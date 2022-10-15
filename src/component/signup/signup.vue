@@ -133,7 +133,7 @@
 					</router-link>
 					<table class="ranking card">
 						<tr class="header">
-							<th class="p15">{{ $t('place') }}</th>
+							<th class="p15">{{ $t('main.place') }}</th>
 							<th class="p35">{{ $t('main.leek') }}</th>
 							<th class="p25">{{ $t('main.talent') }}</th>
 						</tr>
@@ -156,7 +156,7 @@
 					</router-link>
 					<table class="ranking card">
 						<tr class="header">
-							<th class="p15">{{ $t('place') }}</th>
+							<th class="p15">{{ $t('main.place') }}</th>
 							<th class="p35">{{ $t('main.farmer') }}</th>
 							<th class="p20">{{ $t('main.talent') }}</th>
 							<th class="p5">{{ $t('main.country') }}</th>
@@ -183,7 +183,7 @@
 					</router-link>
 					<table class="ranking card">
 						<tr class="header">
-							<th class="p20">{{ $t('place') }}</th>
+							<th class="p20">{{ $t('main.place') }}</th>
 							<th class="p50">{{ $t('main.team') }}</th>
 							<th class="p30">{{ $t('main.talent') }}</th>
 						</tr>

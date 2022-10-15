@@ -125,7 +125,7 @@
 			</panel>
 		</div>
 
-		<panel v-if="is_member" :title="$t('chat')" toggle="team/chat" icon="mdi-chat-outline">
+		<panel v-if="team && is_member" :title="$t('chat')" toggle="team/chat" icon="mdi-chat-outline">
 			<div slot="actions">
 				<div v-if="!LeekWars.mobile && team && $store.state.chat[team.chat]" class="button flat" @click="LeekWars.addChat($store.state.chat[team.chat])">
 					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
@@ -212,6 +212,83 @@
 			</div>
 		</panel>
 
+		<panel v-if="team" icon="mdi-podium">
+			<template slot="title">Classements</template>
+			<div class="container grid last">
+				<div class="column4">
+					<h4>{{ $t('main.leeks') }}</h4>
+					<div class="ranking card">
+						<div class="header">
+							<div class="p15">{{ $t('main.place') }}</div>
+							<div class="p50">{{ $t('main.leek') }}</div>
+							<div class="p20">{{ $t('main.talent') }}</div>
+						</div>
+						<div v-for="(leek, i) in team.rankings.leeks" :key="i" :class="{me: leek.me}">
+							<div class="p15">{{ parseInt(i) + 1 }}</div>
+							<div class="p50" :class="leek.style">
+								<rich-tooltip-leek :id="leek.id" v-slot="{ on }">
+									<router-link :to="'/leek/' + leek.id">
+										<span v-on="on">{{ leek.name }}</span>
+									</router-link>
+								</rich-tooltip-leek>
+							</div>
+							<div class="p20">{{ leek.talent | number }}</div>
+						</div>
+					</div>
+				</div>
+				<div class="column4">
+					<h4>{{ $t('main.farmers') }}</h4>
+					<div class="ranking card">
+						<div class="header">
+							<div class="p15">{{ $t('main.place') }}</div>
+							<div class="p50">{{ $t('main.farmer') }}</div>
+							<div class="p20">{{ $t('main.talent') }}</div>
+							<div class="p15">{{ $t('main.country') }}</div>
+						</div>
+						<div v-for="(farmer, i) in team.rankings.farmers" :key="i" :class="{me: farmer.me}">
+							<div class="p15">{{ parseInt(i) + 1 }}</div>
+							<div class="p50" :class="farmer.style">
+								<rich-tooltip-farmer :id="farmer.id" v-slot="{ on }">
+									<router-link :to="'/farmer/' + farmer.id">
+										<span v-on="on">{{ farmer.name }}</span>
+									</router-link>
+								</rich-tooltip-farmer>
+							</div>
+							<div class="p20">{{ farmer.talent | number }}</div>
+							<div class="p15">
+								<img v-if="farmer.country" :title="$t('country.' + farmer.country)" :src="'/image/flag/' + farmer.country + '.png'" class="country">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="column4">
+					<h4>{{ $t('main.trophies') }}</h4>
+					<div class="ranking card">
+						<div class="header">
+							<div class="p15">{{ $t('main.place') }}</div>
+							<div class="p50">{{ $t('main.farmer') }}</div>
+							<div class="p25">{{ $t('main.trophies') }}</div>
+						</div>
+						<div v-for="(farmer, i) in team.rankings.trophies" :key="i" :class="{me: farmer.me}">
+							<div class="p15">{{ parseInt(i) + 1 }}</div>
+							<div class="p50" :class="farmer.style">
+								<rich-tooltip-farmer v-if="farmer" :id="farmer.id" v-slot="{ on }">
+									<router-link :to="'/farmer/' + farmer.id">
+										<span v-on="on">{{ farmer.name }}</span>
+									</router-link>
+								</rich-tooltip-farmer>
+							</div>
+							<div class="p25">{{ farmer.points | number }}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div v-if="team.leek_count > 10 && !rankingsLoaded" class="load-rankings">
+				<loader v-if="rankingsLoading" />
+				<v-btn small v-else @click="loadRankings">Charger tout</v-btn>
+			</div>
+		</panel>
+
 		<panel v-if="is_member" :title="$t('compositions')">
 			<template v-if="captain" slot="actions">
 				<div class="button flat" @click="createCompoDialog = true">{{ $t('create_composition') }}</div>
@@ -294,7 +371,7 @@
 			</div>
 		</panel>
 		<panel v-else>
-			<h2 v-if="team" slot="title">{{ $t('leeks', [team.leek_count]) }}</h2>
+			<template v-if="team" slot="title">{{ $t('leeks', [team.leek_count]) }}</template>
 			<loader v-if="!team" slot="content" />
 			<div v-else slot="content" class="leeks">
 				<rich-tooltip-leek v-for="leek in team.leeks" :id="leek.id" :key="leek.id" v-slot="{ on }">
@@ -550,6 +627,8 @@
 		logsDialog: boolean = false
 		editMembers: boolean = false
 		logsLevel: number = 0
+		rankingsLoading: boolean = false
+		rankingsLoaded: boolean = false
 
 		get id() { return 'id' in this.$route.params ? parseInt(this.$route.params.id, 10) : (this.$store.state.farmer && this.$store.state.farmer.team !== null ? this.$store.state.farmer.team.id : null) }
 		get max_level() { return this.team && this.team.level === 100 }
@@ -589,6 +668,8 @@
 					request = 'team/get-connected/' + this.id
 				}
 			}
+			this.rankingsLoading = false
+			this.rankingsLoaded = false
 			LeekWars.get<Team>(request).then(team => {
 				this.team = team
 				if (!this.team) {
@@ -614,6 +695,9 @@
 						Vue.set(leek, 'dragging', false)
 					}
 				}
+
+				this.addRankingStyles()
+
 				this.captain = teamCaptain
 				LeekWars.setTitle(this.team.name)
 				LeekWars.setSubTitle(this.$t('main.n_farmers', [team.members.length]) + " • " + this.$t('main.n_leeks', [team.leek_count]))
@@ -625,6 +709,35 @@
 				}
 				this.$root.$emit('loaded')
 			})
+		}
+
+		addRankingStyles() {
+			if (!this.team) return
+			const styles = ['first', 'second', 'third']
+			for (let i = 0; i < 3; ++i) {
+				if (this.team.rankings.leeks.length > i) this.team.rankings.leeks[i].style = styles[i]
+				if (this.team.rankings.farmers.length > i) this.team.rankings.farmers[i].style = styles[i]
+				if (this.team.rankings.trophies.length > i) this.team.rankings.trophies[i].style = styles[i]
+			}
+			if (this.$store.state.connected && this.$store.state.farmer) {
+				for (const row of this.team.rankings.leeks) {
+					if (row.id in this.$store.state.farmer.leeks) {
+						row.me = true
+					}
+				}
+				for (const row of this.team.rankings.farmers) {
+					if (row.id === this.$store.state.farmer.id) {
+						row.me = true
+						break
+					}
+				}
+				for (const row of this.team.rankings.trophies) {
+					if (row.id === this.$store.state.farmer.id) {
+						row.me = true
+						break
+					}
+				}
+			}
 		}
 
 		changeEmblem(e: Event) {
@@ -906,6 +1019,17 @@
 			const power = Math.round(composition.leeks.reduce((p, l) => p + l.level ** LeekWars.POWER_FACTOR, 0))
 			LeekWars.get('tournament/range-compo/' + power).then(d => Vue.set(composition, 'tournamentRange', d))
 		}
+
+		loadRankings() {
+			if (!this.team) return
+			this.rankingsLoading = true
+			LeekWars.get('team/rankings/' + this.team.id).then(rankings => {
+				this.team!.rankings = rankings
+				this.rankingsLoading = false
+				this.rankingsLoaded = true
+				this.addRankingStyles()
+			})
+		}
 	}
 </script>
 
@@ -1051,7 +1175,7 @@
 		}
 	}
 	.chat {
-		height: 250px;
+		height: 300px;
 	}
 	.farmer, .popup.change_owner_popup .farmer {
 		display: inline-block;
@@ -1290,5 +1414,77 @@
 	}
 	.explorer {
 		height: 460px;
+	}
+	h4 {
+		margin-bottom: 7px;
+	}
+	.ranking {
+		width: 100%;
+		background: white;
+		> div {
+			text-align: center;
+			display: flex;
+			&:not(:last-child) {
+				border-bottom: 1px solid #ddd;
+			}
+			> div {
+				&:not(:last-child) {
+					border-right: 1px solid #ddd;
+				}
+				min-width: 0;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				padding: 4px 10px;
+			}
+			&.me {
+				background: #eee;
+			}
+		}
+		.header {
+			background: #e5e5e5;
+			text-align: center;
+		}
+		.first a {
+			color: #ffa900;
+			font-weight: bold;
+		}
+		.second a {
+			color: #9c9c9c;
+			font-weight: bold;
+		}
+		.third a {
+			color: #ae4e00;
+			font-weight: bold;
+		}
+		.p5 {
+			flex: 1;
+		}
+		.p10 {
+			flex: 2;
+		}
+		.p15 {
+			flex: 3;
+		}
+		.p20 {
+			flex: 4;
+		}
+		.p25 {
+			flex: 5;
+		}
+		.p35 {
+			flex: 7;
+		}
+		.p50 {
+			flex: 10;
+		}
+		.country {
+			height: 24px;
+			margin: -5px;
+			vertical-align: middle;
+		}
+	}
+	.load-rankings {
+		text-align: center;
+		margin-top: 15px;
 	}
 </style>

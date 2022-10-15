@@ -60,6 +60,7 @@ class Team {
 	public member_level!: number
 	public forum!: number
 	public leek_count!: number
+	public rankings!: {leeks: any[], farmers: any[], trophies: any[]}
 }
 
 class TeamMember extends Farmer {

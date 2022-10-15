@@ -50,6 +50,7 @@
 	"error_x": "Error: {0}",
 	"error_muted": "You are muted for {0} seconds",
 	"farmer": "Farmer",
+	"farmers": "Farmers",
 	"fight": "Fight",
 	"final": "Finals",
 	"forum": "Forum",
@@ -195,5 +196,6 @@
 	"resource_not_used": "All the resources are unusable at the moment. Maybe they will find a use in the future?",
 	"search_bar": "Search for a concept, a function or a guide...",
 	"more_results": "See more results",
-	"hat": "Hat"
+	"hat": "Hat",
+	"place": "Rank"
 }
