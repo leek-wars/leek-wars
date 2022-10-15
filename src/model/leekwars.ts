@@ -593,8 +593,8 @@ const LeekWars = {
 				summons: "Bulbes"
 			},
 			en: {
-				too_much_ops: "",
-				summons: ""
+				too_much_ops: "Operations",
+				summons: "Bulbs"
 			}
 		} as any
 		return helpPages[locale][log[4]]
