@@ -154,6 +154,8 @@ function displayWarningMessage() {
 	console.log("")
 }
 
+let lastErrorSent = 0
+
 const vueMain = new Vue({
 	router, i18n, store,
 	data: { savedPosition: 0 },
@@ -235,6 +237,16 @@ const vueMain = new Vue({
 		LeekWars.initChats()
 
 		displayWarningMessage()
+	},
+
+	errorCaptured(err, vm, info) {
+
+		if (Date.now() - lastErrorSent < 1000) return
+		lastErrorSent = Date.now()
+
+		const error = err.name + ": " + err.message
+
+		LeekWars.post('error/report', {error, stack: err.stack + "\n" + info})
 	}
 }).$mount('#app')
 
