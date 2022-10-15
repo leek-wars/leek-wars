@@ -18,7 +18,7 @@
 					<span v-show="$store.state.unreadMessages > 0" class="counter messages-counter">{{ $store.state.unreadMessages }}</span>
 				</div>
 				<div v-show="LeekWars.menuExpanded || $store.state.unreadNotifications > 0" v-ripple class="action header-button mobile notifications-button">
-					<v-menu :nudge-bottom="0" :max-width="400" :max-height="400" bottom offset-y @input="readNotifications">
+					<v-menu :nudge-bottom="0" :max-width="400" :max-height="434" bottom offset-y @input="readNotifications">
 						<template v-slot:activator="{ on }">
 							<div class="header-button notifications-button" v-on="on">
 								<v-icon>mdi-information-outline</v-icon>
@@ -223,6 +223,7 @@
 	}
 	.dialog-items {
 		overflow-y: auto;
+		max-height: 400px;
 	}
 	.see-all {
 		padding: 8px;
