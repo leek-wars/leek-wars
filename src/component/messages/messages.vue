@@ -221,7 +221,9 @@
 		selectConversation(id: number) {
 			this.currentID = id
 			LeekWars.splitShowContent()
-			LeekWars.setActions(this.actions)
+			if (this.chat && this.chat.type === ChatType.PM) {
+				LeekWars.setActions(this.actions)
+			}
 			if (id === 0) {
 				LeekWars.setTitle(this.$i18n.t('new_message'))
 			} else if (this.currentID in this.$store.state.chat) {
