@@ -70,6 +70,7 @@
 	import { Game } from './game/game'
 	import { Turret } from './game/turret'
 	import TurretImage from '@/component/turret-image.vue'
+	import { CHIPS } from '@/model/chips'
 
 	@Component({ name: 'hud', components: { EntityDetails, leek: ActionLeekElement, TurretImage } })
 	export default class Hud extends Vue {
@@ -82,6 +83,7 @@
 		ActionComponents = ActionComponents
 		EffectComponents = EffectComponents
 		TEAM_COLORS = TEAM_COLORS
+		CHIPS = CHIPS
 
 		get barWidth() {
 			return LeekWars.mobile ? 300 : 500
