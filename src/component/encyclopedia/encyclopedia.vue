@@ -205,6 +205,7 @@
 
 		mounted() {
 			// this.editStart()
+			LeekWars.loadEncyclopedia()
 
 			this.$root.$on('ctrlS', () => {
 				this.save()
