@@ -18,7 +18,7 @@
 				<th></th>
 				<th v-if="fight.context !== FightContext.CHALLENGE" class="gain">{{ $t('main.talent') }}</th>
 			</tr>
-			<tr>
+			<tr v-if="farmer">
 				<td class="name">
 					<span class="alive">
 						<router-link :to="'/farmer/' + farmer.id">

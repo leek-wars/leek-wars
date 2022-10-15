@@ -100,7 +100,7 @@
 					{{ $t('ratio', [team.ratio]) }}
 				</tooltip>
 
-				<center v-if="$store.state.farmer && !is_member && $store.state.farmer.team == null">
+				<center v-if="team && $store.state.farmer && !is_member && $store.state.farmer.team == null">
 					<br>
 					<v-btn v-if="team.candidacy" @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</v-btn>
 					<v-btn v-if="team.opened && !team.candidacy" @click="sendCandidacy">{{ $t('join_team') }}</v-btn>

@@ -46,7 +46,7 @@
 								</div>
 							</rich-tooltip-farmer>
 						</router-link>
-						<router-link v-if="fight.type === FightType.TEAM" :to="'/team/' + fight.team1.id">
+						<router-link v-if="fight.type === FightType.TEAM && fight.team1" :to="'/team/' + fight.team1.id">
 							<rich-tooltip-team :id="fight.team1.id" v-slot="{ on: rich }">
 								<div class="farmer" v-on="rich">
 									<emblem :team="fight.team1" /><br>

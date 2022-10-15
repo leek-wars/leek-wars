@@ -1,7 +1,7 @@
 <template lang="html">
 	<div class="problems-details">
 		<div v-for="(ais, entrypoint) in analyzer.problems" :key="entrypoint">
-			<div v-for="(problems, ai) in ais" v-if="problems.length" :key="ai">
+			<div v-for="(problems, ai) in ais" v-if="problems.length && fileSystem.aiByFullPath[ai]" :key="ai">
 				<div class="file" @click="toggleProblemFile(entrypoint + ai)">
 					<v-icon>{{ problemsCollapsed[entrypoint + ai] ? 'mdi-chevron-right' : 'mdi-chevron-down' }}</v-icon>
 					<span v-if="fileSystem.aiByFullPath[ai].entrypoints.length > 1">{{ fileSystem.ais[entrypoint].name }} {{ ' ➞ ' }}</span>

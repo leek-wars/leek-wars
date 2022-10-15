@@ -9,7 +9,7 @@
 			<div class="fighter right"><div>Royale</div></div>
 		</div>
 		<div v-else class="fighters">
-			<router-link v-if="fight.type == FightType.SOLO" :to="'/leek/' + fight.leeks1[0].id" class="fighter">
+			<router-link v-if="fight.type == FightType.SOLO && fight.leeks1[0]" :to="'/leek/' + fight.leeks1[0].id" class="fighter">
 				<rich-tooltip-leek :id="fight.leeks1[0].id" v-slot="{ on }">
 					<div v-on="on">{{ fight.leeks1[0].name }}</div>
 				</rich-tooltip-leek>
@@ -30,7 +30,7 @@
 				<v-icon v-else-if="fight.context == FightContext.TOURNAMENT">mdi-trophy-outline</v-icon>
 				<img v-else src="/image/icon/black/garden.png">
 			</router-link>
-			<router-link v-if="fight.type == FightType.SOLO" :to="'/leek/' + fight.leeks2[0].id" class="fighter">
+			<router-link v-if="fight.type == FightType.SOLO && fight.leeks2[0]" :to="'/leek/' + fight.leeks2[0].id" class="fighter">
 				<rich-tooltip-leek :id="fight.leeks2[0].id" v-slot="{ on }">
 					<div v-on="on">{{ fight.leeks2[0].name }}</div>
 				</rich-tooltip-leek>
