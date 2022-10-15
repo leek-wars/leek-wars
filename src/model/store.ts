@@ -129,6 +129,8 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 
 			for (const chat of Object.values(state.chat)) {
 				if (chat.opened && !chat.loaded) {
+					// console.log("wsconnected chat", chat.name, chat.opened, chat.loaded)
+					store.commit('register-chat', chat)
 					store.commit('load-chat', chat)
 				}
 			}
