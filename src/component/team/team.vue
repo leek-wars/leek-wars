@@ -33,7 +33,7 @@
 						<tooltip>
 							<template v-slot:activator="{ on }">
 								<div class="emblem-input" v-on="on">
-									<input ref="emblemInput" type="file" @change="changeEmblem">
+									<input ref="emblemInput" type="file" accept="image/png, image/jpeg, image/jpg, image/bmp, image/gif, image/webp" @change="changeEmblem">
 									<emblem ref="emblem" :team="team" @click.native="$refs.emblemInput.click()" />
 								</div>
 							</template>
@@ -746,7 +746,10 @@
 			if (!input || !input.files) { return }
 			const file = input.files[0]
 
-			if (!LeekWars.uploadCheck(file)) { return }
+			if (!LeekWars.uploadCheck(file)) {
+				LeekWars.toast("Invalid image (wrong format or > 10 Mo)")
+				return
+			}
 
 			LeekWars.fileToImage(file, (this.$refs.emblem as Vue).$el as Element)
 
@@ -764,6 +767,7 @@
 				}
 			}).error(error => {
 				LeekWars.toast(this.$t('upload_failed', [error.error]) as string)
+				this.team!.emblem_changed = LeekWars.time
 			})
 		}
 

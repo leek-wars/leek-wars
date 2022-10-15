@@ -372,7 +372,7 @@ const LeekWars = {
 		if (!file) {
 			return false
 		}
-		const types = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image/bmp']
+		const types = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image/bmp', 'image/webp']
 		if (types.indexOf(file.type) === -1) {
 			return false
 		}

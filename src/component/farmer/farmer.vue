@@ -66,7 +66,7 @@
 						<tooltip>
 							<template v-slot:activator="{ on }">
 								<div class="avatar-input" v-on="on">
-									<input ref="avatarInput" type="file" @change="changeAvatar">
+									<input ref="avatarInput" type="file" accept="image/png, image/jpeg, image/jpg, image/bmp, image/gif, image/webp" @change="changeAvatar">
 									<avatar ref="avatar" :farmer="farmer" @click.native="$refs.avatarInput.click()" />
 								</div>
 							</template>
@@ -716,15 +716,22 @@
 		changeAvatar(e: Event) {
 			if (!e || !e.target) { return }
 			const input = e.target as HTMLInputElement
-			if (!input || !input.files) { return }
+			if (!input || !input.files) {
+				LeekWars.toast("No input file")
+				return
+			}
 			const file = input.files[0]
 
-			if (!LeekWars.uploadCheck(file)) { return }
+			if (!LeekWars.uploadCheck(file)) {
+				LeekWars.toast("Invalid image (wrong format or > 10 Mo)")
+				return
+			}
 
 			LeekWars.fileToImage(file, (this.$refs.avatar as Vue).$el as Element)
 
 			const formdata = new FormData()
 			formdata.append('avatar', file)
+			input.value = null
 
 			LeekWars.toast(this.$t('uploading_avatar') as string)
 
@@ -734,7 +741,8 @@
 					this.farmer.avatar_changed = data.avatar_changed
 				}
 			}).error(error => {
-				LeekWars.toast(this.$t('upload_failed', [error]) as string)
+				LeekWars.toast(this.$t('upload_failed', [error.error]) as string)
+				this.farmer.avatar_changed = LeekWars.time
 			})
 		}
 
