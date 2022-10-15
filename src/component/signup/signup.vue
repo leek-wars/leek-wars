@@ -494,6 +494,7 @@
 		width: 100%;
 		padding: 0 7px;
 		background: white;
+		height: 30px;
 	}
 	input[type=text]:focus, input[type=password]:focus {
 		border: 2px solid #555;
