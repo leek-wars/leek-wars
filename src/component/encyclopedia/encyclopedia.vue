@@ -51,7 +51,7 @@
 		<panel v-if="page" class="first encyclopedia last">
 			<div slot="content" class="table">
 				<div v-if="edition" ref="codemirror" class="codemirror" :style="{lineHeight: 1.6, fontSize: 14}"></div>
-				<div ref="markdown" class="markdown" @scroll="markdownScroll">
+				<div v-if="Object.keys(LeekWars.encyclopedia).length" ref="markdown" class="markdown" @scroll="markdownScroll">
 					<!-- {{ parents }} -->
 
 					<markdown :content="page.content" mode="encyclopedia" :class="{main: page.id === 1}" :locale="page.language" />
@@ -205,12 +205,6 @@
 
 		mounted() {
 			// this.editStart()
-			LeekWars.get('encyclopedia/get-all').then(pages => {
-				LeekWars.encyclopedia = pages
-				for (const page in pages) {
-					Vue.set(LeekWars.encyclopediaById, pages[page].id, pages[page])
-				}
-			})
 
 			this.$root.$on('ctrlS', () => {
 				this.save()
@@ -350,7 +344,7 @@ ${ret}
 							}
 							const parent = (this.$refs.markdown as HTMLElement).querySelector('blockquote')
 							if (parent) {
-								const text = parent.innerText.trim()
+								const text = parent.innerText.trim().toLowerCase().replace(/_/g, ' ')
 								// console.log(parent, text, LeekWars.encyclopedia)
 								if (text in LeekWars.encyclopedia) {
 									this.page.parent = LeekWars.encyclopedia[text].id

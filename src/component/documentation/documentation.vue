@@ -144,6 +144,9 @@
 		}
 
 		created() {
+
+			LeekWars.loadEncyclopedia()
+
 			const get_categories = (callback: any) => {
 				if (localStorage.getItem('data/function_categories_v2')) {
 					callback({categories: JSON.parse(localStorage.getItem('data/function_categories_v2') || '[]')})

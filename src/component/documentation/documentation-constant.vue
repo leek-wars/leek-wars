@@ -3,12 +3,37 @@
 		<h2 v-if="!is_chip && !is_weapon">
 			{{ constant.name }}
 		</h2>
+
 		<div v-if="constant.deprecated" v-dochash class="deprecated-message">
-			Cette constante est dépréciée. <span v-if="constant.replacement">Elle est remplacée par la constante #{{ LeekWars.constantById[constant.replacement].name }}.</span>
+			Cette constante est dépréciée. <span v-if="constant.replacement">Elle est remplacée par la constante #{{ CONSTANT_BY_ID[constant.replacement].name }}.</span>
 		</div>
+
+		<router-link class="encyclo" :to="'/encyclopedia/' + $i18n.locale + '/' + constant.name" :title="'Encyclopédie > ' + constant.name + '()'">
+			<v-icon class="book">mdi-book-open-page-variant</v-icon>
+		</router-link>
+
 		<item-preview v-if="is_chip" :item="LeekWars.items[constant.value]" />
 		<item-preview v-else-if="is_weapon" :item="LeekWars.items[constant.value]" />
-		<div v-else-if="$te('doc.const_' + constant.name)" v-dochash v-code class="content" v-html="$t('doc.const_' + constant.name)"></div>
+
+		<div v-if="new_constant">
+			<markdown v-if="Object.keys(LeekWars.encyclopedia).length" :content="new_constant.description" :pages="{}" mode="encyclopedia" />
+
+			<div v-for="(section, s) in new_constant.primary" :key="s">
+				<h4>{{ s }}</h4>
+				<markdown v-if="s === 'Paramètres'" :content="new_arguments" :pages="{}" mode="encyclopedia" />
+				<markdown v-else :content="section" :pages="{}" mode="encyclopedia" />
+			</div>
+			<div v-if="Object.values(new_constant.secondary).length" class="expand" @click.stop="expanded = !expanded">Détails ({{ Object.values(new_constant.secondary).length }})<v-icon v-if="expanded">mdi-chevron-up</v-icon><v-icon v-else>mdi-chevron-down</v-icon></div>
+			<div v-if="expanded" class="secondary">
+				<div v-for="(section, s) in new_constant.secondary" :key="s">
+					<h4>{{ s }}</h4>
+					<markdown :content="section" :pages="{}" mode="encyclopedia" />
+				</div>
+			</div>
+		</div>
+		<div v-else>
+			<div v-if="$te('doc.const_' + constant.name)" v-dochash v-code class="content" v-html="$t('doc.const_' + constant.name)"></div>
+		</div>
 		<h4>{{ $t('doc.value') }}</h4>
 		<ul>
 			<li>{{ constant.name }}
@@ -32,13 +57,26 @@
 	import ItemPreview from '@/component/market/item-preview.vue'
 	import { Constant } from '@/model/constant'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 	import { CHIPS } from '@/model/chips'
+	import { CONSTANT_BY_ID } from '@/model/constant_by_id'
+	import { locale } from '@/locale'
+	import Markdown from '../encyclopedia/markdown.vue'
 
-	@Component({ name: 'documentation-constant', components: { ItemPreview, RichTooltipItem }})
+	@Component({ name: 'documentation-constant', components: { ItemPreview, RichTooltipItem, Markdown }})
 	export default class DocumentationConstant extends Vue {
 		@Prop() constant!: Constant
+		CONSTANT_BY_ID = CONSTANT_BY_ID
+		expanded: boolean = false
+		new_constant: any = null
+
+		@Watch('constant', {immediate: true})
+		updateFun() {
+			LeekWars.documentation(locale).then((functions) => {
+				this.new_constant = functions[this.constant.name]
+			})
+		}
 
 		get value_int() {
 			return parseInt(this.constant.value, 10)
@@ -143,6 +181,28 @@
 		font-weight: 500;
 		&:hover {
 			text-decoration: underline;
+		}
+	}
+	.doc-constant .md {
+		padding: 0 !important;
+		::v-deep pre code {
+			margin-bottom: 0;
+		}
+		::v-deep p {
+			font-size: 15px;
+		}
+	}
+	.encyclo {
+		position: absolute;
+		right: 12px;
+		top: 15px;
+		color: #aaa;
+		i {
+			font-size: 18px;
+		}
+		&:hover {
+			text-decoration: none;
+			color: #000;
 		}
 	}
 </style>

@@ -4,7 +4,7 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-import { CHIP_BY_NAME } from '@/model/sorted_chips'
+	import { CHIP_BY_NAME } from '@/model/sorted_chips'
 	import { vueMain } from '@/model/vue'
 	import markdown from 'markdown-it'
 	import sanitizeHtml from 'sanitize-html'
@@ -163,9 +163,13 @@ import { CHIP_BY_NAME } from '@/model/sorted_chips'
 		links(html: string) {
 			return html.replace(/\[\[(.*?)\]\]/g, (m, link) => {
 				link = link.trim()
-				const clazz = (LeekWars.isEmptyObj(LeekWars.encyclopedia) || (link in LeekWars.encyclopedia)) ? "" : "new"
+				const parts = link.split('|', 2)
+				link = parts[0]
+				const alias = parts.length === 2 ? parts[1] : link
+				const page = LeekWars.encyclopedia[link.toLowerCase().replace(/_/g, ' ')]
+				const clazz = page ? "" : "new"
 				const text = link.replace(/_/g, ' ').replace(/'/g, '&apos;')
-				return "<a href='/encyclopedia/" + this.language + '/' + text + "' class='" + clazz + "'>" + text + "</a>"
+				return "<a href='/encyclopedia/" + this.language + '/' + (page ? page.title.replace(/ /g, '_') : text) + "' class='" + clazz + "'>" + alias + "</a>"
 			}).replace(/{{(.*?)}}/g, (m, tag) => {
 				tag = tag.trim().toLowerCase()
 				if (tag.startsWith('summary')) {
@@ -220,7 +224,7 @@ import { CHIP_BY_NAME } from '@/model/sorted_chips'
 	.md {
 		padding: 15px;
 	}
-	.md ::v-deep p {
+	.md ::v-deep p, .md ::v-deep ul {
 		color: #252525;
 		font-size: 16px;
 		line-height: 1.6;

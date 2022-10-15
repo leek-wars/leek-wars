@@ -550,6 +550,18 @@ const LeekWars = {
 	},
 	encyclopedia: {} as {[key: string]: any},
 	encyclopediaById: {} as {[key: number]: any},
+	encyclopediaLoaded: false,
+	loadEncyclopedia: () => {
+		if (!LeekWars.encyclopediaLoaded) {
+			LeekWars.encyclopediaLoaded = true
+			LeekWars.get('encyclopedia/get-all').then(pages => {
+				LeekWars.encyclopedia = pages
+				for (const page in pages) {
+					Vue.set(LeekWars.encyclopediaById, pages[page].id, pages[page])
+				}
+			})
+		}
+	},
 	christmasPresents: DATE.getMonth() === 11 && DATE.getDate() >= 25 && DATE.getDate() <= 31,
 	LATEST_LEEKSCRIPT_VERSION: 4
 }
