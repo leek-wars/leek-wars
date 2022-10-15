@@ -97,6 +97,7 @@ class FightLeek {
 	public farmer!: number
 	public frequency!: number
 	public hat!: number
+	public metal!: boolean
 	public id!: number
 	public level!: number
 	public life!: number

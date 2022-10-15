@@ -775,6 +775,12 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
+		'toggle-metal'(state: LeekWarsState, leek: number) {
+			if (state.farmer) {
+				state.farmer.leeks[leek].metal = !state.farmer.leeks[leek].metal
+			}
+		},
+
 		'set-trophies'(state: LeekWarsState, trophies) {
 			if (state.farmer) {
 				Vue.set(state.farmer, 'trophies_list', trophies)

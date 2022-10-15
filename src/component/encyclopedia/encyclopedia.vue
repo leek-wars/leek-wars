@@ -442,7 +442,7 @@ ${ret}
 					this.page.new = false
 					this.page.id = result.id
 				}
-			})
+			}).error(error => LeekWars.toast("Sauvegarde échouée : " + error.error))
 
 			this.initialGeneration = (this.editor as any).doc.history.generation
 			// console.log("initial generation", this.initialGeneration)

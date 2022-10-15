@@ -33,17 +33,16 @@ class Leek extends FightEntity {
 		this.z = this.baseZ
 	}
 
-	public setSkin(skin: number, appearance: number, hat: number | null = null) {
+	public setSkin(skin: number, appearance: number, hat: number | null = null, metal: boolean = false) {
 
 		if (typeof LeekWars.skins[skin] === 'undefined') { skin = 1 }
 
 		this.scale = 0.68 - appearance * 0.01
 		this.skin = skin
-		this.bodyTexFront = T.get(this.game, "image/leek/svg/leek_" + appearance + "_" + LeekWars.skins[skin] + ".svg", true, SHADOW_QUALITY)
-		this.bodyTexBack = T.get(this.game, "image/leek/svg/leek_" + appearance + "_" + LeekWars.skins[skin] + "_metal.svg", true, SHADOW_QUALITY)
+		this.bodyTexFront = T.get(this.game, "image/leek/svg/leek_" + appearance + "_front_" + LeekWars.skins[skin] + (metal ? '_metal' : '') + ".svg", true, SHADOW_QUALITY)
+		this.bodyTexBack = T.get(this.game, "image/leek/svg/leek_" + appearance + "_back_" + LeekWars.skins[skin] + (metal ? '_metal' : '') + ".svg", true, SHADOW_QUALITY)
 
 		if (this.bodyTexFront.loaded) {
-			console.log("height", this.bodyTexFront.texture.height)
 			this.baseHeight = this.bodyTexFront.texture.height
 			this.baseWidth = this.bodyTexFront.texture.width
 			this.updateGrowth()

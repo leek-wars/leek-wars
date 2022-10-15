@@ -492,15 +492,25 @@
 					</div>
 				</div>
 				<br>
-				<tooltip :disabled="showAiLinesEnabled">
-					<template v-slot:activator="{ on }">
-						<span v-if="$store.state.farmer" class="ai-lines" v-on="on">
-							<v-switch :input-value="$store.state.farmer.show_ai_lines" hide-details :label="$t('pomp.ai_lines')" :disabled="!showAiLinesEnabled" @change="changeShowAiLines" />
-							<img src="/image/pomp/ai_lines.png">
-						</span>
-					</template>
-					<v-icon>mdi-lock</v-icon> {{ $t('pomp.ai_lines') }}
-				</tooltip>
+				<span v-if="$store.state.farmer" class="ai-lines">
+					<v-switch :input-value="$store.state.farmer.show_ai_lines" hide-details :label="$t('pomp.ai_lines')" :disabled="!showAiLinesEnabled" @change="changeShowAiLines" />
+					<tooltip :disabled="showAiLinesEnabled">
+						<template v-slot:activator="{ on }">
+							<img v-on="on" src="/image/pomp/ai_lines.png">
+						</template>
+						<v-icon>mdi-lock</v-icon> {{ $t('pomp.ai_lines') }}
+					</tooltip>
+				</span>
+				<br><br>
+				<span v-if="leek" class="ai-lines">
+					<v-switch :input-value="leek.metal" hide-details :label="$t('pomp.metal')" :disabled="!metalEnabled" @change="changeMetal" />
+					<tooltip :disabled="metalEnabled">
+						<template v-slot:activator="{ on }">
+							<img v-on="on" src="/image/pomp/metal.png">
+						</template>
+						<v-icon>mdi-lock</v-icon> {{ $t('pomp.metal') }}
+					</tooltip>
+				</span>
 			</div>
 		</popup>
 
@@ -721,6 +731,9 @@
 		}
 		get showAiLinesEnabled() {
 			return this.$store.state.farmer && LeekWars.selectWhere(this.$store.state.farmer.pomps, 'template', 124) !== null
+		}
+		get metalEnabled() {
+			return this.$store.state.farmer && LeekWars.selectWhere(this.$store.state.farmer.pomps, 'template', 242) !== null
 		}
 		get skinPotions() {
 			return store.state.farmer!.potions.filter(p => LeekWars.potions[p.template].effects.some(e => e.type === PotionEffect.CHANGE_SKIN))
@@ -1114,6 +1127,11 @@
 		changeShowAiLines() {
 			store.commit('toggle-show-ai-lines')
 			LeekWars.put('farmer/set-show-ai-lines', {show_ai_lines: store.state.farmer!.show_ai_lines})
+		}
+		changeMetal() {
+			this.leek.metal = !this.leek.metal
+			store.commit('toggle-metal', this.leek.id)
+			LeekWars.put('leek/set-metal', {leek_id: this.leek.id, metal: this.leek.metal})
 		}
 
 		loadTournamentRange() {

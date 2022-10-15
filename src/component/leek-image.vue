@@ -63,11 +63,11 @@
 			21: {width: 300, height: 199}, // crystal crown
 			22: {width: 300, height: 199}, // crystal crown
 			23: {width: 300, height: 199}, // crystal crown
-			24: {width: 302, height: 209}, // bicorn
-			25: {width: 300, height: 201}, // sombrero
+			24: {width: 320, height: 201}, // bicorn
+			25: {width: 302, height: 209}, // sombrero
 			26: {width: 300, height: 302}, // pirate hat
-			27: {width: 300, height: 201}, // bicorn
-			28: {width: 300, height: 206}, // lareul
+			27: {width: 300, height: 206}, // laurel
+			28: {width: 330, height: 202}, // bicorn napoleon
 			29: {width: 300, height: 206}, // lareul
 			30: {width: 130, height: 140}, // topper
 		}
@@ -77,11 +77,9 @@
 		}
 
 		get leekImage(): string {
-			// return 'leek/leek' + this.appearance + '_front_' + LeekWars.getLeekSkinName(this.leek.skin) + '.png'
-			// const metal = false
-			// return 'leeksvg/leek' + this.appearance + '_front_' + LeekWars.getLeekSkinName(this.leek.skin) + (metal ? '_metal' : '') + '.svg'
 			return LeekWars.SERVER + '/image/leek/svg/leek_' + this.appearance + '_' + (this.leek.back ? 'back' : 'front') + '_' + LeekWars.getLeekSkinName(this.leek.skin) + (this.leek.metal ? '_metal' : '') + (this.leek.face ? '_' + this.leek.face : '') + '.svg'
 		}
+
 		get hat() {
 			let hat = this.leek.hat
 			if (!hat && (!this.leek.real || this.leek.bot)) {
