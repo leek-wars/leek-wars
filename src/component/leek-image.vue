@@ -80,7 +80,7 @@
 			// return 'leek/leek' + this.appearance + '_front_' + LeekWars.getLeekSkinName(this.leek.skin) + '.png'
 			// const metal = false
 			// return 'leeksvg/leek' + this.appearance + '_front_' + LeekWars.getLeekSkinName(this.leek.skin) + (metal ? '_metal' : '') + '.svg'
-			return LeekWars.SERVER + '/image/leek/svg/leek_' + this.appearance + '_front_' + LeekWars.getLeekSkinName(this.leek.skin) + (this.leek.metal ? '_metal' : '') + '.svg'
+			return LeekWars.SERVER + '/image/leek/svg/leek_' + this.appearance + '_' + (this.leek.back ? 'back' : 'front') + '_' + LeekWars.getLeekSkinName(this.leek.skin) + (this.leek.metal ? '_metal' : '') + (this.leek.face ? '_' + this.leek.face : '') + '.svg'
 		}
 		get hat() {
 			let hat = this.leek.hat
@@ -200,6 +200,10 @@
 </script>
 
 <style lang="scss" scoped>
+svg {
+	// border: 1px solid #aaa;
+	height: auto;
+}
 	.invert {
 		transform: scale(-1, 1);
 		transform-origin: center;

@@ -106,17 +106,17 @@ const SKINS: { [key: number]: string } = {
 }
 
 const LEEK_SIZES: { [key: number]: {width: number, height: number} } = {
-	1: {width: 72, height: 136},
+	1: {width: 86, height: 136},
 	2: {width: 116,  height: 143},
 	3: {width: 115, height: 151},
-	4: {width: 128, height: 159},
-	5: {width: 140, height: 166},
-	6: {width: 147, height: 174},
-	7: {width: 141, height: 181},
-	8: {width: 154, height: 189},
+	4: {width: 133, height: 159},
+	5: {width: 144, height: 166},
+	6: {width: 149, height: 174},
+	7: {width: 144, height: 181},
+	8: {width: 156, height: 189},
 	9: {width: 160, height: 196},
-	10: {width: 169, height: 204},
-	11: {width: 174, height: 211},
+	10: {width: 174, height: 204},
+	11: {width: 176, height: 211},
 }
 
 const POTIONS_BY_SKIN = potionsBySkin(POTIONS)

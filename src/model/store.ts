@@ -123,7 +123,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 
 		"wsconnected"(state: LeekWarsState) {
-			console.log("store wsconnected")
+			// console.log("store wsconnected")
 			state.wsconnected = true
 			state.wsdisconnected = false
 
@@ -832,7 +832,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 
 		'invalidate-chats'(state: LeekWarsState) {
-			console.log("invalidate chats")
+			// console.log("invalidate chats")
 			for (const chat of Object.values(state.chat)) {
 				chat.loaded = false
 			}

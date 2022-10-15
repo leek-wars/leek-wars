@@ -710,8 +710,7 @@
 			}
 		}
 	}
-	#app.app .table .team {
-		padding: 2px;
+	#app.app .table {
 		.leek {
 			padding: 0;
 			.name {

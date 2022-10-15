@@ -2,15 +2,23 @@
 	<div class="page">
 		<div class="page-header page-bar">
 			<h1><router-link to="/admin">Administration</router-link> > Skins</h1>
+			<div class="tabs">
+				<div class="tab action" @click="front = !front">
+					<span>{{ front ? 'Face' : 'Dos' }}</span>
+				</div>
+			</div>
 		</div>
 		<panel v-for="(skin, s) in LeekWars.skins" :key="s">
-			<h4>{{ skin }}</h4>
+			<h4>{{ skin }} ({{ s }})</h4>
 			<div class="leeks">
-				<leek-image v-for="level in [1, 10, 25, 50, 80, 100, 150, 200, 250, 300, 301]" :key="level" :leek="{level, skin: s}" :scale="0.8" />
+				<leek-image v-for="level in [1, 10, 25, 50, 80, 100, 150, 200, 250, 300, 301]" :key="level" :leek="{level, skin: s, back: !front, face: Math.random() < 0.33 ? 'neutral' : (Math.random() < 0.5 ? 'happy' : 'angry'), metal: Math.random() > 0.5}" :scale="1.2" />
+			</div>
+			<!-- <div class="leeks">
+				<leek-image v-for="level in [1, 10, 25, 50, 80, 100, 150, 200, 250, 300, 301]" :key="level" :leek="{level, skin: s, back: s == 1 && !front, face: 'happy'}" :scale="1.2" />
 			</div>
 			<div class="leeks">
-				<leek-image v-for="level in [1, 10, 25, 50, 80, 100, 150, 200, 250, 300, 301]" :key="level" :leek="{level, skin: s, metal: true}" :scale="0.8" />
-			</div>
+				<leek-image v-for="level in [1, 10, 25, 50, 80, 100, 150, 200, 250, 300, 301]" :key="level" :leek="{level, skin: s, back: s == 1 && !front, face: 'angry', metal: true}" :scale="1.2" />
+			</div> -->
 		</panel>
 	</div>
 </template>
@@ -23,8 +31,17 @@
 	@Component({})
 	export default class AdminHats extends Vue {
 
+		front: boolean = true
+
 		created() {
 			// console.log("created", LeekWars.weapons, LeekWars.weapons[1 + Math.random() * 20 | 0].item)
+		}
+
+		mounted() {
+			LeekWars.large = true
+		}
+		beforeDestroy() {
+			LeekWars.large = false
 		}
 
 		get all_weapons() {

@@ -5,10 +5,20 @@
 			<leek-image :leek="{level: 90, weapon: 109}" :scale="0.63" />
 			<leek-image :leek="{level: 250, weapon: 47}" :scale="0.65" />
 		</div>
+		<div v-else-if="pomp.template === 5">
+			<leek-image :leek="{level: 90, face: 'happy'}" :scale="0.6" />
+			<leek-image :leek="{level: 150, face: 'happy'}" :scale="0.7" />
+			<leek-image :leek="{level: 300, face: 'happy'}" :scale="0.8" />
+		</div>
+		<div v-else-if="pomp.template === 6">
+			<leek-image :leek="{level: 90, face: 'angry'}" :scale="0.6" />
+			<leek-image :leek="{level: 150, face: 'angry'}" :scale="0.7" />
+			<leek-image :leek="{level: 300, face: 'angry'}" :scale="0.8" />
+		</div>
 		<div v-else-if="pomp.template === 7">
-			<leek-image :leek="{level: 90, metal: true, skin: 1}" :scale="0.6" />
-			<leek-image :leek="{level: 150, metal: true, skin: 2}" :scale="0.7" />
-			<leek-image :leek="{level: 300, metal: true, skin: 4}" :scale="0.8" />
+			<leek-image :leek="{level: 90, metal: true}" :scale="0.6" />
+			<leek-image :leek="{level: 150, metal: true}" :scale="0.7" />
+			<leek-image :leek="{level: 300, metal: true}" :scale="0.8" />
 		</div>
 	</div>
 </template>
