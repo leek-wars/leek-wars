@@ -16,17 +16,21 @@ class Cell {
 	}
 
 	public setEntity(entity: Entity | null) {
+		// Pas d'entité : on clean la cellule
 		if (entity === null) {
 			this.entity = null
 			return
 		}
+		// Même entité, on remet bien la cellule au cas où
 		if (this.entity === entity) {
 			entity.cell = this
 			return
 		}
-		// if (this.entity) {
-			// this.entity.cell = null
-		// }
+		// Entité précédente : on la retire
+		if (this.entity) {
+			this.entity.cell = null
+		}
+		// L'entité était sur une cellule, on l'enlève de celle-ci
 		if (entity.cell) {
 			entity.cell.setEntity(null)
 		}
