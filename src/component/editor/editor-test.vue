@@ -998,8 +998,10 @@
 
 		duplicateTestLeek(leek: Leek) {
 			LeekWars.post('test-leek/new', {name: leek.name}).then(data => {
-				const newLeek = new Leek(JSON.parse(JSON.stringify(leek)))
-				newLeek.id = data.id
+				const newLeek = new Leek({
+					...JSON.parse(JSON.stringify(leek)),
+					id: data.id
+				})
 				this.leeks.push(newLeek as any)
 				this.currentLeek = newLeek as any
 				this.saveLeek()
