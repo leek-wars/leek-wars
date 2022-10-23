@@ -44,6 +44,16 @@
 						</div>
 					</router-link>
 				</template>
+				<template v-if="$store.state.connected">
+					<tooltip>
+						<template v-slot:activator="{ on }">
+							<div class="tab" @click="copyAsTest()" v-on="on" icon="play_arrow">
+								<v-icon class="list-icon">mdi-play</v-icon><span>{{ $t('test') }}</span>
+							</div>
+						</template>
+						{{ $t('copy_as_test', [leek.name]) }}
+					</tooltip>
+				</template>
 			</div>
 		</div>
 
@@ -1220,6 +1230,33 @@
 			if (!this.leek || this.brRange || this.brRangeLoading) { return }
 			this.brRangeLoading = true
 			LeekWars.get('tournament/range-br/' + this.leek.level).then(d => this.brRange = d)
+		}
+
+		copyAsTest() {
+			if (!this.leek) { return }
+
+			LeekWars.post('test-leek/new', {name: this.leek.name}).then(data => {
+				const newLeek = new Leek({
+					id: data.id,
+					name: this.leek.name,
+					level: this.leek.level,
+					life: this.leek.life,
+					strength: this.leek.strength,
+					wisdom: this.leek.wisdom,
+					agility: this.leek.agility,
+					resistance: this.leek.resistance,
+					frequency: this.leek.frequency,
+					science: this.leek.science,
+					magic: this.leek.magic,
+					tp: this.leek.tp,
+					mp: this.leek.mp,
+					weapons: this.leek.weapons.map(w => w.template),
+					chips: this.leek.chips.map(c => c.template)
+				})
+				LeekWars.post('test-leek/update', {id: newLeek.id, data: JSON.stringify(newLeek)})
+				.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
+			})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 	}
 </script>
