@@ -1254,6 +1254,7 @@
 					chips: this.leek.chips.map(c => c.template)
 				})
 				LeekWars.post('test-leek/update', {id: newLeek.id, data: JSON.stringify(newLeek)})
+				.then(_ => this.$router.push('/editor'))
 				.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
