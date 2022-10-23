@@ -95,7 +95,10 @@
 						<div v-for="leek of leeks" :key="leek.id" :class="{selected: leek === currentLeek}" class="item leek" @click="selectLeek(leek)">
 							{{ leek.name }}
 							<span v-if="leek.bot" class="bot">bot</span>
-							<div v-else class="delete" @click.stop="deleteTestLeek(leek)"></div>
+							<span v-else>
+								<div class="duplicate" @click.stop="duplicateTestLeek(leek)">✚</div>
+								<div class="delete" @click.stop="deleteTestLeek(leek)"></div>
+							</span>
 						</div>
 					</div>
 					<div v-ripple class="item add" @click="newLeekDialog = true">✚ {{ $t('main.add') }}</div>
@@ -993,6 +996,17 @@
 			this.saveLeek()
 		}
 
+		duplicateTestLeek(leek: Leek) {
+			LeekWars.post('test-leek/new', {name: leek.name}).then(data => {
+				const newLeek = new Leek(JSON.parse(JSON.stringify(leek)))
+				newLeek.id = data.id
+				this.leeks.push(newLeek as any)
+				this.currentLeek = newLeek as any
+				this.saveLeek()
+			})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
+		}
+
 		deleteTestLeek(leek: Leek) {
 			LeekWars.delete('test-leek/delete', {id: leek.id})
 			this.leeks.splice(this.leeks.findIndex(l => l.id === leek.id), 1)
@@ -1245,6 +1259,18 @@
 	}
 	.lateral-column .add {
 		background: #444;
+	}
+	.lateral-column .item .duplicate {
+		position: absolute;
+		right: 25px;
+		top: 7px;
+		width: 15px;
+		height: 15px;
+		background-size: cover;
+		opacity: 0.6;
+	}
+	.lateral-column .item .duplicate:hover {
+		opacity: 1.0;
 	}
 	.lateral-column .item .delete {
 		position: absolute;
