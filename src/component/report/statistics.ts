@@ -900,4 +900,4 @@ class FightStatistics {
 	}
 }
 
-export { FightStatistics }
+export { FightStatistics, StatisticsEntity }

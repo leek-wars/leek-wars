@@ -91,7 +91,7 @@
 			})
 		}
 
-		mousewheel(event: MouseWheelEvent) {
+		mousewheel(event: WheelEvent) {
 			const target = this.$refs.list as HTMLElement
 			const delta = event.deltaY || event.deltaX
 			const toLeft  = delta < 0 && target.scrollLeft > 0

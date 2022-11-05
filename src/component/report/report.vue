@@ -262,7 +262,7 @@
 	import ReportBlock from './report-block.vue'
 	import ReportLeekRow from './report-leek-row.vue'
 	const ReportStatistics = () => import(/* webpackChunkName: "[request]" */ `@/component/report/report-statistics.${locale}.i18n`)
-	import { FightStatistics } from './statistics'
+	import { FightStatistics, StatisticsEntity } from './statistics'
 	import(/* webpackChunkName: "chartist" */ /* webpackMode: "eager" */ "@/chartist-wrapper")
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
 	import Comments from '@/component/comment/comments.vue'
@@ -332,7 +332,7 @@ import { CHIPS } from '@/model/chips'
 		map_obstacles: any
 		map_teams: any = null
 		legends: any
-		filtered_entities: any
+		filtered_entities!: StatisticsEntity[]
 
 		get id() {
 			return this.$route.params.id

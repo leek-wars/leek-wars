@@ -495,7 +495,7 @@
 				this.request.then((fight: any) => {
 					this.request = null
 					fightLoaded(fight)
-				}).error(error => this.error = error)
+				}).error((error: any) => this.error = error)
 			}
 		}
 		getLogs() {

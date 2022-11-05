@@ -1195,15 +1195,19 @@
 		}
 
 		changeMetal() {
-			this.leek.metal = !this.leek.metal
-			store.commit('toggle-metal', this.leek.id)
-			LeekWars.put('leek/set-metal', {leek_id: this.leek.id, metal: this.leek.metal})
+			if (this.leek) {
+				this.leek.metal = !this.leek.metal
+				store.commit('toggle-metal', this.leek.id)
+				LeekWars.put('leek/set-metal', {leek_id: this.leek.id, metal: this.leek.metal})
+			}
 		}
 
 		changeFace(face) {
-			this.leek.face = face
-			store.commit('set-face', {leek: this.leek.id, face})
-			LeekWars.put('leek/set-face', {leek_id: this.leek.id, face})
+			if (this.leek) {
+				this.leek.face = face
+				store.commit('set-face', {leek: this.leek.id, face})
+				LeekWars.put('leek/set-face', {leek_id: this.leek.id, face})
+			}
 		}
 
 		loadTournamentRange() {

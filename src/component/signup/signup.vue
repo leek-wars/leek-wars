@@ -292,7 +292,6 @@
 		leekHat: number = 0
 		fastRegister: boolean = true
 
-		bigImage: string = ''
 		features = [
 			{
 				icon: 'mdi-code-braces',

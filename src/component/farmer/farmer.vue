@@ -731,7 +731,7 @@
 
 			const formdata = new FormData()
 			formdata.append('avatar', file)
-			input.value = null
+			input.value = ''
 
 			LeekWars.toast(this.$t('uploading_avatar') as string)
 
@@ -742,7 +742,9 @@
 				}
 			}).error(error => {
 				LeekWars.toast(this.$t('upload_failed', [error.error]) as string)
-				this.farmer.avatar_changed = LeekWars.time
+				if (this.farmer) {
+					this.farmer.avatar_changed = LeekWars.time
+				}
 			})
 		}
 
