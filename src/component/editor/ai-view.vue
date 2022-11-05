@@ -1499,18 +1499,14 @@ import { Keyword } from '@/model/keyword'
 
 		public search() {
 			const selection = this.document.getSelection()
-			if (!this.searchEnabled || selection) {
-				this.searchEnabled = true
-				this.searchQuery = selection
-				this.searchUpdate()
-				Vue.nextTick(() => {
-					if (this.$refs.searchInput) {
-						(this.$refs.searchInput as HTMLElement).focus()
-					}
-				})
-			} else {
-				this.closeSearch()
-			}
+			this.searchEnabled = true
+			this.searchQuery = selection
+			this.searchUpdate()
+			Vue.nextTick(() => {
+				if (this.$refs.searchInput) {
+					(this.$refs.searchInput as HTMLElement).focus()
+				}
+			})
 		}
 
 		public closeSearch() {
