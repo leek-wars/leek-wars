@@ -572,7 +572,7 @@ const LeekWars = {
 		return null
 	},
 	logColor: (log: any[]) => {
-		return log[1] === 1 && log.length > 3 ? LeekWars.colorToHex(log[3]) : ''
+		return log[1] === 1 && log.length > 3 && log[3] ? LeekWars.colorToHex(log[3]) : ''
 	},
 	logText: (log: any[]) => {
 		if (log[1] === 5) { return "pause()" }

@@ -16,8 +16,6 @@
 	import { CHIPS } from '@/model/chips'
 	import { EffectType } from '@/model/effect'
 	import { Report } from '@/model/fight'
-	import { i18n } from '@/model/i18n'
-	import { LeekWars } from '@/model/leekwars'
 	import { TEAM_COLORS } from '@/model/team'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import ActionEndFight from '../action/action-end-fight.vue'
