@@ -221,6 +221,7 @@ import { Keyword } from '@/model/keyword'
 		private ctrl: boolean = false
 		private CodeMirrorLines!: HTMLElement
 		private jumpToLine: number | null = null
+		private jumping: boolean = false
 
 		created() {
 			this.id = this.ai.id
@@ -401,11 +402,14 @@ import { Keyword } from '@/model/keyword'
 					this.editor.refresh()
 					this.loaded = true
 					this.loading = false
-					setTimeout(() => {
-						this.editor.refresh()
-						const scrollPosition = parseInt(localStorage.getItem('editor/scroll/' + this.ai.id) || '0')
-						this.editor.scrollTo(0, scrollPosition)
-					})
+					if (!this.jumping) {
+						setTimeout(() => {
+							this.editor.refresh()
+							const scrollPosition = parseInt(localStorage.getItem('editor/scroll/' + this.ai.id) || '0')
+							// console.log("[ai-view] Jump to", scrollPosition)
+							this.editor.scrollTo(0, scrollPosition)
+						})
+					}
 
 					this.lines = this.editor.getDoc().lineCount()
 					this.characters = this.editor.getDoc().getValue().length
@@ -1487,6 +1491,7 @@ import { Keyword } from '@/model/keyword'
 
 		public scrollToLine(line: number) {
 			// console.log("scrollToLine", line, this.document, this.editor)
+			this.jumping = true
 			if (this.document) {
 				this.document.setCursor({line, ch: 0})
 				const height = this.editor.getScrollInfo().clientHeight
