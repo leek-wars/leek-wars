@@ -241,6 +241,8 @@ const vueMain = new Vue({
 
 	errorCaptured(err, vm, info) {
 
+		if (LeekWars.DEV) return
+
 		if (Date.now() - lastErrorSent < 1000) return
 		lastErrorSent = Date.now()
 
