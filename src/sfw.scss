@@ -1,7 +1,7 @@
 #app.sfw {
 	background: white;
 
-	.page-wrapper, .social-panel .content {
+	.page-wrapper, .blabla-panel .content {
 		background: rgba(255,255,255, 0.4);
 	}
 	h1 {
@@ -35,6 +35,12 @@
 	}
 	.panel .header .right .button:hover {
 		color: black;
+	}
+	.panel .actions .button i {
+		color: #777;
+	}
+	.page-bar {
+		background: none;
 	}
 	img, svg {
 		opacity: 0.08;
@@ -120,11 +126,11 @@
 			display: none;
 		}
 	}
-	.menu-button {
+	.menu-button, .blabla-button {
 		background: none;
-	}
-	.social-button {
-		background: none;
+		i {
+			color: #555;
+		}
 	}
 	.menu-center a i {
 		opacity: 0;
