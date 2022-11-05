@@ -207,7 +207,7 @@
 					this.items.push(item)
 					item.lower_name = item.name.toLowerCase()
 					item.id = id++
-					item.data = (this.$t('doc.const_' + item.name) as string).toLowerCase()
+					item.data = (this.$t('doc.const_' + item.name) as string).toLowerCase() + item.value
 					if (item.replacer) {
 						item.data += item.replacer.lower_name!
 					}
