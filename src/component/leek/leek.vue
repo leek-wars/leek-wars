@@ -1202,7 +1202,7 @@
 			}
 		}
 
-		changeFace(face) {
+		changeFace(face: number) {
 			if (this.leek) {
 				this.leek.face = face
 				store.commit('set-face', {leek: this.leek.id, face})
