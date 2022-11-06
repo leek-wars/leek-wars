@@ -392,7 +392,7 @@
 
 			const regex = /include\s*\(\s*["'](.*?)["']\s*\)\s*;?/gm
 			const included_ais = new Set<AI>()
-			const fun = (ai: AI): string => "/** " + ai.path + " **/\n\n" + ai.code.replace(regex, (a, path) => {
+			const fun = (ai: AI): string => "/** " + ai.path + " **/\n\n" + (ai.code ? ai.code.replace(regex, (a, path) => {
 				const included = fileSystem.find(path, ai.folder)
 				if (included && !included_ais.has(included)) {
 					included_ais.add(included)
@@ -400,7 +400,7 @@
 				} else {
 					return ""
 				}
-			})
+			}) : '')
 			const code = fun(this.ai!)
 
 			this.download(this.ai!.name, code)
