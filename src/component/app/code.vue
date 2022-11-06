@@ -44,6 +44,10 @@
 
 
 <style lang="scss" scoped>
+	div {
+		display: inline-block;
+		max-width: 100%;
+	}
 	.button {
 		display: inline-flex;
 		gap: 6px;
