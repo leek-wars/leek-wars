@@ -146,7 +146,7 @@
 				</template>
 				<div slot="content" ref="inventory" class="inventory-content">
 					<div class="inventory">
-						<div v-for="item in sorted_inventory" :key="item.template" class="cell active" :class="'rarity-border-' + LeekWars.items[item.template].rarity">
+						<div v-for="item in sorted_inventory" :key="item.id" class="cell active" :class="'rarity-border-' + LeekWars.items[item.template].rarity">
 							<rich-tooltip-item v-slot="{ on }" :bottom="true" :item="LeekWars.items[item.template]" :quantity="item.quantity" :inventory="true" @retrieve="retrieve">
 								<div v-on="on" class="item"  :quantity="item.quantity | number" :type="LeekWars.items[item.template].type">
 									<img v-if="item.type === ItemType.RESOURCE" class="image" :src="'/image/resource/' + LeekWars.items[item.template].name + '.png'">
