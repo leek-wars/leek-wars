@@ -84,7 +84,7 @@
 							<span class="title"><v-icon>mdi-seed</v-icon> {{ $t('main.seed') }}</span>
 							<span class="desc">{{ $t('main.seed_desc') }}</span>
 						</div>
-						<input v-model="currentScenario.seed" type="number" class="seed" min="1" max="2147483647" :placeholder="$t('main.seed_placeholder')" @keyup.stop @input="updateSeed">
+						<input v-model="currentScenario.seed" type="text" class="seed" min="1" max="2147483647" :placeholder="$t('main.seed_placeholder')" @keyup.stop @input="updateSeed">
 					</div>
 				</div>
 			</v-tab-item>
@@ -1176,6 +1176,8 @@
 						this.currentScenario.seed = 2147483647
 					} else if (this.currentScenario.seed < 1) {
 						this.currentScenario.seed = 1
+					} else if (isNaN(this.currentScenario.seed)) {
+						this.currentScenario.seed = null
 					}
 				}
 				this.updateScenario(this.currentScenario, { seed: this.currentScenario.seed || 0 })
