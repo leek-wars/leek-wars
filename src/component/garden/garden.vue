@@ -121,7 +121,7 @@
 								<span class="title"><v-icon>mdi-seed</v-icon> {{ $t('main.seed') }}</span>
 								<span class="desc">{{ $t('main.seed_desc') }}</span>
 							</div>
-							<input v-model="seed" type="number" class="seed" min="1" max="2147483647" :placeholder="$t('main.seed_placeholder')" @input="updateSeed">
+							<input v-model="seed" type="text" class="seed" min="1" max="2147483647" :placeholder="$t('main.seed_placeholder')" @input="updateSeed">
 						</div>
 					</div>
 					<div v-else>
@@ -272,7 +272,7 @@
 		challengeFarmerTarget: Farmer | null = null
 		queue: number = 0
 		advanced: boolean = false
-		seed: number | null = null
+		seed: any | null = null
 		request: any = null
 
 		get farmerEnabled() { return this.garden && this.garden.farmer_enabled }
@@ -502,10 +502,13 @@
 			if (event.data === '') {
 				this.seed = null
 			} else if (this.seed) {
+				this.seed = parseInt(this.seed)
 				if (this.seed > 2147483647) {
 					this.seed = 2147483647
 				} else if (this.seed < 1) {
 					this.seed = 1
+				} else if (isNaN(this.seed)) {
+					this.seed = null
 				}
 			}
 		}
