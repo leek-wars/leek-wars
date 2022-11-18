@@ -72,5 +72,14 @@
 	"title": "Editor",
 	"v2_beta_message": "[beta] LeekScript V2 is only available for test fights, not 'ranked' fights yet.",
 	"valid_ai": "<b>{0}</b> is valid.",
-	"file": "File"
+	"file": "File",
+	"intial_version": "Initial version",
+	"no_problem": "No problem",
+	"ready": "Ready",
+	"analyzing": "Analyzing",
+	"theme": "Theme",
+	"error": "Error | Errors",
+	"warning": "Warning | Warnings",
+	"todo": "Todo | Todos",
+	"editor_already_opened": "The editor is already opened in another tab!"
 }

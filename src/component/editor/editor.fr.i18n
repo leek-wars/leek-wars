@@ -72,5 +72,14 @@
 	"title": "Éditeur",
 	"v2_beta_message": "[bêta] Le LeekScript V2 est uniquement disponible pour les combats de test, pas encore pour les combats 'classés'.",
 	"valid_ai": "<b>{0}</b> valide",
-	"file": "Fichier"
+	"file": "Fichier",
+	"intial_version": "Version initiale",
+	"no_problem": "Aucun problème",
+	"ready": "Prêt",
+	"analyzing": "En cours d'analyse",
+	"theme": "Thème",
+	"error": "Erreur | Erreurs",
+	"warning": "Avertissement | Avertissements",
+	"todo": "Todo | Todos",
+	"editor_already_opened": "L'éditeur est déjà ouvert dans un autre onglet !"
 }

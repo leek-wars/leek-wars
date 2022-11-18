@@ -166,7 +166,7 @@
 											<v-list-item-title>LeekScript 1</v-list-item-title>
 											<v-list-item-subtitle>
 												<ul>
-													<li>Version initiale</li>
+													<li>{{ $t('intial_version') }}</li>
 												</ul>
 											</v-list-item-subtitle>
 										</v-list-item-content>
@@ -175,17 +175,17 @@
 							</v-menu>
 							<div v-ripple class="problems" @click="toggleProblems">
 								<span v-if="analyzer.error_count + analyzer.warning_count + analyzer.todo_count === 0" class="no-error">
-									<v-icon>mdi-check-circle</v-icon> Aucun problème
+									<v-icon>mdi-check-circle</v-icon> {{ $t('no_problem') }}
 								</span>
 								<span v-else>
 									<span v-if="analyzer.error_count" class="errors">
-										<v-icon>mdi-close-circle</v-icon> {{ analyzer.error_count }} erreurs
+										<v-icon>mdi-close-circle</v-icon> {{ analyzer.error_count }} {{ $tc('error', analyzer.error_count).toLowerCase() }}
 									</span>
 									<span v-if="analyzer.warning_count" class="warnings">
-										<v-icon>mdi-alert-circle</v-icon> {{ analyzer.warning_count }} warnings
+										<v-icon>mdi-alert-circle</v-icon> {{ analyzer.warning_count }} {{ $tc('warning', analyzer.warning_count).toLowerCase() }}
 									</span>
 									<span v-if="analyzer.todo_count" class="todos">
-										<v-icon>mdi-format-list-checks</v-icon> {{ analyzer.todo_count }} todos
+										<v-icon>mdi-format-list-checks</v-icon> {{ analyzer.todo_count }} {{ $tc('todo', analyzer.todo_count).toLowerCase() }}
 									</span>
 								</span>
 							</div>
@@ -193,11 +193,11 @@
 							<div v-if="currentEditor && currentEditor.editor" class="version">L {{ currentEditor.editor.getCursor().line + 1 }}, C {{ currentEditor.editor.getCursor().ch }} <span v-if="currentEditor.editor.getSelection()">({{ currentEditor.editor.getSelection().length }} Select.)</span></div>
 							<div v-if="enableAnalyzer" class="state">
 								<div v-if="analyzer.running == 0" class="ready">
-									Prêt
+									{{ $t('ready') }}
 									<v-icon>mdi-check</v-icon>
 								</div>
 								<div v-else class="running">
-									En cours d'analyse
+									{{ $t('analyzing') }}
 									<v-icon>mdi-sync</v-icon>
 								</div>
 							</div>
@@ -223,7 +223,7 @@
 				<br>
 				{{ $t('line_height') }} : <input v-model="lineHeight" type="number" min="10" max="50" @keyup.stop>
 
-				<div class="title">Thème</div>
+				<div class="title">{{ $t('theme') }}</div>
 
 				<v-radio-group v-model="theme" hide-details>
 					<v-radio label="Leek Wars" value="leek-wars" />
@@ -261,9 +261,9 @@
 
 		<popup v-model="alreadyOpenedDialog" :width="500">
 			<v-icon slot="icon">mdi-alert-outline</v-icon>
-			<span slot="title">Avertissement</span>
+			<span slot="title">{{ $tc('warning') }}</span>
 
-			L'éditeur est déjà ouvert dans un autre onglet !
+			{{ $t('editor_already_opened') }}
 		</popup>
 
 		<editor-test ref="editorTest" v-model="testDialog" :ais="fileSystem.ais" :leek-ais="fileSystem.leekAIs" :currentAI="currentAI" />
