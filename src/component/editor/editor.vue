@@ -358,6 +358,7 @@
 		fileMenu: boolean = false
 		history: AI[] = []
 		alreadyOpenedDialog: boolean = false
+		broadcast: BroadcastChannel = new BroadcastChannel('channel')
 		actions_list = [
 			{icon: 'mdi-plus', click: (e: any) => this.add(e)},
 			{icon: 'mdi-cogs', click: () => this.settings() }
@@ -482,14 +483,15 @@
 				this.connected()
 			}
 
-			const broadcast = new BroadcastChannel('channel')
-			broadcast.onmessage = (event) => {
-				if (event.data.opened) {
+			this.broadcast.onmessage = (event) => {
+				if (event.data.type == 'editor-opened-ping') {
+					this.broadcast.postMessage({ type: 'editor-opened-pong' })
+				}
+				if (event.data.type == 'editor-opened-pong') {
 					this.alreadyOpenedDialog = true
 				}
-				broadcast.close()
 			}
-			broadcast.postMessage({ type: 'editor-opened' })
+			this.broadcast.postMessage({ type: 'editor-opened-ping' })
 		}
 
 		wsmessage(message: {type: number, data: any}) {
@@ -598,6 +600,7 @@
 			LeekWars.header = true
 			LeekWars.footer = true
 			LeekWars.box = false
+			this.broadcast.close()
 		}
 
 		beforeRouteLeave(to: Route, from: Route, next: Function) {
