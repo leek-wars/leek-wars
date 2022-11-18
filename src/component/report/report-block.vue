@@ -16,7 +16,7 @@
 			<tr>
 				<th>{{ $t('main.farmer') }}</th>
 				<th></th>
-				<th v-if="fight.context !== FightContext.CHALLENGE" class="gain">{{ $t('main.talent') }}</th>
+				<th v-if="fight.context !== FightContext.TEST && fight.context !== FightContext.CHALLENGE" class="gain">{{ $t('main.talent') }}</th>
 			</tr>
 			<tr v-if="farmer">
 				<td class="name">
@@ -29,7 +29,7 @@
 					</span>
 				</td>
 				<td></td>
-				<td v-if="fight.context !== FightContext.CHALLENGE" class="talent">
+				<td v-if="fight.context !== FightContext.TEST && fight.context !== FightContext.CHALLENGE" class="talent">
 					<img src="/image/talent.png">
 					{{ farmer.talent }}
 					<span v-if="farmer.talent_gain >= 0">+ {{ farmer.talent_gain }}</span>
