@@ -1,7 +1,7 @@
 <template lang="html">
 	<span class="title">
 		<span class="quote">«</span>
-		<img v-if="icon" :src="'/image/trophy/' + TROPHIES[icon - 1].code + '.svg'" :class="{notext: !noun}">
+		<img v-if="icon" :src="'/image/trophy/' + TROPHIES[icon - 1].code + '.svg'" :class="{notext: !noun && !adjective}">
 		<span v-if="$i18n.locale === 'fr'">{{ word1 }} {{ word2 }}</span>
 		<span v-else>{{ word2 }} {{ word1 }}</span>
 		<span class="quote">»</span>
@@ -48,7 +48,7 @@
 			const trophy = TROPHIES[this.adjective - 1]
 			const gender_code = i18n.locale === 'en' || this.gender === 1 || ((trophy.adj_gender & 2) !== 0) ? '' : '_f'
 			let word = this.$t('trophy.' + trophy.code + gender_code) as string
-			if (i18n.locale === 'fr') {
+			if (i18n.locale === 'fr' && this.noun) {
 				word = word.toLowerCase()
 			}
 			return word
