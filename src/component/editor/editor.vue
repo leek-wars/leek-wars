@@ -122,7 +122,7 @@
 										<v-icon v-if="currentAI.version === 4" class="list-icon">mdi-star</v-icon>
 										<v-icon v-else class="list-icon">mdi-star-outline</v-icon>
 										<v-list-item-content>
-											<v-list-item-title>LeekScript 4 <span class="green">{{ $t('recommanded') }}</span></v-list-item-title>
+											<v-list-item-title>LeekScript 4 <span class="green">{{ $t('recommended') }}</span></v-list-item-title>
 											<v-list-item-subtitle>
 												<router-link class="link" to="/encyclopedia/LeekScript_4"><v-icon>mdi-book-open-page-variant</v-icon> {{ $t('all_info_ls', ['LeekScript 4']) }}</router-link>
 											</v-list-item-subtitle>
