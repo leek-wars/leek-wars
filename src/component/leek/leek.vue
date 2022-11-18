@@ -419,7 +419,7 @@
 						</template>
 						<b>{{ $t('no_weapon') }}</b>
 					</tooltip>
-					<rich-tooltip-item v-for="(weapon, i) in orderedWeapons" :key="i" v-slot="{ on }" :instant="true" :item="LeekWars.items[weapon.template]" :bottom="true">
+					<rich-tooltip-item v-for="(weapon, i) in orderedWeapons" :key="i" v-slot="{ on }" :instant="true" :item="LeekWars.items[weapon.template]" :bottom="true" :nodge="true">
 						<div class="weapon" v-on="on" @click="setWeapon(weapon.template)">
 							<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'">
 						</div>
