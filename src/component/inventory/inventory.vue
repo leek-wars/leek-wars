@@ -297,7 +297,7 @@
 				{image: 'icon/market.png', click: () => this.$router.push('/market')},
 			]
 			LeekWars.setActions(this.actions)
-			LeekWars.setTitle(this.$i18n.t('main.inventory'))
+			LeekWars.setTitle(this.$i18n.$t('main.inventory'))
 			this.updateSubtitle()
 		}
 		updateSubtitle() {
