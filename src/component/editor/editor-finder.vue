@@ -113,10 +113,12 @@
 			Vue.nextTick(() => {
 				const height = 30
 				const list = this.$refs.list as HTMLElement
-				if (list.scrollTop < (this.selected - 8) * height) {
-					list.scrollTop = (this.selected - 8) * height
-				} else if (list.scrollTop > (this.selected - 2) * height) {
-					list.scrollTop = (this.selected - 2) * height
+				if (list) {
+					if (list.scrollTop < (this.selected - 8) * height) {
+						list.scrollTop = (this.selected - 8) * height
+					} else if (list.scrollTop > (this.selected - 2) * height) {
+						list.scrollTop = (this.selected - 2) * height
+					}
 				}
 			})
 		}

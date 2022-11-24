@@ -816,7 +816,7 @@
 		}
 
 		clickLeekAI(leek: any) {
-			if (this.allLeeks[leek.id].ally) { return }
+			if (this.allLeeks[leek.id] && this.allLeeks[leek.id].ally) { return }
 			this.aiDialog = true
 			this.aiDialogBot = leek.id < 0
 			this.aiLeek = leek
