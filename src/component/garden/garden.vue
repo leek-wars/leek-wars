@@ -68,7 +68,7 @@
 							</tooltip>
 
 							<div v-if="queue > 0" class="queue">
-								<div class="title">File d'attente</div>
+								<div class="title">{{ $t('queue') }}</div>
 								<div class="count">{{ $tc('n_fights', queue) }}</div>
 							</div>
 						</div>
