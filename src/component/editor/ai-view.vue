@@ -402,15 +402,14 @@ import { Keyword } from '@/model/keyword'
 					this.editor.refresh()
 					this.loaded = true
 					this.loading = false
+					this.editor.refresh()
 					if (!this.jumping) {
 						setTimeout(() => {
-							this.editor.refresh()
 							const scrollPosition = parseInt(localStorage.getItem('editor/scroll/' + this.ai.id) || '0')
 							// console.log("[ai-view] Jump to", scrollPosition)
 							this.editor.scrollTo(0, scrollPosition)
 						})
 					}
-
 					this.lines = this.editor.getDoc().lineCount()
 					this.characters = this.editor.getDoc().getValue().length
 					Vue.set(this.ai, 'included_lines', this.ai.total_lines - this.lines)
