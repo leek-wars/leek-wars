@@ -1,3 +1,51 @@
+233:
+  title: Sword, Prism, Help on errors, links to action and many improvements.
+  added:
+    - "Added new weapon: Sword."
+    - "Added new bullet: Prism."
+    - "Combat report: added a button next to each action to see it in combat."
+    - Displayed poisons received in combat report actions.
+    - Added links to the encyclopedia on the most common mistakes in combat.
+  improved:
+    - "Farmer matchmaking: farmers already attacked during the day are prioritized less."
+    - Enter key to launch a test in the editor.
+    - "Mobile: the home page arrives on the General chat if the option is activated."
+    - The chat link on the forum page arrives on the correct chat instead of the first one in the list.
+    - Accelerated AI analysis on server restart + triggered on mouseover.
+    - "LeekScript: more explicit error when sorting inconsistently."
+    - "Encyclopedia: blue links are loaded from the first potager."
+    - "Encyclopedia: blue links are case insensitive and underscore insensitive."
+    - "Encyclopedia: added an alias system for links (for plural for example)."
+    - The assocSort and getDistance functions are marked as deprecated in the documentation.
+    - "Editor: Ctrl+F no longer closes if already open, but resets the search."
+    - "Documentation: search for a constant by its value."
+    - Small style improvements in discrete mode.
+    - "LeekScript: added a warning if a variable (x, this.x, class.x) is assigned to itself."
+    - "LeekScript: added warning if a comparison is always true or false."
+    - "LeekScript: added warning about unknown operators (like string - int)."
+    - "Double gun: increased poison damage: 7 to 10 -> 9 to 12."
+    - "Katana: PT hindrance only + 0.05 increase."
+  fixed:
+    - Fixed a weapon drag & drop bug on the leek page.
+    - Fixed a bug on the Rift trophy.
+    - No more notification during a test BR.
+    - A chest is placed in the same place for the same seed.
+    - Two chests can no longer be stacked.
+    - Godfather no longer displayed on a farmer's page if deleted.
+    - "LeekScript: fixed a bug if a bulb function had parameters."
+    - Fixed encyclopedia bug that displayed Encyclopedia in English root.
+    - Fixed encoding of messages in chat moderation popups.
+    - "Editor: clicking on the details of a function does not close the autocomplete window."
+    - Potions obtained in battle arrive correctly in the live inventory.
+    - Fixed a bug when reacting with certain emojis in chat.
+    - "LeekScript: fixed a compile bug if a function was mistyped (with warning)."
+    - "LeekScript: fixed one when a default argument is captured."
+    - Fixed a bug in the tutorial.
+    - "LeekScript: fixed using a static field in the initialization of another."
+    - Fixed mysterious electrifier activating after death (thanks to nytope).
+    - "LeekScript : fixed error on `for (var x in x) {}`."
+    - "LeekScript: fixed location of some errors."
+
 232:
   title: 22 new skins, team rankings, 3 pomps and 4 hats.
   added:
