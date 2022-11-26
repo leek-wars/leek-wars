@@ -94,9 +94,9 @@
 							<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :ais="fileSystem.ais" :editors="$refs.editors" :visible="currentAI === ai" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" @jump="jump" @load="load" />
 						</div>
 						<div v-if="currentEditor" class="compilation">
-							<div v-if="currentEditor.saving" class="compiling">
+							<!-- <div v-if="currentEditor.saving" class="compiling">
 								<loader :size="15" /> {{ $t('saving') }}
-							</div>
+							</div> -->
 							<div class="results">
 								<div v-for="(good, g) in goods" :key="g" class="good" v-html="'✓ ' + (good.ai !== currentAI ? currentAI.name + ' ➞ ' : '') + $t('valid_ai', [good.ai.name])"></div>
 								<div v-if="currentEditor.serverError" class="error" @click="currentEditor.serverError = false">× <i>{{ $t('server_error') }}</i></div>
@@ -190,17 +190,13 @@
 								</span>
 							</div>
 							<div class="filler"></div>
-							<div v-if="currentEditor && currentEditor.editor" class="version">L {{ currentEditor.editor.getCursor().line + 1 }}, C {{ currentEditor.editor.getCursor().ch }} <span v-if="currentEditor.editor.getSelection()">({{ currentEditor.editor.getSelection().length }} Select.)</span></div>
-							<div v-if="enableAnalyzer" class="state">
-								<div v-if="analyzer.running == 0" class="ready">
-									Prêt
-									<v-icon>mdi-check</v-icon>
-								</div>
-								<div v-else class="running">
-									En cours d'analyse
+							<div class="state">
+								<div v-if="currentEditor && (currentEditor.saving || currentEditor.hovering)" class="running">
+									{{ $t('analyzing') }}
 									<v-icon>mdi-sync</v-icon>
 								</div>
 							</div>
+							<div v-if="currentEditor && currentEditor.editor" class="version">L {{ currentEditor.editor.getCursor().line + 1 }}, C {{ currentEditor.editor.getCursor().ch }} <span v-if="currentEditor.editor.getSelection()">({{ currentEditor.editor.getSelection().length }} Select.)</span></div>
 						</div>
 					</div>
 				</panel>
@@ -367,6 +363,7 @@
 			{icon: 'mdi-delete', click: () => this.startDelete()},
 			{icon: 'mdi-play', click: () => this.startTest()},
 		]
+
 		get currentID() {
 			if (this.currentType === 'ai' && this.currentAI) { return this.currentAI.id }
 			if (this.currentFolder) { return this.currentFolder.id }
@@ -1153,7 +1150,6 @@
 		}
 		.state {
 			height: 100%;
-			padding: 0 6px;
 			& > * {
 				height: 100%;
 				display: flex;
@@ -1169,7 +1165,7 @@
 				color: #0084a8;
 			}
 			.running i {
-				animation: rotate 0.8s linear infinite;
+				animation: rotate 0.7s linear infinite;
 			}
 			@keyframes rotate {
 				0% {

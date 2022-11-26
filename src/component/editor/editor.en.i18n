@@ -72,5 +72,6 @@
 	"title": "Editor",
 	"v2_beta_message": "[beta] LeekScript V2 is only available for test fights, not 'ranked' fights yet.",
 	"valid_ai": "<b>{0}</b> is valid.",
-	"file": "File"
+	"file": "File",
+	"analyzing": "Analyzing"
 }
