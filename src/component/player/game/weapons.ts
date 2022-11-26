@@ -669,7 +669,7 @@ class JLaser extends LaserWeapon {
 	static textures = [T.j_laser, T.j_laser_bullet, T.cart_j_laser]
 	static sounds = [S.laser]
 	constructor(game: Game) {
-		super(game, T.j_laser, T.j_laser_bullet, T.cart_j_laser, S.laser, 17, 11, 5, "#f7c604")
+		super(game, T.j_laser, T.j_laser_bullet, T.cart_j_laser, S.laser, 17, 6, 5, "#f7c604")
 	}
 }
 class MachineGun extends Firegun {
