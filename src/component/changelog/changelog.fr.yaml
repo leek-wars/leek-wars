@@ -1,3 +1,51 @@
+233:
+  title: Épée, Prisme, Aide sur les erreurs, liens vers action et beaucoup d'améliorations.
+  added:
+    - "Ajout d'une nouvelle arme : l'Épée. #img_233_sword"
+    - "Ajout d'une nouvelle puce : Prisme. #img_233_prism"
+    - "Rapport de combat : ajout d'un bouton à côté de chaque action pour la voir en combat. #img_233_action"
+    - "Affichage des poisons reçus dans les actions du rapport de combat. #img_233_poison"
+    - "Ajout de liens vers l'encyclopédie sur les erreurs les plus fréquentes en combat. #img_233_errors"
+  improved:
+    - "Matchmaking éleveur : les éleveurs déjà attaqués dans la journée sont moins priorisés."
+    - Touche Entrer pour lancer un test dans l'éditeur.
+    - "Mobile : la page d'accueil arrive sur le chat Général si l'option est activée."
+    - Le lien chat de la page forum arrive sur le bon chat au lieu du premier de la liste.
+    - Accélération de l'analyse de l'IA au redémarrage du serveur + déclenché au survol de la souris.
+    - "LeekScript : erreur plus explicite lors d'un tri incohérent."
+    - "Encyclopédie : les liens bleus sont chargés dès la première potager."
+    - "Encyclopédie : les liens bleus sont insensibles à la casse et aux soulignés."
+    - "Encyclopédie : ajout d'un système d'alias pour les liens (pour le pluriel par exemple)."
+    - Les fonction assocSort et getDistance sont marquées comme dépréciées dans la documentation.
+    - "Éditeur : Ctrl+F ne ferme plus si déjà ouvert, mais réinitialise la recherche."
+    - "Documentation : recherche d'une constante par sa valeur."
+    - Petites améliorations de style en mode discret.
+    - "LeekScript : ajout d'un avertissement si une variable (x, this.x, class.x) est assignée à elle-même. #img_233_assign"
+    - "LeekScript : ajout d'un avertissement si une comparaison est toujours vraie ou fausse. #img_233_comparison"
+    - "LeekScript : ajout d'un avertissement sur les opérateurs inconnus (comme string - int). #img_233_operator"
+    - "Double gun : augmentation des dégâts de poison : 7 à 10 -> 9 à 12."
+    - "Katana : entrave PT uniquement + 0.05 d'augmentation."
+  fixed:
+    - Correction d'un bug de drag & drop d'arme sur la page poireau.
+    - Correction d'un bug sur le trophée Faille.
+    - Plus de notification lors d'une BR de test.
+    - Un coffre est placé au même endroit pour une même graine.
+    - Deux coffres ne peuvent plus être superposés.
+    - Parrain plus affiché sur la page d'un éleveur si supprimé.
+    - "LeekScript : correction d'un bug si une fonction de bulbe avait des paramètres."
+    - Correction d'un bug de l'encyclopédie qui affichait Encyclopédie en racine en Anglais.
+    - Correction de l'encodage des messages dans les popups de modération du chat.
+    - "Éditeur : un clic sur les détails d'une fonction ne ferme la fenêtre d'autocomplétion."
+    - Les potions obtenues en combat arrivent correctement dans l'inventaire en direct.
+    - Correction d'un bug lors d'une réaction avec certains emojis dans le chat.
+    - "LeekScript : correction d'un bug de compilation si une fonction était mal typée (avec warning)."
+    - "LeekScript : correction d'un quand un argument par défaut est capturé."
+    - Corrections d'une faute dans le didactitiel.
+    - "LeekScript : correction de l'utilisation d'un champ statique dans l'initialisation d'un autre."
+    - Correction de l'électriseur mystérieux qui s'activait après la mort (merci à nytope).
+    - "LeekScript : correction de l'erreur sur `for (var x in x) {}`."
+    - "LeekScript : correction de la localisation de certaines erreurs."
+
 232:
   title: 22 nouveaux skins, classements d'équipe, 3 apparats et 4 chapeaux.
   added:

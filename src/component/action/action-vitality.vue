@@ -1,6 +1,6 @@
 
 <template functional>
-	<i18n tag="div" path="fight.leek_win_x">
+	<i18n tag="div" path="fight.leek_win_x" :a="props.a">
 		<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
 		<template v-slot:value>
 			<b class="color-life">{{ parent.$t('fight.n_vita', [props.action.params[2]]) }}</b>
@@ -16,5 +16,6 @@
 	@Component({ components: { leek: ActionLeekElement } })
 	export default class ActionVitality extends Vue {
 		@Prop() action!: Action
+		@Prop() a!: number
 	}
 </script>

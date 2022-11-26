@@ -883,6 +883,11 @@ function lucky() {
 	LeekWars.cloverTop = 20 + Math.random() * 200
 	LeekWars.cloverLeft = 20 + Math.random() * (window.innerWidth - 80)
 	setTimeout(() => LeekWars.clover = false, 5000)
+	if (!LeekWars.sfw) {
+		const audio = new Audio('/sound/move.mp3')
+		audio.volume = 0.4
+		audio.play()
+	}
 }
 
 function detectNativeEmojis() {

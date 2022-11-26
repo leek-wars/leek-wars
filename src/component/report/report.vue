@@ -241,7 +241,7 @@
 				<v-switch v-model="actionsDisplayAlliesLogs" :label="$t('display_allies_logs')" :hide-details="true" />
 			</div>
 			<loader v-if="!loaded" />
-			<actions v-else :has-err-warn="hasErrWarn" :report="report" :actions="actions" :leeks="leeks" :display-logs="actionsDisplayLogs" :display-allies-logs="actionsDisplayAlliesLogs" class="actions" />
+			<actions v-else :has-err-warn="hasErrWarn" :fight="fight" :report="report" :actions="actions" :leeks="leeks" :display-logs="actionsDisplayLogs" :display-allies-logs="actionsDisplayAlliesLogs" class="actions" />
 		</panel>
 	</div>
 </template>
@@ -266,7 +266,7 @@
 	import(/* webpackChunkName: "chartist" */ /* webpackMode: "eager" */ "@/chartist-wrapper")
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
 	import Comments from '@/component/comment/comments.vue'
-import { CHIPS } from '@/model/chips'
+	import { CHIPS } from '@/model/chips'
 
 	@Component({ name: 'report', i18n: {}, mixins: [...mixins], components: { actions: ActionsElement, ReportLeekRow, ReportBlock, ReportStatistics, 'lw-map': Map, Comments } })
 	export default class ReportPage extends Vue {

@@ -1,6 +1,6 @@
 
 <template functional>
-	<i18n tag="div" path="fight.leek_is_dead" class="kill" :style="{borderColor: props.action.params.length > 2 ? parent.TEAM_COLORS[parent.leeks[props.action.params[2]].team - 1] : ''}">
+	<i18n tag="div" path="fight.leek_is_dead" class="kill" :style="{borderColor: props.action.params.length > 2 ? parent.TEAM_COLORS[parent.leeks[props.action.params[2]].team - 1] : ''}" :a="props.a">
 		<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
 	</i18n>
 </template>
@@ -13,6 +13,7 @@
 	@Component({ components: { leek: ActionLeekElement } })
 	export default class ActionPlayerDead extends Vue {
 		@Prop() action!: Action
+		@Prop() a!: number
 	}
 </script>
 

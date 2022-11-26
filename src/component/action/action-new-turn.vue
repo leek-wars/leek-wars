@@ -1,5 +1,5 @@
 <template functional>
-	<div class="turn">
+	<div class="turn" :a="props.a">
 		<div :id="'turn-' + (props.action.params[1] || 1)" class="black">
 			<span class="label" @click="parent.goToTurn(props.action.params[1] || 1)">{{ parent.$t('fight.turn_n', [props.action.params[1] || 1]) }}</span>
 			<v-icon v-if="parent.report" :class="{disabled: (props.action.params[1] || 1) == 1 && !parent.hasErrWarn}" @click="parent.goToTurn((props.action.params[1] || 1) - 1)">mdi-chevron-left</v-icon>
@@ -15,5 +15,6 @@
 	@Component({})
 	export default class ActionNewTurn extends Vue {
 		@Prop() action!: Action
+		@Prop() a!: number
 	}
 </script>

@@ -29,7 +29,7 @@
 						const in_range = Math.abs(x) + Math.abs(y) <= this.max && Math.abs(x) + Math.abs(y) >= this.min
 						const condition = ((this.type & 1) && (x === 0 || y === 0))
 							|| ((this.type & 2) && Math.abs(x) === Math.abs(y))
-							|| ((this.type & 4) && (Math.abs(x) !== Math.abs(y) && x !== 0 && y !== 0))
+							|| ((this.type & 4) && ((x === 0 && y === 0) || (Math.abs(x) !== Math.abs(y) && x !== 0 && y !== 0)))
 						cells[i][j] = in_range && condition ? "full" : ""
 					}
 				}

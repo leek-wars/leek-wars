@@ -1,6 +1,6 @@
 
 <template functional>
-	<i18n tag="div" path="fight.open_chest">
+	<i18n tag="div" path="fight.open_chest" :a="props.a">
 		<leek slot="entity" :leek="parent.leeks[props.action.params[1]]" />
 		<leek slot="chest" :leek="parent.leeks[props.action.params[2]]" />
 		<template v-slot:resources>
@@ -29,5 +29,6 @@
 	@Component({ components: { leek: ActionLeekElement } })
 	export default class ActionOpenChest extends Vue {
 		@Prop() action!: Action
+		@Prop() a!: number
 	}
 </script>

@@ -37,6 +37,7 @@
 	"n_wisdom": "{0} sagesse",
 	"n_vulnerability": "une vulnérabilité de {0}",
 	"n_power": "{0} puissance",
+	"n_poison": "un poison de {0}",
 	"open_chest": "{entity} ouvre le coffre {chest} et récupère : {resources}",
 	"reduce_effects": "Les effets de {leek} sont réduits de {value}",
 	"remove_poisons": "Les poisons de {leek} sont neutralisés",

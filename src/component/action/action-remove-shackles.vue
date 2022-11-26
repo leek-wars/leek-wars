@@ -1,6 +1,6 @@
 
 <template functional>
-	<i18n tag="div" path="fight.remove_shackles">
+	<i18n tag="div" path="fight.remove_shackles" :a="props.a">
 		<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
 	</i18n>
 </template>
@@ -13,5 +13,6 @@
 	@Component({ components: { leek: ActionLeekElement } })
 	export default class ActionRemoveShackles extends Vue {
 		@Prop() action!: Action
+		@Prop() a!: number
 	}
 </script>

@@ -1,5 +1,5 @@
 <template functional>
-	<div>
+	<div :a="props.a">
 		<i18n path="fight.leek_shoot_cost">
 			<leek slot="leek" :leek="props.action.entity" />
 			<template v-slot:weapon>
@@ -21,5 +21,6 @@
 	@Component({ components: { leek: ActionLeekElement } })
 	export default class ActionUseWeapon extends Vue {
 		@Prop() action!: Action
+		@Prop() a!: number
 	}
 </script>

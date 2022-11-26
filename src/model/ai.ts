@@ -239,7 +239,7 @@ class AI {
 		// console.time('static_fields')
 
 		// Search static fields
-		const field_regex = /^\s*(?:public\s+)?(?:(static)\s+)?(\w+)\s*$/gm
+		const field_regex = /^\s*(?:public\s+)?(?:(static)\s+)?(\w+)\s*/gm
 		while ((match = field_regex.exec(this.code)) != null) {
 
 			const name = match[2]

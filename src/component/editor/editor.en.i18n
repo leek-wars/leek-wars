@@ -81,5 +81,6 @@
 	"error": "Error | Errors",
 	"warning": "Warning | Warnings",
 	"todo": "Todo | Todos",
-	"editor_already_opened": "The editor is already opened in another tab!"
+	"editor_already_opened": "The editor is already opened in another tab!",
+	"analyzing": "Analyzing"
 }

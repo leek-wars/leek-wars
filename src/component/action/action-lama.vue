@@ -1,6 +1,6 @@
 
 <template functional>
-	<i18n tag="div" path="fight.lama">
+	<i18n tag="div" path="fight.lama" :a="props.a">
 		<leek slot="leek" :leek="props.action.entity" />
 		<template v-slot:cost>
 			<b class="color-tp">{{ parent.$t('fight.n_tp', [1]) }}</b>
@@ -16,5 +16,6 @@
 	@Component({ components: { leek: ActionLeekElement } })
 	export default class ActionLama extends Vue {
 		@Prop() action!: Action
+		@Prop() a!: number
 	}
 </script>

@@ -120,7 +120,7 @@
 	import { Problem } from './problem'
 	import Type from '@/component/type.vue'
 	import { analyzer } from './analyzer'
-import { Keyword } from '@/model/keyword'
+	import { Keyword } from '@/model/keyword'
 
 	const AUTO_SHORTCUTS = [
 		["lama", "#LamaSwag", "", "Le pouvoir du lama"],
@@ -155,6 +155,7 @@ import { Keyword } from '@/model/keyword'
 		public totalLines: number = 0
 		public characters: number = 0
 		public saving: boolean = false
+		public hovering: boolean = false
 		public loaded = false
 		public loading: boolean = false
 		public error!: boolean
@@ -402,15 +403,14 @@ import { Keyword } from '@/model/keyword'
 					this.editor.refresh()
 					this.loaded = true
 					this.loading = false
+					this.editor.refresh()
 					if (!this.jumping) {
 						setTimeout(() => {
-							this.editor.refresh()
 							const scrollPosition = parseInt(localStorage.getItem('editor/scroll/' + this.ai.id) || '0')
 							// console.log("[ai-view] Jump to", scrollPosition)
 							this.editor.scrollTo(0, scrollPosition)
 						})
 					}
-
 					this.lines = this.editor.getDoc().lineCount()
 					this.characters = this.editor.getDoc().getValue().length
 					Vue.set(this.ai, 'included_lines', this.ai.total_lines - this.lines)
@@ -930,6 +930,8 @@ import { Keyword } from '@/model/keyword'
 				// console.log("getTokenInformation", token, previousToken)
 				const keyword = this.getTokenInformation(token.string, editorPos2, previousToken)
 
+				this.hovering = true
+
 				// console.log("hover at", editorPos.line + 1, editorPos.ch)
 				analyzer.hover(this.ai, editorPos.line + 1, editorPos.ch).then((raw_data) => {
 
@@ -937,6 +939,7 @@ import { Keyword } from '@/model/keyword'
 					// console.log(raw_data.location[0], raw_data.location[1])
 					// console.log("Hover result", raw_data)
 
+					this.hovering = false
 					this.showHoverDetails(keyword, raw_data)
 					this.showErrorDetails(editorPos)
 				})

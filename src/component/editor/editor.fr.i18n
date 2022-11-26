@@ -81,5 +81,6 @@
 	"error": "Erreur | Erreurs",
 	"warning": "Avertissement | Avertissements",
 	"todo": "Todo | Todos",
-	"editor_already_opened": "L'éditeur est déjà ouvert dans un autre onglet !"
+	"editor_already_opened": "L'éditeur est déjà ouvert dans un autre onglet !",
+	"analyzing": "En cours d'analyse"
 }

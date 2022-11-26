@@ -702,7 +702,9 @@
 
 		openGodfatherDialog() {
 			this.godfatherDialog = true
-			LeekWars.selectText(this.$refs.godfatherLink)
+			setTimeout(() => {
+				LeekWars.selectText(this.$refs.godfatherLink)
+			}, 100)
 		}
 
 		selectCountry(code: string) {

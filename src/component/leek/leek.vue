@@ -277,6 +277,16 @@
 						<b slot="max">{{ brRange.max }}</b>
 					</i18n>
 				</tooltip>
+				<template v-if="leek && $store.state.connected">
+					<tooltip>
+						<template v-slot:activator="{ on }">
+							<div class="tab" @click="copyAsTest()" v-on="on" icon="play_arrow">
+								<v-icon class="list-icon">mdi-content-copy</v-icon><span>{{ $t('test') }}</span>
+							</div>
+						</template>
+						{{ $t('copy_as_test', [leek.name]) }}
+					</tooltip>
+				</template>
 			</div>
 		</div>
 
@@ -419,7 +429,7 @@
 						</template>
 						<b>{{ $t('no_weapon') }}</b>
 					</tooltip>
-					<rich-tooltip-item v-for="(weapon, i) in orderedWeapons" :key="i" v-slot="{ on }" :instant="true" :item="LeekWars.items[weapon.template]" :bottom="true">
+					<rich-tooltip-item v-for="(weapon, i) in orderedWeapons" :key="i" v-slot="{ on }" :instant="true" :item="LeekWars.items[weapon.template]" :bottom="true" :nodge="true">
 						<div class="weapon" v-on="on" @click="setWeapon(weapon.template)">
 							<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'">
 						</div>
@@ -1221,6 +1231,34 @@
 			this.brRangeLoading = true
 			LeekWars.get('tournament/range-br/' + this.leek.level).then(d => this.brRange = d)
 		}
+
+		copyAsTest() {
+			if (!this.leek) { return }
+
+			LeekWars.post('test-leek/new', {name: this.leek.name}).then(data => {
+				const newLeek = new Leek({
+					id: data.id,
+					name: this.leek.name,
+					level: this.leek.level,
+					life: this.leek.life,
+					strength: this.leek.strength,
+					wisdom: this.leek.wisdom,
+					agility: this.leek.agility,
+					resistance: this.leek.resistance,
+					frequency: this.leek.frequency,
+					science: this.leek.science,
+					magic: this.leek.magic,
+					tp: this.leek.tp,
+					mp: this.leek.mp,
+					weapons: this.leek.weapons.map(w => w.template),
+					chips: this.leek.chips.map(c => c.template)
+				})
+				LeekWars.post('test-leek/update', {id: newLeek.id, data: JSON.stringify(newLeek)})
+				.then(_ => this.$router.push('/editor#leek-' + newLeek.id))
+				.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
+			})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
+		}
 	}
 </script>
 
@@ -1555,6 +1593,7 @@
 		flex-direction: column;
 		.weapon img {
 			vertical-align: bottom;
+			max-width: 100%;
 		}
 	}
 	.farmer-weapons .weapon, .farmer-chips .chip, .hat-dialog .hat {

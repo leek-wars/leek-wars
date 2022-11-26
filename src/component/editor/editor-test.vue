@@ -2,7 +2,7 @@
 	<popup :value="value" :width="1060" :full="true" @input="$emit('input', $event)">
 		<v-icon slot="icon">mdi-play</v-icon>
 		<span slot="title">{{ $t('run_test') }}</span>
-		<v-tabs :key="value" class="tabs" grow>
+		<v-tabs :key="value" v-model="currentTab" class="tabs" grow>
 			<v-tabs-slider class="indicator" />
 			<v-tab class="tab">{{ $t('scenarios') }} ({{ LeekWars.objectSize(scenarios) }})</v-tab>
 			<v-tab class="tab">{{ $t('test_leeks') }} ({{ LeekWars.objectSize(leeks) }})</v-tab>
@@ -93,9 +93,10 @@
 					<h4>{{ $t('test_leeks') }}</h4>
 					<div class="items leeks">
 						<div v-for="leek of leeks" :key="leek.id" :class="{selected: leek === currentLeek}" class="item leek" @click="selectLeek(leek)">
-							{{ leek.name }}
+							<div class="name">{{ leek.name }}</div>
 							<span v-if="leek.bot" class="bot">bot</span>
-							<div v-else class="delete" @click.stop="deleteTestLeek(leek)"></div>
+							<v-icon v-if="!leek.bot" class="duplicate" @click.stop="duplicateTestLeek(leek)" :title="$t('duplicate')">mdi-content-copy</v-icon>
+							<v-icon v-if="!leek.bot" class="delete" @click.stop="deleteTestLeek(leek)">mdi-delete-outline</v-icon>
 						</div>
 					</div>
 					<div v-ripple class="item add" @click="newLeekDialog = true">✚ {{ $t('main.add') }}</div>
@@ -388,6 +389,7 @@
 		map_add = false
 		timeout: number | null = null
 		fileSystem = fileSystem
+		currentTab: number = 0
 
 		domingo = {
 			id: -1, name: "Domingo", ai: -1, bot: true, level: 150, skin: 1, hat: null,
@@ -603,11 +605,13 @@
 			}
 		}
 
-		@Watch('value')
+		@Watch('value', {immediate: true})
 		update() {
-			this.load()
-			this.loadCompositions()
-			this.updateAI()
+			if (this.value) {
+				this.load()
+				this.loadCompositions()
+				this.updateAI()
+			}
 		}
 
 		@Watch('currentAI')
@@ -816,7 +820,7 @@
 		}
 
 		clickLeekAI(leek: any) {
-			if (this.allLeeks[leek.id].ally) { return }
+			if (this.allLeeks[leek.id] && this.allLeeks[leek.id].ally) { return }
 			this.aiDialog = true
 			this.aiDialogBot = leek.id < 0
 			this.aiLeek = leek
@@ -991,6 +995,19 @@
 			// target.innerText
 			Vue.set(this.currentLeek, characteristic, value)
 			this.saveLeek()
+		}
+
+		duplicateTestLeek(leek: Leek) {
+			LeekWars.post('test-leek/new', {name: leek.name}).then(data => {
+				const newLeek = new Leek({
+					...JSON.parse(JSON.stringify(leek)),
+					id: data.id
+				})
+				this.leeks.push(newLeek as any)
+				this.currentLeek = newLeek as any
+				this.saveLeek()
+			})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 
 		deleteTestLeek(leek: Leek) {
@@ -1230,9 +1247,9 @@
 	}
 	.items {
 		overflow-y: auto;
+		overflow-x: hidden;
 	}
 	.item {
-		padding: 9px;
 		cursor: pointer;
 		position: relative;
 	}
@@ -1246,18 +1263,24 @@
 	.lateral-column .add {
 		background: #444;
 	}
-	.lateral-column .item .delete {
-		position: absolute;
-		right: 7px;
-		top: 10px;
-		width: 15px;
-		height: 15px;
-		background-image: url("../../../public/image/delete_new.png");
-		background-size: cover;
-		opacity: 0.6;
-	}
-	.lateral-column .item .delete:hover {
-		opacity: 1.0;
+	.lateral-column .item {
+		display: flex;
+		align-items: center;
+		min-width: 0;
+		height: 34px;
+		padding: 0 9px;
+		gap: 9px;
+		.name {
+			flex: 1;
+		}
+		.v-icon {
+			font-size: 20px;
+			opacity: 0.5;
+			color: white;
+			&:hover {
+				opacity: 1;
+			}
+		}
 	}
 	.title {
 		font-size: 16px;
@@ -1418,6 +1441,7 @@
 	.characteristics {
 		margin-right: 130px;
 		margin-left: 15px;
+		min-width: 370px;
 		.characteristic {
 			width: 50%;
 			padding: 5px 20px;
@@ -1435,12 +1459,13 @@
 				font-weight: bold;
 				padding: 2px 4px;
 				border-radius: 4px;
-				min-width: 72px;
+				min-width: 120px;
+				margin-right: 10px;
 				&[contenteditable="true"] {
 					border: 1px solid #ccc;
-				}
 				&:hover {
 					border: 1px solid #777;
+				}
 				}
 			}
 		}

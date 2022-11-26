@@ -12,7 +12,9 @@ class Explorer {
 		// console.log("select ai", ai)
 		if (this.selectedAI) {
 			this.selectedAI.selected = false
-			this.selectedFolder.selected = false
+			if (this.selectedFolder) {
+				this.selectedFolder.selected = false
+			}
 		}
 		this.selectedAI = ai
 		Vue.set(ai, "selected", true)

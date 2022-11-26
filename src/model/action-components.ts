@@ -52,6 +52,7 @@ import EffectShackleAgility from '@/component/effect/effect-shackle-agility.vue'
 import EffectShackleMagic from '@/component/effect/effect-shackle-magic.vue'
 import EffectShackleTP from '@/component/effect/effect-shackle-tp.vue'
 import EffectShackleMP from '@/component/effect/effect-shackle-mp.vue'
+import EffectPoison from '@/component/effect/effect-poison.vue'
 
 const ActionComponents = {
 	[ActionType.START_FIGHT]: ActionNewTurn,
@@ -98,6 +99,7 @@ const EffectComponents = {
 	[EffectType.STEAL_ABSOLUTE_SHIELD]: EffectAbsoluteShield,
 	[EffectType.RAW_ABSOLUTE_SHIELD]: EffectAbsoluteShield,
 	[EffectType.RELATIVE_SHIELD]: EffectRelativeShield,
+	[EffectType.RAW_RELATIVE_SHIELD]: EffectRelativeShield,
 	[EffectType.VULNERABILITY]: EffectVulnerability,
 	[EffectType.ABSOLUTE_VULNERABILITY]: EffectAbsoluteVulnerability,
 	[EffectType.BUFF_AGILITY]: EffectBuffAgility,
@@ -122,6 +124,7 @@ const EffectComponents = {
 	[EffectType.SHACKLE_AGILITY]: EffectShackleAgility,
 	[EffectType.SHACKLE_TP]: EffectShackleTP,
 	[EffectType.SHACKLE_MP]: EffectShackleMP,
+	[EffectType.POISON]: EffectPoison,
 }
 
 export { ActionComponents, EffectComponents }
