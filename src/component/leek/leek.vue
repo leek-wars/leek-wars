@@ -44,16 +44,6 @@
 						</div>
 					</router-link>
 				</template>
-				<template v-if="$store.state.connected">
-					<tooltip>
-						<template v-slot:activator="{ on }">
-							<div class="tab" @click="copyAsTest()" v-on="on" icon="play_arrow">
-								<v-icon class="list-icon">mdi-play</v-icon><span>{{ $t('test') }}</span>
-							</div>
-						</template>
-						{{ $t('copy_as_test', [leek.name]) }}
-					</tooltip>
-				</template>
 			</div>
 		</div>
 
@@ -287,6 +277,16 @@
 						<b slot="max">{{ brRange.max }}</b>
 					</i18n>
 				</tooltip>
+				<template v-if="leek && $store.state.connected">
+					<tooltip>
+						<template v-slot:activator="{ on }">
+							<div class="tab" @click="copyAsTest()" v-on="on" icon="play_arrow">
+								<v-icon class="list-icon">mdi-content-copy</v-icon><span>{{ $t('test') }}</span>
+							</div>
+						</template>
+						{{ $t('copy_as_test', [leek.name]) }}
+					</tooltip>
+				</template>
 			</div>
 		</div>
 
@@ -1254,7 +1254,7 @@
 					chips: this.leek.chips.map(c => c.template)
 				})
 				LeekWars.post('test-leek/update', {id: newLeek.id, data: JSON.stringify(newLeek)})
-				.then(_ => this.$router.push('/editor'))
+				.then(_ => this.$router.push('/editor#leek-' + newLeek.id))
 				.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))

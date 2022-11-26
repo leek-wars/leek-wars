@@ -302,6 +302,7 @@
 	import { analyzer } from './analyzer'
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
 	import AIElement from '@/component/app/ai.vue'
+	import EditorTest from './editor-test.vue'
 
 	const DEFAULT_FONT_SIZE = 16
 	const DEFAULT_LINE_HEIGHT = 24
@@ -522,6 +523,19 @@
 
 		@Watch('$route.params.id')
 		update() {
+			if (this.$route.hash) {
+				if (this.$route.hash.startsWith('#leek-')) {
+					const id = parseInt(this.$route.hash.substring(6))
+					this.testDialog = true
+					setTimeout(() => {
+						const test = this.$refs.editorTest as EditorTest
+						test.currentTab = 1
+						if (test.allLeeks[id]) {
+							test.selectLeek(test.allLeeks[id])
+						}
+					}, 200)
+				}
+			}
 			if (this.$route.params.id) {
 				const id = parseInt(this.$route.params.id, 10)
 				// console.log("fileSystem", Object.values(fileSystem.ais).length)

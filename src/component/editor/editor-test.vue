@@ -2,7 +2,7 @@
 	<popup :value="value" :width="1060" :full="true" @input="$emit('input', $event)">
 		<v-icon slot="icon">mdi-play</v-icon>
 		<span slot="title">{{ $t('run_test') }}</span>
-		<v-tabs :key="value" class="tabs" grow>
+		<v-tabs :key="value" v-model="currentTab" class="tabs" grow>
 			<v-tabs-slider class="indicator" />
 			<v-tab class="tab">{{ $t('scenarios') }} ({{ LeekWars.objectSize(scenarios) }})</v-tab>
 			<v-tab class="tab">{{ $t('test_leeks') }} ({{ LeekWars.objectSize(leeks) }})</v-tab>
@@ -389,6 +389,7 @@
 		map_add = false
 		timeout: number | null = null
 		fileSystem = fileSystem
+		currentTab: number = 0
 
 		domingo = {
 			id: -1, name: "Domingo", ai: -1, bot: true, level: 150, skin: 1, hat: null,
@@ -604,11 +605,13 @@
 			}
 		}
 
-		@Watch('value')
+		@Watch('value', {immediate: true})
 		update() {
-			this.load()
-			this.loadCompositions()
-			this.updateAI()
+			if (this.value) {
+				this.load()
+				this.loadCompositions()
+				this.updateAI()
+			}
 		}
 
 		@Watch('currentAI')
@@ -1244,6 +1247,7 @@
 	}
 	.items {
 		overflow-y: auto;
+		overflow-x: hidden;
 	}
 	.item {
 		cursor: pointer;
