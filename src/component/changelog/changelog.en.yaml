@@ -2,7 +2,7 @@
   title: Sword, Prism, Help on errors, links to action and many improvements.
   added:
     - "Added new weapon: Sword."
-    - "Added new bullet: Prism."
+    - "Added new chip: Prism."
     - "Combat report: added a button next to each action to see it in combat."
     - Displayed poisons received in combat report actions.
     - Added links to the encyclopedia on the most common mistakes in combat.
@@ -475,7 +475,7 @@
 221:
   title: "16 new chips, Push/Pull, Team Tooltips, AI Trashcan, Explorer Rifle"
   added:
-    - "#ai Added 16 new bullets, in many categories."
+    - "#ai Added 16 new chips, in many categories."
     - "#ai Added a push/pull mechanism."
     - "#ai Added NOVA_VITALITY, SLIDE_TO, SHACKLE_AGILITY/WISDOM, REMOVE_SHACKLES effects."
     - "#ai Added SQUARE_1, SQUARE_2 and FIRST_IN_LINE areas."
@@ -526,7 +526,7 @@
     - "Encyclopedia : 'Random page' feature."
     - "Encyclopedia : command to make a link in the chat."
     - "Encyclopedia: automatic table of contents ({{ summary }})."
-    - "Encyclopedia: item cards (weapons, bullets, potions)."
+    - "Encyclopedia: item cards (weapons, chips, potions)."
     - "Combat: added tooltips on effects to display their details."
   improved:
     - Added a day separator in the chat, like before.
@@ -1517,7 +1517,7 @@
 138:
   - Added the B-Laser.
   - Modification of the editor, variables and user functions in autocompletion (including includes).
-  - Changed bullets and weapons ids (they don't overlap anymore).
+  - Changed chips and weapons ids (they don't overlap anymore).
   - Removed the team ia slot.
   - The power operator is now the ** operator.
   - Added binary operators &, |, ^, <<, >> and >>>.
@@ -1535,7 +1535,7 @@
 136:
   - "Editor: Option to disable the automatic closing of parenthesis"
   - "Editor: Enhanced auto close parentheses option"
-  - "Editor: Improved autocompletion: added documentation, and information about bullets and weapons."
+  - "Editor: Improved autocompletion: added documentation, and information about chips and weapons."
   - "Editor: Information about the function, weapon or chip when hovering over its name in the code."
   - "Editor : Add shortcuts (for, if, while, ...)."
   - "Editor : Option to choose the text size."

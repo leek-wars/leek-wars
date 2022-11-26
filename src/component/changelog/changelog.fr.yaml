@@ -14,7 +14,7 @@
     - Accélération de l'analyse de l'IA au redémarrage du serveur + déclenché au survol de la souris.
     - "LeekScript : erreur plus explicite lors d'un tri incohérent."
     - "Encyclopédie : les liens bleus sont chargés dès la première potager."
-    - "Encyclopédie : les liens bleus sont insensibles à la casse et aux soulignésents."
+    - "Encyclopédie : les liens bleus sont insensibles à la casse et aux soulignés."
     - "Encyclopédie : ajout d'un système d'alias pour les liens (pour le pluriel par exemple)."
     - Les fonction assocSort et getDistance sont marquées comme dépréciées dans la documentation.
     - "Éditeur : Ctrl+F ne ferme plus si déjà ouvert, mais réinitialise la recherche."
