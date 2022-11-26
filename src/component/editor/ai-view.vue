@@ -76,7 +76,7 @@
 				<lw-code :code="detailDialogContent.details.alias" :single="true" />
 				<span v-if="detailDialogContent.details.size">Taille : {{ detailDialogContent.details.size }}</span>
 			</div>
-			<div v-if="detailDialogContent.details.defined" class="definition">
+			<div v-if="detailDialogContent.details.defined && ais[detailDialogContent.details.defined[0]]" class="definition">
 				<v-icon>mdi-file-outline</v-icon>
 				<span @click="$emit('jump', ais[detailDialogContent.details.defined[0]], detailDialogContent.details.defined[1])">
 					<i18n class="defined" path="leekscript.defined_in">

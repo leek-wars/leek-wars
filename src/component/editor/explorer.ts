@@ -28,13 +28,15 @@ class Explorer {
 		if (this.selectedFolder) {
 			this.selectedFolder.selected = false
 		}
-		this.selectedFolder = folder
-		this.selectedFolder.selected = true
+		if (folder) {
+			this.selectedFolder = folder
+			this.selectedFolder.selected = true
 
-		let current = fileSystem.folderById[this.selectedFolder.parent] as Folder | null
-		while (current) {
-			current.expanded = true
-			current = current.id === 0 ? null : fileSystem.folderById[current.parent]
+			let current = fileSystem.folderById[this.selectedFolder.parent] as Folder | null
+			while (current) {
+				current.expanded = true
+				current = current.id === 0 ? null : fileSystem.folderById[current.parent]
+			}
 		}
 	}
 
