@@ -2595,6 +2595,30 @@ class Game {
 		this.draw()
 	}
 
+	public previousAction() {
+		let i = this.currentAction
+		for (; i >= 0; i--) {
+			if (this.actions[i].type !== ActionType.REMOVE_EFFECT &&
+				this.actions[i].type !== ActionType.ADD_CHIP_EFFECT &&
+				this.actions[i].type !== ActionType.END_TURN &&
+				this.actions[i].type !== ActionType.ADD_STACKED_EFFECT &&
+				this.actions[i].type !== ActionType.ADD_WEAPON_EFFECT) break
+		}
+		this.requestJump(i)
+	}
+
+	public nextAction() {
+		let i = this.currentAction + 2
+		for (; i < this.actions.length; i++) {
+			if (this.actions[i].type !== ActionType.REMOVE_EFFECT &&
+				this.actions[i].type !== ActionType.ADD_CHIP_EFFECT &&
+				this.actions[i].type !== ActionType.END_TURN &&
+				this.actions[i].type !== ActionType.ADD_STACKED_EFFECT &&
+				this.actions[i].type !== ActionType.ADD_WEAPON_EFFECT) break
+		}
+		this.requestJump(i)
+	}
+
 	public resourceLoaded(res: string) { // variable "res" utile pour débug
 		this.loadedData++
 		if (this.cancelled) { return }

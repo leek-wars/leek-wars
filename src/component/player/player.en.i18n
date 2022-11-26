@@ -19,6 +19,8 @@
 	"large_actions": "Large actions",
 	"loading_fight": "Loading fight...",
 	"no_data_received": "No data received",
+	"previous_action": "Previous action",
+	"next_action": "Next action",
 	"pause": "Pause (P)",
 	"plain_background": "Plain background",
 	"position_in_queue": "Position in queue : {0} / {1}",

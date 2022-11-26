@@ -91,6 +91,18 @@
 					</template>
 					{{ $t('accelerate') }} (S)
 				</v-tooltip>
+				<v-tooltip v-if="!LeekWars.mobile" :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
+					<template v-slot:activator="{ on }">
+						<v-icon v-ripple class="control" v-on="on" @click="game.previousAction()">mdi-skip-previous</v-icon>
+					</template>
+					{{ $t('previous_action') }} (←)
+				</v-tooltip>
+				<v-tooltip v-if="!LeekWars.mobile" :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
+					<template v-slot:activator="{ on }">
+						<v-icon v-ripple class="control" v-on="on" @click="game.nextAction()">mdi-skip-next</v-icon>
+					</template>
+					{{ $t('next_action') }} (→)
+				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ on }">
 						<v-icon v-ripple class="control" v-on="on" @click="game.sound = !game.sound">{{ game.sound ? 'mdi-volume-high' : 'mdi-volume-low' }}</v-icon>
@@ -370,6 +382,10 @@
 				}
 				e.preventDefault()
 				return false
+			} else if (e.keyCode === 37) { // left arrow
+				this.game.previousAction()
+			} else if (e.keyCode === 39) { // right arrow
+				this.game.nextAction()
 			}
 		}
 

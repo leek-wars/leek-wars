@@ -19,6 +19,8 @@
 	"large_actions": "Grandes actions",
 	"loading_fight": "Chargement du combat...",
 	"no_data_received": "Aucune donnée reçue",
+	"previous_action": "Action précédente",
+	"next_action": "Action suivante",
 	"pause": "Pause",
 	"plain_background": "Fond uni",
 	"position_in_queue": "Position dans la file : {0} / {1}",
