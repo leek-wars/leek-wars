@@ -5,6 +5,7 @@
 	"create_new_leek": "Create new leek",
 	"create_new_map": "Create new map",
 	"default": "Default",
+	"duplicate": "Duplicate",
 	"error_invalid_name": "The name must be between {min} and {max} characters",
 	"error_not_enough_leeks": "There are not enough leeks",
 	"leek_name": "Leek name",

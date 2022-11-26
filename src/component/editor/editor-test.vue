@@ -93,12 +93,10 @@
 					<h4>{{ $t('test_leeks') }}</h4>
 					<div class="items leeks">
 						<div v-for="leek of leeks" :key="leek.id" :class="{selected: leek === currentLeek}" class="item leek" @click="selectLeek(leek)">
-							{{ leek.name }}
+							<div class="name">{{ leek.name }}</div>
 							<span v-if="leek.bot" class="bot">bot</span>
-							<span v-else>
-								<div class="duplicate" @click.stop="duplicateTestLeek(leek)">✚</div>
-								<div class="delete" @click.stop="deleteTestLeek(leek)"></div>
-							</span>
+							<v-icon v-if="!leek.bot" class="duplicate" @click.stop="duplicateTestLeek(leek)" :title="$t('duplicate')">mdi-content-copy</v-icon>
+							<v-icon v-if="!leek.bot" class="delete" @click.stop="deleteTestLeek(leek)">mdi-delete-outline</v-icon>
 						</div>
 					</div>
 					<div v-ripple class="item add" @click="newLeekDialog = true">✚ {{ $t('main.add') }}</div>
@@ -1248,7 +1246,6 @@
 		overflow-y: auto;
 	}
 	.item {
-		padding: 9px;
 		cursor: pointer;
 		position: relative;
 	}
@@ -1262,30 +1259,24 @@
 	.lateral-column .add {
 		background: #444;
 	}
-	.lateral-column .item .duplicate {
-		position: absolute;
-		right: 25px;
-		top: 7px;
-		width: 15px;
-		height: 15px;
-		background-size: cover;
-		opacity: 0.6;
-	}
-	.lateral-column .item .duplicate:hover {
-		opacity: 1.0;
-	}
-	.lateral-column .item .delete {
-		position: absolute;
-		right: 7px;
-		top: 10px;
-		width: 15px;
-		height: 15px;
-		background-image: url("../../../public/image/delete_new.png");
-		background-size: cover;
-		opacity: 0.6;
-	}
-	.lateral-column .item .delete:hover {
-		opacity: 1.0;
+	.lateral-column .item {
+		display: flex;
+		align-items: center;
+		min-width: 0;
+		height: 34px;
+		padding: 0 9px;
+		gap: 9px;
+		.name {
+			flex: 1;
+		}
+		.v-icon {
+			font-size: 20px;
+			opacity: 0.5;
+			color: white;
+			&:hover {
+				opacity: 1;
+			}
+		}
 	}
 	.title {
 		font-size: 16px;
@@ -1446,6 +1437,7 @@
 	.characteristics {
 		margin-right: 130px;
 		margin-left: 15px;
+		min-width: 370px;
 		.characteristic {
 			width: 50%;
 			padding: 5px 20px;
@@ -1463,12 +1455,13 @@
 				font-weight: bold;
 				padding: 2px 4px;
 				border-radius: 4px;
-				min-width: 72px;
+				min-width: 120px;
+				margin-right: 10px;
 				&[contenteditable="true"] {
 					border: 1px solid #ccc;
-				}
 				&:hover {
 					border: 1px solid #777;
+				}
 				}
 			}
 		}
