@@ -1195,7 +1195,7 @@
 		pickTitle(title: number[]) {
 			this.leek!.title = title
 			this.titleDialog = false
-			LeekWars.put('leek/set-title', {leek: this.leek!.id, icon: title[0] || 0, noun: title[1] || 0, gender: title[2] || 0, adjective: title[3] || 0})
+			LeekWars.put('leek/set-title', {leek_id: this.leek!.id, icon: title[0] || 0, noun: title[1] || 0, gender: title[2] || 0, adjective: title[3] || 0})
 			this.$store.commit('set-leek-title', {leek: this.leek!.id, title})
 		}
 

@@ -23,17 +23,20 @@
 				<div class="select-word select">
 					<v-select v-model="noun" :items="nouns" :label="$t('select_noun')" item-value="id" item-text="t" hide-details dense solo @change="changeNoun">
 						<template slot="item" slot-scope="data">
-							<img class="icon" :src="'/image/trophy/' + data.item.code + '.svg'">
-							<v-list-item-content>
-								<v-list-item-title class="word">
-									<div class="name">{{ data.item.t }}</div>
-									<div class="rarity">{{ formatRarity(data.item.rarity) }}%</div>
-								</v-list-item-title>
-							</v-list-item-content>
+							<template v-if="data.item.id">
+								<img class="icon" :src="'/image/trophy/' + data.item.code + '.svg'">
+								<v-list-item-content>
+									<v-list-item-title class="word">
+										<div class="name">{{ data.item.t }}</div>
+										<div class="rarity">{{ formatRarity(data.item.rarity) }}%</div>
+									</v-list-item-title>
+								</v-list-item-content>
+							</template>
+							<span v-else>{{ $t('main.none') }}</span>
 						</template>
 					</v-select>
 				</div>
-				<div v-if="$i18n.locale === 'fr' && noun && TROPHIES[noun - 1].noun_translation === 3" class="select select-gender">
+				<div v-if="$i18n.locale === 'fr' && (noun && TROPHIES[noun - 1].noun_translation === 3) || (adjective && TROPHIES[adjective - 1].adj_translation === 3)" class="select select-gender">
 					<v-select v-model="gender" :items="genders" :label="$t('select_noun')" item-value="id" item-text="t" hide-details dense solo>
 						<template v-slot:selection>
 							<v-icon :class="genders[gender - 1].code">mdi-gender-{{ genders[gender - 1].code }}</v-icon>
@@ -91,13 +94,13 @@
 		]
 
 		get nouns() {
-			return this.allNouns.filter((w: any) => {
+			return [{code: '', id: 0, t: '', rarity: 0}].concat(this.allNouns.filter((w: any) => {
 				return w.id !== this.adjective
 			}).map((w: any) => {
 				const trophy = TROPHIES[w.id - 1]
 				const gender_code = this.gender === 2 && (trophy.noun_translation & 2) && ((trophy.noun_gender & 2) === 0) ? '_f' : ''
 				return {code: w.code, id: w.id, t: this.$t('trophy.' + w.code + gender_code) as string, rarity: w.rarity}
-			}).sort((a: any, b: any) => a.t.localeCompare(b.t))
+			}).sort((a: any, b: any) => a.t.localeCompare(b.t)))
 		}
 		get adjectives() {
 			return [{code: '', id: 0, t: '', rarity: 0}].concat(this.allAdjectives.filter((w: any) => {
@@ -123,11 +126,13 @@
 		}
 
 		changeNoun() {
-			const trophy = TROPHIES[this.noun - 1]
-			if (this.gender === 0) {
-				this.gender = (trophy.noun_translation & 1) ? 1 : 2
-			} else if ((trophy.noun_translation & this.gender) === 0) {
-				this.gender = trophy.noun_translation
+			if (this.noun) {
+				const trophy = TROPHIES[this.noun - 1]
+				if (this.gender === 0) {
+					this.gender = (trophy.noun_translation & 1) ? 1 : 2
+				} else if ((trophy.noun_translation & this.gender) === 0) {
+					this.gender = trophy.noun_translation
+				}
 			}
 		}
 		getTitle() {
