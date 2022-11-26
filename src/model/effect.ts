@@ -57,6 +57,7 @@ enum EffectType {
 	KILL_TO_TP = 56,
 	RAW_HEAL = 57,
 	CRITICAL_TO_HEAL = 58,
+	ADD_STATE = 59
 }
 
 enum EffectModifier {
@@ -77,6 +78,13 @@ enum EffectTypeMarket {
 	SHACKLE = 7,
 	BULB = 8,
 	TACTIC = 9,
+}
+
+enum State {
+	STATUE = 1,
+	UNHEALABLE = 2,
+	INVICIBLE = 3,
+	PACIFIST = 4,
 }
 
 class Effect {
@@ -101,4 +109,4 @@ class EntityEffect {
 	public modifiers!: number
 }
 
-export { Effect, EffectModifier, EffectType, EffectTypeMarket, EntityEffect }
+export { Effect, EffectModifier, EffectType, EffectTypeMarket, EntityEffect, State }

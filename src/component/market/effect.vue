@@ -18,7 +18,7 @@
 		<i18n v-if="effect.id == 14" path="effect.type_14_fixed">
 			<b slot="summon">{{ $t('effect.summon_' + effect.value1) }}</b>
 		</i18n>
-		<span v-else-if="effect.value2 == 0" v-html="$t('effect.type_' + effect.id + '_fixed', [format(effect.value1)])"></span>
+		<span v-else-if="effect.value2 == 0" v-html="$t('effect.type_' + effect.id + '_fixed', [value1])"></span>
 		<span v-else v-html="$t('effect.type_' + effect.id, [format(effect.value1), format(effect.value1 + effect.value2)])"></span>
 		<span v-if="effect.modifiers & EffectModifier.ON_CASTER">
 			<span v-if="effectThe">
@@ -92,7 +92,8 @@
 </template>
 
 <script lang="ts">
-	import { Effect, EffectModifier, EffectType } from '@/model/effect'
+	import { Effect, EffectModifier, EffectType, State } from '@/model/effect'
+import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
@@ -105,6 +106,13 @@
 		EffectType = EffectType
 		raw_opened: boolean = false
 
+		get value1() {
+			if (this.effect.id === EffectType.ADD_STATE) {
+				// return State[this.effect.value1]
+				return i18n.t('effect.state_' + this.effect.value1)
+			}
+			return this.format(this.effect.value1)
+		}
 		get enemies() { return this.effect.targets & 1 }
 		get allies(): boolean { return (this.effect.targets & (1 << 1)) !== 0 }
 		get caster(): boolean { return (this.effect.targets & (1 << 2)) !== 0 }
