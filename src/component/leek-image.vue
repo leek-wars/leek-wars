@@ -147,7 +147,7 @@
 		}
 		get offsetTop() {
 			return this.weaponData && this.weaponData.white ? Math.max(0,
-				this.weaponData.top - this.leekHeight - (this.hat !== null && this.hatTemplate ? Math.max(0, this.hatHeight - this.leekHeight * this.hatTemplate.height) : 0) + this.weaponData.centerZ +
+				this.weaponData.top - this.leekHeight - (this.hat !== null && this.hatTemplate ? Math.max(0, this.hatHeight - this.hatHeight * this.hatTemplate.height) : 0) + this.weaponData.centerZ +
 				Math.abs(Math.sin(this.weaponRadianAngle)) * (this.weaponData.width + this.weaponData.x)
 			 ) : 0
 		}
