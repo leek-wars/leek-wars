@@ -1614,4 +1614,15 @@ class BoxingGlove extends ChipAnimation {
 	}
 }
 
-export { Alteration, Arsenic, Adrenaline, Armor, Acceleration, Antidote, Armoring, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Covid, ChipAnimation, Carapace, Collar, Covetousness, Crushing, Cure, Desintegration, DevilStrike, Dome, Doping, Drip, Elevation, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Ice, Iceberg, Inversion, Jump, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Summon, Teleportation, Therapy, Thorn, Toxin, Tranquilizer, Transmutation, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry }
+class Prism extends ChipAnimation {
+	static textures = [T.prism]
+	static sounds = [S.buff]
+	public delay = 1
+	constructor(game: Game) { super(game, S.buff, 60, DamageType.DEFAULT) }
+	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
+		super.launch(launchPos, targetPos, targets, targetCell)
+		this.game.particles.addPrism(targetPos.x, targetPos.y, 180, 80)
+	}
+}
+
+export { Alteration, Arsenic, Adrenaline, Armor, Acceleration, Antidote, Armoring, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Covid, ChipAnimation, Carapace, Collar, Covetousness, Crushing, Cure, Desintegration, DevilStrike, Dome, Doping, Drip, Elevation, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Ice, Iceberg, Inversion, Jump, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Prism, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Summon, Teleportation, Therapy, Thorn, Toxin, Tranquilizer, Transmutation, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry }

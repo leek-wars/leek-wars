@@ -1555,6 +1555,7 @@
 		flex-direction: column;
 		.weapon img {
 			vertical-align: bottom;
+			max-width: 100%;
 		}
 	}
 	.farmer-weapons .weapon, .farmer-chips .chip, .hat-dialog .hat {

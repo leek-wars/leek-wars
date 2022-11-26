@@ -184,6 +184,7 @@ class T {
 	public static cart_enhanced_lightninger = new Texture(LeekWars.STATIC + 'image/weapon/cart_enhanced_lightninger.png')
 	public static unstable_destroyer = new Texture(LeekWars.STATIC + 'image/weapon/unstable_destroyer.png', true, SHADOW_QUALITY)
 	public static cart_unstable_destroyer = new Texture(LeekWars.STATIC + 'image/weapon/cart_unstable_destroyer.png')
+	public static sword = new Texture(LeekWars.STATIC + 'image/weapon/sword.png', true, SHADOW_QUALITY)
 
 	// Cartes
 	public static box = new Texture(LeekWars.STATIC + 'image/map/box.png', true, 1)
@@ -319,6 +320,7 @@ class T {
 	public static grapple_2 = new Texture(LeekWars.STATIC + 'image/fight/grapple_2.png')
 	public static grapple_back_1 = new Texture(LeekWars.STATIC + 'image/fight/grapple_back_1.png')
 	public static grapple_back_2 = new Texture(LeekWars.STATIC + 'image/fight/grapple_back_2.png')
+	public static prism = new Texture(LeekWars.STATIC + 'image/fight/prism.png')
 
 	// Buff
 	public static chip_steroid = new Texture(LeekWars.STATIC + 'image/chip/glyph/steroid.png')

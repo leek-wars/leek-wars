@@ -949,4 +949,59 @@ class LineParticle extends Particle {
 	}
 }
 
-export { Particle, Bubble, Bullet, BuryParticle, CriticalParticle, Laser, Lightning, Fire, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, LighningBall, LineParticle, Plasma, Rectangle, Blood, RealisticExplosion, Rocket, SmallExplosion, SpikeParticle, SpinningParticle, NUM_BLOOD_SPRITES }
+class PrismParticle extends Particle {
+	static LIFE = 90
+	static colors = ['#5e1a89', '#272b8f', '#45b1ce', '#44ab52', '#f8fc47', '#fd9536', '#ef1740']
+	total_life
+
+	public constructor(game: Game, x: number, y: number, z: number, life: number) {
+		super(game, x, y, z, life)
+		this.total_life = life
+	}
+
+	public draw(ctx: CanvasRenderingContext2D): void {
+
+		const x = 1 - this.life / this.total_life
+		const a = Math.pow(Math.sin(Math.PI * x), 0.25)
+		const r = 0.9 + 0.1 * a
+
+		const white_start = -70
+		const white_height = 100
+		const wy = Math.min(1, x * (1 / 0.25)) * white_height
+		const gradient = ctx.createLinearGradient(0, white_start, 0, white_start + wy)
+		gradient.addColorStop(0, "rgba(255,255,255,0)")
+		gradient.addColorStop(1, "white")
+		ctx.globalAlpha = a
+		ctx.fillStyle = gradient
+		ctx.fillRect(-5, white_start, 10, wy)
+
+		ctx.globalAlpha = 0.9 * a
+		const start_distance = 10
+		const distance = start_distance + (Math.max(0, x - 0.25) * (1 / 0.75)) * 160
+		const angle_step = Math.PI / 28
+		const cx = 0
+		const cy = 20
+
+		for (let i = 0; i < 7; ++i) {
+			const angle = Math.PI / 2  -3.5 * angle_step + i * angle_step
+			const angle2 = angle + angle_step / 2
+			const angle3 = angle + angle_step
+			ctx.fillStyle = PrismParticle.colors[i]
+			const path = new Path2D()
+			path.moveTo(cx + Math.cos(angle3) * start_distance, cy + Math.sin(angle3) * start_distance)
+			path.lineTo(cx + Math.cos(angle) * start_distance, cy + Math.sin(angle) * start_distance)
+			path.lineTo(cx + Math.cos(angle) * distance, cy + Math.sin(angle) * distance)
+			path.lineTo(cx + Math.cos(angle2) * distance, cy + Math.sin(angle2) * distance)
+			path.lineTo(cx + Math.cos(angle3) * distance, cy + Math.sin(angle3) * distance)
+			path.closePath()
+			ctx.fill(path)
+		}
+
+		ctx.globalAlpha = a
+		const w = T.prism.texture.width * 0.4 * r
+		const h = T.prism.texture.height * 0.4 * r
+		ctx.drawImage(T.prism.texture, - w / 2, -20, w, h)
+	}
+}
+
+export { Particle, Bubble, Bullet, BuryParticle, CriticalParticle, Laser, Lightning, Fire, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, LighningBall, LineParticle, Plasma, Rectangle, Blood, PrismParticle, RealisticExplosion, Rocket, SmallExplosion, SpikeParticle, SpinningParticle, NUM_BLOOD_SPRITES }

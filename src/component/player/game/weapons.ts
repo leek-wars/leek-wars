@@ -565,6 +565,13 @@ class DarkKatana extends WhiteWeaponAnimation {
 	}
 }
 
+class Sword extends WhiteWeaponAnimation {
+	static textures = [T.slash, T.sword]
+	static sounds = [S.sword]
+	constructor(game: Game) {
+		super(game, T.sword, 35)
+	}
+}
 
 class Laser extends LaserWeapon {
 	static textures = [T.laser, T.laser_bullet, T.cart_laser]
@@ -890,4 +897,4 @@ class Bazooka extends Firegun {
 	}
 }
 
-export { WeaponAnimation, WhiteWeaponAnimation, Axe, Bazooka, BLaser, Broadsword, DarkKatana, Destroyer, DoubleGun, Electrisor, EnhancedLightninger, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, Neutrino, Rhino, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rifle, Shotgun, UnbridledGazor, UnstableDestroyer }
+export { WeaponAnimation, WhiteWeaponAnimation, Axe, Bazooka, BLaser, Broadsword, DarkKatana, Destroyer, DoubleGun, Electrisor, EnhancedLightninger, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, Neutrino, Rhino, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rifle, Shotgun, UnbridledGazor, UnstableDestroyer, Sword }

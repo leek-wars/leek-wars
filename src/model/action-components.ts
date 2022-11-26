@@ -99,6 +99,7 @@ const EffectComponents = {
 	[EffectType.STEAL_ABSOLUTE_SHIELD]: EffectAbsoluteShield,
 	[EffectType.RAW_ABSOLUTE_SHIELD]: EffectAbsoluteShield,
 	[EffectType.RELATIVE_SHIELD]: EffectRelativeShield,
+	[EffectType.RAW_RELATIVE_SHIELD]: EffectRelativeShield,
 	[EffectType.VULNERABILITY]: EffectVulnerability,
 	[EffectType.ABSOLUTE_VULNERABILITY]: EffectAbsoluteVulnerability,
 	[EffectType.BUFF_AGILITY]: EffectBuffAgility,

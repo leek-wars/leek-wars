@@ -5,9 +5,7 @@
 				<range-view :min="chip.min_range" :max="chip.max_range" :type="chip.launch_type" />
 				<span>
 					<span v-if="chip.min_range == chip.max_range">{{ $t('effect.range_fixed', [chip.min_range]) }}</span>
-					<span v-else>{{ $t('effect.range', [chip.min_range, chip.max_range]) }}</span>
-					&nbsp;
-					<span v-if="chip.launch_type == 0">{{ $t('effect.in_lign') }}</span>
+					<span v-else>{{ $t('effect.range', [chip.min_range, chip.max_range]) }}</span>&nbsp;<span v-if="chip.launch_type !== 7">{{ $t('effect.launch_' + chip.launch_type) }}</span>
 					<div v-if="!chip.los">
 						[<b>{{ $t('effect.through_obstacles') }}</b>]
 					</div>

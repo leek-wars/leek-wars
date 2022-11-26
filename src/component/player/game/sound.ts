@@ -1,5 +1,4 @@
 import { Game } from '@/component/player/game/game'
-import { env } from '@/env'
 import { LeekWars } from '@/model/leekwars'
 
 // var _iOS = navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false;
