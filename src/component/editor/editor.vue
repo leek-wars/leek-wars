@@ -302,7 +302,6 @@
 	import { analyzer } from './analyzer'
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
 	import AIElement from '@/component/app/ai.vue'
-	import EditorTest from './editor-test.vue'
 
 	const DEFAULT_FONT_SIZE = 16
 	const DEFAULT_LINE_HEIGHT = 24
@@ -530,7 +529,7 @@
 					const id = parseInt(this.$route.hash.substring(6))
 					this.testDialog = true
 					setTimeout(() => {
-						const test = this.$refs.editorTest as EditorTest
+						const test = this.$refs.editorTest as any
 						test.currentTab = 1
 						if (test.allLeeks[id]) {
 							test.selectLeek(test.allLeeks[id])

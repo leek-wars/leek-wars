@@ -1236,6 +1236,7 @@
 			if (!this.leek) { return }
 
 			LeekWars.post('test-leek/new', {name: this.leek.name}).then(data => {
+				if (!this.leek) { return }
 				const newLeek = new Leek({
 					id: data.id,
 					name: this.leek.name,
