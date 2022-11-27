@@ -295,8 +295,28 @@ class FightStatistics {
 					if (state === StatisticsState.USE_ITEM) {
 						state = StatisticsState.ITEM_DAMAGE
 						lastDamageAction = action
-					} else if (state === StatisticsState.ITEM_DAMAGE && currentEntity === itemCaster) {
-						state = StatisticsState.ITEM_DAMAGE_RETURN
+					} else if (currentEntity === itemCaster) {
+						if (state === StatisticsState.ITEM_DAMAGE_RETURN) {
+							// Dégât de zone sur soi après le renvoi de dégât de la cible
+							state = StatisticsState.ITEM_DAMAGE
+						} else {
+							// Détermine si la cible a du renvoi de dégât
+							const target = entities[lastDamageAction[1]]
+							let hasDamageReturn = false
+							for (const effect_id in target.effects) {
+								const effect = target.effects[effect_id]
+								if (effect.type === EffectType.DAMAGE_RETURN) {
+									hasDamageReturn = true
+									break
+								}
+							}
+							// Si elle en a, c'est du renvoi de dégât, sinon du dégât de zone sur soi
+							if (hasDamageReturn) {
+								state = StatisticsState.ITEM_DAMAGE_RETURN
+							} else {
+								state = StatisticsState.ITEM_DAMAGE
+							}
+						}
 					}
 					const entity = entities[action[1]]
 					const damage = action[2]
