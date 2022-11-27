@@ -336,6 +336,7 @@ class Game {
 	public textRatio: number = 1
 	public trophies: any[] = []
 	public trophiesToSend: any[] = []
+	public progressBarMarkers: {[key: number]: any} = {}
 
 	public maps: Map[] = [
 		new Nexus(this),
@@ -1221,6 +1222,9 @@ class Game {
 				}
 			}
 
+			// Ajout du marqueur
+			this.addTimelineMarker(action, entity)
+
 			// Remove all effects
 			for (const effect in entity.effects) {
 				this.removeEffect(parseInt(effect))
@@ -1325,6 +1329,9 @@ class Game {
 				entity.setCell(cell)
 				entity.drawID = this.addDrawableElement(entity, entity.y)
 			}
+
+			// Ajout du marqueur
+			this.addTimelineMarker(action, entity)
 
 			this.log(action)
 			this.actionDone()
@@ -1891,6 +1898,16 @@ class Game {
 
 	public click() {
 		return this.mouseEntity
+	}
+
+	public addTimelineMarker(action: Action, entity: FightEntity) {
+
+		const width = Math.max(100 / this.actions.length, 0.7)
+		let left = this.currentAction / this.actions.length * 100
+		if (left + width > 100) left -= left + width - 100
+		const background =  entity.summon ? entity.lifeColorLighter : entity.lifeColor
+		const outline = action.type == ActionType.RESURRECTION ? '1.5px solid #fff' : '1.5px solid #000'
+		this.progressBarMarkers[this.currentAction] = { left, width, background, outline }
 	}
 
 	public addMarker(owner: number, cells: number[], color: string, duration: number) {

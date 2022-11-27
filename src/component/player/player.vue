@@ -66,6 +66,9 @@
 					</div>
 					<div ref="progressBar" class="progress-bar" @click="progressBarClick" @mousemove="progressBarMove">
 						<div :style="{width: progressBarWidth + '%'}" class="bar"></div>
+						<span v-for="marker in game.progressBarMarkers">
+							<div class="marker" :style="{left: marker.left + '%', width: marker.width + '%', background: marker.background, outline: marker.outline}"></div>
+						</span>
 						<div class="circle" :style="{left: progressBarWidth + '%'}"></div>
 						<div class="preview-bar" :style="{width: progressBarPreviewWidth + '%'}"></div>
 					</div>
@@ -1034,5 +1037,17 @@
 		color: white;
 		padding: 4px 8px;
 		font-size: 13px;
+	}
+	.progress-bar .marker {
+		width: 6px;
+		height: 6px;
+		position: absolute;
+		top: 0;
+		z-index: 2;
+		transition: all 0.2s;
+	}
+	.progress-bar-wrapper:hover .marker {
+		width: 6px;
+		height: 12px;
 	}
 </style>
