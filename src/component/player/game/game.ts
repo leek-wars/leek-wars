@@ -6,7 +6,7 @@ import { Acceleration, Adrenaline, Alteration, Antidote, Armor, Armoring, Arseni
 import { DamageType, EntityDirection, EntityType, FightEntity } from '@/component/player/game/entity'
 import { Ground } from '@/component/player/game/ground'
 import { Leek } from '@/component/player/game/leek'
-import { Arena, Beach, Desert, Factory, Forest, Glacier, Map, Nexus } from '@/component/player/game/maps'
+import { Arena, Beach, DarkNexus, Desert, Factory, Forest, Glacier, Map, Nexus } from '@/component/player/game/maps'
 import { Obstacle } from '@/component/player/game/obstacle'
 import { Particles } from '@/component/player/game/particles'
 import { S, Sound } from '@/component/player/game/sound'
@@ -346,6 +346,7 @@ class Game {
 		new Beach(this),
 		new Arena(this)
 	]
+	public darkNexus = new DarkNexus(this)
 
 	constructor() {
 		for (let i = 0; i < this.ground.field.tilesY * 2; i++) {
@@ -377,6 +378,9 @@ class Game {
 
 		this.mapType = this.data.map.type + 1
 		this.map = this.maps[this.mapType]
+		if (this.mapType === 0 && this.dark) {
+			this.map = this.darkNexus
+		}
 		this.map.seed = fight.id
 		this.map.create()
 
@@ -2621,6 +2625,9 @@ class Game {
 
 	public updateMap() {
 		this.map = this.maps[this.mapType]
+		if (this.mapType === 0 && this.dark) {
+			this.map = this.darkNexus
+		}
 		this.map.create()
 		this.atmosphere = this.map.options.sound
 	}
@@ -2629,6 +2636,18 @@ class Game {
 		this.ground.updateMap()
 		this.ground.resize(this.width, this.height, this.shadows)
 		this.redraw()
+	}
+
+	public toggleDark() {
+		if (this.mapType == 0) {
+			if (this.dark) {
+				this.map = this.darkNexus
+			} else {
+				this.map = this.maps[this.mapType]
+			}
+			this.map.create()
+			this.atmosphere = this.map.options.sound
+		}
 	}
 }
 

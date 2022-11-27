@@ -22,6 +22,7 @@ class MapOptions {
 	public patternColor!: string
 	public backgroundTileSize!: number
 	public patternTileSize!: number
+	public checkerboardColor!: string
 }
 
 class RandomGenerator {
@@ -105,7 +106,8 @@ class Beach extends Map {
 			backgroundColor: '#f8efda',
 			patternColor: '#cbedec',
 			backgroundTileSize: 10,
-			patternTileSize: 10
+			patternTileSize: 10,
+			checkerboardColor: '#0002'
 		})
 		T.starfish.offset = 1.1
 		T.pebble.offset = 0.85
@@ -215,7 +217,8 @@ class Desert extends Map {
 			backgroundColor: '#fbbe36',
 			patternColor: '#daccba',
 			backgroundTileSize: 8,
-			patternTileSize: 4
+			patternTileSize: 4,
+			checkerboardColor: '#0002'
 		})
 		T.cactus.offset = 1.6
 		T.desert_grass.offset = 0.85
@@ -340,7 +343,8 @@ class Factory extends Map {
 			backgroundColor: '#555',
 			patternColor: '#aaa',
 			backgroundTileSize: 4,
-			patternTileSize: 4
+			patternTileSize: 4,
+			checkerboardColor: '#fff2'
 		})
 		T.barrel.offset = 0.9
 		T.cone.offset = 1.15
@@ -483,7 +487,8 @@ class Forest extends Map {
 			backgroundColor: '#3b221b',
 			patternColor: '#3b940f',
 			backgroundTileSize: 4,
-			patternTileSize: 4
+			patternTileSize: 4,
+			checkerboardColor: '#fff1'
 		})
 		T.stump.offset = 1.3
 		T.fern.offset = 1.1
@@ -654,7 +659,8 @@ class Glacier extends Map {
 			backgroundColor: '#eee',
 			patternColor: '#30f6f6',
 			backgroundTileSize: 6,
-			patternTileSize: 6
+			patternTileSize: 6,
+			checkerboardColor: '#0002'
 		})
 		T.ice.offset = 0.9
 		T.fir.offset = 1.1
@@ -735,10 +741,38 @@ class Nexus extends Map {
 			backgroundColor: '#fff',
 			patternColor: '#fff',
 			backgroundTileSize: 8,
-			patternTileSize: 8
+			patternTileSize: 8,
+			checkerboardColor: '#00000018'
 		})
 		T.nexus_block.offset = 1.177
 		T.nexus_block_small.offset = 1.18
+	}
+}
+
+class DarkNexus extends Map {
+	constructor(game: Game) {
+		super(game, {
+			sound: S.map_nexus,
+			groundTexture: T.nexus_dark_bg,
+			patternTexture: T.nexus_dark_bg,
+			margin: 5,
+			radius: 10,
+			smallObstacles: [T.nexus_dark_block_small, T.nexus_dark_block_small, T.nexus_dark_block_small],
+			largeObstacles: [T.nexus_dark_block, T.nexus_dark_block, T.nexus_dark_block],
+			tacticSmallColor: "#cccccc",
+			tacticLargeColor: "#888888",
+			gridColor: '#fff',
+			smoothPattern: true,
+			dark: true,
+			reachableColor: '#fff',
+			backgroundColor: '#000',
+			patternColor: '#000',
+			backgroundTileSize: 8,
+			patternTileSize: 8,
+			checkerboardColor: '#ffffff18'
+		})
+		T.nexus_dark_block.offset = 1.177
+		T.nexus_dark_block_small.offset = 1.18
 	}
 }
 
@@ -761,7 +795,8 @@ class Arena extends Map {
 			backgroundColor: '#9a8d6b',
 			patternColor: '#66822d',
 			backgroundTileSize: 4,
-			patternTileSize: 4
+			patternTileSize: 4,
+			checkerboardColor: '#0003'
 		})
 		T.grass.offset = 1.5
 		T.pillar.offset = 1.1
@@ -862,4 +897,4 @@ class Arena extends Map {
 	}
 }
 
-export { Map, Beach, Desert, Factory, Forest, Glacier, Nexus, Arena }
+export { Map, Beach, Desert, Factory, Forest, Glacier, Nexus, Arena, DarkNexus }

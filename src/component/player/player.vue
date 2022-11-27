@@ -609,6 +609,7 @@
 		}
 		@Watch("game.dark") toggleDark() {
 			localStorage.setItem('fight/dark', '' + this.game.dark)
+			this.game.toggleDark()
 		}
 		@Watch("game.autoDark") toggleAutoDark() {
 			localStorage.setItem('fight/auto-dark', '' + this.game.autoDark)

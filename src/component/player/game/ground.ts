@@ -152,8 +152,7 @@ class Ground {
 			// Draw checkerboard
 			if (this.game.tactic) {
 				this.textureCtx.save()
-				this.textureCtx.fillStyle = 'black'
-				this.textureCtx.globalAlpha = 0.11
+				this.textureCtx.fillStyle = this.game.map.options.checkerboardColor
 
 				for (const cell of this.field.cells) {
 
@@ -176,6 +175,7 @@ class Ground {
 				}
 				this.textureCtx.restore()
 			}
+
 			// Détails de chaque case
 			if (!this.game.plainBackground) {
 				this.drawCellDetails(this.textureCtx)
