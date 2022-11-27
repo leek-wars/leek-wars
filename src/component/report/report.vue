@@ -87,6 +87,7 @@
 							<v-btn @click="refight">
 								<v-icon>mdi-sync</v-icon>
 								{{ $t('refight') }}
+								(R)
 							</v-btn>
 						</span>
 						<span v-else-if="fight.context == FightContext.TOURNAMENT && fight.type !== FightType.BATTLE_ROYALE">
@@ -481,6 +482,22 @@
 			})
 			.error(error => this.error = true)
 		}
+
+		created() {
+			this.$root.$on('keyup', this.keyup)
+		}
+
+		keyup(e: KeyboardEvent) {
+			if (e.key === 'r') {
+				this.refight()
+				e.preventDefault()
+			}
+		}
+
+		beforeDestroy() {
+			this.$root.$off('keyup', this.keyup)
+		}
+
 		processLogs() {
 			if (!this.actions || !this.logs) { return }
 			for (const a in this.actions) {
