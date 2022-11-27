@@ -1893,11 +1893,8 @@ class Game {
 		for (const cell_id of cells) {
 			const cell = this.ground.field.cells[cell_id]
 			const pos = this.ground.field.cellToXY(cell)
-			const xy = this.ground.xyToXYPixels(pos.x, pos.y)
-			const x = xy.x * this.ground.scale
-			const y = xy.y * this.ground.scale
-			if (color.length === 8) { color = color.substr(2) }
-			this.markers[cell.id] = {owner, color: '#' + color, duration, x, y}
+			if (color.length === 8) { color = color.substring(2) }
+			this.markers[cell.id] = {owner, color: '#' + color, duration, x: pos.x, y: pos.y}
 		}
 	}
 
@@ -1906,10 +1903,8 @@ class Game {
 			const cell = this.ground.field.cells[cell_id]
 			const pos = this.ground.field.cellToXY(cell)
 			const xy = this.ground.xyToXYPixels(pos.x, pos.y)
-			const x = xy.x * this.ground.scale
-			const y = xy.y * this.ground.scale
-			if (color.length === 8) { color = color.substr(2) }
-			this.markersText[cell.id] = {owner, text, color: '#' + color, duration, x, y}
+			if (color.length === 8) { color = color.substring(2) }
+			this.markersText[cell.id] = {owner, text, color: '#' + color, duration, x: xy.x, y: xy.y}
 		}
 	}
 
@@ -1947,9 +1942,8 @@ class Game {
 		const area = []
 		for (const cell of cells) {
 			const xy = this.ground.field.cellToXY(cell)
-			const real = this.ground.xyToXYPixels(xy.x, xy.y)
 			const c = convert[cell.id]
-			area.push([real.x * this.ground.scale, real.y * this.ground.scale, lines[c[0]][c[1]]])
+			area.push([xy.x, xy.y, lines[c[0]][c[1]]])
 		}
 		return area
 	}
@@ -1964,9 +1958,8 @@ class Game {
 		for (let c = 0; c < cells.length; ++c) {
 			const cell = cells[c]
 			const xy = this.ground.field.cellToXY(cell)
-			const real = this.ground.xyToXYPixels(xy.x, xy.y)
 			const lines = sides + (c === 0 ? first : (c === cells.length - 1 ? last : 0))
-			this.area.push([real.x * this.ground.scale, real.y * this.ground.scale, lines])
+			this.area.push([xy.x, xy.y, lines])
 		}
 	}
 
@@ -2198,7 +2191,8 @@ class Game {
 		this.ctx.save()
 		this.ctx.globalAlpha = areaAlpha
 
-		this.ctx.translate(x, y)
+		const xy = this.ground.xyToXYPixels(x, y)
+		this.ctx.translate(xy.x * this.ground.scale, xy.y * this.ground.scale)
 
 		this.ctx.beginPath()
 		this.ctx.moveTo(0, -this.ground.tileSizeY / 2.)
@@ -2250,7 +2244,8 @@ class Game {
 		this.ctx.globalAlpha = 0.7
 		this.ctx.fillStyle = color
 
-		this.ctx.translate(x, y)
+		const xy = this.ground.xyToXYPixels(x, y)
+		this.ctx.translate(xy.x * this.ground.scale, xy.y * this.ground.scale)
 
 		this.ctx.beginPath()
 		this.ctx.moveTo(0, -this.ground.tileSizeY / 2.1)
@@ -2268,7 +2263,7 @@ class Game {
 
 		this.ctx.save()
 
-		this.ctx.translate(x, y)
+		this.ctx.translate(x * this.ground.scale, y * this.ground.scale)
 		this.ctx.scale(this.ground.scale, this.ground.scale)
 
 		this.ctx.globalAlpha = 1
