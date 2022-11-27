@@ -225,6 +225,13 @@
 					</div>
 				</panel>
 			</router-link>
+			<router-link to="/press-kit">
+				<panel v-ripple class="help">
+					<div slot="content">
+						<span class="icon">📦</span> {{ $t('main.press-kit') }}
+					</div>
+				</panel>
+			</router-link>
 		</div>
 
 		<div class="flex carousel-title">
@@ -637,6 +644,13 @@
 			margin-bottom: 1px;
 			margin-left: 12px;
 			margin-right: 10px;
+		}
+		.icon {
+			font-size: 36px;
+			vertical-align: bottom;
+			margin-bottom: 1px;
+			margin-left: 12px;
+			margin-right: 8px;
 		}
 	}
 	.slide {
