@@ -478,10 +478,12 @@
 					if (error.level >= 2) {
 						continue
 					}
-					if (!(error.start_line in error_by_line)) {
-						error_by_line[error.start_line] = []
+					for (let l = error.start_line; l <= error.end_line; ++l) {
+						if (!(l in error_by_line)) {
+							error_by_line[l] = []
+						}
+						error_by_line[l].push(error)
 					}
-					error_by_line[error.start_line].push(error)
 				}
 				// Sort errors on each line
 				for (const line in error_by_line) {
@@ -494,16 +496,20 @@
 					const pos = stream.pos
 					if (line in error_by_line) {
 						for (const error of error_by_line[line]) {
-							// console.log("line", line, pos, error_by_line[line])
-							if (pos === error.start_column) {
-								let len = Math.max(0, error.end_column - error.start_column)
-								stream.eatWhile(() => len-- >= 0)
+							if (line === error.start_line) {
+								if (pos < error.start_column) {
+									stream.next()
+									return
+								} else if (line !== error.end_line || pos <= error.end_column) {
+									stream.next()
+									return error.level === 0 ? "error" : "warning"
+								}
+							} else if (line === error.end_line && pos <= error.end_column) {
+								stream.next()
 								return error.level === 0 ? "error" : "warning"
-							}
-							if (pos <= error.end_column) {
-								let len = error.start_column - pos
-								stream.eatWhile(() => len-- > 0)
-								return null
+							} else if (line > error.start_line && line < error.end_line) {
+								stream.skipToEnd()
+								return error.level === 0 ? "error" : "warning"
 							}
 						}
 						stream.skipToEnd()
@@ -967,14 +973,14 @@
 			}, this.ctrl ? 0 : 400)
 		}
 
-		public showErrorDetails(editorPos: any) {
+		public showErrorDetails(editorPos: CodeMirror.Position) {
 			// console.log("showErrorDetails", this.errors, editorPos)
 			// Display error?
 			// const tooltip = this.$refs.tooltip
 			let shown = false
 			for (const entrypoint in this.ai.problems) {
 				for (const error of this.ai.problems[entrypoint]) {
-					if (error.start_line === editorPos.line + 1 && error.start_column <= editorPos.ch && error.end_column >= editorPos.ch) {
+					if (error.contains(editorPos)) {
 						// this.errorTooltipText = i18n.t('ls_error.' + error[5], error[6]) as string
 						this.errorTooltipText = error.info
 						this.errorTooltip = true
@@ -1057,7 +1063,7 @@
 					} else if (lineNo === end_line && stream.pos <= end_char) {
 						stream.next()
 						return "hover"
-					} else {
+					} else if (lineNo > start_line && lineNo < end_line) {
 						stream.skipToEnd()
 						return "hover"
 					}

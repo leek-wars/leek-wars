@@ -1,3 +1,5 @@
+import CodeMirror from "codemirror"
+
 class Problem {
 
 	start_line: number
@@ -16,6 +18,13 @@ class Problem {
 		this.info = info
 	}
 
+	public contains(position: CodeMirror.Position) {
+		const line = position.line + 1
+		if (line >= this.start_line && line <= this.end_line) {
+			return position.ch >= (line === this.start_line ? this.start_column : 0) && position.ch <= (line === this.end_line ? this.end_column : Infinity)
+		}
+		return false
+	}
 }
 
 export { Problem }

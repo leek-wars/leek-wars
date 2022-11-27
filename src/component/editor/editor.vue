@@ -701,13 +701,13 @@
 				const level = problem[0]
 				const ai_id = problem[1]
 				const line = problem[2]
-				let info = problem[4]
+				let info
 				if (problem.length === 8) {
 					info = this.$t('leekscript.error_' + problem[6], problem[7])
 				} else {
 					info = this.$t('leekscript.error_' + problem[6])
 				}
-				const problemObject = new Problem(line, problem[3], line, problem[5], level, info)
+				const problemObject = new Problem(line, problem[3], problem[4], problem[5], level, info as string)
 				if (!problemsByAI[ai_id]) { problemsByAI[ai_id] = [] }
 				problemsByAI[ai_id].push(problemObject)
 			}
