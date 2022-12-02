@@ -37,7 +37,7 @@
 			const trophy = TROPHIES[this.noun - 1]
 			const gender_code = i18n.locale === 'en' || this.gender === 1 || ((trophy.noun_gender & 2) !== 0) ? '' : '_f'
 			let word = this.$t('trophy.' + trophy.code + gender_code) as string
-			if (i18n.locale === 'en' && this.adjective) {
+			if (i18n.locale === 'en' && this.adjective && word !== word.toUpperCase()) {
 				word = word.toLowerCase()
 			}
 			return word
@@ -48,7 +48,7 @@
 			const trophy = TROPHIES[this.adjective - 1]
 			const gender_code = i18n.locale === 'en' || this.gender === 1 || ((trophy.adj_gender & 2) !== 0) ? '' : '_f'
 			let word = this.$t('trophy.' + trophy.code + gender_code) as string
-			if (i18n.locale === 'fr' && this.noun) {
+			if (i18n.locale === 'fr' && this.noun && word !== word.toUpperCase()) {
 				word = word.toLowerCase()
 			}
 			return word
