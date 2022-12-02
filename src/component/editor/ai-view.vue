@@ -230,7 +230,7 @@
 		}
 		mounted() {
 			const codeMirrorElement = this.$refs.codemirror as any
-			import(/* webpackChunkName: "codemirror" */ "@/codemirror-wrapper").then(wrapper => {
+			import(/* webpackChunkName: "codemirror" */ "@/codemirror-wrapper").then(async wrapper => {
 				this.codemirror = wrapper.CodeMirror
 				this.editor = wrapper.CodeMirror(codeMirrorElement, {
 					value: "",
@@ -320,6 +320,9 @@
 					localStorage.setItem('editor/scroll/' + this.ai.id, e.getScrollInfo().top)
 				})
 
+				if (!this.loaded) {
+					await fileSystem.load(this.ai);
+				}
 				this.show()
 
 				if (this.jumpToLine) {
@@ -351,10 +354,10 @@
 					})
 				}
 				this.editor.on("mousedown", this.editorMousedown as any)
-			})
 
-			this.$root.$on('keydown', this.keydown)
-			this.$root.$on('keyup', this.keyup)
+				this.$root.$on('keydown', this.keydown)
+				this.$root.$on('keyup', this.keyup)
+			})
 		}
 
 		beforeDestroy() {
@@ -397,26 +400,24 @@
 				this.editor.refresh()
 			} else {
 				this.loading = true
-				fileSystem.load(this.ai).then(() => {
-					this.editor.setValue(this.ai.code)
-					this.editor.getDoc().clearHistory()
-					this.editor.refresh()
-					this.loaded = true
-					this.loading = false
-					this.editor.refresh()
-					if (!this.jumping) {
-						setTimeout(() => {
-							const scrollPosition = parseInt(localStorage.getItem('editor/scroll/' + this.ai.id) || '0')
-							// console.log("[ai-view] Jump to", scrollPosition)
-							this.editor.scrollTo(0, scrollPosition)
-						})
-					}
-					this.lines = this.editor.getDoc().lineCount()
-					this.characters = this.editor.getDoc().getValue().length
-					Vue.set(this.ai, 'included_lines', this.ai.total_lines - this.lines)
-					Vue.set(this.ai, 'included_chars', this.ai.total_chars - this.ai.code.length)
-					LeekWars.setSubTitle(this.$i18n.tc('main.n_lines', this.lines))
-				})
+				this.editor.setValue(this.ai.code)
+				this.editor.getDoc().clearHistory()
+				this.editor.refresh()
+				this.loaded = true
+				this.loading = false
+				this.editor.refresh()
+				if (!this.jumping) {
+					setTimeout(() => {
+						const scrollPosition = parseInt(localStorage.getItem('editor/scroll/' + this.ai.id) || '0')
+						// console.log("[ai-view] Jump to", scrollPosition)
+						this.editor.scrollTo(0, scrollPosition)
+					})
+				}
+				this.lines = this.editor.getDoc().lineCount()
+				this.characters = this.editor.getDoc().getValue().length
+				Vue.set(this.ai, 'included_lines', this.ai.total_lines - this.lines)
+				Vue.set(this.ai, 'included_chars', this.ai.total_chars - this.ai.code.length)
+				LeekWars.setSubTitle(this.$i18n.tc('main.n_lines', this.lines))
 			}
 		}
 
@@ -1586,6 +1587,7 @@
 				const line = this.searchLines[this.searchCurrent][0]
 				const t = this.editor.charCoords({line, ch: 0}, "local").top
 				const middleHeight = this.editor.getScrollerElement().offsetHeight / 2
+				this.editor.refresh()
 				this.editor.scrollTo(0, t - middleHeight - 5)
 			}
 		}
