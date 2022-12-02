@@ -772,6 +772,11 @@ code {
 			padding-left: 10px;
 		}
 	}
+	&[dense] {
+		pre {
+			padding: 0;
+		}
+	}
 }
 
 #app.app .page-bar .action {

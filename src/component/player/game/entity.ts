@@ -1170,7 +1170,7 @@ abstract class FightEntity extends Entity {
 			ctx.save()
 			ctx.scale(this.game.ground.scale, this.game.ground.scale)
 			ctx.translate(this.ox, this.oy)
-			this.bubble.draw(ctx, 0, this.height + 40, this.isTop)
+			this.bubble.draw(ctx, 0, this.height + 30, this.isTop)
 			ctx.restore()
 		}
 	}

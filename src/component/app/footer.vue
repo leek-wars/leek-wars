@@ -13,7 +13,7 @@
 		<div class="column">
 			<h4>{{ $t('main.resources_help') }}</h4>
 			<router-link to="/help/general" class="item">{{ $t('main.discover') }}</router-link>
-			<router-link to="/help/tutorial" class="item">{{ $t('main.tutorial') }}</router-link>
+			<router-link to="/encyclopedia/fr/Tutoriel" class="item">{{ $t('main.tutorial') }}</router-link>
 			<router-link to="/help/documentation" class="item">{{ $t('main.documentation') }}</router-link>
 			<a class="item" @click="show_didactitiel">{{ $t('main.didactitial') }} <v-icon>mdi-dock-window</v-icon></a>
 			<router-link to="/press-kit" class="item">{{ $t('main.press-kit') }} <v-icon>mdi-package-variant-closed</v-icon></router-link>

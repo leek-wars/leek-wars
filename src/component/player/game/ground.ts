@@ -191,7 +191,7 @@ class Ground {
 			}
 
 			// Obstacles shadows
-			if (shadows && this.game.data.map.type !== -1) {
+			if (shadows && this.game.mapType !== 0) {
 				for (const obstacle of this.obstacles) {
 					obstacle.drawShadow(this.textureCtx)
 				}

@@ -5,13 +5,17 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { CHIP_BY_NAME } from '@/model/sorted_chips'
-	import { vueMain } from '@/model/vue'
+	import { vueMain, vuetify } from '@/model/vue'
 	import markdown from 'markdown-it'
 	import sanitizeHtml from 'sanitize-html'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import LineOfSight from '../line-of-sight/line-of-sight.vue'
 	import ItemPreview from '../market/item-preview.vue'
 	import SearchBar from './search-bar.vue'
+	import TutorialMenu from '../tutorial/tutorial-menu.vue'
+	import TutorialProgress from '../tutorial/tutorial-progress.vue'
+import TutorialQuizz from '../tutorial/tutorial-quizz.vue'
+import { VCheckbox } from 'vuetify/lib/components'
 
 	@Component({ name: 'markdown' })
 	export default class Markdown extends Vue {
@@ -27,6 +31,7 @@
 		})
 		html: string = ''
 		summary: any = {}
+		components: any[] = []
 
 		encodeURL = (s: string) => s.trim().replace(/\s+/g, '_')
 		encodeID = (s: string) => s.trim().replace(/\s+/g, '_').replace(/'/g, '~')
@@ -157,6 +162,45 @@
 				md.querySelectorAll('.encyclopedia-search-bar').forEach((item) => {
 					new SearchBar({ propsData: { }, parent: vueMain }).$mount(item)
 				})
+				// Tutorial menu
+				md.querySelectorAll('.tutorial-menu').forEach((item) => {
+					new TutorialMenu({ propsData: { }, parent: vueMain }).$mount(item)
+				})
+				// Tutorial progress
+				md.querySelectorAll('.tutorial-progress').forEach((item) => {
+					this.components.push(new TutorialProgress({ propsData: {  }, parent: vueMain }).$mount(item))
+				})
+				// Tutorial quizz
+				md.querySelectorAll('.quizz').forEach((item) => {
+
+					item.querySelectorAll('ul').forEach(answers => {
+						;[...answers.children].forEach((child, index) => {
+							child.setAttribute('index', '' + index)
+						})
+						answers.append(...Array.from(answers.children).sort((a, b) => {
+							return Math.random() - 0.5
+						}))
+						let answer = [false, false, false, false]
+						;[...answers.children].forEach((child, index) => {
+							const letter = document.createElement('span')
+							letter.innerText = String.fromCodePoint(65 + index) + ". "
+							letter.classList.add("letter")
+							child.prepend(letter)
+							const checkbox = document.createElement('span')
+							child.prepend(checkbox)
+							const vcheckbox = new VCheckbox({ vuetify: vuetify, propsData: { hideDetails: true, inputValue: answer[index] } }).$mount(checkbox)
+							vcheckbox.$on('change', (a: any) => {
+								answer[index] = a
+								console.log("change", answer)
+							})
+							child.addEventListener('click', () => {
+								vcheckbox.$props.inputValue = !answer[index]
+								answer[index] = !answer[index]
+								console.log("change", answer)
+							})
+						})
+					})
+				})
 			})
 		}
 
@@ -200,6 +244,10 @@
 					return "<div class='encyclopedia-last-modifications'></div>"
 				} else if (tag.startsWith('line-of-sight')) {
 					return "<div class='encyclopedia-los'></div>"
+				} else if (tag.startsWith('tutorial-menu')) {
+					return "<div class='tutorial-menu'></div>"
+				} else if (tag.startsWith('tutorial-progress')) {
+					return "<div class='tutorial-progress'></div>"
 				}
 				return '{{ ' + tag + ' }}'
 			})
@@ -216,6 +264,13 @@
 			return '<ul class="summary">'
 				+ this.summary.children.map((n: any) => aux(n, depth - 2)).join('')
 				+ '</ul>'
+		}
+
+		beforeUpdate() {
+			for (const component of this.components) {
+				component.$destroy()
+			}
+			this.components = []
 		}
 	}
 </script>
@@ -356,6 +411,47 @@
 		.raw {
 			padding: 4px 0;
 			background: none;
+		}
+	}
+	.md ::v-deep .quizz {
+		// padding: 0 40px;
+		h5 {
+			font-size: 17px;
+			font-weight: 500;
+			margin: 20px 0;
+		}
+		ul {
+			display: grid;
+			gap: 10px;
+			list-style-type: none;
+			grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+			padding-inline-start: 0;
+			li {
+				background: white;
+				box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+				padding: 15px;
+				border-radius: 4px;
+				cursor: pointer;
+				display: flex;
+				gap: 4px;
+				.letter {
+					font-weight: 500;
+					color: #777;
+				}
+				.v-input {
+					display: inline-block;
+				}
+				code {
+					pre {
+						padding: 0;
+						padding-left: 6px;
+						border: 0;
+					}
+					.line-number {
+						padding: 0;
+					}
+				}
+			}
 		}
 	}
 </style>

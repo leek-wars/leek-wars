@@ -156,10 +156,12 @@ function displayWarningMessage() {
 
 let lastErrorSent = 0
 
+const vuetify = new Vuetify()
+
 const vueMain = new Vue({
 	router, i18n, store,
 	data: { savedPosition: 0 },
-	vuetify: new Vuetify(),
+	vuetify,
 	render: (h) => {
 		if (location.pathname === '/console') {
 			return h(Console)
@@ -282,4 +284,4 @@ if (window.__FARMER__) {
 	}
 }
 
-export { vueMain }
+export { vueMain, vuetify }
