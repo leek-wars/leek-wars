@@ -220,6 +220,7 @@
 		private ctrl: boolean = false
 		private CodeMirrorLines!: HTMLElement
 		private jumpToLine: number | null = null
+		public loaded: boolean = false
 
 		created() {
 			this.id = this.ai.id
@@ -232,6 +233,7 @@
 				import(/* webpackChunkName: "codemirror" */ "@/codemirror-wrapper"), // Load the editor
 				fileSystem.load(this.ai), // Load the AI
 			]).then(([wrapper]) => {
+				this.loaded = true
 				const codeMirrorElement = this.$refs.codemirror as any
 				this.editor = wrapper.CodeMirror(codeMirrorElement, {
 					value: this.ai.code,
