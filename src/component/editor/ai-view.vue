@@ -1,7 +1,7 @@
 <template>
 	<div v-show="visible" ref="ai" class="ai" @mousemove="mousemove" @mouseleave="mouseleave">
 		<div class="codemirror-wrapper">
-			<div v-show="!loading" ref="codemirror" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" :class="{search: searchEnabled}" class="codemirror"></div>
+			<div ref="codemirror" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" :class="{search: searchEnabled}" class="codemirror"></div>
 			<div v-if="ai.problems" class="errors-band">
 				<template v-for="(problems, entrypoint) of ai.problems">
 					<tooltip v-for="(error, p) of problems" :key="entrypoint + p">
@@ -156,7 +156,6 @@
 		public characters: number = 0
 		public saving: boolean = false
 		public hovering: boolean = false
-		public loaded = false
 		public loading: boolean = false
 		public error!: boolean
 		public needTest = false
@@ -216,24 +215,26 @@
 		private hoverLine: number = -1
 		private hoverLineWidth: number = 0
 		private hoverEditorOrigin: number = 0
-		private codemirror!: any
 		private hoverData: any = null
 		private hoverLocation: any = null
 		private ctrl: boolean = false
 		private CodeMirrorLines!: HTMLElement
 		private jumpToLine: number | null = null
-		private jumping: boolean = false
 
 		created() {
 			this.id = this.ai.id
 			this.error = !this.ai.valid
 		}
+
 		mounted() {
-			const codeMirrorElement = this.$refs.codemirror as any
-			import(/* webpackChunkName: "codemirror" */ "@/codemirror-wrapper").then(wrapper => {
-				this.codemirror = wrapper.CodeMirror
+			this.loading = true
+			Promise.all([
+				import(/* webpackChunkName: "codemirror" */ "@/codemirror-wrapper"), // Load the editor
+				fileSystem.load(this.ai), // Load the AI
+			]).then(([wrapper]) => {
+				const codeMirrorElement = this.$refs.codemirror as any
 				this.editor = wrapper.CodeMirror(codeMirrorElement, {
-					value: "",
+					value: this.ai.code,
 					mode: "leekscript",
 					theme: "leekwars",
 					tabSize: 4,
@@ -301,6 +302,7 @@
 					}
 					return null
 				}}
+
 				this.updateProblems()
 				this.editor.addOverlay(overlay_javadoc)
 				this.editor.addOverlay(overlay_ref)
@@ -320,13 +322,22 @@
 					localStorage.setItem('editor/scroll/' + this.ai.id, e.getScrollInfo().top)
 				})
 
-				this.show()
+				this.loading = false
 
+				this.lines = this.editor.getDoc().lineCount()
+				this.characters = this.editor.getDoc().getValue().length
+				Vue.set(this.ai, 'included_lines', this.ai.total_lines - this.lines)
+				Vue.set(this.ai, 'included_chars', this.ai.total_chars - this.ai.code.length)
+				LeekWars.setSubTitle(this.$i18n.tc('main.n_lines', this.lines))
+
+				// Jump to specific line
 				if (this.jumpToLine) {
-					setTimeout(() => {
-						this.scrollToLine(this.jumpToLine!)
-						this.jumpToLine = null
-					})
+					this.scrollToLine(this.jumpToLine!)
+					this.jumpToLine = null
+				} else {
+					// Jump to the last line
+					const scrollPosition = parseInt(localStorage.getItem('editor/scroll/' + this.ai.id) || '0')
+					this.editor.scrollTo(0, scrollPosition)
 				}
 
 				this.CodeMirrorLines = codeMirrorElement.querySelector('.CodeMirror-lines') as HTMLElement
@@ -362,13 +373,6 @@
 			this.$root.$off('keyup', this.keyup)
 		}
 
-		@Watch('visible')
-		visibilityChanged() {
-			if (this.visible) {
-				setTimeout(() => this.editor.refresh())
-			}
-		}
-
 		public editorMousedown(editor: CodeMirror.Editor, e: MouseEvent) {
 			if (e.ctrlKey && this.hoverData && this.hoverData.defined) {
 				this.detailDialog = false
@@ -391,56 +395,6 @@
 				this.updateMouseAndCtrl()
 			}
 		}
-
-		public show() {
-			if (this.loaded) {
-				this.editor.refresh()
-			} else {
-				this.loading = true
-				fileSystem.load(this.ai).then(() => {
-					this.editor.setValue(this.ai.code)
-					this.editor.getDoc().clearHistory()
-					this.editor.refresh()
-					this.loaded = true
-					this.loading = false
-					this.editor.refresh()
-					if (!this.jumping) {
-						setTimeout(() => {
-							const scrollPosition = parseInt(localStorage.getItem('editor/scroll/' + this.ai.id) || '0')
-							// console.log("[ai-view] Jump to", scrollPosition)
-							this.editor.scrollTo(0, scrollPosition)
-						})
-					}
-					this.lines = this.editor.getDoc().lineCount()
-					this.characters = this.editor.getDoc().getValue().length
-					Vue.set(this.ai, 'included_lines', this.ai.total_lines - this.lines)
-					Vue.set(this.ai, 'included_chars', this.ai.total_chars - this.ai.code.length)
-					LeekWars.setSubTitle(this.$i18n.tc('main.n_lines', this.lines))
-				})
-			}
-		}
-
-		// public removeErrors(entrypoint: number) {
-		// 	// console.log("remove errors", entrypoint, this.ai.name)
-		// 	if (this.errorOverlays[entrypoint]) {
-		// 		// console.log("removeOverlays")
-		// 		this.editor.removeOverlay(this.errorOverlays[entrypoint])
-		// 		delete this.errorOverlays[entrypoint]
-		// 	}
-		// 	Vue.delete(this.errors, entrypoint)
-		// 	this.errorTooltip = false
-		// 	this.errorTooltipText = ''
-		// }
-
-		// public removeAllErrors() {
-		// 	for (const entrypoint in this.errorOverlays) {
-		// 		this.editor.removeOverlay(this.errorOverlays[entrypoint])
-		// 		Vue.delete(this.errorOverlays, entrypoint)
-		// 		Vue.delete(this.errors, entrypoint)
-		// 	}
-		// 	this.errorTooltip = false
-		// 	this.errorTooltipText = ''
-		// }
 
 		public cursorChange() {
 			const cursor = this.document.getCursor()
@@ -1500,7 +1454,6 @@
 
 		public scrollToLine(line: number) {
 			// console.log("scrollToLine", line, this.document, this.editor)
-			this.jumping = true
 			if (this.document) {
 				this.document.setCursor({line, ch: 0})
 				const height = this.editor.getScrollInfo().clientHeight
