@@ -242,7 +242,7 @@
 
 		@Watch('$route.params')
 		update() {
-			if (this.$route.params && 'item' in this.$route.params) {
+			if (!this.popup && this.$route.params && 'item' in this.$route.params) {
 				LeekWars.splitShowContent()
 				this.selectItem(this.$route.params.item)
 				LeekWars.setTitle(this.$route.params.item)
@@ -288,7 +288,7 @@
 			items.scrollTop = 0
 			this.lazy_start = 0
 			this.lazy_end = 10
-			if (this.query.length && 'item' in this.$route.params) {
+			if (!this.popup && this.query.length && 'item' in this.$route.params) {
 				this.$router.push('/help/documentation')
 			}
 		}
