@@ -166,8 +166,8 @@
 								</tooltip>
 							</td>
 							<td width="25%"><span class="big">{{ farmer.won_solo_tournaments }}</span><br><span class="small grey">solo</span></td>
-							<td width="25%"><span class="big">{{ farmer.won_farmer_tournaments }}</span><br><span class="small grey">éleveur</span></td>
-							<td width="25%"><span class="big">{{ farmer.won_team_tournaments }}</span><br><span class="small grey">équipe</span></td>
+							<td width="25%"><span class="big">{{ farmer.won_farmer_tournaments }}</span><br><span class="small grey">{{ $t('display_farmer') }}</span></td>
+							<td width="25%"><span class="big">{{ farmer.won_team_tournaments }}</span><br><span class="small grey">{{ $t('display_team') }}</span></td>
 							<td width="25%"><span class="big">{{ farmer.won_battle_royale }}</span><br><span class="small grey">BR</span></td>
 						</tr>
 					</table>
