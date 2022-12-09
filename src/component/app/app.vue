@@ -429,6 +429,8 @@
 		position: fixed;
 		z-index: 1000;
 		cursor: pointer;
+		width: 50px;
+		height: 50px;
 	}
 	.console .title .spacer {
 		flex: 1;
