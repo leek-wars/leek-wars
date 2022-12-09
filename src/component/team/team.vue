@@ -328,6 +328,9 @@
 					<div v-if="captain" class="delete-compo button flat" @click="compositionToDelete = composition; deleteCompoDialog = true">
 						<v-icon>mdi-close</v-icon>
 					</div>
+					<div v-if="captain" class="button flat" @click="compositionToRename = composition; renameCompoDialog = true">
+						<v-icon>mdi-pencil</v-icon>
+					</div>
 				</template>
 				<div slot="content" :class="{dashed: draggedLeek != null && canDrop(composition)}" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(composition, $event)">
 
@@ -442,6 +445,19 @@
 				<div v-ripple class="red" @click="deleteComposition(compositionToDelete)">{{ $t('delete_confirm') }}</div>
 			</div>
 		</popup>
+		
+		<popup v-if="team" v-model="renameCompoDialog" :width="600">
+			<v-icon slot="icon">mdi-pencil</v-icon>
+			<span v-if="compositionToRename" slot="title">{{ $t('rename_compo_confirm_title', [compositionToRename.name]) }}</span>
+			<h4>{{ $t('compo_name') }}</h4>
+			<input v-model="renameCompoName" type="text" @keyup.enter="renameComposition(compositionToRename)">
+			<div slot="actions">
+				<div v-ripple @click="renameCompoDialog = false">{{ $t('delete_cancel') }}</div>
+				<div v-ripple class="green" @click="renameComposition(compositionToRename)">{{ $t('rename_confirm') }}</div>
+			</div>
+
+		</popup>
+
 
 		<popup v-if="team" v-model="quitTeamDialog" :width="500">
 			<v-icon slot="icon">mdi-exit</v-icon>
@@ -610,6 +626,7 @@
 		createCompoDialog: boolean = false
 		createCompoName: string = ''
 		deleteCompoDialog: boolean = false
+		renameCompoDialog: boolean = false
 		compositionToDelete: Composition | null = null
 		banDialog: boolean = false
 		banMemberTarget: Farmer | null = null
@@ -807,6 +824,17 @@
 					}
 					this.team.compositions.splice(this.team.compositions.indexOf(composition), 1)
 					this.deleteCompoDialog = false
+				}
+			}).error(error => {
+				LeekWars.toast(error)
+			})
+		}
+		
+		renameComposition(composition: Composition) {
+		        // NEED THE APII
+			LeekWars.post('team/rename-composition', {composition_id: composition.id, composition_name: this.createCompoName}).then(data => {
+				if (this.team) {
+					this.renameCompoDialog = false
 				}
 			}).error(error => {
 				LeekWars.toast(error)
