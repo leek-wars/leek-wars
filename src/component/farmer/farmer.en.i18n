@@ -102,5 +102,7 @@
 	"you_have_1_warning": "You have 1 warning",
 	"you_have_n_warnings": "You have {0} warnings",
 	"verified": "Verified",
-	"not_verified": "Not verified"
+	"not_verified": "Not verified",
+	"display_farmer": "farmer",
+	"display_team": "team"
 }
