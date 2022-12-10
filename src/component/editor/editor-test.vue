@@ -12,9 +12,9 @@
 					<h4>{{ $t('test_scenario') }}</h4>
 					<div class="items scenarios">
 						<div v-for="scenario of scenarioList" :key="scenario.id" :class="{selected: scenario === currentScenario}" class="item scenario" @click="selectScenario(scenario)">
-							{{ scenario.name }}
+							<div class="name">{{ scenario.name }}</div>
 							<span v-if="scenario.default" class="base">{{ $t('default') }}</span>
-							<div v-else class="delete" @click.stop="deleteScenario(scenario)"></div>
+							<v-icon v-else class="delete" @click.stop="deleteScenario(scenario)">mdi-delete-outline</v-icon>
 						</div>
 					</div>
 					<div v-ripple class="item add" @click="newScenarioDialog = true">✚ {{ $t('main.add') }}</div>
@@ -150,8 +150,8 @@
 					<h4>{{ $t('test_maps') }}</h4>
 					<div class="items maps">
 						<div v-for="map of maps" :key="map.id" :class="{selected: currentMap === map}" class="item map" @click="selectMap(map)">
-							{{ map.name }}
-							<div class="delete" @click.stop="deleteMap(map)"></div>
+							<div class="name">{{ map.name }}</div>
+							<v-icon class="delete" @click.stop="deleteMap(map)">mdi-delete-outline</v-icon>
 						</div>
 					</div>
 					<div v-ripple class="item add" @click="newMapDialog = true">✚ {{ $t('main.add') }}</div>
