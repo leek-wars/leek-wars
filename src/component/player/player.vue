@@ -1,5 +1,5 @@
 <template lang="html">
-	<div ref="player" :style="{width: width + 'px', height: height + BAR_HEIGHT + 'px'}">
+	<div ref="player" :style="{width: totalWidth + 'px', height: totalHeight + 'px'}">
 		<div v-if="!loaded" class="loading">
 			<template v-if="fight">
 				<div v-if="fight.type === FightType.BATTLE_ROYALE" class="table br">
@@ -56,8 +56,8 @@
 				</div>
 			</div>
 		</div>
-		<div v-show="loaded" class="game">
-			<div :style="{height: (height + 6) + 'px'}" class="layers">
+		<div v-show="loaded" class="game" :class="{horizontal}">
+			<div :style="{width: width + 'px', height: (height + 6) + 'px'}" class="layers">
 				<canvas :style="{width: width + 'px'}" class="bg-canvas"></canvas>
 				<canvas :style="{width: width + 'px'}" class="game-canvas" @click="canvasClick" @mousemove="mousemove"></canvas>
 				<div class="progress-bar-wrapper">
@@ -78,7 +78,7 @@
 					<v-icon v-if="!game.paused" class="play-pause">mdi-play</v-icon>
 				</transition>
 			</div>
-			<div class="controls">
+			<div class="controls controls-a">
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ on }">
 						<v-icon v-ripple class="control" @click="pause" v-on="on">{{ game.paused ? 'mdi-play' : 'mdi-pause' }}</v-icon>
@@ -101,7 +101,7 @@
 					<template v-slot:activator="{ on: tooltip }">
 						<v-menu :close-on-content-click="false" :min-width="390" top offset-y right :attach="$refs.player">
 							<template v-slot:activator="{ on: menu }">
-								<div v-ripple class="control turn" v-on="{...tooltip, ...menu}">{{ $t('fight.turn_n', [game.turn]) }}</div>
+								<div v-ripple class="control turn" v-on="{...tooltip, ...menu}">{{ horizontal ? game.turn : $t('fight.turn_n', [game.turn]) }}</div>
 								<!-- <v-icon class="control" >mdi-settings-outline</v-icon> -->
 							</template>
 							<v-list :dense="true" class="settings-menu">
@@ -119,7 +119,9 @@
 					</template>
 					{{ $t('fight.share') }}
 				</v-tooltip>
-				<div class="filler"></div>
+			</div>
+
+			<div class="controls constrols-b">
 
 				<v-tooltip v-if="$store.state.farmer && $store.state.farmer.admin" :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ on: tooltip }">
@@ -233,10 +235,12 @@
 		mixins: [...mixins]
 	})
 	export default class Player extends Vue {
-		BAR_HEIGHT = 42
+		CONTROLS_HEIGHT = 36
+		BAR_HEIGHT = 6
 		@Prop() fightId!: string
 		@Prop() requiredWidth!: number
 		@Prop() requiredHeight!: number
+		@Prop() horizontal!: boolean
 		@Prop() startTurn!: number
 		@Prop() startAction!: number
 		FightType = FightType
@@ -252,7 +256,9 @@
 		progressBarTooltipMargin: number = 0
 		progressBarPreviewMouse: number = 0
 		width: number = 0
+		totalWidth: number = 0
 		height: number = 0
+		totalHeight: number = 0
 		timeout: any = null
 		request: any = null
 		progress: number = 0
@@ -328,8 +334,10 @@
 				if (newWidth === this.width && newHeight === this.height) { return }
 				const aspectRatio = window.devicePixelRatio || 1
 				this.game.ratio = aspectRatio
-				this.width = newWidth
-				this.height = newHeight - this.BAR_HEIGHT
+				this.totalWidth = newWidth
+				this.totalHeight = newHeight
+				this.width = newWidth - (this.horizontal ? 2 * this.CONTROLS_HEIGHT : 0)
+				this.height = newHeight - (this.horizontal ? this.BAR_HEIGHT : this.BAR_HEIGHT + this.CONTROLS_HEIGHT)
 				this.canvas.width = this.width * aspectRatio
 				this.canvas.height = this.height * aspectRatio
 				this.game.resize(this.canvas.width, this.canvas.height)
@@ -637,9 +645,17 @@
 <style lang="scss" scoped>
 	.game {
 		width: 100%;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		background: #2a2a2a;
 	}
 	.layers {
 		position: relative;
+		flex: 100% 0 0;
+	}
+	.game.horizontal .layers {
+		flex: auto;
 	}
 	.table {
 		display: flex;
@@ -744,11 +760,18 @@
 		font-weight: bold;
 	}
 	.controls {
-		line-height: 36px;
-		height: 36px;
-		background: #2a2a2a;
 		user-select: none;
 		display: flex;
+		min-width: 0;
+		max-width: 50%;
+	}
+	.game.horizontal .controls {
+		flex-direction: column;
+		width: 36px;
+		justify-content: center;
+	}
+	.game.horizontal .controls-a {
+		order: -1;
 	}
 	.controls.large {
 		line-height: 50px;
@@ -758,9 +781,13 @@
 		padding: 5px 12px;
 		cursor: pointer;
 		color: white;
+		text-align: center;
 		::v-deep &.v-icon::after {
 			display: none;
 		}
+	}
+	.game.horizontal .controls .control {
+		padding: 12px 5px;
 	}
 	.controls .control:hover {
 		background: rgba(255,255,255, 0.2);

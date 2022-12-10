@@ -9,7 +9,7 @@
 
 		<panel class="first">
 			<div slot="content" class="fight">
-				<player :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
+				<player :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
 			</div>
 		</panel>
 
@@ -139,6 +139,7 @@
 		error: any
 		playerWidth: number = 0
 		playerHeight: number = 0
+		playerHorizontal: boolean = false
 		FightType = FightType
 		large: boolean = false
 		reportDialog: boolean = false
@@ -190,15 +191,17 @@
 						if (window.innerWidth > window.innerHeight) {
 							// Landscape
 							const height = Math.min(window.innerHeight, Math.round(reference.offsetWidth / 1.5))
-							const padding_top = (height - controls - padding_bottom) * GROUND_PADDING_TOP
-							this.playerWidth = Math.min(window.innerWidth, Math.round((height - controls - padding_bottom - padding_top) * 2))
+							const padding_top = (height - padding_bottom) * GROUND_PADDING_TOP
+							this.playerWidth = Math.min(window.innerWidth, Math.round((height - padding_bottom - padding_top) * 2)) + 2 * controls
 							this.playerHeight = height
+							this.playerHorizontal = true
 						} else {
 							// Portrait
 							const ratio = 1.3
 							const width = Math.min(reference.offsetWidth, Math.round((window.innerHeight - 56) * ratio))
 							this.playerWidth = width
 							this.playerHeight = Math.round(width / ratio)
+							this.playerHorizontal = false
 						}
 					} else {
 						// Desktop
@@ -209,6 +212,7 @@
 						const height = Math.min(window.innerHeight - 128, theoricalHeight)
 						this.playerWidth = maxWidth
 						this.playerHeight = height
+						this.playerHorizontal = false
 					}
 				}
 			})
