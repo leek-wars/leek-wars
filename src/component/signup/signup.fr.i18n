@@ -58,5 +58,8 @@
 	"community_title": "Communauté",
 	"community_text1": "Une communauté active et bienveillante : un <b>chat</b>, des <b>messages privés</b>, un <b>forum</b>, des <b>commentaires</b>, un <b>wiki</b> vous permettent d'interagir avec les autres joueurs pour vous aider dans votre aventure et apprendre de nombreux détails sur le jeu.",
 	"customization_title": "Personnalisation",
-	"customization_text1": "Gérer l'apparence de votre poireau avec des <b>chapeaux</b>, des <b>potions de couleur</b>, des <b>titres</b> et autres apparats."
+	"customization_text1": "Gérer l'apparence de votre poireau avec des <b>chapeaux</b>, des <b>potions de couleur</b>, des <b>titres</b> et autres apparats.",
+	"education": "Leek Wars pour l'éducation",
+	"education_desc": "Créez un groupe d'étudiants ou apprentis codeurs, gérer leur progression et communiquer en direct avec eux.",
+	"education_button": "Contactez-nous pour plus d'informations"
 }

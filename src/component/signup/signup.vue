@@ -123,6 +123,36 @@
 			</div>
 		</panel>
 
+		<div class="container large-tiles">
+			<div class="column6">
+				<panel>
+					<div slot="content" class="flex">
+						<leek-image :scale="1" :leek="{level: 100, face: 1, hat: 31}" class="image" />
+						<div>
+							<h2>{{ $t('education') }}</h2>
+							<div>{{ $t('education_desc') }}</div>
+							<a href="mailto:contact@leekwars.com">
+								<v-btn small>{{ $t('education_button') }}</v-btn>
+							</a>
+						</div>
+					</div>
+				</panel>
+			</div>
+			<div class="column6">
+				<router-link to="/press-kit">
+					<panel v-ripple>
+						<div slot="content" class="flex">
+							<div class="image">📦</div>
+							<div>
+								<h2>{{ $t('main.press-kit') }}</h2>
+								<v-btn small>{{ $t('main.press-kit') }}</v-btn>
+							</div>
+						</div>
+					</panel>
+				</router-link>
+			</div>
+		</div>
+
 		<h1>{{ $t('ranking') }}</h1>
 
 		<panel class="first">
@@ -867,6 +897,33 @@
 		border: 5px solid white;
 		box-shadow: 0px 3px 5px -1px rgb(0 0 0 / 20%), 0px 5px 8px 0px rgb(0 0 0 / 14%), 0px 1px 14px 0px rgb(0 0 0 / 12%);
 		border-radius: 10px;
+	}
+}
+.large-tiles {
+	.panel {
+		height: 100%;
+	}
+	.image {
+		flex: 90px 0 0;
+		font-size: 90px;
+	}
+	.flex {
+		justify-content: flex-start;
+		padding: 10px;
+		gap: 15px;
+		align-items: center;
+		font-weight: 300;
+		height: 100%;
+	}
+	h2 {
+		font-weight: 500;
+		color: #222;
+		font-size: 20px;
+		margin-bottom: 10px;
+	}
+	.v-btn {
+		margin-top: 10px;
+		margin-left: 0px;
 	}
 }
 </style>
