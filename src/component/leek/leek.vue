@@ -704,6 +704,7 @@
 		tournamentRange: any = null
 		brRangeLoading: boolean = false
 		brRange: any = null
+		request: any = null
 
 		get id(): number {
 			return parseInt(this.$route.params.id, 10) || (this.$store.state.farmer && LeekWars.first(this.$store.state.farmer.leeks).id)
@@ -812,7 +813,8 @@
 			this.error = false
 			if (!this.id) { return }
 			const method = this.my_leek ? 'leek/get-private/' + this.id : 'leek/get/' + this.id
-			LeekWars.get(method).then(leek => {
+			this.request = LeekWars.get(method)
+			this.request.then(leek => {
 				this.leek = new Leek(leek)
 				if (this.leek) {
 					LeekWars.setTitle(this.leek.name, this.$t('main.level_n', [this.leek.level]))
@@ -849,6 +851,7 @@
 		beforeDestroy() {
 			this.$root.$off('update-leek-talent')
 			this.$root.$off('update-leek-xp')
+			if (this.request) { this.request.abort() }
 		}
 
 		rename(currency: string) {
