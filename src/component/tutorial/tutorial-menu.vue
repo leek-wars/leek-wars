@@ -2,27 +2,39 @@
 
 	<div class="tutorial-menu">
 
-		<router-link v-for="(item, i) of items" :key="i" class="item" :style="{'background-image': 'url(' + item.image + ')'}" :to="'/encyclopedia/fr/' + item.name.replace(/ /g, '_')">
+		<router-link v-for="(item, i) of items" :key="i" class="item" :style="{'background-image': 'url(' + item.image + ')'}" :to="'/encyclopedia/' + locale + '/' + $t(item.name).replace(/ /g, '_')">
 			<v-icon class="icon">mdi-{{ item.icon }}</v-icon>
 			<div class="bottom">
 				<div class="name">
-					<span>{{ i + 1 }} - {{ item.name }}</span>
+					<span>{{ i + 1 }} - {{ $t(item.name) }}</span>
 					<v-icon v-if="i < progress">mdi-check-bold</v-icon>
 				</div>
-				<ul class="items"><li>{{ item.items }}</li></ul>
+				<ul class="items"><li>{{ $t(item.name + '_items') }}</li></ul>
 			</div>
 		</router-link>
 	</div>
 </template>
 
 <script lang="ts">
-	import { Component, Vue } from 'vue-property-decorator'
+	import { store } from '@/model/store'
+	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import { tutorial_items } from './tutorial-items'
 
 	@Component({ name: 'tutorial-menu', i18n: {} })
 	export default class TutorialMenu extends Vue {
+		@Prop() locale!: string
 		items = tutorial_items
-		progress = 6
+
+		created() {
+			const locale = this.locale
+			import(/* webpackChunkName: "tutorial-[request]" */ `@/lang/${locale}/tutorial.json`).then(module => {
+				this.$i18n.mergeLocaleMessage(locale, module)
+			})
+		}
+
+		get progress() {
+			return store.state.farmer ? store.state.farmer.tutorial_progress : 0
+		}
 	}
 </script>
 

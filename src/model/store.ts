@@ -881,6 +881,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				state.farmer.errors = count
 			}
 		},
+		'set-tutorial-progress'(state: LeekWarsState, progress: number) {
+			if (state.farmer) {
+				state.farmer.tutorial_progress = progress
+			}
+		}
 	},
 })
 export { store }

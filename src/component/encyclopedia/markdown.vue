@@ -14,8 +14,11 @@
 	import SearchBar from './search-bar.vue'
 	import TutorialMenu from '../tutorial/tutorial-menu.vue'
 	import TutorialProgress from '../tutorial/tutorial-progress.vue'
-import TutorialQuizz from '../tutorial/tutorial-quizz.vue'
-import { VCheckbox } from 'vuetify/lib/components'
+	import { VBtn, VCheckbox } from 'vuetify/lib/components'
+	import { tutorial_items } from '../tutorial/tutorial-items'
+import { store } from '@/model/store'
+import { i18n } from '@/model/i18n'
+import LeekImage from '../leek-image.vue'
 
 	@Component({ name: 'markdown' })
 	export default class Markdown extends Vue {
@@ -46,7 +49,10 @@ import { VCheckbox } from 'vuetify/lib/components'
 			const re = /^((https:\/\/leekwars\.com)?\/image\/|https:\/\/(i\.)?imgur\.com\/|https:\/\/(i\.)?ibb.co\/)/
 			const options = this.mode === 'encyclopedia' ? {
 				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img', 'center' ]),
-				allowedAttributes: { '*': ['style', 'class', 'width', 'height', 'href', 'src'] },
+				allowedAttributes: {
+					'*': ['style', 'class', 'width', 'height', 'href', 'src'],
+					'li': ['correct'],
+				},
 				exclusiveFilter: function(frame: any) {
 					return frame.tag === 'img' && !re.test(frame.attribs.src)
 				}
@@ -164,15 +170,87 @@ import { VCheckbox } from 'vuetify/lib/components'
 				})
 				// Tutorial menu
 				md.querySelectorAll('.tutorial-menu').forEach((item) => {
-					new TutorialMenu({ propsData: { }, parent: vueMain }).$mount(item)
+					new TutorialMenu({ propsData: { locale: this.locale }, parent: vueMain }).$mount(item)
 				})
 				// Tutorial progress
 				md.querySelectorAll('.tutorial-progress').forEach((item) => {
-					this.components.push(new TutorialProgress({ propsData: {  }, parent: vueMain }).$mount(item))
+					this.components.push(new TutorialProgress({ propsData: { locale: this.locale }, parent: vueMain }).$mount(item))
 				})
 				// Tutorial quizz
 				md.querySelectorAll('.quizz').forEach((item) => {
+					let chapter = 0
+					item.classList.forEach(c => {
+						if (c.startsWith('chapter-')) {
+							chapter = parseInt(c.substring(8))
+						}
+					})
 
+					// Désactivé si pas le chapitre N + 1
+					if (store.state.farmer && chapter !== store.state.farmer.tutorial_progress + 1) {
+						item.querySelectorAll('ul').forEach((answers, q) => {
+							[...answers.children].forEach(child => child.classList.add('disabled'))
+						})
+					}
+
+					const completed = store.state.farmer && store.state.farmer.tutorial_progress >= chapter
+					const set_finished = () => {
+						;(vbtn.$el as HTMLElement).style.display = 'none'
+						item.querySelectorAll('ul').forEach((answers, q) => {
+							[...answers.children].forEach(child => child.classList.add('disabled'))
+						})
+						const lock = md.querySelector('.lock')
+						if (lock) {
+							lock.classList.remove('locked')
+						}
+					}
+
+					const bravo = document.createElement('div')
+					bravo.innerText = 'Bravo ! 🥳'
+					item.append(bravo)
+					bravo.style.display = 'none'
+
+					const submit = document.createElement('div')
+					item.append(submit)
+					const vbtn = new VBtn({ vuetify: vuetify, propsData: { color: 'primary' } }).$mount(submit)
+					vbtn.$el.innerHTML = i18n.t('main.validate') as string
+					vbtn.$el.classList.add('v-btn--disabled')
+
+					let form = [] as boolean[][]
+					vbtn.$on('click', () => {
+						let good = true
+						const questions = item.querySelectorAll('ul')
+						questions.forEach((answers, q) => {
+							;[...answers.children].forEach((child, index) => {
+								child.classList.remove('correct', 'wrong', 'missed')
+								if (child.hasAttribute('correct') && form[q][index]) {
+									child.classList.add('correct')
+								}
+								if (!child.hasAttribute('correct') && form[q][index]) {
+									child.classList.add('wrong')
+									good = false
+								}
+								if (child.hasAttribute('correct') && !form[q][index]) {
+									child.classList.add('missed')
+									good = false
+								}
+							})
+						})
+						// Submit answer
+						const real_form = form.map((q, i) => {
+							const result = [...q]
+							q.forEach((a, j) => result[parseInt(questions[i].children[j].getAttribute('index')!)] = a)
+							return result
+						})
+						LeekWars.post("tutorial/answer", { chapter, form: JSON.stringify(real_form) })
+
+						if (good) {
+							bravo.style.display = 'block'
+							set_finished()
+							// Send new progression
+							LeekWars.put("tutorial/set-progress", { progress: chapter })
+							store.commit('set-tutorial-progress', chapter)
+						}
+					})
 					item.querySelectorAll('ul').forEach(answers => {
 						;[...answers.children].forEach((child, index) => {
 							child.setAttribute('index', '' + index)
@@ -180,7 +258,8 @@ import { VCheckbox } from 'vuetify/lib/components'
 						answers.append(...Array.from(answers.children).sort((a, b) => {
 							return Math.random() - 0.5
 						}))
-						let answer = [false, false, false, false]
+						let answer = Array(answers.children.length).fill(false)
+						form.push(answer)
 						;[...answers.children].forEach((child, index) => {
 							const letter = document.createElement('span')
 							letter.innerText = String.fromCodePoint(65 + index) + ". "
@@ -188,18 +267,43 @@ import { VCheckbox } from 'vuetify/lib/components'
 							child.prepend(letter)
 							const checkbox = document.createElement('span')
 							child.prepend(checkbox)
-							const vcheckbox = new VCheckbox({ vuetify: vuetify, propsData: { hideDetails: true, inputValue: answer[index] } }).$mount(checkbox)
+							const value = completed && child.hasAttribute('correct') ? true : false
+							const vcheckbox = new VCheckbox({ vuetify: vuetify, propsData: { hideDetails: true, inputValue: value } }).$mount(checkbox)
 							vcheckbox.$on('change', (a: any) => {
 								answer[index] = a
-								console.log("change", answer)
+								vcheckbox.$props.inputValue = a
+								vbtn.$el.classList.toggle('v-btn--disabled', !form.every(q => q.some(a => a)))
+							})
+							vcheckbox.$el.addEventListener('click', (e) => {
+								e.stopPropagation()
 							})
 							child.addEventListener('click', () => {
-								vcheckbox.$props.inputValue = !answer[index]
 								answer[index] = !answer[index]
-								console.log("change", answer)
+								vcheckbox.$props.inputValue = answer[index]
+								vbtn.$el.classList.toggle('v-btn--disabled', !form.every(q => q.some(a => a)))
 							})
 						})
 					})
+					// Déjà réussi ?
+					if (store.state.farmer && store.state.farmer.tutorial_progress >= chapter) {
+						set_finished()
+						item.querySelectorAll('ul').forEach((answers, q) => {
+							[...answers.children].forEach(child => {
+								if (child.hasAttribute('correct')) {
+									child.classList.add('correct')
+								}
+							})
+						})
+					}
+				})
+
+				// Leeky
+				md.querySelectorAll('.leeky').forEach((item) => {
+					this.components.push(new LeekImage({ propsData: { leek: { level: 10, face: 1 }, scale: 0.55 }, parent: vueMain }).$mount(item))
+				})
+				// Domingo
+				md.querySelectorAll('.domingo').forEach((item) => {
+					this.components.push(new LeekImage({ propsData: { leek: { level: 301, face: 2, metal: true, skin: 9 }, scale: 0.45 }, parent: vueMain }).$mount(item))
 				})
 			})
 		}
@@ -248,6 +352,17 @@ import { VCheckbox } from 'vuetify/lib/components'
 					return "<div class='tutorial-menu'></div>"
 				} else if (tag.startsWith('tutorial-progress')) {
 					return "<div class='tutorial-progress'></div>"
+				} else if (tag.startsWith('tutorial-score')) {
+					return "<div>" + (store.state.farmer ? store.state.farmer.tutorial_progress : 0) + " / " + tutorial_items.length + "</div>"
+				} else if (tag.startsWith('tutorial-lock')) {
+					const parts = tag.split(':')
+					if (parts.length > 1) {
+						const chapter = parseInt(parts[1])
+						const locked = (store.state.farmer ? store.state.farmer.tutorial_progress : 0) < chapter ? "locked": ""
+						return "<div class='lock " + locked + "'>" + this.$parent.$parent.$i18n.t('locked') + "</div>"
+					}
+				} else if (tag.startsWith('leeky')) {
+					return "<div class='leeky'></div>"
 				}
 				return '{{ ' + tag + ' }}'
 			})
@@ -414,7 +529,6 @@ import { VCheckbox } from 'vuetify/lib/components'
 		}
 	}
 	.md ::v-deep .quizz {
-		// padding: 0 40px;
 		h5 {
 			font-size: 17px;
 			font-weight: 500;
@@ -424,7 +538,7 @@ import { VCheckbox } from 'vuetify/lib/components'
 			display: grid;
 			gap: 10px;
 			list-style-type: none;
-			grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+			grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
 			padding-inline-start: 0;
 			li {
 				background: white;
@@ -434,6 +548,33 @@ import { VCheckbox } from 'vuetify/lib/components'
 				cursor: pointer;
 				display: flex;
 				gap: 4px;
+				&:hover {
+					background: #ddd;
+				}
+				&.correct {
+					background: #5fad1b;
+				}
+				&.wrong {
+					background: red;
+				}
+				&.missed {
+					background: orange;
+				}
+				&.correct, &.wrong, &.missed {
+					color: white;
+					pre {
+						color: black;
+					}
+					.letter {
+						color: white;
+					}
+					.v-icon {
+						color: white !important;
+					}
+				}
+				&.disabled {
+					pointer-events: none;
+				}
 				.letter {
 					font-weight: 500;
 					color: #777;
@@ -452,6 +593,31 @@ import { VCheckbox } from 'vuetify/lib/components'
 					}
 				}
 			}
+		}
+	}
+	.md ::v-deep .lock {
+		font-weight: 500;
+		&.locked ~ pre {
+			display: none;
+		}
+		&:not(.locked) {
+			display: none;
+		}
+	}
+	.md ::v-deep .tip {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin-bottom: 16px;
+		svg {
+			flex-shrink: 0;
+		}
+		p {
+			background: white;
+			box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+			padding: 10px 15px;
+			border-radius: 4px;
+			margin: 0;
 		}
 	}
 </style>

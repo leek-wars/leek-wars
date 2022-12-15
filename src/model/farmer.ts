@@ -57,6 +57,7 @@ class Farmer {
 	public leek_ais!: {[key: number]: number}
 	public resources!: any[]
 	public verified!: boolean
+	public tutorial_progress!: number
 }
 
 class Reward {
