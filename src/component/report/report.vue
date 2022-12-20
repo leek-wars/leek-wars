@@ -383,6 +383,14 @@
 				Object.freeze(data.data)
 				this.fight = data
 				this.report = this.fight.report
+
+				for (const fid in this.fight.farmers1) {
+					this.farmers[fid] = this.fight.farmers1[fid]
+				}
+				for (const fid in this.fight.farmers2) {
+					this.farmers[fid] = this.fight.farmers2[fid]
+				}
+
 				for (const leek of this.fight.data.leeks) {
 					this.leeks[leek.id] = leek as any
 					if (leek.type !== 0) {
@@ -445,13 +453,6 @@
 				this.statistics = new FightStatistics()
 				this.statistics.generate(this.fight)
 				// console.log(this.statistics)
-
-				for (const fid in this.fight.farmers1) {
-					this.farmers[fid] = this.fight.farmers1[fid]
-				}
-				for (const fid in this.fight.farmers2) {
-					this.farmers[fid] = this.fight.farmers2[fid]
-				}
 
 				if (this.$store.state.connected) {
 					LeekWars.get('fight/get-logs/' + id).then(d => {
