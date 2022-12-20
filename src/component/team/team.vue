@@ -328,7 +328,7 @@
 					<div v-if="captain" class="delete-compo button flat" @click="compositionToDelete = composition; deleteCompoDialog = true">
 						<v-icon>mdi-close</v-icon>
 					</div>
-					<div v-if="captain" class="button flat" @click="compositionToRename = composition; renameCompoDialog = true">
+					<div v-if="captain" class="button flat" @click="compositionToRename = composition; renameCompoName = composition.name; renameCompoDialog = true">
 						<v-icon>mdi-pencil</v-icon>
 					</div>
 				</template>
@@ -445,7 +445,7 @@
 				<div v-ripple class="red" @click="deleteComposition(compositionToDelete)">{{ $t('delete_confirm') }}</div>
 			</div>
 		</popup>
-		
+
 		<popup v-if="team" v-model="renameCompoDialog" :width="600">
 			<v-icon slot="icon">mdi-pencil</v-icon>
 			<span v-if="compositionToRename" slot="title">{{ $t('rename_compo_confirm_title', [compositionToRename.name]) }}</span>
@@ -625,6 +625,7 @@
 		reasons = [Warning.INCORRECT_EMBLEM, Warning.INCORRECT_TEAM_NAME, Warning.INCORRECT_TEAM_DESCRIPTION]
 		createCompoDialog: boolean = false
 		createCompoName: string = ''
+		renameCompoName: string = ''
 		deleteCompoDialog: boolean = false
 		renameCompoDialog: boolean = false
 		compositionToDelete: Composition | null = null
@@ -829,12 +830,12 @@
 				LeekWars.toast(error)
 			})
 		}
-		
+
 		renameComposition(composition: Composition) {
-		        // NEED THE APII
-			LeekWars.post('team/rename-composition', {composition_id: composition.id, composition_name: this.createCompoName}).then(data => {
+			LeekWars.put('team/rename-composition', {composition_id: composition.id, composition_name: this.renameCompoName}).then(data => {
 				if (this.team) {
 					this.renameCompoDialog = false
+					composition.name = this.renameCompoName
 				}
 			}).error(error => {
 				LeekWars.toast(error)
