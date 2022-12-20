@@ -123,7 +123,7 @@ export default class ItemPreview extends Vue {
 			32: ['sword'],
 			33: ['lightninger', 0.7, 'lightninger_impact'],
 			34: ['double_gun'],
-			35: ['sword']
+			35: ['sword'], 36: ['sword']
 		} as {[key: number]: any})[id]
 	}
 

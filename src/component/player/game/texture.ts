@@ -185,6 +185,7 @@ class T {
 	public static unstable_destroyer = new Texture(LeekWars.STATIC + 'image/weapon/unstable_destroyer.png', true, SHADOW_QUALITY)
 	public static cart_unstable_destroyer = new Texture(LeekWars.STATIC + 'image/weapon/cart_unstable_destroyer.png')
 	public static sword = new Texture(LeekWars.STATIC + 'image/weapon/sword.png', true, SHADOW_QUALITY)
+	public static heavy_sword = new Texture(LeekWars.STATIC + 'image/weapon/heavy_sword.png', true, SHADOW_QUALITY)
 
 	// Cartes
 	public static box = new Texture(LeekWars.STATIC + 'image/map/box.png', true, 1)

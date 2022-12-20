@@ -11,7 +11,7 @@ import { Obstacle } from '@/component/player/game/obstacle'
 import { Particles } from '@/component/player/game/particles'
 import { S, Sound } from '@/component/player/game/sound'
 import { T, Texture } from '@/component/player/game/texture'
-import { Axe, Bazooka, BLaser, Broadsword, DarkKatana, Destroyer, DoubleGun, Electrisor, EnhancedLightninger, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, MLaser, MysteriousElectrisor, Neutrino, Pistol, RevokedMLaser, Rhino, Rifle, Shotgun, Sword, UnbridledGazor, UnstableDestroyer } from '@/component/player/game/weapons'
+import { Axe, Bazooka, BLaser, Broadsword, DarkKatana, Destroyer, DoubleGun, Electrisor, EnhancedLightninger, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, HeavySword, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, MLaser, MysteriousElectrisor, Neutrino, Pistol, RevokedMLaser, Rhino, Rifle, Shotgun, Sword, UnbridledGazor, UnstableDestroyer } from '@/component/player/game/weapons'
 import { locale } from '@/locale'
 import { Action, ActionType } from '@/model/action'
 import { Area } from '@/model/area'
@@ -119,6 +119,7 @@ const WEAPONS = [
 	EnhancedLightninger, // 33
 	UnstableDestroyer, // 34
 	Sword, // 35
+	HeavySword, // 36
 ]
 
 const CHIP_ANIMATIONS = [
@@ -1501,6 +1502,7 @@ class Game {
 					"enhanced_lightninger", // 33
 					"unstable_destroyer", // 34
 					"sword", // 35
+					"heavy_sword", // 36
 				][template - 1]
 					image = LeekWars.STATIC + "image/weapon/" + img + ".png"
 					// Gestion des états du poireau
