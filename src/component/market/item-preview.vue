@@ -34,7 +34,7 @@
 			<div v-if="quantity > 1">
 				{{ $t('main.lot_value') }} : <b>{{ item.price * quantity | number }}</b> <span class='hab'></span>
 			</div>
-			<div v-if="item.name.startsWith('box') || (LeekWars.christmasPresents && item.name.startsWith('present'))">
+			<div v-if="item.name.startsWith('box') || ((($store.state.farmer && $store.state.farmer.admin) || LeekWars.christmasPresents) && item.name.startsWith('present'))">
 				<v-btn small class="get-all notif-trophy" @click.stop="retrieveN(1)">{{ $t('main.retrieve') }} <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
 				<v-btn v-if="quantity >= 10" small class="get-all notif-trophy" @click.stop="retrieveN(10)">x10 <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
 				<v-btn v-if="quantity >= 100" small class="get-all notif-trophy" @click.stop="retrieveN(100)">x100 <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>

@@ -111,7 +111,7 @@ const WeaponsData = {
 	// Épée
 	35: { width: 240, height: 61, centerX: 32, centerZ: 45, x: -40, z: -15, hand1x: 22, hand1z: 30, hand2x: 36, hand2z: 30, top: -5, bottom: 2, right: 115, white: true },
 	// Épée lourde
-	36: { width: 340, height: 65, centerX: 35, centerZ: 45, x: -60, z: -15, hand1x: 70, hand1z: 32, hand2x: 32, hand2z: 32, top: -5, bottom: 18, right: 130, white: true },
+	36: { width: 320, height: 61, centerX: 35, centerZ: 45, x: -50, z: -15, hand1x: 62, hand1z: 30, hand2x: 32, hand2z: 30, top: -5, bottom: 8, right: 124, white: true },
 } as {[key: number]: WeaponData}
 
 const FishData = { width: 150, height: 65, centerX: 25, centerZ: 45, x: -35, z: -15, hand1x: 12, hand1z: 44, hand2x: 53, hand2z: 57, sx: 110, sz: 10, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 7, bottom: 50, white: false } as WeaponData

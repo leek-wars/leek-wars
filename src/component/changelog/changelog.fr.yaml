@@ -1,3 +1,41 @@
+234:
+  title: "Nouveau tutoriel, Épée lourde, Créations de la communauté"
+  added:
+    - "Ajout d'un nouveau tutoriel avec IA complète, quizz, astuces. #img_234_tutorial"
+    - "Ajout de l'arme Épée Lourde. #img_234_sword"
+    - "Éditeur : ajout d'un bouton pour copier un poireau en tant que poireau de test (merci à Ref). #img_234_copy_test"
+    - "Éditeur : ajout d'un bouton pour dupliquer un poireau de test (merci à Ref). #img_234_duplicate_leek"
+    - "Ajout de boutons pour aller à l'action précédente/suivante en combat (merci à Karang). #img_234_action_buttons"
+    - "Ajout de marqueurs des morts et résurrections sur la barre de progression (merci à Karang). #img_234_markers"
+    - "Touche R sur le rapport de combat pour relancer un test rapidement. #img_234_refight"
+    - "Ajout d'un mode sombre pour le Nexus (carte de test). #img_234_dark_nexus"
+    - "Ajout d'une version de markText prenant une table [ cellule : texte ] comme argument. #img_234_marktext"
+    - "Ajout de la possibilité de renommer une composition (merci à temakisushi). #img_234_compo_rename"
+  improved:
+    - Ajout de traductions manquantes (merci à nytope).
+    - Autorisation de choisir uniquement un adjectif pour un titre de poireau ou d'éleveur.
+    - Ajout d'un décalage sur les tooltips d'armes dans la fenetre de personnalisation poireau (merci à nytope).
+    - "Éditeur : amélioration de l'affichage des erreurs sur plusieurs lignes. #img_234_multiline_error"
+    - Amélioration de la stabilité de l'éditeur (merci à nytope).
+    - Le nombre de défis quotidiens passe à 100 au lieu de 200.
+    - Meilleur image du trèfle + son à l'apparition.
+    - "LeekScript : accents autorisés dans les noms de variables ou champs."
+    - "Ajout d'une section éducation et kit de presse sur la page d'inscription. #img_234_education"
+    - "Affichage combat mobile paysage : les contrôles sont sur le côté pour agrandir le combat. #img_234_mobile_fight"
+  fixed:
+    - Correction d'un bug dans l'inventaire si un item est dupliqué (merci à nytope).
+    - Correction de l'affichage d'un titre s'il comporte un adjectif uniquement (merci à nytope).
+    - Possibilité de choisir le genre du titre même s'il ne comporte pas de nom.
+    - Un clic sur le bouton messages du header ne marque plus les notifs comme lues (merci à nytope).
+    - Amélioration du message d'avertissement "L'éditeur est déjà ouvert" (merci à nytope).
+    - "LeekScript : correction d'un bug d'appel de fonction avec un argument null."
+    - "Titres : les adjectifs tout en majuscules restent en majuscules (merci à nytope)."
+    - Corrections de traductions sur la page éleveur, inscription (merci à temakisushi).
+    - Correction des say() censurés sur la page rapport de combat.
+    - Amélioration du calcul des dégâts infligés dans le rapport de combat (merci à nytope).
+    - Correction du comportement de la popup de doc sur la page marché (merci à nytope).
+    - "Correction du bug d'affichage des zones en combat quand le lecteur est redimensionné. #img_234_area"
+
 233:
   title: Épée, Prisme, Aide sur les erreurs, liens vers action et beaucoup d'améliorations.
   added:

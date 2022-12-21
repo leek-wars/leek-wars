@@ -241,13 +241,12 @@ import LeekImage from '../leek-image.vue'
 							q.forEach((a, j) => result[parseInt(questions[i].children[j].getAttribute('index')!)] = a)
 							return result
 						})
-						LeekWars.post("tutorial/answer", { chapter, form: JSON.stringify(real_form) })
+						LeekWars.post("tutorial/answer", { chapter, form: JSON.stringify(real_form), progress: good ? chapter : chapter - 1 })
 
 						if (good) {
 							bravo.style.display = 'block'
 							set_finished()
 							// Send new progression
-							LeekWars.put("tutorial/set-progress", { progress: chapter })
 							store.commit('set-tutorial-progress', chapter)
 						}
 					})

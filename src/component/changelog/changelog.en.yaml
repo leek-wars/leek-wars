@@ -1,3 +1,41 @@
+234:
+  title: "New Tutorial, Heavy Sword, Community Creations"
+  added:
+    - "Added new tutorial with full AI, quizzes, tips. #img_234_tutorial"
+    - "Added Heavy Sword weapon. #img_234_sword"
+    - "Editor: added button to copy a leek as a test leek (thanks to Ref). #img_234_copy_test"
+    - "Editor: added a button to duplicate a test leek (thanks to Ref). #img_234_duplicate_leek"
+    - "Added buttons to go to previous/next action in combat (thanks to Karang). #img_234_action_buttons"
+    - "Added markers for deaths and resurrections on the progress bar (thanks to Karang). #img_234_markers"
+    - "R button on the combat report to quickly rerun a test. #img_234_refight"
+    - "Added a dark mode for the Nexus (test card). #img_234_dark_nexus"
+    - "Added a version of markText that takes a table [ cell: text ] as an argument. #img_234_marktext"
+    - "Added the ability to rename a composition (thanks to temakisushi). #img_234_compo_rename"
+  improved:
+    - Added missing translations (thanks to nytope).
+    - Allowed to choose only one adjective for a leek or farmer title.
+    - Added an offset on weapon tooltips in the leek customization window (thanks to nytope).
+    - " Editor : improvement of the display of errors on several lines. #img_234_multiline_error"
+    - Improved stability of the editor (thanks to nytope).
+    - The number of daily challenges is now 100 instead of 200.
+    - Better clover image + sound on appearance.
+    - "LeekScript: accents allowed in variable or field names."
+    - "Added education and press kit section to the registration page. #img_234_education"
+    - "Mobile landscape combat display: controls are on the side to enlarge the combat. #img_234_mobile_fight"
+  fixed:
+    - Fixed a bug in the inventory if an item is duplicated (thanks to nytope).
+    - Fixed display of a title if it contains an adjective only (thanks to nytope).
+    - Possibility to choose the gender of the title even if it doesn't contain a name.
+    - Clicking on the messages button in the header no longer marks notices as read (thanks to nytope).
+    - Improved the warning message "Editor is already open" (thanks to nytope).
+    - "LeekScript: fixed a bug with calling a function with a null argument."
+    - "Titles: all-caps adjectives remain in caps (thanks to nytope)."
+    - Translation corrections on farmer page, registration (thanks to temakisushi).
+    - Fixed censored say() on the fight report page.
+    - Improved the calculation of the damage inflicted in the combat report (thanks to nytope).
+    - Fixed the behavior of the doc popup on the market page (thanks to nytope).
+    - "Fixed the bug of displaying zones in combat when the player is resized. #img_234_area"
+
 233:
   title: Sword, Prism, Help on errors, links to action and many improvements.
   added:
