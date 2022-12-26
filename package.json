@@ -50,7 +50,6 @@
 		"eslint-plugin-prefer-arrow": "^1.2.3",
 		"eslint-plugin-vue": "^9.2.0",
 		"json-loader": "^0.5.7",
-		"mini-css-extract-plugin": "^2.6.1",
 		"prettier": "2.0.5",
 		"request": "^2.88.2",
 		"request-promise": "^4.2.6",

@@ -358,7 +358,7 @@ import LeekImage from '../leek-image.vue'
 					if (parts.length > 1) {
 						const chapter = parseInt(parts[1])
 						const locked = (store.state.farmer ? store.state.farmer.tutorial_progress : 0) < chapter ? "locked": ""
-						return "<div class='lock " + locked + "'>" + this.$parent.$parent.$i18n.t('locked') + "</div>"
+						return "<div class='lock " + locked + "'>" + this.$parent!.$parent!.$i18n.t('locked') + "</div>"
 					}
 				} else if (tag.startsWith('leeky')) {
 					return "<div class='leeky'></div>"

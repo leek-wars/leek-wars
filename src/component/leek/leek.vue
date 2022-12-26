@@ -813,8 +813,8 @@
 			this.error = false
 			if (!this.id) { return }
 			const method = this.my_leek ? 'leek/get-private/' + this.id : 'leek/get/' + this.id
-			this.request = LeekWars.get(method)
-			this.request.then(leek => {
+			this.request = LeekWars.get<Leek>(method)
+			this.request.then((leek: Leek) => {
 				this.leek = new Leek(leek)
 				if (this.leek) {
 					LeekWars.setTitle(this.leek.name, this.$t('main.level_n', [this.leek.level]))
@@ -843,7 +843,7 @@
 					}
 					this.$root.$emit('loaded')
 				}
-			}).error(error => {
+			}).error((error: any) => {
 				this.error = true
 			})
 		}
