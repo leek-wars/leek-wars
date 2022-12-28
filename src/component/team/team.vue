@@ -629,6 +629,7 @@
 		deleteCompoDialog: boolean = false
 		renameCompoDialog: boolean = false
 		compositionToDelete: Composition | null = null
+		compositionToRename: Composition | null = null
 		banDialog: boolean = false
 		banMemberTarget: Farmer | null = null
 		quitTeamDialog: boolean = false
