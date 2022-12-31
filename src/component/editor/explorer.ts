@@ -19,8 +19,10 @@ class Explorer {
 		this.selectedAI = ai
 		Vue.set(ai, "selected", true)
 		const folder = fileSystem.folderById[this.selectedAI.folder]
-		this.selectFolder(folder)
-		this.setExpanded(folder, true)
+		if (folder) {
+			this.selectFolder(folder)
+			this.setExpanded(folder, true)
+		}
 	}
 
 	public selectFolder(folder: Folder) {

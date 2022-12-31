@@ -610,7 +610,9 @@
 			LeekWars.header = true
 			LeekWars.footer = true
 			LeekWars.box = false
-			this.broadcast.close()
+			if (this.broadcast) {
+				this.broadcast.close()
+			}
 		}
 
 		beforeRouteLeave(to: Route, from: Route, next: Function) {
