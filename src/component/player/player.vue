@@ -504,7 +504,7 @@
 						id: 0,
 						farmer1: 1, farmer2: 1,
 						leeks1: [],	leeks2: [],
-						team1: 1, team2: 1,
+						team1: null, team2: null,
 						report: {} as Report,
 						status: 1,
 						team1_name: "A", team2_name: "B",

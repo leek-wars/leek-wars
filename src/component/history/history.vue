@@ -61,7 +61,7 @@
 						<span class="category">
 							{{ $t('fight_context') }}
 						</span>
-						<v-checkbox v-if="type !== 'team'" v-model="displayContexts.challenge" hide-details class="option-checkbox" :label="$t('challenge')" />
+						<v-checkbox v-model="displayContexts.challenge" hide-details class="option-checkbox" :label="$t('challenge')" />
 						<v-checkbox v-model="displayContexts.garden" hide-details class="option-checkbox" :label="$t('garden')" />
 						<v-checkbox v-model="displayContexts.tournament" hide-details class="option-checkbox" :label="$t('tournament')" />
 					</div>

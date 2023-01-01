@@ -81,7 +81,7 @@
 					<loader v-if="!garden || !$store.state.farmer" />
 
 					<div v-else-if="category === 'challenge'">
-						<div v-if="challengeType == 'leek'">
+						<div v-if="challengeType === 'leek'">
 							<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('select_leek') }}</div>
 							<router-link v-for="leek in $store.state.farmer.leeks" :key="leek.id" :to="'/garden/challenge/leek/' + challengeTarget + '/' + leek.id" class="my-leek leek">
 								<garden-leek :leek="leek" />
@@ -95,7 +95,7 @@
 							</div>
 							<garden-no-fights v-else :canbuy="false" />
 						</div>
-						<div v-else>
+						<div v-else-if="challengeType === 'farmer'">
 							<span v-ripple class="my-farmer farmer">
 								<garden-farmer v-if="$store.state.farmer" :farmer="$store.state.farmer" />
 							</span>
@@ -110,6 +110,31 @@
 								</div>
 							</div>
 							<garden-no-fights v-else :canbuy="false" />
+						</div>
+						<div v-else>
+							<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('select_compo') }}</div>
+							<router-link v-for="composition in garden.my_compositions" :key="composition.id" v-ripple :to="'/garden/challenge/team/' + challengeTarget + '/' + composition.id" class="composition-wrapper my-composition">
+								<garden-compo :compo="composition" />
+								<div class="fights">
+									<img class="sword" src="/image/icon/grey/garden.png">{{ composition.fights }}
+								</div>
+							</router-link>
+							<div class="versus">VS</div>
+							<div v-if="challengeFights" class="enemies">
+								<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('click_opponent') }}</div>
+								<loader v-if="!challengeTeamTargets" />
+								<div v-else class="opponents">
+									<span v-for="compo in challengeTeamTargets" :key="compo.id" v-ripple class="composition-wrapper" @click="startTeamChallenge(compo)">
+										<garden-compo :compo="compo" />
+									</span>
+									<div v-if="!challengeTeamTargets.length">
+										<img src="/image/notgood.png">
+										<h4>{{ $t('no_opponent_of_your_size') }}</h4>
+									</div>
+								</div>
+							</div>
+							<garden-no-fights v-else :canbuy="false" />
+							<br>
 						</div>
 						<div class="title advanced" @click="advanced = !advanced">
 							{{ $t('advanced') }}
@@ -270,6 +295,7 @@
 		challengeTarget: number = 0
 		challengeLeekTarget: Leek | null = null
 		challengeFarmerTarget: Farmer | null = null
+		challengeTeamTargets: Composition[] = []
 		queue: number = 0
 		advanced: boolean = false
 		seed: number | null = null
@@ -442,39 +468,66 @@
 		selectChallenge() {
 			this.challengeTarget = parseInt(this.$route.params.target, 10)
 			this.challengeType = this.$route.params.type
-			if (!this.$route.params.item) {
-				this.$router.replace('/garden/challenge/' + this.challengeType + '/' + this.challengeTarget + '/' + LeekWars.first(store.state.farmer!.leeks)!.id)
-				return
-			}
-			this.selectedLeek = store.state.farmer!.leeks[parseInt(this.$route.params.item, 10)]!
+
 			if (this.challengeType === 'leek') {
+				if (!this.$route.params.item) {
+					this.$router.replace('/garden/challenge/' + this.challengeType + '/' + this.challengeTarget + '/' + LeekWars.first(store.state.farmer!.leeks)!.id)
+					return
+				}
+				this.selectedLeek = store.state.farmer!.leeks[parseInt(this.$route.params.item, 10)]!
 				LeekWars.get('garden/get-solo-challenge/' + this.challengeTarget).then(data => {
 					if (data.challenges) {
 						this.challengeFights = data.challenges
 						this.challengeLeekTarget = data.leek
 					}
 				})
-			} else {
+			} else if (this.challengeType === 'farmer') {
 				LeekWars.get('garden/get-farmer-challenge/' + this.challengeTarget).then(data => {
 					if (data.challenges) {
 						this.challengeFights = data.challenges
 						this.challengeFarmerTarget = data.farmer
 					}
 				})
+			} else if (this.challengeType === 'team') {
+				if (!this.$route.params.item) {
+					this.$router.replace('/garden/challenge/' + this.challengeType + '/' + this.challengeTarget + '/' + this.garden.my_compositions[0].id)
+					return
+				}
+				for (const composition of this.garden.my_compositions) {
+					if (composition.id == this.$route.params.item) {
+						this.selectedComposition = composition
+						break
+					}
+				}
+				LeekWars.get('garden/get-team-challenge/' + this.challengeTarget).then(data => {
+					if (data.challenges) {
+						this.challengeFights = data.challenges
+						this.challengeTeamTargets = data.compositions
+					}
+				})
 			}
 		}
+
 		startFarmerChallenge() {
 			if (!this.challengeFarmerTarget) { return }
 			LeekWars.post('garden/start-farmer-challenge', {target_id: this.challengeFarmerTarget.id, seed: this.seed || 0}).then(data => {
 				this.$router.push('/fight/' + data.fight)
 			}).error(error => LeekWars.toast(this.$t(error)))
 		}
+
 		startLeekChallenge() {
 			if (!this.challengeLeekTarget || !this.selectedLeek) { return }
 			LeekWars.post('garden/start-solo-challenge', {leek_id: this.selectedLeek.id, target_id: this.challengeLeekTarget.id, seed: this.seed || 0}).then(data => {
 				this.$router.push('/fight/' + data.fight)
 			}).error(error => LeekWars.toast(this.$t(error)))
 		}
+
+		startTeamChallenge(composition: Composition) {
+			LeekWars.post('garden/start-team-challenge', { composition_id: this.selectedComposition.id, target_id: composition.id, seed: this.seed || 0}).then(data => {
+				this.$router.push('/fight/' + data.fight)
+			}).error(error => LeekWars.toast(this.$t(error)))
+		}
+
 		@Watch('category')
 		updateCategory() {
 			if (this.category && this.category !== 'challenge') {

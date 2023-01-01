@@ -1,6 +1,7 @@
 import { Farmer } from '@/model/farmer'
 import { Comment } from './comment'
 import { Leek } from './leek'
+import { Team } from './team'
 
 enum FightType {
 	FREE = -1,
@@ -67,8 +68,8 @@ class Fight {
 	public leeks2!: Leek[]
 	public farmer1!: number
 	public farmer2!: number
-	public team1!: number
-	public team2!: number
+	public team1!: Team | null
+	public team2!: Team | null
 	public title!: string
 	public farmers1!: {[key: number]: Farmer}
 	public farmers2!: {[key: number]: Farmer}

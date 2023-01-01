@@ -99,7 +99,7 @@
 							</router-link>
 						</span>
 						<span v-else-if="fight.context == FightContext.CHALLENGE">
-							<router-link v-if="myFight" :to="'/garden/challenge/' + ['leek', 'farmer'][fight.type] + '/' + enemy">
+							<router-link v-if="myFight" :to="'/garden/challenge/' + ['leek', 'farmer', 'team'][fight.type] + '/' + enemy">
 								<v-btn v-if="iWin">
 									<v-icon>mdi-undo</v-icon>
 									{{ $t('refight') }}
@@ -558,6 +558,8 @@
 						this.enemy = this.fight.report.leeks2[0].id
 					} else if (this.fight.type === FightType.FARMER) {
 						this.enemy = this.fight.farmer2
+					} else if (this.fight.type === FightType.TEAM && this.fight.team2) {
+						this.enemy = this.fight.team2.id
 					}
 				}
 				else if (this.searchMyLeek(this.$store.state.farmer.leeks[ml], this.fight.report.leeks2)) {
@@ -567,6 +569,8 @@
 						this.enemy = this.fight.report.leeks1.length ? this.fight.report.leeks1[0].id : -1
 					} else if (this.fight.type === FightType.FARMER) {
 						this.enemy = this.fight.farmer1
+					} else if (this.fight.type === FightType.TEAM && this.fight.team1) {
+						this.enemy = this.fight.team1.id
 					}
 				}
 			}

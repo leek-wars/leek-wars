@@ -7,14 +7,14 @@
 			</rich-tooltip-team>
 			<h1 v-else>...</h1>
 
-			<div v-if="is_member && team" class="tabs">
-				<router-link :to="'/forum/category-' + team.forum">
+			<div v-if="team" class="tabs">
+				<router-link v-if="is_member" :to="'/forum/category-' + team.forum">
 					<div :link="'/forum/category-' + team.forum" class="tab action" icon="question_answer">
 						<img src="/image/icon/forum.png">
 						<span>{{ $t('forum') }}</span>
 					</div>
 				</router-link>
-				<tooltip>
+				<tooltip v-if="is_member">
 					<template v-slot:activator="{ on }">
 						<div class="tab" @click="updateOpened" v-on="on">
 							<span>{{ $t('opened') }}</span>
@@ -23,6 +23,12 @@
 					</template>
 					{{ $t('recrutment_mode') }}
 				</tooltip>
+				<router-link v-if="$store.state.connected" :to="'/garden/challenge/team/' + team.id">
+					<div :link="'/garden/challenge/team/' + team.id" class="tab action" icon="flag-outline">
+						<v-icon>mdi-flag-outline</v-icon>
+						<span>{{ $t('main.challenge') }}</span>
+					</div>
+				</router-link>
 			</div>
 		</div>
 
@@ -724,6 +730,10 @@
 					this.logsLevel = this.my_member!.logs_level
 					LeekWars.setActions([
 						{icon: 'mdi-chat-outline', click: () => this.$router.push('/forum/category-' + team.forum)}
+					])
+				} else {
+					LeekWars.setActions([
+						{icon: 'mdi-flag-outline', click: () => this.$router.push('/garden/challenge/team/' + team.id)}
 					])
 				}
 				this.$root.$emit('loaded')

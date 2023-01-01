@@ -40,7 +40,8 @@
 				<template v-else-if="$store.state.connected">
 					<router-link v-if="leek" :to="'/garden/challenge/leek/' + leek.id">
 						<div :link="'/garden/challenge/' + leek.id" class="tab action">
-							<img src="/image/icon/garden.png"><span>{{ $t('challenge') }}</span>
+							<v-icon>mdi-flag-outline</v-icon>
+							<span>{{ $t('challenge') }}</span>
 						</div>
 					</router-link>
 				</template>

@@ -51,7 +51,7 @@
 					</div>
 					<router-link v-if="$store.state.connected && $store.getters.leek_count >= 2 && Object.values(farmer.leeks).length >= 2" :to="'/garden/challenge/farmer/' + farmer.id">
 						<div :link="'/garden/challenge/farmer/' + farmer.id" class="tab action">
-							<img src="/image/icon/garden.png">
+							<v-icon>mdi-flag-outline</v-icon>
 							<span>{{ $t('challenge') }}</span>
 						</div>
 					</router-link>
