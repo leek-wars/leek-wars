@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">
-				<router-link v-if="env.BANK" to="/bank">
+				<router-link v-if="env.BANK && $store.state.farmer?.bank_enabled" to="/bank">
 					<div class="tab action" icon="account_balance" link="/bank">
 						<v-icon>mdi-bank</v-icon>
 						<span>{{ $t('main.bank') }}</span>
@@ -23,7 +23,7 @@
 		</div>
 		<div class="container">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column8">
-				<panel :title="$t('fights')" icon="mdi-sword-cross">
+				<panel v-if="$store.state.farmer?.buy_fights_enabled" :title="$t('fights')" icon="mdi-sword-cross">
 					<loader v-if="!fight_packs.length" slot="content" />
 					<div v-else slot="content" class="items fights">
 						<router-link v-for="pack in fight_packs" :key="pack.id" v-ripple :to="'/market/' + pack.name" :farmer-count="0" :leek-count="0" class="item fight-pack" @click="selectItem(pack)">
@@ -138,7 +138,7 @@
 					</panel>
 
 					<div v-if="!LeekWars.mobile" class="menu">
-						<div v-ripple class="item" @click="scroll(0)">
+						<div v-if="$store.state.farmer?.buy_fights_enabled" v-ripple class="item" @click="scroll(0)">
 							<v-icon>mdi-sword-cross</v-icon> {{ $t('fights') }}
 						</div>
 						<div v-ripple class="item" @click="scroll(1)">

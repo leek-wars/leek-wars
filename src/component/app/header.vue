@@ -52,7 +52,7 @@
 					</div>
 				</div>
 				-->
-				<div v-if="env.BANK && $store.state.farmer.verified" class="button-wrapper">
+				<div v-if="env.BANK && $store.state.farmer.verified && $store.state.farmer.bank_enabled" class="button-wrapper">
 					<router-link to="/bank">
 						<div v-if="$store.state.farmer" class="header-button">
 							<span class="farmer-crystals text">{{ Math.round($store.state.farmer.animated_crystals) | number }}</span>

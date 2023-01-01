@@ -27,7 +27,7 @@
 								<img class="player" src="/image/player.png">
 							</router-link>
 
-							<tooltip :disabled="battleRoyaleEnabled">
+							<tooltip v-if="$store.state.farmer.br_enabled" :disabled="battleRoyaleEnabled">
 								<template v-slot:activator="{ on }">
 									<router-link v-ripple :class="{ enabled: battleRoyaleEnabled }" :event="battleRoyaleEnabled ? 'click' : ''" to="/garden/battle-royale" class="tab">
 										<div v-on="on">
@@ -352,6 +352,7 @@
 				if (savedCategory || !LeekWars.mobile) {
 					let defaultCategory = savedCategory || 'solo'
 					if (defaultCategory === 'challenge') { defaultCategory = 'solo' }
+					if (defaultCategory === 'battle-royale' && !this.$store.state.farmer.br_enabled) { defaultCategory = 'solo' }
 					this.$router.replace('/garden/' + defaultCategory)
 					return
 				}

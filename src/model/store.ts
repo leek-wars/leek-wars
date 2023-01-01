@@ -150,8 +150,9 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			LeekWars.socket.enableChannel(data.id)
 			if (!state.chat[data.id]) {
 				const teamChat = state.farmer && state.farmer.team ? state.farmer.team.chat : null
-				const type = LeekWars.isPublicChat(data.id) ? ChatType.GLOBAL : (data.id === teamChat ? ChatType.TEAM : ChatType.PM)
-				const name = type === ChatType.GLOBAL ? LeekWars.chatNames[data.id] : (type === ChatType.TEAM ? state.farmer!.team!.name : data.name)
+				const groupeChat = state.farmer && state.farmer.groupe ? state.farmer.groupe.chat : null
+				const type = LeekWars.isPublicChat(data.id) ? ChatType.GLOBAL : (data.id === teamChat ? ChatType.TEAM : (data.id === groupeChat ? ChatType.GROUP : ChatType.PM))
+				const name = type === ChatType.GLOBAL ? LeekWars.chatNames[data.id] : (type === ChatType.TEAM ? state.farmer!.team!.name : (type === ChatType.GROUP ? state.farmer!.groupe!.name : data.name))
 				const chat = new Chat(data.id, type, name, data.notifications)
 				Vue.set(state.chat, data.id, chat)
 			}

@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('main.inventory') }}</h1>
 			<div class="tabs">
-				<router-link v-if="env.BANK" to="/bank">
+				<router-link v-if="env.BANK && $store.state.farmer?.bank_enabled" to="/bank">
 					<div class="tab action" icon="account_balance" link="/bank">
 						<v-icon>mdi-bank</v-icon>
 						<span>{{ $t('main.bank') }}</span>

@@ -13,7 +13,7 @@
 							<div class="tab green">{{ $t('see_tournament') }}</div>
 						</router-link>
 					</template>
-					<tooltip v-if="leek.tournament" content-class="fluid" @input="loadTournamentRange">
+					<tooltip v-if="$store.state.farmer.tournaments_enabled && leek.tournament" content-class="fluid" @input="loadTournamentRange">
 						<template v-slot:activator="{ on }">
 							<div class="tab" @click="registerTournament" v-on="on">
 								<v-icon>mdi-trophy</v-icon>
@@ -264,7 +264,7 @@
 						{{ $t('rename_leek') }}
 					</div>
 				</template>
-				<tooltip v-if="leek && my_leek && leek.level >= 20" @input="loadBRRange">
+				<tooltip v-if="leek && my_leek && leek.level >= 20 && $store.state.farmer.br_enabled" @input="loadBRRange">
 					<template v-slot:activator="{ on }">
 						<div class="tab" @click="registerAutoBr" v-on="on">
 							<v-icon>mdi-trophy</v-icon>

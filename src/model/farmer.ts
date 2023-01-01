@@ -6,6 +6,7 @@ import { Leek } from '@/model/leek'
 import { Potion } from '@/model/potion'
 import { Team } from '@/model/team'
 import { Weapon } from '@/model/weapon'
+import { Group } from './group'
 
 class Farmer {
 	public id!: number
@@ -58,6 +59,8 @@ class Farmer {
 	public resources!: any[]
 	public verified!: boolean
 	public tutorial_progress!: number
+	public groupe!: Group
+	public public_chat_enabled!: boolean
 }
 
 class Reward {

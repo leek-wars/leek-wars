@@ -68,7 +68,7 @@
 			</template>
 		</panel>
 
-		<panel icon="mdi-chat-outline">
+		<panel v-if="$store.state.farmer?.public_chat_enabled" icon="mdi-chat-outline">
 			<span slot="title">
 				<router-link :to="'/chat/' + chatLanguage.chat">{{ $t('main.chat') }}</router-link>
 				<v-menu offset-y>

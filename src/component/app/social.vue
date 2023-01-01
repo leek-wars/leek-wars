@@ -43,15 +43,15 @@
 
 				<panel v-if="env.SOCIAL" class="blabla-chat" toggle="social/chat" icon="mdi-chat-outline">
 					<template slot="title">
-						<router-link v-ripple :to="'/chat/' + chatLanguage.chat" class="title">
-							Chat
-							<span class="farmer-count">
+						<router-link v-ripple :to="'/chat/' + chatID" class="title">
+							Chat <span v-if="$store.state.farmer.groupe">{{ $store.state.farmer.groupe.name }}</span>
+							<span v-if="!$store.state.farmer?.groupe" class="farmer-count">
 								<span class="count">({{ $store.state.connected_farmers }} <v-icon class="icon">mdi-account-multiple</v-icon>)</span>
 							</span>
 						</router-link>
 					</template>
 					<div slot="actions" class="actions">
-						<v-menu offset-y>
+						<v-menu v-if="!$store.state.farmer?.groupe" offset-y>
 							<template v-slot:activator="{ on }">
 								<div class="language-button" v-ripple v-on="on">
 									<div class="wrapper">
@@ -68,11 +68,11 @@
 								</v-list-item>
 							</v-list>
 						</v-menu>
-						<div v-if="$store.state.chat[chatLanguage.chat]" class="button text" @click="LeekWars.addChat($store.state.chat[chatLanguage.chat])">
+						<div v-if="$store.state.chat[chatID]" class="button text" @click="LeekWars.addChat($store.state.chat[chatID])">
 							<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 						</div>
 					</div>
-					<chat :id="chatLanguage.chat" slot="content" />
+					<chat :id="chatID" slot="content" />
 				</panel>
 			</div>
 		</div>
@@ -86,6 +86,7 @@
 	import { Notification } from '@/model/notification'
 	import { Component, Vue } from 'vue-property-decorator'
 	import ConversationElement from '@/component/messages/conversation.vue'
+	import { store } from '@/model/store'
 
 	@Component({ name: 'lw-social', components: { chat: ChatElement, 'conversation': ConversationElement } })
 	export default class Social extends Vue {
@@ -93,6 +94,13 @@
 		ChatType = ChatType
 		chatLanguage: Language | null = null
 		panelWidth: number = 400
+
+		get chatID() {
+			if (store.state.farmer && store.state.farmer.groupe) {
+				return store.state.farmer.groupe.chat
+			}
+			return this.chatLanguage ? this.chatLanguage.chat : null
+		}
 
 		created() {
 			const lang = localStorage.getItem('social/chat-language') || this.$i18n.locale

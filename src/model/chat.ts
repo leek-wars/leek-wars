@@ -2,7 +2,7 @@ import { Farmer } from '@/model/farmer'
 import { i18n } from '@/model/i18n'
 import Vue from 'vue'
 
-enum ChatType { GLOBAL, TEAM, PM }
+enum ChatType { GLOBAL, TEAM, PM, GROUP }
 
 class ChatMessage {
 	id!: number

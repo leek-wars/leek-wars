@@ -317,7 +317,7 @@
 						<talent :id="team.id" :talent="composition.talent" category="team" />
 					</div>
 					<router-link v-if="composition.tournament.current" :to="'/tournament/' + composition.tournament.current" class="view-tournament button flat">{{ $t('see_tournament') }}</router-link>
-					<tooltip v-if="captain" content-class="fluid" @input="loadTournamentRange(composition)">
+					<tooltip v-if="$store.state.farmer.tournaments_enabled && captain" content-class="fluid" @input="loadTournamentRange(composition)">
 						<template v-slot:activator="{ on }">
 							<div class="button flat" v-on="on" @click="registerTournament(composition)">
 								<v-icon>mdi-trophy</v-icon>

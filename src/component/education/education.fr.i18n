@@ -1,0 +1,15 @@
+{
+	"supervisor": "Encadrant",
+	"students": "Étudiants",
+	"settings": "Paramètres du groupe",
+	"group_name": "Nom du groupe",
+	"student_options": "Options des étudiants",
+	"setting_trophies": "Activer les trophées",
+	"setting_public_chat": "Activer les chats publics",
+	"setting_buy_fights": "Activer l'achat de combats",
+	"setting_bank": "Activer la banque des cristaux",
+	"setting_chat": "Activer le chat du groupe",
+	"main_options": "Options principales",
+	"setting_tournaments": "Activer les tournois publics",
+	"setting_br": "Activer les Battle Royales"
+}

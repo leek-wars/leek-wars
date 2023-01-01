@@ -129,6 +129,7 @@ class Language {
 	public code!: string
 	public name!: string
 	public flag!: string
+	public chat!: number
 }
 
 const LOCAL_DATE = new Date()

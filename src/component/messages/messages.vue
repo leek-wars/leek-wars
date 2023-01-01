@@ -108,7 +108,7 @@
 		loadingConversations: boolean = false
 
 		get chats() {
-			const chats = [
+			const chats = (store.state.farmer && store.state.farmer.public_chat_enabled ? [
 				{ name: 'Français', image: '/image/flag/fr.png', chats: [
 					{ id: 1, name: 'Général', icon: 'mdi-chat-outline' },
 					{ id: 32506, name: 'Aide', icon: 'mdi-help-circle-outline' },
@@ -119,11 +119,15 @@
 					{ id: 32508, name: 'Help', icon: 'mdi-help-circle-outline' },
 					{ id: 32509, name: 'Programming', icon: 'mdi-code-braces' },
 				]}
-			] as any[]
+			] : []) as any[]
 			if (this.$store.state.farmer && this.$store.state.farmer.team) {
-				chats.push({name: this.$t('cat_team'), icon: 'mdi-account-multiple', chats: [
+				const team_chats = [
 					{ id: this.$store.state.farmer.team.chat, name: this.$store.state.farmer.team.name, icon: 'mdi-chat-outline' },
-				]})
+				]
+				if (this.$store.state.farmer.groupe) {
+					team_chats.push({ id: this.$store.state.farmer.groupe.chat, name: this.$store.state.farmer.groupe.name, icon: 'mdi-chat-outline' })
+				}
+				chats.push({name: this.$t('cat_team'), icon: 'mdi-account-multiple', chats: team_chats })
 			}
 			return chats
 		}
@@ -243,10 +247,11 @@
 		}
 
 		getConversationFarmerId() {
-			if (!this.chat) { return }
-			for (const farmer of this.chat.farmers) {
-				if (!this.$store.state.farmer || farmer.id !== this.$store.state.farmer.id) {
-					return farmer.id
+			if (this.chat && this.chat.type === ChatType.PM) {
+				for (const farmer of this.chat.farmers) {
+					if (!this.$store.state.farmer || farmer.id !== this.$store.state.farmer.id) {
+						return farmer.id
+					}
 				}
 			}
 		}
