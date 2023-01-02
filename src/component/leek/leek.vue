@@ -264,7 +264,7 @@
 						{{ $t('rename_leek') }}
 					</div>
 				</template>
-				<tooltip v-if="leek && my_leek && leek.level >= 20 && $store.state.farmer.br_enabled" @input="loadBRRange">
+				<tooltip v-if="leek && my_leek && leek.level >= 20 && $store.state.farmer?.br_enabled" @input="loadBRRange">
 					<template v-slot:activator="{ on }">
 						<div class="tab" @click="registerAutoBr" v-on="on">
 							<v-icon>mdi-trophy</v-icon>
