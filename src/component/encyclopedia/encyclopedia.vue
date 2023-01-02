@@ -54,7 +54,7 @@
 				<div v-if="Object.keys(LeekWars.encyclopedia).length" ref="markdown" class="markdown" @scroll="markdownScroll">
 					<!-- {{ parents }} -->
 
-					<markdown :content="page.content" mode="encyclopedia" :class="{main: page.id === 1}" :locale="page.language" />
+					<markdown :content="content" mode="encyclopedia" :class="{main: page.id === 1}" :locale="page.language" />
 
 					<div v-if="page.new && !edition" class="nopage">
 						<v-icon>mdi-book-open-page-variant</v-icon>
@@ -135,7 +135,6 @@
 
 	@Component({ name: 'encyclopedia', i18n: {}, mixins: [...mixins], components: { Markdown, Breadcrumb, RichTooltipFarmer } })
 	export default class Encyclopedia extends Vue {
-		content: string = ''
 		english: string = ''
 		page: any = null
 		edition: boolean = false
@@ -190,6 +189,35 @@
 				parents.push(current)
 			}
 			return parents.reverse()
+		}
+		get function_args() {
+			for (const fun of FUNCTIONS) {
+				if (fun.name === this.code) {
+					let name = "("
+					let i = 0
+					for (const a in fun.arguments_names) {
+						if (fun.optional[a]) name += "["
+						name += '<span class="lstype">' + LeekWars.protect(this.$t("doc.arg_type_" + fun.arguments_types[a])) + '</span> '
+						name += fun.arguments_names[a]
+						if (fun.optional[a]) name += "]"
+						if (i++ < fun.arguments_names.length - 1) {
+							name += ", "
+						}
+					}
+					name += ')'
+					if (fun.return_type !== 0) {
+						name += " → " + '<span class="lstype">' + LeekWars.protect(this.$t("doc.arg_type_" + fun.return_type)) + '</span> ' + fun.return_name
+					}
+					return name
+				}
+			}
+		}
+		get content() {
+			let content = this.page ? this.page.content : ''
+			if (this.function_args) {
+				content = content.replace("# " + this.code, "# " + this.code + '<span>' + this.function_args + '</span>')
+			}
+			return content
 		}
 
 		beforeDestroy() {
@@ -340,7 +368,10 @@ ${ret}
 						Vue.nextTick(() => {
 							const title = (this.$refs.markdown as HTMLElement).querySelector('h1')
 							if (title) {
-								const text = title.innerText.trim()
+								let text = ''
+								for (var i = 0; i < title.childNodes.length; ++i)
+									if (title.childNodes[i].nodeType === Node.TEXT_NODE)
+										text += title.childNodes[i].textContent.trim()
 								this.page.title = text
 							}
 							const parent = (this.$refs.markdown as HTMLElement).querySelector('blockquote')

@@ -16,9 +16,9 @@
 	import TutorialProgress from '../tutorial/tutorial-progress.vue'
 	import { VBtn, VCheckbox } from 'vuetify/lib/components'
 	import { tutorial_items } from '../tutorial/tutorial-items'
-import { store } from '@/model/store'
-import { i18n } from '@/model/i18n'
-import LeekImage from '../leek-image.vue'
+	import { store } from '@/model/store'
+	import { i18n } from '@/model/i18n'
+	import LeekImage from '../leek-image.vue'
 
 	@Component({ name: 'markdown' })
 	export default class Markdown extends Vue {
@@ -618,5 +618,9 @@ import LeekImage from '../leek-image.vue'
 			border-radius: 4px;
 			margin: 0;
 		}
+	}
+	.md ::v-deep .lstype {
+		color: #0000D0;
+		font-weight: bold;
 	}
 </style>
