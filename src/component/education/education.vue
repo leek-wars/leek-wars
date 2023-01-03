@@ -19,13 +19,22 @@
 				<router-link class="card member" :to="'/farmer/' + group.owner.id" v-ripple>
 					<avatar :farmer="group.owner" />
 					<div class="info">
-						<b class="name">{{ group.owner.name }}</b>
+						<div class="name">
+							<b>{{ group.owner.name }}</b>
+							<img v-if="group.owner.connected" class="status" src="/image/connected.png">
+							<img v-else class="status" src="/image/disconnected.png">
+						</div>
 						<div class="level">{{ $t('main.level_n', [group.owner.total_level]) }}</div>
 					</div>
 					<!-- <div class="actions">
 						<v-icon @click.stop="sendMessage(group.owner)">mdi-email-outline</v-icon>
 					</div> -->
 				</router-link>
+
+				<div v-if="group && group.is_supervisor">
+					<br>
+					<v-btn @click="startBattleRoyale"><v-icon>mdi-sword-cross</v-icon>&nbsp; Lancer une Battle Royale</v-btn>
+				</div>
 			</div>
 		</panel>
 
@@ -57,6 +66,8 @@
 								<div class="flex name" v-on="on" v-ripple>
 									<avatar :farmer="item" />
 									<span>{{ item.name }}</span>
+									<img v-if="item.connected" class="status" src="/image/connected.png">
+									<img v-else class="status" src="/image/disconnected.png">
 								</div>
 							</rich-tooltip-farmer>
 						</router-link>
@@ -141,8 +152,12 @@
         //   { text: 'Iron (%)', value: 'iron' },
         ]
 
+		get group_id() {
+			return this.$route.params.id
+		}
+
 		created() {
-			LeekWars.get('groupe/get').then(group => {
+			LeekWars.get('groupe/get/' + this.group_id).then(group => {
 				this.group = group
 				this.renameGroupName = group.name
 				LeekWars.setTitle(group.name)
@@ -160,6 +175,12 @@
 
 		renameGroup() {
 
+		}
+
+		startBattleRoyale() {
+			LeekWars.post('groupe/start-battle-royale').then(data => {
+				this.$router.push('/fight/' + data.fight)
+			}).error(error => LeekWars.toast(this.$t(error)))
 		}
 
 		updateSettingChat() {
@@ -213,6 +234,12 @@ h4 {
 	.avatar {
 		width: 50px;
 	}
+	.name {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		margin-bottom: 4px;
+	}
 	.info {
 		flex: 1;
 	}
@@ -239,14 +266,21 @@ input[type="text"] {
 	}
 	.name {
 		justify-content: flex-start;
-		gap: 10px;
+		gap: 6px;
 		align-items: center;
-		text-overflow: ellipsis;
-		overflow: hidden;
 		white-space: nowrap;
+		span {
+			text-overflow: ellipsis;
+			overflow: hidden;
+			white-space: nowrap;
+			max-width: 95px;
+		}
 	}
 	.avatar, .emblem {
 		width: 40px;
 	}
+}
+.status {
+	width: 15px;
 }
 </style>
