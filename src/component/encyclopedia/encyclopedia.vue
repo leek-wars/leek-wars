@@ -371,8 +371,8 @@ ${ret}
 								let text = ''
 								for (var i = 0; i < title.childNodes.length; ++i)
 									if (title.childNodes[i].nodeType === Node.TEXT_NODE)
-										text += title.childNodes[i].textContent.trim()
-								this.page.title = text
+										text += title.childNodes[i].textContent
+								this.page.title = text.trim()
 							}
 							const parent = (this.$refs.markdown as HTMLElement).querySelector('blockquote')
 							if (parent) {
