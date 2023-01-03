@@ -714,7 +714,8 @@
 				width: 100%;
 			}
 			&.br {
-				width: 12%;
+				width: 10%;
+				height: auto;
 			}
 			height: 50%;
 			&.oneline {

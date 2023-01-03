@@ -17,23 +17,12 @@ const TEAM_COLORS = [
 	"#00ff80", // turquoise
 	"#a33000", // brown
 	"#158f00", // darkgreen
-]
-const TEAM_COLORS_DARK = [
-	"#6e86ff", // blue
-	"#ff3838", // red
-	"#4FBF1C", // green
-	"#FDED00", // yellow
-	"#B02D20", // brown
-	"#A2A2A2", // grey
-	"#ac4cba", // purple
-	"#FF7D00", // orange
-	"#14D7E4", // cyan
-	"#ff99f2", // pink
-	"#000000", // black
-	"#ffffff", // white
-	"#00ae57", // turquoise
-	"#6b2000", // brown
-	"#0c5100", // darkgreen
+	"#BEBD7F", // beige
+	"#A98307", // honey
+	"#641C34", // claret violet
+	"#F39F18", // sun
+	"#E55137", // salmon
+	"#E6D690", // ivory
 ]
 
 class Team {
@@ -85,4 +74,4 @@ class Composition {
 	public talent!: number
 }
 
-export { Composition, Team, TeamMember, TeamMemberLevel, TEAM_COLORS, TEAM_COLORS_DARK }
+export { Composition, Team, TeamMember, TeamMemberLevel, TEAM_COLORS }
