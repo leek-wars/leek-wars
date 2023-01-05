@@ -65,7 +65,7 @@
 				<div slot="content" class="leek-image">
 					<leek-image v-if="leek" :scale="0.95" :leek="leek" />
 					<loader v-else />
-					<lw-title v-if="leek && leek.title.length" :title="leek.title" :class="{pointer: my_leek}" @click.native="titleDialog = true" />
+					<lw-title v-if="leek && leek.title.length" :title="leek.title" :class="{pointer: my_leek}" @click.native="titleDialog = my_leek" />
 				</div>
 			</panel>
 
