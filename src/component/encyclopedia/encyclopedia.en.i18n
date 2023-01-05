@@ -1,11 +1,11 @@
 {
-    "n_contributors": "No contributor | <b>{n}</b> contributor | <b>{n}</b> contributors",
-    "search": "Search a page",
-    "created_by_x_the_y": "Created by {farmer} the {date}",
-    "edited_by_x_the_y": "Edited by {farmer} the {date}",
-    "n_views": "{v} views",
-    "n_contributions": "{n} contributions",
-    "not_found": "The page « {name} » does not exist on the encyclopedia in English.",
-    "contributor_create": "You are a contributor 😎 Click Edit to start editing this page",
-    "locked": "Finish the chapter to unlock the complete AI"
+	"n_contributors": "No contributor | <b>{n}</b> contributor | <b>{n}</b> contributors",
+	"search": "Search a page",
+	"created_by_x_the_y": "Created by {farmer} the {date}",
+	"edited_by_x_the_y": "Edited by {farmer} the {date}",
+	"n_views": "{v} views",
+	"n_contributions": "{n} contributions",
+	"not_found": "The page « {name} » does not exist on the encyclopedia in English.",
+	"contributor_create": "You are a contributor 😎 Click Edit to start editing this page",
+	"locked": "Finish the chapter to unlock the complete AI"
 }

@@ -1,13 +1,13 @@
 {
-	"flag_1" : "Static",
-    "flag_2" : "Perfect",
-    "flag_3" : "Rush",
-    "flag_4" : "Patient",
-    "flag_5" : "Magician",
-    "flag_6": "Hunter",
-    "flag_7": "Pacifist",
-    "flag_8" : "Swordsman",
-    "flag_9" : "Evasive",
-    "flag_10" : "Swiss Army Knife",
-    "flag_11" : "Untouchable"
+	"flag_1": "Static",
+	"flag_2": "Perfect",
+	"flag_3": "Rush",
+	"flag_4": "Patient",
+	"flag_5": "Magician",
+	"flag_6": "Hunter",
+	"flag_7": "Pacifist",
+	"flag_8": "Swordsman",
+	"flag_9": "Evasive",
+	"flag_10": "Swiss Army Knife",
+	"flag_11": "Untouchable"
 }

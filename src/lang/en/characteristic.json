@@ -30,5 +30,6 @@
 	"tp": "Turn points",
 	"tp_desc": "How many actions you can take during a turn",
 	"wisdom": "Wisdom",
-	"wisdom_desc": "Wisdom increases healing and life steal."
+	"wisdom_desc": "Wisdom increases healing and life steal.",
+	"too_high": "This feature is useful from level {0} onwards."
 }
