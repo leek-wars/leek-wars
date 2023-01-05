@@ -20,7 +20,8 @@
 							<template v-slot:activator="{ on }">
 								<span :q="cost" :class="{locked: costs[c + cost].cost > capital}" class="add" @click="add(c, cost)" v-on="on"></span>
 							</template>
-							{{ costs[c + cost].cost + ' capital ⇔ ' + costs[c + cost].bonus + ' ' + $t('characteristic.' + c) }}
+							<div>{{ costs[c + cost].cost + ' capital ⇔ ' + costs[c + cost].bonus + ' ' + $t('characteristic.' + c) }}</div>
+							<b v-if="useful_level[c] > leek.level">{{ $t('characteristic.too_high', [useful_level[c]]) }}</b>
 						</tooltip>
 						<tooltip v-if="bonuses[c]">
 							<template v-slot:activator="{ on }">
@@ -130,6 +131,19 @@
 		added: {[key: string]: any} = {}
 		costs: {[key: string]: any} = {}
 		capital: number = 0
+
+		useful_level = {
+			life : 1,
+			strength : 1,
+			wisdom : 1,
+			agility : 1,
+			resistance : 10,
+			science : 53,
+			magic : 42,
+			frequency : 1,
+			tp : 1,
+			mp : 1,
+		}
 
 		created() {
 			this.reset()

@@ -30,5 +30,6 @@
 	"tp": "Points de tour",
 	"tp_desc": "Actions maximum pendant un tour",
 	"wisdom": "Sagesse",
-	"wisdom_desc": "La sagesse accroît les soins et le vol de vie"
+	"wisdom_desc": "La sagesse accroît les soins et le vol de vie",
+	"too_high": "Cette caractéristique est utile à partir du niveau {0}."
 }

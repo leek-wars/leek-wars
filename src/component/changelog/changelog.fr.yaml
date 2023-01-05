@@ -1,3 +1,12 @@
+235:
+  added:
+    - "Ajout des défis d'équipe."
+  improved:
+    - Réinscription aux tournois si connecté depuis 2 jours au lieu de 1.
+    - Plus de gains pour les perdants en BR.
+    - "Ajout d'un message d'avertissement quand une caractéristique est inutile à son niveau. #img_235_leek_charac"
+    - "Ajout d'un icône à côté du bouton de sélection de la version LeekScript. #img_235_editor_chevron"
+
 234:
   title: "Nouveau tutoriel, Épée lourde, Créations de la communauté"
   added:
