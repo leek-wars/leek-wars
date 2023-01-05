@@ -115,6 +115,7 @@
 								<template v-slot:activator="{ on, attrs }">
 									<div v-ripple class="version" v-bind="attrs" v-on="on">
 										LeekScript {{ currentAI.version }}
+										<v-icon>mdi-chevron-down</v-icon>
 									</div>
 								</template>
 								<v-list :dense="true" class="version-menu">
@@ -1138,6 +1139,8 @@
 			padding: 0 10px;
 			font-weight: 500;
 			color: #555;
+			display: flex;
+			align-items: center;
 		}
 		.problems {
 			height: 100%;
