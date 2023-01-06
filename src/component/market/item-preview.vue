@@ -123,7 +123,8 @@ export default class ItemPreview extends Vue {
 			32: ['sword'],
 			33: ['lightninger', 0.7, 'lightninger_impact'],
 			34: ['double_gun'],
-			35: ['sword'], 36: ['sword']
+			35: ['sword'],
+			36: ['sword']
 		} as {[key: number]: any})[id]
 	}
 
@@ -146,11 +147,13 @@ export default class ItemPreview extends Vue {
 			79: ['poison'], 80: ['heal'], 81: ['buff'], 82: ['buff'],
 			83: ['teleportation'], 84: ['heal'], 85: ['alteration.wav'], 86: ['alteration.wav'], 87: ['alteration.wav'],
 			88: [], 89: [], 92: ['bulb'], 93: ['bulb'], 94: ['heal'], 95: ['debuff'], 96: ['debuff'], 97: ['poison'],
-			98: ['buff'], 99: ['shield'], 100: ['liberation'], 104: ['buff']
+			98: ['buff'], 99: ['shield'], 100: ['liberation'],
+			101: [], 102: [], 103: [], 104: ['buff']
 		} as {[key: number]: any})[id]
 	}
 
 	playSound(item: any, type: string) {
+		if (type !== 'chip' && type !== 'weapon') { return }
 		const play = (sounds: any) => {
 			if (sounds.length === 0) { return }
 			const sound = sounds[0]
