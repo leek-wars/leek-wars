@@ -19,14 +19,6 @@ import { PotionEffect, PotionTemplate } from './potion'
 const DEV = window.location.port === '8080'
 const LOCAL = window.location.port === '8500' || window.location.port === '5100'
 
-const MONTHS: { [key: string]: string[] } = {
-	fr: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
-	en: ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'],
-}
-const MONTHS_SHORT: { [key: string]: string[] } = {
-	fr: ['janv.', 'févr.', 'mars', 'avril', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'],
-	en: ['janu.', 'febr.', 'march', 'april', 'may', 'june', 'july', 'augu.', 'sept.', 'oct.', 'nov.', 'dec.'],
-}
 function ucfirst(str: any) {
 	str += ''
 	const f = str.charAt(0).toUpperCase()
@@ -741,17 +733,23 @@ function formatDate(timestamp: number) {
 	const month = date.getMonth()
 	const year = date.getFullYear()
 	if (i18n.locale === 'fr') {
-		return day + ' ' + MONTHS[i18n.locale][month] + ' ' + year
+		return day + ' ' + i18n.t('main.month_' + month) + ' ' + year
 	} else {
-		return ucfirst(MONTHS[i18n.locale][month]) + ' ' + day + ', ' + year
+		return ucfirst(i18n.t('main.month_' + month)) + ' ' + day + ', ' + year
 	}
+}
+
+function getMonthShort(month: number) {
+	const month_str = i18n.t('main.month_' + month) as string
+	const month_short = month_str.length > 5 ? month_str.substring(0, 4) + '.' : month_str
+	return month_short
 }
 
 function formatDayMonthShort(timestamp: number) {
 	const date = new Date(timestamp * 1000)
 	const day = date.getDate()
 	const month = date.getMonth()
-	return day + ' ' + MONTHS_SHORT[i18n.locale][month]
+	return day + ' ' + getMonthShort(month)
 }
 
 function formatDateTime(timestamp: number) {
@@ -763,9 +761,9 @@ function formatDateTime(timestamp: number) {
 	let minuts: any = date.getMinutes()
 	if (minuts < 10) { minuts = '0' + minuts }
 	if (i18n.locale === 'fr') {
-		return day + ' ' + MONTHS[i18n.locale][month] + ' ' + year + " à " + hour + ":" + minuts
+		return day + ' ' + i18n.t('main.month_' + month) + ' ' + year + " à " + hour + ":" + minuts
 	} else /* if (i18n.locale == 'en') */ {
-		return ucfirst(MONTHS[i18n.locale][month]) + ' ' + day + ', ' + year + " at " + hour + ":" + minuts
+		return ucfirst(i18n.t('main.month_' + month)) + ' ' + day + ', ' + year + " at " + hour + ":" + minuts
 	}
 }
 

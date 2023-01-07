@@ -200,5 +200,18 @@
 	"place": "Rank",
 	"press-kit": "Press kit",
 	"challenge": "Challenge",
+	"month_0": "january",
+	"month_1": "february",
+	"month_2": "march",
+	"month_3": "april",
+	"month_4": "may",
+	"month_5": "june",
+	"month_6": "july",
+	"month_7": "august",
+	"month_8": "september",
+	"month_9": "october",
+	"month_10": "november",
+	"month_11": "december",
+	"education": "Education",
 	"rename": "Rename"
 }

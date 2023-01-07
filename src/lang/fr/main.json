@@ -199,5 +199,17 @@
 	"press-kit": "Kit de presse",
 	"education": "Éducation",
 	"rename": "Renommer",
-	"challenge": "Défier"
+	"challenge": "Défier",
+	"month_0": "janvier",
+	"month_1": "février",
+	"month_2": "mars",
+	"month_3": "avril",
+	"month_4": "mai",
+	"month_5": "juin",
+	"month_6": "juillet",
+	"month_7": "août",
+	"month_8": "septembre",
+	"month_9": "octobre",
+	"month_10": "novembre",
+	"month_11": "décembre"
 }
