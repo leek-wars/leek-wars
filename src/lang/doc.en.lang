@@ -989,5 +989,18 @@
 	"parameters": "Parameters",
 	"return": "Return",
 	"value": "Value",
-	"variable_operations": "<b>Variable</b> operations"
+	"variable_operations": "<b>Variable</b> operations",
+	"const_INSTRUCTIONS_LIMIT": "Maximum number of instructions an entity can use during its turn.",
+	"const_USE_CRITICAL": "Value returned by the #useWeapon, #useWeaponOnCell, #useChip and #useChipOnCell functions in the event of a critical hit.",
+	"const_USE_FAILED": "Value returned by the #useWeapon, #useWeaponOnCell, #useChip and #useChipOnCell functions on failure.",
+	"const_USE_INVALID_COOLDOWN": "Value returned by the #useChip and #useChipOnCell functions if the chip is not yet usable.",
+	"const_USE_INVALID_POSITION": "Value returned by the #useWeapon, #useWeaponOnCell, #useChip and #useChipOnCell functions if the range is bad or the line of sight is not clear.",
+	"const_USE_INVALID_TARGET": "Value returned by the #useWeapon and #useChip functions if the target does not exist.",
+	"const_USE_NOT_ENOUGH_TP": "Value returned by the #useWeapon, #useWeaponOnCell, #useChip and #useChipOnCell functions if the caster does not have enough action points to use the object.",
+	"const_USE_SUCCESS": "Value returned by the #useWeapon, #useWeaponOnCell, #useChip and #useChipOnCell functions on success.",
+	"func_getFightID": "Returns the current fight id.",
+	"func_getFightID_return": "The id of the current fight.",
+	"func_isEntity": "Determines whether the contents of cell <b>cell</b> is an entity.",
+	"func_isEntity_arg_1": "The cell to be tested.",
+	"func_isEntity_return": "<i>true</i> if the cell contains an entity, <i>false</i> otherwise."
 }

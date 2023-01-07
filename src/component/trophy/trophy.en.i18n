@@ -23,5 +23,9 @@
 	"progress": "Progress",
 	"n_pocessors": "{n} possessors",
 	"first_farmers": "First farmers",
-	"last_farmers": "Last farmers"
+	"last_farmers": "Last farmers",
+	"group_by_categories": "Categories",
+	"sort_index": "default",
+	"sort_points": "points",
+	"sort_rarity": "rarity"
 }

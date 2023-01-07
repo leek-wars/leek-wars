@@ -133,5 +133,15 @@
 	"passive": "Passive: ",
 	"the_caster": "the caster",
 	"to_the_caster": "to the caster",
-	"not_replaceable": "non replaceable"
+	"not_replaceable": "non replaceable",
+	"type_39_fixed": "Increases magic by <b>{0}</b>",
+	"type_40_fixed": "Increases science by <b>{0}</b>",
+	"type_42_fixed": "Increases resistance by <b>{0}</b>",
+	"type_44_fixed": "Increases Wisdom by <b>{0}</b>",
+	"type_59_fixed": "Add state <b>{0}</b>",
+	"state_1": "Statue",
+	"state_2": "Unhealable",
+	"state_3": "Invincible",
+	"state_4": "Pacifist",
+	"state_6": "Dense"
 }

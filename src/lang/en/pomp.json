@@ -6,5 +6,11 @@
 	"leek_title": "Leek title",
 	"leek_title_desc": "This pomp allows you to give a title to your leeks, which will be displayed on their page and other places in the game.",
 	"farmer_title": "Farmer title",
-	"farmer_title_desc": "This pomp allows you to give yourself a title, which will be displayed on your page and other places in the game like the forum, advanced tooltips etc."
+	"farmer_title_desc": "This pomp allows you to give yourself a title, which will be displayed on your page and other places in the game like the forum, advanced tooltips etc.",
+	"metal": "Metal plates",
+	"metal_desc": "Add metal plaques on your leek image",
+	"angry": "angry face",
+	"angry_desc": "Change the expression of your leek: it will look pissed off",
+	"happy": "Smiling face",
+	"happy_desc": "Change the expression of your leek: it will be smiling"
 }

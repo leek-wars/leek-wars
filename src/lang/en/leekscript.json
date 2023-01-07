@@ -152,5 +152,6 @@
 	"error_1002": "This chip {0} does not exist. Use the CHIP_* constants to retrieve a valid chip.",
 	"error_1003": "This weapon {0} does not exist. Use the WEAPON_* constants to retrieve a valid weapon.",
 	"error_1004": "This weapon {1} (id {0}) is not equipped. You must first equip it on the page of your leek.",
-	"error_1005": "The invoked bulb has no AI"
+	"error_1005": "The invoked bulb has no AI",
+	"error_15": "The name of an AI is expected here"
 }

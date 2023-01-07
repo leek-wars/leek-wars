@@ -41,5 +41,14 @@
 	"wood_chest": "Wooden chest",
 	"iron_chest": "Iron chest",
 	"diamond_chest": "Diamond chest",
-	"flower": "Flower"
+	"flower": "Flower",
+	"leaf": "Sheet",
+	"metal_plate": "Metal plate",
+	"sand": "Sand",
+	"salt": "Salt",
+	"ivy": "Ivy",
+	"statuette": "Statuette",
+	"skull": "Skull",
+	"sea_water": "Sea water",
+	"pine_ball": "Pine cone"
 }

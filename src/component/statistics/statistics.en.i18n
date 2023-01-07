@@ -141,5 +141,14 @@
 	"chat_reactions": "Chat reactions",
 	"chests_kills": "Killed by chests",
 	"resources_chest": "Resources obtained",
-	"resources": "Resources obtained"
+	"resources": "Resources obtained",
+	"ais_v1_chart": "LS 1",
+	"ais_v2_chart": "LS 2",
+	"ais_v3_chart": "LS 3",
+	"ais_v4_chart": "LS 4",
+	"lw_code_javascript_chart": "JS",
+	"damage_direct_chart": "Direct",
+	"damage_poison_chart": "Poison",
+	"damage_life_chart": "%Life",
+	"damage_return_chart": "Return"
 }

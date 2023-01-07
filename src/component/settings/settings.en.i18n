@@ -52,5 +52,15 @@
 	"password": "Password",
 	"verify": "Verify account",
 	"verify_gh": "Verify with GitHub",
-	"allow_github": "Allow connection via GitHub"
+	"allow_github": "Allow connection via GitHub",
+	"error_forbidden_name": "This name is prohibited",
+	"error_invalid_godfather": "This player does not exist",
+	"error_invalid_length": "Password must contain between {0} and {1} characters",
+	"error_invalid_mail": "Email address must be valid",
+	"error_login_already_used": "Username is already in use",
+	"error_login_character_count": "Username must contain between {0} and {1} characters",
+	"error_login_format": "Username must only contain alphanumeric characters",
+	"error_login_length": "Username must contain between {0} and {1} characters",
+	"error_mail_already_used": "The email address is already used",
+	"Vérifier": "Verify Account"
 }

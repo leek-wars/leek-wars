@@ -24,5 +24,6 @@
 	"new_desc": "Create a new AI",
 	"new_folder": "New folder",
 	"recycle_bin": "Recycle bin",
-	"restore": "Restore"
+	"restore": "Restore",
+	"folder_name": "Folder name"
 }
