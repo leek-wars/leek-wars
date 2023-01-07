@@ -8,7 +8,6 @@
 	"autocompletion": "Code completion (suggest variables and leekscript functions)",
 	"all_info_ls": "All informations on {0}",
 	"base": "base",
-	"cancel-test": "Cancel",
 	"child": "Child",
 	"close": "Close",
 	"constant": "Constant {0}",

@@ -1,7 +1,7 @@
 {
 	"info": "Push notifications are sent immediately, emails are sent after 10 minutes if the notification is not read.",
 	"category_1": "Game news",
-	"category_1_title": "Leek Wars",
+	"category_1_title": "leek Wars",
 	"category_1_desc": "Update, event etc.",
 	"category_2": "Game",
 	"category_2_title": "game",
@@ -67,7 +67,6 @@
 	"title_7": "You have been accepted in the team {0}",
 	"title_8": "Your application to join {0} has been rejected",
 	"title_9": "{0} has won a tournament!",
-	"title_10": "You have not been selected for the tournament",
 	"title_11": "Trophy {0} unlocked!",
 	"title_12": "{0} commented on your fight",
 	"title_13": "{0} has finished his {1} fight!",
@@ -82,7 +81,6 @@
 	"title_22": "Your composition {0} has won a team tournament!",
 	"title_23": "Your composition {0} has finished its {1} fight!",
 	"title_24": "The report against {0} has been processed by a moderator",
-	"title_25": "You have been challenged by {0}!",
 	"title_26": "A Battle Royale has started!",
 	"title_27": "The {0} update is available!",
 	"title_28": "New message(s) from {0}",
@@ -90,5 +88,7 @@
 	"title_30": "{0} was not selected for the tournament",
 	"title_31": "{0} has not been selected for the BR",
 	"title_32": "{0} mentioned you on #{1}",
-	"message_32": "See the chat"
+	"message_32": "See the chat",
+	"title_10": "{0} was not selected in tournament",
+	"title_25": "{0} challenged you!"
 }

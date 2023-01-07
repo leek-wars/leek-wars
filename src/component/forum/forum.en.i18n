@@ -2,7 +2,6 @@
 	"cancel": "Cancel",
 	"category": "Category",
 	"category_not_found": "Category <b>{0}</b> not found :(",
-	"chat": "Chat",
 	"connected_farmers": "Connected farmers ({0})",
 	"connected_farmers_subtitle": "{0} connected farmers",
 	"error_cant_access": "Unable to access this category",

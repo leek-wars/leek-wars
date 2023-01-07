@@ -20,7 +20,6 @@
 	"destroy_warning": "This action is irreversible.",
 	"destroy_validate": "Destroy permanently",
 	"new_ai": "New AI",
-	"new_v2": "New V2 AI",
 	"new_desc": "Create a new AI",
 	"new_folder": "New folder",
 	"recycle_bin": "Recycle bin",
