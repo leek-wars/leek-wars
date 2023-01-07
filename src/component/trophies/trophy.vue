@@ -4,7 +4,7 @@
 			<img :src="'/image/trophy/' + trophy.code + '.svg'" class="image">
 			<div class="info">
 				<div class="header">
-					<div class="name">{{ trophy.name }}</div>
+					<div class="name">{{ $t('trophy.' + trophy.code) }}</div>
 					<div v-if="trophy.points" class="points">{{ trophy.points }}</div>
 				</div>
 				<div class="description">{{ trophy.description }}</div>
