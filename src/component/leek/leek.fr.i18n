@@ -92,5 +92,8 @@
 	"weapon": "Arme",
 	"weapons": "Armes",
 	"weapons_of": "Armes de {0}",
-	"xp": "XP : {0}"
+	"xp": "XP : {0}",
+	"angry": "Fâché",
+	"happy": "Souriant",
+    "neutral": "Neutre"
 }

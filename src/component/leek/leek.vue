@@ -528,12 +528,12 @@
 						<v-radio-group v-model="leek.face" @change="changeFace" hide-details>
 							<v-radio :value="0">
 								<template v-slot:label>
-          							Neutre
+          							{{ $t('neutral') }}
 								</template>
 							</v-radio>
 							<v-radio :value="1" :disabled="!happyEnabled">
 								<template v-slot:label>
-          							Souriant
+          							{{ $t('happy') }}
 									<tooltip :disabled="happyEnabled">
 										<template v-slot:activator="{ on }">
 											<img v-on="on" src="/image/pomp/happy.png">
@@ -544,7 +544,7 @@
 							</v-radio>
 							<v-radio :value="2" :disabled="!angryEnabled">
 								<template v-slot:label>
-          							Fâché
+									{{ $t('angry') }}
 									<tooltip :disabled="angryEnabled">
 										<template v-slot:activator="{ on }">
 											<img v-on="on" src="/image/pomp/angry.png">

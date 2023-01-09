@@ -233,7 +233,7 @@
 									Level &lt; 20
 								</tooltip>
 								<br><br>
-								<v-btn v-if="garden.fights" color="primary" @click="battleRoyaleRegister">Sélectionner</v-btn>
+								<v-btn v-if="garden.fights" color="primary" @click="battleRoyaleRegister">{{ $t('main.select') }}</v-btn>
 								<garden-no-fights v-else :canbuy="true" />
 							</div>
 							<div v-else>

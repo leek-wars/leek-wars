@@ -92,5 +92,8 @@
 	"weapon": "Weapon",
 	"weapons": "Weapons",
 	"weapons_of": "Weapons of {0}",
-	"xp": "XP: {0}"
+	"xp": "XP: {0}",
+	"angry": "Angry",
+	"happy": "Smiling",
+	"neutral": "Neutral"
 }
