@@ -17,7 +17,7 @@
 				</router-link>
 				<a href="https://github.com/leek-wars/leek-wars-client" target="_blank" rel="noopener">
 					<div class="tab action">
-						<img src="image/github_white.png">
+						<img src="/image/github_white.png">
 						<span>GitHub <v-icon>mdi-open-in-new</v-icon></span>
 					</div>
 				</a>
