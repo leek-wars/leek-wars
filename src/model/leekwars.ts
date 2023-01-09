@@ -168,6 +168,7 @@ const LeekWars = {
 	languages: Object.freeze({
 		fr: { code: 'fr', name: 'Français', flag: '/image/flag/fr.png', chat: 1, encyclopedia: 'Encyclopédie' } as Language,
 		en: { code: 'en', name: 'English', flag: '/image/flag/gb.png', chat: 2, encyclopedia: 'Encyclopedia' } as Language,
+		es: { code: 'es', name: 'Español', flag: '/image/flag/es.png', chat: 3, encyclopedia: 'Enciclopedia' } as Language,
 	} as { [key: string]: Language }),
 	timeDelta: 0, // (Date.now() / 1000 | 0) - __SERVER_TIME,
 	time: (Date.now() / 1000) | 0,
@@ -190,7 +191,7 @@ const LeekWars = {
 	},
 	skins: Object.freeze(SKINS),
 	leekSizes: Object.freeze(LEEK_SIZES),
-	isPublicChat: (id: number) => id === 1 || id === 2 || id === 32506 || id === 32507 || id === 32508 || id === 32509,
+	isPublicChat: (id: number) => id === 1 || id === 2 || id === 3 || id === 32506 || id === 32507 || id === 32508 || id === 32509,
 	chatNames: {
 		1: 'Général',
 		32506: 'Aide',
@@ -198,6 +199,7 @@ const LeekWars = {
 		2: 'General',
 		32508: 'Help',
 		32509: 'Programming',
+		3: 'General'
 	} as {[key: number]: string},
 	getLeekSkinName: (skin: number) => {
 		if (!(skin in SKINS)) { return SKINS[1] }
@@ -735,10 +737,10 @@ function formatDate(timestamp: number) {
 	const day = date.getDate()
 	const month = date.getMonth()
 	const year = date.getFullYear()
-	if (i18n.locale === 'fr') {
-		return day + ' ' + i18n.t('main.month_' + month) + ' ' + year
-	} else {
+	if (i18n.locale === 'en') {
 		return ucfirst(i18n.t('main.month_' + month)) + ' ' + day + ', ' + year
+	} else {
+		return day + ' ' + i18n.t('main.month_' + month) + ' ' + year
 	}
 }
 
@@ -757,17 +759,10 @@ function formatDayMonthShort(timestamp: number) {
 
 function formatDateTime(timestamp: number) {
 	const date = new Date(timestamp * 1000)
-	const day = date.getDate()
-	const month = date.getMonth()
-	const year = date.getFullYear()
 	const hour = date.getHours()
 	let minuts: any = date.getMinutes()
 	if (minuts < 10) { minuts = '0' + minuts }
-	if (i18n.locale === 'fr') {
-		return day + ' ' + i18n.t('main.month_' + month) + ' ' + year + " à " + hour + ":" + minuts
-	} else /* if (i18n.locale == 'en') */ {
-		return ucfirst(i18n.t('main.month_' + month)) + ' ' + day + ', ' + year + " at " + hour + ":" + minuts
-	}
+	return ucfirst(i18n.t('main.time_at', [ formatDate(timestamp), hour + ":" + minuts]))
 }
 
 function formatTimeSeconds(time: number) {
@@ -776,8 +771,8 @@ function formatTimeSeconds(time: number) {
 	const seconds = time - hours * 3600 - minuts * 60
 	let res = ""
 	if (hours > 0) { res += hours + "h " }
-	if (minuts > 0) { res += ("0" + minuts + "m ").substr(-4) }
-	if (seconds !== 0) { res += ("0" + seconds + "s").substr(-3) }
+	if (minuts > 0) { res += ("0" + minuts + "m ").substring(-4) }
+	if (seconds !== 0) { res += ("0" + seconds + "s").substring(-3) }
 	return res
 }
 
