@@ -330,6 +330,10 @@
 	class TestScenarioLeek {
 		id!: number
 		ai!: number | null
+		hat?: number
+		skin?: number
+		metal?: boolean
+		face?: number
 	}
 
 	class TestScenario {
@@ -526,7 +530,8 @@
 			const team2 = generate_bots(leek_count)
 			const team1 = [] as TestScenarioLeek[]
 			for (const leek in store.state.farmer.leeks) {
-				team1.push({id: parseInt(leek, 10), ai: store.state.farmer.leeks[leek].ai as unknown as number})
+				const ai = store.state.farmer.leeks[leek].ai
+				team1.push({ id: parseInt(leek, 10), ai: ai ? ai.id : null })
 			}
 			if (LeekWars.objectSize(store.state.farmer.leeks) > 1) {
 				templates.push({
@@ -848,7 +853,7 @@
 
 		createScenario() {
 			LeekWars.post('test-scenario/new', {name: this.newScenarioName}).then(data => {
-				const template = LeekWars.clone(this.templates[this.selectedTemplate])
+				const template = LeekWars.clone(this.templates[this.selectedTemplate]) as TestScenario
 				const team1 = template.team1
 				const team2 = template.team2
 				Vue.set(this.scenarios, data.id, {
@@ -1146,12 +1151,12 @@
 						if (!(leek.ai.id in this.ais)) {
 							Vue.set(leek.ai, 'path', leek.ai.name)
 							Vue.set(this.alliesAIs, leek.ai.id, leek.ai)
-							leek.ai = leek.ai.id
 						}
 						if (!(leek.id in store.state.farmer!.leeks)) {
 							Vue.set(this.allies, leek.id, leek)
 							Vue.set(leek, 'ally', true)
 						}
+						leek.ai = leek.ai ? leek.ai.id : null
 					}
 				}
 			})
