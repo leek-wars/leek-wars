@@ -1,7 +1,5 @@
 <template lang="html">
-
 	<div class="tutorial-menu">
-
 		<router-link v-for="(item, i) of items" :key="i" class="item" :style="{'background-image': 'url(' + item.image + ')'}" :to="'/encyclopedia/' + locale + '/' + $t(item.name).replace(/ /g, '_')">
 			<v-icon class="icon">mdi-{{ item.icon }}</v-icon>
 			<div class="bottom">
