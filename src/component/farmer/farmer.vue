@@ -274,7 +274,7 @@
 								</router-link>
 							</template>
 							<div class="header">
-								<b>{{ trophy.name }}</b>
+								<b>{{ $t('trophy.' + trophy.code) }}</b>
 								<b>{{ trophy.points }}</b>
 							</div>
 							<div>{{ trophy.description }}</div>
@@ -293,7 +293,7 @@
 							</template>
 							<span v-if="trophy">
 								<div class="header">
-									<b>{{ trophy.name }}</b>
+									<b>{{ $t('trophy.' + trophy.code) }}</b>
 									<b>{{ trophy.points }}</b>
 								</div>
 								<div v-if="trophy.description">
@@ -315,7 +315,7 @@
 									</router-link>
 								</template>
 								<div class="header">
-									<b>{{ trophy.name }}</b>
+									<b>{{ $t('trophy.' + trophy.code) }}</b>
 									<b v-if="trophy.points">{{ trophy.points }}</b>
 								</div>
 								<div>{{ trophy.description }}</div>
