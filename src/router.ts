@@ -31,7 +31,7 @@ const ForumSearch = () => import(/* webpackChunkName: "[request]" */ `@/componen
 const ForumTopic = () => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum-topic.${locale}.i18n`)
 const Forum = () => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum.${locale}.i18n`)
 const Garden = () => import(/* webpackChunkName: "[request]" */ `@/component/garden/garden.${locale}.i18n`)
-const GeneralHelp = () => import(/* webpackChunkName: "[request]" */ `@/component/general-help/general-help.${locale}.i18n`)
+const GeneralHelp = () => import(/* webpackChunkName: "[request]" */ `@/component/general-help/general-help.vue`)
 const Inventory = () => import(/* webpackChunkName: "[request]" */ `@/component/inventory/inventory.${locale}.i18n`)
 const LineOfSight = () => import(/* webpackChunkName: "[request]" */ `@/component/line-of-sight/line-of-sight.${locale}.i18n`)
 const History = () => import(/* webpackChunkName: "[request]" */ `@/component/history/history.${locale}.i18n`)
