@@ -16,7 +16,7 @@
 		<item-preview v-else-if="is_weapon" :item="LeekWars.items[constant.value]" />
 
 		<div v-if="new_constant">
-			<markdown v-if="Object.keys(LeekWars.encyclopedia[$i18n.locale]).length" :content="new_constant.description" :pages="{}" mode="encyclopedia" />
+			<markdown v-if="LeekWars.encyclopedia[$i18n.locale] && Object.keys(LeekWars.encyclopedia[$i18n.locale]).length" :content="new_constant.description" :pages="{}" mode="encyclopedia" />
 
 			<div v-for="(section, s) in new_constant.primary" :key="s">
 				<h4>{{ s }}</h4>

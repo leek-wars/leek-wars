@@ -166,14 +166,14 @@
 		get breadcrumb_items() {
 			if (this.page && !this.page.new) {
 				return this.parents.map(p => {
-					return {name: p.title, link: p.title === this.main_title ? '/encyclopedia' : '/encyclopedia/' + this.$i18n.locale + '/' + p.title.replace(/ /g, '_')}
+					return {name: p.title, link: p.title === this.main_title ? (this.language === this.$i18n.locale ? '/encyclopedia' : '/encyclopedia/' + this.language + '/' + this.main_title) : '/encyclopedia/' + this.language + '/' + p.title.replace(/ /g, '_')}
 				})
 			} else {
 				const parts = [
-					{name: this.main_title, link: '/encyclopedia'}
+					{name: this.main_title, link: this.language === this.$i18n.locale ? '/encyclopedia' : '/encyclopedia/' + this.language + '/' + this.main_title }
 				]
 				if (this.code !== this.main_title) {
-					parts.push({name: this.code, link: '/encyclopedia/' + this.$i18n.locale + '/' + this.code.replace(/ /g, '_')})
+					parts.push({name: this.code, link: '/encyclopedia/' + this.language + '/' + this.code.replace(/ /g, '_')})
 				}
 				return parts
 			}
@@ -286,6 +286,7 @@
 					id: 0,
 					title: this.code,
 					language: this.language,
+					translations: {},
 					content: fun ?  `# ${this.code}
 > Fonctions
 
