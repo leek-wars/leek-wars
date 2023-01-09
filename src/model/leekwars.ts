@@ -122,6 +122,7 @@ class Language {
 	public name!: string
 	public flag!: string
 	public chat!: number
+	public encyclopedia!: string
 }
 
 const LOCAL_DATE = new Date()
@@ -165,8 +166,8 @@ const LeekWars = {
 	battleRoyale: new BattleRoyale(),
 	squares: new Squares(),
 	languages: Object.freeze({
-		fr: { code: 'fr', name: 'Français', flag: '/image/flag/fr.png', chat: 1 } as Language,
-		en: { code: 'en', name: 'English', flag: '/image/flag/gb.png', chat: 2 } as Language,
+		fr: { code: 'fr', name: 'Français', flag: '/image/flag/fr.png', chat: 1, encyclopedia: 'Encyclopédie' } as Language,
+		en: { code: 'en', name: 'English', flag: '/image/flag/gb.png', chat: 2, encyclopedia: 'Encyclopedia' } as Language,
 	} as { [key: string]: Language }),
 	timeDelta: 0, // (Date.now() / 1000 | 0) - __SERVER_TIME,
 	time: (Date.now() / 1000) | 0,
@@ -542,16 +543,17 @@ const LeekWars = {
 			LeekWars.messagePopup = true
 		}
 	},
-	encyclopedia: {} as {[key: string]: any},
-	encyclopediaById: {} as {[key: number]: any},
-	encyclopediaLoaded: false,
-	loadEncyclopedia: () => {
-		if (!LeekWars.encyclopediaLoaded) {
-			LeekWars.encyclopediaLoaded = true
-			LeekWars.get('encyclopedia/get-all').then(pages => {
-				LeekWars.encyclopedia = pages
+	encyclopedia: {} as {[key: string]: {[key: string]: any}},
+	encyclopediaById: {} as {[key: string]: {[key: number]: any}},
+	encyclopediaLoaded: {} as {[key: string]: boolean},
+	loadEncyclopedia: (locale: string) => {
+		if (!LeekWars.encyclopediaLoaded[locale]) {
+			Vue.set(LeekWars.encyclopediaLoaded, locale, true)
+			LeekWars.get('encyclopedia/get-all-locale/' + locale).then(pages => {
+				Vue.set(LeekWars.encyclopedia, locale, pages)
+				Vue.set(LeekWars.encyclopediaById, locale, {})
 				for (const page in pages) {
-					Vue.set(LeekWars.encyclopediaById, pages[page].id, pages[page])
+					Vue.set(LeekWars.encyclopediaById[locale], pages[page].id, pages[page])
 				}
 			})
 		}

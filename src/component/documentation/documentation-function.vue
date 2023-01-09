@@ -17,7 +17,7 @@
 
 		<div v-if="new_fun">
 			<!-- <div v-dochash v-code class="content" v-html="new_fun.description"></div> -->
-			<markdown v-if="Object.keys(LeekWars.encyclopedia).length" :content="new_fun.description" :pages="{}" mode="encyclopedia" />
+			<markdown v-if="Object.keys(LeekWars.encyclopedia[$i18n.locale]).length" :content="new_fun.description" :pages="{}" mode="encyclopedia" />
 
 			<div v-for="(section, s) in new_fun.primary" :key="s">
 				<h4>{{ s }}</h4>

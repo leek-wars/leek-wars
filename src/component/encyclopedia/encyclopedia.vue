@@ -51,7 +51,7 @@
 		<panel v-if="page" class="first encyclopedia last">
 			<div slot="content" class="table">
 				<div v-if="edition" ref="codemirror" class="codemirror" :style="{lineHeight: 1.6, fontSize: 14}"></div>
-				<div v-if="Object.keys(LeekWars.encyclopedia).length" ref="markdown" class="markdown" @scroll="markdownScroll">
+				<div v-if="LeekWars.encyclopedia[$i18n.locale] && Object.keys(LeekWars.encyclopedia[$i18n.locale]).length" ref="markdown" class="markdown" @scroll="markdownScroll">
 					<!-- {{ parents }} -->
 
 					<markdown :content="content" mode="encyclopedia" :class="{main: page.id === 1}" :locale="page.language" />
@@ -160,7 +160,7 @@
 			return this.page ? this.page.title : 'Encyclopedia'
 		}
 		get main_title() {
-			return this.$i18n.locale === 'fr' ? 'Encyclopédie' : 'Encyclopedia'
+			return LeekWars.languages[this.language].encyclopedia
 		}
 		get breadcrumb_items() {
 			if (this.page && !this.page.new) {
@@ -183,7 +183,7 @@
 		get parents() {
 			const parents = []
 			const visited = new Set<number>()
-			for (let current = this.page; current; current = LeekWars.encyclopediaById[current.parent]) {
+			for (let current = this.page; current; current = LeekWars.encyclopediaById[this.language] ? LeekWars.encyclopediaById[this.language][current.parent] : null) {
 				if (visited.has(current.id)) { break }
 				visited.add(current.id)
 				parents.push(current)
@@ -233,7 +233,7 @@
 
 		mounted() {
 			// this.editStart()
-			LeekWars.loadEncyclopedia()
+			LeekWars.loadEncyclopedia(this.language)
 
 			this.$root.$on('ctrlS', () => {
 				this.save()
@@ -245,7 +245,7 @@
 		update() {
 
 			if (this.code === 'Page au hasard') {
-				const pages = Object.values(LeekWars.encyclopedia)
+				const pages = Object.values(LeekWars.encyclopedia[this.$i18n.locale])
 				this.$router.replace('/encyclopedia/' + this.$i18n.locale + '/' + pages[Math.random() * pages.length | 0].title)
 				return
 			}
@@ -377,9 +377,8 @@ ${ret}
 							const parent = (this.$refs.markdown as HTMLElement).querySelector('blockquote')
 							if (parent) {
 								const text = parent.innerText.trim().toLowerCase().replace(/_/g, ' ')
-								// console.log(parent, text, LeekWars.encyclopedia)
-								if (text in LeekWars.encyclopedia) {
-									this.page.parent = LeekWars.encyclopedia[text].id
+								if (text in LeekWars.encyclopedia[this.language]) {
+									this.page.parent = LeekWars.encyclopedia[this.language][text].id
 								} else {
 									this.page.parent = 1
 								}
@@ -462,7 +461,7 @@ ${ret}
 		}
 
 		save() {
-			LeekWars.put('encyclopedia/update', {page_id: this.page.id, language: this.page.language, title: this.page.title, content: this.page.content, parent: this.page.parent || 1}).then((result) => {
+			LeekWars.put('encyclopedia/update', {page_id: this.page.id, language: this.page.language, title: this.page.title, content: this.page.content, parent: this.page.parent || 1, reference: this.page.reference || 0}).then((result) => {
 				LeekWars.toast("Sauvegardé !")
 				if (this.page.id === 0) {
 					this.page.new = false

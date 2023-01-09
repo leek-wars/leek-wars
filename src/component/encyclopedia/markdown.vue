@@ -148,7 +148,7 @@
 				})
 				// Locked pages
 				md.querySelectorAll('.encyclopedia-locked-pages').forEach((item) => {
-					LeekWars.post<any[]>('encyclopedia/get-locked-pages').then(pages => {
+					LeekWars.get<any[]>('encyclopedia/get-locked-pages').then(pages => {
 						item.innerHTML = '<ul>' + pages.map(p => '<li><a href="/encyclopedia/' + this.language + '/' + p.title + '">' + p.title + '</a>, verrouillée par <b>' + p.name + '</b></li>').join('') + '</ul>'
 						item.querySelectorAll('a').forEach(linkify)
 					})
@@ -313,7 +313,7 @@
 				const parts = link.split('|', 2)
 				link = parts[0]
 				const alias = parts.length === 2 ? parts[1] : link
-				const page = LeekWars.encyclopedia[link.toLowerCase().replace(/_/g, ' ')]
+				const page = LeekWars.encyclopedia[this.language][link.toLowerCase().replace(/_/g, ' ')]
 				const clazz = page ? "" : "new"
 				const text = link.replace(/_/g, ' ').replace(/'/g, '&apos;')
 				return "<a href='/encyclopedia/" + this.language + '/' + (page ? page.title.replace(/ /g, '_') : text) + "' class='" + clazz + "'>" + alias + "</a>"

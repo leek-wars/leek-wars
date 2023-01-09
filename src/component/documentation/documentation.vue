@@ -145,7 +145,7 @@
 
 		created() {
 
-			LeekWars.loadEncyclopedia()
+			LeekWars.loadEncyclopedia(locale)
 
 			const get_categories = (callback: any) => {
 				if (localStorage.getItem('data/function_categories_v2')) {
