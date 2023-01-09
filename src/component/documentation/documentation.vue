@@ -8,13 +8,13 @@
 			</div>
 			<h1 v-else>{{ $t('title') }}</h1>
 			<div class="tabs">
-				<router-link v-if="!LeekWars.mobile && !popup" to="/help/general">
+				<router-link v-if="!LeekWars.mobile && !popup" :to="'/encyclopedia/' + $i18n.locale + '/' + $t('main.game_rules').replace(/ /g, '_')">
 					<div class="tab">
 						<v-icon>mdi-help-circle-outline</v-icon>
 						{{ $t('main.general_help') }}
 					</div>
 				</router-link>
-				<router-link v-if="!LeekWars.mobile && !popup" to="/help/tutorial">
+				<router-link v-if="!LeekWars.mobile && !popup" :to="'/encyclopedia/' + $i18n.locale + '/' + $t('main.tutorial')">
 					<div class="tab">
 						<v-icon>mdi-laptop</v-icon>
 						{{ $t('main.tutorial') }}
