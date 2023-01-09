@@ -1,0 +1,6 @@
+{
+	"description": "El banco te ofrece obtener <b>cristales</b> <span class='crystal'></span>, la segunda moneda de Leek Wars, permitiéndote luego comprar pociones y otras puramente decorativas y <b>que no afecten </b> tu poder en combate. <br>\n¡Date un capricho con una poción de color para tu puerro y apoya Leek Wars!",
+	"pack_of_n_crystals": "Paquete de <b>{0}</b> cristales",
+	"paypal_description": "Compra de {0} cristales por {1} €",
+	"title": "Banco de cristal"
+}

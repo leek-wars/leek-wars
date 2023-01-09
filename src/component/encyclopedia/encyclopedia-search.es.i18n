@@ -1,0 +1,18 @@
+{
+	"all_categories": "Todas las categorias",
+	"author": "Autor",
+	"category": "Categoría",
+	"no_results_found": "Ningún resultado encontrado...",
+	"not_enough_parameters": "No hay suficientes parámetros iniciar una búsqueda",
+	"post_by_x_the_x_in_x": "Publicado por {farmer} el {date} en {topic}",
+	"query": "Investigar",
+	"results": "Resultados de la búsqueda",
+	"search": "Buscar",
+	"sort_by": "Ordenar por",
+	"sort_pertinence": "Relevancia",
+	"sort_date": "Fecha",
+	"sort_votes": "Votación",
+	"title": "Enciclopedia",
+	"too_few_params": "No hay suficientes parámetros...",
+	"too_short": "Búsqueda demasiado corta..."
+}

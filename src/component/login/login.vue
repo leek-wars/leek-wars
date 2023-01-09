@@ -79,7 +79,7 @@
 <style lang="scss" scoped>
 	form {
 		text-align: left;
-		width: 200px;
+		width: 290px;
 		margin: 0 auto;
 	}
 	input[type="text"], input[type="password"] {
@@ -100,7 +100,7 @@
 	}
 	.container {
 		display: flex;
-		max-width: 600px;
+		max-width: 680px;
 		align-items: center;
 		justify-content: center;
 		margin: 0 auto;

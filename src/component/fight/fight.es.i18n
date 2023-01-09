@@ -1,0 +1,12 @@
+{
+	"battle_royale": "Batalla real",
+	"date_format": "El {0}",
+	"deleted_farmer": "criador eliminado",
+	"deleted_leek": "puerro eliminado",
+	"deleted_team": "equipo eliminado",
+	"n_views": "sin vista | 1 vista | {n} vistas",
+	"not_found": "Lucha no encontrada :(",
+	"not_found_id": "ID de lucha <b>{0}</b> no encontrado :(",
+	"pause_message": "Haga clic o presione 'P' para reanudar",
+	"starter": "Lanzador de lucha"
+}

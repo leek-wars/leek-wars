@@ -1,0 +1,21 @@
+{
+	"bugs": "Insectos",
+	"chips_used": "Fichas usadas",
+	"criticals": "CC",
+	"damage_inflicted": "Daño infligido",
+	"damage_received": "Daños recibidos",
+	"heal_casted": "Curación iniciada",
+	"heal_received": "Atención recibida",
+	"kills": "Mata",
+	"mp_used": "PM usado",
+	"nova_received": "Nova recibió",
+	"operations": "Operaciones",
+	"operations_per_turn": "Op/girar",
+	"resurrections": "Vuelve a la vida",
+	"shootings": "Disparos",
+	"summons": "Convocar",
+	"team_n": "Equipo {0}",
+	"tp_per_turn": "PT/turno utilizado",
+	"tp_used": "PT utilizados",
+	"turns_played": "Rondas jugadas"
+}

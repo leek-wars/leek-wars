@@ -1,0 +1,17 @@
+{
+	"shortcut_1": "<b>Ctrl + S</b>: guarda la IA actual",
+	"shortcut_2": "<b>Ctrl + Q</b>: iniciar una prueba",
+	"shortcut_3": "<b>Ctrl + D</b>: duplica la línea o selección actual",
+	"shortcut_4": "<b>Ctrl + K</b>: elimina la línea actual",
+	"shortcut_5": "<b>Ctrl + E</b> o <b>Ctrl + //</b>: comentar/eliminar el comentario de la línea actual",
+	"shortcut_6": "<b>Ctrl + P</b>: abrir un archivo",
+	"shortcut_7": "<b>Ctrl + F</b>: busca en el archivo actual",
+	"shortcut_8": "<b>Alt + arriba/abajo</b>: mueve la línea actual hacia arriba/abajo",
+	"shortcut_9": "<b>Alt + izquierda/derecha</b>: cambiar entre archivos abiertos",
+	"shortcut_10": "<b>Ctrl + Espacio</b>: finalización automática",
+	"shortcut_11": "<b>Ctrl + Clic</b>: ir a la definición del símbolo",
+	"shortcut_12": "<b>Ctrl + Shift + F</b>: formato de código automático y sangría",
+	"shortcut_13": "<b>Ctrl + U</b>: plegar/desplegar el bloque de código actual",
+	"shortcut_14": "<b>Ctrl + J</b>: contraer todos los bloques de código",
+	"shortcut_15": "<b>Ctrl + I</b>: expandir todos los bloques de código"
+}

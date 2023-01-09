@@ -1,0 +1,15 @@
+{
+	"supervisor": "Supervisor",
+	"students": "Estudiantes",
+	"settings": "Configuraciones de grupo",
+	"group_name": "Nombre del grupo",
+	"student_options": "Opciones para estudiantes",
+	"setting_trophies": "Habilitar trofeos",
+	"setting_public_chat": "Habilitar chats públicos",
+	"setting_buy_fights": "Habilitar compra de peleas",
+	"setting_bank": "Activar banco de cristal",
+	"setting_chat": "Habilitar chat grupal",
+	"main_options": "Opciones principales",
+	"setting_tournaments": "Habilitar torneos públicos",
+	"setting_br": "Habilitar batallas reales"
+}

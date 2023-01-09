@@ -1,0 +1,10 @@
+{
+	"comments": "Comentarios",
+	"farmer": "Torneo de criadores del {0}",
+	"few_seconds": "algunos segundos",
+	"next_round_in": "Próxima ronda en {0}",
+	"not_found": "ID de torneo {0} no encontrado :(",
+	"send": "Enviar a",
+	"solo": "Torneo en solitario del {0}",
+	"team": "Torneo por equipos del {0}"
+}

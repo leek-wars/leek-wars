@@ -1,0 +1,16 @@
+{
+	"price": "Premio",
+	"price_lot": "Precio del lote",
+	"quantity": "Cantidad",
+	"name": "Apellido",
+	"level": "Nivel",
+	"date": "Fecha",
+	"all": "Todo",
+	"weapons": "Armas",
+	"chips": "Pulgas",
+	"potions": "Pociones",
+	"hats": "Sombreros",
+	"pomps": "Aparato",
+	"resources": "Recursos",
+	"rarity": "Escasez"
+}

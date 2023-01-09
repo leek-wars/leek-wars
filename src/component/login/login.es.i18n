@@ -1,0 +1,14 @@
+{
+	"connection": "Acceso",
+	"error_banned": "Tu cuenta ha sido baneada",
+	"error_inactive": "Su cuenta no ha sido activada, por favor vaya al enlace enviado por correo electrónico.",
+	"error_invalid": "Las credenciales son incorrectas.",
+	"error_server": "Error del Servidor. Vuelva a intentarlo en unos minutos.",
+	"forgot_password": "Contraseña olvidada ?",
+	"incorrect_login": "Nombre de usuario o contraseña incorrectos.",
+	"keep_connected": "Quedar conectado",
+	"login": "Nombre del criador o correo electrónico",
+	"password": "Contraseña",
+	"success": "Está conectado",
+	"title": "Acceso"
+}

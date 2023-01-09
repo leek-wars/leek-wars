@@ -1,0 +1,18 @@
+{
+	"admin": "Administración",
+	"admin_desc": "Categoría reservada para administradores",
+	"bug_reports": "Informes de errores",
+	"bug_reports_desc": "Si crees que has encontrado un error en el juego",
+	"composter": "Compostador",
+	"composter_desc": "Para hablar de todo... y de nada.",
+	"exploits": "Tus hazañas",
+	"exploits_desc": "Venga a informar sus hazañas o comparta sus capturas de pantalla inusuales",
+	"general_discussion": "Discusión General",
+	"general_discussion_desc": "Discusión general de Leek Wars",
+	"help": "Ayuda y consejos",
+	"help_desc": "Si tienes alguna pregunta sobre el juego o quieres compartir consejos",
+	"moderation": "Moderación",
+	"moderation_desc": "Categoría reservada para moderadores",
+	"suggestions_ideas": "Sugerencias e ideas",
+	"suggestions_ideas_desc": "Si tienes alguna idea de mejora para el juego"
+}

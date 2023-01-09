@@ -1,0 +1,13 @@
+{
+	"4_leeks_only": "¡Ya tienes 4 puerros!",
+	"create": "Crear",
+	"error_under_required_level_1": "Tu primer puerro debe tener al menos el nivel {0}",
+	"error_under_required_level_2": "Tu segundo puerro debe tener al menos el nivel {0}",
+	"error_under_required_level_3": "Tu tercer puerro debe tener al menos el nivel {0}",
+	"name": "Apellido",
+	"name_length": "El nombre del puerro debe contener entre {0} y {1} caracteres",
+	"name_format": "No se permiten caracteres especiales en el nombre.",
+	"not_enough_money": "No tienes suficiente dinero",
+	"price": "Premio",
+	"title": "Puerro nuevo"
+}

@@ -108,18 +108,22 @@
 		loadingConversations: boolean = false
 
 		get chats() {
-			const chats = (store.state.farmer && store.state.farmer.public_chat_enabled ? [
-				{ name: 'Français', image: '/image/flag/fr.png', chats: [
+			const chats = [] as any[]
+			if (store.state.farmer && store.state.farmer.public_chat_enabled) {
+				chats.push({ name: 'Français', image: '/image/flag/fr.png', chats: [
 					{ id: 1, name: 'Général', icon: 'mdi-chat-outline' },
 					{ id: 32506, name: 'Aide', icon: 'mdi-help-circle-outline' },
 					{ id: 32507, name: 'Programmation', icon: 'mdi-code-braces' },
-				]},
-				{ name: 'English', image: '/image/flag/gb.png', chats: [
+				]})
+				chats.push({ name: 'English', image: '/image/flag/gb.png', chats: [
 					{ id: 2, name: 'General', icon: 'mdi-chat-outline' },
 					{ id: 32508, name: 'Help', icon: 'mdi-help-circle-outline' },
 					{ id: 32509, name: 'Programming', icon: 'mdi-code-braces' },
-				]}
-			] : []) as any[]
+				]})
+				chats.push({ name: 'Español', image: '/image/flag/es.png', chats: [
+					{ id: 3, name: 'General', icon: 'mdi-chat-outline' },
+				]})
+			}
 			if (this.$store.state.farmer && this.$store.state.farmer.team) {
 				const team_chats = [
 					{ id: this.$store.state.farmer.team.chat, name: this.$store.state.farmer.team.name, icon: 'mdi-chat-outline' },

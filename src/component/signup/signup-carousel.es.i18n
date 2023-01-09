@@ -1,0 +1,16 @@
+{
+	"android_app": "Aplicación Android",
+	"editor": "Editor inteligente de IA en el sitio",
+	"fight_beach": "Combate en solitario (1v1) en la playa",
+	"fight_desert": "Pelea de rancheros en el desierto",
+	"fight_factory": "Pelea de equipo (6v6) en la fábrica",
+	"fight_forest": "Pelea de pastores (4v4) en el bosque",
+	"fight_ice": "Battle Royale (10 jugadores) en el témpano de hielo",
+	"fight_test": "Pruebas de combate terrestre",
+	"leek_page": "Pagina de tu puerro",
+	"market": "Mercado: compra de armas, chips, sombreros, etc.",
+	"pixel_art": "Pixel art gracias a las funciones de depuración",
+	"ranking": "Clasificación: Solo, Criador, Equipo, Trofeos",
+	"tournament": "Torneo de criadores todas las tardes a las 18 h.",
+	"trophies": "Página de trofeos (300 trofeos)"
+}

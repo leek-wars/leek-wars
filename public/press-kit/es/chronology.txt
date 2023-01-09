@@ -1,0 +1,11 @@
+2012: lanzamiento del juego
+2013: fin de la beta
+2014: torneos, trofeos
+2015: versión en inglés, convocatoria, nuevo diseño, características, armas CaC,
+2016: batalla real
+2017: opciones de prueba, estadísticas
+2018: aplicación móvil y Vue.js
+2019: Torretas
+2020: armas olvidadas, atavíos, autos BR, Docker, registro en GitHub, editor, enciclopedia, nuevos mapas
+2021: 16 fichas, LS 2, 160 nuevos trofeos, LS 3, recursos
+2022: registro rápido, entretenimiento, LS 4, cofres

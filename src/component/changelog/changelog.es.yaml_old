@@ -1,0 +1,382 @@
+235:
+  added:
+    - "Desafíos de equipo agregados".
+  improved:
+    - Reinscripción para torneos si está conectado durante 2 días en lugar de 1.
+    - Más victorias para los perdedores en BR.
+    - "Se agregó un mensaje de advertencia cuando una característica es inútil en su nivel. #img_235_leek_charac"
+    - "Se agregó un ícono junto al botón de selección de versión de LeekScript. #img_235_editor_chevron"
+
+234:
+  title: "Nuevo tutorial, espada pesada, creaciones de la comunidad"
+  added:
+    - "Se agregó un nuevo tutorial con IA completa, cuestionario, consejos. #img_234_tutorial"
+    - "Arma espada pesada añadida. #img_234_sword"
+    - "Editor: agregó un botón para copiar un puerro como puerro de prueba (gracias a Ref). #img_234_copy_test"
+    - "Editor: agregó un botón para duplicar un puerro de prueba (gracias a Ref). #img_234_duplicate_leek"
+    - "Botones añadidos para ir a la acción anterior/siguiente en combate (gracias a Karang). #img_234_action_buttons"
+    - "Se agregaron marcadores de muerte y resurrección en la barra de progreso (gracias a Karang). #img_234_markers"
+    - "Tecla R en el informe de combate para reiniciar una prueba rápidamente. #img_234_refight"
+    - "Se agregó un modo oscuro para el Nexus (mapa de prueba). #img_234_dark_nexus"
+    - "Se agregó una versión de markText que toma una tabla [celda: texto] como argumento. #img_234_marktext"
+    - "Posibilidad añadida de renombrar una composición (gracias a temakisushi). #img_234_compo_rename"
+  mejorado:
+    - Se agregaron traducciones faltantes (gracias a nytope).
+    - Permiso para elegir solo un adjetivo para un puerro o título de criador.
+    - Se agregó compensación en la información sobre herramientas de armas en la ventana de personalización de puerros (gracias a nytope).
+    - "Editor: pantalla de error multilínea mejorada. #img_234_multiline_error"
+    - Estabilidad del editor mejorada (gracias a nytope).
+    - El número de desafíos diarios aumenta a 100 en lugar de 200.
+    - Mejor imagen de trébol + sonido en apariencia.
+    - "LeekScript: acentos permitidos en nombres de variables o campos".
+    - "Se agregó una sección de kit de prensa y educación en la página de registro. #img_234_education"
+    - "Visualización del paisaje de combate móvil: los controles están en el lateral para ampliar el combate. #img_234_mobile_fight"
+  fijado:
+   - Se corrigió un error en el inventario si un artículo se duplica (gracias a nytope).
+    - Se corrigió la visualización de un título si contiene solo un adjetivo (gracias a nytope).
+    - Posibilidad de elegir el género del título aunque no incluya nombre.
+    - Un clic en el botón de mensajes en el encabezado ya no marca las notificaciones como leídas (gracias a nytope).
+    - Mensaje de advertencia "El editor ya está abierto" mejorado (gracias a nytope).
+    - "LeekScript: corrigió un error de llamada de función con un argumento nulo".
+    - "Títulos: todos los adjetivos en mayúsculas se quedan en mayúsculas (gracias a nytope)."
+    - Correcciones de traducciones en la página del criador, registro (gracias a temakisushi).
+    - Se corrigió el error say () censurado en la página de informe de combate.
+    - Cálculo mejorado del daño infligido en el informe de combate (gracias a nytope).
+    - Se corrigió el comportamiento de la ventana emergente del documento en la página del mercado (gracias a nytope).
+    - "Se corrigió el error de visualización de las áreas en combate cuando se cambia el tamaño del jugador. #img_234_area"
+
+233:
+  title: Sword, Prism, Error Help, Links to Action y muchas mejoras.
+  added:
+    - "Agregada una nueva arma: la Espada. #img_233_sword"
+    - "Se agregó una nueva viñeta: Prisma. #img_233_prism"
+    - "Informe de combate: se agregó un botón al lado de cada acción para verla en combate. #img_233_action"
+    - "Visualización de venenos recibidos en acciones de reporte de combate. #img_233_poison"
+    - "Añadidos enlaces a la enciclopedia sobre los errores más frecuentes en combate. #img_233_errors"
+  mejorado:
+    - "Breeder matchmaking: los criadores ya atacados durante el día tienen menos prioridad".
+    - Tecla Enter para iniciar una prueba en el editor.
+    - "Móvil: la página de inicio llega al chat General si la opción está activada".
+    - El enlace del chat de la página del foro va al chat correcto en lugar del primero de la lista.
+    - Aceleración de escaneo AI en el reinicio del servidor + activado al pasar el mouse.
+    - "LeekScript: error más explícito durante la clasificación inconsistente".
+    - "Enciclopedia: los enlaces azules se cargan desde la primera huerta".
+    - "Enciclopedia: los enlaces azules no distinguen entre mayúsculas y minúsculas y están subrayados".
+    - "Enciclopedia: adición de un sistema de alias para enlaces (para el plural por ejemplo)."
+    - Las funciones assocSort y getDistance están marcadas como obsoletas en la documentación.
+    - "Editor: Ctrl+F ya no cierra si ya está abierto, pero restablece la búsqueda".
+    - "Documentación: búsqueda de una constante por su valor".
+    - Pequeñas mejorasoraciones elegantes de manera discreta.
+    - "LeekScript: agregó una advertencia si una variable (x, this.x, class.x) se asigna a sí misma. #img_233_assign"
+    - "LeekScript: agregó una advertencia si una comparación siempre es verdadera o falsa. #img_233_comparison"
+    - "LeekScript: advertencia agregada sobre operadores desconocidos (como cadena - int). #img_233_operator"
+    - "Pistola doble: aumento del daño por veneno: 7 a 10 -> 9 a 12".
+    - "Katana: PT Obstáculo solo + 0,05 de aumento".
+  fijado:
+    - Se corrigió el error de arrastrar y soltar armas en la página de puerros.
+    - Se corrigió un error en el trofeo Rift.
+    - No más notificaciones durante una prueba BR.
+    - Se coloca un cofre en el mismo lugar para la misma semilla.
+    - Ya no se pueden apilar dos cofres.
+    - El patrocinador ya no se muestra en la página de un criador si se elimina.
+    - "LeekScript: corrigió un error si una función de bombilla tenía parámetros".
+    - Se corrigió un error de enciclopedia que mostraba Enciclopedia en la raíz en inglés.
+    - Se corrigió la codificación de mensajes en las ventanas emergentes de moderación de chat.
+    - "Editor: al hacer clic en los detalles de una función no se cierra la ventana de autocompletado".
+    - Las pociones obtenidas en combate llegan correctamente al inventario vivo.
+    - Se corrigió un error al reaccionar con ciertos emojis en el chat.
+    - "LeekScript: corrección de un error de compilación si una función estaba mal escrita (con advertencia)".
+    - "LeekScript: corrigió uno cuando se captura un argumento predeterminado".
+    - Se corrigió un error en el tutorial.
+    - "LeekScript: corrección del uso de un campo estático en la inicialización de otro".
+    - Se corrigió la activación del electrificador misterioso después de la muerte (gracias a nytope).
+    - "LeekScript: error corregido en `for (var x in x) {}`".
+    - "LeekScript: corrigió la localización de algunos errores".
+
+232:
+  title: 22 nuevas máscaras, clasificaciones de equipos, 3 atuendos y 4 sombreros.
+  added:
+    - "Clasificaciones de equipos añadidas. #img_232_team_ranking"
+    - Posibilidad de ganar el mismo recurso varias veces en combate.
+    - Se agregó el resultado de la batalla en las notificaciones de BR, Desafíos y Torneos.
+    - "Se agregaron 22 pociones de color (comprables, a través de trofeos, en combate). #img_232_potions"
+    - "Se agregaron 2 adornos para cambiar la expresión de los puerros (sonriente, neutral y enojado). #img_232_pomp"
+    - "Agregado un dispositivo para activar agregar las placas de metal en los puerros. #img_232_pomp"
+    - "Se agregaron 5 emojis (hab, cristal, cofres). #img_232_emoji"
+    - Se agregó una página de kit de prensa con un archivo descargable.
+    - "Se agregaron 4 sombreros nuevos. #img_232_hats"
+  improved:
+    - Ya no es posible realizar una solicitud GET en POST o viceversa.
+    - Los recursos se ordenan por valor en el informe de combate.
+    - Se agregaron moderadores, ex miembros y colaboradores a la página acerca de.
+    - "Avatares y emblemas: formato webp aceptado, filtro sobre tipos aceptados y mejor gestión de errores".
+    - "Luchas: diferencia entre un error de generación y una pelea no encontrada".
+    - Comportamiento de menú ligeramente mejorado en dispositivos móviles.
+    - "Optimización del cliente: tamaño de JS, CSS e imágenes: carga más rápida en el móvil".
+    - Adición del resultado de las peleas en las notificaciones en la parte inferior derecha de la pantalla.
+    - Imágenes de mejor calidad de puerros.
+    - "Se agregaron ejemplos de artículos para comprar en el banco. #img_232_bank"
+    - Se agregó un fondo negro en el móvil al abrir el panel de notificaciones.
+    - Envío de una notificación push durante una actualización.
+    - "Editor: cuando se vuelve a abrir un archivo, se conserva la posición vertical".
+  fixed:
+    - Se corrigió un error de visualización en el gráfico de puntos de salud.
+    - Cierre de la información sobre herramientas del criador resultante de una mención en el chat si este último se cierra.
+    - El borrador del tema del foro se limpia cuando se publica el tema.
+    - Se corrigieron algunas estadísticas.
+    - "Editor: se corrigieron errores persistentes después de incluir una IA".
+
+231:
+  title: chats, cofres, 12 recursos, 1 trofeo, estadísticas divertidas y tablas de clasificación.
+  agregado:
+    - "Cofres agregados que aparecen aleatoriamente en combate. #img_231_chests"
+    - "Chat: agregar canales, cargar mensajes antiguos haciendo scroll. #img_231_chats"
+    - "Chat: finalización de nicknames, notificación si alguien te menciona. #img_231_pseudo #img_231_mention #img_231_mention_notif"
+    - "Chat: botón para volver al final del chat, etiqueta no leída en los chats (con opción para activarlos). #img_231_chat_unread"
+    - "Nuevas clasificaciones divertidas: clubes, peleas totales, BR ganadas. #img_231_fun_ranking"
+    - "Se agregaron 12 nuevos recursos. #img_231_resources"
+    - "1 nuevo trofeo + reajuste de los puntos de diez trofeos. #img_231_trophy"
+  mejorado:
+    - "Página de estadísticas mejorada y se agregaron muchas estadísticas. #img_231_stats"
+    - "Documentación: se conservan los estados abierto/cerrado de las categorías".
+    - "Estadísticas añadidas en la página de trofeos + Habs de separación ganados pelea/trofeos/cajas. #img_231_ganado"
+    - "Documentación: argumento agregado y tipos de devolución en la lista de la izquierda. #img_231_doc"
+    - Se agregó un borrador sobre temas de escritura en el foro.
+    - "Actualización de tecnologías en la página acerca de. #img_231_about"
+    - El tamaño del historial del editor aumentó de 200 a 500.
+    - "Se agregó useChip sin segundo argumento para lanzar el chip sobre sí mismo. #img_231_usechip"
+    - Detener la IA cuando el uso de un arma o un chip provocó la muerte del lanzador.
+    - El editor ya no marca una IA como modificada después de una modificación seguida de una cancelación.
+    - "Combate: la entidad que se está reproduciendo actualmente es más visible en la línea de tiempo en la parte inferior. #img_231_player"
+    - "Battle Royale: redirección a la pelea que comienza solo si estás en la página de la huerta".
+    - "Battle Royale: el puerro seleccionado en la huerta se mantiene entre varias batallas".
+    - "Agregado un botón para marcar como leído una o todas las notificaciones. #img_231_notif"
+    - "el límite de tamaño de say () cambió de 200 a 100 + estilo de burbuja más pequeño. #img_231_say"
+    - Ya no es posible cambiar la IA de la torreta cuando no eres capitán.
+    - Aceleración de la carga de tablas de clasificación divertidas.
+    - Los trofeos en batalla no se muestran si son secretos y no están desbloqueados.
+    - "Foro: chatea directamente debajo del foro".
+    - "Chat: aceleró la carga de muchos mensajes".
+    - "Chat: lista de nombres de reacciones + haga clic en una reacción para agregar la misma. #img_231_reactions"
+    - "Chat: selección de comandos con flechas arriba/abajo".
+    - "Chat: botón para cerrar bloques de código. #img_231_chat_code"
+    - "Chat: posibilidad de eliminar un mensaje #img_231_delete"
+    - "Inventario: se agregó un botón para recolectar 100 cajas a la vez".
+    - "Paquete de batalla: disminución del precio en el nivel 1 y aumento en el nivel máximo".
+    - Los Battle Royales se desplazan 15min para no caer con los torneos.
+  fijado:
+    - "Documentación: indexOf duplicado, falta el argumento mapMap, regreso de la búsqueda".
+    - "LS: inArray, search y mapSearch encuentran listas o tablas idénticas".
+    - Se corrigió que la notificación de subida de nivel no sucediera en vivo.
+    - Se corrigió la actualización de comentarios en la página de informe de batalla.
+    - Se agregó error explícito en pelea fallida en lugar de carga infinita.
+    - Trofeo deslocalizador fijo (dos condiciones).
+    - Corrección de un desfase en la cuenta atrás de la huerta debido al horario de verano.
+    - "Chat: correcciones sobre pedidos".
+    - "Chat: error de texto grande corregido".
+    - Se corrigió el trofeo "Cariño, encogí el puerro" (gracias a Gandhi y nytope).
+
+230:
+  title: LeekScript 4 y varias mejoras.
+  added:
+    - "#ai LeekScript 4: listas y tablas, enteros de 64 bits, parámetros predeterminados, 56 funciones y más. #img_230_map #img_230_number #img_230_function"
+    - Los Battle Royales están disponibles a partir del nivel 20 en lugar del 50.
+    - "Se agregaron dos nuevos emojis. #img_230_emoji"
+  improved:
+    - "El dinero obtenido de trofeos y cajas de Habs se cuenta en las estadísticas".
+    - "Mejora de la versión en inglés de la enciclopedia".
+    - "Matchmaking en solitario mejorado y una pequeña solución para el emparejamiento de criadores".
+    - "Editor: finalización de campos estáticos de clases".
+    - "Editor: Posibilidad de añadir una IA en un puerro de prueba si no la tiene. #img_230_test_ai"
+    - "Aceleración (x2) de la carga de la página de informe de combate".
+    - "Combate: visualización del coste de las acciones (caminar, usar arma/chip, etc.) en la misma línea".
+    - "El mensaje de límite de depuración () también menciona la marca ()".
+    - “Poder modificar las características de los puerros de prueba es más visible”.
+    - "Editor: al abrir una IA, muestra los errores existentes directamente".
+    - "Clasificación individual por nivel: ordenar por talento y luego en lugar de XP".
+    - "Documentación: visualización de la función/constante de reemplazo en los resultados de búsqueda".
+    - "Documentación: las funciones/constantes en desuso están ocultas en la lista de la izquierda".
+    - "Mayor ganancia en Battle Royale".
+    - "Página de criador: botones de torneo, desafío y agresión ocultos si solo tienes un puerro".
+    - "Foro: selección de idioma en una categoría de foro".
+    - "Se aumenta el límite de criadores en un equipo de 40 a 50".
+    - "Editor: visualización de AI no guardados en el menú Ctrl+P. #img_230_finder"
+    - "Editor: las palabras clave reservadas ya no se colorean, las privadas se cocorrectamente".
+  fixed:
+    - "Se agregaron traducciones faltantes en todo el sitio".
+    - "Se corrigieron dos fugas de memoria: el consumo de RAM ahora es menor".
+    - "Trofeo XII ya no se puede desbloquear en prueba o desafío".
+    - "Arreglada la animación acelerada del lanzagranadas y el electrificador".
+    - "Filtro de torreta fijo en la página del informe".
+    - "Informe de combate: información sobre herramientas fija en el gráfico de salud".
+
+229:
+  title: Registro rápido, nuevas animaciones, 6 nuevos sombreros y 2 armas.
+  added:
+    - "Posibilidad de registrarse sin dirección de correo electrónico (añadir correo electrónico más tarde). #img_229_fast_register"
+    - "Nuevas animaciones agregadas: muerte de entidad, invocación, ataque, choque. #img_229_anim_explode #img_229_anim_slice #img_229_anim_burn #img_229_anim_explosion img_229_anim_summon #img_229_anim_crash"
+    - "Se agregaron 6 sombreros nuevos. #img_229_hats"
+    - "Se agregaron 2 nuevas armas olvidadas. #img_229_weapons"
+    - Se agregaron trofeos Experto (gana todos los trofeos) y Aviso (hazlo primero, felicitaciones a Magestik25).
+    - Posibilidad de usar acentos en puerro y nombres de criadores.
+    - "Posibilidad de compartir un combate en un turno o momento determinado. #img_229_share"
+    - Se agregó el trofeo Preocupado, para los jugadores que informaron un error.
+    - "Editor: atajos agregados Ctrl+U/J/I para desplegar/plegar bloques (gracias a Grapha)".
+  improved:
+    - "#ai LS2+: Error al llamar a un método this.method() con el número incorrecto de argumentos".
+    - "#ai LS2+: mejores errores al llamar a un método estático con el número incorrecto de argumentos".
+    - "#ai LS: Agregado error al asignar una constante, una clase, este, clase y super."
+    - "Editor: Se agregó un mensaje de advertencia si el editor se abre en otra pestaña".
+    - Se agregó el límite de solicitud de API a 5 por segundo.
+    - Se agregó una información sobre herramientas avanzada que faltaba en los equipos en la tabla de clasificación.
+    - Los errores "este valor no es iterable" solo están activos en LS2+.
+    - Incrementado el precio de sombreros y pociones en habs por 2.5x.
+    - "#ai LS: el costo de min/max/abs/suelo/redondo/ceil se convierte en 2".
+    - "Editor: ordenar casos de prueba por nombre".
+    - Adición de una mención "no revendible" en los artículos en cuestión en el mercado.
+    - "Editor: finalización de métodos y campos estáticos de clases externas".
+    - "Función log2 agregada en la documentación. #img_229_log2"
+  fixed:
+    - "#ai Clase fija .campo staticMethods".
+    - "#ai Los valores de función y clase ahora son equivalentes a verdadero".
+    - "Editor: se corrigió el error de finalización en las IA de basura".
+    - "Editor: búsqueda mejorada al pasar el cursor sobre un símbolo".
+    - "Editor: correcciones de errores persistentes".
+    - "LS: se corrigió un error que requería un punto y coma en la última línea".
+    - "Mercado: corrección del desplazamiento de la columna derecha en la parte inferior de la página".
+    - Se corrigió la posición de los sombreros en los puerros jóvenes.
+    - Se corrigió el error de duplicación de puerros visualmente en combate.
+    - Límite de registro fijo (5000 en lugar de 4999).
+    - Error de autocompletado de función fija.
+    - Guante de boxeo fijo cuando una entidad está en la primera celda.
+    - Se corrigió una falla en el generador aleatorio (felicitaciones a Karang).
+    - Se corrigió alguna área de efectos en la visualización de combate (gracias a nytope).
+    - Arreglado el trofeo de Roxxor.
+    - Se corrigió la visualización de páginas de algunos temas del foro.
+    - Coloración fija de algunas palabras clave en el editor.
+    - "Informe: corrección del color de los equipos en la tabla de estadísticas (gracias a nytope)."
+    - "Informe: eliminación de la exhibición de talento en los informes de prueba (gracias a nytope)".
+    - "Combate: Acceso directo al modo nocturno fijo (gracias a nytope)".
+
+228:
+  title: Regalos de Navidad, 6 Recursos, Mejoras en LS/Editor y Documentación Rápida.
+  agregado:
+    - "Documentación accesible desde cualquier página con el atajo Ctrl + Alt + H. #img_228_doc"
+    - "6 nuevos recursos raros. #img_228_resources"
+    - "Regalos de Navidad agregados, disponibles entre el 1 y el 24 de diciembre y funcionando entre el 25 y el 31 de diciembre. #img_228_presents"
+  mejorado:
+    - Se agregó un botón de navegación rápida a los errores y la primera vuelta en el informe (gracias a Amal).
+    - "Foro: se agregó una advertencia cuando se quiere responder pero no en la última página (gracias a Efflam)."
+    - Actualización de cifras en la página de inicio (gracias a Temakisushi).
+    - Posibilidad de ordenar los trofeos por fecha de obtención.
+    - Ordenar carpetas alfabéticamente en el editor.
+    - Visualización del progreso en familias de trofeos equipados y asistentes.
+    - "Editor: función/finalización global/clases de todas las IA incluidas".
+    - "#ai Adición de un error al acceder con el operador [] a un valor que no es un array."
+    - "Editor: carga acelerada de AIs".
+    - "Capacidad para abrir cajas de hab. #img_228_retrieve"
+  fijado:
+    - "#ai Se corrigió la función de reemplazo con $ reemplazo".
+    - Se corrigió el historial del equipo vacío (gracias a Efflam).
+    - Se corrigieron algunas descripciones en la ayuda y el tutorial (gracias a Temakisushi).
+    - Se eliminó el texto 'Aún no desbloqueado' al obtener el trofeo fuera de combate (gracias a Nytope).
+    - Se corrigió la posición de la información sobre herramientas en el torneo (gracias a Nytope).
+    - Llamada de método estático fijo con palabra clave de clase.
+    - "#ai getSummons() ya no devuelve invocaciones muertas".
+    - Se corrigió un error que eliminaba visualmente todas las composiciones en la página del equipo.
+    - Se corrigió un error de redirección infinita entre las páginas Market/Garden/Editor.
+    - "#ai Se corrigió el uso de return en un constructor".
+    - Se agregó un error al ejecutar un método sobre un valor que no es un objeto.
+    - "#ai Se agregó un error faltante en la asignación de un campo inexistente".
+    - "#ai Se corrigió un error al devolver un campo en el método string() de una clase".
+    - "#ai Se agregó un error al llamar a un método estático con un número incorrecto de argumentos (gracias a Amal)."
+    - "#ai Se corrigió el uso del operador con el acceso al estilo de matriz object['f'] y class['f']".
+    - "Documentación: visualización de enlaces en verde en la descripción de constantes".
+    - "Editor: corrigió un error de resolución de IA después de cambiar el nombre o mover una carpeta".
+
+227:
+  title: Recursos en combate, Inventario, LeekScript 3, ayuda mejorada.
+  added:
+    - "Página de inventario añadida. #img_227_inventory"
+    - "Se agregaron 20 recursos que se pueden obtener en combate. #img_227_resources"
+    - "La enciclopedia ahora se convierte en la página de ayuda principal. #img_227_encyclo"
+    - "Documentación: visualización de la lista de elementos correspondientes a las constantes LAUNCH_TYPE_*. #img_227_doc_launch"
+    - "LeekScript 1.1 se renombró como LeekScript 2 y se agregó LeekScript 3. #img_227_ls3"
+    - "#ai LS 2+: reflexión añadida: Object.keys, .values, Class.fields, .methods, .name, .super, etc. #img_227_reflexion"
+    - "#ai LS 3+: se agregaron objetos literales u objetos anónimos (`{a: 12, b: 'hi'}`). #img_227_obj"
+    - "#ai LS 3+: adición de clases base: Number, Integer, Boolean, Array, etc. y .class en valores. #img_227_class"
+  improved:
+    - "#ai Vida máxima de una torreta: 8000 en lugar de 12000".
+    - "Documentación: adición de tipos 'entero' y 'real' para especificar el tipo 'número'. #img_227_types"
+    - "Documentación: visualización de tipos constantes. #img_227_constant"
+    - Aceleración de la carga de la página.
+    - "Documentación: posibilidad de desplegar/plegar las categorías al costado. #img_227_doc"
+    - "Documentación: categorías con iconos, ocultos si no hay resultados y número de resultados. #img_227_doc"
+    - "Editor: carga tu IA puerro en lugar de la primera IA predeterminada".
+    - "Editor: al cerrar la pestaña abierta, redirigir a la última IA".
+    - "Editor: al completar una función, los argumentos no se agregan si ya están presentes".
+    - "Editor: escenario predeterminado + escenario guardado por AI. #img_227_scenario"
+    - "Editor: finalización de métodos sobre este. y métodos estáticos + Doc sobre métodos estáticos. #img_227_complete"
+    - "Icono de Hab en alta definición. #img_227_hab"
+    - "#ai LS 2+: El orden de las propiedades de un objeto se conserva cuando se muestra desde su clase o declaración".
+    - "#ai LS 3+: las palabras clave ahora distinguen entre mayúsculas y minúsculas + nuevas palabras clave reservadas. #img_227_keywords"
+    - "#ai LS 2+: nueva clase sin paréntesis funciona para crear un objeto. #img_227_new"
+    - "#ai LS 3+: se agregó un error si se llama a una función/método con el número incorrecto de argumentos".
+    - "#ai LS 3+: se agregaron más errores en las llamadas a métodos que no existen".
+  fixed:
+    - "Correcciones a algunos trofeos: HL, Forsworn, Annihilator".
+    - "Corrección de errores pequeños en el chat: emoticono <3, selección de emoji, emojis grandes".
+    - Se corrigió la categoría de algunas constantes.
+    - "Prueba: prueba corregida de nombres de puerros".
+    - "Se corrigieron los trofeos de Turing de bajo nivel: los bots de prueba tienen equipo".
+    - Convertir una clase en una cadena da <class Nom_classe> en lugar de nulo.
+    - Se corrigió un error de arrastrar y soltar armas en la página del puerro.
+    - "No es posible cambiar la IA de un aliado en un escenario de prueba (para evitar un error). #img_227_ally"
+    - Se corrigieron errores persistentes de IA después de eliminar o mover.
+    - Ya no es posibleatraer o empujar una torreta o cualquier entidad estática.
+    - "#ai LS 2+: Arreglado arrayFilter y arrayPartition con objetos".
+    - "#ai LS 2+: posibilidad de utilizar un método (estático o no) como valor (gracias a Taga)".
+    - "#ai LS 2+: Acceso fijo/escritura de campos de objetos mediante el acceso a la matriz obj['p'] (gracias a Broco)".
+    - "#ai LS 2+: Posibilidad de usar arrayMap con una clase para construir objetos (gracias a Grim)".
+    - "#ai LS 2+: Corrección de la llamada de funciones nativas en un método del mismo nombre."
+
+226:
+  title: 4 armas nuevas, reacciones de chat, moderación de chat y foro, mejora de la documentación
+  added:
+    - "#ai Se agregaron 4 nuevas armas: Neutrino, Bazooka, Blaster, Dark Katana. #img_226_weapons"
+    - "#ai Nuevos modos de lanzamiento para armas y balas: funciones getChip/WeaponLaunchType() y constantes LAUNCH_TYPE_* (7 en total). #img_226_launch_type"
+    - "Reacciones agregadas a los mensajes de chat. #img_226_chat_reactions"
+    - "Función para informar y moderar publicaciones en el foro. #img_226_forum_report"
+    - "#ai Ligero reequilibrio de algunos elementos: consulte el tema del foro de actualización".
+    - "Visualización de los valores finales de los efectos aumentados por las características de tu puerro. #img_226_preview"
+    - "Función para marcar todo el foro como leído. #img_226_forum_read"
+    - "Filtros agregados en la página de historial sobre los tipos y contextos de peleas (gracias a Efflam). #288 #img_226_history"
+  improved:
+    - "#ai Los errores de IA cuestan más en las operaciones para generar peleas más rápido".
+    - "#ai Solucionado el error de inicialización de campo estático con funciones de combate".
+    - Sustitución de funciones getLeek* por getEntity* en el tutorial (gracias a Turbigo).
+    - "Las funciones en la documentación ahora se agrupan con argumentos opcionales. #img_226_doc"
+    - Las tablas de clasificación son las tablas de clasificación activas de forma predeterminada.
+    - Límite de say() a 2 por turno y 200 caracteres y show() a 5 por turno.
+    - Las funciones getWeapon/ChipEffectiveArea devuelven el área incluso si está fuera de alcance.
+    - "Posibilidad de abrir/cerrar las composiciones en la página del equipo. #img_226_team"
+    - "Las publicaciones del foro eliminadas se muestran en los temas para una mejor comprensión. #img_226_forum_deleted"
+    - Moderación mejorada de los mensajes de chat (separar censura permanente y silencio).
+    - Posibilidad de agregar imágenes a las publicaciones del foro.
+    - "#ai BR context garden/auto se convierte en FIGHT_CONTEXT_GARDEN/FIGHT_CONTEXT_TOURNAMENT".
+    - Sincronización mejorada de notificaciones/mensajes en varias pestañas.
+    - Posición de arma fija y animaciones de disparo + animación de retroceso.
+    - "Animación de explosión rediseñada + efecto de sonido. #img_226_explosion"
+  fixed:
+    - Se corrigió la categoría de algunas constantes EFFECT_* en la documentación.
+    - Enlace fijo + error de emoji en el chat.
+    - Un salto en la pelea también borra el markText().
+    - Los elementos desbloqueados ya no se ven en la página /help/items.
+    - Se corrigieron los mensajes vacíos en los correos electrónicos de respuesta del foro.
+    - Se corrigió el error de la tecla Eliminar en el campo de texto del editor que deseaba eliminar AI.
+    - Se corrigió el error de IA de la torreta cuando dos composiciones del mismo equipo se encuentran en un torneo.
+    - Se corrigió el error de visualización de PT/PM en combate.
+    - Posibilidad de acceder a las opciones de combate en modo de pantalla completa.
+    - "Arreglado el error de carga de registros al inicio de la pelea. #435"
+    - Se corrigió un error de inicialización de campo estático (gracias a Taga).
+    - Se corrigió un error en la edición de algunas publicaciones del foro.

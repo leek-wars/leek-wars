@@ -1,0 +1,16 @@
+{
+	"hide_unlocked": "Ocultar obtenido",
+	"group_by_categories": "Categorías",
+	"sort_by": "Ordenar por {0}",
+	"sort_date": "Fecha",
+	"sort_index": "Culpa",
+	"sort_points": "Puntos",
+	"sort_rarity": "Escasez",
+	"stats": "Estadísticas",
+	"title": "{0} trofeos",
+	"title_me": "Mis trofeos",
+	"trophies": "Trofeos",
+	"best_trophies": "Mejores trofeos",
+	"latest_trophies": "Últimos trofeos",
+	"rarest_trophies": "Trofeos más raros"
+}

@@ -1,0 +1,23 @@
+{
+	"title": "Historia de {0}",
+	"title_html": "Historial de batallas",
+	"24h": "24 horas",
+	"today": "Hoy",
+	"2days": "2 dias",
+	"1week": "1 semana",
+	"n_fights": "{0} peleas",
+	"victories": "victorias",
+	"draws": "corbatas",
+	"defeats": "derrotas",
+	"ratio": "relación",
+	"not_found_id": "Puerro de id {0} no encontrado",
+	"fight_type": "Tipos de lucha",
+	"fight_context": "Contextos de combate",
+	"solo": "Solo",
+	"farmer": "Criador",
+	"team": "Equipo",
+	"battle_royale": "Batalla real",
+	"challenge": "Desafío",
+	"garden": "Huerta",
+	"tournament": "Torneo"
+}

@@ -1,0 +1,10 @@
+{
+	"report_farmer": "Informe {0}",
+	"reporting_deleted": "Informe eliminado",
+	"title": "Moderación",
+	"warning_sent": "¡Advertencia enviada!",
+	"you_are_muted": "Has sido silenciado.",
+	"you_have_been_muted_by_x": "Has sido silenciado por {0}.",
+	"you_have_been_unmuted_by_x": "{0} te permite volver a hablar en el chat.",
+	"you_must_choose_reason": "¡Debes elegir un patrón!"
+}

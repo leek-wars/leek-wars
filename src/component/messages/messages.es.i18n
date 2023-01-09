@@ -1,0 +1,16 @@
+{
+	"cancel": "Anular",
+	"me": "A mí",
+	"new_message": "Nuevo mensaje...",
+	"quit": "Abandonar",
+	"quit_confirm": "¿Quieres salir de la conversación? Ya no podrás ver los mensajes anteriores.",
+	"quit_conversation": "Deja la conversación",
+	"send": "Enviar a",
+	"title": "Chats",
+	"cat_team": "Equipo",
+	"cat_private": "Mensajes privados",
+	"team": "Equipo",
+	"enable_notifications": "Permitir notificaciones",
+	"disable_notifications": "Desactivar notificaciones",
+	"admin_warn": "Para hacer una sugerencia o informar un error no crítico, cree un tema en el {forum}."
+}

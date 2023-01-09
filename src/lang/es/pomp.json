@@ -1,0 +1,16 @@
+{
+	"ai_lines": "Número de líneas de IA",
+	"ai_lines_desc": "Este aparato le permite mostrar el número de líneas de su IA en la página de sus puerros.",
+	"hold_weapon": "Sostén un arma",
+	"hold_weapon_desc": "Este aparato le permite a tu puerro sostener un arma en sus manos, visible en su página y dondequiera que aparezca su visual en el juego.",
+	"leek_title": "Título de puerro",
+	"leek_title_desc": "Esta vestimenta te permite darle un título a tus puerros, que se mostrará en su página y en otros lugares del juego.",
+	"farmer_title": "Título de criador",
+	"farmer_title_desc": "Este equipo te permite darte un título, que se mostrará en tu página y en otros lugares del juego como el foro, información sobre herramientas avanzada, etc.",
+	"metal": "Platos de metal",
+	"metal_desc": "Agregue placas de metal en su imagen de puerro",
+	"angry": "Cara enojada",
+	"angry_desc": "Cambia la expresión de tu puerro: se verá cabreado",
+	"happy": "Cara sonriente",
+	"happy_desc": "Cambia la expresión de tu puerro: estará sonriendo"
+}

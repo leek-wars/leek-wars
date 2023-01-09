@@ -1,0 +1,11 @@
+{
+	"title": "Cambiar e-mail",
+	"send_confirmation": "Enviar confirmación",
+	"enter_a_new_email": "Introduce una nueva dirección de correo electrónico",
+	"new_email": "Nueva dirección de correo electrónico",
+	"confirm": "Confirmación",
+	"email_sent": "Correo electrónico de confirmación enviado a {email}",
+	"email_changed_success": "La dirección de correo electrónico cambió con éxito.",
+	"back_home": "De vuelta a casa",
+	"error_not_same_email": "Las direcciones ingresadas no son las mismas"
+}

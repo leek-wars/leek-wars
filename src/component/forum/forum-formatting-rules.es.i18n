@@ -1,0 +1,19 @@
+{
+	"source_code": "Código fuente",
+	"source_code_ex": "mi código fuente",
+	"big_title": "Gran titular",
+	"big_title_ex": "Titulo principal",
+	"sub_title": "Subtítulos",
+	"sub_title_ex": "Subtítulos",
+	"sub_sub_title": "Sub-subtítulo",
+	"sub_sub_title_ex": "Sub-subtítulo",
+	"bold": "Atrevido",
+	"bold_ex": "atrevido",
+	"italic": "Cursiva",
+	"italic_ex": "cursiva",
+	"underlined": "Subrayar",
+	"underlined_ex": "subrayar",
+	"striked": "Varilla",
+	"striked_ex": "varilla",
+	"basic_html": "HTML básico permitido"
+}

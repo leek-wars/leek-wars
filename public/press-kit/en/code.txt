@@ -1,1 +1,4 @@
 To code your AI, you will need to code in LeekScript, a language close to JavaScript. A tutorial is available to learn the notions of the game and the language as you progress.
+
+
+

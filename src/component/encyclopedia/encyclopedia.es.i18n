@@ -1,0 +1,11 @@
+{
+	"n_contributors": "Sin colaborador | <b>{n}</b> colaborador | <b>{n}</b> colaboradores",
+	"search": "Encuentra una página",
+	"created_by_x_the_y": "Creado por {farmer} el {date}",
+	"edited_by_x_the_y": "Editado por {farmer} el {date}",
+	"n_views": "{v} visualizaciones",
+	"n_contributions": "{n} contribuciones",
+	"not_found": "La página \"{name}\" no existe en la enciclopedia española.",
+	"contributor_create": "Eres un colaborador 😎 Haz clic en Editar para comenzar a editar esta página",
+	"locked": "Completa el capítulo para desbloquear la IA completa"
+}
