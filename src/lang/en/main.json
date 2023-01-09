@@ -211,5 +211,9 @@
 	"month_10": "november",
 	"month_11": "december",
 	"education": "Education",
-	"rename": "Rename"
+	"rename": "Rename",
+	"game_rules": "Rules of the game",
+	"select": "To select",
+	"n_words": "0 word | 1 word | {n} words",
+	"time_at": "{0} at {1}"
 }
