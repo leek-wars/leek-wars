@@ -104,8 +104,12 @@
 								</i18n>
 							</div>
 							<div>
-								<i18n tag="div" path="n_contributions"><b slot="n">{{ page.contributions | number }}</b></i18n>
-								<b>{{ page.content.split('\n').length }}</b> lignes — <b>{{ page.content.split(' ').length }}</b> mots — <b>{{ page.content.length }}</b> caractères
+								<i18n tag="div" path="n_contributions">
+									<b slot="n">{{ page.contributions | number }}</b>
+								</i18n>
+								{{ $tc('main.n_lines', [page.content.split('\n').length]) }}
+								 — {{ $tc('main.n_words', [page.content.split(' ').length]) }}
+								 — {{ $tc('main.n_characters', [page.content.length]) }}
 							</div>
 						</div>
 					</div>
