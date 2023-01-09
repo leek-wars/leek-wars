@@ -106,5 +106,7 @@
 	"upload_success": "Emblème envoyé !",
 	"victories": "victoires",
 	"xp": "XP : {0}",
-	"you_left_team": "Vous avez quitté l'équipe"
+	"you_left_team": "Vous avez quitté l'équipe",
+	"load_all": "Charger tout",
+	"rankings": "Classements"
 }

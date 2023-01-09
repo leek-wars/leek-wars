@@ -106,5 +106,7 @@
 	"upload_success": "Emblem sent!",
 	"victories": "wins",
 	"xp": "XP: {0}",
-	"you_left_team": "You left the team"
+	"you_left_team": "You left the team",
+	"load_all": "Load all",
+	"rankings": "Rankings"
 }

@@ -219,7 +219,7 @@
 		</panel>
 
 		<panel v-if="team" icon="mdi-podium">
-			<template slot="title">Classements</template>
+			<template slot="title">{{ $t('rankings') }}</template>
 			<div class="container grid last">
 				<div class="column4">
 					<h4>{{ $t('main.leeks') }}</h4>
@@ -291,7 +291,7 @@
 			</div>
 			<div v-if="team.leek_count > 10 && !rankingsLoaded" class="load-rankings">
 				<loader v-if="rankingsLoading" />
-				<v-btn small v-else @click="loadRankings">Charger tout</v-btn>
+				<v-btn small v-else @click="loadRankings">{{ $t('load_all') }}</v-btn>
 			</div>
 		</panel>
 
