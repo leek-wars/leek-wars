@@ -7,12 +7,6 @@
 				<v-icon v-if="modified" class="modified">mdi-record</v-icon>
 			</h1>
 			<div v-if="page" class="tabs">
-				<!--
-				<div v-if="page.id === 1 || page.id === 326" class="tab disabled" icon="search" link="/search">
-					<img class="search-icon" src="/image/search.png" @click="search">
-					<input v-model="searchQuery" type="text" :placeholder="$t('search')" @keyup.enter="search">
-				</div>
-				-->
 				<!-- <router-link :to="'/encyclopedia/' + english">
 					<div class="tab">English</div>
 				</router-link> -->
@@ -51,7 +45,7 @@
 		<panel v-if="page" class="first encyclopedia last">
 			<div slot="content" class="table">
 				<div v-if="edition" ref="codemirror" class="codemirror" :style="{lineHeight: 1.6, fontSize: 14}"></div>
-				<div v-if="LeekWars.encyclopedia[$i18n.locale] && Object.keys(LeekWars.encyclopedia[$i18n.locale]).length" ref="markdown" class="markdown" @scroll="markdownScroll">
+				<div v-if="LeekWars.encyclopedia[this.language] && Object.keys(LeekWars.encyclopedia[this.language]).length" ref="markdown" class="markdown" @scroll="markdownScroll">
 					<!-- {{ parents }} -->
 
 					<markdown :content="content" mode="encyclopedia" :class="{main: page.id === 1}" :locale="page.language" />
@@ -160,6 +154,9 @@
 		get code() {
 			return 'page' in this.$route.params ? this.$route.params.page.replace(/_/g, ' ') : this.main_title
 		}
+		get lanuage_and_code() {
+			return this.language + '/' + this.code
+		}
 		get title() {
 			return this.page ? this.page.title : 'Encyclopedia'
 		}
@@ -237,7 +234,6 @@
 
 		mounted() {
 			// this.editStart()
-			LeekWars.loadEncyclopedia(this.language)
 
 			this.$root.$on('ctrlS', () => {
 				this.save()
@@ -245,8 +241,9 @@
 			LeekWars.setActions(this.actions)
 		}
 
-		@Watch('code', {immediate: true})
+		@Watch('lanuage_and_code', {immediate: true})
 		update() {
+			LeekWars.loadEncyclopedia(this.language)
 
 			if (this.code === 'Page au hasard') {
 				const pages = Object.values(LeekWars.encyclopedia[this.$i18n.locale])

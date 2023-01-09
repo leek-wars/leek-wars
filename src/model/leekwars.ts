@@ -547,6 +547,7 @@ const LeekWars = {
 	encyclopediaById: {} as {[key: string]: {[key: number]: any}},
 	encyclopediaLoaded: {} as {[key: string]: boolean},
 	loadEncyclopedia: (locale: string) => {
+		// console.log("load encyclopedia", locale)
 		if (!LeekWars.encyclopediaLoaded[locale]) {
 			Vue.set(LeekWars.encyclopediaLoaded, locale, true)
 			LeekWars.get('encyclopedia/get-all-locale/' + locale).then(pages => {
