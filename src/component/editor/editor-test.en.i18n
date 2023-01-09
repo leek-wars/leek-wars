@@ -48,5 +48,7 @@
 	"my_ais": "My AIs",
 	"reachable_cells": "Accessible cells",
 	"resurrection": "Resurrection",
-	"teleportation": "Teleportation"
+	"teleportation": "Teleportation",
+	"templates": "Models",
+	"free": "Free"
 }

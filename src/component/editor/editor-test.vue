@@ -499,7 +499,7 @@
 
 		get templates(): TestScenario[] {
 			const templates = [
-				{id: 0, base: false, name: "Libre", category: "free", team1: [] as TestScenarioLeek[], team2: [] as TestScenarioLeek[], map: null, type: -1}
+				{id: 0, base: false, name: this.$t('free'), category: "free", team1: [] as TestScenarioLeek[], team2: [] as TestScenarioLeek[], map: null, type: -1}
 			] as TestScenario[]
 			if (!store.state.farmer) { return templates }
 
@@ -531,7 +531,7 @@
 			if (LeekWars.objectSize(store.state.farmer.leeks) > 1) {
 				templates.push({
 					id: 0, base: false, seed: null, default: false, ai: null,
-					name: "Éleveur", category: "farmer", map: null, team1, team2, type: 1
+					name: this.$t('main.farmer') as string, category: "farmer", map: null, team1, team2, type: 1
 				})
 			}
 			templates.push({
@@ -1268,6 +1268,7 @@
 		align-items: center;
 		min-width: 0;
 		height: 34px;
+		flex: 34px 0 0;
 		padding: 0 9px;
 		gap: 9px;
 		.name {

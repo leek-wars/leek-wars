@@ -48,5 +48,7 @@
 	"test_scenario": "Scénario",
 	"test_map": "Carte",
 	"test_maps": "Cartes",
-	"test_advanced": "Avancé"
+	"test_advanced": "Avancé",
+	"templates": "Modèles",
+	"free": "Libre"
 }
