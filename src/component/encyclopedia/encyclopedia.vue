@@ -7,9 +7,6 @@
 				<v-icon v-if="modified" class="modified">mdi-record</v-icon>
 			</h1>
 			<div v-if="page" class="tabs">
-				<!-- <router-link :to="'/encyclopedia/' + english">
-					<div class="tab">English</div>
-				</router-link> -->
 				<v-menu v-if="contributor && edition" offset-y>
 					<template v-slot:activator="{ on }">
 						<div class="page-language info" v-on="on">
@@ -40,6 +37,19 @@
 					<v-icon>mdi-pencil-outline</v-icon>
 					Modifier
 				</div>
+				<v-menu v-if="page && Object.values(page.translations).length" offset-y>
+					<template v-slot:activator="{ on }">
+						<div class="tab" v-on="on"><v-icon>mdi-translate</v-icon></div>
+					</template>
+					<v-list :dense="true">
+						<router-link v-for="(translation, l) in page.translations" :key="l" :to="'/encyclopedia/' + l + '/' + translation">
+							<v-list-item class="language">
+								<img :src="LeekWars.languages[l].flag" class="flag">
+								<span class="name">{{ translation }}</span>
+							</v-list-item>
+						</router-link>
+					</v-list>
+				</v-menu>
 			</div>
 		</div>
 		<panel v-if="page" class="first encyclopedia last">
