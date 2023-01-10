@@ -38,11 +38,12 @@ module.exports = {
 			config.plugins.delete('html-index')
 
 			if (process.env.VUE_CLI_MODERN_BUILD) {
-				config
-					.plugin("webpack-bundle-analyzer")
-					.use(BundleAnalyzerPlugin)
-					.init(Plugin => new Plugin({}))
-				}
+				// Uncomment to analyze bundles
+				// config
+				// 	.plugin("webpack-bundle-analyzer")
+				// 	.use(BundleAnalyzerPlugin)
+				// 	.init(Plugin => new Plugin({}))
+			}
 		}
 	},
     pwa: {
