@@ -58,7 +58,7 @@ const Team = () => import(/* webpackChunkName: "[request]" */ `@/component/team/
 const Tournament = () => import(/* webpackChunkName: "[request]" */ `@/component/tournament/tournament.${locale}.i18n`)
 const Trophies = () => import(/* webpackChunkName: "[request]" */ `@/component/trophies/trophies.${locale}.i18n`)
 const TrophyPage = () => import(/* webpackChunkName: "[request]" */ `@/component/trophy/trophy.${locale}.i18n`)
-const Tutorial = () => import(/* webpackChunkName: "[request]" */ `@/component/tutorial/tutorial.${locale}.i18n`)
+const Tutorial = () => import(/* webpackChunkName: "[request]" */ `@/component/tutorial/tutorial.vue`)
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { vueMain } from '@/model/vue'
