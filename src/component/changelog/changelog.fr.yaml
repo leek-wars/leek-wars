@@ -12,9 +12,11 @@
     - Corrections de traductions anglaises manquantes
     - Ajout de pages d'encyclopédie en Anglais.
     - "Féminin des titres en Anglais : Queen, Godess, Huntress, Baroness, Empress, Godmother etc."
+    - Les anciennes pages tutoriel et aide générale redirigent vers les nouvelles pages dans l'encyclopédie.
   fixed:
     - "Possiblité d'envoyer le message \"0\"."
     - Correction de deux problèmes sur getCellsToUseChipOnCell.
+    - Correction des IA à la création des scenarios de test d'équipe.
 
 234:
   title: "Nouveau tutoriel, Épée lourde, Créations de la communauté"
