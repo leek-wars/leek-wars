@@ -152,7 +152,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				const teamChat = state.farmer && state.farmer.team ? state.farmer.team.chat : null
 				const groupeChat = state.farmer && state.farmer.groupe ? state.farmer.groupe.chat : null
 				const type = LeekWars.isPublicChat(data.id) ? ChatType.GLOBAL : (data.id === teamChat ? ChatType.TEAM : (data.id === groupeChat ? ChatType.GROUP : ChatType.PM))
-				const name = type === ChatType.GLOBAL ? LeekWars.chatNames[data.id] : (type === ChatType.TEAM ? state.farmer!.team!.name : (type === ChatType.GROUP ? state.farmer!.groupe!.name : data.name))
+				const name = type === ChatType.GLOBAL ? LeekWars.publicChats[data.id].name : (type === ChatType.TEAM ? state.farmer!.team!.name : (type === ChatType.GROUP ? state.farmer!.groupe!.name : data.name))
 				const chat = new Chat(data.id, type, name, data.notifications)
 				Vue.set(state.chat, data.id, chat)
 			}
@@ -235,7 +235,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		'br'(state: LeekWarsState, data: any) {
 			const channel = data[0]
 			if (!state.chat[channel]) {
-				const name = LeekWars.chatNames[channel]
+				const name = LeekWars.publicChats[channel].name
 				Vue.set(state.chat, channel, new Chat(channel, ChatType.GLOBAL, name, false))
 			}
 			state.chat[channel].battleRoyale(data[1], data[2])
@@ -253,7 +253,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 
 			// Update or create chat
 			if (!state.chat[chatID]) {
-				const name = type === ChatType.GLOBAL ? LeekWars.chatNames[chatID] : (type === ChatType.TEAM ? state.farmer!.team!.name : message.farmer.name)
+				const name = type === ChatType.GLOBAL ? LeekWars.publicChats[chatID].name : (type === ChatType.TEAM ? state.farmer!.team!.name : message.farmer.name)
 				Vue.set(state.chat, chatID, new Chat(chatID, type, name, type === ChatType.PM))
 			}
 			const chat = state.chat[chatID]
@@ -286,8 +286,8 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 					state.conversationsList.unshift(chat)
 				}
 			}
-			// État non-lu
-			if (data.new) {
+			// État non-lu (pas si bot)
+			if (data.new && message.farmer.id !== 0) {
 				store.commit('chat-set-read', { chat: chatID, read: false })
 			}
 

@@ -166,9 +166,9 @@ const LeekWars = {
 	battleRoyale: new BattleRoyale(),
 	squares: new Squares(),
 	languages: Object.freeze({
-		fr: { code: 'fr', name: 'Français', flag: '/image/flag/fr.png', chat: 1, encyclopedia: 'Encyclopédie' } as Language,
-		en: { code: 'en', name: 'English', flag: '/image/flag/gb.png', chat: 2, encyclopedia: 'Encyclopedia' } as Language,
-		es: { code: 'es', name: 'Español', flag: '/image/flag/es.png', chat: 3, encyclopedia: 'Enciclopedia' } as Language,
+		fr: { code: 'fr', name: 'Français', flag: '/image/flag/fr.png', chat: 1, encyclopedia: 'Encyclopédie', chats: [1, 32506, 32507] } as Language,
+		en: { code: 'en', name: 'English', flag: '/image/flag/gb.png', chat: 2, encyclopedia: 'Encyclopedia', chats: [2, 32508, 32509] } as Language,
+		es: { code: 'es', name: 'Español', flag: '/image/flag/es.png', chat: 3, encyclopedia: 'Enciclopedia', chats: [3] } as Language,
 	} as { [key: string]: Language }),
 	timeDelta: 0, // (Date.now() / 1000 | 0) - __SERVER_TIME,
 	time: (Date.now() / 1000) | 0,
@@ -192,15 +192,15 @@ const LeekWars = {
 	skins: Object.freeze(SKINS),
 	leekSizes: Object.freeze(LEEK_SIZES),
 	isPublicChat: (id: number) => id === 1 || id === 2 || id === 3 || id === 32506 || id === 32507 || id === 32508 || id === 32509,
-	chatNames: {
-		1: 'Général',
-		32506: 'Aide',
-		32507: 'Programmation',
-		2: 'General',
-		32508: 'Help',
-		32509: 'Programming',
-		3: 'General'
-	} as {[key: number]: string},
+	publicChats: {
+		1: { id: 1, name: 'Général', language: 'fr' },
+		32506: { id: 32506, name: 'Aide', language: 'fr' },
+		32507: { id: 32507, name: 'Programmation', language: 'fr' },
+		2: { id: 2, name: 'General', language: 'en' },
+		32508: { id: 32508, name: 'Help', language: 'en' },
+		32509: { id: 32509, name: 'Programming', language: 'en' },
+		3: { id: 3, name: 'General', language: 'es' },
+	} as {[key: number]: { name: string, language: string }},
 	getLeekSkinName: (skin: number) => {
 		if (!(skin in SKINS)) { return SKINS[1] }
 		return SKINS[skin]

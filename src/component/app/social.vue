@@ -44,7 +44,7 @@
 				<panel v-if="env.SOCIAL" class="blabla-chat" toggle="social/chat" icon="mdi-chat-outline">
 					<template slot="title">
 						<router-link v-ripple :to="'/chat/' + chatID" class="title">
-							Chat <span v-if="$store.state.farmer.groupe">{{ $store.state.farmer.groupe.name }}</span>
+							{{ $store.state.chat[chat] ? $store.state.chat[chat].name : 'Chat' }} <span v-if="$store.state.farmer.groupe">{{ $store.state.farmer.groupe.name }}</span>
 							<span v-if="!$store.state.farmer?.groupe" class="farmer-count">
 								<span class="count">({{ $store.state.connected_farmers }} <v-icon class="icon">mdi-account-multiple</v-icon>)</span>
 							</span>
@@ -55,17 +55,19 @@
 							<template v-slot:activator="{ on }">
 								<div class="language-button" v-ripple v-on="on">
 									<div class="wrapper">
-										<img :src="chatLanguage.flag">
-										<div class="unread-circle" v-if="Object.values(LeekWars.languages).some(l => $store.state.chat[l.chat] && !$store.state.chat[l.chat].read)"></div>
+										<img :src="LeekWars.languages[LeekWars.publicChats[chat].language].flag">
+										<div class="unread-circle" v-if="Object.values(LeekWars.publicChats).some(chat => $store.state.chat[chat.id] && !$store.state.chat[chat.id].read)"></div>
 									</div>
 								</div>
 							</template>
 							<v-list :dense="true">
-								<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="setChatLanguage(language)">
-									<img :src="language.flag" class="flag">
-									<span class="name">{{ language.name }}</span>
-									<span class="unread-circle" v-if="$store.state.chat[language.chat] && !$store.state.chat[language.chat].read"></span>
-								</v-list-item>
+								<div v-for="(data, language) in LeekWars.languages" :key="language" class="language">
+									<v-list-item v-for="(chat, i) in data.chats" :key="i" class="language" @click="setChatLanguage(chat)">
+										<img :src="LeekWars.languages[LeekWars.publicChats[chat].language].flag" class="flag">
+										<span class="name">{{ LeekWars.publicChats[chat].name }}</span>
+										<span class="unread-circle" v-if="$store.state.chat[chat] && !$store.state.chat[chat].read"></span>
+									</v-list-item>
+								</div>
 							</v-list>
 						</v-menu>
 						<div v-if="$store.state.chat[chatID]" class="button text" @click="LeekWars.addChat($store.state.chat[chatID])">
@@ -92,19 +94,18 @@
 	export default class Social extends Vue {
 
 		ChatType = ChatType
-		chatLanguage: Language | null = null
+		chat: number | null = null
 		panelWidth: number = 400
 
 		get chatID() {
 			if (store.state.farmer && store.state.farmer.groupe) {
 				return store.state.farmer.groupe.chat
 			}
-			return this.chatLanguage ? this.chatLanguage.chat : null
+			return this.chat
 		}
 
 		created() {
-			const lang = localStorage.getItem('social/chat-language') || this.$i18n.locale
-			this.chatLanguage = LeekWars.languages[lang]
+			this.chat = parseInt(localStorage.getItem('social/chat') || '0') || LeekWars.languages[this.$i18n.locale].chat
 			if (localStorage.getItem('main/social-collapsed') === 'true') {
 				LeekWars.socialCollapsed = true
 			}
@@ -144,9 +145,9 @@
 			LeekWars.post('notification/read-all')
 		}
 
-		setChatLanguage(language: Language) {
-			this.chatLanguage = language
-			localStorage.setItem('social/chat-language', language.code)
+		setChatLanguage(chat: number) {
+			this.chat = chat
+			localStorage.setItem('social/chat', '' + chat)
 		}
 	}
 </script>
