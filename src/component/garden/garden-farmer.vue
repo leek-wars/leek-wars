@@ -5,7 +5,8 @@
 			<div class="name">{{ farmer.name }}</div>
 			<talent :id="farmer.id" :talent="farmer.talent" category="farmer" />
 			<div class="level">
-				{{ farmer.leek_count }} <img src="/image/icon/black/leek.png"> • {{ $t('main.level_n', [farmer.total_level]) }}
+				{{ farmer.leek_count }} <img class="icon" src="/image/icon/black/leek.png"> {{ $t('main.level_n', [farmer.total_level]) }}
+				<img class="country" v-if="farmer.country" :title="$t('country.' + farmer.country)" :src="'/image/flag/' + farmer.country + '.png'">
 			</div>
 		</div>
 	</rich-tooltip-farmer>
@@ -52,10 +53,14 @@
 		display: flex;
 		align-items: flex-start;
 		justify-content: center;
-		img {
+		.icon {
 			width: 16px;
 			opacity: 0.5;
 			margin: 0 3px;
+		}
+		.country {
+			height: 17px;
+			margin-left: 5px;
 		}
 	}
 </style>

@@ -7,7 +7,10 @@
 			<div class="name">{{ leek.name }}</div>
 			<talent :id="leek.id" :talent="leek.talent" category="leek" />
 			<br>
-			<div class="level">{{ $t('main.level_n', [leek.level]) }}</div>
+			<div class="level">
+				{{ $t('main.level_n', [leek.level]) }}
+				<img v-if="leek.country" :title="$t('country.' + leek.country)" :src="'/image/flag/' + leek.country + '.png'">
+			</div>
 		</div>
 	</rich-tooltip-leek>
 </template>
@@ -48,5 +51,12 @@
 		font-size: 16px;
 		color: #555;
 		font-weight: 500;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 5px;
+		img {
+			height: 17px;
+		}
 	}
 </style>
