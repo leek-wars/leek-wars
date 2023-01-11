@@ -215,5 +215,6 @@
 	"game_rules": "Reglas del juego",
 	"select": "Para seleccionar",
 	"n_words": "0 palabra | 1 palabra | {n} palabras",
-	"time_at": "{0} a las {1}"
+	"time_at": "{0} a las {1}",
+	"censored_by": "Censurado por {0}"
 }

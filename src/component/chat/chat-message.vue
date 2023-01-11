@@ -6,26 +6,19 @@
 			</rich-tooltip-farmer>
 		</router-link>
 		<img v-else class="avatar" src="/image/favicon.png">
-		<div class="bubble" :class="{'br-notification': message.farmer.id === 0, large: large}">
+		<div class="bubble" :class="{large: large}">
+
 			<router-link v-if="message.farmer.id !== 0" :to="'/farmer/' + message.farmer.id" class="author">
 				<rich-tooltip-farmer :id="message.farmer.id" v-slot="{ on }">
 					<span :class="message.farmer.color" v-on="on">{{ message.farmer.name }}</span>
 				</rich-tooltip-farmer>
 			</router-link>
-			<div v-else class="author">Leek Wars</div>
+			<div v-else class="author"><span class="bot">Leek Wars 🤖</span></div>
 
-			<div v-if="message.censored" class="censored">Censuré par {{ message.censored_by.name }}</div>
-			<router-link v-else-if="message.farmer.id === 0" :to="'/fight/' + message.content.split('|')[1]">
-				{{ $t(message.content.split('|')[0]) }}
-			</router-link>
-			<div v-else @click="clickMessage" v-chat-code-latex class="text" :class="{'large-emojis': message.only_emojis}" v-html="message.content"></div>
+			<chat-message-text :message="message" />
 
 			<template v-for="(sub, i) in message.subMessages">
-				<div v-if="sub.censored" :key="i" class="censored">Censuré par {{ sub.censored_by.name }}</div>
-				<router-link v-else-if="sub.farmer.id === 0" :to="'/fight/' + sub.content.split('|')[1]">
-					{{ $t(sub.content.split('|')[0]) }}
-				</router-link>
-				<div v-else :key="i" @click="clickMessage" v-chat-code-latex class="text" :class="{'large-emojis': sub.only_emojis, ['m-' + sub.id]: true}" v-html="sub.content"></div>
+				<chat-message-text :message="sub" />
 			</template>
 
 			<div class="right">
@@ -56,14 +49,12 @@
 <script lang="ts">
 	import { Chat, ChatMessage, ChatType } from '@/model/chat'
 	import { LeekWars } from '@/model/leekwars'
-	import { store } from '@/model/store'
-	import { vueMain } from '@/model/vue'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-	import Pseudo from '../app/pseudo.vue'
 	import 'katex/dist/katex.min.css'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+	import ChatMessageText from './chat-message-text.vue'
 
-	@Component({ name: 'ChatMessage', components: { RichTooltipFarmer } })
+	@Component({ name: 'ChatMessage', components: { RichTooltipFarmer, ChatMessageText } })
 	export default class ChatMessageComponent extends Vue {
 
 		@Prop({ required: true }) message!: ChatMessage
@@ -71,31 +62,12 @@
 		@Prop() large!: boolean
 
 		ChatType = ChatType
-		pseudos: Vue[] = []
 
 		get me() {
 			return this.message.farmer.id === this.$store.state.farmer.id
 		}
 		get privateMessages() {
 			return this.chat && this.chat.type === ChatType.PM
-		}
-
-		mounted() {
-			this.$el.querySelectorAll('.pseudo').forEach((c) => {
-				const name = (c as HTMLElement).innerText
-				const farmer = store.state.farmer_by_name[name]
-				if (farmer) {
-					const pseudo = new Pseudo({ propsData: { farmer }, parent: vueMain })
-					pseudo.$mount(c)
-					this.pseudos.push(pseudo)
-				}
-			})
-		}
-
-		beforeDestroy() {
-			for (const pseudo of this.pseudos) {
-				pseudo.$destroy()
-			}
 		}
 
 		@Watch('message.reactions')
@@ -111,16 +83,6 @@
 				LeekWars.post('message-reaction/add', { reaction: emoji, message_id: this.message.id })
 				this.message.my_reaction = emoji
 			}
-		}
-
-		clickMessage(e: MouseEvent) {
-			// console.log("click", e)
-			// const target = e.target as HTMLElement
-			// console.log(target)
-			// if (target.classList.contains('pseudo')) {
-			// 	const farmer = store.state.farmer_by_name[target.innerText]
-			// 	console.log("click on farmer", farmer)
-			// }
 		}
 	}
 </script>
@@ -213,20 +175,6 @@
 			color: #aaa;
 		}
 	}
-	.text ::v-deep a {
-		color: #5fad1b;
-	}
-	.text ::v-deep .v-icon {
-		color: #5fad1b;
-		font-size: 18px;
-		margin-right: 4px;
-		vertical-align: baseline;
-	}
-	.censored {
-		font-size: 15px;
-		color: #777;
-		font-style: italic;
-	}
 	.add {
 		color: #000;
 		background: white;
@@ -279,16 +227,6 @@
 			&.me {
 				border: 1px solid #555;
 			}
-		}
-	}
-	.br-notification {
-		background: #5fad1b;
-		padding: 3px 7px;
-		border-radius: 4px;
-		color: white;
-		display: inline-block;
-		.author, a {
-			color: white;
 		}
 	}
 </style>

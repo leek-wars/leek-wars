@@ -213,7 +213,8 @@
 	"education": "Education",
 	"rename": "Rename",
 	"game_rules": "Rules of the game",
-	"select": "To select",
+	"select": "Select",
 	"n_words": "0 word | 1 word | {n} words",
-	"time_at": "{0} at {1}"
+	"time_at": "{0} at {1}",
+	"censored_by": "Censored by {0}"
 }
