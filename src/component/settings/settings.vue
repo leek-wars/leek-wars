@@ -129,7 +129,7 @@
 					<center><v-btn type="submit">{{ $t('change') }}</v-btn></center>
 				</form>
 
-				<div v-if="$store.state.farmer.verified" v-ripple class="list-item card" @click="viewChangeEmail = !viewChangeEmail">
+				<div v-if="$store.state.farmer?.verified" v-ripple class="list-item card" @click="viewChangeEmail = !viewChangeEmail">
 					<v-icon>mdi-email-outline</v-icon>
 					<span class="label">{{ $t('change_email') }}</span>
 					<v-icon>{{ viewChangeEmail ? 'mdi-menu-up' : 'mdi-menu-down' }}</v-icon>
@@ -153,10 +153,10 @@
 					<br><br>
 				</div>
 
-				<v-switch v-if="$store.state.farmer && $store.state.farmer.verified" v-model="settings.github_login" :disabled="!$store.state.farmer.pass" :label="$t('allow_github')" @change="updateGithubLogin" />
+				<v-switch v-if="$store.state.farmer?.verified" v-model="settings.github_login" :disabled="!$store.state.farmer.pass" :label="$t('allow_github')" @change="updateGithubLogin" />
 			</panel>
 
-			<panel v-if="$store.state.farmer && $store.state.farmer.verified" title="Notifications" icon="mdi-bell-outline">
+			<panel v-if="$store.state.farmer?.verified" :title="$t('main.notifications')" icon="mdi-bell-outline">
 				<span slot="actions" class="push-notifs-button" @click="updatePushNotifications">
 					<span>{{ $t('push_notifications') }}</span>
 					<v-switch :input-value="pushNotifications" hide-details />
@@ -208,8 +208,8 @@
 			<v-icon slot="icon">mdi-delete</v-icon>
 			<span slot="title">{{ $t('delete_account') }}</span>
 			<div v-html="$t('delete_message')"></div>
-			<br v-if="$store.state.farmer.verified">
-			<v-switch v-if="$store.state.farmer.verified" v-model="deleteForumMessages" :label="$t('delete_forum_messages')" hide-details />
+			<br v-if="$store.state.farmer?.verified">
+			<v-switch v-if="$store.state.farmer?.verified" v-model="deleteForumMessages" :label="$t('delete_forum_messages')" hide-details />
 			<div slot="actions">
 				<div v-ripple class="action dismiss" @click="deleteDialog = false">{{ $t('delete_cancel') }}</div>
 				<div v-ripple class="action red" @click="deleteAccountConfirm">{{ $t('delete_confirm') }}</div>
