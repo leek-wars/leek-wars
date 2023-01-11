@@ -313,7 +313,7 @@
 				const parts = link.split('|', 2)
 				link = parts[0]
 				const alias = parts.length === 2 ? parts[1] : link
-				const page = LeekWars.encyclopedia[this.language][link.toLowerCase().replace(/_/g, ' ')]
+				const page = LeekWars.encyclopedia[this.language] ? LeekWars.encyclopedia[this.language][link.toLowerCase().replace(/_/g, ' ')] : null
 				const clazz = page ? "" : "new"
 				const text = link.replace(/_/g, ' ').replace(/'/g, '&apos;')
 				return "<a href='/encyclopedia/" + this.language + '/' + (page ? page.title.replace(/ /g, '_') : text) + "' class='" + clazz + "'>" + alias + "</a>"
