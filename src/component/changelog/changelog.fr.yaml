@@ -17,6 +17,7 @@
     - "Possiblité d'envoyer le message \"0\"."
     - Correction de deux problèmes sur getCellsToUseChipOnCell.
     - Correction des IA à la création des scenarios de test d'équipe.
+    - Gain de puissance sur les coffres activé en défi.
 
 234:
   title: "Nouveau tutoriel, Épée lourde, Créations de la communauté"
