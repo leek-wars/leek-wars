@@ -1479,7 +1479,7 @@ class Game {
 			}
 		} else {
 
-			const modifiers = action.params[8]
+			const modifiers = action.params.length >= 8 ? action.params[8] : 0
 
 			// Ajout de l'image sur le hud
 			let image: string = ''
@@ -2635,7 +2635,9 @@ class Game {
 				this.actions[i].type !== ActionType.ADD_STACKED_EFFECT &&
 				this.actions[i].type !== ActionType.ADD_WEAPON_EFFECT) break
 		}
-		this.requestJump(i)
+		if (i <= this.actions.length) {
+			this.requestJump(i)
+		}
 	}
 
 	public resourceLoaded(res: string) { // variable "res" utile pour débug
