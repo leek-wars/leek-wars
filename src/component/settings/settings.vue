@@ -113,7 +113,7 @@
 			</panel>
 
 			<panel :title="$t('account')" icon="mdi-account" class="account">
-				<div v-if="$store.state.farmer.verified" v-ripple class="list-item card" @click="viewChangePassword = !viewChangePassword">
+				<div v-if="$store.state.farmer?.verified" v-ripple class="list-item card" @click="viewChangePassword = !viewChangePassword">
 					<v-icon>mdi-lock-open-outline</v-icon>
 					<span class="label">{{ $t('change_password') }}</span>
 					<v-icon>{{ viewChangePassword ? 'mdi-menu-up' : 'mdi-menu-down' }}</v-icon>
