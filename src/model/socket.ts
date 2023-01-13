@@ -57,6 +57,7 @@ enum SocketMessage {
 	ADD_RESOURCE = 53,
 	EDITOR_HOVER = 54,
 	CHAT_DELETE = 56,
+	WRONG_TOKEN = 57,
 }
 
 class Socket {
@@ -64,19 +65,21 @@ class Socket {
 	public queue: any[] = []
 	public retry_count: number = 10
 	public retry_delay: number = 2000
+	public wrong_token: boolean = false
 
 	public connect() {
-		if (!store.state.farmer || this.connecting() || this.connected()) {
-			return
-		}
-		const url = LeekWars.LOCAL ? "ws://localhost:1213/" : "wss://leekwars.com/ws"
-		this.socket = new WebSocket(url)
-		// console.log("[socket] socket", this.socket)
-
 		if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
 			const message = "[WS] connect()"
 			console.log(message)
 		}
+		if (!store.state.farmer || this.connecting() || this.connected()) {
+			return
+		}
+		this.wrong_token = false
+		const url = LeekWars.LOCAL ? "ws://localhost:1213/" : "wss://leekwars.com/ws"
+		this.socket = new WebSocket(url)
+		// console.log("[socket] socket", this.socket)
+
 
 		this.socket.onopen = () => {
 			// console.log("[ws] onopen")
@@ -87,7 +90,7 @@ class Socket {
 			store.commit('invalidate-chats')
 			store.commit('wsconnected')
 			this.retry_count = 10
-			this.retry_delay = 2000
+			this.retry_delay = 0
 			for (const p of this.queue) {
 				this.send(p)
 			}
@@ -121,6 +124,10 @@ class Socket {
 			vueMain.$emit('wsmessage', {type: id, data})
 
 			switch (id) {
+				case SocketMessage.WRONG_TOKEN: {
+					this.wrong_token = true
+					break
+				}
 				case SocketMessage.PONG: {
 					store.commit('receive-pong', data)
 					break
@@ -268,7 +275,7 @@ class Socket {
 			const message = "[WS] retry(" + this.retry_delay + ")"
 			console.log(message)
 		}
-		if (this.retry_count > 0) {
+		if (this.retry_count > 0 && !this.wrong_token) {
 			this.retry_count--
 			// console.log("[ws] retry in", this.retry_delay)
 			setTimeout(() => this.connect(), this.retry_delay)
