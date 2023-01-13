@@ -16,7 +16,7 @@
 					<template v-slot:activator="{ on }">
 						<div class="button-wrapper" v-on="on">
 							<div class="header-button">
-								<img :src="'/image/flag/' + ($i18n.locale === 'fr' ? 'fr' : 'gb') + '.png'" class="language-button">
+								<img :src="LeekWars.languages[$i18n.locale].flag" class="language-button">
 							</div>
 						</div>
 					</template>
