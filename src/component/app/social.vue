@@ -41,71 +41,25 @@
 					</div>
 				</panel>
 
-				<panel v-if="env.SOCIAL" class="blabla-chat" toggle="social/chat" icon="mdi-chat-outline">
-					<template slot="title">
-						<router-link v-ripple :to="'/chat/' + chatID" class="title">
-							{{ $store.state.chat[chat] ? $store.state.chat[chat].name : 'Chat' }} <span v-if="$store.state.farmer.groupe">{{ $store.state.farmer.groupe.name }}</span>
-							<span v-if="!$store.state.farmer?.groupe" class="farmer-count">
-								<span class="count">({{ $store.state.connected_farmers }} <v-icon class="icon">mdi-account-multiple</v-icon>)</span>
-							</span>
-						</router-link>
-					</template>
-					<div slot="actions" class="actions">
-						<v-menu v-if="!$store.state.farmer?.groupe" offset-y>
-							<template v-slot:activator="{ on }">
-								<div class="language-button" v-ripple v-on="on">
-									<div class="wrapper">
-										<img :src="LeekWars.languages[LeekWars.publicChats[chat].language].flag">
-										<div class="unread-circle" v-if="Object.values(LeekWars.publicChats).some(chat => $store.state.chat[chat.id] && !$store.state.chat[chat.id].read)"></div>
-									</div>
-								</div>
-							</template>
-							<v-list :dense="true">
-								<div v-for="(data, language) in LeekWars.languages" :key="language" class="language">
-									<v-list-item v-for="(chat, i) in data.chats" :key="i" class="language" @click="setChatLanguage(chat)">
-										<img :src="LeekWars.languages[LeekWars.publicChats[chat].language].flag" class="flag">
-										<span class="name">{{ LeekWars.publicChats[chat].name }}</span>
-										<span class="unread-circle" v-if="$store.state.chat[chat] && !$store.state.chat[chat].read"></span>
-									</v-list-item>
-								</div>
-							</v-list>
-						</v-menu>
-						<div v-if="$store.state.chat[chatID]" class="button text" @click="LeekWars.addChat($store.state.chat[chatID])">
-							<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
-						</div>
-					</div>
-					<chat :id="chatID" slot="content" />
-				</panel>
+				<chat-panel v-if="env.SOCIAL" toggle="social/chat" chat="social" :height="300" />
 			</div>
 		</div>
 	</div>
 </template>
 
 <script lang='ts'>
-	const ChatElement = () => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`)
-	import { ChatType } from '@/model/chat'
-	import { Language, LeekWars } from '@/model/leekwars'
+	const ChatPanel = () => import(/* webpackChunkName: "chat" */ `@/component/chat/chat-panel.vue`)
+	import { LeekWars } from '@/model/leekwars'
 	import { Notification } from '@/model/notification'
 	import { Component, Vue } from 'vue-property-decorator'
 	import ConversationElement from '@/component/messages/conversation.vue'
-	import { store } from '@/model/store'
 
-	@Component({ name: 'lw-social', components: { chat: ChatElement, 'conversation': ConversationElement } })
+	@Component({ name: 'lw-social', components: { ChatPanel, 'conversation': ConversationElement } })
 	export default class Social extends Vue {
 
-		ChatType = ChatType
-		chat: number | null = null
 		panelWidth: number = 400
 
-		get chatID() {
-			if (store.state.farmer && store.state.farmer.groupe) {
-				return store.state.farmer.groupe.chat
-			}
-			return this.chat
-		}
-
 		created() {
-			this.chat = parseInt(localStorage.getItem('social/chat') || '0') || LeekWars.languages[this.$i18n.locale].chat
 			if (localStorage.getItem('main/social-collapsed') === 'true') {
 				LeekWars.socialCollapsed = true
 			}
@@ -143,11 +97,6 @@
 
 		readAllNotifications() {
 			LeekWars.post('notification/read-all')
-		}
-
-		setChatLanguage(chat: number) {
-			this.chat = chat
-			localStorage.setItem('social/chat', '' + chat)
 		}
 	}
 </script>
@@ -240,65 +189,11 @@
 		flex-direction: column;
 		gap: 2px;
 	}
-	.chat {
-		height: 300px;
-	}
-	.blabla-chat .content {
-		padding: 0;
-	}
-	.blabla-chat .panel {
-		margin-bottom: 0;
-	}
-	.blabla-chat .language-button {
-		cursor: pointer;
-		max-height: 36px;
-		padding: 5px 10px;
-		.wrapper {
-			position: relative;
-			img {
-				height: 26px;
-			}
-		}
-	}
-	.unread-circle {
-		background: #5fad1b;
-		border-radius: 50%;
-		width: 10px;
-		height: 10px;
-		margin-left: 8px;
-	}
-	.wrapper .unread-circle {
-		position: absolute;
-		top: 0;
-		right: -5px;
-	}
-	.blabla-chat .languages {
-		padding: 0 5px;
-	}
-	.flag {
-		height: 28px;
-	}
-	.language {
-		display: flex;
-		align-items: center;
-	}
-	.language .name {
-		padding-left: 8px;
-	}
+
 	.blabla-panel > .content > div {
 		margin-bottom: 12px;
 	}
 	.blabla-panel .content > div:last-child {
 		margin-bottom: 0;
-	}
-	.farmer-count {
-		.v-icon.icon {
-			margin-right: 0;
-			font-size: 18px;
-			margin-bottom: 3px;
-		}
-		.count {
-			font-size: 14px;
-		}
 	}
 </style>

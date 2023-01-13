@@ -68,28 +68,7 @@
 			</template>
 		</panel>
 
-		<panel v-if="$store.state.farmer?.public_chat_enabled" icon="mdi-chat-outline">
-			<span slot="title">
-				<router-link :to="'/chat/' + chatLanguage.chat">{{ $t('main.chat') }}</router-link>
-				<v-menu offset-y>
-					<template v-slot:activator="{ on }">
-						<img :src="chatLanguage.flag" class="language-button" v-on="on">
-					</template>
-					<v-list :dense="true">
-						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="setChatLanguage(language)">
-							<img :src="language.flag" class="flag">
-							<span class="name">{{ language.name }}</span>
-						</v-list-item>
-					</v-list>
-				</v-menu>
-			</span>
-			<div slot="actions">
-				<div v-if="!LeekWars.mobile && $store.state.chat[chatLanguage.chat]" class="button flat" @click="LeekWars.addChat($store.state.chat[chatLanguage.chat])">
-					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
-				</div>
-			</div>
-			<chat :id="chatLanguage.chat" slot="content" />
-		</panel>
+		<chat-panel toggle="forum/chat" chat="forum" :height="400" />
 
 		<panel icon="mdi-account-supervisor" class="last">
 			<span slot="title">
@@ -124,7 +103,7 @@
 </template>
 
 <script lang="ts">
-	const ChatElement = () => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`)
+	const ChatPanel = () => import(/* webpackChunkName: "chat" */ `@/component/chat/chat-panel.vue`)
 	import { ChatType } from '@/model/chat'
 	import { Farmer } from '@/model/farmer'
 	import { Language, LeekWars } from '@/model/leekwars'
@@ -132,12 +111,11 @@
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import { mixins } from '@/model/i18n'
 
-	@Component({ name: 'forum', i18n: {}, mixins: [...mixins], components: { chat: ChatElement, RichTooltipFarmer } })
+	@Component({ name: 'forum', i18n: {}, mixins: [...mixins], components: { ChatPanel, RichTooltipFarmer } })
 	export default class Forum extends Vue {
-		ChatType = ChatType
+
 		categories: any = null
 		connected_farmers: Farmer[] = []
-		chatLanguage: Language | null = null
 		forumLanguages: {[key: string]: boolean} = {}
 		expandFarmers: boolean = false
 		searchQuery: string = ''
@@ -150,8 +128,6 @@
 			for (const l of languages) {
 				Vue.set(this.forumLanguages, l, true)
 			}
-			const lang = localStorage.getItem('forum/chat-language') || this.$i18n.locale
-			this.chatLanguage = LeekWars.languages[lang]
 			LeekWars.get('forum/get-categories/' + this.activeLanguages).then(data => {
 				this.categories = data.categories
 				this.$root.$emit('loaded')
@@ -188,10 +164,6 @@
 		}
 		get activeLanguages() {
 			return Object.entries(this.forumLanguages).filter(e => e[1]).map(e => e[0])
-		}
-		setChatLanguage(language: Language) {
-			this.chatLanguage = language
-			localStorage.setItem('forum/chat-language', language.code)
 		}
 	}
 </script>
@@ -295,19 +267,6 @@
 		text-align: right;
 		padding-right: 10px;
 		margin-top: 10px;
-	}
-	.chat {
-		height: 400px;
-	}
-	.panel .language-button {
-		cursor: pointer;
-		height: 36px;
-		max-height: 36px;
-		max-width: none;
-		padding: 5px;
-		margin-left: 4px;
-		margin-right: -10px;
-		vertical-align: bottom;
 	}
 	.flag {
 		height: 28px;

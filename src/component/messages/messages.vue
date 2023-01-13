@@ -110,19 +110,9 @@
 		get chats() {
 			const chats = [] as any[]
 			if (store.state.farmer && store.state.farmer.public_chat_enabled) {
-				chats.push({ name: 'Français', image: '/image/flag/fr.png', chats: [
-					{ id: 1, name: 'Général', icon: 'mdi-chat-outline' },
-					{ id: 32506, name: 'Aide', icon: 'mdi-help-circle-outline' },
-					{ id: 32507, name: 'Programmation', icon: 'mdi-code-braces' },
-				]})
-				chats.push({ name: 'English', image: '/image/flag/gb.png', chats: [
-					{ id: 2, name: 'General', icon: 'mdi-chat-outline' },
-					{ id: 32508, name: 'Help', icon: 'mdi-help-circle-outline' },
-					{ id: 32509, name: 'Programming', icon: 'mdi-code-braces' },
-				]})
-				chats.push({ name: 'Español', image: '/image/flag/es.png', chats: [
-					{ id: 3, name: 'General', icon: 'mdi-chat-outline' },
-				]})
+				chats.push({ name: 'Français', image: '/image/flag/fr.png', chats: Object.values(LeekWars.publicChats).filter(c => c.language === 'fr') })
+				chats.push({ name: 'English', image: '/image/flag/gb.png', chats: Object.values(LeekWars.publicChats).filter(c => c.language === 'en') })
+				chats.push({ name: 'Español', image: '/image/flag/es.png', chats: Object.values(LeekWars.publicChats).filter(c => c.language === 'es') })
 			}
 			if (this.$store.state.farmer && this.$store.state.farmer.team) {
 				const team_chats = [
