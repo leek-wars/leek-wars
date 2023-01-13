@@ -208,6 +208,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				}
 				vueMain.$emit('chat-history', chatID)
 				chat.loading = false
+			}).error(error => {
+				LeekWars.toast(error.error)
+				const chat = state.chat[chatID]
+				vueMain.$emit('chat-history', chatID)
+				chat.loading = false
 			})
 		},
 

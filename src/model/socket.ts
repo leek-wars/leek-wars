@@ -63,7 +63,7 @@ class Socket {
 	public socket!: WebSocket
 	public queue: any[] = []
 	public retry_count: number = 10
-	public retry_delay: number = 1000
+	public retry_delay: number = 2000
 
 	public connect() {
 		if (!store.state.farmer || this.connecting() || this.connected()) {
@@ -72,6 +72,11 @@ class Socket {
 		const url = LeekWars.LOCAL ? "ws://localhost:1213/" : "wss://leekwars.com/ws"
 		this.socket = new WebSocket(url)
 		// console.log("[socket] socket", this.socket)
+
+		if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
+			const message = "[WS] connect()"
+			console.log(message)
+		}
 
 		this.socket.onopen = () => {
 			// console.log("[ws] onopen")
@@ -82,7 +87,7 @@ class Socket {
 			store.commit('invalidate-chats')
 			store.commit('wsconnected')
 			this.retry_count = 10
-			this.retry_delay = 0
+			this.retry_delay = 2000
 			for (const p of this.queue) {
 				this.send(p)
 			}
@@ -259,6 +264,10 @@ class Socket {
 		}
 	}
 	public retry() {
+		if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
+			const message = "[WS] retry(" + this.retry_delay + ")"
+			console.log(message)
+		}
 		if (this.retry_count > 0) {
 			this.retry_count--
 			// console.log("[ws] retry in", this.retry_delay)
@@ -279,6 +288,10 @@ class Socket {
 		this.send([SocketMessage.CHAT_ENABLE, id])
 	}
 	public disconnect() {
+		if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
+			const message = "[WS] disconnect()"
+			console.log(message)
+		}
 		if (this.socket) { this.socket.close() }
 		store.commit('invalidate-chats')
 	}
