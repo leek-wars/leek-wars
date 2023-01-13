@@ -249,8 +249,9 @@ const vueMain = new Vue({
 		lastErrorSent = Date.now()
 
 		const error = err.name + ": " + err.message
+		const location = document.location.href
 
-		LeekWars.post('error/report', {error, stack: err.stack + "\n" + info})
+		LeekWars.post('error/report', {error, stack: err.stack + "\n" + info + "\n" + location})
 	}
 }).$mount('#app')
 
