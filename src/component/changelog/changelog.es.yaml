@@ -1,11 +1,27 @@
 235:
+  title: "Traducción al español, país en el jardín, mensajes bot en el chat y retos de equipo."
   added:
-    - "Desafíos de equipo agregados."
+    - "Traducción al español del juego. #img_235_spanish"
+    - "Desafíos de equipo añadidos. #img_235_team_challenge"
+    - "Nuevos mensajes del bot de Leek Wars en el chat: BR, guardar, torneos, etc. #img_235_chatbot"
+    - "Añadido un mensaje de advertencia cuando una función es inútil a su nivel. #img_235_leek_charac"
+    - "Añadido país de puerros y reproductores al huerto. #img_235_country"
   improved:
-    - Reinscripción para torneos si está conectado durante 2 días en lugar de 1.
-    - Más victorias para los perdedores en BR.
-    - "Se agregó un mensaje de advertencia cuando una característica es inútil en su nivel. #img_235_leek_charac"
-    - "Se agregó un ícono junto al botón de selección de versión de LeekScript. #img_235_editor_chevron"
+    - "Reinscripción a torneos si se ha iniciado sesión durante 2 días en lugar de 1."
+    - "Más ganancias para los perdedores en BR."
+    - "Añadido un icono junto al botón de selección de versión de LeekScript. #img_235_editor_chevron"
+    - "Corrección de las traducciones al inglés que faltaban"
+    - "Añadidas páginas de la enciclopedia inglesa."
+    - "Títulos femeninos en inglés: Queen, Godess, Huntress, Baroness, Empress, Godmother etc."
+    - "Las antiguas páginas de tutoriales y de ayuda general redirigen a las nuevas páginas de la enciclopedia."
+    - "Mejora de la estabilidad del servidor."
+    - "Chat en la barra lateral: todos los chats están disponibles + el panel toma el título del chat. #img_235_chats"
+  fixed:
+    - "Posibilidad de enviar el mensaje \"0\"."
+    - "Corregidos dos problemas con getCellsToUseChipOnCell."
+    - "Corregida la IA en la creación de escenarios de pruebas de equipo."
+    - "Aumento de potencia en cofres habilitados en desafío."
+    - "Corregido error de reconexión múltiple de websocket."
 
 234:
   title: "Nuevo tutorial, espada pesada, creaciones de la comunidad"

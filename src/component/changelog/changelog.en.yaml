@@ -1,3 +1,28 @@
+235:
+  title: Spanish translation, country in the garden, bot messages on the chat and team challenges.
+  added:
+    - "Spanish translation of the game. #img_235_spanish"
+    - "Added team challenges. #img_235_team_challenge"
+    - "New messages from Leek Wars bot in chat: BR, save, tournaments etc. #img_235_chatbot"
+    - "Added a warning message when a feature is useless at his level. #img_235_leek_charac"
+    - "Added leek country and farmers to the vegetable garden. #img_235_country"
+  improved:
+    - Re-registered for tournaments if logged in for 2 days instead of 1.
+    - More winnings for losers in BR.
+    - "Added an icon next to the LeekScript version selection button. #img_235_editor_chevron"
+    - Corrected missing English translations
+    - Added encyclopedia pages in English.
+    - "Feminine titles in English: Queen, Godess, Huntress, Baroness, Empress, Godmother etc."
+    - Old tutorial and general help pages redirect to the new pages in the encyclopedia.
+    - Improved server stability.
+    - "Side chat: all chats are available + panel takes the title of the chat. #img_235_chats"
+  fixed:
+    - "Possibility to send the message \"0\"."
+    - Fixed two problems on getCellsToUseChipOnCell.
+    - Fixed AI when creating team test scenarios.
+    - Power gain on chests activated in challenge.
+    - Fixed a bug of multiple reconnection to the websocket.
+
 234:
   title: "New Tutorial, Heavy Sword, Community Creations"
   added:

@@ -1,8 +1,9 @@
 235:
+  title: Traduction Espagnole, pays dans le potager, messages de bot sur le chat et défis d'équipe.
   added:
-    - Traduction Espagnole du jeu.
-    - "Ajout des défis d'équipe."
-    - "Nouveaux messages du bot Leek Wars dans le chat : BR, sauvegarde, tournois etc."
+    - "Traduction Espagnole du jeu. #img_235_spanish"
+    - "Ajout des défis d'équipe. #img_235_team_challenge"
+    - "Nouveaux messages du bot Leek Wars dans le chat : BR, sauvegarde, tournois etc. #img_235_chatbot"
     - "Ajout d'un message d'avertissement quand une caractéristique est inutile à son niveau. #img_235_leek_charac"
     - "Ajout du pays des poireaux et des éleveurs dans le potager. #img_235_country"
   improved:
@@ -14,7 +15,7 @@
     - "Féminin des titres en Anglais : Queen, Godess, Huntress, Baroness, Empress, Godmother etc."
     - Les anciennes pages tutoriel et aide générale redirigent vers les nouvelles pages dans l'encyclopédie.
     - Amélioration de la stabilité du serveur.
-    - "Chat latéral : tous les chats sont disponibles + le panel prend le titre du chat"
+    - "Chat latéral : tous les chats sont disponibles + le panel prend le titre du chat. #img_235_chats"
   fixed:
     - "Possiblité d'envoyer le message \"0\"."
     - Correction de deux problèmes sur getCellsToUseChipOnCell.
@@ -23,7 +24,7 @@
     - Correction d'un bug de reconnexion multiple à la websocket.
 
 234:
-  title: "Nouveau tutoriel, Épée lourde, Créations de la communauté"
+  title: "Nouveau tutoriel, Épée lourde, Créations de la communauté."
   added:
     - "Ajout d'un nouveau tutoriel avec IA complète, quizz, astuces. #img_234_tutorial"
     - "Ajout de l'arme Épée Lourde. #img_234_sword"

@@ -17,7 +17,8 @@ module.exports = {
 	pages: {
 		index: {entry: 'src/main-fr'},
 		'app-fr': {entry: 'src/main-fr'},
-		'app-en': {entry: 'src/main-en'}
+		'app-en': {entry: 'src/main-en'},
+		'app-es': {entry: 'src/main-es'}
 	},
     chainWebpack: config => {
 		config.module
