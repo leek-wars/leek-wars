@@ -18,10 +18,10 @@
 
 <script lang="ts">
 	const ChatElement = () => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`)
-	import { Chat, ChatType, ChatWindow } from '@/model/chat'
+	import { ChatType, ChatWindow } from '@/model/chat'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Component, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({
 		components: { chat: ChatElement }
@@ -42,7 +42,8 @@
 		getFarmer(window: ChatWindow) {
 			const chat = store.state.chat[window.id]
 			if (chat) {
-				return chat.farmers.find(f => f.id !== store.state.farmer!.id)
+				const f = chat.farmers.find(f => f.id !== store.state.farmer!.id)
+				if (f) { return f }
 			}
 			return {id: -1}
 		}
