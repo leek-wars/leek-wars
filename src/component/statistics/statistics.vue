@@ -66,7 +66,7 @@
 						<div v-else class="value today">{{ Math.floor(statistic.today).toLocaleString('fr-FR') }}</div>
 						<div class="type">{{ $t(statistic.today_state ? 'today' : 'total') }}</div>
 					</div>
-					<div v-if="name === 'fight_tournament' || name === 'turrets_killed' || name === 'ais_v4' || name === 'lang_en'" :key="name + '1'" class="delimiter"></div>
+					<div v-if="name === 'fight_tournament' || name === 'turrets_killed' || name === 'ais_v4' || name === 'lang_es'" :key="name + '1'" class="delimiter"></div>
 					<div v-if="name === 'damage'" class="chart-wrap left"  :key="name + '2'">
 						<chartist ref="charts" :data="chartDamage" :options="chartOptions" class="chart" type="Pie" />
 						<div class="title">{{ $t('chart_damage_type') }}</div>
@@ -136,7 +136,7 @@
 			return this.makeChartData(AI_CATEGORY, ['ais_v1', 'ais_v2', 'ais_v3', 'ais_v4'])
 		}
 		get chartLanguage() {
-			return this.makeChartData(GENERAL_CATEGORY, ['lang_fr', 'lang_en'])
+			return this.makeChartData(GENERAL_CATEGORY, ['lang_fr', 'lang_en', 'lang_es'])
 		}
 		get chartLanguages() {
 			return this.makeChartData(CODE_CATEGORY, ['lw_code_java', 'lw_code_javascript', 'lw_code_php', 'lw_code_css', 'lw_code_vue', 'lw_code_json'])

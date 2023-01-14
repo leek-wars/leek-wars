@@ -588,14 +588,9 @@ const LeekWars = {
 	},
 	logHelpPage: (log: any[]) => {
 		const helpPages = {
-			fr: {
-				too_much_ops: "Comprendre les Erreurs d'exécution",
-				summons: "Bulbes"
-			},
-			en: {
-				too_much_ops: "Operations",
-				summons: "Bulbs"
-			}
+			fr: { too_much_ops: "Comprendre les Erreurs d'exécution", summons: "Bulbes" },
+			en: { too_much_ops: "Understanding Runtime Errors",	summons: "Bulbs" },
+			es: { too_much_ops: "Comprender los errores de tiempo de ejecución", summons: "Bulbos" }
 		} as any
 		return helpPages[locale][log[4]]
 	}

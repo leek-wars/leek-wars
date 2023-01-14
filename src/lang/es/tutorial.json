@@ -15,10 +15,10 @@
 	"operators_items": "Condiciones más complejas",
 	"strings": "Las cadenas",
 	"strings_items": "Saluda a tu oponente",
-	"loops": "Hebillas",
+	"loops": "Bucles",
 	"loops_items": "Usa tu arma varias veces",
 	"lists": "Las listas",
 	"lists_items": "Calcular el daño infligido",
-	"functions": "Crea tus funciones",
+	"functions": "Crea sus funciones",
 	"functions_items": "Función getClosestCellToUse"
 }

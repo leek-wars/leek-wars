@@ -147,5 +147,6 @@
 	"damage_direct_chart": "Direct",
 	"damage_poison_chart": "Poison",
 	"damage_life_chart": "%Life",
-	"damage_return_chart": "Return"
+	"damage_return_chart": "Return",
+	"lang_es": "Spanish"
 }
