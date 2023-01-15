@@ -2,7 +2,7 @@
 	"axe": "Cortado",
 	"b_laser": "B-láser",
 	"bazooka": "Bazuca",
-	"broadsword": "Espada",
+	"broadsword": "Gladius",
 	"destroyer": "Destructor",
 	"dark_katana": "Katana oscura",
 	"double_gun": "Arma doble",
@@ -30,7 +30,7 @@
 	"unstable_destroyer": "Destructor inestable",
 	"revoked_m_laser": "M-Laser revocado",
 	"rhino": "Rinoceronte",
-	"rifle": "Pistola",
+	"rifle": "Fusil",
 	"sword": "Espada",
 	"taser": "Tasers"
 }
