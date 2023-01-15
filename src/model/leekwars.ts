@@ -768,8 +768,8 @@ function formatTimeSeconds(time: number) {
 	const seconds = time - hours * 3600 - minuts * 60
 	let res = ""
 	if (hours > 0) { res += hours + "h " }
-	if (minuts > 0) { res += ("0" + minuts + "m ").substring(-4) }
-	if (seconds !== 0) { res += ("0" + seconds + "s").substring(-3) }
+	if (minuts > 0) { res += ("0" + minuts + "m ").slice(-4) }
+	if (seconds !== 0) { res += ("0" + seconds + "s").slice(-3) }
 	return res
 }
 
