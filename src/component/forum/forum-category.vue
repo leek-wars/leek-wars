@@ -8,14 +8,14 @@
 				<v-menu offset-y>
 					<template v-slot:activator="{ on }">
 						<div class="forum-language info" v-on="on">
-							<img v-for="l in activeLanguages" :key="l" :src="LeekWars.languages[l].flag" class="flag">
+							<flag v-for="l in activeLanguages" :key="l" :code="LeekWars.languages[l].country" />
 							<img width="10" src="/image/selector.png">
 						</div>
 					</template>
 					<v-list :dense="true">
 						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="setForumLanguage(language)" :disabled="forumLanguages[language.code] && activeLanguages.length === 1">
 							<v-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" hide-details @click.stop="updateCategories" />
-							<img :src="language.flag" class="flag">
+							<flag :code="language.country" />
 							<span class="name">{{ language.name }}</span>
 						</v-list-item>
 					</v-list>
@@ -62,7 +62,7 @@
 									#{{ topic.issue }}
 								</a>
 								<router-link :to="'/forum/category-' + topic.category + '/topic-' + topic.id">{{ topic.title }}</router-link>
-								<img v-if="activeLanguages.length >= 2 && topic.lang" class="flag" :src="LeekWars.languages[topic.lang].flag">
+								<flag v-if="activeLanguages.length >= 2 && topic.lang" :code="LeekWars.languages[topic.lang].country" />
 							</span>
 							<div class="description grey">
 								<i18n path="by_x_the_d">
@@ -266,23 +266,16 @@
 
 <style lang="scss" scoped>
 	.forum-language {
-		display: inline-block;
+		display: inline-flex;
 		padding: 0 4px;
-		border-radius: 2px;
 		cursor: pointer;
-		vertical-align: bottom;
-		img.flag {
-			vertical-align: top;
-			height: 32px;
-		}
-		img:not(.flag) {
-			vertical-align: middle;
-			margin-bottom: 3px;
-			margin-left: 6px;
-		}
+		align-items: center;
+		height: 100%;
+		gap: 6px;
 	}
 	.flag {
-		height: 28px;
+		max-width: 30px;
+		max-height: 20px;
 	}
 	.language {
 		display: flex;
@@ -346,10 +339,10 @@
 		height: 40px;
 	}
 	.topic .flag {
-		height: 18px;
-		vertical-align: bottom;
+		height: 13px;
 		margin-left: 6px;
-		margin-bottom: 1px;
+		vertical-align: bottom;
+		margin-bottom: 3px;
 	}
 	.topic .title {
 		font-size: 18px;

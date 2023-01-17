@@ -9,7 +9,7 @@
 			<br>
 			<div class="level">
 				{{ $t('main.level_n', [leek.level]) }}
-				<img v-if="leek.country" :title="$t('country.' + leek.country)" :src="'/image/flag/' + leek.country + '.png'">
+				<flag v-if="leek.country" :code="leek.country" :title="$t('country.' + leek.country)" />
 			</div>
 		</div>
 	</rich-tooltip-leek>
@@ -55,8 +55,9 @@
 		align-items: center;
 		justify-content: center;
 		gap: 5px;
-		img {
-			height: 17px;
+		.flag {
+			max-width: 18px;
+			max-height: 18px;
 		}
 	}
 </style>

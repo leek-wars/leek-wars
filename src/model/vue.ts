@@ -5,6 +5,7 @@ import Error from '@/component/app/error.vue'
 import LWLoader from '@/component/app/loader.vue'
 import Panel from '@/component/app/panel.vue'
 import Avatar from '@/component/avatar.vue'
+import Flag from '@/component/flag.vue'
 import '@/component/editor/leekscript.scss'
 import Emblem from '@/component/emblem.vue'
 import LeekImage from '@/component/leek-image.vue'
@@ -67,6 +68,7 @@ Vue.component('error', Error)
 Vue.component('panel', Panel)
 Vue.component('popup', Popup)
 Vue.component('loader', LWLoader)
+Vue.component('flag', Flag)
 
 Vue.directive('autostopscroll', {
 	inserted: (el, binding) => {

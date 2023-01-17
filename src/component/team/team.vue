@@ -262,7 +262,7 @@
 							</div>
 							<div class="p20">{{ farmer.talent | number }}</div>
 							<div class="p15">
-								<img v-if="farmer.country" :title="$t('country.' + farmer.country)" :src="'/image/flag/' + farmer.country + '.png'" class="country">
+								<flag v-if="farmer.country" :title="$t('country.' + farmer.country)" :code="farmer.country" class="country" />
 							</div>
 						</div>
 					</div>

@@ -20,7 +20,7 @@
 		</td>
 		<td>
 			<div class="country-wrapper">
-				<img v-if="row.country" :title="$t('country.' + row.country)" :src="'/image/flag/' + row.country + '.png'">
+				<flag v-if="row.country" :title="$t('country.' + row.country)" :code="row.country" />
 			</div>
 		</td>
 		<td>

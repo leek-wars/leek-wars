@@ -17,7 +17,7 @@
 							<router-link v-if="farmer.team" :to="'/team/' + farmer.team.id">
 								<emblem :team="farmer.team" :title="farmer.team.name" />
 							</router-link>
-							<img v-if="farmer.country" :src="'/image/flag/' + farmer.country + '.png'" :title="$t('country.' + farmer.country)" class="country">
+							<flag v-if="farmer.country" :code="farmer.country" :title="$t('country.' + farmer.country)" class="country" />
 							<lw-title v-if="farmer.title.length" :title="farmer.title" />
 							<div class="spacer"></div>
 							<v-btn v-if="!$store.state.farmer || id != $store.state.farmer.id" icon small @click="sendMessage()">
@@ -184,8 +184,8 @@
 		height: 25px;
 		margin-right: -4px;
 		margin-bottom: 6px;
-		img {
-			width: 17px;
+		img, .country {
+			height: 17px;
 			margin-right: 3px;
 		}
 		i {

@@ -33,14 +33,14 @@
 					<v-menu offset-y>
 						<template v-slot:activator="{ on }">
 							<div v-on="on" v-ripple class="language-button">
-								<img :src="language.flag" class="flag">
+								<flag :code="language.country" />
 								{{ language.name }}
 								<v-icon>mdi-chevron-down</v-icon>
 							</div>
 						</template>
 						<v-list :dense="true">
 							<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="setLanguage(language)">
-								<img :src="language.flag" class="flag">
+								<flag :code="language.country" />
 								<span class="name">{{ language.name }}</span>
 							</v-list-item>
 						</v-list>
@@ -288,7 +288,8 @@
 		border-radius: 4px;
 	}
 	.flag {
-		height: 28px;
+		max-width: 30px;
+		max-height: 20px;
 	}
 	.language {
 		display: flex;

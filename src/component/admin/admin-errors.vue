@@ -20,6 +20,8 @@
 								<div class="header">
 									<div>Erreur #{{ error.id }} - <b>{{ LeekWars.formatDateTime(error.time) }}</b> - Type {{ error.type }} - Gravité {{ error.severity }}</div>
 									<div class="spacer"></div>
+									<flag class="locale" v-if="error.locale" :code="LeekWars.languages[error.locale]?.country" />
+									<span class="locale" v-if="error.locale">{{ error.locale }}</span>
 									<router-link v-if="error.farmer" :to="'/farmer/' + error.farmer.id" class="farmer" v-ripple>
 										{{ error.farmer.name }}
 										<avatar :farmer="error.farmer" />
@@ -33,7 +35,7 @@
 									<v-icon color="error" @click="removeError(error.id)">mdi-delete</v-icon>
 								</div>
 								<code>{{ error.trace.substring(0, 8000) }}</code>
-								<div v-if="error.file || error.line">Fichier <b>{{ error.file }}</b> ligne <b>{{ error.line }}</b></div>
+								<div v-if="error.file || error.line">Fichier <b>{{ error.file }}</b> <span v-if="error.line"> ligne <b>{{ error.line }}</b></span></div>
 							</div>
 						</div>
 					</div>
@@ -90,7 +92,7 @@
 			display: flex;
 			align-items: center;
 			flex-wrap: wrap;
-			gap: 8px;
+			gap: 6px;
 		}
 		.farmer {
 			display: flex;
@@ -150,5 +152,8 @@
 		justify-content: flex-end;
 		align-items: center;
 		margin-bottom: 10px;
+	}
+	.flag {
+		height: 16px;
 	}
 </style>

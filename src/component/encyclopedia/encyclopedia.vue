@@ -10,13 +10,13 @@
 				<v-menu v-if="contributor && edition" offset-y>
 					<template v-slot:activator="{ on }">
 						<div class="page-language info" v-on="on">
-							<img :src="LeekWars.languages[page.language].flag" class="flag">
+							<flag :code="LeekWars.languages[page.language].country" />
 							<img width="10" src="/image/selector.png">
 						</div>
 					</template>
 					<v-list :dense="true">
 						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="setPageLanguage(language.code)">
-							<img :src="language.flag" class="flag">
+							<flag :code="language.country" />
 							<span class="name">{{ language.name }}</span>
 						</v-list-item>
 					</v-list>
@@ -44,7 +44,7 @@
 					<v-list :dense="true">
 						<router-link v-for="(translation, l) in page.translations" :key="l" :to="'/encyclopedia/' + l + '/' + translation">
 							<v-list-item class="language">
-								<img :src="LeekWars.languages[l].flag" class="flag">
+								<flag :code="LeekWars.languages[l].country" />
 								<span class="name">{{ translation }}</span>
 							</v-list-item>
 						</router-link>
@@ -615,25 +615,22 @@ h1 {
 	display: none;
 }
 .page-language {
-	display: inline-block;
 	padding: 0 4px;
-	border-radius: 2px;
 	cursor: pointer;
-	vertical-align: bottom;
 	margin-right: 15px;
 	margin-left: 5px;
-	img.flag {
+	display: inline-flex;
+	gap: 6px;
+	align-items: center;
+	height: 100%;
+	.flag {
 		vertical-align: top;
-		height: 32px;
-	}
-	img:not(.flag) {
-		vertical-align: middle;
-		margin-bottom: 3px;
-		margin-left: 6px;
+		height: 20px;
 	}
 }
 .flag {
-	height: 28px;
+	max-width: 30px;
+	max-height: 20px;
 }
 .language .name {
 	padding-left: 8px;

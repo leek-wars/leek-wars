@@ -6,14 +6,15 @@
 				<v-menu offset-y>
 					<template v-slot:activator="{ on }">
 						<div class="forum-language info" v-on="on">
-							<img v-for="l in activeLanguages" :key="l" :src="LeekWars.languages[l].flag" class="flag">
+							<flag v-for="l in activeLanguages" :key="l" :code="LeekWars.languages[l].country" />
 							<img width="10" src="/image/selector.png">
 						</div>
 					</template>
 					<v-list :dense="true">
 						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click="setForumLanguage(language)">
 							<v-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" hide-details @click.stop="pickForumLanguage(language)" />
-							<img :src="language.flag" class="flag">
+							<flag :code="language.country" />
+							<!-- <img :src="language.flag" class="flag"> -->
 							<span class="name">{{ language.name }}</span>
 						</v-list-item>
 					</v-list>
@@ -170,19 +171,16 @@
 
 <style lang="scss" scoped>
 	.forum-language {
-		display: inline-block;
+		display: inline-flex;
 		padding: 0 4px;
 		border-radius: 2px;
 		cursor: pointer;
-		vertical-align: bottom;
+		align-items: center;
+		height: 100%;
+		gap: 6px;
 		img.flag {
 			vertical-align: top;
-			height: 32px;
-		}
-		img:not(.flag) {
-			vertical-align: middle;
-			margin-bottom: 3px;
-			margin-left: 6px;
+			width: 32px;
 		}
 	}
 	.search-icon {
@@ -269,7 +267,7 @@
 		margin-top: 10px;
 	}
 	.flag {
-		height: 28px;
+		width: 28px;
 	}
 	.language {
 		display: flex;

@@ -95,12 +95,10 @@
 							</div>
 						</router-link>
 						<div class="info country">
-							<span v-if="farmer.country">
-								<img :src="'/image/flag/' + farmer.country + '.png'" class="flag"><span class="country label">{{ $t('country.' + farmer.country) }}</span>
-							</span>
-							<span v-else>
-								<img class="flag" src="/image/flag/_.png"><span class="country no label">{{ $t('no_country') }}</span>
-							</span>
+							<flag v-if="farmer.country" :code="farmer.country" />
+							<span v-if="farmer.country" class="country label">{{ $t('country.' + farmer.country) }}</span>
+							<flag v-if="!farmer.country" />
+							<span v-if="!farmer.country" class="country no label">{{ $t('no_country') }}</span>
 							<span v-if="myFarmer" class="edit" @click="openCountryDialog()"></span>
 						</div>
 						<div v-if="farmer.website && !/^(https:\/\/leekwars.\w+)?\/api\//.test(farmer.website.trim())" class="info website">
@@ -418,16 +416,16 @@
 			<div ref="godfatherLink" class="godfather-url">https://leekwars.com/godfather/{{ farmer.name }}</div>
 		</popup>
 
-		<popup v-if="farmer" v-model="countryDialog" :width="800">
+		<popup v-if="farmer" v-model="countryDialog" :width="1000">
 			<v-icon slot="icon">mdi-earth</v-icon>
 			<span slot="title">{{ $t('country_selection') }}</span>
 			<div class="country-dialog">
 				<div class="country" code="null" @click="selectCountry(null)">
-					<img src="/image/flag/_.png">
+					<flag />
 					<h4>{{ $t('no_country') }}</h4>
 				</div>
 				<div v-for="country in countries" :key="country.code" class="country" @click="selectCountry(country.code)">
-					<img :src="'/image/flag/' + country.code + '.png'">
+					<flag :code="country.code" />
 					<h4>{{ $t('country.' + country.code) }}</h4>
 				</div>
 			</div>
@@ -894,24 +892,30 @@
 	.country.no {
 		font-style: italic;
 	}
-	.country-dialog .country {
-		display: inline-block;
-		text-align: center;
-		width: 141px;
-		margin: 1px;
-		padding: 4px;
-		cursor: pointer;
-		vertical-align: top;
-	}
-	.country-dialog .country img {
-		width: 32px;
-	}
-	.country-dialog .country:hover {
-		background: white;
-	}
-	.country-dialog .country h4 {
-		font-size: 14px;
-		font-weight: normal;
+	.country-dialog {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+		.country {
+			display: inline-block;
+			text-align: center;
+			margin: 1px;
+			padding: 6px;
+			cursor: pointer;
+			vertical-align: top;
+			.flag {
+				max-width: 40px;
+				max-height: 40px;
+			}
+			&:hover {
+				background: white;
+			}
+			h4 {
+				font-size: 14px;
+				font-weight: normal;
+				margin-top: 6px;
+				color: #222;
+			}
+		}
 	}
 	.infos {
 		text-align: left;
@@ -938,17 +942,19 @@
 		color: #888;
 		font-size: 14px;
 		word-break: break-all;
+		display: flex;
+		align-items: center;
+		gap: 6px;
 	}
 	.infos .info a {
 		color: #888;
 	}
-	.infos .info img {
+	.infos .info img, .infos .info .flag {
 		width: 20px;
 	}
 	.infos .info .label {
 		line-height: 22px;
 		vertical-align: top;
-		margin-left: 5px;
 		font-weight: bold;
 	}
 	.infos .info .edit {
@@ -957,9 +963,7 @@
 		cursor: pointer;
 		width: 12px;
 		height: 12px;
-		margin-left: 5px;
 		display: none;
-		margin-bottom: 2px;
 	}
 	.infos .info:hover .edit {
 		display: inline-block;

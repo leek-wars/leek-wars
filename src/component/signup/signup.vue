@@ -202,7 +202,7 @@
 							</td>
 							<td>{{ farmer.talent }}</td>
 							<td>
-								<img v-if="farmer.country" :title="$t('country.' + farmer.country)" :src="'/image/flag/' + farmer.country + '.png'" loading="lazy">
+								<flag v-if="farmer.country" :title="$t('country.' + farmer.country)" :code="farmer.country" />
 							</td>
 						</tr>
 					</table>
@@ -615,10 +615,9 @@
 		.p50 {
 			width: 50%;
 		}
-		img {
-			margin-top: -3px;
-			margin-bottom: -8px;
-			height: 25px;
+		.flag {
+			height: 18px;
+			vertical-align: bottom;
 		}
 	}
 	#app.app .ranking {

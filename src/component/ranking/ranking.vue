@@ -456,10 +456,9 @@
 			}
 		}
 		::v-deep .country-wrapper {
-			height: 18px;
-			img {
-				margin-top: -2px;
-				width: 24px;
+			height: 16px;
+			.flag {
+				height: 16px;
 			}
 		}
 	}

@@ -63,6 +63,9 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				token: string
 			}) {
 			state.farmer = data.farmer
+			for (const id in state.farmer.leeks) {
+				Vue.set(state.farmer.leeks[id], 'country', state.farmer.country)
+			}
 			Vue.set(state.farmer, 'animated_habs', state.farmer.habs)
 			Vue.set(state.farmer, 'animated_crystals', state.farmer.crystals)
 			state.token = data.token

@@ -12,15 +12,13 @@
 			<v-menu v-if="!$store.state.farmer?.groupe" offset-y>
 				<template v-slot:activator="{ on }">
 					<div class="language-button" v-ripple v-on="on">
-						<div class="wrapper">
-							<img :src="LeekWars.languages[LeekWars.publicChats[chatID].language].flag">
-							<div class="unread-circle" v-if="Object.values(LeekWars.publicChats).some(chat => $store.state.chat[chat.id] && !$store.state.chat[chat.id].read)"></div>
-						</div>
+						<flag :code="LeekWars.languages[LeekWars.publicChats[chatID].language].country" />
+						<div class="unread-circle" v-if="Object.values(LeekWars.publicChats).some(chat => $store.state.chat[chat.id] && !$store.state.chat[chat.id].read)"></div>
 					</div>
 				</template>
 				<v-list :dense="true">
 					<div v-for="(data, language) in LeekWars.languages" :key="language" class="language">
-						<img :src="LeekWars.languages[language].flag" class="flag">
+						<flag :code="LeekWars.languages[language].country" />
 						<v-list-item v-for="(chat, i) in data.chats" :key="i" class="language" @click="setChatLanguage(chat)">
 							<v-icon>{{ LeekWars.publicChats[chat].icon }}</v-icon>
 							<span class="name">{{ LeekWars.publicChats[chat].name }}</span>
@@ -29,7 +27,7 @@
 					</div>
 				</v-list>
 			</v-menu>
-			<div v-if="$store.state.chat[chatID]" class="button text" @click="LeekWars.addChat($store.state.chat[chatID])">
+			<div v-if="!LeekWars.mobile && $store.state.chat[chatID]" class="button text" @click="LeekWars.addChat($store.state.chat[chatID])">
 				<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 			</div>
 		</div>
@@ -68,13 +66,17 @@ export default class ChatPanel extends Vue {
 
 <style lang="scss" scoped>
 .flag {
-	height: 28px;
-	margin-left: 12px;
+	width: 28px;
+	flex-shrink: 0;
 }
 .language-button {
 	cursor: pointer;
 	max-height: 36px;
-	padding: 5px 10px;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	user-select: none;
+	padding: 0 8px;
 	.wrapper {
 		position: relative;
 		img {
@@ -100,6 +102,7 @@ export default class ChatPanel extends Vue {
 .language {
 	display: flex;
 	align-items: center;
+	padding-left: 10px;
 }
 .language .name {
 	padding-left: 8px;

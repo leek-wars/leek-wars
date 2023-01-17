@@ -24,7 +24,7 @@
 						<div v-for="category in chats" :key="category.name" class="category">
 							<div class="name">
 								<v-icon v-if="category.icon">{{ category.icon }}</v-icon>
-								<img v-else :src="category.image">
+								<flag v-else :code="category.flag" />
 								{{ category.name }}
 							</div>
 							<div v-for="chat in category.chats" :key="chat.id" class="conversation chat-preview" :class="{unread: $store.state.chat[chat.id] && !$store.state.chat[chat.id].read, notifications: $store.state.chat[chat.id] && $store.state.chat[chat.id].notifications}">
@@ -110,9 +110,9 @@
 		get chats() {
 			const chats = [] as any[]
 			if (store.state.farmer && store.state.farmer.public_chat_enabled) {
-				chats.push({ name: 'Français', image: '/image/flag/fr.png', chats: Object.values(LeekWars.publicChats).filter(c => c.language === 'fr') })
-				chats.push({ name: 'English', image: '/image/flag/gb.png', chats: Object.values(LeekWars.publicChats).filter(c => c.language === 'en') })
-				chats.push({ name: 'Español', image: '/image/flag/es.png', chats: Object.values(LeekWars.publicChats).filter(c => c.language === 'es') })
+				chats.push({ name: 'Français', flag: 'fr', chats: Object.values(LeekWars.publicChats).filter(c => c.language === 'fr') })
+				chats.push({ name: 'English', flag: 'gb', chats: Object.values(LeekWars.publicChats).filter(c => c.language === 'en') })
+				chats.push({ name: 'Español', flag: 'es', chats: Object.values(LeekWars.publicChats).filter(c => c.language === 'es') })
 			}
 			if (this.$store.state.farmer && this.$store.state.farmer.team) {
 				const team_chats = [
@@ -353,8 +353,9 @@
 			gap: 6px;
 			align-items: center;
 			padding: 10px;
-			img {
-				height: 22px;
+			.flag {
+				max-width: 30px;
+				max-height: 20px;
 			}
 		}
 	}
