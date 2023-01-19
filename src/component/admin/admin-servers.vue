@@ -10,7 +10,7 @@
 				<div class="servers">
 					<div v-for="(node, n) in nodes" :key="n" class="server card">
 						<div class="load">
-							<div :style="{'margin-top': ((1 - node.load) * 136) + 'px'}"></div>
+							<div :style="{'margin-top': ((1 - node.load) * 127) + 'px'}"></div>
 						</div>
 						<img src="/image/admin/server.png">
 						<br>
@@ -104,7 +104,7 @@
 				const node = nodes[runner.node]
 				node.generated += runner.generated
 				node.runners.push(runner)
-				node.load = (node.load + (runner.task ? 1 : 0)) / node.runners.length
+				node.load = ((node.runners.length - 1) * node.load + (runner.task ? 1 : 0)) / node.runners.length
 			}
 			return Object.values(nodes).sort((a, b) => a.name.localeCompare(b.name))
 		}
