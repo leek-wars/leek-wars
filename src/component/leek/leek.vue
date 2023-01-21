@@ -211,6 +211,9 @@
 							<router-link v-if="my_leek" :to="'/editor/' + leek.ai.id">
 								<ai :ai="leek.ai" :library="false" :small="false" />
 							</router-link>
+							<a v-else-if="$store.getters.admin" :href="LeekWars.API + 'ai/download/' + leek.ai.id" target="_blank">
+								<ai :ai="leek.ai" :library="false" :small="false" />
+							</a>
 							<ai v-else :ai="leek.ai" :library="false" :small="false" />
 						</template>
 						<span v-else class="empty">{{ $t('no_ai') }}</span>
