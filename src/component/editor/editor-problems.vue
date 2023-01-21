@@ -4,7 +4,7 @@
 			<div v-for="(problems, ai) in ais" v-if="problems.length && fileSystem.aiByFullPath[ai]" :key="ai">
 				<div class="file" @click="toggleProblemFile(entrypoint + ai)">
 					<v-icon>{{ problemsCollapsed[entrypoint + ai] ? 'mdi-chevron-right' : 'mdi-chevron-down' }}</v-icon>
-					<span v-if="fileSystem.aiByFullPath[ai].entrypoints.length > 1">{{ fileSystem.ais[entrypoint].name }} {{ ' ➞ ' }}</span>
+					<span v-if="fileSystem.aiByFullPath[ai].entrypoints.length > 1 && fileSystem.ais[entrypoint]">{{ fileSystem.ais[entrypoint].name }} {{ ' ➞ ' }}</span>
 					{{ ai }}
 					<span v-if="fileSystem.aiByFullPath[ai].errors" class="count error">{{ fileSystem.aiByFullPath[ai].errors }}</span>
 					<span v-if="fileSystem.aiByFullPath[ai].warnings" class="count warning">{{ fileSystem.aiByFullPath[ai].warnings }}</span>
