@@ -108,7 +108,7 @@
 	"error_71": "La méthode string() doit retourner une chaîne",
 	"error_73": "Constructeur inconnu",
 	"error_74": "Le second opérateur de instanceof doit être une classe",
-	"error_75": "Cette valeur \"{0}\" n'est pas itérable (pas un tableau)",
+	"error_75": "Cette valeur \"{0}\" n'est pas itérable (pas une liste ou table)",
 	"error_76": "Stack Overflow",
 	"error_77": "Opérateur \"{0}\" invalide",
 	"error_78": "Ce champ \"{1}\" est privé dans la classe \"{0}\".",

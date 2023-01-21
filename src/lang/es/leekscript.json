@@ -108,7 +108,7 @@
 	"error_71": "El método string() debe devolver una cadena",
 	"error_73": "Constructor desconocido",
 	"error_74": "El segundo operador de instanceof debe ser una clase.",
-	"error_75": "Este valor \"{0}\" no es iterable (no es una matriz)",
+	"error_75": "Este valor \"{0}\" no es iterable (no es una matriz o mapa)",
 	"error_76": "Desbordamiento de pila",
 	"error_77": "Operador no válido \"{0}\"",
 	"error_78": "Este campo \"{1}\" es privado en la clase \"{0}\".",

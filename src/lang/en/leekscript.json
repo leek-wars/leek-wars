@@ -107,7 +107,7 @@
 	"error_71": "The string() method must return a string",
 	"error_73": "Constructor unknown",
 	"error_74": "The second instanceof operator must be a class",
-	"error_75": "This value \"{0}\" is not iterable (not an array)",
+	"error_75": "This value \"{0}\" is not iterable (not an array or map)",
 	"error_76": "Stack Overflow",
 	"error_77": "Invalid operator \"{0}\"",
 	"error_78": "This field « {1} » is private in class \"{0}\"",
