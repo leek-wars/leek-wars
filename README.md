@@ -39,6 +39,7 @@ I gladly accept pull requests to Leek Wars. Before starting work on a feature, s
 - CodeMirror https://github.com/codemirror/codemirror
 - Chartist https://github.com/gionkunz/chartist-js
 - Katex https://github.com/Khan/KaTeX
+- Flags https://github.com/hampusborgos/country-flags
 
 ## Social media
 - Twitter : https://twitter.com/LeekWars
