@@ -68,10 +68,10 @@ class Socket {
 	public wrong_token: boolean = false
 
 	public connect() {
-		if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
-			const message = "[WS] connect()"
-			console.log(message)
-		}
+		// if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
+		// 	const message = "[WS] connect()"
+		// 	console.log(message)
+		// }
 		if (!store.state.farmer || this.connecting() || this.connected()) {
 			return
 		}
