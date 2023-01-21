@@ -123,34 +123,28 @@
 			</div>
 		</panel>
 
-		<div class="container large-tiles">
-			<div class="column6">
-				<panel>
-					<div slot="content" class="flex">
-						<leek-image :scale="1" :leek="{level: 100, face: 1, hat: 31}" class="image" />
-						<div>
-							<h2>{{ $t('education') }}</h2>
-							<div>{{ $t('education_desc') }}</div>
-							<a href="mailto:contact@leekwars.com">
-								<v-btn small>{{ $t('education_button') }}</v-btn>
-							</a>
-						</div>
+		<div class="container large large-tiles">
+			<panel>
+				<div slot="content" class="flex">
+					<leek-image :scale="1" :leek="{level: 100, face: 1, hat: 31}" class="image" />
+					<div>
+						<h2>{{ $t('education') }}</h2>
+						<div>{{ $t('education_desc') }}</div>
+						<a href="mailto:contact@leekwars.com">
+							<v-btn small>{{ $t('education_button') }}</v-btn>
+						</a>
 					</div>
-				</panel>
-			</div>
-			<div class="column6">
-				<router-link to="/press-kit">
-					<panel v-ripple>
-						<div slot="content" class="flex">
-							<div class="image">📦</div>
-							<div>
-								<h2>{{ $t('main.press-kit') }}</h2>
-								<v-btn small>{{ $t('main.press-kit') }}</v-btn>
-							</div>
-						</div>
-					</panel>
+				</div>
+			</panel>
+			<panel v-ripple>
+				<router-link to="/press-kit" slot="content" class="flex">
+					<div class="image">📦</div>
+					<div>
+						<h2>{{ $t('main.press-kit') }}</h2>
+						<v-btn small>{{ $t('main.press-kit') }}</v-btn>
+					</div>
 				</router-link>
-			</div>
+			</panel>
 		</div>
 
 		<h1>{{ $t('ranking') }}</h1>
@@ -899,9 +893,6 @@
 	}
 }
 .large-tiles {
-	.panel {
-		height: 100%;
-	}
 	.image {
 		flex: 90px 0 0;
 		font-size: 90px;
