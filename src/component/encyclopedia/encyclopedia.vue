@@ -58,7 +58,7 @@
 				<div v-if="LeekWars.encyclopedia[this.language] && Object.keys(LeekWars.encyclopedia[this.language]).length" ref="markdown" class="markdown" @scroll="markdownScroll">
 					<!-- {{ parents }} -->
 
-					<markdown :content="content" mode="encyclopedia" :class="{main: page.id === 1}" :locale="page.language" />
+					<markdown :content="content" mode="encyclopedia" :class="{main: page.reference === 1 }" :locale="page.language" />
 
 					<div v-if="page.new && !edition" class="nopage">
 						<v-icon>mdi-book-open-page-variant</v-icon>
