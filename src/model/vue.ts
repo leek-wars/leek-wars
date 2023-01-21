@@ -251,9 +251,11 @@ const vueMain = new Vue({
 		lastErrorSent = Date.now()
 
 		const error = err.name + ": " + err.message
-		const location = document.location.href
+		const file = document.location.href
+		const stack = err.stack + '\n' + info
+		const locale = i18n.locale
 
-		LeekWars.post('error/report', {error, stack: err.stack + "\n" + info + "\n" + location})
+		LeekWars.post('error/report', { error, stack, file, locale })
 	}
 }).$mount('#app')
 
