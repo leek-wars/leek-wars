@@ -1521,10 +1521,9 @@
 		.p50 {
 			flex: 10;
 		}
-		.country {
-			height: 24px;
-			margin: -5px;
-			vertical-align: middle;
+		.flag {
+			height: 16px;
+			vertical-align: bottom;
 		}
 	}
 	.load-rankings {

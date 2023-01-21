@@ -13,9 +13,9 @@
 
 		get url() {
 			if (this.code) {
-				return '/image/flag/' + this.code + '.png'
+				return '/image/flag/' + this.code + '.png?2'
 			}
-			return '/image/flag/_.png'
+			return '/image/flag/_.png?2'
 		}
 	}
 </script>
@@ -26,6 +26,7 @@
 		position: relative;
 		img {
 			width: 100%;
+			height: 100%;
 			border-radius: calc(1px + 6%);
 			box-shadow: 0 1px 2px 0 #0003;
 		}
