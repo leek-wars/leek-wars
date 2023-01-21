@@ -14,9 +14,9 @@
 			<div v-if="!$store.state.connected" class="header-signin buttons">
 				<v-menu offset-y>
 					<template v-slot:activator="{ on }">
-						<div class="button-wrapper" v-on="on">
+						<div class="button-wrapper language-button" v-on="on">
 							<div class="header-button">
-								<flag :code="LeekWars.languages[$i18n.locale].country" class="language-button" />
+								<flag :code="LeekWars.languages[$i18n.locale].country" />
 							</div>
 						</div>
 					</template>
@@ -338,7 +338,6 @@
 			display: block;
 		}
 		.header .button-wrapper div {
-			width: auto;
 			display: flex;
 			justify-content: center;
 			flex: 1;
@@ -364,8 +363,13 @@
 			padding-right: 20px;
 		}
 	}
-	.language-button {
-		width: 26px;
+	.button-wrapper.language-button {
+		flex-basis: 60px;
+		flex-grow: 0;
+		.flag {
+			max-width: 30px;
+			max-height: 30px;
+		}
 	}
 	.language .flag {
 		width: 26px;
