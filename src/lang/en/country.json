@@ -5,9 +5,7 @@
 	"ag": "Antigua and Barbuda",
 	"al": "Albania",
 	"am": "Armenia",
-	"an": "Netherlands Antilles",
 	"ao": "Angola",
-	"aq": "Antarctica",
 	"ar": "Argentina",
 	"at": "Austria",
 	"au": "Australia",
@@ -125,7 +123,6 @@
 	"my": "Malaysia",
 	"mz": "Mozambique",
 	"na": "Namibia",
-	"nc": "New Caledonia",
 	"ne": "Niger",
 	"ng": "Nigeria",
 	"ni": "Nicaragua",
@@ -145,7 +142,6 @@
 	"pt": "Portugal",
 	"py": "Paraguay",
 	"qa": "Qatar",
-	"re": "Réunion",
 	"ro": "Romania",
 	"rs": "Serbia",
 	"ru": "Russia",
@@ -194,5 +190,10 @@
 	"ye": "Yemen",
 	"za": "South Africa",
 	"zm": "Zambia",
-	"zw": "Zimbabwe"
+	"zw": "Zimbabwe",
+	"aw": "Aruba",
+	"fm": "Micronesia",
+	"mh": "Marshall Islands",
+	"pw": "Palau",
+	"ss": "South Sudan"
 }
