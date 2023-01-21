@@ -1,3 +1,17 @@
+236:
+  added:
+    - rien
+  improved:
+    - Les notifications push montrent le message entier pour les MP, forum, commentaire.
+    - "Amélioration des images de drapeaux. #img_236_flags"
+    - Regroupement de certains pays (195 au lieu de 223).
+    - "Ajout d'une erreur pour une boucle for in sur une valeur non-itérable. #img_236_iterable_warning"
+  fixed:
+    - Correction de la statistique nombre de Battle Royales.
+    - Correction de la traduction des notifications de tournoi par mail et push.
+    - Correction du retour de getPathLength dans la documentation.
+    - "Titre de l'encyclopédie masquée sur la page principale en Anglais et Espagnol. #img_236_encyclo_title"
+
 235:
   title: Traduction Espagnole, pays dans le potager, messages de bot sur le chat et défis d'équipe.
   added:
