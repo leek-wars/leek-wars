@@ -11,6 +11,8 @@
     - Correction de la traduction des notifications de tournoi par mail et push.
     - Correction du retour de getPathLength dans la documentation.
     - "Titre de l'encyclopédie masquée sur la page principale en Anglais et Espagnol. #img_236_encyclo_title"
+    - Correction de la fonction mapRemoveAll avec des valeurs null.
+    - Correction (encore) du bug de duplication de poireau dans le lecteur.
 
 235:
   title: Traduction Espagnole, pays dans le potager, messages de bot sur le chat et défis d'équipe.
