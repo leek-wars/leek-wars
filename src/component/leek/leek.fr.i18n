@@ -13,7 +13,7 @@
 	"click_to_change_hat": "Cliquer pour changer de chapeau",
 	"click_to_put_hat": "Cliquer pour mettre le chapeau",
 	"click_to_use": "Cliquer pour utiliser",
-	"copy_as_test": "Copier {0} en tant que poireau de test",
+	"copy_as_test": "Copier {0} en tant que poireau de test avec les mêmes caractéristiques et équipement",
 	"customize": "Personnaliser le poireau",
 	"defeats": "défaites",
 	"draws": "nuls",
@@ -95,5 +95,7 @@
 	"xp": "XP : {0}",
 	"angry": "Fâché",
 	"happy": "Souriant",
-    "neutral": "Neutre"
+    "neutral": "Neutre",
+	"xp_blocked": "XP bloquée",
+	"xp_blocked_desc": "Si l'option est activée, les combats ne rapporteront plus d'expérience, et le poireau ne montera pas de niveau. Les gains de talent et de ressources sont conservés."
 }

@@ -95,5 +95,7 @@
 	"xp": "XP: {0}",
 	"angry": "Angry",
 	"happy": "Smiling",
-	"neutral": "Neutral"
+	"neutral": "Neutral",
+	"xp_blocked": "XP blocked",
+	"xp_blocked_desc": "If the option is activated, fights will no longer yield experience, and the leek will not level up. Talent and resource gains are retained."
 }

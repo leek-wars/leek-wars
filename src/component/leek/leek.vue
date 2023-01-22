@@ -945,6 +945,12 @@
 				LeekWars.post('leek/set-in-garden', {leek_id: this.leek.id, in_garden: this.leek.in_garden})
 			}
 		}
+		updateXpBlocked() {
+			if (this.leek) {
+				this.leek.xp_blocked = !this.leek.xp_blocked
+				LeekWars.put('leek/set-xp-blocked', {leek_id: this.leek.id, xp_blocked: this.leek.xp_blocked})
+			}
+		}
 
 		chart() {
 			if (!this.leek || this.leek.level < 100) { return }
