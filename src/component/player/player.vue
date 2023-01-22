@@ -518,11 +518,16 @@
 					this.game.setLogs((report.default as any).logs[this.$store.state.farmer.id])
 				})
 			} else {
-				this.request = LeekWars.get('fight/get/' + this.fightId)
-				this.request.then((fight: any) => {
-					this.request = null
-					fightLoaded(fight)
-				}).error((error: any) => this.error = error)
+				if (this.request === null) { // Déjà en train de charger
+					this.request = LeekWars.get('fight/get/' + this.fightId)
+					this.request.then((fight: any) => {
+						this.request = null
+						fightLoaded(fight)
+					}).error((error: any) => {
+						this.request = null
+						this.error = error
+					})
+				}
 			}
 		}
 		getLogs() {
