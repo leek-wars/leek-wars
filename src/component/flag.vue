@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="flag">
+	<div class="flag" :title="$t('country.' + code)">
 		<img :src="url" loading="lazy">
 	</div>
 </template>

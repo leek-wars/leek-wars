@@ -6,7 +6,7 @@
 			<talent :id="farmer.id" :talent="farmer.talent" category="farmer" />
 			<div class="level">
 				{{ farmer.leek_count }} <img class="icon" src="/image/icon/black/leek.png"> {{ $t('main.level_n', [farmer.total_level]) }}
-				<flag class="country" v-if="farmer.country" :title="$t('country.' + farmer.country)" :code="farmer.country" />
+				<flag class="country" v-if="farmer.country" :code="farmer.country" />
 			</div>
 		</div>
 	</rich-tooltip-farmer>

@@ -9,7 +9,7 @@
 			<br>
 			<div class="level">
 				{{ $t('main.level_n', [leek.level]) }}
-				<flag v-if="leek.country" :code="leek.country" :title="$t('country.' + leek.country)" />
+				<flag v-if="leek.country" :code="leek.country" />
 			</div>
 		</div>
 	</rich-tooltip-leek>

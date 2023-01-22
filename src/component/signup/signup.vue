@@ -196,7 +196,7 @@
 							</td>
 							<td>{{ farmer.talent }}</td>
 							<td>
-								<flag v-if="farmer.country" :title="$t('country.' + farmer.country)" :code="farmer.country" />
+								<flag v-if="farmer.country" :code="farmer.country" />
 							</td>
 						</tr>
 					</table>

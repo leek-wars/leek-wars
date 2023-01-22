@@ -20,7 +20,7 @@
 		</td>
 		<td>
 			<div class="country-wrapper">
-				<flag v-if="row.country" :title="$t('country.' + row.country)" :code="row.country" />
+				<flag v-if="row.country" :code="row.country" />
 			</div>
 		</td>
 		<td>
