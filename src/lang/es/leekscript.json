@@ -151,5 +151,6 @@
 	"error_1002": "Este chip {0} no existe. Utilice las constantes CHIP_* para recuperar un chip válido.",
 	"error_1003": "Esta arma {0} no existe. Utilice las constantes WEAPON_* para recuperar un arma válida.",
 	"error_1004": "Esta arma {1} (id {0}) no está equipada. Primero debes equiparlo en tu página de puerro.",
-	"error_1005": "La bombilla invocada no tiene IA."
+	"error_1005": "La bombilla invocada no tiene IA.",
+	"error_118": "El argumento « {0} » está duplicado."
 }
