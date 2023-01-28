@@ -13,6 +13,7 @@
     - "Titre de l'encyclopédie masquée sur la page principale en Anglais et Espagnol. #img_236_encyclo_title"
     - Correction de la fonction mapRemoveAll avec des valeurs null.
     - Correction (encore) du bug de duplication de poireau dans le lecteur.
+    - "Ajout d'une erreur quand un argument de méthode est dupliqué #img_236_duplicated_arg"
 
 235:
   title: Traduction Espagnole, pays dans le potager, messages de bot sur le chat et défis d'équipe.
