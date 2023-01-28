@@ -155,6 +155,7 @@
 		statsExpanded: boolean = false
 		searchQuery: string = ''
 		actions = [
+			{icon: 'mdi-information-variant', click: () => this.$router.push('/about')},
 			{icon: 'mdi-pencil', click: () => this.editStart()},
 		]
 
