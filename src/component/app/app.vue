@@ -61,6 +61,8 @@
 
 			<didactitiel v-if="didactitiel_enabled" v-model="didactitiel" />
 
+			<didactitiel-new v-if="didactitiel_new_enabled" />
+
 			<changelog-dialog v-model="changelogDialog" :changelog="changelog" />
 
 			<popup v-model="LeekWars.messagePopup" :width="500">
@@ -156,6 +158,7 @@
 		annonce: boolean = false
 		docEverywhere: boolean = false
 		docEverywhereModel: boolean = false
+		didactitiel_new_enabled: boolean = false
 
 		created() {
 			this.$root.$on('connected', () => {
