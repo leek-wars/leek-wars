@@ -216,5 +216,9 @@
 	"select": "Para seleccionar",
 	"n_words": "0 palabra | 1 palabra | {n} palabras",
 	"time_at": "{0} a las {1}",
-	"censored_by": "Censurado por {0}"
+	"censored_by": "Censurado por {0}",
+	"group": "Banda",
+	"apply": "Aplicar",
+	"worldwide": "Mundo entero",
+	"save": "Para salvaguardar"
 }

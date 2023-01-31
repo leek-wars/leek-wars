@@ -135,7 +135,7 @@
 			</panel>
 
 			<panel :title="$t('characteristic.characteristics')">
-				<template v-if="leek && my_leek && leek.capital == 0" slot="actions">
+				<template v-if="leek && my_leek && leek.capital == 0 && $store.state.farmer.equipment_enabled" slot="actions">
 					<div class="button flat" @click="capitalDialog = true">
 						<v-icon>mdi-star-outline</v-icon>
 					</div>
@@ -149,7 +149,7 @@
 					</characteristic-tooltip>
 					<center v-if="leek && my_leek">
 						<br>
-						<v-btn v-if="leek.capital > 0" color="primary" @click="capitalDialog = true">{{ $t('main.n_capital', [leek.capital]) }}</v-btn>&nbsp;
+						<v-btn v-if="leek.capital > 0 && $store.state.farmer.equipment_enabled" color="primary" @click="capitalDialog = true">{{ $t('main.n_capital', [leek.capital]) }}</v-btn>&nbsp;
 						<v-btn class="potions-button" @click="potionDialog = true">
 							<img src="/image/icon/black/potion.png">
 							{{ $t('potions') }}
@@ -161,7 +161,7 @@
 			<panel>
 				<template slot="title">{{ $t('weapons') }} <span v-if="leek && leek.weapons" class="weapon-count">[{{ leek.weapons.length }}/{{ leek.max_weapons }}]</span></template>
 				<template v-if="leek && my_leek" slot="actions">
-					<div class="button flat" @click="weaponsDialog = true">
+					<div v-if="$store.state.farmer.equipment_enabled" class="button flat" @click="weaponsDialog = true">
 						<v-icon>mdi-pencil</v-icon>
 					</div>
 				</template>
@@ -181,7 +181,7 @@
 			<panel icon="mdi-chip">
 				<template slot="title">{{ $t('main.chips') }} <span v-if="leek && leek.chips" class="chip-count">[{{ leek.chips.length }}/{{ leek.max_chips }}]</span></template>
 				<template v-if="leek && my_leek" slot="actions">
-					<div class="button flat" @click="chipsDialog = true">
+					<div v-if="$store.state.farmer.equipment_enabled" class="button flat" @click="chipsDialog = true">
 						<v-icon>mdi-pencil</v-icon>
 					</div>
 				</template>
@@ -291,6 +291,15 @@
 						{{ $t('copy_as_test', [leek.name]) }}
 					</tooltip>
 				</template>
+				<!-- <tooltip v-if="leek && my_leek && !$store.state.farmer.groupe">
+					<template v-slot:activator="{ on }">
+						<div class="tab" @click="updateXpBlocked" v-on="on">
+							<span>{{ $t('xp_blocked') }}</span>
+							<v-switch :input-value="leek.xp_blocked" hide-details />
+						</div>
+					</template>
+					{{ $t('xp_blocked_desc') }}
+				</tooltip> -->
 			</div>
 		</div>
 
@@ -1623,9 +1632,6 @@
 		padding-left: 4px;
 		padding-right: 4px;
 		padding-top: 1px;
-	}
-	.v-input--switch {
-		margin-left: 8px;
 	}
 	.customize-dialog {
 		.customize-grid {

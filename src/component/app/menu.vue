@@ -33,7 +33,7 @@
 
 			<div class="menu-center">
 				<span v-if="$store.state.farmer && $store.state.farmer.leeks" class="leeks">
-					<router-link v-for="(leek, key, i) in $store.state.farmer.leeks" :key="leek.id" v-ripple :to="{ name: 'leek', params: { id: leek.id }}" :label="leek.capital || null" :class="{'router-link-active': i == 0 && isHomePage}" class="section">
+					<router-link v-for="(leek, key, i) in $store.state.farmer.leeks" :key="leek.id" v-ripple :to="{ name: 'leek', params: { id: leek.id }}" :label="($store.state.farmer.equipment_enabled ? leek.capital : 0) || null" :class="{'router-link-active': i == 0 && isHomePage}" class="section">
 						<div :leek="leek.id" :tab="'leek-' + leek.id" @click="clickItem">
 							<img src="/image/icon/house.png">
 							<div class="text">{{ leek.name }}</div>
@@ -93,7 +93,7 @@
 				</router-link>
 
 				<router-link v-if="$store.state.farmer && $store.state.farmer.groupe" v-ripple :to="'/group/' + $store.state.farmer.groupe.id" class="section" @click.native="clickItem">
-					<v-icon>mdi-school</v-icon>
+					<v-icon>mdi-account-group</v-icon>
 					<div class="text">{{ $store.state.farmer.groupe.name }}</div>
 				</router-link>
 

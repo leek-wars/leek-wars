@@ -291,7 +291,7 @@ ul, ol {
 .page-bar .tabs .tab {
 	display: inline-flex;
 	align-items: center;
-	padding: 0 8px;
+	padding: 0 7px;
 	font-size: 17px;
 	height: 36px;
 	vertical-align: top;
@@ -301,6 +301,7 @@ ul, ol {
 	background: rgba(0, 0, 0, 0.3);
 	margin-left: 2px;
 	user-select: none;
+	gap: 6px;
 }
 .page-bar .tabs .tab:not(.disabled) {
 	cursor: pointer;
@@ -362,17 +363,10 @@ ul, ol {
 	border-width: 36px 0 0 20px;
 	border-color: transparent  transparent   transparent rgba(110, 201, 31, 0.8);
 }
-.page-bar .tabs .tab span {
-	vertical-align: top;
-}
 .page-bar .tabs .tab img {
 	width: 22px;
-	margin-right: 8px;
-	margin-top: -1px;
 }
 .page-bar .tabs .tab i {
-	margin-top: -2px;
-	margin-right: 5px;
 	color: white;
 	font-size: 26px;
 }
@@ -493,7 +487,7 @@ ul, ol {
 	}
 }
 .v-dialog .title .options .option:hover {
-	background-image: linear-gradient(to bottom, rgba(110, 201, 31, 0.7) 0%, rgba(110, 201, 31, 0.9) 50%, rgba(110, 201, 31, 0.7) 100%);
+	background: #888;
 }
 .v-dialog .title .options .option img {
 	width: 26px;

@@ -216,5 +216,9 @@
 	"select": "Select",
 	"n_words": "0 word | 1 word | {n} words",
 	"time_at": "{0} at {1}",
-	"censored_by": "Censored by {0}"
+	"censored_by": "Censored by {0}",
+	"group": "Band",
+	"apply": "To apply",
+	"worldwide": "Whole world",
+	"save": "To safeguard"
 }

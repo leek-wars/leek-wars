@@ -19,7 +19,7 @@ const ChangeEmail = () => import(/* webpackChunkName: "[request]" */ `@/componen
 const Changelog = () => import(/* webpackChunkName: "[request]" */ `@/component/changelog/changelog.${locale}.i18n`)
 const Conditions = () => import(/* webpackChunkName: "[request]" */ `@/component/conditions/conditions.${locale}.i18n`)
 const Documentation = () => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`)
-const Education = () => import(/* webpackChunkName: "[request]" */ `@/component/education/education.${locale}.i18n`)
+const Group = () => import(/* webpackChunkName: "[request]" */ `@/component/group/group.${locale}.i18n`)
 const Editor = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor.${locale}.i18n`)
 const Encyclopedia = () => import(/* webpackChunkName: "encyclopedia" */ `@/component/encyclopedia/encyclopedia.${locale}.i18n`)
 const EncyclopediaSearch = () => import(/* webpackChunkName: "[request]" */ `@/component/encyclopedia/encyclopedia-search.${locale}.i18n`)
@@ -128,7 +128,7 @@ const routes = [
 	{ path: '/encyclopedia-search', component: EncyclopediaSearch },
 	{ path: '/editor', component: Editor, beforeEnter: connected },
 	{ path: '/editor/:id', component: Editor, beforeEnter: connected },
-	{ path: '/group/:id', component: Education, beforeEnter: connected },
+	{ path: '/group/:id', component: Group, beforeEnter: connected },
 	{ path: '/error/:message', component: Error },
 	{ path: '/error/:message/:title', component: Error },
 	{ path: '/farmer', component: Farmer, beforeEnter: connected },

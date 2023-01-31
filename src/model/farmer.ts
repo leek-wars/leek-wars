@@ -61,6 +61,7 @@ class Farmer {
 	public tutorial_progress!: number
 	public groupe!: Group
 	public public_chat_enabled!: boolean
+	public equipment_enabled!: boolean
 }
 
 class Reward {

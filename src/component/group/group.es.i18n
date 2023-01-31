@@ -11,5 +11,17 @@
 	"setting_chat": "Habilitar chat grupal",
 	"main_options": "Opciones principales",
 	"setting_tournaments": "Habilitar torneos públicos",
-	"setting_br": "Habilitar batallas reales"
+	"setting_br": "Habilitar batallas reales",
+	"members": "Miembros",
+	"member_options": "Opciones de miembros",
+	"xp_blocked": "EXP bloqueado",
+	"equipment_blocked": "Funciones y equipos bloqueados",
+	"equipment": "Equipo impuesto",
+	"weapons_of": "Armas de {0}",
+	"chips_of": "{0} fichas",
+	"too_high_level": "Nivel demasiado alto: {0}",
+	"saved": "Equipo guardado",
+	"applied": "Equipo aplicado",
+	"too_much_weapons": "Demasiadas armas equipadas",
+	"too_much_chips": "Demasiados chips equipados"
 }

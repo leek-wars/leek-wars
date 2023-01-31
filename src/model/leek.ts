@@ -75,6 +75,7 @@ class Leek {
 	public back!: boolean
 	public metal!: boolean
 	public face!: number
+	public xp_blocked!: boolean
 
 	constructor(data: any) {
 		Object.assign(this, data)

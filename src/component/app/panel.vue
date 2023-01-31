@@ -130,19 +130,18 @@
 		display: inline-flex;
 		user-select: none;
 		vertical-align: bottom;
+		gap: 6px;
 		img {
 			height: 36px;
 			width: 28px;
 			padding: 7px 3px;
 			opacity: 0.9;
 			vertical-align: top;
-			margin-right: 6px;
 		}
 		i {
 			padding: 6px 0;
 			opacity: 0.9;
 			font-size: 24px;
-			margin-right: 6px;
 		}
 		.v-icon {
 			color: white;
@@ -157,7 +156,13 @@
 		margin-right: 0;
 	}
 	.header > .actions ::v-deep .button:hover {
+		background: #888;
+	}
+	.header > .actions ::v-deep .button.green:hover {
 		background: rgba(110, 201, 31, 0.8) 0%;
+	}
+	.header > .actions ::v-deep .button.red:hover {
+		background: rgba(201, 31, 31, 0.8) 0%;
 	}
 	.panel > .content {
 		padding: 15px;
