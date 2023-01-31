@@ -299,7 +299,7 @@
 						</div>
 					</template>
 					{{ $t('xp_blocked_desc') }}
-				</tooltip> -->
+				</tooltip>
 			</div>
 		</div>
 
