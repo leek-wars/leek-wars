@@ -162,7 +162,7 @@ const LeekWars = {
 	titleTag: null,
 	requests: 0,
 	notifsResults: localStorage.getItem('options/notifs-results') === 'true',
-	rankingActive: localStorage.getItem('options/ranking-active') !== 'false',
+	rankingInactive: localStorage.getItem('options/ranking-inactive') === 'true',
 	service_worker: null as ServiceWorkerRegistration | null,
 	battleRoyale: new BattleRoyale(),
 	squares: new Squares(),
@@ -564,13 +564,12 @@ const LeekWars = {
 			})
 		}
 	},
-	countries: [] as string[],
+	countries: [] as readonly string[],
 	loadCountries: () => {
-		console.log("load countries")
+		// console.log("load countries")
 		if (!LeekWars.countries.length) {
 			LeekWars.get<string[]>('country/get-all').then((data) => {
-				LeekWars.countries = data
-				console.log(LeekWars.countries)
+				LeekWars.countries = Object.freeze(data)
 			})
 		}
 	},
@@ -911,7 +910,7 @@ function shadeColor(color: string, amount: number) {
 function goToRanking(type: string, order: string, id: number = 0) {
 	// console.log("goToRanking", type, order, id)
 	let url = ''
-	const active = LeekWars.rankingActive ? '-active' : ''
+	const active = LeekWars.rankingInactive ? '' : '-active'
 	if (type === 'leek') {
 		url = 'ranking/get-leek-rank' + active + '/' + id + '/' + order
 	} else if (type === 'farmer') {
@@ -921,8 +920,8 @@ function goToRanking(type: string, order: string, id: number = 0) {
 	}
 	LeekWars.get(url).then(data => {
 		const page = 1 + Math.floor((data.rank - 1) / 50)
-		const active_url = LeekWars.rankingActive && data.active ? '/active' : ''
-		const newRoute = '/ranking/' + type + '/' + order + active_url + '/page-' + page + '#rank-' + data.rank
+		const active_url = LeekWars.rankingInactive && data.active ? '?inactive' : ''
+		const newRoute = '/ranking/' + type + '/' + order + '/page-' + page + active_url + '#rank-' + data.rank
 		if (router.currentRoute.fullPath !== newRoute) {
 			router.push(newRoute)
 		}

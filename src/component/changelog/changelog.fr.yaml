@@ -1,6 +1,8 @@
 236:
   added:
     - Possibilité de bloquer l'XP d'un poireau, pour ne plus gagner de niveau.
+    - "Ajout des classements de niveau max (50, 100, 150 etc.). #img_236_ranking_level"
+    - "Ajout des classements par pays. #img_236_ranking_country"
   improved:
     - Les notifications push montrent le message entier pour les MP, forum, commentaire.
     - "Amélioration des images de drapeaux. #img_236_flags"

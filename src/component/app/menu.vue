@@ -183,7 +183,7 @@
 			return this.$route.path === '/'
 		}
 		get rankingURL() {
-			return '/ranking' + (LeekWars.rankingActive ? '/active' : '')
+			return '/ranking' + (LeekWars.rankingInactive ? '?inactive' : '')
 		}
 		get new_leek_condition() {
 			if (!store.state.farmer!.can_create_leek) {

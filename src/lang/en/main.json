@@ -217,11 +217,11 @@
 	"n_words": "0 word | 1 word | {n} words",
 	"time_at": "{0} at {1}",
 	"censored_by": "Censored by {0}",
-	"group": "Band",
-	"apply": "To apply",
+	"group": "Group",
 	"worldwide": "Whole world",
-	"save": "To safeguard",
 	"fights": "Fights",
 	"delete": "Delete",
-	"advanced": "Advanced"
+	"advanced": "Advanced",
+	"save": "Save",
+	"apply": "Apply"
 }
