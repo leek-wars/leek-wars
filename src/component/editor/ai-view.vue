@@ -2,20 +2,18 @@
 	<div v-show="visible" ref="ai" class="ai" @mousemove="mousemove" @mouseleave="mouseleave">
 		<div class="codemirror-wrapper">
 			<div ref="codemirror" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" :class="{search: searchEnabled}" class="codemirror"></div>
-			<div v-if="ai.problems" class="errors-band">
-				<template v-for="(problems, entrypoint) of ai.problems">
-					<tooltip v-for="(error, p) of problems" :key="entrypoint + p">
-						<template v-slot:activator="{ on }">
-							<div :style="{top: (100 * error.start_line / lines) + '%'}" :class="{warning: error.level === 1, todo: error.level === 2}" class="error" v-on="on" @click="$emit('jump', ai, error.start_line)"></div>
-						</template>
-						<v-icon v-if="error.level === 0" class="tooltip error">mdi-close-circle-outline</v-icon>
-						<v-icon v-else-if="error.level === 1" class="tooltip warning">mdi-alert-circle-outline</v-icon>
-						<v-icon v-else class="tooltip todo">mdi-format-list-checks</v-icon>
-						<!-- {{ $i18n.t('ls_error.' + error[5], error[6]) }} -->
-						{{ error.info }}
-					</tooltip>
-				</template>
-			</div>
+			<template v-for="(problems, entrypoint) of ai.problems">
+				<tooltip v-for="(error, p) of problems" :key="entrypoint + p">
+					<template v-slot:activator="{ on }">
+						<div :style="{top: (100 * error.start_line / lines) + '%'}" :class="{warning: error.level === 1, todo: error.level === 2}" class="error-band" v-on="on" @click="$emit('jump', ai, error.start_line)"></div>
+					</template>
+					<v-icon v-if="error.level === 0" class="tooltip error">mdi-close-circle-outline</v-icon>
+					<v-icon v-else-if="error.level === 1" class="tooltip warning">mdi-alert-circle-outline</v-icon>
+					<v-icon v-else class="tooltip todo">mdi-format-list-checks</v-icon>
+					<!-- {{ $i18n.t('ls_error.' + error[5], error[6]) }} -->
+					{{ error.info }}
+				</tooltip>
+			</template>
 		</div>
 		<div v-show="searchEnabled" class="search-panel">
 			<v-icon>mdi-magnify</v-icon>
@@ -1786,25 +1784,22 @@
 		line-height: 40px;
 		white-space: nowrap;
 	}
-	.errors-band {
+	.error-band {
 		width: 10px;
 		position: absolute;
 		right: 0;
 		top: 0;
 		bottom: 0;
-		.error {
-			background: red;
-			height: 10px;
-			width: 100%;
-			position: absolute;
-			z-index: 6;
-			cursor: pointer;
-			&.warning {
-				background: #ff9100;
-			}
-			&.todo {
-				background: #0099ff;
-			}
+		background: red;
+		height: 10px;
+		position: absolute;
+		z-index: 6;
+		cursor: pointer;
+		&.warning {
+			background: #ff9100;
+		}
+		&.todo {
+			background: #0099ff;
 		}
 	}
 	.tooltip {
