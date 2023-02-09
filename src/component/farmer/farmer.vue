@@ -424,7 +424,7 @@
 					<flag />
 					<h4>{{ $t('no_country') }}</h4>
 				</div>
-				<div v-for="country in countries" :key="country" class="country" @click="selectCountry(country)">
+				<div v-for="country in LeekWars.countries" :key="country" class="country" @click="selectCountry(country)">
 					<flag :code="country" />
 					<h4>{{ $t('country.' + country) }}</h4>
 				</div>
@@ -561,7 +561,6 @@
 			TROPHIES[322 - 1],
 			TROPHIES[320 - 1],
 		]
-		countries: string[] = []
 
 		get id(): any {
 			return this.$route.params.id ? parseInt(this.$route.params.id, 10) : (this.$store.state.farmer ? this.$store.state.farmer.id : null)
@@ -855,11 +854,7 @@
 
 		openCountryDialog() {
 			this.countryDialog = true
-			if (!this.countries.length) {
-				LeekWars.get<any>('country/get-all').then((countries) => {
-					this.countries = Object.freeze(countries)
-				})
-			}
+			LeekWars.loadCountries()
 		}
 	}
 </script>

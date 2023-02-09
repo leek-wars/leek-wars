@@ -3,10 +3,53 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">
-				<!-- TODO tabs active classes -->
 				<router-link :to="rankingLeekURL"><div class="tab" :class="{active: category === 'leek'}">{{ $t('leeks') }}</div></router-link>
 				<router-link :to="rankingFarmerURL"><div class="tab" :class="{active: category === 'farmer'}">{{ $t('farmers') }}</div></router-link>
 				<router-link :to="rankingTeamURL"><div class="tab" :class="{active: category === 'team'}">{{ $t('teams') }}</div></router-link>
+				<router-link :to="rankingLevelURL">
+					<div class="tab" :class="{active: category.startsWith('level')}">
+						{{ $t('main.level_n', [rankingLevel]) }}
+						<v-menu offset-y>
+							<template v-slot:activator="{ on }">
+								<v-icon v-on="on" @click.prevent="">mdi-chevron-down</v-icon>
+							</template>
+							<v-list>
+								<router-link v-for="level of [50, 100, 150, 200, 250, 300]" :key="level" :to="'/ranking/level-' + level + (LeekWars.rankingActive ? '/active' : '')">
+									<v-list-item v-ripple >
+										<v-list-item-content>
+											<v-list-item-title>{{ $t('main.level_n', [level]) }}</v-list-item-title>
+										</v-list-item-content>
+									</v-list-item>
+								</router-link>
+							</v-list>
+						</v-menu>
+					</div>
+				</router-link>
+				<router-link :to="rankingCountryURL">
+					<div class="tab" :class="{active: category.startsWith('country')}">
+						{{ $t('main.country') }}
+						<flag :code="rankingCountry"></flag>
+						<v-menu v-model="countryList" offset-y>
+							<template v-slot:activator="{ on }">
+								<v-icon v-on="on" @click.prevent="">mdi-chevron-down</v-icon>
+							</template>
+							<v-list class="country-list">
+								<v-list-item v-if="$store.state.farmer" v-ripple>
+									<flag :code="$store.state.farmer.country"></flag>
+									<v-list-item-content>
+										{{ $t('country.' + $store.state.farmer.country) }}
+									</v-list-item-content>
+								</v-list-item>
+								<router-link v-for="country in LeekWars.countries" :key="country" :to="'/ranking/country-' + country + (LeekWars.rankingActive ? '/active' : '')">
+									<v-list-item v-ripple >
+										<flag :code="country"></flag>
+										<v-list-item-content>{{ $t(`country.${country}`) }}</v-list-item-content>
+									</v-list-item>
+								</router-link>
+							</v-list>
+						</v-menu>
+					</div>
+				</router-link>
 				<router-link to="/ranking/fun"><div class="tab" :class="{active: category === 'fun'}">{{ $t('fun') }}</div></router-link>
 				<router-link to="/statistics"><div class="tab">{{ $t('statistics') }}</div></router-link>
 				<div class="tab action" icon="search" @click="openSearch">
@@ -52,16 +95,16 @@
 				<div class="center">
 					<pagination :current="page" :total="pages" :url="url" />
 					<div v-if="$store.state.farmer" class="me-buttons">
-						<template v-if="category === 'leek'">
+						<template v-if="displayCategory === 'leek'">
 							<v-btn v-for="leek in $store.state.farmer.leeks" :key="leek.id" @click="LeekWars.goToRanking('leek', order, leek.id)">{{ leek.name }}</v-btn>
 						</template>
 						<v-btn v-else-if="category === 'farmer'" @click="LeekWars.goToRanking('farmer', order, $store.state.farmer.id)">{{ $t('my_farmer') }}</v-btn>
 						<v-btn v-else-if="category === 'team' && $store.state.farmer.team" @click="LeekWars.goToRanking('team', order, $store.state.farmer.team.id)">{{ $t('my_team') }}</v-btn>
 					</div>
-					<v-switch v-model="activeSwitch" :label="$t('hide_inactives')" class="inactives" @change="toggleInactives" />
+					<v-switch v-model="activeSwitch" :label="$t('hide_inactives')" hide-details class="inactives" @change="toggleInactives" />
 				</div>
 				<div class="scroll-x">
-					<table v-if="category === 'leek'" class="ranking large">
+					<table v-if="displayCategory === 'leek'" class="ranking large">
 						<tr class="header">
 							<th class="ranking-column">{{ $t('place') }}</th>
 							<th>
@@ -89,7 +132,7 @@
 								</router-link>
 							</th>
 							<th class="column-farmer">{{ $t('main.farmer') }}</th>
-							<th>{{ $t('country') }}</th>
+							<th>{{ $t('main.country') }}</th>
 							<th class="column-team">{{ $t('main.team') }}</th>
 						</tr>
 						<ranking-leek-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: searchResult == row.rank}" />
@@ -122,7 +165,7 @@
 								</router-link>
 							</th>
 							<th>{{ $t('leeks') }}</th>
-							<th>{{ $t('country') }}</th>
+							<th>{{ $t('main.country') }}</th>
 							<th>{{ $t('main.team') }}</th>
 						</tr>
 						<ranking-farmer-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: searchResult == row.rank}" />
@@ -233,6 +276,8 @@
 		searchResults: any[] | null = null
 		@Prop() active!: boolean
 		activeSwitch: boolean = false
+		countryList: boolean = false
+		displayCategory: string = ''
 
 		get url() {
 			return '/ranking' + (this.category !== 'leek' || this.order !== 'talent' || this.active ? '/' + this.category : '') + (this.order !== 'talent' || this.active ? '/' + this.order : '') + (this.activeSwitch ? '/active' : '')
@@ -246,13 +291,33 @@
 		get rankingTeamURL() {
 			return '/ranking/team' + (LeekWars.rankingActive ? '/active' : '')
 		}
+		get rankingLevelURL() {
+			return '/ranking/level-' + this.rankingLevel + (LeekWars.rankingActive ? '/active' : '')
+		}
+		get rankingCountryURL() {
+			return '/ranking/country-' + this.rankingCountry + (LeekWars.rankingActive ? '/active' : '')
+		}
 		get searchResult() {
 			return parseInt(this.$route.hash.replace('#rank-', ''), 10)
+		}
+		get rankingLevel(): number {
+			return this.category && this.category.startsWith('level-') ? parseInt(this.category.substring(6)) : parseInt(localStorage.getItem('ranking/level') || '50')
+		}
+		get rankingCountry() {
+			return this.category && this.category.startsWith('country-') ? this.category.substring(8) : localStorage.getItem('ranking/country') || this.$store.state.farmer?.country || 'fr'
 		}
 
 		@Watch('$route.params', {immediate: true})
 		update() {
 			this.category = 'category' in this.$route.params ? this.$route.params.category : 'leek'
+			this.displayCategory = this.category
+			if (this.category.startsWith('level-')) {
+				this.displayCategory = 'leek'
+				localStorage.setItem('ranking/level', '' + this.rankingLevel)
+			} else if (this.category.startsWith('country-')) {
+				this.displayCategory = 'farmer'
+				localStorage.setItem('ranking/country', '' + this.rankingCountry)
+			}
 			this.activeSwitch = this.active
 			if (this.category !== 'fun') {
 				this.order = 'order' in this.$route.params ? this.$route.params.order : 'talent'
@@ -354,10 +419,26 @@
 			localStorage.setItem('options/ranking-active', '' + LeekWars.rankingActive)
 			this.$router.push(this.url)
 		}
+
+		@Watch('countryList')
+		updateCountryList() {
+			if (this.countryList) {
+				LeekWars.loadCountries()
+			}
+		}
 	}
 </script>
 
 <style lang="scss" scoped>
+	.center {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+	.tab button {
+		margin-right: -6px;
+	}
 	.panel .content {
 		padding: 0
 	}
@@ -366,15 +447,13 @@
 		display: inline-block;
 	}
 	.me-buttons {
-		padding-top: 8px;
 		display: inline-flex;
 		.button {
 			margin: 0 3px;
 		}
 	}
 	.inactives {
-		padding-left: 8px;
-		margin-bottom: -6px;
+		padding: 10px;
 		vertical-align: bottom;
 	}
 	.ranking.large {
@@ -508,5 +587,12 @@
 		padding: 0 6px;
 		height: 36px;
 		margin-bottom: 15px;
+	}
+	.country-list {
+		max-height: 500px;
+		.flag {
+			width: 30px;
+			margin-right: 10px;
+		}
 	}
 </style>

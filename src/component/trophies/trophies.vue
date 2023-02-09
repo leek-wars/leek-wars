@@ -333,7 +333,6 @@
 		padding: 8px;
 	}
 	.v-input--switch {
-		margin-left: 8px;
 		margin-right: -12px;
 	}
 	.global {

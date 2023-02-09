@@ -14,6 +14,7 @@ import { TranslateResult } from 'vue-i18n'
 import { Chat, ChatWindow } from './chat'
 import { i18n, loadLanguageAsync } from './i18n'
 import { ItemType } from './item'
+import { Leek } from './leek'
 import { PotionEffect, PotionTemplate } from './potion'
 
 const DEV = window.location.port === '8080'
@@ -560,6 +561,16 @@ const LeekWars = {
 				for (const page in pages) {
 					Vue.set(LeekWars.encyclopediaById[locale], pages[page].id, pages[page])
 				}
+			})
+		}
+	},
+	countries: [] as string[],
+	loadCountries: () => {
+		console.log("load countries")
+		if (!LeekWars.countries.length) {
+			LeekWars.get<string[]>('country/get-all').then((data) => {
+				LeekWars.countries = data
+				console.log(LeekWars.countries)
 			})
 		}
 	},

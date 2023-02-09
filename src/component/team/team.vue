@@ -331,7 +331,7 @@
 							<b slot="max">{{ composition.tournamentRange.max }}</b>
 						</i18n>
 					</tooltip>
-					<div v-if="captain" class="delete-compo button flat" @click="compositionToDelete = composition; deleteCompoDialog = true">
+					<div v-if="captain" class="delete-compo button red" @click="compositionToDelete = composition; deleteCompoDialog = true">
 						<v-icon>mdi-close</v-icon>
 					</div>
 					<div v-if="captain" class="button flat" @click="compositionToRename = composition; renameCompoName = composition.name; renameCompoDialog = true">

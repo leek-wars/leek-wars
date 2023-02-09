@@ -1,6 +1,6 @@
 236:
   added:
-    - rien
+    - Possibilité de bloquer l'XP d'un poireau, pour ne plus gagner de niveau.
   improved:
     - Les notifications push montrent le message entier pour les MP, forum, commentaire.
     - "Amélioration des images de drapeaux. #img_236_flags"
