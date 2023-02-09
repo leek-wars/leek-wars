@@ -8,6 +8,7 @@
     - "Amélioration des images de drapeaux. #img_236_flags"
     - Regroupement de certains pays (195 au lieu de 223).
     - "Ajout d'une erreur pour une boucle for in sur une valeur non-itérable. #img_236_iterable_warning"
+    - "LeekScript : ajout d'une opération sur les opérateurs || et &&."
   fixed:
     - Correction de la statistique nombre de Battle Royales.
     - Correction de la traduction des notifications de tournoi par mail et push.
@@ -16,6 +17,7 @@
     - Correction de la fonction mapRemoveAll avec des valeurs null.
     - Correction (encore) du bug de duplication de poireau dans le lecteur.
     - "Ajout d'une erreur quand un argument de méthode est dupliqué #img_236_duplicated_arg"
+    - "Éditeur : correction de la barre de défilement qui n'était pas cliquable."
 
 235:
   title: Traduction Espagnole, pays dans le potager, messages de bot sur le chat et défis d'équipe.
@@ -41,6 +43,7 @@
     - Correction des IA à la création des scenarios de test d'équipe.
     - Gain de puissance sur les coffres activé en défi.
     - Correction d'un bug de reconnexion multiple à la websocket.
+    - Trophées "Pas bouger" et "Chut" ne fonctionnent plus sur les bulbes + amélioration de la condition.
 
 234:
   title: "Nouveau tutoriel, Épée lourde, Créations de la communauté."

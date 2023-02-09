@@ -169,7 +169,7 @@
 								</router-link>
 							</th>
 							<th>
-								<router-link :to="getURL('farmer', 'total_level', country, inactive)">
+								<router-link :to="getURL('farmer', 'total-level', country, inactive)">
 									<span>{{ $t('total_level') }}</span>
 									<v-icon v-if="order === 'total-level'">mdi-chevron-up</v-icon>
 								</router-link>
