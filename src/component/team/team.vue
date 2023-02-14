@@ -1054,7 +1054,7 @@
 
 		updateLogsLevel() {
 			this.my_member!.logs_level = this.logsLevel
-			LeekWars.post('team/set-logs-level', {level: this.logsLevel})
+			LeekWars.put('team/set-logs-level', {level: this.logsLevel})
 		}
 
 		loadTournamentRange(composition: Composition) {
