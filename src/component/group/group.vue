@@ -44,6 +44,7 @@
 				<div v-if="group && group.is_supervisor">
 					<br>
 					<v-btn @click="startBattleRoyale"><v-icon>mdi-sword-cross</v-icon>&nbsp; Lancer une Battle Royale</v-btn>
+					<v-btn @click="startTournament"><v-icon>mdi-trophy</v-icon>&nbsp; Lancer un tournoi</v-btn>
 				</div>
 			</div>
 		</panel>
@@ -386,6 +387,12 @@
 		startBattleRoyale() {
 			LeekWars.post('groupe/start-battle-royale').then(data => {
 				this.$router.push('/fight/' + data.fight)
+			}).error(error => LeekWars.toast(this.$t(error.error)))
+		}
+
+		startTournament() {
+			LeekWars.post('groupe/start-solo-tournament').then(data => {
+				this.$router.push('/tournament/' + data.tournament)
 			}).error(error => LeekWars.toast(this.$t(error.error)))
 		}
 
