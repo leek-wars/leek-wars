@@ -424,9 +424,9 @@
 					<flag />
 					<h4>{{ $t('no_country') }}</h4>
 				</div>
-				<div v-for="country in countries" :key="country.code" class="country" @click="selectCountry(country.code)">
-					<flag :code="country.code" />
-					<h4>{{ $t('country.' + country.code) }}</h4>
+				<div v-for="country in countries" :key="country" class="country" @click="selectCountry(country)">
+					<flag :code="country" />
+					<h4>{{ $t('country.' + country) }}</h4>
 				</div>
 			</div>
 		</popup>
@@ -856,8 +856,8 @@
 		openCountryDialog() {
 			this.countryDialog = true
 			if (!this.countries.length) {
-				LeekWars.get<any>('country/get-all').then((data) => {
-					this.countries = Object.freeze(data.countries)
+				LeekWars.get<any>('country/get-all').then((countries) => {
+					this.countries = Object.freeze(countries)
 				})
 			}
 		}
