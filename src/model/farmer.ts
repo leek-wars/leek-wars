@@ -59,7 +59,7 @@ class Farmer {
 	public resources!: any[]
 	public verified!: boolean
 	public tutorial_progress!: number
-	public groupe!: Group
+	public group!: Group
 	public public_chat_enabled!: boolean
 	public equipment_enabled!: boolean
 }

@@ -92,9 +92,9 @@
 					<div class="text">{{ $t("main.forum") }}</div>
 				</router-link>
 
-				<router-link v-if="$store.state.farmer && $store.state.farmer.groupe" v-ripple :to="'/group/' + $store.state.farmer.groupe.id" class="section" @click.native="clickItem">
+				<router-link v-if="$store.state.farmer && $store.state.farmer.group" v-ripple :to="'/group/' + $store.state.farmer.group.id" class="section" @click.native="clickItem">
 					<v-icon>mdi-account-group</v-icon>
-					<div class="text">{{ $store.state.farmer.groupe.name }}</div>
+					<div class="text">{{ $store.state.farmer.group.name }}</div>
 				</router-link>
 
 				<router-link v-if="$store.getters.moderator" v-ripple :label="$store.state.farmer.reportings || null" to="/moderation" class="section" tab="moderation" @click.native="clickItem">

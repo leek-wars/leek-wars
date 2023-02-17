@@ -118,8 +118,8 @@
 				const team_chats = [
 					{ id: this.$store.state.farmer.team.chat, name: this.$store.state.farmer.team.name, icon: 'mdi-chat-outline' },
 				]
-				if (this.$store.state.farmer.groupe) {
-					team_chats.push({ id: this.$store.state.farmer.groupe.chat, name: this.$store.state.farmer.groupe.name, icon: 'mdi-chat-outline' })
+				if (this.$store.state.farmer.group) {
+					team_chats.push({ id: this.$store.state.farmer.group.chat, name: this.$store.state.farmer.group.name, icon: 'mdi-chat-outline' })
 				}
 				chats.push({name: this.$t('cat_team'), icon: 'mdi-account-multiple', chats: team_chats })
 			}
