@@ -180,19 +180,23 @@
 
 					<tournament-block :item="tournament.winner.name ? tournament.winner : null" :x="-60" :y="-395" :size="120" />
 				</svg>
-
-				<pre v-if="$store.getters.admin && tournament">
-Min power: {{ tournament.min_power | number }}
-Max power: {{ tournament.max_power | number }}
-				</pre>
 			</div>
 		</panel>
 
 		<div v-show="tooltip" :style="{left: tooltipX + 'px', top: tooltipY + 'px'}" class="tooltip v-tooltip__content">{{ tooltipText }}</div>
 
+		<panel v-if="$store.getters.admin || tournament?.group == $store.state.farmer?.supervised_group" title="Admin" icon="mdi-security">
+			<v-btn color="primary" @click="generateTournament"><v-icon>mdi-play</v-icon> Générer le prochain round</v-btn>
+			<br><br>
+			<pre v-if="$store.getters.admin && tournament">
+Min power: {{ tournament.min_power | number }}
+Max power: {{ tournament.max_power | number }}</pre>
+		</panel>
+
 		<panel :title="$t('comments')" icon="mdi-comment-multiple-outline">
 			<comments :comments="tournament ? tournament.comments : null" @comment="comment" />
 		</panel>
+
 	</div>
 </template>
 
@@ -300,6 +304,13 @@ Max power: {{ tournament.max_power | number }}
 			if (!this.tournament.finished && this.tournament.next_round > 0) {
 				update()
 			}
+		}
+
+		generateTournament() {
+			if (!this.tournament) { return }
+			LeekWars.post('tournament/generate', { tournament_id: this.tournament.id }).then(() => {
+				LeekWars.toast('Génération démarée')
+			}).error(error => LeekWars.toast(this.$t(error.error, error.params)))
 		}
 	}
 </script>
