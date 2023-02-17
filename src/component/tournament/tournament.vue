@@ -208,4 +208,8 @@ Max power: {{ tournament.max_power | number }}</pre>
 .small-loader {
 	padding: 0;
 }
+.grey {
+	filter: grayscale(100%);
+	opacity: 0.25;
+}
 </style>

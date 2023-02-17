@@ -346,6 +346,7 @@
 
 		<polyline class="line" points="0 -220, 0 -295" />
 
+		<image :x="-117" :y="-385" :height="89" xlink:href="/image/laurel.png" :class="{grey: !tournament.winner.name}" />
 		<tournament-block :item="tournament.winner.name ? tournament.winner : null" :x="-60" :y="-395" :size="120" />
 	</svg>
 </template>

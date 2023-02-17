@@ -1,6 +1,7 @@
 <template>
 	<a :xlink:href="link" @click="click">
-		<rect :x="x" :y="y" :class="{'no-fight': !fight}" class="fight" width="30" height="30" />
+		<rect :x="x" :y="y" :class="{'no-fight': !fight}" class="fight" :width="30" :height="30" />
+		<image v-if="fight" :x="x + 6" :y="y + 6" :width="18" :height="18" xlink:href="/image/icon/garden.png" />
 	</a>
 </template>
 
