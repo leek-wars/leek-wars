@@ -123,13 +123,12 @@
 	}
 	.header > .actions ::v-deep .button {
 		height: 36px;
-		line-height: 36px;
 		color: white;
 		padding: 0 10px;
 		cursor: pointer;
 		display: inline-flex;
 		user-select: none;
-		vertical-align: bottom;
+		align-items: center;
 		gap: 6px;
 		img {
 			height: 36px;

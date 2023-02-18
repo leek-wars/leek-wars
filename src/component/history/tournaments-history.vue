@@ -1,7 +1,7 @@
 <template lang="html">
 	<div class="history">
 		<div v-for="(tournament, t) in tournaments" :key="t" class="wrapper">
-			<tournament-history :tournament="tournament" />
+			<tournament-history :tournament="tournament" :show-time="showTime" />
 		</div>
 	</div>
 </template>
@@ -14,6 +14,7 @@
 	@Component({ name: 'tournaments-history', components: { TournamentHistory } })
 	export default class TournamentsHistory extends Vue {
 		@Prop() tournaments!: Tournament[]
+		@Prop() showTime!: boolean
 	}
 </script>
 

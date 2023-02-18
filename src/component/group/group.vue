@@ -44,7 +44,10 @@
 				<div v-if="group && group.is_supervisor">
 					<br>
 					<v-btn @click="startBattleRoyale"><v-icon>mdi-sword-cross</v-icon>&nbsp; Lancer une Battle Royale</v-btn>
-					<v-btn @click="startTournament"><v-icon>mdi-trophy</v-icon>&nbsp; Lancer un tournoi</v-btn>
+					<router-link v-if="group.tournament" :to="'/tournament/' + group.tournament">
+						<v-btn color="primary"><v-icon>mdi-trophy</v-icon>&nbsp; Voir le tournoi</v-btn>
+					</router-link>
+					<v-btn v-else @click="startTournament"><v-icon>mdi-trophy</v-icon>&nbsp; Lancer un tournoi</v-btn>
 				</div>
 			</div>
 		</panel>
@@ -108,7 +111,7 @@
 				</div>
 				<div v-if="group.is_supervisor && !equipmentEditing" class="button green" @click="applyEquipment">
 					<v-icon>mdi-upload</v-icon> {{ $t('main.apply') }}
-					<loader class="small-loader" v-if="applyingEquipment" size="36" />
+					<loader class="small-loader" v-if="applyingEquipment" size="30" />
 				</div>
 				<div v-if="equipmentEditing" class="button" @click="equipmentEditing = false">
 					<v-icon>mdi-close</v-icon> {{ $t('main.cancel') }}
@@ -193,6 +196,21 @@
 				</div>
 			</div>
 		</panel>
+
+		<div class="container large">
+			<panel v-if="group && group.fights && group.fights.length > 0" :title="$t('main.fights')" icon="mdi-sword-cross">
+				<!-- <template v-if="group" slot="actions">
+					<router-link :to="'/leek/' + group.id + '/history'" class="button flat">
+						<v-icon>mdi-history</v-icon>
+						<span>{{ $t('history') }}</span>
+					</router-link>
+				</template> -->
+				<fights-history slot="content" :fights="group.fights" />
+			</panel>
+			<panel v-if="group && group.tournaments && group.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-trophy">
+				<tournaments-history slot="content" :tournaments="group.tournaments" :show-time="true" />
+			</panel>
+		</div>
 
 		<div v-if="group" class="container last">
 			<panel :title="$t('settings')" icon="mdi-settings-outline">
@@ -313,9 +331,11 @@
 	import { ORDERED_CHIPS } from '@/model/sorted_chips'
 	import { CHIPS } from '@/model/chips'
 	import CapitalDialog from '../leek/capital-dialog.vue'
+	import FightsHistory from '@/component/history/fights-history.vue'
+	import TournamentsHistory from '@/component/history/tournaments-history.vue'
 
 	@Component({ name: 'group', i18n: {}, mixins: [...mixins], components: {
-		chat: ChatElement, RichTooltipTeam, RichTooltipFarmer, CharacteristicTooltip, RichTooltipItem, CapitalDialog
+		chat: ChatElement, RichTooltipTeam, RichTooltipFarmer, CharacteristicTooltip, RichTooltipItem, CapitalDialog, FightsHistory, TournamentsHistory
 	}})
 	export default class GroupPage extends Vue {
 
@@ -368,6 +388,7 @@
 				}
 				this.renameGroupName = group.name
 				LeekWars.setTitle(group.name)
+				this.$root.$emit('loaded')
 			})
 		}
 

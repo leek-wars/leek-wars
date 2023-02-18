@@ -10,7 +10,7 @@
 	export default class LWLoader extends Vue {
 		@Prop() size!: number
 		get s() { return this.size || 60 }
-		get w() { return this.s / 14 }
+		get w() { return Math.max(3, this.s / 14) }
 	}
 </script>
 

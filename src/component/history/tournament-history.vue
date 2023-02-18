@@ -5,7 +5,7 @@
 				<div v-for="(round, r) of participant" :key="r" class="round" :class="{win: round === 1, lose: round === -1}"></div>
 			</div>
 			<div class="foreground">
-				{{ $t('main.tournament_of', [LeekWars.formatDate(tournament.date)]) }}
+				{{ $t('main.tournament_of', [showTime ? LeekWars.formatDateTime(tournament.date) : LeekWars.formatDate(tournament.date)]) }}
 				<div class="date">{{ tournament.date | duration }}</div>
 			</div>
 		</div>
@@ -18,6 +18,7 @@
 	@Component({ name: 'tournament-history' })
 	export default class TournamentHistory extends Vue {
 		@Prop() tournament!: Tournament
+		@Prop() showTime!: boolean
 	}
 </script>
 

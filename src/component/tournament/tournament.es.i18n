@@ -6,5 +6,8 @@
 	"not_found": "ID de torneo {0} no encontrado :(",
 	"send": "Enviar a",
 	"solo": "Torneo en solitario del {0}",
-	"team": "Torneo por equipos del {0}"
+	"team": "Torneo por equipos del {0}",
+	"next_round_supervisor": "La próxima ronda será iniciada por el supervisor.",
+	"generate": "Generar la siguiente ronda",
+	"generating": "La generación actual..."
 }

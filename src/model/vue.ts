@@ -217,11 +217,11 @@ const vueMain = new Vue({
 			Vue.nextTick(() => {
 				// console.log("loaded", this.$data.savedPosition)
 				if (this.$data.savedPosition > 0) {
-					window.scrollTo(0, this.$data.savedPosition)
+					// window.scrollTo(0, this.$data.savedPosition)
 					setTimeout(() => {
 						window.scrollTo(0, this.$data.savedPosition)
 						this.$data.savedPosition = 0
-					}, 100)
+					})
 				}
 			})
 		})

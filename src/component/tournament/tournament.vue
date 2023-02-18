@@ -2,8 +2,10 @@
 	<div class="tournament-page page">
 		<div class="page-header page-bar">
 			<h1>{{ tournament ? title : '...' }}</h1>
-			<div v-if="!LeekWars.mobile" class="tabs">
-				<div v-if="tournament && !tournament.finished" class="tab disabled">{{ timerText }}</div>
+			<div v-if="!LeekWars.mobile && tournament && !tournament.finished" class="tabs">
+				<div v-if="generating && ($store.getters.admin || tournament?.group == $store.state.farmer?.supervised_group)" class="tab disabled"><loader class="small-loader" :size="25" /> {{ $t('generating') }}</div>
+				<div v-else-if="!generating && ($store.getters.admin || tournament?.group == $store.state.farmer?.supervised_group)" class="tab green" @click="generateTournament"><v-icon>mdi-play</v-icon> {{ $t('generate') }}</div>
+				<div v-else-if="!tournament.finished" class="tab disabled">{{ timerText }}</div>
 			</div>
 		</div>
 		<panel class="first">
@@ -180,18 +182,14 @@
 
 					<tournament-block :item="tournament.winner.name ? tournament.winner : null" :x="-60" :y="-395" :size="120" />
 				</svg>
+
+				<pre class="info" v-if="$store.getters.admin && tournament">
+Min power: {{ tournament.min_power | number }}
+Max power: {{ tournament.max_power | number }}</pre>
 			</div>
 		</panel>
 
 		<div v-show="tooltip" :style="{left: tooltipX + 'px', top: tooltipY + 'px'}" class="tooltip v-tooltip__content">{{ tooltipText }}</div>
-
-		<panel v-if="$store.getters.admin || tournament?.group == $store.state.farmer?.supervised_group" title="Admin" icon="mdi-security">
-			<v-btn color="primary" @click="generateTournament"><v-icon>mdi-play</v-icon> Générer le prochain round</v-btn>
-			<br><br>
-			<pre v-if="$store.getters.admin && tournament">
-Min power: {{ tournament.min_power | number }}
-Max power: {{ tournament.max_power | number }}</pre>
-		</panel>
 
 		<panel :title="$t('comments')" icon="mdi-comment-multiple-outline">
 			<comments :comments="tournament ? tournament.comments : null" @comment="comment" />
@@ -208,8 +206,10 @@ Max power: {{ tournament.max_power | number }}</pre>
 	import { Tournament } from '@/model/tournament'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import Comments from '@/component/comment/comments.vue'
+	import { SocketMessage } from '@/model/socket'
+	import { mixins } from '@/model/i18n'
 
-	@Component({ name: 'tournament', i18n: {}, components: {
+	@Component({ name: 'tournament', i18n: {}, mixins: [...mixins], components: {
 		'tournament-block': TournamentBlock,
 		'tournament-fight': TournamentFight,
 		Comments
@@ -231,12 +231,29 @@ Max power: {{ tournament.max_power | number }}</pre>
 		timerText: string = ''
 		timer: any
 		actions = [{icon: 'mdi-magnify-plus-outline', click: () => this.zoom()}]
+		generating: boolean = false
+
+		created() {
+			this.$root.$on('tournament-update', (data: any) => {
+				if (this.tournament && data[0] === this.tournament.id) {
+					LeekWars.get<Tournament>('tournament/get/' + this.$route.params.id).then(tournament => {
+						this.tournament = tournament
+						this.generating = false
+						this.sixteenths = tournament.rounds.sixteenths
+						this.eighths = tournament.rounds.eighths
+						this.quarters = tournament.rounds.quarters
+						this.semifinals = tournament.rounds.semifinals
+						this.finals = tournament.rounds.finals
+					})
+				}
+			})
+		}
 
 		@Watch('$route.params', {immediate: true})
 		update() {
 			this.tournament = null
-			LeekWars.get('tournament/get/' + this.$route.params.id).then(data => {
-				this.tournament = data.tournament
+			LeekWars.get<Tournament>('tournament/get/' + this.$route.params.id).then(tournament => {
+				this.tournament = tournament
 				if (!this.tournament) { return }
 
 				this.sixteenths = this.tournament.rounds.sixteenths
@@ -245,19 +262,30 @@ Max power: {{ tournament.max_power | number }}</pre>
 				this.semifinals = this.tournament.rounds.semifinals
 				this.finals = this.tournament.rounds.finals
 
-				this.title = this.$t('' + this.tournament.type, [LeekWars.formatDate(this.tournament.date)]) as string
+				this.title = this.$t('' + this.tournament.type, [LeekWars.formatDateTime(this.tournament.date)]) as string
 				LeekWars.setTitle(this.title)
 				LeekWars.setActions(this.actions)
-				this.setupTimer()
+				if (this.tournament.group) {
+					this.timerText = this.$t('next_round_supervisor') as string
+				} else {
+					this.setupTimer()
+				}
+				LeekWars.socket.send([SocketMessage.TOURNAMENT_LISTEN, this.tournament.id])
+				this.$root.$emit('loaded')
 			})
 			this.$root.$on('tooltip', this.tooltipOpen)
 			this.$root.$on('tooltip-close', this.tooltipClose)
 		}
+
 		beforeDestroy() {
 			clearTimeout(this.timer)
 			this.$root.$off('tooltip', this.tooltipOpen)
 			this.$root.$off('tooltip-close', this.tooltipClose)
+			if (this.tournament) {
+				LeekWars.socket.send([SocketMessage.TOURNAMENT_UNLISTEN, this.tournament.id])
+			}
 		}
+
 		tooltipOpen(x: number, y: number, text: string) {
 			this.tooltip = true
 			const width = (this.$refs.sizer as any).offsetWidth - 30
@@ -266,9 +294,11 @@ Max power: {{ tournament.max_power | number }}</pre>
 			this.tooltipY = 60 + (400 + y) * ratio
 			this.tooltipText = text
 		}
+
 		tooltipClose() {
 			this.tooltip = false
 		}
+
 		comment(comment: Comment) {
 			if (!this.tournament) { return }
 			LeekWars.post('tournament/comment', {tournament_id: this.tournament.id, comment: comment.comment}).then(data => {
@@ -277,6 +307,7 @@ Max power: {{ tournament.max_power | number }}</pre>
 				}
 			})
 		}
+
 		zoom() {
 			if (this.zoomed) {
 				this.zoomed = false
@@ -308,8 +339,9 @@ Max power: {{ tournament.max_power | number }}</pre>
 
 		generateTournament() {
 			if (!this.tournament) { return }
+			this.generating = true
 			LeekWars.post('tournament/generate', { tournament_id: this.tournament.id }).then(() => {
-				LeekWars.toast('Génération démarée')
+
 			}).error(error => LeekWars.toast(this.$t(error.error, error.params)))
 		}
 	}
@@ -335,4 +367,11 @@ Max power: {{ tournament.max_power | number }}</pre>
 		stroke-width: 3;
 		fill: none;
 	}
+.info {
+	text-align: center;
+	margin-top: -36px;
+}
+.small-loader {
+	padding: 0;
+}
 </style>

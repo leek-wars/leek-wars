@@ -58,6 +58,9 @@ enum SocketMessage {
 	EDITOR_HOVER = 54,
 	CHAT_DELETE = 56,
 	WRONG_TOKEN = 57,
+	TOURNAMENT_LISTEN = 58,
+	TOURNAMENT_UNLISTEN = 59,
+	TOURNAMENT_UPDATE = 60,
 }
 
 class Socket {
@@ -218,6 +221,10 @@ class Socket {
 				}
 				case SocketMessage.FIGHT_PROGRESS: {
 					vueMain.$emit('fight-progress', data)
+					break
+				}
+				case SocketMessage.TOURNAMENT_UPDATE: {
+					vueMain.$emit('tournament-update', data)
 					break
 				}
 				case SocketMessage.UPDATE_HABS: {
