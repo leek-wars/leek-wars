@@ -25,7 +25,7 @@
 						</span>
 						<talent :id="leek.id" :talent="leek.talent" category="leek" />
 						<span class="talent-more">({{ leek.talent_more >= 0 ? '+' + leek.talent_more : leek.talent_more }})</span>
-						<ranking-badge v-if="leek && leek.ranking <= 1000 && leek.in_garden" :id="leek.id" :ranking="leek.ranking" category="leek" />
+						<ranking-badge v-if="leek && leek.ranking && leek.ranking <= 1000 && leek.in_garden" :id="leek.id" :ranking="leek.ranking" category="leek" />
 						<span class="level">• {{ $t('main.level_n', [leek.level]) }}</span>
 						<v-btn class="expand" icon small @click="expand_items = !expand_items">
 							<v-icon v-if="expand_items">mdi-chevron-up</v-icon>
