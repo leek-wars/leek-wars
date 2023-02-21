@@ -153,6 +153,7 @@ const routes = [
 	{ path: '/inventory', component: Inventory },
 	{ path: '/legal', component: Legal },
 	{ path: '/login', component: Login, beforeEnter: disconnected },
+	{ path: '/login/:token', component: Login },
 	{ path: '/leek/:id', name: 'leek', component: Leek },
 	{ path: '/leek/:id/history', component: History, props: {type: 'leek'} },
 	{ path: '/market', name: 'market', component: Market, meta: {noscrollapp: true}, beforeEnter: connected },

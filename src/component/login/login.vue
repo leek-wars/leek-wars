@@ -51,6 +51,17 @@
 		created() {
 			LeekWars.setTitle(this.$t('title'))
 			this.form.keep_connected = localStorage.getItem("keep_connected") === 'true'
+
+			const token = this.$route.params.token
+			if (token) {
+				LeekWars.post('farmer/login-comeback', { token }).then(data => {
+					const token = LeekWars.DEV ? data.token : '$'
+					this.$store.commit('connect', {...data, token})
+					this.$router.push('/')
+				}).error(error => {
+					LeekWars.toast(error.error)
+				})
+			}
 		}
 
 		login() {

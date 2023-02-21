@@ -62,6 +62,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				chats: {id: number, read: boolean}[],
 				token: string
 			}) {
+			store.commit("reset")
 			state.farmer = data.farmer
 			for (const id in state.farmer.leeks) {
 				Vue.set(state.farmer.leeks[id], 'country', state.farmer.country)
@@ -101,6 +102,10 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 
 		"disconnect"(state: LeekWarsState) {
 			LeekWars.post('farmer/disconnect')
+			store.commit("reset")
+		},
+
+		"reset"(state: LeekWarsState) {
 			state.connected = false
 			localStorage.removeItem('connected')
 			localStorage.removeItem('login-attempt')
