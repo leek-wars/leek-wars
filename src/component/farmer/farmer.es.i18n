@@ -29,7 +29,7 @@
 	"draws": "corbatas",
 	"error_forbidden_name": "Este nombre de criador está prohibido.",
 	"error_name_already_used": "El nombre de tu criador ya está en uso",
-	"error_name_character_count": "El nombre de su criador debe contener entre %d y %d caracteres",
+	"error_name_length": "El nombre de su criador debe contener entre %d y %d caracteres",
 	"error_name_format": "El nombre de su criador debe contener solo caracteres alfanuméricos.",
 	"error_rename_delay": "Debes esperar un mes entre dos cambios de nombre de tu criador.",
 	"farmer_have_1_warning": "Este criador tiene 1 advertencia",

@@ -510,11 +510,11 @@ ul, ol {
 	border-bottom-left-radius: 3px;
 	border-bottom-right-radius: 3px;
 }
-.v-dialog .actions {
+.v-dialog > .actions {
 	height: 40px;
 	display: flex;
 }
-.v-dialog .actions div {
+.v-dialog > .actions div {
 	cursor: pointer;
 	display: inline-flex;
 	justify-content: center;
@@ -527,25 +527,25 @@ ul, ol {
 	line-height: 40px;
 	font-size: 20px;
 }
-.v-dialog .actions div i {
+.v-dialog > .actions div i {
 	margin-right: 4px;
 }
-.v-dialog .actions div:not(:last-child) {
+.v-dialog > .actions div:not(:last-child) {
 	border-right: 1px solid #777;
 }
-.v-dialog .actions div:hover {
+.v-dialog > .actions div:hover {
 	background: #777;
 }
-.v-dialog .actions div.red {
+.v-dialog > .actions div.red {
 	background: #c00;
 }
-.v-dialog .actions div.red:hover {
+.v-dialog > .actions div.red:hover {
 	background: #e00;
 }
-.v-dialog .actions div.green {
+.v-dialog > .actions div.green {
 	background: #5fad1b;
 }
-.v-dialog .actions div.green:hover {
+.v-dialog > .actions div.green:hover {
 	background: #73d120;
 }
 input {

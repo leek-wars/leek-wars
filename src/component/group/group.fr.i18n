@@ -1,6 +1,7 @@
 {
 	"supervisor": "Superviseur",
 	"students": "Étudiants",
+	"member": "Membre",
 	"members": "Membres",
 	"settings": "Paramètres du groupe",
 	"group_name": "Nom du groupe",
@@ -23,5 +24,21 @@
 	"saved": "Équipement sauvegardé",
 	"applied": "Équipement appliqué",
 	"too_much_weapons": "Trop d'armes équipées",
-	"too_much_chips": "Trop de puces équipées"
+	"too_much_chips": "Trop de puces équipées",
+	"add_member": "Ajouter un membre",
+	"no_member": "Aucun membre",
+	"start_br": "Lancer une Battle Royale",
+	"see_tournament": "Voir le tournoi",
+	"start_tournament": "Lancer un tournoi",
+	"3_members_min": "Vous devez avoir 3 membres minimum pour lancer une BR",
+	"4_members_min": "Vous devez avoir 4 membres minimum pour lancer un tournoi",
+	"send_invite": "Envoyer une invitation par email",
+	"remove_member": "Supprimer ce membre",
+	"delete_member_confirm_title": "Supprimer le membre \"{0}\"",
+	"delete_member_confirm": "Voulez-vous vraiment supprimer le membre \"{0}\" ? Le compte ne sera pas supprimé mais il sera retiré du groupe.",
+	"error_name_already_used": "Ce nom est déjà utilisé",
+	"error_name_format": "Le nom ne doit pas contenir des caractères spéciaux",
+	"error_name_length": "Le nom doit contenir entre {0} et {1} caractères",
+	"invite_sent": "Invitation envoyée",
+	"error_invalid_email": "L'adresse e-mail doit être valide"
 }

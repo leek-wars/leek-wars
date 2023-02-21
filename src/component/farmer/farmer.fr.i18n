@@ -29,7 +29,7 @@
 	"draws": "égalités",
 	"error_forbidden_name": "Ce nom d'éleveur est interdit.",
 	"error_name_already_used": "Le nom de votre éleveur est déjà utilisé",
-	"error_name_character_count": "Le nom de votre éleveur doit contenir entre %d et %d caractères",
+	"error_name_length": "Le nom de votre éleveur doit contenir entre %d et %d caractères",
 	"error_name_format": "Le nom de votre éleveur doit contenir uniquement des caractères alphanumériques",
 	"error_rename_delay": "Vous devez attendre un mois entre deux renommages de votre éleveur.",
 	"farmer_have_1_warning": "Cet éleveur a 1 avertissement",

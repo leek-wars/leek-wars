@@ -3,8 +3,8 @@
 		<div class="page-header page-bar">
 			<h1>{{ tournament ? title : '...' }}</h1>
 			<div v-if="!LeekWars.mobile && tournament && !tournament.finished" class="tabs">
-				<div v-if="generating && ($store.getters.admin || tournament?.group == $store.state.farmer?.supervised_group)" class="tab disabled"><loader class="small-loader" :size="25" /> {{ $t('generating') }}</div>
-				<div v-else-if="!generating && ($store.getters.admin || tournament?.group == $store.state.farmer?.supervised_group)" class="tab green" @click="generateTournament"><v-icon>mdi-play</v-icon> {{ $t('generate') }}</div>
+				<div v-if="generating && ($store.getters.admin || (tournament?.group && tournament?.group == $store.state.farmer?.supervised_group))" class="tab disabled"><loader class="small-loader" :size="25" /> {{ $t('generating') }}</div>
+				<div v-else-if="!generating && ($store.getters.admin || (tournament?.group && tournament?.group == $store.state.farmer?.supervised_group))" class="tab green" @click="generateTournament"><v-icon>mdi-play</v-icon> {{ $t('generate') }}</div>
 				<div v-else-if="!tournament.finished" class="tab disabled">{{ timerText }}</div>
 			</div>
 		</div>

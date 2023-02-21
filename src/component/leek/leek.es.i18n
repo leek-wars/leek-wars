@@ -22,7 +22,7 @@
 	"error_already_have_4_leeks": "¡Ya tienes 4 puerros!",
 	"error_forbidden_name": "Este nombre de puerro está prohibido.",
 	"error_name_already_used": "El nombre de tu puerro ya está en uso",
-	"error_name_character_count": "El nombre de tu puerro debe contener entre %d y %d caracteres",
+	"error_name_length": "El nombre de tu puerro debe contener entre %d y %d caracteres",
 	"error_name_format": "El nombre de tu puerro debe contener solo caracteres alfanuméricos",
 	"error_under_required_level_1": "Tu primer puerro debe estar en el nivel {0}.",
 	"error_under_required_level_2": "Tu segundo puerro debe estar en el nivel {0}.",

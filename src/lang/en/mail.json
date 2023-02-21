@@ -40,5 +40,8 @@
 	"reset_mail_html": "Hello <b>%s</b>!\n<br><br>\nYour password reset request has been registered.\n<br><br>\nTo reset your password, visit <a href=\"%s\">this link</a>.",
 	"reset_mail_subject": "Leek Wars: Password reset",
 	"see_the_fight": "See the fight",
-	"see_the_message": "See the message"
+	"see_the_message": "See the message",
+	"group_invite_subject": "%1$s invites you to play Leek Wars",
+	"group_invite_text": "%1$s invites you to play Leek Wars, click on the link to connect: %2$s (link valid for 1 hour).",
+	"group_invite_html": "<b>%1$s</b> invites you to play Leek Wars, click on the link to connect: <br><br> <a href=\"%2$s\">%2$s</ a> <br><br> Link valid for 1 hour, good game!"
 }

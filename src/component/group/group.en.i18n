@@ -23,5 +23,22 @@
 	"saved": "Saved Equipment",
 	"applied": "Applied equipment",
 	"too_much_weapons": "Too many weapons equipped",
-	"too_much_chips": "Too many chips equipped"
+	"too_much_chips": "Too many chips equipped",
+	"member": "Member",
+	"add_member": "Add a member",
+	"no_member": "No member",
+	"start_br": "Start a Battle Royale",
+	"see_tournament": "See the tournament",
+	"start_tournament": "Start a tournament",
+	"3_members_min": "You must have at least 3 members to launch a BR",
+	"4_members_min": "You must have at least 4 members to start a tournament",
+	"send_invite": "Send an invitation by email",
+	"remove_member": "Remove this member",
+	"delete_member_confirm_title": "Delete member \"{0}\"",
+	"delete_member_confirm": "Are you sure you want to delete member \"{0}\"? The account will not be deleted but it will be removed from the group.",
+	"error_name_already_used": "This name is already in use",
+	"error_name_format": "The name must not contain special characters",
+	"error_name_length": "The name must contain between {0} and {1} characters",
+	"invite_sent": "Invitation sent",
+	"error_invalid_email": "Email address must be valid"
 }

@@ -22,7 +22,7 @@
 	"error_already_have_4_leeks": "You already have 4 leeks!",
 	"error_forbidden_name": "This leek name is forbidden.",
 	"error_name_already_used": "This leek name is already taken",
-	"error_name_character_count": "Your leek name must contain between %d and %d characters",
+	"error_name_length": "Your leek name must contain between %d and %d characters",
 	"error_name_format": "Your leek name must contain only alphanumeric characters",
 	"error_under_required_level_1": "Your first leek must be level {0}.",
 	"error_under_required_level_2": "Your second leek must be level {0}.",

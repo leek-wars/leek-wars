@@ -43,11 +43,25 @@
 
 				<div v-if="group && group.is_supervisor">
 					<br>
-					<v-btn @click="startBattleRoyale"><v-icon>mdi-sword-cross</v-icon>&nbsp; Lancer une Battle Royale</v-btn>
+					<tooltip :disabled="group.members.length >= 3">
+						<template v-slot:activator="{ on }">
+							<span v-on="on">
+								<v-btn :disabled="group.members.length < 3" @click="startBattleRoyale"><v-icon>mdi-sword-cross</v-icon>&nbsp;{{ $t('start_br') }}</v-btn>
+							</span>
+						</template>
+						{{ $t('3_members_min') }}
+					</tooltip>
 					<router-link v-if="group.tournament" :to="'/tournament/' + group.tournament">
-						<v-btn color="primary"><v-icon>mdi-trophy</v-icon>&nbsp; Voir le tournoi</v-btn>
+						<v-btn color="primary"><v-icon>mdi-trophy</v-icon>&nbsp;{{ $t('see_tournament') }}</v-btn>
 					</router-link>
-					<v-btn v-else @click="startTournament"><v-icon>mdi-trophy</v-icon>&nbsp; Lancer un tournoi</v-btn>
+					<tooltip v-else :disabled="group.members.length >= 4">
+						<template v-slot:activator="{ on }">
+							<span v-on="on">
+								<v-btn :disabled="group.members.length < 4" @click="startTournament"><v-icon>mdi-trophy</v-icon>&nbsp;{{ $t('start_tournament') }}</v-btn>
+							</span>
+						</template>
+						{{ $t('4_members_min') }}
+					</tooltip>
 				</div>
 			</div>
 		</panel>
@@ -64,6 +78,11 @@
 
 		<panel v-if="group" toggle="group/members" icon="mdi-account-group">
 			<template slot="title">{{ $t('members') }} ({{ group.members.length }})</template>
+			<div slot="actions">
+				<div v-if="group.is_supervisor" class="button" @click="membersDialog = true">
+					<v-icon>mdi-pencil</v-icon>
+				</div>
+			</div>
 			<div slot="content" class="content members">
 				<v-data-table
 					:headers="headers"
@@ -71,6 +90,10 @@
 					hide-default-footer
     				:items-per-page="100"
 					class="elevation-1 members">
+					<div slot="no-data" class="no-member">
+						<span>{{ $t('no_member') }}</span>
+						<v-btn @click="membersDialog = true"><v-icon>mdi-plus</v-icon>&nbsp;{{ $t('add_member') }}</v-btn>
+					</div>
 					<template v-slot:item.name="{ item }">
 						<!-- <router-link class="flex name" :to="'/farmer/' + item.id" v-ripple>
 							<avatar :farmer="item" />
@@ -227,6 +250,69 @@
 			</panel>
 		</div>
 
+		<popup v-if="group" v-model="membersDialog" :width="1000" :full="true">
+			<v-icon slot="icon">mdi-account-group</v-icon>
+			<template slot="title">
+				{{ $t('members') }} ({{ group.members.length }})
+			</template>
+			<v-data-table
+				:headers="headersDialog"
+				:items="group.members"
+				hide-default-footer
+				:items-per-page="100"
+				:no-data-text="$t('no_member')"
+				class="elevation-1 members">
+				<template v-slot:item.name="{ item }">
+					<div class="flex name">
+						<avatar :farmer="item" />
+						<div>
+							<input type="text" v-model="item.name" :class="{error: item.name_error}" @focusout="updateMemberName(item)">
+							<div v-if="item.name_error" class="error">{{ $t('error_' + item.name_error.error, item.name_error.params) }}</div>
+						</div>
+					</div>
+				</template>
+				<template v-slot:item.leek="{ item }">
+					<input type="text" v-model="item.leek" :class="{error: item.leek_error}" @focusout="updateMemberLeekName(item)">
+					<div v-if="item.leek_error" class="error">{{ $t('error_' + item.leek_error.error, item.leek_error.params) }}</div>
+				</template>
+				<template v-slot:item.team="{ item }">
+					<rich-tooltip-team :id="item.team.id" v-slot="{ on }" :bottom="true">
+						<div class="flex name" v-on="on">
+							<emblem :team="item.team" />
+							<span>{{ item.team.name }}</span>
+						</div>
+					</rich-tooltip-team>
+				</template>
+				<template v-slot:item.mail="{ item }">
+					<input type="email" v-model="item.mail" :class="{error: item.mail_error}" @focusout="updateMemberEmail(item)">
+					<div v-if="item.mail_error" class="error">{{ $t('error_' + item.mail_error.error, item.mail_error.params) }}</div>
+				</template>
+				<template v-slot:item.actions="{ item }">
+					<div class="flex actions">
+						<tooltip>
+							<template v-slot:activator="{ on }">
+								<div v-on="on">
+									<v-icon :disabled="!item.mail" @click="sendInvite(item)">mdi-email-outline</v-icon>
+								</div>
+							</template>
+							{{ $t('send_invite') }}
+						</tooltip>
+						<tooltip>
+							<template v-slot:activator="{ on }">
+								<div v-on="on">
+									<v-icon @click="memberToDelete = item; deleteMemberDialog = true">mdi-delete-outline</v-icon>
+								</div>
+							</template>
+							{{ $t('remove_member') }}
+						</tooltip>
+					</div>
+				</template>
+			</v-data-table>
+			<div class="add-member" @click="addMember()" v-ripple>
+				<v-icon>mdi-plus</v-icon> {{ $t('add_member') }}
+			</div>
+		</popup>
+
 		<popup v-if="group" v-model="settingsDialog" :width="500">
 			<v-icon slot="icon">mdi-settings-outline</v-icon>
 			<span slot="title">{{ $t('settings') }}</span>
@@ -311,6 +397,18 @@
 			</div>
 		</popup>
 
+		<popup v-if="group" v-model="deleteMemberDialog" :width="600">
+			<v-icon slot="icon">mdi-delete</v-icon>
+			<span v-if="memberToDelete" slot="title">{{ $t('delete_member_confirm_title', [memberToDelete.name]) }}</span>
+			<div v-if="memberToDelete">
+				{{ $t('delete_member_confirm', [memberToDelete.name]) }}
+			</div>
+			<div slot="actions">
+				<div v-ripple @click="deleteMemberDialog = false">{{ $t('main.cancel') }}</div>
+				<div v-ripple class="red" @click="removeMember()">{{ $t('main.delete') }}</div>
+			</div>
+		</popup>
+
 		<capital-dialog ref="capitalDialog" v-model="capitalDialog" :leek="characteristics" :total-capital="totalCapital" :restat="true" />
 	</div>
 </template>
@@ -352,8 +450,10 @@
 		CHIPS = CHIPS
 		capitalDialog: boolean = false
 		applyingEquipment: boolean = false
-
+		membersDialog: boolean = false
 		characteristics: {[key: string]: number} = {}
+		deleteMemberDialog: boolean = false
+		memberToDelete: Farmer | null = null
 
 		headers = [
           { text: 'Membre', value: 'name' },
@@ -367,11 +467,14 @@
           { text: 'Ratio', value: 'ratio' },
           { text: 'Combats de test', value: 'test_fights' },
           { text: 'Trophées', value: 'trophies' },
-        //   { text: 'Message', value: 'message', sortable: false },
-        //   { text: 'Fat (g)', value: 'fat' },
-        //   { text: 'Carbs (g)', value: 'carbs' },
-        //   { text: 'Protein (g)', value: 'protein' },
-        //   { text: 'Iron (%)', value: 'iron' },
+        ]
+
+		headersDialog = [
+          { text: 'Membre', value: 'name' },
+          { text: 'Poireau', value: 'leek' },
+        //   { text: 'Équipe', value: 'team' },
+		  { text: 'Email', value: 'mail' },
+		  { text: 'Actions', value: 'actions', sortable: false },
         ]
 
 		get group_id() {
@@ -406,62 +509,64 @@
 		}
 
 		startBattleRoyale() {
-			LeekWars.post('groupe/start-battle-royale').then(data => {
+			if (!this.group) { return }
+			LeekWars.post('groupe/start-battle-royale', { group_id: this.group.id }).then(data => {
 				this.$router.push('/fight/' + data.fight)
 			}).error(error => LeekWars.toast(this.$t(error.error)))
 		}
 
 		startTournament() {
-			LeekWars.post('groupe/start-solo-tournament').then(data => {
+			if (!this.group) { return }
+			LeekWars.post('groupe/start-solo-tournament', { group_id: this.group.id }).then(data => {
 				this.$router.push('/tournament/' + data.tournament)
 			}).error(error => LeekWars.toast(this.$t(error.error)))
 		}
 
 		updateSettingChat() {
 			if (this.group) {
-				LeekWars.put('groupe/setting-chat', { enabled: this.group.setting_chat })
+				LeekWars.put('groupe/setting-chat', { group_id: this.group.id, enabled: this.group.setting_chat })
 			}
 		}
 
 		updateSettingBank() {
 			if (this.group) {
-				LeekWars.put('groupe/setting-bank', { enabled: this.group.setting_bank })
+				LeekWars.put('groupe/setting-bank', { group_id: this.group.id, enabled: this.group.setting_bank })
 			}
 		}
 
 		updateSettingPublicChat() {
 			if (this.group) {
-				LeekWars.put('groupe/setting-public-chat', { enabled: this.group.setting_public_chat })
+				LeekWars.put('groupe/setting-public-chat', { group_id: this.group.id, enabled: this.group.setting_public_chat })
 			}
 		}
 
 		updateSettingBuyFights() {
 			if (this.group) {
-				LeekWars.put('groupe/setting-buy-fights', { enabled: this.group.setting_buy_fights })
+				LeekWars.put('groupe/setting-buy-fights', { group_id: this.group.id, enabled: this.group.setting_buy_fights })
 			}
 		}
 
 		updateSettingTournaments() {
 			if (this.group) {
-				LeekWars.put('groupe/setting-tournaments', { enabled: this.group.setting_tournaments })
+				LeekWars.put('groupe/setting-tournaments', { group_id: this.group.id, enabled: this.group.setting_tournaments })
 			}
 		}
 
 		updateSettingBr() {
 			if (this.group) {
-				LeekWars.put('groupe/setting-br', { enabled: this.group.setting_br })
+				LeekWars.put('groupe/setting-br', { group_id: this.group.id, enabled: this.group.setting_br })
 			}
 		}
 
 		updateXpBlocked() {
 			if (this.group) {
-				LeekWars.put('groupe/setting-xp-blocked', { enabled: this.group.setting_xp_blocked })
+				LeekWars.put('groupe/setting-xp-blocked', { group_id: this.group.id, enabled: this.group.setting_xp_blocked })
 			}
 		}
 
 		updateEquipmentBlocked() {
 			if (this.group) {
-				LeekWars.put('groupe/setting-equipment-blocked', { enabled: this.group.setting_equipment_blocked })
+				LeekWars.put('groupe/setting-equipment-blocked', { group_id: this.group.id, enabled: this.group.setting_equipment_blocked })
 			}
 		}
 
@@ -518,21 +623,11 @@
 				return LeekWars.toast(this.$i18n.t('error_weapon_two_forgotten', [this.group.name]))
 			}
 			this.group.weapons.push(weapon)
-			// LeekWars.post('leek/add-weapon', {leek_id: this.leek.id, weapon_id: weapon.id}).then(data => {
-			// 	if (this.leek) {
-			// 		this.leek.weapons.push({id: data.id, template: weapon.template, quantity: 1})
-			// 		this.$store.commit('remove-weapon', weapon)
-			// 	}
-			// }).error(error => {
-			// 	LeekWars.toast(error)
-			// })
 		}
 
 		removeWeapon(weapon: number) {
 			if (!this.group) { return }
 			this.group.weapons.splice(this.group.weapons.indexOf(weapon), 1)
-			// this.$store.commit('add-weapon', weapon)
-			// LeekWars.delete('leek/remove-weapon', {weapon_id: weapon.id}).error((error) => LeekWars.toast(error))
 		}
 
 		weaponsDrop(location: string, e: DragEvent) {
@@ -583,21 +678,11 @@
 				return LeekWars.toast(this.$i18n.t('error_chip_already_equipped', [this.group.name]))
 			}
 			this.group.chips.push(chip)
-			// LeekWars.post('leek/add-chip', {leek_id: this.leek.id, chip_id: chip.id}).then(data => {
-			// 	if (this.leek) {
-			// 		this.leek.chips.push({id: data.id, template: chip.template, quantity: 1})
-			// 		this.$store.commit('remove-chip', chip)
-			// 	}
-			// }).error(error => {
-			// 	LeekWars.toast(error)
-			// })
 		}
 
 		removeChip(chip: number) {
 			if (!this.group) { return }
 			this.group.chips.splice(this.group.chips.indexOf(chip), 1)
-			// this.$store.commit('add-chip', chip)
-			// LeekWars.delete('leek/remove-chip', {chip_id: chip.id}).error((error) => LeekWars.toast(error))
 		}
 
 		chipsDrop(location: string, e: DragEvent) {
@@ -632,6 +717,7 @@
 		saveEquipment() {
 			if (this.group) {
 				LeekWars.put('groupe/equipment', {
+					group_id: this.group.id,
 					level: this.group.level,
 					characteristics: JSON.stringify(this.characteristics),
 					weapons: JSON.stringify(this.group.weapons),
@@ -668,7 +754,7 @@
 		applyEquipment() {
 			if (this.group && !this.applyingEquipment) {
 				this.applyingEquipment = true
-				LeekWars.post('groupe/apply-equipment').then(d => {
+				LeekWars.post('groupe/apply-equipment', { group_id: this.group.id }).then(d => {
 					this.applyingEquipment = false
 					LeekWars.toast(this.$t('applied'))
 				}).error(error => {
@@ -676,6 +762,80 @@
 					LeekWars.toast(this.$t(error.error))
 				})
 			}
+		}
+
+		addMember() {
+			if (!this.group) { return }
+			LeekWars.post('groupe/create-member', { group_id: this.group.id }).then(member => {
+				if (this.group) {
+					this.group.members.push(member)
+				}
+			}).error(error => {
+				LeekWars.toast(this.$t(error.error))
+			})
+		}
+
+		removeMember() {
+			if (!this.group) { return }
+			LeekWars.delete('groupe/remove-member', { group_id: this.group.id, member_id: this.memberToDelete.id }).then(member => {
+				if (this.group && this.memberToDelete) {
+					this.group.members.splice(this.group.members.indexOf(this.memberToDelete), 1)
+					this.deleteMemberDialog = false
+				}
+			}).error(error => {
+				LeekWars.toast(this.$t(error.error))
+			})
+		}
+
+		sendInvite(member: Farmer) {
+			if (!this.group) { return }
+			LeekWars.post('groupe/send-invite', { group_id: this.group.id, member_id: member.id }).then(member => {
+				LeekWars.toast(this.$t('invite_sent'))
+			}).error(error => {
+				LeekWars.toast(this.$t(error.error))
+			})
+		}
+
+		updateMemberName(member: Farmer) {
+			if (!this.group) { return }
+			LeekWars.put('groupe/member-name', {
+				group_id: this.group.id,
+				member_id: member.id,
+				name: member.name,
+			}).then(result => {
+				Vue.delete(member, 'name_error')
+			}).error(error => {
+				Vue.delete(member, 'name_error')
+				Vue.set(member, error.field + '_error', error)
+			})
+		}
+
+		updateMemberLeekName(member: Farmer) {
+			if (!this.group) { return }
+			LeekWars.put('groupe/member-leek-name', {
+				group_id: this.group.id,
+				member_id: member.id,
+				leek_name: member.leek,
+			}).then(result => {
+				Vue.delete(member, 'leek_error')
+			}).error(error => {
+				Vue.delete(member, 'leek_error')
+				Vue.set(member, error.field + '_error', error)
+			})
+		}
+
+		updateMemberEmail(member: Farmer) {
+			if (!this.group || !member.mail) { return }
+			LeekWars.put('groupe/member-email', {
+				group_id: this.group.id,
+				member_id: member.id,
+				email: member.mail
+			}).then(result => {
+				Vue.delete(member, 'mail_error')
+			}).error(error => {
+				Vue.delete(member, 'mail_error')
+				Vue.set(member, error.field + '_error', error)
+			})
 		}
 	}
 </script>
@@ -711,10 +871,13 @@ h4 {
 	flex-direction: column;
 	gap: 10px;
 }
-input[type="text"] {
+input[type="text"], input[type="email"] {
 	height: 28px;
 	vertical-align: bottom;
 	margin-right: 5px;
+	&.error {
+		border: 2px solid red;
+	}
 }
 .members {
 	&::v-deep th {
@@ -722,7 +885,7 @@ input[type="text"] {
 	}
 	&::v-deep td {
 		padding: 0 10px !important;
-		height: 38px !important;
+		height: 36px !important;
 	}
 	.name {
 		justify-content: flex-start;
@@ -737,7 +900,7 @@ input[type="text"] {
 		}
 	}
 	.avatar, .emblem {
-		width: 36px;
+		width: 34px;
 	}
 }
 .status {
@@ -866,5 +1029,27 @@ input[type="text"] {
 }
 .small-loader {
 	padding: 0;
+}
+.add-member {
+	display: inline-flex;
+	align-items: center;
+	cursor: pointer;
+	padding: 8px;
+	gap: 5px;
+	user-select: none;
+}
+.no-member {
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+}
+.actions.flex {
+	gap: 15px;
+}
+div.error {
+	color: red;
+	font-size: 13px;
 }
 </style>

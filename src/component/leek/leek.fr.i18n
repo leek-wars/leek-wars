@@ -22,7 +22,7 @@
 	"error_already_have_4_leeks": "Vous avez déjà 4 poireaux !",
 	"error_forbidden_name": "Ce nom de poireau est interdit.",
 	"error_name_already_used": "Le nom de votre poireau est déjà utilisé",
-	"error_name_character_count": "Le nom de votre poireau doit contenir entre %d et %d caractères",
+	"error_name_length": "Le nom de votre poireau doit contenir entre %d et %d caractères",
 	"error_name_format": "Le nom de votre poireau doit contenir uniquement des caractères alphanumériques",
 	"error_under_required_level_1": "Votre premier poireau doit être de niveau {0}.",
 	"error_under_required_level_2": "Votre second poireau doit être de niveau {0}.",

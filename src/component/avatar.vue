@@ -17,7 +17,7 @@
 					if (this.farmer.avatar_changed > 0) {
 						return LeekWars.AVATAR + 'avatar/' + this.farmer.id + '.png?' + this.farmer.avatar_changed
 					}
-				} else {
+				} else if (this.farmer.id === 0) {
 					return '/image/lw_avatar.png'
 				}
 			}

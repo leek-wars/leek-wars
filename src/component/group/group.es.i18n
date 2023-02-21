@@ -23,5 +23,22 @@
 	"saved": "Equipo guardado",
 	"applied": "Equipo aplicado",
 	"too_much_weapons": "Demasiadas armas equipadas",
-	"too_much_chips": "Demasiados chips equipados"
+	"too_much_chips": "Demasiados chips equipados",
+	"member": "Miembro",
+	"add_member": "Agregar un miembro",
+	"no_member": "Ningún miembro",
+	"start_br": "Iniciar un Battle Royale",
+	"see_tournament": "Ver el torneo",
+	"start_tournament": "Iniciar un torneo",
+	"3_members_min": "Debe tener al menos 3 miembros para lanzar un BR",
+	"4_members_min": "Debes tener al menos 4 miembros para comenzar un torneo",
+	"send_invite": "Enviar una invitación por correo electrónico",
+	"remove_member": "Eliminar este miembro",
+	"delete_member_confirm_title": "Eliminar miembro \"{0}\"",
+	"delete_member_confirm": "¿Está seguro de que desea eliminar el miembro \"{0}\"? La cuenta no se eliminará, pero se eliminará del grupo.",
+	"error_name_already_used": "Este nombre ya esta en uso",
+	"error_name_format": "El nombre no debe contener caracteres especiales",
+	"error_name_length": "El nombre debe contener entre {0} y {1} caracteres",
+	"invite_sent": "Invitación enviada",
+	"error_invalid_email": "La dirección de correo electrónico debe ser válida"
 }

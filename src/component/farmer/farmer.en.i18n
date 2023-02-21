@@ -29,7 +29,7 @@
 	"draws": "draws",
 	"error_forbidden_name": "This farmer's name is forbidden.",
 	"error_name_already_used": "The name of your farmer is already in use",
-	"error_name_character_count": "Your farmer's name must contain between %d and %d characters",
+	"error_name_length": "Your farmer's name must contain between %d and %d characters",
 	"error_name_format": "Your farmer's name must contain only alphanumeric characters",
 	"error_rename_delay": "You have to wait a month between two renames from your farmer.",
 	"farmer_have_1_warning": "This farmer has 1 warning",

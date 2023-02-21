@@ -15,7 +15,7 @@
 		get link() { return this.fight ? this.fight : null }
 
 		click(e: Event) {
-			if (this.fight) {
+			if (this.fight && this.fight) {
 				this.$router.push(this.fight)
 			}
 			e.preventDefault()

@@ -22,6 +22,7 @@ class Group {
 	public max_weapons!: number
 	public max_chips!: number
 	public capital!: number
+	public members!: Farmer[]
 }
 
 export { Group }
