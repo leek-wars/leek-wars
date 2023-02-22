@@ -109,27 +109,6 @@ class Chat {
 		return d.getTime()
 	}
 
-	battleRoyale(fightID: number, time: number) {
-		this.add({
-			id: 0,
-			chat: this.id,
-			farmer: { id: 0, name: "Leek Wars" } as Farmer,
-			content: '',
-			contents: [i18n.t('main.br_started_message') as string, '' + fightID],
-			subMessages: [],
-			date: time,
-			day: 0,
-			censored: 0,
-			censored_by: null,
-			read: false,
-			reactions: {},
-			my_reaction: null,
-			only_emojis: false,
-			mentions: [],
-			formatted: false
-		})
-	}
-
 	deleteMessage(messageID: number) {
 		// Delete from messages list
 		for (let m = 0; m < this.messages.length; ++m) {

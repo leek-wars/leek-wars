@@ -10,7 +10,7 @@ import { AI } from './ai'
 import { fileSystem } from './filesystem'
 import { Hat } from './hat'
 import { Leek } from './leek'
-import { vueMain } from './vue'
+import { displayWarningMessage, vueMain } from './vue'
 import { Weapon } from './weapon'
 
 class LeekWarsState {
@@ -103,6 +103,8 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		"disconnect"(state: LeekWarsState) {
 			LeekWars.post('farmer/disconnect')
 			store.commit("reset")
+			console.clear()
+			displayWarningMessage()
 		},
 
 		"reset"(state: LeekWarsState) {
@@ -127,7 +129,6 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				clearInterval(LeekWars.keepConnected)
 				LeekWars.keepConnected = null
 			}
-			console.clear()
 		},
 
 		"wsconnected"(state: LeekWarsState) {
@@ -182,7 +183,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 					state.farmer_by_name[farmer.name] = farmer
 				}
 				for (const message of data.messages) {
-					store.commit('chat-receive', { chat: chat.id, message, new: false })
+					store.commit('chat-receive', { chat: chat.id, type: data.type, message, new: false })
 				}
 				for (const farmer of data.farmers) {
 					store.commit('add-conversation-participant', {id: chat.id, farmer})
@@ -212,7 +213,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 					state.farmer_by_name[farmer.name] = farmer
 				}
 				for (const message of data.messages.reverse()) {
-					store.commit('chat-receive', { chat: chatID, message, new: false, unshift: true })
+					store.commit('chat-receive', { chat: chatID, type: data.type, message, new: false, unshift: true })
 				}
 				vueMain.$emit('chat-history', chatID)
 				chat.loading = false
@@ -240,24 +241,15 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'br'(state: LeekWarsState, data: any) {
-			const channel = data[0]
-			if (!state.chat[channel]) {
-				const name = LeekWars.publicChats[channel].name
-				Vue.set(state.chat, channel, new Chat(channel, ChatType.GLOBAL, name, false))
-			}
-			state.chat[channel].battleRoyale(data[1], data[2])
-		},
-
-		'chat-receive'(state: LeekWarsState, data: {chat: number, message: ChatMessage, new: boolean, unshift: boolean }) {
+		'chat-receive'(state: LeekWarsState, data: {chat: number, type: ChatType, message: ChatMessage, new: boolean, unshift: boolean }) {
 
 			if (!state.farmer) return
-			// console.log("chat-receive message", data.chat, data.message)
+			// console.log("chat-receive message", data.chat, data.type, data.message)
 
 			const chatID = data.chat
+			const type = data.type
 			const message = data.message
 			const newChat = !state.chat[chatID]
-			const type = chatID === 1 || chatID === 2 ? ChatType.GLOBAL : (state.farmer.team && chatID === state.farmer.team.chat ? ChatType.TEAM : ChatType.PM)
 
 			// Update or create chat
 			if (!state.chat[chatID]) {
@@ -903,3 +895,5 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 	},
 })
 export { store }
+
+

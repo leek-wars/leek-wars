@@ -289,4 +289,4 @@ if (window.__FARMER__) {
 	}
 }
 
-export { vueMain, vuetify }
+export { vueMain, vuetify, displayWarningMessage }

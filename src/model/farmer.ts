@@ -62,6 +62,11 @@ class Farmer {
 	public group!: Group
 	public public_chat_enabled!: boolean
 	public equipment_enabled!: boolean
+	public mail!: string
+}
+
+class Member extends Farmer {
+	public leek!: string
 }
 
 class Reward {
@@ -69,4 +74,4 @@ class Reward {
 	public habs!: number
 }
 
-export { Farmer, Reward }
+export { Farmer, Member, Reward }

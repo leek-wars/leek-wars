@@ -60,6 +60,7 @@
 					this.$router.push('/')
 				}).error(error => {
 					LeekWars.toast(error.error)
+					this.$router.push('/')
 				})
 			}
 		}

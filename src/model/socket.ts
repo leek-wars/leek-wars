@@ -188,11 +188,7 @@ class Socket {
 				case SocketMessage.CHAT_RECEIVE : {
 					// console.log("socket chat receive", data)
 					const message = data as ChatMessage
-					store.commit('chat-receive', { chat: message.chat, message, new: true })
-					break
-				}
-				case SocketMessage.CHAT_RECEIVE_PACK : {
-					store.commit('chat-receive-pack', data)
+					store.commit('chat-receive', { chat: message.chat, type: data.type, message, new: true })
 					break
 				}
 				case SocketMessage.LUCKY: {

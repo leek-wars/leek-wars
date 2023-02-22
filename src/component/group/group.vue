@@ -418,7 +418,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import { Group } from '@/model/group'
-	import { Farmer } from '@/model/farmer'
+	import { Farmer, Member } from '@/model/farmer'
 	import { store } from '@/model/store'
 	const ChatElement = () => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`)
 	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
@@ -453,7 +453,7 @@
 		membersDialog: boolean = false
 		characteristics: {[key: string]: number} = {}
 		deleteMemberDialog: boolean = false
-		memberToDelete: Farmer | null = null
+		memberToDelete: Member | null = null
 
 		headers = [
           { text: 'Membre', value: 'name' },
@@ -495,7 +495,7 @@
 			})
 		}
 
-		sendMessage(farmer: Farmer) {
+		sendMessage(farmer: Member) {
 			LeekWars.get('message/find-conversation/' + farmer.id).then(conversation => {
 				store.commit('new-conversation', conversation)
 				this.$router.push('/chat/' + conversation.id)
@@ -776,7 +776,7 @@
 		}
 
 		removeMember() {
-			if (!this.group) { return }
+			if (!this.group || !this.memberToDelete) { return }
 			LeekWars.delete('groupe/remove-member', { group_id: this.group.id, member_id: this.memberToDelete.id }).then(member => {
 				if (this.group && this.memberToDelete) {
 					this.group.members.splice(this.group.members.indexOf(this.memberToDelete), 1)
@@ -787,7 +787,7 @@
 			})
 		}
 
-		sendInvite(member: Farmer) {
+		sendInvite(member: Member) {
 			if (!this.group) { return }
 			LeekWars.post('groupe/send-invite', { group_id: this.group.id, member_id: member.id }).then(member => {
 				LeekWars.toast(this.$t('invite_sent'))
@@ -796,7 +796,7 @@
 			})
 		}
 
-		updateMemberName(member: Farmer) {
+		updateMemberName(member: Member) {
 			if (!this.group) { return }
 			LeekWars.put('groupe/member-name', {
 				group_id: this.group.id,
@@ -806,11 +806,11 @@
 				Vue.delete(member, 'name_error')
 			}).error(error => {
 				Vue.delete(member, 'name_error')
-				Vue.set(member, error.field + '_error', error)
+				Vue.set(member, 'name_error', error)
 			})
 		}
 
-		updateMemberLeekName(member: Farmer) {
+		updateMemberLeekName(member: Member) {
 			if (!this.group) { return }
 			LeekWars.put('groupe/member-leek-name', {
 				group_id: this.group.id,
@@ -820,11 +820,11 @@
 				Vue.delete(member, 'leek_error')
 			}).error(error => {
 				Vue.delete(member, 'leek_error')
-				Vue.set(member, error.field + '_error', error)
+				Vue.set(member, 'leek_error', error)
 			})
 		}
 
-		updateMemberEmail(member: Farmer) {
+		updateMemberEmail(member: Member) {
 			if (!this.group || !member.mail) { return }
 			LeekWars.put('groupe/member-email', {
 				group_id: this.group.id,
@@ -834,7 +834,7 @@
 				Vue.delete(member, 'mail_error')
 			}).error(error => {
 				Vue.delete(member, 'mail_error')
-				Vue.set(member, error.field + '_error', error)
+				Vue.set(member, 'mail_error', error)
 			})
 		}
 	}
