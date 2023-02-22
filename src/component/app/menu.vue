@@ -186,6 +186,9 @@
 			return '/ranking' + (LeekWars.rankingActive ? '/active' : '')
 		}
 		get new_leek_condition() {
+			if (!store.state.farmer!.can_create_leek) {
+				return false
+			}
 			const leeks = store.state.farmer!.leeks
 			if (Object.keys(leeks).length === 4) { return false }
 			return LeekWars.first(leeks)!.level >= 50

@@ -40,5 +40,6 @@
 	"error_name_format": "El nombre no debe contener caracteres especiales",
 	"error_name_length": "El nombre debe contener entre {0} y {1} caracteres",
 	"invite_sent": "Invitación enviada",
-	"error_invalid_email": "La dirección de correo electrónico debe ser válida"
+	"error_invalid_email": "La dirección de correo electrónico debe ser válida",
+	"new_leek": "Permitir la creación de otro puerro"
 }

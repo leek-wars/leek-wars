@@ -1,16 +1,15 @@
 <template lang="html">
-	<panel class="chat-panel" :toggle="toggle" icon="mdi-chat-outline">
+	<panel v-if="chatID" class="chat-panel" :toggle="toggle" icon="mdi-chat-outline">
 		<template slot="title">
 			<router-link v-ripple :to="'/chat/' + chatID" class="title">
-				<span v-if="is_group_chat">{{ $store.state.farmer.group.name }}</span>
-				<span v-else>{{ $store.state.chat[chatID] ? $store.state.chat[chatID].name : 'Chat' }}</span>
-				<span v-if="!$store.state.farmer?.group" class="farmer-count">
+				<span>{{ $store.state.chat[chatID] ? $store.state.chat[chatID].name : 'Chat' }}</span>
+				<span v-if="$store.state.farmer?.public_chat_enabled" class="farmer-count">
 					<span class="count">({{ $store.state.connected_farmers }} <v-icon class="icon">mdi-account-multiple</v-icon>)</span>
 				</span>
 			</router-link>
 		</template>
 		<div slot="actions" class="actions">
-			<v-menu v-if="!is_group_chat" offset-y>
+			<v-menu v-if="$store.state.farmer?.public_chat_enabled" offset-y>
 				<template v-slot:activator="{ on }">
 					<div class="language-button" v-ripple v-on="on">
 						<flag :code="LeekWars.languages[LeekWars.publicChats[chatID].language].country" />
@@ -53,14 +52,10 @@ export default class ChatPanel extends Vue {
 	ChatType = ChatType
 	chatID: number | null = null
 
-	get is_group_chat() {
-		return this.$store.state.farmer?.group && !this.$store.state.farmer?.public_chat_enabled
-	}
-
 	created() {
-		if (this.is_group_chat) {
+		if (this.$store.state.farmer?.group && this.$store.state.farmer?.group.chat && !this.$store.state.farmer?.public_chat_enabled) {
 			this.chatID = this.$store.state.farmer.group.chat
-		} else {
+		} else if (this.$store.state.farmer?.public_chat_enabled) {
 			this.chatID = parseInt(localStorage.getItem('chat-panel/' + this.chat) || '0') || LeekWars.languages[this.$i18n.locale].chat
 		}
 	}

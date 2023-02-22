@@ -40,5 +40,6 @@
 	"error_name_format": "The name must not contain special characters",
 	"error_name_length": "The name must contain between {0} and {1} characters",
 	"invite_sent": "Invitation sent",
-	"error_invalid_email": "Email address must be valid"
+	"error_invalid_email": "Email address must be valid",
+	"new_leek": "Allow the creation of another leek"
 }

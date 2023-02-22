@@ -15,6 +15,7 @@ class Group {
 	public setting_chat!: boolean
 	public setting_xp_blocked!: boolean
 	public setting_equipment_blocked!: boolean
+	public setting_new_leek!: boolean
 	public characteristics!: any
 	public weapons!: number[]
 	public chips!: number[]

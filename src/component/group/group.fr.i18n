@@ -40,5 +40,6 @@
 	"error_name_format": "Le nom ne doit pas contenir des caractères spéciaux",
 	"error_name_length": "Le nom doit contenir entre {0} et {1} caractères",
 	"invite_sent": "Invitation envoyée",
-	"error_invalid_email": "L'adresse e-mail doit être valide"
+	"error_invalid_email": "L'adresse e-mail doit être valide",
+	"new_leek": "Autoriser la création d'un autre poireau"
 }

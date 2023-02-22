@@ -235,9 +235,9 @@
 			</panel>
 		</div>
 
-		<div v-if="group" class="container last">
+		<div v-if="group && group.is_supervisor" class="container last">
 			<panel :title="$t('settings')" icon="mdi-settings-outline">
-				<v-switch v-model="group.setting_chat" :label="$t('setting_chat')" hide-details />
+				<v-switch v-model="group.setting_chat" :label="$t('setting_chat')" hide-details @change="updateSettingChat" />
 			</panel>
 			<panel :title="$t('member_options')" icon="mdi-settings-outline">
 				<v-switch v-model="group.setting_public_chat" :label="$t('setting_public_chat')" hide-details @change="updateSettingPublicChat" /><br>
@@ -245,6 +245,7 @@
 				<v-switch v-model="group.setting_bank" :label="$t('setting_bank')" hide-details @change="updateSettingBank" /><br>
 				<v-switch v-model="group.setting_tournaments" :label="$t('setting_tournaments')" hide-details @change="updateSettingTournaments" /><br>
 				<v-switch v-model="group.setting_br" :label="$t('setting_br')" hide-details @change="updateSettingBr" /><br>
+				<v-switch v-model="group.setting_new_leek" hide-details :label="$t('new_leek')" @change="updateNewLeek" /><br>
 				<v-switch v-model="group.setting_xp_blocked" hide-details :label="$t('xp_blocked')" @change="updateXpBlocked" /><br>
 				<v-switch v-model="group.setting_equipment_blocked" hide-details :label="$t('equipment_blocked')" @change="updateEquipmentBlocked" /><br>
 			</panel>
@@ -567,6 +568,12 @@
 		updateEquipmentBlocked() {
 			if (this.group) {
 				LeekWars.put('groupe/setting-equipment-blocked', { group_id: this.group.id, enabled: this.group.setting_equipment_blocked })
+			}
+		}
+
+		updateNewLeek() {
+			if (this.group) {
+				LeekWars.put('groupe/setting-new-leek', { group_id: this.group.id, enabled: this.group.setting_new_leek })
 			}
 		}
 

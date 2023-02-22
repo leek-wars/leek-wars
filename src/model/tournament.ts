@@ -9,6 +9,7 @@ class Tournament {
 	comments!: Comment[]
 	next_round!: number
 	group!: number | null
+	size!: number
 }
 
 export { Tournament }

@@ -63,6 +63,7 @@ class Farmer {
 	public public_chat_enabled!: boolean
 	public equipment_enabled!: boolean
 	public mail!: string
+	public can_create_leek!: boolean
 }
 
 class Member extends Farmer {
