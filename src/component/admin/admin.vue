@@ -7,73 +7,73 @@
 			<div slot="content" class="admin">
 				<router-link to="/admin/servers">
 					<div v-ripple class="section card">
-						<img src="/image/admin/server.png">
-						<h2>État des serveurs</h2>
+						<v-icon>mdi-server</v-icon>
+						<h2>Générateurs</h2>
 					</div>
 				</router-link>
 				<router-link to="/admin/errors">
 					<div v-ripple class="section card">
-						<img src="/image/admin/error_manager.png">
+						<v-icon>mdi-emoticon-dead</v-icon>
 						<h2 v-if="$store.state.farmer">Erreurs ({{ $store.state.farmer.errors }})</h2>
 					</div>
 				</router-link>
 				<a href="/memcached.php" target="_blank" rel="noopener">
 					<div v-ripple class="section card">
-						<img src="/image/admin/cache.png">
+						<v-icon>mdi-memory</v-icon>
 						<h2>Memcached <v-icon>mdi-open-in-new</v-icon></h2>
 					</div>
 				</a>
 				<router-link to="/admin/services">
 					<div v-ripple class="section card">
-						<img src="/image/admin/services.png">
+						<v-icon>mdi-api</v-icon>
 						<h2>Services</h2>
 					</div>
 				</router-link>
 				<router-link to="/admin/emails">
 					<div v-ripple class="section card">
-						<img src="/image/admin/mails.png">
-						<h2>Mails</h2>
+						<v-icon>mdi-email-multiple-outline</v-icon>
+						<h2>Gestion emails</h2>
 					</div>
 				</router-link>
 				<router-link to="/admin/trophies">
 					<div v-ripple class="section card">
-						<img src="/image/admin/trophies.png">
+						<v-icon>mdi-trophy-outline</v-icon>
 						<h2>Trophées</h2>
 					</div>
 				</router-link>
 				<router-link to="/admin/hats">
 					<div v-ripple class="section card">
-						<img src="/image/admin/hat.png">
+						<v-icon>mdi-hat-fedora</v-icon>
 						<h2>Chapeaux</h2>
 					</div>
 				</router-link>
 				<router-link to="/admin/skins">
 					<div v-ripple class="section card">
-						<img src="/image/admin/hat.png">
+						<v-icon>mdi-palette</v-icon>
 						<h2>Skins</h2>
 					</div>
 				</router-link>
 				<router-link to="/admin/newsletters">
 					<div v-ripple class="section card">
-						<img src="/image/admin/mails.png">
+						<v-icon>mdi-email-newsletter</v-icon>
 						<h2>Lettres d'informations</h2>
 					</div>
 				</router-link>
 				<a target="_blank" rel="noopener" href="https://roundcube.leekwars.com">
 					<div v-ripple class="section card">
-						<img src="/image/admin/webmail.png">
+						<v-icon>mdi-email-outline</v-icon>
 						<h2>Webmail <v-icon>mdi-open-in-new</v-icon></h2>
 					</div>
 				</a>
 				<a target="_blank" rel="noopener" href="https://www.paypal.com/webapps/business/">
 					<div v-ripple class="section card">
-						<img src="/image/admin/paypal.png">
+						<v-icon>mdi-currency-eur</v-icon>
 						<h2>PayPal <v-icon>mdi-open-in-new</v-icon></h2>
 					</div>
 				</a>
 				<a target="_blank" rel="noopener" href="https://membres.starpass.fr/">
 					<div v-ripple class="section card">
-						<img src="/image/admin/starpass.png">
+						<v-icon>mdi-message-text-outline</v-icon>
 						<h2>StarPass <v-icon>mdi-open-in-new</v-icon></h2>
 					</div>
 				</a>
@@ -199,20 +199,26 @@
 		padding: 10px 5px;
 		text-align: center;
 		height: 100%;
+		& > .v-icon {
+			font-size: 80px;
+			color: #555;
+			margin: 10px 0;
+		}
+		h2 {
+			font-size: 16px;
+			margin: 0;
+			display: flex;
+			justify-content: center;
+			align-items: flex-end;
+			color: #333;
+			i {
+				margin-left: 5px;
+				font-size: 20px;
+			}
+		}
 	}
 	.section img {
 		margin: 10px 0;
 		max-height: 70px;
-	}
-	.section h2 {
-		font-size: 16px;
-		margin: 0;
-		display: flex;
-		justify-content: center;
-		align-items: flex-end;
-	}
-	.section h2 i {
-		margin-left: 5px;
-		font-size: 20px;
 	}
 </style>
