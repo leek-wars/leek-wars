@@ -103,6 +103,10 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		"disconnect"(state: LeekWarsState) {
 			LeekWars.post('farmer/disconnect')
 			store.commit("reset")
+			localStorage.removeItem('editor/tabs')
+			localStorage.removeItem('garden/category') // On revient à la catégorie potager par défaut
+			LeekWars.battleRoyale.leave()
+			LeekWars.socket.disconnect()
 			console.clear()
 			displayWarningMessage()
 		},
@@ -112,14 +116,10 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			localStorage.removeItem('connected')
 			localStorage.removeItem('login-attempt')
 			localStorage.removeItem('token')
-			localStorage.removeItem('editor/tabs')
-			localStorage.removeItem('garden/category') // On revient à la catégorie potager par défaut
 			state.token = null
 			state.farmer = null
 			window.__FARMER__ = null
-			LeekWars.socket.disconnect()
 			LeekWars.setTitleCounter(0)
-			LeekWars.battleRoyale.leave()
 			state.notifications = []
 			state.conversationsList = []
 			state.unreadNotifications = 0
