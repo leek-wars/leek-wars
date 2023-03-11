@@ -12,6 +12,7 @@
     - "LeekScript : ajout d'une opération sur les opérateurs || et &&."
     - "Tournois : ajout d'icones et d'une image de couronne de laurier #img_236_tournament_images"
     - "Éditeur : affichage des poireaux sur lesquels l'IA est équipée. #img_236_editor_leeks"
+    - "Délai d'apparition des tooltips d'items sur la page poireau."
   fixed:
     - Correction de la statistique nombre de Battle Royales.
     - Correction de la traduction des notifications de tournoi par mail et push.
