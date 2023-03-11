@@ -9,11 +9,14 @@
 				<span v-if="ai.errors" class="count error">{{ ai.errors }}</span>
 				<span v-if="ai.warnings" class="count warning">{{ ai.warnings }}</span>
 				<span v-if="ai.todos" class="count todo">{{ ai.todos }}</span>
-				<tooltip v-if="ai.v2">
+				<tooltip v-if="leeks.length">
 					<template v-slot:activator="{ on }">
-						<span class="v2" v-on="on">V2</span>
+						<span v-if="leeks" v-on="on" class="count leek">
+							<img src="/image/icon/black/leek.png">
+							{{ leeks.length }}
+						</span>
 					</template>
-					{{ $t('editor.v2_beta_message') }}
+					{{ leeks.join(', ') }}
 				</tooltip>
 			</div>
 		</div>
@@ -21,10 +24,10 @@
 </template>
 
 <script lang="ts">
-	import { i18n } from '@/model/i18n'
-	import { LeekWars } from '@/model/leekwars'
+	import { fileSystem } from '@/model/filesystem'
+import { store } from '@/model/store'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
-	import { AIItem, Folder } from './editor-item'
+	import { AIItem } from './editor-item'
 
 	@Component({ name: 'editor-ai' })
 	export default class EditorAI extends Vue {
@@ -32,6 +35,12 @@
 		@Prop({required: true}) level!: number
 
 		get ai() { return this.item.ai }
+
+		get leeks() {
+			return Object.entries(fileSystem.leekAIs)
+				.filter(entry => entry[1] === this.ai.id)
+				.map(entry => store.state.farmer!.leeks[parseInt(entry[0])].name)
+		}
 
 		dragstart(e: DragEvent) {
 			if (this.ai.folder === -1) { e.stopPropagation(); return }
@@ -101,7 +110,7 @@
 	.count {
 		border-radius: 10px;
 		color: #333;
-		padding: 1px 4px;
+		padding: 1px 6px;
 		font-size: 13px;
 		margin-left: 6px;
 		font-weight: 500;
@@ -116,6 +125,14 @@
 		&.todo {
 			color: #0099ff;
 			border: 1px solid #0099ff;
+		}
+		&.leek {
+			color: #555;
+			border: 1px solid #555;
+			img {
+				opacity: 0.5;
+				height: 12px;
+			}
 		}
 	}
 </style>

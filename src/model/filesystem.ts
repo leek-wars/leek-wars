@@ -15,7 +15,7 @@ class FileSystem {
 	public rootFolder!: Folder
 	public bin!: Folder
 	private initialized: boolean = false
-	private leekAIs: any = {} // Used in test dialog
+	public leekAIs: {[key: number]: number} = {} // Used in test dialog
 	private items: {[key: string]: AI | Folder} = {}
 	private promise: Promise<void> | null = null
 	private botAIs = [

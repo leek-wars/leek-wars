@@ -10,6 +10,7 @@
     - "Ajout d'une erreur pour une boucle for in sur une valeur non-itérable. #img_236_iterable_warning"
     - "LeekScript : ajout d'une opération sur les opérateurs || et &&."
     - "Tournois : ajout d'icones et d'une image de couronne de laurier #img_236_tournament_images"
+    - "Éditeur : affichage des poireaux sur lesquels l'IA est équipée. #img_236_editor_leeks"
   fixed:
     - Correction de la statistique nombre de Battle Royales.
     - Correction de la traduction des notifications de tournoi par mail et push.
