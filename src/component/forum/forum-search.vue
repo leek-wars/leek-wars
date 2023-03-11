@@ -88,12 +88,12 @@
 </template>
 
 <script lang="ts">
-	import { i18n } from '@/model/i18n'
+	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import Pagination from '@/component/pagination.vue'
 
-	@Component({ name: 'search', i18n: {}, components: { Pagination } })
+	@Component({ name: 'search', i18n: {}, mixins: [...mixins], components: { Pagination } })
 	export default class Search extends Vue {
 		options = {
 			query: '',
@@ -125,8 +125,8 @@
 			return this.options.query || this.options.farmer || this.options.admin
 		}
 		created() {
-			const language = localStorage.getItem('forum/language') || i18n.locale
-			LeekWars.get('forum/get-categories/' + language).then(data => {
+			const languages = (localStorage.getItem('forum/languages') as string || this.$i18n.locale).split(',')
+			LeekWars.get('forum/get-categories/' + languages).then(data => {
 				this.categories = data.categories
 			})
 			LeekWars.setTitle(this.$i18n.t('title'))
@@ -141,7 +141,7 @@
 			if (this.options.farmer === '-') { this.options.farmer = '' }
 			this.options.page = parseInt(this.$route.query.page as string, 10) || 1
 			const category = this.$route.query.category as string
-			this.options.category = (category === '-' || !category) ? -1 : parseInt(category, 10)
+			this.options.category = (category === '-' || !category) ? -1 : category
 			this.options.order = this.$route.query.order || 'pertinence'
 			this.options.admin = this.$route.query.admin || false
 			this.options.moderator = this.$route.query.moderator || false
