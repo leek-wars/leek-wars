@@ -1,7 +1,7 @@
 <template lang="html">
-	<div class="flag" :title="$t('country.' + code)">
+	<router-link class="flag" :title="$t('country.' + code)" :to="'/ranking?country=' + code">
 		<img :src="url" loading="lazy">
-	</div>
+	</router-link>
 </template>
 
 <script lang="ts">
