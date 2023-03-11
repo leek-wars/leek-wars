@@ -21,6 +21,7 @@
     - Correction (encore) du bug de duplication de poireau dans le lecteur.
     - "Ajout d'une erreur quand un argument de méthode est dupliqué #img_236_duplicated_arg"
     - "Éditeur : correction de la barre de défilement qui n'était pas cliquable."
+    - "Équipe : les boutons accepter et refuser une candidature ne s'affichent plus quand l'on est pas capitaine."
 
 235:
   title: Traduction Espagnole, pays dans le potager, messages de bot sur le chat et défis d'équipe.

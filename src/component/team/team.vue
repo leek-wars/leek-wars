@@ -152,8 +152,8 @@
 							</div>
 						</router-link>
 					</rich-tooltip-farmer>
-					<span class="accept" @click="acceptCandidacy(candidacy)">{{ $t('candidacy_accept') }}</span>
-					<span class="reject" @click="rejectCandidacy(candidacy)">{{ $t('candidacy_refuse') }}</span>
+					<span v-if="captain" class="accept" @click="acceptCandidacy(candidacy)">{{ $t('candidacy_accept') }}</span>
+					<span v-if="captain" class="reject" @click="rejectCandidacy(candidacy)">{{ $t('candidacy_refuse') }}</span>
 				</div>
 			</div>
 		</panel>
