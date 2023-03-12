@@ -388,6 +388,8 @@
 			this.lineHeight = parseInt(localStorage.getItem('editor/line_height') || '', 10) || DEFAULT_LINE_HEIGHT
 			this.problemsHeight = parseInt(localStorage.getItem('editor/problems-height') || '', 10) || 200
 			this.panelWidth = parseInt(localStorage.getItem('editor/panel-width') || '', 10) || 200
+
+			LeekWars.loadEncyclopedia(locale)
 		}
 
 		connected() {
