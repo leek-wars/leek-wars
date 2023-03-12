@@ -408,7 +408,7 @@
 				}).error(error => {
 					this.deleteDialog = false
 					this.deleteFailedDialog = true
-					this.deleteFailedError = error
+					this.deleteFailedError = error.error
 				})
 			}
 		}
@@ -425,7 +425,7 @@
 			}).error(error => {
 				this.deleteConfirmDialog = false
 				this.deleteFailedDialog = true
-				this.deleteFailedError = error
+				this.deleteFailedError = error.error
 			})
 		}
 		sendChangeEmail() {
