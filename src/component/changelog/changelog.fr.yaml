@@ -23,6 +23,8 @@
     - "Ajout d'une erreur quand un argument de méthode est dupliqué #img_236_duplicated_arg"
     - "Éditeur : correction de la barre de défilement qui n'était pas cliquable."
     - "Équipe : les boutons accepter et refuser une candidature ne s'affichent plus quand l'on est pas capitaine."
+    - "Forum : correction de la suppression d'un topic."
+    - "Éditeur : correction de la couleur de la barre du bas en thème sombre."
 
 235:
   title: Traduction Espagnole, pays dans le potager, messages de bot sur le chat et défis d'équipe.
