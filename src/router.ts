@@ -10,6 +10,7 @@ const AdminNewsletters = () => import(/* webpackChunkName: "admin" */ `@/compone
 const AdminServers = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-servers.vue`)
 const AdminServices = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-services.vue`)
 const AdminTrophies = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-trophies.vue`)
+const AdminGroups = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-groups.vue`)
 const Admin = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin.vue`)
 import Error from '@/component/app/error.vue'
 const BankBuy = () => import(/* webpackChunkName: "[request]" */ `@/component/bank/bank-buy.${locale}.i18n`)
@@ -117,6 +118,7 @@ const routes = [
 	{ path: '/admin/errors', component: AdminErrors, beforeEnter: connected },
 	{ path: '/admin/servers', component: AdminServers, beforeEnter: connected },
 	{ path: '/admin/trophies', component: AdminTrophies, beforeEnter: connected },
+	{ path: '/admin/groups', component: AdminGroups, beforeEnter: connected },
 	{ path: '/about', component: About },
 	{ path: '/app', component: MobileApp },
 	{ path: '/conditions', component: Conditions },
