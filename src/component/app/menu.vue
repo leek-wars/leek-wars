@@ -461,6 +461,7 @@
 		float: left;
 		margin: 6px;
 		font-size: 28px;
+		transition: none;
 	}
 	#app.menu-collapsed .menu-center .section img {
 		height: 30px;
