@@ -1530,4 +1530,7 @@
 		text-align: center;
 		margin-top: 15px;
 	}
+	.compos {
+		margin-bottom: 12px;
+	}
 </style>
