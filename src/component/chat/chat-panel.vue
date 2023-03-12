@@ -12,7 +12,7 @@
 			<v-menu v-if="$store.state.farmer?.public_chat_enabled" offset-y>
 				<template v-slot:activator="{ on }">
 					<div class="language-button" v-ripple v-on="on">
-						<flag :code="LeekWars.languages[LeekWars.publicChats[chatID].language].country" />
+						<flag :code="LeekWars.languages[LeekWars.publicChats[chatID].language].country" :clickable="false" />
 						<div class="unread-circle" v-if="Object.values(LeekWars.publicChats).some(chat => $store.state.chat[chat.id] && !$store.state.chat[chat.id].read)"></div>
 					</div>
 				</template>

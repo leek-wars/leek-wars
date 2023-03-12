@@ -30,7 +30,7 @@
 					<template v-slot:activator="{ on }">
 						<div class="tab" v-on="on" :class="{active: category.startsWith('country')}">
 							<!-- {{ $t('main.country') }} -->
-							<flag v-if="country" :code="country"></flag>
+							<flag v-if="country" :code="country" :clickable="false" />
 							<v-icon v-else :title="$t('main.worldwide')">mdi-earth</v-icon>
 							<v-icon>mdi-chevron-down</v-icon>
 						</div>
