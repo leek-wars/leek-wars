@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div :class="{single}">
 		<code ref="code" v-show="expanded"></code>
 		<span v-if="expandable && !single" class="button" v-ripple @click="expanded = !expanded">
 			<v-icon>{{ expanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
@@ -45,7 +45,9 @@
 
 <style lang="scss" scoped>
 	div {
-		display: inline-block;
+		&.single {
+			display: inline-block;
+		}
 		max-width: 100%;
 	}
 	.button {
