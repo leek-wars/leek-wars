@@ -137,7 +137,7 @@
 							<br>
 						</div>
 						<div class="title advanced" @click="advanced = !advanced">
-							{{ $t('advanced') }}
+							{{ $t('main.advanced') }}
 							<v-icon v-if="advanced">mdi-chevron-up</v-icon>
 							<v-icon v-else>mdi-chevron-down</v-icon>
 						</div>
