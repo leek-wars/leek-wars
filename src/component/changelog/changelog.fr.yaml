@@ -1,6 +1,7 @@
 236:
+  title: Bloquer son XP, classements par niveau et par pays et améliorations du LeekScript.
   added:
-    - Possibilité de bloquer l'XP d'un poireau, pour ne plus gagner de niveau.
+    - "Possibilité de bloquer l'XP d'un poireau, pour ne plus gagner de niveau. #img_236_xp_blocked #img_236_xp_report"
     - "Ajout des classements de niveau max (50, 100, 150 etc.). #img_236_ranking_level"
     - "Ajout des classements par pays. #img_236_ranking_country"
     - "Un clic sur un drapeau redirige vers le classement du pays."
@@ -8,25 +9,31 @@
     - Les notifications push montrent le message entier pour les MP, forum, commentaire.
     - "Amélioration des images de drapeaux. #img_236_flags"
     - Regroupement de certains pays (195 au lieu de 223).
-    - "Ajout d'une erreur pour une boucle for in sur une valeur non-itérable. #img_236_iterable_warning"
-    - "LeekScript : ajout d'une opération sur les opérateurs || et &&."
+    - "#ai Ajout d'une erreur pour une boucle for in sur une valeur non-itérable. #img_236_iterable_warning"
+    - "#ai LeekScript : ajout d'une opération sur les opérateurs || et && (coût de 1 au lieu de 0)."
     - "Tournois : ajout d'icones et d'une image de couronne de laurier #img_236_tournament_images"
     - "Éditeur : affichage des poireaux sur lesquels l'IA est équipée. #img_236_editor_leeks"
     - "Délai d'apparition des tooltips d'items sur la page poireau."
+    - "#ai LeekScript : le paramètre callback de arraySort() devient optionnel. #img_236_arraysort"
+    - "LeekScript : optimisation des objets et accélération des IA qui en utilisent beaucoup."
   fixed:
     - Correction de la statistique nombre de Battle Royales.
     - Correction de la traduction des notifications de tournoi par mail et push.
     - Correction du retour de getPathLength dans la documentation.
     - "Titre de l'encyclopédie masquée sur la page principale en Anglais et Espagnol. #img_236_encyclo_title"
-    - Correction de la fonction mapRemoveAll avec des valeurs null.
+    - "#ai Correction de la fonction mapRemoveAll avec des valeurs null."
     - Correction (encore) du bug de duplication de poireau dans le lecteur.
-    - "Ajout d'une erreur quand un argument de méthode est dupliqué #img_236_duplicated_arg"
+    - "#ai Ajout d'une erreur quand un argument de méthode est dupliqué #img_236_duplicated_arg"
     - "Éditeur : correction de la barre de défilement qui n'était pas cliquable."
     - "Équipe : les boutons accepter et refuser une candidature ne s'affichent plus quand l'on est pas capitaine."
     - "Forum : correction de la suppression d'un topic."
     - "Éditeur : correction de la couleur de la barre du bas en thème sombre."
     - "Menu : plus d'animation d'icones quand le menu est rétracté."
     - "Éditeur : la documentation provenant de l'encyclopédie est chargée correctement."
+    - "Documentation : icône livre dans la doc de l'éditeur débordait sur le texte."
+    - "#ai LeekScript : déclarer des champs de classe avec des symboles provoque une erreur. #img_236_field"
+    - "#ai LeekScript 4 : correction de search() avec une position de départ négative. #img_236_search"
+    - "#ai LeekScript : il n'est plus possible d'utiliser des champs privés dans une classe fille. #img_236_private"
 
 235:
   title: Traduction Espagnole, pays dans le potager, messages de bot sur le chat et défis d'équipe.
