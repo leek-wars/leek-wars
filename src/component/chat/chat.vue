@@ -149,7 +149,7 @@
 		@Prop() newConversation!: any
 		@Prop() large!: boolean
 
-		emojis = ['❤️', '👍', '👎', '👏', '😂', '😀', '😮', '😱']
+		emojis = ['❤️', '👍', '👋', '😂', '👏', '😢', '😮', '😱']
 
 		isScrollBottom: boolean = true
 		userScroll: boolean = false
