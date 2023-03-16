@@ -394,4 +394,8 @@
 	stroke-width: 3;
 	fill: none;
 }
+.grey {
+	filter: grayscale(100%);
+	opacity: 0.2;
+}
 </style>
