@@ -114,7 +114,7 @@
 	"type_51_fixed": "Pushes to the target cell",
 	"type_53_fixed": "Repels by <b>{0}</b> cells",
 	"type_54_fixed": "Gives <b>{0}%</b> shield",
-	"type_55_fixed": "Gives <b>{0}</b> agility per dead ally",
+	"type_55_fixed": "Gives <b>{0}</b> agility per dead ally (except summon)",
 	"type_56_fixed": "Gives <b>{0}</b> TP for each entity killed",
 	"type_57_fixed": "Restores <b>{0}</b> HP",
 	"type_58": "Restores <b>{0}</b> to <b>{1}</b> HP for each critical hit",

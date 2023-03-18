@@ -118,7 +118,7 @@
 	"type_51_fixed": "Repousse vers la cellule cible",
 	"type_53_fixed": "Repousse de <b>{0}</b> cellules",
 	"type_54_fixed": "Donne <b>{0}%</b> de bouclier",
-	"type_55_fixed": "Donne <b>{0}</b> agilité pour chaque allié mort",
+	"type_55_fixed": "Donne <b>{0}</b> agilité pour chaque allié (hors invocation) mort",
 	"type_56_fixed": "Donne <b>{0}</b> PT pour chaque entité tuée",
 	"type_57_fixed": "Soigne de <b>{0}</b>",
 	"type_58": "Soigne de <b>{0}</b> à <b>{1}</b> pour chaque coup critique effectué",

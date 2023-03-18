@@ -118,7 +118,7 @@
 	"type_51_fixed": "Empuja hacia la celda objetivo",
 	"type_53_fixed": "Nuevo crecimiento de <b>{0}</b> celdas",
 	"type_54_fixed": "Otorga <b>{0}%</b> escudo",
-	"type_55_fixed": "Otorga <b>{0}</b> agilidad por cada aliado muerto",
+	"type_55_fixed": "Otorga <b>{0}</b> agilidad por cada aliado (excepto invocación) muerto",
 	"type_56_fixed": "Otorga <b>{0}</b> PT por cada entidad eliminada",
 	"type_57_fixed": "Curaciones para <b>{0}</b>",
 	"type_58": "Cura de <b>{0}</b> a <b>{1}</b> por cada golpe crítico realizado",
