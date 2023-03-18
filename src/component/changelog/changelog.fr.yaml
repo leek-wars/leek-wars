@@ -1,7 +1,15 @@
 237:
+  added:
+    - "Banque : possibilité de payer par carte bancaire."
+    - "Banque : choix de la monnaie."
   improved:
     - "Chat : changements de quelques emojis disponibles en réaction à un message."
     - "La description de l'effet du katana sombre est plus précise."
+  fixed:
+    - "Classement : suppression des poireaux dont les éleveurs sont bannis (merci à Kraspen)."
+    - "Classement : affichage de l'ancien nom de l'éleveur (merci à Kraspen)."
+    - "Tournois : correction des équipes sans emblèmes (merci à Lmare)"
+    - "Tutoriel : le trophée instruit s'obtient au chapitre 10 et non dès la première question."
 
 236:
   title: Bloquer son XP, classements par niveau et par pays et améliorations du LeekScript.
