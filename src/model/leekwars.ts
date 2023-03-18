@@ -124,7 +124,13 @@ class Language {
 	public flag!: string
 	public chat!: number
 	public encyclopedia!: string
+	public currency!: string
 }
+const LANGUAGES = Object.freeze({
+	fr: { code: 'fr', name: 'Français', country: 'fr', flag: '/image/flag/fr.png', chat: 1, encyclopedia: 'Encyclopédie', chats: [1, 32506, 32507], currency: 'EUR' } as Language,
+	en: { code: 'en', name: 'English', country: 'gb', flag: '/image/flag/gb.png', chat: 2, encyclopedia: 'Encyclopedia', chats: [2, 32508, 32509], currency: 'USD' } as Language,
+	es: { code: 'es', name: 'Español', country: 'es', flag: '/image/flag/es.png', chat: 3, encyclopedia: 'Enciclopedia', chats: [3, 33187, 33188], currency: 'EUR' } as Language,
+} as { [key: string]: Language })
 
 const LOCAL_DATE = new Date()
 const invdate = new Date(LOCAL_DATE.toLocaleString('en-US', {
@@ -166,11 +172,22 @@ const LeekWars = {
 	service_worker: null as ServiceWorkerRegistration | null,
 	battleRoyale: new BattleRoyale(),
 	squares: new Squares(),
-	languages: Object.freeze({
-		fr: { code: 'fr', name: 'Français', country: 'fr', flag: '/image/flag/fr.png', chat: 1, encyclopedia: 'Encyclopédie', chats: [1, 32506, 32507] } as Language,
-		en: { code: 'en', name: 'English', country: 'gb', flag: '/image/flag/gb.png', chat: 2, encyclopedia: 'Encyclopedia', chats: [2, 32508, 32509] } as Language,
-		es: { code: 'es', name: 'Español', country: 'es', flag: '/image/flag/es.png', chat: 3, encyclopedia: 'Enciclopedia', chats: [3, 33187, 33188] } as Language,
-	} as { [key: string]: Language }),
+	languages: LANGUAGES,
+	currencies: Object.freeze({
+		AUD: {symbol: 'A$', flag: 'au', prefix: true},
+		CAD: {symbol: 'C$', flag: 'ca', prefix: true},
+		CHF: {symbol: 'CHF', flag: 'ch' },
+		EUR: {symbol: '€', flag: 'eu'},
+		GBP: {symbol: '£', flag: 'gb', prefix: true},
+		HKD: {symbol: 'HK$', flag: 'hk', prefix: true},
+		JPY: {symbol: '¥', flag: 'jp'},
+		NOK: {symbol: 'kr', flag: 'no'},
+		NZD: {symbol: 'NZ$', flag: 'nz', prefix: true},
+		SEK: {symbol: 'kr', flag: 'se'},
+		SGD: {symbol: 'S$', flag: 'sg', prefix: true},
+		USD: {symbol: '$', flag: 'us', prefix: true},
+	}),
+	currency: localStorage.getItem('currency') || LANGUAGES[locale].currency,
 	timeDelta: 0, // (Date.now() / 1000 | 0) - __SERVER_TIME,
 	time: (Date.now() / 1000) | 0,
 	timeSeconds: (Date.now() / 1000) | 0,

@@ -23,28 +23,26 @@
 		</div>
 		<panel class="first">
 			<div class="bank-description center" v-html="$t('description')"></div>
+
+			<v-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)" hide-details dense solo light>
+				<template v-slot:selection>
+					<flag :code="LeekWars.currencies[LeekWars.currency].flag" :clickable="false" />&nbsp;
+					{{ LeekWars.currency }} &nbsp; <span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>
+				</template>
+				<template slot="item" slot-scope="data">
+					<v-list-item-content>
+						<v-list-item-title class="currency">
+							<flag :code="LeekWars.currencies[data.item].flag" :clickable="false" />&nbsp;
+							{{ data.item }} &nbsp; <span class="symbol">{{ LeekWars.currencies[data.item].symbol }}</span>
+						</v-list-item-title>
+					</v-list-item-content>
+				</template>
+			</v-select>
+
 			<loader v-if="!packs" />
 			<div v-else class="packs">
-				<router-link v-for="(pack, p) in packs" :key="pack.crystals" class="pack card" :to="'/bank/buy/' + p" v-ripple>
-					<img :src="'/image/bank/crystals_' + p + '.png'">
-					<i18n tag="h2" path="main.pack_of_n_crystals">
-						<b slot="crystals">{{ pack.crystals }}</b>
-					</i18n>
-					<div class="buy">
-						<span class="price">{{ pack.price }}€</span>
-						<div>
-							<v-icon>mdi-credit-card-outline</v-icon> {{ $t('main.credit_card') }}
-						</div>
-						<div>
-							<img :src="'/image/bank/paypal.png'">
-						</div>
-						<!-- <router-link v-for="(offer, o) in pack.offers" :key="offer.type" :to="'/bank/buy/' + p + '/' + o">
-							<div v-ripple>
-								<span class="price">{{ offer.price }}€</span>
-								<img :src="'/image/bank/' + offer.type + '.png'">
-							</div>
-						</router-link> -->
-					</div>
+				<router-link v-for="(pack, p) in packs" :key="pack.crystals" :to="'/bank/buy/' + p" v-ripple>
+					<bank-product :product="pack" />
 				</router-link>
 			</div>
 		</panel>
@@ -72,14 +70,16 @@
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import Item from '@/component/item.vue'
+	import { locale } from '@/locale'
+	import BankProduct from './bank-product.vue'
 
-
-	@Component({ name: 'bank', i18n: {}, mixins: [...mixins], components: { Item } })
+	@Component({ name: 'bank', i18n: {}, mixins: [...mixins], components: { Item, BankProduct } })
 	export default class Bank extends Vue {
 		packs: any = null
 		items: any = null
+
 		created() {
 			LeekWars.setActions([
 				{image: 'icon/market.png', click: () => this.$router.push('/market')},
@@ -91,17 +91,41 @@
 				LeekWars.setTitle(this.$i18n.t('title'))
 			})
 			this.updateSubtitle()
-
 		}
+
 		updateSubtitle() {
 			if (this.$store.state.farmer) {
 				LeekWars.setSubTitle(this.$t('main.x_habs', [LeekWars.formatNumber(this.$store.state.farmer.habs)]) + " • " + this.$t('main.x_crystals', [LeekWars.formatNumber(this.$store.state.farmer.crystals)]))
 			}
 		}
+
+		@Watch('LeekWars.currency')
+		updateCurrency() {
+			localStorage.setItem('currency', LeekWars.currency)
+		}
 	}
 </script>
 
 <style lang="scss" scoped>
+.currency {
+	display: flex;
+	align-items: center;
+}
+.flag {
+	max-width: 28px;
+	max-height: 28px;
+}
+.v-select {
+	margin-left: 10px;
+	display: inline-block;
+	::v-deep input {
+		border: none;
+		width: 10px;
+	}
+}
+#app.app .v-select {
+	margin-left: 0;
+}
 	.bank-description {
 		padding: 20px;
 		font-size: 17px;
@@ -140,7 +164,7 @@
 			margin-right: 15px;
 			margin-left: 3px;
 			height: 80px;
-			width: 85px;
+			width: 80px;
 			margin-top: 5px;
 			object-fit: contain;
 		}
@@ -151,7 +175,7 @@
 			align-items: center;
 			div {
 				border-radius: 2px;
-				padding: 5px 10px;
+				padding: 5px 8px;
 				margin: 5px 0;
 				display: inline-flex;
 				border: 1px solid #ccc;
@@ -160,19 +184,20 @@
 				align-items: center;
 				gap: 4px;
 				i {
-					font-size: 30px;
+					font-size: 26px;
 				}
 			}
 		}
 		.price {
 			font-weight: 400;
-			font-size: 25px;
-			color: #555;
+			font-size: 24px;
 			margin-right: 10px;
+			display: flex;
+			align-items: center;
 		}
 		.buy img {
 			vertical-align: middle;
-			height: 30px;
+			height: 25px;
 		}
 	}
 	.item-sample {

@@ -3,27 +3,29 @@
 		<div class="page-header page-bar">
 			<h1>
 				<router-link to="/bank">{{ $t('title') }}</router-link> >
-				<span v-if="data" v-html="$t('purshase_title_simple', [data.crystalCount])"></span>
+				<span v-if="product" v-html="$t('purshase_title_simple', [product.crystals])"></span>
 			</h1>
 		</div>
-		<panel class="first center">
+		<panel class="first">
+
+			<v-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)" hide-details dense solo light>
+				<template v-slot:selection>
+					<flag :code="LeekWars.currencies[LeekWars.currency].flag" :clickable="false" />&nbsp;
+					{{ LeekWars.currency }} &nbsp; <span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>
+				</template>
+				<template slot="item" slot-scope="data">
+					<v-list-item-content>
+						<v-list-item-title class="currency">
+							<flag :code="LeekWars.currencies[data.item].flag" :clickable="false" />&nbsp;
+							{{ data.item }} &nbsp; <span class="symbol">{{ LeekWars.currencies[data.item].symbol }}</span>
+						</v-list-item-title>
+					</v-list-item-content>
+				</template>
+			</v-select>
 
 			<div class="container">
-				<div v-if="data" class="pack card">
-					<img :src="'/image/bank/crystals_' + data.packID + '.png'">
-					<i18n tag="h2" path="main.pack_of_n_crystals">
-						<b slot="crystals">{{ data.crystalCount }}</b>
-					</i18n>
-					<div class="buy">
-						<span class="price">{{ data.price }}€</span>
-						<div>
-							<v-icon>mdi-credit-card-outline</v-icon> {{ $t('main.credit_card') }}
-						</div>
-						<div>
-							<img :src="'/image/bank/paypal.png'">
-						</div>
-					</div>
-				</div>
+				<bank-product v-if="product" :product="product" />
+
 				<!-- <div v-if="data.vendor === 'StarPass'">
 					<br>
 					<loader v-if="starPassLoading" />
@@ -45,17 +47,21 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import { loadScript } from "@paypal/paypal-js"
 	import { mixins } from '@/model/i18n'
+	import { locale } from '@/locale'
+	import BankProduct from './bank-product.vue'
+	import { store } from '@/model/store'
 
-	@Component({ name: 'bank-buy', i18n: {}, mixins: [...mixins] })
+	@Component({ name: 'bank-buy', i18n: {}, mixins: [...mixins], components: { BankProduct } })
 	export default class BankBuy extends Vue {
 		pack!: number
 		offer!: number
-		data: any = null
+		product: any = null
 		loading: boolean = false
 		starPassLoading: boolean = false
+
 		created() {
 			this.pack = parseInt(this.$route.params.pack, 10)
 			this.offer = parseInt(this.$route.params.offer, 10)
@@ -63,15 +69,9 @@
 				const pack = data.packs[this.pack]
 				// const offer = pack.offers[this.offer]
 				// const vendor = offer.vendor
-				const crystalCount = pack.crystals
-				const obj = {
-					id: 0,
-					// vendor,
-					crystalCount,
-					packID: this.pack,
-					offerID: this.offer,
-					price: pack.price
-				}
+				this.product = pack
+				this.loadPayPal()
+
 				// if (vendor === 'StarPass') {
 				// 	obj.id = LeekWars.LOCAL ? offer.id[1] : offer.id[0]
 				// 	LeekWars.post('bank/begin-starpass-payment', {pack_id: this.pack, offer_id: this.offer}).then(() => {
@@ -80,42 +80,43 @@
 				// 	}).error(error => {
 				// 		LeekWars.toast(error)
 				// 	})
-				// } else {
-					loadScript({
-						// "client-id": "Acg3b4FoxUp3vXX-G4aQ01vc5rkev2DIio8e2_ApB7OVIVHocmuXu7RJcN5zZTHGCOpqf-a-ukdIELDy", // Sandbox
-						"client-id": "AesWr04mqzJrZlvdiR99GWBSnvWya49kuhJm84d3bgg7Afq-Ekh7PbunWFL6UOFXdQFw0TGmwr_vzS74",
-						currency: "EUR"
-					}).then((paypal) => {
-						paypal!.Buttons!({
-							style: { layout: 'vertical', color: 'blue', shape: 'rect', label:  'paypal', tagline: false },
-							// Order is created on the server and the order id is returned
-							createOrder: (data, actions) => {
-								return new Promise((resolve, reject) => {
-									return LeekWars.post('bank/begin-paypal-payment', {pack_id: this.pack, offer_id: 1}).then(resolve)
-								})
-							},
-							// Finalize the transaction on the server after payer approval
-							onApprove: (data, actions) => {
-								return LeekWars.post('bank/execute-paypal-payment', {order_id: data.orderID}).then(data => {
-									this.$store.commit('update-crystals', data.crystals)
-									this.$router.replace('/bank/validate/success/' + data.crystals)
-								}).error(error => {
-									this.$router.replace('/bank/validate/failed/' + error.error)
-								})
-							}
-						}).render('#paypal-button-container')
-					})
-					.catch((err) => {
-						console.error("failed to load the PayPal JS SDK script", err)
-					})
-					this.data = obj
 				// }
-				LeekWars.setTitle(this.$t('title'), this.$t('purshase_title_text', [crystalCount]))
+				LeekWars.setTitle(this.$t('title'), this.$t('purshase_title_text_simple', [pack.crystals]))
 			})
 		}
+
+		loadPayPal() {
+			loadScript({
+				"client-id": (LeekWars.LOCAL || store.state.farmer?.id === 1) ? "Acg3b4FoxUp3vXX-G4aQ01vc5rkev2DIio8e2_ApB7OVIVHocmuXu7RJcN5zZTHGCOpqf-a-ukdIELDy" : "AesWr04mqzJrZlvdiR99GWBSnvWya49kuhJm84d3bgg7Afq-Ekh7PbunWFL6UOFXdQFw0TGmwr_vzS74",
+				currency: LeekWars.currency
+			}).then((paypal) => {
+				paypal!.Buttons!({
+					style: { layout: 'vertical', color: 'blue', shape: 'rect', label:  'paypal', tagline: false },
+					// Order is created on the server and the order id is returned
+					createOrder: (data, actions) => {
+						return new Promise((resolve, reject) => {
+							return LeekWars.post('bank/begin-paypal-payment', {pack_id: this.pack, offer_id: 1, currency: LeekWars.currency}).then(resolve)
+						})
+					},
+					// Finalize the transaction on the server after payer approval
+					onApprove: (data, actions) => {
+						return LeekWars.post('bank/execute-paypal-payment', {order_id: data.orderID}).then(data => {
+							this.$store.commit('update-crystals', data.crystals)
+							this.$router.replace('/bank/validate/success/' + data.crystals)
+						}).error(error => {
+							this.$router.replace('/bank/validate/failed/' + error.error)
+						})
+					}
+				}).render('#paypal-button-container')
+			})
+			.catch((err) => {
+				console.error("failed to load the PayPal JS SDK script", err)
+			})
+		}
+
 		createStarPass() {
 			const starpass = document.createElement('script')
-			starpass.src = 'https://script.starpass.fr/script.php?idd=' + this.data.id + '&verif_en_php=1&datas='
+			starpass.src = 'https://script.starpass.fr/script.php?idd=' + this.product.id + '&verif_en_php=1&datas='
 			starpass.async = true
 			const block = this.$refs.starpass as HTMLElement
 			if (block) {
@@ -129,67 +130,42 @@
 				window.location.href = data.url
 			})
 		}
+		@Watch('LeekWars.currency')
+		updateCurrency() {
+			localStorage.setItem('currency', LeekWars.currency)
+			this.loadPayPal()
+		}
 	}
 </script>
 
 <style lang="scss" scoped>
+.currency {
+	display: flex;
+	align-items: center;
+}
+.flag {
+	max-width: 28px;
+	max-height: 28px;
+}
+.first {
+	padding: 25px 0;
+}
+.v-select {
+	display: inline-block;
+	::v-deep input {
+		border: none;
+		width: 10px;
+	}
+}
 .container {
-	padding: 50px 10px;
+	padding: 10px 0px;
 	align-items: flex-start;
 	gap: 25px;
 }
 .container > * {
 	flex: 1;
 }
-.pack {
-	padding: 10px;
-	min-height: 90px;
-	text-align: left;
-	h2 {
-		margin-bottom: 8px;
-		margin-top: 3px;
-		font-size: 20px;
-	}
-	> img {
-		float: left;
-		margin-right: 15px;
-		margin-left: 3px;
-		height: 80px;
-		width: 85px;
-		margin-top: 5px;
-		object-fit: contain;
-	}
-	.buy {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 8px;
-		align-items: center;
-		div {
-			border-radius: 2px;
-			padding: 5px 10px;
-			margin: 5px 0;
-			display: inline-flex;
-			border: 1px solid #ccc;
-			border-radius: 4px;
-			display: flex;
-			align-items: center;
-			gap: 4px;
-			i {
-				font-size: 30px;
-			}
-		}
-	}
-	.price {
-		font-weight: 400;
-		font-size: 25px;
-		color: #555;
-		margin-right: 10px;
-	}
-	.buy img {
-		vertical-align: middle;
-		height: 30px;
-	}
-}
+
 	.paypal-button {
 		display: inline-flex;
 		align-items: center;

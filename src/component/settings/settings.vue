@@ -85,7 +85,7 @@
 		<div class="container grid large">
 			<panel :title="$t('language')" class="languages" icon="mdi-translate">
 				<div v-for="language in LeekWars.languages" :key="language.code" v-ripple :class="{selected: language.code == $i18n.locale}" :lang="language.code" class="language" @click="LeekWars.setLocale(language.code)">
-					<flag :code="language.country" />
+					<flag :code="language.country" :clickable="false" />
 					<br>
 					{{ language.name }} ({{ language.code }})
 				</div>
