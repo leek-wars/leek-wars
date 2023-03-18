@@ -224,5 +224,7 @@
 	"advanced": "Advanced",
 	"save": "Save",
 	"apply": "Apply",
-	"xp_blocked": "XP blocked"
+	"xp_blocked": "XP blocked",
+	"pack_of_n_crystals": "Pack of {crystals} crystals",
+	"credit_card": "Bank card"
 }

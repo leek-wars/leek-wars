@@ -207,9 +207,12 @@ if (process.env.VUE_APP_SOCIAL === 'true') {
 if (process.env.VUE_APP_BANK === 'true') {
 	routes.push(
 		{ path: '/bank', component: Bank, beforeEnter: connected },
+		{ path: '/bank/buy/:pack', component: BankBuy, beforeEnter: connected },
 		{ path: '/bank/buy/:pack/:offer', component: BankBuy, beforeEnter: connected },
 		{ path: '/bank/validate/', component: BankValidate, beforeEnter: connected },
+		{ path: '/bank/validate/success/:crystals', component: BankValidate, props: {success: true}, beforeEnter: connected },
 		{ path: '/bank/validate/success/:crystals/:vendor', component: BankValidate, props: {success: true}, beforeEnter: connected },
+		{ path: '/bank/validate/failed/:reason', component: BankValidate, props: {success: false}, beforeEnter: connected },
 		{ path: '/bank/validate/failed/:vendor/:reason', component: BankValidate, props: {success: false}, beforeEnter: connected },
 	)
 }

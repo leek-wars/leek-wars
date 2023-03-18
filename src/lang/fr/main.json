@@ -224,5 +224,7 @@
 	"worldwide": "Monde entier",
 	"save": "Sauvegarder",
 	"advanced": "Avancé",
-	"xp_blocked": "XP bloquée"
+	"xp_blocked": "XP bloquée",
+	"pack_of_n_crystals": "Pack de {crystals} cristaux",
+	"credit_card": "Carte bancaire"
 }

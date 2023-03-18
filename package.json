@@ -13,6 +13,7 @@
 		"test": "bundlesize"
 	},
 	"dependencies": {
+		"@paypal/paypal-js": "^5.1.4",
 		"codemirror": "^5.58.3",
 		"dotenv": "^8.2.0",
 		"js-beautify": "^1.13.0",

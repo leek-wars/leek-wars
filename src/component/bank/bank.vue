@@ -25,18 +25,27 @@
 			<div class="bank-description center" v-html="$t('description')"></div>
 			<loader v-if="!packs" />
 			<div v-else class="packs">
-				<div v-for="(pack, p) in packs" :key="pack.crystals" class="pack card">
+				<router-link v-for="(pack, p) in packs" :key="pack.crystals" class="pack card" :to="'/bank/buy/' + p" v-ripple>
 					<img :src="'/image/bank/crystals_' + p + '.png'">
-					<h2 v-html="$t('pack_of_n_crystals', [pack.crystals])"></h2>
+					<i18n tag="h2" path="main.pack_of_n_crystals">
+						<b slot="crystals">{{ pack.crystals }}</b>
+					</i18n>
 					<div class="buy">
-						<router-link v-for="(offer, o) in pack.offers" :key="offer.type" :to="'/bank/buy/' + p + '/' + o">
+						<span class="price">{{ pack.price }}€</span>
+						<div>
+							<v-icon>mdi-credit-card-outline</v-icon> {{ $t('main.credit_card') }}
+						</div>
+						<div>
+							<img :src="'/image/bank/paypal.png'">
+						</div>
+						<!-- <router-link v-for="(offer, o) in pack.offers" :key="offer.type" :to="'/bank/buy/' + p + '/' + o">
 							<div v-ripple>
 								<span class="price">{{ offer.price }}€</span>
 								<img :src="'/image/bank/' + offer.type + '.png'">
 							</div>
-						</router-link>
+						</router-link> -->
 					</div>
-				</div>
+				</router-link>
 			</div>
 		</panel>
 		<div class="container grid">
@@ -66,6 +75,7 @@
 	import { Component, Vue } from 'vue-property-decorator'
 	import Item from '@/component/item.vue'
 
+
 	@Component({ name: 'bank', i18n: {}, mixins: [...mixins], components: { Item } })
 	export default class Bank extends Vue {
 		packs: any = null
@@ -81,6 +91,7 @@
 				LeekWars.setTitle(this.$i18n.t('title'))
 			})
 			this.updateSubtitle()
+
 		}
 		updateSubtitle() {
 			if (this.$store.state.farmer) {
@@ -121,41 +132,48 @@
 			margin-top: 3px;
 			font-size: 20px;
 		}
-	}
-	.pack > img {
-		float: left;
-		margin-right: 15px;
-		margin-left: 3px;
-		height: 80px;
-		width: 85px;
-		margin-top: 5px;
-		object-fit: contain;
-	}
-	.pack .buy {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 8px;
-		div {
-			border-radius: 2px;
-			padding: 5px 10px;
-			margin: 5px 0;
-			display: inline-flex;
-			border: 1px solid #aaa;
-			border-radius: 4px;
-			&:hover {
-				background: #eee;
+		&:hover {
+			background: #eee;
+		}
+		> img {
+			float: left;
+			margin-right: 15px;
+			margin-left: 3px;
+			height: 80px;
+			width: 85px;
+			margin-top: 5px;
+			object-fit: contain;
+		}
+		.buy {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+			align-items: center;
+			div {
+				border-radius: 2px;
+				padding: 5px 10px;
+				margin: 5px 0;
+				display: inline-flex;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				display: flex;
+				align-items: center;
+				gap: 4px;
+				i {
+					font-size: 30px;
+				}
 			}
 		}
-	}
-	.pack .price {
-		font-weight: 400;
-		font-size: 25px;
-		color: #777;
-	}
-	.pack .buy img {
-		margin-left: 5px;
-		vertical-align: middle;
-		height: 30px;
+		.price {
+			font-weight: 400;
+			font-size: 25px;
+			color: #555;
+			margin-right: 10px;
+		}
+		.buy img {
+			vertical-align: middle;
+			height: 30px;
+		}
 	}
 	.item-sample {
 		a {

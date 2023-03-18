@@ -3,7 +3,8 @@
 		<loader v-if="loading" />
 		<template v-else-if="success">
 			<div class="page-header page-bar">
-				<h1 v-html="$t('payment_success', [vendor])"></h1>
+				<!-- <h1 v-html="$t('payment_success', [vendor])"></h1> -->
+				<h1 v-html="$t('payment_success_simple')"></h1>
 			</div>
 			<panel class="first center">
 				<br>
@@ -68,6 +69,7 @@
 				this.error = true
 				return
 			}
+			/*
 			const url = document.location!.search
 			if (LeekWars.objectSize(this.$route.query)) { // PayPal return url: /\?paymentId=(.*?)&token=(.*?)&PayerID=(.*?)$/
 				const payment_id = this.$route.query.paymentId
@@ -91,6 +93,7 @@
 					this.error = true
 				})
 			}
+			*/
 		}
 	}
 </script>
