@@ -2,6 +2,7 @@
   added:
     - "Banque : possibilité de payer par carte bancaire."
     - "Banque : choix de la monnaie."
+    - "Forum : ajout d'une option pour masquer les sujets résolus."
   improved:
     - "Chat : changements de quelques emojis disponibles en réaction à un message."
     - "La description de l'effet du katana sombre est plus précise."
@@ -11,6 +12,7 @@
     - "Classement : affichage de l'ancien nom de l'éleveur (merci à Kraspen)."
     - "Tournois : correction des équipes sans emblèmes (merci à Lmare)"
     - "Tutoriel : le trophée instruit s'obtient au chapitre 10 et non dès la première question."
+    - "Correction des tooltips avancées de poireau se fermaient directement après ouverture."
 
 236:
   title: Bloquer son XP, classements par niveau et par pays et améliorations du LeekScript.
