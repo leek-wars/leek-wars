@@ -16,5 +16,6 @@
 	"resolved": "Tema resuelto",
 	"topic": "Sujeto",
 	"mark_as_read": "Marcar como leído",
-	"mark_as_read_text": "Todos los temas en todas las categorías del foro se marcarán como leídos. Después de esta acción, solo se mostrarán nuevos temas o nuevas respuestas."
+	"mark_as_read_text": "Todos los temas en todas las categorías del foro se marcarán como leídos. Después de esta acción, solo se mostrarán nuevos temas o nuevas respuestas.",
+	"show_resolved": "Mostrar temas resueltos"
 }

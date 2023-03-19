@@ -16,5 +16,6 @@
 	"resolved": "Topic solved",
 	"topic": "Subject",
 	"mark_as_read": "Mark as read",
-	"mark_as_read_text": "All topics in all forum categories will be marked as read. After this action, only new topics or replies will be marked."
+	"mark_as_read_text": "All topics in all forum categories will be marked as read. After this action, only new topics or replies will be marked.",
+	"show_resolved": "Show resolved topics"
 }

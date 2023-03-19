@@ -110,6 +110,10 @@
 					<v-icon>mdi-email-open</v-icon>
 					<span class="report-button">{{ $t('mark_as_read') }}</span>
 				</div>
+				<div class="tab" @click="updateShowResolved">
+					<span>{{ $t('show_resolved') }}</span>
+					<v-switch v-model="showResolved" hide-details />
+				</div>
 			</div>
 		</div>
 
@@ -169,6 +173,7 @@
 		markAsReadDialog: boolean = false
 		forumLanguages: {[key: string]: boolean} = {}
 		translations: any[] = []
+		showResolved: boolean = true
 
 		get activeLanguages() {
 			return Object.entries(this.forumLanguages).filter(e => e[1]).map(e => e[0])
@@ -187,12 +192,13 @@
 		update() {
 			const category = this.$route.params.category
 			this.page = 'page' in this.$route.params ? parseInt(this.$route.params.page, 10) : 1
+			this.showResolved = localStorage.getItem('forum/show-resolved') !== 'false'
 			LeekWars.setActions([
 				{icon: 'mdi-pencil', click: () => this.createDialog = true},
 				{icon: 'mdi-magnify', click: () => this.$router.push('/search?category=' + category) }
 			])
 			if (this.topics) { this.topics = null }
-			LeekWars.get('forum/get-topics/' + category + '/' + this.page).then(data => {
+			LeekWars.get('forum/get-topics/' + category + '/' + this.page + '/' + this.showResolved).then(data => {
 				this.categories = data.categories
 				if (this.categories) {
 					this.categories[0].name = this.categories[0].team > 0 ? this.categories[0].name : this.$t('forum-category.' + this.categories[0].name) as string
@@ -260,6 +266,12 @@
 		}
 		updateDraftTitle() {
 			localStorage.setItem('forum/draft-title', this.createTitle)
+		}
+		updateShowResolved() {
+			this.showResolved = !this.showResolved
+			localStorage.setItem('forum/show-resolved', '' + this.showResolved)
+			this.$router.push('/forum/category-' + this.category_ids)
+			if (this.page === 1) { this.update() }
 		}
 	}
 </script>
