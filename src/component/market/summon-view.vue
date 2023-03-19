@@ -24,7 +24,7 @@
 		</div>
 		<h4>{{ $t('main.chips') }}</h4>
 		<div class="chips">
-			<rich-tooltip-item v-for="chip of summon.chips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[chip]" :bottom="true" :instant="true" @input="$emit('input', $event)">
+			<rich-tooltip-item v-for="chip of summon.chips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[chip]" :bottom="true" @input="$emit('input', $event)">
 				<img :src="'/image/chip/' + CHIPS[chip].name + '.png'" class="chip" v-on="on">
 			</rich-tooltip-item>
 		</div>
