@@ -5,7 +5,7 @@ import { SHADOW_QUALITY, T, Texture } from './texture'
 
 class Bulb extends FightEntity {
 
-	public static SCALE: number = 0.40
+	public static SCALE: number = 0.30
 
 	public skin!: number
 	public bulbName!: string

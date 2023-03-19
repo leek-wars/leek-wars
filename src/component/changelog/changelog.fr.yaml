@@ -5,6 +5,7 @@
   improved:
     - "Chat : changements de quelques emojis disponibles en réaction à un message."
     - "La description de l'effet du katana sombre est plus précise."
+    - "Réduction de la taille des bulbes en combat."
   fixed:
     - "Classement : suppression des poireaux dont les éleveurs sont bannis (merci à Kraspen)."
     - "Classement : affichage de l'ancien nom de l'éleveur (merci à Kraspen)."
