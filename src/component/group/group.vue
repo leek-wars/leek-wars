@@ -341,7 +341,7 @@
 			<img slot="icon" src="/image/icon/garden.png">
 			<template slot="title">
 				{{ $t('weapons_of', [group.name]) }}
-				<span class="weapon-count">[{{ group.weapons.length }}/{{ group.max_weapons }}]</span>
+				<span class="weapon-count">[{{ group.weapons.length }}/{{ max_weapons }}]</span>
 			</template>
 			<div class="weapons-popup">
 				<div :class="{dashed: draggedWeapon && draggedWeaponLocation === 'farmer'}" class="leek-weapons" @dragover="dragOver" @drop="weaponsDrop('leek', $event)">
@@ -371,7 +371,7 @@
 
 		<popup v-if="group" v-model="chipsDialog" :width="800">
 			<v-icon slot="icon">mdi-chip</v-icon>
-			<template slot="title">{{ $t('chips_of', [group.name]) }} <span class="chip-count">[{{ group.chips.length }}/{{ group.max_chips }}]</span></template>
+			<template slot="title">{{ $t('chips_of', [group.name]) }} <span class="chip-count">[{{ group.chips.length }}/{{ max_chips }}]</span></template>
 			<div class="chips-dialog">
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'farmer'}" class="leek-chips" @dragover="dragOver" @drop="chipsDrop('leek', $event)">
 					<rich-tooltip-item v-for="chip in orderedChips" :key="chip" v-slot="{ on }" :item="LeekWars.items[chip]" :bottom="true" :nodge="true">
@@ -617,7 +617,7 @@
 		addWeapon(weapon: number) {
 			if (!this.group) { return }
 			const template = LeekWars.items[weapon]
-			if (this.group.weapons.length >= this.group.max_weapons) {
+			if (this.group.weapons.length >= this.max_weapons) {
 				return LeekWars.toast(this.$i18n.t('error_max_weapon', [this.group.name]))
 			}
 			if (template.level > this.group.level) {
@@ -675,7 +675,7 @@
 		addChip(chip: number) {
 			if (!this.group) { return }
 			const template = CHIPS[chip]
-			if (this.group.chips.length >= this.group.max_chips) {
+			if (this.group.chips.length >= this.max_chips) {
 				return LeekWars.toast(this.$i18n.t('error_max_chip', [this.group.name]))
 			}
 			if (template.level > this.group.level) {
