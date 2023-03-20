@@ -1,8 +1,8 @@
 237:
   added:
-    - "Banque : possibilité de payer par carte bancaire."
-    - "Banque : choix de la monnaie."
-    - "Forum : ajout d'une option pour masquer les sujets résolus."
+    - "Banque : possibilité de payer par carte bancaire. #img_237_card"
+    - "Banque : choix de la monnaie. #img_237_currency"
+    - "Forum : ajout d'une option pour masquer les sujets résolus. #img_237_show_resolved"
     - "Éditeur : fonctionnalité Rechercher et Remplacer. #img_237_replace"
   improved:
     - "Chat : changements de quelques emojis disponibles en réaction à un message."
