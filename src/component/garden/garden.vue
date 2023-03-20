@@ -6,6 +6,7 @@
 				<div class="tab action hidden disabled">
 					<img src="/image/icon/garden.png">
 					<span>{{ garden.fights }}</span>
+					<span v-if="$store.state.farmer?.team_fights">+ {{ $store.state.farmer.team_fights }}</span>
 				</div>
 			</div>
 		</div>
@@ -383,7 +384,7 @@
 			}
 			if (this.category) {
 				const category_underscore = this.category.replace('-', '_')
-				LeekWars.setTitle(this.$t('garden_' + category_underscore), this.$tc('n_fights', store.state.farmer.fights))
+				LeekWars.setTitle(this.$t('garden_' + category_underscore), this.$tc('n_fights', store.state.farmer.fights) + (store.state.farmer.team_fights ? ' + ' + this.$tc('n_fights', store.state.farmer.team_fights) : ''))
 				LeekWars.splitShowContent()
 
 				if (this.category === 'solo') {

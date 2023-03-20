@@ -36,6 +36,7 @@ class Farmer {
 	public grade!: string
 	public muted!: boolean
 	public fights!: number
+	public team_fights!: number
 	public chips!: Chip[]
 	public didactitiel_seen!: boolean
 	public last_connection!: number

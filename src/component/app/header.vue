@@ -76,6 +76,7 @@
 					<router-link to="/garden">
 						<div class="header-button fights-button">
 							<span v-if="$store.state.farmer" class="farmer-fights text">{{ $store.state.farmer.fights | number }}</span>
+							<span v-if="$store.state.farmer" class="farmer-fights text">+ {{ $store.state.farmer.team_fights | number }}</span>
 							<img src="/image/icon/garden.png">
 						</div>
 					</router-link>

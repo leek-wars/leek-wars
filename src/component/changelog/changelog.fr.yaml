@@ -7,6 +7,7 @@
     - "Chat : changements de quelques emojis disponibles en réaction à un message."
     - "La description de l'effet du katana sombre est plus précise."
     - "Réduction de la taille des bulbes en combat."
+    - "Le compteur de combats d'équipe s'affiche à côté du compteur classique. #img_237_team_fights"
   fixed:
     - "Classement : suppression des poireaux dont les éleveurs sont bannis (merci à Kraspen)."
     - "Classement : affichage de l'ancien nom de l'éleveur (merci à Kraspen)."

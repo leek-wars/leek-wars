@@ -57,7 +57,7 @@
 					<div class='text'>{{ $t("main.console") }}</div>
 				</router-link> -->
 
-				<router-link v-ripple to="/garden" class="section" :label="($store.state.farmer && $store.state.farmer.fights) || null" @click.native="clickItem">
+				<router-link v-ripple to="/garden" class="section" :label="$store.state.farmer ? ($store.state.farmer.fights + ($store.state.farmer.team_fights ? '+' + $store.state.farmer.team_fights : '')) : null" @click.native="clickItem">
 					<img src="/image/icon/garden.png">
 					<div class="text">{{ $t("main.garden") }}</div>
 				</router-link>
@@ -381,15 +381,16 @@
 	.menu .section[label]:after, .awards:after {
 		position: absolute;
 		background: #333;
-		right: -10px;
+		right: -15px;
 		top: 50%;
 		margin-top: -11px;
 		content: attr(label);
 		color: white;
 		border-radius: 5px;
-		padding: 1px 5px;
+		padding: 2px 4px;
 		line-height: normal;
 		z-index: 2;
+		font-size: 15px;
 	}
 	#app.app .menu .section[label]:after {
 		right: 8px;
