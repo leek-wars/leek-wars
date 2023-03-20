@@ -226,5 +226,8 @@
 	"advanced": "Avance",
 	"xp_blocked": "EXP bloqueado",
 	"pack_of_n_crystals": "Pack de {crystals} cristales",
-	"credit_card": "Tarjeta de crédito"
+	"credit_card": "Tarjeta de crédito",
+	"replace": "Reemplazar",
+	"replace_all": "Reemplaza todo",
+	"search": "Buscar"
 }

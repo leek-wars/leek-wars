@@ -226,5 +226,8 @@
 	"apply": "Apply",
 	"xp_blocked": "XP blocked",
 	"pack_of_n_crystals": "Pack of {crystals} crystals",
-	"credit_card": "Bank card"
+	"credit_card": "Bank card",
+	"replace": "Replace",
+	"replace_all": "Replace All",
+	"search": "To research"
 }

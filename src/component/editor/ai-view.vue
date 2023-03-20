@@ -16,11 +16,33 @@
 			</template>
 		</div>
 		<div v-show="searchEnabled" class="search-panel">
-			<v-icon>mdi-magnify</v-icon>
-			<input ref="searchInput" v-model="searchQuery" type="text" class="query" autocomplete="off" @keyup.enter="$event.shiftKey ? searchPrevious() : searchNext()">
-			<span v-if="searchLines.length" class="results">{{ searchCurrent + 1 }} / {{ searchLines.length }}</span>
-			<v-icon class="arrow" @click="searchPrevious">mdi-chevron-left</v-icon>
-			<v-icon class="arrow" @click="searchNext">mdi-chevron-right</v-icon>
+			<div class="inputs">
+				<input ref="searchInput" v-model="searchQuery" type="text" autocomplete="off" :placeholder="$t('main.search')" @keyup.enter="$event.shiftKey ? searchPrevious() : searchNext()">
+				<input ref="replaceInput" v-model="replaceQuery" type="text" autocomplete="off" :placeholder="$t('main.replace')" @keyup.enter="replaceOne">
+			</div>
+			<div class="buttons">
+				<div>
+					<div v-if="searchLines.length" class="results">{{ searchCurrent + 1 }} / {{ searchLines.length }}</div>
+					<div v-else class="results">∅</div>
+					<v-icon class="arrow" @click="searchPrevious">mdi-chevron-left</v-icon>
+					<v-icon class="arrow" @click="searchNext">mdi-chevron-right</v-icon>
+					<v-icon class="arrow" @click="closeSearch">mdi-close</v-icon>
+				</div>
+				<div>
+					<tooltip>
+						<template v-slot:activator="{ on }">
+							<v-icon class="arrow" v-on="on" @click="replaceOne">mdi-file-replace-outline</v-icon>
+						</template>
+						{{ $t('main.replace') }}
+					</tooltip>
+					<tooltip>
+						<template v-slot:activator="{ on }">
+							<v-icon class="arrow" v-on="on" @click="replaceAll">mdi-file-replace</v-icon>
+						</template>
+						{{ $t('main.replace_all') }}
+					</tooltip>
+				</div>
+			</div>
 		</div>
 		<div v-show="hintDialog" ref="hintDialog" :style="{left: hintDialogLeft + 'px', top: hintDialogTop + 'px'}" class="hint-dialog">
 			<!-- <div v-if="completionType" class="type">
@@ -204,6 +226,7 @@
 		public searchEnabled: boolean = false
 		public searchCurrent: number = 0
 		public searchQuery: string = ''
+		public replaceQuery: string = ''
 		public searchLines: any = []
 		public underlineMarker: CodeMirror.TextMarker | null = null
 		public mouseX: number = -1
@@ -1553,6 +1576,21 @@
 			this.searchCurrent = (this.searchCurrent + 1) % this.searchLines.length
 			this.searchRefresh()
 		}
+
+		public replaceOne() {
+			const index = this.searchCurrent
+			const position = this.searchLines[this.searchCurrent]
+			this.document.replaceRange(this.replaceQuery, { line: position[0], ch: position[1] }, { line: position[0], ch: position[1] + this.searchQuery.length })
+			this.searchUpdate()
+			this.searchCurrent = index
+			this.searchRefresh()
+		}
+		public replaceAll() {
+			for (const occurence of this.searchLines) {
+				this.document.replaceRange(this.replaceQuery, { line: occurence[0], ch: occurence[1] }, { line: occurence[0], ch: occurence[1] + this.searchQuery.length }, "+input")
+			}
+			this.searchUpdate()
+		}
 	}
 </script>
 
@@ -1755,9 +1793,21 @@
 		}
 	}
 	.search-panel {
-		height: 40px;
 		background: #eee;
 		display: flex;
+		.bar {
+			display: flex;
+			flex: 1;
+			margin-right: 10px;
+		}
+		.inputs {
+			flex: 1;
+			margin-right: 10px;
+		}
+		.buttons {
+			display: flex;
+			flex-direction: column;
+		}
 	}
 	.search-panel .v-icon {
 		width: 40px;
@@ -1765,7 +1815,7 @@
 		padding: 8px;
 	}
 	.search-panel .arrow {
-		opacity: 0.3;
+		opacity: 0.5;
 		cursor: pointer;
 	}
 	.search-panel .arrow:hover {
@@ -1774,17 +1824,22 @@
 	}
 	.search-panel input {
 		width: 100%;
-		height: 26px;
-		margin: 7px 0;
-		margin-right: 7px;
+		height: 32px;
+		margin: 5px 0;
+		padding: 0 6px;
 		border: none;
-		background: #eee;
+		background: white;
+		border: 2px solid #ddd;
+		&:focus {
+			border: 2px solid #0861a5;
+		}
 	}
 	.search-panel .results {
 		color: #777;
-		margin-right: 13px;
+		width: 120px;
 		line-height: 40px;
 		white-space: nowrap;
+		display: inline-block;
 	}
 	.error-band {
 		width: 10px;

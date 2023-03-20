@@ -226,5 +226,8 @@
 	"advanced": "Avancé",
 	"xp_blocked": "XP bloquée",
 	"pack_of_n_crystals": "Pack de {crystals} cristaux",
-	"credit_card": "Carte bancaire"
+	"credit_card": "Carte bancaire",
+	"replace": "Remplacer",
+	"replace_all": "Tout remplacer",
+	"search": "Rechercher"
 }
