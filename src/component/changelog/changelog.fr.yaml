@@ -9,6 +9,7 @@
     - "La description de l'effet du katana sombre est plus précise."
     - "Réduction de la taille des bulbes en combat."
     - "Le compteur de combats d'équipe s'affiche à côté du compteur classique. #img_237_team_fights"
+    - "Page poireau : ajout d'un icone si l'XP est bloquée. #img_237_xp_blocked"
   fixed:
     - "Classement : suppression des poireaux dont les éleveurs sont bannis (merci à Kraspen)."
     - "Classement : affichage de l'ancien nom de l'éleveur (merci à Kraspen)."

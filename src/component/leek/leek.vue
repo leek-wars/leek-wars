@@ -70,7 +70,12 @@
 			</panel>
 
 			<panel :title="$t('statistics')">
-				<h4 class="level">{{ $t('main.level_n', [leek ? leek.level : '...']) }}</h4>
+				<h4 class="level">{{ $t('main.level_n', [leek ? leek.level : '...']) }} <tooltip v-if="leek.xp_blocked">
+					<template v-slot:activator="{ on }">
+						<v-icon v-on="on">mdi-lock</v-icon>
+					</template>
+					{{ $t('main.xp_blocked') }}
+				</tooltip></h4>
 
 				<tooltip>
 					<template v-slot:activator="{ on }">
@@ -1326,6 +1331,10 @@
 	}
 	h4.level {
 		font-size: 20px;
+		.v-icon {
+			font-size: 17px;
+			margin-bottom: 3px;
+		}
 	}
 	.bar {
 		width: 100%;
