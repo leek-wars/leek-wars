@@ -103,5 +103,8 @@
 	"verified": "Verified",
 	"not_verified": "Not verified",
 	"display_farmer": "farmer",
-	"display_team": "team"
+	"display_team": "team",
+	"trophy_x": "Trophy {0}",
+	"sponsorship": "Sponsorship",
+	"godsons_level": "Recursive total level of referrals"
 }

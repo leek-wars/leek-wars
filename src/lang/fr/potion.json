@@ -48,6 +48,8 @@
 	"skin_39": "tricolore",
 	"skin_40": "fer",
 	"skin_41": "diamant",
+	"skin_42": "mafia",
+	"skin_43": "bordeaux",
 	"skin_alpha": "Potion transparente",
 	"skin_alpha_desc": "Où suis-je ?",
 	"skin_apple": "Potion verte pomme",
@@ -103,5 +105,7 @@
 	"skin_france": "Potion tricolore",
 	"skin_iron": "Potion de fer",
 	"skin_diamond": "Potion de diamant",
-	"strength": "Potion de force"
+	"strength": "Potion de force",
+	"skin_bordeaux": "Potion bordeaux",
+	"skin_mafia": "Potion mafieuse"
 }

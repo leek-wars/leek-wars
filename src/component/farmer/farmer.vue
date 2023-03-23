@@ -209,7 +209,6 @@
 								</span>
 							</i18n>
 						</div>
-						<div v-if="myFarmer" class="godfather-link" @click="openGodfatherDialog"><br>{{ $t('godfather_link') }}</div>
 					</div>
 				</div>
 			</panel>
@@ -248,7 +247,7 @@
 				</div>
 			</panel>
 		</div>
-		<panel>
+		<panel toggle="farmer/trophies">
 			<template slot="title">
 				<img src="/image/icon/trophy.png">{{ $t('trophies') }} <span v-if="farmer" class="trophy-count">({{ farmer.points | number }})</span>
 			</template>
@@ -344,6 +343,75 @@
 			</div>
 		</panel>
 
+		<panel :title="$t('sponsorship')" toggle="trophies/sponsorship" icon="mdi-hat-fedora">
+			<template slot="actions">
+				<div v-if="myFarmer" class="button flat" @click="openGodfatherDialog"><v-icon>mdi-link-variant</v-icon> {{ $t('godfather_link') }}</div>
+			</template>
+			<div slot="content" class="content sponsorship">
+				<div class="container">
+					<div v-if="farmer" class="column grey">
+						<div v-if="farmer.godfather">
+							<i18n path="godson_of" tag="div">
+								<router-link slot="farmer" :to="'/farmer/' + farmer.godfather.id">
+									<rich-tooltip-farmer :id="farmer.godfather.id">
+										{{ farmer.godfather.name }}
+									</rich-tooltip-farmer>
+								</router-link>
+							</i18n>
+						</div>
+						<div v-if="farmer.godsons.length">
+							<i18n path="godfather_of" tag="div">
+								<span slot="farmers">
+									<template v-for="(godson, i) in farmer.godsons">
+										<router-link :key="i" :to="'/farmer/' + godson.id">
+											<rich-tooltip-farmer :id="godson.id" v-slot="{ on }">
+												<span v-on="on">{{ godson.name }}</span>
+											</rich-tooltip-farmer>
+										</router-link>
+										<span v-if="i < farmer.godsons.length - 1" :key="i + '_'">, </span>
+									</template>
+								</span>
+							</i18n>
+						</div>
+					</div>
+					<div class="column column-level">
+						<div class="grey">{{ $t('godsons_level') }}</div>
+						<div class="total-level">{{ farmer ? farmer.godsons_level : '...' | number }}</div>
+						<tooltip>
+							<template v-slot:activator="{ on }">
+								<div class="bar" v-on="on">
+									<span :class="{ blue: farmer?.godsons_level >= 10_000 }" :style="{width: xp_bar_width + '%'}" class="xp-bar striked"></span>
+								</div>
+							</template>
+							<span v-if="farmer">{{ farmer.godsons_level | number }} / 10 000</span>
+						</tooltip>
+					</div>
+				</div>
+				<h4>{{ $t('main.rewards') }}</h4>
+				<div v-if="farmer" class="rewards">
+					<div v-for="(reward, r) of rewards" :key="r" class="reward card" :class="{'notif-trophy': r < farmer.godsons_level}">
+						<div class="level">{{ r | number }}<v-icon v-if="r < farmer.godsons_level">mdi-check</v-icon></div>
+						<img v-if="reward.trophy" :src="'/image/trophy/' + reward.trophy + '.svg'">
+						<rich-tooltip-item v-else-if="reward.resource" :item="LeekWars.items[reward.item]" v-slot="{ on }" :bottom="true">
+							<img v-on="on" :src="'/image/resource/' + reward.resource + '.png'">
+						</rich-tooltip-item>
+						<img v-else-if="reward.fight_pack" :src="'/image/fight-pack/' + reward.fight_pack + '.png'">
+						<rich-tooltip-item v-else-if="reward.potion" :item="LeekWars.items[reward.item]" v-slot="{ on }" :bottom="true">
+							<img v-on="on" :src="'/image/potion/skin_' + reward.potion + '.png'">
+						</rich-tooltip-item>
+						<rich-tooltip-item v-else-if="reward.hat" :item="LeekWars.items[reward.item]" v-slot="{ on }" :bottom="true">
+							<img v-on="on" :src="'/image/hat/' + reward.hat + '.png'">
+						</rich-tooltip-item>
+						<div class="name" v-if="reward.trophy">{{ $t('trophy_x', [$t('trophy.' + reward.trophy)]) }}</div>
+						<div class="name" v-else-if="reward.resource">{{ $t('resource.' + reward.resource) }}</div>
+						<div class="name" v-else-if="reward.fight_pack">{{ $t('fight-pack.' + reward.fight_pack) }}</div>
+						<div class="name" v-else-if="reward.potion">{{ $t('potion.skin_' + reward.potion) }}</div>
+						<div class="name" v-else-if="reward.hat">{{ $t('hat.' + reward.hat) }}</div>
+					</div>
+				</div>
+			</div>
+		</panel>
+
 		<div class="container grid large">
 			<panel v-if="!farmer || farmer.fight_history.length > 0" :title="$t('fights')" icon="mdi-sword-cross">
 				<template slot="actions">
@@ -360,6 +428,7 @@
 				<tournaments-history v-else slot="content" :tournaments="farmer.tournaments" />
 			</panel>
 		</div>
+
 		<panel v-if="farmer && farmer.warnings && farmer.warnings.length" :title="$t('warnings')">
 			<div slot="content" class="content warnings">
 				<h4 v-if="myFarmer" class="warning-title">{{ $tc('you_have_n_warnings', farmer.warnings.length, [farmer.warnings.length]) }}</h4>
@@ -413,7 +482,7 @@
 			{{ $t('godfather_link_description') }} :
 			<br>
 			<br>
-			<div ref="godfatherLink" class="godfather-url">https://leekwars.com/godfather/{{ farmer.name }}</div>
+			<div ref="godfatherLink" class="godfather-url">leekwars.com/godfather/{{ farmer.name }}</div>
 		</popup>
 
 		<popup v-if="farmer" v-model="countryDialog" :width="1000">
@@ -518,6 +587,7 @@
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 	import FightsHistory from '@/component/history/fights-history.vue'
 	import TournamentsHistory from '@/component/history/tournaments-history.vue'
 	import TitlePicker from '@/component/title/title-picker.vue'
@@ -526,7 +596,7 @@
 	import LWTitle from '@/component/title/title.vue'
 
 	@Component({ name: "farmer", i18n: {}, mixins: [...mixins], components: {
-		RichTooltipFarmer, RichTooltipTeam, RichTooltipLeek, FightsHistory, TournamentsHistory, TitlePicker, ReportDialog, 'lw-title': LWTitle
+		RichTooltipFarmer, RichTooltipTeam, RichTooltipLeek, FightsHistory, TournamentsHistory, TitlePicker, ReportDialog, 'lw-title': LWTitle, 'rich-tooltip-item': RichTooltipItem
 	} })
 	export default class FarmerPage extends Vue {
 		farmer: Farmer | null = null
@@ -561,6 +631,19 @@
 			TROPHIES[322 - 1],
 			TROPHIES[320 - 1],
 		]
+		rewards = {
+			1: { trophy: 'godfather' },
+			20: { fight_pack: 'fight_pack_100' },
+			50: { potion: 'bordeaux', item: 281 },
+			100: { resource: 'box_100k_habs', item: 183 },
+			200: { trophy: 'guru' },
+			500: { hat: 'black_fedora', item: 279 },
+			1000: { resource: 'box_1m_habs', item: 185 },
+			2000: { trophy: 'master' },
+			5000: { potion: 'mafia', item: 282 },
+			10000: { hat: 'gold_fedora', item: 280 },
+		}
+		xp_bar: number = 0
 
 		get id(): any {
 			return this.$route.params.id ? parseInt(this.$route.params.id, 10) : (this.$store.state.farmer ? this.$store.state.farmer.id : null)
@@ -611,7 +694,9 @@
 			this.tournamentRangeLoading = false
 			if (this.id === null) { return }
 			if (this.myFarmer) {
-				this.init(store.state.farmer!)
+				setTimeout(() => {
+					this.init(store.state.farmer!)
+				}, 10)
 			} else {
 				LeekWars.get('farmer/get/' + this.id).then(data => {
 					this.init(data.farmer)
@@ -855,6 +940,13 @@
 		openCountryDialog() {
 			this.countryDialog = true
 			LeekWars.loadCountries()
+		}
+
+		get xp_bar_width() {
+			if (!this.farmer) {
+				return this.xp_bar
+			}
+			return this.xp_bar = this.farmer.godsons_level >= 10_000 ? 100 : Math.min(100, this.farmer.godsons_level / 10_000 * 100)
 		}
 	}
 </script>
@@ -1194,5 +1286,75 @@
 	.give-trophy {
 		width: 30px;
 		margin: 0 5px;
+	}
+	.sponsorship {
+		.grey {
+			color: #999;
+		}
+		.column {
+			flex: 1;
+			display: flex;
+			justify-content: center;
+			flex-direction: column;
+		}
+		.column-level {
+			text-align: center;
+		}
+		.total-level {
+			font-size: 32px;
+			font-weight: 500;
+		}
+		.rewards {
+			display: flex;
+			gap: 8px;
+			margin-top: 10px;
+			.reward {
+				flex: 1;
+				min-width: 0;
+				padding: 6px;
+				text-align: center;
+				font-weight: 500;
+				.level {
+					font-size: 18px;
+					display: flex;
+					justify-content: center;
+					gap: 2px;
+					.v-icon {
+						font-size: 20px;
+					}
+				}
+				.name {
+					font-size: 13px;
+				}
+				img {
+					width: 100%;
+					height: 80px;
+					padding: 7px;
+					object-fit: contain;
+				}
+			}
+		}
+		.bar {
+			width: 100%;
+			height: 12px;
+			margin-top: 5px;
+			background: white;
+			border: 1px solid #ddd;
+			position: relative;
+			border-radius: 5px;
+			text-align: left;
+		}
+		.xp-bar {
+			height: 10px;
+			background: #30bb00;
+			display: inline-block;
+			vertical-align: top;
+			position: absolute;
+			border-radius: 5px;
+			transition: all ease 0.3s;
+		}
+		.xp-bar.blue {
+			background: #008fbb;
+		}
 	}
 </style>

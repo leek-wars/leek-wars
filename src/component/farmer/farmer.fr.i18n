@@ -103,5 +103,8 @@
 	"verified": "Vérifié",
 	"not_verified": "Non vérifié",
 	"display_farmer": "éleveur",
-	"display_team": "équipe"
+	"display_team": "équipe",
+	"trophy_x": "Trophée {0}",
+	"sponsorship": "Parrainage",
+	"godsons_level": "Niveau total récursif des filleuls"
 }

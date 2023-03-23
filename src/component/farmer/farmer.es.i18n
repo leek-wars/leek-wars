@@ -103,5 +103,8 @@
 	"verified": "Comprobado",
 	"not_verified": "No verificado",
 	"display_farmer": "criador",
-	"display_team": "equipo "
+	"display_team": "equipo ",
+	"trophy_x": "Trofeo {0}",
+	"sponsorship": "Patrocinio",
+	"godsons_level": "Nivel total recursivo de referidos"
 }

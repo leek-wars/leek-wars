@@ -103,5 +103,9 @@
 	"skin_france": "Tricolor potion",
 	"skin_iron": "Iron potion",
 	"skin_diamond": "Diamond potion",
-	"strength": "Strength potion"
+	"strength": "Strength potion",
+	"skin_42": "mafia",
+	"skin_43": "bordeaux",
+	"skin_bordeaux": "Burgundy potion",
+	"skin_mafia": "Mafia potion"
 }

@@ -70,7 +70,7 @@
 			</panel>
 
 			<panel :title="$t('statistics')">
-				<h4 class="level">{{ $t('main.level_n', [leek ? leek.level : '...']) }} <tooltip v-if="leek.xp_blocked">
+				<h4 class="level">{{ $t('main.level_n', [leek ? leek.level : '...']) }} <tooltip v-if="leek?.xp_blocked">
 					<template v-slot:activator="{ on }">
 						<v-icon v-on="on">mdi-lock</v-icon>
 					</template>

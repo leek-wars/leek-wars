@@ -229,5 +229,7 @@
 	"credit_card": "Tarjeta de crédito",
 	"replace": "Reemplazar",
 	"replace_all": "Reemplaza todo",
-	"search": "Buscar"
+	"search": "Buscar",
+	"total_level": "Nivel total",
+	"rewards": "Premios"
 }

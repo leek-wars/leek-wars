@@ -97,7 +97,7 @@ const SKINS: { [key: number]: string } = {
 	17: "grey", 18: "turquoise", 19: "celestialblue", 20: "marine", 21: "greenfluo", 22: "brown", 23: "blackandwhite",
 	24: "whiteandblack", 25: "ghost", 26: "salmon", 27: "radioactive", 28: "sand", 29: "teal", 30: "matcha", 31: "peach",
 	32: "fire", 33: "venimous", 34: "greyscale", 35: "frozen", 36: "dalton", 37: "charlie", 38: "mariniere", 39: "france",
-	40: "iron", 41: "diamond"
+	40: "iron", 41: "diamond", 42: "mafia", 43: "bordeaux"
 }
 
 const LEEK_SIZES: { [key: number]: {width: number, height: number} } = {
