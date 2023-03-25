@@ -71,7 +71,6 @@ Max power: {{ tournament.max_power | number }}</pre>
 				if (this.tournament && data[0] === this.tournament.id) {
 					LeekWars.get<Tournament>('tournament/get/' + this.$route.params.id).then(tournament => {
 						this.tournament = tournament
-						LeekWars.large = tournament.size === 64
 						this.generating = false
 					})
 				}
@@ -92,6 +91,7 @@ Max power: {{ tournament.max_power | number }}</pre>
 				this.finals = this.tournament.rounds.finals
 
 				this.title = this.$t('' + this.tournament.type, [LeekWars.formatDateTime(this.tournament.date)]) as string
+				LeekWars.large = tournament.size === 64
 				LeekWars.setTitle(this.title)
 				LeekWars.setActions(this.actions)
 				if (this.tournament.group) {
@@ -117,10 +117,12 @@ Max power: {{ tournament.max_power | number }}</pre>
 		}
 
 		tooltipOpen(x: number, y: number, text: string) {
+			if (!this.tournament) { return }
 			this.tooltip = true
 			const width = (this.$refs.sizer as any).offsetWidth - 30
-			const ratio = width / 970
-			this.tooltipX = 15 + (485 + x) * ratio
+			const tournamentWidth = this.tournament!.size === 64 ? 1224 : 944
+			const ratio = width / tournamentWidth
+			this.tooltipX = 15 + (tournamentWidth / 2 + x) * ratio
 			this.tooltipY = 60 + (400 + y) * ratio
 			this.tooltipText = text
 		}
@@ -148,6 +150,7 @@ Max power: {{ tournament.max_power | number }}</pre>
 				this.actions[0].icon = 'mdi-magnify-minus-outline'
 			}
 		}
+
 		setupTimer() {
 			if (!this.tournament) { return }
 			const update = () => {

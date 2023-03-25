@@ -367,7 +367,7 @@
 			return this.tournament.size === 64 ? "-612 -400 1224 800" : "-472 -400 944 800"
 		}
 
-		get thirtyseconds() { return [...this.tournament.rounds.sixteenths, ...this.tournament.rounds.sixteenths] }
+		get thirtyseconds() { return this.tournament.rounds.thirtyseconds }
 		get sixteenths() { return this.tournament.rounds.sixteenths }
 		get eighths() { return this.tournament.rounds.eighths }
 		get quarters() { return this.tournament.rounds.quarters }
