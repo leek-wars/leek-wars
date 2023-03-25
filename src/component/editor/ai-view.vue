@@ -1449,7 +1449,9 @@
 
 		public close() {
 			this.hintDialog = false
-			this.editor.removeKeyMap(this.dialogKeyMap)
+			if (this.editor) {
+				this.editor.removeKeyMap(this.dialogKeyMap)
+			}
 		}
 
 		public scrollToLine(line: number) {
