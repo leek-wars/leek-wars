@@ -44,7 +44,7 @@
 								</v-list-item-content>
 							</v-list-item>
 						</router-link>
-						<router-link v-if="$store.state.farmer" :to="getURL(category, order, $store.state.farmer.country, LeekWars.rankingInactive)">
+						<router-link v-if="$store.state.farmer?.country" :to="getURL(category, order, $store.state.farmer.country, LeekWars.rankingInactive)">
 							<v-list-item v-ripple>
 								<flag :code="$store.state.farmer.country" :clickable="false" />
 								<v-list-item-content>
@@ -376,7 +376,7 @@
 					}
 					if (this.$store.state.connected) {
 						for (const row of ranking) {
-							if (this.category === 'leek') {
+							if (this.category === 'leek' || this.category.includes('level-')) {
 								if (this.$store.state.farmer && row.id in this.$store.state.farmer.leeks) {
 									row.me = 'me'
 								}
