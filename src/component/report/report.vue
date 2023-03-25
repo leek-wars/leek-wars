@@ -138,7 +138,7 @@
 		</panel>
 
 		<panel :title="$t('life_chart')" toggle="report/graph" icon="mdi-chart-line">
-			<div slot="actions">
+			<template slot="actions">
 				<div v-if="fight && fight.type === FightType.TEAM" class="button flat" @click="toggleTurrets">
 					<img v-if="turrets" src="/image/icon/turret.png">
 					<img v-else src="/image/icon/turret_off.png">
@@ -150,7 +150,7 @@
 					<img v-if="smooth" src="/image/icon/graph_angular.png">
 					<img v-else src="/image/icon/graph_smooth.png">
 				</div>
-			</div>
+			</template>
 			<loader v-if="!report" />
 			<div v-else ref="chartPanel" class="chart-panel" @mouseleave="chartMouseLeave" @mousemove="chartMouseMove">
 				<div class="damage-options">
