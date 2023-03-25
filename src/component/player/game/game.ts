@@ -2616,6 +2616,7 @@ class Game {
 
 	public previousAction() {
 		let i = this.currentAction
+		if (i >= this.actions.length) i = this.actions.length - 1
 		for (; i >= 0; i--) {
 			if (this.actions[i].type !== ActionType.REMOVE_EFFECT &&
 				this.actions[i].type !== ActionType.ADD_CHIP_EFFECT &&
