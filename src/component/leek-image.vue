@@ -41,7 +41,7 @@
 
 		HAT_SIZES: { [key: number]: {width: number, height: number} } = {
 			1: {width: 139, height: 84}, // christmas
-			2: {width: 472, height: 306}, // panama
+			2: {width: 300, height: 194}, // panama
 			3: {width: 139, height: 84}, // christmas
 			4: {width: 139, height: 84}, // christmas
 			5: {width: 100, height: 70}, // crown
@@ -74,9 +74,9 @@
 			32: {width: 300, height: 302}, // saint patrick
 			33: {width: 302, height: 209}, // red sombrero
 			34: {width: 300, height: 165}, // space hat
-			35: {width: 472, height: 306}, // fedora
-			36: {width: 472, height: 306}, // fedora
-			37: {width: 472, height: 306}, // fedora
+			35: {width: 300, height: 194}, // fedora
+			36: {width: 300, height: 194}, // fedora
+			37: {width: 300, height: 194}, // fedora
 		}
 
 		created() {

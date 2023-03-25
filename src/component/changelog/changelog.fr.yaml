@@ -1,10 +1,12 @@
 237:
+  title: Récompenses parrainage, Rechercher & Remplacer et améliorations de la banque.
   added:
     - "Parrainage : 10 récompenses en fonction du niveau des filleuls. #img_237_sponsorship"
-    - "Banque : possibilité de payer par carte bancaire. #img_237_card"
-    - "Banque : choix de la monnaie. #img_237_currency"
     - "Forum : ajout d'une option pour masquer les sujets résolus. #img_237_show_resolved"
     - "Éditeur : fonctionnalité Rechercher et Remplacer. #img_237_replace"
+    - "Ajout du chapeau Panama (l'ancien est renommé en Fedora). #img_237_panama"
+    - "Banque : possibilité de payer par carte bancaire. #img_237_card"
+    - "Banque : choix de la monnaie. #img_237_currency"
   improved:
     - "Chat : changements de quelques emojis disponibles en réaction à un message."
     - "La description de l'effet du katana sombre est plus précise."
