@@ -97,7 +97,7 @@
 						<div class="info country">
 							<flag v-if="farmer.country" :code="farmer.country" />
 							<span v-if="farmer.country" class="country label">{{ $t('country.' + farmer.country) }}</span>
-							<flag v-if="!farmer.country" />
+							<flag v-if="!farmer.country" :clickable="false" />
 							<span v-if="!farmer.country" class="country no label">{{ $t('no_country') }}</span>
 							<span v-if="myFarmer" class="edit" @click="openCountryDialog()"></span>
 						</div>
@@ -421,11 +421,11 @@
 			<span slot="title">{{ $t('country_selection') }}</span>
 			<div class="country-dialog">
 				<div class="country" code="null" @click="selectCountry(null)">
-					<flag />
+					<flag :clickable="false" />
 					<h4>{{ $t('no_country') }}</h4>
 				</div>
 				<div v-for="country in LeekWars.countries" :key="country" class="country" @click="selectCountry(country)">
-					<flag :code="country" />
+					<flag :code="country" :clickable="false" />
 					<h4>{{ $t('country.' + country) }}</h4>
 				</div>
 			</div>

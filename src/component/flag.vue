@@ -1,8 +1,8 @@
 <template lang="html">
-	<router-link v-if="_clickable" class="flag" :title="$t('country.' + code)" :to="'/ranking?country=' + code">
+	<router-link v-if="_clickable" class="flag" :title="code ? $t('country.' + code) : null" :to="'/ranking?country=' + code">
 		<img :src="url" loading="lazy">
 	</router-link>
-	<span v-else class="flag" :title="$t('country.' + code)">
+	<span v-else class="flag" :title="code ? $t('country.' + code) : null">
 		<img :src="url" loading="lazy">
 	</span>
 </template>

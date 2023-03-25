@@ -46,7 +46,7 @@
 						</router-link>
 						<router-link v-if="$store.state.farmer" :to="getURL(category, order, $store.state.farmer.country, LeekWars.rankingInactive)">
 							<v-list-item v-ripple>
-								<flag :code="$store.state.farmer.country"></flag>
+								<flag :code="$store.state.farmer.country" :clickable="false" />
 								<v-list-item-content>
 									{{ $t('country.' + $store.state.farmer.country) }}
 								</v-list-item-content>
@@ -54,7 +54,7 @@
 						</router-link>
 						<router-link v-for="country in LeekWars.countries" :key="country" :to="getURL(category, order, country, LeekWars.rankingInactive)">
 							<v-list-item v-ripple >
-								<flag :code="country"></flag>
+								<flag :code="country" :clickable="false" />
 								<v-list-item-content>{{ $t(`country.${country}`) }}</v-list-item-content>
 							</v-list-item>
 						</router-link>
