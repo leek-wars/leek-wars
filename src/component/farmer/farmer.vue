@@ -389,8 +389,8 @@
 				</div>
 				<h4>{{ $t('main.rewards') }}</h4>
 				<div v-if="farmer" class="rewards">
-					<div v-for="(reward, r) of rewards" :key="r" class="reward card" :class="{'notif-trophy': r < farmer.godsons_level}">
-						<div class="level">{{ r | number }}<v-icon v-if="r < farmer.godsons_level">mdi-check</v-icon></div>
+					<div v-for="(reward, r) of rewards" :key="r" class="reward card" :class="{'notif-trophy': r <= farmer.godsons_level}">
+						<div class="level">{{ r | number }}<v-icon v-if="r <= farmer.godsons_level">mdi-check</v-icon></div>
 						<img v-if="reward.trophy" :src="'/image/trophy/' + reward.trophy + '.svg'">
 						<rich-tooltip-item v-else-if="reward.resource" :item="LeekWars.items[reward.item]" v-slot="{ on }" :bottom="true">
 							<img v-on="on" :src="'/image/resource/' + reward.resource + '.png'">
