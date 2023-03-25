@@ -223,5 +223,6 @@
 	"delete": "Delete",
 	"advanced": "Advanced",
 	"save": "Save",
-	"apply": "Apply"
+	"apply": "Apply",
+	"xp_blocked": "XP blocked"
 }

@@ -246,7 +246,7 @@
 				<v-switch v-model="group.setting_tournaments" :label="$t('setting_tournaments')" hide-details @change="updateSettingTournaments" /><br>
 				<v-switch v-model="group.setting_br" :label="$t('setting_br')" hide-details @change="updateSettingBr" /><br>
 				<v-switch v-model="group.setting_new_leek" hide-details :label="$t('new_leek')" @change="updateNewLeek" /><br>
-				<v-switch v-model="group.setting_xp_blocked" hide-details :label="$t('xp_blocked')" @change="updateXpBlocked" /><br>
+				<v-switch v-model="group.setting_xp_blocked" hide-details :label="$t('main.xp_blocked')" @change="updateXpBlocked" /><br>
 				<v-switch v-model="group.setting_equipment_blocked" hide-details :label="$t('equipment_blocked')" @change="updateEquipmentBlocked" /><br>
 			</panel>
 		</div>

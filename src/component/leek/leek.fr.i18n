@@ -96,6 +96,5 @@
 	"angry": "Fâché",
 	"happy": "Souriant",
     "neutral": "Neutre",
-	"xp_blocked": "XP bloquée",
 	"xp_blocked_desc": "Si l'option est activée, les combats ne rapporteront plus d'expérience, et le poireau ne montera pas de niveau. Les gains de talent et de ressources sont conservés."
 }

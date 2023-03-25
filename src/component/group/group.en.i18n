@@ -14,7 +14,6 @@
 	"setting_br": "Enable Battle Royales",
 	"members": "Members",
 	"member_options": "Member Options",
-	"xp_blocked": "XP blocked",
 	"equipment_blocked": "Blocked features and equipment",
 	"equipment": "Imposed equipment",
 	"weapons_of": "Weapons of {0}",
@@ -41,5 +40,6 @@
 	"error_name_length": "The name must contain between {0} and {1} characters",
 	"invite_sent": "Invitation sent",
 	"error_invalid_email": "Email address must be valid",
-	"new_leek": "Allow the creation of another leek"
+	"new_leek": "Allow the creation of another leek",
+	"xp_blocked": "XP blocked"
 }

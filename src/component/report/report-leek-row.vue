@@ -25,6 +25,12 @@
 				</tooltip>
 				<span>{{ (leek.xp || 0) | number }}</span>
 				<span v-if="fight.report.bonus > 1" class="bonus">x{{ fight.report.bonus }}</span>
+				<tooltip v-if="leek.xp === 0">
+					<template v-slot:activator="{ on }">
+						<v-icon v-on="on" class="xp-blocked">mdi-lock</v-icon>
+					</template>
+					{{ $t('main.xp_blocked') }}
+				</tooltip>
 			</div>
 		</td>
 		<td class="money">
@@ -202,5 +208,9 @@
 			font-weight: bold;
 			background: rgba(0, 0, 0, 0.75);
 		}
+	}
+	.xp-blocked {
+		font-size: 16px;
+		color: #666;
 	}
 </style>

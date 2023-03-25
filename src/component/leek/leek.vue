@@ -291,10 +291,10 @@
 						{{ $t('copy_as_test', [leek.name]) }}
 					</tooltip>
 				</template>
-				<tooltip v-if="leek && my_leek && !$store.state.farmer.group">
+				<tooltip v-if="leek && my_leek && (!$store.state.farmer.group || $store.state.farmer.group.supervisor === $store.state.farmer.id)">
 					<template v-slot:activator="{ on }">
 						<div class="tab" @click="updateXpBlocked" v-on="on">
-							<span>{{ $t('xp_blocked') }}</span>
+							<span>{{ $t('main.xp_blocked') }}</span>
 							<v-switch :input-value="leek.xp_blocked" hide-details />
 						</div>
 					</template>
