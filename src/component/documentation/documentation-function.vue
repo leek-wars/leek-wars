@@ -1,19 +1,20 @@
 <template lang="html">
 	<div v-if="fun" class="doc-function" :class="{deprecated: fun.deprecated}">
 		<h2>
-			{{ fun.name }}(<span v-for="(arg, i) in fun.arguments_names" :key="i"><span v-if="fun.optional[i]">[</span><span class="argument">{{ $t('doc.arg_type_' + fun.arguments_types[i]) }}</span>&nbsp;{{ arg }}<span v-if="fun.optional[i]">]</span><span v-if="i < fun.arguments_names.length - 1">, </span>
+			{{ fun.name }}(<span v-for="(arg, i) in fun.arguments_names" :key="i"><span v-if="fun.optional[i]">[</span><span class="argument">{{ $t('doc.arg_type_' + fun.arguments_types[i]) }}</span>&nbsp;{{ arg }}<span v-if="fun.optional[i]">]</span><span v-if="i < fun.arguments_names.length - 1">,&nbsp;</span>
 			</span>)
 			<span v-if="fun.return_type != 0">
-				<span class="arrow">→</span> <span class="argument"> {{ $t('doc.arg_type_' + fun.return_type) }}</span>&nbsp;{{ fun.return_name }}
+				&nbsp;<span class="arrow">→</span> <span class="argument"> {{ $t('doc.arg_type_' + fun.return_type) }}</span>&nbsp;{{ fun.return_name }}
 			</span>
+			<div class="spacer"></div>
+			<router-link class="encyclo" :to="'/encyclopedia/' + $i18n.locale + '/' + fun.name" :title="'Encyclopédie > ' + fun.name + '()'">
+				<v-icon class="book">mdi-book-open-page-variant</v-icon>
+			</router-link>
 		</h2>
 		<div v-if="fun.deprecated" v-dochash class="deprecated-message">
 			Cette fonction est dépréciée. <span v-if="fun.replacement">Elle est remplacée par la fonction #{{ FUNCTION_BY_ID[fun.replacement].name }}.</span>
 		</div>
 
-		<router-link class="encyclo" :to="'/encyclopedia/' + $i18n.locale + '/' + fun.name" :title="'Encyclopédie > ' + fun.name + '()'">
-			<v-icon class="book">mdi-book-open-page-variant</v-icon>
-		</router-link>
 
 		<div v-if="new_fun">
 			<!-- <div v-dochash v-code class="content" v-html="new_fun.description"></div> -->
@@ -106,6 +107,9 @@
 		font-size: 17px;
 		color: #111;
 		font-family: monospace;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
 	}
 	.content {
 		color: #444;
@@ -157,10 +161,8 @@
 		user-select: none;
 	}
 	.encyclo {
-		position: absolute;
-		right: 12px;
-		top: 15px;
 		color: #aaa;
+		margin-left: 12px;
 		i {
 			font-size: 18px;
 		}

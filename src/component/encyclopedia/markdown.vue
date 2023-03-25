@@ -412,7 +412,6 @@
 		text-shadow: none;
 		color: #222;
 		font-size: 2.0em;
-		line-height: 0.8;
 		margin-top: 10px;
 		margin-bottom: 20px;
 		padding: 0;
