@@ -1578,12 +1578,14 @@
 		}
 
 		public replaceOne() {
-			const index = this.searchCurrent
-			const position = this.searchLines[this.searchCurrent]
-			this.document.replaceRange(this.replaceQuery, { line: position[0], ch: position[1] }, { line: position[0], ch: position[1] + this.searchQuery.length })
-			this.searchUpdate()
-			this.searchCurrent = index
-			this.searchRefresh()
+			if (this.searchLines.length) {
+				const index = this.searchCurrent
+				const position = this.searchLines[this.searchCurrent]
+				this.document.replaceRange(this.replaceQuery, { line: position[0], ch: position[1] }, { line: position[0], ch: position[1] + this.searchQuery.length })
+				this.searchUpdate()
+				this.searchCurrent = index
+				this.searchRefresh()
+			}
 		}
 		public replaceAll() {
 			for (const occurence of this.searchLines) {
