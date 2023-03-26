@@ -1,0 +1,21 @@
+{
+	"by_x_the_d": "Tekijä: {farmer} {date}",
+	"cancel": "Peruuttaa",
+	"create_new_topic": "Luo aihe",
+	"create_topic": "Luo aihe",
+	"error_invalid_title": "Aiheen otsikon on oltava {min}–{max} merkkiä",
+	"n_topic_n_messages": "{0} aihetta / {1} viestiä",
+	"last": "Kestää",
+	"last_message": "Viimeinen {date}, kirjoittaja {farmer}",
+	"last_by_x": "tekijä: {author}",
+	"locked": "Aihe lukittu",
+	"messages": "Viestit",
+	"new_topic_message": "Aiheviesti",
+	"new_topic_title": "Aiheen otsikko",
+	"pinned": "Riippuva aihe",
+	"resolved": "Aihe ratkaistu",
+	"topic": "Aihe",
+	"mark_as_read": "Merkitse luetuksi",
+	"mark_as_read_text": "Kaikki aiheet kaikissa foorumiluokissa merkitään luetuiksi. Tämän toiminnon jälkeen vain uudet aiheet tai uudet vastaukset näytetään.",
+	"show_resolved": "Näytä ratkaistut aiheet"
+}

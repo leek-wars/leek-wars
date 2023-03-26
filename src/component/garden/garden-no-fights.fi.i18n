@@ -1,0 +1,5 @@
+{
+	"buy_fights": "Osta taisteluita nyt Habsista {hab} tai Crystalsista {crystal} {market}.",
+	"next_fight_in": "{fights} uutta taistelua {time}",
+	"no_more_fights": "Lisää tappeluita!"
+}

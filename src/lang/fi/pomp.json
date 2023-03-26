@@ -1,0 +1,16 @@
+{
+	"ai_lines": "AI-linjojen määrä",
+	"ai_lines_desc": "Tämän laitteen avulla voit näyttää tekoälysi rivien lukumäärän purjosivullasi.",
+	"hold_weapon": "Pidä ase",
+	"hold_weapon_desc": "Tämän laitteen avulla purjo voi pitää asetta käsissään, ja se näkyy hänen sivullaan ja kaikkialla, missä hänen visuaalinsa näkyy pelissä.",
+	"leek_title": "Purjo otsikko",
+	"leek_title_desc": "Tämän asusteen avulla voit antaa purjollesi otsikon, joka näkyy sen sivulla ja muissa pelin paikoissa.",
+	"farmer_title": "Kasvattajan titteli",
+	"farmer_title_desc": "Tämän varusteen avulla voit antaa itsellesi otsikon, joka näkyy sivullasi ja muissa pelin paikoissa, kuten keskustelupalstalla, edistyneissä työkaluvihjeissä jne.",
+	"metal": "Metallilevyt",
+	"metal_desc": "Lisää metallilaattoja purjokuvaasi",
+	"angry": "Vihainen naama",
+	"angry_desc": "Muuta purjosi ilmettä: se näyttää vihaiselta",
+	"happy": "Hymyilevät kasvot",
+	"happy_desc": "Muuta purjosi ilmettä: se hymyilee"
+}

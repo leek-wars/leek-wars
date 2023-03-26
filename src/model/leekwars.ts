@@ -130,6 +130,15 @@ const LANGUAGES = Object.freeze({
 	fr: { code: 'fr', name: 'Français', country: 'fr', flag: '/image/flag/fr.png', chat: 1, encyclopedia: 'Encyclopédie', chats: [1, 32506, 32507], currency: 'EUR' } as Language,
 	en: { code: 'en', name: 'English', country: 'gb', flag: '/image/flag/gb.png', chat: 2, encyclopedia: 'Encyclopedia', chats: [2, 32508, 32509], currency: 'USD' } as Language,
 	es: { code: 'es', name: 'Español', country: 'es', flag: '/image/flag/es.png', chat: 3, encyclopedia: 'Enciclopedia', chats: [3, 33187, 33188], currency: 'EUR' } as Language,
+	de: { code: 'de', name: 'Deutsch', country: 'de', flag: '/image/flag/de.png', chat: 4, encyclopedia: 'Enciclopedia', chats: [3, 33187, 33188], currency: 'EUR' } as Language,
+	it: { code: 'it', name: 'Italiano', country: 'it', flag: '/image/flag/it.png', chat: 5, encyclopedia: 'Enciclopedia', chats: [3, 33187, 33188], currency: 'EUR' } as Language,
+	pt: { code: 'pt', name: 'Portugais', country: 'pt', flag: '/image/flag/pt.png', chat: 6, encyclopedia: 'Enciclopedia', chats: [3, 33187, 33188], currency: 'EUR' } as Language,
+	da: { code: 'da', name: 'Dansk', country: 'dk', flag: '/image/flag/da.png', chat: 7, encyclopedia: 'Enciclopedia', chats: [3, 33187, 33188], currency: 'DKK' } as Language,
+	fi: { code: 'fi', name: 'Suomi', country: 'fi', flag: '/image/flag/fi.png', chat: 8, encyclopedia: 'Enciclopedia', chats: [3, 33187, 33188], currency: 'EUR' } as Language,
+	nl: { code: 'nl', name: 'Nederlands', country: 'nl', flag: '/image/flag/nl.png', chat: 9, encyclopedia: 'Enciclopedia', chats: [3, 33187, 33188], currency: 'EUR' } as Language,
+	no: { code: 'no', name: 'Norsk', country: 'no', flag: '/image/flag/no.png', chat: 10, encyclopedia: 'Enciclopedia', chats: [3, 33187, 33188], currency: 'NOK' } as Language,
+	pl: { code: 'pl', name: 'Polska', country: 'pl', flag: '/image/flag/pl.png', chat: 11, encyclopedia: 'Enciclopedia', chats: [3, 33187, 33188], currency: 'EUR' } as Language,
+	sv: { code: 'sv', name: 'Svenska', country: 'sv', flag: '/image/flag/sv.png', chat: 12, encyclopedia: 'Enciclopedia', chats: [3, 33187, 33188], currency: 'SEK' } as Language,
 } as { [key: string]: Language })
 
 const LOCAL_DATE = new Date()
@@ -178,6 +187,7 @@ const LeekWars = {
 		CAD: {symbol: 'C$', flag: 'ca', prefix: true},
 		CHF: {symbol: 'CHF', flag: 'ch' },
 		EUR: {symbol: '€', flag: 'eu'},
+		DKK: {symbol: 'kr', flag: 'dk'},
 		GBP: {symbol: '£', flag: 'gb', prefix: true},
 		HKD: {symbol: 'HK$', flag: 'hk', prefix: true},
 		JPY: {symbol: '¥', flag: 'jp'},

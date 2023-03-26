@@ -1,0 +1,13 @@
+{
+	"4_leeks_only": "Du har allerede 4 porrer!",
+	"create": "Skab",
+	"error_under_required_level_1": "Din første porre skal være mindst niveau {0}",
+	"error_under_required_level_2": "Din anden porre skal være mindst niveau {0}",
+	"error_under_required_level_3": "Din 3. porre skal være mindst niveau {0}",
+	"name": "Navn",
+	"name_length": "Porrenavnet skal indeholde mellem {0} og {1} tegn",
+	"name_format": "Specialtegn er ikke tilladt i navnet",
+	"not_enough_money": "Du har ikke nok penge",
+	"price": "Pris",
+	"title": "Ny porre"
+}

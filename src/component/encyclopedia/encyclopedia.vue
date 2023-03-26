@@ -1,11 +1,16 @@
 <template lang="html">
 	<div class="page">
 		<div class="page-bar page-header">
-			<h1 :class="{small: breadcrumb_items.length >= 3}">
-				<v-icon class="book">mdi-book-open-page-variant</v-icon>
-				<breadcrumb :items="breadcrumb_items" :raw="true" />
-				<v-icon v-if="modified" class="modified">mdi-record</v-icon>
-			</h1>
+			<div>
+				<h1 :class="{small: breadcrumb_items.length >= 3}">
+					<v-icon class="book">mdi-book-open-page-variant</v-icon>
+					<breadcrumb :items="breadcrumb_items" :raw="true" />
+					<v-icon v-if="modified" class="modified">mdi-record</v-icon>
+				</h1>
+				<div v-if="$store.getters.admin && page" class="info">
+					<v-checkbox v-model="page.official" :hide-details="true" :dark="true" label="Officiel" @change="updateOfficial" />
+				</div>
+			</div>
 			<div v-if="page" class="tabs">
 				<v-menu v-if="contributor && edition" offset-y>
 					<template v-slot:activator="{ on }">
@@ -502,6 +507,12 @@ ${ret}
 				this.$router.push('/encyclopedia-search')
 			}
 		}
+
+		updateOfficial() {
+			LeekWars.put('encyclopedia/official', {page_id: this.page.id, official: this.page.official}).then((result) => {
+
+			}).error(error => LeekWars.toast("Sauvegarde échouée : " + error.error))
+		}
 	}
 </script>
 
@@ -524,6 +535,9 @@ h1 {
 		font-size: 23px;
 		margin-bottom: 5px;
 	}
+}
+.info {
+	margin-top: 6px;
 }
 .encyclopedia {
 	min-height: 0;

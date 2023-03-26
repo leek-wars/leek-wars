@@ -1,0 +1,13 @@
+{
+	"available_on_market": "(Beschikbaar voor aankoop in de markt)",
+	"new_chips": "Nieuwe fiches",
+	"new_weapons": "Nieuwe wapens",
+	"no_news": "Geen nieuw item voor dit niveau.",
+	"title": "<b>{0}</b> slagen voor niveau <b>{1}</b>!",
+	"301_title": "Gefeliciteerd!",
+	"301_message": "Je hebt het hoogste niveau in Leek Wars bereikt, je prei heeft de laatste fase van zijn evolutie bereikt!<br> Je krijgt een <b>gouden drankje</b> en een <b>kroon</b> als beloning.",
+	"new_weapon": "Nieuw wapenslot",
+	"new_chip": "Nieuw chipslot",
+	"total_weapons": "{0} totale wapens",
+	"total_chips": "{0} fiches in totaal"
+}

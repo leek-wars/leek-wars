@@ -1,0 +1,23 @@
+{
+	"title": "Geschiedenis van {0}",
+	"title_html": "Gevechtsgeschiedenis",
+	"24h": "24 uur",
+	"today": "Vandaag",
+	"2days": "2 dagen",
+	"1week": "1 week",
+	"n_fights": "{0} gevechten",
+	"victories": "overwinningen",
+	"draws": "banden",
+	"defeats": "nederlagen",
+	"ratio": "verhouding",
+	"not_found_id": "Prei van id {0} niet gevonden",
+	"fight_type": "Soorten vechten",
+	"fight_context": "Contexten van gevechten",
+	"solo": "Solo",
+	"farmer": "Fokker",
+	"team": "Bemanning",
+	"battle_royale": "Battle Royale",
+	"challenge": "Uitdaging",
+	"garden": "Moestuin",
+	"tournament": "Toernooi"
+}

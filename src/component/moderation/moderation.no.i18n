@@ -1,0 +1,10 @@
+{
+	"report_farmer": "Rapporter {0}",
+	"reporting_deleted": "Rapport fjernet",
+	"title": "Moderasjon",
+	"warning_sent": "Advarsel sendt!",
+	"you_are_muted": "Du har blitt tauset.",
+	"you_have_been_muted_by_x": "Du har blitt lydløs av {0}.",
+	"you_have_been_unmuted_by_x": "{0} lar deg snakke i chatten igjen.",
+	"you_must_choose_reason": "Du må velge et mønster!"
+}

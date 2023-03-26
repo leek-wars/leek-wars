@@ -1,0 +1,23 @@
+{
+	"title": "História de {0}",
+	"title_html": "Histórico de batalha",
+	"24h": "24 horas",
+	"today": "Hoje",
+	"2days": "2 dias",
+	"1week": "1 semana",
+	"n_fights": "{0} lutas",
+	"victories": "vitórias",
+	"draws": "laços",
+	"defeats": "derrotas",
+	"ratio": "razão",
+	"not_found_id": "Alho-porro de id {0} não encontrado",
+	"fight_type": "Tipos de luta",
+	"fight_context": "Contextos de combate",
+	"solo": "Só",
+	"farmer": "Criador",
+	"team": "Equipe",
+	"battle_royale": "Batalha real",
+	"challenge": "Desafio",
+	"garden": "Horta",
+	"tournament": "Torneio"
+}

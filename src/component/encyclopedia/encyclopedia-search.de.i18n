@@ -1,0 +1,18 @@
+{
+	"all_categories": "Alle Kategorien",
+	"author": "Autor",
+	"category": "Kategorie",
+	"no_results_found": "Keine Einträge gefunden...",
+	"not_enough_parameters": "Nicht genügend Parameter starten eine Suche",
+	"post_by_x_the_x_in_x": "Gepostet von {farmer} am {date} in {topic}",
+	"query": "Forschung",
+	"results": "Suchergebnisse",
+	"search": "Forschen",
+	"sort_by": "Sortieren nach",
+	"sort_pertinence": "Relevanz",
+	"sort_date": "Datum",
+	"sort_votes": "Wählen",
+	"title": "Enzyklopädie",
+	"too_few_params": "Nicht genug Parameter...",
+	"too_short": "Suche zu kurz..."
+}

@@ -1,0 +1,16 @@
+{
+	"thank_you": "TACK",
+	"for_your_support": "för ert stöd!",
+	"you_earn_n_crystals": "Du har {crystals}.",
+	"back_to_bank": "Tillbaka till banken",
+	"payment_fail": "Betalning {0} misslyckades.",
+	"payment_fail_reason": "Betalning misslyckades: {0}",
+	"payment_success": "Betalning {0} validerad",
+	"payment_success_simple": "Betalning validerad",
+	"no_running_payment": "ingen löpande betalning",
+	"failed_to_execute_payment_wrong_code": "koden du angav är inte giltig",
+	"failed_to_execute_payment": "betalningen fungerade inte eller avbröts",
+	"payment_cancelled": "Du avbröt betalningen",
+	"payment_no_code": "Inga koder",
+	"payment_wrong_code": "Ogiltig kod"
+}

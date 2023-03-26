@@ -1,0 +1,17 @@
+{
+	"shortcut_1": "<b>Strg + S</b>: aktuelle KI speichern",
+	"shortcut_2": "<b>Strg + Q</b>: Test starten",
+	"shortcut_3": "<b>Strg + D</b>: dupliziert die aktuelle Zeile oder Auswahl",
+	"shortcut_4": "<b>Strg + K</b>: aktuelle Zeile löschen",
+	"shortcut_5": "<b>Strg + E</b> oder <b>Strg + /</b>: Auskommentieren/Entkommentieren der aktuellen Zeile",
+	"shortcut_6": "<b>Strg + P</b>: Datei öffnen",
+	"shortcut_7": "<b>Strg + F</b>: Suche in der aktuellen Datei",
+	"shortcut_8": "<b>Alt + hoch/runter</b>: Bewegt die aktuelle Zeile nach oben/unten",
+	"shortcut_9": "<b>Alt + links/rechts</b>: Zwischen geöffneten Dateien wechseln",
+	"shortcut_10": "<b>Strg + Leertaste</b>: automatische Vervollständigung",
+	"shortcut_11": "<b>Strg + Klick</b>: zur Symboldefinition gehen",
+	"shortcut_12": "<b>Strg + Umschalt + F</b>: automatische Formatierung und Einrückung des Codes",
+	"shortcut_13": "<b>Strg + U</b>: Aktuellen Codeblock ein-/ausklappen",
+	"shortcut_14": "<b>Strg + J</b>: Alle Codeblöcke reduzieren",
+	"shortcut_15": "<b>Strg + I</b>: Alle Codeblöcke erweitern"
+}

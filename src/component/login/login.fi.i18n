@@ -1,0 +1,14 @@
+{
+	"connection": "Kirjaudu sisään",
+	"error_banned": "Tilisi on estetty",
+	"error_inactive": "Tiliäsi ei ole aktivoitu, siirry sähköpostilla lähetettyyn linkkiin.",
+	"error_invalid": "Tunnukset ovat virheelliset.",
+	"error_server": "Palvelinvirhe. Yritä uudelleen muutaman minuutin kuluttua",
+	"forgot_password": "Unohditko salasanasi ?",
+	"incorrect_login": "Kirjautumistunnus tai salasana väärä.",
+	"keep_connected": "Pysyä yhteydessä",
+	"login": "Kasvattajan nimi tai sähköpostiosoite",
+	"password": "Salasana",
+	"success": "Olet yhteydessä",
+	"title": "Kirjaudu sisään"
+}

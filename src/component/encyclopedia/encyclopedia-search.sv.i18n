@@ -1,0 +1,18 @@
+{
+	"all_categories": "Alla kategorier",
+	"author": "Författare",
+	"category": "Kategori",
+	"no_results_found": "Inga resultat...",
+	"not_enough_parameters": "Inte tillräckligt med parametrar startar en sökning",
+	"post_by_x_the_x_in_x": "Upplagt av {farmer} den {date} i {topic}",
+	"query": "Forskning",
+	"results": "Sökresultat",
+	"search": "Att efterforska",
+	"sort_by": "Sortera efter",
+	"sort_pertinence": "Relevans",
+	"sort_date": "Datum",
+	"sort_votes": "Röstning",
+	"title": "Encyklopedi",
+	"too_few_params": "Inte tillräckligt med parametrar...",
+	"too_short": "Sök för kort..."
+}

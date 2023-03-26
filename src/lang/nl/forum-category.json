@@ -1,0 +1,18 @@
+{
+	"admin": "Beheerder",
+	"admin_desc": "Categorie gereserveerd voor beheerders",
+	"bug_reports": "Foutmeldingen",
+	"bug_reports_desc": "Als je denkt dat je een bug in het spel hebt gevonden",
+	"composter": "Composter",
+	"composter_desc": "Om over alles te praten... en niets.",
+	"exploits": "Uw heldendaden",
+	"exploits_desc": "Meld je heldendaden of deel je ongewone screenshots",
+	"general_discussion": "Algemene discussie",
+	"general_discussion_desc": "Algemene Leek Wars-discussie",
+	"help": "Hulp en tips",
+	"help_desc": "Als je een vraag hebt over het spel of tips wilt delen",
+	"moderation": "Met mate",
+	"moderation_desc": "Categorie gereserveerd voor moderators",
+	"suggestions_ideas": "Suggesties en ideeën",
+	"suggestions_ideas_desc": "Als je verbeterideeën hebt voor het spel"
+}

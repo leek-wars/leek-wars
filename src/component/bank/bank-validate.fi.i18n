@@ -1,0 +1,16 @@
+{
+	"thank_you": "KIITOS",
+	"for_your_support": "tuestanne!",
+	"you_earn_n_crystals": "Sinulla on {crystals}.",
+	"back_to_bank": "Takaisin pankkiin",
+	"payment_fail": "Maksu {0} epäonnistui.",
+	"payment_fail_reason": "Maksu epäonnistui: {0}",
+	"payment_success": "Maksu {0} vahvistettu",
+	"payment_success_simple": "Maksu vahvistettu",
+	"no_running_payment": "ei nykyistä maksua",
+	"failed_to_execute_payment_wrong_code": "antamasi koodi ei ole kelvollinen",
+	"failed_to_execute_payment": "maksu ei toiminut tai se peruutettiin",
+	"payment_cancelled": "Peruutit maksun",
+	"payment_no_code": "Ei koodeja",
+	"payment_wrong_code": "Virheellinen koodi"
+}

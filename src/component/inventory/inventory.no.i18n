@@ -1,0 +1,16 @@
+{
+	"price": "Pris",
+	"price_lot": "Batch pris",
+	"quantity": "Mengde",
+	"name": "Navn",
+	"level": "Nivå",
+	"date": "Dato",
+	"all": "Alle",
+	"weapons": "Våpen",
+	"chips": "Lopper",
+	"potions": "Potions",
+	"hats": "Hatter",
+	"pomps": "Apparater",
+	"resources": "Ressurser",
+	"rarity": "Knapphet"
+}

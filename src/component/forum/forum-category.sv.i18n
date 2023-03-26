@@ -1,0 +1,21 @@
+{
+	"by_x_the_d": "Av {farmer} den {date}",
+	"cancel": "Annullera",
+	"create_new_topic": "Skapa ämne",
+	"create_topic": "Skapa ämne",
+	"error_invalid_title": "Ämnesrubrik måste vara mellan {min} och {max} tecken",
+	"n_topic_n_messages": "{0} ämnen / {1} inlägg",
+	"last": "Sista",
+	"last_message": "Senaste {date} av {farmer}",
+	"last_by_x": "av {author}",
+	"locked": "Ämnet låst",
+	"messages": "Inlägg",
+	"new_topic_message": "Ämnesmeddelande",
+	"new_topic_title": "Ämnestitel",
+	"pinned": "Hängande ämne",
+	"resolved": "Ämnet löst",
+	"topic": "Ämne",
+	"mark_as_read": "Markera som läst",
+	"mark_as_read_text": "Alla ämnen i alla forumkategorier kommer att markeras som lästa. Efter denna åtgärd kommer endast nya ämnen eller nya svar att visas.",
+	"show_resolved": "Visa lösta ämnen"
+}

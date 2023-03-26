@@ -1,0 +1,11 @@
+{
+	"title": "Vaihda sähköposti",
+	"send_confirmation": "Lähetä vahvistus",
+	"enter_a_new_email": "Kirjoita uusi sähköpostiosoite",
+	"new_email": "Uusi sähköpostiosoite",
+	"confirm": "Vahvistus",
+	"email_sent": "Vahvistussähköposti lähetetty osoitteeseen {email}",
+	"email_changed_success": "Sähköpostiosoite vaihdettu onnistuneesti.",
+	"back_home": "Takaisin kotiin",
+	"error_not_same_email": "Annetut osoitteet eivät ole samoja"
+}

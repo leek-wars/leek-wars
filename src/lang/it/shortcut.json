@@ -1,0 +1,17 @@
+{
+	"shortcut_1": "<b>Ctrl + S</b>: salva l'IA corrente",
+	"shortcut_2": "<b>Ctrl + Q</b>: avvia un test",
+	"shortcut_3": "<b>Ctrl + D</b>: duplica la riga o la selezione corrente",
+	"shortcut_4": "<b>Ctrl + K</b>: elimina la riga corrente",
+	"shortcut_5": "<b>Ctrl + E</b> o <b>Ctrl + /</b>: commenta/decommenta la riga corrente",
+	"shortcut_6": "<b>Ctrl + P</b>: apre un file",
+	"shortcut_7": "<b>Ctrl + F</b>: ricerca nel file corrente",
+	"shortcut_8": "<b>Alt + su/giù</b>: sposta la riga corrente su/giù",
+	"shortcut_9": "<b>Alt + sinistra/destra</b>: passa tra i file aperti",
+	"shortcut_10": "<b>Ctrl + Spazio</b>: completamento automatico",
+	"shortcut_11": "<b>Ctrl + clic</b>: vai alla definizione del simbolo",
+	"shortcut_12": "<b>Ctrl + Maiusc + F</b>: formattazione e rientro automatici del codice",
+	"shortcut_13": "<b>Ctrl + U</b>: chiude/estende il blocco di codice corrente",
+	"shortcut_14": "<b>Ctrl + J</b>: Comprimi tutti i blocchi di codice",
+	"shortcut_15": "<b>Ctrl + I</b>: espande tutti i blocchi di codice"
+}

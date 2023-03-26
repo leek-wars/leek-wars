@@ -1,0 +1,6 @@
+{
+	"description": "Bank oferuje zdobycie <b>kryształów</b> <span class='crystal'></span>, drugiej waluty Leek Wars, umożliwiającej następnie zakup mikstur i innych czysto dekoracyjnych i <b>nie wpływających </b> swoją siłę w walce. <br>\nZafunduj sobie eliksir koloru dla swojego pora i wesprzyj Leek Wars!",
+	"pack_of_n_crystals": "Pakiet <b>{0}</b> kryształów",
+	"paypal_description": "Zakup {0} kryształów za {1} €",
+	"title": "Bank kryształów"
+}

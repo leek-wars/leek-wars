@@ -1,0 +1,16 @@
+{
+	"price": "Prezzo",
+	"price_lot": "Prezzo del lotto",
+	"quantity": "Quantità",
+	"name": "Nome",
+	"level": "Livello",
+	"date": "Data",
+	"all": "Tutto",
+	"weapons": "Armi",
+	"chips": "Pulci",
+	"potions": "Pozioni",
+	"hats": "Cappelli",
+	"pomps": "Apparecchio",
+	"resources": "Risorse",
+	"rarity": "Scarsità"
+}

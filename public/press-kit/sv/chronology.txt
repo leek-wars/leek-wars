@@ -1,0 +1,11 @@
+2012: lansering av spelet
+2013: slut på beta
+2014: turneringar, troféer
+2015: Engelsk version, kallelse, ny design, egenskaper, CaC-vapen,
+2016: Battle Royale
+2017: testalternativ, statistik
+2018: Mobilapp och Vue.js
+2019: Torn
+2020: Glömda vapen, fällor, BR-bilar, Docker, GitHub-registrering, Editor, Encyclopedia, Nya kartor
+2021: 16 marker, LS 2, 160 nya troféer, LS 3, resurser
+2022: snabb registrering, underhållning, LS 4, kistor

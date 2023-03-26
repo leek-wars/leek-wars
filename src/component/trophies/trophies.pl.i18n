@@ -1,0 +1,16 @@
+{
+	"hide_unlocked": "Uzyskano ukrycie",
+	"group_by_categories": "Kategorie",
+	"sort_by": "Sortuj według {0}",
+	"sort_date": "Data",
+	"sort_index": "Domyślny",
+	"sort_points": "Zwrotnica",
+	"sort_rarity": "Niedostatek",
+	"stats": "Statystyka",
+	"title": "{0} Trofea",
+	"title_me": "Moje trofea",
+	"trophies": "Trofea",
+	"best_trophies": "Najlepsze trofea",
+	"latest_trophies": "Najnowsze trofea",
+	"rarest_trophies": "Najrzadsze trofea"
+}

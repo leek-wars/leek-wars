@@ -1,0 +1,23 @@
+{
+	"title": "Historia {0}",
+	"title_html": "Historia bitwy",
+	"24h": "24 godziny",
+	"today": "Dzisiaj",
+	"2days": "2 dni",
+	"1week": "1 tydzień",
+	"n_fights": "{0} walk",
+	"victories": "zwycięstwa",
+	"draws": "krawaty",
+	"defeats": "porażki",
+	"ratio": "stosunek",
+	"not_found_id": "Nie znaleziono pora o identyfikatorze {0}",
+	"fight_type": "Rodzaje walki",
+	"fight_context": "Konteksty walki",
+	"solo": "Solo",
+	"farmer": "Hodowca",
+	"team": "Załoga",
+	"battle_royale": "Battle Royale",
+	"challenge": "Wyzwanie",
+	"garden": "Ogród warzywny",
+	"tournament": "Turniej"
+}

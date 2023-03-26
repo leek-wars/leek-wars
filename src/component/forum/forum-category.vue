@@ -8,14 +8,14 @@
 				<v-menu offset-y>
 					<template v-slot:activator="{ on }">
 						<div class="forum-language info" v-on="on">
-							<flag v-for="l in activeLanguages" :key="l" :code="LeekWars.languages[l].country" />
+							<flag v-for="l in activeLanguages" :key="l" :code="LeekWars.languages[l].country" :clickable="false" />
 							<img width="10" src="/image/selector.png">
 						</div>
 					</template>
 					<v-list :dense="true">
 						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="setForumLanguage(language)" :disabled="forumLanguages[language.code] && activeLanguages.length === 1">
 							<v-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" hide-details @click.stop="updateCategories" />
-							<flag :code="language.country" />
+							<flag :code="language.country" :clickable="false" />
 							<span class="name">{{ language.name }}</span>
 						</v-list-item>
 					</v-list>
@@ -62,7 +62,7 @@
 									#{{ topic.issue }}
 								</a>
 								<router-link :to="'/forum/category-' + topic.category + '/topic-' + topic.id">{{ topic.title }}</router-link>
-								<flag v-if="activeLanguages.length >= 2 && topic.lang" :code="LeekWars.languages[topic.lang].country" />
+								<flag v-if="activeLanguages.length >= 2 && topic.lang" :code="LeekWars.languages[topic.lang].country" :clickable="false" />
 							</span>
 							<div class="description grey">
 								<i18n path="by_x_the_d">

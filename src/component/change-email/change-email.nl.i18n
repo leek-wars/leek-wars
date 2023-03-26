@@ -1,0 +1,11 @@
+{
+	"title": "E-mailadres wijzigen",
+	"send_confirmation": "Bevestiging sturen",
+	"enter_a_new_email": "Voer een nieuw e-mailadres in",
+	"new_email": "Nieuw email adres",
+	"confirm": "Bevestiging",
+	"email_sent": "Bevestigingsmail verzonden naar {email}",
+	"email_changed_success": "E-mailadres succesvol gewijzigd.",
+	"back_home": "Terug naar huis",
+	"error_not_same_email": "De ingevoerde adressen zijn niet hetzelfde"
+}

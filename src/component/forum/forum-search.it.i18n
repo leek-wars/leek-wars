@@ -1,0 +1,18 @@
+{
+	"all_categories": "Tutte le categorie",
+	"author": "Autore",
+	"category": "Categoria",
+	"no_results_found": "Nessun risultato trovato...",
+	"not_enough_parameters": "Parametri insufficienti avviano una ricerca",
+	"post_by_x_the_x_in_x": "Pubblicato da {farmer} il {date} in {topic}",
+	"query": "Ricerca",
+	"results": "Risultati di ricerca",
+	"search": "Ricercare",
+	"sort_by": "Ordina per",
+	"sort_pertinence": "Rilevanza",
+	"sort_date": "Data",
+	"sort_votes": "Voto",
+	"title": "Ricerca nel forum",
+	"too_few_params": "Parametri insufficienti...",
+	"too_short": "Ricerca troppo breve..."
+}

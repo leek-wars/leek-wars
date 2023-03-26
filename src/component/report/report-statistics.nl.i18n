@@ -1,0 +1,21 @@
+{
+	"bugs": "Insecten",
+	"chips_used": "Chips gebruikt",
+	"criticals": "CC",
+	"damage_inflicted": "Schade toegebracht",
+	"damage_received": "Schade opgelopen",
+	"heal_casted": "Genezing op gang gebracht",
+	"heal_received": "Zorg ontvangen",
+	"kills": "Doodt",
+	"mp_used": "PB gebruikt",
+	"nova_received": "Nova ontvangen",
+	"operations": "Ops",
+	"operations_per_turn": "Op/draai",
+	"resurrections": "Keert terug tot leven",
+	"shootings": "Schoten",
+	"summons": "Oproepen",
+	"team_n": "Team {0}",
+	"tp_per_turn": "PT/beurt gebruikt",
+	"tp_used": "PT's gebruikt",
+	"turns_played": "Rondes gespeeld"
+}

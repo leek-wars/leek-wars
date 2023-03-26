@@ -1,0 +1,12 @@
+{
+	"battle_royale": "Herre på täppan",
+	"date_format": "{0}",
+	"deleted_farmer": "uppfödare borttagen",
+	"deleted_leek": "purjolök borttagen",
+	"deleted_team": "raderat lag",
+	"n_views": "ingen vy | 1 vy | {n} visningar",
+	"not_found": "Kampen hittades inte :(",
+	"not_found_id": "Kamp-id <b>{0}</b> hittades inte :(",
+	"pause_message": "Klicka eller tryck på 'P' för att fortsätta",
+	"starter": "Fight Launcher"
+}

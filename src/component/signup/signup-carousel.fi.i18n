@@ -1,0 +1,16 @@
+{
+	"android_app": "Android-sovellus",
+	"editor": "Sisäinen älykäs AI-editori",
+	"fight_beach": "Yksintaistelu (1v1) rannalla",
+	"fight_desert": "Rancher-taistelu erämaassa",
+	"fight_factory": "Joukkueen taistelu (6v6) tehtaalla",
+	"fight_forest": "Herder-taistelu (4v4) metsässä",
+	"fight_ice": "Battle Royale (10 pelaajaa) jäälautalla",
+	"fight_test": "Maataistelun todistaminen",
+	"leek_page": "Purjosi sivu",
+	"market": "Markkinat: aseiden, pelimerkkien, hattujen jne. osto.",
+	"pixel_art": "Pikselitaidetta virheenkorjaustoimintojen ansiosta",
+	"ranking": "Sijoitus: Yksin, Kasvattaja, Joukkue, Trophyt",
+	"tournament": "Kasvattajaturnaus joka ilta klo 18.",
+	"trophies": "Palkintosivu (300 pokaalia)"
+}

@@ -1,0 +1,12 @@
+{
+	"battle_royale": "Battle royale",
+	"date_format": "{0}",
+	"deleted_farmer": "opdrætter fjernet",
+	"deleted_leek": "porre fjernet",
+	"deleted_team": "slettede hold",
+	"n_views": "ingen udsigt | 1 visning | {n} visninger",
+	"not_found": "Kamp ikke fundet :(",
+	"not_found_id": "Kamp-id <b>{0}</b> ikke fundet :(",
+	"pause_message": "Klik eller tryk på 'P' for at fortsætte",
+	"starter": "Fight Launcher"
+}

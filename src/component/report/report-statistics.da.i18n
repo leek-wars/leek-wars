@@ -1,0 +1,21 @@
+{
+	"bugs": "Bugs",
+	"chips_used": "Chips brugt",
+	"criticals": "CC",
+	"damage_inflicted": "Skader påført",
+	"damage_received": "Skader modtaget",
+	"heal_casted": "Healing påbegyndt",
+	"heal_received": "Omsorg modtaget",
+	"kills": "Dræber",
+	"mp_used": "PM brugt",
+	"nova_received": "Nova modtog",
+	"operations": "Ops",
+	"operations_per_turn": "Op/drej",
+	"resurrections": "Vender tilbage til livet",
+	"shootings": "Skud",
+	"summons": "Tilkalde",
+	"team_n": "Team {0}",
+	"tp_per_turn": "PT/vending brugt",
+	"tp_used": "PT'er brugt",
+	"turns_played": "Spillede runder"
+}

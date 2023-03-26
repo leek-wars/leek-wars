@@ -1,0 +1,16 @@
+{
+	"cancel": "Cancelar",
+	"me": "Meu",
+	"new_message": "Nova mensagem...",
+	"quit": "Desistir",
+	"quit_confirm": "Deseja sair da conversa? Você não poderá mais ver as mensagens anteriores.",
+	"quit_conversation": "Sair da conversa",
+	"send": "Enviar",
+	"title": "Gatos",
+	"cat_team": "Equipe",
+	"cat_private": "Mensagens privadas",
+	"team": "Equipe",
+	"enable_notifications": "Ativar notificações",
+	"disable_notifications": "Desative as notificações",
+	"admin_warn": "Para fazer uma sugestão ou relatar um bug não crítico, crie um tópico no {forum}."
+}

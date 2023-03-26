@@ -1,0 +1,13 @@
+{
+	"available_on_market": "(Kan kjøpes på markedet)",
+	"new_chips": "Nye sjetonger",
+	"new_weapons": "Nye våpen",
+	"no_news": "Ingen ny vare for dette nivået.",
+	"title": "<b>{0}</b> bestått nivå <b>{1}</b>!",
+	"301_title": "Gratulerer!",
+	"301_message": "Du har nådd det høyeste nivået i Leek Wars, purren din har nådd det siste stadiet av utviklingen!<br> Du får en <b>gyllen trylledrikk</b> og en <b>krone</b> i belønning.",
+	"new_weapon": "Ny våpenspor",
+	"new_chip": "Ny brikkespor",
+	"total_weapons": "{0} totalt våpen",
+	"total_chips": "{0} sjetonger totalt"
+}

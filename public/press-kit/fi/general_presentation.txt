@@ -1,0 +1,1 @@
+Leek Wars on selainpohjainen vuoropohjainen strategiapeli, jossa purjo kilpailee keskenään ja jota ohjaa tekoäly (AI), joka sinun on koodattava. Hauska tapa oppia ohjelmointia.

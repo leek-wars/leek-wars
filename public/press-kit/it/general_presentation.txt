@@ -1,0 +1,1 @@
+Leek Wars è un gioco di strategia a turni basato su browser in cui i porri competono l'uno contro l'altro controllati da un'intelligenza artificiale (AI) che devi codificare. Un modo divertente per imparare a programmare.

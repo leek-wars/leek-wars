@@ -1,0 +1,16 @@
+{
+	"hide_unlocked": "Piilota saatu",
+	"group_by_categories": "Luokat",
+	"sort_by": "Lajitteluperuste: {0}",
+	"sort_date": "Päivämäärä",
+	"sort_index": "Oletus",
+	"sort_points": "Pisteet",
+	"sort_rarity": "Niukkuus",
+	"stats": "Tilastot",
+	"title": "{0} palkinnot",
+	"title_me": "Minun palkintoni",
+	"trophies": "Palkinnot",
+	"best_trophies": "Parhaat pokaalit",
+	"latest_trophies": "Uusimmat palkinnot",
+	"rarest_trophies": "Harvinaisimmat palkinnot"
+}

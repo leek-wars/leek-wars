@@ -1,0 +1,21 @@
+{
+	"by_x_the_d": "Door {farmer} op {date}",
+	"cancel": "Annuleren",
+	"create_new_topic": "Onderwerp maken",
+	"create_topic": "Onderwerp maken",
+	"error_invalid_title": "Onderwerptitel moet tussen {min} en {max} tekens zijn",
+	"n_topic_n_messages": "{0} onderwerpen / {1} berichten",
+	"last": "Laatst",
+	"last_message": "Laatste {date} door {farmer}",
+	"last_by_x": "door {author}",
+	"locked": "Onderwerp op slot",
+	"messages": "Berichten",
+	"new_topic_message": "Onderwerp bericht",
+	"new_topic_title": "Onderwerp titel",
+	"pinned": "Hangend onderwerp",
+	"resolved": "Onderwerp opgelost",
+	"topic": "Onderwerp",
+	"mark_as_read": "Markeer als gelezen",
+	"mark_as_read_text": "Alle onderwerpen in alle forumcategorieën worden gemarkeerd als gelezen. Na deze actie worden alleen nieuwe onderwerpen of nieuwe antwoorden getoond.",
+	"show_resolved": "Toon opgeloste onderwerpen"
+}

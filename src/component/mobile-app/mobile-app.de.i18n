@@ -1,0 +1,19 @@
+{
+	"app_installation": "Installieren der App auf dem Handy",
+	"app_info": "Wenn Sie diese Anweisungen befolgen, können Sie die Leek Wars-Webanwendung (<a href='https://en.wikipedia.org/wiki/Progressive_web_app'>PWA</a>) installieren.\nauf Ihrem Handy.\nDiese Funktion wird je nach Betriebssystem und Browser mehr oder weniger gut verwaltet, und der Installationsmodus kann von einem zum anderen variieren.\nDer in der Anleitung verwendete Browser ist <b>Chrome</b> auf <b>Android</b>, der Web-Apps am besten zu handhaben scheint.",
+	"app_preview": "App-Übersicht",
+	"title": "App",
+	"step_n": "Schritt {0}",
+	"step1": "Gehen Sie zu leekwars.com",
+	"step2": "Tippen Sie auf „Zum Startbildschirm hinzufügen“",
+	"step3": "Drücken Sie \"Hinzufügen\"",
+	"step4": "Die Verknüpfung zur Anwendung wird auf dem Desktop angezeigt",
+	"preview1": "Lauch Seite",
+	"preview2": "Seitenmenü",
+	"preview3": "Marktseite",
+	"preview4": "Detail einer Waffe auf dem Markt",
+	"preview5": "Seite Trophäen",
+	"preview6": "Kampf anschauen",
+	"preview7": "Bearbeiten einer KI",
+	"preview8": "Push-Benachrichtigung"
+}

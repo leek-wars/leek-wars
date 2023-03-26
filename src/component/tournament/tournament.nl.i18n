@@ -1,0 +1,13 @@
+{
+	"comments": "Opmerkingen",
+	"farmer": "{0} Fokkertoernooi",
+	"few_seconds": "een paar seconden",
+	"next_round_in": "Volgende ronde over {0}",
+	"not_found": "Toernooi-ID {0} niet gevonden :(",
+	"send": "Sturen",
+	"solo": "{0} Solo-toernooi",
+	"team": "{0} Teamtoernooi",
+	"next_round_supervisor": "De volgende ronde wordt geïnitieerd door de begeleider",
+	"generate": "Genereer de volgende ronde",
+	"generating": "Huidige generatie..."
+}

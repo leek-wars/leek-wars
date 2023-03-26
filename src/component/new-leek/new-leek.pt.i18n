@@ -1,0 +1,13 @@
+{
+	"4_leeks_only": "Você já tem 4 alhos-porós!",
+	"create": "Criar",
+	"error_under_required_level_1": "Seu primeiro alho-poró deve ter pelo menos nível {0}",
+	"error_under_required_level_2": "Seu segundo alho-poró deve ter pelo menos nível {0}",
+	"error_under_required_level_3": "Seu terceiro alho-poró deve ter pelo menos nível {0}",
+	"name": "Nome",
+	"name_length": "O nome do alho-poró deve conter entre {0} e {1} caracteres",
+	"name_format": "Caracteres especiais não são permitidos no nome",
+	"not_enough_money": "Você não tem dinheiro suficiente",
+	"price": "Preço",
+	"title": "Novo alho-poró"
+}

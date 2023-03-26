@@ -1,0 +1,13 @@
+{
+	"comments": "Uwagi",
+	"farmer": "{0} Turniej hodowców",
+	"few_seconds": "kilka sekund",
+	"next_round_in": "Następna runda za {0}",
+	"not_found": "Nie znaleziono identyfikatora turnieju {0} :(",
+	"send": "Wysłać",
+	"solo": "{0} Turniej solo",
+	"team": "{0} Turniej drużynowy",
+	"next_round_supervisor": "Kolejna runda zostanie zainicjowana przez przełożonego",
+	"generate": "Wygeneruj następną rundę",
+	"generating": "Obecna generacja..."
+}

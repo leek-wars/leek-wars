@@ -1,0 +1,18 @@
+{
+	"admin": "Administrator",
+	"admin_desc": "Kategorie für Administratoren reserviert",
+	"bug_reports": "Fehlerberichte",
+	"bug_reports_desc": "Wenn Sie glauben, einen Fehler im Spiel gefunden zu haben",
+	"composter": "Komposter",
+	"composter_desc": "Über alles reden... und nichts.",
+	"exploits": "Ihre Heldentaten",
+	"exploits_desc": "Melden Sie Ihre Exploits oder teilen Sie Ihre ungewöhnlichen Screenshots",
+	"general_discussion": "Allgemeine Diskussion",
+	"general_discussion_desc": "Allgemeine Lauchkrieg-Diskussion",
+	"help": "Hilfe und Tipps",
+	"help_desc": "Wenn Sie eine Frage zum Spiel haben oder Tipps teilen möchten",
+	"moderation": "Mäßigung",
+	"moderation_desc": "Kategorie für Moderatoren reserviert",
+	"suggestions_ideas": "Anregungen und Ideen",
+	"suggestions_ideas_desc": "Wenn Sie Verbesserungsvorschläge für das Spiel haben"
+}

@@ -1,0 +1,19 @@
+{
+	"app_installation": "De app installeren op mobiel",
+	"app_info": "Door deze instructies te volgen, kunt u de Leek Wars-webtoepassing installeren (<a href='https://en.wikipedia.org/wiki/Progressive_web_app'>PWA</a>)\nop je mobiel.\nDeze functie wordt min of meer goed beheerd, afhankelijk van het besturingssysteem en de browsers, en de installatiemodus kan van de ene naar de andere verschillen.\nDe browser die in de instructies wordt gebruikt, is <b>Chrome</b> op <b>Android</b>, die webapps het beste lijkt te verwerken.",
+	"app_preview": "App-overzicht",
+	"title": "Applicatie voor de mobiele telefoon",
+	"step_n": "Etappe {0}",
+	"step1": "Ga naar preiwars.com",
+	"step2": "Tik op \"Toevoegen aan startscherm\"",
+	"step3": "Druk op \"Toevoegen\"",
+	"step4": "De snelkoppeling naar de applicatie verschijnt op het bureaublad",
+	"preview1": "Prei pagina",
+	"preview2": "Zijmenu",
+	"preview3": "Markt pagina",
+	"preview4": "Detail van een pistool op de markt",
+	"preview5": "Trofeeën pagina",
+	"preview6": "Een gevecht bekijken",
+	"preview7": "Een AI bewerken",
+	"preview8": "Push notificatie"
+}

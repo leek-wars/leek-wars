@@ -1,0 +1,19 @@
+{
+	"source_code": "Källkod",
+	"source_code_ex": "min källkod",
+	"big_title": "Stor rubrik",
+	"big_title_ex": "Huvudtitel",
+	"sub_title": "Texta",
+	"sub_title_ex": "Texta",
+	"sub_sub_title": "Undertext",
+	"sub_sub_title_ex": "Undertext",
+	"bold": "Djärv",
+	"bold_ex": "djärv",
+	"italic": "Kursiv",
+	"italic_ex": "kursiv",
+	"underlined": "Understrykning",
+	"underlined_ex": "understrykning",
+	"striked": "Stav",
+	"striked_ex": "stav",
+	"basic_html": "Grundläggande HTML tillåten"
+}

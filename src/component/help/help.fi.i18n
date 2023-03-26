@@ -1,0 +1,11 @@
+{
+	"documentation": "Dokumentointi",
+	"documentation_desc": "Yksityiskohtainen luettelo kaikista <b>LeekScript</b>-funktioista ja vakioista",
+	"general_help": "Pelin, toiminnan ja tietojen löytäminen",
+	"rewatch_didactitiel": "Tarkista opetusohjelma",
+	"title": "Apu",
+	"tutorial": "LeekScript opetusohjelma",
+	"tutorial_desc": "Johdatus <b>LeekScript</b>-kieleen, tekniset tiedot ja syntaksi",
+	"wiki": "Wiki",
+	"wiki_desc": "Pelaajien kirjoittama Wiki, jossa on paljon tietoa pelistä"
+}

@@ -1,0 +1,10 @@
+{
+	"report_farmer": "Rapportera {0}",
+	"reporting_deleted": "Rapporten har tagits bort",
+	"title": "Måtta",
+	"warning_sent": "Varning skickad!",
+	"you_are_muted": "Du har blivit tystad.",
+	"you_have_been_muted_by_x": "Du har tystats av {0}.",
+	"you_have_been_unmuted_by_x": "{0} låter dig prata i chatten igen.",
+	"you_must_choose_reason": "Du måste välja ett mönster!"
+}

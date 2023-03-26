@@ -1,0 +1,16 @@
+{
+	"hide_unlocked": "Göm erhållen",
+	"group_by_categories": "Kategorier",
+	"sort_by": "Sortera efter {0}",
+	"sort_date": "Datum",
+	"sort_index": "Standard",
+	"sort_points": "Poäng",
+	"sort_rarity": "Brist",
+	"stats": "Statistik",
+	"title": "{0} Troféer",
+	"title_me": "Mina troféer",
+	"trophies": "Troféer",
+	"best_trophies": "Bästa troféer",
+	"latest_trophies": "Senaste troféerna",
+	"rarest_trophies": "Sällsynta troféer"
+}

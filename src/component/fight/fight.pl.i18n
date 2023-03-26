@@ -1,0 +1,12 @@
+{
+	"battle_royale": "Królewskie bitwy",
+	"date_format": "{0}",
+	"deleted_farmer": "hodowca usunięty",
+	"deleted_leek": "por usunięty",
+	"deleted_team": "usunięty zespół",
+	"n_views": "brak widoku | 1 widok | {n} wyświetleń",
+	"not_found": "Nie znaleziono walki :(",
+	"not_found_id": "Nie znaleziono identyfikatora walki <b>{0}</b> :(",
+	"pause_message": "Kliknij lub naciśnij „P”, aby wznowić",
+	"starter": "Wyrzutnia walki"
+}

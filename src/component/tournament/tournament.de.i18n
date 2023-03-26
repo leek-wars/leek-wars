@@ -1,0 +1,13 @@
+{
+	"comments": "Kommentare",
+	"farmer": "{0} Züchterturnier",
+	"few_seconds": "ein paar Sekunden",
+	"next_round_in": "Nächste Runde in {0}",
+	"not_found": "Turnier-ID {0} nicht gefunden :(",
+	"send": "Schicken",
+	"solo": "{0} Solo-Turnier",
+	"team": "{0} Mannschaftsturnier",
+	"next_round_supervisor": "Die nächste Runde wird vom Betreuer eingeleitet",
+	"generate": "Nächste Runde generieren",
+	"generating": "Derzeitige Generation..."
+}

@@ -1,0 +1,12 @@
+{
+	"battle_royale": "Battle-Royale",
+	"date_format": "Die {0}",
+	"deleted_farmer": "züchter gelöscht",
+	"deleted_leek": "lauch entfernt",
+	"deleted_team": "gelöschte Mannschaft",
+	"n_views": "keine Aussicht | 1 Ansicht | {n} Aufrufe",
+	"not_found": "Kampf nicht gefunden :(",
+	"not_found_id": "Kampf-ID <b>{0}</b> nicht gefunden :(",
+	"pause_message": "Klicken Sie auf oder drücken Sie „P“, um fortzufahren",
+	"starter": "Launcher bekämpfen"
+}

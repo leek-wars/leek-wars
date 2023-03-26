@@ -1,0 +1,23 @@
+{
+	"title": "Historia: {0}",
+	"title_html": "Taisteluhistoria",
+	"24h": "24 tuntia",
+	"today": "Tänään",
+	"2days": "2 päivää",
+	"1week": "1 viikko",
+	"n_fights": "{0} tappelua",
+	"victories": "voittoja",
+	"draws": "siteitä",
+	"defeats": "tappioita",
+	"ratio": "suhde",
+	"not_found_id": "Tunteen {0} purjoa ei löydy",
+	"fight_type": "Taistelutyyppejä",
+	"fight_context": "Taistelun kontekstit",
+	"solo": "Yksin",
+	"farmer": "Kasvattaja",
+	"team": "Miehistö",
+	"battle_royale": "Battle Royale",
+	"challenge": "Haaste",
+	"garden": "Vihannespuutarha",
+	"tournament": "Turnaus"
+}

@@ -1,0 +1,1 @@
+Koodataksesi tekoälyäsi sinun on koodattava LeekScriptillä, joka on JavaScriptiä muistuttava kieli. Saatavilla on opetusohjelma, jonka avulla voit oppia pelin ja kielen käsitteitä edistyessäsi.

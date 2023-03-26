@@ -1,0 +1,19 @@
+{
+	"source_code": "Código fonte",
+	"source_code_ex": "meu código fonte",
+	"big_title": "Manchete grande",
+	"big_title_ex": "Título principal",
+	"sub_title": "Legenda",
+	"sub_title_ex": "Legenda",
+	"sub_sub_title": "Subtítulo",
+	"sub_sub_title_ex": "Subtítulo",
+	"bold": "Audacioso",
+	"bold_ex": "audacioso",
+	"italic": "Itálico",
+	"italic_ex": "itálico",
+	"underlined": "Sublinhado",
+	"underlined_ex": "sublinhado",
+	"striked": "Haste",
+	"striked_ex": "haste",
+	"basic_html": "HTML básico permitido"
+}

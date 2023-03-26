@@ -1,0 +1,12 @@
+{
+	"battle_royale": "Strijd royale",
+	"date_format": "De {0}",
+	"deleted_farmer": "fokker verwijderd",
+	"deleted_leek": "prei verwijderd",
+	"deleted_team": "verwijderd team",
+	"n_views": "geen uitzicht | 1 weergave | {n} weergaven",
+	"not_found": "Gevecht niet gevonden :(",
+	"not_found_id": "Gevechts-ID <b>{0}</b> niet gevonden :(",
+	"pause_message": "Klik of druk op 'P' om door te gaan",
+	"starter": "Vecht Launcher"
+}

@@ -1,0 +1,1 @@
+Leek Wars to przeglądarkowa gra strategiczna turowa, w której pory rywalizują ze sobą, a są kontrolowane przez sztuczną inteligencję (AI), którą musisz zaprogramować. Fajny sposób na naukę programowania.

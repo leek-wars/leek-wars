@@ -1,0 +1,11 @@
+{
+	"n_contributors": "Geen bijdrager | <b>{n}</b> bijdrager | <b>{n}</b> bijdragers",
+	"search": "Zoek een pagina",
+	"created_by_x_the_y": "Gemaakt door {farmer} op {date}",
+	"edited_by_x_the_y": "Bewerkt door {farmer} op {date}",
+	"n_views": "{v} weergaven",
+	"n_contributions": "{n} bijdragen",
+	"not_found": "De pagina \"{name}\" bestaat niet in de Franse encyclopedie.",
+	"contributor_create": "U bent een bijdrager 😎 Klik op Bewerken om deze pagina te bewerken",
+	"locked": "Voltooi het hoofdstuk om de volledige AI te ontgrendelen"
+}

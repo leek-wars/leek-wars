@@ -1,0 +1,17 @@
+{
+	"shortcut_1": "<b>Ctrl + S</b>: Gem nuværende AI",
+	"shortcut_2": "<b>Ctrl + Q</b>: start en test",
+	"shortcut_3": "<b>Ctrl + D</b>: Dupliker den aktuelle linje eller markering",
+	"shortcut_4": "<b>Ctrl + K</b>: Slet den aktuelle linje",
+	"shortcut_5": "<b>Ctrl + E</b> eller <b>Ctrl + /</b>: kommenter/fjern kommentar til den aktuelle linje",
+	"shortcut_6": "<b>Ctrl + P</b>: Åbn en fil",
+	"shortcut_7": "<b>Ctrl + F</b>: søg i den aktuelle fil",
+	"shortcut_8": "<b>Alt + op/ned</b>: Flyt den aktuelle linje op/ned",
+	"shortcut_9": "<b>Alt + venstre/højre</b>: Skift mellem åbne filer",
+	"shortcut_10": "<b>Ctrl + Mellemrum</b>: automatisk afslutning",
+	"shortcut_11": "<b>Ctrl + klik</b>: Gå til symboldefinition",
+	"shortcut_12": "<b>Ctrl + Shift + F</b>: automatisk kodeformatering og indrykning",
+	"shortcut_13": "<b>Ctrl + U</b>: fold/fold den aktuelle kodeblok",
+	"shortcut_14": "<b>Ctrl + J</b>: Skjul alle kodeblokke",
+	"shortcut_15": "<b>Ctrl + I</b>: Udvid alle kodeblokke"
+}

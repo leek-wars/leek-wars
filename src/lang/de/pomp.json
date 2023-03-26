@@ -1,0 +1,16 @@
+{
+	"ai_lines": "Anzahl der AI-Linien",
+	"ai_lines_desc": "Mit diesem Gerät können Sie die Anzahl der Zeilen Ihrer KI auf der Seite Ihres Lauchs anzeigen.",
+	"hold_weapon": "Halten Sie eine Waffe",
+	"hold_weapon_desc": "Dieser Apparat ermöglicht es Ihrem Lauch, eine Waffe in seinen Händen zu halten, die auf seiner Seite und überall dort sichtbar ist, wo sein Bild im Spiel erscheint.",
+	"leek_title": "Lauch Titel",
+	"leek_title_desc": "Mit dieser Kleidung können Sie Ihrem Lauch einen Titel geben, der auf seiner Seite und an anderen Stellen im Spiel angezeigt wird.",
+	"farmer_title": "Züchtertitel",
+	"farmer_title_desc": "Mit dieser Ausrüstung können Sie sich selbst einen Titel geben, der auf Ihrer Seite und an anderen Stellen im Spiel wie dem Forum, erweiterten Tooltips usw. angezeigt wird.",
+	"metal": "Metallplatten",
+	"metal_desc": "Fügen Sie Ihrem Lauchbild Metallplaketten hinzu",
+	"angry": "Wütendes Gesicht",
+	"angry_desc": "Ändere den Ausdruck deines Lauchs: Er wird angepisst aussehen",
+	"happy": "Lächelndes Gesicht",
+	"happy_desc": "Ändern Sie den Ausdruck Ihres Lauchs: Er wird lächeln"
+}

@@ -1,0 +1,11 @@
+{
+	"n_contributors": "Ingen bidragsgivare | <b>{n}</b> bidragsgivare | <b>{n}</b> bidragsgivare",
+	"search": "Hitta en sida",
+	"created_by_x_the_y": "Skapad av {farmer} den {date}",
+	"edited_by_x_the_y": "Redigerad av {farmer} den {date}",
+	"n_views": "{v} visningar",
+	"n_contributions": "{n} bidrag",
+	"not_found": "Sidan \"{name}\" finns inte i det franska uppslagsverket.",
+	"contributor_create": "Du är en bidragsgivare 😎 Klicka på Redigera för att börja redigera den här sidan",
+	"locked": "Slutför kapitlet för att låsa upp hela AI"
+}

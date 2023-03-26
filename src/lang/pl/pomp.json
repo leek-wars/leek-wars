@@ -1,0 +1,16 @@
+{
+	"ai_lines": "Liczba linii AI",
+	"ai_lines_desc": "To urządzenie pozwala wyświetlić liczbę linii twojej AI na stronie twoich porów.",
+	"hold_weapon": "Trzymaj broń",
+	"hold_weapon_desc": "To urządzenie pozwala twojemu porowi trzymać broń w dłoniach, widoczną na jego stronie i wszędzie tam, gdzie jego grafika pojawia się w grze.",
+	"leek_title": "Tytuł pora",
+	"leek_title_desc": "Ten strój pozwala nadać porom tytuł, który będzie wyświetlany na jego stronie iw innych miejscach w grze.",
+	"farmer_title": "Tytuł hodowcy",
+	"farmer_title_desc": "Ten sprzęt pozwala nadać sobie tytuł, który będzie wyświetlany na Twojej stronie oraz w innych miejscach w grze, takich jak forum, zaawansowane podpowiedzi itp.",
+	"metal": "Metalowe talerze",
+	"metal_desc": "Dodaj metalowe blaszki na obrazie pora",
+	"angry": "Zła twarz",
+	"angry_desc": "Zmień wyraz swojego pora: będzie wyglądał na wkurzonego",
+	"happy": "Uśmiechnięta twarz",
+	"happy_desc": "Zmień wyraz swojego pora: będzie się uśmiechał"
+}

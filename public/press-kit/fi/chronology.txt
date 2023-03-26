@@ -1,0 +1,11 @@
+2012: pelin julkaisu
+2013: beetaversion loppu
+2014: turnaukset, palkinnot
+2015: Englanninkielinen versio, kutsu, uusi muotoilu, ominaisuudet, CaC-aseet,
+2016: Battle Royale
+2017: testivaihtoehdot, tilastot
+2018: Mobiilisovellus ja Vue.js
+2019: Tornit
+2020: Unohdetut aseet, ansat, BR-autot, Docker, GitHub-rekisteröinti, Editor, Encyclopedia, Uudet kartat
+2021: 16 pelimerkkiä, LS 2, 160 uutta pokaalia, LS 3, resurssit
+2022: nopea rekisteröinti, viihde, LS 4, arkut

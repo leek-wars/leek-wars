@@ -1,0 +1,23 @@
+{
+	"title": "Storia di {0}",
+	"title_html": "Storia della battaglia",
+	"24h": "24 ore",
+	"today": "Oggi",
+	"2days": "2 giorni",
+	"1week": "1 settimana",
+	"n_fights": "{0} risse",
+	"victories": "vittorie",
+	"draws": "cravatte",
+	"defeats": "sconfitte",
+	"ratio": "rapporto",
+	"not_found_id": "Porro di id {0} non trovato",
+	"fight_type": "Tipi di combattimento",
+	"fight_context": "Contesti di combattimento",
+	"solo": "Assolo",
+	"farmer": "Allevatore",
+	"team": "Equipaggio",
+	"battle_royale": "Battaglia reale",
+	"challenge": "Sfida",
+	"garden": "Orto",
+	"tournament": "Torneo"
+}

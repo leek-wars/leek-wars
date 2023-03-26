@@ -1,0 +1,21 @@
+{
+	"by_x_the_d": "Por {farmer} em {date}",
+	"cancel": "Cancelar",
+	"create_new_topic": "Criar tópico",
+	"create_topic": "Criar tópico",
+	"error_invalid_title": "O título do tópico deve ter entre {min} e {max} caracteres",
+	"n_topic_n_messages": "{0} tópicos / {1} postagens",
+	"last": "Durar",
+	"last_message": "Última {date} por {farmer}",
+	"last_by_x": "por {author}",
+	"locked": "Tópico bloqueado",
+	"messages": "Postagens",
+	"new_topic_message": "Mensagem do tópico",
+	"new_topic_title": "Titulo do Topico",
+	"pinned": "Sujeito pendurado",
+	"resolved": "Tópico resolvido",
+	"topic": "Assunto",
+	"mark_as_read": "Marcar como Lido",
+	"mark_as_read_text": "Todos os tópicos em todas as categorias do fórum serão marcados como lidos. Após esta ação, apenas novos tópicos ou novas respostas serão mostrados.",
+	"show_resolved": "Mostrar tópicos resolvidos"
+}

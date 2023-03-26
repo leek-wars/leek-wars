@@ -1,0 +1,1 @@
+Aby zakodować swoją sztuczną inteligencję, musisz pisać w LeekScript, języku podobnym do JavaScript. Dostępny jest samouczek, dzięki któremu nauczysz się pojęć związanych z grą i językiem w miarę postępów.

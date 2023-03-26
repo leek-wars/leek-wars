@@ -1,0 +1,18 @@
+{
+	"admin": "Administrador",
+	"admin_desc": "Categoria reservada para administradores",
+	"bug_reports": "Relatório de erros",
+	"bug_reports_desc": "Se você acha que encontrou um bug no jogo",
+	"composter": "Composteira",
+	"composter_desc": "Falar de tudo... e de nada.",
+	"exploits": "Suas façanhas",
+	"exploits_desc": "Venha relatar suas façanhas ou compartilhar suas capturas de tela incomuns",
+	"general_discussion": "Discussão geral",
+	"general_discussion_desc": "Discussão geral das guerras de alho-poró",
+	"help": "Ajuda e dicas",
+	"help_desc": "Se você tiver alguma dúvida sobre o jogo ou quiser compartilhar dicas",
+	"moderation": "Moderação",
+	"moderation_desc": "Categoria reservada para moderadores",
+	"suggestions_ideas": "Sugestões e ideias",
+	"suggestions_ideas_desc": "Se você tiver alguma ideia de melhoria para o jogo"
+}

@@ -1,0 +1,16 @@
+{
+	"android_app": "Android App",
+	"editor": "Integrierter intelligenter KI-Editor",
+	"fight_beach": "Einzelkampf (1v1) am Strand",
+	"fight_desert": "Rancher kämpfen in der Wüste",
+	"fight_factory": "Teamkampf (6v6) in der Fabrik",
+	"fight_forest": "Hirtenkampf (4v4) im Wald",
+	"fight_ice": "Battle Royale (10 Spieler) auf der Eisscholle",
+	"fight_test": "Bodenkampf testen",
+	"leek_page": "Seite Ihres Lauchs",
+	"market": "Markt: Kauf von Waffen, Chips, Hüten etc.",
+	"pixel_art": "Pixelkunst dank der Debug-Funktionen",
+	"ranking": "Rangliste: Solo, Züchter, Team, Trophäen",
+	"tournament": "Züchterturnier jeden Abend um 18 Uhr",
+	"trophies": "Trophäenseite (300 Trophäen)"
+}

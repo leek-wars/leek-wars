@@ -1,0 +1,13 @@
+{
+	"4_leeks_only": "Du har redan 4 purjolök!",
+	"create": "Skapa",
+	"error_under_required_level_1": "Din första purjolök måste vara minst nivå {0}",
+	"error_under_required_level_2": "Din andra purjolök måste vara minst nivå {0}",
+	"error_under_required_level_3": "Din tredje purjolök måste vara minst nivå {0}",
+	"name": "Namn",
+	"name_length": "Purjolökens namn måste innehålla mellan {0} och {1} tecken",
+	"name_format": "Specialtecken är inte tillåtna i namnet",
+	"not_enough_money": "Du har inte tillräckligt med pengar",
+	"price": "Pris",
+	"title": "Ny purjolök"
+}

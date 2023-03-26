@@ -1,0 +1,13 @@
+{
+	"available_on_market": "(Saatavana ostaa markkinoilta)",
+	"new_chips": "Uudet sirut",
+	"new_weapons": "Uusia aseita",
+	"no_news": "Ei uutta tuotetta tälle tasolle.",
+	"title": "<b>{0}</b> läpäisytason <b>{1}</b>!",
+	"301_title": "Onnittelut!",
+	"301_message": "Olet saavuttanut korkeimman tason Leek Warsissa, purjosi on saavuttanut kehityksensä viimeisen vaiheen!<br> Saat palkkioksi <b>kultaisen juoman</b> ja <b>kruunun</b>.",
+	"new_weapon": "Uusi asepaikka",
+	"new_chip": "Uusi sirupaikka",
+	"total_weapons": "{0} asetta yhteensä",
+	"total_chips": "yhteensä {0} pelimerkkiä"
+}

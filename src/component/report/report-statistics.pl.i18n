@@ -1,0 +1,21 @@
+{
+	"bugs": "Błędy",
+	"chips_used": "Chipsy używane",
+	"criticals": "CC",
+	"damage_inflicted": "Zadana szkoda",
+	"damage_received": "Otrzymane obrażenia",
+	"heal_casted": "Rozpoczęło się leczenie",
+	"heal_received": "Otrzymana opieka",
+	"kills": "Zabija",
+	"mp_used": "Używany PM",
+	"nova_received": "Nowa otrzymała",
+	"operations": "Operacje",
+	"operations_per_turn": "Op/obrót",
+	"resurrections": "Powraca do życia",
+	"shootings": "Strzały",
+	"summons": "Wezwać",
+	"team_n": "Zespół {0}",
+	"tp_per_turn": "Zastosowano PT/obrót",
+	"tp_used": "Używane PT",
+	"turns_played": "Rozegrane rundy"
+}

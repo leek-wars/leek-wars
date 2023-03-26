@@ -1,0 +1,21 @@
+{
+	"bugs": "Insetti",
+	"chips_used": "Chip usati",
+	"criticals": "CC",
+	"damage_inflicted": "Danno inflitto",
+	"damage_received": "Danno ricevuto",
+	"heal_casted": "Guarigione avviata",
+	"heal_received": "Cura ricevuta",
+	"kills": "Uccide",
+	"mp_used": "PM utilizzato",
+	"nova_received": "Nova ha ricevuto",
+	"operations": "Ops",
+	"operations_per_turn": "Op/turn",
+	"resurrections": "Ritorna alla vita",
+	"shootings": "Colpi",
+	"summons": "Convocare",
+	"team_n": "Squadra {0}",
+	"tp_per_turn": "PT/giro utilizzato",
+	"tp_used": "PT utilizzati",
+	"turns_played": "Turni giocati"
+}

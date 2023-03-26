@@ -1,0 +1,17 @@
+{
+	"shortcut_1": "<b>Ctrl + S</b>: spara aktuell AI",
+	"shortcut_2": "<b>Ctrl + Q</b>: starta ett test",
+	"shortcut_3": "<b>Ctrl + D</b>: duplicera den aktuella raden eller markeringen",
+	"shortcut_4": "<b>Ctrl + K</b>: radera den aktuella raden",
+	"shortcut_5": "<b>Ctrl + E</b> eller <b>Ctrl + /</b>: kommentera/avkommentera den aktuella raden",
+	"shortcut_6": "<b>Ctrl + P</b>: öppna en fil",
+	"shortcut_7": "<b>Ctrl + F</b>: sök i den aktuella filen",
+	"shortcut_8": "<b>Alt + upp/ner</b>: flytta aktuell linje upp/ner",
+	"shortcut_9": "<b>Alt + vänster/höger</b>: växla mellan öppna filer",
+	"shortcut_10": "<b>Ctrl + Mellanslag</b>: automatiskt slutförande",
+	"shortcut_11": "<b>Ctrl + Klicka</b>: gå till symboldefinition",
+	"shortcut_12": "<b>Ctrl + Shift + F</b>: automatisk kodformatering och indrag",
+	"shortcut_13": "<b>Ctrl + U</b>: vik/vik upp det aktuella kodblocket",
+	"shortcut_14": "<b>Ctrl + J</b>: Komprimera alla kodblock",
+	"shortcut_15": "<b>Ctrl + I</b>: expandera alla kodblock"
+}

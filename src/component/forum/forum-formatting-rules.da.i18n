@@ -1,0 +1,19 @@
+{
+	"source_code": "Kildekode",
+	"source_code_ex": "min kildekode",
+	"big_title": "Stor overskrift",
+	"big_title_ex": "Hovedtitel",
+	"sub_title": "Undertekst",
+	"sub_title_ex": "Undertekst",
+	"sub_sub_title": "Undertekst",
+	"sub_sub_title_ex": "Undertekst",
+	"bold": "Fremhævet",
+	"bold_ex": "fremhævet",
+	"italic": "Kursiv",
+	"italic_ex": "kursiv",
+	"underlined": "Understrege",
+	"underlined_ex": "understrege",
+	"striked": "Stang",
+	"striked_ex": "stang",
+	"basic_html": "Grundlæggende HTML tilladt"
+}

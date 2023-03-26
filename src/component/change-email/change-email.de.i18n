@@ -1,0 +1,11 @@
+{
+	"title": "Ändern Sie die E-Mail",
+	"send_confirmation": "Bestätigung senden",
+	"enter_a_new_email": "Geben Sie eine neue E-Mail-Adresse ein",
+	"new_email": "Neue Email Adresse",
+	"confirm": "Bestätigung",
+	"email_sent": "Bestätigungs-E-Mail an {email} gesendet",
+	"email_changed_success": "E-Mail-Adresse erfolgreich geändert.",
+	"back_home": "Zurück nach Hause",
+	"error_not_same_email": "Die eingegebenen Adressen stimmen nicht überein"
+}

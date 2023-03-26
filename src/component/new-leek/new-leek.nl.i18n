@@ -1,0 +1,13 @@
+{
+	"4_leeks_only": "Je hebt al 4 prei!",
+	"create": "Scheppen",
+	"error_under_required_level_1": "Je eerste prei moet minimaal niveau {0} zijn",
+	"error_under_required_level_2": "Je tweede prei moet minimaal niveau {0} zijn",
+	"error_under_required_level_3": "Je 3e prei moet minimaal niveau {0} zijn",
+	"name": "Naam",
+	"name_length": "Preinaam moet tussen {0} en {1} tekens bevatten",
+	"name_format": "Speciale tekens zijn niet toegestaan in de naam",
+	"not_enough_money": "Je hebt niet genoeg geld",
+	"price": "Prijs",
+	"title": "Nieuwe prei"
+}

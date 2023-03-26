@@ -1,0 +1,14 @@
+{
+	"connection": "Anmeldung",
+	"error_banned": "Dein Account wurde gesperrt",
+	"error_inactive": "Ihr Konto wurde nicht aktiviert, bitte gehen Sie auf den per E-Mail gesendeten Link.",
+	"error_invalid": "Die Anmeldeinformationen sind falsch.",
+	"error_server": "Serverfehler. Bitte versuchen Sie es in ein paar Minuten erneut",
+	"forgot_password": "Haben Sie Ihr Passwort vergessen ?",
+	"incorrect_login": "Login oder Passwort falsch.",
+	"keep_connected": "In Verbindung bleiben",
+	"login": "Züchtername oder E-Mail",
+	"password": "Passwort",
+	"success": "Sie sind verbunden",
+	"title": "Anmeldung"
+}

@@ -1,0 +1,9 @@
+{
+	"buy_with": "Compre com",
+	"paypal_message": "Clique em um botão para começar a comprar",
+	"purshase_title": "Comprando <b>{0}</b> cristais com <i>{1}</i>",
+	"purshase_title_simple": "Compra de <b>{0}</b> cristais",
+	"purshase_title_text": "Compre {0} cristais com {1}",
+	"purshase_title_text_simple": "Compre {0} Cristais",
+	"title": "Banco de cristal"
+}

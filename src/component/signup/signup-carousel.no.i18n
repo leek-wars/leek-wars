@@ -1,0 +1,16 @@
+{
+	"android_app": "Android-app",
+	"editor": "Smart AI-redigering på stedet",
+	"fight_beach": "Solokamp (1v1) på stranden",
+	"fight_desert": "Rancher-kamp i ørkenen",
+	"fight_factory": "Lagkamp (6v6) på fabrikken",
+	"fight_forest": "Gjeterkamp (4v4) i skogen",
+	"fight_ice": "Battle Royale (10 spillere) på isflaket",
+	"fight_test": "Bevisende bakkekamp",
+	"leek_page": "Side av purren din",
+	"market": "Marked: kjøp av våpen, sjetonger, hatter etc.",
+	"pixel_art": "Pixel art takket være feilsøkingsfunksjonene",
+	"ranking": "Rangering: Solo, Oppdretter, Lag, Trofeer",
+	"tournament": "Oppdretterturnering hver kveld kl.18.",
+	"trophies": "Trofeer-side (300 trofeer)"
+}

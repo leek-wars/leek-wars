@@ -1,0 +1,13 @@
+{
+	"available_on_market": "(Do nabycia na rynku)",
+	"new_chips": "Nowe chipsy",
+	"new_weapons": "Nowa broń",
+	"no_news": "Brak nowego przedmiotu na tym poziomie.",
+	"title": "<b>{0}</b> zalicz poziom <b>{1}</b>!",
+	"301_title": "Gratulacje!",
+	"301_message": "Osiągnąłeś najwyższy poziom w Leek Wars, twój por osiągnął ostatni etap ewolucji!<br> W nagrodę otrzymujesz <b>złotą miksturę</b> i <b>koronę</b>.",
+	"new_weapon": "Nowe miejsce na broń",
+	"new_chip": "Nowe miejsce na chip",
+	"total_weapons": "{0} łącznie broni",
+	"total_chips": "łącznie {0} żetonów"
+}

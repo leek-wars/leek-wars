@@ -6,14 +6,14 @@
 				<v-menu offset-y>
 					<template v-slot:activator="{ on }">
 						<div class="forum-language info" v-on="on">
-							<flag v-for="l in activeLanguages" :key="l" :code="LeekWars.languages[l].country" />
+							<flag v-for="l in activeLanguages" :key="l" :code="LeekWars.languages[l].country" :clickable="false" />
 							<img width="10" src="/image/selector.png">
 						</div>
 					</template>
 					<v-list :dense="true">
 						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click="setForumLanguage(language)">
 							<v-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" hide-details @click.stop="pickForumLanguage(language)" />
-							<flag :code="language.country" />
+							<flag :code="language.country" :clickable="false" />
 							<!-- <img :src="language.flag" class="flag"> -->
 							<span class="name">{{ language.name }}</span>
 						</v-list-item>

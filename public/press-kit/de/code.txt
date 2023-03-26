@@ -1,0 +1,1 @@
+Um Ihre KI zu codieren, müssen Sie in LeekScript codieren, einer JavaScript-ähnlichen Sprache. Ein Tutorial ist verfügbar, um die Begriffe des Spiels und die Sprache zu lernen, während Sie fortschreiten.

@@ -1,0 +1,16 @@
+{
+	"ai_lines": "Antal AI-linjer",
+	"ai_lines_desc": "Dette apparat giver dig mulighed for at vise antallet af linjer i din AI på siden af dine porrer.",
+	"hold_weapon": "Hold et våben",
+	"hold_weapon_desc": "Dette apparat giver din porre mulighed for at holde et våben i hænderne, synligt på hans side, og hvor som helst hans visuelle optræder i spillet.",
+	"leek_title": "Porre titel",
+	"leek_title_desc": "Dette tøj giver dig mulighed for at give dine porrer en titel, som vil blive vist på dens side og andre steder i spillet.",
+	"farmer_title": "Opdrættertitel",
+	"farmer_title_desc": "Dette gear giver dig mulighed for at give dig selv en titel, som vil blive vist på din side og andre steder i spillet såsom forummet, avancerede værktøjstip osv.",
+	"metal": "Metalplader",
+	"metal_desc": "Tilføj metalplader på dit porrebillede",
+	"angry": "Vredt ansigt",
+	"angry_desc": "Skift udtryk på din porre: den vil se sur ud",
+	"happy": "Smilende ansigt",
+	"happy_desc": "Skift udtryk for din porre: den vil smile"
+}

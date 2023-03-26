@@ -1,0 +1,11 @@
+{
+	"n_contributors": "Ingen bidragyder | <b>{n}</b> bidragyder | <b>{n}</b> bidragydere",
+	"search": "Find en side",
+	"created_by_x_the_y": "Oprettet af {farmer} den {date}",
+	"edited_by_x_the_y": "Redigeret af {farmer} den {date}",
+	"n_views": "{v} visninger",
+	"n_contributions": "{n} bidrag",
+	"not_found": "Siden \"{name}\" findes ikke på den franske encyklopædi.",
+	"contributor_create": "Du er en bidragyder 😎 Klik på Rediger for at begynde at redigere denne side",
+	"locked": "Fuldfør kapitlet for at låse op for den fulde AI"
+}

@@ -1,0 +1,21 @@
+{
+	"by_x_the_d": "Od {farmer} w dniu {date}",
+	"cancel": "Anulować",
+	"create_new_topic": "Utwórz temat",
+	"create_topic": "Utwórz temat",
+	"error_invalid_title": "Tytuł tematu musi zawierać od {min} do {max} znaków",
+	"n_topic_n_messages": "{0} tematów / {1} postów",
+	"last": "Ostatni",
+	"last_message": "Ostatnia {date} od {farmer}",
+	"last_by_x": "autorstwa {author}",
+	"locked": "Temat zablokowany",
+	"messages": "Posty",
+	"new_topic_message": "Wiadomość tematyczna",
+	"new_topic_title": "Tytuł wątku",
+	"pinned": "Temat wiszący",
+	"resolved": "Temat rozwiązany",
+	"topic": "Temat",
+	"mark_as_read": "Oznacz jako przeczytane",
+	"mark_as_read_text": "Wszystkie tematy we wszystkich kategoriach forum zostaną oznaczone jako przeczytane. Po tej akcji będą wyświetlane tylko nowe tematy lub nowe odpowiedzi.",
+	"show_resolved": "Pokaż rozwiązane tematy"
+}

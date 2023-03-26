@@ -1,0 +1,13 @@
+{
+	"4_leeks_only": "Du har allerede 4 purre!",
+	"create": "Skape",
+	"error_under_required_level_1": "Din første purre må være minst nivå {0}",
+	"error_under_required_level_2": "Den andre purren din må være minst nivå {0}",
+	"error_under_required_level_3": "Din tredje purre må være minst nivå {0}",
+	"name": "Navn",
+	"name_length": "Purrenavn må inneholde mellom {0} og {1} tegn",
+	"name_format": "Spesialtegn er ikke tillatt i navnet",
+	"not_enough_money": "Du har ikke nok penger",
+	"price": "Pris",
+	"title": "Ny purre"
+}

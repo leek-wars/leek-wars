@@ -1,0 +1,21 @@
+{
+	"by_x_the_d": "Von {farmer} am {date}",
+	"cancel": "Stornieren",
+	"create_new_topic": "Thema erstellen",
+	"create_topic": "Thema erstellen",
+	"error_invalid_title": "Der Thementitel muss zwischen {min} und {max} Zeichen lang sein",
+	"n_topic_n_messages": "{0} Themen / {1} Beiträge",
+	"last": "Zuletzt",
+	"last_message": "Letztes {date} von {farmer}",
+	"last_by_x": "von {author}",
+	"locked": "Thema gesperrt",
+	"messages": "Beiträge",
+	"new_topic_message": "Thema Nachricht",
+	"new_topic_title": "Thementitel",
+	"pinned": "Hängendes Thema",
+	"resolved": "Thema gelöst",
+	"topic": "Thema",
+	"mark_as_read": "Als gelesen markieren",
+	"mark_as_read_text": "Alle Themen in allen Forenkategorien werden als gelesen markiert. Nach dieser Aktion werden nur neue Themen oder neue Antworten angezeigt.",
+	"show_resolved": "Gelöste Themen anzeigen"
+}

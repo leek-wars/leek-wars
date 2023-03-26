@@ -1,0 +1,16 @@
+{
+	"ai_lines": "Antall AI-linjer",
+	"ai_lines_desc": "Dette apparatet lar deg vise antall linjer i AI-en din på siden til purren din.",
+	"hold_weapon": "Hold et våpen",
+	"hold_weapon_desc": "Dette apparatet lar purren din holde et våpen i hendene, synlig på siden hans og uansett hvor visuelle bilder vises i spillet.",
+	"leek_title": "Purretittel",
+	"leek_title_desc": "Denne bekledningen lar deg gi purren en tittel, som vises på siden og andre steder i spillet.",
+	"farmer_title": "Oppdrettertittel",
+	"farmer_title_desc": "Dette utstyret lar deg gi deg selv en tittel, som vil vises på siden din og andre steder i spillet som forumet, avanserte verktøytips etc.",
+	"metal": "Metallplater",
+	"metal_desc": "Legg til metallplaketter på purrebildet ditt",
+	"angry": "Sint ansikt",
+	"angry_desc": "Endre uttrykket til purren din: den vil se forbanna ut",
+	"happy": "Smilende fjes",
+	"happy_desc": "Endre uttrykket til purren din: den vil smile"
+}

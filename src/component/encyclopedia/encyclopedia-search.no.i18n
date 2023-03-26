@@ -1,0 +1,18 @@
+{
+	"all_categories": "Alle Kategorier",
+	"author": "Forfatter",
+	"category": "Kategori",
+	"no_results_found": "Ingen resultater funnet...",
+	"not_enough_parameters": "Ikke nok parametere starter et søk",
+	"post_by_x_the_x_in_x": "Skrevet av {farmer} den {date} i {topic}",
+	"query": "Forskning",
+	"results": "Søkeresultater",
+	"search": "Å forske",
+	"sort_by": "Sorter etter",
+	"sort_pertinence": "Relevans",
+	"sort_date": "Dato",
+	"sort_votes": "Stemmegivning",
+	"title": "Encyclopedia",
+	"too_few_params": "Ikke nok parametere...",
+	"too_short": "Søk for kort..."
+}

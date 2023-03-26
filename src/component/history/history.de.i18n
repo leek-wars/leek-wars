@@ -1,0 +1,23 @@
+{
+	"title": "Verlauf von {0}",
+	"title_html": "Kampfgeschichte",
+	"24h": "24 Stunden",
+	"today": "Heute",
+	"2days": "2 Tage",
+	"1week": "1 Woche",
+	"n_fights": "{0} kämpft",
+	"victories": "siege",
+	"draws": "krawatten",
+	"defeats": "niederlagen",
+	"ratio": "verhältnis",
+	"not_found_id": "Lauch von ID {0} nicht gefunden",
+	"fight_type": "Arten von Kämpfen",
+	"fight_context": "Kontexte des Kampfes",
+	"solo": "Solo",
+	"farmer": "Züchter",
+	"team": "Besatzung",
+	"battle_royale": "Battle-Royale",
+	"challenge": "Herausforderung",
+	"garden": "Gemüsegarten",
+	"tournament": "Turnier"
+}

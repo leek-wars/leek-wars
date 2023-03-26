@@ -1,0 +1,21 @@
+{
+	"bugs": "Bugeja",
+	"chips_used": "Chipsiä käytetty",
+	"criticals": "CC",
+	"damage_inflicted": "Aiheutettu vahinko",
+	"damage_received": "Vahinko saatu",
+	"heal_casted": "Parantuminen aloitettu",
+	"heal_received": "Hoito saatu",
+	"kills": "Tappaa",
+	"mp_used": "PM käytetty",
+	"nova_received": "Nova sai",
+	"operations": "Ops",
+	"operations_per_turn": "Op/käänny",
+	"resurrections": "Palaa elämään",
+	"shootings": "Laukaukset",
+	"summons": "Koota",
+	"team_n": "Tiimi {0}",
+	"tp_per_turn": "PT/käännös käytetty",
+	"tp_used": "Käytetyt PT:t",
+	"turns_played": "Kierroksia pelattu"
+}

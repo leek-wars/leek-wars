@@ -1,0 +1,13 @@
+{
+	"available_on_market": "(Disponibile per l'acquisto sul mercato)",
+	"new_chips": "Chip nuovi",
+	"new_weapons": "Nuove armi",
+	"no_news": "Nessun nuovo oggetto per questo livello.",
+	"title": "<b>{0}</b> supera il livello <b>{1}</b>!",
+	"301_title": "Congratulazioni!",
+	"301_message": "Hai raggiunto il livello più alto in Leek Wars, il tuo porro è arrivato allo stadio finale della sua evoluzione!<br> Ottieni una <b>pozione d'oro</b> e una <b>corona</b> come ricompensa.",
+	"new_weapon": "Nuovo slot per armi",
+	"new_chip": "Nuovo slot per chip",
+	"total_weapons": "{0} armi totali",
+	"total_chips": "{0} gettoni in totale"
+}

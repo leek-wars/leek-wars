@@ -1,0 +1,16 @@
+{
+	"thank_you": "Dankjewel",
+	"for_your_support": "voor je bijdrage!",
+	"you_earn_n_crystals": "Je hebt {crystals}.",
+	"back_to_bank": "Terug naar de bank",
+	"payment_fail": "Betaling {0} is mislukt.",
+	"payment_fail_reason": "Betaling mislukt: {0}",
+	"payment_success": "Betaling {0} gevalideerd",
+	"payment_success_simple": "Betaling gevalideerd",
+	"no_running_payment": "geen lopende betaling",
+	"failed_to_execute_payment_wrong_code": "de ingevoerde code is niet geldig",
+	"failed_to_execute_payment": "de betaling werkte niet of werd geannuleerd",
+	"payment_cancelled": "U heeft de betaling geannuleerd",
+	"payment_no_code": "Geen codes",
+	"payment_wrong_code": "Ongeldige code"
+}

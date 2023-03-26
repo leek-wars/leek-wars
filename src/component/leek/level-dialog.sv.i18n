@@ -1,0 +1,13 @@
+{
+	"available_on_market": "(Finns att köpa på marknaden)",
+	"new_chips": "Nya marker",
+	"new_weapons": "Nya vapen",
+	"no_news": "Inget nytt objekt för denna nivå.",
+	"title": "<b>{0}</b> godkänd nivå <b>{1}</b>!",
+	"301_title": "Grattis!",
+	"301_message": "Du har nått den högsta nivån i Leek Wars, din purjolök har kommit till slutskedet av dess utveckling!<br> Du får en <b>gyllene dryck</b> och en <b>krona</b> i belöning.",
+	"new_weapon": "Ny vapenplats",
+	"new_chip": "Ny chipplats",
+	"total_weapons": "{0} totalt vapen",
+	"total_chips": "{0} marker totalt"
+}

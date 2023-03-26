@@ -1,0 +1,12 @@
+{
+	"forum_topic": "Forum emne",
+	"popup_ok": "OKAY :)",
+	"see_all_changes": "Find den fulde liste over ændringer på siden {changelog}.",
+	"title": "Skift historik",
+	"title_0": "🌟 Nye ankomster",
+	"title_1": "⚒️ Forbedringer",
+	"title_2": "🐞 Rettelser",
+	"version_n": "Frigiv {0}",
+	"version_online": "Version {version} online!\n",
+	"need_ai_change": "Kan kræve ændringer i AI"
+}

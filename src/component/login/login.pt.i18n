@@ -1,0 +1,14 @@
+{
+	"connection": "Conecte-se",
+	"error_banned": "Sua conta foi banida",
+	"error_inactive": "Sua conta não foi ativada, acesse o link enviado por e-mail.",
+	"error_invalid": "As credenciais estão incorretas.",
+	"error_server": "Erro de servidor. Por favor, tente novamente em alguns minutos",
+	"forgot_password": "Esqueceu sua senha ?",
+	"incorrect_login": "Login ou senha incorreta.",
+	"keep_connected": "Permaneça conectado",
+	"login": "Nome ou e-mail do criador",
+	"password": "Senha",
+	"success": "Você está conectado",
+	"title": "Conecte-se"
+}

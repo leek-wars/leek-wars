@@ -1,0 +1,12 @@
+{
+	"forum_topic": "Forum ämne",
+	"popup_ok": "OK :)",
+	"see_all_changes": "Hitta hela listan över ändringar på sidan {changelog}.",
+	"title": "Förändra historien",
+	"title_0": "🌟 Nyanlända",
+	"title_1": "⚒️ Förbättringar",
+	"title_2": "🐞 Fixar",
+	"version_n": "Släpp {0}",
+	"version_online": "Version {version} online!\n",
+	"need_ai_change": "Kan kräva ändringar i AI"
+}

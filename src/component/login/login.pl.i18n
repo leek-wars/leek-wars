@@ -1,0 +1,14 @@
+{
+	"connection": "Zaloguj sie",
+	"error_banned": "Twoje konto zostało zablokowane",
+	"error_inactive": "Twoje konto nie zostało aktywowane, przejdź do linku przesłanego e-mailem.",
+	"error_invalid": "Poświadczenia są nieprawidłowe.",
+	"error_server": "Błąd serwera. Prosze spróbować za kilka minut",
+	"forgot_password": "Zapomniałeś hasła ?",
+	"incorrect_login": "Nieprawidłowy login lub hasło.",
+	"keep_connected": "Pozostawanie w kontakcie",
+	"login": "Nazwa hodowcy lub adres e-mail",
+	"password": "Hasło",
+	"success": "Jesteś połączony",
+	"title": "Zaloguj sie"
+}

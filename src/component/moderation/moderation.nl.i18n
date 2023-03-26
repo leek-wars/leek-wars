@@ -1,0 +1,10 @@
+{
+	"report_farmer": "Rapporteer {0}",
+	"reporting_deleted": "Rapport verwijderd",
+	"title": "Met mate",
+	"warning_sent": "Waarschuwing verzonden!",
+	"you_are_muted": "Je bent tot zwijgen gebracht.",
+	"you_have_been_muted_by_x": "Je bent het zwijgen opgelegd door {0}.",
+	"you_have_been_unmuted_by_x": "met {0} kun je weer spreken in de chat.",
+	"you_must_choose_reason": "Je moet een patroon kiezen!"
+}

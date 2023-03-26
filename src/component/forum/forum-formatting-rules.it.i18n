@@ -1,0 +1,19 @@
+{
+	"source_code": "Codice sorgente",
+	"source_code_ex": "il mio codice sorgente",
+	"big_title": "Grande titolo",
+	"big_title_ex": "Titolo principale",
+	"sub_title": "Sottotitolo",
+	"sub_title_ex": "Sottotitolo",
+	"sub_sub_title": "Sottotitolo",
+	"sub_sub_title_ex": "Sottotitolo",
+	"bold": "Grassetto",
+	"bold_ex": "grassetto",
+	"italic": "Corsivo",
+	"italic_ex": "corsivo",
+	"underlined": "Sottolineare",
+	"underlined_ex": "sottolineare",
+	"striked": "Asta",
+	"striked_ex": "asta",
+	"basic_html": "HTML di base consentito"
+}

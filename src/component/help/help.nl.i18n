@@ -1,0 +1,11 @@
+{
+	"documentation": "Documentatie",
+	"documentation_desc": "Gedetailleerde lijst van alle <b>LeekScript</b> functies en constanten",
+	"general_help": "Ontdekking van het spel, werking en informatie",
+	"rewatch_didactitiel": "Bekijk de zelfstudie",
+	"title": "Hulp",
+	"tutorial": "LeekScript-zelfstudie",
+	"tutorial_desc": "Inleiding tot de <b>LeekScript</b> taal, specificaties en syntaxis",
+	"wiki": "Wiki",
+	"wiki_desc": "Wiki geschreven door de spelers met veel informatie over het spel"
+}

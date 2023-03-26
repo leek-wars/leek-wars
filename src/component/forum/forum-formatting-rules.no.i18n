@@ -1,0 +1,19 @@
+{
+	"source_code": "Kildekode",
+	"source_code_ex": "kildekoden min",
+	"big_title": "Stor overskrift",
+	"big_title_ex": "Hovedtittel",
+	"sub_title": "Undertekst",
+	"sub_title_ex": "Undertekst",
+	"sub_sub_title": "Undertekst",
+	"sub_sub_title_ex": "Undertekst",
+	"bold": "Dristig",
+	"bold_ex": "dristig",
+	"italic": "Kursiv",
+	"italic_ex": "kursiv",
+	"underlined": "Understrek",
+	"underlined_ex": "understreke",
+	"striked": "Stang",
+	"striked_ex": "stang",
+	"basic_html": "Grunnleggende HTML tillatt"
+}

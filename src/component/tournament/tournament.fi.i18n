@@ -1,0 +1,13 @@
+{
+	"comments": "Kommentit",
+	"farmer": "{0} Kasvattajaturnaus",
+	"few_seconds": "muutama sekunti",
+	"next_round_in": "Seuraava kierros {0}",
+	"not_found": "Turnaustunnusta {0} ei löydy :(",
+	"send": "Lähettää",
+	"solo": "{0} Yksinturnaus",
+	"team": "{0} Joukkueturnaus",
+	"next_round_supervisor": "Seuraavan kierroksen aloittaa valvoja",
+	"generate": "Luo seuraava kierros",
+	"generating": "Nykyinen sukupolvi..."
+}

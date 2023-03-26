@@ -1,0 +1,1 @@
+Leek Wars er et browserbaseret turbaseret strategispil, hvor porrer konkurrerer mod hinanden, som er styret af en kunstig intelligens (AI), som du skal kode. En sjov måde at lære programmering på.

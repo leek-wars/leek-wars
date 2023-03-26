@@ -1,0 +1,11 @@
+2012: Start des Spiels
+2013: Beta-Ende
+2014: Turniere, Trophäen
+2015: Englische Version, Vorladung, neues Design, Eigenschaften, CaC Waffen,
+2016: Battle Royale
+2017: Testmöglichkeiten, Statistiken
+2018: Mobile App und Vue.js
+2019: Türme
+2020: Vergessene Waffen, Drumherum, BR-Autos, Docker, GitHub-Registrierung, Editor, Enzyklopädie, Neue Karten
+2021: 16 Chips, LS 2, 160 neue Trophäen, LS 3, Ressourcen
+2022: Schnellregistrierung, Unterhaltung, LS 4, Truhen

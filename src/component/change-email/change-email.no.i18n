@@ -1,0 +1,11 @@
+{
+	"title": "Endre e-post",
+	"send_confirmation": "Send bekreftelse",
+	"enter_a_new_email": "Skriv inn en ny e-postadresse",
+	"new_email": "Ny e-postadresse",
+	"confirm": "Bekreftelse",
+	"email_sent": "E-postbekreftelse sendt til {email}",
+	"email_changed_success": "E-postadressen ble endret.",
+	"back_home": "Tilbake til hjemmet",
+	"error_not_same_email": "Adressene som er oppgitt er ikke de samme"
+}

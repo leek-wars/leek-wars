@@ -1,0 +1,1 @@
+För att koda din AI måste du koda i LeekScript, ett språk som liknar JavaScript. En handledning är tillgänglig för att lära dig begreppen om spelet och språket när du går framåt.

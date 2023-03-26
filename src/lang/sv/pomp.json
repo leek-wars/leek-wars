@@ -1,0 +1,16 @@
+{
+	"ai_lines": "Antal AI-linjer",
+	"ai_lines_desc": "Denna apparat låter dig visa antalet rader i din AI på sidan av din purjolök.",
+	"hold_weapon": "Håll ett vapen",
+	"hold_weapon_desc": "Denna apparat låter din purjolök hålla ett vapen i sina händer, synligt på hans sida och varhelst hans bild visas i spelet.",
+	"leek_title": "Purjolök titel",
+	"leek_title_desc": "Denna klädsel låter dig ge din purjolök en titel, som kommer att visas på dess sida och andra platser i spelet.",
+	"farmer_title": "Uppfödartitel",
+	"farmer_title_desc": "Denna utrustning låter dig ge dig själv en titel, som kommer att visas på din sida och på andra ställen i spelet som forumet, avancerade verktygstips etc.",
+	"metal": "Metallplattor",
+	"metal_desc": "Lägg till metallplattor på din purjolöksbild",
+	"angry": "Argt ansikte",
+	"angry_desc": "Ändra purjolökens uttryck: den kommer att se förbannad ut",
+	"happy": "Leende ansikte",
+	"happy_desc": "Ändra uttrycket på din purjolök: den kommer att le"
+}

@@ -1,0 +1,16 @@
+{
+	"ai_lines": "Numero di linee AI",
+	"ai_lines_desc": "Questo apparecchio ti permette di visualizzare il numero di linee della tua IA sulla pagina dei tuoi porri.",
+	"hold_weapon": "Impugna un'arma",
+	"hold_weapon_desc": "Questo apparato consente al tuo porro di tenere un'arma tra le mani, visibile sulla sua pagina e ovunque appaia la sua visuale sul gioco.",
+	"leek_title": "Titolo porro",
+	"leek_title_desc": "Questo abbigliamento ti consente di dare un titolo ai tuoi porri, che verrà visualizzato sulla sua pagina e in altri punti del gioco.",
+	"farmer_title": "Titolo di allevatore",
+	"farmer_title_desc": "Questa attrezzatura ti consente di darti un titolo, che verrà visualizzato sulla tua pagina e in altri punti del gioco come il forum, i suggerimenti avanzati ecc.",
+	"metal": "Piastre metalliche",
+	"metal_desc": "Aggiungi placche di metallo sulla tua immagine di porro",
+	"angry": "Faccia arrabbiata",
+	"angry_desc": "Cambia l'espressione del tuo porro: sembrerà incazzato",
+	"happy": "Faccia sorridente",
+	"happy_desc": "Cambia l'espressione del tuo porro: sorriderà"
+}

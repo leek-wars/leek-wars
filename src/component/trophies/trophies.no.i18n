@@ -1,0 +1,16 @@
+{
+	"hide_unlocked": "Skjul innhentet",
+	"group_by_categories": "Kategorier",
+	"sort_by": "Sorter etter {0}",
+	"sort_date": "Dato",
+	"sort_index": "Misligholde",
+	"sort_points": "Poeng",
+	"sort_rarity": "Knapphet",
+	"stats": "Statistikk",
+	"title": "{0} Trofeer",
+	"title_me": "Mine trofeer",
+	"trophies": "Trofeer",
+	"best_trophies": "Beste trofeer",
+	"latest_trophies": "Siste trofeer",
+	"rarest_trophies": "Sjeldneste trofeer"
+}

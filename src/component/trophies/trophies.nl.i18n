@@ -1,0 +1,16 @@
+{
+	"hide_unlocked": "Verbergen verkregen",
+	"group_by_categories": "Categorieën",
+	"sort_by": "Sorteren op {0}",
+	"sort_date": "Datum",
+	"sort_index": "Standaard",
+	"sort_points": "Punten",
+	"sort_rarity": "Schaarste",
+	"stats": "Statistieken",
+	"title": "{0} Trofeeën",
+	"title_me": "Mijn trofeeën",
+	"trophies": "Trofeeën",
+	"best_trophies": "Beste trofeeën",
+	"latest_trophies": "Laatste trofeeën",
+	"rarest_trophies": "Zeldzaamste trofeeën"
+}

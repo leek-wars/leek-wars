@@ -1,0 +1,13 @@
+{
+	"4_leeks_only": "Sie haben bereits 4 Lauch!",
+	"create": "Erstellen",
+	"error_under_required_level_1": "Dein erster Lauch muss mindestens Level {0} sein",
+	"error_under_required_level_2": "Dein zweiter Lauch muss mindestens Level {0} sein",
+	"error_under_required_level_3": "Dein 3. Lauch muss mindestens Level {0} sein",
+	"name": "Name",
+	"name_length": "Lauchname muss zwischen {0} und {1} Zeichen enthalten",
+	"name_format": "Sonderzeichen sind im Namen nicht erlaubt",
+	"not_enough_money": "Du hast nicht genug Geld",
+	"price": "Preis",
+	"title": "Neuer Lauch"
+}

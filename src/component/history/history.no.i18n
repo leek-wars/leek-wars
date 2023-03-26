@@ -1,0 +1,23 @@
+{
+	"title": "Historien til {0}",
+	"title_html": "Kamphistorie",
+	"24h": "24 timer",
+	"today": "I dag",
+	"2days": "2 dager",
+	"1week": "1 uke",
+	"n_fights": "{0} kamper",
+	"victories": "seire",
+	"draws": "slips",
+	"defeats": "nederlag",
+	"ratio": "forhold",
+	"not_found_id": "Purre med id {0} ble ikke funnet",
+	"fight_type": "Typer slåssing",
+	"fight_context": "Kontekster av kamp",
+	"solo": "Solo",
+	"farmer": "Oppdretter",
+	"team": "Mannskap",
+	"battle_royale": "Battle Royale",
+	"challenge": "Utfordring",
+	"garden": "Grønnsakshage",
+	"tournament": "Turnering"
+}

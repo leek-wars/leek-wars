@@ -1,0 +1,18 @@
+{
+	"all_categories": "Kaikki kategoriat",
+	"author": "Tekijä",
+	"category": "Kategoria",
+	"no_results_found": "Tulosta ei löytynyt...",
+	"not_enough_parameters": "Ei tarpeeksi parametreja aloittaa haun",
+	"post_by_x_the_x_in_x": "Lähettäjä {farmer} {date} aiheessa {topic}",
+	"query": "Tutkimus",
+	"results": "Hakutulokset",
+	"search": "Tutkia",
+	"sort_by": "Järjestä",
+	"sort_pertinence": "Merkityksellisyys",
+	"sort_date": "Päivämäärä",
+	"sort_votes": "Äänestäminen",
+	"title": "Foorumin haku",
+	"too_few_params": "Ei tarpeeksi parametreja...",
+	"too_short": "Haku liian lyhyt..."
+}

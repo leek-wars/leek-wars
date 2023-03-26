@@ -1,0 +1,18 @@
+{
+	"all_categories": "Alle categorieën",
+	"author": "Auteur",
+	"category": "Categorie",
+	"no_results_found": "Geen resultaat gevonden...",
+	"not_enough_parameters": "Onvoldoende parameters starten een zoekopdracht",
+	"post_by_x_the_x_in_x": "Geplaatst door {farmer} op {date} in {topic}",
+	"query": "Zoeken",
+	"results": "Zoekresultaten",
+	"search": "Zoeken",
+	"sort_by": "Sorteer op",
+	"sort_pertinence": "Relevantie",
+	"sort_date": "Datum",
+	"sort_votes": "Stemmen",
+	"title": "Forum zoeken",
+	"too_few_params": "Niet genoeg parameters...",
+	"too_short": "Zoek te kort..."
+}

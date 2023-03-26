@@ -1,0 +1,1 @@
+Para codificar sua IA, você precisará codificar em LeekScript, uma linguagem semelhante ao JavaScript. Um tutorial está disponível para aprender as noções do jogo e o idioma à medida que avança.

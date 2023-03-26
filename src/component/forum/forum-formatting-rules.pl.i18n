@@ -1,0 +1,19 @@
+{
+	"source_code": "Kod źródłowy",
+	"source_code_ex": "mój kod źródłowy",
+	"big_title": "Duży nagłówek",
+	"big_title_ex": "Główny tytuł",
+	"sub_title": "Podtytuł",
+	"sub_title_ex": "Podtytuł",
+	"sub_sub_title": "Podtytuł",
+	"sub_sub_title_ex": "Podtytuł",
+	"bold": "Pogrubiony",
+	"bold_ex": "pogrubiony",
+	"italic": "Kursywa",
+	"italic_ex": "kursywa",
+	"underlined": "Podkreślać",
+	"underlined_ex": "podkreślać",
+	"striked": "Pręt",
+	"striked_ex": "pręt",
+	"basic_html": "Dozwolony podstawowy kod HTML"
+}

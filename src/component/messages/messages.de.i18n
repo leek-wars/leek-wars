@@ -1,0 +1,16 @@
+{
+	"cancel": "Stornieren",
+	"me": "Mich",
+	"new_message": "Neue Nachricht...",
+	"quit": "Aufhören",
+	"quit_confirm": "Möchten Sie das Gespräch verlassen? Sie können frühere Nachrichten nicht mehr sehen.",
+	"quit_conversation": "Verlassen Sie das Gespräch",
+	"send": "Schicken",
+	"title": "Katzen",
+	"cat_team": "Besatzung",
+	"cat_private": "Private Nachrichten",
+	"team": "Besatzung",
+	"enable_notifications": "Aktiviere Benachrichtigungen",
+	"disable_notifications": "Benachrichtigungen deaktivieren",
+	"admin_warn": "Um einen Vorschlag zu machen oder einen unkritischen Fehler zu melden, erstellen Sie bitte ein Thema im {forum}."
+}

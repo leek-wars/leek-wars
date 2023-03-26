@@ -1,0 +1,13 @@
+{
+	"available_on_market": "(Kan købes på markedet)",
+	"new_chips": "Nye chips",
+	"new_weapons": "Nye våben",
+	"no_news": "Ingen ny vare for dette niveau.",
+	"title": "<b>{0}</b> bestå niveau <b>{1}</b>!",
+	"301_title": "Tillykke!",
+	"301_message": "Du har nået det højeste niveau i Leek Wars, din porre er nået til den sidste fase af dens udvikling!<br> Du får en <b>gylden drik</b> og en <b>krone</b> i belønning.",
+	"new_weapon": "Ny våbenslot",
+	"new_chip": "Ny chip slot",
+	"total_weapons": "{0} våben i alt",
+	"total_chips": "{0} chips i alt"
+}

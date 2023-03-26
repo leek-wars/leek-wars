@@ -1,0 +1,13 @@
+{
+	"available_on_market": "(Im Handel erhältlich)",
+	"new_chips": "Neue Chips",
+	"new_weapons": "Neue Waffen",
+	"no_news": "Kein neues Element für dieses Level.",
+	"title": "<b>{0}</b> Level <b>{1}</b> bestehen!",
+	"301_title": "Glückwunsch!",
+	"301_message": "Du hast das höchste Level in Lauchkrieg erreicht, dein Lauch ist in der Endphase seiner Evolution angekommen!<br> Du bekommst einen <b>goldenen Trank</b> und eine <b>Krone</b> als Belohnung.",
+	"new_weapon": "Neuer Waffenplatz",
+	"new_chip": "Neuer Chip-Slot",
+	"total_weapons": "{0} insgesamt Waffen",
+	"total_chips": "{0} Chips insgesamt"
+}

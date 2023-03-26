@@ -1,0 +1,14 @@
+{
+	"connection": "Log på",
+	"error_banned": "Din konto er blevet forbudt",
+	"error_inactive": "Din konto er ikke blevet aktiveret, gå venligst til linket sendt via e-mail.",
+	"error_invalid": "Legitimationsoplysningerne er forkerte.",
+	"error_server": "Server Fejl. Prøv venligst igen om et par minutter",
+	"forgot_password": "Glemt din adgangskode ?",
+	"incorrect_login": "Login eller adgangskode er forkert.",
+	"keep_connected": "Forbliv forbundet",
+	"login": "Opdrætters navn eller e-mail",
+	"password": "Adgangskode",
+	"success": "Du er forbundet",
+	"title": "Log på"
+}

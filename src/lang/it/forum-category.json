@@ -1,0 +1,18 @@
+{
+	"admin": "Admin",
+	"admin_desc": "Categoria riservata agli amministratori",
+	"bug_reports": "Segnalazioni di bug",
+	"bug_reports_desc": "Se pensi di aver trovato un bug nel gioco",
+	"composter": "Compostiera",
+	"composter_desc": "Per parlare di tutto... e di niente.",
+	"exploits": "Le tue imprese",
+	"exploits_desc": "Vieni a segnalare i tuoi exploit o condividi i tuoi screenshot insoliti",
+	"general_discussion": "Discussione Generale",
+	"general_discussion_desc": "Discussione generale sulle guerre dei porri",
+	"help": "Aiuto e suggerimenti",
+	"help_desc": "Se hai una domanda sul gioco o vuoi condividere suggerimenti",
+	"moderation": "Moderazione",
+	"moderation_desc": "Categoria riservata ai moderatori",
+	"suggestions_ideas": "Suggerimenti e idee",
+	"suggestions_ideas_desc": "Se hai idee per migliorare il gioco"
+}

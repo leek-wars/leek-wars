@@ -1,0 +1,19 @@
+{
+	"app_installation": "Installerar appen på mobilen",
+	"app_info": "Genom att följa dessa instruktioner kommer du att kunna installera Leek Wars webbapplikation (<a href='https://en.wikipedia.org/wiki/Progressive_web_app'>PWA</a>)\npå din mobil.\nDenna funktion hanteras mer eller mindre bra beroende på operativsystem och webbläsare, och installationsläget kan variera från en till en annan.\nWebbläsaren som används i instruktionerna är <b>Chrome</b> på <b>Android</b>, som verkar hantera webbappar bäst.",
+	"app_preview": "Appöversikt",
+	"title": "Mobil app",
+	"step_n": "Steg {0}",
+	"step1": "Gå till leekwas.com",
+	"step2": "Tryck på \"Lägg till på startskärmen\"",
+	"step3": "Tryck på \"Lägg till\"",
+	"step4": "Genvägen till programmet visas på skrivbordet",
+	"preview1": "Purjolökssida",
+	"preview2": "Sidomeny",
+	"preview3": "Marknadssida",
+	"preview4": "Detalj av ett vapen på marknaden",
+	"preview5": "Troféer sida",
+	"preview6": "Tittar på ett slagsmål",
+	"preview7": "Redigera en AI",
+	"preview8": "Push-meddelande"
+}

@@ -1,0 +1,11 @@
+{
+	"n_contributors": "Brak kontrybutora | <b>{n}</b> współautor | <b>{n}</b> współtwórców",
+	"search": "Znajdź stronę",
+	"created_by_x_the_y": "Utworzone przez {farmer} w dniu {date}",
+	"edited_by_x_the_y": "Edytowane przez {farmer} w dniu {date}",
+	"n_views": "{v} wyświetleń",
+	"n_contributions": "{n} wkładów",
+	"not_found": "Strona „{name}” nie istnieje we francuskiej encyklopedii.",
+	"contributor_create": "Jesteś współtwórcą 😎 Kliknij Edytuj, aby rozpocząć edycję tej strony",
+	"locked": "Ukończ rozdział, aby odblokować pełną sztuczną inteligencję"
+}

@@ -1,0 +1,12 @@
+{
+	"battle_royale": "Battle Royale",
+	"date_format": "{0}",
+	"deleted_farmer": "kasvattaja poistettu",
+	"deleted_leek": "purjo poistettu",
+	"deleted_team": "poistettu joukkue",
+	"n_views": "ei näkymää | 1 näyttökerta | {n} näyttökertaa",
+	"not_found": "Tappelua ei löytynyt :(",
+	"not_found_id": "Taistelutunnusta <b>{0}</b> ei löydy :(",
+	"pause_message": "Napsauta tai paina 'P' jatkaaksesi",
+	"starter": "Fight Launcher"
+}

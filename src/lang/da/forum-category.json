@@ -1,0 +1,18 @@
+{
+	"admin": "Admin",
+	"admin_desc": "Kategori forbeholdt administratorer",
+	"bug_reports": "Fejlrapporter",
+	"bug_reports_desc": "Hvis du tror, du har fundet en fejl i spillet",
+	"composter": "Komposter",
+	"composter_desc": "At tale om alt... og ingenting.",
+	"exploits": "Dine bedrifter",
+	"exploits_desc": "Kom og rapporter dine bedrifter eller del dine usædvanlige skærmbilleder",
+	"general_discussion": "Generel diskussion",
+	"general_discussion_desc": "Generel Leek Wars diskussion",
+	"help": "Hjælp og tips",
+	"help_desc": "Hvis du har et spørgsmål om spillet eller vil dele tips",
+	"moderation": "Moderering",
+	"moderation_desc": "Kategori forbeholdt moderatorer",
+	"suggestions_ideas": "Forslag og ideer",
+	"suggestions_ideas_desc": "Hvis du har nogle forbedringsideer til spillet"
+}

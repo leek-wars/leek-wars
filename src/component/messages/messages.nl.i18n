@@ -1,0 +1,16 @@
+{
+	"cancel": "Annuleren",
+	"me": "Mij",
+	"new_message": "Nieuw bericht...",
+	"quit": "Ontslag nemen",
+	"quit_confirm": "Wil je het gesprek verlaten? U kunt eerdere berichten niet meer zien.",
+	"quit_conversation": "Verlaat het gesprek",
+	"send": "Sturen",
+	"title": "Katten",
+	"cat_team": "Bemanning",
+	"cat_private": "Prive berichten",
+	"team": "Bemanning",
+	"enable_notifications": "Notificaties aanzetten",
+	"disable_notifications": "Schakel de meldingen uit",
+	"admin_warn": "Als u een suggestie wilt doen of een niet-kritieke bug wilt melden, maakt u een onderwerp aan op het {forum}."
+}

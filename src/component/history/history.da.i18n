@@ -1,0 +1,23 @@
+{
+	"title": "Historien om {0}",
+	"title_html": "Kamphistorie",
+	"24h": "24 timer",
+	"today": "I dag",
+	"2days": "2 dage",
+	"1week": "en uge",
+	"n_fights": "{0} kampe",
+	"victories": "sejre",
+	"draws": "bånd",
+	"defeats": "nederlag",
+	"ratio": "forhold",
+	"not_found_id": "Porre med id {0} blev ikke fundet",
+	"fight_type": "Slags kampe",
+	"fight_context": "Kontekster af kamp",
+	"solo": "Solo",
+	"farmer": "Opdrætter",
+	"team": "Mandskab",
+	"battle_royale": "Battle Royale",
+	"challenge": "Udfordring",
+	"garden": "Grøntsagshave",
+	"tournament": "Turnering"
+}

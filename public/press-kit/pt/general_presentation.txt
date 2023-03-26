@@ -1,0 +1,1 @@
+Leek Wars é um jogo de estratégia baseado em turnos baseado em navegador no qual os alho-poró competem uns contra os outros controlados por uma inteligência artificial (IA) que você deve codificar. Uma maneira divertida de aprender a programar.

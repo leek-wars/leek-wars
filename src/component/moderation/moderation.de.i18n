@@ -1,0 +1,10 @@
+{
+	"report_farmer": "Melde {0}",
+	"reporting_deleted": "Bericht entfernt",
+	"title": "Mäßigung",
+	"warning_sent": "Warnung gesendet!",
+	"you_are_muted": "Sie wurden zum Schweigen gebracht.",
+	"you_have_been_muted_by_x": "Sie wurden von {0} stummgeschaltet.",
+	"you_have_been_unmuted_by_x": "{0} erlaubt Ihnen, wieder im Chat zu sprechen.",
+	"you_must_choose_reason": "Sie müssen ein Muster auswählen!"
+}

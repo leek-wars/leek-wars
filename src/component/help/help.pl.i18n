@@ -1,0 +1,11 @@
+{
+	"documentation": "Dokumentacja",
+	"documentation_desc": "Szczegółowa lista wszystkich funkcji i stałych <b>LeekScript</b>",
+	"general_help": "Odkrycie gry, działanie i informacje",
+	"rewatch_didactitiel": "Przejrzyj samouczek",
+	"title": "Pomoc",
+	"tutorial": "LeekScript samouczek",
+	"tutorial_desc": "Wprowadzenie do języka <b>LeekScript</b>, specyfikacji i składni",
+	"wiki": "Wiki",
+	"wiki_desc": "Wiki napisana przez graczy z dużą ilością informacji o grze"
+}

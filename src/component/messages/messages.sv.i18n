@@ -1,0 +1,16 @@
+{
+	"cancel": "Annullera",
+	"me": "Mig",
+	"new_message": "Nytt meddelande...",
+	"quit": "Sluta",
+	"quit_confirm": "Vill du lämna konversationen? Du kommer inte längre att kunna se tidigare meddelanden.",
+	"quit_conversation": "Lämna konversationen",
+	"send": "Skicka",
+	"title": "Katter",
+	"cat_team": "Besättning",
+	"cat_private": "Privata meddelanden",
+	"team": "Besättning",
+	"enable_notifications": "Aktivera notifiering",
+	"disable_notifications": "Avaktivera aviseringarna",
+	"admin_warn": "För att komma med ett förslag eller rapportera en icke-kritisk bugg, skapa ett ämne på {forum}."
+}

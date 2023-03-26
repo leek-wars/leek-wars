@@ -1,0 +1,14 @@
+{
+	"connection": "Login",
+	"error_banned": "Il tuo account è stato bannato",
+	"error_inactive": "Il tuo account non è stato attivato, vai al link inviato via email.",
+	"error_invalid": "Le credenziali non sono corrette.",
+	"error_server": "Errore del server. Riprova tra qualche minuto",
+	"forgot_password": "Hai dimenticato la password ?",
+	"incorrect_login": "Login o password non corretti.",
+	"keep_connected": "Rimani connesso",
+	"login": "Nome o e-mail dell'allevatore",
+	"password": "Parola d'ordine",
+	"success": "Sei connesso",
+	"title": "Login"
+}

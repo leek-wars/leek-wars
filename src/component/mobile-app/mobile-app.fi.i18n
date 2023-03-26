@@ -1,0 +1,19 @@
+{
+	"app_installation": "Sovelluksen asentaminen mobiililaitteeseen",
+	"app_info": "Seuraamalla näitä ohjeita voit asentaa Leek Wars -verkkosovelluksen (<a href='https://en.wikipedia.org/wiki/Progressive_web_app'>PWA</a>)\nmatkapuhelimellasi.\nTätä ominaisuutta hallitaan enemmän tai vähemmän hyvin käyttöjärjestelmästä ja selaimista riippuen, ja asennustila voi vaihdella.\nOhjeissa käytetty selain on <b>Androidin</b> <b>Chrome</b>, joka näyttää käsittelevän verkkosovelluksia parhaiten.",
+	"app_preview": "Sovelluksen yleiskatsaus",
+	"title": "Mobiilisovellus",
+	"step_n": "Vaihe {0}",
+	"step1": "Siirry osoitteeseen leekwars.com",
+	"step2": "Napauta \"Lisää aloitusnäyttöön\"",
+	"step3": "Paina \"Lisää\"",
+	"step4": "Sovelluksen pikakuvake tulee näkyviin työpöydälle",
+	"preview1": "Purjo sivu",
+	"preview2": "Sivuvalikko",
+	"preview3": "Markkinasivu",
+	"preview4": "Yksityiskohta aseesta markkinoilla",
+	"preview5": "Palkinnot -sivu",
+	"preview6": "Taistelun katsominen",
+	"preview7": "Tekoälyn muokkaaminen",
+	"preview8": "Push-ilmoitus"
+}

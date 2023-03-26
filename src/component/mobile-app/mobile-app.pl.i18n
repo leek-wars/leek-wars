@@ -1,0 +1,19 @@
+{
+	"app_installation": "Instalowanie aplikacji na telefonie komórkowym",
+	"app_info": "Postępując zgodnie z tymi instrukcjami, będziesz mógł zainstalować aplikację internetową Leek Wars (<a href='https://en.wikipedia.org/wiki/Progressive_web_app'>PWA</a>)\nna telefonie komórkowym.\nTa funkcja jest mniej lub bardziej zarządzana w zależności od systemu operacyjnego i przeglądarki, a tryb instalacji może się różnić w zależności od systemu.\nPrzeglądarka używana w instrukcjach to <b>Chrome</b> na <b>Androida</b>, która wydaje się najlepiej obsługiwać aplikacje internetowe.",
+	"app_preview": "Przegląd aplikacji",
+	"title": "Aplikacja mobilna",
+	"step_n": "Scena {0}",
+	"step1": "Wejdź na leekwars.com",
+	"step2": "Stuknij „Dodaj do ekranu głównego”",
+	"step3": "Naciśnij „Dodaj”",
+	"step4": "Na pulpicie pojawi się skrót do aplikacji",
+	"preview1": "Strona pora",
+	"preview2": "Menu boczne",
+	"preview3": "Strona rynku",
+	"preview4": "Szczegóły broni na rynku",
+	"preview5": "Strona z trofeami",
+	"preview6": "Oglądanie walki",
+	"preview7": "Edycja AI",
+	"preview8": "Aktywne powiadomienie"
+}

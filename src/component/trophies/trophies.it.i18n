@@ -1,0 +1,16 @@
+{
+	"hide_unlocked": "Nascondi ottenuto",
+	"group_by_categories": "Categorie",
+	"sort_by": "Ordina per {0}",
+	"sort_date": "Data",
+	"sort_index": "Difetto",
+	"sort_points": "Punti",
+	"sort_rarity": "Scarsità",
+	"stats": "Statistiche",
+	"title": "{0} Trofei",
+	"title_me": "I miei trofei",
+	"trophies": "Trofei",
+	"best_trophies": "I migliori trofei",
+	"latest_trophies": "Ultimi trofei",
+	"rarest_trophies": "Trofei più rari"
+}

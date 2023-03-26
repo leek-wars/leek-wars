@@ -1,0 +1,16 @@
+{
+	"cancel": "Anulować",
+	"me": "Ja",
+	"new_message": "Nowa wiadomość...",
+	"quit": "Zrezygnować",
+	"quit_confirm": "Czy chcesz opuścić rozmowę? Nie będziesz już widzieć poprzednich wiadomości.",
+	"quit_conversation": "Opuść rozmowę",
+	"send": "Wysłać",
+	"title": "Koty",
+	"cat_team": "Załoga",
+	"cat_private": "Prywatne wiadomości",
+	"team": "Załoga",
+	"enable_notifications": "Włącz powiadomienia",
+	"disable_notifications": "Wyłącz powiadomienia",
+	"admin_warn": "Aby zasugerować lub zgłosić niekrytyczny błąd, utwórz temat na {forum}."
+}

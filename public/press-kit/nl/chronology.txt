@@ -1,0 +1,11 @@
+2012: lancering van het spel
+2013: einde bèta
+2014: toernooien, trofeeën
+2015: Engelse versie, dagvaarding, nieuw ontwerp, kenmerken, CaC-wapens,
+2016: Battle Royale
+2017: testmogelijkheden, statistieken
+2018: mobiele app en Vue.js
+2019: torentjes
+2020: Vergeten wapens, attributen, BR-auto's, Docker, GitHub-registratie, Editor, Encyclopedia, Nieuwe kaarten
+2021: 16 fiches, LS 2, 160 nieuwe trofeeën, LS 3, grondstoffen
+2022: snelle registratie, entertainment, LS 4, kisten

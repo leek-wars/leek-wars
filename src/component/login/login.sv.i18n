@@ -1,0 +1,14 @@
+{
+	"connection": "Logga in",
+	"error_banned": "Ditt konto har förbjudits",
+	"error_inactive": "Ditt konto har inte aktiverats, vänligen gå till länken skickad via e-post.",
+	"error_invalid": "Inloggningsuppgifterna är felaktiga.",
+	"error_server": "Serverfel. Försök igen om några minuter",
+	"forgot_password": "Glömt ditt lösenord ?",
+	"incorrect_login": "Inloggning eller lösenord är felaktigt.",
+	"keep_connected": "Förbli uppkopplad",
+	"login": "Uppfödarens namn eller e-postadress",
+	"password": "Lösenord",
+	"success": "Du är uppkopplad",
+	"title": "Logga in"
+}

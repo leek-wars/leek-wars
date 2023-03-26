@@ -1,0 +1,11 @@
+{
+	"n_contributors": "Nessun collaboratore | <b>{n}</b> collaboratore | <b>{n}</b> collaboratori",
+	"search": "Trova una pagina",
+	"created_by_x_the_y": "Creato da {farmer} il {date}",
+	"edited_by_x_the_y": "Modificato da {farmer} il {date}",
+	"n_views": "{v} visualizzazioni",
+	"n_contributions": "{n} contributi",
+	"not_found": "La pagina \"{name}\" non esiste nell'enciclopedia francese.",
+	"contributor_create": "Sei un collaboratore 😎 Fai clic su Modifica per iniziare a modificare questa pagina",
+	"locked": "Completa il capitolo per sbloccare l'IA completa"
+}

@@ -1,0 +1,11 @@
+2012: premiera gry
+2013: koniec wersji beta
+2014: turnieje, trofea
+2015: wersja angielska, wezwania, nowy design, charakterystyka, broń CaC,
+2016: Battle Royale
+2017: opcje testowe, statystyki
+2018: Aplikacja mobilna i Vue.js
+2019: Wieżyczki
+2020: Zapomniane bronie, pułapki, samochody BR, Docker, rejestracja GitHub, Edytor, Encyklopedia, Nowe mapy
+2021: 16 żetonów, LS 2, 160 nowych trofeów, LS 3, zasoby
+2022: szybka rejestracja, rozrywka, LS 4, skrzynie

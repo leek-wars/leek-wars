@@ -1,0 +1,18 @@
+{
+	"admin": "Admin",
+	"admin_desc": "Kategoria zarezerwowana dla administratorów",
+	"bug_reports": "Zgłaszanie błędów",
+	"bug_reports_desc": "Jeśli uważasz, że znalazłeś błąd w grze",
+	"composter": "Kompostownik",
+	"composter_desc": "Porozmawiać o wszystkim... io niczym.",
+	"exploits": "Twoje wyczyny",
+	"exploits_desc": "Przyjdź i zgłoś swoje wyczyny lub podziel się swoimi niezwykłymi zrzutami ekranu",
+	"general_discussion": "Ogólna dyskusja",
+	"general_discussion_desc": "Ogólna dyskusja o porach wojennych",
+	"help": "Pomoc i wskazówki",
+	"help_desc": "Jeśli masz pytanie dotyczące gry lub chcesz podzielić się wskazówkami",
+	"moderation": "Umiar",
+	"moderation_desc": "Kategoria zarezerwowana dla moderatorów",
+	"suggestions_ideas": "Sugestie i pomysły",
+	"suggestions_ideas_desc": "Jeśli masz jakieś pomysły na ulepszenia gry"
+}

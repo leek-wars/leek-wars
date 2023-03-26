@@ -1,0 +1,11 @@
+2012: lansering av spillet
+2013: slutten av beta
+2014: turneringer, trofeer
+2015: Engelsk versjon, innkalling, nytt design, egenskaper, CaC-våpen,
+2016: Battle Royale
+2017: testalternativer, statistikk
+2018: Mobilapp og Vue.js
+2019: Turrets
+2020: Glemte våpen, pynt, BR-biler, Docker, GitHub-registrering, Editor, Encyclopedia, Nye kart
+2021: 16 sjetonger, LS 2, 160 nye trofeer, LS 3, ressurser
+2022: rask registrering, underholdning, LS 4, kister

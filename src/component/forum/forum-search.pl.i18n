@@ -1,0 +1,18 @@
+{
+	"all_categories": "Wszystkie kategorie",
+	"author": "Autor",
+	"category": "Kategoria",
+	"no_results_found": "Nie znaleziono żadnych wyników...",
+	"not_enough_parameters": "Za mało parametrów rozpoczyna wyszukiwanie",
+	"post_by_x_the_x_in_x": "Opublikowane przez {farmer} w dniu {date} w {topic}",
+	"query": "Badania",
+	"results": "Wyniki wyszukiwania",
+	"search": "Do badań",
+	"sort_by": "Sortuj według",
+	"sort_pertinence": "Znaczenie",
+	"sort_date": "Data",
+	"sort_votes": "Głosowanie",
+	"title": "Wyszukiwarka forum",
+	"too_few_params": "Za mało parametrów...",
+	"too_short": "Wyszukiwanie za krótkie..."
+}

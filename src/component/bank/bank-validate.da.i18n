@@ -1,0 +1,16 @@
+{
+	"thank_you": "TAK",
+	"for_your_support": "for din støtte!",
+	"you_earn_n_crystals": "Du har {crystals}.",
+	"back_to_bank": "Tilbage til banken",
+	"payment_fail": "Betaling {0} mislykkedes.",
+	"payment_fail_reason": "Betaling mislykkedes: {0}",
+	"payment_success": "Betaling {0} valideret",
+	"payment_success_simple": "Betaling valideret",
+	"no_running_payment": "ingen løbende betaling",
+	"failed_to_execute_payment_wrong_code": "koden du indtastede er ikke gyldig",
+	"failed_to_execute_payment": "betalingen virkede ikke eller blev annulleret",
+	"payment_cancelled": "Du har annulleret betalingen",
+	"payment_no_code": "Ingen koder",
+	"payment_wrong_code": "Ugyldig kode"
+}

@@ -1,0 +1,16 @@
+{
+	"cancel": "Annulla",
+	"me": "Me",
+	"new_message": "Nuovo messaggio...",
+	"quit": "Esentato",
+	"quit_confirm": "Vuoi abbandonare la conversazione? Non sarai più in grado di vedere i messaggi precedenti.",
+	"quit_conversation": "Abbandona la conversazione",
+	"send": "Mandare",
+	"title": "Gatti",
+	"cat_team": "Equipaggio",
+	"cat_private": "Messaggi privati",
+	"team": "Equipaggio",
+	"enable_notifications": "Attivare le notifiche",
+	"disable_notifications": "Disattivare le notifiche",
+	"admin_warn": "Per dare un suggerimento o segnalare un bug non critico, crea un argomento nel {forum}."
+}

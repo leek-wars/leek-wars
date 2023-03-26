@@ -1,0 +1,9 @@
+{
+	"buy_with": "Osta kanssa",
+	"paypal_message": "Napsauta painiketta aloittaaksesi ostokset",
+	"purshase_title": "<b>{0}</b> kiteen ostaminen <i>{1}</i>:lla",
+	"purshase_title_simple": "<b>{0}</b> kristallin osto",
+	"purshase_title_text": "Ostetaan {0} kristallia {1}:lla",
+	"purshase_title_text_simple": "Osta {0} kristalleja",
+	"title": "Kristallipankki"
+}

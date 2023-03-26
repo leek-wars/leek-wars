@@ -1,0 +1,13 @@
+{
+	"comments": "Kommentarer",
+	"farmer": "{0} Oppdretterturnering",
+	"few_seconds": "noen få sekunder",
+	"next_round_in": "Neste runde om {0}",
+	"not_found": "Finner ikke turnerings-ID {0} :(",
+	"send": "Sende",
+	"solo": "{0} Soloturnering",
+	"team": "{0} Lagturnering",
+	"next_round_supervisor": "Neste runde vil bli initiert av veileder",
+	"generate": "Generer neste runde",
+	"generating": "Nåværende generasjon..."
+}

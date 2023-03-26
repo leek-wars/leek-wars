@@ -1,0 +1,16 @@
+{
+	"hide_unlocked": "Ocultar obtido",
+	"group_by_categories": "Categorias",
+	"sort_by": "Classificar por {0}",
+	"sort_date": "Data",
+	"sort_index": "Padrão",
+	"sort_points": "Pontos",
+	"sort_rarity": "Escassez",
+	"stats": "Estatisticas",
+	"title": "{0} Troféus",
+	"title_me": "Meus troféus",
+	"trophies": "Troféus",
+	"best_trophies": "Melhores troféus",
+	"latest_trophies": "Últimos troféus",
+	"rarest_trophies": "Troféus mais raros"
+}

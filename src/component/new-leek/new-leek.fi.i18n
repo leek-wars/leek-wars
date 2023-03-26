@@ -1,0 +1,13 @@
+{
+	"4_leeks_only": "Sinulla on jo 4 purjoa!",
+	"create": "Luoda",
+	"error_under_required_level_1": "Ensimmäisen purjosi on oltava vähintään tasolla {0}",
+	"error_under_required_level_2": "Toisen purjosi on oltava vähintään tasolla {0}",
+	"error_under_required_level_3": "Kolmannen purjosi on oltava vähintään tasolla {0}",
+	"name": "Nimi",
+	"name_length": "Purjo nimessä on oltava {0}–{1} merkkiä",
+	"name_format": "Erikoismerkit eivät ole sallittuja nimessä",
+	"not_enough_money": "Sinulla ei ole tarpeeksi rahaa",
+	"price": "Hinta",
+	"title": "Uutta purjoa"
+}

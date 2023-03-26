@@ -1,0 +1,11 @@
+{
+	"title": "Skift e-mail",
+	"send_confirmation": "Send bekræftelse",
+	"enter_a_new_email": "Indtast en ny e-mailadresse",
+	"new_email": "Ny email adresse",
+	"confirm": "Bekræftelse",
+	"email_sent": "Bekræftelsesmail sendt til {email}",
+	"email_changed_success": "E-mailadressen blev ændret.",
+	"back_home": "Tilbage til hjemmet",
+	"error_not_same_email": "De indtastede adresser er ikke de samme"
+}

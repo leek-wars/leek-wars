@@ -1,0 +1,11 @@
+{
+	"documentation": "Dokumentation",
+	"documentation_desc": "Detaljeret liste over alle <b>LeekScript</b> funktioner og konstanter",
+	"general_help": "Opdagelse af spillet, drift og information",
+	"rewatch_didactitiel": "Gennemgå selvstudiet",
+	"title": "Hjælpe",
+	"tutorial": "LeekScript vejledning",
+	"tutorial_desc": "Introduktion til <b>LeekScript</b>-sproget, specifikationer og syntaks",
+	"wiki": "Wiki",
+	"wiki_desc": "Wiki skrevet af spillerne med en masse information om spillet"
+}

@@ -1,0 +1,21 @@
+{
+	"bugs": "Buggar",
+	"chips_used": "Chips används",
+	"criticals": "CC",
+	"damage_inflicted": "Skador tillfogad",
+	"damage_received": "Erhållen skada",
+	"heal_casted": "Healing påbörjad",
+	"heal_received": "Vård mottagen",
+	"kills": "Dödar",
+	"mp_used": "PM används",
+	"nova_received": "Nova fick",
+	"operations": "Ops",
+	"operations_per_turn": "Op/sväng",
+	"resurrections": "Återgår till livet",
+	"shootings": "Skott",
+	"summons": "Kalla",
+	"team_n": "Team {0}",
+	"tp_per_turn": "PT/sväng används",
+	"tp_used": "PT:er används",
+	"turns_played": "Spelade omgångar"
+}

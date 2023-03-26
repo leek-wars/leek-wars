@@ -1,0 +1,1 @@
+Voit hallita purjosi ulkonäköä hattujen, värijuomien, otsikoiden ja muiden koristeiden avulla, jotta purjo erottuu muista.

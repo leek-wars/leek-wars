@@ -1,0 +1,11 @@
+{
+	"title": "Byta e-mail",
+	"send_confirmation": "Skicka bekräftelse",
+	"enter_a_new_email": "Ange en ny e-postadress",
+	"new_email": "Ny Email Adress",
+	"confirm": "Bekräftelse",
+	"email_sent": "Bekräftelsemail skickat till {email}",
+	"email_changed_success": "E-postadressen har ändrats.",
+	"back_home": "Tillbaka till hemmet",
+	"error_not_same_email": "De angivna adresserna är inte desamma"
+}

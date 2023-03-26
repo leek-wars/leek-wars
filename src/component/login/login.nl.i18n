@@ -1,0 +1,14 @@
+{
+	"connection": "Verbinding",
+	"error_banned": "Je account is verbannen",
+	"error_inactive": "Uw account is niet geactiveerd, ga naar de link die per e-mail is verzonden.",
+	"error_invalid": "De inloggegevens zijn onjuist.",
+	"error_server": "Serverfout. Probeer het over een paar minuten opnieuw",
+	"forgot_password": "Je wachtwoord vergeten ?",
+	"incorrect_login": "Login of wachtwoord onjuist.",
+	"keep_connected": "Blijf verbonden",
+	"login": "Fokker naam of e-mail",
+	"password": "Wachtwoord",
+	"success": "Je bent verbonden",
+	"title": "Verbinding"
+}

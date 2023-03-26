@@ -1,0 +1,1 @@
+Leek Wars är ett webbläsarbaserat turbaserat strategispel där purjolök tävlar mot varandra som styrs av en artificiell intelligens (AI) som du måste koda. Ett roligt sätt att lära sig programmering.

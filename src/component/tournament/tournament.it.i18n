@@ -1,0 +1,13 @@
+{
+	"comments": "Commenti",
+	"farmer": "{0} Torneo degli Allevatori",
+	"few_seconds": "pochi secondi",
+	"next_round_in": "Prossimo turno tra {0}",
+	"not_found": "ID torneo {0} non trovato :(",
+	"send": "Mandare",
+	"solo": "{0} Torneo singolo",
+	"team": "{0} Torneo a squadre",
+	"next_round_supervisor": "Il turno successivo sarà avviato dal supervisore",
+	"generate": "Genera il prossimo round",
+	"generating": "Generazione attuale..."
+}

@@ -1,0 +1,6 @@
+{
+	"description": "Pankki tarjoaa sinulle mahdollisuuden hankkia <b>kiteitä</b> <span class='crystal'></span>, Leek Warsin toinen valuutta, jonka avulla voit ostaa juomia ja muita puhtaasti koristeellisia ja <b>ei vaikuttavia </b> voimasi taistelussa. <br>\nHemmottele itseäsi värijuoksulla purjollesi ja tue Leek Warsia!",
+	"pack_of_n_crystals": "<b>{0}</b> kristallin pakkaus",
+	"paypal_description": "Osta {0} kristallia hintaan {1} €",
+	"title": "Kristallipankki"
+}

@@ -1,0 +1,1 @@
+Leek Wars ist ein browserbasiertes rundenbasiertes Strategiespiel, in dem Lauch gegeneinander antritt, der von einer künstlichen Intelligenz (KI) gesteuert wird, die Sie programmieren müssen. Eine unterhaltsame Art, Programmieren zu lernen.

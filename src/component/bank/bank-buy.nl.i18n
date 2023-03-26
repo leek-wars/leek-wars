@@ -1,0 +1,9 @@
+{
+	"buy_with": "Koop met",
+	"paypal_message": "Klik op een knop om te beginnen met winkelen",
+	"purshase_title": "<b>{0}</b> kristallen kopen met <i>{1}</i>",
+	"purshase_title_simple": "Aankoop van <b>{0}</b> kristallen",
+	"purshase_title_text": "{0} kristallen kopen met {1}",
+	"purshase_title_text_simple": "Koop {0} kristallen",
+	"title": "Kristallen bank"
+}

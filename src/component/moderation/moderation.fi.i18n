@@ -1,0 +1,10 @@
+{
+	"report_farmer": "Ilmoita {0}",
+	"reporting_deleted": "Raportti poistettu",
+	"title": "Maltillisuus",
+	"warning_sent": "Varoitus lähetetty!",
+	"you_are_muted": "Sinut on hiljennetty.",
+	"you_have_been_muted_by_x": "{0} on hiljentänyt sinut.",
+	"you_have_been_unmuted_by_x": "{0} antaa sinun puhua uudelleen chatissa.",
+	"you_must_choose_reason": "Sinun on valittava malli!"
+}

@@ -1,0 +1,21 @@
+{
+	"by_x_the_d": "Af {farmer} den {date}",
+	"cancel": "Afbestille",
+	"create_new_topic": "Opret emne",
+	"create_topic": "Opret emne",
+	"error_invalid_title": "Emnets titel skal være mellem {min} og {max} tegn",
+	"n_topic_n_messages": "{0} emner / {1} indlæg",
+	"last": "Sidst",
+	"last_message": "Sidste {date} af {farmer}",
+	"last_by_x": "af {author}",
+	"locked": "Emne låst",
+	"messages": "Indlæg",
+	"new_topic_message": "Emne besked",
+	"new_topic_title": "Emne titel",
+	"pinned": "Hængende emne",
+	"resolved": "Emne løst",
+	"topic": "Emne",
+	"mark_as_read": "Marker som læst",
+	"mark_as_read_text": "Alle emner i alle forumkategorier vil blive markeret som læst. Efter denne handling vil kun nye emner eller nye svar blive vist.",
+	"show_resolved": "Vis løste emner"
+}

@@ -1,0 +1,18 @@
+{
+	"admin": "Järjestelmänvalvoja",
+	"admin_desc": "Järjestelmänvalvojille varattu luokka",
+	"bug_reports": "Virheraportit",
+	"bug_reports_desc": "Jos luulet löytäneesi virheen pelistä",
+	"composter": "Kompostori",
+	"composter_desc": "Puhua kaikesta... eikä mistään.",
+	"exploits": "Sinun hyväksikäyttösi",
+	"exploits_desc": "Tule raportoimaan hyväksikäytöstäsi tai jakamaan epätavallisia kuvakaappauksiasi",
+	"general_discussion": "Yleinen keskustelu",
+	"general_discussion_desc": "Yleinen Leek Wars -keskustelu",
+	"help": "Apua ja vinkkejä",
+	"help_desc": "Jos sinulla on kysyttävää pelistä tai haluat jakaa vinkkejä",
+	"moderation": "Maltillisuus",
+	"moderation_desc": "Moderaattoreille varattu luokka",
+	"suggestions_ideas": "Ehdotuksia ja ideoita",
+	"suggestions_ideas_desc": "Jos sinulla on parannusideoita peliin"
+}

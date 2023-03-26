@@ -1,0 +1,12 @@
+{
+	"battle_royale": "Battaglia reale",
+	"date_format": "Il {0}",
+	"deleted_farmer": "allevatore rimosso",
+	"deleted_leek": "porro rimosso",
+	"deleted_team": "squadra eliminata",
+	"n_views": "nessuna vista | 1 vista | {n} visualizzazioni",
+	"not_found": "Combattimento non trovato :(",
+	"not_found_id": "ID combattimento <b>{0}</b> non trovato :(",
+	"pause_message": "Fare clic o premere 'P' per riprendere",
+	"starter": "Lanciatore di combattimento"
+}

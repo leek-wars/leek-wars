@@ -1,0 +1,10 @@
+{
+	"report_farmer": "Zgłoś {0}",
+	"reporting_deleted": "Raport usunięty",
+	"title": "Umiar",
+	"warning_sent": "Ostrzeżenie wysłane!",
+	"you_are_muted": "Zostałeś uciszony.",
+	"you_have_been_muted_by_x": "Zostałeś uciszony przez {0}.",
+	"you_have_been_unmuted_by_x": "{0} umożliwia ponowne wypowiadanie się na czacie.",
+	"you_must_choose_reason": "Musisz wybrać wzór!"
+}

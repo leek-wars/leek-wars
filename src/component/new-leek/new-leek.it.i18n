@@ -1,0 +1,13 @@
+{
+	"4_leeks_only": "Hai già 4 porri!",
+	"create": "Creare",
+	"error_under_required_level_1": "Il tuo primo porro deve essere almeno di livello {0}",
+	"error_under_required_level_2": "Il tuo secondo porro deve essere almeno di livello {0}",
+	"error_under_required_level_3": "Il tuo terzo porro deve essere almeno di livello {0}",
+	"name": "Nome",
+	"name_length": "Il nome del porro deve contenere tra {0} e {1} caratteri",
+	"name_format": "I caratteri speciali non sono ammessi nel nome",
+	"not_enough_money": "Non hai abbastanza soldi",
+	"price": "Prezzo",
+	"title": "Nuovo porro"
+}

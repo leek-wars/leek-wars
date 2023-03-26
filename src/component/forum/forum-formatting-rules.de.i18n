@@ -1,0 +1,19 @@
+{
+	"source_code": "Quellcode",
+	"source_code_ex": "mein Quellcode",
+	"big_title": "Große Überschrift",
+	"big_title_ex": "Überschrift",
+	"sub_title": "Untertitel",
+	"sub_title_ex": "Untertitel",
+	"sub_sub_title": "Untertitel",
+	"sub_sub_title_ex": "Untertitel",
+	"bold": "Deutlich",
+	"bold_ex": "deutlich",
+	"italic": "Kursivschrift",
+	"italic_ex": "kursivschrift",
+	"underlined": "Unterstreichen",
+	"underlined_ex": "unterstreichen",
+	"striked": "Stange",
+	"striked_ex": "stange",
+	"basic_html": "Einfaches HTML erlaubt"
+}

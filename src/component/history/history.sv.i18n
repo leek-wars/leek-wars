@@ -1,0 +1,23 @@
+{
+	"title": "Historik för {0}",
+	"title_html": "Slagets historia",
+	"24h": "24 timmar",
+	"today": "I dag",
+	"2days": "2 dagar",
+	"1week": "1 vecka",
+	"n_fights": "{0} slagsmål",
+	"victories": "segrar",
+	"draws": "band",
+	"defeats": "nederlag",
+	"ratio": "förhållande",
+	"not_found_id": "Purjolök med id {0} hittades inte",
+	"fight_type": "Typer av slagsmål",
+	"fight_context": "Stridssammanhang",
+	"solo": "Solo",
+	"farmer": "Uppfödare",
+	"team": "Besättning",
+	"battle_royale": "Herre på täppan",
+	"challenge": "Utmaning",
+	"garden": "Grönsaksträdgård",
+	"tournament": "Turnering"
+}

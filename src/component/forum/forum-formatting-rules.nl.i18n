@@ -1,0 +1,19 @@
+{
+	"source_code": "Broncode",
+	"source_code_ex": "mijn broncode",
+	"big_title": "Grote kop",
+	"big_title_ex": "Hoofdtitel",
+	"sub_title": "Ondertitel",
+	"sub_title_ex": "Ondertitel",
+	"sub_sub_title": "Ondertitel",
+	"sub_sub_title_ex": "Ondertitel",
+	"bold": "Vetgedrukt",
+	"bold_ex": "vetgedrukt",
+	"italic": "Cursief",
+	"italic_ex": "cursief",
+	"underlined": "Onderstrepen",
+	"underlined_ex": "onderstrepen",
+	"striked": "Hengel",
+	"striked_ex": "hengel",
+	"basic_html": "Eenvoudige HTML toegestaan"
+}

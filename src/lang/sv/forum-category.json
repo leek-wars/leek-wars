@@ -1,0 +1,18 @@
+{
+	"admin": "Administration",
+	"admin_desc": "Kategori reserverad för administratörer",
+	"bug_reports": "Buggrapporter",
+	"bug_reports_desc": "Om du tror att du har hittat en bugg i spelet",
+	"composter": "Kompostor",
+	"composter_desc": "Att prata om allt... och ingenting.",
+	"exploits": "Dina bedrifter",
+	"exploits_desc": "Kom och rapportera dina bedrifter eller dela dina ovanliga skärmdumpar",
+	"general_discussion": "Allmän diskussion",
+	"general_discussion_desc": "General Leek Wars Diskussion",
+	"help": "Hjälp och tips",
+	"help_desc": "Om du har en fråga om spelet eller vill dela med dig av tips",
+	"moderation": "Måtta",
+	"moderation_desc": "Kategori reserverad för moderatorer",
+	"suggestions_ideas": "Förslag och idéer",
+	"suggestions_ideas_desc": "Om du har några förbättringsidéer för spelet"
+}

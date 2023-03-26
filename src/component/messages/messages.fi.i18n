@@ -1,0 +1,16 @@
+{
+	"cancel": "Peruuttaa",
+	"me": "Minä",
+	"new_message": "Uusi viesti...",
+	"quit": "Lopettaa",
+	"quit_confirm": "Haluatko poistua keskustelusta? Et voi enää nähdä aikaisempia viestejä.",
+	"quit_conversation": "Poistu keskustelusta",
+	"send": "Lähettää",
+	"title": "Kissat",
+	"cat_team": "Miehistö",
+	"cat_private": "Yksityisviestit",
+	"team": "Miehistö",
+	"enable_notifications": "Salli ilmoitukset",
+	"disable_notifications": "Poista ilmoitukset käytöstä",
+	"admin_warn": "Jos haluat tehdä ehdotuksen tai ilmoittaa ei-kriittisestä virheestä, luo aihe {forum}-sivustolle."
+}

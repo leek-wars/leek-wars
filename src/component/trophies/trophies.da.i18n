@@ -1,0 +1,16 @@
+{
+	"hide_unlocked": "Skjul opnået",
+	"group_by_categories": "Kategorier",
+	"sort_by": "Sorter efter {0}",
+	"sort_date": "Dato",
+	"sort_index": "Standard",
+	"sort_points": "Points",
+	"sort_rarity": "Mangel",
+	"stats": "Statistikker",
+	"title": "{0} Trofæer",
+	"title_me": "Mine trofæer",
+	"trophies": "Trofæer",
+	"best_trophies": "Bedste trofæer",
+	"latest_trophies": "Seneste trofæer",
+	"rarest_trophies": "Sjældneste trofæer"
+}

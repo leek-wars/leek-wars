@@ -1,0 +1,19 @@
+{
+	"source_code": "Lähdekoodi",
+	"source_code_ex": "minun lähdekoodini",
+	"big_title": "Iso otsikko",
+	"big_title_ex": "Pääotsikko",
+	"sub_title": "Tekstitys",
+	"sub_title_ex": "Tekstitys",
+	"sub_sub_title": "Alatekstitys",
+	"sub_sub_title_ex": "Alatekstitys",
+	"bold": "Lihavoitu",
+	"bold_ex": "lihavoitu",
+	"italic": "Kursivointi",
+	"italic_ex": "kursivoitu",
+	"underlined": "Korostaa",
+	"underlined_ex": "korostaa",
+	"striked": "Rod",
+	"striked_ex": "sauva",
+	"basic_html": "Perus-HTML sallittu"
+}

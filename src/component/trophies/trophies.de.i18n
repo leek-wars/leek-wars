@@ -1,0 +1,16 @@
+{
+	"hide_unlocked": "Ausblenden erhalten",
+	"group_by_categories": "Kategorien",
+	"sort_by": "Sortieren nach {0}",
+	"sort_date": "Datum",
+	"sort_index": "Standard",
+	"sort_points": "Punkte",
+	"sort_rarity": "Knappheit",
+	"stats": "Statistiken",
+	"title": "{0} Trophäen",
+	"title_me": "Meine Trophäen",
+	"trophies": "Trophäen",
+	"best_trophies": "Beste Trophäen",
+	"latest_trophies": "Neueste Trophäen",
+	"rarest_trophies": "Seltenste Trophäen"
+}

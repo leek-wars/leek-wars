@@ -1,0 +1,21 @@
+{
+	"bugs": "Bugs",
+	"chips_used": "Chips brukt",
+	"criticals": "CC",
+	"damage_inflicted": "Skade påført",
+	"damage_received": "Skade mottatt",
+	"heal_casted": "Helbredelse igangsatt",
+	"heal_received": "Omsorg mottatt",
+	"kills": "Dreper",
+	"mp_used": "PM brukt",
+	"nova_received": "Nova mottok",
+	"operations": "Ops",
+	"operations_per_turn": "Op/sving",
+	"resurrections": "Tilbake til livet",
+	"shootings": "Skudd",
+	"summons": "Innkalle",
+	"team_n": "Team {0}",
+	"tp_per_turn": "PT/sving brukt",
+	"tp_used": "PT-er brukt",
+	"turns_played": "Runder spilt"
+}

@@ -1,0 +1,1 @@
+For at kode din AI skal du kode i LeekScript, et sprog, der ligner JavaScript. En tutorial er tilgængelig for at lære forestillingerne om spillet og sproget, efterhånden som du udvikler dig.

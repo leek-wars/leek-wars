@@ -1,0 +1,16 @@
+{
+	"price": "Pris",
+	"price_lot": "Batch pris",
+	"quantity": "Antal",
+	"name": "Navn",
+	"level": "Niveau",
+	"date": "Dato",
+	"all": "Alle",
+	"weapons": "Våben",
+	"chips": "Lopper",
+	"potions": "Potions",
+	"hats": "Hatte",
+	"pomps": "Apparat",
+	"resources": "Ressourcer",
+	"rarity": "Mangel"
+}

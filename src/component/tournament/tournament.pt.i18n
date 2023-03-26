@@ -1,0 +1,13 @@
+{
+	"comments": "Comentários",
+	"farmer": "{0} Torneio de Criadores",
+	"few_seconds": "alguns segundos",
+	"next_round_in": "Próxima rodada em {0}",
+	"not_found": "ID do torneio {0} não encontrado :(",
+	"send": "Enviar",
+	"solo": "{0} Torneio Solo",
+	"team": "{0} Torneio de Equipe",
+	"next_round_supervisor": "A próxima rodada será iniciada pelo supervisor",
+	"generate": "Gerar próxima rodada",
+	"generating": "Geração atual..."
+}

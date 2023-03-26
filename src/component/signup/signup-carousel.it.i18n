@@ -1,0 +1,16 @@
+{
+	"android_app": "Applicazione Android",
+	"editor": "Editor AI intelligente in loco",
+	"fight_beach": "Combattimento singolo (1v1) sulla spiaggia",
+	"fight_desert": "Combattimento di allevatori nel deserto",
+	"fight_factory": "Combattimento a squadre (6v6) in fabbrica",
+	"fight_forest": "Herder lotta (4v4) nella foresta",
+	"fight_ice": "Battle Royale (10 giocatori) sul lastrone di ghiaccio",
+	"fight_test": "Prova di combattimento a terra",
+	"leek_page": "Pagina del tuo porro",
+	"market": "Mercato: acquisto di armi, fiches, cappelli ecc.",
+	"pixel_art": "Pixel art grazie alle funzioni di debug",
+	"ranking": "Classifica: Solo, Allevatore, Team, Trofei",
+	"tournament": "Torneo di allevatori ogni sera alle 18:00",
+	"trophies": "Pagina dei trofei (300 trofei)"
+}

@@ -1,0 +1,6 @@
+{
+	"description": "Die Bank bietet Ihnen an, <b>Kristalle</b> <span class='crystal'></span>, die zweite Währung von Lauchkriegen, zu erwerben, mit denen Sie dann Tränke und andere rein dekorative und <b>nicht beeinträchtigende Tränke kaufen können </b> deine Kraft im Kampf. <br>\nGönnen Sie sich einen Farbtrank für Ihren Lauch und unterstützen Sie Leek Wars!",
+	"pack_of_n_crystals": "Packung mit <b>{0}</b> Kristallen",
+	"paypal_description": "Kauf von {0} Kristallen für {1} €",
+	"title": "Kristallbank"
+}

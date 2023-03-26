@@ -1,0 +1,13 @@
+{
+	"4_leeks_only": "Masz już 4 pory!",
+	"create": "Tworzyć",
+	"error_under_required_level_1": "Twój pierwszy por musi być co najmniej na poziomie {0}",
+	"error_under_required_level_2": "Twój drugi por musi być co najmniej na poziomie {0}",
+	"error_under_required_level_3": "Twój trzeci por musi być co najmniej na poziomie {0}",
+	"name": "Nazwa",
+	"name_length": "Nazwa pora musi zawierać od {0} do {1} znaków",
+	"name_format": "W nazwie nie są dozwolone znaki specjalne",
+	"not_enough_money": "Nie masz wystarczająco pieniędzy",
+	"price": "Cena",
+	"title": "Nowy por"
+}

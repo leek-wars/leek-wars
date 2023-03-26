@@ -1,0 +1,14 @@
+{
+	"connection": "Logg Inn",
+	"error_banned": "Kontoen din er utestengt",
+	"error_inactive": "Kontoen din er ikke aktivert, vennligst gå til lenken sendt på e-post.",
+	"error_invalid": "Legitimasjonen er feil.",
+	"error_server": "Serverfeil. Vennligst prøv igjen om noen minutter",
+	"forgot_password": "Glemt passordet ?",
+	"incorrect_login": "Innlogging eller passord er feil.",
+	"keep_connected": "Hold kontakten",
+	"login": "Oppdretternavn eller e-post",
+	"password": "Passord",
+	"success": "Du er tilkoblet",
+	"title": "Logg Inn"
+}

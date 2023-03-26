@@ -1,0 +1,16 @@
+{
+	"cancel": "Afbestille",
+	"me": "Mig",
+	"new_message": "Ny besked...",
+	"quit": "Afslut",
+	"quit_confirm": "Vil du forlade samtalen? Du vil ikke længere kunne se tidligere beskeder.",
+	"quit_conversation": "Forlad samtalen",
+	"send": "Sende",
+	"title": "Katte",
+	"cat_team": "Mandskab",
+	"cat_private": "Private beskeder",
+	"team": "Mandskab",
+	"enable_notifications": "Aktiver meddelelser",
+	"disable_notifications": "Deaktiver meddelelserne",
+	"admin_warn": "For at komme med et forslag eller rapportere en ikke-kritisk fejl, skal du oprette et emne på {forum}."
+}
