@@ -220,7 +220,7 @@
 
 		<panel v-if="team" icon="mdi-podium">
 			<template slot="title">{{ $t('rankings') }}</template>
-			<div class="container grid last">
+			<div class="container grid last rankings">
 				<div class="column4">
 					<h4>{{ $t('main.leeks') }}</h4>
 					<div class="ranking card">
@@ -1461,6 +1461,10 @@
 	}
 	h4 {
 		margin-bottom: 7px;
+	}
+	.rankings {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
 	}
 	.ranking {
 		width: 100%;
