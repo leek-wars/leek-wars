@@ -1359,9 +1359,11 @@ class Resurrection extends ChipAnimation {
 }
 
 class Grapple extends ChipAnimation {
+
 	static textures = [T.grapple_1, T.grapple_2, T.grapple_back_1, T.grapple_back_2, T.chain, T.chain_back]
 	static sounds = []
 	static DURATION = 70
+
 	sx!: number
 	sy!: number
 	x!: number
@@ -1381,10 +1383,20 @@ class Grapple extends ChipAnimation {
 	chain_sy!: number
 	target: FightEntity | null = null
 	move_end: number = 0
-	constructor(game: Game) { super(game, S.resurrection, Grapple.DURATION, DamageType.DEFAULT) }
 
-	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
+	constructor(game: Game) {
+		super(game, S.resurrection, Grapple.DURATION, DamageType.DEFAULT)
+	}
+
+	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher: FightEntity) {
+		// Fix targetCell and targetPos
+		if (targets.length) {
+			targetCell = this.game.ground.field.computeAttractCell(launcher.cell!, targets[0].cell!, targetCell)
+			const xy = this.game.ground.field.cellToXY(targetCell)
+			targetPos = this.game.ground.xyToXYPixels(xy.x, xy.y)
+		}
 		super.launch(launchPos, targetPos, targets, targetCell)
+
 		const angle = Math.atan2(targetPos.y - launchPos.y, targetPos.x - launchPos.x)
 		this.dx = Math.cos(angle)
 		this.dy = Math.sin(angle)

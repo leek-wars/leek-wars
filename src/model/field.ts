@@ -251,6 +251,26 @@ class Field {
 		}
 		return current
 	}
+
+	public computeAttractCell(launcherCell: Cell, entityCell: Cell, targetCell: Cell) {
+		let current = entityCell
+		// Delta caster --> entity
+		const cdx = Math.sign(current.x - launcherCell.x);
+		const cdy = Math.sign(current.y - launcherCell.y);
+		// Delta entity --> target
+		const edx = Math.sign(targetCell.x - current.x)
+		const edy = Math.sign(targetCell.y - current.y)
+
+		// Check deltas (must be attracted in the correct direction)
+		if (cdx == -edx && cdy == -edy) {
+			while (current !== targetCell) {
+				const next = this.next_cell(current, edx, edy)!
+				if (next.obstacle || next.entity) { break }
+				current = next
+			}
+		}
+		return current
+	}
 }
 
 export { Field }

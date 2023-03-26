@@ -1108,9 +1108,16 @@ class Game {
 				if (chip === 37 || chip === 78) {
 					cell.setEntity(caster)
 				}
-				if (chip === 88 || chip === 89) { // boxing glove & grapple
+				if (chip === 88) { // grapple
 					if (targets.length) {
-						cell.setEntity(targets[0])
+						const realCell = this.ground.field.computeAttractCell(caster.cell!, targets[0].cell!, cell)
+						realCell.setEntity(targets[0])
+					}
+				}
+				if (chip === 89) { // boxing glove
+					if (targets.length) {
+						const realCell = this.ground.field.getLastAvailableCell(caster.cell!, cell)
+						realCell.setEntity(targets[0])
 					}
 				}
 				// Update leeks cells after inversion / repotting
