@@ -1,7 +1,7 @@
 <template lang="html">
 	<div class="page">
 		<div class="page-bar page-header">
-			<div>
+			<div class="flex">
 				<h1 :class="{small: breadcrumb_items.length >= 3}">
 					<v-icon class="book">mdi-book-open-page-variant</v-icon>
 					<breadcrumb :items="breadcrumb_items" :raw="true" />
@@ -536,8 +536,8 @@ h1 {
 		margin-bottom: 5px;
 	}
 }
-.info {
-	margin-top: 6px;
+.page-header .flex {
+	align-items: center;
 }
 .encyclopedia {
 	min-height: 0;
