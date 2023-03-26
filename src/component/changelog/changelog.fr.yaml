@@ -6,8 +6,12 @@
     - "Classements fun des tournois (solo, éleveur, équipe)."
     - Ajout les langues des éleveurs connectés sur la page forum.
   fixed:
+    - Correction d'un bug de déplacement interdit avec le grappin.
+    - Correction de l'affichage des classements sur la page équipe sur mobile.
     - Correction d'un bug de position d'entité à la suite d'inversions.
     - Correction de la vérification du compte via GitHub.
+  improved:
+    - Accélération de l'IA en cas d'erreurs très nombreuses.
 
 237:
   title: Récompenses parrainage, Rechercher & Remplacer et améliorations de la banque.
