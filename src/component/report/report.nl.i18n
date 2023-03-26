@@ -37,5 +37,8 @@
 	"title": "Gevechtsverslag",
 	"trophies": "Trofeeën",
 	"winners": "Winnaars",
-	"errors": "Fouten"
+	"errors": "Fouten",
+	"errors_warnings": "Fouten en waarschuwingen",
+	"n_errors": "{n} fouten",
+	"n_warnings": "{n} waarschuwingen"
 }

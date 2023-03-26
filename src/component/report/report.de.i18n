@@ -37,5 +37,8 @@
 	"title": "Kampfbericht",
 	"trophies": "Trophäen",
 	"winners": "Gewinner",
-	"errors": "Fehler"
+	"errors": "Fehler",
+	"errors_warnings": "Fehler und Warnungen",
+	"n_errors": "{n} Fehler",
+	"n_warnings": "{n} Warnungen"
 }

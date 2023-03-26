@@ -219,7 +219,7 @@
 		</panel>
 
 		<panel v-if="hasErrWarn" id="errors" class="warnings-error" toggle="report/warnings-errors" icon="mdi-alert">
-			<template slot="title">Erreurs et avertissements ({{ errors.length + warnings.length }})</template>
+			<template slot="title">{{ $t('errors_warnings') }} ({{ errors.length + warnings.length }})</template>
 			<div class="logs">
 				<div class="turn">
 					<div id="turn-0" class="black">
@@ -228,9 +228,17 @@
 						<v-icon v-if="report" @click="goToTurn(1)">mdi-chevron-right</v-icon>
 					</div>
 				</div>
-				<div v-if="errors.length" class="title"><b>{{ errors.length }}</b> erreurs</div>
+				<div v-if="errors.length" class="title">
+					<i18n path="n_errors">
+						<b slot="n">{{ errors.length }}</b>
+					</i18n>
+				</div>
 				<pre v-for="(e, i) in errors" :key="i" class="log error">[{{ e.entity }}] {{ e.data }}</pre>
-				<div v-if="warnings.length" class="title"><b>{{ warnings.length }}</b> avertissements</div>
+				<div v-if="warnings.length" class="title">
+					<i18n path="n_warnings">
+						<b slot="n">{{ warnings.length }}</b>
+					</i18n>
+				</div>
 				<pre v-for="(w, i) in warnings" :key="errors.length + i" class="log warning">[{{ w.entity }}] {{ w.data }}</pre>
 			</div>
 		</panel>

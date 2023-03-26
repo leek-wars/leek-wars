@@ -37,5 +37,8 @@
 	"title": "Kamprapport",
 	"trophies": "Trofeer",
 	"winners": "Vinnere",
-	"errors": "Feil"
+	"errors": "Feil",
+	"errors_warnings": "Feil og advarsler",
+	"n_errors": "{n} feil",
+	"n_warnings": "{n} advarsler"
 }

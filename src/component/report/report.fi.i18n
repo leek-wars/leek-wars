@@ -37,5 +37,8 @@
 	"title": "Taisteluraportti",
 	"trophies": "Palkinnot",
 	"winners": "Voittajat",
-	"errors": "Virheet"
+	"errors": "Virheet",
+	"errors_warnings": "Virheet ja varoitukset",
+	"n_errors": "{n} virhettä",
+	"n_warnings": "{n} varoitusta"
 }

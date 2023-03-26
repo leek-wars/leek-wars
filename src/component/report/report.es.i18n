@@ -37,5 +37,8 @@
 	"title": "Informe de batalla",
 	"trophies": "Trofeos",
 	"winners": "Ganadores",
-	"errors": "Errores"
+	"errors": "Errores",
+	"errors_warnings": "Errores y advertencias",
+	"n_errors": "{n} errores",
+	"n_warnings": "{n} advertencias"
 }

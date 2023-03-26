@@ -37,5 +37,8 @@
 	"title": "Rapport de combat",
 	"trophies": "Trophées",
 	"winners": "Gagnants",
-	"errors": "Erreurs"
+	"errors": "Erreurs",
+	"errors_warnings": "Erreurs et avertissements",
+	"n_errors": "{n} erreurs",
+	"n_warnings": "{n} avertissements"
 }

@@ -37,5 +37,8 @@
 	"title": "Stridsrapport",
 	"trophies": "Troféer",
 	"winners": "Vinnare",
-	"errors": "Fel"
+	"errors": "Fel",
+	"errors_warnings": "Fel och varningar",
+	"n_errors": "{n} fel",
+	"n_warnings": "{n} varningar"
 }

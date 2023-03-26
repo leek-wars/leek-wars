@@ -37,5 +37,8 @@
 	"title": "Raport bojowy",
 	"trophies": "Trofea",
 	"winners": "Zwycięzcy",
-	"errors": "Błędy"
+	"errors": "Błędy",
+	"errors_warnings": "Błędy i ostrzeżenia",
+	"n_errors": "{n} błędów",
+	"n_warnings": "{n} ostrzeżeń"
 }

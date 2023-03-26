@@ -37,5 +37,8 @@
 	"title": "Fight report",
 	"trophies": "Trophies",
 	"winners": "Winners",
-	"errors": "Errors"
+	"errors": "Errors",
+	"errors_warnings": "Errors and warnings",
+	"n_errors": "{n} errors",
+	"n_warnings": "{n} warnings"
 }
