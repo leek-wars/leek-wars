@@ -18,7 +18,16 @@ module.exports = {
 		index: {entry: 'src/main-fr'},
 		'app-fr': {entry: 'src/main-fr'},
 		'app-en': {entry: 'src/main-en'},
-		'app-es': {entry: 'src/main-es'}
+		'app-es': {entry: 'src/main-es'},
+		'app-de': {entry: 'src/main-de'},
+		'app-it': {entry: 'src/main-it'},
+		'app-pt': {entry: 'src/main-pt'},
+		'app-da': {entry: 'src/main-da'},
+		'app-fi': {entry: 'src/main-fi'},
+		'app-nl': {entry: 'src/main-nl'},
+		'app-no': {entry: 'src/main-no'},
+		'app-pl': {entry: 'src/main-pl'},
+		'app-sv': {entry: 'src/main-sv'},
 	},
     chainWebpack: config => {
 		config.module

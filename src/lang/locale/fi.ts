@@ -25,6 +25,6 @@ const translations = { main, changelog, characteristic, chip, flag, 'fight-pack'
 
 import { setTranslations } from "@/locale"
 // import wiki from '@/wiki/fr.wiki'
-setTranslations("fr", translations, null)
+setTranslations("fi", translations, null)
 
 export { translations }
