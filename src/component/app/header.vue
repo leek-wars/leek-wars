@@ -16,13 +16,13 @@
 					<template v-slot:activator="{ on }">
 						<div class="button-wrapper language-button" v-on="on">
 							<div class="header-button">
-								<flag :code="LeekWars.languages[$i18n.locale].country" />
+								<flag :code="LeekWars.languages[$i18n.locale].country" :clickable="false" />
 							</div>
 						</div>
 					</template>
 					<v-list :dense="true">
 						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="LeekWars.setLocale(language.code)">
-							<flag :code="language.country" />
+							<flag :code="language.country" :clickable="false" />
 							<span class="name">{{ language.name }}</span>
 						</v-list-item>
 					</v-list>

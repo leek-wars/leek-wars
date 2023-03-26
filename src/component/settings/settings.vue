@@ -245,7 +245,6 @@
 	import TwoFactor from '@/component/settings/two-factor.vue'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { store } from '@/model/store'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({ name: 'settings', i18n: {}, mixins: [...mixins], components: {TwoFactor} })
@@ -343,10 +342,12 @@
 			}
 			this.pushNotifications = !this.pushNotifications
 		}
+
 		logout() {
 			this.$store.commit('disconnect')
 			this.$router.push('/')
 		}
+
 		clearLocalStorage() {
 			localStorage.clear()
 			LeekWars.toast("localstorage cleared!")
@@ -367,6 +368,7 @@
 			localStorage.setItem('options/notifs-results', '' + this.notifsResults)
 			LeekWars.notifsResults = this.notifsResults
 		}
+
 		@Watch('chatFirst')
 		updateChatFirst() {
 			localStorage.setItem('options/chat-first', '' + this.chatFirst)
@@ -428,6 +430,7 @@
 				this.deleteFailedError = error.error
 			})
 		}
+
 		sendChangeEmail() {
 			LeekWars.post('farmer/change-email1').then(data => {
 				LeekWars.toast(this.$i18n.t('change_email_sent'))
