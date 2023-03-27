@@ -106,6 +106,14 @@
 			</panel>
 		</div>
 
+		<panel :title="$t('main.partners')">
+			<div slot="content" class="content partners">
+				<a target="_blank" rel="noopener" href="https://www.esiea.fr/">
+					<img class="partner" src="/image/partner/esiea.png" title="ESIEA">
+				</a>
+			</div>
+		</panel>
+
 		<panel class="features first">
 			<div v-for="(feature, f) in features" :key="f" class="feature">
 				<div class="images">
@@ -947,6 +955,13 @@
 	}
 	.v-btn {
 		margin-top: 20px;
+	}
+}
+.partners {
+	display: flex;
+	justify-content: center;
+	.partner {
+		height: 100px;
 	}
 }
 </style>

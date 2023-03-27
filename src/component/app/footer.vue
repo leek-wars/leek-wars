@@ -37,35 +37,47 @@
 				LeekScript <v-icon>mdi-open-in-new</v-icon>
 			</a>
 		</div> -->
-		<div class="column">
+		<!-- <div class="column">
 			<h4>{{ $t('main.legal') }}</h4>
+			<router-link to="/press-kit" class="item">{{ $t('main.press-kit') }} <v-icon>mdi-package-variant-closed</v-icon></router-link>
+			<router-link to="/legal" class="item">{{ $t('main.legal') }}</router-link>
+			<router-link to="/conditions" class="item">{{ $t('main.conditions') }}</router-link>
+		</div> -->
+		<div class="column">
+			<h4>{{ $t('main.partners') }}</h4>
+			<a target="_blank" rel="noopener" href="https://www.esiea.fr/">
+				<img class="color partner" src="/image/partner/esiea.png" title="ESIEA">
+			</a>
 			<router-link to="/contact" class="item">{{ $t('main.contact') }}</router-link>
 			<router-link to="/press-kit" class="item">{{ $t('main.press-kit') }} <v-icon>mdi-package-variant-closed</v-icon></router-link>
+			<h4>Social</h4>
+			<div class="icons">
+				<a target="_blank" rel="noopener" href="https://twitter.com/LeekWars">
+					<v-icon>mdi-twitter</v-icon>
+				</a>
+				<a target="_blank" rel="noopener" href="https://www.facebook.com/LeekWars">
+					<v-icon>mdi-facebook</v-icon>
+				</a>
+				<a target="_blank" rel="noopener" href="https://www.instagram.com/leekwars/">
+					<v-icon>mdi-instagram</v-icon>
+				</a>
+				<a target="_blank" rel="noopener" href="https://www.linkedin.com/company/leek-wars">
+					<v-icon>mdi-linkedin</v-icon>
+				</a>
+				<a target="_blank" rel="noopener" href="mailto:contact@leekwars.com">
+					<v-icon>mdi-email-outline</v-icon>
+				</a>
+			</div>
+		</div>
+		<div class="column">
+			<h4>{{ $t('main.legal') }}</h4>
 			<router-link to="/legal" class="item">{{ $t('main.legal') }}</router-link>
 			<router-link to="/conditions" class="item">{{ $t('main.conditions') }}</router-link>
 			<span class="item">
 				<span class="color cookie-button" @click="throwCookies">🍪</span> {{ $t('main.no_cookies') }}
 			</span>
-			<!-- <span class="item">Copyright © 2013 - 3012</span> -->
-		</div>
-		<div class="column">
-			<h4>Social</h4>
-			<a class="item" target="_blank" rel="noopener" href="mailto:contact@leekwars.com">
-				<v-icon>mdi-email-outline</v-icon> E-mail
-			</a>
-			<a class="item" target="_blank" rel="noopener" href="https://twitter.com/LeekWars">
-				<v-icon>mdi-twitter</v-icon> Twitter
-			</a>
-			<a class="item" target="_blank" rel="noopener" href="https://www.facebook.com/LeekWars">
-				<v-icon>mdi-facebook</v-icon> Facebook
-			</a>
-			<a class="item" target="_blank" rel="noopener" href="https://www.instagram.com/leekwars/">
-				<v-icon>mdi-instagram</v-icon> Instagram
-			</a>
-			<!-- <a class="item" target="_blank" rel="noopener" href="https://www.linkedin.com/company/43355938">
-				<v-icon>mdi-linkedin</v-icon> LinkedIn
-			</a> -->
 			<span class="item"><span class="color">🇫🇷</span> {{ $t('main.made_in_france') }}</span>
+			<span class="item">Copyright © 2013 - 3012</span>
 		</div>
 
 		<img class="leek" src="/image/big_leek_1_white.webp" loading="lazy">
@@ -144,7 +156,7 @@
 			font-weight: normal;
 		}
 		.color {
-			opacity: 0.2;
+			opacity: 0.25;
 			transition: opacity 0.15s ease;
 		}
 	}
@@ -156,6 +168,9 @@
 		h4 {
 			margin-bottom: 10px;
 			font-size: 15px;
+			&:not(:first-child) {
+				margin-top: 4px;
+			}
 		}
 		.item {
 			padding: 8px 0;
@@ -182,20 +197,6 @@
 	.copy {
 		font-size: 12px;
 	}
-	.social {
-		font-size: 12px;
-		margin-top: 8px;
-	}
-	.social img {
-		opacity: 0.3;
-		width: 32px;
-		margin-right: 7px;
-		filter: grayscale(100%);
-	}
-	.social img:hover {
-		opacity: 1;
-		filter: none;
-	}
 	.leek {
 		position: absolute;
 		bottom: 0;
@@ -220,6 +221,17 @@
 		pointer-events: none;
 		&.fall {
 			margin-top: 105vh;
+		}
+	}
+	.partner {
+		height: 32px;
+		margin-bottom: 4px;
+	}
+	.icons {
+		display: flex;
+		gap: 10px;
+		a .v-icon {
+			font-size: 20px;
 		}
 	}
 </style>
