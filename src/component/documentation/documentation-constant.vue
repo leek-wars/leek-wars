@@ -5,7 +5,8 @@
 		</h2>
 
 		<div v-if="constant.deprecated" v-dochash class="deprecated-message">
-			Cette constante est dépréciée. <span v-if="constant.replacement">Elle est remplacée par la constante #{{ CONSTANT_BY_ID[constant.replacement].name }}.</span>
+			{{ $t('doc.deprecated_constant') }}
+			<span v-if="constant.replacement">{{ $t('doc.replaced_by', ['#' + CONSTANT_BY_ID[constant.replacement].name]) }}</span>
 		</div>
 
 		<router-link class="encyclo" :to="'/encyclopedia/' + $i18n.locale + '/' + constant.name" :title="'Encyclopédie > ' + constant.name + '()'">

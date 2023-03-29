@@ -999,5 +999,8 @@
 	"parameters": "Indstillinger",
 	"return": "Feedback",
 	"value": "Værdi",
-	"variable_operations": "<b>Variabel</b> operationer"
+	"variable_operations": "<b>Variabel</b> operationer",
+	"deprecated_function": "Denne funktion er forældet.",
+	"deprecated_constant": "Denne konstant er forældet.",
+	"replaced_by": "Den erstattes af {0}."
 }

@@ -999,5 +999,8 @@
 	"parameters": "Ustawienia",
 	"return": "Informacja zwrotna",
 	"value": "Wartość",
-	"variable_operations": "<b>Operacje na zmiennych</b>"
+	"variable_operations": "<b>Operacje na zmiennych</b>",
+	"deprecated_function": "Ta funkcja jest przestarzała.",
+	"deprecated_constant": "Ta stała jest przestarzała.",
+	"replaced_by": "Zastępuje go {0}."
 }

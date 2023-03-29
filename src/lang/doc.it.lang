@@ -999,5 +999,8 @@
 	"parameters": "Impostazioni",
 	"return": "Feedback",
 	"value": "Valore",
-	"variable_operations": "<b>Operazioni variabili</b>"
+	"variable_operations": "<b>Operazioni variabili</b>",
+	"deprecated_function": "Questa funzione è deprecata.",
+	"deprecated_constant": "Questa costante è deprecata.",
+	"replaced_by": "È sostituito da {0}."
 }

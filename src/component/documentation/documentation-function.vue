@@ -12,7 +12,8 @@
 			</router-link>
 		</h2>
 		<div v-if="fun.deprecated" v-dochash class="deprecated-message">
-			Cette fonction est dépréciée. <span v-if="fun.replacement">Elle est remplacée par la fonction #{{ FUNCTION_BY_ID[fun.replacement].name }}.</span>
+			{{ $t('doc.deprecated_function') }}
+			<span v-if="fun.replacement">{{ $t('doc.replaced_by', ['#' + FUNCTION_BY_ID[fun.replacement].name]) }}</span>
 		</div>
 
 

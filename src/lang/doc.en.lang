@@ -999,5 +999,8 @@
 	"func_getFightID_return": "The id of the current fight.",
 	"func_isEntity": "Determines whether the contents of cell <b>cell</b> is an entity.",
 	"func_isEntity_arg_1": "The cell to be tested.",
-	"func_isEntity_return": "<i>true</i> if the cell contains an entity, <i>false</i> otherwise."
+	"func_isEntity_return": "<i>true</i> if the cell contains an entity, <i>false</i> otherwise.",
+	"deprecated_function": "This function is deprecated.",
+	"deprecated_constant": "This constant is deprecated.",
+	"replaced_by": "It is replaced by {0}."
 }

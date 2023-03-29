@@ -999,5 +999,8 @@
 	"parameters": "Instellingen",
 	"return": "Feedback",
 	"value": "Waarde",
-	"variable_operations": "<b>Variabele</b> bewerkingen"
+	"variable_operations": "<b>Variabele</b> bewerkingen",
+	"deprecated_function": "Deze functie is verouderd.",
+	"deprecated_constant": "Deze constante is verouderd.",
+	"replaced_by": "Het wordt vervangen door {0}."
 }

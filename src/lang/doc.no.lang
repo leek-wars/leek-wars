@@ -999,5 +999,8 @@
 	"parameters": "Innstillinger",
 	"return": "Tilbakemelding",
 	"value": "Verdi",
-	"variable_operations": "<b>Variabel</b> operasjoner"
+	"variable_operations": "<b>Variabel</b> operasjoner",
+	"deprecated_function": "Denne funksjonen er utdatert.",
+	"deprecated_constant": "Denne konstanten er utdatert.",
+	"replaced_by": "Den er erstattet av {0}."
 }

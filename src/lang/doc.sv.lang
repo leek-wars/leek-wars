@@ -999,5 +999,8 @@
 	"parameters": "Inställningar",
 	"return": "Respons",
 	"value": "Värde",
-	"variable_operations": "<b>Variabel</b> operationer"
+	"variable_operations": "<b>Variabel</b> operationer",
+	"deprecated_function": "Denna funktion är föråldrad.",
+	"deprecated_constant": "Denna konstant är utfasad.",
+	"replaced_by": "Den ersätts av {0}."
 }

@@ -999,5 +999,8 @@
 	"parameters": "Einstellungen",
 	"return": "Rückmeldung",
 	"value": "Wert",
-	"variable_operations": "<b>Variable</b> Operationen"
+	"variable_operations": "<b>Variable</b> Operationen",
+	"deprecated_function": "Diese Funktion ist veraltet.",
+	"deprecated_constant": "Diese Konstante ist veraltet.",
+	"replaced_by": "Es wird durch {0} ersetzt."
 }

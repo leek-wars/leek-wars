@@ -999,5 +999,8 @@
 	"parameters": "Configurações",
 	"return": "Opinião",
 	"value": "Valor",
-	"variable_operations": "Operações <b>Variáveis</b>"
+	"variable_operations": "Operações <b>Variáveis</b>",
+	"deprecated_function": "Esta função está obsoleta.",
+	"deprecated_constant": "Esta constante é obsoleta.",
+	"replaced_by": "É substituído por {0}."
 }
