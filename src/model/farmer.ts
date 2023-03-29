@@ -66,6 +66,7 @@ class Farmer {
 	public mail!: string
 	public can_create_leek!: boolean
 	public godsons_level!: number
+	public password!: string
 }
 
 class Member extends Farmer {

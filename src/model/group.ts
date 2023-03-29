@@ -24,6 +24,7 @@ class Group {
 	public max_chips!: number
 	public capital!: number
 	public members!: Farmer[]
+	public use_passwords!: boolean
 }
 
 export { Group }

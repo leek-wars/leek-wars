@@ -498,7 +498,7 @@
 		created() {
 			LeekWars.get('groupe/get/' + this.group_id).then(group => {
 				this.group = group
-				this.headersDialog = this.group.use_passwords ? this.headersDialogPassword : this.headersDialogEmails
+				this.headersDialog = group.use_passwords ? this.headersDialogPassword : this.headersDialogEmails
 				Vue.set(this.characteristics, 'level', group.level)
 				Vue.set(this.characteristics, 'baseLife', 100 + (group.level - 1) * 3)
 				for (const charac of LeekWars.characteristics) {
