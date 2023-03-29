@@ -35,10 +35,6 @@
 		<panel v-for="(category, category_id) in statistics" v-else :key="category_id" :class="{first: category_id == 1, last: category_id == 8}">
 			<h2>{{ $t('category_' + category_id) }}</h2>
 			<div :class="{ai: category_id == 3, code: category_id == 6}" class="category">
-				<div v-if="category_id == 1" class="chart-wrap left">
-					<chartist ref="charts" :data="chartLanguage" :options="chartOptions" class="chart" type="Pie" />
-					<div class="title">{{ $t('chart_language') }}</div>
-				</div>
 				<div v-if="category_id == 2" class="chart-wrap left">
 					<chartist ref="charts" :data="chartFightType" :options="chartOptions" class="chart" type="Pie" />
 					<div class="title">{{ $t('chart_fight_type') }}</div>
@@ -66,7 +62,11 @@
 						<div v-else class="value today">{{ Math.floor(statistic.today).toLocaleString('fr-FR') }}</div>
 						<div class="type">{{ $t(statistic.today_state ? 'today' : 'total') }}</div>
 					</div>
-					<div v-if="name === 'fight_tournament' || name === 'turrets_killed' || name === 'ais_v4' || name === 'lang_es'" :key="name + '1'" class="delimiter"></div>
+					<div v-if="name === 'fight_tournament' || name === 'turrets_killed' || name === 'ais_v4' || name === 'godsons'" :key="name + '1'" class="delimiter"></div>
+					<div v-if="name === 'godsons'" class="chart-wrap left" :key="name + '2'">
+						<chartist ref="charts" :data="chartLanguage" :options="chartOptions" class="chart" type="Pie" />
+						<div class="title">{{ $t('chart_language') }}</div>
+					</div>
 					<div v-if="name === 'damage'" class="chart-wrap left"  :key="name + '2'">
 						<chartist ref="charts" :data="chartDamage" :options="chartOptions" class="chart" type="Pie" />
 						<div class="title">{{ $t('chart_damage_type') }}</div>
