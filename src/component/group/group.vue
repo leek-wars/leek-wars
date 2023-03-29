@@ -288,9 +288,13 @@
 					<input type="email" v-model="item.mail" :class="{error: item.mail_error}" @focusout="updateMemberEmail(item)">
 					<div v-if="item.mail_error" class="error">{{ $t('error_' + item.mail_error.error, item.mail_error.params) }}</div>
 				</template>
+				<template v-slot:item.password="{ item }">
+					<input type="text" v-model="item.password" :class="{error: item.password_error}" @focusout="updateMemberPassword(item)">
+					<div v-if="item.password_error" class="error">{{ $t('error_' + item.password_error.error, item.password_error.params) }}</div>
+				</template>
 				<template v-slot:item.actions="{ item }">
 					<div class="flex actions">
-						<tooltip>
+						<tooltip v-if="!group.use_passwords">
 							<template v-slot:activator="{ on }">
 								<div v-on="on">
 									<v-icon :disabled="!item.mail" @click="sendInvite(item)">mdi-email-outline</v-icon>
@@ -470,11 +474,20 @@
           { text: 'Trophées', value: 'trophies' },
         ]
 
-		headersDialog = [
+		headersDialog: any = []
+		headersDialogEmails = [
           { text: 'Membre', value: 'name' },
           { text: 'Poireau', value: 'leek' },
         //   { text: 'Équipe', value: 'team' },
 		  { text: 'Email', value: 'mail' },
+		  { text: 'Actions', value: 'actions', sortable: false },
+        ]
+
+		headersDialogPassword = [
+          { text: 'Membre', value: 'name' },
+          { text: 'Poireau', value: 'leek' },
+        //   { text: 'Équipe', value: 'team' },
+		  { text: 'Mot de passe', value: 'password' },
 		  { text: 'Actions', value: 'actions', sortable: false },
         ]
 
@@ -485,6 +498,7 @@
 		created() {
 			LeekWars.get('groupe/get/' + this.group_id).then(group => {
 				this.group = group
+				this.headersDialog = this.group.use_passwords ? this.headersDialogPassword : this.headersDialogEmails
 				Vue.set(this.characteristics, 'level', group.level)
 				Vue.set(this.characteristics, 'baseLife', 100 + (group.level - 1) * 3)
 				for (const charac of LeekWars.characteristics) {
@@ -842,6 +856,20 @@
 			}).error(error => {
 				Vue.delete(member, 'mail_error')
 				Vue.set(member, 'mail_error', error)
+			})
+		}
+
+		updateMemberPassword(member: Member) {
+			if (!this.group || !member.password) { return }
+			LeekWars.put('groupe/member-password', {
+				group_id: this.group.id,
+				member_id: member.id,
+				password: member.password
+			}).then(result => {
+				Vue.delete(member, 'password_error')
+			}).error(error => {
+				Vue.delete(member, 'password_error')
+				Vue.set(member, 'password_error', error)
 			})
 		}
 	}
