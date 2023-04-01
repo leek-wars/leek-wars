@@ -1,5 +1,5 @@
 {
-	"contact": "連絡先メールアドレス}",
+	"contact": "コンタクト ： {email}",
 	"editor": "編集者",
 	"editor_message": "Leek Wars ウェブサイト (leekwars.com) は <b>Pilow</b> と <b>SilentHunter</b> によって編集されています",
 	"host": "ホスト",

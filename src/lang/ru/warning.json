@@ -1,7 +1,7 @@
 {
 	"censor": "Цензор",
 	"confirm_mute": "Немой",
-	"given_by_x_the_d": "Подарено {фермером} {дата}",
+	"given_by_x_the_d": "Подарено {farmer} {date}",
 	"mute": "Немой",
 	"mute_popup": "Вы уверены, что хотите заглушить {farmer} на 1 час?",
 	"censor_farmer": "Выберите сообщения от {farmer} для цензуры:",

@@ -1,7 +1,7 @@
 {
 	"thank_you": "धन्यवाद",
 	"for_your_support": "आपकी मदद के लिए!",
-	"you_earn_n_crystals": "आपको {क्रिस्टल} मिले हैं।",
+	"you_earn_n_crystals": "आपको {crystals} मिले हैं।",
 	"back_to_bank": "वापस बैंक में",
 	"payment_fail": "भुगतान {0} विफल रहा।",
 	"payment_fail_reason": "भुगतान विफल: {0}",

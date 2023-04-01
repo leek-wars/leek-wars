@@ -4,7 +4,7 @@
 	"category": "カテゴリー",
 	"no_results_found": "結果が見つかりません...",
 	"not_enough_parameters": "十分なパラメーターがありません。検索を開始します",
-	"post_by_x_the_x_in_x": "{トピック} の {date} に {farmer} によって投稿されました",
+	"post_by_x_the_x_in_x": "{topic} の {date} に {farmer} によって投稿されました",
 	"query": "リサーチ",
 	"results": "の検索結果",
 	"search": "研究する",

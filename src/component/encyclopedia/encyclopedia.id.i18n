@@ -5,7 +5,7 @@
 	"edited_by_x_the_y": "Diedit oleh {farmer} pada {date}",
 	"n_views": "{v} dilihat",
 	"n_contributions": "{n} kontribusi",
-	"not_found": "Halaman \"{nama}\" tidak ada di ensiklopedia Prancis.",
+	"not_found": "Halaman \"{name}\" tidak ada di ensiklopedia Prancis.",
 	"contributor_create": "Anda adalah kontributor 😎 Klik Edit untuk mulai mengedit halaman ini",
 	"locked": "Selesaikan bab ini untuk membuka AI lengkap"
 }

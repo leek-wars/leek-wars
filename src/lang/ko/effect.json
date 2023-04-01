@@ -1,5 +1,5 @@
 {
-	"area_x": "지역: {지역}",
+	"area_x": "지역: {area}",
 	"area_3": "원 1",
 	"area_4": "서클 2",
 	"area_5": "원 3",
@@ -25,7 +25,7 @@
 	"line_until_obstacle": "장애물까지 전체 라인",
 	"multiplied_target": "적중 당",
 	"n_turns": "<b>1</b>턴 | <b>{n}</b> 라운드",
-	"on_n_turns": " {턴} 동안",
+	"on_n_turns": " {turns} 동안",
 	"range": "범위: {0}에서 {1}까지",
 	"range_fixed": "범위: {0}",
 	"summon_1": "작은 전구",

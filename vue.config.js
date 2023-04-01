@@ -28,6 +28,12 @@ module.exports = {
 		'app-no': {entry: 'src/main-no'},
 		'app-pl': {entry: 'src/main-pl'},
 		'app-sv': {entry: 'src/main-sv'},
+		'app-ru': {entry: 'src/main-ru'},
+		'app-hi': {entry: 'src/main-hi'},
+		'app-zh': {entry: 'src/main-zh'},
+		'app-id': {entry: 'src/main-id'},
+		'app-ja': {entry: 'src/main-ja'},
+		'app-ko': {entry: 'src/main-ko'},
 	},
     chainWebpack: config => {
 		config.module

@@ -19,7 +19,7 @@
 	"level_n": "Уровень {0}",
 	"n_challenges": "{0} вызовов",
 	"n_remaining_fights": "осталось {0} боев",
-	"n_fights": "1 бой | {количество} боев",
+	"n_fights": "1 бой | {count} боев",
 	"no_opponent_of_your_size": "Нет соперника твоего размера!",
 	"no_team_of_your_size": "Нет команды в вашем размере!",
 	"select_compo": "Выберите свою сборку",

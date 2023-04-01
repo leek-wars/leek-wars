@@ -34,7 +34,7 @@
 	"error_weapon_already_equipped": "{0} уже экипировал это оружие.",
 	"error_weapon_two_forgotten": "у {0} уже есть забытое оружие.",
 	"error_chip_already_equipped": "{0} уже использует этот чип.",
-	"farmed_by": "Выращен {фермером}",
+	"farmed_by": "Выращен {farmer}",
 	"fights": "Бои",
 	"garden": "Нападения",
 	"garden_no": "НЕТ",

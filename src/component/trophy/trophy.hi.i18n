@@ -18,13 +18,13 @@
 	"trophies": "ट्राफी",
 	"unique": "अद्वितीय",
 	"trophy": "ट्रॉफी",
-	"n_points": "{पी} डॉट्स",
+	"n_points": "{p} डॉट्स",
 	"rewards": "पुरस्कार",
 	"not_unlocked": "अभी तक ताला नहीं खुला",
 	"unlocked_the_x": "{date} को अनलॉक किया गया",
 	"see_fight": "लड़ाई देखें",
 	"progress": "प्रगति",
-	"n_pocessors": "{एन} रखने वाले",
+	"n_pocessors": "{n} रखने वाले",
 	"first_farmers": "प्रारंभिक प्रजनकों",
 	"last_farmers": "नवीनतम ब्रीडर्स"
 }

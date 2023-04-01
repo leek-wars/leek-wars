@@ -21,7 +21,7 @@
 	"change_owner": "परिवर्तन का मालिक",
 	"change_owner_cancel": "रद्द करना",
 	"change_owner_change": "परिवर्तन का मालिक",
-	"change_owner_confirm": "क्या आप वाकई {किसान} को टीम के मालिक के रूप में नामित करना चाहते हैं?",
+	"change_owner_confirm": "क्या आप वाकई {farmer} को टीम के मालिक के रूप में नामित करना चाहते हैं?",
 	"change_owner_confirm_title": "टीम के मालिक को बदलें",
 	"change_owner_select": "एक नए टीम मालिक का चयन करें",
 	"chat": "बिल्ली",

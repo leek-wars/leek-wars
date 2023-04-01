@@ -1,5 +1,5 @@
 {
-	"area_x": "エリア: {エリア}",
+	"area_x": "エリア: {area}",
 	"area_3": "サークル 1",
 	"area_4": "サークル 2",
 	"area_5": "サークル 3",
@@ -25,7 +25,7 @@
 	"line_until_obstacle": "障害物までのライン全体",
 	"multiplied_target": "ターゲット当たり",
 	"n_turns": "<b>1</b> ターン | <b>{n}</b>ラウンド",
-	"on_n_turns": " {turn}の間",
+	"on_n_turns": " {turns}の間",
 	"range": "範囲: {0} から {1}",
 	"range_fixed": "範囲: {0}",
 	"summon_1": "ちっぽけな電球",

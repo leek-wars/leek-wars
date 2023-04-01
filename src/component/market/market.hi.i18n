@@ -1,7 +1,7 @@
 {
 	"already_have": "आप पहले से ही इस वस्तु के स्वामी हैं",
-	"are_you_sure_you_want_to_buy": "क्या आप वाकई {आइटम} खरीदना चाहते हैं?",
-	"are_you_sure_you_want_to_sell": "क्या आप वाकई {आइटम} बेचना चाहते हैं?",
+	"are_you_sure_you_want_to_buy": "क्या आप वाकई {item} खरीदना चाहते हैं?",
+	"are_you_sure_you_want_to_sell": "क्या आप वाकई {item} बेचना चाहते हैं?",
 	"buy": "खरीदना",
 	"buying": "खरीदना...",
 	"cancel": "रद्द करना",
@@ -41,7 +41,7 @@
 	"summon_available_chips": "सुसज्जित चिप्स",
 	"summon_characteristics": "विशेषताएँ",
 	"title": "बाज़ार",
-	"unlocked_with": "{ट्रॉफी} ट्रॉफी के साथ अनलॉक हुआ",
+	"unlocked_with": "{trophy} ट्रॉफी के साथ अनलॉक हुआ",
 	"weapon": "हथियारबंद",
 	"weapon_bought": "हथियार खरीदा!",
 	"weapons": "हथियार, शस्त्र",

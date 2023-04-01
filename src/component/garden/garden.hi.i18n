@@ -19,7 +19,7 @@
 	"level_n": "स्तर {0}",
 	"n_challenges": "{0} चुनौतियां",
 	"n_remaining_fights": "{0} लड़ाइयाँ शेष हैं",
-	"n_fights": "1 लड़ाई | {गिनती} लड़ता है",
+	"n_fights": "1 लड़ाई | {count} लड़ता है",
 	"no_opponent_of_your_size": "आपके आकार का कोई विरोधी नहीं!",
 	"no_team_of_your_size": "आपके आकार में कोई टीम नहीं!",
 	"select_compo": "अपनी रचना का चयन करें",

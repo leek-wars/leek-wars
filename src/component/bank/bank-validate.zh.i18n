@@ -1,7 +1,7 @@
 {
 	"thank_you": "谢谢",
 	"for_your_support": "你的支持！",
-	"you_earn_n_crystals": "你得到了{水晶}。",
+	"you_earn_n_crystals": "你得到了{crystals}。",
 	"back_to_bank": "返回银行",
 	"payment_fail": "付款 {0} 失败。",
 	"payment_fail_reason": "付款失败：{0}",

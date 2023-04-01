@@ -7,7 +7,7 @@
 	"n_topic_n_messages": "{0} 个主题/{1} 个帖子",
 	"last": "最后的",
 	"last_message": "{farmer} 的最后 {date}",
-	"last_by_x": "由{作者}",
+	"last_by_x": "由{author}",
 	"locked": "主题已锁定",
 	"messages": "帖子",
 	"new_topic_message": "话题留言",

@@ -1,6 +1,6 @@
 {
 	"android_app": "안드로이드 앱",
-	"conditions": "등록 버튼을 클릭하면 {링크}에 동의하는 것입니다.",
+	"conditions": "등록 버튼을 클릭하면 {link}에 동의하는 것입니다.",
 	"conditions_name": "서비스 약관",
 	"confirm_password": "확인",
 	"country": "국가",

@@ -34,7 +34,7 @@
 	"error_weapon_already_equipped": "{0} telah melengkapi senjata ini.",
 	"error_weapon_two_forgotten": "{0} sudah dilengkapi dengan Senjata yang Terlupakan.",
 	"error_chip_already_equipped": "{0} telah melengkapi chip ini.",
-	"farmed_by": "Dibesarkan oleh {petani}",
+	"farmed_by": "Dibesarkan oleh {farmer}",
 	"fights": "Berkelahi",
 	"garden": "Serangan",
 	"garden_no": "TIDAK",

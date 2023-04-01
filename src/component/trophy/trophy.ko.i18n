@@ -21,7 +21,7 @@
 	"n_points": "{p} 도트",
 	"rewards": "상",
 	"not_unlocked": "아직 잠금 해제되지 않음",
-	"unlocked_the_x": "{날짜}에 잠금 해제됨",
+	"unlocked_the_x": "{date}에 잠금 해제됨",
 	"see_fight": "싸움을 참조하십시오",
 	"progress": "진전",
 	"n_pocessors": "{n} 소유자",

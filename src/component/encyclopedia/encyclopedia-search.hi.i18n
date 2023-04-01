@@ -4,7 +4,7 @@
 	"category": "वर्ग",
 	"no_results_found": "कोई परिणाम नहीं मिला...",
 	"not_enough_parameters": "काफ़ी पैरामीटर नहीं होने पर खोज शुरू होती है",
-	"post_by_x_the_x_in_x": "{किसान} द्वारा {date} को {topic} में पोस्ट किया गया",
+	"post_by_x_the_x_in_x": "{farmer} द्वारा {date} को {topic} में पोस्ट किया गया",
 	"query": "शोध करना",
 	"results": "खोज के परिणाम",
 	"search": "अनुसंधान करना",

@@ -7,7 +7,7 @@
 	"censor_farmer": "Pilih postingan dari {farmer} untuk disensor:",
 	"delete_farmer": "Pilih pesan yang akan dihapus:",
 	"unmute": "Berikan lantai",
-	"unmute_popup": "Anda yakin ingin mengembalikan lantai ke {petani}?",
+	"unmute_popup": "Anda yakin ingin mengembalikan lantai ke {farmer}?",
 	"reason_1": "Nama peternak salah",
 	"reason_1_action": "Nama petani akan diganti dengan 'Petani@<id>' dan nama yang melanggar akan ditambahkan ke daftar kata yang dilarang.",
 	"reason_2": "Nama daun bawang salah",

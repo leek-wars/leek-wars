@@ -1,7 +1,7 @@
 {
 	"thank_you": "СПАСИБО",
 	"for_your_support": "для вашей поддержки!",
-	"you_earn_n_crystals": "Вы получили {кристаллов}.",
+	"you_earn_n_crystals": "Вы получили {crystals}.",
 	"back_to_bank": "Вернуться в банк",
 	"payment_fail": "Платеж {0} не выполнен.",
 	"payment_fail_reason": "Платеж не выполнен: {0}",
