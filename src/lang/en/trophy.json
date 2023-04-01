@@ -535,5 +535,7 @@
 	"venomous_f": "Poisonous",
 	"viewer_f": "Spectator",
 	"weedwacker_f": "Weeder",
-	"wrecker_f": "Demolisher"
+	"wrecker_f": "Demolisher",
+	"joker": "Prankster",
+	"joker_f": "Prankster"
 }

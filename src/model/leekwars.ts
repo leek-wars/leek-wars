@@ -558,7 +558,7 @@ const LeekWars = {
 	setTitle, setSubTitle, setTitleCounter, setTitleTag,
 	shadeColor,
 	createCodeArea, createCodeAreaSimple,
-	clover: false, cloverTop: 0, cloverLeft: 0, cloverDX: 0, cloverDY: 0, cloverDDX: 0, cloverDDY: 0, cloverFake: false, lucky,
+	clover: false, cloverTop: 0, cloverLeft: 0, cloverDX: 0, cloverDY: 0, cloverDDX: 0, cloverDDY: 0, cloverFake: false, cloverTimeout: null as any, lucky,
 	setFavicon,
 	linkify, toChatLink,
 	goToRanking,
@@ -940,7 +940,8 @@ function lucky(isFake: boolean = false) {
 	LeekWars.cloverDX = LeekWars.cloverDDX = LeekWars.cloverLeft
 	LeekWars.cloverDY = LeekWars.cloverDDY = LeekWars.cloverTop
 	LeekWars.cloverFake = isFake
-	setTimeout(() => LeekWars.clover = false, 50000)
+	if (LeekWars.cloverTimeout) { clearTimeout(LeekWars.cloverTimeout) }
+	LeekWars.cloverTimeout = setTimeout(() => LeekWars.clover = false, 5000)
 	if (!LeekWars.sfw) {
 		const audio = new Audio('/sound/move.mp3')
 		audio.volume = 0.4

@@ -5,7 +5,7 @@
 		</div>
 		<panel v-if="trophy" class="first">
 			<div class="flex">
-				<img class="image" :src="'/image/trophy/' + code + '.svg'">
+				<img class="image" :src="'/image/trophy/' + code + '.svg'" @click="trophy.code === 'joker' && LeekWars.lucky(true)" :class="{clickable: trophy.code === 'joker'}">
 				<div class="right">
 					<div class="name">
 						{{ $t('trophy.' + code) }}
@@ -112,6 +112,9 @@
 		width: 120px;
 		margin: 0 20px;
 		margin-right: 30px;
+		&.clickable {
+			cursor: pointer;
+		}
 	}
 	#app.app .image {
 		margin: 0;

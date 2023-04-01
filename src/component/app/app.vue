@@ -319,12 +319,11 @@ import { Leek } from '@/model/leek'
 				LeekWars.cloverLeft -= (LeekWars.cloverLeft - LeekWars.cloverDX) / this.cloverSpeed
 				LeekWars.cloverTop -= (LeekWars.cloverTop - LeekWars.cloverDY) / this.cloverSpeed
 
-				setTimeout(this.updateCloverPosition, 1000 / 60)
+				requestAnimationFrame(this.updateCloverPosition)
 			}
 		}
 
 		mousemove(e: MouseEvent) {
-			// console.log(e.clientX, e.clientY)
 			if (LeekWars.cloverFake) {
 				this.mouseX = e.clientX
 				this.mouseY = e.clientY
