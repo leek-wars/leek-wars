@@ -162,6 +162,7 @@ import { Leek } from '@/model/leek'
 		// didactitiel_new_enabled: boolean = false
 		mouseX = 0
 		mouseY = 0
+		cloverSpeed = 200
 
 		created() {
 			this.$root.$on('connected', () => {
@@ -263,8 +264,16 @@ import { Leek } from '@/model/leek'
 		}
 		*/
 		clickClover() {
-			LeekWars.socket.send([SocketMessage.GET_LUCKY])
-			LeekWars.clover = false
+			if (LeekWars.cloverFake) {
+				this.mouseX = LeekWars.cloverLeft
+				this.mouseY = LeekWars.cloverTop
+				this.cloverSpeed = 5
+				this.updateClover()
+				this.updateCloverPosition()
+			} else {
+				LeekWars.socket.send([SocketMessage.GET_LUCKY])
+				LeekWars.clover = false
+			}
 		}
 
 		updateClover() {
@@ -307,8 +316,8 @@ import { Leek } from '@/model/leek'
 				LeekWars.cloverDX -= (LeekWars.cloverDX - LeekWars.cloverDDX) / 80
 				LeekWars.cloverDY -= (LeekWars.cloverDY - LeekWars.cloverDDY) / 80
 
-				LeekWars.cloverLeft -= (LeekWars.cloverLeft - LeekWars.cloverDX) / 200
-				LeekWars.cloverTop -= (LeekWars.cloverTop - LeekWars.cloverDY) / 200
+				LeekWars.cloverLeft -= (LeekWars.cloverLeft - LeekWars.cloverDX) / this.cloverSpeed
+				LeekWars.cloverTop -= (LeekWars.cloverTop - LeekWars.cloverDY) / this.cloverSpeed
 
 				setTimeout(this.updateCloverPosition, 1000 / 60)
 			}
@@ -319,6 +328,7 @@ import { Leek } from '@/model/leek'
 			if (LeekWars.cloverFake) {
 				this.mouseX = e.clientX
 				this.mouseY = e.clientY
+				this.cloverSpeed = 200
 				this.updateClover()
 				this.updateCloverPosition()
 			}
