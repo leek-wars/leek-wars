@@ -1,5 +1,5 @@
 <template>
-	<div id="app" :class="{ connected: $store.state.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw, 'menu-collapsed': !LeekWars.mobile && LeekWars.menuCollapsed, beta: env.BETA, lightbar: LeekWars.lightBar }" data-app="true">
+	<div id="app" :class="{ connected: $store.state.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw, 'menu-collapsed': !LeekWars.mobile && LeekWars.menuCollapsed, beta: env.BETA, lightbar: LeekWars.lightBar }" data-app="true" @mousemove="mousemove">
 		<div class="v-application--wrap">
 			<div :class="{visible: LeekWars.dark > 0}" :style="{opacity: LeekWars.dark}" class="dark" @click="darkClick"></div>
 
@@ -61,7 +61,7 @@
 
 			<didactitiel v-if="didactitiel_enabled" v-model="didactitiel" />
 
-			<didactitiel-new v-if="didactitiel_new_enabled" />
+			<!-- <didactitiel-new v-if="didactitiel_new_enabled" /> -->
 
 			<changelog-dialog v-model="changelogDialog" :changelog="changelog" />
 
@@ -131,6 +131,7 @@
 	const Squares = () => import('@/component/app/squares.vue')
 	const ChangelogVersion = () => import('@/component/changelog/changelog-version.vue')
 	import { locale } from '@/locale'
+import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { Component, Vue } from 'vue-property-decorator'
@@ -158,7 +159,9 @@
 		annonce: boolean = false
 		docEverywhere: boolean = false
 		docEverywhereModel: boolean = false
-		didactitiel_new_enabled: boolean = false
+		// didactitiel_new_enabled: boolean = false
+		mouseX = 0
+		mouseY = 0
 
 		created() {
 			this.$root.$on('connected', () => {
@@ -262,6 +265,63 @@
 		clickClover() {
 			LeekWars.socket.send([SocketMessage.GET_LUCKY])
 			LeekWars.clover = false
+		}
+
+		updateClover() {
+
+			const mx = this.mouseX
+			const my = this.mouseY
+			const cx = LeekWars.cloverLeft
+			const cy = LeekWars.cloverTop
+			const d = 300
+			const td = 400
+			if (Math.sqrt(Math.pow(mx - cx, 2) + Math.pow(my - cy, 2)) < d) {
+
+				// Find best position to go
+				var best = -Infinity
+				var best_angle = 0
+				const start_angle = Math.random() * 360
+				for (var i = 0; i < 360; i += 10) {
+					var angle = (((start_angle + i) % 360) / 360) * Math.PI * 2
+					var dx = mx + Math.cos(angle) * td
+					var dy = my + Math.sin(angle) * td
+					// sortie ?
+					if (dx > window.innerWidth - 100 || dx < 50 || dy > window.innerHeight - 100 || dy < 50) {
+						continue
+					}
+					var dist = Math.random() * 100 + Math.sqrt(Math.pow(mx - dx, 2) + Math.pow(my - dy, 2)) - Math.sqrt(Math.pow(cx - dx, 2) + Math.pow(cy - dy, 2))
+					if (dist > best) {
+						best = dist
+						best_angle = angle
+					}
+				}
+				LeekWars.cloverDDX = mx + Math.cos(best_angle) * td
+				LeekWars.cloverDDY = my + Math.sin(best_angle) * td
+			}
+		}
+
+		updateCloverPosition() {
+
+			if (Math.abs(LeekWars.cloverLeft - LeekWars.cloverDDX) > 1 || Math.abs(LeekWars.cloverTop - LeekWars.cloverDDY) > 1) {
+
+				LeekWars.cloverDX -= (LeekWars.cloverDX - LeekWars.cloverDDX) / 80
+				LeekWars.cloverDY -= (LeekWars.cloverDY - LeekWars.cloverDDY) / 80
+
+				LeekWars.cloverLeft -= (LeekWars.cloverLeft - LeekWars.cloverDX) / 200
+				LeekWars.cloverTop -= (LeekWars.cloverTop - LeekWars.cloverDY) / 200
+
+				setTimeout(this.updateCloverPosition, 1000 / 60)
+			}
+		}
+
+		mousemove(e: MouseEvent) {
+			// console.log(e.clientX, e.clientY)
+			if (LeekWars.cloverFake) {
+				this.mouseX = e.clientX
+				this.mouseY = e.clientY
+				this.updateClover()
+				this.updateCloverPosition()
+			}
 		}
 	}
 </script>

@@ -543,7 +543,7 @@ const LeekWars = {
 	setTitle, setSubTitle, setTitleCounter, setTitleTag,
 	shadeColor,
 	createCodeArea, createCodeAreaSimple,
-	clover: false, cloverTop: 0, cloverLeft: 0, lucky,
+	clover: false, cloverTop: 0, cloverLeft: 0, cloverDX: 0, cloverDY: 0, cloverDDX: 0, cloverDDY: 0, cloverFake: false, lucky,
 	setFavicon,
 	linkify, toChatLink,
 	goToRanking,
@@ -918,11 +918,14 @@ function linkify(html: string) {
 	return html.replace(email_pattern, '<a target="_blank" rel="noopener" href="mailto:$&">$&</a>')
 }
 
-function lucky() {
+function lucky(isFake: boolean = false) {
 	LeekWars.clover = true
 	LeekWars.cloverTop = 20 + Math.random() * 200
 	LeekWars.cloverLeft = 20 + Math.random() * (window.innerWidth - 80)
-	setTimeout(() => LeekWars.clover = false, 5000)
+	LeekWars.cloverDX = LeekWars.cloverDDX = LeekWars.cloverLeft
+	LeekWars.cloverDY = LeekWars.cloverDDY = LeekWars.cloverTop
+	LeekWars.cloverFake = isFake
+	setTimeout(() => LeekWars.clover = false, 50000)
 	if (!LeekWars.sfw) {
 		const audio = new Audio('/sound/move.mp3')
 		audio.volume = 0.4

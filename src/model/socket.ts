@@ -61,6 +61,7 @@ enum SocketMessage {
 	TOURNAMENT_LISTEN = 58,
 	TOURNAMENT_UNLISTEN = 59,
 	TOURNAMENT_UPDATE = 60,
+	FAKE_LUCKY = 61,
 }
 
 class Socket {
@@ -193,6 +194,10 @@ class Socket {
 				}
 				case SocketMessage.LUCKY: {
 					LeekWars.lucky()
+					break
+				}
+				case SocketMessage.FAKE_LUCKY: {
+					LeekWars.lucky(true)
 					break
 				}
 				case SocketMessage.BATTLE_ROYALE_CHAT_NOTIF: {
