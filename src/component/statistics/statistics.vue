@@ -327,7 +327,7 @@
 		padding: 6px 10px;
 		margin: 7px;
 		background: white;
-		min-width: 130px;
+		min-width: 128px;
 		.label {
 			margin-bottom: 4px;
 			font-weight: 500;
