@@ -1293,7 +1293,7 @@
 		}
 		.container {
 			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+			grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
 		}
 		.column {
 			flex: 1;
@@ -1312,7 +1312,7 @@
 			display: grid;
 			gap: 8px;
 			margin-top: 10px;
-			grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+			grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
 			.reward {
 				flex: 1;
 				min-width: 0;
