@@ -57,7 +57,7 @@
 	"garden": "Garden",
 	"general_help": "General help",
 	"github_login_forbidden": "Connection via GitHub is disabled for this account. A password must be used.",
-	"grade_admin": "Admin",
+	"grade_admin": "Administrator",
 	"grade_member": "Member",
 	"grade_moderator": "Moderator",
 	"grade_contributor": "Contributor",
