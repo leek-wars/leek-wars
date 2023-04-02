@@ -1,3 +1,62 @@
+237:
+  title: Sponsorship rewards, Search & Replace and bank improvements.
+  added:
+    - "Sponsorship: 10 rewards depending on the level of the referrals. #img_237_sponsorship"
+    - "Forum: added option to hide resolved topics. #img_237_show_resolved"
+    - "Editor: search and replace functionality. #img_237_replace"
+    - "Panama hat added (old one renamed to Fedora). #img_237_panama"
+    - "Bank: ability to pay by credit card. #img_237_card"
+    - "Bank: choice of currency. #img_237_currency"
+  improved:
+    - "Chat: changes to some emojis available in response to a message."
+    - "The description of the effect of the dark katana is more accurate."
+    - "Reduced the size of bulbs in combat."
+    - "The team fight counter is displayed next to the classic counter. #img_237_team_fights"
+    - "Leek page: added an icon if XP is blocked. #img_237_xp_blocked"
+  fixed:
+    - "Ranking: removed leeks whose farmers are banned (thanks to Kraspen)."
+    - "Ranking: display of the old farmer name (thanks to Kraspen)."
+    - "Tournaments: correction of teams without emblems (thanks to Lmare)"
+    - "Tutorial: educated trophy is obtained in chapter 10 and not from the first question."
+    - "Correction of advanced leek tooltips were closing directly after opening."
+
+236:
+  title: Block his XP, rankings by level and country and improvements of LeekScript.
+  added:
+    - "Ability to block a leek's XP, so you don't gain any more levels. #img_236_xp_blocked #img_236_xp_report"
+    - "Added max level rankings (50, 100, 150 etc). #img_236_ranking_level"
+    - "Added rankings by country. #img_236_ranking_country"
+    - "Clicking on a flag redirects to the country ranking."
+  improved:
+    - Push notifications show full post for PM, forum, comment.
+    - "Improved flag images. #img_236_flags"
+    - Grouping of some countries (195 instead of 223).
+    - "#ai Added error for for in loop on non-iterable value. #img_236_iterable_warning"
+    - "#ai LeekScript: added operation on || and && operators (cost of 1 instead of 0)."
+    - "Tournaments: added icons and a laurel wreath image #img_236_tournament_images"
+    - "Editor: display of leeks on which AI is equipped. #img_236_editor_leeks"
+    - "Delay in appearance of item tooltips on leek page."
+    - "#ai LeekScript: callback parameter of arraySort() becomes optional. #img_236_arraysort"
+    - "LeekScript: object optimization and acceleration for AIs that use a lot of them."
+  fixed:
+    - Fixed the number of Battle Royales statistic.
+    - Fixed translation of tournament notifications by mail and push.
+    - Fixed getPathLength return in documentation.
+    - "Encyclopedia title hidden on main page in English and Spanish. #img_236_encyclo_title"
+    - "#ai Fixed mapRemoveAll function with null values."
+    - Fixed (again) the leek duplication bug in the player.
+    - "#ai Added error when a method argument is duplicated #img_236_duplicated_arg"
+    - "Editor: fixed scroll bar that was not clickable."
+    - "Team: accept and decline application buttons no longer display when you are not a captain."
+    - "Forum: fixed deletion of a topic."
+    - "Editor: fixed the color of the bottom bar in dark theme."
+    - "Menu: no more icon animation when menu is retracted."
+    - "Editor: documentation from encyclopedia is loaded correctly."
+    - "Documentation: book icon in editor doc was overflowing into text."
+    - "#ai LeekScript: declaring class fields with symbols causes an error. #img_236_field"
+    - "#ai LeekScript 4: fixed search() with negative start position. #img_236_search"
+    - "#ai LeekScript: it is no longer possible to use private fields in a child class. #img_236_private"
+
 235:
   title: Spanish translation, country in the garden, bot messages on the chat and team challenges.
   added:
