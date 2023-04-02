@@ -105,7 +105,7 @@
 				<div class="center">
 					<pagination :current="page" :total="pages" :url="url" :url-query="urlQuery" />
 					<div v-if="$store.state.farmer" class="me-buttons">
-						<template v-if="displayCategory === 'leek'">
+						<template v-if="category === 'leek'">
 							<v-btn v-for="leek in $store.state.farmer.leeks" :key="leek.id" @click="LeekWars.goToRanking('leek', order, leek.id)">{{ leek.name }}</v-btn>
 						</template>
 						<v-btn v-else-if="category === 'farmer'" @click="LeekWars.goToRanking('farmer', order, $store.state.farmer.id)">{{ $t('my_farmer') }}</v-btn>
@@ -118,25 +118,25 @@
 						<tr class="header">
 							<th class="ranking-column">{{ $t('place') }}</th>
 							<th>
-								<router-link :to="getURL('leek', 'name', page, country, inactive)">
+								<router-link :to="getURL('leek', 'name', country, inactive)">
 									<span>{{ $t('main.leek') }}</span>
 									<v-icon v-if="order === 'name'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>
-								<router-link :to="getURL('leek', 'talent', page, country, inactive)">
+								<router-link :to="getURL('leek', 'talent', country, inactive)">
 									<span>{{ $t('main.talent') }}</span>
 									<v-icon v-if="order === 'talent'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>
-								<router-link :to="getURL('leek', 'level', page, country, inactive)">
+								<router-link :to="getURL('leek', 'level', country, inactive)">
 									<span>{{ $t('main.level') }}</span>
 									<v-icon v-if="order === 'level'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>
-								<router-link :to="getURL('leek', 'xp', page, country, inactive)">
+								<router-link :to="getURL('leek', 'xp', country, inactive)">
 									<span>{{ $t('xp') }}</span>
 									<v-icon v-if="order === 'xp'">mdi-chevron-up</v-icon>
 								</router-link>
@@ -305,7 +305,7 @@
 			return '' + this.$route.query.country // || localStorage.getItem('ranking/country') || this.$store.state.farmer?.country || 'fr'
 		}
 		get inactive(): boolean {
-			if (this.$route.query.inactive) { return !!this.$route.query.inactive }
+			if (this.$route.query.inactive !== undefined) { return true }
 			return LeekWars.rankingInactive
 		}
 

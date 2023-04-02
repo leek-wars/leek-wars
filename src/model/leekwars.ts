@@ -956,7 +956,7 @@ function goToRanking(type: string, order: string, id: number = 0) {
 	}
 	LeekWars.get(url).then(data => {
 		const page = 1 + Math.floor((data.rank - 1) / 50)
-		const active_url = LeekWars.rankingInactive && data.active ? '?inactive' : ''
+		const active_url = data.active ? '' : '?inactive'
 		const newRoute = '/ranking/' + type + '/' + order + '/page-' + page + active_url + '#rank-' + data.rank
 		if (router.currentRoute.fullPath !== newRoute) {
 			router.push(newRoute)
