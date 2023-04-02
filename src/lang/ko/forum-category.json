@@ -1,0 +1,18 @@
+{
+	"admin": "관리자",
+	"admin_desc": "관리자용으로 예약된 카테고리",
+	"bug_reports": "버그 보고서",
+	"bug_reports_desc": "게임에서 버그를 발견했다고 생각하는 경우",
+	"composter": "퇴비",
+	"composter_desc": "모든 것에 대해 이야기하고 ... 아무 것도.",
+	"exploits": "당신의 익스플로잇",
+	"exploits_desc": "악용 사례를 보고하거나 비정상적인 스크린샷을 공유하십시오.",
+	"general_discussion": "일반 토론",
+	"general_discussion_desc": "일반 부추 전쟁 토론",
+	"help": "도움말 및 팁",
+	"help_desc": "게임에 대한 질문이 있거나 팁을 공유하고 싶다면",
+	"moderation": "절도",
+	"moderation_desc": "중재자 전용 카테고리",
+	"suggestions_ideas": "제안 및 아이디어",
+	"suggestions_ideas_desc": "게임에 대한 개선 아이디어가 있다면"
+}

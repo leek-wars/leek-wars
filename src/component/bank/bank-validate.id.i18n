@@ -1,0 +1,16 @@
+{
+	"thank_you": "TERIMA KASIH",
+	"for_your_support": "untuk dukunganmu!",
+	"you_earn_n_crystals": "Anda mendapatkan {crystals}.",
+	"back_to_bank": "Kembali ke perbankan",
+	"payment_fail": "Pembayaran {0} gagal.",
+	"payment_fail_reason": "Pembayaran gagal: {0}",
+	"payment_success": "Pembayaran {0} divalidasi",
+	"payment_success_simple": "Pembayaran divalidasi",
+	"no_running_payment": "tidak ada pembayaran saat ini",
+	"failed_to_execute_payment_wrong_code": "kode yang Anda masukkan tidak valid",
+	"failed_to_execute_payment": "pembayaran tidak berhasil atau dibatalkan",
+	"payment_cancelled": "Anda membatalkan pembayaran",
+	"payment_no_code": "Tidak ada kode",
+	"payment_wrong_code": "Kode salah"
+}

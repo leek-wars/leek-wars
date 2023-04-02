@@ -1,0 +1,21 @@
+{
+	"bugs": "Ошибки",
+	"chips_used": "Используемые чипы",
+	"criticals": "CC",
+	"damage_inflicted": "Нанесенный урон",
+	"damage_received": "Полученный урон",
+	"heal_casted": "Исцеление начато",
+	"heal_received": "Полученная помощь",
+	"kills": "Убивает",
+	"mp_used": "ПМ используется",
+	"nova_received": "Нова получила",
+	"operations": "Оперативная служба",
+	"operations_per_turn": "Оп/поворот",
+	"resurrections": "Возвращается к жизни",
+	"shootings": "Выстрелы",
+	"summons": "Призвать",
+	"team_n": "Команда {0}",
+	"tp_per_turn": "PT/оборот использовано",
+	"tp_used": "Используемые ПТ",
+	"turns_played": "Сыграно раундов"
+}

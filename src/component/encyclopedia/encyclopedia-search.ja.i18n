@@ -1,0 +1,18 @@
+{
+	"all_categories": "すべてのカテゴリ",
+	"author": "著者",
+	"category": "カテゴリー",
+	"no_results_found": "結果が見つかりません...",
+	"not_enough_parameters": "十分なパラメーターがありません。検索を開始します",
+	"post_by_x_the_x_in_x": "{トピック} の {date} に {farmer} によって投稿されました",
+	"query": "リサーチ",
+	"results": "の検索結果",
+	"search": "研究する",
+	"sort_by": "並び替え",
+	"sort_pertinence": "関連性",
+	"sort_date": "日にち",
+	"sort_votes": "投票",
+	"title": "百科事典",
+	"too_few_params": "十分なパラメータがありません...",
+	"too_short": "検索が短すぎます..."
+}

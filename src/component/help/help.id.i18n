@@ -1,0 +1,11 @@
+{
+	"documentation": "Dokumentasi",
+	"documentation_desc": "Daftar detail semua fungsi dan konstanta <b>LeekScript</b>",
+	"general_help": "Penemuan permainan, operasi dan informasi",
+	"rewatch_didactitiel": "Tinjau tutorialnya",
+	"title": "Bantuan",
+	"tutorial": "Tutorial LeekScript",
+	"tutorial_desc": "Pengantar bahasa, spesifikasi, dan sintaksis <b>LeekScript</b>",
+	"wiki": "Wiki",
+	"wiki_desc": "Wiki ditulis oleh para pemain dengan banyak informasi tentang permainan"
+}

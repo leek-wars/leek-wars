@@ -1,0 +1,11 @@
+{
+	"documentation": "선적 서류 비치",
+	"documentation_desc": "모든 <b>LeekScript</b> 함수 및 상수의 상세 목록",
+	"general_help": "게임, 운영 및 정보의 발견",
+	"rewatch_didactitiel": "튜토리얼 검토",
+	"title": "지원",
+	"tutorial": "리크스크립트 튜토리얼",
+	"tutorial_desc": "<b>LeekScript</b> 언어, 사양 및 구문 소개",
+	"wiki": "위키",
+	"wiki_desc": "게임에 대한 많은 정보와 함께 플레이어가 작성한 위키"
+}

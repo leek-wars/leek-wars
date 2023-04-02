@@ -1,0 +1,11 @@
+{
+	"n_contributors": "기여자 없음 | <b>{n}</b> 기여자 | <b>{n}</b> 참여자",
+	"search": "페이지 찾기",
+	"created_by_x_the_y": "{date}에 {farmer}이(가) 만들었습니다.",
+	"edited_by_x_the_y": "{date}에 {farmer}님이 수정함",
+	"n_views": "{v} 보기",
+	"n_contributions": "{n} 기여",
+	"not_found": "프랑스 백과사전에 \"{name}\" 페이지가 없습니다.",
+	"contributor_create": "당신은 기여자입니다 😎 이 페이지 편집을 시작하려면 편집을 클릭하십시오",
+	"locked": "전체 AI의 잠금을 해제하려면 챕터를 완료하세요."
+}

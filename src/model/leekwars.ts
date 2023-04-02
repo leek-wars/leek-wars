@@ -141,6 +141,12 @@ const LANGUAGES = Object.freeze({
 	no: { code: 'no', name: 'Norsk', country: 'no', flag: '/image/flag/no.png', chat: 10, encyclopedia: 'Encyclopedia', chats: [10], currency: 'NOK', beta: true, forum: false } as Language,
 	pl: { code: 'pl', name: 'Polska', country: 'pl', flag: '/image/flag/pl.png', chat: 11, encyclopedia: 'Encyklopedia', chats: [11], currency: 'EUR', beta: true, forum: false } as Language,
 	sv: { code: 'sv', name: 'Svenska', country: 'se', flag: '/image/flag/sv.png', chat: 12, encyclopedia: 'Encyklopedi', chats: [12], currency: 'SEK', beta: true, forum: false } as Language,
+	ru: { code: 'ru', name: 'Русский', country: 'ru', flag: '/image/flag/ru.png', chat: 13, encyclopedia: 'Энциклопедия', chats: [13], currency: 'RUB', beta: true, forum: false } as Language,
+	zh: { code: 'zh', name: '中国人', country: 'cn', flag: '/image/flag/cn.png', chat: 14, encyclopedia: '百科全书', chats: [14], currency: 'RUB', beta: true, forum: false } as Language,
+	hi: { code: 'hi', name: 'भारतीय', country: 'in', flag: '/image/flag/in.png', chat: 15, encyclopedia: 'विश्वकोश', chats: [15], currency: 'RUB', beta: true, forum: false } as Language,
+	id: { code: 'id', name: 'Indonesia', country: 'id', flag: '/image/flag/id.png', chat: 16, encyclopedia: 'Encyklopedi', chats: [16], currency: 'RUB', beta: true, forum: false } as Language,
+	ja: { code: 'ja', name: '日本', country: 'jp', flag: '/image/flag/jp.png', chat: 17, encyclopedia: 'Encyklopedi', chats: [17], currency: 'RUB', beta: true, forum: false } as Language,
+	ko: { code: 'ko', name: '한국인', country: 'kr', flag: '/image/flag/kr.png', chat: 18, encyclopedia: 'Encyklopedi', chats: [18], currency: 'RUB', beta: true, forum: false } as Language,
 } as { [key: string]: Language })
 
 const LOCAL_DATE = new Date()
@@ -241,6 +247,12 @@ const LeekWars = {
 		10: { id: 10, name: 'General', language: 'no', icon: 'mdi-chat-outline' },
 		11: { id: 11, name: 'General', language: 'pl', icon: 'mdi-chat-outline' },
 		12: { id: 12, name: 'General', language: 'sv', icon: 'mdi-chat-outline' },
+		13: { id: 13, name: 'General', language: 'sv', icon: 'mdi-chat-outline' },
+		14: { id: 14, name: 'General', language: 'sv', icon: 'mdi-chat-outline' },
+		15: { id: 15, name: 'General', language: 'sv', icon: 'mdi-chat-outline' },
+		16: { id: 16, name: 'General', language: 'sv', icon: 'mdi-chat-outline' },
+		17: { id: 17, name: 'General', language: 'sv', icon: 'mdi-chat-outline' },
+		18: { id: 18, name: 'General', language: 'sv', icon: 'mdi-chat-outline' },
 	} as {[key: number]: { name: string, language: string }},
 	getLeekSkinName: (skin: number) => {
 		if (!(skin in SKINS)) { return SKINS[1] }

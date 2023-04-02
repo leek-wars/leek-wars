@@ -1,0 +1,1 @@
+Untuk membuat kode AI Anda, Anda perlu membuat kode dalam LeekScript, bahasa yang mirip dengan JavaScript. Tutorial tersedia untuk mempelajari pengertian permainan dan bahasa saat Anda maju.

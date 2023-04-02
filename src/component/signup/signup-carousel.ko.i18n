@@ -1,0 +1,16 @@
+{
+	"android_app": "안드로이드 앱",
+	"editor": "현장 스마트 AI 편집기",
+	"fight_beach": "해변에서 단독 전투(1v1)",
+	"fight_desert": "사막에서 목장주 싸움",
+	"fight_factory": "공장에서 팀 전투(6v6)",
+	"fight_forest": "숲에서 목동 싸움(4v4)",
+	"fight_ice": "유빙 위의 배틀로얄(10인)",
+	"fight_test": "지상 전투 증명",
+	"leek_page": "부추의 페이지",
+	"market": "시장: 무기, 칩, 모자 등 구매",
+	"pixel_art": "디버그 기능 덕분에 픽셀 아트",
+	"ranking": "랭킹: 솔로, 브리더, 팀, 트로피",
+	"tournament": "브리더 토너먼트 매일 저녁 6시",
+	"trophies": "트로피 페이지(트로피 300개)"
+}

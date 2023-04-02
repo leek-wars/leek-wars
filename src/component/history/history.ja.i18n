@@ -1,0 +1,23 @@
+{
+	"title": "{0}の歴史",
+	"title_html": "戦歴",
+	"24h": "24時間",
+	"today": "今日",
+	"2days": "2日",
+	"1week": "1週間",
+	"n_fights": "{0}戦",
+	"victories": "勝利",
+	"draws": "ネクタイ",
+	"defeats": "敗北",
+	"ratio": "比",
+	"not_found_id": "ID {0} のネギが見つかりません",
+	"fight_type": "戦闘の種類",
+	"fight_context": "戦闘の状況",
+	"solo": "ソロ",
+	"farmer": "ブリーダー",
+	"team": "クルー",
+	"battle_royale": "バトルロワイアル",
+	"challenge": "チャレンジ",
+	"garden": "菜園",
+	"tournament": "トーナメント"
+}

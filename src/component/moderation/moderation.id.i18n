@@ -1,0 +1,10 @@
+{
+	"report_farmer": "Laporkan {0}",
+	"reporting_deleted": "Laporan dihapus",
+	"title": "Moderasi",
+	"warning_sent": "Peringatan dikirim!",
+	"you_are_muted": "Anda telah dibungkam.",
+	"you_have_been_muted_by_x": "Anda telah dibungkam oleh {0}.",
+	"you_have_been_unmuted_by_x": "{0} memungkinkan Anda berbicara lagi di obrolan.",
+	"you_must_choose_reason": "Anda harus memilih pola!"
+}

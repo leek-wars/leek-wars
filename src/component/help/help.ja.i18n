@@ -1,0 +1,11 @@
+{
+	"documentation": "ドキュメンテーション",
+	"documentation_desc": "すべての <b>LeekScript</b> 関数と定数の詳細なリスト",
+	"general_help": "ゲーム、操作、情報の発見",
+	"rewatch_didactitiel": "チュートリアルを確認する",
+	"title": "援助",
+	"tutorial": "LeekScript チュートリアル",
+	"tutorial_desc": "<b>LeekScript</b> 言語、仕様、構文の紹介",
+	"wiki": "ウィキ",
+	"wiki_desc": "ゲームに関する多くの情報を含むプレイヤーによって書かれたWiki"
+}

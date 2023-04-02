@@ -1,0 +1,9 @@
+{
+	"buy_with": "Beli dengan",
+	"paypal_message": "Klik tombol untuk mulai berbelanja",
+	"purshase_title": "Membeli <b>{0}</b> kristal dengan <i>{1}</i>",
+	"purshase_title_simple": "Beli <b>{0}</b> kristal",
+	"purshase_title_text": "Membeli {0} kristal dengan {1}",
+	"purshase_title_text_simple": "Beli {0} Kristal",
+	"title": "Bank kristal"
+}

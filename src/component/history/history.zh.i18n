@@ -1,0 +1,23 @@
+{
+	"title": "{0}的历史",
+	"title_html": "战史",
+	"24h": "24小时",
+	"today": "今天",
+	"2days": "2天",
+	"1week": "1周",
+	"n_fights": "{0} 场战斗",
+	"victories": "胜利",
+	"draws": "领带",
+	"defeats": "失败",
+	"ratio": "比率",
+	"not_found_id": "未找到 ID {0} 的韭菜",
+	"fight_type": "战斗类型",
+	"fight_context": "战斗背景",
+	"solo": "独奏",
+	"farmer": "饲养员",
+	"team": "全体人员",
+	"battle_royale": "大逃杀",
+	"challenge": "挑战",
+	"garden": "菜园",
+	"tournament": "比赛"
+}

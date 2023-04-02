@@ -1,0 +1,19 @@
+{
+	"app_installation": "Menginstal aplikasi di ponsel",
+	"app_info": "Dengan mengikuti petunjuk ini, Anda akan dapat menginstal aplikasi web Leek Wars (<a href='https://en.wikipedia.org/wiki/Progressive_web_app'>PWA</a>)\ndi ponsel Anda.\nFitur ini kurang lebih dikelola dengan baik tergantung pada OS dan browser, dan mode penginstalan dapat berbeda satu sama lain.\nBrowser yang digunakan dalam petunjuk adalah <b>Chrome</b> di <b>Android</b>, yang tampaknya paling baik menangani aplikasi web.",
+	"app_preview": "Ikhtisar Aplikasi",
+	"title": "Aplikasi seluler",
+	"step_n": "Panggung {0}",
+	"step1": "Pergi ke leekwars.com",
+	"step2": "Ketuk \"Tambahkan ke Layar Utama\"",
+	"step3": "Tekan \"Tambah\"",
+	"step4": "Pintasan ke aplikasi muncul di desktop",
+	"preview1": "Halaman daun bawang",
+	"preview2": "Menu samping",
+	"preview3": "Halaman Pasar",
+	"preview4": "Detail senjata di pasar",
+	"preview5": "Halaman piala",
+	"preview6": "Melihat perkelahian",
+	"preview7": "Mengedit AI",
+	"preview8": "Pemberitahuan push"
+}

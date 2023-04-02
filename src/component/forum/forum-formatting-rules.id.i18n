@@ -1,0 +1,19 @@
+{
+	"source_code": "Kode sumber",
+	"source_code_ex": "kode sumber saya",
+	"big_title": "Judul besar",
+	"big_title_ex": "Judul utama",
+	"sub_title": "Subjudul",
+	"sub_title_ex": "Subjudul",
+	"sub_sub_title": "Sub-subjudul",
+	"sub_sub_title_ex": "Sub-subjudul",
+	"bold": "Berani",
+	"bold_ex": "berani",
+	"italic": "Huruf miring",
+	"italic_ex": "huruf miring",
+	"underlined": "Menggarisbawahi",
+	"underlined_ex": "menggarisbawahi",
+	"striked": "Tongkat",
+	"striked_ex": "tongkat",
+	"basic_html": "HTML dasar diperbolehkan"
+}

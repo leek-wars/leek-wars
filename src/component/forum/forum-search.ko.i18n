@@ -1,0 +1,18 @@
+{
+	"all_categories": "모든 카테고리",
+	"author": "작가",
+	"category": "범주",
+	"no_results_found": "결과가 없습니다...",
+	"not_enough_parameters": "매개변수가 충분하지 않아 검색 시작",
+	"post_by_x_the_x_in_x": "{date}에 {topic}에 {farmer}님이 게시함",
+	"query": "연구",
+	"results": "검색 결과",
+	"search": "연구하다",
+	"sort_by": "정렬 기준",
+	"sort_pertinence": "관련성",
+	"sort_date": "날짜",
+	"sort_votes": "투표",
+	"title": "포럼 검색",
+	"too_few_params": "매개변수가 부족합니다...",
+	"too_short": "너무 짧은 검색..."
+}

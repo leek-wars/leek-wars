@@ -1,0 +1,1 @@
+Leek Wars adalah game strategi berbasis giliran berbasis browser di mana daun bawang bersaing satu sama lain yang dikendalikan oleh kecerdasan buatan (AI) yang harus Anda kodekan. Cara yang menyenangkan untuk belajar pemrograman.

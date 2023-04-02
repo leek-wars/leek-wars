@@ -1,0 +1,9 @@
+{
+	"buy_with": "के साथ खरीदें",
+	"paypal_message": "खरीदारी शुरू करने के लिए एक बटन पर क्लिक करें",
+	"purshase_title": "<i>{1}</i> से <b>{0}</b> क्रिस्टल खरीदना",
+	"purshase_title_simple": "<b>{0}</b> क्रिस्टल की खरीदारी",
+	"purshase_title_text": "{1} के साथ {0} क्रिस्टल खरीदना",
+	"purshase_title_text_simple": "{0} क्रिस्टल खरीदें",
+	"title": "क्रिस्टल बैंक"
+}

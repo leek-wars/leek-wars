@@ -1,0 +1,23 @@
+{
+	"title": "{0}의 역사",
+	"title_html": "전투 역사",
+	"24h": "24시간",
+	"today": "오늘",
+	"2days": "2일",
+	"1week": "일주",
+	"n_fights": "{0} 싸움",
+	"victories": "승리",
+	"draws": "의",
+	"defeats": "패배",
+	"ratio": "비율",
+	"not_found_id": "Id {0}의 리크를 찾을 수 없습니다.",
+	"fight_type": "싸움의 종류",
+	"fight_context": "전투 상황",
+	"solo": "독주",
+	"farmer": "사육자",
+	"team": "승무원",
+	"battle_royale": "배틀 로얄",
+	"challenge": "도전",
+	"garden": "채소밭",
+	"tournament": "토너먼트"
+}

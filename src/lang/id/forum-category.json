@@ -1,0 +1,18 @@
+{
+	"admin": "Admin",
+	"admin_desc": "Kategori disediakan untuk admin",
+	"bug_reports": "Laporan bug",
+	"bug_reports_desc": "Jika Anda merasa telah menemukan bug di dalam game",
+	"composter": "Komposter",
+	"composter_desc": "Untuk membicarakan segalanya ... dan tidak ada apa-apa.",
+	"exploits": "Eksploitasi Anda",
+	"exploits_desc": "Ayo laporkan eksploitasi Anda atau bagikan tangkapan layar Anda yang tidak biasa",
+	"general_discussion": "Diskusi Umum",
+	"general_discussion_desc": "Diskusi Perang Daun Bawang Umum",
+	"help": "Bantuan dan tip",
+	"help_desc": "Jika Anda memiliki pertanyaan tentang permainan atau ingin berbagi tips",
+	"moderation": "Moderasi",
+	"moderation_desc": "Kategori disediakan untuk moderator",
+	"suggestions_ideas": "Saran dan ide",
+	"suggestions_ideas_desc": "Jika Anda memiliki ide perbaikan untuk permainan"
+}

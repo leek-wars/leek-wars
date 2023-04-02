@@ -1,0 +1,13 @@
+{
+	"comments": "코멘트",
+	"farmer": "{0} 브리더 토너먼트",
+	"few_seconds": "몇 초",
+	"next_round_in": "{0}의 다음 라운드",
+	"not_found": "토너먼트 ID {0}을(를) 찾을 수 없습니다.",
+	"send": "보내다",
+	"solo": "{0} 솔로 토너먼트",
+	"team": "{0} 팀 토너먼트",
+	"next_round_supervisor": "다음 라운드는 감독관이 시작합니다.",
+	"generate": "다음 라운드 생성",
+	"generating": "현세대..."
+}

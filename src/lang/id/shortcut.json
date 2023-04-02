@@ -1,0 +1,17 @@
+{
+	"shortcut_1": "<b>Ctrl + S</b>: menyimpan AI saat ini",
+	"shortcut_2": "<b>Ctrl + Q</b>: meluncurkan pengujian",
+	"shortcut_3": "<b>Ctrl + D</b>: menduplikasi baris atau pilihan saat ini",
+	"shortcut_4": "<b>Ctrl + K</b>: menghapus baris saat ini",
+	"shortcut_5": "<b>Ctrl + E</b> atau <b>Ctrl + /</b>: beri komentar/hapus komentar pada baris saat ini",
+	"shortcut_6": "<b>Ctrl + P</b>: membuka file",
+	"shortcut_7": "<b>Ctrl + F</b>: mencari di file saat ini",
+	"shortcut_8": "<b>Alt + atas/bawah</b>: memindahkan baris saat ini ke atas/bawah",
+	"shortcut_9": "<b>Alt + kiri/kanan</b>: beralih di antara file yang terbuka",
+	"shortcut_10": "<b>Ctrl + Spasi</b>: penyelesaian otomatis",
+	"shortcut_11": "<b>Ctrl + Klik</b>: buka definisi simbol",
+	"shortcut_12": "<b>Ctrl + Shift + F</b>: pemformatan dan indentasi kode otomatis",
+	"shortcut_13": "<b>Ctrl + U</b>: lipat/buka blok kode saat ini",
+	"shortcut_14": "<b>Ctrl + J</b>: Ciutkan semua blok kode",
+	"shortcut_15": "<b>Ctrl + I</b>: luaskan semua blok kode"
+}

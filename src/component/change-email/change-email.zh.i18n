@@ -1,0 +1,11 @@
+{
+	"title": "更改电子邮件",
+	"send_confirmation": "发送确认",
+	"enter_a_new_email": "输入新的电子邮件地址",
+	"new_email": "新电子邮件地址",
+	"confirm": "确认",
+	"email_sent": "确认电子邮件已发送至 {email}",
+	"email_changed_success": "电子邮件地址更改成功。",
+	"back_home": "回到家",
+	"error_not_same_email": "输入的地址不一样"
+}

@@ -1,0 +1,18 @@
+{
+	"all_categories": "सब वर्ग",
+	"author": "लेखक",
+	"category": "वर्ग",
+	"no_results_found": "कोई परिणाम नहीं मिला...",
+	"not_enough_parameters": "काफ़ी पैरामीटर नहीं होने पर खोज शुरू होती है",
+	"post_by_x_the_x_in_x": "{किसान} द्वारा {date} को {topic} में पोस्ट किया गया",
+	"query": "शोध करना",
+	"results": "खोज के परिणाम",
+	"search": "अनुसंधान करना",
+	"sort_by": "इसके अनुसार क्रमबद्ध करें",
+	"sort_pertinence": "प्रासंगिकता",
+	"sort_date": "तारीख",
+	"sort_votes": "मतदान",
+	"title": "विश्वकोश",
+	"too_few_params": "पर्याप्त पैरामीटर नहीं...",
+	"too_short": "बहुत छोटा खोजें..."
+}

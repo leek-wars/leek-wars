@@ -1,0 +1,9 @@
+{
+	"buy_with": "Купить с",
+	"paypal_message": "Нажмите кнопку, чтобы начать делать покупки",
+	"purshase_title": "Покупка кристаллов <b>{0}</b> за <i>{1}</i>",
+	"purshase_title_simple": "Покупка кристаллов <b>{0}</b>",
+	"purshase_title_text": "Покупка {0} кристаллов за {1}",
+	"purshase_title_text_simple": "Купить {0} кристаллов",
+	"title": "Хрустальный банк"
+}

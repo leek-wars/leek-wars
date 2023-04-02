@@ -1,0 +1,11 @@
+{
+	"title": "이메일을 바꾸다",
+	"send_confirmation": "확인 보내기",
+	"enter_a_new_email": "새 이메일 주소를 입력하세요.",
+	"new_email": "새 이메일 주소",
+	"confirm": "확인",
+	"email_sent": "{email}로 전송된 확인 이메일",
+	"email_changed_success": "이메일 주소가 성공적으로 변경되었습니다.",
+	"back_home": "홈으로",
+	"error_not_same_email": "입력한 주소가 동일하지 않습니다."
+}

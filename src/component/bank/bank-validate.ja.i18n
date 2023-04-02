@@ -1,0 +1,16 @@
+{
+	"thank_you": "ありがとう",
+	"for_your_support": "あなたのサポートのために！",
+	"you_earn_n_crystals": "{crystals} を獲得しました。",
+	"back_to_bank": "銀行に戻る",
+	"payment_fail": "支払い {0} が失敗しました。",
+	"payment_fail_reason": "支払いに失敗しました: {0}",
+	"payment_success": "支払い {0} が検証されました",
+	"payment_success_simple": "支払いが確認されました",
+	"no_running_payment": "現在の支払いなし",
+	"failed_to_execute_payment_wrong_code": "入力したコードは無効です",
+	"failed_to_execute_payment": "支払いが機能しなかったか、キャンセルされました",
+	"payment_cancelled": "支払いをキャンセルしました",
+	"payment_no_code": "コードなし",
+	"payment_wrong_code": "無効なコード"
+}

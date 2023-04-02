@@ -1,0 +1,12 @@
+{
+	"battle_royale": "Battle royal",
+	"date_format": "{0}",
+	"deleted_farmer": "peternak dihapus",
+	"deleted_leek": "daun bawang dihapus",
+	"deleted_team": "tim dihapus",
+	"n_views": "tidak ada tampilan | 1 tampilan | {n} dilihat",
+	"not_found": "Pertarungan tidak ditemukan :(",
+	"not_found_id": "Fight id <b>{0}</b> tidak ditemukan :(",
+	"pause_message": "Klik atau tekan 'P' untuk melanjutkan",
+	"starter": "Melawan Peluncur"
+}

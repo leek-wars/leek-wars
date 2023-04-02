@@ -1,0 +1,11 @@
+{
+	"documentation": "文档",
+	"documentation_desc": "所有 <b>LeekScript</b> 函数和常量的详细列表",
+	"general_help": "发现游戏、运营和信息",
+	"rewatch_didactitiel": "查看教程",
+	"title": "援助",
+	"tutorial": "LeekScript 教程",
+	"tutorial_desc": "<b>LeekScript</b> 语言、规范和语法简介",
+	"wiki": "维基百科",
+	"wiki_desc": "由玩家编写的 Wiki，包含大量有关游戏的信息"
+}

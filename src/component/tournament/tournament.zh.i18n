@@ -1,0 +1,13 @@
+{
+	"comments": "评论",
+	"farmer": "{0} 饲养员锦标赛",
+	"few_seconds": "几秒钟",
+	"next_round_in": "下一轮在 {0}",
+	"not_found": "找不到比赛 ID {0} :(",
+	"send": "发送",
+	"solo": "{0} 个人赛",
+	"team": "{0} 团队锦标赛",
+	"next_round_supervisor": "下一轮将由主管发起",
+	"generate": "生成下一轮",
+	"generating": "当前这一代..."
+}

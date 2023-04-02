@@ -1,0 +1,19 @@
+{
+	"source_code": "Исходный код",
+	"source_code_ex": "мой исходный код",
+	"big_title": "Большой заголовок",
+	"big_title_ex": "Основное название",
+	"sub_title": "Подзаголовок",
+	"sub_title_ex": "Подзаголовок",
+	"sub_sub_title": "Подсубтитры",
+	"sub_sub_title_ex": "Подсубтитры",
+	"bold": "Смелый",
+	"bold_ex": "смелый",
+	"italic": "Курсив",
+	"italic_ex": "курсив",
+	"underlined": "Подчеркнуть",
+	"underlined_ex": "подчеркнуть",
+	"striked": "Стержень",
+	"striked_ex": "стержень",
+	"basic_html": "Разрешен базовый HTML"
+}

@@ -1,0 +1,16 @@
+{
+	"cancel": "キャンセル",
+	"me": "自分",
+	"new_message": "新しいメッセージ...",
+	"quit": "やめる",
+	"quit_confirm": "会話を終了しますか？以前のメッセージを表示できなくなります。",
+	"quit_conversation": "会話から離れる",
+	"send": "送信",
+	"title": "猫",
+	"cat_team": "クルー",
+	"cat_private": "プライベートメッセージ",
+	"team": "クルー",
+	"enable_notifications": "通知を有効にします",
+	"disable_notifications": "通知を無効にする",
+	"admin_warn": "提案をしたり、重大ではないバグを報告したりするには、{フォーラム} でトピックを作成してください。"
+}

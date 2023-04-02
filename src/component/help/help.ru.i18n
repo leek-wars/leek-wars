@@ -1,0 +1,11 @@
+{
+	"documentation": "Документация",
+	"documentation_desc": "Подробный список всех функций и констант <b>LeekScript</b>",
+	"general_help": "Открытие игры, операции и информация",
+	"rewatch_didactitiel": "Просмотрите учебник",
+	"title": "Помогать",
+	"tutorial": "Учебник по LeekScript",
+	"tutorial_desc": "Введение в язык <b>LeekScript</b>, спецификации и синтаксис",
+	"wiki": "Вики",
+	"wiki_desc": "Вики, написанная игроками, содержит много информации об игре."
+}

@@ -1,0 +1,18 @@
+{
+	"admin": "行政",
+	"admin_desc": "为管理员保留的类别",
+	"bug_reports": "错误报告",
+	"bug_reports_desc": "如果您认为您在游戏中发现了错误",
+	"composter": "堆肥机",
+	"composter_desc": "无所不谈……什么都没有。",
+	"exploits": "你的功绩",
+	"exploits_desc": "快来报告您的功绩或分享您不寻常的屏幕截图",
+	"general_discussion": "一般讨论;一般交流",
+	"general_discussion_desc": "一般韭葱战争讨论",
+	"help": "帮助和提示",
+	"help_desc": "如果您对游戏有疑问或想分享技巧",
+	"moderation": "适度",
+	"moderation_desc": "为版主保留的类别",
+	"suggestions_ideas": "建议和想法",
+	"suggestions_ideas_desc": "如果您对游戏有任何改进的想法"
+}

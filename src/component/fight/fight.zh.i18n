@@ -1,0 +1,12 @@
+{
+	"battle_royale": "大逃杀",
+	"date_format": "{0}",
+	"deleted_farmer": "饲养员已删除",
+	"deleted_leek": "韭菜去掉",
+	"deleted_team": "删除的团队",
+	"n_views": "没有观点 | 1 视图 | {n} 次观看",
+	"not_found": "找不到战斗:(",
+	"not_found_id": "战斗 ID <b>{0}</b> 未找到 :(",
+	"pause_message": "单击或按“P”继续",
+	"starter": "战斗发射器"
+}

@@ -1,0 +1,10 @@
+{
+	"report_farmer": "Сообщить {0}",
+	"reporting_deleted": "Отчет удален",
+	"title": "На модерации",
+	"warning_sent": "Предупреждение отправлено!",
+	"you_are_muted": "Вас заставили замолчать.",
+	"you_have_been_muted_by_x": "{0} заставил вас замолчать.",
+	"you_have_been_unmuted_by_x": "{0} позволяет вам снова говорить в чате.",
+	"you_must_choose_reason": "Вы должны выбрать узор!"
+}

@@ -1,0 +1,13 @@
+{
+	"4_leeks_only": "あなたはすでに4つのネギを持っています！",
+	"create": "作成",
+	"error_under_required_level_1": "最初のニラはレベル {0} 以上でなければなりません",
+	"error_under_required_level_2": "2 番目のネギは少なくともレベル {0} でなければなりません",
+	"error_under_required_level_3": "3 番目のネギはレベル {0} 以上でなければなりません",
+	"name": "名前",
+	"name_length": "ニラの名前は {0} から {1} 文字の間である必要があります",
+	"name_format": "名前に特殊文字は使用できません",
+	"not_enough_money": "あなたは十分なお金を持っていません",
+	"price": "価格",
+	"title": "新ネギ"
+}

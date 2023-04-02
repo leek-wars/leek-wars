@@ -1,0 +1,21 @@
+{
+	"by_x_the_d": "{日付}の{農家}による",
+	"cancel": "キャンセル",
+	"create_new_topic": "トピックを作成",
+	"create_topic": "トピックを作成",
+	"error_invalid_title": "トピックのタイトルは {min} から {max} 文字の間である必要があります",
+	"n_topic_n_messages": "{0} トピック / {1} 投稿",
+	"last": "最後",
+	"last_message": "{農家}による最後の{日付}",
+	"last_by_x": "{著者}による",
+	"locked": "トピックがロックされました",
+	"messages": "投稿",
+	"new_topic_message": "トピックメッセージ",
+	"new_topic_title": "トピックタイトル",
+	"pinned": "ぶら下げ対象",
+	"resolved": "トピックが解決されました",
+	"topic": "主題",
+	"mark_as_read": "既読にする",
+	"mark_as_read_text": "すべてのフォーラム カテゴリのすべてのトピックが既読としてマークされます。このアクションの後、新しいトピックまたは新しい返信のみが表示されます。",
+	"show_resolved": "解決済みのトピックを表示"
+}

@@ -1,0 +1,21 @@
+{
+	"bugs": "कीड़े",
+	"chips_used": "चिप्स का इस्तेमाल किया",
+	"criticals": "सीसी",
+	"damage_inflicted": "नुकसान पहुंचाया",
+	"damage_received": "क्षति प्राप्त हुई",
+	"heal_casted": "उपचार शुरू किया",
+	"heal_received": "देखभाल प्राप्त हुई",
+	"kills": "हत्या",
+	"mp_used": "पीएम इस्तेमाल किया",
+	"nova_received": "नोवा ने प्राप्त किया",
+	"operations": "ऑप्स",
+	"operations_per_turn": "सेशन / बारी",
+	"resurrections": "जीवन में लौट आता है",
+	"shootings": "फुहार",
+	"summons": "बुलाने",
+	"team_n": "टीम {0}",
+	"tp_per_turn": "पीटी / बारी का इस्तेमाल किया",
+	"tp_used": "पीटी का इस्तेमाल किया",
+	"turns_played": "राउंड खेले"
+}

@@ -1,0 +1,21 @@
+{
+	"by_x_the_d": "由{farmer}于{date}",
+	"cancel": "取消",
+	"create_new_topic": "创建话题",
+	"create_topic": "创建主题",
+	"error_invalid_title": "主题标题必须介于 {min} 和 {max} 个字符之间",
+	"n_topic_n_messages": "{0} 个主题/{1} 个帖子",
+	"last": "最后的",
+	"last_message": "{farmer} 的最后 {date}",
+	"last_by_x": "由{作者}",
+	"locked": "主题已锁定",
+	"messages": "帖子",
+	"new_topic_message": "话题留言",
+	"new_topic_title": "主题标题",
+	"pinned": "挂题",
+	"resolved": "话题解决了",
+	"topic": "主题",
+	"mark_as_read": "标记为已读",
+	"mark_as_read_text": "所有论坛类别中的所有主题都将标记为已读。此操作后，将仅显示新主题或新回复。",
+	"show_resolved": "显示已解决的主题"
+}

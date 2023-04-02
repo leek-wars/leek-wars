@@ -1,0 +1,17 @@
+{
+	"shortcut_1": "<b>Ctrl + S</b>: 現在の AI を保存",
+	"shortcut_2": "<b>Ctrl + Q</b>: テストを開始します",
+	"shortcut_3": "<b>Ctrl + D</b>: 現在の行または選択範囲を複製します",
+	"shortcut_4": "<b>Ctrl + K</b>: 現在の行を削除",
+	"shortcut_5": "<b>Ctrl + E</b> または <b>Ctrl + /</b>: 現在の行をコメント化/コメント解除",
+	"shortcut_6": "<b>Ctrl + P</b>: ファイルを開く",
+	"shortcut_7": "<b>Ctrl + F</b>: 現在のファイルを検索",
+	"shortcut_8": "<b>Alt + 上/下</b>: 現在の行を上/下に移動",
+	"shortcut_9": "<b>Alt + 左/右</b>: 開いているファイルを切り替える",
+	"shortcut_10": "<b>Ctrl + スペース</b>: 自動補完",
+	"shortcut_11": "<b>Ctrl + クリック</b>: シンボル定義に移動",
+	"shortcut_12": "<b>Ctrl + Shift + F</b>: コードの自動フォーマットとインデント",
+	"shortcut_13": "<b>Ctrl + U</b>: 現在のコード ブロックを折りたたむ/展開する",
+	"shortcut_14": "<b>Ctrl + J</b>: すべてのコード ブロックを折りたたむ",
+	"shortcut_15": "<b>Ctrl + I</b>: すべてのコード ブロックを展開します"
+}

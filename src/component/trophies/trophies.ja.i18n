@@ -1,0 +1,16 @@
+{
+	"hide_unlocked": "取得した非表示",
+	"group_by_categories": "カテゴリー",
+	"sort_by": "{0}で並べ替え",
+	"sort_date": "日にち",
+	"sort_index": "デフォルト",
+	"sort_points": "ポイント",
+	"sort_rarity": "希少性",
+	"stats": "統計",
+	"title": "{0}トロフィー",
+	"title_me": "私のトロフィー",
+	"trophies": "トロフィー",
+	"best_trophies": "最高のトロフィー",
+	"latest_trophies": "最新のトロフィー",
+	"rarest_trophies": "最もレアなトロフィー"
+}

@@ -1,0 +1,13 @@
+{
+	"comments": "コメント",
+	"farmer": "{0}ブリーダートーナメント",
+	"few_seconds": "数秒",
+	"next_round_in": "{0}で次のラウンド",
+	"not_found": "トーナメント ID {0} が見つかりません:(",
+	"send": "送信",
+	"solo": "{0}ソロトーナメント",
+	"team": "{0}チームトーナメント",
+	"next_round_supervisor": "次のラウンドはスーパーバイザーによって開始されます",
+	"generate": "次のラウンドを生成する",
+	"generating": "現世代..."
+}

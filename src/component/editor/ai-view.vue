@@ -10,7 +10,6 @@
 					<v-icon v-if="error.level === 0" class="tooltip error">mdi-close-circle-outline</v-icon>
 					<v-icon v-else-if="error.level === 1" class="tooltip warning">mdi-alert-circle-outline</v-icon>
 					<v-icon v-else class="tooltip todo">mdi-format-list-checks</v-icon>
-					<!-- {{ $i18n.t('ls_error.' + error[5], error[6]) }} -->
 					{{ error.info }}
 				</tooltip>
 			</template>
@@ -958,7 +957,6 @@
 			for (const entrypoint in this.ai.problems) {
 				for (const error of this.ai.problems[entrypoint]) {
 					if (error.contains(editorPos)) {
-						// this.errorTooltipText = i18n.t('ls_error.' + error[5], error[6]) as string
 						this.errorTooltipText = error.info
 						this.errorTooltip = true
 						this.errorLevel = error.level

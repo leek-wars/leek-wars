@@ -9,7 +9,6 @@ import fight_pack from '@/lang/it/fight-pack.json'
 import forum_category from '@/lang/it/forum-category.json'
 import hat from "@/lang/it/hat.json"
 import leekscript from "@/lang/it/leekscript.json"
-import ls_error from "@/lang/it/ls_error.json"
 import mail from "@/lang/it/mail.json"
 import main from "@/lang/it/main.json"
 import notification from "@/lang/it/notification.json"
@@ -21,7 +20,7 @@ import trophy from "@/lang/it/trophy.json"
 import warning from '@/lang/it/warning.json'
 import weapon from '@/lang/it/weapon.json'
 
-const translations = { main, changelog, characteristic, chip, flag, 'fight-pack': fight_pack, 'forum-category': forum_category, weapon, potion, effect, country, entity, hat, leekscript, ls_error, mail, notification, resource, shortcut, trophy, pomp, warning }
+const translations = { main, changelog, characteristic, chip, flag, 'fight-pack': fight_pack, 'forum-category': forum_category, weapon, potion, effect, country, entity, hat, leekscript, mail, notification, resource, shortcut, trophy, pomp, warning }
 
 import { setTranslations } from "@/locale"
 // import wiki from '@/wiki/fr.wiki'

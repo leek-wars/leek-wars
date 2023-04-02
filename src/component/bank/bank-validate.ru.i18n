@@ -1,0 +1,16 @@
+{
+	"thank_you": "СПАСИБО",
+	"for_your_support": "для вашей поддержки!",
+	"you_earn_n_crystals": "Вы получили {кристаллов}.",
+	"back_to_bank": "Вернуться в банк",
+	"payment_fail": "Платеж {0} не выполнен.",
+	"payment_fail_reason": "Платеж не выполнен: {0}",
+	"payment_success": "Платеж {0} подтвержден",
+	"payment_success_simple": "Платеж подтвержден",
+	"no_running_payment": "нет текущего платежа",
+	"failed_to_execute_payment_wrong_code": "введенный вами код недействителен",
+	"failed_to_execute_payment": "платеж не прошел или был отменен",
+	"payment_cancelled": "Вы отменили платеж",
+	"payment_no_code": "Нет кодов",
+	"payment_wrong_code": "Неверный код"
+}

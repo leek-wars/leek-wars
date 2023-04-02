@@ -1,0 +1,16 @@
+{
+	"hide_unlocked": "얻은 숨기기",
+	"group_by_categories": "카테고리",
+	"sort_by": "{0}로 정렬",
+	"sort_date": "날짜",
+	"sort_index": "기본",
+	"sort_points": "포인트들",
+	"sort_rarity": "부족",
+	"stats": "통계",
+	"title": "{0} 트로피",
+	"title_me": "내 트로피",
+	"trophies": "트로피",
+	"best_trophies": "최고의 트로피",
+	"latest_trophies": "최신 트로피",
+	"rarest_trophies": "가장 희귀한 트로피"
+}

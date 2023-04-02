@@ -1,0 +1,14 @@
+{
+	"connection": "登录",
+	"error_banned": "您的帐户已被禁止",
+	"error_inactive": "您的帐户尚未激活，请转到通过电子邮件发送的链接。",
+	"error_invalid": "凭据不正确。",
+	"error_server": "服务器错误。请在几分钟后再试一次",
+	"forgot_password": "忘记密码了吗 ？",
+	"incorrect_login": "登录名或密码不正确。",
+	"keep_connected": "保持联系",
+	"login": "育种者姓名或电子邮件",
+	"password": "密码",
+	"success": "您已连接",
+	"title": "登录"
+}

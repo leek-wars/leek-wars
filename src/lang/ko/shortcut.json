@@ -1,0 +1,17 @@
+{
+	"shortcut_1": "<b>Ctrl + S</b>: 현재 AI 저장",
+	"shortcut_2": "<b>Ctrl + Q</b>: 테스트 시작",
+	"shortcut_3": "<b>Ctrl + D</b>: 현재 줄 또는 선택 항목 복제",
+	"shortcut_4": "<b>Ctrl + K</b>: 현재 줄 삭제",
+	"shortcut_5": "<b>Ctrl + E</b> 또는 <b>Ctrl + /</b>: 현재 줄 주석 처리/주석 해제",
+	"shortcut_6": "<b>Ctrl + P</b>: 파일 열기",
+	"shortcut_7": "<b>Ctrl + F</b>: 현재 파일에서 검색",
+	"shortcut_8": "<b>Alt + 위/아래</b>: 현재 줄을 위/아래로 이동",
+	"shortcut_9": "<b>Alt + 왼쪽/오른쪽</b>: 열려 있는 파일 간 전환",
+	"shortcut_10": "<b>Ctrl + Space</b>: 자동 완성",
+	"shortcut_11": "<b>Ctrl + 클릭</b>: 기호 정의로 이동",
+	"shortcut_12": "<b>Ctrl + Shift + F</b>: 자동 코드 서식 지정 및 들여쓰기",
+	"shortcut_13": "<b>Ctrl + U</b>: 현재 코드 블록 접기/펼치기",
+	"shortcut_14": "<b>Ctrl + J</b>: 모든 코드 블록 접기",
+	"shortcut_15": "<b>Ctrl + I</b>: 모든 코드 블록 확장"
+}

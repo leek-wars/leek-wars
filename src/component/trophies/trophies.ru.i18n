@@ -1,0 +1,16 @@
+{
+	"hide_unlocked": "Скрыть полученный",
+	"group_by_categories": "Категории",
+	"sort_by": "Сортировать по {0}",
+	"sort_date": "Дата",
+	"sort_index": "По умолчанию",
+	"sort_points": "Точки",
+	"sort_rarity": "Дефицит",
+	"stats": "Статистика",
+	"title": "{0} Трофеи",
+	"title_me": "Мои трофеи",
+	"trophies": "Трофеи",
+	"best_trophies": "Лучшие трофеи",
+	"latest_trophies": "Последние трофеи",
+	"rarest_trophies": "Редчайшие трофеи"
+}

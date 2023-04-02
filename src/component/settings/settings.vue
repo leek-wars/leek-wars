@@ -87,7 +87,8 @@
 				<div v-for="language in LeekWars.languages" :key="language.code" v-ripple :class="{selected: language.code == $i18n.locale}" :lang="language.code" class="language" @click="LeekWars.setLocale(language.code)">
 					<flag :code="language.country" :clickable="false" />
 					<br>
-					{{ language.name }} ({{ language.code }})
+					{{ language.name }}
+					<!-- ({{ language.code }}) -->
 					<span v-if="language.beta" class="beta">bêta</span>
 				</div>
 			</panel>
@@ -503,7 +504,7 @@
 		text-align: center;
 		.language {
 			display: inline-block;
-			padding: 5px 7px;
+			padding: 7px;
 			text-align: center;
 			margin: 5px;
 			cursor: pointer;
@@ -519,6 +520,10 @@
 				border: 1px solid #aaa;
 				border-radius: 4px;
 				font-size: 12px;
+			}
+			.flag {
+				height: 22px;
+				margin-bottom: 10px;
 			}
 		}
 	}
@@ -686,9 +691,5 @@
 		color: red;
 		font-size: 12px;
 		margin: 5px 0;
-	}
-	.flag {
-		height: 25px;
-		margin-bottom: 10px;
 	}
 </style>

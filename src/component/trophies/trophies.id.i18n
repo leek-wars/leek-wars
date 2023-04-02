@@ -1,0 +1,16 @@
+{
+	"hide_unlocked": "Sembunyikan diperoleh",
+	"group_by_categories": "Kategori",
+	"sort_by": "Urutkan menurut {0}",
+	"sort_date": "Tanggal",
+	"sort_index": "Bawaan",
+	"sort_points": "Poin",
+	"sort_rarity": "Kelangkaan",
+	"stats": "Statistik",
+	"title": "{0} Piala",
+	"title_me": "Trofi saya",
+	"trophies": "Piala",
+	"best_trophies": "Trofi terbaik",
+	"latest_trophies": "Trofi terbaru",
+	"rarest_trophies": "Trofi paling langka"
+}

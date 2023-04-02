@@ -1,0 +1,13 @@
+{
+	"comments": "Komentar",
+	"farmer": "{0} Turnamen Peternak",
+	"few_seconds": "beberapa detik",
+	"next_round_in": "Babak berikutnya di {0}",
+	"not_found": "ID turnamen {0} tidak ditemukan :(",
+	"send": "Mengirim",
+	"solo": "{0} Turnamen Tunggal",
+	"team": "{0} Turnamen Tim",
+	"next_round_supervisor": "Babak selanjutnya akan diprakarsai oleh pengawas",
+	"generate": "Menghasilkan putaran berikutnya",
+	"generating": "Generasi saat ini..."
+}

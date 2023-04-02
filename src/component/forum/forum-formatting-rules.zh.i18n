@@ -1,0 +1,19 @@
+{
+	"source_code": "源代码",
+	"source_code_ex": "我的源代码",
+	"big_title": "大标题",
+	"big_title_ex": "主题",
+	"sub_title": "字幕",
+	"sub_title_ex": "字幕",
+	"sub_sub_title": "副标题",
+	"sub_sub_title_ex": "副标题",
+	"bold": "大胆的",
+	"bold_ex": "大胆的",
+	"italic": "斜体字",
+	"italic_ex": "斜体字",
+	"underlined": "强调",
+	"underlined_ex": "强调",
+	"striked": "杆",
+	"striked_ex": "杆",
+	"basic_html": "允许基本 HTML"
+}

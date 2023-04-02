@@ -1,0 +1,16 @@
+{
+	"hide_unlocked": "प्राप्त छुपाएं",
+	"group_by_categories": "श्रेणियाँ",
+	"sort_by": "{0} के अनुसार छाँटें",
+	"sort_date": "तारीख",
+	"sort_index": "गलती करना",
+	"sort_points": "अंक",
+	"sort_rarity": "कमी",
+	"stats": "आंकड़े",
+	"title": "{0} ट्राफियां",
+	"title_me": "मेरी ट्राफियां",
+	"trophies": "ट्राफी",
+	"best_trophies": "सर्वश्रेष्ठ ट्राफियां",
+	"latest_trophies": "नवीनतम ट्राफियां",
+	"rarest_trophies": "सबसे दुर्लभ ट्राफियां"
+}

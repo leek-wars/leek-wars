@@ -1,0 +1,21 @@
+{
+	"by_x_the_d": "{날짜}에 {farmer}님이 작성",
+	"cancel": "취소",
+	"create_new_topic": "주제 만들기",
+	"create_topic": "주제 만들기",
+	"error_invalid_title": "주제 제목은 {min}자에서 {max}자 사이여야 합니다.",
+	"n_topic_n_messages": "{0} 주제 / {1} 게시물",
+	"last": "마지막",
+	"last_message": "{farmer}의 마지막 {날짜}",
+	"last_by_x": "{작성자}",
+	"locked": "주제 잠김",
+	"messages": "게시물",
+	"new_topic_message": "주제 메시지",
+	"new_topic_title": "주제 제목",
+	"pinned": "교수형 주제",
+	"resolved": "해결된 주제",
+	"topic": "주제",
+	"mark_as_read": "읽은 상태로 표시",
+	"mark_as_read_text": "모든 포럼 카테고리의 모든 주제는 읽은 것으로 표시됩니다. 이 작업 후에는 새 주제 또는 새 답글만 표시됩니다.",
+	"show_resolved": "해결된 주제 표시"
+}

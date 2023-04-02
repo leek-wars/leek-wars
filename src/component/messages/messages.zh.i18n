@@ -1,0 +1,16 @@
+{
+	"cancel": "取消",
+	"me": "我",
+	"new_message": "新消息...",
+	"quit": "辞职",
+	"quit_confirm": "你想离开对话吗？您将无法再看到以前的消息。",
+	"quit_conversation": "离开对话",
+	"send": "发送",
+	"title": "猫",
+	"cat_team": "全体人员",
+	"cat_private": "私人信息",
+	"team": "全体人员",
+	"enable_notifications": "启用通知",
+	"disable_notifications": "停用通知",
+	"admin_warn": "要提出建议或报告非严重错误，请在 {forum} 上创建一个主题。"
+}

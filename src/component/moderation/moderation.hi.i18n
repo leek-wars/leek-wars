@@ -1,0 +1,10 @@
+{
+	"report_farmer": "रिपोर्ट {0}",
+	"reporting_deleted": "रिपोर्ट निकाली गई",
+	"title": "संयम",
+	"warning_sent": "चेतावनी भेजी गई!",
+	"you_are_muted": "आपको खामोश कर दिया गया है।",
+	"you_have_been_muted_by_x": "आपको {0} ने खामोश कर दिया है।",
+	"you_have_been_unmuted_by_x": "{0} आपको चैट पर फिर से बोलने की अनुमति देता है।",
+	"you_must_choose_reason": "आपको एक पैटर्न चुनना होगा!"
+}

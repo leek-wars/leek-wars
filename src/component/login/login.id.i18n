@@ -1,0 +1,14 @@
+{
+	"connection": "Gabung",
+	"error_banned": "Akun Anda telah diblokir",
+	"error_inactive": "Akun Anda belum diaktifkan, silakan buka tautan yang dikirim melalui email.",
+	"error_invalid": "Kredensial salah.",
+	"error_server": "Server error. Silakan coba lagi dalam beberapa menit",
+	"forgot_password": "Lupa kata sandi Anda ?",
+	"incorrect_login": "Login atau kata sandi salah.",
+	"keep_connected": "Tetap terhubung",
+	"login": "Nama peternak atau email",
+	"password": "Kata sandi",
+	"success": "Anda terhubung",
+	"title": "Gabung"
+}

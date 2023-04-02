@@ -1,0 +1,16 @@
+{
+	"price": "価格",
+	"price_lot": "バッチ価格",
+	"quantity": "量",
+	"name": "名前",
+	"level": "レベル",
+	"date": "日にち",
+	"all": "全て",
+	"weapons": "兵器",
+	"chips": "ノミ",
+	"potions": "ポーション",
+	"hats": "帽子",
+	"pomps": "装置",
+	"resources": "資力",
+	"rarity": "希少性"
+}

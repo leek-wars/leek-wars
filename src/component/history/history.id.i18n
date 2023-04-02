@@ -1,0 +1,23 @@
+{
+	"title": "Sejarah {0}",
+	"title_html": "Sejarah Pertempuran",
+	"24h": "24 jam",
+	"today": "Hari ini",
+	"2days": "2 hari",
+	"1week": "1 minggu",
+	"n_fights": "{0} pertarungan",
+	"victories": "kemenangan",
+	"draws": "dasi",
+	"defeats": "kekalahan",
+	"ratio": "perbandingan",
+	"not_found_id": "Leek dari id {0} tidak ditemukan",
+	"fight_type": "Jenis pertempuran",
+	"fight_context": "Konteks pertempuran",
+	"solo": "Solo",
+	"farmer": "Peternak",
+	"team": "Awak kapal",
+	"battle_royale": "Battle Royale",
+	"challenge": "Tantangan",
+	"garden": "Kebun sayur",
+	"tournament": "Turnamen"
+}

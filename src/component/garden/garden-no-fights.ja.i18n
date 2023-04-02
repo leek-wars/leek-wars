@@ -1,0 +1,5 @@
+{
+	"buy_fights": "今すぐ Habs {hab} または {market} の Crystals {crystal} で戦いを購入してください。",
+	"next_fight_in": "{time}で{fights}の新しい戦い",
+	"no_more_fights": "もっと戦います！"
+}

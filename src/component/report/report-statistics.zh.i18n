@@ -1,0 +1,21 @@
+{
+	"bugs": "虫子",
+	"chips_used": "使用的芯片",
+	"criticals": "CC",
+	"damage_inflicted": "造成的伤害",
+	"damage_received": "受到伤害",
+	"heal_casted": "治疗开始",
+	"heal_received": "得到照顾",
+	"kills": "击杀",
+	"mp_used": "下午使用",
+	"nova_received": "新星收到",
+	"operations": "行动",
+	"operations_per_turn": "操作/转弯",
+	"resurrections": "重获新生",
+	"shootings": "镜头",
+	"summons": "召唤",
+	"team_n": "团队{0}",
+	"tp_per_turn": "PT/回合使用",
+	"tp_used": "使用的 PT",
+	"turns_played": "回合数"
+}

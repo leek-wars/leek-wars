@@ -1,0 +1,21 @@
+{
+	"by_x_the_d": "Oleh {farmer} pada {date}",
+	"cancel": "Membatalkan",
+	"create_new_topic": "Buat topik",
+	"create_topic": "Buat topik",
+	"error_invalid_title": "Judul topik harus antara {min} dan {max} karakter",
+	"n_topic_n_messages": "{0} topik / {1} pos",
+	"last": "Terakhir",
+	"last_message": "{tanggal} terakhir oleh {farmer}",
+	"last_by_x": "oleh {penulis}",
+	"locked": "Topik terkunci",
+	"messages": "Posting",
+	"new_topic_message": "Pesan topik",
+	"new_topic_title": "Judul topik",
+	"pinned": "Subjek gantung",
+	"resolved": "Topik terpecahkan",
+	"topic": "Subjek",
+	"mark_as_read": "Tandai sebagai membaca",
+	"mark_as_read_text": "Semua topik di semua kategori forum akan ditandai sebagai telah dibaca. Setelah tindakan ini, hanya topik baru atau balasan baru yang akan ditampilkan.",
+	"show_resolved": "Tampilkan topik yang diselesaikan"
+}

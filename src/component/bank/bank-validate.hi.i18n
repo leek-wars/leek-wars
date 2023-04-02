@@ -1,0 +1,16 @@
+{
+	"thank_you": "धन्यवाद",
+	"for_your_support": "आपकी मदद के लिए!",
+	"you_earn_n_crystals": "आपको {क्रिस्टल} मिले हैं।",
+	"back_to_bank": "वापस बैंक में",
+	"payment_fail": "भुगतान {0} विफल रहा।",
+	"payment_fail_reason": "भुगतान विफल: {0}",
+	"payment_success": "भुगतान {0} सत्यापित",
+	"payment_success_simple": "भुगतान मान्य",
+	"no_running_payment": "कोई वर्तमान भुगतान नहीं",
+	"failed_to_execute_payment_wrong_code": "आपके द्वारा दर्ज किया गया कोड मान्य नहीं है",
+	"failed_to_execute_payment": "भुगतान काम नहीं किया या रद्द कर दिया गया",
+	"payment_cancelled": "आपने भुगतान रद्द कर दिया",
+	"payment_no_code": "कोई कोड नहीं",
+	"payment_wrong_code": "अवैध कोड"
+}

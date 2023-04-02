@@ -1,0 +1,19 @@
+{
+	"source_code": "소스 코드",
+	"source_code_ex": "내 소스 코드",
+	"big_title": "큰 제목",
+	"big_title_ex": "메인 타이틀",
+	"sub_title": "부제",
+	"sub_title_ex": "부제",
+	"sub_sub_title": "부제목",
+	"sub_sub_title_ex": "부제목",
+	"bold": "용감한",
+	"bold_ex": "용감한",
+	"italic": "이탤릭체",
+	"italic_ex": "이탤릭체",
+	"underlined": "밑줄",
+	"underlined_ex": "밑줄",
+	"striked": "막대",
+	"striked_ex": "막대",
+	"basic_html": "기본 HTML 허용"
+}

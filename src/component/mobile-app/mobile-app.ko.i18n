@@ -1,0 +1,19 @@
+{
+	"app_installation": "모바일에 앱 설치",
+	"app_info": "이 지침에 따라 Leek Wars 웹 애플리케이션(<a href='https://en.wikipedia.org/wiki/Progressive_web_app'>PWA</a>)을 설치할 수 있습니다.\n모바일에서.\n이 기능은 OS 및 브라우저에 따라 다소 잘 관리되며 설치 모드는 서로 다를 수 있습니다.\n지침에 사용된 브라우저는 웹 앱을 가장 잘 처리하는 것으로 보이는 <b>Android</b>의 <b>Chrome</b>입니다.",
+	"app_preview": "앱 개요",
+	"title": "모바일 앱",
+	"step_n": "{0}단계",
+	"step1": "Leekwars.com 바로가기",
+	"step2": "\"홈 화면에 추가\"를 누릅니다.",
+	"step3": "\"추가\"를 누르십시오",
+	"step4": "응용 프로그램 바로 가기가 바탕 화면에 나타납니다.",
+	"preview1": "부추 페이지",
+	"preview2": "사이드 메뉴",
+	"preview3": "시장 페이지",
+	"preview4": "시장에서 무기의 세부 사항",
+	"preview5": "트로피 페이지",
+	"preview6": "싸움 보기",
+	"preview7": "AI 편집",
+	"preview8": "푸시 알림"
+}

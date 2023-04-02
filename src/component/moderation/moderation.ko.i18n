@@ -1,0 +1,10 @@
+{
+	"report_farmer": "{0} 신고",
+	"reporting_deleted": "신고가 삭제되었습니다.",
+	"title": "절도",
+	"warning_sent": "경고를 보냈습니다!",
+	"you_are_muted": "당신은 침묵했습니다.",
+	"you_have_been_muted_by_x": "{0}에 의해 무음 처리되었습니다.",
+	"you_have_been_unmuted_by_x": "{0}을(를) 사용하면 채팅에서 다시 말할 수 있습니다.",
+	"you_must_choose_reason": "패턴을 선택해야 합니다!"
+}

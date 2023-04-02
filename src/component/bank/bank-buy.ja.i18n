@@ -1,0 +1,9 @@
+{
+	"buy_with": "で購入",
+	"paypal_message": "ボタンをクリックしてショッピングを開始",
+	"purshase_title": "<i>{1}</i>で<b>{0}</b>クリスタルを購入",
+	"purshase_title_simple": "<b>{0}</b> クリスタルの購入",
+	"purshase_title_text": "{1}で{0}クリスタルを購入",
+	"purshase_title_text_simple": "{0}クリスタルを購入",
+	"title": "クリスタルバンク"
+}

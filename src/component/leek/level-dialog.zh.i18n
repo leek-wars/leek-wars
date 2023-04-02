@@ -1,0 +1,13 @@
+{
+	"available_on_market": "（可在市场购买）",
+	"new_chips": "新芯片",
+	"new_weapons": "新武器",
+	"no_news": "此级别没有新项目。",
+	"title": "<b>{0}</b> 通过级别 <b>{1}</b>！",
+	"301_title": "恭喜！",
+	"301_message": "您已达到 Leek Wars 的最高等级，您的韭菜已到达其进化的最后阶段！<br>您将获得<b>黄金药水</b>和<b>皇冠</b>作为奖励。",
+	"new_weapon": "新武器槽",
+	"new_chip": "新芯片插槽",
+	"total_weapons": "{0} 总武器",
+	"total_chips": "总共 {0} 个筹码"
+}

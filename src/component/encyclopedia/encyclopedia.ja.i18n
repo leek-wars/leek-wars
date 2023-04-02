@@ -1,0 +1,11 @@
+{
+	"n_contributors": "寄稿者なし | <b>{n}</b> 人の貢献者 | <b>{n}</b> 人の貢献者",
+	"search": "ページを探す",
+	"created_by_x_the_y": "{date} に {farmer} によって作成されました",
+	"edited_by_x_the_y": "{date} に {farmer} によって編集されました",
+	"n_views": "{v}ビュー",
+	"n_contributions": "{n} の貢献",
+	"not_found": "ページ「{name}」はフランスの百科事典には存在しません。",
+	"contributor_create": "あなたは寄稿者です😎 [編集] をクリックして、このページの編集を開始します",
+	"locked": "チャプターを完了すると、完全な AI のロックが解除されます"
+}

@@ -1,0 +1,16 @@
+{
+	"hide_unlocked": "隐藏获得",
+	"group_by_categories": "类别",
+	"sort_by": "按 {0} 排序",
+	"sort_date": "日期",
+	"sort_index": "默认",
+	"sort_points": "积分",
+	"sort_rarity": "缺乏",
+	"stats": "统计数据",
+	"title": "{0} 个奖杯",
+	"title_me": "我的奖杯",
+	"trophies": "奖杯",
+	"best_trophies": "最佳奖杯",
+	"latest_trophies": "最新奖杯",
+	"rarest_trophies": "最稀有的奖杯"
+}

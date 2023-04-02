@@ -1,0 +1,16 @@
+{
+	"thank_you": "감사해요",
+	"for_your_support": "당신의 지원을 위해!",
+	"you_earn_n_crystals": "{crystals}을(를) 얻었습니다.",
+	"back_to_bank": "은행으로 돌아가기",
+	"payment_fail": "{0} 결제에 실패했습니다.",
+	"payment_fail_reason": "결제 실패: {0}",
+	"payment_success": "결제 {0}이(가) 확인되었습니다",
+	"payment_success_simple": "결제 확인됨",
+	"no_running_payment": "현재 지불하지 않음",
+	"failed_to_execute_payment_wrong_code": "입력한 코드가 유효하지 않습니다",
+	"failed_to_execute_payment": "결제가 되지 않았거나 취소되었습니다.",
+	"payment_cancelled": "결제를 취소했습니다.",
+	"payment_no_code": "코드 없음",
+	"payment_wrong_code": "유효하지 않은 코드"
+}

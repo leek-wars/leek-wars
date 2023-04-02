@@ -1,0 +1,13 @@
+{
+	"4_leeks_only": "이미 4개의 파가 있습니다!",
+	"create": "만들다",
+	"error_under_required_level_1": "첫 리크는 레벨 {0} 이상이어야 합니다.",
+	"error_under_required_level_2": "두 번째 리크는 레벨 {0} 이상이어야 합니다.",
+	"error_under_required_level_3": "세 번째 리크는 레벨 {0} 이상이어야 합니다.",
+	"name": "이름",
+	"name_length": "리크 이름은 {0}에서 {1}자 사이여야 합니다.",
+	"name_format": "이름에 특수 문자를 사용할 수 없습니다.",
+	"not_enough_money": "너는 충분한 돈이 없다",
+	"price": "가격",
+	"title": "새로운 부추"
+}

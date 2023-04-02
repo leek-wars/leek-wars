@@ -1,0 +1,10 @@
+{
+	"report_farmer": "{0} を報告",
+	"reporting_deleted": "レポートを削除しました",
+	"title": "節度",
+	"warning_sent": "警告が送信されました!",
+	"you_are_muted": "あなたは黙っていました。",
+	"you_have_been_muted_by_x": "あなたは {0} によって沈黙させられました。",
+	"you_have_been_unmuted_by_x": "{0} を使用すると、チャットで再び話すことができます。",
+	"you_must_choose_reason": "パターンを選択する必要があります。"
+}

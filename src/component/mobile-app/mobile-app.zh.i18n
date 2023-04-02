@@ -1,0 +1,19 @@
+{
+	"app_installation": "在手机上安装应用程序",
+	"app_info": "按照这些说明，您将能够安装 Leek Wars Web 应用程序 (<a href='https://en.wikipedia.org/wiki/Progressive_web_app'>PWA</a>)\n在你的手机上。\n根据操作系统和浏览器的不同，此功能或多或少得到了很好的管理，安装模式可能因人而异。\n说明中使用的浏览器是 <b>Android</b> 上的 <b>Chrome</b>，它似乎最适合处理网络应用程序。",
+	"app_preview": "应用概览",
+	"title": "移动应用",
+	"step_n": "步骤 {0}",
+	"step1": "前往 leekwars.com",
+	"step2": "点击“添加到主屏幕”",
+	"step3": "按“添加”",
+	"step4": "应用程序的快捷方式出现在桌面上",
+	"preview1": "韭菜页",
+	"preview2": "侧面菜单",
+	"preview3": "市场页面",
+	"preview4": "一把枪的细节在市场上的",
+	"preview5": "奖杯页面",
+	"preview6": "观看战斗",
+	"preview7": "编辑人工智能",
+	"preview8": "推送通知"
+}

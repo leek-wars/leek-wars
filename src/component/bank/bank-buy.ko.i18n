@@ -1,0 +1,9 @@
+{
+	"buy_with": "구매",
+	"paypal_message": "쇼핑을 시작하려면 버튼을 클릭하세요.",
+	"purshase_title": "<i>{1}</i>로 <b>{0}</b> 크리스탈 구입",
+	"purshase_title_simple": "<b>{0}</b> 크리스탈 구매",
+	"purshase_title_text": "{1}로 {0} 크리스탈 구매",
+	"purshase_title_text_simple": "{0} 크리스탈 구매",
+	"title": "크리스탈 뱅크"
+}

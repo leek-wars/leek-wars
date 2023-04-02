@@ -1,0 +1,21 @@
+{
+	"bugs": "버그",
+	"chips_used": "사용된 칩",
+	"criticals": "CC",
+	"damage_inflicted": "입은 피해",
+	"damage_received": "받은 피해",
+	"heal_casted": "치유 시작",
+	"heal_received": "치료를 받았습니다",
+	"kills": "죽인다",
+	"mp_used": "오후 사용",
+	"nova_received": "노바 수신",
+	"operations": "작전",
+	"operations_per_turn": "Op/턴",
+	"resurrections": "삶으로 돌아가다",
+	"shootings": "샷",
+	"summons": "소환",
+	"team_n": "팀 {0}",
+	"tp_per_turn": "PT/턴 사용",
+	"tp_used": "사용한 PT",
+	"turns_played": "플레이한 라운드"
+}

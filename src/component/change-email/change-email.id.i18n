@@ -1,0 +1,11 @@
+{
+	"title": "Ganti e-mail",
+	"send_confirmation": "Kirim konfirmasi",
+	"enter_a_new_email": "Masukkan alamat email baru",
+	"new_email": "Alamat email baru",
+	"confirm": "Konfirmasi",
+	"email_sent": "Email konfirmasi dikirim ke {email}",
+	"email_changed_success": "Alamat email berhasil diubah.",
+	"back_home": "Kembali ke rumah",
+	"error_not_same_email": "Alamat yang dimasukkan tidak sama"
+}

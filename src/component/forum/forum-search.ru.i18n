@@ -1,0 +1,18 @@
+{
+	"all_categories": "Все категории",
+	"author": "Автор",
+	"category": "Категория",
+	"no_results_found": "Результатов не найдено...",
+	"not_enough_parameters": "Недостаточно параметров начать поиск",
+	"post_by_x_the_x_in_x": "Опубликовано {farmer} {date} в {topic}",
+	"query": "Исследовать",
+	"results": "Результаты поиска",
+	"search": "Исследовать",
+	"sort_by": "Сортировать по",
+	"sort_pertinence": "Актуальность",
+	"sort_date": "Дата",
+	"sort_votes": "Голосование",
+	"title": "Поиск по форуму",
+	"too_few_params": "Не хватает параметров...",
+	"too_short": "Слишком короткий поиск..."
+}

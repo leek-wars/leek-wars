@@ -1,0 +1,21 @@
+{
+	"bugs": "Bug",
+	"chips_used": "Chip yang digunakan",
+	"criticals": "CC",
+	"damage_inflicted": "Kerusakan yang ditimbulkan",
+	"damage_received": "Kerusakan yang diterima",
+	"heal_casted": "Penyembuhan dimulai",
+	"heal_received": "Perawatan diterima",
+	"kills": "Membunuh",
+	"mp_used": "PM digunakan",
+	"nova_received": "Nova menerima",
+	"operations": "Operasi",
+	"operations_per_turn": "Op/putar",
+	"resurrections": "Hidup kembali",
+	"shootings": "Tembakan",
+	"summons": "Memanggil",
+	"team_n": "Tim {0}",
+	"tp_per_turn": "PT/giliran digunakan",
+	"tp_used": "PT yang digunakan",
+	"turns_played": "Putaran dimainkan"
+}

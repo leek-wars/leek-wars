@@ -1,0 +1,12 @@
+{
+	"battle_royale": "バトルロワイアル",
+	"date_format": "{0}",
+	"deleted_farmer": "ブリーダーが削除されました",
+	"deleted_leek": "ネギを取り除いた",
+	"deleted_team": "削除されたチーム",
+	"n_views": "ビューなし | 1 ビュー | {n}ビュー",
+	"not_found": "戦いが見つかりません:(",
+	"not_found_id": "戦闘 ID <b>{0}</b> が見つかりません:(",
+	"pause_message": "クリックするか、「P」を押して再開します",
+	"starter": "ファイトランチャー"
+}

@@ -1,0 +1,16 @@
+{
+	"cancel": "Membatalkan",
+	"me": "Aku",
+	"new_message": "Pesan baru...",
+	"quit": "Berhenti",
+	"quit_confirm": "Apakah Anda ingin keluar dari percakapan? Anda tidak akan lagi dapat melihat pesan sebelumnya.",
+	"quit_conversation": "Tinggalkan percakapan",
+	"send": "Mengirim",
+	"title": "Kucing",
+	"cat_team": "Awak kapal",
+	"cat_private": "Pesan pribadi",
+	"team": "Awak kapal",
+	"enable_notifications": "Aktifkan notifikasi",
+	"disable_notifications": "Menonaktifkan notifikasi",
+	"admin_warn": "Untuk memberikan saran atau melaporkan bug yang tidak kritis, harap buat topik di {forum}."
+}

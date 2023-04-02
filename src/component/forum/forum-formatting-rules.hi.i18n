@@ -1,0 +1,19 @@
+{
+	"source_code": "सोर्स कोड",
+	"source_code_ex": "मेरा स्रोत कोड",
+	"big_title": "बड़ी हेडलाइन",
+	"big_title_ex": "मुख्य शीर्षक",
+	"sub_title": "उपशीर्षक",
+	"sub_title_ex": "उपशीर्षक",
+	"sub_sub_title": "उप-उपशीर्षक",
+	"sub_sub_title_ex": "उप-उपशीर्षक",
+	"bold": "निडर",
+	"bold_ex": "निडर",
+	"italic": "तिर्छा",
+	"italic_ex": "तिर्छा",
+	"underlined": "रेखांकन",
+	"underlined_ex": "रेखांकन",
+	"striked": "छड़",
+	"striked_ex": "छड़",
+	"basic_html": "मूल HTML की अनुमति है"
+}

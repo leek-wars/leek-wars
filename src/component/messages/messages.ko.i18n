@@ -1,0 +1,16 @@
+{
+	"cancel": "취소",
+	"me": "나",
+	"new_message": "새로운 메시지...",
+	"quit": "그만두다",
+	"quit_confirm": "대화에서 나가시겠습니까? 더 이상 이전 메시지를 볼 수 없습니다.",
+	"quit_conversation": "대화에서 나가기",
+	"send": "보내다",
+	"title": "고양이",
+	"cat_team": "승무원",
+	"cat_private": "비공개 메시지",
+	"team": "승무원",
+	"enable_notifications": "알림 활성화",
+	"disable_notifications": "알림 비활성화",
+	"admin_warn": "제안을 하거나 심각하지 않은 버그를 보고하려면 {forum}에서 주제를 만드세요."
+}

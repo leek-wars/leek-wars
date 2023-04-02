@@ -1,0 +1,16 @@
+{
+	"android_app": "安卓应用",
+	"editor": "现场智能AI编辑器",
+	"fight_beach": "海滩上的单人战斗（1v1）",
+	"fight_desert": "牧场主在沙漠中的战斗",
+	"fight_factory": "工厂团战（6v6）",
+	"fight_forest": "森林中的牧民战斗（4v4）",
+	"fight_ice": "浮冰上的大逃杀（10 名玩家）",
+	"fight_test": "试验场战斗",
+	"leek_page": "韭葱的一页",
+	"market": "市场：购买武器、筹码、帽子等。",
+	"pixel_art": "像素艺术归功于调试功能",
+	"ranking": "排名：单人，饲养员，团队，奖杯",
+	"tournament": "每晚 6 点举行的育种者锦标赛",
+	"trophies": "奖杯页面（300个奖杯）"
+}

@@ -1,0 +1,19 @@
+{
+	"app_installation": "モバイルへのアプリのインストール",
+	"app_info": "これらの手順に従って、Leek Wars Web アプリケーション (<a href='https://en.wikipedia.org/wiki/Progressive_web_app'>PWA</a>) をインストールできます。\nあなたの携帯で。\nこの機能は、OS とブラウザーに応じて多かれ少なかれ適切に管理され、インストール モードはそれぞれ異なる場合があります。\n手順で使用されているブラウザは、<b>Android</b> の <b>Chrome</b> です。これは、ウェブ アプリケーションを最適に処理できるようです。",
+	"app_preview": "アプリの概要",
+	"title": "モバイルアプリ",
+	"step_n": "ステップ {0}",
+	"step1": "に行く leekwars.com",
+	"step2": "「ホーム画面に追加」をタップ",
+	"step3": "「追加」を押します",
+	"step4": "アプリケーションへのショートカットがデスクトップに表示されます",
+	"preview1": "ニラのページ",
+	"preview2": "サイドメニュー",
+	"preview3": "マーケットページ",
+	"preview4": "市場での武器の詳細",
+	"preview5": "トロフィーページ",
+	"preview6": "対戦を見る",
+	"preview7": "AI の編集",
+	"preview8": "プッシュ通知"
+}

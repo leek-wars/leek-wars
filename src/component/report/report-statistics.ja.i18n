@@ -1,0 +1,21 @@
+{
+	"bugs": "バグ",
+	"chips_used": "使用チップ",
+	"criticals": "CC",
+	"damage_inflicted": "与えたダメージ",
+	"damage_received": "受けたダメージ",
+	"heal_casted": "治癒開始",
+	"heal_received": "受けたケア",
+	"kills": "殺す",
+	"mp_used": "PM使用",
+	"nova_received": "ノヴァが受けた",
+	"operations": "オペレーション",
+	"operations_per_turn": "操作/ターン",
+	"resurrections": "生き返る",
+	"shootings": "ショット",
+	"summons": "召喚",
+	"team_n": "チーム {0}",
+	"tp_per_turn": "使用PT/ターン",
+	"tp_used": "使用したPT",
+	"turns_played": "ラウンド数"
+}

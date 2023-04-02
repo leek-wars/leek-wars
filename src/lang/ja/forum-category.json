@@ -1,0 +1,18 @@
+{
+	"admin": "管理者",
+	"admin_desc": "管理者専用のカテゴリ",
+	"bug_reports": "バグレポート",
+	"bug_reports_desc": "ゲームにバグを見つけたと思われる場合",
+	"composter": "コンポスター",
+	"composter_desc": "すべてについて話すこと...そして何も話さないこと。",
+	"exploits": "あなたのエクスプロイト",
+	"exploits_desc": "エクスプロイトを報告するか、異常なスクリーンショットを共有してください",
+	"general_discussion": "一般的なディスカッション",
+	"general_discussion_desc": "一般的なネギ戦争の議論",
+	"help": "ヘルプとヒント",
+	"help_desc": "ゲームについて質問がある場合、またはヒントを共有したい場合",
+	"moderation": "節度",
+	"moderation_desc": "モデレーター専用カテゴリー",
+	"suggestions_ideas": "提案とアイデア",
+	"suggestions_ideas_desc": "ゲームの改善案があれば"
+}

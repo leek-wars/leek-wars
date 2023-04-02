@@ -1,0 +1,16 @@
+{
+	"thank_you": "谢谢",
+	"for_your_support": "你的支持！",
+	"you_earn_n_crystals": "你得到了{水晶}。",
+	"back_to_bank": "返回银行",
+	"payment_fail": "付款 {0} 失败。",
+	"payment_fail_reason": "付款失败：{0}",
+	"payment_success": "付款 {0} 已验证",
+	"payment_success_simple": "付款已验证",
+	"no_running_payment": "没有当前付款",
+	"failed_to_execute_payment_wrong_code": "您输入的代码无效",
+	"failed_to_execute_payment": "付款无效或已取消",
+	"payment_cancelled": "您取消了付款",
+	"payment_no_code": "没有代码",
+	"payment_wrong_code": "无效的代码"
+}

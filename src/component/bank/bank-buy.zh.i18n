@@ -1,0 +1,9 @@
+{
+	"buy_with": "购买",
+	"paypal_message": "点击按钮开始购物",
+	"purshase_title": "使用 <i>{1}</i> 购买 <b>{0}</b> 水晶",
+	"purshase_title_simple": "购买 <b>{0}</b> 个水晶",
+	"purshase_title_text": "用 {1} 购买 {0} 个水晶",
+	"purshase_title_text_simple": "购买 {0} 颗水晶",
+	"title": "水晶银行"
+}

@@ -1,0 +1,13 @@
+{
+	"4_leeks_only": "Anda sudah memiliki 4 daun bawang!",
+	"create": "Membuat",
+	"error_under_required_level_1": "Daun bawang pertama Anda setidaknya harus level {0}",
+	"error_under_required_level_2": "Daun bawang kedua Anda harus setidaknya level {0}",
+	"error_under_required_level_3": "Daun bawang ke-3 Anda setidaknya harus level {0}",
+	"name": "Nama",
+	"name_length": "Nama daun bawang harus mengandung antara {0} dan {1} karakter",
+	"name_format": "Karakter khusus tidak diperbolehkan dalam nama",
+	"not_enough_money": "Kamu tidak punya cukup uang",
+	"price": "Harga",
+	"title": "Daun bawang baru"
+}

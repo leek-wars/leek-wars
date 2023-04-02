@@ -1,0 +1,13 @@
+{
+	"available_on_market": "(Tersedia untuk pembelian di pasar)",
+	"new_chips": "Chip baru",
+	"new_weapons": "Senjata baru",
+	"no_news": "Tidak ada item baru untuk level ini.",
+	"title": "<b>{0}</b> tingkat kelulusan <b>{1}</b>!",
+	"301_title": "Selamat!",
+	"301_message": "Anda telah mencapai level tertinggi dalam Perang Daun Bawang, daun bawang Anda telah mencapai tahap akhir evolusinya!<br> Anda mendapatkan <b>ramuan emas</b> dan <b>mahkota</b> sebagai hadiah.",
+	"new_weapon": "Slot senjata baru",
+	"new_chip": "Slot chip baru",
+	"total_weapons": "{0} jumlah senjata",
+	"total_chips": "total {0} chip"
+}

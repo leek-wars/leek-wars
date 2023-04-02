@@ -1,0 +1,19 @@
+{
+	"source_code": "ソースコード",
+	"source_code_ex": "私のソースコード",
+	"big_title": "大きな見出し",
+	"big_title_ex": "メインタイトル",
+	"sub_title": "字幕",
+	"sub_title_ex": "字幕",
+	"sub_sub_title": "サブサブタイトル",
+	"sub_sub_title_ex": "サブサブタイトル",
+	"bold": "大胆な",
+	"bold_ex": "大胆な",
+	"italic": "斜体",
+	"italic_ex": "斜体",
+	"underlined": "下線",
+	"underlined_ex": "下線",
+	"striked": "ロッド",
+	"striked_ex": "ロッド",
+	"basic_html": "基本的な HTML を許可"
+}

@@ -1,0 +1,11 @@
+{
+	"title": "बदले ई - मेल",
+	"send_confirmation": "पुष्टि भेजें",
+	"enter_a_new_email": "एक नया ईमेल पता दर्ज करें",
+	"new_email": "न्यू ईमेल पता",
+	"confirm": "पुष्टीकरण",
+	"email_sent": "पुष्टिकरण ईमेल {email} पर भेजा गया",
+	"email_changed_success": "ईमेल पता सफलतापूर्वक बदल गया।",
+	"back_home": "घर वापिस जा रहा हूँ",
+	"error_not_same_email": "दर्ज किए गए पते समान नहीं हैं"
+}
