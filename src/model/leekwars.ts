@@ -125,20 +125,22 @@ class Language {
 	public chat!: number
 	public encyclopedia!: string
 	public currency!: string
+	public forum!: boolean
+	public beta!: boolean
 }
 const LANGUAGES = Object.freeze({
-	fr: { code: 'fr', name: 'Français', country: 'fr', flag: '/image/flag/fr.png', chat: 1, encyclopedia: 'Encyclopédie', chats: [1, 32506, 32507], currency: 'EUR' } as Language,
-	en: { code: 'en', name: 'English', country: 'gb', flag: '/image/flag/gb.png', chat: 2, encyclopedia: 'Encyclopedia', chats: [2, 32508, 32509], currency: 'USD' } as Language,
-	es: { code: 'es', name: 'Español', country: 'es', flag: '/image/flag/es.png', chat: 3, encyclopedia: 'Enciclopedia', chats: [3, 33187, 33188], currency: 'EUR' } as Language,
-	de: { code: 'de', name: 'Deutsch', country: 'de', flag: '/image/flag/de.png', chat: 4, encyclopedia: 'Enzyklopädie', chats: [4], currency: 'EUR' } as Language,
-	it: { code: 'it', name: 'Italiano', country: 'it', flag: '/image/flag/it.png', chat: 5, encyclopedia: 'Enciclopedia', chats: [5], currency: 'EUR' } as Language,
-	pt: { code: 'pt', name: 'Portugais', country: 'pt', flag: '/image/flag/pt.png', chat: 6, encyclopedia: 'Enciclopédia', chats: [6], currency: 'EUR' } as Language,
-	da: { code: 'da', name: 'Dansk', country: 'dk', flag: '/image/flag/da.png', chat: 7, encyclopedia: 'Encyklopædi', chats: [7], currency: 'DKK' } as Language,
-	fi: { code: 'fi', name: 'Suomi', country: 'fi', flag: '/image/flag/fi.png', chat: 8, encyclopedia: 'Tietosanakirja', chats: [8], currency: 'EUR' } as Language,
-	nl: { code: 'nl', name: 'Nederlands', country: 'nl', flag: '/image/flag/nl.png', chat: 9, encyclopedia: 'Encyclopedie', chats: [9], currency: 'EUR' } as Language,
-	no: { code: 'no', name: 'Norsk', country: 'no', flag: '/image/flag/no.png', chat: 10, encyclopedia: 'Encyclopedia', chats: [10], currency: 'NOK' } as Language,
-	pl: { code: 'pl', name: 'Polska', country: 'pl', flag: '/image/flag/pl.png', chat: 11, encyclopedia: 'Encyklopedia', chats: [11], currency: 'EUR' } as Language,
-	sv: { code: 'sv', name: 'Svenska', country: 'se', flag: '/image/flag/sv.png', chat: 12, encyclopedia: 'Encyklopedi', chats: [12], currency: 'SEK' } as Language,
+	fr: { code: 'fr', name: 'Français', country: 'fr', flag: '/image/flag/fr.png', chat: 1, encyclopedia: 'Encyclopédie', chats: [1, 32506, 32507], currency: 'EUR', beta: false, forum: true } as Language,
+	en: { code: 'en', name: 'English', country: 'gb', flag: '/image/flag/gb.png', chat: 2, encyclopedia: 'Encyclopedia', chats: [2, 32508, 32509], currency: 'USD', beta: false, forum: true } as Language,
+	es: { code: 'es', name: 'Español', country: 'es', flag: '/image/flag/es.png', chat: 3, encyclopedia: 'Enciclopedia', chats: [3], currency: 'EUR', beta: true, forum: false } as Language,
+	de: { code: 'de', name: 'Deutsch', country: 'de', flag: '/image/flag/de.png', chat: 4, encyclopedia: 'Enzyklopädie', chats: [4], currency: 'EUR', beta: true, forum: false } as Language,
+	it: { code: 'it', name: 'Italiano', country: 'it', flag: '/image/flag/it.png', chat: 5, encyclopedia: 'Enciclopedia', chats: [5], currency: 'EUR', beta: true, forum: false } as Language,
+	pt: { code: 'pt', name: 'Portugais', country: 'pt', flag: '/image/flag/pt.png', chat: 6, encyclopedia: 'Enciclopédia', chats: [6], currency: 'EUR', beta: true, forum: false } as Language,
+	da: { code: 'da', name: 'Dansk', country: 'dk', flag: '/image/flag/da.png', chat: 7, encyclopedia: 'Encyklopædi', chats: [7], currency: 'DKK', beta: true, forum: false } as Language,
+	fi: { code: 'fi', name: 'Suomi', country: 'fi', flag: '/image/flag/fi.png', chat: 8, encyclopedia: 'Tietosanakirja', chats: [8], currency: 'EUR', beta: true, forum: false } as Language,
+	nl: { code: 'nl', name: 'Nederlands', country: 'nl', flag: '/image/flag/nl.png', chat: 9, encyclopedia: 'Encyclopedie', chats: [9], currency: 'EUR', beta: true, forum: false } as Language,
+	no: { code: 'no', name: 'Norsk', country: 'no', flag: '/image/flag/no.png', chat: 10, encyclopedia: 'Encyclopedia', chats: [10], currency: 'NOK', beta: true, forum: false } as Language,
+	pl: { code: 'pl', name: 'Polska', country: 'pl', flag: '/image/flag/pl.png', chat: 11, encyclopedia: 'Encyklopedia', chats: [11], currency: 'EUR', beta: true, forum: false } as Language,
+	sv: { code: 'sv', name: 'Svenska', country: 'se', flag: '/image/flag/sv.png', chat: 12, encyclopedia: 'Encyklopedi', chats: [12], currency: 'SEK', beta: true, forum: false } as Language,
 } as { [key: string]: Language })
 
 const LOCAL_DATE = new Date()
@@ -228,8 +230,8 @@ const LeekWars = {
 		32508: { id: 32508, name: 'Help', language: 'en', icon: 'mdi-help-circle-outline' },
 		32509: { id: 32509, name: 'Programming', language: 'en', icon: 'mdi-code-braces' },
 		3: { id: 3, name: 'General', language: 'es', icon: 'mdi-chat-outline' },
-		33187: { id: 33187, name: 'Ayuda', language: 'es', icon: 'mdi-help-circle-outline' },
-		33188: { id: 33188, name: 'Programación', language: 'es', icon: 'mdi-code-braces' },
+		// 33187: { id: 33187, name: 'Ayuda', language: 'es', icon: 'mdi-help-circle-outline' },
+		// 33188: { id: 33188, name: 'Programación', language: 'es', icon: 'mdi-code-braces' },
 		4: { id: 4, name: 'General', language: 'de', icon: 'mdi-chat-outline' },
 		5: { id: 5, name: 'Generale', language: 'it', icon: 'mdi-chat-outline' },
 		6: { id: 6, name: 'Geral', language: 'pt', icon: 'mdi-chat-outline' },

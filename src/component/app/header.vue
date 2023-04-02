@@ -24,6 +24,7 @@
 						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="LeekWars.setLocale(language.code)">
 							<flag :code="language.country" :clickable="false" />
 							<span class="name">{{ language.name }}</span>
+							<span v-if="language.beta" class="beta">bêta</span>
 						</v-list-item>
 					</v-list>
 				</v-menu>
@@ -375,6 +376,14 @@
 	.language .flag {
 		width: 26px;
 		margin-right: 8px;
+	}
+	.beta {
+		background: white;
+		padding: 2px 4px;
+		border: 1px solid #aaa;
+		border-radius: 4px;
+		font-size: 12px;
+		margin-left: 8px;
 	}
 	.win {
 		position: absolute;

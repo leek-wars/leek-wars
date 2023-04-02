@@ -88,6 +88,7 @@
 					<flag :code="language.country" :clickable="false" />
 					<br>
 					{{ language.name }} ({{ language.code }})
+					<span v-if="language.beta" class="beta">bêta</span>
 				</div>
 			</panel>
 
@@ -502,13 +503,23 @@
 		text-align: center;
 		.language {
 			display: inline-block;
-			padding: 8px;
+			padding: 5px 7px;
 			text-align: center;
-			font-weight: 300;
 			margin: 5px;
 			cursor: pointer;
 			border: 1px solid #ddd;
 			border-radius: 2px;
+			position: relative;
+			.beta {
+				position: absolute;
+				top: -5px;
+				right: -5px;
+				background: white;
+				padding: 2px 4px;
+				border: 1px solid #aaa;
+				border-radius: 4px;
+				font-size: 12px;
+			}
 		}
 	}
 	.languages .language.selected {
@@ -677,7 +688,7 @@
 		margin: 5px 0;
 	}
 	.flag {
-		height: 30px;
+		height: 25px;
 		margin-bottom: 10px;
 	}
 </style>

@@ -13,7 +13,7 @@
 						</div>
 					</template>
 					<v-list :dense="true">
-						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="setForumLanguage(language)" :disabled="forumLanguages[language.code] && activeLanguages.length === 1">
+						<v-list-item v-for="(language, i) in languages" :key="i" class="language" @click="setForumLanguage(language)" :disabled="forumLanguages[language.code] && activeLanguages.length === 1">
 							<v-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" hide-details @click.stop="updateCategories" />
 							<flag :code="language.country" :clickable="false" />
 							<span class="name">{{ language.name }}</span>
@@ -174,6 +174,10 @@
 		forumLanguages: {[key: string]: boolean} = {}
 		translations: any[] = []
 		showResolved: boolean = true
+
+		get languages() {
+			return Object.values(LeekWars.languages).filter(l => l.forum)
+		}
 
 		get activeLanguages() {
 			return Object.entries(this.forumLanguages).filter(e => e[1]).map(e => e[0])

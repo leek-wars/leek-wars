@@ -11,7 +11,7 @@
 						</div>
 					</template>
 					<v-list :dense="true">
-						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click="setForumLanguage(language)">
+						<v-list-item v-for="(language, i) in languages" :key="i" class="language" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click="setForumLanguage(language)">
 							<v-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" hide-details @click.stop="pickForumLanguage(language)" />
 							<flag :code="language.country" :clickable="false" />
 							<!-- <img :src="language.flag" class="flag"> -->
@@ -120,6 +120,10 @@
 		forumLanguages: {[key: string]: boolean} = {}
 		expandFarmers: boolean = false
 		searchQuery: string = ''
+
+		get languages() {
+			return Object.values(LeekWars.languages).filter(l => l.forum)
+		}
 
 		created() {
 			const languages = (localStorage.getItem('forum/languages') as string || this.$i18n.locale).split(',')
