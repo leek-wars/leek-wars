@@ -18,19 +18,19 @@
 
 
 		<div v-if="new_fun">
-			<!-- <div v-dochash v-code class="content" v-html="new_fun.description"></div> -->
 			<markdown v-if="LeekWars.encyclopedia[$i18n.locale] && Object.keys(LeekWars.encyclopedia[$i18n.locale]).length" :content="new_fun.description" :pages="{}" mode="encyclopedia" />
 
 			<div v-for="(section, s) in new_fun.primary" :key="s">
 				<h4>{{ s }}</h4>
-				<markdown v-if="s === 'Paramètres'" :content="new_arguments" :pages="{}" mode="encyclopedia" />
-				<markdown v-else :content="section" :pages="{}" mode="encyclopedia" />
+				<markdown :content="section" :pages="{}" mode="encyclopedia" />
 			</div>
 			<div class="operations">
-				<span v-if="fun.complexity == 1"><b>{{ fun.operations }}</b> opérations</span>
-				<span v-else>Complexité <b>{{ LeekWars.complexities[fun.complexity] }}</b></span>
+				<i18n v-if="fun.complexity == 1" path="doc.operations"><b slot="o">{{ fun.operations }}</b></i18n>
+				<i18n v-else path="doc.complexity">
+					<b slot="c">{{ LeekWars.complexities[fun.complexity] }}</b>
+				</i18n>
 			</div>
-			<div v-if="Object.values(new_fun.secondary).length" class="expand" @click.stop="expanded = !expanded">Détails ({{ Object.values(new_fun.secondary).length }})<v-icon v-if="expanded">mdi-chevron-up</v-icon><v-icon v-else>mdi-chevron-down</v-icon></div>
+			<div v-if="Object.values(new_fun.secondary).length" class="expand" @click.stop="expanded = !expanded">{{ $t('doc.details') }} ({{ Object.values(new_fun.secondary).length }})<v-icon v-if="expanded">mdi-chevron-up</v-icon><v-icon v-else>mdi-chevron-down</v-icon></div>
 			<div v-if="expanded" class="secondary">
 				<div v-for="(section, s) in new_fun.secondary" :key="s">
 					<h4>{{ s }}</h4>
@@ -44,7 +44,7 @@
 			<template v-if="fun.arguments_names.length > 0">
 				<h4>{{ $t('doc.parameters') }}</h4>
 				<ul>
-					<li v-for="(arg, i) in fun.arguments_names" :key="i">{{ arg }} <span v-if="fun.optional[i]">(optionnel)</span> : <span v-dochash v-code v-html="$t('doc.func_' + fun.name + '_arg_' + (parseInt(i) + 1))"></span></li>
+					<li v-for="(arg, i) in fun.arguments_names" :key="i">{{ arg }} <span v-if="fun.optional[i]">({{ $t('doc.optional') }})</span> : <span v-dochash v-code v-html="$t('doc.func_' + fun.name + '_arg_' + (parseInt(i) + 1))"></span></li>
 				</ul>
 			</template>
 

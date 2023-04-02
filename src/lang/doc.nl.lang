@@ -1002,5 +1002,7 @@
 	"variable_operations": "<b>Variabele</b> bewerkingen",
 	"deprecated_function": "Deze functie is verouderd.",
 	"deprecated_constant": "Deze constante is verouderd.",
-	"replaced_by": "Het wordt vervangen door {0}."
+	"replaced_by": "Het wordt vervangen door {0}.",
+	"details": "Details",
+	"optional": "optioneel"
 }

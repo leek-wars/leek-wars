@@ -415,6 +415,7 @@
 		margin-top: 10px;
 		margin-bottom: 20px;
 		padding: 0;
+		height: auto;
 		&:after {
 			display: none;
 		}

@@ -21,8 +21,7 @@
 
 			<div v-for="(section, s) in new_constant.primary" :key="s">
 				<h4>{{ s }}</h4>
-				<markdown v-if="s === 'Paramètres'" :content="new_arguments" :pages="{}" mode="encyclopedia" />
-				<markdown v-else :content="section" :pages="{}" mode="encyclopedia" />
+				<markdown :content="section" :pages="{}" mode="encyclopedia" />
 			</div>
 			<div v-if="Object.values(new_constant.secondary).length" class="expand" @click.stop="expanded = !expanded">Détails ({{ Object.values(new_constant.secondary).length }})<v-icon v-if="expanded">mdi-chevron-up</v-icon><v-icon v-else>mdi-chevron-down</v-icon></div>
 			<div v-if="expanded" class="secondary">

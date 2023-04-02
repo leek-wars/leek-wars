@@ -1002,5 +1002,7 @@
 	"func_isEntity_return": "<i>true</i> if the cell contains an entity, <i>false</i> otherwise.",
 	"deprecated_function": "This function is deprecated.",
 	"deprecated_constant": "This constant is deprecated.",
-	"replaced_by": "It is replaced by {0}."
+	"replaced_by": "It is replaced by {0}.",
+	"details": "Details",
+	"optional": "optional"
 }

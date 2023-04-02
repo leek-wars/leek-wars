@@ -1002,5 +1002,7 @@
 	"variable_operations": "<b>Muuttuja</b> -toiminnot",
 	"deprecated_function": "Tämä toiminto on vanhentunut.",
 	"deprecated_constant": "Tämä vakio on vanhentunut.",
-	"replaced_by": "Se korvataan tekstillä {0}."
+	"replaced_by": "Se korvataan tekstillä {0}.",
+	"details": "Yksityiskohdat",
+	"optional": "valinnainen"
 }

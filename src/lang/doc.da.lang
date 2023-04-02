@@ -1002,5 +1002,7 @@
 	"variable_operations": "<b>Variabel</b> operationer",
 	"deprecated_function": "Denne funktion er forældet.",
 	"deprecated_constant": "Denne konstant er forældet.",
-	"replaced_by": "Den erstattes af {0}."
+	"replaced_by": "Den erstattes af {0}.",
+	"details": "Detaljer",
+	"optional": "valgfri"
 }

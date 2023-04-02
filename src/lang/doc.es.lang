@@ -1002,5 +1002,7 @@
 	"variable_operations": "Operaciones con <b>variables</b>",
 	"deprecated_function": "Esta función está obsoleta.",
 	"deprecated_constant": "Esta constante está en desuso.",
-	"replaced_by": "Se reemplaza por {0}."
+	"replaced_by": "Se reemplaza por {0}.",
+	"details": "Detalles",
+	"optional": "opcional"
 }
