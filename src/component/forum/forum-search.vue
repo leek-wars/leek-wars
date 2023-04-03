@@ -162,7 +162,7 @@
 			}
 		}
 		get url() {
-			return this.urlPagination + (this.options.page > 1 ? '&page=' + this.options.page : '')
+			return this.urlPagination
 		}
 		get urlPagination() {
 			const url = "/search"
