@@ -161,9 +161,6 @@
 				})
 			}
 		}
-		get url() {
-			return this.urlPagination
-		}
 		get urlPagination() {
 			const url = "/search"
 			const options = Object.keys(this.options)
@@ -173,7 +170,7 @@
 			return url + '?' + options
 		}
 		search() {
-			this.$router.push(this.url)
+			this.$router.push(this.urlPagination)
 		}
 		searchButton() {
 			if (!this.canSearch) {
