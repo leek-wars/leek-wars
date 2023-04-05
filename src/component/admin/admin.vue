@@ -47,6 +47,12 @@
 						<h2>Groupes</h2>
 					</div>
 				</router-link>
+				<router-link to="/admin/sources">
+					<div v-ripple class="section card">
+						<v-icon>mdi-merge</v-icon>
+						<h2>Sources</h2>
+					</div>
+				</router-link>
 				<router-link to="/admin/hats">
 					<div v-ripple class="section card">
 						<v-icon>mdi-hat-fedora</v-icon>
