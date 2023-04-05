@@ -45,7 +45,7 @@
 						{{ farmer.register_time | datetime }}
 					</div>
 					<div class="level">{{ $t('main.level_n', [farmer.total_level]) }}</div>
-					<div class="level">
+					<div class="level" :class="{empty: farmer.fights + farmer.test_fights + farmer.trophies === 0}">
 						<v-icon>mdi-sword-cross</v-icon> {{ farmer.fights }}
 						<v-icon>mdi-settings-outline</v-icon> {{ farmer.test_fights }}
 						<v-icon>mdi-trophy-outline</v-icon> {{ farmer.trophies }}
@@ -184,6 +184,9 @@
 		flex: 1;
 		.v-icon {
 			font-size: 18px;
+		}
+		&.empty {
+			opacity: 0.3;
 		}
 	}
 }
