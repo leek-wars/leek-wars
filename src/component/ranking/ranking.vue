@@ -395,7 +395,7 @@
 					this.pages = data.pages
 					this.ranking = ranking
 					LeekWars.setActions([{icon: 'mdi-magnify', click: () => this.openSearch()}])
-					LeekWars.setTitle(this.$t('title'), this.$t('main.n_' + this.category + 's', [data.total]))
+					LeekWars.setTitle(this.$t('title'), this.category.includes('level') ? this.$t('main.level_n', [this.rankingLevel]) : this.$t('main.n_' + this.category + 's', [data.total]))
 					this.$root.$emit('loaded')
 				})
 			}
