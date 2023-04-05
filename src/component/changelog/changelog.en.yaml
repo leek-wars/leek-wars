@@ -64,7 +64,7 @@
     - "Added team challenges. #img_235_team_challenge"
     - "New messages from Leek Wars bot in chat: BR, save, tournaments etc. #img_235_chatbot"
     - "Added a warning message when a feature is useless at his level. #img_235_leek_charac"
-    - "Added leek country and farmers to the vegetable garden. #img_235_country"
+    - "Added leek country and farmers to the garden. #img_235_country"
   improved:
     - Re-registered for tournaments if logged in for 2 days instead of 1.
     - More winnings for losers in BR.
@@ -224,7 +224,7 @@
     - The editor no longer marks an AI as modified after a modification followed by a cancellation.
     - "Combat: the entity currently playing is more visible in the timeline at the bottom. #img_231_player"
     - "Battle Royale: redirection to the battle that only launches if you are on the garden page."
-    - "Battle Royale: the selected leek in the vegetable garden is kept between several fights."
+    - "Battle Royale: the selected leek in the garden is kept between several fights."
     - "Added a button to mark as read one or all notifications. #img_231_notif"
     - "say() size limit decreased from 200 to 100 + smaller bubble style. #img_231_say"
     - No longer possible to change the turret AI when you are not a captain.
@@ -246,7 +246,7 @@
     - Fixed comment update on the battle report page.
     - Added an explicit error when a fight failed instead of infinite loading.
     - Fixed trophy delocalizer (two conditions).
-    - Fixed a lag on the vegetable garden countdown due to daylight saving time.
+    - Fixed a lag on the garden countdown due to daylight saving time.
     - "Chat: corrections on the commands."
     - "Chat: fixed large text bug."
     - "Honey, I shrunk the leek trophy fixed (thanks to Gandhi and nytope)."
@@ -438,7 +438,7 @@
     - "Deleted forum posts are displayed in topics for better understanding. #img_226_forum_deleted"
     - Improved moderation of chat messages (permanent censoring and separate mute).
     - Possibility to add images to messages on the forum.
-    - "#ai BR vegetable/auto context becomes FIGHT_CONTEXT_GARDEN/FIGHT_CONTEXT_TOURNAMENT."
+    - "#ai BR garden/auto context becomes FIGHT_CONTEXT_GARDEN/FIGHT_CONTEXT_TOURNAMENT."
     - Improved synchronization of notifications/messages on multiple tabs.
     - Fixed weapon position and shooting animations + recoil animation.
     - "Redesigned explosion animation + sound effect. #img_226_explosion"
@@ -557,7 +557,7 @@
     - "Fixed display of 2x2 obstacles in the report. #img_223_map"
     - Fixed a bug when creating your first scenario in the editor.
     - When you create a test leek, it does have a basic lambda AI.
-    - Added missing error translations in the vegetable garden.
+    - Added missing error translations in the garden.
     - typeOf(object) returns TYPE_OBJET and not 0.
     - Fixed the grapple that could grow.
     - Fixed bug with some characters in say() and fixed censoring.
@@ -615,7 +615,7 @@
     - Improved the visibility of the top life bars in combat (and dark mode).
     - "Capital window: added a button to remove all the capital of a feature."
     - Added golden hands for the golden skin.
-    - "Vegetable garden : improvement of the display of levels + number of leeks of a compo."
+    - "Garden : improvement of the display of levels + number of leeks of a compo."
     - Display of team emblems under team fights.
     - Price increase in Habs for items also purchased in crystals (x2).
     - Acceleration of the loading of the team page.
@@ -652,7 +652,7 @@
     - "Combat: added tooltips on effects to display their details."
   improved:
     - Added a day separator in the chat, like before.
-    - Added a message to buy fights in the vegetable garden.
+    - Added a message to buy fights in the garden.
     - Special colors for trophy and tournament won notifications alerts.
     - Added keyboard shortcuts for all options in the fight.
     - Improved visibility of markText() and cell numbers in fights.
@@ -755,7 +755,7 @@
     - When you pass a line in a comment, the comment continues automatically.
     - Optimization of AI validation at backup, much faster with many includes.
     - Moving the progress bar of the Battle Royale under the menu.
-    - Added hints in the vegetable garden for opponent selection.
+    - Added hints in the garden for opponent selection.
     - Added tabs with active status on bank/market pages and ranking.
   fixed:
     - It is now impossible to equip weapons and chips on test bots.
@@ -822,7 +822,7 @@
     - Added the Instagram page in the footer.
     - "Tournaments : display how the leeks looked like at the time of the tournament."
     - Added a button 'available on Google Play' on the /app page.
-    - Display of the names of the compositions in the vegetable garden.
+    - Display of the names of the compositions in the garden.
     - Display of unread conversations in green.
     - Improved the design of the statistics table to remove the horizontal scroll.
   fixed:
