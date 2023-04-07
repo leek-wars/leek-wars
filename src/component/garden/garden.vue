@@ -464,6 +464,7 @@
 			if (this.selectedComposition) {
 				LeekWars.post('garden/start-team-fight', {composition_id: this.selectedComposition.id, target_id: composition.id}).then(data => {
 					this.$router.push('/fight/' + data.fight)
+					store.commit('update-team-fights', -1)
 				}).error(error => LeekWars.toast(this.$t(error)))
 			}
 		}

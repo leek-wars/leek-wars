@@ -356,6 +356,10 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (state.farmer) { state.farmer.fights += fights }
 		},
 
+		'update-team-fights'(state: LeekWarsState, fights: number) {
+			if (state.farmer) { state.farmer.team_fights += fights }
+		},
+
 		'set-talent'(state: LeekWarsState, talent: number) {
 			if (state.farmer) { state.farmer.talent = talent }
 		},
