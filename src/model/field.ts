@@ -50,7 +50,10 @@ class Field {
 
 	public resetCells() {
 		for (const cell of this.cells) {
-			cell.entity = null
+			if (cell.entity) {
+				cell.entity.cell = null
+				cell.entity = null
+			}
 		}
 	}
 

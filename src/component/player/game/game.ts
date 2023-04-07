@@ -1240,6 +1240,7 @@ class Game {
 
 			if (entity.cell) {
 				entity.cell.entity = null
+				entity.cell = null
 			}
 			if (this.jumping) {
 				entity.active = false
@@ -2532,10 +2533,6 @@ class Game {
 			leek.crashAnim = 0
 			leek.bubble = new Bubble(this)
 			leek.weapon = null
-			if (leek.cell) {
-				leek.cell.entity = null
-				leek.cell = null
-			}
 			leek.path = []
 			leek.moveDelay = 0
 			leek.moveAnim = 0
@@ -2549,7 +2546,6 @@ class Game {
 				}
 			} else {
 				leek.setCell(this.states[i].cell)
-				this.states[i].cell!.setEntity(leek)
 			}
 			// Remove drawable element
 			if (leek.drawID) {
