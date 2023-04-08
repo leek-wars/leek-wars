@@ -1,6 +1,7 @@
 238:
   added:
     - "Ajout d'information sur les BR et la création d'un nouveau poireau. #img_238_br #img_238_newleek"
+    - "Classements fun des tournois (solo, éleveur, équipe)."
   fixed:
     - Correction d'un bug de position d'entité à la suite d'inversions.
 
