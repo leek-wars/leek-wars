@@ -343,7 +343,7 @@
 						row.ranking.ranking[1].style = 'second'
 						row.ranking.ranking[2].style = 'third'
 					}
-					if (this.$store.state.connected) {
+					if (this.$store.state.farmer) {
 						for (const category of data.rankings) {
 							for (const row of category.ranking.ranking as Ranking) {
 								if (row.id === this.$store.state.farmer.id) {
