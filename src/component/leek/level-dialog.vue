@@ -43,7 +43,6 @@
 					</td>
 				</tr>
 			</table>
-			<br>
 
 			<div v-if="levelData.weapons.length == 0 && levelData.chips.length == 0 && !levelData.new_chip && !levelData.new_weapon">
 				<center>{{ $t('no_news') }}</center>
@@ -73,6 +72,17 @@
 					<h4><v-icon>mdi-shape-square-plus</v-icon> {{ $t('new_chip') }}</h4>
 					<div class="available-market">{{ $t('total_chips', [leek.max_chips]) }}</div>
 				</div>
+			</div>
+
+			<div v-if="leek.level == 20">
+				<h4><v-icon>mdi-sword-cross</v-icon> {{ $t('main.battle_royale') }}</h4>
+				<div>{{ $t('br_desc') }}</div>
+				<img class="screenshot" height=200 src="/image/feature/fight_battle_royale.webp" />
+			</div>
+			<div v-if="leek.level == 50 && Object.values($store.state.farmer.leeks).length === 4">
+				<h4><v-icon>mdi-leek</v-icon> {{ $t('main.new_leek') }}</h4>
+				<div>{{ $t('newleek_desc') }}</div>
+				<leek-image class="screenshot" :leek="{level: 1}" :scale="0.7" />
 			</div>
 		</div>
 	</popup>
@@ -105,6 +115,7 @@
 		display: flex;
 		align-items: center;
 		color: #333;
+		margin: 10px 0;
 		.v-icon {
 			margin-right: 5px;
 			font-size: 26px;
@@ -143,5 +154,8 @@
 	}
 	.new {
 		padding: 5px 0;
+	}
+	.screenshot {
+		margin-top: 10px;
 	}
 </style>

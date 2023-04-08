@@ -100,6 +100,7 @@
 				<v-btn @click="squareMP">Square MP</v-btn>
 				<v-btn @click="show_didactitiel">Didactitiel</v-btn>
 				<v-btn @click="showLevelDialog(2)">Level Dialog 2</v-btn>
+				<v-btn @click="showLevelDialog(20)">Level Dialog 20</v-btn>
 				<v-btn @click="showLevelDialog(50)">Level Dialog 50</v-btn>
 				<v-btn @click="showLevelDialog(97)">Level Dialog 97</v-btn>
 				<v-btn @click="showLevelDialog(200)">Level Dialog 200</v-btn>

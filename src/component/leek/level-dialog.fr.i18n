@@ -9,5 +9,7 @@
 	"new_weapon": "Nouvel emplacement d'arme",
 	"new_chip": "Nouvel emplacement de puce",
 	"total_weapons": "{0} armes au total",
-	"total_chips": "{0} puces au total"
+	"total_chips": "{0} puces au total",
+	"br_desc": "Nouveau mode de jeu débloqué : les Battle Royales ! Un combat de 10 poireaux en mode chacun pour soi. Inscrivez-vous depuis le potager ou sur la page poireau.",
+	"newleek_desc": "Nouveau poireau disponible à l'achat depuis le menu."
 }
