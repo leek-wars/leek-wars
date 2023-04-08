@@ -182,6 +182,9 @@
 		align-items: center;
 		gap: 5px;
 		flex: 1;
+		min-width: 0;
+		text-overflow: ellipsis;
+		overflow: hidden;
 		.v-icon {
 			font-size: 18px;
 		}
