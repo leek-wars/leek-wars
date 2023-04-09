@@ -1582,6 +1582,9 @@
 				this.document.replaceRange(this.replaceQuery, { line: position[0], ch: position[1] }, { line: position[0], ch: position[1] + this.searchQuery.length })
 				this.searchUpdate()
 				this.searchCurrent = index
+				if (this.searchLines.length) {
+					this.searchCurrent = this.searchCurrent % this.searchLines.length
+				}
 				this.searchRefresh()
 			}
 		}
