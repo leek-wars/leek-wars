@@ -531,8 +531,11 @@
 		}
 
 		scroll(index: number) {
-			const position = document.querySelectorAll('.column8 h2')[index].getBoundingClientRect().top + window.scrollY
-			window.scrollTo(0, position)
+			const title = document.querySelectorAll('.column8 h2')[index]
+			if (title) {
+				const position = title.getBoundingClientRect().top + window.scrollY
+				window.scrollTo(0, position)
+			}
 		}
 	}
 </script>
