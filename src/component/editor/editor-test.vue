@@ -363,7 +363,7 @@
 		@Prop() value!: boolean
 		@Prop() ais!: {[key: number]: AI}
 		@Prop() leekAis!: {[key: number]: number}
-		@Prop({ required: true }) currentAI!: AI
+		@Prop({ required: true }) currentAI!: AI | null
 
 		FightType = FightType
 		CHIPS = CHIPS
@@ -1029,11 +1029,11 @@
 		}
 
 		launchTest() {
-			if (!this.currentScenario) { return }
+			if (!this.currentScenario || !this.currentAI) { return }
 			Vue.set(this.currentAI, 'scenario', this.currentScenario.id)
 			LeekWars.post('ai/test-scenario', { scenario_id: this.currentScenario.id, ai_id: this.currentAI.id }).then(data => {
 				localStorage.setItem('editor/last-scenario', '' + this.currentScenario!.id)
-				localStorage.setItem('editor/last-scenario-ai', '' + this.currentAI.id)
+				localStorage.setItem('editor/last-scenario-ai', '' + this.currentAI!.id)
 				this.$router.push('/fight/' + data.fight)
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
