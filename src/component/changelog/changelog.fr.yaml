@@ -5,12 +5,14 @@
     - "Classements fun des tournois (solo, éleveur, équipe)."
     - Ajout les langues des éleveurs connectés sur la page forum.
     - "Ajout de 15 langues : Allemand, Italien, Portuguais, Suédois, Norvégien, Finlandais, Danois, Néérlandais, Polonais, Russe, Chinois, Hindi, Indonésien, Japonais et Coréen. #img_238_languages"
+    - "Ajout de 4 nouveaux chapeaux. #img_238_hats"
   improved:
     - Accélération de l'IA en cas d'erreurs très nombreuses.
     - Le bot du chat envoie un message seulement si le dernier message n'est pas de lui.
-    - Amélioration de la traduction en Anglais.
     - "LeekScript : correction d'un bug de performance avec des listes en clés de tables."
     - "Tutoriel : corrections de fautes (merci à epouarp)."
+    - Amélioration de la traduction en anglais.
+    - "Refonte graphique de plusieurs chapeaux. #img_238_hats_rework"
   fixed:
     - Correction d'un bug de déplacement interdit avec le grappin.
     - Correction de l'affichage des classements sur la page équipe sur mobile.

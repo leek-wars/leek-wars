@@ -83,6 +83,10 @@
 			35: {width: 300, height: 194}, // fedora
 			36: {width: 300, height: 194}, // fedora
 			37: {width: 300, height: 194}, // fedora
+			38: {width: 130, height: 140}, // topper
+			39: {width: 300, height: 262}, // crown
+			40: {width: 300, height: 205}, // cubic
+			41: {width: 300, height: 187}, // cap
 		}
 
 		created() {
