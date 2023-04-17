@@ -11,20 +11,7 @@
 			</div>
 		</div>
 		<panel class="first">
-			<div class="title">
-				<h3>Sources</h3>
-				<loader v-if="loading" :size="40" />
-			</div>
 
-			<div class="sources">
-				<div v-for="source of sources" :key="source.name" class="source card">
-					<a v-if="source.name" class="name" :href="source.name" target="_blank">{{ format(source.name) }}</a>
-					<div v-else class="name">∅</div>
-					<div class="count">{{ source.count | number }}</div>
-				</div>
-			</div>
-
-			<br>
 			<div class="title">
 				<h3>Derniers éleveurs</h3>
 				<loader v-if="loading" :size="40" />
@@ -35,7 +22,7 @@
 					<rich-tooltip-farmer :id="farmer.id" v-slot="{ on }" :bottom="true">
 						<router-link :to="'/farmer/' + farmer.id" class="name" v-on="on" v-ripple>
 							<avatar :farmer="farmer" />
-							<flag :code="LeekWars.languages[farmer.language].country" />
+							<flag :code="LeekWars.languages[farmer.language].country" :clickable="false" />
 							<div>{{ farmer.name }}</div>
 						</router-link>
 					</rich-tooltip-farmer>
@@ -50,7 +37,32 @@
 						<v-icon>mdi-settings-outline</v-icon> {{ farmer.test_fights }}
 						<v-icon>mdi-trophy-outline</v-icon> {{ farmer.trophies }}
 					</div>
-					<div class="level">{{ format(farmer.referer || '∅') }}</div>
+					<a class="level" :href="farmer.referer" target="_blank">
+						<img v-if="!farmer.pass && farmer.verified" src="/image/github_black.png"> {{ format(farmer.referer || '∅') }}
+					</a>
+				</div>
+			</div>
+
+			<br>
+
+			<div class="title">
+				<h3>Sources</h3>
+				<loader v-if="loading" :size="40" />
+			</div>
+
+			<div class="sources">
+				<div v-for="source of sources" :key="source.name" class="source card">
+					<a v-if="source.name" class="name" :href="source.name" target="_blank">{{ format(source.name) }}</a>
+					<div v-else class="name">∅</div>
+					<div class="stats">
+						<div class="count">{{ source.count | number }}</div>
+						<div class="other" :class="{empty: source.fights + source.test_fights + source.trophies === 0}">
+							<v-icon>mdi-sword-cross</v-icon> {{ source.fights }}
+							<v-icon>mdi-settings-outline</v-icon> {{ source.test_fights }}
+							<v-icon>mdi-trophy-outline</v-icon> {{ source.trophies }}
+							<v-icon>mdi-flash-outline</v-icon> {{ (source.trophies / source.count).toFixed(1) }}
+						</div>
+					</div>
 				</div>
 			</div>
 		</panel>
@@ -119,8 +131,8 @@
 	padding: 6px 8px;
 	display: flex;
 	justify-content: space-between;
-	align-items: center;
-	gap: 10px;
+	flex-direction: column;
+	gap: 5px;
 	.name {
 		word-break: break-all;
 		font-weight: 500;
@@ -132,6 +144,23 @@
 	.count {
 		text-align: center;
 		font-size: 24px;
+	}
+	.stats {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		.v-icon {
+			font-size: 16px;
+		}
+		.other {
+			display: flex;
+			align-items: center;
+			gap: 3px;
+			font-size: 14px;
+			&.empty {
+				opacity: 0.3;
+			}
+		}
 	}
 }
 .farmers {
@@ -146,6 +175,7 @@
 	justify-content: space-between;
 	align-items: center;
 	flex-wrap: wrap;
+	overflow: hidden;
 	a {
 		flex-shrink: 0;
 	}
@@ -155,14 +185,21 @@
 		gap: 6px;
 		flex-shrink: 0;
 		flex: 1;
+		div {
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
 	}
 	.flag {
 		max-height: 24px;
 		max-width: 24px;
+		flex-basis: 24px;
 		flex-shrink: 0;
 	}
 	.avatar {
 		height: 24px;
+		flex-basis: 24px;
+		flex-shrink: 0;
 	}
 	.status {
 		width: 15px;
@@ -182,11 +219,15 @@
 		align-items: center;
 		gap: 5px;
 		flex: 1;
-		min-width: 0;
+		max-width: 200px;
+		// min-width: 0;
 		text-overflow: ellipsis;
-		overflow: hidden;
+		// overflow: hidden;
 		.v-icon {
 			font-size: 18px;
+		}
+		img {
+			height: 18px;
 		}
 		&.empty {
 			opacity: 0.3;
