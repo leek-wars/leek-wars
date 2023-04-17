@@ -247,7 +247,7 @@
 				</div>
 			</panel>
 		</div>
-		<panel toggle="farmer/trophies">
+		<panel v-if="farmer && farmer.trophies > 0" toggle="farmer/trophies">
 			<template slot="title">
 				<img src="/image/icon/trophy.png">{{ $t('trophies') }} <span v-if="farmer" class="trophy-count">({{ farmer.points | number }})</span>
 			</template>
