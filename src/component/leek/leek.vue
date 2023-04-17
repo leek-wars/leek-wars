@@ -185,7 +185,7 @@
 
 			<panel icon="mdi-chip">
 				<template slot="title">{{ $t('main.chips') }} <span v-if="leek && leek.chips" class="chip-count">[{{ leek.chips.length }}/{{ leek.max_chips }}]</span></template>
-				<template v-if="leek && my_leek" slot="actions">
+				<template v-if="leek && my_leek && (leek.chips.length + farmer_chips.length) > 0" slot="actions">
 					<div v-if="$store.state.farmer.equipment_enabled" class="button flat" @click="chipsDialog = true">
 						<v-icon>mdi-pencil</v-icon>
 					</div>
@@ -227,6 +227,16 @@
 			</panel>
 		</div>
 
+		<center v-if="leek && my_leek && leek.fights && leek.fights.length === 0">
+			<br>
+			<router-link to="/garden">
+				<v-btn color="primary">
+					<v-icon>mdi-sword-cross</v-icon>&nbsp;
+					{{ $t('start_a_fight') }}
+				</v-btn>
+			</router-link>
+		</center>
+
 		<div class="container large">
 			<panel v-if="leek && leek.fights && leek.fights.length > 0" :title="$t('fights')" icon="mdi-sword-cross">
 				<template v-if="leek" slot="actions">
@@ -258,6 +268,8 @@
 			</table>
 		</panel>
 
+		<div class="spacer"></div>
+
 		<div class="page-footer page-bar">
 			<div class="tabs">
 				<template v-if="$store.state.connected && !my_leek">
@@ -286,7 +298,7 @@
 						<b slot="max">{{ brRange.max }}</b>
 					</i18n>
 				</tooltip>
-				<template v-if="leek && $store.state.connected">
+				<template v-if="leek && leek.level > 1 && $store.state.connected">
 					<tooltip>
 						<template v-slot:activator="{ on }">
 							<div class="tab" @click="copyAsTest()" v-on="on" icon="play_arrow">
@@ -1291,6 +1303,10 @@
 </script>
 
 <style lang="scss" scoped>
+	.page {
+		display: flex;
+		flex-direction: column;
+	}
 	.leek-image {
 		display: flex;
 		flex-direction: column;
