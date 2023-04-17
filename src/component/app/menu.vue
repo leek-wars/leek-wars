@@ -381,7 +381,7 @@
 	.menu .section[label]:after, .awards:after {
 		position: absolute;
 		background: #333;
-		right: -15px;
+		right: -10px;
 		top: 50%;
 		margin-top: -11px;
 		content: attr(label);
@@ -390,7 +390,7 @@
 		padding: 2px 4px;
 		line-height: normal;
 		z-index: 2;
-		font-size: 15px;
+		font-size: 16px;
 	}
 	#app.app .menu .section[label]:after {
 		right: 8px;
