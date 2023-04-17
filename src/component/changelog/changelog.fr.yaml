@@ -1,8 +1,6 @@
 238:
   title: 15 langues
   added:
-    - "Ajout d'information sur les BR et la création d'un nouveau poireau. #img_238_br #img_238_newleek"
-    - "Classements fun des tournois (solo, éleveur, équipe)."
     - Ajout les langues des éleveurs connectés sur la page forum.
     - "Ajout de 15 langues : Allemand, Italien, Portuguais, Suédois, Norvégien, Finlandais, Danois, Néérlandais, Polonais, Russe, Chinois, Hindi, Indonésien, Japonais et Coréen. #img_238_languages"
     - "Ajout de 4 nouveaux chapeaux. #img_238_hats"
@@ -25,7 +23,6 @@
     - "Tutoriel : corrections de fautes (merci à epouarp)."
     - "Correction de la pagination de la recherche forum (merci à FdHP)."
     - "Correction du titre des classements par niveau sur mobile."
-    - Correction d'un bug de position d'entité à la suite d'inversions.
 
 237:
   title: Récompenses parrainage, Rechercher & Remplacer et améliorations de la banque.
