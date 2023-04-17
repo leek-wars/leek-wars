@@ -91,9 +91,9 @@
 		}
 
 		show_didactitiel() {
-			this.didactitiel_new_enabled = true
+			this.didactitiel_enabled = true
 			Vue.nextTick(() => {
-				// this.didactitiel = true
+				this.didactitiel = true
 			})
 		}
 
