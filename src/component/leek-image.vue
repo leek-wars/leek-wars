@@ -1,5 +1,11 @@
 <template lang="html">
 	<svg :viewBox="'0 0 ' + width + ' ' + height" :width="width * scale" :height="height * scale" v-on="on">
+		<!-- <defs>
+			<clipPath id="cut" clipPathUnits="objectBoundingBox">
+				<rect :x="0" :y="0.15" :width="leekWidth" :height="leekHeight" />
+			</clipPath>
+			clip-path="url(#cut)"
+		</defs> -->
 		<g :class="{invert}">
 			<image v-if="leekImage" :x="leekX" :y="leekY" :width="leekWidth" :height="leekHeight" :xlink:href="leekImage" />
 			<image v-if="hasHat && hatImage" :x="hatX" :y="hatY" :width="hatWidth" :height="hatHeight" :xlink:href="'/image/' + hatImage" />
