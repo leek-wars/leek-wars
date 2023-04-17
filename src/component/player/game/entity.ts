@@ -651,6 +651,7 @@ abstract class FightEntity extends Entity {
 	}
 
 	public useChip(chip: ChipAnimation, cell: Cell, targets: FightEntity[], result: number) {
+		if (!this.cell) { return }
 		const pos = this.game.ground.field.cellToXY(cell)
 		const cellPixels = this.game.ground.xyToXYPixels(pos.x, pos.y)
 		this.watch(cell)
@@ -658,8 +659,8 @@ abstract class FightEntity extends Entity {
 
 		// One and zeros animation
 		S.chip.play(this.game)
-		const target_angle = cell.angle(this.game, this.cell!)
-		const distance = this.game.ground.field.real_distance(cell, this.cell!)
+		const target_angle = cell.angle(this.game, this.cell)
+		const distance = this.game.ground.field.real_distance(cell, this.cell)
 		for (let p = 0; p < 40; ++p) {
 			const angle_delta = Math.PI / 4 / distance
 			const angle = cell === this.cell ? Math.random() * Math.PI * 2 : target_angle - angle_delta / 2 + Math.random() * angle_delta
