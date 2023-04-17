@@ -72,7 +72,7 @@
 					<div class="text">{{ $t('main.team') }}</div>
 				</router-link>
 
-				<router-link v-ripple to="/trophies" class="section" @click.native="clickItem">
+				<router-link v-if="$store.state.farmer && $store.state.farmer.trophies" v-ripple to="/trophies" class="section" @click.native="clickItem">
 					<img src="/image/icon/trophy.png">
 					<div class="text">{{ $t("main.trophies") }}</div>
 				</router-link>
