@@ -142,7 +142,7 @@ const LANGUAGES = Object.freeze({
 	pl: { code: 'pl', name: 'Polska', country: 'pl', flag: '/image/flag/pl.png', chat: 11, encyclopedia: 'Encyklopedia', chats: [11], currency: 'EUR', beta: true, forum: false } as Language,
 	sv: { code: 'sv', name: 'Svenska', country: 'se', flag: '/image/flag/sv.png', chat: 12, encyclopedia: 'Encyklopedi', chats: [12], currency: 'SEK', beta: true, forum: false } as Language,
 	ru: { code: 'ru', name: 'Русский', country: 'ru', flag: '/image/flag/ru.png', chat: 13, encyclopedia: 'Энциклопедия', chats: [13], currency: 'RUB', beta: true, forum: false } as Language,
-	zh: { code: 'zh', name: '中国人', country: 'cn', flag: '/image/flag/cn.png', chat: 14, encyclopedia: '百科全书', chats: [14], currency: 'RUB', beta: true, forum: false } as Language,
+	zh: { code: 'zh', name: '中文', country: 'cn', flag: '/image/flag/cn.png', chat: 14, encyclopedia: '百科全书', chats: [14], currency: 'RUB', beta: true, forum: false } as Language,
 	hi: { code: 'hi', name: 'भारतीय', country: 'in', flag: '/image/flag/in.png', chat: 15, encyclopedia: 'विश्वकोश', chats: [15], currency: 'USD', beta: true, forum: false } as Language,
 	id: { code: 'id', name: 'Bahasa', country: 'id', flag: '/image/flag/id.png', chat: 16, encyclopedia: 'Ensiklopedia', chats: [16], currency: 'USD', beta: true, forum: false } as Language,
 	ja: { code: 'ja', name: '日本', country: 'jp', flag: '/image/flag/jp.png', chat: 17, encyclopedia: '百科事典', chats: [17], currency: 'JPY', beta: true, forum: false } as Language,
