@@ -103,7 +103,7 @@
 		}
 		get hatImage(): string {
 			if (this.hatTemplate) {
-				return 'hat/' + this.hatTemplate.name + '.png'
+				return 'hat/' + this.hatTemplate.name + '.png?2'
 			}
 			return ''
 		}

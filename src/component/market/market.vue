@@ -74,7 +74,7 @@
 					<loader v-if="!hats.length" slot="content" />
 					<div v-else slot="content" class="items hats">
 						<router-link v-for="hat in hats" :key="hat.id" v-ripple :to="'/market/' + hat.name" :farmer-count="items[hat.id].farmer_count" :leek-count="items[hat.id].leek_count" class="item hat" :class="{toohigh: hat.level > max_level}">
-							<img :src="'/image/hat/' + hat.name + '.png'">
+							<img :src="'/image/hat/' + hat.name + '.png?2'">
 						</router-link>
 					</div>
 				</panel>
