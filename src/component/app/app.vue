@@ -35,7 +35,7 @@
 				</div>
 			</div>
 
-			<div v-if="!LeekWars.mobile" class="big-leeks" :class="{flex: LeekWars.flex || LeekWars.large}">
+			<div v-if="!LeekWars.mobile" class="big-leeks" :class="{flex: LeekWars.flex || LeekWars.large, hidden: LeekWars.didactitial}">
 				<div class="wrapper">
 					<img class="big-leek-1" :src="LeekWars.leekTheme ? '/image/big_leek_1_white.webp' : '/image/big_leek_1.webp'">
 					<img class="big-leek-2" :src="LeekWars.leekTheme ? '/image/big_leek_2_white.webp' : '/image/big_leek_2.webp'">
@@ -59,9 +59,9 @@
 
 			<img v-if="LeekWars.clover" :style="{top: LeekWars.cloverTop + 'px', left: LeekWars.cloverLeft + 'px'}" class="clover" src="/image/clover.png" @click="clickClover">
 
-			<didactitiel v-if="didactitiel_enabled" v-model="didactitiel" />
+			<!-- <didactitiel v-if="didactitiel_enabled" v-model="didactitiel" /> -->
 
-			<!-- <didactitiel-new v-if="didactitiel_new_enabled" /> -->
+			<didactitiel-new v-if="LeekWars.didactitial" />
 
 			<changelog-dialog v-model="changelogDialog" :changelog="changelog" />
 
@@ -131,20 +131,19 @@
 	const Squares = () => import('@/component/app/squares.vue')
 	const ChangelogVersion = () => import('@/component/changelog/changelog-version.vue')
 	import { locale } from '@/locale'
-import { Leek } from '@/model/leek'
+	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { Component, Vue } from 'vue-property-decorator'
 	const ChangelogDialog = () => import('../changelog/changelog-dialog.vue')
 	const Didactitiel = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`)
 	const Documentation = () => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`)
+	const DidactitielNew = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel-new/didactitiel-new.${locale}.i18n`)
 
 	@Component({
-		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Squares, Didactitiel, Chats, 'mobile-br': MobileBR, ChangelogVersion, ChangelogDialog, Documentation }
+		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Squares, Didactitiel, Chats, 'mobile-br': MobileBR, ChangelogVersion, ChangelogDialog, Documentation, DidactitielNew }
 	})
 	export default class App extends Vue {
-		didactitiel: boolean = false
-		didactitiel_enabled: boolean = false
 		console: boolean = false
 		consoleDown: boolean = false
 		consoleX: number = 0
@@ -159,20 +158,19 @@ import { Leek } from '@/model/leek'
 		annonce: boolean = false
 		docEverywhere: boolean = false
 		docEverywhereModel: boolean = false
-		// didactitiel_new_enabled: boolean = false
+		didactitiel_new_enabled: boolean = true
 		mouseX = 0
 		mouseY = 0
 		cloverSpeed = 200
 
 		created() {
 			this.$root.$on('connected', () => {
-				if (!this.$store.state.farmer.didactitiel_seen) {
-					this.didactitiel_enabled = true
+				// if (!this.$store.state.farmer.didactitiel_seen) {
+					LeekWars.show_didactitiel()
 					Vue.nextTick(() => {
-						this.didactitiel = true
 						this.$store.commit('didactitiel-seen')
 					})
-				}
+				// }
 			})
 			if (this.$store.state.connected && localStorage.getItem('changelog_version') !== LeekWars.normal_version) {
 				this.changelogShow()
@@ -439,6 +437,8 @@ import { Leek } from '@/model/leek'
 		right: 0;
 		bottom: 0;
 		height: 100px;
+		opacity: 1;
+		transition: opacity 300ms ease;
 		.wrapper {
 			position: relative;
 			max-width: 1100px;
@@ -450,6 +450,9 @@ import { Leek } from '@/model/leek'
 				max-width: none;
 				width: 100%;
 			}
+		}
+		&.hidden {
+			opacity: 0;
 		}
 	}
 	#app.connected .big-leeks {
@@ -599,7 +602,7 @@ import { Leek } from '@/model/leek'
 			box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 			border-bottom-left-radius: 5px;
 			border-bottom-right-radius: 5px;
-			padding: 6px 12px;
+			padding: 4px 12px;
 			display: flex;
 			gap: 5px;
 			i {

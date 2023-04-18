@@ -582,6 +582,18 @@ const LeekWars = {
 			umami.track(event)
 		}
 	},
+	didactitial: false, didactitial_step: 0, didactitial_visible: false, show_didactitiel: () => {
+		LeekWars.didactitial = true
+		LeekWars.didactitial_step = 1
+		Vue.nextTick(() => {
+			LeekWars.didactitial_visible = true
+		})
+	},
+	didactitial_next: () => {
+		LeekWars.didactitial_step++
+		LeekWars.didactitial_visible = false
+		Vue.nextTick(() => LeekWars.didactitial_visible = true)
+	},
 	socket: new Socket(),
 	hats: Object.freeze(HATS),
 	pomps: Object.freeze(POMPS),

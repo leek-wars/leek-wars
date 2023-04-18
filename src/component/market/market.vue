@@ -625,7 +625,6 @@
 		border-radius: 20px;
 		background-color: #5fad1b;
 		font-weight: bold;
-		z-index: 1;
 	}
 	.items .item:not([farmer-count="0"]):after {
 		position: absolute;

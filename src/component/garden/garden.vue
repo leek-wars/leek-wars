@@ -160,7 +160,7 @@
 							<div v-if="selectedLeek && garden.fights">
 								<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('click_opponent') }}</div>
 								<loader v-if="!leekOpponents[selectedLeek.id] && !leekErrors[selectedLeek.id]" />
-								<div v-else-if="leekOpponents[selectedLeek.id]" class="opponents">
+								<div v-else-if="leekOpponents[selectedLeek.id]" class="opponents dida-element">
 									<span v-for="leek in leekOpponents[selectedLeek.id]" :key="leek.id" v-ripple class="leek" @click="clickSoloOpponent(leek)">
 										<garden-leek :leek="leek" />
 									</span>
@@ -168,6 +168,10 @@
 										<img src="/image/notgood.png">
 										<h4>{{ $t('no_opponent_of_your_size') }}</h4>
 									</div>
+									<span v-if="LeekWars.didactitial_step === 2" class="dida-hint shaking">
+										<span class="bubble" v-html="$t('main.dida_4')"></span>
+										<span class="arrow"></span>
+									</span>
 								</div>
 								<div v-else-if="leekErrors[selectedLeek.id]">
 									<img src="/image/notgood.png">
@@ -449,6 +453,9 @@
 		clickSoloOpponent(leek: Leek) {
 			if (this.selectedLeek) {
 				LeekWars.track('start-fight')
+				if (LeekWars.didactitial_step === 2) {
+					LeekWars.didactitial_next()
+				}
 				LeekWars.post('garden/start-solo-fight', {leek_id: this.selectedLeek.id, target_id: leek.id}).then(data => {
 					this.$router.push('/fight/' + data.fight)
 					store.commit('update-fights', -1)

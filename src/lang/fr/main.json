@@ -235,5 +235,20 @@
 	"contact": "Contact",
 	"private_groups": "Groupes privés",
 	"retrieve_all": "Tout récupérer",
-	"partners": "Partenaires"
+	"partners": "Partenaires",
+	"pass": "Passer",
+	"play": "Jouer",
+	"dida_1": "Bienvenue sur Leek Wars <b>{0}</b>, jeune éleveur de poireau ! Voici la page de votre poireau, <b>{1}</b>.",
+	"dida_1_leek": "Bienvenue sur Leek Wars <b>{0}</b>, jeune poireau ! Voici votre page.",
+	"dida_2": "Commencez par utiliser vos points de capital pour augmenter vos caractéristiques : la vie {life} et la force {strength} sont conseillés.",
+	"dida_3": "Vous pouvez maintenant affronter les poireaux d'autres joueurs dans le <b>Potager</b> ⚔️. Vous disposez de 50 combats par jour.",
+	"dida_4": "Cliquez sur un adversaire pour l'attaquer !",
+	"dida_5": "Dans Leek Wars, vous ne contrôlez pas directement votre poireau. C'est l'<b>Intelligence Artificielle</b> (IA) que vous programmez qui s'en charge ! ⚙️",
+	"dida_6": "Faire des combats vous fait gagner de l'XP pour gagner des points de capital et débloquer des armes et des puces.",
+	"dida_7": "Pour modifier votre IA, rendez-vous dans l'<b>Éditeur</b> 🖥️.",
+	"dida_8": "Voici votre IA de base. Dupliquez la ligne <code>useWeapon(enemy)</code> <b>3 fois</b> pour que votre poireau puisse tirer 3 fois par tour.",
+	"dida_9": "Sauvegardez l'IA et relancez ensuite un combat depuis le potager pour voir le résultat. La victoire sera votre !",
+	"dida_10": "Ce tutoriel est terminé ! Consultez l'{help} ❔ pour tout apprendre sur le jeu. Le {tutorial} vous apprendra à coder en 10 chapitres si vous êtes débutant.",
+	"dida_11": "N'hésitez pas à demander de l'aide sur le {chat} ou le {forum}, nous serons ravis de vous aider.",
+	"dida_12": "Bonne chance <b>{0}</b> !"
 }

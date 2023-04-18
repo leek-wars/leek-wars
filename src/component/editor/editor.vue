@@ -44,7 +44,7 @@
 							<v-list-item v-if="currentAI" v-ripple @click="save()">
 								<v-icon class="list-icon">mdi-content-save</v-icon>
 								<v-list-item-content>
-									<v-list-item-title>{{ $t('save') }}</v-list-item-title>
+									<v-list-item-title>{{ $t('save') }} <span class="shortcut">Ctrl + S</span></v-list-item-title>
 								</v-list-item-content>
 							</v-list-item>
 							<v-list-item v-if="currentAI" v-ripple @click="$refs.explorer.deleteAI(currentAI)">
@@ -88,7 +88,7 @@
 
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" :style="{width: 'calc(100% - ' + (LeekWars.mobile ? 0 : panelWidth) + 'px)'}" class="editor-column">
 				<panel>
-					<div slot="content" class="editor-left">
+					<div slot="content" class="editor-left dida-element">
 						<div class="resizer" @mousedown="resizerMousedown"></div>
 						<div :class="{tabs: $refs.tabs && $refs.tabs.tabs.length > 1}" class="editors">
 							<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :ais="fileSystem.ais" :editors="$refs.editors" :visible="currentAI === ai" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" @jump="jump" @load="load" />
@@ -105,6 +105,11 @@
 								</div>
 							</div>
 						</div>
+
+						<span v-if="LeekWars.didactitial_step === 4" class="dida-hint shaking">
+							<span class="bubble" v-html="$t('main.dida_8')" v-chat-code-latex></span>
+							<span class="arrow"></span>
+						</span>
 
 						<div v-if="showProblemsDetails && problemsHeight && (analyzer.error_count || analyzer.warning_count || analyzer.todo_count)" :style="{height: problemsHeight + 'px'}">
 							<div class="problems-resizer" @mousedown="problemsResizerMousedown"></div>
@@ -615,6 +620,9 @@
 			LeekWars.box = false
 			if (this.broadcast) {
 				this.broadcast.close()
+			}
+			if (LeekWars.didactitial_step === 4) {
+				LeekWars.didactitial_next()
 			}
 		}
 
@@ -1250,5 +1258,11 @@
 	code {
 		display: inline-block;
 		padding: 0;
+	}
+	.shortcut {
+		font-size: 12px;
+		color: #888;
+		font-weight: 500;
+		margin-left: 10px;
 	}
 </style>

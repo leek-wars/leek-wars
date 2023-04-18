@@ -81,8 +81,6 @@
 		</div>
 
 		<img class="leek" src="/image/big_leek_1_white.webp" loading="lazy">
-		<didactitiel v-if="didactitiel_enabled" v-model="didactitiel" />
-		<didactitiel-new v-if="didactitiel_new_enabled" />
 		<div class="cookies">
 			<div v-for="(cookie, c) in cookies" :key="c" class="cookie" :style="{left: cookie[0] + 'px', top: cookie[1] + 'px', 'font-size': cookie[2] + 'px', 'transform': 'rotate(' + cookie[3] + 'deg)'}">🍪</div>
 		</div>
@@ -94,9 +92,8 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
 	const Didactitiel = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`)
-	const DidactitielNew = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel-new/didactitiel-new.${locale}.i18n`)
 
-	@Component({ name: 'lw-footer', components: { Didactitiel, DidactitielNew } })
+	@Component({ name: 'lw-footer', components: { Didactitiel } })
 	export default class Footer extends Vue {
 
 		didactitiel: boolean = false
@@ -106,13 +103,7 @@
 
 		created() {
 			// this.throwCookies()
-		}
-
-		show_didactitiel() {
-			this.didactitiel_enabled = true
-			Vue.nextTick(() => {
-				this.didactitiel = true
-			})
+			// LeekWars.didactitial = true
 		}
 
 		throwCookies() {

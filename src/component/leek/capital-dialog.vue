@@ -294,6 +294,9 @@
 		updateValue() {
 			if (!this.value) {
 				this.close()
+				if (LeekWars.didactitial_step === 1) {
+					LeekWars.didactitial_next()
+				}
 			}
 		}
 

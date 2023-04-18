@@ -467,6 +467,9 @@
 			if (this.fightId !== 'local') {
 				LeekWars.socket.send([SocketMessage.FIGHT_PROGRESS_UNREGISTER, this.fightId])
 			}
+			if (LeekWars.didactitial_step === 3) {
+				LeekWars.didactitial_next()
+			}
 		}
 
 		getFight(first: boolean) {

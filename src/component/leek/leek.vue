@@ -154,7 +154,17 @@
 					</characteristic-tooltip>
 					<center v-if="leek && my_leek">
 						<br>
-						<v-btn v-if="leek.capital > 0 && $store.state.farmer.equipment_enabled" color="primary" @click="capitalDialog = true">{{ $t('main.n_capital', [leek.capital]) }}</v-btn>&nbsp;
+						<span class="dida-element">
+							<v-btn v-if="(leek.capital > 0 || LeekWars.didactitial_step === 1) && $store.state.farmer.equipment_enabled" color="primary" @click="capitalDialog = true" :class="{bouncing: !capitalDialog && LeekWars.didactitial_step === 1}">{{ $t('main.n_capital', [leek.capital]) }}</v-btn>
+							<span v-if="LeekWars.didactitial_step === 1" class="dida-hint">
+								<i18n v-if="LeekWars.didactitial_step === 1" class="bubble" path="main.dida_2">
+									<img height=18 src="/image/charac/life.png" slot="life">
+									<img height=18 src="/image/charac/strength.png" slot="strength">
+								</i18n>
+								<span class="arrow"></span>
+							</span>
+						</span>
+						&nbsp;
 						<v-btn class="potions-button" @click="potionDialog = true">
 							<img src="/image/icon/black/potion.png">
 							{{ $t('potions') }}

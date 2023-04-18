@@ -33,12 +33,21 @@
 
 			<div class="menu-center">
 				<span v-if="$store.state.farmer && $store.state.farmer.leeks" class="leeks">
-					<router-link v-for="(leek, key, i) in $store.state.farmer.leeks" :key="leek.id" v-ripple :to="{ name: 'leek', params: { id: leek.id }}" :label="($store.state.farmer.equipment_enabled ? leek.capital : 0) || null" :class="{'router-link-active': i == 0 && isHomePage}" class="section">
-						<div :leek="leek.id" :tab="'leek-' + leek.id" @click="clickItem">
-							<img src="/image/icon/house.png">
-							<div class="text">{{ leek.name }}</div>
-						</div>
-					</router-link>
+					<span v-for="(leek, key, i) in $store.state.farmer.leeks" :key="leek.id" class="dida-element">
+						<router-link v-ripple :to="{ name: 'leek', params: { id: leek.id }}" :label="($store.state.farmer.equipment_enabled ? leek.capital : 0) || null" :class="{'router-link-active': i == 0 && isHomePage, bouncing: LeekWars.didactitial_step === 1 && i === 0 && !(isHomePage || $route.path === '/leek/' + leek.id)}" class="section">
+							<div :leek="leek.id" :tab="'leek-' + leek.id" @click="clickItem">
+								<img src="/image/icon/house.png">
+								<div class="text">{{ leek.name }}</div>
+							</div>
+						</router-link>
+						<span v-if="LeekWars.didactitial_step === 1 && i === 0 && !(isHomePage || $route.path === '/leek/' + leek.id)" class="dida-hint right">
+							<i18n class="bubble" path="main.dida_2">
+								<img height=18 src="/image/charac/life.png" slot="life">
+								<img height=18 src="/image/charac/strength.png" slot="strength">
+							</i18n>
+							<span class="arrow"></span>
+						</span>
+					</span>
 					<router-link v-if="new_leek_condition" v-ripple to="/new-leek" class="section">
 						<v-icon>mdi-plus</v-icon>
 						<div class="text">{{ $t('main.add_leek') }}</div>
@@ -47,20 +56,32 @@
 
 				<div v-if="$store.state.farmer && $store.state.farmer.leeks" class="separator"></div>
 
-				<router-link v-ripple to="/editor" class="section" @click.native="clickItem">
-					<v-icon>mdi-code-braces</v-icon>
-					<div class="text">{{ $t("main.editor") }}</div>
-				</router-link>
+				<span class="dida-element">
+					<router-link v-ripple to="/editor" class="section" :class="{bouncing: LeekWars.didactitial_step === 4 && !$route.path.startsWith('/editor')}" @click.native="clickItem">
+						<v-icon>mdi-code-braces</v-icon>
+						<div class="text">{{ $t("main.editor") }}</div>
+					</router-link>
+					<span v-if="LeekWars.didactitial_step === 4 && !$route.path.startsWith('/editor')" class="dida-hint right">
+						<span class="bubble" v-html="$t('main.dida_7')"></span>
+						<span class="arrow"></span>
+					</span>
+				</span>
 
 				<!-- <router-link to='/console'>
 					<img src='/image/console.png'>
 					<div class='text'>{{ $t("main.console") }}</div>
 				</router-link> -->
 
-				<router-link v-ripple to="/garden" class="section" :label="$store.state.farmer ? ($store.state.farmer.fights + ($store.state.farmer.team_fights ? '+' + $store.state.farmer.team_fights : '')) : null" @click.native="clickItem">
-					<img src="/image/icon/garden.png">
-					<div class="text">{{ $t("main.garden") }}</div>
-				</router-link>
+				<span class="dida-element">
+					<router-link v-ripple to="/garden" class="section" :class="{bouncing: LeekWars.didactitial_step === 2 && !$route.path.startsWith('/garden')}" :label="$store.state.farmer ? ($store.state.farmer.fights + ($store.state.farmer.team_fights ? '+' + $store.state.farmer.team_fights : '')) : null" @click.native="clickItem">
+						<img src="/image/icon/garden.png">
+						<div class="text">{{ $t("main.garden") }}</div>
+					</router-link>
+					<span v-if="LeekWars.didactitial_step === 2 && !$route.path.startsWith('/garden')" class="dida-hint right">
+						<span class="bubble" v-html="$t('main.dida_3')"></span>
+						<span class="arrow"></span>
+					</span>
+				</span>
 
 				<router-link v-ripple to="/market" class="section" @click.native="clickItem">
 					<img src="/image/icon/market.png">
@@ -313,6 +334,7 @@
 		padding-top: 46px;
 		flex-direction: column;
     	align-items: stretch;
+		z-index: 1;
 	}
 	#app.app .menu {
 		position: fixed;

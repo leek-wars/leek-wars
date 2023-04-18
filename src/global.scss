@@ -1014,3 +1014,78 @@ a.green-link {
 		margin: 4px;
 	}
 }
+.dida-element {
+	position: relative;
+}
+.dida-hint {
+	position: absolute;
+	left: -420px;
+	bottom: 0;
+	top: 0;
+	font-size: 16px;
+	display: flex;
+	align-items: center;
+	z-index: 10;
+	max-width: 370px;
+	.bubble {
+		max-width: 370px;
+		border-radius: 7px;
+		background: white;
+		padding: 18px;
+		box-shadow: rgba(0, 0, 0, 0.7) 0px 10px 30px;
+		line-height: 1.4;
+	}
+	.arrow {
+		height: 0;
+		width: 0;
+		border-top: 15px solid transparent;
+		border-bottom: 15px solid transparent;
+		border-left: 20px solid white;
+		z-index: 1;
+	}
+	&.right {
+		right: -420px;
+		left: auto;
+		flex-direction: row-reverse;
+		.arrow {
+			height: 0;
+			width: 0;
+			border-top: 15px solid transparent;
+			border-bottom: 15px solid transparent;
+			border-right: 20px solid white;
+			border-left: none;
+		}
+	}
+}
+#app.app .dida-hint {
+	left: auto;
+	right: auto;
+	top: calc(100% + 30px);
+	bottom: auto;
+	flex-direction: column-reverse;
+	.arrow {
+		height: 0;
+		width: 0;
+		border-bottom: 20px solid white;
+		border-left: 15px solid transparent;
+		border-right: 15px solid transparent;
+		border-top: none;
+	}
+}
+.bouncing {
+	animation: hithere 1.5s ease infinite;
+}
+@keyframes hithere {
+	30% { transform: scale(1.2); }
+	40%, 60% { transform: rotate(-15deg) scale(1.2); }
+	50% { transform: rotate(15deg) scale(1.2); }
+	70% { transform: rotate(0deg) scale(1.2); }
+	100% { transform: scale(1); }
+}
+.shaking {
+	animation: shaking 4s ease infinite;
+}
+@keyframes shaking {
+	20% { transform: translateX(20px); }
+	40% { transform: translateX(0); }
+}
