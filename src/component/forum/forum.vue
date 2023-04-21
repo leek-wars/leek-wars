@@ -93,10 +93,15 @@
 				</template>
 			</div>
 			<div class="grades-legend">
-				{{ $t('legend') }} : <span class="admin">{{ $t('main.grade_admin') }}</span>,
-				<span class="moderator">{{ $t('main.grade_moderator') }}</span>,
-				<span class="contributor">{{ $t('main.grade_contributor') }}</span>,
-				<span>{{ $t('main.grade_member') }}</span>
+				<div class="languages">
+					<span v-for="(language, l) of connected_languages" :key="l"><flag :code="LeekWars.languages[l].country" /> {{ language }}</span>
+				</div>
+				<div class="grades">
+					{{ $t('legend') }} : <span class="admin">{{ $t('main.grade_admin') }}</span>,
+					<span class="moderator">{{ $t('main.grade_moderator') }}</span>,
+					<span class="contributor">{{ $t('main.grade_contributor') }}</span>,
+					<span>{{ $t('main.grade_member') }}</span>
+				</div>
 			</div>
 		</panel>
 
@@ -117,6 +122,7 @@
 
 		categories: any = null
 		connected_farmers: Farmer[] = []
+		connected_languages: any
 		forumLanguages: {[key: string]: boolean} = {}
 		expandFarmers: boolean = false
 		searchQuery: string = ''
@@ -137,6 +143,7 @@
 				this.categories = data.categories
 				this.$root.$emit('loaded')
 				this.connected_farmers = data.farmers
+				this.connected_languages = data.languages
 				LeekWars.setSubTitle(this.$t('connected_farmers_subtitle', [data.farmers.length]))
 			})
 			LeekWars.setTitle(this.$t('title'))
@@ -264,11 +271,32 @@
 	.connected-farmers.expanded {
 		height: auto;
 	}
-	.grades-legend {
+	.languages {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		span {
+			display: inline-flex;
+			gap: 5px;
+			align-items: center;
+		}
+		.flag {
+			height: 16px;
+			width: auto;
+		}
+	}
+	.grades {
 		font-size: 12px;
-		text-align: right;
-		padding-right: 10px;
+	}
+	.grades-legend {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
 		margin-top: 10px;
+		gap: 10px;
+	}
+	#app.app .grades-legend {
+		flex-direction: column;
 	}
 	.flag {
 		width: 28px;
