@@ -1,5 +1,5 @@
 <template lang="html">
-	<div>
+	<div class="page">
 		<div class="page-bar page-header">
 			<h1>{{ $t('title') }}</h1>
 		</div>

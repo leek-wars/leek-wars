@@ -82,6 +82,12 @@
 			</div>
 		</panel>
 
+		<panel :title="$t('contact')">
+			<i18n path="contact_text" tag="p">
+				<a slot="contact" class="green" target="_blank" rel="noopener" href="mailto:contact@leekwars.com">contact@leekwars.com</a>
+			</i18n>
+		</panel>
+
 		<panel :title="$t('we_talk_about_leeks')">
 			<p>{{ $t('thanks_about_articles') }}</p>
 			<div class="links">
@@ -132,12 +138,6 @@
 					</a>
 				</div>
 			</div>
-		</panel>
-
-		<panel :title="$t('contact')">
-			<i18n path="contact_text" tag="p">
-				<a slot="contact" class="green" target="_blank" rel="noopener" href="mailto:contact@leekwars.com">contact@leekwars.com</a>
-			</i18n>
 		</panel>
 
 		<panel :title="$t('links')">

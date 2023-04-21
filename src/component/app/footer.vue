@@ -12,13 +12,16 @@
 		</div>
 		<div class="column">
 			<h4>{{ $t('main.resources_help') }}</h4>
+			<router-link to="/changelog" class="item">{{ $t('main.changelog') }}</router-link>
 			<router-link :to="'/encyclopedia/' + $i18n.locale + '/' + $t('main.game_rules').replace(/ /g, '_')" class="item">{{ $t('main.game_rules') }}</router-link>
 			<router-link :to="'/encyclopedia/' + $i18n.locale + '/' + $t('main.tutorial').replace(/ /g, '_')" class="item">{{ $t('main.tutorial') }}</router-link>
 			<router-link to="/help/documentation" class="item">{{ $t('main.documentation') }}</router-link>
-			<a class="item" @click="show_didactitiel">{{ $t('main.didactitial') }} <v-icon>mdi-dock-window</v-icon></a>
-			<router-link to="/press-kit" class="item">{{ $t('main.press-kit') }} <v-icon>mdi-package-variant-closed</v-icon></router-link>
+			<!-- <a class="item" @click="show_didactitiel">{{ $t('main.didactitial') }} <v-icon>mdi-dock-window</v-icon></a> -->
+			<a class="item" target="_blank" rel="noopener" href="https://github.com/leek-wars/leek-wars">
+				GitHub
+			</a>
 		</div>
-		<div class="column">
+		<!-- <div class="column">
 			<h4>{{ $t('main.developers') }}</h4>
 			<router-link to="/changelog" class="item">{{ $t('main.changelog') }}</router-link>
 			<a href="https://github.com/leek-wars/leek-wars" target="_blank" rel="noopener" class="item">
@@ -33,9 +36,23 @@
 			<a href="https://leekscript.com" target="_blank" rel="noopener" class="item">
 				LeekScript <v-icon>mdi-open-in-new</v-icon>
 			</a>
+		</div> -->
+		<div class="column">
+			<h4>{{ $t('main.legal') }}</h4>
+			<router-link to="/contact" class="item">{{ $t('main.contact') }}</router-link>
+			<router-link to="/press-kit" class="item">{{ $t('main.press-kit') }} <v-icon>mdi-package-variant-closed</v-icon></router-link>
+			<router-link to="/legal" class="item">{{ $t('main.legal') }}</router-link>
+			<router-link to="/conditions" class="item">{{ $t('main.conditions') }}</router-link>
+			<span class="item">
+				<span class="color cookie-button" @click="throwCookies">🍪</span> {{ $t('main.no_cookies') }}
+			</span>
+			<!-- <span class="item">Copyright © 2013 - 3012</span> -->
 		</div>
 		<div class="column">
 			<h4>Social</h4>
+			<a class="item" target="_blank" rel="noopener" href="mailto:contact@leekwars.com">
+				<v-icon>mdi-email-outline</v-icon> E-mail
+			</a>
 			<a class="item" target="_blank" rel="noopener" href="https://twitter.com/LeekWars">
 				<v-icon>mdi-twitter</v-icon> Twitter
 			</a>
@@ -45,23 +62,12 @@
 			<a class="item" target="_blank" rel="noopener" href="https://www.instagram.com/leekwars/">
 				<v-icon>mdi-instagram</v-icon> Instagram
 			</a>
-			<a class="item" target="_blank" rel="noopener" href="https://www.linkedin.com/company/43355938">
+			<!-- <a class="item" target="_blank" rel="noopener" href="https://www.linkedin.com/company/43355938">
 				<v-icon>mdi-linkedin</v-icon> LinkedIn
-			</a>
-			<a class="item" target="_blank" rel="noopener" href="mailto:contact@leekwars.com">
-				<v-icon>mdi-email-outline</v-icon> E-mail
-			</a>
-		</div>
-		<div class="column">
-			<h4>{{ $t('main.legal') }}</h4>
-			<router-link to="/legal" class="item">{{ $t('main.legal') }}</router-link>
-			<router-link to="/conditions" class="item">{{ $t('main.conditions') }}</router-link>
-			<span class="item">
-				<span class="color cookie-button" @click="throwCookies">🍪</span> {{ $t('main.no_cookies') }}
-			</span>
+			</a> -->
 			<span class="item"><span class="color">🇫🇷</span> {{ $t('main.made_in_france') }}</span>
-			<span class="item">Copyright © 2013 - 3012</span>
 		</div>
+
 		<img class="leek" src="/image/big_leek_1_white.webp" loading="lazy">
 		<didactitiel v-if="didactitiel_enabled" v-model="didactitiel" />
 		<didactitiel-new v-if="didactitiel_new_enabled" />

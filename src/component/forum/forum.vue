@@ -122,7 +122,7 @@
 
 		categories: any = null
 		connected_farmers: Farmer[] = []
-		connected_languages: any
+		connected_languages: any = {}
 		forumLanguages: {[key: string]: boolean} = {}
 		expandFarmers: boolean = false
 		searchQuery: string = ''
