@@ -3,7 +3,8 @@ declare module '*.vue' {
 	export default Vue
 }
 
-declare let ga: Function
+declare let ga: any
+declare let umami: any
 
 declare module 'vuetify/lib/framework';
 declare module 'vuetify/lib/directives/ripple';

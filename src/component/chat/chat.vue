@@ -306,6 +306,7 @@
 		}
 
 		sendMessage(message: any) {
+			LeekWars.track('chat-message')
 			if (message.startsWith('/ping')) {
 				this.$store.commit('last-ping', Date.now())
 			}
@@ -415,6 +416,7 @@
 		toggleReaction(emoji: string) {
 			this.menuEmoji = false
 			if (!this.menuMessage) return
+			LeekWars.track('chat-reaction')
 			if (this.menuMessage.my_reaction === emoji) { // Remove current reaction
 				LeekWars.delete('message-reaction/delete', { message_id: this.menuMessage.id })
 				this.menuMessage.my_reaction = null

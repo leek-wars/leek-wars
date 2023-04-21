@@ -562,6 +562,11 @@ const LeekWars = {
 	setFavicon,
 	linkify, toChatLink,
 	goToRanking,
+	track: (event: string) => {
+		if (typeof umami !== 'undefined') {
+			umami.track(event)
+		}
+	},
 	socket: new Socket(),
 	hats: Object.freeze(HATS),
 	pomps: Object.freeze(POMPS),

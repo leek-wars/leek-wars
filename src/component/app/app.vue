@@ -271,6 +271,7 @@ import { Leek } from '@/model/leek'
 				this.updateClover()
 				this.updateCloverPosition()
 			} else {
+				LeekWars.track('clover')
 				LeekWars.socket.send([SocketMessage.GET_LUCKY])
 				LeekWars.clover = false
 			}

@@ -643,6 +643,8 @@
 			const content = aiEditor.editor.getValue()
 			Vue.set(aiEditor.ai, 'code', content)
 
+			LeekWars.track('save-ai')
+
 			LeekWars.post('ai/save', {ai_id: saveID, code: content}).then(data => {
 				if (aiEditor === null) { return }
 				aiEditor.saving = false

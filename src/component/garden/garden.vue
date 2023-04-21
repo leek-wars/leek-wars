@@ -448,6 +448,7 @@
 		}
 		clickSoloOpponent(leek: Leek) {
 			if (this.selectedLeek) {
+				LeekWars.track('start-fight')
 				LeekWars.post('garden/start-solo-fight', {leek_id: this.selectedLeek.id, target_id: leek.id}).then(data => {
 					this.$router.push('/fight/' + data.fight)
 					store.commit('update-fights', -1)
@@ -455,6 +456,7 @@
 			}
 		}
 		clickFarmerOpponent(farmer: Farmer) {
+			LeekWars.track('start-fight')
 			LeekWars.post('garden/start-farmer-fight', {target_id: farmer.id}).then(data => {
 				this.$router.push('/fight/' + data.fight)
 				store.commit('update-fights', -1)
@@ -462,6 +464,7 @@
 		}
 		clickCompositionOpponent(composition: Composition) {
 			if (this.selectedComposition) {
+				LeekWars.track('start-fight')
 				LeekWars.post('garden/start-team-fight', {composition_id: this.selectedComposition.id, target_id: composition.id}).then(data => {
 					this.$router.push('/fight/' + data.fight)
 					store.commit('update-team-fights', -1)
@@ -513,6 +516,7 @@
 
 		startFarmerChallenge() {
 			if (!this.challengeFarmerTarget) { return }
+			LeekWars.track('start-fight')
 			LeekWars.post('garden/start-farmer-challenge', {target_id: this.challengeFarmerTarget.id, seed: this.seed || 0}).then(data => {
 				this.$router.push('/fight/' + data.fight)
 			}).error(error => LeekWars.toast(this.$t(error)))
@@ -520,12 +524,14 @@
 
 		startLeekChallenge() {
 			if (!this.challengeLeekTarget || !this.selectedLeek) { return }
+			LeekWars.track('start-fight')
 			LeekWars.post('garden/start-solo-challenge', {leek_id: this.selectedLeek.id, target_id: this.challengeLeekTarget.id, seed: this.seed || 0}).then(data => {
 				this.$router.push('/fight/' + data.fight)
 			}).error(error => LeekWars.toast(this.$t(error)))
 		}
 
 		startTeamChallenge(composition: Composition) {
+			LeekWars.track('start-fight')
 			LeekWars.post('garden/start-team-challenge', { composition_id: this.selectedComposition.id, target_id: composition.id, seed: this.seed || 0}).then(data => {
 				this.$router.push('/fight/' + data.fight)
 			}).error(error => LeekWars.toast(this.$t(error)))
