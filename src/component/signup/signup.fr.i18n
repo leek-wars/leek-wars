@@ -60,6 +60,7 @@
 	"customization_title": "Personnalisation",
 	"customization_text1": "Gérer l'apparence de votre poireau avec des <b>chapeaux</b>, des <b>potions de couleur</b>, des <b>titres</b> et autres apparats.",
 	"groups": "Leek Wars pour les groupes",
-	"groups_desc": "Créez un groupe d'étudiants ou apprentis codeurs, gérer leur progression et communiquer en direct avec eux.",
-	"groups_button": "En savoir plus sur les offres"
+	"groups_desc": "Créez un groupe privé d'étudiants, de collaborateurs ou de joueurs, gérer leur progression, organisez des tournois et communiquez en direct avec eux.",
+	"groups_button": "En savoir plus sur les offres",
+	"groups_title": "Crééz votre groupe privé Leek Wars"
 }

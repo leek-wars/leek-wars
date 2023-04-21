@@ -1,112 +1,113 @@
 <template lang="html">
 	<div class="page">
 		<div class="page-bar page-header">
-			<h1>{{ $t('title') }}</h1>
+			<h1>
+				<breadcrumb :items="breadcrumb_items" :raw="true" />
+			</h1>
 		</div>
 		<panel class="first">
 
 			<div class="intro">
-				<h2>Crééz votre groupe privé Leek wars</h2>
+				<h2>{{ $t('intro') }}</h2>
 
-				Leek Wars offre la possibilité de <b>créer et gérer un groupe de joueurs</b> avec des fonctionnalités plus poussées que le jeu de base.
-				<br>Idéal si vous êtes :
+				<span v-html="$t('intro2')"></span>
 			</div>
 
 			<div class="targets">
 				<div class="target card">
 					<div class="image">
-						<leek-image :leek="{level: 200, hat: 7}" :scale="0.6" />
-						<leek-image :leek="{level: 20, hat: 31}" :scale="0.52" :invert="true" />
-						<leek-image :leek="{level: 20, hat: 31}" :scale="0.52" :invert="true" />
-						<leek-image :leek="{level: 20, hat: 31}" :scale="0.52" :invert="true" />
+						<leek-image :leek="{level: 200, hat: 7, face: 1}" :scale="0.6" />
+						<leek-image :leek="{level: 20, hat: 31, face: 1}" :scale="0.52" :invert="true" />
+						<leek-image :leek="{level: 20, hat: 31, face: 1}" :scale="0.52" :invert="true" />
+						<leek-image :leek="{level: 20, hat: 31, face: 1}" :scale="0.52" :invert="true" />
 					</div>
-					<div class="title">Education</div>
-					Un professeur avec des étudiants, pour un cours ou une activité.
+					<div class="title">{{ $t('education') }}</div>
+					{{ $t('education_desc') }}
 				</div>
 				<div class="target card">
 					<div class="image">
-						<leek-image :leek="{level: 300, hat: 2, skin: 12}" :scale="0.43" />
-						<leek-image :leek="{level: 200, hat: 7, skin: 43}" :scale="0.42" />
-						<leek-image :leek="{level: 250, hat: 35, skin: 17}" :scale="0.43" :invert="true" />
-						<leek-image :leek="{level: 200, hat: 7, skin: 20}" :scale="0.42" :invert="true" />
+						<leek-image :leek="{level: 300, hat: 2, skin: 12, face: 1}" :scale="0.43" />
+						<leek-image :leek="{level: 200, hat: 7, skin: 43, face: 1}" :scale="0.42" />
+						<leek-image :leek="{level: 250, hat: 35, skin: 17, face: 1}" :scale="0.43" :invert="true" />
+						<leek-image :leek="{level: 200, hat: 7, skin: 20, face: 1}" :scale="0.42" :invert="true" />
 					</div>
-					<div class="title">Entreprise</div>
-					Une entreprise pour une activité entre collaborateurs.
+					<div class="title">{{ $t('enterprise') }}</div>
+					{{ $t('enterprise_desc') }}
 				</div>
 				<div class="target card">
 					<div class="image">
-						<leek-image :leek="{level: 200, skin: 2, hat: 10}" :scale="0.44" />
-						<leek-image :leek="{level: 200, skin: 3, hat: 17}" :scale="0.44" />
-						<leek-image :leek="{level: 200, skin: 4, hat: 6}" :scale="0.44" :invert="true" />
-						<leek-image :leek="{level: 200, skin: 5, hat: 8}" :scale="0.44" :invert="true" />
+						<leek-image :leek="{level: 200, skin: 2, hat: 10, face: 1}" :scale="0.44" />
+						<leek-image :leek="{level: 200, skin: 3, hat: 17, face: 1}" :scale="0.44" />
+						<leek-image :leek="{level: 200, skin: 4, hat: 6, face: 1}" :scale="0.44" :invert="true" />
+						<leek-image :leek="{level: 200, skin: 5, hat: 8, face: 1}" :scale="0.44" :invert="true" />
 					</div>
-					<div class="title">Joueurs</div>
-					Un groupe de joueurs pour un évènement avec un tournoi privé.
+					<div class="title">{{ $t('players') }}</div>
+					{{ $t('players_desc') }}
 				</div>
 			</div>
 
-			<h2>Fonctionnalités</h2>
+			<h2>{{ $t('features') }}</h2>
 			<div class="features">
 				<div class="feature card">
 					<v-icon>mdi-account-group</v-icon>
-					<div>Page privée de groupe</div>
+					<div>{{ $t('private_page') }}</div>
 				</div>
 				<div class="feature card">
 					<v-icon>mdi-account-edit</v-icon>
-					<div>Création et gestion des participants</div>
+					<div>{{ $t('create_members') }}</div>
 				</div>
 				<div class="feature card">
 					<v-icon>mdi-chat</v-icon>
-					<div>Chat de discussion privé</div>
+					<div>{{ $t('chat') }}</div>
 				</div>
 				<div class="feature card">
 					<v-icon>mdi-sword</v-icon>
-					<div>Équipement et caractéristiques imposé</div>
+					<div>{{ $t('equipment') }}</div>
 				</div>
 				<div class="feature card">
 					<v-icon>mdi-finance</v-icon>
-					<div>Statistiques détaillées des participants et API</div>
+					<div>{{ $t('stats') }}</div>
 				</div>
 				<div class="feature card">
 					<v-icon>mdi-trophy</v-icon>
-					<div>Tournois privés jusqu'à 64 joueurs</div>
+					<div>{{ $t('tournaments') }}</div>
 				</div>
 				<div class="feature card">
 					<v-icon>mdi-sword-cross</v-icon>
-					<div>Battle Royales privés</div>
+					<div>{{ $t('br') }}</div>
 				</div>
 				<div class="feature card">
 					<v-icon>mdi-cogs</v-icon>
-					<div>Options pour personnaliser l'interface</div>
+					<div>{{ $t('options') }}</div>
 				</div>
 			</div>
 
-			<h2>Offres</h2>
+			<h2>{{ $t('offers') }}</h2>
 			<div class="offers">
 				<div class="offer card">
-					<div class="title">🥈 Platine</div>
-					<div class="item"><v-icon>mdi-check</v-icon> Création et gestion d'un groupe privé</div>
-					<div class="item"><v-icon>mdi-check</v-icon> Possibilité d'imposer équipement et caractéristiques</div>
-					<div class="item"><v-icon>mdi-check</v-icon> Lancement de Tournois et Battle Royales</div>
-					<div class="item"><v-icon>mdi-check</v-icon> <span>Argent de 10 000 000 <span class="hab"></span> par participant</span></div>
+					<div class="title">🥈 {{ $t('platinum') }}</div>
+					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_manage') }}</div>
+					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_equipment') }}</div>
+					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_tournament') }}</div>
+					<div class="item"><v-icon>mdi-check</v-icon> <span v-html="$t('offer_money_10m')"></span></div>
 					<div class="spacer"></div>
-					<div class="price">299 €/groupe</div>
-					<a href="mailto:contact@leekwars.com?subject=Demande d'informations groupe privé Platine" target="_blank">
-						<v-btn color="primary">Contactez-nous</v-btn>
+					<div class="price">299 €/{{ $t('per_group') }}</div>
+					<a :href="'mailto:contact@leekwars.com?subject=' + $t('platinum_subject')" target="_blank">
+						<v-btn color="primary">{{ $t('contact_us') }}</v-btn>
 					</a>
 				</div>
 				<div class="offer card">
 					<div class="title">💎 Diamant</div>
-					<div class="item"><v-icon>mdi-check</v-icon> Toutes les fonctionnalités <b>Platine</b></div>
+					<div class="item"><v-icon>mdi-check</v-icon> <span v-html="$t('offer_plus')"></span></div>
 					<div class="plus">+</div>
-					<div class="item"><v-icon>mdi-check</v-icon> <span>Argent de 100 000 000 <span class="hab"></span> par participant</span></div>
-					<div class="item"><v-icon>mdi-check</v-icon> Accès aux codes des participants par le superviseur</div>
-					<div class="item"><v-icon>mdi-check</v-icon> Ajout de fonctionnalités sur mesure</div>
-					<div class="item"><v-icon>mdi-check</v-icon> Support personnalisé</div>
+					<div class="item"><v-icon>mdi-check</v-icon> <span v-html="$t('offer_money_100m')"></span></div>
+					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_code') }}</div>
+					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_custom') }}</div>
+					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_support') }}</div>
 					<div class="spacer"></div>
-					<div class="price">799 €/groupe</div>
-					<a href="mailto:contact@leekwars.com?subject=Demande d'informations groupe privé Diamant" target="_blank">
-						<v-btn color="primary">Contactez-nous</v-btn>
+					<div class="price">799 €/{{ $t('per_group') }}</div>
+					<a :href="'mailto:contact@leekwars.com?subject=' + $t('diamond_subject')" target="_blank">
+						<v-btn color="primary">{{ $t('contact_us') }}</v-btn>
 					</a>
 				</div>
 			</div>
@@ -119,9 +120,18 @@
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
+	import Breadcrumb from '../forum/breadcrumb.vue'
 
-	@Component({ name: 'groups', i18n: {}, mixins: [...mixins] })
+	@Component({ name: 'groups', i18n: {}, mixins: [...mixins], components: { Breadcrumb } })
 	export default class Groups extends Vue {
+
+		get breadcrumb_items() {
+			return [
+				{ name: 'Leek Wars', link: '/' },
+				{ name: this.$t('title'), link: '/groups' },
+			]
+		}
+
 		created() {
 			LeekWars.setTitle(this.$t('title'))
 		}
@@ -188,12 +198,13 @@ h2 {
 }
 
 .offers {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	display: flex;
 	gap: 30px;
 	margin-top: 15px;
-	margin-bottom: 30px;
+	flex-wrap: wrap;
+	justify-content: center;
 	.offer {
+		max-width: 300px;
 		padding: 20px;
 		border-radius: 4px;
 		display: flex;

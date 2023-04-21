@@ -123,17 +123,25 @@
 			</div>
 		</panel>
 
+		<h1>{{ $t('groups') }}</h1>
+
 		<div class="container large large-tiles">
-			<panel v-ripple>
-				<router-link to="/groups" slot="content" class="flex">
-					<div class="flex">
-						<leek-image :scale="1" :leek="{level: 100, face: 1, hat: 31}" class="image" />
+			<panel v-ripple class="first">
+				<router-link to="/groups" slot="content">
+					<div class="groups">
+						<div class="image">
+							<leek-image :leek="{level: 300, hat: 2, skin: 12, face: 1}" :scale="0.6" />
+							<leek-image :leek="{level: 200, hat: 7, skin: 43, face: 1}" :scale="0.7" />
+							<leek-image :leek="{level: 300, hat: 37, skin: 23, face: 1}" :scale="0.8" style="margin-top: 15px" />
+							<leek-image :leek="{level: 250, hat: 35, skin: 17, face: 1}" :scale="0.7" :invert="true" style="margin-top: 10px" />
+							<leek-image :leek="{level: 200, hat: 7, skin: 20, face: 1}" :scale="0.6" :invert="true" />
+						</div>
 						<div>
-							<h2>{{ $t('groups') }}</h2>
+							<h2>{{ $t('groups_title') }}</h2>
 							<div>{{ $t('groups_desc') }}</div>
-							<!-- <a href="mailto:contact@leekwars.com"> -->
-								<v-btn small>{{ $t('groups_button') }}</v-btn>
-							<!-- </a> -->
+							<center>
+								<v-btn>{{ $t('groups_button') }}</v-btn>
+							</center>
 						</div>
 					</div>
 				</router-link>
@@ -397,6 +405,8 @@
 			LeekWars.get('changelog/get/' + this.$i18n.locale).then(data => {
 				this.last_version = data.changelog[0]
 			})
+
+			this.$root.$emit('loaded')
 		}
 
 		submit(e: Event) {
@@ -916,6 +926,27 @@
 	.v-btn {
 		margin-top: 10px;
 		margin-left: 0px;
+	}
+}
+.groups {
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+	padding: 15px;
+	.image {
+		display: flex;
+		text-align: center;
+		align-items: flex-start;
+		justify-content: center;
+		margin: 10px 0;
+		svg {
+			max-width: calc(20% + 20px);
+			margin-left: -10px;
+			margin-right: -10px;
+		}
+	}
+	.v-btn {
+		margin-top: 20px;
 	}
 }
 </style>
