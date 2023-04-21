@@ -124,19 +124,21 @@
 		</panel>
 
 		<div class="container large large-tiles">
-			<panel>
-				<div slot="content" class="flex">
-					<leek-image :scale="1" :leek="{level: 100, face: 1, hat: 31}" class="image" />
-					<div>
-						<h2>{{ $t('education') }}</h2>
-						<div>{{ $t('education_desc') }}</div>
-						<a href="mailto:contact@leekwars.com">
-							<v-btn small>{{ $t('education_button') }}</v-btn>
-						</a>
-					</div>
-				</div>
-			</panel>
 			<panel v-ripple>
+				<router-link to="/groups" slot="content" class="flex">
+					<div class="flex">
+						<leek-image :scale="1" :leek="{level: 100, face: 1, hat: 31}" class="image" />
+						<div>
+							<h2>{{ $t('groups') }}</h2>
+							<div>{{ $t('groups_desc') }}</div>
+							<!-- <a href="mailto:contact@leekwars.com"> -->
+								<v-btn small>{{ $t('groups_button') }}</v-btn>
+							<!-- </a> -->
+						</div>
+					</div>
+				</router-link>
+			</panel>
+			<!-- <panel v-ripple>
 				<router-link to="/press-kit" slot="content" class="flex">
 					<div class="image">📦</div>
 					<div>
@@ -144,7 +146,7 @@
 						<v-btn small>{{ $t('main.press-kit') }}</v-btn>
 					</div>
 				</router-link>
-			</panel>
+			</panel> -->
 		</div>
 
 		<h1>{{ $t('ranking') }}</h1>

@@ -23,6 +23,7 @@ const Conditions = () => import(/* webpackChunkName: "[request]" */ `@/component
 const Contact = () => import(/* webpackChunkName: "[request]" */ `@/component/contact/contact.${locale}.i18n`)
 const Documentation = () => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`)
 const Group = () => import(/* webpackChunkName: "[request]" */ `@/component/group/group.${locale}.i18n`)
+const Groups = () => import(/* webpackChunkName: "[request]" */ `@/component/groups/groups.${locale}.i18n`)
 const Editor = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor.${locale}.i18n`)
 const Encyclopedia = () => import(/* webpackChunkName: "encyclopedia" */ `@/component/encyclopedia/encyclopedia.${locale}.i18n`)
 const EncyclopediaSearch = () => import(/* webpackChunkName: "[request]" */ `@/component/encyclopedia/encyclopedia-search.${locale}.i18n`)
@@ -135,6 +136,7 @@ const routes = [
 	{ path: '/editor', component: Editor, beforeEnter: connected },
 	{ path: '/editor/:id', component: Editor, beforeEnter: connected },
 	{ path: '/group/:id', component: Group, beforeEnter: connected },
+	{ path: '/groups', component: Groups },
 	{ path: '/error/:message', component: Error },
 	{ path: '/error/:message/:title', component: Error },
 	{ path: '/farmer', component: Farmer, beforeEnter: connected },
