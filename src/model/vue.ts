@@ -54,7 +54,8 @@ Vue.mixin({
 Vue.filter('number', LeekWars.formatNumber)
 Vue.filter('date', LeekWars.formatDate)
 Vue.filter('datetime', LeekWars.formatDateTime)
-Vue.filter('time', LeekWars.formatTimeSeconds)
+Vue.filter('timeseconds', LeekWars.formatTimeSeconds)
+Vue.filter('time', LeekWars.formatTime)
 Vue.filter('duration', LeekWars.formatDuration)
 
 Vue.component('leek-image', LeekImage)

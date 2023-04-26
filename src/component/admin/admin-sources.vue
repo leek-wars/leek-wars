@@ -11,56 +11,63 @@
 			</div>
 		</div>
 		<panel class="first">
-
-			<div class="title">
-				<h3>Derniers éleveurs</h3>
-				<loader v-if="loading" :size="40" />
-			</div>
-
-			<div class="farmers">
-				<div v-for="farmer of last" :key="farmer.id" class="card farmer">
-					<rich-tooltip-farmer :id="farmer.id" v-slot="{ on }" :bottom="true">
-						<router-link :to="'/farmer/' + farmer.id" class="name" v-on="on" v-ripple>
-							<avatar :farmer="farmer" />
-							<flag :code="LeekWars.languages[farmer.language].country" :clickable="false" />
-							<div>{{ farmer.name }}</div>
-						</router-link>
-					</rich-tooltip-farmer>
-					<div class="date">
-						<img v-if="farmer.connected" class="status" src="/image/connected.png">
-						<img v-else class="status" src="/image/disconnected.png">
-						{{ farmer.register_time | datetime }}
-					</div>
-					<div class="level">{{ $t('main.level_n', [farmer.total_level]) }}</div>
-					<div class="level" :class="{empty: farmer.fights + farmer.test_fights + farmer.trophies === 0}">
-						<v-icon>mdi-sword-cross</v-icon> {{ farmer.fights }}
-						<v-icon>mdi-settings-outline</v-icon> {{ farmer.test_fights }}
-						<v-icon>mdi-trophy-outline</v-icon> {{ farmer.trophies }}
-					</div>
-					<a class="level" :href="farmer.referer" target="_blank">
-						<img v-if="!farmer.pass && farmer.verified" src="/image/github_black.png"> {{ format(farmer.referer || '∅') }}
-					</a>
+			<div class="content" slot="content">
+				<div class="title">
+					<h3>Derniers éleveurs</h3>
+					<loader v-if="loading" :size="40" />
 				</div>
-			</div>
 
-			<br>
+				<div class="last-farmers">
+					<div v-for="(day, d) of last_farmers_by_day" :key="day" class="farmers">
+						<b class="date">{{ d }} ({{ day.length }})</b>
+						<div v-for="farmer of day" :key="farmer.id" class="card farmer">
+							<div class="date">
+								<img v-if="farmer.connected" class="status" src="/image/connected.png">
+								<img v-else class="status" src="/image/disconnected.png">
+								{{ farmer.register_time | time }}
+							</div>
+							<rich-tooltip-farmer :id="farmer.id" v-slot="{ on }" :bottom="true">
+								<router-link :to="'/farmer/' + farmer.id" class="name" v-on="on" v-ripple>
+									<avatar :farmer="farmer" />
+									<flag :code="LeekWars.languages[farmer.language].country" :clickable="false" />
+									<div>{{ farmer.name }}</div>
+								</router-link>
+							</rich-tooltip-farmer>
+							<!-- <div class="level">{{ $t('main.level_n', [farmer.total_level]) }}</div> -->
+							<div class="ip">
+								{{ farmer.register_ip }}
+							</div>
+							<div class="stats" :class="{empty: farmer.fights + farmer.test_fights + farmer.trophies === 0}">
+								<v-icon>mdi-sword-cross</v-icon> {{ farmer.fights }}
+								<v-icon>mdi-settings-outline</v-icon> {{ farmer.test_fights }}
+								<v-icon>mdi-trophy-outline</v-icon> {{ farmer.trophies }}
+							</div>
+							<a class="source" :href="farmer.referer" target="_blank">
+								<img v-if="!farmer.pass && farmer.verified" src="/image/github_black.png"> {{ format(farmer.referer || '∅') }}
+							</a>
+						</div>
+					</div>
+				</div>
 
-			<div class="title">
-				<h3>Sources</h3>
-				<loader v-if="loading" :size="40" />
-			</div>
+				<br>
 
-			<div class="sources">
-				<div v-for="source of sources" :key="source.name" class="source card">
-					<a v-if="source.name" class="name" :href="source.name" target="_blank">{{ format(source.name) }}</a>
-					<div v-else class="name">∅</div>
-					<div class="stats">
-						<div class="count">{{ source.count | number }}</div>
-						<div class="other" :class="{empty: source.fights + source.test_fights + source.trophies === 0}">
-							<v-icon>mdi-sword-cross</v-icon> {{ source.fights }}
-							<v-icon>mdi-settings-outline</v-icon> {{ source.test_fights }}
-							<v-icon>mdi-trophy-outline</v-icon> {{ source.trophies }}
-							<v-icon>mdi-flash-outline</v-icon> {{ (source.trophies / source.count).toFixed(1) }}
+				<div class="title">
+					<h3>Sources</h3>
+					<loader v-if="loading" :size="40" />
+				</div>
+
+				<div class="sources">
+					<div v-for="source of sources" :key="source.name" class="source card">
+						<a v-if="source.name" class="name" :href="source.name" target="_blank">{{ format(source.name) }}</a>
+						<div v-else class="name">∅</div>
+						<div class="stats">
+							<div class="count">{{ source.count | number }}</div>
+							<div class="other" :class="{empty: source.fights + source.test_fights + source.trophies === 0}">
+								<v-icon>mdi-sword-cross</v-icon> {{ source.fights }}
+								<v-icon>mdi-settings-outline</v-icon> {{ source.test_fights }}
+								<v-icon>mdi-trophy-outline</v-icon> {{ source.trophies }}
+								<v-icon>mdi-flash-outline</v-icon> {{ (source.trophies / source.count).toFixed(1) }}
+							</div>
 						</div>
 					</div>
 				</div>
@@ -81,6 +88,7 @@
 		last: any = null
 		loading: boolean = false
 		timer: any = null
+		last_farmers_by_day: any = {}
 
 		created() {
 			LeekWars.setTitle("Admin Sources")
@@ -101,6 +109,14 @@
 				this.data = data
 				this.sources = data.all
 				this.last = data.last
+
+				// Group by day
+				this.last_farmers_by_day = {}
+				for (const farmer of this.last) {
+					const day = LeekWars.formatDate(farmer.register_time)
+					if (!this.last_farmers_by_day[day]) this.last_farmers_by_day[day] = []
+					this.last_farmers_by_day[day].push(farmer)
+				}
 			})
 		}
 
@@ -113,6 +129,9 @@
 </script>
 
 <style lang="scss" scoped>
+#app.app .panel .content {
+	padding: 10px;
+}
 .title {
 	display: flex;
 	align-items: center;
@@ -126,47 +145,54 @@
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 	gap: 10px;
-}
-.source {
-	padding: 6px 8px;
-	display: flex;
-	justify-content: space-between;
-	flex-direction: column;
-	gap: 5px;
-	.name {
-		word-break: break-all;
-		font-weight: 500;
-		color: #555;
-		&:hover {
-			color: #000;
-		}
-	}
-	.count {
-		text-align: center;
-		font-size: 24px;
-	}
-	.stats {
+	.source {
+		padding: 6px 8px;
 		display: flex;
-		align-items: center;
-		gap: 10px;
-		.v-icon {
-			font-size: 16px;
+		justify-content: space-between;
+		flex-direction: column;
+		gap: 5px;
+		.name {
+			word-break: break-all;
+			font-weight: 500;
+			color: #555;
+			&:hover {
+				color: #000;
+			}
 		}
-		.other {
+		.count {
+			text-align: center;
+			font-size: 24px;
+		}
+		.stats {
 			display: flex;
 			align-items: center;
-			gap: 3px;
-			font-size: 14px;
-			&.empty {
-				opacity: 0.3;
+			gap: 10px;
+			.v-icon {
+				font-size: 16px;
+			}
+			.other {
+				display: flex;
+				align-items: center;
+				gap: 3px;
+				font-size: 14px;
+				&.empty {
+					opacity: 0.3;
+				}
 			}
 		}
 	}
 }
+
 .farmers {
 	display: flex;
 	flex-direction: column;
-	gap: 5px;
+	gap: 2px;
+	> .date {
+		padding-bottom: 6px;
+	}
+	&:not(:first-child) > .date {
+		padding-top: 15px;
+	}
 }
 .farmer {
 	display: flex;
@@ -183,7 +209,6 @@
 		display: flex;
 		align-items: center;
 		gap: 6px;
-		flex-shrink: 0;
 		flex: 1;
 		div {
 			overflow: hidden;
@@ -197,8 +222,8 @@
 		flex-shrink: 0;
 	}
 	.avatar {
-		height: 24px;
-		flex-basis: 24px;
+		height: 22px;
+		flex-basis: 22px;
 		flex-shrink: 0;
 	}
 	.status {
@@ -211,18 +236,16 @@
 		font-size: 13px;
 		white-space: nowrap;
 		gap: 6px;
-		flex: 1;
+		flex-basis: 60px;
 	}
-	.level {
+	.level, .stats, .source, .ip {
 		white-space: nowrap;
 		display: flex;
 		align-items: center;
 		gap: 5px;
 		flex: 1;
-		max-width: 200px;
-		// min-width: 0;
 		text-overflow: ellipsis;
-		// overflow: hidden;
+		max-width: 200px;
 		.v-icon {
 			font-size: 18px;
 		}
@@ -232,6 +255,23 @@
 		&.empty {
 			opacity: 0.3;
 		}
+	}
+	.level {
+		flex-basis: 80px;
+		flex-grow: 0;
+	}
+	.ip {
+		font-size: 13px;
+	}
+}
+#app.app .farmer {
+	gap: 6px;
+	.name {
+		flex: 1;
+	}
+	.ip {
+		flex-basis: 80px;
+		flex: 0;
 	}
 }
 </style>
