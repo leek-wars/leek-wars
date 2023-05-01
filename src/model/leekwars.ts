@@ -217,7 +217,22 @@ const LeekWars = {
 	box: false,
 	nativeEmojis: detectNativeEmojis(),
 	leekTheme: localStorage.getItem('leek-theme') === 'true',
-	keepConnected: null as NodeJS.Timeout | null,
+	keepConnected: null as any,
+	startIntervals: () => {
+		if (LeekWars.keepConnected || !store.state.connected) { return }
+		LeekWars.keepConnected = setInterval(() => {
+			store.commit('last-connection', LeekWars.time)
+			LeekWars.post('farmer/update').then(data => {
+				store.commit('connected-count', data.farmers)
+			})
+		}, 59 * 1000)
+	},
+	clearIntervals: () => {
+		if (LeekWars.keepConnected) {
+			clearInterval(LeekWars.keepConnected)
+			LeekWars.keepConnected = null
+		}
+	},
 	setLocale(locale: string) {
 		loadLanguageAsync(vueMain, locale)
 		LeekWars.put('farmer/set-language', {language: locale})

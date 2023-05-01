@@ -90,12 +90,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				store.commit('register-chat', chat)
 			}
 			fileSystem.init(data.farmer)
-			LeekWars.keepConnected = setInterval(() => {
-				store.commit('last-connection', LeekWars.time)
-				LeekWars.post('farmer/update').then(data => {
-					store.commit('connected-count', data.farmers)
-				})
-			}, 59 * 1000)
+			LeekWars.startIntervals()
 			updateTitle(state)
 			vueMain.$emit('connected', state.farmer)
 		},
@@ -125,10 +120,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.unreadNotifications = 0
 			state.chat = {}
 			fileSystem.clear()
-			if (LeekWars.keepConnected) {
-				clearInterval(LeekWars.keepConnected)
-				LeekWars.keepConnected = null
-			}
+			LeekWars.clearIntervals()
 		},
 
 		"wsconnected"(state: LeekWarsState) {

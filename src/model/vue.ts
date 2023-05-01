@@ -159,6 +159,8 @@ function displayWarningMessage() {
 
 let lastErrorSent = 0
 
+let secondInterval: any = null, minuteInterval: any = null
+
 const vuetify = new Vuetify()
 
 const vueMain = new Vue({
@@ -201,18 +203,30 @@ const vueMain = new Vue({
 			this.$emit('resize')
 			LeekWars.mobile = LeekWars.isMobile()
 		})
+
+		const startIntervals = () => {
+			secondInterval = setInterval(() => {
+				LeekWars.timeSeconds = (Date.now() / 1000) | 0 - LeekWars.timeDelta
+			}, 1000)
+			minuteInterval = setInterval(() => {
+				LeekWars.time = (Date.now() / 1000) | 0 - LeekWars.timeDelta
+			}, 1000 * 60)
+		}
+		startIntervals()
+
+		window.addEventListener('blur', () => {
+			if (secondInterval) clearInterval(secondInterval)
+			if (minuteInterval) clearInterval(minuteInterval)
+			LeekWars.clearIntervals()
+		})
 		window.addEventListener('focus', () => {
 			this.$emit('focus')
+			startIntervals()
+			LeekWars.startIntervals()
 		})
 		window.addEventListener('click', () => {
 			this.$emit('htmlclick')
 		})
-		setInterval(() => {
-			LeekWars.timeSeconds = (Date.now() / 1000) | 0 - LeekWars.timeDelta
-		}, 1000)
-		setInterval(() => {
-			LeekWars.time = (Date.now() / 1000) | 0 - LeekWars.timeDelta
-		}, 1000 * 60)
 
 		this.$on('loaded', () => {
 			Vue.nextTick(() => {
