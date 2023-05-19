@@ -184,7 +184,7 @@
 	"func_canUseChip_return": "<i>true</i> si votre entité peut utiliser la puce, <i>false</i> sinon.",
 	"func_canUseChipOnCell": "Détermine si votre entité peut utiliser la puce <b>chip</b> sur la cellule <b>cell</b>.",
 	"func_canUseChipOnCell_arg_1": "Le numéro de la puce à tester.",
-	"func_canUseChipOnCell_arg_2": "Le numéro de la cellule sur laquelle vous voulez utliser la puce.",
+	"func_canUseChipOnCell_arg_2": "Le numéro de la cellule sur laquelle vous voulez utiliser la puce.",
 	"func_canUseChipOnCell_return": "<i>true</i> si votre entité peut utiliser la puce, <i>false</i> sinon.",
 	"func_canUseWeapon": "Détermine si votre entité peut tirer sur l'entité d'id <b>entity</b> avec l'arme <b>weapon</b>.",
 	"func_canUseWeapon_arg_1": "L'arme à tester. Par défaut votre arme actuellement équipée.",
