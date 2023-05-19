@@ -15,7 +15,7 @@
 	"equipment": "Équipement et caractéristiques imposé",
 	"stats": "Statistiques détaillées des participants et API",
 	"tournaments": "Tournois privés jusqu'à 64 joueurs",
-	"br": "Battle Royales privés",
+	"br": "Battle Royales privées",
 	"options": "Options pour personnaliser l'interface",
 	"offers": "Offres",
 	"platinum": "Platine",
@@ -32,5 +32,9 @@
 	"offer_custom": "Développement de fonctionnalités personnalisées",
 	"offer_support": "Support personnalisé",
 	"contact_us": "Contactez-nous",
-	"per_group": "groupe"
+	"per_group": "groupe",
+	"data_safety": "Sécurité et confidentialité des données",
+	"support": "Support rapide en 5 minutes",
+	"training": "Assistance à la formation",
+	"no_install": "Jouez tout de suite sans installation"
 }

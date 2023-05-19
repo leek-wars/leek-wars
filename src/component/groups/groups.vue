@@ -80,6 +80,23 @@
 					<v-icon>mdi-cogs</v-icon>
 					<div>{{ $t('options') }}</div>
 				</div>
+				<div class="feature card">
+					<v-icon>mdi-security</v-icon>
+					<div>{{ $t('data_safety') }}</div>
+				</div>
+				<div class="feature card">
+					<v-icon>mdi-face-agent</v-icon>
+					<div>{{ $t('support') }}</div>
+				</div>
+				<div class="feature card">
+					<v-icon>mdi-help-circle-outline</v-icon>
+					<div>{{ $t('training') }}</div>
+				</div>
+				<div class="feature card">
+					<v-icon>mdi-flash-outline</v-icon>
+					<div>{{ $t('no_install') }}</div>
+				</div>
+
 			</div>
 
 			<h2>{{ $t('offers') }}</h2>
@@ -188,10 +205,10 @@ h2 {
 	.feature {
 		display: flex;
 		gap: 12px;
-		padding: 15px;
+		padding: 10px 15px;
 		align-items: center;
 		.v-icon {
-			font-size: 30px;
+			font-size: 28px;
 			color: #555;
 		}
 	}
