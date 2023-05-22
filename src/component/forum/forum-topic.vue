@@ -38,15 +38,15 @@
 				<loader v-if="!topic || !topic.messages" />
 				<div v-else>
 					<div v-for="message in topic.messages" :id="'message-' + message.id" :key="message.id" class="message-wrapper">
-						<div class="profile">
-							<rich-tooltip-farmer v-if="!message.writer.deleted" :id="message.writer.id" v-slot="{ on }">
+						<div v-if="!message.writer.deleted" class="profile">
+							<rich-tooltip-farmer :id="message.writer.id" v-slot="{ on }">
 								<div v-on="on">
 									<router-link :to="'/farmer/' + message.writer.id" class="">
 										<avatar :farmer="message.writer" />
 									</router-link>
 								</div>
 							</rich-tooltip-farmer>
-							<div v-if="!message.writer.deleted" class="info">
+							<div class="info">
 								<div class="pseudo">
 									{{ message.writer.name }}
 									<img v-if="message.writer.connected" class="status" src="/image/connected.png">
@@ -62,6 +62,12 @@
 								<i18n class="trophy-count" path="main.n_trophies" tag="div">
 									<b slot="0">{{ message.writer.points }}</b>
 								</i18n>
+							</div>
+						</div>
+						<div v-else class="profile">
+							<div class="info">
+								<avatar />
+								<div class="farmer deleted">{{ $t('main.farmer') }}@{{ message.writer.id }}</div>
 							</div>
 						</div>
 						<div class="message card">
@@ -563,6 +569,10 @@
 	#app.app .profile .pseudo {
 		padding: 0;
 		max-width: none;
+	}
+	.farmer.deleted {
+		font-style: italic;
+		color: #aaa;
 	}
 	.profile .avatar {
 		width: 130px;
