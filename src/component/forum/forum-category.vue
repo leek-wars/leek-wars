@@ -66,11 +66,12 @@
 							</span>
 							<div class="description grey">
 								<i18n path="by_x_the_d">
-									<router-link slot="farmer" :to="'/farmer/' + topic.author.id">
+									<router-link v-if="topic.author.name!=''" slot="farmer" :to="'/farmer/' + topic.author.id">
 										<rich-tooltip-farmer :id="topic.author.id">
 											{{ topic.author.name }}
 										</rich-tooltip-farmer>
 									</router-link>
+									<span v-else slot="farmer" class="farmer deleted">{{ $t('main.farmer') }}@{{ topic.author.id }}</span>
 									<span slot="date">{{ topic.date | date }}</span>
 								</i18n>
 							</div>
@@ -79,7 +80,9 @@
 								<i18n v-if="LeekWars.mobile" tag="span" path="last_message">
 									<span slot="date">{{ LeekWars.formatDuration(topic.last_message_date) }}</span>
 									<router-link slot="farmer" :to="'/forum/category-' + topic.category + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id">
-										{{ topic.last_message_writer }} ►
+										<span v-if="topic.last_message_writer!=''">{{ topic.last_message_writer }}</span>
+										<span v-else class="farmer deleted">{{ $t('main.farmer') }}@{{ topic.last_message_writer_id }} </span>
+										►
 									</router-link>
 								</i18n>
 							</div>
@@ -90,9 +93,11 @@
 								<span>{{ LeekWars.formatDuration(topic.last_message_date) }}</span>
 								<i18n tag="div" path="last_by_x">
 									<router-link slot="author" :to="'/forum/category-' + topic.category + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id">
-										<rich-tooltip-farmer :id="topic.last_message_writer_id">
-											{{ topic.last_message_writer }} ►
+										<rich-tooltip-farmer v-if="topic.last_message_writer!=''" :id="topic.last_message_writer_id">
+											{{ topic.last_message_writer }}
 										</rich-tooltip-farmer>
+										<span v-else class="farmer deleted">{{ $t('main.farmer') }}@{{ topic.last_message_writer_id }} </span>
+										►
 									</router-link>
 								</i18n>
 							</div>
@@ -387,6 +392,11 @@
 	.topic .description i {
 		font-size: 14px;
 		vertical-align: bottom;
+	}
+
+	.topic .farmer.deleted {
+		font-style: italic;
+		color: #aaa;
 	}
 	.topic .num-messages {
 		flex: 0 0 100px;
