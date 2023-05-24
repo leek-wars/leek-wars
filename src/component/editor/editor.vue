@@ -119,27 +119,36 @@
 							<v-menu v-if="currentAI" top :offset-y="true" :nudge-top="1" :max-width="600">
 								<template v-slot:activator="{ on, attrs }">
 									<div v-ripple class="version" v-bind="attrs" v-on="on">
-										LeekScript {{ currentAI.version }}
+										LeekScript {{ currentAI.version }} <span v-if="currentAI.strict">&nbsp;({{ $t('strict') }})</span>
 										<v-icon>mdi-chevron-down</v-icon>
 									</div>
 								</template>
 								<v-list :dense="true" class="version-menu">
-									<v-list-item v-ripple @click="setVersion(5)">
+									<!-- <v-list-item v-ripple @click="setVersion(5)">
 										<v-icon v-if="currentAI.version === 5" class="list-icon">mdi-star</v-icon>
 										<v-icon v-else class="list-icon">mdi-star-outline</v-icon>
 										<v-list-item-content>
 											<v-list-item-title>LeekScript 5 <span class="green">{{ $t('recommended') }}</span></v-list-item-title>
 											<v-list-item-subtitle>
+												<ul v-if="$i18n.locale === 'fr'">
+													<li>Ajout du typage.</li>
+													<li>Ajout d'un mode strict qui renvoie plus d'avertissements.</li>
+												</ul>
 												<router-link class="link" to="/encyclopedia/LeekScript_5"><v-icon>mdi-book-open-page-variant</v-icon> {{ $t('all_info_ls', ['LeekScript 5']) }}</router-link>
 											</v-list-item-subtitle>
 										</v-list-item-content>
-									</v-list-item>
+									</v-list-item> -->
 									<v-list-item v-ripple @click="setVersion(4)">
 										<v-icon v-if="currentAI.version === 4" class="list-icon">mdi-star</v-icon>
 										<v-icon v-else class="list-icon">mdi-star-outline</v-icon>
 										<v-list-item-content>
 											<v-list-item-title>LeekScript 4</v-list-item-title>
 											<v-list-item-subtitle>
+												<ul v-if="$i18n.locale === 'fr'">
+													<li>Séparation entre Array et Map et nouvelles fonctions.</li>
+													<li>Entiers sur 64 bits au lieu de 32, nouvelles fonctions sur les nombres.</li>
+													<li>Fonctions flèches, paramètres par défaut.</li>
+												</ul>
 												<router-link class="link" to="/encyclopedia/LeekScript_4"><v-icon>mdi-book-open-page-variant</v-icon> {{ $t('all_info_ls', ['LeekScript 4']) }}</router-link>
 											</v-list-item-subtitle>
 										</v-list-item-content>
@@ -150,11 +159,11 @@
 										<v-list-item-content>
 											<v-list-item-title>LeekScript 3</v-list-item-title>
 											<v-list-item-subtitle>
-												<!-- <ul>
+												<ul v-if="$i18n.locale === 'fr'">
 													<li>Littéraux d'objets <code>{a: 12}</code></li>
 													<li>Classes de base : Number, Integer, Boolean, Object, Array, Function etc.</li>
 													<li>Nouveaux mots-clés réservés.</li>
-												</ul> -->
+												</ul>
 												<router-link class="link" to="/encyclopedia/LeekScript_3"><v-icon>mdi-book-open-page-variant</v-icon> {{ $t('all_info_ls', ['LeekScript 3']) }}</router-link>
 											</v-list-item-subtitle>
 										</v-list-item-content>
@@ -165,11 +174,11 @@
 										<v-list-item-content>
 											<v-list-item-title>LeekScript 2</v-list-item-title>
 											<v-list-item-subtitle>
-												<!-- <ul>
+												<ul v-if="$i18n.locale === 'fr'">
 													<li>Ajout des classes et objets.</li>
 													<li>Passage par référence par défaut pour les valeurs non-primitives dans les fonctions, les boucles foreach et les tableaux.</li>
 													<li>Corrections mineures (arrayFilter, opérateur ^=, et autres).</li>
-												</ul> -->
+												</ul>
 												<router-link class="link" to="/encyclopedia/LeekScript_2"><v-icon>mdi-book-open-page-variant</v-icon> {{ $t('all_info_ls', ['LeekScript 2']) }}</router-link>
 											</v-list-item-subtitle>
 										</v-list-item-content>
@@ -183,6 +192,20 @@
 											<v-list-item-subtitle>
 												<ul>
 													<li>{{ $t('intial_version') }}</li>
+												</ul>
+											</v-list-item-subtitle>
+										</v-list-item-content>
+									</v-list-item>
+									<v-divider></v-divider>
+									<v-list-item v-ripple @click="toggleStrictMode()" @click.stop>
+										<v-checkbox v-model="currentAI.strict" :hide-details="true" />
+										<v-list-item-content>
+											<v-list-item-title>{{ $t('strict_mode') }}</v-list-item-title>
+											<v-list-item-subtitle>
+												<ul v-if="$i18n.locale === 'fr'">
+													<li>Les variables initialisées avec une valeur gardent un type fixe.</li>
+													<li>Les accès en dehors d'un tableau causent une erreur au lieu de renvoyer null.</li>
+													<li>Davantage d'avertissements sur les types sont renvoyés.</li>
 												</ul>
 											</v-list-item-subtitle>
 										</v-list-item-content>
@@ -914,6 +937,15 @@
 			if (this.currentAI) {
 				this.currentAI.version = version
 				LeekWars.put('ai/version', {ai_id: this.currentAI.id, version})
+				this.save(this.currentEditor)
+				this.currentAI.analyze()
+			}
+		}
+
+		toggleStrictMode() {
+			if (this.currentAI) {
+				this.currentAI.strict = !this.currentAI.strict
+				// LeekWars.put('ai/strict', {ai_id: this.currentAI.id, strict: this.currentAI.strict})
 				this.save(this.currentEditor)
 				this.currentAI.analyze()
 			}

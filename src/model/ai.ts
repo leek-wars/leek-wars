@@ -10,6 +10,7 @@ class AI {
 	public code!: string
 	public valid!: boolean
 	public version!: number
+	public strict!: boolean
 	public timestamp: number = 0
 	public modified: boolean = false
 	public dragging: boolean = false
