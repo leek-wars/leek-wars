@@ -294,7 +294,7 @@ class Leek extends FightEntity {
 			// Translate to the weapon texture origin
 			ctx.translate(this.weapon.x - this.weapon.recoil, this.weapon.z)
 			// Draw the weapon
-			ctx.drawImage(texture, 0, 0, this.weapon.texture.texture.width, this.weapon.texture.texture.height)
+			ctx.drawImage(texture, 0, 0, this.weapon.w, this.weapon.h)
 		}
 		// Draw hands
 		if (!shadow) {

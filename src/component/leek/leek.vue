@@ -186,7 +186,7 @@
 					<template v-else>
 						<rich-tooltip-item v-for="weapon in orderedWeapons" :key="weapon.id" v-slot="{ on }" :item="LeekWars.items[weapon.template]" :bottom="true">
 							<div class="weapon" v-on="on">
-								<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" @click="setWeapon(weapon.template)">
+								<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" @click="setWeapon(weapon.template)" :width="WeaponsData[LeekWars.items[weapon.template].params].width">
 							</div>
 						</rich-tooltip-item>
 					</template>
@@ -484,7 +484,7 @@
 			<span slot="title">{{ $t('customize') }}</span>
 			<div v-if="leek" class="customize-dialog">
 				<center>
-					<leek-image :leek="leek" :scale="1" />
+					<leek-image ref="leekImage" :leek="leek" :scale="1" />
 					<br>
 					<lw-title v-if="leek.title.length" :title="leek.title" />
 				</center>
@@ -596,6 +596,7 @@
 						</v-radio-group>
 					</div>
 				</div>
+				<v-btn small @click="downloadLeekImage">Télécharger une image HD</v-btn>
 			</div>
 		</popup>
 
@@ -669,7 +670,7 @@
 	import { Warning } from '@/model/moderation'
 	import { Potion, PotionEffect } from '@/model/potion'
 	import { store } from '@/model/store'
-	import { Weapon } from '@/model/weapon'
+	import { Weapon, WeaponsData } from '@/model/weapon'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import CapitalDialog from './capital-dialog.vue'
 	import CharacteristicTooltip from './characteristic-tooltip.vue'
@@ -688,6 +689,7 @@
 	import LWTitle from '@/component/title/title.vue'
 	import { CHIPS } from '@/model/chips'
 	import { ORDERED_CHIPS } from '@/model/sorted_chips'
+import LeekImage from '../leek-image.vue'
 
 	@Component({ name: "leek", i18n: {}, mixins: [...mixins], components: {
 		CapitalDialog,
@@ -706,6 +708,7 @@
 	} })
 	export default class LeekPage extends Vue {
 		CHIPS = CHIPS
+		WeaponsData = WeaponsData
 		leek: Leek | null = null
 		error: boolean = false
 		weaponsDialog: boolean = false
@@ -1309,6 +1312,19 @@
 				.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
+		}
+
+		downloadLeekImage() {
+			let leekImage = this.$refs.leekImage! as LeekImage
+			const canvas = leekImage.drawOnCanvas()
+			if (canvas) {
+				let png = canvas.toDataURL()
+				var link = document.createElement('a')
+				link.download = this.leek!.name + ".png"
+				link.style.opacity = "0"
+				link.href = png
+				link.click()
+			}
 		}
 	}
 </script>

@@ -13,6 +13,8 @@ import { Position } from './position'
 abstract class WeaponAnimation {
 	public game: Game
 	public texture: Texture
+	public w: number
+	public h: number
 	// Position de l'arme par rapport au poireau (centre de rotation)
 	public cx: number
 	public cz: number
@@ -37,6 +39,8 @@ abstract class WeaponAnimation {
 		this.game = game
 		this.texture = texture
 		const data = WeaponsData[id] || FishData
+		this.w = data.width
+		this.h = data.height
 		this.cz = data.centerZ
 		this.cx = data.centerX
 		this.x = data.x

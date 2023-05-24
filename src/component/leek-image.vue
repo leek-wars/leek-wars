@@ -1,13 +1,12 @@
 <template lang="html">
-	<svg :viewBox="'0 0 ' + width + ' ' + height" :width="width * scale" :height="height * scale" v-on="on">
-		<!-- <defs>
-			<clipPath id="cut" clipPathUnits="objectBoundingBox">
-				<rect :x="0" :y="0.15" :width="leekWidth" :height="leekHeight" />
+	<svg xmlns="http://www.w3.org/2000/svg" :viewBox="'0 0 ' + width + ' ' + height" :width="width * scale" :height="height * scale" v-on="on">
+		<defs>
+			<clipPath :id="'cut' + hat" clipPathUnits="objectBoundingBox">
+				<rect :x="0" :y="hatCrop" :width="leekWidth" :height="leekHeight" />
 			</clipPath>
-			clip-path="url(#cut)"
-		</defs> -->
+		</defs>
 		<g :class="{invert}">
-			<image v-if="leekImage" :x="leekX" :y="leekY" :width="leekWidth" :height="leekHeight" :xlink:href="leekImage" />
+			<image v-if="leekImage" :x="leekX" :y="leekY" :width="leekWidth" :height="leekHeight" :xlink:href="leekImage" :clip-path="'url(#cut' + hat + ')'" />
 			<image v-if="hasHat && hatImage" :x="hatX" :y="hatY" :width="hatWidth" :height="hatHeight" :xlink:href="'/image/' + hatImage" />
 
 			<g v-if="weapon || leek.fish" :transform="'translate(' + (leekWidth / 2 + weaponCX) + ',' + (leekY + leekHeight - weaponCY) + ')'">
@@ -119,6 +118,7 @@
 		}
 		get hatWidth() { return this.hatTemplate ? this.leekHeight * 0.8 * this.hatTemplate.width : 0 }
 		get hatHeight() { return this.hatSize ? this.hatWidth * (this.hatSize.height / this.hatSize.width) : 0 }
+		get hatCrop() { return this.hatTemplate ? this.hatTemplate.crop : 0 }
 		get hasHat(): boolean { return this.hat !== null }
 		get leekWidth(): number { return this.leekSize ? this.leekSize.width : 0 }
 		get leekHeight(): number { return this.leekSize ? this.leekSize.height : 0 }
@@ -160,12 +160,12 @@
 		}
 		get offsetTop() {
 			return this.weaponData && this.weaponData.white ? Math.max(0,
-				this.weaponData.top - this.leekHeight - (this.hat !== null && this.hatTemplate ? Math.max(0, this.hatHeight - this.hatHeight * this.hatTemplate.height) : 0) + this.weaponData.centerZ +
+				this.weaponData.top - this.leekHeight - (this.hat !== null && this.hatTemplate ? this.hatHeight - this.hatHeight * this.hatTemplate.height : 0) + this.weaponData.centerZ +
 				Math.abs(Math.sin(this.weaponRadianAngle)) * (this.weaponData.width + this.weaponData.x)
 			 ) : 0
 		}
 		get leekX() { return Math.max(0, this.hatWidth / 2 - this.leekWidth / 2) }
-		get leekY() { return this.offsetTop + (this.hat !== null && this.hatTemplate ? Math.max(0, this.hatHeight - this.hatHeight * this.hatTemplate.height) : 0) }
+		get leekY() { return this.offsetTop + (this.hat !== null && this.hatTemplate ? this.hatHeight - this.hatHeight * this.hatTemplate.height : 0) }
 		get hatX() { return this.hat !== null ? Math.max(0, this.leekWidth / 2 - this.hatWidth / 2) : 0 }
 		get hatY() { return this.offsetTop }
 
@@ -189,7 +189,8 @@
 			if (this.leek.fish) {
 				return '/image/weapon/fish.png'
 			}
-			return '/image/' + LeekWars.items[this.weapon].name.replace('_', '/') + '.png' }
+			return '/image/' + LeekWars.items[this.weapon].name.replace('_', '/') + '.png'
+		}
 		get weaponWidth() { return this.weaponData ? this.weaponData.width : 0 }
 		get weaponHeight() { return this.weaponData ? this.weaponData.height : 0 }
 		get weaponCX() { return this.weaponData ? this.leekX + this.weaponData.centerX : 0 }
@@ -211,6 +212,54 @@
 		get hatSize() { return this.hat ? this.HAT_SIZES[this.hat] : null }
 		get handImage() {
 			return "/image/fight/leek_hand" + (this.leek.skin === 15 ? "_gold" : "") + ".png"
+		}
+
+		drawOnCanvas(): HTMLCanvasElement | null {
+			const SCALE = 4
+			const canvas = document.createElement('canvas')
+			canvas.width = this.width * SCALE
+			canvas.height = this.height * SCALE
+			const context = canvas.getContext('2d')
+			if (!context) { return null }
+
+			const leekImage = new Image()
+			leekImage.src = this.leekImage
+
+			context.scale(SCALE, SCALE)
+			// <image v-if="leekImage" :x="leekX" :y="leekY" :width="leekWidth" :height="leekHeight" :xlink:href="leekImage" :clip-path="'url(#cut' + hat + ')'" />
+			context.drawImage(leekImage, 0, this.leekHeight * this.hatCrop, this.leekWidth, this.leekHeight * (1 - this.hatCrop), this.leekX, this.leekY + this.leekHeight * this.hatCrop, this.leekWidth, this.leekHeight * (1 - this.hatCrop))
+			// <image v-if="hasHat && hatImage" :x="hatX" :y="hatY" :width="hatWidth" :height="hatHeight" :xlink:href="'/image/' + hatImage" />
+			if (this.hasHat) {
+				const hatImage = new Image()
+				hatImage.src = '/image/' + this.hatImage
+				context.drawImage(hatImage, this.hatX, this.hatY, this.hatWidth, this.hatHeight)
+			}
+			// <g v-if="weapon || leek.fish" :transform="'translate(' + (leekWidth / 2 + weaponCX) + ',' + (leekY + leekHeight - weaponCY) + ')'">
+			if (this.weapon || this.leek.fish) {
+				const weaponImage = new Image()
+				weaponImage.src = this.weaponImage
+				const handImage = new Image()
+				handImage.src = this.handImage
+				context.translate(this.leekWidth / 2 + this.weaponCX, (this.leekY + this.leekHeight - this.weaponCY))
+				// <g :transform="'scale(' + weaponScale + ')'">
+				context.scale(this.weaponScale, this.weaponScale)
+				// <g :transform="'rotate(' + weaponAngle + ')'" transform-box="fill-box">
+				context.rotate(this.weaponRadianAngle)
+				// <g :transform="'translate(' + weaponX + ',' + weaponY + ')'">
+				context.translate(this.weaponX, this.weaponY)
+				// <image :xlink:href="weaponImage" :width="weaponWidth" :height="weaponHeight" />
+				context.drawImage(weaponImage, 0, 0, this.weaponWidth, this.weaponHeight)
+				// <image v-if="hand1" :xlink:href="handImage" :width="handSize" :height="handSize" :x="hand1.x - handSize / 2" :y="hand1.y - handSize / 2" />
+				if (this.hand1) {
+					context.drawImage(handImage, this.hand1.x - this.handSize / 2, this.hand1.y - this.handSize / 2, this.handSize, this.handSize)
+				}
+				// <image v-if="hand2" :xlink:href="handImage" :width="handSize" :height="handSize" :x="hand2.x - handSize / 2" :y="hand2.y - handSize / 2" />
+				if (this.hand2) {
+					context.drawImage(handImage, this.hand2.x - this.handSize / 2, this.hand2.y - this.handSize / 2, this.handSize, this.handSize)
+				}
+			}
+
+			return canvas;
 		}
 	}
 </script>

@@ -14,5 +14,6 @@ class HatTemplate {
 	public width!: number
 	public height!: number
 	public item!: number
+	public crop!: number
 }
 export { Hat, HatTemplate }

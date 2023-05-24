@@ -347,7 +347,7 @@
 							this.hats.push(hat)
 							this.items_by_name[hat.name] = item
 						} else {
-							const fakeHat = {...item, name: item.name.replace(/^hat_/, ''), level: 1, width: 0, height: 0, template: item.id, item: 0}
+							const fakeHat = {...item, name: item.name.replace(/^hat_/, ''), level: 1, width: 0, height: 0, crop: 0, template: item.id, item: 0}
 							this.hats.push(fakeHat)
 							this.items_by_name[fakeHat.name] = fakeHat
 						}

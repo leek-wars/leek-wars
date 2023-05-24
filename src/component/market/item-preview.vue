@@ -11,7 +11,8 @@
 		</div>
 		<div v-if="item.type === ItemType.WEAPON || item.type === ItemType.CHIP" class="constant">{{ item.name.toUpperCase() }}</div>
 		<div class="image" :class="{sound: category === 'chip' || category === 'weapon'}">
-			<img :src="'/image/' + category + '/' + item.name.replace(category + '_', '') + '.png'" @click="playSound(item, category)">
+			<img v-if="item.type === ItemType.WEAPON" :src="'/image/weapon/' + item.name.replace(category + '_', '') + '.png'" @click="playSound(item, category)" :width="WeaponsData[item.params].width">
+			<img v-else :src="'/image/' + category + '/' + item.name.replace(category + '_', '') + '.png'" @click="playSound(item, category)">
 		</div>
 		<div v-if="$te(category + '.' + name_short + '_desc')" class="desc">
 			{{ $t(category + '.' + name_short + '_desc') }}
@@ -57,6 +58,7 @@ import FightPackPreview from '@/component/market/fight-pack-preview.vue'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { CHIPS } from '@/model/chips'
+import { WeaponsData } from '@/model/weapon'
 
 @Component({ name: 'item-preview', components: {
 	'weapon-preview': WeaponPreview,
@@ -74,6 +76,7 @@ export default class ItemPreview extends Vue {
 
 	ItemType = ItemType
 	CHIPS = CHIPS
+	WeaponsData = WeaponsData
 
 	get category() {
 		if (this.item.type === ItemType.WEAPON) return 'weapon'
