@@ -1,13 +1,13 @@
 238:
-  title: 15 langues, Refonte du didactitiel, Refonte + 4 chapeaux
+  title: Typage en LeekScript, Refonte des chapeaux + 4 nouveaux, 15 langues, Refonte du didactitiel.
   added:
-    - "LeekScript 5 : typage."
-    - Ajout les langues des éleveurs connectés sur la page forum.
+    - "LeekScript : ajout du typage manuel. #img_238_types"
+    - "LeekScript : ajout d'un mode strict pour les joueurs avancés."
     - "Ajout de 15 langues : Allemand, Italien, Portuguais, Suédois, Norvégien, Finlandais, Danois, Néérlandais, Polonais, Russe, Chinois, Hindi, Indonésien, Japonais et Coréen. #img_238_languages"
     - "Ajout de 4 nouveaux chapeaux. #img_238_hats"
     - "Ajout d'information sur les BR et la création d'un nouveau poireau. #img_238_br #img_238_newleek"
     - "Classements fun des tournois (solo, éleveur, équipe)."
-    - Refonte du didactitiel
+    - "Refonte du didactitiel. #img_238_didactitial"
     - "Affichage des langues des éleveurs connectés sur la page forum. #img_238_forum_languages"
   improved:
     - Accélération de l'IA en cas d'erreurs très nombreuses.
@@ -18,6 +18,8 @@
     - "Refonte graphique de plusieurs chapeaux. #img_238_hats_rework"
     - "Le bouton \"Tester\" est caché sur la page poireau au niveau 1."
     - "Petites améliorations de stabilité de l'éditeur au survol avec la souris."
+    - "Amélioration de l'autocomplétion sur des objets : les champs et les méthodes sont toutes affichées. #img_238_complete"
+    - "Passage de plusieurs images d'armes en HD."
   fixed:
     - Correction d'un bug de déplacement interdit avec le grappin.
     - Correction de l'affichage des classements sur la page équipe sur mobile.
@@ -30,6 +32,7 @@
     - "Correction du titre des classements par niveau sur mobile."
     - "Correction de la description du trophées géant en anglais."
     - "Correction d'un bug de performance du site quand on revient après une veille."
+    - "LeekScript : correction d'un bug de portée du mot-clé super."
 
 237:
   title: Récompenses parrainage, Rechercher & Remplacer et améliorations de la banque.

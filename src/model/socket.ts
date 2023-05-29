@@ -62,6 +62,8 @@ enum SocketMessage {
 	TOURNAMENT_UNLISTEN = 59,
 	TOURNAMENT_UPDATE = 60,
 	FAKE_LUCKY = 61,
+	EDITOR_COMPLETE = 62,
+	EDITOR_ANALYZE = 64,
 }
 
 class Socket {
@@ -123,9 +125,10 @@ class Socket {
 			const json = JSON.parse(msg.data)
 			const id = json[0]
 			const data = json[1]
-			// console.log("[WS] onmessage", id, data)
+			const request_id = json[2]
+			// console.log("[WS] onmessage", id, data, request_id)
 
-			vueMain.$emit('wsmessage', {type: id, data})
+			vueMain.$emit('wsmessage', {type: id, data, id: request_id})
 
 			switch (id) {
 				case SocketMessage.WRONG_TOKEN: {

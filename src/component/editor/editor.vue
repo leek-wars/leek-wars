@@ -198,7 +198,7 @@
 									</v-list-item>
 									<v-divider></v-divider>
 									<v-list-item v-ripple @click="toggleStrictMode()" @click.stop>
-										<v-checkbox v-model="currentAI.strict" :hide-details="true" />
+										<v-checkbox v-model="currentAI.strict" :hide-details="true" @click.stop />
 										<v-list-item-content>
 											<v-list-item-title>{{ $t('strict_mode') }}</v-list-item-title>
 											<v-list-item-subtitle>
@@ -532,9 +532,14 @@
 			this.broadcast.postMessage({ type: 'editor-opened-ping' })
 		}
 
-		wsmessage(message: {type: number, data: any}) {
-			if (message.type === SocketMessage.EDITOR_HOVER) {
+		wsmessage(message: {type: number, id: number, data: any}) {
+			// console.log("wsmessage", JSON.stringify(message))
+			if (message.type === SocketMessage.EDITOR_ANALYZE) {
+				analyzer.analyzeResult(message.data)
+			} else if (message.type === SocketMessage.EDITOR_HOVER) {
 				analyzer.hoverResult(message.data)
+			} else if (message.type === SocketMessage.EDITOR_COMPLETE) {
+				analyzer.completeResult(message)
 			}
 		}
 
@@ -714,7 +719,7 @@
 						this.goods.push({ai})
 					}
 					Vue.set(ai, 'valid', valid)
-					this.handleProblems(ai, data.result[entrypoint])
+					analyzer.handleProblems(ai, data.result[entrypoint])
 				}
 				analyzer.updateCount()
 				setTimeout(() => this.goods = [], 2000)
@@ -735,35 +740,6 @@
 		saveAll() {
 			for (const aiEditor of (this.$refs.editors as AIView[])) {
 				this.save(aiEditor)
-			}
-		}
-
-		handleProblems(entrypoint: AI, problems: any[][]) {
-			// console.log("handleProblems", entrypoint, problems)
-
-			analyzer.removeProblems(entrypoint)
-
-			// Group problems by ai
-			const problemsByAI = {} as {[key: number]: Problem[]}
-			for (const problem of problems) {
-				const level = problem[0]
-				const ai_id = problem[1]
-				const line = problem[2]
-				let info
-				if (problem.length === 8) {
-					info = this.$t('leekscript.error_' + problem[6], problem[7])
-				} else {
-					info = this.$t('leekscript.error_' + problem[6])
-				}
-				const problemObject = new Problem(line, problem[3], problem[4], problem[5], level, info as string)
-				if (!problemsByAI[ai_id]) { problemsByAI[ai_id] = [] }
-				problemsByAI[ai_id].push(problemObject)
-			}
-			for (const ai_id in problemsByAI) {
-				const ai = fileSystem.ais[ai_id]
-				const ai_problems = problemsByAI[ai_id]
-				// console.log("ai", ai.path, "problems", ai_problems)
-				analyzer.setProblems(entrypoint.id, ai, ai_problems)
 			}
 		}
 
@@ -945,7 +921,7 @@
 		toggleStrictMode() {
 			if (this.currentAI) {
 				this.currentAI.strict = !this.currentAI.strict
-				// LeekWars.put('ai/strict', {ai_id: this.currentAI.id, strict: this.currentAI.strict})
+				LeekWars.put('ai/strict', {ai_id: this.currentAI.id, strict: this.currentAI.strict})
 				this.save(this.currentEditor)
 				this.currentAI.analyze()
 			}

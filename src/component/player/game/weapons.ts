@@ -134,7 +134,7 @@ class WhiteWeaponAnimation extends WeaponAnimation {
 			const i = 1 - Math.min(1, (0.05 / this.inte))
 			ctx.rotate((front ? -Math.PI / 3 : -Math.PI / 3) + (Math.PI / 2.6 + (front ? Math.PI / 3 : Math.PI / 3)) * i)
 		}
-		ctx.drawImage(texture, 0, 0, this.texture.texture.width, this.texture.texture.height)
+		ctx.drawImage(texture, 0, 0, this.w, this.h)
 	}
 }
 

@@ -1,3 +1,38 @@
+238:
+  title: Typing in LeekScript, Hats redesigned + 4 new ones, 15 languages, Tutorial redesigned.
+  added:
+    - "LeekScript: manual typing added. #img_238_types"
+    - "LeekScript: strict mode added for advanced players."
+    - "Added 15 languages: German, Italian, Portuguese, Swedish, Norwegian, Finnish, Danish, Dutch, Polish, Russian, Chinese, Hindi, Indonesian, Japanese and Korean. #img_238_languages"
+    - "4 new hats added. #img_238_hats"
+    - "Added BR information and created a new leek. #img_238_br #img_238_newleek"
+    - "Fun tournament rankings (solo, farmer, team)."
+    - "Didactic overhaul. #img_238_didactitial"
+    - "Display of the languages of connected farmers on the forum page. #img_238_forum_languages"
+  improved:
+    - AI acceleration in case of very many errors.
+    - The chat bot only sends a message if the last message is not its own.
+    - "LeekScript: fixed performance bug with lists in table keys."
+    - "Tutorial: error corrections (thanks to epouarp)."
+    - English translation improved.
+    - "Graphic redesign of several hats. #img_238_hats_rework"
+    - "The \"Test\" button is hidden on the leek page at level 1."
+    - "Small stability improvements to editor on mouseover."
+    - "Improved autocompletion on objects: fields and methods are all displayed. #img_238_complete"
+    - "Several weapon images now in HD."
+  fixed:
+    - Fixed bug with grappling hook not moving.
+    - Fixed display of rankings on mobile team page.
+    - Correction of an entity position bug following inversions.
+    - Fixed account verification via GitHub.
+    - "LeekScript: fixed <class>.fields/methods with base classes."
+    - "LeekScript: fixed performance bug with lists in table keys."
+    - "Tutorial: error corrections (thanks to epouarp)."
+    - "Correction of forum search pagination (thanks to FdHP)."
+    - "Correction of mobile level rankings title."
+    - "Correction of giant trophy description in English."
+    - "Fixed site performance bug when returning after a standby."
+    - "LeekScript: fixed scope bug in super keyword."
 237:
   title: Sponsorship rewards, Search & Replace and bank improvements.
   added:

@@ -5,6 +5,7 @@ import { SocketMessage } from '@/model/socket'
 import Vue from 'vue'
 import { AIItem, Folder } from './editor-item'
 import { Problem } from './problem'
+import { i18n } from '@/model/i18n'
 
 class Analyzer {
 
@@ -15,7 +16,10 @@ class Analyzer {
 	public warning_count: number = 0
 	public todo_count: number = 0
 	public promise!: Promise<any>
+	public requestID: number = 0
+	public analyzeResolve!: (value: unknown) => any
 	public hoverResolve!: (value: unknown) => any
+	public completeResolve: {[key: number]: (value: unknown) => any} = {}
 
 	private initialized: boolean = false
 	// private GeneratorAnalyze!: Function
@@ -75,6 +79,23 @@ class Analyzer {
 		this.todo_count = todos
 	}
 
+	public analyze(ai: AI, code: string) {
+		// console.log("🔥 Analyze", ai.path)
+		// console.time('hover')
+		LeekWars.socket.send([SocketMessage.EDITOR_ANALYZE, ai.id, code])
+
+		return new Promise<any>((resolve, reject) => {
+			this.analyzeResolve = resolve
+		})
+	}
+
+	public analyzeResult(data: any[]) {
+		if (this.analyzeResolve) {
+			// console.timeEnd('hover')
+			this.analyzeResolve(data)
+		}
+	}
+
 	public hover(ai: AI, line: number, column: number) {
 		// console.log("🔥 Hover", ai.path, line, column)
 		// console.time('hover')
@@ -91,111 +112,27 @@ class Analyzer {
 			this.hoverResolve(data)
 		}
 	}
-	/*
-	public hover_old(ai: AI, position: number) {
 
-		if (!this.enabled) { return Promise.reject() }
+	public complete(ai: AI, code: string, line: number, column: number) {
 
-		// console.log("Hover", ai.path)
+		// console.log("🔥 Complete", ai.path, line, column)
 
-		// console.time("hover")
-		return this.promise.then(() => {
-			try {
-				const data = this.GeneratorHover(ai.version, ai.path, position, ai.entrypoint)
-				const result = JSON.parse(data)
-				// console.log(result)
-				return Promise.resolve(result)
-			} catch (e) {
-				console.error(this.getExceptionMessage(e))
-				return Promise.reject()
-			}
+		const requestID = this.requestID++
+		LeekWars.socket.send([SocketMessage.EDITOR_COMPLETE, requestID, ai.id, code, line, column])
+
+		return new Promise<any>((resolve, reject) => {
+			this.completeResolve[requestID] = resolve
 		})
 	}
-	*/
 
-	/*
-	public analyze(ai: AI, code: string) {
-
-		if (!this.enabled) { return Promise.reject() }
-
-		// console.log("Chain promise")
-		return this.promise.then(() => {
-
-			this.registerEntrypoints(ai)
-
-			console.log("🔥 Analyze", ai.path, {entrypoint: ai.entrypoint})
-
-			this.running = 1
-			return new Promise((resolve, reject) => setTimeout(() => {
-				try {
-					console.time("analyze")
-					const result = JSON.parse(this.GeneratorAnalyze(ai.version, ai.path, code, ai.entrypoint))
-					console.log(result)
-					for (const path in result) {
-						const problems = result[path]
-						problems.sort((a: any, b: any) => {
-							return a[0] - b[0]
-						})
-						// this.setAIProblems(path, problems)
-					}
-					return resolve(result)
-				} catch (e) {
-					const problems = [ [0, 0, 0, 0, 1, "ANALYZER_CRASHED"] ]
-					// this.setAIProblems(ai.path, problems)
-					try {
-						// console.error(this.getExceptionMessage(e))
-					} catch (e2) {
-						// nothing
-					}
-					return reject()
-				} finally {
-					this.running = 0
-					this.updateCount()
-					console.timeEnd("analyze")
-				}
-			}))
-		})
+	public completeResult(message: {type: number, id: number, data: any}) {
+		// console.log("complete result", message)
+		if (this.completeResolve[message.id]) {
+			// console.timeEnd('hover')
+			this.completeResolve[message.id](message.data)
+			delete this.completeResolve[message.id]
+		}
 	}
-	*/
-
-	/*
-	public register(ai: AI) {
-
-		if (!this.enabled) { return Promise.reject() }
-
-		// console.log("Register", ai.path)
-
-		return this.promise.then(() => {
-
-			this.GeneratorRegister(ai.version, ai.path)
-
-			this.registerEntrypoints(ai)
-
-			return Promise.resolve()
-		})
-	}
-	*/
-
-	/*
-	public complete(ai: AI, position: number) {
-
-		if (!this.enabled) { return Promise.reject() }
-
-		// console.log("Complete", ai.path)
-
-		console.time("complete")
-		const data = this.GeneratorComplete(ai.version, ai.path, position)
-		console.timeEnd("complete")
-		// console.log("complete", data)
-		const result = JSON.parse(data)
-		// console.log(result)
-		// this.problems[ai] = result
-		// this.error_count += result.errors.length
-		// console.log(this.error_count)
-
-		return Promise.resolve(result)
-	}
-	*/
 
 	/*
 	public delete(ai: AI) {
@@ -250,6 +187,37 @@ class Analyzer {
 		}
 	}
 	*/
+
+
+
+	handleProblems(entrypoint: AI, problems: any[][]) {
+		// console.log("handleProblems", entrypoint, problems)
+
+		analyzer.removeProblems(entrypoint)
+
+		// Group problems by ai
+		const problemsByAI = {} as {[key: number]: Problem[]}
+		for (const problem of problems) {
+			const level = problem[0]
+			const ai_id = problem[1]
+			const line = problem[2]
+			let info
+			if (problem.length === 8) {
+				info = i18n.t('leekscript.error_' + problem[6], problem[7])
+			} else {
+				info = i18n.t('leekscript.error_' + problem[6])
+			}
+			const problemObject = new Problem(line, problem[3], problem[4], problem[5], level, info as string)
+			if (!problemsByAI[ai_id]) { problemsByAI[ai_id] = [] }
+			problemsByAI[ai_id].push(problemObject)
+		}
+		for (const ai_id in problemsByAI) {
+			const ai = fileSystem.ais[ai_id]
+			const ai_problems = problemsByAI[ai_id]
+			// console.log("ai", ai.path, "problems", ai_problems)
+			analyzer.setProblems(entrypoint.id, ai, ai_problems)
+		}
+	}
 
 	public setProblems(entrypoint: number, ai: AI, problems: any) {
 		// console.log("[Analyzer] set ai problems", entrypoint, ai, problems)

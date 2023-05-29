@@ -16,10 +16,8 @@
 			<router-link :to="'/encyclopedia/' + $i18n.locale + '/' + $t('main.game_rules').replace(/ /g, '_')" class="item">{{ $t('main.game_rules') }}</router-link>
 			<router-link :to="'/encyclopedia/' + $i18n.locale + '/' + $t('main.tutorial').replace(/ /g, '_')" class="item">{{ $t('main.tutorial') }}</router-link>
 			<router-link to="/help/documentation" class="item">{{ $t('main.documentation') }}</router-link>
-			<!-- <a class="item" @click="show_didactitiel">{{ $t('main.didactitial') }} <v-icon>mdi-dock-window</v-icon></a> -->
-			<a class="item" target="_blank" rel="noopener" href="https://github.com/leek-wars/leek-wars">
-				GitHub
-			</a>
+			<a class="item" @click="LeekWars.show_didactitiel()">{{ $t('main.didactitial') }} <v-icon>mdi-dock-window</v-icon></a>
+
 		</div>
 		<!-- <div class="column">
 			<h4>{{ $t('main.developers') }}</h4>
@@ -52,6 +50,9 @@
 			<router-link to="/press-kit" class="item">{{ $t('main.press-kit') }} <v-icon>mdi-package-variant-closed</v-icon></router-link>
 			<h4>Social</h4>
 			<div class="icons">
+				<!-- <a class="item" target="_blank" rel="noopener" href="https://github.com/leek-wars/leek-wars">
+					<v-icon>mdi-github</v-icon>
+				</a> -->
 				<a target="_blank" rel="noopener" href="https://twitter.com/LeekWars">
 					<v-icon>mdi-twitter</v-icon>
 				</a>

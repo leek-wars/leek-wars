@@ -44,9 +44,9 @@
 			</div>
 		</div>
 		<div v-show="hintDialog" ref="hintDialog" :style="{left: hintDialogLeft + 'px', top: hintDialogTop + 'px'}" class="hint-dialog">
-			<!-- <div v-if="completionType" class="type">
+			<div v-if="completionType" class="type">
 				<lw-type :type="completionType" />
-			</div> -->
+			</div>
 			<div ref="hints" class="hints">
 				<div v-for="(hint, index) of hints" :key="index" :class="{active: selectedCompletion === index}" class="hint" @click="clickHint($event, index)">
 					<v-icon v-if="hint.category === 0" class="method">mdi-alpha-m-circle-outline</v-icon>
@@ -61,7 +61,8 @@
 					<v-icon v-else-if="hint.category === 9" class="class">mdi-copyright</v-icon>
 					<!-- <v-icon v-else class="variable">mdi-function</v-icon> -->
 					{{ hint.fullName }}
-					<!-- <lw-type :type="hint.lstype" /> -->
+					<div class="spacer"></div>
+					<lw-type v-if="hint.lstype" :type="hint.lstype" />
 				</div>
 			</div>
 			<div v-if="selectedHint" class="details">
@@ -506,25 +507,29 @@
 		setAnalyzerTimeout() {
 			clearTimeout(this.analyzerTimeout)
 			this.analyzerTimeout = setTimeout(() => {
+
 				this.ai.code = this.document.getValue()
 				this.ai.analyze()
-			}, 1000)
-		}
 
-		/*
-		analyzeV2() {
-			const content = this.editor.getValue()
-			return analyzer.analyze(this.ai, this.editor.getDoc().getValue()).then((problems) => {
-				this.$emit('problems', problems)
-			})
-			.catch(() => {
-				for (const entrypoint in this.errorOverlays) {
-					this.editor.removeOverlay(this.errorOverlays[entrypoint])
-					Vue.delete(this.errorOverlays, entrypoint)
-				}
-			})
+				analyzer.analyze(this.ai, this.ai.code).then((result) => {
+					// console.log("analyze", result)
+
+					for (const entrypoint in result) {
+						const entrypoint_id = parseInt(entrypoint, 10)
+						const ai = fileSystem.ais[entrypoint_id]
+
+						// Valid?
+						let valid = true
+						for (const problem of result[entrypoint]) {
+							if (problem[0] === 0) { valid = false; break }
+						}
+						Vue.set(ai, 'valid', valid)
+						analyzer.handleProblems(ai, result[entrypoint])
+					}
+					analyzer.updateCount()
+				})
+			}, 500)
 		}
-		*/
 
 		public save() {
 			this.ai.modified = false
@@ -841,7 +846,7 @@
 		public updateMouseAndCtrl() {
 			// console.log("updateMouseAndCtrl", {ctrl : this.ctrl })
 			if (!this.popups || !this.editor) { return null }
-			if (this.hintDialog) { return null }
+			// if (this.hintDialog) { return null }
 
 			if (!this.ctrl && this.underlineMarker) {
 				this.removeUnderlineMarker()
@@ -1091,6 +1096,7 @@
 			const tokenBeforeDot = token.string === '.' ? this.editor.getTokenAt({ ch: token.start, line: cur.line }) : this.editor.getTokenAt({ ch: token.start - 1, line: cur.line })
 			const isDot = token.string === '.' || previousToken.string === '.'
 			const start = token.string === '.' ? '' : token.string.toLowerCase()
+			// console.log({isDot, start})
 
 			const maybeAdd = (data: string | Keyword) => {
 				if (typeof data === 'string') {
@@ -1124,7 +1130,7 @@
 						this.addDotCompletionsFromAI(tokenBeforeDot, start, completions, visited, entrypoint)
 					}
 				}
-
+				/*
 				if (currentClass) {
 					// class.<field>
 					if (tokenBeforeDot.string === 'class') {
@@ -1148,6 +1154,7 @@
 						}
 					}
 				}
+				*/
 
 			} else {
 
@@ -1228,33 +1235,35 @@
 				this.detailDialog = false
 			}
 
-			this.openCompletions(this.completions, cursor)
+			analyzer.complete(this.ai, this.document.getValue(), cursor.line + 1, cursor.ch - 1).then(raw_data => {
 
-			return null
+				// console.log("Completions", raw_data)
+				if (raw_data) {
+					const raw_completions = raw_data.items as any[]
+					this.completionType = raw_data.type
 
-			/*
-			analyzer.complete(this.ai, position).then(raw_data => {
+					const new_completions = raw_completions
+						.filter(item => {
+							return item.name.toLowerCase().startsWith(start)
+						})
+						// .sort((a, b) => {
+						// 	return a.name.localeCompare(b.name)
+						// })
+						.map(data => { return {
+							name: data.name,
+							fullName: data.name,
+							details: '', // i18n.t('leekscript.keyword', [data.name]) as string,
+							category: data.category,
+							type: '',
+							lstype: data.type,
+							location: data.location
+						}
+					})
+					this.completions.push(...new_completions)
+				}
 
-				const raw_completions = raw_data.items
-				this.completionType = raw_data.type
-				// console.log(raw_data)
-
-				const new_completions = raw_completions.sort().map((data: any) => {
-					return {
-						name: data.name,
-						fullName: data.name,
-						details: i18n.t('leekscript.keyword', [data.name]) as string,
-						category: data.type,
-						type: 'function',
-						lstype: data.lstype,
-						location: data.location
-					}
-				})
-
-				this.completions = new_completions
-				this.openCompletions(new_completions, cursor)
+				this.openCompletions(this.completions, cursor)
 			})
-			*/
 		}
 
 		public addCompletionsFromAI(start: string, completions: any[], visited: Set<number>, ai: AI) {
@@ -1310,7 +1319,7 @@
 		}
 
 		public openCompletions(completions: any[], cursor: any) {
-
+			// console.log("openCompletions", completions)
 			if (completions.length === 0) {
 				this.close()
 			} else {
@@ -1642,10 +1651,11 @@
 		user-select: none;
 		font-size: 14px;
 		line-height: 20px;
+		display: flex;
+		align-items: center;
 		.v-icon {
 			transition: none;
 			font-size: 20px;
-			margin-top: -2px;
 			&.field {
 				color: #074f86;
 			}

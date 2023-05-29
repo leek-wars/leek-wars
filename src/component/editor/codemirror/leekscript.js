@@ -14,11 +14,13 @@ import { CONSTANTS } from '@/model/constants'
     var trackScope = parserConfig.trackScope !== false
     var isTS = parserConfig.typescript;
     var wordRE = parserConfig.wordCharacters || /[\w$\xa1-\uffff]/;
-
     // Tokenizer
 
-    var isLeekScriptType = (value) => {
+    var isLeekScriptTypeDef = (value) => {
       return value == "|" || value == "<" || value == ">" || value == "," || value == "?" || value === "void" || value === "null" || value === "any" || value === "integer" || value === "real" || value === "string" || value === "boolean" || value === "Array" || value === "Object" || value === "Map" || value === "Class" || value === "Function" || config.ai?.isClassDefined(value)
+    }
+    var isLeekScriptType = (value) => {
+      return value === "void" || value === "null" || value === "any" || value === "integer" || value === "real" || value === "string" || value === "boolean" || value === "Array" || value === "Object" || value === "Map" || value === "Class" || value === "Function" || config.ai?.isClassDefined(value)
     }
 
     var keywords = function(){
@@ -35,7 +37,7 @@ import { CONSTANTS } from '@/model/constants'
         "function": kw("function"),
         "for": kw("for"),
         // "switch": kw("switch"), "case": kw("case"), "default": kw("default"), "typeof": operator, "undefined": atom,
-        "in": operator, "instanceof": operator, "and": operator, "or": operator, "xor": operator, "not": operator, "as": operator,
+        "in": operator, "instanceof": operator, "and": operator, "or": operator, "xor": operator, "not": operator,
         "true": atom, "false": atom, "null": atom, "NaN": atom, "Infinity": atom,
         "this": kw("this"), "class": kw("class"), "super": kw("atom"),
         "private": kw("variable"), "protected": kw("variable"), "final": kw("variable"), "static": kw("variable"), "extends": C,
@@ -382,7 +384,7 @@ import { CONSTANTS } from '@/model/constants'
     }
 
     function statement(type, value) {
-      if (isLeekScriptType(value)) {
+      if (isLeekScriptTypeDef(value)) {
         cx.marked = "type"
         return cont(pushlex("vardef", value), vardef, expect(";"), poplex);
       }
@@ -477,11 +479,12 @@ import { CONSTANTS } from '@/model/constants'
       return maybeoperatorNoComma(type, value, false);
     }
     function maybeoperatorNoComma(type, value, noComma) {
+      // console.log("maybeoperatorNoComma", type, value)
       var me = noComma == false ? maybeoperatorComma : maybeoperatorNoComma;
       var expr = noComma == false ? expression : expressionNoComma;
       if (type == "=>") return cont(pushcontext, noComma ? arrowBodyNoComma : arrowBody, popcontext);
       if (type == "operator") {
-        if (/\+\+|--/.test(value) || isTS && value == "!") return cont(me);
+        if (/\+\+|--/.test(value) || value == "!") return cont(me);
         if (isTS && value == "<" && cx.stream.match(/^([^<>]|<[^<>]*>)*>\s*\(/, false))
           return cont(pushlex(">"), commasep(typeexpr, ">"), poplex, me);
         if (value == "?") return cont(expression, expect(":"), expr);
@@ -492,7 +495,7 @@ import { CONSTANTS } from '@/model/constants'
       if (type == "(") return contCommasep(expressionNoComma, ")", "call", me);
       if (type == ".") return cont(property, me);
       if (type == "[") return cont(pushlex("]"), maybeexpression, expect("]"), poplex, me);
-      if (isTS && value == "as") { cx.marked = "keyword"; return cont(typeexpr, me) }
+      if (value == "as") { cx.marked = "keyword"; return cont(typeexpr, me) }
       if (type == "regexp") {
         cx.state.lastType = cx.marked = "operator"
         cx.stream.backUp(cx.stream.pos - cx.stream.start - 1)
@@ -628,6 +631,10 @@ import { CONSTANTS } from '@/model/constants'
       }
     }
     function typeexpr(type, value) {
+      if (isLeekScriptType(value)) {
+        cx.marked = "type"
+        return cont(typeexpr)
+      }
       if (value == "keyof" || value == "typeof" || value == "infer" || value == "readonly") {
         cx.marked = "keyword"
         return cont(value == "typeof" ? expressionNoComma : typeexpr)
@@ -641,7 +648,7 @@ import { CONSTANTS } from '@/model/constants'
       if (type == "[") return cont(pushlex("]"), commasep(typeexpr, "]", ","), poplex, afterType)
       if (type == "{") return cont(pushlex("}"), typeprops, poplex, afterType)
       if (type == "(") return cont(commasep(typearg, ")"), maybeReturnType, afterType)
-      if (type == "<") return cont(commasep(typeexpr, ">"), typeexpr)
+      if (value == "<") return cont(commasep(typeexpr, ">"), typeexpr)
       if (type == "quasi") { return pass(quasiType, afterType); }
     }
     function maybeReturnType(type) {
@@ -703,7 +710,7 @@ import { CONSTANTS } from '@/model/constants'
       if (value == "=") return cont(typeexpr)
     }
     function vardef(_, value) {
-      if (isLeekScriptType(value)) {
+      if (isLeekScriptTypeDef(value)) {
         cx.marked = "type"
         return cont(vardef);
       }
@@ -745,7 +752,7 @@ import { CONSTANTS } from '@/model/constants'
       if (type == "(") return cont(pushlex(")"), forspec1, poplex);
     }
     function forspec1(type, value) {
-      if (isLeekScriptType(value)) {
+      if (isLeekScriptTypeDef(value)) {
         cx.marked = "type"
         return cont(vardef, forspec2);
       }
@@ -780,7 +787,7 @@ import { CONSTANTS } from '@/model/constants'
       }
     }
     function funarg(type, value) {
-      if (isLeekScriptType(value)) {
+      if (isLeekScriptTypeDef(value)) {
         cx.marked = "type"
         return cont(funarg);
       }
@@ -807,16 +814,16 @@ import { CONSTANTS } from '@/model/constants'
       if (type == "{") return cont(pushlex("}"), classBody, poplex);
     }
     function classBody(type, value) {
-      // console.log(type, value, cx)
-      if (type == "async" || (type == "variable" && (value === "static" || value === "public" || value === "protected" || value === "final" || value === "constructor" || value === "private" || value === "get" || value == "set" || (isTS && isModifier(value))) && cx.stream.match(/^[\s<,>]/, false) )) {
+      // console.log(type, value)
+      if (type == "async" || (type == "variable" && (value === "static" || value === "public" || value === "protected" || value === "final" || value === "constructor" || value === "private" || value === "get" || value == "set" || (isTS && isModifier(value))) && cx.stream.match(/^[\s<,>=]/, false) )) {
         cx.marked = "keyword";
         return cont(classBody);
       }
-      if (isLeekScriptType(value) && cx.stream.match(/^[\s<,>\?]/, false)) {
+      if (isLeekScriptTypeDef(value) && cx.stream.match(/^[\s<,>\?=]/, false)) {
         cx.marked = "type";
         return cont(classBody);
       }
-      if (value == "<" || type == "," || value == "|" || (value && value.startsWith(">"))) {
+      if (value == "<" || type == "," || value == "|" || type == "=>" || (value && value.startsWith(">"))) {
         return cont(classBody);
       }
       if (type == "variable" || cx.style == "keyword") {
@@ -840,7 +847,7 @@ import { CONSTANTS } from '@/model/constants'
       if (value == "?") return cont(classfield)
       if (type == ":") return cont(typeexpr, maybeAssign)
       if (value == "=") return cont(expressionNoComma)
-      if (value === "public" || value === "private" || value === "protected" || value === "static" || value === "constructor" || value === "integer" || value === "null" || value === "Map" || config.ai.isClassDefined(value) || value === "|" || value == "}" || type === "variable") return;
+      if (value === "public" || value === "private" || value === "protected" || value === "static" || value === "constructor" || value === "integer" || value === "null" || value === "Map" || config.ai?.isClassDefined(value) || value === "|" || value == "}" || type === "variable") return;
       var context = cx.state.lexical.prev, isInterface = context && context.info == "interface"
       return pass(isInterface ? functiondecl : functiondef)
     }
