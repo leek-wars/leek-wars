@@ -9,5 +9,7 @@
 	"new_weapon": "New weapon slot",
 	"new_chip": "New chip slot",
 	"total_weapons": "{0} total weapons",
-	"total_chips": "{0} total chips"
+	"total_chips": "{0} total chips",
+	"br_desc": "New game mode unlocked: Battle Royales! A battle of 10 leeks in free-for-all mode. Register from the vegetable garden or on the leek page.",
+	"newleek_desc": "New leek available for purchase from the menu."
 }

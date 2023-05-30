@@ -32,5 +32,9 @@
 	"offer_custom": "Development of custom features",
 	"offer_support": "Custom Support",
 	"contact_us": "Contact us",
-	"per_group": "group"
+	"per_group": "group",
+	"data_safety": "Data Security and Privacy",
+	"support": "Fast support in 5 minutes",
+	"training": "Training assistance",
+	"no_install": "Play right away without installation"
 }

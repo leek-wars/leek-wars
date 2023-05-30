@@ -39,5 +39,9 @@
 	"trophies_title": "Most trophies",
 	"statistics": "Statistics",
 	"no_results": "No results",
-	"xp": "XP"
+	"xp": "XP",
+	"solo_tournaments_title": "Solo Tournaments Won",
+	"farmer_tournaments_title": "Farmer Tournaments Won",
+	"team_tournaments_title": "Team Tournaments Won",
+	"tournaments": "Tournaments"
 }

@@ -235,5 +235,20 @@
 	"contact": "Contact",
 	"private_groups": "Private groups",
 	"retrieve_all": "Retrieve all",
-	"partners": "Partners"
+	"partners": "Partners",
+	"dida_1": "Welcome to Leek Wars <b>{0}</b>, young leek farmer! This is the page for your leek, <b>{1}</b>.",
+	"dida_1_leek": "Welcome to Leek Wars <b>{0}</b>, young leek! This is your page.",
+	"dida_2": "Start by using your capital points to increase your characteristics: life {life} and strength {strength} are recommended.",
+	"dida_3": "You can now battle other players' leeks in the <b>Garden</b> ⚔️. You have 50 battles per day.",
+	"dida_4": "Click on an opponent to attack him!",
+	"dida_5": "In Leek Wars, you don't directly control your leek. It's the <b>Artificial Intelligence</b> (AI) you program that takes care of it! ⚙️",
+	"dida_6": "Fighting earns you XP to earn capital points and unlock weapons and chips.",
+	"dida_7": "To edit your AI, go to the <b>Editor</b> 🖥️.",
+	"dida_8": "Here is your base AI. Duplicate the <code>useWeapon(enemy)</code> line <b>3 times</b> so your leek can fire 3 times per turn.",
+	"dida_9": "Save the AI and then restart a fight from the vegetable garden to see the result. Victory will be yours!",
+	"dida_10": "This tutorial is finished! Check the {help} ❔ to learn all about the game. The {tutorial} will teach you how to code in 10 chapters if you are a beginner.",
+	"dida_11": "Do not hesitate to ask for help on the {chat} or the {forum}, we will be happy to help you.",
+	"dida_12": "Good luck <b>{0}</b>!",
+	"play": "Play",
+	"pass": "Skip"
 }

@@ -129,7 +129,7 @@
 	"error_96": "Accès à l'index {0} en dehors du tableau de taille {1}.",
 	"error_97": "Cette clé est en double dans cette table.",
 	"error_98": "L'argument n°{0} « {1} » de type « {2} » est incompatible avec le type attendu « {3} ».",
-	"error_99": "Erreur inconnue {0}",
+	"error_99": "Erreur inconnue : {0}",
 	"error_100": "Interruption de l'IA : valeur invalide : {0}",
 	"error_101": "Interruption de l'IA : trop d'opérations consommées.",
 	"error_103": "Interruption de l'IA : trop de RAM consommée.",
