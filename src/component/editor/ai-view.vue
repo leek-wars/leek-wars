@@ -511,6 +511,8 @@
 				this.ai.code = this.document.getValue()
 				this.ai.analyze()
 
+				if (true) return;
+
 				analyzer.analyze(this.ai, this.ai.code).then((result) => {
 					// console.log("analyze", result)
 
@@ -1235,35 +1237,40 @@
 				this.detailDialog = false
 			}
 
-			analyzer.complete(this.ai, this.document.getValue(), cursor.line + 1, cursor.ch - 1).then(raw_data => {
+			if (force) {
+				analyzer.complete(this.ai, this.document.getValue(), cursor.line + 1, cursor.ch - 1).then(raw_data => {
 
-				// console.log("Completions", raw_data)
-				if (raw_data) {
-					const raw_completions = raw_data.items as any[]
-					this.completionType = raw_data.type
+					// console.log("Completions", raw_data)
+					if (raw_data) {
+						const raw_completions = raw_data.items as any[]
+						this.completionType = raw_data.type
 
-					const new_completions = raw_completions
-						.filter(item => {
-							return item.name.toLowerCase().startsWith(start)
+						const new_completions = raw_completions
+							.filter(item => {
+								return item.name.toLowerCase().startsWith(start)
+							})
+							// .sort((a, b) => {
+							// 	return a.name.localeCompare(b.name)
+							// })
+							.map(data => { return {
+								name: data.name,
+								fullName: data.name,
+								details: '', // i18n.t('leekscript.keyword', [data.name]) as string,
+								category: data.category,
+								type: '',
+								lstype: data.type,
+								location: data.location
+							}
 						})
-						// .sort((a, b) => {
-						// 	return a.name.localeCompare(b.name)
-						// })
-						.map(data => { return {
-							name: data.name,
-							fullName: data.name,
-							details: '', // i18n.t('leekscript.keyword', [data.name]) as string,
-							category: data.category,
-							type: '',
-							lstype: data.type,
-							location: data.location
-						}
-					})
-					this.completions.push(...new_completions)
-				}
+						this.completions.push(...new_completions)
+					}
+
+					this.openCompletions(this.completions, cursor)
+				})
+			} else {
 
 				this.openCompletions(this.completions, cursor)
-			})
+			}
 		}
 
 		public addCompletionsFromAI(start: string, completions: any[], visited: Set<number>, ai: AI) {
