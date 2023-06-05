@@ -240,7 +240,7 @@ class AI {
 		// console.time('static_fields')
 
 		// Search static fields
-		const field_regex = /^\s*(?:public\s+)?(?:(static)\s+)?(\w+)\s*/gm
+		const field_regex = /^\s*(?:public\s+)?(?:(static)\s+)?(?:.*\s+?)?(\w+)\s*/gm
 		while ((match = field_regex.exec(this.code)) != null) {
 
 			const name = match[2]
@@ -322,7 +322,7 @@ class AI {
 		// console.time('methods')
 
 		// Search methods
-		const method_regex = /^\s*(?:public\s+)?(?:(static)\s+)?(\w+)\s*\(([\w\s,]*)\)\s*{/gm
+		const method_regex = /^\s*(?:public\s+)?(?:(static)\s+)?(?:.*\s+?)?(\w+)\s*\(([\w\s,]*)\)\s*{/gm
 		while ((match = method_regex.exec(this.code)) != null) {
 
 			const name = match[2]
@@ -446,7 +446,7 @@ class AI {
 		let match
 
 		// Search global vars
-		const global_regex = /global\s+(\w+)/gm
+		const global_regex = /global\s+(?:.*\s+?)?(\w+)$/gm
 		while ((match = global_regex.exec(this.code)) != null) {
 			const line = this.code.substring(0, match.index).split("\n").length
 			const name = match[1]
