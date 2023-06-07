@@ -147,7 +147,7 @@
 								<span class="title"><v-icon>mdi-seed</v-icon> {{ $t('main.seed') }}</span>
 								<span class="desc">{{ $t('main.seed_desc') }}</span>
 							</div>
-							<input v-model="seed" type="text" class="seed" min="1" max="2147483647" :placeholder="$t('main.seed_placeholder')" @input="updateSeed">
+							<input v-model="seed" type="text" class="seed" :placeholder="$t('main.seed_placeholder')" @input="updateSeed">
 						</div>
 					</div>
 					<div v-else>
