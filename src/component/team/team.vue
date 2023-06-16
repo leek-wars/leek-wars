@@ -929,7 +929,7 @@
 		saveDescription() {
 			if (!this.team) { return }
 			this.editingDescription = false
-			;(this.$refs.descriptionElement as HTMLElement).blur()
+			(this.$refs.descriptionElement as HTMLElement).blur()
 			this.team.description = '' + (this.$refs.descriptionElement as HTMLElement).textContent
 			LeekWars.put('team/change-description', {team_id: this.team.id, description: this.team.description})
 			if (!this.team.description) {
