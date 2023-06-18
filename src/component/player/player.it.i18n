@@ -10,7 +10,7 @@
 	"display_logs": "Mostra debug",
 	"display_effects": "Mostra effetti",
 	"display_shadows": "Mostra Ombre",
-	"enlarge_fight": "Espandi la lotta",
+	"enlarge_fight": "Espandi il combattimento",
 	"error_generating_fight": "Si è verificato un errore durante la generazione del combattimento",
 	"error_not_found": "Questo combattimento non esiste o è stato eliminato",
 	"admin_noticed": "Un amministratore è già stato avvisato",

@@ -66,7 +66,7 @@
 	"type_10_fixed": "Teletrasporta il lanciatore",
 	"type_11_fixed": "Scambia due entità di luogo",
 	"type_12": "Aumenta la vita massima e le cure da <b>{0}</b> a <b>{1}</b>",
-	"type_12_fixed": "Aumenta la salute massima e le cure di <b>{0}</b>",
+	"type_12_fixed": "Aumenta la salute massima e cura di <b>{0}</b>",
 	"type_13": "Veleno da <b>{0}</b> a <b>{1}</b>",
 	"type_13_fixed": "Avvelenato da <b>{0}</b>",
 	"type_14_fixed": "Evoca una {summon}",

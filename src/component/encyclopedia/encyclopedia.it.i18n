@@ -5,7 +5,7 @@
 	"edited_by_x_the_y": "Modificato da {farmer} il {date}",
 	"n_views": "{v} visualizzazioni",
 	"n_contributions": "{n} contributi",
-	"not_found": "La pagina \"{name}\" non esiste nell'enciclopedia francese.",
+	"not_found": "La pagina \"{name}\" non esiste nell'enciclopedia italiana.",
 	"contributor_create": "Sei un collaboratore 😎 Fai clic su Modifica per iniziare a modificare questa pagina",
 	"locked": "Completa il capitolo per sbloccare l'IA completa"
 }

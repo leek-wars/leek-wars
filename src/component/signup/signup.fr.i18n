@@ -1,6 +1,6 @@
 {
 	"android_app": "Application Android",
-	"conditions": "En cliquant sur le bouton s'inscrire, vous acceptez les {link}.",
+	"conditions": "En cliquant sur le bouton Jouer, vous acceptez les {link}.",
 	"conditions_name": "conditions générales d'utilisation",
 	"confirm_password": "Confirmation",
 	"country": "Pays",

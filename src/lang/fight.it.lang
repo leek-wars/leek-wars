@@ -43,12 +43,12 @@
 	"remove_poisons": "I veleni di {leek} vengono neutralizzati",
 	"remove_shackles": "Le catene di {leek} sono state distrutte",
 	"share": "Suddividere",
-	"start_of_fight": "Inizio della lotta!",
+	"start_of_fight": "Inizio del combattimento!",
 	"summon": "{leek} invoca {summon}",
 	"turn_n": "Turno {0}",
 	"turn_of_leek": "Turno di {leek}",
 	"turret": "Torretta",
-	"end_of_fight": "Fine della lotta!",
+	"end_of_fight": "Fine del combattimento!",
 	"lama": "{leek} fa appello ai poteri di 🦙 ({cost})",
 	"help_page": "Saperne di più :"
 }

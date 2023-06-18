@@ -42,6 +42,6 @@
 	"reset_mail": "Ciao <b>%s</b>!\n\nLa tua richiesta di reimpostazione della password è stata registrata con successo.\n\nPer cambiare la tua password clicca su questo link: %s.",
 	"reset_mail_html": "Ciao <b>%s</b>!\n<br><br>\nLa tua richiesta di reimpostazione della password è stata registrata con successo.\n<br><br>\nPer cambiare la tua password, fai clic su <a href='%s'>questo link</a>.\n<br><br>\nA presto su Leek Wars!",
 	"reset_mail_subject": "Guerre dei porri: reimpostazione della password",
-	"see_the_fight": "Guarda la lotta",
+	"see_the_fight": "Guarda il combattimento",
 	"see_the_message": "Visualizza messaggio"
 }

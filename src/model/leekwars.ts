@@ -132,7 +132,7 @@ const LANGUAGES = Object.freeze({
 	en: { code: 'en', name: 'English', country: 'gb', flag: '/image/flag/gb.png', chat: 2, encyclopedia: 'Encyclopedia', chats: [2, 32508, 32509], currency: 'USD', beta: false, forum: true } as Language,
 	es: { code: 'es', name: 'Español', country: 'es', flag: '/image/flag/es.png', chat: 3, encyclopedia: 'Enciclopedia', chats: [3], currency: 'EUR', beta: true, forum: false } as Language,
 	de: { code: 'de', name: 'Deutsch', country: 'de', flag: '/image/flag/de.png', chat: 4, encyclopedia: 'Enzyklopädie', chats: [4], currency: 'EUR', beta: true, forum: false } as Language,
-	it: { code: 'it', name: 'Italiano', country: 'it', flag: '/image/flag/it.png', chat: 5, encyclopedia: 'Enciclopedia', chats: [5], currency: 'EUR', beta: true, forum: false } as Language,
+	it: { code: 'it', name: 'Italiano', country: 'it', flag: '/image/flag/it.png', chat: 5, encyclopedia: 'Enciclopedia', chats: [5], currency: 'EUR', beta: false, forum: true } as Language,
 	pt: { code: 'pt', name: 'Portugais', country: 'pt', flag: '/image/flag/pt.png', chat: 6, encyclopedia: 'Enciclopédia', chats: [6], currency: 'EUR', beta: true, forum: false } as Language,
 	da: { code: 'da', name: 'Dansk', country: 'dk', flag: '/image/flag/da.png', chat: 7, encyclopedia: 'Encyklopædi', chats: [7], currency: 'DKK', beta: true, forum: false } as Language,
 	fi: { code: 'fi', name: 'Suomi', country: 'fi', flag: '/image/flag/fi.png', chat: 8, encyclopedia: 'Tietosanakirja', chats: [8], currency: 'EUR', beta: true, forum: false } as Language,
