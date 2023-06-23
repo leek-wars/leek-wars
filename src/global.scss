@@ -367,6 +367,9 @@ ul, ol {
 .page-bar .tabs .tab i {
 	color: white;
 	font-size: 26px;
+	&.small {
+		font-size: 18px;
+	}
 }
 .page-bar .tabs .tab input[type="text"],
 .page-bar .tabs .tab input[type="number"] {

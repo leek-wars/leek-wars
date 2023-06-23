@@ -3,6 +3,13 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('main.inventory') }}</h1>
 			<div class="tabs">
+				<a href="https://leek-wars.myspreadshop.fr" target="_blank" rel="noopener">
+					<div class="tab action" icon="cart-outline" link="https://leek-wars.myspreadshop.fr">
+						<v-icon>mdi-cart-outline</v-icon>
+						<span>{{ $t('main.shop') }}</span>
+						<v-icon class="small">mdi-open-in-new</v-icon>
+					</div>
+				</a>
 				<router-link v-if="env.BANK && $store.state.farmer?.bank_enabled" to="/bank">
 					<div class="tab action" icon="account_balance" link="/bank">
 						<v-icon>mdi-bank</v-icon>
