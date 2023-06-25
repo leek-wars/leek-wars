@@ -15,13 +15,13 @@
 				<v-menu v-if="contributor && edition" offset-y>
 					<template v-slot:activator="{ on }">
 						<div class="page-language info" v-on="on">
-							<flag :code="LeekWars.languages[page.language].country" />
+							<flag :code="LeekWars.languages[page.language].country" :clickable="false" />
 							<img width="10" src="/image/selector.png">
 						</div>
 					</template>
 					<v-list :dense="true">
 						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="setPageLanguage(language.code)">
-							<flag :code="language.country" />
+							<flag :code="language.country" :clickable="false" />
 							<span class="name">{{ language.name }}</span>
 						</v-list-item>
 					</v-list>
@@ -49,7 +49,7 @@
 					<v-list :dense="true">
 						<router-link v-for="(translation, l) in page.translations" :key="l" :to="'/encyclopedia/' + l + '/' + translation">
 							<v-list-item class="language">
-								<flag :code="LeekWars.languages[l].country" />
+								<flag :code="LeekWars.languages[l].country" :clickable="false" />
 								<span class="name">{{ translation }}</span>
 							</v-list-item>
 						</router-link>
