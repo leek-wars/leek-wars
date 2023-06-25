@@ -4,7 +4,7 @@
 	"expert": "Esperto",
 	"normal": "Normale",
 	"lambda": "Lambda",
-	"leekscript": "Porroscript",
+	"leekscript": "LeekScript",
 	"ls_function_definitions": "La funzione \"{0}\" offre {1} definizioni.",
 	"ls_function_information": "Informazioni sulla funzione \"{0}\".",
 	"ls_return_nothing": "non restituisce nulla",
