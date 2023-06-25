@@ -89,7 +89,7 @@ class AI {
 		this.functions = []
 		let match
 
-		const regex = /function\s+(\w+)\s*\(([^]*?)\)\s*{/gm
+		const regex = /function\s+(\w+)\s*\(([^]*?)\).*{/gm
 		// Match [ full_match, javadoc, nom, arguments ]
 
 		while ((match = regex.exec(this.code)) != null) {

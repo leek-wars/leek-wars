@@ -124,11 +124,21 @@
 									</div>
 								</template>
 								<v-list :dense="true" class="version-menu">
+									<v-list-item v-ripple @click="setVersion(5)">
+										<v-icon v-if="currentAI.version === 5" class="list-icon">mdi-star</v-icon>
+										<v-icon v-else class="list-icon">mdi-star-outline</v-icon>
+										<v-list-item-content>
+											<v-list-item-title>LeekScript 5 <span class="green">{{ $t('recommended') }}</span></v-list-item-title>
+											<v-list-item-subtitle>
+												<router-link class="link" to="/encyclopedia/LeekScript_5"><v-icon>mdi-book-open-page-variant</v-icon> {{ $t('all_info_ls', ['LeekScript 5']) }}</router-link>
+											</v-list-item-subtitle>
+										</v-list-item-content>
+									</v-list-item>
 									<v-list-item v-ripple @click="setVersion(4)">
 										<v-icon v-if="currentAI.version === 4" class="list-icon">mdi-star</v-icon>
 										<v-icon v-else class="list-icon">mdi-star-outline</v-icon>
 										<v-list-item-content>
-											<v-list-item-title>LeekScript 4 <span class="green">{{ $t('recommended') }}</span></v-list-item-title>
+											<v-list-item-title>LeekScript 4</v-list-item-title>
 											<v-list-item-subtitle>
 												<router-link class="link" to="/encyclopedia/LeekScript_4"><v-icon>mdi-book-open-page-variant</v-icon> {{ $t('all_info_ls', ['LeekScript 4']) }}</router-link>
 											</v-list-item-subtitle>

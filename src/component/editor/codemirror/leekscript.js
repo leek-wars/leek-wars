@@ -17,6 +17,10 @@ import { CONSTANTS } from '@/model/constants'
 
     // Tokenizer
 
+    var isLeekScriptType = (value) => {
+      return value == "|" || value == "<" || value == ">" || value == "," || value == "?" || value === "void" || value === "null" || value === "any" || value === "integer" || value === "real" || value === "string" || value === "boolean" || value === "Array" || value === "Object" || value === "Map" || value === "Class" || value === "Function" || config.ai?.isClassDefined(value)
+    }
+
     var keywords = function(){
       function kw(type) {return {type: type, style: "keyword"};}
       var A = kw("keyword a"), B = kw("keyword b"), C = kw("keyword c"), D = kw("keyword d");
@@ -378,6 +382,10 @@ import { CONSTANTS } from '@/model/constants'
     }
 
     function statement(type, value) {
+      if (isLeekScriptType(value)) {
+        cx.marked = "type"
+        return cont(pushlex("vardef", value), vardef, expect(";"), poplex);
+      }
       if (type == "var") return cont(pushlex("vardef", value), vardef, expect(";"), poplex);
       if (type == "keyword a") return cont(pushlex("form"), parenExpr, statement, poplex);
       if (type == "keyword b") return cont(pushlex("form"), statement, poplex);
@@ -695,6 +703,10 @@ import { CONSTANTS } from '@/model/constants'
       if (value == "=") return cont(typeexpr)
     }
     function vardef(_, value) {
+      if (isLeekScriptType(value)) {
+        cx.marked = "type"
+        return cont(vardef);
+      }
       if (value == "enum") {cx.marked = "keyword"; return cont(enumdef)}
       return pass(pattern, maybetype, maybeAssign, vardefCont);
     }
@@ -732,7 +744,11 @@ import { CONSTANTS } from '@/model/constants'
       if (value == "await") return cont(forspec);
       if (type == "(") return cont(pushlex(")"), forspec1, poplex);
     }
-    function forspec1(type) {
+    function forspec1(type, value) {
+      if (isLeekScriptType(value)) {
+        cx.marked = "type"
+        return cont(vardef, forspec2);
+      }
       if (type == "var") return cont(vardef, forspec2);
       if (type == "variable") return cont(forspec2);
       return pass(forspec2)
@@ -764,7 +780,7 @@ import { CONSTANTS } from '@/model/constants'
       }
     }
     function funarg(type, value) {
-      if (value == "|" || value == "<" || value == ">" || value == "," || value == "void" || value == "null" || value === "any" || value === "integer" || value === "real" || value === "string" || value === "boolean" || value === "Array" || value === "Map" || value === "Class" || value === "Function" || config.ai.isClassDefined(value)) {
+      if (isLeekScriptType(value)) {
         cx.marked = "type"
         return cont(funarg);
       }
@@ -796,11 +812,10 @@ import { CONSTANTS } from '@/model/constants'
         cx.marked = "keyword";
         return cont(classBody);
       }
-      if ((type === "atom" && value === "null") ||
-        (type == "variable" && (value === "any" || value === "void" || value === "integer" || value === "real" || value === "string" || value === "boolean" || value === "Array" || value === "Map" || value === "Class" || value === "Function" || config.ai.isClassDefined(value)) && cx.stream.match(/^[\s<,>]/, false) )) {
-      cx.marked = "type";
-      return cont(classBody);
-    }
+      if (isLeekScriptType(value) && cx.stream.match(/^[\s<,>\?]/, false)) {
+        cx.marked = "type";
+        return cont(classBody);
+      }
       if (value == "<" || type == "," || value == "|" || (value && value.startsWith(">"))) {
         return cont(classBody);
       }

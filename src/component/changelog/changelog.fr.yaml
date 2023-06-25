@@ -1,6 +1,7 @@
 238:
   title: 15 langues, Refonte du didactitiel, Refonte + 4 chapeaux
   added:
+    - "LeekScript 5 : typage."
     - Ajout les langues des éleveurs connectés sur la page forum.
     - "Ajout de 15 langues : Allemand, Italien, Portuguais, Suédois, Norvégien, Finlandais, Danois, Néérlandais, Polonais, Russe, Chinois, Hindi, Indonésien, Japonais et Coréen. #img_238_languages"
     - "Ajout de 4 nouveaux chapeaux. #img_238_hats"
@@ -15,6 +16,7 @@
     - Amélioration de la traduction en anglais.
     - "Refonte graphique de plusieurs chapeaux. #img_238_hats_rework"
     - "Le bouton \"Tester\" est caché sur la page poireau au niveau 1."
+    - "Petites améliorations de stabilité de l'éditeur au survol avec la souris."
   fixed:
     - Correction d'un bug de déplacement interdit avec le grappin.
     - Correction de l'affichage des classements sur la page équipe sur mobile.

@@ -97,7 +97,7 @@
 			</div>
 			<div v-if="detailDialogContent.details.defined && ais[detailDialogContent.details.defined[0]]" class="definition">
 				<v-icon>mdi-file-outline</v-icon>
-				<span @click="$emit('jump', ais[detailDialogContent.details.defined[0]], detailDialogContent.details.defined[1])">
+				<span @click="goToDefinition">
 					<i18n class="defined" path="leekscript.defined_in">
 						<b slot="0">{{ ais[detailDialogContent.details.defined[0]].name }}</b>
 						<b slot="1">{{ detailDialogContent.details.defined[1] }}</b>
@@ -401,6 +401,9 @@
 				this.detailDialog = false
 				const ai = fileSystem.ais[this.hoverData.defined[0]]
 				this.$emit('jump', ai, this.hoverData.defined[1])
+				this.removeUnderlineMarker()
+				this.mouseleave()
+				this.ctrl = false
 				e.preventDefault()
 			}
 		}
@@ -853,7 +856,7 @@
 			// console.log("pos", editorPos, "token", token)
 
 			// Underline
-			if (this.ctrl && this.hoverData && this.hoverData.defined) {
+			if (token && token.string.trim().length > 0 && this.ctrl && this.hoverData && this.hoverData.defined) {
 				if (this.underlineMarker) { this.underlineMarker.clear() }
 				this.underlineMarker = this.editor.getDoc().markText({line: editorPos.line, ch: token.start}, {line: editorPos.line, ch: token.end}, {className: 'cm-underlined'})
 				this.togglePointerCursor(true)
@@ -861,58 +864,32 @@
 				this.removeUnderlineMarker()
 			}
 
-			if (editorPos.line !== this.hoverLine) {
-				const current_line = this.document.getLine(editorPos.line)
-				this.hoverLineWidth = this.stringRealSize(current_line) * 10.2358333333 + 4
-				this.hoverEditorOrigin = this.CodeMirrorLines.getBoundingClientRect().left
-				this.hoverLine = editorPos.line
-				// console.log("line width", this.hoverLineWidth)
-			}
-
-			// console.log("origin", origin)
-			const position = this.document.indexFromPos(editorPos)
-			// const pos_in_line = pos.left - this.hoverEditorOrigin
-
-			// Leave the hover area?
-			if (this.hoverData) {
-				// console.log("hover", editorPos.ch, this.hoverData.location[2], this.hoverData.location[4], editorPos.line + 1, this.hoverData.location[1], this.hoverData.location[3], pos_in_line, this.hoverLineWidth)
-				if (editorPos.line + 1 < this.hoverData.location[1] || editorPos.ch < this.hoverData.location[2] || editorPos.line + 1 < this.hoverData.location[3] ||editorPos.ch > this.hoverData.location[4] /*|| pos_in_line > this.hoverLineWidth*/) {
-					clearTimeout(this.detailTimer)
-					this.hoverData = null
-					this.removeUnderlineMarker()
-					if (this.hoverOverlay) {
-						this.editor.removeOverlay(this.hoverOverlay)
-						this.hoverOverlay = null
-						this.hoverLocation = null
-						this.hoverToken = null
-					}
-					this.detailDialog = false
-				}
-			}
-
-			// if (this.editor.getSelection().length > 0) { return }
-
-			// console.log(this.hoverPosition, position, pos_in_line, this.hoverLineWidth)
-			if (this.hoverToken && token && this.hoverToken.start === token.start && this.hoverToken.end === token.end && this.hoverToken.string === token.string) {
-				// console.log("same token", token)
+			// The cursor leaves the current token?
+			const coords = this.editor.charCoords(editorPos2, "window")
+			if (this.hoverToken && token.string !== this.hoverToken.string || this.mouseX > coords.left) { // Hack to detect if we are passed the line
+				this.mouseleave()
 				return
 			}
-			// console.log("set hoverToken", token)
-			this.hoverToken = token
+
+			// Same token, no need to hover again
+			if (this.hoverToken && this.hoverToken.string === token.string && this.hoverToken.start === token.start && this.hoverToken.end === token.end) {
+				return
+			}
+
 			this.hoverLocation = null
-			// if (this.hoverPosition === position || pos_in_line > this.hoverLineWidth) {
-			// 	return
-			// }
-			this.hoverPosition = position
+			this.hoverData = null
 
 			const previousToken = this.editor.getTokenAt({line: editorPos.line, ch: token.start - 1})
 
 			clearTimeout(this.detailTimer)
 			this.detailTimer = setTimeout(() => {
 
+				if (!token) { return }
+
 				// console.log("getTokenInformation", token, previousToken)
 				const keyword = this.getTokenInformation(token.string, editorPos2, previousToken)
 
+				this.hoverToken = token
 				this.hovering = true
 
 				// console.log("hover at", editorPos.line + 1, editorPos.ch)
@@ -1083,6 +1060,7 @@
 			if (this.hoverOverlay) {
 				this.editor.removeOverlay(this.hoverOverlay)
 			}
+			this.hoverData = null
 			this.hoverToken = null
 			this.hoverOverlay = null
 			this.hoverLocation = null
@@ -1594,6 +1572,11 @@
 				this.document.replaceRange(this.replaceQuery, { line: occurence[0], ch: occurence[1] }, { line: occurence[0], ch: occurence[1] + this.searchQuery.length }, "+input")
 			}
 			this.searchUpdate()
+		}
+
+		public goToDefinition() {
+			this.$emit('jump', this.ais[this.detailDialogContent.details.defined[0]], this.detailDialogContent.details.defined[1])
+			this.mouseleave()
 		}
 	}
 </script>
