@@ -463,5 +463,44 @@ class AI {
 			}
 		}
 	}
+
+	public isClassDefined(clazz: string): boolean {
+		// console.log("isClassDefined", clazz, this)
+
+		const visited = new Set<number>()
+
+		const aux = (ai: AI): boolean => {
+			if (visited.has(ai.id)) { return false }
+			visited.add(ai.id)
+			// console.log("aux", ai.path)
+
+			if (ai.classes[clazz]) return true
+
+			if (ai.includes) {
+				for (const include of ai.includes) {
+					if (visited.has(include.id)) { continue }
+					const found = aux(include)
+					if (found) {
+						return found
+					}
+				}
+			}
+			return false
+		}
+
+		const result = aux(this)
+		if (result) { return result }
+
+		// console.log("entrypoints", startAI.entrypoints)
+		for (const entrypoint_id of this.entrypoints) {
+			const entrypoint = fileSystem.ais[entrypoint_id]
+			if (entrypoint) {
+				// console.log("entrypoints", entrypoint.path, entrypoint.includes)
+				const result = aux(entrypoint)
+				if (result) { return result }
+			}
+		}
+		return false
+	}
 }
 export { AI }

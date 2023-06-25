@@ -14,7 +14,6 @@ import { TranslateResult } from 'vue-i18n'
 import { Chat, ChatWindow } from './chat'
 import { i18n, loadLanguageAsync } from './i18n'
 import { ItemType } from './item'
-import { Leek } from './leek'
 import { PotionEffect, PotionTemplate } from './potion'
 
 const DEV = window.location.port === '8080'

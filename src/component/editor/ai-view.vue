@@ -257,6 +257,7 @@
 				const codeMirrorElement = this.$refs.codemirror as any
 				this.editor = wrapper.CodeMirror(codeMirrorElement, {
 					value: this.ai.code,
+					ai: this.ai,
 					mode: "leekscript",
 					theme: "leekwars",
 					tabSize: 4,
@@ -889,7 +890,7 @@
 				}
 			}
 
-			if (this.editor.getSelection().length > 0) { return }
+			// if (this.editor.getSelection().length > 0) { return }
 
 			// console.log(this.hoverPosition, position, pos_in_line, this.hoverLineWidth)
 			if (this.hoverToken && token && this.hoverToken.start === token.start && this.hoverToken.end === token.end && this.hoverToken.string === token.string) {

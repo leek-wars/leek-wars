@@ -6,6 +6,7 @@ import { FUNCTIONS } from '@/model/functions'
 import { CONSTANTS } from '@/model/constants'
 
   CodeMirror.defineMode("leekscript", function(config, parserConfig) {
+
     var indentUnit = config.indentUnit;
     var statementIndent = parserConfig.statementIndent;
     var jsonldMode = parserConfig.jsonld;
@@ -30,7 +31,7 @@ import { CONSTANTS } from '@/model/constants'
         "function": kw("function"),
         "for": kw("for"),
         // "switch": kw("switch"), "case": kw("case"), "default": kw("default"), "typeof": operator, "undefined": atom,
-        "in": operator, "instanceof": operator, "and": operator, "or": operator, "xor": operator, "not": operator,
+        "in": operator, "instanceof": operator, "and": operator, "or": operator, "xor": operator, "not": operator, "as": operator,
         "true": atom, "false": atom, "null": atom, "NaN": atom, "Infinity": atom,
         "this": kw("this"), "class": kw("class"), "super": kw("atom"),
         "private": kw("variable"), "protected": kw("variable"), "final": kw("variable"), "static": kw("variable"), "extends": C,
@@ -324,7 +325,7 @@ import { CONSTANTS } from '@/model/constants'
     }
 
     function isModifier(name) {
-      return name === "public" || name === "private" || name === "protected" || name === "final" || name === "protected" || name === "abstract" || name === "readonly" || name === "static" || name === "constructor"
+      return name === "public" || name === "private" || name === "protected" || name === "final" || name === "protected" || name === "abstract" || name === "readonly" || name === "static" || name === "constructor" || name === "integer" || name === "null"
     }
 
     // Combinators
@@ -763,6 +764,10 @@ import { CONSTANTS } from '@/model/constants'
       }
     }
     function funarg(type, value) {
+      if (value == "|" || value == "<" || value == ">" || value == "," || value == "void" || value == "null" || value === "any" || value === "integer" || value === "real" || value === "string" || value === "boolean" || value === "Array" || value === "Map" || value === "Class" || value === "Function" || config.ai.isClassDefined(value)) {
+        cx.marked = "type"
+        return cont(funarg);
+      }
       if (value == "@") cont(expression, funarg)
       if (type == "spread") return cont(funarg);
       if (isTS && isModifier(value)) { cx.marked = "keyword"; return cont(funarg); }
@@ -786,11 +791,17 @@ import { CONSTANTS } from '@/model/constants'
       if (type == "{") return cont(pushlex("}"), classBody, poplex);
     }
     function classBody(type, value) {
-      if (type == "async" ||
-          (type == "variable" &&
-           (value === "static" || value === "public" || value === "protected" || value === "final" || value === "constructor"  || value === "private" || value === "get" || value == "set" || (isTS && isModifier(value))) &&
-           cx.stream.match(/^\s+[\w$\xa1-\uffff]/, false))) {
+      // console.log(type, value, cx)
+      if (type == "async" || (type == "variable" && (value === "static" || value === "public" || value === "protected" || value === "final" || value === "constructor" || value === "private" || value === "get" || value == "set" || (isTS && isModifier(value))) && cx.stream.match(/^[\s<,>]/, false) )) {
         cx.marked = "keyword";
+        return cont(classBody);
+      }
+      if ((type === "atom" && value === "null") ||
+        (type == "variable" && (value === "any" || value === "void" || value === "integer" || value === "real" || value === "string" || value === "boolean" || value === "Array" || value === "Map" || value === "Class" || value === "Function" || config.ai.isClassDefined(value)) && cx.stream.match(/^[\s<,>]/, false) )) {
+      cx.marked = "type";
+      return cont(classBody);
+    }
+      if (value == "<" || type == "," || value == "|" || (value && value.startsWith(">"))) {
         return cont(classBody);
       }
       if (type == "variable" || cx.style == "keyword") {
@@ -798,7 +809,7 @@ import { CONSTANTS } from '@/model/constants'
         return cont(classfield, classBody);
       }
       if (type == "number" || type == "string") return cont(classfield, classBody);
-      if (type == "[")
+      if (type == "[" )
         return cont(expression, maybetype, expect("]"), classfield, classBody)
       if (value == "*") {
         cx.marked = "keyword";
@@ -814,7 +825,7 @@ import { CONSTANTS } from '@/model/constants'
       if (value == "?") return cont(classfield)
       if (type == ":") return cont(typeexpr, maybeAssign)
       if (value == "=") return cont(expressionNoComma)
-      if (value === "public" || value === "private" || value === "protected" || value === "static" || value === "constructor" || value == "}") return;
+      if (value === "public" || value === "private" || value === "protected" || value === "static" || value === "constructor" || value === "integer" || value === "null" || value === "Map" || config.ai.isClassDefined(value) || value === "|" || value == "}" || type === "variable") return;
       var context = cx.state.lexical.prev, isInterface = context && context.info == "interface"
       return pass(isInterface ? functiondecl : functiondef)
     }

@@ -245,6 +245,7 @@
 					{{ $t('start_a_fight') }}
 				</v-btn>
 			</router-link>
+			<br><br>
 		</center>
 
 		<div class="container large">

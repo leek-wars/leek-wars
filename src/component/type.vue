@@ -29,5 +29,6 @@
 	.type {
 		color: #0000D0;
 		font-weight: bold;
+		font-family: monospace;
 	}
 </style>

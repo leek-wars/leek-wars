@@ -165,12 +165,12 @@
 
 		created() {
 			this.$root.$on('connected', () => {
-				// if (!this.$store.state.farmer.didactitiel_seen) {
+				if (!this.$store.state.farmer.didactitiel_seen) {
 					LeekWars.show_didactitiel()
 					Vue.nextTick(() => {
 						this.$store.commit('didactitiel-seen')
 					})
-				// }
+				}
 			})
 			if (this.$store.state.connected && localStorage.getItem('changelog_version') !== LeekWars.normal_version) {
 				this.changelogShow()
@@ -505,8 +505,8 @@
 		position: fixed;
 		z-index: 1000;
 		cursor: pointer;
-		width: 50px;
-		height: 50px;
+		width: 40px;
+		height: 40px;
 	}
 	.console .title .spacer {
 		flex: 1;
