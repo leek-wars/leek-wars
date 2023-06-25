@@ -301,7 +301,7 @@ class UnstableDestroyer extends Firegun {
 	static textures = [T.shots, T.bullet, T.unstable_destroyer, T.cart_unstable_destroyer]
 	static sounds = [S.double_gun]
 	constructor(game: Game) {
-		super(game, T.unstable_destroyer, T.cart_unstable_destroyer, S.double_gun, 9, DamageType.EXPLOSION)
+		super(game, T.unstable_destroyer, T.cart_unstable_destroyer, S.double_gun, 34, DamageType.EXPLOSION)
 	}
 }
 class DoubleGun extends Firegun {
@@ -334,8 +334,8 @@ class Electrisor extends WeaponAnimation {
 	public lightning!: Texture
 	public areaColor!: string
 
-	constructor(game: Game) {
-		super(game, T.electrisor, 11, DamageType.DEFAULT)
+	constructor(game: Game, id: number = 11) {
+		super(game, T.electrisor, id, DamageType.DEFAULT)
 		this.lightning = T.lightning
 		this.areaColor = '#0263f4'
 	}
@@ -370,7 +370,7 @@ class MysteriousElectrisor extends Electrisor {
 	static sounds = [S.electrisor]
 
 	constructor(game: Game) {
-		super(game)
+		super(game, 19)
 		this.texture = T.mysterious_electrisor
 		this.lightning = T.cyan_lightning
 		this.areaColor = '#00de9b'
@@ -653,7 +653,7 @@ class ExplorerRifle extends Firegun {
 	shoots: number = 0
 	delay: number = Rifle.DELAY
 	constructor(game: Game) {
-		super(game, T.explorer_rifle, T.explorer_rifle_cartridge, S.rifle, 22, DamageType.DEFAULT)
+		super(game, T.explorer_rifle, T.explorer_rifle_cartridge, S.rifle, 24, DamageType.DEFAULT)
 	}
 
 	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number): number {
@@ -850,7 +850,7 @@ class EnhancedLightninger extends Firegun {
 	target_z!: number
 
 	constructor(game: Game) {
-		super(game, T.enhanced_lightninger, T.cart_enhanced_lightninger, S.lightninger, 25, DamageType.DEFAULT)
+		super(game, T.enhanced_lightninger, T.cart_enhanced_lightninger, S.lightninger, 33, DamageType.DEFAULT)
 	}
 
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
