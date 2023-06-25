@@ -22,6 +22,7 @@
     - "LeekScript : correction d'un bug de performance avec des listes en clés de tables."
     - "Tutoriel : corrections de fautes (merci à epouarp)."
     - "Correction de la pagination de la recherche forum (merci à FdHP)."
+    - "Correction du titre des classements par niveau sur mobile."
 
 237:
   title: Récompenses parrainage, Rechercher & Remplacer et améliorations de la banque.
