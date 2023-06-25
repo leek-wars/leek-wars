@@ -127,7 +127,7 @@
 						<div class="weapons">
 							<div class="container">
 								<rich-tooltip-item v-for="weapon of currentLeek.weapons" :key="weapon" v-slot="{ on }" :item="LeekWars.items[weapon]" :instant="true" :nodge="true">
-									<img :src="'/image/' + LeekWars.items[weapon].name.replace('_', '/') + '.png'" class="weapon" v-on="on" @click="removeLeekWeapon(weapon)">
+									<img :src="'/image/' + LeekWars.items[weapon].name.replace('_', '/') + '.png'" class="weapon" v-on="on" @click="removeLeekWeapon(weapon)" :width="WeaponsData[LeekWars.items[weapon].params].width">
 								</rich-tooltip-item>
 								<div v-if="currentLeek.weapons.length < 4" class="add" @click="weaponsDialog = true">+</div>
 							</div>
@@ -320,7 +320,7 @@
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { WeaponTemplate } from '@/model/weapon'
+	import { WeaponTemplate, WeaponsData } from '@/model/weapon'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { fileSystem } from '@/model/filesystem'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
@@ -367,6 +367,7 @@
 
 		FightType = FightType
 		CHIPS = CHIPS
+		WeaponsData = WeaponsData
 		initialized: boolean = false
 		scenarios: {[key: string]: TestScenario} = {}
 		leeks: Leek[] = []

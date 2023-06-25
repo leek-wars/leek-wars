@@ -182,7 +182,7 @@
 
 					<rich-tooltip-item v-for="weapon in group.weapons" :key="weapon" v-slot="{ on }" :item="LeekWars.items[weapon]" :bottom="true">
 						<div class="weapon" v-on="on">
-							<img :src="'/image/' + LeekWars.items[weapon].name.replace('_', '/') + '.png'" @click="setWeapon(weapon)">
+							<img :src="'/image/' + LeekWars.items[weapon].name.replace('_', '/') + '.png'" @click="setWeapon(weapon)" :width="WeaponsData[LeekWars.items[weapon].params].width">
 							<tooltip v-if="LeekWars.items[weapon].level > group.level">
 								<template v-slot:activator="{ on }">
 									<v-icon v-on="on" class="card alert">mdi-alert-circle</v-icon>
@@ -430,7 +430,7 @@
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import CharacteristicTooltip from '@/component/leek/characteristic-tooltip.vue'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
-	import { Weapon } from '@/model/weapon'
+	import { Weapon, WeaponsData } from '@/model/weapon'
 	import { ORDERED_CHIPS } from '@/model/sorted_chips'
 	import { CHIPS } from '@/model/chips'
 	import CapitalDialog from '../leek/capital-dialog.vue'
@@ -459,6 +459,7 @@
 		characteristics: {[key: string]: number} = {}
 		deleteMemberDialog: boolean = false
 		memberToDelete: Member | null = null
+		WeaponsData = WeaponsData
 
 		headers = [
           { text: 'Membre', value: 'name' },
