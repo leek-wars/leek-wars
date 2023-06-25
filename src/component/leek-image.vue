@@ -15,8 +15,8 @@
 					<g :transform="'rotate(' + weaponAngle + ')'" transform-box="fill-box">
 						<g :transform="'translate(' + weaponX + ',' + weaponY + ')'">
 							<image :xlink:href="weaponImage" :width="weaponWidth" :height="weaponHeight" />
-							<image :xlink:href="handImage" :width="handSize" :height="handSize" :x="hand1.x - handSize / 2" :y="hand1.y - handSize / 2" />
-							<image :xlink:href="handImage" :width="handSize" :height="handSize" :x="hand2.x - handSize / 2" :y="hand2.y - handSize / 2" />
+							<image v-if="hand1" :xlink:href="handImage" :width="handSize" :height="handSize" :x="hand1.x - handSize / 2" :y="hand1.y - handSize / 2" />
+							<image v-if="hand2" :xlink:href="handImage" :width="handSize" :height="handSize" :x="hand2.x - handSize / 2" :y="hand2.y - handSize / 2" />
 						</g>
 					</g>
 				</g>

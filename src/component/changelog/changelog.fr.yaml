@@ -8,6 +8,7 @@
     - "Ajout d'information sur les BR et la création d'un nouveau poireau. #img_238_br #img_238_newleek"
     - "Classements fun des tournois (solo, éleveur, équipe)."
     - Refonte du didactitiel
+    - "Affichage des langues des éleveurs connectés sur la page forum. #img_238_forum_languages"
   improved:
     - Accélération de l'IA en cas d'erreurs très nombreuses.
     - Le bot du chat envoie un message seulement si le dernier message n'est pas de lui.
@@ -27,6 +28,8 @@
     - "Tutoriel : corrections de fautes (merci à epouarp)."
     - "Correction de la pagination de la recherche forum (merci à FdHP)."
     - "Correction du titre des classements par niveau sur mobile."
+    - "Correction de la description du trophées géant en anglais."
+    - "Correction d'un bug de performance du site quand on revient après une veille."
 
 237:
   title: Récompenses parrainage, Rechercher & Remplacer et améliorations de la banque.
