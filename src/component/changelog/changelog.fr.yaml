@@ -3,6 +3,7 @@
     - Ajout d'une boutique pour acheter des produits dérivés Leek Wars.
   improved:
     - Meilleur affichage des éleveurs supprimés sur le forum (merci à CaptainTheDelta).
+    - Amélioration de la traduction italienne, qui n'est plus en bêta (merci à Augustineduf et pakalatak).
   fixed:
     - Correction de l'affichage de 4 armes oubliées dans la timeline en combat (merci à fujiwar).
     - Correction du coût en opérations de certaines fonctions qui coutaîent 0.
