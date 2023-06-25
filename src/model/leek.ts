@@ -76,6 +76,10 @@ class Leek {
 	public metal!: boolean
 	public face!: number
 	public xp_blocked!: boolean
+	public fights!: any[]
+	public tournaments!: any[]
+	public victories!: number
+	public ranking!: number
 
 	constructor(data: any) {
 		Object.assign(this, data)
