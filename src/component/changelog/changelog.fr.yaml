@@ -6,6 +6,7 @@
     - "Ajout de 4 nouveaux chapeaux. #img_238_hats"
     - "Ajout d'information sur les BR et la création d'un nouveau poireau. #img_238_br #img_238_newleek"
     - "Classements fun des tournois (solo, éleveur, équipe)."
+    - Refonte du didactitiel
   improved:
     - Accélération de l'IA en cas d'erreurs très nombreuses.
     - Le bot du chat envoie un message seulement si le dernier message n'est pas de lui.
@@ -13,6 +14,7 @@
     - "Tutoriel : corrections de fautes (merci à epouarp)."
     - Amélioration de la traduction en anglais.
     - "Refonte graphique de plusieurs chapeaux. #img_238_hats_rework"
+    - "Le bouton \"Tester\" est caché sur la page poireau au niveau 1."
   fixed:
     - Correction d'un bug de déplacement interdit avec le grappin.
     - Correction de l'affichage des classements sur la page équipe sur mobile.
