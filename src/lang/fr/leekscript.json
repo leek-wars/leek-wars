@@ -80,7 +80,7 @@
 	"error_63": "L'IA est désactivee, elle ne s'exécute donc pas",
 	"error_64": "Interruption IA : {0}",
 	"error_65": "Interruption IA : L'IA a mis plus de 10 secondes a s'exécuter, elle a été desactivée pour le reste du combat",
-	"error_62": "Votre IA n'a pas pu être compilée correctement (raison inconnue).",
+	"error_62": "Votre IA n'a pas pu être compilée correctement, un administrateur a été prévenu : {0}.",
 	"error_58": "Impossible d'exécuter \"{0}\"",
 	"error_59": "Impossible d'utiliser cette fonction avec les arguments ({0}), {1} arguments attendus",
 	"error_66": "Votre IA n'a pas pu être compilée correctement car votre code est trop gros.",
