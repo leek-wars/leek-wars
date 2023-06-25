@@ -5,15 +5,18 @@
     - "Ajout d'information sur les BR et la création d'un nouveau poireau. #img_238_br #img_238_newleek"
     - "Classements fun des tournois (solo, éleveur, équipe)."
     - Ajout les langues des éleveurs connectés sur la page forum.
+  improved:
+    - Accélération de l'IA en cas d'erreurs très nombreuses.
+    - Le bot du chat envoie un message seulement si le dernier message n'est pas de lui.
+    - Amélioration de la traduction en Anglais.
+    - "LeekScript : correction d'un bug de performance avec des listes en clés de tables."
+    - "Tutoriel : corrections de fautes (merci à epouarp)."
   fixed:
     - Correction d'un bug de déplacement interdit avec le grappin.
     - Correction de l'affichage des classements sur la page équipe sur mobile.
     - Correction d'un bug de position d'entité à la suite d'inversions.
     - Correction de la vérification du compte via GitHub.
     - "LeekScript : correction de <classe>.fields/methods avec les classes de base."
-  improved:
-    - Accélération de l'IA en cas d'erreurs très nombreuses.
-    - Le bot du chat envoie un message seulement si le dernier message n'est pas de lui.
 
 237:
   title: Récompenses parrainage, Rechercher & Remplacer et améliorations de la banque.
