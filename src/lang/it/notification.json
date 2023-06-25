@@ -21,7 +21,7 @@
 	"category_7": "Privato",
 	"category_7_title": "privato",
 	"category_7_desc": "Messaggi privati",
-	"category_8": "Equipaggio",
+	"category_8": "Squadra",
 	"category_8_title": "squadra",
 	"category_8_desc": "Applicazioni, nuovo membro, divieto",
 	"category_9": "Moderazione",
@@ -52,7 +52,7 @@
 	"message_23": "Guarda il torneo",
 	"message_24": "Grazie per la segnalazione",
 	"message_25": "Guarda la lotta",
-	"message_26": "Guarda la Battaglia reale",
+	"message_26": "Guarda la Battle Royale",
 	"message_27": "Visualizza modifiche",
 	"message_28": "Visualizza la conversazione",
 	"message_29": "Hai la priorità per quella di domani",
@@ -90,5 +90,5 @@
 	"title_30": "{0} non è stato selezionato nel torneo",
 	"title_31": "{0} non è stato selezionato in BR",
 	"title_32": "{0} ti ha menzionato su #{1}",
-	"message_32": "Vedi il gatto"
+	"message_32": "Vedi il chat"
 }

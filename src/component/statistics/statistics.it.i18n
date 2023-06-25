@@ -82,7 +82,7 @@
 	"forum_views": "Argomenti visualizzati",
 	"fight_solo": "Assolo",
 	"fight_farmer": "Allevatore",
-	"fight_team": "Equipaggio",
+	"fight_team": "Squadra",
 	"fight_br": "BR",
 	"fight_garden": "Orto",
 	"fight_test": "Test",
@@ -145,7 +145,7 @@
 	"notifications": "Avvisi",
 	"push_notifications": "Le notifiche push",
 	"encyclopedia_pages": "Pagine dell'enciclopedia",
-	"chat_reactions": "Reazioni sui gatti",
+	"chat_reactions": "Reazioni sui chats",
 	"chests_kills": "Ucciso dai forzieri",
 	"resources_chest": "Risorse ottenute",
 	"resources": "Risorse ottenute"

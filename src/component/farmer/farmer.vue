@@ -630,6 +630,7 @@
 			TROPHIES[194 - 1],
 			TROPHIES[322 - 1],
 			TROPHIES[320 - 1],
+			TROPHIES[111 - 1],
 		]
 		rewards = {
 			1: { trophy: 'godfather' },

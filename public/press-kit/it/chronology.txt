@@ -2,7 +2,7 @@
 2013: fine della versione beta
 2014: tornei, trofei
 2015: versione inglese, convocazioni, nuovo design, caratteristiche, armi CaC,
-2016: Battaglia reale
+2016: Battle Royale
 2017: opzioni di test, statistiche
 2018: app mobile e Vue.js
 2019: Torrette

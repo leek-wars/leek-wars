@@ -27,7 +27,7 @@
 	"shield": "Scudi",
 	"strength": "Forza",
 	"strength_desc": "La forza aumenta il danno dell'arma e dei proiettili",
-	"tp": "Punti giro",
+	"tp": "Punti turno",
 	"tp_desc": "Numero massimo di azioni durante un turno",
 	"wisdom": "Saggezza",
 	"wisdom_desc": "La saggezza aumenta la guarigione e il rubavita",

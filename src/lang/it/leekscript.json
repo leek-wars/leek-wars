@@ -152,5 +152,5 @@
 	"error_1002": "Questo chip {0} non esiste. Utilizzare le costanti CHIP_* per recuperare un chip valido.",
 	"error_1003": "Quest'arma {0} non esiste. Usa le costanti WEAPON_* per recuperare un'arma valida.",
 	"error_1004": "Quest'arma {1} (id {0}) non è equipaggiata. Devi prima equipaggiarlo sulla tua pagina dei porri.",
-	"error_1005": "La lampadina evocata non ha IA"
+	"error_1005": "La bulbo evocata non ha IA"
 }
