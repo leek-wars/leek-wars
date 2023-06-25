@@ -1,10 +1,10 @@
 238:
-  title: 9 langues
+  title: 15 langues
   added:
-    - "Ajout de 9 langues : Allemand, Italien, Portuguais, Suédois, Norvégien, Finlandais, Danois, Néérlandais, Polonais. #img_238_languages"
     - "Ajout d'information sur les BR et la création d'un nouveau poireau. #img_238_br #img_238_newleek"
     - "Classements fun des tournois (solo, éleveur, équipe)."
     - Ajout les langues des éleveurs connectés sur la page forum.
+    - "Ajout de 15 langues : Allemand, Italien, Portuguais, Suédois, Norvégien, Finlandais, Danois, Néérlandais, Polonais, Russe, Chinois, Hindi, Indonésien, Japonais et Coréen. #img_238_languages"
   improved:
     - Accélération de l'IA en cas d'erreurs très nombreuses.
     - Le bot du chat envoie un message seulement si le dernier message n'est pas de lui.
