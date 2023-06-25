@@ -511,7 +511,8 @@
 				this.ai.code = this.document.getValue()
 				this.ai.analyze()
 
-				if (true) return;
+				// DISABLE AUTO ANALYZE
+				// if (true) return;
 
 				analyzer.analyze(this.ai, this.ai.code).then((result) => {
 					// console.log("analyze", result)
@@ -1237,7 +1238,7 @@
 				this.detailDialog = false
 			}
 
-			if (force) {
+			// if (force) {
 				analyzer.complete(this.ai, this.document.getValue(), cursor.line + 1, cursor.ch - 1).then(raw_data => {
 
 					// console.log("Completions", raw_data)
@@ -1267,10 +1268,10 @@
 
 					this.openCompletions(this.completions, cursor)
 				})
-			} else {
+			// } else {
 
-				this.openCompletions(this.completions, cursor)
-			}
+			// 	this.openCompletions(this.completions, cursor)
+			// }
 		}
 
 		public addCompletionsFromAI(start: string, completions: any[], visited: Set<number>, ai: AI) {

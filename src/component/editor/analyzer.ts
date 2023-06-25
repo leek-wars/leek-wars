@@ -82,6 +82,11 @@ class Analyzer {
 	public analyze(ai: AI, code: string) {
 		// console.log("🔥 Analyze", ai.path)
 		// console.time('hover')
+
+		if (code.length > 60_000) {
+			return Promise.reject()
+		}
+
 		LeekWars.socket.send([SocketMessage.EDITOR_ANALYZE, ai.id, code])
 
 		return new Promise<any>((resolve, reject) => {
@@ -116,6 +121,10 @@ class Analyzer {
 	public complete(ai: AI, code: string, line: number, column: number) {
 
 		// console.log("🔥 Complete", ai.path, line, column)
+
+		if (code.length > 60_000) {
+			return Promise.reject()
+		}
 
 		const requestID = this.requestID++
 		LeekWars.socket.send([SocketMessage.EDITOR_COMPLETE, requestID, ai.id, code, line, column])
