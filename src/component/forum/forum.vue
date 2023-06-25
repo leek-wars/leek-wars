@@ -116,6 +116,7 @@
 	import { Component, Vue } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import { mixins } from '@/model/i18n'
+import { store } from '@/model/store'
 
 	@Component({ name: 'forum', i18n: {}, mixins: [...mixins], components: { ChatPanel, RichTooltipFarmer } })
 	export default class Forum extends Vue {
@@ -143,6 +144,7 @@
 				this.categories = data.categories
 				this.$root.$emit('loaded')
 				this.connected_farmers = data.farmers
+				store.commit('connected-count', data.farmers.length)
 				this.connected_languages = data.languages
 				LeekWars.setSubTitle(this.$t('connected_farmers_subtitle', [data.farmers.length]))
 			})
