@@ -183,12 +183,13 @@ class Leek extends FightEntity {
 				const angle = this.weapon instanceof WhiteWeaponAnimation ? (this.direction === 1 ? -Math.PI / 3 : Math.PI / 3) : (this.direction === 1 ? this.angle : -this.angle)
 				const cos = Math.cos(this.angle)
 				const sin = Math.sin(this.angle)
-				const cx = this.weapon.x + this.weapon.texture.texture.width / 2
-				const cz = this.weapon.z + this.weapon.texture.texture.height / 2
+				const cx = this.weapon.x + this.weapon.w / 2
+				const cz = this.weapon.z + this.weapon.h / 2
 				const x = (this.weapon.cx + cx * cos - cz * sin) * this.direction
 				const y = this.weapon.cz - cx * sin + cz * cos
 				const z = Math.max(1, this.handPos)
-				this.game.particles.addGarbage(this.ox + x * this.scale, this.oy - y * this.scale, z * this.scale, wdx, wdy, dz, this.weapon.texture, this.direction, rotation, this.scale, angle, 70)
+				const scale = this.weapon.w / this.weapon.texture.texture.width
+				this.game.particles.addGarbage(this.ox + x * this.scale, this.oy - y * this.scale, z * this.scale, wdx, wdy, dz, this.weapon.texture, this.direction, rotation, this.scale * scale, angle, 70)
 			}
 		}
 	}
