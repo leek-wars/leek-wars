@@ -5,7 +5,8 @@
 			<router-link to="/about" class="item">{{ $t('main.about') }}</router-link>
 			<router-link to="/groups" class="item">{{ $t('main.private_groups') }}</router-link>
 			<router-link to="/statistics" class="item">{{ $t('main.statistics') }}</router-link>
-			<router-link to="/app" class="item">{{ $t('main.app') }}</router-link>
+			<!-- <router-link to="/app" class="item">{{ $t('main.app') }}</router-link> -->
+			<router-link to="/dev-blog" class="item">{{ $t('main.dev-blog') }}</router-link>
 			<router-link to="/bank" class="item">
 				{{ $t('main.donation') }} <v-icon>mdi-currency-eur</v-icon>
 			</router-link>

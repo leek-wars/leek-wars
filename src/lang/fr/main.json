@@ -238,6 +238,7 @@
 	"partners": "Partenaires",
 	"pass": "Passer",
 	"play": "Jouer",
+	"dev-blog": "Dev Blog",
 	"dida_1": "Bienvenue sur Leek Wars <b>{0}</b>, jeune éleveur de poireau ! Voici la page de votre poireau, <b>{1}</b>.",
 	"dida_1_leek": "Bienvenue sur Leek Wars <b>{0}</b>, jeune poireau ! Voici votre page.",
 	"dida_2": "Commencez par utiliser vos points de capital pour augmenter vos caractéristiques : la vie {life} et la force {strength} sont conseillés.",

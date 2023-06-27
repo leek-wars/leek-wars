@@ -21,6 +21,8 @@ const ChangeEmail = () => import(/* webpackChunkName: "[request]" */ `@/componen
 const Changelog = () => import(/* webpackChunkName: "[request]" */ `@/component/changelog/changelog.${locale}.i18n`)
 const Conditions = () => import(/* webpackChunkName: "[request]" */ `@/component/conditions/conditions.${locale}.i18n`)
 const Contact = () => import(/* webpackChunkName: "[request]" */ `@/component/contact/contact.${locale}.i18n`)
+const DevBlog = () => import(/* webpackChunkName: "[request]" */ `@/component/dev-blog/dev-blog.${locale}.i18n`)
+const DevBlogArticle = () => import(/* webpackChunkName: "[request]" */ `@/component/dev-blog/dev-blog-article.${locale}.i18n`)
 const Documentation = () => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`)
 const Group = () => import(/* webpackChunkName: "[request]" */ `@/component/group/group.${locale}.i18n`)
 const Groups = () => import(/* webpackChunkName: "[request]" */ `@/component/groups/groups.${locale}.i18n`)
@@ -129,6 +131,8 @@ const routes = [
 	{ path: '/changelog', component: Changelog },
 	{ path: '/change-email/:state/:token', component: ChangeEmail },
 	{ path: '/contact', component: Contact },
+	{ path: '/dev-blog', component: DevBlog },
+	{ path: '/dev-blog/:id', component: DevBlogArticle },
 	{ path: '/encyclopedia', component: Encyclopedia, meta: {scrollOffset: 45} },
 	{ path: '/encyclopedia/:page', component: Encyclopedia, meta: {scrollOffset: 45} },
 	{ path: '/encyclopedia/:lang/:page', component: Encyclopedia, meta: {scrollOffset: 45} },
@@ -200,10 +204,10 @@ const routes = [
 if (process.env.VUE_APP_SOCIAL === 'true') {
 	routes.push(
 		{ path: '/forum', component: Forum, beforeEnter: connected },
-		{ path: '/forum/category-:category', component: ForumCategory, beforeEnter: connected },
-		{ path: '/forum/category-:category/page-:page', component: ForumCategory, beforeEnter: connected },
-		{ path: '/forum/category-:category/topic-:topic', component: ForumTopic, beforeEnter: connected },
-		{ path: '/forum/category-:category/topic-:topic/page-:page', component: ForumTopic, beforeEnter: connected },
+		{ path: '/forum/category-:category', component: ForumCategory },
+		{ path: '/forum/category-:category/page-:page', component: ForumCategory },
+		{ path: '/forum/category-:category/topic-:topic', component: ForumTopic },
+		{ path: '/forum/category-:category/topic-:topic/page-:page', component: ForumTopic },
 		{ path: '/search', component: ForumSearch, beforeEnter: connected },
 		{ path: '/chat', component: Messages, beforeEnter: connected },
 		{ path: '/chat/:id', component: Messages, beforeEnter: connected },
