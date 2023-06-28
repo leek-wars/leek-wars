@@ -118,25 +118,25 @@
 						<tr class="header">
 							<th class="ranking-column">{{ $t('place') }}</th>
 							<th>
-								<router-link :to="getURL('leek', 'name', country, inactive)">
+								<router-link :to="getURL(category, 'name', country, inactive)">
 									<span>{{ $t('main.leek') }}</span>
 									<v-icon v-if="order === 'name'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>
-								<router-link :to="getURL('leek', 'talent', country, inactive)">
+								<router-link :to="getURL(category, 'talent', country, inactive)">
 									<span>{{ $t('main.talent') }}</span>
 									<v-icon v-if="order === 'talent'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>
-								<router-link :to="getURL('leek', 'level', country, inactive)">
+								<router-link :to="getURL(category, 'level', country, inactive)">
 									<span>{{ $t('main.level') }}</span>
 									<v-icon v-if="order === 'level'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>
-								<router-link :to="getURL('leek', 'xp', country, inactive)">
+								<router-link :to="getURL(category, 'xp', country, inactive)">
 									<span>{{ $t('xp') }}</span>
 									<v-icon v-if="order === 'xp'">mdi-chevron-up</v-icon>
 								</router-link>
