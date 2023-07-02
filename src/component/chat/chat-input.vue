@@ -87,7 +87,7 @@
 				if (this.message.length === 0) {
 					return
 				}
-				if (this.message.length > 1000) {
+				if (this.message.length > 2000) {
 					LeekWars.toast(i18n.t('main.chat_too_long') as string)
 					return
 				}
