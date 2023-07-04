@@ -73,6 +73,26 @@
 				<div v-if="LeekWars.message" v-html="$i18n.t(LeekWars.message.message, LeekWars.message.arguments)"></div>
 			</popup>
 
+			<popup v-model="annonce" :width="800">
+				<template slot="title"><v-icon>mdi-bullhorn-outline</v-icon> Annonce !</template>
+				<div class="annonce">
+					<h2>Lancement de la boutique Leek Wars</h2>
+					<div class="annonce-message">
+						<br>
+						<a href="https://leek-wars.myspreadshop.fr/"><img src="/image/shop/shop.webp" width="100%"></a>
+						<br>
+						<br>
+						Lien de la boutique : <v-btn>
+							<a href="https://leek-wars.myspreadshop.fr/">https://leek-wars.myspreadshop.fr</a>
+						</v-btn>
+						<br><br>
+						Sujet forum : <v-btn>
+							<router-link to="/forum/category-6/topic-10939">https://leekwars.com/forum/category-6/topic-10939</router-link>
+						</v-btn>
+					</div>
+				</div>
+			</popup>
+
 			<!--
 			<popup v-model="annonce" :width="500">
 				<template slot="title"><v-icon>mdi-bullhorn-outline</v-icon> Annonce de concours !</template>
@@ -204,10 +224,10 @@
 				this.docEverywhereModel = false
 			})
 
-			// if (this.$store.state.connected && !localStorage.getItem('annonce')) {
-			// 	this.annonce = true
-			// 	localStorage.setItem('annonce', 'true')
-			// }
+			if (this.$store.state.connected && !localStorage.getItem('annonce/shop')) {
+				this.annonce = true
+				localStorage.setItem('annonce/shop', 'true')
+			}
 		}
 		changelogShow() {
 			LeekWars.get('changelog/get-last/' + this.$i18n.locale).then(data => {
