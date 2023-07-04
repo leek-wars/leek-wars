@@ -96,5 +96,6 @@
 	"angry": "Nervoso",
 	"happy": "Sorridente",
 	"neutral": "Neutro",
-	"xp_blocked_desc": "Se a opção estiver ativada, as lutas não renderão mais experiência e o alho-poró não subirá de nível. Ganhos de talentos e recursos são retidos."
+	"xp_blocked_desc": "Se a opção estiver ativada, as lutas não renderão mais experiência e o alho-poró não subirá de nível. Ganhos de talentos e recursos são retidos.",
+	"start_a_fight": "Começar uma luta!"
 }

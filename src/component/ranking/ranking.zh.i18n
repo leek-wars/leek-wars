@@ -39,5 +39,9 @@
 	"trophies_title": "大多数奖杯",
 	"statistics": "统计数据",
 	"no_results": "没有结果",
-	"xp": "经验值"
+	"xp": "经验值",
+	"solo_tournaments_title": "赢得的个人比赛",
+	"farmer_tournaments_title": "赢得的饲养员比赛",
+	"team_tournaments_title": "赢得的团体比赛",
+	"tournaments": "锦标赛"
 }

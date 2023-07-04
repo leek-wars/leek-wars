@@ -96,5 +96,6 @@
 	"angry": "Boos",
 	"happy": "Glimlachend",
 	"neutral": "Neutrale",
-	"xp_blocked_desc": "Als de optie is geactiveerd, leveren gevechten geen ervaring meer op en stijgt de prei niet. Talent- en resourcewinsten blijven behouden."
+	"xp_blocked_desc": "Als de optie is geactiveerd, leveren gevechten geen ervaring meer op en stijgt de prei niet. Talent- en resourcewinsten blijven behouden.",
+	"start_a_fight": "Begin een gevecht!"
 }

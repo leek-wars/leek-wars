@@ -58,5 +58,10 @@
 	"community_title": "Comunidad",
 	"community_text1": "Una comunidad activa y solidaria: un <b>chat</b>, <b>mensajes privados</b>, un <b>foro</b>, <b>comentarios</b>, un <b> > wiki</b> te permite interactuar con otros jugadores para ayudarte en tu aventura y aprender muchos detalles sobre el juego.",
 	"customization_title": "Personalización",
-	"customization_text1": "Administra la apariencia de tu puerro con <b>sombreros</b>, <b>pociones de color</b>, <b>títulos</b> y otros adornos."
+	"customization_text1": "Administra la apariencia de tu puerro con <b>sombreros</b>, <b>pociones de color</b>, <b>títulos</b> y otros adornos.",
+	"shop_desc": "Vea nuestras camisetas, tazas, pegatinas y mucho más",
+	"groups": "Guerra de puerros para grupos",
+	"groups_desc": "Crea un grupo privado de estudiantes, personal o jugadores, gestiona sus progresos, organiza torneos y comunícate en directo con ellos.",
+	"groups_button": "Más información sobre nuestras ofertas",
+	"groups_title": "Crea tu grupo privado Leek Wars"
 }

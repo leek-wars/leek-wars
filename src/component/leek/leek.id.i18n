@@ -96,5 +96,6 @@
 	"angry": "Marah",
 	"happy": "Tersenyum",
 	"neutral": "Netral",
-	"xp_blocked_desc": "Jika opsi diaktifkan, pertarungan tidak akan lagi menghasilkan pengalaman, dan daun bawang tidak akan naik level. Keuntungan bakat dan sumber daya dipertahankan."
+	"xp_blocked_desc": "Jika opsi diaktifkan, pertarungan tidak akan lagi menghasilkan pengalaman, dan daun bawang tidak akan naik level. Keuntungan bakat dan sumber daya dipertahankan.",
+	"start_a_fight": "Mulai berkelahi!"
 }

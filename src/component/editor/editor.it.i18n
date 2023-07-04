@@ -80,5 +80,7 @@
 	"error": "Errore | Errori",
 	"warning": "Dichiarazione di non responsabilità | Avvertenze",
 	"todo": "Tutto | Tutto",
-	"editor_already_opened": "L'editor è già aperto in un'altra scheda!"
+	"editor_already_opened": "L'editor è già aperto in un'altra scheda!",
+	"strict_mode": "Modalità rigorosa (avanzata)",
+	"strict": "Rigoroso"
 }

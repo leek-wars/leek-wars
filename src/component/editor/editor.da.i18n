@@ -80,5 +80,7 @@
 	"error": "Fejl | Fejl",
 	"warning": "Ansvarsfraskrivelse | Advarsler",
 	"todo": "Gøre | Todos",
-	"editor_already_opened": "Editoren er allerede åben i en anden fane!"
+	"editor_already_opened": "Editoren er allerede åben i en anden fane!",
+	"strict_mode": "Streng tilstand (avanceret)",
+	"strict": "Streng"
 }

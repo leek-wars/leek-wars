@@ -58,5 +58,10 @@
 	"community_title": "Comunidade",
 	"community_text1": "Uma comunidade ativa e solidária: um <b>chat</b>, <b>mensagens privadas</b>, um <b>fórum</b>, <b>comentários</b>, um <b> > wiki</b> permite que você interaja com outros jogadores para ajudá-lo em sua aventura e aprender muitos detalhes sobre o jogo.",
 	"customization_title": "Personalização",
-	"customization_text1": "Gerencie a aparência do seu alho-poró com <b>chapéus</b>, <b>poções de cor</b>, <b>títulos</b> e outros adereços."
+	"customization_text1": "Gerencie a aparência do seu alho-poró com <b>chapéus</b>, <b>poções de cor</b>, <b>títulos</b> e outros adereços.",
+	"shop_desc": "Veja as nossas t-shirts, canecas, autocolantes e muito mais!",
+	"groups": "Guerras do alho francês para grupos",
+	"groups_desc": "Crie um grupo privado de estudantes, funcionários ou jogadores, faça a gestão dos seus progressos, organize torneios e comunique em direto com eles.",
+	"groups_button": "Saiba mais sobre as nossas ofertas",
+	"groups_title": "Criar o seu grupo privado de Leek Wars"
 }

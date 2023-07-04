@@ -148,5 +148,20 @@
 	"chat_reactions": "猫の反応",
 	"chests_kills": "チェストで殺される",
 	"resources_chest": "入手した資源",
-	"resources": "入手した資源"
+	"resources": "入手した資源",
+	"lang_de": "ドイツ語",
+	"lang_it": "イタリア語",
+	"lang_pt": "ポルトガル語",
+	"lang_da": "デンマーク語",
+	"lang_fi": "フィンランド語",
+	"lang_nl": "オランダ語",
+	"lang_no": "ノルウェー語",
+	"lang_pl": "ポーランド語",
+	"lang_sv": "スデドワ",
+	"lang_ru": "ロシア語",
+	"lang_zh": "マンダリン",
+	"lang_hi": "ヒンディー語",
+	"lang_id": "インドネシア語",
+	"lang_ja": "日本語",
+	"lang_ko": "韓国語"
 }

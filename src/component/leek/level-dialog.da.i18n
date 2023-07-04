@@ -9,5 +9,7 @@
 	"new_weapon": "Ny våbenslot",
 	"new_chip": "Ny chip slot",
 	"total_weapons": "{0} våben i alt",
-	"total_chips": "{0} chips i alt"
+	"total_chips": "{0} chips i alt",
+	"br_desc": "Ny spiltilstand låst op: Battle Royales! En kamp mellem 10 porrer, hvor hver mand kæmper for sig selv. Tilmeld dig i køkkenhaven eller på porresiden.",
+	"newleek_desc": "Ny porre kan købes fra menuen."
 }

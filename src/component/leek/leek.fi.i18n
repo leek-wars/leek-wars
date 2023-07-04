@@ -96,5 +96,6 @@
 	"angry": "Vihainen",
 	"happy": "Hymyilevä",
 	"neutral": "Neutraali",
-	"xp_blocked_desc": "Jos vaihtoehto on aktivoitu, taistelut eivät enää tuota kokemusta, eikä purjo nouse tasolle. Lahjakkuus ja resurssit säilyvät."
+	"xp_blocked_desc": "Jos vaihtoehto on aktivoitu, taistelut eivät enää tuota kokemusta, eikä purjo nouse tasolle. Lahjakkuus ja resurssit säilyvät.",
+	"start_a_fight": "Aloita tappelu!"
 }

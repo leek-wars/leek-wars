@@ -148,5 +148,20 @@
 	"chat_reactions": "Reaksjoner på katter",
 	"chests_kills": "Drept av kister",
 	"resources_chest": "Innhentede ressurser",
-	"resources": "Innhentede ressurser"
+	"resources": "Innhentede ressurser",
+	"lang_de": "Tysk",
+	"lang_it": "Italiensk",
+	"lang_pt": "Portugisisk",
+	"lang_da": "Dansk",
+	"lang_fi": "Finsk",
+	"lang_nl": "Nederlandsk",
+	"lang_no": "Norsk",
+	"lang_pl": "Polsk",
+	"lang_sv": "Sudédois",
+	"lang_ru": "Russisk",
+	"lang_zh": "Mandarin",
+	"lang_hi": "Hindi",
+	"lang_id": "Indonesisk",
+	"lang_ja": "Japansk",
+	"lang_ko": "Koreansk"
 }

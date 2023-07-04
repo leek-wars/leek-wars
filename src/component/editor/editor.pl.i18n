@@ -80,5 +80,7 @@
 	"error": "Błąd | Błędy",
 	"warning": "Zastrzeżenie | Ostrzeżenia",
 	"todo": "Do zrobienia | Todos",
-	"editor_already_opened": "Edytor jest już otwarty w innej zakładce!"
+	"editor_already_opened": "Edytor jest już otwarty w innej zakładce!",
+	"strict_mode": "Tryb ścisły (zaawansowany)",
+	"strict": "Ścisły"
 }

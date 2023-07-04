@@ -148,5 +148,20 @@
 	"damage_poison_chart": "Poison",
 	"damage_life_chart": "%Life",
 	"damage_return_chart": "Return",
-	"lang_es": "Spanish"
+	"lang_es": "Spanish",
+	"lang_de": "German",
+	"lang_it": "Italian",
+	"lang_pt": "Portuguese",
+	"lang_da": "Danish",
+	"lang_fi": "Finnish",
+	"lang_nl": "Dutch",
+	"lang_no": "Norwegian",
+	"lang_pl": "Polish",
+	"lang_sv": "Sudédois",
+	"lang_ru": "Russian",
+	"lang_zh": "Mandarin",
+	"lang_hi": "Hindi",
+	"lang_id": "Indonesian",
+	"lang_ja": "Japanese",
+	"lang_ko": "Korean"
 }

@@ -39,5 +39,9 @@
 	"trophies_title": "Большинство трофеев",
 	"statistics": "Статистика",
 	"no_results": "Без результатов",
-	"xp": "XP"
+	"xp": "XP",
+	"solo_tournaments_title": "Победа в одиночных турнирах",
+	"farmer_tournaments_title": "Победа в турнирах селекционеров",
+	"team_tournaments_title": "Выигранные командные турниры",
+	"tournaments": "Турниры"
 }

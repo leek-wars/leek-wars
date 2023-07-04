@@ -148,5 +148,20 @@
 	"chat_reactions": "Reaktiot kissoihin",
 	"chests_kills": "Tappoi rintakehällä",
 	"resources_chest": "Saadut resurssit",
-	"resources": "Saadut resurssit"
+	"resources": "Saadut resurssit",
+	"lang_de": "Saksan",
+	"lang_it": "Italian",
+	"lang_pt": "Portugalin",
+	"lang_da": "Tanskalainen",
+	"lang_fi": "Suomalainen",
+	"lang_nl": "Hollantilainen",
+	"lang_no": "Norjalainen",
+	"lang_pl": "Puolan",
+	"lang_sv": "Sudédois",
+	"lang_ru": "Venäläinen",
+	"lang_zh": "Mandariini",
+	"lang_hi": "Hindi",
+	"lang_id": "Indonesialainen",
+	"lang_ja": "Japanilainen",
+	"lang_ko": "Korean"
 }

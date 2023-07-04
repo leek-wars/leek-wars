@@ -9,5 +9,7 @@
 	"new_weapon": "Nowe miejsce na broń",
 	"new_chip": "Nowe miejsce na chip",
 	"total_weapons": "{0} łącznie broni",
-	"total_chips": "łącznie {0} żetonów"
+	"total_chips": "łącznie {0} żetonów",
+	"br_desc": "Odblokowano nowy tryb gry: Battle Royales! Bitwa na 10 porów, każdy dla siebie. Zarejestruj się w ogrodzie warzywnym lub na stronie porów.",
+	"newleek_desc": "Nowy por dostępny do kupienia w menu."
 }

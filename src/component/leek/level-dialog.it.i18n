@@ -9,5 +9,7 @@
 	"new_weapon": "Nuovo slot per armi",
 	"new_chip": "Nuovo slot per chip",
 	"total_weapons": "{0} armi totali",
-	"total_chips": "{0} gettoni in totale"
+	"total_chips": "{0} gettoni in totale",
+	"br_desc": "Nuova modalità di gioco sbloccata: Battle Royales! Una battaglia di 10 porri, ognuno per sé. Iscriviti nell'orto o sulla pagina dei porri.",
+	"newleek_desc": "Porro nuovo disponibile per l'acquisto dal menu."
 }

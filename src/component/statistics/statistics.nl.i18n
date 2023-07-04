@@ -148,5 +148,20 @@
 	"chat_reactions": "Reacties op katten",
 	"chests_kills": "Gedood door kisten",
 	"resources_chest": "Middelen verkregen",
-	"resources": "Middelen verkregen"
+	"resources": "Middelen verkregen",
+	"lang_de": "Duits",
+	"lang_it": "Italiaans",
+	"lang_pt": "Portugees",
+	"lang_da": "Deens",
+	"lang_fi": "Fins",
+	"lang_nl": "Nederlands",
+	"lang_no": "Noors",
+	"lang_pl": "Pools",
+	"lang_sv": "Sudédois",
+	"lang_ru": "Russisch",
+	"lang_zh": "Mandarijn",
+	"lang_hi": "Hindi",
+	"lang_id": "Indonesisch",
+	"lang_ja": "Japans",
+	"lang_ko": "Koreaans"
 }

@@ -9,5 +9,7 @@
 	"new_weapon": "Nieuw wapenslot",
 	"new_chip": "Nieuw chipslot",
 	"total_weapons": "{0} totale wapens",
-	"total_chips": "{0} fiches in totaal"
+	"total_chips": "{0} fiches in totaal",
+	"br_desc": "Nieuw speltype ontgrendeld: Battle Royales! Een strijd van 10 preien ieder voor zich. Meld je aan in de moestuin of op de preipagina.",
+	"newleek_desc": "Nieuwe prei verkrijgbaar via het menu."
 }

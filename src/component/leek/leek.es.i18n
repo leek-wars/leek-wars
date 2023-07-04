@@ -96,5 +96,6 @@
 	"angry": "Enojado",
 	"happy": "Sonriente",
 	"neutral": "Neutral",
-	"xp_blocked_desc": "Si la opción está activada, las peleas ya no darán experiencia y el puerro no subirá de nivel. Se retienen las ganancias de talento y recursos."
+	"xp_blocked_desc": "Si la opción está activada, las peleas ya no darán experiencia y el puerro no subirá de nivel. Se retienen las ganancias de talento y recursos.",
+	"start_a_fight": "¡Empieza una pelea!"
 }

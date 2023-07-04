@@ -80,5 +80,7 @@
 	"error": "错误 |错误",
 	"warning": "免责声明 |警告",
 	"todo": "待办事项 |待办事项",
-	"editor_already_opened": "编辑器已在另一个选项卡中打开！"
+	"editor_already_opened": "编辑器已在另一个选项卡中打开！",
+	"strict_mode": "严格模式（高级）",
+	"strict": "严格的"
 }

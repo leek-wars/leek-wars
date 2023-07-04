@@ -1,1 +1,5 @@
-{}
+{
+	"email": "Email : {email}",
+	"title": "Contatto",
+	"intro": "Volete mettervi in contatto con noi? Siamo qui per aiutarvi!"
+}

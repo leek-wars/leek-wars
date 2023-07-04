@@ -9,5 +9,7 @@
 	"new_weapon": "Novo slot de arma",
 	"new_chip": "Novo slot para fichas",
 	"total_weapons": "{0} total de armas",
-	"total_chips": "{0} fichas no total"
+	"total_chips": "{0} fichas no total",
+	"br_desc": "Novo modo de jogo desbloqueado: Battle Royales! Uma batalha de 10 alhos franceses, cada um por si. Inscreve-te na horta ou na página dos alhos franceses.",
+	"newleek_desc": "Alho francês novo disponível para compra no menu."
 }

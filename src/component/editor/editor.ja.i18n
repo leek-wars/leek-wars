@@ -80,5 +80,7 @@
 	"error": "エラー |エラー",
 	"warning": "免責事項 |警告",
 	"todo": "トド |トドス",
-	"editor_already_opened": "エディタはすでに別のタブで開いています!"
+	"editor_already_opened": "エディタはすでに別のタブで開いています!",
+	"strict_mode": "ストリクトモード（上級者向け）",
+	"strict": "厳しい"
 }

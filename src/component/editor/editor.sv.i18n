@@ -80,5 +80,7 @@
 	"error": "Fel | Fel",
 	"warning": "Ansvarsfriskrivning | Varningar",
 	"todo": "Göra | Todos",
-	"editor_already_opened": "Redaktören är redan öppen på en annan flik!"
+	"editor_already_opened": "Redaktören är redan öppen på en annan flik!",
+	"strict_mode": "Strikt läge (avancerat)",
+	"strict": "Strikt"
 }

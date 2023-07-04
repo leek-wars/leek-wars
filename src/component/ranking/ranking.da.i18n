@@ -39,5 +39,9 @@
 	"trophies_title": "Flest trofæer",
 	"statistics": "Statistikker",
 	"no_results": "Ingen resultater",
-	"xp": "XP"
+	"xp": "XP",
+	"solo_tournaments_title": "Vundne soloturneringer",
+	"farmer_tournaments_title": "Vundne opdrætterturneringer",
+	"team_tournaments_title": "Vundne holdturneringer",
+	"tournaments": "Turneringer"
 }

@@ -9,5 +9,7 @@
 	"new_weapon": "Neuer Waffenplatz",
 	"new_chip": "Neuer Chip-Slot",
 	"total_weapons": "{0} insgesamt Waffen",
-	"total_chips": "{0} Chips insgesamt"
+	"total_chips": "{0} Chips insgesamt",
+	"br_desc": "Neuer freigeschalteter Spielmodus: Battle Royales! Ein Kampf von 10 Lauchern im Modus \"Jeder gegen Jeden\". Melden Sie sich vom Gemüsegarten aus oder auf der Lauchseite an.",
+	"newleek_desc": "Neuer Lauch, der über das Menü zum Kauf angeboten wird."
 }

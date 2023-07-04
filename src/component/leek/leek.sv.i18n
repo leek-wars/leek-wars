@@ -96,5 +96,6 @@
 	"angry": "Arg",
 	"happy": "Leende",
 	"neutral": "Neutral",
-	"xp_blocked_desc": "Om alternativet är aktiverat kommer slagsmål inte längre att ge erfarenhet, och purjolöken kommer inte att gå upp i nivå. Talang- och resursvinster behålls."
+	"xp_blocked_desc": "Om alternativet är aktiverat kommer slagsmål inte längre att ge erfarenhet, och purjolöken kommer inte att gå upp i nivå. Talang- och resursvinster behålls.",
+	"start_a_fight": "Starta en strid!"
 }

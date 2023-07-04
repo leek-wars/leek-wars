@@ -39,5 +39,9 @@
 	"trophies_title": "La mayoría de trofeos",
 	"statistics": "Estadísticas",
 	"no_results": "No hay resultados",
-	"xp": "PE"
+	"xp": "PE",
+	"solo_tournaments_title": "Torneos individuales ganados",
+	"farmer_tournaments_title": "Torneos de criadores ganados",
+	"team_tournaments_title": "Torneos ganados por equipos",
+	"tournaments": "Torneos"
 }

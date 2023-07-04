@@ -80,5 +80,7 @@
 	"error": "Kesalahan | Kesalahan",
 	"warning": "Penafian | Peringatan",
 	"todo": "Yang harus dilakukan | Semuanya",
-	"editor_already_opened": "Editor sudah terbuka di tab lain!"
+	"editor_already_opened": "Editor sudah terbuka di tab lain!",
+	"strict_mode": "Mode ketat (lanjutan)",
+	"strict": "Ketat"
 }

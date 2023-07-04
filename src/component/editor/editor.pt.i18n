@@ -80,5 +80,7 @@
 	"error": "Erro | Erros",
 	"warning": "Isenção de responsabilidade | Avisos",
 	"todo": "Tudo | Todos",
-	"editor_already_opened": "O editor já está aberto em outra aba!"
+	"editor_already_opened": "O editor já está aberto em outra aba!",
+	"strict_mode": "Modo estrito (avançado)",
+	"strict": "Rigoroso"
 }

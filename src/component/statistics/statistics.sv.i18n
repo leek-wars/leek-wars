@@ -148,5 +148,20 @@
 	"chat_reactions": "Reaktioner på katter",
 	"chests_kills": "Dödad av kistor",
 	"resources_chest": "Erhållna resurser",
-	"resources": "Erhållna resurser"
+	"resources": "Erhållna resurser",
+	"lang_de": "Tyska",
+	"lang_it": "Italienska",
+	"lang_pt": "Portugisiska",
+	"lang_da": "Danska",
+	"lang_fi": "Finska",
+	"lang_nl": "Nederländska",
+	"lang_no": "Norska",
+	"lang_pl": "Polsk",
+	"lang_sv": "Sudédois",
+	"lang_ru": "Ryska",
+	"lang_zh": "Mandarin",
+	"lang_hi": "Hindi",
+	"lang_id": "Indonesiska",
+	"lang_ja": "Japanska",
+	"lang_ko": "Koreanska"
 }

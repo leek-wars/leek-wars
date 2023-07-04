@@ -9,5 +9,7 @@
 	"new_weapon": "Uusi asepaikka",
 	"new_chip": "Uusi sirupaikka",
 	"total_weapons": "{0} asetta yhteensä",
-	"total_chips": "yhteensä {0} pelimerkkiä"
+	"total_chips": "yhteensä {0} pelimerkkiä",
+	"br_desc": "Uusi pelitila avattu: Battle Royales! Taistelu 10 purjoa, jokainen mies omasta puolestaan. Ilmoittaudu vihannespuutarhassa tai purjosivulla.",
+	"newleek_desc": "Uutta purjoa voi ostaa valikosta."
 }

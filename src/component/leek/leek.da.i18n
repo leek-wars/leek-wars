@@ -96,5 +96,6 @@
 	"angry": "Vred",
 	"happy": "Smilende",
 	"neutral": "Neutral",
-	"xp_blocked_desc": "Hvis muligheden er aktiveret, vil kampe ikke længere give erfaring, og porren vil ikke op i niveau. Talent- og ressourcegevinster bibeholdes."
+	"xp_blocked_desc": "Hvis muligheden er aktiveret, vil kampe ikke længere give erfaring, og porren vil ikke op i niveau. Talent- og ressourcegevinster bibeholdes.",
+	"start_a_fight": "Start en kamp!"
 }

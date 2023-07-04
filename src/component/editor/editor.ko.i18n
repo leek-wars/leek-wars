@@ -80,5 +80,7 @@
 	"error": "오류 | 오류",
 	"warning": "면책 조항 | 경고",
 	"todo": "할 일 | 할 일",
-	"editor_already_opened": "편집기는 이미 다른 탭에서 열려 있습니다!"
+	"editor_already_opened": "편집기는 이미 다른 탭에서 열려 있습니다!",
+	"strict_mode": "엄격 모드(고급)",
+	"strict": "Strict"
 }

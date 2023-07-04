@@ -148,5 +148,20 @@
 	"chat_reactions": "Reakcje na koty",
 	"chests_kills": "Zabity przez skrzynie",
 	"resources_chest": "Uzyskane zasoby",
-	"resources": "Uzyskane zasoby"
+	"resources": "Uzyskane zasoby",
+	"lang_de": "Niemiecki",
+	"lang_it": "Włoski",
+	"lang_pt": "Portugalski",
+	"lang_da": "Duński",
+	"lang_fi": "Fiński",
+	"lang_nl": "Holenderski",
+	"lang_no": "Norweski",
+	"lang_pl": "Polski",
+	"lang_sv": "Sudédois",
+	"lang_ru": "Rosyjski",
+	"lang_zh": "Mandaryński",
+	"lang_hi": "Hindi",
+	"lang_id": "Indonezyjski",
+	"lang_ja": "Japoński",
+	"lang_ko": "Koreański"
 }

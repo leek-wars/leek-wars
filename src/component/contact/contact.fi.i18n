@@ -1,1 +1,5 @@
-{}
+{
+	"email": "Sähköposti: {email}",
+	"title": "Ota yhteyttä",
+	"intro": "Haluatko ottaa meihin yhteyttä? Olemme täällä auttamassa!"
+}

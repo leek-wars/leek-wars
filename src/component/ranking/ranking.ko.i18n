@@ -39,5 +39,9 @@
 	"trophies_title": "최다 트로피",
 	"statistics": "통계",
 	"no_results": "결과 없음",
-	"xp": "경험치"
+	"xp": "경험치",
+	"solo_tournaments_title": "솔로 토너먼트 우승 횟수",
+	"farmer_tournaments_title": "브리더 토너먼트 우승",
+	"team_tournaments_title": "팀 토너먼트 우승",
+	"tournaments": "토너먼트"
 }

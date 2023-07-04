@@ -148,5 +148,20 @@
 	"chests_kills": "Asesinado por cofres",
 	"resources_chest": "Recursos obtenidos",
 	"resources": "Recursos obtenidos",
-	"lang_es": "Español"
+	"lang_es": "Español",
+	"lang_de": "Alemán",
+	"lang_it": "Italiano",
+	"lang_pt": "Portugués",
+	"lang_da": "Danés",
+	"lang_fi": "En finés",
+	"lang_nl": "Holandés",
+	"lang_no": "Noruega",
+	"lang_pl": "Polaco",
+	"lang_sv": "Sudédois",
+	"lang_ru": "Ruso",
+	"lang_zh": "Mandarín",
+	"lang_hi": "Hindi",
+	"lang_id": "Indonesia",
+	"lang_ja": "Japonés",
+	"lang_ko": "Coreano"
 }

@@ -80,5 +80,7 @@
 	"error": "Virhe | Virheet",
 	"warning": "Vastuuvapauslauseke | Varoitukset",
 	"todo": "Tehdä | Todos",
-	"editor_already_opened": "Editori on jo auki toisella välilehdellä!"
+	"editor_already_opened": "Editori on jo auki toisella välilehdellä!",
+	"strict_mode": "Tiukka tila (edistynyt)",
+	"strict": "Tiukka"
 }

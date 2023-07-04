@@ -148,5 +148,20 @@
 	"chat_reactions": "Reazioni sui chats",
 	"chests_kills": "Ucciso dai forzieri",
 	"resources_chest": "Risorse ottenute",
-	"resources": "Risorse ottenute"
+	"resources": "Risorse ottenute",
+	"lang_de": "Tedesco",
+	"lang_it": "Italiano",
+	"lang_pt": "Portoghese",
+	"lang_da": "Danese",
+	"lang_fi": "Finlandese",
+	"lang_nl": "Olandese",
+	"lang_no": "Norvegese",
+	"lang_pl": "Polacco",
+	"lang_sv": "Sudédois",
+	"lang_ru": "Russo",
+	"lang_zh": "Mandarino",
+	"lang_hi": "Hindi",
+	"lang_id": "Indonesiano",
+	"lang_ja": "Giapponese",
+	"lang_ko": "Coreano"
 }

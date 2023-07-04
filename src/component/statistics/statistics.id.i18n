@@ -148,5 +148,20 @@
 	"chat_reactions": "Reaksi pada kucing",
 	"chests_kills": "Dibunuh oleh peti",
 	"resources_chest": "Sumber Daya yang Didapat",
-	"resources": "Sumber Daya yang Didapat"
+	"resources": "Sumber Daya yang Didapat",
+	"lang_de": "Bahasa Jerman",
+	"lang_it": "Bahasa Italia",
+	"lang_pt": "Bahasa Portugis",
+	"lang_da": "Denmark",
+	"lang_fi": "Finlandia",
+	"lang_nl": "Belanda",
+	"lang_no": "Norwegia",
+	"lang_pl": "Polandia",
+	"lang_sv": "Sudédois",
+	"lang_ru": "Rusia",
+	"lang_zh": "Bahasa Mandarin",
+	"lang_hi": "Bahasa Hindi",
+	"lang_id": "Bahasa Indonesia",
+	"lang_ja": "Bahasa Jepang",
+	"lang_ko": "Bahasa Korea"
 }

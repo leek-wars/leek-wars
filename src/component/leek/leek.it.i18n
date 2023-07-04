@@ -96,5 +96,6 @@
 	"angry": "Arrabbiato",
 	"happy": "Sorridente",
 	"neutral": "Neutro",
-	"xp_blocked_desc": "Se l'opzione è attivata, i combattimenti non produrranno più esperienza e il porro non salirà di livello. I guadagni di talenti e risorse vengono mantenuti."
+	"xp_blocked_desc": "Se l'opzione è attivata, i combattimenti non produrranno più esperienza e il porro non salirà di livello. I guadagni di talenti e risorse vengono mantenuti.",
+	"start_a_fight": "Iniziare una lotta!"
 }

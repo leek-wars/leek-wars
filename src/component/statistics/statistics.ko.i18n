@@ -148,5 +148,20 @@
 	"chat_reactions": "고양이에 대한 반응",
 	"chests_kills": "상자에 의해 살해",
 	"resources_chest": "얻은 자원",
-	"resources": "얻은 자원"
+	"resources": "얻은 자원",
+	"lang_de": "독일어",
+	"lang_it": "이탈리아어",
+	"lang_pt": "포르투갈어",
+	"lang_da": "덴마크어",
+	"lang_fi": "핀란드어",
+	"lang_nl": "네덜란드어",
+	"lang_no": "Norwegian",
+	"lang_pl": "폴란드어",
+	"lang_sv": "Sudédois",
+	"lang_ru": "러시아어",
+	"lang_zh": "만다린",
+	"lang_hi": "Hindi",
+	"lang_id": "인도네시아어",
+	"lang_ja": "일본어",
+	"lang_ko": "한국어"
 }

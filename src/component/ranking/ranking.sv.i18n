@@ -39,5 +39,9 @@
 	"trophies_title": "Flest troféer",
 	"statistics": "Statistik",
 	"no_results": "Inga resultat",
-	"xp": "XP"
+	"xp": "XP",
+	"solo_tournaments_title": "Vunna soloturneringar",
+	"farmer_tournaments_title": "Vunna uppfödarturneringar",
+	"team_tournaments_title": "Vunna lagturneringar",
+	"tournaments": "Turneringar"
 }

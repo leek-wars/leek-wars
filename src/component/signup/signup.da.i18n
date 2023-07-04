@@ -58,5 +58,10 @@
 	"community_title": "Fællesskab",
 	"community_text1": "Et aktivt og omsorgsfuldt fællesskab: en <b>chat</b>, <b>private beskeder</b>, et <b>forum</b>, <b>kommentarer</b>, en <b> > wiki</b> giver dig mulighed for at interagere med andre spillere for at hjælpe dig på dit eventyr og lære mange detaljer om spillet.",
 	"customization_title": "Personalisering",
-	"customization_text1": "Administrer din porres udseende med <b>hatte</b>, <b>farvepotions</b>, <b>titler</b> og andre pynt."
+	"customization_text1": "Administrer din porres udseende med <b>hatte</b>, <b>farvepotions</b>, <b>titler</b> og andre pynt.",
+	"shop_desc": "Se vores T-shirts, krus, klistermærker og meget mere!",
+	"groups": "Porrekrig for grupper",
+	"groups_desc": "Opret en privat gruppe af studerende, ansatte eller spillere, administrer deres fremskridt, organiser turneringer og kommuniker live med dem.",
+	"groups_button": "Find ud af mere om vores tilbud",
+	"groups_title": "Opret din private Leek Wars-gruppe"
 }

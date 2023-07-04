@@ -148,5 +148,20 @@
 	"chat_reactions": "Reaktioner på katte",
 	"chests_kills": "Dræbt af kister",
 	"resources_chest": "Opnåede ressourcer",
-	"resources": "Opnåede ressourcer"
+	"resources": "Opnåede ressourcer",
+	"lang_de": "Tysk",
+	"lang_it": "Italiensk",
+	"lang_pt": "Portugisisk",
+	"lang_da": "Dansk",
+	"lang_fi": "Finsk",
+	"lang_nl": "Hollandsk",
+	"lang_no": "Norsk",
+	"lang_pl": "Polsk",
+	"lang_sv": "Sudédois",
+	"lang_ru": "Russisk",
+	"lang_zh": "Mandarin",
+	"lang_hi": "Hindi",
+	"lang_id": "Indonesisk",
+	"lang_ja": "Japansk",
+	"lang_ko": "Koreansk"
 }

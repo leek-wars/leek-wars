@@ -148,5 +148,20 @@
 	"chat_reactions": "对猫的反应",
 	"chests_kills": "被箱子杀死",
 	"resources_chest": "获得的资源",
-	"resources": "获得的资源"
+	"resources": "获得的资源",
+	"lang_de": "德国",
+	"lang_it": "意大利语",
+	"lang_pt": "葡萄牙语",
+	"lang_da": "丹麦",
+	"lang_fi": "芬兰语",
+	"lang_nl": "荷兰语",
+	"lang_no": "挪威",
+	"lang_pl": "波兰语",
+	"lang_sv": "苏台德人",
+	"lang_ru": "俄罗斯",
+	"lang_zh": "普通话",
+	"lang_hi": "印地语",
+	"lang_id": "印尼语",
+	"lang_ja": "日本人",
+	"lang_ko": "韩国"
 }

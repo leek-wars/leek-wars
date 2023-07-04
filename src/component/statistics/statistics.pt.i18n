@@ -148,5 +148,20 @@
 	"chat_reactions": "Reações em gatos",
 	"chests_kills": "Morto por baús",
 	"resources_chest": "Recursos Obtidos",
-	"resources": "Recursos Obtidos"
+	"resources": "Recursos Obtidos",
+	"lang_de": "Alemão",
+	"lang_it": "Italiano",
+	"lang_pt": "Português",
+	"lang_da": "Dinamarquesa",
+	"lang_fi": "Finlandês",
+	"lang_nl": "Holandês",
+	"lang_no": "Norueguês",
+	"lang_pl": "Polaco",
+	"lang_sv": "Sudédois",
+	"lang_ru": "Russo",
+	"lang_zh": "Mandarim",
+	"lang_hi": "Hindi",
+	"lang_id": "Indonésio",
+	"lang_ja": "Japonês",
+	"lang_ko": "Coreano"
 }

@@ -80,5 +80,7 @@
 	"error": "Fout | Fouten",
 	"warning": "Disclaimer | Waarschuwingen",
 	"todo": "Doe | Taken",
-	"editor_already_opened": "De editor is al geopend in een ander tabblad!"
+	"editor_already_opened": "De editor is al geopend in een ander tabblad!",
+	"strict_mode": "Strikte modus (geavanceerd)",
+	"strict": "Strikt"
 }

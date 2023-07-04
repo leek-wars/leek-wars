@@ -9,5 +9,7 @@
 	"new_weapon": "Ny våpenspor",
 	"new_chip": "Ny brikkespor",
 	"total_weapons": "{0} totalt våpen",
-	"total_chips": "{0} sjetonger totalt"
+	"total_chips": "{0} sjetonger totalt",
+	"br_desc": "Ny spillmodus låst opp: Battle Royales! En kamp mellom 10 purre, hver mann for seg selv. Meld deg på i grønnsakshagen eller på purresiden.",
+	"newleek_desc": "Ny purre kan kjøpes fra menyen."
 }

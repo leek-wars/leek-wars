@@ -58,5 +58,10 @@
 	"community_title": "Comunità",
 	"community_text1": "Una comunità attiva e premurosa: una <b>chat</b>, <b>messaggi privati</b>, un <b>forum</b>, <b>commenti</b>, un <b> > wiki</b> ti permettono di interagire con altri giocatori per aiutarti nella tua avventura e apprendere molti dettagli sul gioco.",
 	"customization_title": "Personalizzazione",
-	"customization_text1": "Gestisci l'aspetto del tuo porro con <b>cappelli</b>, <b>pozioni di colore</b>, <b>titoli</b> e altri ornamenti."
+	"customization_text1": "Gestisci l'aspetto del tuo porro con <b>cappelli</b>, <b>pozioni di colore</b>, <b>titoli</b> e altri ornamenti.",
+	"shop_desc": "Scoprite le nostre magliette, tazze, adesivi e altro ancora!",
+	"groups": "Guerre di porri per gruppi",
+	"groups_desc": "Create un gruppo privato di studenti, personale o giocatori, gestite i loro progressi, organizzate tornei e comunicate in diretta con loro.",
+	"groups_button": "Per saperne di più sulle nostre offerte",
+	"groups_title": "Crea il tuo gruppo privato Leek Wars"
 }

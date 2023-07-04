@@ -58,5 +58,10 @@
 	"community_title": "Samfunnet",
 	"community_text1": "Et aktivt og omsorgsfullt fellesskap: en <b>chat</b>, <b>private meldinger</b>, et <b>forum</b>, <b>kommentarer</b>, en <b> > wiki</b> lar deg samhandle med andre spillere for å hjelpe deg på eventyret ditt og lære mange detaljer om spillet.",
 	"customization_title": "Personalisering",
-	"customization_text1": "Administrer purren din med <b>hatter</b>, <b>fargedrikker</b>, <b>titler</b> og andre pynt."
+	"customization_text1": "Administrer purren din med <b>hatter</b>, <b>fargedrikker</b>, <b>titler</b> og andre pynt.",
+	"shop_desc": "Se våre T-skjorter, krus, klistremerker og mye mer!",
+	"groups": "Purrekrigen for grupper",
+	"groups_desc": "Opprett en privat gruppe med elever, ansatte eller spillere, administrer fremgangen deres, organiser turneringer og kommuniser live med dem.",
+	"groups_button": "Finn ut mer om tilbudene våre",
+	"groups_title": "Opprett din egen private Leek Wars-gruppe"
 }

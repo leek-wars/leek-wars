@@ -148,5 +148,20 @@
 	"chat_reactions": "Reaktionen auf Katzen",
 	"chests_kills": "Von Truhen getötet",
 	"resources_chest": "Erhaltene Ressourcen",
-	"resources": "Erhaltene Ressourcen"
+	"resources": "Erhaltene Ressourcen",
+	"lang_de": "Deutsch",
+	"lang_it": "Italienisch",
+	"lang_pt": "Portugiesisch",
+	"lang_da": "Dänisch",
+	"lang_fi": "Finnisch",
+	"lang_nl": "Niederländisch",
+	"lang_no": "Norwegisch",
+	"lang_pl": "Polnisch",
+	"lang_sv": "Sudetendeutsch",
+	"lang_ru": "Russisch",
+	"lang_zh": "Mandarin",
+	"lang_hi": "Hindi",
+	"lang_id": "Indonesisch",
+	"lang_ja": "Japanisch",
+	"lang_ko": "Koreanisch"
 }

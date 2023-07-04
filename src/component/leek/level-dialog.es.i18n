@@ -9,5 +9,7 @@
 	"new_weapon": "Nueva ranura para armas",
 	"new_chip": "Nueva ranura para chips",
 	"total_weapons": "{0} armas totales",
-	"total_chips": "{0} fichas en total"
+	"total_chips": "{0} fichas en total",
+	"br_desc": "Nuevo modo de juego desbloqueado: ¡Battle Royales! Una batalla de 10 puerros cada uno por su lado. Apúntate en el huerto o en la página de puerros.",
+	"newleek_desc": "Nuevo puerro disponible para comprar en el menú."
 }

@@ -9,5 +9,7 @@
 	"new_weapon": "Ny vapenplats",
 	"new_chip": "Ny chipplats",
 	"total_weapons": "{0} totalt vapen",
-	"total_chips": "{0} marker totalt"
+	"total_chips": "{0} marker totalt",
+	"br_desc": "Nytt spelläge upplåst: Battle Royales! En kamp mellan 10 purjolökar där varje man kämpar för sig själv. Anmäl dig i grönsakslandet eller på purjolökssidan.",
+	"newleek_desc": "Ny purjolök finns att köpa från menyn."
 }

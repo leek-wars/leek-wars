@@ -9,5 +9,7 @@
 	"new_weapon": "Slot senjata baru",
 	"new_chip": "Slot chip baru",
 	"total_weapons": "{0} jumlah senjata",
-	"total_chips": "total {0} chip"
+	"total_chips": "total {0} chip",
+	"br_desc": "Mode permainan baru dibuka: Battle Royales! Pertempuran 10 daun bawang setiap orang untuk dirinya sendiri. Daftar di kebun sayur atau di halaman daun bawang.",
+	"newleek_desc": "Daun bawang baru tersedia untuk dibeli dari menu."
 }

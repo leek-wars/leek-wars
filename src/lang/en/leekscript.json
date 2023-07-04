@@ -79,7 +79,7 @@
 	"error_63": "The AI has been deactivated. It does not run",
 	"error_64": "AI interruption : {0}",
 	"error_65": "AI interruption : the AI has taken more than 10 seconds to run, so it has been deactivated for the rest of the fight.",
-	"error_62": "Your AI was not compiled successfully",
+	"error_62": "Your AI could not be compiled correctly, an administrator has been notified: {0}.",
 	"error_58": "Can not execute \"{0}\"",
 	"error_59": "Can not use this function with argument ({0}). There should be {1} arguments",
 	"error_66": "Your AI could not be compiled properly because your code is too large",

@@ -39,5 +39,9 @@
 	"trophies_title": "A maioria dos troféus",
 	"statistics": "Estatisticas",
 	"no_results": "Sem resultados",
-	"xp": "EXP"
+	"xp": "EXP",
+	"solo_tournaments_title": "Torneios a solo ganhos",
+	"farmer_tournaments_title": "Torneios de criadores ganhos",
+	"team_tournaments_title": "Torneios de equipas ganhos",
+	"tournaments": "Torneios"
 }

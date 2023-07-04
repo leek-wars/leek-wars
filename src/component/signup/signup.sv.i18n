@@ -58,5 +58,10 @@
 	"community_title": "Gemenskap",
 	"community_text1": "En aktiv och omtänksam gemenskap: en <b>chatt</b>, <b>privata meddelanden</b>, ett <b>forum</b>, <b>kommentarer</b>, ett <b> > wiki</b> låter dig interagera med andra spelare för att hjälpa dig på ditt äventyr och lära dig många detaljer om spelet.",
 	"customization_title": "Personalisering",
-	"customization_text1": "Hantera purjolökens utseende med <b>hattar</b>, <b>färgdrycker</b>, <b>titlar</b> och andra tillbehör."
+	"customization_text1": "Hantera purjolökens utseende med <b>hattar</b>, <b>färgdrycker</b>, <b>titlar</b> och andra tillbehör.",
+	"shop_desc": "Se våra T-shirts, muggar, klistermärken och mycket mer!",
+	"groups": "Leek Wars för grupper",
+	"groups_desc": "Skapa en privat grupp med elever, personal eller spelare, hantera deras framsteg, organisera turneringar och kommunicera live med dem.",
+	"groups_button": "Läs mer om våra erbjudanden",
+	"groups_title": "Skapa din privata Leek Wars-grupp"
 }
