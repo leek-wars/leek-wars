@@ -18,7 +18,7 @@
 				</div>
 
 				<div class="last-farmers">
-					<div v-for="(day, d) of last_farmers_by_day" :key="day" class="farmers">
+					<div v-for="(day, d) of last_farmers_by_day" :key="d" class="farmers">
 						<b class="date">{{ d }} ({{ day.length }})</b>
 						<div v-for="farmer of day" :key="farmer.id" class="card farmer">
 							<div class="date">

@@ -20,10 +20,11 @@
 </template>
 
 <script lang="ts">
+	import { mixins } from '@/model/i18n';
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'contact', i18n: {} })
+	@Component({ name: 'contact', i18n: {}, mixins: [...mixins] })
 	export default class Contact extends Vue {
 		created() {
 			LeekWars.setTitle(this.$t('title'))

@@ -46,6 +46,21 @@
 				</div>
 			</div>
 
+				<div class="screenshots">
+					<a href="/image/groups/members.png" target="_blank">
+						<img src="/image/groups/members.png">
+						<div>{{ $t('create_members') }}</div>
+					</a>
+					<a href="/image/groups/equipment.png" target="_blank">
+						<img src="/image/groups/equipment.png">
+						<div>{{ $t('equipment') }}</div>
+					</a>
+					<a href="/image/feature/tournament.webp" target="_blank">
+						<img src="/image/feature/tournament.webp">
+						<div>{{ $t('tournaments') }}</div>
+					</a>
+				</div>
+
 			<h2>{{ $t('features') }}</h2>
 			<div class="features">
 				<div class="feature card">
@@ -129,6 +144,19 @@
 				</div>
 			</div>
 			<!-- <div class="small">¹ Un jour de support offert, 49€ par jour supplémentaire</div> -->
+
+			<h2>{{ $t('customers') }}</h2>
+			<div class="customers">
+				<div>
+					<img src="/image/partner/esiea.png">
+				</div>
+				<div>
+					<img src="/image/partner/jsb.png">
+				</div>
+				<div>
+					<img src="/image/partner/norauto.png">
+				</div>
+			</div>
 		</panel>
 	</div>
 </template>
@@ -169,7 +197,7 @@
 }
 h2 {
 	font-weight: 500;
-	font-size: 28px;
+	font-size: 25px;
 	margin-bottom: 10px;
 	// color: #5fad1b;
 }
@@ -218,6 +246,7 @@ h2 {
 	display: flex;
 	gap: 30px;
 	margin-top: 15px;
+	margin-bottom: 40px;
 	flex-wrap: wrap;
 	justify-content: center;
 	.offer {
@@ -259,6 +288,44 @@ h2 {
 			width: 100%;
 			margin-top: 30px;
 		}
+	}
+}
+.customers {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+	align-items: center;
+	gap: 15px;
+	margin-top: 15px;
+	justify-content: center;
+	text-align: center;
+	img {
+		max-width: 120px;
+		max-height: 120px;
+	}
+}
+.screenshots {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 15px;
+	padding-bottom: 20px;
+	a {
+		color: #555;
+		font-size: 13px;
+		text-align: center;
+	}
+	img {
+		min-width: 200px;
+		max-width: 100%;
+		max-height: 180px;
+		object-fit: contain;
+		box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+		margin-bottom: 6px;
+	}
+}
+#app.app {
+	.screenshots {
+		flex-wrap: wrap;
 	}
 }
 </style>
