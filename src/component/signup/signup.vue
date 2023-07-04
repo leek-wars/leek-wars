@@ -245,6 +245,20 @@
 			</div>
 		</panel>
 
+		<h1>{{ $t('main.shop') }}</h1>
+
+		<panel class="first">
+			<a href="https://leek-wars.myspreadshop.fr/" class="container grid">
+				<div class="column4">
+					<img width="100%" src="/image/shop/shop.webp">
+					<br><br>
+					<center>
+						<v-btn>{{ $t('shop_desc') }}</v-btn>
+					</center>
+				</div>
+			</a>
+		</panel>
+
 		<div class="tiles">
 			<a href="https://play.google.com/store/apps/details?id=com.leekwars.app" target="_blank">
 				<panel v-ripple class="android">
