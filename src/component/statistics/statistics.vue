@@ -136,7 +136,7 @@
 			return this.makeChartData(AI_CATEGORY, ['ais_v1', 'ais_v2', 'ais_v3', 'ais_v4'])
 		}
 		get chartLanguage() {
-			return this.makeChartData(GENERAL_CATEGORY, ['lang_fr', 'lang_en', 'lang_es'])
+			return this.makeChartData(GENERAL_CATEGORY, ['lang_fr', 'lang_en', 'lang_es', 'lang_it', 'lang_de'])
 		}
 		get chartLanguages() {
 			return this.makeChartData(CODE_CATEGORY, ['lw_code_java', 'lw_code_javascript', 'lw_code_php', 'lw_code_css', 'lw_code_vue', 'lw_code_json'])
