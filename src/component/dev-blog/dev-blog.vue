@@ -11,7 +11,7 @@
 		<panel class="first last">
 			<div slot="content" class="content">
 
-				<h2>Articles</h2>
+				<h2>{{ $t('articles') }}</h2>
 
 				<loader v-if="!articles" />
 				<div v-else class="articles">
@@ -19,7 +19,19 @@
 						<img :src="article.image">
 						<div class="info">
 							<div class="title">{{ article.title }}</div>
-							<div class="date">{{ article.date | date }}</div>
+
+							<div class="flex subtitle">
+								<div class="date">{{ article.date | date }}</div>
+								<div class="spacer"></div>
+								<div :class="{zero: article.votes_up === 0}" class="vote up">
+									<v-icon>mdi-thumb-up-outline</v-icon>
+									<span class="counter">{{ article.votes_up }}</span>
+								</div>
+								<div :class="{zero: article.message_count - 1 === 0}" class="vote">
+									<v-icon>mdi-message-outline</v-icon>
+									<span class="counter">{{ article.message_count - 1 }}</span>
+								</div>
+							</div>
 						</div>
 					</router-link>
 				</div>
@@ -49,7 +61,7 @@
 		}
 
 		formatTitleURL(title: string) {
-			return title.toLocaleLowerCase().replace(/ /g, '-').replace(/[\[\]]/g, '').replace(/,/g, '')
+			return title.toLocaleLowerCase().replace(/ /g, '-').replace(/[\[\]]/g, '').replace(/,/g, '').replace(/\//g, '')
 		}
 	}
 </script>
@@ -72,8 +84,28 @@
 			font-size: 21px;
 			margin-bottom: 10px;
 		}
+		.subtitle {
+			color: #555;
+		}
 		.date {
-			color: #777;
+			font-weight: 500;
+		}
+		.vote {
+			display: flex;
+			align-items: center;
+			// font-size: 16px;
+			padding: 0 6px;
+			border-radius: 6px;
+		}
+		.vote i {
+			font-size: 18px;
+			padding-right: 5px;
+		}
+		.vote.zero {
+			opacity: 0.3;
+		}
+		.vote.zero {
+			color: #555;
 		}
 	}
 }
