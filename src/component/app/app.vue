@@ -73,7 +73,7 @@
 				<div v-if="LeekWars.message" v-html="$i18n.t(LeekWars.message.message, LeekWars.message.arguments)"></div>
 			</popup>
 
-			<popup v-model="annonce" :width="800">
+			<!-- <popup v-model="annonce" :width="800">
 				<template slot="title"><v-icon>mdi-bullhorn-outline</v-icon> Annonce !</template>
 				<div class="annonce">
 					<h2>Lancement de la boutique Leek Wars</h2>
@@ -91,7 +91,7 @@
 						</v-btn>
 					</div>
 				</div>
-			</popup>
+			</popup> -->
 
 			<!--
 			<popup v-model="annonce" :width="500">
@@ -224,10 +224,10 @@
 				this.docEverywhereModel = false
 			})
 
-			if (this.$store.state.connected && !localStorage.getItem('annonce/shop')) {
-				this.annonce = true
-				localStorage.setItem('annonce/shop', 'true')
-			}
+			// if (this.$store.state.connected && !localStorage.getItem('annonce/shop')) {
+			// 	this.annonce = true
+			// 	localStorage.setItem('annonce/shop', 'true')
+			// }
 		}
 		changelogShow() {
 			LeekWars.get('changelog/get-last/' + this.$i18n.locale).then(data => {
