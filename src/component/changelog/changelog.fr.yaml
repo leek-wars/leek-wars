@@ -1,14 +1,18 @@
 239:
   added:
     - Ajout d'une boutique pour acheter des produits dérivés Leek Wars.
+    - Ajout d'une page Dev Blog pour regrouper tous les sujets d'annonce du forum (/dev-blog).
   improved:
     - Meilleur affichage des éleveurs supprimés sur le forum (merci à CaptainTheDelta).
     - Amélioration de la traduction italienne, qui n'est plus en bêta (merci à Augustineduf et pakalatak).
     - La limite de taille de message passe de 1000 à 2000.
+    - Amélioration du rafraichissement du compteur d'éleveur connectés.
   fixed:
     - Correction de l'affichage de 4 armes oubliées dans la timeline en combat (merci à fujiwar).
     - Correction du coût en opérations de certaines fonctions qui coutaîent 0.
     - Correction du champ de choix de la graine sur Firefox (merci à nytope).
+    - Nombreuses corrections sur les types en LeekScript.
+    - Correction du tri dans le classement par niveau.
 
 238:
   title: Typage en LeekScript, Refonte des chapeaux + 4 nouveaux, 15 langues, Refonte du didactitiel.
