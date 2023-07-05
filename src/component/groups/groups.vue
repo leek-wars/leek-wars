@@ -156,6 +156,9 @@
 				<div>
 					<img src="/image/partner/norauto.png">
 				</div>
+				<div>
+					<img src="/image/partner/n-hitec.png">
+				</div>
 			</div>
 		</panel>
 	</div>
@@ -299,7 +302,7 @@ h2 {
 	justify-content: center;
 	text-align: center;
 	img {
-		max-width: 120px;
+		max-width: 150px;
 		max-height: 120px;
 	}
 }
