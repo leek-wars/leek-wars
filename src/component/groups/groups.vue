@@ -46,20 +46,51 @@
 				</div>
 			</div>
 
-				<div class="screenshots">
-					<a href="/image/groups/members.png" target="_blank">
-						<img src="/image/groups/members.png">
-						<div>{{ $t('create_members') }}</div>
-					</a>
-					<a href="/image/groups/equipment.png" target="_blank">
-						<img src="/image/groups/equipment.png">
-						<div>{{ $t('equipment') }}</div>
-					</a>
-					<a href="/image/feature/tournament.webp" target="_blank">
-						<img src="/image/feature/tournament.webp">
-						<div>{{ $t('tournaments') }}</div>
+			<div class="screenshots">
+				<a href="/image/groups/members.png" target="_blank">
+					<img src="/image/groups/members.png">
+					<div>{{ $t('create_members') }}</div>
+				</a>
+				<a href="/image/groups/equipment.png" target="_blank">
+					<img src="/image/groups/equipment.png">
+					<div>{{ $t('equipment') }}</div>
+				</a>
+				<a href="/image/feature/tournament.webp" target="_blank">
+					<img src="/image/feature/tournament.webp">
+					<div>{{ $t('tournaments') }}</div>
+				</a>
+			</div>
+
+			<h2>{{ $t('offers') }}</h2>
+			<div class="offers">
+				<div class="offer card">
+					<div class="title">🥈 {{ $t('platinum') }}</div>
+					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_manage') }}</div>
+					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_equipment') }}</div>
+					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_tournament') }}</div>
+					<div class="item"><v-icon>mdi-check</v-icon> <span v-html="$t('offer_money_10m')"></span></div>
+					<div class="spacer"></div>
+					<div class="price">299 €/{{ $t('per_group') }}</div>
+					<a :href="'mailto:contact@leekwars.com?subject=' + $t('platinum_subject')" target="_blank">
+						<v-btn color="primary">{{ $t('contact_us') }}</v-btn>
 					</a>
 				</div>
+				<div class="offer card">
+					<div class="title">💎 Diamant</div>
+					<div class="item"><v-icon>mdi-check</v-icon> <span v-html="$t('offer_plus')"></span></div>
+					<div class="plus">+</div>
+					<div class="item"><v-icon>mdi-check</v-icon> <span v-html="$t('offer_money_100m')"></span></div>
+					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_code') }}</div>
+					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_custom') }}</div>
+					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_support') }}</div>
+					<div class="spacer"></div>
+					<div class="price">799 €/{{ $t('per_group') }}</div>
+					<a :href="'mailto:contact@leekwars.com?subject=' + $t('diamond_subject')" target="_blank">
+						<v-btn color="primary">{{ $t('contact_us') }}</v-btn>
+					</a>
+				</div>
+			</div>
+			<!-- <div class="small">¹ Un jour de support offert, 49€ par jour supplémentaire</div> -->
 
 			<h2>{{ $t('features') }}</h2>
 			<div class="features">
@@ -111,39 +142,7 @@
 					<v-icon>mdi-flash-outline</v-icon>
 					<div>{{ $t('no_install') }}</div>
 				</div>
-
 			</div>
-
-			<h2>{{ $t('offers') }}</h2>
-			<div class="offers">
-				<div class="offer card">
-					<div class="title">🥈 {{ $t('platinum') }}</div>
-					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_manage') }}</div>
-					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_equipment') }}</div>
-					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_tournament') }}</div>
-					<div class="item"><v-icon>mdi-check</v-icon> <span v-html="$t('offer_money_10m')"></span></div>
-					<div class="spacer"></div>
-					<div class="price">299 €/{{ $t('per_group') }}</div>
-					<a :href="'mailto:contact@leekwars.com?subject=' + $t('platinum_subject')" target="_blank">
-						<v-btn color="primary">{{ $t('contact_us') }}</v-btn>
-					</a>
-				</div>
-				<div class="offer card">
-					<div class="title">💎 Diamant</div>
-					<div class="item"><v-icon>mdi-check</v-icon> <span v-html="$t('offer_plus')"></span></div>
-					<div class="plus">+</div>
-					<div class="item"><v-icon>mdi-check</v-icon> <span v-html="$t('offer_money_100m')"></span></div>
-					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_code') }}</div>
-					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_custom') }}</div>
-					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_support') }}</div>
-					<div class="spacer"></div>
-					<div class="price">799 €/{{ $t('per_group') }}</div>
-					<a :href="'mailto:contact@leekwars.com?subject=' + $t('diamond_subject')" target="_blank">
-						<v-btn color="primary">{{ $t('contact_us') }}</v-btn>
-					</a>
-				</div>
-			</div>
-			<!-- <div class="small">¹ Un jour de support offert, 49€ par jour supplémentaire</div> -->
 
 			<h2>{{ $t('customers') }}</h2>
 			<div class="customers">
@@ -157,6 +156,16 @@
 					<img src="/image/partner/norauto.png">
 				</div>
 				<div>
+					<img src="/image/partner/n-hitec.png">
+				</div>
+			</div>
+
+			<div class="testimonies">
+				<div class="testimony">
+					<!-- <avatar :farmer="{id: -1, avatar_changed: 0}" /> -->
+					<div class="card">
+						« {{ $t('testimony_n_hitec') }} »
+					</div>
 					<img src="/image/partner/n-hitec.png">
 				</div>
 			</div>
@@ -311,7 +320,6 @@ h2 {
 	align-items: center;
 	justify-content: center;
 	gap: 15px;
-	padding-bottom: 20px;
 	a {
 		color: #555;
 		font-size: 13px;
@@ -329,6 +337,30 @@ h2 {
 #app.app {
 	.screenshots {
 		flex-wrap: wrap;
+	}
+}
+.testimonies {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+	margin-top: 40px;
+	.testimony {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 15px;
+		img {
+			width: 150px;
+			max-height: 60px;
+			object-fit: contain;
+		}
+		.card {
+			padding: 20px;
+			line-height: 1.5;
+			font-size: 17px;
+			font-style: italic;
+			color: #555;
+			text-align: justify;
+		}
 	}
 }
 </style>
