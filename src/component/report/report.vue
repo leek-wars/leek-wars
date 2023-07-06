@@ -228,11 +228,7 @@
 						<v-icon v-if="report" @click="goToTurn(1)">mdi-chevron-right</v-icon>
 					</div>
 				</div>
-				<div v-if="errors.length" class="title">
-					<i18n path="n_errors">
-						<b slot="n">{{ errors.length }}</b>
-					</i18n>
-				</div>
+				<div v-if="errors.length" class="title">{{ $tc('n_errors', errors.length) }}</div>
 				<pre v-for="(e, i) in errors" :key="i" class="log error">[{{ e.entity }}] {{ e.data }}</pre>
 				<div v-if="warnings.length" class="title">
 					<i18n path="n_warnings">

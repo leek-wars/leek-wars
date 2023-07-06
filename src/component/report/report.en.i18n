@@ -39,6 +39,6 @@
 	"winners": "Winners",
 	"errors": "Errors",
 	"errors_warnings": "Errors and warnings",
-	"n_errors": "{n} errors",
+	"n_errors": "{n} error | {n} errors",
 	"n_warnings": "{n} warnings"
 }
