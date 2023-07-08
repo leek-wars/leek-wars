@@ -7,6 +7,7 @@
     - Amélioration de la traduction italienne, qui n'est plus en bêta (merci à Augustineduf et pakalatak).
     - La limite de taille de message passe de 1000 à 2000.
     - Amélioration du rafraichissement du compteur d'éleveur connectés.
+    - Amélioration du typage de certaines fonctions dans la doc (merci à nytope).
   fixed:
     - Correction de l'affichage de 4 armes oubliées dans la timeline en combat (merci à fujiwar).
     - Correction du coût en opérations de certaines fonctions qui coutaîent 0.
