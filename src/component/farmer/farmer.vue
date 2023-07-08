@@ -834,12 +834,14 @@
 		}
 
 		warnings() {
-			if (!this.farmer || !this.$store.getters.moderator) { return }
-			LeekWars.get('moderation/get-warnings/' + this.farmer.id).then(data => {
-				if (this.farmer) {
-					Vue.set(this.farmer, 'warnings', data.warnings)
-				}
-			})
+			if (!this.farmer) { return }
+				if (this.$store.getters.moderator || this.myFarmer) {
+				LeekWars.get('moderation/get-warnings/' + this.farmer.id).then(data => {
+					if (this.farmer) {
+						Vue.set(this.farmer, 'warnings', data.warnings)
+					}
+				})
+			}
 		}
 
 		createTeam() {
