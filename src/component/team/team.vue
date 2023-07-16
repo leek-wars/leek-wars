@@ -837,9 +837,8 @@
 					this.team.compositions.splice(this.team.compositions.indexOf(composition), 1)
 					this.deleteCompoDialog = false
 				}
-			}).error(error => {
-				LeekWars.toast(error)
 			})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 
 		renameComposition(composition: Composition) {
@@ -848,9 +847,8 @@
 					this.renameCompoDialog = false
 					composition.name = this.renameCompoName
 				}
-			}).error(error => {
-				LeekWars.toast(error)
 			})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 
 		quitTeamStart() {
@@ -868,7 +866,7 @@
 				this.$router.push('/farmer')
 			}).error(error => {
 				this.quitTeamDialog = false
-				LeekWars.toast(error)
+				LeekWars.toast(this.$t('error_' + error.error, error.params))
 			})
 		}
 
@@ -878,9 +876,8 @@
 				LeekWars.toast(this.$i18n.t('team_have_been_disolved'))
 				this.$store.commit('dissolve-team')
 				this.$router.push('/farmer')
-			}).error(error => {
-				LeekWars.toast(this.$i18n.t(error.error))
 			})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 
 		registerTournament(composition: Composition) {
@@ -906,9 +903,8 @@
 			LeekWars.post('team/ban', {farmer_id: this.banMemberTarget.id}).then(data => {
 				LeekWars.toast(this.$i18n.t('farmer_banned'))
 				this.banDialog = false
-			}).error(error => {
-				LeekWars.toast(error)
 			})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 
 		updateOpened() {
@@ -941,17 +937,15 @@
 			LeekWars.post('team/accept-candidacy', {candidacy_id: candidacy.id}).then(data => {
 				LeekWars.toast(this.$i18n.t('farmer_accepted'))
 				this.update()
-			}).error(error => {
-				LeekWars.toast(error)
 			})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 		rejectCandidacy(candidacy: any) {
 			LeekWars.post('team/reject-candidacy', {candidacy_id: candidacy.id}).then(data => {
 				LeekWars.toast(this.$i18n.t('farmer_refused'))
 				this.update()
-			}).error(error => {
-				LeekWars.toast(error)
 			})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 		sendCandidacy() {
 			if (!this.team) { return }
@@ -960,9 +954,8 @@
 					LeekWars.toast(this.$i18n.t('candidacy_sent'))
 					this.team.candidacy = true
 				}
-			}).error(error => {
-				LeekWars.toast(error)
 			})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 		cancelCandidacy() {
 			if (!this.team) { return }
@@ -971,9 +964,8 @@
 					LeekWars.toast(this.$i18n.t('candidacy_cancelled'))
 					this.team.candidacy = false
 				}
-			}).error(error => {
-				LeekWars.toast(error)
 			})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 		changeLevel(member: TeamMember) {
 			if (!this.team) { return }
@@ -995,9 +987,8 @@
 				this.changeOwnerConfirmDialog = false
 				this.changeOwnerDialog = false
 				this.update()
-			}).error(error => {
-				LeekWars.toast(error)
 			})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 		moveLeek(leek: Leek, oldCompo: Composition | null, newCompo: Composition) {
 			if (!this.team || (newCompo && !this.canDrop(newCompo))) { return }
@@ -1012,7 +1003,8 @@
 				this.team.unengaged_leeks.push(leek)
 			}
 			const newCompositionID = newCompo ? newCompo.id : -1
-			LeekWars.post('team/move-leek', {leek_id: leek.id, to: newCompositionID}).error(error => LeekWars.toast(error))
+			LeekWars.post('team/move-leek', {leek_id: leek.id, to: newCompositionID})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 		leeksDragstart(composition: Composition, leek: Leek, e: DragEvent) {
 			if (composition && composition.tournament.registered) { return false }
@@ -1048,7 +1040,8 @@
 		selectAI(ai: any) {
 			LeekWars.put('team/set-turret-ai', {ai: ai.id}).then(r => {
 				this.team!.turret_ai = ai
-			}).error(error => LeekWars.toast(error))
+			})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 			this.turretAiDialog = false
 		}
 
