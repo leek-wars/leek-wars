@@ -312,6 +312,7 @@
 
 		created() {
 			this.actions = [
+				{icon: 'mdi-cart-outline', click: () => window.open('https://leek-wars.myspreadshop.fr', '_blank')!.focus() },
 				{icon: 'mdi-bank', click: () => this.$router.push('/bank')},
 				{icon: 'mdi-treasure-chest', click: () => this.$router.push('/inventory')},
 			]
