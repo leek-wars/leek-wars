@@ -26,6 +26,7 @@
 		"vue-chartist": "^2.3.1",
 		"vue-class-component": "^7.2.6",
 		"vue-i18n": "^8.22.2",
+		"vue-json-viewer": "^2.2.22",
 		"vue-property-decorator": "^9.1.2",
 		"vue-router": "^3.4.9",
 		"vuetify": "^2.5.10",

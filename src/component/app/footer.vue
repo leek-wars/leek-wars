@@ -2,10 +2,12 @@
 	<footer class="footer">
 		<div class="column">
 			<h4 class="version">Leek Wars {{ LeekWars.smart_version }}</h4>
-			<router-link to="/about" class="item">{{ $t('main.about') }}</router-link>
+			<a class="item" target="_blank" rel="noopener" href="https://leek-wars.myspreadshop.fr/">
+				{{ $t('main.shop') }} <v-icon>mdi-open-in-new</v-icon>
+			</a>
 			<router-link to="/groups" class="item">{{ $t('main.private_groups') }}</router-link>
 			<router-link to="/statistics" class="item">{{ $t('main.statistics') }}</router-link>
-			<!-- <router-link to="/app" class="item">{{ $t('main.app') }}</router-link> -->
+			<router-link to="/app" class="item">{{ $t('main.app') }}</router-link>
 			<router-link to="/dev-blog" class="item">{{ $t('main.dev-blog') }}</router-link>
 			<router-link to="/bank" class="item">
 				{{ $t('main.donation') }} <v-icon>mdi-currency-eur</v-icon>
@@ -14,11 +16,11 @@
 		<div class="column">
 			<h4>{{ $t('main.resources_help') }}</h4>
 			<router-link to="/changelog" class="item">{{ $t('main.changelog') }}</router-link>
+			<router-link to="/help" class="item">{{ $t('main.help') }}</router-link>
 			<router-link :to="'/encyclopedia/' + $i18n.locale + '/' + $t('main.game_rules').replace(/ /g, '_')" class="item">{{ $t('main.game_rules') }}</router-link>
 			<router-link :to="'/encyclopedia/' + $i18n.locale + '/' + $t('main.tutorial').replace(/ /g, '_')" class="item">{{ $t('main.tutorial') }}</router-link>
 			<router-link to="/help/documentation" class="item">{{ $t('main.documentation') }}</router-link>
 			<a class="item" @click="LeekWars.show_didactitiel()">{{ $t('main.didactitial') }} <v-icon>mdi-dock-window</v-icon></a>
-
 		</div>
 		<!-- <div class="column">
 			<h4>{{ $t('main.developers') }}</h4>
@@ -36,12 +38,6 @@
 				LeekScript <v-icon>mdi-open-in-new</v-icon>
 			</a>
 		</div> -->
-		<!-- <div class="column">
-			<h4>{{ $t('main.legal') }}</h4>
-			<router-link to="/press-kit" class="item">{{ $t('main.press-kit') }} <v-icon>mdi-package-variant-closed</v-icon></router-link>
-			<router-link to="/legal" class="item">{{ $t('main.legal') }}</router-link>
-			<router-link to="/conditions" class="item">{{ $t('main.conditions') }}</router-link>
-		</div> -->
 		<div class="column">
 			<h4>{{ $t('main.partners') }}</h4>
 			<a target="_blank" rel="noopener" href="https://www.esiea.fr/">
@@ -49,6 +45,7 @@
 			</a>
 			<router-link to="/contact" class="item">{{ $t('main.contact') }}</router-link>
 			<router-link to="/press-kit" class="item">{{ $t('main.press-kit') }} <v-icon>mdi-package-variant-closed</v-icon></router-link>
+			<router-link to="/help/api" class="item">API</router-link>
 			<h4>Social</h4>
 			<div class="icons">
 				<!-- <a class="item" target="_blank" rel="noopener" href="https://github.com/leek-wars/leek-wars">
@@ -73,6 +70,7 @@
 		</div>
 		<div class="column">
 			<h4>{{ $t('main.legal') }}</h4>
+			<router-link to="/about" class="item">{{ $t('main.about') }}</router-link>
 			<router-link to="/legal" class="item">{{ $t('main.legal') }}</router-link>
 			<router-link to="/conditions" class="item">{{ $t('main.conditions') }}</router-link>
 			<span class="item">

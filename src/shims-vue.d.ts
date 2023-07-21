@@ -35,3 +35,7 @@ declare module 'sanitize-html' {
 	const sanitizeHtml: any
 	export = sanitizeHtml
 }
+declare module 'vue-json-viewer' {
+	const JsonViewer: any
+	export = JsonViewer
+}

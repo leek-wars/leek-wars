@@ -1,1 +1,27 @@
-{}
+{
+	"title": "Documentation de l'API",
+	"parameters": "Paramètres",
+	"return": "Retour",
+	"no_desc": "Pas encore de description 😥",
+	"leek_get": "Récupère les informations publiques d'un poireau.",
+	"farmer_get": "Récupère les informations publiques d'un éleveur.",
+	"team_get": "Récupère les informations publiques d'une équipe.",
+	"ai_bin": "Vide votre corbeille et détruit définitivement les IA qui s'y trouvent.",
+	"ai_change-folder": "Déplace l'IA d'id **ai_id** vers le dossier d'id <b>folder_id</b>.",
+	"ai_delete": "Place l'IA d'id <b>ai_id</b> dans votre corbeille.",
+	"ai_destroy": "Détruit définitivement l'IA d'id **ai_id** qui se trouve dans votre corbeille.",
+	"ai_get": "Renvoie le code et les informations publiques de votre IA **ai_id**.",
+	"ai_get-farmer-ais": "Renvoie la liste de toutes vos IA.",
+	"ai_new-name": "Crée une nouvelle IA nommée **name** et de version **version** dans le dossier **folder_id** (`0` pour la racine).",
+	"ai_rename": "Renomme l'IA **ai_id** en **new_name**.",
+	"ai_restore": "Restore l'IA **ai_id** et la sort de la corbeille.",
+	"ai_save": "Sauvegarde l'IA **ai_id** et renvoie les éventuelles erreurs.",
+	"ai_strict": "Active ou non le mode strict sur l'IA **ai_id**.",
+	"ai_sync": "Prend une liste d'id d'IA **ais** sous la forme `{ ai: timestamp }` et renvoie les codes des IA qui ne sont plus à jour.",
+	"ai_test-scenario": "Lance le scénario **scenario_id** ou le scénario par défaut pour l'IA **ai_id** si **scenario_id** vaut `0`.",
+	"ai_version": "Change la version de l'IA **ai_id** en **version**.",
+	"ai-folder_change-folder": "Déplace le dossier **folder_id** vers **dest_folder_id**.",
+	"ai-folder_delete": "Supprime le dossier **folder_id** et déplace toutes ses IA dans votre corbeille.",
+	"ai-folder_new-name": "Crée un nouveau dossier de nom **name** dans le dossier **folder_id** (`0` pour la racine).",
+	"ai-folder_rename": "Renomme le dossier **folder_id** en **new_name**."
+}

@@ -215,8 +215,6 @@
 				LeekWars.setTitle(this.$i18n.t('title'))
 				this.update()
 			})
-			this.$root.$on('back', this.back)
-			this.$root.$on('doc-navigate', this.navigate)
 		}
 		mounted() {
 			if (!this.popup) {
@@ -225,6 +223,8 @@
 				LeekWars.box = true
 			}
 			(this.$refs.search as HTMLElement).focus()
+			this.$root.$on('back', this.back)
+			this.$root.$on('doc-navigate', this.navigate)
 		}
 		focus() {
 			(this.$refs.search as HTMLElement).focus()

@@ -1,1 +1,27 @@
-{}
+{
+	"title": "API documentation",
+	"parameters": "Parameters",
+	"return": "Return",
+	"no_desc": "No description yet 😥",
+	"leek_get": "Retrieves public information from a leek.",
+	"farmer_get": "Retrieves a farmer's public information.",
+	"team_get": "Retrieves a team's public information.",
+	"ai_bin": "Empties your recycle garbage can and permanently destroys the AI in it.",
+	"ai_change-folder": "Moves AI id **ai_id** to id folder <b>folder_id</b>.",
+	"ai_delete": "Places the AI id <b>ai_id</b> in your recycle garbage can.",
+	"ai_destroy": "Permanently destroys the **ai_id** AI in your recycle garbage can.",
+	"ai_get": "Returns the code and public information of your AI **ai_id**.",
+	"ai_get-farmer-ais": "Returns a list of all your AIs.",
+	"ai_new-name": "Creates a new AI named **name** and version **version** in the **folder_id** folder (`0` for the root).",
+	"ai_rename": "Renames AI **ai_id** to **new_name**.",
+	"ai_restore": "Restores AI **ai_id** and removes it from the recycle garbage can.",
+	"ai_save": "Saves AI **ai_id** and returns any errors.",
+	"ai_strict": "Enables or disables strict mode on AI **ai_id**.",
+	"ai_sync": "Takes a list of AI ids **ais** in the form `{ ai: timestamp }` and returns the codes of AIs that are no longer up to date.",
+	"ai_test-scenario": "Starts **scenario_id** scenario or **ai_id** AI default scenario if **scenario_id** is `0`.",
+	"ai_version": "Change AI version **ai_id** to **version**.",
+	"ai-folder_change-folder": "Moves **folder_id** folder to **dest_folder_id**.",
+	"ai-folder_delete": "Deletes the **folder_id** folder and moves all its AIs to your recycle garbage can.",
+	"ai-folder_new-name": "Creates a new folder with name **name** in folder **folder_id** (`0` for root).",
+	"ai-folder_rename": "Rename **folder_id** folder to **new_name**."
+}
