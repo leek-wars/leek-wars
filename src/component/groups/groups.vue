@@ -168,6 +168,14 @@
 					</div>
 					<img src="/image/partner/n-hitec.png">
 				</div>
+
+				<div class="testimony">
+					<!-- <avatar :farmer="{id: -1, avatar_changed: 0}" /> -->
+					<div class="card">
+						« {{ $t('testimony_norauto') }} »
+					</div>
+					<img src="/image/partner/norauto.png">
+				</div>
 			</div>
 		</panel>
 	</div>
@@ -343,24 +351,30 @@ h2 {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
 	margin-top: 40px;
+	gap: 25px;
 	.testimony {
 		display: flex;
 		flex-direction: column;
 		align-items: flex-end;
 		gap: 15px;
 		img {
-			width: 150px;
+			width: 120px;
 			max-height: 60px;
 			object-fit: contain;
 		}
 		.card {
 			padding: 20px;
 			line-height: 1.5;
-			font-size: 17px;
+			font-size: 16px;
 			font-style: italic;
 			color: #555;
 			text-align: justify;
 		}
+	}
+}
+#app.app {
+	.testimonies {
+		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 	}
 }
 </style>

@@ -38,5 +38,6 @@
 	"training": "Training assistance",
 	"no_install": "Play right away without installation",
 	"customers": "They trust us",
-	"testimony_n_hitec": "We organized a month-long tournament on Leek Wars with our student association, with a prize at stake. The atmosphere was great and the feedback excellent!"
+	"testimony_n_hitec": "We organized a month-long tournament on Leek Wars with our student association, with a prize at stake. The atmosphere was great and the feedback excellent!",
+	"testimony_norauto": "We used Leek Wars as a support for a school presentation on algorithms. Because it's both fun and competitive, it's a great tool for getting to grips with programming with a specific need in mind. The students had a great morning, discovering the game and watching their leeks compete against each other."
 }
