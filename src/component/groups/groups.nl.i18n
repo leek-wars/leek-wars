@@ -39,5 +39,12 @@
 	"no_install": "Direct spelen zonder installatie",
 	"customers": "Ze vertrouwen ons",
 	"testimony_n_hitec": "Met onze studentenvereniging organiseerden we een maand lang een toernooi over Leek Wars, waarbij een prijs op het spel stond. De sfeer was geweldig en de feedback was uitstekend!",
-	"testimony_norauto": "We hebben Leek Wars gebruikt als ondersteuning voor een schoolpresentatie over algoritmen. Omdat het zowel leuk als competitief is, is het een geweldige manier om het programmeren met een specifieke behoefte onder de knie te krijgen. De leerlingen hadden een geweldige ochtend om het spel te ontdekken en te kijken hoe hun prei het tegen elkaar opnam."
+	"testimony_norauto": "We hebben Leek Wars gebruikt als ondersteuning voor een schoolpresentatie over algoritmen. Omdat het zowel leuk als competitief is, is het een geweldige manier om het programmeren met een specifieke behoefte onder de knie te krijgen. De leerlingen hadden een geweldige ochtend om het spel te ontdekken en te kijken hoe hun prei het tegen elkaar opnam.",
+	"faq": "Veelgestelde vragen",
+	"question1": "Hoeveel gevechten kunnen deelnemers starten?",
+	"answer1": "Het aanvankelijke aantal gevechten is 100 voor alle deelnemers, maar de begeleider kan op elk moment tijdens het evenement gevechten aan iedereen geven om de voortgang van de groep te versnellen. Het aantal gevechten is dus onbeperkt.",
+	"question2": "Kunnen het niveau en de uitrusting van de deelnemers worden ingesteld?",
+	"answer2": "Ja, het is mogelijk om een niveau en uitrusting aan deelnemers toe te wijzen en, indien nodig, te vergrendelen zodat het tijdens het evenement hetzelfde blijft. Het niveau en de uitrusting kunnen op elk moment tijdens het evenement worden gewijzigd.",
+	"question3": "Kunnen de deelnemers in teams worden verdeeld?",
+	"answer3": "Dit is niet verplicht, maar het is mogelijk om teams aan te maken en er deelnemers aan toe te wijzen. De groepsbegeleider kan dan teamtoernooien starten."
 }

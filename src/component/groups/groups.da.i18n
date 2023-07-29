@@ -39,5 +39,12 @@
 	"no_install": "Spil med det samme uden installation",
 	"customers": "De stoler på os",
 	"testimony_n_hitec": "Vi arrangerede en månedlang turnering om Leek Wars med vores studenterforening, hvor der var en præmie på spil. Stemningen var fantastisk, og feedbacken var fremragende!",
-	"testimony_norauto": "Vi brugte Leek Wars som støtte til en skolepræsentation om algoritmer. Fordi det både er sjovt og konkurrencepræget, er det en god måde at få styr på programmering med et specifikt behov for øje. Eleverne tilbragte en fantastisk formiddag med at opdage spillet og se deres porrer konkurrere mod hinanden."
+	"testimony_norauto": "Vi brugte Leek Wars som støtte til en skolepræsentation om algoritmer. Fordi det både er sjovt og konkurrencepræget, er det en god måde at få styr på programmering med et specifikt behov for øje. Eleverne tilbragte en fantastisk formiddag med at opdage spillet og se deres porrer konkurrere mod hinanden.",
+	"faq": "Ofte stillede spørgsmål",
+	"question1": "Hvor mange kampe kan deltagerne starte?",
+	"answer1": "Det oprindelige antal kampe er 100 for alle deltagere, men supervisoren kan give kampe til alle på et hvilket som helst tidspunkt i løbet af eventet for at holde tempoet i gruppens fremskridt. Antallet af kampe er derfor ubegrænset.",
+	"question2": "Kan deltagernes niveau og udstyr fastsættes?",
+	"answer2": "Ja, det er muligt at tildele et niveau og udstyr til deltagerne og om nødvendigt låse det, så det forbliver det samme under hele arrangementet. Niveauet og udstyret kan ændres når som helst under arrangementet.",
+	"question3": "Kan deltagerne deles op i hold?",
+	"answer3": "Det er ikke obligatorisk, men det er muligt at oprette hold og tildele deltagere til dem. Gruppelederen kan derefter starte holdturneringer."
 }

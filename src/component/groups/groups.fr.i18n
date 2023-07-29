@@ -39,5 +39,12 @@
 	"no_install": "Jouez tout de suite sans installation",
 	"customers": "Ils nous font confiance",
 	"testimony_n_hitec": "Nous avons organisé un tournoi d'une durée d'un mois sur Leek Wars avec notre association étudiante, avec une récompense à la clé. L'ambiance était bonne et les retours excellents !",
-	"testimony_norauto": "Nous avons utilisé Leek Wars comme support lors d’une présentation en école sur l’algorithmie. Par son aspect ludique et compétitif, c’est un super outil pour aborder la programmation avec un besoin précis. Les étudiants ont passé une bonne matinée, à découvrir le jeu et à voir leurs poireaux s'affronter entre eux."
+	"testimony_norauto": "Nous avons utilisé Leek Wars comme support lors d’une présentation en école sur l’algorithmie. Par son aspect ludique et compétitif, c’est un super outil pour aborder la programmation avec un besoin précis. Les étudiants ont passé une bonne matinée, à découvrir le jeu et à voir leurs poireaux s'affronter entre eux.",
+	"faq": "Foire aux questions",
+	"question1": "Combien de combats peuvent lancer les participants ?",
+	"answer1": "Le nombre de combats initial est de 100 pour tous les participants, mais le superviseur peut en donner à tout le monde à n'importe quel moment de l'événement pour rythmer la progression du groupe. Le nombre de combats possible est donc illimité.",
+	"question2": "Peut-on paramétrer le niveau et l'équipement des participants ?",
+	"answer2": "Oui, il est possible d'assigner un niveau et un équipement aux participants et éventuellement de le bloquer pour qu'il reste identique durant l'événement. Il est possible de changer ce niveau et cet équipement imposé à n'importe quel moment de l'événement.",
+	"question3": "Peut-on répartir les participants dans des équipes ?",
+	"answer3": "Ce n'est pas obligatoire mais il est possible de créer des équipes et répartir les participants dans celles-ci. Le superviseur du groupe peut ensuite lancer des tournois d'équipe."
 }

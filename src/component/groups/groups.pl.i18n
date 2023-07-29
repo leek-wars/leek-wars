@@ -39,5 +39,12 @@
 	"no_install": "Graj od razu bez instalacji",
 	"customers": "Ufają nam",
 	"testimony_n_hitec": "Zorganizowaliśmy miesięczny turniej Leek Wars z naszym stowarzyszeniem studenckim, w którym stawką była nagroda. Atmosfera była świetna, a reakcje bardzo pozytywne!",
-	"testimony_norauto": "Wykorzystaliśmy Leek Wars jako wsparcie dla szkolnej prezentacji na temat algorytmów. Ponieważ jest to zarówno zabawa, jak i rywalizacja, jest to świetny sposób na opanowanie programowania z myślą o konkretnych potrzebach. Uczniowie spędzili wspaniały poranek, odkrywając grę i obserwując, jak ich pory rywalizują ze sobą."
+	"testimony_norauto": "Wykorzystaliśmy Leek Wars jako wsparcie dla szkolnej prezentacji na temat algorytmów. Ponieważ jest to zarówno zabawa, jak i rywalizacja, jest to świetny sposób na opanowanie programowania z myślą o konkretnych potrzebach. Uczniowie spędzili wspaniały poranek, odkrywając grę i obserwując, jak ich pory rywalizują ze sobą.",
+	"faq": "Często zadawane pytania",
+	"question1": "Ile walk mogą rozpocząć uczestnicy?",
+	"answer1": "Początkowa liczba walk wynosi 100 dla wszystkich uczestników, ale opiekun może przyznać walki każdemu w dowolnym momencie wydarzenia, aby przyspieszyć postępy grupy. Liczba walk jest zatem nieograniczona.",
+	"question2": "Czy można ustalić poziom i wyposażenie uczestników?",
+	"answer2": "Tak, możliwe jest przypisanie poziomu i wyposażenia uczestnikom oraz, w razie potrzeby, zablokowanie ich, aby pozostały takie same przez cały czas trwania wydarzenia. Poziom i wyposażenie można zmienić w dowolnym momencie wydarzenia.",
+	"question3": "Czy uczestnicy mogą zostać podzieleni na zespoły?",
+	"answer3": "Nie jest to obowiązkowe, ale możliwe jest tworzenie zespołów i przydzielanie do nich uczestników. Opiekun grupy może następnie uruchomić turnieje drużynowe."
 }

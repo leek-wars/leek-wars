@@ -39,5 +39,12 @@
 	"no_install": "Sofort spielen ohne Installation",
 	"customers": "Sie vertrauen uns",
 	"testimony_n_hitec": "Wir haben mit unserer Studentenvereinigung ein einmonatiges Turnier zu Leek Wars veranstaltet, bei dem es einen Preis zu gewinnen gab. Die Stimmung war gut und das Feedback hervorragend!",
-	"testimony_norauto": "Wir haben Leek Wars als Unterstützung bei einer Präsentation in der Schule zum Thema Algorithmus verwendet. Durch seinen spielerischen und kompetitiven Aspekt ist es ein tolles Werkzeug, um mit einem bestimmten Bedarf an die Programmierung heranzugehen. Die Schülerinnen und Schüler verbrachten einen guten Vormittag damit, das Spiel zu entdecken und zu sehen, wie ihre Lauchstangen gegeneinander antraten."
+	"testimony_norauto": "Wir haben Leek Wars als Unterstützung bei einer Präsentation in der Schule zum Thema Algorithmus verwendet. Durch seinen spielerischen und kompetitiven Aspekt ist es ein tolles Werkzeug, um mit einem bestimmten Bedarf an die Programmierung heranzugehen. Die Schülerinnen und Schüler verbrachten einen guten Vormittag damit, das Spiel zu entdecken und zu sehen, wie ihre Lauchstangen gegeneinander antraten.",
+	"faq": "Häufig gestellte Fragen",
+	"question1": "Wie viele Kämpfe können die Teilnehmer starten?",
+	"answer1": "Die anfängliche Anzahl der Kämpfe beträgt 100 für alle Teilnehmer, aber der Supervisor kann jedem zu jedem Zeitpunkt der Veranstaltung Kämpfe geben, um den Fortschritt der Gruppe zu rhythmisieren. Die Anzahl der möglichen Kämpfe ist also unbegrenzt.",
+	"question2": "Kann man das Niveau und die Ausrüstung der Teilnehmer einstellen?",
+	"answer2": "Ja, es ist möglich, den Teilnehmern eine Stufe und eine Ausrüstung zuzuweisen und diese eventuell zu blockieren, damit sie während der Veranstaltung gleich bleibt. Es ist möglich, diese vorgeschriebene Stufe und Ausrüstung zu jedem Zeitpunkt der Veranstaltung zu ändern.",
+	"question3": "Können die Teilnehmer in Teams eingeteilt werden?",
+	"answer3": "Dies ist nicht zwingend erforderlich, aber es ist möglich, Teams zu erstellen und die Teilnehmer in diese einzuteilen. Der Gruppenbetreuer kann dann Teamturniere starten."
 }

@@ -39,5 +39,12 @@
 	"no_install": "Toista heti ilman asennusta",
 	"customers": "He luottavat meihin",
 	"testimony_n_hitec": "Järjestimme opiskelijayhdistyksemme kanssa kuukauden mittaisen Leek Wars -turnauksen, jossa oli panoksena palkinto. Tunnelma oli mahtava ja palaute erinomaista!",
-	"testimony_norauto": "Käytimme Leek Warsia algoritmeja käsittelevän kouluesityksen tukena. Koska se on sekä hauska että kilpailuhenkinen, se on loistava tapa tutustua ohjelmointiin tiettyä tarvetta silmällä pitäen. Oppilaat viettivät hienon aamupäivän tutustumalla peliin ja katsomalla, kuinka heidän purjonsa kilpailivat toisiaan vastaan."
+	"testimony_norauto": "Käytimme Leek Warsia algoritmeja käsittelevän kouluesityksen tukena. Koska se on sekä hauska että kilpailuhenkinen, se on loistava tapa tutustua ohjelmointiin tiettyä tarvetta silmällä pitäen. Oppilaat viettivät hienon aamupäivän tutustumalla peliin ja katsomalla, kuinka heidän purjonsa kilpailivat toisiaan vastaan.",
+	"faq": "Usein kysytyt kysymykset",
+	"question1": "Kuinka monta tappelua osallistujat voivat aloittaa?",
+	"answer1": "Kaikkien osallistujien alkuperäinen ottelumäärä on 100, mutta valvoja voi antaa otteluita kaikille milloin tahansa tapahtuman aikana ryhmän edistymisen tahdittamiseksi. Otteluiden määrä on siis rajoittamaton.",
+	"question2": "Voidaanko osallistujien taso ja varustus määrittää?",
+	"answer2": "Kyllä, osallistujille on mahdollista määrittää taso ja varusteet ja tarvittaessa lukita ne niin, että ne pysyvät samoina koko tapahtuman ajan. Tasoa ja varusteita voidaan muuttaa milloin tahansa tapahtuman aikana.",
+	"question3": "Voidaanko osallistujat jakaa joukkueisiin?",
+	"answer3": "Tämä ei ole pakollista, mutta on mahdollista luoda ryhmiä ja jakaa osallistujat niihin. Ryhmän valvoja voi sitten käynnistää joukkueturnaukset."
 }

@@ -39,5 +39,12 @@
 	"no_install": "Jogue imediatamente sem instalação",
 	"customers": "Eles confiam em nós",
 	"testimony_n_hitec": "Organizámos um torneio de um mês sobre Leek Wars com a nossa associação de estudantes, com um prémio em jogo. O ambiente foi ótimo e o feedback foi excelente!",
-	"testimony_norauto": "Utilizámos o Leek Wars como suporte para uma apresentação escolar sobre algoritmos. Por ser divertido e competitivo, é uma óptima forma de se familiarizar com a programação com uma necessidade específica em mente. Os alunos passaram uma óptima manhã a descobrir o jogo e a ver os seus alhos franceses competirem uns contra os outros."
+	"testimony_norauto": "Utilizámos o Leek Wars como suporte para uma apresentação escolar sobre algoritmos. Por ser divertido e competitivo, é uma óptima forma de se familiarizar com a programação com uma necessidade específica em mente. Os alunos passaram uma óptima manhã a descobrir o jogo e a ver os seus alhos franceses competirem uns contra os outros.",
+	"faq": "Perguntas mais frequentes",
+	"question1": "Quantos combates podem os participantes iniciar?",
+	"answer1": "O número inicial de combates é de 100 para todos os participantes, mas o supervisor pode atribuir combates a todos em qualquer altura durante o evento, para acompanhar o progresso do grupo. O número de combates é, portanto, ilimitado.",
+	"question2": "É possível definir o nível e o equipamento dos participantes?",
+	"answer2": "Sim, é possível atribuir um nível e um equipamento aos participantes e, se necessário, bloqueá-los para que permaneçam os mesmos durante todo o evento. O nível e o equipamento podem ser alterados em qualquer altura durante o evento.",
+	"question3": "Os participantes podem ser divididos em equipas?",
+	"answer3": "Isto não é obrigatório, mas é possível criar equipas e atribuir-lhes participantes. O supervisor do grupo pode então lançar torneios de equipas."
 }

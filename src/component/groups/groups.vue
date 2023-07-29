@@ -177,6 +177,12 @@
 					<img src="/image/partner/norauto.png">
 				</div>
 			</div>
+
+			<h2>{{ $t('faq') }}</h2>
+			<div v-for="q in [1, 2, 3]" :key="q">
+				<div class="question">{{ $t('question' + q) }}</div>
+				<div class="answer">{{ $t('answer' + q) }}</div>
+			</div>
 		</panel>
 	</div>
 </template>
@@ -351,6 +357,7 @@ h2 {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
 	margin-top: 40px;
+	margin-bottom: 10px;
 	gap: 25px;
 	.testimony {
 		display: flex;
@@ -376,5 +383,14 @@ h2 {
 	.testimonies {
 		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 	}
+}
+
+.question {
+	font-size: 17px;
+	margin-bottom: 6px;
+}
+.answer {
+	margin-bottom: 12px;
+	color: var(--text-color-secondary);
 }
 </style>

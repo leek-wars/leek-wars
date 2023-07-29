@@ -39,5 +39,12 @@
 	"no_install": "Play right away without installation",
 	"customers": "They trust us",
 	"testimony_n_hitec": "We organized a month-long tournament on Leek Wars with our student association, with a prize at stake. The atmosphere was great and the feedback excellent!",
-	"testimony_norauto": "We used Leek Wars as a support for a school presentation on algorithms. Because it's both fun and competitive, it's a great tool for getting to grips with programming with a specific need in mind. The students had a great morning, discovering the game and watching their leeks compete against each other."
+	"testimony_norauto": "We used Leek Wars as a support for a school presentation on algorithms. Because it's both fun and competitive, it's a great tool for getting to grips with programming with a specific need in mind. The students had a great morning, discovering the game and watching their leeks compete against each other.",
+	"faq": "Frequently asked questions",
+	"question1": "How many fights can participants start?",
+	"answer1": "The initial number of fights is 100 for all participants, but the supervisor can give fights to everyone at any time during the event to pace the group's progress. The number of possible fights is therefore unlimited.",
+	"question2": "Is it possible to parameterize the level and equipment of participants?",
+	"answer2": "Yes, it's possible to assign a level and equipment to participants and, if necessary, lock it in place so that it remains the same throughout the event. The level and equipment can be changed at any time during the event.",
+	"question3": "Can we divide participants into teams?",
+	"answer3": "This is not compulsory, but it is possible to create teams and allocate participants to them. The group supervisor can then launch team tournaments."
 }

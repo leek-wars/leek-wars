@@ -39,5 +39,12 @@
 	"no_install": "Langsung mainkan tanpa instalasi",
 	"customers": "Mereka mempercayai kami",
 	"testimony_n_hitec": "Kami menyelenggarakan turnamen Leek Wars selama sebulan penuh dengan perkumpulan mahasiswa kami, dengan hadiah yang dipertaruhkan. Suasananya sangat menyenangkan dan umpan baliknya sangat bagus!",
-	"testimony_norauto": "Kami menggunakan Leek Wars sebagai pendukung presentasi sekolah tentang algoritma. Karena permainan ini menyenangkan dan kompetitif, ini adalah cara yang bagus untuk memahami pemrograman dengan kebutuhan tertentu. Para siswa menghabiskan pagi yang menyenangkan dengan menemukan permainan ini dan menyaksikan daun bawang mereka bersaing satu sama lain."
+	"testimony_norauto": "Kami menggunakan Leek Wars sebagai pendukung presentasi sekolah tentang algoritma. Karena permainan ini menyenangkan dan kompetitif, ini adalah cara yang bagus untuk memahami pemrograman dengan kebutuhan tertentu. Para siswa menghabiskan pagi yang menyenangkan dengan menemukan permainan ini dan menyaksikan daun bawang mereka bersaing satu sama lain.",
+	"faq": "Pertanyaan yang sering diajukan",
+	"question1": "Berapa banyak pertarungan yang dapat dimulai oleh peserta?",
+	"answer1": "Jumlah awal pertarungan adalah 100 untuk semua peserta, tetapi pengawas dapat memberikan pertarungan kepada semua orang kapan saja selama acara berlangsung untuk mempercepat kemajuan kelompok. Oleh karena itu, jumlah pertarungan tidak terbatas.",
+	"question2": "Dapatkah level dan perlengkapan peserta diatur?",
+	"answer2": "Ya, Anda dapat menetapkan level dan perlengkapan untuk peserta dan, jika perlu, menguncinya agar tetap sama selama acara berlangsung. Level dan peralatan dapat diubah kapan saja selama acara berlangsung.",
+	"question3": "Dapatkah peserta dibagi menjadi beberapa tim?",
+	"answer3": "Hal ini tidak wajib dilakukan, namun memungkinkan untuk membuat tim dan mengalokasikan peserta ke dalam tim tersebut. Pengawas kelompok kemudian dapat meluncurkan turnamen tim."
 }

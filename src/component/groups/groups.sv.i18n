@@ -39,5 +39,12 @@
 	"no_install": "Spela direkt utan installation",
 	"customers": "De litar på oss",
 	"testimony_n_hitec": "Vi organiserade en månadslång turnering om Leek Wars med vår studentförening, med ett pris på spel. Stämningen var fantastisk och feedbacken var utmärkt!",
-	"testimony_norauto": "Vi använde Leek Wars som stöd för en skolpresentation om algoritmer. Eftersom det är både roligt och tävlingsinriktat är det ett utmärkt sätt att få grepp om programmering med ett specifikt behov i åtanke. Eleverna tillbringade en fantastisk förmiddag med att upptäcka spelet och se sina purjolökar tävla mot varandra."
+	"testimony_norauto": "Vi använde Leek Wars som stöd för en skolpresentation om algoritmer. Eftersom det är både roligt och tävlingsinriktat är det ett utmärkt sätt att få grepp om programmering med ett specifikt behov i åtanke. Eleverna tillbringade en fantastisk förmiddag med att upptäcka spelet och se sina purjolökar tävla mot varandra.",
+	"faq": "Vanliga frågor och svar",
+	"question1": "Hur många matcher kan deltagarna starta?",
+	"answer1": "Det initiala antalet matcher är 100 för alla deltagare, men supervisorn kan ge matcher till alla när som helst under evenemanget för att öka gruppens framsteg. Antalet matcher är därför obegränsat.",
+	"question2": "Kan deltagarnas nivå och utrustning fastställas?",
+	"answer2": "Ja, det är möjligt att tilldela deltagare en nivå och utrustning och, om nödvändigt, låsa den så att den förblir densamma under hela evenemanget. Nivå och utrustning kan ändras när som helst under evenemanget.",
+	"question3": "Kan deltagarna delas in i team?",
+	"answer3": "Detta är inte obligatoriskt, men det är möjligt att skapa team och fördela deltagare till dem. Gruppchefen kan sedan starta lagturneringar."
 }
