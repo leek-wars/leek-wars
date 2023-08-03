@@ -1295,7 +1295,6 @@
 		font-size: 16px;
 		font-weight: bold;
 		text-transform: uppercase;
-		color: #555;
 		padding-bottom: 8px;
 		.v-icon {
 			vertical-align: middle;
@@ -1320,12 +1319,11 @@
 		margin-top: -15px;
 	}
 	.column-scenario .add, .leek-column .add {
-		background: white;
+		background: var(--pure-white);
 		font-size: 40px;
 		border-radius: 50%;
 		font-weight: 300;
 		padding: 2px 14px;
-		color: #bbb;
 		cursor: pointer;
 		display: inline-block;
 		vertical-align: top;
@@ -1339,8 +1337,7 @@
 		margin-right: 20px;
 	}
 	.column-scenario .add:hover, .leek-column .add:hover {
-		color: #555;
-		background: #ccc;
+		background: var(--border);
 	}
 	.column-scenario .vs {
 		font-size: 22px;
@@ -1471,7 +1468,7 @@
 				min-width: 120px;
 				margin-right: 10px;
 				&[contenteditable="true"] {
-					border: 1px solid #ccc;
+					border: 1px solid var(--border);
 				&:hover {
 					border: 1px solid #777;
 				}
@@ -1480,7 +1477,7 @@
 		}
 		.characteristic:nth-child(4n+3),
 		.characteristic:nth-child(4n+4) {
-			background: #eee;
+			background: var(--background-secondary);
 		}
 	}
 	.leek-column .chips .container, .leek-column .weapons .container {
@@ -1518,11 +1515,11 @@
 		width: 27px;
 		height: 27px;
 		display: inline-block;
-		border: 1px solid #888;
+		border: 1px solid var(--border);
 		margin: 2px;
 		cursor: pointer;
 		border-radius: 2px;
-		background: white;
+		background: var(--pure-white);
 		vertical-align: top;
 	}
 	.map .cell.disabled {

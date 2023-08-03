@@ -67,7 +67,7 @@
 			flex: 1;
 			div {
 				height: 100%;
-				color: #222;
+				color: var(--text-color);
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -82,11 +82,11 @@
 				}
 			}
 			&.current {
-				background: white;
+				background: var(--pure-white);
 			}
 			&.router-link-active {
 				margin: 0;
-				border: 2px solid #222;
+				border: 2px solid var(--text-color);
 			}
 		}
 	}

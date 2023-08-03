@@ -232,7 +232,7 @@ export default class RichTooltipLeek extends Vue {
 		margin-left: 3px;
 		vertical-align: top;
 		margin-top: 10px;
-		color: #555;
+		color: var(--text-color-secondary);
 	}
 	.expand {
 		vertical-align: top;
@@ -244,10 +244,10 @@ export default class RichTooltipLeek extends Vue {
 		width: 600px;
 		margin: 0 -8px;
 		tr {
-			border-bottom: 1px solid #ddd;
+			border-bottom: 1px solid var(--border);
 		}
 		tr:nth-child(2n) {
-			background: #f7f7f7;
+			background: var(--background);
 		}
 		td, th {
 			padding: 3px 4px;

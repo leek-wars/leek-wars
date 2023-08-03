@@ -84,7 +84,7 @@
 	}
 	.content {
 		overflow: auto;
-		background: #f5f5f5;
+		background: var(--background);
 	}
 	.grid {
 		padding: 8px;

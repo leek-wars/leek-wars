@@ -12,6 +12,11 @@
 		</div>
 		<div class="header-right">
 			<div v-if="!$store.state.connected" class="header-signin buttons">
+				<div class="button-wrapper">
+					<div class="header-button" @click="LeekWars.darkMode = !LeekWars.darkMode">
+						<v-icon>mdi-weather-night</v-icon>
+					</div>
+				</div>
 				<v-menu offset-y>
 					<template v-slot:activator="{ on }">
 						<div class="button-wrapper language-button" v-on="on">
@@ -53,6 +58,11 @@
 					</div>
 				</div>
 				-->
+				<div class="button-wrapper">
+					<div class="header-button" @click="LeekWars.darkMode = !LeekWars.darkMode">
+						<v-icon>mdi-weather-night</v-icon>
+					</div>
+				</div>
 				<div v-if="env.BANK && $store.state.farmer.verified && $store.state.farmer.bank_enabled" class="button-wrapper">
 					<router-link to="/bank">
 						<div v-if="$store.state.farmer" class="header-button">
@@ -310,7 +320,7 @@
 		line-height: 12px;
 	}
 	.dialog {
-		background: #f2f2f2;
+		background: var(--background);
 	}
 	.dialog-items {
 		width: 400px;
@@ -325,7 +335,7 @@
 		color: #777;
 	}
 	.see-all:hover {
-		background: white;
+		background: var(--pure-white);
 	}
 
 	@media screen and (min-width: 1600px) {

@@ -49,18 +49,16 @@
 <style lang="scss" scoped>
 	.description {
 		white-space: pre-wrap;
-		color: #444;
+		color: var(--text-color-secondary);
 	}
 	h2 {
 		margin-bottom: 12px;
 		font-size: 17px;
-		color: #111;
 		font-family: monospace;
 	}
 	h4 {
 		font-weight: 500;
 		margin: 0;
-		color: #111;
 		margin-top: 10px;
 		margin-bottom: 8px;
 		font-size: 15px;

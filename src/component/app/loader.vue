@@ -30,6 +30,9 @@
 	animation: rotate 0.8s linear infinite;
 	vertical-align: bottom;
 }
+body.dark .sbl-circ-path {
+	color: #333;
+}
 @keyframes rotate {
 	0% {
 		transform: rotate(0);

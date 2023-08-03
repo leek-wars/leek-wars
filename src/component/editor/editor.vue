@@ -70,7 +70,7 @@
 
 		<div class="container last">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" :style="{width: LeekWars.mobile ? '100%' : panelWidth + 'px'}" class="resize-panel">
-				<panel class="editor-left first">
+				<panel class="editor-left editor-panel first">
 					<div slot="content" class="full">
 						<div v-if="fileSystem.rootFolder" v-autostopscroll class="ai-list">
 							<explorer ref="explorer" :current-ai="currentAI" :selected-folder="currentFolder" @test="startTest" @delete-ai="deleteAI" />
@@ -87,7 +87,7 @@
 			</div>
 
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" :style="{width: 'calc(100% - ' + (LeekWars.mobile ? 0 : panelWidth) + 'px)'}" class="editor-column">
-				<panel>
+				<panel class="editor-panel">
 					<div slot="content" class="editor-left dida-element">
 						<div class="resizer" @mousedown="resizerMousedown"></div>
 						<div :class="{tabs: $refs.tabs && $refs.tabs.tabs.length > 1}" class="editors">
@@ -934,6 +934,17 @@
 		display: flex;
 		flex-direction: column;
 		height: 100%;
+		--editor-background: #f2f2f2;
+		--editor-text: #111;
+		--editor-text-secondary: #555;
+		--editor-card: white;
+		color: var(--editor-text);
+	}
+	.theme-monokai {
+		--editor-background: #1f1f1f;
+		--editor-text: #f7f7f7;
+		--editor-text-secondary: #aaa;
+		--editor-card: black;
 	}
 	.page-header {
 		flex-wrap: nowrap;
@@ -974,7 +985,7 @@
 	.ai-stats {
 		padding: 8px;
 		margin: 10px;
-		background-color: white;
+		background-color: var(--editor-card);
 		font-size: 14px;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
@@ -1047,33 +1058,33 @@
 		background: #cacaca;
 		color: black;
 	}
-	.theme-monokai .panel {
-		background: #272822;
+	.panel.editor-panel {
+		background: var(--editor-background);
 	}
-	.theme-monokai .button {
-		background: #444;
-		color: #eee;
-		box-shadow: 0px 3px 0px black;
-	}
-	.theme-monokai .ai-list ::v-deep .item > .label:not(.error):not(.warning) {
-		color: #eee;
-	}
-	.theme-monokai .ai-list ::v-deep .router-link-active > .item > .label {
-		background: #555;
-	}
-	.theme-monokai .ai-list ::v-deep .item.router-link-active > .label {
-		background: #555;
-	}
-	.theme-monokai .ai-list ::v-deep .item > .label:hover {
-		background: #444;
-	}
-	.theme-monokai .ai-list ::v-deep .folder.dragover {
-		background: #333;
-	}
-	.theme-monokai .ai-stats {
-		background: #444;
-		color: #eee;
-	}
+	// .theme-monokai .panel {
+	// 	background: #272822;
+	// }
+	// .theme-monokai .button {
+	// 	background: #444;
+	// 	color: var(--background-secondary);
+	// 	box-shadow: 0px 3px 0px black;
+	// }
+	// .theme-monokai .ai-list ::v-deep .router-link-active > .item > .label {
+	// 	background: #555;
+	// }
+	// .theme-monokai .ai-list ::v-deep .item.router-link-active > .label {
+	// 	background: #555;
+	// }
+	// .theme-monokai .ai-list ::v-deep .item > .label:hover {
+	// 	background: #444;
+	// }
+	// .theme-monokai .ai-list ::v-deep .folder.dragover {
+	// 	background: #333;
+	// }
+	// .theme-monokai .ai-stats {
+	// 	background: #444;
+	// 	color: #eee;
+	// }
 	.folder-content {
 		display: none;
 		padding: 20px;
@@ -1168,9 +1179,12 @@
 			cursor: pointer;
 			padding: 0 10px;
 			font-weight: 500;
-			color: #555;
+			color: var(--editor-text-secondary);
 			display: flex;
 			align-items: center;
+			.v-icon {
+				color: var(--editor-text-secondary);
+			}
 		}
 		.problems {
 			height: 100%;
@@ -1184,6 +1198,9 @@
 			}
 			.no-error {
 				color: #5fad1b;
+				.v-icon {
+					color: #5fad1b;
+				}
 			}
 			.errors {
 				color: red;

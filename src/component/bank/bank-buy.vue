@@ -8,7 +8,7 @@
 		</div>
 		<panel class="first">
 
-			<v-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)" hide-details dense solo light>
+			<v-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)" hide-details dense solo>
 				<template v-slot:selection>
 					<flag :code="LeekWars.currencies[LeekWars.currency].flag" :clickable="false" />&nbsp;
 					{{ LeekWars.currency }} &nbsp; <span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>

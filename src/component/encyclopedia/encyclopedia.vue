@@ -569,8 +569,8 @@ h1 {
 
 .stats {
 	padding: 15px;
-	border-top: 1px solid #ccc;
-	color: #777;
+	border-top: 1px solid var(--border);
+	color: var(--text-color-secondary);
 	a {
 		color: #5fad1b;
 		font-weight: bold;

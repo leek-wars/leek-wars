@@ -199,9 +199,9 @@
 		position: relative;
 	}
 	.chat-input .chat-input-content {
-		background: white;
+		background: var(--pure-white);
 		padding: 10px;
-		border: 1px solid #eee;
+		border: 1px solid var(--border);
 		padding-left: 56px;
 		padding-right: 36px;
 		cursor: text;

@@ -7,6 +7,7 @@ import Panel from '@/component/app/panel.vue'
 import Avatar from '@/component/avatar.vue'
 import Flag from '@/component/flag.vue'
 import '@/component/editor/leekscript.scss'
+import '@/component/editor/leekscript-monokai.scss'
 import Emblem from '@/component/emblem.vue'
 import LeekImage from '@/component/leek-image.vue'
 import NotificationElement from '@/component/notifications/notification.vue'
@@ -27,6 +28,7 @@ import { scroll_to_hash } from '@/router-functions'
 import Vuetify from 'vuetify/lib'
 import Ripple from 'vuetify/lib/directives/ripple'
 Vue.use(Vuetify, {
+	theme: { dark: true },
 	directives: {
 		Ripple
 	}

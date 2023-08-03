@@ -209,6 +209,7 @@
 							<option value="captain">{{ $t('captain') }}</option>
 							<option value="member">{{ $t('member') }}</option>
 						</select>
+						<br>
 						<v-btn v-if="member.id !== $store.state.farmer.id" class="ban" small @click="banMemberStart(member)">
 							<v-icon>mdi-hand-pointing-right</v-icon>
 							{{ $t('ban') }}
@@ -350,7 +351,8 @@
 							<talent :id="leek.id" :talent="leek.talent" category="leek" />
 							<div>{{ $t('main.level_n', [leek.level]) }}</div>
 							<div class="fights">
-								<img src="/image/icon/grey/garden.png">
+								<v-icon>mdi-sword</v-icon>
+								<!-- <img src="/image/icon/grey/garden.png"> -->
 								<span>{{ leek.team_fights }}</span>
 							</div>
 						</div>
@@ -369,10 +371,12 @@
 					<div :class="{dragging: leek.dragging}" class="leek" draggable="true" v-on="on" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(null, leek, $event)" @dragend="leeksDragend(leek, $event)">
 						<leek-image :leek="leek" :scale="0.6" />
 						<br>
-						<div class="name">{{ leek.name }} ({{ leek.level }})</div>
+						<div class="name">{{ leek.name }}</div>
 						<talent :id="leek.id" :talent="leek.talent" category="leek" />
+						<div>{{ $t('main.level_n', [leek.level]) }}</div>
 						<div class="fights">
-							<img src="/image/icon/grey/garden.png">
+							<v-icon>mdi-sword</v-icon>
+							<!-- <img src="/image/icon/grey/garden.png"> -->
 							<span>{{ leek.team_fights }}</span>
 						</div>
 					</div>
@@ -1095,7 +1099,7 @@
 		padding-top: 8px;
 		.text {
 			font-size: 20px;
-			color: #555;
+			color: var(--text-color-secondary);
 			font-weight: 300;
 		}
 	}
@@ -1103,7 +1107,7 @@
 		font-size: 34px;
 		line-height: 22px;
 		vertical-align: top;
-		color: #bbb;
+		color: var(--text-color-secondary);
 		font-weight: 300;
 	}
 	.team-status {
@@ -1118,7 +1122,7 @@
 		height: 12px;
 		margin-top: 5px;
 		background: white;
-		border: 1px solid #ddd;
+		border: 1px solid var(--border);
 		position: relative;
 		border-radius: 5px;
 	}
@@ -1146,13 +1150,13 @@
 		.big {
 			font-size: 22px;
 			font-weight: 300;
-			color: #555;
+			color: var(--text-color-secondary);
 		}
 		.grey {
 			color: #999;
 		}
 		tr > td:nth-child(n+2) {
-			border-left: 2px solid #ddd;
+			border-left: 2px solid var(--border);
 		}
 	}
 	.candidacies .farmer {
@@ -1197,7 +1201,7 @@
 				}
 			}
 			&.hidden {
-				color: #777;
+				color: var(--text-color-secondary);
 			}
 			.v-icon {
 				font-size: 22px;
@@ -1294,7 +1298,6 @@
 		.name {
 			font-size: 16px;
 			text-align: center;
-			color: #555;
 			display: inline-block;
 			text-overflow: ellipsis;
 			overflow: hidden;
@@ -1303,6 +1306,10 @@
 		.fights {
 			display: inline-block;
 			margin-top: 3px;
+			.v-icon {
+				font-size: 18px;
+				margin-right: 2px;
+			}
 			img {
 				width: 18px;
 				height: 18px;
@@ -1325,7 +1332,7 @@
 		transform: scale(0.5);
 	}
 	.compo.in-tournament .leeks {
-		background: #bbb;
+		background: var(--background-disabled);
 	}
 	.compo .empty {
 		position: absolute;
@@ -1376,7 +1383,7 @@
 			}
 			.level {
 				font-weight: 300;
-				color: #555;
+				color: var(--text-color-secondary);
 				padding-bottom: 5px;
 			}
 			.ai {
@@ -1461,16 +1468,16 @@
 	}
 	.ranking {
 		width: 100%;
-		background: white;
+		background: var(--pure-white);
 		> div {
 			text-align: center;
 			display: flex;
 			&:not(:last-child) {
-				border-bottom: 1px solid #ddd;
+				border-bottom: 1px solid var(--border);
 			}
 			> div {
 				&:not(:last-child) {
-					border-right: 1px solid #ddd;
+					border-right: 1px solid var(--border);
 				}
 				min-width: 0;
 				text-overflow: ellipsis;
@@ -1478,11 +1485,11 @@
 				padding: 4px 10px;
 			}
 			&.me {
-				background: #eee;
+				background: var(--background-secondary);
 			}
 		}
 		.header {
-			background: #e5e5e5;
+			background: var(--background-header);
 			text-align: center;
 		}
 		.first a {

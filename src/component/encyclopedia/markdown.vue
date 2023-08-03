@@ -102,10 +102,12 @@
 				md.querySelectorAll('pre code').forEach((item) => {
 					const content = ('' + item.textContent).trim()
 					item.classList.add('multi')
+					if (LeekWars.darkMode) item.classList.add('theme-monokai')
 					LeekWars.createCodeArea(content, item as HTMLElement)
 				})
 				md.querySelectorAll('code:not(.multi)').forEach((item) => {
 					const content = ('' + item.textContent).trim()
+					if (LeekWars.darkMode) item.classList.add('theme-monokai')
 					LeekWars.createCodeAreaSimple(content, item as HTMLElement)
 				})
 
@@ -394,7 +396,7 @@
 		padding: 15px;
 	}
 	.md ::v-deep p, .md ::v-deep ul {
-		color: #252525;
+		// color: ;
 		font-size: 16px;
 		line-height: 1.6;
 		margin-bottom: 16px;
@@ -406,11 +408,10 @@
 		vertical-align: middle;
 	}
 	.md ::v-deep h1:first-child {
-		border-bottom: 1px solid #aaa;
+		border-bottom: 1px solid var(--border);
 		display: block;
 		background: none;
 		text-shadow: none;
-		color: #222;
 		font-size: 2.0em;
 		margin-top: 10px;
 		margin-bottom: 20px;
@@ -424,18 +425,18 @@
 		display: none;
 	}
 	.md ::v-deep h2 {
-		color: #000;
+		// color: #000;
 		&:not(:first-of-type) {
 			margin-top: 1em;
 		}
 		padding-bottom: 6px;
-		border-bottom: 1px solid #aaa;
+		border-bottom: 1px solid var(--border);
 		margin-bottom: 0.5em;
 	}
 	.md ::v-deep h4 {
 		margin-bottom: 0.7em;
 		line-height: 1.6;
-		border-bottom: 1px solid #aaa;
+		border-bottom: 1px solid var(--border);
 	}
 	.md ::v-deep img {
 		max-width: 100%;
@@ -443,6 +444,9 @@
 	.md ::v-deep a {
 		color: #0645ad;
 		font-weight: 500;
+	}
+	body.dark .md ::v-deep a {
+		color: #4bbaff;
 	}
 	.md ::v-deep a.new {
 		color: #ba0000;
@@ -462,7 +466,7 @@
 		border-left: .3em solid #aaa;
 	}
 	.md ::v-deep code {
-		background: white;
+		background: var(--pure-white);
 		padding: 0 4px;
 	}
 	.md ::v-deep pre code {
@@ -479,21 +483,24 @@
 		}
 	}
 	.md ::v-deep table, .md ::v-deep tr, .md ::v-deep td, .md ::v-deep th {
-		border: 1px solid #aaa;
+		border: 1px solid var(--border);
 	}
 	.md ::v-deep a.card {
+		.v-icon {
+			color: var(--text-color);
+		}
 		&:hover {
-			background: #ddd;
+			background: var(--background-secondary);
 		}
 		&:active {
-			background: #bbb;
+			background: var(--background-disabled);
 		}
 	}
 	.md ::v-deep .summary {
 		// border: 1px solid #aaa;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 		display: inline-block;
-		background: white;
+		background: var(--pure-white);
 		margin: 5px 0;
 		padding-top: 5px;
 		padding-bottom: 5px;
@@ -540,7 +547,7 @@
 			grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
 			padding-inline-start: 0;
 			li {
-				background: white;
+				background: var(--pure-white);
 				box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 				padding: 15px;
 				border-radius: 4px;
@@ -612,7 +619,7 @@
 			flex-shrink: 0;
 		}
 		p {
-			background: white;
+			background: var(--pure-white);
 			box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 			padding: 10px 15px;
 			border-radius: 4px;
@@ -620,7 +627,7 @@
 		}
 	}
 	.md ::v-deep .lstype {
-		color: #0000D0;
+		color: var(--type-color);
 		font-weight: bold;
 	}
 </style>

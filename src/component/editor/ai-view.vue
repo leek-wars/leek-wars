@@ -1641,20 +1641,18 @@
 	.hint-dialog .hints {
 		min-width: 400px;
 		max-width: 600px;
-		background: white;
 		font-family: monospace;
 		overflow-y: auto;
 		overflow-x: hidden;
 		vertical-align: top;
 		max-height: 260px;
-		background: #f7f7f7;
-		border: 1px solid #ccc;
+		background: var(--background);
+		border: 1px solid var(--border);
 	}
 	.hint-dialog .hint {
 		margin: 0;
 		padding: 2px 4px;
 		white-space: pre;
-		color: black;
 		cursor: pointer;
 		user-select: none;
 		font-size: 14px;
@@ -1687,21 +1685,21 @@
 			}
 		}
 		&.active {
-			background: #d2e9ff;
+			background: var(--background-header);
 		}
 	}
 	.hint-dialog .details {
 		width: 500px;
 		overflow-y: auto;
-		background: #f7f7f7;
-		border: 1px solid #ccc;
+		background: var(--background);
+		border: 1px solid var(--border);
 		margin-left: -1px;
 		max-height: 600px;
 		& > * {
 			padding: 5px 8px;
 		}
 		.definition {
-			border-top: 1px solid #ccc;
+			border-top: 1px solid var(--border);
 		}
 	}
 	.detail-dialog {
@@ -1709,8 +1707,8 @@
 		max-width: 600px;
 		width: fit-content;
 		z-index: 100;
-		background: #f7f7f7;
-		border: 1px solid #ccc;
+		background: var(--background);
+		border: 1px solid var(--border);
 		display: flex;
 		flex-direction: column;
 		&.active {
@@ -1720,7 +1718,7 @@
 			display: block;
 			padding: 5px 8px;
 			&:not(:last-child) {
-				border-bottom: 1px solid #ccc;
+				border-bottom: 1px solid var(--border);
 			}
 		}
 		.main {
@@ -1785,7 +1783,7 @@
 		cursor: pointer;
 		span {
 			// color: #5fad1b;
-			color: #0000D0;
+			color: var(--type-color);
 			// font-weight: 500;
 		}
 		span:hover {

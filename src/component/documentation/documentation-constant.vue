@@ -173,7 +173,7 @@
 		max-height: 50px;
 	}
 	.argument {
-		color: #0000D0;
+		color: var(--type-color);
 		font-weight: bold;
 	}
 	::v-deep a {

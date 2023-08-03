@@ -357,13 +357,13 @@
 		align-items: center;
 		gap: 5px;
 		font-weight: bold;
-		color: #222;
+		// color: var(--text-color);
 		position: sticky;
 		top: 0;
 		padding: 10px 5px;
 		padding-left: 10px;
 		margin-bottom: 6px;
-		background: #f2f2f2;
+		background: var(--background);
 		cursor: pointer;
 	}
 	.items-list .item {
@@ -377,7 +377,7 @@
 			margin-bottom: 6px;
 		}
 		.argument {
-			color: #0000D0;
+			color: var(--type-color);
 			font-weight: 500;
 		}
 		.arrow {
@@ -385,9 +385,13 @@
 			line-height: 14px;
 		}
 	}
+	body.dark .argument {
+
+		color: var(--type-color);
+	}
 	.items-list .item:hover, .item.router-link-active {
 		font-weight: bold;
-		background: white;
+		background: var(--pure-white);
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
 	.items {

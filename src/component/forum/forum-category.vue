@@ -49,7 +49,7 @@
 				<loader v-if="!categories || !topics" />
 				<div v-else class="topics">
 					<div v-for="topic in topics" :key="topic.id" :class="{pinned: topic.pinned}" class="topic">
-						<div class="seen">
+						<div class="seen" :class="{unseen: !topic.seen}">
 							<img v-if="topic.seen" src="/image/forum_seen.png">
 							<img v-else src="/image/forum_unseen.png">
 						</div>
@@ -323,10 +323,10 @@
 		align-items: center;
 	}
 	.topic:not(.header) {
-		border: 1px solid #ddd;
+		border: 1px solid var(--border);
 	}
 	.topic.pinned {
-		background: white;
+		background: var(--pure-white);
 	}
 	.topic .attr {
 		height: 19px;
@@ -347,7 +347,7 @@
 		flex: 1;
 	}
 	.topic:not(.header):hover {
-		background-color: white;
+		background-color: var(--pure-white);
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
 	.topic .seen {
@@ -359,6 +359,9 @@
 	.topic .seen img {
 		height: 40px;
 	}
+	body.dark .topic .seen:not(.unseen) img {
+		filter: invert(0.85);
+	}
 	.topic .flag {
 		height: 13px;
 		margin-left: 6px;
@@ -368,11 +371,7 @@
 	.topic .title {
 		font-size: 18px;
 		margin-bottom: 5px;
-		color: #333;
 		display: inline-block;
-		a {
-			color: #333;
-		}
 		.issue {
 			background: #0366d6;
 			color: white;

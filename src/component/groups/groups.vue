@@ -263,7 +263,7 @@ h2 {
 		align-items: center;
 		.v-icon {
 			font-size: 28px;
-			color: #555;
+			color: var(--text-color-secondary);
 		}
 	}
 }
@@ -281,7 +281,7 @@ h2 {
 		border-radius: 4px;
 		display: flex;
 		flex-direction: column;
-		border: 1px solid #aaa;
+		border: 1px solid var(--border);
 		.title {
 			font-size: 21px;
 			font-weight: 500;
@@ -335,7 +335,7 @@ h2 {
 	justify-content: center;
 	gap: 15px;
 	a {
-		color: #555;
+		color: var(--text-color-secondary);
 		font-size: 13px;
 		text-align: center;
 	}
@@ -374,7 +374,7 @@ h2 {
 			line-height: 1.5;
 			font-size: 16px;
 			font-style: italic;
-			color: #555;
+			color: var(--text-color-secondary);
 			text-align: justify;
 		}
 	}

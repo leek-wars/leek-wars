@@ -37,7 +37,7 @@
 		font-size: 16px;
 		font-weight: bold;
 		text-transform: uppercase;
-		color: #555;
+		color: var(--text-color-secondary);
 		margin-bottom: 10px;
 		display: flex;
 		align-items: center;

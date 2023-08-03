@@ -3,14 +3,12 @@
 	text-align: center;
 	position: relative;
 	.header {
-		background-color: #2a2a2a;
 		color: #eee;
+		background: #2a2a2a;
 		padding: 0 8px;
 		height: 36px;
 		display: flex;
 		align-items: center;
-		// border-top-left-radius: 3px;
-		// border-top-right-radius: 3px;
 		gap: 7px;
 		h2.name {
 			color: #eee;
@@ -18,7 +16,6 @@
 	}
 	.name {
 		font-size: 17px;
-		color: #f2f2f2;
 		white-space: nowrap;
 	}
 	.rarity {
@@ -34,7 +31,7 @@
 	}
 	.image {
 		max-height: 140px;
-		background: #f2f2f2;
+		background: var(--background);
 		padding: 15px;
 		img {
 			max-width: 100%;
@@ -55,10 +52,10 @@
 		cursor: help;
 	}
 	.desc {
-		background: #f2f2f2;
+		background: var(--background-secondary);
 		text-align: justify;
 		font-size: 14px;
-		color: #666;
+		color: var(--text-color-secondary);
 		padding: 8px;
 	}
 	.stats div {
@@ -69,10 +66,10 @@
 		margin-right: 4px;
 	}
 	.stats > div:nth-child(2n+1) {
-		background-color: white;
+		background-color: var(--pure-white);
 	}
 	.stats > div:nth-child(2n) {
-		background-color: #f2f2f2;
+		background-color: var(--background-secondary);
 	}
 	.ennemies,
 	.allies,
@@ -109,10 +106,10 @@
 	}
 	.constant {
 		text-align: left;
-		color: #555;
+		color: var(--text-color-secondary);
 		font-size: 13px;
 		padding: 4px 6px;
-		background: #f2f2f2;
+		background: var(--background-secondary);
 	}
 	.area {
 		border-collapse: separate;
@@ -122,10 +119,10 @@
 	.area td {
 		width: 6px;
 		height: 6px;
-		background: #eee;
+		background: var(--background-secondary);
 	}
 	.area td.full {
-		background: #999;
+		background:var(--background-disabled);
 	}
 	.stats .leek-preview {
 		padding: 10px;

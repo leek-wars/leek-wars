@@ -85,9 +85,8 @@
 		.legend {
 			text-align: center;
 			font-size: 18px;
-			color: #333;
 			padding: 10px 0;
-			background: #f2f2f2;
+			background: var(--background);
 		}
 	}
 	.bigscreen {

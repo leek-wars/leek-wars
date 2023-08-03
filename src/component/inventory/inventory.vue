@@ -403,9 +403,9 @@
 	}
 }
 .cell {
-	border: 1px solid #ccc;
+	border: 1px solid var(--border);
 	&:hover {
-		background: white;
+		background: var(--pure-white);
 	}
 }
 .item {
@@ -466,7 +466,7 @@
 	}
 }
 .placeholder {
-	border: 1px solid #ddd;
+	border: 1px solid var(--border);
 	// background: linear-gradient(to bottom right, #f2f2f2, #e1e1e1);
 	height: 78px;
 }

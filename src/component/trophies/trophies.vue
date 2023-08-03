@@ -368,16 +368,15 @@
 			}
 			.total {
 				font-size: 18px;
-				color: #888;
+				color: var(--text-color-secondary);
 			}
 			.points {
 				font-size: 36px;
 				font-weight: bold;
-				color: #444;
 			}
 			.percent {
 				font-size: 18px;
-				color: #888;
+				color: var(--text-color-secondary);
 				float: right;
 				margin-left: 10px;
 			}
@@ -438,10 +437,10 @@
 	.global-bar {
 		height: 14px;
 		position: relative;
-		background: white;
+		background: var(--pure-white);
 		border-radius: 6px;
 		margin: 5px 0;
-		border: 1px solid #ddd;
+		border: 1px solid var(--border);
 		.bar {
 			height: 12px;
 			width: 0;
@@ -471,10 +470,11 @@
 	.category-bar {
 		height: 12px;
 		position: relative;
-		background: white;
+		background: var(--pure-white);
 		border-radius: 6px;
 		flex: 1;
 		margin-top: 12px;
+		border: 1px solid var(--border);
 		.bar {
 			height: 12px;
 			width: 0;
@@ -522,10 +522,6 @@
 		}
 		.name {
 			font-size: 16px;
-		}
-		.description {
-			color: #555;
-			font-size: 13px;
 		}
 		.fight-icon {
 			width: 16px;

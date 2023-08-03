@@ -488,10 +488,10 @@
 		margin: 8px 5px;
 	}
 	.ranking {
-		background: white;
+		background: var(--pure-white);
 		::v-deep td {
-			border-bottom: 1px solid #ddd;
-			border-right: 1px solid #ddd;
+			border-bottom: 1px solid var(--border);
+			border-right: 1px solid var(--border);
 			text-align: center;
 			padding: 5px 7px;
 			white-space: nowrap;
@@ -500,7 +500,7 @@
 			border-right: none;
 		}
 		tr.header {
-			background: #e5e5e5;
+			background: var(--background-header);
 			height: 38px;
 			text-align: center;
 			a {
@@ -518,16 +518,12 @@
 		th {
 			padding: 0 5px;
 			font-weight: normal;
-			color: #222;
 			font-size: 16px;
-			border-bottom: 1px solid #fff;
-			border-right: 1px solid #fff;
+			border-bottom: 1px solid var(--border);
+			border-right: 1px solid var(--border);
 		}
 		th:last-child {
 			border-right: none;
-		}
-		th a {
-			color: #222;
 		}
 		::v-deep .first a {
 			color: #ffa900;
@@ -544,12 +540,12 @@
 		tr.me {
 			font-weight: bold;
 			::v-deep td {
-				background: #eee;
+				background: var(--background);
 			}
 		}
 		tr.highlight {
 			::v-deep td {
-				background: #b5ee84;
+				background: rgba(100, 255, 0, 0.4);
 			}
 		}
 		tr.inactive {
@@ -565,6 +561,7 @@
 			}
 		}
 	}
+
 	.ranking-column {
 		width: 80px;
 	}

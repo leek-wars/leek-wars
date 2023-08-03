@@ -621,7 +621,7 @@
 		padding: 15px;
 		vertical-align: top;
 		text-align: left;
-		color: #252525;
+		// color: #252525;
 		width: 100%;
 		position: relative;
 		display: flex;
@@ -693,7 +693,7 @@
 		}
 	}
 	.message .date {
-		color: #aaa;
+		color: var(--text-color-secondary);
 		font-size: 12px;
 		text-align: right;
 		display: flex;
@@ -704,7 +704,7 @@
 		}
 	}
 	.edit-wrapper {
-		color: #aaa;
+		color: var(--text-color-secondary);
 		font-size: 14px;
 		cursor: pointer;
 		span .v-icon {
@@ -729,7 +729,7 @@
 		padding: 10px;
 		font-size: 15px;
 		font-family: "Roboto", sans-serif;
-		color: #555;
+		color: var(--text-color-secondary);
 		border: none;
 		margin-bottom: 10px;
 	}
@@ -780,7 +780,7 @@
 		padding-right: 4px;
 	}
 	.vote.zero {
-		opacity: 0.3;
+		opacity: 0.6;
 	}
 	.vote.zero:hover {
 		opacity: 1;
@@ -790,21 +790,36 @@
 	}
 	.vote.up, .vote.up.zero:hover {
 		color: #5fad1b;
+		.v-icon {
+			color: #5fad1b;
+		}
 	}
 	.vote.up.zero, .vote.down.zero {
-		color: #555;
+		color: var(--text-color-secondary);
+		.v-icon {
+			color: var(--text-color-secondary);
+		}
 	}
 	.vote.down, .vote.down.zero:hover {
 		color: red;
 		margin-right: 20px;
+		.v-icon {
+			color: red;
+		}
 	}
 	.vote.up.active {
 		color: white;
 		background: #5fad1b;
+		.v-icon {
+			color: white;
+		}
 	}
 	.vote.down.active {
 		color: white;
 		background: red;
+		.v-icon {
+			color: white;
+		}
 	}
 	.tooltip.votes-tooltip .content img {
 		margin: 3px 40px;
@@ -820,7 +835,7 @@
 		margin-top: 10px;
 		display: block;
 		background: transparent;
-		color: #555;
+		color: var(--text-color-secondary);
 		padding: 0px;
 		text-shadow: none;
 	}
@@ -843,7 +858,7 @@
 		margin-top: 10px;
 		display: block;
 		background: transparent;
-		color: #555;
+		color: var(--text-color-secondary);
 		padding: 0px;
 		text-shadow: none;
 	}

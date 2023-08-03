@@ -204,7 +204,6 @@ import { store } from '@/model/store'
 	}
 	.header.category {
 		font-size: 17px;
-		font-weight: 300;
 		background-color: transparent;
 		margin: 0;
 	}
@@ -223,10 +222,10 @@ import { store } from '@/model/store'
 		padding: 4px 6px;
 	}
 	.category:not(.header) {
-		border: 1px solid #ddd;
+		border: 1px solid var(--border);
 	}
 	.category:not(.header):hover {
-		background-color: white;
+		background-color: var(--pure-white);
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
 	.category .seen {
@@ -238,31 +237,33 @@ import { store } from '@/model/store'
 	.category .seen img {
 		height: 40px;
 	}
+	body.dark .category .seen img {
+		filter: invert(0.85);
+	}
 	.category .text {
 		flex: 1;
 	}
 	.category .title {
 		font-size: 18px;
 		margin-bottom: 4px;
-		color: #333;
 	}
 	.category .description {
-		color: #777;
+		color: var(--text-color-secondary);
 		font-size: 14px;
 	}
 	.category .mobile-info {
 		margin-top: 5px;
-		color: #777;
+		color: var(--text-color-secondary);
 		font-size: 14px;
 	}
 	.category .num-topics {
 		flex: 0 0 80px;
-		color: #777;
+		color: var(--text-color-secondary);
 		text-align: center;
 	}
 	.category .num-messages {
 		flex: 0 0 80px;
-		color: #777;
+		color: var(--text-color-secondary);
 		text-align: center;
 	}
 	.connected-farmers {

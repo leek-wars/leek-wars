@@ -214,7 +214,7 @@
 		height: 100%;
 		& > .v-icon {
 			font-size: 80px;
-			color: #555;
+			color: var(--text-color-secondary);
 			margin: 10px 0;
 		}
 		h2 {
@@ -223,7 +223,6 @@
 			display: flex;
 			justify-content: center;
 			align-items: flex-end;
-			color: #333;
 			i {
 				margin-left: 5px;
 				font-size: 20px;

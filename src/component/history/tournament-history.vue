@@ -30,7 +30,6 @@
 		line-height: 42px;
 		font-size: 15px;
 		text-align: center;
-		color: #333;
 		border-radius: 3px;
 		position: relative;
 		display: flex;
@@ -53,6 +52,14 @@
 		}
 		.round {
 			width: 20%;
+			&:first-child {
+				border-top-left-radius: 3px;
+				border-bottom-left-radius: 3px;
+			}
+			&:last-child {
+				border-top-right-radius: 3px;
+				border-bottom-right-radius: 3px;
+			}
 			&.win {
 				background: #b6f182;
 			}
@@ -63,10 +70,20 @@
 		.date {
 			font-size: 10px;
 			text-align: right;
-			color: #888;
+			color: var(--text-color-secondary);
 			line-height: normal;
 			margin-right: 5px;
 			margin-top: -13px;
+		}
+	}
+
+	body.dark .tournament {
+		background: #444;
+		.win {
+			background: #3c651b;
+		}
+		.lose {
+			background: #76342f;
 		}
 	}
 </style>

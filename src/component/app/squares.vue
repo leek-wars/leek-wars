@@ -43,8 +43,12 @@
 		}
 		i {
 			font-size: 32px;
-			color: #444;
 		}
+	}
+
+	body.dark .square img.padding {
+		// filter: invert(1);
+		// opacity: 0.9 !important;
 	}
 	@keyframes in-and-out {
 		0% { transform: translate(150%, 0); }

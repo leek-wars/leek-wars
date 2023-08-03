@@ -95,6 +95,10 @@
 
 			<panel :title="$t('misc_options')" icon="mdi-settings-outline">
 				<table class="misc-settings">
+					<tr id="dark-button">
+						<td><h4>{{ $t('activate_dark_mode') }}</h4></td>
+						<td><v-switch v-model="LeekWars.darkMode" hide-details /></td>
+					</tr>
 					<tr id="sfw-button">
 						<td><h4>{{ $t('activate_discrete_mode') }}</h4></td>
 						<td><v-switch v-model="sfwMode" hide-details /></td>
@@ -365,6 +369,11 @@
 			}
 		}
 
+		@Watch('LeekWars.darkMode')
+		updateDarkMode() {
+			localStorage.setItem('dark', '' + LeekWars.darkMode)
+		}
+
 		@Watch('notifsResults')
 		updateNotifsResults() {
 			localStorage.setItem('options/notifs-results', '' + this.notifsResults)
@@ -508,14 +517,14 @@
 			text-align: center;
 			margin: 5px;
 			cursor: pointer;
-			border: 1px solid #ddd;
+			border: 1px solid var(--border);
 			border-radius: 2px;
 			position: relative;
 			.beta {
 				position: absolute;
 				top: -5px;
 				right: -5px;
-				background: white;
+				background: var(--pure-white);
 				padding: 2px 4px;
 				border: 1px solid #aaa;
 				border-radius: 4px;
@@ -528,7 +537,7 @@
 		}
 	}
 	.languages .language.selected {
-		background: white;
+		background: var(--pure-white);
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
 	.misc-settings {
@@ -542,12 +551,11 @@
 		text-align: left;
 		padding: 8px;
 		cursor: pointer;
-		background: white;
+		background: var(--pure-white);
 		font-size: 16px;
 		margin-bottom: 10px;
 		display: flex;
 		align-items: center;
-		color: #555;
 		user-select: none;
 	}
 	.list-item:not(:first-child) {

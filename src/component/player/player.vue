@@ -865,7 +865,7 @@
 		margin-bottom: 10px;
 	}
 	.status {
-		color: #555;
+		color: var(--text-color-secondary);
 		font-weight: 500;
 		padding-left: 4px;
 	}
@@ -948,7 +948,7 @@
 	}
 	.level {
 		font-size: 17px;
-		color: #555;
+		color: var(--text-color-secondary);
 		font-weight: 500;
 	}
 	.play-pause {
@@ -1017,9 +1017,9 @@
 	.loading-bar {
 		height: 14px;
 		position: relative;
-		background: white;
+		background: var(--pure-white);
 		border-radius: 6px;
-		border: 1px solid #ddd;
+		border: 1px solid var(--border);
 		text-align: left;
 		max-width: 700px;
 		margin: 10px auto;

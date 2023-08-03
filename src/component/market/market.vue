@@ -605,7 +605,7 @@
 		grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
 	}
 	.items .item {
-		border: 1px solid #ddd;
+		border: 1px solid var(--border);
 		cursor: pointer;
 		position: relative;
 		text-align: center;
@@ -614,7 +614,7 @@
 		}
 	}
 	.items .item.router-link-active {
-		background: white;
+		background: var(--pure-white);
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
 	.buy-label {
@@ -646,7 +646,7 @@
 		color: #eee;
 		border-radius: 20px;
 		font-weight: bold;
-		background-color: #777;
+		background-color: var(--border);
 	}
 	.items .item:not([farmer-count="0"]):not([leek-count="0"]):before {
 		border-radius: 20px 0 0 20px;
@@ -661,7 +661,10 @@
 	.item.fight-pack {
 		padding: 10px;
 		font-size: 16px;
-		color: #777;
+		color: var(--text-color-secondary);
+		div {
+			margin-top: 5px;
+		}
 	}
 	.fights img {
 		height: 75px;
@@ -772,15 +775,14 @@
 		user-select: none;
 		flex: 0 0 auto;
 		.item {
-			background: #f2f2f2;
+			background: var(--background);
 			border-radius: 4px;
 			box-shadow: 0px 10px 11px -11px rgba(0,0,0,0.75);
 			padding: 8px 5px;
 			cursor: pointer;
-			color: #555;
+			// color: var(--text-color);
 			&:hover {
-				background: white;
-				color: black;
+				background: var(--pure-white);
 			}
 		}
 	}

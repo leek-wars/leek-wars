@@ -75,18 +75,16 @@
 <style lang="scss" scoped>
 	td.header {
 		text-align: left;
-		background: white;
 	}
 	th {
-		border: 1px solid #ddd;
+		border: 1px solid var(--border);
 		padding: 4px;
-		background: white;
+		background: var(--background-header);
 		font-weight: normal;
-		color: #777;
 		font-size: 14px;
 	}
 	td {
-		border: 1px solid #ddd;
+		border: 1px solid var(--border);
 		text-align: center;
 		padding: 4px;
 	}

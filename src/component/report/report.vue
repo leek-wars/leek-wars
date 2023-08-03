@@ -921,14 +921,14 @@
 	.report {
 		width: 100%;
 		margin-bottom: 10px;
-		background: #f8f8f8;
+		background: var(--pure-white);
 	}
 	.report th {
-		border: 1px solid #ddd;
+		border: 1px solid var(--border);
 		padding: 8px;
-		background: white;
+		background: var(--background-header);
 		font-weight: normal;
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	.turn {
 		font-size: 18px;
@@ -1148,9 +1148,10 @@
 		::v-deep .total {
 			font-weight: 500;
 			font-size: 14px;
+			fill: var(--text-color-secondary);
 		}
 		::v-deep .ct-label.ct-vertical {
-			color: #444;
+			color: var(--text-color-secondary);
 			white-space: nowrap;
 		}
 	}
@@ -1162,7 +1163,7 @@
 	}
 	.seed {
 		text-align: right;
-		color: #333;
+		color: var(--text-color-secondary);
 		.v-icon {
 			font-size: 20px;
 		}
@@ -1179,7 +1180,7 @@
 	}
 	.actions-options {
 		display: flex;
-		background: #f2f2f2;
+		background: var(--background);
 		position: sticky;
 		height: 45px;
 		top: 0;
@@ -1206,7 +1207,7 @@
 	::v-deep .turn {
 		position: sticky;
 		top: 0;
-		background: #f2f2f2;
+		background: var(--background);
 		padding: 7px 0;
 		margin: 0;
 		display: inline-block;

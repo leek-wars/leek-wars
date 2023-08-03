@@ -37,6 +37,6 @@
 	.all {
 		padding: 15px;
 		padding-top: 5px;
-		background: #f2f2f2;
+		background: var(--background);
 	}
 </style>

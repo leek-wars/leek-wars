@@ -33,7 +33,7 @@
 		padding-top: 4px;
 		padding-bottom: 6px;
 		border-radius: 50%;
-		background: white;
+		background: var(--pure-white);
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
 	img {
@@ -43,7 +43,7 @@
 	.value {
 		display: inline-block;
 		margin-left: -8px;
-		background: white;
+		background: var(--pure-white);
 		font-size: 18px;
 		padding: 3px 10px;
 		padding-left: 14px;

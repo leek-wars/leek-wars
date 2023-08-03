@@ -27,7 +27,7 @@
 		padding: 3px 4px;
 		font-weight: 500;
 		border-radius: 2px;
-		border: 1px solid #ccc;
+		border: 1px solid var(--border);
 		.v-icon {
 			font-size: 21px;
 		}
@@ -39,7 +39,7 @@
 		}
 		&.cent {
 			box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
-			background: white;
+			background: var(--pure-white);
 			font-size: 18px;
 			border: none;
 		}

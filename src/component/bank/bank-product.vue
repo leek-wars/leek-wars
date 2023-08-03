@@ -64,7 +64,7 @@
 			padding: 5px 8px;
 			margin: 5px 0;
 			display: inline-flex;
-			border: 1px solid #ccc;
+			border: 1px solid var(--border);
 			border-radius: 4px;
 			display: flex;
 			align-items: center;

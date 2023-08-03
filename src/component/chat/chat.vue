@@ -497,7 +497,7 @@
 		right: 0;
 		left: 0;
 		background: #5fad1b;
-		color: white;
+		color: var(--pure-white);
 		text-align: center;
 		line-height: 30px;
 		cursor: pointer;
@@ -515,12 +515,12 @@
 	}
 	.separator {
 		text-align: center;
-		color: #777;
+		color: var(--text-color-secondary);
 		display: flex;
 		align-items: center;
 		margin: 12px 0;
 		&:before, &:after {
-			border-bottom: 1px dashed #aaa;
+			border-bottom: 1px dashed var(--text-color-secondary);
 			width: 100%;
 			content: " ";
 			flex: 1;

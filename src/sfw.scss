@@ -1,36 +1,36 @@
 #app.sfw {
-	background: white;
+	background: var(--pure-white);
 
 	.page-wrapper, .blabla-panel .content {
-		background: rgba(255,255,255, 0.4);
+		background: none;
 	}
 	h1 {
-		background: white;
+		background: var(--pure-white);
 		color: #777;
 		text-shadow: none;
 	}
 	h1:after {
-		border-color: transparent transparent transparent white;
+		border-color: transparent transparent transparent var(--pure-white);
 	}
 	.panel {
-		background: white;
+		background: var(--pure-white);
 		box-shadow: none;
 	}
 	.panel .header {
-		background: white;
+		background: var(--pure-white);
 	}
 	.panel .header h2 {
-		background: white;
+		background: var(--pure-white);
 		color: #777;
 	}
 	.panel .header h2 a {
 		color: #777;
 	}
 	.panel .header h2:before {
-		border-color: transparent transparent transparent white;
+		border-color: transparent transparent transparent var(--pure-white);
 	}
 	.panel .header .right .button {
-		background: white;
+		background: var(--pure-white);
 		color: #777;
 	}
 	.panel .header .right .button:hover {
@@ -48,25 +48,22 @@
 	.smiley, .hab, .crystal {
 		opacity: 0.2;
 	}
-	.menu {
-		background: rgba(255,255,255,0.4);
-	}
-	.menu .menu-wrapper {
-		background: rgba(255,255,255,0.4);
+	.menu-wrapper {
+		background: none;
 	}
 	.menu .section {
-		background: white;
+		background: var(--pure-white);
 		color: #777;
 	}
 	.menu-center a.router-link-active {
 		text-shadow: none;
-		color: black;
+		color: var(--text-color);
 		&:before {
 			display: none;
 		}
 	}
 	.menu .menu-top {
-		background: white;
+		background: var(--pure-white);
 		color: #777;
 	}
 	.xp-bar, .switch-active .switch-switch {
@@ -85,13 +82,15 @@
 	}
 	.history {
 		.win {
-			background: #f3ffe9;
+			// background: #f3ffe9;
+			background: rgba(0, 255, 0, 0.15);
 		}
-		.defeat {
-			background: #fff2f1;
+		.defeat, .lose {
+			// background: #fff2f1;
+			background: rgba(255, 0, 0, 0.15);
 		}
 		.tournament {
-			background: #f8f8f8;
+			background: none;
 		}
 	}
 	.menu .section[label]:after {
@@ -153,7 +152,7 @@
 		color: #83a1bb !important;
 	}
 	.global-bar .bar, .category-bar .bar, .trophy .trophy-bar .bar {
-		background: #e6e6e6
+		background: var(--background-header);
 	}
 	.moderator, .admin, .contributor, .author {
 		font-weight: normal;
@@ -177,16 +176,16 @@
 	.v-dialog {
 		box-shadow: none;
 		.action {
-			background: white;
+			background: var(--pure-white);
 			color: #777;
 		}
 	}
 	.v-dialog > .title {
-		background: white;
+		background: var(--pure-white);
 		color: #777;
 	}
 	.v-dialog .content {
-		background: white;
+		background: var(--pure-white);
 	}
 	.page-bar .tab input[type="text"] {
 		background: none;
@@ -227,7 +226,7 @@
 		font-weight: normal;
 	}
 	.items .item:before, .items .item:after {
-		background: white;
+		background: var(--pure-white);
 		color: #777;
 	}
 	.item.weapon, .item.fight-pack, .item.chip, .item.potion, .item.hat {
@@ -243,14 +242,14 @@
 		font-weight: normal;
 	}
 	.xp-bar {
-		background: #f1f1f1;
+		background: var(--background-secondary);
 	}
 	.window {
 		box-shadow: none;
-		background: white;
+		background: var(--pure-white);
 	}
 	.window .header, .br .header {
-		background: white;
+		background: var(--pure-white);
 		color: #777;
 	}
 	.v-btn.error {
@@ -268,5 +267,9 @@
 		image {
 			opacity: 0.08;
 		}
+	}
+	.notif-trophy {
+		background: linear-gradient(0deg, #ffb02933, #ffdc3a33);
+		border: 1px solid #ffb43033;
 	}
 }

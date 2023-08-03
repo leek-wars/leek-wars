@@ -557,7 +557,6 @@
 	input[type=text], input[type=password] {
 		width: 100%;
 		padding: 0 7px;
-		background: white;
 		height: 30px;
 	}
 	input[type=text]:focus, input[type=password]:focus {
@@ -592,11 +591,11 @@
 		margin: 0 auto;
 		width: calc(100% - 20px);
 		td {
-			border-bottom: 1px solid #ddd;
-			border-right: 1px solid #ddd;
+			border-bottom: 1px solid var(--border);
+			border-right: 1px solid var(--border);
 			text-align: center;
 			padding: 4px 12px;
-			background: white;
+			background: var(--pure-white);
 			a span {
 				white-space: nowrap;
 			}
@@ -605,16 +604,15 @@
 			border-right: none;
 		}
 		tr.header {
-			background: #e5e5e5;
+			background: var(--pure-white);
 			text-align: center;
 		}
 		th {
 			padding: 5px 12px;
 			font-weight: normal;
-			color: #222;
 			font-size: 16px;
-			border-bottom: 1px solid #fff;
-			border-right: 1px solid #fff;
+			border-bottom: 1px solid var(--border);
+			border-right: 1px solid var(--border);
 		}
 		th:last-child {
 			border-right: none;
@@ -746,7 +744,7 @@
 			.name {
 				margin-top: 5px;
 				font-weight: 500;
-				background: white;
+				background: var(--pure-white);
 				height: 24px;
 				padding: 3px 5px;
 				max-width: 120px;
@@ -819,7 +817,7 @@
 		justify-content: flex-end;
 	}
 	img {
-		border: 5px solid white;
+		border: 5px solid var(--pure-white);
 		box-shadow: 0px 3px 5px -1px rgb(0 0 0 / 20%), 0px 5px 8px 0px rgb(0 0 0 / 14%), 0px 1px 14px 0px rgb(0 0 0 / 12%);
 		border-radius: 5px;
 		min-width: 0;

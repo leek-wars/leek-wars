@@ -149,6 +149,9 @@
 </script>
 
 <style lang="scss" scoped>
+	.hud {
+		color: #111;
+	}
 	.timeline {
 		position: absolute;
 		bottom: 5px;

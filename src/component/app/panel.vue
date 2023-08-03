@@ -51,7 +51,7 @@
 
 <style lang="scss" scoped>
 	.panel {
-		background: #f2f2f2;
+		background: var(--background);
 		border-radius: 4px;
 		box-shadow: 0px 10px 11px -11px rgba(0,0,0,0.75);
 		display: flex;

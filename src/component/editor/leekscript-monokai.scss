@@ -1,7 +1,10 @@
-.theme-monokai .CodeMirror {
-	background: #272822;
+.theme-monokai {
+	background: #272822 !important;
 	color: #f8f8f2;
-
+	.CodeMirror {
+		background: #272822 !important;
+		color: #f8f8f2;
+	}
 	.cm-number {
 		color: #ae81ff;
 	}
@@ -124,9 +127,6 @@
 }
 
 .theme-monokai .status {
-	.version {
-		color: #eee !important;
-	}
 	border-top: 1px solid #555 !important;
 }
 

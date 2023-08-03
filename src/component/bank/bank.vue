@@ -31,7 +31,7 @@
 		<panel class="first">
 			<div class="bank-description center" v-html="$t('description')"></div>
 
-			<v-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)" hide-details dense solo light>
+			<v-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)" hide-details dense solo>
 				<template v-slot:selection>
 					<flag :code="LeekWars.currencies[LeekWars.currency].flag" :clickable="false" />&nbsp;
 					{{ LeekWars.currency }} &nbsp; <span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>
@@ -151,68 +151,12 @@
 		padding: 10px;
 		grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
 	}
-	#app.app .packs {
-		padding: 0;
-		padding-top: 10px;
-	}
-	.pack {
-		padding: 10px;
-		min-height: 90px;
-		h2 {
-			margin-bottom: 8px;
-			margin-top: 3px;
-			font-size: 20px;
-		}
-		&:hover {
-			background: #eee;
-		}
-		> img {
-			float: left;
-			margin-right: 15px;
-			margin-left: 3px;
-			height: 80px;
-			width: 80px;
-			margin-top: 5px;
-			object-fit: contain;
-		}
-		.buy {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 8px;
-			align-items: center;
-			div {
-				border-radius: 2px;
-				padding: 5px 8px;
-				margin: 5px 0;
-				display: inline-flex;
-				border: 1px solid #ccc;
-				border-radius: 4px;
-				display: flex;
-				align-items: center;
-				gap: 4px;
-				i {
-					font-size: 26px;
-				}
-			}
-		}
-		.price {
-			font-weight: 400;
-			font-size: 24px;
-			margin-right: 10px;
-			display: flex;
-			align-items: center;
-		}
-		.buy img {
-			vertical-align: middle;
-			height: 25px;
-		}
-	}
 	.item-sample {
 		a {
 			display: flex;
 			gap: 10px;
 			padding: 10px;
-			color: #555;
+			color: var(--text-color-secondary);
 		}
 		::v-deep .item {
 			width: 80px;

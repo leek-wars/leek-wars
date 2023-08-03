@@ -67,5 +67,6 @@
 	"password": "Mot de passe",
 	"Vérifier" : "Vérifier le compte",
 	"verify_gh" : "Vérifier avec GitHub",
-	"allow_github": "Autoriser la connexion via GitHub"
+	"allow_github": "Autoriser la connexion via GitHub",
+	"activate_dark_mode": "Activer le mode sombre"
 }

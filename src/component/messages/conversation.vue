@@ -47,7 +47,7 @@
 		}
 	}
 	.conversation:hover {
-		background-color: white;
+		background-color: var(--pure-white);
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 		&.unread {
 			background-color: rgba(90, 194, 0, 0.25);
@@ -55,7 +55,7 @@
 	}
 	.selected {
 		background: #ddd;
-		color: white;
+		color: var(--pure-white);
 	}
 	.selected:hover {
 		background: #999;
@@ -73,7 +73,7 @@
 	}
 	.last-message {
 		font-size: 13px;
-		color: #777;
+		color: var(--text-color-secondary);
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		overflow: hidden;
@@ -88,7 +88,7 @@
 	}
 	.date {
 		position: absolute;
-		color: #555;
+		color: var(--text-color-secondary);
 		font-size: 12px;
 		top: 8px;
 		right: 8px;

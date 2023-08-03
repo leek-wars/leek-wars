@@ -56,27 +56,6 @@
 	.global-percent {
 		font-size: 40px;
 	}
-	.global-count {
-		font-size: 30px;
-		color: #888;
-		float: right;
-		line-height: 55px;
-	}
-	.global-bar {
-		height: 14px;
-		position: relative;
-		background: white;
-		border-radius: 6px;
-		margin: 5px 0;
-		border: 1px solid #ddd;
-		.bar {
-			height: 12px;
-			width: 0;
-			background: #008fbb;
-			position: absolute;
-			border-radius: 6px;
-		}
-	}
 	.panel ::v-deep .actions {
 		flex: 1;
 	}
@@ -90,21 +69,6 @@
 			color: white;
 			font-size: 16px;
 			margin: 9px 10px;
-		}
-	}
-	.category-bar {
-		height: 12px;
-		position: relative;
-		background: white;
-		border-radius: 6px;
-		flex: 1;
-		margin-top: 12px;
-		.bar {
-			height: 12px;
-			width: 0;
-			background: #30bb00;
-			position: absolute;
-			border-radius: 6px;
 		}
 	}
 	.bar {
@@ -138,7 +102,7 @@
 			margin-bottom: 5px;
 		}
 		.points {
-			border: 1px solid #aaa;
+			border: 1px solid var(--border);
 			padding: 1px 4px;
 			border-radius: 4px;
 			margin-left: 5px;
@@ -148,11 +112,11 @@
 			font-size: 16px;
 		}
 		.description {
-			color: #555;
+			color: var(--text-color-secondary);
 			font-size: 13px;
 		}
 		.habs {
-			color: #555;
+			color: var(--text-color-secondary);
 			font-size: 13px;
 			padding-top: 5px;
 			.hab {
@@ -171,10 +135,10 @@
 		.trophy-bar {
 			height: 10px;
 			position: relative;
-			background: white;
+			background: var(--pure-white);
 			border-radius: 6px;
 			margin-top: 6px;
-			border: 1px solid #ddd;
+			border: 1px solid var(--border);
 			.bar {
 				height: 8px;
 				border-radius: 6px;
@@ -191,7 +155,7 @@
 			margin-top: 4px;
 		}
 		.date, .rarity {
-			color: #888;
+			color: var(--text-color-secondary);
 			font-size: 13px;
 			font-style: italic;
 			.fight {

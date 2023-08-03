@@ -68,7 +68,7 @@
 <style lang="scss" scoped>
 	.fight {
 		margin: 5px;
-		color: #333;
+		// color: #333;
 		text-align: center;
 		border-radius: 3px;
 		font-size: 15px;
@@ -124,7 +124,7 @@
 			position: absolute;
 			bottom: 2px;
 			right: 8px;
-			color: #777;
+			color: var(--text-color-secondary);
 			font-size: 11px;
 			text-align: right;
 		}
@@ -132,14 +132,23 @@
 	.win {
 		background-color: #b6f182;
 	}
+	body.dark .win {
+		background-color: #3c651b;
+	}
 	.draw {
-		background-color: #dcdcdc;
+		background: #dcdcdc;
+	}
+	body.dark .draw {
+		background: #444;
 	}
 	.defeat {
 		background-color: #ffb3ae;
 	}
+	body.dark .defeat {
+		background-color: #76342f;
+	}
 	.generating {
-		background-color: white;
+		background: var(--pure-white);
 	}
 	@keyframes rotate {
 		0% { transform: rotate(0); }

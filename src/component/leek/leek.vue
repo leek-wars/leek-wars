@@ -147,7 +147,7 @@
 				</template>
 				<div slot="content" class="characteristics">
 					<characteristic-tooltip v-for="c in LeekWars.characteristics_table" :key="c" v-slot="{ on }" :characteristic="c" :value="leek ? leek[c] : 0" :leek="leek" :test="false">
-						<div class="characteristic" v-on="on">
+						<div class="characteristic" :class="c" v-on="on">
 							<img :src="'/image/charac/' + c + '.png'">
 							<span :class="'color-' + c">{{ leek ? leek[c] : '...' }}</span>
 						</div>
@@ -1366,8 +1366,11 @@ import LeekImage from '../leek-image.vue'
 		}
 		.characteristic:nth-child(8n+6),
 		.characteristic:nth-child(8n+8) {
-			background: white;
+			background: var(--background-secondary);
 		}
+	}
+	body.dark .characteristic.frequency {
+		filter: invert(1);
 	}
 	.tooltip .effect, .tooltip .capital, .tooltip .base-life, .tooltip .added-life {
 		font-size: 13px;
@@ -1383,8 +1386,8 @@ import LeekImage from '../leek-image.vue'
 		width: 100%;
 		height: 12px;
 		margin-top: 5px;
-		background: white;
-		border: 1px solid #ddd;
+		background: var(--pure-white);
+		border: 1px solid var(--border);
 		position: relative;
 		border-radius: 5px;
 	}
@@ -1403,7 +1406,7 @@ import LeekImage from '../leek-image.vue'
 	.talent-more {
 		font-size: 18px;
 		margin-left: 5px;
-		color: #888;
+		color: var(--text-color-secondary);
 	}
 	.fights {
 		margin-top: 10px;
@@ -1413,13 +1416,13 @@ import LeekImage from '../leek-image.vue'
 		.big {
 			font-size: 21px;
 			font-weight: 300;
-			color: #555;
+			color: var(--text-color-secondary);
 		}
 		.grey {
 			color: #999;
 		}
 		tr > td:nth-child(n+2) {
-			border-left: 2px solid #ddd;
+			border-left: 2px solid var(--border);
 		}
 	}
 	.talent-wrapper {
@@ -1466,7 +1469,7 @@ import LeekImage from '../leek-image.vue'
 		color: black;
 	}
 	.dashed {
-		border: 3px dashed #999;
+		border: 3px dashed var(--border);
 		margin: -3px;
 	}
 	.dragging {
@@ -1487,7 +1490,7 @@ import LeekImage from '../leek-image.vue'
 	}
 	.weapons-popup .weapon {
 		cursor: pointer;
-		border: 1px solid #ddd;
+		border: 1px solid var(--border);
 		vertical-align: bottom;
 		height: 72px;
 		display: flex;
@@ -1578,7 +1581,7 @@ import LeekImage from '../leek-image.vue'
 			display: inline-block;
 			cursor: pointer;
 			position: relative;
-			border: 1px solid#ddd;
+			border: 1px solid var(--border);
 			padding: 5px 0;
 			img {
 				width: 100%;
@@ -1615,7 +1618,7 @@ import LeekImage from '../leek-image.vue'
 			cursor: pointer;
 			padding: 2px;
 			height: 74px;
-			border: 1px solid #ddd;
+			border: 1px solid var(--border);
 		}
 		.hat img {
 			max-height: 70px;
@@ -1626,7 +1629,7 @@ import LeekImage from '../leek-image.vue'
 		display: none;
 	}
 	.registers {
-		border: 1px solid #ccc;
+		border: 1px solid var(--border);
 		width: 100%;
 		.register {
 			font-family: monospace;
@@ -1635,20 +1638,20 @@ import LeekImage from '../leek-image.vue'
 			}
 		}
 		th {
-			background: white;
+			background: var(--pure-white);
 			font-size: 17px;
 			font-weight: bold;
 		}
 		td {
-			background: #f8f8f8;
+			background: var(--pure-white);
 		}
 		td, th {
 			vertical-align: top;
 			padding: 4px 8px;
-			border: 1px solid #ccc;
+			border: 1px solid var(--border);
 		}
 		.key {
-			color: #555;
+			color: var(--text-color-secondary);
 			font-style: italic;
 		}
 		.value {
@@ -1657,7 +1660,7 @@ import LeekImage from '../leek-image.vue'
 		.delete {
 			padding: 0 20px;
 			cursor: pointer;
-			color: #555;
+			color: var(--text-color-secondary);
 		}
 	}
 	.weapons-wrapper {

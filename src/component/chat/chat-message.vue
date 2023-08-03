@@ -92,7 +92,6 @@
 		display: flex;
 		align-items: flex-start;
 		margin: 6px 8px;
-		color: #aaa;
 		gap: 8px;
 		&.me {
 			flex-direction: row-reverse;
@@ -110,7 +109,7 @@
 	.bubble {
 		padding: 3px 7px;
 		border-radius: 4px;
-		background: white;
+		background: var(--pure-white);
 		position: relative;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.1), 0px 1px 1px 0px rgba(0,0,0,0.07), 0px 1px 3px 0px rgba(0,0,0,0.06);
 		min-width: 0;
@@ -120,7 +119,6 @@
 		}
 		.text {
 			word-break: break-word;
-			color: #333;
 		}
 		.text.large-emojis, &.large .text.large-emojis {
 			line-height: 26px;
@@ -153,7 +151,7 @@
 		display: block;
 		padding-bottom: 2px;
 		padding-right: 60px;
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	.right {
 		font-size: 13px;
@@ -161,6 +159,7 @@
 		top: 3px;
 		right: 0;
 		.time {
+			color: var(--text-color-secondary);
 			padding-right: 4px;
 		}
 		.v-btn {
@@ -176,8 +175,7 @@
 		}
 	}
 	.add {
-		color: #000;
-		background: white;
+		background: var(--pure-white);
 		padding: 2px 6px;
 		cursor: pointer;
 		border-radius: 10px;
@@ -208,12 +206,12 @@
 			}
 		}
 		.reaction {
-			background: white;
+			background: var(--pure-white);
 			box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.1), 0px 1px 1px 0px rgba(0,0,0,0.07), 0px 1px 3px 0px rgba(0,0,0,0.06);
 			border-radius: 4px;
 			padding: 2.5px 5px;
-			border: 1px solid #ccc;
-			color: #444;
+			border: 1px solid var(--border);
+			color: var(--text-color-secondary);
 			font-weight: 500;
 			user-select: none;
 			font-size: 18px;
@@ -225,7 +223,7 @@
 				margin-left: 4px;
 			}
 			&.me {
-				border: 1px solid #555;
+				border: 1px solid var(--text-color-secondary);
 			}
 		}
 	}

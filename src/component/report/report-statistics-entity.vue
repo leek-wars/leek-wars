@@ -24,14 +24,14 @@
 
 <style lang="scss" scoped>
 	td {
-		border: 1px solid #ddd;
+		border: 1px solid var(--border);
 		text-align: center;
 		padding: 4px;
 		font-size: 14px;
 	}
 	.best {
 		font-weight: bold;
-		background: white;
+		background: var(--background-header);
 	}
 	.name {
 		text-align: left;

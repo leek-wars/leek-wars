@@ -54,7 +54,7 @@
 	.level {
 		font-size: 15px;
 		padding-top: 3px;
-		color: #555;
+		color: var(--text-color-secondary);
 		font-weight: 500;
 		display: flex;
 		align-items: flex-start;

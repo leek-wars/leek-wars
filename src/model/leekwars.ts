@@ -505,6 +505,7 @@ const LeekWars = {
 			document.msExitFullscreen()
 		}
 	},
+	darkMode: localStorage.getItem('dark') === 'true' || !!window.matchMedia('(prefers-color-scheme: dark)'),
 	sfw: false,
 	sfwTitle: "#3735931646 Documentation index",
 	sfwInit() {

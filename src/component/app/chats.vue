@@ -67,7 +67,7 @@
 	}
 	.window {
 		width: 300px;
-		background: #f2f2f2;
+		background: var(--background);
 		margin-right: 15px;
 		border-top-left-radius: 7px;
 		border-top-right-radius: 7px;

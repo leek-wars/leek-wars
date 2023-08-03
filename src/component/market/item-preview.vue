@@ -192,7 +192,7 @@ export default class ItemPreview extends Vue {
 	border-radius: 0;
 	padding: 1.5px;
 	&.difficulty-0 {
-		background: #f2f2f2;
+		background: var(--background-secondary);
 	}
 }
 .rarity-wrapper {

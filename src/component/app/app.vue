@@ -1,141 +1,143 @@
 <template>
-	<div id="app" :class="{ connected: $store.state.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw, 'menu-collapsed': !LeekWars.mobile && LeekWars.menuCollapsed, beta: env.BETA, lightbar: LeekWars.lightBar }" data-app="true" @mousemove="mousemove">
-		<div class="v-application--wrap">
-			<div :class="{visible: LeekWars.dark > 0}" :style="{opacity: LeekWars.dark}" class="dark" @click="darkClick"></div>
+	<div id="app" :class="{ connected: $store.state.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw, dark: LeekWars.darkMode, 'menu-collapsed': !LeekWars.mobile && LeekWars.menuCollapsed, beta: env.BETA, lightbar: LeekWars.lightBar }" data-app="true" @mousemove="mousemove">
+		<v-theme-provider root>
+			<div class="v-application--wrap">
+				<div :class="{visible: LeekWars.dark > 0}" :style="{opacity: LeekWars.dark}" class="dark-shadow" @click="darkClick"></div>
 
-			<div class="requests">{{ LeekWars.requests }} <v-btn x-small @click="LeekWars.requests = 0">reset</v-btn></div>
+				<div class="requests">{{ LeekWars.requests }} <v-btn x-small @click="LeekWars.requests = 0">reset</v-btn></div>
 
-			<lw-menu v-if="$store.state.connected" />
+				<lw-menu v-if="$store.state.connected" />
 
-			<!-- <div class="console-button" @click="leekscriptConsole">
-				<img src="/image/console.png">
-			</div> -->
-			<div v-if="console" :style="{top: consoleY + 'px', left: consoleX + 'px'}" class="console v-dialog draggable">
-				<div class="title" @mousedown="consoleMouseDown">
-					Console LeekScript V2
-					<div class="spacer"></div>
-					<div class="options">
-						<div class="option" @click="consoleRandom"><img src="/image/icon/dice.png"></div>
-						<div class="option" @click="consolePopup"><v-icon>mdi-open-in-new</v-icon></div>
-						<div class="option" @click="consoleClose"><v-icon>mdi-close</v-icon></div>
+				<!-- <div class="console-button" @click="leekscriptConsole">
+					<img src="/image/console.png">
+				</div> -->
+				<div v-if="console" :style="{top: consoleY + 'px', left: consoleX + 'px'}" class="console v-dialog draggable">
+					<div class="title" @mousedown="consoleMouseDown">
+						Console LeekScript V2
+						<div class="spacer"></div>
+						<div class="options">
+							<div class="option" @click="consoleRandom"><img src="/image/icon/dice.png"></div>
+							<div class="option" @click="consolePopup"><v-icon>mdi-open-in-new</v-icon></div>
+							<div class="option" @click="consoleClose"><v-icon>mdi-close</v-icon></div>
+						</div>
+					</div>
+					<console ref="console" />
+				</div>
+
+				<lw-bar v-if="LeekWars.mobile" />
+
+				<div class="app-center">
+					<div :class="{large: LeekWars.large || LeekWars.flex, flex: LeekWars.flex, box: LeekWars.box}" class="app-wrapper">
+						<lw-header v-if="!LeekWars.mobile || !$store.state.connected" />
+						<div class="page-wrapper">
+							<router-view />
+						</div>
+						<lw-footer v-if="LeekWars.footer" />
 					</div>
 				</div>
-				<console ref="console" />
-			</div>
 
-			<lw-bar v-if="LeekWars.mobile" />
-
-			<div class="app-center">
-				<div :class="{large: LeekWars.large || LeekWars.flex, flex: LeekWars.flex, box: LeekWars.box}" class="app-wrapper">
-					<lw-header v-if="!LeekWars.mobile || !$store.state.connected" />
-					<div class="page-wrapper">
-						<router-view />
-					</div>
-					<lw-footer v-if="LeekWars.footer" />
-				</div>
-			</div>
-
-			<div v-if="!LeekWars.mobile" class="big-leeks" :class="{flex: LeekWars.flex || LeekWars.large, hidden: LeekWars.didactitial}">
-				<div class="wrapper">
-					<img class="big-leek-1" :src="LeekWars.leekTheme ? '/image/big_leek_1_white.webp' : '/image/big_leek_1.webp'">
-					<img class="big-leek-2" :src="LeekWars.leekTheme ? '/image/big_leek_2_white.webp' : '/image/big_leek_2.webp'">
-				</div>
-			</div>
-
-			<lw-social v-if="$store.state.connected" />
-
-			<chats v-if="!LeekWars.mobile && $store.state.connected" />
-			<squares v-if="$store.state.connected" />
-			<mobile-br v-if="LeekWars.mobile && $store.state.connected" />
-
-			<div class="toasts"></div>
-
-			<div v-if="$store.state.farmer && !$store.state.farmer.verified" class="finish-register">
-				<div class="message">
-					<v-icon>mdi-account-plus</v-icon>
-					{{ $t('main.verify_message') }} <router-link class="green-link" to="/settings">{{ $t('main.verify_info') }}</router-link>
-				</div>
-			</div>
-
-			<img v-if="LeekWars.clover" :style="{top: LeekWars.cloverTop + 'px', left: LeekWars.cloverLeft + 'px'}" class="clover" src="/image/clover.png" @click="clickClover">
-
-			<!-- <didactitiel v-if="didactitiel_enabled" v-model="didactitiel" /> -->
-
-			<didactitiel-new v-if="LeekWars.didactitial" />
-
-			<changelog-dialog v-model="changelogDialog" :changelog="changelog" />
-
-			<popup v-model="LeekWars.messagePopup" :width="500">
-				<template slot="title">
-					<v-icon>mdi-information-outline</v-icon>
-					{{ LeekWars.message ? $i18n.t(LeekWars.message.title) : '...' }}
-				</template>
-				<div v-if="LeekWars.message" v-html="$i18n.t(LeekWars.message.message, LeekWars.message.arguments)"></div>
-			</popup>
-
-			<!-- <popup v-model="annonce" :width="800">
-				<template slot="title"><v-icon>mdi-bullhorn-outline</v-icon> Annonce !</template>
-				<div class="annonce">
-					<h2>Lancement de la boutique Leek Wars</h2>
-					<div class="annonce-message">
-						<br>
-						<a href="https://leek-wars.myspreadshop.fr/"><img src="/image/shop/shop.webp" width="100%"></a>
-						<br>
-						<br>
-						Lien de la boutique : <v-btn>
-							<a href="https://leek-wars.myspreadshop.fr/">https://leek-wars.myspreadshop.fr</a>
-						</v-btn>
-						<br><br>
-						Sujet forum : <v-btn>
-							<router-link to="/forum/category-6/topic-10939">https://leekwars.com/forum/category-6/topic-10939</router-link>
-						</v-btn>
+				<div v-if="!LeekWars.mobile" class="big-leeks" :class="{flex: LeekWars.flex || LeekWars.large, hidden: LeekWars.didactitial}">
+					<div class="wrapper">
+						<img class="big-leek-1" :src="LeekWars.leekTheme ? '/image/big_leek_1_white.webp' : '/image/big_leek_1.webp'">
+						<img class="big-leek-2" :src="LeekWars.leekTheme ? '/image/big_leek_2_white.webp' : '/image/big_leek_2.webp'">
 					</div>
 				</div>
-			</popup> -->
 
-			<!--
-			<popup v-model="annonce" :width="500">
-				<template slot="title"><v-icon>mdi-bullhorn-outline</v-icon> Annonce de concours !</template>
-				<div class="annonce">
-					<h2>Reverse-Engineering : LW101</h2>
-					<h4>Examen pratique</h4>
-					<br>
-					Organisé par <rich-tooltip-farmer :id="50023" v-slot="{ on }" :bottom="true">
-						<avatar :farmer="{id: 50023, avatar_changed: 12}" />
-						<b v-on="on">Oimat</b>
-					</rich-tooltip-farmer>
-					<div class="annonce-message">
-						<br>
-						Zplop les poireaux ! <s>Et les bulbes.</s>
-						<br>
-						<br>
-						Votre très cher Animacteur vous propose le premier concours officiel LeekWars !!
-						<br>
-						<br>
-						<i>La foule est en délire, les poireaux du monde entier se regroupent en masse devant la LeekWars Arena pour assister à ce spectacle épatant ! Et c'est normal, car cette mise à mort végan aura, pour la première fois, des subventions du poireau à la plus grande pilowsité au monde !</i>
-						<br>
-						<br>
-						Ce concours est ouvert aux nouveaux comme aux vétérans. L'avancée de vos IAs ne jouera pas dans le classement ! Il s'agira de découvrir ce que MOI, votre cher Animacteur, a mis dans mon IA. <i>D'où le titre Reverse-Engineering, logique.</i>
-						<br>
-						<br>
-						Ce concours s'effectuera en plusieurs manches, dont la première commence <b>dès aujourd'hui</b>, et finira au <b>nouvel an</b>.
-						Les prix seront répartis comme suit : <b>300</b> cristaux pour le premier, <b>200</b> cristaux pour le second, <b>100</b> cristaux pour le troisième.
-						<br>
-						<br>
-						Pour plus d'informations, rendez-vous sur le topic !
-						<br>
-						<br>
-						<v-btn>
-							<router-link to="/forum/category-5/topic-10033">https://leekwars.com/forum/category-5/topic-10033</router-link>
-						</v-btn>
+				<lw-social v-if="$store.state.connected" />
+
+				<chats v-if="!LeekWars.mobile && $store.state.connected" />
+				<squares v-if="$store.state.connected" />
+				<mobile-br v-if="LeekWars.mobile && $store.state.connected" />
+
+				<div class="toasts"></div>
+
+				<div v-if="$store.state.farmer && !$store.state.farmer.verified" class="finish-register">
+					<div class="message">
+						<v-icon>mdi-account-plus</v-icon>
+						{{ $t('main.verify_message') }} <router-link class="green-link" to="/settings">{{ $t('main.verify_info') }}</router-link>
 					</div>
 				</div>
-			</popup>
-			-->
-			<v-dialog v-if="docEverywhere" v-model="docEverywhereModel" content-class="doc" :max-width="1400">
-				<documentation ref="doc" :popup="true" />
-			</v-dialog>
-		</div>
+
+				<img v-if="LeekWars.clover" :style="{top: LeekWars.cloverTop + 'px', left: LeekWars.cloverLeft + 'px'}" class="clover" src="/image/clover.png" @click="clickClover">
+
+				<!-- <didactitiel v-if="didactitiel_enabled" v-model="didactitiel" /> -->
+
+				<didactitiel-new v-if="LeekWars.didactitial" />
+
+				<changelog-dialog v-model="changelogDialog" :changelog="changelog" />
+
+				<popup v-model="LeekWars.messagePopup" :width="500">
+					<template slot="title">
+						<v-icon>mdi-information-outline</v-icon>
+						{{ LeekWars.message ? $i18n.t(LeekWars.message.title) : '...' }}
+					</template>
+					<div v-if="LeekWars.message" v-html="$i18n.t(LeekWars.message.message, LeekWars.message.arguments)"></div>
+				</popup>
+
+				<!-- <popup v-model="annonce" :width="800">
+					<template slot="title"><v-icon>mdi-bullhorn-outline</v-icon> Annonce !</template>
+					<div class="annonce">
+						<h2>Lancement de la boutique Leek Wars</h2>
+						<div class="annonce-message">
+							<br>
+							<a href="https://leek-wars.myspreadshop.fr/"><img src="/image/shop/shop.webp" width="100%"></a>
+							<br>
+							<br>
+							Lien de la boutique : <v-btn>
+								<a href="https://leek-wars.myspreadshop.fr/">https://leek-wars.myspreadshop.fr</a>
+							</v-btn>
+							<br><br>
+							Sujet forum : <v-btn>
+								<router-link to="/forum/category-6/topic-10939">https://leekwars.com/forum/category-6/topic-10939</router-link>
+							</v-btn>
+						</div>
+					</div>
+				</popup> -->
+
+				<!--
+				<popup v-model="annonce" :width="500">
+					<template slot="title"><v-icon>mdi-bullhorn-outline</v-icon> Annonce de concours !</template>
+					<div class="annonce">
+						<h2>Reverse-Engineering : LW101</h2>
+						<h4>Examen pratique</h4>
+						<br>
+						Organisé par <rich-tooltip-farmer :id="50023" v-slot="{ on }" :bottom="true">
+							<avatar :farmer="{id: 50023, avatar_changed: 12}" />
+							<b v-on="on">Oimat</b>
+						</rich-tooltip-farmer>
+						<div class="annonce-message">
+							<br>
+							Zplop les poireaux ! <s>Et les bulbes.</s>
+							<br>
+							<br>
+							Votre très cher Animacteur vous propose le premier concours officiel LeekWars !!
+							<br>
+							<br>
+							<i>La foule est en délire, les poireaux du monde entier se regroupent en masse devant la LeekWars Arena pour assister à ce spectacle épatant ! Et c'est normal, car cette mise à mort végan aura, pour la première fois, des subventions du poireau à la plus grande pilowsité au monde !</i>
+							<br>
+							<br>
+							Ce concours est ouvert aux nouveaux comme aux vétérans. L'avancée de vos IAs ne jouera pas dans le classement ! Il s'agira de découvrir ce que MOI, votre cher Animacteur, a mis dans mon IA. <i>D'où le titre Reverse-Engineering, logique.</i>
+							<br>
+							<br>
+							Ce concours s'effectuera en plusieurs manches, dont la première commence <b>dès aujourd'hui</b>, et finira au <b>nouvel an</b>.
+							Les prix seront répartis comme suit : <b>300</b> cristaux pour le premier, <b>200</b> cristaux pour le second, <b>100</b> cristaux pour le troisième.
+							<br>
+							<br>
+							Pour plus d'informations, rendez-vous sur le topic !
+							<br>
+							<br>
+							<v-btn>
+								<router-link to="/forum/category-5/topic-10033">https://leekwars.com/forum/category-5/topic-10033</router-link>
+							</v-btn>
+						</div>
+					</div>
+				</popup>
+				-->
+				<v-dialog v-if="docEverywhere" v-model="docEverywhereModel" content-class="doc" :max-width="1400">
+					<documentation ref="doc" :popup="true" />
+				</v-dialog>
+			</div>
+		</v-theme-provider>
 	</div>
 </template>
 
@@ -154,7 +156,7 @@
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Component, Vue, Watch } from 'vue-property-decorator'
 	const ChangelogDialog = () => import('../changelog/changelog-dialog.vue')
 	const Didactitiel = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`)
 	const Documentation = () => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`)
@@ -182,6 +184,15 @@
 		mouseX = 0
 		mouseY = 0
 		cloverSpeed = 200
+
+		@Watch('LeekWars.darkMode', {immediate: true})
+		updateDarkMode() {
+			this.$vuetify.theme.dark = LeekWars.darkMode
+			if (LeekWars.darkMode)
+				document.body.classList.add('dark')
+			else
+				document.body.classList.remove('dark')
+		}
 
 		created() {
 			this.$root.$on('connected', () => {
@@ -497,6 +508,9 @@
 		background: rgba(255, 255, 255, 0.1);
 		padding: 12px;
 	}
+	body.dark .page-wrapper {
+		// background: rgba(0, 0, 0, 0.1);
+	}
 	#app.app .page-wrapper {
 		background: none;
 		padding: 0;
@@ -504,7 +518,7 @@
 	.page {
 		min-height: calc(100vh - 352px);
 	}
-	.dark {
+	.dark-shadow {
 		display: none;
 		position: fixed;
 		top: 0; bottom: 0;
@@ -514,10 +528,10 @@
 		z-index: 5;
 		transition: opacity ease 200ms;
 	}
-	#app.app .dark {
+	#app.app .dark-shadow {
 		top: 56px;
 	}
-	.dark.visible {
+	.dark-shadow.visible {
 		display: block;
 		opacity: 0.6;
 	}

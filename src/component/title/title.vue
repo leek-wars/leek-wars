@@ -68,7 +68,7 @@ img {
 .title {
 	font-weight: 500;
 	font-size: 16px;
-	color: #555;
+	color: var(--text-color-secondary);
 	display: flex;
 	align-items: center;
 	justify-content: center;

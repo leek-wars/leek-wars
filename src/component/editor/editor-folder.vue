@@ -86,7 +86,7 @@
 <style lang="scss" scoped>
 	.item {
 		cursor: pointer;
-		color: #333;
+		// color: var(--editor-text);
 		display: block;
 	}
 	.root {
@@ -125,12 +125,15 @@
 	.item.selected > .label:before {
 		color: white;
 	}
+	.v-icon {
+		color: var(--editor-text);
+	}
 	.triangle {
 		width: 0;
 		height: 0;
 		border-top: 5px solid transparent;
 		border-bottom: 5px solid transparent;
-		border-left: 6px solid #666;
+		border-left: 6px solid var(--editor-text);
 		display: inline-block;
 		margin-left: -5px;
 		margin-right: 5px;

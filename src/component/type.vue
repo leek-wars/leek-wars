@@ -27,7 +27,7 @@
 
 <style lang="scss" scoped>
 	.type {
-		color: #0000D0;
+		color: var(--type-color);
 		font-weight: bold;
 		font-family: monospace;
 	}

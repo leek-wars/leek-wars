@@ -106,25 +106,21 @@
 	h2 {
 		margin-bottom: 12px;
 		font-size: 17px;
-		color: #111;
 		font-family: monospace;
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
 	}
-	.content {
-		color: #444;
-	}
 	h4 {
 		font-weight: 500;
 		margin: 0;
-		color: #111;
 		margin-top: 10px;
 		margin-bottom: 8px;
 		font-size: 15px;
+		color: var(--text-color);
 	}
 	.argument {
-		color: #0000D0;
+		color: var(--type-color);
 		font-weight: bold;
 	}
 	.operations {

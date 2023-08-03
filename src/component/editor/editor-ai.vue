@@ -58,7 +58,7 @@ import { store } from '@/model/store'
 <style lang="scss" scoped>
 	.item {
 		cursor: pointer;
-		color: #333;
+		color: var(--editor-text);
 	}
 	.item.dragging {
 		opacity: 1;
@@ -77,9 +77,6 @@ import { store } from '@/model/store'
 	}
 	#app.app .item .label {
 		padding: 8px 10px;
-	}
-	.item .label:hover {
-		background: white;
 	}
 	.item.selected > .label {
 		background: #ddd;
@@ -109,7 +106,6 @@ import { store } from '@/model/store'
 	}
 	.count {
 		border-radius: 10px;
-		color: #333;
 		padding: 1px 6px;
 		font-size: 13px;
 		margin-left: 6px;
@@ -127,12 +123,13 @@ import { store } from '@/model/store'
 			border: 1px solid #0099ff;
 		}
 		&.leek {
-			color: #555;
-			border: 1px solid #555;
+			border: 1px solid var(--editor-text);
 			img {
-				opacity: 0.5;
 				height: 12px;
 			}
 		}
+	}
+	.theme-monokai .count.leek img {
+		filter: invert(1);
 	}
 </style>

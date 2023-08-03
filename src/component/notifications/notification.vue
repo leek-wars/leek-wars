@@ -71,7 +71,7 @@
 		}
 	}
 	.notification:hover {
-		background-color: white;
+		background-color: var(--pure-white);
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 		&.unread {
 			background-color: rgba(90, 194, 0, 0.25);
@@ -88,13 +88,13 @@
 	}
 	.result {
 		position: absolute;
-		background: white;
+		background: var(--pure-white);
 		height: 24px;
 		width: 24px;
 		border-radius: 50%;
 		text-align: center;
-		border-bottom: 2px solid #ccc;
-		border-right: 2px solid #ccc;
+		border-bottom: 2px solid var(--border);
+		border-right: 2px solid var(--border);
 		left: 2px;
 		top: 2px;
 	}
@@ -118,7 +118,7 @@
 		opacity: 0.5;
 	}
 	.message {
-		color: #555;
+		color: var(--text-color-secondary);
 		font-size: 12px;
 		margin-top: 5px;
 		text-overflow: ellipsis;
@@ -129,7 +129,7 @@
 		position: absolute;
 		bottom: 5px;
 		right: 0;
-		color: #555;
+		color: var(--text-color-secondary);
 		font-size: 12px;
 		padding: 0 8px;
 	}
@@ -141,8 +141,12 @@
 	.notification:not(.bigwin):not(.trophy) img.image {
 		opacity: 0.7;
 	}
+	body.dark .notification:not(.bigwin):not(.trophy) img.image {
+		filter: invert(1);
+		opacity: 0.9 !important;
+	}
 	.image.v-icon {
 		font-size: 32px;
-		color: #444;
+		color: var(--text-color);
 	}
 </style>

@@ -17,6 +17,6 @@
 
 <style scoped lang="scss">
 .leek-preview {
-	background: white;
+	background: var(--pure-white);
 }
 </style>

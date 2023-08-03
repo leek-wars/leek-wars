@@ -100,7 +100,7 @@
 
 <style lang="scss" scoped>
 	td {
-		border: 1px solid #ddd;
+		border: 1px solid var(--border);
 		text-align: center;
 		padding: 4px 8px;
 		white-space: nowrap;
@@ -127,11 +127,21 @@
 		flex: 1;
 		display: flex;
 		height: 14px;
-		background: #ddd;
+		background: var(--pure-white);
+		border: 1px solid var(--border);
+		border-radius: 7px;
 	}
 	.bar span {
-		height: 14px;
+		height: 12px;
 		vertical-align: top;
+		&:first-child {
+			border-top-left-radius: 7px;
+			border-bottom-left-radius: 7px;
+		}
+		&:last-child {
+			border-top-right-radius: 7px;
+			border-bottom-right-radius: 7px;
+		}
 	}
 	.gain {
 		width: 110px;
@@ -159,7 +169,7 @@
 		min-width: 100px;
 	}
 	.current_xp {
-		background-color: #bdbdbd;
+		background: var(--background-disabled);
 	}
 	.new_xp {
 		background-color: #5fad1b;

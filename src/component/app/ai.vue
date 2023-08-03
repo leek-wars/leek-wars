@@ -49,7 +49,6 @@
 		height: 135px;
 		position: relative;
 		word-wrap: break-word;
-		color: #555;
 		text-align: center;
 		&.blue {
 			background-image: url("../../../public/image/ai/ai_blue.png");
@@ -91,6 +90,7 @@
 			font-size: 13px;
 			margin-top: 5px;
 			font-weight: normal;
+			color: var(--text-color-secondary);
 		}
 		.version {
 			font-size: 10px;
@@ -98,13 +98,20 @@
 			padding: 1px 3px;
 			font-weight: 500;
 			position: absolute;
-			border: 1px solid #aaa;
-			color: #555;
+			border: 1px solid var(--border);
+			color: var(--text-color-secondary);
 			bottom: 10px;
 			right: 10px;
 		}
 		&.locked {
 			filter: brightness(85%);
+		}
+	}
+	body.dark .ai:not(.blue):not(.red):not(.green) {
+		background-image: url("../../../public/image/ai/ai_black.png");
+		&.black {
+			background-image: url("../../../public/image/ai/ai.png");
+			color: black;
 		}
 	}
 </style>

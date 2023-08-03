@@ -168,7 +168,6 @@
 	}
 	.server {
 		position: relative;
-		background: white;
 		padding: 10px;
 		text-align: center;
 		vertical-align: top;
@@ -180,9 +179,10 @@
 		left: 10px;
 		width: 15px;
 		height: 127px;
-		background: #eee;
+		background: var(--pure-white);
 		overflow: hidden;
-		border: 2px solid #eee;
+		border: 1px solid var(--border);
+		border-radius: 6px;
 	}
 	.server .load div {
 		height: 100%;
@@ -201,17 +201,15 @@
 		width: 16px;
 	}
 	.server .total-wrapper {
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	.threads {
 		text-align: left;
 		color: #555;
-		border-top: 3px solid #f2f2f2;
-		padding-top: 8px;
+		padding-top: 15px;
 		margin-top: 8px;
 	}
 	.server .thread {
-		color: #aaa;
 		font-size: 14px;
 		padding-bottom: 10px;
 		padding-left: 5px;
@@ -221,7 +219,7 @@
 		vertical-align: top;
 	}
 	.server .thread .th-name {
-		color: #666;
+		color: var(--text-color-secondary);
 		font-size: 14px;
 		margin-bottom: 4px;
 		text-overflow: ellipsis;
@@ -257,7 +255,7 @@
 			font-size: 13px;
 			margin-top: 2px;
 			a {
-				color: #777;
+				color: var(--text-color-secondary);
 			}
 		}
 	}
@@ -267,14 +265,13 @@
 	.empty {
 		padding: 20px;
 		text-align: center;
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	.task {
 		display: flex;
 		align-items: center;
 		margin: 2px 0;
 		height: 20px;
-		color: black;
 		gap: 5px;
 		flex-wrap: nowrap;
 		span {

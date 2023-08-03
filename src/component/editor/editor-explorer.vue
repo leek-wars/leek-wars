@@ -440,6 +440,9 @@
 .v-icon {
 	margin-right: 8px;
 }
+.v-icon.theme--dark {
+	color: #111;
+}
 .dialog-input {
 	width: 100%;
 	padding: 10px;

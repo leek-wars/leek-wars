@@ -127,12 +127,12 @@
 		position: relative;
 		display: flex;
 		color: #666;
-		a, h4, .item {
+		a, h4, .item, .v-icon {
 			color: #666;
 			transition: color 0.15s ease;
 			.v-icon {
 				font-size: 16px;
-				transition: none;
+				// transition: none;
 				vertical-align: top;
 			}
 		}
@@ -175,7 +175,7 @@
 		h4 {
 			color: #999;
 		}
-		.item {
+		.item, .v-icon {
 			color: #ccc;
 		}
 		a {

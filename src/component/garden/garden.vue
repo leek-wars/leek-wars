@@ -598,19 +598,16 @@
 			margin: 10px;
 			padding: 10px;
 			display: block;
-			border: 1px solid #ddd;
+			border: 1px solid var(--border);
 			border-radius: 2px;
-			h2 {
-				color: #555;
-			}
 			.player-count {
 				font-size: 20px;
-				color: #555;
+				color: var(--text-color-secondary);
 				padding: 2px;
 			}
 		}
 		.tab.router-link-active {
-			background: white;
+			background: var(--pure-white);
 			box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 		}
 		.tab:not(.enabled) {
@@ -626,7 +623,7 @@
 	}
 	.fights {
 		font-size: 20px;
-		color: #444;
+		color: var(--text-color-secondary);
 		margin-top: 8px;
 		img {
 			vertical-align: middle;
@@ -655,25 +652,24 @@
 		border-radius: 2px;
 		width: calc(20% - 2px);
 		min-width: 150px;
-		border: 1px solid rgba(0, 0, 0, 0.1);
+		border: 1px solid var(--border);
 	}
 	.leek, .composition, .composition-wrapper, .opponents .farmer {
 		cursor: pointer;
 	}
 	.leek:hover, .my-farmer, .composition-wrapper:hover, .opponents .farmer:hover {
-		background-color: white;
+		background-color: var(--pure-white);
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
 	a.my-leek:not(.router-link-active) {
 		opacity: 0.5;
 	}
 	a.my-leek.router-link-active, a.my-composition.router-link-active {
-		background-color: white;
+		background-color: var(--pure-white);
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
 	::v-deep .talent {
 		font-size: 22px;
-		color: #555;
 		font-weight: 300;
 		margin: 3px;
 	}
@@ -682,7 +678,7 @@
 		font-weight: bold;
 		margin-top: 15px;
 		margin-bottom: 5px;
-		color: #666;
+		color: var(--text-color-secondary);
 	}
 	a.my-leek.disabled {
 		opacity: 0.15;
@@ -695,20 +691,20 @@
 		padding: 15px 10px;
 		.title {
 			font-weight: bold;
-			color: #777;
+			color: var(--text-color-secondary);
 		}
 		.count {
 			font-size: 18px;
 			text-align: center;
 			padding: 6px 0;
-			color: #555;
+			color: var(--text-color-secondary);
 		}
 	}
 	.title {
 		font-size: 16px;
 		font-weight: bold;
 		text-transform: uppercase;
-		color: #555;
+		color: var(--text-color-secondary);
 		padding-bottom: 8px;
 		text-align: left;
 		.v-icon {
@@ -725,7 +721,7 @@
 	}
 	.desc {
 		padding-left: 6px;
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	input.seed {
 		margin-top: 4px;
@@ -736,7 +732,7 @@
 	}
 	.info {
 		padding: 10px;
-		color: #777;
+		color: var(--text-color-secondary);
 		.v-icon {
 			margin-bottom: 2px;
 		}

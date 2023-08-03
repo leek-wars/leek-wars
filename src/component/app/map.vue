@@ -77,11 +77,11 @@
 		vertical-align: top;
 		border: 1px solid transparent;
 		&.enabled {
-			background: white;
-			border: 1px solid #888;
+			background: var(--pure-white);
+			border: 1px solid var(--text-color-secondary);
 		}
 		&.obstacle {
-			background: #333;
+			background: var(--text-color);
 		}
 		&.t1.t2 {
 			background: rgb(200, 0, 255) !important;

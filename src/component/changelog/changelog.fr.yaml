@@ -2,7 +2,9 @@
   added:
     - Ajout d'une boutique pour acheter des produits dérivés Leek Wars.
     - Ajout d'une page Dev Blog pour regrouper tous les sujets d'annonce du forum (/dev-blog).
+    - "Ajout du mode sombre. #img_239_dark_mode"
   improved:
+    - Passage de PHP 7.4 à 8.2.
     - Meilleur affichage des éleveurs supprimés sur le forum (merci à CaptainTheDelta).
     - Amélioration de la traduction italienne, qui n'est plus en bêta (merci à Augustineduf et pakalatak).
     - La limite de taille de message passe de 1000 à 2000.

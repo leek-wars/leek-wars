@@ -298,10 +298,10 @@
 		font-family: monospace;
 	}
 	.module {
-		color: #0000D0;
+		color: var(--type-color);
 	}
 	.function {
-		color: #111;
+		color: var(--text-color);
 	}
 	.description {
 		padding: 0 !important;
@@ -313,7 +313,7 @@
 			margin-bottom: 0;
 		}
 		&.grey {
-			color: #777;
+			color: var(--text-color-secondary);
 			font-style: italic;
 		}
 	}
@@ -372,12 +372,11 @@
 		align-items: center;
 		gap: 8px;
 		font-weight: bold;
-		color: #222;
 		position: sticky;
 		top: 0;
 		padding: 10px 5px;
 		padding-left: 10px;
-		background: #f2f2f2;
+		background: var(--background-secondary);
 		cursor: pointer;
 	}
 	.items-list .item {
@@ -392,14 +391,6 @@
 		font-family: monospace;
 		&:last-child {
 			margin-bottom: 6px;
-		}
-		.argument {
-			color: #0000D0;
-			font-weight: 500;
-		}
-		.arrow {
-			font-size: 22px;
-			line-height: 14px;
 		}
 	}
 	.items-list .item:hover, .item.router-link-active {
@@ -502,7 +493,7 @@
 	h4 {
 		font-weight: 500;
 		margin: 0;
-		color: #111;
+		color: var(--text-color);
 		margin-top: 10px;
 		margin-bottom: 8px;
 		font-size: 15px;

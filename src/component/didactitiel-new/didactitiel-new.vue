@@ -46,7 +46,7 @@
 
 				<v-icon class="close" @click="close">mdi-close</v-icon>
 
-				<svg class="arrow" width="70" height="41" viewBox="0 0 18.617 10.965"><path d="M45.666 57.347h9.04l9.577 10.965z" style="fill:#fff;stroke-width:.306566" transform="translate(-45.666 -57.347)"/></svg>
+				<svg class="arrow" width="70" height="41" viewBox="0 0 18.617 10.965"><path d="M45.666 57.347h9.04l9.577 10.965z" style="fill: var(--pure-white); stroke-width:.306566" transform="translate(-45.666 -57.347)"/></svg>
 			</div>
 
 			<leek-image class="leek" :leek="{ level: 10, face: 1 }" :scale="2" :invert="true" />
@@ -105,7 +105,7 @@
 	padding: 5px;
 }
 .bubble {
-	background: white;
+	background: var(--pure-white);
 	padding: 20px 30px;
 	border-radius: 7px;
 	position: relative;
@@ -159,7 +159,7 @@
 	right: -55px;
 	top: 8px;
 	font-size: 30px;
-	background: white;
+	background: var(--pure-white);
 	border-radius: 50%;
 	padding: 5px;
 	box-shadow: rgba(0, 0, 0, 0.4) 0px 5px 15px;

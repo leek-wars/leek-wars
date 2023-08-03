@@ -218,7 +218,7 @@
 		}
 	}
 	.dialog {
-		background: #f2f2f2;
+		background: var(--background);
 		min-width: min(400px, 100vw);
 	}
 	.dialog-items {
@@ -232,6 +232,6 @@
 		color: #777;
 	}
 	.see-all:hover {
-		background: white;
+		background: var(--pure-white);
 	}
 </style>

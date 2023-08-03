@@ -286,7 +286,6 @@
 		font-weight: 500;
 		margin-bottom: 10px;
 		font-size: 22px;
-		color: #111;
 	}
 	h2:before, h2:after {
 		height: 5px;
@@ -296,11 +295,11 @@
 		content: "";
 	}
 	h2:before {
-		background: linear-gradient(to left, #777, rgba(0,0,0,0));
+		background: linear-gradient(to left, var(--text-color), rgba(0,0,0,0));
 		margin-right: 10px;
 	}
 	h2:after {
-		background: linear-gradient(to right, #777, rgba(0,0,0,0));
+		background: linear-gradient(to right, var(--text-color), rgba(0,0,0,0));
 		margin-left: 10px;
 	}
 	#app.app h2 {
@@ -326,7 +325,6 @@
 		display: inline-block;
 		padding: 6px 10px;
 		margin: 7px;
-		background: white;
 		min-width: 128px;
 		.label {
 			margin-bottom: 4px;
@@ -351,7 +349,7 @@
 		.value {
 			font-size: 20px;
 			display: block;
-			color: #777;
+			color: var(--text-color-secondary);
 			text-align: right;
 			&.today {
 				color: #00c0e5;
@@ -373,7 +371,7 @@
 		margin: 5px;
 	}
 	.statistic.private {
-		background: #eee;
+		background: var(--background-secondary);
 	}
 	.statistic.show_today {
 		cursor: pointer;

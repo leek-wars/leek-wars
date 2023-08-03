@@ -341,8 +341,7 @@
 		padding: 0;
 	}
 	.router-link-active {
-		background: #ccc;
-		color: black;
+		background: var(--background-header);
 	}
 	.chats {
 		padding: 10px 0;
@@ -387,8 +386,7 @@
 			display: inline-flex;
 		}
 		&:hover {
-			background: white;
-			color: black;
+			background: var(--pure-white);
 			cursor: pointer;
 			.bell {
 				display: inline-flex;

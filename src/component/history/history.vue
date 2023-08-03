@@ -194,26 +194,24 @@
 	.period {
 		display: inline-block;
 		padding: 10px;
-		background: white;
 		cursor: pointer;
 		font-size: 16px;
-		color: #555;
 		width: 150px;
 		text-align: center;
 		margin: 2px;
 	}
 	.period:hover {
-		background: #eee;
+		background: var(--background-header);
 	}
 	.period.selected {
-		background: #eee;
+		background: var(--background-header);
 		font-weight: bold;
 	}
 	.n-fights {
 		padding-left: 10px;
 		font-size: 18px;
 		font-weight: bold;
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	.stats {
 		display: inline-block;
@@ -231,10 +229,10 @@
 		margin-left: 5px;
 		margin-top: 6px;
 		vertical-align: top;
-		color: #888;
+		color: var(--text-color-secondary);
 	}
 	.stats tr > td:nth-child(n+2) {
-		border-left: 2px solid #ddd;
+		border-left: 2px solid var(--border);
 	}
 	.stats td {
 		padding: 0px 15px;
@@ -242,13 +240,13 @@
 	.stats .big {
 		font-size: 22px;
 		font-weight: 300;
-		color: #555;
+		color: var(--text-color-secondary);
 	}
 	.history {
 		text-align: center;
 	}
 	.grey {
-		color: #aaa;
+		color: var(--text-color-secondary);
 	}
 	.category {
 		vertical-align: top;

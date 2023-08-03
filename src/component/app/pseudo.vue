@@ -20,17 +20,17 @@
 
 <style lang="scss" scoped>
 	.pseudo {
-		color: black;
+		color: var(--text-color);
 		font-weight: 500;
 		cursor: pointer;
 		border-radius: 5px;
 		padding: 0 2px;
-		background: #eee;
+		background: var(--background);
 		&:before {
 			content: "@";
 		}
 		&:hover {
-			background: #ddd;
+			background: var(--pure-white);
 		}
 		&.me {
 			color: rgb(0, 121, 243);

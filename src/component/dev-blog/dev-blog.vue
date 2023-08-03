@@ -85,7 +85,7 @@
 			margin-bottom: 10px;
 		}
 		.subtitle {
-			color: #555;
+			color: var(--text-color-secondary);
 		}
 		.date {
 			font-weight: 500;
@@ -105,7 +105,7 @@
 			opacity: 0.3;
 		}
 		.vote.zero {
-			color: #555;
+			color: var(--text-color-secondary);
 		}
 	}
 }

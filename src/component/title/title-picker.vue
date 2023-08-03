@@ -3,7 +3,7 @@
 		<lw-title v-if="noun" class="preview" :title="[icon, noun, gender, adjective]" />
 		<div class="selection">
 			<div class="select-icon select">
-				<v-select v-model="icon" :items="icons" item-value="id" hide-details dense solo light>
+				<v-select v-model="icon" :items="icons" item-value="id" hide-details dense solo>
 					<template v-slot:selection>
 						<img v-if="icon" slot="prepend" :src="'/image/trophy/' + TROPHIES[icon - 1].code + '.svg'">
 					</template>

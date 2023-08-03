@@ -1110,7 +1110,7 @@
 			margin-bottom: 15px;
 		}
 		tr > td:nth-child(n+2) {
-			border-left: 2px solid #ddd;
+			border-left: 2px solid var(--border);
 		}
 		td {
 			padding: 0 17px;
@@ -1119,7 +1119,7 @@
 		.big {
 			font-size: 22px;
 			font-weight: 300;
-			color: #555;
+			color: var(--text-color-secondary);
 		}
 		.grey {
 			color: #999;
@@ -1183,7 +1183,7 @@
 		}
 		.level {
 			font-size: 17px;
-			color: #555;
+			color: var(--text-color-secondary);
 			font-weight: 500;
 		}
 		img {
@@ -1191,7 +1191,7 @@
 		}
 	}
 	.leek:hover {
-		background: white;
+		background: var(--pure-white);
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
 	.trophies-mode-button {
@@ -1346,8 +1346,8 @@
 			width: 100%;
 			height: 12px;
 			margin-top: 5px;
-			background: white;
-			border: 1px solid #ddd;
+			background: var(--pure-white);
+			border: 1px solid var(--border);
 			position: relative;
 			border-radius: 5px;
 			text-align: left;

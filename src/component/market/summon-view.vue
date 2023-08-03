@@ -52,7 +52,7 @@ export default class SummonView extends Vue {
 
 <style lang="scss" scoped>
 	.summon {
-		background: #f2f2f2;
+		background: var(--background-secondary);
 		display: block;
 	}
 	.characteristics {
@@ -71,8 +71,6 @@ export default class SummonView extends Vue {
 	}
 	.summon-image {
 		flex: 1 0 90px;
-		// margin-right: 10px;
-		// margin-left: 10px;
 		text-align: center;
 		max-height: 120px;
 	}

@@ -163,21 +163,20 @@
 	.report {
 		width: 100%;
 		margin-bottom: 10px;
-		background: #f8f8f8;
+		background: var(--pure-white);
 	}
 	th {
-		border: 1px solid #ddd;
+		border: 1px solid var(--border);
 		padding: 8px;
-		background: white;
+		background: var(--background-header);
 		font-weight: normal;
-		color: #777;
 	}
 	.total {
-		color: #888;
+		color: var(--text-color-secondary);
 		font-style: italic;
 	}
 	td {
-		border: 1px solid #ddd;
+		border: 1px solid var(--border);
 		text-align: center;
 		padding: 4px 8px;
 		white-space: nowrap;
@@ -198,21 +197,32 @@
 		min-width: 180px;
 	}
 	.current_xp {
-		background-color: #bdbdbd;
+		background: var(--background-disabled);
 	}
 	.bar {
 		width: 70%;
 		height: 14px;
 		display: inline-block;
-		background: #ddd;
 		margin-right: 10px;
 		margin-bottom: 3px;
 		vertical-align: bottom;
+		background: var(--pure-white);
+		border: 1px solid var(--border);
+		border-radius: 7px;
 	}
 	.bar span {
-		height: 14px;
+		height: 12px;
 		display: inline-block;
 		vertical-align: top;
+		border-radius: 7px;
+		&:first-child {
+			border-top-left-radius: 7px;
+			border-bottom-left-radius: 7px;
+		}
+		&:last-child {
+			border-top-right-radius: 7px;
+			border-bottom-right-radius: 7px;
+		}
 	}
 	.new_xp.team {
 		background-color: #00aaa8;
@@ -232,7 +242,7 @@
 	}
 	.flag {
 		display: inline-block;
-		background: white;
+		background: var(--pure-white);
 		border-radius: 50%;
 		padding: 7px;
 		margin-bottom: 8px;

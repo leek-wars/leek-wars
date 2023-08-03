@@ -119,13 +119,13 @@ import(/* webpackChunkName: "changelog-[request]" */ `json-loader!yaml-loader!@/
 	.wrapper {
 		max-width: 820px;
 		margin: 0 auto;
-		background: #f2f2f2;
+		background: var(--background);
 		padding: 15px;
 	}
 	h4 {
 		margin-bottom: 10px;
 		text-transform: uppercase;
-		color: #000;
+		color: var(--text-color);
 		font-size: 19px;
 	}
 	h4:not(.first) {
