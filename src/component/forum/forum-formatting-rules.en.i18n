@@ -1,6 +1,8 @@
 {
 	"source_code": "Source code",
 	"source_code_ex": "my source code",
+	"image": "Image",
+	"image_ex": "url",
 	"big_title": "Main title",
 	"big_title_ex": "Main title",
 	"sub_title": "Sub-title",
