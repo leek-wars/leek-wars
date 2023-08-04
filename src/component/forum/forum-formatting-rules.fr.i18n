@@ -1,6 +1,8 @@
 {
 	"source_code": "Code source",
 	"source_code_ex": "mon code source",
+	"image": "Image",
+	"image_ex": "url",
 	"big_title": "Grand titre",
 	"big_title_ex": "Titre principal",
 	"sub_title": "Sous-titre",
