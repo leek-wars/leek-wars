@@ -2,7 +2,7 @@
 	<div class="formating">
 		<h4>Formatage</h4>
 		<span class="rule">{{ $t('source_code') }} ➤ </span> <span class="example"><b>```</b>{{ $t('source_code_ex') }}<b>```</b></span> <br>
-		<span class="rule">{{ $t('image') }} ➤ </span> <span class="example"><b>&lt;img src=&#39;</b>{{ $t('image_ex') }}<b>&gt;&#39;</b></span> <br>
+		<span class="rule">{{ $t('image') }} ➤ </span> <span class="example"><b>&lt;img src=&#39;</b>{{ $t('image_ex') }}<b>&#39;&gt;</b></span> <br>
 		<span class="rule">{{ $t('big_title') }} ➤ </span> <span class="example"><b>#</b> {{ $t('big_title_ex') }}</span> <br>
 		<span class="rule">{{ $t('sub_title') }} ➤ </span> <span class="example"><b>##</b> {{ $t('sub_title_ex') }}</span> <br>
 		<span class="rule">{{ $t('sub_sub_title') }} ➤ </span> <span class="example"><b>###</b> {{ $t('sub_sub_title_ex') }}</span> <br>
