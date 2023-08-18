@@ -215,7 +215,7 @@ class FileSystem {
 		folder.items.splice(folder.items.findIndex((i) => !i.folder && (i as AIItem).ai === ai), 1)
 		Vue.delete(this.ais, '' + ai.id)
 		Vue.delete(this.aiByFullPath, ai.path)
-		LeekWars.delete('ai/destroy', {ai: ai.id}).error(error => LeekWars.toast(error))
+		LeekWars.delete('ai/destroy', {ai_id: ai.id}).error(error => LeekWars.toast(error))
 	}
 
 	public emptyBin() {
@@ -236,7 +236,7 @@ class FileSystem {
 		Vue.set(this.ais, '' + ai.id, ai)
 		Vue.set(this.aiByFullPath, ai.path, ai)
 		this.rootFolder.items.push(...item)
-		LeekWars.post('ai/restore', {ai: ai.id}).error(error => LeekWars.toast(error))
+		LeekWars.post('ai/restore', {ai_id: ai.id}).error(error => LeekWars.toast(error))
 	}
 
 	public deleteFolder(folder: Folder) {
