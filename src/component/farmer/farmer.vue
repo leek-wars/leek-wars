@@ -482,7 +482,7 @@
 			{{ $t('godfather_link_description') }} :
 			<br>
 			<br>
-			<div ref="godfatherLink" class="godfather-url">leekwars.com/godfather/{{ farmer.name }}</div>
+			<div ref="godfatherLink" class="godfather-url">leekwars.com/godfather/{{ farmer.login }}</div>
 		</popup>
 
 		<popup v-if="farmer" v-model="countryDialog" :width="1000">
