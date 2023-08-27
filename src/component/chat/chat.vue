@@ -390,7 +390,7 @@
 
 		muteConfirm() {
 			if (!this.muteFarmer || !this.chat) { return }
-			LeekWars.post('message/mute', { farmer: this.muteFarmer.id, chat: this.chat.id, duration: 3600 })
+			LeekWars.post('message/mute', { target_id: this.muteFarmer.id, chat: this.chat.id, duration: 3600 })
 			this.muteFarmer.muted = true
 			this.muteDialog = false
 		}

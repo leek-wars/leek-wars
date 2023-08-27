@@ -255,7 +255,7 @@
 		archiveReporting() {
 			if (!this.selectedFault) { return }
 			const fault = this.selectedFault
-			LeekWars.post('moderation/archive', {target: fault.target.id, reason: fault.reason, parameter: fault.parameter}).then(data => {
+			LeekWars.post('moderation/archive', {target_id: fault.target.id, reason: fault.reason, parameter: fault.parameter}).then(data => {
 				LeekWars.toast(this.$t('reporting_deleted') as string)
 				this.faults!.splice(this.faults!.indexOf(fault), 1)
 				Vue.delete(this.faultsById, '' + fault.id)
@@ -267,7 +267,7 @@
 		sendWarning() {
 			if (!this.selectedFault) { return }
 			const fault = this.selectedFault
-			LeekWars.post('moderation/warn', {target: fault.target.id, reason: fault.reason, new_reason: this.finalReason, message: this.message, severity: this.severity, parameter: this.selectedFault.parameter}).then(data => {
+			LeekWars.post('moderation/warn', {target_id: fault.target.id, reason: fault.reason, new_reason: this.finalReason, message: this.message, severity: this.severity, parameter: this.selectedFault.parameter}).then(data => {
 				LeekWars.toast(i18n.t('moderation.warning_sent') as string)
 				this.faults!.splice(this.faults!.indexOf(fault), 1)
 				Vue.delete(this.faultsById, '' + fault.id)
