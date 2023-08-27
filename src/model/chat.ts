@@ -60,6 +60,7 @@ class Chat {
 		// console.log("chat add", message, this)
 		this.prepare(message)
 		this.messages.push(message)
+		Vue.set(message, 'subMessages', [])
 
 		if (!this.messages_by_day[message.day]) {
 			Vue.set(this.messages_by_day, message.day, [])
@@ -69,9 +70,6 @@ class Chat {
 		if (day_messages.length) {
 			const lastMessage = day_messages[day_messages.length - 1]
 			if (lastMessage.farmer.id === message.farmer.id && message.date - lastMessage.date < 120) {
-				if (!lastMessage.subMessages) {
-					Vue.set(lastMessage, 'subMessages', [])
-				}
 				lastMessage.subMessages.push(message)
 				return
 			}
@@ -122,7 +120,7 @@ class Chat {
 			for (let m = 0; m < messages.length; ++m) {
 				const message = messages[m]
 				if (message.id === messageID) {
-					if (message.subMessages && message.subMessages.length) {
+					if (message.subMessages.length) {
 						// Remonte le premier sous-message
 						const firstSubMessage = message.subMessages.shift()!
 						firstSubMessage.subMessages = message.subMessages
