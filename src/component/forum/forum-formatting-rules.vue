@@ -22,7 +22,7 @@
 
 <style lang="scss" scoped>
 	.formating {
-		color: #333;
+		color: var(--text-color-secondary);
 	}
 	.formating h4 {
 		margin-bottom: 4px;
