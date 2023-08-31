@@ -170,5 +170,6 @@
 	"error_62": "AI Anda tidak dapat dikompilasi dengan benar, administrator telah diberi tahu: {0}.",
 	"error_50": "Anggota \"{0}\" ini tidak ada dalam \"{1}\" dari tipe \"{2}\"",
 	"error_45": "Kolom \"{0}\" ini sudah ada",
-	"error_99": "Kesalahan tidak diketahui: {0}"
+	"error_99": "Kesalahan tidak diketahui: {0}",
+	"error_141": "Operator {0} tidak kompatibel dengan \"{1}\" dari tipe \"{2}\""
 }

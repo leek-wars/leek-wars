@@ -15,5 +15,7 @@
 	"underlined_ex": "sublinhado",
 	"striked": "Haste",
 	"striked_ex": "haste",
-	"basic_html": "HTML básico permitido"
+	"basic_html": "HTML básico permitido",
+	"image": "Imagem",
+	"image_ex": "url"
 }

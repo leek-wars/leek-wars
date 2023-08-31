@@ -15,5 +15,7 @@
 	"underlined_ex": "korostaa",
 	"striked": "Rod",
 	"striked_ex": "sauva",
-	"basic_html": "Perus-HTML sallittu"
+	"basic_html": "Perus-HTML sallittu",
+	"image": "Kuva",
+	"image_ex": "url"
 }

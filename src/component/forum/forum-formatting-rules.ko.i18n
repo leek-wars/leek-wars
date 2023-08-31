@@ -15,5 +15,7 @@
 	"underlined_ex": "밑줄",
 	"striked": "막대",
 	"striked_ex": "막대",
-	"basic_html": "기본 HTML 허용"
+	"basic_html": "기본 HTML 허용",
+	"image": "이미지",
+	"image_ex": "url"
 }

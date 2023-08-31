@@ -62,5 +62,6 @@
 	"verify_pro4": "크리스탈 구매",
 	"verify_pro5": "배틀 로얄",
 	"Vérifier": "계정 확인",
-	"allow_github": "GitHub를 통한 연결 허용"
+	"allow_github": "GitHub를 통한 연결 허용",
+	"activate_dark_mode": "다크 모드 활성화"
 }

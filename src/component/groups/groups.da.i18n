@@ -46,5 +46,6 @@
 	"question2": "Kan deltagernes niveau og udstyr fastsættes?",
 	"answer2": "Ja, det er muligt at tildele et niveau og udstyr til deltagerne og om nødvendigt låse det, så det forbliver det samme under hele arrangementet. Niveauet og udstyret kan ændres når som helst under arrangementet.",
 	"question3": "Kan deltagerne deles op i hold?",
-	"answer3": "Det er ikke obligatorisk, men det er muligt at oprette hold og tildele deltagere til dem. Gruppelederen kan derefter starte holdturneringer."
+	"answer3": "Det er ikke obligatorisk, men det er muligt at oprette hold og tildele deltagere til dem. Gruppelederen kan derefter starte holdturneringer.",
+	"testimony_esiea": "Takket være Leek Wars-platformen har vi i de sidste to år arrangeret algoritmiske og programmeringsmæssige udfordringer over flere dage for vores elever. Det er særligt sjovt og engagerende, og hver gang er det en stor succes, og vi ser dem blive begejstrede, mens de udvikler deres færdigheder. Og for at gøre det hele endnu værre, så er det nemt for lærerne at sætte op. Sidst, men ikke mindst, giver selve spillets mekanik deltagerne mulighed for at udvikle sig gennem funktionerne og opmuntre dem til at... læse dokumentationen, og det virker! Ved at veksle mellem individuelle faser og holdfaser opfordres vores elever til at hjælpe hinanden uden at afsløre deres koder for hinanden, hvilket også styrker sammenholdet og vidensdelingen; en perfekt platform til vores brug."
 }

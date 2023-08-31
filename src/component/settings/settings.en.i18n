@@ -62,5 +62,6 @@
 	"error_login_format": "Username must only contain alphanumeric characters",
 	"error_login_length": "Username must contain between {0} and {1} characters",
 	"error_mail_already_used": "The email address is already used",
-	"Vérifier": "Verify Account"
+	"Vérifier": "Verify Account",
+	"activate_dark_mode": "Activate dark mode"
 }

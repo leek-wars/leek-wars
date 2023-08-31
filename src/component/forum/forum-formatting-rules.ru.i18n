@@ -15,5 +15,7 @@
 	"underlined_ex": "подчеркнуть",
 	"striked": "Стержень",
 	"striked_ex": "стержень",
-	"basic_html": "Разрешен базовый HTML"
+	"basic_html": "Разрешен базовый HTML",
+	"image": "Изображение",
+	"image_ex": "url"
 }

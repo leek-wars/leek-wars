@@ -15,5 +15,7 @@
 	"underlined_ex": "understrege",
 	"striked": "Stang",
 	"striked_ex": "stang",
-	"basic_html": "Grundlæggende HTML tilladt"
+	"basic_html": "Grundlæggende HTML tilladt",
+	"image": "Billede",
+	"image_ex": "url"
 }

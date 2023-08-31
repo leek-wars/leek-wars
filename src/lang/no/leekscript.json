@@ -170,5 +170,6 @@
 	"error_62": "AI-en din kunne ikke kompileres riktig, en administrator har blitt varslet: {0}.",
 	"error_50": "Dette medlemmet \"{0}\" finnes ikke i \"{1}\" av typen \"{2}\"",
 	"error_45": "Dette \"{0}\"-feltet finnes allerede",
-	"error_99": "Ukjent feil: {0}"
+	"error_99": "Ukjent feil: {0}",
+	"error_141": "Operatoren {0} er ikke kompatibel med \"{1}\" av typen \"{2}\""
 }

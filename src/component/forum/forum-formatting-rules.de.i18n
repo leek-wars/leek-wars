@@ -15,5 +15,7 @@
 	"underlined_ex": "unterstreichen",
 	"striked": "Stange",
 	"striked_ex": "stange",
-	"basic_html": "Einfaches HTML erlaubt"
+	"basic_html": "Einfaches HTML erlaubt",
+	"image": "Bild",
+	"image_ex": "url"
 }

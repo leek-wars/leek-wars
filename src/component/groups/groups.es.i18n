@@ -46,5 +46,6 @@
 	"question2": "¿Se puede fijar el nivel y el equipo de los participantes?",
 	"answer2": "Sí, es posible asignar un nivel y un equipo a los participantes y, si es necesario, bloquearlos para que sigan siendo los mismos durante todo el evento. El nivel y el equipo pueden cambiarse en cualquier momento durante el evento.",
 	"question3": "¿Se puede dividir a los participantes en equipos?",
-	"answer3": "Esto no es obligatorio, pero es posible crear equipos y asignarles participantes. A continuación, el supervisor del grupo puede lanzar torneos por equipos."
+	"answer3": "Esto no es obligatorio, pero es posible crear equipos y asignarles participantes. A continuación, el supervisor del grupo puede lanzar torneos por equipos.",
+	"testimony_esiea": "Gracias a la plataforma Leek Wars, desde hace 2 años organizamos retos algorítmicos y de programación durante varios días para nuestros alumnos. Particularmente divertido y atractivo, cada vez es un gran éxito y vemos cómo se entusiasman mientras desarrollan sus habilidades. Por si fuera poco, es especialmente fácil de preparar para los profesores. Por último, pero no por ello menos importante, la mecánica del propio juego permite a los participantes progresar a través de las funcionalidades, animándoles a... leer la documentación, ¡y funciona! Al alternar fases individuales y por equipos, se anima a nuestros alumnos a ayudarse mutuamente sin revelarse sus códigos, lo que también refuerza la cohesión y el intercambio de conocimientos; una plataforma perfecta para nuestro uso."
 }

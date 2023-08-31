@@ -15,5 +15,7 @@
 	"underlined_ex": "understrykning",
 	"striked": "Stav",
 	"striked_ex": "stav",
-	"basic_html": "Grundläggande HTML tillåten"
+	"basic_html": "Grundläggande HTML tillåten",
+	"image": "Bild",
+	"image_ex": "url"
 }

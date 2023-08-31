@@ -62,5 +62,6 @@
 	"verify_pro4": "Køb krystaller",
 	"verify_pro5": "Battle Royales",
 	"Vérifier": "Bekræft konto",
-	"allow_github": "Tillad forbindelse via GitHub"
+	"allow_github": "Tillad forbindelse via GitHub",
+	"activate_dark_mode": "Aktivér mørk tilstand"
 }

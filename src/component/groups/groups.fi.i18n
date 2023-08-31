@@ -46,5 +46,6 @@
 	"question2": "Voidaanko osallistujien taso ja varustus määrittää?",
 	"answer2": "Kyllä, osallistujille on mahdollista määrittää taso ja varusteet ja tarvittaessa lukita ne niin, että ne pysyvät samoina koko tapahtuman ajan. Tasoa ja varusteita voidaan muuttaa milloin tahansa tapahtuman aikana.",
 	"question3": "Voidaanko osallistujat jakaa joukkueisiin?",
-	"answer3": "Tämä ei ole pakollista, mutta on mahdollista luoda ryhmiä ja jakaa osallistujat niihin. Ryhmän valvoja voi sitten käynnistää joukkueturnaukset."
+	"answer3": "Tämä ei ole pakollista, mutta on mahdollista luoda ryhmiä ja jakaa osallistujat niihin. Ryhmän valvoja voi sitten käynnistää joukkueturnaukset.",
+	"testimony_esiea": "Leek Wars -alustan ansiosta olemme kahden viime vuoden ajan järjestäneet algoritmi- ja ohjelmointihaasteita oppilaillemme useiden päivien ajan. Se on erityisen hauskaa ja mukaansatempaavaa, ja joka kerta se on ollut suuri menestys, ja näemme oppilaiden innostuvan ja kehittävän samalla taitojaan. Kaiken kukkuraksi se on opettajille erityisen helppo järjestää. Viimeisenä mutta ei vähäisimpänä itse pelin mekaniikka antaa osallistujille mahdollisuuden edetä toiminnallisuuksien kautta, mikä kannustaa heitä... lukemaan dokumentaatiota, ja se toimii! Vuorottelemalla yksilö- ja tiimivaiheiden välillä oppilaitamme kannustetaan auttamaan toisiaan paljastamatta koodejaan toisilleen, mikä myös vahvistaa yhteenkuuluvuutta ja tiedon jakamista; täydellinen alusta meidän käyttöömme."
 }

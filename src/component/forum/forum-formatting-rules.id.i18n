@@ -15,5 +15,7 @@
 	"underlined_ex": "menggarisbawahi",
 	"striked": "Tongkat",
 	"striked_ex": "tongkat",
-	"basic_html": "HTML dasar diperbolehkan"
+	"basic_html": "HTML dasar diperbolehkan",
+	"image": "Gambar",
+	"image_ex": "url"
 }

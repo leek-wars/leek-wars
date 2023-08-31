@@ -15,5 +15,7 @@
 	"underlined_ex": "强调",
 	"striked": "杆",
 	"striked_ex": "杆",
-	"basic_html": "允许基本 HTML"
+	"basic_html": "允许基本 HTML",
+	"image": "图片",
+	"image_ex": "网址"
 }

@@ -46,5 +46,6 @@
 	"question2": "É possível definir o nível e o equipamento dos participantes?",
 	"answer2": "Sim, é possível atribuir um nível e um equipamento aos participantes e, se necessário, bloqueá-los para que permaneçam os mesmos durante todo o evento. O nível e o equipamento podem ser alterados em qualquer altura durante o evento.",
 	"question3": "Os participantes podem ser divididos em equipas?",
-	"answer3": "Isto não é obrigatório, mas é possível criar equipas e atribuir-lhes participantes. O supervisor do grupo pode então lançar torneios de equipas."
+	"answer3": "Isto não é obrigatório, mas é possível criar equipas e atribuir-lhes participantes. O supervisor do grupo pode então lançar torneios de equipas.",
+	"testimony_esiea": "Graças à plataforma Leek Wars, nos últimos dois anos temos vindo a organizar desafios de algoritmia e programação durante vários dias para os nossos alunos. Particularmente divertidos e cativantes, são sempre um grande sucesso e vemo-los entusiasmados enquanto desenvolvem as suas competências. Para piorar a situação, é particularmente fácil para os professores organizarem. Por último, mas não menos importante, a mecânica do próprio jogo permite que os participantes progridam através das funcionalidades, encorajando-os a... ler a documentação, e funciona! Ao alternar entre fases individuais e de equipa, os nossos alunos são encorajados a ajudarem-se mutuamente sem revelarem os seus códigos uns aos outros, o que também reforça a coesão e a partilha de conhecimentos; uma plataforma perfeita para a nossa utilização."
 }

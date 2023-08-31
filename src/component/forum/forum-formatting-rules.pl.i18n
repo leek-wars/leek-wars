@@ -15,5 +15,7 @@
 	"underlined_ex": "podkreślać",
 	"striked": "Pręt",
 	"striked_ex": "pręt",
-	"basic_html": "Dozwolony podstawowy kod HTML"
+	"basic_html": "Dozwolony podstawowy kod HTML",
+	"image": "Obraz",
+	"image_ex": "url"
 }

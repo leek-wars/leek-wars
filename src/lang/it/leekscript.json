@@ -170,5 +170,6 @@
 	"error_62": "L'IA non è stata compilata correttamente, un amministratore è stato avvisato: {0}.",
 	"error_50": "Questo membro \"{0}\" non esiste in \"{1}\" di tipo \"{2}\"",
 	"error_45": "Questo campo \"{0}\" esiste già",
-	"error_99": "Errore sconosciuto: {0}"
+	"error_99": "Errore sconosciuto: {0}",
+	"error_141": "L'operatore {0} è incompatibile con \"{1}\" di tipo \"{2}\""
 }

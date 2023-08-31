@@ -46,5 +46,6 @@
 	"question2": "Czy można ustalić poziom i wyposażenie uczestników?",
 	"answer2": "Tak, możliwe jest przypisanie poziomu i wyposażenia uczestnikom oraz, w razie potrzeby, zablokowanie ich, aby pozostały takie same przez cały czas trwania wydarzenia. Poziom i wyposażenie można zmienić w dowolnym momencie wydarzenia.",
 	"question3": "Czy uczestnicy mogą zostać podzieleni na zespoły?",
-	"answer3": "Nie jest to obowiązkowe, ale możliwe jest tworzenie zespołów i przydzielanie do nich uczestników. Opiekun grupy może następnie uruchomić turnieje drużynowe."
+	"answer3": "Nie jest to obowiązkowe, ale możliwe jest tworzenie zespołów i przydzielanie do nich uczestników. Opiekun grupy może następnie uruchomić turnieje drużynowe.",
+	"testimony_esiea": "Dzięki platformie Leek Wars od 2 lat organizujemy kilkudniowe wyzwania algorytmiczne i programistyczne dla naszych uczniów. Szczególnie zabawne i angażujące, za każdym razem są wielkim sukcesem i widzimy, jak są podekscytowani, rozwijając swoje umiejętności. Co gorsza, jest to szczególnie łatwe do skonfigurowania dla nauczycieli. Wreszcie, co nie mniej ważne, mechanika samej gry pozwala uczestnikom przechodzić przez kolejne funkcje, zachęcając ich do... czytania dokumentacji, i to działa! Dzięki naprzemiennym fazom indywidualnym i zespołowym nasi uczniowie są zachęcani do wzajemnej pomocy bez ujawniania sobie nawzajem swoich kodów, co również wzmacnia spójność i dzielenie się wiedzą; idealna platforma do naszego użytku."
 }

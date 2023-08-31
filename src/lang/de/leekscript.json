@@ -170,5 +170,6 @@
 	"error_62": "Ihre KI konnte nicht richtig kompiliert werden, ein Administrator wurde benachrichtigt: {0}.",
 	"error_50": "Dieses Mitglied \"{0}\" existiert nicht in \"{1}\" vom Typ \"{2}\"",
 	"error_45": "Dieses Feld \"{0}\" existiert bereits",
-	"error_99": "Unbekannter Fehler: {0}"
+	"error_99": "Unbekannter Fehler: {0}",
+	"error_141": "Der Operator {0} ist inkompatibel mit \"{1}\" vom Typ \"{2}\""
 }

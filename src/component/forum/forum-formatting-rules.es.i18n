@@ -15,5 +15,7 @@
 	"underlined_ex": "subrayar",
 	"striked": "Varilla",
 	"striked_ex": "varilla",
-	"basic_html": "HTML básico permitido"
+	"basic_html": "HTML básico permitido",
+	"image": "Imagen",
+	"image_ex": "url"
 }

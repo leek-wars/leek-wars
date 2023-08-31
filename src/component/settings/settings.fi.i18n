@@ -62,5 +62,6 @@
 	"verify_pro4": "Osta kristalleja",
 	"verify_pro5": "Battle Royales",
 	"Vérifier": "Vahvista tili",
-	"allow_github": "Salli yhteys GitHubin kautta"
+	"allow_github": "Salli yhteys GitHubin kautta",
+	"activate_dark_mode": "Aktivoi pimeä tila"
 }

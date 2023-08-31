@@ -15,5 +15,7 @@
 	"underlined_ex": "sottolineare",
 	"striked": "Asta",
 	"striked_ex": "asta",
-	"basic_html": "HTML di base consentito"
+	"basic_html": "HTML di base consentito",
+	"image": "Immagine",
+	"image_ex": "url"
 }

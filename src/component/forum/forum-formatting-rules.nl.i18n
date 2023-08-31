@@ -15,5 +15,7 @@
 	"underlined_ex": "onderstrepen",
 	"striked": "Hengel",
 	"striked_ex": "hengel",
-	"basic_html": "Eenvoudige HTML toegestaan"
+	"basic_html": "Eenvoudige HTML toegestaan",
+	"image": "Afbeelding",
+	"image_ex": "url"
 }

@@ -15,5 +15,7 @@
 	"underlined_ex": "下線",
 	"striked": "ロッド",
 	"striked_ex": "ロッド",
-	"basic_html": "基本的な HTML を許可"
+	"basic_html": "基本的な HTML を許可",
+	"image": "画像",
+	"image_ex": "url"
 }

@@ -46,5 +46,6 @@
 	"question2": "Is it possible to parameterize the level and equipment of participants?",
 	"answer2": "Yes, it's possible to assign a level and equipment to participants and, if necessary, lock it in place so that it remains the same throughout the event. The level and equipment can be changed at any time during the event.",
 	"question3": "Can we divide participants into teams?",
-	"answer3": "This is not compulsory, but it is possible to create teams and allocate participants to them. The group supervisor can then launch team tournaments."
+	"answer3": "This is not compulsory, but it is possible to create teams and allocate participants to them. The group supervisor can then launch team tournaments.",
+	"testimony_esiea": "Thanks to the Leek Wars platform, for the past 2 years we've been organizing algorithmic and programming challenges over several days for our students. Particularly fun and engaging, it's a great success every time, as we see them get excited while developing their skills. To make matters worse, it's particularly easy for teachers to set up. Last but not least, the mechanics of the game itself allow for a progression in the mastery of functionalities, encouraging participants to... read the documentation, and it works! By alternating individual and team phases, our students are encouraged to help each other without revealing their codes to each other, which also reinforces cohesion and knowledge sharing; a perfect platform for our use."
 }
