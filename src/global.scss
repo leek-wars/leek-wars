@@ -160,6 +160,9 @@ button {
 	background: var(--pure-white);
 	color: var(--text-color);
 }
+.v-btn:not(.v-btn--flat).theme--light.primary {
+	color: var(--pure-white);
+}
 .v-btn.error {
     background-color: #ca0000 !important;
     border-color: #ca0000 !important;

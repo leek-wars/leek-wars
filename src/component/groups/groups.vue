@@ -161,6 +161,16 @@
 			</div>
 
 			<div class="testimonies">
+
+				<div class="testimony">
+					<!-- <avatar :farmer="{id: -1, avatar_changed: 0}" /> -->
+					<div class="card small">
+						« {{ $t('testimony_esiea') }} »
+					</div>
+					<img src="/image/partner/esiea.png">
+				</div>
+
+				<div>
 				<div class="testimony">
 					<!-- <avatar :farmer="{id: -1, avatar_changed: 0}" /> -->
 					<div class="card">
@@ -168,6 +178,7 @@
 					</div>
 					<img src="/image/partner/n-hitec.png">
 				</div>
+				<br>
 
 				<div class="testimony">
 					<!-- <avatar :farmer="{id: -1, avatar_changed: 0}" /> -->
@@ -175,6 +186,7 @@
 						« {{ $t('testimony_norauto') }} »
 					</div>
 					<img src="/image/partner/norauto.png">
+				</div>
 				</div>
 			</div>
 
@@ -368,6 +380,7 @@ h2 {
 			width: 120px;
 			max-height: 60px;
 			object-fit: contain;
+    		object-position: right;
 		}
 		.card {
 			padding: 20px;
@@ -376,6 +389,9 @@ h2 {
 			font-style: italic;
 			color: var(--text-color-secondary);
 			text-align: justify;
+			// &.small {
+			// 	font-size: 14px;
+			// }
 		}
 	}
 }
