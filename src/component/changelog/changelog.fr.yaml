@@ -3,6 +3,7 @@
     - Ajout d'une boutique pour acheter des produits dérivés Leek Wars.
     - Ajout d'une page Dev Blog pour regrouper tous les sujets d'annonce du forum (/dev-blog).
     - "Ajout du mode sombre. #img_239_dark_mode"
+    - Rééquilibrage de nombreux items (merci au topic d'AppleTree).
   improved:
     - Passage de PHP 7.4 à 8.2.
     - Meilleur affichage des éleveurs supprimés sur le forum (merci à CaptainTheDelta).
@@ -10,12 +11,16 @@
     - La limite de taille de message passe de 1000 à 2000.
     - Amélioration du rafraichissement du compteur d'éleveur connectés.
     - Amélioration du typage de certaines fonctions dans la doc (merci à nytope).
+    - Le poison de brûlis est maintenant cumulable.
+    - Le footer s'affiche sur la page Aide en mode mobile.
   fixed:
     - Correction de l'affichage de 4 armes oubliées dans la timeline en combat (merci à fujiwar).
     - Correction du coût en opérations de certaines fonctions qui coutaîent 0.
     - Correction du champ de choix de la graine sur Firefox (merci à nytope).
     - Nombreuses corrections sur les types en LeekScript.
     - Correction du tri dans le classement par niveau.
+    - Les inclusions commentées ne sont plus comptées lors d'un téléchargement d'IA (merci à temakisushi).
+    - Correction d'une faute d'orthographe sur le rapport de combat (merci à nytope).
 
 238:
   title: Typage en LeekScript, Refonte des chapeaux + 4 nouveaux, 15 langues, Refonte du didactitiel.
