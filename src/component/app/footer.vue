@@ -1,5 +1,5 @@
 <template lang="html">
-	<footer class="footer">
+	<footer class="footer" :class="{help: $route.path === '/help'}">
 		<div class="column">
 			<h4 class="version">Leek Wars {{ LeekWars.smart_version }}</h4>
 			<a class="item" target="_blank" rel="noopener" href="https://leek-wars.myspreadshop.fr/">
@@ -116,7 +116,7 @@
 </script>
 
 <style lang="scss" scoped>
-	#app.app .footer {
+	#app.app .footer:not(.help) {
 		display: none;
 	}
 	.footer {
@@ -125,7 +125,8 @@
 		padding-top: 20px;
 		padding-bottom: 20px;
 		position: relative;
-		display: flex;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 		color: #666;
 		a, h4, .item, .v-icon {
 			color: #666;
