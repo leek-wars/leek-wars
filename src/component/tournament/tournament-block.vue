@@ -43,20 +43,20 @@
 
 <style lang="scss" scoped>
 	.entry {
-		fill: white;
-		stroke: #bbb;
+		fill: var(--pure-white);
+		stroke: var(--background-disabled);
 		stroke-width: 2;
 	}
 	.entry[me="true"] {
 		stroke: #5fad1b;
-		fill: #c8ffc7;
+		fill: #78ff0355;
 	}
 	image[win="false"] {
 		opacity: 0.4;
 		fill: #f5f5f5;
 	}
 	.no-fight {
-		fill: rgb(242, 242, 242);
+		fill: var(--background);
 		stroke-dasharray: 5.5;
 	}
 </style>

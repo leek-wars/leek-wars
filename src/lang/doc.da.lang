@@ -978,5 +978,9 @@
 	"deprecated_constant": "Denne konstant er forældet.",
 	"replaced_by": "Den erstattes af {0}.",
 	"details": "Detaljer",
-	"optional": "valgfri"
+	"optional": "valgfri",
+	"arg_type_9": "pakke",
+	"arg_type_10": "interval",
+	"function_category_set": "Pakker",
+	"function_category_interval": "Intervaller"
 }

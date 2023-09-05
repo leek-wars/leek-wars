@@ -25,7 +25,7 @@
 
 <script lang="ts">
 	import { fileSystem } from '@/model/filesystem'
-import { store } from '@/model/store'
+	import { store } from '@/model/store'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import { AIItem } from './editor-item'
 
@@ -58,7 +58,6 @@ import { store } from '@/model/store'
 <style lang="scss" scoped>
 	.item {
 		cursor: pointer;
-		color: var(--editor-text);
 	}
 	.item.dragging {
 		opacity: 1;
@@ -79,7 +78,10 @@ import { store } from '@/model/store'
 		padding: 8px 10px;
 	}
 	.item.selected > .label {
-		background: #ddd;
+		background: var(--background-secondary);
+	}
+	.item .label:hover {
+		background: var(--pure-white);
 	}
 	.item.modified .label .text {
 		font-style: italic;
@@ -123,7 +125,7 @@ import { store } from '@/model/store'
 			border: 1px solid #0099ff;
 		}
 		&.leek {
-			border: 1px solid var(--editor-text);
+			border: 1px solid var(--text-color);
 			img {
 				height: 12px;
 			}

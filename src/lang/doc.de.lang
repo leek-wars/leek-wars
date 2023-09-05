@@ -978,5 +978,9 @@
 	"deprecated_constant": "Diese Konstante ist veraltet.",
 	"replaced_by": "Es wird durch {0} ersetzt.",
 	"details": "Einzelheiten",
-	"optional": "optional"
+	"optional": "optional",
+	"arg_type_9": "zusammen",
+	"arg_type_10": "intervall",
+	"function_category_set": "Sets",
+	"function_category_interval": "Intervalle"
 }

@@ -171,5 +171,6 @@
 	"error_50": "Medlemmen \"{0}\" finns inte i \"{1}\" av typen \"{2}\"",
 	"error_45": "Detta \"{0}\"-fält finns redan",
 	"error_99": "Okänt fel: {0}",
-	"error_141": "Operatorn {0} är oförenlig med \"{1}\" av typen \"{2}\""
+	"error_141": "Operatorn {0} är oförenlig med \"{1}\" av typen \"{2}\"",
+	"error_142": "Den oändliga \"{0}\"-gränsen kan inte stängas."
 }

@@ -171,5 +171,6 @@
 	"error_50": "Dit lid \"{0}\" bestaat niet in \"{1}\" van type \"{2}\"",
 	"error_45": "Dit veld \"{0}\" bestaat al",
 	"error_99": "Onbekende fout: {0}",
-	"error_141": "De {0} operator is niet compatibel met \"{1}\" van type \"{2}\""
+	"error_141": "De {0} operator is niet compatibel met \"{1}\" van type \"{2}\"",
+	"error_142": "De oneindige \"{0}\" grens kan niet gesloten worden."
 }

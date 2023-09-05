@@ -12,11 +12,11 @@
 		</div>
 		<div class="header-right">
 			<div v-if="!$store.state.connected" class="header-signin buttons">
-				<!-- <div class="button-wrapper">
+				<div class="button-wrapper">
 					<div class="header-button" @click="LeekWars.darkMode = !LeekWars.darkMode">
 						<v-icon>mdi-weather-night</v-icon>
 					</div>
-				</div> -->
+				</div>
 				<v-menu offset-y>
 					<template v-slot:activator="{ on }">
 						<div class="button-wrapper language-button" v-on="on">

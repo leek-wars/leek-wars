@@ -157,6 +157,9 @@
 		margin-right: 12px;
 		vertical-align: bottom;
 	}
+	body.dark .dead {
+		filter: invert(1);
+	}
 	.xp {
 		min-width: 180px;
 		.xp-wrapper {

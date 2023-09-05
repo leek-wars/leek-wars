@@ -1,12 +1,13 @@
 239:
-  title: Boutique, Mode sombre, documentation de l'API, Rééquilibrage, Set et Interval en LeekScript.
+  title: Mode sombre, documentation de l'API, Rééquilibrage, Set et Interval en LeekScript.
   added:
-    - Ajout d'une boutique pour acheter des produits dérivés Leek Wars.
-    - Ajout d'une page Dev Blog pour regrouper tous les sujets d'annonce du forum (/dev-blog).
-    - Ajout d'une documentation de l'API (/help/api).
+    - "Ajout d'une boutique pour acheter des produits dérivés Leek Wars. #img_239_shop"
+    - "Ajout d'une page Dev Blog pour regrouper tous les sujets d'annonce du forum (/dev-blog). #img_239_devblog"
+    - "Ajout d'une documentation de l'API (/help/api). #img_239_api"
     - "Ajout du mode sombre. #img_239_dark_mode"
     - Rééquilibrage de nombreux items (merci au topic d'AppleTree).
-    - "LeekScript : ajout des Set et Interval (merci à Hazurl)."
+    - "LeekScript : ajout des Set et Interval (merci à Hazurl). #img_239_set_interval"
+    - "LeekScript : ajout de l'opérateur in (merci à Hazurl)."
   improved:
     - Passage de PHP 7.4 à 8.2.
     - Meilleur affichage des éleveurs supprimés sur le forum (merci à CaptainTheDelta).

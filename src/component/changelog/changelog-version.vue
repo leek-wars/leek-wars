@@ -102,8 +102,8 @@ import(/* webpackChunkName: "changelog-[request]" */ `json-loader!yaml-loader!@/
 			vertical-align: top;
 			display: inline-block;
 			&:hover {
-				color: black;
-				border-color: black;
+				color: var(--text-color);
+				border-color: var(--text-color);
 			}
 		}
 	}

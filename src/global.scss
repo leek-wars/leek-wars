@@ -156,13 +156,13 @@ button {
 	height: 40px;
 	padding: 0 32px;
 }
-.v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
-	background: var(--pure-white);
-	color: var(--text-color);
-}
-.v-btn:not(.v-btn--flat).theme--light.primary {
-	color: var(--pure-white);
-}
+// .v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
+// 	background: var(--pure-white);
+// 	color: var(--text-color);
+// }
+// .v-btn:not(.v-btn--flat).theme--light.primary {
+// 	color: var(--pure-white);
+// }
 .v-btn.error {
     background-color: #ca0000 !important;
     border-color: #ca0000 !important;
@@ -735,7 +735,7 @@ img.emoji {
 	color: #ff4a01;
 }
 .color-frequency {
-	color: black;
+	color: var(--text-color);
 }
 .color-science { color: #0000a2; }
 .dark .color-science { color: #2a63ff; }
@@ -908,7 +908,7 @@ body {
 	background: linear-gradient(0deg, #ffb029, #ffdc3a);
 	border-radius: 2px;
 	border: 1px solid #ffb430;
-	color: black;
+	color: black !important;
 	.large-icon {
 		color: white;
 	}

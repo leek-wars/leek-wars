@@ -100,6 +100,8 @@
 			2: 'mdi-format-text',
 			3: 'mdi-code-array',
 			4: 'mdi-code-braces-box',
+			13: 'mdi-code-not-equal-variant',
+			14: 'mdi-code-brackets',
 			5: 'mdi-account',
 			6: 'mdi-sword',
 			7: 'mdi-chip',
@@ -148,11 +150,11 @@
 			LeekWars.loadEncyclopedia(locale)
 
 			const get_categories = (callback: any) => {
-				if (localStorage.getItem('data/function_categories_v2')) {
-					callback({categories: JSON.parse(localStorage.getItem('data/function_categories_v2') || '[]')})
+				if (localStorage.getItem('data/function_categories_v3')) {
+					callback({categories: JSON.parse(localStorage.getItem('data/function_categories_v3') || '[]')})
 				} else {
 					LeekWars.get('function/get-categories').then(data => {
-						localStorage.setItem('data/function_categories_v2', JSON.stringify(data.categories))
+						localStorage.setItem('data/function_categories_v3', JSON.stringify(data.categories))
 						callback(data)
 					})
 				}
@@ -443,8 +445,6 @@
 		input[type=text] {
 			height: 27px;
 			width: calc(100% - 35px);
-			background: #eee;
-			color: black;
 			font-size: 20px;
 			border-radius: 4px;
 			vertical-align: bottom;

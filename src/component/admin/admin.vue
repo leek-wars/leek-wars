@@ -214,7 +214,6 @@
 		height: 100%;
 		& > .v-icon {
 			font-size: 80px;
-			color: var(--text-color-secondary);
 			margin: 10px 0;
 		}
 		h2 {

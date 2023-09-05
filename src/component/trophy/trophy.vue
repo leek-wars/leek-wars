@@ -147,14 +147,14 @@
 		align-items: center;
 	}
 	.points {
-		border: 1px solid #aaa;
+		border: 1px solid var(--text-color-secondary);
 		display: inline-block;
 		margin: 0 10px;
 		padding: 2px 5px;
 		border-radius: 5px;
 		font-size: 16px;
 		margin-top: 2px;
-		color: #555;
+		color: var(--text-color-secondary);
 	}
 	.description {
 		font-size: 17px;
@@ -162,12 +162,12 @@
 		padding: 12px 0;
 	}
 	.rarity {
-		color: #666;
+		color: var(--text-color-secondary);
 		padding: 8px 0;
 		font-weight: 500;
 	}
 	a.rarity {
-		color: #111;
+		color: var(--text-color);
 	}
 	.badges {
 		display: flex;
@@ -195,23 +195,23 @@
 		color: white;
 	}
 	.in-fight {
-		border: 1px solid #aaa;
-		color: #333;
+		border: 1px solid var(--text-color-secondary);
+		color: var(--text-color-secondary);
 	}
 	.bar-wrapper {
 		display: flex;
 		gap: 10px;
 		align-items: center;
 		font-weight: 500;
-		color: #666;
+		color: var(--text-color-secondary);
 	}
 	.trophy-bar {
 		height: 10px;
 		position: relative;
-		background: white;
+		background: var(--pure-white);
 		border-radius: 6px;
 		margin-top: 6px;
-		border: 1px solid #ddd;
+		border: 1px solid var(--border);
 		margin: 10px 0;
 		flex: 1;
 		.bar {

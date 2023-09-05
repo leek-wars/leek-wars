@@ -86,7 +86,6 @@
 <style lang="scss" scoped>
 	.item {
 		cursor: pointer;
-		// color: var(--editor-text);
 		display: block;
 	}
 	.root {
@@ -108,7 +107,7 @@
 		}
 	}
 	.item.selected > .label {
-		background: #ddd;
+		background: var(--background-secondary);
 	}
 	#app.app .item .label {
 		padding: 8px 10px;
@@ -120,20 +119,17 @@
 		padding-right: 5px;
 	}
 	.item .label:hover {
-		background: white;
-	}
-	.item.selected > .label:before {
-		color: white;
+		background: var(--pure-white);
 	}
 	.v-icon {
-		color: var(--editor-text);
+		color: var(--text-color);
 	}
 	.triangle {
 		width: 0;
 		height: 0;
 		border-top: 5px solid transparent;
 		border-bottom: 5px solid transparent;
-		border-left: 6px solid var(--editor-text);
+		border-left: 6px solid var(--text-color);
 		display: inline-block;
 		margin-left: -5px;
 		margin-right: 5px;

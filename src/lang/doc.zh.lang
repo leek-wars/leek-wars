@@ -978,5 +978,9 @@
 	"parameters": "设置",
 	"return": "反馈",
 	"value": "价值",
-	"variable_operations": "<b>变量</b>操作"
+	"variable_operations": "<b>变量</b>操作",
+	"arg_type_9": "包装",
+	"arg_type_10": "间隙",
+	"function_category_set": "套餐",
+	"function_category_interval": "间隔"
 }

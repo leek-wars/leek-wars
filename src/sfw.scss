@@ -42,7 +42,7 @@
 	.page-bar {
 		background: none;
 	}
-	img, svg {
+	img:not(.clover), svg {
 		opacity: 0.08;
 	}
 	.smiley, .hab, .crystal {

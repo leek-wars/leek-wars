@@ -220,7 +220,7 @@
 		z-index: 8;
 		width: 400px;
 		max-height: 250px;
-		background: white;
+		background: var(--pure-white);
 		bottom: 39px;
 		position: absolute;
 	}

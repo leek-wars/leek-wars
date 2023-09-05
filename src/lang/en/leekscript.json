@@ -171,5 +171,6 @@
 	"error_1004": "This weapon {1} (id {0}) is not equipped. You must first equip it on the page of your leek.",
 	"error_1005": "The invoked bulb has no AI",
 	"error_15": "The name of an AI is expected here",
-	"error_141": "The {0} operator is incompatible with \"{1}\" of type \"{2}\""
+	"error_141": "The {0} operator is incompatible with \"{1}\" of type \"{2}\"",
+	"error_142": "The infinite \"{0}\" boundary cannot be closed."
 }

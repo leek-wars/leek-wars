@@ -17,10 +17,10 @@ import { CONSTANTS } from '@/model/constants'
     // Tokenizer
 
     var isLeekScriptTypeDef = (value) => {
-      return value == "|" || value == "<" || value == ">" || value == "," || value == "?" || value === "void" || value === "null" || value === "any" || value === "integer" || value === "real" || value === "string" || value === "boolean" || value === "Array" || value === "Object" || value === "Map" || value === "Class" || value === "Function" || config.ai?.isClassDefined(value)
+      return value == "|" || value == "<" || value == ">" || value == "," || value == "?" || value === "void" || value === "null" || value === "any" || value === "integer" || value === "real" || value === "string" || value === "boolean" || value === "Array" || value === "Object" || value === "Map" || value === "Class" || value === "Function" || value === "Set" || value === "Interval" || config.ai?.isClassDefined(value)
     }
     var isLeekScriptType = (value) => {
-      return value === "void" || value === "null" || value === "any" || value === "integer" || value === "real" || value === "string" || value === "boolean" || value === "Array" || value === "Object" || value === "Map" || value === "Class" || value === "Function" || config.ai?.isClassDefined(value)
+      return value === "void" || value === "null" || value === "any" || value === "integer" || value === "real" || value === "string" || value === "boolean" || value === "Array" || value === "Object" || value === "Map" || value === "Class" || value === "Function" || value === "Set" || value === "Interval" || config.ai?.isClassDefined(value)
     }
 
     var keywords = function(){

@@ -978,5 +978,9 @@
 	"parameters": "설정",
 	"return": "피드백",
 	"value": "값",
-	"variable_operations": "<b>변수</b> 작업"
+	"variable_operations": "<b>변수</b> 작업",
+	"arg_type_9": "패키지",
+	"arg_type_10": "간격",
+	"function_category_set": "패키지",
+	"function_category_interval": "간격"
 }

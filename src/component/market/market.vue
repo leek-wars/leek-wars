@@ -646,7 +646,7 @@
 		color: #eee;
 		border-radius: 20px;
 		font-weight: bold;
-		background-color: var(--border);
+		background-color: #777;
 	}
 	.items .item:not([farmer-count="0"]):not([leek-count="0"]):before {
 		border-radius: 20px 0 0 20px;

@@ -49,8 +49,8 @@
 				<loader v-if="!categories || !topics" />
 				<div v-else class="topics">
 					<div v-for="topic in topics" :key="topic.id" :class="{pinned: topic.pinned}" class="topic">
-						<div class="seen" :class="{unseen: !topic.seen}">
-							<img v-if="topic.seen" src="/image/forum_seen.png">
+						<div class="seen">
+							<img v-if="topic.seen" class="seen" src="/image/forum_seen.png">
 							<img v-else src="/image/forum_unseen.png">
 						</div>
 						<div>
@@ -350,7 +350,7 @@
 		background-color: var(--pure-white);
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
-	.topic .seen {
+	.topic > .seen {
 		flex: 0 0 40px;
 		padding-top: 10px;
 		padding-bottom: 10px;
@@ -359,7 +359,7 @@
 	.topic .seen img {
 		height: 40px;
 	}
-	body.dark .topic .seen:not(.unseen) img {
+	body.dark .topic .seen img.seen {
 		filter: invert(0.85);
 	}
 	.topic .flag {
@@ -415,7 +415,7 @@
 		margin-bottom: -4px;
 	}
 	.topic .messages {
-		color: black;
+		color: var(--text-color);
 	}
 	.create-popup .topic-name {
 		width: 100%;

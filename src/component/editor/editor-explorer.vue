@@ -393,7 +393,7 @@
 			const regex = /.*include\s*\(\s*["'](.*?)["']\s*\)\s*;.*/gm
 			const regexComment1 = /^\s*\/\/.*$/
 			const regexComment2 = /^\s*\/\*.*\*\//
-			
+
 			const included_ais = new Set<AI>()
 			const fun = (ai: AI): string => "/** " + ai.path + " **/\n\n" + (ai.code ? ai.code.replace(regex, (a, path) => {
 				const included = fileSystem.find(path, ai.folder)
@@ -439,9 +439,6 @@
 }
 .v-icon {
 	margin-right: 8px;
-}
-.v-icon.theme--dark {
-	color: #111;
 }
 .dialog-input {
 	width: 100%;

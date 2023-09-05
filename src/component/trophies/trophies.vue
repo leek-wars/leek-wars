@@ -476,11 +476,11 @@
 		margin-top: 12px;
 		border: 1px solid var(--border);
 		.bar {
-			height: 12px;
+			height: 10px;
 			width: 0;
 			background: #30bb00;
 			position: absolute;
-			border-radius: 6px;
+			border-radius: 5px;
 		}
 	}
 	.bar {

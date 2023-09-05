@@ -978,5 +978,9 @@
 	"deprecated_constant": "Questa costante è deprecata.",
 	"replaced_by": "È sostituito da {0}.",
 	"details": "Dettagli",
-	"optional": "opzionale"
+	"optional": "opzionale",
+	"arg_type_9": "set",
+	"arg_type_10": "intervallo",
+	"function_category_set": "Pacchetti",
+	"function_category_interval": "Intervalli"
 }

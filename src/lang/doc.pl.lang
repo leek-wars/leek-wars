@@ -978,5 +978,9 @@
 	"deprecated_constant": "Ta stała jest przestarzała.",
 	"replaced_by": "Zastępuje go {0}.",
 	"details": "Detale",
-	"optional": "opcjonalny"
+	"optional": "opcjonalny",
+	"arg_type_9": "zestaw",
+	"arg_type_10": "interwał",
+	"function_category_set": "Pakiety",
+	"function_category_interval": "Interwały"
 }

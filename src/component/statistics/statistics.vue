@@ -356,7 +356,7 @@
 			}
 		}
 		&.show_today:hover .value.total {
-			color: #222;
+			color: var(--text-color);
 		}
 		&.color {
 			.value, .value.total, .label, .type {

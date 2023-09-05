@@ -1,5 +1,5 @@
 <template>
-	<div :class="{single, theme}">
+	<div :class="{single, [theme]: theme}">
 		<code ref="code" v-show="expanded"></code>
 		<span v-if="expandable && !single" class="button" v-ripple @click="expanded = !expanded">
 			<v-icon>{{ expanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>

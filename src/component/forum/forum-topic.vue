@@ -458,7 +458,7 @@
 				}
 			}
 			if (message.id !== -1) {
-				LeekWars.post("forum/edit-message", {message_id: message.id, message: message.message}).then(callback)
+				LeekWars.post("forum/edit-message", {message_id: message.id, new_message: message.message}).then(callback)
 			} else {
 				const input = this.$refs.topicTitle as HTMLElement
 				const title = input.innerText
@@ -603,10 +603,10 @@
 	}
 	.profile .messages-count, .profile .trophy-count {
 		font-size: 12px;
-		color: #999;
+		color: var(--text-color-secondary);
 	}
 	.profile .messages-count b, .profile .trophy-count b {
-		color: #555;
+		color: var(--text-color);
 	}
 	.profile .status {
 		width: 15px;
@@ -728,8 +728,6 @@
 		margin-top: 5px;
 		padding: 10px;
 		font-size: 15px;
-		font-family: "Roboto", sans-serif;
-		color: var(--text-color-secondary);
 		border: none;
 		margin-bottom: 10px;
 	}

@@ -171,5 +171,6 @@
 	"error_50": "Ten element \"{0}\" nie istnieje w \"{1}\" typu \"{2}\"",
 	"error_45": "To pole \"{0}\" już istnieje",
 	"error_99": "Nieznany błąd: {0}",
-	"error_141": "Operator {0} jest niezgodny z \"{1}\" typu \"{2}\""
+	"error_141": "Operator {0} jest niezgodny z \"{1}\" typu \"{2}\"",
+	"error_142": "Nieskończona granica \"{0}\" nie może być zamknięta."
 }

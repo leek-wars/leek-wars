@@ -108,7 +108,7 @@
 							<leek-image :leek="currentLeek" :scale="1" />
 						</div>
 						<div class="card characteristics">
-							<div v-for="c in LeekWars.characteristics_table" :key="c" class="characteristic">
+							<div v-for="c in LeekWars.characteristics_table" :key="c" class="characteristic" :class="c">
 								<characteristic-tooltip  v-slot="{ on }" :characteristic="c" :value="currentLeek[c]" :leek="currentLeek" :test="true">
 									<img v-on="on" :src="'/image/charac/' + c + '.png'">
 								</characteristic-tooltip>
@@ -1478,6 +1478,11 @@
 		.characteristic:nth-child(4n+3),
 		.characteristic:nth-child(4n+4) {
 			background: var(--background-secondary);
+		}
+	}
+	body.dark .characteristic.frequency {
+		img {
+			filter: invert(1);
 		}
 	}
 	.leek-column .chips .container, .leek-column .weapons .container {

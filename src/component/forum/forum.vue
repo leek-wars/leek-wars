@@ -45,7 +45,7 @@
 				</div>
 				<router-link v-for="category in categories" :key="category.id" v-ripple :to="'/forum/category-' + category.id" class="category">
 					<div class="seen">
-						<img v-if="category.seen" src="/image/forum_seen.png">
+						<img v-if="category.seen" class="seen" src="/image/forum_seen.png">
 						<img v-else src="/image/forum_unseen.png">
 					</div>
 					<div class="text">
@@ -228,7 +228,7 @@ import { store } from '@/model/store'
 		background-color: var(--pure-white);
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
-	.category .seen {
+	.category > .seen {
 		width: 55px;
 		padding-top: 10px;
 		padding-bottom: 8px;
@@ -237,7 +237,7 @@ import { store } from '@/model/store'
 	.category .seen img {
 		height: 40px;
 	}
-	body.dark .category .seen img {
+	body.dark .category .seen img.seen {
 		filter: invert(0.85);
 	}
 	.category .text {

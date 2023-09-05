@@ -409,8 +409,8 @@
 	}
 	.admin-warn {
 		padding: 15px 20px;
-		background: white;
-		border-bottom: 1px solid #ccc;
+		background: var(--pure-white);
+		border-bottom: 1px solid var(--border);
 		display: flex;
 		align-items: center;
 		gap: 6px;

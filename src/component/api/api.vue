@@ -319,7 +319,7 @@
 	}
 	.service .label {
 		display: inline-block;
-		color: white;
+		color: var(--pure-white);
 		background: #aaa;
 		border-radius: 2px;
 		padding: 2px 5px;
@@ -395,7 +395,7 @@
 	}
 	.items-list .item:hover, .item.router-link-active {
 		font-weight: bold;
-		background: white;
+		background: var(--pure-white);
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
 	.items {
@@ -447,8 +447,7 @@
 		input[type=text] {
 			height: 27px;
 			width: calc(100% - 35px);
-			background: #eee;
-			color: black;
+			background: var(--background);
 			font-size: 20px;
 			border-radius: 4px;
 			vertical-align: bottom;
@@ -485,9 +484,11 @@
 	}
 	.demo {
 		background: white;
+		color: #333;
 		border: 1px solid #aaa;
 		.v-icon {
 			font-size: 13px;
+			color: #333;
 		}
 	}
 	h4 {
@@ -498,8 +499,12 @@
 		margin-bottom: 8px;
 		font-size: 15px;
 	}
+	.example.jv-container {
+		background: var(--pure-white);
+	}
 	.example ::v-deep .jv-code {
-		border: 1px solid #aaa;
+		color: var(--text-color);
+		border: 1px solid var(--border);
 		padding: 5px;
 		border-radius: 4px;
 		max-height: 300px;
@@ -508,5 +513,11 @@
 		.jv-node {
 			padding: 2px 0;
 		}
+		.jv-key, .jv-array, .jv-object {
+			color: var(--text-color);
+		}
+	}
+	body.dark .example ::v-deep .jv-code {
+		// background: ;
 	}
 </style>

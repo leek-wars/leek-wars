@@ -171,5 +171,6 @@
 	"error_50": "Dette medlem \"{0}\" findes ikke i \"{1}\" af typen \"{2}\"",
 	"error_45": "Dette \"{0}\"-felt findes allerede",
 	"error_99": "Ukendt fejl: {0}",
-	"error_141": "Operatoren {0} er uforenelig med \"{1}\" af typen \"{2}\""
+	"error_141": "Operatoren {0} er uforenelig med \"{1}\" af typen \"{2}\"",
+	"error_142": "Den uendelige \"{0}\"-grænse kan ikke lukkes."
 }

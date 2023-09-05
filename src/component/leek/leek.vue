@@ -1369,7 +1369,7 @@ import LeekImage from '../leek-image.vue'
 			background: var(--background-secondary);
 		}
 	}
-	body.dark .characteristic.frequency {
+	body.dark .characteristic.frequency img {
 		filter: invert(1);
 	}
 	.tooltip .effect, .tooltip .capital, .tooltip .base-life, .tooltip .added-life {
@@ -1569,6 +1569,9 @@ import LeekImage from '../leek-image.vue'
 		height: 22px;
 		margin-right: 4px;
 		opacity: 0.7;
+	}
+	body.dark .potions-button img {
+		filter: invert(1);
 	}
 	.farmer-potions {
 		.potions-grid {

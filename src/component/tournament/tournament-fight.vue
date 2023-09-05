@@ -25,28 +25,15 @@
 </script>
 
 <style lang="scss" scoped>
-	.entry {
-		fill: white;
-		stroke: #bbb;
-		stroke-width: 2;
-	}
-	.entry[me="true"] {
-		stroke: #5fad1b;
-		fill: #c8ffc7;
-	}
-	image[win="false"] {
-		opacity: 0.4;
-		fill: #f5f5f5;
-	}
 	.fight {
-		stroke: #bbb;
+		stroke: var(--background-disabled);
 		stroke-width: 2;
 	}
 	.no-fight {
-		fill: rgb(242, 242, 242);
+		fill: var(--background);
 		stroke-dasharray: 5.5;
 	}
 	.fight:not(.no-fight) {
-		fill: #666;
+		fill: #777;
 	}
 </style>

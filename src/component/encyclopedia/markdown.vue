@@ -417,6 +417,7 @@
 		margin-bottom: 20px;
 		padding: 0;
 		height: auto;
+		color: var(--text-color);
 		&:after {
 			display: none;
 		}

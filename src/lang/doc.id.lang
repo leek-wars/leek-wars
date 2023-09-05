@@ -978,5 +978,9 @@
 	"parameters": "Pengaturan",
 	"return": "Masukan",
 	"value": "Nilai",
-	"variable_operations": "Operasi <b>Variabel</b>"
+	"variable_operations": "Operasi <b>Variabel</b>",
+	"arg_type_9": "paket",
+	"arg_type_10": "interval",
+	"function_category_set": "Paket",
+	"function_category_interval": "Interval"
 }

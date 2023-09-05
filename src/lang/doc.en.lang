@@ -978,5 +978,9 @@
 	"deprecated_constant": "This constant is deprecated.",
 	"replaced_by": "It is replaced by {0}.",
 	"details": "Details",
-	"optional": "optional"
+	"optional": "optional",
+	"arg_type_9": "set",
+	"arg_type_10": "interval",
+	"function_category_set": "Sets",
+	"function_category_interval": "Intervals"
 }

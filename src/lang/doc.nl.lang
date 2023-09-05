@@ -978,5 +978,9 @@
 	"deprecated_constant": "Deze constante is verouderd.",
 	"replaced_by": "Het wordt vervangen door {0}.",
 	"details": "Details",
-	"optional": "optioneel"
+	"optional": "optioneel",
+	"arg_type_9": "pakket",
+	"arg_type_10": "interval",
+	"function_category_set": "Pakketten",
+	"function_category_interval": "Intervallen"
 }

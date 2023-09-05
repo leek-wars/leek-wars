@@ -1,3 +1,38 @@
+239:
+  title: Dark mode, API documentation, Rebalancing, Set and Interval in LeekScript.
+  added:
+    - "Added a store to buy Leek Wars merchandise. #img_239_shop"
+    - "Added a Dev Blog page to group all forum announcement topics (/dev-blog). #img_239_devblog"
+    - "API documentation added (/help/api). #img_239_api"
+    - "Dark mode added. #img_239_dark_mode"
+    - Many items rebalanced (thanks to AppleTree's topic).
+    - "LeekScript: Set and Interval added (thanks to Hazurl). #img_239_set_interval"
+    - "LeekScript: in operator added (thanks to Hazurl)."
+  improved:
+    - Upgrade from PHP 7.4 to 8.2.
+    - Better display of deleted farmers on the forum (thanks to CaptainTheDelta).
+    - Improved Italian translation, no longer in beta (thanks to Augustineduf and pakalatak).
+    - Post size limit increased from 1000 to 2000.
+    - Improved refresh of the connected farmer counter.
+    - Improved typing of certain functions in the doc (thanks to nytope).
+    - Burn poison is now cumulative.
+    - The footer is now displayed on the Help page in mobile mode. #img_239_footer"
+    - "LeekScript: Boolean xor operator added."
+  fixed:
+    - Fixed display of 4 weapons forgotten in timeline during combat (thanks to fujiwar).
+    - Corrected the cost in operations of some functions to 0.
+    - Fixed seed choice field on Firefox (thanks to nytope).
+    - "LeekScript: many typing errors fixed."
+    - Corrected sorting in level sorting.
+    - Commented inclusions are no longer counted when downloading AI (thanks to temakisushi).
+    - Fixed spelling error on combat report (thanks to nytope).
+    - Fixed getBirthTurn() function without arguments (thanks to nytope).
+    - "LeekScript: added static error on 'string'++ (thanks to nytope)."
+    - Fixed display of J-Laser effect area (thanks to nytope).
+    - Fixed sponsorship link when name changed (thanks to bwbl).
+    - "LeekScript: .methods and .staticMethods that return inherited methods (thanks to falconv5)."
+    - Fixed getNearestAllyTo returning an enemy (thanks to nytope).
+
 238:
   title: Typing in LeekScript, Hats redesigned + 4 new ones, 15 languages, Tutorial redesigned.
   added:

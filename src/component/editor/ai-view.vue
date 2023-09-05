@@ -1796,7 +1796,7 @@
 		}
 	}
 	.search-panel {
-		background: #eee;
+		// background: ;
 		display: flex;
 		.bar {
 			display: flex;
@@ -1816,6 +1816,7 @@
 		width: 40px;
 		height: 40px;
 		padding: 8px;
+		color: var(--text-color);
 	}
 	.search-panel .arrow {
 		opacity: 0.5;
@@ -1831,8 +1832,8 @@
 		margin: 5px 0;
 		padding: 0 6px;
 		border: none;
-		background: white;
-		border: 2px solid #ddd;
+		background: var(--pure-white);
+		border: 2px solid var(--border);
 		&:focus {
 			border: 2px solid #0861a5;
 		}

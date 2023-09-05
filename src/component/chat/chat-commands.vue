@@ -79,6 +79,6 @@
 
 <style lang="scss" scoped>
 	.command.selected {
-		background: #eee;
+		background: var(--background);
 	}
 </style>

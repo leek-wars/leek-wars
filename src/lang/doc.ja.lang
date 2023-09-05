@@ -978,5 +978,9 @@
 	"parameters": "設定",
 	"return": "フィードバック",
 	"value": "価値",
-	"variable_operations": "<b>変数</b>操作"
+	"variable_operations": "<b>変数</b>操作",
+	"arg_type_9": "パッケージ",
+	"arg_type_10": "間隔",
+	"function_category_set": "パッケージ",
+	"function_category_interval": "インターバル"
 }

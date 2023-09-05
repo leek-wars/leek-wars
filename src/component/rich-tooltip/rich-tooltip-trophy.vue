@@ -42,7 +42,6 @@
 <style lang="scss" scoped>
 	.card {
 		width: 280px;
-		background: white;
 	}
 	.trophy {
 		display: block;

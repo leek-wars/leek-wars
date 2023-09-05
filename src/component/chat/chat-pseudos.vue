@@ -52,7 +52,7 @@
 		min-height: 32px;
 	}
 	.command.selected {
-		background: #eee;
+		background: var(--background);
 	}
 	.avatar {
 		width: 32px;

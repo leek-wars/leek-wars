@@ -146,7 +146,7 @@
 				background: #30bb00;
 			}
 			&.full .bar {
-				background: #ddd;
+				background: var(--border);
 			}
 		}
 		.unlock {
@@ -159,7 +159,7 @@
 			font-size: 13px;
 			font-style: italic;
 			.fight {
-				color: black;
+				color: var(--text-color);
 			}
 		}
 	}

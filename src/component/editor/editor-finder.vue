@@ -259,7 +259,7 @@
 		&.active {
 			cursor: pointer;
 			&:hover {
-				background: white;
+				background: var(--pure-white);
 			}
 		}
 		&.selected {

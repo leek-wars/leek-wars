@@ -171,5 +171,6 @@
 	"error_50": "Dieses Mitglied \"{0}\" existiert nicht in \"{1}\" vom Typ \"{2}\"",
 	"error_45": "Dieses Feld \"{0}\" existiert bereits",
 	"error_99": "Unbekannter Fehler: {0}",
-	"error_141": "Der Operator {0} ist inkompatibel mit \"{1}\" vom Typ \"{2}\""
+	"error_141": "Der Operator {0} ist inkompatibel mit \"{1}\" vom Typ \"{2}\"",
+	"error_142": "Die unendliche Schranke \"{0}\" kann nicht geschlossen werden."
 }

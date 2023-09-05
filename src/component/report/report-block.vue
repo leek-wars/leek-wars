@@ -253,4 +253,7 @@
 			vertical-align: bottom;
 		}
 	}
+	body.dark .flag img {
+		filter: invert(1);
+	}
 </style>
