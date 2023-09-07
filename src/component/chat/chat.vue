@@ -6,7 +6,7 @@
 		</div>
 		<div v-else-if="chat && chat.messages.length" ref="messages" v-autostopscroll class="messages" @scroll="scroll" @wheel="scroll">
 			<div v-for="(messages, day) in $store.state.chat[id].days" :key="day">
-				<div class="separator">
+				<div v-if="messages[0]" class="separator">
 					{{ messages[0].date | date }}
 				</div>
 				<chat-message v-for="(message, m) in messages" :key="message.id" :message="formatMessage(message)" :chat="chat" @scroll="updateScroll" :large="large" :class="'m-' + message.id" @menu="openMenu($event, message)" @emoji="openEmojis($event, message)" />
