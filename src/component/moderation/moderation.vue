@@ -303,12 +303,12 @@
 		display: block;
 		padding: 8px;
 		padding-bottom: 4px;
-		border: 1px solid #ddd;
+		border: 1px solid var(--border);
 		border-radius: 2px;
 		margin-bottom: 10px;
 	}
 	.fault.router-link-active {
-		background: white;
+		background: var(--pure-white);
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
 	#app.app .faults .fault {
@@ -316,7 +316,7 @@
 		margin-bottom: 10px;
 	}
 	.faults .fault.selected {
-		border: 2px solid #ddd;
+		border: 2px solid var(--border);
 		opacity: 1;
 	}
 	.faults .fault img {
@@ -349,7 +349,7 @@
 		text-transform: uppercase;
 		margin-top: -2px;
 		font-size: 14px;
-		color: #555;
+		color: var(--text-color-secondary);
 		margin-bottom: 8px;
 	}
 	.warning {
@@ -424,7 +424,7 @@
 		margin-top: 6px;
 		text-align: justify;
 		.text {
-			color: #555;
+			color: var(--text-color-secondary);
 		}
 	}
 	.warning-message {
@@ -474,10 +474,10 @@
 		}
 	}
 	.forum-message {
-		border: 1px solid #aaa;
+		border: 1px solid var(--border);
 		margin: 5px 0;
 		border-radius: 4px;
-		background: #efefef;
+		background: var(--background);
 		max-height: 250px;
 		overflow-y: auto;
 	}
