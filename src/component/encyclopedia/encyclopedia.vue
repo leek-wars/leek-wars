@@ -7,7 +7,7 @@
 					<breadcrumb :items="breadcrumb_items" :raw="true" />
 					<v-icon v-if="modified" class="modified">mdi-record</v-icon>
 				</h1>
-				<div v-if="$store.getters.admin && page" class="info">
+				<div v-if="$store.getters.admin && page && page.language === 'fr'" class="info">
 					<v-checkbox v-model="page.official" :hide-details="true" :dark="true" label="Officiel" @change="updateOfficial" />
 				</div>
 			</div>
