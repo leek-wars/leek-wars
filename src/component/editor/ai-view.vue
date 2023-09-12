@@ -16,8 +16,8 @@
 		</div>
 		<div v-show="searchEnabled" class="search-panel">
 			<div class="inputs">
-				<input ref="searchInput" v-model="searchQuery" type="text" autocomplete="off" :placeholder="$t('main.search')" @keyup.enter="$event.shiftKey ? searchPrevious() : searchNext()">
-				<input ref="replaceInput" v-model="replaceQuery" type="text" autocomplete="off" :placeholder="$t('main.replace')" @keyup.enter="replaceOne">
+				<input ref="searchInput" v-model="searchQuery" type="text" autocomplete="off" :placeholder="$t('main.search')" @keyup.stop @keyup.enter="$event.shiftKey ? searchPrevious() : searchNext()">
+				<input ref="replaceInput" v-model="replaceQuery" type="text" autocomplete="off" :placeholder="$t('main.replace')" @keyup.stop @keyup.enter="replaceOne">
 			</div>
 			<div class="buttons">
 				<div>
