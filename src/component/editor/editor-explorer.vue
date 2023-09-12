@@ -390,7 +390,7 @@
 		downloadIncludes() {
 			if (!this.ai) { return }
 
-			const regex = /.*include\s*\(\s*["'](.*?)["']\s*\)\s*;.*/gm
+			const regex = /.*include\s*\(\s*["'](.*?)["']\s*\)\s*;?.*/gm
 			const regexComment1 = /^\s*\/\/.*$/
 			const regexComment2 = /^\s*\/\*.*\*\//
 
