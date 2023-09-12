@@ -1,6 +1,6 @@
 <template lang="html">
 	<div v-if="value" class="finder" @click.stop>
-		<input v-if="search" ref="input" v-model="query" class="input" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" @change="change" @keydown="keydown">
+		<input v-if="search" ref="input" v-model="query" class="input" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" @keyup.stop @change="change" @keydown="keydown">
 		<div ref="list" class="results">
 			<div v-for="(result, r) of results" :key="result.ai.id" class="result active" :class="{selected: selected === r}" @click="go(result.ai)">
 				<v-icon v-if="result.ai.errors" class="icon error">mdi-close-circle</v-icon>
