@@ -102,7 +102,7 @@
 					<div v-ripple class="item add" @click="newLeekDialog = true">✚ {{ $t('main.add') }}</div>
 				</div>
 				<div v-if="currentLeek" class="column leek-column">
-					<div class="title name">{{ currentLeek.name }} - {{ $t('main.level_n', [currentLeek.level]) }}</div>
+					<div class="title name">{{ currentLeek.name }} <v-icon @click="changedLeekName = currentLeek.name;changeLeekNameDialog = true">mdi-pencil</v-icon>- {{ $t('main.level_n', [currentLeek.level]) }}</div>
 					<div class="flex">
 						<div class="image card">
 							<leek-image :leek="currentLeek" :scale="1" />
@@ -231,6 +231,18 @@
 			<div slot="actions">
 				<div v-ripple @click="newLeekDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="green" @click="createLeek">{{ $t('main.create') }}</div>
+			</div>
+		</popup>
+
+		<popup v-model="changeLeekNameDialog" :width="500">
+			<v-icon slot="icon">mdi-pencil</v-icon>
+			<span slot="title">{{ $t('leek_name') }}</span>
+			<div class="padding">
+				<input v-model="changedLeekName" :placeholder="$t('leek_name')" type="text" class="input" @keyup.stop @keyup.enter="changeLeekName">
+			</div>
+			<div slot="actions">
+				<div v-ripple @click="changeLeekNameDialog = false">{{ $t('main.cancel') }}</div>
+				<div v-ripple class="green" @click="changeLeekName">{{ $t('main.save') }}</div>
 			</div>
 		</popup>
 
@@ -383,7 +395,9 @@
 		newScenarioDialog: boolean = false
 		newScenarioName: string = ''
 		newLeekDialog: boolean = false
+		changeLeekNameDialog: boolean = false
 		newLeekName: string = ''
+		changedLeekName: string = ''
 		newMapDialog: boolean = false
 		newMapName: string = ''
 		mapDialog: boolean = false
@@ -1009,6 +1023,13 @@
 		hasWeaponEquipped(weapon: any) {
 			if (!this.currentLeek) { return false }
 			return (this.currentLeek!.weapons as any).indexOf(weapon) !== -1
+		}
+
+		changeLeekName() {
+			if (!this.currentLeek) { return }
+			this.currentLeek.name = this.changedLeekName
+			this.saveLeek()
+			this.changeLeekNameDialog = false
 		}
 
 		createLeek() {
