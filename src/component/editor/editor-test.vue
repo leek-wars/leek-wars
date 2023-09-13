@@ -109,7 +109,7 @@
 						</div>
 						<div class="card characteristics">
 							<div v-for="c in LeekWars.characteristics_table" :key="c" class="characteristic" :class="c">
-								<characteristic-tooltip  v-slot="{ on }" :characteristic="c" :value="currentLeek[c]" :leek="currentLeek" :test="true">
+								<characteristic-tooltip v-slot="{ on }" :characteristic="c" :value="currentLeek[c]" :leek="currentLeek" :test="true">
 									<img v-on="on" :src="'/image/charac/' + c + '.png'">
 								</characteristic-tooltip>
 								<span :contenteditable="!currentLeek.bot" class="stat" :class="'color-' + c" @keyup.stop @focusout="characteristicFocusout(c, $event)" v-html="currentLeek[c]"></span>
@@ -126,20 +126,20 @@
 						<div class="title">{{ $t('main.weapons') }} [{{ currentLeek.weapons.length }}]</div>
 						<div class="weapons">
 							<div class="container">
-								<rich-tooltip-item v-for="weapon of currentLeek.weapons" :key="weapon" v-slot="{ on }" :item="LeekWars.items[weapon]" :instant="true" :nodge="true">
-									<img :src="'/image/' + LeekWars.items[weapon].name.replace('_', '/') + '.png'" class="weapon" v-on="on" @click="removeLeekWeapon(weapon)" :width="WeaponsData[LeekWars.items[weapon].params].width">
+								<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ on }" :item="LeekWars.items[weapon.item]" :bottom="true" :nodge="true">
+									<img :src="'/image/' + LeekWars.items[weapon.item].name.replace('_', '/') + '.png'" :class="{hidden: !hasWeaponEquipped(weapon.item)}" class="weapon" v-on="on" @click="removeLeekWeapon(weapon.item)" :width="WeaponsData[LeekWars.items[weapon.item].params].width">
 								</rich-tooltip-item>
-								<div v-if="currentLeek.weapons.length < 4" class="add" @click="weaponsDialog = true">+</div>
+								<div v-if="currentLeek.weapons.length < MAX_WEAPONS" class="add" @click="weaponsDialog = true">+</div>
 							</div>
 						</div>
 						<br>
 						<div class="title">{{ $t('main.chips') }} [{{ currentLeek.chips.length }}]</div>
 						<div class="chips">
 							<div class="container">
-								<rich-tooltip-item v-for="chip in currentLeek.chips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[chip]" :instant="true" :nodge="true">
-									<img :src="'/image/chip/' + CHIPS[chip].name + '.png'" class="chip" v-on="on" @click="removeLeekChip(chip)">
+								<rich-tooltip-item v-for="chip of availableChips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[LeekWars.chipTemplates[chip.template].item]" :nodge="true">
+									<img :src="'/image/chip/' + chip.name + '.png'" :class="{hidden: !hasChipEquipped(chip.id)}" class="chip" v-on="on" @click="removeLeekChip(chip.id)">
 								</rich-tooltip-item>
-								<div v-if="currentLeek.chips.length < 20" class="add" @click="chipsDialog = true">+</div>
+								<div v-if="currentLeek.chips.length < MAX_CHIPS" class="add" @click="chipsDialog = true">+</div>
 							</div>
 						</div>
 					</div>
@@ -289,20 +289,24 @@
 
 		<popup v-model="chipsDialog" :width="767">
 			<v-icon slot="icon">mdi-chip</v-icon>
-			<span slot="title">{{ $t('select_chip') }}</span>
+			<span slot="title">{{ $t('select_chips') }} [{{ currentLeek.chips.length }}/{{MAX_CHIPS}}]</span>
 			<div v-if="currentLeek" class="padding chips-dialog">
-				<rich-tooltip-item v-for="chip of availableChips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[LeekWars.chipTemplates[chip.template].item]" :bottom="true" :instant="true" :nodge="true">
-					<img :src="'/image/chip/' + chip.name + '.png'" class="chip" v-on="on" @click="addLeekChip(chip.id)">
+				<rich-tooltip-item v-for="chip of availableChips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[LeekWars.chipTemplates[chip.template].item]" :bottom="true" :nodge="true">
+					<span :class="{disabled: hasChipEquipped(chip.id)}" v-on="on">
+						<img :src="'/image/chip/' + chip.name + '.png'" class="chip" @click="addOrRemoveLeekChip(chip.id)">
+					</span>
 				</rich-tooltip-item>
 			</div>
 		</popup>
 
 		<popup v-model="weaponsDialog" :width="800">
 			<img slot="icon" src="/image/icon/garden.png">
-			<span slot="title">{{ $t('select_weapon') }}</span>
+			<span slot="title">{{ $t('select_weapons') }} [{{ currentLeek.weapons.length }}/{{MAX_WEAPONS}}]</span>
 			<div v-if="currentLeek" class="padding weapons-dialog">
-				<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ on }" :item="LeekWars.items[LeekWars.weapons[weapon.id].item]" :bottom="true" :instant="true" :nodge="true">
-					<img :src="'/image/weapon/' + weapon.name + '.png'" class="weapon" v-on="on" @click="addLeekWeapon(weapon.item)">
+				<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ on }" :item="LeekWars.items[weapon.item]" :bottom="true" :nodge="true">
+					<span :class="{disabled: hasWeaponEquipped(weapon.item)}" v-on="on">
+						<img :src="'/image/weapon/' + weapon.name + '.png'" class="weapon" v-on="on" @click="addOrRemoveLeekWeapon(weapon.item)" :width="WeaponsData[LeekWars.items[weapon.item].params].width">
+					</span>
 				</rich-tooltip-item>
 			</div>
 		</popup>
@@ -326,6 +330,7 @@
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 	import AIElement from '@/component/app/ai.vue'
 	import { CHIPS } from '@/model/chips'
+	import {ORDERED_CHIPS} from "@/model/sorted_chips"
 
 	class TestScenarioLeek {
 		id!: number
@@ -395,6 +400,8 @@
 		timeout: number | null = null
 		fileSystem = fileSystem
 		currentTab: number = 0
+		MAX_CHIPS: number = 20
+		MAX_WEAPONS: number = 4
 
 		domingo = {
 			id: -1, name: "Domingo", ai: -1, bot: true, level: 150, skin: 1, hat: null,
@@ -579,11 +586,14 @@
 		}
 		get availableWeapons() {
 			if (!this.currentLeek) { return [] }
-			return Object.values(LeekWars.weapons).filter((w: WeaponTemplate) => (this.currentLeek!.weapons as any).indexOf(w.item) === -1)
+			return Object.values(LeekWars.weapons)
 		}
 		get availableChips() {
 			if (!this.currentLeek) { return [] }
-			return Object.values(CHIPS).filter((c: ChipTemplate) => (this.currentLeek!.chips as any).indexOf(c.id) === -1)
+			return Object.values(CHIPS)
+				.sort((chipA, chipB) => {
+					return ORDERED_CHIPS[chipA.id] - ORDERED_CHIPS[chipB.id]
+				})
 		}
 
 		get scenarioList() {
@@ -952,7 +962,9 @@
 		addLeekChip(chip: any) {
 			if (!this.currentLeek) { return }
 			this.currentLeek.chips.push(chip)
-			this.chipsDialog = false
+			if (this.currentLeek.chips.length === this.MAX_CHIPS) {
+				this.weaponsDialog = false
+			}
 			this.updateLeekLevel(this.currentLeek)
 			this.saveLeek()
 		}
@@ -960,9 +972,43 @@
 		addLeekWeapon(weapon: any) {
 			if (!this.currentLeek) { return }
 			this.currentLeek.weapons.push(weapon)
-			this.weaponsDialog = false
+			if (this.currentLeek.weapons.length === this.MAX_WEAPONS) {
+				this.weaponsDialog = false
+			}
 			this.updateLeekLevel(this.currentLeek)
 			this.saveLeek()
+		}
+
+		addOrRemoveLeekChip(chip: any) {
+			if (!this.currentLeek) { return }
+			if (!this.hasChipEquipped(chip)) {
+				if (this.currentLeek!.chips.length < this.MAX_CHIPS) {
+					this.addLeekChip(chip)
+				}
+			} else {
+				this.removeLeekChip(chip)
+			}
+		}
+
+		addOrRemoveLeekWeapon(weapon: any) {
+			if (!this.currentLeek) { return }
+			if (!this.hasWeaponEquipped(weapon)) {
+				if (this.currentLeek!.weapons.length < this.MAX_WEAPONS) {
+					this.addLeekWeapon(weapon)
+				}
+			} else {
+				this.removeLeekWeapon(weapon)
+			}
+		}
+
+		hasChipEquipped(chip: any) {
+			if (!this.currentLeek) { return false }
+			return (this.currentLeek!.chips as any).indexOf(chip) !== -1
+		}
+
+		hasWeaponEquipped(weapon: any) {
+			if (!this.currentLeek) { return false }
+			return (this.currentLeek!.weapons as any).indexOf(weapon) !== -1
 		}
 
 		createLeek() {
@@ -1298,7 +1344,7 @@
 		padding-bottom: 8px;
 		.v-icon {
 			vertical-align: middle;
-    		margin-bottom: 3px;
+			margin-bottom: 3px;
 		}
 		&.advanced {
 			cursor: pointer;
@@ -1494,10 +1540,19 @@
 		width: 63px;
 		cursor: pointer;
 		margin: 0 2px;
+		&.hidden {
+			display: none;
+		}
+	}
+	.chips-dialog .disabled, .weapons-dialog .disabled {
+		opacity: 0.4;
 	}
 	.leek-column .weapon, .weapons-dialog .weapon {
 		cursor: pointer;
 		margin: 5px;
+		&.hidden {
+			display: none;
+		}
 	}
 	.leek-column .chip, .leek-column .weapon {
 		margin: 2px;
