@@ -241,13 +241,14 @@ class Field {
 		return this.coord[x - this.min_x][y - this.min_y]
 	}
 
-	public getLastAvailableCell(from: Cell, target: Cell) {
+	public getLastAvailableCell(from: Cell, target: Cell, targetEntity: Entity) {
+		// console.log("getLastAvailableCell", "from=" + from.id, "target=" + target.id)
 		const dx = Math.sign(target.x - from.x)
 		const dy = Math.sign(target.y - from.y)
 		let current = from
 		while (current !== target) {
 			const next = this.next_cell(current, dx, dy)!
-			if (next.obstacle || !!next.entity) {
+			if (!next || next.obstacle || (next.entity && next.entity !== targetEntity)) {
 				return current
 			}
 			current = next

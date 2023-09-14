@@ -1115,8 +1115,9 @@ class Game {
 					}
 				}
 				if (chip === 89) { // boxing glove
+					// console.log("glove", cell.id, "targets=" + targets.length)
 					if (targets.length) {
-						const realCell = this.ground.field.getLastAvailableCell(caster.cell!, cell)
+						const realCell = this.ground.field.getLastAvailableCell(caster.cell!, cell, targets[0])
 						realCell.setEntity(targets[0])
 					}
 				}
