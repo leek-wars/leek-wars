@@ -242,6 +242,8 @@
 		private CodeMirrorLines!: HTMLElement
 		private jumpToLine: number | null = null
 		public loaded: boolean = false
+		private completeTimeout: any
+		private completing: boolean = false
 
 		created() {
 			this.id = this.ai.id
@@ -1238,9 +1240,11 @@
 				this.detailDialog = false
 			}
 
-			// if (force) {
+			if (!this.completing) {
+				this.completing = true
 				analyzer.complete(this.ai, this.document.getValue(), cursor.line + 1, cursor.ch - 1).then(raw_data => {
 
+					this.completing = false
 					// console.log("Completions", raw_data)
 					if (raw_data) {
 						const raw_completions = raw_data.items as any[]
@@ -1268,10 +1272,7 @@
 
 					this.openCompletions(this.completions, cursor)
 				})
-			// } else {
-
-			// 	this.openCompletions(this.completions, cursor)
-			// }
+			}
 		}
 
 		public addCompletionsFromAI(start: string, completions: any[], visited: Set<number>, ai: AI) {
