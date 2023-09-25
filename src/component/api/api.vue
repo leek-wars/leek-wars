@@ -206,7 +206,9 @@
 				this.services = services
 				for (const service of services) {
 					// Vue.set(service, 'function_lower', service.function.toLowerCase())
-					service.example = JSON.parse(service.example)
+					if (service.example) {
+						service.example = JSON.parse(service.example)
+					}
 					if (!(service.module in this.categories)) {
 						Vue.set(this.categories, service.module, [])
 					}
