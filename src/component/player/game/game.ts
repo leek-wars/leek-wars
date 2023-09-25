@@ -952,7 +952,7 @@ class Game {
 
 	public pause() {
 		if (!this.requestPause && !this.paused) {
-			if (this.atmosphere != null) {
+			if (this.atmosphere != null && this.sound) {
 				this.atmosphere.stop()
 			}
 			this.requestPause = true
