@@ -172,5 +172,8 @@
 	"error_45": "Este campo \"{0}\" ya existe",
 	"error_99": "Error desconocido: {0}",
 	"error_141": "El operador {0} es incompatible con \"{1}\" de tipo \"{2}\"",
-	"error_142": "La frontera infinita \"{0}\" no se puede cerrar."
+	"error_142": "La frontera infinita \"{0}\" no se puede cerrar.",
+	"error_137": "Demasiados errores",
+	"error_143": "Se esperaba el operador \"...\".",
+	"error_144": "Cadena de caracteres no cerrada."
 }

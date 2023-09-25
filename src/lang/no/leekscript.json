@@ -172,5 +172,8 @@
 	"error_45": "Dette \"{0}\"-feltet finnes allerede",
 	"error_99": "Ukjent feil: {0}",
 	"error_141": "Operatoren {0} er ikke kompatibel med \"{1}\" av typen \"{2}\"",
-	"error_142": "Den uendelige \"{0}\"-grensen kan ikke lukkes."
+	"error_142": "Den uendelige \"{0}\"-grensen kan ikke lukkes.",
+	"error_137": "For mange feil",
+	"error_143": "Operatør \"...\" forventet.",
+	"error_144": "Ikke-lukket tegnstreng."
 }

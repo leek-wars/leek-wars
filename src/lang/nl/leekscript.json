@@ -172,5 +172,8 @@
 	"error_45": "Dit veld \"{0}\" bestaat al",
 	"error_99": "Onbekende fout: {0}",
 	"error_141": "De {0} operator is niet compatibel met \"{1}\" van type \"{2}\"",
-	"error_142": "De oneindige \"{0}\" grens kan niet gesloten worden."
+	"error_142": "De oneindige \"{0}\" grens kan niet gesloten worden.",
+	"error_137": "Te veel fouten",
+	"error_143": "Operator \"...\" verwacht.",
+	"error_144": "Niet gesloten tekenreeks."
 }

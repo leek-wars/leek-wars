@@ -172,5 +172,8 @@
 	"error_45": "Tämä \"{0}\"-kenttä on jo olemassa",
 	"error_99": "Tuntematon virhe: {0}",
 	"error_141": "Operaattori {0} on yhteensopimaton tyypin \"{2}\" operaattorin \"{1}\" kanssa",
-	"error_142": "Ääretön \"{0}\"-raja ei voi olla suljettu."
+	"error_142": "Ääretön \"{0}\"-raja ei voi olla suljettu.",
+	"error_137": "Liian monta virhettä",
+	"error_143": "Operaattoria \"...\" odotetaan.",
+	"error_144": "Suljettu merkkijono."
 }

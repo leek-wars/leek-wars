@@ -172,5 +172,8 @@
 	"error_1005": "The invoked bulb has no AI",
 	"error_15": "The name of an AI is expected here",
 	"error_141": "The {0} operator is incompatible with \"{1}\" of type \"{2}\"",
-	"error_142": "The infinite \"{0}\" boundary cannot be closed."
+	"error_142": "The infinite \"{0}\" boundary cannot be closed.",
+	"error_137": "Too many mistakes",
+	"error_143": "Operator \"...\" expected.",
+	"error_144": "Unclosed character string."
 }

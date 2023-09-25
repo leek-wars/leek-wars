@@ -172,5 +172,8 @@
 	"error_45": "Detta \"{0}\"-fält finns redan",
 	"error_99": "Okänt fel: {0}",
 	"error_141": "Operatorn {0} är oförenlig med \"{1}\" av typen \"{2}\"",
-	"error_142": "Den oändliga \"{0}\"-gränsen kan inte stängas."
+	"error_142": "Den oändliga \"{0}\"-gränsen kan inte stängas.",
+	"error_137": "För många misstag",
+	"error_143": "Operatör \"...\" förväntad.",
+	"error_144": "Icke sluten teckensträng."
 }

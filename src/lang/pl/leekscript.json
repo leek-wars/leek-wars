@@ -172,5 +172,8 @@
 	"error_45": "To pole \"{0}\" już istnieje",
 	"error_99": "Nieznany błąd: {0}",
 	"error_141": "Operator {0} jest niezgodny z \"{1}\" typu \"{2}\"",
-	"error_142": "Nieskończona granica \"{0}\" nie może być zamknięta."
+	"error_142": "Nieskończona granica \"{0}\" nie może być zamknięta.",
+	"error_137": "Zbyt wiele błędów",
+	"error_143": "Oczekiwany operator \"...\".",
+	"error_144": "Niezamknięty ciąg znaków."
 }
