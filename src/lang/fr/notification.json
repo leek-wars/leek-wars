@@ -58,6 +58,7 @@
 	"message_29": "Vous êtes prioritaire pour celui de demain",
 	"message_30": "Vous êtes prioritaire pour celui de demain",
 	"message_31": "Vous êtes prioritaire pour la prochaine",
+	"message_34": "Voir votre inventaire",
 	"title_1": "{0} passe niveau {1}",
 	"title_2": "{0} a été agressé par {1}",
 	"title_3": "{0} a répondu au sujet {1}",
@@ -91,6 +92,5 @@
 	"title_31": "{0} n'a pas été sélectionné en BR",
 	"title_32": "{0} vous a mentionné sur #{1}",
 	"message_32": "Voir le chat",
-	"title_34": "{0} vous a donné l'item {1}",
-	"message_34": "Voir votre inventaire"
+	"title_34": "{0} vous a donné l'item {1}"
 }

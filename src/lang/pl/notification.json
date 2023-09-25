@@ -90,5 +90,7 @@
 	"title_30": "{0} nie został wybrany w turnieju",
 	"title_31": "{0} nie został wybrany w BR",
 	"title_32": "{0} wspomniał o Tobie w #{1}",
-	"message_32": "Zobacz kota"
+	"message_32": "Zobacz kota",
+	"message_34": "Wyświetlanie zapasów",
+	"title_34": "{0} dał ci przedmiot {1}"
 }

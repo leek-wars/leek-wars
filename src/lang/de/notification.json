@@ -90,5 +90,7 @@
 	"title_30": "{0} wurde nicht im Turnier ausgewählt",
 	"title_31": "{0} wurde in BR nicht ausgewählt",
 	"title_32": "{0} hat Sie auf #{1} erwähnt",
-	"message_32": "Siehe die Katze"
+	"message_32": "Siehe die Katze",
+	"message_34": "Ihr Inventar ansehen",
+	"title_34": "{0} hat Ihnen den Gegenstand {1} gegeben"
 }

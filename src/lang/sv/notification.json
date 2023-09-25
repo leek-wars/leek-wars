@@ -90,5 +90,7 @@
 	"title_30": "{0} valdes inte i turneringen",
 	"title_31": "{0} valdes inte i BR",
 	"title_32": "{0} nämnde dig på #{1}",
-	"message_32": "Se katten"
+	"message_32": "Se katten",
+	"message_34": "Visa ditt lager",
+	"title_34": "{0} gav dig föremål {1}"
 }

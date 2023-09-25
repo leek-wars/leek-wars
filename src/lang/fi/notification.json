@@ -90,5 +90,7 @@
 	"title_30": "{0} ei valittu turnaukseen",
 	"title_31": "{0} ei valittu BR:ssä",
 	"title_32": "{0} mainitsi sinut numerossa {1}",
-	"message_32": "Katso kissa"
+	"message_32": "Katso kissa",
+	"message_34": "Tarkastele inventaariota",
+	"title_34": "{0} antoi sinulle esineen {1}"
 }

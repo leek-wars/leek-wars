@@ -90,5 +90,7 @@
 	"title_30": "{0} is niet geselecteerd in het toernooi",
 	"title_31": "{0} is niet geselecteerd in BR",
 	"title_32": "{0} heeft je genoemd op #{1}",
-	"message_32": "Zie de kat"
+	"message_32": "Zie de kat",
+	"message_34": "Bekijk je inventaris",
+	"title_34": "{0} gaf je item {1}"
 }

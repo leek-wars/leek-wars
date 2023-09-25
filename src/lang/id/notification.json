@@ -90,5 +90,7 @@
 	"title_30": "{0} tidak terpilih dalam turnamen",
 	"title_31": "{0} tidak dipilih di BR",
 	"title_32": "{0} menyebut Anda di #{1}",
-	"message_32": "Lihat kucingnya"
+	"message_32": "Lihat kucingnya",
+	"message_34": "Lihat inventaris Anda",
+	"title_34": "{0} memberi Anda item {1}"
 }
