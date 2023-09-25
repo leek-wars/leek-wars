@@ -68,6 +68,7 @@
         ]
 
 		created() {
+			if (!this.$store.getters.admin) this.$router.replace('/')
 			LeekWars.setTitle("Admin Groupes")
 			LeekWars.get('groupe/get-all').then(groups => {
 				this.groups = groups

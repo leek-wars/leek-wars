@@ -46,6 +46,7 @@ import { store } from '@/model/store'
 		progress: any = []
 
 		created() {
+			if (!this.$store.getters.admin) this.$router.replace('/')
 			LeekWars.setTitle("Admin Newsletters")
 
 			LeekWars.get('newsletter/all').then(newsletters => this.newsletters = newsletters)

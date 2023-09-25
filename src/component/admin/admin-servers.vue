@@ -110,6 +110,7 @@
 		}
 
 		created() {
+			if (!this.$store.getters.admin) this.$router.replace('/')
 			LeekWars.socket.send([LISTEN_DATA])
 			LeekWars.setTitle("Admin serveurs")
 			this.$root.$on('wsmessage', this.update)

@@ -21,6 +21,7 @@
 	export default class AdminHats extends Vue {
 
 		created() {
+			if (!this.$store.getters.admin) this.$router.replace('/')
 			// console.log("created", LeekWars.weapons, LeekWars.weapons[1 + Math.random() * 20 | 0].item)
 		}
 

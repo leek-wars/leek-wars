@@ -91,6 +91,7 @@
 		last_farmers_by_day: any = {}
 
 		created() {
+			if (!this.$store.getters.admin) this.$router.replace('/')
 			LeekWars.setTitle("Admin Sources")
 			this.refresh()
 			this.timer = setInterval(this.refresh, 5_000)

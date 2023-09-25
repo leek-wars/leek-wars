@@ -109,6 +109,7 @@
 			{id: 5, color: 'red'}
 		]
 		created() {
+			if (!this.$store.getters.admin) this.$router.replace('/')
 			LeekWars.setTitle("Admin Trophies")
 			LeekWars.get('trophy/get-admin').then(data => {
 				this.trophies = data.trophies

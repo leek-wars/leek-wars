@@ -56,6 +56,7 @@
 		deleteQuery: string = ''
 
 		created() {
+			if (!this.$store.getters.admin) this.$router.replace('/')
 			this.update()
 		}
 

@@ -33,6 +33,7 @@
 	export default class AdminServices extends Vue {
 		services: any = null
 		created() {
+			if (!this.$store.getters.admin) this.$router.replace('/')
 			LeekWars.setTitle("Services")
 			LeekWars.get('service/get-all-admin').then(data => {
 				this.services = data.services

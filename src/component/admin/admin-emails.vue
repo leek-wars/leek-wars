@@ -43,6 +43,7 @@
 		email: string = ''
 
 		created() {
+			if (!this.$store.getters.admin) this.$router.replace('/')
 			LeekWars.get('farmer/get-waiting-farmers').then(data => this.farmers = data.farmers)
 			LeekWars.setTitle("Admin activation mails")
 		}

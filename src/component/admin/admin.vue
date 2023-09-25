@@ -133,6 +133,7 @@
 		levelPopupData: any = null
 
 		created() {
+			if (!this.$store.getters.admin) this.$router.replace('/')
 			LeekWars.setTitle('Admin')
 		}
 
