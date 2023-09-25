@@ -41,5 +41,6 @@
 	"error_name_length": "De naam moet tussen {0} en {1} tekens bevatten",
 	"invite_sent": "Uitnodiging verzonden",
 	"error_invalid_email": "E-mailadres moet geldig zijn",
-	"new_leek": "Sta creatie van een andere prei toe"
+	"new_leek": "Sta creatie van een andere prei toe",
+	"start_team_tournament": "Start een teamtoernooi"
 }

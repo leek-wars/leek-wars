@@ -41,5 +41,6 @@
 	"error_name_length": "Il nome deve contenere tra {0} e {1} caratteri",
 	"invite_sent": "Invito spedito",
 	"error_invalid_email": "L'indirizzo e-mail deve essere valido",
-	"new_leek": "Consentire la creazione di un altro porro"
+	"new_leek": "Consentire la creazione di un altro porro",
+	"start_team_tournament": "Lanciare un torneo a squadre"
 }

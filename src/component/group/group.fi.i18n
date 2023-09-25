@@ -41,5 +41,6 @@
 	"error_name_length": "Nimessä on oltava {0}–{1} merkkiä",
 	"invite_sent": "Kutsu lähetetty",
 	"error_invalid_email": "Sähköpostiosoitteen on oltava kelvollinen",
-	"new_leek": "Anna luoda toinen purjo"
+	"new_leek": "Anna luoda toinen purjo",
+	"start_team_tournament": "Käynnistä tiimiturnaus"
 }

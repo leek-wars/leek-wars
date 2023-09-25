@@ -41,5 +41,6 @@
 	"error_name_length": "Nazwa musi zawierać od {0} do {1} znaków",
 	"invite_sent": "Zaproszenie wysłane",
 	"error_invalid_email": "Adres e-mail musi być prawidłowy",
-	"new_leek": "Pozwól na utworzenie kolejnego pora"
+	"new_leek": "Pozwól na utworzenie kolejnego pora",
+	"start_team_tournament": "Rozpoczęcie turnieju drużynowego"
 }

@@ -41,5 +41,6 @@
 	"error_name_length": "名称必须包含 {0} 到 {1} 个字符",
 	"invite_sent": "邀请已发送",
 	"error_invalid_email": "电子邮件地址必须有效",
-	"new_leek": "允许创建另一个韭菜"
+	"new_leek": "允许创建另一个韭菜",
+	"start_team_tournament": "发起团队锦标赛"
 }

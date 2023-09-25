@@ -41,5 +41,6 @@
 	"error_name_length": "Navnet må inneholde mellom {0} og {1} tegn",
 	"invite_sent": "Invitasjon sendt",
 	"error_invalid_email": "E-postadressen må være gyldig",
-	"new_leek": "Tillat dannelse av en annen purre"
+	"new_leek": "Tillat dannelse av en annen purre",
+	"start_team_tournament": "Start en lagturnering"
 }

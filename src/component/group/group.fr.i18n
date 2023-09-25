@@ -30,6 +30,7 @@
 	"start_br": "Lancer une Battle Royale",
 	"see_tournament": "Voir le tournoi",
 	"start_tournament": "Lancer un tournoi",
+	"start_team_tournament": "Lancer un tournoi d'équipe",
 	"3_members_min": "Vous devez avoir 3 membres minimum pour lancer une BR",
 	"4_members_min": "Vous devez avoir 4 membres minimum pour lancer un tournoi",
 	"send_invite": "Envoyer une invitation par email",

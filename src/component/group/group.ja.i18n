@@ -41,5 +41,6 @@
 	"error_name_length": "名前には {0} ～ {1} 文字を含める必要があります",
 	"invite_sent": "招待状が送られました",
 	"error_invalid_email": "メールアドレスは有効でなければなりません",
-	"new_leek": "別のネギの作成を許可する"
+	"new_leek": "別のネギの作成を許可する",
+	"start_team_tournament": "チームトーナメントを立ち上げる"
 }

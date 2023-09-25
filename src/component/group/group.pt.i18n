@@ -41,5 +41,6 @@
 	"error_name_length": "O nome deve conter entre {0} e {1} caracteres",
 	"invite_sent": "Convite enviado",
 	"error_invalid_email": "O endereço de e-mail deve ser válido",
-	"new_leek": "Permitir a criação de outro alho-poró"
+	"new_leek": "Permitir a criação de outro alho-poró",
+	"start_team_tournament": "Lançar um torneio de equipas"
 }

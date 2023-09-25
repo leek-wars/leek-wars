@@ -41,5 +41,6 @@
 	"error_name_length": "이름은 {0}에서 {1}자 사이여야 합니다.",
 	"invite_sent": "초대장을 보냈습니다.",
 	"error_invalid_email": "이메일 주소는 유효해야 합니다.",
-	"new_leek": "다른 리크 생성 허용"
+	"new_leek": "다른 리크 생성 허용",
+	"start_team_tournament": "팀 토너먼트 시작"
 }

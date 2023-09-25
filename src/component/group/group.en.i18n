@@ -41,5 +41,6 @@
 	"invite_sent": "Invitation sent",
 	"error_invalid_email": "Email address must be valid",
 	"new_leek": "Allow the creation of another leek",
-	"xp_blocked": "XP blocked"
+	"xp_blocked": "XP blocked",
+	"start_team_tournament": "Launch a team tournament"
 }

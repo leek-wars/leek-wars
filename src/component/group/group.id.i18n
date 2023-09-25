@@ -41,5 +41,6 @@
 	"error_name_length": "Nama harus berisi antara {0} dan {1} karakter",
 	"invite_sent": "Undangan dikirim",
 	"error_invalid_email": "Alamat email harus valid",
-	"new_leek": "Izinkan pembuatan daun bawang lainnya"
+	"new_leek": "Izinkan pembuatan daun bawang lainnya",
+	"start_team_tournament": "Meluncurkan turnamen tim"
 }

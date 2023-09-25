@@ -62,6 +62,15 @@
 						</template>
 						{{ $t('4_members_min') }}
 					</tooltip>
+
+					<tooltip v-if="!group.tournament" :disabled="group.members.length >= 4">
+						<template v-slot:activator="{ on }">
+							<span v-on="on">
+								<v-btn :disabled="group.members.length < 4" @click="startTeamTournament"><v-icon>mdi-trophy</v-icon>&nbsp;{{ $t('start_team_tournament') }}</v-btn>
+							</span>
+						</template>
+						{{ $t('4_members_min') }}
+					</tooltip>
 				</div>
 			</div>
 		</panel>
@@ -534,6 +543,13 @@
 		startTournament() {
 			if (!this.group) { return }
 			LeekWars.post('groupe/start-solo-tournament', { group_id: this.group.id }).then(data => {
+				this.$router.push('/tournament/' + data.tournament)
+			}).error(error => LeekWars.toast(this.$t(error.error)))
+		}
+
+		startTeamTournament() {
+			if (!this.group) { return }
+			LeekWars.post('groupe/start-team-tournament', { group_id: this.group.id }).then(data => {
 				this.$router.push('/tournament/' + data.tournament)
 			}).error(error => LeekWars.toast(this.$t(error.error)))
 		}

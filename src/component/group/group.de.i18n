@@ -41,5 +41,6 @@
 	"error_name_length": "Der Name muss zwischen {0} und {1} Zeichen enthalten",
 	"invite_sent": "Einladung versendet",
 	"error_invalid_email": "Die E-Mail-Adresse muss gültig sein",
-	"new_leek": "Erstellen eines weiteren Lauchs zulassen"
+	"new_leek": "Erstellen eines weiteren Lauchs zulassen",
+	"start_team_tournament": "Ein Teamturnier starten"
 }
