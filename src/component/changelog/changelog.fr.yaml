@@ -1,3 +1,7 @@
+240:
+  title: Boss
+  fixed:
+    - Correction d'un bug de combat avec le gant de boxe.
 239:
   title: Mode sombre, documentation de l'API, Rééquilibrage, Set et Interval en LeekScript.
   added:
