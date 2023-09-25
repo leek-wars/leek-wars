@@ -42,5 +42,7 @@
 	"error_name_length": "Le nom doit contenir entre {0} et {1} caractères",
 	"invite_sent": "Invitation envoyée",
 	"error_invalid_email": "L'adresse e-mail doit être valide",
-	"new_leek": "Autoriser la création d'un autre poireau"
+	"new_leek": "Autoriser la création d'un autre poireau",
+	"give_item": "Donner un item",
+	"confirm_give_item": "Confirmer le don de cet item au membre {member} ?"
 }

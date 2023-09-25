@@ -1,4 +1,6 @@
 import { i18n } from "./i18n"
+import { ItemType } from "./item"
+import { LeekWars } from "./leekwars"
 import { Notification, NotificationType } from "./notification"
 import { store } from "./store"
 import { TROPHIES } from "./trophies"
@@ -154,6 +156,17 @@ class NotificationBuilder {
 			const conversation_name = params[2]
 			// const message_id = params[3]
 			return new Notification(data, "/chat/" + conversation_id, "mdi-at", [farmer_name, conversation_name])
+		} else if (type === NotificationType.GIVE_ITEM) {
+			const farmer_name = params[0]
+			const item_id = params[1]
+			const item = LeekWars.items[item_id]
+			let item_name = item.name as any
+			if (item.type === ItemType.WEAPON) {
+				item_name = i18n.t('weapon.' + item.name.substring(7))
+			} else if (item.type === ItemType.CHIP) {
+				item_name = i18n.t('chip.' + item.name.substring(5))
+			}
+			return new Notification(data, "/inventory/", "mdi-gift-outline", [farmer_name, item_name])
 		} else {
 			return new Notification(data, null, null, ["? type " + type])
 		}

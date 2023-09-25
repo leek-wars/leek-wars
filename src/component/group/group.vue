@@ -132,6 +132,9 @@
 					<template v-slot:item.message="{ item }">
 						<v-icon @click="sendMessage(item)">mdi-email-outline</v-icon>
 					</template>
+					<template v-slot:item.give="{ item }">
+						<v-icon @click="giveItem(item)">mdi-gift-outline</v-icon>
+					</template>
 				</v-data-table>
 			</div>
 		</panel>
@@ -424,6 +427,58 @@
 		</popup>
 
 		<capital-dialog ref="capitalDialog" v-model="capitalDialog" :leek="characteristics" :total-capital="totalCapital" :restat="true" />
+
+		<popup v-if="group" v-model="giveItemDialog" :width="800" class="give-item-dialog">
+			<v-icon slot="icon">mdi-gift-outline</v-icon>
+			<div slot="title">{{ $t('give_item') }}</div>
+
+			<v-tabs :key="itemCategories.length" class="tabs" grow :show-arrows="false">
+				<v-tabs-slider class="indicator" />
+				<v-tab v-for="(category, c) in itemCategories" :key="c" :href="'#tab-' + c" class="tab">
+					<v-icon>{{ category.icon }}</v-icon>&nbsp;
+					{{ $t('main.' + category.name) }}
+				</v-tab>
+				<v-tab-item :value="'tab-' + 0" class="content grid farmer-weapons weapons-popup">
+					<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ on }" :item="LeekWars.items[LeekWars.weapons[weapon.id].item]" :bottom="true" :instant="true" :nodge="true">
+						<div class="weapon" @click="giveItemConfirm(weapon.item)">
+							<img :src="'/image/weapon/' + weapon.name + '.png'" v-on="on">
+						</div>
+					</rich-tooltip-item>
+				</v-tab-item>
+				<v-tab-item :value="'tab-' + 1" class="content grid chips-popup farmer-chips">
+					<rich-tooltip-item v-for="chip of availableChips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[LeekWars.chipTemplates[chip.template].item]" :bottom="true" :instant="true" :nodge="true">
+						<div class="chip" @click="giveItemConfirm(chip.id)">
+							<img :src="'/image/chip/' + chip.name + '.png'" v-on="on">
+						</div>
+					</rich-tooltip-item>
+				</v-tab-item>
+				<!-- <v-tab-item :value="'tab-' + 2" class="content grid farmer-chips">
+
+				</v-tab-item> -->
+			</v-tabs>
+
+			<div slot="actions">
+				<div v-ripple @click="giveItemDialog = false">{{ $t('main.cancel') }}</div>
+			</div>
+		</popup>
+
+		<popup v-if="group" v-model="giveItemConfirmDialog" :width="600">
+			<v-icon slot="icon">mdi-gift-outline</v-icon>
+			<div slot="title">{{ $t('give_item') }}</div>
+			<div class="give-item-confirm" v-if="itemToGive && giveItemTarget">
+				<div class="item">
+					<item :item="{template: itemToGive.id}" />
+				</div>
+				<i18n path="confirm_give_item">
+					<b slot="member">{{ giveItemTarget.name }}</b>
+				</i18n>
+			</div>
+
+			<div slot="actions">
+				<div v-ripple @click="giveItemConfirmDialog = false">{{ $t('main.cancel') }}</div>
+				<div v-ripple class="green" @click="giveItemFinal()">{{ $t('give_item') }}</div>
+			</div>
+		</popup>
 	</div>
 </template>
 
@@ -445,9 +500,10 @@
 	import CapitalDialog from '../leek/capital-dialog.vue'
 	import FightsHistory from '@/component/history/fights-history.vue'
 	import TournamentsHistory from '@/component/history/tournaments-history.vue'
+	import Item from '@/component/item.vue'
 
 	@Component({ name: 'group', i18n: {}, mixins: [...mixins], components: {
-		chat: ChatElement, RichTooltipTeam, RichTooltipFarmer, CharacteristicTooltip, RichTooltipItem, CapitalDialog, FightsHistory, TournamentsHistory
+		chat: ChatElement, RichTooltipTeam, RichTooltipFarmer, CharacteristicTooltip, RichTooltipItem, CapitalDialog, FightsHistory, TournamentsHistory, Item
 	}})
 	export default class GroupPage extends Vue {
 
@@ -469,6 +525,10 @@
 		deleteMemberDialog: boolean = false
 		memberToDelete: Member | null = null
 		WeaponsData = WeaponsData
+		giveItemDialog: boolean = false
+		giveItemConfirmDialog: boolean = false
+		itemToGive: any = null
+		giveItemTarget: Member | null = null
 
 		headers = [
           { text: 'Membre', value: 'name' },
@@ -482,6 +542,7 @@
           { text: 'Ratio', value: 'ratio' },
           { text: 'Combats de test', value: 'test_fights' },
           { text: 'Trophées', value: 'trophies' },
+          { text: 'Actions', value: 'give' },
         ]
 
 		headersDialog: any = []
@@ -501,8 +562,20 @@
 		  { text: 'Actions', value: 'actions', sortable: false },
         ]
 
+		itemCategories = [
+			{name: 'weapons', icon: 'mdi-pistol'},
+			{name: 'chips', icon: 'mdi-chip'},
+			// {name: 'hats', icon: 'mdi-hat-fedora'}
+		]
+
 		get group_id() {
 			return this.$route.params.id
+		}
+		get availableWeapons() {
+			return Object.values(LeekWars.weapons)
+		}
+		get availableChips() {
+			return Object.values(CHIPS).sort((a, b) => a.level - b.level)
 		}
 
 		created() {
@@ -513,6 +586,9 @@
 				Vue.set(this.characteristics, 'baseLife', 100 + (group.level - 1) * 3)
 				for (const charac of LeekWars.characteristics) {
 					Vue.set(this.characteristics, charac, group[charac])
+				}
+				for (const member of group.members) {
+					Vue.set(member, 'give', {})
 				}
 				this.renameGroupName = group.name
 				LeekWars.setTitle(group.name)
@@ -889,6 +965,28 @@
 				Vue.set(member, 'password_error', error)
 			})
 		}
+
+		giveItem(member: Member) {
+			this.giveItemDialog = true
+			this.giveItemTarget = member
+		}
+
+		giveItemConfirm(itemID: number) {
+			console.log("give", itemID, LeekWars.items[itemID])
+			this.itemToGive = LeekWars.items[itemID]
+			this.giveItemConfirmDialog = true
+		}
+
+		giveItemFinal() {
+			if (!this.group || !this.giveItemTarget) { return }
+			LeekWars.post('groupe/give-item', {
+				group_id: this.group.id,
+				member_id: this.giveItemTarget.id,
+				item_id: this.itemToGive.id
+			})
+			this.giveItemConfirmDialog = false
+			this.giveItemDialog = false
+		}
 	}
 </script>
 
@@ -1042,6 +1140,23 @@ input[type="text"], input[type="email"] {
 .v-input--switch {
 	margin: 3px 0;
 }
+.leek-chips, .farmer-chips {
+	min-height: 80px;
+	display: grid;
+	grid-gap: 5px;
+	grid-template-columns: repeat(auto-fill, minmax(55px, 1fr));
+}
+.chips-popup .chip {
+	cursor: pointer;
+	border: 1px solid #ddd;
+	vertical-align: bottom;
+	height: 52px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	padding: 3px 0;
+}
 .leek-weapons, .farmer-weapons {
 	min-height: 80px;
 	display: grid;
@@ -1103,5 +1218,15 @@ input[type="text"], input[type="email"] {
 div.error {
 	color: red;
 	font-size: 13px;
+}
+.give-item-confirm {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	.item {
+		width: 100px;
+		height: 100px;
+		display: flex;
+	}
 }
 </style>

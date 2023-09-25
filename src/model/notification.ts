@@ -34,6 +34,7 @@ enum NotificationType {
 	NO_BR = 31, // Pas de place pour la BR
 	CHAT_MENTION = 32, // Mention sur un chat publique
 	GAME_UPDATE = 33, // Nouvelle mise à jour
+	GIVE_ITEM = 34, // Don d'item
 }
 
 class Notification {
