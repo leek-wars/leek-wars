@@ -311,13 +311,13 @@
 		}
 
 		retrieve(reward: any) {
-			LeekWars.post('trophy/retrieve-reward', { trophy: reward.trophy })
+			LeekWars.post('trophy/retrieve-reward', { trophy_id: reward.trophy })
 			store.commit('remove-reward', reward.trophy)
 			store.commit('update-habs', reward.habs)
 		}
 
-		retrieveAll(trophy: number) {
-			LeekWars.post('trophy/retrieve-all-rewards', { trophy })
+		retrieveAll() {
+			LeekWars.post('trophy/retrieve-all-rewards')
 			const total = store.state.farmer!.rewards.reduce((s, r) => s + r.habs, 0)
 			store.commit('remove-all-rewards')
 			store.commit('update-habs', total)
