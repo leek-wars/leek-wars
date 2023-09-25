@@ -779,7 +779,7 @@
 		updateGarden() {
 			if (this.farmer) {
 				this.farmer.in_garden = !this.farmer.in_garden
-				LeekWars.post('farmer/set-in-garden', {leek_id: this.farmer.id, in_garden: this.farmer.in_garden})
+				LeekWars.post('farmer/set-in-garden', {in_garden: this.farmer.in_garden})
 			}
 		}
 
