@@ -119,7 +119,11 @@
 		</panel>
 		<div v-else>
 			<panel v-for="category in categories" :key="category.id" :icon="LeekWars.trophyCategoriesIcons[category.id - 1]">
-				<template slot="title">{{ $t('trophy.category_' + category.name) }}</template>
+				<!--<div @click="isOpen[category.id] = !isOpen[category.id]">-->
+				<template slot="title">
+					<button class="category-toggle" @click="open_close(category.id)">{{ $t('trophy.category_' + category.name) }}<v-switch :input-value="isOpen[category.id]" hide-details /></button>
+				</template>
+				<!--</div>-->
 				<template slot="actions">
 					<div class="category-bar-wrapper">
 						<div v-if="category.id !== 6" class="stats">{{ points[category.id] | number }} / {{ totalPoints[category.id] | number }}</div>
@@ -130,7 +134,7 @@
 					</div>
 				</template>
 				<loader v-show="!loaded" slot="content" />
-				<div v-if="loaded" slot="content" class="trophies">
+				<div v-if="loaded" slot="content" class="trophies" v-bind:style="[isOpen[category.id] ? {'visibility': 'visible'} : {'visibility': 'collapse'}]">
 					<trophy v-for="trophy in trophies[category.id]" :key="trophy.id" :trophy="trophy" />
 				</div>
 			</panel>
@@ -155,6 +159,7 @@
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import Trophy from './trophy.vue'
 	import RichTooltipTrophy from '@/component/rich-tooltip/rich-tooltip-trophy.vue'
+	import { reactive } from 'vue'
 
 	@Component({ name: 'trophies', i18n: {}, mixins: [...mixins], components: {
 		Breadcrumb, Trophy, RichTooltipTrophy
@@ -179,6 +184,8 @@
 		count_by_difficulty: number[] = [0, 0, 0, 0, 0, 0]
 		farmer: any = null
 		variables: any = []
+		isOpen: {[key: number]: boolean} = {}
+		isActive = true;
 
 		created() {
 			this.hide_unlocked = localStorage.getItem('options/trophies/hide-unlocked') === 'true'
@@ -186,7 +193,6 @@
 				this.group_by_categories = localStorage.getItem('options/trophies/group-by-category') === 'true'
 			}
 		}
-
 		get id() {
 			return this.$route.params.id || (this.$store.state.farmer ? this.$store.state.farmer.id : null)
 		}
@@ -272,6 +278,7 @@
 				this.points[c.id] = 0
 				this.totals[c.id] = 0
 				this.totalPoints[c.id] = 0
+				this.isOpen[c.id] = true;
 			})
 			LeekWars.get('trophy/get-farmer-trophies/' + this.id + '/' + this.$i18n.locale).then(data => {
 				for (const t in data.trophies) {
@@ -313,6 +320,17 @@
 				this.loaded = true
 			})
 		}
+
+		public open_close(id : number) {
+			var new_obj : {[key: number]: boolean} = {}
+			for (let key in this.isOpen) {
+				new_obj[key] = this.isOpen[key];
+				if (key == id.toString()) {
+					new_obj[key] = !new_obj[key];
+				}
+			}
+			this.isOpen = new_obj;
+		}
 		@Watch('hide_unlocked')
 		public updateHideUnlocked() {
 			localStorage.setItem('options/trophies/hide-unlocked', this.hide_unlocked ? 'true' : 'false')
@@ -324,6 +342,10 @@
 		@Watch('sort_by')
 		public updateSort() {
 			localStorage.setItem('options/trophies/sort', this.sort_by)
+		}
+		@Watch('isOpen')
+		public updateIsOpen() {
+
 		}
 	}
 </script>
@@ -590,5 +612,13 @@
 				font-weight: 500;
 			}
 		}
+	}
+
+
+	.category-toggle {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
 	}
 </style>
