@@ -909,6 +909,9 @@ body {
 	border-radius: 2px;
 	border: 1px solid #ffb430;
 	color: black !important;
+	a, .message, .date {
+		color: black !important;
+	}
 	.large-icon {
 		color: white;
 	}
@@ -1126,4 +1129,7 @@ a.green-link {
 }
 .ct-chart-line .ct-grid, .ct-chart-bar .ct-grid {
 	stroke: var(--background-disabled);
+}
+.v-select input {
+	background: transparent;
 }

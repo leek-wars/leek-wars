@@ -141,8 +141,11 @@
 		margin-right: 10px;
 		img {
 			height: 20px;
-			margin-right: 5px;
+			margin-right: 8px;
 		}
+	}
+	body.dark .gh-button img {
+		filter: invert(1);
 	}
 	.title {
 		font-size: 16px;
