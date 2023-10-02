@@ -1,7 +1,11 @@
 240:
   title: Boss
+  improved:
+    - Nombreuses améliorations du mode sombre.
   fixed:
     - Correction d'un bug de combat avec le gant de boxe.
+    - Le type de new Array/Map/Set/Interval() est bien [Type]<empty> au lieu de [Type].
+    - Correction de l'opérateur -x sur un type integer | real.
 239:
   title: Mode sombre, documentation de l'API, Rééquilibrage, Set et Interval en LeekScript.
   added:

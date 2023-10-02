@@ -138,10 +138,10 @@
 		width: 50px;
 		padding: 10px;
 	}
-	.notification:not(.bigwin):not(.trophy) img.image {
+	.notification:not(.notif-bigwin):not(.notif-trophy) img.image {
 		opacity: 0.7;
 	}
-	body.dark .notification:not(.bigwin):not(.trophy) img.image {
+	body.dark .notification:not(.notif-bigwin):not(.notif-trophy) img.image {
 		filter: invert(1);
 		opacity: 0.9 !important;
 	}

@@ -226,18 +226,17 @@
 		margin-top: 20px;
 	}
 	.result {
-		background: #fafafa;
+		background: var(--pure-white);
 		padding: 10px;
 		margin: 8px 0;
-	}
-	.result:hover {
-		background: white;
+		&:hover {
+			background: var(--background);
+		}
 	}
 	.result .title {
 		font-weight: 300;
 		font-size: 22px;
 		margin-bottom: 5px;
-		color: black;
 	}
 	.result .headline {
 		color: #777;
@@ -286,14 +285,20 @@
 	.vote.active {
 		font-weight: bold;
 	}
-	.vote.up {
+	.vote.up, .vote.up i {
 		color: #5fad1b;
-	}
-	.vote.up.zero, .vote.down.zero {
-		color: #555;
 	}
 	.vote.down {
 		color: red;
 		margin-right: 20px;
+		i {
+			color: red;
+		}
+	}
+	.vote.up.zero, .vote.down.zero {
+		color: #555;
+		i {
+			color: #555;
+		}
 	}
 </style>
