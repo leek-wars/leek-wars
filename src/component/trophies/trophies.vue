@@ -118,11 +118,9 @@
 			</div>
 		</panel>
 		<div v-else>
-			<panel v-for="category in categories" :key="category.id" :icon="LeekWars.trophyCategoriesIcons[category.id - 1]">
+			<panel v-for="category in categories" :key="category.id" :icon="LeekWars.trophyCategoriesIcons[category.id - 1]" toggle="trophies/category">
 				<!--<div @click="isOpen[category.id] = !isOpen[category.id]">-->
-				<template slot="title">
-					<button class="category-toggle" @click="open_close(category.id)">{{ $t('trophy.category_' + category.name) }}<v-switch :input-value="isOpen[category.id]" hide-details /></button>
-				</template>
+				<template slot="title">{{ $t('trophy.category_' + category.name) }}</template>
 				<!--</div>-->
 				<template slot="actions">
 					<div class="category-bar-wrapper">
@@ -134,7 +132,7 @@
 					</div>
 				</template>
 				<loader v-show="!loaded" slot="content" />
-				<div v-if="loaded" slot="content" class="trophies" v-bind:style="[isOpen[category.id] ? {'visibility': 'visible'} : {'visibility': 'collapse'}]">
+				<div v-if="loaded" slot="content" class="trophies">
 					<trophy v-for="trophy in trophies[category.id]" :key="trophy.id" :trophy="trophy" />
 				</div>
 			</panel>
@@ -159,7 +157,6 @@
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import Trophy from './trophy.vue'
 	import RichTooltipTrophy from '@/component/rich-tooltip/rich-tooltip-trophy.vue'
-	import { reactive } from 'vue'
 
 	@Component({ name: 'trophies', i18n: {}, mixins: [...mixins], components: {
 		Breadcrumb, Trophy, RichTooltipTrophy
@@ -184,7 +181,6 @@
 		count_by_difficulty: number[] = [0, 0, 0, 0, 0, 0]
 		farmer: any = null
 		variables: any = []
-		isOpen: {[key: number]: boolean} = {}
 		isActive = true;
 
 		created() {
@@ -278,7 +274,6 @@
 				this.points[c.id] = 0
 				this.totals[c.id] = 0
 				this.totalPoints[c.id] = 0
-				this.isOpen[c.id] = true;
 			})
 			LeekWars.get('trophy/get-farmer-trophies/' + this.id + '/' + this.$i18n.locale).then(data => {
 				for (const t in data.trophies) {
@@ -319,17 +314,6 @@
 				this.$root.$emit('loaded')
 				this.loaded = true
 			})
-		}
-
-		public open_close(id : number) {
-			var new_obj : {[key: number]: boolean} = {}
-			for (let key in this.isOpen) {
-				new_obj[key] = this.isOpen[key];
-				if (key == id.toString()) {
-					new_obj[key] = !new_obj[key];
-				}
-			}
-			this.isOpen = new_obj;
 		}
 		@Watch('hide_unlocked')
 		public updateHideUnlocked() {
