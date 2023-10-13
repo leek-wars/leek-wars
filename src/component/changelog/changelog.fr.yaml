@@ -8,6 +8,9 @@
     - Correction d'un bug de combat avec le gant de boxe.
     - Le type de new Array/Map/Set/Interval() est bien [Type]<empty> au lieu de [Type].
     - Correction de l'opérateur -x sur un type integer | real.
+    - Correction du déterminisme des Set et Map avec des objets en clés (merci à Kava).
+    - Correction de la touche Suppr dans les champs de l'éditeur (merci à WhiteSlash).
+
 239:
   title: Mode sombre, documentation de l'API, Rééquilibrage, Set et Interval en LeekScript.
   added:
