@@ -175,5 +175,6 @@
 	"error_142": "O limite infinito \"{0}\" não pode ser fechado.",
 	"error_137": "Demasiados erros",
 	"error_143": "Operador \"...\" esperado.",
-	"error_144": "Cadeia de caracteres não fechada."
+	"error_144": "Cadeia de caracteres não fechada.",
+	"error_145": "Os argumentos por defeito devem ser colocados no final."
 }

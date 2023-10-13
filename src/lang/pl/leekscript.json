@@ -175,5 +175,6 @@
 	"error_142": "Nieskończona granica \"{0}\" nie może być zamknięta.",
 	"error_137": "Zbyt wiele błędów",
 	"error_143": "Oczekiwany operator \"...\".",
-	"error_144": "Niezamknięty ciąg znaków."
+	"error_144": "Niezamknięty ciąg znaków.",
+	"error_145": "Domyślne argumenty muszą być umieszczone na końcu."
 }

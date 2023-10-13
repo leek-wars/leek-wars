@@ -175,5 +175,6 @@
 	"error_142": "Die unendliche Schranke \"{0}\" kann nicht geschlossen werden.",
 	"error_137": "Zu viele Fehler",
 	"error_143": "Operator \"...\" erwartet.",
-	"error_144": "Nicht geschlossene Zeichenkette."
+	"error_144": "Nicht geschlossene Zeichenkette.",
+	"error_145": "Die Standardargumente müssen sich am Ende befinden."
 }

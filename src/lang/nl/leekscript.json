@@ -175,5 +175,6 @@
 	"error_142": "De oneindige \"{0}\" grens kan niet gesloten worden.",
 	"error_137": "Te veel fouten",
 	"error_143": "Operator \"...\" verwacht.",
-	"error_144": "Niet gesloten tekenreeks."
+	"error_144": "Niet gesloten tekenreeks.",
+	"error_145": "De standaardargumenten moeten aan het einde worden geplaatst."
 }

@@ -175,5 +175,6 @@
 	"error_142": "Den oändliga \"{0}\"-gränsen kan inte stängas.",
 	"error_137": "För många misstag",
 	"error_143": "Operatör \"...\" förväntad.",
-	"error_144": "Icke sluten teckensträng."
+	"error_144": "Icke sluten teckensträng.",
+	"error_145": "Standardargumenten måste placeras i slutet."
 }

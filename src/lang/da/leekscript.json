@@ -175,5 +175,6 @@
 	"error_142": "Den uendelige \"{0}\"-grænse kan ikke lukkes.",
 	"error_137": "For mange fejl",
 	"error_143": "Operatør \"...\" forventet.",
-	"error_144": "Ikke-lukket tegnstreng."
+	"error_144": "Ikke-lukket tegnstreng.",
+	"error_145": "Standardargumenterne skal placeres til sidst."
 }
