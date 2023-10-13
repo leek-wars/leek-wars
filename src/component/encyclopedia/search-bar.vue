@@ -72,13 +72,13 @@
 		.result {
 			padding: 6px;
 			padding-left: 15px;
-			color: black;
+			color: var(--text-color) !important;
 			::v-deep b {
 				color: #5fad1b;
 				font-weight: bold;
 			}
 			&:hover {
-				background: #ddd;
+				background: var(--background-secondary);
 				text-decoration: none;
 			}
 		}

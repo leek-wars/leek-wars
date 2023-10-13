@@ -1215,6 +1215,9 @@
 			}
 			.errors {
 				color: red;
+				i {
+					color: red;
+				}
 				margin-right: 5px;
 			}
 			.warnings {

@@ -230,7 +230,7 @@
 		padding: 10px;
 		margin: 8px 0;
 		&:hover {
-			background: var(--background);
+			background: var(--background-secondary);
 		}
 	}
 	.result .title {

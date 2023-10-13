@@ -181,18 +181,17 @@ h2 {
 	margin-top: 20px;
 }
 .result {
-	background: #fafafa;
+	background: var(--pure-white);
 	padding: 10px;
 	margin: 8px 0;
 }
 .result:hover {
-	background: white;
+	background: var(--background-secondary);
 }
 .result .title {
 	// font-weight: 300;
 	font-size: 22px;
 	margin-bottom: 5px;
-	color: black;
 }
 .result .headline {
 	color: #777;
