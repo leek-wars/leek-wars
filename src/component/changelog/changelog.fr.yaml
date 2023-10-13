@@ -1,5 +1,7 @@
 240:
   title: Boss
+  added:
+    - "Trophée Aigle : 100 trèfles trouvés (bravo à Ref)."
   improved:
     - Nombreuses améliorations du mode sombre.
   fixed:
