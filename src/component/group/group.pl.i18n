@@ -42,5 +42,7 @@
 	"invite_sent": "Zaproszenie wysłane",
 	"error_invalid_email": "Adres e-mail musi być prawidłowy",
 	"new_leek": "Pozwól na utworzenie kolejnego pora",
-	"start_team_tournament": "Rozpoczęcie turnieju drużynowego"
+	"start_team_tournament": "Rozpoczęcie turnieju drużynowego",
+	"give_item": "Podaruj przedmiot",
+	"confirm_give_item": "Potwierdzić przekazanie tego przedmiotu członkowi {member}?"
 }

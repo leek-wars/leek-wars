@@ -42,5 +42,7 @@
 	"invite_sent": "Uitnodiging verzonden",
 	"error_invalid_email": "E-mailadres moet geldig zijn",
 	"new_leek": "Sta creatie van een andere prei toe",
-	"start_team_tournament": "Start een teamtoernooi"
+	"start_team_tournament": "Start een teamtoernooi",
+	"give_item": "Geef een item",
+	"confirm_give_item": "Bevestig de donatie van dit item aan lid {member} ?"
 }

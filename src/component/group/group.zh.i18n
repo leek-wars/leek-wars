@@ -42,5 +42,7 @@
 	"invite_sent": "邀请已发送",
 	"error_invalid_email": "电子邮件地址必须有效",
 	"new_leek": "允许创建另一个韭菜",
-	"start_team_tournament": "发起团队锦标赛"
+	"start_team_tournament": "发起团队锦标赛",
+	"give_item": "赠送物品",
+	"confirm_give_item": "确认将此物品捐赠给会员 {member} ?"
 }

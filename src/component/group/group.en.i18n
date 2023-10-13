@@ -42,5 +42,7 @@
 	"error_invalid_email": "Email address must be valid",
 	"new_leek": "Allow the creation of another leek",
 	"xp_blocked": "XP blocked",
-	"start_team_tournament": "Launch a team tournament"
+	"start_team_tournament": "Launch a team tournament",
+	"give_item": "Give an item",
+	"confirm_give_item": "Confirm the donation of this item to member {member} ?"
 }

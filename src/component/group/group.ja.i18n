@@ -42,5 +42,7 @@
 	"invite_sent": "招待状が送られました",
 	"error_invalid_email": "メールアドレスは有効でなければなりません",
 	"new_leek": "別のネギの作成を許可する",
-	"start_team_tournament": "チームトーナメントを立ち上げる"
+	"start_team_tournament": "チームトーナメントを立ち上げる",
+	"give_item": "品物を贈る",
+	"confirm_give_item": "この品物の会員{member}への寄付を確認しますか？"
 }

@@ -42,5 +42,7 @@
 	"invite_sent": "Inbjudan skickad",
 	"error_invalid_email": "E-postadressen måste vara giltig",
 	"new_leek": "Tillåt skapandet av ytterligare en purjolök",
-	"start_team_tournament": "Starta en lagturnering"
+	"start_team_tournament": "Starta en lagturnering",
+	"give_item": "Ge ett objekt",
+	"confirm_give_item": "Bekräfta donationen av denna artikel till medlem {member} ?"
 }

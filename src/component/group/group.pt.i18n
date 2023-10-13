@@ -42,5 +42,7 @@
 	"invite_sent": "Convite enviado",
 	"error_invalid_email": "O endereço de e-mail deve ser válido",
 	"new_leek": "Permitir a criação de outro alho-poró",
-	"start_team_tournament": "Lançar um torneio de equipas"
+	"start_team_tournament": "Lançar um torneio de equipas",
+	"give_item": "Dar um artigo",
+	"confirm_give_item": "Confirmar a doação deste artigo ao membro {member} ?"
 }

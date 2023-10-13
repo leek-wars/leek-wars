@@ -42,5 +42,7 @@
 	"invite_sent": "Invitación enviada",
 	"error_invalid_email": "La dirección de correo electrónico debe ser válida",
 	"new_leek": "Permitir la creación de otro puerro",
-	"start_team_tournament": "Iniciar un torneo por equipos"
+	"start_team_tournament": "Iniciar un torneo por equipos",
+	"give_item": "Regala un artículo",
+	"confirm_give_item": "¿ Confirmar la donación de este artículo al miembro {member} ?"
 }

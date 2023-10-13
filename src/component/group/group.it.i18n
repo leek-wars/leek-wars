@@ -42,5 +42,7 @@
 	"invite_sent": "Invito spedito",
 	"error_invalid_email": "L'indirizzo e-mail deve essere valido",
 	"new_leek": "Consentire la creazione di un altro porro",
-	"start_team_tournament": "Lanciare un torneo a squadre"
+	"start_team_tournament": "Lanciare un torneo a squadre",
+	"give_item": "Dare un oggetto",
+	"confirm_give_item": "Confermate la donazione di questo oggetto al socio {member}?"
 }
