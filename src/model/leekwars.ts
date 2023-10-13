@@ -449,8 +449,8 @@ const LeekWars = {
 	},
 	fileToImage(file: File, imageElem: Element) {
 		const reader = new FileReader()
-		reader.onloadend = (e: any) => {
-			imageElem.setAttribute('src', e.target.result)
+		reader.onloadend = e => {
+			imageElem.setAttribute('src', e.target!.result as string)
 		}
 		reader.readAsDataURL(file)
 	},
