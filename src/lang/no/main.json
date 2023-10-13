@@ -252,5 +252,6 @@
 	"dida_9": "Lagre AI-en og start deretter en ny kamp fra grønnsakshagen for å se resultatet. Seieren er din!",
 	"dida_10": "Denne opplæringen er over! Ta en titt på {help} ❔ for å lære alt om spillet. {tutorial} lærer deg å kode i 10 kapitler hvis du er nybegynner.",
 	"dida_11": "Ikke nøl med å be om hjelp i {chat} eller {forum}, vi hjelper deg gjerne.",
-	"dida_12": "Lykke til <b>{0}</b>!"
+	"dida_12": "Lykke til <b>{0}</b>!",
+	"hats": "Hatter"
 }

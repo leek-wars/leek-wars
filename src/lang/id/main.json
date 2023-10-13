@@ -252,5 +252,6 @@
 	"dida_9": "Simpan AI dan luncurkan kembali pertarungan dari kebun sayur untuk melihat hasilnya. Kemenangan menjadi milik Anda!",
 	"dida_10": "Tutorial ini sudah selesai! Lihat {help} ❔ untuk mempelajari semua tentang game ini. {tutorial} ini akan mengajarkan Anda cara membuat kode dalam 10 bab jika Anda seorang pemula.",
 	"dida_11": "Jangan ragu untuk meminta bantuan di {chat} atau {forum}, kami akan dengan senang hati membantu Anda.",
-	"dida_12": "Semoga berhasil <b>{0}</b>!"
+	"dida_12": "Semoga berhasil <b>{0}</b>!",
+	"hats": "Topi"
 }

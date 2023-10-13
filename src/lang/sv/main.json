@@ -252,5 +252,6 @@
 	"dida_9": "Spara AI och starta sedan om en strid från grönsakslandet för att se resultatet. Segern är din!",
 	"dida_10": "Denna handledning är över! Kolla in {help} ❔ för att lära dig allt om spelet. {tutorial} lär dig att koda i 10 kapitel om du är nybörjare.",
 	"dida_11": "Tveka inte att be om hjälp i {chat} eller {forum}, vi hjälper dig gärna.",
-	"dida_12": "Lycka till <b>{0}</b>!"
+	"dida_12": "Lycka till <b>{0}</b>!",
+	"hats": "Hattar"
 }

@@ -252,5 +252,6 @@
 	"dida_9": "Guarda la IA y vuelve a iniciar un combate desde el huerto para ver el resultado. ¡La victoria es tuya!",
 	"dida_10": "¡Este tutorial ha terminado! Echa un vistazo a la {help} ❔ para aprender todo sobre el juego. El {tutorial} te enseñará a codificar en 10 capítulos si eres principiante.",
 	"dida_11": "No dudes en pedir ayuda en {chat} o {forum}, estaremos encantados de ayudarte.",
-	"dida_12": "¡Buena suerte <b>{0}</b>!"
+	"dida_12": "¡Buena suerte <b>{0}</b>!",
+	"hats": "Sombreros"
 }

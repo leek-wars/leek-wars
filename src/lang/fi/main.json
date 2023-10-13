@@ -252,5 +252,6 @@
 	"dida_9": "Tallenna tekoäly ja käynnistä sitten taistelu uudelleen vihannespuutarhasta nähdäksesi tuloksen. Voitto on sinun!",
 	"dida_10": "Tämä opetusohjelma on ohi! Tutustu {help} ❔ oppiaksesi kaiken pelistä. {tutorial} opettaa sinut koodaamaan 10 luvussa, jos olet aloittelija.",
 	"dida_11": "Älä epäröi kysyä apua {chat} tai {forum}, autamme sinua mielellämme.",
-	"dida_12": "Onnea <b>{0}</b>!"
+	"dida_12": "Onnea <b>{0}</b>!",
+	"hats": "Hatut"
 }
