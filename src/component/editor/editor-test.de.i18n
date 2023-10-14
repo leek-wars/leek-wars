@@ -50,5 +50,7 @@
 	"test_maps": "Karten",
 	"test_advanced": "Vorauszahlung",
 	"templates": "Modelle",
-	"free": "Frei"
+	"free": "Frei",
+	"select_chips": "Flöhe auswählen",
+	"select_weapons": "Waffen auswählen"
 }

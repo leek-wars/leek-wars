@@ -50,5 +50,7 @@
 	"test_maps": "Kort",
 	"test_advanced": "Rykke",
 	"templates": "Modeller",
-	"free": "Gratis"
+	"free": "Gratis",
+	"select_chips": "Valg af kugler",
+	"select_weapons": "Vælg våben"
 }

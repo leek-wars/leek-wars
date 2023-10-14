@@ -50,5 +50,7 @@
 	"test_maps": "カード",
 	"test_advanced": "前進",
 	"templates": "モデル",
-	"free": "無料"
+	"free": "無料",
+	"select_chips": "弾丸の選択",
+	"select_weapons": "武器の選択"
 }

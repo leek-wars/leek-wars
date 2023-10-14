@@ -50,5 +50,7 @@
 	"test_maps": "Kartu-kartu",
 	"test_advanced": "Maju",
 	"templates": "Model",
-	"free": "Bebas"
+	"free": "Bebas",
+	"select_chips": "Memilih peluru",
+	"select_weapons": "Pilih senjata"
 }

@@ -50,5 +50,7 @@
 	"test_maps": "Karty",
 	"test_advanced": "Osiągnięcie",
 	"templates": "Modele",
-	"free": "Bezpłatny"
+	"free": "Bezpłatny",
+	"select_chips": "Wybieranie pocisków",
+	"select_weapons": "Wybór broni"
 }

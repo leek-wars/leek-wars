@@ -50,5 +50,7 @@
 	"test_maps": "Kortit",
 	"test_advanced": "Advance",
 	"templates": "Mallit",
-	"free": "Vapaa"
+	"free": "Vapaa",
+	"select_chips": "Luotien valitseminen",
+	"select_weapons": "Valitse aseet"
 }

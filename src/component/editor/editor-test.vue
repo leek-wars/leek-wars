@@ -289,7 +289,7 @@
 
 		<popup v-model="chipsDialog" :width="767">
 			<v-icon slot="icon">mdi-chip</v-icon>
-			<span slot="title">{{ $t('select_chips') }} [{{ currentLeek.chips.length }}/{{MAX_CHIPS}}]</span>
+			<span slot="title">{{ $t('select_chips') }} [{{ currentLeek.chips.length }}/{{ MAX_CHIPS }}]</span>
 			<div v-if="currentLeek" class="padding chips-dialog">
 				<rich-tooltip-item v-for="chip of availableChips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[LeekWars.chipTemplates[chip.template].item]" :bottom="true" :nodge="true">
 					<span :class="{disabled: hasChipEquipped(chip.id)}" v-on="on">
@@ -301,7 +301,7 @@
 
 		<popup v-model="weaponsDialog" :width="800">
 			<img slot="icon" src="/image/icon/garden.png">
-			<span slot="title">{{ $t('select_weapons') }} [{{ currentLeek.weapons.length }}/{{MAX_WEAPONS}}]</span>
+			<span slot="title">{{ $t('select_weapons') }} [{{ currentLeek.weapons.length }}/{{ MAX_WEAPONS }}]</span>
 			<div v-if="currentLeek" class="padding weapons-dialog">
 				<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ on }" :item="LeekWars.items[weapon.item]" :bottom="true" :nodge="true">
 					<span :class="{disabled: hasWeaponEquipped(weapon.item)}" v-on="on">
@@ -330,7 +330,7 @@
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 	import AIElement from '@/component/app/ai.vue'
 	import { CHIPS } from '@/model/chips'
-	import {ORDERED_CHIPS} from "@/model/sorted_chips"
+	import { ORDERED_CHIPS } from "@/model/sorted_chips"
 
 	class TestScenarioLeek {
 		id!: number
@@ -963,7 +963,7 @@
 			if (!this.currentLeek) { return }
 			this.currentLeek.chips.push(chip)
 			if (this.currentLeek.chips.length === this.MAX_CHIPS) {
-				this.weaponsDialog = false
+				this.chipsDialog = false
 			}
 			this.updateLeekLevel(this.currentLeek)
 			this.saveLeek()

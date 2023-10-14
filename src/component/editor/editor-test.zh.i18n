@@ -50,5 +50,7 @@
 	"test_maps": "牌",
 	"test_advanced": "进步",
 	"templates": "楷模",
-	"free": "自由的"
+	"free": "自由的",
+	"select_chips": "选择子弹",
+	"select_weapons": "选择武器"
 }

@@ -50,5 +50,7 @@
 	"test_maps": "Kort",
 	"test_advanced": "Förskott",
 	"templates": "Modeller",
-	"free": "Fri"
+	"free": "Fri",
+	"select_chips": "Välja kulor",
+	"select_weapons": "Välj vapen"
 }

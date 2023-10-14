@@ -50,5 +50,7 @@
 	"test_maps": "Kaarten",
 	"test_advanced": "Voorschot",
 	"templates": "Modellen",
-	"free": "Vrije"
+	"free": "Vrije",
+	"select_chips": "Kogels selecteren",
+	"select_weapons": "Selecteer wapens"
 }

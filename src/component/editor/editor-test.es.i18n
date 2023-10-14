@@ -50,5 +50,7 @@
 	"test_maps": "Tarjetas",
 	"test_advanced": "Avanzado",
 	"templates": "Modelos",
-	"free": "Libre"
+	"free": "Libre",
+	"select_chips": "Selección de viñetas",
+	"select_weapons": "Seleccionar armas"
 }

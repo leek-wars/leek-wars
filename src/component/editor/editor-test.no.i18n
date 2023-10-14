@@ -50,5 +50,7 @@
 	"test_maps": "Kort",
 	"test_advanced": "Avansere",
 	"templates": "Modeller",
-	"free": "Gratis"
+	"free": "Gratis",
+	"select_chips": "Valg av kuler",
+	"select_weapons": "Velg våpen"
 }

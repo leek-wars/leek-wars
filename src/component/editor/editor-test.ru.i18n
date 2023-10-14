@@ -50,5 +50,7 @@
 	"test_maps": "Карты",
 	"test_advanced": "Продвигать",
 	"templates": "Модели",
-	"free": "Бесплатно"
+	"free": "Бесплатно",
+	"select_chips": "Выбор пуль",
+	"select_weapons": "Выбор оружия"
 }

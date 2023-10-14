@@ -50,5 +50,7 @@
 	"test_maps": "Cartões",
 	"test_advanced": "Avançar",
 	"templates": "Modelos",
-	"free": "Livre"
+	"free": "Livre",
+	"select_chips": "Seleção de marcadores",
+	"select_weapons": "Selecionar armas"
 }
