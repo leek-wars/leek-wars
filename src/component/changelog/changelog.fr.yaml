@@ -4,6 +4,7 @@
     - "Trophée Aigle : 100 trèfles trouvés (bravo à Ref)."
   improved:
     - Nombreuses améliorations du mode sombre.
+    - Amélioration de l'interface de sélection des armes et puces dans l'éditeur (merci à WhiteSlash).
   fixed:
     - Correction d'un bug de combat avec le gant de boxe.
     - Le type de new Array/Map/Set/Interval() est bien [Type]<empty> au lieu de [Type].
