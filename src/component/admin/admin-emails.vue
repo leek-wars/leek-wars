@@ -83,7 +83,7 @@
 		border-right: 1px solid #ddd;
 		text-align: center;
 		padding: 0px 8px;
-		background: white;
+		background: var(--pure-white);
 	}
 	table th {
 		padding: 0 5px;
