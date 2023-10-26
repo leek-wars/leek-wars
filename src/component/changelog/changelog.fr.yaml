@@ -11,6 +11,7 @@
     - Correction de l'opérateur -x sur un type integer | real.
     - Correction du déterminisme des Set et Map avec des objets en clés (merci à Kava).
     - Correction de la touche Suppr dans les champs de l'éditeur (merci à WhiteSlash).
+    - Correction d'une faille permettant d'inscrire n'importe quel poireau en BR (merci à WhiteSlash).
 
 239:
   title: Mode sombre, documentation de l'API, Rééquilibrage, Set et Interval en LeekScript.
