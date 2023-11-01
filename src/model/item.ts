@@ -11,6 +11,13 @@ enum ItemType {
 }
 export { ItemType }
 
+class Item {
+	public id!: number
+	public template!: number
+	public quantity!: number
+	public time!: number
+}
+
 class ItemTemplate {
 	public id!: number
 	public name!: string
@@ -46,4 +53,4 @@ const ITEM_CATEGORY_NAME = {
 	[ItemType.RESOURCE]: 'resource',
 }
 
-export { ItemTemplate, ITEM_CATEGORY_NAME }
+export { Item, ItemTemplate, ITEM_CATEGORY_NAME }

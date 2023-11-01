@@ -192,11 +192,10 @@
 
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
-	import { ItemType } from '@/model/item'
+	import { Item, ItemType } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
-	import { Item } from '../editor/editor-item'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 
 	enum Sort {
@@ -227,13 +226,13 @@
 			const inventory = []
 			if (store.state.farmer) {
 				for (const weapon of store.state.farmer.weapons) {
-					inventory.push({type: ItemType.WEAPON, template: weapon.template, quantity: weapon.quantity})
+					inventory.push({type: ItemType.WEAPON, ...weapon})
 				}
 				inventory.push(...store.state.farmer.chips.map(chip => {return {type: ItemType.CHIP, ...chip}}))
 				inventory.push(...store.state.farmer.potions.map(potion => {return {type: ItemType.POTION, ...potion}}))
 				inventory.push(...store.state.farmer.hats.map(hat => {return {type: ItemType.HAT, ...hat}}))
 				inventory.push(...store.state.farmer.pomps.map(pomp => {return {type: ItemType.POMP, ...pomp}}))
-				inventory.push(...store.state.farmer.resources.map(p => {return {type: ItemType.RESOURCE, ...p}}))
+				inventory.push(...store.state.farmer.resources.map(resource => {return {type: ItemType.RESOURCE, ...resource}}))
 			}
 			return inventory
 		}
@@ -260,8 +259,8 @@
 		}
 
 		get sorted_inventory() {
-			if (this.sort === Sort.DATE) return this.filtered_inventory
-			return [...this.filtered_inventory].sort((a: any, b: any) => {
+			return [...this.filtered_inventory].sort((a: Item, b: Item) => {
+				if (this.sort === Sort.DATE) return b.time - a.time
 				if (this.sort === Sort.PRICE) return LeekWars.items[b.template].price! - LeekWars.items[a.template].price!
 				if (this.sort === Sort.PRICE_LOT) return LeekWars.items[b.template].price! * b.quantity - LeekWars.items[a.template].price! * a.quantity
 				if (this.sort === Sort.QUANTITY) return b.quantity - a.quantity
