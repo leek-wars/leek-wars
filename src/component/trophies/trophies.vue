@@ -117,11 +117,9 @@
 				<trophy v-for="trophy in sorted_trophies" :key="trophy.id" :trophy="trophy" />
 			</div>
 		</panel>
-		<div v-else>
-			<panel v-for="category in categories" :key="category.id" :icon="LeekWars.trophyCategoriesIcons[category.id - 1]" toggle="trophies/category">
-				<!--<div @click="isOpen[category.id] = !isOpen[category.id]">-->
+		<template v-else>
+			<panel v-for="category in categories" :key="category.id" :icon="LeekWars.trophyCategoriesIcons[category.id - 1]" :toggle="'trophies/toggle-' + category.id">
 				<template slot="title">{{ $t('trophy.category_' + category.name) }}</template>
-				<!--</div>-->
 				<template slot="actions">
 					<div class="category-bar-wrapper">
 						<div v-if="category.id !== 6" class="stats">{{ points[category.id] | number }} / {{ totalPoints[category.id] | number }}</div>
@@ -136,7 +134,7 @@
 					<trophy v-for="trophy in trophies[category.id]" :key="trophy.id" :trophy="trophy" />
 				</div>
 			</panel>
-		</div>
+		</template>
 		<panel icon="mdi-chart-line" class="last">
 			<template slot="title">{{ $t('stats') }}</template>
 			<loader v-show="!loaded" slot="content" />
@@ -181,7 +179,6 @@
 		count_by_difficulty: number[] = [0, 0, 0, 0, 0, 0]
 		farmer: any = null
 		variables: any = []
-		isActive = true;
 
 		created() {
 			this.hide_unlocked = localStorage.getItem('options/trophies/hide-unlocked') === 'true'
@@ -326,10 +323,6 @@
 		@Watch('sort_by')
 		public updateSort() {
 			localStorage.setItem('options/trophies/sort', this.sort_by)
-		}
-		@Watch('isOpen')
-		public updateIsOpen() {
-
 		}
 	}
 </script>
@@ -596,13 +589,5 @@
 				font-weight: 500;
 			}
 		}
-	}
-
-
-	.category-toggle {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		width: 100%;
 	}
 </style>
