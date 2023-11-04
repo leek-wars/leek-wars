@@ -390,14 +390,12 @@
 		downloadIncludes() {
 			if (!this.ai) { return }
 
-			const regex = /^[ \t\/*]*include\s*\(\s*["'](.*?)["']\s*\)[ \t]*;?.*$/gm
-			const regexComment1 = /^\s*\/\/.*$/
-			const regexComment2 = /^\s*\/\*.*\*\//
+			const regex = /^[ \t]*include\s*\(\s*["'](.*?)["']\s*\)[ \t]*;?.*$/gm
 
 			const included_ais = new Set<AI>()
 			const fun = (ai: AI): string => "/** " + ai.path + " **/\n\n" + (ai.code ? ai.code.replace(regex, (a, path) => {
 				const included = fileSystem.find(path, ai.folder)
-				if (!regexComment1.test(a) && !regexComment2.test(a) && included && !included_ais.has(included)) {
+				if (included && !included_ais.has(included)) {
 					included_ais.add(included)
 					return fun(included)
 				} else {
