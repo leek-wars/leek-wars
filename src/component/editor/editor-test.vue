@@ -102,7 +102,7 @@
 					<div v-ripple class="item add" @click="newLeekDialog = true">✚ {{ $t('main.add') }}</div>
 				</div>
 				<div v-if="currentLeek" class="column leek-column">
-					<div class="title name">{{ currentLeek.name }} <v-icon @click="changedLeekName = currentLeek.name;changeLeekNameDialog = true">mdi-pencil</v-icon>- {{ $t('main.level_n', [currentLeek.level]) }}</div>
+					<div class="title name">{{ currentLeek.name }} <v-icon v-if="!currentLeek.bot" @click="changedLeekName = currentLeek.name; changeLeekNameDialog = true">mdi-pencil</v-icon>&nbsp;- {{ $t('main.level_n', [currentLeek.level]) }}</div>
 					<div class="flex">
 						<div class="image card">
 							<leek-image :leek="currentLeek" :scale="1" />
