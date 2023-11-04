@@ -6,6 +6,8 @@
     - Nombreuses améliorations du mode sombre.
     - Amélioration de l'interface de sélection des armes et puces dans l'éditeur (merci à WhiteSlash).
     - Possibilité de renommer un poireau de test (merci à WhiteSlash).
+    - Amélioration du dialogue de sélection du profil GitHub (merci à Azecko).
+    - Possibilité de fermer des catégories sur la page trophées (merci à RG88000).
   fixed:
     - Correction d'un bug de combat avec le gant de boxe.
     - Le type de new Array/Map/Set/Interval() est bien [Type]<empty> au lieu de [Type].
