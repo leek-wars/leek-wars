@@ -880,14 +880,9 @@
 
 		changeGithub() {
 			if (!this.farmer) { return }
-			/* If the user enter his GitHub's URL like `github.com/username` or `https://github.com/username`,
-			it will only keep `username` */
-			let newGitHub = this.newGitHub.replace(
-				/^(?:https?:\/\/)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\/\b/,
-				''
-			)
-			this.farmer.github = newGitHub
-			LeekWars.post('farmer/set-github', {github: newGitHub})
+			/* If the user enter his GitHub's URL like `github.com/username` or `https://github.com/username`, it will only keep `username` */
+			this.farmer.github = this.newGitHub.substring(this.newGitHub.lastIndexOf('/') + 1)
+			LeekWars.post('farmer/set-github', {github: this.farmer.github})
 			this.githubDialog = false
 		}
 
