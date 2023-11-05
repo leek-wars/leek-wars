@@ -91,7 +91,9 @@
 
 		get sorted_resources() {
 			if (this.leek.resources) {
-				return Object.entries(this.leek.resources).sort((a, b) => LeekWars.items[b[0]].price! - LeekWars.items[a[0]].price!)
+				return Object.entries(this.leek.resources)
+					.filter(r => !!LeekWars.items[r[0]])
+					.sort((a, b) => LeekWars.items[b[0]].price! - LeekWars.items[a[0]].price!)
 			}
 			return {}
 		}
