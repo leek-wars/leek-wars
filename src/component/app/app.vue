@@ -74,6 +74,29 @@
 					<div v-if="LeekWars.message" v-html="$i18n.t(LeekWars.message.message, LeekWars.message.arguments)"></div>
 				</popup>
 
+				<popup v-model="annonce" :width="800">
+					<template slot="title"><v-icon>mdi-bullhorn-outline</v-icon> Annonce !</template>
+					<div class="annonce">
+						<h2>Concours pour le lancement des Boss</h2>
+						<div class="annonce-message">
+							<br>
+							En vue de la 2.40, je vous propose un petit concours avec des trophées à la clé.
+							<br><br>
+							Devinez les 3 futurs Boss de Leek Wars ! Vous avez jusqu'au 2 décembre.
+							<br><br>
+							Lien du sondage : <v-btn>
+								<a href="https://strawpoll.com/xVg7jVk6Knr">https://strawpoll.com/xVg7jVk6Knr</a>
+							</v-btn>
+							<br><br>
+							<img src="/image/boss_poll.png" width="100%">
+							<br><br>
+							Indiquez votre pseudo Leek Wars pour répondre.
+							<br><br>
+							Bonne chance !
+						</div>
+					</div>
+				</popup>
+
 				<!-- <popup v-model="annonce" :width="800">
 					<template slot="title"><v-icon>mdi-bullhorn-outline</v-icon> Annonce !</template>
 					<div class="annonce">
@@ -235,10 +258,10 @@
 				this.docEverywhereModel = false
 			})
 
-			// if (this.$store.state.connected && !localStorage.getItem('annonce/shop')) {
-			// 	this.annonce = true
-			// 	localStorage.setItem('annonce/shop', 'true')
-			// }
+			if (this.$store.state.connected && !localStorage.getItem('annonce/boss-poll')) {
+				this.annonce = true
+				localStorage.setItem('annonce/boss-poll', 'true')
+			}
 		}
 		changelogShow() {
 			LeekWars.get('changelog/get-last/' + this.$i18n.locale).then(data => {
