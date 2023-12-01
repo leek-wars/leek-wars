@@ -253,5 +253,6 @@
 	"dida_10": "Tämä opetusohjelma on ohi! Tutustu {help} ❔ oppiaksesi kaiken pelistä. {tutorial} opettaa sinut koodaamaan 10 luvussa, jos olet aloittelija.",
 	"dida_11": "Älä epäröi kysyä apua {chat} tai {forum}, autamme sinua mielellämme.",
 	"dida_12": "Onnea <b>{0}</b>!",
-	"hats": "Hatut"
+	"hats": "Hatut",
+	"10years": "10 vuotta purjosotaa!"
 }

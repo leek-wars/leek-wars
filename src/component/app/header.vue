@@ -7,6 +7,12 @@
 					<span v-if="LeekWars.LOCAL" class="local-label">local</span>
 					<span v-else-if="LeekWars.DEV" class="dev-label">dev</span>
 					<span v-if="env.BETA" class="beta-label">Bêta</span>
+					<tooltip>
+						<template v-slot:activator="{ on }">
+							<img v-on="on" class="hat" src="/image/10years_hat.png">
+						</template>
+						{{ $t('main.10years') }}
+					</tooltip>
 				</div>
 			</router-link>
 		</div>
@@ -196,6 +202,13 @@
 	}
 	.logo-wrapper {
 		white-space: nowrap;
+		position: relative;
+		.hat {
+			position: absolute;
+			top: -10px;
+			left: 160px;
+			height: 50px;
+		}
 	}
 	.header .buttons {
 		padding-bottom: 4px;

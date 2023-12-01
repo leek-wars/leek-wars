@@ -253,5 +253,6 @@
 	"dida_9": "Sauvegardez l'IA et relancez ensuite un combat depuis le potager pour voir le résultat. La victoire sera votre !",
 	"dida_10": "Ce tutoriel est terminé ! Consultez l'{help} ❔ pour tout apprendre sur le jeu. Le {tutorial} vous apprendra à coder en 10 chapitres si vous êtes débutant.",
 	"dida_11": "N'hésitez pas à demander de l'aide sur le {chat} ou le {forum}, nous serons ravis de vous aider.",
-	"dida_12": "Bonne chance <b>{0}</b> !"
+	"dida_12": "Bonne chance <b>{0}</b> !",
+	"10years": "10 ans de Leek Wars !"
 }
