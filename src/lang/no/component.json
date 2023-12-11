@@ -53,5 +53,8 @@
 	"rgb": "RGB",
 	"rgb_desc": "Det er dyrt, men det ser bra ut!",
 	"recovery_ram": "Feilsøking av RAM",
-	"recovery_core": "Feilsøking av kjernen"
+	"recovery_core": "Feilsøking av kjernen",
+	"core_desc": "XN.a-56 datakjerne: 1 teraflops rå datakraft. Klokket til 0,4 GHz. 100 MB hurtigminne.",
+	"recovery_ram_desc": "Feilsøking av komponent. Fjerner et komponentspor.",
+	"recovery_core_desc": "Feilsøking av komponent. Fjerner et komponentspor."
 }

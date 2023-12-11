@@ -787,6 +787,7 @@
 	.bosses {
 		display: flex;
 		align-items: baseline;
+		flex-wrap: wrap;
 	}
 	.boss-wrapper {
 		flex: 1;

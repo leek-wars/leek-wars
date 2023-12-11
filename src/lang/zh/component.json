@@ -53,5 +53,8 @@
 	"rgb": "RGB",
 	"rgb_desc": "虽然价格昂贵，但看起来不错！",
 	"recovery_ram": "内存故障排除",
-	"recovery_core": "故障排除核心"
+	"recovery_core": "故障排除核心",
+	"core_desc": "XN.a-56 计算核心：1 Tera-flops 的原始计算能力。主频为 0.4GHz。100MB 高速缓冲存储器。",
+	"recovery_ram_desc": "故障排除组件。移除组件插槽。",
+	"recovery_core_desc": "故障排除组件。移除组件插槽。"
 }

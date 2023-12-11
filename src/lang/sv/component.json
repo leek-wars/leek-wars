@@ -53,5 +53,8 @@
 	"rgb": "RGB",
 	"rgb_desc": "Den är dyr men ser bra ut!",
 	"recovery_ram": "Felsökning av RAM-minne",
-	"recovery_core": "Felsökning av kärnan"
+	"recovery_core": "Felsökning av kärnan",
+	"core_desc": "Beräkningskärna XN.a-56: 1 tera flops rå beräkningskraft. Klockad till 0,4 GHz. 100 MB cacheminne.",
+	"recovery_ram_desc": "Felsökning av komponent. Tar bort en komponentplats.",
+	"recovery_core_desc": "Felsökning av komponent. Tar bort en komponentplats."
 }

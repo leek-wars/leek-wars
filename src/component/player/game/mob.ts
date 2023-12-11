@@ -99,6 +99,10 @@ class Mob extends FightEntity {
 			}, { once: true })
 		}
 
+		if (this.template.hat) {
+			super.setHat(this.template.hat)
+		}
+
 		if (this.template.hand) {
 			this.handTex = this.template.hand.load(this.game)
 		}

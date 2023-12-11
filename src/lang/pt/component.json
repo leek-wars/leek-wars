@@ -53,5 +53,8 @@
 	"rgb": "RGB",
 	"rgb_desc": "É caro mas tem bom aspeto!",
 	"recovery_ram": "Resolução de problemas de RAM",
-	"recovery_core": "Núcleo de resolução de problemas"
+	"recovery_core": "Núcleo de resolução de problemas",
+	"core_desc": "Núcleo de computação XN.a-56: 1 Tera-flops de potência de computação bruta. Velocidade de 0,4 GHz. memória cache de 100MB.",
+	"recovery_ram_desc": "Componente de resolução de problemas. Remove uma ranhura de componente.",
+	"recovery_core_desc": "Componente de resolução de problemas. Remove uma ranhura de componente."
 }

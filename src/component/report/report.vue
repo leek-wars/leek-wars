@@ -478,6 +478,8 @@
 				let title = this.$i18n.t('title') + " - "
 				if (this.fight.type === FightType.BATTLE_ROYALE) {
 					title += "Battle Royale"
+				} else if (this.fight.type === FightType.BOSS) {
+					title += this.$t('entity.' + this.fight.boss_name) as string
 				} else {
 					title += this.fight.team1_name + " vs " + this.fight.team2_name
 				}

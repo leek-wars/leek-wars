@@ -53,5 +53,8 @@
 	"rgb": "RGB",
 	"rgb_desc": "Harganya mahal, tetapi tampilannya bagus!",
 	"recovery_ram": "Memecahkan masalah RAM",
-	"recovery_core": "Inti pemecahan masalah"
+	"recovery_core": "Inti pemecahan masalah",
+	"core_desc": "Inti komputasi XN.a-56: 1 Tera-flop daya komputasi mentah. Clock pada 0,4GHz. memori cache 100MB.",
+	"recovery_ram_desc": "Memecahkan masalah komponen. Menghapus slot komponen.",
+	"recovery_core_desc": "Memecahkan masalah komponen. Menghapus slot komponen."
 }

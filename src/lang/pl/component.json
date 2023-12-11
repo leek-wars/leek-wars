@@ -53,5 +53,8 @@
 	"rgb": "RGB",
 	"rgb_desc": "Jest drogi, ale wygląda dobrze!",
 	"recovery_ram": "Rozwiązywanie problemów z pamięcią RAM",
-	"recovery_core": "Rozwiązywanie problemów z rdzeniem"
+	"recovery_core": "Rozwiązywanie problemów z rdzeniem",
+	"core_desc": "Rdzeń obliczeniowy XN.a-56: 1 teraflop surowej mocy obliczeniowej. Taktowanie 0,4 GHz. 100 MB pamięci podręcznej.",
+	"recovery_ram_desc": "Rozwiązywanie problemów z komponentem. Usuwa gniazdo komponentu.",
+	"recovery_core_desc": "Rozwiązywanie problemów z komponentem. Usuwa gniazdo komponentu."
 }

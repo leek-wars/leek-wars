@@ -53,5 +53,8 @@
 	"rgb": "RGB",
 	"rgb_desc": "¡Es caro pero tiene buena pinta!",
 	"recovery_ram": "Solución de problemas de RAM",
-	"recovery_core": "Solución de problemas del núcleo"
+	"recovery_core": "Solución de problemas del núcleo",
+	"core_desc": "Núcleo de cálculo XN.a-56: 1 teraflops de potencia de cálculo bruta. Frecuencia de reloj de 0,4 GHz. memoria caché de 100 MB.",
+	"recovery_ram_desc": "Componente de localización de averías. Elimina una ranura de componente.",
+	"recovery_core_desc": "Componente de localización de averías. Elimina una ranura de componente."
 }

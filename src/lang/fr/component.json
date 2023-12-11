@@ -1,9 +1,10 @@
 {
 	"core": "Cœur XN.a-56",
-	"core2": "Cœur de calcul X.v-57",
+	"core_desc": "Cœur de calcul XN.a-56 : 1 Tera-flops de calcul brut. Cadencé à 0,4GHz. 100Mo de mémoire cache.",
+	"core2": "Cœur de calcul Y.v-57",
 	"core2_desc": "Cœur de calcul X.v-57 : 10 Tera-flops de calcul brut. Cadencé à 2,4GHz, 3,2GHz en mode Turbo. 1000Mo de mémoire cache.",
-	"core3": "Cœur de calcul X.v-57",
-	"core3_desc": "Cœur de calcul X.v-57 : 10 Tera-flops de calcul brut. Cadencé à 2,4GHz, 3,2GHz en mode Turbo. 1000Mo de mémoire cache.",
+	"core3": "Cœur de calcul Z.v-850",
+	"core3_desc": "Cœur de calcul Z.v-850 : 100 Tera-flops de calcul brut. Cadencé à 4,8GHz, 5,6GHz en mode Turbo. 10Go de mémoire cache.",
 	"battery": "Pile",
 	"nuclear_core": "Générateur nucléaire",
 	"iron_plate": "Plaque de fer",

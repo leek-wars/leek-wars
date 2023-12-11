@@ -53,5 +53,8 @@
 	"rgb": "RGB",
 	"rgb_desc": "Es ist teuer, aber es sieht schön aus!",
 	"recovery_ram": "RAM zur Fehlerbehebung",
-	"recovery_core": "Pannenherz"
+	"recovery_core": "Pannenherz",
+	"core_desc": "XN.a-56 Rechenkern: 1 Teraflops Bruttorechenleistung. Mit 0,4 GHz getaktet. 100 MB Cache-Speicher.",
+	"recovery_ram_desc": "Komponente für die Fehlerbehebung. Entfernt einen Komponentenplatz.",
+	"recovery_core_desc": "Komponente für die Fehlerbehebung. Entfernt einen Komponentenplatz."
 }

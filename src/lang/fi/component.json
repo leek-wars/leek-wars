@@ -53,5 +53,8 @@
 	"rgb": "RGB",
 	"rgb_desc": "Se on kallis, mutta näyttää hyvältä!",
 	"recovery_ram": "RAM-muistin vianmääritys",
-	"recovery_core": "Vianmääritys ydin"
+	"recovery_core": "Vianmääritys ydin",
+	"core_desc": "XN.a-56-laskentaydin: 1 teraflopin raaka laskentateho. Kellotaajuus 0,4 GHz. 100 Mt välimuistia.",
+	"recovery_ram_desc": "Vianmäärityskomponentti. Poistaa komponenttipaikan.",
+	"recovery_core_desc": "Vianmäärityskomponentti. Poistaa komponenttipaikan."
 }

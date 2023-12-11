@@ -53,5 +53,8 @@
 	"rgb": "RGB",
 	"rgb_desc": "È costoso ma ha un bell'aspetto!",
 	"recovery_ram": "Risoluzione dei problemi della RAM",
-	"recovery_core": "Risoluzione dei problemi del nucleo"
+	"recovery_core": "Risoluzione dei problemi del nucleo",
+	"core_desc": "Core di calcolo XN.a-56: 1 Tera-flop di potenza di calcolo grezza. Con un clock di 0,4 GHz. 100 MB di memoria cache.",
+	"recovery_ram_desc": "Risoluzione dei problemi del componente. Rimuove uno slot per componenti.",
+	"recovery_core_desc": "Risoluzione dei problemi del componente. Rimuove uno slot per componenti."
 }

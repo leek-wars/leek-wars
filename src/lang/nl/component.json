@@ -53,5 +53,8 @@
 	"rgb": "RGB",
 	"rgb_desc": "Het is duur, maar het ziet er goed uit!",
 	"recovery_ram": "Problemen met RAM oplossen",
-	"recovery_core": "Probleemoplossende kern"
+	"recovery_core": "Probleemoplossende kern",
+	"core_desc": "XN.a-56 rekenkern: 1 Tera-flops aan ruwe rekenkracht. Geklokt op 0,4GHz. 100 MB cachegeheugen.",
+	"recovery_ram_desc": "Component voor probleemoplossing. Verwijdert een componentsleuf.",
+	"recovery_core_desc": "Component voor probleemoplossing. Verwijdert een componentsleuf."
 }

@@ -53,5 +53,8 @@
 	"rgb": "RGB",
 	"rgb_desc": "Det er dyrt, men det ser godt ud!",
 	"recovery_ram": "Fejlfinding af RAM",
-	"recovery_core": "Fejlfinding i kernen"
+	"recovery_core": "Fejlfinding i kernen",
+	"core_desc": "XN.a-56 computerkerne: 1 Tera-flops rå computerkraft. Taktet ved 0,4 GHz. 100 MB cache-hukommelse.",
+	"recovery_ram_desc": "Fejlfinding af komponent. Fjerner en komponentplads.",
+	"recovery_core_desc": "Fejlfinding af komponent. Fjerner en komponentplads."
 }
