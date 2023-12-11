@@ -4,6 +4,7 @@ import { Cell } from "@/model/cell"
 import { TURRET_DATA } from '@/model/turret-data'
 import { ChipAnimation } from "./chips"
 import { SHADOW_QUALITY, T, Texture } from './texture'
+import { i18n } from "@/model/i18n"
 
 class Piece {
 	i!: number
@@ -24,6 +25,9 @@ class Turret extends FightEntity {
 
 	constructor(game: Game, team: number, level: number, name: string) {
 		super(game, EntityType.TURRET, team, name)
+
+		this.translatedName = i18n.t('entity.turret') as string
+
 		this.baseZ = 0
 		const color = team === 1 ? 'blue' : 'red'
 		this.textures.base = T.get(this.game, 'image/turret/base_' + color + '.png', true, SHADOW_QUALITY)

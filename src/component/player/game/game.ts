@@ -587,8 +587,6 @@ class Game {
 
 			} else if (entity instanceof Turret) {
 
-				entity.name = i18n.t('entity.turret') as string
-
 				if (this.teams[entity.team - 1] === undefined) {
 					this.teams[entity.team - 1] = []
 				}
