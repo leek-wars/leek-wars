@@ -1,5 +1,5 @@
 {
-	"by_x_the_d": "By {farmer} the {date}",
+	"by_x_the_d": "By {farmer} on {date}",
 	"cancel": "Cancel",
 	"create_new_topic": "Create a topic",
 	"create_topic": "Create topic",
