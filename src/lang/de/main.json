@@ -262,5 +262,6 @@
 	"workshop": "Workshop",
 	"scheme": "Schema",
 	"schemes": "Schemata",
-	"scheme_x": "Schema: {0}"
+	"scheme_x": "Schema: {0}",
+	"edit": "Bearbeiten"
 }

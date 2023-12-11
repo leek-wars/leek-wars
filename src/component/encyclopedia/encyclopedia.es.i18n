@@ -7,5 +7,7 @@
 	"n_contributions": "{n} contribuciones",
 	"not_found": "La página \"{name}\" no existe en la enciclopedia española.",
 	"contributor_create": "Eres un colaborador 😎 Haz clic en Editar para comenzar a editar esta página",
-	"locked": "Completa el capítulo para desbloquear la IA completa"
+	"locked": "Completa el capítulo para desbloquear la IA completa",
+	"end_edition": "Fin de la edición",
+	"editing_by_x": "Actualmente editado por {0}"
 }

@@ -7,5 +7,7 @@
 	"n_contributions": "{n} contributions",
 	"not_found": "The page « {name} » does not exist on the encyclopedia in English.",
 	"contributor_create": "You are a contributor 😎 Click Edit to start editing this page",
-	"locked": "Finish the chapter to unlock the complete AI"
+	"locked": "Finish the chapter to unlock the complete AI",
+	"end_edition": "End editing",
+	"editing_by_x": "Currently being edited by {0}"
 }

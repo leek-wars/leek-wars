@@ -7,5 +7,7 @@
 	"n_contributions": "{n} bidrag",
 	"not_found": "Siden \"{name}\" findes ikke på den franske encyklopædi.",
 	"contributor_create": "Du er en bidragyder 😎 Klik på Rediger for at begynde at redigere denne side",
-	"locked": "Fuldfør kapitlet for at låse op for den fulde AI"
+	"locked": "Fuldfør kapitlet for at låse op for den fulde AI",
+	"end_edition": "Afslut redigering",
+	"editing_by_x": "Bliver i øjeblikket redigeret af {0}"
 }

@@ -28,19 +28,19 @@
 				</v-menu>
 				<div v-if="contributor && edition && modified" class="tab" @click="save">
 					<v-icon>mdi-content-save</v-icon>
-					Sauvegarder
+					{{ $t('main.save') }}
 				</div>
 				<div v-if="contributor && edition" class="tab" @click="editEnd">
 					<v-icon>mdi-check</v-icon>
-					Terminer l'édition
+					{{ $t('end_edition') }}
 				</div>
 				<div v-else-if="page.locker" class="tab disabled">
 					<v-icon>mdi-lock</v-icon>
-					En cours d'édition par {{ page.locker_name }}
+					{{ $t('editing_by_x', [page.locker_name]) }}
 				</div>
 				<div v-if="contributor && !edition && (!page.locker || !$store.state.farmer || page.locker === $store.state.farmer.id)" class="tab action" @click="editStart">
 					<v-icon>mdi-pencil-outline</v-icon>
-					Modifier
+					{{ $t('main.edit') }}
 				</div>
 				<v-menu v-if="page && Object.values(page.translations).length" offset-y>
 					<template v-slot:activator="{ on }">

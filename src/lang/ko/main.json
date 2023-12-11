@@ -262,5 +262,6 @@
 	"workshop": "워크샵",
 	"scheme": "다이어그램",
 	"schemes": "회로도",
-	"scheme_x": "다이어그램: {0}"
+	"scheme_x": "다이어그램: {0}",
+	"edit": "수정"
 }

@@ -262,5 +262,6 @@
 	"workshop": "Workshop",
 	"scheme": "Diagram",
 	"schemes": "Schema's",
-	"scheme_x": "Diagram: {0}"
+	"scheme_x": "Diagram: {0}",
+	"edit": "Aanpassen"
 }

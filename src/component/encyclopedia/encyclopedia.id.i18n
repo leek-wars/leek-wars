@@ -7,5 +7,7 @@
 	"n_contributions": "{n} kontribusi",
 	"not_found": "Halaman \"{name}\" tidak ada di ensiklopedia Prancis.",
 	"contributor_create": "Anda adalah kontributor 😎 Klik Edit untuk mulai mengedit halaman ini",
-	"locked": "Selesaikan bab ini untuk membuka AI lengkap"
+	"locked": "Selesaikan bab ini untuk membuka AI lengkap",
+	"end_edition": "Mengakhiri pengeditan",
+	"editing_by_x": "Saat ini sedang diedit oleh {0}"
 }

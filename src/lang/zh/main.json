@@ -262,5 +262,6 @@
 	"workshop": "工作坊",
 	"scheme": "图表",
 	"schemes": "示意图",
-	"scheme_x": "图表：{0}"
+	"scheme_x": "图表：{0}",
+	"edit": "修改"
 }

@@ -262,5 +262,6 @@
 	"workshop": "Taller",
 	"scheme": "Diagrama",
 	"schemes": "Esquemas",
-	"scheme_x": "Diagrama: {0}"
+	"scheme_x": "Diagrama: {0}",
+	"edit": "Modifique"
 }

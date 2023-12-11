@@ -7,5 +7,7 @@
 	"n_contributions": "{n} 기여",
 	"not_found": "프랑스 백과사전에 \"{name}\" 페이지가 없습니다.",
 	"contributor_create": "당신은 기여자입니다 😎 이 페이지 편집을 시작하려면 편집을 클릭하십시오",
-	"locked": "전체 AI의 잠금을 해제하려면 챕터를 완료하세요."
+	"locked": "전체 AI의 잠금을 해제하려면 챕터를 완료하세요.",
+	"end_edition": "편집 종료",
+	"editing_by_x": "현재 {0}이(가) 편집 중입니다"
 }

@@ -7,5 +7,7 @@
 	"n_contributions": "{n} bijdragen",
 	"not_found": "De pagina \"{name}\" bestaat niet in de Franse encyclopedie.",
 	"contributor_create": "U bent een bijdrager 😎 Klik op Bewerken om deze pagina te bewerken",
-	"locked": "Voltooi het hoofdstuk om de volledige AI te ontgrendelen"
+	"locked": "Voltooi het hoofdstuk om de volledige AI te ontgrendelen",
+	"end_edition": "Einde bewerking",
+	"editing_by_x": "Momenteel bewerkt door {0}"
 }

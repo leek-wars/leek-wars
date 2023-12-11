@@ -262,5 +262,6 @@
 	"workshop": "Bengkel",
 	"scheme": "Diagram",
 	"schemes": "Skema",
-	"scheme_x": "Diagram: {0}"
+	"scheme_x": "Diagram: {0}",
+	"edit": "Memodifikasi"
 }

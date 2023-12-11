@@ -262,5 +262,6 @@
 	"workshop": "Työpaja",
 	"scheme": "Kaavio",
 	"schemes": "Kaaviot",
-	"scheme_x": "Kaavio: {0}"
+	"scheme_x": "Kaavio: {0}",
+	"edit": "Muokkaa"
 }

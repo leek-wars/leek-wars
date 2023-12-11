@@ -7,5 +7,7 @@
     "n_contributions": "{n} contributions",
     "not_found": "La page « {name} » est inexistante sur l'encyclopédie en Français.",
     "contributor_create": "Vous êtes un contributeur 😎 Cliquez sur Modifier pour commencer la rédaction de cette page",
-    "locked": "Terminez le chapitre pour débloquer l'IA complète"
+    "locked": "Terminez le chapitre pour débloquer l'IA complète",
+    "end_edition": "Terminer l'édition",
+    "editing_by_x": "En cours d'édition par {0}"
 }

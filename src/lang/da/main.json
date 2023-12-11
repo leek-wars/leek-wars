@@ -262,5 +262,6 @@
 	"workshop": "Værksted",
 	"scheme": "Diagram",
 	"schemes": "Skemaer",
-	"scheme_x": "Diagram: {0}"
+	"scheme_x": "Diagram: {0}",
+	"edit": "Ændre"
 }

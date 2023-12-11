@@ -7,5 +7,7 @@
 	"n_contributions": "{n} contribuições",
 	"not_found": "A página \"{name}\" não existe na enciclopédia francesa.",
 	"contributor_create": "Você é um colaborador 😎 Clique em Editar para começar a editar esta página",
-	"locked": "Complete o capítulo para desbloquear a IA completa"
+	"locked": "Complete o capítulo para desbloquear a IA completa",
+	"end_edition": "Terminar a edição",
+	"editing_by_x": "Atualmente a ser editado por {0}"
 }

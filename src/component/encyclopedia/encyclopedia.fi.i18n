@@ -7,5 +7,7 @@
 	"n_contributions": "{n} lahjoitusta",
 	"not_found": "Sivua \"{name}\" ei ole ranskalaisessa tietosanakirjassa.",
 	"contributor_create": "Olet avustaja 😎 Aloita tämän sivun muokkaaminen napsauttamalla Muokkaa",
-	"locked": "Suorita luku avataksesi koko tekoälyn"
+	"locked": "Suorita luku avataksesi koko tekoälyn",
+	"end_edition": "Lopeta muokkaus",
+	"editing_by_x": "Tällä hetkellä muokkaa {0}"
 }
