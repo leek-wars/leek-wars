@@ -1120,7 +1120,7 @@
     - Correction of the limit of the test leeks' weapons and chips (Signaled by Losarou).
     - Correction of the display of inactive farmers in italic in the rankings.
     - Notifications are marqued as unread when we read them all.
-    - Correction of the isStatic function on the turret with no equiped AI (Thanks to Caneton).
+    - Correction of the isStatic function on the turret with no equipped AI (Thanks to Caneton).
     - Correction of the Explorer trophy.
 
 209:
@@ -1436,7 +1436,7 @@
     - "Farmer garden : the first 3 opponents all have a similar talent, instead of an inferior talent."
     - "#ai Erosion is up to 10% in case of critical hit."
     - Roadmap update.
-    - Displaying in the market the leeks on which the item is equiped (Thanks to Amal).
+    - Displaying in the market the leeks on which the item is equipped (Thanks to Amal).
     - Added the possibility to search in a precise category in the forum."
   improved:
     - Added a confirmation popup when trying to suppress a team composition.
