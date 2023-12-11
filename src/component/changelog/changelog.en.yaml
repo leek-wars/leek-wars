@@ -1,19 +1,19 @@
 240:
-  title: Boss + Components + Manufacturing + Cores and RAM
+  title: 10 years! Boss, Components, Manufacturing, Cores and RAM
   added:
-    - 3 Bosses added.
-    - Components added (50).
-    - Added item crafting.
-    - (Re)-addition of Hearts feature increasing maximum operations.
-    - (Re)-added RAM feature which increases chip count and usable RAM.
-    - "Eagle Trophy: 100 clovers found (kudos to Ref)."
-    - Addition of 30 new trophies relating to chests and bosses.
+    - "3 Bosses added. #img_240_boss"
+    - "Added components (50). #img_240_components"
+    - "Added item crafting. #img_240_craft"
+    - "(Re)-added feature Hearts increase maximum operations. #img_240_cores"
+    - "(Re)-added RAM feature increases chip count and usable RAM. #img_240_cores"
+    - "Eagle Trophy: 100 clovers found (well done Ref). #img_240_eagle"
+    - "Added 30 new trophies related to chests and bosses. #img_240_trophies"
   improved:
     - Numerous improvements to dark mode.
     - Improved weapon and chip selection interface in the editor (thanks to WhiteSlash).
     - Ability to rename a test leek (thanks to WhiteSlash).
     - Improved GitHub profile selection dialog (thanks to Azecko).
-    - Possibility of closing categories on the trophies page (thanks to RG88000).
+    - "Ability to close categories on trophy page (thanks to RG88000) #img_240_trophy_fold"
   fixed:
     - Fixed fighting bug with boxing glove.
     - The type of new Array/Map/Set/Interval() is now [Type]<empty> instead of [Type].

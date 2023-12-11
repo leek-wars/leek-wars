@@ -1,19 +1,19 @@
 240:
-  title: Boss + Composants + Fabrication + Coeurs et RAM
+  title: 10 ans ! Boss, Composants, Fabrication, Cœurs et RAM
   added:
-    - Ajout de 3 Boss.
-    - Ajout des composants (50).
-    - Ajout du craft d'items.
-    - (Re)-ajout de la caractéristique Coeurs augmentent les opérations maximum.
-    - (Re)-ajout de la caractéristique RAM qui augmente le nombre de puces et la RAM utilisable.
-    - "Trophée Aigle : 100 trèfles trouvés (bravo à Ref)."
-    - Ajout de 30 nouveaux trophées relatifs aux coffres et boss.
+    - "Ajout de 3 Boss. #img_240_boss"
+    - "Ajout des composants (50). #img_240_components"
+    - "Ajout du craft d'items. #img_240_craft"
+    - "(Re)-ajout de la caractéristique Cœurs augmentent les opérations maximum. #img_240_cores"
+    - "(Re)-ajout de la caractéristique RAM qui augmente le nombre de puces et la RAM utilisable. #img_240_cores"
+    - "Trophée Aigle : 100 trèfles trouvés (bravo à Ref). #img_240_eagle"
+    - "Ajout de 30 nouveaux trophées relatifs aux coffres et boss. #img_240_trophies"
   improved:
     - Nombreuses améliorations du mode sombre.
     - Amélioration de l'interface de sélection des armes et puces dans l'éditeur (merci à WhiteSlash).
     - Possibilité de renommer un poireau de test (merci à WhiteSlash).
     - Amélioration du dialogue de sélection du profil GitHub (merci à Azecko).
-    - Possibilité de fermer des catégories sur la page trophées (merci à RG88000).
+    - "Possibilité de fermer des catégories sur la page trophées (merci à RG88000). #img_240_trophy_fold"
   fixed:
     - Correction d'un bug de combat avec le gant de boxe.
     - Le type de new Array/Map/Set/Interval() est bien [Type]<empty> au lieu de [Type].
