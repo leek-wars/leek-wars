@@ -1,8 +1,8 @@
 {
 	"n_contributors": "No contributor | <b>{n}</b> contributor | <b>{n}</b> contributors",
 	"search": "Search a page",
-	"created_by_x_the_y": "Created by {farmer} the {date}",
-	"edited_by_x_the_y": "Edited by {farmer} the {date}",
+	"created_by_x_the_y": "Created by {farmer} on {date}",
+	"edited_by_x_the_y": "Edited by {farmer} on {date}",
 	"n_views": "{v} views",
 	"n_contributions": "{n} contributions",
 	"not_found": "The page « {name} » does not exist on the encyclopedia in English.",
