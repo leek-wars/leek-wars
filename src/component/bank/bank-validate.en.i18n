@@ -9,7 +9,7 @@
 	"payment_success_simple": "Payment validated!",
 	"no_running_payment": "no running paiement",
 	"failed_to_execute_payment_wrong_code": "the code you entered is not valid",
-	"failed_to_execute_payment": "the payment did not work or was cancelled",
+	"failed_to_execute_payment": "the payment did not work or was canceled",
 	"payment_cancelled": "You canceled the payment",
 	"payment_no_code": "No code",
 	"payment_wrong_code": "Invalid code"
