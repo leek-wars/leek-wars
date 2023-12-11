@@ -56,7 +56,8 @@
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { COSTS } from '@/model/leek'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	@Component({ name: "characteristic-tooltip" })
 	export default class CharacteristicTooltip extends Vue {
 		@Prop() characteristic!: string
@@ -66,33 +67,33 @@
 		@Prop() test!: boolean
 
 		get capitalSpent() {
-			switch (this.characteristic) {
-			case 'life':
-				return Math.min(this.base - (100 + (this.leek.level - 1) * 3), 1000) * 1 / 4 + Math.min(Math.max(0, this.base - (1100 + (this.leek.level - 1) * 3)), 999) * 1 / 3 + Math.max(0, this.base - (2100 + (this.leek.level - 1) * 3)) * 1 / 2
-			case 'tp': {
-				const added = this.base - 10
-				const progression = added <= 14 ? added : 14
-				const leftover = added > 14 ? added - 14 : 0
-				return added > 0 ? 25 * progression + progression * (progression + 1) * 5 / 2 + leftover * 100 : 0
+			const base = {
+				life: 100 + (this.leek.level - 1) * 3,
+				strength: 0,
+				wisdom: 0,
+				agility: 0,
+				resistance: 0,
+				science: 0,
+				magic: 0,
+				frequency: 100,
+				cores: 1,
+				ram: 6,
+				tp: 10,
+				mp: 3
+			} as any
+			let characLeft = this.base - base[this.characteristic]
+			let characAdded = 0
+			let step = 0
+			let usedCapital = 0
+			while (characAdded < characLeft) {
+				if (step < COSTS[this.characteristic].length - 1 && characAdded >= COSTS[this.characteristic][step + 1].step) {
+					step++
+				}
+				const cost = COSTS[this.characteristic][step]
+				characAdded += cost.sup
+				usedCapital += cost.capital
 			}
-			case 'mp': {
-				const added = this.base - 3
-				const progression = added <= 8 ? added : 8
-				const leftover = added > 8 ? added - 8 : 0
-				return added > 0 ? progression * (progression + 1) * 20 / 2 + leftover * 180 : 0
-			}
-			case 'frequency':
-				return this.base - 100
-			case 'cores':
-				return (this.base - 1) * 50
-			case 'ram':
-				const added = this.base - 6
-				const progression = added <= 8 ? added : 8
-				const leftover = added > 8 ? added - 8 : 0
-				return added > 0 ? progression * (progression + 1) * 10 / 2 + leftover * 100 : 0
-			default:
-				return Math.min(this.base, 200) / 2 + Math.min(Math.max(0, this.base - 200), 200) + Math.min(Math.max(0, this.base - 400), 200) * 2 + Math.max(0, this.base - 600) * 3
-			}
+			return usedCapital
 		}
 	}
 </script>
