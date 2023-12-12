@@ -44,5 +44,5 @@
 	"xp_blocked": "XP blocked",
 	"start_team_tournament": "Launch a team tournament",
 	"give_item": "Give an item",
-	"confirm_give_item": "Confirm the donation of this item to member {member} ?"
+	"confirm_give_item": "Confirm the donation of this item to member {member}?"
 }
