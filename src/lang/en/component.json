@@ -55,6 +55,6 @@
 	"recovery_ram": "RAM for troubleshooting",
 	"recovery_core": "Troubleshooting core",
 	"core_desc": "XN.a-56 computing core: 1 Tera-flops of raw computing power. Clocked at 0.4GHz. 100MB cache memory.",
-	"recovery_ram_desc": "Troubleshooting component. Removes a component slot.",
-	"recovery_core_desc": "Troubleshooting component. Removes a component slot."
+	"recovery_ram_desc": "Troubleshooting component. Removes two component slots.",
+	"recovery_core_desc": "Troubleshooting component. Removes two component slots."
 }

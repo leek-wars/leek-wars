@@ -890,7 +890,7 @@
 			if (this.leek) {
 				for (const component of this.leek.components) {
 					if (component) {
-						if (component.template === 406 || component.template === 407) n--
+						if (component.template === 406 || component.template === 407) n -= 2
 					}
 				}
 			}

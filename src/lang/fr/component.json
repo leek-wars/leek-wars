@@ -54,7 +54,7 @@
 	"rgb": "RGB",
 	"rgb_desc": "C'est cher mais ça fait joli !",
 	"recovery_ram": "RAM de dépannage",
-	"recovery_ram_desc": "Composant de dépannage. Retire un emplacement de composant.",
+	"recovery_ram_desc": "Composant de dépannage. Retire deux emplacements de composant.",
 	"recovery_core": "Cœur de dépannage",
-	"recovery_core_desc": "Composant de dépannage. Retire un emplacement de composant."
+	"recovery_core_desc": "Composant de dépannage. Retire deux emplacements de composant."
 }
