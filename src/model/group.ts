@@ -22,6 +22,8 @@ class Group {
 	public level!: number
 	public max_weapons!: number
 	public max_chips!: number
+	public cores!: number
+	public ram!: number
 	public capital!: number
 	public members!: Farmer[]
 	public use_passwords!: boolean

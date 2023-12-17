@@ -1710,20 +1710,17 @@
 		z-index: 100;
 		background: var(--background);
 		border: 1px solid var(--border);
-		display: flex;
-		flex-direction: column;
+		overflow-y: auto;
 		&.active {
 			box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
 		}
 		> * {
 			display: block;
+			min-height: 0;
 			padding: 5px 8px;
 			&:not(:last-child) {
 				border-bottom: 1px solid var(--border);
 			}
-		}
-		.main {
-			overflow-y: auto;
 		}
 		::v-deep .doc-constant.item {
 			padding: 0 !important;
@@ -1749,6 +1746,7 @@
 			display: flex;
 			align-items: center;
 			padding: 5px 8px;
+			overflow-y: auto;
 			.v-icon {
 				margin-right: 4px;
 				font-size: 20px;
@@ -1773,7 +1771,7 @@
 		.alias {
 			display: flex;
 			align-items: center;
-			overflow-y: auto;
+			min-height: 0;
 			flex-wrap: wrap;
 			span {
 				white-space: nowrap;

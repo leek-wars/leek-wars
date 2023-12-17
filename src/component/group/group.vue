@@ -206,8 +206,8 @@
 				</div>
 				<div class="section">
 					<div class="title">
-						<h4>{{ $t('main.chips') }} ({{ group.chips.length }}/{{ max_chips }})
-							<tooltip v-if="group.chips.length > max_chips">
+						<h4>{{ $t('main.chips') }} ({{ group.chips.length }}/{{ group.ram }})
+							<tooltip v-if="group.chips.length > group.ram">
 								<template v-slot:activator="{ on }">
 									<v-icon v-on="on" class="card alert">mdi-alert-circle</v-icon>
 								</template>
@@ -387,7 +387,7 @@
 
 		<popup v-if="group" v-model="chipsDialog" :width="800">
 			<v-icon slot="icon">mdi-chip</v-icon>
-			<template slot="title">{{ $t('chips_of', [group.name]) }} <span class="chip-count">[{{ group.chips.length }}/{{ max_chips }}]</span></template>
+			<template slot="title">{{ $t('chips_of', [group.name]) }} <span class="chip-count">[{{ group.chips.length }}/{{ group.ram }}]</span></template>
 			<div class="chips-dialog">
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'farmer'}" class="leek-chips" @dragover="dragOver" @drop="chipsDrop('leek', $event)">
 					<rich-tooltip-item v-for="chip in orderedChips" :key="chip" v-slot="{ on }" :item="LeekWars.items[chip]" :bottom="true" :nodge="true">
@@ -782,7 +782,7 @@
 		addChip(chip: number) {
 			if (!this.group) { return }
 			const template = CHIPS[chip]
-			if (this.group.chips.length >= this.max_chips) {
+			if (this.group.chips.length >= this.group.ram) {
 				return LeekWars.toast(this.$i18n.t('error_max_chip', [this.group.name]))
 			}
 			if (template.level > this.group.level) {
@@ -850,19 +850,6 @@
 			if (this.group.level < 100) return 2;
 			if (this.group.level < 200) return 3;
 			return 4;
-		}
-
-		get max_chips() {
-			if (!this.group) { return 1 }
-			if (this.group.level < 50) return 12;
-			if (this.group.level < 75) return 13;
-			if (this.group.level < 100) return 14;
-			if (this.group.level < 125) return 15;
-			if (this.group.level < 150) return 16;
-			if (this.group.level < 200) return 17;
-			if (this.group.level < 250) return 18;
-			if (this.group.level < 300) return 19;
-			return 20;
 		}
 
 		applyEquipment() {
