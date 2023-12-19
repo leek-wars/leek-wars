@@ -1,3 +1,15 @@
+241:
+  title: Qualité de vie et fun !
+  added:
+    - Ajout de la fonction getFightBoss() et des constantes associées pour récupérer le boss.
+  improved:
+    - Nombreuses améliorations et équilibrages sur les boss.
+    - Nombreuses équilibrages sur les composants.
+    - Amélioration de nombreuses traductions anglaises (merci à bgbg).
+    - Affichage des composants sur la page /help/items.
+  fixed:
+    - Les puces et les armes de boss ne sont plus affichées dans les dialogues de niveau.
+
 240:
   title: 10 ans ! Boss, Composants, Fabrication, Cœurs et RAM
   added:
