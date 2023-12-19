@@ -16,6 +16,7 @@
 	"arg_type_7": "réel",
 	"arg_type_8": "table",
 	"arg_type_9": "ensemble",
+	"arg_type_96": "ensemble<entier>",
 	"arg_type_10": "intervalle",
 	"arg_type_806": "table<?, entier>",
 	"complexity": "Complexité {c}",

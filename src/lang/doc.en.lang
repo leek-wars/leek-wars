@@ -980,6 +980,7 @@
 	"details": "Details",
 	"optional": "optional",
 	"arg_type_9": "set",
+	"arg_type_96": "set<integer>",
 	"arg_type_10": "interval",
 	"function_category_set": "Sets",
 	"function_category_interval": "Intervals"

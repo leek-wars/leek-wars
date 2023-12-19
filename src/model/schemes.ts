@@ -18,10 +18,10 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
     id: 2,
     result: 291,
     items: [
-      [ 216, 1 ],  [ 200, 3 ],
-      null,        [ 290, 1 ],
+      [ 216, 1 ],  [ 186, 2 ],
+      [ 188, 2 ],  [ 290, 1 ],
       [ 204, 25 ], null,
-      [ 305, 1 ],  [ 276, 1 ],
+      [ 233, 37 ], [ 276, 1 ],
       null
     ],
     comment: 'core2',
@@ -252,8 +252,8 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
     id: 20,
     result: 309,
     items: [
-      [ 218, 1 ],  [ 319, 9 ],
-      [ 190, 20 ], [ 98, 1 ],
+      [ 218, 1 ],  [ 319, 3 ],
+      [ 190, 22 ], [ 98, 1 ],
       [ 321, 5 ],  [ 377, 70 ],
       [ 236, 80 ], [ 235, 50 ],
       null
@@ -417,7 +417,19 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
     comment: 'apple',
     quantity: 1
   },
-  '33': { id: 33, result: 322, items: [ [ 199, 5 ], [ 202, 3 ], [ 198, 1 ], [ 239, 5 ], [ 203, 20 ], [ 200, 2 ] ], comment: 'nephelium', quantity: 1 },
+  '33': {
+    id: 33,
+    result: 322,
+    items: [
+      [ 199, 5 ],  [ 202, 3 ],
+      [ 198, 1 ],  [ 239, 5 ],
+      [ 203, 20 ], [ 188, 1 ],
+      null,        null,
+      null
+    ],
+    comment: 'nephelium',
+    quantity: 1
+  },
   '34': {
     id: 34,
     result: 323,
@@ -671,9 +683,9 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
     id: 55,
     result: 382,
     items: [
-      [ 232, 30 ], [ 200, 3 ],
+      [ 232, 20 ], [ 200, 3 ],
       [ 229, 1 ],  [ 216, 1 ],
-      [ 213, 1 ],  [ 388, 1 ],
+      [ 213, 1 ],  [ 388, 20 ],
       [ 215, 60 ], [ 381, 1 ],
       null
     ],
