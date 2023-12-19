@@ -81,7 +81,7 @@
 
 		get items() {
 			return Object.values(LeekWars.items)
-				.filter(i => i.id < 408 && !i.name.startsWith('recovery_') && (i.type === ItemType.WEAPON || i.type === ItemType.CHIP /* || i.type === ItemType.COMPONENT */))
+				.filter(i => i.id < 408 && !i.name.startsWith('recovery_') && (i.type === ItemType.WEAPON || i.type === ItemType.CHIP || i.type === ItemType.COMPONENT))
 				.sort((a, b) => a.level - b.level)
 		}
 	}
