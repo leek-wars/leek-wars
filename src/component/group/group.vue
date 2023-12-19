@@ -171,7 +171,7 @@
 					</div>
 					<b v-else class="level">{{ $t('main.level_n', [group.level]) }}</b>
 					<div class="card characteristics">
-						<div v-for="c in LeekWars.characteristics_table" :key="c" class="characteristic">
+						<div v-for="c in LeekWars.characteristics_table" :key="c" class="characteristic" :class="c">
 							<characteristic-tooltip  v-slot="{ on }" :characteristic="c" :value="characteristics[c]" :leek="characteristics" :test="true">
 								<img v-on="on" :src="'/image/charac/' + c + '.png'">
 							</characteristic-tooltip>
@@ -1069,8 +1069,11 @@ input[type="text"], input[type="email"] {
 	}
 	.characteristic:nth-child(4n+3),
 	.characteristic:nth-child(4n+4) {
-		background: #eee;
+		background: var(--background-secondary);
 	}
+}
+body.dark .characteristic.frequency img {
+	filter: invert(1);
 }
 .equipment {
 	gap: 15px;
