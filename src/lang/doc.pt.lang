@@ -982,5 +982,6 @@
 	"arg_type_9": "pacote",
 	"arg_type_10": "intervalo",
 	"function_category_set": "Pacotes",
-	"function_category_interval": "Intervalos"
+	"function_category_interval": "Intervalos",
+	"arg_type_96": "conjunto<entier>"
 }

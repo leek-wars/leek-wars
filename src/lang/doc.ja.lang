@@ -982,5 +982,6 @@
 	"arg_type_9": "パッケージ",
 	"arg_type_10": "間隔",
 	"function_category_set": "パッケージ",
-	"function_category_interval": "インターバル"
+	"function_category_interval": "インターバル",
+	"arg_type_96": "set<entier>"
 }

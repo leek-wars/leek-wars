@@ -982,5 +982,6 @@
 	"arg_type_9": "пакет",
 	"arg_type_10": "интервал",
 	"function_category_set": "Пакеты",
-	"function_category_interval": "Интервалы"
+	"function_category_interval": "Интервалы",
+	"arg_type_96": "set<entier>"
 }

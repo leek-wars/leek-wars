@@ -982,5 +982,6 @@
 	"arg_type_9": "zusammen",
 	"arg_type_10": "intervall",
 	"function_category_set": "Sets",
-	"function_category_interval": "Intervalle"
+	"function_category_interval": "Intervalle",
+	"arg_type_96": "zusammen<ganz>"
 }

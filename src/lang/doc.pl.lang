@@ -982,5 +982,6 @@
 	"arg_type_9": "zestaw",
 	"arg_type_10": "interwał",
 	"function_category_set": "Pakiety",
-	"function_category_interval": "Interwały"
+	"function_category_interval": "Interwały",
+	"arg_type_96": "set<entier>"
 }

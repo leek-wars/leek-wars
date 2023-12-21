@@ -982,5 +982,6 @@
 	"arg_type_9": "pakke",
 	"arg_type_10": "intervall",
 	"function_category_set": "Pakker",
-	"function_category_interval": "Intervaller"
+	"function_category_interval": "Intervaller",
+	"arg_type_96": "sett<entier>"
 }

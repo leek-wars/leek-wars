@@ -982,5 +982,6 @@
 	"arg_type_9": "paketti",
 	"arg_type_10": "intervalli",
 	"function_category_set": "Paketit",
-	"function_category_interval": "Intervallit"
+	"function_category_interval": "Intervallit",
+	"arg_type_96": "set<entier>"
 }

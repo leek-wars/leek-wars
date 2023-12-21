@@ -982,5 +982,6 @@
 	"arg_type_9": "패키지",
 	"arg_type_10": "간격",
 	"function_category_set": "패키지",
-	"function_category_interval": "간격"
+	"function_category_interval": "간격",
+	"arg_type_96": "set<entier>"
 }
