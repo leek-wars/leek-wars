@@ -490,8 +490,8 @@
 		}
 
 		createFightPacks() {
-			const fights = [100, 200, 500, 1000]
-			const costs = [1, 1.8, 4, 7]
+			const fights = [50, 100, 200, 500]
+			const costs = [50, 100, 200, 500]
 			for (const p in fights) {
 				const count = fights[p]
 				const pack: ItemTemplate = {
@@ -499,7 +499,7 @@
 					name: 'fight_pack_' + count,
 					title: this.$t('n_fights', [count]),
 					price: p === '0' ? 100000 : 0,
-					crystals: costs[p] * 100,
+					crystals: costs[p],
 					buyable: p === '0',
 					buyable_crystals: true,
 					sellable: false,
@@ -526,8 +526,8 @@
 		}
 		setFightPackPrice(farmer: Farmer) {
 			const x = store.state.farmer!.total_level
-			const priceHabs = Math.round(10_000 + Math.pow((x - 1) / 1203, 1.5) * (10_000_000 - 10_000))
-			this.items_by_name['fight_pack_100'].price! = priceHabs
+			const priceHabs = Math.round(10_000 + Math.pow((x - 1) / 1203, 1.5) * (5_000_000 - 10_000))
+			this.items_by_name['fight_pack_50'].price! = priceHabs
 		}
 
 		@Watch('unseenItemDialog')
@@ -666,10 +666,11 @@
 	}
 	.item.fight-pack {
 		padding: 10px;
-		font-size: 16px;
-		color: var(--text-color-secondary);
+		font-size: 14px;
+		// color: var(--text-color-secondary);
+		font-weight: 500;
 		div {
-			margin-top: 5px;
+			margin-top: 10px;
 		}
 	}
 	.fights img {
