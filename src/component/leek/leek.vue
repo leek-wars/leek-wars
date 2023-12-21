@@ -656,6 +656,11 @@
 								</div>
 							</rich-tooltip-item>
 						</div>
+						<center>
+							<router-link to="/inventory">
+								<v-btn><v-icon left>mdi-treasure-chest</v-icon> {{ $t('main.inventory') }}</v-btn>
+							</router-link>
+						</center>
 					</div>
 				</div>
 			</div>
