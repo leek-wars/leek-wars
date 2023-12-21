@@ -85,6 +85,7 @@ class Fight {
 	public queue!: number
 	public trophies!: any[]
 	public boss_name?: string
+	public chests!: number
 }
 
 class FightMap {

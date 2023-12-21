@@ -54,6 +54,9 @@
 			</div>
 		</div>
 		<div class="time">{{ LeekWars.formatDuration(fight.date) }}</div>
+		<div class="chests">
+			<v-icon v-for="i in fight.chests">mdi-treasure-chest</v-icon>
+		</div>
 	</div>
 </template>
 
@@ -134,6 +137,14 @@
 			color: var(--text-color-secondary);
 			font-size: 11px;
 			text-align: right;
+		}
+		.chests {
+			position: absolute;
+			bottom: 2px;
+			left: 5px;
+			.v-icon {
+				font-size: 16px;
+			}
 		}
 	}
 	.win {

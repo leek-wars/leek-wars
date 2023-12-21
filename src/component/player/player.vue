@@ -524,7 +524,8 @@ import { T } from './game/texture'
 				},
 				comments: [],
 				result: 'win', queue: 0,
-				trophies: []
+				trophies: [],
+				chests: 0
 			} as Fight
 			this.loaded = true
 			this.$emit('fight', local_fight)
@@ -586,7 +587,8 @@ import { T } from './game/texture'
 						data: report.default.fight as any,
 						comments: [],
 						result: 'win', queue: 0,
-						trophies: []
+						trophies: [],
+						chests: 0
 					} as Fight
 					fightLoaded(local_fight)
 					this.game.setLogs((report.default as any).logs[this.$store.state.farmer.id])
