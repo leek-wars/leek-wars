@@ -1287,6 +1287,9 @@
 			min-height: 600px;
 		}
 	}
+	#app.app .tabs ::v-deep .tab-content {
+		flex-direction: column;
+	}
 	.tabs .tab {
 		cursor: pointer;
 	}
@@ -1322,6 +1325,9 @@
 	}
 	.column {
 		max-height: 670px;
+	}
+	#app.app .tabs .column {
+		max-height: none;
 	}
 	.lateral-column {
 		flex: 220px 0 0;
@@ -1397,6 +1403,9 @@
 	.column-scenario .team {
 		width: 810px;
 		text-align: center;
+	}
+	#app.app .tabs .column-scenario .team {
+		width: auto;
 	}
 	.column-scenario .leeks {
 		text-align: center;
@@ -1494,6 +1503,9 @@
 		text-align: center;
 		width: 800px;
 	}
+	#app.app .tabs .column-scenario .map-container {
+		width: auto;
+	}
 	.column-scenario .map, .map-dialog .map {
 		display: inline-block;
 		text-align: center;
@@ -1518,9 +1530,16 @@
 	.leek-column {
 		width: 820px;
 	}
+	#app.app .leek-column {
+		width: auto;
+	}
 	.flex {
 		align-items: center;
 		padding-bottom: 15px;
+	}
+	#app.app .leek-column .flex {
+		flex-direction: column;
+		gap: 15px;
 	}
 	.leek-column .image {
 		display: inline-block;
@@ -1528,6 +1547,9 @@
 		margin-left: 130px;
 		padding: 7px;
 		width: 190px;
+	}
+	#app.app .leek-column .image {
+		margin: 0;
 	}
 	.characteristics {
 		margin-right: 130px;
@@ -1564,6 +1586,10 @@
 		.characteristic:nth-child(4n+4) {
 			background: var(--background-secondary);
 		}
+	}
+	#app.app .characteristics {
+		min-width: 0;
+		margin: 0;
 	}
 	body.dark .characteristic.frequency {
 		img {
