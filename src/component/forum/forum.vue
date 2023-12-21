@@ -125,7 +125,7 @@ import { store } from '@/model/store'
 		connected_farmers: Farmer[] = []
 		connected_languages: any = {}
 		forumLanguages: {[key: string]: boolean} = {}
-		expandFarmers: boolean = false
+		expandFarmers: boolean = true
 		searchQuery: string = ''
 
 		get languages() {
