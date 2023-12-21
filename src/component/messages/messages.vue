@@ -112,7 +112,7 @@
 			if (store.state.farmer && store.state.farmer.public_chat_enabled) {
 				chats.push({ name: 'Français', flag: 'fr', chats: Object.values(LeekWars.publicChats).filter(c => c.language === 'fr') })
 				chats.push({ name: 'English', flag: 'gb', chats: Object.values(LeekWars.publicChats).filter(c => c.language === 'en') })
-				chats.push({ name: 'Español', flag: 'es', chats: Object.values(LeekWars.publicChats).filter(c => c.language === 'es') })
+				// chats.push({ name: 'Español', flag: 'es', chats: Object.values(LeekWars.publicChats).filter(c => c.language === 'es') })
 			}
 			if (this.$store.state.farmer && this.$store.state.farmer.team) {
 				const team_chats = [

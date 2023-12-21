@@ -17,7 +17,7 @@
 					</div>
 				</template>
 				<v-list :dense="true">
-					<div v-for="(data, language) in LeekWars.languages" :key="language" class="language">
+					<div v-for="(data, language) in LeekWars.languages" v-if="data.chats" :key="language" class="language">
 						<flag :code="LeekWars.languages[language].country" />
 						<v-list-item v-for="(chat, i) in data.chats" :key="i" class="language" @click="setChatLanguage(chat)">
 							<v-icon>{{ LeekWars.publicChats[chat].icon }}</v-icon>
