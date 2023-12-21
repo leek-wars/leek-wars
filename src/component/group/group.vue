@@ -572,10 +572,10 @@
 			return this.$route.params.id
 		}
 		get availableWeapons() {
-			return Object.values(LeekWars.weapons)
+			return Object.values(LeekWars.weapons).filter(w => LeekWars.items[w.item].market)
 		}
 		get availableChips() {
-			return Object.values(CHIPS).sort((a, b) => a.level - b.level)
+			return Object.values(CHIPS).sort((a, b) => a.level - b.level).filter(w => LeekWars.items[w.id].market)
 		}
 
 		created() {
