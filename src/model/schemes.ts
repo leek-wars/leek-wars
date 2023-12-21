@@ -85,7 +85,7 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
     items: [
       [ 188, 3 ], [ 217, 2 ],
       [ 214, 1 ], [ 294, 4 ],
-      [ 295, 1 ], [ 379, 10 ],
+      [ 295, 1 ], [ 379, 90 ],
       [ 213, 3 ], [ 288, 1 ],
       null
     ],
@@ -148,7 +148,7 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
     id: 12,
     result: 301,
     items: [
-      [ 289, 1 ], [ 380, 2 ],
+      [ 289, 1 ], [ 380, 20 ],
       [ 213, 1 ], [ 387, 1 ],
       [ 307, 1 ], [ 186, 4 ],
       [ 297, 5 ], [ 200, 4 ],
@@ -372,7 +372,7 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
       [ 204, 40 ], [ 288, 1 ],
       [ 215, 5 ],  [ 317, 1 ],
       null,        [ 297, 1 ],
-      [ 213, 2 ],  [ 379, 10 ],
+      [ 213, 2 ],  [ 379, 80 ],
       null
     ],
     comment: 'propulsor2',
@@ -395,7 +395,7 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
     id: 31,
     result: 320,
     items: [
-      [ 199, 11 ], [ 216, 1 ],
+      [ 199, 7 ],  [ 216, 1 ],
       [ 386, 30 ], [ 365, 1 ],
       [ 310, 1 ],  [ 201, 2 ],
       [ 309, 1 ],  [ 202, 7 ],
@@ -514,8 +514,8 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
     id: 42,
     result: 366,
     items: [
-      [ 207, 3 ],  [ 198, 1 ],
-      [ 388, 15 ], [ 322, 1 ],
+      [ 207, 1 ],  [ 198, 1 ],
+      [ 388, 22 ], [ 322, 1 ],
       [ 228, 1 ],  [ 234, 33 ],
       [ 239, 8 ],  [ 193, 5 ],
       null
@@ -568,8 +568,8 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
     items: [
       [ 238, 80 ], [ 370, 2 ],
       [ 236, 50 ], [ 323, 1 ],
-      [ 368, 2 ],  [ 200, 6 ],
-      [ 390, 3 ],  [ 380, 1 ],
+      [ 368, 1 ],  [ 200, 6 ],
+      [ 390, 3 ],  [ 380, 16 ],
       null
     ],
     comment: 'blue_plum',
@@ -592,10 +592,10 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
     id: 48,
     result: 371,
     items: [
-      null,         [ 310, 1 ],
-      [ 238, 30 ],  [ 373, 1 ],
-      [ 188, 7 ],   [ 233, 27 ],
-      [ 389, 150 ], [ 216, 1 ],
+      null,        [ 310, 1 ],
+      [ 238, 30 ], [ 373, 1 ],
+      [ 188, 5 ],  [ 233, 27 ],
+      [ 389, 36 ], [ 216, 1 ],
       null
     ],
     comment: 'quince',
@@ -608,7 +608,7 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
       [ 386, 20 ], [ 377, 30 ],
       null,        [ 319, 1 ],
       [ 311, 1 ],  null,
-      [ 198, 4 ],  [ 203, 10 ],
+      [ 198, 2 ],  [ 203, 10 ],
       null
     ],
     comment: 'onion',
@@ -633,7 +633,7 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
     items: [
       [ 198, 9 ],  [ 386, 30 ],
       [ 192, 60 ], [ 231, 50 ],
-      [ 186, 8 ],  [ 207, 2 ],
+      [ 186, 6 ],  [ 207, 2 ],
       [ 203, 40 ], [ 239, 36 ],
       null
     ],
@@ -645,8 +645,8 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
     result: 375,
     items: [
       [ 371, 1 ], [ 192, 20 ],
-      [ 200, 2 ], [ 214, 3 ],
-      null,       [ 239, 33 ],
+      [ 200, 1 ], [ 214, 2 ],
+      null,       [ 239, 5 ],
       [ 372, 1 ], [ 388, 20 ],
       null
     ],
@@ -683,10 +683,10 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
     id: 55,
     result: 382,
     items: [
-      [ 232, 20 ], [ 200, 3 ],
-      [ 229, 1 ],  [ 216, 1 ],
-      [ 213, 1 ],  [ 388, 20 ],
-      [ 215, 60 ], [ 381, 1 ],
+      [ 232, 20 ], [ 200, 2 ],
+      [ 229, 1 ],  null,
+      [ 213, 1 ],  [ 388, 16 ],
+      [ 215, 40 ], [ 381, 1 ],
       null
     ],
     comment: 'motherboard3',
