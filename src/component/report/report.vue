@@ -213,7 +213,7 @@
 					<v-btn :style="{background: TEAM_COLORS[1]}" @click="walkedCells(-2)">{{ $t('team2') }}</v-btn>
 				</template>
 				<span v-for="(entity, e) in fight.data.leeks" :key="e">
-					<v-btn :style="{background: TEAM_COLORS[entity.team - 1]}" :class="'t' + entity.team" @click="walkedCells(entity.id)">{{ entity.name }}</v-btn>
+					<v-btn :style="{background: TEAM_COLORS[entity.team - 1]}" :class="'t' + entity.team" @click="walkedCells(entity.id)">{{ entity.translatedName }}</v-btn>
 				</span>
 			</div>
 		</panel>
@@ -460,7 +460,7 @@
 				this.statistics.generate(this.fight)
 				// console.log(this.statistics)
 
-				if (this.$store.state.connected) {
+				if (this.$store.state.farmer) {
 					LeekWars.get('fight/get-logs/' + id).then(d => {
 						this.logs = Object.freeze(d)
 						this.processLogs()

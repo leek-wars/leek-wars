@@ -5,6 +5,7 @@ import { EffectType, EntityEffect } from '@/model/effect'
 import { Entity } from '@/model/entity'
 import { Field } from '@/model/field'
 import { Fight, FightLeek, FightType } from "@/model/fight"
+import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 
 class StatisticsEntity extends Entity {
@@ -79,6 +80,10 @@ class StatisticsEntity extends Entity {
 		super()
 		this.leek = leek
 		this.name = leek.name
+		this.translatedName = leek.name
+		if (leek.type !== 0) {
+			this.translatedName = i18n.t('entity.' + leek.name) as string
+		}
 		this.level = leek.level
 		this.team = leek.team
 		this.life = leek.life
