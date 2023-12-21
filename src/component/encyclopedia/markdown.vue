@@ -47,35 +47,26 @@
 		update() {
 
 			const re = /^((https:\/\/leekwars\.com)?\/image\/|https:\/\/(i\.)?imgur\.com\/|https:\/\/(i\.)?ibb.co\/)/
-			const options = this.mode === 'encyclopedia' ? {
+			const options = {
 				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img', 'center' ]),
-				allowedAttributes: {
-					'*': ['style', 'class', 'width', 'height', 'href', 'src'],
-					'li': ['correct'],
-				},
-				exclusiveFilter: function(frame: any) {
-					return frame.tag === 'img' && !re.test(frame.attribs.src)
-				}
-			} : {
-				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img', 'center' ]),
-				allowedAttributes: { '*': ['style', 'class', 'width', 'height', 'href', 'src'] },
+				allowedAttributes: { '*': ['style', 'class', 'width', 'height', 'href', 'src', 'colspan', 'rowspan', 'alt'] },
 				exclusiveFilter: function(frame: any) {
 					return frame.tag === 'img' && !re.test(frame.attribs.src)
 				},
-				allowedStyles: {
-					'*': {
-						'padding': [/^.*$/],
-						'margin': [/^.*$/],
-						'color': [/^.*$/],
-						'background': [/^.*$/],
-						'border': [/^.*$/],
-						'text-align': [/^.*$/],
-						'font-size': [/^.*$/],
-						'font-weight': [/^.*$/],
-						'width': [/^.*$/],
-						'height': [/^.*$/],
-					}
-				}
+				// allowedStyles: {
+				// 	'*': {
+				// 		'padding': [/^.*$/],
+				// 		'margin': [/^.*$/],
+				// 		'color': [/^.*$/],
+				// 		'background': [/^.*$/],
+				// 		'border': [/^.*$/],
+				// 		'text-align': [/^.*$/],
+				// 		'font-size': [/^.*$/],
+				// 		'font-weight': [/^.*$/],
+				// 		'width': [/^.*$/],
+				// 		'height': [/^.*$/],
+				// 	}
+				// }
 			}
 			this.html = this.links(sanitizeHtml(this.markdown.render(this.content), options))
 
