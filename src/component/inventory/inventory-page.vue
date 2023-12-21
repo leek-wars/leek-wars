@@ -115,10 +115,24 @@
 		}
 	}
 }
+#app.app .bottom {
+	flex-basis: auto;
+	flex: 1;
+	.content {
+		flex-direction: column;
+		overflow-y: auto;
+		.forge-wrapper {
+			flex-basis: auto;
+		}
+	}
+}
 .schemes {
 	overflow-y: auto;
 	min-height: 0;
 	height: 100%;
 	flex: 1;
+}
+#app.app .schemes {
+	overflow-y: visible;
 }
 </style>
