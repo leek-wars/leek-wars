@@ -17,7 +17,7 @@
 						<div>FR : {{ newsletter.title_fr }}</div>
 						<div>EN : {{ newsletter.title_en }}</div>
 						<div class="spacer"></div>
-						<v-btn v-if="newsletter.sent === 0" @click="test(newsletter)"><v-icon>mdi-cog-outline</v-icon> Test</v-btn>
+						<v-btn @click="test(newsletter)"><v-icon>mdi-cog-outline</v-icon> Test</v-btn>
 						<v-btn v-if="newsletter.sent === 0" color="primary" @click="send(newsletter)"><v-icon>mdi-send-outline</v-icon> Envoyer</v-btn>
 						<div v-else>Envoyé le {{ newsletter.sent | date }}</div>
 					</div>
@@ -60,6 +60,7 @@ import { store } from '@/model/store'
 		test(newsletter: any) {
 			LeekWars.post('newsletter/test', {id: newsletter.id}).then(x => LeekWars.toast("Envoyé !"))
 		}
+
 		send(newsletter: any) {
 
 			const es = new EventSource(LeekWars.API + 'newsletter/send/' + newsletter.id)
