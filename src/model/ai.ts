@@ -84,44 +84,73 @@ class AI {
 		// console.timeEnd("inc")
 	}
 
+	public parseArguments(allArguments: string) {
+		const args = [] as string[]
+		const types = [] as string[]
+		let chevron = 0
+		let j = 0
+		if (allArguments.trim().length === 0) return { args, types }
+		for (let i = 0; i <= allArguments.length; ++i) {
+			const c = i < allArguments.length ? allArguments[i] : ','
+			if (c === '<') chevron++
+			if (c === '>') chevron--
+			if (chevron === 0 && c === ',') {
+				let arg = allArguments.substring(j, i).trim()
+				j = i + 1
+				if (arg.startsWith('@')) {
+					arg = arg.substring(1)
+				}
+				if (arg.includes(' ')) {
+					const space = arg.lastIndexOf(' ')
+					types.push(arg.substring(0, space))
+					arg = arg.substring(space + 1)
+				} else {
+					types.push('any')
+				}
+				args.push(arg)
+			}
+		}
+		return { args, types }
+	}
 
 	public updateFunctions() {
 
 		this.functions = []
 		let match
 
-		const regex = /function\s+(\w+)\s*\(([^]*?)\).*{/gm
+		const regex = /function\s+(\w+)\s*\(([^]*?)\)\s*(?:=>)?(?:->)?\s*(.*)\s{/gm
 		// Match [ full_match, javadoc, nom, arguments ]
 
 		while ((match = regex.exec(this.code)) != null) {
 
+			// console.log(match)
 			const line = this.code.substring(0, match.index).split("\n").length
-			let args = match[2].split(",")
-			if (args.length === 1 && args[0].trim() === '') { args = [] }
-			for (const a in args) {
-				args[a] = args[a].trim()
-				if (args[a].startsWith('@')) {
-					args[a] = args[a].substring(1)
-				}
-			}
+			const return_type = match[3] ? match[3].trim() : 'any'
+
+			const { args, types } = this.parseArguments(match[2])
+			// console.log(args, types)
+
 			let fullName = match[1] + "(" + args.join(", ") + ")"
 			let description = "<h4>" + i18n.t('leekscript.function_f', [fullName]) + "</h4><br>"
 			description += i18n.t('leekscript.defined_in', [this.name, line])
 
 			const comment = this.comments[match.index]
 			const javadoc = {
-				name: fullName,
+				name: match[1],
 				description: "",
-				items: [] as any[]
+				items: [] as any[],
 			}
+			// console.log(javadoc)
 			// Add arguments from signature
+			let a = 0
 			for (const arg of args) {
-				javadoc.items.push({ type: 'param', name: arg, text: null})
+				javadoc.items.push({ type: 'param', name: arg, text: null, lstype: { name: types[a] } })
+				a++
 			}
 			// console.log(javadoc.items)
 			if (comment) {
 				const javadoc_lines = comment.split("\n")
-				const javadoc_regex = /^\s*@(\w+)(?:\s+([a-zA-Z_\u00C0-\u024F\u1E00-\u1EFF]+)\s*:?\s*)?(?:\s*:\s*)?(.*)$/
+				const javadoc_regex = /^\s*@(\w+)(?:\s+([a-zA-Z0-9_\u00C0-\u024F\u1E00-\u1EFF]+)\s*:?\s*)?(?:\s*:\s*)?(.*)$/
 				let match_javadoc
 				for (const jline of javadoc_lines) {
 					if ((match_javadoc = javadoc_regex.exec(jline))) {
@@ -153,11 +182,6 @@ class AI {
 						}
 						javadoc.items.push({ type, name, text })
 					} else {
-						// const star = jline.indexOf("*")
-						// let formatted_line = jline.substring(star + 2)
-						// if (l === javadoc_lines.length - 1) {
-						// 	formatted_line = formatted_line.trim()
-						// }
 						if (jline.length) {
 							if (javadoc.description.length) {
 								javadoc.description += "\n"
@@ -186,7 +210,8 @@ class AI {
 				ai: this,
 				line,
 				javadoc,
-				category: 4
+				category: 4,
+				return_type: { name: return_type }
 			}
 			// console.log(fun)
 			this.functions.push(fun)
@@ -240,16 +265,19 @@ class AI {
 		// console.time('static_fields')
 
 		// Search static fields
-		const field_regex = /^\s*(?:public\s+)?(?:(static)\s+)?(?:.*\s+?)?(\w+)\s*/gm
+		const field_regex = /^\s*(?:public\s+)?(?:(static)\s+)?([\w ,<>]+[ \t]+)?(\w+)[ \t]*($|=|;)/gm
 		while ((match = field_regex.exec(this.code)) != null) {
 
-			const name = match[2]
+			const name = match[3]
 			if (name === 'function' || name === 'for' || name === 'while' || name === 'if') continue
 
+			// console.log(match[1], match[2], match[3])
+
 			const is_static = !!match[1]
+			const type = match[2]
 			const line = this.code.substring(0, match.index).split("\n").length
 
-			const fullName = match[2]
+			const fullName = name
 			let description = "<h4>" + i18n.t('leekscript.function_f', [fullName]) + "</h4><br>"
 			description += i18n.t('leekscript.defined_in', [this.name, line])
 
@@ -258,12 +286,13 @@ class AI {
 			const javadoc = {
 				name: fullName,
 				description: "",
-				items: [] as any[]
+				items: [] as any[],
+				lstype: { name: type }
 			}
 			// console.log(javadoc.items)
 			if (comment) {
 				const javadoc_lines = comment.split("\n")
-				const javadoc_regex = /^\s*@(\w+)(?:\s+([a-zA-Z_\u00C0-\u024F\u1E00-\u1EFF]+)\s*:?\s*)?(?:\s*:\s*)?(.*)$/
+				const javadoc_regex = /^\s*@(\w+)(?:\s+([a-zA-Z0-9_\u00C0-\u024F\u1E00-\u1EFF]+)\s*:?\s*)?(?:\s*:\s*)?(.*)$/
 				let match_javadoc
 				for (const jline of javadoc_lines) {
 					if ((match_javadoc = javadoc_regex.exec(jline))) {
@@ -299,7 +328,7 @@ class AI {
 			}
 			if (clazz) {
 				const field = {
-					name: match[2],
+					name,
 					fullName,
 					details: description,
 					type: is_static ? 'user-static-field' : 'user-field',
@@ -322,50 +351,55 @@ class AI {
 		// console.time('methods')
 
 		// Search methods
-		const method_regex = /^\s*(?:public\s+)?(?:(static)\s+)?(?:.*\s+?)?(\w+)\s*\(([\w\s,]*)\)\s*{/gm
+		const method_regex = /^\s*(?:public\s+)?(?:(static)\s+)?(.*\s+?)?(\w+)\s*\(([\w\s,<>]*)\)\s*{/gm
 		while ((match = method_regex.exec(this.code)) != null) {
 
-			const name = match[2]
+			const name = match[3]
 			if (name === 'function' || name === 'for' || name === 'while' || name === 'if') continue
 
-			const is_static = !!match[1]
-			const line = this.code.substring(0, match.index).split("\n").length
-			let args = match[3].split(",")
-			if (args.length === 1 && args[0].trim() === '') { args = [] }
-			for (const a in args) {
-				args[a] = args[a].trim()
-				if (args[a].startsWith('@')) {
-					args[a] = args[a].substring(1)
-				}
+			// console.log(match)
+			if (!name) {
+				console.error("No name", match)
 			}
-			let fullName = match[2] + "(" + args.join(", ") + ")"
+			const is_static = !!match[1]
+			const return_type = match[2] ? match[2].trim() : 'any'
+			const line = this.code.substring(0, match.index).split("\n").length
+
+			const { args, types } = this.parseArguments(match[4])
+
+			let fullName = name + "(" + args.join(", ") + ")"
 			let description = "<h4>" + i18n.t('leekscript.function_f', [fullName]) + "</h4><br>"
 			description += i18n.t('leekscript.defined_in', [this.name, line])
 
 			const comment = this.comments[match.index] || this.comments[match.index + 1]
 			// console.log("comment", comment, this.comments, match)
 			const javadoc = {
-				name: fullName,
+				name,
+				args,
 				description: "",
-				items: [] as any[]
+				items: [] as any[],
 			}
 			// Add arguments from signature
+			let a = 0
 			for (const arg of args) {
-				javadoc.items.push({ type: 'param', name: arg, text: null})
+				javadoc.items.push({ type: 'param', name: arg, text: null, lstype: { name: types[a] } })
+				a++
 			}
 			// console.log(javadoc.items)
 			if (comment) {
 				const javadoc_lines = comment.split("\n")
-				const javadoc_regex = /^\s*@(\w+)(?:\s+([a-zA-Z_\u00C0-\u024F\u1E00-\u1EFF]+)\s*:?\s*)?(?:\s*:\s*)?(.*)$/
+				const javadoc_regex = /^\s*@(\w+)(?:\s+([a-zA-Z0-9_\u00C0-\u024F\u1E00-\u1EFF]+)\s*:?\s*)?(?:\s*:\s*)?(.*)$/
 				let match_javadoc
 				for (const jline of javadoc_lines) {
 					if ((match_javadoc = javadoc_regex.exec(jline))) {
 						// console.log(match_javadoc)
 						const type = match_javadoc[1]
+						let lstype = null
 						let name = match_javadoc[2]
 						let text = match_javadoc[3]
 						if (type === 'return') {
 							fullName += ' : ' + text
+							lstype = {name: return_type}
 						} else if (type === 'param') {
 							if (name) {
 								name = name.trim()
@@ -386,7 +420,7 @@ class AI {
 								continue
 							}
 						}
-						javadoc.items.push({ type, name, text })
+						javadoc.items.push({ type, name, text, lstype })
 					} else {
 						if (jline.length) {
 							if (javadoc.description.length) {
@@ -413,8 +447,11 @@ class AI {
 				clazz = this.classes[c]
 			}
 			if (clazz) {
+				if (!match[3]) {
+					console.error("No name", match)
+				}
 				const method = {
-					name: match[2],
+					name: match[3],
 					fullName,
 					details: description,
 					type: is_static ? 'user-static-method' : 'user-method',
@@ -424,7 +461,8 @@ class AI {
 					line,
 					javadoc,
 					category: 4,
-					clazz
+					clazz,
+					return_type: { name: return_type }
 				}
 				// console.log(fun)
 				if (is_static) {

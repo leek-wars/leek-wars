@@ -369,7 +369,7 @@ class Socket {
 
 	public send(message: any) {
 		if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-			console.log("[WS] send", message)
+			// console.log("[WS] send", message)
 			this.socket.send(JSON.stringify(message))
 		} else {
 			this.queue.push(message)

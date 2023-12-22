@@ -1,20 +1,26 @@
 <template lang="html">
 	<div>
 		<h2>
-			<span v-if="keyword.type === 'user-static-method' || keyword.type === 'user-static-field'">{{ keyword.clazz.name }}.</span>{{ javadoc.name }} <span v-if="return_ && return_.name" class="arrow">→</span> <span v-if="return_ && return_.name">{{ return_.name }}</span>
+			<span v-if="keyword.type === 'user-static-method' || keyword.type === 'user-method' || keyword.type === 'user-function'">
+				<span v-if="keyword.clazz">{{ keyword.clazz.name }}.</span>{{ javadoc.name }}(<span v-for="(arg, i) in args" :key="i">
+					<type v-if="arg.lstype" :type="arg.lstype" /> {{ arg.name }}<span v-if="i < args.length - 1">,&nbsp;</span></span>)
+				<span v-if="keyword.return_type" class="arrow">→</span> <type v-if="keyword.return_type" :type="keyword.return_type" /> <span v-if="return_"> {{ return_.name }}</span>
+			</span>
+			<span v-else-if="keyword.type === 'user-static-field'"><type v-if="javadoc.lstype" :type="javadoc.lstype" /> {{ keyword.clazz.name }}.{{ javadoc.name }}</span>
+			<span v-else>{{ javadoc.name }}</span>
 		</h2>
 		<div class="description" v-html="javadoc.description"></div>
 
 		<template v-if="args.length > 0">
 			<h4>{{ $t('doc.parameters') }}</h4>
 			<ul>
-				<li v-for="(arg, i) in args" :key="i">{{ arg.name }} <span v-if="arg.name && arg.text">:</span> <span v-if="arg.text" v-dochash v-code v-html="arg.text"></span></li>
+				<li v-for="(arg, i) in args" :key="i"><type v-if="arg.lstype" :type="arg.lstype" /> {{ arg.name }} <span v-if="arg.name && arg.text">:</span> <span v-if="arg.text" v-dochash v-code v-html="arg.text"></span></li>
 			</ul>
 		</template>
 
 		<h4 v-if="return_">{{ $t('doc.return') }}</h4>
 		<ul v-if="return_">
-			<li>{{ return_.name }} <span v-if="return_.name">:</span> <span v-dochash v-code v-html="return_.text"></span>
+			<li><type v-if="return_.lstype" :type="return_.lstype" /> {{ return_.name }} <span v-if="return_.name">:</span> <span v-dochash v-code v-html="return_.text"></span>
 			</li>
 		</ul>
 
@@ -26,8 +32,9 @@
 
 <script lang="ts">
 	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import Type from '../type.vue'
 
-	@Component({ name: "javadoc" })
+	@Component({ name: "javadoc", components: { Type } })
 	export default class Javadoc extends Vue {
 		@Prop() javadoc!: any
 		@Prop() keyword!: any
