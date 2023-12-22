@@ -105,7 +105,8 @@ const SKINS: { [key: number]: string } = {
 	17: "grey", 18: "turquoise", 19: "celestialblue", 20: "marine", 21: "greenfluo", 22: "brown", 23: "blackandwhite",
 	24: "whiteandblack", 25: "ghost", 26: "salmon", 27: "radioactive", 28: "sand", 29: "teal", 30: "matcha", 31: "peach",
 	32: "fire", 33: "venimous", 34: "greyscale", 35: "frozen", 36: "dalton", 37: "charlie", 38: "mariniere", 39: "france",
-	40: "iron", 41: "diamond", 42: "mafia", 43: "bordeaux"
+	40: "iron", 41: "diamond", 42: "mafia", 43: "bordeaux",
+	// 44: "ventura"
 }
 
 const LEEK_SIZES: { [key: number]: {width: number, height: number} } = {
@@ -211,7 +212,7 @@ const LANGUAGES = Object.freeze({
 	en: { code: 'en', name: 'English', country: 'gb', flag: '/image/flag/gb.png', chat: 2, encyclopedia: 'Encyclopedia', chats: [2, 32508, 32509], currency: 'USD', beta: false, forum: true } as Language,
 	es: { code: 'es', name: 'Español', country: 'es', flag: '/image/flag/es.png', chat: 2, encyclopedia: 'Enciclopedia', chats: null, currency: 'EUR', beta: true, forum: false } as Language,
 	de: { code: 'de', name: 'Deutsch', country: 'de', flag: '/image/flag/de.png', chat: 2, encyclopedia: 'Enzyklopädie', chats: null, currency: 'EUR', beta: true, forum: false } as Language,
-	it: { code: 'it', name: 'Italiano', country: 'it', flag: '/image/flag/it.png', chat: 2, encyclopedia: 'Enciclopedia', chats: null, currency: 'EUR', beta: false, forum: true } as Language,
+	it: { code: 'it', name: 'Italiano', country: 'it', flag: '/image/flag/it.png', chat: 2, encyclopedia: 'Enciclopedia', chats: null, currency: 'EUR', beta: false, forum: false } as Language,
 	pt: { code: 'pt', name: 'Portugais', country: 'pt', flag: '/image/flag/pt.png', chat: 2, encyclopedia: 'Enciclopédia', chats: null, currency: 'EUR', beta: true, forum: false } as Language,
 	da: { code: 'da', name: 'Dansk', country: 'dk', flag: '/image/flag/da.png', chat: 2, encyclopedia: 'Encyklopædi', chats: null, currency: 'DKK', beta: true, forum: false } as Language,
 	fi: { code: 'fi', name: 'Suomi', country: 'fi', flag: '/image/flag/fi.png', chat: 2, encyclopedia: 'Tietosanakirja', chats: null, currency: 'EUR', beta: true, forum: false } as Language,
