@@ -55,7 +55,7 @@
 		</div>
 		<div class="time">{{ LeekWars.formatDuration(fight.date) }}</div>
 		<div class="chests">
-			<v-icon v-for="i in fight.chests">mdi-treasure-chest</v-icon>
+			<v-icon v-for="i in fight.chests" :key="i">mdi-treasure-chest</v-icon>
 		</div>
 	</div>
 </template>
