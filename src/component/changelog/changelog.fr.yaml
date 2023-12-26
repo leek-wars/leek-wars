@@ -21,6 +21,7 @@
     - Les puces et les armes de boss ne sont plus affichées dans les dialogues de niveau.
     - Ajout des versions féminines des nouveaux trophées.
     - Correction de l'itération sur les intervalles entiers ouverts.
+    - Meilleur affichage de la page de craft sur mobile.
 
 240:
   title: 10 ans ! Boss, Composants, Fabrication, Cœurs et RAM
