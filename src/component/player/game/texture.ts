@@ -343,6 +343,7 @@ class T {
 	public static liberation_halo = new Texture(LeekWars.STATIC + 'image/fight/liberation.png')
 	public static antidote_halo = new Texture(LeekWars.STATIC + 'image/fight/antidote.png')
 	public static manumission_halo = new Texture(LeekWars.STATIC + 'image/fight/manumission.png')
+	public static exasperation_halo = new Texture(LeekWars.STATIC + 'image/fight/exasperation.png')
 	public static poison_aureol = new Texture(LeekWars.STATIC + 'image/fight/poison_aureol.png')
 	public static shackle_aureol = new Texture(LeekWars.STATIC + 'image/fight/shackle_aureol.png')
 	public static damage_return_aureol = new Texture(LeekWars.STATIC + 'image/fight/damage_return_aureol.png')

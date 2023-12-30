@@ -1110,6 +1110,26 @@ class Antidote extends ChipAnimation {
 	}
 }
 
+export class Exasperation extends ChipAnimation {
+	static textures = [T.exasperation_halo]
+	static sounds = [S.liberation]
+	public delay = 2
+	constructor(game: Game) { super(game, S.liberation, 60, DamageType.DEFAULT) }
+	public update(dt: number) {
+		super.update(dt)
+		if (Math.random() > 0.5) {
+			let angle = Math.random() * Math.PI * 2
+			const dx = Math.cos(angle) * 2
+			const dy = Math.sin(angle)
+			angle = Math.atan2(dy, dx)
+			const x = this.position.x + dx * 10
+			const y = this.position.y + dy * 10
+			const z = 50
+			this.game.particles.addImage(x, y, z, dx, dy, 0, angle, T.exasperation_halo, 60)
+		}
+	}
+}
+
 class Punishment extends ChipAnimation {
 	static textures = [T.spike1, T.spike2]
 	static sounds = [S.sword]
