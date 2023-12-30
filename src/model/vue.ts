@@ -221,14 +221,17 @@ const vueMain = new Vue({
 		startIntervals()
 
 		window.addEventListener('blur', () => {
+			// console.log("onblur")
 			if (secondInterval) clearInterval(secondInterval)
 			if (minuteInterval) clearInterval(minuteInterval)
 			LeekWars.clearIntervals()
 		})
 		window.addEventListener('focus', () => {
+			// console.log("onfocus")
 			this.$emit('focus')
 			startIntervals()
 			LeekWars.startIntervals()
+			LeekWars.socket.reconnect()
 		})
 		window.addEventListener('click', () => {
 			this.$emit('htmlclick')

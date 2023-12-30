@@ -4,6 +4,7 @@ import router from '@/router'
 import { ChatMessage } from './chat'
 import { NotificationType } from './notification'
 import { store } from './store'
+import { Leek } from './leek'
 
 enum SocketMessage {
 	AUTH = 0,
@@ -88,32 +89,26 @@ class Socket {
 	public socket!: WebSocket
 	public queue: any[] = []
 	public retry_count: number = 10
-	public retry_delay: number = 2000
-	public wrong_token: boolean = false
+	public retry_delay: number = 1000
 
 	public connect() {
-		// if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
-		// 	const message = "[WS] connect()"
-		// 	console.log(message)
-		// }
+		if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
+			const message = "[WS] connect()"
+			console.log(message)
+		}
 		if (!store.state.farmer || this.connecting() || this.connected()) {
 			return
 		}
-		this.wrong_token = false
 		const url = LeekWars.LOCAL ? "ws://localhost:1213/" : "wss://leekwars.com/ws"
-		this.socket = new WebSocket(url)
+		this.socket = new WebSocket(url, [ 'leek-wars', store.state.token! ])
 		// console.log("[socket] socket", this.socket)
 
 		this.socket.onopen = () => {
 			// console.log("[ws] onopen")
-			if (LeekWars.DEV) {
-				// In dev mode, auth via a AUTH message
-				this.send([SocketMessage.AUTH, store.state.token])
-			}
 			store.commit('invalidate-chats')
 			store.commit('wsconnected')
 			this.retry_count = 10
-			this.retry_delay = 0
+			this.retry_delay = 1000
 			for (const p of this.queue) {
 				this.send(p)
 			}
@@ -149,10 +144,6 @@ class Socket {
 			vueMain.$emit('wsmessage', {type: id, data, id: request_id})
 
 			switch (id) {
-				case SocketMessage.WRONG_TOKEN: {
-					this.wrong_token = true
-					break
-				}
 				case SocketMessage.PONG: {
 					store.commit('receive-pong', data)
 					break
@@ -325,12 +316,19 @@ class Socket {
 			}
 		}
 	}
+
+	public reconnect() {
+		this.retry_count = 10
+		this.retry_delay = 1000
+		this.connect()
+	}
+
 	public retry() {
 		if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
 			const message = "[WS] retry(" + this.retry_delay + ")"
 			console.log(message)
 		}
-		if (this.retry_count > 0 && !this.wrong_token) {
+		if (this.retry_count > 0) {
 			this.retry_count--
 			// console.log("[ws] retry in", this.retry_delay)
 			setTimeout(() => this.connect(), this.retry_delay)
