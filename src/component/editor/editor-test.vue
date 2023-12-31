@@ -301,7 +301,7 @@
 
 		<popup v-model="chipsDialog" :width="767">
 			<v-icon slot="icon">mdi-chip</v-icon>
-			<span slot="title" v-if="currentLeek">{{ $t('select_chips') }} [{{ currentLeek.chips.length }}/{{ MAX_CHIPS }}]</span>
+			<span slot="title" v-if="currentLeek">{{ $t('select_chips') }} [{{ currentLeek.chips.length }}/{{ currentLeek.ram }}]</span>
 			<div v-if="currentLeek" class="padding chips-dialog">
 				<rich-tooltip-item v-for="chip of availableChips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[LeekWars.chipTemplates[chip.template].item]" :bottom="true" :nodge="true">
 					<span :class="{disabled: hasChipEquipped(chip.id)}" v-on="on">
@@ -414,7 +414,6 @@
 		timeout: number | null = null
 		fileSystem = fileSystem
 		currentTab: number = 0
-		MAX_CHIPS: number = 20
 		MAX_WEAPONS: number = 4
 
 		domingo = {
@@ -528,8 +527,8 @@
 			frequency: {min: 100, max: 9999},
 			tp: {min: 0, max: 1000},
 			mp: {min: 0, max: 100},
-			cores: {min: 1, max: 20},
-			ram: {min: 1, max: 50},
+			cores: {min: 1, max: 30},
+			ram: {min: 1, max: 40},
 		}
 		selectedTemplate: number = 0
 		compositionTemplates: any[] = []
@@ -700,7 +699,7 @@
 			localStorage.setItem('editor/leek', '' + leek.id)
 		}
 
-		deleteLeek(leek: Leek, teamID: number) {
+		deleteLeek(leek: TestScenarioLeek, teamID: number) {
 			if (!this.currentScenario) { return }
 			const team = teamID === 0 ? this.currentScenario.team1 : this.currentScenario.team2
 			team.splice(team.findIndex(l => l.id === leek.id), 1)
@@ -990,7 +989,7 @@
 		addLeekChip(chip: any) {
 			if (!this.currentLeek) { return }
 			this.currentLeek.chips.push(chip)
-			if (this.currentLeek.chips.length === this.MAX_CHIPS) {
+			if (this.currentLeek.chips.length === this.currentLeek.ram) {
 				this.chipsDialog = false
 			}
 			this.updateLeekLevel(this.currentLeek)
@@ -1010,7 +1009,7 @@
 		addOrRemoveLeekChip(chip: any) {
 			if (!this.currentLeek) { return }
 			if (!this.hasChipEquipped(chip)) {
-				if (this.currentLeek!.chips.length < this.MAX_CHIPS) {
+				if (this.currentLeek!.chips.length < this.currentLeek.ram) {
 					this.addLeekChip(chip)
 				}
 			} else {
@@ -1181,7 +1180,7 @@
 		}
 
 		getLimit(type: FightType) {
-			if (type === FightType.FREE) { return 6 }
+			if (type === FightType.FREE) { return 8 }
 			else if (type === FightType.SOLO) { return 1 }
 			else if (type === FightType.FARMER) { return 4 }
 			else if (type === FightType.TEAM) { return 6 }
@@ -1324,7 +1323,9 @@
 		min-height: 530px;
 	}
 	.column {
-		max-height: 670px;
+		max-height: 664px;
+		overflow-y: auto;
+		overflow-x: hidden;
 	}
 	#app.app .tabs .column {
 		max-height: none;
