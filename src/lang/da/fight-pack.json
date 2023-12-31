@@ -2,9 +2,9 @@
 	"fight_pack_100": "Pakke med 100 kampe",
 	"fight_pack_200": "Pakke med 200 kampe",
 	"fight_pack_500": "Pakke med 500 kampe",
-	"fight_pack_1000": "Pakke med 1000 kampe",
 	"fight_pack_100_desc": "Pakke med 100 kampe til brug med det samme",
 	"fight_pack_200_desc": "Pakke med 200 kampe til brug med det samme",
 	"fight_pack_500_desc": "Pakke med 500 kampe til brug med det samme",
-	"fight_pack_1000_desc": "Pakke med 1000 kampe til brug med det samme"
+	"fight_pack_50": "Pakke med 50 kampe",
+	"fight_pack_50_desc": "Pakke med 50 kampe til øjeblikkelig brug"
 }

@@ -2,9 +2,9 @@
 	"fight_pack_100": "一包 100 场战斗",
 	"fight_pack_200": "一包 200 次战斗",
 	"fight_pack_500": "一包 500 次战斗",
-	"fight_pack_1000": "1000 次战斗包",
 	"fight_pack_100_desc": "立即使用的 100 包战斗包",
 	"fight_pack_200_desc": "立即使用的 200 包战斗",
 	"fight_pack_500_desc": "立即使用的 500 次战斗包",
-	"fight_pack_1000_desc": "一包 1000 次战斗，立即使用"
+	"fight_pack_50": "50 格斗包",
+	"fight_pack_50_desc": "每包 50 件，可立即使用"
 }

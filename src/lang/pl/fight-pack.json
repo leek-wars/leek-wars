@@ -2,9 +2,9 @@
 	"fight_pack_100": "Pakiet 100 walk",
 	"fight_pack_200": "Pakiet 200 walk",
 	"fight_pack_500": "Pakiet 500 walk",
-	"fight_pack_1000": "Pakiet 1000 walk",
 	"fight_pack_100_desc": "Pakiet 100 walk do natychmiastowego użycia",
 	"fight_pack_200_desc": "Pakiet 200 walk do natychmiastowego użycia",
 	"fight_pack_500_desc": "Pakiet 500 walk do natychmiastowego użycia",
-	"fight_pack_1000_desc": "Pakiet 1000 walk do natychmiastowego użycia"
+	"fight_pack_50": "Pakiet 50 walk",
+	"fight_pack_50_desc": "Opakowanie 50 walk do natychmiastowego użycia"
 }

@@ -2,9 +2,9 @@
 	"fight_pack_100": "Pakke med 100 kamper",
 	"fight_pack_200": "Pakke med 200 kamper",
 	"fight_pack_500": "Pakke med 500 kamper",
-	"fight_pack_1000": "Pakke med 1000 kamper",
 	"fight_pack_100_desc": "Pakke med 100 kamper som kan brukes umiddelbart",
 	"fight_pack_200_desc": "Pakke med 200 kamper som kan brukes umiddelbart",
 	"fight_pack_500_desc": "Pakke med 500 kamper som kan brukes umiddelbart",
-	"fight_pack_1000_desc": "Pakke med 1000 kamper som kan brukes umiddelbart"
+	"fight_pack_50": "Pakke med 50 kamper",
+	"fight_pack_50_desc": "Pakke med 50 kamper til umiddelbar bruk"
 }

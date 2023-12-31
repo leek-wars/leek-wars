@@ -2,9 +2,9 @@
 	"fight_pack_100": "100개의 전투 팩",
 	"fight_pack_200": "200개의 전투 팩",
 	"fight_pack_500": "500개의 전투 팩",
-	"fight_pack_1000": "1000개의 전투 팩",
 	"fight_pack_100_desc": "즉시 사용할 수 있는 100개의 전투 팩",
 	"fight_pack_200_desc": "즉시 사용할 수 있는 200개의 전투 팩",
 	"fight_pack_500_desc": "즉시 사용할 수 있는 500개의 전투 팩",
-	"fight_pack_1000_desc": "즉시 사용할 수 있는 1000개의 전투 팩"
+	"fight_pack_50": "50 전투 팩",
+	"fight_pack_50_desc": "즉시 사용 가능한 50개 전투 팩"
 }

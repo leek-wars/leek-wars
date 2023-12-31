@@ -2,9 +2,9 @@
 	"fight_pack_100": "100 taistelun pakkaus",
 	"fight_pack_200": "Paketissa 200 taistelua",
 	"fight_pack_500": "Paketissa 500 taistelua",
-	"fight_pack_1000": "Paketti 1000 taistelua",
 	"fight_pack_100_desc": "100 taistelun pakkaus käytettäväksi välittömästi",
 	"fight_pack_200_desc": "200 taistelun pakkaus käytettäväksi välittömästi",
 	"fight_pack_500_desc": "500 taistelun pakkaus käytettäväksi välittömästi",
-	"fight_pack_1000_desc": "1000 taistelun pakkaus käytettäväksi välittömästi"
+	"fight_pack_50": "50-ottelun paketti",
+	"fight_pack_50_desc": "50 ottelun pakkaus välitöntä käyttöä varten"
 }

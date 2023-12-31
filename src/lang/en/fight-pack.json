@@ -2,9 +2,9 @@
 	"fight_pack_100": "Pack of 100 fights",
 	"fight_pack_200": "Pack of 200 fights",
 	"fight_pack_500": "Pack of 500 fights",
-	"fight_pack_1000": "Pack of 1000 fights",
 	"fight_pack_100_desc": "Pack of 100 fights to be used immediately",
 	"fight_pack_200_desc": "Pack of 200 fights to be used immediately",
 	"fight_pack_500_desc": "Pack of 500 fights to be used immediately",
-	"fight_pack_1000_desc": "Pack of 1000 fights to be used immediately"
+	"fight_pack_50": "50-fight pack",
+	"fight_pack_50_desc": "50-fight pack for immediate use"
 }
