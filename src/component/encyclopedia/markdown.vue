@@ -49,7 +49,7 @@
 			const re = /^((https:\/\/leekwars\.com)?\/image\/|https:\/\/(i\.)?imgur\.com\/|https:\/\/(i\.)?ibb.co\/)/
 			const options = {
 				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img', 'center' ]),
-				allowedAttributes: { '*': ['style', 'class', 'width', 'height', 'href', 'src', 'colspan', 'rowspan', 'alt'] },
+				allowedAttributes: { '*': ['style', 'class', 'width', 'height', 'href', 'src', 'colspan', 'rowspan', 'alt', 'correct'] },
 				exclusiveFilter: function(frame: any) {
 					return frame.tag === 'img' && !re.test(frame.attribs.src)
 				},
@@ -547,7 +547,7 @@
 				display: flex;
 				gap: 4px;
 				&:hover {
-					background: #ddd;
+					background: var(--background-secondary);
 				}
 				&.correct {
 					background: #5fad1b;
@@ -579,6 +579,7 @@
 				}
 				.v-input {
 					display: inline-block;
+					color: var(--text-color);
 				}
 				code {
 					pre {
