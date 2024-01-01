@@ -17,6 +17,7 @@
     - Désactivation des chats autres que Français et Anglais pour plus de clarté.
     - "Changement des packs de combats : le pack achetable en habs est le pack de 50. #img_241_fight_packs"
     - "Amélioration de l'inventaire sur mobile. #241_inventory"
+    - La fonction listen() renvoie les say() dans l'ordre dans lequel ils ont été dits.
   fixed:
     - Les puces et les armes de boss ne sont plus affichées dans les dialogues de niveau.
     - Ajout des versions féminines des nouveaux trophées.
