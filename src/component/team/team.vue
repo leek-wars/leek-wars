@@ -226,12 +226,13 @@
 					<h4>{{ $t('main.leeks') }}</h4>
 					<div class="ranking card">
 						<div class="header">
-							<div class="p15">{{ $t('main.place') }}</div>
+							<div class="p20">{{ $t('main.place') }}</div>
 							<div class="p50">{{ $t('main.leek') }}</div>
 							<div class="p20">{{ $t('main.talent') }}</div>
+							<div class="p20">{{ $t('main.level') }}</div>
 						</div>
 						<div v-for="(leek, i) in team.rankings.leeks" :key="i" :class="{me: leek.me}">
-							<div class="p15">{{ parseInt(i) + 1 }}</div>
+							<div class="p20">{{ parseInt(i) + 1 }}</div>
 							<div class="p50" :class="leek.style">
 								<rich-tooltip-leek :id="leek.id" v-slot="{ on }">
 									<router-link :to="'/leek/' + leek.id">
@@ -240,6 +241,7 @@
 								</rich-tooltip-leek>
 							</div>
 							<div class="p20">{{ leek.talent | number }}</div>
+							<div class="p20">{{ leek.level | number }}</div>
 						</div>
 					</div>
 				</div>
