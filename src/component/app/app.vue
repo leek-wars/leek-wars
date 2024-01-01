@@ -1,5 +1,5 @@
 <template>
-	<div id="app" :class="{ connected: $store.state.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw, dark: LeekWars.darkMode, 'menu-collapsed': !LeekWars.mobile && LeekWars.menuCollapsed, beta: env.BETA, lightbar: LeekWars.lightBar }" data-app="true" @mousemove="mousemove">
+	<div id="app" :class="{ connected: $store.state.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw, dark: LeekWars.darkMode, 'menu-collapsed': !LeekWars.mobile && LeekWars.menuCollapsed, beta: env.BETA, lightbar: LeekWars.lightBar }" data-app="true" @mousemove="mousemove" @mouseup="mouseup">
 		<v-theme-provider root>
 			<div class="v-application--wrap">
 				<div :class="{visible: LeekWars.dark > 0}" :style="{opacity: LeekWars.dark}" class="dark-shadow" @click="darkClick"></div>
@@ -8,12 +8,12 @@
 
 				<lw-menu v-if="$store.state.connected" />
 
-				<!-- <div class="console-button" @click="leekscriptConsole">
+				<div class="console-button" @click="leekscriptConsole">
 					<img src="/image/console.png">
-				</div> -->
+				</div>
 				<div v-if="console" :style="{top: consoleY + 'px', left: consoleX + 'px'}" class="console v-dialog draggable">
 					<div class="title" @mousedown="consoleMouseDown">
-						Console LeekScript V2
+						Console LeekScript
 						<div class="spacer"></div>
 						<div class="options">
 							<div class="option" @click="consoleRandom"><img src="/image/icon/dice.png"></div>
@@ -181,13 +181,14 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import Console from './console.vue'
 	const ChangelogDialog = () => import('../changelog/changelog-dialog.vue')
 	const Didactitiel = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`)
 	const Documentation = () => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`)
 	const DidactitielNew = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel-new/didactitiel-new.${locale}.i18n`)
 
 	@Component({
-		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Squares, Didactitiel, Chats, 'mobile-br': MobileBR, ChangelogVersion, ChangelogDialog, Documentation, DidactitielNew }
+		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Squares, Didactitiel, Chats, 'mobile-br': MobileBR, ChangelogVersion, ChangelogDialog, Documentation, DidactitielNew, Console }
 	})
 	export default class App extends Vue {
 		console: boolean = false
@@ -277,7 +278,6 @@
 			LeekWars.menuExpanded = false
 			LeekWars.dark = 0
 		}
-		/*
 		leekscriptConsole() {
 			this.console = true
 			this.consoleX = window.innerWidth / 2 - 300
@@ -316,7 +316,7 @@
 			LeekWars.popupWindow("/console", "title", 600, 320)
 			this.console = false
 		}
-		*/
+
 		clickClover() {
 			if (LeekWars.cloverFake) {
 				this.mouseX = LeekWars.cloverLeft
@@ -386,6 +386,11 @@
 				this.updateClover()
 				this.updateCloverPosition()
 			}
+			this.consoleMouseMove(e)
+		}
+
+		mouseup(e: MouseEvent) {
+			this.consoleMouseUp(e)
 		}
 	}
 </script>
@@ -398,15 +403,16 @@
 		position: fixed;
 		top: 46px;
 		left: 34px;
+		z-index: 1;
 		cursor: pointer;
 		display: none;
 		img {
 			width: 30px;
 			opacity: 0.3;
 		}
-	}
-	.console-button:hover img {
-		opacity: 0.6;
+		&:hover img {
+			opacity: 0.6;
+		}
 	}
 	#app.connected .console-button {
 		display: block;

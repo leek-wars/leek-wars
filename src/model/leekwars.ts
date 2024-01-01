@@ -539,7 +539,6 @@ const LeekWars = {
 		const favicon = document.querySelector("link[rel*='icon'")
 		if (favicon) { favicon.setAttribute("href", image) }
 	},
-	/*
 	popupWindow(url: string, title: string, w: number, h: number) {
 		const dualScreenLeft = window.screenLeft
 		const dualScreenTop = window.screenTop
@@ -553,7 +552,6 @@ const LeekWars = {
 			newWindow.focus()
 		}
 	},
-	*/
 	fullscreen: false,
 	fullscreenEnter(element: HTMLElement, callback: (f: boolean) => void) {
 		const fullscreenCallback = () => {
