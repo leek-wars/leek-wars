@@ -1906,25 +1906,29 @@ class Game {
 
 	public mousedown(e: MouseEvent) {
 		// console.log("game mousedown")
-		if (this.groundPaint) {
-			this.painting = true
-		} else {
-			const obstacle = this.ground.obstacles.find(o => o.cell === this.mouseCell)
-			if (obstacle) {
-				this.draggedObstacle = obstacle
-				// console.log("game dragged=", this.draggedObstacle)
-			}
-			const entity = this.leeks.find(e => e.cell === this.mouseCell)
-			if (entity) {
-				this.draggedEntity = entity
+		if (this.creator) {
+			if (this.groundPaint) {
+				this.painting = true
+			} else {
+				const obstacle = this.ground.obstacles.find(o => o.cell === this.mouseCell)
+				if (obstacle) {
+					this.draggedObstacle = obstacle
+					// console.log("game dragged=", this.draggedObstacle)
+				}
+				const entity = this.leeks.find(e => e.cell === this.mouseCell)
+				if (entity) {
+					this.draggedEntity = entity
+				}
 			}
 		}
 	}
 
 	public mouseup(e: MouseEvent) {
-		this.draggedObstacle = null
-		this.draggedEntity = null
-		this.painting = false
+		if (this.creator) {
+			this.draggedObstacle = null
+			this.draggedEntity = null
+			this.painting = false
+		}
 	}
 
 	public mousemove(e: MouseEvent) {
@@ -1988,23 +1992,25 @@ class Game {
 			this.mouseEntity = null
 			this.canvas.style.cursor = "auto"
 		}
-		if (this.draggedObstacle && this.mouseCell && this.ground.field.canFit(this.draggedObstacle, this.mouseCell)) {
-			// console.log("move draggedObstacle", this.paused)
-			this.draggedObstacle.move(this.mouseCell)
-			this.player.$emit('edited', 'obstacle' + this.draggedObstacle.drawID)
-		}
-		if (this.draggedEntity && this.mouseCell && this.mouseCell.isAvailable()) {
-			// console.log("move draggedObstacle", this.paused)
-			this.draggedEntity.setCell(this.mouseCell)
-			this.player.$emit('edited', 'entity' + this.draggedEntity.drawID)
-		}
-		if (this.painting && this.groundPaint && this.mouseCell) {
-			// console.log("change cell color", this.mouseCell, this.map.options)
-			const paint = this.groundPaint.texture === this.map.options.groundTexture ? 0 : this.groundPaint.id
-			if (this.mouseCell.color !== paint) {
-				this.mouseCell.color = paint
-				this.player.$emit('edited', 'cell' + this.mouseCell.id)
-				this.ground.resize(this.width, this.height, this.shadows)
+		if (this.creator) {
+			if (this.draggedObstacle && this.mouseCell && this.ground.field.canFit(this.draggedObstacle, this.mouseCell)) {
+				// console.log("move draggedObstacle", this.paused)
+				this.draggedObstacle.move(this.mouseCell)
+				this.player.$emit('edited', 'obstacle' + this.draggedObstacle.drawID)
+			}
+			if (this.draggedEntity && this.mouseCell && this.mouseCell.isAvailable()) {
+				// console.log("move draggedObstacle", this.paused)
+				this.draggedEntity.setCell(this.mouseCell)
+				this.player.$emit('edited', 'entity' + this.draggedEntity.drawID)
+			}
+			if (this.painting && this.groundPaint && this.mouseCell) {
+				// console.log("change cell color", this.mouseCell, this.map.options)
+				const paint = this.groundPaint.texture === this.map.options.groundTexture ? 0 : this.groundPaint.id
+				if (this.mouseCell.color !== paint) {
+					this.mouseCell.color = paint
+					this.player.$emit('edited', 'cell' + this.mouseCell.id)
+					this.ground.resize(this.width, this.height, this.shadows)
+				}
 			}
 		}
 		if (this.paused) {
@@ -2013,20 +2019,20 @@ class Game {
 	}
 
 	public click() {
-
-		if (this.groundPaint && this.mouseCell) {
-			// console.log("change cell color", this.mouseCell, this.map.options)
-			const paint = this.groundPaint.texture === this.map.options.groundTexture ? 0 : this.groundPaint.id
-			if (this.mouseCell.color !== paint) {
-				this.mouseCell.color = paint
-				this.player.$emit('edited', 'cell' + this.mouseCell.id)
-				this.ground.resize(this.width, this.height, this.shadows)
-				if (this.paused) {
-					this.draw()
+		if (this.creator) {
+			if (this.groundPaint && this.mouseCell) {
+				// console.log("change cell color", this.mouseCell, this.map.options)
+				const paint = this.groundPaint.texture === this.map.options.groundTexture ? 0 : this.groundPaint.id
+				if (this.mouseCell.color !== paint) {
+					this.mouseCell.color = paint
+					this.player.$emit('edited', 'cell' + this.mouseCell.id)
+					this.ground.resize(this.width, this.height, this.shadows)
+					if (this.paused) {
+						this.draw()
+					}
 				}
 			}
 		}
-
 		return this.mouseEntity
 	}
 
