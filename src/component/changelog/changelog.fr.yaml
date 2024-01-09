@@ -19,12 +19,14 @@
     - "Amélioration de l'inventaire sur mobile. #241_inventory"
     - La fonction listen() renvoie les say() dans l'ordre dans lequel ils ont été dits.
     - Matchmaking éleveur beaucoup plus rapide à bas niveau.
+    - Ajout de "vide" dans les noms des ressources coffre.
   fixed:
     - Les puces et les armes de boss ne sont plus affichées dans les dialogues de niveau.
     - Ajout des versions féminines des nouveaux trophées.
     - Correction de l'itération sur les intervalles entiers ouverts.
     - Meilleur affichage de la page de craft sur mobile.
     - Correction du mode sombre par défaut.
+    - Affichage des effets EffectType.RAW_RELATIVE_SHIELD avec un % en combat.
 
 240:
   title: 10 ans ! Boss, Composants, Fabrication, Cœurs et RAM
