@@ -214,7 +214,7 @@
 		height: 12px;
 		display: inline-block;
 		vertical-align: top;
-		border-radius: 7px;
+		// border-radius: 7px;
 		&:first-child {
 			border-top-left-radius: 7px;
 			border-bottom-left-radius: 7px;
