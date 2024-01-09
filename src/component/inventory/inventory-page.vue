@@ -100,7 +100,7 @@
 	min-height: 0;
 }
 .bottom {
-	flex-basis: 304px;
+	flex-basis: 357px;
 	// flex-basis: 800px;
 	min-height: 0;
 	.content {
