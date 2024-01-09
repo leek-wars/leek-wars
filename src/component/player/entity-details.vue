@@ -14,7 +14,7 @@
 						<b v-if="effect.type === EffectType.ABSOLUTE_SHIELD || effect.type === EffectType.STEAL_ABSOLUTE_SHIELD || effect.type === EffectType.RAW_ABSOLUTE_SHIELD" class="color-resistance">
 							{{ $t('fight.n_absolute_shield', [effect.value]) }}
 						</b>
-						<b v-else-if="effect.type === EffectType.RELATIVE_SHIELD" class="color-resistance">
+						<b v-else-if="effect.type === EffectType.RELATIVE_SHIELD || effect.type === EffectType.RAW_RELATIVE_SHIELD" class="color-resistance">
 							{{ $t('fight.n_relative_shield', [effect.value + '%']) }}
 						</b>
 						<b v-else-if="effect.type === EffectType.VULNERABILITY" class="color-resistance">
@@ -179,7 +179,7 @@
 			if (effect.type === EffectType.SHACKLE_MAGIC || effect.type === EffectType.SHACKLE_MP || effect.type === EffectType.SHACKLE_TP || effect.type === EffectType.SHACKLE_STRENGTH || effect.type === EffectType.VULNERABILITY || effect.type === EffectType.ABSOLUTE_VULNERABILITY) {
 				r = '-' + r
 			}
-			if (effect.type === EffectType.RELATIVE_SHIELD || effect.type === EffectType.DAMAGE_RETURN || effect.type === EffectType.VULNERABILITY) {
+			if (effect.type === EffectType.RAW_RELATIVE_SHIELD || effect.type === EffectType.RELATIVE_SHIELD || effect.type === EffectType.DAMAGE_RETURN || effect.type === EffectType.VULNERABILITY) {
 				r += '%'
 			}
 			return r
