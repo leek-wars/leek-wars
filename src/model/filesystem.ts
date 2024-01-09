@@ -97,10 +97,12 @@ class FileSystem {
 		if (ai.entrypoint) {
 			for (const id of ai.includes_ids) { dependencies_set.add(id) }
 		}
-		for (const entrypoint of ai.entrypoints) {
-			dependencies_set.add(entrypoint)
-			if (fileSystem.ais[entrypoint]) {
-				for (const id of fileSystem.ais[entrypoint].includes_ids) { dependencies_set.add(id) }
+		if (ai.entrypoints) {
+			for (const entrypoint of ai.entrypoints) {
+				dependencies_set.add(entrypoint)
+				if (fileSystem.ais[entrypoint]) {
+					for (const id of fileSystem.ais[entrypoint].includes_ids) { dependencies_set.add(id) }
+				}
 			}
 		}
 		const dependencies_timestamps = {} as {[key: number]: number}

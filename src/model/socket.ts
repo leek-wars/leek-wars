@@ -5,6 +5,7 @@ import { ChatMessage } from './chat'
 import { NotificationType } from './notification'
 import { store } from './store'
 import { Leek } from './leek'
+import { analyzer } from '@/component/editor/analyzer'
 
 enum SocketMessage {
 	AUTH = 0,
@@ -83,6 +84,12 @@ enum SocketMessage {
 	GARDEN_BOSS_LOCK = 80,
 	GARDEN_BOSS_UNLISTEN = 81,
 	GARDEN_BOSS_LEFT = 82,
+	CONSOLE_NEW = 83,
+	CONSOLE_EXECUTE = 84,
+	CONSOLE_RESULT = 85,
+	CONSOLE_ERROR = 86,
+	CONSOLE_LOG = 87,
+	CONSOLE_CLOSE = 88,
 }
 
 class Socket {
@@ -313,6 +320,30 @@ class Socket {
 					LeekWars.bossSquads.left()
 					break
 				}
+				case SocketMessage.CONSOLE_RESULT: {
+					vueMain.$emit('console', data)
+					break
+				}
+				case SocketMessage.CONSOLE_ERROR: {
+					vueMain.$emit('console-error', data)
+					break
+				}
+				case SocketMessage.CONSOLE_LOG: {
+					vueMain.$emit('console-log', data)
+					break
+				}
+				case SocketMessage.EDITOR_ANALYZE: {
+					analyzer.analyzeResult(data)
+					break
+				}
+				case SocketMessage.EDITOR_HOVER: {
+					analyzer.hoverResult(data)
+					break
+				}
+				case SocketMessage.EDITOR_COMPLETE: {
+					analyzer.completeResult({ id: request_id, type: id, data })
+					break
+				}
 			}
 		}
 	}
@@ -338,7 +369,7 @@ class Socket {
 
 	public send(message: any) {
 		if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-			// console.log("[WS] send", message)
+			console.log("[WS] send", message)
 			this.socket.send(JSON.stringify(message))
 		} else {
 			this.queue.push(message)

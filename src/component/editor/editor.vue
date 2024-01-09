@@ -91,7 +91,7 @@
 					<div slot="content" class="editor-left dida-element">
 						<div class="resizer" @mousedown="resizerMousedown"></div>
 						<div :class="{tabs: $refs.tabs && $refs.tabs.tabs.length > 1}" class="editors">
-							<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :ais="fileSystem.ais" :editors="$refs.editors" :visible="currentAI === ai" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" @jump="jump" @load="load" />
+							<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :ais="fileSystem.ais" :editors="$refs.editors" :visible="currentAI === ai" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" @jump="jump" @load="load" />
 						</div>
 						<div v-if="currentEditor" class="compilation">
 							<!-- <div v-if="currentEditor.saving" class="compiling">
@@ -515,8 +515,6 @@
 			})
 			this.$root.$on('connected', this.connected)
 
-			this.$root.$on('wsmessage', this.wsmessage)
-
 			if (store.state.farmer) {
 				this.connected()
 			}
@@ -530,17 +528,6 @@
 				}
 			}
 			this.broadcast.postMessage({ type: 'editor-opened-ping' })
-		}
-
-		wsmessage(message: {type: number, id: number, data: any}) {
-			// console.log("wsmessage", JSON.stringify(message))
-			if (message.type === SocketMessage.EDITOR_ANALYZE) {
-				analyzer.analyzeResult(message.data)
-			} else if (message.type === SocketMessage.EDITOR_HOVER) {
-				analyzer.hoverResult(message.data)
-			} else if (message.type === SocketMessage.EDITOR_COMPLETE) {
-				analyzer.completeResult(message)
-			}
 		}
 
 		isChild(folder: Folder, parent: Folder): boolean {
@@ -651,7 +638,6 @@
 			this.$root.$off('next')
 			this.$root.$off('back')
 			this.$root.$off('connected', this.connected)
-			this.$root.$off('wsmessage', this.wsmessage)
 			LeekWars.large = false
 			LeekWars.header = true
 			LeekWars.footer = true

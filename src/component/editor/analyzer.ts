@@ -120,7 +120,7 @@ class Analyzer {
 
 	public complete(ai: AI, code: string, line: number, column: number) {
 
-		// console.log("🔥 Complete", ai.path, line, column)
+		console.log("🔥 Complete", ai.path, line, column)
 
 		if (code.length > 60_000) {
 			return Promise.reject()
@@ -135,8 +135,9 @@ class Analyzer {
 	}
 
 	public completeResult(message: {type: number, id: number, data: any}) {
-		// console.log("complete result", message)
+		console.log("complete result", message)
 		if (this.completeResolve[message.id]) {
+			console.log("resolve complete", message)
 			// console.timeEnd('hover')
 			this.completeResolve[message.id](message.data)
 			delete this.completeResolve[message.id]

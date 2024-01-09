@@ -521,14 +521,14 @@ ul, ol {
 .v-dialog.draggable .title {
 	cursor: move;
 }
-.v-dialog .content {
+.v-dialog > .content {
 	background: rgba(240,240,240, 0.95);
 	padding: 15px;
 	max-height: calc(100vh - 104px);
 	overflow-y: auto;
 	overflow-x: hidden;
 }
-body.dark .v-dialog .content {
+body.dark .v-dialog > .content {
 	background: rgba(15,15,15, 0.95);
 }
 .v-dialog:not(.v-dialog--fullscreen) {

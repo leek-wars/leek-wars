@@ -166,7 +166,9 @@
 		@Prop() autoClosing!: boolean
 		@Prop() autocompleteOption!: boolean
 		@Prop() popups!: boolean
+		@Prop() lineNumbers!: boolean
 		@Prop() editors!: AIView[]
+		@Prop() relative!: boolean
 
 		public id!: number
 		public editor!: CodeMirror.Editor
@@ -268,15 +270,15 @@
 					indentWithTabs: true,
 					highlightSelectionMatches: true,
 					matchBrackets: true,
-					lineNumbers: true,
+					lineNumbers: this.lineNumbers,
 					lineWrapping: true,
 					continueComments: true,
 					autofocus: true,
 					smartIndent: true,
 					cursorHeight: 1,
-					foldGutter: true,
+					foldGutter: this.lineNumbers,
 					undoDepth: 500,
-					gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+					gutters: this.lineNumbers ? ["CodeMirror-linenumbers", "CodeMirror-foldgutter"] : [],
 					extraKeys: {
 						"Shift-Tab": () => this.unindentCode(),
 						"Ctrl-D": () => this.duplicateLine(),
@@ -338,9 +340,12 @@
 
 				this.editor.on('change', (_, changes) => this.change(wrapper.CodeMirror, changes))
 				this.editor.on('cursorActivity', (_) => this.cursorChange())
-				this.editor.on('keyup', (i: any, e: any) => {
-					if (e.which === 46) {
+				this.editor.on('keyup', (i: any, e: KeyboardEvent) => {
+					if (e.key === 'Delete') {
 						e.stopPropagation()
+					}
+					if (e.key === 'Enter') {
+						this.$emit('enter')
 					}
 				})
 				this.editor.on('scroll', (e) => {
@@ -1077,6 +1082,7 @@
 		}
 
 		public autocomplete(CodeMirror: any, force: boolean = false) {
+			console.log("autocomplete", this.autocompleteOption)
 			if (!this.autocompleteOption) { return }
 
 			const cursor = this.document.getCursor()
@@ -1093,6 +1099,7 @@
 
 			if (!force && token.string.length === 0) {
 				this.close()
+				console.log("close")
 				return
 			}
 			token.state = CodeMirror.innerMode(this.document.getMode(), token.state).state
@@ -1245,7 +1252,7 @@
 				analyzer.complete(this.ai, this.document.getValue(), cursor.line + 1, cursor.ch - 1).then(raw_data => {
 
 					this.completing = false
-					// console.log("Completions", raw_data)
+					console.log("Completions", raw_data)
 					if (raw_data) {
 						const raw_completions = raw_data.items as any[]
 						this.completionType = raw_data.type
@@ -1335,12 +1342,21 @@
 				this.hintDialog = true
 				this.detailDialog = false
 
-				const pos = this.editor.cursorCoords({line: cursor.line, ch: cursor.ch })
-				const left = pos.left, top = pos.bottom
+				const pos = this.editor.cursorCoords({line: cursor.line, ch: cursor.ch }, this.relative ? "local" : "page")
+				const left = pos.left
+				const top = pos.bottom
+				const editorElement = (this.$refs.ai as HTMLElement)
 				const offset = (this.$refs.ai as HTMLElement).getBoundingClientRect()
+				// console.log("pos", pos)
+				// console.log("ai offset", offset, "scroll", editorElement.parentElement!.parentElement!.scrollTop!)
 
-				this.hintDialogTop = top - offset.top
-				this.hintDialogLeft = left - offset.left
+				if (this.relative) {
+					this.hintDialogTop = top + editorElement.offsetTop - editorElement.parentElement!.parentElement!.scrollTop!
+					this.hintDialogLeft = left + editorElement.offsetLeft
+				} else {
+					this.hintDialogTop = top - offset.top
+					this.hintDialogLeft = left - offset.left
+				}
 
 				this.hints = completions
 				this.selectHint(0)
@@ -1387,6 +1403,8 @@
 		}
 
 		public pick() {
+			this.$emit('enter')
+
 			const completion = this.completions[this.selectedCompletion]
 			const cursor = this.document.getCursor()
 
@@ -1634,8 +1652,8 @@
 			font-size: 14px;
 			line-height: 20px;
 			padding: 2px 5px;
-			background: #f7f7f7;
-			border: 1px solid #ccc;
+			background: var(--background);
+			border: 1px solid var(--border);
 			border-right: none;
 		}
 	}

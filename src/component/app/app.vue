@@ -424,9 +424,10 @@
 		position: fixed;
 		top: calc(50% - 200px);
 		left: calc(50% - 300px);
-		width: 600px;
-		z-index: 600;
+		width: 700px;
+		z-index: 10;
 		transition: none;
+		overflow: visible;
 	}
 	#app.app {
 		overflow: hidden;
