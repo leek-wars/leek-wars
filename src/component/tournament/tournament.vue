@@ -183,7 +183,6 @@ Max power: {{ tournament.max_power | number }}</pre>
 <style lang="scss" scoped>
 	.tournament-page {
 		position: relative;
-		text-align: center;
 	}
 	.tooltip {
 		transform: translate(-50%, 0px);
@@ -192,6 +191,8 @@ Max power: {{ tournament.max_power | number }}</pre>
 	}
 	.tournament.zoomed {
 		overflow-x: auto;
+    	overflow-y: hidden;
+		height: calc(100vh - 56px);
 	}
 	#app.app .tournament.zoomed {
 		width: auto;

@@ -383,12 +383,6 @@
 	opacity: 0.9;
 	z-index: 10;
 }
-.tournament.zoomed {
-	overflow-x: auto;
-}
-#app.app .tournament.zoomed {
-	width: auto;
-}
 .line {
 	stroke: var(--background-disabled);
 	stroke-width: 3;
