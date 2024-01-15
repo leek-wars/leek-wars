@@ -37,6 +37,9 @@
 					<template v-slot:item.creation_date="{ item }">
 						{{ item.creation_date | date }}
 					</template>
+					<template v-slot:item.archived="{ item }">
+						<v-checkbox v-model="item.archived" :hide-details="true" />
+					</template>
 				</v-data-table>
 			</div>
 		</panel>
@@ -57,6 +60,7 @@
           { text: 'Supervisor', value: 'supervisor' },
           { text: 'Membres', value: 'members' },
           { text: 'Date de création', value: 'creation_date' },
+          { text: 'Archivé', value: 'archived' },
         //   { text: 'Combats restants', value: 'day_fight' },
         //   { text: 'Combats', value: 'fights' },
         //   { text: 'Victoires', value: 'wins' },
