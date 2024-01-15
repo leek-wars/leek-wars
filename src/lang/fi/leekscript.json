@@ -176,5 +176,6 @@
 	"error_137": "Liian monta virhettä",
 	"error_143": "Operaattoria \"...\" odotetaan.",
 	"error_144": "Suljettu merkkijono.",
-	"error_145": "Oletusargumentit on sijoitettava loppuun."
+	"error_145": "Oletusargumentit on sijoitettava loppuun.",
+	"error_139": "In-operaattoria ei voi käyttää tähän arvoon \"{0}\""
 }

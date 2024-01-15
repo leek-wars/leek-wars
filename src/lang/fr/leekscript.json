@@ -166,6 +166,7 @@
 	"error_135": "Cette méthode de type « {0} » doit avoir le même type que sa méthode parente surchargée de type « {1} »",
 	"error_136": "Conversion de « {0} » de type « {1} » inutile.",
 	"error_137": "Trop d'erreurs",
+	"error_139": "Impossible d'utiliser l'opérateur in sur cette valeur « {0} »",
 	"error_141": "L'opérateur {0} est incompatible avec « {1} » de type « {2} »",
 	"error_142": "La borne « {0} » infinie ne peut pas être fermée.",
 	"error_143": "Opérateur « .. » attendu.",

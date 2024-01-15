@@ -176,5 +176,6 @@
 	"error_137": "För många misstag",
 	"error_143": "Operatör \"...\" förväntad.",
 	"error_144": "Icke sluten teckensträng.",
-	"error_145": "Standardargumenten måste placeras i slutet."
+	"error_145": "Standardargumenten måste placeras i slutet.",
+	"error_139": "Omöjligt att använda in-operatorn på detta värde \"{0}\""
 }

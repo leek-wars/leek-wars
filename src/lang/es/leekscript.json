@@ -176,5 +176,6 @@
 	"error_137": "Demasiados errores",
 	"error_143": "Se esperaba el operador \"...\".",
 	"error_144": "Cadena de caracteres no cerrada.",
-	"error_145": "Los argumentos por defecto deben colocarse al final."
+	"error_145": "Los argumentos por defecto deben colocarse al final.",
+	"error_139": "Imposible utilizar el operador in en este valor \"{0}\""
 }

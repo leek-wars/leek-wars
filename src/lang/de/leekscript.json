@@ -176,5 +176,6 @@
 	"error_137": "Zu viele Fehler",
 	"error_143": "Operator \"...\" erwartet.",
 	"error_144": "Nicht geschlossene Zeichenkette.",
-	"error_145": "Die Standardargumente müssen sich am Ende befinden."
+	"error_145": "Die Standardargumente müssen sich am Ende befinden.",
+	"error_139": "Der in-Operator kann bei diesem Wert \"{0}\" nicht verwendet werden"
 }

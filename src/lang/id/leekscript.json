@@ -176,5 +176,6 @@
 	"error_137": "Terlalu banyak kesalahan",
 	"error_143": "Operator \"...\" yang diharapkan.",
 	"error_144": "String karakter yang tidak tertutup.",
-	"error_145": "Argumen default harus ditempatkan di bagian akhir."
+	"error_145": "Argumen default harus ditempatkan di bagian akhir.",
+	"error_139": "Tidak mungkin menggunakan operator in pada nilai \"{0}\" ini"
 }

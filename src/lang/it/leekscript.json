@@ -176,5 +176,6 @@
 	"error_137": "Troppi errori",
 	"error_143": "Operatore \"...\" atteso.",
 	"error_144": "Stringa di caratteri non chiusa.",
-	"error_145": "Gli argomenti predefiniti devono essere posti alla fine."
+	"error_145": "Gli argomenti predefiniti devono essere posti alla fine.",
+	"error_139": "Impossibile utilizzare l'operatore in su questo valore \"{0}\""
 }

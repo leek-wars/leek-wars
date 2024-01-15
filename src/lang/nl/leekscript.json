@@ -176,5 +176,6 @@
 	"error_137": "Te veel fouten",
 	"error_143": "Operator \"...\" verwacht.",
 	"error_144": "Niet gesloten tekenreeks.",
-	"error_145": "De standaardargumenten moeten aan het einde worden geplaatst."
+	"error_145": "De standaardargumenten moeten aan het einde worden geplaatst.",
+	"error_139": "Onmogelijk om de in operator te gebruiken op deze waarde \"{0}\""
 }
