@@ -7,6 +7,7 @@
     - Trophées pour le concours sur les boss.
     - Le talent moyen par niveau en solo et éleveur est basé sur les joueurs actifs depuis 1 an.
     - "Affichage des coffres dans les historiques de combat #img_241_chests"
+    - Ajout de la fonction arrayToSet()
   improved:
     - Nombreuses améliorations et équilibrages sur les boss.
     - Nombreuses équilibrages sur les composants.
@@ -20,6 +21,9 @@
     - La fonction listen() renvoie les say() dans l'ordre dans lequel ils ont été dits.
     - Matchmaking éleveur beaucoup plus rapide à bas niveau.
     - Ajout de "vide" dans les noms des ressources coffre.
+    - "Potion de restat : 5 offertes à l'inscription, prix de 100000 à 500000 ou 10 cristaux."
+    - Possibilité d'inscrire tous ses poireaux en BR automatique.
+    - Les poireaux à XP bloquées sont séparés des autres en BR automatique.
   fixed:
     - Les puces et les armes de boss ne sont plus affichées dans les dialogues de niveau.
     - Ajout des versions féminines des nouveaux trophées.
@@ -27,6 +31,10 @@
     - Meilleur affichage de la page de craft sur mobile.
     - Correction du mode sombre par défaut.
     - Affichage des effets EffectType.RAW_RELATIVE_SHIELD avec un % en combat.
+    - Correction de la grenade qui rebondit trop longtemps.
+    - Correction du décompte sur la page tournoi.
+    - Correction de la constante AREA_ENEMIES.
+    - Correction du trophée "Chérie, j'ai rétréci le poireau".
 
 240:
   title: 10 ans ! Boss, Composants, Fabrication, Cœurs et RAM

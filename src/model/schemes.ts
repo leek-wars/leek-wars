@@ -161,7 +161,7 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
     id: 13,
     result: 302,
     items: [
-      null,       [ 234, 1 ],
+      null,       [ 193, 9 ],
       null,       null,
       [ 232, 1 ], null,
       [ 204, 2 ], null,
@@ -265,7 +265,7 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
     id: 21,
     result: 310,
     items: [
-      null,        [ 205, 2 ],
+      null,        [ 234, 2 ],
       null,        [ 188, 1 ],
       [ 203, 1 ],  null,
       [ 233, 10 ], null,
@@ -278,7 +278,7 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
     id: 22,
     result: 311,
     items: [
-      [ 234, 18 ], [ 231, 2 ],
+      [ 205, 18 ], [ 231, 2 ],
       null,        [ 239, 9 ],
       [ 198, 2 ],  null,
       [ 202, 1 ],  [ 321, 1 ],
@@ -294,7 +294,7 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
       [ 192, 40 ], [ 218, 3 ],
       [ 323, 1 ],  [ 207, 3 ],
       [ 216, 2 ],  [ 217, 1 ],
-      [ 49, 20 ],  [ 200, 5 ],
+      [ 49, 4 ],   [ 200, 5 ],
       null
     ],
     comment: 'thokozani',
@@ -467,7 +467,7 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
       null
     ],
     comment: 'restart_potion',
-    quantity: 5
+    quantity: 1
   },
   '37': {
     id: 37,
@@ -508,7 +508,7 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
     comment: 'potion_skin_fire',
     quantity: 1
   },
-  '40': { id: 40, result: 250, items: [ [ 264, 1 ], [ 186, 80 ], [ 200, 80 ], [ 230, 10 ], [ 301, 10 ], [ 203, 9999 ], [ 323, 10 ], [ 49, 200 ], null ], comment: 'potion_skin_radioactive', quantity: 1 },
+  '40': { id: 40, result: 250, items: [ [ 264, 1 ], [ 186, 80 ], [ 200, 80 ], [ 230, 10 ], [ 301, 10 ], [ 203, 9999 ], [ 323, 10 ], [ 49, 40 ], null ], comment: 'potion_skin_radioactive', quantity: 1 },
   '41': { id: 41, result: 237, items: [ null, null, null, [ 236, 9 ], null, null, null, null, null ], comment: 'salt', quantity: 1 },
   '42': {
     id: 42,
@@ -516,7 +516,7 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
     items: [
       [ 207, 1 ],  [ 198, 1 ],
       [ 388, 22 ], [ 322, 1 ],
-      [ 228, 1 ],  [ 234, 33 ],
+      [ 228, 1 ],  [ 234, 10 ],
       [ 239, 8 ],  [ 193, 5 ],
       null
     ],
@@ -527,7 +527,7 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
     id: 43,
     result: 365,
     items: [
-      [ 190, 12 ], [ 205, 18 ],
+      [ 190, 12 ], [ 234, 18 ],
       null,        [ 206, 35 ],
       [ 198, 1 ],  null,
       [ 201, 1 ],  [ 321, 1 ],
@@ -582,7 +582,7 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
       null,        [ 238, 8 ],
       [ 191, 6 ],  [ 203, 20 ],
       [ 233, 10 ], [ 206, 1 ],
-      [ 234, 6 ],  null,
+      [ 205, 6 ],  null,
       null
     ],
     comment: 'kiwi',
@@ -618,9 +618,9 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
     id: 50,
     result: 373,
     items: [
-      [ 231, 6 ], null,
-      [ 205, 3 ], null,
-      null,       [ 206, 2 ],
+      [ 231, 8 ], null,
+      [ 205, 9 ], null,
+      null,       [ 206, 4 ],
       null,       [ 321, 2 ],
       null
     ],
@@ -722,9 +722,9 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
     id: 58,
     result: 385,
     items: [
-      [ 186, 1 ],  [ 203, 5 ],
+      [ 186, 1 ],  [ 203, 10 ],
       [ 233, 50 ], [ 200, 1 ],
-      [ 205, 5 ],  [ 236, 5 ],
+      [ 205, 40 ], [ 236, 20 ],
       [ 377, 10 ], [ 321, 2 ],
       null
     ],
