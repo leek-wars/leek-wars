@@ -1,5 +1,5 @@
 {
-	"effect_1": "Réinitialise les points de capital du poireau",
+	"effect_1": "Réinitialise les caractéristiques et les points de capital du poireau.",
 	"effect_2": "Colore le poireau en <b>{0}</b>",
 	"effect_3": "<b>+{0} {1}</b> pendant <b>{2}</b> combats",
 	"restat": "Potion de réinitialisation",
