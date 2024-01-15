@@ -240,7 +240,7 @@
 			window.addEventListener('pointerdown', (e) => {
 				downX = e.clientX
 				downY = e.clientY
-				if (LeekWars.menuExpanded || downX < window.innerWidth / 2) {
+				if (LeekWars.menuExpanded || downX < window.innerWidth / 3) {
 					down = true
 					aborted = false
 					menu_visible = LeekWars.menuExpanded
@@ -282,12 +282,12 @@
 				center_element.style.transition = transition
 				center_element.style.transform = ''
 				if (menu_visible) {
-					if (d < W / 2) {
+					if (d < W / 3) {
 						LeekWars.menuExpanded = false
 						LeekWars.dark = 0
 					}
 				} else {
-					if (d > W / 2) {
+					if (d > W / 3) {
 						LeekWars.menuExpanded = true
 						LeekWars.dark = 0.6
 					} else {
