@@ -104,7 +104,7 @@ abstract class FallingParticle extends Particle {
 			if (this.z <= 0) {
 				this.z -= this.dz
 				this.dz = -this.dz * 0.4
-				if (this.dz < 0.8) {
+				if (this.dz < 0.5 * dt) {
 					this.dz = 0
 					this.dy = 0
 					this.dx = 0
