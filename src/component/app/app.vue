@@ -51,10 +51,11 @@
 
 				<div class="toasts"></div>
 
-				<div v-if="$store.state.farmer && !$store.state.farmer.verified" class="finish-register">
+				<div v-if="verifyMessage && $store.state.farmer && !$store.state.farmer.verified" class="finish-register">
 					<div class="message">
 						<v-icon>mdi-account-plus</v-icon>
 						{{ $t('main.verify_message') }} <router-link class="green-link" to="/settings">{{ $t('main.verify_info') }}</router-link>
+						<v-icon @click="verifyMessage = false">mdi-close</v-icon>
 					</div>
 				</div>
 
@@ -207,6 +208,7 @@
 		mouseX = 0
 		mouseY = 0
 		cloverSpeed = 200
+		verifyMessage = true
 
 		@Watch('LeekWars.darkMode', {immediate: true})
 		updateDarkMode() {
@@ -655,14 +657,15 @@
 		justify-content: center;
 		z-index: 10;
 		.message {
-			background: white;
+			background: var(--pure-white);
 			box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 			border-bottom-left-radius: 5px;
 			border-bottom-right-radius: 5px;
 			padding: 4px 12px;
 			display: flex;
-			gap: 5px;
-			i {
+			align-items: center;
+			gap: 10px;
+			i, button {
 				font-size: 18px;
 			}
 		}

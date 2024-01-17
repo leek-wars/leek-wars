@@ -24,6 +24,7 @@
     - "Potion de restat : 5 offertes à l'inscription, prix de 100000 à 500000 ou 10 cristaux."
     - Possibilité d'inscrire tous ses poireaux en BR automatique.
     - Les poireaux à XP bloquées sont séparés des autres en BR automatique.
+    - Possibilité de masquer la bannière de confirmation de compte.
   fixed:
     - Les puces et les armes de boss ne sont plus affichées dans les dialogues de niveau.
     - Ajout des versions féminines des nouveaux trophées.
