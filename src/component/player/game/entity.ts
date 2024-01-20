@@ -136,7 +136,7 @@ abstract class FightEntity extends Entity {
 	public jumpForce: number = 0
 	public bodyTexFront!: Texture
 	public bodyTexBack!: Texture
-	public bloodTex: Texture
+	public bloodTex: Texture | null
 	public lifeColor!: string
 	public lifeColorLighter!: string
 	// Reachable cells
@@ -1222,19 +1222,21 @@ abstract class FightEntity extends Entity {
 
 		if (this.type === EntityType.TURRET || this.type === EntityType.CHEST) { return }
 
-		const dir = Math.random()
-		dx *= dir / 10
-		dy *= dir / 10
-		let bx = this.ox + dx * (40 + Math.random() * 60)
-		let by = this.oy + dy *  (40 + Math.random() * 60)
-		this.game.particles.addBlood(x, y, z, dx, dy, dz, this.bloodTex)
-		this.game.particles.addBloodOnGround(bx, by, this.bloodTex)
-		dx = -dx
-		dy = -dy
-		bx = this.ox + dx * (40 + Math.random() * 60)
-		by = this.oy + dy * (40 + Math.random() * 60)
-		this.game.particles.addBlood(x, y, z, dx, dy, dz, this.bloodTex)
-		this.game.particles.addBloodOnGround(bx, by, this.bloodTex)
+		if (this.bloodTex) {
+			const dir = Math.random()
+			dx *= dir / 10
+			dy *= dir / 10
+			let bx = this.ox + dx * (40 + Math.random() * 60)
+			let by = this.oy + dy *  (40 + Math.random() * 60)
+			this.game.particles.addBlood(x, y, z, dx, dy, dz, this.bloodTex)
+			this.game.particles.addBloodOnGround(bx, by, this.bloodTex)
+			dx = -dx
+			dy = -dy
+			bx = this.ox + dx * (40 + Math.random() * 60)
+			by = this.oy + dy * (40 + Math.random() * 60)
+			this.game.particles.addBlood(x, y, z, dx, dy, dz, this.bloodTex)
+			this.game.particles.addBloodOnGround(bx, by, this.bloodTex)
+		}
 		if (!this.dead) {
 			this.flash = 5
 		}

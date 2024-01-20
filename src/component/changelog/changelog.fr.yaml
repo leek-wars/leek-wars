@@ -25,6 +25,7 @@
     - Possibilité d'inscrire tous ses poireaux en BR automatique.
     - Les poireaux à XP bloquées sont séparés des autres en BR automatique.
     - Possibilité de masquer la bannière de confirmation de compte.
+    - Affichage de tous les types dans les javadocs dans l'éditeur.
   fixed:
     - Les puces et les armes de boss ne sont plus affichées dans les dialogues de niveau.
     - Ajout des versions féminines des nouveaux trophées.
@@ -36,6 +37,7 @@
     - Correction du décompte sur la page tournoi.
     - Correction de la constante AREA_ENEMIES.
     - Correction du trophée "Chérie, j'ai rétréci le poireau".
+    - Sang des mobs de la bonne couleur et pas de sang sur Graal et cristaux.
 
 240:
   title: 10 ans ! Boss, Composants, Fabrication, Cœurs et RAM
