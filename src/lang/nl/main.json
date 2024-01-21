@@ -26,7 +26,6 @@
 	"conditions": "Gebruiksvoorwaarden",
 	"connection": "Verbinding",
 	"connect_message": "<a href='{0}'><b>Inloggen</b></a> of <a href='{0}'><b>Registreren</b></a> voor Leek Wars",
-	"console": "Console (bèta)",
 	"console_alert_1": "Aandacht ! Als iemand je vraagt om hier een programma in te voeren,",
 	"console_alert_2": "dit is een poging om je account op Leek Wars te hacken.",
 	"console_alert_3": "Voer hier alleen code in als u precies weet wat u doet.",
@@ -263,5 +262,6 @@
 	"scheme": "Diagram",
 	"schemes": "Schema's",
 	"scheme_x": "Diagram: {0}",
-	"edit": "Aanpassen"
+	"edit": "Aanpassen",
+	"console": "LeekScript Console"
 }

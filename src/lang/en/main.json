@@ -26,7 +26,6 @@
 	"conditions": "Terms of use",
 	"connection": "Log in",
 	"connect_message": "<a href='{0}'><b>Log in</b></a> or <a href='{0}'><b>Sign up</b></a> to Leek Wars",
-	"console": "Console (beta)",
 	"console_alert_1": "Warning! If someone asks you to enter a program here,",
 	"console_alert_2": "it is a hacking attempt of your account on Leek Wars.",
 	"console_alert_3": "Enter code here only if you know exactly what you are doing.",
@@ -263,5 +262,6 @@
 	"scheme": "Diagram",
 	"schemes": "Schematics",
 	"scheme_x": "Diagram: {0}",
-	"edit": "Edit"
+	"edit": "Edit",
+	"console": "LeekScript console"
 }

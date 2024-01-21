@@ -1,13 +1,18 @@
 <template lang="html">
-	<div class="console" @keyup="keyup">
+	<div class="console" :class="'theme-' + theme">
 		<div ref="scroll" class="scroll" v-autostopscroll >
 			<div class="lines">
 				<div v-for="(line, l) in lines" :key="l" class="line">
 					<template v-if="line.type === 'code'">
-						<span class="arrow">►</span><span>{{ line.code }}</span>
+						<!-- <span class="arrow">›</span> -->
+						<v-icon class="arrow">mdi-chevron-right</v-icon>
+						<span v-single-code><code>{{ line.code }}</code></span>
 					</template>
 					<template v-else-if="line.type === 'result'">
-						<div class="line result">{{ line.result }}<span class="ops">{{ line.ops }} ops</span></div>
+						<div class="line result">
+							<span v-single-code><code>{{ line.result }}</code></span>
+							<span class="ops">{{ line.ops }} ops</span>
+						</div>
 					</template>
 					<template v-else-if="line.type === 'log'">
 						<div :class="LeekWars.logClass(line.log)" :style="{color: LeekWars.logColor(line.log)}">{{ LeekWars.logText(line.log) }}</div>
@@ -25,20 +30,23 @@
 				</div>
 			</div>
 			<div class="input" @click="focus()">
-				<span class="arrow">►</span>
+				<!-- <span class="arrow">›</span> -->
+				<v-icon class="arrow">mdi-chevron-right</v-icon>
 				<!-- <input ref="input" v-model="code" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" @keydown.enter="enter"> -->
-				<ai-view class="editor theme-monokai" ref="editor" :ai="ai" :ais="{}" :visible="true" :line-numbers="false" :font-size="17" @enter="enter" :autocomplete-option="true" :popups="true" :relative="true" />
+				<ai-view class="editor" ref="editor" :ai="ai" :ais="{}" :visible="true" :line-numbers="false" :font-size="17" @enter="enter" :autocomplete-option="true" :popups="true" :console="true" @down="down" @up="up" />
 			</div>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
+	import { locale } from '@/locale'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { Component, Vue } from 'vue-property-decorator'
 	import AIView from '../editor/ai-view.vue'
 	import { AI } from '@/model/ai'
+	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
 
 	@Component({ components: { 'ai-view': AIView } })
 	export default class Console extends Vue {
@@ -47,10 +55,24 @@
 		lines: any[] = []
 		history: string[] = []
 		historyPos: number = 0
-		ai: any = new AI({ id: 0, code: 'var a = [1, 2, 3]' })
+		ai: any = new AI({ id: 0, code: '' })
+		theme: string = 'leekwars'
+		version: number = 4
+		strict: boolean = false
 
 		created() {
+			LeekWars.loadEncyclopedia(locale)
+
+			const defaultTheme = LeekWars.darkMode ? 'monokai' : 'leekwars'
+			this.theme = localStorage.getItem('console/theme') || defaultTheme
+			this.version = parseInt(localStorage.getItem('console/version') || '4')
+			this.strict = localStorage.getItem('console/strict') === 'true'
+
 			this.clear()
+		}
+
+		isEmpty() {
+			return this.lines.length === 0
 		}
 
 		clear() {
@@ -60,22 +82,22 @@
 			if (this.editor) {
 				this.editor.editor.setValue('')
 			}
-			LeekWars.socket.send([SocketMessage.CONSOLE_NEW])
+			LeekWars.socket.send([SocketMessage.CONSOLE_NEW, this.version, this.strict])
 		}
 
-		keyup(e: KeyboardEvent) {
-			if (e.key === 'ArrowUp') {
-				this.historyPos--
-				if (this.historyPos < 0) this.historyPos = 0
-				this.editor.editor.setValue(this.history[this.historyPos])
-			} else if (e.key === 'ArrowDown') {
-				this.historyPos++
-				if (this.historyPos >= this.history.length) {
-					this.historyPos = this.history.length
-					this.editor.editor.setValue('')
-				} else {
-					this.editor.editor.setValue(this.history[this.historyPos])
-				}
+		up() {
+			this.historyPos--
+			if (this.historyPos < 0) this.historyPos = 0
+			this.editor.setCode(this.history[this.historyPos])
+		}
+
+		down() {
+			this.historyPos++
+			if (this.historyPos >= this.history.length) {
+				this.historyPos = this.history.length
+				this.editor.editor.setValue('')
+			} else {
+				this.editor.setCode(this.history[this.historyPos])
 			}
 		}
 
@@ -114,6 +136,7 @@
 		}
 
 		enter() {
+			console.log("Console enter")
 			const code = this.editor.editor.getValue()
 			this.history.push(code)
 			this.historyPos = this.history.length
@@ -127,10 +150,12 @@
 				(this.$refs.scroll as HTMLElement).scrollTop = (this.$refs.scroll as HTMLElement).scrollHeight
 			}, 50)
 		}
+
 		focus() {
 			// (this.$refs.input as HTMLElement).focus()
 			this.editor.editor.focus()
 		}
+
 		random() {
 			LeekWars.get('leekscript/random').then(data => {
 				// this.code = data.code
@@ -138,16 +163,36 @@
 				LeekWars.toast(error)
 			})
 		}
+
+		toggleTheme() {
+			console.log("toggle theme")
+			this.theme = this.theme === 'leekwars' ? 'monokai' : 'leekwars'
+			localStorage.setItem('console/theme', this.theme)
+		}
+
+		setVersion(version: number) {
+			this.version = version
+			localStorage.setItem('console/version', '' + this.version)
+			this.clear()
+		}
+
+		toggleStrictMode() {
+			this.strict = !this.strict
+			localStorage.setItem('console/strict', '' + this.strict)
+			this.clear()
+		}
 	}
 </script>
 
 <style lang="scss" scoped>
 	.console {
-		height: 400px;
-		background: rgba(45, 45, 45, 0.95);
-		color: #ddd;
-		font-family: monospace;
-		font-size: 16px;
+		background: var(--background);
+		color: var(--text-color);
+		font-size: 17px;
+		height: 100vh;
+		&.window {
+			height: 400px;
+		}
 		position: relative;
 
 		--pure-white: #fff;
@@ -173,6 +218,8 @@
 	}
 	.scroll {
 		// position: relative;
+		display: flex;
+		flex-direction: column;
 		padding: 10px;
 		overflow-y: auto;
 		height: 100%;
@@ -185,8 +232,9 @@
 		padding: 2px 0;
 		word-wrap: break-word;
 		display: flex;
-		align-items: center;
-		gap: 8px;
+		align-items: start;
+		gap: 5px;
+		font-family: monospace;
 		span, .error {
 			white-space: pre-wrap;
 		}
@@ -194,12 +242,12 @@
 			color: red;
 		}
 		.zigzag {
-			padding-left: 18px;
+			padding-left: 31px;
 			margin-top: -10px;
 		}
 	}
 	.line.result {
-		color: white;
+		// color: white;
 		font-weight: bold;
 		font-size: 16px;
 		margin-bottom: 2px;
@@ -212,22 +260,28 @@
 	.input {
 		flex: 1;
 		display: flex;
-		gap: 8px;
+		gap: 5px;
 		align-items: flex-start;
-	}
-	.input input {
-		border: none;
-		background: transparent;
-		color: white;
-		font-family: monospace;
-		margin: 0;
-		padding: 0;
-		font-size: 16px;
-		min-height: 0;
-		width: calc(100% - 18px);
+		padding: 2px 0;
+		.arrow {
+			opacity: 1;
+		}
+		input {
+			border: none;
+			background: transparent;
+			// color: white;
+			font-family: monospace;
+			margin: 0;
+			padding: 0;
+			font-size: 16px;
+			min-height: 0;
+			width: calc(100% - 18px);
+		}
 	}
 	.arrow {
-		color: white;
+		font-size: 22px;
+		color: var(--text-color);
+		opacity: 0.4;
 	}
 
 .editor {
@@ -246,5 +300,9 @@
 			background: transparent !important;
 		}
 	}
+}
+.console::v-deep code {
+	border: none;
+	padding: 0 4px;
 }
 </style>

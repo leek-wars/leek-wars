@@ -177,5 +177,8 @@
 	"error_143": "Operator \"...\" erwartet.",
 	"error_144": "Nicht geschlossene Zeichenkette.",
 	"error_145": "Die Standardargumente müssen sich am Ende befinden.",
-	"error_139": "Der in-Operator kann bei diesem Wert \"{0}\" nicht verwendet werden"
+	"error_139": "Der in-Operator kann bei diesem Wert \"{0}\" nicht verwendet werden",
+	"intial_version": "Ursprüngliche Version",
+	"strict_mode": "Strenger Modus (fortgeschritten)",
+	"all_info_ls": "Alle Informationen über den {0}"
 }

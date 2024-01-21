@@ -6,7 +6,6 @@
 	"analyzer": "[beta] Nästa generations LeekScript Analyzer",
 	"auto_closing": "Autostängande parenteser, hakparenteser, klammerparenteser och citattecken",
 	"autocompletion": "Autokomplettering (förslag på aktuella variabler och funktioner i dokumentet)",
-	"all_info_ls": "All information om {0}",
 	"base": "bas",
 	"cancel": "Annullera",
 	"child": "Barn",
@@ -74,13 +73,11 @@
 	"valid_ai": "<b>{0}</b> giltig",
 	"file": "Fil",
 	"analyzing": "Analyserar",
-	"intial_version": "Första versionen",
 	"no_problem": "Inga problem",
 	"theme": "Tema",
 	"error": "Fel | Fel",
 	"warning": "Ansvarsfriskrivning | Varningar",
 	"todo": "Göra | Todos",
 	"editor_already_opened": "Redaktören är redan öppen på en annan flik!",
-	"strict_mode": "Strikt läge (avancerat)",
 	"strict": "Strikt"
 }

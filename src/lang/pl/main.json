@@ -26,7 +26,6 @@
 	"conditions": "Warunki korzystania",
 	"connection": "Zaloguj sie",
 	"connect_message": "<a href='{0}'><b>Zaloguj się</b></a> lub <a href='{0}'><b>Zarejestruj się</b></a> w Leek Wars",
-	"console": "Konsola (wersja beta)",
 	"console_alert_1": "Uwaga ! Jeśli ktoś poprosi Cię o wpisanie programu tutaj,",
 	"console_alert_2": "jest to próba włamania się na twoje konto w Leek Wars.",
 	"console_alert_3": "Wpisz tutaj kod tylko wtedy, gdy dokładnie wiesz, co robisz.",
@@ -263,5 +262,6 @@
 	"scheme": "Schemat",
 	"schemes": "Schematy",
 	"scheme_x": "Diagram: {0}",
-	"edit": "Modyfikacja"
+	"edit": "Modyfikacja",
+	"console": "Konsola LeekScript"
 }

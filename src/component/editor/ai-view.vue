@@ -126,7 +126,7 @@
 </template>
 
 <script lang="ts">
-	import { keywords } from '@/component/editor/keywords'
+	import { keywords, keywordsLSOnly } from '@/component/editor/keywords'
 	import { AI } from '@/model/ai'
 	import { fileSystem } from '@/model/filesystem'
 	import { i18n } from '@/model/i18n'
@@ -168,7 +168,7 @@
 		@Prop() popups!: boolean
 		@Prop() lineNumbers!: boolean
 		@Prop() editors!: AIView[]
-		@Prop() relative!: boolean
+		@Prop() console!: boolean
 
 		public id!: number
 		public editor!: CodeMirror.Editor
@@ -193,13 +193,13 @@
 		public completions: Keyword[] = []
 		public initialGeneration: number = 0
 		public dialogKeyMap: CodeMirror.KeyMap = {
-			Up: this.up,
-			Down: this.down,
-			PageUp: this.up,
-			PageDown: this.down,
+			// Up: this.up,
+			// Down: this.down,
+			// PageUp: this.up,
+			// PageDown: this.down,
 			Home: this.top,
 			End: this.bottom,
-			Enter: this.pick,
+			// Enter: this.pick,
 			Tab: this.pick,
 			Esc: this.close
 		}
@@ -340,12 +340,46 @@
 
 				this.editor.on('change', (_, changes) => this.change(wrapper.CodeMirror, changes))
 				this.editor.on('cursorActivity', (_) => this.cursorChange())
+				this.editor.on('keydown', (i: any, e: KeyboardEvent) => {
+					if (e.key === 'Enter' || e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+						// console.log("keydown Enter", this.hintDialog)
+						// On bloquer Enter si dialogue de complétion ou console
+						if (this.hintDialog || this.console) {
+							e.preventDefault()
+						}
+					}
+				})
 				this.editor.on('keyup', (i: any, e: KeyboardEvent) => {
 					if (e.key === 'Delete') {
 						e.stopPropagation()
 					}
 					if (e.key === 'Enter') {
-						this.$emit('enter')
+						// console.log("keyup Enter", this.hintDialog, this.console)
+						if (this.hintDialog) {
+							this.pick()
+							e.stopPropagation()
+						} else if (this.console) {
+							this.$emit('enter')
+							e.preventDefault()
+						}
+					}
+					if (e.key === 'ArrowDown') {
+						if (this.hintDialog) {
+							this.down()
+							e.stopPropagation()
+						} else if (this.console) {
+							this.$emit('down')
+							e.preventDefault()
+						}
+					}
+					if (e.key === 'ArrowUp') {
+						if (this.hintDialog) {
+							this.up()
+							e.stopPropagation()
+						} else if (this.console) {
+							this.$emit('up')
+							e.preventDefault()
+						}
 					}
 				})
 				this.editor.on('scroll', (e) => {
@@ -359,7 +393,9 @@
 				this.characters = this.editor.getDoc().getValue().length
 				Vue.set(this.ai, 'included_lines', this.ai.total_lines - this.lines)
 				Vue.set(this.ai, 'included_chars', this.ai.total_chars - this.ai.code.length)
-				LeekWars.setSubTitle(this.$i18n.tc('main.n_lines', this.lines))
+				if (this.$route.path.startsWith('/editor/')) {
+					LeekWars.setSubTitle(this.$i18n.tc('main.n_lines', this.lines))
+				}
 
 				// Jump to specific line
 				if (this.jumpToLine) {
@@ -431,6 +467,7 @@
 		}
 
 		public cursorChange() {
+			// console.log("cursorChange")
 			const cursor = this.document.getCursor()
 			if (!this.pos) {
 				this.pos = cursor
@@ -440,6 +477,12 @@
 			}
 			if (this.activeLine) { this.editor.removeLineClass(this.activeLine, "background", "activeline") }
 			this.activeLine = this.editor.addLineClass(cursor.line, "background", "activeline")
+		}
+
+		public setCode(code: string) {
+			this.editor.setValue(code)
+			// Set cursor at the end
+			this.editor.setCursor(this.editor.posFromIndex(code.length))
 		}
 
 		@Watch('ai.problems')
@@ -1223,7 +1266,11 @@
 				}
 
 				// Ajout des fonctions
-				keywords.forEach(maybeAdd)
+				if (this.console) {
+					keywordsLSOnly.forEach(maybeAdd)
+				} else {
+					keywords.forEach(maybeAdd)
+				}
 
 				// Raccourcis
 				for (const r in AUTO_SHORTCUTS) {
@@ -1342,7 +1389,7 @@
 				this.hintDialog = true
 				this.detailDialog = false
 
-				const pos = this.editor.cursorCoords({line: cursor.line, ch: cursor.ch }, this.relative ? "local" : "page")
+				const pos = this.editor.cursorCoords({line: cursor.line, ch: cursor.ch }, this.console ? "local" : "page")
 				const left = pos.left
 				const top = pos.bottom
 				const editorElement = (this.$refs.ai as HTMLElement)
@@ -1350,7 +1397,7 @@
 				// console.log("pos", pos)
 				// console.log("ai offset", offset, "scroll", editorElement.parentElement!.parentElement!.scrollTop!)
 
-				if (this.relative) {
+				if (this.console) {
 					this.hintDialogTop = top + editorElement.offsetTop - editorElement.parentElement!.parentElement!.scrollTop!
 					this.hintDialogLeft = left + editorElement.offsetLeft
 				} else {
@@ -1403,7 +1450,7 @@
 		}
 
 		public pick() {
-			this.$emit('enter')
+			console.log("pick")
 
 			const completion = this.completions[this.selectedCompletion]
 			const cursor = this.document.getCursor()

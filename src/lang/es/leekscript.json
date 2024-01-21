@@ -177,5 +177,8 @@
 	"error_143": "Se esperaba el operador \"...\".",
 	"error_144": "Cadena de caracteres no cerrada.",
 	"error_145": "Los argumentos por defecto deben colocarse al final.",
-	"error_139": "Imposible utilizar el operador in en este valor \"{0}\""
+	"error_139": "Imposible utilizar el operador in en este valor \"{0}\"",
+	"intial_version": "Versión inicial",
+	"strict_mode": "Modo estricto (avanzado)",
+	"all_info_ls": "Toda la información sobre {0}"
 }

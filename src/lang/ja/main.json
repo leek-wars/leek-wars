@@ -26,7 +26,6 @@
 	"conditions": "利用規約",
 	"connection": "ログイン",
 	"connect_message": "<a href='{0}'><b>ログイン</b></a>または<a href='{0}'><b>登録</b></a>してネギ戦争に参加",
-	"console": "コンソール (ベータ)",
 	"console_alert_1": "注意 ！ここでプログラムに参加するように言われたら、",
 	"console_alert_2": "これは、Leek Wars アカウントをハッキングしようとする試みです。",
 	"console_alert_3": "何をしているのか正確にわかっている場合にのみ、ここにコードを入力してください。",
@@ -263,5 +262,6 @@
 	"scheme": "ダイアグラム",
 	"schemes": "回路図",
 	"scheme_x": "ダイアグラム：{0}",
-	"edit": "修正"
+	"edit": "修正",
+	"console": "LeekScriptコンソール"
 }

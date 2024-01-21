@@ -6,7 +6,6 @@
 	"analyzer": "[beta] Analizzatore LeekScript di nuova generazione",
 	"auto_closing": "Parentesi chiuse automaticamente, parentesi quadre, graffe e virgolette",
 	"autocompletion": "Completamento automatico (proposta di variabili e funzioni correnti dal documento)",
-	"all_info_ls": "Tutte le informazioni su {0}",
 	"base": "base",
 	"cancel": "Annulla",
 	"child": "Bambino",
@@ -74,13 +73,11 @@
 	"valid_ai": "<b>{0}</b> valido",
 	"file": "File",
 	"analyzing": "Analizzando",
-	"intial_version": "Versione iniziale",
 	"no_problem": "Nessun problema",
 	"theme": "Tema",
 	"error": "Errore | Errori",
 	"warning": "Dichiarazione di non responsabilità | Avvertenze",
 	"todo": "Tutto | Tutto",
 	"editor_already_opened": "L'editor è già aperto in un'altra scheda!",
-	"strict_mode": "Modalità rigorosa (avanzata)",
 	"strict": "Rigoroso"
 }

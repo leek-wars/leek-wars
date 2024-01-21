@@ -8,21 +8,9 @@
 
 				<lw-menu v-if="$store.state.connected" />
 
-				<div class="console-button" @click="leekscriptConsole">
-					<img src="/image/console.png">
-				</div>
-				<div v-if="console" :style="{top: consoleY + 'px', left: consoleX + 'px'}" class="console v-dialog draggable">
-					<div class="title" @mousedown="consoleMouseDown">
-						Console LeekScript
-						<div class="spacer"></div>
-						<div class="options">
-							<div class="option" @click="consoleRandom"><img src="/image/icon/dice.png"></div>
-							<div class="option" @click="consolePopup"><v-icon>mdi-open-in-new</v-icon></div>
-							<div class="option" @click="consoleClose"><v-icon>mdi-close</v-icon></div>
-						</div>
-					</div>
-					<console ref="console" />
-				</div>
+				<v-icon class="console-button" @click="leekscriptConsole">mdi-console</v-icon>
+
+				<console-window v-if="console" ref="console" @close="console = false" />
 
 				<lw-bar v-if="LeekWars.mobile" />
 
@@ -181,24 +169,17 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
-	import Console from './console.vue'
+	import ConsoleWindow from './console-window.vue'
 	const ChangelogDialog = () => import('../changelog/changelog-dialog.vue')
 	const Didactitiel = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`)
 	const Documentation = () => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`)
 	const DidactitielNew = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel-new/didactitiel-new.${locale}.i18n`)
 
 	@Component({
-		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Squares, Didactitiel, Chats, 'mobile-br': MobileBR, ChangelogVersion, ChangelogDialog, Documentation, DidactitielNew, Console }
+		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Squares, Didactitiel, Chats, 'mobile-br': MobileBR, ChangelogVersion, ChangelogDialog, Documentation, DidactitielNew, ConsoleWindow }
 	})
 	export default class App extends Vue {
 		console: boolean = false
-		consoleDown: boolean = false
-		consoleX: number = 0
-		consoleY: number = 0
-		consoleStartx: number = 0
-		consoleStarty: number = 0
-		consoleDragx: number = 0
-		consoleDragy: number = 0
 		changelog: any = null
 		changelogDialog: boolean = false
 		konami: string = ''
@@ -278,43 +259,14 @@
 			LeekWars.menuExpanded = false
 			LeekWars.dark = 0
 		}
+
 		leekscriptConsole() {
 			this.console = true
-			this.consoleX = window.innerWidth / 2 - 300
-			this.consoleY = window.innerHeight / 2 - 200
-			setTimeout(() => {
-				(this.$refs.console as Console).focus()
-			}, 100)
-		}
-		consoleRandom() {
-			(this.$refs.console as Console).random()
-		}
-		consoleClose() {
-			this.console = false
-		}
-		consoleMouseDown(e: MouseEvent) {
-			if (e.button === 2) { return false }
-			this.consoleDragx = e.pageX
-			this.consoleDragy = e.pageY
-			this.consoleStartx = this.consoleX
-			this.consoleStarty = this.consoleY
-			this.consoleDown = true
-			e.preventDefault()
-			return false
-		}
-		consoleMouseMove(e: MouseEvent) {
-			if (!this.consoleDown) { return null }
-			this.consoleX = this.consoleStartx + (e.pageX - this.consoleDragx)
-			if (this.consoleX < -15) { this.consoleX = -15 }
-			this.consoleY = this.consoleStarty + (e.pageY - this.consoleDragy)
-			if (this.consoleY < -15) { this.consoleY = -15 }
-		}
-		consoleMouseUp(e: MouseEvent) {
-			this.consoleDown = false
-		}
-		consolePopup() {
-			LeekWars.popupWindow("/console", "title", 600, 320)
-			this.console = false
+			Vue.nextTick(() => {
+				if (this.$refs.console) {
+					(this.$refs.console as any).open()
+				}
+			})
 		}
 
 		clickClover() {
@@ -386,11 +338,15 @@
 				this.updateClover()
 				this.updateCloverPosition()
 			}
-			this.consoleMouseMove(e)
+			if (this.$refs.console) {
+				(this.$refs.console as any).consoleMouseMove(e)
+			}
 		}
 
 		mouseup(e: MouseEvent) {
-			this.consoleMouseUp(e)
+			if (this.$refs.console) {
+				(this.$refs.console as any).consoleMouseUp(e)
+			}
 		}
 	}
 </script>
@@ -399,19 +355,18 @@
 	#app.beta {
 		background: #492e46;
 	}
-	.console-button {
+	.console-button.v-icon {
 		position: fixed;
-		top: 46px;
-		left: 34px;
+		top: 44px;
+		left: 35px;
 		z-index: 1;
 		cursor: pointer;
 		display: none;
-		img {
-			width: 30px;
-			opacity: 0.3;
-		}
-		&:hover img {
-			opacity: 0.6;
+		font-size: 30px;
+		opacity: 0.5;
+		color: white;
+		&:hover {
+			opacity: 1;
 		}
 	}
 	#app.connected .console-button {
@@ -419,15 +374,6 @@
 	}
 	#app.app .console-button {
 		display: none;
-	}
-	.v-dialog.console {
-		position: fixed;
-		top: calc(50% - 200px);
-		left: calc(50% - 300px);
-		width: 700px;
-		z-index: 10;
-		transition: none;
-		overflow: visible;
 	}
 	#app.app {
 		overflow: hidden;

@@ -177,5 +177,8 @@
 	"error_143": "Operatør \"...\" forventet.",
 	"error_144": "Ikke-lukket tegnstreng.",
 	"error_145": "Standardargumentene må plasseres på slutten.",
-	"error_139": "Umulig å bruke in-operatoren på denne verdien \"{0}\""
+	"error_139": "Umulig å bruke in-operatoren på denne verdien \"{0}\"",
+	"intial_version": "Første versjon",
+	"strict_mode": "Streng modus (avansert)",
+	"all_info_ls": "All informasjon om {0}"
 }

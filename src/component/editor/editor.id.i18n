@@ -6,7 +6,6 @@
 	"analyzer": "[beta] Penganalisis LeekScript Generasi Berikutnya",
 	"auto_closing": "Tanda kurung tutup otomatis, tanda kurung siku, tanda kurung, dan tanda kutip",
 	"autocompletion": "Pelengkapan otomatis (proposal variabel dan fungsi dokumen saat ini)",
-	"all_info_ls": "Semua informasi tentang {0}",
 	"base": "basis",
 	"cancel": "Membatalkan",
 	"child": "Anak",
@@ -74,13 +73,11 @@
 	"valid_ai": "<b>{0}</b> valid",
 	"file": "Mengajukan",
 	"analyzing": "Menganalisa",
-	"intial_version": "Versi awal",
 	"no_problem": "Tidak masalah",
 	"theme": "Tema",
 	"error": "Kesalahan | Kesalahan",
 	"warning": "Penafian | Peringatan",
 	"todo": "Yang harus dilakukan | Semuanya",
 	"editor_already_opened": "Editor sudah terbuka di tab lain!",
-	"strict_mode": "Mode ketat (lanjutan)",
 	"strict": "Ketat"
 }

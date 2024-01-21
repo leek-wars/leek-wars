@@ -89,11 +89,18 @@ Vue.directive('autostopscroll', {
 	}
 })
 
-
 Vue.directive('code', {
 	inserted: (el) => {
 		el.querySelectorAll('code').forEach((c) => {
 			new Code({ propsData: { code: (c as HTMLElement).innerText }, parent: vueMain }).$mount(c)
+		})
+	}
+})
+
+Vue.directive('single-code', {
+	inserted: (el) => {
+		el.querySelectorAll('code').forEach((c) => {
+			new Code({ propsData: { code: (c as HTMLElement).innerText, single: true, theme: 'auto' }, parent: vueMain }).$mount(c)
 		})
 	}
 })
@@ -174,7 +181,7 @@ const vueMain = new Vue({
 	data: { savedPosition: 0 },
 	vuetify,
 	render: (h) => {
-		if (location.pathname === '/console') {
+		if (location.pathname === '/full-console') {
 			return h(Console)
 		}
 		return h(App)

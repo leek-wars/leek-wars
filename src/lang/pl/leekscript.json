@@ -177,5 +177,8 @@
 	"error_143": "Oczekiwany operator \"...\".",
 	"error_144": "Niezamknięty ciąg znaków.",
 	"error_145": "Domyślne argumenty muszą być umieszczone na końcu.",
-	"error_139": "Nie można użyć operatora in na tej wartości \"{0}\""
+	"error_139": "Nie można użyć operatora in na tej wartości \"{0}\"",
+	"intial_version": "Wersja początkowa",
+	"strict_mode": "Tryb ścisły (zaawansowany)",
+	"all_info_ls": "Wszystkie informacje na temat {0}"
 }

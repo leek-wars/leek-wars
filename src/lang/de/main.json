@@ -26,7 +26,6 @@
 	"conditions": "Nutzungsbedingungen",
 	"connection": "Anmeldung",
 	"connect_message": "<a href='{0}'><b>Anmelden</b></a> oder <a href='{0}'><b>Registrieren</b></a> für Lauchkriege",
-	"console": "Konsole (Beta)",
 	"console_alert_1": "Aufmerksamkeit ! Wenn Sie jemand bittet, hier ein Programm einzugeben,",
 	"console_alert_2": "dies ist ein Versuch, Ihr Konto bei Leek Wars zu hacken.",
 	"console_alert_3": "Geben Sie den Code hier nur ein, wenn Sie genau wissen, was Sie tun.",
@@ -263,5 +262,6 @@
 	"scheme": "Schema",
 	"schemes": "Schemata",
 	"scheme_x": "Schema: {0}",
-	"edit": "Bearbeiten"
+	"edit": "Bearbeiten",
+	"console": "LeekScript-Konsole"
 }

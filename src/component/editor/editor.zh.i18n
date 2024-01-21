@@ -6,7 +6,6 @@
 	"analyzer": "[beta] 下一代 LeekScript 分析器",
 	"auto_closing": "自动关闭括号、方括号、大括号和引号",
 	"autocompletion": "自动完成（文档的当前变量和函数的建议）",
-	"all_info_ls": "有关 {0} 的所有信息",
 	"base": "根据",
 	"cancel": "取消",
 	"child": "孩子",
@@ -74,13 +73,11 @@
 	"valid_ai": "<b>{0}</b> 有效",
 	"file": "文件",
 	"analyzing": "分析",
-	"intial_version": "初始版本",
 	"no_problem": "没问题",
 	"theme": "主题",
 	"error": "错误 |错误",
 	"warning": "免责声明 |警告",
 	"todo": "待办事项 |待办事项",
 	"editor_already_opened": "编辑器已在另一个选项卡中打开！",
-	"strict_mode": "严格模式（高级）",
 	"strict": "严格的"
 }

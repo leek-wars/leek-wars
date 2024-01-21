@@ -22,6 +22,7 @@ const Bank = () => import(/* webpackChunkName: "[request]" */ `@/component/bank/
 const ChangeEmail = () => import(/* webpackChunkName: "[request]" */ `@/component/change-email/change-email.${locale}.i18n`)
 const Changelog = () => import(/* webpackChunkName: "[request]" */ `@/component/changelog/changelog.${locale}.i18n`)
 const Conditions = () => import(/* webpackChunkName: "[request]" */ `@/component/conditions/conditions.${locale}.i18n`)
+const ConsolePage = () => import(/* webpackChunkName: "[request]" */ `@/component/console/console-page.vue`)
 const Contact = () => import(/* webpackChunkName: "[request]" */ `@/component/contact/contact.${locale}.i18n`)
 const DevBlog = () => import(/* webpackChunkName: "[request]" */ `@/component/dev-blog/dev-blog.${locale}.i18n`)
 const DevBlogArticle = () => import(/* webpackChunkName: "[request]" */ `@/component/dev-blog/dev-blog-article.${locale}.i18n`)
@@ -136,6 +137,7 @@ const routes = [
 	{ path: '/about', component: About },
 	{ path: '/app', component: MobileApp },
 	{ path: '/conditions', component: Conditions },
+	{ path: '/console', component: ConsolePage },
 	{ path: '/changelog', component: Changelog },
 	{ path: '/change-email/:state/:token', component: ChangeEmail },
 	{ path: '/contact', component: Contact },

@@ -6,7 +6,6 @@
 	"analyzer": "[bèta] LeekScript-analysator van de volgende generatie",
 	"auto_closing": "Automatisch sluitende haakjes, vierkante haken, accolades en aanhalingstekens",
 	"autocompletion": "Automatische aanvulling (voorstel van huidige variabelen en functies van het document)",
-	"all_info_ls": "Alle informatie over de {0}",
 	"base": "baseren",
 	"cancel": "Annuleren",
 	"child": "Kind",
@@ -74,13 +73,11 @@
 	"valid_ai": "<b>{0}</b> geldig",
 	"file": "Bestand",
 	"analyzing": "Analyseren",
-	"intial_version": "Eerste versie",
 	"no_problem": "Geen probleem",
 	"theme": "Thema",
 	"error": "Fout | Fouten",
 	"warning": "Disclaimer | Waarschuwingen",
 	"todo": "Doe | Taken",
 	"editor_already_opened": "De editor is al geopend in een ander tabblad!",
-	"strict_mode": "Strikte modus (geavanceerd)",
 	"strict": "Strikt"
 }

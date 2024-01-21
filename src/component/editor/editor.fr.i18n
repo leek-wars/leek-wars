@@ -6,7 +6,6 @@
 	"analyzer": "[bêta] Analyzeur LeekScript de nouvelle génération",
 	"auto_closing": "Fermeture automatique des parenthèses, crochets, accolades et guillemets",
 	"autocompletion": "Autocomplétion (proposition des variables courantes et fonctions de la doc)",
-	"all_info_ls": "Toutes les informations sur le {0}",
 	"base": "base",
 	"cancel": "Annuler",
 	"child": "Enfant",
@@ -74,7 +73,6 @@
 	"valid_ai": "<b>{0}</b> valide",
 	"file": "Fichier",
 	"analyzing": "En cours d'analyse",
-	"intial_version": "Version initiale",
 	"no_problem": "Aucun problème",
 	"analyzing": "En cours d'analyse",
 	"theme": "Thème",
@@ -82,6 +80,5 @@
 	"warning": "Avertissement | Avertissements",
 	"todo": "Todo | Todos",
 	"editor_already_opened": "L'éditeur est déjà ouvert dans un autre onglet !",
-	"strict_mode": "Mode strict (avancé)",
 	"strict": "Strict"
 }

@@ -60,7 +60,7 @@
 	max-width: none !important;
 }
 .v-dialog {
-	margin: 12px !important;
+	margin: 12px;
 }
 .dialog-transition-enter, .dialog-transition-leave-to {
 	transform: scale(0.5);
@@ -181,6 +181,7 @@ body {
 	font-size: 15px;
 	background: #333;
 	color: var(--text-color);
+	--primary: #5fad1b;
 	--pure-white: #fff;
 	--background: #f2f2f2;
 	--background-secondary: #eee;

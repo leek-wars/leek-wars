@@ -153,12 +153,12 @@
 	h2 {
 		margin-bottom: 10px;
 		font-size: 17px;
-		color: #333;
+		// color: #333;
 	}
 	h4 {
 		font-weight: 500;
 		margin: 0;
-		color: #666;
+		// color: #666;
 		margin-top: 10px;
 		margin-bottom: 8px;
 		font-size: 15px;

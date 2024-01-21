@@ -177,5 +177,8 @@
 	"error_143": "Operatör \"...\" förväntad.",
 	"error_144": "Icke sluten teckensträng.",
 	"error_145": "Standardargumenten måste placeras i slutet.",
-	"error_139": "Omöjligt att använda in-operatorn på detta värde \"{0}\""
+	"error_139": "Omöjligt att använda in-operatorn på detta värde \"{0}\"",
+	"intial_version": "Ursprunglig version",
+	"strict_mode": "Strikt läge (avancerat)",
+	"all_info_ls": "All information om {0}"
 }

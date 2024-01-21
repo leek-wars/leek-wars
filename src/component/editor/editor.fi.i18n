@@ -6,7 +6,6 @@
 	"analyzer": "[beta] Seuraavan sukupolven LeekScript Analyzer",
 	"auto_closing": "Automaattisesti sulkeutuvat sulkeet, hakasulkeet, aaltosulut ja lainausmerkit",
 	"autocompletion": "Automaattinen täydennys (ehdotus nykyisistä muuttujista ja funktioista asiakirjasta)",
-	"all_info_ls": "Kaikki tiedot kohteesta {0}",
 	"base": "pohja",
 	"cancel": "Peruuttaa",
 	"child": "Lapsi",
@@ -74,13 +73,11 @@
 	"valid_ai": "<b>{0}</b> kelvollinen",
 	"file": "Tiedosto",
 	"analyzing": "Analysoidaan",
-	"intial_version": "Alkuperäinen versio",
 	"no_problem": "Ei ongelmaa",
 	"theme": "Teema",
 	"error": "Virhe | Virheet",
 	"warning": "Vastuuvapauslauseke | Varoitukset",
 	"todo": "Tehdä | Todos",
 	"editor_already_opened": "Editori on jo auki toisella välilehdellä!",
-	"strict_mode": "Tiukka tila (edistynyt)",
 	"strict": "Tiukka"
 }

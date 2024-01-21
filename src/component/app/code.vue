@@ -1,5 +1,5 @@
 <template>
-	<div :class="{single, [theme]: theme}">
+	<div :class="{single, [finalTheme]: true}">
 		<code ref="code" v-show="expanded"></code>
 		<span v-if="expandable && !single" class="button" v-ripple @click="expanded = !expanded">
 			<v-icon>{{ expanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
@@ -19,10 +19,11 @@
 		@Prop({required: true}) code!: string
 		@Prop() single!: boolean
 		@Prop() expandable!: boolean
+		@Prop() theme!: string
 		expanded: boolean = true
 
-		get theme() {
-			return LeekWars.darkMode ? 'theme-monokai' : ''
+		get finalTheme() {
+			return this.theme ? this.theme : (LeekWars.darkMode ? 'theme-monokai' : '')
 		}
 		get lines() {
 			return this.code.split('\n').length

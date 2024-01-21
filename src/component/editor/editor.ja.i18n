@@ -6,7 +6,6 @@
 	"analyzer": "[beta] 次世代 LeekScript アナライザー",
 	"auto_closing": "自動閉じ括弧、角括弧、中括弧、および引用符",
 	"autocompletion": "オートコンプリート (ドキュメントの現在の変数と関数の提案)",
-	"all_info_ls": "{0}に関するすべての情報",
 	"base": "ベース",
 	"cancel": "キャンセル",
 	"child": "子供",
@@ -74,13 +73,11 @@
 	"valid_ai": "<b>{0}</b> 有効",
 	"file": "ファイル",
 	"analyzing": "分析中",
-	"intial_version": "初期バージョン",
 	"no_problem": "問題ない",
 	"theme": "テーマ",
 	"error": "エラー |エラー",
 	"warning": "免責事項 |警告",
 	"todo": "トド |トドス",
 	"editor_already_opened": "エディタはすでに別のタブで開いています!",
-	"strict_mode": "ストリクトモード（上級者向け）",
 	"strict": "厳しい"
 }

@@ -6,7 +6,6 @@
 	"analyzer": "[beta] New generation LeekScript analyzer",
 	"auto_closing": "Automatic closing of parentheses, brackets and quotation marks.",
 	"autocompletion": "Code completion (suggest variables and leekscript functions)",
-	"all_info_ls": "All information on {0}",
 	"base": "base",
 	"child": "Child",
 	"close": "Close",
@@ -73,7 +72,6 @@
 	"valid_ai": "<b>{0}</b> is valid.",
 	"file": "File",
 	"analyzing": "Analyzing",
-	"intial_version": "Initial version",
 	"no_problem": "No problem",
 	"theme": "Theme",
 	"error": "Error | Errors",
@@ -81,6 +79,5 @@
 	"todo": "Todo | Todos",
 	"editor_already_opened": "The editor is already opened in another tab!",
 	"cancel": "Cancel",
-	"strict_mode": "Mode strict (advanced)",
 	"strict": "Strict"
 }

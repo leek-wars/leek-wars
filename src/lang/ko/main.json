@@ -26,7 +26,6 @@
 	"conditions": "이용약관",
 	"connection": "로그인",
 	"connect_message": "leek Wars <a href='{0}'><b>로그인</b></a> 또는 <a href='{0}'><b>등록</b></a>",
-	"console": "콘솔(베타)",
 	"console_alert_1": "주목 ! 누군가 여기에 프로그램을 입력하라고 하면",
 	"console_alert_2": "이것은 Leek Wars에서 귀하의 계정을 해킹하려는 시도입니다.",
 	"console_alert_3": "수행 중인 작업을 정확히 알고 있는 경우에만 여기에 코드를 입력하십시오.",
@@ -263,5 +262,6 @@
 	"scheme": "다이어그램",
 	"schemes": "회로도",
 	"scheme_x": "다이어그램: {0}",
-	"edit": "수정"
+	"edit": "수정",
+	"console": "LeekScript 콘솔"
 }

@@ -177,5 +177,8 @@
 	"error_143": "Operator \"...\" expected.",
 	"error_144": "Unclosed character string.",
 	"error_145": "Default arguments must be placed at the end.",
-	"error_139": "Impossible to use the in operator on this value \"{0}\""
+	"error_139": "Impossible to use the in operator on this value \"{0}\"",
+	"intial_version": "Initial version",
+	"strict_mode": "Strict mode (advanced)",
+	"all_info_ls": "All information on {0}"
 }

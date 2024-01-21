@@ -26,7 +26,6 @@
 	"conditions": "Vilkår for bruk",
 	"connection": "Logg Inn",
 	"connect_message": "<a href='{0}'><b>Logg på</b></a> eller <a href='{0}'><b>Registrer deg</b></a> for Leek Wars",
-	"console": "Konsoll (beta)",
 	"console_alert_1": "Merk følgende ! Hvis noen ber deg om å legge inn et program her,",
 	"console_alert_2": "dette er et forsøk på å hacke kontoen din på Leek Wars.",
 	"console_alert_3": "Skriv inn koden her bare hvis du vet nøyaktig hva du gjør.",
@@ -263,5 +262,6 @@
 	"scheme": "Diagram",
 	"schemes": "Skjemaer",
 	"scheme_x": "Diagram: {0}",
-	"edit": "Endre"
+	"edit": "Endre",
+	"console": "LeekScript-konsollen"
 }

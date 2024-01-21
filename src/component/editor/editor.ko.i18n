@@ -6,7 +6,6 @@
 	"analyzer": "[베타] 차세대 LeekScript 분석기",
 	"auto_closing": "자동 닫기 괄호, 대괄호, 중괄호 및 따옴표",
 	"autocompletion": "자동 완성(문서의 현재 변수 및 기능 제안)",
-	"all_info_ls": "{0}에 대한 모든 정보",
 	"base": "베이스",
 	"cancel": "취소",
 	"child": "어린이",
@@ -74,13 +73,11 @@
 	"valid_ai": "<b>{0}</b> 유효",
 	"file": "파일",
 	"analyzing": "분석하는",
-	"intial_version": "초기 버전",
 	"no_problem": "괜찮아요",
 	"theme": "주제",
 	"error": "오류 | 오류",
 	"warning": "면책 조항 | 경고",
 	"todo": "할 일 | 할 일",
 	"editor_already_opened": "편집기는 이미 다른 탭에서 열려 있습니다!",
-	"strict_mode": "엄격 모드(고급)",
 	"strict": "Strict"
 }

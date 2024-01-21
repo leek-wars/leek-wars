@@ -26,7 +26,6 @@
 	"conditions": "Käyttöehdot",
 	"connection": "Kirjaudu sisään",
 	"connect_message": "<a href='{0}'><b>Kirjaudu sisään</b></a> tai <a href='{0}'><b>Rekisteröidy</b></a> Leek Warsiin",
-	"console": "Konsoli (beta)",
 	"console_alert_1": "Huomio ! Jos joku pyytää sinua syöttämään ohjelman tänne,",
 	"console_alert_2": "tämä on yritys hakkeroida tilisi Leek Warsissa.",
 	"console_alert_3": "Kirjoita koodi tähän vain, jos tiedät tarkalleen mitä olet tekemässä.",
@@ -263,5 +262,6 @@
 	"scheme": "Kaavio",
 	"schemes": "Kaaviot",
 	"scheme_x": "Kaavio: {0}",
-	"edit": "Muokkaa"
+	"edit": "Muokkaa",
+	"console": "LeekScript-konsoli"
 }

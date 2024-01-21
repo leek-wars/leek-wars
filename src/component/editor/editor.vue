@@ -149,7 +149,7 @@
 													<li>Entiers sur 64 bits au lieu de 32, nouvelles fonctions sur les nombres.</li>
 													<li>Fonctions flèches, paramètres par défaut.</li>
 												</ul>
-												<router-link class="link" to="/encyclopedia/LeekScript_4"><v-icon>mdi-book-open-page-variant</v-icon> {{ $t('all_info_ls', ['LeekScript 4']) }}</router-link>
+												<router-link class="link" to="/encyclopedia/LeekScript_4"><v-icon>mdi-book-open-page-variant</v-icon> {{ $t('leekscript.all_info_ls', ['LeekScript 4']) }}</router-link>
 											</v-list-item-subtitle>
 										</v-list-item-content>
 									</v-list-item>
@@ -164,7 +164,7 @@
 													<li>Classes de base : Number, Integer, Boolean, Object, Array, Function etc.</li>
 													<li>Nouveaux mots-clés réservés.</li>
 												</ul>
-												<router-link class="link" to="/encyclopedia/LeekScript_3"><v-icon>mdi-book-open-page-variant</v-icon> {{ $t('all_info_ls', ['LeekScript 3']) }}</router-link>
+												<router-link class="link" to="/encyclopedia/LeekScript_3"><v-icon>mdi-book-open-page-variant</v-icon> {{ $t('leekscript.all_info_ls', ['LeekScript 3']) }}</router-link>
 											</v-list-item-subtitle>
 										</v-list-item-content>
 									</v-list-item>
@@ -179,7 +179,7 @@
 													<li>Passage par référence par défaut pour les valeurs non-primitives dans les fonctions, les boucles foreach et les tableaux.</li>
 													<li>Corrections mineures (arrayFilter, opérateur ^=, et autres).</li>
 												</ul>
-												<router-link class="link" to="/encyclopedia/LeekScript_2"><v-icon>mdi-book-open-page-variant</v-icon> {{ $t('all_info_ls', ['LeekScript 2']) }}</router-link>
+												<router-link class="link" to="/encyclopedia/LeekScript_2"><v-icon>mdi-book-open-page-variant</v-icon> {{ $t('leekscript.all_info_ls', ['LeekScript 2']) }}</router-link>
 											</v-list-item-subtitle>
 										</v-list-item-content>
 									</v-list-item>
@@ -191,7 +191,7 @@
 											<v-list-item-title>LeekScript 1</v-list-item-title>
 											<v-list-item-subtitle>
 												<ul>
-													<li>{{ $t('intial_version') }}</li>
+													<li>{{ $t('leekscript.intial_version') }}</li>
 												</ul>
 											</v-list-item-subtitle>
 										</v-list-item-content>
@@ -200,7 +200,7 @@
 									<v-list-item v-ripple @click="toggleStrictMode()" @click.stop>
 										<v-checkbox v-model="currentAI.strict" :hide-details="true" @click.stop />
 										<v-list-item-content>
-											<v-list-item-title>{{ $t('strict_mode') }}</v-list-item-title>
+											<v-list-item-title>{{ $t('leekscript.strict_mode') }}</v-list-item-title>
 											<v-list-item-subtitle>
 												<ul v-if="$i18n.locale === 'fr'">
 													<li>Les variables initialisées avec une valeur gardent un type fixe.</li>
@@ -1151,7 +1151,7 @@
 		padding: 5px;
 	}
 	.list-icon {
-		margin-right: 8px;
+		margin-right: 12px;
 	}
 	.shortcuts {
 		padding-left: 30px;

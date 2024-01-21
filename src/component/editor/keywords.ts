@@ -5,6 +5,7 @@ import { Keyword } from '@/model/keyword'
 import { LeekWars } from "@/model/leekwars"
 
 const keywords: Keyword[] = []
+export const keywordsLSOnly: Keyword[] = []
 
 for (const fun of FUNCTIONS) {
 
@@ -26,7 +27,11 @@ for (const fun of FUNCTIONS) {
 		name += " : " + fun.return_name
 	}
 
-	keywords.push({name: text, fullName: name, details: '', type: 'function', argumentCount: fun.arguments_names.length, function: fun, category: 2})
+	const keyword = { name: text, fullName: name, details: '', type: 'function', argumentCount: fun.arguments_names.length, function: fun, category: 2 }
+	keywords.push(keyword)
+	if (fun.category === 1 || fun.category === 2 || fun.category === 3 || fun.category === 4 || fun.category === 10 || fun.category === 12 || fun.category === 13 || fun.category === 14) {
+		keywordsLSOnly.push(keyword)
+	}
 }
 
 // Constantes
@@ -53,7 +58,11 @@ for (const constant of CONSTANTS) {
 	} else {
 		details = ''
 	}
-	keywords.push({name: constant.name, fullName: constant.name, details, type: 'constant', constant, category: 3})
+	const keyword = { name: constant.name, fullName: constant.name, details, type: 'constant', constant, category: 3 }
+	keywords.push(keyword)
+	if (constant.category === 1 || constant.category === 2 || constant.category === 3 || constant.category === 4 || constant.category === 10 || constant.category === 12 || constant.category === 13 || constant.category === 14) {
+		keywordsLSOnly.push(keyword)
+	}
 }
 
 export { keywords }

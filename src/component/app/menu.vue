@@ -67,11 +67,6 @@
 					</span>
 				</span>
 
-				<!-- <router-link to='/console'>
-					<img src='/image/console.png'>
-					<div class='text'>{{ $t("main.console") }}</div>
-				</router-link> -->
-
 				<span class="dida-element">
 					<router-link v-ripple to="/garden" class="section" :class="{bouncing: LeekWars.didactitial_step === 2 && !$route.path.startsWith('/garden')}" :label="$store.state.farmer ? ($store.state.farmer.fights + ($store.state.farmer.team_fights ? '+' + $store.state.farmer.team_fights : '')) : null" @click.native="clickItem">
 						<img src="/image/icon/garden.png">
@@ -111,6 +106,11 @@
 				<router-link v-if="env.SOCIAL" v-ripple to="/forum" class="section" @click.native="clickItem">
 					<img src="/image/icon/forum.png">
 					<div class="text">{{ $t("main.forum") }}</div>
+				</router-link>
+
+				<router-link v-if="LeekWars.mobile" v-ripple to="/console" class="section" @click.native="clickItem">
+					<v-icon>mdi-console</v-icon>
+					<div class="text">{{ $t("main.console") }}</div>
 				</router-link>
 
 				<router-link v-if="$store.state.farmer && $store.state.farmer.group" v-ripple :to="'/group/' + $store.state.farmer.group.id" class="section" @click.native="clickItem">

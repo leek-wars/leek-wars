@@ -6,7 +6,6 @@
 	"analyzer": "[beta] Analizator LeekScript nowej generacji",
 	"auto_closing": "Automatyczne zamykanie nawiasów, nawiasów kwadratowych, nawiasów klamrowych i cudzysłowów",
 	"autocompletion": "Autouzupełnianie (propozycja aktualnych zmiennych i funkcji dokumentu)",
-	"all_info_ls": "Wszystkie informacje o {0}",
 	"base": "baza",
 	"cancel": "Anulować",
 	"child": "Dziecko",
@@ -74,13 +73,11 @@
 	"valid_ai": "<b>{0}</b> ważne",
 	"file": "Plik",
 	"analyzing": "Analizowanie",
-	"intial_version": "Początkowa wersja",
 	"no_problem": "Bez problemu",
 	"theme": "Temat",
 	"error": "Błąd | Błędy",
 	"warning": "Zastrzeżenie | Ostrzeżenia",
 	"todo": "Do zrobienia | Todos",
 	"editor_already_opened": "Edytor jest już otwarty w innej zakładce!",
-	"strict_mode": "Tryb ścisły (zaawansowany)",
 	"strict": "Ścisły"
 }

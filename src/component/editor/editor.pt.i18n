@@ -6,7 +6,6 @@
 	"analyzer": "[beta] Analisador LeekScript de próxima geração",
 	"auto_closing": "Fechamento automático de parênteses, colchetes, colchetes e aspas",
 	"autocompletion": "Autocompletion (proposta de variáveis e funções atuais do doc)",
-	"all_info_ls": "Todas as informações sobre o {0}",
 	"base": "base",
 	"cancel": "Cancelar",
 	"child": "Criança",
@@ -74,13 +73,11 @@
 	"valid_ai": "<b>{0}</b> válido",
 	"file": "Arquivo",
 	"analyzing": "Analisando",
-	"intial_version": "Versão inicial",
 	"no_problem": "Sem problemas",
 	"theme": "Tema",
 	"error": "Erro | Erros",
 	"warning": "Isenção de responsabilidade | Avisos",
 	"todo": "Tudo | Todos",
 	"editor_already_opened": "O editor já está aberto em outra aba!",
-	"strict_mode": "Modo estrito (avançado)",
 	"strict": "Rigoroso"
 }

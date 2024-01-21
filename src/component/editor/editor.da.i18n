@@ -6,7 +6,6 @@
 	"analyzer": "[beta] Næste generation af LeekScript Analyzer",
 	"auto_closing": "Autolukkende parenteser, firkantede parenteser, klammeparenteser og anførselstegn",
 	"autocompletion": "Autofuldførelse (forslag til aktuelle variabler og funktioner i dokumentet)",
-	"all_info_ls": "Alle oplysninger om {0}",
 	"base": "grundlag",
 	"cancel": "Afbestille",
 	"child": "Barn",
@@ -74,13 +73,11 @@
 	"valid_ai": "<b>{0}</b> gyldig",
 	"file": "Fil",
 	"analyzing": "Analyserer",
-	"intial_version": "Indledende version",
 	"no_problem": "Intet problem",
 	"theme": "Tema",
 	"error": "Fejl | Fejl",
 	"warning": "Ansvarsfraskrivelse | Advarsler",
 	"todo": "Gøre | Todos",
 	"editor_already_opened": "Editoren er allerede åben i en anden fane!",
-	"strict_mode": "Streng tilstand (avanceret)",
 	"strict": "Streng"
 }

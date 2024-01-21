@@ -26,7 +26,6 @@
 	"conditions": "使用条款",
 	"connection": "登录",
 	"connect_message": "<a href='{0}'><b>登录</b></a>或<a href='{0}'><b>注册</b></a> Leek Wars",
-	"console": "控制台（测试版）",
 	"console_alert_1": "注意力 ！如果有人要你在这里输入程序，",
 	"console_alert_2": "这是企图破解您在 Leek Wars 上的帐户。",
 	"console_alert_3": "仅当您确切知道自己在做什么时才在此处输入代码。",
@@ -263,5 +262,6 @@
 	"scheme": "图表",
 	"schemes": "示意图",
 	"scheme_x": "图表：{0}",
-	"edit": "修改"
+	"edit": "修改",
+	"console": "LeekScript 控制台"
 }
