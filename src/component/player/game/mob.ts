@@ -25,10 +25,10 @@ export const MOBS = {
 	"leek": { id: 0, name: "leek", hat: null, weapon: null, baseZ: -4, type: 'mob', life: 2000, hand: T.leek_hand, scale: 1.0, weaponCX: 0, blood: T.leek_blood },
 	"nasu_samurai": { id: 1, name: "nasu_samurai", hat: null, weapon: 408, baseZ: -16, type: 'mob', life: 2000, hand: T.nasu_hand, scale: 1.0, weaponCX: 0, blood: T.blood_purple },
 	"nasu_seito": { id: 13, name: "nasu_seito", hat: null, weapon: null, baseZ: -6, type: 'mob', life: 500, hand: T.nasu_hand, scale: 1.0, weaponCX: 0, blood: T.blood_purple },
-	"nasu_warrior": { id: 14, name: "nasu_warrior", hat: null, weapon: 107, baseZ: -6, type: 'mob', life: 1000, hand: T.nasu_hand, scale: 1.0, weaponCX: 0, blood: T.blood_purple },
-	"nasu_ronin": { id: 15, name: "nasu_ronin", hat: null, weapon: 187, baseZ: -6, type: 'mob', life: 1200, hand: T.nasu_hand, scale: 1.0, weaponCX: 0, blood: T.blood_purple },
+	"nasu_warrior": { id: 14, name: "nasu_warrior", hat: null, weapon: 107, baseZ: -6, type: 'mob', life: 1000, hand: T.nasu_hand, scale: 1.0, weaponCX: 20, blood: T.blood_purple },
+	"nasu_ronin": { id: 15, name: "nasu_ronin", hat: null, weapon: 187, baseZ: -6, type: 'mob', life: 1200, hand: T.nasu_hand, scale: 1.0, weaponCX: 20, blood: T.blood_purple },
 	"fennel_king": { id: 2, name: "fennel_king", hat: 5, weapon: 409, baseZ: -16, type: 'mob', life: 10000, hand: T.leek_hand, scale: 1.0, weaponCX: 0, blood: T.blood_white },
-	"fennel_knight": { id: 16, name: "fennel_knight", hat: null, weapon: 277, baseZ: -10, type: 'mob', life: 6000, hand: T.leek_hand, scale: 1.0, weaponCX: 0, blood: T.blood_white },
+	"fennel_knight": { id: 16, name: "fennel_knight", hat: null, weapon: 277, baseZ: -10, type: 'mob', life: 6000, hand: T.leek_hand, scale: 1.0, weaponCX: 15, blood: T.blood_white },
 	"fennel_squire": { id: 17, name: "fennel_squire", hat: null, weapon: null, baseZ: -6, type: 'mob', life: 3000, hand: T.leek_hand, scale: 1.0, weaponCX: 0, blood: T.blood_white },
 	"fennel_scribe": { id: 18, name: "fennel_scribe", hat: null, weapon: 278, baseZ: -15, type: 'mob', life: 8000, hand: T.leek_hand, scale: 1.0, weaponCX: 25, blood: T.blood_white },
 	"graal": { id: 4, name: "graal", hat: null, weapon: null, baseZ: -8, type: 'object', life: 1000, hand: null, scale: 0.8, weaponCX: 0, blood: null },
@@ -59,6 +59,7 @@ class Mob extends FightEntity {
 		this.scale = 0.5 * this.template.scale
 		this.bloodTex = this.template.blood
 		if (this.bloodTex) this.bloodTex.load(game)
+		this.living = this.template.type !== 'object'
 
 		this.bodyTexFront = T.get(this.game, 'image/mob/' + this.name + '.png', true, SHADOW_QUALITY)
 		this.bodyTexBack = T.get(this.game, 'image/mob/' + this.name + '_back.png', true, SHADOW_QUALITY)

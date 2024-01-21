@@ -308,7 +308,10 @@
 										<rich-tooltip-leek v-for="(leek,p) of LeekWars.bossSquads.squad.engaged_leeks" :key="p" :id="leek.id" v-slot="{ on }">
 											<div v-on="on" class="participant" :class="{active: true}" @click="LeekWars.bossSquads.removeLeek(leek)">
 												<leek-image :leek="leek" :scale="0.42"></leek-image>
-												<div class="name">{{ leek.name }}</div>
+												<div class="name">
+													<avatar :farmer="LeekWars.bossSquads.squad.farmers.find(f => f.id === leek.farmer)" />
+													<span>{{ leek.name }}</span>
+												</div>
 												<div class="level">{{ $t('main.level_n', [leek.level]) }}</div>
 											</div>
 										</rich-tooltip-leek>
@@ -319,7 +322,10 @@
 										<rich-tooltip-leek v-for="leek of LeekWars.bossSquads.squad.available_leeks" :key="leek.id" :id="leek.id" v-slot="{ on }">
 											<div v-on="on" class="participant" :class="{active: true}" @click="LeekWars.bossSquads.addLeek(leek)">
 												<leek-image :leek="leek" :scale="0.42"></leek-image>
-												<div class="name">{{ leek.name }}</div>
+												<div class="name">
+													<avatar :farmer="LeekWars.bossSquads.squad.farmers.find(f => f.id === leek.farmer)" />
+													<span>{{ leek.name }}</span>
+												</div>
 												<div class="level">{{ $t('main.level_n', [leek.level]) }}</div>
 											</div>
 										</rich-tooltip-leek>
@@ -330,7 +336,7 @@
 											<v-icon v-if="LeekWars.bossSquads.squad.locked" :disabled="LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="LeekWars.bossSquads.open()">mdi-lock</v-icon>
 											<v-icon v-else :disabled="LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="LeekWars.bossSquads.lock()">mdi-earth</v-icon>
 											<rich-tooltip-farmer v-for="farmer of LeekWars.bossSquads.squad.farmers" :key="farmer.id" :id="farmer.id" v-slot="{ on }">
-												<avatar :on="on" :farmer="farmer" />
+												<avatar :on="on" :farmer="farmer" :class="{master: LeekWars.bossSquads.squad.master === farmer.id}" />
 											</rich-tooltip-farmer>
 										</div>
 										<v-btn color="primary" :disabled="LeekWars.bossSquads.squad.engaged_leeks.length === 0 || LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="LeekWars.bossSquads.attack()"><v-icon>mdi-sword-cross</v-icon>&nbsp;{{ $t('attack') }}</v-btn>
@@ -811,6 +817,7 @@
 	}
 	.farmers {
 		display: flex;
+		align-items: center;
 		gap: 5px;
 		.v-icon {
 			margin-right: 10px;
@@ -820,6 +827,11 @@
 	.avatar {
 		width: 30px;
 		height: 30px;
+		&.master {
+			width: 36px;
+			height: 36px;
+			border: 3px solid var(--primary);
+		}
 	}
 	.leek.boss {
 		width: 100%;
@@ -945,9 +957,19 @@
 			max-height: 105px;
 		}
 		.name {
-			text-overflow: ellipsis;
-			overflow: hidden;
-			font-weight: 500;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 4px;
+			span {
+				font-weight: 500;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			.avatar {
+				width: 16px;
+				height: 16px;
+			}
 		}
 		.level {
 			font-size: 13px;

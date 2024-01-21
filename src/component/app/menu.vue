@@ -135,7 +135,7 @@
 					<div class="text">{{ $t('main.battle_royale') }}</div>
 					<div class="progress-bar" :style="{width: (LeekWars.battleRoyale.progress * 10) + '%'}"></div>
 				</span>
-				<span v-if="LeekWars.bossSquads.squad" v-ripple :label="LeekWars.bossSquads.squad.engaged_count" class="section boss" @click="$router.push('/garden/boss/' + BOSSES[LeekWars.bossSquads.squad.boss].name + '/' + LeekWars.bossSquads.squad.id)">
+				<span v-if="LeekWars.bossSquads.squad" v-ripple :label="LeekWars.bossSquads.squad.engaged_count" class="section boss" @click="goToBoss">
 					<v-icon>mdi-crown</v-icon>
 					<div class="text">{{ $t('entity.' + BOSSES[LeekWars.bossSquads.squad.boss].name) }}</div>
 					<div class="progress-bar" :style="{width: (100 * LeekWars.bossSquads.squad.engaged_count / 8) + '%'}"></div>
@@ -328,6 +328,15 @@
 			const total = store.state.farmer!.rewards.reduce((s, r) => s + r.habs, 0)
 			store.commit('remove-all-rewards')
 			store.commit('update-habs', total)
+		}
+
+		goToBoss() {
+			if (LeekWars.bossSquads.squad) {
+				const route = '/garden/boss/' + BOSSES[LeekWars.bossSquads.squad.boss].name + '/' + LeekWars.bossSquads.squad.id
+				if (this.$router.currentRoute.path !== route) {
+					this.$router.push(route)
+				}
+			}
 		}
 	}
 </script>

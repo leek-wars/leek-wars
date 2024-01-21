@@ -108,6 +108,7 @@ abstract class FightEntity extends Entity {
 	public baseHeight: number = 0
 	public baseWidth: number = 0
 	public scale: number = 1
+	public living: boolean = true
 	// States
 	public dead = false
 	public flash = 0
@@ -405,7 +406,9 @@ abstract class FightEntity extends Entity {
 	}
 
 	public updateGrowth() {
-		this.growth = 1.0 + Math.log10(Math.max(0.0316227766, this.maxLife / this.initialMaxLife)) / 3
+		if (this.living) {
+			this.growth = 1.0 + Math.log10(Math.max(0.0316227766, this.maxLife / this.initialMaxLife)) / 3
+		}
 		this.width = this.baseWidth * this.scale * this.growth
 		this.height = this.baseHeight * this.scale * this.growth
 	}
@@ -580,7 +583,9 @@ abstract class FightEntity extends Entity {
 
 			// Animation
 			this.frame += dt / Math.max(1, this.game.speed / 6)
-			this.oscillation = 1 + Math.cos(this.frame / 17) / 40
+			if (this.living) {
+				this.oscillation = 1 + Math.cos(this.frame / 17) / 40
+			}
 			if (this.crashAnim > 0) {
 				this.crashAnim -= dt
 				if (this.crashAnim < 0) {

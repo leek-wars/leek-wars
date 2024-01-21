@@ -11,6 +11,7 @@ export class BossSquad {
 	public id!: string
 	public boss!: number
 	public farmers!: Farmer[]
+	public engaged_leeks!: Leek[]
 }
 
 export class BossSquads {
@@ -31,11 +32,15 @@ export class BossSquads {
 	}
 	create(boss: Boss) {
 		const locked = localStorage.getItem('garden/boss-locked') === 'true'
-		LeekWars.socket.send([SocketMessage.GARDEN_BOSS_CREATE_SQUAD, boss.id, locked])
+		const allLeeks = Object.keys(store.state.farmer!.leeks).map(i => parseInt(i))
+		const leeks = localStorage.getItem('garden/boss-leeks') ? JSON.parse(localStorage.getItem('garden/boss-leeks')!) : allLeeks
+		LeekWars.socket.send([SocketMessage.GARDEN_BOSS_CREATE_SQUAD, boss.id, locked, leeks])
 	}
 	join(squad_id: string) {
 		localStorage.setItem('garden/boss-squad', squad_id)
-		LeekWars.socket.send([SocketMessage.GARDEN_BOSS_JOIN_SQUAD, squad_id])
+		const allLeeks = Object.keys(store.state.farmer!.leeks).map(i => parseInt(i))
+		const leeks = localStorage.getItem('garden/boss-leeks') ? JSON.parse(localStorage.getItem('garden/boss-leeks')!) : allLeeks
+		LeekWars.socket.send([SocketMessage.GARDEN_BOSS_JOIN_SQUAD, squad_id, leeks])
 	}
 	update(data: any) {
 		this.squads = data
@@ -46,6 +51,9 @@ export class BossSquads {
 	}
 	updateSquad(data: any) {
 		this.squad = data
+		// console.log("Update squad", data)
+		const leeks = this.squad!.engaged_leeks.filter(l => l.farmer === store.state.farmer!.id).map(l => l.id)
+		localStorage.setItem('garden/boss-leeks', JSON.stringify(leeks))
 		// this.enabled = true
 		// this.leeks = data.data[1]
 		// this.progress = LeekWars.objectSize(this.leeks)
@@ -53,13 +61,14 @@ export class BossSquads {
 	}
 	joined(squad: BossSquad) {
 		this.squad = squad
-		if (router.currentRoute.path.startsWith("/garden/")) {
-			router.push('/garden/boss/' + BOSSES[squad.boss].name + '/' + squad.id)
+		const route = '/garden/boss/' + BOSSES[squad.boss].name + '/' + squad.id
+		if (router.currentRoute.path !== route) {
+			router.push(route)
 		}
 	}
 	noSuchSquad() {
-		if (router.currentRoute.path.startsWith("/garden/")) {
-			router.push('/garden/boss/')
+		if (router.currentRoute.path.startsWith("/garden/") && router.currentRoute.path !== "/garden/boss") {
+			router.push('/garden/boss')
 		}
 	}
 	addLeek(leek: Leek) {
