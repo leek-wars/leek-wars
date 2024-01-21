@@ -50,6 +50,7 @@
 		position: relative;
 		word-wrap: break-word;
 		text-align: center;
+		margin: 0 auto;
 		&.blue {
 			background-image: url("../../../public/image/ai/ai_blue.png");
 			color: white;
