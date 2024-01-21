@@ -1,3 +1,54 @@
+241:
+   title: Happy new year! Quality of life, rebalancing and fun.
+   added:
+     - "Re-added the LeekScript console removed in 2.16. #img_241_console"
+     - Added getFightBoss() function and associated constants to retrieve the boss.
+     - Added constants and their documentation for new effects, areas, cards.
+     - Added a getStates() function which returns the states of an entity and associated constants.
+     - Trophies for the boss competition.
+     - Average talent per level in Solo and Farmer is based on players active for 1 year.
+     - "Displaying chests in combat histories #img_241_chests"
+     - Added arrayToSet() and intervalToSet() functions.
+     - Added the getSide() function to retrieve the number of your team in combat.
+   improved:
+     - Numerous improvements and balances on bosses.
+     - Numerous balancings on the components.
+     - Improved many English translations (thanks to bgbg).
+     - Display of components on the /help/items page.
+     - "Added a button to access the inventory from the components list. #img_241_components_button"
+     - “Test configuration interface more suitable for mobile #img_241_editor_test_mobile”
+     - Disabling chats other than French and English for greater clarity.
+     - "Change of fight packs: the pack purchasable in habs is the pack of 50. #img_241_fight_packs"
+     - "Improved inventory on mobile. #img_241_inventory"
+     - The listen() function returns the say() in the order in which they were said.
+     - Much faster farmer matchmaking at low levels.
+     - Added "empty" in the names of vault resources.
+     - "Restat potion: 5 offered upon registration, price from 100000 to 500000 or 10 crystals."
+     - Possibility of registering all your leeks in automatic BR.
+     - Blocked XP leeks are separated from others in automatic BR.
+     - Ability to hide the account confirmation banner.
+     - Showing all types in javadocs in editor.
+     - "The avatars and the group master are displayed in the boss vegetable garden. #img_241_garden_boss"
+     - Leeks engaged in a boss group are saved for the next group.
+     - Bonus XP and winnings in team fights of x3.
+     - Changed the colors of the tactical modes of the 3 bosses.
+     - XP gains on bosses are based on the group level.
+   fixed:
+     - Boss chips and weapons are no longer displayed in level dialogs.
+     - Added female versions of the new trophies.
+     - Fixed iteration on open integer intervals.
+     - Better display of the craft page on mobile.
+     - Fixed default dark mode.
+     - Display of EffectType.RAW_RELATIVE_SHIELD effects with a % in combat.
+     - Fixed grenade bouncing for too long.
+     - Fixed the countdown on the tournament page.
+     - Fixed the AREA_ENEMIES constant.
+     - Fixed the “Honey, I Shrunk the Leek” trophy.
+     - Blood from mobs of the correct color and no blood on Grails and crystals.
+     - "Fixed xp icon stuck in reports. #img_241_xp_locked"
+     - "Fixed death icon in boss reports. #img_241_boss_report"
+     - The Grail and crystals no longer breathe and no longer grow into King Fennel.
+
 240:
   title: 10 years! Boss, Components, Manufacturing, Cores and RAM
   added:

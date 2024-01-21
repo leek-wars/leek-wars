@@ -1,23 +1,25 @@
 241:
-  title: Qualité de vie et fun !
+  title: Bonne année ! Qualité de vie, rééquilibrage et fun.
   added:
+    - "Re-ajout de la console LeekScript supprimée en 2.16. #img_241_console"
     - Ajout de la fonction getFightBoss() et des constantes associées pour récupérer le boss.
     - Ajout de constantes et leur doc pour les nouveaux effets, area, cartes.
     - Ajout d'une fonction getStates() qui renvoie les états d'une entité et des constantes associées.
     - Trophées pour le concours sur les boss.
     - Le talent moyen par niveau en solo et éleveur est basé sur les joueurs actifs depuis 1 an.
     - "Affichage des coffres dans les historiques de combat #img_241_chests"
-    - Ajout de la fonction arrayToSet()
+    - Ajout de la fonction arrayToSet() et intervalToSet().
+    - Ajout de la fonction getSide() pour récupérer le numéro de son équipe en combat.
   improved:
     - Nombreuses améliorations et équilibrages sur les boss.
     - Nombreuses équilibrages sur les composants.
     - Amélioration de nombreuses traductions anglaises (merci à bgbg).
     - Affichage des composants sur la page /help/items.
-    - Ajout d'un bouton pour accéder à l'inventaire depuis la liste des composants. #img_241_components_button
-    - Interface de configuration de test plus adaptée en mobile #img_241_editor_test_mobile
+    - "Ajout d'un bouton pour accéder à l'inventaire depuis la liste des composants. #img_241_components_button"
+    - "Interface de configuration de test plus adaptée en mobile #img_241_editor_test_mobile"
     - Désactivation des chats autres que Français et Anglais pour plus de clarté.
     - "Changement des packs de combats : le pack achetable en habs est le pack de 50. #img_241_fight_packs"
-    - "Amélioration de l'inventaire sur mobile. #241_inventory"
+    - "Amélioration de l'inventaire sur mobile. #img_241_inventory"
     - La fonction listen() renvoie les say() dans l'ordre dans lequel ils ont été dits.
     - Matchmaking éleveur beaucoup plus rapide à bas niveau.
     - Ajout de "vide" dans les noms des ressources coffre.
@@ -26,6 +28,11 @@
     - Les poireaux à XP bloquées sont séparés des autres en BR automatique.
     - Possibilité de masquer la bannière de confirmation de compte.
     - Affichage de tous les types dans les javadocs dans l'éditeur.
+    - "Les avatars et le maître du groupe sont affichés dans le potager des boss. #img_241_garden_boss"
+    - Les poireaux engagés dans un groupe de boss sont sauvegardés pour le prochain groupe.
+    - Bonus d'XP et de gains en combat d'équipe de x3.
+    - Changement des couleurs des modes tactiques des 3 boss.
+    - Les gains d'XP sur les boss sont en fonction du niveau du groupe.
   fixed:
     - Les puces et les armes de boss ne sont plus affichées dans les dialogues de niveau.
     - Ajout des versions féminines des nouveaux trophées.
@@ -38,6 +45,9 @@
     - Correction de la constante AREA_ENEMIES.
     - Correction du trophée "Chérie, j'ai rétréci le poireau".
     - Sang des mobs de la bonne couleur et pas de sang sur Graal et cristaux.
+    - "Correction de l'icône d'xp bloquée dans les rapports. #img_241_xp_locked"
+    - "Correction de l'icône de mort dans les rapports de boss. #img_241_boss_report"
+    - Le Graal et les cristaux ne respirent plus et ne grandissent plus en Roi Fenouil.
 
 240:
   title: 10 ans ! Boss, Composants, Fabrication, Cœurs et RAM
