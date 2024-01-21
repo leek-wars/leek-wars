@@ -32,6 +32,7 @@ class ReportLeek {
 	weapon!: any
 	resources!: {[key: number]: number}
 	mob!: boolean
+	xp_locked!: boolean
 }
 
 class ReportFarmer {

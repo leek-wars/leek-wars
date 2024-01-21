@@ -26,7 +26,7 @@
 				</tooltip>
 				<span>{{ (leek.xp || 0) | number }}</span>
 				<span v-if="fight.report.bonus > 1" class="bonus">x{{ fight.report.bonus }}</span>
-				<tooltip v-if="leek.xp === 0">
+				<tooltip v-if="leek.xp_locked">
 					<template v-slot:activator="{ on }">
 						<v-icon v-on="on" class="xp-blocked">mdi-lock</v-icon>
 					</template>
