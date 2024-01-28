@@ -4,6 +4,7 @@
   fixed:
     - "Correction du coût en opérations d'une boucle for avec clé : valeur."
     - "Correction d'un bug de compilation d'une même IA lors d'un combat parallèle."
+    - Correction des skins transparents sur Firefox et Safari.
 
 241:
   title: Bonne année ! Qualité de vie, rééquilibrage et fun.
