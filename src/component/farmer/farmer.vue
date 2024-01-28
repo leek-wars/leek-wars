@@ -1323,6 +1323,9 @@
 				padding: 6px;
 				text-align: center;
 				font-weight: 500;
+				&.notif-trophy .v-icon {
+					color: black;
+				}
 				.level {
 					font-size: 18px;
 					display: flex;
