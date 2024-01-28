@@ -24,7 +24,7 @@
 		created() {
 			LeekWars.setTitle(this.$t('main.console'))
 			LeekWars.setActions([
-				{icon: 'mdi-weather-night', click: () => this.$refs.console.toggleTheme()}
+				{icon: 'mdi-weather-night', click: () => (this.$refs.console as any).toggleTheme()}
 			])
 		}
 	}
