@@ -94,7 +94,7 @@
 			</div>
 			<div slot="content" class="content members">
 				<v-data-table
-					:headers="headers"
+					:headers="group.is_supervisor ? headersSupervisor : headers"
 					:items="group.members"
 					hide-default-footer
     				:items-per-page="100"
@@ -467,13 +467,12 @@
 			<div slot="title">{{ $t('give_item') }}</div>
 			<div class="give-item-confirm" v-if="itemToGive && giveItemTarget">
 				<div class="item">
-					<item :item="{template: itemToGive.id}" />
+					<item :item="itemToGive" />
 				</div>
 				<i18n path="confirm_give_item">
 					<b slot="member">{{ giveItemTarget.name }}</b>
 				</i18n>
 			</div>
-
 			<div slot="actions">
 				<div v-ripple @click="giveItemConfirmDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="green" @click="giveItemFinal()">{{ $t('give_item') }}</div>
@@ -531,18 +530,31 @@
 		giveItemTarget: Member | null = null
 
 		headers = [
-          { text: 'Membre', value: 'name' },
-          { text: 'Équipe', value: 'team' },
-          { text: 'Niveau', value: 'total_level' },
-          { text: 'Combats restants', value: 'day_fight' },
-          { text: 'Combats', value: 'fights' },
-          { text: 'Victoires', value: 'wins' },
-          { text: 'Nuls', value: 'draws' },
-          { text: 'Défaites', value: 'defeats' },
-          { text: 'Ratio', value: 'ratio' },
-          { text: 'Combats de test', value: 'test_fights' },
-          { text: 'Trophées', value: 'trophies' },
-          { text: 'Actions', value: 'give' },
+			{ text: 'Membre', value: 'name' },
+			{ text: 'Équipe', value: 'team' },
+			{ text: 'Niveau', value: 'total_level' },
+			{ text: 'Combats restants', value: 'day_fight' },
+			{ text: 'Combats', value: 'fights' },
+			{ text: 'Victoires', value: 'wins' },
+			{ text: 'Nuls', value: 'draws' },
+			{ text: 'Défaites', value: 'defeats' },
+			{ text: 'Ratio', value: 'ratio' },
+			{ text: 'Combats de test', value: 'test_fights' },
+			{ text: 'Trophées', value: 'trophies' },
+        ]
+		headersSupervisor = [
+			{ text: 'Membre', value: 'name' },
+			{ text: 'Équipe', value: 'team' },
+			{ text: 'Niveau', value: 'total_level' },
+			{ text: 'Combats restants', value: 'day_fight' },
+			{ text: 'Combats', value: 'fights' },
+			{ text: 'Victoires', value: 'wins' },
+			{ text: 'Nuls', value: 'draws' },
+			{ text: 'Défaites', value: 'defeats' },
+			{ text: 'Ratio', value: 'ratio' },
+			{ text: 'Combats de test', value: 'test_fights' },
+			{ text: 'Trophées', value: 'trophies' },
+			{ text: 'Actions', value: 'give' },
         ]
 
 		headersDialog: any = []
@@ -959,7 +971,7 @@
 		}
 
 		giveItemConfirm(itemID: number) {
-			console.log("give", itemID, LeekWars.items[itemID])
+			// console.log("give", itemID, LeekWars.items[itemID])
 			this.itemToGive = LeekWars.items[itemID]
 			this.giveItemConfirmDialog = true
 		}
@@ -1138,7 +1150,7 @@ body.dark .characteristic.frequency img {
 }
 .chips-popup .chip {
 	cursor: pointer;
-	border: 1px solid #ddd;
+	border: 1px solid var(--border);
 	vertical-align: bottom;
 	height: 52px;
 	display: flex;
@@ -1155,7 +1167,7 @@ body.dark .characteristic.frequency img {
 }
 .weapons-popup .weapon {
 	cursor: pointer;
-	border: 1px solid #ddd;
+	border: 1px solid var(--border);
 	vertical-align: bottom;
 	height: 72px;
 	display: flex;
@@ -1211,7 +1223,7 @@ div.error {
 }
 .give-item-confirm {
 	display: flex;
-	gap: 10px;
+	gap: 20px;
 	align-items: center;
 	.item {
 		width: 100px;
