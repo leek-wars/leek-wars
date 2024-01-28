@@ -3,7 +3,7 @@
 		<template v-for="(action, a) in actions">
 			<component :key="a" :is="ActionComponents[action.type]" :action="action" :a="a" />
 			<template v-if="displayLogs && (displayAlliesLogs || action.me) && action.logs.length">
-				<action-log v-for="(log, l) in action.logs" :key="a + 'l' + l" :log="log" :leeks="leeks" />
+				<action-log v-for="(log, l) in action.logs" :key="a + 'l' + l" :log="log" :leeks="leeks" :action="a" :index="l" />
 			</template>
 		</template>
 		<action-end-fight />

@@ -229,13 +229,21 @@
 					</div>
 				</div>
 				<div v-if="errors.length" class="title">{{ $tc('n_errors', errors.length) }}</div>
-				<pre v-for="(e, i) in errors" :key="i" class="log error">[{{ e.entity }}] {{ e.data }}</pre>
+				<div class="errors" @mouseover="mouseover">
+					<div v-for="(e, i) in errors" :key="i" class="log error" :a="e.action" :i="e.index">
+						<pre>[{{ e.entity }}] {{ e.data }}</pre>
+					</div>
+				</div>
 				<div v-if="warnings.length" class="title">
 					<i18n path="n_warnings">
 						<b slot="n">{{ warnings.length }}</b>
 					</i18n>
 				</div>
-				<pre v-for="(w, i) in warnings" :key="errors.length + i" class="log warning">[{{ w.entity }}] {{ w.data }}</pre>
+				<div class="errors" @mouseover="mouseover">
+					<div v-for="(w, i) in warnings" :key="i" class="log warning" :a="w.action" :i="w.index">
+						<pre>[{{ w.entity }}] {{ w.data }}</pre>
+					</div>
+				</div>
 			</div>
 		</panel>
 
@@ -338,6 +346,7 @@
 		map_teams: any = null
 		legends: any
 		filtered_entities!: StatisticsEntity[]
+		currentLink: Element | null = null
 
 		get id() {
 			return this.$route.params.id
@@ -534,15 +543,17 @@
 				const farmerLogs = this.logs[farmer]
 				for (const a in farmerLogs) {
 					const action = farmerLogs[a]
+					let i = 0
 					for (const log of action) {
 						const leek = log[0]
 						const type = log[1]
 						const message = (type >= 6 && type <= 8) ? i18n.t('leekscript.error_' + log[3], log[4]) + "\n" + log[2] : log[2]
 						if (type === 2 || type === 7) {
-							this.warnings.push({entity: this.leeks[leek].name, data: message})
+							this.warnings.push({entity: this.leeks[leek].name, data: message, action: a, index: i})
 						} else if (type === 3 || type === 8) {
-							this.errors.push({entity: this.leeks[leek].name, data: message})
+							this.errors.push({entity: this.leeks[leek].name, data: message, action: a, index: i})
 						}
+						i++
 					}
 				}
 			}
@@ -864,9 +875,11 @@
 		}
 
 		goToTurn(turn: number) {
-			const element = document.getElementById('turn-' + turn)!
-			const sibling = element.parentElement!.nextElementSibling!
-			window.scrollTo(0, sibling.getBoundingClientRect().top + window.scrollY - 48)
+			const element = document.getElementById('turn-' + turn)
+			if (element) {
+				const sibling = element.parentElement!.nextElementSibling!
+				window.scrollTo(0, sibling.getBoundingClientRect().top + window.scrollY - 48)
+			}
 		}
 
 		// walkedCells(fid: number) {
@@ -900,6 +913,35 @@
 		// 	Array.prototype.forEach.call(binaryArray, function (el, idx, arr) { arr[idx] = str.charCodeAt(idx) })
 		// 	return binaryArray
 		// }
+
+		mouseover(e: MouseEvent) {
+			// console.log("mouseover", e)
+			let target = (e.target as Element)
+			if (target.tagName === 'PRE') target = target.parentElement as Element
+			else if (target.tagName === 'A') target = target.parentElement as Element
+			if (this.currentLink && this.currentLink !== target) {
+				const l = this.currentLink.querySelector('a')
+				if (l) {
+					this.currentLink.removeChild(l)
+				}
+			}
+			this.currentLink = target
+			const link = target.querySelector('a')
+			if (!link) {
+				const action = target.getAttribute('a')
+				const index = target.getAttribute('i')
+				const l = document.createElement('a')
+				l.innerText = '➡️'
+				l.onclick = (e) => {
+					const error = document.querySelector('.fight-actions [l="' + action + '"][i="' + index + '"') as HTMLElement
+					if (error) {
+						window.scrollTo(0, error.offsetTop - 100)
+					}
+					e.preventDefault()
+				}
+				target.appendChild(l)
+			}
+		}
 	}
 </script>
 
@@ -944,6 +986,12 @@
 		margin: 0;
 		word-break: break-all;
 		white-space: pre-wrap;
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		&::v-deep a {
+			cursor: pointer;
+		}
 	}
 	.warning {
 		color: #ff5f00;
