@@ -98,7 +98,7 @@
 		@Prop({required: true}) type!: string
 		fights!: Fight[]
 		entity: Farmer | Leek | null = null
-		period: string = '1week'
+		period: string = 'today'
 		start_date: number = 0
 		displayContexts = { challenge: true, garden: true, tournament: true }
 		displayTypes = { solo: true, farmer: true, team: true, battleRoyale: true, boss: true }
