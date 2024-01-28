@@ -1,3 +1,10 @@
+242:
+  improved:
+    - Mise à jour de Java 17 à Java 21.
+  fixed:
+    - "Correction du coût en opérations d'une boucle for avec clé : valeur."
+    - "Correction d'un bug de compilation d'une même IA lors d'un combat parallèle."
+
 241:
   title: Bonne année ! Qualité de vie, rééquilibrage et fun.
   added:
