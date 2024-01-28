@@ -62,7 +62,7 @@ export class BossSquads {
 	joined(squad: BossSquad) {
 		this.squad = squad
 		const route = '/garden/boss/' + BOSSES[squad.boss].name + '/' + squad.id
-		if (router.currentRoute.path !== route) {
+		if (router.currentRoute.path.startsWith("/garden/") && router.currentRoute.path !== route) {
 			router.push(route)
 		}
 	}
