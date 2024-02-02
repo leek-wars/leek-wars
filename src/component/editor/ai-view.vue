@@ -453,6 +453,7 @@
 		}
 
 		public keydown(e: KeyboardEvent) {
+			// console.log("keydown", e.ctrlKey, e.key)
 			if (e.ctrlKey) {
 				this.ctrl = true
 				this.updateMouseAndCtrl()
@@ -460,10 +461,16 @@
 		}
 
 		public keyup(e: KeyboardEvent) {
+			// console.log("keyup", e.ctrlKey, e.key)
 			if (e.key === "Control") {
 				this.ctrl = false
 				this.updateMouseAndCtrl()
 			}
+		}
+
+		public ctrlUp() {
+			this.ctrl = false
+			this.updateMouseAndCtrl()
 		}
 
 		public cursorChange() {

@@ -466,6 +466,9 @@
 				finder.search = true
 				finder.open()
 				event.preventDefault()
+				for (const editor of (this.$refs.editors as AIView[])) {
+					editor.ctrlUp()
+				}
 			})
 			this.$root.$on('escape', () => {
 				if (this.currentEditor) {
