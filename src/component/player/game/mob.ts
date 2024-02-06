@@ -218,7 +218,7 @@ class Mob extends FightEntity {
 		let current_cell = this.cell
 		for (let r = 0; r < 50; ++r) {
 			current_cell = this.game.ground.field.next_cell(current_cell, this.beamDXY!.x, this.beamDXY!.y)
-			if (!current_cell || current_cell.obstacle || current_cell.entity) { break }
+			if (!current_cell || current_cell.obstacle || (current_cell.entity && current_cell.entity.name === "graal")) { break }
 			length++
 		}
 		const width = (length + 1) * this.game.ground.tileSize * 0.65
