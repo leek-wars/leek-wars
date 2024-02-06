@@ -1,4 +1,6 @@
 242:
+  added:
+    - "Rapport : lien d'une erreur/warning vers sa position dans le rapport. #img_242_report_link"
   improved:
     - Mise à jour de Java 17 à Java 21.
   fixed:
@@ -8,6 +10,7 @@
     - Laser des cristaux en Roi Fenouil traversent les entités.
     - Correction faute trophée Belligérant.
     - Correction du Ctrl dans l'éditeur suite à un Ctrl + P ou autre.
+    - Correction d'un bug d'affichage des entraves agilité et sagesse.
 
 241:
   title: Bonne année ! Qualité de vie, rééquilibrage et fun.

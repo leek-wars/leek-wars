@@ -1786,6 +1786,12 @@ class Game {
 		case EffectType.SHACKLE_STRENGTH:
 			leek.strength -= delta
 			break
+		case EffectType.SHACKLE_WISDOM:
+			leek.wisdom -= delta
+			break
+		case EffectType.SHACKLE_AGILITY:
+			leek.agility -= delta
+			break
 		case EffectType.SHACKLE_MAGIC:
 			leek.magic -= delta
 			break
