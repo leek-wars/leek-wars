@@ -88,7 +88,7 @@
 						{{ $t('xp', [LeekWars.formatNumber(leek.xp)]) }}
 					</template>
 					<template v-else-if="leek">
-						<b>{{ $t('remaining_xp', [LeekWars.formatNumber(leek.remaining_xp)]) }}</b>
+						<b>{{ $t('remaining_xp', [LeekWars.formatNumber(remaining_xp)]) }} ({{ Math.round(100 * (leek.xp - leek.down_xp) / (leek.up_xp - leek.down_xp)) }}%)</b>
 						<br>
 						{{ $t('xp', [LeekWars.formatNumber(leek.xp) + " / " + LeekWars.formatNumber(leek.up_xp)]) }}
 					</template>
@@ -900,6 +900,9 @@
 				}
 			}
 			return n
+		}
+		get remaining_xp() {
+			return this.leek ? this.leek.up_xp - this.leek.xp : 0
 		}
 
 		mounted() {

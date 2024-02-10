@@ -3,6 +3,8 @@
     - "Rapport : lien d'une erreur/warning vers sa position dans le rapport. #img_242_report_link"
   improved:
     - Mise à jour de Java 17 à Java 21.
+    - "Affichage du pourcentage d'xp du niveau actuel. #img_242_xp"
+    - L'xp restante s'actualise en direct sur la page d'un poireau.
   fixed:
     - "Correction du coût en opérations d'une boucle for avec clé : valeur."
     - "Correction d'un bug de compilation d'une même IA lors d'un combat parallèle."
