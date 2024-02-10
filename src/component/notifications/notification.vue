@@ -8,7 +8,7 @@
 				<div class="message">{{ $t('notification.message_' + notification.type, notification.message) }}</div>
 			</div>
 			<div class="spacer"></div>
-			<span class="date">{{ LeekWars.formatDuration(notification.date) }}</span>
+			<span class="date" :title="LeekWars.formatDateTime(notification.date)">{{ LeekWars.formatDuration(notification.date) }}</span>
 			<span v-if="resultIcon && LeekWars.notifsResults" class="result">
 				<v-icon :class="resultIcon">{{ resultIcon }}</v-icon>
 			</span>
