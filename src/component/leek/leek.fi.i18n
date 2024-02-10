@@ -96,6 +96,7 @@
 	"angry": "Vihainen",
 	"happy": "Hymyilevä",
 	"neutral": "Neutraali",
+	"download_leek_image": "Lataa HD-kuva",
 	"xp_blocked_desc": "Jos vaihtoehto on aktivoitu, taistelut eivät enää tuota kokemusta, eikä purjo nouse tasolle. Lahjakkuus ja resurssit säilyvät.",
 	"start_a_fight": "Aloita tappelu!",
 	"all_my_components": "Omat komponentit",

@@ -607,7 +607,7 @@
 						</v-radio-group>
 					</div>
 				</div>
-				<v-btn small @click="downloadLeekImage">Télécharger une image HD</v-btn>
+				<v-btn small @click="downloadLeekImage">{{ $t('download_leek_image') }}</v-btn>
 			</div>
 		</popup>
 

@@ -99,6 +99,7 @@
 	"angry": "Fâché",
 	"happy": "Souriant",
     "neutral": "Neutre",
+	"download_leek_image": "Télécharger une image HD",
 	"xp_blocked_desc": "Si l'option est activée, les combats ne rapporteront plus d'expérience, et le poireau ne montera pas de niveau. Les gains de talent et de ressources sont conservés.",
 	"start_a_fight": "Lancer un combat !"
 }
