@@ -113,7 +113,7 @@ export default class ItemPreview extends Vue {
 				store.commit('update-habs', data.habs)
 			}
 			for (const item of Object.values(data.items)) {
-				store.commit('add-inventory', {...item, type: LeekWars.items[item.template].type})
+				store.commit('add-inventory', {...item, type: LeekWars.items[item.template].type, time: Date.now() / 1000 })
 			}
 			this.$emit('retrieve', Object.values(data.items))
 			store.commit('remove-inventory', { type: ItemType.RESOURCE, item_template: this.item.id, quantity: n })

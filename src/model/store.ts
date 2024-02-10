@@ -603,6 +603,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				const weapon = LeekWars.selectWhere(state.farmer.weapons, 'id', data.id)
 				if (weapon !== null) {
 					weapon.quantity += quantity
+					weapon.time = data.time
 				} else {
 					state.farmer.weapons.push({id: data.id, template: data.template, quantity: 1})
 				}
@@ -610,6 +611,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				const chip = LeekWars.selectWhere(state.farmer.chips, 'id', data.id)
 				if (chip !== null) {
 					chip.quantity += quantity
+					chip.time = data.time
 				} else {
 					state.farmer.chips.push({id: data.id, template: data.template, quantity: 1})
 				}
@@ -617,6 +619,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				const hat = LeekWars.selectWhere(state.farmer.hats, 'id', data.id)
 				if (hat !== null) {
 					hat.quantity += quantity
+					hat.time = data.time
 				} else {
 					const item_template = LeekWars.items[data.template]
 					const hat_template = LeekWars.hats[item_template.params]
@@ -633,6 +636,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				const potion = LeekWars.selectWhere(state.farmer.potions, 'id', data.id)
 				if (potion !== null) {
 					potion.quantity += quantity
+					potion.time = data.time
 				} else {
 					state.farmer.potions.push({id: data.id, template: data.template, quantity: 1})
 				}
@@ -640,6 +644,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				const pomp = LeekWars.selectWhere(state.farmer.pomps, 'id', data.id)
 				if (pomp) {
 					pomp.quantity += quantity
+					pomp.time = data.time
 				} else {
 					state.farmer.pomps.push(data)
 				}
