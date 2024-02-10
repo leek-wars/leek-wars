@@ -1235,7 +1235,7 @@
 			.ready {
 				color: #5fad1b;
 			}
-			.running {
+			.running, .running i {
 				color: #0084a8;
 			}
 			.running i {

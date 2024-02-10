@@ -385,6 +385,8 @@
 				this.editor.on('scroll', (e) => {
 					// console.log('scroll', e.getScrollInfo())
 					localStorage.setItem('editor/scroll/' + this.ai.id, e.getScrollInfo().top)
+					// Hide autocomplete
+					this.close()
 				})
 
 				this.loading = false
@@ -1740,6 +1742,7 @@
 		.v-icon {
 			transition: none;
 			font-size: 20px;
+			color: var(--text-color);
 			&.field {
 				color: #074f86;
 			}
