@@ -46,9 +46,9 @@
 		}
 	}
 
-	body.dark .square img.padding {
-		// filter: invert(1);
-		// opacity: 0.9 !important;
+	body.dark .square:not(.notif-trophy):not(.notif-bigwin) img.padding {
+		filter: invert(1);
+		opacity: 1.0 !important;
 	}
 	@keyframes in-and-out {
 		0% { transform: translate(150%, 0); }
