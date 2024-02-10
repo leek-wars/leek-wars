@@ -13,7 +13,7 @@
     - Correction d'un bug d'affichage des entraves agilité et sagesse.
 
 241:
-  title: Bonne année ! Qualité de vie, rééquilibrage et fun.
+  title: Bonne année ! Console LeekScript, Qualité de vie, rééquilibrage et fun.
   added:
     - "Re-ajout de la console LeekScript supprimée en 2.16. #img_241_console"
     - Ajout de la fonction getFightBoss() et des constantes associées pour récupérer le boss.
