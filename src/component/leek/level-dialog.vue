@@ -59,7 +59,7 @@
 				<div v-if="levelData.chips.length > 0" class="new">
 					<h4><v-icon>mdi-chip</v-icon> {{ $t('new_chips') }}</h4>
 					<div class="available-market">{{ $t('available_on_market') }}</div>
-					<div v-for="chip of levelData.chips" :key="chip" class="weapon">
+					<div v-for="chip of levelData.chips" :key="chip" class="chip">
 						<img :src="'/image/chip/' + chip + '.png'"><br>
 						<div class="name">{{ $t('chip.' + chip) }}</div>
 					</div>
@@ -114,7 +114,7 @@
 	h4 {
 		display: flex;
 		align-items: center;
-		color: #333;
+		// color: #333;
 		margin: 10px 0;
 		.v-icon {
 			margin-right: 5px;
@@ -127,10 +127,14 @@
 		padding: 8px;
 	}
 	.chip img {
-		width: 80px;
+		width: 90px;
+	}
+	.weapon img {
+		max-width: 200px;
+		max-height: 60px;
 	}
 	.available-market {
-		color: #666;
+		color: var(--text-color-secondary);
 		font-size: 15px;
 	}
 	.function, .weapon .name, .chip .name {
