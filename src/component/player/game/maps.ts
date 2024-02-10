@@ -935,7 +935,7 @@ class Japan extends Map {
 			radius: 20,
 			smallObstacles: [OBSTACLES[41], OBSTACLES[40], OBSTACLES[39], OBSTACLES[42]],
 			largeObstacles: [OBSTACLES[43], OBSTACLES[44], OBSTACLES[45]],
-			tacticSmallColor: "#db0000",
+			tacticSmallColor: "#aa0000",
 			tacticLargeColor: "#e3e3e3",
 			gridColor: '#aaa',
 			smoothPattern: false,
