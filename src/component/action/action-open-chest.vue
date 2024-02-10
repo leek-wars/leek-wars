@@ -9,11 +9,11 @@
 				<template v-slot:activator="{ on }">
 					<span class="res" v-on="on">
 						<b>{{ quantity }}</b>
-						<img v-if="parent.LeekWars.items[resource]" :src="'/image/resource/' + parent.LeekWars.items[resource].name + '.png'">
+						<img v-if="parent.LeekWars.items[resource]" :src="'/image/' + parent.ITEM_CATEGORY_NAME[parent.LeekWars.items[resource].type] + '/' + parent.LeekWars.items[resource].name.replace('potion_', '') + '.png'">
 						<span v-else>{{ resource }}</span>
 					</span>
 				</template>
-				{{ quantity }}x <b v-if="parent.LeekWars.items[resource]">{{ parent.$t('resource.' + parent.LeekWars.items[resource].name) }}</b>
+				{{ quantity }}x <b v-if="parent.LeekWars.items[resource]">{{ parent.$t(parent.ITEM_CATEGORY_NAME[parent.LeekWars.items[resource].type] + '.' + parent.LeekWars.items[resource].name.replace('potion_', '')) }}</b>
 			</tooltip>
 
 			<!-- <span v-for="(resource, i) in props.action.params[3]" :key="i">{{ resource }}, </span> -->
@@ -25,6 +25,7 @@
 	import { Action } from '@/model/action'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import ActionLeekElement from '../report/action-leek.vue'
+	import { ITEM_CATEGORY_NAME } from '@/model/item'
 
 	@Component({ components: { leek: ActionLeekElement } })
 	export default class ActionOpenChest extends Vue {

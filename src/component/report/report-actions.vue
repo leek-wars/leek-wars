@@ -21,6 +21,7 @@
 	import ActionEndFight from '../action/action-end-fight.vue'
 	import ActionLeekElement from './action-leek.vue'
 	import ActionLog from './report-log.vue'
+	import { ITEM_CATEGORY_NAME } from '@/model/item'
 
 	@Component({ name: "actions", components: {
 		leek: ActionLeekElement,
@@ -43,6 +44,7 @@
 		ActionComponents = ActionComponents
 		EffectComponents = EffectComponents
 		currentLink: Element | null = null
+		ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
 
 		goToTurn(turn: number) {
 			const element = document.getElementById('turn-' + turn)!
