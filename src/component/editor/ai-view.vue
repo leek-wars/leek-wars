@@ -588,7 +588,7 @@
 					}
 					analyzer.updateCount()
 				})
-			}, 500)
+			}, 1000)
 		}
 
 		public save() {
@@ -919,6 +919,11 @@
 			const editorPos2 = {line: editorPos.line, ch: editorPos.ch + 1}
 			const token = this.editor.getTokenAt(editorPos2, true)
 			// console.log("pos", editorPos, "token", token)
+			// console.log(token ? token.type : null, token.string)
+			if (token && token.string === ';') {
+				this.mouseleave()
+				return
+			}
 
 			// Underline
 			if (token && token.string.trim().length > 0 && this.ctrl && this.hoverData && this.hoverData.defined) {
@@ -989,7 +994,7 @@
 						this.showHoverDetails(keyword, data)
 					}
 				})
-			}, this.ctrl ? 0 : 400)
+			}, this.ctrl ? 0 : 600)
 		}
 
 		public showErrorDetails(editorPos: CodeMirror.Position) {
@@ -1864,6 +1869,7 @@
 			font-size: 16px;
 			vertical-align: top;
 			margin-right: 4px;
+			color: var(--text-color);
 		}
 	}
 	.search-panel {

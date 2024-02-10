@@ -1211,6 +1211,9 @@
 			}
 			.warnings {
 				color: #ff9100;
+				i {
+					color: #ff9100;
+				}
 			}
 			.todos {
 				color: #0099ff;
