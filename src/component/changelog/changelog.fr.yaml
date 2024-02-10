@@ -5,6 +5,7 @@
     - Mise à jour de Java 17 à Java 21.
     - "Affichage du pourcentage d'xp du niveau actuel. #img_242_xp"
     - L'xp restante s'actualise en direct sur la page d'un poireau.
+    - "Éditeur : autocomplétion se ferme si on scroll la page."
     - "Ajout de la date complète des notifications. #img_242_notif"
   fixed:
     - "Correction du coût en opérations d'une boucle for avec clé : valeur."
@@ -14,6 +15,7 @@
     - Correction faute trophée Belligérant.
     - Correction du Ctrl dans l'éditeur suite à un Ctrl + P ou autre.
     - Correction d'un bug d'affichage des entraves agilité et sagesse.
+    - Correction de nombreux icones en mode sombre.
     - Obstacles un peu plus foncés en nasu tactique (pour Ref).
     - "Correction de l'affichage des potions récupérées en combat. #img_242_potion"
 
