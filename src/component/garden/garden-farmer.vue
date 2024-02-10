@@ -64,4 +64,7 @@
 			margin-left: 5px;
 		}
 	}
+#app.dark .icon {
+	filter: invert(1);
+}
 </style>

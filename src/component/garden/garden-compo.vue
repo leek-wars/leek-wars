@@ -14,7 +14,7 @@
 			<talent :id="compo.team_id" :talent="compo.talent" category="team" />
 			<br>
 			<div class="level">
-				{{ compo.leek_count }} <img src="/image/icon/black/leek.png"> • {{ $t('main.level_n', [compo.total_level]) }}
+				{{ compo.leek_count }} <img class="icon" src="/image/icon/black/leek.png"> • {{ $t('main.level_n', [compo.total_level]) }}
 			</div>
 		</div>
 	</rich-tooltip-composition>
@@ -65,4 +65,7 @@
 			margin: 0 3px;
 		}
 	}
+#app.dark .icon {
+	filter: invert(1);
+}
 </style>
