@@ -1159,6 +1159,10 @@ class Game {
 			action.item = chip_template
 			this.log(action)
 
+			if (new_format) {
+				caster.looseTP(chip_template.cost, this.jumping)
+			}
+
 			if (this.jumping) {
 				// Update leek cell after teleportation
 				if (chip === 37 || chip === 78) {
@@ -1187,10 +1191,6 @@ class Game {
 				}
 				this.actionDone()
 				break
-			}
-
-			if (new_format) {
-				caster.looseTP(chip_template.cost, this.jumping)
 			}
 
 			if (CHIP_ANIMATIONS[chip - 1] !== null && chip !== 40) {
@@ -1223,6 +1223,10 @@ class Game {
 			action.item = weapon_template
 			this.log(action)
 
+			if (new_format) {
+				leek.looseTP(weapon_template.cost, this.jumping)
+			}
+
 			if (this.jumping) {
 				this.actionDone()
 				break
@@ -1233,10 +1237,6 @@ class Game {
 
 			const duration = leek.useWeapon(cell, targets, result)
 			this.actionDone(Math.max(6, duration))
-
-			if (new_format) {
-				leek.looseTP(weapon_template.cost, this.jumping)
-			}
 
 			break
 		}
@@ -1337,13 +1337,13 @@ class Game {
 		case ActionType.SAY: {
 			action.entity = this.leeks[this.currentPlayer!]
 			this.log(action)
+			action.entity.looseTP(1, this.jumping)
 			if (!this.jumping) {
 				let message = action.params[1]
 				if (action.entity.farmer && action.entity.farmer.muted) {
 					message = "@*%#$€"
 				}
 				action.entity.say(this.ctx, message)
-				action.entity.looseTP(1, this.jumping)
 			}
 			this.actionDone(40)
 			break
