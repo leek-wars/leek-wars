@@ -1425,7 +1425,7 @@ class Grapple extends ChipAnimation {
 	move_end: number = 0
 
 	constructor(game: Game) {
-		super(game, S.resurrection, Grapple.DURATION, DamageType.DEFAULT)
+		super(game, S.rock, Grapple.DURATION, DamageType.DEFAULT)
 	}
 
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher: FightEntity) {
@@ -1564,7 +1564,7 @@ class BoxingGlove extends ChipAnimation {
 	target: FightEntity | null = null
 	moved: boolean = false
 	move_start: number = 0
-	constructor(game: Game) { super(game, S.resurrection, BoxingGlove.DURATION, DamageType.DEFAULT) }
+	constructor(game: Game) { super(game, S.rock, BoxingGlove.DURATION, DamageType.DEFAULT) }
 
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher: FightEntity) {
 		super.launch(launchPos, targetPos, targets, targetCell)
