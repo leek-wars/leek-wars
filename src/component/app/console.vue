@@ -232,7 +232,7 @@
 		padding: 2px 0;
 		word-wrap: break-word;
 		display: flex;
-		align-items: start;
+		align-items: flex-start;
 		gap: 5px;
 		font-family: monospace;
 		span, .error {
