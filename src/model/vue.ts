@@ -24,6 +24,8 @@ import Vue from 'vue'
 import { Latex } from './latex'
 import { Route } from 'vue-router'
 import { scroll_to_hash } from '@/router-functions'
+import boomJS from "webgl-boom-js";
+import './matter'
 
 import Vuetify from 'vuetify/lib'
 import Ripple from 'vuetify/lib/directives/ripple'
@@ -40,6 +42,8 @@ Vue.component('tooltip', tooltip)
 import { createSimpleTransition } from 'vuetify/lib/components/transitions/createTransition'
 import '../fade-transition.sass'
 import MobImage from '@/component/mob-image.vue'
+import html2canvas from 'html2canvas'
+import { Shatter, VoronoiPieces } from '@cdgugler/shatter'
 const myTransition = createSimpleTransition('my-transition')
 Vue.component('my-transition', myTransition)
 
@@ -274,6 +278,8 @@ const vueMain = new Vue({
 		if (!LeekWars.LOCAL) {
 			displayWarningMessage()
 		}
+
+		
 	},
 
 	errorCaptured(err, vm, info) {

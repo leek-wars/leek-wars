@@ -1,5 +1,5 @@
 <template>
-	<div id="app" :class="{ connected: $store.state.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw, dark: LeekWars.darkMode, 'menu-collapsed': !LeekWars.mobile && LeekWars.menuCollapsed, beta: env.BETA, lightbar: LeekWars.lightBar }" data-app="true" @mousemove="mousemove" @mouseup="mouseup">
+	<div id="app" :class="{ connected: $store.state.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw, dark: LeekWars.darkMode, 'menu-collapsed': !LeekWars.mobile && LeekWars.menuCollapsed, beta: env.BETA, lightbar: LeekWars.lightBar }" data-app="true" @mousemove="mousemove" @mouseup="mouseup" @click="click">
 		<v-theme-provider root>
 			<div class="v-application--wrap">
 				<div :class="{visible: LeekWars.dark > 0}" :style="{opacity: LeekWars.dark}" class="dark-shadow" @click="darkClick"></div>
@@ -8,7 +8,11 @@
 
 				<lw-menu v-if="$store.state.connected" />
 
+				<div id="matter"></div>
+
 				<v-icon class="console-button" @click="leekscriptConsole">mdi-console</v-icon>
+
+				<v-icon class="april-button" @click="toogleApril">mdi-fish</v-icon>
 
 				<console-window v-if="console" ref="console" @close="console = false" />
 
@@ -170,6 +174,9 @@
 	import { SocketMessage } from '@/model/socket'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import ConsoleWindow from './console-window.vue'
+import html2canvas from 'html2canvas'
+import { Shatter, VoronoiPieces } from '@cdgugler/shatter'
+import { MatterWorld } from '@/model/matter'
 	const ChangelogDialog = () => import('../changelog/changelog-dialog.vue')
 	const Didactitiel = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`)
 	const Documentation = () => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`)
@@ -191,6 +198,7 @@
 		mouseY = 0
 		cloverSpeed = 200
 		verifyMessage = true
+		april = false
 
 		@Watch('LeekWars.darkMode', {immediate: true})
 		updateDarkMode() {
@@ -199,6 +207,68 @@
 				document.body.classList.add('dark')
 			else
 				document.body.classList.remove('dark')
+		}
+
+		aprilStart() {
+
+			// const halloweenStart = new Date()
+			// halloweenStart.setDate(1)
+			// halloweenStart.setMonth(3) // avril
+			// halloweenStart.setHours(0, 0, 0, 0)
+			// const halloweenEnd = new Date()
+			// halloweenEnd.setDate(1)
+			// halloweenEnd.setMonth(3) // avril
+			// halloweenEnd.setHours(21, 0, 0, 0)
+			// const now = new Date()
+			// this.april = now >= halloweenStart && now < halloweenEnd && localStorage.getItem('april') !== 'false'
+
+			MatterWorld.run()
+			if (this.april) {
+			}
+		}
+
+		click(e: any) {
+			if (!this.april) return
+
+			let element = e.target as HTMLElement;
+			if (element.tagName === 'image') return
+			if (element.tagName === 'g') return
+			if (element.tagName === 'svg') return
+			// console.log("april click", element.tagName, element)
+
+			const pos = element.getBoundingClientRect()
+
+			try {
+				html2canvas(element, {
+					backgroundColor: null,
+
+				}).then(async canvas => {
+
+					element.style.opacity = '0'
+
+					const vshatter = new Shatter();
+					vshatter.setImage(canvas as any as HTMLImageElement)
+					const voropieces = VoronoiPieces({
+						width: canvas.width,
+						height: canvas.height,
+						numPieces: 4 + Math.random() * 6 | 0,
+					});
+					// console.log(voropieces)
+
+					vshatter.setPieces(voropieces);
+					let demo2pieces = await vshatter.shatter()
+					demo2pieces!.forEach((res, i) => {
+						// document.body.appendChild(res.image);
+
+						// console.log(res)
+
+						MatterWorld.addObject(voropieces[i], pos.left + res.x, pos.top + res.y, res.image)
+					});
+
+				});
+			} catch (e) {
+
+			}
 		}
 
 		created() {
@@ -246,6 +316,10 @@
 			// 	this.annonce = true
 			// 	localStorage.setItem('annonce/boss-poll', 'true')
 			// }
+
+			setTimeout(() => {
+				this.aprilStart()
+			}, 100)
 		}
 		changelogShow() {
 			LeekWars.get('changelog/get-last/' + this.$i18n.locale).then(data => {
@@ -267,6 +341,11 @@
 					(this.$refs.console as any).open()
 				}
 			})
+		}
+
+		toogleApril() {
+			this.april = !this.april
+			localStorage.setItem('april', '' + this.april)
 		}
 
 		clickClover() {
@@ -362,6 +441,19 @@
 		z-index: 1;
 		cursor: pointer;
 		display: none;
+		font-size: 30px;
+		opacity: 0.5;
+		color: white;
+		&:hover {
+			opacity: 1;
+		}
+	}
+	.april-button.v-icon {
+		position: fixed;
+		top: 44px;
+		left: 65px;
+		z-index: 1;
+		cursor: pointer;
 		font-size: 30px;
 		opacity: 0.5;
 		color: white;
@@ -623,4 +715,14 @@
 			}
 		}
 	}
+
+#matter {
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	z-index: 10000;
+	pointer-events: none;
+}
 </style>
