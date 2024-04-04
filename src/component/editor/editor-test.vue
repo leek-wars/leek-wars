@@ -65,7 +65,7 @@
 					<div class="title">{{ $t('test_map') }}</div>
 					<div class="map-container">
 						<div v-if="(currentScenario.map && currentScenario.map !== -1)" v-ripple class="map card" @click="mapDialog = true">
-							<img src="/image/map_icon.png">
+							<Map :obstacles="maps[currentScenario.map].data.obstacles" class="map-preview"></Map>
 							<div v-if="currentScenario.map in maps" class="name">{{ maps[currentScenario.map].name }}</div>
 						</div>
 						<div v-else v-ripple class="map card" @click="mapDialog = true">
@@ -343,6 +343,7 @@
 	import AIElement from '@/component/app/ai.vue'
 	import { CHIPS } from '@/model/chips'
 	import { ORDERED_CHIPS } from "@/model/sorted_chips"
+	import Map from "@/component/app/map.vue"
 
 	class TestScenarioLeek {
 		id!: number
@@ -375,7 +376,7 @@
 		team!: number
 	}
 
-	@Component({ components: { CharacteristicTooltip, 'explorer': Explorer, RichTooltipItem, ai: AIElement }, name: 'editor-test', i18n: {}, mixins: [...mixins] })
+	@Component({ components: { CharacteristicTooltip, 'explorer': Explorer, RichTooltipItem, ai: AIElement, Map }, name: 'editor-test', i18n: {}, mixins: [...mixins] })
 	export default class EditorTest extends Vue {
 		@Prop() value!: boolean
 		@Prop() ais!: {[key: number]: AI}
@@ -1517,6 +1518,9 @@
 	}
 	.column-scenario .map img, .map-dialog .map img {
 		width: 80px;
+	}
+	.map-preview {
+		width: 250px;
 	}
 	.item.leek .bot, .item.scenario .base {
 		background: #777;
