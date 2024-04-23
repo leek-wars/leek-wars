@@ -99,7 +99,9 @@
 			}).map((w: any) => {
 				const trophy = TROPHIES[w.id - 1]
 				const gender_code = this.gender === 2 && (trophy.noun_translation & 2) && ((trophy.noun_gender & 2) === 0) ? '_f' : ''
-				return {code: w.code, id: w.id, t: this.$t('trophy.' + w.code + gender_code) as string, rarity: w.rarity}
+				let t = this.$t('trophy.' +	w.code + gender_code);
+				if (t == 'trophy.' + w.code + gender_code) { t = this.$t('trophy.' + w.code) }
+				return {code: w.code, id: w.id, t: t as string, rarity: w.rarity}
 			}).sort((a: any, b: any) => a.t.localeCompare(b.t)))
 		}
 		get adjectives() {
@@ -108,7 +110,9 @@
 			}).map((w: any) => {
 				const trophy = TROPHIES[w.id - 1]
 				const gender_code = this.gender === 2 && (trophy.adj_translation & 2) && ((trophy.adj_gender & 2) === 0) ? '_f' : ''
-				return {code: w.code, id: w.id, t: this.$t('trophy.' + w.code + gender_code) as string, rarity: w.rarity}
+				let t = this.$t('trophy.' +	w.code + gender_code);
+				if (t == 'trophy.' + w.code + gender_code) { t = this.$t('trophy.' + w.code) }
+				return {code: w.code, id: w.id, t: t as string, rarity: w.rarity}
 			}).sort((a: any, b: any) => a.t.localeCompare(b.t)))
 		}
 
