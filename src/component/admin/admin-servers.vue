@@ -45,9 +45,12 @@
 					</div>
 				</div>
 				<div class="queue">
-					<h4>➤ Queue ({{ queue.length }})</h4>
+					<div class="flex" :style="{'align-items': 'center'}">
+						<h4>➤ Queue ({{ queue.length }})</h4>
+						<v-switch v-model="show_ids" hide-details label="IDs" />
+					</div>
 					<div class="farmers">
-						<div v-for="(task, t) in queue" :key="t" class="card farmer">
+						<div v-for="(task, t) in queue" :key="t" class="card farmer" :style="{background: show_ids ? colorFromID(task[1].queue_id) : undefined}">
 							<router-link :to="'/farmer/' + task[1].id">
 								<avatar :farmer="task[1]" /> {{ task[1].name }}
 							</router-link>
@@ -55,6 +58,7 @@
 								<router-link v-if="task[0] === 1" :to="'/fight/' + task[2]">{{ task[2] }}</router-link>
 								<router-link v-else-if="task[0] === 2" :to="'/tournament/' + task[2]">{{ task[2] }}</router-link>
 							</div>
+							<div v-if="show_ids" class="queue-id">{{ task[1].queue_id }}</div>
 						</div>
 					</div>
 				</div>
@@ -65,7 +69,7 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Component, Vue, Watch } from 'vue-property-decorator'
 
 	const REMOVE_RUNNER = 14
 	const LISTEN_DATA = 15
@@ -88,12 +92,15 @@
 		public task!: string
 	}
 
+
 	@Component({})
 	export default class AdminServers extends Vue {
 
 		runners: {[key: number]: Runner} = {}
 		queue: any = []
 		loading: boolean = true
+		colors: {[key: string]: string} = {}
+		show_ids: boolean = localStorage.getItem('admin/queue-ids') === 'true'
 
 		get nodes() {
 			const nodes: {[key: string]: Node} = {}
@@ -157,6 +164,25 @@
 			if (id in this.runners) {
 				Vue.delete(this.runners, id)
 			}
+		}
+
+		colorFromID(id: string) {
+			console.log("color from id", id, this.colors[id])
+			if (this.colors[id]) return this.colors[id]
+			
+			let h = 0
+			for (var i = 0; i < id.length; i++) {
+				h = id.charCodeAt(i) + ((h << 5) - h)
+				// h = h & h;
+			}
+			if (h < 0) h = -h
+			
+			return this.colors[id] = `hsl(${h % 360}deg, 80%, 90%)`
+		}
+
+		@Watch('show_ids')
+		updateQueueID() {
+			localStorage.setItem('admin/queue-ids', '' + this.show_ids)
 		}
 	}
 </script>
@@ -244,11 +270,9 @@
 	}
 	.queue .farmer {
 		display: inline-block;
-		width: 80px;
 		text-align: center;
 		padding: 4px 4px;
-		margin-right: 6px;
-		margin-bottom: 6px;
+		overflow: hidden;
 		.avatar {
 			width: 50px;
 		}
@@ -259,9 +283,17 @@
 				color: var(--text-color-secondary);
 			}
 		}
+		.queue-id {
+			font-size: 10px;
+			margin-top: 2px;
+			color: var(--text-color-secondary);
+		}
 	}
 	.queue .farmers {
 		min-height: 60px;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+		gap: 4px;
 	}
 	.empty {
 		padding: 20px;
