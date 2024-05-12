@@ -852,7 +852,7 @@
 	.message ::v-deep h3 {
 		margin-left: 0;
 		margin-bottom: 10px;
-		font-size: 18px;
+		font-size: 20px;
 		margin-top: 10px;
 		display: block;
 		background: transparent;
@@ -865,6 +865,12 @@
 	}
 	.message ::v-deep h3:before {
 		display: none;
+	}
+	.message ::v-deep h5 {
+		font-size: 17px;
+	}
+	.message ::v-deep h6 {
+		font-size: 16px;
 	}
 	.message ::v-deep .chat-input-emoji {
 		position: absolute;
