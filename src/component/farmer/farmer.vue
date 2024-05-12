@@ -489,7 +489,7 @@
 			<v-icon slot="icon">mdi-earth</v-icon>
 			<span slot="title">{{ $t('country_selection') }}</span>
 			<div class="country-dialog">
-				<div class="country" code="null" @click="selectCountry(null)">
+				<div class="country" code="null" @click="selectCountry('null')">
 					<flag :clickable="false" />
 					<h4>{{ $t('no_country') }}</h4>
 				</div>
@@ -792,7 +792,7 @@
 
 		selectCountry(code: string) {
 			if (this.farmer) {
-				this.farmer.country = code
+				this.farmer.country = code === 'null' ? null : code
 				this.countryDialog = false
 				LeekWars.post('farmer/change-country', {country_code: code})
 			}

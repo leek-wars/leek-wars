@@ -27,7 +27,7 @@ class Farmer {
 	public tournament!: any
 	public in_garden!: boolean
 	public talent_more!: number
-	public country!: string
+	public country!: string | null
 	public warnings!: any[]
 	public candidacy!: any
 	public website!: string
