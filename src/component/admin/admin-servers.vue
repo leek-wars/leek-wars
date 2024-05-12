@@ -89,7 +89,7 @@
 		public generated!: number
 		public errors!: number
 		public name!: string
-		public task!: string
+		public task!: any
 	}
 
 
@@ -167,13 +167,11 @@
 		}
 
 		colorFromID(id: string) {
-			console.log("color from id", id, this.colors[id])
 			if (this.colors[id]) return this.colors[id]
 			
 			let h = 0
 			for (var i = 0; i < id.length; i++) {
 				h = id.charCodeAt(i) + ((h << 5) - h)
-				// h = h & h;
 			}
 			if (h < 0) h = -h
 			

@@ -1139,7 +1139,7 @@
 		}
 
 		public autocomplete(CodeMirror: any, force: boolean = false) {
-			console.log("autocomplete", this.autocompleteOption)
+			// console.log("autocomplete", this.autocompleteOption)
 			if (!this.autocompleteOption) { return }
 
 			const cursor = this.document.getCursor()
@@ -1156,7 +1156,7 @@
 
 			if (!force && token.string.length === 0) {
 				this.close()
-				console.log("close")
+				// console.log("close")
 				return
 			}
 			token.state = CodeMirror.innerMode(this.document.getMode(), token.state).state
@@ -1313,7 +1313,7 @@
 				analyzer.complete(this.ai, this.document.getValue(), cursor.line + 1, cursor.ch - 1).then(raw_data => {
 
 					this.completing = false
-					console.log("Completions", raw_data)
+					// console.log("Completions", raw_data)
 					if (raw_data) {
 						const raw_completions = raw_data.items as any[]
 						this.completionType = raw_data.type
@@ -1464,7 +1464,7 @@
 		}
 
 		public pick() {
-			console.log("pick")
+			// console.log("pick")
 
 			const completion = this.completions[this.selectedCompletion]
 			const cursor = this.document.getCursor()
