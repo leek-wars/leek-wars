@@ -594,6 +594,12 @@ select {
 	border: solid 1px #ddd;
 	background-color: white;
 }
+select {
+	-webkit-appearance: menulist-button;
+	border: solid 1px var(--border);
+	background-color: var(--pure-white);
+	color: var(--text-color);
+}
 input:active, input:focus {
 	outline: none;
 }
