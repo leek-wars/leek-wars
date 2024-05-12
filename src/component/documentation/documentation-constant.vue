@@ -121,7 +121,7 @@
 			const items = [] as any
 			if (this.constant.name.startsWith("EFFECT_MODIFIER_")) {
 				for (const i in LeekWars.weapons) {
-					if (LeekWars.weapons[i].effects.some((e) => e.modifiers & this.value_int)) {
+					if (LeekWars.weapons[i].effects.some((e) => e.modifiers & this.value_int) || LeekWars.weapons[i].passive_effects.some((e) => e.modifiers & this.value_int)) {
 						items.push(LeekWars.weapons[i])
 					}
 				}

@@ -1,4 +1,5 @@
 import { Area } from './area'
+import { Effect } from './effect'
 
 class Chip {
 	public id!: number
@@ -14,7 +15,7 @@ class ChipTemplate {
 	public min_range!: number
 	public max_range!: number
 	public launch_type!: number
-	public effects!: any[]
+	public effects!: Effect[]
 	public cost!: number
 	public area!: Area
 	public los!: boolean

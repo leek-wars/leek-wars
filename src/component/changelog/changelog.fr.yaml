@@ -19,6 +19,7 @@
     - Correction de nombreux icones en mode sombre.
     - Obstacles un peu plus foncés en nasu tactique (pour Ref).
     - "Correction de l'affichage des potions récupérées en combat. #img_242_potion"
+    - Affichage des items ayant des modificateurs sur leurs effets passifs dans la doc des constantes.
 
 241:
   title: Bonne année ! Console LeekScript, Qualité de vie, rééquilibrage et fun.
