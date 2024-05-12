@@ -135,9 +135,9 @@ class Analyzer {
 	}
 
 	public completeResult(message: {type: number, id: number, data: any}) {
-		console.log("complete result", message)
+		// console.log("complete result", message)
 		if (this.completeResolve[message.id]) {
-			console.log("resolve complete", message)
+			// console.log("resolve complete", message)
 			// console.timeEnd('hover')
 			this.completeResolve[message.id](message.data)
 			delete this.completeResolve[message.id]
