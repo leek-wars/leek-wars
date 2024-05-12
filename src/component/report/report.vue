@@ -12,7 +12,7 @@
 				<div v-if="fight" class="info">{{ fight.date | date }}</div>
 			</div>
 			<div class="tabs">
-				<div v-if="report && $store.getters.admin" class="tab disabled">
+				<div v-if="report && fight && $store.getters.admin" class="tab disabled">
 					{{ (fight.size / 1000) | number }} Ko
 				</div>
 				<a v-if="report && (errors.length > 0 || warnings.length > 0)" href="#errors" class="tab">
@@ -668,8 +668,8 @@
 				fullWidth: true,
 				fullHeight: true,
 				axisX: {
-					type: Chartist.FixedScaleAxis,
-					divisor: this.fight.report.duration,
+					type: Chartist.AutoScaleAxis,
+					onlyInteger: true,
 				}
 			}
 			this.chartEvents = [{

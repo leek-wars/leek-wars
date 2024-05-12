@@ -87,6 +87,7 @@ class Fight {
 	public trophies!: any[]
 	public boss_name?: string
 	public chests!: number
+	public size!: number
 }
 
 class FightMap {
