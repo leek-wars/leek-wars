@@ -301,7 +301,7 @@
 				LeekWars.setActions([this.action])
 				if (this.topic.subscribed) { this.action.icon = 'mdi-newspaper-minus' }
 				this.$root.$emit('loaded')
-				this.newMessage = localStorage.getItem('forum/draft') as string
+				this.newMessage = localStorage.getItem('forum/draft-' + this.topic.id) as string
 			})
 		}
 		resolve() {
@@ -401,13 +401,13 @@
 			})
 		}
 		updateDraft() {
-			localStorage.setItem('forum/draft', this.newMessage)
+			localStorage.setItem('forum/draft-' + this.topic!.id, this.newMessage)
 		}
 		send() {
 			if (!this.topic || this.sendingMessage) { return }
 			this.sendingMessage = true
 			LeekWars.post("forum/post-message", {topic_id: this.topic.id, message: this.newMessage}).then(data => {
-				localStorage.setItem('forum/draft', '')
+				localStorage.removeItem('forum/draft-' + this.topic!.id)
 				this.newMessage = ''
 				this.update(true)
 				this.sendingMessage = false
