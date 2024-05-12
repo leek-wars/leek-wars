@@ -1,8 +1,6 @@
 {
-	"added_life": "Vida Adicionada",
 	"agility": "Agilidade",
 	"agility_desc": "A agilidade aumenta a chance de acerto crítico e a reflexão de dano.",
-	"base_life": "Vida básica",
 	"boost": "Reforços",
 	"characteristics": "Características",
 	"critical": "Acertos críticos",
@@ -39,5 +37,6 @@
 	"operations": "Número de transacções",
 	"chips": "Número máximo de fichas",
 	"variables": "Variáveis",
-	"base": "Investido"
+	"base": "Investido",
+	"invested": "Investido"
 }

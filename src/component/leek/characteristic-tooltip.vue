@@ -9,14 +9,9 @@
 			{{ $t('characteristic.' + characteristic + '_desc') }}
 			<template v-if="value > 0 && (characteristic != 'frequency' || value > 100)">
 				<br>
-				<template v-if="!test && characteristic == 'life'">
-					<b v-if="characteristic === 'life'" class="effect">{{ $t('characteristic.base_life') }} : <span class="amount">{{ leek.baseLife }}</span></b>
-					<br>
-					<b v-if="characteristic === 'life'" class="effect">{{ $t('characteristic.added_life') }} : <span class="amount">{{ base - leek.baseLife }}</span></b>
-					<br>
-				</template>
-				<div v-if="characteristic !== 'life' && capitalSpent"><b class="effect">{{ $t('characteristic.base') }} : <span class="amount">{{ base }}</span></b></div>
-				<div v-if="value != base"><b class="effect">{{ $t('main.components') }} : <span class="amount">{{ value - base }}</span></b></div>
+				<div v-if="base"><b class="effect">{{ $t('characteristic.base') }} : <span class="amount">{{ base }}</span></b></div>
+				<div v-if="capitalSpent"><b class="effect">{{ $t('characteristic.invested') }} : <span class="amount">{{ invested }}</span></b></div>
+				<div v-if="value != total"><b class="effect">{{ $t('main.components') }} : <span class="amount">{{ total - value }}</span></b></div>
 				<div v-if="!test && capitalSpent">
 					<b class="capital">{{ $t('characteristic.invested_capital') }} : <span class="amount">{{ capitalSpent }}</span></b>
 				</div>
@@ -57,16 +52,17 @@
 
 <script lang="ts">
 	import { COSTS } from '@/model/leek'
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Component, Prop, Vue } from 'vue-property-decorator'
+
 	@Component({ name: "characteristic-tooltip" })
 	export default class CharacteristicTooltip extends Vue {
-		@Prop() characteristic!: string
-		@Prop() base!: number
-		@Prop() value!: number
-		@Prop() leek!: any
-		@Prop() test!: boolean
+		@Prop({ required: true }) characteristic!: string
+		@Prop({ required: true }) value!: number
+		@Prop({ required: true }) total!: number
+		@Prop({ required: true }) leek!: any
+		@Prop({ required: true }) test!: boolean
 
-		get capitalSpent() {
+		get base() {
 			const base = {
 				life: 100 + (this.leek.level - 1) * 3,
 				strength: 0,
@@ -79,9 +75,18 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 				cores: 1,
 				ram: 6,
 				tp: 10,
-				mp: 3
+				mp: 3,
 			} as any
-			let characLeft = this.base - base[this.characteristic]
+			return base[this.characteristic]
+		}
+
+		get invested() {
+			return this.value - this.base
+		}
+
+		get capitalSpent() {
+			
+			let characLeft = this.invested
 			let characAdded = 0
 			let step = 0
 			let usedCapital = 0

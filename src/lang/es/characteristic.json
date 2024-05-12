@@ -1,8 +1,6 @@
 {
-	"added_life": "Vida añadida",
 	"agility": "Agilidad",
 	"agility_desc": "La agilidad aumenta la probabilidad de golpe crítico y el reflejo del daño.",
-	"base_life": "Vida basica",
 	"boost": "Aumenta",
 	"characteristics": "Características",
 	"critical": "Golpes críticos",
@@ -39,5 +37,6 @@
 	"operations": "Número de transacciones",
 	"chips": "Número máximo de fichas",
 	"variables": "Variables",
-	"base": "Invertido"
+	"base": "Invertido",
+	"invested": "Invertido"
 }

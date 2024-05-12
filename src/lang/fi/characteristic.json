@@ -1,8 +1,6 @@
 {
-	"added_life": "Lisätty Elämä",
 	"agility": "Ketteryys",
 	"agility_desc": "Ketteryys lisää kriittistä iskun mahdollisuutta ja vaurioiden heijastusta.",
-	"base_life": "Peruselämää",
 	"boost": "Tehostaa",
 	"characteristics": "Ominaisuudet",
 	"critical": "Kriittiset osumat",
@@ -39,5 +37,6 @@
 	"operations": "Tapahtumien määrä",
 	"chips": "Sirujen enimmäismäärä",
 	"variables": "Muuttujat",
-	"base": "Sijoitetut"
+	"base": "Sijoitetut",
+	"invested": "Sijoitetut"
 }

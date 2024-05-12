@@ -1,8 +1,6 @@
 {
-	"added_life": "Lagt til liv",
 	"agility": "Smidighet",
 	"agility_desc": "Agility øker kritiske treffsjanser og skaderefleksjon.",
-	"base_life": "Grunnleggende liv",
 	"boost": "Øker",
 	"characteristics": "Egenskaper",
 	"critical": "Kritiske treff",
@@ -39,5 +37,6 @@
 	"operations": "Antall transaksjoner",
 	"chips": "Maksimalt antall brikker",
 	"variables": "Variabler",
-	"base": "Investert"
+	"base": "Investert",
+	"invested": "Investert"
 }

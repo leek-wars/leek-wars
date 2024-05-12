@@ -38,7 +38,7 @@
 							<div class="title">Caractéristiques</div>
 							<div class="characteristics">
 								<div v-for="c in LeekWars.characteristics_table" :key="c" class="characteristic" :class="c">
-									<characteristic-tooltip v-slot="{ on }" :characteristic="c" :value="game.selectedEntity[c]" :leek="game.selectedEntity" :test="true">
+									<characteristic-tooltip v-slot="{ on }" :characteristic="c" :value="game.selectedEntity[c]" :total="game.selectedEntity[c]" :leek="game.selectedEntity" :test="true">
 										<img v-on="on" :src="'/image/charac/' + c + '.png'">
 									</characteristic-tooltip>
 									<input class="stat" :class="'color-' + c" v-model.number="game.selectedEntity[c]" @keyup="edited('charac')" type="number">

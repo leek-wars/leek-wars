@@ -1,8 +1,6 @@
 {
-	"added_life": "Leven toegevoegd",
 	"agility": "Wendbaarheid",
 	"agility_desc": "Behendigheid vergroot de kans op een kritieke aanval en de reflectie van schade.",
-	"base_life": "Basis leven",
 	"boost": "Verhoogt",
 	"characteristics": "Functies",
 	"critical": "Kritieke treffers",
@@ -39,5 +37,6 @@
 	"operations": "Aantal transacties",
 	"chips": "Maximaal aantal chips",
 	"variables": "Variabelen",
-	"base": "Geïnvesteerd"
+	"base": "Geïnvesteerd",
+	"invested": "Geïnvesteerd"
 }

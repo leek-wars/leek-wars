@@ -1,8 +1,6 @@
 {
-	"added_life": "增加生命",
 	"agility": "敏捷",
 	"agility_desc": "敏捷增加暴击率和伤害反射。",
-	"base_life": "基本生活",
 	"boost": "提升",
 	"characteristics": "特征",
 	"critical": "致命一击",
@@ -39,5 +37,6 @@
 	"operations": "交易数量",
 	"chips": "最大芯片数",
 	"variables": "变量",
-	"base": "已投资"
+	"base": "已投资",
+	"invested": "已投资"
 }

@@ -1,8 +1,6 @@
 {
-	"added_life": "Added life",
 	"agility": "Agility",
 	"agility_desc": "Agility increases the critical hit rate and damage return.",
-	"base_life": "Base life",
 	"boost": "Boosts",
 	"characteristics": "Characteristics",
 	"critical": "Critical hits",
@@ -39,5 +37,6 @@
 	"operations": "Number of operations",
 	"chips": "Maximum number of chips",
 	"variables": "Variables",
-	"base": "Invested"
+	"base": "Invested",
+	"invested": "Invested"
 }

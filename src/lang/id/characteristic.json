@@ -1,8 +1,6 @@
 {
-	"added_life": "Menambahkan Hidup",
 	"agility": "Kelincahan",
 	"agility_desc": "Ketangkasan meningkatkan peluang serangan kritis dan refleksi kerusakan.",
-	"base_life": "Kehidupan dasar",
 	"boost": "Meningkatkan",
 	"characteristics": "Fitur",
 	"critical": "Pukulan kritis",
@@ -39,5 +37,6 @@
 	"operations": "Jumlah transaksi",
 	"chips": "Jumlah chip maksimum",
 	"variables": "Variabel",
-	"base": "Diinvestasikan"
+	"base": "Diinvestasikan",
+	"invested": "Diinvestasikan"
 }

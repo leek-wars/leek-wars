@@ -1,8 +1,6 @@
 {
-	"added_life": "추가된 생명",
 	"agility": "민첩",
 	"agility_desc": "민첩성은 치명타 확률과 피해 반사를 증가시킵니다.",
-	"base_life": "기본 생활",
 	"boost": "부스트",
 	"characteristics": "특징",
 	"critical": "치명타",
@@ -39,5 +37,6 @@
 	"operations": "트랜잭션 수",
 	"chips": "최대 칩 수",
 	"variables": "변수",
-	"base": "투자"
+	"base": "투자",
+	"invested": "투자"
 }

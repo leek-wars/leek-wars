@@ -558,8 +558,8 @@
 				<div class="infos">
 					<h4>{{ $t('characteristic.characteristics') }}</h4>
 					<div class="card characteristics">
-						<characteristic-tooltip v-for="c in LeekWars.characteristics_table" :key="c" v-slot="{ on }" :characteristic="c" :value="turret[c]" :leek="turret" :test="true">
-							<div class="characteristic" v-on="on">
+						<characteristic-tooltip v-for="c in LeekWars.characteristics_table" :key="c" v-slot="{ on }" :characteristic="c" :value="turret[c]" :total="turret[c]" :leek="turret" :test="true">
+							<div class="characteristic" :class="c" v-on="on">
 								<img :src="'/image/charac/' + c + '.png'">
 								<span class="stat" :class="'color-' + c">{{ turret[c] }}</span>
 							</div>
@@ -683,6 +683,8 @@
 				wisdom: 100 + " à " + characteristics_base_1000,
 				magic: 100 + " à " + characteristics_base_1000,
 				frequency: 111,
+				ram: 20,
+				cores: 20,
 				tp: Math.floor(12 * team_ratio),
 				mp: 0
 			}
@@ -1123,7 +1125,7 @@
 		width: 100%;
 		height: 12px;
 		margin-top: 5px;
-		background: white;
+		background: var(--pure-white);
 		border: 1px solid var(--border);
 		position: relative;
 		border-radius: 5px;
@@ -1442,9 +1444,12 @@
 			}
 			.characteristic:nth-child(8n+6),
 			.characteristic:nth-child(8n+8) {
-				background: #eee;
+				background: var(--background-secondary);
 			}
 		}
+	}
+	body.dark .characteristic.frequency img {
+		filter: invert(1);
 	}
 	#app.app .turret-dialog {
 		.characteristic {

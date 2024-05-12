@@ -1,8 +1,6 @@
 {
-	"added_life": "Dodano życie",
 	"agility": "Zwinność",
 	"agility_desc": "Zwinność zwiększa szansę na trafienie krytyczne i odbicie obrażeń.",
-	"base_life": "Podstawowe życie",
 	"boost": "Wzmocnienia",
 	"characteristics": "Cechy",
 	"critical": "Trafienia krytyczne",
@@ -39,5 +37,6 @@
 	"operations": "Liczba transakcji",
 	"chips": "Maksymalna liczba żetonów",
 	"variables": "Zmienne",
-	"base": "Zainwestowane"
+	"base": "Zainwestowane",
+	"invested": "Zainwestowane"
 }

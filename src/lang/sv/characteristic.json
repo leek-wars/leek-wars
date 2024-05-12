@@ -1,8 +1,6 @@
 {
-	"added_life": "Lade till liv",
 	"agility": "Rörlighet",
 	"agility_desc": "Agility ökar kritiska slagchanser och skadereflektion.",
-	"base_life": "Grundläggande liv",
 	"boost": "Ökar",
 	"characteristics": "Funktioner",
 	"critical": "Kritiska träffar",
@@ -39,5 +37,6 @@
 	"operations": "Antal transaktioner",
 	"chips": "Maximalt antal chips",
 	"variables": "Variabler",
-	"base": "Investerad"
+	"base": "Investerad",
+	"invested": "Investerade"
 }

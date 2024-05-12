@@ -1,8 +1,6 @@
 {
-	"added_life": "Vita aggiunta",
 	"agility": "Agilità",
 	"agility_desc": "L'agilità aumenta la probabilità di colpo critico e la riflessione del danno.",
-	"base_life": "Vita di base",
 	"boost": "Potenzia",
 	"characteristics": "Caratteristiche",
 	"critical": "Colpi critici",
@@ -39,5 +37,6 @@
 	"operations": "Numero di transazioni",
 	"chips": "Numero massimo di chip",
 	"variables": "Variabili",
-	"base": "Investito"
+	"base": "Investito",
+	"invested": "Investito"
 }

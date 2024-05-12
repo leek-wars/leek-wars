@@ -1,8 +1,6 @@
 {
-	"added_life": "Leben hinzugefügt",
 	"agility": "Beweglichkeit",
 	"agility_desc": "Agilität erhöht die kritische Trefferchance und die Schadensreflexion.",
-	"base_life": "Grundlegendes Leben",
 	"boost": "Steigert",
 	"characteristics": "Merkmale",
 	"critical": "Kritische Treffer",
@@ -39,5 +37,6 @@
 	"operations": "Anzahl der Operationen",
 	"chips": "Maximale Anzahl an Chips",
 	"variables": "Variablen",
-	"base": "Investiert"
+	"base": "Investiert",
+	"invested": "Investiert"
 }

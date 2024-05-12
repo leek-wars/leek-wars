@@ -7,7 +7,7 @@
 
 		<div class="characteristics">
 			<div v-for="c in LeekWars.characteristics" :key="c" class="charac" :class="c">
-				<characteristic-tooltip v-slot="{ on }" :characteristic="c" :base="leek[c] + bonuses[c]" :value="leek[c] + bonuses[c]" :leek="leek" :test="false">
+				<characteristic-tooltip v-slot="{ on }" :characteristic="c" :value="leek[c]" :total="leek[c]" :leek="leek" :test="false">
 					<template v-on="on">
 						<img :src="'/image/charac/' + c + '.png'" v-on="on">
 					</template>

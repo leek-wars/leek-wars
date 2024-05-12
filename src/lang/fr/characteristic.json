@@ -1,8 +1,6 @@
 {
-	"added_life": "Vie investie",
 	"agility": "Agilité",
 	"agility_desc": "L'agilité augmente les chances de coup critique et les renvois de dégâts.",
-	"base_life": "Vie de base",
 	"boost": "Boosts",
 	"cores": "Cœurs",
 	"cores_desc": "Les cœurs augmentent le nombre maximal d'opérations exécutables par tour. 1 cœur augmente de 1 million la limite d'opérations.",
@@ -13,6 +11,7 @@
 	"frequency": "Fréquence",
 	"frequency_desc": "Les fréquences élevées commencent le combat en premier",
 	"heal": "Soins",
+	"invested": "Investi",
 	"invested_capital": "Capital investi",
 	"life": "Points de vie",
 	"life_desc": "Dégâts que peut encaisser une entité avant de mourir",
@@ -39,5 +38,5 @@
 	"operations": "Nombre d'opérations",
 	"chips": "Nombre maximal de puces",
 	"variables": "Variables",
-	"base": "Investi"
+	"base": "Base"
 }

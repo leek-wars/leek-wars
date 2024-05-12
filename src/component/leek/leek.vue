@@ -146,7 +146,7 @@
 					</div>
 				</template>
 				<div slot="content" class="characteristics">
-					<characteristic-tooltip v-for="c in LeekWars.characteristics_table" :key="c" v-slot="{ on }" :characteristic="c" :base="leek ? leek[c] : 0" :value="leek ? leek['total_' + c] : 0" :leek="leek" :test="false">
+					<characteristic-tooltip v-for="c in LeekWars.characteristics_table" :key="c" v-slot="{ on }" :characteristic="c" :value="leek ? leek[c] : 0" :total="leek ? leek['total_' + c] : 0" :leek="leek" :test="false">
 						<div class="characteristic" :class="c" v-on="on">
 							<img :src="'/image/charac/' + c + '.png'">
 							<span :class="'color-' + c">{{ leek ? leek['total_' + c] : '...' }}</span>

@@ -6,7 +6,7 @@
 				<img :src="'/image/bulb/' + summon.name + '_front.png'" width="width">
 			</div>
 			<div>
-				<characteristic-tooltip v-for="c of LeekWars.characteristics_table" :key="c" v-slot="{ on }" :characteristic="c" :value="c === 'frequency' || c === 'ram' || c === 'cores' ? 0 : summon.characteristics[c][1]" :leek="summon.characteristics" :test="true">
+				<characteristic-tooltip v-for="c of LeekWars.characteristics_table" :key="c" v-slot="{ on }" :characteristic="c" :value="c === 'frequency' || c === 'ram' || c === 'cores' ? 0 : summon.characteristics[c][1]" :total="c === 'frequency' || c === 'ram' || c === 'cores' ? 0 : summon.characteristics[c][1]" :leek="summon.characteristics" :test="true">
 					<div class="characteristic" v-on="on">
 						<img :src="'/image/charac/' + c + '.png'" v-on="on">
 						<span :class="'color-' + c">

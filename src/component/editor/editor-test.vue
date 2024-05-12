@@ -109,7 +109,7 @@
 						</div>
 						<div class="card characteristics">
 							<div v-for="c in LeekWars.characteristics_table" :key="c" class="characteristic" :class="c">
-								<characteristic-tooltip v-slot="{ on }" :characteristic="c" :value="currentLeek[c]" :leek="currentLeek" :test="true">
+								<characteristic-tooltip v-slot="{ on }" :characteristic="c" :value="currentLeek[c]" :total="currentLeek[c]" :leek="currentLeek" :test="true">
 									<img v-on="on" :src="'/image/charac/' + c + '.png'">
 								</characteristic-tooltip>
 								<span :contenteditable="!currentLeek.bot" class="stat" :class="'color-' + c" @keyup.stop @focusout="characteristicFocusout(c, $event)" v-html="currentLeek[c]"></span>

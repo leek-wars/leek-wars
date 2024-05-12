@@ -1,8 +1,6 @@
 {
-	"added_life": "追加されたライフ",
 	"agility": "機敏",
 	"agility_desc": "敏捷性は、クリティカル ストライクのチャンスとダメージ反射を増加させます。",
-	"base_life": "基本生活",
 	"boost": "ブースト",
 	"characteristics": "特徴",
 	"critical": "クリティカルヒット",
@@ -39,5 +37,6 @@
 	"operations": "取引件数",
 	"chips": "最大チップ数",
 	"variables": "変数",
-	"base": "投資済み"
+	"base": "投資済み",
+	"invested": "投資済み"
 }

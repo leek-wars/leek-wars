@@ -172,7 +172,7 @@
 					<b v-else class="level">{{ $t('main.level_n', [group.level]) }}</b>
 					<div class="card characteristics">
 						<div v-for="c in LeekWars.characteristics_table" :key="c" class="characteristic" :class="c">
-							<characteristic-tooltip  v-slot="{ on }" :characteristic="c" :value="characteristics[c]" :leek="characteristics" :test="true">
+							<characteristic-tooltip  v-slot="{ on }" :characteristic="c" :value="characteristics[c]" :total="characteristics[c]" :leek="characteristics" :test="true">
 								<img v-on="on" :src="'/image/charac/' + c + '.png'">
 							</characteristic-tooltip>
 							<span class="stat" :class="'color-' + c" v-html="characteristics[c]"></span>
