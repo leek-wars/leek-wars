@@ -175,7 +175,7 @@
 			}
 			if (h < 0) h = -h
 			
-			return this.colors[id] = `hsl(${h % 360}deg, 80%, 90%)`
+			return this.colors[id] = `hsl(${h % 360}deg, 80%, ${LeekWars.darkMode ? 10 : 90}%)`
 		}
 
 		@Watch('show_ids')
