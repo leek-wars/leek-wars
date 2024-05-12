@@ -47,7 +47,7 @@
 						</td>
 						<td>{{ leek.level }}</td>
 						<td><b>{{ leek.talent }}</b></td>
-						<td v-for="c in LeekWars.characteristics" :key="c" :class="['color-' + c, leek[c] === 0 ? 'zero' : '']" class="c">{{ leek[c] }}</td>
+						<td v-for="c in LeekWars.characteristics" :key="c" :class="['color-' + c, leek['total_' + c] === 0 ? 'zero' : '']" class="c">{{ leek['total_' + c] }}</td>
 					</tr>
 				</table>
 			</template>
