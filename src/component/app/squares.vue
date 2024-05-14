@@ -1,6 +1,6 @@
 <template>
 	<div v-show="LeekWars.squares.squares.length" class="squares">
-		<router-link v-for="square in LeekWars.squares.squares" :key="square.id" v-ripple :to="square.link" class="square card" :class="{[square.clazz]: square.clazz}" @click.native="LeekWars.closeMenu()">
+		<router-link v-for="square in LeekWars.squares.squares" :key="square.id" v-ripple :to="square.link" class="square card" :class="{[square.clazz]: square.clazz}" @click.native="click(square)">
 			<v-icon v-if="square.icon" :class="{padding: square.padding}" class="image">{{ square.image }}</v-icon>
 			<img v-else :src="square.image" :class="{padding: square.padding}" class="image">
 			<div class="wrapper">
@@ -15,11 +15,23 @@
 </template>
 
 <script lang="ts">
-	import { Component, Vue } from 'vue-property-decorator'
-	import '@/model/emojis'
+import { Component, Vue } from 'vue-property-decorator'
+import '@/model/emojis'
+import { Notification } from '@/model/notification'
+import { LeekWars } from '@/model/leekwars'
+import { Square } from '@/model/squares'
 
-	@Component({})
-	export default class Squares extends Vue {}
+@Component({})
+export default class Squares extends Vue {
+
+	click(square: Square) {
+		if (square.notification) {
+			LeekWars.post('notification/read', { notification_id: square.notification.id })
+			this.$store.commit('read-notification', square.notification.id)
+		}
+	}
+
+}
 </script>
 
 <style lang="scss" scoped>

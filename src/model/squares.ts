@@ -13,6 +13,7 @@ class Square {
 	padding!: boolean
 	clazz!: string
 	resultIcon!: string
+	notification?: Notification
 }
 
 class Squares {
@@ -27,6 +28,7 @@ class Squares {
 
 	addFromNotification(notification: Notification) {
 		this.add({
+			notification,
 			image: (notification.icon ? notification.image : '/image/' + notification.image),
 			icon: notification.icon,
 			title: i18n.t('notification.title_' + notification.type, notification.title) as string,

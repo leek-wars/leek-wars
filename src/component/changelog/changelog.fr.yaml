@@ -8,6 +8,7 @@
     - "Éditeur : autocomplétion se ferme si on scroll la page."
     - "Ajout de la date complète des notifications. #img_242_notif"
     - Un brouillon par sujet forum au lieu d'un global.
+    - Un clic sur une notification en bas à droite lit cette notification.
   fixed:
     - "Correction du coût en opérations d'une boucle for avec clé : valeur."
     - "Correction d'un bug de compilation d'une même IA lors d'un combat parallèle."
