@@ -318,6 +318,7 @@ class Game {
 	public actionsWidth: number = 400
 	public displayDebugs: boolean = true
 	public displayAllyDebugs: boolean = true
+	public displayAILines: boolean = true
 	public plainBackground: boolean = false
 	public sound: boolean = false
 	public atmosphere!: Sound
@@ -758,7 +759,7 @@ class Game {
 				}
 				for (const log of farmerLogs[action]) {
 					const type = log[1]
-					log[5] = me
+					log[6] = me
 					if (me || (type !== 4 && type !== 9 && type !== 10 && type !== 5)) {
 						this.logs[actionI].push(log)
 					}
@@ -1858,7 +1859,7 @@ class Game {
 			this.currentLog++
 			const log = this.logs[this.currentAction][l]
 			const type = log[1]
-			if (this.displayDebugs && (this.displayAllyDebugs || log[5])) {
+			if (this.displayDebugs && (this.displayAllyDebugs || log[6])) {
 				if (type === 5) {
 					this.pause()
 					this.addConsoleLine({id: 'l' + this.currentAction + '-' + this.currentLog, log})

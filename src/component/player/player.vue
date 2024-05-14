@@ -190,6 +190,7 @@
 								<v-list-item v-if="!LeekWars.mobile" :ripple="game.displayDebugs" :class="{disabled: !game.showActions}" @click="game.showActions ? (game.displayDebugs = !game.displayDebugs) : null">
 									<v-icon>mdi-math-log</v-icon>
 									<v-switch :input-value="game.displayDebugs" :disabled="!game.showActions" :label="$t('display_logs') + ' (D)'" hide-details />
+									<v-checkbox v-model="game.displayAILines" :disabled="!game.showActions || !game.displayDebugs" :class="{disabled: !game.showActions || !game.displayDebugs}" label="Lignes" hide-details class="ally-debug" @click.stop />
 									<v-checkbox v-model="game.displayAllyDebugs" :disabled="!game.showActions || !game.displayDebugs" :class="{disabled: !game.showActions || !game.displayDebugs}" label="Alliés" hide-details class="ally-debug" @click.stop />
 								</v-list-item>
 								<div class="section">GRAPHISMES</div>
@@ -313,6 +314,7 @@ import { T } from './game/texture'
 			this.game.dark = localStorage.getItem('fight/dark') === 'true'
 			this.game.plainBackground = localStorage.getItem('fight/plain-background') === 'true'
 			this.game.displayDebugs = localStorage.getItem('fight/debugs') === 'true'
+			this.game.displayAILines = localStorage.getItem('fight/debug-lines') === 'true'
 			this.game.displayAllyDebugs = localStorage.getItem('fight/ally-debugs') === 'true'
 			this.game.player = this
 
@@ -722,6 +724,9 @@ import { T } from './game/texture'
 		}
 		@Watch("game.displayDebugs") updateDebugs() {
 			localStorage.setItem('fight/debugs', '' + this.game.displayDebugs)
+		}
+		@Watch("game.displayAILines") updateDebugsLines() {
+			localStorage.setItem('fight/debug-lines', '' + this.game.displayAILines)
 		}
 		@Watch("game.displayAllyDebugs") updateAllyDebugs() {
 			localStorage.setItem('fight/ally-debugs', '' + this.game.displayAllyDebugs)

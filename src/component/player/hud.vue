@@ -50,7 +50,7 @@
 						<b slot="trophy">{{ $t('trophy.' + line.trophy.name) }}</b>
 					</i18n>
 				</div>
-				<action-log v-else :key="line.id" :log="line.log" :leeks="game.leeks" :action="0" :index="0" />
+				<action-log v-else-if="game.displayDebugs" :key="line.id" :log="line.log" :leeks="game.leeks" :action="0" :index="0" :lines="game.displayAILines" />
 			</template>
 		</div>
 		<div v-if="!creator && game.showActions && game.largeActions" class="resizer" :style="{left: actionsWidth + 'px'}" @mousedown="resizerMousedown"></div>
@@ -77,6 +77,8 @@
 	import { CHIPS } from '@/model/chips'
 	import ActionLog from '../report/report-log.vue'
 	import { ITEM_CATEGORY_NAME } from '@/model/item'
+import { fileSystem } from '@/model/filesystem'
+import router from '@/router'
 
 	@Component({ name: 'hud', components: { EntityDetails, leek: ActionLeekElement, TurretImage, 'action-log': ActionLog } })
 	export default class Hud extends Vue {
@@ -93,6 +95,7 @@
 		TEAM_COLORS = TEAM_COLORS
 		CHIPS = CHIPS
 		ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
+		fileSystem = fileSystem
 
 		get barWidth() {
 			return LeekWars.mobile ? 300 : 500
@@ -152,6 +155,10 @@
 			document.documentElement!.addEventListener('mousemove', mousemove, false)
 			document.documentElement!.addEventListener('mouseup', mouseup, false)
 			e.preventDefault()
+		}
+
+		goToAI(file: number, line: number, log: any) {
+			router.push('/editor/' + file + '?line=' + line)
 		}
 	}
 </script>

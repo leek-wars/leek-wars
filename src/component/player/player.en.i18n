@@ -5,7 +5,7 @@
 	"dark_mode": "Dark mode",
 	"decelerate": "Slow down",
 	"display_cell_numbers": "Show cell numbers",
-	"display_debug": "Show debug informations",
+	"display_debug": "Debug",
 	"display_life_bars": "Show health meters",
 	"display_logs": "Display debugs",
 	"display_effects": "Display effects",

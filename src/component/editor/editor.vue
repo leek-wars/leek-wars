@@ -600,6 +600,10 @@
 					LeekWars.setTitle(this.currentAI.name)
 					LeekWars.splitShowContent()
 					LeekWars.setActions(this.actions_content)
+
+					if ('line' in this.$route.query) {
+						this.jump(this.currentAI, parseInt(this.$route.query.line as string))
+					}
 				} else {
 					this.currentFolder = fileSystem.folderById[id]
 					this.currentType = 'folder'

@@ -199,7 +199,7 @@ body {
 		--background-header: #2f2f2f;
 		--border: #444;
 		--text-color: #f7f7f7;
-		--text-color-secondary: #aaa;
+		--text-color-secondary: #999;
 		--type-color: #0099d0;
 	}
 }
@@ -1038,6 +1038,13 @@ a.green-link {
 		font-family: monospace;
 		word-break: break-all;
 		white-space: pre-wrap;
+	}
+	.ai {
+		color: var(--text-color-secondary);
+		cursor: pointer;
+		&:hover {
+			color: var(--primary);
+		}
 	}
 	.pause {
 		color: #999;

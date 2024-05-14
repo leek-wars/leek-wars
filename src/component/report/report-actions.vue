@@ -22,6 +22,8 @@
 	import ActionLeekElement from './action-leek.vue'
 	import ActionLog from './report-log.vue'
 	import { ITEM_CATEGORY_NAME } from '@/model/item'
+import { fileSystem } from '@/model/filesystem'
+import router from '@/router'
 
 	@Component({ name: "actions", components: {
 		leek: ActionLeekElement,
@@ -45,6 +47,7 @@
 		EffectComponents = EffectComponents
 		currentLink: Element | null = null
 		ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
+		fileSystem = fileSystem
 
 		goToTurn(turn: number) {
 			const element = document.getElementById('turn-' + turn)!
@@ -88,6 +91,10 @@
 					target.appendChild(l)
 				}
 			}
+		}
+
+		goToAI(file: number, line: number) {
+			router.push('/editor/' + file + '?line=' + line)
 		}
 	}
 </script>

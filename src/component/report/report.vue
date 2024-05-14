@@ -462,7 +462,7 @@
 						Math.round(100 * v[1] / total) + '%'
 					])
 					result.sort((a, b) => b[1] as number - (a[1] as number))
-					console.log(result, total)
+					// console.log(result, total)
 				}
 
 				this.statistics = new FightStatistics()
