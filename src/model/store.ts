@@ -605,7 +605,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 					weapon.quantity += quantity
 					weapon.time = data.time
 				} else {
-					state.farmer.weapons.push({id: data.id, template: data.template, quantity: 1})
+					state.farmer.weapons.push({id: data.id, template: data.template, quantity })
 				}
 			} else if (data.type === ItemType.CHIP) {
 				const chip = LeekWars.selectWhere(state.farmer.chips, 'id', data.id)
@@ -613,7 +613,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 					chip.quantity += quantity
 					chip.time = data.time
 				} else {
-					state.farmer.chips.push({id: data.id, template: data.template, quantity: 1})
+					state.farmer.chips.push({id: data.id, template: data.template, quantity })
 				}
 			} else if (data.type === ItemType.HAT) {
 				const hat = LeekWars.selectWhere(state.farmer.hats, 'id', data.id)
@@ -629,7 +629,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 						name: hat_template.name,
 						level: hat_template.level,
 						hat_template: hat_template.id,
-						quantity: 1
+						quantity,
 					})
 				}
 			} else if (data.type === ItemType.POTION) {
@@ -638,7 +638,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 					potion.quantity += quantity
 					potion.time = data.time
 				} else {
-					state.farmer.potions.push({id: data.id, template: data.template, quantity: 1})
+					state.farmer.potions.push({id: data.id, template: data.template, quantity })
 				}
 			} else if (data.type === ItemType.POMP) {
 				const pomp = LeekWars.selectWhere(state.farmer.pomps, 'id', data.id)

@@ -121,8 +121,13 @@
 								</div>
 								<div v-if="selectedItem.buyable || selectedItem.buyable_crystals" class="buy">
 									<h4 class="buy-label">{{ $t('buy') }}</h4>
-									<v-btn v-if="selectedItem.buyable" :disabled="($store.state.farmer && $store.state.farmer.habs < selectedItem.price) || (selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0))" class="buy-button" @click="openBuyHabs">{{ selectedItem.price | number }}<img src="/image/hab.png"></v-btn>
-									<v-btn v-if="selectedItem.buyable_crystals" :disabled="($store.state.farmer && $store.state.farmer.crystals < selectedItem.crystals) || (selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0))" class="buy-crystals-button" @click="openBuyCrystals">{{ selectedItem.crystals | number }}<img src="/image/crystal.png"></v-btn>
+									<v-btn v-if="selectedItem.buyable" :disabled="($store.state.farmer && $store.state.farmer.habs < selectedItem.price) || (selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0))" class="buy-button" @click="openBuyHabs(1)">{{ selectedItem.price | number }}<img src="/image/hab.png"></v-btn>
+									<v-btn v-if="selectedItem.buyable_crystals" :disabled="($store.state.farmer && $store.state.farmer.crystals < selectedItem.crystals) || (selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0))" class="buy-crystals-button" @click="openBuyCrystals(1)">{{ selectedItem.crystals | number }}<img src="/image/crystal.png"></v-btn>
+								</div>
+								<div v-if="selectedItem.name === 'potion_restat'" class="buy">
+									<h4 class="buy-label">{{ $t('buy') }} x10</h4>
+									<v-btn v-if="selectedItem.buyable" :disabled="($store.state.farmer && $store.state.farmer.habs < selectedItem.price * 10)" class="buy-button" @click="openBuyHabs(10)">{{ selectedItem.price * 10 | number }}<img src="/image/hab.png"></v-btn>
+									<v-btn v-if="selectedItem.buyable_crystals" :disabled="($store.state.farmer && $store.state.farmer.crystals < selectedItem.crystals * 10)" class="buy-crystals-button" @click="openBuyCrystals(10)">{{ selectedItem.crystals * 10 | number }}<img src="/image/crystal.png"></v-btn>
 								</div>
 								<div v-if="selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0)" class="already-have">
 									{{ $t('already_have') }}
@@ -188,14 +193,14 @@
 			<span slot="title">{{ $t('confirm_purchase') }}</span>
 			<div v-if="selectedItem && $store.state.farmer">
 				<i18n tag="div" path="are_you_sure_you_want_to_buy">
-					<b slot="item">{{ translateName(selectedItem) }}</b>
+					<b slot="item">{{ buyQuantity }}x {{ translateName(selectedItem) }}</b>
 				</i18n>
 				<br>
-				<b>{{ $t('price') }}</b> : {{ selectedItem.price | number }} <span class="hab"></span>
+				<b>{{ $t('price') }}</b> : {{ selectedItem.price * buyQuantity | number }} <span class="hab"></span>
 				<br>
 				<b>{{ $t('habs_before_purchase') }}</b> : {{ $store.state.farmer.habs | number }} <span class="hab"></span>
 				<br>
-				<b>{{ $t('habs_after_purchase') }}</b> : {{ $store.state.farmer.habs - selectedItem.price | number }} <span class="hab"></span>
+				<b>{{ $t('habs_after_purchase') }}</b> : {{ $store.state.farmer.habs - selectedItem.price * buyQuantity | number }} <span class="hab"></span>
 			</div>
 			<div slot="actions">
 				<div v-ripple @click="buyDialog = false">{{ $t('cancel') }}</div>
@@ -211,11 +216,11 @@
 					<b slot="item">{{ translateName(selectedItem) }}</b>
 				</i18n>
 				<br>
-				<b>{{ $t('price') }}</b> : {{ selectedItem.crystals }} <span class="crystal"></span>
+				<b>{{ $t('price') }}</b> : {{ selectedItem.crystals * buyQuantity }} <span class="crystal"></span>
 				<br>
 				<b>{{ $t('crystals_before_purchase') }}</b> : {{ $store.state.farmer.crystals | number }} <span class="crystal"></span>
 				<br>
-				<b>{{ $t('crystals_after_purchase') }}</b> : {{ $store.state.farmer.crystals - selectedItem.crystals | number }} <span class="crystal"></span>
+				<b>{{ $t('crystals_after_purchase') }}</b> : {{ $store.state.farmer.crystals - selectedItem.crystals * buyQuantity | number }} <span class="crystal"></span>
 			</div>
 			<div slot="actions">
 				<div v-ripple @click="buyCrystalsDialog = false">{{ $t('cancel') }}</div>
@@ -299,6 +304,7 @@
 		ItemType = ItemType
 		buyDialog: boolean = false
 		buyCrystalsDialog: boolean = false
+		buyQuantity: number = 1
 		sellDialog: boolean = false
 		chipMode: string = localStorage.getItem('market/sort_mode') === 'type' ? 'type' : 'level'
 		EffectTypeMarket = EffectTypeMarket
@@ -436,37 +442,39 @@
 			const type = ['weapon', 'chip', 'potion', 'hat', 'pomp'][item.type - 1]
 			return this.$t(type + '.' + item.name.replace(type + '_', ''))
 		}
-		openBuyHabs() {
+		openBuyHabs(quantity: number) {
 			if (this.selectedItem && this.selectedItem.price! <= this.$store.state.farmer.habs) {
 				this.buyDialog = true
+				this.buyQuantity = quantity
 			}
 		}
-		openBuyCrystals() {
+		openBuyCrystals(quantity: number) {
 			if (this.selectedItem && this.selectedItem.crystals! <= this.$store.state.farmer.crystals) {
 				this.buyCrystalsDialog = true
+				this.buyQuantity = quantity
 			}
 		}
 		buy(currency: string) {
 			if (!this.selectedItem) { return }
 			const item = this.selectedItem
-			const method = currency === 'habs' ? 'market/buy-habs' : 'market/buy-crystals'
+			const method = currency === 'habs' ? 'market/buy-habs-quantity' : 'market/buy-crystals-quantity'
 			const id = item.type === ItemType.FIGHT_PACK ? (item.id - 1000000) + 'fights' : item.id
-			LeekWars.post(method, {item_id: id}).then(data => {
+			LeekWars.post(method, { item_id: id, quantity: this.buyQuantity }).then(data => {
 				this.buyDialog = false
 				this.buyCrystalsDialog = false
 
 				if (item.type !== ItemType.FIGHT_PACK) {
-					this.items[item.id].farmer_count!++
+					this.items[item.id].farmer_count! += this.buyQuantity
 				}
 				if (currency === 'habs') {
-					this.$store.commit('update-habs', -item.price!)
+					this.$store.commit('update-habs', -item.price! * this.buyQuantity)
 				} else {
-					this.$store.commit('update-crystals', -item.crystals!)
+					this.$store.commit('update-crystals', -item.crystals! * this.buyQuantity)
 				}
 				if (item.type === ItemType.FIGHT_PACK) {
 					this.$store.commit('update-fights', data.fights)
 				}
-				this.$store.commit('add-inventory', { type: item.type, id: data.item, template: id, quantity: 1, time: Date.now() / 1000 })
+				this.$store.commit('add-inventory', { type: item.type, id: data.item, template: id, quantity: this.buyQuantity, time: Date.now() / 1000 })
 				this.updateSubtitle()
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))

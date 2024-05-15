@@ -2,6 +2,7 @@
   added:
     - "Rapport : lien d'une erreur/warning vers sa position dans le rapport. #img_242_report_link"
     - Ajout de l'IA et numéro de ligne après tous les debug().
+    - "Marché : ajout d'un bouton acheter x10 pour la potion de réinitialisation. #img_242_buy_x10"
   improved:
     - Mise à jour de Java 17 à Java 21.
     - "Affichage du pourcentage d'xp du niveau actuel. #img_242_xp"
