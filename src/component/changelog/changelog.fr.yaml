@@ -1,6 +1,7 @@
 242:
   added:
     - "Rapport : lien d'une erreur/warning vers sa position dans le rapport. #img_242_report_link"
+    - Ajout de l'IA et numéro de ligne après tous les debug().
   improved:
     - Mise à jour de Java 17 à Java 21.
     - "Affichage du pourcentage d'xp du niveau actuel. #img_242_xp"

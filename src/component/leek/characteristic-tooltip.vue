@@ -7,7 +7,7 @@
 			<b>{{ $t('characteristic.' + characteristic) }}</b>
 			<br>
 			{{ $t('characteristic.' + characteristic + '_desc') }}
-			<template v-if="value > 0 && (characteristic != 'frequency' || value > 100)">
+			<template v-if="total > 0 && (characteristic != 'frequency' || total > 100)">
 				<br>
 				<div v-if="base"><b class="effect">{{ $t('characteristic.base') }} : <span class="amount">{{ base }}</span></b></div>
 				<div v-if="capitalSpent"><b class="effect">{{ $t('characteristic.invested') }} : <span class="amount">{{ invested }}</span></b></div>
@@ -16,34 +16,34 @@
 					<b class="capital">{{ $t('characteristic.invested_capital') }} : <span class="amount">{{ capitalSpent }}</span></b>
 				</div>
 				<template v-if="characteristic == 'strength'">
-					<b class="effect">{{ $t('characteristic.damage') }} : × <span class="damage">{{ (1 + value / 100).toFixed(2) }}</span></b>
+					<b class="effect">{{ $t('characteristic.damage') }} : × <span class="damage">{{ (1 + total / 100).toFixed(2) }}</span></b>
 				</template>
 				<template v-else-if="characteristic == 'agility'">
-					<b class="effect">{{ $t('characteristic.damage_return') }} : × <span class="damage-return">{{ (1 + value / 100).toFixed(2) }}</span></b>
+					<b class="effect">{{ $t('characteristic.damage_return') }} : × <span class="damage-return">{{ (1 + total / 100).toFixed(2) }}</span></b>
 					<br>
-					<b class="effect">{{ $t('characteristic.critical') }} : <span class="critical">{{ (value / 10).toFixed(2) }}%</span></b>
+					<b class="effect">{{ $t('characteristic.critical') }} : <span class="critical">{{ (total / 10).toFixed(2) }}%</span></b>
 				</template>
 				<template v-else-if="characteristic == 'science'">
-					<b class="effect">{{ $t('characteristic.boost') }} : × <span class="damage">{{ (1 + value / 100).toFixed(2) }}</span></b>
+					<b class="effect">{{ $t('characteristic.boost') }} : × <span class="damage">{{ (1 + total / 100).toFixed(2) }}</span></b>
 				</template>
 				<template v-else-if="characteristic == 'wisdom'">
-					<b class="effect">{{ $t('characteristic.heal') }} : × <span class="heal">{{ (1 + value / 100).toFixed(2) }}</span></b>
+					<b class="effect">{{ $t('characteristic.heal') }} : × <span class="heal">{{ (1 + total / 100).toFixed(2) }}</span></b>
 					<br>
-					<b class="effect">{{ $t('characteristic.life_steal') }} : <span class="life-steal">{{ Math.round(value / 10) }}%</span></b>
+					<b class="effect">{{ $t('characteristic.life_steal') }} : <span class="life-steal">{{ Math.round(total / 10) }}%</span></b>
 				</template>
 				<template v-else-if="characteristic == 'magic'">
-					<b class="effect">{{ $t('characteristic.shackle_poison') }} : × <span class="damage">{{ (1 + value / 100).toFixed(2) }}</span></b>
+					<b class="effect">{{ $t('characteristic.shackle_poison') }} : × <span class="damage">{{ (1 + total / 100).toFixed(2) }}</span></b>
 				</template>
 				<template v-else-if="characteristic == 'resistance'">
-					<b class="effect">{{ $t('characteristic.shield') }} : × <span class="damage">{{ (1 + value / 100).toFixed(2) }}</span></b>
+					<b class="effect">{{ $t('characteristic.shield') }} : × <span class="damage">{{ (1 + total / 100).toFixed(2) }}</span></b>
 				</template>
 				<template v-else-if="characteristic == 'cores'">
-					<b class="effect">{{ $t('characteristic.operations') }} : <span class="damage">{{ value }}M</span></b>
+					<b class="effect">{{ $t('characteristic.operations') }} : <span class="damage">{{ total }}M</span></b>
 				</template>
 				<template v-else-if="characteristic == 'ram'">
-					<b class="effect">{{ $t('characteristic.chips') }} : {{ value }}</b>
+					<b class="effect">{{ $t('characteristic.chips') }} : {{ total }}</b>
 					<br>
-					<b class="effect">{{ $t('characteristic.variables') }} : {{ value }}M ({{ value * 8 }}Mo)</b>
+					<b class="effect">{{ $t('characteristic.variables') }} : {{ total }}M ({{ total * 8 }}Mo)</b>
 				</template>
 			</template>
 		</div>
