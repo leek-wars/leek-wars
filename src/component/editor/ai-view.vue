@@ -246,6 +246,7 @@
 		public loaded: boolean = false
 		private completeTimeout: any
 		private completing: boolean = false
+		private completePromise: Promise<any> | null = null
 
 		created() {
 			this.id = this.ai.id
@@ -1311,6 +1312,8 @@
 			if (!this.completing) {
 				this.completing = true
 				analyzer.complete(this.ai, this.document.getValue(), cursor.line + 1, cursor.ch - 1).then(raw_data => {
+					// Dialog de complétion fermé entre temps
+					if (this.hintDialog === false) return
 
 					this.completing = false
 					// console.log("Completions", raw_data)
