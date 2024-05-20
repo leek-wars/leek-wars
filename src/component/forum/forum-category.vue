@@ -37,7 +37,15 @@
 			<div slot="content" class="content">
 				<breadcrumb v-if="LeekWars.mobile" :items="breadcrumb_items" />
 
-				<pagination v-if="categories" :current="page" :total="pages" :url="'/forum/category-' + category_ids" />
+				<div class="flex">
+					<v-spacer />
+					<pagination v-if="categories" :current="page" :total="pages" :url="'/forum/category-' + category_ids" />
+					<v-spacer />
+					<select v-model="order">
+						<option value="date">Date</option>
+						<option value="votes">Votes</option>
+					</select>
+				</div>
 
 				<div v-if="!LeekWars.mobile" class="topic header forum-header">
 					<div class="seen"></div>
@@ -74,6 +82,16 @@
 									<span v-else slot="farmer" class="farmer deleted">{{ $t('main.farmer') }}@{{ topic.author.id }}</span>
 									<span slot="date">{{ topic.date | date }}</span>
 								</i18n>
+								<div v-if="topic.votes_up !== 0 || topic.votes_down !== 0" class="votes">
+									<div :class="{zero: topic.votes_up === 0}" class="vote up">
+										<v-icon>mdi-thumb-up</v-icon>
+										<span class="counter">{{ topic.votes_up }}</span>
+									</div>
+									<div :class="{zero: !topic.votes_down}" class="vote down">
+										<v-icon>mdi-thumb-down</v-icon>
+										<span class="counter">{{ topic.votes_down }}</span>
+									</div>
+								</div>
 							</div>
 							<div v-if="LeekWars.mobile" class="description grey">
 								<span class="messages"><v-icon>mdi-message-outline</v-icon> {{ topic.messages }} • </span>
@@ -179,6 +197,7 @@
 		forumLanguages: {[key: string]: boolean} = {}
 		translations: any[] = []
 		showResolved: boolean = true
+		order: string = localStorage.getItem('forum/topic-order') || 'date'
 
 		get languages() {
 			return Object.values(LeekWars.languages).filter(l => l.forum)
@@ -198,6 +217,7 @@
 		}
 
 		@Watch("$route.params", {immediate: true})
+		@Watch('order')
 		update() {
 			const category = this.$route.params.category
 			this.page = 'page' in this.$route.params ? parseInt(this.$route.params.page, 10) : 1
@@ -207,7 +227,7 @@
 				{icon: 'mdi-magnify', click: () => this.$router.push('/search?category=' + category) }
 			])
 			if (this.topics) { this.topics = null }
-			LeekWars.get('forum/get-topics/' + category + '/' + this.page + '/' + this.showResolved).then(data => {
+			LeekWars.get('forum/get-topics/' + category + '/' + this.page + '/' + this.showResolved + '/' + this.order).then(data => {
 				this.categories = data.categories
 				if (this.categories) {
 					this.categories[0].name = this.categories[0].team > 0 ? this.categories[0].name : this.$t('forum-category.' + this.categories[0].name) as string
@@ -281,6 +301,11 @@
 			localStorage.setItem('forum/show-resolved', '' + this.showResolved)
 			this.$router.push('/forum/category-' + this.category_ids)
 			if (this.page === 1) { this.update() }
+		}
+
+		@Watch('order')
+		updateOrder() {
+			localStorage.setItem('forum/topic-order', '' + this.order)
 		}
 	}
 </script>
@@ -387,6 +412,43 @@
 	.topic .description {
 		font-size: 14px;
 		margin-top: 4px;
+		display: flex;
+		gap: 10px;
+		.votes {
+			display: flex;
+			gap: 6px;
+			align-items: center;
+			.vote {
+				display: inline-block;
+				border-radius: 6px;
+			}
+			.vote i {
+				vertical-align: bottom;
+				font-size: 15px;
+				margin-right: 3px;
+			}
+			.vote.zero {
+				opacity: 0.3;
+			}
+			.vote.active {
+				font-weight: bold;
+			}
+			.vote.up, .vote.up i {
+				color: #5fad1b;
+			}
+			.vote.down {
+				color: red;
+				i {
+					color: red;
+				}
+			}
+			.vote.up.zero, .vote.down.zero {
+				color: #555;
+				i {
+					color: #555;
+				}
+			}
+		}
 	}
 	.topic .description i {
 		font-size: 14px;
@@ -440,4 +502,9 @@
 	.grey {
 		color: #888;
 	}
+
+select {
+	align-self: center;
+}
+
 </style>
