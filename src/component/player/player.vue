@@ -387,8 +387,8 @@ import { T } from './game/texture'
 		}
 		setOrigin() {
 			setTimeout(() => {
-				const p = this.$el.getBoundingClientRect()
-				this.game.setOrigin(p.left, p.top + window.pageYOffset)
+				const p = this.canvas.getBoundingClientRect()
+				this.game.setOrigin(p.left, p.top + window.scrollY)
 			}, 50)
 		}
 		mousemove(e: MouseEvent) {
