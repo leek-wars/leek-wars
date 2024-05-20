@@ -129,7 +129,14 @@ class Chat {
 						// Sinon on supprime juste
 						messages.splice(m, 1)
 					}
-					break
+					return
+				}
+				// Pas trouvé en message principal, on recherche les sous-messages
+				for (let s = 0; s < message.subMessages.length; ++s) {
+					const subMessage = message.subMessages[s]
+					if (subMessage.id === messageID) {
+						message.subMessages.splice(s, 1)
+					}
 				}
 			}
 		}
