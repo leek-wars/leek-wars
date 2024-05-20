@@ -1160,7 +1160,7 @@ class Game {
 
 			const caster = this.leeks[this.currentPlayer!]
 			const chip_template = CHIPS[LeekWars.chipTemplates[chip].item]
-			const targets = this.ground.field.getTargets(cell, chip_template.area, caster.cell!) as FightEntity[]
+			const targets = this.ground.field.getTargets(cell, chip_template.area, caster.cell!, chip_template.max_range) as FightEntity[]
 
 			action.entity = caster
 			action.item = chip_template
@@ -1240,7 +1240,7 @@ class Game {
 			}
 
 			// console.log(leek.weapon, weapon_template)
-			const targets = this.ground.field.getTargets(cell, weapon_template.area, leek.cell!) as FightEntity[]
+			const targets = this.ground.field.getTargets(cell, weapon_template.area, leek.cell!, weapon_template.max_range) as FightEntity[]
 
 			const duration = leek.useWeapon(cell, targets, result)
 			this.actionDone(Math.max(6, duration))
