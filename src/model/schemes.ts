@@ -730,5 +730,31 @@ export const SCHEMES: {[key: string]: SchemeTemplate} = Object.freeze({
     ],
     comment: 'rgb',
     quantity: 1
+  },
+  '59': {
+    id: 59,
+    result: 236,
+    items: [
+      null,       [ 191, 10 ],
+      null,       null,
+      [ 237, 1 ], null,
+      null,       null,
+      null
+    ],
+    comment: 'sea_water',
+    quantity: 12
+  },
+  '60': {
+    id: 60,
+    result: 233,
+    items: [
+      [ 194, 4 ], null,
+      null,       null,
+      null,       null,
+      null,       [ 195, 4 ],
+      null
+    ],
+    comment: 'sand',
+    quantity: 1
   }
 })
