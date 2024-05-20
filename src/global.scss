@@ -690,9 +690,11 @@ img.emoji {
 	& > .panel {
 		margin-bottom: 0;
 		flex: 1 1 320px;
+		min-width: 0;
 	}
 	&.large > .panel {
 		flex: 1 1 400px;
+		min-width: 0;
 	}
 	.column3 { flex: 3; min-width: 0; }
 	.column4 { flex: 4; min-width: 0; }
