@@ -14,5 +14,10 @@
 	"sort_votes": "Stemmen",
 	"title": "Forum zoeken",
 	"too_few_params": "Niet genoeg parameters...",
-	"too_short": "Zoek te kort..."
+	"too_short": "Zoek te kort...",
+	"resolved": "Opgelost",
+	"resolved_all": "Alle",
+	"resolved_yes": "Ja",
+	"resolved_no": "Geen",
+	"locked": "Gesloten"
 }

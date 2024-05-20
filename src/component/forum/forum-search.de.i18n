@@ -14,5 +14,10 @@
 	"sort_votes": "Wählen",
 	"title": "Forensuche",
 	"too_few_params": "Nicht genug Parameter...",
-	"too_short": "Suche zu kurz..."
+	"too_short": "Suche zu kurz...",
+	"resolved": "Gelöst",
+	"resolved_all": "Alle",
+	"resolved_yes": "Ja",
+	"resolved_no": "Nicht",
+	"locked": "Gesperrt"
 }

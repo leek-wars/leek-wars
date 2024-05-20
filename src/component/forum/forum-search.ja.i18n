@@ -14,5 +14,10 @@
 	"sort_votes": "投票",
 	"title": "フォーラム検索",
 	"too_few_params": "十分なパラメータがありません...",
-	"too_short": "検索が短すぎます..."
+	"too_short": "検索が短すぎます...",
+	"resolved": "解決済み",
+	"resolved_all": "すべて",
+	"resolved_yes": "はい",
+	"resolved_no": "いいえ",
+	"locked": "ロック"
 }

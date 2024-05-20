@@ -14,5 +14,10 @@
 	"sort_votes": "Afstemning",
 	"title": "Forum søgning",
 	"too_few_params": "Ikke nok parametre...",
-	"too_short": "Søg for kort..."
+	"too_short": "Søg for kort...",
+	"resolved": "Løst",
+	"resolved_all": "Alle",
+	"resolved_yes": "Ja",
+	"resolved_no": "Nej",
+	"locked": "Låst"
 }

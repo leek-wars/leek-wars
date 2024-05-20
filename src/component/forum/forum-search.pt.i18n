@@ -14,5 +14,10 @@
 	"sort_votes": "Votação",
 	"title": "Pesquisa no fórum",
 	"too_few_params": "Parâmetros insuficientes...",
-	"too_short": "Pesquisa muito curta..."
+	"too_short": "Pesquisa muito curta...",
+	"resolved": "Resolvido",
+	"resolved_all": "Todos",
+	"resolved_yes": "Sim",
+	"resolved_no": "Não",
+	"locked": "Bloqueado"
 }

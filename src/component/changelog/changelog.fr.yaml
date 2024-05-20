@@ -7,6 +7,7 @@
     - Possibilité de trier les topics par nombre de votes dans le forum.
     - Ajout d'un schéma de craft pour le sable et l'eau de mer.
     - Historique : affichage des coffres, commentaires, trophées, ressources rares, up de niveau.
+    - Forum : possibilité de rechercher les topics résolus ou non.
   improved:
     - Mise à jour de Java 17 à Java 21.
     - "Affichage du pourcentage d'xp du niveau actuel. #img_242_xp"
@@ -15,6 +16,7 @@
     - "Ajout de la date complète des notifications. #img_242_notif"
     - Un brouillon par sujet forum au lieu d'un global.
     - Un clic sur une notification en bas à droite lit cette notification.
+    - Amélioration de la recherche dans le forum et l'aide (signe -, OR, double quotes).
   fixed:
     - "Correction du coût en opérations d'une boucle for avec clé : valeur."
     - "Correction d'un bug de compilation d'une même IA lors d'un combat parallèle."

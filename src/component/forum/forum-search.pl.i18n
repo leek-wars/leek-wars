@@ -14,5 +14,10 @@
 	"sort_votes": "Głosowanie",
 	"title": "Wyszukiwarka forum",
 	"too_few_params": "Za mało parametrów...",
-	"too_short": "Wyszukiwanie za krótkie..."
+	"too_short": "Wyszukiwanie za krótkie...",
+	"resolved": "Rozwiązany",
+	"resolved_all": "Wszystkie",
+	"resolved_yes": "Tak",
+	"resolved_no": "Nie",
+	"locked": "Zablokowany"
 }

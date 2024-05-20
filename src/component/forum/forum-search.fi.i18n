@@ -14,5 +14,10 @@
 	"sort_votes": "Äänestäminen",
 	"title": "Foorumin haku",
 	"too_few_params": "Ei tarpeeksi parametreja...",
-	"too_short": "Haku liian lyhyt..."
+	"too_short": "Haku liian lyhyt...",
+	"resolved": "Ratkaistu",
+	"resolved_all": "Kaikki",
+	"resolved_yes": "Kyllä",
+	"resolved_no": "Ei",
+	"locked": "Lukittu"
 }

@@ -14,5 +14,10 @@
 	"sort_votes": "Votes",
 	"title": "Search in forum",
 	"too_few_params": "Too few parameters...",
-	"too_short": "Search too short..."
+	"too_short": "Search too short...",
+	"resolved": "Resolved",
+	"resolved_all": "All",
+	"resolved_yes": "Yes",
+	"resolved_no": "No",
+	"locked": "Locked"
 }

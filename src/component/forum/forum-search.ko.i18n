@@ -14,5 +14,10 @@
 	"sort_votes": "투표",
 	"title": "포럼 검색",
 	"too_few_params": "매개변수가 부족합니다...",
-	"too_short": "너무 짧은 검색..."
+	"too_short": "너무 짧은 검색...",
+	"resolved": "해결됨",
+	"resolved_all": "모두",
+	"resolved_yes": "예",
+	"resolved_no": "아니요",
+	"locked": "잠김"
 }

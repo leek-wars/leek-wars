@@ -14,5 +14,10 @@
 	"sort_votes": "Pemungutan suara",
 	"title": "Pencarian forum",
 	"too_few_params": "Parameter tidak cukup...",
-	"too_short": "Pencarian terlalu singkat..."
+	"too_short": "Pencarian terlalu singkat...",
+	"resolved": "Terselesaikan",
+	"resolved_all": "Semua",
+	"resolved_yes": "Ya",
+	"resolved_no": "Tidak",
+	"locked": "Terkunci"
 }

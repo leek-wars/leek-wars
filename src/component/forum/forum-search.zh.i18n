@@ -14,5 +14,10 @@
 	"sort_votes": "表决",
 	"title": "论坛搜索",
 	"too_few_params": "参数不够...",
-	"too_short": "搜索太短..."
+	"too_short": "搜索太短...",
+	"resolved": "已解决",
+	"resolved_all": "全部",
+	"resolved_yes": "是",
+	"resolved_no": "没有",
+	"locked": "锁定"
 }

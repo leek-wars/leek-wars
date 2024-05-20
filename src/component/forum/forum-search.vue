@@ -5,6 +5,7 @@
 		</div>
 		<panel class="first">
 			<div class="search">
+
 				<div class="search-box">
 					<div class="label">{{ $t('query') }}</div>
 					<input v-model="options.query" class="query card" type="text" @keydown.enter="search">
@@ -13,8 +14,10 @@
 					<div class="label">{{ $t('author') }}</div>
 					<input v-model="options.farmer" class="query card" type="text" @keydown.enter="search">
 				</div>
-				<v-switch v-model="options.moderator" :label="$t('main.grade_moderator')" class="switch" hide-details @change="search" />
-				<v-switch v-model="options.admin" :label="$t('main.grade_admin')" class="switch" hide-details @change="search" />
+				<div>
+					<v-switch v-model="options.moderator" :label="$t('main.grade_moderator')" class="switch" hide-details @change="search" />
+					<v-switch v-model="options.admin" :label="$t('main.grade_admin')" class="switch" hide-details @change="search" />
+				</div>
 				<div>
 					<div class="label">{{ $t('category') }}</div>
 					<select v-model="options.category" class="search-category" @change="search">
@@ -30,12 +33,20 @@
 						<option value="votes">{{ $t('sort_votes') }}</option>
 					</select>
 				</div>
-
-				<div class="center">
-					<v-btn color="primary" class="search-button" @click="searchButton">
-						<img src="/image/search.png"><span>{{ $t('search') }}</span>
-					</v-btn>
+				<div>
+					<div class="label">{{ $t('resolved') }}</div>
+					<select v-model="options.resolved" @change="search">
+						<option value="all">{{ $t('resolved_all') }}</option>
+						<option value="yes">{{ $t('resolved_yes') }}</option>
+						<option value="no">{{ $t('resolved_no') }}</option>
+					</select>
 				</div>
+			</div>
+
+			<div class="center">
+				<v-btn color="primary" class="search-button" @click="searchButton">
+					<img src="/image/search.png"><span>{{ $t('search') }}</span>
+				</v-btn>
 			</div>
 
 			<div v-if="searchStarted">
@@ -48,8 +59,10 @@
 				<div v-else class="results-wrapper">
 					<div v-if="results.length" class="results">
 						<div v-for="(result, r) in results" :key="r" v-ripple class="result card">
-							<router-link :to="'/forum/category-' + result.cid + '/topic-' + result.tid">
-								<div class="title" v-html="result.title"></div>
+							<router-link :to="'/forum/category-' + result.cid + '/topic-' + result.tid" class="title">
+								<v-icon v-if="result.resolved" :title="$t('resolved')" class="attr resolved">mdi-check-circle</v-icon>
+								<v-icon v-if="result.closed" :title="$t('locked')" class="attr">mdi-lock</v-icon>
+								<span v-html="result.title"></span>
 							</router-link>
 							<i18n tag="div" class="info" path="post_by_x_the_x_in_x">
 								<router-link slot="farmer" :to="'/farmer/' + result.fid">
@@ -92,6 +105,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import Pagination from '@/component/pagination.vue'
+import { resolve } from 'path'
 
 	@Component({ name: 'search', i18n: {}, mixins: [...mixins], components: { Pagination } })
 	export default class Search extends Vue {
@@ -102,7 +116,8 @@
 			category: -1,
 			admin: false,
 			moderator: false,
-			order: 'pertinence'
+			order: 'pertinence',
+			resolved: 'all',
 		} as {[key: string]: any}
 		defaultOptions = {
 			query: '',
@@ -145,12 +160,13 @@
 			this.options.order = this.$route.query.order || 'pertinence'
 			this.options.admin = this.$route.query.admin || false
 			this.options.moderator = this.$route.query.moderator || false
+			this.options.resolved = this.$route.query.resolved || 'all'
 
 			this.searchStarted = false
 			this.results = null
-			if (this.canSearch) {
+			// if (this.canSearch) {
 				this.searchStarted = true
-				LeekWars.get('forum/search2/' + this.options.query.replace(/ /g, '+') + '/' + this.options.farmer + '/' + this.options.category + '/' + this.options.page + '/' + (this.options.order || 'pertinence') + '/' + (this.options.admin || false) + '/' + (this.options.moderator || false)).then(data => {
+				LeekWars.get('forum/search2/' + this.options.query.replace(/ /g, '+') + '/' + this.options.farmer + '/' + this.options.category + '/' + this.options.page + '/' + (this.options.order || 'pertinence') + '/' + (this.options.admin || false) + '/' + (this.options.moderator || false) + '/' + this.options.resolved).then(data => {
 					this.results = data.results
 					this.pages = data.pages
 					this.count = data.count
@@ -159,7 +175,7 @@
 					this.count = 0
 					LeekWars.toast(error.error)
 				})
-			}
+			// }
 		}
 		get urlPagination() {
 			const url = "/search"
@@ -173,22 +189,25 @@
 			this.$router.push(this.urlPagination)
 		}
 		searchButton() {
-			if (!this.canSearch) {
-				LeekWars.toast(this.$t('not_enough_parameters'))
-			} else {
+			// if (!this.canSearch) {
+			// 	LeekWars.toast(this.$t('not_enough_parameters'))
+			// } else {
 				this.search()
-			}
+			// }
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
 	.search {
-		max-width: 500px;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+		gap: 15px;
+		margin-bottom: 10px;
+		align-items: center;
 	}
 	#app.app .search {
 		padding: 0;
-		padding-top: 10px;
 	}
 	.label {
 		margin-right: 6px;
@@ -197,30 +216,26 @@
 	}
 	.search-button {
 		margin: 8px auto;
-		margin-bottom: 20px;
 		img {
 			vertical-align: bottom;
 			margin-right: 6px;
 		}
 	}
+	.switch {
+		margin-right: 15px;
+	}
 	.query {
 		height: 36px;
 		padding: 0 8px;
-		width: calc(100% - 16px);
-		margin-bottom: 10px;
+		width: 100%;
 	}
 	.query:focus {
 		border: 1px solid #5fad1b;
-	}
-	.switch {
-		margin-bottom: 15px;
-		margin-right: 15px;
 	}
 	select {
 		height: 36px;
 		width: 100%;
 		font-size: 16px;
-		margin-bottom: 10px;
 	}
 	h2 {
 		margin-top: 20px;
@@ -237,6 +252,12 @@
 		font-weight: 300;
 		font-size: 22px;
 		margin-bottom: 5px;
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		.v-icon.resolved {
+			color: #5fad1b;
+		}
 	}
 	.result .headline {
 		color: #777;
