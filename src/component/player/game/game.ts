@@ -391,6 +391,12 @@ class Game {
 	}
 
 	public init(fight: Fight) {
+
+		if (this.initialized) {
+			console.warn("Déjà initialisé !")
+			return
+		}
+
 		this.data = fight.data
 		this.trophies = fight.trophies
 		this.trophiesToSend = [...fight.trophies]
