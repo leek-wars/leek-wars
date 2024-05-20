@@ -24,7 +24,7 @@
 			<i18n v-if="chip.initial_cooldown > 0" tag="div" path="effect.initial_cooldown">
 				<span slot="turns" v-html="$tc('effect.n_turns', chip.initial_cooldown)"></span>
 			</i18n>
-			<effect-view v-for="(effect, e) in chip.effects" :key="chip.id + '_' + e" :effect="effect" />
+			<effect-view v-for="(effect, e) in chip.effects" :key="chip.id + '_' + e" :effect="effect" :leek="leek" />
 		</div>
 		<summon-view v-if="summon" :summon="summon" @input="$emit('input', $event)" />
 	</div>
@@ -38,6 +38,7 @@
 	import { Area } from '@/model/area'
 	import { ChipTemplate } from '@/model/chip'
 	import { EffectType } from '@/model/effect'
+	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 
@@ -52,6 +53,7 @@
 	})
 	export default class ChipPreview extends Vue {
 		@Prop() chip!: ChipTemplate
+		@Prop() leek!: Leek
 		Area = Area
 		get summon() {
 			for (const effect of this.chip.effects) {

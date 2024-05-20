@@ -4,7 +4,7 @@
 			<slot :on="on"></slot>
 		</template>
 		<div class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
-			<item-preview :item="item" :quantity="quantity" :inventory="inventory" @input="setParent" @retrieve="$emit('retrieve', $event)" />
+			<item-preview :item="item" :quantity="quantity" :inventory="inventory" :leek="leek" @input="setParent" @retrieve="$emit('retrieve', $event)" />
 		</div>
 	</v-menu>
 </template>
@@ -13,6 +13,7 @@
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import ItemPreview from '@/component/market/item-preview.vue'
 	import { LeekWars } from '@/model/leekwars'
+	import { Leek } from '@/model/leek'
 
 	@Component({ name: 'rich-tooltip-item', components: {
 		'item-preview': ItemPreview
@@ -25,6 +26,7 @@
 		@Prop() nodge!: boolean
 		@Prop() inventory!: boolean
 		@Prop() openDelay!: number
+		@Prop() leek!: Leek
 		locked: boolean = false
 		mouse: boolean = false
 		value: boolean = false

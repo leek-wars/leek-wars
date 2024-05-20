@@ -93,15 +93,19 @@
 
 <script lang="ts">
 	import { Effect, EffectModifier, EffectType, State } from '@/model/effect'
-import { i18n } from '@/model/i18n'
+	import { i18n } from '@/model/i18n'
+	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 
 	@Component({ name: 'effect-view' })
 	export default class EffectView extends Vue {
+
 		@Prop() effect!: Effect
 		@Prop() passive!: boolean
+		@Prop() leek!: Leek
+
 		EffectModifier = EffectModifier
 		EffectType = EffectType
 		raw_opened: boolean = false
@@ -138,10 +142,22 @@ import { i18n } from '@/model/i18n'
 		}
 
 		get my_leek() {
-			return store.state.farmer ? LeekWars.first(store.state.farmer!.leeks) : null
+			return this.leek ? this.leek : (store.state.farmer ? LeekWars.first(store.state.farmer!.leeks) : null)
 		}
 		get charac() {
-			return this.icon && this.my_leek ? this.my_leek[this.icon] : 0
+			if (this.icon) {
+				if (this.leek) {
+					return (this.leek as any)['total_' + this.icon]
+				}
+				if (store.state.farmer) {
+					let max = 0
+					for (const l in store.state.farmer!.leeks) {
+						max = Math.max(max, (store.state.farmer!.leeks[l] as any)['total_' + this.icon])
+					}
+					return max
+				}
+			}
+			return 0
 		}
 		get boost() {
 			if (this.icon === 'life') {

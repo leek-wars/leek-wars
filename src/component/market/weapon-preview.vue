@@ -19,9 +19,9 @@
 
 			<area-view v-if="weapon.area != Area.SINGLE_CELL" :area="weapon.area" />
 
-			<effect-view v-for="(effect, e) in weapon.effects" :key="e" :effect="effect" />
+			<effect-view v-for="(effect, e) in weapon.effects" :key="e" :effect="effect" :leek="leek" />
 
-			<effect-view v-for="(effect, e) in weapon.passive_effects" :key="'_' + e" :effect="effect" :passive="true" />
+			<effect-view v-for="(effect, e) in weapon.passive_effects" :key="'_' + e" :effect="effect" :passive="true" :leek="leek" />
 		</div>
 	</div>
 </template>
@@ -31,6 +31,7 @@
 	import EffectView from '@/component/market/effect.vue'
 	import RangeView from '@/component/market/range-view.vue'
 	import { Area } from '@/model/area'
+	import { Leek } from '@/model/leek'
 	import { WeaponTemplate } from '@/model/weapon'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	@Component({
@@ -38,6 +39,7 @@
 	})
 	export default class WeaponPreview extends Vue {
 		@Prop() weapon!: WeaponTemplate
+		@Prop() leek!: Leek
 		Area = Area
 	}
 </script>

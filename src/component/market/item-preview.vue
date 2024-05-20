@@ -20,8 +20,8 @@
 		<div v-if="$te(category + '.' + name_short + '_desc')" class="desc">
 			{{ $t(category + '.' + name_short + '_desc') }}
 		</div>
-		<weapon-preview v-if="item.type === ItemType.WEAPON" :weapon="LeekWars.weapons[item.params]" />
-		<chip-preview v-else-if="item.type === ItemType.CHIP" :chip="CHIPS[item.id]" @input="$emit('input', $event)" />
+		<weapon-preview v-if="item.type === ItemType.WEAPON" :weapon="LeekWars.weapons[item.params]" :leek="leek" />
+		<chip-preview v-else-if="item.type === ItemType.CHIP" :chip="CHIPS[item.id]" :leek="leek" @input="$emit('input', $event)" />
 		<potion-preview v-else-if="item.type === ItemType.POTION" :potion="LeekWars.potions[item.id]" />
 		<hat-preview v-else-if="item.type === ItemType.HAT" :hat="LeekWars.hats[item.params]" />
 		<pomp-preview v-else-if="item.type === ItemType.POMP" :pomp="LeekWars.pomps[item.id]" />
@@ -63,6 +63,7 @@ import { CHIPS } from '@/model/chips'
 import { WeaponsData } from '@/model/weapon'
 import SchemePreview from './scheme-preview.vue'
 import SchemeImage from './scheme-image.vue'
+import { Leek } from '@/model/leek'
 
 @Component({ name: 'item-preview', components: {
 	'weapon-preview': WeaponPreview,
@@ -80,6 +81,7 @@ export default class ItemPreview extends Vue {
 	@Prop() item!: ItemTemplate
 	@Prop() quantity!: number
 	@Prop() inventory!: boolean
+	@Prop() leek!: Leek
 
 	ItemType = ItemType
 	CHIPS = CHIPS
