@@ -54,8 +54,12 @@
 			</div>
 		</div>
 		<div class="time">{{ LeekWars.formatDuration(fight.date) }}</div>
-		<div class="chests">
-			<v-icon v-for="i in fight.chests" :key="i">mdi-treasure-chest</v-icon>
+		<div class="info">
+			<span v-if="fight.levelups"><v-icon >mdi-arrow-up-thick</v-icon>{{ fight.levelups }}</span>
+			<span v-if="fight.trophies"><v-icon >mdi-trophy</v-icon>{{ fight.trophies }}</span>
+			<span v-if="fight.comments"><v-icon >mdi-chat</v-icon>{{ fight.comments }}</span>
+			<span v-if="fight.chests"><v-icon >mdi-treasure-chest</v-icon>{{ fight.chests }}</span>
+			<span v-if="fight.rareloot"><v-icon >mdi-leaf</v-icon>{{ fight.rareloot }}</span>
 		</div>
 	</div>
 </template>
@@ -138,12 +142,20 @@
 			font-size: 11px;
 			text-align: right;
 		}
-		.chests {
+		.info {
 			position: absolute;
-			bottom: 2px;
+			bottom: 1px;
 			left: 5px;
+			font-size: 11px;
+			display: flex;
+			gap: 3px;
 			.v-icon {
-				font-size: 16px;
+				font-size: 14px;
+			}
+			span {
+				display: flex;
+				align-items: center;
+				gap: 2px;
 			}
 		}
 	}

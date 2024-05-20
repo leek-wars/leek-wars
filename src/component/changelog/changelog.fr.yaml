@@ -3,6 +3,10 @@
     - "Rapport : lien d'une erreur/warning vers sa position dans le rapport. #img_242_report_link"
     - Ajout de l'IA et numéro de ligne après tous les debug().
     - "Marché : ajout d'un bouton acheter x10 pour la potion de réinitialisation. #img_242_buy_x10"
+    - Affichage des votes dans la liste des topics forum.
+    - Possibilité de trier les topics par nombre de votes dans le forum.
+    - Ajout d'un schéma de craft pour le sable et l'eau de mer.
+    - Historique : affichage des coffres, commentaires, trophées, ressources rares, up de niveau.
   improved:
     - Mise à jour de Java 17 à Java 21.
     - "Affichage du pourcentage d'xp du niveau actuel. #img_242_xp"
@@ -23,6 +27,7 @@
     - Obstacles un peu plus foncés en nasu tactique (pour Ref).
     - "Correction de l'affichage des potions récupérées en combat. #img_242_potion"
     - Affichage des items ayant des modificateurs sur leurs effets passifs dans la doc des constantes.
+    - Editeur : correction de l'autocomplétion qui se lançait sur un mot vide.
     - Correction de l'affichage du grappin à plus de 8 de distance.
 
 241:

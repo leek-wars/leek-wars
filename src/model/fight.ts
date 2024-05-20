@@ -88,6 +88,8 @@ class Fight {
 	public boss_name?: string
 	public chests!: number
 	public size!: number
+	public levelups!: number
+	public rareloot!: number
 }
 
 class FightMap {
