@@ -460,9 +460,6 @@
 			const method = currency === 'habs' ? 'market/buy-habs-quantity' : 'market/buy-crystals-quantity'
 			const id = item.type === ItemType.FIGHT_PACK ? (item.id - 1000000) + 'fights' : item.id
 			LeekWars.post(method, { item_id: id, quantity: this.buyQuantity }).then(data => {
-				this.buyDialog = false
-				this.buyCrystalsDialog = false
-
 				if (item.type !== ItemType.FIGHT_PACK) {
 					this.items[item.id].farmer_count! += this.buyQuantity
 				}
@@ -478,18 +475,20 @@
 				this.updateSubtitle()
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
+			this.buyDialog = false
+			this.buyCrystalsDialog = false
 		}
 		sell() {
 			if (!this.selectedItem) { return }
 			const item = this.selectedItem
 			LeekWars.post('market/sell-habs', {item_id: item.id}).then(data => {
-				this.sellDialog = false
 				item.farmer_count!--
 				this.$store.commit('update-habs', item.sell_price)
 				this.$store.commit('remove-inventory', {type: item.type, item_template: item.id})
 				this.updateSubtitle()
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
+			this.sellDialog = false
 		}
 
 		updateChipMode() {
