@@ -117,11 +117,11 @@
 			this.noun = this.title[1] || 0
 			this.gender = this.title[2] || 1
 			this.adjective = this.title[3] || 0
-			LeekWars.get('trophy/get-trophy-words').then(words => {
-				this.allNouns = words.nouns
-				this.allAdjectives = words.adjectives
-				this.icons = [{id: 0, code: '', t: '', rarity: 0}].concat(this.nouns.concat(this.adjectives)
-					.sort((a: any, b: any) => a.id - b.id))
+			LeekWars.get<any[]>('trophy/get-trophy-words').then(words => {
+				this.allNouns = words.filter(w => w.title & 1)
+				this.allAdjectives = words.filter(w => w.title & 2)
+				this.icons = [{id: 0, code: '', t: '', rarity: 0}].concat(words)
+					.sort((a: any, b: any) => a.rarity - b.rarity)
 			})
 		}
 
