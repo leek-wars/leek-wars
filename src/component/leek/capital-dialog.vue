@@ -222,10 +222,10 @@
 				}
 				this.leek.capital = this.capital
 				this.$store.commit('update-capital', {leek: this.leek.id, capital: this.capital})
-				this.close()
 			}).error((error) => {
 				LeekWars.toast(error)
 			})
+			this.close()
 		}
 
 		@Watch('value')
