@@ -21,8 +21,8 @@
 					<th width="80">Genres possibles du nom</th>
 					<th width="80">Genres de l'adjectif</th>
 					<th width="80">Genres possibles de l'adjectif</th>
-					<th>Description fr</th>
-					<th>Description en</th>
+					<!-- <th>Description fr</th>
+					<th>Description en</th> -->
 					<th>Desc. publique</th>
 					<th>Nombre</th>
 					<th>%</th>
@@ -78,8 +78,8 @@
 							</span>
 						</span>
 					</td>
-					<td class="description" contenteditable @focusout="descriptionFocusout(trophy, 'fr', $event)"><div>{{ trophy.description_fr }}</div></td>
-					<td class="description" contenteditable @focusout="descriptionFocusout(trophy, 'en', $event)"><div>{{ trophy.description_en }}</div></td>
+					<!-- <td class="description" contenteditable @focusout="descriptionFocusout(trophy, 'fr', $event)"><div>{{ trophy.description_fr }}</div></td>
+					<td class="description" contenteditable @focusout="descriptionFocusout(trophy, 'en', $event)"><div>{{ trophy.description_en }}</div></td> -->
 					<td>
 						<input v-model="trophy.public_description" type="checkbox" @change="publicDescUpdate(trophy)">
 					</td>
