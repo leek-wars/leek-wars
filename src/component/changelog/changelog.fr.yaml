@@ -8,6 +8,8 @@
     - Ajout d'un schéma de craft pour le sable et l'eau de mer.
     - Historique : affichage des coffres, commentaires, trophées, ressources rares, up de niveau.
     - Forum : possibilité de rechercher les topics résolus ou non.
+    - Affichage des trophées rares gagnés par tout le monde dans le chat.
+    - Nouveaux effets sur téléportation, antidote, gant de boxe, grappin et affranchissement.
     - Option pour envoyer une notification quand un sujet est créé sur le forum.
     - "Possibilité de choisir le côté de son équipe lors du lancement d'un défi. #img_242_challenge_side"
   improved:
