@@ -172,6 +172,12 @@ class NotificationBuilder {
 			const fightID = params[1]
 			// const result = params.length > 1 ? parseInt(params[1]) : 0
 			return new Notification(data, "/fight/" + fightID, "mdi-crown", [farmer_name])
+		} else if (type === NotificationType.FORUM_TOPIC) {
+			const farmerName = params[0]
+			const topicId = params[1]
+			const catgoryId = params[2]
+			const topicTitle = params[3]
+			return new Notification(data, "/forum/category-" + catgoryId + "/topic-" + topicId, "mdi-forum", [farmerName, topicTitle])
 		} else {
 			return new Notification(data, null, null, ["? type " + type])
 		}

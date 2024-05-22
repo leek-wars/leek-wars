@@ -94,5 +94,7 @@
 	"message_32": "Voir le chat",
 	"title_34": "{0} vous a donné l'item {1}",
 	"title_35": "{0} a lancé un combat de boss",
-	"message_35": "Voir le combat"
+	"message_35": "Voir le combat",
+	"title_36": "{0} a créé un nouveau sujet : {1}",
+	"message_36": "Voir le sujet"
 }

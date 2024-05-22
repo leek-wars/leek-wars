@@ -36,6 +36,7 @@ enum NotificationType {
 	GAME_UPDATE = 33, // Nouvelle mise à jour
 	GIVE_ITEM = 34, // Don d'item
 	BOSS_STARTED = 35, // Démarrage d'un boss
+	FORUM_TOPIC = 36, // Création d'un nouveau topic
 }
 
 class Notification {
