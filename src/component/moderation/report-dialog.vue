@@ -91,7 +91,7 @@
 				LeekWars.toast(i18n.t('warning.you_must_choose_reason') as string)
 				return
 			}
-			const target = this.selectedTarget!.id
+			const target = this.selectedTarget?.id || 0
 			let parameter = this.parameter || ''
 			if (this.selectedReason === Warning.INCORRECT_LEEK_NAME) {
 				parameter = this.selectedLeek!.id
