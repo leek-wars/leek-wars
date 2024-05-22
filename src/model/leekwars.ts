@@ -1004,17 +1004,22 @@ function set_cursor_position(el: any, pos: number) {
 	}
 }
 
-function toChatLink(url: string, text: string, blank: string) {
+function toChatLink(url: string, text: string, blank: string, clazz: string = '') {
 	blank = blank ? blank : ""
-	return '<a ' + blank + ' href="' + url + '">' + text + '</a>'
+	return '<a ' + blank + ' class="' + clazz + '" href="' + url + '">' + text + '</a>'
 }
 
 function linkify(html: string) {
-	const make_blank = (url: string) => {
-		return (url.indexOf("http://www.leekwars.com") !== 0
-			&& url.indexOf("http://leekwars.com") !== 0
-			&& url.indexOf("https://leekwars.com") !== 0
-			&& url.indexOf("https://www.leekwars.com") !== 0) ? "target='_blank' rel='noopener'" : ""
+	const indexOf_leekwars = (url: string) => {
+		const i1 = url.indexOf("http://leekwars.com")
+		if (i1 !== -1) return {index: i1, length: 19}
+		const i2 = url.indexOf("http://www.leekwars.com")
+		if (i2 !== -1) return {index: i2, length: 23}
+		const i3 = url.indexOf("https://leekwars.com")
+		if (i3 !== -1) return {index: i3, length: 20}
+		const i4 = url.indexOf("https://www.leekwars.com")
+		if (i4 !== -1) return {index: i4, length: 24}
+		return {index: -1, length: 0}
 	}
 	const email_pattern = /\w+@[a-zA-Z_]+?(?:\.[a-zA-Z]{2,6})+/gim
 	const url_regex = /((?:https?):\/\/[\w-]+\.[\w-]+(?:\.\w+)*)|((?:www\.)?leekwars\.com)/gim
@@ -1041,11 +1046,18 @@ function linkify(html: string) {
 				last = html[--i - 1]
 			}
 		}
-		const url = html.substring(match.index, i).replace(/\$/g, '%24')
-		const real_url = (url.indexOf('http') === -1) ? 'http://' + url : url
-		const blank = make_blank(real_url)
+		let url = html.substring(match.index, i).replace(/\$/g, '%24')
+		let real_url = url.indexOf('http') === -1 ? 'http://' + url : url
+		const lw_index = indexOf_leekwars(real_url)
+		const blank = lw_index.index === 0 ? "" : "target='_blank' rel='noopener'"
+		if (lw_index.index === 0) {
+			real_url = decodeURIComponent(real_url).substring(lw_index.length)
+			if (real_url.length === 0) real_url = '/'
+			url = real_url
+		}
+		const clazz = lw_index.index === 0 ? 'lw' : ''
 
-		html = html.substring(0, match.index) + toChatLink(real_url, url, blank) + html.substring(i)
+		html = html.substring(0, match.index) + toChatLink(real_url, url, blank, clazz) + html.substring(i)
 		url_regex.lastIndex += real_url.length + blank.length + '<a href=""  ></a>'.length
 	}
 	return html.replace(email_pattern, '<a target="_blank" rel="noopener" href="mailto:$&">$&</a>')

@@ -142,6 +142,16 @@ Vue.directive('chat-code-latex', {
 				c.innerHTML = result
 			})
 		})
+		el.querySelectorAll('a').forEach(a => {
+			if (a.getAttribute('href')!.startsWith('/')) {
+				a.onclick = (e: Event) => {
+					e.stopPropagation()
+					e.preventDefault()
+					router.push(a.innerText)
+					return false
+				}
+			}
+		})
 	}
 })
 

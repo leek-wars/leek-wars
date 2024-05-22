@@ -42,6 +42,14 @@
 <style lang="scss" scoped>
 	.text ::v-deep a {
 		color: #5fad1b;
+		&.lw {
+			border: 1px solid var(--border);
+			border-radius: 4px;
+			padding: 0 4px;
+			&:hover {
+				border: 1px solid #5fad1b;
+			}
+		}
 	}
 	.text ::v-deep .v-icon {
 		color: #5fad1b;
