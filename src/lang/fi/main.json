@@ -263,5 +263,9 @@
 	"schemes": "Kaaviot",
 	"scheme_x": "Kaavio: {0}",
 	"edit": "Muokkaa",
-	"console": "LeekScript-konsoli"
+	"console": "LeekScript-konsoli",
+	"side": "Käy osoitteessa",
+	"side_desc": "Mistä aloittaa taistelu",
+	"side_left": "Vasemmalle",
+	"side_right": "Oikealle"
 }

@@ -263,5 +263,9 @@
 	"schemes": "Skema",
 	"scheme_x": "Diagram: {0}",
 	"edit": "Memodifikasi",
-	"console": "Konsol LeekScript"
+	"console": "Konsol LeekScript",
+	"side": "Kunjungi",
+	"side_desc": "Lokasi di mana Anda akan memulai pertarungan",
+	"side_left": "Ke kiri",
+	"side_right": "Ke kanan"
 }

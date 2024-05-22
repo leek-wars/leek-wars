@@ -263,5 +263,9 @@
 	"schemes": "回路図",
 	"scheme_x": "ダイアグラム：{0}",
 	"edit": "修正",
-	"console": "LeekScriptコンソール"
+	"console": "LeekScriptコンソール",
+	"side": "訪問",
+	"side_desc": "どこで試合を始めるか",
+	"side_left": "左",
+	"side_right": "右へ"
 }

@@ -263,5 +263,9 @@
 	"schemes": "회로도",
 	"scheme_x": "다이어그램: {0}",
 	"edit": "수정",
-	"console": "LeekScript 콘솔"
+	"console": "LeekScript 콘솔",
+	"side": "방문",
+	"side_desc": "싸움을 시작할 곳",
+	"side_left": "왼쪽으로",
+	"side_right": "오른쪽으로"
 }

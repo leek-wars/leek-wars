@@ -263,5 +263,9 @@
 	"schemes": "示意图",
 	"scheme_x": "图表：{0}",
 	"edit": "修改",
-	"console": "LeekScript 控制台"
+	"console": "LeekScript 控制台",
+	"side": "参观",
+	"side_desc": "开始战斗的地点",
+	"side_left": "向左",
+	"side_right": "向右"
 }

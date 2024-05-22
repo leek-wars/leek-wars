@@ -263,5 +263,9 @@
 	"schemes": "Schematics",
 	"scheme_x": "Diagram: {0}",
 	"edit": "Edit",
-	"console": "LeekScript console"
+	"console": "LeekScript console",
+	"side": "Visit",
+	"side_desc": "Where to start the fight",
+	"side_left": "To the left",
+	"side_right": "To the right"
 }

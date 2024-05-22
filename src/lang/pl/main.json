@@ -263,5 +263,9 @@
 	"schemes": "Schematy",
 	"scheme_x": "Diagram: {0}",
 	"edit": "Modyfikacja",
-	"console": "Konsola LeekScript"
+	"console": "Konsola LeekScript",
+	"side": "Odwiedź",
+	"side_desc": "Od czego zacząć walkę?",
+	"side_left": "Po lewej stronie",
+	"side_right": "W prawo"
 }

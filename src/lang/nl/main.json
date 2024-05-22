@@ -263,5 +263,9 @@
 	"schemes": "Schema's",
 	"scheme_x": "Diagram: {0}",
 	"edit": "Aanpassen",
-	"console": "LeekScript Console"
+	"console": "LeekScript Console",
+	"side": "Bezoek",
+	"side_desc": "Waar het gevecht beginnen",
+	"side_left": "Naar links",
+	"side_right": "Naar rechts"
 }

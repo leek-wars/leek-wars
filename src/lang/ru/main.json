@@ -263,5 +263,9 @@
 	"schemes": "Схемы",
 	"scheme_x": "Диаграмма: {0}",
 	"edit": "Изменить",
-	"console": "Консоль LeekScript"
+	"console": "Консоль LeekScript",
+	"side": "Посетите",
+	"side_desc": "Где начать бой",
+	"side_left": "Налево",
+	"side_right": "Направо"
 }

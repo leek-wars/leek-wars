@@ -263,5 +263,9 @@
 	"schemes": "Skemaer",
 	"scheme_x": "Diagram: {0}",
 	"edit": "Ændre",
-	"console": "LeekScript-konsol"
+	"console": "LeekScript-konsol",
+	"side": "Besøg",
+	"side_desc": "Sted, hvor du vil starte kampen",
+	"side_left": "Til venstre",
+	"side_right": "Til højre"
 }

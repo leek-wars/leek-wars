@@ -9,6 +9,7 @@
     - Historique : affichage des coffres, commentaires, trophées, ressources rares, up de niveau.
     - Forum : possibilité de rechercher les topics résolus ou non.
     - Option pour envoyer une notification quand un sujet est créé sur le forum.
+    - "Possibilité de choisir le côté de son équipe lors du lancement d'un défi. #img_242_challenge_side"
   improved:
     - Mise à jour de Java 17 à Java 21.
     - "Affichage du pourcentage d'xp du niveau actuel. #img_242_xp"

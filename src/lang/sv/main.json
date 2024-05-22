@@ -263,5 +263,9 @@
 	"schemes": "Schematiska ritningar",
 	"scheme_x": "Diagram: {0}",
 	"edit": "Ändra",
-	"console": "LeekScript-konsol"
+	"console": "LeekScript-konsol",
+	"side": "Besök",
+	"side_desc": "Var ska man börja striden?",
+	"side_left": "Till vänster",
+	"side_right": "Till höger"
 }

@@ -263,5 +263,9 @@
 	"schemes": "Schemata",
 	"scheme_x": "Schema: {0}",
 	"edit": "Bearbeiten",
-	"console": "LeekScript-Konsole"
+	"console": "LeekScript-Konsole",
+	"side": "Seite",
+	"side_desc": "Ort, an dem Sie den Kampf beginnen",
+	"side_left": "Links",
+	"side_right": "Rechts"
 }

@@ -162,6 +162,15 @@
 								<span class="desc">{{ $t('main.seed_desc') }}</span>
 							</div>
 							<input v-model="seed" type="text" class="seed" :placeholder="$t('main.seed_placeholder')" @input="updateSeed">
+							<br><br>
+							<div>
+								<span class="title"><v-icon>mdi-arrow-left-right</v-icon> {{ $t('main.side') }}</span>
+								<span class="desc">{{ $t('main.side_desc') }}</span>
+							</div>
+							<v-radio-group v-model="side">
+								<v-radio value="left" :label="$t('main.side_left')"></v-radio>
+								<v-radio value="right" :label="$t('main.side_right')"></v-radio>
+							</v-radio-group>
 						</div>
 					</div>
 					<div v-else>
@@ -399,6 +408,7 @@
 		queue: number = 0
 		advanced: boolean = false
 		seed: any | null = null
+		side: string = 'left'
 		request: any = null
 		selectedBoss: any | null = null
 		BOSSES = BOSSES
@@ -653,7 +663,7 @@
 		startFarmerChallenge() {
 			if (!this.challengeFarmerTarget) { return }
 			LeekWars.track('start-fight')
-			LeekWars.post('garden/start-farmer-challenge', {target_id: this.challengeFarmerTarget.id, seed: this.seed || 0}).then(data => {
+			LeekWars.post('garden/start-farmer-challenge', {target_id: this.challengeFarmerTarget.id, seed: this.seed || 0, side: this.side}).then(data => {
 				this.$router.push('/fight/' + data.fight)
 			}).error(error => LeekWars.toast(this.$t(error)))
 		}
@@ -661,14 +671,14 @@
 		startLeekChallenge() {
 			if (!this.challengeLeekTarget || !this.selectedLeek) { return }
 			LeekWars.track('start-fight')
-			LeekWars.post('garden/start-solo-challenge', {leek_id: this.selectedLeek.id, target_id: this.challengeLeekTarget.id, seed: this.seed || 0}).then(data => {
+			LeekWars.post('garden/start-solo-challenge', {leek_id: this.selectedLeek.id, target_id: this.challengeLeekTarget.id, seed: this.seed || 0, side: this.side}).then(data => {
 				this.$router.push('/fight/' + data.fight)
 			}).error(error => LeekWars.toast(this.$t(error)))
 		}
 
 		startTeamChallenge(composition: Composition) {
 			LeekWars.track('start-fight')
-			LeekWars.post('garden/start-team-challenge', { composition_id: this.selectedComposition.id, target_id: composition.id, seed: this.seed || 0}).then(data => {
+			LeekWars.post('garden/start-team-challenge', { composition_id: this.selectedComposition.id, target_id: composition.id, seed: this.seed || 0, side: this.side}).then(data => {
 				this.$router.push('/fight/' + data.fight)
 			}).error(error => LeekWars.toast(this.$t(error)))
 		}
