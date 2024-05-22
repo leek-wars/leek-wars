@@ -133,9 +133,9 @@
 					<v-icon>mdi-email-open</v-icon>
 					<span class="report-button">{{ $t('mark_as_read') }}</span>
 				</div>
-				<div class="tab" @click="updateShowResolved">
+				<div class="tab" @click="showResolved = !showResolved">
 					<span>{{ $t('show_resolved') }}</span>
-					<v-switch v-model="showResolved" hide-details />
+					<v-switch v-model="showResolved" hide-details @click.stop />
 				</div>
 			</div>
 		</div>
@@ -296,11 +296,11 @@
 		updateDraftTitle() {
 			localStorage.setItem('forum/draft-title', this.createTitle)
 		}
+
+		@Watch('showResolved')
 		updateShowResolved() {
-			this.showResolved = !this.showResolved
 			localStorage.setItem('forum/show-resolved', '' + this.showResolved)
-			this.$router.push('/forum/category-' + this.category_ids)
-			if (this.page === 1) { this.update() }
+			this.update()
 		}
 
 		@Watch('order')
