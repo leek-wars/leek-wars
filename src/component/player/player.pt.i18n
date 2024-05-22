@@ -32,5 +32,6 @@
 	"show_ids": "Mostrar IDs",
 	"sound_activated": "Som ativado",
 	"sound_disactivated": "Som mudo",
-	"tactic_mode": "Modo tático"
+	"tactic_mode": "Modo tático",
+	"error_secret_trophy": "Esta batalha contém um troféu secreto que ainda não desbloqueaste."
 }

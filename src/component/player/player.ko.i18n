@@ -32,5 +32,6 @@
 	"show_ids": "쇼 ID",
 	"sound_activated": "소리 활성화",
 	"sound_disactivated": "음소거된 소리",
-	"tactic_mode": "전술 모드"
+	"tactic_mode": "전술 모드",
+	"error_secret_trophy": "이 전투에는 아직 잠금 해제하지 않은 비밀 트로피가 있습니다."
 }

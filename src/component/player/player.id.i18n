@@ -32,5 +32,6 @@
 	"show_ids": "Tampilkan ID",
 	"sound_activated": "Suara diaktifkan",
 	"sound_disactivated": "Suara diam",
-	"tactic_mode": "Modus Taktis"
+	"tactic_mode": "Modus Taktis",
+	"error_secret_trophy": "Pertempuran ini berisi trofi rahasia yang belum Anda buka."
 }

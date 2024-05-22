@@ -39,6 +39,7 @@
 				<img src="/image/notgood.png">
 				<br>
 				<h4 v-if="error === 'fight_not_found'">{{ $t('error_not_found') }}</h4>
+				<h4 v-else-if="error === 'fight_with_secret_trophy'">{{ $t('error_secret_trophy') }}</h4>
 				<h4 v-else>{{ $t('error_generating_fight') }}<br><br><i>{{ $t('admin_noticed') }}</i></h4>
 			</div>
 			<div v-else class="loading-fight">

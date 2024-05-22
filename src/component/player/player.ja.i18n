@@ -32,5 +32,6 @@
 	"show_ids": "ID を表示",
 	"sound_activated": "サウンドが有効化されました",
 	"sound_disactivated": "消音",
-	"tactic_mode": "戦術モード"
+	"tactic_mode": "戦術モード",
+	"error_secret_trophy": "この戦いには、まだアンロックされていない秘密のトロフィーがある。"
 }

@@ -32,5 +32,6 @@
 	"show_ids": "Visa ID:n",
 	"sound_activated": "Ljud aktiverat",
 	"sound_disactivated": "Dämpat ljud",
-	"tactic_mode": "Taktiskt läge"
+	"tactic_mode": "Taktiskt läge",
+	"error_secret_trophy": "Den här striden innehåller en hemlig trofé som du inte har låst upp ännu."
 }

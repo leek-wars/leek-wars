@@ -32,5 +32,6 @@
 	"show_ids": "Näytä tunnukset",
 	"sound_activated": "Ääni aktivoitu",
 	"sound_disactivated": "Mykistetty ääni",
-	"tactic_mode": "Taktinen tila"
+	"tactic_mode": "Taktinen tila",
+	"error_secret_trophy": "Tämä taistelu sisältää salaisen palkinnon, jota et ole vielä avannut."
 }

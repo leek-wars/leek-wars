@@ -32,5 +32,6 @@
 	"show_ids": "Display IDs",
 	"sound_activated": "Sound is on",
 	"sound_disactivated": "Sound is off",
-	"tactic_mode": "Tactical mode"
+	"tactic_mode": "Tactical mode",
+	"error_secret_trophy": "This battle contains a secret trophy that you haven't yet unlocked."
 }

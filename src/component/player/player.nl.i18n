@@ -32,5 +32,6 @@
 	"show_ids": "ID's tonen",
 	"sound_activated": "Geluid geactiveerd",
 	"sound_disactivated": "Gedempt geluid",
-	"tactic_mode": "Tactische modus"
+	"tactic_mode": "Tactische modus",
+	"error_secret_trophy": "Dit gevecht bevat een geheime trofee die je nog niet hebt vrijgespeeld."
 }

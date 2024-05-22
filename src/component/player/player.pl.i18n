@@ -32,5 +32,6 @@
 	"show_ids": "Pokaż identyfikatory",
 	"sound_activated": "Aktywowany dźwiękiem",
 	"sound_disactivated": "Wyciszony dźwięk",
-	"tactic_mode": "Tryb taktyczny"
+	"tactic_mode": "Tryb taktyczny",
+	"error_secret_trophy": "Ta bitwa zawiera sekretne trofeum, którego jeszcze nie odblokowałeś."
 }

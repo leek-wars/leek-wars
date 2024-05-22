@@ -32,5 +32,6 @@
 	"show_ids": "显示 ID",
 	"sound_activated": "声音激活",
 	"sound_disactivated": "静音",
-	"tactic_mode": "战术模式"
+	"tactic_mode": "战术模式",
+	"error_secret_trophy": "这场战斗包含一个您尚未解锁的秘密奖杯。"
 }

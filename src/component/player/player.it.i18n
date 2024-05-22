@@ -32,5 +32,6 @@
 	"show_ids": "Mostra ID",
 	"sound_activated": "Suono attivato",
 	"sound_disactivated": "Suono silenziato",
-	"tactic_mode": "Modalità tattica"
+	"tactic_mode": "Modalità tattica",
+	"error_secret_trophy": "Questa battaglia contiene un trofeo segreto che non avete ancora sbloccato."
 }

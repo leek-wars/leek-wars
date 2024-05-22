@@ -17,6 +17,7 @@
     - Un brouillon par sujet forum au lieu d'un global.
     - Un clic sur une notification en bas à droite lit cette notification.
     - Amélioration de la recherche dans le forum et l'aide (signe -, OR, double quotes).
+    - Les combats comportant des trophées secrets non débloqués sont bloqués.
   fixed:
     - "Correction du coût en opérations d'une boucle for avec clé : valeur."
     - "Correction d'un bug de compilation d'une même IA lors d'un combat parallèle."

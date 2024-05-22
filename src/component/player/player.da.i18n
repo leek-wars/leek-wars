@@ -32,5 +32,6 @@
 	"show_ids": "Vis ID'er",
 	"sound_activated": "Lyd aktiveret",
 	"sound_disactivated": "Dæmpet lyd",
-	"tactic_mode": "Taktisk tilstand"
+	"tactic_mode": "Taktisk tilstand",
+	"error_secret_trophy": "Denne kamp indeholder et hemmeligt trofæ, som du ikke har låst op for endnu."
 }

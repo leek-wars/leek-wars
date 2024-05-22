@@ -32,5 +32,6 @@
 	"show_ids": "Ausweise anzeigen",
 	"sound_activated": "Ton aktiviert",
 	"sound_disactivated": "Gedämpfter Ton",
-	"tactic_mode": "Taktischer Modus"
+	"tactic_mode": "Taktischer Modus",
+	"error_secret_trophy": "Dieser Kampf enthält eine geheime Trophäe, die Sie noch nicht freigeschaltet haben."
 }
