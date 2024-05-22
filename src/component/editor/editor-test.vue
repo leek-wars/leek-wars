@@ -64,11 +64,11 @@
 					<br>
 					<div class="title">{{ $t('test_map') }}</div>
 					<div class="map-container">
-						<div v-if="(currentScenario.map && currentScenario.map !== -1)" v-ripple class="map card" @click="mapDialog = true">
+						<div v-if="(currentScenario.map && currentScenario.map !== -1)" v-ripple class="map-card card" @click="mapDialog = true">
 							<Map :obstacles="maps[currentScenario.map].data.obstacles" class="map-preview"></Map>
 							<div v-if="currentScenario.map in maps" class="name">{{ maps[currentScenario.map].name }}</div>
 						</div>
-						<div v-else v-ripple class="map card" @click="mapDialog = true">
+						<div v-else v-ripple class="map-card card" @click="mapDialog = true">
 							<img src="/image/map_icon_random.png">
 							<div class="name">{{ $t('main.random') }}</div>
 						</div>
@@ -258,16 +258,16 @@
 			</div>
 		</popup>
 
-		<popup v-model="mapDialog" :width="700">
+		<popup v-model="mapDialog" :width="870">
 			<v-icon slot="icon">mdi-map</v-icon>
 			<span slot="title">{{ $t('select_map') }}</span>
 			<div class="padding map-dialog">
-				<div v-ripple class="map card" @click="selectScenarioMap(null)">
+				<div v-ripple class="map-card card" @click="selectScenarioMap(null)">
 					<img src="/image/map_icon_random.png">
 					<div class="name">{{ $t('main.random') }}</div>
 				</div>
-				<div v-for="map of maps" :key="map.id" v-ripple class="map card" @click="selectScenarioMap(map)">
-					<img src="/image/map_icon.png">
+				<div v-for="map of maps" :key="map.id" v-ripple class="map-card card" @click="selectScenarioMap(map)">
+					<Map :obstacles="map.data.obstacles" class="map-preview" />
 					<div class="name">{{ map.name }}</div>
 				</div>
 			</div>
@@ -1508,19 +1508,25 @@
 	#app.app .tabs .column-scenario .map-container {
 		width: auto;
 	}
-	.column-scenario .map, .map-dialog .map {
+	.column-scenario .map-card, .map-dialog .map-card {
 		display: inline-block;
 		text-align: center;
 		font-size: 16px;
 		cursor: pointer;
 		margin: 5px;
 		padding: 5px 10px;
+		.name {
+			margin-top: 4px;
+		}
 	}
 	.column-scenario .map img, .map-dialog .map img {
 		width: 80px;
 	}
-	.map-preview {
+	.map-card img, .map-preview {
 		width: 250px;
+		height: 134px;
+		object-fit: contain;
+		vertical-align: bottom;
 	}
 	.item.leek .bot, .item.scenario .base {
 		background: #777;

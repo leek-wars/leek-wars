@@ -23,6 +23,7 @@
     - Amélioration de la recherche dans le forum et l'aide (signe -, OR, double quotes).
     - Les combats comportant des trophées secrets non débloqués sont bloqués.
     - "Les liens vers LW dans le chat sont entourés et plus rapides à charger. #img_242_internal_links"
+    - "Affichage de l'aperçu des cartes de test dans l'éditeur (merci à BLGO). #img_242_test_map"
   fixed:
     - "Correction du coût en opérations d'une boucle for avec clé : valeur."
     - "Correction d'un bug de compilation d'une même IA lors d'un combat parallèle."
