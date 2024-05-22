@@ -374,7 +374,7 @@
 							ranking[2].style = 'third'
 						}
 					}
-					if (this.$store.state.connected) {
+					if (this.$store.state.farmer) {
 						for (const row of ranking) {
 							if (this.category === 'leek' || this.category.includes('level-')) {
 								if (this.$store.state.farmer && row.id in this.$store.state.farmer.leeks) {
