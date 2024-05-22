@@ -23,5 +23,6 @@
 	"team_forum_description": "Ryhmäsi yksityinen foorumi",
 	"title": "Foorumi",
 	"topic_not_found": "Aihetta tunnuksella <b>{0}</b> ei löydy :(",
-	"topics": "Aiheet"
+	"topics": "Aiheet",
+	"new_topic_notification": "Ilmoita meille uusista aiheista"
 }

@@ -23,5 +23,6 @@
 	"team_forum_description": "チームの非公開フォーラム",
 	"title": "フォーラム",
 	"topic_not_found": "ID <b>{0}</b> の件名が見つかりません:(",
-	"topics": "トピック"
+	"topics": "トピック",
+	"new_topic_notification": "新しいテーマを通知する"
 }

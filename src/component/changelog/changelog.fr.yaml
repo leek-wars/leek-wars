@@ -8,6 +8,7 @@
     - Ajout d'un schéma de craft pour le sable et l'eau de mer.
     - Historique : affichage des coffres, commentaires, trophées, ressources rares, up de niveau.
     - Forum : possibilité de rechercher les topics résolus ou non.
+    - Option pour envoyer une notification quand un sujet est créé sur le forum.
   improved:
     - Mise à jour de Java 17 à Java 21.
     - "Affichage du pourcentage d'xp du niveau actuel. #img_242_xp"

@@ -71,7 +71,7 @@
 
 		<chat-panel toggle="forum/chat" chat="forum" :height="400" />
 
-		<panel icon="mdi-account-supervisor" class="last">
+		<panel icon="mdi-account-supervisor">
 			<span slot="title">
 				<span v-if="connected_farmers.length">{{ $t('connected_farmers', [$store.state.connected_farmers]) }}</span>
 			</span>
@@ -105,18 +105,25 @@
 			</div>
 		</panel>
 
+		<div class="page-footer page-bar">
+			<div class="tabs">
+				<div class="tab" @click="notifyNewTopics = !notifyNewTopics">
+					<span>{{ $t('new_topic_notification') }}</span>
+					<v-switch v-model="notifyNewTopics" hide-details @click.stop />
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
 <script lang="ts">
 	const ChatPanel = () => import(/* webpackChunkName: "chat" */ `@/component/chat/chat-panel.vue`)
-	import { ChatType } from '@/model/chat'
 	import { Farmer } from '@/model/farmer'
 	import { Language, LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import { mixins } from '@/model/i18n'
-import { store } from '@/model/store'
+	import { store } from '@/model/store'
 
 	@Component({ name: 'forum', i18n: {}, mixins: [...mixins], components: { ChatPanel, RichTooltipFarmer } })
 	export default class Forum extends Vue {
@@ -127,6 +134,7 @@ import { store } from '@/model/store'
 		forumLanguages: {[key: string]: boolean} = {}
 		expandFarmers: boolean = true
 		searchQuery: string = ''
+		notifyNewTopics: boolean = false
 
 		get languages() {
 			return Object.values(LeekWars.languages).filter(l => l.forum)
@@ -146,6 +154,7 @@ import { store } from '@/model/store'
 				this.connected_farmers = data.farmers
 				store.commit('connected-count', data.farmers.length)
 				this.connected_languages = data.languages
+				this.notifyNewTopics = data.notif_topics
 				LeekWars.setSubTitle(this.$t('connected_farmers_subtitle', [data.farmers.length]))
 			})
 			LeekWars.setTitle(this.$t('title'))
@@ -178,6 +187,11 @@ import { store } from '@/model/store'
 		}
 		get activeLanguages() {
 			return Object.entries(this.forumLanguages).filter(e => e[1]).map(e => e[0])
+		}
+
+		@Watch('notifyNewTopics')
+		updateNotifyNewTopics() {
+			LeekWars.post('settings/update-setting', { setting: 'notif_topics', value: this.notifyNewTopics })
 		}
 	}
 </script>

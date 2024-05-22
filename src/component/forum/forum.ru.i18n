@@ -23,5 +23,6 @@
 	"team_forum_description": "Частный форум вашей команды",
 	"title": "Форум",
 	"topic_not_found": "Тема с идентификатором <b>{0}</b> не найдена :(",
-	"topics": "Темы"
+	"topics": "Темы",
+	"new_topic_notification": "Сообщайте нам о новых предметах"
 }

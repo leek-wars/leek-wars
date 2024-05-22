@@ -23,5 +23,6 @@
 	"team_forum_description": "Das private Forum Ihres Teams",
 	"title": "Forum",
 	"topic_not_found": "Betreff mit ID <b>{0}</b> nicht gefunden :(",
-	"topics": "Themen"
+	"topics": "Themen",
+	"new_topic_notification": "Neue Themen benachrichtigen"
 }

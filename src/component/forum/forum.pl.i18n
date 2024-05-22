@@ -23,5 +23,6 @@
 	"team_forum_description": "Prywatne forum Twojego zespołu",
 	"title": "Forum",
 	"topic_not_found": "Nie znaleziono podmiotu o identyfikatorze <b>{0}</b> :(",
-	"topics": "Tematy"
+	"topics": "Tematy",
+	"new_topic_notification": "Powiadom nas o nowych tematach"
 }

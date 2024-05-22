@@ -23,5 +23,6 @@
 	"team_forum_description": "Dit teams private forum",
 	"title": "Forum",
 	"topic_not_found": "Emne med id <b>{0}</b> blev ikke fundet :(",
-	"topics": "Emner"
+	"topics": "Emner",
+	"new_topic_notification": "Giv os besked om nye emner"
 }
