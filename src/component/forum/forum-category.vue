@@ -241,7 +241,9 @@
 			})
 			const languages = (localStorage.getItem('forum/languages') as string || this.$i18n.locale).split(',')
 			for (const l in LeekWars.languages) {
-				Vue.set(this.forumLanguages, l, false)
+				if (LeekWars.languages[l].forum) {
+					Vue.set(this.forumLanguages, l, false)
+				}
 			}
 			for (const l of languages) {
 				Vue.set(this.forumLanguages, l, true)
