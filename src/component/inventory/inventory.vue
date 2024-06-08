@@ -7,7 +7,7 @@
 			</div>
 		</template>
 		<template slot="actions">
-			<span class="value" title="Valeur totale">{{ total_estimated | number }} <div class="hab"></div></span>
+			<span class="value" :title="$t('total_value')">{{ total_estimated | number }} <div class="hab"></div></span>			
 			<v-menu offset-y>
 				<template v-slot:activator="{ on }">
 					<div class="button flat" v-on="on">

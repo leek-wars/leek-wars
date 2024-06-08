@@ -12,5 +12,6 @@
 	"hats": "टोपी",
 	"pomps": "उपकरण",
 	"resources": "संसाधन",
-	"rarity": "कमी"
+	"rarity": "कमी",	
+	"total_value" : "कुल मूल्य"
 }

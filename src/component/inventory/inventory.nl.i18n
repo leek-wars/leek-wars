@@ -5,5 +5,6 @@
 	"name": "Naam",
 	"level": "Niveau",
 	"date": "Datum",
-	"rarity": "Schaarste"
+	"rarity": "Schaarste",	
+	"total_value" : "Totale waarde"
 }

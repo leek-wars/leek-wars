@@ -5,5 +5,6 @@
 	"name": "Navn",
 	"level": "Niveau",
 	"date": "Dato",
-	"rarity": "Mangel"
+	"rarity": "Mangel",
+	"total_value" : "Total værdi"
 }
