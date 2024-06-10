@@ -180,5 +180,6 @@
 	"error_139": "Umuligt at bruge in-operatoren på denne værdi \"{0}\"",
 	"intial_version": "Første version",
 	"strict_mode": "Streng tilstand (avanceret)",
-	"all_info_ls": "Alle oplysninger om {0}"
+	"all_info_ls": "Alle oplysninger om {0}",
+	"size": "Størrelse"
 }

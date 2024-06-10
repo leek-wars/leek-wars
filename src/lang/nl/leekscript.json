@@ -180,5 +180,6 @@
 	"error_139": "Onmogelijk om de in operator te gebruiken op deze waarde \"{0}\"",
 	"intial_version": "Eerste versie",
 	"strict_mode": "Strikte modus (geavanceerd)",
-	"all_info_ls": "Alle informatie over {0}"
+	"all_info_ls": "Alle informatie over {0}",
+	"size": "Maat"
 }
