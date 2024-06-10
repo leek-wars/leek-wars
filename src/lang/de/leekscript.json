@@ -180,5 +180,6 @@
 	"error_139": "Der in-Operator kann bei diesem Wert \"{0}\" nicht verwendet werden",
 	"intial_version": "Ursprüngliche Version",
 	"strict_mode": "Strenger Modus (fortgeschritten)",
-	"all_info_ls": "Alle Informationen über den {0}"
+	"all_info_ls": "Alle Informationen über den {0}",
+	"size": "Größe"
 }

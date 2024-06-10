@@ -94,7 +94,7 @@
 
 			<div v-if="detailDialogContent.details.alias && !detailDialogContent.details.op" class="alias">
 				<lw-code :code="detailDialogContent.details.alias" :single="true" />
-				<span v-if="detailDialogContent.details.size">Taille : {{ detailDialogContent.details.size }}</span>
+				<span v-if="detailDialogContent.details.size">{{ $t('leekscript.size') }} : {{ detailDialogContent.details.size }}</span>
 			</div>
 			<div v-if="detailDialogContent.details.defined && ais[detailDialogContent.details.defined[0]]" class="definition">
 				<v-icon>mdi-file-outline</v-icon>

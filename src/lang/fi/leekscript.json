@@ -180,5 +180,6 @@
 	"error_139": "In-operaattoria ei voi käyttää tähän arvoon \"{0}\"",
 	"intial_version": "Alkuperäinen versio",
 	"strict_mode": "Tiukka tila (edistynyt)",
-	"all_info_ls": "Kaikki tiedot {0}"
+	"all_info_ls": "Kaikki tiedot {0}",
+	"size": "Koko"
 }

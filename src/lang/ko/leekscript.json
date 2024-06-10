@@ -180,5 +180,6 @@
 	"error_139": "이 값 \"{0}\"에 in 연산자를 사용할 수 없습니다",
 	"intial_version": "초기 버전",
 	"strict_mode": "엄격 모드(고급)",
-	"all_info_ls": "{0}에 대한 모든 정보"
+	"all_info_ls": "{0}에 대한 모든 정보",
+	"size": "크기"
 }
