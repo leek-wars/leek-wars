@@ -64,6 +64,7 @@
 		added: {[key: string]: any} = {}
 		costs: {[key: string]: any} = {}
 		usedCapital: number = 0
+		validating: boolean = false
 
 		useful_level = {
 			life : 1,
@@ -208,6 +209,8 @@
 		}
 
 		validate() {
+			if (this.validating) return
+			this.validating = true
 			if (this.restat) {
 				for (const stat in this.bonuses) {
 					(this.leek as any)[stat] = this.base[stat] + this.bonuses[stat]
@@ -222,10 +225,10 @@
 				}
 				this.leek.capital = this.capital
 				this.$store.commit('update-capital', {leek: this.leek.id, capital: this.capital})
+				this.close()
 			}).error((error) => {
 				LeekWars.toast(error)
 			})
-			this.close()
 		}
 
 		@Watch('value')
@@ -239,6 +242,7 @@
 		}
 
 		close() {
+			this.validating = false
 			this.reset()
 			this.$emit('input', false)
 		}
