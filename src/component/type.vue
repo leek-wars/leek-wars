@@ -1,5 +1,5 @@
 <template>
-	<span v-if="type.name == 'function'" class="type">(<template v-for="(arg, a) of type.args">
+	<span v-if="type.name === 'function'" class="type">(<template v-for="(arg, a) of type.args">
 		<span v-if="a > 0" :key="a">, </span><lw-type :key="a + '_'" :type="arg" />
 	</template>)
 		→ <lw-type :type="type.return" />

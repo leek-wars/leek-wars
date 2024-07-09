@@ -180,5 +180,6 @@
 	"error_1002": "Cette puce {0} n'existe pas. Utilisez les constantes CHIP_* pour récupérer une puce valide.",
 	"error_1003": "Cette arme {0} n'existe pas. Utilisez les constantes WEAPON_* pour récupérer une arme valide.",
 	"error_1004": "Cette arme {1} (id {0}) n'est pas équipée. Vous devez d'abord l'équiper sur la page de votre poireau.",
-	"error_1005": "Le bulbe invoqué n'a pas d'IA"
+	"error_1005": "Le bulbe invoqué n'a pas d'IA",
+	"size": "Taille"
 }

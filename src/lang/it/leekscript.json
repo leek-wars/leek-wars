@@ -180,5 +180,6 @@
 	"error_139": "Impossibile utilizzare l'operatore in su questo valore \"{0}\"",
 	"intial_version": "Versione iniziale",
 	"strict_mode": "Modalità rigorosa (avanzata)",
-	"all_info_ls": "Tutte le informazioni su {0}"
+	"all_info_ls": "Tutte le informazioni su {0}",
+	"size": "Formato"
 }

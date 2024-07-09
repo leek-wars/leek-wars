@@ -180,5 +180,6 @@
 	"error_139": "Tidak mungkin menggunakan operator in pada nilai \"{0}\" ini",
 	"intial_version": "Versi awal",
 	"strict_mode": "Mode ketat (lanjutan)",
-	"all_info_ls": "Semua informasi tentang {0}"
+	"all_info_ls": "Semua informasi tentang {0}",
+	"size": "Ukuran"
 }

@@ -94,7 +94,7 @@
 
 			<div v-if="detailDialogContent.details.alias && !detailDialogContent.details.op" class="alias">
 				<lw-code :code="detailDialogContent.details.alias" :single="true" />
-				<span v-if="detailDialogContent.details.size">Taille : {{ detailDialogContent.details.size }}</span>
+				<span v-if="detailDialogContent.details.size">{{ $t('leekscript.size') }} : {{ detailDialogContent.details.size }}</span>
 			</div>
 			<div v-if="detailDialogContent.details.defined && ais[detailDialogContent.details.defined[0]]" class="definition">
 				<v-icon>mdi-file-outline</v-icon>
@@ -1312,10 +1312,13 @@
 			if (!this.completing) {
 				this.completing = true
 				analyzer.complete(this.ai, this.document.getValue(), cursor.line + 1, cursor.ch - 1).then(raw_data => {
-					// Dialog de complétion fermé entre temps
-					if (this.hintDialog === false) return
-
 					this.completing = false
+
+					// Dialog de complétion fermé entre temps
+					if (this.hintDialog === false) {
+						return
+					}
+
 					// console.log("Completions", raw_data)
 					if (raw_data) {
 						const raw_completions = raw_data.items as any[]
@@ -1458,10 +1461,12 @@
 			this.selectedHint = this.hints[index]
 			Vue.nextTick(() => {
 				const hints = this.$refs.hints as HTMLElement
-				const hintList = (this.$refs.hintDialog as HTMLElement).querySelectorAll('.hint') as any
-				const posIndex = Math.max(0, Math.round(index - (hints.offsetHeight / hintList[index].offsetHeight) / 2 + 1))
-				if (hintList[posIndex]) {
-					hints.scrollTo(0, -2 + hintList[posIndex].offsetTop)
+				if (hints) {
+					const hintList = (this.$refs.hintDialog as HTMLElement).querySelectorAll('.hint') as any
+					const posIndex = Math.max(0, Math.round(index - (hints.offsetHeight / hintList[index].offsetHeight) / 2 + 1))
+					if (hintList[posIndex]) {
+						hints.scrollTo(0, -2 + hintList[posIndex].offsetTop)
+					}
 				}
 			})
 		}
@@ -1470,6 +1475,7 @@
 			// console.log("pick")
 
 			const completion = this.completions[this.selectedCompletion]
+			if (!completion) return
 			const cursor = this.document.getCursor()
 
 			const range = this.document.getRange(cursor, {line: cursor.line, ch: cursor.ch + 1})

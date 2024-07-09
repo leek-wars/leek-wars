@@ -1004,7 +1004,6 @@
 				font-size: 14px;
 				font-weight: normal;
 				margin-top: 6px;
-				color: #222;
 			}
 		}
 	}
