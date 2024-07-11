@@ -94,10 +94,12 @@ class S {
 	public static lightninger_impact = new Sound(LeekWars.STATIC + "sound/lightninger_impact.mp3", VOL_OFFENSIVE_SOUND)
 	public static leek_explosion = new Sound(LeekWars.STATIC + "sound/leek_explosion.mp3", 0.8)
 	public static leek_slice = new Sound(LeekWars.STATIC + "sound/leek_slice.mp3", 0.7)
-	public static crash = new Sound(LeekWars.STATIC + "sound/crash.mp3", 0.6)
+	public static crash = new Sound(LeekWars.STATIC + "sound/crash.mp3", 0.7)
 	public static chip = new Sound(LeekWars.STATIC + "sound/chip.mp3", 0.8)
 	public static bury = new Sound(LeekWars.STATIC + "sound/bury.mp3", 1)
 	public static burn = new Sound(LeekWars.STATIC + "sound/burn.mp3", 1)
+	public static grapple = new Sound(LeekWars.STATIC + "sound/grapple.mp3", 0.8)
+	public static boxing = new Sound(LeekWars.STATIC + "sound/boxing.mp3", 1)
 	// chips
 	public static heal = new Sound(LeekWars.STATIC + "sound/heal.mp3", VOL_DEFFENSIVE_SOUND)
 	public static buff = new Sound(LeekWars.STATIC + "sound/buff.mp3", 0.15)
