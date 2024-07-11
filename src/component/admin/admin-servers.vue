@@ -168,13 +168,13 @@
 
 		colorFromID(id: string) {
 			if (this.colors[id]) return this.colors[id]
-			
+
 			let h = 0
 			for (var i = 0; i < id.length; i++) {
 				h = id.charCodeAt(i) + ((h << 5) - h)
 			}
 			if (h < 0) h = -h
-			
+
 			return this.colors[id] = `hsl(${h % 360}deg, 80%, ${LeekWars.darkMode ? 10 : 90}%)`
 		}
 

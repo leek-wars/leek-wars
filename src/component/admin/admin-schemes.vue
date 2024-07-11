@@ -327,7 +327,7 @@
 		position: absolute;
 		bottom: 0;
 		left: 0;
-		background: #fff7;
+		background: #7775;
 		padding: 2px;
 		font-size: 13px;
 		z-index: 5;
@@ -336,7 +336,7 @@
 		position: absolute;
 		bottom: 0;
 		right: 0;
-		background: #fff7;
+		background: #7775;
 		padding: 2px;
 		font-size: 13px;
 		z-index: 5;

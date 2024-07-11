@@ -116,10 +116,10 @@ export default class AdminComponents extends Vue {
 			flex: 1;
 			min-width: 0;
 			&.positive {
-				background: rgb(213, 255, 213);
+				background: rgba(0, 255, 0, 0.2);
 			}
 			&.negative {
-				background: rgb(255, 210, 210);
+				background: rgba(255, 0, 0, 0.2);
 			}
 		}
 	}

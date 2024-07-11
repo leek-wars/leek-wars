@@ -74,13 +74,13 @@
 		width: 100%;
 	}
 	table .header {
-		background: #e5e5e5;
+		background: var(--background-header);
 		height: 38px;
 		text-align: center;
 	}
 	table td {
-		border-bottom: 1px solid #ddd;
-		border-right: 1px solid #ddd;
+		border-bottom: 1px solid var(--border);
+		border-right: 1px solid var(--border);
 		text-align: center;
 		padding: 0px 8px;
 		background: var(--pure-white);
@@ -88,10 +88,10 @@
 	table th {
 		padding: 0 5px;
 		font-weight: normal;
-		color: #222;
+		// color: #222;
 		font-size: 18px;
-		border-bottom: 1px solid #fff;
-		border-right: 1px solid #fff;
+		border-bottom: 1px solid var(--border);
+		border-right: 1px solid var(--border);
 	}
 	input {
 		width: 400px;

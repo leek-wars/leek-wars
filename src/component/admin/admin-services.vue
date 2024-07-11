@@ -54,7 +54,7 @@
 		color: #5fad1b;
 	}
 	.service .function, .service .returns {
-		color: black;
+		color: var(--pure-black);
 	}
 	.service .parameter {
 		color: #777;
@@ -69,6 +69,7 @@
 		padding: 2px 5px;
 		font-size: 12px;
 		font-weight: bold;
+		margin-right: 4px;
 	}
 	.service .not-implemented {
 		background: red;
