@@ -70,7 +70,7 @@
 						<span>{{ farmer.name }}</span>
 					</router-link>
 					<div class="duration">
-						{{ LeekWars.formatLongDuration(farmer.duration) }}
+						{{ LeekWars.formatLongDuration(farmer.time - trophy.created_time) }}
 					</div>
 					<router-link v-if="farmer.fight" :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight" v-ripple>
 						<v-icon>mdi-sword-cross</v-icon> {{ farmer.time | date }}
@@ -85,7 +85,7 @@
 						<span>{{ farmer.name }}</span>
 					</router-link>
 					<div class="duration">
-						{{ LeekWars.formatLongDuration(farmer.duration) }}
+						{{ LeekWars.formatLongDuration(farmer.time - trophy.created_time) }}
 					</div>
 					<router-link v-if="farmer.fight" :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight" v-ripple>
 						<v-icon>mdi-sword-cross</v-icon> {{ farmer.time | date }}
