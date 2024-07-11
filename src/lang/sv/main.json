@@ -267,5 +267,11 @@
 	"side": "Besök",
 	"side_desc": "Var ska man börja striden?",
 	"side_left": "Till vänster",
-	"side_right": "Till höger"
+	"side_right": "Till höger",
+	"n_year": "1 år | {n} år",
+	"n_month": "1 månad | {n} månader",
+	"n_day": "1 j | {n} j",
+	"n_hour": "1 h | {n} h",
+	"n_minute": "1 min | {n} min",
+	"n_second": "1 s | {n} s"
 }

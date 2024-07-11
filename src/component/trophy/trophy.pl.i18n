@@ -26,5 +26,9 @@
 	"progress": "Postęp",
 	"n_pocessors": "{n} posiadaczy",
 	"first_farmers": "Wcześni hodowcy",
-	"last_farmers": "Najnowsi hodowcy"
+	"last_farmers": "Najnowsi hodowcy",
+	"fastest_farmers": "Najszybsi hodowcy",
+	"slowest_farmers": "Najwolniejsi hodowcy",
+	"title_farmers": "Hodowcy z tą nazwą w tytule",
+	"created_the": "Dodano w dniu {0}"
 }

@@ -26,5 +26,9 @@
 	"progress": "Framsteg",
 	"n_pocessors": "{n} innehavare",
 	"first_farmers": "Tidiga uppfödare",
-	"last_farmers": "Senaste uppfödare"
+	"last_farmers": "Senaste uppfödare",
+	"fastest_farmers": "Snabbaste uppfödarna",
+	"slowest_farmers": "Långsammaste uppfödarna",
+	"title_farmers": "Uppfödare med det i sin titel",
+	"created_the": "Tillagd den {0}"
 }

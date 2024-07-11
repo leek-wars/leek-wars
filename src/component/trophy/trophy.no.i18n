@@ -26,5 +26,9 @@
 	"progress": "Framgang",
 	"n_pocessors": "{n} eiere",
 	"first_farmers": "Tidlige oppdrettere",
-	"last_farmers": "Siste oppdrettere"
+	"last_farmers": "Siste oppdrettere",
+	"fastest_farmers": "Raskeste oppdrettere",
+	"slowest_farmers": "De tregeste oppdretterne",
+	"title_farmers": "Oppdrettere med det i tittelen",
+	"created_the": "Lagt til den {0}"
 }

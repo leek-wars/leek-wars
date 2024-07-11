@@ -26,5 +26,9 @@
 	"progress": "Edistystä",
 	"n_pocessors": "{n} haltijaa",
 	"first_farmers": "Varhaiset kasvattajat",
-	"last_farmers": "Uusimmat kasvattajat"
+	"last_farmers": "Uusimmat kasvattajat",
+	"fastest_farmers": "Nopeimmat kasvattajat",
+	"slowest_farmers": "Hitaimmat kasvattajat",
+	"title_farmers": "Kasvattajat, joiden nimessä on se",
+	"created_the": "Lisätty {0}"
 }

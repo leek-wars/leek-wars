@@ -267,5 +267,11 @@
 	"side": "방문",
 	"side_desc": "싸움을 시작할 곳",
 	"side_left": "왼쪽으로",
-	"side_right": "오른쪽으로"
+	"side_right": "오른쪽으로",
+	"n_year": "1년 | {n}년",
+	"n_month": "1개월 | {n}개월",
+	"n_day": "1 j | {n} j",
+	"n_hour": "1 시간 | {n} 시간",
+	"n_minute": "1분 | {n} 분",
+	"n_second": "1초 | {n}초"
 }

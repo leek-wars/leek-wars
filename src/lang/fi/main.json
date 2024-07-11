@@ -267,5 +267,11 @@
 	"side": "Käy osoitteessa",
 	"side_desc": "Mistä aloittaa taistelu",
 	"side_left": "Vasemmalle",
-	"side_right": "Oikealle"
+	"side_right": "Oikealle",
+	"n_year": "1 vuosi | {n} vuotta",
+	"n_month": "1 kuukausi | {n} kuukautta",
+	"n_day": "1 j | {n} j",
+	"n_hour": "1 h | {n} h",
+	"n_minute": "1 min | {n} min",
+	"n_second": "1 s | {n} s"
 }

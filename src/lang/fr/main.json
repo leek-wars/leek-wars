@@ -268,5 +268,11 @@
 	"dida_10": "Ce tutoriel est terminé ! Consultez l'{help} ❔ pour tout apprendre sur le jeu. Le {tutorial} vous apprendra à coder en 10 chapitres si vous êtes débutant.",
 	"dida_11": "N'hésitez pas à demander de l'aide sur le {chat} ou le {forum}, nous serons ravis de vous aider.",
 	"dida_12": "Bonne chance <b>{0}</b> !",
-	"10years": "10 ans de Leek Wars !"
+	"10years": "10 ans de Leek Wars !",
+	"n_year": "1 an | {n} ans",
+	"n_month": "1 mois | {n} mois",
+	"n_day": "1 j | {n} j",
+	"n_hour": "1 h | {n} h",
+	"n_minute": "1 min | {n} min",
+	"n_second": "1 s | {n} s"
 }

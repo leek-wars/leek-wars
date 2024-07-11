@@ -26,5 +26,9 @@
 	"progress": "Fortschritt",
 	"n_pocessors": "{n} Besitzer",
 	"first_farmers": "Frühe Züchter",
-	"last_farmers": "Neueste Züchter"
+	"last_farmers": "Neueste Züchter",
+	"fastest_farmers": "Schnellste Züchter",
+	"slowest_farmers": "Langsamste Züchter",
+	"title_farmers": "Züchter, die es in ihrem Titel haben",
+	"created_the": "Hinzugefügt am {0}"
 }

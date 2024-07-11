@@ -26,5 +26,9 @@
 	"group_by_categories": "Categories",
 	"sort_index": "default",
 	"sort_points": "points",
-	"sort_rarity": "rarity"
+	"sort_rarity": "rarity",
+	"fastest_farmers": "Fastest farmers",
+	"slowest_farmers": "Slowest farmers",
+	"title_farmers": "Farmers with it in their title",
+	"created_the": "Added on {0}"
 }

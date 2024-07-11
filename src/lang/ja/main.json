@@ -267,5 +267,11 @@
 	"side": "訪問",
 	"side_desc": "どこで試合を始めるか",
 	"side_left": "左",
-	"side_right": "右へ"
+	"side_right": "右へ",
+	"n_year": "1年｜{n}年",
+	"n_month": "1ヶ月｜{n}ヶ月",
+	"n_day": "1 j｜{n} j",
+	"n_hour": "1 h｜{n} h",
+	"n_minute": "1分｜{n}分",
+	"n_second": "1 s｜{n} s"
 }

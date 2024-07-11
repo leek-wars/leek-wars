@@ -26,5 +26,9 @@
 	"progress": "Kemajuan",
 	"n_pocessors": "{n} pemilik",
 	"first_farmers": "Peternak Awal",
-	"last_farmers": "Peternak Terbaru"
+	"last_farmers": "Peternak Terbaru",
+	"fastest_farmers": "Peternak tercepat",
+	"slowest_farmers": "Peternak paling lambat",
+	"title_farmers": "Peternak dengan gelar tersebut di gelar mereka",
+	"created_the": "Ditambahkan pada {0}"
 }

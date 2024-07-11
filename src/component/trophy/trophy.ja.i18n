@@ -26,5 +26,9 @@
 	"progress": "進捗",
 	"n_pocessors": "{n}人の所有者",
 	"first_farmers": "初期のブリーダー",
-	"last_farmers": "最新のブリーダー"
+	"last_farmers": "最新のブリーダー",
+	"fastest_farmers": "最速ブリーダー",
+	"slowest_farmers": "最も遅いブリーダー",
+	"title_farmers": "タイトルにこの言葉を含むブリーダー",
+	"created_the": "0}に追加"
 }

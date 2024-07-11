@@ -51,32 +51,87 @@
 						<template slot="date">{{ trophy.date | datetime }}</template>
 					</i18n>
 					<div v-else class="rarity">{{ $t('not_unlocked') }}</div>
-					<router-link v-if="trophy.fight" class="rarity" :to="'/fight/' + trophy.fight">{{ $t('see_fight') }}</router-link>
+					<router-link v-if="trophy.fight" class="rarity" :to="'/fight/' + trophy.fight + (trophy.action ? '?action=' + (trophy.action - 15) : '')">{{ $t('see_fight') }}</router-link>
 				</div>
 				<div>
 					<h4><v-icon>mdi-chart-line</v-icon> {{ $t('stats') }}</h4>
+					<div class="rarity">{{ $t('created_the', [ LeekWars.formatDate(trophy.created_time) ]) }}</div>
 					<div class="rarity">{{ (trophy.rarity * 100).toPrecision(2) }}% • <i18n tag="span" path="n_pocessors">
 						<template slot="n">{{ trophy.total | number }}</template>
 					</i18n></div>
 				</div>
 			</div>
 		</panel>
-		<div v-if="trophy" class="container large">
-			<panel v-if="trophy.first_farmers.length" :title="$t('first_farmers')" icon="mdi-sort-descending">
-				<router-link v-for="(farmer, f) in trophy.first_farmers" :key="f" v-ripple :to="'/farmer/' + farmer.id" class="farmer">
-					<avatar :farmer="farmer" />
-					{{ farmer.name }}
-					<div class="spacer"></div>
-					{{ farmer.time | date }}
-				</router-link>
+		<div v-if="trophy" class="grid">
+			<panel v-if="trophy.first_farmers.length" :title="$t('first_farmers')" icon="mdi-sort-descending" class="last">
+				<div v-for="(farmer, f) in trophy.first_farmers" :key="f" class="farmer">
+					<router-link v-ripple :to="'/farmer/' + farmer.id" class="name">
+						<avatar :farmer="farmer" />
+						<span>{{ farmer.name }}</span>
+					</router-link>
+					<div class="duration">
+						{{ LeekWars.formatLongDuration(farmer.duration) }}
+					</div>
+					<router-link v-if="farmer.fight" :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight" v-ripple>
+						<v-icon>mdi-sword-cross</v-icon> {{ farmer.time | date }}
+					</router-link>
+					<span v-else class="fight">{{ farmer.time | date }}</span>
+				</div>
 			</panel>
-			<panel v-if="trophy.last_farmers.length" :title="$t('last_farmers')" icon="mdi-sort-ascending">
-				<router-link v-for="(farmer, f) in trophy.last_farmers" :key="f" v-ripple :to="'/farmer/' + farmer.id" class="farmer">
-					<avatar :farmer="farmer" />
-					{{ farmer.name }}
+			<panel v-if="trophy.last_farmers.length" :title="$t('last_farmers')" icon="mdi-sort-ascending" class="last">
+				<div v-for="(farmer, f) in trophy.last_farmers" :key="f" class="farmer">
+					<router-link v-ripple :to="'/farmer/' + farmer.id" class="name">
+						<avatar :farmer="farmer" />
+						<span>{{ farmer.name }}</span>
+					</router-link>
+					<div class="duration">
+						{{ LeekWars.formatLongDuration(farmer.duration) }}
+					</div>
+					<router-link v-if="farmer.fight" :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight" v-ripple>
+						<v-icon>mdi-sword-cross</v-icon> {{ farmer.time | date }}
+					</router-link>
+					<span v-else class="fight">{{ farmer.time | date }}</span>
+				</div>
+			</panel>
+			<panel v-if="trophy.fastest_farmers?.length" :title="$t('fastest_farmers')" icon="mdi-flash" class="last">
+				<div v-for="(farmer, f) in trophy.fastest_farmers" :key="f" class="farmer">
+					<router-link v-ripple :to="'/farmer/' + farmer.id" class="name">
+						<avatar :farmer="farmer" />
+						<span>{{ farmer.name }}</span>
+					</router-link>
+					<div class="duration">
+						{{ LeekWars.formatLongDuration(farmer.duration) }}
+					</div>
+					<router-link v-if="farmer.fight" :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight" v-ripple>
+						<v-icon>mdi-sword-cross</v-icon> {{ farmer.time | date }}
+					</router-link>
+					<span v-else class="fight">{{ farmer.time | date }}</span>
+				</div>
+			</panel>
+			<panel v-if="trophy.slowest_farmers?.length" :title="$t('slowest_farmers')" icon="mdi-sleep" class="last">
+				<div v-for="(farmer, f) in trophy.slowest_farmers" :key="f" class="farmer">
+					<router-link v-ripple :to="'/farmer/' + farmer.id" class="name">
+						<avatar :farmer="farmer" />
+						<span>{{ farmer.name }}</span>
+					</router-link>
+					<div class="duration">
+						{{ LeekWars.formatLongDuration(farmer.duration) }}
+					</div>
+					<router-link v-if="farmer.fight" :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight" v-ripple>
+						<v-icon>mdi-sword-cross</v-icon> {{ farmer.time | date }}
+					</router-link>
+					<span v-else class="fight">{{ farmer.time | date }}</span>
+				</div>
+			</panel>
+			<panel v-if="trophy.title_farmers?.length" :title="$t('title_farmers')" icon="mdi-format-letter-case" class="last">
+				<div v-for="(farmer, f) in trophy.title_farmers" :key="f" v-ripple :to="'/farmer/' + farmer.id" class="farmer">
+					<router-link v-ripple :to="'/farmer/' + farmer.id" class="name">
+						<avatar :farmer="farmer" />
+						<span>{{ farmer.name }}</span>
+					</router-link>
 					<div class="spacer"></div>
-					{{ farmer.time | date }}
-				</router-link>
+					<lw-title :title="farmer.title" />
+				</div>
 			</panel>
 		</div>
 	</div>
@@ -88,8 +143,9 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
+	import LWTitle from '@/component/title/title.vue'
 
-	@Component({ name: 'trophy', i18n: {}, mixins: [...mixins], components: { RichTooltipItem } })
+	@Component({ name: 'trophy', i18n: {}, mixins: [...mixins], components: { 'lw-title': LWTitle, RichTooltipItem } })
 	export default class Trophy extends Vue {
 		code: any = null
 		trophy: any = null
@@ -131,6 +187,12 @@
 	}
 	.right {
 		flex: 1;
+		.name {
+			font-size: 28px;
+			font-weight: 500;
+			display: flex;
+			align-items: center;
+		}
 	}
 	h4 {
 		margin-bottom: 6px;
@@ -139,12 +201,6 @@
 		i {
 			margin-right: 6px;
 		}
-	}
-	.name {
-		font-size: 28px;
-		font-weight: 500;
-		display: flex;
-		align-items: center;
 	}
 	.points {
 		border: 1px solid var(--text-color-secondary);
@@ -238,11 +294,44 @@
 	}
 	.farmer {
 		display: flex;
-		padding: 2px 0;
-		align-items: center;
+		padding: 1px 0;
+		align-items: stretch;
+		gap: 8px;
+		& > * {
+			min-width: 0;
+		}
+		.name {
+			flex: 1.3;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			span {
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+		}
 		.avatar {
-			margin-right: 8px;
-			width: 32px;
+			width: 30px;
+			vertical-align: bottom;
+		}
+		.v-icon {
+			font-size: 18px;
+		}
+		.fight {
+			flex: 1.2;
+			display: flex;
+			align-items: center;
+			gap: 4px;
+			justify-content: flex-end;
+		}
+		a.fight {
+			font-weight: 500;
+		}
+		.duration {
+			flex: 1;
+			display: flex;
+			align-items: center;
+			white-space: nowrap;
 		}
 	}
 	ul {
@@ -254,5 +343,10 @@
 	}
 	.hab {
 		margin-right: 2px;
+	}
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+		gap: 12px;
 	}
 </style>

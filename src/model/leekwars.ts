@@ -584,7 +584,8 @@ const LeekWars = {
 			document.msExitFullscreen()
 		}
 	},
-	darkMode: localStorage.getItem('dark') !== null ? localStorage.getItem('dark') === 'true' : window.matchMedia('(prefers-color-scheme: dark)').matches,
+	themeSetting: localStorage.getItem('theme') || 'auto',
+	darkMode: localStorage.getItem('theme') !== null && localStorage.getItem('theme') !== 'auto' ? localStorage.getItem('theme') === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches,
 	sfw: false,
 	sfwTitle: "#3735931646 Documentation index",
 	sfwInit() {
@@ -648,7 +649,7 @@ const LeekWars = {
 		LeekWars.chatWindows.splice(i, 1)
 	},
 	get_cursor_position, set_cursor_position,
-	formatDate, formatDateTime, formatDuration, formatTime, formatTimeSeconds, formatDayMonthShort,
+	formatDate, formatDateTime, formatDuration, formatTime, formatTimeSeconds, formatDayMonthShort, formatLongDuration,
 	setTitle, setSubTitle, setTitleCounter, setTitleTag,
 	shadeColor,
 	createCodeArea, createCodeAreaSimple,
@@ -950,6 +951,25 @@ function formatTimeSeconds(time: number) {
 	if (minuts > 0) { res += ("0" + minuts + "m ").slice(-4) }
 	if (seconds !== 0) { res += ("0" + seconds + "s").slice(-3) }
 	return res
+}
+
+function formatLongDuration(seconds: number) {
+	const sign = Math.sign(seconds)
+	seconds = Math.abs(seconds)
+	const y = Math.floor(seconds / 31536000);
+	const mo = Math.floor((seconds % 31536000) / 2628000);
+	const d = Math.floor(((seconds % 31536000) % 2628000) / 86400);
+	const h = Math.floor((seconds % (3600 * 24)) / 3600);
+	const m = Math.floor((seconds % 3600) / 60);
+	const s = Math.floor(seconds % 60);
+
+	const yDisplay = y > 0 ? i18n.tc('main.n_year', y) : "";
+	const moDisplay = mo > 0 ? i18n.tc('main.n_month', mo) : "";
+	const dDisplay = d > 0 ? i18n.tc('main.n_day', d) : "";
+	const hDisplay = h > 0 ? i18n.tc('main.n_hour', h) : "";
+	const mDisplay = m > 0 ? i18n.tc('main.n_minute', m) : "";
+	const sDisplay = s >= 0 ? i18n.tc('main.n_second', s) : "";
+	return (sign < 0 ? '-' : '') + [yDisplay, moDisplay, dDisplay, hDisplay, mDisplay, sDisplay].filter(p => p).slice(0, 3).join(', ')
 }
 
 function formatTime(time: number) {

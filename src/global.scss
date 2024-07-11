@@ -183,6 +183,7 @@ body {
 	color: var(--text-color);
 	--primary: #5fad1b;
 	--pure-white: #fff;
+	--pure-black: #000;
 	--background: #f2f2f2;
 	--background-secondary: #eee;
 	--background-disabled: #bbb;
@@ -193,6 +194,7 @@ body {
 	--type-color: #0000D0;
 	&.dark {
 		--pure-white: #000;
+		--pure-black: #fff;
 		--background: #1f1f1f;
 		--background-secondary: #171717;
 		--background-disabled: #555;

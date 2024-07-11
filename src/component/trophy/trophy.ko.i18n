@@ -26,5 +26,9 @@
 	"progress": "진전",
 	"n_pocessors": "{n} 소유자",
 	"first_farmers": "초기 육종가",
-	"last_farmers": "최신 육종가"
+	"last_farmers": "최신 육종가",
+	"fastest_farmers": "가장 빠른 육종가",
+	"slowest_farmers": "가장 느린 육종가",
+	"title_farmers": "제목에 이 단어가 포함된 브리더",
+	"created_the": "0}에 추가됨"
 }

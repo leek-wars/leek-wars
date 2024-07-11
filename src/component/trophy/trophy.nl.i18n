@@ -26,5 +26,9 @@
 	"progress": "Voortgang",
 	"n_pocessors": "{n} bezitters",
 	"first_farmers": "Vroege fokkers",
-	"last_farmers": "Laatste fokkers"
+	"last_farmers": "Laatste fokkers",
+	"fastest_farmers": "Snelste fokkers",
+	"slowest_farmers": "Langzaamste fokkers",
+	"title_farmers": "Fokkers met het in hun titel",
+	"created_the": "Toegevoegd op {0}"
 }

@@ -26,5 +26,9 @@
 	"progress": "Progreso",
 	"n_pocessors": "{n} poseedores",
 	"first_farmers": "Primeros criadores",
-	"last_farmers": "Últimos criadores"
+	"last_farmers": "Últimos criadores",
+	"fastest_farmers": "Los reproductores más rápidos",
+	"slowest_farmers": "Los reproductores más lentos",
+	"title_farmers": "Criadores con él en su título",
+	"created_the": "Añadido el {0}"
 }

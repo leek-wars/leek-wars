@@ -26,5 +26,9 @@
 	"progress": "Fremskridt",
 	"n_pocessors": "{n} besiddere",
 	"first_farmers": "Tidlige opdrættere",
-	"last_farmers": "Seneste opdrættere"
+	"last_farmers": "Seneste opdrættere",
+	"fastest_farmers": "Hurtigste opdrættere",
+	"slowest_farmers": "Langsomste opdrættere",
+	"title_farmers": "Opdrættere med det i deres titel",
+	"created_the": "Tilføjet den {0}"
 }

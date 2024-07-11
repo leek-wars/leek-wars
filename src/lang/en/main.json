@@ -267,5 +267,11 @@
 	"side": "Visit",
 	"side_desc": "Where to start the fight",
 	"side_left": "To the left",
-	"side_right": "To the right"
+	"side_right": "To the right",
+	"n_year": "1 year | {n} years",
+	"n_month": "1 month | {n} months",
+	"n_day": "1 j | {n} j",
+	"n_hour": "1 h | {n} h",
+	"n_minute": "1 min | {n} min",
+	"n_second": "1 s | {n} s"
 }

@@ -267,5 +267,11 @@
 	"side": "Visite",
 	"side_desc": "Dónde empezar la lucha",
 	"side_left": "A la izquierda",
-	"side_right": "A la derecha"
+	"side_right": "A la derecha",
+	"n_year": "1 año | {n} años",
+	"n_month": "1 mes | {n} meses",
+	"n_day": "1 j | {n} j",
+	"n_hour": "1 h | {n} h",
+	"n_minute": "1 min | {n} min",
+	"n_second": "1 s | {n} s"
 }
