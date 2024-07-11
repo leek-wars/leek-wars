@@ -40,7 +40,7 @@ export const COMPONENTS: {[key: string]: ComponentTemplate} = Object.freeze({
   '37': { id: 37, name: 'chestnut', stats: [ [ 'life', 240 ], [ 'strength', 80 ], [ 'resistance', 40 ], [ 'tp', 1 ] ], template: 366 },
   '38': { id: 38, name: 'blue_plum', stats: [ [ 'life', 130 ], [ 'wisdom', 50 ], [ 'agility', 50 ], [ 'science', 50 ], [ 'mp', 1 ] ], template: 369 },
   '39': { id: 39, name: 'kiwi', stats: [ [ 'wisdom', 20 ], [ 'tp', -1 ], [ 'mp', 1 ] ], template: 370 },
-  '40': { id: 40, name: 'quince', stats: [ [ 'life', 180 ], [ 'wisdom', 40 ], [ 'resistance', 40 ], [ 'tp', 1 ] ], template: 371 },
+  '40': { id: 40, name: 'quince', stats: [ [ 'life', 180 ], [ 'wisdom', 40 ], [ 'resistance', 40 ], [ 'mp', 1 ], [ 'tp', 1 ] ], template: 371 },
   '41': { id: 41, name: 'onion', stats: [ [ 'life', 60 ], [ 'strength', 60 ], [ 'science', -60 ], [ 'magic', 60 ] ], template: 372 },
   '42': { id: 42, name: 'orange', stats: [ [ 'resistance', 25 ], [ 'wisdom', 25 ] ], template: 373 },
   '43': { id: 43, name: 'soursop', stats: [ [ 'life', 120 ], [ 'strength', 50 ], [ 'wisdom', 50 ], [ 'frequency', 20 ], [ 'mp', 1 ] ], template: 374 },
