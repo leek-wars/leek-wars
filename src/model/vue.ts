@@ -27,11 +27,15 @@ import { scroll_to_hash } from '@/router-functions'
 
 import Vuetify from 'vuetify/lib'
 import Ripple from 'vuetify/lib/directives/ripple'
+import '@mdi/font/css/materialdesignicons.css'
 Vue.use(Vuetify, {
 	theme: { dark: true },
 	directives: {
 		Ripple
-	}
+	},
+	icons: {
+		iconfont: 'mdi'
+	},
 })
 
 import tooltip from '@/vtooltip-fast'
