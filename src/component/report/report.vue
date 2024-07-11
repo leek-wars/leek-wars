@@ -1219,14 +1219,16 @@
 			font-size: 20px;
 		}
 	}
-	.panel.actions {
-		.actions {
-			padding: 0 15px;
+	#app:not(.app) {
+		.panel.actions {
+			.actions {
+				padding: 0 15px;
+			}
 		}
-	}
-	.panel.warnings-error {
-		.logs {
-			padding: 0 15px;
+		.panel.warnings-error {
+			.logs {
+				padding: 0 15px;
+			}
 		}
 	}
 	.actions-options {
@@ -1283,4 +1285,7 @@
 			}
 		}
 	}
+pre {
+	white-space: pre-wrap;
+}
 </style>
