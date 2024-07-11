@@ -94,5 +94,7 @@
 	"message_34": "Bekijk je inventaris",
 	"title_34": "{0} gaf je item {1}",
 	"title_35": "{0} heeft een eindbaasgevecht gelanceerd",
-	"message_35": "Bekijk het gevecht"
+	"message_35": "Bekijk het gevecht",
+	"title_36": "{0} heeft een nieuw onderwerp aangemaakt: {1}",
+	"message_36": "Onderwerp bekijken"
 }

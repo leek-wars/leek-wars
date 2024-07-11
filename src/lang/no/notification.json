@@ -94,5 +94,7 @@
 	"message_34": "Se lagerbeholdningen din",
 	"title_34": "{0} ga deg gjenstand {1}",
 	"title_35": "{0} har startet en sjefskamp",
-	"message_35": "Se kampen"
+	"message_35": "Se kampen",
+	"title_36": "{0} har opprettet et nytt emne: {1}",
+	"message_36": "Vis emne"
 }

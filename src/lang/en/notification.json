@@ -94,5 +94,7 @@
 	"message_34": "View your inventory",
 	"title_34": "{0} gave you item {1}",
 	"title_35": "{0} has launched a boss fight",
-	"message_35": "See the fight"
+	"message_35": "See the fight",
+	"title_36": "{0} has created a new topic: {1}",
+	"message_36": "View topic"
 }

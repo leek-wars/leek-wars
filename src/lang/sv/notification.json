@@ -94,5 +94,7 @@
 	"message_34": "Visa ditt lager",
 	"title_34": "{0} gav dig föremål {1}",
 	"title_35": "{0} har startat en bosskamp",
-	"message_35": "Se kampen"
+	"message_35": "Se kampen",
+	"title_36": "{0} har skapat ett nytt ämne: {1}",
+	"message_36": "Visa ämne"
 }

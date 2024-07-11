@@ -94,5 +94,7 @@
 	"message_34": "Tarkastele inventaariota",
 	"title_34": "{0} antoi sinulle esineen {1}",
 	"title_35": "{0} on aloittanut pomotaistelun",
-	"message_35": "Katso taistelu"
+	"message_35": "Katso taistelu",
+	"title_36": "{0} on luonut uuden aiheen: {1}",
+	"message_36": "Näytä aihe"
 }

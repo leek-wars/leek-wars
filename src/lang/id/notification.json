@@ -94,5 +94,7 @@
 	"message_34": "Lihat inventaris Anda",
 	"title_34": "{0} memberi Anda item {1}",
 	"title_35": "{0} telah meluncurkan pertempuran bos",
-	"message_35": "Lihat pertarungannya"
+	"message_35": "Lihat pertarungannya",
+	"title_36": "{0} telah membuat topik baru: {1}",
+	"message_36": "Lihat topik"
 }

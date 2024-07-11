@@ -94,5 +94,7 @@
 	"message_34": "Ihr Inventar ansehen",
 	"title_34": "{0} hat Ihnen den Gegenstand {1} gegeben",
 	"title_35": "{0} hat einen Bosskampf gestartet",
-	"message_35": "Kampf ansehen"
+	"message_35": "Kampf ansehen",
+	"title_36": "{0} hat ein neues Thema erstellt: {1}",
+	"message_36": "Thema anzeigen"
 }

@@ -94,5 +94,7 @@
 	"message_34": "Wyświetlanie zapasów",
 	"title_34": "{0} dał ci przedmiot {1}",
 	"title_35": "{0} rozpoczął walkę z bossem",
-	"message_35": "Zobacz walkę"
+	"message_35": "Zobacz walkę",
+	"title_36": "{0} utworzył nowy temat: {1}",
+	"message_36": "Wyświetl temat"
 }
