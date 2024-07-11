@@ -50,5 +50,7 @@
 	"turret": "Torni",
 	"end_of_fight": "Taistelun loppu!",
 	"lama": "{leek} käyttää 🦙:n voimia ({cost})",
-	"help_page": "Lisätietoja:"
+	"help_page": "Lisätietoja:",
+	"leek_state_x_turns": "{leek} siirtyy {tilaan} tilaan ({kääntyy} kääntyy)",
+	"state_x": "Tila {0}"
 }

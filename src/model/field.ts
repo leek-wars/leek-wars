@@ -2,6 +2,8 @@ import { Obstacle } from '@/component/player/game/obstacle'
 import { Area } from './area'
 import { Cell } from './cell'
 import { Entity } from './entity'
+import { State } from './effect'
+import { FightEntity } from '@/component/player/game/entity'
 
 class Field {
 	public tilesX!: number
@@ -244,11 +246,14 @@ class Field {
 		return this.coord[x - this.min_x][y - this.min_y]
 	}
 
-	public getLastAvailableCell(from: Cell, target: Cell, targetEntity: Entity) {
-		// console.log("getLastAvailableCell", "from=" + from.id, "target=" + target.id)
+	public getLastAvailableCell(from: Cell, target: Cell, targetEntity: FightEntity) {
+		// console.log("getLastAvailableCell", "from=" + from.id, "target=" + target.id, "static=" + targetEntity.states.has(State.STATIC))
 		const dx = Math.sign(target.x - from.x)
 		const dy = Math.sign(target.y - from.y)
 		let current = from
+		if (targetEntity && current.entity === targetEntity && targetEntity.states.has(State.STATIC)) {
+			return current
+		}
 		while (current !== target) {
 			const next = this.next_cell(current, dx, dy)!
 			if (!next || next.obstacle || (next.entity && next.entity !== targetEntity)) {

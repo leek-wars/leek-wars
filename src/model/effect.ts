@@ -81,10 +81,10 @@ enum EffectTypeMarket {
 }
 
 enum State {
-	STATUE = 1,
 	UNHEALABLE = 2,
 	INVICIBLE = 3,
 	PACIFIST = 4,
+	STATIC = 11,
 }
 
 class Effect {

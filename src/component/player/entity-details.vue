@@ -3,8 +3,9 @@
 		<div class="effects">
 			<tooltip v-for="effect in entity.effects" :key="effect.id" :left="true">
 				<template v-slot:activator="{ on }">
-					<div :value="effectText(effect)" :turns="effect.turns === -1 ? '∞' : effect.turns" class="effect" v-on="on">
-						<img :src="effect.texture.src">
+					<div :value="effectText(effect)" :turns="effect.turns === -1 ? '∞' : effect.turns" class="effect" :class="{irreductible: effect.modifiers & EffectModifier.IRREDUCTIBLE}" v-on="on">
+						<img class="image" :src="effect.texture.src">
+						<img class="state" v-if="effect.type === EffectType.ADD_STATE" :src="LeekWars.STATIC + 'image/state/' + effect.value + '.svg'" :style="{ background: FightEntity.stateColors[effect.value] }">
 					</div>
 				</template>
 				<div v-if="effect.item"><b>{{ $t(LeekWars.items[effect.item].name.replace('_', '.')) }}</b></div>
@@ -68,6 +69,9 @@
 						<b v-else-if="effect.type === EffectType.DAMAGE" class="color-life">
 							{{ $t('fight.n_damage', [effect.value]) }}
 						</b>
+						<b v-else-if="effect.type === EffectType.ADD_STATE">
+							{{ $t('fight.state_x', [$t('effect.state_' + effect.value)]) }}
+						</b>
 					</b>
 					<span v-if="effect.turns === -1">{{ $t('effect.infinite') }}</span>
 					<span v-else v-html="$t('effect.on_n_turns', {turns: $tc('effect.n_turns', [effect.turns])})"></span>
@@ -75,7 +79,7 @@
 			</tooltip>
 		</div>
 		<div :class="{dead: entity.dead, dark}" class="details">
-			<div class="image">
+			<div class="entity-image">
 				<img v-if="entity.summon" :src="'/image/bulb/' + entity.bulbName + '_front.png'">
 				<turret-image v-else-if="(entity instanceof Turret)" :level="entity.level" :skin="entity.team" :scale="0.15" />
 				<img v-else-if="(entity instanceof Chest)" :src="'/image/chest/' + entity.name + '.png'">
@@ -155,7 +159,7 @@
 </template>
 
 <script lang="ts">
-	import { Effect, EffectType } from '@/model/effect'
+	import { Effect, EffectModifier, EffectType } from '@/model/effect'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { Chest } from './game/chest'
 	import { FightEntity } from './game/entity'
@@ -173,8 +177,11 @@
 		EffectType = EffectType
 		Chest = Chest
 		Mob = Mob
+		FightEntity = FightEntity
+		EffectModifier = EffectModifier
 
 		effectText(effect: any) {
+			if (effect.type === EffectType.ADD_STATE) return ''
 			let r = '' + effect.value
 			if (effect.type === EffectType.SHACKLE_MAGIC || effect.type === EffectType.SHACKLE_MP || effect.type === EffectType.SHACKLE_TP || effect.type === EffectType.SHACKLE_STRENGTH || effect.type === EffectType.VULNERABILITY || effect.type === EffectType.ABSOLUTE_VULNERABILITY) {
 				r = '-' + r
@@ -214,7 +221,7 @@
 .details.dead {
 	background: rgba(255,255,255,0.3);
 }
-.image {
+.entity-image {
 	flex: 45px 0 0;
 	margin-right: 3px;
 	display: flex;
@@ -315,15 +322,25 @@
 .effects .effect {
 	position: relative;
 	display: inline-block;
-	img {
+	margin-bottom: 4px;
+	.image {
 		width: 36px;
 		height: 36px;
-		margin-bottom: 4px;
 		vertical-align: bottom;
 		object-fit: fill;
 	}
+	&.irreductible .image {
+		border: 3px solid #ffca00;
+	}
+	.state {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 22px;
+		height: 22px;
+	}
 }
-.effects .effect:after {
+.effects .effect:not([value=""]):after {
 	position: absolute;
 	left: 0;
 	bottom: 4px;

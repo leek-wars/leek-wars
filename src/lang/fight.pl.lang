@@ -50,5 +50,7 @@
 	"turret": "Wieżyczka",
 	"end_of_fight": "Koniec walki!",
 	"lama": "{leek} przywołuje moce 🦙 ({cost})",
-	"help_page": "Ucz się więcej:"
+	"help_page": "Ucz się więcej:",
+	"leek_state_x_turns": "{leek} wchodzi w stan {state} ({turns} obraca się)",
+	"state_x": "Status {0}"
 }

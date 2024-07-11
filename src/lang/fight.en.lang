@@ -50,5 +50,7 @@
 	"turret": "Turret",
 	"end_of_fight": "End of fight!",
 	"lama": "{leek} calls upon the powers of the 🦙 ({cost})",
-	"help_page": "Learn more: "
+	"help_page": "Learn more: ",
+	"leek_state_x_turns": "{leek} enters {state} ({turns} state)",
+	"state_x": "Status {0}"
 }

@@ -50,5 +50,7 @@
 	"turret": "Turret",
 	"end_of_fight": "Slut på kampen!",
 	"lama": "{leek} kalder på kræfterne fra 🦙 ({cost})",
-	"help_page": "Lær mere:"
+	"help_page": "Lær mere:",
+	"leek_state_x_turns": "{leek} går ind i {state} tilstanden ({turns} drejer)",
+	"state_x": "Status {0}"
 }

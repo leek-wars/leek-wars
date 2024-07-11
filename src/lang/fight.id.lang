@@ -50,5 +50,7 @@
 	"turret": "Kubah",
 	"end_of_fight": "Akhir dari pertarungan!",
 	"lama": "{leek} memanggil kekuatan 🦙 ({cost})",
-	"help_page": "Belajarlah lagi:"
+	"help_page": "Belajarlah lagi:",
+	"leek_state_x_turns": "{leek} memasuki keadaan {state} ({putaran} berputar)",
+	"state_x": "Status {0}"
 }

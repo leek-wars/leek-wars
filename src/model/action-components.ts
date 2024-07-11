@@ -53,6 +53,7 @@ import EffectShackleMagic from '@/component/effect/effect-shackle-magic.vue'
 import EffectShackleTP from '@/component/effect/effect-shackle-tp.vue'
 import EffectShackleMP from '@/component/effect/effect-shackle-mp.vue'
 import EffectPoison from '@/component/effect/effect-poison.vue'
+import EffectAddState from "@/component/effect/effect-add-state.vue"
 
 const ActionComponents = {
 	[ActionType.START_FIGHT]: ActionNewTurn,
@@ -125,6 +126,7 @@ const EffectComponents = {
 	[EffectType.SHACKLE_TP]: EffectShackleTP,
 	[EffectType.SHACKLE_MP]: EffectShackleMP,
 	[EffectType.POISON]: EffectPoison,
+	[EffectType.ADD_STATE]: EffectAddState,
 }
 
 export { ActionComponents, EffectComponents }

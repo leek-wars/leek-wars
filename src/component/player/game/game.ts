@@ -17,7 +17,7 @@ import { Action, ActionType } from '@/model/action'
 import { Area } from '@/model/area'
 import { Cell } from '@/model/cell'
 import { CHIPS } from '@/model/chips'
-import { EffectType, EntityEffect } from '@/model/effect'
+import { EffectType, EntityEffect, State } from '@/model/effect'
 import { Fight, FightData, FightType } from '@/model/fight'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
@@ -1176,21 +1176,21 @@ class Game {
 					cell.setEntity(caster)
 				}
 				if (chip === 88) { // grapple
-					if (targets.length) {
+					if (targets.length && !targets[0].states.has(State.STATIC)) {
 						const realCell = this.ground.field.computeAttractCell(caster.cell!, targets[0].cell!, cell)
 						realCell.setEntity(targets[0])
 					}
 				}
 				if (chip === 89) { // boxing glove
 					// console.log("glove", cell.id, "targets=" + targets.length)
-					if (targets.length) {
+					if (targets.length && !targets[0].states.has(State.STATIC)) {
 						const realCell = this.ground.field.getLastAvailableCell(caster.cell!, cell, targets[0])
 						realCell.setEntity(targets[0])
 					}
 				}
 				// Update leeks cells after inversion / repotting
 				if (chip === 39 || chip === 83) {
-					if (targets.length) { // C'est possible de lancer dans le vide
+					if (targets.length && !caster.states.has(State.STATIC) && !targets[0].states.has(State.STATIC)) { // C'est possible de lancer dans le vide
 						const launcher_cell = caster.cell!
 						cell.setEntity(caster)
 						launcher_cell.setEntity(targets[0])
@@ -1532,6 +1532,8 @@ class Game {
 
 	public addEffect(action: Action, stacked: boolean) {
 
+		// console.log("addEffect", action, stacked)
+
 		const item = action.params[1]
 		const id = action.params[2]
 		const caster_id = action.params[3]
@@ -1679,6 +1681,9 @@ class Game {
 				break
 			case EffectType.RAW_BUFF_POWER:
 				leek.buffPower(value, this.jumping)
+				break
+			case EffectType.ADD_STATE:
+				leek.addState(value)
 				break
 		}
 	}

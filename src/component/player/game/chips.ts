@@ -5,6 +5,7 @@ import { T, Texture } from '@/component/player/game/texture'
 import { Area } from '@/model/area'
 import { Cell } from '@/model/cell'
 import { Position } from './position'
+import { State } from '@/model/effect'
 
 abstract class ChipAnimation {
 	public game: Game
@@ -536,7 +537,7 @@ class Inversion extends ChipAnimation {
 			this.game.particles.addRectangle(x1, y1, z, dx, dy, dz, angle, sx, sy, dsx, dsy, color, alpha, life)
 			this.game.particles.addRectangle(x2, y2, z, dx, dy, dz, angle, sx, sy, dsx, dsy, color, alpha, life)
 		}
-		if (!this.inverted && this.duration < 40 && this.launcher && this.target) {
+		if (!this.inverted && this.duration < 40 && this.launcher && this.target && !this.target.states.has(State.STATIC)) {
 			const cell = this.launcher.cell
 			this.launcher.setCell(this.target.cell)
 			this.target.setCell(cell)
@@ -1401,7 +1402,7 @@ export class Awakening extends ChipAnimation {
 class Grapple extends ChipAnimation {
 
 	static textures = [T.grapple_1, T.grapple_2, T.grapple_back_1, T.grapple_back_2, T.chain, T.chain_back]
-	static sounds = []
+	static sounds = [S.grapple]
 	static DURATION = 70
 
 	sx!: number
@@ -1425,7 +1426,7 @@ class Grapple extends ChipAnimation {
 	move_end: number = 0
 
 	constructor(game: Game) {
-		super(game, S.rock, Grapple.DURATION, DamageType.DEFAULT)
+		super(game, S.grapple, Grapple.DURATION, DamageType.DEFAULT)
 	}
 
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher: FightEntity) {
@@ -1475,14 +1476,14 @@ class Grapple extends ChipAnimation {
 		this.x = this.sx + x * this.ex
 		this.y = this.sy + x * this.ey
 		this.d = Math.sqrt(Math.pow(this.x - this.sx, 2) + Math.pow(this.y - this.sy, 2))
-		if (this.target && r > 0.5) {
+		if (this.target && !this.target.states.has(State.STATIC) && r > 0.5) {
 			this.target.ox = this.x
 			this.target.oy = this.y
 		}
 	}
 
 	public end() {
-		if (this.target) {
+		if (this.target && !this.target.states.has(State.STATIC)) {
 			this.target.setCell(this.cell)
 		}
 	}
@@ -1542,7 +1543,7 @@ class Grapple extends ChipAnimation {
 
 class BoxingGlove extends ChipAnimation {
 	static textures = [T.glove, T.glove_back, T.chain, T.chain_back]
-	static sounds = []
+	static sounds = [S.boxing]
 	static DURATION = 70
 	sx!: number
 	sy!: number
@@ -1564,7 +1565,10 @@ class BoxingGlove extends ChipAnimation {
 	target: FightEntity | null = null
 	moved: boolean = false
 	move_start: number = 0
-	constructor(game: Game) { super(game, S.rock, BoxingGlove.DURATION, DamageType.DEFAULT) }
+
+	constructor(game: Game) {
+		super(game, S.boxing, BoxingGlove.DURATION, DamageType.DEFAULT)
+	}
 
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher: FightEntity) {
 		super.launch(launchPos, targetPos, targets, targetCell)
@@ -1582,6 +1586,7 @@ class BoxingGlove extends ChipAnimation {
 		}
 		// Find real end cell
 		this.cell = this.game.ground.field.getLastAvailableCell(entity_cell, this.cell, targets[0])
+		// console.log("end cell", this.cell)
 		const xy = this.game.ground.field.cellToXY(this.cell)
 		this.position = this.game.ground.xyToXYPixels(xy.x, xy.y)
 		const target_distance = Math.sqrt(Math.pow(launchPos.x - this.tsx, 2) + Math.pow(launchPos.y - this.tsy, 2))
@@ -1614,7 +1619,7 @@ class BoxingGlove extends ChipAnimation {
 		this.y = this.sy + x * this.ey
 		this.d = Math.sqrt(Math.pow(this.x - this.sx, 2) + Math.pow(this.y - this.sy, 2))
 
-		if (this.target) {
+		if (this.target && !this.target.states.has(State.STATIC)) {
 			const tr = Math.max(0, Math.min(1, r / (0.2 * (1 - this.move_start)) - this.move_start))
 			this.target.ox = this.tsx + tr * (this.position.x - this.tsx)
 			this.target.oy = this.tsy + tr * (this.position.y - this.tsy)

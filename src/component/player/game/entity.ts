@@ -4,7 +4,7 @@ import { Colors, Game } from '@/component/player/game/game'
 import { InfoText } from '@/component/player/game/infotext'
 import { SHADOW_QUALITY, T, Texture } from '@/component/player/game/texture'
 import { Cell } from '@/model/cell'
-import { EffectModifier, EffectType, EntityEffect } from '@/model/effect'
+import { Effect, EffectModifier, EffectType, EntityEffect } from '@/model/effect'
 import { Entity } from '@/model/entity'
 import { Farmer } from '@/model/farmer'
 import { i18n } from '@/model/i18n'
@@ -40,6 +40,12 @@ enum DamageType {
 }
 
 abstract class FightEntity extends Entity {
+
+	static stateImages: Map<number, HTMLImageElement> = new Map()
+	static stateColors = [
+		'', '', '', 'green', '', '', '', '', '', '', '', 'blue'
+	]
+
 	// Infos générales
 	public game: Game
 	public farmer!: Farmer | null
@@ -140,6 +146,8 @@ abstract class FightEntity extends Entity {
 	public bloodTex: Texture | null
 	public lifeColor!: string
 	public lifeColorLighter!: string
+	// States
+	public states: Set<number> = new Set()
 	// Reachable cells
 	public reachableCells: Set<Cell> = new Set<Cell>()
 	public reachableCellsArea: any
@@ -1085,6 +1093,7 @@ abstract class FightEntity extends Entity {
 		ctx.scale(this.game.ground.scale, this.game.ground.scale)
 
 		const effect_size = 30
+		const state_size = 0.6
 		const reverse = Math.min(0.7, this.game.textRatio / this.game.ground.scale)
 		const z = LeekWars.objectSize(this.effects) > 0 && this.game.showEffects ? effect_size : 0
 		const y = Math.max(-this.game.ground.startY / this.game.ground.scale + 20, this.oy - this.height - this.baseZ - 30 - z * reverse)
@@ -1115,7 +1124,7 @@ abstract class FightEntity extends Entity {
 		ctx.fillText(text, 0, 12)
 
 		// Barre de vie
-			if (this.life > 0) {
+		if (this.life > 0) {
 			const life = this.life / this.maxLife
 			const barWidth = life * width
 			ctx.fillStyle = this.lifeColor
@@ -1139,23 +1148,37 @@ abstract class FightEntity extends Entity {
 				if (effect.modifiers & EffectModifier.IRREDUCTIBLE) {
 					ctx.strokeRect(x + 1.5, effect_size + 1.5, effect_size - 3, effect_size - 3)
 				}
-				let effect_message = '' + effect.value
-				if (effect.type === EffectType.SHACKLE_MAGIC || effect.type === EffectType.SHACKLE_MP || effect.type === EffectType.SHACKLE_TP || effect.type === EffectType.SHACKLE_STRENGTH || effect.type === EffectType.VULNERABILITY || effect.type === EffectType.ABSOLUTE_VULNERABILITY) {
-					effect_message = '-' + effect_message
+				// Value
+				if (effect.type == EffectType.ADD_STATE) {
+					ctx.globalAlpha = 0.85 * (1 - this.deadAnim)
+					ctx.fillStyle = FightEntity.stateColors[effect.value]
+					ctx.fillRect(x, (2 - state_size) * effect_size - 2, effect_size * state_size + 2, effect_size * state_size + 2)
+					ctx.globalAlpha = (1 - this.deadAnim)
+					ctx.drawImage(FightEntity.stateImages.get(effect.value)!, x + 1, (2 - state_size) * effect_size - 1, effect_size * state_size, effect_size * state_size)
+				} else {
+					let effect_message = '' + effect.value
+					if (effect.type === EffectType.SHACKLE_MAGIC || effect.type === EffectType.SHACKLE_MP || effect.type === EffectType.SHACKLE_TP || effect.type === EffectType.SHACKLE_STRENGTH || effect.type === EffectType.VULNERABILITY || effect.type === EffectType.ABSOLUTE_VULNERABILITY) {
+						effect_message = '-' + effect_message
+					}
+					if (effect.type === EffectType.RAW_RELATIVE_SHIELD || effect.type === EffectType.RELATIVE_SHIELD || effect.type === EffectType.DAMAGE_RETURN || effect.type === EffectType.VULNERABILITY) {
+						effect_message = effect_message + '%'
+					}
+					const w = ctx.measureText(effect_message).width
+					ctx.globalAlpha = 0.5 * (1 - this.deadAnim)
+					ctx.fillStyle = 'black'
+					ctx.fillRect(x + 1, 2 * effect_size - text_size - 5, w + 3, text_size + 4)
+					ctx.globalAlpha = (1 - this.deadAnim)
+					ctx.fillStyle = 'white'
+					ctx.fillText(effect_message, x + 2, 2 * effect_size - 6)
 				}
-				if (effect.type === EffectType.RAW_RELATIVE_SHIELD || effect.type === EffectType.RELATIVE_SHIELD || effect.type === EffectType.DAMAGE_RETURN || effect.type === EffectType.VULNERABILITY) {
-					effect_message = effect_message + '%'
-				}
+				// Duration
 				const effect_duration = effect.turns === -1 ? '∞' : '' + effect.turns
-				const w = ctx.measureText(effect_message).width
 				const w2 = ctx.measureText(effect_duration).width
 				ctx.globalAlpha = 0.5 * (1 - this.deadAnim)
 				ctx.fillStyle = 'black'
-				ctx.fillRect(x + 1, 2 * effect_size - text_size - 5, w + 3, text_size + 4)
 				ctx.fillRect(x + effect_size - 11, effect_size + 1.5, w2 + 3, 12)
 				ctx.globalAlpha = (1 - this.deadAnim)
 				ctx.fillStyle = 'white'
-				ctx.fillText(effect_message, x + 2, 2 * effect_size - 6)
 				ctx.fillText(effect_duration, x + effect_size - 9, effect_size + 8)
 				x += effect_size
 			}
@@ -1273,6 +1296,14 @@ abstract class FightEntity extends Entity {
 		const background = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',0.8)'
 		const background2 = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',0.4)'
 		return "linear-gradient(to bottom, " + background2 + " 0%, " + background2 + " 30%," + background + " 100%)"
+	}
+
+	addState(state: number) {
+		this.states.add(state)
+		// Load image
+		const image = new Image()
+		image.src = LeekWars.STATIC + "image/state/" + state + ".svg"
+		FightEntity.stateImages.set(state, image)
 	}
 }
 

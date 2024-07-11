@@ -50,5 +50,7 @@
 	"turret": "Turm",
 	"end_of_fight": "Ende des Kampfes!",
 	"lama": "{leek} beruft sich auf die Kräfte von 🦙 ({cost})",
-	"help_page": "Erfahren Sie mehr:"
+	"help_page": "Erfahren Sie mehr:",
+	"leek_state_x_turns": "{leek} tritt in den Zustand {state} ein ({turns} Runden)",
+	"state_x": "Staat {0}"
 }

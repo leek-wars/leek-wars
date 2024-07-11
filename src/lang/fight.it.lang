@@ -50,5 +50,7 @@
 	"turret": "Torretta",
 	"end_of_fight": "Fine del combattimento!",
 	"lama": "{leek} fa appello ai poteri di 🦙 ({cost})",
-	"help_page": "Saperne di più :"
+	"help_page": "Saperne di più :",
+	"leek_state_x_turns": "{Entra nello stato {stato} ({gira} gira)",
+	"state_x": "Stato {0}"
 }

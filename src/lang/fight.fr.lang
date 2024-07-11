@@ -18,6 +18,7 @@
 	"leek_take_weapon_cost": "{leek} prend l'arme {weapon} ({cost})",
 	"leek_win_x": "{leek} gagne {value}",
 	"leek_win_x_turns": "{leek} gagne {value} ({turns} tours)",
+	"leek_state_x_turns": "{leek} entre dans l'état {state} ({turns} tours)",
 	"leek_receives_x": "{leek} reçoit {value} ({turns} tours)",
 	"n_absolute_shield": "{0} bouclier absolu",
 	"n_agility": "{0} agilité",
@@ -50,5 +51,6 @@
 	"turret": "Tourelle",
 	"end_of_fight": "Fin du combat !",
 	"lama": "{leek} fait appel aux pouvoirs du 🦙 ({cost})",
-	"help_page": "En savoir plus : "
+	"help_page": "En savoir plus : ",
+	"state_x": "État {0}"
 }

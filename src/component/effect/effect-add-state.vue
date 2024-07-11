@@ -1,9 +1,9 @@
 
 <template functional>
-	<i18n path="fight.leek_receives_x" tag="div" :a="props.a">
+	<i18n path="fight.leek_state_x_turns" tag="div" :a="props.a">
 		<leek slot="leek" :leek="props.leek" />
-		<template v-slot:value>
-			<b class="color-poison">{{ parent.$t('fight.n_poison', [props.value]) }}</b>
+		<template v-slot:state>
+			<b>{{ parent.$t('effect.state_' + props.value) }}</b>
 		</template>
 		<template v-slot:turns>
 			<b>{{ parent.formatTurns(props.turns) }}</b>
@@ -17,7 +17,7 @@
 	import ActionLeekElement from '../report/action-leek.vue'
 
 	@Component({ components: { leek: ActionLeekElement } })
-	export default class EffectPoison extends Vue {
+	export default class EffectAddState extends Vue {
 		@Prop() leek!: FightLeek
 		@Prop() value!: number
 		@Prop() turns!: number

@@ -50,5 +50,7 @@
 	"turret": "タレット",
 	"end_of_fight": "戦いの終わり！",
 	"lama": "{leek} は 🦙 ({cost}) の力を呼び起こします",
-	"help_page": "もっと詳しく知る："
+	"help_page": "もっと詳しく知る：",
+	"leek_state_x_turns": "{リーク}が{状態}に入る（{ターン}ターンする）",
+	"state_x": "ステータス {0｝"
 }
