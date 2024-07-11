@@ -63,5 +63,8 @@
 	"verify_pro5": "Batallas reales",
 	"Vérifier": "Verificar Cuenta",
 	"allow_github": "Permitir la conexión a través de GitHub",
-	"activate_dark_mode": "Activar el modo oscuro"
+	"light": "Clair",
+	"dark": "Oscuro",
+	"auto": "Auto",
+	"theme": "Tema"
 }

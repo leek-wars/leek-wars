@@ -63,5 +63,8 @@
 	"verify_pro5": "大逃杀",
 	"Vérifier": "验证账户",
 	"allow_github": "允许通过 GitHub 连接",
-	"activate_dark_mode": "激活黑暗模式"
+	"light": "克莱尔",
+	"dark": "黑暗",
+	"auto": "汽车",
+	"theme": "主题"
 }

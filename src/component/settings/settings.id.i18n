@@ -63,5 +63,8 @@
 	"verify_pro5": "Battle Royale",
 	"Vérifier": "Verifikasi akun",
 	"allow_github": "Izinkan koneksi melalui GitHub",
-	"activate_dark_mode": "Mengaktifkan mode gelap"
+	"light": "Clair",
+	"dark": "Gelap",
+	"auto": "Otomatis",
+	"theme": "Tema"
 }

@@ -63,5 +63,8 @@
 	"verify_pro5": "Battle royales",
 	"Vérifier": "Account verifiëren",
 	"allow_github": "Sta verbinding toe via GitHub",
-	"activate_dark_mode": "Donkere modus activeren"
+	"light": "Clair",
+	"dark": "Donker",
+	"auto": "Auto",
+	"theme": "Thema"
 }

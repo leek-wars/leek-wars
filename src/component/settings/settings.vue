@@ -94,28 +94,34 @@
 			</panel>
 
 			<panel :title="$t('misc_options')" icon="mdi-settings-outline">
-				<table class="misc-settings">
-					<tr id="dark-button">
-						<td><h4>{{ $t('activate_dark_mode') }}</h4></td>
-						<td><v-switch v-model="LeekWars.darkMode" hide-details /></td>
-					</tr>
-					<tr id="sfw-button">
-						<td><h4>{{ $t('activate_discrete_mode') }}</h4></td>
-						<td><v-switch v-model="sfwMode" hide-details /></td>
-					</tr>
-					<tr id="notifs-results-button">
-						<td><h4>{{ $t('notifs_results') }}</h4></td>
-						<td><v-switch v-model="notifsResults" hide-details /></td>
-					</tr>
-					<tr v-if="LeekWars.mobile">
-						<td><h4>{{ $t('chat_first') }}</h4></td>
-						<td><v-switch v-model="chatFirst" hide-details /></td>
-					</tr>
-					<tr v-if="!LeekWars.mobile">
-						<td><h4>{{ $t('leek_theme') }}</h4></td>
-						<td><v-switch v-model="LeekWars.leekTheme" hide-details /></td>
-					</tr>
-				</table>
+				<div class="misc-settings">
+					<div class="setting" id="dark-button">
+						<div>{{ $t('theme') }}</div>
+						<div width="100">
+							<v-radio-group v-model="LeekWars.themeSetting" hide-details row>
+								<v-radio :label="$t('auto')" value="auto"></v-radio>
+								<v-radio :label="$t('light')" value="light"></v-radio>
+								<v-radio :label="$t('dark')" value="dark"></v-radio>
+							</v-radio-group>
+						</div>
+					</div>
+					<div class="setting" id="sfw-button">
+						<div>{{ $t('activate_discrete_mode') }}</div>
+						<div><v-switch v-model="sfwMode" hide-details /></div>
+					</div>
+					<div class="setting" id="notifs-results-button">
+						<div>{{ $t('notifs_results') }}</div>
+						<div><v-switch v-model="notifsResults" hide-details /></div>
+					</div>
+					<div class="setting" v-if="LeekWars.mobile">
+						<div>{{ $t('chat_first') }}</div>
+						<div><v-switch v-model="chatFirst" hide-details /></div>
+					</div>
+					<div class="setting" v-if="!LeekWars.mobile">
+						<div>{{ $t('leek_theme') }}</div>
+						<div><v-switch v-model="LeekWars.leekTheme" hide-details /></div>
+					</div>
+				</div>
 			</panel>
 
 			<panel :title="$t('account')" icon="mdi-account" class="account">
@@ -369,9 +375,10 @@
 			}
 		}
 
-		@Watch('LeekWars.darkMode')
-		updateDarkMode() {
-			localStorage.setItem('dark', '' + LeekWars.darkMode)
+		@Watch('LeekWars.themeSetting')
+		updateTheme() {
+			localStorage.setItem('theme', '' + LeekWars.themeSetting)
+			LeekWars.darkMode = LeekWars.themeSetting !== 'auto' ? LeekWars.themeSetting === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
 		}
 
 		@Watch('notifsResults')
@@ -542,9 +549,31 @@
 	}
 	.misc-settings {
 		width: 100%;
+		font-size: 15px;
+		.setting {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin: 8px 0;
+			.v-input--radio-group--row ::v-deep .v-input--radio-group__input {
+				flex-wrap: nowrap;
+			}
+			.v-radio {
+				margin-right: 8px;
+				&:last-child {
+					margin-right: 0;
+				}
+			}
+		}
+		.flex {
+			gap: 8px;
+		}
 		td {
 			text-align: left;
 			padding: 2px;
+			&:last-child {
+				text-align: right;
+			}
 		}
 	}
 	.list-item {

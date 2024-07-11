@@ -63,5 +63,8 @@
 	"verify_pro5": "バトルロイヤル",
 	"Vérifier": "アカウントを確認",
 	"allow_github": "GitHub 経由の接続を許可する",
-	"activate_dark_mode": "ダークモードを有効にする"
+	"light": "クレア",
+	"dark": "暗い",
+	"auto": "オート",
+	"theme": "テーマ"
 }

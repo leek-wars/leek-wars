@@ -63,5 +63,8 @@
 	"verify_pro5": "Battle Royales",
 	"Vérifier": "Verifiera konto",
 	"allow_github": "Tillåt anslutning via GitHub",
-	"activate_dark_mode": "Aktivera mörkt läge"
+	"light": "Clair",
+	"dark": "Mörk",
+	"auto": "Auto",
+	"theme": "Tema"
 }

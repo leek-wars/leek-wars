@@ -63,5 +63,8 @@
 	"verify_pro5": "Battle Royale",
 	"Vérifier": "Konto überprüfen",
 	"allow_github": "Verbindung über GitHub zulassen",
-	"activate_dark_mode": "Dunkelmodus aktivieren"
+	"light": "Clair",
+	"dark": "Dunkel",
+	"auto": "Auto",
+	"theme": "Thema"
 }

@@ -63,5 +63,8 @@
 	"verify_pro5": "Battle Royales",
 	"Vérifier": "Vahvista tili",
 	"allow_github": "Salli yhteys GitHubin kautta",
-	"activate_dark_mode": "Aktivoi pimeä tila"
+	"light": "Clair",
+	"dark": "Tumma",
+	"auto": "Auto",
+	"theme": "Teema"
 }
