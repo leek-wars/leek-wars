@@ -1,5 +1,5 @@
 242:
-  title: Fonctionnalités attendues depuis longtemps et limite d'utilisation d'arme et de puce
+  title: Fonctionnalités attendues depuis longtemps et limite d'utilisation d'arme et de puce.
   added:
     - Rééquilibrage d'armes, de puces et de composants (voir le topic).
     - "Limite d'utilisations par tour par item : fonctions get[Weapon/Chip]MaxUses() et getItemUses(item)."

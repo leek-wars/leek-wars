@@ -1,3 +1,62 @@
+242:
+  title: Long-awaited features and weapon and chip usage limit.
+  added:
+    - Rebalancing of weapons, chips and components (see topic).
+    - "Limit of uses per turn per item: functions get[Weapon/Chip]MaxUses() and getItemUses(item)."
+    - New effects on teleportation, antidote, boxing glove, grappling hook and postage (see topic).
+    - "Trophy page: farmers having obtained the trophy the fastest/slowest and having it as a title. #img_242_trophy"
+    - "History: display of chests, comments, trophies, rare resources, level up. #img_242_history"
+    - "Possibility to choose the side of your team when launching a challenge. #img_242_challenge_side"
+    - "Displaying rare trophies won by everyone in the chat. #img_242_chat_trophy"
+    - "Added AI and line number after all debug(). #img_242_logs"
+    - "Market: added a buy x10 button for the reset potion. #img_242_buy_x10"
+    - "Display of votes in the list of forum topics. #img_242_topics"
+    - "Report: link of an error/warning to its position in the report. #img_242_report_link"
+    - "Possibility of sorting topics by number of votes in the forum. #img_242_forum_search"
+    - "Added a crafting blueprint for sand and seawater. #img_242_sand"
+    - "Forum: possibility of searching for resolved or unresolved topics."
+    - "Option to send a notification when a topic is created on the forum. #img_242_new_topics"
+    - "Trophy page: Link to see the fight with exact action."
+  improved:
+    - Updated the combat generator from Java 17 to Java 21.
+    - "Display of the current level's XP percentage. #img_242_xp"
+    - The remaining XP is updated live on the page of a leek.
+    - "Editor: improved fluidity of autocompletion."
+    - "Added the full date of notifications. #img_242_notif"
+    - A draft per forum topic instead of a global one.
+    - Clicking on a notification at the bottom right reads that notification.
+    - Improved search in the forum and help (sign -, OR, double quotes).
+    - Battles with ununlocked secret trophies are blocked.
+    - "Links to LW in chat are circled and faster to load. #img_242_internal_links"
+    - "Showing preview of test maps in editor (thanks to BLGO). #img_242_test_map"
+    - All unlocked trophy icons are available in the title choice.
+    - "Editor: automatic analysis of the file when opening an AI."
+    - "New auto dark mode option #img_242_darkmode"
+    - "Combat report: wrap on errors and less padding"
+    - Added sounds for the Boxing Glove and Grapple chips.
+    - "Displaying combat states with icons. #img_242_states"
+    - Possibility of using inversion on a static entity (for the vulnerable or the heal only).
+    - Various improvements to the Evil Pumpkin boss to make it less frustrating.
+  fixed:
+    - "Correction of the cost in operations of a for loop with key: value."
+    - "Fixed a bug when compiling the same AI during a side fight."
+    - Fixed transparent skins on Firefox and Safari.
+    - Laser crystals in King Fennel pass through the entities.
+    - Fixed Belligerent trophy error.
+    - Fixed Ctrl in the editor following a Ctrl + P or other.
+    - Fixed a display bug for agility and wisdom hindrances.
+    - Fixed many icons in dark mode.
+    - Slightly darker obstacles in tactical nasu (for Ref).
+    - "Fixed the display of potions recovered in combat. #img_242_potion"
+    - Display of items with modifiers on their passive effects in the constants doc.
+    - "Editor: correction of autocompletion which was launched on an empty word."
+    - Fixed grappling hook display at more than 8 distance.
+    - Fixed team reporting.
+    - Fixed the VITALITY effect which could be negative.
+    - Fixed Ctrl+P panel dark mode in editor.
+    - Fixed bug when using grappling hook or glove on a static entity.
+    - Fixed many translations (thanks to RedWolfie).
+
 241:
    title: Happy new year! Quality of life, rebalancing and fun.
    added:
@@ -16,7 +75,7 @@
      - Improved many English translations (thanks to bgbg).
      - Display of components on the /help/items page.
      - "Added a button to access the inventory from the components list. #img_241_components_button"
-     - “Test configuration interface more suitable for mobile #img_241_editor_test_mobile”
+     - "Test configuration interface more suitable for mobile. #img_241_editor_test_mobile"
      - Disabling chats other than French and English for greater clarity.
      - "Change of fight packs: the pack purchasable in habs is the pack of 50. #img_241_fight_packs"
      - "Improved inventory on mobile. #img_241_inventory"
