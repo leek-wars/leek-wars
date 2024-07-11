@@ -24,5 +24,7 @@
 	"new_desc": "Crear una nueva IA",
 	"folder_name": "Nombre de la carpeta",
 	"recycle_bin": "Cesta",
-	"restore": "Restaurar"
+	"restore": "Restaurar",
+	"close_folder": "Cerrar carpeta",
+	"open_folder": "Abrir carpeta"
 }

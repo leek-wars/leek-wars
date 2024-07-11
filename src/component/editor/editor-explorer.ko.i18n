@@ -24,5 +24,7 @@
 	"new_desc": "새 AI 만들기",
 	"folder_name": "폴더 이름",
 	"recycle_bin": "바구니",
-	"restore": "복원하다"
+	"restore": "복원하다",
+	"close_folder": "폴더 닫기",
+	"open_folder": "폴더 열기"
 }

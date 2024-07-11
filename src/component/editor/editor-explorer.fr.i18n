@@ -24,5 +24,7 @@
 	"new_desc": "Créer une nouvelle IA",
 	"folder_name": "Nom du dossier",
 	"recycle_bin": "Corbeille",
-	"restore": "Restaurer"
+	"restore": "Restaurer",
+	"close_folder": "Fermer le dossier",
+	"open_folder": "Ouvrir le dossier"
 }

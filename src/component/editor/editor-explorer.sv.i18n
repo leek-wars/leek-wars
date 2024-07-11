@@ -24,5 +24,7 @@
 	"new_desc": "Skapa en ny AI",
 	"folder_name": "Mapp namn",
 	"recycle_bin": "Korg",
-	"restore": "Återställ"
+	"restore": "Återställ",
+	"close_folder": "Stäng mappen",
+	"open_folder": "Öppna mappen"
 }

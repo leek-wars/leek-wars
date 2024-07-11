@@ -51,6 +51,7 @@ class FileSystem {
 			} else {
 				folder.expanded = localStorage.getItem('editor/folder/' + id) === 'true'
 			}
+			folder.closed = localStorage.getItem('editor/folder/closed/' + id) === 'true'
 			folder.items = farmer.folders
 				.filter((f: any) => f.folder === id)
 				.map((f: any) => buildFolder(f.id, folder.id))

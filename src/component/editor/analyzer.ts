@@ -7,6 +7,11 @@ import { AIItem, Folder } from './editor-item'
 import { Problem } from './problem'
 import { i18n } from '@/model/i18n'
 
+export class AnalyzerPromise {
+	public then!: (data: any) => void
+	public abort!: () => void
+}
+
 class Analyzer {
 
 	public enabled: boolean = false
@@ -118,20 +123,25 @@ class Analyzer {
 		}
 	}
 
-	public complete(ai: AI, code: string, line: number, column: number) {
+	public complete(ai: AI, code: string, line: number, column: number): AnalyzerPromise {
 
 		console.log("🔥 Complete", ai.path, line, column)
 
 		if (code.length > 60_000) {
-			return Promise.reject()
+			return { ...Promise.reject(), abort: () => null }
 		}
 
 		const requestID = this.requestID++
+		// console.log("Complete request", requestID)
 		LeekWars.socket.send([SocketMessage.EDITOR_COMPLETE, requestID, ai.id, code, line, column])
 
-		return new Promise<any>((resolve, reject) => {
+		const promise = new Promise<any>((resolve, reject) => {
 			this.completeResolve[requestID] = resolve
 		})
+		return { then: promise.then.bind(promise), abort: () => {
+			// console.log("Abort request", requestID)
+			delete this.completeResolve[requestID]
+		}} as AnalyzerPromise
 	}
 
 	public completeResult(message: {type: number, id: number, data: any}) {

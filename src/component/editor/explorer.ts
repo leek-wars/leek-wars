@@ -47,6 +47,12 @@ class Explorer {
 		Vue.set(folder, 'expanded', expanded)
 		localStorage.setItem('editor/folder/' + folder.id, '' + folder.expanded)
 	}
+
+	public setClosed(folder: Folder, closed: boolean) {
+		// console.log("folder", folder.name, "expanded", expanded)
+		Vue.set(folder, 'closed', closed)
+		localStorage.setItem('editor/folder/closed/' + folder.id, '' + folder.closed)
+	}
 }
 
 const explorer = new Explorer()

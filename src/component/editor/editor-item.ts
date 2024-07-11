@@ -26,6 +26,7 @@ class Folder extends Item {
 	public errors: number = 0
 	public warnings: number = 0
 	public todos: number = 0
+	public closed: boolean = false
 	constructor(id: number, name: string, parent: number) {
 		super(parent)
 		this.id = id

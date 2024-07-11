@@ -24,5 +24,7 @@
 	"new_desc": "Maak een nieuwe AI",
 	"folder_name": "Naam van de map",
 	"recycle_bin": "Mand",
-	"restore": "Herstellen"
+	"restore": "Herstellen",
+	"close_folder": "Map sluiten",
+	"open_folder": "Map openen"
 }

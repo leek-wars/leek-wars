@@ -24,5 +24,7 @@
 	"new_desc": "Создать новый ИИ",
 	"folder_name": "Имя папки",
 	"recycle_bin": "Корзина",
-	"restore": "Восстановить"
+	"restore": "Восстановить",
+	"close_folder": "Закрыть папку",
+	"open_folder": "Открыть папку"
 }

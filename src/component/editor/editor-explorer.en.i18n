@@ -24,5 +24,7 @@
 	"new_folder": "New folder",
 	"recycle_bin": "Recycle bin",
 	"restore": "Restore",
-	"folder_name": "Folder name"
+	"folder_name": "Folder name",
+	"close_folder": "Close folder",
+	"open_folder": "Open folder"
 }

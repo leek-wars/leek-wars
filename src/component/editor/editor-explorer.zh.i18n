@@ -24,5 +24,7 @@
 	"new_desc": "创建一个新的人工智能",
 	"folder_name": "文件夹名称",
 	"recycle_bin": "篮子",
-	"restore": "恢复"
+	"restore": "恢复",
+	"close_folder": "关闭文件夹",
+	"open_folder": "打开文件夹"
 }

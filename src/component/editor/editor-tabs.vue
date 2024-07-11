@@ -204,19 +204,22 @@
 		display: inline-flex;
 		align-items: center;
 		max-width: 200px;
-		background: rgba(0, 0, 0, 0.3);
+		background: rgba(0, 0, 0, 0.2);
 		min-width: 0;
 		min-width: 120px;
 		flex-shrink: 0;
 		overflow: hidden;
-		color: #eee;
+		color: #f2f2f2;
 	}
 	.tab:not(:last-child) {
 		margin-right: 1px;
 	}
 	.tab.selected {
-		background: white;
-		color: #333;
+		color: var(--text-color);
+		background: var(--pure-white);
+		.v-icon {
+			color: var(--text-color);
+		}
 	}
 	.tab .name {
 		text-overflow: ellipsis;
@@ -230,8 +233,6 @@
 			vertical-align: baseline;
 			margin-right: 2px;
 			transition: none;
-		}
-		.v-icon {
 			color: #5fad1b;
 			&.error {
 				color: red
@@ -242,6 +243,7 @@
 		}
 	}
 	.tab .v-icon {
+		color: #eee;
 		font-size: 20px;
 		margin-right: 6px;
 		&.hidden::before {

@@ -84,22 +84,34 @@
 		<v-menu offset-y absolute :position-x="x" :position-y="y" :value="folderMenu">
 			<div v-if="folder && folder.id !== 0" class="title">{{ folder.name }}</div>
 			<v-list class="menu" :dense="true">
-				<v-list-item v-ripple @click="newAIStart()">
+				<v-list-item v-if="folder && !folder.closed" v-ripple @click="newAIStart()">
 					<v-icon>mdi-file-plus-outline</v-icon>
 					<v-list-item-content>
 						<v-list-item-title>{{ $t('new_ai') }}</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item v-ripple @click="newFolderStart()">
+				<v-list-item v-if="folder && !folder.closed" v-ripple @click="newFolderStart()">
 					<v-icon>mdi-folder-plus-outline</v-icon>
 					<v-list-item-content>
 						<v-list-item-title>{{ $t('new_folder') }}</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
-				<v-list-item v-ripple @click="renameStart">
+				<v-list-item v-if="folder && !folder.closed" v-ripple @click="renameStart">
 					<v-icon>mdi-pencil</v-icon>
 					<v-list-item-content>
 						<v-list-item-title>{{ $t('rename') }}</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				<v-list-item v-if="folder && folder.closed" v-ripple @click="openFolder()">
+					<v-icon>mdi-folder-open-outline</v-icon>
+					<v-list-item-content>
+						<v-list-item-title>{{ $t('open_folder') }}</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				<v-list-item v-else v-ripple @click="closeFolder()">
+					<v-icon>mdi-folder-lock-outline</v-icon>
+					<v-list-item-content>
+						<v-list-item-title>{{ $t('close_folder') }}</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 				<v-list-item v-ripple @click="deleteDialog = true">
@@ -200,6 +212,7 @@
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import EditorFolder from './editor-folder.vue'
 	import { Folder } from './editor-item'
+	import { explorer } from './explorer'
 
 	@Component({ name: 'editor-explorer', i18n: {}, mixins: [...mixins], components: { 'editor-folder': EditorFolder } })
 	export default class Explorer extends Vue {
@@ -355,6 +368,17 @@
 		newFolderStart() {
 			this.newFolderDialog = true
 			setTimeout(() => (this.$refs.newFolderInput as HTMLElement).focus(), 50)
+		}
+		closeFolder() {
+			if (this.folder) {
+				explorer.setClosed(this.folder, true)
+				explorer.setExpanded(this.folder, false)
+			}
+		}
+		openFolder() {
+			if (this.folder) {
+				explorer.setClosed(this.folder, false)
+			}
 		}
 		newFolder(name: string) {
 			if (!this.folder) { return }

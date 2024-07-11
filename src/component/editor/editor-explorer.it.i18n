@@ -24,5 +24,7 @@
 	"new_desc": "Crea una nuova IA",
 	"folder_name": "Nome della cartella",
 	"recycle_bin": "Cestino",
-	"restore": "Ristabilire"
+	"restore": "Ristabilire",
+	"close_folder": "Chiudere la cartella",
+	"open_folder": "Aprire la cartella"
 }

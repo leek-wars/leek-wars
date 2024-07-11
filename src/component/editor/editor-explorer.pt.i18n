@@ -24,5 +24,7 @@
 	"new_desc": "Criar uma nova IA",
 	"folder_name": "Nome da pasta",
 	"recycle_bin": "Cesta",
-	"restore": "Restaurar"
+	"restore": "Restaurar",
+	"close_folder": "Fechar a pasta",
+	"open_folder": "Abrir a pasta"
 }

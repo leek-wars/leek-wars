@@ -24,5 +24,7 @@
 	"new_desc": "Erstellen Sie eine neue KI",
 	"folder_name": "Ordnernamen",
 	"recycle_bin": "Korb",
-	"restore": "Wiederherstellen"
+	"restore": "Wiederherstellen",
+	"close_folder": "Ordner schließen",
+	"open_folder": "Ordner öffnen"
 }

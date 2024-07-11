@@ -24,5 +24,7 @@
 	"new_desc": "Buat AI baru",
 	"folder_name": "Nama folder",
 	"recycle_bin": "Keranjang",
-	"restore": "Memulihkan"
+	"restore": "Memulihkan",
+	"close_folder": "Tutup folder",
+	"open_folder": "Buka folder"
 }

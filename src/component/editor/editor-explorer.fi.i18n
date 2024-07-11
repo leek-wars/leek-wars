@@ -24,5 +24,7 @@
 	"new_desc": "Luo uusi AI",
 	"folder_name": "Kansion nimi",
 	"recycle_bin": "Kori",
-	"restore": "Palauttaa"
+	"restore": "Palauttaa",
+	"close_folder": "Sulje kansio",
+	"open_folder": "Avaa kansio"
 }

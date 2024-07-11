@@ -24,5 +24,7 @@
 	"new_desc": "新しい AI を作成する",
 	"folder_name": "フォルダ名",
 	"recycle_bin": "バスケット",
-	"restore": "戻す"
+	"restore": "戻す",
+	"close_folder": "フォルダを閉じる",
+	"open_folder": "フォルダを開く"
 }

@@ -24,5 +24,7 @@
 	"new_desc": "Opprett en ny AI",
 	"folder_name": "Mappenavn",
 	"recycle_bin": "Kurv",
-	"restore": "Restaurere"
+	"restore": "Restaurere",
+	"close_folder": "Lukk mappen",
+	"open_folder": "Åpne mappe"
 }

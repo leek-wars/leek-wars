@@ -24,5 +24,7 @@
 	"new_desc": "Opret en ny AI",
 	"folder_name": "Mappenavn",
 	"recycle_bin": "Kurv",
-	"restore": "Gendan"
+	"restore": "Gendan",
+	"close_folder": "Luk mappen",
+	"open_folder": "Åbn mappe"
 }

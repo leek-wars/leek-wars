@@ -44,10 +44,15 @@
 			</div>
 		</div>
 		<div v-show="hintDialog" ref="hintDialog" :style="{left: hintDialogLeft + 'px', top: hintDialogTop + 'px'}" class="hint-dialog">
-			<div v-if="completionType" class="type">
-				<lw-type :type="completionType" />
+			<div v-if="completionType || completing" class="type">
+				<Transition>
+					<loader v-if="completing" :size="24" />
+				</Transition>
+				<lw-type v-if="completionType" :type="completionType" />
+				<span v-else>...</span>
 			</div>
 			<div ref="hints" class="hints">
+				<div v-if="hints.length === 0" class="hint">...</div>
 				<div v-for="(hint, index) of hints" :key="index" :class="{active: selectedCompletion === index}" class="hint" @click="clickHint($event, index)">
 					<v-icon v-if="hint.category === 0" class="method">mdi-alpha-m-circle-outline</v-icon>
 					<v-icon v-else-if="hint.category === 1" class="field">mdi-cube-outline</v-icon>
@@ -139,7 +144,7 @@
 	import Javadoc from './javadoc.vue'
 	import { Problem } from './problem'
 	import Type from '@/component/type.vue'
-	import { analyzer } from './analyzer'
+	import { analyzer, AnalyzerPromise } from './analyzer'
 	import { Keyword } from '@/model/keyword'
 
 	const AUTO_SHORTCUTS = [
@@ -233,6 +238,7 @@
 		public underlineMarker: CodeMirror.TextMarker | null = null
 		public mouseX: number = -1
 		public mouseY: number = -1
+		public analyzing: boolean = false
 		private analyzerTimeout: any
 		private hoverPosition: number = -1
 		private hoverLine: number = -1
@@ -245,8 +251,9 @@
 		private jumpToLine: number | null = null
 		public loaded: boolean = false
 		private completeTimeout: any
-		private completing: boolean = false
-		private completePromise: Promise<any> | null = null
+		public completing: boolean = false
+		private completePromise: AnalyzerPromise | null = null
+		public completeCursor!: CodeMirror.Position
 
 		created() {
 			this.id = this.ai.id
@@ -332,6 +339,7 @@
 					return null
 				}}
 
+				this.setAnalyzerTimeout()
 				this.updateProblems()
 				this.editor.addOverlay(overlay_javadoc)
 				this.editor.addOverlay(overlay_ref)
@@ -568,6 +576,7 @@
 			clearTimeout(this.analyzerTimeout)
 			this.analyzerTimeout = setTimeout(() => {
 
+				this.analyzing = true
 				this.ai.code = this.document.getValue()
 				this.ai.analyze()
 
@@ -576,6 +585,7 @@
 
 				analyzer.analyze(this.ai, this.ai.code).then((result) => {
 					// console.log("analyze", result)
+					this.analyzing = false
 
 					for (const entrypoint in result) {
 						const entrypoint_id = parseInt(entrypoint, 10)
@@ -622,10 +632,9 @@
 
 			if (changes.origin === "setValue") {
 				this.ai.code = this.document.getValue()
-				// this.ai.analyze()
-			} else {
-				this.setAnalyzerTimeout()
 			}
+			this.setAnalyzerTimeout()
+
 
 			if (userChange && this.autoClosing) {
 
@@ -1302,22 +1311,28 @@
 				this.completionFrom.ch++
 			}
 
-			if (completions.length === 0) {
-				this.close()
-			} else {
-				this.hintDialog = true
-				this.detailDialog = false
+			this.completionType = null
+			this.hints = completions
+			if (force || token.string === '.' || completions.length || this.hintDialog) {
+				this.openCompletions(cursor)
+				this.selectHint(0)
 			}
 
-			if (!this.completing) {
-				this.completing = true
-				analyzer.complete(this.ai, this.document.getValue(), cursor.line + 1, cursor.ch - 1).then(raw_data => {
-					this.completing = false
+			this.completeCursor = cursor
+			if (this.completeTimeout) {
+				clearTimeout(this.completeTimeout)
+			}
+			this.completeTimeout = setTimeout(() => {
 
-					// Dialog de complétion fermé entre temps
-					if (this.hintDialog === false) {
-						return
-					}
+				this.completing = true
+				if (this.completePromise) {
+					this.completePromise.abort()
+				}
+				this.completePromise = analyzer.complete(this.ai, this.document.getValue(), this.completeCursor.line + 1, this.completeCursor.ch - 1)
+				this.completePromise.then((raw_data: any) => {
+
+					this.completing = false
+					this.openCompletions(this.completeCursor)
 
 					// console.log("Completions", raw_data)
 					if (raw_data) {
@@ -1328,9 +1343,6 @@
 							.filter(item => {
 								return item.name.toLowerCase().startsWith(start)
 							})
-							// .sort((a, b) => {
-							// 	return a.name.localeCompare(b.name)
-							// })
 							.map(data => { return {
 								name: data.name,
 								fullName: data.name,
@@ -1344,9 +1356,17 @@
 						this.completions.push(...new_completions)
 					}
 
-					this.openCompletions(this.completions, cursor)
+					if (this.completions.length) {
+						this.hints = this.completions
+						this.selectHint(0)
+
+						this.editor.removeKeyMap(this.dialogKeyMap)
+						this.editor.addKeyMap(this.dialogKeyMap)
+					} else {
+						this.close()
+					}
 				})
-			}
+			}, force || !this.completing ? 0 : 500)
 		}
 
 		public addCompletionsFromAI(start: string, completions: any[], visited: Set<number>, ai: AI) {
@@ -1401,35 +1421,26 @@
 			}
 		}
 
-		public openCompletions(completions: any[], cursor: any) {
+		public openCompletions(cursor: any) {
 			// console.log("openCompletions", completions)
-			if (completions.length === 0) {
-				this.close()
+
+			this.hintDialog = true
+			this.detailDialog = false
+
+			const pos = this.editor.cursorCoords({line: cursor.line, ch: cursor.ch }, this.console ? "local" : "page")
+			const left = pos.left
+			const top = pos.bottom
+			const editorElement = (this.$refs.ai as HTMLElement)
+			const offset = (this.$refs.ai as HTMLElement).getBoundingClientRect()
+			// console.log("pos", pos)
+			// console.log("ai offset", offset, "scroll", editorElement.parentElement!.parentElement!.scrollTop!)
+
+			if (this.console) {
+				this.hintDialogTop = top + editorElement.offsetTop - editorElement.parentElement!.parentElement!.scrollTop!
+				this.hintDialogLeft = left + editorElement.offsetLeft
 			} else {
-				this.hintDialog = true
-				this.detailDialog = false
-
-				const pos = this.editor.cursorCoords({line: cursor.line, ch: cursor.ch }, this.console ? "local" : "page")
-				const left = pos.left
-				const top = pos.bottom
-				const editorElement = (this.$refs.ai as HTMLElement)
-				const offset = (this.$refs.ai as HTMLElement).getBoundingClientRect()
-				// console.log("pos", pos)
-				// console.log("ai offset", offset, "scroll", editorElement.parentElement!.parentElement!.scrollTop!)
-
-				if (this.console) {
-					this.hintDialogTop = top + editorElement.offsetTop - editorElement.parentElement!.parentElement!.scrollTop!
-					this.hintDialogLeft = left + editorElement.offsetLeft
-				} else {
-					this.hintDialogTop = top - offset.top
-					this.hintDialogLeft = left - offset.left
-				}
-
-				this.hints = completions
-				this.selectHint(0)
-
-				this.editor.removeKeyMap(this.dialogKeyMap)
-				this.editor.addKeyMap(this.dialogKeyMap)
+				this.hintDialogTop = top - offset.top
+				this.hintDialogLeft = left - offset.left
 			}
 		}
 
@@ -1554,7 +1565,18 @@
 		}
 
 		public close() {
+			// console.trace('close')
 			this.hintDialog = false
+			this.hints = []
+			this.completionType = null
+			this.selectedCompletion = 0
+			this.selectedHint = null
+			if (this.completeTimeout) {
+				clearTimeout(this.completeTimeout)
+			}
+			if (this.completePromise) {
+				this.completePromise.abort()
+			}
 			if (this.editor) {
 				this.editor.removeKeyMap(this.dialogKeyMap)
 			}
@@ -1713,6 +1735,7 @@
 		margin: 0;
 		display: flex;
 		align-items: flex-start;
+		transition: left 0.2s ease;
 		> .type {
 			position: absolute;
 			top: 0;
@@ -1725,6 +1748,11 @@
 			background: var(--background);
 			border: 1px solid var(--border);
 			border-right: none;
+			.loader {
+				left: -30px;
+				top: 0;
+				padding: 0;
+			}
 		}
 	}
 	.hint-dialog .hints {
@@ -1963,4 +1991,14 @@
 			color: #0099ff;
 		}
 	}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.25s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
 </style>

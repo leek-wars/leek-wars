@@ -230,7 +230,7 @@
 							</div>
 							<div class="filler"></div>
 							<div class="state">
-								<div v-if="currentEditor && (currentEditor.saving || currentEditor.hovering)" class="running">
+								<div v-if="currentEditor && (currentEditor.saving || currentEditor.hovering || currentEditor.analyzing)" class="running">
 									{{ $t('analyzing') }}
 									<v-icon>mdi-sync</v-icon>
 								</div>
@@ -928,6 +928,7 @@
 		flex-direction: column;
 		height: 100%;
 		--pure-white: #fff;
+		--pure-black: #000;
 		--background: #f2f2f2;
 		--background-secondary: #eee;
 		--background-disabled: #bbb;
@@ -940,6 +941,7 @@
 	}
 	.theme-monokai {
 		--pure-white: #000;
+		--pure-black: #fff;
 		--background: #1f1f1f;
 		--background-secondary: #171717;
 		--background-disabled: #555;

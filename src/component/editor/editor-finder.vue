@@ -43,12 +43,14 @@
 			if (this.query.length === 0) {
 				for (const ai of this.history) {
 					if (ai.folder === -1) { continue } // Exclude recycle bin AIs
+					if (this.isClosed(ai)) continue // Closed folder
 					result.push({ai, score: 0, name: [ai.name], type: 1})
 				}
 			} else {
 				for (const path in fileSystem.aiByFullPath) {
 					const ai = fileSystem.aiByFullPath[path]
 					if (ai.folder === -1) { continue } // Exclude recycle bin AIs
+					if (this.isClosed(ai)) continue // Closed folder
 					const s = this.score(path, ai.name, this.query, queryLower)
 					if (s.score < 9999) {
 						if (ai.id in this.active) { s.score *= 0.25 }
@@ -58,6 +60,16 @@
 			}
 			result.sort((a, b) => a.score - b.score)
 			return result
+		}
+
+		isClosed(ai: AI) {
+			// console.log("isClosed", ai.path)
+			let folder = fileSystem.folderById[ai.folder]
+			while (folder && folder.id != 0) {
+				if (folder.closed) return true
+				folder = fileSystem.folderById[folder.parent]
+			}
+			return false
 		}
 
 		open() {
@@ -141,7 +153,7 @@
 			const str_lower = str.toLocaleLowerCase()
 			let index = 0
 			const parts = []
-			let score = 0
+			let score = str.length / 100
 			const fullUpper = str.toLocaleUpperCase() === str
 			for (let q = 0; q < query.length; ++q) {
 				const i = str_lower.indexOf(query_lower[q], index)
@@ -165,7 +177,6 @@
 
 		score_separators(str: string, query: string, query_lower: string) {
 			const s = this.separators(str)
-			const str_lower = str.toLocaleLowerCase()
 			const parts = []
 			let score = 0
 			let index = 0
@@ -212,7 +223,7 @@
 		top: 36px;
 		left: calc(50% - 250px);
 		width: 500px;
-		background: #f2f2f2;
+		background: var(--background-secondary);
 		border-radius: 5px;
 		box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 5px 8px 0px rgba(0, 0, 0, 0.14), 0px 1px 14px 0px rgba(0, 0, 0, 0.12);
 		z-index: 10;
@@ -226,7 +237,7 @@
 		padding: 8px;
 		flex: 36px 0 0;
 		border: none;
-		border-bottom: 1px solid #ddd;
+		border-bottom: 1px solid var(--border);
 		border-top-left-radius: 5px;
 		border-top-right-radius: 5px;
 	}
@@ -237,13 +248,13 @@
 	.result {
 		padding: 6px;
 		padding-left: 10px;
-		color: #444;
 		display: flex;
 		align-items: center;
 		.fill {
 			flex: 1
 		}
 		.v-icon {
+			color: var(--text-color);
 			font-size: 14px;
 			margin-right: 6px;
 			&.valid {
@@ -263,14 +274,14 @@
 			}
 		}
 		&.selected {
-			background: #ddd;
+			background: var(--pure-white);
 		}
 		.path {
-			color: #888;
+			color: var(--text-color-secondary);
 			padding-left: 10px;
 		}
 		b {
-			color: black;
+			color: var(--pure-black);
 		}
 	}
 </style>

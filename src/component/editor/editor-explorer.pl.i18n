@@ -24,5 +24,7 @@
 	"new_desc": "Utwórz nową sztuczną inteligencję",
 	"folder_name": "Nazwa folderu",
 	"recycle_bin": "Kosz",
-	"restore": "Przywrócić"
+	"restore": "Przywrócić",
+	"close_folder": "Zamknij folder",
+	"open_folder": "Otwórz folder"
 }

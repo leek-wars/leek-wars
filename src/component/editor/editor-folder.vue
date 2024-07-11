@@ -1,10 +1,11 @@
 <template lang="html">
 	<div :class="{root: folder.id === 0}" @click="click" @contextmenu.prevent.stop="$root.$emit('editor-menu', folder, false, $event)">
 		<div :class="{empty: !folder.items.length, 'dragover': dragOver > 0, expanded: folder.expanded, root: level === 0, selected: folder.selected}" :draggable="level > 0 && folder.id !== -1" class="item folder" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="drop" @dragstart="dragstart" @dragend="dragend">
-			<div v-if="folder.id != 0" :style="{'padding-left': ((level - 1) * 15 + 10) + 'px'}" class="label" :class="{error: folder.errors, warning: folder.warnings}" @click="toggle(folder)">
+			<div v-if="folder.id != 0" :style="{'padding-left': ((level - 1) * 15 + 10) + 'px'}" class="label" :class="{error: folder.errors, warning: folder.warnings, closed: folder.closed}" @click="toggle(folder)">
 				<div class="triangle"></div>
-				<v-icon v-if="folder.id === -1" class="icon">mdi-delete-outline</v-icon>
-				<v-icon v-else class="icon">mdi-folder-outline</v-icon>
+				<!-- <v-icon v-if="folder.id === -1" class="icon">mdi-delete-outline</v-icon> -->
+				<v-icon class="icon" v-if="folder.closed">mdi-folder-lock-outline</v-icon>
+				<v-icon class="icon" v-else="folder.closed">mdi-folder-outline</v-icon>
 				<span v-if="folder.id === -1" ref="name" class="text">{{ $parent.$t(folder.name) }}
 					<span v-if="folder.id === -1">({{ folder.items.length }})</span>
 				</span>
@@ -40,7 +41,9 @@
 		dragging: boolean = false
 
 		toggle(folder: Folder) {
-			explorer.setExpanded(folder, !folder.expanded)
+			if (!folder.closed) {
+				explorer.setExpanded(folder, !folder.expanded)
+			}
 		}
 		drop(e: DragEvent) {
 			if (this.folder.id === -1) { return }
@@ -104,6 +107,12 @@
 		}
 		&.error {
 			color: red;
+		}
+		&.closed {
+			opacity: 0.5;
+			.triangle {
+				opacity: 0;
+			}
 		}
 	}
 	.item.selected > .label {
