@@ -70,7 +70,7 @@
     - "Visualización de venenos recibidos en acciones de reporte de combate. #img_233_poison"
     - "Añadidos enlaces a la enciclopedia sobre los errores más frecuentes en combate. #img_233_errors"
   mejorado:
-    - "Breeder matchmaking: los criadores ya atacados durante el día tienen menos prioridad."
+    - "Farmer matchmaking: los criadores ya atacados durante el día tienen menos prioridad."
     - Tecla Enter para iniciar una prueba en el editor.
     - "Móvil: la página de inicio llega al chat General si la opción está activada."
     - El enlace del chat de la página del foro va al chat correcto en lugar del primero de la lista.

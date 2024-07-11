@@ -1,6 +1,6 @@
 {
 	"name": "leek-wars-client",
-	"version": "2.41.0",
+	"version": "2.42.0",
 	"scripts": {
 		"start": "vue-cli-service serve --mode dev",
 		"serve": "vue-cli-service serve --mode dev",
@@ -9,7 +9,6 @@
 		"build": "if test `git rev-parse --abbrev-ref HEAD` = \"master\" ; then VUE_MODE=build vue-cli-service build; else echo 'Build bloqué sur cette branche (pas master)'; fi;",
 		"build-beta": "VUE_MODE=build NODE_ENV=production vue-cli-service build --mode beta",
 		"lint": "vue-cli-service lint",
-		"stylelint": "stylelint src/**/*.{vue,css,scss}",
 		"test": "bundlesize"
 	},
 	"dependencies": {
@@ -29,12 +28,13 @@
 		"vue-json-viewer": "^2.2.22",
 		"vue-property-decorator": "^9.1.2",
 		"vue-router": "^3.4.9",
-		"vuetify": "^2.5.10",
+		"vuetify": "^2.7.2",
 		"vuex": "^3.6.0",
 		"yaml-loader": "^0.6.0"
 	},
 	"devDependencies": {
 		"@intlify/vue-i18n-loader": "^1.0.0",
+		"@mdi/font": "^7.4.47",
 		"@types/codemirror": "0.0.96",
 		"@types/google.analytics": "0.0.40",
 		"@types/node": "^14.14.10",

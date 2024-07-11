@@ -1,22 +1,27 @@
 242:
+  title: Fonctionnalités attendues depuis longtemps et limite d'utilisation d'arme et de puce
   added:
-    - "Rapport : lien d'une erreur/warning vers sa position dans le rapport. #img_242_report_link"
-    - Ajout de l'IA et numéro de ligne après tous les debug().
-    - "Marché : ajout d'un bouton acheter x10 pour la potion de réinitialisation. #img_242_buy_x10"
-    - Affichage des votes dans la liste des topics forum.
-    - Possibilité de trier les topics par nombre de votes dans le forum.
-    - Ajout d'un schéma de craft pour le sable et l'eau de mer.
-    - Historique : affichage des coffres, commentaires, trophées, ressources rares, up de niveau.
-    - Forum : possibilité de rechercher les topics résolus ou non.
-    - Affichage des trophées rares gagnés par tout le monde dans le chat.
-    - Nouveaux effets sur téléportation, antidote, gant de boxe, grappin et affranchissement.
-    - Option pour envoyer une notification quand un sujet est créé sur le forum.
+    - Rééquilibrage d'armes, de puces et de composants (voir le topic).
+    - "Limite d'utilisations par tour par item : fonctions get[Weapon/Chip]MaxUses() et getItemUses(item)."
+    - Nouveaux effets sur téléportation, antidote, gant de boxe, grappin et affranchissement (voir le topic).
+    - "Page trophée : éleveurs ayant obtenu le trophée le plus rapidement/lentement et l'ayant comme titre. #img_242_trophy"
+    - "Historique : affichage des coffres, commentaires, trophées, ressources rares, up de niveau. #img_242_history"
     - "Possibilité de choisir le côté de son équipe lors du lancement d'un défi. #img_242_challenge_side"
+    - "Affichage des trophées rares gagnés par tout le monde dans le chat. #img_242_chat_trophy"
+    - "Ajout de l'IA et numéro de ligne après tous les debug(). #img_242_logs"
+    - "Marché : ajout d'un bouton acheter x10 pour la potion de réinitialisation. #img_242_buy_x10"
+    - "Affichage des votes dans la liste des topics forum. #img_242_topics"
+    - "Rapport : lien d'une erreur/warning vers sa position dans le rapport. #img_242_report_link"
+    - "Possibilité de trier les topics par nombre de votes dans le forum. #img_242_forum_search"
+    - "Ajout d'un schéma de craft pour le sable et l'eau de mer. #img_242_sand"
+    - "Forum : possibilité de rechercher les topics résolus ou non."
+    - "Option pour envoyer une notification quand un sujet est créé sur le forum. #img_242_new_topics"
+    - "Page trophée : Lien pour voir le combat avec action l'exacte."
   improved:
-    - Mise à jour de Java 17 à Java 21.
+    - Mise à jour du générateur de combat de Java 17 à Java 21.
     - "Affichage du pourcentage d'xp du niveau actuel. #img_242_xp"
     - L'xp restante s'actualise en direct sur la page d'un poireau.
-    - "Éditeur : autocomplétion se ferme si on scroll la page."
+    - "Éditeur : amélioration de la fluidité de l'autocomplétion."
     - "Ajout de la date complète des notifications. #img_242_notif"
     - Un brouillon par sujet forum au lieu d'un global.
     - Un clic sur une notification en bas à droite lit cette notification.
@@ -25,6 +30,13 @@
     - "Les liens vers LW dans le chat sont entourés et plus rapides à charger. #img_242_internal_links"
     - "Affichage de l'aperçu des cartes de test dans l'éditeur (merci à BLGO). #img_242_test_map"
     - Tous les icones de trophées débloqués sont disponibles dans le choix du titre.
+    - "Éditeur : analyze automatique du fichier à l'ouverture d'une IA."
+    - "Nouvelle option de mode sombre automatique #img_242_darkmode"
+    - "Rapport de combat : wrap sur les erreurs et moins de padding"
+    - Ajout de sons pour les puces Gant de boxe et Grappin.
+    - "Affichage des états en combat avec des icônes. #img_242_states"
+    - Possibilité d'utiliser inversion sur une entité statique (pour la vulné ou le soin seulement).
+    - Diverses améliorations du boss Potiron Maléfique pour le rendre moins frustrant.
   fixed:
     - "Correction du coût en opérations d'une boucle for avec clé : valeur."
     - "Correction d'un bug de compilation d'une même IA lors d'un combat parallèle."
@@ -37,9 +49,13 @@
     - Obstacles un peu plus foncés en nasu tactique (pour Ref).
     - "Correction de l'affichage des potions récupérées en combat. #img_242_potion"
     - Affichage des items ayant des modificateurs sur leurs effets passifs dans la doc des constantes.
-    - Editeur : correction de l'autocomplétion qui se lançait sur un mot vide.
+    - "Editeur : correction de l'autocomplétion qui se lançait sur un mot vide."
     - Correction de l'affichage du grappin à plus de 8 de distance.
     - Correction du signalement d'équipe.
+    - Correction de l'effet VITALITY qui pouvait être négatif.
+    - Correction du mode sombre du panneau Ctrl + P dans l'éditeur.
+    - Correction du bug lors de l'utilisation de grappin ou gant sur une entité statique.
+    - Correction de nombreuses traductions (merci à RedWolfie).
 
 241:
   title: Bonne année ! Console LeekScript, Qualité de vie, rééquilibrage et fun.
