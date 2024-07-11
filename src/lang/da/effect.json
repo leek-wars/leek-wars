@@ -145,5 +145,8 @@
 	"state_4": "Pacifist",
 	"state_6": "Tæt",
 	"allies": "Alle de allierede",
-	"enemies": "Alle fjender"
+	"enemies": "Alle fjender",
+	"state_11": "Statisk",
+	"n_uses": "<b>1</b> brug | <b>{n}</b> brug",
+	"max_uses": "maksimalt {brug} pr. runde"
 }

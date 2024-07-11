@@ -21,6 +21,7 @@ class WeaponTemplate {
 	public passive_effects!: Effect[]
 	public forgotten!: boolean
 	public item!: number
+	public max_uses!: number
 }
 
 class WeaponData {

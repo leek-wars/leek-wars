@@ -144,6 +144,9 @@
 	"state_3": "Invincible",
 	"state_4": "Pacifiste",
 	"state_6": "Dense",
+	"state_11": "Statique",
 	"allies": "Tous les alliés",
-	"enemies": "Tous les ennemis"
+	"enemies": "Tous les ennemis",
+	"n_uses": "<b>1</b> utilisation | <b>{n}</b> utilisations",
+	"max_uses": "{uses} maximum par tour"
 }

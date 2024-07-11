@@ -24,6 +24,9 @@
 			<i18n v-if="chip.initial_cooldown > 0" tag="div" path="effect.initial_cooldown">
 				<span slot="turns" v-html="$tc('effect.n_turns', chip.initial_cooldown)"></span>
 			</i18n>
+			<i18n v-if="chip.max_uses != -1" path="effect.max_uses" tag="div">
+				<span slot="uses" v-html="$tc('effect.n_uses', chip.max_uses)"></span>
+			</i18n>
 			<effect-view v-for="(effect, e) in chip.effects" :key="chip.id + '_' + e" :effect="effect" :leek="leek" />
 		</div>
 		<summon-view v-if="summon" :summon="summon" @input="$emit('input', $event)" />

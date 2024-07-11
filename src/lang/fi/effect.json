@@ -145,5 +145,8 @@
 	"state_4": "Pasifisti",
 	"state_6": "Tiheä",
 	"allies": "Kaikki liittolaiset",
-	"enemies": "Kaikki viholliset"
+	"enemies": "Kaikki viholliset",
+	"state_11": "Staattinen",
+	"n_uses": "<b>1</b> käyttö | <b>{n}</b> käyttötapoja",
+	"max_uses": "enintään {käytöt} kierrosta kohti"
 }

@@ -145,5 +145,8 @@
 	"state_4": "Pacifista",
 	"state_6": "Denso",
 	"allies": "Todos los aliados",
-	"enemies": "Todos los enemigos"
+	"enemies": "Todos los enemigos",
+	"state_11": "Estática",
+	"n_uses": "<b>1</b> uso | <b>{n}</b> usos",
+	"max_uses": "máximo {usos} por ronda"
 }

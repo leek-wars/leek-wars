@@ -145,5 +145,8 @@
 	"state_4": "Pazifist",
 	"state_6": "Dicht",
 	"allies": "Alle Verbündeten",
-	"enemies": "Alle Feinde"
+	"enemies": "Alle Feinde",
+	"state_11": "Statisch",
+	"n_uses": "<b>1</b> Verwendung | <b>{n}</b> Verwendungen",
+	"max_uses": "{Maximum pro Runde"
 }

@@ -17,6 +17,10 @@
 				<img src="/image/charac/small/tp.png">{{ weapon.cost }}
 			</div>
 
+			<i18n v-if="weapon.max_uses != -1" path="effect.max_uses" tag="div">
+				<span slot="uses" v-html="$tc('effect.n_uses', weapon.max_uses)"></span>
+			</i18n>
+
 			<area-view v-if="weapon.area != Area.SINGLE_CELL" :area="weapon.area" />
 
 			<effect-view v-for="(effect, e) in weapon.effects" :key="e" :effect="effect" :leek="leek" />

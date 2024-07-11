@@ -145,5 +145,8 @@
 	"state_4": "Pacifist",
 	"state_6": "Tät",
 	"allies": "Alla allierade",
-	"enemies": "Alla fiender"
+	"enemies": "Alla fiender",
+	"state_11": "Statisk",
+	"n_uses": "<b>1</b> användning | <b>{n}</b> användning",
+	"max_uses": "maximalt {används} per runda"
 }

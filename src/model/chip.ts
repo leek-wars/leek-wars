@@ -24,5 +24,6 @@ class ChipTemplate {
 	public team_cooldown!: boolean
 	public initial_cooldown!: number
 	public type!: number
+	public max_uses!: number
 }
 export { ChipTemplate }

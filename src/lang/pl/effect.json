@@ -145,5 +145,8 @@
 	"state_4": "Pacyfista",
 	"state_6": "Gęsty",
 	"allies": "Wszyscy sojusznicy",
-	"enemies": "Wszyscy wrogowie"
+	"enemies": "Wszyscy wrogowie",
+	"state_11": "Statyczny",
+	"n_uses": "<b>1</b> użycie | <b>{n}</b> użyć",
+	"max_uses": "maksymalne {użycia} na rundę"
 }
