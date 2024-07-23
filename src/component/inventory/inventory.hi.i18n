@@ -5,5 +5,14 @@
 	"name": "नाम",
 	"level": "स्तर",
 	"date": "तारीख",
+	"all": "सभी",
+	"weapons": "हथियार, शस्त्र",
+	"chips": "पिस्सू",
+	"potions": "पोशन",
+	"hats": "टोपी",
+	"pomps": "उपकरण",
+	"resources": "संसाधन",
+	"rarity": "कमी",	
+	"total_value" : "कुल मूल्य",
 	"rarity": "कमी"
 }
