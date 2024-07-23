@@ -33,7 +33,7 @@
 				</div>
 				<div class="report-general">
 					<div v-if="fight.type === FightType.BATTLE_ROYALE">
-						<h3>Poireaux</h3>
+						<h3>{{ $t('leeks') }}</h3>
 						<div class="scroll-x">
 							<table class="report">
 								<tr>

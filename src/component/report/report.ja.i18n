@@ -12,6 +12,7 @@
 	"generation_too_long": "戦いの生成に<b>長すぎ</b>かかりました。<b>最も長く</b>かかったチームが敗者と宣言されます。",
 	"heal": "お手入れ",
 	"inflicted_damage": "与ダメージ",
+	"leeks": "ネギ",
 	"life_chart": "ヘルスポイントの進化",
 	"loosers": "敗者",
 	"movements": "変位",

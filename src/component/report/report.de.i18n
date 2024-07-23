@@ -12,6 +12,7 @@
 	"generation_too_long": "Die Generierung des Kampfes hat <b>zu lange</b> gedauert, das Team, das <b>am längsten</b> gebraucht hat, wird zum Verlierer erklärt.",
 	"heal": "Pflege",
 	"inflicted_damage": "Schaden ausgeteilt",
+	"leeks": "Lauch",
 	"life_chart": "Entwicklung der Gesundheitspunkte",
 	"loosers": "Verlierer",
 	"movements": "Verschiebungen",

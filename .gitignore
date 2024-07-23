@@ -2,6 +2,7 @@ dist
 package-lock.json
 node_modules
 .vscode/
+.idea/
 src/report.json
 public/analyzer.js
 public/analyzer.wasm
