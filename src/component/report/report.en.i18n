@@ -12,6 +12,7 @@
 	"generation_too_long": "The fight generation has taken <b>too long</b>. The team using the <b>most time</b> has been declared the loser.",
 	"heal": "Heal",
 	"inflicted_damage": "Inflicted damage",
+	"leeks": "Leeks",
 	"life_chart": "Life evolution",
 	"loosers": "Losers",
 	"movements": "Movements",
