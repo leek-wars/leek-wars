@@ -12,6 +12,7 @@
 	"generation_too_long": "Genereringen av kampen tog <b>för lång tid</b>, laget som tog <b>längst</b> förklaras vara förlorare.",
 	"heal": "Vård",
 	"inflicted_damage": "Skada gjord",
+	"leeks": "Purjolök",
 	"life_chart": "Utveckling av hälsopunkter",
 	"loosers": "Förlorare",
 	"movements": "Förskjutningar",
