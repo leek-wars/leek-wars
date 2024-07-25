@@ -675,13 +675,13 @@
 			const characteristics_base_2000 = 200 + Math.round(1900 * team_ratio)
 			const characteristics_base_500 = 50 + Math.round(475 * team_ratio)
 			return {
-				life: 1000 + " à " + max_life,
-				strength: 200 + " à " + characteristics_base_2000,
-				agility: 50 + " à " + characteristics_base_500,
-				resistance: 50 + " à " + characteristics_base_500,
-				science: 50 + " à " + characteristics_base_500,
-				wisdom: 100 + " à " + characteristics_base_1000,
-				magic: 100 + " à " + characteristics_base_1000,
+				life: 1000 + ` ${this.$t('to')} ` + max_life,
+				strength: 200 + ` ${this.$t('to')} ` + characteristics_base_2000,
+				agility: 50 + ` ${this.$t('to')} ` + characteristics_base_500,
+				resistance: 50 + ` ${this.$t('to')} ` + characteristics_base_500,
+				science: 50 + ` ${this.$t('to')} ` + characteristics_base_500,
+				wisdom: 100 + ` ${this.$t('to')} ` + characteristics_base_1000,
+				magic: 100 + ` ${this.$t('to')} ` + characteristics_base_1000,
 				frequency: 111,
 				ram: 20,
 				cores: 20,
