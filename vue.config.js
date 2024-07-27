@@ -1,5 +1,6 @@
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const path = require('path')
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 const dotenv = require('dotenv')
 const match = process.env.npm_lifecycle_script.match(/--mode\ (.*)/)
@@ -12,7 +13,21 @@ module.exports = {
 	configureWebpack: {
 		performance: {
 			hints: false
-		}
+		},
+		// devServer: {
+		// 	client: {
+		// 		overlay: false,
+		// 	},
+		// },
+		output: {
+			filename: '[name].bundle.js',
+			path: path.resolve(__dirname, 'dist')
+		},
+		plugins: [
+			new MonacoWebpackPlugin({
+				languages: ['typescript', 'javascript', 'css']
+			})
+		]
 	},
 	pages: {
 		index: {entry: 'src/main-fr'},

@@ -1,8 +1,9 @@
 import { Problem } from '@/component/editor/problem'
 import { fileSystem } from './filesystem'
 import { i18n } from './i18n'
-import { Keyword, LSClass } from './keyword'
+import { Keyword, KeywordKind, LSClass } from './keyword'
 import { LeekWars } from './leekwars'
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'
 
 class AI {
 	public id!: number
@@ -36,6 +37,7 @@ class AI {
 	public comments: { [key: number]: string } = {}
 	public scenario!: number | null
 	public problems: { [key: number]: Problem[] } = {}
+	public model!: monaco.editor.ITextModel
 
 	constructor(data: any) {
 		Object.assign(this, data)
@@ -201,10 +203,10 @@ class AI {
 			}
 
 			const fun = {
-				name: match[1],
+				label: match[1],
 				fullName,
 				details: description,
-				type: 'user-function',
+				kind: KeywordKind.Function,
 				argumentCount: args.length,
 				arguments: args,
 				ai: this,
@@ -233,14 +235,15 @@ class AI {
 			const comment = this.comments[match.index]
 			const javadoc = { name, description: comment, items: [] }
 			this.classes[name] = {
-				name,
+				label: name,
 				fullName: name,
 				details: "Classe <b>" + name + "</b>",
-				type: 'class',
+				kind: KeywordKind.Class,
 				ai: this,
 				line,
 				category: 9,
 				javadoc,
+				documentation: javadoc.description,
 				fields: [],
 				static_fields: [
 
@@ -250,12 +253,12 @@ class AI {
 			}
 			if (this.version >= 3) {
 				this.classes[name].static_fields.push(
-					{ name: "name", fullName: "name", type: "static-field", category: 1, details: i18n.t('leekscript.class_name') },
-					{ name: "super", fullName: "super", type: "static-field", category: 1, details: i18n.t('leekscript.class_super') },
-					{ name: "fields", fullName: "fields", type: "static-field", category: 1, details: i18n.t('leekscript.class_fields') },
-					{ name: "staticFields", fullName: "staticFields", type: "static-field", category: 1, details: i18n.t('leekscript.class_staticFields') },
-					{ name: "methods", fullName: "methods", type: "static-field", category: 1, details: i18n.t('leekscript.class_methods') },
-					{ name: "staticMethods", fullName: "staticMethods", type: "static-field", category: 1, details: i18n.t('leekscript.class_staticMethods') },
+					{ label: "name", fullName: "name", kind: KeywordKind.Field, category: 1, details: i18n.t('leekscript.class_name') },
+					{ label: "super", fullName: "super", kind: KeywordKind.Field, category: 1, details: i18n.t('leekscript.class_super') },
+					{ label: "fields", fullName: "fields", kind: KeywordKind.Field, category: 1, details: i18n.t('leekscript.class_fields') },
+					{ label: "staticFields", fullName: "staticFields", kind: KeywordKind.Field, category: 1, details: i18n.t('leekscript.class_staticFields') },
+					{ label: "methods", fullName: "methods", kind: KeywordKind.Field, category: 1, details: i18n.t('leekscript.class_methods') },
+					{ label: "staticMethods", fullName: "staticMethods", kind: KeywordKind.Field, category: 1, details: i18n.t('leekscript.class_staticMethods') },
 				)
 			}
 		}
@@ -328,10 +331,10 @@ class AI {
 			}
 			if (clazz) {
 				const field = {
-					name,
+					label: name,
 					fullName,
 					details: description,
-					type: is_static ? 'user-static-field' : 'user-field',
+					kind: KeywordKind.Field,
 					ai: this,
 					line,
 					javadoc,
@@ -451,10 +454,10 @@ class AI {
 					console.error("No name", match)
 				}
 				const method = {
-					name: match[3],
+					label: match[3],
 					fullName,
 					details: description,
-					type: is_static ? 'user-static-method' : 'user-method',
+					kind: KeywordKind.Method,
 					argumentCount: args.length,
 					arguments: args,
 					ai: this,
@@ -491,10 +494,10 @@ class AI {
 			const comment = this.comments[match.index]
 			const javadoc = { name, description: comment, items: [] }
 			this.globals[name] = {
-				name,
+				label: name,
 				fullName: name,
 				details: "Variable <b>" + name + "</b>",
-				type: 'variable',
+				kind: KeywordKind.Variable,
 				ai: this,
 				line,
 				category: 8,

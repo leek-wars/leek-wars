@@ -93,6 +93,7 @@ export default class SummonView extends Vue {
 	}
 	.summon .chips .chip {
 		width: 50px;
+		height: 50px;
 		margin: 3px;
 	}
 </style>

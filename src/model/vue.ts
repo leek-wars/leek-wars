@@ -43,10 +43,8 @@ Vue.component('tooltip', tooltip)
 
 import { createSimpleTransition } from 'vuetify/lib/components/transitions/createTransition'
 import '../fade-transition.sass'
-import MobImage from '@/component/mob-image.vue'
 const myTransition = createSimpleTransition('my-transition')
 Vue.component('my-transition', myTransition)
-
 
 Vue.config.productionTip = false
 
@@ -285,6 +283,7 @@ const vueMain = new Vue({
 			if (beforeRouteLeave) {
 				if (!beforeRouteLeave[0].bind(component)()) { return "Confirm" }
 			}
+			LeekWars.unload()
 		}
 
 		LeekWars.sfwInit()

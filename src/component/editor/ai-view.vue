@@ -1,5 +1,5 @@
 <template>
-	<div v-show="visible" ref="ai" class="ai" @mousemove="mousemove" @mouseleave="mouseleave">
+	<div ref="ai" class="ai" @mousemove="mousemove" @mouseleave="mouseleave">
 		<div class="codemirror-wrapper">
 			<div ref="codemirror" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" :class="{search: searchEnabled}" class="codemirror"></div>
 			<template v-for="(problems, entrypoint) of ai.problems">
@@ -71,8 +71,8 @@
 				</div>
 			</div>
 			<div v-if="selectedHint" class="details">
-				<documentation-function v-if="selectedHint.type === 'function'" :fun="selectedHint.function" />
-				<documentation-constant v-else-if="selectedHint.type === 'constant'" :constant="selectedHint.constant" />
+				<documentation-function v-if="selectedHint.kind === KeywordKind.Function" :fun="selectedHint.function" />
+				<documentation-constant v-else-if="selectedHint.kind === KeywordKind.Constant" :constant="selectedHint.constant" />
 				<item-preview v-else-if="selectedHint.details.type === 'weapon'" :item="selectedHint.details.weapon" />
 				<item-preview v-else-if="selectedHint.details.type === 'chip'" :chip="selectedHint.details.chip" />
 				<javadoc v-else-if="selectedHint.javadoc" :javadoc="selectedHint.javadoc" :keyword="selectedHint" class="main" />
@@ -145,7 +145,7 @@
 	import { Problem } from './problem'
 	import Type from '@/component/type.vue'
 	import { analyzer, AnalyzerPromise } from './analyzer'
-	import { Keyword } from '@/model/keyword'
+	import { Keyword, KeywordKind } from '@/model/keyword'
 
 	const AUTO_SHORTCUTS = [
 		["lama", "#LamaSwag", "", "Le pouvoir du lama"],
@@ -252,8 +252,10 @@
 		public loaded: boolean = false
 		private completeTimeout: any
 		public completing: boolean = false
-		private completePromise: AnalyzerPromise | null = null
+		// private completePromise: AnalyzerPromise | null = null
+		private completePromise: Promise<any> | null = null
 		public completeCursor!: CodeMirror.Position
+		KeywordKind = KeywordKind
 
 		created() {
 			this.id = this.ai.id
@@ -795,8 +797,8 @@
 			if (token.startsWith('@')) { token = token.substring(1) }
 			let wrong_arguments = false
 			for (const keyword of keywords) {
-				if (keyword.name === token) {
-					if (keyword.type === 'function' && pos) {
+				if (keyword.label === token) {
+					if (keyword.kind === KeywordKind.Function && pos) {
 						const line = this.document.getLine(pos.line)
 						let start = 0
 						let par = 0
@@ -822,7 +824,7 @@
 			}
 			if (wrong_arguments) {
 				for (const keyword of keywords) {
-					if (keyword.name === token) {
+					if (keyword.label === token) {
 						return keyword
 					}
 				}
@@ -842,7 +844,7 @@
 				// console.log("aux", ai.path)
 				if (ai.functions) {
 					for (const fun of ai.functions) {
-						if (symbol === fun.name) {
+						if (symbol === fun.label) {
 							return fun
 						}
 					}
@@ -859,14 +861,14 @@
 					}
 					if (previousToken.string === s && clazz.static_methods) {
 						for (const method of clazz.static_methods) {
-							if (symbol === method.name) {
+							if (symbol === method.label) {
 								return method
 							}
 						}
 					}
 					if (previousToken.string === s && clazz.static_fields) {
 						for (const field of clazz.static_fields) {
-							if (symbol === field.name) {
+							if (symbol === field.label) {
 								return field
 							}
 						}
@@ -1180,10 +1182,10 @@
 			const maybeAdd = (data: string | Keyword) => {
 				if (typeof data === 'string') {
 					if (data.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-						completions.push({ name: data, fullName: data, details: i18n.t('leekscript.keyword', [data]) as string, type: 'keyword', category: 3 })
+						completions.push({ label: data, fullName: data, insertText: data, details: i18n.t('leekscript.keyword', [data]) as string, kind: KeywordKind.Keyword, category: 3 })
 					}
 				} else {
-					if (data.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+					if (data.label.toLowerCase().indexOf(start.toLowerCase()) === 0) {
 						completions.push(data)
 					}
 				}
@@ -1240,20 +1242,20 @@
 				// Ajout des variables locales du code
 				for (let v = token.state.localVars; v; v = v.next) {
 					if (v.name !== "arguments" && v.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-						completions.push({name: v.name, fullName: v.name, details: i18n.t('leekscript.variable', [v.name]) as string, type: 'keyword', category: 6})
+						completions.push({label: v.name, fullName: v.name, insertText: v.name, details: i18n.t('leekscript.variable', [v.name]) as string, kind: KeywordKind.Keyword, category: 6})
 					}
 				}
 				if (token.state.context) {
 					for (let context = token.state.context.prev; context; context = context.prev) {
 						for (let v = context.vars; v; v = v.next) {
 							if (v.name !== "arguments" && v.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-								completions.push({name: v.name, fullName: v.name, details: i18n.t('leekscript.variable', [v.name]) as string, type: 'keyword', category: 6})
+								completions.push({label: v.name, fullName: v.name, insertText: v.name, details: i18n.t('leekscript.variable', [v.name]) as string, kind: KeywordKind.Keyword, category: 6})
 							}
 						}
 					}
 					for (let v = token.state.context.vars; v; v = v.next) {
 						if (v.name !== "arguments" && v.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-							completions.push({name: v.name, fullName: v.name, details: i18n.t('leekscript.argument', [v.name]) as string, type: 'keyword', category: 7})
+							completions.push({label: v.name, fullName: v.name, insertText: v.name, details: i18n.t('leekscript.argument', [v.name]) as string, kind: KeywordKind.Keyword, category: 7})
 						}
 					}
 				}
@@ -1261,17 +1263,17 @@
 				// Méthodes dans la classe actuelle
 				if (currentClass) {
 					for (const staticField of currentClass.static_fields) {
-						if (staticField.name.toLowerCase().indexOf(start) === 0) {
+						if (staticField.label.toLowerCase().indexOf(start) === 0) {
 							completions.push(staticField)
 						}
 					}
 					for (const staticMethod of currentClass.static_methods) {
-						if (staticMethod.name.toLowerCase().indexOf(start) === 0) {
+						if (staticMethod.label.toLowerCase().indexOf(start) === 0) {
 							completions.push(staticMethod)
 						}
 					}
 					for (const method of currentClass.methods) {
-						if (method.name.toLowerCase().indexOf(start) === 0) {
+						if (method.label.toLowerCase().indexOf(start) === 0) {
 							completions.push(method)
 						}
 					}
@@ -1299,7 +1301,7 @@
 				// Raccourcis
 				for (const r in AUTO_SHORTCUTS) {
 					if (AUTO_SHORTCUTS[r][0].indexOf(start.toLowerCase()) === 0) {
-						completions.push({ name: AUTO_SHORTCUTS[r][0], fullName: AUTO_SHORTCUTS[r][0], details: AUTO_SHORTCUTS[r][3], type: 'shortcut', shortcut: parseInt(r, 10), category: 5 })
+						completions.push({ label: AUTO_SHORTCUTS[r][0], fullName: AUTO_SHORTCUTS[r][0], insertText: AUTO_SHORTCUTS[r][0], details: AUTO_SHORTCUTS[r][3], kind: KeywordKind.Snippet, shortcut: parseInt(r, 10), category: 5 })
 					}
 				}
 			}
@@ -1326,10 +1328,10 @@
 
 				this.completing = true
 				if (this.completePromise) {
-					this.completePromise.abort()
+					// this.completePromise.abort()
 				}
 				this.completePromise = analyzer.complete(this.ai, this.document.getValue(), this.completeCursor.line + 1, this.completeCursor.ch - 1)
-				this.completePromise.then((raw_data: any) => {
+				this.completePromise!.then((raw_data: any) => {
 
 					this.completing = false
 					this.openCompletions(this.completeCursor)
@@ -1344,11 +1346,12 @@
 								return item.name.toLowerCase().startsWith(start)
 							})
 							.map(data => { return {
-								name: data.name,
+								label: data.name,
 								fullName: data.name,
+								insertText: data.name,
 								details: '', // i18n.t('leekscript.keyword', [data.name]) as string,
 								category: data.category,
-								type: '',
+								kind: KeywordKind.Text,
 								lstype: data.type,
 								location: data.location
 							}
@@ -1381,7 +1384,7 @@
 			}
 			// Fonctions
 			for (const fun of ai.functions) {
-				if (fun.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+				if (fun.label.toLowerCase().indexOf(start.toLowerCase()) === 0) {
 					completions.push(fun)
 				}
 			}
@@ -1405,12 +1408,12 @@
 			if (tokenBeforeDot.string in ai.classes) {
 				const clazz = ai.classes[tokenBeforeDot.string]
 				for (const staticMethod of clazz.static_methods) {
-					if (staticMethod.name.toLowerCase().indexOf(start) === 0) {
+					if (staticMethod.label.toLowerCase().indexOf(start) === 0) {
 						completions.push(staticMethod)
 					}
 				}
 				for (const static_field of clazz.static_fields) {
-					if (static_field.name.toLowerCase().indexOf(start) === 0) {
+					if (static_field.label.toLowerCase().indexOf(start) === 0) {
 						completions.push(static_field)
 					}
 				}
@@ -1494,7 +1497,7 @@
 
 			// console.log("pick", completion)
 
-			if (completion.type === 'user-method' || completion.type === 'user-static-method' || completion.type === 'user-function') {
+			if (completion.kind === KeywordKind.Method) {
 
 				const pos = this.document.getCursor()
 				let name = completion.fullName
@@ -1506,13 +1509,13 @@
 				if (addParameters && argCount > 0) {
 					const firstArgLength = (argCount > 1 ? name.indexOf(',') : name.indexOf(')')) - name.indexOf('(') - 1
 					this.document.setSelection(
-						{line: pos.line, ch: this.completionFrom.ch + completion.name.length + 1},
-						{line: pos.line, ch: this.completionFrom.ch + completion.name.length + 1 + firstArgLength}
+						{line: pos.line, ch: this.completionFrom.ch + completion.label.length + 1},
+						{line: pos.line, ch: this.completionFrom.ch + completion.label.length + 1 + firstArgLength}
 					)
 				}
 
-			} else if (completion.type === 'function') {
-				let name = completion.name
+			} else if (completion.kind === KeywordKind.Function) {
+				let name = completion.label
 				if (addParameters) {
 					name += "("
 					let a = 0, i = 0
@@ -1537,9 +1540,9 @@
 
 				if (addParameters && argCount > 0) {
 					const firstArgLength = (argCount > 1 ? name.indexOf(',') : name.indexOf(')')) - name.indexOf('(') - 1
-					this.document.setSelection({line: pos.line, ch: this.completionFrom.ch + completion.name.length + 1}, {line: pos.line, ch: this.completionFrom.ch + completion.name.length + 1 + firstArgLength})
+					this.document.setSelection({line: pos.line, ch: this.completionFrom.ch + completion.label.length + 1}, {line: pos.line, ch: this.completionFrom.ch + completion.label.length + 1 + firstArgLength})
 				}
-			} else if (completion.type === 'shortcut') {
+			} else if (completion.kind === KeywordKind.Snippet) {
 
 				// Dirty : modify the history to avoid having the word selected after an undo.
 				// Set head.ch = anchor.ch (no selection)
@@ -1559,7 +1562,7 @@
 				pos.ch = shortcut[1].length - shortcut[1].lastIndexOf("\n") - 1 + indent.length
 				this.document.setCursor(pos)
 			} else {
-				this.document.replaceRange(completion.name, this.completionFrom, this.completionTo)
+				this.document.replaceRange(completion.label, this.completionFrom, this.completionTo)
 			}
 			this.close()
 		}
@@ -1575,7 +1578,7 @@
 				clearTimeout(this.completeTimeout)
 			}
 			if (this.completePromise) {
-				this.completePromise.abort()
+				// this.completePromise.abort()
 			}
 			if (this.editor) {
 				this.editor.removeKeyMap(this.dialogKeyMap)

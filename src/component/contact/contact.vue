@@ -38,7 +38,7 @@
 	padding: 30px 0;
 }
 a {
-	color: black;
+	color: var(--pure-black);
 	font-weight: 500;
 }
 h2 {

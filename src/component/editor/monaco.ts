@@ -1,0 +1,345 @@
+
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+
+// @ts-ignore
+import leekscript from './leekscript-monarch.js'
+
+import { i18n } from '@/model/i18n';
+import { fileSystem } from '@/model/filesystem';
+import { analyzer } from './analyzer';
+import { vueMain } from '@/model/vue';
+import { AI } from '@/model/ai.js';
+import { keywords } from './keywords';
+import { Keyword, KeywordKind } from '@/model/keyword';
+import { LeekWars } from '@/model/leekwars';
+
+monaco.languages.register({ id: 'leekscript' })
+monaco.languages.setLanguageConfiguration('leekscript', {
+	comments: {
+		lineComment: '//',
+		blockComment: ['/*', '*/'],
+	},
+	surroundingPairs: [
+		{ open: "(", close: ")" },
+		{ open: "{", close: "}" },
+		{ open: "[", close: "]" },
+		// { open: "<", close: ">" },
+	],
+	autoClosingPairs: [
+		{ open: "(", close: ")" },
+		{ open: "{", close: "}" },
+		{ open: "[", close: "]" },
+		// { open: "<", close: ">" },
+	],
+	brackets:[
+		["(", ")"],
+		["{", "}"],
+		["[", "]"],
+		// ["<", ">"],
+	],
+})
+monaco.languages.setMonarchTokensProvider('leekscript', leekscript)
+monaco.languages.registerDocumentSemanticTokensProvider('leekscript', leekscript)
+
+monaco.editor.registerCommand('jump', (accessor, args) => {
+	// console.log("Command jump", args)
+	vueMain.$emit('jump', fileSystem.aiByFullPath[args.ai], args.line, args.column)
+})
+
+monaco.languages.registerDocumentSymbolProvider("leekscript", {
+	provideDocumentSymbols: function (model, token) {
+		return [
+			{
+				range: {
+					startLineNumber: 1,
+					startColumn: 1,
+					endLineNumber: 2,
+					endColumn: 1,
+				},
+				name: "File",
+				kind: 0,
+				detail: "",
+				tags: [],
+				selectionRange: {
+					startLineNumber: 1,
+					startColumn: 1,
+					endLineNumber: 2,
+					endColumn: 1,
+				},
+			},
+		]
+	}
+})
+
+monaco.editor.defineTheme("leek-wars", {
+	base: "vs", // can also be vs-dark or hc-black
+	inherit: true, // can also be false to completely replace the builtin rules
+	rules: [
+		{ token: "comment", foreground: "999999" },
+		{ token: "string", foreground: "ff781e" },
+		{ token: "keyword", foreground: "00007f", fontStyle: 'bold' },
+		{ token: "type", foreground: "0000D0", fontStyle: 'bold' },
+		{ token: "lsconstant", fontStyle: 'bold' },
+		{ token: "lsfunction", fontStyle: 'italic' },
+		{ token: "lsfunction-deprecated", foreground: '777777', fontStyle: 'italic' },
+		{ token: "atom", foreground: '0086bc', fontStyle: 'bold' },
+		{ token: "number", foreground: '007f00' },
+	],
+	colors: {
+		"editor.foreground": "#000000",
+		"editor.background": "#ffffff",
+		"editor.hoverHighlightBackground": "#00aeff33"
+	},
+})
+
+monaco.editor.defineTheme("monokai", {
+	base: "vs-dark", // can also be vs-dark or hc-black
+	inherit: true, // can also be false to completely replace the builtin rules
+	rules: [
+		{ token: "comment", foreground: "75715e" },
+		{ token: "string", foreground: "e6db74" },
+		{ token: "keyword", foreground: "f92672" },
+		{ token: "type", foreground: "86d7ff" },
+		{ token: "lsconstant", fontStyle: 'bold' },
+		{ token: "lsfunction", fontStyle: 'italic' },
+		{ token: "lsfunction-deprecated", foreground: '777777', fontStyle: 'italic' },
+		{ token: "atom", foreground: 'ae81ff' },
+		{ token: "number", foreground: 'ae81ff' },
+	],
+	colors: {
+		"editor.foreground": "#f8f8f2",
+		"editor.background": "#272822",
+		"editor.hoverHighlightBackground": "#00aeff33"
+	},
+})
+
+monaco.editor.registerEditorOpener({
+	openCodeEditor: (source, resource, selectionOrPosition) => {
+		console.log("open", source, resource, selectionOrPosition)
+		vueMain.$emit('jump', fileSystem.aiByFullPath[resource.path.substring(1)], (selectionOrPosition as monaco.IRange).startLineNumber)
+		return true
+	},
+})
+
+monaco.languages.registerHoverProvider("leekscript", {
+	provideHover: async (model, position, token, context) => {
+		// console.log("hover", model.uri.path)
+
+		const ai = fileSystem.aiByFullPath[model.uri.path.substring(1)]
+
+		const hover = await analyzer.hover(ai, position.lineNumber, position.column - 1)
+		// console.log(hover)
+		// this.hover = hover
+		if (hover && hover.type) {
+			const range = new monaco.Range(
+				hover.location[1],
+				hover.location[2] + 1,
+				hover.location[3],
+				hover.location[4] + 2,
+			)
+			let details = ''
+			if (hover.defined) {
+				const ai = fileSystem.ais[hover.defined[0]]
+				const line = hover.defined[1]
+				const column = hover.defined[2]
+				const args = encodeURIComponent(JSON.stringify({ ai: ai.path, line, column }))
+				details += "[" + i18n.t('leekscript.defined_in', [ '`' + ai.path + '`', line ]) + "](command:jump?" + args + ' "' + ai.path + ':' + line + ':' + column + '")'
+				// console.log(details)
+				const uri = monaco.Uri.parse('file:///' + ai.path)
+				if (monaco.editor.getModel(uri) === null) {
+					monaco.editor.createModel(ai.code, 'leekscript', uri)
+				}
+			}
+			return {
+				range: range,
+				contents: [
+					{ value: "```leekscript\n" + model.getValueInRange(range) + "\n```" },
+					{ value: details, isTrusted: true },
+					{ value: "```leekscript\n" + hover.type + "\n```" },
+				],
+			}
+		}
+		return {
+			range: new monaco.Range(
+				position.lineNumber,
+				position.column,
+				position.lineNumber,
+				position.column,
+			),
+			contents: [
+
+			],
+		}
+	},
+})
+
+monaco.languages.registerDefinitionProvider("leekscript", {
+	provideDefinition: (model, position, token) => {
+		// console.log("provideDefinition")
+		// console.log("provideDefinition", model, position, token)
+		const hover = analyzer.lastHover
+		if (hover?.defined) {
+			// console.log("provideDefinition defined", hover.defined)
+			const range = new monaco.Range(
+				hover.defined[1],
+				hover.defined[2] + 1,
+				hover.defined[3],
+				hover.defined[4],
+			)
+			// console.log(model.uri)
+			const ai = fileSystem.ais[hover.defined[0]]
+			return {
+				range,
+				uri: monaco.Uri.parse('file:///' + ai.path)
+			}
+		}
+		return {
+			range: new monaco.Range(
+				position.lineNumber,
+				position.column,
+				position.lineNumber,
+				position.column,
+			),
+			uri: model.uri
+		}
+	},
+})
+
+LeekWars.completionsProvider = monaco.languages.registerCompletionItemProvider("leekscript", {
+	triggerCharacters: ["."],
+
+	provideCompletionItems: async function (model, position) {
+
+		// console.log("provideCompletionItems", model)
+
+		const ai = fileSystem.aiByFullPath[model.uri.path.substring(1)]
+
+		const completions = await analyzer.complete(ai, model.getValue(), position.lineNumber, position.column - 2)
+
+		console.log("completions", completions)
+		const word = model.getWordUntilPosition(position)
+		const line = model.getLineContent(position.lineNumber)
+		const isDot = line.charAt(word.startColumn - 2) === '.'
+		const tokenBeforeDot = model.getWordAtPosition({ column: word.startColumn - 1, lineNumber: position.lineNumber })?.word || ''
+		console.log("word", word, "isDot", isDot, "tokenBeforeDot", tokenBeforeDot)
+		const range = {
+			startLineNumber: position.lineNumber,
+			endLineNumber: position.lineNumber,
+			startColumn: word.startColumn,
+			endColumn: word.endColumn,
+		}
+		console.log("range", range)
+		const suggestions = completions ? completions.items.map((i: any) => ({
+			label: i.name,
+			kind: monaco.languages.CompletionItemKind.Function,
+			documentation: "Describe your library here",
+			insertText: i.name,
+			range,
+		} as monaco.languages.CompletionItem)) : [] as monaco.languages.CompletionItem[]
+
+		const visited = new Set<number>()
+		const maybeAdd = (data: string | Keyword) => {
+			// console.log("keyword", data)
+			if (typeof data === 'string') {
+				if (data.toLowerCase().indexOf(word.word.toLowerCase()) === 0) {
+					suggestions.push({
+						label: data,
+						fullName: data,
+						details: i18n.t('leekscript.keyword', [data]) as string,
+						kind: KeywordKind.Keyword,
+						category: 3,
+						range,
+						insertText: data,
+					})
+				}
+			} else {
+				if (data.label.toLowerCase().indexOf(word.word.toLowerCase()) === 0) {
+					suggestions.push({
+						...data,
+						label: data.fullName,
+						documentation: data.label,
+						range,
+						insertText:
+						data.insertText || data.label,
+						insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+					})
+				}
+			}
+		}
+		if (isDot) {
+			// ClassName.<field>
+			const visited = new Set<number>()
+			addDotCompletionsFromAI(tokenBeforeDot, word.word, suggestions, visited, ai, range)
+
+			for (const entrypoint_id of ai.entrypoints) {
+				const entrypoint = fileSystem.ais[entrypoint_id]
+				if (entrypoint) {
+					addDotCompletionsFromAI(tokenBeforeDot, word.word, suggestions, visited, entrypoint, range)
+				}
+			}
+		} else {
+			addCompletionsFromAI(word.word, suggestions, visited, ai, range)
+			keywords.forEach(maybeAdd)
+		}
+
+		return {
+			suggestions
+		}
+	}
+})
+
+function addCompletionsFromAI(start: string, completions: monaco.languages.CompletionItem[], visited: Set<number>, ai: AI, range: monaco.IRange) {
+	if (visited.has(ai.id)) { return }
+	visited.add(ai.id)
+	// console.log("add completions from ai", ai.id)
+	// Globales
+	for (const variable in ai.globals) {
+		if (variable.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+			const g = ai.globals[variable]
+			completions.push({ ...g, kind: g.kind as number as monaco.languages.CompletionItemKind, insertText: g.label, range })
+		}
+	}
+	// Fonctions
+	for (const fun of ai.functions) {
+		if (fun.label.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+			completions.push({ ...fun, kind: fun.kind as number as monaco.languages.CompletionItemKind, insertText: fun.label, range })
+		}
+	}
+	// Classes
+	for (const variable in ai.classes) {
+		if (variable.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+			const c = ai.classes[variable]
+			completions.push({ ...c, kind: c.kind as number as monaco.languages.CompletionItemKind, insertText: c.label, range })
+		}
+	}
+	// Includes of ai
+	for (const include of ai.includes) {
+		addCompletionsFromAI(start, completions, visited, include, range)
+	}
+}
+
+function addDotCompletionsFromAI(tokenBeforeDot: string, start: string, completions: monaco.languages.CompletionItem[], visited: Set<number>, ai: AI, range: monaco.IRange) {
+
+	// console.log("dot completions", ai)
+
+	if (visited.has(ai.id)) { return }
+	visited.add(ai.id)
+
+	if (tokenBeforeDot in ai.classes) {
+		const clazz = ai.classes[tokenBeforeDot]
+		for (const staticMethod of clazz.static_methods) {
+			if (staticMethod.label.toLowerCase().indexOf(start) === 0) {
+				completions.push({ ...staticMethod, kind: staticMethod.kind as number as monaco.languages.CompletionItemKind, insertText: staticMethod.label, range })
+			}
+		}
+		for (const static_field of clazz.static_fields) {
+			if (static_field.label.toLowerCase().indexOf(start) === 0) {
+				completions.push({ ...static_field, kind: static_field.kind as number as monaco.languages.CompletionItemKind, insertText: static_field.label, range })
+			}
+		}
+	}
+	// Includes of ai
+	for (const include of ai.includes) {
+		addDotCompletionsFromAI(tokenBeforeDot, start, completions, visited, include, range)
+	}
+}

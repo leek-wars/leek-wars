@@ -773,6 +773,13 @@ const LeekWars = {
 			return helpPages[locale][log[4]]
 		}
 		return helpPages.en[log[4]]
+	},
+	completionsProvider: null as any,
+	unload: () => {
+		// console.log("Leek Wars unload")
+		// if (LeekWars.completionsProvider) {
+		// 	LeekWars.completionsProvider.dispose()
+		// }
 	}
 }
 

@@ -61,6 +61,7 @@
 	height: 100%;
 	.v-icon {
 		font-size: 20px;
+		color: var(--text-color);
 	}
 	.file {
 		display: flex;

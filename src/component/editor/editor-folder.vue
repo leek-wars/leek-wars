@@ -116,7 +116,7 @@
 		}
 	}
 	.item.selected > .label {
-		background: var(--background-secondary);
+		background: var(--background-header);
 	}
 	#app.app .item .label {
 		padding: 8px 10px;

@@ -63,7 +63,10 @@
 					</div>
 				</div>
 			</div>
-			<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :current="currentID" :ais="fileSystem.ais" :history2="history" @close="close" @close-all="closeAll" />
+
+			<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :ais="fileSystem.ais" :history2="history" :current="currentAI1" :active="currentSide === 1" :splitted="splitted" group="tabs" @close="close" @close-all="closeAll" @split="setSplitted(true, $event)" :style="{ 'width': (editor1Width * 80) + '%' }" @open="open($event, 1)" />
+
+			<editor-tabs v-if="splitted && !LeekWars.mobile" ref="tabs2" :ais="fileSystem.ais" :history2="history" :current="currentAI2" :active="currentSide === 2" :splitted="splitted" group="tabs2" @close="close" @close-all="closeAll" :style="{ 'width': (editor2Width * 100) + '%' }" @open="open($event, 2)" @close-panel="setSplitted(false)" />
 
 			<editor-finder ref="finder" :active="activeAIs" :history="history" />
 		</div>
@@ -89,21 +92,19 @@
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" :style="{width: 'calc(100% - ' + (LeekWars.mobile ? 0 : panelWidth) + 'px)'}" class="editor-column">
 				<panel class="editor-panel">
 					<div slot="content" class="editor-left dida-element">
-						<div class="resizer" @mousedown="resizerMousedown"></div>
-						<div :class="{tabs: $refs.tabs && $refs.tabs.tabs.length > 1}" class="editors">
-							<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :ais="fileSystem.ais" :editors="$refs.editors" :visible="currentAI === ai" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" @jump="jump" @load="load" />
+						<div class="resizer explorer-resizer" @mousedown="resizerMousedown">
+							<v-icon>mdi-drag-vertical-variant</v-icon>
 						</div>
-						<div v-if="currentEditor" class="compilation">
-							<!-- <div v-if="currentEditor.saving" class="compiling">
-								<loader :size="15" /> {{ $t('saving') }}
-							</div> -->
-							<div class="results">
-								<div v-for="(good, g) in goods" :key="g" class="good" v-html="'✓ ' + (good.ai !== currentAI ? currentAI.name + ' ➞ ' : '') + $t('valid_ai', [good.ai.name])"></div>
-								<div v-if="currentEditor.serverError" class="error" @click="currentEditor.serverError = false">× <i>{{ $t('server_error') }}</i></div>
-								<div v-for="(error, e) in errors" :key="e" class="error" @click="errors.splice(e, 1)">
-									× <span v-html="$t('ai_error', [error.ai, error.line])"></span> ▶ {{ error.message }}
-								</div>
+						<div :class="{tabs: $refs.tabs && $refs.tabs.tabs.length > 1}" class="editors" ref="editors">
+
+							<ai-view-monaco v-if="currentAI1" ref="editor" :ai="fileSystem.ais[currentAI1]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" @jump="jump" @load="load" @focus="setSide(1)" :style="{ 'width': (editor1Width * 100) + '%' }" />
+
+							<div v-if="splitted" class="resizer editor-resizer" @dblclick="split50_50" @mousedown="resizerEditorMousedown">
+								<v-icon>mdi-drag-vertical-variant</v-icon>
 							</div>
+
+							<ai-view-monaco v-if="splitted && currentAI2" ref="editor2" :ai="fileSystem.ais[currentAI2]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" @jump="jump" @load="load" @focus="setSide(2)" :style="{ 'width': (editor2Width * 100) + '%' }" />
+
 						</div>
 
 						<span v-if="LeekWars.didactitial_step === 4" class="dida-hint shaking">
@@ -112,7 +113,9 @@
 						</span>
 
 						<div v-if="showProblemsDetails && problemsHeight && (analyzer.error_count || analyzer.warning_count || analyzer.todo_count)" :style="{height: problemsHeight + 'px'}">
-							<div class="problems-resizer" @mousedown="problemsResizerMousedown"></div>
+							<div class="resizer problems-resizer" @mousedown="problemsResizerMousedown">
+								<v-icon>mdi-drag-horizontal-variant</v-icon>
+							</div>
 							<editor-problems @jump="jump" />
 						</div>
 						<div class="status">
@@ -235,7 +238,7 @@
 									<v-icon>mdi-sync</v-icon>
 								</div>
 							</div>
-							<div v-if="currentEditor && currentEditor.editor" class="version">L {{ currentEditor.editor.getCursor().line + 1 }}, C {{ currentEditor.editor.getCursor().ch }} <span v-if="currentEditor.editor.getSelection()">({{ currentEditor.editor.getSelection().length }} Select.)</span></div>
+							<div v-if="currentEditor && currentEditor.editor" class="version">L {{ currentEditor.position.lineNumber + 1 }}, C {{ currentEditor.position.column }} <span v-if="currentEditor.selected">({{ currentEditor.selected.length }} Select.)</span></div>
 						</div>
 					</div>
 				</panel>
@@ -260,10 +263,16 @@
 
 				<div class="title">{{ $t('theme') }}</div>
 
-				<v-radio-group v-model="theme" hide-details>
+				<v-radio-group v-model="theme" hide-details class="themes">
 					<v-radio label="Leek Wars" value="leek-wars" />
 					<v-radio label="Monokai" value="monokai" />
+					<v-radio label="VS Code clair" value="vs" />
+					<v-radio label="VS Code sombre" value="vs-dark" />
+					<v-radio label="High Contrast clair" value="hc-light" />
+					<v-radio label="High Contrast sombre" value="hc-black" />
 				</v-radio-group>
+				<!-- Custom theme name
+				<input v-model="theme"> -->
 
 				<div class="title">{{ $t('settings_editor') }}</div>
 
@@ -322,12 +331,13 @@
 	import { locale } from '@/locale'
 	import { AI } from '@/model/ai'
 	import { fileSystem } from '@/model/filesystem'
-	import { mixins } from '@/model/i18n'
+	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import { Route } from 'vue-router'
 	import AIView from './ai-view.vue'
+	import AIViewMonaco from './ai-view-monaco.vue'
 	import { Problem } from './problem'
 	import EditorFinder from './editor-finder.vue'
 	import { AIItem, Folder, Item } from './editor-item'
@@ -341,6 +351,7 @@
 	import { analyzer } from './analyzer'
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
 	import AIElement from '@/component/app/ai.vue'
+	import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'
 
 	const DEFAULT_FONT_SIZE = 16
 	const DEFAULT_LINE_HEIGHT = 24
@@ -350,12 +361,15 @@
 		name: 'editor', i18n: {},
 		components: {
 			'ai-view': AIView,
+			'ai-view-monaco': AIViewMonaco,
 			'editor-test': EditorTest,
 			'editor-tabs': EditorTabs,
 			'explorer': Explorer,
 			'editor-finder': EditorFinder,
 			'editor-problems': EditorProblems,
-			ai: AIElement
+			ai: AIElement,
+			// 'dockview-vue': DockviewVue,
+			// 'Lumino': Lumino
 		},
 		mixins: [...mixins]
 	})
@@ -363,12 +377,12 @@
 
 		analyzer = analyzer
 		activeAIs: {[key: number]: AI} = {}
-		currentAI: AI | null = null
-		currentEditor: AIView | null = null
+		currentAI1: number | null = null
+		currentAI2: number | null = null
+		currentSide: number = 1
+		currentEditor: AIViewMonaco | null = null
 		currentType: string | null = null
 		currentFolder: Folder | null = null
-		errors: any[] = []
-		goods: any[] = []
 		infoDialog: boolean = false
 		settingsDialog: boolean = false
 		addMenu: boolean = false
@@ -384,7 +398,6 @@
 		lineHeight: number = DEFAULT_LINE_HEIGHT
 		dragging: Item | null = null
 		testDialog: boolean = false
-		tabs: AI[] = []
 		panelWidth: number = 200
 		problemsHeight: number = 200
 		newAIv2Dialog: boolean = false
@@ -403,19 +416,28 @@
 			{icon: 'mdi-delete', click: () => this.startDelete()},
 			{icon: 'mdi-play', click: () => this.startTest()},
 		]
+		editor1Width: number = 0.5
+		editor2Width: number = 0.5
+		editorTotalWidth: number = 800
+		splitted: boolean = true
 
 		get currentID() {
 			if (this.currentType === 'ai' && this.currentAI) { return this.currentAI.id }
 			if (this.currentFolder) { return this.currentFolder.id }
 			return 0
 		}
+		get currentAI() {
+			return fileSystem.ais[this.currentSide === 1 ? this.currentAI1! : this.currentAI2!]
+		}
 
 		created() {
+			LeekWars.footer = false
+			LeekWars.box = true
 			if (localStorage.getItem('editor/autocomplete') === null) { localStorage.setItem('editor/autocomplete', 'true') }
 			if (localStorage.getItem('editor/auto_closing') === null) { localStorage.setItem('editor/auto_closing', 'true') }
 			if (localStorage.getItem('editor/popups') === null) { localStorage.setItem('editor/popups', 'true') }
 			if (localStorage.getItem('editor/analyzer') === null) { localStorage.setItem('editor/analyzer', 'false') }
-			this.enlargeWindow = localStorage.getItem('editor/large') === 'true'
+			LeekWars.large = this.enlargeWindow = localStorage.getItem('editor/large') === 'true'
 			this.theme = localStorage.getItem('editor/theme') || DEFAULT_THEME
 			this.autoClosing = localStorage.getItem('editor/auto_closing') === 'true'
 			this.autocomplete = localStorage.getItem('editor/autocomplete') === 'true'
@@ -426,6 +448,10 @@
 			this.lineHeight = parseInt(localStorage.getItem('editor/line_height') || '', 10) || DEFAULT_LINE_HEIGHT
 			this.problemsHeight = parseInt(localStorage.getItem('editor/problems-height') || '', 10) || 200
 			this.panelWidth = parseInt(localStorage.getItem('editor/panel-width') || '', 10) || 200
+			this.splitted = localStorage.getItem('editor/splitted') === 'true'
+			this.editor1Width = parseFloat(localStorage.getItem('editor/editor1-width') || '') || (this.splitted ? 0.5 : 1)
+			this.editor2Width = parseFloat(localStorage.getItem('editor/editor2-width') || '') || 0.5
+			this.currentAI2 = parseInt(localStorage.getItem('editor/last-code-2') || '') || null
 
 			LeekWars.loadEncyclopedia(locale)
 		}
@@ -445,6 +471,7 @@
 		mounted() {
 			LeekWars.footer = false
 			LeekWars.box = true
+
 			this.$root.$on('ctrlS', () => {
 				this.save()
 			})
@@ -455,33 +482,33 @@
 			this.$root.$on('ctrlQ', () => {
 				this.testDialog = true
 			})
-			this.$root.$on('ctrlF', (event: Event) => {
-				if (this.currentEditor) {
-					this.currentEditor.search()
-					event.preventDefault()
-				}
-			})
+			// this.$root.$on('ctrlF', (event: Event) => {
+			// 	if (this.currentEditor) {
+			// 		this.currentEditor.search()
+			// 		event.preventDefault()
+			// 	}
+			// })
 			this.$root.$on('ctrlP', (event: Event) => {
 				const finder = this.$refs.finder as EditorFinder
 				finder.search = true
 				finder.open()
 				event.preventDefault()
-				for (const editor of (this.$refs.editors as AIView[])) {
-					editor.ctrlUp()
-				}
+				// for (const editor of (this.$refs.editors as AIView[])) {
+				// 	editor.ctrlUp()
+				// }
 			})
-			this.$root.$on('escape', () => {
-				if (this.currentEditor) {
-					this.currentEditor.closeSearch()
-				}
-				(this.$refs.finder as EditorFinder).close()
-			})
-			this.$root.$on('htmlclick', () => {
-				if (this.currentEditor) {
-					this.currentEditor.close()
-				}
-				(this.$refs.finder as EditorFinder).close()
-			})
+			// this.$root.$on('escape', () => {
+			// 	if (this.currentEditor) {
+			// 		this.currentEditor.closeSearch()
+			// 	}
+			// 	(this.$refs.finder as EditorFinder).close()
+			// })
+			// this.$root.$on('htmlclick', () => {
+			// 	if (this.currentEditor) {
+			// 		this.currentEditor.close()
+			// 	}
+			// 	(this.$refs.finder as EditorFinder).close()
+			// })
 			this.$root.$on('keydown', this.keydown)
 			this.$root.$on('keyup', this.keyup)
 			this.$root.$on('previous', (event: Event) => {
@@ -517,6 +544,7 @@
 				this.dragging = null
 			})
 			this.$root.$on('connected', this.connected)
+			this.$root.$on('jump', this.jump)
 
 			if (store.state.farmer) {
 				this.connected()
@@ -578,31 +606,39 @@
 				// console.log("fileSystem", Object.values(fileSystem.ais).length)
 				if (id > 0 && id in fileSystem.ais) {
 					const ai = fileSystem.ais[id]
-					this.currentAI = ai
-					this.currentType = 'ai'
-					this.currentFolder = fileSystem.folderById[ai.folder]
-					localStorage.setItem('editor/last_code', '' + id)
-					if (!(id in this.activeAIs)) {
-						Vue.set(this.$data.activeAIs, ai.id, this.currentAI)
+					if (this.currentSide === 1) {
+						this.currentAI1 = id
+					} else {
+						this.currentAI2 = id
 					}
 					Vue.nextTick(() => {
-						this.currentEditor = (this.$refs.editors as AIView[]).find(editor => editor.ai === ai) || null
+						this.currentEditor = (this.currentSide === 1 ? this.$refs.editor : this.$refs.editor2) as AIViewMonaco
 					})
-					explorer.selectAI(this.currentAI!)
+					localStorage.setItem('editor/last-code-' + this.currentSide, '' + id)
+					this.currentType = 'ai'
+					this.currentFolder = fileSystem.folderById[ai.folder]
+					if (!(id in this.activeAIs)) {
+						Vue.set(this.$data.activeAIs, ai.id, ai)
+					}
+					explorer.selectAI(ai)
 					if (this.$refs.tabs) {
-						(this.$refs.tabs as any).add(this.currentAI)
+						if (this.currentSide === 1) {
+							(this.$refs.tabs as any).add(id)
+						} else {
+							(this.$refs.tabs2 as any).add(id)
+						}
 					}
 					// Ajout dans l'historique
-					const i = this.history.indexOf(this.currentAI)
+					const i = this.history.indexOf(ai)
 					if (i !== -1) { this.history.splice(i, 1) }
-					this.history.unshift(this.currentAI)
+					this.history.unshift(ai)
 
-					LeekWars.setTitle(this.currentAI.name)
+					LeekWars.setTitle(ai.name)
 					LeekWars.splitShowContent()
 					LeekWars.setActions(this.actions_content)
 
 					if ('line' in this.$route.query) {
-						this.jump(this.currentAI, parseInt(this.$route.query.line as string))
+						this.jump(ai, parseInt(this.$route.query.line as string), 0)
 					}
 				} else {
 					this.currentFolder = fileSystem.folderById[id]
@@ -613,9 +649,10 @@
 				}
 
 			} else if (!LeekWars.mobile) {
-				const lastCode = localStorage.getItem('editor/last_code')
+
+				const lastCode = localStorage.getItem('editor/last-code-1')
 				if (lastCode && parseInt(lastCode, 10) > 0 && lastCode in fileSystem.ais) {
-					this.$router.replace('/editor/' + localStorage.getItem('editor/last_code'))
+					this.$router.replace('/editor/' + localStorage.getItem('editor/last-code-1'))
 				} else if (store.state.farmer) {
 					for (const ai in store.state.farmer.leek_ais) {
 						if (store.state.farmer.leek_ais[ai] in fileSystem.ais) {
@@ -645,6 +682,7 @@
 			this.$root.$off('next')
 			this.$root.$off('back')
 			this.$root.$off('connected', this.connected)
+			this.$root.$off('jump', this.jump)
 			LeekWars.large = false
 			LeekWars.header = true
 			LeekWars.footer = true
@@ -670,15 +708,15 @@
 			}
 		}
 
-		save(aiEditor: AIView | null = this.currentEditor) {
+		save(aiEditor: AIViewMonaco | null = this.currentEditor) {
+			// console.log("save", aiEditor, this.currentEditor)
 			if (!aiEditor) { return }
-			if (aiEditor.saving || !aiEditor.loaded) { return }
+			if (aiEditor.saving) { return }
 			aiEditor.saving = true
 			aiEditor.save()
 			aiEditor.serverError = false
-			this.errors = []
 
-			const saveID = aiEditor.id > 0 ? aiEditor.id : 0
+			const saveID = aiEditor.ai ? aiEditor.ai.id : 0
 			const content = aiEditor.editor.getValue()
 			Vue.set(aiEditor.ai, 'code', content)
 
@@ -696,8 +734,7 @@
 				localStorage.setItem('ai/time/' + aiEditor.ai.id, '' + data.modified)
 				localStorage.setItem('ai/code/' + aiEditor.ai.id, content)
 
-				this.errors = []
-				this.goods = []
+				aiEditor.goods = []
 
 				for (const entrypoint in data.result) {
 					const entrypoint_id = parseInt(entrypoint, 10)
@@ -708,21 +745,21 @@
 					for (const problem of data.result[entrypoint]) {
 						if (problem[0] === 0) { valid = false; break }
 					}
-					if (valid && this.goods.length === 0) {
-						this.goods.push({ai})
+					if (valid && aiEditor.goods.length === 0) {
+						aiEditor.goods.push({ai})
 					}
 					Vue.set(ai, 'valid', valid)
 					analyzer.handleProblems(ai, data.result[entrypoint])
 				}
 				analyzer.updateCount()
-				setTimeout(() => this.goods = [], 2000)
+				setTimeout(() => aiEditor.goods = [], 2000)
 
-				if (aiEditor.needTest) {
-					aiEditor.needTest = false
-					if (aiEditor.ai.valid) {
-						this.startTest()
-					}
-				}
+				// if (aiEditor.needTest) {
+				// 	aiEditor.needTest = false
+				// 	if (aiEditor.ai.valid) {
+				// 		this.startTest()
+				// 	}
+				// }
 			}).error(() => {
 				if (aiEditor === null) { return }
 				aiEditor.serverError = true
@@ -731,9 +768,9 @@
 		}
 
 		saveAll() {
-			for (const aiEditor of (this.$refs.editors as AIView[])) {
-				this.save(aiEditor)
-			}
+			// for (const aiEditor of (this.$refs.editors as AIView[])) {
+			// 	this.save(aiEditor)
+			// }
 		}
 
 		startDelete() {
@@ -742,7 +779,7 @@
 		startTest(editor = this.currentEditor) {
 			if (!editor || !editor.ai) { return }
 			if (editor.ai.modified) {
-				editor.needTest = true
+				// editor.needTest = true
 				this.save(editor)
 				return
 			}
@@ -797,13 +834,14 @@
 			return (this.$refs.editors as AIView[]).find(e => e.ai === ai)
 		}
 
-		jump(ai: AI, line: number) {
-			if (ai !== this.currentAI) {
+		jump(ai: AI, line: number, column: number) {
+			console.log("jump()", ai, line)
+			if (ai.id !== this.currentAI!.id) {
 				this.$router.push('/editor/' + ai.id)
 			}
 			Vue.nextTick(() => {
-				const editor = this.getAiView(ai)
-				if (editor) { editor.scrollToLine(line - 1) }
+				const editor = this.$refs.editor as AIViewMonaco
+				if (editor) { editor.scrollToLine(line, column) }
 			})
 		}
 
@@ -822,7 +860,28 @@
 					panelWidth = 0
 				}
 				this.panelWidth = panelWidth
+				this.editorTotalWidth = (this.$refs.editors! as HTMLElement).clientWidth
 				localStorage.setItem('editor/panel-width', '' + this.panelWidth)
+			}
+			const mouseup: any = (ev: MouseEvent) => {
+				document.documentElement!.removeEventListener('mousemove', mousemove)
+				document.documentElement!.removeEventListener('mouseup', mouseup)
+			}
+			document.documentElement!.addEventListener('mousemove', mousemove, false)
+			document.documentElement!.addEventListener('mouseup', mouseup, false)
+			e.preventDefault()
+		}
+
+		resizerEditorMousedown(e: MouseEvent) {
+			const startX = e.clientX
+			this.editorTotalWidth = (this.$refs.editors! as HTMLElement).clientWidth
+			const startWidth = this.editor1Width * this.editorTotalWidth
+			const mousemove: any = (ev: MouseEvent) => {
+				let panelWidth = Math.max(300, Math.min(this.editorTotalWidth - 300, startWidth + ev.clientX - startX))
+				this.editor1Width = panelWidth / this.editorTotalWidth
+				this.editor2Width = 1 - this.editor1Width
+				localStorage.setItem('editor/editor1-width', '' + this.editor1Width)
+				localStorage.setItem('editor/editor2-width', '' + this.editor2Width)
 			}
 			const mouseup: any = (ev: MouseEvent) => {
 				document.documentElement!.removeEventListener('mousemove', mousemove)
@@ -919,6 +978,47 @@
 				this.currentAI.analyze()
 			}
 		}
+
+		setSplitted(splitted: boolean, ai: AI | null = null) {
+			this.splitted = splitted
+			this.editorTotalWidth = (this.$refs.editors! as HTMLElement).clientWidth
+			if (this.splitted) {
+				this.editor1Width = 0.5
+				this.editor2Width = 0.5
+				this.currentAI2 = ai!.id
+				this.setSide(2)
+				localStorage.setItem('editor/last-code-2', '' + ai!.id)
+				Vue.nextTick(() => {
+					;(this.$refs.tabs2 as any).add(ai!.id)
+				})
+			} else {
+				this.editor1Width = this.editorTotalWidth
+				this.setSide(1)
+			}
+			localStorage.setItem('editor/editor1-width', '' + this.editor1Width)
+			localStorage.setItem('editor/editor2-width', '' + this.editor2Width)
+			localStorage.setItem('editor/splitted', '' + this.splitted)
+		}
+
+		open(ai: number, side: number) {
+			this.setSide(side)
+			side === 1 ? this.currentAI1 = ai : this.currentAI2 = ai
+			const tabs = (side === 1 ? this.$refs.tabs : this.$refs.tabs2) as any
+			tabs.add(ai)
+			localStorage.setItem('editor/last-code-' + side, '' + ai)
+		}
+
+		split50_50() {
+			this.editor1Width = 0.5
+			this.editor2Width = 0.5
+			localStorage.setItem('editor/editor1-width', '' + this.editor1Width)
+			localStorage.setItem('editor/editor2-width', '' + this.editor2Width)
+		}
+
+		setSide(side: number) {
+			this.currentSide = side
+			this.currentEditor = (this.currentSide === 1 ? this.$refs.editor : this.$refs.editor2) as AIViewMonaco
+		}
 	}
 </script>
 
@@ -939,7 +1039,7 @@
 		--type-color: #0000D0;
 		color: var(--text-color);
 	}
-	.theme-monokai {
+	.theme-monokai, .theme-vs-dark, .theme-hc-black {
 		--pure-white: #000;
 		--pure-black: #fff;
 		--background: #1f1f1f;
@@ -1001,54 +1101,6 @@
 	.line-count-wrapper, .char-count-wrapper {
 		font-size: 13px;
 	}
-	.compilation {
-		position: fixed;
-		bottom: 150px;
-		right: 50%;
-		left: 50%;
-		width: 500px;
-		margin-left: -250px;
-		text-align: center;
-		z-index: 1000;
-	}
-	.compiling {
-		padding: 5px 10px;
-		border-radius: 2px;
-		color: black;
-		background: #f2f2f2;
-		margin: 4px;
-		display: inline-block;
-	}
-	.compiling .loader {
-		display: inline-block;
-		padding: 0;
-		padding-right: 5px;
-	}
-	.results {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-	}
-	.results .good, .results .error {
-		padding: 5px 10px;
-		border-radius: 2px;
-		margin: 4px;
-	}
-	.results {
-		cursor: pointer;
-	}
-	.results .good {
-		color: white;
-		background: #2cdc20;
-	}
-	.results .error {
-		color: white;
-		background: #ff0008;
-	}
-	.compiling img {
-		vertical-align: middle;
-	}
 	.CodeMirror {
 		font-size: 14px;
 	}
@@ -1056,6 +1108,7 @@
 		padding: 0;
 		min-height: 0;
 		flex: 1;
+		display: flex;
 	}
 	.popup.input_popup input {
 		width: 90%;
@@ -1067,30 +1120,6 @@
 	.panel.editor-panel {
 		background: var(--background);
 	}
-	// .theme-monokai .panel {
-	// 	background: #272822;
-	// }
-	// .theme-monokai .button {
-	// 	background: #444;
-	// 	color: var(--background-secondary);
-	// 	box-shadow: 0px 3px 0px black;
-	// }
-	// .theme-monokai .ai-list ::v-deep .router-link-active > .item > .label {
-	// 	background: #555;
-	// }
-	// .theme-monokai .ai-list ::v-deep .item.router-link-active > .label {
-	// 	background: #555;
-	// }
-	// .theme-monokai .ai-list ::v-deep .item > .label:hover {
-	// 	background: #444;
-	// }
-	// .theme-monokai .ai-list ::v-deep .folder.dragover {
-	// 	background: #333;
-	// }
-	// .theme-monokai .ai-stats {
-	// 	background: #444;
-	// 	color: #eee;
-	// }
 	.folder-content {
 		display: none;
 		padding: 20px;
@@ -1147,13 +1176,42 @@
 		height: 100%;
 	}
 	.resizer {
+		z-index: 5;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		.v-icon {
+			font-size: 21px;
+			color: var(--text-color-secondary);
+		}
+		&:hover {
+			background: #0086bc;
+			.v-icon {
+				color: white;
+			}
+		}
+	}
+	.explorer-resizer {
+		width: 10px;
+		cursor: ew-resize;
 		position: absolute;
-		left: -15px;
 		top: 0;
 		bottom: 10px;
+	}
+	.editor-resizer {
+		width: 10px;
 		cursor: ew-resize;
-		width: 20px;
+		flex-shrink: 0;
+		width: 10px;
 		z-index: 5;
+		margin-right: -10px;
+	}
+	.problems-resizer {
+		height: 10px;
+		cursor: ns-resize;
+		position: absolute;
+		left: 0;
+		right: 0;
 	}
 	.dialog-input {
 		width: calc(100% - 10px);
@@ -1165,22 +1223,14 @@
 	.shortcuts {
 		padding-left: 30px;
 	}
-
-	.problems-resizer {
-		height: 10px;
-		cursor: ns-resize;
-		position: absolute;
-		left: 0;
-		right: 0;
-		z-index: 1;
-	}
 	.status {
 		flex: 0 0 36px;
 		display: flex;
 		align-items: center;
-		border-top: 1px solid #ddd;
+		border-top: 1px solid var(--border);
 		.version {
 			line-height: 36px;
+			gap: 4px;
 			user-select: none;
 			cursor: pointer;
 			padding: 0 10px;
@@ -1311,5 +1361,9 @@
 		color: #888;
 		font-weight: 500;
 		margin-left: 10px;
+	}
+	.themes ::v-deep .v-input--radio-group__input {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 	}
 </style>

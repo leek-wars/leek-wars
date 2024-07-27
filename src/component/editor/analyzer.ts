@@ -6,6 +6,7 @@ import Vue from 'vue'
 import { AIItem, Folder } from './editor-item'
 import { Problem } from './problem'
 import { i18n } from '@/model/i18n'
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'
 
 export class AnalyzerPromise {
 	public then!: (data: any) => void
@@ -24,6 +25,7 @@ class Analyzer {
 	public requestID: number = 0
 	public analyzeResolve!: (value: unknown) => any
 	public hoverResolve!: (value: unknown) => any
+	public lastHover: any
 	public completeResolve: {[key: number]: (value: unknown) => any} = {}
 
 	private initialized: boolean = false
@@ -85,7 +87,7 @@ class Analyzer {
 	}
 
 	public analyze(ai: AI, code: string) {
-		// console.log("🔥 Analyze", ai.path)
+		console.log("🔥 Analyze", ai.path)
 		// console.time('hover')
 
 		if (code.length > 60_000) {
@@ -119,16 +121,18 @@ class Analyzer {
 	public hoverResult(data: any[]) {
 		if (this.hoverResolve) {
 			// console.timeEnd('hover')
+			this.lastHover = data
 			this.hoverResolve(data)
 		}
 	}
 
-	public complete(ai: AI, code: string, line: number, column: number): AnalyzerPromise {
+	public complete(ai: AI, code: string, line: number, column: number): Promise<any> {
 
 		console.log("🔥 Complete", ai.path, line, column)
 
 		if (code.length > 60_000) {
-			return { ...Promise.reject(), abort: () => null }
+			// return { ...Promise.reject(), abort: () => null }
+			return Promise.reject()
 		}
 
 		const requestID = this.requestID++
@@ -138,10 +142,11 @@ class Analyzer {
 		const promise = new Promise<any>((resolve, reject) => {
 			this.completeResolve[requestID] = resolve
 		})
-		return { then: promise.then.bind(promise), abort: () => {
-			// console.log("Abort request", requestID)
-			delete this.completeResolve[requestID]
-		}} as AnalyzerPromise
+		// return { then: promise.then.bind(promise), abort: () => {
+		// 	// console.log("Abort request", requestID)
+		// 	delete this.completeResolve[requestID]
+		// }} as AnalyzerPromise
+		return promise
 	}
 
 	public completeResult(message: {type: number, id: number, data: any}) {
@@ -237,6 +242,17 @@ class Analyzer {
 			// console.log("ai", ai.path, "problems", ai_problems)
 			analyzer.setProblems(entrypoint.id, ai, ai_problems)
 		}
+
+		const markers = problems.map((problem: any) => ({
+			message: problem.length === 8 ? i18n.t('leekscript.error_' + problem[6], problem[7]) as string : i18n.t('leekscript.error_' + problem[6]) as string,
+			severity: problem[0] === 0 ? monaco.MarkerSeverity.Error : monaco.MarkerSeverity.Warning,
+			startLineNumber: problem[2],
+			startColumn: problem[3] + 1,
+			endLineNumber: problem[4],
+			endColumn: problem[5] + 2,
+		}))
+		// console.log("markers", markers)
+		monaco.editor.setModelMarkers(entrypoint.model, "owner", markers)
 	}
 
 	public setProblems(entrypoint: number, ai: AI, problems: any) {

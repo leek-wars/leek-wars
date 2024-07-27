@@ -1,20 +1,20 @@
 <template lang="html">
-	<div v-show="tabs.length" class="tabs-wrapper">
+	<div class="tabs-wrapper" :class="{active}">
 		<div ref="list" class="list" @wheel.prevent="mousewheel">
-			<div v-for="(ai, i) in tabs" ref="tabs" :key="ai.id" :class="{selected: ai.selected, modified: ai.modified}" :title="ai.path" class="tab" @click="click($event, ai)" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(ai)">
+			<div v-for="(ai, i) in tabs" ref="tabs" :key="ai" :class="{selected: ai === current, modified: fileSystem.ais[ai]?.modified}" :title="fileSystem.ais[ai]?.path" class="tab" @click="click($event, fileSystem.ais[ai])" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(fileSystem.ais[ai])">
 				<div class="name">
-					<v-icon v-if="ai.errors" class="icon error">mdi-close-circle</v-icon>
-					<v-icon v-else-if="ai.warnings" class="icon warning">mdi-alert-circle</v-icon>
+					<v-icon v-if="fileSystem.ais[ai]?.errors" class="icon error">mdi-close-circle</v-icon>
+					<v-icon v-else-if="fileSystem.ais[ai]?.warnings" class="icon warning">mdi-alert-circle</v-icon>
 					<v-icon v-else class="icon valid">mdi-check-bold</v-icon>
-					{{ ai.name }}
+					{{ fileSystem.ais[ai]?.name || ai }}
 				</div>
-				<span @click.stop="close(ai)">
+				<span @click.stop="close(fileSystem.ais[ai])">
 					<v-icon class="modified">mdi-record</v-icon>
-					<v-icon class="close" :class="{hidden: tabs.length === 1}">mdi-close</v-icon>
+					<v-icon class="close" :class="{hidden: group === 'tabs' && tabs.length === 1}">mdi-close</v-icon>
 				</span>
 			</div>
 		</div>
-		<v-menu ref="menu" :key="currentI" v-model="menu" :activator="activator" offset-y @input="menuChange()">
+		<v-menu ref="menu" :key="currentI" v-model="menu" :activator="activator" offset-y @input="menuChange">
 			<v-list class="menu" :dense="true">
 				<v-list-item v-ripple @click="close(currentAI)">
 					<v-icon>mdi-close-box-outline</v-icon>
@@ -28,6 +28,12 @@
 						<v-list-item-title>{{ $t('close_others') }}</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
+				<v-list-item v-if="!splitted" v-ripple @click="split()">
+					<v-icon>mdi-dock-right</v-icon>
+					<v-list-item-content>
+						<v-list-item-title>{{ $t('split') }}</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
 			</v-list>
 		</v-menu>
 	</div>
@@ -37,13 +43,26 @@
 	import { AI } from '@/model/ai'
 	import { mixins } from '@/model/i18n'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { fileSystem } from '@/model/filesystem'
+
+	class Tab {
+		public id!: number
+		public ai!: AI
+	}
 
 	@Component({ name: 'editor-tabs', i18n: {}, mixins: [...mixins] })
 	export default class EditorTabs extends Vue {
+
 		@Prop({required: true}) ais!: AI[]
 		@Prop({required: true}) history2!: AI[]
+		@Prop({required: true}) group!: string
+		@Prop({required: true}) current!: number
+		@Prop({required: true}) active!: boolean
+		@Prop({required: true}) splitted!: boolean
+
+		fileSystem = fileSystem
 		loaded: boolean = false
-		tabs: AI[] = []
+		tabs: number[] = []
 		menu: boolean = false
 		activator: any = null
 		currentI: number = 0
@@ -53,22 +72,13 @@
 		updateAis() {
 			if (this.loaded) { return }
 			this.loaded = true
-			const tabs = JSON.parse(localStorage.getItem('editor/tabs') || '[]')
+			const tabs = JSON.parse(localStorage.getItem('editor/' + this.group) || '[]')
+			console.log("update tabs", tabs, Object.values(this.ais).length)
 			for (const t of tabs) {
-				if (t in this.ais) {
-					const ai_id = parseInt(t, 10)
-					if (ai_id > 0) {
-						this.tabs.push(this.ais[t])
-					}
-				}
+				this.tabs.push(parseInt(t))
 			}
-			if (tabs.length === 0) {
-				if (this.$route.params.id in this.ais) {
-					const ai_id = parseInt(this.$route.params.id, 10)
-					if (ai_id > 0) {
-						this.tabs.push(this.ais[ai_id])
-					}
-				}
+			if (tabs.length === 0 && this.current) {
+				this.tabs.push(this.current)
 			}
 			this.update()
 		}
@@ -78,11 +88,11 @@
 			Vue.nextTick(() => {
 				const list = (this.$refs.list as HTMLElement)
 				for (let i = 0; i < this.tabs.length; ++i) {
-					if (this.tabs[i].selected) {
+					if (this.tabs[i] === this.current) {
 						const tab = (this.$refs.tabs as HTMLElement[])[i]
-						if (tab.offsetLeft < list.scrollLeft) {
+						if (tab && tab.offsetLeft < list.scrollLeft) {
 							list.scrollLeft = tab.offsetLeft
-						} else if (tab.offsetLeft + tab.clientWidth - list.scrollLeft > list.clientWidth) {
+						} else if (tab && tab.offsetLeft + tab.clientWidth - list.scrollLeft > list.clientWidth) {
 							list.scrollLeft = tab.offsetLeft + tab.clientWidth - list.clientWidth
 						}
 						return
@@ -101,7 +111,7 @@
 			}
 		}
 
-		add(ai: AI) {
+		add(ai: number) {
 			if (this.tabs.findIndex(t => t === ai) !== -1) {
 				return
 			}
@@ -110,14 +120,17 @@
 		}
 
 		click(e: MouseEvent, ai: AI) {
-			if (this.$route.path !== '/editor/' + ai.id) {
-				this.$router.push('/editor/' + ai.id)
+			if (this.group === 'tabs') {
+				if (this.$route.path !== '/editor/' + ai.id) {
+					this.$router.push('/editor/' + ai.id)
+				}
 			}
+			this.$emit('open', ai.id)
 		}
 
 		openMenu(i: number) {
 			this.currentI = i
-			this.currentAI = this.tabs[i]
+			this.currentAI = fileSystem.ais[this.tabs[i]]
 			this.$nextTick(() => {
 				this.activator = (this.$refs.tabs as Vue[])[i]
 				this.$nextTick(() => {
@@ -126,15 +139,17 @@
 			})
 		}
 
-		menuChange(e: any) {
+		menuChange() {
 			this.currentI = -1
 			this.activator = null
 			this.menu = false
 		}
 
 		close(ai: AI, confirm: boolean = true) {
-			if (this.tabs.length === 1) { return }
-			const i = this.tabs.indexOf(ai)
+			if (this.group === 'tabs' && this.tabs.length === 1) {
+				return
+			}
+			const i = this.tabs.indexOf(ai.id)
 			if (confirm && ai.modified) {
 				if (!window.confirm(this.$i18n.t('confirm_close', [1]) as string)) {
 					return
@@ -147,12 +162,15 @@
 			}
 			this.currentI = -1
 			this.$emit('close', ai)
+			if (this.tabs.length === 0) {
+				this.$emit('close-panel')
+			}
 		}
 
 		closeOthers(ai: AI) {
 			this.tabs = []
 			this.$emit('close-all')
-			this.tabs.push(ai)
+			this.tabs.push(ai.id)
 			this.save()
 			if (this.$route.path !== '/editor/' + ai.id) {
 				this.$router.push('/editor/' + ai.id)
@@ -170,18 +188,26 @@
 		}
 
 		save() {
-			localStorage.setItem('editor/tabs', JSON.stringify(this.tabs.map(ai => ai.id)))
+			localStorage.setItem('editor/' + this.group, JSON.stringify(this.tabs))
+		}
+
+		split() {
+			this.$emit('split', this.currentAI)
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
 	.tabs-wrapper {
-		flex: 36px 1 0;
+		// flex: 36px 1 0;
 		user-select: none;
 		overflow: hidden;
 		display: flex;
 		justify-content: flex-end;
+		opacity: 0.75;
+		&.active {
+			opacity: 1;
+		}
 	}
 	.list {
 		height: 36px;

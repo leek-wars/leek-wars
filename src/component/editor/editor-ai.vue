@@ -78,7 +78,7 @@
 		padding: 8px 10px;
 	}
 	.item.selected > .label {
-		background: var(--background-secondary);
+		background: var(--background-header);
 	}
 	.item .label:hover {
 		background: var(--pure-white);

@@ -1,5 +1,5 @@
 <template lang="html">
-	<div v-if="fun" class="doc-function" :class="{deprecated: fun.deprecated}">
+	<div v-if="fun" class="doc-function lw" :class="{deprecated: fun.deprecated}">
 		<h2>
 			{{ fun.name }}(<span v-for="(arg, i) in fun.arguments_names" :key="i"><span v-if="fun.optional[i]">[</span><span class="argument">{{ $t('doc.arg_type_' + fun.arguments_types[i]) }}</span>&nbsp;{{ arg }}<span v-if="fun.optional[i]">]</span><span v-if="i < fun.arguments_names.length - 1">,&nbsp;</span>
 			</span>)
@@ -146,9 +146,9 @@
 		::v-deep pre code {
 			margin-bottom: 0;
 		}
-		::v-deep p {
-			font-size: 15px;
-		}
+		// ::v-deep p {
+		// 	font-size: 15px;
+		// }
 	}
 	.expand {
 		cursor: pointer;

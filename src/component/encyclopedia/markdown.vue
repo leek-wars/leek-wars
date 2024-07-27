@@ -387,8 +387,6 @@
 		padding: 15px;
 	}
 	.md ::v-deep p, .md ::v-deep ul {
-		// color: ;
-		font-size: 16px;
 		line-height: 1.6;
 		margin-bottom: 16px;
 		img {

@@ -22,16 +22,13 @@
 }
 .sbl-circ-path {
 	display: inline-block;
-	color: #ddd;
+	color: var(--border);
 	position: relative;
 	border-style: solid;
 	border-radius: 50%;
 	border-right-color: #5fad1b;
 	animation: rotate 0.8s linear infinite;
 	vertical-align: bottom;
-}
-body.dark .sbl-circ-path {
-	color: #333;
 }
 @keyframes rotate {
 	0% {

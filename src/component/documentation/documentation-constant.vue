@@ -1,5 +1,5 @@
 <template lang="html">
-	<div v-if="constant" class="doc-constant" :class="{item: is_weapon || is_chip, deprecated: constant.deprecated}">
+	<div v-if="constant" class="doc-constant lw" :class="{item: is_weapon || is_chip, deprecated: constant.deprecated}">
 		<h2 v-if="!is_chip && !is_weapon">
 			{{ constant.name }}
 		</h2>
@@ -188,9 +188,9 @@
 		::v-deep pre code {
 			margin-bottom: 0;
 		}
-		::v-deep p {
-			font-size: 15px;
-		}
+		// ::v-deep p {
+		// 	font-size: 15px;
+		// }
 	}
 	.encyclo {
 		position: absolute;

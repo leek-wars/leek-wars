@@ -72,7 +72,9 @@
 		toggleSocial() {
 			LeekWars.socialCollapsed = !LeekWars.socialCollapsed
 			localStorage.setItem('main/social-collapsed', '' + LeekWars.socialCollapsed)
-			this.$root.$emit('resize')
+			Vue.nextTick(() => {
+				this.$root.$emit('resize')
+			})
 		}
 
 		resizerMousedown(e: MouseEvent) {

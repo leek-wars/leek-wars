@@ -18,6 +18,8 @@
 		"js-beautify": "^1.13.0",
 		"katex": "^0.11.0",
 		"markdown-it": "^12.3.2",
+		"monaco-editor": "^0.50.0",
+		"monaco-editor-webpack-plugin": "^7.1.0",
 		"register-service-worker": "^1.7.1",
 		"sanitize-html": "^2.2.0",
 		"swiper": "^7.3.1",
