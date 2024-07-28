@@ -497,18 +497,12 @@
 				// 	editor.ctrlUp()
 				// }
 			})
-			// this.$root.$on('escape', () => {
-			// 	if (this.currentEditor) {
-			// 		this.currentEditor.closeSearch()
-			// 	}
-			// 	(this.$refs.finder as EditorFinder).close()
-			// })
-			// this.$root.$on('htmlclick', () => {
-			// 	if (this.currentEditor) {
-			// 		this.currentEditor.close()
-			// 	}
-			// 	(this.$refs.finder as EditorFinder).close()
-			// })
+			this.$root.$on('escape', () => {
+				(this.$refs.finder as EditorFinder).close()
+			})
+			this.$root.$on('htmlclick', () => {
+				(this.$refs.finder as EditorFinder).close()
+			})
 			this.$root.$on('keydown', this.keydown)
 			this.$root.$on('keyup', this.keyup)
 			this.$root.$on('previous', (event: Event) => {

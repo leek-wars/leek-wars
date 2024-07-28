@@ -21,7 +21,7 @@ monaco.languages.setLanguageConfiguration('leekscript', {
 	},
 	surroundingPairs: [
 		{ open: "(", close: ")" },
-		{ open: "{", close: "}" },
+		// { open: "{", close: "}" },
 		{ open: "[", close: "]" },
 		// { open: "<", close: ">" },
 	],
@@ -40,6 +40,49 @@ monaco.languages.setLanguageConfiguration('leekscript', {
 })
 monaco.languages.setMonarchTokensProvider('leekscript', leekscript)
 monaco.languages.registerDocumentSemanticTokensProvider('leekscript', leekscript)
+
+monaco.editor.addKeybindingRules([
+	{
+		keybinding: monaco.KeyMod.CtrlCmd | monaco.KeyCode.Slash,
+		command: "editor.action.commentLine",
+		when: "textInputFocus",
+	},
+	{
+		keybinding: monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.Slash,
+		command: "editor.action.commentLine",
+		when: "textInputFocus",
+	},
+	{
+		keybinding: monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyE,
+		command: "editor.action.commentLine",
+		when: "textInputFocus",
+	},
+	{
+		keybinding: monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyD,
+		command: "editor.action.duplicateSelection",
+		when: "textInputFocus",
+	},
+	{
+		keybinding: monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyK,
+		command: "editor.action.deleteLines",
+		when: "textInputFocus",
+	},
+	{
+		keybinding: monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyJ,
+		command: "editor.foldAll",
+		when: "textInputFocus",
+	},
+	{
+		keybinding: monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyI,
+		command: "editor.unfoldAll",
+		when: "textInputFocus",
+	},
+	{
+		keybinding: monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyU,
+		command: "editor.toggleFold",
+		when: "textInputFocus",
+	},
+]);
 
 monaco.editor.registerCommand('jump', (accessor, args) => {
 	// console.log("Command jump", args)
