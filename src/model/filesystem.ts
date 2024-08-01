@@ -5,6 +5,7 @@ import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import Vue from 'vue'
 import { Farmer } from './farmer'
+import { Keyword } from './keyword'
 
 class FileSystem {
 
@@ -18,6 +19,7 @@ class FileSystem {
 	public leekAIs: {[key: number]: number} = {} // Used in test dialog
 	private items: {[key: string]: AI | Folder} = {}
 	private promise: Promise<void> | null = null
+	public symbols: { [key: string]: Keyword } = {}
 	private botAIs = [
 		{id: -1, name: 'lambda', path: '/lambda', bot: true, valid: true, color: 'green', specs: [
 			"basic_items", "basic_strategy", "reachable_cells", "combos"

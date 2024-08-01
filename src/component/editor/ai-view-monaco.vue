@@ -3,11 +3,11 @@
 		<!-- Editeur -->
 		<div class="compilation">
 			<div v-if="saving" class="compiling">
-				<loader :size="15" /> {{ t('saving') }}
+				<loader :size="15" /> {{ t('main.saving') }}
 			</div>
 			<div class="results">
-				<div v-for="(good, g) in goods" :key="g" class="good" v-html="'✓ ' + (good.ai !== ai && ai ? ai.name + ' ➞ ' : '') + t('valid_ai', [good.ai.name])"></div>
-				<div v-if="serverError" class="error" @click="serverError = false">× <i>{{ t('server_error') }}</i></div>
+				<div v-for="(good, g) in goods" :key="g" class="good" v-html="'✓ ' + (good.ai !== ai && ai ? ai.name + ' ➞ ' : '') + t('main.valid_ai', [good.ai.name])"></div>
+				<div v-if="serverError" class="error" @click="serverError = false">× <i>{{ t('main.server_error') }}</i></div>
 				<!-- <div v-for="(error, e) in errors" :key="e" class="error" @click="errors.splice(e, 1)">
 					× <span v-html="$t('ai_error', [error.ai, error.line])"></span> ▶ {{ error.message }}
 				</div> -->
@@ -28,6 +28,7 @@ import { analyzer, AnalyzerPromise } from './analyzer'
 import { vueMain, vuetify } from '@/model/vue'
 import DocumentationConstant from '../documentation/documentation-constant.vue'
 import DocumentationFunction from '../documentation/documentation-function.vue'
+import Javadoc from './javadoc.vue'
 import { FUNCTIONS } from '@/model/functions';
 import { CONSTANTS } from '@/model/constants';
 
@@ -53,6 +54,7 @@ export default class AIViewMonaco extends Vue {
 	public goods: any[] = []
 	public position: monaco.Position = { lineNumber: 1, column: 1 } as monaco.Position
 	public selected: string = ''
+	public currentVersionId: number = 0
 
 	mounted() {
 		// https://microsoft.github.io/monaco-editor/docs.html#interfaces/editor.IEditorOptions.html
@@ -90,7 +92,8 @@ export default class AIViewMonaco extends Vue {
 			this.position = this.editor.getPosition()!
 			this.selected = this.editor.getModel()!.getValueInRange(this.editor.getSelection()!)
 		})
-		this.editor.onDidChangeModelContent(() => {
+		this.editor.onDidChangeModelContent((e) => {
+			this.ai.modified = this.currentVersionId !== this.ai.model.getAlternativeVersionId()
 			this.setAnalyzerTimeout()
 		})
 
@@ -125,6 +128,14 @@ export default class AIViewMonaco extends Vue {
 						suggestionWidget.value._details._placeAtAnchor(suggestionWidget.value._details._anchorBox, { width: 500, height: doc.$el.clientHeight + 10 }, true)
 					})
 				}
+				// console.log("suggestion", docs.innerText)
+				const symbol = fileSystem.symbols[docs.innerText]
+				if (symbol) {
+					const doc = new Javadoc({ propsData: { javadoc: symbol.javadoc, keyword: symbol }, parent: vueMain }).$mount(element)
+					setTimeout(() => {
+						suggestionWidget.value._details._placeAtAnchor(suggestionWidget.value._details._anchorBox, { width: 500, height: doc.$el.clientHeight + 10 }, true)
+					})
+				}
 			})
 		})
 
@@ -139,7 +150,7 @@ export default class AIViewMonaco extends Vue {
 				e.remove()
 			})
 			const firstRow = body.querySelector('.markdown-hover')
-			// console.log("widget", widget, firstRow.innerText)
+			// console.log("hover symbol", firstRow.innerText)
 
 			var element = document.createElement('div')
 			element.classList.add('lw')
@@ -161,11 +172,19 @@ export default class AIViewMonaco extends Vue {
 					hoverController._contentWidget._widget._resize({ width: 350, height: doc.$el.clientHeight + 40 })
 				})
 			}
+			const symbol = fileSystem.symbols[firstRow.innerText]
+			if (symbol) {
+				firstRow.style.display = 'none'
+				const doc = new Javadoc({ propsData: { javadoc: symbol.javadoc, keyword: symbol }, parent: vueMain }).$mount(element)
+				setTimeout(() => {
+					hoverController._contentWidget._widget._resize({ width: 500, height: doc.$el.clientHeight + 80 })
+				})
+			}
 		})
 	}
 
 	beforeDestroy() {
-		console.log("beforeDestroy")
+		// console.log("beforeDestroy")
 		this.scrollListener.dispose()
 	}
 
@@ -191,6 +210,7 @@ export default class AIViewMonaco extends Vue {
 			let model = monaco.editor.getModel(uri) || monaco.editor.createModel(this.ai.code, 'leekscript', uri)
 			this.ai.model = model
 			this.editor.setModel(model)
+			this.currentVersionId = model.getAlternativeVersionId()
 			this.setAnalyzerTimeout()
 
 			if (this.jumpToLine) {
@@ -234,7 +254,7 @@ export default class AIViewMonaco extends Vue {
 			// if (true) return;
 
 			analyzer.analyze(this.ai, this.ai.code).then((result) => {
-				console.log("analyze", result)
+				// console.log("analyze", result)
 				this.analyzing = false
 
 				for (const entrypoint in result) {
@@ -256,7 +276,9 @@ export default class AIViewMonaco extends Vue {
 
 	public save() {
 		this.ai.modified = false
-		console.log(this.editor.getModel())
+		this.currentVersionId = this.ai.model.getAlternativeVersionId()
+		console.log("save", this.currentVersionId)
+		// console.log(this.editor.getModel())
 	}
 }
 

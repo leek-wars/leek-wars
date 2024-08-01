@@ -1,5 +1,6 @@
 {
 	"close": "Zamknąć",
 	"close_others": "Zamknij innych",
-	"confirm_close": "Masz niezapisane zmiany w tej sztucznej inteligencji. Czy na pewno chcesz zamknąć kartę i porzucić je?"
+	"confirm_close": "Masz niezapisane zmiany w tej sztucznej inteligencji. Czy na pewno chcesz zamknąć kartę i porzucić je?",
+	"split": "Podzielony edytor"
 }

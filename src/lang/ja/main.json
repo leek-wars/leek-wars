@@ -273,5 +273,8 @@
 	"n_day": "1 j｜{n} j",
 	"n_hour": "1 h｜{n} h",
 	"n_minute": "1分｜{n}分",
-	"n_second": "1 s｜{n} s"
+	"n_second": "1 s｜{n} s",
+	"saving": "バックアップ...",
+	"server_error": "サーバーエラー",
+	"valid_ai": "<b>{0}</b>有効"
 }

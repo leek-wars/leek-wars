@@ -829,77 +829,7 @@
 					}
 				}
 			}
-			return this.searchSymbolInAI(this.ai, token, previousToken)
-		}
-
-		public searchSymbolInAI(startAI: AI, symbol: string, previousToken: CodeMirror.Token): Keyword | null {
-
-			// console.log("searchSymbolInAI", symbol)
-
-			const visited = new Set<number>()
-
-			const aux = (ai: AI): Keyword | null => {
-				if (visited.has(ai.id)) { return null }
-				visited.add(ai.id)
-				// console.log("aux", ai.path)
-				if (ai.functions) {
-					for (const fun of ai.functions) {
-						if (symbol === fun.label) {
-							return fun
-						}
-					}
-				}
-				for (const g in ai.globals) {
-					if (symbol === g) {
-						return ai.globals[g]
-					}
-				}
-				for (const s in ai.classes) {
-					const clazz = ai.classes[s]
-					if (symbol === s) {
-						return clazz
-					}
-					if (previousToken.string === s && clazz.static_methods) {
-						for (const method of clazz.static_methods) {
-							if (symbol === method.label) {
-								return method
-							}
-						}
-					}
-					if (previousToken.string === s && clazz.static_fields) {
-						for (const field of clazz.static_fields) {
-							if (symbol === field.label) {
-								return field
-							}
-						}
-					}
-				}
-				if (ai.includes) {
-					for (const include of ai.includes) {
-						if (visited.has(include.id)) { continue }
-						const found = aux(include)
-						if (found) {
-							return found
-						}
-					}
-				}
-				return null
-			}
-
-			const result = aux(startAI)
-			if (result) { return result }
-
-			// console.log("entrypoints", startAI.entrypoints)
-			for (const entrypoint_id of startAI.entrypoints) {
-				const entrypoint = fileSystem.ais[entrypoint_id]
-				if (entrypoint) {
-					// console.log("entrypoints", entrypoint.path, entrypoint.includes)
-					const result = aux(entrypoint)
-					if (result) { return result }
-				}
-			}
-
-			return null
+			return this.ai.searchSymbol(token, previousToken?.string)
 		}
 
 		public mousemove(e: any) {

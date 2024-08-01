@@ -1,5 +1,6 @@
 {
 	"close": "Kiinni",
 	"close_others": "Sulje muut",
-	"confirm_close": "Sinulla on tallentamattomia muutoksia tähän tekoälyyn. Haluatko varmasti sulkea välilehden ja hylätä ne?"
+	"confirm_close": "Sinulla on tallentamattomia muutoksia tähän tekoälyyn. Haluatko varmasti sulkea välilehden ja hylätä ne?",
+	"split": "Jaettu editori"
 }

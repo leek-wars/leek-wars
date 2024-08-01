@@ -181,6 +181,11 @@ monaco.languages.registerHoverProvider("leekscript", {
 				hover.location[4] + 2,
 			)
 			let details = ''
+			let text = model.getValueInRange(range)
+			const previousToken = text.includes('.') ? text.split('.')[0] : undefined
+			const mainToken = text.includes('.') ? text.split('.')[1] : text
+
+			const symbol = ai.searchSymbol(mainToken, previousToken)
 			if (hover.defined) {
 				const ai = fileSystem.ais[hover.defined[0]]
 				const line = hover.defined[1]
@@ -192,11 +197,14 @@ monaco.languages.registerHoverProvider("leekscript", {
 				if (monaco.editor.getModel(uri) === null) {
 					monaco.editor.createModel(ai.code, 'leekscript', uri)
 				}
+				if (symbol) {
+					fileSystem.symbols[text] = symbol
+				}
 			}
 			return {
 				range: range,
 				contents: [
-					{ value: "```leekscript\n" + model.getValueInRange(range) + "\n```" },
+					{ value: "```leekscript\n" + text + "\n```" },
 					{ value: details, isTrusted: true },
 					{ value: "```leekscript\n" + hover.type + "\n```" },
 				],
@@ -259,26 +267,24 @@ LeekWars.completionsProvider = monaco.languages.registerCompletionItemProvider("
 
 		const completions = await analyzer.complete(ai, model.getValue(), position.lineNumber, position.column - 2)
 
-		console.log("completions", completions)
 		const word = model.getWordUntilPosition(position)
 		const line = model.getLineContent(position.lineNumber)
 		const isDot = line.charAt(word.startColumn - 2) === '.'
 		const tokenBeforeDot = model.getWordAtPosition({ column: word.startColumn - 1, lineNumber: position.lineNumber })?.word || ''
-		console.log("word", word, "isDot", isDot, "tokenBeforeDot", tokenBeforeDot)
+		// console.log("word", word, "isDot", isDot, "tokenBeforeDot", tokenBeforeDot)
 		const range = {
 			startLineNumber: position.lineNumber,
 			endLineNumber: position.lineNumber,
 			startColumn: word.startColumn,
 			endColumn: word.endColumn,
 		}
-		console.log("range", range)
-		const suggestions = completions ? completions.items.map((i: any) => ({
+		const suggestions = (completions ? completions.items.map((i: any) => ({
 			label: i.name,
 			kind: monaco.languages.CompletionItemKind.Function,
 			documentation: "Describe your library here",
 			insertText: i.name,
 			range,
-		} as monaco.languages.CompletionItem)) : [] as monaco.languages.CompletionItem[]
+		})) : []) as monaco.languages.CompletionItem[]
 
 		const visited = new Set<number>()
 		const maybeAdd = (data: string | Keyword) => {
@@ -287,10 +293,8 @@ LeekWars.completionsProvider = monaco.languages.registerCompletionItemProvider("
 				if (data.toLowerCase().indexOf(word.word.toLowerCase()) === 0) {
 					suggestions.push({
 						label: data,
-						fullName: data,
-						details: i18n.t('leekscript.keyword', [data]) as string,
-						kind: KeywordKind.Keyword,
-						category: 3,
+						detail: i18n.t('leekscript.keyword', [data]) as string,
+						kind: KeywordKind.Keyword as number as monaco.languages.CompletionItemKind,
 						range,
 						insertText: data,
 					})
@@ -299,11 +303,12 @@ LeekWars.completionsProvider = monaco.languages.registerCompletionItemProvider("
 				if (data.label.toLowerCase().indexOf(word.word.toLowerCase()) === 0) {
 					suggestions.push({
 						...data,
+						kind: data.kind as number as monaco.languages.CompletionItemKind,
 						label: data.fullName,
 						documentation: data.label,
+						// detail: data.details,
 						range,
-						insertText:
-						data.insertText || data.label,
+						insertText: data.insertText || data.label,
 						insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
 					})
 				}
@@ -345,7 +350,16 @@ function addCompletionsFromAI(start: string, completions: monaco.languages.Compl
 	// Fonctions
 	for (const fun of ai.functions) {
 		if (fun.label.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-			completions.push({ ...fun, kind: fun.kind as number as monaco.languages.CompletionItemKind, insertText: fun.label, range })
+			completions.push({
+				...fun,
+				kind: fun.kind as number as monaco.languages.CompletionItemKind,
+				label: fun.fullName,
+				insertText: fun.insertText || fun.label,
+				range,
+				insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+				documentation: fun.label,
+			})
+			fileSystem.symbols[fun.label] = fun
 		}
 	}
 	// Classes
@@ -372,12 +386,29 @@ function addDotCompletionsFromAI(tokenBeforeDot: string, start: string, completi
 		const clazz = ai.classes[tokenBeforeDot]
 		for (const staticMethod of clazz.static_methods) {
 			if (staticMethod.label.toLowerCase().indexOf(start) === 0) {
-				completions.push({ ...staticMethod, kind: staticMethod.kind as number as monaco.languages.CompletionItemKind, insertText: staticMethod.label, range })
+				completions.push({
+					...staticMethod,
+					kind: staticMethod.kind as number as monaco.languages.CompletionItemKind,
+					label: staticMethod.fullName,
+					insertText: staticMethod.insertText || staticMethod.label,
+					range,
+					// detail: clazz.fullName + '.' + staticMethod.label,
+					documentation: clazz.fullName + '.' + staticMethod.label,
+					insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+				})
+				fileSystem.symbols[clazz.fullName + '.' + staticMethod.label] = staticMethod
 			}
 		}
 		for (const static_field of clazz.static_fields) {
 			if (static_field.label.toLowerCase().indexOf(start) === 0) {
-				completions.push({ ...static_field, kind: static_field.kind as number as monaco.languages.CompletionItemKind, insertText: static_field.label, range })
+				completions.push({
+					...static_field,
+					kind: static_field.kind as number as monaco.languages.CompletionItemKind,
+					insertText: static_field.label,
+					range,
+					documentation: clazz.fullName + '.' + static_field.label,
+				})
+				fileSystem.symbols[clazz.fullName + '.' + static_field.label] = static_field
 			}
 		}
 	}

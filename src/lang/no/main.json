@@ -273,5 +273,8 @@
 	"n_day": "1 j | {n} j",
 	"n_hour": "1 h | {n} h",
 	"n_minute": "1 min | {n} min",
-	"n_second": "1 s | {n} s"
+	"n_second": "1 s | {n} s",
+	"saving": "Backup...",
+	"server_error": "Serverfeil",
+	"valid_ai": "<b>{0}</b> gyldig"
 }

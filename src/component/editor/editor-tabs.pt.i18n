@@ -1,5 +1,6 @@
 {
 	"close": "Fechar",
 	"close_others": "Fechar outros",
-	"confirm_close": "Você tem alterações não salvas nesta IA. Tem certeza de que deseja fechar a guia e abandoná-los?"
+	"confirm_close": "Você tem alterações não salvas nesta IA. Tem certeza de que deseja fechar a guia e abandoná-los?",
+	"split": "Editor de divisão"
 }

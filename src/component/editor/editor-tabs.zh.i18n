@@ -1,5 +1,6 @@
 {
 	"close": "关闭",
 	"close_others": "关闭其他",
-	"confirm_close": "您对此 AI 有未保存的更改。您确定要关闭标签页并放弃它们吗？"
+	"confirm_close": "您对此 AI 有未保存的更改。您确定要关闭标签页并放弃它们吗？",
+	"split": "分割编辑器"
 }

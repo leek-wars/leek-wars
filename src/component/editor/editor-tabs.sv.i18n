@@ -1,5 +1,6 @@
 {
 	"close": "Stänga",
 	"close_others": "Stäng andra",
-	"confirm_close": "Du har osparade ändringar av denna AI. Är du säker på att du vill stänga fliken och överge dem?"
+	"confirm_close": "Du har osparade ändringar av denna AI. Är du säker på att du vill stänga fliken och överge dem?",
+	"split": "Delad editor"
 }

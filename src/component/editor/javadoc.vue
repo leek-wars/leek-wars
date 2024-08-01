@@ -1,12 +1,12 @@
 <template lang="html">
-	<div>
+	<div class="lw">
 		<h2>
-			<span v-if="keyword.type === 'user-static-method' || keyword.type === 'user-method' || keyword.type === 'user-function'">
-				<span v-if="keyword.clazz">{{ keyword.clazz.name }}.</span>{{ javadoc.name }}(<span v-for="(arg, i) in args" :key="i">
+			<span v-if="keyword.type === 'user-static-method' || keyword.type === 'user-method' || keyword.type === 'user-function' || keyword.kind === KeywordKind.Function || keyword.kind === KeywordKind.Method">
+				<span v-if="keyword.clazz">{{ keyword.clazz.label }}.</span>{{ javadoc.name }}(<span v-for="(arg, i) in args" :key="i">
 					<type v-if="arg.lstype" :type="arg.lstype" /> {{ arg.name }}<span v-if="i < args.length - 1">,&nbsp;</span></span>)
 				<span v-if="keyword.return_type" class="arrow">→</span> <type v-if="keyword.return_type" :type="keyword.return_type" /> <span v-if="return_"> {{ return_.name }}</span>
 			</span>
-			<span v-else-if="keyword.type === 'user-static-field'"><type v-if="javadoc.lstype" :type="javadoc.lstype" /> {{ keyword.clazz.name }}.{{ javadoc.name }}</span>
+			<span v-else-if="keyword.type === 'user-static-field' || keyword.kind === KeywordKind.Field"><type v-if="javadoc.lstype" :type="javadoc.lstype" /> {{ keyword.clazz.label }}.{{ javadoc.name }}</span>
 			<span v-else>{{ javadoc.name }}</span>
 		</h2>
 		<div class="description" v-html="javadoc.description"></div>
@@ -33,11 +33,16 @@
 <script lang="ts">
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import Type from '../type.vue'
+	import { KeywordKind } from '@/model/keyword'
 
 	@Component({ name: "javadoc", components: { Type } })
 	export default class Javadoc extends Vue {
+		
+		KeywordKind = KeywordKind
+
 		@Prop() javadoc!: any
 		@Prop() keyword!: any
+
 
 		get args() {
 			return this.javadoc.items.filter((i: any) => i.type === 'param')

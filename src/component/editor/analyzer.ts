@@ -87,7 +87,7 @@ class Analyzer {
 	}
 
 	public analyze(ai: AI, code: string) {
-		console.log("🔥 Analyze", ai.path)
+		// console.log("🔥 Analyze", ai.path)
 		// console.time('hover')
 
 		if (code.length > 60_000) {
