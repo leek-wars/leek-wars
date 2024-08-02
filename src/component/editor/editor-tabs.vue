@@ -73,7 +73,7 @@
 			if (this.loaded) { return }
 			this.loaded = true
 			const tabs = JSON.parse(localStorage.getItem('editor/' + this.group) || '[]')
-			console.log("update tabs", tabs, Object.values(this.ais).length)
+			// console.log("update tabs", tabs, Object.values(this.ais).length)
 			for (const t of tabs) {
 				this.tabs.push(parseInt(t))
 			}

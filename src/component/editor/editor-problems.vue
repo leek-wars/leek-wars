@@ -54,8 +54,8 @@
 
 <style lang="scss" scoped>
 .problems-details {
-	background: white;
-	border-top: 1px solid #ddd;
+	background: var(--background);;
+	border-top: 1px solid var(--border);
 	overflow-y: auto;
 	position: relative;
 	height: 100%;
@@ -70,7 +70,7 @@
 		cursor: pointer;
 		user-select: none;
 		&:hover {
-			background: #eee;
+			background: var(--pure-white);
 		}
 		.count {
 			padding: 1px 6px;
@@ -89,7 +89,7 @@
 		padding-left: 20px;
 		cursor: pointer;
 		&:hover {
-			background: #eee;
+			background: var(--pure-white);
 		}
 		.line {
 			padding-left: 6px;

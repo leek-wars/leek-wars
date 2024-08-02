@@ -65,7 +65,6 @@ export default class AIViewMonaco extends Vue {
 			fontSize: this.fontSize,
 			lineHeight: this.lineHeight,
 			theme: this.theme,
-			stickyScroll: { enabled: true },
 		}, {
 			storageService: {
 				get() {},
@@ -87,6 +86,11 @@ export default class AIViewMonaco extends Vue {
 		})
 		this.editor.onDidFocusEditorWidget((e) => {
 			this.$emit('focus')
+		})
+		this.editor.onKeyUp((e) => {
+			if (e.code === 'Delete') {
+				e.stopPropagation()
+			}
 		})
 		this.editor.onDidChangeCursorPosition((e) => {
 			this.position = this.editor.getPosition()!
@@ -202,7 +206,7 @@ export default class AIViewMonaco extends Vue {
 	@Watch('ai.id', { immediate: true })
 	update() {
 		if (!this.ai) return
-		console.log("update ai", this.ai.id)
+		// console.log("update ai", this.ai.id)
 
 		fileSystem.load(this.ai).then(() => {
 

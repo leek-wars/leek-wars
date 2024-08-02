@@ -122,7 +122,7 @@
 							<v-menu v-if="currentAI" top :offset-y="true" :nudge-top="1" :max-width="600">
 								<template v-slot:activator="{ on, attrs }">
 									<div v-ripple class="version" v-bind="attrs" v-on="on">
-										LeekScript {{ currentAI.version }} <span v-if="currentAI.strict">&nbsp;({{ $t('strict') }})</span>
+										LeekScript&nbsp;{{ currentAI.version }} <span v-if="currentAI.strict">&nbsp;({{ $t('strict') }})</span>
 										<v-icon>mdi-chevron-down</v-icon>
 									</div>
 								</template>
@@ -217,7 +217,7 @@
 							</v-menu>
 							<div v-ripple class="problems" @click="toggleProblems">
 								<span v-if="analyzer.error_count + analyzer.warning_count + analyzer.todo_count === 0" class="no-error">
-									<v-icon>mdi-check-circle</v-icon> {{ $t('no_problem') }}
+									<v-icon>mdi-check-circle</v-icon> <span v-if="!LeekWars.mobile">{{ $t('no_problem') }}</span>
 								</span>
 								<span v-else>
 									<span v-if="analyzer.error_count" class="errors">
@@ -234,7 +234,7 @@
 							<div class="filler"></div>
 							<div class="state">
 								<div v-if="currentEditor && (currentEditor.saving || currentEditor.hovering || currentEditor.analyzing)" class="running">
-									{{ $t('analyzing') }}
+									<span v-if="!LeekWars.mobile">{{ $t('analyzing') }}</span>
 									<v-icon>mdi-sync</v-icon>
 								</div>
 							</div>

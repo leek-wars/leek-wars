@@ -21,7 +21,7 @@ monaco.languages.setLanguageConfiguration('leekscript', {
 	},
 	surroundingPairs: [
 		{ open: "(", close: ")" },
-		// { open: "{", close: "}" },
+		{ open: "{", close: "}" },
 		{ open: "[", close: "]" },
 		// { open: "<", close: ">" },
 	],
@@ -89,30 +89,30 @@ monaco.editor.registerCommand('jump', (accessor, args) => {
 	vueMain.$emit('jump', fileSystem.aiByFullPath[args.ai], args.line, args.column)
 })
 
-monaco.languages.registerDocumentSymbolProvider("leekscript", {
-	provideDocumentSymbols: function (model, token) {
-		return [
-			{
-				range: {
-					startLineNumber: 1,
-					startColumn: 1,
-					endLineNumber: 2,
-					endColumn: 1,
-				},
-				name: "File",
-				kind: 0,
-				detail: "",
-				tags: [],
-				selectionRange: {
-					startLineNumber: 1,
-					startColumn: 1,
-					endLineNumber: 2,
-					endColumn: 1,
-				},
-			},
-		]
-	}
-})
+// monaco.languages.registerDocumentSymbolProvider("leekscript", {
+// 	provideDocumentSymbols: function (model, token) {
+// 		return [
+// 			{
+// 				range: {
+// 					startLineNumber: 1,
+// 					startColumn: 1,
+// 					endLineNumber: 2,
+// 					endColumn: 1,
+// 				},
+// 				name: "File",
+// 				kind: 0,
+// 				detail: "",
+// 				tags: [],
+// 				selectionRange: {
+// 					startLineNumber: 1,
+// 					startColumn: 1,
+// 					endLineNumber: 2,
+// 					endColumn: 1,
+// 				},
+// 			},
+// 		]
+// 	}
+// })
 
 monaco.editor.defineTheme("leek-wars", {
 	base: "vs", // can also be vs-dark or hc-black
