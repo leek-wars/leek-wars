@@ -14,15 +14,6 @@ module.exports = {
 		performance: {
 			hints: false
 		},
-		// devServer: {
-		// 	client: {
-		// 		overlay: false,
-		// 	},
-		// },
-		output: {
-			filename: '[name].bundle.js',
-			path: path.resolve(__dirname, 'dist')
-		},
 		plugins: [
 			new MonacoWebpackPlugin({
 				languages: ['typescript', 'javascript', 'css']
