@@ -28,14 +28,14 @@ const COMMANDS = [
 		replacement: (a: any, b: any, item: string) => {
 			const link = item ? URL_DOC + "/" + item : URL_DOC
 			const name = item ? item : "Doc"
-			return " " + LeekWars.toChatLink(link, name, "target='_blank' rel='noopener'") + " "
+			return " " + LeekWars.toChatLink(link, name, "target='_blank' rel='noopener'", "lw") + " "
 		}
 	}, {
 		name: "doc!",
 		description: "Lien vers la documentation",
 		regex: /(?:^|(\s))\/doc!(?=\s|$)/gi,
 		replacement: () => {
-			return " " + LeekWars.toChatLink(URL_DOC, "LA DOOOOOC", "target='_blank' rel='noopener'") + " "
+			return " " + LeekWars.toChatLink(URL_DOC, "LA DOOOOOC", "target='_blank' rel='noopener'", "lw") + " "
 		}
 	}, {
 		name: "fliptable",
@@ -73,13 +73,13 @@ const COMMANDS = [
 		replacement: (a: any, b: any, item: string) => {
 			const link = item ? URL_MARKET + "/" + item : URL_MARKET
 			const name = item ? item : "Marché"
-			return " " + LeekWars.toChatLink(link, name, "target='_blank' rel='noopener'") + " "
+			return " " + LeekWars.toChatLink(link, name, "target='_blank' rel='noopener'", "lw") + " "
 		}
 	}, {
 		name: "market!",
 		regex: /(?:^|(\s))\/market!(?=\s|$)/gi,
 		description: "Lien vers le marché, de manière appuyée",
-		replacement: () => " " + LeekWars.toChatLink(URL_MARKET, "LE MARCHÉÉÉÉÉ", "target='_blank' rel='noopener'") + " "
+		replacement: () => " " + LeekWars.toChatLink(URL_MARKET, "LE MARCHÉÉÉÉÉ", "target='_blank' rel='noopener'", "lw") + " "
 	}, {
 		name: "me",
 		description: "Votre pseudo avec une emphase",
@@ -118,25 +118,25 @@ const COMMANDS = [
 		name: "tuto",
 		description: "Lien vers le tutorial",
 		regex: /(^| )\/tuto(?=$|\s)/gi,
-		replacement: () => " " + LeekWars.toChatLink(URL_TUTO, "tuto", "target='_blank' rel='noopener'") + " "
+		replacement: () => " " + LeekWars.toChatLink(URL_TUTO, "tuto", "target='_blank' rel='noopener'", "lw") + " "
 	}, {
 		name: "tuto!",
 		description: "Lien vers le tutorial, de manière appuyée",
 		regex: /(^| )\/tuto([!]?)(?=$|\s)/gi,
-		replacement: () => " " + LeekWars.toChatLink(URL_TUTO, "LE TUTOOOOO", "target='_blank' rel='noopener'") + " "
+		replacement: () => " " + LeekWars.toChatLink(URL_TUTO, "LE TUTOOOOO", "target='_blank' rel='noopener'", "lw") + " "
 	}, {
 		name: "update",
 		description: "Lien vers le sujet de la dernière mise à jour",
 		regex: /(^| )\/update(?=$|\s)/gi,
 		replacement: () => {
-			return " " + LeekWars.toChatLink(URL_UPDATE + localStorage.getItem('changelog_forum_topic'), "la màj", "target='_blank' rel='noopener'") + " "
+			return " " + LeekWars.toChatLink(URL_UPDATE + localStorage.getItem('changelog_forum_topic'), "la màj", "target='_blank' rel='noopener'", "lw") + " "
 		}
 	}, {
 		name: "update!",
 		description: "Lien vers le sujet de la dernière mise à jour, de manière appuyée",
 		regex: /(^| )\/update!(?=$|\s)/gi,
 		replacement: () => {
-			return " " + LeekWars.toChatLink(URL_UPDATE + localStorage.getItem('changelog_forum_topic'), "LA MÀJJJJJ", "target='_blank' rel='noopener'") + " "
+			return " " + LeekWars.toChatLink(URL_UPDATE + localStorage.getItem('changelog_forum_topic'), "LA MÀJJJJJ", "target='_blank' rel='noopener'", "lw") + " "
 		}
 	}, {
 		name: "encyclo",
@@ -145,14 +145,14 @@ const COMMANDS = [
 		replacement: (a: any, b: any, page: string, anchor: string) => {
 			const name = page ? page + (anchor ? '#' + anchor : '') : "Encyclopédie"
 			const link = page ? URL_ENCYCLOPEDIA + '/' + page + (anchor ? '#' + anchor : '') : URL_ENCYCLOPEDIA
-			return  " <i class='v-icon notranslate book mdi mdi-book-open-page-variant theme--light'></i>" + LeekWars.toChatLink(link, name, "target='_blank' rel='noopener'") + " "
+			return  " <i class='v-icon notranslate book mdi mdi-book-open-page-variant theme--light'></i>" + LeekWars.toChatLink(link, name, "target='_blank' rel='noopener'", "lw") + " "
 		},
 		options: []
 	}, {
 		name: "encyclo!",
 		description: "Lien vers l'encyclopédie, de manière appuyée",
 		regex: /(?:^|(\s))\/encyclo!(?=\s|$)/gi,
-		replacement: () => " " + LeekWars.toChatLink(URL_ENCYCLOPEDIA, "L'ENCYCLOPÉDIIIIIIE", "target='_blank' rel='noopener'") + " "
+		replacement: () => " " + LeekWars.toChatLink(URL_ENCYCLOPEDIA, "L'ENCYCLOPÉDIIIIIIE", "target='_blank' rel='noopener'", "lw") + " "
 	}
 ] as Command[]
 

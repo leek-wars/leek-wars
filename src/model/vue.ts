@@ -145,11 +145,15 @@ Vue.directive('chat-code-latex', {
 			})
 		})
 		el.querySelectorAll('a').forEach(a => {
-			if (a.getAttribute('href')!.startsWith('/')) {
+			if (a.getAttribute('href')!.startsWith('/') ) {
 				a.onclick = (e: Event) => {
 					e.stopPropagation()
 					e.preventDefault()
-					router.push(a.innerText)
+					if (a.innerText === a.getAttribute('href')) {
+						router.push(a.innerText)
+					} else {
+						router.push(a.getAttribute('href')!)
+					}
 					return false
 				}
 			}
