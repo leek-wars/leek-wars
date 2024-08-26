@@ -39,18 +39,19 @@
 			</a>
 		</div> -->
 		<div class="column">
-			<h4>{{ $t('main.partners') }}</h4>
-			<a target="_blank" rel="noopener" href="https://www.esiea.fr/">
+			<!-- <h4>{{ $t('main.partners') }}</h4> -->
+			<h4>{{ $t('main.contact') }}</h4>
+			<!-- <a target="_blank" rel="noopener" href="https://www.esiea.fr/">
 				<img class="color partner" src="/image/partner/esiea.png" title="ESIEA">
-			</a>
+			</a> -->
 			<router-link to="/contact" class="item">{{ $t('main.contact') }}</router-link>
 			<router-link to="/press-kit" class="item">{{ $t('main.press-kit') }} <v-icon>mdi-package-variant-closed</v-icon></router-link>
 			<router-link to="/help/api" class="item">API</router-link>
 			<h4>Social</h4>
 			<div class="icons">
-				<!-- <a class="item" target="_blank" rel="noopener" href="https://github.com/leek-wars/leek-wars">
+				<a target="_blank" rel="noopener" href="https://github.com/leek-wars/leek-wars">
 					<v-icon>mdi-github</v-icon>
-				</a> -->
+				</a>
 				<a target="_blank" rel="noopener" href="https://twitter.com/LeekWars">
 					<v-icon>mdi-twitter</v-icon>
 				</a>

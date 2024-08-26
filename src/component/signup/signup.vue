@@ -106,13 +106,13 @@
 			</panel>
 		</div>
 
-		<panel :title="$t('main.partners')">
+		<!-- <panel :title="$t('main.partners')">
 			<div slot="content" class="content partners">
 				<a target="_blank" rel="noopener" href="https://www.esiea.fr/">
 					<img class="partner" src="/image/partner/esiea.png" title="ESIEA">
 				</a>
 			</div>
-		</panel>
+		</panel> -->
 
 		<panel class="features first">
 			<div v-for="(feature, f) in features" :key="f" class="feature">
