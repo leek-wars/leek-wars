@@ -13,6 +13,7 @@
 	},
 	"dependencies": {
 		"@paypal/paypal-js": "^5.1.4",
+		"@typescript-eslint/typescript-estree": "^8.2.0",
 		"codemirror": "^5.65.16",
 		"dotenv": "^8.2.0",
 		"js-beautify": "^1.13.0",
@@ -49,7 +50,6 @@
 		"@vue/eslint-config-prettier": "^6.0.0",
 		"@vue/eslint-config-typescript": "^11.0.0",
 		"babel-plugin-transform-imports": "^2.0.0",
-		"bundlesize": "^0.18.0",
 		"eslint": "^8.19.0",
 		"eslint-plugin-prefer-arrow": "^1.2.3",
 		"eslint-plugin-vue": "^9.2.0",
@@ -63,7 +63,6 @@
 		"stylus-loader": "^3.0.2",
 		"terser-webpack-plugin": "^3.1.0",
 		"typescript": "^4.7.4",
-		"typescript-estree": "^18.1.0",
 		"vue-cli-plugin-vuetify": "^2.0.8",
 		"vuetify-loader": "^1.6.0",
 		"webpack-bundle-analyzer": "^4.5.0"
