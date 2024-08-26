@@ -222,6 +222,7 @@ class Analyzer {
 
 		// Group problems by ai
 		const problemsByAI = {} as {[key: number]: Problem[]}
+		const markersByAI = {} as {[key: number]: any}
 		for (const problem of problems) {
 			const level = problem[0]
 			const ai_id = problem[1]
@@ -233,26 +234,32 @@ class Analyzer {
 				info = i18n.t('leekscript.error_' + problem[6])
 			}
 			const problemObject = new Problem(line, problem[3], problem[4], problem[5], level, info as string)
-			if (!problemsByAI[ai_id]) { problemsByAI[ai_id] = [] }
+			if (!problemsByAI[ai_id]) {
+				problemsByAI[ai_id] = []
+				markersByAI[ai_id] = []
+			}
 			problemsByAI[ai_id].push(problemObject)
+			markersByAI[ai_id].push({
+				message: problem.length === 8 ? i18n.t('leekscript.error_' + problem[6], problem[7]) as string : i18n.t('leekscript.error_' + problem[6]) as string,
+				severity: problem[0] === 0 ? monaco.MarkerSeverity.Error : monaco.MarkerSeverity.Warning,
+				startLineNumber: problem[2],
+				startColumn: problem[3] + 1,
+				endLineNumber: problem[4],
+				endColumn: problem[5] + 2,
+			})
 		}
 		for (const ai_id in problemsByAI) {
 			const ai = fileSystem.ais[ai_id]
 			const ai_problems = problemsByAI[ai_id]
 			// console.log("ai", ai.path, "problems", ai_problems)
 			analyzer.setProblems(entrypoint.id, ai, ai_problems)
-		}
 
-		const markers = problems.map((problem: any) => ({
-			message: problem.length === 8 ? i18n.t('leekscript.error_' + problem[6], problem[7]) as string : i18n.t('leekscript.error_' + problem[6]) as string,
-			severity: problem[0] === 0 ? monaco.MarkerSeverity.Error : monaco.MarkerSeverity.Warning,
-			startLineNumber: problem[2],
-			startColumn: problem[3] + 1,
-			endLineNumber: problem[4],
-			endColumn: problem[5] + 2,
-		}))
-		// console.log("markers", markers)
-		monaco.editor.setModelMarkers(entrypoint.model, "owner", markers)
+			monaco.editor.setModelMarkers(ai.model, "owner", markersByAI[ai_id])
+		}
+		// No problems, clear markers
+		if (problems.length === 0) {
+			monaco.editor.setModelMarkers(entrypoint.model, "owner", [])
+		}
 	}
 
 	public setProblems(entrypoint: number, ai: AI, problems: any) {
