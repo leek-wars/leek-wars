@@ -132,8 +132,7 @@
 		}
 	},
 	"browserslist": [
-		"> 1%",
-		"last 2 versions"
+		"last 5 years"
 	],
 	"license": "GPL-3.0",
 	"author": "Pilow",
