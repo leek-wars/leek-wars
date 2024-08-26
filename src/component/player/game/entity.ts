@@ -1299,6 +1299,7 @@ abstract class FightEntity extends Entity {
 	}
 
 	addState(state: number) {
+		if (state == 0) return
 		this.states.add(state)
 		// Load image
 		const image = new Image()

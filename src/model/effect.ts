@@ -81,6 +81,7 @@ enum EffectTypeMarket {
 }
 
 enum State {
+	INVICIBLE_OLD = 0, // Invincible was 0 at a time
 	UNHEALABLE = 2,
 	INVICIBLE = 3,
 	PACIFIST = 4,
