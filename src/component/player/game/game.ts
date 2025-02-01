@@ -321,6 +321,7 @@ class Game {
 	public displayAILines: boolean = true
 	public plainBackground: boolean = false
 	public sound: boolean = false
+	public volume: number = 0.5;
 	public atmosphere!: Sound
 	public obstacles!: {[key: number]: number[]}
 	public error: boolean = false
@@ -781,6 +782,7 @@ class Game {
 	public launch() {
 		// Atmosphere sound
 		if (!this.creator && this.atmosphere != null && this.sound) {
+			this.changeVolume();
 			this.atmosphere.loop(this)
 		}
 		for (const obstacle of this.ground.obstacles) {
@@ -908,6 +910,11 @@ class Game {
 			}
 		}
 	}
+	public changeVolume() {
+		if (this.atmosphere != null) {
+			this.atmosphere.changeVolume(this.volume);
+		}
+	}
 
 	public update() {
 
@@ -1015,7 +1022,7 @@ class Game {
 
 	public pause() {
 		if (!this.requestPause && !this.paused) {
-			if (this.atmosphere != null && this.sound) {
+			if (this.atmosphere != null) {
 				this.atmosphere.stop()
 			}
 			this.requestPause = true
