@@ -115,6 +115,11 @@
 					</template>
 					{{ $t(game.sound ? 'sound_activated' : 'sound_disactivated') }} (V)
 				</v-tooltip>
+				<v-tooltip v-if="game.sound" :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
+					<template v-slot:activator="{ on }">
+						<input type="range" min="0" max="1" step="0.1" v-model="game.volume">
+					</template>
+				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ on: tooltip }">
 						<v-menu :close-on-content-click="false" :min-width="390" top offset-y right :attach="$refs.player">
@@ -295,6 +300,7 @@ import { T } from './game/texture'
 
 		created() {
 			if (localStorage.getItem('fight/shadows') === null) { localStorage.setItem('fight/shadows', 'true') }
+			if (localStorage.getItem('fight/volume') === null) { localStorage.setItem('fight/volume', '0.5') }
 			if (localStorage.getItem('fight/sound') === null) { localStorage.setItem('fight/sound', 'true') }
 			if (localStorage.getItem('fight/lifes') === null) { localStorage.setItem('fight/lifes', 'true') }
 			if (localStorage.getItem('fight/effects') === null) { localStorage.setItem('fight/effects', 'true') }
@@ -310,7 +316,8 @@ import { T } from './game/texture'
 			this.game.showActions = localStorage.getItem('fight/actions') === 'true'
 			this.game.largeActions = localStorage.getItem('fight/large-actions') === 'true'
 			this.game.actionsWidth = parseInt(localStorage.getItem('fight/actions-width') || '395', 10)
-			this.game.sound = localStorage.getItem('fight/sound') === 'true'
+			this.game.sound = localStorage.getItem('fight/sound') === 'true';
+			this.game.volume = parseFloat(localStorage.getItem('fight/volume') || "0.5");
 			this.game.autoDark = localStorage.getItem('fight/auto-dark') === 'true'
 			this.game.dark = localStorage.getItem('fight/dark') === 'true'
 			this.game.plainBackground = localStorage.getItem('fight/plain-background') === 'true'
@@ -667,6 +674,10 @@ import { T } from './game/texture'
 		}
 		get progressBarPreviewWidth() {
 			return Math.max(0, this.progressBarPreviewMouse - this.progressBarWidth)
+		}
+		@Watch("game.volume") changeVolume() {
+			localStorage.setItem('fight/volume', '' + this.game.volume)
+			this.game.changeVolume();
 		}
 		@Watch("game.sound") toggleSound() {
 			localStorage.setItem('fight/sound', '' + this.game.sound)

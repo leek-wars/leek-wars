@@ -49,9 +49,13 @@ class Sound {
 		this.sound.load()
 		return this
 	}
+	public changeVolume(volume: number) {
+		this.sound.volume = volume * this.volume;
+	}
 
 	public play(game: Game) {
 		if (game.sound && this.sound != null) {
+			this.changeVolume(game.volume);
 			this.sound.currentTime = 0
 			this.sound.play()
 		}
@@ -135,7 +139,7 @@ class S {
 		if (path in this.cache) {
 			return this.cache[path]
 		}
-		const sound = new Sound(LeekWars.STATIC + path, volume).load(game)
+		const sound = new Sound(LeekWars.STATIC + path, volume*game.volume).load(game)
 		this.cache[path] = sound
 		return sound
 	}
