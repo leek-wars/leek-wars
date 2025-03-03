@@ -183,7 +183,7 @@ import { emitter } from '@/model/vue'
 			setTimeout(() => this.resize(), 50)
 
 			emitter.on('trophy', this.onTrophy)
-			emitter.on('fight_notification', this.displayFightNotification)
+			emitter.on('fight_notification', this.onFightNotification)
 		}
 
 		@Watch('$route.params.id', {immediate: true})
@@ -243,7 +243,7 @@ import { emitter } from '@/model/vue'
 			LeekWars.lightBar = false
 			emitter.off('resize', this.resize)
 			emitter.off('trophy', this.onTrophy)
-			emitter.off('fight_notification', this.displayFightNotification)
+			emitter.off('fight_notification', this.onFightNotification)
 
 			// Notifications de trophées restants
 			for (const message of this.trophyQueue) {
@@ -293,15 +293,6 @@ import { emitter } from '@/model/vue'
 					this.trophyQueue.splice(m, 1)
 					m--
 				}
-			}
-		}
-
-		displayFightNotification() {
-			for (let m = 0; m < this.notificationQueue.length; ++m) {
-				const message = this.notificationQueue[m]
-				store.commit('notification', message)
-				this.notificationQueue.splice(m, 1)
-				m--
 			}
 		}
 
