@@ -16,7 +16,7 @@
 		<panel class="first">
 			<template #content>
 				<div class="fight">
-					<player v-if="fight_id" :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
+					<player v-if="fight_id" :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @display-fight-notification="displayFightNotification" @fight="fightLoaded" @resize="resize" />
 				</div>
 			</template>
 		</panel>
@@ -156,6 +156,7 @@ import { emitter } from '@/model/vue'
 		reportDialog: boolean = false
 		reasons = [Warning.RUDE_SAY, Warning.INCORRECT_LEEK_NAME, Warning.INCORRECT_FARMER_NAME, Warning.INCORRECT_AVATAR]
 		trophyQueue: any[] = []
+		notificationQueue: any[] = []
 
 		get reportLeeks() {
 			if (!this.fight) { return [] }
@@ -182,6 +183,7 @@ import { emitter } from '@/model/vue'
 			setTimeout(() => this.resize(), 50)
 
 			emitter.on('trophy', this.onTrophy)
+			emitter.on('fight_notification', this.displayFightNotification)
 		}
 
 		@Watch('$route.params.id', {immediate: true})
@@ -241,9 +243,13 @@ import { emitter } from '@/model/vue'
 			LeekWars.lightBar = false
 			emitter.off('resize', this.resize)
 			emitter.off('trophy', this.onTrophy)
+			emitter.off('fight_notification', this.displayFightNotification)
 
 			// Notifications de trophées restants
 			for (const message of this.trophyQueue) {
+				store.commit('notification', message)
+			}
+			for (const message of this.notificationQueue) {
 				store.commit('notification', message)
 			}
 		}
@@ -273,6 +279,11 @@ import { emitter } from '@/model/vue'
 			this.trophyQueue.push(trophy)
 		}
 
+		// Réception des notifications pour les mettre en attente
+		onFightNotification(notification: any) {
+			this.notificationQueue.push(notification)
+		}
+
 		// Le player a joué un trophée, on peut l'afficher
 		unlockTrophy(trophy: number) {
 			for (let m = 0; m < this.trophyQueue.length; ++m) {
@@ -282,6 +293,15 @@ import { emitter } from '@/model/vue'
 					this.trophyQueue.splice(m, 1)
 					m--
 				}
+			}
+		}
+
+		displayFightNotification() {
+			for (let m = 0; m < this.notificationQueue.length; ++m) {
+				const message = this.notificationQueue[m]
+				store.commit('notification', message)
+				this.notificationQueue.splice(m, 1)
+				m--
 			}
 		}
 
