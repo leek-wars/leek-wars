@@ -173,7 +173,7 @@ import { BOSSES } from '@/model/boss'
 			setTimeout(() => this.resize(), 50)
 
 			this.$root.$on('trophy', this.onTrophy)
-			this.$root.$on('fight_notification', this.displayFightNotification)
+			this.$root.$on('fight_notification', this.onFightNotification)
 		}
 
 		@Watch('$route.params.id', {immediate: true})
@@ -226,7 +226,7 @@ import { BOSSES } from '@/model/boss'
 			LeekWars.lightBar = false
 			this.$root.$off('resize', this.resize)
 			this.$root.$off('trophy', this.onTrophy)
-			this.$root.$off('fight_notification', this.displayFightNotification)
+			this.$root.$off('fight_notification', this.onFightNotification)
 
 			// Notifications de trophées restants
 			for (const message of this.trophyQueue) {
@@ -276,15 +276,6 @@ import { BOSSES } from '@/model/boss'
 					this.trophyQueue.splice(m, 1)
 					m--
 				}
-			}
-		}
-
-		displayFightNotification() {
-			for (let m = 0; m < this.fightNotificationQueue.length; ++m) {
-				const message = this.fightNotificationQueue[m]
-				store.commit('notification', message)
-				this.fightNotificationQueue.splice(m, 1)
-				m--
 			}
 		}
 
