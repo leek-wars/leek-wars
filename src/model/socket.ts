@@ -191,11 +191,11 @@ class Socket {
 					const fightIdIndex: Record<number, number> = {
 						[NotificationType.BATTLE_ROYALE_STARTED]: 0,
 						[NotificationType.FIGHT_REPORT]: 1,
+						[NotificationType.FARMER_FIGHT_REPORT]: 1,
 						[NotificationType.COMPOSITION_FIGHT_REPORT]: 1,
-						[NotificationType.TOURNAMENT_WINNER]: 2,
 						[NotificationType.CHALLENGE]: 1,
 						[NotificationType.FARMER_CHALLENGE]: 1,
-						[NotificationType.FARMER_FIGHT_REPORT]: 1,
+						[NotificationType.TOURNAMENT_WINNER]: 2,
 						[NotificationType.FARMER_TOURNAMENT_WIN]: 2,
 						[NotificationType.TEAM_TOURNAMENT_WIN]: 2
 					};
