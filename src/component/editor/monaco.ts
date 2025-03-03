@@ -268,8 +268,8 @@ monaco.languages.registerDefinitionProvider("leekscript", {
 })
 
 monaco.languages.registerDocumentFormattingEditProvider("leekscript", {
-	async provideDocumentFormattingEdits(model, options, token) {
-		const formattedText = await formatLeekScript(model.getValue()); // Implement this function
+	async provideDocumentFormattingEdits(model) {
+		const formattedText = await formatLeekScript(model.getValue());
 		return [
 			{
 				range: model.getFullModelRange(),
@@ -284,14 +284,14 @@ async function formatLeekScript(code:string): Promise<string> {
 
 	await import(/* webpackChunkName: "js-beautify" */ "js-beautify").then(js_beautify => {
 
-		const hex_literals = code.matchAll(/0(?:x[\dA-Fa-f_\.p]+|o[0-7_]+|b[01_]+)/g)
+		const hex_literals = code.matchAll(/0(?:x[\dA-Fa-f_.p]+|o[0-7_]+|b[01_]+)/g)
 		let formatted = js_beautify.default.js_beautify(code, {indent_size: 1, indent_char: '\t'})
 
 		// js-beautify doesn't recognize hexadecimal floating point, and will split them as:
 		// 0x1 .0 p53
 		// this code restore the correct litteral after the formatting:
 		for (const lit of hex_literals) {
-			let fLit = lit[0].replace(/\./, ' .').replace(/p/, ' p')
+			const fLit = lit[0].replace(/\./, ' .').replace(/p/, ' p')
 			formatted = formatted.replace(fLit, lit[0])
 		}
 		formattedCode = formatted;
