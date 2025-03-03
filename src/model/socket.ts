@@ -181,9 +181,19 @@ class Socket {
 				case SocketMessage.NOTIFICATION_RECEIVE : {
 
 					const message = { id: data[0], type: data[1], date: LeekWars.time, parameters: data[2], new: true }
+					
+					const spoilableTypes = [NotificationType.BATTLE_ROYALE_STARTED, NotificationType.FIGHT_REPORT, NotificationType.COMPOSITION_FIGHT_REPORT];
+					const fightIdIndex: Record<number, number> = {
+						[NotificationType.BATTLE_ROYALE_STARTED]: 0,
+						[NotificationType.FIGHT_REPORT]: 1,
+						[NotificationType.COMPOSITION_FIGHT_REPORT]: 1,
+						[NotificationType.TOURNAMENT_WINNER]: 2,
+					};
 					// Envoie de la notif sur la page du combat pour la mettre en file d'attente
 					if (message.type === NotificationType.TROPHY_UNLOCKED && router.currentRoute.value.path.startsWith('/fight/' + message.parameters[1])) {
 						emitter.emit('trophy', message)
+					} else if (spoilableTypes.indexOf(message.type) !== -1 && router.currentRoute.value.path.startsWith('/fight/' + message.parameters[fightIdIndex[message.type]])) {
+						emitter.emit('fight_notification', message)
 					} else {
 						if (message.type === NotificationType.UP_LEVEL) {
 							const leek = parseInt(message.parameters[0], 10)
