@@ -6,7 +6,7 @@
 			<span class="text">{{ entity.translatedName }}</span>
 		</td>
 		<td>{{ entity.level }}</td>
-		<td v-for="stat in stats" :key="stat" :class="{best: best[stat] === entity.leek.id}">
+		<td v-for="stat in stats" :key="stat" :class="{best: best[stat].indexOf(entity.leek.id) !== -1}">
 			<template v-if="entity[stat]">{{ entity[stat] | number }}</template>
 		</td>
 	</tr>
