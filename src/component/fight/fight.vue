@@ -156,7 +156,7 @@ import { emitter } from '@/model/vue'
 		reportDialog: boolean = false
 		reasons = [Warning.RUDE_SAY, Warning.INCORRECT_LEEK_NAME, Warning.INCORRECT_FARMER_NAME, Warning.INCORRECT_AVATAR]
 		trophyQueue: any[] = []
-		notificationQueue: any[] = []
+		fightNotificationQueue: any[] = []
 
 		get reportLeeks() {
 			if (!this.fight) { return [] }
