@@ -10,7 +10,7 @@
 	"shortcut_9": "<b>Alt + vänster/höger</b>: växla mellan öppna filer",
 	"shortcut_10": "<b>Ctrl + Mellanslag</b>: automatiskt slutförande",
 	"shortcut_11": "<b>Ctrl + Klicka</b>: gå till symboldefinition",
-	"shortcut_12": "<b>Ctrl + Shift + F</b>: automatisk kodformatering och indrag",
+	"shortcut_12": "<b>Alt + Shift + F</b>: automatisk kodformatering och indrag",
 	"shortcut_13": "<b>Ctrl + U</b>: vik/vik upp det aktuella kodblocket",
 	"shortcut_14": "<b>Ctrl + J</b>: Komprimera alla kodblock",
 	"shortcut_15": "<b>Ctrl + I</b>: expandera alla kodblock"

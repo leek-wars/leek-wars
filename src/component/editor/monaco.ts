@@ -37,6 +37,12 @@ monaco.languages.setLanguageConfiguration('leekscript', {
 		["[", "]"],
 		// ["<", ">"],
 	],
+	indentationRules: {
+		decreaseIndentPattern: new RegExp("^\\s*[\\}\\]\\)].*$"),
+		increaseIndentPattern: new RegExp("^.*(\\{[^}]*|\\([^)]*|\\[[^\\]]*)$"),
+		unIndentedLinePattern: new RegExp("^(\\t|[ ])*[ ]\\*[^/]*\\*/\\s*$|^(\\t|[ ])*[ ]\\*/\\s*$|^(\\t|[ ])*[ ]\\*([ ]([^\\*]|\\*(?!/))*)?$"),
+		indentNextLinePattern: new RegExp("^((.*=>\\s*)|((.*[^\\w]+|\\s*)(if|while|for)\\s*\\(.*\\)\\s*))$")
+	},
 })
 monaco.languages.setMonarchTokensProvider('leekscript', leekscript)
 monaco.languages.registerDocumentSemanticTokensProvider('leekscript', leekscript)
@@ -68,6 +74,11 @@ monaco.editor.addKeybindingRules([
 		when: "textInputFocus",
 	},
 	{
+		keybinding: monaco.KeyMod.Alt | monaco.KeyCode.Shift | monaco.KeyCode.KeyF,
+		command: "editor.action.formatDocument",
+		when: "textInputFocus",
+	},
+	{
 		keybinding: monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyJ,
 		command: "editor.foldAll",
 		when: "textInputFocus",
@@ -81,7 +92,7 @@ monaco.editor.addKeybindingRules([
 		keybinding: monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyU,
 		command: "editor.toggleFold",
 		when: "textInputFocus",
-	},
+	}
 ]);
 
 monaco.editor.registerCommand('jump', (accessor, args) => {
@@ -255,6 +266,39 @@ monaco.languages.registerDefinitionProvider("leekscript", {
 		}
 	},
 })
+
+monaco.languages.registerDocumentFormattingEditProvider("leekscript", {
+	async provideDocumentFormattingEdits(model, options, token) {
+		const formattedText = await formatLeekScript(model.getValue()); // Implement this function
+		return [
+			{
+				range: model.getFullModelRange(),
+				text: formattedText,
+			},
+		];
+	},
+});
+
+async function formatLeekScript(code:string): Promise<string> {
+	let formattedCode:string = code;
+
+	await import(/* webpackChunkName: "js-beautify" */ "js-beautify").then(js_beautify => {
+
+		const hex_literals = code.matchAll(/0(?:x[\dA-Fa-f_\.p]+|o[0-7_]+|b[01_]+)/g)
+		let formatted = js_beautify.default.js_beautify(code, {indent_size: 1, indent_char: '\t'})
+
+		// js-beautify doesn't recognize hexadecimal floating point, and will split them as:
+		// 0x1 .0 p53
+		// this code restore the correct litteral after the formatting:
+		for (const lit of hex_literals) {
+			let fLit = lit[0].replace(/\./, ' .').replace(/p/, ' p')
+			formatted = formatted.replace(fLit, lit[0])
+		}
+		formattedCode = formatted;
+	})
+	return formattedCode;
+
+}
 
 LeekWars.completionsProvider = monaco.languages.registerCompletionItemProvider("leekscript", {
 	triggerCharacters: ["."],

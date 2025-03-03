@@ -10,7 +10,7 @@
 	"shortcut_9": "<b>Alt + izquierda/derecha</b>: cambiar entre archivos abiertos",
 	"shortcut_10": "<b>Ctrl + Espacio</b>: finalización automática",
 	"shortcut_11": "<b>Ctrl + Clic</b>: ir a la definición del símbolo",
-	"shortcut_12": "<b>Ctrl + Shift + F</b>: formato de código automático y sangría",
+	"shortcut_12": "<b>Alt + Shift + F</b>: formato de código automático y sangría",
 	"shortcut_13": "<b>Ctrl + U</b>: plegar/desplegar el bloque de código actual",
 	"shortcut_14": "<b>Ctrl + J</b>: contraer todos los bloques de código",
 	"shortcut_15": "<b>Ctrl + I</b>: expandir todos los bloques de código"
