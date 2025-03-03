@@ -16,7 +16,7 @@
 		<panel class="first">
 			<template #content>
 				<div class="fight">
-					<player v-if="fight_id" :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @display-fight-notification="displayFightNotification" @fight="fightLoaded" @resize="resize" />
+					<player v-if="fight_id" :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
 				</div>
 			</template>
 		</panel>
