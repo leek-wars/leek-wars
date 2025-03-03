@@ -130,6 +130,7 @@ type Events = {
 	'editor-drag': any
 	'tournament-update': any
 	trophy: any
+	fight_notification: any
 	wsmessage: { type: number, data: any, id: number | null },
 	mousemove: any,
 	mouseup: any,
