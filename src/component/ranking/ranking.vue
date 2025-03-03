@@ -12,7 +12,7 @@
 								<v-icon v-on="on" @click.prevent="">mdi-chevron-down</v-icon>
 							</template>
 							<v-list>
-								<router-link v-for="level of [50, 100, 150, 200, 250, 300]" :key="level" :to="getURL('level-' + level, order, country, LeekWars.rankingInactive)">
+								<router-link v-for="level of [50, 99, 150, 199, 250, 299]" :key="level" :to="getURL('level-' + level, order, country, LeekWars.rankingInactive)">
 									<v-list-item v-ripple >
 										<v-list-item-content>
 											<v-list-item-title>{{ $t('main.level_n', [level]) }}</v-list-item-title>
