@@ -55,7 +55,7 @@
 			const result: any = {}
 			for (const stat of this.stats) {
 				let best = 0
-				let bestEntities = null
+				let bestEntities = []
 				const real_stat = stat === 'ops_format' ? 'operations' : (stat === 'ops_per_turn_format' ? 'operations_per_turn' : stat)
 				for (const e in this.statistics.entities) {
 					if ((this.statistics.entities[e] as any)[real_stat] > best) {
@@ -65,9 +65,8 @@
 						bestEntities.push(this.statistics.entities[e].leek.id)
 					}
 				}
-				if (bestEntity !== null) {
-					result[stat] = bestEntities
-				}
+				
+				result[stat] = bestEntities
 			}
 			return result
 		}
