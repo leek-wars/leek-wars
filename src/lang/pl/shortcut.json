@@ -10,7 +10,7 @@
 	"shortcut_9": "<b>Alt + lewo/prawo</b>: przełączanie między otwartymi plikami",
 	"shortcut_10": "<b>Ctrl + spacja</b>: automatyczne uzupełnianie",
 	"shortcut_11": "<b>Ctrl + kliknięcie</b>: przejście do definicji symbolu",
-	"shortcut_12": "<b>Ctrl + Shift + F</b>: automatyczne formatowanie i wcięcie kodu",
+	"shortcut_12": "<b>Alt + Shift + F</b>: automatyczne formatowanie i wcięcie kodu",
 	"shortcut_13": "<b>Ctrl + U</b>: zwiń/rozwiń bieżący blok kodu",
 	"shortcut_14": "<b>Ctrl + J</b>: Zwiń wszystkie bloki kodu",
 	"shortcut_15": "<b>Ctrl + I</b>: rozwiń wszystkie bloki kodu"

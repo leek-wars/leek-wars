@@ -10,7 +10,7 @@
 	"shortcut_9": "<b>Alt + 왼쪽/오른쪽</b>: 열려 있는 파일 간 전환",
 	"shortcut_10": "<b>Ctrl + Space</b>: 자동 완성",
 	"shortcut_11": "<b>Ctrl + 클릭</b>: 기호 정의로 이동",
-	"shortcut_12": "<b>Ctrl + Shift + F</b>: 자동 코드 서식 지정 및 들여쓰기",
+	"shortcut_12": "<b>Alt + Shift + F</b>: 자동 코드 서식 지정 및 들여쓰기",
 	"shortcut_13": "<b>Ctrl + U</b>: 현재 코드 블록 접기/펼치기",
 	"shortcut_14": "<b>Ctrl + J</b>: 모든 코드 블록 접기",
 	"shortcut_15": "<b>Ctrl + I</b>: 모든 코드 블록 확장"

@@ -10,7 +10,7 @@
 	"shortcut_9": "<b>Alt + 左/右</b>: 開いているファイルを切り替える",
 	"shortcut_10": "<b>Ctrl + スペース</b>: 自動補完",
 	"shortcut_11": "<b>Ctrl + クリック</b>: シンボル定義に移動",
-	"shortcut_12": "<b>Ctrl + Shift + F</b>: コードの自動フォーマットとインデント",
+	"shortcut_12": "<b>Alt + Shift + F</b>: コードの自動フォーマットとインデント",
 	"shortcut_13": "<b>Ctrl + U</b>: 現在のコード ブロックを折りたたむ/展開する",
 	"shortcut_14": "<b>Ctrl + J</b>: すべてのコード ブロックを折りたたむ",
 	"shortcut_15": "<b>Ctrl + I</b>: すべてのコード ブロックを展開します"

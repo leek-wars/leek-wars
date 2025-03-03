@@ -10,7 +10,7 @@
 	"shortcut_9": "<b>Alt + 左/右</b>：在打开的文件之间切换",
 	"shortcut_10": "<b>Ctrl + Space</b>：自动补全",
 	"shortcut_11": "<b>Ctrl + 单击</b>：转到符号定义",
-	"shortcut_12": "<b>Ctrl + Shift + F</b>：自动代码格式化和缩进",
+	"shortcut_12": "<b>Alt + Shift + F</b>：自动代码格式化和缩进",
 	"shortcut_13": "<b>Ctrl + U</b>：折叠/展开当前代码块",
 	"shortcut_14": "<b>Ctrl + J</b>：折叠所有代码块",
 	"shortcut_15": "<b>Ctrl + I</b>：展开所有代码块"
