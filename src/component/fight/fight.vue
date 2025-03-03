@@ -9,7 +9,7 @@
 
 		<panel class="first">
 			<div slot="content" class="fight">
-				<player :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
+				<player :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @display-fight-notification="displayFightNotification" @fight="fightLoaded" @resize="resize" />
 			</div>
 		</panel>
 
@@ -146,6 +146,7 @@ import { BOSSES } from '@/model/boss'
 		reportDialog: boolean = false
 		reasons = [Warning.RUDE_SAY, Warning.INCORRECT_LEEK_NAME, Warning.INCORRECT_FARMER_NAME, Warning.INCORRECT_AVATAR]
 		trophyQueue: any[] = []
+		notificationQueue: any[] = []
 
 		get reportLeeks() {
 			if (!this.fight) { return [] }
@@ -172,6 +173,7 @@ import { BOSSES } from '@/model/boss'
 			setTimeout(() => this.resize(), 50)
 
 			this.$root.$on('trophy', this.onTrophy)
+			this.$root.$on('fight_notification', this.displayFightNotification)
 		}
 
 		@Watch('$route.params.id', {immediate: true})
@@ -224,9 +226,13 @@ import { BOSSES } from '@/model/boss'
 			LeekWars.lightBar = false
 			this.$root.$off('resize', this.resize)
 			this.$root.$off('trophy', this.onTrophy)
+			this.$root.$off('fight_notification', this.displayFightNotification)
 
 			// Notifications de trophées restants
 			for (const message of this.trophyQueue) {
+				store.commit('notification', message)
+			}
+			for (const message of this.notificationQueue) {
 				store.commit('notification', message)
 			}
 		}
@@ -256,6 +262,11 @@ import { BOSSES } from '@/model/boss'
 			this.trophyQueue.push(trophy)
 		}
 
+		// Réception des notifications pour les mettre en attente
+		onFightNotification(trophy: any) {
+			this.fightNotificationQueue.push(trophy)
+		}
+
 		// Le player a joué un trophée, on peut l'afficher
 		unlockTrophy(trophy: number) {
 			for (let m = 0; m < this.trophyQueue.length; ++m) {
@@ -265,6 +276,15 @@ import { BOSSES } from '@/model/boss'
 					this.trophyQueue.splice(m, 1)
 					m--
 				}
+			}
+		}
+
+		displayFightNotification() {
+			for (let m = 0; m < this.fightNotificationQueue.length; ++m) {
+				const message = this.fightNotificationQueue[m]
+				store.commit('notification', message)
+				this.fightNotificationQueue.splice(m, 1)
+				m--
 			}
 		}
 
