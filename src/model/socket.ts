@@ -193,7 +193,6 @@ class Socket {
 							|| ((message.type ===NotificationType.TOURNAMENT_WINNER || message.type ===NotificationType.FARMER_TOURNAMENT_WIN || message.type ===NotificationType.TEAM_TOURNAMENT_WIN) && router.currentRoute.path.startsWith('/fight/' + message.parameters[2]))
 						)
 					) {
-						console.log('coucou', message);
 						vueMain.$emit('fight_notification', message)
 					} else {
 						if (message.type === NotificationType.UP_LEVEL) {
