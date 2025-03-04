@@ -232,7 +232,7 @@ import { BOSSES } from '@/model/boss'
 			for (const message of this.trophyQueue) {
 				store.commit('notification', message)
 			}
-			for (const message of this.notificationQueue) {
+			for (const message of this.fightNotificationQueue) {
 				store.commit('notification', message)
 			}
 		}
