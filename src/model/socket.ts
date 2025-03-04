@@ -180,27 +180,20 @@ class Socket {
 
 					const message = { id: data[0], type: data[1], date: LeekWars.time, parameters: data[2], new: true }
 					
-					const spoilableTypes = [
-						NotificationType.BATTLE_ROYALE_STARTED,
-						NotificationType.FIGHT_REPORT, NotificationType.FARMER_FIGHT_REPORT,, NotificationType.COMPOSITION_FIGHT_REPORT,
-						NotificationType.CHALLENGE, NotificationType.FARMER_CHALLENGE,
-						NotificationType.TOURNAMENT_WINNER, NotificationType.FARMER_TOURNAMENT_WIN, NotificationType.TEAM_TOURNAMENT_WIN
-					];
-					const fightIdIndex = {
-						NotificationType.BATTLE_ROYALE_STARTED: 0,
-						NotificationType.FIGHT_REPORT: 1,
-						NotificationType.FARMER_FIGHT_REPORT: 1,
-						NotificationType.COMPOSITION_FIGHT_REPORT: 1,
-						NotificationType.CHALLENGE: 1,
-						NotificationType.FARMER_CHALLENGE: 1,
-						NotificationType.TOURNAMENT_WINNER: 2,
-						NotificationType.FARMER_TOURNAMENT_WIN: 2,
-						NotificationType.TEAM_TOURNAMENT_WIN: 2
-					};
+					const spoilableTypes:any[] = [NotificationType.BATTLE_ROYALE_STARTED, NotificationType.FIGHT_REPORT, NotificationType.FARMER_FIGHT_REPORT, NotificationType.COMPOSITION_FIGHT_REPORT, NotificationType.CHALLENGE, NotificationType.FARMER_CHALLENGE, NotificationType.TOURNAMENT_WINNER, NotificationType.FARMER_TOURNAMENT_WIN, NotificationType.TEAM_TOURNAMENT_WIN]
+
 					// Envoie de la notif sur la page du combat pour la mettre en file d'attente
 					if (message.type === NotificationType.TROPHY_UNLOCKED && router.currentRoute.path.startsWith('/fight/' + message.parameters[1])) {
 						vueMain.$emit('trophy', message)
-					} else if (spoilableTypes.indexOf(message.type) !== -1 && router.currentRoute.path.startsWith('/fight/' + message.parameters[fightIdIndex[message.type])) {
+					} else if (
+						spoilableTypes.indexOf(message.type) !== -1
+						&& (
+							((message.type === NotificationType.BATTLE_ROYALE_STARTED || message.type === NotificationType.FARMER_CHALLENGE) && router.currentRoute.path.startsWith('/fight/' + message.parameters[0]))
+							|| ((message.type === NotificationType.FIGHT_REPORT || message.type === NotificationType.FARMER_FIGHT_REPORT || message.type === NotificationType.COMPOSITION_FIGHT_REPORT || message.type === NotificationType.CHALLENGE) && router.currentRoute.path.startsWith('/fight/' + message.parameters[1]))
+							|| ((message.type ===NotificationType.TOURNAMENT_WINNER || message.type ===NotificationType.FARMER_TOURNAMENT_WIN || message.type ===NotificationType.TEAM_TOURNAMENT_WIN) && router.currentRoute.path.startsWith('/fight/' + message.parameters[2]))
+						)
+					) {
+						console.log('coucou', message);
 						vueMain.$emit('fight_notification', message)
 					} else {
 						if (message.type === NotificationType.UP_LEVEL) {
