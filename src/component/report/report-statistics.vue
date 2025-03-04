@@ -54,8 +54,8 @@
 		get best() {
 			const result: any = {}
 			for (const stat of this.stats) {
-				let best = 0
-				let bestEntities = []
+				let best = -1
+				let bestEntities:number[] = []
 				const real_stat = stat === 'ops_format' ? 'operations' : (stat === 'ops_per_turn_format' ? 'operations_per_turn' : stat)
 				for (const e in this.statistics.entities) {
 					if ((this.statistics.entities[e] as any)[real_stat] > best) {
