@@ -88,6 +88,9 @@
 		<panel v-if="group" toggle="group/members" icon="mdi-account-group">
 			<template slot="title">{{ $t('members') }} ({{ group.members.length }})</template>
 			<div slot="actions">
+				<div v-if="group.is_supervisor" class="button" @click="giveMoneyDialog = true; giveMoneyTarget = null">
+					<v-icon>mdi-hand-coin-outline</v-icon>
+				</div>
 				<div v-if="group.is_supervisor" class="button" @click="membersDialog = true">
 					<v-icon>mdi-pencil</v-icon>
 				</div>
@@ -97,6 +100,7 @@
 					:headers="group.is_supervisor ? headersSupervisor : headers"
 					:items="group.members"
 					hide-default-footer
+					:dense="true"
     				:items-per-page="100"
 					class="elevation-1 members">
 					<div slot="no-data" class="no-member">
@@ -133,7 +137,10 @@
 						<v-icon @click="sendMessage(item)">mdi-email-outline</v-icon>
 					</template>
 					<template v-slot:item.give="{ item }">
-						<v-icon @click="giveItem(item)">mdi-gift-outline</v-icon>
+						<div class="flex">
+							<v-icon @click="giveItem(item)">mdi-gift-outline</v-icon>
+							<v-icon @click="giveMoney(item)">mdi-hand-coin-outline</v-icon>
+						</div>
 					</template>
 				</v-data-table>
 			</div>
@@ -478,6 +485,27 @@
 				<div v-ripple class="green" @click="giveItemFinal()">{{ $t('give_item') }}</div>
 			</div>
 		</popup>
+
+		<popup v-if="group" v-model="giveMoneyDialog" :width="500" class="give-item-dialog">
+			<v-icon slot="icon">mdi-gift-outline</v-icon>
+			<div slot="title">{{ $t('give_money', { member: giveMoneyTarget?.name || $t('everybody') }) }}</div>
+
+			<div class="flex">
+				<h4>Montant</h4>
+				<div class="flex" style="justify-content: flex-start; gap: 6px; align-items: center;">
+					<input type="number" v-model="giveMoneyAmount" :min="0" :max="10000000" style="padding: 8px" /> <span class="hab"></span>
+				</div>
+				<h4>Combats</h4>
+				<div class="flex" style="justify-content: flex-start; gap: 6px; align-items: center;">
+					<input type="number" v-model="giveFightsAmount" :min="0" :max="100" style="padding: 8px" /> <span class="hab"></span>
+				</div>
+			</div>
+
+			<div slot="actions">
+				<div v-ripple @click="giveMoneyDialog = false">{{ $t('main.cancel') }}</div>
+				<div v-ripple class="green" @click="giveMoneyConfirm()">{{ $t('main.send') }}</div>
+			</div>
+		</popup>
 	</div>
 </template>
 
@@ -528,31 +556,35 @@
 		giveItemConfirmDialog: boolean = false
 		itemToGive: any = null
 		giveItemTarget: Member | null = null
+		giveMoneyDialog: boolean = false
+		giveMoneyTarget: Member | null = null
+		giveMoneyAmount: number = 1_000_000
+		giveFightsAmount: number = 100
 
 		headers = [
 			{ text: 'Membre', value: 'name' },
 			{ text: 'Équipe', value: 'team' },
 			{ text: 'Niveau', value: 'total_level' },
-			{ text: 'Combats restants', value: 'day_fight' },
 			{ text: 'Combats', value: 'fights' },
+			{ text: 'Restants', value: 'day_fight' },
 			{ text: 'Victoires', value: 'wins' },
 			{ text: 'Nuls', value: 'draws' },
 			{ text: 'Défaites', value: 'defeats' },
-			{ text: 'Ratio', value: 'ratio' },
-			{ text: 'Combats de test', value: 'test_fights' },
+			{ text: 'Talent', value: 'talent' },
+			{ text: 'Combats test', value: 'test_fights' },
 			{ text: 'Trophées', value: 'trophies' },
         ]
 		headersSupervisor = [
 			{ text: 'Membre', value: 'name' },
 			{ text: 'Équipe', value: 'team' },
 			{ text: 'Niveau', value: 'total_level' },
-			{ text: 'Combats restants', value: 'day_fight' },
 			{ text: 'Combats', value: 'fights' },
+			{ text: 'Restants', value: 'day_fight' },
 			{ text: 'Victoires', value: 'wins' },
 			{ text: 'Nuls', value: 'draws' },
 			{ text: 'Défaites', value: 'defeats' },
-			{ text: 'Ratio', value: 'ratio' },
-			{ text: 'Combats de test', value: 'test_fights' },
+			{ text: 'Talent', value: 'talent' },
+			{ text: 'Tests', value: 'test_fights' },
 			{ text: 'Trophées', value: 'trophies' },
 			{ text: 'Actions', value: 'give' },
         ]
@@ -986,6 +1018,29 @@
 			this.giveItemConfirmDialog = false
 			this.giveItemDialog = false
 		}
+
+		giveMoney(member: Member) {
+			this.giveMoneyDialog = true
+			this.giveMoneyTarget = member
+		}
+
+		giveMoneyConfirm() {
+			if (!this.group) { return }
+			if (this.giveMoneyTarget) {
+				LeekWars.post('groupe/give-money', {
+					group_id: this.group.id,
+					member_id: this.giveMoneyTarget!.id,
+					amount: this.giveMoneyAmount,
+				})
+			} else {
+				LeekWars.post('groupe/give-money-all', {
+					group_id: this.group.id,
+					amount: this.giveMoneyAmount,
+				})
+			}
+			this.giveMoneyDialog = false
+			this.giveMoneyTarget = null
+		}
 	}
 </script>
 
@@ -1015,11 +1070,6 @@ h4 {
 .chat {
 	height: 300px;
 }
-.members {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-}
 input[type="text"], input[type="email"] {
 	height: 28px;
 	vertical-align: bottom;
@@ -1029,11 +1079,20 @@ input[type="text"], input[type="email"] {
 	}
 }
 .members {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	.v-icon {
+		opacity: 0.8;
+		&:hover {
+			opacity: 1;
+		}
+	}
 	&::v-deep th {
 		text-align: left;
 	}
-	&::v-deep td {
-		padding: 0 10px !important;
+	&::v-deep td, &::v-deep th {
+		padding: 0 6px !important;
 		height: 36px !important;
 	}
 	.name {

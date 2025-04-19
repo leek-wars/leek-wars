@@ -178,6 +178,10 @@ class NotificationBuilder {
 			const catgoryId = params[2]
 			const topicTitle = params[3]
 			return new Notification(data, "/forum/category-" + catgoryId + "/topic-" + topicId, "mdi-forum", [farmerName, topicTitle])
+		} else if (type === NotificationType.GIVE_MONEY) {
+			const farmer_name = params[0]
+			const amount = params[1]
+			return new Notification(data, "/market", "mdi-hand-coin-outline", [farmer_name, amount])
 		} else {
 			return new Notification(data, null, null, ["? type " + type])
 		}

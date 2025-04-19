@@ -44,5 +44,7 @@
 	"error_invalid_email": "L'adresse e-mail doit être valide",
 	"new_leek": "Autoriser la création d'un autre poireau",
 	"give_item": "Donner un item",
-	"confirm_give_item": "Confirmer le don de cet item au membre {member} ?"
+	"confirm_give_item": "Confirmer le don de cet item au membre {member} ?",
+	"give_money": "Donner de l'argent à {member}",
+	"everybody": "tout le monde"
 }
