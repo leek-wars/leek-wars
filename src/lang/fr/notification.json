@@ -98,5 +98,7 @@
 	"title_36": "{0} a créé un nouveau sujet : {1}",
 	"message_36": "Voir le sujet",
 	"title_37": "{0} vous a donné {1} habs",
-	"message_37": "Voir le marché"
+	"message_37": "Voir le marché",
+	"title_38": "{0} vous a donné {1} combats",
+	"message_38": "Aller dans le potager"
 }

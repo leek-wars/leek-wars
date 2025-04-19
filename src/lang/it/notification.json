@@ -96,5 +96,9 @@
 	"title_35": "{0} ha lanciato una battaglia contro i boss",
 	"message_35": "Vedere il combattimento",
 	"title_36": "{0} ha creato un nuovo argomento: {1}",
-	"message_36": "Visualizza argomento"
+	"message_36": "Visualizza argomento",
+	"title_37": "{0} ti ha dato {1} habs",
+	"message_37": "Vedere il mercato",
+	"title_38": "{0} ti ha dato {1} combattimenti",
+	"message_38": "Andare nell'orto"
 }

@@ -96,5 +96,9 @@
 	"title_35": "{0} har startet en bosskamp",
 	"message_35": "Se kampen",
 	"title_36": "{0} har oprettet et nyt emne: {1}",
-	"message_36": "Vis emne"
+	"message_36": "Vis emne",
+	"title_37": "{0} gav dig {1} habs",
+	"message_37": "Se markedet",
+	"title_38": "{0} gav dig {1} kampe",
+	"message_38": "Gå ud i køkkenhaven"
 }

@@ -44,5 +44,7 @@
 	"new_leek": "Izinkan pembuatan daun bawang lainnya",
 	"start_team_tournament": "Meluncurkan turnamen tim",
 	"give_item": "Berikan item",
-	"confirm_give_item": "Konfirmasikan donasi item ini kepada anggota {member} ?"
+	"confirm_give_item": "Konfirmasikan donasi item ini kepada anggota {member} ?",
+	"give_money": "Berikan uang kepada {member}",
+	"everybody": "semua orang"
 }

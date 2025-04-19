@@ -11,9 +11,6 @@ dotenv.config({ path: path.resolve(process.cwd(), 'src', 'env', '.env') })
 
 module.exports = {
 	configureWebpack: {
-		// performance: {
-		// 	hints: false
-		// },
 		plugins: [
 			new MonacoWebpackPlugin({
 				// languages: ['typescript', 'javascript', 'css']

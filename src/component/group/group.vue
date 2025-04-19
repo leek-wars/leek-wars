@@ -490,14 +490,20 @@
 			<v-icon slot="icon">mdi-gift-outline</v-icon>
 			<div slot="title">{{ $t('give_money', { member: giveMoneyTarget?.name || $t('everybody') }) }}</div>
 
-			<div class="flex">
-				<h4>Montant</h4>
-				<div class="flex" style="justify-content: flex-start; gap: 6px; align-items: center;">
-					<input type="number" v-model="giveMoneyAmount" :min="0" :max="10000000" style="padding: 8px" /> <span class="hab"></span>
+			<div class="flex" style="gap: 10px">
+				<div class="column" style="flex: 1">
+					<h4>Habs</h4>
+					<div class="flex" style="justify-content: flex-start; gap: 6px; align-items: center;">
+						<input type="number" v-model="giveMoneyAmount" placeholder="1000000" :min="0" :max="10000000" style="padding: 8px; flex: 1" />
+						<span class="hab"></span>
+					</div>
 				</div>
-				<h4>Combats</h4>
-				<div class="flex" style="justify-content: flex-start; gap: 6px; align-items: center;">
-					<input type="number" v-model="giveFightsAmount" :min="0" :max="100" style="padding: 8px" /> <span class="hab"></span>
+				<div class="column" style="flex: 1">
+					<h4>Combats</h4>
+					<div class="flex" style="justify-content: flex-start; gap: 6px; align-items: center;">
+						<input type="number" v-model="giveFightsAmount" placeholder="100" :min="0" :max="100" style="padding: 8px; flex: 1" />
+						<v-icon>mdi-sword-cross</v-icon>
+					</div>
 				</div>
 			</div>
 
@@ -558,8 +564,8 @@
 		giveItemTarget: Member | null = null
 		giveMoneyDialog: boolean = false
 		giveMoneyTarget: Member | null = null
-		giveMoneyAmount: number = 1_000_000
-		giveFightsAmount: number = 100
+		giveMoneyAmount: number = 0
+		giveFightsAmount: number = 0
 
 		headers = [
 			{ text: 'Membre', value: 'name' },
@@ -1027,15 +1033,17 @@
 		giveMoneyConfirm() {
 			if (!this.group) { return }
 			if (this.giveMoneyTarget) {
-				LeekWars.post('groupe/give-money', {
+				LeekWars.post('groupe/give-money-fights', {
 					group_id: this.group.id,
 					member_id: this.giveMoneyTarget!.id,
 					amount: this.giveMoneyAmount,
+					fights: this.giveFightsAmount,
 				})
 			} else {
-				LeekWars.post('groupe/give-money-all', {
+				LeekWars.post('groupe/give-money-fights-all', {
 					group_id: this.group.id,
 					amount: this.giveMoneyAmount,
+					fights: this.giveFightsAmount,
 				})
 			}
 			this.giveMoneyDialog = false
@@ -1083,7 +1091,7 @@ input[type="text"], input[type="email"] {
 	flex-direction: column;
 	gap: 10px;
 	.v-icon {
-		opacity: 0.8;
+		opacity: 0.7;
 		&:hover {
 			opacity: 1;
 		}
@@ -1290,4 +1298,9 @@ div.error {
 		display: flex;
 	}
 }
+.column {
+	display: flex;
+	flex-direction: column;
+}
+
 </style>

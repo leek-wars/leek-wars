@@ -44,5 +44,7 @@
 	"new_leek": "Permitir la creación de otro puerro",
 	"start_team_tournament": "Iniciar un torneo por equipos",
 	"give_item": "Regala un artículo",
-	"confirm_give_item": "¿ Confirmar la donación de este artículo al miembro {member} ?"
+	"confirm_give_item": "¿ Confirmar la donación de este artículo al miembro {member} ?",
+	"give_money": "Dar dinero a {member}",
+	"everybody": "todo el mundo"
 }
