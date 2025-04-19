@@ -148,5 +148,5 @@
 	"enemies": "Kaikki viholliset",
 	"state_11": "Staattinen",
 	"n_uses": "<b>1</b> käyttö | <b>{n}</b> käyttötapoja",
-	"max_uses": "enintään {käytöt} kierrosta kohti"
+	"max_uses": "enintään {uses} kierrosta kohti"
 }

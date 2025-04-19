@@ -148,5 +148,5 @@
 	"enemies": "Todos os inimigos",
 	"state_11": "Estático",
 	"n_uses": "<b>1</b> utilização | <b>{n}</b> utilizações",
-	"max_uses": "máximo de {utilizações} por ronda"
+	"max_uses": "máximo de {uses} por ronda"
 }

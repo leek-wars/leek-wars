@@ -148,5 +148,5 @@
 	"enemies": "Alla fiender",
 	"state_11": "Statisk",
 	"n_uses": "<b>1</b> användning | <b>{n}</b> användning",
-	"max_uses": "maximalt {används} per runda"
+	"max_uses": "maximalt {uses} per runda"
 }
