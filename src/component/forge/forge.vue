@@ -4,7 +4,7 @@
 			<div v-for="(item, i) in forge" :key="i" class="cell" :class="{['cell' + i]: true, active: !!item, building: item && building}">
 				<rich-tooltip-item v-if="item" :key="item[0]" v-slot="{ on }" :item="LeekWars.items[item[0]]" :inventory="true" :quantity="item[1]">
 					<div class="item" v-on="on" :type="LeekWars.items[item[0]].type">
-						<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[item[0]].type] + '/' + LeekWars.items[item[0]].name.replace('hat_', '').replace('potion_', '').replace('chip_', '') + '.png'">
+						<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[item[0]].type] + '/' + LeekWars.items[item[0]].name.replace('hat_', '').replace('potion_', '').replace('chip_', '').replace('weapon_', '') + '.png'">
 						<div v-if="item[1] > 1" class="quantity">{{ item[1] | number }}</div>
 					</div>
 				</rich-tooltip-item>
