@@ -106,7 +106,7 @@ class Socket {
 		if (!store.state.farmer || this.connecting() || this.connected()) {
 			return
 		}
-		const url = LeekWars.LOCAL ? "ws://localhost:1213/" : "wss://leekwars.com/ws"
+		const url = LeekWars.LOCAL ? "ws://localhost:1213/" : "wss://" + window.location.host + "/ws"
 		this.socket = new WebSocket(url, [ 'leek-wars', store.state.token! ])
 		// console.log("[socket] socket", this.socket)
 
