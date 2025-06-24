@@ -1,11 +1,20 @@
 243:
   title: Retour
+  added:
+    - Réglage du volume en combat (merci à TheWiseMan).
+    - Ajout de nouveaux émojis (merci à FdHP).
   improved:
-    - Ajout de nouveaux émojis (merci à FdHP)
+    - Ajout de nouveaux émojis (merci à FdHP).
+    - Restrictions (ctrl, alt, shift) sur les touches raccourci en combat (merci à TheWiseMan).
+    - "Rapport de combat : affichage de plusieurs poireaux en gras quand les stats sont identiques (merci à WhiteSlash)."
+    - Quand on copie un leek de test, copie aussi les stats composants (merci à WhiteSlash).
+    - "Classement : changement des classements par niveaux par défaut (merci à WhiteSlash)."
   fixed:
     - Traduction du titre "Poireaux" dans le rapport de combat (merci à Alexiscomete).
     - Traduction des caractéristiques de la tourelle sur la page équipe (merci à PtitsPoisCarottes).
     - Correction d'une typo dans le README (merci à smegg99).
+    - Correction affiche B-Laser dans la recette du coeur neuronal (merci à FdHP).
+    - Possibilité de formater un code LeekScript dans l'éditeur (merci à FdHP).
 242:
   title: Fonctionnalités attendues depuis longtemps et limite d'utilisation d'arme et de puce.
   added:
