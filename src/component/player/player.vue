@@ -115,9 +115,9 @@
 					</template>
 					{{ $t(game.sound ? 'sound_activated' : 'sound_disactivated') }} (V)
 				</v-tooltip>
-				<v-tooltip v-if="game.sound" :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
+				<v-tooltip v-if="game.sound && !LeekWars.mobile" :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ on }">
-						<input type="range" min="0" max="1" step="0.1" v-model="game.volume">
+						<input type="range" min="0" max="1" step="0.01" style="width: 100px; padding: 0" v-model="game.volume">
 					</template>
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
