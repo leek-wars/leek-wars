@@ -1,7 +1,11 @@
 243:
   title: Retour
+  improved:
+    - Ajout de nouveaux émojis (merci à FdHP)
   fixed:
     - Traduction du titre "Poireaux" dans le rapport de combat (merci à Alexiscomete).
+    - Traduction des caractéristiques de la tourelle sur la page équipe (merci à PtitsPoisCarottes).
+    - Correction d'une typo dans le README (merci à smegg99).
 242:
   title: Fonctionnalités attendues depuis longtemps et limite d'utilisation d'arme et de puce.
   added:
