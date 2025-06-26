@@ -148,5 +148,5 @@
 	"enemies": "All enemies",
 	"state_11": "Static",
 	"n_uses": "<b>1</b> use | <b>{n}</b> uses",
-	"max_uses": "1ラウンドあたりの最大{uses}回"
+	"max_uses": "Maximum {uses} per round"
 }
