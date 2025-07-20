@@ -1,6 +1,7 @@
 import { Farmer } from '@/model/farmer'
 import { i18n } from '@/model/i18n'
 import Vue from 'vue'
+import { LeekWars } from './leekwars'
 
 enum ChatType { GLOBAL, TEAM, PM, GROUP }
 
@@ -76,6 +77,29 @@ class Chat {
 		}
 		Vue.set(this, 'last_message', message.content.replace(/<br>/g, '\n'))
 		day_messages.push(message)
+
+		// Desktop notification
+		if (!this.loading && 'Notification' in window && document.visibilityState === 'hidden') {
+			if (Notification.permission === 'granted') {
+				this.notify(message)
+			} else {
+				Notification.requestPermission().then((permission) => {
+					if (permission === 'granted') {
+						this.notify(message)
+					}
+				})
+			}
+		}
+	}
+
+	notify(message: ChatMessage) {
+		new Notification(
+			message.farmer.name + ' (' + this.name + ')',
+			{
+				body: message.content,
+				icon: LeekWars.getAvatar(message.farmer.id, message.farmer.avatar_changed)
+			}
+		)
 	}
 
 	unshift(message: ChatMessage) {
