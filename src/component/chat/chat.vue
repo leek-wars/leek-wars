@@ -439,7 +439,7 @@
 			content = LeekWars.linkify(content)
 			content = formatEmojis(content)
 			content = Commands.execute(content, message.farmer.name)
-			content = content.replace(/@([0-9A-zÀ-ú\w]+)/g, (a, b) => {
+			content = content.replace(/@([À-ú\w]+)/g, (a, b) => {
 				const farmer = store.state.farmer_by_name[b]
 				if (farmer) {
 					return "<span class='pseudo'>" + b + "</span>"
