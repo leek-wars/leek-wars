@@ -2,7 +2,7 @@
 	<div class="wrapper">
 		<loader v-if="!comments" />
 		<div v-else class="comments">
-			<div v-for="(comment, c) in comments" :key="c" class="comment">
+			<div v-for="(comment, c) in comments.sort(function(c1, c2) {return c1.date - c2.date;})" :key="c" class="comment">
 				<router-link :to="'/farmer/' + comment.farmer.id">
 					<rich-tooltip-farmer :id="comment.farmer.id" v-slot="{ on }">
 						<avatar :farmer="comment.farmer" :on="on" />
