@@ -417,7 +417,7 @@
 			if (!this.searchQuery.length) {
 				this.searchResults = []
 			} else {
-				LeekWars.post('ranking/search', {query: this.searchQuery, search_leeks: this.searchLeeks, search_farmers: this.searchFarmers, search_teams: this.searchTeams}).then(data => {
+				LeekWars.post('ranking/search', {query: this.searchQuery.trim(), search_leeks: this.searchLeeks, search_farmers: this.searchFarmers, search_teams: this.searchTeams}).then(data => {
 					this.searchResults = data.results
 				})
 			}
