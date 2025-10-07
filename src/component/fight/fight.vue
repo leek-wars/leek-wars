@@ -263,8 +263,8 @@ import { BOSSES } from '@/model/boss'
 		}
 
 		// Réception des notifications pour les mettre en attente
-		onFightNotification(trophy: any) {
-			this.fightNotificationQueue.push(trophy)
+		onFightNotification(message: any) {
+			this.fightNotificationQueue.push(message)
 		}
 
 		// Le player a joué un trophée, on peut l'afficher
