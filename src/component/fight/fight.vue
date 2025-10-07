@@ -280,8 +280,8 @@ import { emitter } from '@/model/vue'
 		}
 
 		// Réception des notifications pour les mettre en attente
-		onFightNotification(notification: any) {
-			this.notificationQueue.push(notification)
+		onFightNotification(message: any) {
+			this.notificationQueue.push(message)
 		}
 
 		// Le player a joué un trophée, on peut l'afficher
