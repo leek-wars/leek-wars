@@ -75,6 +75,11 @@
 						<v-checkbox v-model="displayTypes.battleRoyale" hide-details class="option-checkbox" :label="$t('battle_royale')" />
 						<v-checkbox v-model="displayTypes.boss" hide-details class="option-checkbox" :label="$t('boss')" />
 					</div>
+					<div class="fight-loot">
+						<span class="category">{{ $t('loot') }}</span>
+						<v-checkbox v-model="displayLoot.chests" hide-details class="option-checkbox" :label="$t('chests')" />
+						<v-checkbox v-model="displayLoot.rareloot" hide-details class="option-checkbox" :label="$t('rare_loot')" />
+					</div>
 				</div>
 
 				<fights-history :fights="filteredFights" />
@@ -102,7 +107,8 @@
 		start_date: number = 0
 		displayContexts = { challenge: true, garden: true, tournament: true }
 		displayTypes = { solo: true, farmer: true, team: true, battleRoyale: true, boss: true }
-
+		displayLoot = { chests: true, rareloot: true }
+		
 		get breadcrumb_items() {
 			return [
 				{name: (this.entity ? this.entity.name : '...'), link: '/' + this.type + '/' + (this.entity ? this.entity.id : '')},
@@ -111,19 +117,27 @@
 		}
 		get filteredFights() {
 			return this.fights.filter((fight) => {
-				return fight.date >= this.start_date && (
-						(this.displayContexts.challenge && fight.context === FightContext.CHALLENGE) ||
-						(this.displayContexts.garden && fight.context === FightContext.GARDEN) ||
-						(this.displayContexts.tournament && fight.context === FightContext.TOURNAMENT) ||
-						(this.displayContexts.garden && this.displayTypes.battleRoyale && fight.context === FightContext.BATTLE_ROYALE) // TODO temporary, BR context is removed
-					) && (
-						(this.displayTypes.solo && fight.type === FightType.SOLO) ||
-						(this.displayTypes.farmer && fight.type === FightType.FARMER) ||
-						(this.displayTypes.team && fight.type === FightType.TEAM) ||
-						(this.displayTypes.battleRoyale && fight.type === FightType.BATTLE_ROYALE) ||
-						(this.displayTypes.boss && fight.type === FightType.BOSS) ||
-                        this.type === 'team'
-					)
+				const contextFilter = fight.date >= this.start_date && (
+					(this.displayContexts.challenge && fight.context === FightContext.CHALLENGE) ||
+					(this.displayContexts.garden && fight.context === FightContext.GARDEN) ||
+					(this.displayContexts.tournament && fight.context === FightContext.TOURNAMENT) ||
+					(this.displayContexts.garden && this.displayTypes.battleRoyale && fight.context === FightContext.BATTLE_ROYALE)  // TODO temporary, BR context is removed
+				)
+
+				const typeFilter = (
+					(this.displayTypes.solo && fight.type === FightType.SOLO) ||
+					(this.displayTypes.farmer && fight.type === FightType.FARMER) ||
+					(this.displayTypes.team && fight.type === FightType.TEAM) ||
+					(this.displayTypes.battleRoyale && fight.type === FightType.BATTLE_ROYALE) ||
+					(this.displayTypes.boss && fight.type === FightType.BOSS) ||
+					this.type === 'team'
+				)
+
+				const lootFilter = !this.displayLoot.chests && !this.displayLoot.rareloot
+					|| (this.displayLoot.chests && fight.chests > 0)
+					|| (this.displayLoot.rareloot && fight.rareloot > 0)
+
+				return contextFilter && typeFilter && lootFilter
 			})
 		}
 		get victories() {
@@ -144,6 +158,7 @@
 			const period = localStorage.getItem('options/history-period') || '1week'
 			this.displayContexts = JSON.parse(localStorage.getItem('options/history-contexts') || '{"challenge": true, "garden": true, "tournament": true }')
 			this.displayTypes = JSON.parse(localStorage.getItem('options/history-types') || '{"solo": true, "farmer": true, "team": true, "battleRoyale": true, "boss": true }')
+			this.displayLoot = JSON.parse(localStorage.getItem('options/history-loot') || '{"chests":true,"rareloot":true}')
 			this.select_period(period)
 			LeekWars.get('history/get-' + this.type + '-history/' + id).then(data => {
 				this.fights = data.fights
@@ -176,6 +191,11 @@
 		@Watch('displayTypes', { deep: true })
 		updateTypes() {
 			localStorage.setItem('options/history-types', JSON.stringify(this.displayTypes))
+		}
+
+		@Watch('displayLoot', { deep: true })
+		updateLoot() {
+			localStorage.setItem('options/history-loot', JSON.stringify(this.displayLoot))
 		}
 	}
 </script>
