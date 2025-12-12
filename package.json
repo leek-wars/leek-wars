@@ -31,7 +31,7 @@
 		"vue-json-viewer": "^2.2.22",
 		"vue-property-decorator": "^9.1.2",
 		"vue-router": "^3.4.9",
-		"vuetify": "^2.7.2",
+		"vuetify": "^3.11.3",
 		"vuex": "^3.6.0",
 		"yaml-loader": "^0.6.0"
 	},
