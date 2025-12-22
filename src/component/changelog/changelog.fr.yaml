@@ -6,6 +6,7 @@
     - Ajout de la fonction bitLength qui complète leadingZeros pour les BigInteger (merci à Batary).
     - Ajout de nouveaux émojis (merci à FdHP).
     - Réglage du volume en combat (merci à TheWiseMan).
+    - Filtres coffres et ressources rares sur la page historique (merci à temakisushi).
   improved:
     - Restrictions (ctrl, alt, shift) sur les touches raccourci en combat (merci à TheWiseMan).
     - "Rapport de combat : affichage de plusieurs poireaux en gras quand les stats sont identiques (merci à WhiteSlash)."
@@ -21,6 +22,8 @@
     - Possibilité de formater un code LeekScript dans l'éditeur (merci à FdHP).
     - Correction d'un bug sur la résurrection d'un bulbe ennemi (merci à WhiteSlash).
     - Correction d'un bug de lecture d'intervalle avec des nombres à virgule (merci à Hazurl).
+    - Tri des commentaires sur un combat par order chronologique (merci à WhiteSlash)
+
 242:
   title: Fonctionnalités attendues depuis longtemps et limite d'utilisation d'arme et de puce.
   added:
