@@ -5,11 +5,17 @@
 				<h1>{{ fight.title }}</h1>
 				<div class="info">{{ fight.date | date }}</div>
 			</div>
+			<div class="tabs">
+				<div v-if="fight_id === 'local'" class="tab" @click="reload">
+					<v-icon>mdi-refresh</v-icon>
+					Recharger
+				</div>
+			</div>
 		</div>
 
 		<panel class="first">
 			<div slot="content" class="fight">
-				<player :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
+				<player v-if="fight_id" :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
 			</div>
 		</panel>
 
@@ -177,6 +183,13 @@ import { BOSSES } from '@/model/boss'
 		@Watch('$route.params.id', {immediate: true})
 		update() {
 			this.fight_id = this.$route.params.id
+		}
+
+		reload() {
+			this.fight_id = null
+			Vue.nextTick(() => {
+				this.fight_id = this.$route.params.id
+			})
 		}
 
 		resize() {

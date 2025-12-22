@@ -10,6 +10,13 @@ if (match) {
 dotenv.config({ path: path.resolve(process.cwd(), 'src', 'env', '.env') })
 
 module.exports = {
+	devServer: {
+		static: {
+			directory: path.resolve(__dirname, 'static'),
+			publicPath: '/static',
+			watch: false,
+		},
+	},
 	configureWebpack: {
 		plugins: [
 			new MonacoWebpackPlugin({
@@ -39,6 +46,9 @@ module.exports = {
 		'app-ko': {entry: 'src/main-ko'},
 	},
     chainWebpack: config => {
+		config.watchOptions({
+			ignored: '/static/'
+		})
 		config.module
 			.rule('i18n')
 			.test(/\.\w\w\.i18n/)

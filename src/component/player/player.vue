@@ -584,7 +584,7 @@ import { T } from './game/texture'
 				}
 			}
 			if (this.fightId === 'local') {
-				import(`@/report.json`).then(report => {
+				fetch(`/static/report.json`).then(response => response.json()).then(report => {
 					const local_fight = {
 						title: 'Fight', context: 3,	date: 0,
 						farmers1: {1: {id: 1, name: 'Pilow'} as Farmer},
@@ -597,7 +597,7 @@ import { T } from './game/texture'
 						status: 1,
 						team1_name: "A", team2_name: "B",
 						tournament: 0, type: 0, winner: 1, year: 2019,
-						data: report.default.fight as any,
+						data: report.fight as any,
 						comments: [],
 						result: 'win', queue: 0,
 						trophies: [],
@@ -607,7 +607,9 @@ import { T } from './game/texture'
 						levelups: 0,
 					} as Fight
 					fightLoaded(local_fight)
-					this.game.setLogs((report.default as any).logs[this.$store.state.farmer.id])
+					if (this.$store.state.farmer) {
+						this.game.setLogs(report.logs[this.$store.state.farmer.id])
+					}
 				})
 			} else {
 				if (this.request === null) { // Déjà en train de charger
@@ -757,7 +759,7 @@ import { T } from './game/texture'
 
 		@Watch("game.going_to_report")
 		endOfFight() {
-			if (this.game.going_to_report) {
+			if (this.game.going_to_report && this.fightId !== 'local') {
 				this.$router.push("/report/" + this.fightId)
 			}
 		}
