@@ -152,6 +152,7 @@ import { BOSSES } from '@/model/boss'
 		reportDialog: boolean = false
 		reasons = [Warning.RUDE_SAY, Warning.INCORRECT_LEEK_NAME, Warning.INCORRECT_FARMER_NAME, Warning.INCORRECT_AVATAR]
 		trophyQueue: any[] = []
+		fightNotificationQueue: any[] = []
 
 		get reportLeeks() {
 			if (!this.fight) { return [] }
@@ -178,6 +179,7 @@ import { BOSSES } from '@/model/boss'
 			setTimeout(() => this.resize(), 50)
 
 			this.$root.$on('trophy', this.onTrophy)
+			this.$root.$on('fight_notification', this.onFightNotification)
 		}
 
 		@Watch('$route.params.id', {immediate: true})
@@ -237,9 +239,13 @@ import { BOSSES } from '@/model/boss'
 			LeekWars.lightBar = false
 			this.$root.$off('resize', this.resize)
 			this.$root.$off('trophy', this.onTrophy)
+			this.$root.$off('fight_notification', this.onFightNotification)
 
 			// Notifications de trophées restants
 			for (const message of this.trophyQueue) {
+				store.commit('notification', message)
+			}
+			for (const message of this.fightNotificationQueue) {
 				store.commit('notification', message)
 			}
 		}
@@ -267,6 +273,11 @@ import { BOSSES } from '@/model/boss'
 		// Réception des notifications de trophées pour les mettre en attente
 		onTrophy(trophy: any) {
 			this.trophyQueue.push(trophy)
+		}
+
+		// Réception des notifications pour les mettre en attente
+		onFightNotification(message: any) {
+			this.fightNotificationQueue.push(message)
 		}
 
 		// Le player a joué un trophée, on peut l'afficher
