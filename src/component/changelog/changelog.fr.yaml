@@ -12,6 +12,7 @@
     - Quand on copie un leek de test, copie aussi les stats composants (merci à WhiteSlash).
     - "Classement : changement des classements par niveaux par défaut (merci à WhiteSlash)."
     - Harmonisation de l'ordre des cellules pour les items à zone d'effet (merci à fujiwar).
+    - Le second paramètre (entity) de useChip est optionnel dans la doc (merci à fujiwar).
   fixed:
     - Traduction du titre "Poireaux" dans le rapport de combat (merci à Alexiscomete).
     - Traduction des caractéristiques de la tourelle sur la page équipe (merci à PtitsPoisCarottes).
