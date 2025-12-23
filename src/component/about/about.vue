@@ -164,6 +164,7 @@
 				<li>Flamethrower, pugaeme, CC BY 3.0 license.</li>
 				<li>Punch 1.wav, JakeEaton, CC 0 license.</li>
 				<li>Chains - heavy, Vrymaa, CC 0 license.</li>
+				<li>Quantum harmonic spaced.wav by aceinet, Creative Commons 0 license</li>
 			</ul>
 		</panel>
 	</div>

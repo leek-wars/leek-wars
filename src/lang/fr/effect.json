@@ -123,6 +123,7 @@
 	"type_57_fixed": "Soigne de <b>{0}</b>",
 	"type_58": "Soigne de <b>{0}</b> à <b>{1}</b> pour chaque coup critique effectué",
 	"type_59_fixed": "Ajoute l'état <b>{0}</b>",
+	"type_61_fixed": "Soigne du total de l'effet précédent",
 	"effect_type_1": "Attaques",
 	"effect_type_2": "Soins",
 	"effect_type_3": "Renvois",

@@ -104,6 +104,7 @@ class S {
 	public static burn = new Sound(LeekWars.STATIC + "sound/burn.mp3", 1)
 	public static grapple = new Sound(LeekWars.STATIC + "sound/grapple.mp3", 0.8)
 	public static boxing = new Sound(LeekWars.STATIC + "sound/boxing.mp3", 1)
+	public static quantum_rifle = new Sound(LeekWars.STATIC + "sound/quantum_rifle.mp3", 0.6)
 	// chips
 	public static heal = new Sound(LeekWars.STATIC + "sound/heal.mp3", VOL_DEFFENSIVE_SOUND)
 	public static buff = new Sound(LeekWars.STATIC + "sound/buff.mp3", 0.15)

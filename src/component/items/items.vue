@@ -39,6 +39,7 @@
 	export default class Items extends Vue {
 
 		trophies: any = {}
+		ignoredItems = new Set()
 
 		created() {
 			LeekWars.setTitle("Items")
@@ -81,7 +82,7 @@
 
 		get items() {
 			return Object.values(LeekWars.items)
-				.filter(i => i.id < 408 && !i.name.startsWith('recovery_') && (i.type === ItemType.WEAPON || i.type === ItemType.CHIP || i.type === ItemType.COMPONENT))
+				.filter(i => !this.ignoredItems.has(i.id) && (i.type === ItemType.WEAPON || i.type === ItemType.CHIP || i.type === ItemType.COMPONENT))
 				.sort((a, b) => a.level - b.level)
 		}
 	}

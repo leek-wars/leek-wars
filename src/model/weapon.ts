@@ -119,6 +119,8 @@ const WeaponsData = {
 	38: { width: 261, height: 68, centerX: 60, centerZ: 60, x: -50, z: -15, hand1x: 50, hand1z: 33, hand2x: 18, hand2z: 33, top: -5, bottom: 8, right: 110, white: true },
 	// Faux
 	39: { width: 350, height: 192, centerX: 40, centerZ: 30, x: -50, z: -15, hand1x: 29, hand1z: 19, hand2x: 192, hand2z: 15, top: 0, bottom: 20, right: 200, white: true },
+	// Quantum rifle
+	40: { width: 180, height: 70, centerX: 15, centerZ: 35, x: -40, z: -35, hand1x: 38, hand1z: 45, hand2x: 70, hand2z: 46, sx: 167, sz: 28, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 15, angleForce: 12, top: 4, bottom: 50, white: false },
 } as {[key: number]: WeaponData}
 
 const FishData = { width: 150, height: 65, centerX: 25, centerZ: 45, x: -35, z: -15, hand1x: 12, hand1z: 44, hand2x: 53, hand2z: 57, sx: 110, sz: 10, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 7, bottom: 50, white: false } as WeaponData

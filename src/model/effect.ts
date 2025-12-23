@@ -57,7 +57,9 @@ enum EffectType {
 	KILL_TO_TP = 56,
 	RAW_HEAL = 57,
 	CRITICAL_TO_HEAL = 58,
-	ADD_STATE = 59
+	ADD_STATE = 59,
+	TOTAL_DEBUFF = 60,
+	STEAL_LIFE = 61,
 }
 
 enum EffectModifier {
