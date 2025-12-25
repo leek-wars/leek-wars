@@ -942,7 +942,7 @@ class QuantumRifle extends Firegun {
 	add_orbital: number = 0
 
 	constructor(game: Game) {
-		super(game, T.quantum_rifle, T.cart_quantum_rifle, S.quantum_rifle, 25, DamageType.DEFAULT)
+		super(game, T.quantum_rifle, T.cart_quantum_rifle, S.quantum_rifle, 40, DamageType.DEFAULT)
 	}
 
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {

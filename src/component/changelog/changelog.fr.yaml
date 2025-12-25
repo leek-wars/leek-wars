@@ -6,12 +6,13 @@
     - Ajout de la fonction bitLength qui complète leadingZeros pour les BigInteger (merci à Batary).
 
 243:
-  title: Améliorations de la communauté et Fusil Quantique.
+  title: Création de la communauté, Fusil quantique et nouveau serveur.
   added:
     - "Ajout de l'arme Fusil Quantique. #img_243_quantum_rifle #img_243_quantum_rifle2"
+    - Nouveau serveur (voir le topic).
     - "Ajout de nouveaux émojis (merci à FdHP). #img_243_emojis"
     - "Réglage du volume en combat (merci à TheWiseMan). #img_243_sound"
-    - Filtres coffres et ressources rares sur la page historique (merci à temakisushi).
+    - "Filtres coffres et ressources rares sur la page historique (merci à temakisushi). #img_243_filters"
   improved:
     - Restrictions (ctrl, alt, shift) sur les touches raccourci en combat (merci à TheWiseMan).
     - "Rapport de combat : affichage de plusieurs poireaux en gras quand les stats sont identiques (merci à WhiteSlash). #img_243_stats"

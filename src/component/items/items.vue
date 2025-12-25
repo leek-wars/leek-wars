@@ -39,7 +39,7 @@
 	export default class Items extends Vue {
 
 		trophies: any = {}
-		ignoredItems = new Set()
+		ignoredItems = new Set([406, 407, 408, 409, 410, 425, 419, 418, 417, 416, 415, 414, 413, 412, 411])
 
 		created() {
 			LeekWars.setTitle("Items")
