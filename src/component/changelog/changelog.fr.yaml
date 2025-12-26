@@ -4,6 +4,8 @@
     - Ajout des BigIntegers dans le LeekScript (merci à Batary).
     - Ajout des fonctions setBit et testBit pour lire ou écrire un bit spécifique (merci à Batary).
     - Ajout de la fonction bitLength qui complète leadingZeros pour les BigInteger (merci à Batary).
+  improved:
+    - "Tournois : Tous les joueurs inscrits participent maintenant, répartis équitablement entre plusieurs tournois de 16 à 32 joueurs au lieu d'exclure les joueurs en trop."
 
 243:
   title: Création de la communauté, Fusil quantique et nouveau serveur.
