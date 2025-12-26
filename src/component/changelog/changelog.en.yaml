@@ -1,3 +1,31 @@
+243:
+  title: Community creation, Quantum Rifle and new server.
+  added:
+    - "Added the Quantum Rifle weapon. #img_243_quantum_rifle #img_243_quantum_rifle2"
+    - New server (see topic).
+    - "Added new emojis (thanks to FdHP). #img_243_emojis"
+    - "Volume control in fight (thanks to TheWiseMan). #img_243_sound"
+    - "Chests and rare resources filters on history page (thanks to temakisushi). #img_243_filters"
+  improved:
+    - Restrictions (ctrl, alt, shift) on shortcut keys in fight (thanks to TheWiseMan).
+    - "Fight report: display of multiple leeks in bold when stats are identical (thanks to WhiteSlash). #img_243_stats"
+    - When copying a test leek, also copy component stats (thanks to WhiteSlash).
+    - "Ranking: change of default level rankings (thanks to WhiteSlash). #img_243_ranking"
+    - Harmonization of cell order for area of effect items (thanks to fujiwar).
+    - The second parameter (entity) of useChip is optional in the doc (thanks to fujiwar).
+    - "Multiple error handling in the editor. #img_243_multiple_errors"
+    - "Link handling in comments in the editor. #img_243_links"
+    - "Invalid character handling in the editor. #img_243_invalid_chars"
+  fixed:
+    - Translation of the "Leeks" title in the fight report (thanks to Alexiscomete).
+    - Translation of turret characteristics on the team page (thanks to PtitsPoisCarottes).
+    - Fixed a typo in the README (thanks to smegg99).
+    - Fixed B-Laser display in the neural core recipe (thanks to FdHP).
+    - Ability to format LeekScript code in the editor (thanks to FdHP).
+    - Fixed a bug with enemy bulb resurrection (thanks to WhiteSlash).
+    - Fixed a bug reading interval with decimal numbers (thanks to Hazurl).
+    - Sorting of comments on a fight in chronological order (thanks to WhiteSlash)
+
 242:
   title: Long-awaited features and weapon and chip usage limit.
   added:
