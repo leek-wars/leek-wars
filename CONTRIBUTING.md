@@ -33,4 +33,49 @@ If you don't know how to format your code, follow the style of the existing code
 
 More information about [commits](http://chris.beams.io/posts/git-commit/) and [pull requests](https://github.com/blog/1943-how-to-write-the-perfect-pull-request).
 
+## Changelog
+
+### Location
+
+The changelog is managed in multilingual YAML files located in `src/component/changelog/`:
+
+- **French (main)**: `changelog.fr.yaml`
+- **English (main)**: `changelog.en.yaml`
+- Other languages: `changelog.es.yaml`, `changelog.de.yaml`, etc. (often less up-to-date)
+
+### Structure
+
+Each version follows this structure:
+
+```yaml
+244:
+  title: Version title
+  added:
+    - Description of an addition.
+    - Another addition with image. #img_244_example
+  improved:
+    - Description of an improvement.
+  fixed:
+    - Description of a bug fix.
+```
+
+### Categories
+
+- **`added`**: New features, items, constants, functions
+- **`improved`**: Enhancements to existing features
+- **`fixed`**: Bug fixes
+
+### How to add an entry
+
+1. **Find the current version**: The version in development is always at the top with `title: WIP` (Work In Progress)
+2. **Update both main files**: `changelog.fr.yaml` AND `changelog.en.yaml`
+3. **Choose the right category**: `added`, `improved`, or `fixed`
+4. **Add your entry** with proper indentation (4 spaces)
+
+### Formatting rules
+
+- Start with a capital letter and end with a period
+- For images: add `#img_VERSION_NAME` at the end of the line
+- For credits: add `(merci à Username)` or `(thanks to Username)` at the end
+- Use quotes for YAML when the line contains `:` → `"Text: with colon."`
 
