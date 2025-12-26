@@ -143,12 +143,12 @@ export default class AIViewMonaco extends Vue {
 			})
 		})
 
-		const hoverController = (this.editor.getContribution('editor.contrib.hover') as any)
+		const hoverController = (this.editor.getContribution('editor.contrib.contentHover') as any)
 		// console.log("hoverController", hoverController)
 		hoverController._getOrCreateContentWidget()
 		hoverController._contentWidget.onContentsChanged(() => {
 			// console.log("Show hover", hoverController)
-			const widget = hoverController._contentWidget._widget._resizableNode
+			const widget = hoverController._contentWidget.widget._resizableNode
 			const body = widget.domNode.querySelector('.hover-row-contents')
 			body.querySelectorAll('.lw').forEach((e: any) => {
 				e.remove()
@@ -165,7 +165,7 @@ export default class AIViewMonaco extends Vue {
 				firstRow.style.display = 'none'
 				const doc = new DocumentationFunction({ propsData: { fun }, parent: vueMain }).$mount(element)
 				setTimeout(() => {
-					hoverController._contentWidget._widget._resize({ width: 500, height: doc.$el.clientHeight + 40 })
+					hoverController._contentWidget.widget._resize({ width: 500, height: doc.$el.clientHeight + 40 })
 				})
 			}
 			const constant = CONSTANTS.find(c => c.name === firstRow.innerText)
@@ -173,7 +173,7 @@ export default class AIViewMonaco extends Vue {
 				firstRow.style.display = 'none'
 				const doc = new DocumentationConstant({ propsData: { constant }, parent: vueMain }).$mount(element)
 				setTimeout(() => {
-					hoverController._contentWidget._widget._resize({ width: 350, height: doc.$el.clientHeight + 40 })
+					hoverController._contentWidget.widget._resize({ width: 350, height: doc.$el.clientHeight + 40 })
 				})
 			}
 			const symbol = fileSystem.symbols[firstRow.innerText]
@@ -181,7 +181,7 @@ export default class AIViewMonaco extends Vue {
 				firstRow.style.display = 'none'
 				const doc = new Javadoc({ propsData: { javadoc: symbol.javadoc, keyword: symbol }, parent: vueMain }).$mount(element)
 				setTimeout(() => {
-					hoverController._contentWidget._widget._resize({ width: 500, height: doc.$el.clientHeight + 80 })
+					hoverController._contentWidget.widget._resize({ width: 500, height: doc.$el.clientHeight + 80 })
 				})
 			}
 		})

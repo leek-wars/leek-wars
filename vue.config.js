@@ -19,9 +19,7 @@ module.exports = {
 	},
 	configureWebpack: {
 		plugins: [
-			new MonacoWebpackPlugin({
-				// languages: ['typescript', 'javascript', 'css']
-			})
+			new MonacoWebpackPlugin()
 		]
 	},
 	pages: {
