@@ -22,9 +22,7 @@ module.exports = {
 		},
 	},
 	configureWebpack: {
-		// Use hidden-source-map: generates .map files but doesn't reference them in JS
-		// This prevents users from downloading source maps while allowing server-side decoding
-		devtool: process.env.NODE_ENV === 'production' ? 'hidden-source-map' : 'eval-source-map',
+		devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'eval-source-map',
 		plugins: [
 			new MonacoWebpackPlugin()
 		]
@@ -54,6 +52,17 @@ module.exports = {
 		config.watchOptions({
 			ignored: '/static/'
 		})
+		config.module
+			.rule('vue')
+			.use('vue-loader')
+			.tap(options => ({
+				...options,
+				compilerOptions: {
+					...options?.compilerOptions,
+					whitespace: 'preserve'
+				}
+			}))
+
 		config.module
 			.rule('i18n')
 			.test(/\.\w\w\.i18n/)

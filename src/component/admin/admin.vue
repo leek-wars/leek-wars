@@ -124,6 +124,7 @@
 				<v-btn @click="showLevelDialog(200)">Level Dialog 200</v-btn>
 				<v-btn @click="showLevelDialog(211)">Level Dialog 211</v-btn>
 				<v-btn @click="showLevelDialog(301)">Level Dialog 301</v-btn>
+				<v-btn @click="sendError()">Send JS error</v-btn>
 			</div>
 		</panel>
 		<didactitiel v-if="didactitiel_enabled" v-model="didactitiel" />
@@ -135,6 +136,7 @@
 	import { locale } from '@/locale'
 	import { ChatMessage } from '@/model/chat'
 	import { Farmer } from '@/model/farmer'
+	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { NotificationBuilder } from '@/model/notification-builder'
 	import { TROPHIES } from '@/model/trophies'
@@ -216,6 +218,18 @@
 					this.levelPopupData = data.popup
 				})
 			})
+		}
+
+		sendError() {
+			const err = new Error()
+			const info = "test"
+			
+			const error = err.name + ": " + err.message
+			const file = document.location.href
+			const stack = err.stack + '\n' + info
+			const locale = i18n.locale
+
+			LeekWars.post('error/report', { error, stack, file, locale })
 		}
 	}
 </script>
