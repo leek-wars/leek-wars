@@ -10,6 +10,10 @@ if (match) {
 dotenv.config({ path: path.resolve(process.cwd(), 'src', 'env', '.env') })
 
 module.exports = {
+	// Generate source maps in production for error decoding
+	// Files are NOT exposed to users (hidden-source-map)
+	productionSourceMap: true,
+
 	devServer: {
 		static: {
 			directory: path.resolve(__dirname, 'static'),
@@ -18,6 +22,9 @@ module.exports = {
 		},
 	},
 	configureWebpack: {
+		// Use hidden-source-map: generates .map files but doesn't reference them in JS
+		// This prevents users from downloading source maps while allowing server-side decoding
+		devtool: process.env.NODE_ENV === 'production' ? 'hidden-source-map' : 'eval-source-map',
 		plugins: [
 			new MonacoWebpackPlugin()
 		]
