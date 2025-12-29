@@ -92,7 +92,11 @@ export class BossSquads {
 		LeekWars.socket.send([SocketMessage.GARDEN_BOSS_ATTACK])
 	}
 	start(data: any[]) {
-		store.commit('update-fights', -1)
+		// Only decrease fight count if we have engaged leeks in the squad
+		const hasEngagedLeeks = this.squad && this.squad.engaged_leeks.some((l: Leek) => l.farmer === store.state.farmer!.id)
+		if (hasEngagedLeeks) {
+			store.commit('update-fights', -1)
+		}
 		if (router.currentRoute.path.startsWith("/garden/")) {
 			router.push('/fight/' + data[0])
 		}
