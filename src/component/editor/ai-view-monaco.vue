@@ -85,6 +85,10 @@ export default class AIViewMonaco extends Vue {
 			localStorage.setItem('editor/scroll/' + this.ai.id, '' + e.scrollTop)
 		})
 		this.editor.onDidFocusEditorWidget((e) => {
+			// Verify the correct model is active when focusing
+			if (this.ai && this.ai.model && this.editor.getModel() !== this.ai.model) {
+				this.editor.setModel(this.ai.model)
+			}
 			this.$emit('focus')
 		})
 		this.editor.onKeyUp((e) => {
@@ -215,31 +219,37 @@ export default class AIViewMonaco extends Vue {
 			this.ai.model = model
 			this.editor.setModel(model)
 			this.currentVersionId = model.getAlternativeVersionId()
-			this.setAnalyzerTimeout()
 
-			if (this.jumpToLine) {
-				Vue.nextTick(() => {
-					this.scrollToLine(this.jumpToLine as number)
-					this.jumpToLine = null
-				})
-			} else {
-				const scrollPosition = parseInt(localStorage.getItem('editor/scroll/' + this.ai.id) || '0')
-				// console.log("scroll to", scrollPosition)
-				this.editor.setScrollTop(scrollPosition)
-			}
+			// Force focus to ensure model is properly bound
+			Vue.nextTick(() => {
+				// console.log("Focus editor")
+				this.editor.focus()
+
+				this.setAnalyzerTimeout()
+
+				if (this.jumpToLine) {
+					Vue.nextTick(() => {
+						this.scrollToLine(this.jumpToLine as number)
+						this.jumpToLine = null
+					})
+				} else {
+					const scrollPosition = parseInt(localStorage.getItem('editor/scroll/' + this.ai.id) || '0')
+					// console.log("scroll to", scrollPosition)
+					this.editor.setScrollTop(scrollPosition)
+				}
+			})
 		})
 	}
 
 	public scrollToLine(line: number, column: number = 0) {
 		if (this.editor) {
-			Vue.nextTick(() => {
-				console.log("reveal & set pos", line, column)
+			requestAnimationFrame(() => {
 				this.editor.revealLineInCenterIfOutsideViewport(line, monaco.editor.ScrollType.Immediate)
 				const pos = { lineNumber: line, column: column + 1 }
-				console.log(pos)
-				setTimeout(() => {
-					this.editor.setPosition(pos, 'jump')
-				}, 100)
+				// Set position immediately after reveal
+				this.editor.setPosition(pos, 'jump')
+				// Focus the editor to ensure the cursor is visible
+				this.editor.focus()
 			})
 		} else {
 			this.jumpToLine = line
@@ -281,7 +291,7 @@ export default class AIViewMonaco extends Vue {
 	public save() {
 		this.ai.modified = false
 		this.currentVersionId = this.ai.model.getAlternativeVersionId()
-		console.log("save", this.currentVersionId)
+		// console.log("save", this.currentVersionId)
 		// console.log(this.editor.getModel())
 	}
 }

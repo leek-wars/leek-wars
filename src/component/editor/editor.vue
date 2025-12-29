@@ -829,7 +829,7 @@
 		}
 
 		jump(ai: AI, line: number, column: number) {
-			console.log("jump()", ai, line)
+			// console.log("jump()", ai, line)
 			if (ai.id !== this.currentAI!.id) {
 				this.$router.push('/editor/' + ai.id)
 			}

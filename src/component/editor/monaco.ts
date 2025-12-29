@@ -169,8 +169,9 @@ monaco.editor.defineTheme("monokai", {
 
 monaco.editor.registerEditorOpener({
 	openCodeEditor: (source, resource, selectionOrPosition) => {
-		console.log("open", source, resource, selectionOrPosition)
-		vueMain.$emit('jump', fileSystem.aiByFullPath[resource.path.substring(1)], (selectionOrPosition as monaco.IRange).startLineNumber)
+		// console.log("open", source, resource, selectionOrPosition)
+		const range = selectionOrPosition as monaco.IRange
+		vueMain.$emit('jump', fileSystem.aiByFullPath[resource.path.substring(1)], range.startLineNumber, range.startColumn - 1)
 		return true
 	},
 })
@@ -192,7 +193,7 @@ monaco.languages.registerHoverProvider("leekscript", {
 				hover.location[4] + 2,
 			)
 			let details = ''
-			let text = model.getValueInRange(range)
+			const text = model.getValueInRange(range)
 			const previousToken = text.includes('.') ? text.split('.')[0] : undefined
 			const mainToken = text.includes('.') ? text.split('.')[1] : text
 
@@ -236,10 +237,13 @@ monaco.languages.registerHoverProvider("leekscript", {
 })
 
 monaco.languages.registerDefinitionProvider("leekscript", {
-	provideDefinition: (model, position, token) => {
-		// console.log("provideDefinition")
-		// console.log("provideDefinition", model, position, token)
-		const hover = analyzer.lastHover
+	provideDefinition: async (model, position, token) => {
+		// console.log("provideDefinition", model.uri.path, position.lineNumber, position.column)
+
+		// Make a fresh hover request instead of using potentially stale lastHover
+		const ai = fileSystem.aiByFullPath[model.uri.path.substring(1)]
+		const hover = await analyzer.hover(ai, position.lineNumber, position.column - 1)
+
 		if (hover?.defined) {
 			// console.log("provideDefinition defined", hover.defined)
 			const range = new monaco.Range(
@@ -248,11 +252,15 @@ monaco.languages.registerDefinitionProvider("leekscript", {
 				hover.defined[3],
 				hover.defined[4],
 			)
-			// console.log(model.uri)
-			const ai = fileSystem.ais[hover.defined[0]]
+			const targetAi = fileSystem.ais[hover.defined[0]]
+			const uri = monaco.Uri.parse('file:///' + targetAi.path)
+			// Ensure the model exists before returning the definition
+			if (monaco.editor.getModel(uri) === null) {
+				monaco.editor.createModel(targetAi.code, 'leekscript', uri)
+			}
 			return {
 				range,
-				uri: monaco.Uri.parse('file:///' + ai.path)
+				uri
 			}
 		}
 		return {

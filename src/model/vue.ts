@@ -266,6 +266,13 @@ const vueMain = new Vue({
 			this.$emit('htmlclick')
 		})
 
+		// Ignore Monaco "Canceled" errors (normal behavior when switching files/canceling operations)
+		window.addEventListener('unhandledrejection', (event) => {
+			if (event.reason?.message === 'Canceled') {
+				event.preventDefault()
+			}
+		})
+
 		this.$on('loaded', () => {
 			Vue.nextTick(() => {
 				// console.log("loaded", this.$data.savedPosition)

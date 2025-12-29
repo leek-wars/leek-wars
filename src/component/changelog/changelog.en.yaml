@@ -4,6 +4,7 @@
     - Added boss weapon constants WEAPON_ODACHI, WEAPON_EXCALIBUR and WEAPON_SCYTHE.
   improved:
     - "Tournaments: All registered players now participate, evenly distributed across multiple tournaments of 16 to 32 players instead of excluding extra players."
+    - "Editor: improved Ctrl+click to go to symbol definition (more reliable navigation and correct scrolling)."
   fixed:
     - Fixed untranslated "error_name_already_used" error message when creating a leek.
 
