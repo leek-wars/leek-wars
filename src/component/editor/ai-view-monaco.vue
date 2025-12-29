@@ -243,13 +243,17 @@ export default class AIViewMonaco extends Vue {
 
 	public scrollToLine(line: number, column: number = 0) {
 		if (this.editor) {
+			// Use double requestAnimationFrame to ensure Monaco has finished rendering especially when loading a new file
 			requestAnimationFrame(() => {
-				this.editor.revealLineInCenterIfOutsideViewport(line, monaco.editor.ScrollType.Immediate)
-				const pos = { lineNumber: line, column: column + 1 }
-				// Set position immediately after reveal
-				this.editor.setPosition(pos, 'jump')
-				// Focus the editor to ensure the cursor is visible
-				this.editor.focus()
+				requestAnimationFrame(() => {
+					// console.log("scrollToLine", this.ai.path, line, column)
+					this.editor.revealLineInCenterIfOutsideViewport(line, monaco.editor.ScrollType.Immediate)
+					const pos = { lineNumber: line, column: column + 1 }
+					// Set position immediately after reveal
+					this.editor.setPosition(pos, 'jump')
+					// Focus the editor to ensure the cursor is visible
+					this.editor.focus()
+				})
 			})
 		} else {
 			this.jumpToLine = line
