@@ -7,6 +7,8 @@
     - Ajout des constantes d'armes de boss WEAPON_ODACHI, WEAPON_EXCALIBUR et WEAPON_SCYTHE.
   improved:
     - "Tournois : Tous les joueurs inscrits participent maintenant, répartis équitablement entre plusieurs tournois de 16 à 32 joueurs au lieu d'exclure les joueurs en trop."
+  fixed:
+    - Correction du message d'erreur "error_name_already_used" non traduit lors de la création d'un poireau.
 
 243:
   title: Création de la communauté, Fusil quantique et nouveau serveur.

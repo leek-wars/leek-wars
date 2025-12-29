@@ -4,6 +4,7 @@
 	"error_under_required_level_1": "Twój pierwszy por musi być co najmniej na poziomie {0}",
 	"error_under_required_level_2": "Twój drugi por musi być co najmniej na poziomie {0}",
 	"error_under_required_level_3": "Twój trzeci por musi być co najmniej na poziomie {0}",
+	"error_name_already_used": "Nazwa twojego pora jest już w użyciu",
 	"name": "Nazwa",
 	"name_length": "Nazwa pora musi zawierać od {0} do {1} znaków",
 	"name_format": "W nazwie nie są dozwolone znaki specjalne",

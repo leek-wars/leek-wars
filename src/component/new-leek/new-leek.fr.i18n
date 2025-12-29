@@ -4,6 +4,7 @@
 	"error_under_required_level_1": "Votre premier poireau doit être niveau {0} au minimum",
 	"error_under_required_level_2": "Votre second poireau doit être niveau {0} au minimum",
 	"error_under_required_level_3": "Votre 3ème poireau doit être niveau {0} au minimum",
+	"error_name_already_used": "Le nom de votre poireau est déjà utilisé",
 	"name": "Nom",
 	"name_length": "Le nom du poireau doit contenir entre {0} et {1} caractères",
 	"name_format": "Les caractères spéciaux sont interdits dans le nom",

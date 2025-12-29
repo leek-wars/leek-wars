@@ -4,6 +4,7 @@
 	"error_under_required_level_1": "Je eerste prei moet minimaal niveau {0} zijn",
 	"error_under_required_level_2": "Je tweede prei moet minimaal niveau {0} zijn",
 	"error_under_required_level_3": "Je 3e prei moet minimaal niveau {0} zijn",
+	"error_name_already_used": "De naam van je prei is al in gebruik",
 	"name": "Naam",
 	"name_length": "Preinaam moet tussen {0} en {1} tekens bevatten",
 	"name_format": "Speciale tekens zijn niet toegestaan in de naam",

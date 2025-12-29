@@ -4,6 +4,7 @@
 	"error_under_required_level_1": "您的第一棵韭菜必须至少达到 {0} 级",
 	"error_under_required_level_2": "您的第二个韭菜必须至少达到 {0} 级",
 	"error_under_required_level_3": "您的第 3 个韭葱必须至少达到 {0} 级",
+	"error_name_already_used": "您的韭菜名称已被使用",
 	"name": "姓名",
 	"name_length": "Leek 名称必须包含 {0} 到 {1} 个字符",
 	"name_format": "名字中不允许有特殊字符",

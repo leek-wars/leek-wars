@@ -4,6 +4,7 @@
 	"error_under_required_level_1": "첫 리크는 레벨 {0} 이상이어야 합니다.",
 	"error_under_required_level_2": "두 번째 리크는 레벨 {0} 이상이어야 합니다.",
 	"error_under_required_level_3": "세 번째 리크는 레벨 {0} 이상이어야 합니다.",
+	"error_name_already_used": "부추 이름이 이미 사용 중입니다.",
 	"name": "이름",
 	"name_length": "리크 이름은 {0}에서 {1}자 사이여야 합니다.",
 	"name_format": "이름에 특수 문자를 사용할 수 없습니다.",
