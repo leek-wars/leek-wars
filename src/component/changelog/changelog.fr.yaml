@@ -10,6 +10,7 @@
     - "Éditeur : amélioration du Ctrl+clic pour aller à la définition d'un symbole (navigation plus fiable et scroll correct)."
   fixed:
     - Correction du message d'erreur "error_name_already_used" non traduit lors de la création d'un poireau.
+    - "Éditeur : correction de la fermeture d'onglet quand l'IA a été supprimée en dehors de l'éditeur."
 
 243:
   title: Création de la communauté, Fusil quantique et nouveau serveur.

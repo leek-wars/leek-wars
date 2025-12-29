@@ -7,6 +7,7 @@
     - "Editor: improved Ctrl+click to go to symbol definition (more reliable navigation and correct scrolling)."
   fixed:
     - Fixed untranslated "error_name_already_used" error message when creating a leek.
+    - "Editor: fixed tab closing when AI was deleted outside the editor."
 
 243:
   title: Community creation, Quantum Rifle and new server.

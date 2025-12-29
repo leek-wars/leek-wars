@@ -927,7 +927,7 @@
 			Vue.delete(this.$data.activeAIs, '' + ai.id)
 			// Remove from tabs
 			if (this.$refs.tabs) {
-				(this.$refs.tabs as any).close(ai, false)
+				(this.$refs.tabs as any).close(ai.id, false)
 			}
 			// Clear the AI from scenarios
 			(this.$refs.editorTest as any).onAIDeleted(ai.id)
@@ -942,8 +942,8 @@
 			this.$router.replace('/editor')
 		}
 
-		close(ai: AI) {
-			this.history = this.history.filter(a => a !== ai)
+		close(id: number) {
+			this.history = this.history.filter(a => a.id !== id)
 		}
 
 		closeAll() {

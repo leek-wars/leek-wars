@@ -1,14 +1,14 @@
 <template lang="html">
 	<div class="tabs-wrapper" :class="{active}">
 		<div ref="list" class="list" @wheel.prevent="mousewheel">
-			<div v-for="(ai, i) in tabs" ref="tabs" :key="ai" :class="{selected: ai === current, modified: fileSystem.ais[ai]?.modified}" :title="fileSystem.ais[ai]?.path" class="tab" @click="click($event, fileSystem.ais[ai])" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(fileSystem.ais[ai])">
+			<div v-for="(ai, i) in tabs" ref="tabs" :key="ai" :class="{selected: ai === current, modified: fileSystem.ais[ai]?.modified}" :title="fileSystem.ais[ai]?.path" class="tab" @click="click($event, fileSystem.ais[ai])" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(ai)">
 				<div class="name">
 					<v-icon v-if="fileSystem.ais[ai]?.errors" class="icon error">mdi-close-circle</v-icon>
 					<v-icon v-else-if="fileSystem.ais[ai]?.warnings" class="icon warning">mdi-alert-circle</v-icon>
 					<v-icon v-else class="icon valid">mdi-check-bold</v-icon>
 					{{ fileSystem.ais[ai]?.name || ai }}
 				</div>
-				<span @click.stop="close(fileSystem.ais[ai])">
+				<span @click.stop="close(ai)">
 					<v-icon class="modified">mdi-record</v-icon>
 					<v-icon class="close" :class="{hidden: group === 'tabs' && tabs.length === 1}">mdi-close</v-icon>
 				</span>
@@ -16,7 +16,7 @@
 		</div>
 		<v-menu ref="menu" :key="currentI" v-model="menu" :activator="activator" offset-y @input="menuChange">
 			<v-list class="menu" :dense="true">
-				<v-list-item v-ripple @click="close(currentAI)">
+				<v-list-item v-ripple @click="close(tabs[currentI])">
 					<v-icon>mdi-close-box-outline</v-icon>
 					<v-list-item-content>
 						<v-list-item-title>{{ $t('close') }}</v-list-item-title>
@@ -145,23 +145,23 @@
 			this.menu = false
 		}
 
-		close(ai: AI, confirm: boolean = true) {
+		close(id: number, confirm: boolean = true) {
 			if (this.group === 'tabs' && this.tabs.length === 1) {
 				return
 			}
-			const i = this.tabs.indexOf(ai.id)
-			if (confirm && ai.modified) {
+			const i = this.tabs.indexOf(id)
+			if (confirm && fileSystem.ais[id]?.modified) {
 				if (!window.confirm(this.$i18n.t('confirm_close', [1]) as string)) {
 					return
 				}
 			}
 			this.tabs.splice(i, 1)
 			this.save()
-			if (ai.selected) {
+			if (fileSystem.ais[id]?.selected) {
 				this.openLast()
 			}
 			this.currentI = -1
-			this.$emit('close', ai)
+			this.$emit('close', id)
 			if (this.tabs.length === 0) {
 				this.$emit('close-panel')
 			}
