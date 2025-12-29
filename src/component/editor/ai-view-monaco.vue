@@ -46,6 +46,7 @@ export default class AIViewMonaco extends Vue {
 	hover: any
 	editor!: monaco.editor.IStandaloneCodeEditor
 	jumpToLine: number | null = 0
+	jumpToColumn: number | null = 0
 	scrollListener!: monaco.IDisposable
 	private analyzerTimeout: any
 	public analyzing: boolean = false
@@ -212,25 +213,27 @@ export default class AIViewMonaco extends Vue {
 		if (!this.ai) return
 		// console.log("update ai", this.ai.id)
 
-		fileSystem.load(this.ai).then(() => {
+		fileSystem.load(this.ai).then((loadedAI) => {
 
-			const uri = monaco.Uri.parse('file:///' + this.ai.path)
-			let model = monaco.editor.getModel(uri) || monaco.editor.createModel(this.ai.code, 'leekscript', uri)
-			this.ai.model = model
+			// Update or create model with real content
+			const uri = monaco.Uri.parse('file:///' + loadedAI.path)
+			let model = monaco.editor.getModel(uri) || monaco.editor.createModel(loadedAI.code, 'leekscript', uri)
+			loadedAI.model = model
+
+			// Ensure we are still on the same AI
+			if (this.ai !== loadedAI) return
+
 			this.editor.setModel(model)
 			this.currentVersionId = model.getAlternativeVersionId()
 
-			// Force focus to ensure model is properly bound
-			Vue.nextTick(() => {
-				// console.log("Focus editor")
-				this.editor.focus()
+			this.setAnalyzerTimeout()
+			this.editor.focus()
 
-				this.setAnalyzerTimeout()
+			Vue.nextTick(() => {
 
 				if (this.jumpToLine) {
 					Vue.nextTick(() => {
-						this.scrollToLine(this.jumpToLine as number)
-						this.jumpToLine = null
+						this.scrollToLine(loadedAI, this.jumpToLine!, this.jumpToColumn!)
 					})
 				} else {
 					const scrollPosition = parseInt(localStorage.getItem('editor/scroll/' + this.ai.id) || '0')
@@ -241,22 +244,19 @@ export default class AIViewMonaco extends Vue {
 		})
 	}
 
-	public scrollToLine(line: number, column: number = 0) {
-		if (this.editor) {
-			// Use double requestAnimationFrame to ensure Monaco has finished rendering especially when loading a new file
-			requestAnimationFrame(() => {
-				requestAnimationFrame(() => {
-					// console.log("scrollToLine", this.ai.path, line, column)
-					this.editor.revealLineInCenterIfOutsideViewport(line, monaco.editor.ScrollType.Immediate)
-					const pos = { lineNumber: line, column: column + 1 }
-					// Set position immediately after reveal
-					this.editor.setPosition(pos, 'jump')
-					// Focus the editor to ensure the cursor is visible
-					this.editor.focus()
-				})
-			})
+	public scrollToLine(ai: AI, line: number, column: number = 0) {
+		if (ai.model && this.editor.getModel() === ai.model) {
+			this.editor.revealLineInCenterIfOutsideViewport(line, monaco.editor.ScrollType.Immediate)
+			const pos = { lineNumber: line, column: column + 1 }
+			// Set position immediately after reveal
+			this.editor.setPosition(pos, 'jump')
+			// Focus the editor to ensure the cursor is visible
+			this.editor.focus()
+			this.jumpToLine = null
+			this.jumpToColumn = null
 		} else {
 			this.jumpToLine = line
+			this.jumpToColumn = column
 		}
 	}
 

@@ -835,7 +835,7 @@
 			}
 			Vue.nextTick(() => {
 				const editor = this.$refs.editor as AIViewMonaco
-				if (editor) { editor.scrollToLine(line, column) }
+				if (editor) { editor.scrollToLine(ai, line, column) }
 			})
 		}
 

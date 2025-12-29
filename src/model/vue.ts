@@ -268,7 +268,7 @@ const vueMain = new Vue({
 
 		// Ignore Monaco "Canceled" errors (normal behavior when switching files/canceling operations)
 		window.addEventListener('unhandledrejection', (event) => {
-			if (event.reason?.message === 'Canceled') {
+			if (event.reason?.message === 'Canceled' || event.reason?.message === 'Model not found') {
 				event.preventDefault()
 			}
 		})

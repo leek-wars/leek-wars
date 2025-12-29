@@ -168,10 +168,14 @@ monaco.editor.defineTheme("monokai", {
 })
 
 monaco.editor.registerEditorOpener({
-	openCodeEditor: (source, resource, selectionOrPosition) => {
-		// console.log("open", source, resource, selectionOrPosition)
+	openCodeEditor: async (source, resource, selectionOrPosition) => {
+		const ai = fileSystem.aiByFullPath[resource.path.substring(1)]
+		await fileSystem.load(ai)
+		const uri = monaco.Uri.parse('file:///' + ai.path)
+		const model = monaco.editor.getModel(resource) || monaco.editor.createModel(ai.code, 'leekscript', uri)
+		ai.model = model
 		const range = selectionOrPosition as monaco.IRange
-		vueMain.$emit('jump', fileSystem.aiByFullPath[resource.path.substring(1)], range.startLineNumber, range.startColumn - 1)
+		vueMain.$emit('jump', ai, range.startLineNumber, range.startColumn - 1)
 		return true
 	},
 })
@@ -204,11 +208,6 @@ monaco.languages.registerHoverProvider("leekscript", {
 				const column = hover.defined[2]
 				const args = encodeURIComponent(JSON.stringify({ ai: ai.path, line, column }))
 				details += "[" + i18n.t('leekscript.defined_in', [ '`' + ai.path + '`', line ]) + "](command:jump?" + args + ' "' + ai.path + ':' + line + ':' + column + '")'
-				// console.log(details)
-				const uri = monaco.Uri.parse('file:///' + ai.path)
-				if (monaco.editor.getModel(uri) === null) {
-					monaco.editor.createModel(ai.code, 'leekscript', uri)
-				}
 				if (symbol) {
 					fileSystem.symbols[text] = symbol
 				}
@@ -254,10 +253,6 @@ monaco.languages.registerDefinitionProvider("leekscript", {
 			)
 			const targetAi = fileSystem.ais[hover.defined[0]]
 			const uri = monaco.Uri.parse('file:///' + targetAi.path)
-			// Ensure the model exists before returning the definition
-			if (monaco.editor.getModel(uri) === null) {
-				monaco.editor.createModel(targetAi.code, 'leekscript', uri)
-			}
 			return {
 				range,
 				uri

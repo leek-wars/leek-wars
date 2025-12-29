@@ -93,7 +93,7 @@ class FileSystem {
 		this.initialized = true
 	}
 
-	public load(ai: AI) {
+	public load(ai: AI): Promise<AI> {
 
 		const dependencies_set = new Set<number>()
 		dependencies_set.add(ai.id)
@@ -126,7 +126,8 @@ class FileSystem {
 
 		if (Object.keys(dependencies_timestamps).length) {
 
-			return new Promise<void>((resolve, reject) => {
+			return new Promise<AI>((resolve, reject) => {
+
 				LeekWars.post<{id: number, modified: number, code: string}[]>('ai/sync', {ais: JSON.stringify(dependencies_timestamps)}).then(result => {
 
 					for (const entry of result) { // Nouveaux timestamp, on met à jour
@@ -139,16 +140,16 @@ class FileSystem {
 						}
 					}
 					// console.time('analyze')
-					for (const ai of new_ais) {
-						ai.analyze()
+					for (const a of new_ais) {
+						a.analyze()
 					}
 					// console.timeEnd('analyze')
-					resolve()
+					resolve(ai)
 
 				}).error(reject)
 			})
 		} else {
-			return Promise.resolve()
+			return Promise.resolve(ai)
 		}
 	}
 
