@@ -120,6 +120,7 @@
 		}
 
 		click(e: MouseEvent, ai: AI) {
+			if (!ai) return // AI was deleted
 			if (this.group === 'tabs') {
 				if (this.$route.path !== '/editor/' + ai.id) {
 					this.$router.push('/editor/' + ai.id)
