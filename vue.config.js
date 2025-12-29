@@ -20,6 +20,9 @@ module.exports = {
 			publicPath: '/static',
 			watch: false,
 		},
+		client: {
+			overlay: false,
+		},
 	},
 	configureWebpack: {
 		devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'eval-source-map',

@@ -150,11 +150,11 @@
 			LeekWars.loadEncyclopedia(locale)
 
 			const get_categories = (callback: any) => {
-				if (localStorage.getItem('data/function_categories_v3')) {
-					callback({categories: JSON.parse(localStorage.getItem('data/function_categories_v3') || '[]')})
+				if (localStorage.getItem('data/function_categories_v4')) {
+					callback({categories: JSON.parse(localStorage.getItem('data/function_categories_v4') || '[]')})
 				} else {
 					LeekWars.get('function/get-categories').then(data => {
-						localStorage.setItem('data/function_categories_v3', JSON.stringify(data.categories))
+						localStorage.setItem('data/function_categories_v4', JSON.stringify(data.categories))
 						callback(data)
 					})
 				}
