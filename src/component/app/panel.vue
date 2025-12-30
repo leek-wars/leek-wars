@@ -13,10 +13,12 @@
 				</div>
 			</div>
 		</div>
-		<div v-if="expanded">
+		<template v-if="expanded">
 			<slot v-if="$slots.content" name="content"></slot>
-			<slot v-else class="content"></slot>
-		</div>
+			<div v-else class="content">
+				<slot></slot>
+			</div>
+		</template>
 	</div>
 </template>
 
@@ -162,7 +164,7 @@
 	.header > .actions ::v-deep .button.red:hover {
 		background: rgba(201, 31, 31, 0.8) 0%;
 	}
-	.panel > .content {
+	.panel:deep( > .content) {
 		padding: 15px;
 	}
 	.panel.collapsed .content {

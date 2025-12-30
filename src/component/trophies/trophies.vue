@@ -120,7 +120,7 @@
 		<template v-else>
 			<panel v-for="category in categories" :key="category.id" :icon="LeekWars.trophyCategoriesIcons[category.id - 1]" :toggle="'trophies/toggle-' + category.id">
 				<template #title>{{ $t('trophy.category_' + category.name) }}</template>
-				<template slot="actions">
+				<template #actions>
 					<div class="category-bar-wrapper">
 						<div v-if="category.id !== 6" class="stats">{{ points[category.id] | number }} / {{ totalPoints[category.id] | number }}</div>
 						<div class="category-bar">

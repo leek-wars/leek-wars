@@ -20,45 +20,47 @@
 		<div class="container last">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="side-column">
 				<panel class="first">
-					<div slot="content" class="conversations" @scroll="conversationsScroll">
-						<div v-for="category in chats" :key="category.name" class="category">
-							<div class="name">
-								<v-icon v-if="category.icon">{{ category.icon }}</v-icon>
-								<flag v-else :code="category.flag" />
-								{{ category.name }}
+					<template #content>
+						<div class="conversations" @scroll="conversationsScroll">
+							<div v-for="category in chats" :key="category.name" class="category">
+								<div class="name">
+									<v-icon v-if="category.icon">{{ category.icon }}</v-icon>
+									<flag v-else :code="category.flag" />
+									{{ category.name }}
+								</div>
+								<div v-for="chat in category.chats" :key="chat.id" class="conversation chat-preview" :class="{unread: $store.state.chat[chat.id] && !$store.state.chat[chat.id].read, notifications: $store.state.chat[chat.id] && $store.state.chat[chat.id].notifications}">
+									<router-link class="wrapper" :to="'/chat/' + chat.id" v-ripple>
+										<v-icon>{{ chat.icon }}</v-icon>
+										{{ $t(chat.name) }}
+										<div class="unread"></div>
+									</router-link>
+									<v-tooltip>
+										<template v-slot:activator="{ props }">
+											<v-icon v-if="$store.state.chat[chat.id] && $store.state.chat[chat.id].notifications" v-bind="props" class="bell" @click.stop="toggleNotifications(chat.id)">mdi-bell</v-icon>
+											<v-icon v-else v-bind="props" class="bell" @click.stop="toggleNotifications(chat.id)">mdi-bell-off</v-icon>
+										</template>
+										{{ $store.state.chat[chat.id] && $store.state.chat[chat.id].notifications ? $t('disable_notifications') : $t('enable_notifications') }}
+									</v-tooltip>
+								</div>
 							</div>
-							<div v-for="chat in category.chats" :key="chat.id" class="conversation chat-preview" :class="{unread: $store.state.chat[chat.id] && !$store.state.chat[chat.id].read, notifications: $store.state.chat[chat.id] && $store.state.chat[chat.id].notifications}">
-								<router-link class="wrapper" :to="'/chat/' + chat.id" v-ripple>
-									<v-icon>{{ chat.icon }}</v-icon>
-									{{ $t(chat.name) }}
-									<div class="unread"></div>
-								</router-link>
-								<v-tooltip>
-									<template v-slot:activator="{ props }">
-										<v-icon v-if="$store.state.chat[chat.id] && $store.state.chat[chat.id].notifications" v-bind="props" class="bell" @click.stop="toggleNotifications(chat.id)">mdi-bell</v-icon>
-										<v-icon v-else v-bind="props" class="bell" @click.stop="toggleNotifications(chat.id)">mdi-bell-off</v-icon>
-									</template>
-									{{ $store.state.chat[chat.id] && $store.state.chat[chat.id].notifications ? $t('disable_notifications') : $t('enable_notifications') }}
-								</v-tooltip>
+							<div class="category">
+								<div class="name">
+									<v-icon>mdi-email-outline</v-icon>
+									{{ $t('cat_private') }}
+								</div>
 							</div>
+							<router-link v-if="newConversation && newConversation.messages.length === 0" :to="'/chat/new/' + newFarmer.id + '/' + newFarmer.name + '/' + newFarmer.avatar_changed">
+								<conversation :chat="newConversation" />
+							</router-link>
+							<router-link v-for="conversation in $store.state.conversationsList" :key="conversation.id" :to="'/chat/' + conversation.id">
+								<conversation :chat="conversation" />
+							</router-link>
 						</div>
-						<div class="category">
-							<div class="name">
-								<v-icon>mdi-email-outline</v-icon>
-								{{ $t('cat_private') }}
-							</div>
-						</div>
-						<router-link v-if="newConversation && newConversation.messages.length === 0" :to="'/chat/new/' + newFarmer.id + '/' + newFarmer.name + '/' + newFarmer.avatar_changed">
-							<conversation :chat="newConversation" />
-						</router-link>
-						<router-link v-for="conversation in $store.state.conversationsList" :key="conversation.id" :to="'/chat/' + conversation.id">
-							<conversation :chat="conversation" />
-						</router-link>
-					</div>
+					</template>
 				</panel>
 			</div>
 			<panel v-show="!LeekWars.mobile || LeekWars.splitBack" class="main-column">
-				<div slot="content" class="content">
+				<template #content>
 					<div class="admin-warn" v-if="isAdmin">
 						<v-icon>mdi-alert-outline</v-icon>
 						<i18n-t keypath="admin_warn" tag="div">
@@ -67,7 +69,7 @@
 					</div>
 					<chat v-if="newConversation" :new-farmer="newFarmer" :large="true" :new-conversation="newConversation" />
 					<chat v-else :id="currentID" :large="true" />
-				</div>
+				</template>
 			</panel>
 			<!-- <div v-show="!LeekWars.mobile" class="right-column">
 				<panel>
@@ -80,10 +82,10 @@
 			<v-icon slot="icon">mdi-delete</v-icon>
 			<span slot="title">{{ $t('quit_conversation') }}</span>
 			{{ $t('quit_confirm') }}
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="quitDialog = false">{{ $t('cancel') }}</div>
 				<div v-ripple class="red" @click="quitConversation">{{ $t('quit') }}</div>
-			</div>
+			</template>
 		</popup>
 	</div>
 </template>

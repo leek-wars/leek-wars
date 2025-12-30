@@ -19,6 +19,7 @@
 	import { store } from '@/model/store'
 	import { i18n } from '@/model/i18n'
 	import LeekImage from '../leek-image.vue'
+import { nextTick } from 'vue'
 
 	@Component({ name: 'markdown' })
 	export default class Markdown extends Vue {

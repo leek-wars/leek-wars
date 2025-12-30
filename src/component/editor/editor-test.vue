@@ -176,7 +176,7 @@
 				</div>
 			</v-tab-item>
 		</v-tabs>
-		<div slot="actions">
+		<template #actions>
 			<div v-ripple @click="$emit('input', false)">
 				<v-icon>mdi-close</v-icon>
 				<span>{{ $t('main.cancel') }}</span>
@@ -216,7 +216,7 @@
 					</div>
 				</div>
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="newScenarioDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="green" @click="createScenario">{{ $t('main.create') }}</div>
 			</div>
@@ -228,7 +228,7 @@
 			<div class="padding">
 				<input v-model="newLeekName" :placeholder="$t('leek_name')" type="text" class="input" @keyup.stop @keyup.enter="createLeek">
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="newLeekDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="green" @click="createLeek">{{ $t('main.create') }}</div>
 			</div>
@@ -240,7 +240,7 @@
 			<div class="padding">
 				<input v-model="changedLeekName" :placeholder="$t('leek_name')" type="text" class="input" @keyup.stop @keyup.enter="changeLeekName">
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="changeLeekNameDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="green" @click="changeLeekName">{{ $t('main.save') }}</div>
 			</div>
@@ -252,7 +252,7 @@
 			<div class="padding">
 				<input v-model="newMapName" :placeholder="$t('map_name')" type="text" class="input" @keyup.stop @keyup.enter="createMap">
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div @click="newMapDialog = false">{{ $t('main.cancel') }}</div>
 				<div class="green" @click="createMap">{{ $t('main.create') }}</div>
 			</div>

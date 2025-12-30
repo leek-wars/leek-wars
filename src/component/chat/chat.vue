@@ -68,10 +68,10 @@
 				</div>
 				<v-checkbox v-model="censorMute" label="Mettre en sourdine pour 1h" :hide-details="true" />
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="censorDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="mute red" @click="censorConfirm"><v-icon>mdi-gavel</v-icon> Censurer</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-model="deleteDialog" :width="500">
@@ -93,10 +93,10 @@
 				</div>
 				<v-checkbox v-if="isModerator && muteFarmer.color !== 'admin'" v-model="censorMute" label="Mettre en sourdine pour 1h" :hide-details="true" />
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="deleteDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="mute red" @click="deleteConfirm"><v-icon>mdi-delete</v-icon> Supprimer</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-model="muteDialog" :width="500">
@@ -107,10 +107,10 @@
 					<b slot="farmer">{{ muteFarmer.name }}</b>
 				</i18n-t>
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="muteDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="mute red" @click="muteConfirm"><v-icon>mdi-gavel</v-icon> Censurer</div>
-			</div>
+			</template>
 		</popup>
 
 		<v-menu v-if="menuMessage && $store.state.farmer.verified" offset-y top :nudge-top="10" v-model="menuEmoji" :activator="menuEmojiActivator" content-class="emojis-dialog">
@@ -591,7 +591,7 @@
 		contain: inherit;
 		overflow: inherit;
 	}
-	.emojis ::v-deep .chat-input-emoji {
+	.emojis:deep(.chat-input-emoji) {
 		position: relative;
 		display: inline-flex;
 	}

@@ -59,10 +59,10 @@
 			<v-icon slot="icon">mdi-security</v-icon>
 			<span slot="title">Enter your password to validate</span>
 			Password : <input id="two-factor-confirm-password" type="password">
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple class="action dismiss">Cancel</div>
 				<div v-ripple class="action green">Validate</div>
-			</div>
+			</template>
 		</popup>
 	</div>
 </template>

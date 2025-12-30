@@ -6,7 +6,7 @@
 
 			</div>
 		</template>
-		<template slot="actions">
+		<template #actions>
 			<span class="value" title="Valeur totale">{{ total_estimated | number }} <div class="hab"></div></span>
 			<v-menu offset-y>
 				<template v-slot:activator="{ props }">
@@ -60,44 +60,46 @@
 				</v-list>
 			</v-menu>
 		</template>
-		<div slot="content" ref="inventory" class="inventory-content">
-			<div class="inventory">
-				<div v-for="item in sorted_inventory" :key="item.id" class="cell active" :class="'rarity-border-' + LeekWars.items[item.template].rarity">
-					<rich-tooltip-item v-slot="{ props }" :bottom="true" :item="LeekWars.items[item.template]" :quantity="item.quantity" :inventory="true" @retrieve="retrieve">
-						<div v-bind="props" class="item"  :quantity="item.quantity | number" :type="LeekWars.items[item.template].type">
-							<img v-if="item.type === ItemType.RESOURCE" class="image" :src="'/image/resource/' + LeekWars.items[item.template].name + '.png'">
-							<scheme-image v-else-if="item.type === ItemType.SCHEME" class="image" :scheme="LeekWars.schemes[LeekWars.items[item.template].params]" />
-							<img v-else-if="item.type === ItemType.COMPONENT" class="image" :src="'/image/component/' + LeekWars.items[item.template].name + '.png'">
-							<img v-else class="image" :class="{small: item.template === 37 || item.template === 45 || item.template === 153 || item.template === 182}" :src="'/image/' + LeekWars.items[item.template].name.replace('_', '/') + '.png'">
-							<img v-if="LeekWars.items[item.template].name.startsWith('box')" class="retrieve notif-trophy" src="/image/icon/black/arrow-down-right-bold.svg">
-							<img v-if="LeekWars.christmasPresents && LeekWars.items[item.template].name.startsWith('present')" class="retrieve notif-trophy" src="/image/icon/black/arrow-down-right-bold.svg">
-							<div class="id">#{{ item.template }}</div>
-						</div>
-					</rich-tooltip-item>
-				</div>
-				<div v-for="item in placeholder_count" :key="'p' + item" class="placeholder"></div>
-			</div>
-
-			<popup v-model="retrieveDialog" :width="400">
-				<v-icon slot="title">mdi-gift-outline</v-icon>
-				<template #title>Objets obtenus</template>
+		<template #content>
+			<div ref="inventory" class="inventory-content">
 				<div class="inventory">
-					<div v-for="item in retrieveItems" :key="item.id" class="cell active" :class="'rarity-border-' + LeekWars.items[item.template].rarity">
-						<rich-tooltip-item v-slot="{ props }" :bottom="true" :item="LeekWars.items[item.template]" :quantity="item.quantity" :inventory="true">
-							<div v-bind="props" class="item" :quantity="item.quantity" :type="LeekWars.items[item.template].type">
-								<img v-if="LeekWars.items[item.template].type === ItemType.RESOURCE" class="image" :src="'/image/resource/' + LeekWars.items[item.template].name + '.png'">
-								<img v-else class="image" :class="{small: item.template === 37 || item.template === 45 || item.template === 153 || item.template === 182}" :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[item.template].type] + '/' + LeekWars.items[item.template].name.replace('potion_', '').replace('hat_', '').replace('weapon_', '').replace('chip_', '').replace('pomp_', '') + '.png'">
+					<div v-for="item in sorted_inventory" :key="item.id" class="cell active" :class="'rarity-border-' + LeekWars.items[item.template].rarity">
+						<rich-tooltip-item v-slot="{ props }" :bottom="true" :item="LeekWars.items[item.template]" :quantity="item.quantity" :inventory="true" @retrieve="retrieve">
+							<div v-bind="props" class="item"  :quantity="item.quantity | number" :type="LeekWars.items[item.template].type">
+								<img v-if="item.type === ItemType.RESOURCE" class="image" :src="'/image/resource/' + LeekWars.items[item.template].name + '.png'">
+								<scheme-image v-else-if="item.type === ItemType.SCHEME" class="image" :scheme="LeekWars.schemes[LeekWars.items[item.template].params]" />
+								<img v-else-if="item.type === ItemType.COMPONENT" class="image" :src="'/image/component/' + LeekWars.items[item.template].name + '.png'">
+								<img v-else class="image" :class="{small: item.template === 37 || item.template === 45 || item.template === 153 || item.template === 182}" :src="'/image/' + LeekWars.items[item.template].name.replace('_', '/') + '.png'">
+								<img v-if="LeekWars.items[item.template].name.startsWith('box')" class="retrieve notif-trophy" src="/image/icon/black/arrow-down-right-bold.svg">
+								<img v-if="LeekWars.christmasPresents && LeekWars.items[item.template].name.startsWith('present')" class="retrieve notif-trophy" src="/image/icon/black/arrow-down-right-bold.svg">
+								<div class="id">#{{ item.template }}</div>
 							</div>
 						</rich-tooltip-item>
 					</div>
+					<div v-for="item in placeholder_count" :key="'p' + item" class="placeholder"></div>
 				</div>
-				<br>
-				<div>
-					Total estimé : <b>{{ retrieveItems.reduce((s, i) => s + i.quantity * LeekWars.items[i.template].price, 0) | number }}</b> <span class="hab"></span>
-				</div>
-			</popup>
 
-		</div>
+				<popup v-model="retrieveDialog" :width="400">
+					<v-icon slot="title">mdi-gift-outline</v-icon>
+					<template #title>Objets obtenus</template>
+					<div class="inventory">
+						<div v-for="item in retrieveItems" :key="item.id" class="cell active" :class="'rarity-border-' + LeekWars.items[item.template].rarity">
+							<rich-tooltip-item v-slot="{ props }" :bottom="true" :item="LeekWars.items[item.template]" :quantity="item.quantity" :inventory="true">
+								<div v-bind="props" class="item" :quantity="item.quantity" :type="LeekWars.items[item.template].type">
+									<img v-if="LeekWars.items[item.template].type === ItemType.RESOURCE" class="image" :src="'/image/resource/' + LeekWars.items[item.template].name + '.png'">
+									<img v-else class="image" :class="{small: item.template === 37 || item.template === 45 || item.template === 153 || item.template === 182}" :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[item.template].type] + '/' + LeekWars.items[item.template].name.replace('potion_', '').replace('hat_', '').replace('weapon_', '').replace('chip_', '').replace('pomp_', '') + '.png'">
+								</div>
+							</rich-tooltip-item>
+						</div>
+					</div>
+					<br>
+					<div>
+						Total estimé : <b>{{ retrieveItems.reduce((s, i) => s + i.quantity * LeekWars.items[i.template].price, 0) | number }}</b> <span class="hab"></span>
+					</div>
+				</popup>
+
+			</div>
+		</template>
 	</panel>
 </template>
 

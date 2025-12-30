@@ -193,20 +193,20 @@
 			<v-icon slot="icon">mdi-delete</v-icon>
 			<span slot="title">{{ $t('do_you_want_to_delete_message') }}</span>
 			{{ $t('undoable_action') }}
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="deleteMessageDialog = false">{{ $t('cancel') }}</div>
 				<div v-ripple class="red" @click="deleteMessage">{{ $t('delete') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-model="deleteTopicDialog" :width="600">
 			<v-icon slot="icon">mdi-delete</v-icon>
 			<span slot="title">{{ $t('do_you_want_to_delete_topic') }}</span>
 			{{ $t('undoable_action') }}
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="deleteTopicDialog = false">{{ $t('cancel') }}</div>
 				<div v-ripple class="red" @click="deleteTopic">{{ $t('delete') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<report-dialog v-if="reportFarmer" v-model="reportDialog" :target="reportFarmer" :reasons="reasons" :parameter="reportContent" class="report-dialog" />

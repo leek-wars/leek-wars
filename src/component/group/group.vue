@@ -76,78 +76,82 @@
 		</panel>
 
 		<panel v-if="group && group.setting_chat" :title="$t('main.chat')" toggle="group/chat" icon="mdi-chat-outline">
-			<div slot="actions">
+			<template #actions>
 				<div v-if="!LeekWars.mobile && group && $store.state.chat[group.chat]" class="button flat" @click="LeekWars.addChat($store.state.chat[group.chat])">
 					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 				</div>
-			</div>
-			<chat :id="group.chat" slot="content" />
+			</template>
+			<template #content>
+				<chat :id="group.chat" />
+			</template>
 		</panel>
 
 
 		<panel v-if="group" toggle="group/members" icon="mdi-account-group">
 			<template #title>{{ $t('members') }} ({{ group.members.length }})</template>
-			<div slot="actions">
+			<template #actions>
 				<div v-if="group.is_supervisor" class="button" @click="giveMoneyDialog = true; giveMoneyTarget = null">
 					<v-icon>mdi-hand-coin-outline</v-icon>
 				</div>
 				<div v-if="group.is_supervisor" class="button" @click="membersDialog = true">
 					<v-icon>mdi-pencil</v-icon>
 				</div>
-			</div>
-			<div slot="content" class="content members">
-				<v-data-table
-					:headers="group.is_supervisor ? headersSupervisor : headers"
-					:items="group.members"
-					hide-default-footer
-					:dense="true"
-    				:items-per-page="100"
-					class="elevation-1 members">
-					<div slot="no-data" class="no-member">
-						<span>{{ $t('no_member') }}</span>
-						<v-btn @click="membersDialog = true"><v-icon>mdi-plus</v-icon>&nbsp;{{ $t('add_member') }}</v-btn>
-					</div>
-					<template v-slot:item.name="{ item }">
-						<!-- <router-link class="flex name" :to="'/farmer/' + item.id" v-ripple>
-							<avatar :farmer="item" />
-							<div>{{ item.name }}</div>
-						</router-link> -->
-						<router-link :to="'/farmer/' + item.id">
-							<rich-tooltip-farmer :id="item.id" v-slot="{ props }" :bottom="true">
-								<div class="flex name" v-bind="props" v-ripple>
-									<avatar :farmer="item" />
-									<span>{{ item.name }}</span>
-									<img v-if="item.connected" class="status" src="/image/connected.png">
-									<img v-else class="status" src="/image/disconnected.png">
-								</div>
-							</rich-tooltip-farmer>
-						</router-link>
-					</template>
-					<template v-slot:item.team="{ item }">
-						<router-link v-if="item.team"  :to="'/team/' + item.team.id">
-							<rich-tooltip-team :id="item.team.id" v-slot="{ props }" :bottom="true">
-								<div class="flex name" v-bind="props" v-ripple>
-									<emblem :team="item.team" />
-									<span>{{ item.team.name }}</span>
-								</div>
-							</rich-tooltip-team>
-						</router-link>
-					</template>
-					<template v-slot:item.message="{ item }">
-						<v-icon @click="sendMessage(item)">mdi-email-outline</v-icon>
-					</template>
-					<template v-slot:item.give="{ item }">
-						<div class="flex">
-							<v-icon @click="giveItem(item)">mdi-gift-outline</v-icon>
-							<v-icon @click="giveMoney(item)">mdi-hand-coin-outline</v-icon>
+			</template>
+			<template #content>
+				<div class="content members">
+					<v-data-table
+						:headers="group.is_supervisor ? headersSupervisor : headers"
+						:items="group.members"
+						hide-default-footer
+						:dense="true"
+						:items-per-page="100"
+						class="elevation-1 members">
+						<div slot="no-data" class="no-member">
+							<span>{{ $t('no_member') }}</span>
+							<v-btn @click="membersDialog = true"><v-icon>mdi-plus</v-icon>&nbsp;{{ $t('add_member') }}</v-btn>
 						</div>
-					</template>
-				</v-data-table>
-			</div>
+						<template v-slot:item.name="{ item }">
+							<!-- <router-link class="flex name" :to="'/farmer/' + item.id" v-ripple>
+								<avatar :farmer="item" />
+								<div>{{ item.name }}</div>
+							</router-link> -->
+							<router-link :to="'/farmer/' + item.id">
+								<rich-tooltip-farmer :id="item.id" v-slot="{ props }" :bottom="true">
+									<div class="flex name" v-bind="props" v-ripple>
+										<avatar :farmer="item" />
+										<span>{{ item.name }}</span>
+										<img v-if="item.connected" class="status" src="/image/connected.png">
+										<img v-else class="status" src="/image/disconnected.png">
+									</div>
+								</rich-tooltip-farmer>
+							</router-link>
+						</template>
+						<template v-slot:item.team="{ item }">
+							<router-link v-if="item.team"  :to="'/team/' + item.team.id">
+								<rich-tooltip-team :id="item.team.id" v-slot="{ props }" :bottom="true">
+									<div class="flex name" v-bind="props" v-ripple>
+										<emblem :team="item.team" />
+										<span>{{ item.team.name }}</span>
+									</div>
+								</rich-tooltip-team>
+							</router-link>
+						</template>
+						<template v-slot:item.message="{ item }">
+							<v-icon @click="sendMessage(item)">mdi-email-outline</v-icon>
+						</template>
+						<template v-slot:item.give="{ item }">
+							<div class="flex">
+								<v-icon @click="giveItem(item)">mdi-gift-outline</v-icon>
+								<v-icon @click="giveMoney(item)">mdi-hand-coin-outline</v-icon>
+							</div>
+						</template>
+					</v-data-table>
+				</div>
+			</template>
 		</panel>
 
 		<panel v-if="group" :title="$t('equipment')" icon="mdi-sword" toggle="group/equipment">
-			<div slot="actions">
+			<template #actions>
 				<div v-if="equipmentEditing" class="button green" @click="saveEquipment">
 					<v-icon>mdi-check</v-icon> {{ $t('main.save') }}
 				</div>
@@ -161,7 +165,7 @@
 				<div v-else-if="group.is_supervisor" class="button" @click="equipmentEditing = true">
 					<v-icon>mdi-pencil</v-icon>
 				</div>
-			</div>
+			</template>
 			<div class="equipment">
 				<div class="section">
 					<div class="title">
@@ -241,7 +245,7 @@
 
 		<div class="container large">
 			<panel v-if="group && group.fights && group.fights.length > 0" :title="$t('main.fights')" icon="mdi-sword-cross">
-				<!-- <template v-if="group" slot="actions">
+				<!-- <template v-if="group" #actions>
 					<router-link :to="'/leek/' + group.id + '/history'" class="button flat">
 						<v-icon>mdi-history</v-icon>
 						<span>{{ $t('history') }}</span>
@@ -427,10 +431,10 @@
 			<div v-if="memberToDelete">
 				{{ $t('delete_member_confirm', [memberToDelete.name]) }}
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="deleteMemberDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="red" @click="removeMember()">{{ $t('main.delete') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<capital-dialog ref="capitalDialog" v-model="capitalDialog" :leek="characteristics" :total-capital="totalCapital" :restat="true" />
@@ -464,9 +468,9 @@
 				</v-tab-item> -->
 			</v-tabs>
 
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="giveItemDialog = false">{{ $t('main.cancel') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-if="group" v-model="giveItemConfirmDialog" :width="600">
@@ -480,10 +484,10 @@
 					<b slot="member">{{ giveItemTarget.name }}</b>
 				</i18n-t>
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="giveItemConfirmDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="green" @click="giveItemFinal()">{{ $t('give_item') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-if="group" v-model="giveMoneyDialog" :width="500" class="give-item-dialog">
@@ -507,10 +511,10 @@
 				</div>
 			</div>
 
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="giveMoneyDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="green" @click="giveMoneyConfirm()">{{ $t('main.send') }}</div>
-			</div>
+			</template>
 		</popup>
 	</div>
 </template>

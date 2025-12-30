@@ -97,7 +97,7 @@
 		</div>
 
 		<panel v-if="fight" :title="$t('main.comments') + ' (' + fight.comments.length + ')'" icon="mdi-comment-multiple-outline">
-			<div slot="actions" class="views-counter">
+			<template #actions class="views-counter">
 				{{ $tc('n_views', fight.views) }}
 			</div>
 			<comments :comments="fight.comments" @comment="comment" />

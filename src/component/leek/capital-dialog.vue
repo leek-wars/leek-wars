@@ -34,7 +34,7 @@
 				</div>
 			</div>
 		</div>
-		<div v-if="totalCapital" slot="actions">
+		<template v-if="totalCapital" #actions>
 			<div v-ripple class="action" @click="reset">
 				<v-icon>mdi-refresh</v-icon>
 				<span>{{ $t('main.reset') }}</span>
@@ -43,7 +43,7 @@
 				<v-icon>mdi-check</v-icon>
 				<span>{{ $t('main.validate') }}</span>
 			</div>
-		</div>
+		</template>
 	</popup>
 </template>
 

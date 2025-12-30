@@ -129,7 +129,7 @@
 						<div class="title">Message (facultatif)</div>
 						<textarea v-model="message" class="warning-message" placeholder="Précisions sur l'avertissement, contexte etc."></textarea>
 					</div>
-					<div class="center" class="buttons">
+					<div class="center buttons">
 						<v-btn color="primary" @click="archiveReporting"><v-icon>mdi-thumb-up-outline</v-icon> Archiver</v-btn>
 						<v-btn color="error" @click="warningConfirmDialog = true"><v-icon>mdi-gavel</v-icon> Sanctionner</v-btn>
 					</div>
@@ -147,10 +147,10 @@
 			Gravité : <b>{{ severity }}</b> <br>
 			<span v-if="message">Message : "{{ message }}"</span>
 			<div v-if="$root.$te('warning.reason_' + finalReason + '_action')" class="warn-action">Action prise : <span class="text">{{ $t('warning.reason_' + finalReason + '_action') }}</span></div>
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple class="dismiss" @click="warningConfirmDialog = false">Annuler</div>
 				<div v-ripple class="red" @click="sendWarning"><v-icon>mdi-gavel</v-icon> Sanctionner</div>
-			</div>
+			</template>
 		</popup>
 	</div>
 </template>

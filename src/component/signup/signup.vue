@@ -12,10 +12,10 @@
 				</div>
 			</panel>
 			<panel v-if="env.SIGN_UP" :title="fastRegister ? $t('play') : $t('main.signup')" :icon="fastRegister ? 'mdi-sword-cross' : 'mdi-account-plus'">
-				<div slot="actions">
+				<template #actions>
 					<div v-if="fastRegister" class="button" @click="fastRegister = false"><v-icon>mdi-account-plus</v-icon><span>{{ $t('classic_register') }}</span></div>
 					<div v-else class="button" @click="fastRegister = true"><v-icon>mdi-flash-outline</v-icon><span>{{ $t('fast_register') }}</span></div>
-				</div>
+				</template>
 				<form class="signup-form" method="post" @submit="submit">
 
 					<div class="leek-creator" :class="{fast: fastRegister}">

@@ -49,7 +49,7 @@
 			<inventory />
 		</div>
 		<panel icon="mdi-script-outline" :title="'Schémas (' + (filtered_schemes ? filtered_schemes.length : '...') + '/' + (schemes ? schemes.length : '...') + ')'">
-			<template slot="actions">
+			<template #actions>
 				<v-menu offset-y>
 					<template v-slot:activator="{ props }">
 						<div class="button flat" v-bind="props">
