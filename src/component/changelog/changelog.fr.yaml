@@ -14,6 +14,7 @@
     - "Éditeur : correction de la fermeture d'onglet quand l'IA a été supprimée en dehors de l'éditeur."
     - "Boss : correction du décompte de combats lors du lancement d'un combat de boss sans y participer (#2344)."
     - Correction de la progression du combat qui sautait à 99% quand un coffre mourait.
+    - "Éditeur : correction d'un bug où les caractères s'inséraient au mauvais endroit après navigation avec les boutons précédent/suivant du navigateur (Firefox)."
 
 243:
   title: Création de la communauté, Fusil quantique et nouveau serveur.

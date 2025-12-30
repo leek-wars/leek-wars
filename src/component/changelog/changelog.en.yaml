@@ -11,6 +11,7 @@
     - "Editor: fixed tab closing when AI was deleted outside the editor."
     - "Boss: fixed fight count deduction when a boss fight starts without participating (#2344)."
     - Fixed fight progress jumping to 99% when a chest died.
+    - "Editor: fixed a bug where characters were inserted at the wrong position after navigating with browser back/forward buttons (Firefox)."
 
 243:
   title: Community creation, Quantum Rifle and new server.
