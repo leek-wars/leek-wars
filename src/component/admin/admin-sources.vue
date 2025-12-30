@@ -26,8 +26,8 @@
 								<img v-else class="status" src="/image/disconnected.png">
 								{{ farmer.register_time | time }}
 							</div>
-							<rich-tooltip-farmer :id="farmer.id" v-slot="{ on }" :bottom="true">
-								<router-link :to="'/farmer/' + farmer.id" class="name" v-on="on" v-ripple>
+							<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }" :bottom="true">
+								<router-link :to="'/farmer/' + farmer.id" class="name" v-bind="props" v-ripple>
 									<avatar :farmer="farmer" />
 									<flag :code="LeekWars.languages[farmer.language].country" :clickable="false" />
 									<div>{{ farmer.name }}</div>

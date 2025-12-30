@@ -1,6 +1,6 @@
 
 <template>
-	<i18n tag="div" path="fight.leek_show_cell" :a="props.a">
+	<i18n-t tag="div" keypath="fight.leek_show_cell" :a="props.a">
 		<leek slot="leek" :leek="props.action.entity" />
 		<template v-slot:cell>
 			<b>{{ props.action.params[1] }}</b>
@@ -8,7 +8,7 @@
 		<template v-slot:cost>
 			<b class="color-tp">{{ parent.$t('fight.n_tp', [1]) }}</b>
 		</template>
-	</i18n>
+	</i18n-t>
 </template>
 
 <script lang="ts">

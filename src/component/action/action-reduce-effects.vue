@@ -1,11 +1,11 @@
 
 <template>
-	<i18n tag="div" path="fight.reduce_effects" :a="props.a">
+	<i18n-t tag="div" keypath="fight.reduce_effects" :a="props.a">
 		<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
 		<template v-slot:value>
 			<b>{{ props.action.params[2] }}%</b>
 		</template>
-	</i18n>
+	</i18n-t>
 </template>
 
 <script lang="ts">

@@ -7,12 +7,12 @@
 					<span v-if="LeekWars.LOCAL" class="local-label">local</span>
 					<span v-else-if="LeekWars.DEV" class="dev-label">dev</span>
 					<span v-if="env.BETA" class="beta-label">Bêta</span>
-					<!-- <tooltip>
-						<template v-slot:activator="{ on }">
-							<img v-on="on" class="hat" src="/image/10years_hat.png">
+					<!-- <v-tooltip>
+						<template v-slot:activator="{ props }">
+							<img v-bind="props" class="hat" src="/image/10years_hat.png">
 						</template>
 						{{ $t('main.10years') }}
-					</tooltip> -->
+					</v-tooltip> -->
 				</div>
 			</router-link>
 		</div>
@@ -24,8 +24,8 @@
 					</div>
 				</div>
 				<v-menu offset-y>
-					<template v-slot:activator="{ on }">
-						<div class="button-wrapper language-button" v-on="on">
+					<template v-slot:activator="{ props }">
+						<div class="button-wrapper language-button" v-bind="props">
 							<div class="header-button">
 								<flag :code="LeekWars.languages[$i18n.locale].country" :clickable="false" />
 							</div>
@@ -100,8 +100,8 @@
 				</div>
 				<div class="button-wrapper">
 					<v-menu v-if="env.SOCIAL" :nudge-bottom="3" :width="400" :max-height="400" bottom offset-y>
-						<template v-slot:activator="{ on }">
-							<div class="header-button messages-button" v-on="on">
+						<template v-slot:activator="{ props }">
+							<div class="header-button messages-button" v-bind="props">
 								<v-icon>mdi-email-outline</v-icon>
 								<span v-show="$store.state.unreadMessages > 0" class="counter">{{ $store.state.unreadMessages }}</span>
 							</div>
@@ -118,8 +118,8 @@
 				</div>
 				<div class="button-wrapper">
 					<v-menu :nudge-bottom="3" :width="400" :max-height="400" bottom offset-y @input="readNotifications">
-						<template v-slot:activator="{ on }">
-							<div class="header-button notifications-button" v-on="on">
+						<template v-slot:activator="{ props }">
+							<div class="header-button notifications-button" v-bind="props">
 								<v-icon>mdi-bell-outline</v-icon>
 								<span v-show="$store.state.unreadNotifications > 0" class="counter">{{ $store.state.unreadNotifications }}</span>
 							</div>

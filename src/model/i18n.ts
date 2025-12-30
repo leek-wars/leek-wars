@@ -7,7 +7,37 @@ const i18n = createI18n({
 	locale,
 	messages: {[locale]: messages},
 	silentTranslationWarn: true,
+	missingWarn: false,
+	fallbackWarn: false,
+	// Add global error handler to help debug
+	warnHtmlMessage: false,
 })
+
+// Add backward compatibility helpers for Vue 2 -> Vue 3 migration
+// This allows code to use i18n.t() instead of i18n.global.t()
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+Object.defineProperty(i18n, 't', {
+	get() {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		return (i18n.global as any).t
+	}
+})
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+Object.defineProperty(i18n, 'tc', {
+	get() {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		return (i18n.global as any).tc
+	}
+})
+Object.defineProperty(i18n, 'locale', {
+	get() {
+		return i18n.global.locale
+	},
+	set(value: string) {
+		i18n.global.locale = value
+	}
+})
+
 const loadedLanguages: string[] = [locale]
 
 const mixins = [{

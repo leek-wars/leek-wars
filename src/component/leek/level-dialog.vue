@@ -10,19 +10,19 @@
 				<div v-html="$t('301_message')"></div>
 				<br>
 				<div class="center">
-					<tooltip>
-						<template v-slot:activator="{ on }">
-							<img width="100" src="/image/potion/skin_gold.png" v-on="on">
+					<v-tooltip>
+						<template v-slot:activator="{ props }">
+							<img width="100" src="/image/potion/skin_gold.png" v-bind="props">
 						</template>
 						<b>{{ $t('potion.skin_gold') }}</b>
-					</tooltip>
+					</v-tooltip>
 					&nbsp;&nbsp;&nbsp;&nbsp;
-					<tooltip>
-						<template v-slot:activator="{ on }">
-							<img width="100" src="/image/hat/crown.png" v-on="on">
+					<v-tooltip>
+						<template v-slot:activator="{ props }">
+							<img width="100" src="/image/hat/crown.png" v-bind="props">
 						</template>
 						<b>{{ $t('hat.crown') }}</b>
-					</tooltip>
+					</v-tooltip>
 				</div>
 			</div>
 

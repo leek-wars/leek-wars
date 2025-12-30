@@ -1,17 +1,17 @@
 <template lang="html">
 	<div class="tutoriel-progress">
 		<v-tooltip :open-delay="0" :close-delay="0" bottom>
-			<template v-slot:activator="{ on }">
+			<template v-slot:activator="{ props }">
 				<router-link class="item current" :to="'/encyclopedia/' + locale + '/' + $t('main_page')">
-					<div v-on="on"><v-icon>mdi-home</v-icon></div>
+					<div v-bind="props"><v-icon>mdi-home</v-icon></div>
 				</router-link>
 			</template>
 			{{ $t('home') }}
 		</v-tooltip>
 		<v-tooltip v-for="(item, i) of items" :key="i" :open-delay="0" :close-delay="0" bottom>
-			<template v-slot:activator="{ on }">
+			<template v-slot:activator="{ props }">
 				<router-link class="item" :class="{ completed: i < progress, current: i < 10 && i == progress }" :to="'/encyclopedia/' + locale + '/' + $t(item.name).replace(/ /g, '_')">
-					<div v-on="on"><v-icon>mdi-{{ item.icon }}</v-icon></div>
+					<div v-bind="props"><v-icon>mdi-{{ item.icon }}</v-icon></div>
 				</router-link>
 			</template>
 			{{ $t(item.name) }}

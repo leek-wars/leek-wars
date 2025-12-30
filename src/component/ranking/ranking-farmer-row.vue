@@ -3,8 +3,8 @@
 		<td>{{ row.rank }}</td>
 		<td :class="row.style">
 			<router-link :to="'/farmer/' + row.id">
-				<rich-tooltip-farmer :id="row.id" v-slot="{ on }" :bottom="true">
-					<span v-on="on">{{ row.name }}</span>
+				<rich-tooltip-farmer :id="row.id" v-slot="{ props }" :bottom="true">
+					<span v-bind="props">{{ row.name }}</span>
 				</rich-tooltip-farmer>
 			</router-link>
 		</td>
@@ -19,8 +19,8 @@
 		</td>
 		<td>
 			<router-link v-if="row.team" :to="'/team/' + row.team_id">
-				<rich-tooltip-team :id="row.team_id" v-slot="{ on }" :bottom="true">
-					<span v-on="on">{{ row.team }}</span>
+				<rich-tooltip-team :id="row.team_id" v-slot="{ props }" :bottom="true">
+					<span v-bind="props">{{ row.team }}</span>
 				</rich-tooltip-team>
 			</router-link>
 		</td>

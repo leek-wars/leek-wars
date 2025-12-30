@@ -59,6 +59,7 @@
 	import { Notification } from '@/model/notification'
 	import { Component, Vue } from 'vue-property-decorator'
 	import ConversationElement from '@/component/messages/conversation.vue'
+import { nextTick } from 'vue'
 
 	@Component({ name: 'lw-social', components: { ChatPanel, 'conversation': ConversationElement } })
 	export default class Social extends Vue {
@@ -78,7 +79,7 @@
 		toggleSocial() {
 			LeekWars.socialCollapsed = !LeekWars.socialCollapsed
 			localStorage.setItem('main/social-collapsed', '' + LeekWars.socialCollapsed)
-			Vue.nextTick(() => {
+			nextTick(() => {
 				this.$root.$emit('resize')
 			})
 		}

@@ -2,16 +2,16 @@
 	<div class="forge">
 		<div class="grid">
 			<div v-for="(item, i) in forge" :key="i" class="cell" :class="{['cell' + i]: true, active: !!item, building: item && building}">
-				<rich-tooltip-item v-if="item" :key="item[0]" v-slot="{ on }" :item="LeekWars.items[item[0]]" :inventory="true" :quantity="item[1]">
-					<div class="item" v-on="on" :type="LeekWars.items[item[0]].type">
+				<rich-tooltip-item v-if="item" :key="item[0]" v-slot="{ props }" :item="LeekWars.items[item[0]]" :inventory="true" :quantity="item[1]">
+					<div class="item" v-bind="props" :type="LeekWars.items[item[0]].type">
 						<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[item[0]].type] + '/' + LeekWars.items[item[0]].name.replace('hat_', '').replace('potion_', '').replace('chip_', '').replace('weapon_', '') + '.png'">
 						<div v-if="item[1] > 1" class="quantity">{{ item[1] | number }}</div>
 					</div>
 				</rich-tooltip-item>
 			</div>
 			<div class="cell" :class="{cell8: true, active: !!result && !built, built}" @click="craft">
-				<rich-tooltip-item v-if="result" v-slot="{ on }" :item="LeekWars.items[result]" :inventory="true" :quantity="scheme.quantity" :open-delay="built ? 500 : 1000">
-					<div v-on="on" v-ripple class="item" :class="{building}" :type="LeekWars.items[result].type">
+				<rich-tooltip-item v-if="result" v-slot="{ props }" :item="LeekWars.items[result]" :inventory="true" :quantity="scheme.quantity" :open-delay="built ? 500 : 1000">
+					<div v-bind="props" v-ripple class="item" :class="{building}" :type="LeekWars.items[result].type">
 						<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[result].type] + '/' + LeekWars.items[result].name.replace('hat_', '').replace('potion_', '') + '.png'">
 						<div v-if="scheme.quantity > 1" class="quantity">{{ scheme.quantity | number }}</div>
 					</div>

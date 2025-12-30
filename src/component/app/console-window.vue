@@ -3,8 +3,8 @@
 		<div class="title" @mousedown="consoleMouseDown">
 			{{ $t('main.console') }}
 			<v-menu v-if="$refs.console" offset-y :close-on-content-click="false">
-				<template v-slot:activator="{ on }">
-					<v-chip v-on="on" size="small">LS {{ $refs.console.version }} {{ $refs.console.strict ? 'strict' : '' }} <v-icon>mdi-chevron-down</v-icon></v-chip>
+				<template v-slot:activator="{ props }">
+					<v-chip v-bind="props" size="small">LS {{ $refs.console.version }} {{ $refs.console.strict ? 'strict' : '' }} <v-icon>mdi-chevron-down</v-icon></v-chip>
 				</template>
 				<v-list :dense="true" class="version-menu">
 					<v-list-item v-ripple @click="$refs.console.setVersion(4)">

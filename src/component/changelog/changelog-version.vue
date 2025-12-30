@@ -7,8 +7,8 @@
 				<div v-for="(change, c) in changes" :key="c" class="change">
 					<span v-html="'➤ ' + change.text"></span>
 					<v-menu v-for="image in change.images" :key="image" :close-on-content-click="false" :width="280" offset-overflow :nudge-top="0" transition="none" :open-on-hover="true" :open-delay="200" offset-y>
-						<template v-slot:activator="{ on }">
-							<v-icon class="screenshot" v-on="on">mdi-tooltip-image-outline</v-icon>
+						<template v-slot:activator="{ props }">
+							<v-icon class="screenshot" v-bind="props">mdi-tooltip-image-outline</v-icon>
 						</template>
 						<img class="image-menu" :src="'/image/changelog/' + image + '.png'">
 					</v-menu>

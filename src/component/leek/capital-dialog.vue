@@ -7,9 +7,9 @@
 
 		<div class="characteristics">
 			<div v-for="c in LeekWars.characteristics" :key="c" class="charac" :class="c">
-				<characteristic-tooltip v-slot="{ on }" :characteristic="c" :value="leek[c]" :total="leek[c]" :leek="leek" :test="false">
-					<template v-on="on">
-						<img :src="'/image/charac/' + c + '.png'" v-on="on">
+				<characteristic-tooltip v-slot="{ props }" :characteristic="c" :value="leek[c]" :total="leek[c]" :leek="leek" :test="false">
+					<template v-bind="props">
+						<img :src="'/image/charac/' + c + '.png'" v-bind="props">
 					</template>
 				</characteristic-tooltip>
 				<div>
@@ -17,19 +17,19 @@
 					<span v-else :class="'stat color-' + c">{{ leek[c] + bonuses[c] }}</span>
 					<span v-if="bonuses[c]" class="sup">&nbsp;(+{{ bonuses[c] }})</span>
 					<div class="add-wrapper">
-						<tooltip v-for="cost in [1, 10, 100]" :key="cost">
-							<template v-slot:activator="{ on }">
-								<span :q="cost" :class="{locked: costs[c + cost].cost > capital}" class="add" @click="add(c, cost)" v-on="on"></span>
+						<v-tooltip v-for="cost in [1, 10, 100]" :key="cost">
+							<template v-slot:activator="{ props }">
+								<span :q="cost" :class="{locked: costs[c + cost].cost > capital}" class="add" @click="add(c, cost)" v-bind="props"></span>
 							</template>
 							<div>{{ costs[c + cost].cost + ' capital ⇔ ' + costs[c + cost].bonus + ' ' + $t('characteristic.' + c) }}</div>
 							<b v-if="useful_level[c] > leek.level">{{ $t('characteristic.too_high', [useful_level[c]]) }}</b>
-						</tooltip>
-						<tooltip v-if="bonuses[c]">
-							<template v-slot:activator="{ on }">
-								<span q="0" class="add" @click="clear(c)" v-on="on"></span>
+						</v-tooltip>
+						<v-tooltip v-if="bonuses[c]">
+							<template v-slot:activator="{ props }">
+								<span q="0" class="add" @click="clear(c)" v-bind="props"></span>
 							</template>
 							{{ $t('main.clear') }}
-						</tooltip>
+						</v-tooltip>
 					</div>
 				</div>
 			</div>

@@ -6,9 +6,9 @@
 		<panel class="first">
 			<div>{{ $t('accept_1') }}</div>
 			<br>
-			<i18n path="accept_2" tag="div">
+			<i18n-t keypath="accept_2" tag="div">
 				<router-link slot="cgu" to="/conditions">{{ $t('cgu') }}</router-link>
-			</i18n>
+			</i18n-t>
 			<v-btn color="primary" @click="accept">{{ $t('i_accept') }}</v-btn>
 		</panel>
 	</div>

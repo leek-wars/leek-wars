@@ -45,8 +45,8 @@
 				</v-list-item>
 				<template v-if="ai && ai.includes && ai.includes.length">
 					<v-menu offset-x open-on-hover>
-						<template v-slot:activator="{ on, attrs }">
-							<v-list-item v-ripple v-bind="attrs" v-on="on">
+						<template v-slot:activator="{ props }">
+							<v-list-item v-ripple v-bind="props">
 								<v-icon>mdi-download</v-icon>
 								<v-list-item-content>
 									<v-list-item-title>{{ $t('download') }}</v-list-item-title>

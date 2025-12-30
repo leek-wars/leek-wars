@@ -1,9 +1,9 @@
 <template lang="html">
 	<div class="pack card">
 		<img :src="'/image/bank/crystals_' + product.id + '.png'">
-		<i18n tag="h2" path="main.pack_of_n_crystals">
+		<i18n-t tag="h2" keypath="main.pack_of_n_crystals">
 			<b slot="crystals">{{ product.crystals }}</b>
-		</i18n>
+		</i18n-t>
 		<div class="buy">
 			<span v-if="LeekWars.currencies[LeekWars.currency].prefix" class="price"><span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>{{ format(product.prices[LeekWars.currency]) }}</span>
 			<span v-else class="price">{{ format(product.prices[LeekWars.currency]) }}&nbsp;<span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span></span>

@@ -1,6 +1,6 @@
 <template lang="html">
-	<rich-tooltip-farmer :id="farmer.id" v-slot="{ on }" :bottom="farmer.id !== $store.state.farmer.id" :instant="true" class="rich">
-		<div class="elem" v-on="on">
+	<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }" :bottom="farmer.id !== $store.state.farmer.id" :instant="true" class="rich">
+		<div class="elem" v-bind="props">
 			<avatar :farmer="farmer" />
 			<div class="name">{{ farmer.name }}</div>
 			<talent :id="farmer.id" :talent="farmer.talent" category="farmer" />

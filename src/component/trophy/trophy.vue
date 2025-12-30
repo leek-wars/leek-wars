@@ -9,9 +9,9 @@
 				<div class="right">
 					<div class="name">
 						{{ $t('trophy.' + code) }}
-						<i18n tag="div" path="n_points" v-if="trophy.points" class="points">
+						<i18n-t tag="div" keypath="n_points" v-if="trophy.points" class="points">
 							<template slot="p">{{ trophy.points }}</template>
-						</i18n>
+						</i18n-t>
 					</div>
 					<div class="description">{{ trophy.description }}</div>
 					<div class="badges">
@@ -30,10 +30,10 @@
 						<ul>
 							<li v-if="trophy.habs"><span class="hab"></span> {{ trophy.habs | number }} habs</li>
 							<li v-for="item in items" :key="item.id">
-								<rich-tooltip-item v-slot="{ on }" :bottom="true" :instant="true" :item="item">
-									<div v-if="item.type === ItemType.WEAPON" v-on="on">{{ $t('weapon.' + LeekWars.weapons[item.params].name) }}</div>
-									<div v-else-if="item.type === ItemType.HAT" v-on="on">{{ $t('hat.' + LeekWars.hats[item.params].name) }}</div>
-									<div v-else-if="item.type === ItemType.POTION" v-on="on">{{ $t('potion.' + LeekWars.potions[item.id].name) }}</div>
+								<rich-tooltip-item v-slot="{ props }" :bottom="true" :instant="true" :item="item">
+									<div v-if="item.type === ItemType.WEAPON" v-bind="props">{{ $t('weapon.' + LeekWars.weapons[item.params].name) }}</div>
+									<div v-else-if="item.type === ItemType.HAT" v-bind="props">{{ $t('hat.' + LeekWars.hats[item.params].name) }}</div>
+									<div v-else-if="item.type === ItemType.POTION" v-bind="props">{{ $t('potion.' + LeekWars.potions[item.id].name) }}</div>
 								</rich-tooltip-item>
 							</li>
 						</ul>
@@ -47,18 +47,18 @@
 							<div :style="{width: Math.floor(100 * Math.min(trophy.threshold, trophy.progression) / trophy.threshold) + '%'}" class="bar striked"></div>
 						</div>
 					</div>
-					<i18n v-if="trophy.unlocked" path="unlocked_the_x" tag="div" class="rarity">
+					<i18n-t v-if="trophy.unlocked" keypath="unlocked_the_x" tag="div" class="rarity">
 						<template slot="date">{{ trophy.date | datetime }}</template>
-					</i18n>
+					</i18n-t>
 					<div v-else class="rarity">{{ $t('not_unlocked') }}</div>
 					<router-link v-if="trophy.fight" class="rarity" :to="'/fight/' + trophy.fight + (trophy.action ? '?action=' + (trophy.action - 15) : '')">{{ $t('see_fight') }}</router-link>
 				</div>
 				<div>
 					<h4><v-icon>mdi-chart-line</v-icon> {{ $t('stats') }}</h4>
 					<div class="rarity">{{ $t('created_the', [ LeekWars.formatDate(trophy.created_time) ]) }}</div>
-					<div class="rarity">{{ (trophy.rarity * 100).toPrecision(2) }}% • <i18n tag="span" path="n_pocessors">
+					<div class="rarity">{{ (trophy.rarity * 100).toPrecision(2) }}% • <i18n-t tag="span" keypath="n_pocessors">
 						<template slot="n">{{ trophy.total | number }}</template>
-					</i18n></div>
+					</i18n-t></div>
 				</div>
 			</div>
 		</panel>

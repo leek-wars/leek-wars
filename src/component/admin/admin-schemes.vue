@@ -9,8 +9,8 @@
 				<div v-if="schemes" class="schemes">
 					<!-- <div v-for="(scheme, s) in schemes" :key="s" class="scheme">
 						<div v-ripple class="group result">
-							<rich-tooltip-item v-slot="{ on }" :item="LeekWars.items[scheme.result]" :bottom="true" :inventory="true" @input="$emit('input', $event)">
-								<div class="item" v-on="on" :quantity="1" :class="{['rarity-border-' + LeekWars.items[scheme.result].rarity]: true}">
+							<rich-tooltip-item v-slot="{ props }" :item="LeekWars.items[scheme.result]" :bottom="true" :inventory="true" @input="$emit('input', $event)">
+								<div class="item" v-bind="props" :quantity="1" :class="{['rarity-border-' + LeekWars.items[scheme.result].rarity]: true}">
 									<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[scheme.result].type] + '/' + LeekWars.items[scheme.result].name.replace('hat_', '').replace('potion_', '') + '.png'" :type="LeekWars.items[scheme.result].type">
 									<div v-if="scheme.quantity > 1" class="quantity">{{ scheme.quantity | number }}</div>
 								</div>
@@ -21,8 +21,8 @@
 						<div class="items">
 							<template v-for="(ingredient, i) in scheme.items">
 								<div v-if="ingredient">
-									<rich-tooltip-item v-if="LeekWars.items[ingredient[0]]" :key="i" v-slot="{ on }" :item="LeekWars.items[ingredient[0]]" :bottom="true" :inventory="true" :quantity="ingredient[1]" @input="$emit('input', $event)">
-										<div class="item" v-on="on" :class="{['rarity-border-' + LeekWars.items[ingredient[0]].rarity]: true}">
+									<rich-tooltip-item v-if="LeekWars.items[ingredient[0]]" :key="i" v-slot="{ props }" :item="LeekWars.items[ingredient[0]]" :bottom="true" :inventory="true" :quantity="ingredient[1]" @input="$emit('input', $event)">
+										<div class="item" v-bind="props" :class="{['rarity-border-' + LeekWars.items[ingredient[0]].rarity]: true}">
 											<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[ingredient[0]].type] + '/' + LeekWars.items[ingredient[0]].name.replace('hat_', '').replace('potion_', '').replace('chip_', '') + '.png'" :type="LeekWars.items[ingredient[0]].type">
 											<div v-if="ingredient[1] > 1" class="quantity">{{ ingredient[1] | number }}</div>
 										</div>
@@ -44,8 +44,8 @@
 					<div v-for="(scheme, s) in schemes" :key="s" class="forge">
 						<div class="grid">
 							<div v-for="(_, i) in 9" :key="i" class="cell" :class="{['cell' + i]: true}">
-								<rich-tooltip-item v-if="scheme.items[i] && LeekWars.items[scheme.items[i][0]]" :key="i" v-slot="{ on }" :item="LeekWars.items[scheme.items[i][0]]" :bottom="true" :inventory="true" :quantity="scheme.items[i][1]">
-									<div class="item" v-on="on" :type="LeekWars.items[scheme.items[i][0]].type">
+								<rich-tooltip-item v-if="scheme.items[i] && LeekWars.items[scheme.items[i][0]]" :key="i" v-slot="{ props }" :item="LeekWars.items[scheme.items[i][0]]" :bottom="true" :inventory="true" :quantity="scheme.items[i][1]">
+									<div class="item" v-bind="props" :type="LeekWars.items[scheme.items[i][0]].type">
 										<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[scheme.items[i][0]].type] + '/' + LeekWars.items[scheme.items[i][0]].name.replace('hat_', '').replace('potion_', '').replace('chip_', '').replace('weapon_', '') + '.png'">
 									</div>
 								</rich-tooltip-item>
@@ -53,8 +53,8 @@
 								<input v-model="scheme.items[i][1]" @keyup="updateScheme(scheme)" class="quantity">
 							</div>
 							<div class="cell" :class="{cell8: true}">
-								<rich-tooltip-item v-slot="{ on }" :item="LeekWars.items[scheme.result]" :bottom="true" :inventory="true" :quantity="scheme.quantity">
-									<div v-on="on" class="item" :type="LeekWars.items[scheme.result].type">
+								<rich-tooltip-item v-slot="{ props }" :item="LeekWars.items[scheme.result]" :bottom="true" :inventory="true" :quantity="scheme.quantity">
+									<div v-bind="props" class="item" :type="LeekWars.items[scheme.result].type">
 										<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[scheme.result].type] + '/' + LeekWars.items[scheme.result].name.replace('hat_', '').replace('potion_', '') + '.png'">
 										<input v-model="scheme.quantity" @keyup="updateScheme(scheme)" class="quantity">
 									</div>

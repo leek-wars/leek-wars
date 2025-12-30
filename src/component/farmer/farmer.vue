@@ -5,8 +5,8 @@
 	<div v-else class="page">
 		<div class="page-header page-bar">
 			<div>
-				<rich-tooltip-farmer v-if="farmer" :id="farmer.id" v-slot="{ on }" :bottom="true">
-					<h1 v-on="on">{{ farmer.name }}</h1>
+				<rich-tooltip-farmer v-if="farmer" :id="farmer.id" v-slot="{ props }" :bottom="true">
+					<h1 v-bind="props">{{ farmer.name }}</h1>
 				</rich-tooltip-farmer>
 				<h1 v-else>...</h1>
 				<div class="info state">
@@ -21,20 +21,20 @@
 							<div class="tab green">{{ $t('see_tournament') }}</div>
 						</router-link>
 					</template>
-					<tooltip v-if="$store.state.farmer.tournaments_enabled && $store.getters.leek_count >= 2" content-class="fluid" @input="loadTournamentRange()">
-						<template v-slot:activator="{ on }">
-							<div class="tab" v-on="on">
+					<v-tooltip v-if="$store.state.farmer.tournaments_enabled && $store.getters.leek_count >= 2" content-class="fluid" @input="loadTournamentRange()">
+						<template v-slot:activator="{ props }">
+							<div class="tab" v-bind="props">
 								<v-icon>mdi-trophy</v-icon>
 								<span v-if="farmer.tournament && !farmer.tournament.registered" class="register" @click="registerTournament">{{ $t('register_to_tournament') }}</span>
 								<span v-else class="unregister" @click="registerTournament">{{ $t('unregister') }}</span>
 							</div>
 						</template>
 						{{ $t('tournament_time') }}
-						<i18n v-if="tournamentRange" tag="div" path="main.level_x_to_y">
+						<i18n-t v-if="tournamentRange" tag="div" keypath="main.level_x_to_y">
 							<b slot="min">{{ tournamentRange.min }}</b>
 							<b slot="max">{{ tournamentRange.max }}</b>
-						</i18n>
-					</tooltip>
+						</i18n-t>
+					</v-tooltip>
 					<div class="tab" v-if="$store.getters.leek_count >= 2" @click="updateGarden">
 						<span>{{ $t('garden') }}</span>
 						<v-switch :input-value="farmer.in_garden" hide-details />
@@ -63,15 +63,15 @@
 			<panel class="first">
 				<div slot="content" class="content avatar-td">
 					<div v-if="myFarmer">
-						<tooltip>
-							<template v-slot:activator="{ on }">
-								<div class="avatar-input" v-on="on">
+						<v-tooltip>
+							<template v-slot:activator="{ props }">
+								<div class="avatar-input" v-bind="props">
 									<input ref="avatarInput" type="file" accept="image/png, image/jpeg, image/jpg, image/bmp, image/gif, image/webp" @change="changeAvatar">
 									<avatar ref="avatar" :farmer="farmer" @click.native="$refs.avatarInput.click()" />
 								</div>
 							</template>
 							{{ $t('click_to_change_avatar') }}
-						</tooltip>
+						</v-tooltip>
 					</div>
 					<div v-else>
 						<avatar :farmer="farmer" />
@@ -79,15 +79,15 @@
 					<lw-title v-if="farmer && farmer.title.length" class="info title" :class="{me: myFarmer}" :title="farmer.title" @click.native="titleDialog = myFarmer" />
 					<div v-if="farmer" class="infos">
 						<div v-if="!farmer.title.length && myFarmer" class="add add-title" :class="{locked: !farmerTitleEnabled}" @click="titleDialog = farmerTitleEnabled">
-							<tooltip :disabled="farmerTitleEnabled">
-								<template v-slot:activator="{ on }">
-									<span v-on="on">
+							<v-tooltip :disabled="farmerTitleEnabled">
+								<template v-slot:activator="{ props }">
+									<span v-bind="props">
 										<img class="image" src="/image/pomp/farmer_title.png">
 										{{ $t('add_title') }}
 									</span>
 								</template>
 								<v-icon>mdi-lock</v-icon> {{ $t('pomp.farmer_title') }}
-							</tooltip>
+							</v-tooltip>
 						</div>
 						<router-link v-if="farmer.forum_messages" :to="'/search?farmer=' + farmer.name + '&order=date'">
 							<div class="info">
@@ -118,26 +118,26 @@
 			<panel>
 				<div slot="content" class="content stats">
 					<div class="talent-wrapper">
-						<tooltip>
-							<template v-slot:activator="{ on }">
-								<talent :id="farmer ? farmer.id : 0" :talent="farmer ? farmer.talent : '...'" category="farmer" :on="on" />
+						<v-tooltip>
+							<template v-slot:activator="{ props }">
+								<talent :id="farmer ? farmer.id : 0" :talent="farmer ? farmer.talent : '...'" category="farmer" :on="props" />
 							</template>
 							<div>{{ $t('talent') }}</div>
-						</tooltip>
-						<tooltip v-if="farmer">
-							<template v-slot:activator="{ on }">
-								<div class="talent-more" v-on="on">({{ farmer.talent_more >= 0 ? '+' : '' }} {{ farmer.talent_more | number }})</div>
+						</v-tooltip>
+						<v-tooltip v-if="farmer">
+							<template v-slot:activator="{ props }">
+								<div class="talent-more" v-bind="props">({{ farmer.talent_more >= 0 ? '+' : '' }} {{ farmer.talent_more | number }})</div>
 							</template>
 							<template v-if="farmer.talent_more > 0">
 								<span v-html="$t('main.talent_difference_farmer', [farmer.name, farmer.talent_more, talent_gains + '%'])"></span>
 							</template>
 							<div v-else v-html="$t('main.talent_difference_farmer_no_gains', [farmer.name])"></div>
-						</tooltip>
+						</v-tooltip>
 						<ranking-badge v-if="farmer && farmer.ranking && farmer.ranking <= 1000 && farmer.in_garden" :id="farmer.id" :ranking="farmer.ranking" category="farmer" />
 					</div>
-					<tooltip v-if="farmer">
-						<template v-slot:activator="{ on }">
-							<table v-on="on">
+					<v-tooltip v-if="farmer">
+						<template v-slot:activator="{ props }">
+							<table v-bind="props">
 								<tr>
 									<td class="big">{{ farmer.victories | number }}</td>
 									<td class="big">{{ farmer.draws | number }}</td>
@@ -151,17 +151,17 @@
 							</table>
 						</template>
 						{{ $t('ratio') }} : {{ farmer.ratio }}
-					</tooltip>
+					</v-tooltip>
 
 					<table v-if="farmer && farmer.won_solo_tournaments + farmer.won_farmer_tournaments + farmer.won_team_tournaments + farmer.won_battle_royale > 0" class="tournaments">
 						<tr>
 							<td class="grey">
-								<tooltip>
-									<template v-slot:activator="{ on }">
-										<v-icon v-on="on">mdi-trophy-outline</v-icon>
+								<v-tooltip>
+									<template v-slot:activator="{ props }">
+										<v-icon v-bind="props">mdi-trophy-outline</v-icon>
 									</template>
 									{{ $t('tournaments') }}
-								</tooltip>
+								</v-tooltip>
 							</td>
 							<td width="25%"><span class="big">{{ farmer.won_solo_tournaments }}</span><br><span class="small grey">solo</span></td>
 							<td width="25%"><span class="big">{{ farmer.won_farmer_tournaments }}</span><br><span class="small grey">{{ $t('display_farmer') }}</span></td>
@@ -187,27 +187,27 @@
 					</div>
 					<div v-if="farmer" class="godfather grey">
 						<div v-if="farmer.godfather">
-							<i18n path="godson_of" tag="div">
+							<i18n-t keypath="godson_of" tag="div">
 								<router-link slot="farmer" :to="'/farmer/' + farmer.godfather.id">
-									<rich-tooltip-farmer :id="farmer.godfather.id" v-slot="{ on }">
-										<span v-on="on">{{ farmer.godfather.name }}</span>
+									<rich-tooltip-farmer :id="farmer.godfather.id" v-slot="{ props }">
+										<span v-bind="props">{{ farmer.godfather.name }}</span>
 									</rich-tooltip-farmer>
 								</router-link>
-							</i18n>
+							</i18n-t>
 						</div>
 						<div v-if="farmer.godsons.length">
-							<i18n path="godfather_of" tag="div">
+							<i18n-t keypath="godfather_of" tag="div">
 								<span slot="farmers">
 									<template v-for="(godson, i) in farmer.godsons">
 										<router-link :key="i" :to="'/farmer/' + godson.id">
-											<rich-tooltip-farmer :id="godson.id" v-slot="{ on }">
-												<span v-on="on">{{ godson.name }}</span>
+											<rich-tooltip-farmer :id="godson.id" v-slot="{ props }">
+												<span v-bind="props">{{ godson.name }}</span>
 											</rich-tooltip-farmer>
 										</router-link>
 										<span v-if="i < farmer.godsons.length - 1" :key="i + '_'">, </span>
 									</template>
 								</span>
-							</i18n>
+							</i18n-t>
 						</div>
 					</div>
 				</div>
@@ -217,9 +217,9 @@
 				<div slot="content" class="content team center">
 					<loader v-if="!farmer" />
 					<div v-else-if="farmer.team">
-						<rich-tooltip-team :id="farmer.team.id" v-slot="{ on }" :bottom="true">
+						<rich-tooltip-team :id="farmer.team.id" v-slot="{ props }" :bottom="true">
 							<router-link :to="'/team/' + farmer.team.id">
-								<div v-on="on">
+								<div v-bind="props">
 									<emblem :team="farmer.team" />
 									<br>
 									<h2>{{ farmer.team.name }}</h2>
@@ -233,9 +233,9 @@
 							<v-btn @click="createTeamDialog = true">{{ $t('create_team') }}</v-btn>
 							<div v-if="farmer.candidacy">
 								<br><br><br>
-								<i18n path="candidacy_for_team" class="candidacy">
+								<i18n-t keypath="candidacy_for_team" class="candidacy">
 									<a slot="team" :href="'/team/' + farmer.candidacy.team_id">{{ farmer.candidacy.team_name }}</a>
-								</i18n>
+								</i18n-t>
 								<br><br>
 								<v-btn @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</v-btn>
 							</div>
@@ -264,10 +264,10 @@
 				<loader v-if="!farmer || !trophies" />
 				<template v-else-if="farmer.trophies > 0 && trophies_list && trophies_grid">
 					<div v-show="trophiesMode == 'list'" class="list trophies-container">
-						<tooltip v-for="(trophy, t) in trophies_list" v-if="trophy != null" :key="t">
-							<template v-slot:activator="{ on }">
+						<v-tooltip v-for="(trophy, t) in trophies_list" v-if="trophy != null" :key="t">
+							<template v-slot:activator="{ props }">
 								<router-link :to="'/trophy/' + trophy.code">
-									<img class="trophy" v-on="on" :src="'/image/trophy/' + trophy.code + '.svg'">
+									<img class="trophy" v-bind="props" :src="'/image/trophy/' + trophy.code + '.svg'">
 								</router-link>
 							</template>
 							<div class="header">
@@ -276,15 +276,15 @@
 							</div>
 							<div>{{ trophy.description }}</div>
 							<span class="trophy-date">{{ LeekWars.formatDuration(trophy.date) }}</span>
-						</tooltip>
+						</v-tooltip>
 					</div>
 					<div v-show="trophiesMode == 'grid'" class="grid trophies-container">
-						<tooltip v-for="(trophy, t) in trophies_grid" :key="t" :disabled="!trophy">
-							<template v-slot:activator="{ on }">
+						<v-tooltip v-for="(trophy, t) in trophies_grid" :key="t" :disabled="!trophy">
+							<template v-slot:activator="{ props }">
 								<router-link v-if="trophy != null" :to="'/trophy/' + trophy.code" class="card">
-									<img :src="'/image/trophy/' + trophy.code + '.svg'" v-on="on" class="trophy">
+									<img :src="'/image/trophy/' + trophy.code + '.svg'" v-bind="props" class="trophy">
 								</router-link>
-								<div v-else class="locked" v-on="on">
+								<div v-else class="locked" v-bind="props">
 									<img class="trophy" src="/image/unknown.png">
 								</div>
 							</template>
@@ -296,19 +296,19 @@
 								<div v-if="trophy.description">
 									{{ trophy.description }}
 								</div>
-								<i18n tag="span" class="trophy-date" path="main.unlocked_the">
+								<i18n-t tag="span" class="trophy-date" keypath="main.unlocked_the">
 									<span slot="date">{{ trophy.date | date }}</span>
-								</i18n>
+								</i18n-t>
 							</span>
-						</tooltip>
+						</v-tooltip>
 					</div>
 					<div v-if="bonus_trophies && bonus_trophies.length > 0">
 						<h4 class="trophies-bonus">{{ $t('bonus_trophies') }}</h4>
 						<div class="trophies-container">
-							<tooltip v-for="trophy in bonus_trophies" :key="trophy.id">
-								<template v-slot:activator="{ on }">
+							<v-tooltip v-for="trophy in bonus_trophies" :key="trophy.id">
+								<template v-slot:activator="{ props }">
 									<router-link :to="'/trophy/' + trophy.code" :class="{card: trophiesMode == 'grid'}">
-										<img class="trophy" :src="'/image/trophy/' + trophy.code + '.svg'" v-on="on">
+										<img class="trophy" :src="'/image/trophy/' + trophy.code + '.svg'" v-bind="props">
 									</router-link>
 								</template>
 								<div class="header">
@@ -317,7 +317,7 @@
 								</div>
 								<div>{{ trophy.description }}</div>
 								<span class="date">{{ LeekWars.formatDuration(trophy.date) }}</span>
-							</tooltip>
+							</v-tooltip>
 						</div>
 					</div>
 				</template>
@@ -328,9 +328,9 @@
 		<panel :title="$t('leeks')">
 			<loader v-if="!farmer" />
 			<div v-else class="leeks">
-				<rich-tooltip-leek v-for="leek in farmer.leeks" :id="leek.id" :key="leek.id" v-slot="{ on }">
+				<rich-tooltip-leek v-for="leek in farmer.leeks" :id="leek.id" :key="leek.id" v-slot="{ props }">
 					<router-link v-ripple :to="'/leek/' + leek.id" class="leek">
-						<div v-on="on">
+						<div v-bind="props">
 							<leek-image :leek="leek" :scale="0.9" />
 							<div class="name">{{ leek.name }}</div>
 							<lw-title v-if="leek.title.length" :title="leek.title" />
@@ -351,40 +351,40 @@
 				<div class="container">
 					<div v-if="farmer" class="column grey">
 						<div v-if="farmer.godfather">
-							<i18n path="godson_of" tag="div">
+							<i18n-t keypath="godson_of" tag="div">
 								<router-link slot="farmer" :to="'/farmer/' + farmer.godfather.id">
-									<rich-tooltip-farmer :id="farmer.godfather.id" v-slot="{ on }">
-										<span v-on="on">{{ farmer.godfather.name }}</span>
+									<rich-tooltip-farmer :id="farmer.godfather.id" v-slot="{ props }">
+										<span v-bind="props">{{ farmer.godfather.name }}</span>
 									</rich-tooltip-farmer>
 								</router-link>
-							</i18n>
+							</i18n-t>
 						</div>
 						<div v-if="farmer.godsons.length">
-							<i18n path="godfather_of" tag="div">
+							<i18n-t keypath="godfather_of" tag="div">
 								<span slot="farmers">
 									<template v-for="(godson, i) in farmer.godsons">
 										<router-link :key="i" :to="'/farmer/' + godson.id">
-											<rich-tooltip-farmer :id="godson.id" v-slot="{ on }">
-												<span v-on="on">{{ godson.name }}</span>
+											<rich-tooltip-farmer :id="godson.id" v-slot="{ props }">
+												<span v-bind="props">{{ godson.name }}</span>
 											</rich-tooltip-farmer>
 										</router-link>
 										<span v-if="i < farmer.godsons.length - 1" :key="i + '_'">, </span>
 									</template>
 								</span>
-							</i18n>
+							</i18n-t>
 						</div>
 					</div>
 					<div class="column column-level">
 						<div class="grey">{{ $t('godsons_level') }}</div>
 						<div class="total-level">{{ farmer ? farmer.godsons_level : '...' | number }}</div>
-						<tooltip>
-							<template v-slot:activator="{ on }">
-								<div class="bar" v-on="on">
+						<v-tooltip>
+							<template v-slot:activator="{ props }">
+								<div class="bar" v-bind="props">
 									<span :class="{ blue: farmer?.godsons_level >= 10_000 }" :style="{width: xp_bar_width + '%'}" class="xp-bar striked"></span>
 								</div>
 							</template>
 							<span v-if="farmer">{{ farmer.godsons_level | number }} / 10 000</span>
-						</tooltip>
+						</v-tooltip>
 					</div>
 				</div>
 				<h4>{{ $t('main.rewards') }}</h4>
@@ -392,15 +392,15 @@
 					<div v-for="(reward, r) of rewards" :key="r" class="reward card" :class="{'notif-trophy': r <= farmer.godsons_level}">
 						<div class="level">{{ r | number }}<v-icon v-if="r <= farmer.godsons_level">mdi-check</v-icon></div>
 						<img v-if="reward.trophy" :src="'/image/trophy/' + reward.trophy + '.svg'">
-						<rich-tooltip-item v-else-if="reward.resource" :item="LeekWars.items[reward.item]" v-slot="{ on }" :bottom="true">
-							<img v-on="on" :src="'/image/resource/' + reward.resource + '.png'">
+						<rich-tooltip-item v-else-if="reward.resource" :item="LeekWars.items[reward.item]" v-slot="{ props }" :bottom="true">
+							<img v-bind="props" :src="'/image/resource/' + reward.resource + '.png'">
 						</rich-tooltip-item>
 						<img v-else-if="reward.fight_pack" :src="'/image/fight-pack/' + reward.fight_pack + '.png'">
-						<rich-tooltip-item v-else-if="reward.potion" :item="LeekWars.items[reward.item]" v-slot="{ on }" :bottom="true">
-							<img v-on="on" :src="'/image/potion/skin_' + reward.potion + '.png'">
+						<rich-tooltip-item v-else-if="reward.potion" :item="LeekWars.items[reward.item]" v-slot="{ props }" :bottom="true">
+							<img v-bind="props" :src="'/image/potion/skin_' + reward.potion + '.png'">
 						</rich-tooltip-item>
-						<rich-tooltip-item v-else-if="reward.hat" :item="LeekWars.items[reward.item]" v-slot="{ on }" :bottom="true">
-							<img v-on="on" :src="'/image/hat/' + reward.hat + '.png'">
+						<rich-tooltip-item v-else-if="reward.hat" :item="LeekWars.items[reward.item]" v-slot="{ props }" :bottom="true">
+							<img v-bind="props" :src="'/image/hat/' + reward.hat + '.png'">
 						</rich-tooltip-item>
 						<div class="name" v-if="reward.trophy">{{ $t('trophy_x', [$t('trophy.' + reward.trophy)]) }}</div>
 						<div class="name" v-else-if="reward.resource">{{ $t('resource.' + reward.resource) }}</div>
@@ -436,10 +436,10 @@
 				<div v-for="(warning, w) in farmer.warnings" :key="w" class="warning card">
 					<div class="reason">{{ $t('warning.reason_' + warning.reason) }} ({{ $t('warning.severity_s', [ warning.severity]) }})</div>
 					<div class="message"><i>{{ warning.message }}</i></div>
-					<i18n v-if="$store.getters.moderator" class="date" path="warning.given_by_x_the_d">
+					<i18n-t v-if="$store.getters.moderator" class="date" keypath="warning.given_by_x_the_d">
 						<router-link slot="farmer" :to="'/farmer/' + warning.author_id">{{ warning.author_name }}</router-link>
 						<span slot="date">{{ warning.date | date }}</span>
-					</i18n>
+					</i18n-t>
 					<div v-else class="date">{{ warning.date | date }}</div>
 				</div>
 			</div>

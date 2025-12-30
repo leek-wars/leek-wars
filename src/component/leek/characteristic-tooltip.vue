@@ -1,7 +1,7 @@
 <template lang="html">
-	<tooltip bottom>
-		<template v-slot:activator="{ on }">
-			<slot :on="on"></slot>
+	<v-tooltip bottom>
+		<template v-slot:activator="{ props }">
+			<slot :on="props"></slot>
 		</template>
 		<div class="tooltip">
 			<b>{{ $t('characteristic.' + characteristic) }}</b>
@@ -47,7 +47,7 @@
 				</template>
 			</template>
 		</div>
-	</tooltip>
+	</v-tooltip>
 </template>
 
 <script lang="ts">

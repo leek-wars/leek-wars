@@ -41,10 +41,10 @@
 							</div>
 						</router-link>
 						<span v-if="LeekWars.didactitial_step === 1 && i === 0 && !(isHomePage || $route.path === '/leek/' + leek.id)" class="dida-hint right">
-							<i18n class="bubble" path="main.dida_2">
+							<i18n-t class="bubble" keypath="main.dida_2">
 								<img height=18 src="/image/charac/life.png" slot="life">
 								<img height=18 src="/image/charac/strength.png" slot="strength">
-							</i18n>
+							</i18n-t>
 							<span class="arrow"></span>
 						</span>
 					</span>
@@ -162,8 +162,8 @@
 		</div>
 
 		<v-menu v-if="$store.state.farmer && $store.state.farmer.rewards.length" offset-x :nudge-right="15" :max-height="500" :close-on-content-click="false">
-			<template v-slot:activator="{ on }">
-				<div v-ripple class="rewards-button notif-trophy" v-on="on">
+			<template v-slot:activator="{ props }">
+				<div v-ripple class="rewards-button notif-trophy" v-bind="props">
 					<img src="/image/icon/chest.svg">
 				</div>
 			</template>

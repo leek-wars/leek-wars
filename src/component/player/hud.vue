@@ -3,14 +3,14 @@
 		<div v-if="!creator" class="life-bar">
 			<div class="wrapper">
 				<template v-for="team in game.teams">
-					<tooltip v-for="entity in team" v-if="!entity.dead" :key="entity.id" top>
-						<template v-slot:activator="{ on }">
-							<div :style="{background: entity.lifeBarGadient, width: Math.max(1, barWidth * (entity.life / totalLife) - 3) + 'px'}" class="bar" v-on="on"></div>
+					<v-tooltip v-for="entity in team" v-if="!entity.dead" :key="entity.id" top>
+						<template v-slot:activator="{ props }">
+							<div :style="{background: entity.lifeBarGadient, width: Math.max(1, barWidth * (entity.life / totalLife) - 3) + 'px'}" class="bar" v-bind="props"></div>
 						</template>
 						<span v-if="entity instanceof Mob">{{ $t('entity.' + entity.name) }}</span>
 						<span v-else>{{ entity.name }}</span>
 						({{ entity.life }})
-					</tooltip>
+					</v-tooltip>
 				</template>
 			</div>
 		</div>
@@ -23,9 +23,9 @@
 			<div>Resources : {{ game.numData }}</div>
 		</div>
 		<div v-if="!creator && !LeekWars.mobile" class="timeline" :class="{large: !game.showActions}" :style="{left: (game.showActions ? (game.largeActions ? actionsWidth + 5 : 400) : 0) + 'px'}">
-			<tooltip v-for="(entity, e) of game.entityOrder" :key="e" top>
-				<template v-slot:activator="{ on }">
-					<div :class="{summon: entity.summon, current: entity.id === game.currentPlayer, dead: entity.dead}" :style="{background: entity === game.selectedEntity || entity === game.mouseEntity ? '#fffc' : (entity.id === game.currentPlayer ? entity.color : entity.gradient)}" class="entity" v-on="on" @mouseenter="entity_enter(entity)" @mouseleave="entity_leave(entity)" @click="entity_click(entity)">
+			<v-tooltip v-for="(entity, e) of game.entityOrder" :key="e" top>
+				<template v-slot:activator="{ props }">
+					<div :class="{summon: entity.summon, current: entity.id === game.currentPlayer, dead: entity.dead}" :style="{background: entity === game.selectedEntity || entity === game.mouseEntity ? '#fffc' : (entity.id === game.currentPlayer ? entity.color : entity.gradient)}" class="entity" v-bind="props" @mouseenter="entity_enter(entity)" @mouseleave="entity_leave(entity)" @click="entity_click(entity)">
 						<div v-if="!entity.dead" :style="{height: 'calc(6px + ' + ((entity.life / entity.maxLife) * 100) + '%)', background: entity.lifeColor, 'border-color': entity.lifeColorLighter}" class="bar"></div>
 						<div class="image">
 							<img v-if="entity.summon" :src="'/image/bulb/' + entity.bulbName + '_front.png'">
@@ -38,17 +38,17 @@
 				</template>
 				<span v-if="entity instanceof Mob">{{ $t('entity.' + entity.name) }}</span>
 				<span v-else>{{ entity.name }}</span>
-			</tooltip>
+			</v-tooltip>
 		</div>
 		<div v-if="!creator && !LeekWars.mobile && game.showActions && actionsWidth > 0" ref="actions" class="fight-actions" :class="{large: game.largeActions}" :style="{'width': game.largeActions ? actionsWidth + 'px' : null, 'max-width': game.largeActions ? Math.max(600, actionsWidth) + 'px' : null}">
 			<template v-for="line of game.consoleLines">
 				<component :is="ActionComponents[line.action.type]" v-if="line.action" :key="line.id" :action="line.action" />
 				<div v-else-if="line.trophy" :key="line.id" class="notif-trophy">
 					<img :src="'/image/trophy/' + line.trophy.name + '.svg'">
-					<i18n path="trophy.x_unlocks_t">
+					<i18n-t keypath="trophy.x_unlocks_t">
 						<template slot="farmer">{{ line.trophy.farmer.name }}</template>
 						<b slot="trophy">{{ $t('trophy.' + line.trophy.name) }}</b>
-					</i18n>
+					</i18n-t>
 				</div>
 				<action-log v-else-if="game.displayDebugs" :key="line.id" :log="line.log" :leeks="game.leeks" :action="0" :index="0" :lines="game.displayAILines" />
 			</template>

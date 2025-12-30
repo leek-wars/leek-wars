@@ -122,7 +122,7 @@
 		}
 
 		updateScroll() {
-			Vue.nextTick(() => {
+			nextTick(() => {
 				const height = 30
 				const list = this.$refs.list as HTMLElement
 				if (list) {

@@ -13,8 +13,8 @@
 			</div>
 			<div v-if="page" class="tabs">
 				<v-menu v-if="contributor && edition" offset-y>
-					<template v-slot:activator="{ on }">
-						<div class="page-language info" v-on="on">
+					<template v-slot:activator="{ props }">
+						<div class="page-language info" v-bind="props">
 							<flag :code="LeekWars.languages[page.language].country" :clickable="false" />
 							<img width="10" src="/image/selector.png">
 						</div>
@@ -43,8 +43,8 @@
 					{{ $t('main.edit') }}
 				</div>
 				<v-menu v-if="page && Object.values(page.translations).length" offset-y>
-					<template v-slot:activator="{ on }">
-						<div class="tab" v-on="on"><v-icon>mdi-translate</v-icon></div>
+					<template v-slot:activator="{ props }">
+						<div class="tab" v-bind="props"><v-icon>mdi-translate</v-icon></div>
 					</template>
 					<v-list :dense="true">
 						<router-link v-for="(translation, l) in page.translations" :key="l" :to="'/encyclopedia/' + l + '/' + translation">
@@ -68,9 +68,9 @@
 					<div v-if="page.new && !edition" class="nopage">
 						<v-icon>mdi-book-open-page-variant</v-icon>
 						<br><br>
-						<i18n path="not_found" tag="div" class="message">
+						<i18n-t keypath="not_found" tag="div" class="message">
 							<template slot="name">{{ code }}</template>
-						</i18n>
+						</i18n-t>
 						<br>
 						<div v-if="contributor">{{ $t('contributor_create') }}</div>
 					</div>
@@ -81,41 +81,41 @@
 							<v-icon>mdi-account-multiple</v-icon>
 							<div v-html="$tc('n_contributors', page.contributors.length)"></div>
 							<div class="avatars">
-								<rich-tooltip-farmer v-for="contributor in page.contributors" :id="contributor.id" :key="contributor.id" v-slot="{ on }">
+								<rich-tooltip-farmer v-for="contributor in page.contributors" :id="contributor.id" :key="contributor.id" v-slot="{ props }">
 									<router-link :to="'/farmer/' + contributor.id">
-										<avatar :farmer="contributor" :on="on" />
+										<avatar :farmer="contributor" :on="props" />
 									</router-link>
 								</rich-tooltip-farmer>
 							</div>
-							<i18n tag="div" path="n_views" class="views"><b slot="v">{{ page.views | number }}</b></i18n>
+							<i18n-t tag="div" keypath="n_views" class="views"><b slot="v">{{ page.views | number }}</b></i18n-t>
 							<div class="fill"></div>
 							<v-icon @click="statsExpanded = !statsExpanded">{{ statsExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
 						</div>
 
 						<div v-if="statsExpanded" class="expanded-stats">
 							<div>
-								<i18n path="created_by_x_the_y">
+								<i18n-t keypath="created_by_x_the_y">
 									<template slot="farmer">
-										<rich-tooltip-farmer :id="page.creator" v-slot="{ on }">
-											<router-link :to="'/farmer/' + page.creator"><span v-on="on">{{ page.creator_name }}</span></router-link>
+										<rich-tooltip-farmer :id="page.creator" v-slot="{ props }">
+											<router-link :to="'/farmer/' + page.creator"><span v-bind="props">{{ page.creator_name }}</span></router-link>
 										</rich-tooltip-farmer>
 									</template>
 									<span slot="date">{{ page.creation_time | datetime }}</span>
-								</i18n>
+								</i18n-t>
 
-								<i18n path="edited_by_x_the_y" tag="div" v-if="page.last_editor">
+								<i18n-t keypath="edited_by_x_the_y" tag="div" v-if="page.last_editor">
 									<template slot="farmer">
-										<rich-tooltip-farmer :id="page.last_editor" v-slot="{ on }">
-											<router-link :to="'/farmer/' + page.last_editor"><span v-on="on">{{ page.last_editor_name }}</span></router-link>
+										<rich-tooltip-farmer :id="page.last_editor" v-slot="{ props }">
+											<router-link :to="'/farmer/' + page.last_editor"><span v-bind="props">{{ page.last_editor_name }}</span></router-link>
 										</rich-tooltip-farmer>
 									</template>
 									<span slot="date">{{ page.last_edition_time | datetime }}</span>
-								</i18n>
+								</i18n-t>
 							</div>
 							<div>
-								<i18n tag="div" path="n_contributions">
+								<i18n-t tag="div" keypath="n_contributions">
 									<b slot="n">{{ page.contributions | number }}</b>
-								</i18n>
+								</i18n-t>
 								{{ $tc('main.n_lines', [page.content.split('\n').length]) }}
 								 — {{ $tc('main.n_words', [page.content.split(' ').length]) }}
 								 — {{ $tc('main.n_characters', [page.content.length]) }}
@@ -145,6 +145,7 @@
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import { FUNCTIONS } from '@/model/functions'
+import { nextTick } from 'vue'
 
 	@Component({ name: 'encyclopedia', i18n: {}, mixins: [...mixins], components: { Markdown, Breadcrumb, RichTooltipFarmer } })
 	export default class Encyclopedia extends Vue {
@@ -347,7 +348,7 @@ ${ret}
 				this.setEditorContent()
 				return
 			}
-			Vue.nextTick(() => {
+			nextTick(() => {
 				const codeMirrorElement = this.$refs.codemirror as any
 				import(/* webpackChunkName: "codemirror-markdown" */ "@/component/encyclopedia/codemirror-markdown").then(wrapper => {
 					// console.log("CM", wrapper)
@@ -383,7 +384,7 @@ ${ret}
 						// console.log("generation", generation, this.editor.doc)
 						this.modified = generation !== this.initialGeneration
 
-						Vue.nextTick(() => {
+						nextTick(() => {
 							const title = (this.$refs.markdown as HTMLElement).querySelector('h1')
 							if (title) {
 								let text = ''

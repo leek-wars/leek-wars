@@ -9,25 +9,25 @@
 				</div>
 				<div class="description">{{ trophy.description }}</div>
 				<div v-if="trophy.habs" class="habs">{{ trophy.habs | number }} <span class="hab"></span></div>
-				<tooltip v-if="trophy.progression != null">
-					<template v-slot:activator="{ on }">
-						<div class="trophy-bar" :class="{full: trophy.unlocked}" v-on="on">
+				<v-tooltip v-if="trophy.progression != null">
+					<template v-slot:activator="{ props }">
+						<div class="trophy-bar" :class="{full: trophy.unlocked}" v-bind="props">
 							<div :style="{width: Math.floor(100 * Math.min(trophy.threshold, trophy.progression) / trophy.threshold) + '%'}" class="bar striked"></div>
 						</div>
 					</template>
 					{{ trophy.progression | number }} / {{ trophy.threshold | number }}
-				</tooltip>
+				</v-tooltip>
 			</div>
 		</div>
 		<div class="unlock">
 			<img v-if="trophy.in_fight" class="fight-icon" src="/image/trophy/winner.svg" :title="$t('trophy.unlockable_fight')">
 			<template v-if="trophy.unlocked">
-				<i18n v-if="trophy.fight" tag="span" class="date" path="main.unlocked_the">
+				<i18n-t v-if="trophy.fight" tag="span" class="date" keypath="main.unlocked_the">
 					<router-link slot="date" :to="'/fight/' + trophy.fight" class="fight">{{ trophy.date | date }}</router-link>
-				</i18n>
-				<i18n v-else tag="span" class="date" path="main.unlocked_the">
+				</i18n-t>
+				<i18n-t v-else tag="span" class="date" keypath="main.unlocked_the">
 					<span slot="date">{{ trophy.date | date }}</span>
-				</i18n>
+				</i18n-t>
 			</template>
 			<span class="rarity"><span v-if="trophy.unlocked"> • </span>{{ trophy.total }} • {{ (trophy.rarity * 100).toPrecision(2) }}%</span>
 		</div>

@@ -73,7 +73,7 @@
 			this.summary = {children: []}
 			const stack = [this.summary] as any[]
 
-			Vue.nextTick(() => {
+			nextTick(() => {
 				const md = this.$refs.md as HTMLElement
 				md.querySelectorAll('h1, h2, h3, h4, h5').forEach((item: any) => {
 					const level = parseInt(item.tagName.substring(1), 10)

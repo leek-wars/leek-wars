@@ -1,8 +1,8 @@
 
 <template>
-	<i18n tag="div" path="fight.remove_shackles" :a="props.a">
+	<i18n-t tag="div" keypath="fight.remove_shackles" :a="props.a">
 		<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
-	</i18n>
+	</i18n-t>
 </template>
 
 <script lang="ts">

@@ -239,7 +239,7 @@
 			if (!this.filteredItems.find((it) => it.name === item)) {
 				this.query = ''
 			}
-			Vue.nextTick(() => {
+			nextTick(() => {
 				setTimeout(() => {
 					const element: any = document.querySelector('.items .service[item=' + item + ']')
 					const elements = this.$refs.elements as HTMLElement

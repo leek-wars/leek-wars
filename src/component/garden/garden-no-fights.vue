@@ -2,15 +2,15 @@
 	<div class="nofight">
 		<img src="/image/notgood.png"><br>
 		<h4 class="next">{{ $t('no_more_fights') }}</h4>
-		<i18n v-if="canbuy" class="next" tag="div" path="next_fight_in">
+		<i18n-t v-if="canbuy" class="next" tag="div" keypath="next_fight_in">
 			<b slot="fights">{{ 50 }}</b>
 			<b slot="time">{{ remainingTime | timeseconds }}</b>
-		</i18n>
-		<i18n v-if="canbuy" class="buy" tag="div" path="buy_fights">
+		</i18n-t>
+		<i18n-t v-if="canbuy" class="buy" tag="div" keypath="buy_fights">
 			<span slot="hab" class="hab"></span>
 			<span slot="crystal" class="crystal"></span>
 			<router-link slot="market" to="/market/fight_pack_100">{{ $t('main.market') }}</router-link>
-		</i18n>
+		</i18n-t>
 	</div>
 </template>
 

@@ -235,9 +235,9 @@
 					</div>
 				</div>
 				<div v-if="warnings.length" class="title">
-					<i18n path="n_warnings">
+					<i18n-t keypath="n_warnings">
 						<b slot="n">{{ warnings.length }}</b>
-					</i18n>
+					</i18n-t>
 				</div>
 				<div class="errors" @mouseover="mouseover">
 					<div v-for="(w, i) in warnings" :key="i" class="log warning" :a="w.action" :i="w.index">

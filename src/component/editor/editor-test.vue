@@ -109,8 +109,8 @@
 						</div>
 						<div class="card characteristics">
 							<div v-for="c in LeekWars.characteristics_table" :key="c" class="characteristic" :class="c">
-								<characteristic-tooltip v-slot="{ on }" :characteristic="c" :value="currentLeek[c]" :total="currentLeek[c]" :leek="currentLeek" :test="true">
-									<img v-on="on" :src="'/image/charac/' + c + '.png'">
+								<characteristic-tooltip v-slot="{ props }" :characteristic="c" :value="currentLeek[c]" :total="currentLeek[c]" :leek="currentLeek" :test="true">
+									<img v-bind="props" :src="'/image/charac/' + c + '.png'">
 								</characteristic-tooltip>
 								<span :contenteditable="!currentLeek.bot" class="stat" :class="'color-' + c" @keyup.stop @focusout="characteristicFocusout(c, $event)" v-html="currentLeek[c]"></span>
 							</div>
@@ -126,8 +126,8 @@
 						<div class="title">{{ $t('main.weapons') }} [{{ currentLeek.weapons.length }}]</div>
 						<div class="weapons">
 							<div class="container">
-								<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ on }" :item="LeekWars.items[weapon.item]" :bottom="true" :nodge="true" :leek="currentLeek">
-									<img :src="'/image/' + LeekWars.items[weapon.item].name.replace('_', '/') + '.png'" :class="{hidden: !hasWeaponEquipped(weapon.item)}" class="weapon" v-on="on" @click="removeLeekWeapon(weapon.item)" :width="WeaponsData[LeekWars.items[weapon.item].params].width">
+								<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ props }" :item="LeekWars.items[weapon.item]" :bottom="true" :nodge="true" :leek="currentLeek">
+									<img :src="'/image/' + LeekWars.items[weapon.item].name.replace('_', '/') + '.png'" :class="{hidden: !hasWeaponEquipped(weapon.item)}" class="weapon" v-bind="props" @click="removeLeekWeapon(weapon.item)" :width="WeaponsData[LeekWars.items[weapon.item].params].width">
 								</rich-tooltip-item>
 								<div v-if="currentLeek.weapons.length < MAX_WEAPONS" class="add" @click="weaponsDialog = true">+</div>
 							</div>
@@ -136,8 +136,8 @@
 						<div class="title">{{ $t('main.chips') }} [{{ currentLeek.chips.length }} / {{ currentLeek.ram }}]</div>
 						<div class="chips">
 							<div class="container">
-								<rich-tooltip-item v-for="(chip, c) of currentLeek.chips" :key="chip" v-slot="{ on }" :item="LeekWars.items[chip]" :nodge="true" :leek="currentLeek">
-									<img :src="'/image/chip/' + LeekWars.items[chip].name.replace('chip_', '') + '.png'" :class="{disabled: c >= currentLeek.ram}" class="chip" v-on="on" @click="removeLeekChip(chip)">
+								<rich-tooltip-item v-for="(chip, c) of currentLeek.chips" :key="chip" v-slot="{ props }" :item="LeekWars.items[chip]" :nodge="true" :leek="currentLeek">
+									<img :src="'/image/chip/' + LeekWars.items[chip].name.replace('chip_', '') + '.png'" :class="{disabled: c >= currentLeek.ram}" class="chip" v-bind="props" @click="removeLeekChip(chip)">
 								</rich-tooltip-item>
 								<div v-if="currentLeek.chips.length < currentLeek.ram" class="add" @click="chipsDialog = true">+</div>
 							</div>
@@ -303,8 +303,8 @@
 			<v-icon slot="icon">mdi-chip</v-icon>
 			<span slot="title" v-if="currentLeek">{{ $t('select_chips') }} [{{ currentLeek.chips.length }}/{{ currentLeek.ram }}]</span>
 			<div v-if="currentLeek" class="padding chips-dialog">
-				<rich-tooltip-item v-for="chip of availableChips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[LeekWars.chipTemplates[chip.template].item]" :bottom="true" :nodge="true" :leek="currentLeek">
-					<span :class="{disabled: hasChipEquipped(chip.id)}" v-on="on">
+				<rich-tooltip-item v-for="chip of availableChips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[LeekWars.chipTemplates[chip.template].item]" :bottom="true" :nodge="true" :leek="currentLeek">
+					<span :class="{disabled: hasChipEquipped(chip.id)}" v-bind="props">
 						<img :src="'/image/chip/' + chip.name + '.png'" class="chip" @click="addOrRemoveLeekChip(chip.id)">
 					</span>
 				</rich-tooltip-item>
@@ -315,9 +315,9 @@
 			<img slot="icon" src="/image/icon/garden.png">
 			<span slot="title" v-if="currentLeek">{{ $t('select_weapons') }} [{{ currentLeek.weapons.length }}/{{ MAX_WEAPONS }}]</span>
 			<div v-if="currentLeek" class="padding weapons-dialog">
-				<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ on }" :item="LeekWars.items[weapon.item]" :bottom="true" :nodge="true" :leek="currentLeek">
-					<span :class="{disabled: hasWeaponEquipped(weapon.item)}" v-on="on">
-						<img :src="'/image/weapon/' + weapon.name + '.png'" class="weapon" v-on="on" @click="addOrRemoveLeekWeapon(weapon.item)" :width="WeaponsData[LeekWars.items[weapon.item].params].width">
+				<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ props }" :item="LeekWars.items[weapon.item]" :bottom="true" :nodge="true" :leek="currentLeek">
+					<span :class="{disabled: hasWeaponEquipped(weapon.item)}" v-bind="props">
+						<img :src="'/image/weapon/' + weapon.name + '.png'" class="weapon" v-bind="props" @click="addOrRemoveLeekWeapon(weapon.item)" :width="WeaponsData[LeekWars.items[weapon.item].params].width">
 					</span>
 				</rich-tooltip-item>
 			</div>

@@ -28,22 +28,22 @@
 								<img class="player" src="/image/player.png">
 							</router-link>
 
-							<tooltip v-if="$store.state.farmer?.br_enabled" :disabled="battleRoyaleEnabled">
-								<template v-slot:activator="{ on }">
+							<v-tooltip v-if="$store.state.farmer?.br_enabled" :disabled="battleRoyaleEnabled">
+								<template v-slot:activator="{ props }">
 									<router-link v-ripple :class="{ enabled: battleRoyaleEnabled }" :event="battleRoyaleEnabled ? 'click' : ''" to="/garden/battle-royale" class="tab">
-										<div v-on="on">
+										<div v-bind="props">
 											<h2>{{ $t('category_battle_royale') }}</h2>
 											<span class="player-count">10</span>&nbsp;<img class="player" src="/image/player.png">
 										</div>
 									</router-link>
 								</template>
 								{{ $t('you_must_be_level_20') }}
-							</tooltip>
+							</v-tooltip>
 
-							<tooltip :disabled="farmerEnabled">
-								<template v-slot:activator="{ on }">
+							<v-tooltip :disabled="farmerEnabled">
+								<template v-slot:activator="{ props }">
 									<router-link v-ripple :class="{ enabled: farmerEnabled }" :event="farmerEnabled ? 'click' : ''" to="/garden/farmer" class="tab">
-										<div v-on="on">
+										<div v-bind="props">
 											<h2>{{ $t('category_farmer_fight') }}</h2>
 											<span class="player-count">4</span>&nbsp;<img class="player" src="/image/player.png">
 											<img class="sword" src="/image/icon/grey/garden.png">
@@ -52,12 +52,12 @@
 									</router-link>
 								</template>
 								{{ $t('you_must_have_2_leeks') }}
-							</tooltip>
+							</v-tooltip>
 
-							<tooltip :disabled="teamEnabled">
-								<template v-slot:activator="{ on }">
+							<v-tooltip :disabled="teamEnabled">
+								<template v-slot:activator="{ props }">
 									<router-link v-ripple :class="{ enabled: teamEnabled }" :event="teamEnabled ? 'click' : ''" to="/garden/team" class="tab">
-										<div v-on="on">
+										<div v-bind="props">
 											<h2>{{ $t('category_team_fight') }}</h2>
 											<span class="player-count">6</span>&nbsp;<img class="player" src="/image/player.png">
 											<img class="sword" src="/image/icon/grey/garden.png">
@@ -66,12 +66,12 @@
 									</router-link>
 								</template>
 								{{ $t('you_must_have_a_team') }}
-							</tooltip>
+							</v-tooltip>
 
-							<tooltip :disabled="bossEnabled">
-								<template v-slot:activator="{ on }">
+							<v-tooltip :disabled="bossEnabled">
+								<template v-slot:activator="{ props }">
 									<router-link v-ripple :class="{ enabled: bossEnabled }" :event="bossEnabled ? 'click' : ''" to="/garden/boss" class="tab">
-										<div v-on="on">
+										<div v-bind="props">
 											<h2>{{ $t('category_boss_fight') }}</h2>
 											<span class="player-count">8</span>&nbsp;<img class="player" src="/image/player.png">
 											<img class="sword" src="/image/icon/grey/garden.png">
@@ -80,7 +80,7 @@
 									</router-link>
 								</template>
 								{{ $t('boss_extension_locked') }}
-							</tooltip>
+							</v-tooltip>
 
 							<div v-if="queue > 0" class="queue">
 								<div class="title">{{ $t('queue') }}</div>
@@ -250,16 +250,16 @@
 						<div v-else-if="category == 'battle-royale'">
 							<div v-if="!LeekWars.battleRoyale.enabled">
 								<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('select_leek') }}</div>
-								<tooltip v-for="leek in $store.state.farmer.leeks" :key="leek.id" :disabled="leek.level >= 20">
-									<template v-slot:activator="{ on }">
-										<span v-on="on">
+								<v-tooltip v-for="leek in $store.state.farmer.leeks" :key="leek.id" :disabled="leek.level >= 20">
+									<template v-slot:activator="{ props }">
+										<span v-bind="props">
 											<router-link v-ripple :to="'/garden/battle-royale/' + leek.id" :class="{disabled: leek.level < 20}" :event="leek.level < 20 ? null : 'click'" class="leek my-leek">
 												<garden-leek :leek="leek" />
 											</router-link>
 										</span>
 									</template>
 									Level &lt; 20
-								</tooltip>
+								</v-tooltip>
 								<br><br>
 								<v-btn v-if="garden.fights" color="primary" @click="battleRoyaleRegister">{{ $t('main.select') }}</v-btn>
 								<garden-no-fights v-else :canbuy="true" />
@@ -314,8 +314,8 @@
 								<div v-else>
 									<h4>Participants</h4>
 									<div class="participants">
-										<rich-tooltip-leek v-for="(leek,p) of LeekWars.bossSquads.squad.engaged_leeks" :key="p" :id="leek.id" v-slot="{ on }">
-											<div v-on="on" class="participant" :class="{active: true}" @click="LeekWars.bossSquads.removeLeek(leek)">
+										<rich-tooltip-leek v-for="(leek,p) of LeekWars.bossSquads.squad.engaged_leeks" :key="p" :id="leek.id" v-slot="{ props }">
+											<div v-bind="props" class="participant" :class="{active: true}" @click="LeekWars.bossSquads.removeLeek(leek)">
 												<leek-image :leek="leek" :scale="0.42"></leek-image>
 												<div class="name">
 													<avatar :farmer="LeekWars.bossSquads.squad.farmers.find(f => f.id === leek.farmer)" />
@@ -328,8 +328,8 @@
 									</div>
 									<h4 v-if="LeekWars.bossSquads.squad.available_leeks.length">Poireaux disponibles</h4>
 									<div class="participants">
-										<rich-tooltip-leek v-for="leek of LeekWars.bossSquads.squad.available_leeks" :key="leek.id" :id="leek.id" v-slot="{ on }">
-											<div v-on="on" class="participant" :class="{active: true}" @click="LeekWars.bossSquads.addLeek(leek)">
+										<rich-tooltip-leek v-for="leek of LeekWars.bossSquads.squad.available_leeks" :key="leek.id" :id="leek.id" v-slot="{ props }">
+											<div v-bind="props" class="participant" :class="{active: true}" @click="LeekWars.bossSquads.addLeek(leek)">
 												<leek-image :leek="leek" :scale="0.42"></leek-image>
 												<div class="name">
 													<avatar :farmer="LeekWars.bossSquads.squad.farmers.find(f => f.id === leek.farmer)" />
@@ -344,8 +344,8 @@
 										<div class="farmers">
 											<v-icon v-if="LeekWars.bossSquads.squad.locked" :disabled="LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="LeekWars.bossSquads.open()">mdi-lock</v-icon>
 											<v-icon v-else :disabled="LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="LeekWars.bossSquads.lock()">mdi-earth</v-icon>
-											<rich-tooltip-farmer v-for="farmer of LeekWars.bossSquads.squad.farmers" :key="farmer.id" :id="farmer.id" v-slot="{ on }">
-												<avatar :on="on" :farmer="farmer" :class="{master: LeekWars.bossSquads.squad.master === farmer.id}" />
+											<rich-tooltip-farmer v-for="farmer of LeekWars.bossSquads.squad.farmers" :key="farmer.id" :id="farmer.id" v-slot="{ props }">
+												<avatar :on="props" :farmer="farmer" :class="{master: LeekWars.bossSquads.squad.master === farmer.id}" />
 											</rich-tooltip-farmer>
 										</div>
 										<v-btn color="primary" :disabled="LeekWars.bossSquads.squad.engaged_leeks.length === 0 || LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="LeekWars.bossSquads.attack()"><v-icon>mdi-sword-cross</v-icon>&nbsp;{{ $t('attack') }}</v-btn>

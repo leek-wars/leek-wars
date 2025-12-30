@@ -28,10 +28,13 @@ function i18nPlugin(): Plugin {
 				// Generate code that imports the Vue component and adds i18n with proper structure
 				// vue-i18n expects: { messages: { [locale]: {...translations...} } }
 				return `
-					import Component from '${vuePath}'
-					Component.i18n = {
-						messages: {
-							'${locale}': ${i18nContent}
+					import ComponentModule from '${vuePath}'
+					const Component = ComponentModule.default || ComponentModule
+					if (Component && typeof Component === 'object') {
+						Component.i18n = {
+							messages: {
+								'${locale}': ${i18nContent}
+							}
 						}
 					}
 					export default Component

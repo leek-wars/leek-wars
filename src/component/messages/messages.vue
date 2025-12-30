@@ -33,13 +33,13 @@
 									{{ $t(chat.name) }}
 									<div class="unread"></div>
 								</router-link>
-								<tooltip>
-									<template v-slot:activator="{ on }">
-										<v-icon v-if="$store.state.chat[chat.id] && $store.state.chat[chat.id].notifications" v-on="on" class="bell" @click.stop="toggleNotifications(chat.id)">mdi-bell</v-icon>
-										<v-icon v-else v-on="on" class="bell" @click.stop="toggleNotifications(chat.id)">mdi-bell-off</v-icon>
+								<v-tooltip>
+									<template v-slot:activator="{ props }">
+										<v-icon v-if="$store.state.chat[chat.id] && $store.state.chat[chat.id].notifications" v-bind="props" class="bell" @click.stop="toggleNotifications(chat.id)">mdi-bell</v-icon>
+										<v-icon v-else v-bind="props" class="bell" @click.stop="toggleNotifications(chat.id)">mdi-bell-off</v-icon>
 									</template>
 									{{ $store.state.chat[chat.id] && $store.state.chat[chat.id].notifications ? $t('disable_notifications') : $t('enable_notifications') }}
-								</tooltip>
+								</v-tooltip>
 							</div>
 						</div>
 						<div class="category">
@@ -61,9 +61,9 @@
 				<div slot="content" class="content">
 					<div class="admin-warn" v-if="isAdmin">
 						<v-icon>mdi-alert-outline</v-icon>
-						<i18n path="admin_warn" tag="div">
+						<i18n-t keypath="admin_warn" tag="div">
 							<router-link slot="forum" to="/forum"><u>forum</u></router-link>
-						</i18n>
+						</i18n-t>
 					</div>
 					<chat v-if="newConversation" :new-farmer="newFarmer" :large="true" :new-conversation="newConversation" />
 					<chat v-else :id="currentID" :large="true" />

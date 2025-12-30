@@ -1,6 +1,6 @@
 <template lang="html">
-	<rich-tooltip-composition :id="compo.id" v-slot="{ on }" :bottom="true" :instant="true" class="rich">
-		<div class="composition" v-on="on">
+	<rich-tooltip-composition :id="compo.id" v-slot="{ props }" :bottom="true" :instant="true" class="rich">
+		<div class="composition" v-bind="props">
 			<emblem :team="{id: compo.team_id, emblem_changed: compo.emblem_changed}" />
 			<div class="name">
 				{{ compo.team_name }}

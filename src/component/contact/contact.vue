@@ -9,9 +9,9 @@
 
 				<a href="mailto:contact@leekwars.com" target="_blank">
 					<div class="card" v-ripple>
-						<i18n path="email">
+						<i18n-t keypath="email">
 							<span slot="email">contact@leekwars.com</span>
-						</i18n>
+						</i18n-t>
 					</div>
 				</a>
 			</div>

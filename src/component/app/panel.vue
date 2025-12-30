@@ -13,9 +13,9 @@
 				</div>
 			</div>
 		</div>
-		<div v-if="expanded" class="content">
+		<div v-if="expanded">
 			<slot v-if="$slots.content" name="content"></slot>
-			<slot v-else></slot>
+			<slot v-else class="content"></slot>
 		</div>
 	</div>
 </template>

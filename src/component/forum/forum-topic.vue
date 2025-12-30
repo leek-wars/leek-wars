@@ -39,8 +39,8 @@
 				<div v-else>
 					<div v-for="message in topic.messages" :id="'message-' + message.id" :key="message.id" class="message-wrapper">
 						<div v-if="!message.writer.deleted" class="profile">
-							<rich-tooltip-farmer :id="message.writer.id" v-slot="{ on }">
-								<div v-on="on">
+							<rich-tooltip-farmer :id="message.writer.id" v-slot="{ props }">
+								<div v-bind="props">
 									<router-link :to="'/farmer/' + message.writer.id" class="">
 										<avatar :farmer="message.writer" />
 									</router-link>
@@ -56,12 +56,12 @@
 								<div v-else-if="message.writer.color == 'moderator'" class="grade moderator">{{ $t('main.grade_moderator') }}</div>
 								<div v-else-if="message.writer.color == 'contributor'" class="grade contributor">{{ $t('main.grade_contributor') }}</div>
 								<lw-title v-if="message.writer.title.length" :title="message.writer.title" />
-								<i18n class="messages-count" path="main.n_messages" tag="div">
+								<i18n-t class="messages-count" keypath="main.n_messages" tag="div">
 									<b slot="0">{{ message.writer.messages }}</b>
-								</i18n>
-								<i18n class="trophy-count" path="main.n_trophies" tag="div">
+								</i18n-t>
+								<i18n-t class="trophy-count" keypath="main.n_trophies" tag="div">
 									<b slot="0">{{ message.writer.points }}</b>
-								</i18n>
+								</i18n-t>
 							</div>
 						</div>
 						<div v-else class="profile">
@@ -89,8 +89,8 @@
 								<div class="edit-wrapper">
 									<div v-if="!message.deleted" class="votes">
 										<v-tooltip :key="votes_up_names[message.id] ? message.id * 101 + votes_up_names[message.id].length : message.id * 101" :open-delay="0" :close-delay="0" :disabled="message.votes_up === 0" bottom @input="loadVotesUp(message)">
-											<template v-slot:activator="{ on }">
-												<div :class="{active: message.my_vote == 1, zero: message.votes_up === 0}" class="vote up" @click="voteUp(message)" v-on="on">
+											<template v-slot:activator="{ props }">
+												<div :class="{active: message.my_vote == 1, zero: message.votes_up === 0}" class="vote up" @click="voteUp(message)" v-bind="props">
 													<v-icon>mdi-thumb-up</v-icon>
 													<span class="counter">{{ message.votes_up }}</span>
 												</div>
@@ -101,8 +101,8 @@
 											</div>
 										</v-tooltip>
 										<v-tooltip :key="votes_down_names[message.id] ? message.id * 100 + votes_down_names[message.id].length : message.id" :open-delay="0" :close-delay="0" :disabled="message.votes_down === 0" bottom @input="loadVotesDown(message)">
-											<template v-slot:activator="{ on }">
-												<div :class="{active: message.my_vote == -1, zero: !message.votes_down}" class="vote down" @click="voteDown(message)" v-on="on">
+											<template v-slot:activator="{ props }">
+												<div :class="{active: message.my_vote == -1, zero: !message.votes_down}" class="vote down" @click="voteDown(message)" v-bind="props">
 													<v-icon>mdi-thumb-down</v-icon>
 													<span class="counter">{{ message.votes_down }}</span>
 												</div>
@@ -134,8 +134,8 @@
 									</div>
 
 									<v-menu v-if="$store.state.farmer && !message.deleted && !message.editing && ((message.writer.id === $store.state.farmer.id || category.moderator) || (category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'))" offset-y>
-										<template v-slot:activator="{ on }">
-											<v-btn text small icon color="grey" v-on="on">
+										<template v-slot:activator="{ props }">
+											<v-btn text small icon color="grey" v-bind="props">
 												<v-icon>mdi-dots-vertical</v-icon>
 											</v-btn>
 										</template>

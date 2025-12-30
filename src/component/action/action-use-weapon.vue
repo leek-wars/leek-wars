@@ -1,6 +1,6 @@
 <template>
 	<div :a="props.a">
-		<i18n path="fight.leek_shoot_cost">
+		<i18n-t keypath="fight.leek_shoot_cost">
 			<leek slot="leek" :leek="props.action.entity" />
 			<template v-slot:weapon>
 				<b>{{ parent.$t('weapon.' + props.action.item.name) }}</b>
@@ -8,7 +8,7 @@
 			<template v-slot:cost>
 				<b class="color-tp">{{ parent.$t('fight.n_tp', [props.action.item.cost]) }}</b>
 			</template>
-		</i18n>
+		</i18n-t>
 		<span v-if="props.action.params[2] === 2">... {{ parent.$t('effect.critical') }}</span>
 	</div>
 </template>

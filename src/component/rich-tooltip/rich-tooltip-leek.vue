@@ -1,7 +1,7 @@
 <template>
 	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'my-transition'" :open-on-hover="!locked" offset-y @input="open($event)">
-		<template v-slot:activator="{ on }">
-			<slot :on="on"></slot>
+		<template v-slot:activator="{ props }">
+			<slot v-bind="props"></slot>
 		</template>
 		<div :class="{expanded: expand_items}" class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
 			<loader v-if="!leek" :size="30" />
@@ -50,18 +50,18 @@
 					</table>
 					<div class="items">
 						<div class="weapons">
-							<rich-tooltip-item v-for="weapon in leek.weapons" :key="weapon.id" v-slot="{ on }" :item="LeekWars.items[weapon.template]" :bottom="true" :leek="leek" @input="setParent">
-								<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" class="weapon" v-on="on">
+							<rich-tooltip-item v-for="weapon in leek.weapons" :key="weapon.id" v-slot="{ props }" :item="LeekWars.items[weapon.template]" :bottom="true" :leek="leek" @input="setParent">
+								<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" class="weapon" v-bind="props">
 							</rich-tooltip-item>
 						</div>
 						<div class="chips">
-							<rich-tooltip-item v-for="chip in leek.chips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[chip.template]" :bottom="true" :leek="leek" @input="setParent">
-								<img :src="'/image/chip/' + CHIPS[chip.template].name + '.png'" class="chip" v-on="on">
+							<rich-tooltip-item v-for="chip in leek.chips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[chip.template]" :bottom="true" :leek="leek" @input="setParent">
+								<img :src="'/image/chip/' + CHIPS[chip.template].name + '.png'" class="chip" v-bind="props">
 							</rich-tooltip-item>
 						</div>
 						<div class="components">
-							<rich-tooltip-item v-for="component in leek.components.filter(c => c)" :key="component.id" v-slot="{ on }" :item="LeekWars.items[component.template]" :bottom="true" @input="setParent">
-								<img :src="'/image/component/' + LeekWars.items[component.template].name + '.png'" class="component" v-on="on">
+							<rich-tooltip-item v-for="component in leek.components.filter(c => c)" :key="component.id" v-slot="{ props }" :item="LeekWars.items[component.template]" :bottom="true" @input="setParent">
+								<img :src="'/image/component/' + LeekWars.items[component.template].name + '.png'" class="component" v-bind="props">
 							</rich-tooltip-item>
 						</div>
 					</div>

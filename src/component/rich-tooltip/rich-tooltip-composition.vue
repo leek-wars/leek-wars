@@ -1,7 +1,7 @@
 <template>
 	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :nudge-width="expand_leeks ? 500 : 200" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'my-transition'" :open-on-hover="!locked" offset-y @input="open($event)">
-		<template v-slot:activator="{ on }">
-			<slot :on="on"></slot>
+		<template v-slot:activator="{ props }">
+			<slot v-bind="props"></slot>
 		</template>
 		<div class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
 			<loader v-if="!composition" :size="30" />
@@ -39,9 +39,9 @@
 					</tr>
 					<tr v-for="leek in composition.leeks" :key="leek.id">
 						<td class="leek-name">
-							<rich-tooltip-leek :id="leek.id" v-slot="{ on }" :bottom="true" @input="setParent">
+							<rich-tooltip-leek :id="leek.id" v-slot="{ props }" :bottom="true" @input="setParent">
 								<router-link :to="'/leek/' + leek.id">
-									<span v-on="on">{{ leek.name }}</span>
+									<span v-bind="props">{{ leek.name }}</span>
 								</router-link>
 							</rich-tooltip-leek>
 						</td>

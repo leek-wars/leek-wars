@@ -25,10 +25,10 @@
 				<markdown :content="section" :pages="{}" mode="encyclopedia" />
 			</div>
 			<div class="operations">
-				<i18n v-if="fun.complexity == 1" path="doc.operations"><b slot="o">{{ fun.operations }}</b></i18n>
-				<i18n v-else path="doc.complexity">
+				<i18n-t v-if="fun.complexity == 1" keypath="doc.operations"><b slot="o">{{ fun.operations }}</b></i18n-t>
+				<i18n-t v-else keypath="doc.complexity">
 					<b slot="c">{{ LeekWars.complexities[fun.complexity] }}</b>
-				</i18n>
+				</i18n-t>
 			</div>
 			<div v-if="Object.values(new_fun.secondary).length" class="expand" @click.stop="expanded = !expanded">{{ $t('doc.details') }} ({{ Object.values(new_fun.secondary).length }})<v-icon v-if="expanded">mdi-chevron-up</v-icon><v-icon v-else>mdi-chevron-down</v-icon></div>
 			<div v-if="expanded" class="secondary">
@@ -56,10 +56,10 @@
 				</ul>
 			</div>
 			<div class="operations">
-				<i18n v-if="fun.complexity == 1" path="doc.operations"><b slot="o">{{ fun.operations }}</b></i18n>
-				<i18n v-else path="doc.complexity">
+				<i18n-t v-if="fun.complexity == 1" keypath="doc.operations"><b slot="o">{{ fun.operations }}</b></i18n-t>
+				<i18n-t v-else keypath="doc.complexity">
 					<b slot="c">{{ LeekWars.complexities[fun.complexity] }}</b>
-				</i18n>
+				</i18n-t>
 			</div>
 		</div>
 	</div>

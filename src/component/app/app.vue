@@ -113,9 +113,9 @@
 						<h2>Reverse-Engineering : LW101</h2>
 						<h4>Examen pratique</h4>
 						<br>
-						Organisé par <rich-tooltip-farmer :id="50023" v-slot="{ on }" :bottom="true">
+						Organisé par <rich-tooltip-farmer :id="50023" v-slot="{ props }" :bottom="true">
 							<avatar :farmer="{id: 50023, avatar_changed: 12}" />
-							<b v-on="on">Oimat</b>
+							<b v-bind="props">Oimat</b>
 						</rich-tooltip-farmer>
 						<div class="annonce-message">
 							<br>
@@ -205,7 +205,7 @@
 			this.$root.$on('connected', () => {
 				if (!this.$store.state.farmer.didactitiel_seen) {
 					LeekWars.show_didactitiel()
-					Vue.nextTick(() => {
+					nextTick(() => {
 						this.$store.commit('didactitiel-seen')
 					})
 				}
@@ -216,9 +216,9 @@
 			this.$root.$on('keyup', (event: KeyboardEvent) => {
 				if (event.keyCode === 72 && event.altKey && event.ctrlKey) {
 					this.docEverywhere = true
-					Vue.nextTick(() => {
+					nextTick(() => {
 						this.docEverywhereModel = true
-						Vue.nextTick(() => {
+						nextTick(() => {
 							if (this.$refs.doc) {
 								(this.$refs.doc as any).focus()
 							}
@@ -262,7 +262,7 @@
 
 		leekscriptConsole() {
 			this.showConsole = true
-			Vue.nextTick(() => {
+			nextTick(() => {
 				if (this.$refs.console) {
 					(this.$refs.console as any).open()
 				}
