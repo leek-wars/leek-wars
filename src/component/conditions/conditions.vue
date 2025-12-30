@@ -4,10 +4,10 @@
 			<h1>{{ $t('title') }}</h1>
 		</div>
 		<panel class="first">
-			<center>
+			<div class="center">
 				<h4>{{ $t('version_n', [LeekWars.cgu_version]) }}</h4>
 				<br>
-			</center>
+			</div>
 			<p>{{ $t('intro') }}</p>
 
 			<h2>{{ $t('acceptation') }}</h2>

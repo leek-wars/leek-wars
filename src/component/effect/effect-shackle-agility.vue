@@ -1,5 +1,5 @@
 
-<template functional>
+<template>
 	<i18n path="fight.leek_loose_x_turns" tag="div" :a="props.a">
 		<leek slot="leek" :leek="props.leek" />
 		<template v-slot:value>

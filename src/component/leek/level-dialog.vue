@@ -9,7 +9,7 @@
 				<br>
 				<div v-html="$t('301_message')"></div>
 				<br>
-				<center>
+				<div class="center">
 					<tooltip>
 						<template v-slot:activator="{ on }">
 							<img width="100" src="/image/potion/skin_gold.png" v-on="on">
@@ -23,7 +23,7 @@
 						</template>
 						<b>{{ $t('hat.crown') }}</b>
 					</tooltip>
-				</center>
+				</div>
 			</div>
 
 			<table class="gains-table">
@@ -45,7 +45,7 @@
 			</table>
 
 			<div v-if="levelData.weapons.length == 0 && levelData.chips.length == 0 && !levelData.new_chip && !levelData.new_weapon">
-				<center>{{ $t('no_news') }}</center>
+				<div class="center">{{ $t('no_news') }}</div>
 			</div>
 			<div v-else>
 				<div v-if="levelData.weapons.length > 0" class="new">

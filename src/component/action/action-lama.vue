@@ -1,5 +1,5 @@
 
-<template functional>
+<template>
 	<i18n tag="div" path="fight.lama" :a="props.a">
 		<leek slot="leek" :leek="props.action.entity" />
 		<template v-slot:cost>

@@ -248,7 +248,7 @@
 			</panel>
 		</div>
 		<panel v-if="farmer && farmer.trophies > 0" toggle="farmer/trophies">
-			<template slot="title">
+			<template #title>
 				<img src="/image/icon/trophy.png">{{ $t('trophies') }} <span v-if="farmer" class="trophy-count">({{ farmer.points | number }})</span>
 			</template>
 			<template slot="actions">
@@ -540,7 +540,7 @@
 
 		<popup v-if="farmer" v-model="renameDialog" :width="600">
 			<v-icon slot="icon">mdi-pencil-outline</v-icon>
-			<template slot="title">{{ $t('rename') }}</template>
+			<template #title>{{ $t('rename') }}</template>
 			{{ $t('rename_description') }}
 			<br>
 			<br>
@@ -550,16 +550,16 @@
 			{{ $t('rename_new_name') }} : <input v-model="renameName" type="text">
 			<br>
 			<br>
-			<center>
+			<div class="center">
 				<v-btn class="rename-button" @click="rename('habs')">{{ $t('rename_pay_habs') }} :&nbsp;<b>{{ rename_price_habs | number }}</b><span class="hab"></span></v-btn>
 				&nbsp;
 				<v-btn class="rename-button" @click="rename('crystals')">{{ $t('rename_pay_crystals') }} :&nbsp;<b>{{ rename_price_crystals }}</b> <span class="crystal"></span></v-btn>
-			</center>
+			</div>
 		</popup>
 
 		<popup v-if="farmer" v-model="trophyDialog" :width="600">
 			<v-icon slot="icon">mdi-trophy-outline</v-icon>
-			<template slot="title">Donner un trophée</template>
+			<template #title>Donner un trophée</template>
 
 			<div>
 				ID de trophée : <input v-model="giveTrophyID" type="number">

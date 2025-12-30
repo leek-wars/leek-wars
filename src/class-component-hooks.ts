@@ -1,8 +1,4 @@
-import { Component } from 'vue-property-decorator'
-
-// Register the router hooks with their names
-Component.registerHooks([
-	'beforeRouteEnter',
-	'beforeRouteLeave',
-	'beforeRouteUpdate' // for vue-router 2.2+
-])
+// Vue 3 with vue-class-component automatically recognizes router hooks
+// No need to register them manually anymore
+// The hooks beforeRouteEnter, beforeRouteLeave, and beforeRouteUpdate
+// are automatically detected when used in class components

@@ -14,7 +14,7 @@
 	import SearchBar from './search-bar.vue'
 	import TutorialMenu from '../tutorial/tutorial-menu.vue'
 	import TutorialProgress from '../tutorial/tutorial-progress.vue'
-	import { VBtn, VCheckbox } from 'vuetify/lib/components'
+	import { VBtn, VCheckbox } from 'vuetify/components'
 	import { tutorial_items } from '../tutorial/tutorial-items'
 	import { store } from '@/model/store'
 	import { i18n } from '@/model/i18n'

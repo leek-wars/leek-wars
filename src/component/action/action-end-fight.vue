@@ -1,4 +1,4 @@
-<template functional>
+<template>
 	<div :a="props.a">{{ parent.$t('fight.end_of_fight') }}</div>
 </template>
 

@@ -1,4 +1,4 @@
-<template functional>
+<template>
 	<div class="turn" :a="props.a">
 		<div :id="'turn-' + (props.action.params[1] || 1)" class="black">
 			<span class="label" @click="parent.goToTurn(props.action.params[1] || 1)">{{ parent.$t('fight.turn_n', [props.action.params[1] || 1]) }}</span>

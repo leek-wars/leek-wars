@@ -15,7 +15,7 @@
 		<div class="container">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column7 split-list">
 				<panel>
-					<template slot="title">Derniers signalements ({{ faults ? faults.length : '...' }})</template>
+					<template #title>Derniers signalements ({{ faults ? faults.length : '...' }})</template>
 					<div slot="content" class="faults">
 						<loader v-if="!faults" />
 						<div v-else>
@@ -129,10 +129,10 @@
 						<div class="title">Message (facultatif)</div>
 						<textarea v-model="message" class="warning-message" placeholder="Précisions sur l'avertissement, contexte etc."></textarea>
 					</div>
-					<center class="buttons">
+					<div class="center" class="buttons">
 						<v-btn color="primary" @click="archiveReporting"><v-icon>mdi-thumb-up-outline</v-icon> Archiver</v-btn>
 						<v-btn color="error" @click="warningConfirmDialog = true"><v-icon>mdi-gavel</v-icon> Sanctionner</v-btn>
-					</center>
+					</div>
 				</panel>
 			</div>
 		</div>

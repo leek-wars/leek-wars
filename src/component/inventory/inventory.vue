@@ -1,6 +1,6 @@
 <template>
 	<panel :icon="LeekWars.mobile ? '' : 'mdi-treasure-chest'" class="inventory-panel">
-		<template slot="title">
+		<template #title>
 			<div><span v-if="!LeekWars.mobile">{{ $t('main.inventory') }}</span> ({{ filtered_inventory.length }}<span v-if="filter !== ItemType.ALL"> / {{ inventory.length }}</span>)</div>
 			<div class="categories">
 
@@ -80,7 +80,7 @@
 
 			<popup v-model="retrieveDialog" :width="400">
 				<v-icon slot="title">mdi-gift-outline</v-icon>
-				<template slot="title">Objets obtenus</template>
+				<template #title>Objets obtenus</template>
 				<div class="inventory">
 					<div v-for="item in retrieveItems" :key="item.id" class="cell active" :class="'rarity-border-' + LeekWars.items[item.template].rarity">
 						<rich-tooltip-item v-slot="{ on }" :bottom="true" :item="LeekWars.items[item.template]" :quantity="item.quantity" :inventory="true">

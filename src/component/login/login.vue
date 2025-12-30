@@ -14,7 +14,7 @@
 						<br><br>
 						<v-checkbox v-model="form.keep_connected" :label="$t('keep_connected')" hide-details />
 						<br><br>
-						<center><v-btn large color="primary" type="submit">{{ $t('connection') }}</v-btn></center>
+						<div class="center"><v-btn large color="primary" type="submit">{{ $t('connection') }}</v-btn></div>
 						<br>
 						<div v-if="error" class="error">
 							<span v-if="error.error">{{ $t('error_' + error.error) }}</span>

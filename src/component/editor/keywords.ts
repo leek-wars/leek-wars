@@ -2,10 +2,17 @@ import { CHIPS } from '@/model/chips'
 import { CONSTANTS } from '@/model/constants'
 import { FUNCTIONS } from '@/model/functions'
 import { Keyword, KeywordKind } from '@/model/keyword'
-import { LeekWars } from "@/model/leekwars"
 
-const keywords: Keyword[] = []
-export const keywordsLSOnly: Keyword[] = []
+let keywords: Keyword[] = []
+let keywordsLSOnly: Keyword[] = []
+let initialized = false
+
+function initializeKeywords() {
+	if (initialized) return
+	initialized = true
+
+	// Import LeekWars only when needed
+	const { LeekWars } = require("@/model/leekwars")
 
 for (const fun of FUNCTIONS) {
 
@@ -89,5 +96,16 @@ for (const constant of CONSTANTS) {
 		keywordsLSOnly.push(keyword)
 	}
 }
+}
 
-export { keywords }
+function getKeywords() {
+	initializeKeywords()
+	return keywords
+}
+
+function getKeywordsLSOnly() {
+	initializeKeywords()
+	return keywordsLSOnly
+}
+
+export { getKeywords as keywords, getKeywordsLSOnly as keywordsLSOnly }

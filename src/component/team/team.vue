@@ -106,12 +106,12 @@
 					{{ $t('ratio', [team.ratio]) }}
 				</tooltip>
 
-				<center v-if="team && $store.state.farmer && !is_member && $store.state.farmer.team == null">
+				<div class="center" v-if="team && $store.state.farmer && !is_member && $store.state.farmer.team == null">
 					<br>
 					<v-btn v-if="team.candidacy" @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</v-btn>
 					<v-btn v-if="team.opened && !team.candidacy" @click="sendCandidacy">{{ $t('join_team') }}</v-btn>
 					<i v-else-if="!team.opened">{{ $t('closed_team') }}</i>
-				</center>
+				</div>
 			</panel>
 
 			<panel class="description">
@@ -141,7 +141,7 @@
 		</panel>
 
 		<panel v-if="team && is_member && team.candidacies && team.candidacies.length > 0">
-			<template slot="title">{{ $t('candidacies') }} ({{ team.candidacies.length }})</template>
+			<template #title>{{ $t('candidacies') }} ({{ team.candidacies.length }})</template>
 			<div slot="content" class="content candidacies">
 				<div v-for="candidacy in team.candidacies" :key="candidacy.id" class="farmer">
 					<rich-tooltip-farmer :id="candidacy.farmer.id" v-slot="{ on }">
@@ -220,7 +220,7 @@
 		</panel>
 
 		<panel v-if="team" icon="mdi-podium">
-			<template slot="title">{{ $t('rankings') }}</template>
+			<template #title>{{ $t('rankings') }}</template>
 			<div class="container grid last rankings">
 				<div class="column4">
 					<h4>{{ $t('main.leeks') }}</h4>
@@ -309,7 +309,7 @@
 
 		<div v-if="is_member && team && team.compositions" class="compos">
 			<panel v-for="composition in team.compositions" :key="composition.id" :class="{'in-tournament': composition.tournament.registered}" :toggle="'team/compo/toggle/' + composition.id" class="compo">
-				<template slot="title">
+				<template #title>
 					<rich-tooltip-composition :id="composition.id" v-slot="{ on }">
 						<div v-on="on">{{ composition.name }}</div>
 					</rich-tooltip-composition>
@@ -364,7 +364,7 @@
 		</div>
 
 		<panel v-if="is_member && team && team.unengaged_leeks" class="compo" toggle="team/no-compo">
-			<template slot="title">{{ $t('unsorted_leeks') }}</template>
+			<template #title>{{ $t('unsorted_leeks') }}</template>
 
 			<div slot="content" :class="{dashed: draggedLeek != null}" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(null, $event)">
 				<div v-if="team.unengaged_leeks.length == 0" class="empty">{{ $t('empty_compo') }}</div>

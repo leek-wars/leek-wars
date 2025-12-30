@@ -46,13 +46,13 @@
 			</panel>
 
 		</div>
-		<center>
+		<div class="center">
 			<div class="advanced-button" @click="advanced = !advanced">
 				<span>Avancé</span>
 				<v-icon v-if="advanced">mdi-chevron-up</v-icon>
 				<v-icon v-else>mdi-chevron-down</v-icon>
 			</div>
-		</center>
+		</div>
 
 		<div v-if="advanced" class="container grid large advanced">
 

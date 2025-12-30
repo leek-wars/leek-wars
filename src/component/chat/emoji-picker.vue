@@ -1,16 +1,17 @@
 <template>
-	<v-menu ref="menu" v-model="shown" :close-on-content-click="false" :nudge-width="width" :left="true" :nudge-top="0" :min-width="width" :max-width="width" top offset-y>
-		<template v-slot:activator="{ on }">
-			<div v-ripple class="chat-input-emoji" v-on="on">
+	<v-menu ref="menu" v-model="shown" :close-on-content-click="false" :min-width="width" :max-width="width" location="top" offset-y>
+		<template v-slot:activator="{ props }">
+			<div v-ripple class="chat-input-emoji" v-bind="props">
 				<div :class="{'emoji-font': !LeekWars.nativeEmojis}"><slot></slot></div>
 			</div>
 		</template>
 		<v-tabs :key="categories.length" class="tabs" grow :show-arrows="false">
-			<v-tabs-slider class="indicator" />
-			<v-tab v-for="(category, c) in categories" :key="c" :href="'#tab-' + c" class="tab">
+			<v-tab v-for="(category, c) in categories" :key="c" :value="'tab-' + c" class="tab">
 				<span v-emojis>{{ category.icon }}</span>
 			</v-tab>
-			<v-tab-item v-for="(category, c) in categories" :key="c" v-autostopscroll :value="'tab-' + c" class="content">
+		</v-tabs>
+		<v-window v-model="activeTab">
+			<v-window-item v-for="(category, c) in categories" :key="c" v-autostopscroll :value="'tab-' + c" class="content">
 				<div class="grid">
 					<template v-for="(emoji, e) in category.emojis">
 						<template v-if="c == 0 && e < 30">
@@ -19,8 +20,8 @@
 						<div v-else :key="e" :class="{'emoji-font': !LeekWars.nativeEmojis}" class="emoji" @click="pick(emoji)">{{ emoji }}</div>
 					</template>
 				</div>
-			</v-tab-item>
-		</v-tabs>
+			</v-window-item>
+		</v-window>
 	</v-menu>
 </template>
 
@@ -36,7 +37,9 @@
 
 		@Prop() closeOnSelected!: boolean
 		@Prop() classic!: boolean
+		@Prop({ default: true }) left!: boolean
 		shown: boolean = false
+		activeTab: string = 'tab-0'
 
 		pick(emoji: string) {
 			this.$emit('pick', emoji.replace('&lt;', '<'))

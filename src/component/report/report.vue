@@ -63,7 +63,7 @@
 					</div>
 				</div>
 
-				<center class="buttons">
+				<div class="center" class="buttons">
 					<router-link :to="'/fight/' + fight.id">
 						<v-btn>
 							<v-icon>mdi-replay</v-icon>
@@ -111,7 +111,7 @@
 							</router-link>
 						</span>
 					</span>
-				</center>
+				</div>
 
 				<div class="seed"><v-icon>mdi-seed</v-icon>{{ $t('seed', [fight.seed]) }}</div>
 
@@ -219,7 +219,7 @@
 		</panel>
 
 		<panel v-if="hasErrWarn" id="errors" class="warnings-error" toggle="report/warnings-errors" icon="mdi-alert">
-			<template slot="title">{{ $t('errors_warnings') }} ({{ errors.length + warnings.length }})</template>
+			<template #title>{{ $t('errors_warnings') }} ({{ errors.length + warnings.length }})</template>
 			<div class="logs">
 				<div class="turn">
 					<div id="turn-0" class="black">

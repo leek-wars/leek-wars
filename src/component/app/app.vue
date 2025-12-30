@@ -10,7 +10,7 @@
 
 				<v-icon class="console-button" @click="leekscriptConsole">mdi-console</v-icon>
 
-				<console-window v-if="console" ref="console" @close="console = false" />
+				<console-window v-if="showConsole" ref="console" @close="showConsole = false" />
 
 				<lw-bar v-if="LeekWars.mobile" />
 
@@ -56,7 +56,7 @@
 				<changelog-dialog v-model="changelogDialog" :changelog="changelog" />
 
 				<popup v-model="LeekWars.messagePopup" :width="500">
-					<template slot="title">
+					<template #title>
 						<v-icon>mdi-information-outline</v-icon>
 						{{ LeekWars.message ? $i18n.t(LeekWars.message.title) : '...' }}
 					</template>
@@ -64,7 +64,7 @@
 				</popup>
 
 				<!-- <popup v-model="annonce" :width="800">
-					<template slot="title"><v-icon>mdi-bullhorn-outline</v-icon> Annonce !</template>
+					<template #title><v-icon>mdi-bullhorn-outline</v-icon> Annonce !</template>
 					<div class="annonce">
 						<h2>Concours pour le lancement des Boss</h2>
 						<div class="annonce-message">
@@ -87,7 +87,7 @@
 				</popup> -->
 
 				<!-- <popup v-model="annonce" :width="800">
-					<template slot="title"><v-icon>mdi-bullhorn-outline</v-icon> Annonce !</template>
+					<template #title><v-icon>mdi-bullhorn-outline</v-icon> Annonce !</template>
 					<div class="annonce">
 						<h2>Lancement de la boutique Leek Wars</h2>
 						<div class="annonce-message">
@@ -108,7 +108,7 @@
 
 				<!--
 				<popup v-model="annonce" :width="500">
-					<template slot="title"><v-icon>mdi-bullhorn-outline</v-icon> Annonce de concours !</template>
+					<template #title><v-icon>mdi-bullhorn-outline</v-icon> Annonce de concours !</template>
 					<div class="annonce">
 						<h2>Reverse-Engineering : LW101</h2>
 						<h4>Examen pratique</h4>
@@ -179,7 +179,7 @@
 		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Squares, Didactitiel, Chats, 'mobile-br': MobileBR, ChangelogVersion, ChangelogDialog, Documentation, DidactitielNew, ConsoleWindow }
 	})
 	export default class App extends Vue {
-		console: boolean = false
+		showConsole: boolean = false
 		changelog: any = null
 		changelogDialog: boolean = false
 		konami: string = ''
@@ -261,7 +261,7 @@
 		}
 
 		leekscriptConsole() {
-			this.console = true
+			this.showConsole = true
 			Vue.nextTick(() => {
 				if (this.$refs.console) {
 					(this.$refs.console as any).open()

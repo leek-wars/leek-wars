@@ -1,9 +1,9 @@
 import { locale, messages } from '@/locale'
-import Vue, { Component } from 'vue'
-import VueI18n from 'vue-i18n'
+import { Component } from 'vue'
+import { createI18n } from 'vue-i18n'
 
-Vue.use(VueI18n)
-const i18n = new VueI18n({
+const i18n = createI18n({
+	legacy: true, // Use legacy mode for compatibility
 	locale,
 	messages: {[locale]: messages},
 	silentTranslationWarn: true,
@@ -14,19 +14,19 @@ const mixins = [{
 	beforeCreate() {
 		// Reload translations because in case of hot reloading, they are lost
 		// Missing messages or messages for the current locale
-		if (!(this as any).$options.i18n.messages || !(this as any).$options.i18n.messages[i18n.locale]) {
+		if (!(this as any).$options.i18n.messages || !(this as any).$options.i18n.messages[i18n.global.locale]) {
 			// console.log("reload translations...")
-			loadInstanceTranslations(i18n.locale, this)
+			loadInstanceTranslations(i18n.global.locale, this)
 		}
 	},
 	watch: {
 		'$i18n.locale'() {
 			const name = (this as any).$options.name!
 			// console.log("Reload translations of component", name)
-			const newLocale = i18n.locale
+			const newLocale = i18n.global.locale
 			const folder = name.startsWith('signup-') ? 'signup' : name
 			return import(/* webpackChunkName: "locale-[request]" */ `!json-loader!@/component/${folder}/${name}.${newLocale}.i18n`).then((module: any) => {
-				i18n.mergeLocaleMessage(newLocale, { [name]: module.default })
+				i18n.global.mergeLocaleMessage(newLocale, { [name]: module.default })
 				const instanceI18n = (this as any).$i18n
 				instanceI18n.setLocaleMessage(newLocale, module.default)
 			})
@@ -35,7 +35,7 @@ const mixins = [{
 }]
 
 function setI18nLanguage(lang: string) {
-	i18n.locale = lang
+	i18n.global.locale = lang
 	const html = document.querySelector('html')
 	if (html) {
 		html.setAttribute('lang', lang)
@@ -50,7 +50,7 @@ function loadLanguageAsync(vue: any, newLocale: string) {
 	}
 	if (!loadedLanguages.includes(newLocale)) {
 		return import(/* webpackChunkName: "locale-[request]" */ `@/lang/locale/${newLocale}`).then(module => {
-			i18n.mergeLocaleMessage(newLocale, module.translations)
+			i18n.global.mergeLocaleMessage(newLocale, module.translations)
 			loadedLanguages.push(newLocale)
 			// vue.onLanguageLoaded()
 			return setI18nLanguage(newLocale)
@@ -107,7 +107,7 @@ function loadComponentLanguage(newLocale: string, component: any, instance: Comp
 			// return
 		// }
 		// console.log("loadComponentLanguage merge", { [name]: module })
-		i18n.mergeLocaleMessage(newLocale, { [name]: module })
+		i18n.global.mergeLocaleMessage(newLocale, { [name]: module })
 		if (instance && (instance as any).$i18n) {
 			const instanceI18n = (instance as any).$i18n
 			instanceI18n.setLocaleMessage(newLocale, module)

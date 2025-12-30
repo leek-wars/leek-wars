@@ -1,4 +1,4 @@
-<template functional>
+<template>
 	<i18n path="fight.leek_take_weapon" tag="div" :a="props.a">
 		<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
 		<template v-slot:weapon>

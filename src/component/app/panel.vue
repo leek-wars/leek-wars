@@ -13,11 +13,10 @@
 				</div>
 			</div>
 		</div>
-		<slot v-if="expanded" name="content">
-			<div v-if="expanded" class="content">
-				<slot></slot>
-			</div>
-		</slot>
+		<div v-if="expanded" class="content">
+			<slot v-if="$slots.content" name="content"></slot>
+			<slot v-else></slot>
+		</div>
 	</div>
 </template>
 
@@ -32,7 +31,7 @@
 		expanded: boolean = true
 
 		get hasTitle() {
-			return this.title || 'title' in this.$slots
+			return this.title || !!this.$slots.title
 		}
 		created() {
 			if (this.toggle) {

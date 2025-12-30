@@ -75,10 +75,10 @@
 							<td><div class="space"></div></td>
 						</tr>
 					</table>
-					<center>
+					<div class="center">
 						<v-btn v-if="signupMethod === 1" large color="primary" type="submit">{{ $t('verify') }}</v-btn>
 						<v-btn v-else color="black" type="submit" class="gh-button"> <img src="/image/github_black.png"> {{ $t('verify_gh') }}</v-btn>
-					</center>
+					</div>
 				</form>
 			</div>
 		</panel>
@@ -138,7 +138,7 @@
 					<input v-model="newPassword1" name="new_password1" type="password" required> <br>
 					<h4>{{ $t('confirm_password') }}</h4>
 					<input v-model="newPassword2" name="new_password2" type="password" required> <br>
-					<center><v-btn type="submit">{{ $t('change') }}</v-btn></center>
+					<div class="center"><v-btn type="submit">{{ $t('change') }}</v-btn></div>
 				</form>
 
 				<div v-if="$store.state.farmer?.verified" v-ripple class="list-item card" @click="viewChangeEmail = !viewChangeEmail">
@@ -202,13 +202,13 @@
 			</panel>
 		</div>
 
-		<center>
+		<div class="center">
 			<div class="advanced-button" @click="advanced = !advanced">
 				{{ $t('advanced') }}
 				<v-icon v-if="advanced">mdi-chevron-up</v-icon>
 				<v-icon v-else>mdi-chevron-down</v-icon>
 			</div>
-		</center>
+		</div>
 
 		<div v-if="advanced" class="container grid large">
 			<panel :title="$t('empty_localstorage')" class="last" icon="mdi-eraser">

@@ -175,10 +175,10 @@
 				<div v-if="topic && !topic.locked && $store.state.farmer && $store.state.farmer.verified" class="editor">
 					<h4>{{ $t('answer') }}</h4>
 					<textarea v-model="newMessage" class="response card" @keyup="updateDraft"></textarea>
-					<center>
+					<div class="center">
 						<div v-if="page != pages" class="warning"><v-icon>mdi-alert</v-icon> {{ $t('not_last_page') }}</div>
 						<v-btn color="primary" class="send" @click="send"><v-icon>mdi-send-outline</v-icon> {{ $t('send') }}</v-btn>
-					</center>
+					</div>
 					<formatting-rules />
 					<br>
 				</div>

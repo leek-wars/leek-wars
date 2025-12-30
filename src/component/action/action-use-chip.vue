@@ -1,4 +1,4 @@
-<template functional>
+<template>
 	<div :a="props.a">
 		<i18n path="fight.leek_cast_cost">
 			<leek slot="leek" :leek="props.action.entity" />

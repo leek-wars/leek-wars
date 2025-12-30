@@ -1,5 +1,5 @@
 
-<template functional>
+<template>
 	<i18n tag="div" path="fight.open_chest" :a="props.a">
 		<leek slot="entity" :leek="parent.leeks[props.action.params[1]]" />
 		<leek slot="chest" :leek="parent.leeks[props.action.params[2]]" />

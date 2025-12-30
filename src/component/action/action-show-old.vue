@@ -1,5 +1,5 @@
 
-<template functional>
+<template>
 	<i18n tag="div" path="fight.leek_show_cell" :a="props.a">
 		<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
 		<template v-slot:cell>

@@ -97,11 +97,11 @@
 					<i18n class="cgu" tag="div" path="conditions">
 						<router-link slot="link" to="/conditions">{{ $t('conditions_name') }}</router-link>
 					</i18n>
-					<center>
+					<div class="center">
 						<v-btn v-if="fastRegister" large color="primary" type="submit">{{ $t('play_button') }}</v-btn>
 						<v-btn v-else-if="signupMethod === 1" large color="primary" type="submit">{{ $t('signup') }}</v-btn>
 						<v-btn v-else color="black" type="submit" class="gh-button"> <img src="/image/github_black.png"> {{ $t('signup_gh') }}</v-btn>
-					</center>
+					</div>
 				</form>
 			</panel>
 		</div>
@@ -147,9 +147,9 @@
 						<div>
 							<h2>{{ $t('groups_title') }}</h2>
 							<div>{{ $t('groups_desc') }}</div>
-							<center>
+							<div class="center">
 								<v-btn>{{ $t('groups_button') }}</v-btn>
-							</center>
+							</div>
 						</div>
 					</div>
 				</router-link>
@@ -252,9 +252,9 @@
 				<div class="column4">
 					<img width="100%" src="/image/shop/shop.webp">
 					<br><br>
-					<center>
+					<div class="center">
 						<v-btn>{{ $t('shop_desc') }}</v-btn>
-					</center>
+					</div>
 				</div>
 			</a>
 		</panel>
@@ -301,7 +301,7 @@
 
 		<h1>{{ $t('last_update') }}</h1>
 		<panel v-if="last_version" icon="mdi-star-outline">
-			<template slot="title">{{ $t('changelog.version_n', [last_version.version_name]) }} ({{ last_version.date | date }}) {{ translations[last_version.version] && translations[last_version.version].title ? ' — ' + translations[last_version.version].title : '' }}</template>
+			<template #title>{{ $t('changelog.version_n', [last_version.version_name]) }} ({{ last_version.date | date }}) {{ translations[last_version.version] && translations[last_version.version].title ? ' — ' + translations[last_version.version].title : '' }}</template>
 			<div slot="content">
 				<changelog-version :version="last_version" />
 			</div>

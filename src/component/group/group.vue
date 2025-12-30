@@ -86,7 +86,7 @@
 
 
 		<panel v-if="group" toggle="group/members" icon="mdi-account-group">
-			<template slot="title">{{ $t('members') }} ({{ group.members.length }})</template>
+			<template #title>{{ $t('members') }} ({{ group.members.length }})</template>
 			<div slot="actions">
 				<div v-if="group.is_supervisor" class="button" @click="giveMoneyDialog = true; giveMoneyTarget = null">
 					<v-icon>mdi-hand-coin-outline</v-icon>
@@ -272,7 +272,7 @@
 
 		<popup v-if="group" v-model="membersDialog" :width="1000" :full="true">
 			<v-icon slot="icon">mdi-account-group</v-icon>
-			<template slot="title">
+			<template #title>
 				{{ $t('members') }} ({{ group.members.length }})
 			</template>
 			<v-data-table
@@ -362,7 +362,7 @@
 
 		<popup v-if="group" v-model="weaponsDialog" :width="800">
 			<img slot="icon" src="/image/icon/garden.png">
-			<template slot="title">
+			<template #title>
 				{{ $t('weapons_of', [group.name]) }}
 				<span class="weapon-count">[{{ group.weapons.length }}/{{ max_weapons }}]</span>
 			</template>
@@ -394,7 +394,7 @@
 
 		<popup v-if="group" v-model="chipsDialog" :width="800">
 			<v-icon slot="icon">mdi-chip</v-icon>
-			<template slot="title">{{ $t('chips_of', [group.name]) }} <span class="chip-count">[{{ group.chips.length }}/{{ group.ram }}]</span></template>
+			<template #title>{{ $t('chips_of', [group.name]) }} <span class="chip-count">[{{ group.chips.length }}/{{ group.ram }}]</span></template>
 			<div class="chips-dialog">
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'farmer'}" class="leek-chips" @dragover="dragOver" @drop="chipsDrop('leek', $event)">
 					<rich-tooltip-item v-for="chip in orderedChips" :key="chip" v-slot="{ on }" :item="LeekWars.items[chip]" :bottom="true" :nodge="true">

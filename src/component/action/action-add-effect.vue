@@ -1,5 +1,5 @@
 
-<template functional>
+<template>
 	<component :is="parent.EffectComponents[props.action.params[5]]" :leek="parent.leeks[props.action.params[4]]" :value="props.action.params[6]" :turns="props.action.params[7]" :a="props.a" />
 </template>
 

@@ -31,12 +31,12 @@
 					</div>
 
 					<div class="stats">
-						<center>
+						<div class="center">
 							<talent :id="entity.id" :talent="entity.talent" :category="type" />
 							<div v-if="type === 'leek' || type === 'farmer'" class="talent-more">
 								({{ entity.talent_more >= 0 ? '+' + entity.talent_more : entity.talent_more }})
 							</div>
-						</center>
+						</div>
 						<table>
 							<tr>
 								<td class="big">{{ victories }}</td>
