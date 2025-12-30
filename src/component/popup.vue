@@ -1,5 +1,5 @@
 <template lang="html">
-	<v-dialog :value="value" :max-width="width" :persistent="persistent" @input="$emit('input', $event)">
+	<v-dialog :model-value="value" :max-width="width" :persistent="persistent" @update:model-value="$emit('input', $event)">
 		<template v-if="content_created">
 			<div class="title">
 				<slot name="icon"></slot>
@@ -15,7 +15,7 @@
 			<div :class="{full: full}" class="content">
 				<slot></slot>
 			</div>
-			<div v-if="!!$slots['actions']" class="actions">
+			<div v-if="hasActionsSlot" class="actions">
 				<slot name="actions"></slot>
 			</div>
 		</template>
@@ -41,6 +41,9 @@
 					this.content_created = true
 				}
 			})
+		}
+		get hasActionsSlot() {
+			return !!this.$slots.actions
 		}
 		hasIcon() {
 			return !!this.$slots.icon

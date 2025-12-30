@@ -1,5 +1,5 @@
 <template lang="html">
-	<span v-ripple class="badge" :class="{first: ranking === 1, second: ranking === 2, third: ranking === 3, ten: ranking <= 10, cent: ranking <= 100}" v-on="on" @click.stop="LeekWars.goToRanking(category, 'talent', id)">
+	<span v-ripple class="badge" :class="{first: ranking === 1, second: ranking === 2, third: ranking === 3, ten: ranking <= 10, cent: ranking <= 100}" v-bind="props" @click.stop="LeekWars.goToRanking(category, 'talent', id)">
 		<v-icon>mdi-chevron-triple-up</v-icon>
 		<span class="value">{{ ranking }}</span>
 	</span>

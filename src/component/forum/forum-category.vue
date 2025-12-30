@@ -6,8 +6,8 @@
 					<breadcrumb :items="breadcrumb_items" :raw="true" />
 				</h1>
 				<v-menu offset-y>
-					<template v-slot:activator="{ on }">
-						<div class="forum-language info" v-on="on">
+					<template v-slot:activator="{ props }">
+						<div class="forum-language info" v-bind="props">
 							<flag v-for="l in activeLanguages" :key="l" :code="LeekWars.languages[l].country" :clickable="false" />
 							<img width="10" src="/image/selector.png">
 						</div>
@@ -73,7 +73,7 @@
 								<flag v-if="activeLanguages.length >= 2 && topic.lang" :code="LeekWars.languages[topic.lang].country" :clickable="false" />
 							</span>
 							<div class="description grey">
-								<i18n path="by_x_the_d">
+								<i18n-t keypath="by_x_the_d">
 									<router-link v-if="topic.author.name!=''" slot="farmer" :to="'/farmer/' + topic.author.id">
 										<rich-tooltip-farmer :id="topic.author.id">
 											{{ topic.author.name }}
@@ -81,7 +81,7 @@
 									</router-link>
 									<span v-else slot="farmer" class="farmer deleted">{{ $t('main.farmer') }}@{{ topic.author.id }}</span>
 									<span slot="date">{{ topic.date | date }}</span>
-								</i18n>
+								</i18n-t>
 								<div v-if="topic.votes_up !== 0 || topic.votes_down !== 0" class="votes">
 									<div :class="{zero: topic.votes_up === 0}" class="vote up">
 										<v-icon>mdi-thumb-up</v-icon>
@@ -95,21 +95,21 @@
 							</div>
 							<div v-if="LeekWars.mobile" class="description grey">
 								<span class="messages"><v-icon>mdi-message-outline</v-icon> {{ topic.messages }} • </span>
-								<i18n v-if="LeekWars.mobile" tag="span" path="last_message">
+								<i18n-t v-if="LeekWars.mobile" tag="span" keypath="last_message">
 									<span slot="date">{{ LeekWars.formatDuration(topic.last_message_date) }}</span>
 									<router-link slot="farmer" :to="'/forum/category-' + topic.category + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id">
 										<span v-if="topic.last_message_writer!=''">{{ topic.last_message_writer }}</span>
 										<span v-else class="farmer deleted">{{ $t('main.farmer') }}@{{ topic.last_message_writer_id }} </span>
 										►
 									</router-link>
-								</i18n>
+								</i18n-t>
 							</div>
 						</div>
 						<div v-if="!LeekWars.mobile" class="num-messages">{{ topic.messages }}</div>
 						<div v-if="!LeekWars.mobile" class="last-message grey">
 							<div>
 								<span>{{ LeekWars.formatDuration(topic.last_message_date) }}</span>
-								<i18n tag="div" path="last_by_x">
+								<i18n-t tag="div" keypath="last_by_x">
 									<router-link slot="author" :to="'/forum/category-' + topic.category + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id">
 										<rich-tooltip-farmer v-if="topic.last_message_writer!=''" :id="topic.last_message_writer_id">
 											{{ topic.last_message_writer }}
@@ -117,7 +117,7 @@
 										<span v-else class="farmer deleted">{{ $t('main.farmer') }}@{{ topic.last_message_writer_id }} </span>
 										►
 									</router-link>
-								</i18n>
+								</i18n-t>
 							</div>
 						</div>
 					</div>

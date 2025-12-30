@@ -51,8 +51,8 @@
 		<panel icon="mdi-script-outline" :title="'Schémas (' + (filtered_schemes ? filtered_schemes.length : '...') + '/' + (schemes ? schemes.length : '...') + ')'">
 			<template slot="actions">
 				<v-menu offset-y>
-					<template v-slot:activator="{ on }">
-						<div class="button flat" v-on="on">
+					<template v-slot:activator="{ props }">
+						<div class="button flat" v-bind="props">
 							<v-icon>mdi-sort</v-icon>
 						</div>
 					</template>
@@ -76,8 +76,8 @@
 					</v-list>
 				</v-menu>
 				<v-menu offset-y>
-					<template v-slot:activator="{ on }">
-						<div class="button flat" v-on="on">
+					<template v-slot:activator="{ props }">
+						<div class="button flat" v-bind="props">
 							<v-icon>mdi-filter-outline</v-icon>
 						</div>
 					</template>

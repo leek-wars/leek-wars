@@ -20,7 +20,7 @@ import { LeekWars } from '@/model/leekwars'
 import '@/model/serviceworker'
 import { store } from "@/model/store"
 import router from '@/router'
-import { createApp } from 'vue'
+import { createApp, nextTick } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
 import Vue, { configureCompat } from '@vue/compat'
 import { Latex } from './latex'
@@ -44,10 +44,6 @@ const vuetify = createVuetify({
 		defaultTheme: 'dark'
 	}
 })
-
-// TODO: Fix vtooltip-fast for Vuetify 3
-// import tooltip from '@/vtooltip-fast'
-// Vue.component('tooltip', tooltip)
 
 // TODO: Fix transitions for Vuetify 3
 // import { createSimpleTransition } from 'vuetify/lib/components/transitions/createTransition'
@@ -89,7 +85,7 @@ Vue.component('loader', LWLoader)
 Vue.component('flag', Flag)
 
 Vue.directive('autostopscroll', {
-	inserted: (el, binding) => {
+	mounted: (el, binding) => {
 		const top = binding.value === 'top' || !binding.value
 		const bottom = binding.value === 'bottom' || !binding.value
 		el.addEventListener("wheel", (e: WheelEvent) => {
@@ -101,23 +97,31 @@ Vue.directive('autostopscroll', {
 })
 
 Vue.directive('code', {
-	inserted: (el) => {
+	mounted: (el) => {
 		el.querySelectorAll('code').forEach((c) => {
-			new Code({ propsData: { code: (c as HTMLElement).innerText }, parent: vueMain }).$mount(c)
+			const codeApp = createApp(Code, { code: (c as HTMLElement).innerText })
+			codeApp.use(vuetify)
+			codeApp.use(i18n)
+			codeApp.use(store)
+			codeApp.mount(c)
 		})
 	}
 })
 
 Vue.directive('single-code', {
-	inserted: (el) => {
+	mounted: (el) => {
 		el.querySelectorAll('code').forEach((c) => {
-			new Code({ propsData: { code: (c as HTMLElement).innerText, single: true, theme: 'auto' }, parent: vueMain }).$mount(c)
+			const codeApp = createApp(Code, { code: (c as HTMLElement).innerText, single: true, theme: 'auto' })
+			codeApp.use(vuetify)
+			codeApp.use(i18n)
+			codeApp.use(store)
+			codeApp.mount(c)
 		})
 	}
 })
 
 Vue.directive('latex', {
-	inserted: (el) => {
+	mounted: (el) => {
 		el.innerHTML = el.innerHTML.replace(/\$(.*?)\$/, (str: string) => {
 			return "<latex>" + str + "</latex>"
 		})
@@ -130,7 +134,7 @@ Vue.directive('latex', {
 })
 
 Vue.directive('chat-code-latex', {
-	inserted: (el) => {
+	mounted: (el) => {
 		el.innerHTML = el.innerHTML.replace(/\$(.*?)\$/g, (str: string) => {
 			return "<latex>" + str.replace(/`/g, "") + "</latex>"
 		})
@@ -143,9 +147,17 @@ Vue.directive('chat-code-latex', {
 		el.querySelectorAll('code').forEach((c) => {
 			if (c.innerHTML.indexOf("<br>") !== -1) {
 				const code = LeekWars.decodehtmlentities(c.innerHTML).replace(/<br>/gi, "\n").trim()
-				new Code({ propsData: { code, expandable: true }, parent: vueMain }).$mount(c)
+				const codeApp = createApp(Code, { code, expandable: true })
+				codeApp.use(vuetify)
+				codeApp.use(i18n)
+				codeApp.use(store)
+				codeApp.mount(c)
 			} else {
-				new Code({ propsData: { code: c.innerText, single: true }, parent: vueMain }).$mount(c)
+				const codeApp = createApp(Code, { code: c.textContent || '', single: true })
+				codeApp.use(vuetify)
+				codeApp.use(i18n)
+				codeApp.use(store)
+				codeApp.mount(c)
 			}
 		})
 		el.querySelectorAll('latex').forEach((c) => {
@@ -170,18 +182,20 @@ Vue.directive('chat-code-latex', {
 	}
 })
 
-Vue.directive('dochash', (el) => {
-	el.innerHTML = el.innerHTML.replace(/#(\w+)/g, (a, b) => {
-		return "<a href='/help/documentation/" + b + "'>" + b + "</a>"
-	})
-	el.querySelectorAll('a').forEach(a => {
-		a.onclick = (e: Event) => {
-			e.stopPropagation()
-			e.preventDefault()
-			vueMain.$emit('doc-navigate', a.innerText)
-			return false
-		}
-	})
+Vue.directive('dochash', {
+	mounted: (el) => {
+		el.innerHTML = el.innerHTML.replace(/#(\w+)/g, (a, b) => {
+			return "<a href='/help/documentation/" + b + "'>" + b + "</a>"
+		})
+		el.querySelectorAll('a').forEach(a => {
+			a.onclick = (e: Event) => {
+				e.stopPropagation()
+				e.preventDefault()
+				vueMain.$emit('doc-navigate', a.innerText)
+				return false
+			}
+		})
+	}
 })
 
 function displayWarningMessage() {
@@ -281,7 +295,7 @@ const app = createApp({
 		})
 
 		this.$on('loaded', () => {
-			Vue.nextTick(() => {
+			nextTick(() => {
 				// console.log("loaded", this.$data.savedPosition)
 				if (this.$data.savedPosition > 0) {
 					// window.scrollTo(0, this.$data.savedPosition)
@@ -370,4 +384,4 @@ if (window.__FARMER__) {
 	}
 }
 
-export { vueMain, vuetify, displayWarningMessage }
+export { vueMain, vuetify, displayWarningMessage, app }

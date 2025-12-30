@@ -110,9 +110,9 @@
 
 							<router-link v-if="selectedItem.trophy" :to="'/trophy/' + selectedItem.trophy.name" class="trophy">
 								<img :src="'/image/trophy/' + selectedItem.trophy.name + '.svg'">
-								<i18n path="unlocked_with">
+								<i18n-t keypath="unlocked_with">
 									<b slot="trophy">{{ $t('trophy.' + selectedItem.trophy.name) }}</b>
-								</i18n>
+								</i18n-t>
 							</router-link>
 
 							<div class="buy-buttons">
@@ -146,8 +146,8 @@
 								<div><b>{{ $t('equipped_on') }}</b></div>
 								<div class="leeks">
 									<router-link v-for="leek in selectedItem.leek_objs" :key="leek.id" :to="'/leek/' + leek.id">
-										<rich-tooltip-leek :id="leek.id" v-slot="{ on }">
-											<div class="leek" v-on="on">{{ leek.name }}</div>
+										<rich-tooltip-leek :id="leek.id" v-slot="{ props }">
+											<div class="leek" v-bind="props">{{ leek.name }}</div>
 										</rich-tooltip-leek>
 									</router-link>
 								</div>
@@ -192,9 +192,9 @@
 			<v-icon slot="icon">mdi-cash-multiple</v-icon>
 			<span slot="title">{{ $t('confirm_purchase') }}</span>
 			<div v-if="selectedItem && $store.state.farmer">
-				<i18n tag="div" path="are_you_sure_you_want_to_buy">
+				<i18n-t tag="div" keypath="are_you_sure_you_want_to_buy">
 					<b slot="item">{{ buyQuantity }}x {{ translateName(selectedItem) }}</b>
-				</i18n>
+				</i18n-t>
 				<br>
 				<b>{{ $t('price') }}</b> : {{ selectedItem.price * buyQuantity | number }} <span class="hab"></span>
 				<br>
@@ -212,9 +212,9 @@
 			<v-icon slot="icon">mdi-cash-multiple</v-icon>
 			<span slot="title">{{ $t('confirm_purchase') }}</span>
 			<div v-if="selectedItem && $store.state.farmer">
-				<i18n tag="div" path="are_you_sure_you_want_to_buy">
+				<i18n-t tag="div" keypath="are_you_sure_you_want_to_buy">
 					<b slot="item">{{ translateName(selectedItem) }}</b>
-				</i18n>
+				</i18n-t>
 				<br>
 				<b>{{ $t('price') }}</b> : {{ selectedItem.crystals * buyQuantity }} <span class="crystal"></span>
 				<br>
@@ -232,9 +232,9 @@
 			<v-icon slot="icon">mdi-cash-multiple</v-icon>
 			<span slot="title">{{ $t('confirm_sell') }}</span>
 			<div v-if="selectedItem && $store.state.farmer">
-				<i18n tag="div" path="are_you_sure_you_want_to_sell">
+				<i18n-t tag="div" keypath="are_you_sure_you_want_to_sell">
 					<b slot="item">{{ translateName(selectedItem) }}</b>
-				</i18n>
+				</i18n-t>
 				<br>
 				<b>{{ $t('price') }}</b> : {{ selectedItem.price | number }} <span class="hab"></span>
 				<br>
@@ -256,9 +256,9 @@
 
 				<div v-if="unseenItem.trophy" class="card trophy">
 					<img :src="'/image/trophy/' + unseenItem.trophy.name + '.svg'">
-					<i18n path="unlocked_with">
+					<i18n-t keypath="unlocked_with">
 						<b slot="trophy">{{ $t('trophy.' + unseenItem.trophy.name) }}</b>
-					</i18n>
+					</i18n-t>
 				</div>
 			</div>
 		</popup>

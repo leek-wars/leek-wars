@@ -29,9 +29,9 @@
 					<img src="/image/map/nexus_block_small.png">
 					<br>
 					<br>
-					<i18n path="mail_sent">
+					<i18n-t keypath="mail_sent">
 						<b slot="email">{{ $route.params.email }}</b>
-					</i18n>
+					</i18n-t>
 					<br>
 					<br>
 				</div>

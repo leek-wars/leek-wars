@@ -1,11 +1,12 @@
 
 import 'chartist/dist/scss/chartist.scss'
-import Vue from 'vue'
+import { App } from 'vue'
+import * as chartist from 'chartist'
 
 const Chartist = function(Vue: any, options = {}) {
 
-	Vue.chartist = require('chartist')
-	Vue.prototype.$chartist = require('chartist')
+	Vue.chartist = chartist
+	Vue.prototype.$chartist = chartist
 
 	Vue.component('Chartist', {
 		props: {
@@ -164,4 +165,5 @@ const Chartist = function(Vue: any, options = {}) {
 	})
 }
 
-Vue.use(Chartist)
+// Vue.use(Chartist) // TODO: This needs to be migrated to Vue 3 plugin system
+export default Chartist

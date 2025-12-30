@@ -2,14 +2,14 @@
 	<div>
 		<h3><v-icon>{{ icon }}</v-icon> {{ title }}</h3>
 		<div class="flags">
-			<tooltip v-for="flag in flags" :key="flag">
-				<template v-slot:activator="{ on }">
-					<div class="flag card" v-on="on">
+			<v-tooltip v-for="flag in flags" :key="flag">
+				<template v-slot:activator="{ props }">
+					<div class="flag card" v-bind="props">
 						<img :src="'/image/fight_flag/flag_' + flag + '.svg'">
 					</div>
 				</template>
 				{{ $t('flag.flag_' + flag) }}
-			</tooltip>
+			</v-tooltip>
 		</div>
 
 		<table v-if="fight.type === FightType.FARMER" class="report">
@@ -22,8 +22,8 @@
 				<td class="name">
 					<span class="alive">
 						<router-link :to="'/farmer/' + farmer.id">
-							<rich-tooltip-farmer :id="farmer.id" v-slot="{ on }" :bottom="true">
-								<span v-on="on">{{ farmer.name }}</span>
+							<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }" :bottom="true">
+								<span v-bind="props">{{ farmer.name }}</span>
 							</rich-tooltip-farmer>
 						</router-link>
 					</span>
@@ -54,15 +54,15 @@
 					</td>
 					<td class="level">{{ team.level }}</td>
 					<td class="xp">
-						<tooltip>
-							<template v-slot:activator="{ on }">
-								<div class="bar" v-on="on">
+						<v-tooltip>
+							<template v-slot:activator="{ props }">
+								<div class="bar" v-bind="props">
 									<span :style="{width: currentBar + '%'}" class="current_xp"></span>
 									<span :style="{width: newBar + '%'}" class="new_xp team"></span>
 								</div>
 							</template>
 							{{ team.cur_xp | number }} / {{ team.next_xp | number }}
-						</tooltip>
+						</v-tooltip>
 						<span>{{ team.xp | number }}</span>
 					</td>
 					<td v-if="fight.context !== FightContext.TEST && fight.context !== FightContext.CHALLENGE" class="talent">

@@ -1,7 +1,7 @@
 <template>
 	<v-menu v-model="value" :close-on-content-click="false" :width="280" offset-overflow :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" transition="none" :bottom="bottom" :open-on-hover="!locked" offset-y @input="$emit('input', $event)">
-		<template v-slot:activator="{ on }">
-			<slot :on="on"></slot>
+		<template v-slot:activator="{ props }">
+			<slot v-bind="props"></slot>
 		</template>
 		<div class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
 			<trophy ref="preview" :trophy="trophy" @input="setParent" />

@@ -1,16 +1,16 @@
 <template lang="html">
 	<div class="message" :class="{ me: chat.type === 2 && $store.state.farmer && message.farmer.id === $store.state.farmer.id, react: false, reactions: !LeekWars.isEmptyObj(message.reactions) }">
 		<router-link v-if="message.farmer.id !== 0" :to="'/farmer/' + message.farmer.id" class="avatar-wrapper">
-			<rich-tooltip-farmer :id="message.farmer.id" v-slot="{ on }">
-				<avatar :farmer="message.farmer" :on="on" />
+			<rich-tooltip-farmer :id="message.farmer.id" v-slot="{ props }">
+				<avatar :farmer="message.farmer" :on="props" />
 			</rich-tooltip-farmer>
 		</router-link>
 		<img v-else class="avatar" src="/image/favicon.png">
 		<div class="bubble" :class="{large: large}">
 
 			<router-link v-if="message.farmer.id !== 0" :to="'/farmer/' + message.farmer.id" class="author">
-				<rich-tooltip-farmer :id="message.farmer.id" v-slot="{ on }">
-					<span :class="message.farmer.color" v-on="on">{{ message.farmer.name }}</span>
+				<rich-tooltip-farmer :id="message.farmer.id" v-slot="{ props }">
+					<span :class="message.farmer.color" v-bind="props">{{ message.farmer.name }}</span>
 				</rich-tooltip-farmer>
 			</router-link>
 			<div v-else class="author"><span class="bot">Leek Wars 🤖</span></div>
@@ -30,8 +30,8 @@
 			</div>
 			<div class="reactions">
 				<v-tooltip v-for="(reaction, emoji) in message.reactions" :key="emoji" :open-delay="500" :close-delay="0" bottom>
-					<template v-slot:activator="{ on }">
-						<div v-on="on" class="reaction" v-ripple :class="{me: emoji === message.my_reaction}" @click="toggleReaction(emoji)">
+					<template v-slot:activator="{ props }">
+						<div v-bind="props" class="reaction" v-ripple :class="{me: emoji === message.my_reaction}" @click="toggleReaction(emoji)">
 							{{ emoji }} <span v-if="reaction.count > 1" class="count">{{ reaction.count }}</span>
 						</div>
 					</template>

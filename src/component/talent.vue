@@ -1,5 +1,5 @@
 <template lang="html">
-	<span class="talent" v-on="on" @click.stop="LeekWars.goToRanking(category, 'talent', id)">
+	<span class="talent" v-bind="props" @click.stop="LeekWars.goToRanking(category, 'talent', id)">
 		<div v-ripple class="icon">
 			<img src="/image/talent.png">
 		</div>

@@ -1,7 +1,7 @@
 <template>
-	<rich-tooltip-farmer v-if="farmer" :id="farmer.id" v-slot="{ on }">
+	<rich-tooltip-farmer v-if="farmer" :id="farmer.id" v-slot="{ props }">
 		<router-link :to="'/farmer/' + farmer.id">
-			<span class="pseudo" :class="{me: $store.state.farmer.id === farmer.id}" v-on="on">{{ farmer.name }}</span>
+			<span class="pseudo" :class="{me: $store.state.farmer.id === farmer.id}" v-bind="props">{{ farmer.name }}</span>
 		</router-link>
 	</rich-tooltip-farmer>
 </template>

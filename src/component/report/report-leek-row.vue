@@ -4,8 +4,8 @@
 			<span v-if="leek.dead" class="dead"></span>
 			<span v-else class="alive"></span>
 			<router-link v-if="leek.id != -1" :to="'/leek/' + leek.id">
-				<rich-tooltip-leek :id="leek.id" v-slot="{ on }" :bottom="true">
-					<span v-on="on">{{ leek.name }}</span>
+				<rich-tooltip-leek :id="leek.id" v-slot="{ props }" :bottom="true">
+					<span v-bind="props">{{ leek.name }}</span>
 				</rich-tooltip-leek>
 			</router-link>
 			<span v-else-if="leek.mob">{{ $t('entity.' + leek.name) }}</span>
@@ -15,39 +15,39 @@
 		<!-- <td v-if="$store.getters.admin" class="power">{{ Math.round(Math.pow(leek.level, 4.2)) | number }}</td> -->
 		<td class="xp">
 			<div class="xp-wrapper">
-				<tooltip>
-					<template v-slot:activator="{ on }">
-						<div class="bar" v-on="on">
+				<v-tooltip>
+					<template v-slot:activator="{ props }">
+						<div class="bar" v-bind="props">
 							<span :style="{width: currentBar + '%'}" class="current_xp"></span>
 							<span :style="{width: newBar + '%'}" class="new_xp"></span>
 						</div>
 					</template>
 					{{ leek.cur_xp | number }} / {{ leek.next_xp | number }}
-				</tooltip>
+				</v-tooltip>
 				<span>{{ (leek.xp || 0) | number }}</span>
 				<span v-if="fight.report.bonus > 1" class="bonus">x{{ fight.report.bonus }}</span>
-				<tooltip v-if="leek.xp_locked">
-					<template v-slot:activator="{ on }">
-						<v-icon v-on="on" class="xp-blocked">mdi-lock</v-icon>
+				<v-tooltip v-if="leek.xp_locked">
+					<template v-slot:activator="{ props }">
+						<v-icon v-bind="props" class="xp-blocked">mdi-lock</v-icon>
 					</template>
 					{{ $t('main.xp_blocked') }}
-				</tooltip>
+				</v-tooltip>
 			</div>
 		</td>
 		<td class="money">
 			<span>{{ (leek.money || 0) | number }} <span class="hab"></span></span>
 		</td>
 		<td v-if="fight.context != FightContext.TEST && fight.context != FightContext.CHALLENGE" class="resources">
-			<tooltip v-for="resource of sorted_resources" :key="resource[0]" content-class="fluid">
-				<template v-slot:activator="{ on }">
-					<span class="resource" v-on="on">
+			<v-tooltip v-for="resource of sorted_resources" :key="resource[0]" content-class="fluid">
+				<template v-slot:activator="{ props }">
+					<span class="resource" v-bind="props">
 						<scheme-image v-if="LeekWars.items[resource[0]].type === ItemType.SCHEME" class="image" :scheme="LeekWars.schemes[LeekWars.items[resource[0]].params]" />
 						<img v-else :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[resource[0]].type] + '/' + LeekWars.items[resource[0]].name.replace('potion_', '') + '.png'">
 						<span v-if="resource[1] > 1" class="quantity">{{ resource[1] }}</span>
 					</span>
 				</template>
 				{{ resource[1] }}x <b v-if="LeekWars.items[resource[0]].type === ItemType.SCHEME">{{ $t('main.scheme_x', [$t(ITEM_CATEGORY_NAME[LeekWars.items[LeekWars.schemes[LeekWars.items[resource[0]].params].result].type] + '.' + LeekWars.items[LeekWars.schemes[LeekWars.items[resource[0]].params].result].name.replace('potion_', ''))]) }}</b><b v-else>{{ $t(ITEM_CATEGORY_NAME[LeekWars.items[resource[0]].type] + '.' + LeekWars.items[resource[0]].name.replace('potion_', '')) }}</b>
-			</tooltip>
+			</v-tooltip>
 		</td>
 		<td v-if="fight.context !== FightContext.CHALLENGE && leek.talent !== undefined" class="talent">
 			<img src="/image/talent.png">

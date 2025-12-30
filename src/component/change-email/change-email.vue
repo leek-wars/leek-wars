@@ -38,9 +38,9 @@
 					<img src="/image/map/nexus_block_small.png">
 					<br>
 					<br>
-					<i18n path="email_sent">
+					<i18n-t keypath="email_sent">
 						<b slot="email">{{ email }}</b>
-					</i18n>
+					</i18n-t>
 					<br>
 					<br>
 				</div>

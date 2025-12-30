@@ -1,5 +1,5 @@
 <template>
-	<i18n path="fight.leek_take_weapon_cost" tag="div" :a="props.a">
+	<i18n-t keypath="fight.leek_take_weapon_cost" tag="div" :a="props.a">
 		<leek slot="leek" :leek="props.action.entity" />
 		<template v-slot:weapon>
 			<b>{{ parent.$t('weapon.' + parent.LeekWars.weapons[props.action.params[1]].name) }}</b>
@@ -7,7 +7,7 @@
 		<template v-slot:cost>
 			<b class="color-tp">{{ parent.$t('fight.n_tp', [1]) }}</b>
 		</template>
-	</i18n>
+	</i18n-t>
 </template>
 
 <script lang="ts">

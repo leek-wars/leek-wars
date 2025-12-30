@@ -3,15 +3,15 @@
 		<div class="codemirror-wrapper">
 			<div ref="codemirror" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" :class="{search: searchEnabled}" class="codemirror"></div>
 			<template v-for="(problems, entrypoint) of ai.problems">
-				<tooltip v-for="(error, p) of problems" :key="entrypoint + p">
-					<template v-slot:activator="{ on }">
-						<div :style="{top: (100 * error.start_line / lines) + '%'}" :class="{warning: error.level === 1, todo: error.level === 2}" class="error-band" v-on="on" @click="$emit('jump', ai, error.start_line)"></div>
+				<v-tooltip v-for="(error, p) of problems" :key="entrypoint + p">
+					<template v-slot:activator="{ props }">
+						<div :style="{top: (100 * error.start_line / lines) + '%'}" :class="{warning: error.level === 1, todo: error.level === 2}" class="error-band" v-bind="props" @click="$emit('jump', ai, error.start_line)"></div>
 					</template>
 					<v-icon v-if="error.level === 0" class="tooltip error">mdi-close-circle-outline</v-icon>
 					<v-icon v-else-if="error.level === 1" class="tooltip warning">mdi-alert-circle-outline</v-icon>
 					<v-icon v-else class="tooltip todo">mdi-format-list-checks</v-icon>
 					{{ error.info }}
-				</tooltip>
+				</v-tooltip>
 			</template>
 		</div>
 		<div v-show="searchEnabled" class="search-panel">
@@ -28,18 +28,18 @@
 					<v-icon class="arrow" @click="closeSearch">mdi-close</v-icon>
 				</div>
 				<div>
-					<tooltip>
-						<template v-slot:activator="{ on }">
-							<v-icon class="arrow" v-on="on" @click="replaceOne">mdi-file-replace-outline</v-icon>
+					<v-tooltip>
+						<template v-slot:activator="{ props }">
+							<v-icon class="arrow" v-bind="props" @click="replaceOne">mdi-file-replace-outline</v-icon>
 						</template>
 						{{ $t('main.replace') }}
-					</tooltip>
-					<tooltip>
-						<template v-slot:activator="{ on }">
-							<v-icon class="arrow" v-on="on" @click="replaceAll">mdi-file-replace</v-icon>
+					</v-tooltip>
+					<v-tooltip>
+						<template v-slot:activator="{ props }">
+							<v-icon class="arrow" v-bind="props" @click="replaceAll">mdi-file-replace</v-icon>
 						</template>
 						{{ $t('main.replace_all') }}
-					</tooltip>
+					</v-tooltip>
 				</div>
 			</div>
 		</div>
@@ -80,10 +80,10 @@
 				<div v-if="selectedHint.ai" class="definition">
 					<v-icon>mdi-file-outline</v-icon>
 					<span @click="$emit('jump', selectedHint.ai, selectedHint.line)">
-						<i18n class="defined" path="leekscript.defined_in">
+						<i18n-t class="defined" keypath="leekscript.defined_in">
 							<b slot="0">{{ selectedHint.ai.name }}</b>
 							<b slot="1">{{ selectedHint.line }}</b>
-						</i18n>
+						</i18n-t>
 					</span>
 				</div>
 			</div>
@@ -104,10 +104,10 @@
 			<div v-if="detailDialogContent.details.defined && ais[detailDialogContent.details.defined[0]]" class="definition">
 				<v-icon>mdi-file-outline</v-icon>
 				<span @click="goToDefinition">
-					<i18n class="defined" path="leekscript.defined_in">
+					<i18n-t class="defined" keypath="leekscript.defined_in">
 						<b slot="0">{{ ais[detailDialogContent.details.defined[0]].name }}</b>
 						<b slot="1">{{ detailDialogContent.details.defined[1] }}</b>
-					</i18n>
+					</i18n-t>
 				</span>
 			</div>
 			<div v-if="detailDialogContent.details.type">
@@ -1007,7 +1007,7 @@
 					this.detailDialogLeft = window.innerWidth - width - offset.left - 20
 				}
 			}
-			Vue.nextTick(fixPosition)
+			nextTick(fixPosition)
 
 			const start_line = raw_data.location[1] - 1
 			const start_char = raw_data.location[2]
@@ -1403,7 +1403,7 @@
 		public selectHint(index: number) {
 			this.selectedCompletion = index
 			this.selectedHint = this.hints[index]
-			Vue.nextTick(() => {
+			nextTick(() => {
 				const hints = this.$refs.hints as HTMLElement
 				if (hints) {
 					const hintList = (this.$refs.hintDialog as HTMLElement).querySelectorAll('.hint') as any
@@ -1532,7 +1532,7 @@
 			this.searchEnabled = true
 			this.searchQuery = selection
 			this.searchUpdate()
-			Vue.nextTick(() => {
+			nextTick(() => {
 				if (this.$refs.searchInput) {
 					(this.$refs.searchInput as HTMLElement).focus()
 				}

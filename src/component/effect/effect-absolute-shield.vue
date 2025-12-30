@@ -1,6 +1,6 @@
 
 <template>
-	<i18n path="fight.leek_win_x_turns" tag="div" :a="props.a">
+	<i18n-t keypath="fight.leek_win_x_turns" tag="div" :a="props.a">
 		<leek slot="leek" :leek="props.leek" />
 		<template v-slot:value>
 			<b class="color-resistance">{{ parent.$t('fight.n_absolute_shield', [props.value]) }}</b>
@@ -8,7 +8,7 @@
 		<template v-slot:turns>
 			<b>{{ parent.formatTurns(props.turns) }}</b>
 		</template>
-	</i18n>
+	</i18n-t>
 </template>
 
 <script lang="ts">

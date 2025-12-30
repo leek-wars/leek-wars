@@ -1,6 +1,6 @@
 
 <template>
-	<i18n tag="div" path="fight.leek_speak" :a="props.a">
+	<i18n-t tag="div" keypath="fight.leek_speak" :a="props.a">
 		<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
 		<template v-slot:text>
 			<i slot="text">{{ (parent.leeks[props.action.params[1]].farmer && parent.leeks[props.action.params[1]].farmer.muted) ? "@*%#$€" : props.action.params[2] }}</i>
@@ -8,7 +8,7 @@
 		<template v-slot:cost>
 			<b class="color-tp">{{ parent.$t('fight.n_tp', [1]) }}</b>
 		</template>
-	</i18n>
+	</i18n-t>
 </template>
 
 <script lang="ts">

@@ -70,7 +70,7 @@
 			this.$root.$off('resize', this.resize)
 		}
 		resize() {
-			Vue.nextTick(() => {
+			nextTick(() => {
 				(this.$refs.leekChart as any).redraw()
 				(this.$refs.farmerChart as any).redraw()
 			})

@@ -85,7 +85,7 @@
 
 		@Watch('$route.params')
 		update() {
-			Vue.nextTick(() => {
+			nextTick(() => {
 				const list = (this.$refs.list as HTMLElement)
 				for (let i = 0; i < this.tabs.length; ++i) {
 					if (this.tabs[i] === this.current) {

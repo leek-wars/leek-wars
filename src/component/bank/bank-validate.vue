@@ -12,12 +12,12 @@
 				<div class="thank-you-2">{{ $t('for_your_support') }}</div>
 				<br><br>
 				<h4>
-					<i18n path="you_earn_n_crystals">
+					<i18n-t keypath="you_earn_n_crystals">
 						<div slot="crystals" class="crystals card">
 							{{ crystals }}
 							<span class="crystal"></span>
 						</div>
-					</i18n>
+					</i18n-t>
 				</h4>
 				<br><br><br>
 				<router-link to="/bank">

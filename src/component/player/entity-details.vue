@@ -1,9 +1,9 @@
 <template>
 	<div class="details-wrapper">
 		<div class="effects">
-			<tooltip v-for="effect in entity.effects" :key="effect.id" :left="true">
-				<template v-slot:activator="{ on }">
-					<div :value="effectText(effect)" :turns="effect.turns === -1 ? '∞' : effect.turns" class="effect" :class="{irreductible: effect.modifiers & EffectModifier.IRREDUCTIBLE}" v-on="on">
+			<v-tooltip v-for="effect in entity.effects" :key="effect.id" :left="true">
+				<template v-slot:activator="{ props }">
+					<div :value="effectText(effect)" :turns="effect.turns === -1 ? '∞' : effect.turns" class="effect" :class="{irreductible: effect.modifiers & EffectModifier.IRREDUCTIBLE}" v-bind="props">
 						<img class="image" :src="effect.texture.src">
 						<img class="state" v-if="effect.type === EffectType.ADD_STATE" :src="LeekWars.STATIC + 'image/state/' + effect.value + '.svg'" :style="{ background: FightEntity.stateColors[effect.value] }">
 					</div>
@@ -76,7 +76,7 @@
 					<span v-if="effect.turns === -1">{{ $t('effect.infinite') }}</span>
 					<span v-else v-html="$t('effect.on_n_turns', {turns: $tc('effect.n_turns', [effect.turns])})"></span>
 				</div>
-			</tooltip>
+			</v-tooltip>
 		</div>
 		<div :class="{dead: entity.dead, dark}" class="details">
 			<div class="entity-image">

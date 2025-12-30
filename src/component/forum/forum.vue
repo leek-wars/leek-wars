@@ -4,8 +4,8 @@
 			<div>
 				<h1>{{ $t('title') }}</h1>
 				<v-menu offset-y>
-					<template v-slot:activator="{ on }">
-						<div class="forum-language info" v-on="on">
+					<template v-slot:activator="{ props }">
+						<div class="forum-language info" v-bind="props">
 							<flag v-for="l in activeLanguages" :key="l" :code="LeekWars.languages[l].country" :clickable="false" />
 							<img width="10" src="/image/selector.png">
 						</div>
@@ -85,9 +85,9 @@
 			<div v-else :class="{expanded: expandFarmers}" class="connected-farmers">
 				<template v-for="(farmer, f) in connected_farmers">
 					<template v-if="f > 0">, </template>
-					<rich-tooltip-farmer :id="farmer.id" :key="farmer.id" v-slot="{ on }">
+					<rich-tooltip-farmer :id="farmer.id" :key="farmer.id" v-slot="{ props }">
 						<router-link :to="'/farmer/' + farmer.id">
-							<span :class="farmer.class" v-on="on">{{ farmer.name }}</span>
+							<span :class="farmer.class" v-bind="props">{{ farmer.name }}</span>
 						</router-link>
 					</rich-tooltip-farmer>
 				</template>

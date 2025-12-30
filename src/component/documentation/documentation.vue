@@ -267,7 +267,7 @@
 			if (!this.filteredItems.find((it) => it.name === item)) {
 				this.query = ''
 			}
-			Vue.nextTick(() => {
+			nextTick(() => {
 				const index = this.filteredItems.findIndex((it) => it.name === item)
 				if (index !== -1) {
 					this.lazy_start = Math.max(0, index - 2)

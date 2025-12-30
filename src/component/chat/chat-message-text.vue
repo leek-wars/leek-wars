@@ -5,35 +5,40 @@
 
 <script lang="ts">
 	import { store } from '@/model/store'
-	import { vueMain } from '@/model/vue'
+	import { vueMain, vuetify } from '@/model/vue'
+	import { i18n } from '@/model/i18n'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import Pseudo from '../app/pseudo.vue'
 	import 'katex/dist/katex.min.css'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import { ChatMessage } from '@/model/chat'
+	import { createApp, App } from 'vue'
 
 	@Component({ name: 'ChatMessageText', components: { RichTooltipFarmer } })
 	export default class ChatMessageText extends Vue {
 
 		@Prop({ required: true }) message!: ChatMessage
 
-		pseudos: Vue[] = []
+		pseudos: App[] = []
 
 		mounted() {
 			this.$el.querySelectorAll('.pseudo').forEach((c) => {
 				const name = (c as HTMLElement).innerText
 				const farmer = store.state.farmer_by_name[name]
 				if (farmer) {
-					const pseudo = new Pseudo({ propsData: { farmer }, parent: vueMain })
-					pseudo.$mount(c)
-					this.pseudos.push(pseudo)
+					const app = createApp(Pseudo, { farmer })
+					app.use(vuetify)
+					app.use(i18n)
+					app.use(store)
+					app.mount(c)
+					this.pseudos.push(app)
 				}
 			})
 		}
 
 		beforeDestroy() {
 			for (const pseudo of this.pseudos) {
-				pseudo.$destroy()
+				pseudo.unmount()
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 <template lang="html">
-	<rich-tooltip-item v-slot="{ on }" :bottom="true" :instant="true" :item="item" :inventory="true">
-		<div class="item" v-on="on">
+	<rich-tooltip-item v-slot="{ props }" :bottom="true" :instant="true" :item="item" :inventory="true">
+		<div class="item" v-bind="props">
 			<img :src="url" :class="{weapon: is_weapon}">
 		</div>
 	</rich-tooltip-item>

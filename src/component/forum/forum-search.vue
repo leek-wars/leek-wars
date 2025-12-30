@@ -64,7 +64,7 @@
 								<v-icon v-if="result.closed" :title="$t('locked')" class="attr">mdi-lock</v-icon>
 								<span v-html="result.title"></span>
 							</router-link>
-							<i18n tag="div" class="info" path="post_by_x_the_x_in_x">
+							<i18n-t tag="div" class="info" keypath="post_by_x_the_x_in_x">
 								<router-link slot="farmer" :to="'/farmer/' + result.fid">
 									<template v-if="options.farmer === ''">{{ result.fname }}</template>
 									<span v-else><b>{{ result.fname }}</b></span>
@@ -73,7 +73,7 @@
 								<router-link slot="topic" :to="'/forum/category-' + result.cid">
 									{{ $i18n.t('forum-category.' + result.cname) }}
 								</router-link>
-							</i18n>
+							</i18n-t>
 							<router-link :to="'/forum/category-' + result.cid + '/topic-' + result.tid + '/page-' + (floor(result.pos / 20) + 1) + (result.mid !== -1 ? '#message-' + result.mid : '')">
 								<div class="headline" v-html="result.message"></div>
 							</router-link>

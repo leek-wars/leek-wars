@@ -48,8 +48,8 @@
 					<div class="card farmer">
 						<div class="title">Éleveur ciblé</div>
 						<div class="flex">
-							<rich-tooltip-farmer :id="selectedFault.target.id" v-slot="{ on }" :instant="true">
-								<avatar :farmer="selectedFault.target" :on="on" />
+							<rich-tooltip-farmer :id="selectedFault.target.id" v-slot="{ props }" :instant="true">
+								<avatar :farmer="selectedFault.target" :on="props" />
 							</rich-tooltip-farmer>
 							<div class="infos">
 								<router-link :to="'/farmer/' + selectedFault.target.id">
@@ -87,9 +87,9 @@
 						<div class="details">
 							<div v-if="finalReason === Warning.INCORRECT_LEEK_NAME">
 								Poireau :
-								<rich-tooltip-leek :id="selectedFault.parameter" v-slot="{ on }" :instant="true">
+								<rich-tooltip-leek :id="selectedFault.parameter" v-slot="{ props }" :instant="true">
 									<router-link :to="'/leek/' + selectedFault.parameter">
-										<span v-on="on">{{ selectedFault.data }}</span>
+										<span v-bind="props">{{ selectedFault.data }}</span>
 									</router-link>
 								</rich-tooltip-leek>
 							</div>

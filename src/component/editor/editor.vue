@@ -23,12 +23,12 @@
 								<v-icon class="list-icon">mdi-file-star-outline</v-icon>
 								<v-list-item-content>
 									<v-list-item-title>{{ $t('new_v2') }}
-										<tooltip>
-											<template v-slot:activator="{ on }">
-												<span class="label-beta" v-on="on">bêta <v-icon>mdi-information-outline</v-icon></span>
+										<v-tooltip>
+											<template v-slot:activator="{ props }">
+												<span class="label-beta" v-bind="props">bêta <v-icon>mdi-information-outline</v-icon></span>
 											</template>
 											{{ $t('v2_beta_message') }}
-										</tooltip>
+										</v-tooltip>
 									</v-list-item-title>
 								</v-list-item-content>
 							</v-list-item> -->
@@ -120,8 +120,8 @@
 						</div>
 						<div class="status">
 							<v-menu v-if="currentAI" top :offset-y="true" :nudge-top="1" :max-width="600">
-								<template v-slot:activator="{ on, attrs }">
-									<div v-ripple class="version" v-bind="attrs" v-on="on">
+								<template v-slot:activator="{ props }">
+									<div v-ripple class="version" v-bind="props">
 										LeekScript&nbsp;{{ currentAI.version }} <span v-if="currentAI.strict">&nbsp;({{ $t('strict') }})</span>
 										<v-icon>mdi-chevron-down</v-icon>
 									</div>
@@ -605,7 +605,7 @@
 					} else {
 						this.currentAI2 = id
 					}
-					Vue.nextTick(() => {
+					nextTick(() => {
 						this.currentEditor = (this.currentSide === 1 ? this.$refs.editor : this.$refs.editor2) as AIViewMonaco
 					})
 					localStorage.setItem('editor/last-code-' + this.currentSide, '' + id)
@@ -833,7 +833,7 @@
 			if (ai.id !== this.currentAI!.id) {
 				this.$router.push('/editor/' + ai.id)
 			}
-			Vue.nextTick(() => {
+			nextTick(() => {
 				const editor = this.$refs.editor as AIViewMonaco
 				if (editor) { editor.scrollToLine(ai, line, column) }
 			})
@@ -982,7 +982,7 @@
 				this.currentAI2 = ai!.id
 				this.setSide(2)
 				localStorage.setItem('editor/last-code-2', '' + ai!.id)
-				Vue.nextTick(() => {
+				nextTick(() => {
 					;(this.$refs.tabs2 as any).add(ai!.id)
 				})
 			} else {

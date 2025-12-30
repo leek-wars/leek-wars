@@ -1,7 +1,7 @@
 <template>
 	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :max-width="600" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'my-transition'" :open-on-hover="!locked" offset-y @input="open($event)">
-		<template v-slot:activator="{ on }">
-			<slot :on="on"></slot>
+		<template v-slot:activator="{ props }">
+			<slot v-bind="props"></slot>
 		</template>
 		<div class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
 			<loader v-if="!team" :size="30" />
@@ -27,11 +27,11 @@
 					</div>
 				</div>
 				<div v-if="expand" class="farmers">
-					<template v-for="(farmer, f) in team.farmers">
+					<template v-for="(farmer, f) in team.farmers" :key="farmer.id">
 						<template v-if="f > 0">, </template>
-						<rich-tooltip-farmer :id="farmer.id" :key="farmer.id" v-slot="{ on }" :bottom="true" @input="setParent">
+						<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }" :bottom="true" @input="setParent">
 							<router-link :to="'/farmer/' + farmer.id">
-								<span :class="farmer.class" v-on="on">{{ farmer.name }}</span>
+								<span :class="farmer.class" v-bind="props">{{ farmer.name }}</span>
 							</router-link>
 						</rich-tooltip-farmer>
 					</template>

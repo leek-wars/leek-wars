@@ -1,11 +1,11 @@
 <template>
 	<div :a="props.a">
-		<i18n path="fight.leek_shoot">
+		<i18n-t keypath="fight.leek_shoot">
 			<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
 			<template v-slot:weapon>
 				<b>{{ parent.$t('weapon.' + props.action.item.name) }}</b>
 			</template>
-		</i18n>
+		</i18n-t>
 		<span v-if="props.action.params[4] === 2">... {{ parent.$t('effect.critical') }}</span>
 	</div>
 </template>

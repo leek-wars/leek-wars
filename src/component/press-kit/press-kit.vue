@@ -31,8 +31,8 @@
 
 				<div>
 					<v-menu offset-y>
-						<template v-slot:activator="{ on }">
-							<div v-on="on" v-ripple class="language-button">
+						<template v-slot:activator="{ props }">
+							<div v-bind="props" v-ripple class="language-button">
 								<flag :code="language.country" />
 								{{ language.name }}
 								<v-icon>mdi-chevron-down</v-icon>

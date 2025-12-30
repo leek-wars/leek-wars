@@ -41,12 +41,12 @@
 								<div class="farmer" v-on="rich">
 									<avatar :farmer="farmer" /><br>
 									<span class="name">
-										<tooltip>
-											<template v-slot:activator="{ on }">
-												<span v-if="farmer.id === fight.starter" class="arrow" v-on="on">▶</span>
+										<v-tooltip>
+											<template v-slot:activator="{ props }">
+												<span v-if="farmer.id === fight.starter" class="arrow" v-bind="props">▶</span>
 											</template>
 											{{ $t('starter') }}
-										</tooltip>
+										</v-tooltip>
 										{{ farmer.name }}
 									</span>
 								</div>
@@ -80,12 +80,12 @@
 								<div class="farmer" v-on="rich">
 									<avatar :farmer="farmer" /><br>
 									<span class="name">
-										<tooltip>
-											<template v-slot:activator="{ on }">
-												<span v-if="farmer.id === fight.starter" class="arrow" v-on="on">▶</span>
+										<v-tooltip>
+											<template v-slot:activator="{ props }">
+												<span v-if="farmer.id === fight.starter" class="arrow" v-bind="props">▶</span>
 											</template>
 											{{ $t('starter') }}
-										</tooltip>
+										</v-tooltip>
 										{{ farmer.name }}
 									</span>
 								</div>
@@ -187,7 +187,7 @@ import { BOSSES } from '@/model/boss'
 
 		reload() {
 			this.fight_id = null
-			Vue.nextTick(() => {
+			nextTick(() => {
 				this.fight_id = this.$route.params.id
 			})
 		}
@@ -195,7 +195,7 @@ import { BOSSES } from '@/model/boss'
 		resize() {
 			LeekWars.lightBar = window.innerWidth / window.innerHeight > 1
 
-			Vue.nextTick(() => {
+			nextTick(() => {
 				const reference = document.querySelector('.app-center') as HTMLElement
 				const offset = 40 + 24
 				const controls = 36

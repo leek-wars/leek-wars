@@ -86,45 +86,45 @@
 
 			<div v-if="!creator" class="controls controls-a">
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
-					<template v-slot:activator="{ on }">
-						<v-icon v-ripple class="control" @click="pause" v-on="on">{{ game.paused ? 'mdi-play' : 'mdi-pause' }}</v-icon>
+					<template v-slot:activator="{ props }">
+						<v-icon v-ripple class="control" @click="pause" v-bind="props">{{ game.paused ? 'mdi-play' : 'mdi-pause' }}</v-icon>
 					</template>
 					{{ $t('pause') }} (P)
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
-					<template v-slot:activator="{ on }">
-						<v-icon v-ripple class="control" :style="{opacity: game.speedButtonVisible ? 1 : 0}" v-on="on" @click="game.speedUp()">mdi-fast-forward</v-icon>
+					<template v-slot:activator="{ props }">
+						<v-icon v-ripple class="control" :style="{opacity: game.speedButtonVisible ? 1 : 0}" v-bind="props" @click="game.speedUp()">mdi-fast-forward</v-icon>
 					</template>
 					{{ $t('accelerate') }} (S)
 				</v-tooltip>
 				<v-tooltip v-if="!LeekWars.mobile" :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
-					<template v-slot:activator="{ on }">
-						<v-icon v-ripple class="control" v-on="on" @click="game.previousAction()">mdi-skip-previous</v-icon>
+					<template v-slot:activator="{ props }">
+						<v-icon v-ripple class="control" v-bind="props" @click="game.previousAction()">mdi-skip-previous</v-icon>
 					</template>
 					{{ $t('previous_action') }} (←)
 				</v-tooltip>
 				<v-tooltip v-if="!LeekWars.mobile" :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
-					<template v-slot:activator="{ on }">
-						<v-icon v-ripple class="control" v-on="on" @click="game.nextAction()">mdi-skip-next</v-icon>
+					<template v-slot:activator="{ props }">
+						<v-icon v-ripple class="control" v-bind="props" @click="game.nextAction()">mdi-skip-next</v-icon>
 					</template>
 					{{ $t('next_action') }} (→)
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
-					<template v-slot:activator="{ on }">
-						<v-icon v-ripple class="control" v-on="on" @click="game.sound = !game.sound">{{ game.sound ? 'mdi-volume-high' : 'mdi-volume-low' }}</v-icon>
+					<template v-slot:activator="{ props }">
+						<v-icon v-ripple class="control" v-bind="props" @click="game.sound = !game.sound">{{ game.sound ? 'mdi-volume-high' : 'mdi-volume-low' }}</v-icon>
 					</template>
 					{{ $t(game.sound ? 'sound_activated' : 'sound_disactivated') }} (V)
 				</v-tooltip>
 				<v-tooltip v-if="game.sound && !LeekWars.mobile" :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
-					<template v-slot:activator="{ on }">
+					<template v-slot:activator="{ props }">
 						<input type="range" min="0" max="1" step="0.01" style="width: 100px; padding: 0" v-model="game.volume">
 					</template>
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
-					<template v-slot:activator="{ on: tooltip }">
+					<template v-slot:activator="{ props: tooltipProps }">
 						<v-menu :close-on-content-click="false" :min-width="390" top offset-y right :attach="$refs.player">
-							<template v-slot:activator="{ on: menu }">
-								<div v-ripple class="control turn" v-on="{...tooltip, ...menu}">{{ horizontal ? game.turn : $t('fight.turn_n', [game.turn]) }}</div>
+							<template v-slot:activator="{ props: menuProps }">
+								<div v-ripple class="control turn" v-bind="{...tooltipProps, ...menuProps}">{{ horizontal ? game.turn : $t('fight.turn_n', [game.turn]) }}</div>
 								<!-- <v-icon class="control" >mdi-settings-outline</v-icon> -->
 							</template>
 							<v-list :dense="true" class="settings-menu">
@@ -150,10 +150,10 @@
 			<div class="controls constrols-b">
 
 				<v-tooltip v-if="!creator && $store.state.farmer && $store.state.farmer.admin" :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
-					<template v-slot:activator="{ on: tooltip }">
+					<template v-slot:activator="{ props: tooltipProps }">
 						<v-menu :close-on-content-click="false" top offset-y left>
-							<template v-slot:activator="{ on: menu }">
-								<v-icon v-ripple class="control" v-on="{...tooltip, ...menu}">mdi-map</v-icon>
+							<template v-slot:activator="{ props: menuProps }">
+								<v-icon v-ripple class="control" v-bind="{...tooltipProps, ...menuProps}">mdi-map</v-icon>
 							</template>
 							<v-radio-group v-model="game.mapType" class="map-menu" hide-details :mandatory="true">
 								<v-radio v-for="(map, m) of maps" :key="map" :label="map" :value="m" />
@@ -164,16 +164,16 @@
 				</v-tooltip>
 
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
-					<template v-slot:activator="{ on }">
-						<v-icon v-ripple class="control" v-on="on" @click="toggleFullscreen">mdi-aspect-ratio</v-icon>
+					<template v-slot:activator="{ props }">
+						<v-icon v-ripple class="control" v-bind="props" @click="toggleFullscreen">mdi-aspect-ratio</v-icon>
 					</template>
 					{{ $t('fullscreen') }}
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
-					<template v-slot:activator="{ on: tooltip }">
+					<template v-slot:activator="{ props: tooltipProps }">
 						<v-menu :close-on-content-click="false" top offset-y left :attach="$refs.player">
-							<template v-slot:activator="{ on: menu }">
-								<v-icon v-ripple class="control" v-on="{...tooltip, ...menu}">mdi-settings-outline</v-icon>
+							<template v-slot:activator="{ props: menuProps }">
+								<v-icon v-ripple class="control" v-bind="{...tooltipProps, ...menuProps}">mdi-settings-outline</v-icon>
 							</template>
 							<v-list :dense="true" class="settings-menu">
 								<div class="section">INTERFACE</div>
@@ -232,8 +232,8 @@
 					{{ $t('settings') }}
 				</v-tooltip>
 				<v-tooltip v-if="!creator" :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
-					<template v-slot:activator="{ on }">
-						<v-icon v-ripple class="control" v-on="on" @click="quit">mdi-exit-to-app</v-icon>
+					<template v-slot:activator="{ props }">
+						<v-icon v-ripple class="control" v-bind="props" @click="quit">mdi-exit-to-app</v-icon>
 					</template>
 					{{ $t('quit') }}
 				</v-tooltip>
@@ -376,7 +376,7 @@ import { T } from './game/texture'
 		}
 
 		resize() {
-			Vue.nextTick(() => {
+			nextTick(() => {
 				const newWidth = this.getWidth()
 				const newHeight = this.getHeight()
 				if (newWidth === this.width && newHeight === this.height) { return }
@@ -542,7 +542,7 @@ import { T } from './game/texture'
 			} as Fight
 			this.loaded = true
 			this.$emit('fight', local_fight)
-			Vue.nextTick(() => {
+			nextTick(() => {
 				this.game.creator = true
 				this.game.paused = true
 				this.game.init(local_fight)

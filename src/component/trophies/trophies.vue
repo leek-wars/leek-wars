@@ -6,8 +6,8 @@
 			</h1>
 			<div class="tabs">
 				<v-menu bottom offset-y :max-width="600">
-					<template v-slot:activator="{ on, attrs }">
-						<div class="tab" v-bind="attrs" v-on="on">
+					<template v-slot:activator="{ props }">
+						<div class="tab" v-bind="props">
 							<v-icon>{{ sort_icon }}</v-icon> {{ $t('sort_by', [$t('sort_' + sort_by).toLowerCase()]) }}
 						</div>
 					</template>
@@ -59,15 +59,15 @@
 								</div>
 								<div v-if="!LeekWars.mobile"> — </div>
 								<div class="difficulties">
-									<tooltip v-for="(c, i) in count_by_difficulty_filter" :key="i">
-										<template v-slot:activator="{ on }">
-											<span class="counter" v-on="on">
+									<v-tooltip v-for="(c, i) in count_by_difficulty_filter" :key="i">
+										<template v-slot:activator="{ props }">
+											<span class="counter" v-bind="props">
 												<img :src="'/image/icon/trophy/' + i + '.svg'">
 												<span>{{ c }}</span>
 											</span>
 										</template>
 										{{ $t('main.difficulty_' + i) }}
-									</tooltip>
+									</v-tooltip>
 								</div>
 							</div>
 						</div>
@@ -80,9 +80,9 @@
 					<div>
 						<h4><v-icon>mdi-trophy-outline</v-icon> {{ $t('best_trophies') }}</h4>
 						<div class="trophies">
-							<rich-tooltip-trophy v-for="(trophy, t) in best_trophies" :key="t" v-slot="{ on }" :trophy="trophy" :bottom="true" :instant="true" @input="$emit('input', $event)">
+							<rich-tooltip-trophy v-for="(trophy, t) in best_trophies" :key="t" v-slot="{ props }" :trophy="trophy" :bottom="true" :instant="true" @input="$emit('input', $event)">
 								<router-link :to="'/trophy/' + trophy.code">
-									<img :src="'/image/trophy/' + trophy.code + '.svg'" class="trophy" v-on="on">
+									<img :src="'/image/trophy/' + trophy.code + '.svg'" class="trophy" v-bind="props">
 								</router-link>
 							</rich-tooltip-trophy>
 						</div>
@@ -90,9 +90,9 @@
 					<div>
 						<h4><v-icon>mdi-star-outline</v-icon> {{ $t('rarest_trophies') }}</h4>
 						<div class="trophies">
-							<rich-tooltip-trophy v-for="(trophy, t) in rarest_trophies" :key="t" v-slot="{ on }" :trophy="trophy" :bottom="true" :instant="true" @input="$emit('input', $event)">
+							<rich-tooltip-trophy v-for="(trophy, t) in rarest_trophies" :key="t" v-slot="{ props }" :trophy="trophy" :bottom="true" :instant="true" @input="$emit('input', $event)">
 								<router-link :to="'/trophy/' + trophy.code">
-									<img :src="'/image/trophy/' + trophy.code + '.svg'" class="trophy" v-on="on">
+									<img :src="'/image/trophy/' + trophy.code + '.svg'" class="trophy" v-bind="props">
 								</router-link>
 							</rich-tooltip-trophy>
 						</div>
@@ -100,9 +100,9 @@
 					<div>
 						<h4><v-icon>mdi-history</v-icon> {{ $t('latest_trophies') }}</h4>
 						<div class="trophies">
-							<rich-tooltip-trophy v-for="(trophy, t) in latest_trophies" :key="t" v-slot="{ on }" :trophy="trophy" :bottom="true" :instant="true" @input="$emit('input', $event)">
+							<rich-tooltip-trophy v-for="(trophy, t) in latest_trophies" :key="t" v-slot="{ props }" :trophy="trophy" :bottom="true" :instant="true" @input="$emit('input', $event)">
 								<router-link :to="'/trophy/' + trophy.code">
-									<img :src="'/image/trophy/' + trophy.code + '.svg'" class="trophy" v-on="on">
+									<img :src="'/image/trophy/' + trophy.code + '.svg'" class="trophy" v-bind="props">
 								</router-link>
 							</rich-tooltip-trophy>
 						</div>

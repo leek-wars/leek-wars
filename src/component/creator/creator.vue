@@ -38,8 +38,8 @@
 							<div class="title">Caractéristiques</div>
 							<div class="characteristics">
 								<div v-for="c in LeekWars.characteristics_table" :key="c" class="characteristic" :class="c">
-									<characteristic-tooltip v-slot="{ on }" :characteristic="c" :value="game.selectedEntity[c]" :total="game.selectedEntity[c]" :leek="game.selectedEntity" :test="true">
-										<img v-on="on" :src="'/image/charac/' + c + '.png'">
+									<characteristic-tooltip v-slot="{ props }" :characteristic="c" :value="game.selectedEntity[c]" :total="game.selectedEntity[c]" :leek="game.selectedEntity" :test="true">
+										<img v-bind="props" :src="'/image/charac/' + c + '.png'">
 									</characteristic-tooltip>
 									<input class="stat" :class="'color-' + c" v-model.number="game.selectedEntity[c]" @keyup="edited('charac')" type="number">
 								</div>
@@ -49,8 +49,8 @@
 						<div class="category">
 							<div class="title">Armes</div>
 							<div class="container weapons">
-								<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ on }" :item="LeekWars.items[weapon.item]" :bottom="true" :nodge="true" :leek="game.selectedEntity">
-									<img :src="'/image/' + LeekWars.items[weapon.item].name.replace('_', '/') + '.png'" :class="{hidden: !hasWeaponEquipped(weapon.item)}" class="weapon" v-on="on" @click="removeLeekWeapon(weapon.item)" :width="WeaponsData[LeekWars.items[weapon.item].params].width">
+								<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ props }" :item="LeekWars.items[weapon.item]" :bottom="true" :nodge="true" :leek="game.selectedEntity">
+									<img :src="'/image/' + LeekWars.items[weapon.item].name.replace('_', '/') + '.png'" :class="{hidden: !hasWeaponEquipped(weapon.item)}" class="weapon" v-bind="props" @click="removeLeekWeapon(weapon.item)" :width="WeaponsData[LeekWars.items[weapon.item].params].width">
 								</rich-tooltip-item>
 								<div v-if="game.selectedEntity.weapons.length < 4" class="add" @click="weaponsDialog = true">+</div>
 							</div>
@@ -59,8 +59,8 @@
 						<div class="category">
 							<div class="title">Puces</div>
 							<div class="container chips">
-								<rich-tooltip-item v-for="(chip, c) of game.selectedEntity.chips" :key="chip" v-slot="{ on }" :item="LeekWars.items[chip]" :nodge="true" :leek="game.selectEntity">
-									<img :src="'/image/chip/' + LeekWars.items[chip].name.replace('chip_', '') + '.png'" :class="{disabled: c >= game.selectedEntity.ram}" class="chip" v-on="on" @click="removeLeekChip(chip)">
+								<rich-tooltip-item v-for="(chip, c) of game.selectedEntity.chips" :key="chip" v-slot="{ props }" :item="LeekWars.items[chip]" :nodge="true" :leek="game.selectEntity">
+									<img :src="'/image/chip/' + LeekWars.items[chip].name.replace('chip_', '') + '.png'" :class="{disabled: c >= game.selectedEntity.ram}" class="chip" v-bind="props" @click="removeLeekChip(chip)">
 								</rich-tooltip-item>
 								<div v-if="game.selectedEntity.chips.length < game.selectedEntity.ram" class="add" @click="chipsDialog = true">+</div>
 							</div>
@@ -70,15 +70,15 @@
 						<div class="category">
 							<div class="title">Sols</div>
 							<div class="assets">
-								<tooltip v-for="ground of GROUNDS" :key="ground.id">
-									<template v-slot:activator="{ on }">
-										<div v-on="on" class="asset tile" @click="selectGround(ground)">
+								<v-tooltip v-for="ground of GROUNDS" :key="ground.id">
+									<template v-slot:activator="{ props }">
+										<div v-bind="props" class="asset tile" @click="selectGround(ground)">
 											<img :src="ground.texture.path">
 											<v-icon v-if="game && game.groundPaint === ground">mdi-check</v-icon>
 										</div>
 									</template>
 									{{ ground.texture.path }}
-								</tooltip>
+								</v-tooltip>
 							</div>
 							<div class="title">Décoration</div>
 							<div class="assets">
@@ -115,8 +115,8 @@
 			<v-icon slot="icon">mdi-chip</v-icon>
 			<span slot="title" v-if="game.selectedEntity">{{ $t('select_chips') }} [{{ game.selectedEntity.chips.length }}/{{ game.selectedEntity.ram }}]</span>
 			<div v-if="game.selectedEntity" class="padding chips-dialog">
-				<rich-tooltip-item v-for="chip of availableChips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[chip.id]" :bottom="true" :nodge="true" :leek="game.selectedEntity">
-					<span :class="{disabled: game.selectedEntity.chips.indexOf(chip.id) !== -1}" v-on="on">
+				<rich-tooltip-item v-for="chip of availableChips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[chip.id]" :bottom="true" :nodge="true" :leek="game.selectedEntity">
+					<span :class="{disabled: game.selectedEntity.chips.indexOf(chip.id) !== -1}" v-bind="props">
 						<img :src="'/image/chip/' + chip.name + '.png'" class="chip" @click="addOrRemoveLeekChip(chip.id)">
 					</span>
 				</rich-tooltip-item>
@@ -127,9 +127,9 @@
 			<img slot="icon" src="/image/icon/garden.png">
 			<span slot="title" v-if="game.selectedEntity">{{ $t('select_weapons') }} [{{ game.selectedEntity.weapons.length }}/{{ 4 }}]</span>
 			<div v-if="game.selectedEntity" class="padding weapons-dialog">
-				<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ on }" :item="LeekWars.items[weapon.item]" :bottom="true" :nodge="true" :leek="game.selectedEntity">
-					<span :class="{disabled: game.selectedEntity.weapons.indexOf(weapon.item) !== -1}" v-on="on">
-						<img :src="'/image/weapon/' + weapon.name + '.png'" class="weapon" v-on="on" @click="addOrRemoveLeekWeapon(weapon.item)" :width="WeaponsData[LeekWars.items[weapon.item].params].width">
+				<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ props }" :item="LeekWars.items[weapon.item]" :bottom="true" :nodge="true" :leek="game.selectedEntity">
+					<span :class="{disabled: game.selectedEntity.weapons.indexOf(weapon.item) !== -1}" v-bind="props">
+						<img :src="'/image/weapon/' + weapon.name + '.png'" class="weapon" v-bind="props" @click="addOrRemoveLeekWeapon(weapon.item)" :width="WeaponsData[LeekWars.items[weapon.item].params].width">
 					</span>
 				</rich-tooltip-item>
 			</div>
@@ -215,7 +215,7 @@ export default class Creator extends Vue {
 
 	playerLoaded() {
 		// console.log("loaded")
-		Vue.nextTick(() => {
+		nextTick(() => {
 			this.game = (this.$refs.player as any).game as Game
 			for (const ground of GROUNDS) {
 				ground.texture.load(this.game)

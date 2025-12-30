@@ -231,10 +231,10 @@ export default class AIViewMonaco extends Vue {
 			this.setAnalyzerTimeout()
 			this.editor.focus()
 
-			Vue.nextTick(() => {
+			nextTick(() => {
 
 				if (this.jumpToLine) {
-					Vue.nextTick(() => {
+					nextTick(() => {
 						this.scrollToLine(loadedAI, this.jumpToLine!, this.jumpToColumn!)
 					})
 				} else {

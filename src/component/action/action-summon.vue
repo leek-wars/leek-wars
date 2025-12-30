@@ -1,9 +1,9 @@
 
 <template>
-	<i18n tag="div" path="fight.summon" :a="props.a">
+	<i18n-t tag="div" keypath="fight.summon" :a="props.a">
 		<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
 		<leek slot="summon" :leek="parent.leeks[props.action.params[2]]" />
-	</i18n>
+	</i18n-t>
 </template>
 
 <script lang="ts">

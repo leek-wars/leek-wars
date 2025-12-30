@@ -8,8 +8,8 @@
 					<div class="tab" :class="{active: category.startsWith('level')}">
 						{{ $t('main.level_n', [rankingLevel]) }}
 						<v-menu offset-y>
-							<template v-slot:activator="{ on }">
-								<v-icon v-on="on" @click.prevent="">mdi-chevron-down</v-icon>
+							<template v-slot:activator="{ props }">
+								<v-icon v-bind="props" @click.prevent="">mdi-chevron-down</v-icon>
 							</template>
 							<v-list>
 								<router-link v-for="level of [50, 99, 150, 199, 250, 299]" :key="level" :to="getURL('level-' + level, order, country, LeekWars.rankingInactive)">
@@ -27,8 +27,8 @@
 				<router-link :to="getURL('team', 'talent', country, LeekWars.rankingInactive)"><div class="tab" :class="{active: category === 'team'}">{{ $t('teams') }}</div></router-link>
 
 				<v-menu v-model="countryList" offset-y>
-					<template v-slot:activator="{ on }">
-						<div class="tab" v-on="on" :class="{active: category.startsWith('country')}">
+					<template v-slot:activator="{ props }">
+						<div class="tab" v-bind="props" :class="{active: category.startsWith('country')}">
 							<!-- {{ $t('main.country') }} -->
 							<flag v-if="country" :code="country" :clickable="false" />
 							<v-icon v-else :title="$t('main.worldwide')">mdi-earth</v-icon>
@@ -82,8 +82,8 @@
 							<td>{{ parseInt(i) + 1 }}</td>
 							<td :class="farmer.style">
 								<router-link :to="'/farmer/' + farmer.id">
-									<rich-tooltip-farmer :id="farmer.id" v-slot="{ on }">
-										<span v-on="on">{{ farmer.name }}</span>
+									<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }">
+										<span v-bind="props">{{ farmer.name }}</span>
 									</rich-tooltip-farmer>
 								</router-link>
 							</td>

@@ -94,9 +94,9 @@
 							<td><div class="space"></div></td>
 						</tr>
 					</table>
-					<i18n class="cgu" tag="div" path="conditions">
+					<i18n-t class="cgu" tag="div" keypath="conditions">
 						<router-link slot="link" to="/conditions">{{ $t('conditions_name') }}</router-link>
-					</i18n>
+					</i18n-t>
 					<div class="center">
 						<v-btn v-if="fastRegister" large color="primary" type="submit">{{ $t('play_button') }}</v-btn>
 						<v-btn v-else-if="signupMethod === 1" large color="primary" type="submit">{{ $t('signup') }}</v-btn>
@@ -182,9 +182,9 @@
 						<tr v-for="(leek, i) in leek_ranking" :key="i" :class="leek.style">
 							<td>{{ i + 1 }}</td>
 							<td :class="leek.class">
-								<rich-tooltip-leek :id="leek.id" v-slot="{ on }">
+								<rich-tooltip-leek :id="leek.id" v-slot="{ props }">
 									<router-link :to="'/leek/' + leek.id">
-										<span v-on="on">{{ leek.name }}</span>
+										<span v-bind="props">{{ leek.name }}</span>
 									</router-link>
 								</rich-tooltip-leek>
 							</td>
@@ -206,9 +206,9 @@
 						<tr v-for="(farmer, i) in farmer_ranking" :key="i" :class="farmer.style">
 							<td>{{ i + 1 }}</td>
 							<td :class="farmer.class">
-								<rich-tooltip-farmer :id="farmer.id" v-slot="{ on }">
+								<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }">
 									<router-link :to="'/farmer/' + farmer.id">
-										<span v-on="on">{{ farmer.name }}</span>
+										<span v-bind="props">{{ farmer.name }}</span>
 									</router-link>
 								</rich-tooltip-farmer>
 							</td>
@@ -232,9 +232,9 @@
 						<tr v-for="(team, i) in team_ranking" :key="i" :class="team.style">
 							<td>{{ i + 1 }}</td>
 							<td :class="team.class">
-								<rich-tooltip-team :id="team.id" v-slot="{ on }">
+								<rich-tooltip-team :id="team.id" v-slot="{ props }">
 									<router-link :to="'/team/' + team.id">
-										<span v-on="on">{{ team.name }}</span>
+										<span v-bind="props">{{ team.name }}</span>
 									</router-link>
 								</rich-tooltip-team>
 							</td>

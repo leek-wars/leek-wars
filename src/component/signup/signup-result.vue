@@ -6,9 +6,9 @@
 		<panel class="first center">
 			<img src="/image/map/nexus_block_small.png">
 			<br><br>
-			<i18n tag="h2" class="signup-message" path="validated_message">
+			<i18n-t tag="h2" class="signup-message" keypath="validated_message">
 				<b slot="farmer">{{ farmer }}</b>
-			</i18n>
+			</i18n-t>
 			<br><br>
 			<slot name="button">
 				<router-link to="/">

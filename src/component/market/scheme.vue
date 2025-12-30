@@ -1,8 +1,8 @@
 <template lang="html">
 	<div class="scheme">
 		<div v-if="showResult" v-ripple class="group result" @click="possible && $root.$emit('craft', scheme)">
-			<rich-tooltip-item v-slot="{ on }" :item="result" :bottom="true" :inventory="true" @input="$emit('input', $event)">
-				<div class="item" v-on="on" :quantity="1" :class="{['rarity-border-' + result.rarity]: true, 'missing': !possible}">
+			<rich-tooltip-item v-slot="{ props }" :item="result" :bottom="true" :inventory="true" @input="$emit('input', $event)">
+				<div class="item" v-bind="props" :quantity="1" :class="{['rarity-border-' + result.rarity]: true, 'missing': !possible}">
 					<img :src="'/image/' + ITEM_CATEGORY_NAME[result.type] + '/' + result.name.replace('hat_', '').replace('potion_', '') + '.png'" :type="result.type">
 					<!-- <div class="id">#{{ scheme.result }}</div> -->
 					<div v-if="scheme.quantity > 1" class="quantity">{{ scheme.quantity | number }}</div>
@@ -12,8 +12,8 @@
 		<div v-if="showResult" :key="'__'" class="symbol">{{ " = " }}</div>
 		<div class="items">
 			<template v-for="(ingredient, i) in items">
-				<rich-tooltip-item v-if="ingredient" :key="i" v-slot="{ on }" :item="ingredient.item" :bottom="true" :inventory="true" :quantity="ingredient.quantity" @input="$emit('input', $event)">
-					<div class="item" v-on="on" :class="{['rarity-border-' + ingredient.item.rarity]: true, [item_present[i]]: true}">
+				<rich-tooltip-item v-if="ingredient" :key="i" v-slot="{ props }" :item="ingredient.item" :bottom="true" :inventory="true" :quantity="ingredient.quantity" @input="$emit('input', $event)">
+					<div class="item" v-bind="props" :class="{['rarity-border-' + ingredient.item.rarity]: true, [item_present[i]]: true}">
 						<img :src="'/image/' + ITEM_CATEGORY_NAME[ingredient.item.type] + '/' + ingredient.item.name.replace('hat_', '').replace('potion_', '').replace('chip_', '').replace('weapon_', '') + '.png'" :type="ingredient.item.type">
 						<!-- <div class="id">#{{ item[0] }}</div> -->
 						<div v-if="ingredient.quantity > 1" class="quantity">{{ ingredient.quantity | number }}</div>

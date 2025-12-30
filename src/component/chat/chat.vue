@@ -51,9 +51,9 @@
 			<v-icon slot="icon">mdi-gavel</v-icon>
 			<span slot="title">Censurer</span>
 			<div v-if="muteFarmer" class="censor">
-				<i18n path="warning.censor_farmer">
+				<i18n-t keypath="warning.censor_farmer">
 					<b slot="farmer">{{ muteFarmer.name }}</b>
-				</i18n>
+				</i18n-t>
 				<div class="flex">
 					<avatar :farmer="muteFarmer" />
 					<div class="messages card">
@@ -78,7 +78,7 @@
 			<v-icon slot="icon">mdi-delete</v-icon>
 			<span slot="title">Supprimer</span>
 			<div v-if="muteFarmer" class="censor">
-				<i18n path="warning.delete_farmer"></i18n>
+				<i18n-t keypath="warning.delete_farmer"></i18n-t>
 				<div class="flex">
 					<avatar :farmer="muteFarmer" />
 					<div class="messages card">
@@ -103,9 +103,9 @@
 			<v-icon slot="icon">mdi-gavel</v-icon>
 			<span slot="title">Censurer</span>
 			<div v-if="muteFarmer" class="censor">
-				<i18n path="warning.mute_popup">
+				<i18n-t keypath="warning.mute_popup">
 					<b slot="farmer">{{ muteFarmer.name }}</b>
-				</i18n>
+				</i18n-t>
 			</div>
 			<div slot="actions">
 				<div v-ripple @click="muteDialog = false">{{ $t('main.cancel') }}</div>
@@ -131,6 +131,7 @@
 	import { store } from '@/model/store'
 	import { TeamMemberLevel } from '@/model/team'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { nextTick } from 'vue'
 	import ChatInput from './chat-input.vue'
 	import ChatMessageComponent from './chat-message.vue'
 	import EmojiPicker from './emoji-picker.vue'
@@ -238,7 +239,7 @@
 
 		chatHistory(e: any) {
 			if (e === this.id && this.scrollMessage) {
-				Vue.nextTick(() => {
+				nextTick(() => {
 					const element = this.$el.querySelector('.m-' + this.scrollMessage) as HTMLElement
 					if (element) {
 						(this.$refs.messages as HTMLElement).scrollTop = element.offsetTop
@@ -325,7 +326,7 @@
 
 		read() {
 			if (!this.chat) { return }
-			Vue.nextTick(() => {
+			nextTick(() => {
 				if (!this.chat!.read) {
 					LeekWars.post('message/read', { conversation_id: this.chat!.id })
 				}
@@ -399,7 +400,7 @@
 			this.menuMessage = message
 			this.menuActivator = activator.target
 			this.menuEmoji = false
-			Vue.nextTick(() => {
+			nextTick(() => {
 				this.menu = true
 			})
 		}
@@ -408,7 +409,7 @@
 			this.menuMessage = message
 			this.menuEmojiActivator = activator.target
 			this.menu = false
-			Vue.nextTick(() => {
+			nextTick(() => {
 				this.menuEmoji = true
 			})
 		}

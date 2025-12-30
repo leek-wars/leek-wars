@@ -6,9 +6,9 @@
 				<img :src="'/image/bulb/' + summon.name + '_front.png'" width="width">
 			</div>
 			<div>
-				<characteristic-tooltip v-for="c of LeekWars.characteristics_table" :key="c" v-slot="{ on }" :characteristic="c" :value="c === 'frequency' || c === 'ram' || c === 'cores' ? 0 : summon.characteristics[c][1]" :total="c === 'frequency' || c === 'ram' || c === 'cores' ? 0 : summon.characteristics[c][1]" :leek="summon.characteristics" :test="true">
-					<div class="characteristic" v-on="on">
-						<img :src="'/image/charac/' + c + '.png'" v-on="on">
+				<characteristic-tooltip v-for="c of LeekWars.characteristics_table" :key="c" v-slot="{ props }" :characteristic="c" :value="c === 'frequency' || c === 'ram' || c === 'cores' ? 0 : summon.characteristics[c][1]" :total="c === 'frequency' || c === 'ram' || c === 'cores' ? 0 : summon.characteristics[c][1]" :leek="summon.characteristics" :test="true">
+					<div class="characteristic" v-bind="props">
+						<img :src="'/image/charac/' + c + '.png'" v-bind="props">
 						<span :class="'color-' + c">
 							<span v-if="c == 'frequency' || c === 'ram' || c === 'cores'">0</span>
 							<span v-else-if="summon.characteristics[c][0] == summon.characteristics[c][1]">
@@ -24,8 +24,8 @@
 		</div>
 		<h4>{{ $t('main.chips') }}</h4>
 		<div class="chips">
-			<rich-tooltip-item v-for="chip of summon.chips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[chip]" :bottom="true" @input="$emit('input', $event)">
-				<img :src="'/image/chip/' + CHIPS[chip].name + '.png'" class="chip" v-on="on">
+			<rich-tooltip-item v-for="chip of summon.chips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[chip]" :bottom="true" @input="$emit('input', $event)">
+				<img :src="'/image/chip/' + CHIPS[chip].name + '.png'" class="chip" v-bind="props">
 			</rich-tooltip-item>
 		</div>
 	</div>

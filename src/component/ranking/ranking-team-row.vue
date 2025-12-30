@@ -3,8 +3,8 @@
 		<td>{{ row.rank }}</td>
 		<td :class="row.style">
 			<router-link :to="'/team/' + row.id">
-				<rich-tooltip-team :id="row.id" v-slot="{ on }" :bottom="true">
-					<span v-on="on">{{ row.name }}</span>
+				<rich-tooltip-team :id="row.id" v-slot="{ props }" :bottom="true">
+					<span v-bind="props">{{ row.name }}</span>
 				</rich-tooltip-team>
 			</router-link>
 		</td>
