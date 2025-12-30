@@ -153,20 +153,20 @@
 				</v-radio-group>
 				<formatting-rules />
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple class="action" @click="createDialog = false">{{ $t('cancel') }}</div>
 				<div v-ripple class="action green" @click="create">{{ $t('create_topic') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-model="markAsReadDialog" :width="500">
 			<v-icon slot="icon">mdi-email-open</v-icon>
 			<span slot="title">{{ $t('mark_as_read') }}</span>
 			{{ $t('mark_as_read_text') }}
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple class="action" @click="markAsReadDialog = false">{{ $t('cancel') }}</div>
 				<div v-ripple class="action green" @click="markAsRead">{{ $t('mark_as_read') }}</div>
-			</div>
+			</template>
 		</popup>
 	</div>
 </template>

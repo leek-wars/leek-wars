@@ -169,36 +169,40 @@
 			</panel>
 
 			<panel v-if="$store.state.farmer?.verified" :title="$t('main.notifications')" icon="mdi-bell-outline">
-				<span slot="actions" class="push-notifs-button" @click="updatePushNotifications">
-					<span>{{ $t('push_notifications') }}</span>
-					<v-switch :input-value="pushNotifications" hide-details />
-				</span>
-				<div slot="content" class="content notifications">
-					<table>
-						<template v-for="category in mails">
-							<tr :key="category.name + '_t'">
-								<td class="category">
-									<v-icon>{{ category.icon }}</v-icon>
-									{{ $t('notification.category_' + category.id) }}
-								</td>
-							</tr>
-							<tr :key="category.name + '_d'">
-								<td class="item">
-									{{ $t('notification.category_' + category.id + '_desc') }}
-								</td>
-								<td class="push">
-									<v-checkbox v-model="settings['push_' + category.name]" hide-details label="Push" @change="updateNotif('push_' + category.name, $event)" />
-								</td>
-								<td class="mail">
-									<v-checkbox v-model="settings['mail_' + category.name]" hide-details label="E-mail" @change="updateNotif('mail_' + category.name, $event)" />
-								</td>
-							</tr>
-						</template>
-					</table>
-					<div class="notif-info">
-						<v-icon>mdi-information-outline</v-icon> {{ $t('notification.info') }}
+				<template #actions>
+					<span class="push-notifs-button" @click="updatePushNotifications">
+						<span>{{ $t('push_notifications') }}</span>
+						<v-switch :input-value="pushNotifications" hide-details />
+					</span>
+				</template>
+				<template #content>
+					<div class="content notifications">
+						<table>
+							<template v-for="category in mails" :key="category.name">
+								<tr>
+									<td class="category">
+										<v-icon>{{ category.icon }}</v-icon>
+										{{ $t('notification.category_' + category.id) }}
+									</td>
+								</tr>
+								<tr>
+									<td class="item">
+										{{ $t('notification.category_' + category.id + '_desc') }}
+									</td>
+									<td class="push">
+										<v-checkbox v-model="settings['push_' + category.name]" hide-details label="Push" @change="updateNotif('push_' + category.name, $event)" />
+									</td>
+									<td class="mail">
+										<v-checkbox v-model="settings['mail_' + category.name]" hide-details label="E-mail" @change="updateNotif('mail_' + category.name, $event)" />
+									</td>
+								</tr>
+							</template>
+						</table>
+						<div class="notif-info">
+							<v-icon>mdi-information-outline</v-icon> {{ $t('notification.info') }}
+						</div>
 					</div>
-				</div>
+				</template>
 			</panel>
 		</div>
 
@@ -222,10 +226,10 @@
 			<div v-html="$t('delete_message')"></div>
 			<br v-if="$store.state.farmer?.verified">
 			<v-switch v-if="$store.state.farmer?.verified" v-model="deleteForumMessages" :label="$t('delete_forum_messages')" hide-details />
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple class="action dismiss" @click="deleteDialog = false">{{ $t('delete_cancel') }}</div>
 				<div v-ripple class="action red" @click="deleteAccountConfirm">{{ $t('delete_confirm') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-model="deleteConfirmDialog" :width="600">
@@ -233,10 +237,10 @@
 			<span slot="title">{{ $t('delete_confirmation') }}</span>
 			{{ $t('delete_confirmation_password') }} : <br><br>
 			{{ $t('delete_password') }} : <input v-model="deleteConfirmPassword" type="password">
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple class="action dismiss" @click="deleteConfirmDialog = false">{{ $t('delete_cancel') }}</div>
 				<div v-ripple class="action red" @click="deleteAccountFinal">{{ $t('delete_finalize') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-model="deleteSuccessDialog" :width="600">

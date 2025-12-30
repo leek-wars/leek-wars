@@ -12,9 +12,9 @@
 				</i18n-t>
 			</div>
 		</div>
-		<div slot="actions">
+		<template #actions>
 			<div v-ripple @click="$emit('input', false)">{{ $t('main.ok') }} :)</div>
-		</div>
+		</template>
 	</popup>
 </template>
 

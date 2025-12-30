@@ -28,7 +28,7 @@
 					</div>
 				</router-link>
 				<div class="tab action disabled" icon="search" link="/search">
-					<img class="search-icon" src="image/search.png" @click="search">
+					<img class="search-icon" src="/image/search.png" @click="search">
 					<input v-model="searchQuery" type="text" class="search-input" @keyup.enter="search">
 				</div>
 			</div>
@@ -75,17 +75,17 @@
 			<span slot="title">
 				<span v-if="connected_farmers.length">{{ $t('connected_farmers', [$store.state.connected_farmers]) }}</span>
 			</span>
-			<div slot="actions">
+			<template #actions>
 				<div class="button flat" @click="expandFarmers = !expandFarmers">
 					<v-icon v-if="expandFarmers">mdi-chevron-down</v-icon>
 					<v-icon v-else>mdi-chevron-up</v-icon>
 				</div>
-			</div>
+			</template>
 			<loader v-if="!connected_farmers.length" />
 			<div v-else :class="{expanded: expandFarmers}" class="connected-farmers">
-				<template v-for="(farmer, f) in connected_farmers">
+				<template v-for="(farmer, f) in connected_farmers" :key="farmer.id">
 					<template v-if="f > 0">, </template>
-					<rich-tooltip-farmer :id="farmer.id" :key="farmer.id" v-slot="{ props }">
+					<rich-tooltip-farmer :id="farmer.id"  v-slot="{ props }">
 						<router-link :to="'/farmer/' + farmer.id">
 							<span :class="farmer.class" v-bind="props">{{ farmer.name }}</span>
 						</router-link>

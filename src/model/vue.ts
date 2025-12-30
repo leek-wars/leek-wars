@@ -64,13 +64,6 @@ Vue.mixin({
 	}
 })
 
-Vue.filter('number', LeekWars.formatNumber)
-Vue.filter('date', LeekWars.formatDate)
-Vue.filter('datetime', LeekWars.formatDateTime)
-Vue.filter('timeseconds', LeekWars.formatTimeSeconds)
-Vue.filter('time', LeekWars.formatTime)
-Vue.filter('duration', LeekWars.formatDuration)
-
 Vue.component('leek-image', LeekImage)
 Vue.component('avatar', Avatar)
 Vue.component('emblem', Emblem)
@@ -383,5 +376,13 @@ if (window.__FARMER__) {
 		})
 	}
 }
+
+// Register Vue filters after LeekWars is fully initialized
+Vue.filter('number', LeekWars.formatNumber)
+Vue.filter('date', LeekWars.formatDate)
+Vue.filter('datetime', LeekWars.formatDateTime)
+Vue.filter('timeseconds', LeekWars.formatTimeSeconds)
+Vue.filter('time', LeekWars.formatTime)
+Vue.filter('duration', LeekWars.formatDuration)
 
 export { vueMain, vuetify, displayWarningMessage, app }

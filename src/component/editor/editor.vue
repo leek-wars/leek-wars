@@ -319,7 +319,7 @@
 			<div class="padding">
 				<input ref="newAIInputv2" v-model="newAIName" :placeholder="$t('ai_name')" type="text" class="input dialog-input" @keyup.enter="newAI(true, newAIName)">
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div @click="newAIv2Dialog = false">{{ $t('cancel') }}</div>
 				<div class="green" @click="newAI(true, newAIName)">{{ $t('main.create') }}</div>
 			</div>

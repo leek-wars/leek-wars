@@ -141,7 +141,7 @@
 			<div class="padding">
 				<input ref="nameInput" v-model="newName" type="text" class="input dialog-input" @keyup.stop @keyup.enter="rename()">
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="renameDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="green" @click="rename()">{{ $t('rename') }}</div>
 			</div>
@@ -152,7 +152,7 @@
 			<span v-if="ai" slot="title">{{ $t('delete_ai', [ai.name]) }}</span>
 			<span v-else-if="folder" slot="title">{{ $t('delete_folder', [folder.name]) }}</span>
 			{{ $t('delete_warning') }}
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="deleteDialog = false">{{ $t('delete_cancel') }}</div>
 				<div v-ripple class="red" @click="deleteItem">{{ $t('delete_validate') }}</div>
 			</div>
@@ -162,7 +162,7 @@
 			<v-icon slot="icon">mdi-delete-forever</v-icon>
 			<span v-if="ai" slot="title">{{ $t('destroy_ai', [ai.name]) }}</span>
 			{{ $t('destroy_warning') }}
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="destroyDialog = false">{{ $t('delete_cancel') }}</div>
 				<div v-ripple class="red" @click="destroyAI">{{ $t('destroy_validate') }}</div>
 			</div>
@@ -172,7 +172,7 @@
 			<v-icon slot="icon">mdi-delete</v-icon>
 			<span slot="title">{{ $t('empty_bin') }}</span>
 			{{ $t('empty_warning') }}
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="emptyDialog = false">{{ $t('delete_cancel') }}</div>
 				<div v-ripple class="red" @click="emptyBin">{{ $t('empty_bin') }}</div>
 			</div>
@@ -184,7 +184,7 @@
 			<div class="padding">
 				<input ref="newAIInput" v-model="newAIName" :placeholder="$t('ai_name')" type="text" class="input dialog-input" @keyup.stop @keyup.enter="newAI(false, newAIName)">
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="newAIDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="green" @click="newAI(false, newAIName)">{{ $t('main.create') }}</div>
 			</div>
@@ -196,7 +196,7 @@
 			<div class="padding">
 				<input ref="newFolderInput" v-model="newFolderName" :placeholder="$t('folder_name')" type="text" class="input dialog-input" @keyup.stop @keyup.enter="newFolder(newFolderName)">
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="newFolderDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="green" @click="newFolder(newFolderName)">{{ $t('main.create') }}</div>
 			</div>

@@ -108,7 +108,7 @@
 			<div class="pagination">{{ page }} / 8</div>
 		</div>
 
-		<div slot="actions">
+		<template #actions>
 			<div v-ripple class="skip-previous" @click="previous">
 				<span v-if="page === 1">❌&nbsp; {{ $t("dismiss") }}</span>
 				<span v-else>◄ {{ $t("previous") }}</span>

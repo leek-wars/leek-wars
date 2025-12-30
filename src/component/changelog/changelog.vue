@@ -29,7 +29,7 @@
 		<template v-else>
 			<panel v-for="version in lazy_changelog" :key="version.version" icon="mdi-star">
 				<template #title>{{ $t('changelog.version_n', [version.version_name]) }} ({{ version.date | date }}) {{ translations[version.version] && translations[version.version].title ? ' — ' + translations[version.version].title : '' }}</template>
-				<template slot="actions">
+				<template #actions>
 					<div class="button flat" @click="showChangelogDialog(version)">
 						<v-icon>mdi-eye-outline</v-icon>
 					</div>

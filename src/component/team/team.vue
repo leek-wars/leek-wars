@@ -132,12 +132,14 @@
 		</div>
 
 		<panel v-if="team && is_member" :title="$t('chat')" toggle="team/chat" icon="mdi-chat-outline">
-			<div slot="actions">
+			<template #actions>
 				<div v-if="!LeekWars.mobile && team && $store.state.chat[team.chat]" class="button flat" @click="LeekWars.addChat($store.state.chat[team.chat])">
 					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 				</div>
-			</div>
-			<chat v-if="team" :id="team.chat" slot="content" />
+			</template>
+			<template #content>
+				<chat v-if="team" :id="team.chat" />
+			</template>
 		</panel>
 
 		<panel v-if="team && is_member && team.candidacies && team.candidacies.length > 0">
@@ -159,7 +161,7 @@
 		</panel>
 
 		<panel v-if="team" icon="mdi-account-supervisor" :title="$t('farmers', [ team.member_count])">
-			<template slot="actions">
+			<template #actions>
 				<div v-if="owner && !editMembers" class="button flat" @click="editMembers = true">
 					<v-icon>mdi-pencil</v-icon>
 				</div>
@@ -299,7 +301,7 @@
 		</panel>
 
 		<panel v-if="is_member" :title="$t('compositions')">
-			<template v-if="captain" slot="actions">
+			<template v-if="captain" #actions>
 				<div class="button flat" @click="createCompoDialog = true">{{ $t('create_composition') }}</div>
 			</template>
 			<div slot="content"></div>
@@ -314,7 +316,7 @@
 						<div v-bind="props">{{ composition.name }}</div>
 					</rich-tooltip-composition>
 				</template>
-				<template slot="actions">
+				<template #actions>
 					<div class="level-talent">
 						<span class="level">{{ $t('level_n', [composition.total_level]) }}</span>
 						<talent :id="team.id" :talent="composition.talent" category="team" />
@@ -405,7 +407,7 @@
 
 		<div class="container grid large">
 			<panel v-if="team && team.fights.length > 0" :title="$t('history')" icon="mdi-sword-cross">
-				<template slot="actions">
+				<template #actions>
 					<router-link :to="'/team/' + id + '/history'" class="button flat">
 						<v-icon class="list-icon">mdi-history</v-icon>
 						<span>{{ $t('history') }}</span>
@@ -440,10 +442,10 @@
 			<span slot="title">{{ $t('create_composition') }}</span>
 			<h4>{{ $t('compo_name') }}</h4>
 			<input v-model="createCompoName" type="text" @keyup.enter="createComposition">
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="createCompoDialog = false">{{ $t('compo_cancel') }}</div>
 				<div v-ripple class="green" @click="createComposition">{{ $t('compo_create') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-if="team" v-model="deleteCompoDialog" :width="600">
@@ -452,10 +454,10 @@
 			<div v-if="compositionToDelete">
 				{{ $t('delete_compo_confirm', [compositionToDelete.name]) }}
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="deleteCompoDialog = false">{{ $t('delete_cancel') }}</div>
 				<div v-ripple class="red" @click="deleteComposition(compositionToDelete)">{{ $t('delete_confirm') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-if="team" v-model="renameCompoDialog" :width="600">
@@ -463,11 +465,10 @@
 			<span v-if="compositionToRename" slot="title">{{ $t('rename_compo_confirm_title', [compositionToRename.name]) }}</span>
 			<h4>{{ $t('compo_name') }}</h4>
 			<input v-model="renameCompoName" type="text" @keyup.enter="renameComposition(compositionToRename)">
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="renameCompoDialog = false">{{ $t('delete_cancel') }}</div>
 				<div v-ripple class="green" @click="renameComposition(compositionToRename)">{{ $t('rename_confirm') }}</div>
-			</div>
-
+			</template>
 		</popup>
 
 
@@ -475,30 +476,30 @@
 			<v-icon slot="icon">mdi-exit</v-icon>
 			<span slot="title">{{ $t('quit_team_confirm_title', [team.name]) }}</span>
 			{{ $t('quit_team_confirm') }}
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="quitTeamDialog = false">{{ $t('quit_cancel') }}</div>
 				<div v-ripple class="red" @click="quitTeam">{{ $t('quit_confirm') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-if="team" v-model="dissolveDialog" :width="500">
 			<v-icon slot="icon">mdi-delete</v-icon>
 			<span slot="title">{{ $t('disolve_confirm_title', [team.name]) }}</span>
 			{{ $t('disolve_confirm') }}
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="dissolveDialog = false">{{ $t('disolve_cancel') }}</div>
 				<div v-ripple class="red" @click="dissolveTeam">{{ $t('disolve_disolve') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-if="banMemberTarget" v-model="banDialog" :width="500">
 			<v-icon slot="icon">mdi-delete</v-icon>
 			<span slot="title">{{ $t('ban_confirm_title', [banMemberTarget.name]) }}</span>
 			{{ $t('ban_confirm', [banMemberTarget.name]) }}
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="banDialog = false">{{ $t('ban_cancel') }}</div>
 				<div v-ripple class="red" @click="banMember"><v-icon>mdi-hand-pointing-right</v-icon>{{ $t('ban_ban') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-if="team" v-model="changeOwnerDialog" :width="650">
@@ -528,10 +529,10 @@
 					</div>
 				</rich-tooltip-farmer>
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="changeOwnerDialog = false">{{ $t('change_owner_cancel') }}</div>
 				<div v-ripple class="green" @click="changeOwnerSelect(changeOwnerSelected)">{{ $t('change_owner_change') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-if="changeOwnerSelected" v-model="changeOwnerConfirmDialog" :width="500">
@@ -544,10 +545,10 @@
 			{{ $t('enter_password_to_confirm') }}
 			<br><br>
 			<input v-model="changeOwnerPassword" type="password">
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="changeOwnerConfirmDialog = false">{{ $t('change_owner_cancel') }}</div>
 				<div v-ripple class="green" @click="changeOwner">{{ $t('change_owner_change') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-if="team" v-model="turretDialog" :width="600">
