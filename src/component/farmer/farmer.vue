@@ -189,8 +189,8 @@
 						<div v-if="farmer.godfather">
 							<i18n path="godson_of" tag="div">
 								<router-link slot="farmer" :to="'/farmer/' + farmer.godfather.id">
-									<rich-tooltip-farmer :id="farmer.godfather.id">
-										{{ farmer.godfather.name }}
+									<rich-tooltip-farmer :id="farmer.godfather.id" v-slot="{ on }">
+										<span v-on="on">{{ farmer.godfather.name }}</span>
 									</rich-tooltip-farmer>
 								</router-link>
 							</i18n>
@@ -353,8 +353,8 @@
 						<div v-if="farmer.godfather">
 							<i18n path="godson_of" tag="div">
 								<router-link slot="farmer" :to="'/farmer/' + farmer.godfather.id">
-									<rich-tooltip-farmer :id="farmer.godfather.id">
-										{{ farmer.godfather.name }}
+									<rich-tooltip-farmer :id="farmer.godfather.id" v-slot="{ on }">
+										<span v-on="on">{{ farmer.godfather.name }}</span>
 									</rich-tooltip-farmer>
 								</router-link>
 							</i18n>
