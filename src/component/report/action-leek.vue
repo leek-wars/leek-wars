@@ -1,4 +1,4 @@
-<template functional>
+<template>
 	<span :class="'team' + props.leek.team">{{ props.leek.translatedName }}</span>
 </template>
 

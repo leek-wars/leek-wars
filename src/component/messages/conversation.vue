@@ -1,7 +1,7 @@
 <template>
 	<div v-if="chat" v-ripple class="conversation" :class="{unread: !chat.read}">
-		<rich-tooltip-farmer :id="farmer ? farmer.id : 0" v-slot="{ on }">
-			<avatar :farmer="farmer" :on="on" />
+		<rich-tooltip-farmer :id="farmer ? farmer.id : 0" v-slot="{ props }">
+			<avatar :farmer="farmer" v-bind="props" />
 		</rich-tooltip-farmer>
 		<div class="content">
 			<div class="name">{{ farmer ? farmer.name : '?' }}</div>

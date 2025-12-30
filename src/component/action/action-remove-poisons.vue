@@ -1,5 +1,5 @@
 
-<template functional>
+<template>
 	<i18n tag="div" path="fight.remove_poisons" :a="props.a">
 		<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
 	</i18n>

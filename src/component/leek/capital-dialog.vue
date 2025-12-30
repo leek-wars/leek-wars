@@ -3,7 +3,7 @@
 		<v-icon slot="icon">mdi-star-outline</v-icon>
 		<span slot="title">{{ $t('main.add_capital_title') }} ({{ totalCapital }})</span>
 
-		<center><div v-if="totalCapital" :class="{zero: capital == 0}" class="capital rounded4">{{ $t('main.n_capital', [capital]) }}</div></center>
+		<div class="center"><div v-if="totalCapital" :class="{zero: capital == 0}" class="capital rounded4">{{ $t('main.n_capital', [capital]) }}</div></div>
 
 		<div class="characteristics">
 			<div v-for="c in LeekWars.characteristics" :key="c" class="charac" :class="c">

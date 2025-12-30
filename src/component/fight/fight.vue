@@ -20,7 +20,7 @@
 		</panel>
 
 		<div v-if="fight" class="fight-info">
-			<center v-if="fight.type === FightType.BATTLE_ROYALE">
+			<div class="center" v-if="fight.type === FightType.BATTLE_ROYALE">
 				<span v-for="(farmer, f, i) in fight.farmers1" :key="f">
 					<span v-if="i !== 0" class="br-versus">VS</span>
 					<router-link :to="'/farmer/' + farmer.id">
@@ -32,7 +32,7 @@
 						</rich-tooltip-farmer>
 					</router-link>
 				</span>
-			</center>
+			</div>
 			<table v-else>
 				<tr>
 					<td>

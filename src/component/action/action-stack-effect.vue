@@ -1,5 +1,5 @@
 
-<template functional>
+<template>
 	<component :is="parent.EffectComponents[props.action.item.type]" :leek="parent.leeks[props.action.item.target]" :value="props.action.params[2]" :turns="props.action.item.turns" :a="props.a" />
 	<!-- <div>stack {{ props.action }} {{ props.action.item }}</div> -->
 </template>

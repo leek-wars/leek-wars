@@ -1,6 +1,7 @@
-import {precacheAndRoute} from 'workbox-precaching';
-
-precacheAndRoute(self.__WB_MANIFEST);
+// Workbox precaching disabled for Vite development
+// TODO: Re-enable with vite-plugin-pwa for production
+// import {precacheAndRoute} from 'workbox-precaching';
+// precacheAndRoute(self.__WB_MANIFEST);
 
 /*
 function post(url, args) {

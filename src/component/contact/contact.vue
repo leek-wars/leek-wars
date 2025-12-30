@@ -4,7 +4,7 @@
 			<h1>{{ $t('title') }}</h1>
 		</div>
 		<panel class="first">
-			<center>
+			<div class="center">
 				<div class="text">{{ $t('intro') }}</div>
 
 				<a href="mailto:contact@leekwars.com" target="_blank">
@@ -14,7 +14,7 @@
 						</i18n>
 					</div>
 				</a>
-			</center>
+			</div>
 		</panel>
 	</div>
 </template>

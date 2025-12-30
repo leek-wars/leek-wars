@@ -143,7 +143,7 @@
 
 				<popup v-model="battleRoyaleDialog" :width="600">
 					<v-icon slot="icon">mdi-sword-cross</v-icon>
-					<template slot="title">{{ $t('main.battle_royale') }}</template>
+					<template #title>{{ $t('main.battle_royale') }}</template>
 					<loader v-if="LeekWars.battleRoyale.progress == 0" />
 					<div class="br-leeks">
 						<div v-for="leek in LeekWars.battleRoyale.leeks" :key="leek.id" class="leek">
@@ -154,9 +154,9 @@
 						</div>
 					</div>
 					<br>
-					<center>
+					<div class="center">
 						<v-btn @click="quit"><v-icon>mdi-keyboard-backspace</v-icon>&nbsp;Quitter</v-btn>
-					</center>
+					</div>
 				</popup>
 			</div>
 		</div>

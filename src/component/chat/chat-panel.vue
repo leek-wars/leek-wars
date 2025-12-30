@@ -1,6 +1,6 @@
 <template lang="html">
 	<panel v-if="chatID" class="chat-panel" :toggle="toggle" icon="mdi-chat-outline">
-		<template slot="title">
+		<template #title>
 			<router-link v-ripple :to="'/chat/' + chatID" class="title">
 				<span>{{ $store.state.chat[chatID] ? $store.state.chat[chatID].name : 'Chat' }}</span>
 				<span v-if="$store.state.farmer?.public_chat_enabled" class="farmer-count">
@@ -8,30 +8,34 @@
 				</span>
 			</router-link>
 		</template>
-		<div slot="actions" class="actions">
-			<v-menu v-if="$store.state.farmer?.public_chat_enabled" offset-y>
-				<template v-slot:activator="{ on }">
-					<div class="language-button" v-ripple v-on="on">
-						<flag :code="LeekWars.languages[LeekWars.publicChats[chatID].language].country" :clickable="false" />
-						<div class="unread-circle" v-if="Object.values(LeekWars.publicChats).some(chat => $store.state.chat[chat.id] && !$store.state.chat[chat.id].read)"></div>
-					</div>
-				</template>
-				<v-list :dense="true">
-					<div v-for="(data, language) in LeekWars.languages" v-if="data.chats" :key="language" class="language">
-						<flag :code="LeekWars.languages[language].country" />
-						<v-list-item v-for="(chat, i) in data.chats" :key="i" class="language" @click="setChatLanguage(chat)">
-							<v-icon>{{ LeekWars.publicChats[chat].icon }}</v-icon>
-							<span class="name">{{ LeekWars.publicChats[chat].name }}</span>
-							<span class="unread-circle" v-if="$store.state.chat[chat] && !$store.state.chat[chat].read"></span>
-						</v-list-item>
-					</div>
-				</v-list>
-			</v-menu>
-			<div v-if="!LeekWars.mobile && $store.state.chat[chatID]" class="button text" @click="LeekWars.addChat($store.state.chat[chatID])">
-				<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
+		<template #actions>
+			<div class="actions">
+				<v-menu v-if="$store.state.farmer?.public_chat_enabled" location="bottom">
+					<template v-slot:activator="{ props }">
+						<div class="language-button" v-ripple v-bind="props">
+							<flag :code="LeekWars.languages[LeekWars.publicChats[chatID].language].country" :clickable="false" />
+							<div class="unread-circle" v-if="Object.values(LeekWars.publicChats).some(chat => $store.state.chat[chat.id] && !$store.state.chat[chat.id].read)"></div>
+						</div>
+					</template>
+					<v-list :dense="true">
+						<div v-for="(data, language) in LeekWars.languages" v-if="data.chats" :key="language" class="language">
+							<flag :code="LeekWars.languages[language].country" />
+							<v-list-item v-for="(chat, i) in data.chats" :key="i" class="language" @click="setChatLanguage(chat)">
+								<v-icon>{{ LeekWars.publicChats[chat].icon }}</v-icon>
+								<span class="name">{{ LeekWars.publicChats[chat].name }}</span>
+								<span class="unread-circle" v-if="$store.state.chat[chat] && !$store.state.chat[chat].read"></span>
+							</v-list-item>
+						</div>
+					</v-list>
+				</v-menu>
+				<div v-if="!LeekWars.mobile && $store.state.chat[chatID]" class="button text" @click="LeekWars.addChat($store.state.chat[chatID])">
+					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
+				</div>
 			</div>
-		</div>
-		<chat :id="chatID" slot="content" :style="{height: height + 'px'}" />
+		</template>
+		<template #content>
+			<chat :id="chatID" :style="{height: height + 'px'}" />
+		</template>
 	</panel>
 </template>
 

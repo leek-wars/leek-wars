@@ -11,34 +11,40 @@
 				<div class="resizer" @mousedown="resizerMousedown"></div>
 
 				<panel v-if="$store.state.notifications.length" toggle="social/notifications" icon="mdi-bell-outline">
-					<template slot="title">
+					<template #title>
 						<router-link v-ripple class="title" to="/notifications">
 							{{ $t('main.notifications') }}
 							<span v-show="$store.state.unreadNotifications" class="label">{{ $store.state.unreadNotifications }}</span>
 						</router-link>
 					</template>
-					<div slot="actions" class="actions">
-						<div v-if="$store.state.unreadNotifications" class="button text" @click="readAllNotifications">
-							<v-icon>mdi-check-all</v-icon>
+					<template #actions>
+						<div class="actions">
+							<div v-if="$store.state.unreadNotifications" class="button text" @click="readAllNotifications">
+								<v-icon>mdi-check-all</v-icon>
+							</div>
 						</div>
-					</div>
-					<div slot="content" v-autostopscroll class="content-limit">
-						<notification v-for="notification in $store.state.notifications" :key="notification.id" :notification="notification" @click.native="readNotification(notification)" />
-					</div>
+					</template>
+					<template #content>
+						<div v-autostopscroll class="content-limit">
+							<notification v-for="notification in $store.state.notifications" :key="notification.id" :notification="notification" @click.native="readNotification(notification)" />
+						</div>
+					</template>
 				</panel>
 
 				<panel v-if="env.SOCIAL && $store.state.farmer.verified && $store.state.conversationsList.length" toggle="social/messages" icon="mdi-email-outline">
-					<template slot="title">
+					<template #title>
 						<router-link v-ripple class="title" to="/chat">
 							{{ $t('main.messages') }}
 							<span v-show="$store.state.unreadMessages" class="label">{{ $store.state.unreadMessages }}</span>
 						</router-link>
 					</template>
-					<div slot="content" v-autostopscroll class="content-limit">
-						<router-link v-for="chat in $store.state.conversationsList" :key="chat.id" :to="'/chat/' + chat.id">
-							<conversation :chat="chat" />
-						</router-link>
-					</div>
+					<template #content>
+						<div v-autostopscroll class="content-limit">
+							<router-link v-for="chat in $store.state.conversationsList" :key="chat.id" :to="'/chat/' + chat.id">
+								<conversation :chat="chat" />
+							</router-link>
+						</div>
+					</template>
 				</panel>
 
 				<chat-panel v-if="env.SOCIAL" toggle="social/chat" chat="social" :height="300" />

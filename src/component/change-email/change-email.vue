@@ -16,9 +16,9 @@
 
 					<br>
 					<br>
-					<center>
+					<div class="center">
 						<v-btn type="submit">{{ $t('send_confirmation') }}</v-btn>
-					</center>
+					</div>
 					<br>
 					<div class="error">{{ error }}</div>
 				</form>
@@ -26,15 +26,15 @@
 
 			<template v-else-if="state == 2">
 				<loader v-if="!error" />
-				<center v-else>
+				<div class="center" v-else>
 					<img src="/image/notgood.png">
 					<br><br>
 					<div class="error">{{ error }}</div>
-				</center>
+				</div>
 			</template>
 
 			<template v-else-if="state == 3">
-				<center>
+				<div class="center">
 					<img src="/image/map/nexus_block_small.png">
 					<br>
 					<br>
@@ -43,11 +43,11 @@
 					</i18n>
 					<br>
 					<br>
-				</center>
+				</div>
 			</template>
 
 			<template v-else-if="state == 4">
-				<center>
+				<div class="center">
 					<img src="/image/map/nexus_block_small.png">
 					<br>
 					<br>
@@ -55,7 +55,7 @@
 					<br>
 					<br>
 					<v-btn color="primary">{{ $t('back_home') }}</v-btn>
-				</center>
+				</div>
 			</template>
 		</panel>
 	</div>

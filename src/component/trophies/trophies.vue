@@ -111,7 +111,7 @@
 			</div>
 		</panel>
 		<panel v-if="!group_by_categories" :icon="LeekWars.trophyCategoriesIcons[0]">
-			<template slot="title">{{ $t('trophies') }}</template>
+			<template #title>{{ $t('trophies') }}</template>
 			<loader v-show="!loaded" slot="content" />
 			<div v-if="loaded" slot="content" class="trophies">
 				<trophy v-for="trophy in sorted_trophies" :key="trophy.id" :trophy="trophy" />
@@ -119,7 +119,7 @@
 		</panel>
 		<template v-else>
 			<panel v-for="category in categories" :key="category.id" :icon="LeekWars.trophyCategoriesIcons[category.id - 1]" :toggle="'trophies/toggle-' + category.id">
-				<template slot="title">{{ $t('trophy.category_' + category.name) }}</template>
+				<template #title>{{ $t('trophy.category_' + category.name) }}</template>
 				<template slot="actions">
 					<div class="category-bar-wrapper">
 						<div v-if="category.id !== 6" class="stats">{{ points[category.id] | number }} / {{ totalPoints[category.id] | number }}</div>
@@ -136,7 +136,7 @@
 			</panel>
 		</template>
 		<panel icon="mdi-chart-line" class="last">
-			<template slot="title">{{ $t('stats') }}</template>
+			<template #title>{{ $t('stats') }}</template>
 			<loader v-show="!loaded" slot="content" />
 			<div v-if="loaded" slot="content" class="statistics">
 				<div v-for="(variable, v) in variables" :key="v" class="stat">

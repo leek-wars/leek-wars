@@ -16,16 +16,16 @@
 
 					<br>
 					<br>
-					<center>
+					<div class="center">
 						<v-btn type="submit">{{ $t('change_password') }}</v-btn>
-					</center>
+					</div>
 					<br>
 					<div class="error"></div>
 				</form>
 			</template>
 
 			<template v-else-if="state == 'email_sent'">
-				<center>
+				<div class="center">
 					<img src="/image/map/nexus_block_small.png">
 					<br>
 					<br>
@@ -34,7 +34,7 @@
 					</i18n>
 					<br>
 					<br>
-				</center>
+				</div>
 			</template>
 
 			<div v-else>
@@ -44,9 +44,9 @@
 					<h2>{{ $t('email_address') }}</h2>
 					<input v-model="email" type="text" name="email">
 					<br><br>
-					<center>
+					<div class="center">
 						<v-btn type="submit">{{ $t('ask_new_password') }}</v-btn>
-					</center>
+					</div>
 					<br>
 					<div class="error"></div>
 				</form>

@@ -20,31 +20,40 @@ import { LeekWars } from '@/model/leekwars'
 import '@/model/serviceworker'
 import { store } from "@/model/store"
 import router from '@/router'
-import Vue from 'vue'
+import { createApp } from 'vue'
+import type { ComponentPublicInstance } from 'vue'
+import Vue, { configureCompat } from '@vue/compat'
 import { Latex } from './latex'
-import { Route } from 'vue-router'
 import { scroll_to_hash } from '@/router-functions'
 
-import Vuetify from 'vuetify/lib'
-import Ripple from 'vuetify/lib/directives/ripple'
-import '@mdi/font/css/materialdesignicons.css'
-Vue.use(Vuetify, {
-	theme: { dark: true },
-	directives: {
-		Ripple
-	},
-	icons: {
-		iconfont: 'mdi'
-	},
+// Configure compat mode
+configureCompat({
+	MODE: 2,
 })
 
-import tooltip from '@/vtooltip-fast'
-Vue.component('tooltip', tooltip)
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+import 'vuetify/styles'
+import '@mdi/font/css/materialdesignicons.css'
 
-import { createSimpleTransition } from 'vuetify/lib/components/transitions/createTransition'
-import '../fade-transition.sass'
-const myTransition = createSimpleTransition('my-transition')
-Vue.component('my-transition', myTransition)
+const vuetify = createVuetify({
+	components,
+	directives,
+	theme: {
+		defaultTheme: 'dark'
+	}
+})
+
+// TODO: Fix vtooltip-fast for Vuetify 3
+// import tooltip from '@/vtooltip-fast'
+// Vue.component('tooltip', tooltip)
+
+// TODO: Fix transitions for Vuetify 3
+// import { createSimpleTransition } from 'vuetify/lib/components/transitions/createTransition'
+// import '../fade-transition.sass'
+// const myTransition = createSimpleTransition('my-transition')
+// Vue.component('my-transition', myTransition)
 
 Vue.config.productionTip = false
 
@@ -178,11 +187,11 @@ Vue.directive('dochash', (el) => {
 function displayWarningMessage() {
 	const style = "color: black; font-size: 13px; font-weight: bold;"
 	const styleRed = "color: red; font-size: 14px; font-weight: bold;"
-	console.log("%c" + i18n.t('main.console_alert_1'), style)
-	console.log("%c" + i18n.t('main.console_alert_2'), styleRed)
-	console.log("%c" + i18n.t('main.console_alert_3'), style)
+	console.log("%c" + i18n.global.t('main.console_alert_1'), style)
+	console.log("%c" + i18n.global.t('main.console_alert_2'), styleRed)
+	console.log("%c" + i18n.global.t('main.console_alert_3'), style)
 	console.log("")
-	console.log("%c✔️ " + i18n.t('main.console_github'), style)
+	console.log("%c✔️ " + i18n.global.t('main.console_github'), style)
 	console.log("")
 }
 
@@ -190,17 +199,15 @@ let lastErrorSent = 0
 
 let secondInterval: any = null, minuteInterval: any = null
 
-const vuetify = new Vuetify()
-
-const vueMain = new Vue({
-	router, i18n, store,
-	data: { savedPosition: 0 },
-	vuetify,
-	render: (h) => {
+const app = createApp({
+	data() {
+		return { savedPosition: 0 }
+	},
+	render() {
 		if (location.pathname === '/full-console') {
-			return h(Console)
+			return this.$createElement(Console)
 		}
-		return h(App)
+		return this.$createElement(App)
 	},
 	created() {
 		window.addEventListener('keydown', (event) => {
@@ -306,7 +313,7 @@ const vueMain = new Vue({
 		}
 	},
 
-	errorCaptured(err, vm, info) {
+	errorCaptured(err: any, vm: any, info: any) {
 
 		if (LeekWars.DEV) return
 
@@ -316,22 +323,32 @@ const vueMain = new Vue({
 		const error = err.name + ": " + err.message
 		const file = document.location.href
 		const stack = err.stack + '\n' + info
-		const locale = i18n.locale
+		const locale = i18n.global.locale
 
 		LeekWars.post('error/report', { error, stack, file, locale })
 	}
-}).$mount('#app')
+})
 
-router.afterEach((to: Route) => {
+app.use(router)
+app.use(i18n)
+app.use(store)
+app.use(vuetify)
+
+const vueMain = app.mount('#app2') as ComponentPublicInstance & {
+	$once: (event: string, callback: () => void) => void
+	$emit: (event: string, ...args: any[]) => void
+}
+
+router.afterEach((to: any) => {
 	if (to.hash) {
-		vueMain.$once('loaded', () => {
+		setTimeout(() => {
 			setTimeout(() => {
 				scroll_to_hash(to.hash, to)
 			}, 100)
-		})
+		}, 0)
 	}
 
-	vueMain.$emit('navigate')
+	app.config.globalProperties.$root?.$emit?.('navigate')
 })
 
 if (window.__FARMER__) {
@@ -339,6 +356,7 @@ if (window.__FARMER__) {
 } else {
 	const token = LeekWars.DEV ? localStorage.getItem('token') : '$'
 	if (localStorage.getItem('connected') === 'true') {
+		store.commit('connected', token)
 		LeekWars.get('farmer/get-from-token').then(data => {
 			store.commit('connect', {...data, token})
 		}).error(() => {

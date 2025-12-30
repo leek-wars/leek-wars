@@ -152,7 +152,7 @@
 							<span :class="'color-' + c">{{ leek ? leek['total_' + c] : '...' }}</span>
 						</div>
 					</characteristic-tooltip>
-					<center v-if="leek && my_leek">
+					<div class="center" v-if="leek && my_leek">
 						<span class="dida-element">
 							<v-btn v-if="(leek.capital > 0 || LeekWars.didactitial_step === 1) && $store.state.farmer.equipment_enabled" color="primary" @click="capitalDialog = true" :class="{bouncing: !capitalDialog && LeekWars.didactitial_step === 1}">{{ $t('main.n_capital', [leek.capital]) }}</v-btn>
 							<span v-if="LeekWars.didactitial_step === 1" class="dida-hint">
@@ -168,12 +168,12 @@
 							<img src="/image/icon/black/potion.png">
 							{{ $t('potions') }}
 						</v-btn>
-					</center>
+					</div>
 				</div>
 			</panel>
 
 			<panel icon="mdi-sword">
-				<template slot="title">{{ $t('weapons') }} <span v-if="leek && leek.weapons" class="weapon-count">[{{ leek.weapons.length }}/{{ leek.max_weapons }}]</span></template>
+				<template #title>{{ $t('weapons') }} <span v-if="leek && leek.weapons" class="weapon-count">[{{ leek.weapons.length }}/{{ leek.max_weapons }}]</span></template>
 				<template v-if="leek && my_leek" slot="actions">
 					<div v-if="$store.state.farmer.equipment_enabled" class="button flat" @click="weaponsDialog = true">
 						<v-icon>mdi-pencil</v-icon>
@@ -193,7 +193,7 @@
 			</panel>
 
 			<panel icon="mdi-chip">
-				<template slot="title">{{ $t('main.chips') }} <span v-if="leek && leek.chips" class="chip-count">[{{ leek.chips.length }}/{{ leek.total_ram }}]</span></template>
+				<template #title>{{ $t('main.chips') }} <span v-if="leek && leek.chips" class="chip-count">[{{ leek.chips.length }}/{{ leek.total_ram }}]</span></template>
 				<template v-if="leek && my_leek && (leek.chips.length + farmer_chips.length) > 0" slot="actions">
 					<div v-if="$store.state.farmer.equipment_enabled" class="button flat" @click="chipsDialog = true">
 						<v-icon>mdi-pencil</v-icon>
@@ -248,7 +248,7 @@
 			</panel>
 		</div>
 
-		<center v-if="leek && my_leek && leek.fights && leek.fights.length === 0">
+		<div class="center" v-if="leek && my_leek && leek.fights && leek.fights.length === 0">
 			<br>
 			<router-link to="/garden">
 				<v-btn color="primary">
@@ -257,7 +257,7 @@
 				</v-btn>
 			</router-link>
 			<br><br>
-		</center>
+		</div>
 
 		<div class="container large">
 			<panel v-if="leek && leek.fights && leek.fights.length > 0" :title="$t('fights')" icon="mdi-sword-cross">
@@ -275,7 +275,7 @@
 		</div>
 
 		<panel v-if="leek && my_leek && leek.registers && leek.registers.length > 0" toggle="leek/registers" icon="mdi-database">
-			<template slot="title">{{ $t('registers') }} <span class="register-count">[{{ leek.registers.length }}/100]</span></template>
+			<template #title>{{ $t('registers') }} <span class="register-count">[{{ leek.registers.length }}/100]</span></template>
 			<table class="registers">
 				<tr>
 					<th>{{ $t('register_key') }}</th>
@@ -344,7 +344,7 @@
 
 		<popup v-if="leek" v-model="weaponsDialog" :width="800">
 			<img slot="icon" src="/image/icon/garden.png">
-			<template slot="title">
+			<template #title>
 				{{ $t('weapons_of', [leek.name]) }}
 				<span class="weapon-count">[{{ leek.weapons.length }}/{{ leek.max_weapons }}]</span>
 			</template>
@@ -375,18 +375,18 @@
 
 		<popup v-if="leek" v-model="renameDialog" :width="600">
 			<v-icon slot="icon">mdi-pencil-outline</v-icon>
-			<template slot="title">{{ $t('rename_leek') }}</template>
+			<template #title>{{ $t('rename_leek') }}</template>
 			{{ $t('rename_description') }}
 			<br>
 			<br>
 			{{ $t('rename_new_name') }} : <input v-model="renameName" type="text">
 			<br>
 			<br>
-			<center>
+			<div class="center">
 				<v-btn class="rename-button" @click="rename('habs')">{{ $t('rename_pay_habs') }} :&nbsp;<b>{{ rename_price_habs | number }}</b><img src="/image/hab.png"></v-btn>
 				&nbsp;
 				<v-btn class="rename-button" @click="rename('crystals')">{{ $t('rename_pay_crystals') }} :&nbsp;<b>{{ rename_price_crystals }}</b><span class="crystal"></span></v-btn>
-			</center>
+			</div>
 		</popup>
 
 		<v-snackbar v-model="renameSuccess" :timeout="2000" color="success">{{ $t('rename_done') }}</v-snackbar>
@@ -411,7 +411,7 @@
 						</div>
 					</tooltip>
 				</div>
-				<center>({{ $t('click_to_use') }})</center>
+				<div class="center">({{ $t('click_to_use') }})</div>
 			</div>
 		</popup>
 
@@ -464,7 +464,7 @@
 					</tooltip>
 				</div>
 				<br>
-				<center>({{ $t('click_to_put_hat') }})</center>
+				<div class="center">({{ $t('click_to_put_hat') }})</div>
 			</div>
 		</popup>
 
@@ -494,11 +494,11 @@
 			<v-icon slot="icon">mdi-auto-fix</v-icon>
 			<span slot="title">{{ $t('customize') }}</span>
 			<div v-if="leek" class="customize-dialog">
-				<center>
+				<div class="center">
 					<leek-image ref="leekImage" :leek="leek" :scale="1" />
 					<br>
 					<lw-title v-if="leek.title.length" :title="leek.title" />
-				</center>
+				</div>
 
 				<div class="customize-grid">
 					<div v-ripple class="item card" @click="skinPotionDialog = true">
@@ -656,11 +656,11 @@
 								</div>
 							</rich-tooltip-item>
 						</div>
-						<center>
+						<div class="center">
 							<router-link to="/inventory">
 								<v-btn><v-icon left>mdi-treasure-chest</v-icon> {{ $t('main.inventory') }}</v-btn>
 							</router-link>
-						</center>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -668,7 +668,7 @@
 
 		<popup v-if="leek && my_leek" v-model="chipsDialog" :width="816">
 			<v-icon slot="icon">mdi-chip</v-icon>
-			<template slot="title">{{ $t('chips_of', [leek.name]) }} <span class="chip-count">[{{ leek.chips.length }}/{{ leek.total_ram }}]</span></template>
+			<template #title>{{ $t('chips_of', [leek.name]) }} <span class="chip-count">[{{ leek.chips.length }}/{{ leek.total_ram }}]</span></template>
 			<div class="chips-dialog">
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'farmer'}" class="leek-chips" @dragover="dragOver" @drop="chipsDrop('leek', $event)">
 					<rich-tooltip-item v-for="chip in orderedChips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[chip.template]" :bottom="true" :nodge="true" :leek="leek">
