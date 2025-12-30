@@ -10,6 +10,7 @@
     - Fixed untranslated "error_name_already_used" error message when creating a leek.
     - "Editor: fixed tab closing when AI was deleted outside the editor."
     - "Boss: fixed fight count deduction when a boss fight starts without participating (#2344)."
+    - Fixed fight progress jumping to 99% when a chest died.
 
 243:
   title: Community creation, Quantum Rifle and new server.
