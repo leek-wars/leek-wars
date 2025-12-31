@@ -43,9 +43,9 @@
 	import { EffectType } from '@/model/effect'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({
+	@Options({
 		name: 'chip-preview',
 		components: {
 			'range-view': RangeView,

@@ -30,9 +30,9 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'new_leek', i18n: {} })
+	@Options({ name: 'new_leek', i18n: {} })
 	export default class NewLeek extends Vue {
 		price: number | null = null
 		leekCount: number | null = null

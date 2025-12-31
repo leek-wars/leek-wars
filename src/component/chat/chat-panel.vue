@@ -40,13 +40,14 @@
 </template>
 
 <script lang="ts">
-const ChatElement = () => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`)
-import { Component, Prop, Vue } from 'vue-property-decorator'
+const ChatElement = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
+import { Options, Prop, Vue } from 'vue-property-decorator'
 import { Language, LeekWars } from '@/model/leekwars'
 import { ChatType } from '@/model/chat'
 import { store } from '@/model/store'
+import { defineAsyncComponent } from 'vue'
 
-@Component({ components: { chat: ChatElement, components: { ChatElement } } })
+@Options({ components: { chat: ChatElement, components: { ChatElement } } })
 export default class ChatPanel extends Vue {
 
 	@Prop({ required: true }) toggle!: string

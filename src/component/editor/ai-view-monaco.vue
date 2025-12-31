@@ -20,7 +20,7 @@
 <script lang="ts">
 
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 import { fileSystem } from '@/model/filesystem'
 import './monaco'
 import { AI } from '@/model/ai'
@@ -32,7 +32,7 @@ import Javadoc from './javadoc.vue'
 import { FUNCTIONS } from '@/model/functions';
 import { CONSTANTS } from '@/model/constants';
 
-@Component({ name: 'ai-view-monaco', components: {
+@Options({ name: 'ai-view-monaco', components: {
 
 }})
 export default class AIViewMonaco extends Vue {
@@ -286,7 +286,7 @@ export default class AIViewMonaco extends Vue {
 					for (const problem of result[entrypoint]) {
 						if (problem[0] === 0) { valid = false; break }
 					}
-					Vue.set(ai, 'valid', valid)
+					ai.valid = valid
 					analyzer.handleProblems(ai, result[entrypoint])
 				}
 				analyzer.updateCount()

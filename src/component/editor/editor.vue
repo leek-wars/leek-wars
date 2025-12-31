@@ -334,7 +334,7 @@
 	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import { Route } from 'vue-router'
 	import AIView from './ai-view.vue'
 	import AIViewMonaco from './ai-view-monaco.vue'
@@ -357,7 +357,7 @@
 	const DEFAULT_LINE_HEIGHT = 24
 	const DEFAULT_THEME = "leek-wars"
 
-	@Component({
+	@Options({
 		name: 'editor', i18n: {},
 		components: {
 			'ai-view': AIView,
@@ -472,23 +472,23 @@
 			LeekWars.footer = false
 			LeekWars.box = true
 
-			this.$root.$on('ctrlS', () => {
+			emitter.on('ctrlS', () => {
 				this.save()
 			})
-			this.$root.$on('ctrlShiftS', () => {
+			emitter.on('ctrlShiftS', () => {
 				// TODO save all but analyze only entrypoints
 				// this.saveAll()
 			})
-			this.$root.$on('ctrlQ', () => {
+			emitter.on('ctrlQ', () => {
 				this.testDialog = true
 			})
-			// this.$root.$on('ctrlF', (event: Event) => {
+			// emitter.on('ctrlF', (event: Event) => {
 			// 	if (this.currentEditor) {
 			// 		this.currentEditor.search()
 			// 		event.preventDefault()
 			// 	}
 			// })
-			this.$root.$on('ctrlP', (event: Event) => {
+			emitter.on('ctrlP', (event: Event) => {
 				const finder = this.$refs.finder as EditorFinder
 				finder.search = true
 				finder.open()
@@ -497,35 +497,35 @@
 				// 	editor.ctrlUp()
 				// }
 			})
-			this.$root.$on('escape', () => {
+			emitter.on('escape', () => {
 				(this.$refs.finder as EditorFinder).close()
 			})
-			this.$root.$on('htmlclick', () => {
+			emitter.on('htmlclick', () => {
 				(this.$refs.finder as EditorFinder).close()
 			})
-			this.$root.$on('keydown', this.keydown)
-			this.$root.$on('keyup', this.keyup)
-			this.$root.$on('previous', (event: Event) => {
+			emitter.on('keydown', this.keydown)
+			emitter.on('keyup', this.keyup)
+			emitter.on('previous', (event: Event) => {
 				const finder = this.$refs.finder as EditorFinder
 				finder.search = false
 				finder.open()
 				finder.previous()
 				event.preventDefault()
 			})
-			this.$root.$on('next', (event: Event) => {
+			emitter.on('next', (event: Event) => {
 				const finder = this.$refs.finder as EditorFinder
 				finder.search = false
 				finder.open()
 				finder.next()
 				event.preventDefault()
 			})
-			this.$root.$on('back', () => {
+			emitter.on('back', () => {
 				this.$router.push('/editor')
 			})
-			this.$root.$on('editor-drag', (item: any) => {
+			emitter.on('editor-drag', (item: any) => {
 				this.dragging = item
 			})
-			this.$root.$on('editor-drop', (folder: Folder) => {
+			emitter.on('editor-drop', (folder: Folder) => {
 				if (!this.dragging) { return }
 				const parent = fileSystem.folderById[this.dragging.parent]
 				if (parent === folder || this.dragging === folder) { return }
@@ -537,8 +537,8 @@
 				LeekWars.post(this.dragging.folder ? 'ai-folder/change-folder' : 'ai/change-folder', this.dragging.folder ? {folder_id: (this.dragging as Folder).id, dest_folder_id: folder.id} : {ai_id: (this.dragging as AIItem).ai.id, folder_id: folder.id})
 				this.dragging = null
 			})
-			this.$root.$on('connected', this.connected)
-			this.$root.$on('jump', this.jump)
+			emitter.on('connected', this.connected)
+			emitter.on('jump', this.jump)
 
 			if (store.state.farmer) {
 				this.connected()
@@ -612,7 +612,7 @@
 					this.currentType = 'ai'
 					this.currentFolder = fileSystem.folderById[ai.folder]
 					if (!(id in this.activeAIs)) {
-						Vue.set(this.$data.activeAIs, ai.id, ai)
+						this.$data.activeAIs[ai.id] = ai
 					}
 					explorer.selectAI(ai)
 					if (this.$refs.tabs) {
@@ -663,20 +663,20 @@
 		}
 
 		beforeDestroy() {
-			this.$root.$off('ctrlS')
-			this.$root.$off('ctrlShiftS')
-			this.$root.$off('ctrlQ')
-			this.$root.$off('ctrlF')
-			this.$root.$off('ctrlP')
-			this.$root.$off('escape')
-			this.$root.$off('htmlclick')
-			this.$root.$off('keydown', this.keydown)
-			this.$root.$off('keyup', this.keyup)
-			this.$root.$off('previous')
-			this.$root.$off('next')
-			this.$root.$off('back')
-			this.$root.$off('connected', this.connected)
-			this.$root.$off('jump', this.jump)
+			emitter.off('ctrlS')
+			emitter.off('ctrlShiftS')
+			emitter.off('ctrlQ')
+			emitter.off('ctrlF')
+			emitter.off('ctrlP')
+			emitter.off('escape')
+			emitter.off('htmlclick')
+			emitter.off('keydown', this.keydown)
+			emitter.off('keyup', this.keyup)
+			emitter.off('previous')
+			emitter.off('next')
+			emitter.off('back')
+			emitter.off('connected', this.connected)
+			emitter.off('jump', this.jump)
 			LeekWars.large = false
 			LeekWars.header = true
 			LeekWars.footer = true
@@ -712,7 +712,7 @@
 
 			const saveID = aiEditor.ai ? aiEditor.ai.id : 0
 			const content = aiEditor.editor.getValue()
-			Vue.set(aiEditor.ai, 'code', content)
+			aiEditor.ai.code = content
 
 			LeekWars.track('save-ai')
 
@@ -724,7 +724,7 @@
 					return
 				}
 
-				Vue.set(aiEditor.ai, 'timestamp', data.modified)
+				aiEditor.ai.timestamp = data.modified
 				localStorage.setItem('ai/time/' + aiEditor.ai.id, '' + data.modified)
 				localStorage.setItem('ai/code/' + aiEditor.ai.id, content)
 
@@ -742,7 +742,7 @@
 					if (valid && aiEditor.goods.length === 0) {
 						aiEditor.goods.push({ai})
 					}
-					Vue.set(ai, 'valid', valid)
+					ai['valid'] = valid
 					analyzer.handleProblems(ai, data.result[entrypoint])
 				}
 				analyzer.updateCount()
@@ -841,7 +841,7 @@
 
 		load(ai: AI) {
 			if (!(ai.id in this.activeAIs)) {
-				Vue.set(this.$data.activeAIs, ai.id, ai)
+				this.$data.activeAIs[ai.id] = ai
 			}
 		}
 
@@ -924,7 +924,7 @@
 
 		deleteAI(ai: AI) {
 			// Remove from active AIs
-			Vue.delete(this.$data.activeAIs, '' + ai.id)
+			delete this.$data.activeAIs['' + ai.id]
 			// Remove from tabs
 			if (this.$refs.tabs) {
 				(this.$refs.tabs as any).close(ai.id, false)

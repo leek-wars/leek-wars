@@ -65,15 +65,17 @@
 			</panel>
 			<template v-else>
 				<panel v-for="(item, i) in items" :key="i" class="item-sample">
-					<router-link slot="content"  :to="'/market/' + item.name.replace(/[a-z-]+_/, '')" v-ripple>
-						<item :item="item" />
-						<div class="info">
-							<div class="name">{{ $t(item.name.replace('_', '.')) }}</div>
-							<div class="price">
-								{{ item.crystals | number }} <span class="crystal"></span>
+					<template #content>
+						<router-link :to="'/market/' + item.name.replace(/[a-z-]+_/, '')" v-ripple>
+							<item :item="item" />
+							<div class="info">
+								<div class="name">{{ $t(item.name.replace('_', '.')) }}</div>
+								<div class="price">
+									{{ $filters.number(item.crystals) }} <span class="crystal"></span>
+								</div>
 							</div>
-						</div>
-					</router-link>
+						</router-link>
+					</template>
 				</panel>
 			</template>
 		</div>
@@ -83,12 +85,12 @@
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import Item from '@/component/item.vue'
 	import { locale } from '@/locale'
 	import BankProduct from './bank-product.vue'
 
-	@Component({ name: 'bank', i18n: {}, mixins: [...mixins], components: { Item, BankProduct } })
+	@Options({ name: 'bank', i18n: {}, mixins: [...mixins], components: { Item, BankProduct } })
 	export default class Bank extends Vue {
 		packs: any = null
 		items: any = null

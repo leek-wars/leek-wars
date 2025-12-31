@@ -34,11 +34,13 @@
 						<v-icon>mdi-eye-outline</v-icon>
 					</div>
 				</template>
-				<div slot="content" class="wrapper">
-					<div class="content">
-						<changelog-version :version="version" />
+				<template #content>
+					<div class="wrapper">
+						<div class="content">
+							<changelog-version :version="version" />
+						</div>
 					</div>
-				</div>
+				</template>
 			</panel>
 		</template>
 		<changelog-dialog v-model="changelogDialog" :changelog="changelogVersion" />
@@ -47,11 +49,11 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 	import ChangelogDialog from './changelog-dialog.vue'
 	import ChangelogVersion from './changelog-version.vue'
 
-	@Component({ name: 'changelog', i18n: {}, components: { ChangelogVersion, ChangelogDialog } })
+	@Options({ name: 'changelog', i18n: {}, components: { ChangelogVersion, ChangelogDialog } })
 	export default class Changelog extends Vue {
 		changelog: any = null
 		changelogDialog: boolean = false
@@ -68,14 +70,14 @@
 			LeekWars.get('changelog/get/' + this.$i18n.locale).then(data => {
 				this.changelog = data.changelog
 				for (const c in this.changelog) {
-					Vue.set(this.changelog[c], 'active', parseInt(c, 10) < 2 ? true : false)
+					this.changelog[c].active = parseInt(c, 10) < 2 ? true : false
 				}
 				const lw_version = parseInt(LeekWars.normal_version.replace(/\./g, ''), 10)
 				if (this.changelog[0].version !== lw_version) {
 					this.changelog.unshift({active: true, image: true, version: lw_version, version_name: LeekWars.normal_version.replace(/\.(\d)$/, '$1'), date: Date.now() / 1000, data: 'changelog_' + lw_version})
 				}
 				LeekWars.setTitle(this.$t('main.changelog'))
-				this.$root.$emit('loaded')
+				emitter.emit('loaded')
 			})
 			window.addEventListener('scroll', this.scroll)
 

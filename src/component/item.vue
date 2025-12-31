@@ -8,10 +8,10 @@
 
 <script lang="ts">
 	import { ItemTemplate, ItemType, ITEM_CATEGORY_NAME } from '@/model/item'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 
-	@Component({ name: "item", components: { RichTooltipItem } })
+	@Options({ name: "item", components: { RichTooltipItem } })
 	export default class ItemView extends Vue {
 		@Prop() item!: ItemTemplate
 

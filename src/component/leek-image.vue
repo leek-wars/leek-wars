@@ -1,5 +1,5 @@
 <template lang="html">
-	<svg xmlns="http://www.w3.org/2000/svg" :viewBox="'0 0 ' + width + ' ' + height" :width="width * scale" :height="height * scale" v-bind="props">
+	<svg xmlns="http://www.w3.org/2000/svg" :viewBox="'0 0 ' + width + ' ' + height" :width="width * scale" :height="height * scale">
 		<defs>
 			<clipPath :id="'cut' + hat" clipPathUnits="objectBoundingBox">
 				<rect :x="0" :y="hatCrop" :width="leekWidth" :height="leekHeight" />
@@ -30,14 +30,13 @@
 	import { Leek, LEEK_FACES } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { FishData, WeaponsData } from '@/model/weapon'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({})
+	@Options({})
 	export default class LeekImage extends Vue {
 
 		@Prop({required: true}) leek!: Leek
 		@Prop({required: true}) scale!: number
-		@Prop() on!: any
 		@Prop() invert!: boolean
 		@Prop() ai!: number
 

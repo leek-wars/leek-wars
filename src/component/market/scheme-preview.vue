@@ -8,10 +8,10 @@
 
 <script lang="ts">
 	import { SchemeTemplate } from '@/model/scheme'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import SchemeView from './scheme.vue';
 
-	@Component({ components: { 'scheme': SchemeView } })
+	@Options({ components: { 'scheme': SchemeView } })
 	export default class SchemePreview extends Vue {
 		@Prop() scheme!: SchemeTemplate
 

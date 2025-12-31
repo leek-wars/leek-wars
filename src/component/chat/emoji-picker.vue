@@ -27,9 +27,9 @@
 
 <script lang="ts">
 	import { Emojis } from '@/model/emojis'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({})
+	@Options({})
 	export default class EmojiPicker extends Vue {
 		width: number = 352
 		categories = Emojis.categories

@@ -63,8 +63,8 @@
 							<span>{{ $t('n_messages', [LeekWars.formatNumber(category.messages)]) }}</span>
 						</div>
 					</div>
-					<div v-if="!LeekWars.mobile" class="num-topics">{{ category.topics | number }}</div>
-					<div v-if="!LeekWars.mobile" class="num-messages">{{ category.messages | number }}</div>
+					<div v-if="!LeekWars.mobile" class="num-topics">{{ $filters.number(category.topics) }}</div>
+					<div v-if="!LeekWars.mobile" class="num-messages">{{ $filters.number(category.messages) }}</div>
 				</router-link>
 			</template>
 		</panel>
@@ -72,9 +72,9 @@
 		<chat-panel toggle="forum/chat" chat="forum" :height="400" />
 
 		<panel icon="mdi-account-supervisor">
-			<span slot="title">
+			<template #title>
 				<span v-if="connected_farmers.length">{{ $t('connected_farmers', [$store.state.connected_farmers]) }}</span>
-			</span>
+			</template>
 			<template #actions>
 				<div class="button flat" @click="expandFarmers = !expandFarmers">
 					<v-icon v-if="expandFarmers">mdi-chevron-down</v-icon>
@@ -117,15 +117,17 @@
 </template>
 
 <script lang="ts">
-	const ChatPanel = () => import(/* webpackChunkName: "chat" */ `@/component/chat/chat-panel.vue`)
+	const ChatPanel = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat-panel.vue`))
 	import { Farmer } from '@/model/farmer'
 	import { Language, LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import { mixins } from '@/model/i18n'
 	import { store } from '@/model/store'
+	import { defineAsyncComponent } from 'vue'
+import { emitter } from '@/model/vue'
 
-	@Component({ name: 'forum', i18n: {}, mixins: [...mixins], components: { ChatPanel, RichTooltipFarmer } })
+	@Options({ name: 'forum', i18n: {}, mixins: [...mixins], components: { ChatPanel, RichTooltipFarmer } })
 	export default class Forum extends Vue {
 
 		categories: any = null
@@ -143,14 +145,14 @@
 		created() {
 			const languages = (localStorage.getItem('forum/languages') as string || this.$i18n.locale).split(',')
 			for (const l in LeekWars.languages) {
-				Vue.set(this.forumLanguages, l, false)
+				this.forumLanguages[l] = false
 			}
 			for (const l of languages) {
-				Vue.set(this.forumLanguages, l, true)
+				this.forumLanguages[l] = true
 			}
 			LeekWars.get('forum/get-categories/' + this.activeLanguages).then(data => {
 				this.categories = data.categories
-				this.$root.$emit('loaded')
+				emitter.emit('loaded')
 				this.connected_farmers = data.farmers
 				store.commit('connected-count', data.farmers.length)
 				this.connected_languages = data.languages

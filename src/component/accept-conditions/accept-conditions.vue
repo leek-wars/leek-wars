@@ -16,9 +16,9 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'accept_conditions', i18n: {} })
+	@Options({ name: 'accept_conditions', i18n: {} })
 	export default class AcceptConditions extends Vue {
 		accept() {
 			LeekWars.post('farmer/accept-terms')

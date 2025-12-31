@@ -7,10 +7,10 @@
 
 <script lang="ts">
 	import { Action } from '@/model/action'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import ActionLeekElement from '../report/action-leek.vue'
 
-	@Component({ components: { leek: ActionLeekElement } })
+	@Options({ components: { leek: ActionLeekElement } })
 	export default class ActionPlayerDead extends Vue {
 		@Prop() action!: Action
 		@Prop() a!: number

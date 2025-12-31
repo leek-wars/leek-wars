@@ -46,8 +46,8 @@
 <script lang="ts">
 	import RangeView from '@/component/market/range-view.vue'
 	import { Area } from '@/model/area'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
-	@Component({
+	import { Options, Prop, Vue } from 'vue-property-decorator'
+	@Options({
 		name: 'area-view',
 		components: { 'range-view': RangeView }
 	})

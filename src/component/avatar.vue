@@ -5,9 +5,9 @@
 <script lang="ts">
 	import { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ name: "avatar" })
+	@Options({ name: "avatar" })
 	export default class Avatar extends Vue {
 		@Prop() farmer!: Farmer
 		get url() {

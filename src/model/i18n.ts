@@ -1,5 +1,5 @@
 import { locale, messages } from '@/locale'
-import { Component } from 'vue'
+import { Options } from 'vue'
 import { createI18n } from 'vue-i18n'
 
 const i18n = createI18n({

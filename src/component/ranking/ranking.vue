@@ -87,16 +87,16 @@
 									</rich-tooltip-farmer>
 								</router-link>
 							</td>
-							<td v-if="funRanking.value_type == 'number'">{{ farmer.value | number }}</td>
-							<td v-else-if="funRanking.value_type == 'money'">{{ farmer.value | number }} <span class="hab"></span></td>
-							<td v-else-if="funRanking.value_type == 'distance'">{{ farmer.value | number }}m</td>
+							<td v-if="funRanking.value_type == 'number'">{{ $filters.number(farmer.value) }}</td>
+							<td v-else-if="funRanking.value_type == 'money'">{{ $filters.number(farmer.value) }} <span class="hab"></span></td>
+							<td v-else-if="funRanking.value_type == 'distance'">{{ $filters.number(farmer.value) }}m</td>
 						</tr>
 						<tr v-if="$store.state.farmer && funRanking.ranking.farmer_rank > 10" class="me">
 							<td>{{ funRanking.ranking.farmer_rank }}</td>
 							<td>{{ $store.state.farmer.name }}</td>
-							<td v-if="funRanking.value_type == 'number'">{{ funRanking.ranking.farmer_value | number }}</td>
-							<td v-if="funRanking.value_type == 'money'">{{ funRanking.ranking.farmer_value | number }} <span class="hab"></span></td>
-							<td v-if="funRanking.value_type == 'distance'">{{ funRanking.ranking.farmer_value | number }}m</td>
+							<td v-if="funRanking.value_type == 'number'">{{ $filters.number(funRanking.ranking.farmer_value) }}</td>
+							<td v-if="funRanking.value_type == 'money'">{{ $filters.number(funRanking.ranking.farmer_value) }} <span class="hab"></span></td>
+							<td v-if="funRanking.value_type == 'distance'">{{ $filters.number(funRanking.ranking.farmer_value) }}m</td>
 						</tr>
 					</table>
 				</div>
@@ -262,11 +262,11 @@
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Ranking } from '@/model/ranking'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import Pagination from '@/component/pagination.vue'
 
-	@Component({
+	@Options({
 		name: 'ranking', i18n: {}, mixins: [...mixins],
 		components: { 'ranking-leek-row': RankingLeekRowElement, 'ranking-farmer-row': RankingFarmerRowElement, 'ranking-team-row': RankingTeamRowElement, 'ranking-search-result': RankingSearchResult, RichTooltipFarmer, Pagination }
 	})
@@ -356,7 +356,7 @@
 					this.rankings = data.rankings
 					this.ranking = []
 					LeekWars.setTitle(this.$t('title'), this.$t('fun'))
-					this.$root.$emit('loaded')
+					emitter.emit('loaded')
 				})
 			} else {
 				this.ranking = null
@@ -396,7 +396,7 @@
 					this.ranking = ranking
 					LeekWars.setActions([{icon: 'mdi-magnify', click: () => this.openSearch()}])
 					LeekWars.setTitle(this.$t('title'), this.category.includes('level') ? this.$t('main.level_n', [this.rankingLevel]) : this.$t('main.n_' + this.category + 's', [data.total]))
-					this.$root.$emit('loaded')
+					emitter.emit('loaded')
 				})
 			}
 		}

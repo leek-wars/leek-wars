@@ -46,7 +46,7 @@ const InventoryPage = () => import(/* webpackChunkName: "[request]" */ `@/compon
 const LineOfSight = () => import(/* webpackChunkName: "[request]" */ `@/component/line-of-sight/line-of-sight.${locale}.i18n`)
 const History = () => import(/* webpackChunkName: "[request]" */ `@/component/history/history.${locale}.i18n`)
 const Items = () => import(/* webpackChunkName: "[request]" */ `@/component/items/items.${locale}.i18n`)
-const Leek = () => import(/* webpackChunkName: "[request]" */ `@/component/leek/leek.${locale}.i18n`)
+const Leek = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/leek/leek.${locale}.i18n`))
 const Legal = () => import(/* webpackChunkName: "[request]" */ `@/component/legal/legal.${locale}.i18n`)
 const Login = () => import(/* webpackChunkName: "[request]" */ `@/component/login/login.${locale}.i18n`)
 const Market = () => import(/* webpackChunkName: "[request]" */ `@/component/market/market.${locale}.i18n`)
@@ -60,7 +60,7 @@ const PressKit = () => import(/* webpackChunkName: "[request]" */ `@/component/p
 const Ranking = () => import(/* webpackChunkName: "[request]" */ `@/component/ranking/ranking.${locale}.i18n`)
 const Report = () => import(/* webpackChunkName: "[request]" */ `@/component/report/report.${locale}.i18n`)
 const Settings = () => import(/* webpackChunkName: "[request]" */ `@/component/settings/settings.${locale}.i18n`)
-const Signup = () => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup.${locale}.i18n`)
+const Signup = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup.${locale}.i18n`))
 const Statistics = () => import(/* webpackChunkName: "[request]" */ `@/component/statistics/statistics.${locale}.i18n`)
 const SignupResult = () => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup-result.${locale}.i18n`)
 const TalentPage = () => import(/* webpackChunkName: "[request]" */ `@/component/talent/talent.${locale}.i18n`)
@@ -77,7 +77,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 import { scroll_to_hash } from './router-functions'
 import AdminComponents from './component/admin/admin-components.vue'
-import { defineComponent, h } from 'vue'
+import { defineAsyncComponent, defineComponent, h } from 'vue'
 
 // Lazy getter for vueMain to avoid circular dependency
 let _vueMain: any = null

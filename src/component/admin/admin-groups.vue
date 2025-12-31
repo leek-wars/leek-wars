@@ -48,10 +48,10 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Component({ components: { RichTooltipFarmer } })
+	@Options({ components: { RichTooltipFarmer } })
 	export default class AdminTrophies extends Vue {
 		groups: any = null
 		headers = [

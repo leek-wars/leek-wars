@@ -1,7 +1,9 @@
 <template>
-	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'my-transition'" :open-on-hover="!locked" offset-y @input="open($event)">
+	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'my-transition'" :open-on-hover="!locked" offset-y @update:modelValue="open($event)">
 		<template v-slot:activator="{ props }">
-			<slot v-bind="props"></slot>
+			<span v-bind="props">
+				<slot></slot>
+			</span>
 		</template>
 		<div :class="{expanded: expand_items}" class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
 			<loader v-if="!leek" :size="30" />
@@ -50,17 +52,17 @@
 					</table>
 					<div class="items">
 						<div class="weapons">
-							<rich-tooltip-item v-for="weapon in leek.weapons" :key="weapon.id" v-slot="{ props }" :item="LeekWars.items[weapon.template]" :bottom="true" :leek="leek" @input="setParent">
+							<rich-tooltip-item v-for="weapon in leek.weapons" :key="weapon.id" v-slot="{ props }" :item="LeekWars.items[weapon.template]" :bottom="true" :leek="leek" @update:modelValue="setParent">
 								<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" class="weapon" v-bind="props">
 							</rich-tooltip-item>
 						</div>
 						<div class="chips">
-							<rich-tooltip-item v-for="chip in leek.chips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[chip.template]" :bottom="true" :leek="leek" @input="setParent">
+							<rich-tooltip-item v-for="chip in leek.chips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[chip.template]" :bottom="true" :leek="leek" @update:modelValue="setParent">
 								<img :src="'/image/chip/' + CHIPS[chip.template].name + '.png'" class="chip" v-bind="props">
 							</rich-tooltip-item>
 						</div>
 						<div class="components">
-							<rich-tooltip-item v-for="component in leek.components.filter(c => c)" :key="component.id" v-slot="{ props }" :item="LeekWars.items[component.template]" :bottom="true" @input="setParent">
+							<rich-tooltip-item v-for="component in leek.components.filter(c => c)" :key="component.id" v-slot="{ props }" :item="LeekWars.items[component.template]" :bottom="true" @update:modelValue="setParent">
 								<img :src="'/image/component/' + LeekWars.items[component.template].name + '.png'" class="component" v-bind="props">
 							</rich-tooltip-item>
 						</div>
@@ -75,12 +77,13 @@
 
 import { Leek } from '@/model/leek'
 import { LeekWars } from '@/model/leekwars'
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
-const LWTitle = () => import('@/component/title/title.vue')
+const LWTitle = defineAsyncComponent(() => import('@/component/title/title.vue'))
 import { CHIPS } from '@/model/chips'
+import { defineAsyncComponent } from 'vue'
 
-@Component({ components: { RichTooltipItem, 'lw-title': LWTitle } })
+@Options({ components: { RichTooltipItem, 'lw-title': LWTitle } })
 export default class RichTooltipLeek extends Vue {
 
 	@Prop({required: true}) id!: number
@@ -108,7 +111,7 @@ export default class RichTooltipLeek extends Vue {
 		this.content_created = false
 	}
 	open(v: boolean) {
-		this.$emit('input', v)
+		this.$emit('update:modelValue', v)
 		this.expand_items = localStorage.getItem('richtooltipleek/expanded') === 'true'
 		if (this.content_created) { return }
 		this.content_created = true
@@ -130,7 +133,7 @@ export default class RichTooltipLeek extends Vue {
 		this.locked = event
 		if (!event && !this.mouse) {
 			this.value = false
-			this.$emit('input', false)
+			this.$emit('update:modelValue', false)
 		}
 	}
 

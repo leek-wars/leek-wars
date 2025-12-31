@@ -110,10 +110,10 @@
 	import { locale } from '@/locale'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 	const Didactitiel = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`)
 
-	@Component({ name: 'help', i18n: {}, mixins: [...mixins], components: { Didactitiel } })
+	@Options({ name: 'help', i18n: {}, mixins: [...mixins], components: { Didactitiel } })
 	export default class Help extends Vue {
 		advanced: boolean = false
 		didactitiel: boolean = false

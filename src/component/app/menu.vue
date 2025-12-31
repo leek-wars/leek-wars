@@ -20,10 +20,10 @@
 							</router-link>
 							<div class="moneys">
 								<router-link v-ripple to="/market" @click.native="clickItem">
-									<span class="hab text"></span><span v-if="$store.state.farmer" class="farmer-habs">{{ $store.state.farmer.habs | number }}</span>
+									<span class="hab text"></span><span v-if="$store.state.farmer" class="farmer-habs">{{ $filters.number($store.state.farmer.habs) }}</span>
 								</router-link>
 								<router-link v-ripple class="crystals" to="/bank" @click.native="clickItem">
-									<span class="crystal text"></span><span v-if="$store.state.farmer" class="farmer-crystals">{{ $store.state.farmer.crystals | number }}</span>
+									<span class="crystal text"></span><span v-if="$store.state.farmer" class="farmer-crystals">{{ $filters.number($store.state.farmer.crystals) }}</span>
 								</router-link>
 							</div>
 						</div>
@@ -171,7 +171,7 @@
 				<div class="title">
 					<div>
 						<h4>{{ $t('main.rewards') }} ({{ $store.state.farmer.rewards.length }})</h4>
-						<div>{{ $store.state.farmer.rewards.reduce((s, r) => s + r.habs, 0) | number }} <span class="hab"></span></div>
+						<div>{{ $filters.number($store.state.farmer.rewards.reduce((s, r) => s + r.habs, 0)) }} <span class="hab"></span></div>
 					</div>
 					<v-btn class="get-all notif-trophy" @click.stop="retrieveAll()"><span v-if="!LeekWars.mobile">{{ $t('main.retrieve_all') }}</span> <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
 				</div>
@@ -181,7 +181,7 @@
 							<img :src="'/image/trophy/' + TROPHIES[reward.trophy - 1].code + '.svg'">
 							{{ $t('trophy.' + TROPHIES[reward.trophy - 1].code) }}
 							<div class="spacer"></div>
-							<div>{{ reward.habs | number }} <span class="hab"></span></div>
+							<div>{{ $filters.number(reward.habs) }} <span class="hab"></span></div>
 						</router-link>
 						<v-btn class="get notif-trophy" @click.stop="retrieve(reward)"><img src="/image/icon/arrow-down-right-bold.svg"></v-btn>
 					</div>
@@ -194,11 +194,11 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import { TROPHIES } from '@/model/trophies'
 	import { BOSSES } from '@/model/boss'
 
-	@Component({
+	@Options({
 		name: 'lw-menu'
 	})
 	export default class Menu extends Vue {
@@ -308,7 +308,7 @@
 		@Watch('LeekWars.menuCollapsed')
 		update() {
 			localStorage.setItem('main/menu-collapsed', '' + LeekWars.menuCollapsed)
-			this.$root.$emit('resize')
+			emitter.emit('resize')
 		}
 
 		quit(e: Event) {

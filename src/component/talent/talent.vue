@@ -26,10 +26,10 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import Chartist from 'vue-chartist'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 	import(/* webpackChunkName: "chartist" */ /* webpackMode: "eager" */ "@/chartist-wrapper")
 
-	@Component({ name: 'talent', i18n: {} })
+	@Options({ name: 'talent', i18n: {} })
 	export default class TalentPage extends Vue {
 
 		leekData: any = null
@@ -63,11 +63,11 @@
 		}
 		mounted() {
 			LeekWars.large = true
-			this.$root.$on('resize', this.resize)
+			emitter.on('resize', this.resize)
 		}
 		beforeDestroy() {
 			LeekWars.large = false
-			this.$root.$off('resize', this.resize)
+			emitter.off('resize', this.resize)
 		}
 		resize() {
 			nextTick(() => {

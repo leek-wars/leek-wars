@@ -50,10 +50,10 @@
 <script lang="ts">
 	import { COSTS, Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import CharacteristicTooltip from './characteristic-tooltip.vue'
 
-	@Component({ name: 'capital-dialog', components: { "characteristic-tooltip": CharacteristicTooltip } })
+	@Options({ name: 'capital-dialog', components: { "characteristic-tooltip": CharacteristicTooltip } })
 	export default class CapitalDialog extends Vue {
 		@Prop() value!: boolean
 		@Prop({required: true}) leek!: Leek
@@ -154,7 +154,7 @@
 
 		buttonCost(capital: number, charac: string) {
 			let tmpBonus = this.bonuses[charac]
-			Vue.set(this.costs, charac + capital, {cost: 0, bonus: 0})
+			this.costs[charac + capital] = {cost: 0, bonus: 0}
 			let q = capital
 			while (q > 0) {
 				const total = this.added[charac] + tmpBonus

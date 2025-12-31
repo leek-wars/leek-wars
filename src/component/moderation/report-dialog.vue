@@ -47,9 +47,9 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { Team } from '@/model/team'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({})
+	@Options({})
 	export default class ReportDialog extends Vue {
 		@Prop() reasons!: Warning[]
 		@Prop() target!: Farmer | null

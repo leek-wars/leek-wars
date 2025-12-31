@@ -15,8 +15,8 @@
 </template>
 
 <script lang="ts">
-	import { Component, Vue } from 'vue-property-decorator'
-	@Component({})
+	import { Options, Vue } from 'vue-property-decorator'
+	@Options({})
 	export default class FormattingRules extends Vue {}
 </script>
 

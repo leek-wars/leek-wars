@@ -31,11 +31,11 @@
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import Type from '../type.vue'
 	import { KeywordKind } from '@/model/keyword'
 
-	@Component({ name: "javadoc", components: { Type } })
+	@Options({ name: "javadoc", components: { Type } })
 	export default class Javadoc extends Vue {
 		
 		KeywordKind = KeywordKind

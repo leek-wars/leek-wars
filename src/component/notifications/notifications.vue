@@ -17,9 +17,9 @@
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { NotificationBuilder } from '@/model/notification-builder'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 
-	@Component({
+	@Options({
 		name: 'notifications', i18n: {}, mixins: [...mixins],
 		components: { notification: NotificationElement }
 	})

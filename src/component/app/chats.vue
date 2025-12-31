@@ -21,9 +21,9 @@
 	import { ChatType, ChatWindow } from '@/model/chat'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({
+	@Options({
 		components: { chat: ChatElement }
 	})
 	export default class Chats extends Vue {

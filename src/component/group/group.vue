@@ -522,7 +522,7 @@
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import { Group } from '@/model/group'
 	import { Farmer, Member } from '@/model/farmer'
 	import { store } from '@/model/store'
@@ -539,7 +539,7 @@
 	import TournamentsHistory from '@/component/history/tournaments-history.vue'
 	import Item from '@/component/item.vue'
 
-	@Component({ name: 'group', i18n: {}, mixins: [...mixins], components: {
+	@Options({ name: 'group', i18n: {}, mixins: [...mixins], components: {
 		chat: ChatElement, RichTooltipTeam, RichTooltipFarmer, CharacteristicTooltip, RichTooltipItem, CapitalDialog, FightsHistory, TournamentsHistory, Item
 	}})
 	export default class GroupPage extends Vue {
@@ -636,17 +636,17 @@
 			LeekWars.get('groupe/get/' + this.group_id).then(group => {
 				this.group = group
 				this.headersDialog = group.use_passwords ? this.headersDialogPassword : this.headersDialogEmails
-				Vue.set(this.characteristics, 'level', group.level)
-				Vue.set(this.characteristics, 'baseLife', 100 + (group.level - 1) * 3)
+				this.characteristics['level'] = group.level
+				this.characteristics['baseLife'] = 100 + (group.level - 1) * 3
 				for (const charac of LeekWars.characteristics) {
-					Vue.set(this.characteristics, charac, group[charac])
+					this.characteristics[charac] = group[charac]
 				}
 				for (const member of group.members) {
-					Vue.set(member, 'give', {})
+					member.give = {}
 				}
 				this.renameGroupName = group.name
 				LeekWars.setTitle(group.name)
-				this.$root.$emit('loaded')
+				emitter.emit('loaded')
 			})
 		}
 
@@ -874,10 +874,10 @@
 				this.group.level = parseInt(e.target!.value)
 				if (this.group.level < 1) this.group.level = 1
 				if (this.group.level > 301) this.group.level = 301
-				Vue.set(this.characteristics, 'level', this.group.level)
-				Vue.set(this.characteristics, 'baseLife', 100 + (this.group.level - 1) * 3)
+				this.characteristics['level'] = this.group.level
+				this.characteristics['baseLife'] = 100 + (this.group.level - 1) * 3
 				if (this.characteristics.life < this.characteristics.baseLife) {
-					Vue.set(this.characteristics, 'life', this.characteristics.baseLife)
+					this.characteristics['life'] = this.characteristics.baseLife
 				}
 			}
 		}
@@ -958,10 +958,10 @@
 				member_id: member.id,
 				name: member.name,
 			}).then(result => {
-				Vue.delete(member, 'name_error')
+				delete member['name_error']
 			}).error(error => {
-				Vue.delete(member, 'name_error')
-				Vue.set(member, 'name_error', error)
+				delete member['name_error']
+				member['name_error'] = error
 			})
 		}
 
@@ -972,10 +972,10 @@
 				member_id: member.id,
 				leek_name: member.leek,
 			}).then(result => {
-				Vue.delete(member, 'leek_error')
+				delete member['leek_error']
 			}).error(error => {
-				Vue.delete(member, 'leek_error')
-				Vue.set(member, 'leek_error', error)
+				delete member['leek_error']
+				member['leek_error'] = error
 			})
 		}
 
@@ -986,10 +986,10 @@
 				member_id: member.id,
 				email: member.mail
 			}).then(result => {
-				Vue.delete(member, 'mail_error')
+				delete member['mail_error']
 			}).error(error => {
-				Vue.delete(member, 'mail_error')
-				Vue.set(member, 'mail_error', error)
+				delete member['mail_error']
+				member['mail_error'] = error
 			})
 		}
 
@@ -1000,10 +1000,10 @@
 				member_id: member.id,
 				password: member.password
 			}).then(result => {
-				Vue.delete(member, 'password_error')
+				delete member['password_error']
 			}).error(error => {
-				Vue.delete(member, 'password_error')
-				Vue.set(member, 'password_error', error)
+				delete member['password_error']
+				member['password_error'] = error
 			})
 		}
 

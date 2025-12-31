@@ -8,8 +8,8 @@
 </template>
 
 <script lang="ts">
-import { Component } from '@/model/component'
-import { Component as VueComponent, Prop, Vue } from 'vue-property-decorator'
+import { Options } from '@/model/component'
+import { Options as VueComponent, Prop, Vue } from 'vue-property-decorator'
 import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 
 @VueComponent({ components: { RichTooltipItem } })

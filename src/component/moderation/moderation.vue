@@ -48,8 +48,8 @@
 					<div class="card farmer">
 						<div class="title">Éleveur ciblé</div>
 						<div class="flex">
-							<rich-tooltip-farmer :id="selectedFault.target.id" v-slot="{ props }" :instant="true">
-								<avatar :farmer="selectedFault.target" :on="props" />
+							<rich-tooltip-farmer :id="selectedFault.target.id" :instant="true">
+								<avatar :farmer="selectedFault.target" />
 							</rich-tooltip-farmer>
 							<div class="infos">
 								<router-link :to="'/farmer/' + selectedFault.target.id">
@@ -162,7 +162,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Fault, Warning } from '@/model/moderation'
 	import router from '@/router'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 
@@ -171,7 +171,7 @@
 		thugs!: Farmer[]
 	}
 
-	@Component({ name: "moderation", i18n: {}, components: { Markdown, RichTooltipFarmer, RichTooltipLeek } })
+	@Options({ name: "moderation", i18n: {}, components: { Markdown, RichTooltipFarmer, RichTooltipLeek } })
 	export default class Moderation extends Vue {
 		faults: Fault[] | null = null
 		faultsById: {[key: number]: Fault} = {}
@@ -221,7 +221,7 @@
 				LeekWars.setTitle(this.$t('title'), data.faults.length + ' signalements')
 				this.update()
 			})
-			this.$root.$on('back', () => {
+			emitter.on('back', () => {
 				this.$router.push('/moderation')
 			})
 		}
@@ -258,7 +258,7 @@
 			LeekWars.post('moderation/archive', {target_id: fault.target.id, reason: fault.reason, parameter: fault.parameter}).then(data => {
 				LeekWars.toast(this.$t('reporting_deleted') as string)
 				this.faults!.splice(this.faults!.indexOf(fault), 1)
-				Vue.delete(this.faultsById, '' + fault.id)
+				delete this.faultsById['' + fault.id]
 				this.$router.push('/moderation')
 			}).error(error => {
 				LeekWars.toast(error)
@@ -270,7 +270,7 @@
 			LeekWars.post('moderation/warn', {target_id: fault.target.id, reason: fault.reason, new_reason: this.finalReason, message: this.message, severity: this.severity, parameter: this.selectedFault.parameter}).then(data => {
 				LeekWars.toast(i18n.t('moderation.warning_sent') as string)
 				this.faults!.splice(this.faults!.indexOf(fault), 1)
-				Vue.delete(this.faultsById, '' + fault.id)
+				delete this.faultsById['' + fault.id]
 				this.warningConfirmDialog = false
 				this.$router.push('/moderation')
 			}).error(error => {

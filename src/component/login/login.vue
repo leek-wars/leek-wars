@@ -37,9 +37,9 @@
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'login', i18n: {}, mixins: [...mixins] })
+	@Options({ name: 'login', i18n: {}, mixins: [...mixins] })
 	export default class Login extends Vue {
 		error: any = null
 		form = {

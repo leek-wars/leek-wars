@@ -10,9 +10,9 @@
 <script lang="ts">
 	import { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'chat-pseudos' })
+	@Options({ name: 'chat-pseudos' })
 	export default class ChatPseudos extends Vue {
 
 		@Prop({ required: true }) chat!: number

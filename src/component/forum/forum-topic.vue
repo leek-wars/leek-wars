@@ -221,7 +221,7 @@
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import EmojiPicker from '../chat/emoji-picker.vue'
 	import Breadcrumb from './breadcrumb.vue'
 	const FormattingRules = () => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum-formatting-rules.${locale}.i18n`)
@@ -230,7 +230,7 @@
 	import Pagination from '@/component/pagination.vue'
 	import LWTitle from '@/component/title/title.vue'
 
-	@Component({ name: 'forum_topic', i18n: {}, mixins: [...mixins], components: { Breadcrumb, EmojiPicker, Markdown, FormattingRules, RichTooltipFarmer, ReportDialog, Pagination, 'lw-title': LWTitle } })
+	@Options({ name: 'forum_topic', i18n: {}, mixins: [...mixins], components: { Breadcrumb, EmojiPicker, Markdown, FormattingRules, RichTooltipFarmer, ReportDialog, Pagination, 'lw-title': LWTitle } })
 	export default class ForumTopicPage extends Vue {
 		topic: ForumTopic | null = null
 		category: ForumCategory | null = null
@@ -276,7 +276,7 @@
 			const topic = parseInt(this.$route.params.topic, 10)
 			const page = 'page' in this.$route.params ? parseInt(this.$route.params.page, 10) : 1
 			if (!force && this.topic && this.topic.id === topic && this.page === page) {
-				this.$root.$emit('loaded')
+				emitter.emit('loaded')
 				return
 			}
 			this.page = page
@@ -288,11 +288,11 @@
 				if (!this.topic) { return }
 				this.category = data.category
 				if (this.topic) {
-					Vue.set(this.topic, 'messages', data.messages)
+					this.topic.messages = data.messages
 					if (this.topic.messages) {
 						for (const message of this.topic.messages) {
-							Vue.set(message, 'editing', false)
-							Vue.set(message, 'height', 100)
+							message.editing = false
+							message.height = 100
 						}
 					}
 				}
@@ -300,7 +300,7 @@
 				LeekWars.setTitle(this.topic.name, this.$t('n_messages', [data.total]))
 				LeekWars.setActions([this.action])
 				if (this.topic.subscribed) { this.action.icon = 'mdi-newspaper-minus' }
-				this.$root.$emit('loaded')
+				emitter.emit('loaded')
 				this.newMessage = localStorage.getItem('forum/draft-' + this.topic.id) as string
 			})
 		}
@@ -361,16 +361,16 @@
 		}
 		loadVotesUp(message: ForumMessage) {
 			if (!this.topic || this.votes_up_names[message.id] !== undefined) { return }
-			Vue.set(this.$data.votes_up_names, message.id, null)
+			this.$data.votes_up_names[message.id] = null
 			LeekWars.post('forum/get-message-up-votes-names', {topic_id: this.topic.id, message_id: message.id}).then(data => {
-				Vue.set(this.$data.votes_up_names, message.id, data.farmers.map((f: any) => f[1]))
+				this.$data.votes_up_names[message.id] = data.farmers.map((f: any) => f[1])
 			})
 		}
 		loadVotesDown(message: ForumMessage) {
 			if (!this.topic || this.votes_down_names[message.id] !== undefined) { return }
-			Vue.set(this.$data.votes_down_names, message.id, null)
+			this.$data.votes_down_names[message.id] = null
 			LeekWars.post('forum/get-message-down-votes-names', {topic_id: this.topic.id, message_id: message.id}).then(data => {
-				Vue.set(this.$data.votes_down_names, message.id, data.farmers.map((f: any) => f[1]))
+				this.$data.votes_down_names[message.id] = data.farmers.map((f: any) => f[1])
 			})
 		}
 		deleteGeneric(message: ForumMessage) {

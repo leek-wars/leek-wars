@@ -69,9 +69,9 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'two-factor' })
+	@Options({ name: 'two-factor' })
 	export default class TwoFactor extends Vue {
 		twoFactorConfirmDialog: boolean = false
 		step: number = 0

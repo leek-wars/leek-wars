@@ -73,10 +73,10 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { TROPHIES } from '@/model/trophies'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import LWTitle from '@/component/title/title.vue'
 
-	@Component({ name: "title-picker", components: { 'lw-title': LWTitle } })
+	@Options({ name: "title-picker", components: { 'lw-title': LWTitle } })
 	export default class TitlePicker extends Vue {
 
 		@Prop() title!: number[]

@@ -176,13 +176,13 @@
 	import { ForumCategory, ForumTopic } from '@/model/forum'
 	import { mixins } from '@/model/i18n'
 	import { Language, LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from './breadcrumb.vue'
 	const FormattingRules = () => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum-formatting-rules.${locale}.i18n`)
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import Pagination from '@/component/pagination.vue'
 
-	@Component({ name: 'forum_category', i18n: {}, mixins: [...mixins], components: { Breadcrumb, FormattingRules, RichTooltipFarmer, Pagination } })
+	@Options({ name: 'forum_category', i18n: {}, mixins: [...mixins], components: { Breadcrumb, FormattingRules, RichTooltipFarmer, Pagination } })
 	export default class ForumCategoryPage extends Vue {
 		categories: ForumCategory[] | null = null
 		topics: ForumTopic[] | null = null
@@ -236,17 +236,17 @@
 					this.translations = data.translations
 
 					LeekWars.setTitle(this.categories[0].name, this.$t('n_topic_n_messages', [data.total_topics, data.total_messages]))
-					this.$root.$emit('loaded')
+					emitter.emit('loaded')
 				}
 			})
 			const languages = (localStorage.getItem('forum/languages') as string || this.$i18n.locale).split(',')
 			for (const l in LeekWars.languages) {
 				if (LeekWars.languages[l].forum) {
-					Vue.set(this.forumLanguages, l, false)
+					this.forumLanguages[l] = false
 				}
 			}
 			for (const l of languages) {
-				Vue.set(this.forumLanguages, l, true)
+				this.forumLanguages[l] = true
 			}
 			this.createMessage = localStorage.getItem('forum/draft') as string
 			this.createTitle = localStorage.getItem('forum/draft-title') as string

@@ -355,9 +355,9 @@
 	import TournamentBlock from '@/component/tournament/tournament-block.vue'
 	import TournamentFight from '@/component/tournament/tournament-fight.vue'
 	import { Tournament } from '@/model/tournament'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'tournament-graph', components: {
+	@Options({ name: 'tournament-graph', components: {
 		'tournament-block': TournamentBlock,
 		'tournament-fight': TournamentFight
 	} })

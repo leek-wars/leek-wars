@@ -10,9 +10,9 @@
 
 <script lang="ts">
 	import { TEAM_COLORS } from '@/model/team'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: "lw-map" })
+	@Options({ name: "lw-map" })
 	export default class Map extends Vue {
 		@Prop() obstacles!: any
 		@Prop() teams!: {[key: number]: Set<number>}

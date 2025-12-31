@@ -18,9 +18,9 @@
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'lw-type' })
+	@Options({ name: 'lw-type' })
 	export default class Type extends Vue {
 		@Prop({required: true}) type!: any
 	}

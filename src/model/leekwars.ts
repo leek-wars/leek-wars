@@ -6,10 +6,10 @@ import { CHIP_TEMPLATES, HAT_TEMPLATES, HATS, POMPS, POTIONS, SUMMON_TEMPLATES, 
 import { Socket } from '@/model/socket'
 import { Squares } from '@/model/squares'
 import { store } from '@/model/store'
-import { vueMain } from '@/model/vue'
+import { emitter, vueMain } from '@/model/vue'
 import { WeaponTemplate } from '@/model/weapon'
 import router from '@/router'
-import Vue from 'vue'
+
 import { TranslateResult } from 'vue-i18n'
 import { Chat, ChatWindow } from './chat'
 import { i18n, loadLanguageAsync } from './i18n'
@@ -517,9 +517,9 @@ const LeekWars = {
 	documentation(locale: string): Promise<any> {
 		if (!(locale in LeekWars._documentationPromises)) {
 			const promise = get<any>('function/doc/' + locale)
-			Vue.set(LeekWars._documentationPromises, locale, promise)
+			LeekWars._documentationPromises[locale] = promise
 			promise.then((data) => {
-				Vue.set(LeekWars._documentation, locale, data)
+				LeekWars._documentation[locale] = data
 			})
 			return promise as any
 		}
@@ -571,7 +571,7 @@ const LeekWars = {
 	fullscreenEnter(element: HTMLElement, callback: (f: boolean) => void) {
 		const fullscreenCallback = () => {
 			LeekWars.fullscreen = !LeekWars.fullscreen
-			vueMain.$emit('resize')
+			emitter.emit('resize')
 			callback(LeekWars.fullscreen)
 		}
 		if (element.requestFullscreen) {
@@ -736,12 +736,12 @@ const LeekWars = {
 	loadEncyclopedia: (locale: string) => {
 		// console.log("load encyclopedia", locale)
 		if (!LeekWars.encyclopediaLoaded[locale]) {
-			Vue.set(LeekWars.encyclopediaLoaded, locale, true)
+			LeekWars.encyclopediaLoaded[locale] = true
 			LeekWars.get('encyclopedia/get-all-locale/' + locale).then(pages => {
-				Vue.set(LeekWars.encyclopedia, locale, pages)
-				Vue.set(LeekWars.encyclopediaById, locale, {})
+				LeekWars.encyclopedia[locale] = pages
+				LeekWars.encyclopediaById[locale] = {}
 				for (const page in pages) {
-					Vue.set(LeekWars.encyclopediaById[locale], pages[page].id, pages[page])
+					LeekWars.encyclopediaById[locale][pages[page].id] = pages[page]
 				}
 			})
 		}

@@ -75,13 +75,13 @@
 	import { CONSTANT_BY_ID } from '@/model/constant_by_id'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import DocumentationConstant from './documentation-constant.vue'
 	import DocumentationFunction from './documentation-function.vue'
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
 
-	@Component({
+	@Options({
 		name: 'documentation',
 		components: { DocumentationFunction, DocumentationConstant, Breadcrumb },
 		i18n: {},
@@ -162,7 +162,7 @@
 			get_categories((data: any) => {
 				this.categories = data.categories
 				for (const category in this.categories) {
-					Vue.set(this.categoryState, category, localStorage.getItem('documentation/category-' + category) === 'true')
+					this.categoryState[category] = localStorage.getItem('documentation/category-' + category) === 'true'
 				}
 				let id = 0
 				for (const item of FUNCTIONS) {
@@ -225,8 +225,8 @@
 				LeekWars.box = true
 			}
 			(this.$refs.search as HTMLElement).focus()
-			this.$root.$on('back', this.back)
-			this.$root.$on('doc-navigate', this.navigate)
+			emitter.on('back', this.back)
+			emitter.on('doc-navigate', this.navigate)
 		}
 		focus() {
 			(this.$refs.search as HTMLElement).focus()
@@ -238,8 +238,8 @@
 			LeekWars.large = false
 			LeekWars.footer = true
 			LeekWars.box = false
-			this.$root.$off('back', this.back)
-			this.$root.$off('doc-navigate', this.navigate)
+			emitter.off('back', this.back)
+			emitter.off('doc-navigate', this.navigate)
 		}
 
 		@Watch('$route.params')

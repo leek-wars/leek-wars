@@ -54,14 +54,15 @@
 </template>
 
 <script lang='ts'>
-	const ChatPanel = () => import(/* webpackChunkName: "chat" */ `@/component/chat/chat-panel.vue`)
+	const ChatPanel = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat-panel.vue`))
 	import { LeekWars } from '@/model/leekwars'
 	import { Notification } from '@/model/notification'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 	import ConversationElement from '@/component/messages/conversation.vue'
-import { nextTick } from 'vue'
+	import { defineAsyncComponent, nextTick } from 'vue'
+import { emitter } from '@/model/vue'
 
-	@Component({ name: 'lw-social', components: { ChatPanel, 'conversation': ConversationElement } })
+	@Options({ name: 'lw-social', components: { ChatPanel, 'conversation': ConversationElement } })
 	export default class Social extends Vue {
 
 		panelWidth: number = 400
@@ -80,7 +81,7 @@ import { nextTick } from 'vue'
 			LeekWars.socialCollapsed = !LeekWars.socialCollapsed
 			localStorage.setItem('main/social-collapsed', '' + LeekWars.socialCollapsed)
 			nextTick(() => {
-				this.$root.$emit('resize')
+				emitter.emit('resize')
 			})
 		}
 

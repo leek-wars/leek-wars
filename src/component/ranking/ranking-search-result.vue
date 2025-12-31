@@ -2,17 +2,17 @@
 	<div class="result card">
 		<div v-ripple class="main" @click="$emit('gotoresult', result)">
 			<div class="image">
-				<rich-tooltip-leek v-if="result.type === 'leek'" :id="result.id" v-slot="{ props }">
-					<leek-image :leek="result" :scale="1" width="40" height="40" :on="props" />
+				<rich-tooltip-leek v-if="result.type === 'leek'" :id="result.id">
+					<leek-image :leek="result" :scale="1" width="40" height="40" />
 				</rich-tooltip-leek>
-				<rich-tooltip-farmer v-else-if="result.type === 'farmer'" :id="result.id" v-slot="{ props }">
-					<avatar :farmer="result" :on="props" />
+				<rich-tooltip-farmer v-else-if="result.type === 'farmer'" :id="result.id">
+					<avatar :farmer="result" />
 				</rich-tooltip-farmer>
 				<emblem v-else-if="result.type === 'team'" :team="result" />
 			</div>
 			<div class="name">
-				<rich-tooltip-farmer v-if="result.type === 'farmer'" :id="result.id" v-slot="{ props }">
-					<span v-bind="props">{{ result.name }}</span>
+				<rich-tooltip-farmer v-if="result.type === 'farmer'" :id="result.id">
+					<span>{{ result.name }}</span>
 				</rich-tooltip-farmer>
 				<span v-else>{{ result.name }}</span>
 			</div>
@@ -28,12 +28,12 @@
 
 <script lang="ts">
 	import { i18n } from '@/model/i18n'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 
-	@Component({ components: { RichTooltipFarmer, RichTooltipLeek, RichTooltipTeam } })
+	@Options({ components: { RichTooltipFarmer, RichTooltipLeek, RichTooltipTeam } })
 	export default class RankingSearchResult extends Vue {
 		@Prop({ required: true }) result!: any
 		get description() {

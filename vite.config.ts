@@ -80,10 +80,7 @@ export default defineConfig({
 		vue({
 			template: {
 				compilerOptions: {
-					// Enable Vue 2 compat mode
-					compatConfig: {
-						MODE: 2
-					}
+					
 				}
 			}
 		}),
@@ -94,8 +91,6 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			'@': path.resolve(__dirname, 'src'),
-			// Use @vue/compat for Vue 2 compatibility
-			'vue': '@vue/compat',
 			// Shim for vue-property-decorator to export Component as alias for Options
 			'vue-property-decorator': path.resolve(__dirname, 'src/vue-property-decorator.ts')
 		}
@@ -125,7 +120,7 @@ export default defineConfig({
 		// For now, use single entry point (main-fr.ts)
 	},
 	optimizeDeps: {
-		include: ['vue', '@vue/compat', 'vue-router', 'pinia', 'vuetify'],
+		include: ['vue', 'vue-router', 'pinia', 'vuetify'],
 		// Exclude from pre-bundling to avoid circular dependency with our shim
 		exclude: ['vue-property-decorator', 'vue-class-component']
 	}

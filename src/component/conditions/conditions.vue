@@ -39,8 +39,8 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
-	@Component({ name: "conditions", i18n: {} })
+	import { Options, Vue } from 'vue-property-decorator'
+	@Options({ name: "conditions", i18n: {} })
 	export default class Conditions extends Vue {
 		created() {
 			LeekWars.setTitle(this.$t('title'))

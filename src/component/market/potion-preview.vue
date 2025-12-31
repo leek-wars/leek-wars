@@ -33,9 +33,9 @@
 	import EffectView from '@/component/market/effect.vue'
 	import RangeView from '@/component/market/range-view.vue'
 	import { PotionEffect, PotionTemplate } from '@/model/potion'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({
+	@Options({
 		name: 'potion-preview',
 		components: { 'range-view': RangeView, 'effect-view': EffectView, 'area-view': AreaView }
 	})

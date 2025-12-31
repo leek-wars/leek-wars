@@ -84,7 +84,8 @@
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+import { emitter } from '@/model/vue'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import(/* webpackChunkName: "chartist" */ /* webpackMode: "eager" */ "@/chartist-wrapper")
 
 	const GENERAL_CATEGORY = 1
@@ -105,7 +106,7 @@
 		today_state!: boolean
 	}
 
-	@Component({ name: 'statistics', i18n: {}, mixins: [...mixins] })
+	@Options({ name: 'statistics', i18n: {}, mixins: [...mixins] })
 	export default class Statistics extends Vue {
 		loaded: boolean = false
 		statistics: Array<{[key: string]: Statistic}> = []
@@ -179,7 +180,7 @@
 				for (const c in this.statistics) {
 					for (const s in this.statistics[c]) {
 						const statistic = this.statistics[c][s]
-						Vue.set(statistic, 'today_state', false)
+						statistic.today_state = false
 						if (!statistic.visible || !statistic.interpolate) { continue }
 						statistic.speed = statistic.speed * (DELAY / 1000)
 						if (statistic.speed > 0.002) {
@@ -188,13 +189,13 @@
 					}
 				}
 
-				this.$root.$emit('loaded')
+				emitter.emit('loaded')
 				this.playing = localStorage.getItem('statistics/play') !== 'false'
 				if (this.playing) { this.play() }
 
 				this.resize()
 				this.loaded = true
-				this.$root.$on('resize', () => this.resize())
+				emitter.on('resize', () => this.resize())
 			})
 		}
 

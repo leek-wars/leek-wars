@@ -7,7 +7,7 @@
 			</div>
 		</template>
 		<template #actions>
-			<span class="value" title="Valeur totale">{{ total_estimated | number }} <div class="hab"></div></span>
+			<span class="value" title="Valeur totale">{{ $filters.number(total_estimated) }} <div class="hab"></div></span>
 			<v-menu offset-y>
 				<template v-slot:activator="{ props }">
 					<div class="button flat" v-bind="props">
@@ -65,7 +65,7 @@
 				<div class="inventory">
 					<div v-for="item in sorted_inventory" :key="item.id" class="cell active" :class="'rarity-border-' + LeekWars.items[item.template].rarity">
 						<rich-tooltip-item v-slot="{ props }" :bottom="true" :item="LeekWars.items[item.template]" :quantity="item.quantity" :inventory="true" @retrieve="retrieve">
-							<div v-bind="props" class="item"  :quantity="item.quantity | number" :type="LeekWars.items[item.template].type">
+							<div v-bind="props" class="item"  :quantity="$filters.number(item.quantity)" :type="LeekWars.items[item.template].type">
 								<img v-if="item.type === ItemType.RESOURCE" class="image" :src="'/image/resource/' + LeekWars.items[item.template].name + '.png'">
 								<scheme-image v-else-if="item.type === ItemType.SCHEME" class="image" :scheme="LeekWars.schemes[LeekWars.items[item.template].params]" />
 								<img v-else-if="item.type === ItemType.COMPONENT" class="image" :src="'/image/component/' + LeekWars.items[item.template].name + '.png'">
@@ -94,7 +94,7 @@
 					</div>
 					<br>
 					<div>
-						Total estimé : <b>{{ retrieveItems.reduce((s, i) => s + i.quantity * LeekWars.items[i.template].price, 0) | number }}</b> <span class="hab"></span>
+						Total estimé : <b>{{ $filters.number(retrieveItems.reduce((s, i) => s + i.quantity * LeekWars.items[i.template].price, 0)) }}</b> <span class="hab"></span>
 					</div>
 				</popup>
 
@@ -108,15 +108,16 @@
 	import { Item, ItemType, ItemTypes, ITEM_TYPE_ICONS, ITEM_TYPE_NAME, ITEM_CATEGORY_NAME } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 	import SchemeImage from '../market/scheme-image.vue'
+	import { emitter } from '@/model/vue'
 
 	enum Sort {
 		DATE, PRICE, PRICE_LOT, QUANTITY, /*NAME, */ LEVEL, RARITY
 	}
 
-	@Component({ name: 'inventory', i18n: {}, mixins: [...mixins], components: { RichTooltipItem, SchemeImage } })
+	@Options({ name: 'inventory', i18n: {}, mixins: [...mixins], components: { RichTooltipItem, SchemeImage } })
 	export default class Inventory extends Vue {
 
 		ItemType = ItemType
@@ -207,7 +208,7 @@
 			LeekWars.box = true
 
 			this.resize()
-			this.$root.$on('resize', this.resize)
+			emitter.on('resize', this.resize)
 		}
 		created() {
 			this.actions = [
@@ -224,7 +225,7 @@
 			}
 		}
 		beforeDestroy() {
-			this.$root.$off('resize', this.resize)
+			emitter.off('resize', this.resize)
 		}
 
 		@Watch('sort')

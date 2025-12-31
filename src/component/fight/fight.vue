@@ -14,9 +14,11 @@
 		</div>
 
 		<panel class="first">
-			<div slot="content" class="fight">
-				<player v-if="fight_id" :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
-			</div>
+			<template #content>
+				<div class="fight">
+					<player v-if="fight_id" :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
+				</div>
+			</template>
 		</panel>
 
 		<div v-if="fight" class="fight-info">
@@ -99,7 +101,7 @@
 		<panel v-if="fight" :title="$t('main.comments') + ' (' + fight.comments.length + ')'" icon="mdi-comment-multiple-outline">
 			<template #actions class="views-counter">
 				{{ $tc('n_views', fight.views) }}
-			</div>
+			</template>
 			<comments :comments="fight.comments" @comment="comment" />
 		</panel>
 
@@ -127,16 +129,18 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import { GROUND_PADDING_LEFT, GROUND_PADDING_RIGHT, GROUND_PADDING_TOP } from '../player/game/ground'
-	const Player = () => import(/* webpackChunkName: "[request]" */ `@/component/player/player.${locale}.i18n`)
+	const Player = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/player/player.${locale}.i18n`))
 	import Comments from '@/component/comment/comments.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
-import { BOSSES } from '@/model/boss'
+	import { BOSSES } from '@/model/boss'
+	import { defineAsyncComponent, nextTick } from 'vue'
+import { emitter } from '@/model/vue'
 
-	@Component({ name: "fight", components: { Player, Comments, RichTooltipFarmer, RichTooltipTeam, ReportDialog }, i18n: {}, mixins: [...mixins] })
+	@Options({ name: "fight", components: { 'player': Player, Comments, RichTooltipFarmer, RichTooltipTeam, 'report-dialog': ReportDialog }, i18n: {}, mixins: [...mixins] })
 	export default class FightPage extends Vue {
 		fight_id: string | null = null
 		fight: Fight | null = null
@@ -174,14 +178,15 @@ import { BOSSES } from '@/model/boss'
 
 		mounted() {
 			LeekWars.flex = true
-			this.$root.$on('resize', this.resize)
+			emitter.on('resize', this.resize)
 			setTimeout(() => this.resize(), 50)
 
-			this.$root.$on('trophy', this.onTrophy)
+			emitter.on('trophy', this.onTrophy)
 		}
 
 		@Watch('$route.params.id', {immediate: true})
 		update() {
+			console.log("update", this.$route.params.id)
 			this.fight_id = this.$route.params.id
 		}
 
@@ -235,8 +240,8 @@ import { BOSSES } from '@/model/boss'
 		destroyed() {
 			LeekWars.flex = false
 			LeekWars.lightBar = false
-			this.$root.$off('resize', this.resize)
-			this.$root.$off('trophy', this.onTrophy)
+			emitter.off('resize', this.resize)
+			emitter.off('trophy', this.onTrophy)
 
 			// Notifications de trophées restants
 			for (const message of this.trophyQueue) {

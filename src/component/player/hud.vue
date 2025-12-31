@@ -68,7 +68,7 @@
 	import { ActionComponents, EffectComponents } from '@/model/action-components'
 	import { LeekWars } from '@/model/leekwars'
 	import { TEAM_COLORS } from '@/model/team'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { Chest } from './game/chest'
 	import { Mob } from './game/mob'
 	import { Game } from './game/game'
@@ -77,10 +77,10 @@
 	import { CHIPS } from '@/model/chips'
 	import ActionLog from '../report/report-log.vue'
 	import { ITEM_CATEGORY_NAME } from '@/model/item'
-import { fileSystem } from '@/model/filesystem'
-import router from '@/router'
+	import { fileSystem } from '@/model/filesystem'
+	import router from '@/router'
 
-	@Component({ name: 'hud', components: { EntityDetails, leek: ActionLeekElement, TurretImage, 'action-log': ActionLog } })
+	@Options({ name: 'hud', components: { EntityDetails, leek: ActionLeekElement, TurretImage, 'action-log': ActionLog } })
 	export default class Hud extends Vue {
 		@Prop({required: true}) game!: Game
 		@Prop() creator!: boolean

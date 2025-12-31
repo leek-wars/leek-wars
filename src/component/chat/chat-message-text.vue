@@ -7,14 +7,14 @@
 	import { store } from '@/model/store'
 	import { vueMain, vuetify } from '@/model/vue'
 	import { i18n } from '@/model/i18n'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import Pseudo from '../app/pseudo.vue'
 	import 'katex/dist/katex.min.css'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import { ChatMessage } from '@/model/chat'
 	import { createApp, App } from 'vue'
 
-	@Component({ name: 'ChatMessageText', components: { RichTooltipFarmer } })
+	@Options({ name: 'ChatMessageText', components: { RichTooltipFarmer } })
 	export default class ChatMessageText extends Vue {
 
 		@Prop({ required: true }) message!: ChatMessage

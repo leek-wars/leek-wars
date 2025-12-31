@@ -71,9 +71,9 @@
 	import { locale } from '@/locale'
 	import { LSFunction } from '@/model/function'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'documentation-function', components: { Markdown } })
+	@Options({ name: 'documentation-function', components: { Markdown } })
 	export default class DocumentationFunction extends Vue {
 
 		@Prop() fun!: LSFunction

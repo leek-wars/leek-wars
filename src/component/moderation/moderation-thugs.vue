@@ -33,7 +33,7 @@
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Fault, Warning } from '@/model/moderation'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 
 	class ModerationRequest {
@@ -41,7 +41,7 @@
 		thugs!: Farmer[]
 	}
 
-	@Component({ name: "moderation-thugs", i18n: {}, components: { Breadcrumb } })
+	@Options({ name: "moderation-thugs", i18n: {}, components: { Breadcrumb } })
 	export default class ModerationThugs extends Vue {
 		thugs: any = null
 

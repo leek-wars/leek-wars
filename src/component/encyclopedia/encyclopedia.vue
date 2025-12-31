@@ -81,13 +81,13 @@
 							<v-icon>mdi-account-multiple</v-icon>
 							<div v-html="$tc('n_contributors', page.contributors.length)"></div>
 							<div class="avatars">
-								<rich-tooltip-farmer v-for="contributor in page.contributors" :id="contributor.id" :key="contributor.id" v-slot="{ props }">
+								<rich-tooltip-farmer v-for="contributor in page.contributors" :id="contributor.id" :key="contributor.id">
 									<router-link :to="'/farmer/' + contributor.id">
-										<avatar :farmer="contributor" :on="props" />
+										<avatar :farmer="contributor" />
 									</router-link>
 								</rich-tooltip-farmer>
 							</div>
-							<i18n-t tag="div" keypath="n_views" class="views"><b slot="v">{{ page.views | number }}</b></i18n-t>
+							<i18n-t tag="div" keypath="n_views" class="views"><b slot="v">{{ $filters.number(page.views) }}</b></i18n-t>
 							<div class="fill"></div>
 							<v-icon @click="statsExpanded = !statsExpanded">{{ statsExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
 						</div>
@@ -114,7 +114,7 @@
 							</div>
 							<div>
 								<i18n-t tag="div" keypath="n_contributions">
-									<b slot="n">{{ page.contributions | number }}</b>
+									<b slot="n">{{ $filters.number(page.contributions) }}</b>
 								</i18n-t>
 								{{ $tc('main.n_lines', [page.content.split('\n').length]) }}
 								 — {{ $tc('main.n_words', [page.content.split(' ').length]) }}
@@ -139,7 +139,7 @@
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import { Route } from 'vue-router'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
@@ -147,7 +147,7 @@
 	import { FUNCTIONS } from '@/model/functions'
 import { nextTick } from 'vue'
 
-	@Component({ name: 'encyclopedia', i18n: {}, mixins: [...mixins], components: { Markdown, Breadcrumb, RichTooltipFarmer } })
+	@Options({ name: 'encyclopedia', i18n: {}, mixins: [...mixins], components: { Markdown, Breadcrumb, RichTooltipFarmer } })
 	export default class Encyclopedia extends Vue {
 		english: string = ''
 		page: any = null
@@ -239,7 +239,7 @@ import { nextTick } from 'vue'
 		}
 
 		beforeDestroy() {
-			this.$root.$off('ctrlS')
+			emitter.off('ctrlS')
 			LeekWars.large = false
 			LeekWars.box = false
 			LeekWars.footer = true
@@ -252,7 +252,7 @@ import { nextTick } from 'vue'
 		mounted() {
 			// this.editStart()
 
-			this.$root.$on('ctrlS', () => {
+			emitter.on('ctrlS', () => {
 				this.save()
 			})
 			LeekWars.setActions(this.actions)
@@ -279,7 +279,7 @@ import { nextTick } from 'vue'
 					this.setEditorContent()
 				}
 				LeekWars.setTitle(this.title)
-				this.$root.$emit('loaded')
+				emitter.emit('loaded')
 			})
 			.error(() => {
 				// Pas de page

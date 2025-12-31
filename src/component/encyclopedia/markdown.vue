@@ -8,7 +8,7 @@
 	import { vueMain, vuetify } from '@/model/vue'
 	import markdown from 'markdown-it'
 	import sanitizeHtml from 'sanitize-html'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import LineOfSight from '../line-of-sight/line-of-sight.vue'
 	import ItemPreview from '../market/item-preview.vue'
 	import SearchBar from './search-bar.vue'
@@ -21,7 +21,7 @@
 	import LeekImage from '../leek-image.vue'
 import { nextTick } from 'vue'
 
-	@Component({ name: 'markdown' })
+	@Options({ name: 'markdown' })
 	export default class Markdown extends Vue {
 
 		@Prop({required: true}) content!: string

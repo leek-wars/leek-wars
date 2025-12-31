@@ -120,13 +120,13 @@
 					<div class="talent-wrapper">
 						<v-tooltip>
 							<template v-slot:activator="{ props }">
-								<talent :id="farmer ? farmer.id : 0" :talent="farmer ? farmer.talent : '...'" category="farmer" :on="props" />
+								<talent :id="farmer ? farmer.id : 0" :talent="farmer ? farmer.talent : '...'" category="farmer" v-bind="props" />
 							</template>
 							<div>{{ $t('talent') }}</div>
 						</v-tooltip>
 						<v-tooltip v-if="farmer">
 							<template v-slot:activator="{ props }">
-								<div class="talent-more" v-bind="props">({{ farmer.talent_more >= 0 ? '+' : '' }} {{ farmer.talent_more | number }})</div>
+								<div class="talent-more" v-bind="props">({{ farmer.talent_more >= 0 ? '+' : '' }} {{ $filters.number(farmer.talent_more) }})</div>
 							</template>
 							<template v-if="farmer.talent_more > 0">
 								<span v-html="$t('main.talent_difference_farmer', [farmer.name, farmer.talent_more, talent_gains + '%'])"></span>
@@ -139,9 +139,9 @@
 						<template v-slot:activator="{ props }">
 							<table v-bind="props">
 								<tr>
-									<td class="big">{{ farmer.victories | number }}</td>
-									<td class="big">{{ farmer.draws | number }}</td>
-									<td class="big">{{ farmer.defeats | number }}</td>
+									<td class="big">{{ $filters.number(farmer.victories) }}</td>
+									<td class="big">{{ $filters.number(farmer.draws) }}</td>
+									<td class="big">{{ $filters.number(farmer.defeats) }}</td>
 								</tr>
 								<tr>
 									<td class="grey">{{ $t('victories') }}</td>
@@ -249,7 +249,7 @@
 		</div>
 		<panel v-if="farmer && farmer.trophies > 0" toggle="farmer/trophies">
 			<template #title>
-				<img src="/image/icon/trophy.png">{{ $t('trophies') }} <span v-if="farmer" class="trophy-count">({{ farmer.points | number }})</span>
+				<img src="/image/icon/trophy.png">{{ $t('trophies') }} <span v-if="farmer" class="trophy-count">({{ $filters.number(farmer.points) }})</span>
 			</template>
 			<template #actions>
 				<router-link :to="'/trophies/' + id" class="button flat">
@@ -265,7 +265,7 @@
 					<loader v-if="!farmer || !trophies" />
 					<template v-else-if="farmer.trophies > 0 && trophies_list && trophies_grid">
 						<div v-show="trophiesMode == 'list'" class="list trophies-container">
-							<v-tooltip v-for="(trophy, t) in trophies_list" v-if="trophy != null" :key="t">
+							<v-tooltip v-for="(trophy, t) in trophies_list" :key="t">
 								<template v-slot:activator="{ props }">
 									<router-link :to="'/trophy/' + trophy.code">
 										<img class="trophy" v-bind="props" :src="'/image/trophy/' + trophy.code + '.svg'">
@@ -379,21 +379,21 @@
 						</div>
 						<div class="column column-level">
 							<div class="grey">{{ $t('godsons_level') }}</div>
-							<div class="total-level">{{ farmer ? farmer.godsons_level : '...' | number }}</div>
+							<div class="total-level">{{ $filters.number(farmer ? farmer.godsons_level : '...') }}</div>
 							<v-tooltip>
 								<template v-slot:activator="{ props }">
 									<div class="bar" v-bind="props">
 										<span :class="{ blue: farmer?.godsons_level >= 10_000 }" :style="{width: xp_bar_width + '%'}" class="xp-bar striked"></span>
 									</div>
 								</template>
-								<span v-if="farmer">{{ farmer.godsons_level | number }} / 10 000</span>
+								<span v-if="farmer">{{ $filters.number(farmer.godsons_level) }} / 10 000</span>
 							</v-tooltip>
 						</div>
 					</div>
 					<h4>{{ $t('main.rewards') }}</h4>
 					<div v-if="farmer" class="rewards">
 						<div v-for="(reward, r) of rewards" :key="r" class="reward card" :class="{'notif-trophy': r <= farmer.godsons_level}">
-							<div class="level">{{ r | number }}<v-icon v-if="r <= farmer.godsons_level">mdi-check</v-icon></div>
+							<div class="level">{{ $filters.number(r) }}<v-icon v-if="r <= farmer.godsons_level">mdi-check</v-icon></div>
 							<img v-if="reward.trophy" :src="'/image/trophy/' + reward.trophy + '.svg'">
 							<rich-tooltip-item v-else-if="reward.resource" :item="LeekWars.items[reward.item]" v-slot="{ props }" :bottom="true">
 								<img v-bind="props" :src="'/image/resource/' + reward.resource + '.png'">
@@ -555,9 +555,9 @@
 			<br>
 			<br>
 			<div class="center">
-				<v-btn class="rename-button" @click="rename('habs')">{{ $t('rename_pay_habs') }} :&nbsp;<b>{{ rename_price_habs | number }}</b><span class="hab"></span></v-btn>
+				<v-btn class="rename-button" @click="rename('habs')">{{ $t('rename_pay_habs') }} :&nbsp;<b>{{ $filters.number(rename_price_habs) }}</b><span class="hab"></span></v-btn>
 				&nbsp;
-				<v-btn class="rename-button" @click="rename('crystals')">{{ $t('rename_pay_crystals') }} :&nbsp;<b>{{ rename_price_crystals }}</b> <span class="crystal"></span></v-btn>
+				<v-btn class="rename-button" @click="rename('crystals')">{{ $t('rename_pay_crystals') }} :&nbsp;<b>{{ $filters.number(rename_price_crystals) }}</b> <span class="crystal"></span></v-btn>
 			</div>
 		</popup>
 
@@ -587,7 +587,7 @@
 	import { store } from '@/model/store'
 	import { Team } from '@/model/team'
 	import { mixins } from '@/model/i18n'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
@@ -598,8 +598,9 @@
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
 	import { TROPHIES } from '@/model/trophies'
 	import LWTitle from '@/component/title/title.vue'
+import { emitter } from '@/model/vue'
 
-	@Component({ name: "farmer", i18n: {}, mixins: [...mixins], components: {
+	@Options({ name: "farmer", i18n: {}, mixins: [...mixins], components: {
 		RichTooltipFarmer, RichTooltipTeam, RichTooltipLeek, FightsHistory, TournamentsHistory, TitlePicker, ReportDialog, 'lw-title': LWTitle, 'rich-tooltip-item': RichTooltipItem
 	} })
 	export default class FarmerPage extends Vue {
@@ -732,7 +733,7 @@
 			this.warnings()
 			this.newWebsite = this.farmer.website
 			this.newGitHub = this.farmer.github
-			this.$root.$emit('loaded')
+			emitter.emit('loaded')
 		}
 
 		logout() {
@@ -842,7 +843,7 @@
 				if (this.$store.getters.moderator || this.myFarmer) {
 				LeekWars.get('moderation/get-warnings/' + this.farmer.id).then(data => {
 					if (this.farmer) {
-						Vue.set(this.farmer, 'warnings', data.warnings)
+						this.farmer.warnings = data.warnings
 					}
 				})
 			}

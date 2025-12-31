@@ -23,12 +23,12 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 
 	/**
 	 * mogrify -format webp -quality 90 *.jpg *.png
 	 */
-	@Component({ name: 'changelog-version', i18n: {} })
+	@Options({ name: 'changelog-version', i18n: {} })
 	export default class ChangelogVersion extends Vue {
 
 		@Prop({required: true}) version!: any

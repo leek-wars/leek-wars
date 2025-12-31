@@ -17,9 +17,9 @@
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ i18n: {}, mixins: [...mixins] })
+	@Options({ i18n: {}, mixins: [...mixins] })
 	export default class GardenNoFights extends Vue {
 
 		@Prop() canbuy!: boolean

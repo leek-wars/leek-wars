@@ -3,8 +3,8 @@
 		<div v-if="!loaded" class="loading">
 			<template v-if="fight">
 				<div v-if="fight.type === FightType.BATTLE_ROYALE" class="table br">
-					<template v-for="(leek, i) in fight.leeks1">
-						<div :key="leek.id" class="leek br">
+					<template v-for="(leek, i) in fight.leeks1" :key="leek.id">
+						<div class="leek br">
 							<leek-image :leek="leek" :scale="1" />
 							<div class="name">{{ leek.name }}</div>
 							<lw-title v-if="leek.title && leek.title.length" :title="leek.title" />
@@ -249,14 +249,15 @@
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { Game } from './game/game'
 	import Hud from './hud.vue'
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
 	import LWTitle from '@/component/title/title.vue'
-import { T } from './game/texture'
+	import { nextTick } from 'vue'
+	import { emitter } from '@/model/vue'
 
-	@Component({
+	@Options({
 		name: 'player',
 		components: { Hud, 'lw-title': LWTitle },
 		i18n: {},
@@ -333,16 +334,13 @@ import { T } from './game/texture'
 			}
 			this.resize()
 			this.$emit('resize')
-			this.$root.$on('resize', () => {
+			emitter.on('resize', () => {
 				this.resize()
 			})
-			this.$root.$on('keyup', this.keyup)
-			this.$root.$on('keydown', this.keydown)
-			this.$on('game-launched', () => {
-				this.loaded = true
-				this.setOrigin()
-			})
-			this.$root.$on('fight-progress', (data: any) => {
+			emitter.on('keyup', this.keyup)
+			emitter.on('keydown', this.keydown)
+
+			emitter.on('fight-progress', (data: any) => {
 				if (this.fight && data[0] === this.fight.id) {
 					this.progress = data[1]
 					if (this.progress === 100 && this.request === null) {
@@ -351,6 +349,11 @@ import { T } from './game/texture'
 					}
 				}
 			})
+		}
+			
+		gameLaunched() {
+			this.loaded = true
+			this.setOrigin()
 		}
 
 		@Watch('requiredWidth')
@@ -497,10 +500,10 @@ import { T } from './game/texture'
 		beforeDestroy() {
 			this.game.pause()
 			this.game.cancelled = true
-			this.$root.$off('keyup', this.keyup)
-			this.$root.$off('keydown', this.keydown)
-			this.$root.$off('resize')
-			this.$root.$off('fight-progress')
+			emitter.off('keyup', this.keyup)
+			emitter.off('keydown', this.keydown)
+			emitter.off('resize')
+			emitter.off('fight-progress')
 			if (this.timeout) { clearTimeout(this.timeout) }
 			if (this.request) { this.request.abort() }
 			if (this.fightId !== 'local') {

@@ -20,29 +20,32 @@ import { LeekWars } from '@/model/leekwars'
 import '@/model/serviceworker'
 import { store } from "@/model/store"
 import router from '@/router'
-import { createApp, nextTick } from 'vue'
+import { createApp, h, nextTick } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
-import Vue, { configureCompat } from '@vue/compat'
 import { Latex } from './latex'
 import { scroll_to_hash } from '@/router-functions'
-
-// Configure compat mode
-configureCompat({
-	MODE: 2,
-})
 
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import 'vuetify/styles'
 import '@mdi/font/css/materialdesignicons.css'
+import { create } from 'domain'
+import { formatEmojis } from './emojis'
+import mitt from 'mitt'
+import { Farmer } from './farmer'
 
 const vuetify = createVuetify({
 	components,
 	directives,
 	theme: {
 		defaultTheme: 'dark'
-	}
+	},
+	defaults: {
+		VTooltip: {
+			location: 'bottom',
+		},
+	},
 })
 
 // TODO: Fix transitions for Vuetify 3
@@ -51,11 +54,192 @@ const vuetify = createVuetify({
 // const myTransition = createSimpleTransition('my-transition')
 // Vue.component('my-transition', myTransition)
 
-Vue.config.productionTip = false
+
+function displayWarningMessage() {
+	const style = "color: black; font-size: 13px; font-weight: bold;"
+	const styleRed = "color: red; font-size: 14px; font-weight: bold;"
+	console.log("%c" + i18n.global.t('main.console_alert_1'), style)
+	console.log("%c" + i18n.global.t('main.console_alert_2'), styleRed)
+	console.log("%c" + i18n.global.t('main.console_alert_3'), style)
+	console.log("")
+	console.log("%c✔️ " + i18n.global.t('main.console_github'), style)
+	console.log("")
+}
+
+let lastErrorSent = 0
+
+let secondInterval: any = null, minuteInterval: any = null
+
+type Events = {
+	keydown: KeyboardEvent
+	ctrlShiftS: void
+	ctrlS: void
+	ctrlQ: void
+	ctrlF: KeyboardEvent
+	escape: void
+	previous: KeyboardEvent
+	next: KeyboardEvent
+	ctrlP: KeyboardEvent
+	keyup: KeyboardEvent
+	resize: void
+	focus: void
+	htmlclick: void
+	loaded: void
+	connected: Farmer
+	back: void
+	chat: any
+	'chat-history': any
+	wsconnected: void
+	tooltip: { x: number, y: number, content: string }
+	'tooltip-close': void
+	'editor-drag': any
+	'tournament-update': any
+	trophy: any
+	wsmessage: { type: number, data: any, id: number | null }
+}
+
+const emitter = mitt<Events>()
+
+const app = createApp({
+	data() {
+		return { savedPosition: 0 }
+	},
+	render() {
+		if (location.pathname === '/full-console') {
+			return h(Console)
+		}
+		return h(App)
+	},
+	created() {
+		window.addEventListener('keydown', (event) => {
+			emitter.emit('keydown', event)
+			if (event.ctrlKey && event.shiftKey && event.keyCode === 83) {
+				emitter.emit('ctrlShiftS')
+			} else if (event.ctrlKey && event.keyCode === 83) {
+				emitter.emit('ctrlS')
+				event.preventDefault()
+			} else if (event.ctrlKey && event.keyCode === 81) {
+				emitter.emit('ctrlQ')
+			} else if (event.ctrlKey && event.keyCode === 70 && !event.shiftKey) {
+				emitter.emit('ctrlF', event)
+			} else if (event.keyCode === 27) {
+				emitter.emit('escape')
+			} else if (event.altKey && event.which === 37) {
+				emitter.emit('previous', event)
+			} else if (event.altKey && event.which === 39) {
+				emitter.emit('next', event)
+			} else if (event.ctrlKey && event.keyCode === 80) {
+				emitter.emit('ctrlP', event)
+			}
+		})
+		window.addEventListener('keyup', (event) => {
+			emitter.emit('keyup', event)
+		})
+		LeekWars.mobile = LeekWars.isMobile()
+		window.addEventListener('resize', () => {
+			emitter.emit('resize')
+			LeekWars.mobile = LeekWars.isMobile()
+		})
+		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+			// console.log("Change dark mode", event.matches)
+			if (LeekWars.themeSetting === 'auto') {
+				LeekWars.darkMode = event.matches
+			}
+		});
+
+		const startIntervals = () => {
+			secondInterval = setInterval(() => {
+				LeekWars.timeSeconds = (Date.now() / 1000) | 0 - LeekWars.timeDelta
+			}, 1000)
+			minuteInterval = setInterval(() => {
+				LeekWars.time = (Date.now() / 1000) | 0 - LeekWars.timeDelta
+			}, 1000 * 60)
+		}
+		startIntervals()
+
+		window.addEventListener('blur', () => {
+			// console.log("onblur")
+			if (secondInterval) clearInterval(secondInterval)
+			if (minuteInterval) clearInterval(minuteInterval)
+			LeekWars.clearIntervals()
+		})
+		window.addEventListener('focus', () => {
+			// console.log("onfocus")
+			emitter.emit('focus')
+			startIntervals()
+			LeekWars.startIntervals()
+			LeekWars.socket.reconnect()
+		})
+		window.addEventListener('click', () => {
+			emitter.emit('htmlclick')
+		})
+
+		// Ignore Monaco "Canceled" errors (normal behavior when switching files/canceling operations)
+		window.addEventListener('unhandledrejection', (event) => {
+			if (event.reason?.message === 'Canceled' || event.reason?.message === 'Model not found') {
+				event.preventDefault()
+			}
+		})
+
+		emitter.on('loaded', () => {
+			nextTick(() => {
+				// console.log("loaded", this.$data.savedPosition)
+				if (this.$data.savedPosition > 0) {
+					// window.scrollTo(0, this.$data.savedPosition)
+					setTimeout(() => {
+						window.scrollTo(0, this.$data.savedPosition)
+						this.$data.savedPosition = 0
+					})
+				}
+			})
+		})
+		emitter.on('connected', () => {
+			LeekWars.socket.connect()
+		})
+		
+		window.onbeforeunload = () => {
+			const component = router.currentRoute.matched[0].instances.default
+			const beforeRouteLeave = (component.$options as any).beforeRouteLeave
+			if (beforeRouteLeave) {
+				if (!beforeRouteLeave[0].bind(component)()) { return "Confirm" }
+			}
+			LeekWars.unload()
+		}
+
+		LeekWars.sfwInit()
+		LeekWars.setFavicon()
+		LeekWars.initChats()
+
+		if (!LeekWars.LOCAL) {
+			displayWarningMessage()
+		}
+	},
+
+	errorCaptured(err: any, vm: any, info: any) {
+
+		if (LeekWars.DEV) return
+
+		if (Date.now() - lastErrorSent < 1000) return
+		lastErrorSent = Date.now()
+
+		const error = err.name + ": " + err.message
+		const file = document.location.href
+		const stack = err.stack + '\n' + info
+		const locale = i18n.global.locale
+
+		LeekWars.post('error/report', { error, stack, file, locale })
+	}
+})
+
+app.use(router)
+app.use(i18n)
+app.use(store)
+app.use(vuetify)
+
 
 // Vue.prototype.LeekWars = LeekWars
 // Vue.prototype.env = env
-Vue.mixin({
+app.mixin({
 	data() {
 		return { LeekWars }
 	},
@@ -64,20 +248,20 @@ Vue.mixin({
 	}
 })
 
-Vue.component('leek-image', LeekImage)
-Vue.component('avatar', Avatar)
-Vue.component('emblem', Emblem)
-Vue.component('talent', Talent)
-Vue.component('ranking-badge', RankingBadge)
-Vue.component('notification', NotificationElement)
-Vue.component('lw-code', Code)
-Vue.component('error', Error)
-Vue.component('panel', Panel)
-Vue.component('popup', Popup)
-Vue.component('loader', LWLoader)
-Vue.component('flag', Flag)
+app.component('leek-image', LeekImage)
+app.component('avatar', Avatar)
+app.component('emblem', Emblem)
+app.component('talent', Talent)
+app.component('ranking-badge', RankingBadge)
+app.component('notification', NotificationElement)
+app.component('lw-code', Code)
+app.component('error', Error)
+app.component('panel', Panel)
+app.component('popup', Popup)
+app.component('loader', LWLoader)
+app.component('flag', Flag)
 
-Vue.directive('autostopscroll', {
+app.directive('autostopscroll', {
 	mounted: (el, binding) => {
 		const top = binding.value === 'top' || !binding.value
 		const bottom = binding.value === 'bottom' || !binding.value
@@ -89,7 +273,7 @@ Vue.directive('autostopscroll', {
 	}
 })
 
-Vue.directive('code', {
+app.directive('code', {
 	mounted: (el) => {
 		el.querySelectorAll('code').forEach((c) => {
 			const codeApp = createApp(Code, { code: (c as HTMLElement).innerText })
@@ -101,7 +285,7 @@ Vue.directive('code', {
 	}
 })
 
-Vue.directive('single-code', {
+app.directive('single-code', {
 	mounted: (el) => {
 		el.querySelectorAll('code').forEach((c) => {
 			const codeApp = createApp(Code, { code: (c as HTMLElement).innerText, single: true, theme: 'auto' })
@@ -113,7 +297,7 @@ Vue.directive('single-code', {
 	}
 })
 
-Vue.directive('latex', {
+app.directive('latex', {
 	mounted: (el) => {
 		el.innerHTML = el.innerHTML.replace(/\$(.*?)\$/, (str: string) => {
 			return "<latex>" + str + "</latex>"
@@ -126,7 +310,7 @@ Vue.directive('latex', {
 	}
 })
 
-Vue.directive('chat-code-latex', {
+app.directive('chat-code-latex', {
 	mounted: (el) => {
 		el.innerHTML = el.innerHTML.replace(/\$(.*?)\$/g, (str: string) => {
 			return "<latex>" + str.replace(/`/g, "") + "</latex>"
@@ -175,7 +359,7 @@ Vue.directive('chat-code-latex', {
 	}
 })
 
-Vue.directive('dochash', {
+app.directive('dochash', {
 	mounted: (el) => {
 		el.innerHTML = el.innerHTML.replace(/#(\w+)/g, (a, b) => {
 			return "<a href='/help/documentation/" + b + "'>" + b + "</a>"
@@ -184,162 +368,23 @@ Vue.directive('dochash', {
 			a.onclick = (e: Event) => {
 				e.stopPropagation()
 				e.preventDefault()
-				vueMain.$emit('doc-navigate', a.innerText)
+				emitter.emit('doc-navigate', a.innerText)
 				return false
 			}
 		})
 	}
 })
 
-function displayWarningMessage() {
-	const style = "color: black; font-size: 13px; font-weight: bold;"
-	const styleRed = "color: red; font-size: 14px; font-weight: bold;"
-	console.log("%c" + i18n.global.t('main.console_alert_1'), style)
-	console.log("%c" + i18n.global.t('main.console_alert_2'), styleRed)
-	console.log("%c" + i18n.global.t('main.console_alert_3'), style)
-	console.log("")
-	console.log("%c✔️ " + i18n.global.t('main.console_github'), style)
-	console.log("")
-}
-
-let lastErrorSent = 0
-
-let secondInterval: any = null, minuteInterval: any = null
-
-const app = createApp({
-	data() {
-		return { savedPosition: 0 }
-	},
-	render() {
-		if (location.pathname === '/full-console') {
-			return this.$createElement(Console)
+app.directive('emojis', (el) => {
+	el.childNodes.forEach((child) => {
+		if (child.nodeType === Node.TEXT_NODE) {
+			const html = formatEmojis(LeekWars.protect((child as Text).wholeText))
+			const template = document.createElement('span')
+			template.innerHTML = html
+			el.replaceChild(template, child)
 		}
-		return this.$createElement(App)
-	},
-	created() {
-		window.addEventListener('keydown', (event) => {
-			this.$emit('keydown', event)
-			if (event.ctrlKey && event.shiftKey && event.keyCode === 83) {
-				this.$emit('ctrlShiftS')
-			} else if (event.ctrlKey && event.keyCode === 83) {
-				this.$emit('ctrlS')
-				event.preventDefault()
-			} else if (event.ctrlKey && event.keyCode === 81) {
-				this.$emit('ctrlQ')
-			} else if (event.ctrlKey && event.keyCode === 70 && !event.shiftKey) {
-				this.$emit('ctrlF', event)
-			} else if (event.keyCode === 27) {
-				this.$emit('escape')
-			} else if (event.altKey && event.which === 37) {
-				this.$emit('previous', event)
-			} else if (event.altKey && event.which === 39) {
-				this.$emit('next', event)
-			} else if (event.ctrlKey && event.keyCode === 80) {
-				this.$emit('ctrlP', event)
-			}
-		})
-		window.addEventListener('keyup', (event) => {
-			this.$emit('keyup', event)
-		})
-		LeekWars.mobile = LeekWars.isMobile()
-		window.addEventListener('resize', () => {
-			this.$emit('resize')
-			LeekWars.mobile = LeekWars.isMobile()
-		})
-		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-			// console.log("Change dark mode", event.matches)
-			if (LeekWars.themeSetting === 'auto') {
-				LeekWars.darkMode = event.matches
-			}
-		});
-
-		const startIntervals = () => {
-			secondInterval = setInterval(() => {
-				LeekWars.timeSeconds = (Date.now() / 1000) | 0 - LeekWars.timeDelta
-			}, 1000)
-			minuteInterval = setInterval(() => {
-				LeekWars.time = (Date.now() / 1000) | 0 - LeekWars.timeDelta
-			}, 1000 * 60)
-		}
-		startIntervals()
-
-		window.addEventListener('blur', () => {
-			// console.log("onblur")
-			if (secondInterval) clearInterval(secondInterval)
-			if (minuteInterval) clearInterval(minuteInterval)
-			LeekWars.clearIntervals()
-		})
-		window.addEventListener('focus', () => {
-			// console.log("onfocus")
-			this.$emit('focus')
-			startIntervals()
-			LeekWars.startIntervals()
-			LeekWars.socket.reconnect()
-		})
-		window.addEventListener('click', () => {
-			this.$emit('htmlclick')
-		})
-
-		// Ignore Monaco "Canceled" errors (normal behavior when switching files/canceling operations)
-		window.addEventListener('unhandledrejection', (event) => {
-			if (event.reason?.message === 'Canceled' || event.reason?.message === 'Model not found') {
-				event.preventDefault()
-			}
-		})
-
-		this.$on('loaded', () => {
-			nextTick(() => {
-				// console.log("loaded", this.$data.savedPosition)
-				if (this.$data.savedPosition > 0) {
-					// window.scrollTo(0, this.$data.savedPosition)
-					setTimeout(() => {
-						window.scrollTo(0, this.$data.savedPosition)
-						this.$data.savedPosition = 0
-					})
-				}
-			})
-		})
-		this.$on('connected', () => {
-			LeekWars.socket.connect()
-		})
-		window.onbeforeunload = () => {
-			const component = router.currentRoute.matched[0].instances.default
-			const beforeRouteLeave = (component.$options as any).beforeRouteLeave
-			if (beforeRouteLeave) {
-				if (!beforeRouteLeave[0].bind(component)()) { return "Confirm" }
-			}
-			LeekWars.unload()
-		}
-
-		LeekWars.sfwInit()
-		LeekWars.setFavicon()
-		LeekWars.initChats()
-
-		if (!LeekWars.LOCAL) {
-			displayWarningMessage()
-		}
-	},
-
-	errorCaptured(err: any, vm: any, info: any) {
-
-		if (LeekWars.DEV) return
-
-		if (Date.now() - lastErrorSent < 1000) return
-		lastErrorSent = Date.now()
-
-		const error = err.name + ": " + err.message
-		const file = document.location.href
-		const stack = err.stack + '\n' + info
-		const locale = i18n.global.locale
-
-		LeekWars.post('error/report', { error, stack, file, locale })
-	}
+	})
 })
-
-app.use(router)
-app.use(i18n)
-app.use(store)
-app.use(vuetify)
 
 const vueMain = app.mount('#app2') as ComponentPublicInstance & {
 	$once: (event: string, callback: () => void) => void
@@ -378,11 +423,20 @@ if (window.__FARMER__) {
 }
 
 // Register Vue filters after LeekWars is fully initialized
-Vue.filter('number', LeekWars.formatNumber)
-Vue.filter('date', LeekWars.formatDate)
-Vue.filter('datetime', LeekWars.formatDateTime)
-Vue.filter('timeseconds', LeekWars.formatTimeSeconds)
-Vue.filter('time', LeekWars.formatTime)
-Vue.filter('duration', LeekWars.formatDuration)
 
-export { vueMain, vuetify, displayWarningMessage, app }
+app.config.globalProperties.$filters = {
+	number: LeekWars.formatNumber,
+	date: LeekWars.formatDate,
+	datetime: LeekWars.formatDateTime,
+	timeseconds: LeekWars.formatTimeSeconds,
+	time: LeekWars.formatTime,
+	duration: LeekWars.formatDuration,
+}
+// Vue.filter('number', LeekWars.formatNumber)
+// Vue.filter('date', LeekWars.formatDate)
+// Vue.filter('datetime', LeekWars.formatDateTime)
+// Vue.filter('timeseconds', LeekWars.formatTimeSeconds)
+// Vue.filter('time', LeekWars.formatTime)
+// Vue.filter('duration', LeekWars.formatDuration)
+
+export { vueMain, vuetify, displayWarningMessage, app, emitter }

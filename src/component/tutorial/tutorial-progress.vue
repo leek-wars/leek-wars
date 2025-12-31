@@ -23,10 +23,10 @@
 
 <script lang="ts">
 	import { store } from '@/model/store'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import { tutorial_items } from './tutorial-items'
 
-	@Component({ name: 'tutorial-progress', i18n: {} })
+	@Options({ name: 'tutorial-progress', i18n: {} })
 	export default class TutorialProgress extends Vue {
 
 		@Prop() locale!: string

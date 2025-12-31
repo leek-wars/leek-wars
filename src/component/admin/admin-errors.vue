@@ -48,9 +48,9 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 
-	@Component({})
+	@Options({})
 	export default class AdminErrors extends Vue {
 		errors: any[] | null = null
 		deleteQuery: string = ''

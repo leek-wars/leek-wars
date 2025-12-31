@@ -13,7 +13,7 @@
 						<span v-else>{{ resource }}</span>
 					</span>
 				</template>
-				{{ quantity }}x <b v-if="parent.LeekWars.items[resource]">{{ parent.$t(parent.ITEM_CATEGORY_NAME[parent.LeekWars.items[resource].type] + '.' + parent.LeekWars.items[resource].name.replace('potion_', '')) }}</b>
+				{{ quantity }}x <b v-if="parent.LeekWars.items[resource]">{{ $t(parent.ITEM_CATEGORY_NAME[parent.LeekWars.items[resource].type] + '.' + parent.LeekWars.items[resource].name.replace('potion_', '')) }}</b>
 			</v-tooltip>
 
 			<!-- <span v-for="(resource, i) in props.action.params[3]" :key="i">{{ resource }}, </span> -->
@@ -23,11 +23,11 @@
 
 <script lang="ts">
 	import { Action } from '@/model/action'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import ActionLeekElement from '../report/action-leek.vue'
 	import { ITEM_CATEGORY_NAME } from '@/model/item'
 
-	@Component({ components: { leek: ActionLeekElement } })
+	@Options({ components: { leek: ActionLeekElement } })
 	export default class ActionOpenChest extends Vue {
 		@Prop() action!: Action
 		@Prop() a!: number

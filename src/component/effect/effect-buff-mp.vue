@@ -13,10 +13,10 @@
 
 <script lang="ts">
 	import { FightLeek } from '@/model/fight'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import ActionLeekElement from '../report/action-leek.vue'
 
-	@Component({ components: { leek: ActionLeekElement } })
+	@Options({ components: { leek: ActionLeekElement } })
 	export default class EffectBuffMP extends Vue {
 		@Prop() leek!: FightLeek
 		@Prop() value!: number

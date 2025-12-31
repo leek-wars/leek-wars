@@ -57,14 +57,14 @@
 	import ItemPreview from '@/component/market/item-preview.vue'
 	import { Constant } from '@/model/constant'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 	import { CHIPS } from '@/model/chips'
 	import { CONSTANT_BY_ID } from '@/model/constant_by_id'
 	import { locale } from '@/locale'
 	import Markdown from '../encyclopedia/markdown.vue'
 
-	@Component({ name: 'documentation-constant', components: { ItemPreview, RichTooltipItem, Markdown }})
+	@Options({ name: 'documentation-constant', components: { ItemPreview, RichTooltipItem, Markdown }})
 	export default class DocumentationConstant extends Vue {
 		@Prop() constant!: Constant
 		CONSTANT_BY_ID = CONSTANT_BY_ID

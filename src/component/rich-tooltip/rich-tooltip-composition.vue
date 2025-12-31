@@ -58,10 +58,10 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Composition } from '@/model/team'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 
-	@Component({ components: { RichTooltipLeek } })
+	@Options({ components: { RichTooltipLeek } })
 	export default class RichTooltipComposition extends Vue {
 		@Prop({required: true}) id!: number
 		@Prop() disabled!: boolean
@@ -94,7 +94,7 @@
 				LeekWars.get<Composition>('team/composition-rich-tooltip/' + this.id).then(composition => {
 					this.composition = composition
 					for (const c of LeekWars.characteristics) {
-						Vue.set(this.sums, c, Object.values(this.composition.leeks).reduce((sum: number, leek: any) => sum + leek[c], 0))
+						this.sums[c] = Object.values(this.composition.leeks).reduce((sum: number, leek: any) => sum + leek[c], 0)
 					}
 					if (this.expand_leeks) {
 						(this.$refs.menu as any).onResize()

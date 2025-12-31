@@ -12,11 +12,11 @@
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 	import { store } from '@/model/store'
 	import Console from '../app/console.vue'
 
-	@Component({ name: 'console-page', components: {
+	@Options({ name: 'console-page', components: {
 		Console
 	} })
 	export default class ConsolePage extends Vue {

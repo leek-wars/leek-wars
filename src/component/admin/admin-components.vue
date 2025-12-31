@@ -32,14 +32,14 @@
 <script lang="ts">
 import { ITEM_CATEGORY_NAME } from '@/model/item'
 import { LeekWars } from '@/model/leekwars'
-import { Component, Vue, Watch } from 'vue-property-decorator'
+import { Options, Vue, Watch } from 'vue-property-decorator'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import { SchemeTemplate } from '@/model/scheme'
-import { ComponentTemplate } from '@/model/component'
+import { OptionsTemplate } from '@/model/component'
 import ItemView from '../item.vue'
 const RichTooltipItem = () => import('@/component/rich-tooltip/rich-tooltip-item.vue')
 
-@Component({ components: { RichTooltipFarmer, RichTooltipItem, item: ItemView } })
+@Options({ components: { RichTooltipFarmer, RichTooltipItem, item: ItemView } })
 export default class AdminComponents extends Vue {
 	ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
 	data: any = null
@@ -70,7 +70,7 @@ export default class AdminComponents extends Vue {
 	up(component: ComponentTemplate, i: number) {
 		// [component.stats[i], component.stats[i - 1]] = [component.stats[i - 1], component.stats[i]] marche pas :(
 		const stat = component.stats[i]
-		Vue.set(component.stats, i, component.stats[i - 1])
+		component.stats.splice(i, 1, component.stats[i - 1])
 		component.stats[i - 1] = stat
 		this.updateComponent(component)
 	}
