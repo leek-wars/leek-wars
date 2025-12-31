@@ -11,9 +11,9 @@
 
 <script lang="ts">
 	import Trophy from '@/component/trophies/trophy.vue'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ components: { Trophy } })
+	@Options({ components: { Trophy } })
 	export default class RichTooltipTrophy extends Vue {
 		@Prop({required: true}) trophy!: any
 		@Prop() bottom!: boolean

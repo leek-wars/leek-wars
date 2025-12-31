@@ -57,9 +57,9 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'forgot_password', i18n: {} })
+	@Options({ name: 'forgot_password', i18n: {} })
 	export default class ForgotPassword extends Vue {
 		@Prop() state!: string
 		email: string = ''

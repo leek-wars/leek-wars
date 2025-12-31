@@ -80,7 +80,7 @@
 				<div class="info-talent">
 					<v-tooltip>
 						<template v-slot:activator="{ props }">
-							<talent :id="team ? team.id : ''" :talent="team ? team.talent : '...'" category="team" :on="props" />
+							<talent :id="team ? team.id : ''" :talent="team ? team.talent : '...'" category="team" v-bind="props" />
 						</template>
 						{{ $t('talent') }}
 					</v-tooltip>
@@ -92,9 +92,9 @@
 					<template v-slot:activator="{ props }">
 						<table class="fights" v-bind="props">
 							<tr>
-								<td class="big">{{ team.victories | number }}</td>
-								<td class="big">{{ team.draws | number }}</td>
-								<td class="big">{{ team.defeats | number }}</td>
+								<td class="big">{{ $filters.number(team.victories) }}</td>
+								<td class="big">{{ $filters.number(team.draws) }}</td>
+								<td class="big">{{ $filters.number(team.defeats) }}</td>
 							</tr>
 							<tr>
 								<td class="grey">{{ $t('victories') }}</td>
@@ -242,8 +242,8 @@
 									</router-link>
 								</rich-tooltip-leek>
 							</div>
-							<div class="p20">{{ leek.talent | number }}</div>
-							<div class="p20">{{ leek.level | number }}</div>
+							<div class="p20">{{ $filters.number(leek.talent) }}</div>
+							<div class="p20">{{ $filters.number(leek.level) }}</div>
 						</div>
 					</div>
 				</div>
@@ -265,7 +265,7 @@
 									</router-link>
 								</rich-tooltip-farmer>
 							</div>
-							<div class="p20">{{ farmer.talent | number }}</div>
+							<div class="p20">{{ $filters.number(farmer.talent) }}</div>
 							<div class="p15">
 								<flag v-if="farmer.country" :code="farmer.country" class="country" />
 							</div>
@@ -289,7 +289,7 @@
 									</router-link>
 								</rich-tooltip-farmer>
 							</div>
-							<div class="p25">{{ farmer.points | number }}</div>
+							<div class="p25">{{ $filters.number(farmer.points) }}</div>
 						</div>
 					</div>
 				</div>
@@ -601,7 +601,7 @@
 </template>
 
 <script lang="ts">
-	const ChatElement = () => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`)
+	const ChatElement = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
 	import { locale } from '@/locale'
 	const Explorer = () => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`)
 	import CharacteristicTooltip from '@/component/leek/characteristic-tooltip.vue'
@@ -612,7 +612,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { Composition, Team, TeamMember } from '@/model/team'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
@@ -624,8 +624,9 @@
 	import TurretImage from '@/component/turret-image.vue'
 	import AIElement from '@/component/app/ai.vue'
 	import { CHIPS } from '@/model/chips'
+import { defineAsyncComponent } from 'vue'
 
-	@Component({ name: 'team', i18n: {}, mixins: [...mixins], components: {
+	@Options({ name: 'team', i18n: {}, mixins: [...mixins], components: {
 		CharacteristicTooltip, Explorer, chat: ChatElement, RichTooltipItem, RichTooltipLeek, RichTooltipFarmer, RichTooltipComposition, RichTooltipTeam, FightsHistory, TournamentsHistory, ReportDialog, TurretImage, ai: AIElement
 	}})
 	export default class TeamPage extends Vue {
@@ -722,11 +723,11 @@
 					for (const composition of this.team.compositions) {
 						this.team.compositionsById[composition.id] = composition
 						for (const leek of composition.leeks) {
-							Vue.set(leek, 'dragging', false)
+							leek.dragging = false
 						}
 					}
 					for (const leek of this.team.unengaged_leeks) {
-						Vue.set(leek, 'dragging', false)
+						leek.dragging = false
 					}
 				}
 
@@ -745,7 +746,7 @@
 						{icon: 'mdi-flag-outline', click: () => this.$router.push('/garden/challenge/team/' + team.id)}
 					])
 				}
-				this.$root.$emit('loaded')
+				emitter.emit('loaded')
 			})
 		}
 
@@ -1063,7 +1064,7 @@
 			if (composition.tournamentRange || composition.tournamentRangeLoading) { return }
 			composition.tournamentRangeLoading = true
 			const power = Math.round(composition.leeks.reduce((p, l) => p + l.level ** LeekWars.POWER_FACTOR, 0))
-			LeekWars.get('tournament/range-compo/' + power).then(d => Vue.set(composition, 'tournamentRange', d))
+			LeekWars.get('tournament/range-compo/' + power).then(d => composition.tournamentRange = d)
 		}
 
 		loadRankings() {

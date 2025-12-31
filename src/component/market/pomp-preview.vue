@@ -25,9 +25,9 @@
 
 <script lang="ts">
 	import { PompTemplate } from '@/model/pomp'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'pomp-preview' })
+	@Options({ name: 'pomp-preview' })
 	export default class PompPreview extends Vue {
 		@Prop() pomp!: PompTemplate
 	}

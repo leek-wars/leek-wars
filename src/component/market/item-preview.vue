@@ -32,10 +32,10 @@
 
 		<div v-if="inventory" class="stats inventory">
 			<div v-if="item.price">
-				{{ $t('main.estimated_value') }} : <b>{{ item.price | number }}</b> <span class='hab'></span>
+				{{ $t('main.estimated_value') }} : <b>{{ $filters.number(item.price) }}</b> <span class='hab'></span>
 			</div>
 			<div v-if="item.price && quantity > 1">
-				{{ $t('main.lot_value') }} : <b>{{ item.price * quantity | number }}</b> <span class='hab'></span>
+				{{ $t('main.lot_value') }} : <b>{{ $filters.number(item.price * quantity) }}</b> <span class='hab'></span>
 			</div>
 			<div v-if="item.name.startsWith('box') || ((($store.state.farmer && $store.state.farmer.admin) || LeekWars.christmasPresents) && item.name.startsWith('present'))">
 				<v-btn small class="get-all notif-trophy" @click.stop="retrieveN(1)">{{ $t('main.retrieve') }} <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import { ItemTemplate, ItemType, ITEM_CATEGORY_NAME } from '@/model/item'
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Options, Prop, Vue } from 'vue-property-decorator'
 import WeaponPreview from '@/component/market/weapon-preview.vue'
 import ChipPreview from '@/component/market/chip-preview.vue'
 import PotionPreview from '@/component/market/potion-preview.vue'
@@ -65,7 +65,7 @@ import SchemePreview from './scheme-preview.vue'
 import SchemeImage from './scheme-image.vue'
 import { Leek } from '@/model/leek'
 
-@Component({ name: 'item-preview', components: {
+@Options({ name: 'item-preview', components: {
 	'weapon-preview': WeaponPreview,
 	'chip-preview': ChipPreview,
 	'potion-preview': PotionPreview,

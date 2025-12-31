@@ -18,10 +18,10 @@
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import { mixins } from '@/model/i18n'
 
-	@Component({ name: 'bank-product' })
+	@Options({ name: 'bank-product' })
 	export default class BankProduct extends Vue {
 
 		@Prop({ required: true }) product!: any

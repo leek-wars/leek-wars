@@ -209,12 +209,12 @@
 	import { fileSystem } from '@/model/filesystem'
 	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import EditorFolder from './editor-folder.vue'
 	import { Folder } from './editor-item'
 	import { explorer } from './explorer'
 
-	@Component({ name: 'editor-explorer', i18n: {}, mixins: [...mixins], components: { 'editor-folder': EditorFolder } })
+	@Options({ name: 'editor-explorer', i18n: {}, mixins: [...mixins], components: { 'editor-folder': EditorFolder } })
 	export default class Explorer extends Vue {
 		@Prop({required: true}) currentAi!: AI
 		@Prop({required: true}) selectedFolder!: Folder
@@ -237,12 +237,12 @@
 		newFolderName: string = ''
 
 		created() {
-			this.$root.$on('editor-menu', this.openMenu)
-			this.$root.$on('keyup', this.keyup)
+			emitter.on('editor-menu', this.openMenu)
+			emitter.on('keyup', this.keyup)
 		}
 		destroyed() {
-			this.$root.$off('editor-menu', this.openMenu)
-			this.$root.$off('keyup', this.keyup)
+			emitter.off('editor-menu', this.openMenu)
+			emitter.off('keyup', this.keyup)
 		}
 
 		open() {

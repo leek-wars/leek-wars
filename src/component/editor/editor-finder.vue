@@ -25,9 +25,9 @@
 	import { AI } from '@/model/ai'
 	import { fileSystem } from '@/model/filesystem'
 	import { mixins } from '@/model/i18n'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'editor-finder', components: { } })
+	@Options({ name: 'editor-finder', components: { } })
 	export default class EditorFinder extends Vue {
 		@Prop({required: true}) active!: {[key: number]: AI}
 		@Prop({required: true}) history!: AI[]

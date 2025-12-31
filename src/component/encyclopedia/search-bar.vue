@@ -17,9 +17,9 @@
 <script lang="ts">
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'search-bar' })
+	@Options({ name: 'search-bar' })
 	export default class SearchBar extends Vue {
 
 		query: string = ''

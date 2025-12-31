@@ -1,19 +1,19 @@
 
 <template>
-	<i18n-t tag="div" keypath="fight.lama" :a="props.a">
-		<leek slot="leek" :leek="props.action.entity" />
+	<i18n-t tag="div" keypath="fight.lama" :a="a">
+		<leek slot="leek" :leek="action.entity" />
 		<template v-slot:cost>
-			<b class="color-tp">{{ parent.$t('fight.n_tp', [1]) }}</b>
+			<b class="color-tp">{{ $t('fight.n_tp', [1]) }}</b>
 		</template>
 	</i18n-t>
 </template>
 
 <script lang="ts">
 	import { Action } from '@/model/action'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import ActionLeekElement from '../report/action-leek.vue'
 
-	@Component({ components: { leek: ActionLeekElement } })
+	@Options({ components: { leek: ActionLeekElement } })
 	export default class ActionLama extends Vue {
 		@Prop() action!: Action
 		@Prop() a!: number

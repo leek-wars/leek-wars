@@ -28,12 +28,12 @@
 	import { AI } from '@/model/ai'
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import EditorAI from './editor-ai.vue'
 	import { AIItem, Folder } from './editor-item'
 	import { explorer } from './explorer'
 
-	@Component({ name: 'editor-folder', components: { 'editor-ai': EditorAI } })
+	@Options({ name: 'editor-folder', components: { 'editor-ai': EditorAI } })
 	export default class EditorFolder extends Vue {
 		@Prop() folder!: Folder
 		@Prop() level!: number
@@ -47,7 +47,7 @@
 		}
 		drop(e: DragEvent) {
 			if (this.folder.id === -1) { return }
-			this.$root.$emit('editor-drop', this.folder)
+			emitter.emit('editor-drop', this.folder)
 			e.preventDefault()
 			e.stopPropagation()
 			this.dragOver = 0
@@ -71,7 +71,7 @@
 			if (this.folder.id === -1) { return }
 			e.dataTransfer!.setData('text/plain', 'drag !!!')
 			this.dragging = true
-			this.$root.$emit('editor-drag', this.folder)
+			emitter.emit('editor-drag', this.folder)
 			e.stopPropagation()
 		}
 		dragend() {

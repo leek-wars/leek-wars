@@ -140,11 +140,11 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { NotificationBuilder } from '@/model/notification-builder'
 	import { TROPHIES } from '@/model/trophies'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 	const Didactitiel = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`)
 	const LevelDialog = () => import(/* webpackChunkName: "[request]" */ `@/component/leek/level-dialog.${locale}.i18n`)
 
-	@Component({ components: { Didactitiel, LevelDialog } })
+	@Options({ components: { Didactitiel, LevelDialog } })
 	export default class Admin extends Vue {
 		didactitiel: boolean = false
 		didactitiel_enabled: boolean = false

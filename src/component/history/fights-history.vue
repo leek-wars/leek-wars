@@ -8,10 +8,10 @@
 
 <script lang="ts">
 	import { Fight } from '@/model/fight'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import FightHistory from '@/component/history/fight-history.vue'
 
-	@Component({ name: 'fights-history', components: { FightHistory } })
+	@Options({ name: 'fights-history', components: { FightHistory } })
 	export default class FightsHistory extends Vue {
 		@Prop() fights!: Fight[]
 	}

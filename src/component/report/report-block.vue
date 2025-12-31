@@ -61,9 +61,9 @@
 									<span :style="{width: newBar + '%'}" class="new_xp team"></span>
 								</div>
 							</template>
-							{{ team.cur_xp | number }} / {{ team.next_xp | number }}
+							{{ $filters.number(team.cur_xp) }} / {{ $filters.number(team.next_xp) }}
 						</v-tooltip>
-						<span>{{ team.xp | number }}</span>
+						<span>{{ $filters.number(team.xp) }}</span>
 					</td>
 					<td v-if="fight.context !== FightContext.TEST && fight.context !== FightContext.CHALLENGE" class="talent">
 						<img src="/image/talent.png">
@@ -92,13 +92,13 @@
 				<tr v-if="fight.type !== FightType.SOLO" class="total">
 					<td class="name"><span class="alive">{{ $t('main.total') }}</span></td>
 					<td class="level">{{ totalLevel }}</td>
-					<!-- <td v-if="$store.getters.admin" class="power">{{ totalPower | number }}</td> -->
-					<td class="xp"><div class="bar"></div>{{ totalXP | number }}</td>
+					<!-- <td v-if="$store.getters.admin" class="power">{{ $filters.number(totalPower) }}</td> -->
+					<td class="xp"><div class="bar"></div>{{ $filters.number(totalXP) }}</td>
 					<td class="money">
-						<span>{{ totalMoney | number }} <span class="hab"></span></span>
+						<span>{{ $filters.number(totalMoney) }} <span class="hab"></span></span>
 					</td>
 					<td v-if="fight.context != FightContext.TEST && fight.context != FightContext.CHALLENGE" class="resources"></td>
-					<!-- <td class="gain">{{ totalOpes | number }}</td> -->
+					<!-- <td class="gain">{{ $filters.number(totalOpes) }}</td> -->
 					<!-- <td v-if="$store.getters.admin" class="gain">{{ totalTime }} s</td> -->
 				</tr>
 			</table>
@@ -108,11 +108,11 @@
 
 <script lang="ts">
 	import { Fight, FightContext, FightType, ReportFarmer } from '@/model/fight'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import ReportLeekRow from './report-leek-row.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Component({
+	@Options({
 		components: { ReportLeekRow, RichTooltipFarmer }
 	})
 	export default class ReportBlock extends Vue {

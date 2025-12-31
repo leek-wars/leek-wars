@@ -24,7 +24,7 @@
 							<div class="date">
 								<img v-if="farmer.connected" class="status" src="/image/connected.png">
 								<img v-else class="status" src="/image/disconnected.png">
-								{{ farmer.register_time | time }}
+								{{ $filters.time(farmer.register_time) }}
 							</div>
 							<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }" :bottom="true">
 								<router-link :to="'/farmer/' + farmer.id" class="name" v-bind="props" v-ripple>
@@ -42,7 +42,7 @@
 								<v-icon>mdi-settings-outline</v-icon> {{ farmer.test_fights }}
 								<v-icon>mdi-trophy-outline</v-icon> {{ farmer.trophies }}
 							</div>
-							<a class="source" :href="farmer.referer" target="_blank">
+							<a class="source" :href="farmer.referer" target="_blank" :title="farmer.referer">
 								<img v-if="!farmer.pass && farmer.verified" src="/image/github_black.png"> {{ format(farmer.referer || '∅') }}
 							</a>
 						</div>
@@ -61,7 +61,7 @@
 						<a v-if="source.name" class="name" :href="source.name" target="_blank">{{ format(source.name) }}</a>
 						<div v-else class="name">∅</div>
 						<div class="stats">
-							<div class="count">{{ source.count | number }}</div>
+							<div class="count">{{ $filters.number(source.count) }}</div>
 							<div class="other" :class="{empty: source.fights + source.test_fights + source.trophies === 0}">
 								<v-icon>mdi-sword-cross</v-icon> {{ source.fights }}
 								<v-icon>mdi-settings-outline</v-icon> {{ source.test_fights }}
@@ -78,10 +78,10 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Component({ components: { RichTooltipFarmer } })
+	@Options({ components: { RichTooltipFarmer } })
 	export default class AdminSources extends Vue {
 		data: any = null
 		sources: any = null

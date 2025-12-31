@@ -12,7 +12,7 @@
 							<rich-tooltip-item v-slot="{ props }" :item="LeekWars.items[scheme.result]" :bottom="true" :inventory="true" @input="$emit('input', $event)">
 								<div class="item" v-bind="props" :quantity="1" :class="{['rarity-border-' + LeekWars.items[scheme.result].rarity]: true}">
 									<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[scheme.result].type] + '/' + LeekWars.items[scheme.result].name.replace('hat_', '').replace('potion_', '') + '.png'" :type="LeekWars.items[scheme.result].type">
-									<div v-if="scheme.quantity > 1" class="quantity">{{ scheme.quantity | number }}</div>
+									<div v-if="scheme.quantity > 1" class="quantity">{{ $filters.number(scheme.quantity) }}</div>
 								</div>
 							</rich-tooltip-item>
 							<input :value="scheme.result" type="text">
@@ -24,7 +24,7 @@
 									<rich-tooltip-item v-if="LeekWars.items[ingredient[0]]" :key="i" v-slot="{ props }" :item="LeekWars.items[ingredient[0]]" :bottom="true" :inventory="true" :quantity="ingredient[1]" @input="$emit('input', $event)">
 										<div class="item" v-bind="props" :class="{['rarity-border-' + LeekWars.items[ingredient[0]].rarity]: true}">
 											<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[ingredient[0]].type] + '/' + LeekWars.items[ingredient[0]].name.replace('hat_', '').replace('potion_', '').replace('chip_', '') + '.png'" :type="LeekWars.items[ingredient[0]].type">
-											<div v-if="ingredient[1] > 1" class="quantity">{{ ingredient[1] | number }}</div>
+											<div v-if="ingredient[1] > 1" class="quantity">{{ $filters.number(ingredient[1]) }}</div>
 										</div>
 									</rich-tooltip-item>
 									<div v-else class="item"></div>
@@ -36,8 +36,8 @@
 						</div>
 						<div class="spacer"></div>
 						<div>
-							<div>{{ scheme.quantity * LeekWars.items[scheme.result].price | number }} <span class="hab"></span></div>
-							<div :class="{wrong: Math.abs((scheme.quantity * LeekWars.items[scheme.result].price) / scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0) - 1.1) > 0.02 }">{{ scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0) | number }} ({{ ((scheme.quantity * LeekWars.items[scheme.result].price) / scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0)).toFixed(2) }}) <span class="hab"></span></div>
+							<div>{{ $filters.number(scheme.quantity * LeekWars.items[scheme.result].price) }} <span class="hab"></span></div>
+							<div :class="{wrong: Math.abs((scheme.quantity * LeekWars.items[scheme.result].price) / scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0) - 1.1) > 0.02 }">{{ $filters.number(scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0)) }} ({{ ((scheme.quantity * LeekWars.items[scheme.result].price) / scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0)).toFixed(2) }}) <span class="hab"></span></div>
 						</div>
 					</div> -->
 
@@ -62,8 +62,8 @@
 							</div>
 						</div>
 						<div>
-							<div>{{ scheme.quantity * LeekWars.items[scheme.result].price | number }} <span class="hab"></span></div>
-							<div :class="{wrong: Math.abs((scheme.quantity * LeekWars.items[scheme.result].price) / scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0) - 1.1) > 0.03 }">{{ scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0) | number }} ({{ ((scheme.quantity * LeekWars.items[scheme.result].price) / scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0)).toFixed(2) }}) <span class="hab"></span></div>
+							<div>{{ $filters.number(scheme.quantity * LeekWars.items[scheme.result].price) }} <span class="hab"></span></div>
+							<div :class="{wrong: Math.abs((scheme.quantity * LeekWars.items[scheme.result].price) / scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0) - 1.1) > 0.03 }">{{ $filters.number(scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0)) }} ({{ ((scheme.quantity * LeekWars.items[scheme.result].price) / scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0)).toFixed(2) }}) <span class="hab"></span></div>
 						</div>
 					</div>
 				</div>
@@ -75,12 +75,12 @@
 <script lang="ts">
 	import { ITEM_CATEGORY_NAME } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import { SchemeTemplate } from '@/model/scheme'
 	const RichTooltipItem = () => import('@/component/rich-tooltip/rich-tooltip-item.vue')
 
-	@Component({ components: { RichTooltipFarmer, RichTooltipItem } })
+	@Options({ components: { RichTooltipFarmer, RichTooltipItem } })
 	export default class AdminSchemes extends Vue {
 		ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
 		data: any = null

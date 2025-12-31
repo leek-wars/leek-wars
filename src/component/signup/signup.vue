@@ -325,13 +325,14 @@
 	import { i18n, loadComponentLanguage, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+import { emitter } from '@/model/vue'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	const SignupCarousel = () => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup-carousel.${locale}.i18n`)
 	const RichTooltipLeek = () => import('@/component/rich-tooltip/rich-tooltip-leek.vue')
 	const RichTooltipFarmer = () => import('@/component/rich-tooltip/rich-tooltip-farmer.vue')
 	const RichTooltipTeam = () => import('@/component/rich-tooltip/rich-tooltip-team.vue')
 
-	@Component({ name: 'signup', i18n: {}, mixins: [...mixins], components: {
+	@Options({ name: 'signup', i18n: {}, mixins: [...mixins], components: {
 		ChangelogVersion, SignupCarousel,
 		RichTooltipLeek, RichTooltipFarmer, RichTooltipTeam
 	} })
@@ -428,7 +429,7 @@
 				this.last_version = data.changelog[0]
 			})
 
-			this.$root.$emit('loaded')
+			emitter.emit('loaded')
 		}
 
 		submit(e: Event) {
@@ -474,7 +475,7 @@
 		}
 		addError(form: string, error: string) {
 			if (!(form in this.errors)) {
-				Vue.set(this.$data.errors, form, [])
+				this.$data.errors[form] = []
 			}
 			this.errors[form].push(error)
 		}

@@ -37,8 +37,8 @@
 	import { Area } from '@/model/area'
 	import { Leek } from '@/model/leek'
 	import { WeaponTemplate } from '@/model/weapon'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
-	@Component({
+	import { Options, Prop, Vue } from 'vue-property-decorator'
+	@Options({
 		components: { 'range-view': RangeView, 'effect-view': EffectView, 'area-view': AreaView }
 	})
 	export default class WeaponPreview extends Vue {

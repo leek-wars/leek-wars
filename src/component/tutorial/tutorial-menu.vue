@@ -15,10 +15,10 @@
 
 <script lang="ts">
 	import { store } from '@/model/store'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import { tutorial_items } from './tutorial-items'
 
-	@Component({ name: 'tutorial-menu', i18n: {} })
+	@Options({ name: 'tutorial-menu', i18n: {} })
 	export default class TutorialMenu extends Vue {
 		@Prop() locale!: string
 		items = tutorial_items

@@ -18,11 +18,11 @@
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import { Swiper, Navigation, Pagination, Autoplay } from 'swiper'
 	import 'swiper/css'
 
-	@Component({ name: 'signup-carousel', i18n: {}, mixins: [...mixins] })
+	@Options({ name: 'signup-carousel', i18n: {}, mixins: [...mixins] })
 	export default class SignupCarousel extends Vue {
 
 		bigImage: string | null = null

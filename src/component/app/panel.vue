@@ -23,9 +23,9 @@
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'panel' })
+	@Options({ name: 'panel' })
 	export default class Panel extends Vue {
 		@Prop() icon!: string
 		@Prop() title!: string

@@ -1,5 +1,5 @@
 <template>
-	<v-app id="app" :class="{ connected: $store.state.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw, dark: LeekWars.darkMode, 'menu-collapsed': !LeekWars.mobile && LeekWars.menuCollapsed, beta: env.BETA, lightbar: LeekWars.lightBar }" data-app="true" @mousemove="mousemove" @mouseup="mouseup">
+	<div id="app" :class="{ connected: $store.state.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw, dark: LeekWars.darkMode, 'menu-collapsed': !LeekWars.mobile && LeekWars.menuCollapsed, beta: env.BETA, lightbar: LeekWars.lightBar }" data-app="true" @mousemove="mousemove" @mouseup="mouseup">
 				<div :class="{visible: LeekWars.dark > 0}" :style="{opacity: LeekWars.dark}" class="dark-shadow" @click="darkClick"></div>
 
 				<div class="requests">{{ LeekWars.requests }} <v-btn x-small @click="LeekWars.requests = 0">reset</v-btn></div>
@@ -146,32 +146,33 @@
 				<v-dialog v-if="docEverywhere" v-model="docEverywhereModel" content-class="doc" :max-width="1400">
 					<documentation ref="doc" :popup="true" />
 				</v-dialog>
-			</v-app>
+			</div>
 </template>
 
 <script lang='ts'>
 	import Bar from '@/component/app/bar.vue'
-	const Chats = () => import('@/component/app/chats.vue')
+	const Chats = defineAsyncComponent(() => import('@/component/app/chats.vue'))
 	// import Console from '@/component/app/console.vue'
-	const Footer = () => import('@/component/app/footer.vue')
+	const Footer = defineAsyncComponent(() => import('@/component/app/footer.vue'))
 	import Header from '@/component/app/header.vue'
-	const Menu = () => import(/* webpackChunkName: "[request]" */ `@/component/app/menu.vue`)
-	const MobileBR = () => import('@/component/app/mobile-br.vue')
-	const Social = () => import(/* webpackChunkName: "[request]" */ `@/component/app/social.vue`)
-	const Squares = () => import('@/component/app/squares.vue')
-	const ChangelogVersion = () => import('@/component/changelog/changelog-version.vue')
+	const Menu = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/app/menu.vue`))
+	const MobileBR = defineAsyncComponent(() => import('@/component/app/mobile-br.vue'))
+	const Social = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/app/social.vue`))
+	const Squares = defineAsyncComponent(() => import('@/component/app/squares.vue'))
+	const ChangelogVersion = defineAsyncComponent(() => import('@/component/changelog/changelog-version.vue'))
 	import { locale } from '@/locale'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import ConsoleWindow from './console-window.vue'
-	const ChangelogDialog = () => import('../changelog/changelog-dialog.vue')
-	const Didactitiel = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`)
-	const Documentation = () => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`)
-	const DidactitielNew = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel-new/didactitiel-new.${locale}.i18n`)
+	import { defineAsyncComponent, nextTick } from 'vue'
+	const ChangelogDialog = defineAsyncComponent(() => import('../changelog/changelog-dialog.vue'))
+	const Didactitiel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`))
+	const Documentation = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`))
+	const DidactitielNew = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel-new/didactitiel-new.${locale}.i18n`))
 
-	@Component({
+	@Options({
 		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Squares, Didactitiel, Chats, 'mobile-br': MobileBR, ChangelogVersion, ChangelogDialog, Documentation, DidactitielNew, ConsoleWindow }
 	})
 	export default class App extends Vue {
@@ -198,7 +199,8 @@
 		}
 
 		created() {
-			this.$root.$on('connected', () => {
+			/*
+			emitter.on('connected', () => {
 				if (!this.$store.state.farmer.didactitiel_seen) {
 					LeekWars.show_didactitiel()
 					nextTick(() => {
@@ -206,10 +208,12 @@
 					})
 				}
 			})
+				*/
 			if (this.$store.state.connected && localStorage.getItem('changelog_version') !== LeekWars.normal_version) {
 				this.changelogShow()
 			}
-			this.$root.$on('keyup', (event: KeyboardEvent) => {
+			/*
+			emitter.on('keyup', (event: KeyboardEvent) => {
 				if (event.keyCode === 72 && event.altKey && event.ctrlKey) {
 					this.docEverywhere = true
 					nextTick(() => {
@@ -234,9 +238,10 @@
 				}
 				if (this.konami.length > 12) { this.konami = this.konami.substring(1) }
 			})
-			this.$root.$on('navigate', () => {
+			emitter.on('navigate', () => {
 				this.docEverywhereModel = false
 			})
+			*/
 
 			// if (this.$store.state.connected && !localStorage.getItem('annonce/boss-poll')) {
 			// 	this.annonce = true

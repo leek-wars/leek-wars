@@ -63,9 +63,9 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'change_email', i18n: {} })
+	@Options({ name: 'change_email', i18n: {} })
 	export default class ChangeEmail extends Vue {
 		state: number = 0
 		email: string = ''

@@ -20,8 +20,8 @@
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue } from 'vue-property-decorator'
-	@Component({ name: "signup-result" })
+	import { Options, Prop, Vue } from 'vue-property-decorator'
+	@Options({ name: "signup-result" })
 	export default class SignupResult extends Vue {
 		@Prop() result!: string
 

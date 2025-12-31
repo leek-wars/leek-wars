@@ -19,10 +19,10 @@
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import ChangelogVersion from './changelog-version.vue'
 
-	@Component({ name: 'changelog-dialog', i18n: {}, components: { ChangelogVersion } })
+	@Options({ name: 'changelog-dialog', i18n: {}, components: { ChangelogVersion } })
 	export default class ChangelogDialog extends Vue {
 		@Prop({required: true}) changelog!: any
 		@Prop() value!: boolean

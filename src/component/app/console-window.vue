@@ -98,10 +98,10 @@
 <script lang="ts">
 
 import { LeekWars } from '@/model/leekwars'
-import { Component, Vue } from 'vue-property-decorator'
+import { Options, Vue } from 'vue-property-decorator'
 import Console from './console.vue'
 
-@Component({ components: { 'console': Console } })
+@Options({ components: { 'console': Console } })
 export default class ConsoleWindow extends Vue {
 
 	consoleX: number = 0

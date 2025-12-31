@@ -103,11 +103,11 @@
 <script lang="ts">
 	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import Pagination from '@/component/pagination.vue'
 import { resolve } from 'path'
 
-	@Component({ name: 'search', i18n: {}, mixins: [...mixins], components: { Pagination } })
+	@Options({ name: 'search', i18n: {}, mixins: [...mixins], components: { Pagination } })
 	export default class Search extends Vue {
 		options = {
 			query: '',

@@ -13,11 +13,11 @@
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import Avatar from '../avatar.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Component({
+	@Options({
 		components: { avatar: Avatar, RichTooltipFarmer }
 	})
 	export default class GardenFarmer extends Vue {

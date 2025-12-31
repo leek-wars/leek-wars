@@ -23,7 +23,7 @@
 				</router-link>
 				<a href="https://github.com/leek-wars/leek-wars-client" target="_blank" rel="noopener">
 					<div class="tab action">
-						<img src="image/github_white.png">
+						<img src="/image/github_white.png">
 						<span>GitHub <v-icon>mdi-open-in-new</v-icon></span>
 					</div>
 				</a>
@@ -38,7 +38,7 @@
 				<h4>{{ $t('version_n', [LeekWars.version]) }}</h4>
 				<br>
 				<a href="https://www.facebook.com/LeekWars">
-					<img height="28" src="image/about/facebook_like.png">
+					<img height="28" src="/image/about/facebook_like.png">
 				</a>
 				<span ref="github"></span>
 				<span class="github-button"><a class="github-button" href="https://github.com/leek-wars/leek-wars-client" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star Leek Wars on GitHub">Star</a></span>
@@ -116,7 +116,7 @@
 				</a>
 				<a href="https://github.com/leek-wars/leek-wars-client" target="_blank" rel="noopener">
 					<div class="item">
-						<img src="image/about/github.png">
+						<img src="/image/about/github.png">
 						<h4>GitHub</h4>
 					</div>
 				</a>
@@ -174,10 +174,10 @@
 	import { Farmer } from '@/model/farmer'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Component({ name: 'about', i18n: {}, mixins: [...mixins], components: { RichTooltipFarmer } })
+	@Options({ name: 'about', i18n: {}, mixins: [...mixins], components: { RichTooltipFarmer } })
 	export default class About extends Vue {
 		links = [
 			["Korben", "http://korben.info/leek-wars.html"],

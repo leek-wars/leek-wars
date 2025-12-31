@@ -91,16 +91,18 @@
 </template>
 
 <script lang="ts">
-	const ChatElement = () => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`)
+	const ChatElement = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
 	import { Chat, ChatType } from '@/model/chat'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { store } from '@/model/store'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import ConversationElement from '@/component/messages/conversation.vue'
+	import { emitter } from '@/model/vue'
+	import { defineAsyncComponent } from 'vue'
 
-	@Component({ name: 'messages', i18n: {}, mixins: [...mixins], components: { chat: ChatElement, conversation: ConversationElement } })
+	@Options({ name: 'messages', i18n: {}, mixins: [...mixins], components: { chat: ChatElement, conversation: ConversationElement } })
 	export default class Messages extends Vue {
 		ChatType = ChatType
 		newFarmer_: any = null
@@ -141,16 +143,16 @@
 			LeekWars.footer = false
 			LeekWars.box = true
 			LeekWars.large = true
-			this.$root.$on('back', this.back)
-			this.$root.$on('focus', this.conversationRead)
+			emitter.on('back', this.back)
+			emitter.on('focus', this.conversationRead)
 		}
 
 		destroyed() {
 			LeekWars.footer = true
 			LeekWars.box = false
 			LeekWars.large = false
-			this.$root.$off('back', this.back)
-			this.$root.$off('focus', this.conversationRead)
+			emitter.off('back', this.back)
+			emitter.off('focus', this.conversationRead)
 		}
 
 		back() {

@@ -11,9 +11,9 @@
 
 <script lang="ts">
 	import { AI } from '@/model/ai'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ name: "ai" })
+	@Options({ name: "ai" })
 	export default class AIElement extends Vue {
 		@Prop({required: true}) ai!: AI
 		@Prop({required: true}) library!: boolean

@@ -13,7 +13,7 @@
 		<div class="container last">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column3">
 				<panel class="garden-left first last">
-					<div slot="content">
+					<template #content>
 						<template v-if="category === 'challenge'">
 							<div class="tab active enabled router-link-active">
 								<h2>{{ $t('challenge') }}</h2>
@@ -87,7 +87,7 @@
 								<div class="count">{{ $tc('n_fights', queue) }}</div>
 							</div>
 						</div>
-					</div>
+					</template>
 				</panel>
 			</div>
 
@@ -344,8 +344,8 @@
 										<div class="farmers">
 											<v-icon v-if="LeekWars.bossSquads.squad.locked" :disabled="LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="LeekWars.bossSquads.open()">mdi-lock</v-icon>
 											<v-icon v-else :disabled="LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="LeekWars.bossSquads.lock()">mdi-earth</v-icon>
-											<rich-tooltip-farmer v-for="farmer of LeekWars.bossSquads.squad.farmers" :key="farmer.id" :id="farmer.id" v-slot="{ props }">
-												<avatar :on="props" :farmer="farmer" :class="{master: LeekWars.bossSquads.squad.master === farmer.id}" />
+											<rich-tooltip-farmer v-for="farmer of LeekWars.bossSquads.squad.farmers" :key="farmer.id" :id="farmer.id">
+												<avatar :farmer="farmer" :class="{master: LeekWars.bossSquads.squad.master === farmer.id}" />
 											</rich-tooltip-farmer>
 										</div>
 										<v-btn color="primary" :disabled="LeekWars.bossSquads.squad.engaged_leeks.length === 0 || LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="LeekWars.bossSquads.attack()"><v-icon>mdi-sword-cross</v-icon>&nbsp;{{ $t('attack') }}</v-btn>
@@ -369,7 +369,7 @@
 	import { SocketMessage } from '@/model/socket'
 	import { store } from '@/model/store'
 	import { Composition } from '@/model/team'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import GardenCompo from './garden-compo.vue'
 	import GardenFarmer from './garden-farmer.vue'
 	import GardenLeek from './garden-leek.vue'
@@ -378,7 +378,7 @@
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Component({
+	@Options({
 		name: 'garden', i18n: {}, mixins: [...mixins],
 		components: {
 			RichTooltipLeek,
@@ -432,21 +432,23 @@
 				}
 				this.update()
 			})
-			this.$root.$on('back', this.back)
+			/*
+			emitter.on('back', this.back)
 			LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_REGISTER])
-			this.$root.$on('garden-queue', (data: number) => this.queue = data)
+			emitter.on('garden-queue', (data: number) => this.queue = data)
 
-			this.$root.$on('update-team-talent', (message: any) => {
+			emitter.on('update-team-talent', (message: any) => {
 				if (message.composition in this.compositions_by_id) {
 					this.compositions_by_id[message.composition].talent += message.talent
 				}
 			})
+			*/
 		}
 		created() {
 			if (store.state.wsconnected) {
 				this.updateWS()
 			} else {
-				this.$root.$on('wsconnected', this.updateWS)
+				// emitter.on('wsconnected', this.updateWS)
 			}
 		}
 		back() {
@@ -458,10 +460,10 @@
 			localStorage.removeItem('garden/category')
 		}
 		beforeDestroy() {
-			this.$root.$off('back')
+			emitter.off('back')
 			if (this.request) { this.request.abort() }
 			LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_UNREGISTER])
-			this.$root.$off('wsconnected', this.updateWS)
+			emitter.off('wsconnected', this.updateWS)
 			LeekWars.socket.send([SocketMessage.GARDEN_BOSS_UNLISTEN])
 		}
 
@@ -554,9 +556,9 @@
 				return
 			}
 			LeekWars.get('garden/get-leek-opponents/' + leek.id).then(data => {
-				Vue.set(this.$data.leekOpponents, leek.id, data.opponents)
+				this.leekOpponents[leek.id] = data.opponents
 			}).error(error => {
-				Vue.set(this.$data.leekErrors, leek.id, error.error)
+				this.leekErrors[leek.id] = error.error
 			})
 		}
 		selectFarmer() {
@@ -575,7 +577,7 @@
 				return
 			}
 			LeekWars.get('garden/get-composition-opponents/' + composition.id).then(data => {
-				Vue.set(this.$data.teamOpponents, composition.id, data.opponents)
+				this.teamOpponents[composition.id] = data.opponents
 			}).error(error => {
 				LeekWars.toast(error)
 			})

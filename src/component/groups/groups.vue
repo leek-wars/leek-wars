@@ -202,10 +202,10 @@
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 
-	@Component({ name: 'groups', i18n: {}, mixins: [...mixins], components: { Breadcrumb } })
+	@Options({ name: 'groups', i18n: {}, mixins: [...mixins], components: { Breadcrumb } })
 	export default class Groups extends Vue {
 
 		get breadcrumb_items() {

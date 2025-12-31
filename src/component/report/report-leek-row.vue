@@ -12,7 +12,7 @@
 			<span v-else>{{ leek.name }}</span>
 		</td>
 		<td class="level">{{ leek.level }}</td>
-		<!-- <td v-if="$store.getters.admin" class="power">{{ Math.round(Math.pow(leek.level, 4.2)) | number }}</td> -->
+		<!-- <td v-if="$store.getters.admin" class="power">{{ $filters.number(Math.round(Math.pow(leek.level, 4.2))) }}</td> -->
 		<td class="xp">
 			<div class="xp-wrapper">
 				<v-tooltip>
@@ -22,9 +22,9 @@
 							<span :style="{width: newBar + '%'}" class="new_xp"></span>
 						</div>
 					</template>
-					{{ leek.cur_xp | number }} / {{ leek.next_xp | number }}
+					{{ $filters.number(leek.cur_xp) }} / {{ $filters.number(leek.next_xp) }}
 				</v-tooltip>
-				<span>{{ (leek.xp || 0) | number }}</span>
+				<span>{{ $filters.number(leek.xp || 0) }}</span>
 				<span v-if="fight.report.bonus > 1" class="bonus">x{{ fight.report.bonus }}</span>
 				<v-tooltip v-if="leek.xp_locked">
 					<template v-slot:activator="{ props }">
@@ -35,7 +35,7 @@
 			</div>
 		</td>
 		<td class="money">
-			<span>{{ (leek.money || 0) | number }} <span class="hab"></span></span>
+			<span>{{ $filters.number(leek.money || 0) }} <span class="hab"></span></span>
 		</td>
 		<td v-if="fight.context != FightContext.TEST && fight.context != FightContext.CHALLENGE" class="resources">
 			<v-tooltip v-for="resource of sorted_resources" :key="resource[0]" content-class="fluid">
@@ -56,10 +56,10 @@
 			<span v-else>-{{ -leek.talent_gain }}</span>
 		</td>
 		<!-- <td class="gain">
-			{{ leek.opes | number }}
+			{{ $filters.number(leek.opes) }}
 		</td> -->
 		<!-- <td v-if="$store.getters.admin" class="gain">
-			{{ leek.time / 1000 | number }}&nbsp;s
+			{{ $filters.number(leek.time / 1000) }}&nbsp;s
 		</td> -->
 	</tr>
 </template>
@@ -68,11 +68,11 @@
 	import { Fight, FightContext, ReportLeek } from '@/model/fight'
 	import { ItemTemplate, ItemType, ITEM_CATEGORY_NAME } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import SchemeImage from '../market/scheme-image.vue'
 
-	@Component({ components: { RichTooltipLeek, SchemeImage } })
+	@Options({ components: { RichTooltipLeek, SchemeImage } })
 	export default class ReportLeekRow extends Vue {
 		@Prop({required: true}) leek!: ReportLeek
 		@Prop({required: true}) fight!: Fight

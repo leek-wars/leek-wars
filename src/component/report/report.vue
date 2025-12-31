@@ -13,7 +13,7 @@
 			</div>
 			<div class="tabs">
 				<div v-if="report && fight && $store.getters.admin" class="tab disabled">
-					{{ (fight.size / 1000) | number }} Ko
+					{{ $filters.number(fight.size / 1000) }} Ko
 				</div>
 				<a v-if="report && (errors.length > 0 || warnings.length > 0)" href="#errors" class="tab">
 					<span v-if="errors.length > 0"><v-icon class="error">mdi-alert-circle</v-icon> {{ errors.length }} </span>
@@ -63,7 +63,7 @@
 					</div>
 				</div>
 
-				<div class="center" class="buttons">
+				<div class="center buttons">
 					<router-link :to="'/fight/' + fight.id">
 						<v-btn>
 							<v-icon>mdi-replay</v-icon>
@@ -184,7 +184,7 @@
 						<chartist :data="damageChartDamage" :options="damageChartOptions" :class="{heal: damageChartType === 2, tank: damageChartType === 3}" class="right" type="Pie" />
 						<div class="legend">
 							<div v-for="(damage, d) in damageChartDamage.series" :key="d">
-								<span :style="{color: legends[d]}">{{ $t('stat_' + damageChartDamage.labels[d]) }}</span> <div class="value">{{ damage | number }}</div>
+								<span :style="{color: legends[d]}">{{ $t('stat_' + damageChartDamage.labels[d]) }}</span> <div class="value">{{ $filters.number(damage) }}</div>
 							</div>
 						</div>
 					</div>
@@ -270,18 +270,20 @@
 	import { store } from '@/model/store'
 	import { TEAM_COLORS } from '@/model/team'
 	import Chartist from 'chartist'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import ActionsElement from './report-actions.vue'
 	import ReportBlock from './report-block.vue'
 	import ReportLeekRow from './report-leek-row.vue'
-	const ReportStatistics = () => import(/* webpackChunkName: "[request]" */ `@/component/report/report-statistics.${locale}.i18n`)
+	const ReportStatistics = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/report/report-statistics.${locale}.i18n`))
 	import { FightStatistics, StatisticsEntity } from './statistics'
 	import(/* webpackChunkName: "chartist" */ /* webpackMode: "eager" */ "@/chartist-wrapper")
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
 	import Comments from '@/component/comment/comments.vue'
 	import { CHIPS } from '@/model/chips'
+	import { emitter } from '@/model/vue'
+	import { defineAsyncComponent } from 'vue'
 
-	@Component({ name: 'report', i18n: {}, mixins: [...mixins], components: { actions: ActionsElement, ReportLeekRow, ReportBlock, ReportStatistics, 'lw-map': Map, Comments } })
+	@Options({ name: 'report', i18n: {}, mixins: [...mixins], components: { actions: ActionsElement, ReportLeekRow, ReportBlock, ReportStatistics, 'lw-map': Map, Comments } })
 	export default class ReportPage extends Vue {
 		TEAM_COLORS = TEAM_COLORS
 		fight: Fight | null = null
@@ -493,14 +495,14 @@
 					title += this.fight.team1_name + " vs " + this.fight.team2_name
 				}
 				LeekWars.setTitle(title)
-				this.$root.$emit('loaded')
+				emitter.emit('loaded')
 				this.loaded = true
 			})
 			.error(error => this.error = true)
 		}
 
 		created() {
-			this.$root.$on('keyup', this.keyup)
+			emitter.on('keyup', this.keyup)
 		}
 
 		keyup(e: KeyboardEvent) {
@@ -511,7 +513,7 @@
 		}
 
 		beforeDestroy() {
-			this.$root.$off('keyup', this.keyup)
+			emitter.off('keyup', this.keyup)
 		}
 
 		processLogs() {

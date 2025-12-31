@@ -137,7 +137,7 @@
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import CodeMirror, { Token } from 'codemirror'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import DocumentationConstant from '../documentation/documentation-constant.vue'
 	import DocumentationFunction from '../documentation/documentation-function.vue'
 	import ItemPreview from '../market/item-preview.vue'
@@ -155,7 +155,7 @@
 		["if", 'if (', ') {\n\t\n}', "<h4>Condition if</h4><br>if ( ... ) { ... }"]
 	]
 
-	@Component({ name: 'ai-view', components: {
+	@Options({ name: 'ai-view', components: {
 		'item-preview': ItemPreview,
 		'documentation-function': DocumentationFunction,
 		'documentation-constant': DocumentationConstant,
@@ -404,8 +404,8 @@
 
 				this.lines = this.editor.getDoc().lineCount()
 				this.characters = this.editor.getDoc().getValue().length
-				Vue.set(this.ai, 'included_lines', this.ai.total_lines - this.lines)
-				Vue.set(this.ai, 'included_chars', this.ai.total_chars - this.ai.code.length)
+				this.ai.included_lines = this.ai.total_lines - this.lines
+				this.ai.included_chars = this.ai.total_chars - this.ai.code.length
 				if (this.$route.path.startsWith('/editor/')) {
 					LeekWars.setSubTitle(this.$i18n.tc('main.n_lines', this.lines))
 				}
@@ -444,13 +444,13 @@
 				this.editor.on("mousedown", this.editorMousedown as any)
 			})
 
-			this.$root.$on('keydown', this.keydown)
-			this.$root.$on('keyup', this.keyup)
+			emitter.on('keydown', this.keydown)
+			emitter.on('keyup', this.keyup)
 		}
 
 		beforeDestroy() {
-			this.$root.$off('keydown', this.keydown)
-			this.$root.$off('keyup', this.keyup)
+			emitter.off('keydown', this.keydown)
+			emitter.off('keyup', this.keyup)
 		}
 
 		public editorMousedown(editor: CodeMirror.Editor, e: MouseEvent) {
@@ -513,7 +513,7 @@
 			for (const entrypoint in this.errorOverlays) {
 				if (!this.ai.problems[entrypoint]) {
 					this.editor.removeOverlay(this.errorOverlays[entrypoint])
-					Vue.delete(this.errorOverlays, entrypoint)
+					delete this.errorOverlays[entrypoint]
 				}
 			}
 
@@ -522,7 +522,7 @@
 
 				if (this.errorOverlays[entrypoint]) {
 					this.editor.removeOverlay(this.errorOverlays[entrypoint])
-					Vue.delete(this.errorOverlays, entrypoint)
+					delete this.errorOverlays[entrypoint]
 				}
 				const error_by_line = {} as {[key: number]: Problem[]}
 				for (const error of problems) {
@@ -598,7 +598,7 @@
 						for (const problem of result[entrypoint]) {
 							if (problem[0] === 0) { valid = false; break }
 						}
-						Vue.set(ai, 'valid', valid)
+						ai.valid = valid
 						analyzer.handleProblems(ai, result[entrypoint])
 					}
 					analyzer.updateCount()

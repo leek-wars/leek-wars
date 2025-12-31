@@ -43,12 +43,12 @@
 	import { locale } from '@/locale'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 	import AIView from '../editor/ai-view.vue'
 	import { AI } from '@/model/ai'
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
 
-	@Component({ components: { 'ai-view': AIView } })
+	@Options({ components: { 'ai-view': AIView } })
 	export default class Console extends Vue {
 
 		editor!: AIView
@@ -103,12 +103,12 @@
 
 		mounted() {
 			this.editor = this.$refs.editor as AIView
-			this.$root.$on('console', (data: any) => {
+			emitter.on('console', (data: any) => {
 				console.log("on console", data)
 				this.lines.push({ type: 'result', ...data })
 				this.scrollDown()
 			})
-			this.$root.$on('console-error', (data: any) => {
+			emitter.on('console-error', (data: any) => {
 				console.log("on console-error", data)
 				let zigzags = ""
 				if (data.location) {
@@ -118,20 +118,20 @@
 				this.lines.push({ type: 'error', ...data, zigzags })
 				this.scrollDown()
 			})
-			this.$root.$on('console-log', (data: any) => {
+			emitter.on('console-log', (data: any) => {
 				console.log("on console-log", data)
 				this.lines.push({ type: 'log', log: data })
 				this.scrollDown()
 			})
-			this.$root.$on("wsconnected", () => {
+			emitter.on("wsconnected", () => {
 				this.clear()
 			})
 		}
 
 		beforeDestroy() {
-			this.$root.$off('console')
-			this.$root.$off('console-error')
-			this.$root.$off('console-log')
+			emitter.off('console')
+			emitter.off('console-error')
+			emitter.off('console-log')
 			LeekWars.socket.send([SocketMessage.CONSOLE_CLOSE])
 		}
 

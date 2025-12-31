@@ -97,9 +97,9 @@
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'effect-view' })
+	@Options({ name: 'effect-view' })
 	export default class EffectView extends Vue {
 
 		@Prop() effect!: Effect

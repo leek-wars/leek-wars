@@ -1,21 +1,23 @@
 <template>
-	<v-menu v-model="value" :close-on-content-click="false" :min-width="280" offset-overflow :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" transition="none" :open-on-hover="!locked" :disabled="disabled" offset-y :nudge-right="nodge ? 20 : 0" @input="$emit('input', $event)">
+	<v-menu v-model="value" :close-on-content-click="false" :min-width="280" offset-overflow :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" transition="none" :open-on-hover="!locked" :disabled="disabled" offset-y :nudge-right="nodge ? 20 : 0" @update:model-value="$emit('update:modelValue', $event)">
 		<template v-slot:activator="{ props }">
-			<slot v-bind="props"></slot>
+			<span v-bind="props">
+				<slot></slot>
+			</span>
 		</template>
 		<div class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
-			<item-preview :item="item" :quantity="quantity" :inventory="inventory" :leek="leek" @input="setParent" @retrieve="$emit('retrieve', $event)" />
+			<item-preview :item="item" :quantity="quantity" :inventory="inventory" :leek="leek" @update:modelValue="setParent" @retrieve="$emit('retrieve', $event)" />
 		</div>
 	</v-menu>
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import ItemPreview from '@/component/market/item-preview.vue'
 	import { LeekWars } from '@/model/leekwars'
 	import { Leek } from '@/model/leek'
 
-	@Component({ name: 'rich-tooltip-item', components: {
+	@Options({ name: 'rich-tooltip-item', components: {
 		'item-preview': ItemPreview
 	}})
 	export default class RichTooltipItem extends Vue {
@@ -43,7 +45,7 @@
 			this.locked = event
 			if (!event && !this.mouse) {
 				this.value = false
-				this.$emit('input', false)
+				this.$emit('update:modelValue', false)
 			}
 		}
 	}

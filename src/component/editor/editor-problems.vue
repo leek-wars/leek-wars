@@ -29,12 +29,12 @@
 	import { fileSystem } from '@/model/filesystem'
 	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { analyzer } from './analyzer'
 	import EditorFolder from './editor-folder.vue'
 	import { Folder } from './editor-item'
 
-	@Component({ name: 'editor-problems', i18n: {}, mixins: [...mixins] })
+	@Options({ name: 'editor-problems', i18n: {}, mixins: [...mixins] })
 	export default class Explorer extends Vue {
 
 		analyzer = analyzer
@@ -42,7 +42,7 @@
 		fileSystem = fileSystem
 
 		toggleProblemFile(ai: string) {
-			Vue.set(this.problemsCollapsed, ai, !this.problemsCollapsed[ai])
+			this.problemsCollapsed[ai] = !this.problemsCollapsed[ai]
 		}
 
 		jumpProblem(path: string, problem: any) {

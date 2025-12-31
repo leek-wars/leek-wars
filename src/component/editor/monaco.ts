@@ -7,7 +7,7 @@ import leekscript from './leekscript-monarch.js'
 import { i18n } from '@/model/i18n';
 import { fileSystem } from '@/model/filesystem';
 import { analyzer } from './analyzer';
-import { vueMain } from '@/model/vue';
+import { emitter, vueMain } from '@/model/vue';
 import { AI } from '@/model/ai.js';
 import { keywords } from './keywords';
 import { Keyword, KeywordKind } from '@/model/keyword';
@@ -97,7 +97,7 @@ monaco.editor.addKeybindingRules([
 
 monaco.editor.registerCommand('jump', (accessor, args) => {
 	// console.log("Command jump", args)
-	vueMain.$emit('jump', fileSystem.aiByFullPath[args.ai], args.line, args.column)
+	emitter.emit('jump', fileSystem.aiByFullPath[args.ai], args.line, args.column)
 })
 
 // monaco.languages.registerDocumentSymbolProvider("leekscript", {
@@ -175,7 +175,7 @@ monaco.editor.registerEditorOpener({
 		const model = monaco.editor.getModel(resource) || monaco.editor.createModel(ai.code, 'leekscript', uri)
 		ai.model = model
 		const range = selectionOrPosition as monaco.IRange
-		vueMain.$emit('jump', ai, range.startLineNumber, range.startColumn - 1)
+		emitter.emit('jump', ai, range.startLineNumber, range.startColumn - 1)
 		return true
 	},
 })

@@ -337,7 +337,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { WeaponTemplate, WeaponsData } from '@/model/weapon'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { fileSystem } from '@/model/filesystem'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 	import AIElement from '@/component/app/ai.vue'
@@ -376,7 +376,7 @@
 		team!: number
 	}
 
-	@Component({ components: { CharacteristicTooltip, 'explorer': Explorer, RichTooltipItem, ai: AIElement, Map }, name: 'editor-test', i18n: {}, mixins: [...mixins] })
+	@Options({ components: { CharacteristicTooltip, 'explorer': Explorer, RichTooltipItem, ai: AIElement, Map }, name: 'editor-test', i18n: {}, mixins: [...mixins] })
 	export default class EditorTest extends Vue {
 		@Prop() value!: boolean
 		@Prop() ais!: {[key: number]: AI}
@@ -636,11 +636,11 @@
 
 		mounted() {
 			this.initMap()
-			this.$root.$on('keyup', this.keyup)
+			emitter.on('keyup', this.keyup)
 		}
 
 		beforeDestroy() {
-			this.$root.$off('keyup', this.keyup)
+			emitter.off('keyup', this.keyup)
 		}
 
 		keyup(e: KeyboardEvent) {
@@ -707,9 +707,9 @@
 			const scenario = this.currentScenario
 			if (scenario.id === 0) {
 				LeekWars.post('test-scenario/new', { name: scenario.ai!.name }).then(r => {
-					Vue.delete(this.scenarios, 0)
+					delete this.scenarios[0]
 					scenario.id = r.id
-					Vue.set(this.scenarios, r.id, scenario)
+					this.scenarios[r.id] = scenario
 					scenario.default = false
 					scenario!.ai!.scenario = r.id
 					const json = { type: 0, ai: scenario.ai!.id }
@@ -785,9 +785,9 @@
 				this.map_down = true
 				this.map_add = !(cell.cell in this.currentMap.data.obstacles)
 				if (this.map_add) {
-					Vue.set(this.currentMap.data.obstacles, cell.cell, true)
+					this.currentMap.data.obstacles[cell.cell] = true
 				} else {
-					Vue.delete(this.currentMap.data.obstacles, cell.cell)
+					delete this.currentMap.data.obstacles[cell.cell]
 				}
 				this.resetSaveTimeout()
 			} else if (e.button === 2) {
@@ -800,9 +800,9 @@
 				const has_class = cell.cell in this.currentMap.data.obstacles
 				if (has_class !== this.map_add) {
 					if (this.map_add) {
-						Vue.set(this.currentMap.data.obstacles, cell.cell, true)
+						this.currentMap.data.obstacles[cell.cell] = true
 					} else {
-						Vue.delete(this.currentMap.data.obstacles, cell.cell)
+						delete this.currentMap.data.obstacles[cell.cell]
 					}
 					this.resetSaveTimeout()
 				}
@@ -832,7 +832,7 @@
 			LeekWars.delete('test-map/delete', {id: map.id})
 				.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 
-			Vue.delete(this.$data.maps, map.id)
+			delete this.$data.maps[map.id]
 			// Delete from scenarios
 			for (const s in this.scenarios) {
 				if (this.scenarios[s].map === map.id) { this.scenarios[s].map = null }
@@ -882,7 +882,7 @@
 			LeekWars.delete('test-scenario/delete', {id: scenario.id})
 				.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 
-			Vue.delete(this.scenarios, scenario.id)
+			delete this.scenarios[scenario.id]
 			if (!LeekWars.isEmptyObj(this.scenarios)) {
 				this.selectScenario(LeekWars.first(this.scenarios)!)
 			} else {
@@ -895,7 +895,7 @@
 				const template = LeekWars.clone(this.templates[this.selectedTemplate]) as TestScenario
 				const team1 = template.team1
 				const team2 = template.team2
-				Vue.set(this.scenarios, data.id, {
+				this.scenarios[data.id] = {
 					name: this.newScenarioName,
 					id: data.id,
 					team1,
@@ -1051,7 +1051,7 @@
 				const leek = {name: this.newLeekName, id: data.id, ai: -1}
 				this.leeks.push(leek as any)
 				for (const k in data.data) {
-					Vue.set(leek, k, data.data[k])
+					leek[k] = data.data[k]
 				}
 				this.newLeekDialog = false
 				this.newLeekName = ''
@@ -1062,7 +1062,7 @@
 
 		createMap() {
 			LeekWars.post('test-map/new', {name: this.newMapName}).then(data => {
-				Vue.set(this.maps, data.id, {name: this.newMapName, id: data.id, data: {obstacles: {}, team1: [], team2: []}})
+				this.maps[data.id] = {name: this.newMapName, id: data.id, data: {obstacles: {}, team1: [], team2: []}}
 				this.newMapDialog = false
 				this.newMapName = ''
 				this.selectMap(this.maps[data.id])
@@ -1080,7 +1080,7 @@
 			value = Math.max(value, this.characsLimits[characteristic].min)
 			value = Math.min(value, this.characsLimits[characteristic].max)
 			// target.innerText
-			Vue.set(this.currentLeek, characteristic, value)
+			this.currentLeek[characteristic] = value
 			this.saveLeek()
 		}
 
@@ -1112,7 +1112,7 @@
 
 		launchTest() {
 			if (!this.currentScenario || !this.currentAI) { return }
-			Vue.set(this.currentAI, 'scenario', this.currentScenario.id)
+			this.currentAI.scenario = this.currentScenario.id
 			LeekWars.post('ai/test-scenario', { scenario_id: this.currentScenario.id, ai_id: this.currentAI.id }).then(data => {
 				localStorage.setItem('editor/last-scenario', '' + this.currentScenario!.id)
 				localStorage.setItem('editor/last-scenario-ai', '' + this.currentAI!.id)
@@ -1161,9 +1161,9 @@
 		updateScenario(scenario: TestScenario, data: any) {
 			if (scenario.id === 0) {
 				LeekWars.post('test-scenario/new', { name: scenario.ai!.name }).then(r => {
-					Vue.delete(this.scenarios, 0)
+					delete this.scenarios[0]
 					scenario.id = r.id
-					Vue.set(this.scenarios, r.id, scenario)
+					this.scenarios[r.id] = scenario
 					scenario.default = false
 					scenario!.ai!.scenario = r.id
 					const json = { ...data, type: 0, ai: scenario.ai!.id }
@@ -1199,8 +1199,8 @@
 					for (const leek of data.leeks) {
 						this.leeks.push(leek)
 						if (!leek.cores) {
-							Vue.set(leek, 'cores', 20)
-							Vue.set(leek, 'ram', 20)
+							leek.cores = 20
+							leek.ram = 20
 						}
 					}
 					this.generateBots()
@@ -1235,12 +1235,12 @@
 					const compo = compositions[c]
 					for (const leek of compo.leeks) {
 						if (!(leek.ai.id in this.ais)) {
-							Vue.set(leek.ai, 'path', leek.ai.name)
-							Vue.set(this.alliesAIs, leek.ai.id, leek.ai)
+							leek.ai.path = leek.ai.name
+							this.alliesAIs[leek.ai.id] = leek.ai
 						}
 						if (!(leek.id in store.state.farmer!.leeks)) {
-							Vue.set(this.allies, leek.id, leek)
-							Vue.set(leek, 'ally', true)
+							this.allies[leek.id] = leek
+							leek.ally = true
 						}
 						leek.ai = leek.ai ? leek.ai.id : null
 					}

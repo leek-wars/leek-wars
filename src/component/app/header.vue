@@ -72,7 +72,7 @@
 				<div v-if="env.BANK && $store.state.farmer.verified && $store.state.farmer.bank_enabled" class="button-wrapper">
 					<router-link to="/bank">
 						<div v-if="$store.state.farmer" class="header-button">
-							<span class="farmer-crystals text">{{ Math.round($store.state.farmer.animated_crystals) | number }}</span>
+							<span class="farmer-crystals text">{{ $filters.number(Math.round($store.state.farmer.animated_crystals)) }}</span>
 							<span class="crystal text"></span>
 							<span v-if="$store.state.farmer.animated_crystals < $store.state.farmer.crystals" class="crystal win"></span>
 							<span v-else-if="$store.state.farmer.animated_crystals > $store.state.farmer.crystals" class="crystal lose"></span>
@@ -82,7 +82,7 @@
 				<div class="button-wrapper">
 					<router-link to="/market">
 						<div v-if="$store.state.farmer" class="header-button">
-							<span class="farmer-habs text">{{ Math.round($store.state.farmer.animated_habs) | number }}</span>
+							<span class="farmer-habs text">{{ $filters.number(Math.round($store.state.farmer.animated_habs)) }}</span>
 							<span class="hab text"></span>
 							<span v-if="$store.state.farmer.animated_habs < $store.state.farmer.habs" class="hab win"></span>
 							<span v-else-if="$store.state.farmer.animated_habs > $store.state.farmer.habs" class="hab lose"></span>
@@ -92,8 +92,8 @@
 				<div class="button-wrapper">
 					<router-link to="/garden">
 						<div class="header-button fights-button">
-							<span v-if="$store.state.farmer" class="farmer-fights text">{{ $store.state.farmer.fights | number }}</span>
-							<span v-if="$store.state.farmer?.team_fights" class="farmer-fights text">+ {{ $store.state.farmer.team_fights | number }}</span>
+							<span v-if="$store.state.farmer" class="farmer-fights text">{{ $filters.number($store.state.farmer.fights) }}</span>
+							<span v-if="$store.state.farmer?.team_fights" class="farmer-fights text">+ {{ $filters.number($store.state.farmer.team_fights) }}</span>
 							<img src="/image/icon/garden.png">
 						</div>
 					</router-link>
@@ -155,10 +155,11 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Notification } from '@/model/notification'
-	import { Component, Vue } from 'vue-property-decorator'
-	const ConversationElement = () => import('@/component/messages/conversation.vue')
+	import { defineAsyncComponent } from 'vue'
+	import { Options, Vue } from 'vue-property-decorator'
+	const ConversationElement = defineAsyncComponent(() => import('@/component/messages/conversation.vue'))
 
-	@Component({ name: 'lw-header', components: { 'conversation': ConversationElement } })
+	@Options({ name: 'lw-header', components: { 'conversation': ConversationElement } })
 	export default class Header extends Vue {
 
 		readNotifications() {

@@ -33,7 +33,7 @@
 				<div class="forge">
 					<div class="grid">
 						<div v-for="(item, i) in forge" :key="i" class="cell" :class="{active: !!item}">
-							<div v-if="item" v-ripple class="item" :quantity="item.quantity | number" :type="LeekWars.items[item.template].type" @click="remove(i, $event)">
+							<div v-if="item" v-ripple class="item" :quantity="$filters.number(item.quantity)" :type="LeekWars.items[item.template].type" @click="remove(i, $event)">
 								<img :src="'/image/' + LeekWars.items[item.template].name.replace('_', '/') + '.png'">
 							</div>
 						</div>
@@ -102,7 +102,7 @@
 	import { ITEM_TYPE_NAME, ITEM_CATEGORY_NAME, ITEM_TYPE_ICONS, ItemTemplate, ItemType, ItemTypes } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { SchemeTemplate } from '@/model/scheme'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import Inventory from '../inventory/inventory.vue'
 	import RichTooltipItem from '../rich-tooltip/rich-tooltip-item.vue'
 	import SchemeView from '../market/scheme.vue'
@@ -111,7 +111,7 @@
 		DATE, PRICE, PRICE_LOT, QUANTITY, /*NAME, */ LEVEL, RARITY, INGREDIENT_COUNT
 	}
 
-	@Component({ name: 'workshop', i18n: {}, mixins: [...mixins], components: {
+	@Options({ name: 'workshop', i18n: {}, mixins: [...mixins], components: {
 		Inventory, 'rich-tooltip-item': RichTooltipItem, 'scheme': SchemeView
 	}})
 	export default class Workshop extends Vue {
@@ -164,10 +164,10 @@
 		use(scheme: any) {
 			this.scheme = scheme
 			for (let i = 0; i < 9; ++i) {
-				Vue.set(this.forge, i, null)
+				this.forge[i] = null
 			}
 			for (let i = 0; i < scheme.items.length; ++i) {
-				Vue.set(this.forge, i, {template: scheme.items[i][0][0], quantity: scheme.items[i][0][1]})
+				this.forge[i] = {template: scheme.items[i][0][0], quantity: scheme.items[i][0][1]}
 			}
 		}
 
@@ -196,7 +196,7 @@
 				}
 			}
 			// Ajout à la première place dispo
-			Vue.set(this.forge, forgePosition, {template: item.template, quantity})
+			this.forge[forgePosition] = {template: item.template, quantity}
 			this.removeInventory(position, added_quantity)
 		}
 
@@ -214,11 +214,11 @@
 			const all = event.ctrlKey
 			if (this.forge[i].quantity === 1 || all) {
 				this.addInventory(this.forge[i].template, this.forge[i].quantity)
-				Vue.set(this.forge, i, null)
+				this.forge[i] = null
 			} else {
 				const quantity = all ? this.forge[i].quantity : 1
 				this.addInventory(this.forge[i].template, quantity)
-				Vue.set(this.forge, i, {template: this.forge[i].template, quantity: this.forge[i].quantity - quantity})
+				this.forge[i] = {template: this.forge[i].template, quantity: this.forge[i].quantity - quantity}
 			}
 		}
 

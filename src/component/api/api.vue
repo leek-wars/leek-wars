@@ -109,12 +109,12 @@
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import JsonViewer from 'vue-json-viewer'
 	import Markdown from '@/component/encyclopedia/markdown.vue'
 
-	@Component({ name: 'api', i18n: {}, mixins: [...mixins],
+	@Options({ name: 'api', i18n: {}, mixins: [...mixins],
 		components: { Breadcrumb, JsonViewer, Markdown }
 	})
 	export default class Api extends Vue {
@@ -195,7 +195,7 @@
 			const categories: {[key: number]: any} = {}
 			for (const item of this.filteredItems) {
 				if (item.deprecated) continue
-				if (!(item.module in categories)) Vue.set(categories, item.module, [])
+				if (!(item.module in categories)) categories[item.module] = []
 				categories[item.module].push(item)
 			}
 			return categories
@@ -205,17 +205,16 @@
 			LeekWars.get('service/get-all').then(services => {
 				this.services = services
 				for (const service of services) {
-					// Vue.set(service, 'function_lower', service.function.toLowerCase())
 					if (service.example) {
 						service.example = JSON.parse(service.example)
 					}
 					if (!(service.module in this.categories)) {
-						Vue.set(this.categories, service.module, [])
+						this.categories[service.module] = []
 					}
 					this.categories[service.module].push(service)
 				}
 				for (const category in this.categories) {
-					Vue.set(this.categoryState, category, localStorage.getItem('api-doc/category-' + category) === 'true')
+					this.categoryState[category] = localStorage.getItem('api-doc/category-' + category) === 'true'
 				}
 				LeekWars.setTitle('API')
 				this.update()
@@ -275,7 +274,7 @@
 			LeekWars.footer = false
 			LeekWars.box = true
 			;(this.$refs.search as HTMLElement).focus()
-			this.$root.$on('back', this.back)
+			emitter.on('back', this.back)
 		}
 		focus() {
 			(this.$refs.search as HTMLElement).focus()
@@ -287,7 +286,7 @@
 			LeekWars.large = false
 			LeekWars.footer = true
 			LeekWars.box = false
-			this.$root.$off('back', this.back)
+			emitter.off('back', this.back)
 		}
 	}
 </script>

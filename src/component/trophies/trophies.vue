@@ -50,7 +50,7 @@
 					<div class="right">
 						<div class="header">
 							<div>
-								<span class="points">{{ point | number }}</span> <span class="total">/ {{ totalPoint | number }} — {{ Math.floor(100 * point / totalPoint) }}%</span>
+								<span class="points">{{ $filters.number(point) }}</span> <span class="total">/ {{ $filters.number(totalPoint) }} — {{ Math.floor(100 * point / totalPoint) }}%</span>
 							</div>
 							<div class="counters">
 								<div class="counter">
@@ -122,7 +122,7 @@
 				<template #title>{{ $t('trophy.category_' + category.name) }}</template>
 				<template #actions>
 					<div class="category-bar-wrapper">
-						<div v-if="category.id !== 6" class="stats">{{ points[category.id] | number }} / {{ totalPoints[category.id] | number }}</div>
+						<div v-if="category.id !== 6" class="stats">{{ $filters.number(points[category.id]) }} / {{ $filters.number(totalPoints[category.id]) }}</div>
 						<div class="category-bar">
 							<div :style="{width: (loaded ? Math.floor(100 * progressions[category.id] / totals[category.id]) : 0) + '%'}" class="bar striked"></div>
 						</div>
@@ -141,7 +141,7 @@
 			<div v-if="loaded" slot="content" class="statistics">
 				<div v-for="(variable, v) in variables" :key="v" class="stat">
 					<i class="key">{{ v.split('.')[1] }}</i>
-					<span class="value">{{ variable | number }}</span>
+					<span class="value">{{ $filters.number(variable) }}</span>
 				</div>
 			</div>
 		</panel>
@@ -151,12 +151,12 @@
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import Trophy from './trophy.vue'
 	import RichTooltipTrophy from '@/component/rich-tooltip/rich-tooltip-trophy.vue'
 
-	@Component({ name: 'trophies', i18n: {}, mixins: [...mixins], components: {
+	@Options({ name: 'trophies', i18n: {}, mixins: [...mixins], components: {
 		Breadcrumb, Trophy, RichTooltipTrophy
 	} })
 	export default class Trophies extends Vue {
@@ -266,7 +266,7 @@
 			this.title = null
 			if (!this.id) { return }
 			LeekWars.trophyCategories.forEach((c) => {
-				Vue.set(this.raw_trophies, c.id, [])
+				this.raw_trophies[c.id] = []
 				this.progressions[c.id] = 0
 				this.points[c.id] = 0
 				this.totals[c.id] = 0
@@ -276,7 +276,7 @@
 				for (const t in data.trophies) {
 					this.farmer = data.farmer
 					this.variables = data.variables
-					Vue.delete(this.variables, 'trophy.farmer')
+					delete this.variables['trophy.farmer']
 					const trophy = data.trophies[t]
 					this.all_trophies = data.trophies
 					this.raw_trophies[trophy.category].push(trophy)
@@ -308,7 +308,7 @@
 				} else {
 					LeekWars.setTitle(this.$t('title', [data.farmer.name]), subtitle)
 				}
-				this.$root.$emit('loaded')
+				emitter.emit('loaded')
 				this.loaded = true
 			})
 		}

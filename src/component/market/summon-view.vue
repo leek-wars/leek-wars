@@ -34,11 +34,11 @@
 <script lang="ts">
 
 import { CHIPS } from '@/model/chips'
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Options, Prop, Vue } from 'vue-property-decorator'
 import CharacteristicTooltip from '../leek/characteristic-tooltip.vue'
 const RichTooltipItem = () => import('@/component/rich-tooltip/rich-tooltip-item.vue')
 
-@Component({ name: 'summon-view', components: {
+@Options({ name: 'summon-view', components: {
 	'characteristic-tooltip': CharacteristicTooltip,
 	'rich-tooltip-item': RichTooltipItem
 }})

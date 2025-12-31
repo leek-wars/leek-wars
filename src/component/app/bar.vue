@@ -50,16 +50,16 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'lw-bar' })
+	@Options({ name: 'lw-bar' })
 	export default class Bar extends Vue {
 		dark: boolean = false
 		mainButton() {
 			if (LeekWars.menuExpanded || !LeekWars.splitBack) {
 				LeekWars.toggleMenu()
 			} else {
-				this.$root.$emit('back')
+				emitter.emit('back')
 			}
 		}
 		closeMenu() {

@@ -3,25 +3,9 @@
  * This shim re-exports Options as Component for backwards compatibility
  */
 // Import vue-class-component exports directly
-import { mixins, Options, Options as Component, Vue as VueBase } from 'vue-class-component'
+import { mixins, Options, Vue } from 'vue-class-component'
 
-// Add Vue.set and Vue.delete compatibility methods for Vue 3
-// In Vue 3, direct assignment works thanks to Proxy-based reactivity
-const Vue = VueBase as typeof VueBase & {
-  set: (target: any, key: string | number, value: any) => any
-  delete: (target: any, key: string | number) => void
-}
-
-Vue.set = (target: any, key: string | number, value: any) => {
-  target[key] = value
-  return value
-}
-
-Vue.delete = (target: any, key: string | number) => {
-  delete target[key]
-}
-
-export { mixins, Options, Component, Vue }
+export { mixins, Options, Vue }
 
 // Import each decorator directly from its file to avoid circular imports
 export { Emit } from '../node_modules/vue-property-decorator/lib/decorators/Emit.js'

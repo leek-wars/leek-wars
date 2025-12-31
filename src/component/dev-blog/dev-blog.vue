@@ -46,10 +46,10 @@
 	import { ForumCategory, ForumMessage, ForumTopic } from '@/model/forum'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 
-	@Component({ name: 'dev-blog', i18n: {}, mixins: [...mixins], components: { Breadcrumb } })
+	@Options({ name: 'dev-blog', i18n: {}, mixins: [...mixins], components: { Breadcrumb } })
 	export default class DevBlog extends Vue {
 
 		articles = null

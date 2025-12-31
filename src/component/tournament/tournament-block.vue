@@ -7,9 +7,10 @@
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { emitter } from '@/model/vue'
+import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'tournament-block' })
+	@Options({ name: 'tournament-block' })
 	export default class TournamentBlock extends Vue {
 		@Prop({ required: true }) item: any
 		@Prop({ required: true }) x!: number
@@ -30,12 +31,12 @@
 				const attributes = (e.target as any).attributes
 				const x = parseInt(attributes.x.nodeValue, 10) + parseInt(attributes.width.nodeValue, 10) / 2
 				const y = parseInt(attributes.y.nodeValue, 10) + parseInt(attributes.height.nodeValue, 10)
-				this.$root.$emit('tooltip', x, y, this.item.name)
+				emitter.emit('tooltip', { x, y, content: this.item.name })
 			}
 		}
 		mouseleave(e: Event) {
 			if (this.item) {
-				this.$root.$emit('tooltip-close')
+				emitter.emit('tooltip-close')
 			}
 		}
 	}

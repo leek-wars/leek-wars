@@ -1,4 +1,3 @@
-import Vue from "vue"
 import { LeekWars } from "./leekwars"
 
 const Emojis = {
@@ -73,16 +72,5 @@ function formatEmojis(data: any) {
 		return data.replace(emoji_regex, "<span class='emoji emoji-font'>$&</span>")
 	}
 }
-
-Vue.directive('emojis', (el) => {
-	el.childNodes.forEach((child) => {
-		if (child.nodeType === Node.TEXT_NODE) {
-			const html = formatEmojis(LeekWars.protect((child as Text).wholeText))
-			const template = document.createElement('span')
-			template.innerHTML = html
-			el.replaceChild(template, child)
-		}
-	})
-})
 
 export { Emojis, formatEmojis }

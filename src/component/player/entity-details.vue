@@ -160,7 +160,7 @@
 
 <script lang="ts">
 	import { Effect, EffectModifier, EffectType } from '@/model/effect'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { Chest } from './game/chest'
 	import { FightEntity } from './game/entity'
 	import { Game } from './game/game'
@@ -168,7 +168,7 @@
 	import TurretImage from '@/component/turret-image.vue'
 	import { Mob } from './game/mob'
 
-	@Component({ name: 'entity-details', components: { TurretImage } })
+	@Options({ name: 'entity-details', components: { TurretImage } })
 	export default class EntityDetails extends Vue {
 		@Prop({required: true}) entity!: FightEntity
 		@Prop({required: true}) game!: Game

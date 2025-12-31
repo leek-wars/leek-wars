@@ -22,9 +22,9 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Notification } from '@/model/notification'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'notification' })
+	@Options({ name: 'notification' })
 	export default class NotificationElement extends Vue {
 
 		@Prop({ required: true }) notification!: Notification

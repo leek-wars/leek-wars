@@ -4,9 +4,9 @@
 
 <script lang="ts">
 	import { FightLeek } from '@/model/fight'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({})
+	@Options({})
 	export default class ActionLeekElement extends Vue {
 		@Prop({required: true}) leek!: FightLeek
 	}

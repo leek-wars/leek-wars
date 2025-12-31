@@ -26,9 +26,9 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'legal', i18n: {} })
+	@Options({ name: 'legal', i18n: {} })
 	export default class Legal extends Vue {
 		created() {
 			LeekWars.setTitle(this.$t('title'))

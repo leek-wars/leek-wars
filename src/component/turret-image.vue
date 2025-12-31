@@ -6,9 +6,9 @@
 
 <script lang="ts">
 	import { TURRET_DATA, TURRET_PIECE_SIZE } from '@/model/turret-data'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({})
+	@Options({})
 	export default class TurretImage extends Vue {
 		@Prop({required: true}) level!: number
 		@Prop({required: true}) skin!: number

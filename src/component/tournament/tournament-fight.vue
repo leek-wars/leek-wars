@@ -6,9 +6,9 @@
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'tournament-fight' })
+	@Options({ name: 'tournament-fight' })
 	export default class TournamentFight extends Vue {
 		@Prop({ required: true }) fight: any
 		@Prop({ required: true }) x!: number

@@ -1,7 +1,9 @@
 <template>
-	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :nudge-width="expand_leeks ? 500 : 200" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'my-transition'" :open-on-hover="!locked" offset-y @input="open($event)">
+	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :nudge-width="expand_leeks ? 500 : 200" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'my-transition'" :open-on-hover="!locked" offset-y @update:model-value="open($event)">
 		<template v-slot:activator="{ props }">
-			<slot v-bind="props"></slot>
+			<span v-bind="props">
+				<slot></slot>
+			</span>
 		</template>
 		<div class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
 			<loader v-if="!farmer" :size="30" />
@@ -26,7 +28,7 @@
 						</span>
 						<div>
 							<router-link :to="'/trophies/' + farmer.id" class="stat">
-								<img class="icon" src="/image/icon/grey/trophy.png">{{ farmer.points | number }}
+								<img class="icon" src="/image/icon/grey/trophy.png">{{ $filters.number(farmer.points) }}
 							</router-link>
 							<router-link v-if="farmer.forum_messages" :to="'/search?farmer=' + farmer.name + '&order=date'" class="stat">
 								<img class="icon" src="/image/forum.png">{{ $t('main.n_messages', [farmer.forum_messages]) }}
@@ -71,11 +73,12 @@
 	import { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
-	const LWTitle = () => import('@/component/title/title.vue')
+	import { defineAsyncComponent } from 'vue'
+	const LWTitle = defineAsyncComponent(() => import('@/component/title/title.vue'))
 
-	@Component({ components: { RichTooltipLeek, 'lw-title': LWTitle } })
+	@Options({ components: { RichTooltipLeek, 'lw-title': LWTitle } })
 	export default class RichTooltipFarmer extends Vue {
 		@Prop({required: true}) id!: number
 		@Prop() disabled!: boolean
@@ -101,7 +104,7 @@
 			this.content_created = false
 		}
 		open(v: boolean) {
-			this.$emit('input', v)
+			this.$emit('update:modelValue', v)
 			this.expand_leeks = localStorage.getItem('richtooltipfarmer/expanded') === 'true'
 			if (this.content_created) { return }
 			this.content_created = true
@@ -109,7 +112,7 @@
 				LeekWars.get<Farmer>('farmer/rich-tooltip/' + this.id).then(farmer => {
 					this.farmer = farmer
 					for (const c of LeekWars.characteristics) {
-						Vue.set(this.sums, c, Object.values(this.farmer.leeks).reduce((sum: number, leek: any) => sum + leek['total_' + c], 0))
+						this.sums[c] = Object.values(this.farmer.leeks).reduce((sum: number, leek: any) => sum + leek['total_' + c], 0)
 					}
 					if (this.expand_leeks) {
 						(this.$refs.menu as any).onResize()
@@ -138,7 +141,7 @@
 			this.locked = event
 			if (!event && !this.mouse) {
 				this.value = false
-				this.$emit('input', false)
+				this.$emit('update:modelValue', false)
 			}
 		}
 	}

@@ -142,7 +142,7 @@ import { locale } from '@/locale'
 import { FightMap } from '@/model/fight'
 import { mixins } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
-import { Component, Vue } from 'vue-property-decorator'
+import { Options, Vue } from 'vue-property-decorator'
 const Player = () => import(/* webpackChunkName: "[request]" */ `@/component/player/player.${locale}.i18n`)
 import { Game, WEAPONS } from '@/component/player/game/game'
 import { Obstacle } from '@/component/player/game/obstacle'
@@ -156,7 +156,7 @@ import { ORDERED_CHIPS } from '@/model/sorted_chips'
 import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 import { WeaponsData } from '@/model/weapon'
 
-@Component({ name: 'creator', i18n: {}, mixins: [...mixins], components: {
+@Options({ name: 'creator', i18n: {}, mixins: [...mixins], components: {
 	Player,
 	CharacteristicTooltip,
 	RichTooltipItem

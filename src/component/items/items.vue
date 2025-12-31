@@ -31,11 +31,11 @@
 	import { ItemTemplate, ItemType } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import Item from '@/component/item.vue'
 
-	@Component({ name: 'items', i18n: {}, components: { Breadcrumb, Item } })
+	@Options({ name: 'items', i18n: {}, components: { Breadcrumb, Item } })
 	export default class Items extends Vue {
 
 		trophies: any = {}
@@ -49,7 +49,7 @@
 			if (store.state.connected) {
 				LeekWars.get('trophy/my-trophies/' + this.$i18n.locale).then(data => {
 					for (const trophy of data.trophies) {
-						Vue.set(this.trophies, trophy.id, trophy)
+						this.trophies[trophy.id] = trophy
 					}
 				})
 			}

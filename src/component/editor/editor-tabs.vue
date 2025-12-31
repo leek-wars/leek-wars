@@ -42,7 +42,7 @@
 <script lang="ts">
 	import { AI } from '@/model/ai'
 	import { mixins } from '@/model/i18n'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { fileSystem } from '@/model/filesystem'
 
 	class Tab {
@@ -50,7 +50,7 @@
 		public ai!: AI
 	}
 
-	@Component({ name: 'editor-tabs', i18n: {}, mixins: [...mixins] })
+	@Options({ name: 'editor-tabs', i18n: {}, mixins: [...mixins] })
 	export default class EditorTabs extends Vue {
 
 		@Prop({required: true}) ais!: AI[]

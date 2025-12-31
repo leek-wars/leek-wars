@@ -3,9 +3,9 @@
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({})
+	@Options({})
 	export default class ActionLog extends Vue {
 		@Prop({required: true}) leeks!: {[key: number]: any}
 		@Prop({required: true}) log!: any

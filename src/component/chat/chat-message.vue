@@ -1,8 +1,8 @@
 <template lang="html">
 	<div class="message" :class="{ me: chat.type === 2 && $store.state.farmer && message.farmer.id === $store.state.farmer.id, react: false, reactions: !LeekWars.isEmptyObj(message.reactions) }">
 		<router-link v-if="message.farmer.id !== 0" :to="'/farmer/' + message.farmer.id" class="avatar-wrapper">
-			<rich-tooltip-farmer :id="message.farmer.id" v-slot="{ props }">
-				<avatar :farmer="message.farmer" :on="props" />
+			<rich-tooltip-farmer :id="message.farmer.id">
+				<avatar :farmer="message.farmer" />
 			</rich-tooltip-farmer>
 		</router-link>
 		<img v-else class="avatar" src="/image/favicon.png">
@@ -49,12 +49,12 @@
 <script lang="ts">
 	import { Chat, ChatMessage, ChatType } from '@/model/chat'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import 'katex/dist/katex.min.css'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import ChatMessageText from './chat-message-text.vue'
 
-	@Component({ name: 'ChatMessage', components: { RichTooltipFarmer, ChatMessageText } })
+	@Options({ name: 'ChatMessage', components: { RichTooltipFarmer, ChatMessageText } })
 	export default class ChatMessageComponent extends Vue {
 
 		@Prop({ required: true }) message!: ChatMessage

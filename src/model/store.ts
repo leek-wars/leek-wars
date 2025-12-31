@@ -4,13 +4,13 @@ import { ItemType } from '@/model/item'
 import { LeekWars } from '@/model/leekwars'
 import { Notification, NotificationType } from '@/model/notification'
 import { Team } from '@/model/team'
-import Vue from 'vue'
+
 import Vuex, { Store } from 'vuex'
 import { AI } from './ai'
 import { fileSystem } from './filesystem'
 import { Hat } from './hat'
 import { Leek } from './leek'
-import { displayWarningMessage, vueMain } from './vue'
+import { displayWarningMessage, emitter, vueMain } from './vue'
 import { Weapon } from './weapon'
 import { SchemeTemplate } from './scheme'
 
@@ -37,8 +37,6 @@ class LeekWarsState {
 function updateTitle(state: LeekWarsState) {
 	LeekWars.setTitleCounter(state.unreadNotifications + state.unreadMessages)
 }
-
-Vue.use(Vuex)
 
 const store: Store<LeekWarsState> = new Vuex.Store({
 	state: new LeekWarsState(),
@@ -98,10 +96,10 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			store.commit("reset")
 			state.farmer = data.farmer
 			for (const id in state.farmer.leeks) {
-				Vue.set(state.farmer.leeks[id], 'country', state.farmer.country)
+				state.farmer.leeks[id].country = state.farmer.country
 			}
-			Vue.set(state.farmer, 'animated_habs', state.farmer.habs)
-			Vue.set(state.farmer, 'animated_crystals', state.farmer.crystals)
+			state.farmer.animated_habs = state.farmer.habs
+			state.farmer.animated_crystals = state.farmer.crystals
 			state.token = data.token
 			state.connected = true
 			state.connected_farmers = data.farmers
@@ -125,7 +123,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			fileSystem.init(data.farmer)
 			LeekWars.startIntervals()
 			updateTitle(state)
-			vueMain.$emit('connected', state.farmer)
+			emitter.emit('connected', state.farmer)
 		},
 
 		"disconnect"(state: LeekWarsState) {
@@ -169,7 +167,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 					store.commit('load-chat', chat)
 				}
 			}
-			vueMain.$emit('wsconnected')
+			emitter.emit('wsconnected')
 		},
 
 		"wsclose"(state: LeekWarsState) {
@@ -189,7 +187,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				const type = LeekWars.isPublicChat(data.id) ? ChatType.GLOBAL : (data.id === teamChat ? ChatType.TEAM : (data.id === groupChat ? ChatType.GROUP : ChatType.PM))
 				const name = type === ChatType.GLOBAL ? LeekWars.publicChats[data.id].name : (type === ChatType.TEAM ? state.farmer!.team!.name : (type === ChatType.GROUP ? state.farmer!.group!.name : data.name))
 				const chat = new Chat(data.id, type, name, data.notifications)
-				Vue.set(state.chat, data.id, chat)
+				state.chat[data.id] = chat
 			}
 		},
 
@@ -241,12 +239,12 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				for (const message of data.messages.reverse()) {
 					store.commit('chat-receive', { chat: chatID, type: data.type, message, new: false, unshift: true })
 				}
-				vueMain.$emit('chat-history', chatID)
+				emitter.emit('chat-history', chatID)
 				chat.loading = false
 			}).error(error => {
 				LeekWars.toast(error.error)
 				const chat = state.chat[chatID]
-				vueMain.$emit('chat-history', chatID)
+				emitter.emit('chat-history', chatID)
 				chat.loading = false
 			})
 		},
@@ -280,7 +278,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			// Update or create chat
 			if (!state.chat[chatID]) {
 				const name = type === ChatType.GLOBAL ? LeekWars.publicChats[chatID].name : (type === ChatType.TEAM ? state.farmer!.team!.name : message.farmer.name)
-				Vue.set(state.chat, chatID, new Chat(chatID, type, name, type === ChatType.PM))
+				state.chat[chatID] = new Chat(chatID, type, name, type === ChatType.PM)
 			}
 			const chat = state.chat[chatID]
 
@@ -300,7 +298,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				chat.unshift(message)
 			} else {
 				chat.add(message)
-				vueMain.$emit('chat', [chatID])
+				emitter.emit('chat', [chatID])
 			}
 
 			if (chat.type === ChatType.PM) {
@@ -472,7 +470,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (data.new) {
 				// Received a new trophy, invalidate farmer trophies, add to rewards
 				if (state.farmer && data.type === NotificationType.TROPHY_UNLOCKED) {
-					Vue.delete(state.farmer, 'trophies_list')
+					delete state.farmer.trophies_list
 					const trophy = parseInt(data.parameters[0], 10)
 					import("@/model/trophies").then(module => {
 						state.farmer!.rewards.push({
@@ -534,7 +532,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 								message.reactions[data.old].farmers.splice(i, 1)
 							}
 							if (message.reactions[data.old].count === 0) {
-								Vue.delete(message.reactions, data.old)
+								delete message.reactions[data.old]
 							}
 						}
 						if (data.reaction) {
@@ -542,7 +540,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 								message.reactions[data.reaction].count++
 								message.reactions[data.reaction].farmers.push(data.farmer)
 							} else {
-								Vue.set(message.reactions, data.reaction, { count: 1, farmers: [ data.farmer ] })
+								message.reactions[data.reaction] = { count: 1, farmers: [ data.farmer ] }
 							}
 						}
 						break
@@ -561,7 +559,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				chat.last_date = data.last_date
 				chat.last_farmer = last_farmer
 				chat.last_message = data.last_message
-				Vue.set(state.chat, data.id, chat)
+				state.chat[data.id] = chat
 				state.conversationsList.push(chat)
 			}
 			chat.farmers = [...data.farmers]
@@ -570,7 +568,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 
 		'quit-conversation'(state: LeekWarsState, id: number) {
 			if (id in state.chat) {
-				Vue.delete(state.chat, '' + id)
+				delete state.chat[id]
 				const index = state.conversationsList.findIndex((chat) => chat.id === id)
 				state.conversationsList.splice(index, 1)
 			}
@@ -786,7 +784,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		'receive-pong'(state: LeekWarsState, data: any) {
 			// const channel = data[0]
 			// if (!state.chat[channel]) {
-				// Vue.set(state.chat, channel, new Chat(channel, ChatType.GLOBAL, false))
+				// state.chat[channel] = new Chat(channel, ChatType.GLOBAL, false)
 			// }
 			// state.chat[channel].add(state.farmer!.id, state.farmer!.name, state.farmer!.avatar_changed, state.farmer!.grade, "pong ! " + (Date.now() - state.last_ping) + "ms", Date.now() / 1000)
 			// vueMain.$emit('chat', [channel])
@@ -869,7 +867,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 
 		'set-trophies'(state: LeekWarsState, trophies) {
 			if (state.farmer) {
-				Vue.set(state.farmer, 'trophies_list', trophies)
+				state.farmer.trophies_list = trophies
 			}
 		},
 
@@ -879,7 +877,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 
 		'new-leek'(state: LeekWarsState, leek: Leek) {
 			if (state.farmer) {
-				Vue.set(state.farmer.leeks, leek.id, leek)
+				state.farmer.leeks[leek.id] = leek
 			}
 		},
 

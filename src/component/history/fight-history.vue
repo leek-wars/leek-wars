@@ -66,12 +66,12 @@
 
 <script lang="ts">
 	import { Fight, FightContext, FightType } from '@/model/fight'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
 
-	@Component({ name: 'fight-history', components: { RichTooltipFarmer, RichTooltipLeek, RichTooltipComposition } })
+	@Options({ name: 'fight-history', components: { RichTooltipFarmer, RichTooltipLeek, RichTooltipComposition } })
 	export default class FightHistory extends Vue {
 		@Prop() fight!: Fight
 		FightType = FightType

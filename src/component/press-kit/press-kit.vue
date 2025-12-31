@@ -83,11 +83,11 @@
 
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import { Language, LeekWars } from '@/model/leekwars'
 
-	@Component({ name: 'press-kit', i18n: {}, mixins: [...mixins], components: { RichTooltipFarmer } })
+	@Options({ name: 'press-kit', i18n: {}, mixins: [...mixins], components: { RichTooltipFarmer } })
 	export default class PressKit extends Vue {
 
 		language: Language | null = null

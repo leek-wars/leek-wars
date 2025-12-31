@@ -26,10 +26,10 @@
 <script lang="ts">
 	import { fileSystem } from '@/model/filesystem'
 	import { store } from '@/model/store'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import { AIItem } from './editor-item'
 
-	@Component({ name: 'editor-ai' })
+	@Options({ name: 'editor-ai' })
 	export default class EditorAI extends Vue {
 		@Prop({required: true}) item!: AIItem
 		@Prop({required: true}) level!: number
@@ -45,7 +45,7 @@
 		dragstart(e: DragEvent) {
 			if (this.ai.folder === -1) { e.stopPropagation(); return }
 			e.dataTransfer!.setData('text/plain', 'drag !!!')
-			this.$root.$emit('editor-drag', this.item)
+			emitter.emit('editor-drag', this.item)
 			e.stopPropagation()
 		}
 		click(e: Event) {

@@ -47,14 +47,14 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import { loadScript } from "@paypal/paypal-js"
 	import { mixins } from '@/model/i18n'
 	import { locale } from '@/locale'
 	import BankProduct from './bank-product.vue'
 	import { store } from '@/model/store'
 
-	@Component({ name: 'bank-buy', i18n: {}, mixins: [...mixins], components: { BankProduct } })
+	@Options({ name: 'bank-buy', i18n: {}, mixins: [...mixins], components: { BankProduct } })
 	export default class BankBuy extends Vue {
 		pack!: number
 		offer!: number

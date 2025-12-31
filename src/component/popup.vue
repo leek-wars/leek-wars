@@ -1,5 +1,5 @@
 <template lang="html">
-	<v-dialog :model-value="value" :max-width="width" :persistent="persistent" @update:model-value="$emit('input', $event)">
+	<v-dialog :model-value="modelValue" :max-width="width" :persistent="persistent" @update:model-value="$emit('update:modelValue', $event)">
 		<template v-if="content_created">
 			<div class="title">
 				<slot name="icon"></slot>
@@ -23,20 +23,20 @@
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-	@Component({ name: "popup" })
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
+	@Options({ name: "popup" })
 	export default class Popup extends Vue {
-		@Prop() value!: boolean
+		@Prop() modelValue!: boolean
 		@Prop() title!: string
 		@Prop() width!: number
 		@Prop() full!: boolean
 		@Prop() persistent!: Boolean
 		content_created: boolean = false
 		created() {
-			if (this.value) {
+			if (this.modelValue) {
 				this.content_created = true // Content created direclty from creation
 			}
-			this.$watch('value', (new_value, old_value) => {
+			this.$watch('modelValue', (new_value, old_value) => {
 				if (new_value === true) {
 					this.content_created = true
 				}
@@ -49,7 +49,7 @@
 			return !!this.$slots.icon
 		}
 		close() {
-			this.$emit('input', false)
+			this.$emit('update:modelValue', false)
 		}
 	}
 </script>

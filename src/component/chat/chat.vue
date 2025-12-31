@@ -7,7 +7,7 @@
 		<div v-else-if="chat && chat.messages.length" ref="messages" v-autostopscroll class="messages" @scroll="scroll" @wheel="scroll">
 			<div v-for="(messages, day) in $store.state.chat[id].days" :key="day">
 				<div v-if="messages[0]" class="separator">
-					{{ messages[0].date | date }}
+					{{ $filters.date(messages[0].date) }}
 				</div>
 				<chat-message v-for="(message, m) in messages" :key="message.id" :message="formatMessage(message)" :chat="chat" @scroll="updateScroll" :large="large" :class="'m-' + message.id" @menu="openMenu($event, message)" @emoji="openEmojis($event, message)" />
 			</div>
@@ -130,7 +130,7 @@
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
 	import { TeamMemberLevel } from '@/model/team'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { nextTick } from 'vue'
 	import ChatInput from './chat-input.vue'
 	import ChatMessageComponent from './chat-message.vue'
@@ -138,8 +138,9 @@
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
 	import { Commands } from '@/model/commands'
 	import { formatEmojis } from '@/model/emojis'
+import { emitter } from '@/model/vue'
 
-	@Component({
+	@Options({
 		name: "chat",
 		components: { 'chat-input': ChatInput, 'chat-message': ChatMessageComponent, 'emoji-picker': EmojiPicker, ReportDialog }
 	})
@@ -206,13 +207,13 @@
 		}
 
 		created() {
-			this.$root.$on('chat', this.newMessage)
-			this.$root.$on('chat-history', this.chatHistory)
-			this.$root.$on('resize', this.updateScroll)
+			emitter.on('chat', this.newMessage)
+			emitter.on('chat-history', this.chatHistory)
+			emitter.on('resize', this.updateScroll)
 			if (store.state.wsconnected) {
 				this.update()
 			} else {
-				this.$root.$on('wsconnected', this.update)
+				emitter.on('wsconnected', this.update)
 			}
 		}
 
@@ -221,10 +222,10 @@
 		}
 
 		beforeDestroy() {
-			this.$root.$off('chat', this.newMessage)
-			this.$root.$off('chat-history', this.chatHistory)
-			this.$root.$off('resize', this.updateScroll)
-			this.$root.$off('wsconnected', this.update)
+			emitter.off('chat', this.newMessage)
+			emitter.off('chat-history', this.chatHistory)
+			emitter.off('resize', this.updateScroll)
+			emitter.off('wsconnected', this.update)
 		}
 
 		newMessage(e: any) {
@@ -346,11 +347,11 @@
 			this.muteFarmer = message.farmer
 			this.censoredMessages = {}
 			if (message.censored === 0) {
-				Vue.set(this.censoredMessages, message.id, true)
+				this.censoredMessages[message.id] = true
 			}
 			for (const sub of message.subMessages) {
 				if (sub.censored === 0) {
-					Vue.set(this.censoredMessages, sub.id, true)
+					this.censoredMessages[sub.id] = true
 				}
 			}
 		}
@@ -360,10 +361,10 @@
 			this.deletedMessage = message
 			this.muteFarmer = message.farmer
 			this.deletedMessages = {}
-			Vue.set(this.deletedMessages, message.id, true)
+			this.deletedMessages[message.id] = true
 			if (message.subMessages) {
 				for (const sub of message.subMessages) {
-					Vue.set(this.deletedMessages, sub.id, true)
+					this.deletedMessages[sub.id] = true
 				}
 			}
 		}
@@ -453,12 +454,12 @@
 			const element = document.createElement('div')
 			element.innerHTML = message.content
 			const innerText = element.innerText.trim()
-			Vue.set(message, 'only_emojis', innerText.length === 0 || /^[\s\p{Emoji_Presentation}]+$/gmu.test(innerText))
+			message.only_emojis = innerText.length === 0 || /^[\s\p{Emoji_Presentation}]+$/gmu.test(innerText)
 			if (!('censored' in message)) {
-				Vue.set(message, 'censored', 0)
+				message.censored = 0
 			}
-			Vue.set(message, 'reactionDialog', false)
-			Vue.set(message, 'formatted', true)
+			message.reactionDialog = false
+			message.formatted = true
 			return message
 		}
 	}

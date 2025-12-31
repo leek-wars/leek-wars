@@ -11,9 +11,9 @@
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({})
+	@Options({})
 	export default class Pagination extends Vue {
 		@Prop({required: true}) current!: number
 		@Prop({required: true}) total!: number

@@ -19,9 +19,9 @@
 
 <script lang="ts">
 	import { Command, Commands } from '@/model/commands'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'chat-commands' })
+	@Options({ name: 'chat-commands' })
 	export default class ChatCommands extends Vue {
 
 		@Prop() filter!: string
