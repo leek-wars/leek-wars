@@ -448,7 +448,7 @@
 			emitter.on('keyup', this.keyup)
 		}
 
-		beforeDestroy() {
+		beforeUnmount() {
 			emitter.off('keydown', this.keydown)
 			emitter.off('keyup', this.keyup)
 		}

@@ -4,8 +4,9 @@
 
 <script lang="ts">
 	import { Options, Prop, Vue } from 'vue-property-decorator'
+	import ActionLeekElement from './action-leek.vue'
 
-	@Options({})
+	@Options({ components: { leek: ActionLeekElement } })
 	export default class ActionLog extends Vue {
 		@Prop({required: true}) leeks!: {[key: number]: any}
 		@Prop({required: true}) log!: any

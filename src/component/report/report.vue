@@ -9,7 +9,7 @@
 		<div class="page-header page-bar">
 			<div>
 				<h1>{{ $t('title') }}</h1>
-				<div v-if="fight" class="info">{{ fight.date | date }}</div>
+				<div v-if="fight" class="info">{{ $filters.date(fight.date) }}</div>
 			</div>
 			<div class="tabs">
 				<div v-if="report && fight && $store.getters.admin" class="tab disabled">
@@ -157,7 +157,7 @@
 					<div class="spacer"></div>
 					<v-switch v-model="chartDisplaySummons" :label="$t('display_summons')" :hide-details="true" />
 				</div>
-				<chartist ref="chart" :data="chartData" :options="chartOptions" :event-handlers="chartEvents" ratio="ct-major-eleventh" class="chart" :class="{long: statistics && statistics.lives.length >= 30}" type="Line" />
+				<Line ref="chart" :data="chartData" :options="chartOptions" :event-handlers="chartEvents" ratio="ct-major-eleventh" class="chart" :class="{long: statistics && statistics.lives.length >= 30}" />
 				<div v-show="chartTooltipValue" ref="chartTooltip" :style="{top: chartTooltipY + 'px', left: chartTooltipX + 'px'}" class="chart-tooltip v-tooltip__content top" v-html="chartTooltipValue"></div>
 			</div>
 		</panel>
@@ -166,14 +166,14 @@
 			<loader v-if="!loaded" />
 			<template v-else>
 				<div class="damage-options">
-					<v-radio-group v-model="damageChartType" :row="true" :dense="true" :hide-details="true">
+					<v-radio-group v-model="damageChartType" :inline="true" :hide-details="true">
 						<v-radio :value="0" :label="$t('inflicted_damage')" />
 						<v-radio :value="1" :label="$t('received_damage')" />
 						<v-radio :value="2" :label="$t('heal')" />
 						<v-radio :value="3" label="Tank" />
 					</v-radio-group>
 					<div class="spacer"></div>
-					<v-radio-group v-if="fight.type !== FightType.BATTLE_ROYALE && fight.type !== FightType.SOLO" v-model="damagesTeams" :row="true" :dense="true" :hide-details="true">
+					<v-radio-group v-if="fight.type !== FightType.BATTLE_ROYALE && fight.type !== FightType.SOLO" v-model="damagesTeams" :inline="true" :hide-details="true">
 						<v-radio :value="0" label="Entités" />
 						<v-radio :value="1" label="Équipes" />
 					</v-radio-group>
@@ -181,15 +181,15 @@
 				</div>
 				<div class="damages">
 					<div class="damage-chart">
-						<chartist :data="damageChartDamage" :options="damageChartOptions" :class="{heal: damageChartType === 2, tank: damageChartType === 3}" class="right" type="Pie" />
+						<Doughnut :data="damageChartDamage" :options="damageChartOptions" :class="{heal: damageChartType === 2, tank: damageChartType === 3}" class="right" />
 						<div class="legend">
-							<div v-for="(damage, d) in damageChartDamage.series" :key="d">
+							<div v-for="(damage, d) in damageChartDamage.datasets[0].data" :key="d">
 								<span :style="{color: legends[d]}">{{ $t('stat_' + damageChartDamage.labels[d]) }}</span> <div class="value">{{ $filters.number(damage) }}</div>
 							</div>
 						</div>
 					</div>
 					<div class="damages-bars" :style="{height: (damagesBarsHeight - 10) + 'px'}">
-						<chartist :data="damagesBarsData" :options="damagesBarsOptions" :event-handlers="damagesBarsEvents" :class="{heal: damageChartType === 2, tank: damageChartType === 3}" :style="{height: damagesBarsHeight + 'px'}" class="chart" type="Bar" />
+						<Bar :data="damagesBarsData" :options="damagesBarsOptions" :event-handlers="damagesBarsEvents" :class="{heal: damageChartType === 2, tank: damageChartType === 3}" :style="{height: damagesBarsHeight + 'px'}" class="chart" />
 					</div>
 				</div>
 			</template>
@@ -269,21 +269,30 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { TEAM_COLORS } from '@/model/team'
-	import Chartist from 'chartist'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import ActionsElement from './report-actions.vue'
 	import ReportBlock from './report-block.vue'
 	import ReportLeekRow from './report-leek-row.vue'
 	const ReportStatistics = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/report/report-statistics.${locale}.i18n`))
 	import { FightStatistics, StatisticsEntity } from './statistics'
-	import(/* webpackChunkName: "chartist" */ /* webpackMode: "eager" */ "@/chartist-wrapper")
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
 	import Comments from '@/component/comment/comments.vue'
 	import { CHIPS } from '@/model/chips'
 	import { emitter } from '@/model/vue'
 	import { defineAsyncComponent } from 'vue'
+	import { Bar, Doughnut, Line } from 'vue-chartjs'
 
-	@Options({ name: 'report', i18n: {}, mixins: [...mixins], components: { actions: ActionsElement, ReportLeekRow, ReportBlock, ReportStatistics, 'lw-map': Map, Comments } })
+	@Options({ name: 'report', i18n: {}, mixins: [...mixins], components: {
+		actions: ActionsElement,
+		ReportLeekRow,
+		ReportBlock,
+		ReportStatistics,
+		'lw-map': Map,
+		Comments,
+		Doughnut,
+		Bar,
+		Line,
+	} })
 	export default class ReportPage extends Vue {
 		TEAM_COLORS = TEAM_COLORS
 		fight: Fight | null = null
@@ -324,20 +333,30 @@
 		damageChartDamage: any = {}
 		damageChartOptions = {
 			donut: true,
-			donutWidth: 38,
-			startAngle: 90,
-			showLabel: false
+			cutout: '70%',
+			rotation: 90,
+			showLabel: false,
+			plugins: { legend: { display: false } },
 		}
 		damagesBarsData: any = {}
 		damagesBarsOptions = {
-			stackBars: true,
-			horizontalBars: true,
-			showLabel: true,
-			chartPadding: {
-				top: 10,
-				right: 35,
-				bottom: 0,
-				left: 90
+			// stackBars: true,
+			// horizontalBars: true,
+			// showLabel: true,
+			// chartPadding: {
+			// 	top: 10,
+			// 	right: 35,
+			// 	bottom: 0,
+			// 	left: 90
+			// },
+			barThickness: 15,
+			plugins: { legend: { display: false } },
+			indexAxis: 'y',
+			scales: {
+				y: {
+					stacked: true,
+					reverse: true,
+				},
 			}
 		}
 		damagesTeams: number = 0
@@ -512,7 +531,7 @@
 			}
 		}
 
-		beforeDestroy() {
+		beforeUnmount() {
 			emitter.off('keyup', this.keyup)
 		}
 
@@ -662,16 +681,27 @@
 				series = series.filter((value, index) => this.statistics!.entities[index].leek.type !== 2)
 			}
 			this.chartData = {
-				series
+				datasets: series.map((s, i) => ({
+					data: s,
+					tension: this.smooth ? 0.2 : 0,
+					borderColor: TEAM_COLORS[this.filtered_entities[i].leek.team - 1]
+				}))
 			}
 			this.chartOptions = {
-				showPoint: false,
-				lineSmooth: this.smooth,
-				fullWidth: true,
-				fullHeight: true,
-				axisX: {
-					type: Chartist.AutoScaleAxis,
-					onlyInteger: true,
+				plugins: { legend: { display: false } },
+				// axisX: {
+				// 	// type: Chartist.AutoScaleAxis,
+				// 	// onlyInteger: true,
+				// }
+				elements: { point: { pointStyle: false } },
+				scales: {
+					x: {
+						type: 'linear',
+						position: 'bottom'
+					},
+					y: {
+						type: 'linear'
+					}
 				}
 			}
 			this.chartEvents = [{
@@ -797,9 +827,11 @@
 				series.push(entities.map(e => e[v]))
 			}
 			this.damageEntities = entities
+			const colors = this.damageChartType === 0 || this.damageChartType === 1 ? ['#e22424', '#a017d6', '#41d3ff', '#38e9ae', '#f28dff'] : this.damageChartType === 2 ? ['#5fad1b', '#e22424', '#38e9ae'] : ['orange']
+
 			this.damagesBarsData = {
 				labels: entities.map(e => e[0]),
-				series
+				datasets: series.map((s, i) => ({ label: entities[i], data: s, stack: 'total', backgroundColor: colors[i] }) )
 			}
 			this.damagesBarsHeight = Math.max(370, entities.length * 25)
 			this.damagesBarsEvents = [{
@@ -836,7 +868,10 @@
 			}
 			this.damageChartDamage = {
 				labels,
-				series: chartSeries
+				datasets: [{
+					data: chartSeries,
+					backgroundColor: colors
+				}]
 			}
 			// setTimeout(() => {
 			// 	this.$el.querySelectorAll('.damage-chart').forEach((chart, i) => {
@@ -1011,9 +1046,6 @@
 		position: relative;
 	}
 	.chart {
-		margin-left: -10px;
-		margin-right: -4px;
-		margin-bottom: -16px;
 		::v-deep .ct-line {
 			stroke-width: 3px;
 		}
@@ -1159,7 +1191,7 @@
 	}
 	.damages-bars {
 		flex: 1.8;
-		width: 100%;
+    	min-width: 0;
 		height: 356px;
 		.chart {
 			height: 380px;

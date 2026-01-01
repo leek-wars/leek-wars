@@ -1,9 +1,8 @@
 <template>
-	<popup :value="value" :width="500" @input="$emit('input', $event)">
-		<v-icon slot="icon">mdi-flag</v-icon>
-		<span slot="title">
+	<popup :model-value="modelValue" :width="500" icon="mdi-flag" @update:modelValue="$emit('update:modelValue', $event)">
+		<template #title>
 			<span :class="{pointer: leeks}" @click="leeks ? back : null">{{ title }}</span><span v-if="subtitle" class="subtitle"><v-icon>mdi-chevron-right</v-icon>{{ subtitle }}</span>
-		</span>
+		</template>
 		<div class="report-popup">
 			<div v-if="selectedTarget || !leeks">
 				<div class="targets">
@@ -51,18 +50,21 @@
 
 	@Options({})
 	export default class ReportDialog extends Vue {
+
 		@Prop() reasons!: Warning[]
 		@Prop() target!: Farmer | null
 		@Prop() team!: Team | null
-		@Prop() value!: boolean
+		@Prop() modelValue!: boolean
 		@Prop() parameter!: any
 		@Prop() leeks!: Leek[] | null
 		@Prop() fight!: number
 		@Prop() leek!: Leek | null
+
 		additionalMessage: string = ''
 		selectedReason: Warning | null = null
 		selectedTarget: Farmer | null = null
 		selectedLeek: Leek | null = null
+
 		get title() {
 			return this.$t('warning.report')
 		}
@@ -105,7 +107,7 @@
 			})
 		}
 		close() {
-			this.$emit('input', false)
+			this.$emit('update:modelValue', false)
 		}
 		selectLeek(leek: Leek) {
 			this.selectedTarget = leek.farmer

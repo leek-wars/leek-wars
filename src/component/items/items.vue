@@ -54,7 +54,7 @@
 				})
 			}
 		}
-		beforeDestroy() {
+		beforeUnmount() {
 			LeekWars.large = false
 		}
 		get breadcrumb_items() {

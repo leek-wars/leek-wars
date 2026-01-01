@@ -51,11 +51,11 @@
 		<div class="container">
 			<panel>
 				<template #title>
-					<i18n-t keypath="farmed_by">
+					<i18n-t keypath="farmed_by" tag="span">
 						<template #farmer>
 							<router-link :to="'/farmer/' + (leek ? leek.farmer.id : 0)">
-								<rich-tooltip-farmer :id="(leek ? leek.farmer.id : 0)" v-slot="{ props }" :bottom="true">
-									<span v-bind="props">{{ leek ? leek.farmer.name : '...' }}</span>
+								<rich-tooltip-farmer :id="(leek ? leek.farmer.id : 0)" :bottom="true">
+									{{ leek ? leek.farmer.name : '...' }}
 								</rich-tooltip-farmer>
 							</router-link>
 						</template>
@@ -101,7 +101,12 @@
 				</v-tooltip>
 
 				<div class="talent-wrapper">
-					<talent :id="leek ? leek.id : 0" :talent="leek ? leek.talent : '...'" category="leek" :v-tooltip="$t('talent')" />
+					<v-tooltip>
+						<template v-slot:activator="{ props }">
+							<talent :id="leek ? leek.id : 0" :talent="leek ? leek.talent : '...'" category="leek" v-bind="props" />
+						</template>
+						{{ $t('talent') }}
+					</v-tooltip>
 					<v-tooltip v-if="leek">
 						<template v-slot:activator="{ props }">
 							<div class="talent-more" v-bind="props">({{ leek.talent_more >= 0 ? '+' + leek.talent_more : leek.talent_more }})</div>
@@ -135,8 +140,7 @@
 				</v-tooltip>
 
 				<template v-if="leek && leek.level >= 100">
-					<chartist ref="chart" :data="chartData" :options="chartOptions" :events="chartEvents" ratio="ct-major-eleventh" class="talent-history" type="Line" />
-					<div v-show="chartTooltipValue" ref="chartTooltip" :style="{top: chartTooltipY + 'px', left: chartTooltipX + 'px'}" class="chart-tooltip v-tooltip__content top">{{ chartTooltipValue }}</div>
+					<Line :data="chartData" :options="chartOptions" ratio="ct-major-eleventh" class="talent-history" />
 				</template>
 			</panel>
 
@@ -365,8 +369,8 @@
 			</template>
 			<div class="weapons-popup">
 				<div :class="{dashed: draggedWeapon && draggedWeaponLocation === 'farmer'}" class="leek-weapons" @dragover="dragOver" @drop="weaponsDrop('leek', $event)">
-					<rich-tooltip-item v-for="(weapon, i) in orderedWeapons" :key="i" v-slot="{ props }" :item="LeekWars.items[weapon.template]" :bottom="true" :nodge="true" :leek="leek">
-						<div :class="{dragging: draggedWeapon && draggedWeapon.template === weapon.template && draggedWeaponLocation === 'leek'}" class="weapon" draggable="true" v-bind="props" @dragstart="weaponDragStart('leek', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="removeWeapon(weapon)">
+					<rich-tooltip-item v-for="(weapon, i) in orderedWeapons" :key="i" :item="LeekWars.items[weapon.template]" :bottom="true" :nodge="true" :leek="leek">
+						<div :class="{dragging: draggedWeapon && draggedWeapon.template === weapon.template && draggedWeaponLocation === 'leek'}" class="weapon" draggable="true" @dragstart="weaponDragStart('leek', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="removeWeapon(weapon)">
 							<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" draggable="false">
 						</div>
 					</rich-tooltip-item>
@@ -410,8 +414,12 @@
 		<v-snackbar v-if="renameError" v-model="renameFailed" :timeout="5000" color="error">{{ $t(renameError.error, renameError.error_params) }}</v-snackbar>
 
 		<popup v-if="leek && my_leek" v-model="potionDialog" :width="750">
-			<img slot="icon" src="/image/icon/potion.png">
-			<span slot="title">{{ $t("use_a_potion", [leek.name]) }}</span>
+			<template #icon>
+				<img src="/image/icon/potion.png">
+			</template>
+			<template #title>
+				{{ $t("use_a_potion", [leek.name]) }}
+			</template>
 			<div class="farmer-potions">
 				<div class="potions-grid">
 					<v-tooltip v-for="(potion, id) in $store.state.farmer.potions" :key="id">
@@ -433,8 +441,12 @@
 		</popup>
 
 		<popup v-if="leek && my_leek" v-model="skinPotionDialog" :width="750">
-			<img slot="icon" src="/image/icon/potion.png">
-			<span slot="title">{{ $t("select_skin") }}</span>
+			<template #icon>
+				<img src="/image/icon/potion.png">
+			</template>
+			<template #title>
+				{{ $t("select_skin") }}
+			</template>
 			<div class="farmer-potions">
 				<div class="potions-grid">
 					<v-tooltip v-for="(potion, id) in skinPotions" :key="id">
@@ -507,9 +519,7 @@
 			</div>
 		</popup>
 
-		<popup v-model="customizeDialog" :width="700">
-			<v-icon slot="icon">mdi-auto-fix</v-icon>
-			<span slot="title">{{ $t('customize') }}</span>
+		<popup v-model="customizeDialog" :width="700" icon="mdi-auto-fix" :title="$t('customize')">
 			<div v-if="leek" class="customize-dialog">
 				<div class="center">
 					<leek-image ref="leekImage" :leek="leek" :scale="1" />
@@ -643,8 +653,12 @@
 		<level-dialog v-if="leek" v-model="levelPopup" :leek="leek" :level-data="levelPopupData" />
 
 		<popup v-if="leek && my_leek" v-model="aiDialog" :width="1050">
-			<v-icon slot="icon">mdi-code-braces</v-icon>
-			<span slot="title">{{ $t('ai_of', [leek.name]) }}</span>
+			<template #icon>
+				<v-icon>mdi-code-braces</v-icon>
+			</template>
+			<template #title>
+				{{ $t('ai_of', [leek.name]) }}
+			</template>
 			<div class="ai-popup">
 				<div class="leek-ai-components components-grid">
 					<div v-for="(c, i) of 8" :key="i" class="component" :class="{dashed: draggedComponent, disabled: i >= max_components}" @dragover="dragOver" @drop="componentsDrop('leek', $event, i)">
@@ -733,8 +747,7 @@
 	import CapitalDialog from './capital-dialog.vue'
 	import CharacteristicTooltip from './characteristic-tooltip.vue'
 	const LevelDialog = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/leek/level-dialog.${locale}.i18n`))
-	import(/* webpackChunkName: "chartist" */ /* webpackMode: "eager" */ "@/chartist-wrapper")
-	const Explorer = () => defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`))
+	const Explorer = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`))
 	import { fileSystem } from '@/model/filesystem'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
@@ -750,8 +763,10 @@
 	import { ORDERED_CHIPS } from '@/model/sorted_chips'
 	import LeekImage from '../leek-image.vue'
 	import LeekComponent from './leek-component.vue'
-import { defineAsyncComponent } from 'vue'
-import { emitter } from '@/model/vue'
+	import { defineAsyncComponent } from 'vue'
+	import { emitter } from '@/model/vue'
+	import { Line } from 'vue-chartjs'
+	import { ChartData, ChartOptions, plugins } from 'chart.js'
 
 	@VueComponent({ name: "leek", i18n: {}, mixins: [...mixins], components: {
 		CapitalDialog,
@@ -768,6 +783,7 @@ import { emitter } from '@/model/vue'
 		ai: AIElement,
 		'lw-title': LWTitle,
 		LeekComponent,
+		Line,
 	} })
 	export default class LeekPage extends Vue {
 		CHIPS = CHIPS
@@ -788,12 +804,8 @@ import { emitter } from '@/model/vue'
 		renameError: any = null
 		potionDialog: boolean = false
 		hatDialog: boolean = false
-		chartData: any = null
-		chartOptions: any = null
-		chartTooltipValue: any = null
-		chartTooltipX: number = 0
-		chartTooltipY: number = 0
-		chartEvents: any = null
+		chartData: ChartData | null = null
+		chartOptions: ChartOptions | null = null
 		reportDialog: boolean = false
 		reasons = [Warning.INCORRECT_LEEK_NAME, Warning.INCORRECT_AI_NAME]
 		levelPopup: boolean = false
@@ -982,7 +994,7 @@ import { emitter } from '@/model/vue'
 			})
 		}
 
-		beforeDestroy() {
+		beforeUnmount() {
 			emitter.off('update-leek-talent')
 			emitter.off('update-leek-xp')
 			if (this.request) { this.request.abort() }
@@ -1077,33 +1089,35 @@ import { emitter } from '@/model/vue'
 			if (!this.leek || this.leek.level < 100) { return }
 			const labels = []
 			const time = LeekWars.time
-			for (let i = 1; i < 7; ++i) {
+			for (let i = 1; i <= 7; ++i) {
 				labels.push(LeekWars.formatDayMonthShort(time - i * 24 * 3600))
 			}
 			this.chartData = {
 				labels: labels.reverse(),
-				series: [this.leek.talent_history]
+				datasets: [
+					{
+						tension: 0.2,
+						data: this.leek.talent_history,
+						borderColor: '#5fad1b',
+						pointBackgroundColor: '#5fad1b',
+						borderWidth: 2,
+						fill: {
+							target: 'origin',
+							above: '#5fad1b30',
+						},
+					}
+				]
 			}
-			this.chartOptions = {showArea: true, fullWidth: true, fullHeight: true}
-			this.chartEvents = [{
-				event: 'created', fn: () => {
-					const chartElement = this.$refs.chart
-					if (!chartElement) { return }
-					const chartTooltip = this.$refs.chartTooltip as HTMLElement
-					;(chartElement as any).$el.querySelectorAll('.ct-point').forEach((point: any) => {
-						point.addEventListener('mouseenter', (e: Event) => {
-							this.chartTooltipValue = (e.target as any).getAttribute('ct:value')
-						})
-						point.addEventListener('mouseleave', (e: Event) => {
-							this.chartTooltipValue = null
-						})
-						point.addEventListener('mousemove', (e: MouseEvent) => {
-							this.chartTooltipX = e.pageX - chartTooltip.offsetWidth / 2,
-							this.chartTooltipY = e.pageY - chartTooltip.offsetHeight - 15
-						})
-					})
-				}
-			}]
+			this.chartOptions = {
+				aspectRatio: 2.5,
+				plugins: { legend: { display: false } },
+				elements: {
+					point: {
+						radius: 4,
+						hoverRadius: 6,
+					}
+				},
+			}
 		}
 
 		hat() {
@@ -1633,9 +1647,9 @@ import { emitter } from '@/model/vue'
 	}
 	.talent-history {
 		margin-top: 3px;
-		margin-left: -10px;
-		margin-right: -4px;
-		margin-bottom: -16px;
+		// margin-left: -10px;
+		// margin-right: -4px;
+		// margin-bottom: -16px;
 		position: relative;
 		::v-deep .ct-line {
 			stroke: rgba(95, 173, 27, 0.7);

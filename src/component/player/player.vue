@@ -497,7 +497,7 @@
 			}
 		}
 
-		beforeDestroy() {
+		beforeUnmount() {
 			this.game.pause()
 			this.game.cancelled = true
 			emitter.off('keyup', this.keyup)

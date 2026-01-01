@@ -46,7 +46,8 @@ const InventoryPage = () => import(/* webpackChunkName: "[request]" */ `@/compon
 const LineOfSight = () => import(/* webpackChunkName: "[request]" */ `@/component/line-of-sight/line-of-sight.${locale}.i18n`)
 const History = () => import(/* webpackChunkName: "[request]" */ `@/component/history/history.${locale}.i18n`)
 const Items = () => import(/* webpackChunkName: "[request]" */ `@/component/items/items.${locale}.i18n`)
-const Leek = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/leek/leek.${locale}.i18n`))
+const Leek = () => import(/* webpackChunkName: "[request]" */ `@/component/leek/leek.${locale}.i18n`)
+const LeekAsync = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/leek/leek.${locale}.i18n`))
 const Legal = () => import(/* webpackChunkName: "[request]" */ `@/component/legal/legal.${locale}.i18n`)
 const Login = () => import(/* webpackChunkName: "[request]" */ `@/component/login/login.${locale}.i18n`)
 const Market = () => import(/* webpackChunkName: "[request]" */ `@/component/market/market.${locale}.i18n`)
@@ -90,7 +91,7 @@ async function getVueMain() {
 }
 
 const Home = defineComponent({
-	components: { signup: Signup, leek: Leek, messages: Messages },
+	components: { signup: Signup, leek: LeekAsync, messages: Messages },
 	computed: {
 		chatFirst() {
 			return LeekWars.mobile && localStorage.getItem('options/chat-first') === 'true'
@@ -103,7 +104,7 @@ const Home = defineComponent({
 		}
 	},
 	render() {
-		return store.state.connected ? h(Leek) : h(Signup)
+		return store.state.connected ? h(LeekAsync) : h(Signup)
 	}
 })
 

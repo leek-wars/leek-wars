@@ -37,18 +37,20 @@
 		<panel class="first">
 			<div class="bank-description center" v-html="$t('description')"></div>
 
-			<v-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)" hide-details dense solo>
+			<v-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)" hide-details dense variant="solo">
 				<template v-slot:selection>
 					<flag :code="LeekWars.currencies[LeekWars.currency].flag" :clickable="false" />&nbsp;
 					{{ LeekWars.currency }} &nbsp; <span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>
 				</template>
-				<template slot="item" slot-scope="data">
-					<v-list-item-content>
-						<v-list-item-title class="currency">
-							<flag :code="LeekWars.currencies[data.item].flag" :clickable="false" />&nbsp;
-							{{ data.item }} &nbsp; <span class="symbol">{{ LeekWars.currencies[data.item].symbol }}</span>
-						</v-list-item-title>
-					</v-list-item-content>
+				<template v-slot:item="{ props, item }">
+					<v-list-item v-bind="props" class="currency">
+						<template #prepend>
+							<flag :code="LeekWars.currencies[item.value].flag" :clickable="false" />
+						</template>
+						<template #append>
+							<span class="symbol">{{ LeekWars.currencies[item.value].symbol }}</span>
+						</template>
+					</v-list-item>
 				</template>
 			</v-select>
 

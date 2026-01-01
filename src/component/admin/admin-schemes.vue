@@ -78,7 +78,8 @@
 	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import { SchemeTemplate } from '@/model/scheme'
-	const RichTooltipItem = () => import('@/component/rich-tooltip/rich-tooltip-item.vue')
+	import { defineAsyncComponent } from 'vue'
+	const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
 
 	@Options({ components: { RichTooltipFarmer, RichTooltipItem } })
 	export default class AdminSchemes extends Vue {
@@ -106,7 +107,7 @@
 		mounted() {
 			LeekWars.large = true
 		}
-		beforeDestroy() {
+		beforeUnmount() {
 			LeekWars.large = false
 		}
 

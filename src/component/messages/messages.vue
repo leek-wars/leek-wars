@@ -147,7 +147,7 @@
 			emitter.on('focus', this.conversationRead)
 		}
 
-		destroyed() {
+		unmounted() {
 			LeekWars.footer = true
 			LeekWars.box = false
 			LeekWars.large = false

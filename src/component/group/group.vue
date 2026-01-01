@@ -443,30 +443,31 @@
 			<v-icon slot="icon">mdi-gift-outline</v-icon>
 			<div slot="title">{{ $t('give_item') }}</div>
 
-			<v-tabs :key="itemCategories.length" class="tabs" grow :show-arrows="false">
-				<v-tabs-slider class="indicator" />
-				<v-tab v-for="(category, c) in itemCategories" :key="c" :href="'#tab-' + c" class="tab">
+			<v-tabs v-model="giveItemTab" :key="itemCategories.length" class="tabs" grow :show-arrows="false">
+				<v-tab v-for="(category, c) in itemCategories" :key="c" :value="'tab-' + c" class="tab">
 					<v-icon>{{ category.icon }}</v-icon>&nbsp;
 					{{ $t('main.' + category.name) }}
 				</v-tab>
-				<v-tab-item :value="'tab-' + 0" class="content grid farmer-weapons weapons-popup">
+			</v-tabs>
+			<v-window v-model="giveItemTab">
+				<v-window-item :value="'tab-' + 0" class="content grid farmer-weapons weapons-popup">
 					<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ props }" :item="LeekWars.items[LeekWars.weapons[weapon.id].item]" :bottom="true" :instant="true" :nodge="true">
 						<div class="weapon" @click="giveItemConfirm(weapon.item)">
 							<img :src="'/image/weapon/' + weapon.name + '.png'" v-bind="props">
 						</div>
 					</rich-tooltip-item>
-				</v-tab-item>
-				<v-tab-item :value="'tab-' + 1" class="content grid chips-popup farmer-chips">
+				</v-window-item>
+				<v-window-item :value="'tab-' + 1" class="content grid chips-popup farmer-chips">
 					<rich-tooltip-item v-for="chip of availableChips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[LeekWars.chipTemplates[chip.template].item]" :bottom="true" :instant="true" :nodge="true">
 						<div class="chip" @click="giveItemConfirm(chip.id)">
 							<img :src="'/image/chip/' + chip.name + '.png'" v-bind="props">
 						</div>
 					</rich-tooltip-item>
-				</v-tab-item>
-				<!-- <v-tab-item :value="'tab-' + 2" class="content grid farmer-chips">
+				</v-window-item>
+				<!-- <v-window-item :value="'tab-' + 2" class="content grid farmer-chips">
 
-				</v-tab-item> -->
-			</v-tabs>
+				</v-window-item> -->
+			</v-window>
 
 			<template #actions>
 				<div v-ripple @click="giveItemDialog = false">{{ $t('main.cancel') }}</div>
@@ -526,7 +527,7 @@
 	import { Group } from '@/model/group'
 	import { Farmer, Member } from '@/model/farmer'
 	import { store } from '@/model/store'
-	const ChatElement = () => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`)
+	const ChatElement = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
 	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import CharacteristicTooltip from '@/component/leek/characteristic-tooltip.vue'
@@ -563,6 +564,7 @@
 		memberToDelete: Member | null = null
 		WeaponsData = WeaponsData
 		giveItemDialog: boolean = false
+		giveItemTab: string = 'tab-0'
 		giveItemConfirmDialog: boolean = false
 		itemToGive: any = null
 		giveItemTarget: Member | null = null

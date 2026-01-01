@@ -25,9 +25,7 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import Chartist from 'vue-chartist'
 	import { Options, Vue } from 'vue-property-decorator'
-	import(/* webpackChunkName: "chartist" */ /* webpackMode: "eager" */ "@/chartist-wrapper")
 
 	@Options({ name: 'talent', i18n: {} })
 	export default class TalentPage extends Vue {
@@ -65,7 +63,7 @@
 			LeekWars.large = true
 			emitter.on('resize', this.resize)
 		}
-		beforeDestroy() {
+		beforeUnmount() {
 			LeekWars.large = false
 			emitter.off('resize', this.resize)
 		}

@@ -41,7 +41,7 @@
 		mounted() {
 			LeekWars.large = true
 		}
-		beforeDestroy() {
+		beforeUnmount() {
 			LeekWars.large = false
 		}
 

@@ -97,7 +97,7 @@
 			this.timer = setInterval(this.refresh, 5_000)
 		}
 
-		beforeDestroy() {
+		beforeUnmount() {
 			if (this.timer) {
 				clearInterval(this.timer)
 			}

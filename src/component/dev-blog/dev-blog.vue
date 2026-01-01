@@ -21,7 +21,7 @@
 							<div class="title">{{ article.title }}</div>
 
 							<div class="flex subtitle">
-								<div class="date">{{ article.date | date }}</div>
+								<div class="date">{{ $filters.date(article.date) }}</div>
 								<div class="spacer"></div>
 								<div :class="{zero: article.votes_up === 0}" class="vote up">
 									<v-icon>mdi-thumb-up-outline</v-icon>

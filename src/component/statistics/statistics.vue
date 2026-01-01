@@ -84,9 +84,8 @@
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/vue'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
-	import(/* webpackChunkName: "chartist" */ /* webpackMode: "eager" */ "@/chartist-wrapper")
 
 	const GENERAL_CATEGORY = 1
 	const FIGHT_CATEGORY = 2
@@ -199,7 +198,7 @@ import { emitter } from '@/model/vue'
 			})
 		}
 
-		beforeDestroy() {
+		beforeUnmount() {
 			clearInterval(this.interval)
 		}
 

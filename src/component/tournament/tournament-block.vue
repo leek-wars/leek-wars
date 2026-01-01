@@ -52,10 +52,6 @@ import { Options, Prop, Vue } from 'vue-property-decorator'
 		stroke: #5fad1b;
 		fill: #78ff0355;
 	}
-	image[win="false"] {
-		opacity: 0.4;
-		fill: #f5f5f5;
-	}
 	.no-fight {
 		fill: var(--background);
 		stroke-dasharray: 5.5;

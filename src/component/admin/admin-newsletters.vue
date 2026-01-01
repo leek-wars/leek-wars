@@ -7,35 +7,36 @@
 			</div>
 		</div>
 		<panel class="first">
-			<div slot="content" class="newsletters">
-				<div ref="progress" class="progress">
-					<div v-for="p in progress" :key="p.id">{{ p.progress }} --- {{ p.farmer }} ({{ p.id }}) --- {{ p.email }}</div>
-				</div>
-				<div v-for="newsletter in newsletters" :key="newsletter.id" class="newsletter card">
-					<div class="main">
-						<b>Version {{ newsletter.version }}</b>
-						<div>FR : {{ newsletter.title_fr }}</div>
-						<div>EN : {{ newsletter.title_en }}</div>
-						<div class="spacer"></div>
-						<v-btn @click="test(newsletter)"><v-icon>mdi-cog-outline</v-icon> Test</v-btn>
-						<v-btn v-if="newsletter.sent === 0" color="primary" @click="send(newsletter)"><v-icon>mdi-send-outline</v-icon> Envoyer</v-btn>
-						<div v-else>Envoyé le {{ newsletter.sent | date }}</div>
+			<template #content>
+				<div class="newsletters">
+					<div ref="progress" class="progress">
+						<div v-for="p in progress" :key="p.id">{{ p.progress }} --- {{ p.farmer }} ({{ p.id }}) --- {{ p.email }}</div>
 					</div>
-					<div class="content">
-						FR :
-						<div v-html="html(newsletter.content_fr)"></div>
-						EN :
-						<div v-html="html(newsletter.content_en)"></div>
+					<div v-for="newsletter in newsletters" :key="newsletter.id" class="newsletter card">
+						<div class="main">
+							<b>Version {{ newsletter.version }}</b>
+							<div>FR : {{ newsletter.title_fr }}</div>
+							<div>EN : {{ newsletter.title_en }}</div>
+							<div class="spacer"></div>
+							<v-btn @click="test(newsletter)"><v-icon>mdi-cog-outline</v-icon> Test</v-btn>
+							<v-btn v-if="newsletter.sent === 0" color="primary" @click="send(newsletter)"><v-icon>mdi-send-outline</v-icon> Envoyer</v-btn>
+							<div v-else>Envoyé le {{ $filters.date(newsletter.sent) }}</div>
+						</div>
+						<div class="content">
+							FR :
+							<div v-html="html(newsletter.content_fr)"></div>
+							EN :
+							<div v-html="html(newsletter.content_en)"></div>
+						</div>
 					</div>
 				</div>
-			</div>
+			</template>
 		</panel>
 	</div>
 </template>
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-import { store } from '@/model/store'
 	import { Options, Vue } from 'vue-property-decorator'
 
 	@Options({})

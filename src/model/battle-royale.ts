@@ -43,9 +43,11 @@ class BattleRoyale {
 			store.commit('update-fights', -1)
 
 			// Redirect if on the garden page
-			if (router.currentRoute.path.startsWith("/garden/")) {
-				router.push('/fight/' + data[0])
-			}
+			router.isReady().then(() => {
+				if (router.currentRoute.value.path.startsWith("/garden/")) {
+					router.push('/fight/' + data[0])
+				}
+			})
 		}
 	}
 }

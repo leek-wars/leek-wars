@@ -30,18 +30,42 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import 'vuetify/styles'
 import '@mdi/font/css/materialdesignicons.css'
-import { create } from 'domain'
 import { formatEmojis } from './emojis'
 import mitt from 'mitt'
 import { Farmer } from './farmer'
+import '@/chart'
 
 const vuetify = createVuetify({
 	components,
 	directives,
 	theme: {
-		defaultTheme: 'dark'
+		themes: {
+			dark: {
+				colors: {
+					primary: '#5fad1b',
+				},
+			},
+			light: {
+				colors: {
+					primary: '#5fad1b',
+
+				},
+			},
+		},
 	},
 	defaults: {
+		VSwitch: {
+			color: 'primary',
+		},
+		VRadio: {
+			color: 'primary',
+		},
+		VRadioGroup: {
+			color: 'primary',
+		},
+		VCheckbox: {
+			color: 'primary',
+		},
 		VTooltip: {
 			location: 'bottom',
 		},
@@ -423,7 +447,6 @@ if (window.__FARMER__) {
 }
 
 // Register Vue filters after LeekWars is fully initialized
-
 app.config.globalProperties.$filters = {
 	number: LeekWars.formatNumber,
 	date: LeekWars.formatDate,
@@ -432,11 +455,5 @@ app.config.globalProperties.$filters = {
 	time: LeekWars.formatTime,
 	duration: LeekWars.formatDuration,
 }
-// Vue.filter('number', LeekWars.formatNumber)
-// Vue.filter('date', LeekWars.formatDate)
-// Vue.filter('datetime', LeekWars.formatDateTime)
-// Vue.filter('timeseconds', LeekWars.formatTimeSeconds)
-// Vue.filter('time', LeekWars.formatTime)
-// Vue.filter('duration', LeekWars.formatDuration)
 
 export { vueMain, vuetify, displayWarningMessage, app, emitter }

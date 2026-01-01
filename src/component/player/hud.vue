@@ -3,7 +3,7 @@
 		<div v-if="!creator" class="life-bar">
 			<div class="wrapper">
 				<template v-for="team in game.teams">
-					<v-tooltip v-for="entity in team" v-if="!entity.dead" :key="entity.id" top>
+					<v-tooltip v-for="entity in team.filter(e => !e.dead)" :key="entity.id" top>
 						<template v-slot:activator="{ props }">
 							<div :style="{background: entity.lifeBarGadient, width: Math.max(1, barWidth * (entity.life / totalLife) - 3) + 'px'}" class="bar" v-bind="props"></div>
 						</template>
@@ -42,7 +42,7 @@
 		</div>
 		<div v-if="!creator && !LeekWars.mobile && game.showActions && actionsWidth > 0" ref="actions" class="fight-actions" :class="{large: game.largeActions}" :style="{'width': game.largeActions ? actionsWidth + 'px' : null, 'max-width': game.largeActions ? Math.max(600, actionsWidth) + 'px' : null}">
 			<template v-for="line of game.consoleLines">
-				<component :is="ActionComponents[line.action.type]" v-if="line.action" :key="line.id" :action="line.action" />
+				<component :is="ActionComponents[line.action.type]" v-if="line.action" :key="line.id" :action="line.action" :leeks="game.leeks" />
 				<div v-else-if="line.trophy" :key="line.id" class="notif-trophy">
 					<img :src="'/image/trophy/' + line.trophy.name + '.svg'">
 					<i18n-t keypath="trophy.x_unlocks_t">

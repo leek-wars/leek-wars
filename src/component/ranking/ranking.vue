@@ -265,6 +265,7 @@
 	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import Pagination from '@/component/pagination.vue'
+import { emitter } from '@/model/vue'
 
 	@Options({
 		name: 'ranking', i18n: {}, mixins: [...mixins],

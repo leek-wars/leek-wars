@@ -36,7 +36,8 @@
 import { CHIPS } from '@/model/chips'
 import { Options, Prop, Vue } from 'vue-property-decorator'
 import CharacteristicTooltip from '../leek/characteristic-tooltip.vue'
-const RichTooltipItem = () => import('@/component/rich-tooltip/rich-tooltip-item.vue')
+import { defineAsyncComponent } from 'vue'
+const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
 
 @Options({ name: 'summon-view', components: {
 	'characteristic-tooltip': CharacteristicTooltip,

@@ -282,7 +282,7 @@
 		back() {
 			this.$router.push('/help/api')
 		}
-		beforeDestroy() {
+		beforeUnmount() {
 			LeekWars.large = false
 			LeekWars.footer = true
 			LeekWars.box = false

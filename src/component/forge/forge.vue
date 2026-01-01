@@ -75,7 +75,7 @@
 			this.built = false
 		}
 
-		beforeDestroy() {
+		beforeUnmount() {
 			emitter.off('craft')
 		}
 

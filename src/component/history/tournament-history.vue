@@ -6,7 +6,7 @@
 			</div>
 			<div class="foreground">
 				{{ $t('main.tournament_of', [showTime ? LeekWars.formatDateTime(tournament.date) : LeekWars.formatDate(tournament.date)]) }}
-				<div class="date">{{ tournament.date | duration }}</div>
+				<div class="date">{{ $filters.duration(tournament.date) }}</div>
 			</div>
 		</div>
 	</router-link>

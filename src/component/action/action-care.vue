@@ -1,9 +1,9 @@
 
 <template>
-	<i18n-t tag="div" keypath="fight.leek_win_x" :a="props.a">
-		<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
+	<i18n-t tag="div" keypath="fight.leek_win_x" :a="a">
+		<leek slot="leek" :leek="leeks[action.params[1]]" />
 		<template v-slot:value>
-			<b class="color-life">{{ $t('fight.n_life', [props.action.params[2]]) }}</b>
+			<b class="color-life">{{ $t('fight.n_life', [action.params[2]]) }}</b>
 		</template>
 	</i18n-t>
 </template>
@@ -17,5 +17,6 @@
 	export default class ActionCare extends Vue {
 		@Prop() action!: Action
 		@Prop() a!: number
+		@Prop() leeks!: {[key: number]: Leek}
 	}
 </script>

@@ -1,19 +1,19 @@
 
 <template>
-	<i18n-t tag="div" keypath="fight.open_chest" :a="props.a">
-		<leek slot="entity" :leek="parent.leeks[props.action.params[1]]" />
-		<leek slot="chest" :leek="parent.leeks[props.action.params[2]]" />
+	<i18n-t tag="div" keypath="fight.open_chest" :a="a">
+		<leek slot="entity" :leek="leeks[action.params[1]]" />
+		<leek slot="chest" :leek="leeks[action.params[2]]" />
 		<template v-slot:resources>
 			<br>
-			<v-tooltip v-for="(quantity, resource) of props.action.params[3]" :key="resource">
+			<v-tooltip v-for="(quantity, resource) of action.params[3]" :key="resource">
 				<template v-slot:activator="{ props }">
 					<span class="res" v-bind="props">
 						<b>{{ quantity }}</b>
-						<img v-if="parent.LeekWars.items[resource]" :src="'/image/' + parent.ITEM_CATEGORY_NAME[parent.LeekWars.items[resource].type] + '/' + parent.LeekWars.items[resource].name.replace('potion_', '') + '.png'">
+						<img v-if="LeekWars.items[resource]" :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[resource].type] + '/' + LeekWars.items[resource].name.replace('potion_', '') + '.png'">
 						<span v-else>{{ resource }}</span>
 					</span>
 				</template>
-				{{ quantity }}x <b v-if="parent.LeekWars.items[resource]">{{ $t(parent.ITEM_CATEGORY_NAME[parent.LeekWars.items[resource].type] + '.' + parent.LeekWars.items[resource].name.replace('potion_', '')) }}</b>
+				{{ quantity }}x <b v-if="LeekWars.items[resource]">{{ $t(ITEM_CATEGORY_NAME[LeekWars.items[resource].type] + '.' + LeekWars.items[resource].name.replace('potion_', '')) }}</b>
 			</v-tooltip>
 
 			<!-- <span v-for="(resource, i) in props.action.params[3]" :key="i">{{ resource }}, </span> -->

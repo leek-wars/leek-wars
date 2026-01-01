@@ -1,12 +1,12 @@
 
 <template>
-	<i18n-t keypath="fight.leek_win_x_turns" tag="div" :a="props.a">
-		<leek slot="leek" :leek="props.leek" />
+	<i18n-t keypath="fight.leek_win_x_turns" tag="div" :a="a">
+		<leek slot="leek" :leek="leek" />
 		<template v-slot:value>
-			<b class="color-science">{{ parent.$t('fight.n_science', [props.value]) }}</b>
+			<b class="color-science">{{ $t('fight.n_science', [value]) }}</b>
 		</template>
 		<template v-slot:turns>
-			<b>{{ parent.formatTurns(props.turns) }}</b>
+			<b>{{ LeekWars.formatTurns(turns) }}</b>
 		</template>
 	</i18n-t>
 </template>

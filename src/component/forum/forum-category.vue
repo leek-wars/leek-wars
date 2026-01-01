@@ -74,13 +74,15 @@
 							</span>
 							<div class="description grey">
 								<i18n-t keypath="by_x_the_d">
-									<router-link v-if="topic.author.name!=''" slot="farmer" :to="'/farmer/' + topic.author.id">
-										<rich-tooltip-farmer :id="topic.author.id">
-											{{ topic.author.name }}
-										</rich-tooltip-farmer>
-									</router-link>
-									<span v-else slot="farmer" class="farmer deleted">{{ $t('main.farmer') }}@{{ topic.author.id }}</span>
-									<span slot="date">{{ topic.date | date }}</span>
+									<template #farmer>
+										<router-link v-if="topic.author.name!=''" :to="'/farmer/' + topic.author.id">
+											<rich-tooltip-farmer :id="topic.author.id">
+												{{ topic.author.name }}
+											</rich-tooltip-farmer>
+										</router-link>
+										<span v-else class="farmer deleted">{{ $t('main.farmer') }}@{{ topic.author.id }}</span>
+									</template>
+									<template #date>{{ $filters.date(topic.date) }}</template>
 								</i18n-t>
 								<div v-if="topic.votes_up !== 0 || topic.votes_down !== 0" class="votes">
 									<div :class="{zero: topic.votes_up === 0}" class="vote up">
@@ -110,13 +112,15 @@
 							<div>
 								<span>{{ LeekWars.formatDuration(topic.last_message_date) }}</span>
 								<i18n-t tag="div" keypath="last_by_x">
-									<router-link slot="author" :to="'/forum/category-' + topic.category + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id">
-										<rich-tooltip-farmer v-if="topic.last_message_writer!=''" :id="topic.last_message_writer_id">
-											{{ topic.last_message_writer }}
-										</rich-tooltip-farmer>
-										<span v-else class="farmer deleted">{{ $t('main.farmer') }}@{{ topic.last_message_writer_id }} </span>
-										►
-									</router-link>
+									<template #author>
+										<router-link :to="'/forum/category-' + topic.category + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id">
+											<rich-tooltip-farmer v-if="topic.last_message_writer!=''" :id="topic.last_message_writer_id">
+												{{ topic.last_message_writer }}
+											</rich-tooltip-farmer>
+											<span v-else class="farmer deleted">{{ $t('main.farmer') }}@{{ topic.last_message_writer_id }} </span>
+											►
+										</router-link>
+									</template>
 								</i18n-t>
 							</div>
 						</div>
@@ -141,8 +145,12 @@
 		</div>
 
 		<popup v-model="createDialog" :width="800">
-			<v-icon slot="icon">mdi-comment-edit</v-icon>
-			<span slot="title">{{ $t('create_topic') }}</span>
+			<template #icon>
+				<v-icon>mdi-comment-edit</v-icon>
+			</template>
+			<template #title>
+				{{ $t('create_topic') }}
+			</template>
 			<div class="create-popup">
 				<h3>{{ $t('new_topic_title') }}</h3>
 				<input v-model="createTitle" @keyup="updateDraftTitle" class="topic-name card" type="text">
@@ -159,9 +167,10 @@
 			</template>
 		</popup>
 
-		<popup v-model="markAsReadDialog" :width="500">
-			<v-icon slot="icon">mdi-email-open</v-icon>
-			<span slot="title">{{ $t('mark_as_read') }}</span>
+		<popup v-model="markAsReadDialog" :width="500" :title="$t('mark_as_read')">
+			<template #icon>
+				<v-icon>mdi-email-open</v-icon>
+			</template>
 			{{ $t('mark_as_read_text') }}
 			<template #actions>
 				<div v-ripple class="action" @click="markAsReadDialog = false">{{ $t('cancel') }}</div>
@@ -178,9 +187,11 @@
 	import { Language, LeekWars } from '@/model/leekwars'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from './breadcrumb.vue'
-	const FormattingRules = () => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum-formatting-rules.${locale}.i18n`)
+	const FormattingRules = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum-formatting-rules.${locale}.i18n`))
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import Pagination from '@/component/pagination.vue'
+import { defineAsyncComponent } from 'vue'
+import { emitter } from '@/model/vue'
 
 	@Options({ name: 'forum_category', i18n: {}, mixins: [...mixins], components: { Breadcrumb, FormattingRules, RichTooltipFarmer, Pagination } })
 	export default class ForumCategoryPage extends Vue {

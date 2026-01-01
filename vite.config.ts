@@ -77,13 +77,7 @@ export default defineConfig({
 		}),
 		i18nPlugin(),
 		yamlPlugin(),
-		vue({
-			template: {
-				compilerOptions: {
-					
-				}
-			}
-		}),
+		vue(),
 		vuetify({
 			autoImport: true
 		})

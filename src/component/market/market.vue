@@ -415,10 +415,10 @@
 		back() {
 			this.$router.back()
 		}
-		beforeDestroy() {
+		beforeUnmount() {
 			if (this.request) { this.request.abort() }
 		}
-		destroyed() {
+		unmounted() {
 			emitter.off('back', this.back)
 		}
 

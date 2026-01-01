@@ -69,7 +69,7 @@
 									<template v-if="options.farmer === ''">{{ result.fname }}</template>
 									<span v-else><b>{{ result.fname }}</b></span>
 								</router-link>
-								<span slot="date" class="dark">{{ result.date | date }}</span>
+								<span slot="date" class="dark">{{ $filters.date(result.date) }}</span>
 								<router-link slot="topic" :to="'/forum/category-' + result.cid">
 									{{ $i18n.t('forum-category.' + result.cname) }}
 								</router-link>
