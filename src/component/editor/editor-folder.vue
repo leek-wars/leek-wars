@@ -15,9 +15,9 @@
 				<span v-if="folder.todos" class="count todo">{{ folder.todos }}</span>
 			</div>
 			<div v-if="folder.expanded" :class="{dragging: dragging}" class="content">
-				<template v-for="(item, i) in folder.items">
-					<editor-folder v-if="item.folder" :key="i" :folder="item" :level="level + 1" />
-					<editor-ai v-else :key="i" :item="item" :level="level" />
+				<template v-for="(item, i) in folder.items" :key="i">
+					<editor-folder v-if="item.folder" :folder="item" :level="level + 1" />
+					<editor-ai v-else :item="item" :level="level" />
 				</template>
 			</div>
 		</div>

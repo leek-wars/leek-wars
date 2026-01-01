@@ -17,10 +17,11 @@
 </template>
 
 <script lang="ts">
-	const ChatElement = () => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`)
+	const ChatElement = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
 	import { ChatType, ChatWindow } from '@/model/chat'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
+	import { defineAsyncComponent } from 'vue'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
 
 	@Options({

@@ -1,7 +1,11 @@
 <template>
-	<popup :value="value" :width="700" @input="$emit('input', $event)">
-		<v-icon slot="icon">mdi-new-box</v-icon>
-		<span v-if="levelData && leek" slot="title" v-html="$t('title', [leek.name, levelData.level])"></span>
+	<popup :width="700">
+		<template #icon>
+			<v-icon>mdi-new-box</v-icon>
+		</template>
+		<template #title>
+			<span v-if="levelData && leek" v-html="$t('title', [leek.name, levelData.level])"></span>
+		</template>
 
 		<div v-if="levelData && leek" class="level-popup">
 			<div v-if="leek.level == 301">
@@ -96,11 +100,10 @@
 
 	@Options({ name: 'level-dialog', i18n: {}, mixins: [...mixins] })
 	export default class LevelDialog extends Vue {
-		@Prop({required: true}) value!: boolean
 		@Prop({required: true}) leek!: Leek
 		@Prop({required: true}) levelData!: any
 
-		@Watch('value')
+		@Watch('modelValue')
 		close() {
 			LeekWars.post('leek/set-popup-level-seen', {leek_id: this.leek.id})
 		}

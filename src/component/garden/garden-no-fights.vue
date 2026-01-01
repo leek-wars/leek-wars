@@ -4,7 +4,7 @@
 		<h4 class="next">{{ $t('no_more_fights') }}</h4>
 		<i18n-t v-if="canbuy" class="next" tag="div" keypath="next_fight_in">
 			<b slot="fights">{{ 50 }}</b>
-			<b slot="time">{{ remainingTime | timeseconds }}</b>
+			<b slot="time">{{ $filters.timeseconds($remainingTime) }}</b>
 		</i18n-t>
 		<i18n-t v-if="canbuy" class="buy" tag="div" keypath="buy_fights">
 			<span slot="hab" class="hab"></span>

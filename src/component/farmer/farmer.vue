@@ -188,16 +188,18 @@
 					<div v-if="farmer" class="godfather grey">
 						<div v-if="farmer.godfather">
 							<i18n-t keypath="godson_of" tag="div">
-								<router-link slot="farmer" :to="'/farmer/' + farmer.godfather.id">
-									<rich-tooltip-farmer :id="farmer.godfather.id" v-slot="{ props }">
-										<span v-bind="props">{{ farmer.godfather.name }}</span>
-									</rich-tooltip-farmer>
-								</router-link>
+								<template #farmer>
+									<router-link :to="'/farmer/' + farmer.godfather.id">
+										<rich-tooltip-farmer :id="farmer.godfather.id" v-slot="{ props }">
+											<span v-bind="props">{{ farmer.godfather.name }}</span>
+										</rich-tooltip-farmer>
+									</router-link>
+								</template>
 							</i18n-t>
 						</div>
 						<div v-if="farmer.godsons.length">
 							<i18n-t keypath="godfather_of" tag="div">
-								<span slot="farmers">
+								<template #farmers>
 									<template v-for="(godson, i) in farmer.godsons" :key="i">
 										<router-link :to="'/farmer/' + godson.id">
 											<rich-tooltip-farmer :id="godson.id" v-slot="{ props }">
@@ -206,7 +208,7 @@
 										</router-link>
 										<span v-if="i < farmer.godsons.length - 1" :key="i + '_'">, </span>
 									</template>
-								</span>
+								</template>
 							</i18n-t>
 						</div>
 					</div>
@@ -298,7 +300,7 @@
 										{{ trophy.description }}
 									</div>
 									<i18n-t tag="span" class="trophy-date" keypath="main.unlocked_the">
-										<span slot="date">{{ trophy.date | date }}</span>
+										<span slot="date">{{ $filters.date(trophy.date) }}</span>
 									</i18n-t>
 								</span>
 							</v-tooltip>
@@ -355,16 +357,18 @@
 						<div v-if="farmer" class="column grey">
 							<div v-if="farmer.godfather">
 								<i18n-t keypath="godson_of" tag="div">
-									<router-link slot="farmer" :to="'/farmer/' + farmer.godfather.id">
-										<rich-tooltip-farmer :id="farmer.godfather.id" v-slot="{ props }">
-											<span v-bind="props">{{ farmer.godfather.name }}</span>
-										</rich-tooltip-farmer>
-									</router-link>
+									<template #farmer>
+										<router-link :to="'/farmer/' + farmer.godfather.id">
+											<rich-tooltip-farmer :id="farmer.godfather.id" v-slot="{ props }">
+												<span v-bind="props">{{ farmer.godfather.name }}</span>
+											</rich-tooltip-farmer>
+										</router-link>
+									</template>
 								</i18n-t>
 							</div>
 							<div v-if="farmer.godsons.length">
 								<i18n-t keypath="godfather_of" tag="div">
-									<span slot="farmers">
+									<template #farmers>
 										<template v-for="(godson, i) in farmer.godsons" :key="i">
 											<router-link :to="'/farmer/' + godson.id">
 												<rich-tooltip-farmer :id="godson.id" v-slot="{ props }">
@@ -373,7 +377,7 @@
 											</router-link>
 											<span v-if="i < farmer.godsons.length - 1" :key="i + '_'">, </span>
 										</template>
-									</span>
+									</template>
 								</i18n-t>
 							</div>
 						</div>
@@ -424,12 +428,16 @@
 						<span>{{ $t('history') }}</span>
 					</router-link>
 				</template>
-				<loader v-if="!farmer" />
-				<fights-history v-else slot="content" :fights="farmer.fight_history" />
+				<template #content>
+					<loader v-if="!farmer" />
+					<fights-history v-else :fights="farmer.fight_history" />
+				</template>
 			</panel>
 			<panel v-if="!farmer || farmer.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-trophy">
-				<loader v-if="!farmer" />
-				<tournaments-history v-else slot="content" :tournaments="farmer.tournaments" />
+				<template #content>
+					<loader v-if="!farmer" />
+					<tournaments-history v-else :tournaments="farmer.tournaments" />
+				</template>
 			</panel>
 		</div>
 
@@ -442,9 +450,9 @@
 					<div class="message"><i>{{ warning.message }}</i></div>
 					<i18n-t v-if="$store.getters.moderator" class="date" keypath="warning.given_by_x_the_d">
 						<router-link slot="farmer" :to="'/farmer/' + warning.author_id">{{ warning.author_name }}</router-link>
-						<span slot="date">{{ warning.date | date }}</span>
+						<span slot="date">{{ $filters.date(warning.date) }}</span>
 					</i18n-t>
-					<div v-else class="date">{{ warning.date | date }}</div>
+					<div v-else class="date">{{ $filters.date(warning.date) }}</div>
 				</div>
 			</div>
 		</panel>
@@ -480,18 +488,14 @@
 			</template>
 		</popup>
 
-		<popup v-if="farmer" v-model="godfatherDialog" :width="600">
-			<v-icon slot="icon">mdi-hat-fedora</v-icon>
-			<span slot="title">{{ $t('godfather_link') }}</span>
+		<popup v-if="farmer" v-model="godfatherDialog" :width="600" icon="mdi-hat-fedora" :title="$t('godfather_link')">
 			{{ $t('godfather_link_description') }} :
 			<br>
 			<br>
 			<div ref="godfatherLink" class="godfather-url">leekwars.com/godfather/{{ farmer.login }}</div>
 		</popup>
 
-		<popup v-if="farmer" v-model="countryDialog" :width="1000">
-			<v-icon slot="icon">mdi-earth</v-icon>
-			<span slot="title">{{ $t('country_selection') }}</span>
+		<popup v-if="farmer" v-model="countryDialog" :width="1000" icon="mdi-earth" :title="$t('country_selection')">
 			<div class="country-dialog">
 				<div class="country" code="null" @click="selectCountry('null')">
 					<flag :clickable="false" />
@@ -506,9 +510,7 @@
 
 		<report-dialog v-if="farmer" v-model="reportDialog" :target="farmer" :reasons="reasons" />
 
-		<popup v-if="farmer" v-model="websiteDialog" :width="500">
-			<v-icon slot="icon">mdi-web</v-icon>
-			<span slot="title">{{ $t('add_website') }}</span>
+		<popup v-if="farmer" v-model="websiteDialog" :width="500" icon="mdi-web" :title="$t('add_website')">
 			<div class="website-dialog">
 				<input v-model="newWebsite" type="text" class="input">
 			</div>
@@ -518,9 +520,10 @@
 			</template>
 		</popup>
 
-		<popup v-if="farmer" v-model="githubDialog" :width="500">
-			<img slot="icon" src="/image/github_white.png">
-			<span slot="title">{{ $t('add_github') }}</span>
+		<popup v-if="farmer" v-model="githubDialog" :width="500" :title="$t('add_github')">
+			<template #icon>
+				<img src="/image/github_white.png">
+			</template>
 			<div class="github-dialog">
 				<input v-model="newGitHub" type="text" class="input">
 			</div>

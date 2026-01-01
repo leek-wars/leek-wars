@@ -224,7 +224,7 @@
 				LeekWars.setSubTitle(this.$t('main.x_habs', [LeekWars.formatNumber(this.$store.state.farmer.habs)]) + " • " + this.$t('main.x_crystals', [LeekWars.formatNumber(this.$store.state.farmer.crystals)]))
 			}
 		}
-		beforeDestroy() {
+		beforeUnmount() {
 			emitter.off('resize', this.resize)
 		}
 

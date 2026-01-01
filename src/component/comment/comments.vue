@@ -15,7 +15,7 @@
 						</rich-tooltip-farmer>
 					</div>
 					<div v-emojis class="text" v-text="comment.comment"></div>
-					<div class="date">{{ comment.date | date }}</div>
+					<div class="date">{{ $filters.date(comment.date) }}</div>
 				</div>
 			</div>
 		</div>

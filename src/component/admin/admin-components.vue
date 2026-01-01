@@ -30,16 +30,13 @@
 </template>
 
 <script lang="ts">
+
 import { ITEM_CATEGORY_NAME } from '@/model/item'
 import { LeekWars } from '@/model/leekwars'
 import { Options, Vue, Watch } from 'vue-property-decorator'
-import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
-import { SchemeTemplate } from '@/model/scheme'
-import { OptionsTemplate } from '@/model/component'
 import ItemView from '../item.vue'
-const RichTooltipItem = () => import('@/component/rich-tooltip/rich-tooltip-item.vue')
 
-@Options({ components: { RichTooltipFarmer, RichTooltipItem, item: ItemView } })
+@Options({ components: { item: ItemView } })
 export default class AdminComponents extends Vue {
 	ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
 	data: any = null
@@ -63,7 +60,7 @@ export default class AdminComponents extends Vue {
 	mounted() {
 		LeekWars.large = true
 	}
-	beforeDestroy() {
+	beforeUnmount() {
 		LeekWars.large = false
 	}
 

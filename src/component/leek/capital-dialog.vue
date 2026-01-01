@@ -1,16 +1,18 @@
 <template>
-	<popup :value="value" :width="800" @input="$emit('input', $event)">
-		<v-icon slot="icon">mdi-star-outline</v-icon>
-		<span slot="title">{{ $t('main.add_capital_title') }} ({{ totalCapital }})</span>
+	<popup :width="800" @update:modelValue="updateValue">
+		<template #icon>
+			<v-icon>mdi-star-outline</v-icon>
+		</template>
+		<template #title>
+			{{ $t('main.add_capital_title') }} ({{ totalCapital }})
+		</template>
 
 		<div class="center"><div v-if="totalCapital" :class="{zero: capital == 0}" class="capital rounded4">{{ $t('main.n_capital', [capital]) }}</div></div>
 
 		<div class="characteristics">
 			<div v-for="c in LeekWars.characteristics" :key="c" class="charac" :class="c">
-				<characteristic-tooltip v-slot="{ props }" :characteristic="c" :value="leek[c]" :total="leek[c]" :leek="leek" :test="false">
-					<template v-bind="props">
-						<img :src="'/image/charac/' + c + '.png'" v-bind="props">
-					</template>
+				<characteristic-tooltip  :characteristic="c" :value="leek[c]" :total="leek[c]" :leek="leek" :test="false">
+					<img :src="'/image/charac/' + c + '.png'">
 				</characteristic-tooltip>
 				<div>
 					<span v-if="restat" :class="'stat color-' + c">{{ base[c] + bonuses[c] }}</span>
@@ -55,7 +57,6 @@
 
 	@Options({ name: 'capital-dialog', components: { "characteristic-tooltip": CharacteristicTooltip } })
 	export default class CapitalDialog extends Vue {
-		@Prop() value!: boolean
 		@Prop({required: true}) leek!: Leek
 		@Prop({required: true}) totalCapital!: number
 		@Prop() restat!: boolean
@@ -231,7 +232,6 @@
 			})
 		}
 
-		@Watch('value')
 		updateValue() {
 			if (!this.value) {
 				this.close()

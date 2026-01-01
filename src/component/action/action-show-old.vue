@@ -1,9 +1,9 @@
 
 <template>
-	<i18n-t tag="div" keypath="fight.leek_show_cell" :a="props.a">
-		<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
+	<i18n-t tag="div" keypath="fight.leek_show_cell" :a="a">
+		<leek slot="leek" :leek="leeks[action.params[1]]" />
 		<template v-slot:cell>
-			<b>{{ props.action.params[2] }}</b>
+			<b>{{ action.params[2] }}</b>
 		</template>
 	</i18n-t>
 </template>

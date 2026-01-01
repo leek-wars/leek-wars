@@ -234,7 +234,7 @@
 		back() {
 			this.$router.push('/help/documentation')
 		}
-		beforeDestroy() {
+		beforeUnmount() {
 			LeekWars.large = false
 			LeekWars.footer = true
 			LeekWars.box = false

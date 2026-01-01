@@ -1,8 +1,8 @@
 <template>
-	<i18n-t keypath="fight.leek_take_weapon" tag="div" :a="props.a">
-		<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
+	<i18n-t keypath="fight.leek_take_weapon" tag="div" :a="a">
+		<leek slot="leek" :leek="leeks[action.params[1]]" />
 		<template v-slot:weapon>
-			<b>{{ parent.$t('weapon.' + parent.LeekWars.weapons[props.action.params[2]].name) }}</b>
+			<b>{{ $t('weapon.' + LeekWars.weapons[action.params[2]].name) }}</b>
 		</template>
 	</i18n-t>
 </template>

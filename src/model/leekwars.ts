@@ -20,6 +20,7 @@ import { SCHEMES } from './schemes'
 import { COMPONENTS } from './components'
 import { WEAPONS } from './weapons'
 import { BossSquads } from './boss-squads'
+import { nextTick, reactive } from 'vue'
 
 const DEV = window.location.port === '8080'
 const LOCAL = window.location.port === '8500' || window.location.port === '5100'
@@ -249,7 +250,7 @@ const invdate = new Date(LOCAL_DATE.toLocaleString('en-US', {
 }))
 const DATE = new Date(invdate.getTime())
 
-const LeekWars = {
+const LeekWars = reactive({
 	version: packageJson.version,
 	normal_version: packageJson.version.replace(/\.\d+$/, ''),
 	smart_version: packageJson.version.replace(/\.0$/, ''),
@@ -434,6 +435,9 @@ const LeekWars = {
 		const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
 		if (!result) { return [0, 0, 0] }
 		return [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)]
+	},
+	formatTurns(turns: number) {
+		return turns === -1 ? '∞' : turns
 	},
 	protect(string: any) {
 		return ('' + string).replace(/&/g, "&amp;")
@@ -677,7 +681,10 @@ const LeekWars = {
 			umami.track(event)
 		}
 	},
-	didactitial: false, didactitial_step: 0, didactitial_visible: false, show_didactitiel: () => {
+	didactitial: false,
+	didactitial_step: 0,
+	didactitial_visible: false,
+	show_didactitiel: () => {
 		LeekWars.didactitial = true
 		LeekWars.didactitial_step = 1
 		nextTick(() => {
@@ -796,7 +803,7 @@ const LeekWars = {
 		// 	LeekWars.completionsProvider.dispose()
 		// }
 	}
-}
+})
 
 function setTitle(title: string | TranslateResult | null, subtitle: string | TranslateResult | null = null) {
 	if (LeekWars.sfw) {

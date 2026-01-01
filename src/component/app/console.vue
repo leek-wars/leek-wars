@@ -128,7 +128,7 @@
 			})
 		}
 
-		beforeDestroy() {
+		beforeUnmount() {
 			emitter.off('console')
 			emitter.off('console-error')
 			emitter.off('console-log')

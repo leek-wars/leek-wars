@@ -466,119 +466,8 @@ ul, ol {
 	background-position: center;
 	background-size: contain;
 }
-.popup {
-	display: none;
-	width: 700px;
-	box-shadow: 0px 0px 50px #111;
-	transition: height ease 0.3s;
-	margin-bottom: 50px;
-	text-align: left;
-}
-.popup.draggable {
-	position: fixed;
-	z-index: 600;
-	top: 0;
-	left: 0;
-}
-.v-dialog > .v-overlay__content > .title {
-	background: #2a2a2a;
-	color: #eee;
-	padding: 0 10px;
-	padding-top: 6px;
-	padding-bottom: 4px;
-	height: 40px;
-	font-size: 20px;
-	line-height: 28px;
-	text-align: left;
-	border-top-left-radius: 2px;
-	border-top-right-radius: 2px;
-	display: flex;
-	.main {
-		flex: 1;
-	}
-	.options {
-		display: flex;
-		float: right;
-		cursor: pointer;
-		margin-top: -6px;
-		margin-bottom: -4px;
-		margin-right: -10px;
-		.option {
-			background: black;
-			height: 40px;
-			width: 40px;
-			padding: 7px;
-			i {
-				font-size: 26px;
-				vertical-align: baseline;
-			}
-		}
-	}
-}
-.v-dialog .title .options .option:hover {
-	background: #888;
-}
-.v-dialog .title .options .option img {
-	width: 26px;
-	height: 26px;
-}
-.v-dialog.draggable .title {
-	cursor: move;
-}
-.v-dialog > .v-overlay__content > .content {
-	background: rgba(240,240,240, 0.95);
-	padding: 15px;
-	max-height: calc(100vh - 104px);
-	overflow-y: auto;
-	overflow-x: hidden;
-}
-body.dark .v-dialog > .content {
-	background: rgba(15,15,15, 0.95);
-}
 .v-dialog:not(.v-dialog--fullscreen) {
 	max-height: 100%;
-}
-.v-dialog.no-actions .content {
-	border-bottom-left-radius: 3px;
-	border-bottom-right-radius: 3px;
-}
-.v-dialog > .actions {
-	height: 40px;
-	display: flex;
-}
-.v-dialog > .actions div {
-	cursor: pointer;
-	display: inline-flex;
-	justify-content: center;
-	align-items: center;
-	background: #555;
-	color: #eee;
-	width: 100%;
-	height: 40px;
-	text-align: center;
-	line-height: 40px;
-	font-size: 20px;
-}
-.v-dialog > .actions div i {
-	margin-right: 4px;
-}
-.v-dialog > .actions div:not(:last-child) {
-	border-right: 1px solid #777;
-}
-.v-dialog > .actions div:hover {
-	background: #777;
-}
-.v-dialog > .actions div.red {
-	background: #c00;
-}
-.v-dialog > .actions div.red:hover {
-	background: #e00;
-}
-.v-dialog > .actions div.green {
-	background: #5fad1b;
-}
-.v-dialog > .actions div.green:hover {
-	background: #73d120;
 }
 input {
 	font-family: "Roboto";
@@ -1153,4 +1042,23 @@ a.green-link {
 }
 .v-select input {
 	background: transparent;
+}
+
+// Reduce height of switches and inputs (Vue 3 migration)
+.v-input--switch,
+.v-input--density-default {
+	--v-input-control-height: 24px;
+}
+.v-selection-control--density-default {
+	--v-selection-control-size: 24px;
+}
+
+// Force green primary color for switches (Vue 3 migration)
+.v-switch .v-switch__track {
+	background-color: #5fad1b !important;
+	opacity: 0.5;
+}
+.v-switch .v-selection-control--dirty .v-switch__track {
+	background-color: #5fad1b !important;
+	opacity: 1;
 }

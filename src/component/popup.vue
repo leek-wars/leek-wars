@@ -4,7 +4,7 @@
 			<div class="title">
 				<slot name="icon"></slot>
 				<div class="main">
-					<slot name="title"></slot>
+					<slot name="title">{{ title }}</slot>
 				</div>
 				<div class="options">
 					<div class="option" @click="close">
@@ -27,6 +27,7 @@
 	@Options({ name: "popup" })
 	export default class Popup extends Vue {
 		@Prop() modelValue!: boolean
+		@Prop() icon!: string
 		@Prop() title!: string
 		@Prop() width!: number
 		@Prop() full!: boolean
@@ -55,23 +56,137 @@
 </script>
 
 <style lang="scss" scoped>
-	.title ::v-deep .v-icon {
-		margin-right: 5px;
-		margin-bottom: 2px;
+
+.popup {
+	display: none;
+	width: 700px;
+	box-shadow: 0px 0px 50px #111;
+	transition: height ease 0.3s;
+	margin-bottom: 50px;
+	text-align: left;
+}
+.popup.draggable {
+	position: fixed;
+	z-index: 600;
+	top: 0;
+	left: 0;
+}
+.title {
+	background: #2a2a2a;
+	color: #eee;
+	padding: 0 10px;
+	padding-top: 6px;
+	padding-bottom: 4px;
+	height: 40px;
+	font-size: 20px;
+	line-height: 28px;
+	text-align: left;
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	display: flex;
+	.main {
+		flex: 1;
+	}
+	.options {
+		display: flex;
+		float: right;
+		cursor: pointer;
+		margin-top: -6px;
+		margin-bottom: -4px;
+		margin-right: -10px;
+		.option {
+			background: black;
+			height: 40px;
+			width: 40px;
+			padding: 7px;
+			i {
+				font-size: 26px;
+				vertical-align: baseline;
+			}
+		}
+	}
+}
+.title .options .option:hover {
+	background: #888;
+}
+.title .options .option img {
+	width: 26px;
+	height: 26px;
+}
+.draggable .title {
+	cursor: move;
+}
+.content {
+	background: rgba(240,240,240, 0.95);
+	padding: 15px;
+	max-height: calc(100vh - 104px);
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+body.dark .content {
+	background: rgba(15,15,15, 0.95);
+}
+.v-dialog.no-actions .content {
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
+}
+.actions {
+	height: 40px;
+	display: flex;
+	&:deep(div) {
+		cursor: pointer;
+		display: inline-flex;
+		justify-content: center;
+		align-items: center;
+		background: #555;
 		color: #eee;
+		width: 100%;
+		height: 40px;
+		text-align: center;
+		line-height: 40px;
+		font-size: 20px;
+		i {
+			margin-right: 4px;
+		}
+		&:not(:last-child) {
+			border-right: 1px solid #777;
+		}
+		&:hover {
+			background: #777;
+		}
+		&.red {
+			background: #c00;
+		}
+		&.red:hover {
+			background: #e00;
+		}
+		&.green {
+			background: #5fad1b;
+		}
+		&.green:hover {
+			background: #73d120;
+		}
 	}
-	.title ::v-deep img {
-		width: 24px;
-		height: 24px;
-		margin-right: 5px;
-		align-self: center;
-		margin-bottom: 2px;
-		opacity: 0.9;
-	}
-	.content.full {
-		padding: 0;
-	}
-	.actions ::v-deep > * {
-		user-select: none;
-	}
+}
+
+.title:deep(.v-icon) {
+	margin-right: 5px;
+	margin-bottom: 2px;
+	color: #eee;
+}
+.title:deep(img) {
+	width: 24px;
+	height: 24px;
+	margin-right: 5px;
+	align-self: center;
+	margin-bottom: 2px;
+	opacity: 0.9;
+}
+.content.full {
+	padding: 0;
+}
+.actions:deep(> *) {
+	user-select: none;
+}
+
 </style>

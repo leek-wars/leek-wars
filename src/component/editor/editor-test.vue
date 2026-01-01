@@ -3,11 +3,12 @@
 		<v-icon slot="icon">mdi-play</v-icon>
 		<span slot="title">{{ $t('run_test') }}</span>
 		<v-tabs :key="value" v-model="currentTab" class="tabs" grow>
-			<v-tabs-slider class="indicator" />
-			<v-tab class="tab">{{ $t('scenarios') }} ({{ LeekWars.objectSize(scenarios) }})</v-tab>
-			<v-tab class="tab">{{ $t('test_leeks') }} ({{ LeekWars.objectSize(leeks) }})</v-tab>
-			<v-tab class="tab">{{ $t('test_maps') }} ({{ LeekWars.objectSize(maps) }})</v-tab>
-			<v-tab-item class="tab-content">
+			<v-tab class="tab" value="scenarios">{{ $t('scenarios') }} ({{ LeekWars.objectSize(scenarios) }})</v-tab>
+			<v-tab class="tab" value="leeks">{{ $t('test_leeks') }} ({{ LeekWars.objectSize(leeks) }})</v-tab>
+			<v-tab class="tab" value="maps">{{ $t('test_maps') }} ({{ LeekWars.objectSize(maps) }})</v-tab>
+		</v-tabs>
+		<v-window v-model="currentTab" class="tabs-content">
+			<v-window-item class="tab-content" value="scenarios">
 				<div class="column lateral-column">
 					<h4>{{ $t('test_scenario') }}</h4>
 					<div class="items scenarios">
@@ -87,8 +88,8 @@
 						<input v-model="currentScenario.seed" type="text" class="seed" :placeholder="$t('main.seed_placeholder')" @keyup.stop @input="updateSeed">
 					</div>
 				</div>
-			</v-tab-item>
-			<v-tab-item class="tab-content">
+			</v-window-item>
+			<v-window-item class="tab-content" value="leeks">
 				<div class="column lateral-column">
 					<h4>{{ $t('test_leeks') }}</h4>
 					<div class="items leeks">
@@ -144,8 +145,8 @@
 						</div>
 					</div>
 				</div>
-			</v-tab-item>
-			<v-tab-item class="tab-content">
+			</v-window-item>
+			<v-window-item class="tab-content" value="maps">
 				<div class="column lateral-column">
 					<h4>{{ $t('test_maps') }}</h4>
 					<div class="items maps">
@@ -174,8 +175,8 @@
 						<div class="instruction">✔ {{ $t('map_click_right') }}</div>
 					</div>
 				</div>
-			</v-tab-item>
-		</v-tabs>
+			</v-window-item>
+		</v-window>
 		<template #actions>
 			<div v-ripple @click="$emit('input', false)">
 				<v-icon>mdi-close</v-icon>
@@ -185,7 +186,7 @@
 				<v-icon>mdi-play</v-icon>
 				<span>{{ $t('test_validate') }}</span>
 			</div>
-		</div>
+		</template>
 
 		<popup v-model="newScenarioDialog" :width="800">
 			<v-icon slot="icon">mdi-plus-circle-outline</v-icon>
@@ -219,7 +220,7 @@
 			<template #actions>
 				<div v-ripple @click="newScenarioDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="green" @click="createScenario">{{ $t('main.create') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-model="newLeekDialog" :width="500">
@@ -231,7 +232,7 @@
 			<template #actions>
 				<div v-ripple @click="newLeekDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="green" @click="createLeek">{{ $t('main.create') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-model="changeLeekNameDialog" :width="500">
@@ -243,7 +244,7 @@
 			<template #actions>
 				<div v-ripple @click="changeLeekNameDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="green" @click="changeLeekName">{{ $t('main.save') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-model="newMapDialog" :width="500">
@@ -255,7 +256,7 @@
 			<template #actions>
 				<div @click="newMapDialog = false">{{ $t('main.cancel') }}</div>
 				<div class="green" @click="createMap">{{ $t('main.create') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-model="mapDialog" :width="870">
@@ -327,7 +328,7 @@
 
 <script lang="ts">
 	import { locale } from '@/locale'
-	const Explorer = () => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`)
+	const Explorer = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`))
 	import CharacteristicTooltip from '@/component/leek/characteristic-tooltip.vue'
 	import { AI } from '@/model/ai'
 	import { ChipTemplate } from '@/model/chip'
@@ -344,6 +345,8 @@
 	import { CHIPS } from '@/model/chips'
 	import { ORDERED_CHIPS } from "@/model/sorted_chips"
 	import Map from "@/component/app/map.vue"
+import { emitter } from '@/model/vue'
+import { defineAsyncComponent } from 'vue'
 
 	class TestScenarioLeek {
 		id!: number
@@ -414,7 +417,7 @@
 		map_add = false
 		timeout: number | null = null
 		fileSystem = fileSystem
-		currentTab: number = 0
+		currentTab: string = 'scenarios'
 		MAX_WEAPONS: number = 4
 
 		domingo = {
@@ -639,7 +642,7 @@
 			emitter.on('keyup', this.keyup)
 		}
 
-		beforeDestroy() {
+		beforeUnmount() {
 			emitter.off('keyup', this.keyup)
 		}
 
@@ -902,7 +905,7 @@
 					team2,
 					map: null,
 					type: template.type
-				})
+				}
 				const scenario = this.scenarios[data.id]
 				this.updateScenario(scenario, { type: template.type })
 				for (const leek of team1) {
@@ -1275,9 +1278,6 @@
 <style lang="scss" scoped>
 	h4 {
 		display: inline-block;
-	}
-	.indicator {
-		background: #5fad1b;
 	}
 	.v-dialog .content {
 		padding: 0;

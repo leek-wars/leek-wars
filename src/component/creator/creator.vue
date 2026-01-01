@@ -143,7 +143,7 @@ import { FightMap } from '@/model/fight'
 import { mixins } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { Options, Vue } from 'vue-property-decorator'
-const Player = () => import(/* webpackChunkName: "[request]" */ `@/component/player/player.${locale}.i18n`)
+const Player = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/player/player.${locale}.i18n`))
 import { Game, WEAPONS } from '@/component/player/game/game'
 import { Obstacle } from '@/component/player/game/obstacle'
 import { GROUNDS, GroundTexture, OBSTACLES, ObstacleInfo } from '@/component/player/game/ground'
@@ -204,7 +204,7 @@ export default class Creator extends Vue {
 		LeekWars.footer = false
 	}
 
-	destroyed() {
+	unmounted() {
 		LeekWars.large = false
 		LeekWars.footer = true
 	}

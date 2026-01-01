@@ -167,6 +167,7 @@
 	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import ConsoleWindow from './console-window.vue'
 	import { defineAsyncComponent, nextTick } from 'vue'
+import { emitter } from '@/model/vue'
 	const ChangelogDialog = defineAsyncComponent(() => import('../changelog/changelog-dialog.vue'))
 	const Didactitiel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`))
 	const Documentation = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`))
@@ -199,7 +200,6 @@
 		}
 
 		created() {
-			/*
 			emitter.on('connected', () => {
 				if (!this.$store.state.farmer.didactitiel_seen) {
 					LeekWars.show_didactitiel()
@@ -208,11 +208,9 @@
 					})
 				}
 			})
-				*/
 			if (this.$store.state.connected && localStorage.getItem('changelog_version') !== LeekWars.normal_version) {
 				this.changelogShow()
 			}
-			/*
 			emitter.on('keyup', (event: KeyboardEvent) => {
 				if (event.keyCode === 72 && event.altKey && event.ctrlKey) {
 					this.docEverywhere = true
@@ -241,7 +239,6 @@
 			emitter.on('navigate', () => {
 				this.docEverywhereModel = false
 			})
-			*/
 
 			// if (this.$store.state.connected && !localStorage.getItem('annonce/boss-poll')) {
 			// 	this.annonce = true

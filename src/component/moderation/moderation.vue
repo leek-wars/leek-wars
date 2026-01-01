@@ -55,8 +55,8 @@
 								<router-link :to="'/farmer/' + selectedFault.target.id">
 									<div class="name">{{ selectedFault.target.name }}</div>
 								</router-link>
-								<div class="info"><v-icon>mdi-account-plus</v-icon> Inscrit le <b>{{ selectedFault.target.register_time | date }}</b></div>
-								<div class="info"><v-icon>mdi-power</v-icon> Connecté <b>{{ selectedFault.target.last_time | duration }}</b></div>
+								<div class="info"><v-icon>mdi-account-plus</v-icon> Inscrit le <b>{{ $filters.date(selectedFault.target.register_time) }}</b></div>
+								<div class="info"><v-icon>mdi-power</v-icon> Connecté <b>{{ $filters.duration(selectedFault.target.last_time) }}</b></div>
 								<div class="info"><v-icon>mdi-sword</v-icon> Niveau total : {{ selectedFault.target.total_level }}</div>
 								<div class="info"><img src="/image/icon/black/trophy.png"> {{ selectedFault.target.trophies }} trophées</div>
 								<div v-if="selectedFault.target.messages" class="info">

@@ -83,6 +83,30 @@
 		i {
 			margin-right: 7px;
 		}
+		h2 {
+			color: #eee;
+			font-size: 18px;
+			display: inline-flex;
+			align-items: center;
+			height: 36px;
+			line-height: 36px;
+			padding: 0 12px;
+			position: relative;
+			white-space: nowrap;
+			border-top-left-radius: 3px;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			flex: 1;
+			&:deep(a, a:visited) {
+				color: white;
+				font-weight: bold;
+				vertical-align: top;
+			}
+			&:deep(img) {
+				height: 25px;
+				margin-right: 8px;
+			}
+		}
 	}
 	#app.app .panel > .header {
 		border-radius: 0;
@@ -90,30 +114,7 @@
 	.panel.first > .header {
 		border-top-left-radius: 0px;
 	}
-	.panel > .header h2 {
-		color: #eee;
-		font-size: 18px;
-		display: inline-flex;
-		align-items: center;
-		height: 36px;
-		line-height: 36px;
-		padding: 0 12px;
-		position: relative;
-		white-space: nowrap;
-		border-top-left-radius: 3px;
-		text-overflow: ellipsis;
-		overflow: hidden;
-		flex: 1;
-	}
-	.panel > .header h2 a, .panel > .header h2 a:visited {
-		color: white;
-		font-weight: bold;
-		vertical-align: top;
-	}
-	.panel > .header h2 img {
-		height: 25px;
-		margin-right: 8px;
-	}
+	
 	.panel.first > .header h2 {
 		border-top-left-radius: 0px;
 	}

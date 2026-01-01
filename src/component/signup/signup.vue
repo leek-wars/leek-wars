@@ -301,7 +301,7 @@
 
 		<h1>{{ $t('last_update') }}</h1>
 		<panel v-if="last_version" icon="mdi-star-outline">
-			<template #title>{{ $t('changelog.version_n', [last_version.version_name]) }} ({{ last_version.date | date }}) {{ translations[last_version.version] && translations[last_version.version].title ? ' — ' + translations[last_version.version].title : '' }}</template>
+			<template #title>{{ $t('changelog.version_n', [last_version.version_name]) }} ({{ $filters.date(last_version.date) }}) {{ translations[last_version.version] && translations[last_version.version].title ? ' — ' + translations[last_version.version].title : '' }}</template>
 			<div slot="content">
 				<changelog-version :version="last_version" />
 			</div>
@@ -325,9 +325,10 @@
 	import { i18n, loadComponentLanguage, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/vue'
+	import { defineAsyncComponent } from 'vue'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
-	const SignupCarousel = () => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup-carousel.${locale}.i18n`)
+	const SignupCarousel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup-carousel.${locale}.i18n`))
 	const RichTooltipLeek = () => import('@/component/rich-tooltip/rich-tooltip-leek.vue')
 	const RichTooltipFarmer = () => import('@/component/rich-tooltip/rich-tooltip-farmer.vue')
 	const RichTooltipTeam = () => import('@/component/rich-tooltip/rich-tooltip-team.vue')
@@ -422,8 +423,8 @@ import { emitter } from '@/model/vue'
 				this.leek_ranking = data.leeks
 				this.team_ranking = data.teams
 			})
-			import(/* webpackChunkName: "changelog-[request]" */ `json-loader!yaml-loader!@/component/changelog/changelog.${this.$i18n.locale}.yaml`).then((translations) => {
-				this.translations = translations
+			import(/* webpackChunkName: "changelog-[request]" */ `@/component/changelog/changelog.${this.$i18n.locale}.yaml`).then((module) => {
+				this.translations = module.default
 			})
 			LeekWars.get('changelog/get/' + this.$i18n.locale).then(data => {
 				this.last_version = data.changelog[0]

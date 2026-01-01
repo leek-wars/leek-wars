@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<div v-if="fight">
 				<h1>{{ fight.title }}</h1>
-				<div class="info">{{ fight.date | date }}</div>
+				<div class="info">{{ $filters.date(fight.date) }}</div>
 			</div>
 			<div class="tabs">
 				<div v-if="fight_id === 'local'" class="tab" @click="reload">
@@ -237,7 +237,7 @@ import { emitter } from '@/model/vue'
 			})
 		}
 
-		destroyed() {
+		unmounted() {
 			LeekWars.flex = false
 			LeekWars.lightBar = false
 			emitter.off('resize', this.resize)

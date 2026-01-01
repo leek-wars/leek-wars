@@ -28,7 +28,7 @@
 		</panel>
 		<template v-else>
 			<panel v-for="version in lazy_changelog" :key="version.version" icon="mdi-star">
-				<template #title>{{ $t('changelog.version_n', [version.version_name]) }} ({{ version.date | date }}) {{ translations[version.version] && translations[version.version].title ? ' — ' + translations[version.version].title : '' }}</template>
+				<template #title>{{ $t('changelog.version_n', [version.version_name]) }} ({{ $filters.date(version.date) }}) {{ translations[version.version] && translations[version.version].title ? ' — ' + translations[version.version].title : '' }}</template>
 				<template #actions>
 					<div class="button flat" @click="showChangelogDialog(version)">
 						<v-icon>mdi-eye-outline</v-icon>
@@ -52,6 +52,7 @@
 	import { Options, Vue } from 'vue-property-decorator'
 	import ChangelogDialog from './changelog-dialog.vue'
 	import ChangelogVersion from './changelog-version.vue'
+import { emitter } from '@/model/vue'
 
 	@Options({ name: 'changelog', i18n: {}, components: { ChangelogVersion, ChangelogDialog } })
 	export default class Changelog extends Vue {
@@ -81,11 +82,11 @@
 			})
 			window.addEventListener('scroll', this.scroll)
 
-			import(/* webpackChunkName: "changelog-[request]" */ `json-loader!yaml-loader!@/component/changelog/changelog.${this.$i18n.locale}.yaml`).then((translations) => {
-				this.translations = translations
+			import(/* webpackChunkName: "changelog-[request]" */ `@/component/changelog/changelog.${this.$i18n.locale}.yaml`).then((module) => {
+				this.translations = module.default
 			})
 		}
-		destroyed() {
+		unmounted() {
 			window.removeEventListener('scroll', this.scroll)
 		}
 		showChangelogDialog(version: any) {

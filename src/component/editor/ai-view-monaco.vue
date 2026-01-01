@@ -192,7 +192,7 @@ export default class AIViewMonaco extends Vue {
 		})
 	}
 
-	beforeDestroy() {
+	beforeUnmount() {
 		this.scrollListener.dispose()
 		if (this.editor) {
 			this.editor.dispose()

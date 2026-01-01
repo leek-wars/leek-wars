@@ -107,7 +107,7 @@ Max power: {{ $filters.number(tournament.max_power) }}</pre>
 			emitter.on('tooltip-close', this.tooltipClose)
 		}
 
-		beforeDestroy() {
+		beforeUnmount() {
 			clearTimeout(this.timer)
 			LeekWars.large = false
 			emitter.off('tooltip', this.tooltipOpen)

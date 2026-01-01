@@ -14,7 +14,7 @@
 				</span>
 			</div>
 		</div>
-		<v-menu ref="menu" :key="currentI" v-model="menu" :activator="activator" offset-y @input="menuChange">
+		<v-menu ref="menu" :key="currentI" v-model="menuOpened" :activator="activator" offset-y @input="menuChange">
 			<v-list class="menu" :dense="true">
 				<v-list-item v-ripple @click="close(tabs[currentI])">
 					<v-icon>mdi-close-box-outline</v-icon>
@@ -44,6 +44,7 @@
 	import { mixins } from '@/model/i18n'
 	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { fileSystem } from '@/model/filesystem'
+	import { nextTick } from 'vue'
 
 	class Tab {
 		public id!: number
@@ -63,7 +64,7 @@
 		fileSystem = fileSystem
 		loaded: boolean = false
 		tabs: number[] = []
-		menu: boolean = false
+		menuOpened: boolean = false
 		activator: any = null
 		currentI: number = 0
 		currentAI: AI | null = null
@@ -132,9 +133,9 @@
 		openMenu(i: number) {
 			this.currentI = i
 			this.currentAI = fileSystem.ais[this.tabs[i]]
-			this.$nextTick(() => {
+			nextTick(() => {
 				this.activator = (this.$refs.tabs as Vue[])[i]
-				this.$nextTick(() => {
+				nextTick(() => {
 					this.menu = true
 				})
 			})

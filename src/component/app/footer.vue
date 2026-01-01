@@ -91,8 +91,9 @@
 <script lang="ts">
 	import { locale } from '@/locale'
 	import { LeekWars } from '@/model/leekwars'
+	import { defineAsyncComponent } from 'vue'
 	import { Options, Vue } from 'vue-property-decorator'
-	const Didactitiel = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`)
+	const Didactitiel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`))
 
 	@Options({ name: 'lw-footer', components: { Didactitiel } })
 	export default class Footer extends Vue {

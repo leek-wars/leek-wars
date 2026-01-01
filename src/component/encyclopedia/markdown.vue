@@ -7,7 +7,7 @@
 	import { CHIP_BY_NAME } from '@/model/sorted_chips'
 	import { vueMain, vuetify } from '@/model/vue'
 	import markdown from 'markdown-it'
-	import sanitizeHtml from 'sanitize-html'
+	import DOMPurify from 'dompurify'
 	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import LineOfSight from '../line-of-sight/line-of-sight.vue'
 	import ItemPreview from '../market/item-preview.vue'
@@ -19,7 +19,7 @@
 	import { store } from '@/model/store'
 	import { i18n } from '@/model/i18n'
 	import LeekImage from '../leek-image.vue'
-import { nextTick } from 'vue'
+	import { nextTick } from 'vue'
 
 	@Options({ name: 'markdown' })
 	export default class Markdown extends Vue {
@@ -48,28 +48,27 @@ import { nextTick } from 'vue'
 		update() {
 
 			const re = /^((https:\/\/leekwars\.com)?\/image\/|https:\/\/(i\.)?imgur\.com\/|https:\/\/(i\.)?ibb.co\/)/
-			const options = {
-				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img', 'center' ]),
-				allowedAttributes: { '*': ['style', 'class', 'width', 'height', 'href', 'src', 'colspan', 'rowspan', 'alt', 'correct'] },
-				exclusiveFilter: function(frame: any) {
-					return frame.tag === 'img' && !re.test(frame.attribs.src)
-				},
-				// allowedStyles: {
-				// 	'*': {
-				// 		'padding': [/^.*$/],
-				// 		'margin': [/^.*$/],
-				// 		'color': [/^.*$/],
-				// 		'background': [/^.*$/],
-				// 		'border': [/^.*$/],
-				// 		'text-align': [/^.*$/],
-				// 		'font-size': [/^.*$/],
-				// 		'font-weight': [/^.*$/],
-				// 		'width': [/^.*$/],
-				// 		'height': [/^.*$/],
-				// 	}
-				// }
-			}
-			this.html = this.links(sanitizeHtml(this.markdown.render(this.content), options))
+
+			// Configure DOMPurify
+			DOMPurify.addHook('uponSanitizeElement', (node, data) => {
+				// Filter images with invalid src
+				if (data.tagName === 'img' && node instanceof Element) {
+					const src = node.getAttribute('src')
+					if (src && !re.test(src)) {
+						node.remove()
+					}
+				}
+			})
+
+			const sanitized = DOMPurify.sanitize(this.markdown.render(this.content), {
+				ADD_TAGS: ['img', 'center'],
+				ADD_ATTR: ['style', 'class', 'width', 'height', 'href', 'src', 'colspan', 'rowspan', 'alt', 'correct'],
+				ALLOW_UNKNOWN_PROTOCOLS: false,
+			})
+
+			DOMPurify.removeHook('uponSanitizeElement')
+
+			this.html = this.links(sanitized)
 
 			this.summary = {children: []}
 			const stack = [this.summary] as any[]

@@ -144,7 +144,7 @@
 			<template #actions>
 				<div v-ripple @click="renameDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="green" @click="rename()">{{ $t('rename') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-model="deleteDialog" :width="500">
@@ -155,7 +155,7 @@
 			<template #actions>
 				<div v-ripple @click="deleteDialog = false">{{ $t('delete_cancel') }}</div>
 				<div v-ripple class="red" @click="deleteItem">{{ $t('delete_validate') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-model="destroyDialog" :width="500">
@@ -165,7 +165,7 @@
 			<template #actions>
 				<div v-ripple @click="destroyDialog = false">{{ $t('delete_cancel') }}</div>
 				<div v-ripple class="red" @click="destroyAI">{{ $t('destroy_validate') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-model="emptyDialog" :width="500">
@@ -175,7 +175,7 @@
 			<template #actions>
 				<div v-ripple @click="emptyDialog = false">{{ $t('delete_cancel') }}</div>
 				<div v-ripple class="red" @click="emptyBin">{{ $t('empty_bin') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-model="newAIDialog" :width="500">
@@ -187,7 +187,7 @@
 			<template #actions>
 				<div v-ripple @click="newAIDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="green" @click="newAI(false, newAIName)">{{ $t('main.create') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-model="newFolderDialog" :width="500">
@@ -199,7 +199,7 @@
 			<template #actions>
 				<div v-ripple @click="newFolderDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="green" @click="newFolder(newFolderName)">{{ $t('main.create') }}</div>
-			</div>
+			</template>
 		</popup>
 	</div>
 </template>
@@ -213,6 +213,7 @@
 	import EditorFolder from './editor-folder.vue'
 	import { Folder } from './editor-item'
 	import { explorer } from './explorer'
+import { emitter } from '@/model/vue'
 
 	@Options({ name: 'editor-explorer', i18n: {}, mixins: [...mixins], components: { 'editor-folder': EditorFolder } })
 	export default class Explorer extends Vue {
@@ -240,7 +241,7 @@
 			emitter.on('editor-menu', this.openMenu)
 			emitter.on('keyup', this.keyup)
 		}
-		destroyed() {
+		unmounted() {
 			emitter.off('editor-menu', this.openMenu)
 			emitter.off('keyup', this.keyup)
 		}

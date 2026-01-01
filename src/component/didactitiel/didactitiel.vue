@@ -1,7 +1,8 @@
 <template>
-	<popup :value="value" :width="800" :full="true" persistent @input="input">
-		<v-icon slot="icon">mdi-human-greeting</v-icon>
-		<span slot="title">{{ $t("title") }}</span>
+	<popup :modelValue="modelValue" :width="800" :full="true" :title="$t('title')" persistent @update:model-value="input">
+		<template #icon>
+			<v-icon slot="icon">mdi-human-greeting</v-icon>
+		</template>
 
 		<div ref="content" :style="{height: height + 'px'}" class="content">
 			<div ref="page1" :class="getClass(1)" class="page">
@@ -128,7 +129,7 @@
 
 	@Options({ name: 'didactitiel', i18n: {}, mixins: [...mixins] })
 	export default class Didactitiel extends Vue {
-		@Prop() value!: boolean
+		@Prop() modelValue!: boolean
 		page: number = 1
 		height: number = 280
 

@@ -124,7 +124,7 @@ import { emitter } from '@/model/vue'
 			emitter.on('wsmessage', this.update)
 		}
 
-		beforeDestroy() {
+		beforeUnmount() {
 			emitter.off('wsmessage', this.update)
 		}
 

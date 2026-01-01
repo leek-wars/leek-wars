@@ -40,8 +40,8 @@
 
 		@Watch('$i18n.locale')
 		update() {
-import(/* webpackChunkName: "changelog-[request]" */ `json-loader!yaml-loader!@/component/changelog/changelog.${this.$i18n.locale}.yaml`).then((changelog) => {
-				this.changelog = changelog
+import(/* webpackChunkName: "changelog-[request]" */ `@/component/changelog/changelog.${this.$i18n.locale}.yaml`).then((module) => {
+				this.changelog = module.default
 			})
 		}
 

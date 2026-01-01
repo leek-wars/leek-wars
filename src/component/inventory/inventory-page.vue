@@ -87,7 +87,7 @@
 			LeekWars.box = true
 		}
 
-		beforeDestroy() {
+		beforeUnmount() {
 			LeekWars.footer = true
 			LeekWars.box = false
 		}

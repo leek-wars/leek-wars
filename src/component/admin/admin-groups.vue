@@ -35,7 +35,7 @@
 						</router-link>
 					</template>
 					<template v-slot:item.creation_date="{ item }">
-						{{ item.creation_date | date }}
+						{{ $filters.date(item.creation_date) }}
 					</template>
 					<template v-slot:item.archived="{ item }">
 						<v-checkbox v-model="item.archived" :hide-details="true" />

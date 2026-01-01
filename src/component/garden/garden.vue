@@ -374,9 +374,11 @@
 	import GardenFarmer from './garden-farmer.vue'
 	import GardenLeek from './garden-leek.vue'
 	import { BOSSES, Boss } from '@/model/boss'
-	const GardenNoFights = () => import(/* webpackChunkName: "[request]" */ `@/component/garden/garden-no-fights.${locale}.i18n`)
+	const GardenNoFights = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/garden/garden-no-fights.${locale}.i18n`))
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+	import { defineAsyncComponent } from 'vue'
+import { emitter } from '@/model/vue'
 
 	@Options({
 		name: 'garden', i18n: {}, mixins: [...mixins],
@@ -432,7 +434,7 @@
 				}
 				this.update()
 			})
-			/*
+			
 			emitter.on('back', this.back)
 			LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_REGISTER])
 			emitter.on('garden-queue', (data: number) => this.queue = data)
@@ -442,13 +444,12 @@
 					this.compositions_by_id[message.composition].talent += message.talent
 				}
 			})
-			*/
 		}
 		created() {
 			if (store.state.wsconnected) {
 				this.updateWS()
 			} else {
-				// emitter.on('wsconnected', this.updateWS)
+				emitter.on('wsconnected', this.updateWS)
 			}
 		}
 		back() {
@@ -459,7 +460,7 @@
 			}
 			localStorage.removeItem('garden/category')
 		}
-		beforeDestroy() {
+		beforeUnmount() {
 			emitter.off('back')
 			if (this.request) { this.request.abort() }
 			LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_UNREGISTER])

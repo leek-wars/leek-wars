@@ -221,7 +221,7 @@ import { emitter } from '@/model/vue'
 			this.updateScroll()
 		}
 
-		beforeDestroy() {
+		beforeUnmount() {
 			emitter.off('chat', this.newMessage)
 			emitter.off('chat-history', this.chatHistory)
 			emitter.off('resize', this.updateScroll)

@@ -156,7 +156,7 @@
 			LeekWars.footer = false
 			LeekWars.box = true
 		}
-		destroyed() {
+		unmounted() {
 			LeekWars.footer = true
 			LeekWars.box = false
 		}
