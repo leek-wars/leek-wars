@@ -87,13 +87,13 @@ export default class AIViewMonaco extends Vue {
 			// console.log('scroll', this.ai.id, e.scrollTop, e.scrollHeight, e.scrollWidth)
 			localStorage.setItem('editor/scroll/' + this.ai.id, '' + e.scrollTop)
 		})
-		this.editor.onDidFocusEditorWidget((e) => {
-			// Verify the correct model is active when focusing
-			if (this.ai && this.ai.model && this.editor.getModel() !== this.ai.model) {
-				this.editor.setModel(this.ai.model)
-			}
-			this.$emit('focus')
-		})
+		// this.editor.onDidFocusEditorWidget((e) => {
+		// 	// Verify the correct model is active when focusing
+		// 	if (this.ai && this.ai.model && this.editor.getModel() !== this.ai.model) {
+		// 		this.editor.setModel(this.ai.model)
+		// 	}
+		// 	this.$emit('focus')
+		// })
 		this.editor.onKeyUp((e) => {
 			if (e.code === 'Delete') {
 				e.stopPropagation()
@@ -234,20 +234,20 @@ export default class AIViewMonaco extends Vue {
 			this.editor.setModel(model)
 			this.currentVersionId = model.getAlternativeVersionId()
 
-			// this.setAnalyzerTimeout()
-			// this.editor.focus()
+			this.setAnalyzerTimeout()
+			this.editor.focus()
 
-			// nextTick(() => {
-			// 	if (this.jumpToLine) {
-			// 		nextTick(() => {
-			// 			this.scrollToLine(loadedAI, this.jumpToLine!, this.jumpToColumn!)
-			// 		})
-			// 	} else {
-			// 		const scrollPosition = parseInt(localStorage.getItem('editor/scroll/' + this.ai.id) || '0')
-			// 		// console.log("scroll to", scrollPosition)
-			// 		this.editor.setScrollTop(scrollPosition)
-			// 	}
-			// })
+			nextTick(() => {
+				if (this.jumpToLine) {
+					nextTick(() => {
+						this.scrollToLine(loadedAI, this.jumpToLine!, this.jumpToColumn!)
+					})
+				} else {
+					const scrollPosition = parseInt(localStorage.getItem('editor/scroll/' + this.ai.id) || '0')
+					// console.log("scroll to", scrollPosition)
+					this.editor.setScrollTop(scrollPosition)
+				}
+			})
 		})
 	}
 
@@ -276,7 +276,7 @@ export default class AIViewMonaco extends Vue {
 			this.ai.analyze()
 
 			// DISABLE AUTO ANALYZE
-			if (true) return;
+			// if (true) return;
 
 			analyzer.analyze(this.ai, this.ai.code).then((result) => {
 				// console.log("analyze", result)

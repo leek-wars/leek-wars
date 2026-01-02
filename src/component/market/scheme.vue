@@ -1,6 +1,6 @@
 <template lang="html">
 	<div class="scheme">
-		<div v-if="showResult" v-ripple class="group result" @click="possible && $root.$emit('craft', scheme)">
+		<div v-if="showResult" v-ripple class="group result" @click="possible && emitter.emit('craft', scheme)">
 			<rich-tooltip-item v-slot="{ props }" :item="result" :bottom="true" :inventory="true" @input="$emit('input', $event)">
 				<div class="item" v-bind="props" :quantity="1" :class="{['rarity-border-' + result.rarity]: true, 'missing': !possible}">
 					<img :src="'/image/' + ITEM_CATEGORY_NAME[result.type] + '/' + result.name.replace('hat_', '').replace('potion_', '') + '.png'" :type="result.type">

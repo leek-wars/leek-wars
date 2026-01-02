@@ -69,6 +69,12 @@ const vuetify = createVuetify({
 		VTooltip: {
 			location: 'bottom',
 		},
+		VList: {
+			density: 'compact'
+		},
+		VListItem: {
+			density: 'compact'
+		},
 	},
 })
 
@@ -260,9 +266,6 @@ app.use(i18n)
 app.use(store)
 app.use(vuetify)
 
-
-// Vue.prototype.LeekWars = LeekWars
-// Vue.prototype.env = env
 app.mixin({
 	data() {
 		return { LeekWars }
