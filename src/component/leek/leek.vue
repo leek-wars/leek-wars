@@ -191,11 +191,11 @@
 						<loader v-if="!leek" />
 						<div v-else-if="leek.weapons.length === 0" class="empty">{{ $t('no_weapons') }}</div>
 						<template v-else>
-							<rich-tooltip-item v-for="weapon in orderedWeapons" :key="weapon.id" v-slot="{ props }" :item="LeekWars.items[weapon.template]" :bottom="true" :leek="leek">
-								<div class="weapon" v-bind="props">
-									<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" @click="setWeapon(weapon.template)" :width="WeaponsData[LeekWars.items[weapon.template].params].width">
-								</div>
-							</rich-tooltip-item>
+							<div class="weapon" v-for="weapon in orderedWeapons" :key="weapon.id">
+								<rich-tooltip-item  v-slot="{ props }" :item="LeekWars.items[weapon.template]" :bottom="true" :leek="leek">
+									<img v-bind="props" :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" @click="setWeapon(weapon.template)" :width="WeaponsData[LeekWars.items[weapon.template].params].width">
+								</rich-tooltip-item>
+							</div>
 						</template>
 					</div>
 				</template>
@@ -697,8 +697,7 @@
 			</div>
 		</popup>
 
-		<popup v-if="leek && my_leek" v-model="chipsDialog" :width="816">
-			<v-icon slot="icon">mdi-chip</v-icon>
+		<popup v-if="leek && my_leek" v-model="chipsDialog" :width="816" icon="mdi-chip">
 			<template #title>{{ $t('chips_of', [leek.name]) }} <span class="chip-count">[{{ leek.chips.length }}/{{ leek.total_ram }}]</span></template>
 			<div class="chips-dialog">
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'farmer'}" class="leek-chips" @dragover="dragOver" @drop="chipsDrop('leek', $event)">

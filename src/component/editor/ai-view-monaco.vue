@@ -25,12 +25,14 @@ import { fileSystem } from '@/model/filesystem'
 import './monaco'
 import { AI } from '@/model/ai'
 import { analyzer, AnalyzerPromise } from './analyzer'
-import { vueMain, vuetify } from '@/model/vue'
+import { dochash, vueMain, vuetify } from '@/model/vue'
 import DocumentationConstant from '../documentation/documentation-constant.vue'
 import DocumentationFunction from '../documentation/documentation-function.vue'
 import Javadoc from './javadoc.vue'
 import { FUNCTIONS } from '@/model/functions';
 import { CONSTANTS } from '@/model/constants';
+import { createApp, nextTick } from 'vue';
+import { create } from 'domain';
 
 @Options({ name: 'ai-view-monaco', components: {
 
@@ -140,7 +142,9 @@ export default class AIViewMonaco extends Vue {
 				// console.log("suggestion", docs.innerText)
 				const symbol = fileSystem.symbols[docs.innerText]
 				if (symbol) {
-					const doc = new Javadoc({ propsData: { javadoc: symbol.javadoc, keyword: symbol }, parent: vueMain }).$mount(element)
+					const doc = createApp(Javadoc, { javadoc: symbol.javadoc, keyword: symbol })
+						.directive('dochash', dochash)
+						.mount(element)
 					setTimeout(() => {
 						suggestionWidget.value._details._placeAtAnchor(suggestionWidget.value._details._anchorBox, { width: 500, height: doc.$el.clientHeight + 10 }, true)
 					})
@@ -184,7 +188,9 @@ export default class AIViewMonaco extends Vue {
 			const symbol = fileSystem.symbols[firstRow.innerText]
 			if (symbol) {
 				firstRow.style.display = 'none'
-				const doc = new Javadoc({ propsData: { javadoc: symbol.javadoc, keyword: symbol }, parent: vueMain }).$mount(element)
+				const doc = createApp(Javadoc, { javadoc: symbol.javadoc, keyword: symbol })
+					.directive('dochash', dochash)
+					.mount(element)
 				setTimeout(() => {
 					hoverController._contentWidget.widget._resize({ width: 500, height: doc.$el.clientHeight + 80 })
 				})
@@ -228,21 +234,20 @@ export default class AIViewMonaco extends Vue {
 			this.editor.setModel(model)
 			this.currentVersionId = model.getAlternativeVersionId()
 
-			this.setAnalyzerTimeout()
-			this.editor.focus()
+			// this.setAnalyzerTimeout()
+			// this.editor.focus()
 
-			nextTick(() => {
-
-				if (this.jumpToLine) {
-					nextTick(() => {
-						this.scrollToLine(loadedAI, this.jumpToLine!, this.jumpToColumn!)
-					})
-				} else {
-					const scrollPosition = parseInt(localStorage.getItem('editor/scroll/' + this.ai.id) || '0')
-					// console.log("scroll to", scrollPosition)
-					this.editor.setScrollTop(scrollPosition)
-				}
-			})
+			// nextTick(() => {
+			// 	if (this.jumpToLine) {
+			// 		nextTick(() => {
+			// 			this.scrollToLine(loadedAI, this.jumpToLine!, this.jumpToColumn!)
+			// 		})
+			// 	} else {
+			// 		const scrollPosition = parseInt(localStorage.getItem('editor/scroll/' + this.ai.id) || '0')
+			// 		// console.log("scroll to", scrollPosition)
+			// 		this.editor.setScrollTop(scrollPosition)
+			// 	}
+			// })
 		})
 	}
 
@@ -271,7 +276,7 @@ export default class AIViewMonaco extends Vue {
 			this.ai.analyze()
 
 			// DISABLE AUTO ANALYZE
-			// if (true) return;
+			if (true) return;
 
 			analyzer.analyze(this.ai, this.ai.code).then((result) => {
 				// console.log("analyze", result)

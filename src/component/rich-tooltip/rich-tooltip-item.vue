@@ -1,5 +1,5 @@
 <template>
-	<v-menu v-model="value" :close-on-content-click="false" :min-width="280" offset-overflow :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" transition="none" :open-on-hover="!locked" :disabled="disabled" offset-y :nudge-right="nodge ? 20 : 0" @update:model-value="$emit('update:modelValue', $event)">
+	<v-menu v-model="value" :close-on-content-click="false" :min-width="280" offset-overflow :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'scale-transition'" :open-on-hover="!locked" :disabled="disabled" offset-y :nudge-right="nodge ? 20 : 0">
 		<template v-slot:activator="{ props }">
 			<span v-bind="props">
 				<slot></slot>
@@ -38,7 +38,7 @@
 			return this.instant || LeekWars.mobile ? 0 : (this.openDelay || 500)
 		}
 		get _close_delay() {
-			return 0
+			return 1
 		}
 
 		setParent(event: boolean) {

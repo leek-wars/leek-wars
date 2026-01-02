@@ -1,5 +1,5 @@
 <template lang="html">
-	<popup :value="value" :width="800" :full="true" @input="$emit('input', $event)">
+	<popup :model-value="modelValue" :width="800" :full="true">
 		<v-icon slot="icon">mdi-star</v-icon>
 		<i18n-t slot="title" keypath="changelog.version_online">
 			<b v-if="changelog" slot="version">{{ changelog.version_name }}</b>
@@ -25,7 +25,7 @@
 	@Options({ name: 'changelog-dialog', i18n: {}, components: { ChangelogVersion } })
 	export default class ChangelogDialog extends Vue {
 		@Prop({required: true}) changelog!: any
-		@Prop() value!: boolean
+		@Prop() modelValue!: boolean
 
 	}
 </script>

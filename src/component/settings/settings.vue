@@ -500,7 +500,7 @@
 
 		addError(form: string, error: string) {
 			if (!(form in this.errors)) {
-				this.$data.errors[form] = []
+				this.errors[form] = []
 			}
 			this.errors[form].push(error)
 		}

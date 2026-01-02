@@ -13,11 +13,7 @@
 							</template>
 							<v-list>
 								<router-link v-for="level of [50, 99, 150, 199, 250, 299]" :key="level" :to="getURL('level-' + level, order, country, LeekWars.rankingInactive)">
-									<v-list-item v-ripple >
-										<v-list-item-content>
-											<v-list-item-title>{{ $t('main.level_n', [level]) }}</v-list-item-title>
-										</v-list-item-content>
-									</v-list-item>
+									<v-list-item v-ripple :title="$t('main.level_n', [level])" />
 								</router-link>
 							</v-list>
 						</v-menu>
@@ -39,23 +35,19 @@
 						<router-link :to="getURL(category, order, null, LeekWars.rankingInactive)">
 							<v-list-item v-ripple>
 								<v-icon>mdi-earth</v-icon>
-								<v-list-item-content>
-									{{ $t('main.worldwide') }}
-								</v-list-item-content>
+								{{ $t('main.worldwide') }}
 							</v-list-item>
 						</router-link>
 						<router-link v-if="$store.state.farmer?.country" :to="getURL(category, order, $store.state.farmer.country, LeekWars.rankingInactive)">
 							<v-list-item v-ripple>
 								<flag :code="$store.state.farmer.country" :clickable="false" />
-								<v-list-item-content>
-									{{ $t('country.' + $store.state.farmer.country) }}
-								</v-list-item-content>
+								{{ $t('country.' + $store.state.farmer.country) }}
 							</v-list-item>
 						</router-link>
 						<router-link v-for="country in LeekWars.countries" :key="country" :to="getURL(category, order, country, LeekWars.rankingInactive)">
-							<v-list-item v-ripple >
+							<v-list-item v-ripple>
 								<flag :code="country" :clickable="false" />
-								<v-list-item-content>{{ $t(`country.${country}`) }}</v-list-item-content>
+								{{ $t(`country.${country}`) }}
 							</v-list-item>
 						</router-link>
 					</v-list>
@@ -236,9 +228,7 @@
 			</div>
 		</panel>
 
-		<popup v-model="searchDialog" :width="500">
-			<v-icon slot="icon">mdi-magnify</v-icon>
-			<span slot="title">{{ $t('search_in_ranking') }}</span>
+		<popup v-model="searchDialog" :width="500" icon="mdi-magnify" :title="$t('search_in_ranking')">
 			<input ref="search" v-model="searchQuery" :placeholder="$t('search_name')" class="query" type="text">
 			<div class="flex">
 				<v-checkbox v-model="searchLeeks" :label="$t('leeks')" hide-details />

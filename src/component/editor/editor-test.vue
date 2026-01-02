@@ -1,8 +1,6 @@
 <template>
-	<popup :value="value" :width="1060" :full="true" @input="$emit('input', $event)">
-		<v-icon slot="icon">mdi-play</v-icon>
-		<span slot="title">{{ $t('run_test') }}</span>
-		<v-tabs :key="value" v-model="currentTab" class="tabs" grow>
+	<popup :modelValue="modelValue" :width="1060" :full="true" icon="mdi-play" :title="$t('run_test')" @update:modelValue="$emit('update:modelValue', $event)">
+		<v-tabs :key="modelValue" v-model="currentTab" class="tabs" grow>
 			<v-tab class="tab" value="scenarios">{{ $t('scenarios') }} ({{ LeekWars.objectSize(scenarios) }})</v-tab>
 			<v-tab class="tab" value="leeks">{{ $t('test_leeks') }} ({{ LeekWars.objectSize(leeks) }})</v-tab>
 			<v-tab class="tab" value="maps">{{ $t('test_maps') }} ({{ LeekWars.objectSize(maps) }})</v-tab>
@@ -381,7 +379,7 @@ import { defineAsyncComponent } from 'vue'
 
 	@Options({ components: { CharacteristicTooltip, 'explorer': Explorer, RichTooltipItem, ai: AIElement, Map }, name: 'editor-test', i18n: {}, mixins: [...mixins] })
 	export default class EditorTest extends Vue {
-		@Prop() value!: boolean
+		@Prop() modelValue!: boolean
 		@Prop() ais!: {[key: number]: AI}
 		@Prop() leekAis!: {[key: number]: number}
 		@Prop({ required: true }) currentAI!: AI | null
@@ -647,14 +645,14 @@ import { defineAsyncComponent } from 'vue'
 		}
 
 		keyup(e: KeyboardEvent) {
-			if (this.value && e.key === 'Enter') {
+			if (this.modelValue && e.key === 'Enter') {
 				this.launchTest()
 			}
 		}
 
-		@Watch('value', {immediate: true})
+		@Watch('modelValue', {immediate: true})
 		update() {
-			if (this.value) {
+			if (this.modelValue) {
 				this.load()
 				this.loadCompositions()
 				this.updateAI()
@@ -835,7 +833,7 @@ import { defineAsyncComponent } from 'vue'
 			LeekWars.delete('test-map/delete', {id: map.id})
 				.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 
-			delete this.$data.maps[map.id]
+			delete this.maps[map.id]
 			// Delete from scenarios
 			for (const s in this.scenarios) {
 				if (this.scenarios[s].map === map.id) { this.scenarios[s].map = null }
@@ -1537,9 +1535,6 @@ import { defineAsyncComponent } from 'vue'
 		position: absolute;
 		right: 7px;
 		top: 8px;
-	}
-	.leek-column {
-		width: 820px;
 	}
 	#app.app .leek-column {
 		width: auto;

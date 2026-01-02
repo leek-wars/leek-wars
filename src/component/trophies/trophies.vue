@@ -14,19 +14,19 @@
 					<v-list :dense="true" class="version-menu">
 						<v-list-item v-ripple @click="sort_by = 'index'">
 							<v-icon class="list-icon">mdi-sort-variant</v-icon>
-							<v-list-item-content>{{ $t('sort_index') }}</v-list-item-content>
+							{{ $t('sort_index') }}
 						</v-list-item>
 						<v-list-item v-ripple @click="sort_by = 'rarity'">
 							<v-icon class="list-icon">mdi-star-outline</v-icon>
-							<v-list-item-content>{{ $t('sort_rarity') }}</v-list-item-content>
+							{{ $t('sort_rarity') }}
 						</v-list-item>
 						<v-list-item v-ripple @click="sort_by = 'points'">
 							<v-icon class="list-icon">mdi-trophy-outline</v-icon>
-							<v-list-item-content>{{ $t('sort_points') }}</v-list-item-content>
+							{{ $t('sort_points') }}
 						</v-list-item>
 						<v-list-item v-ripple @click="sort_by = 'date'">
 							<v-icon class="list-icon">mdi-calendar</v-icon>
-							<v-list-item-content>{{ $t('sort_date') }}</v-list-item-content>
+							{{ $t('sort_date') }}
 						</v-list-item>
 					</v-list>
 				</v-menu>
@@ -81,9 +81,9 @@
 						<div>
 							<h4><v-icon>mdi-trophy-outline</v-icon> {{ $t('best_trophies') }}</h4>
 							<div class="trophies">
-								<rich-tooltip-trophy v-for="(trophy, t) in best_trophies" :key="t" v-slot="{ props }" :trophy="trophy" :bottom="true" :instant="true" @input="$emit('input', $event)">
+								<rich-tooltip-trophy v-for="(trophy, t) in best_trophies" :key="t" :trophy="trophy" :bottom="true" :instant="true" @input="$emit('input', $event)">
 									<router-link :to="'/trophy/' + trophy.code">
-										<img :src="'/image/trophy/' + trophy.code + '.svg'" class="trophy" v-bind="props">
+										<img :src="'/image/trophy/' + trophy.code + '.svg'" class="trophy">
 									</router-link>
 								</rich-tooltip-trophy>
 							</div>

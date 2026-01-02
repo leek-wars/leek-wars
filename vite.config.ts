@@ -2,6 +2,7 @@ import { defineConfig, Plugin } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vuetify from 'vite-plugin-vuetify'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
+import monacoEditorPlugin from 'vite-plugin-monaco-editor'
 import path from 'path'
 import fs from 'fs'
 import yaml from 'js-yaml'
@@ -66,20 +67,15 @@ function yamlPlugin(): Plugin {
 // https://vitejs.dev/config/
 export default defineConfig({
 	plugins: [
-		nodePolyfills({
-			// Include polyfills for Node.js modules used by sanitize-html
-			include: ['path', 'url', 'util', 'stream', 'buffer'],
-			globals: {
-				Buffer: true,
-				global: true,
-				process: true,
-			},
-		}),
 		i18nPlugin(),
 		yamlPlugin(),
 		vue(),
 		vuetify({
 			autoImport: true
+		}),
+		monacoEditorPlugin({
+			languageWorkers: ['editorWorkerService'],
+			customWorkers: []
 		})
 	],
 	resolve: {

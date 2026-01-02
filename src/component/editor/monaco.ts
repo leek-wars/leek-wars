@@ -1,5 +1,4 @@
-
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import * as monaco from 'monaco-editor'
 
 // @ts-ignore
 import leekscript from './leekscript-monarch.js'

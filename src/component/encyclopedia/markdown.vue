@@ -19,7 +19,9 @@
 	import { store } from '@/model/store'
 	import { i18n } from '@/model/i18n'
 	import LeekImage from '../leek-image.vue'
-	import { nextTick } from 'vue'
+	import { createApp, nextTick } from 'vue'
+import LWLoader from '../app/loader.vue'
+import router from '@/router'
 
 	@Options({ name: 'markdown' })
 	export default class Markdown extends Vue {
@@ -159,7 +161,7 @@
 				})
 				// Search bar
 				md.querySelectorAll('.encyclopedia-search-bar').forEach((item) => {
-					new SearchBar({ propsData: { }, parent: vueMain }).$mount(item)
+					createApp(SearchBar).use(i18n).component('loader', LWLoader).use(router).mount(item)
 				})
 				// Tutorial menu
 				md.querySelectorAll('.tutorial-menu').forEach((item) => {

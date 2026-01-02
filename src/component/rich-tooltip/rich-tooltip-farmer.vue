@@ -1,5 +1,5 @@
 <template>
-	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :nudge-width="expand_leeks ? 500 : 200" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'my-transition'" :open-on-hover="!locked" offset-y @update:model-value="open($event)">
+	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :nudge-width="expand_leeks ? 500 : 200" :nudge-top="-5" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'scale-transition'" :open-on-hover="!locked" offset-y @update:model-value="open($event)">
 		<template v-slot:activator="{ props }">
 			<span v-bind="props">
 				<slot></slot>
@@ -22,9 +22,7 @@
 							<flag v-if="farmer.country" :code="farmer.country" class="country" />
 							<lw-title v-if="farmer.title.length" :title="farmer.title" />
 							<div class="spacer"></div>
-							<v-btn v-if="!$store.state.farmer || id != $store.state.farmer.id" icon small @click="sendMessage()">
-								<v-icon>mdi-chat</v-icon>
-							</v-btn>
+							<v-btn v-if="!$store.state.farmer || id != $store.state.farmer.id" variant="text" icon="mdi-chat" small @click="sendMessage()" />
 						</span>
 						<div>
 							<router-link :to="'/trophies/' + farmer.id" class="stat">
@@ -40,10 +38,7 @@
 				<span class="talent-more">({{ farmer.talent_more >= 0 ? '+' + farmer.talent_more : farmer.talent_more }})</span>
 				<ranking-badge v-if="farmer && farmer.ranking && farmer.ranking <= 1000 && farmer.in_garden" :id="farmer.id" :ranking="farmer.ranking" category="farmer" />
 				<span class="level">• {{ $t('main.level_n', [farmer.total_level]) }}</span>
-				<v-btn class="expand" icon small @click="expand_leeks = !expand_leeks">
-					<v-icon v-if="expand_leeks">mdi-chevron-up</v-icon>
-					<v-icon v-else>mdi-chevron-down</v-icon>
-				</v-btn>
+				<v-btn class="expand" variant="text" size="x-small" @click="expand_leeks = !expand_leeks" :icon="expand_leeks ? 'mdi-chevron-up' : 'mdi-chevron-down'" />
 				<table v-if="expand_leeks" class="leeks">
 					<tr>
 						<th>{{ $t('main.name') }}</th>
@@ -96,7 +91,7 @@
 			return this.instant ? 0 : 500
 		}
 		get _close_delay() {
-			return this.instant ? 0 : 0
+			return this.instant ? 0 : 1
 		}
 		@Watch('id')
 		update() {
@@ -115,7 +110,7 @@
 						this.sums[c] = Object.values(this.farmer.leeks).reduce((sum: number, leek: any) => sum + leek['total_' + c], 0)
 					}
 					if (this.expand_leeks) {
-						(this.$refs.menu as any).onResize()
+						(this.$refs.menu as any).updateLocation()
 					}
 				})
 			}
