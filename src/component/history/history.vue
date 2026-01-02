@@ -107,7 +107,7 @@
 		start_date: number = 0
 		displayContexts = { challenge: true, garden: true, tournament: true }
 		displayTypes = { solo: true, farmer: true, team: true, battleRoyale: true, boss: true }
-		displayLoot = { chests: true, rareloot: true }
+		displayLoot = { chests: false, rareloot: false }
 		
 		get breadcrumb_items() {
 			return [
@@ -158,7 +158,7 @@
 			const period = localStorage.getItem('options/history-period') || '1week'
 			this.displayContexts = JSON.parse(localStorage.getItem('options/history-contexts') || '{"challenge": true, "garden": true, "tournament": true }')
 			this.displayTypes = JSON.parse(localStorage.getItem('options/history-types') || '{"solo": true, "farmer": true, "team": true, "battleRoyale": true, "boss": true }')
-			this.displayLoot = JSON.parse(localStorage.getItem('options/history-loot') || '{"chests":true,"rareloot":true}')
+			this.displayLoot = JSON.parse(localStorage.getItem('options/history-loot') || '{"chests":false,"rareloot":false}')
 			this.select_period(period)
 			LeekWars.get('history/get-' + this.type + '-history/' + id).then(data => {
 				this.fights = data.fights
