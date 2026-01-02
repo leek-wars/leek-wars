@@ -1,6 +1,6 @@
 <template lang="html">
 	<div>
-		<div ref="ai" :class="{modified: ai.modified, selected: ai.selected}" class="item ai" @click="click" @contextmenu.prevent.stop="$root.$emit('editor-menu', ai, true, $event)">
+		<div ref="ai" :class="{modified: ai.modified, selected: ai.selected}" class="item ai" @click="click" @contextmenu.prevent.stop="emitter.emit('editor-menu', { item: ai, ai: true, e: $event })">
 			<div :style="{'padding-left': (level * 15 + 15) + 'px'}" class="label" :class="{error: ai.errors, warning: ai.warnings}" :draggable="ai.folder !== -1" @dragstart="dragstart">
 				<v-icon v-if="ai.errors" class="icon error">mdi-close-circle</v-icon>
 				<v-icon v-else-if="ai.warnings" class="icon warning">mdi-alert-circle</v-icon>
@@ -28,11 +28,13 @@
 	import { store } from '@/model/store'
 	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import { AIItem } from './editor-item'
+	import { emitter } from '@/model/vue'
 
 	@Options({ name: 'editor-ai' })
 	export default class EditorAI extends Vue {
 		@Prop({required: true}) item!: AIItem
 		@Prop({required: true}) level!: number
+		emitter = emitter
 
 		get ai() { return this.item.ai }
 

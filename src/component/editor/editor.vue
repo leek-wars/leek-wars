@@ -7,28 +7,24 @@
 					<div ref="fileButton" class="tab first action" icon="settings">
 						<v-icon>mdi-file-outline</v-icon> {{ $t('file') }}
 					</div>
-					<v-menu v-model="fileMenu" :activator="LeekWars.mobile ? addMenuActivator : $refs.fileButton" offset-y>
+					<v-menu v-model="fileMenu" :activator="LeekWars.mobile ? fileMenuActivator : $refs.fileButton" offset-y>
 						<v-list>
-							<div v-if="currentFolder && currentFolder.id > 0" class="menu-title">
+							<v-list-subheader v-if="currentFolder && currentFolder.id > 0" class="menu-title">
 								<v-icon>mdi-folder-outline</v-icon> {{ currentFolder.name }}
-							</div>
-							<v-list-item v-if="currentFolder && currentFolder.id !== -1" v-ripple @click="$refs.explorer.openNewAI(currentFolder)">
-								<v-icon class="list-icon">mdi-file-plus-outline</v-icon>
+							</v-list-subheader>
+							<v-list-item v-if="currentFolder && currentFolder.id !== -1" v-ripple prepend-icon="mdi-file-plus-outline" @click="$refs.explorerEl.openNewAI(currentFolder)">
 								<v-list-item-title>{{ $t('new_ai') }}</v-list-item-title>
 							</v-list-item>
-							<v-list-item v-if="currentFolder && currentFolder.id !== -1" v-ripple @click="$refs.explorer.openNewFolder(currentFolder)">
-								<v-icon class="list-icon">mdi-folder-plus-outline</v-icon>
+							<v-list-item v-if="currentFolder && currentFolder.id !== -1" v-ripple prepend-icon="mdi-folder-plus-outline" @click="$refs.explorerEl.openNewFolder(currentFolder)">
 								<v-list-item-title>{{ $t('new_folder') }}</v-list-item-title>
 							</v-list-item>
-							<div v-if="currentAI" class="menu-title">
-								<v-icon>mdi-file-outline</v-icon> {{ currentAI.name }}
-							</div>
-							<v-list-item v-if="currentAI" v-ripple @click="save()">
-								<v-icon class="list-icon">mdi-content-save</v-icon>
+							<v-list-subheader v-if="currentAI" class="menu-title">
+								<v-icon>mdi-file-outline</v-icon> <span>{{ currentAI.name }}</span>
+							</v-list-subheader>
+							<v-list-item v-if="currentAI" v-ripple prepend-icon="mdi-content-save" @click="save()">
 								<v-list-item-title>{{ $t('save') }} <span class="shortcut">Ctrl + S</span></v-list-item-title>
 							</v-list-item>
-							<v-list-item v-if="currentAI" v-ripple @click="$refs.explorer.deleteAI(currentAI)">
-								<v-icon class="list-icon">mdi-delete</v-icon>
+							<v-list-item v-if="currentAI" v-ripple prepend-icon="mdi-delete" @click="$refs.explorerEl.deleteAI(currentAI)">
 								<v-list-item-title>{{ $t('delete') }}</v-list-item-title>
 							</v-list-item>
 						</v-list>
@@ -55,7 +51,7 @@
 					<template #content>
 						<div class="full">
 							<div v-if="fileSystem.rootFolder" v-autostopscroll class="ai-list">
-								<explorer ref="explorer" :current-ai="currentAI" :selected-folder="currentFolder" @test="startTest" @delete-ai="deleteAI" />
+								<explorer ref="explorerEl" :current-ai="currentAI" :selected-folder="currentFolder" @test="startTest" @delete-ai="deleteAI" />
 							</div>
 
 							<div v-if="currentEditor && currentEditor.loaded && panelWidth" class="ai-stats">
@@ -84,7 +80,7 @@
 									<v-icon>mdi-drag-vertical-variant</v-icon>
 								</div>
 
-								<!-- <ai-view-monaco v-if="splitted && currentAI2" ref="editor2" :ai="fileSystem.ais[currentAI2]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" @jump="jump" @load="load" @focus="setSide(2)" :style="{ 'width': (editor2Width * 100) + '%' }" /> -->
+								<ai-view-monaco v-if="splitted && currentAI2" ref="editor2" :ai="fileSystem.ais[currentAI2]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" @jump="jump" @load="load" @focus="setSide(2)" :style="{ 'width': (editor2Width * 100) + '%' }" />
 
 							</div>
 
@@ -342,8 +338,6 @@
 		currentFolder: Folder | null = null
 		infoDialog: boolean = false
 		settingsDialog: boolean = false
-		addMenu: boolean = false
-		addMenuActivator: any = null
 		enlargeWindow: boolean = false
 		theme: string = DEFAULT_THEME
 		autoClosing: boolean = false
@@ -361,6 +355,7 @@
 		showProblemsDetails: boolean = true
 		fileSystem = fileSystem
 		fileMenu: boolean = false
+		fileMenuActivator: any = null
 		history: AI[] = []
 		alreadyOpenedDialog: boolean = false
 		broadcast: BroadcastChannel = new BroadcastChannel('channel')
@@ -519,6 +514,17 @@
 				current = fileSystem.folderById[current.parent]
 			}
 			return false
+		}
+
+		toggleFileMenu(event?: Event) {
+			if (LeekWars.mobile && event) {
+				this.fileMenuActivator = event.target
+			} else {
+				this.fileMenuActivator = this.$refs.fileButton as HTMLElement
+			}
+			nextTick(() => {
+				this.fileMenu = !this.fileMenu
+			})
 		}
 
 		keydown(e: KeyboardEvent) {
@@ -726,7 +732,7 @@
 		}
 
 		startDelete() {
-			(this.$refs.explorer as any).deleteDialog = true
+			(this.$refs.explorerEl as any).deleteDialog = true
 		}
 		startTest(editor = this.currentEditor) {
 			if (!editor || !editor.ai) { return }
@@ -744,9 +750,9 @@
 			this.settingsDialog = true
 		}
 		add(event: any) {
-			if (!this.addMenuActivator) {
-				this.addMenu = true
-				this.addMenuActivator = event.target
+			if (!this.fileMenuActivator) {
+				this.fileMenu = true
+				this.fileMenuActivator = event.target
 			}
 		}
 		@Watch('theme') themeChange() {
@@ -1021,9 +1027,6 @@
 	.v-list__tile__content {
 		padding-left: 8px;
 	}
-	.v-menu {
-		display: none;
-	}
 	#app.app .panel {
 		margin-bottom: 0;
 	}
@@ -1267,9 +1270,11 @@
 		padding-top: 10px;
 		color: #777;
 		font-size: 13px;
+		display: flex;
+		align-items: center;
 		.v-icon {
 			font-size: 16px;
-			vertical-align: bottom;
+			margin-right: 4px;
 		}
 	}
 	.version-menu {

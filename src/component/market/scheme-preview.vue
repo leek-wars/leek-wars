@@ -2,7 +2,7 @@
 	<div class="scheme-preview">
 		<scheme ref="schemeElement" :scheme="scheme" :show-result="true" :show-price="false" @input="$emit('input', $event)" />
 
-		<v-btn class="button" :disabled="!$store.getters.scheme_possible(scheme)" @click="$root.$emit('craft', scheme)"><v-icon>mdi-hammer-wrench</v-icon> Fabriquer</v-btn>
+		<v-btn class="button" :disabled="!$store.getters.scheme_possible(scheme)" @click="emitter.emit('craft', scheme)"><v-icon>mdi-hammer-wrench</v-icon> Fabriquer</v-btn>
 	</div>
 </template>
 

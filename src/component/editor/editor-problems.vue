@@ -1,24 +1,26 @@
 <template lang="html">
 	<div class="problems-details">
 		<div v-for="(ais, entrypoint) in analyzer.problems" :key="entrypoint">
-			<div v-for="(problems, ai) in ais" v-if="problems.length && fileSystem.aiByFullPath[ai]" :key="ai">
-				<div class="file" @click="toggleProblemFile(entrypoint + ai)">
-					<v-icon>{{ problemsCollapsed[entrypoint + ai] ? 'mdi-chevron-right' : 'mdi-chevron-down' }}</v-icon>
-					<span v-if="fileSystem.aiByFullPath[ai].entrypoints.length > 1 && fileSystem.ais[entrypoint]">{{ fileSystem.ais[entrypoint].name }} {{ ' ➞ ' }}</span>
-					{{ ai }}
-					<span v-if="fileSystem.aiByFullPath[ai].errors" class="count error">{{ fileSystem.aiByFullPath[ai].errors }}</span>
-					<span v-if="fileSystem.aiByFullPath[ai].warnings" class="count warning">{{ fileSystem.aiByFullPath[ai].warnings }}</span>
-					<span v-if="fileSystem.aiByFullPath[ai].todos" class="count todo">{{ fileSystem.aiByFullPath[ai].todos }}</span>
-				</div>
-				<div v-if="!problemsCollapsed[entrypoint + ai]">
-					<div v-for="(problem, p) in problems" :key="p" class="problem" @click="jumpProblem(ai, problem)">
-						<v-icon v-if="problem.level === 0" class="error">mdi-close-circle-outline</v-icon>
-						<v-icon v-else-if="problem.level === 1" class="warning">mdi-alert-circle-outline</v-icon>
-						<v-icon v-else class="todo">mdi-format-list-checks</v-icon>
-						{{ problem.info }}
-						<span class="line">ligne {{ problem.start_line }} [{{ problem.start_column }} : {{ problem.end_column }}]</span>
+			<div v-for="(problems, ai) in ais" :key="ai">
+				<template v-if="problems.length && fileSystem.aiByFullPath[ai]">
+					<div class="file" @click="toggleProblemFile(entrypoint + ai)">
+						<v-icon>{{ problemsCollapsed[entrypoint + ai] ? 'mdi-chevron-right' : 'mdi-chevron-down' }}</v-icon>
+						<span v-if="fileSystem.aiByFullPath[ai].entrypoints.length > 1 && fileSystem.ais[entrypoint]">{{ fileSystem.ais[entrypoint].name }} {{ ' ➞ ' }}</span>
+						{{ ai }}
+						<span v-if="fileSystem.aiByFullPath[ai].errors" class="count error">{{ fileSystem.aiByFullPath[ai].errors }}</span>
+						<span v-if="fileSystem.aiByFullPath[ai].warnings" class="count warning">{{ fileSystem.aiByFullPath[ai].warnings }}</span>
+						<span v-if="fileSystem.aiByFullPath[ai].todos" class="count todo">{{ fileSystem.aiByFullPath[ai].todos }}</span>
 					</div>
-				</div>
+					<div v-if="!problemsCollapsed[entrypoint + ai]">
+						<div v-for="(problem, p) in problems" :key="p" class="problem" @click="jumpProblem(ai, problem)">
+							<v-icon v-if="problem.level === 0" class="error">mdi-close-circle-outline</v-icon>
+							<v-icon v-else-if="problem.level === 1" class="warning">mdi-alert-circle-outline</v-icon>
+							<v-icon v-else class="todo">mdi-format-list-checks</v-icon>
+							{{ problem.info }}
+							<span class="line">ligne {{ problem.start_line }} [{{ problem.start_column }} : {{ problem.end_column }}]</span>
+						</div>
+					</div>
+				</template>
 			</div>
 		</div>
 	</div>

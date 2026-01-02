@@ -1,5 +1,5 @@
 <template lang="html">
-	<div :class="{root: folder.id === 0}" @click="click" @contextmenu.prevent.stop="$root.$emit('editor-menu', folder, false, $event)">
+	<div :class="{root: folder.id === 0}" @click="click" @contextmenu.prevent.stop="emitter.emit('editor-menu', { item: folder, ai: false, e: $event })">
 		<div :class="{empty: !folder.items.length, 'dragover': dragOver > 0, expanded: folder.expanded, root: level === 0, selected: folder.selected}" :draggable="level > 0 && folder.id !== -1" class="item folder" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="drop" @dragstart="dragstart" @dragend="dragend">
 			<div v-if="folder.id != 0" :style="{'padding-left': ((level - 1) * 15 + 10) + 'px'}" class="label" :class="{error: folder.errors, warning: folder.warnings, closed: folder.closed}" @click="toggle(folder)">
 				<div class="triangle"></div>
@@ -32,6 +32,7 @@
 	import EditorAI from './editor-ai.vue'
 	import { AIItem, Folder } from './editor-item'
 	import { explorer } from './explorer'
+	import { emitter } from '@/model/vue'
 
 	@Options({ name: 'editor-folder', components: { 'editor-ai': EditorAI } })
 	export default class EditorFolder extends Vue {
@@ -39,6 +40,7 @@
 		@Prop() level!: number
 		dragOver: number = 0
 		dragging: boolean = false
+		emitter = emitter
 
 		toggle(folder: Folder) {
 			if (!folder.closed) {

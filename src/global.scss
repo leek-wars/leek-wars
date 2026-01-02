@@ -94,11 +94,9 @@
 .v-snack__content {
 	box-sizing: border-box;
 }
-.v-menu__activator, .v-menu {
-	position: static !important;
-}
 .v-menu__content {
 	background: var(--pure-white);
+	// z-index: 2000 !important;
 }
 .tab-transition-enter {
 	transform: translate(100%, 0);
@@ -130,6 +128,13 @@
 .v-list--dense {
     padding-top: 4px;
     padding-bottom: 4px;
+}
+.v-list {
+	--v-list-prepend-gap: 16px;
+	.v-list-item-title {
+		font-size: 14px;
+		font-weight: 500;
+	}
 }
 .primary {
     background-color: #5fad1b !important;
