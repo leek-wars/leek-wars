@@ -588,9 +588,10 @@ import { emitter } from '@/model/vue'
 		left: 10px;
 		z-index: 100;
 	}
-	::v-deep .v-dialog.doc {
+	::v-deep .v-overlay__content.doc {
 		height: auto;
 		display: flex;
+		flex-direction: row;
 		max-height: 80vh;
 		box-shadow: none;
 		align-self: flex-start;

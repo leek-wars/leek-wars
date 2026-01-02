@@ -1,7 +1,9 @@
 <template>
-	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :max-width="600" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'my-transition'" :open-on-hover="!locked" offset-y @input="open($event)">
+	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :max-width="600" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'scale-transition'" :open-on-hover="!locked" offset-y @update:model-value="open($event)">
 		<template v-slot:activator="{ props }">
-			<slot v-bind="props"></slot>
+			<span v-bind="props">
+				<slot></slot>
+			</span>
 		</template>
 		<div class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
 			<loader v-if="!team" :size="30" />
@@ -20,10 +22,7 @@
 							• {{ $t('main.n_farmers', [team.farmers.length]) }}
 							• {{ team.leek_count }} <img src="/image/icon/black/leek.png">
 							• {{ $t('main.level_n', [team.level]) }}</span>
-						<v-btn class="expand" icon small @click="expand = !expand">
-							<v-icon v-if="expand">mdi-chevron-up</v-icon>
-							<v-icon v-else>mdi-chevron-down</v-icon>
-						</v-btn>
+						<v-btn class="expand" variant="text" size="x-small" @click="expand = !expand" :icon="expand ? 'mdi-chevron-up' : 'mdi-chevron-down'" />
 					</div>
 				</div>
 				<div v-if="expand" class="farmers">
@@ -65,7 +64,7 @@
 			return this.instant ? 0 : 500
 		}
 		get _close_delay() {
-			return this.instant ? 0 : 0
+			return this.instant ? 0 : 1
 		}
 		@Watch('id')
 		update() {

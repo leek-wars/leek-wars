@@ -2,7 +2,9 @@
 	<v-dialog :model-value="modelValue" :max-width="width" :persistent="persistent" @update:model-value="$emit('update:modelValue', $event)">
 		<template v-if="content_created">
 			<div class="title">
-				<slot name="icon"></slot>
+				<slot name="icon">
+					<v-icon v-if="icon">{{ icon }}</v-icon>
+				</slot>
 				<div class="main">
 					<slot name="title">{{ title }}</slot>
 				</div>

@@ -76,12 +76,10 @@
 								{{ $t('warning.reason_' + finalReason) }}
 							</template>
 							<template slot="item" slot-scope="data">
-								<v-list-item-content>
-									<v-list-item-title class="select-item">
-										<div class="name">{{ $t('warning.reason_' + data.item) }}</div>
-										<div v-if="$root.$te('warning.reason_' + data.item + '_action', 'fr')" class="desc">{{ $t('warning.reason_' + data.item + '_action') }}</div>
-									</v-list-item-title>
-								</v-list-item-content>
+								<v-list-item-title class="select-item">
+									<div class="name">{{ $t('warning.reason_' + data.item) }}</div>
+									<div v-if="$root.$te('warning.reason_' + data.item + '_action', 'fr')" class="desc">{{ $t('warning.reason_' + data.item + '_action') }}</div>
+								</v-list-item-title>
 							</template>
 						</v-select>
 						<div class="details">

@@ -18,7 +18,7 @@
 			</div>
 
 			<i18n-t v-if="weapon.max_uses != -1" keypath="effect.max_uses" tag="div">
-				<span slot="uses" v-html="$tc('effect.n_uses', weapon.max_uses)"></span>
+				<template #uses><span v-html="$tc('effect.n_uses', weapon.max_uses)"></span></template>
 			</i18n-t>
 
 			<area-view v-if="weapon.area != Area.SINGLE_CELL" :area="weapon.area" />

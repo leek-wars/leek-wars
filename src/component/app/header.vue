@@ -117,7 +117,7 @@
 					</v-menu>
 				</div>
 				<div class="button-wrapper">
-					<v-menu :nudge-bottom="3" :width="400" :max-height="400" bottom offset-y @input="readNotifications">
+					<v-menu :nudge-bottom="3" :width="400" :max-height="400" bottom offset-y @update:model-value="readNotifications">
 						<template v-slot:activator="{ props }">
 							<div class="header-button notifications-button" v-bind="props">
 								<v-icon>mdi-bell-outline</v-icon>

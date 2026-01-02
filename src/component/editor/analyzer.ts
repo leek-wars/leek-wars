@@ -6,7 +6,7 @@ import { SocketMessage } from '@/model/socket'
 import { AIItem, Folder } from './editor-item'
 import { Problem } from './problem'
 import { i18n } from '@/model/i18n'
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'
+import * as monaco from 'monaco-editor'
 
 export class AnalyzerPromise {
 	public then!: (data: any) => void

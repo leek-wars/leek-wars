@@ -246,7 +246,7 @@
 	import { locale } from '@/locale'
 	import { Farmer } from '@/model/farmer'
 	import { Fight, FightMap, FightType, Report } from '@/model/fight'
-	import { mixins } from '@/model/i18n'
+	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
@@ -299,7 +299,11 @@
 		maps = ["Nexus", "Usine", "Désert", "Forêt", "Glacier", "Plage", "Temple", "Japon", "Château", "Cimetière"]
 		document = document
 
-		created() {
+		async created() {
+			// Load doc translations
+			const fightMessages = await import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
+			i18n.global.mergeLocaleMessage(locale, { fight: fightMessages.default })
+
 			if (localStorage.getItem('fight/shadows') === null) { localStorage.setItem('fight/shadows', 'true') }
 			if (localStorage.getItem('fight/volume') === null) { localStorage.setItem('fight/volume', '0.5') }
 			if (localStorage.getItem('fight/sound') === null) { localStorage.setItem('fight/sound', 'true') }
@@ -923,6 +927,11 @@
 		cursor: pointer;
 		color: white;
 		text-align: center;
+		width: 48px;
+		height: 36px;
+		&:is(i) {
+			font-size: 24px;
+		}
 		::v-deep &.v-icon::after {
 			display: none;
 		}

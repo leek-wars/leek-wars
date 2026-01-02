@@ -54,11 +54,9 @@
 			</template>
 		</div>
 		<div v-if="!creator && game.showActions && game.largeActions" class="resizer" :style="{left: actionsWidth + 'px'}" @mousedown="resizerMousedown"></div>
-		<template>
-			<entity-details v-if="game.mouseEntity" :entity="game.mouseEntity" :game="game" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
-			<entity-details v-else-if="game.selectedEntity" :entity="game.selectedEntity" :game="game" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
-			<entity-details v-else-if="!LeekWars.mobile && game.currentPlayer in game.leeks" :entity="game.leeks[game.currentPlayer]" :game="game" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
-		</template>
+		<entity-details v-if="game.mouseEntity" :entity="game.mouseEntity" :game="game" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
+		<entity-details v-else-if="game.selectedEntity" :entity="game.selectedEntity" :game="game" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
+		<entity-details v-else-if="!LeekWars.mobile && game.currentPlayer in game.leeks" :entity="game.leeks[game.currentPlayer]" :game="game" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
 	</div>
 </template>
 
@@ -90,8 +88,8 @@
 		Chest = Chest
 		Mob = Mob
 		actionsWidth: number = 395
-		ActionComponents = ActionComponents
-		EffectComponents = EffectComponents
+		ActionComponents = Object.freeze(ActionComponents)
+		EffectComponents = Object.freeze(EffectComponents)
 		TEAM_COLORS = TEAM_COLORS
 		CHIPS = CHIPS
 		ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME

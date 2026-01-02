@@ -24,9 +24,7 @@
 			<div class="right">
 				<span :title="LeekWars.formatDateTime(message.date)" class="time">{{ LeekWars.formatTime(message.date) }}</span>
 
-				<v-btn v-if="!privateMessages && (message.farmer.color !== 'admin' || $store.getters.admin) && message.farmer.id !== 0"  text small icon color="grey" @click="$emit('menu', $event)">
-					<v-icon>mdi-dots-vertical</v-icon>
-				</v-btn>
+				<v-btn v-if="!privateMessages && (message.farmer.color !== 'admin' || $store.getters.admin) && message.farmer.id !== 0" size="x-small" variant="text" icon="mdi-dots-vertical" color="grey" @click="$emit('menu', $event)"></v-btn>
 			</div>
 			<div class="reactions">
 				<v-tooltip v-for="(reaction, emoji) in message.reactions" :key="emoji" :open-delay="500" :close-delay="0" bottom>

@@ -1,5 +1,5 @@
 <template>
-	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'my-transition'" :open-on-hover="!locked" offset-y @update:modelValue="open($event)">
+	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'scale-transition'" :open-on-hover="!locked" offset-y @update:modelValue="open($event)">
 		<template v-slot:activator="{ props }">
 			<span v-bind="props">
 				<slot></slot>
@@ -29,10 +29,7 @@
 						<span class="talent-more">({{ leek.talent_more >= 0 ? '+' + leek.talent_more : leek.talent_more }})</span>
 						<ranking-badge v-if="leek && leek.ranking && leek.ranking <= 1000 && leek.in_garden" :id="leek.id" :ranking="leek.ranking" category="leek" />
 						<span class="level">• {{ $t('main.level_n', [leek.level]) }}</span>
-						<v-btn class="expand" icon small @click="expand_items = !expand_items">
-							<v-icon v-if="expand_items">mdi-chevron-up</v-icon>
-							<v-icon v-else>mdi-chevron-down</v-icon>
-						</v-btn>
+						<v-btn class="expand" variant="text" size="x-small" @click="expand_items = !expand_items" :icon="expand_items ? 'mdi-chevron-up' : 'mdi-chevron-down'" />
 					</div>
 				</div>
 				<div v-if="expand_items">
@@ -103,7 +100,7 @@ export default class RichTooltipLeek extends Vue {
 		return this.instant ? 0 : 500
 	}
 	get _close_delay() {
-		return this.instant ? 0 : 0
+		return this.instant ? 0 : 1
 	}
 	@Watch('id')
 	update() {
@@ -119,7 +116,7 @@ export default class RichTooltipLeek extends Vue {
 			LeekWars.get<Leek>('leek/rich-tooltip/' + this.id).then(leek => {
 				this.leek = new Leek(leek)
 				if (this.expand_items) {
-					(this.$refs.menu as any).onResize()
+					(this.$refs.menu as any).updateLocation()
 				}
 			})
 		}

@@ -26,8 +26,8 @@
 				<span v-for="(farmer, f, i) in fight.farmers1" :key="f">
 					<span v-if="i !== 0" class="br-versus">VS</span>
 					<router-link :to="'/farmer/' + farmer.id">
-						<rich-tooltip-farmer :id="farmer.id" v-slot="{ on: rich }">
-							<div class="farmer" v-on="rich">
+						<rich-tooltip-farmer :id="farmer.id">
+							<div class="farmer">
 								<avatar :farmer="farmer" /><br>
 								<span class="name">{{ farmer.name }}</span>
 							</div>
@@ -39,8 +39,8 @@
 				<tr>
 					<td>
 						<router-link v-for="farmer in fight.farmers1" :key="farmer.id" :disabled="farmer.id > 0" :to="'/farmer/' + farmer.id">
-							<rich-tooltip-farmer :id="farmer.id" v-slot="{ on: rich }">
-								<div class="farmer" v-on="rich">
+							<rich-tooltip-farmer :id="farmer.id">
+								<div class="farmer">
 									<avatar :farmer="farmer" /><br>
 									<span class="name">
 										<v-tooltip>
@@ -55,8 +55,8 @@
 							</rich-tooltip-farmer>
 						</router-link>
 						<router-link v-if="fight.type === FightType.TEAM && fight.team1" :to="'/team/' + fight.team1.id">
-							<rich-tooltip-team :id="fight.team1.id" v-slot="{ on: rich }">
-								<div class="farmer" v-on="rich">
+							<rich-tooltip-team :id="fight.team1.id">
+								<div class="farmer">
 									<emblem :team="fight.team1" /><br>
 									<span class="name">
 										{{ fight.team1.name }}
@@ -68,8 +68,8 @@
 					<td class="versus">VS</td>
 					<td>
 						<router-link v-if="fight.team2 && fight.type === FightType.TEAM" :to="'/team/' + fight.team2.id">
-							<rich-tooltip-team :id="fight.team2.id" v-slot="{ on: rich }">
-								<div class="farmer" v-on="rich">
+							<rich-tooltip-team :id="fight.team2.id">
+								<div class="farmer">
 									<emblem :team="fight.team2" /><br>
 									<span class="name">
 										{{ fight.team2.name }}
@@ -78,8 +78,8 @@
 							</rich-tooltip-team>
 						</router-link>
 						<router-link v-for="farmer in fight.farmers2" :key="farmer.id" :event="farmer.id > 0 ? 'click' : ''" :to="'/farmer/' + farmer.id">
-							<rich-tooltip-farmer :id="farmer.id" v-slot="{ on: rich }">
-								<div class="farmer" v-on="rich">
+							<rich-tooltip-farmer :id="farmer.id">
+								<div class="farmer">
 									<avatar :farmer="farmer" /><br>
 									<span class="name">
 										<v-tooltip>
@@ -186,7 +186,6 @@ import { emitter } from '@/model/vue'
 
 		@Watch('$route.params.id', {immediate: true})
 		update() {
-			console.log("update", this.$route.params.id)
 			this.fight_id = this.$route.params.id
 		}
 

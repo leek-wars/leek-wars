@@ -144,7 +144,7 @@
 
 		<panel v-if="team && is_member && team.candidacies && team.candidacies.length > 0">
 			<template #title>{{ $t('candidacies') }} ({{ team.candidacies.length }})</template>
-			<div slot="content" class="content candidacies">
+			<div class="content candidacies">
 				<div v-for="candidacy in team.candidacies" :key="candidacy.id" class="farmer">
 					<rich-tooltip-farmer :id="candidacy.farmer.id" v-slot="{ props }">
 						<router-link :to="'/farmer/' + candidacy.farmer.id">
@@ -169,56 +169,58 @@
 					<v-icon>mdi-check</v-icon>
 				</div>
 			</template>
-			<loader v-if="!team" slot="content" />
-			<div v-else slot="content" class="members">
-				<div v-for="member in team.members" :key="member.id" class="farmer">
-					<router-link :to="'/farmer/' + member.id">
-						<rich-tooltip-farmer :id="member.id" v-slot="{ props }">
-							<div v-bind="props">
-								<avatar :farmer="member" />
-								<div class="name">
-									<img v-if="member.connected" class="status" src="/image/connected.png">
-									<img v-else class="status" src="/image/disconnected.png">
-									<v-tooltip v-if="member.grade == 'owner'">
-										<template v-slot:activator="{ props }">
-											<span v-bind="props">★</span>
-										</template>
-										<div class="grade">{{ $t('owner') }}</div>
-									</v-tooltip>
-									<v-tooltip v-else-if="member.grade == 'captain'">
-										<template v-slot:activator="{ props }">
-											<span v-bind="props">☆</span>
-										</template>
-										<div class="grade">{{ $t('captain') }}</div>
-									</v-tooltip>
-									<span :title="member.name">{{ member.name }}</span>
+			<template #content>
+				<loader v-if="!team" />
+				<div v-else class="members">
+					<div v-for="member in team.members" :key="member.id" class="farmer">
+						<router-link :to="'/farmer/' + member.id">
+							<rich-tooltip-farmer :id="member.id" v-slot="{ props }">
+								<div v-bind="props">
+									<avatar :farmer="member" />
+									<div class="name">
+										<img v-if="member.connected" class="status" src="/image/connected.png">
+										<img v-else class="status" src="/image/disconnected.png">
+										<v-tooltip v-if="member.grade == 'owner'">
+											<template v-slot:activator="{ props }">
+												<span v-bind="props">★</span>
+											</template>
+											<div class="grade">{{ $t('owner') }}</div>
+										</v-tooltip>
+										<v-tooltip v-else-if="member.grade == 'captain'">
+											<template v-slot:activator="{ props }">
+												<span v-bind="props">☆</span>
+											</template>
+											<div class="grade">{{ $t('captain') }}</div>
+										</v-tooltip>
+										<span :title="member.name">{{ member.name }}</span>
+									</div>
+									<talent :id="member.id" :talent="member.talent" category="farmer" />
 								</div>
-								<talent :id="member.id" :talent="member.talent" category="farmer" />
+							</rich-tooltip-farmer>
+						</router-link>
+						<template v-if="is_member">
+							<div class="logs" :class="{hidden: member.logs_level === 0, me: $store.state.farmer && member.id === $store.state.farmer.id}" @click="logsDialog = ($store.state.farmer && member.id === $store.state.farmer.id)">
+								<v-icon v-if="member.logs_level > 0" class="activated">mdi-playlist-check</v-icon>
+								<v-icon v-else>mdi-playlist-remove</v-icon>
+								<span :title="$t('log_level_' + member.logs_level) + ' : ' + $t('log_level_' + member.logs_level + '_desc')"> {{ $t('log_level_' + member.logs_level) }} </span>
+								<v-icon v-if="$store.state.farmer && member.id === $store.state.farmer.id" class="edit">mdi-pencil</v-icon>
 							</div>
-						</rich-tooltip-farmer>
-					</router-link>
-					<template v-if="is_member">
-						<div class="logs" :class="{hidden: member.logs_level === 0, me: $store.state.farmer && member.id === $store.state.farmer.id}" @click="logsDialog = ($store.state.farmer && member.id === $store.state.farmer.id)">
-							<v-icon v-if="member.logs_level > 0" class="activated">mdi-playlist-check</v-icon>
-							<v-icon v-else>mdi-playlist-remove</v-icon>
-							<span :title="$t('log_level_' + member.logs_level) + ' : ' + $t('log_level_' + member.logs_level + '_desc')"> {{ $t('log_level_' + member.logs_level) }} </span>
-							<v-icon v-if="$store.state.farmer && member.id === $store.state.farmer.id" class="edit">mdi-pencil</v-icon>
-						</div>
-					</template>
-					<template v-if="owner && editMembers">
-						<i v-if="member.grade == 'owner'" class="grade">{{ $t('owner') }}</i>
-						<select v-else v-model="member.grade" class="level" @change="changeLevel(member, $event)">
-							<option value="captain">{{ $t('captain') }}</option>
-							<option value="member">{{ $t('member') }}</option>
-						</select>
-						<br>
-						<v-btn v-if="member.id !== $store.state.farmer.id" class="ban" small @click="banMemberStart(member)">
-							<v-icon>mdi-hand-pointing-right</v-icon>
-							{{ $t('ban') }}
-						</v-btn>
-					</template>
+						</template>
+						<template v-if="owner && editMembers">
+							<i v-if="member.grade == 'owner'" class="grade">{{ $t('owner') }}</i>
+							<select v-else v-model="member.grade" class="level" @change="changeLevel(member, $event)">
+								<option value="captain">{{ $t('captain') }}</option>
+								<option value="member">{{ $t('member') }}</option>
+							</select>
+							<br>
+							<v-btn v-if="member.id !== $store.state.farmer.id" class="ban" small @click="banMemberStart(member)">
+								<v-icon>mdi-hand-pointing-right</v-icon>
+								{{ $t('ban') }}
+							</v-btn>
+						</template>
+					</div>
 				</div>
-			</div>
+			</template>
 		</panel>
 
 		<panel v-if="team" icon="mdi-podium">
@@ -304,7 +306,7 @@
 			<template v-if="captain" #actions>
 				<div class="button flat" @click="createCompoDialog = true">{{ $t('create_composition') }}</div>
 			</template>
-			<div slot="content"></div>
+			<template #content></template>
 		</panel>
 
 		<div v-if="is_member && team && team.compositions && team.compositions.length == 0" class="no-compos">{{ $t('no_compositions') }}</div>
@@ -343,12 +345,39 @@
 						<v-icon>mdi-pencil</v-icon>
 					</div>
 				</template>
-				<div slot="content" :class="{dashed: draggedLeek != null && canDrop(composition)}" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(composition, $event)">
+				<template #content>
+					<div :class="{dashed: draggedLeek != null && canDrop(composition)}" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(composition, $event)">
 
-					<div v-if="composition.leeks.length == 0" class="empty">{{ $t('empty_compo') }}</div>
+						<div v-if="composition.leeks.length == 0" class="empty">{{ $t('empty_compo') }}</div>
 
-					<rich-tooltip-leek v-for="leek in composition.leeks" :id="leek.id" :key="leek.id" v-slot="{ props }">
-						<div :class="{dragging: leek.dragging}" class="leek" draggable="true" v-bind="props" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(composition, leek, $event)" @dragend="leeksDragend(leek, $event)">
+						<rich-tooltip-leek v-for="leek in composition.leeks" :id="leek.id" :key="leek.id" v-slot="{ props }">
+							<div :class="{dragging: leek.dragging}" class="leek" draggable="true" v-bind="props" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(composition, leek, $event)" @dragend="leeksDragend(leek, $event)">
+								<leek-image :leek="leek" :scale="0.6" />
+								<br>
+								<div class="name">{{ leek.name }}</div>
+								<talent :id="leek.id" :talent="leek.talent" category="leek" />
+								<div>{{ $t('main.level_n', [leek.level]) }}</div>
+								<div class="fights">
+									<v-icon>mdi-sword</v-icon>
+									<!-- <img src="/image/icon/grey/garden.png"> -->
+									<span>{{ leek.team_fights }}</span>
+								</div>
+							</div>
+						</rich-tooltip-leek>
+					</div>
+				</template>
+			</panel>
+		</div>
+
+		<panel v-if="is_member && team && team.unengaged_leeks" class="compo" toggle="team/no-compo">
+			<template #title>{{ $t('unsorted_leeks') }}</template>
+
+			<template #content>
+				<div :class="{dashed: draggedLeek != null}" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(null, $event)">
+					<div v-if="team.unengaged_leeks.length == 0" class="empty">{{ $t('empty_compo') }}</div>
+
+					<rich-tooltip-leek v-for="leek in team.unengaged_leeks" :id="leek.id" :key="leek.id" v-slot="{ props }">
+						<div :class="{dragging: leek.dragging}" class="leek" draggable="true" v-bind="props" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(null, leek, $event)" @dragend="leeksDragend(leek, $event)">
 							<leek-image :leek="leek" :scale="0.6" />
 							<br>
 							<div class="name">{{ leek.name }}</div>
@@ -362,47 +391,25 @@
 						</div>
 					</rich-tooltip-leek>
 				</div>
-			</panel>
-		</div>
-
-		<panel v-if="is_member && team && team.unengaged_leeks" class="compo" toggle="team/no-compo">
-			<template #title>{{ $t('unsorted_leeks') }}</template>
-
-			<div slot="content" :class="{dashed: draggedLeek != null}" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(null, $event)">
-				<div v-if="team.unengaged_leeks.length == 0" class="empty">{{ $t('empty_compo') }}</div>
-
-				<rich-tooltip-leek v-for="leek in team.unengaged_leeks" :id="leek.id" :key="leek.id" v-slot="{ props }">
-					<div :class="{dragging: leek.dragging}" class="leek" draggable="true" v-bind="props" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(null, leek, $event)" @dragend="leeksDragend(leek, $event)">
-						<leek-image :leek="leek" :scale="0.6" />
-						<br>
-						<div class="name">{{ leek.name }}</div>
-						<talent :id="leek.id" :talent="leek.talent" category="leek" />
-						<div>{{ $t('main.level_n', [leek.level]) }}</div>
-						<div class="fights">
-							<v-icon>mdi-sword</v-icon>
-							<!-- <img src="/image/icon/grey/garden.png"> -->
-							<span>{{ leek.team_fights }}</span>
-						</div>
-					</div>
-				</rich-tooltip-leek>
-			</div>
+			</template>
 		</panel>
-		<panel v-else>
-			<template v-if="team" slot="title">{{ $t('leeks', [team.leek_count]) }}</template>
-			<loader v-if="!team" slot="content" />
-			<div v-else slot="content" class="leeks">
-				<rich-tooltip-leek v-for="leek in team.leeks" :id="leek.id" :key="leek.id" v-slot="{ props }">
-					<router-link :to="'/leek/' + leek.id" :leek="leek.id" class="leek">
-						<div v-bind="props">
-							<leek-image :leek="leek" :scale="0.6" />
-							<br>
-							<div class="name">{{ leek.name }}</div>
-							<talent :id="leek.id" :talent="leek.talent" category="leek" />
-							<div>{{ $t('main.level_n', [leek.level]) }}</div>
-						</div>
-					</router-link>
-				</rich-tooltip-leek>
-			</div>
+		<panel v-else :title="$t('leeks', [team.leek_count])">
+			<template #content>
+				<loader v-if="!team" />
+				<div v-else class="leeks">
+					<rich-tooltip-leek v-for="leek in team.leeks" :id="leek.id" :key="leek.id" v-slot="{ props }">
+						<router-link :to="'/leek/' + leek.id" :leek="leek.id" class="leek">
+							<div v-bind="props">
+								<leek-image :leek="leek" :scale="0.6" />
+								<br>
+								<div class="name">{{ leek.name }}</div>
+								<talent :id="leek.id" :talent="leek.talent" category="leek" />
+								<div>{{ $t('main.level_n', [leek.level]) }}</div>
+							</div>
+						</router-link>
+					</rich-tooltip-leek>
+				</div>
+			</template>
 		</panel>
 
 		<div class="container grid large">
@@ -413,11 +420,15 @@
 						<span>{{ $t('history') }}</span>
 					</router-link>
 				</template>
-				<fights-history v-if="team" slot="content" :fights="team.fights" />
+				<template #content>
+					<fights-history v-if="team" :fights="team.fights" />
+				</template>
 			</panel>
 
 			<panel v-if="team && team.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-trophy">
-				<tournaments-history v-if="team" slot="content" :tournaments="team.tournaments" />
+				<template #content>
+					<tournaments-history v-if="team" :tournaments="team.tournaments" />
+				</template>
 			</panel>
 		</div>
 
@@ -437,9 +448,7 @@
 
 		<report-dialog v-if="team" v-model="reportDialog" :team="team" :reasons="reasons" :parameter="team.id" />
 
-		<popup v-model="createCompoDialog" :width="500">
-			<v-icon slot="icon">mdi-plus</v-icon>
-			<span slot="title">{{ $t('create_composition') }}</span>
+		<popup v-model="createCompoDialog" :width="500" icon="mdi-plus" :title="$t('create_composition')">
 			<h4>{{ $t('compo_name') }}</h4>
 			<input v-model="createCompoName" type="text" @keyup.enter="createComposition">
 			<template #actions>
@@ -448,9 +457,7 @@
 			</template>
 		</popup>
 
-		<popup v-if="team" v-model="deleteCompoDialog" :width="600">
-			<v-icon slot="icon">mdi-delete</v-icon>
-			<span v-if="compositionToDelete" slot="title">{{ $t('delete_compo_confirm_title', [compositionToDelete.name]) }}</span>
+		<popup v-if="team" v-model="deleteCompoDialog" :width="600" icon="mdi-delete" :title="$t('delete_compo_confirm_title', [compositionToDelete?.name])">
 			<div v-if="compositionToDelete">
 				{{ $t('delete_compo_confirm', [compositionToDelete.name]) }}
 			</div>
@@ -460,9 +467,7 @@
 			</template>
 		</popup>
 
-		<popup v-if="team" v-model="renameCompoDialog" :width="600">
-			<v-icon slot="icon">mdi-pencil</v-icon>
-			<span v-if="compositionToRename" slot="title">{{ $t('rename_compo_confirm_title', [compositionToRename.name]) }}</span>
+		<popup v-if="team" v-model="renameCompoDialog" :width="600" icon="mdi-pencil" :title="$t('rename_compo_confirm_title', [compositionToRename?.name])">
 			<h4>{{ $t('compo_name') }}</h4>
 			<input v-model="renameCompoName" type="text" @keyup.enter="renameComposition(compositionToRename)">
 			<template #actions>
@@ -471,10 +476,7 @@
 			</template>
 		</popup>
 
-
-		<popup v-if="team" v-model="quitTeamDialog" :width="500">
-			<v-icon slot="icon">mdi-exit</v-icon>
-			<span slot="title">{{ $t('quit_team_confirm_title', [team.name]) }}</span>
+		<popup v-if="team" v-model="quitTeamDialog" :width="500" icon="mdi-exit" :title="$t('quit_team_confirm_title', [team.name])">
 			{{ $t('quit_team_confirm') }}
 			<template #actions>
 				<div v-ripple @click="quitTeamDialog = false">{{ $t('quit_cancel') }}</div>
@@ -482,9 +484,7 @@
 			</template>
 		</popup>
 
-		<popup v-if="team" v-model="dissolveDialog" :width="500">
-			<v-icon slot="icon">mdi-delete</v-icon>
-			<span slot="title">{{ $t('disolve_confirm_title', [team.name]) }}</span>
+		<popup v-if="team" v-model="dissolveDialog" :width="500" icon="mdi-delete" :title="$t('disolve_confirm_title', [team.name])">
 			{{ $t('disolve_confirm') }}
 			<template #actions>
 				<div v-ripple @click="dissolveDialog = false">{{ $t('disolve_cancel') }}</div>
@@ -492,9 +492,7 @@
 			</template>
 		</popup>
 
-		<popup v-if="banMemberTarget" v-model="banDialog" :width="500">
-			<v-icon slot="icon">mdi-delete</v-icon>
-			<span slot="title">{{ $t('ban_confirm_title', [banMemberTarget.name]) }}</span>
+		<popup v-if="banMemberTarget" v-model="banDialog" :width="500" icon="mdi-delete" :title="$t('ban_member_confirm_title', [banMemberTarget.name])">
 			{{ $t('ban_confirm', [banMemberTarget.name]) }}
 			<template #actions>
 				<div v-ripple @click="banDialog = false">{{ $t('ban_cancel') }}</div>
@@ -502,9 +500,7 @@
 			</template>
 		</popup>
 
-		<popup v-if="team" v-model="changeOwnerDialog" :width="650">
-			<v-icon slot="icon">mdi-account-switch</v-icon>
-			<span slot="title">{{ $t('change_owner_confirm_title') }}</span>
+		<popup v-if="team" v-model="changeOwnerDialog" :width="650" icon="mdi-account-switch" :title="$t('change_owner_confirm_title')">
 			<div class="change_owner_popup">
 				{{ $t('change_owner_select') }}
 				<br>
@@ -535,9 +531,7 @@
 			</template>
 		</popup>
 
-		<popup v-if="changeOwnerSelected" v-model="changeOwnerConfirmDialog" :width="500">
-			<v-icon slot="icon">mdi-account-switch</v-icon>
-			<span slot="title">{{ $t('change_owner_confirm_title') }}</span>
+		<popup v-if="changeOwnerSelected" v-model="changeOwnerConfirmDialog" :width="500" icon="mdi-account-switch" :title="$t('change_owner_confirm_title')">
 			<i18n-t keypath="change_owner_confirm">
 				<b slot="farmer">{{ changeOwnerSelected.name }}</b>
 			</i18n-t>
@@ -551,9 +545,7 @@
 			</template>
 		</popup>
 
-		<popup v-if="team" v-model="turretDialog" :width="600">
-			<v-icon slot="icon">mdi-information-outline</v-icon>
-			<span slot="title">{{ $t('turret') }} [{{ $t('level_n', [team.level]) }}]</span>
+		<popup v-if="team" v-model="turretDialog" :width="600" icon="mdi-information-outline" :title="$t('turret') + ' [' + $t('level_n', [team.level]) + ']'">
 			<div class="turret-dialog">
 				<turret-image :level="team.level" :skin="1" :scale="0.32" />
 				<div class="infos">
@@ -578,17 +570,13 @@
 			</div>
 		</popup>
 
-		<popup v-if="team && is_member" v-model="turretAiDialog" :width="870">
-			<v-icon slot="icon">mdi-code-braces</v-icon>
-			<span slot="title">{{ $t('main.turret') }} [{{ $t('level_n', [team.level]) }}]</span>
+		<popup v-if="team && is_member" v-model="turretAiDialog" :width="870" icon="mdi-code-braces" :title="$t('main.turret') + ' [' + $t('level_n', [team.level]) + ']'">
 			<div class="turret-ai-dialog">
 				<explorer class="explorer" @select="selectAI($event)" />
 			</div>
 		</popup>
 
-		<popup v-if="team && is_member" v-model="logsDialog" :width="600">
-			<v-icon slot="icon">mdi-playlist-check</v-icon>
-			<span slot="title">{{ $t('log_change') }}</span>
+		<popup v-if="team && is_member" v-model="logsDialog" :width="600" icon="mdi-playlist-check" :title="$t('log_change')">
 			<div>{{ $t('log_change_text') }}</div>
 			<br>
 			<v-radio-group v-model="logsLevel" hide-details @change="updateLogsLevel">
@@ -625,6 +613,7 @@
 	import AIElement from '@/component/app/ai.vue'
 	import { CHIPS } from '@/model/chips'
 import { defineAsyncComponent } from 'vue'
+import { emitter } from '@/model/vue'
 
 	@Options({ name: 'team', i18n: {}, mixins: [...mixins], components: {
 		CharacteristicTooltip, Explorer, chat: ChatElement, RichTooltipItem, RichTooltipLeek, RichTooltipFarmer, RichTooltipComposition, RichTooltipTeam, FightsHistory, TournamentsHistory, ReportDialog, TurretImage, ai: AIElement

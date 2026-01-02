@@ -230,6 +230,7 @@
 	import Pagination from '@/component/pagination.vue'
 	import LWTitle from '@/component/title/title.vue'
 import { defineAsyncComponent } from 'vue'
+import { emitter } from '@/model/vue'
 
 	@Options({ name: 'forum_topic', i18n: {}, mixins: [...mixins], components: { Breadcrumb, EmojiPicker, Markdown, FormattingRules, RichTooltipFarmer, ReportDialog, Pagination, 'lw-title': LWTitle } })
 	export default class ForumTopicPage extends Vue {
@@ -341,8 +342,8 @@ import { defineAsyncComponent } from 'vue'
 				}
 				message.my_vote = 1
 			}
-			delete this.$data.votes_up_names[message.id]
-			delete this.$data.votes_down_names[message.id]
+			delete this.votes_up_names[message.id]
+			delete this.votes_down_names[message.id]
 		}
 		voteDown(message: ForumMessage) {
 			if (message.my_vote === -1) {
@@ -357,21 +358,21 @@ import { defineAsyncComponent } from 'vue'
 				}
 				message.my_vote = -1
 			}
-			delete this.$data.votes_up_names[message.id]
-			delete this.$data.votes_down_names[message.id]
+			delete this.votes_up_names[message.id]
+			delete this.votes_down_names[message.id]
 		}
 		loadVotesUp(message: ForumMessage) {
 			if (!this.topic || this.votes_up_names[message.id] !== undefined) { return }
-			this.$data.votes_up_names[message.id] = null
+			this.votes_up_names[message.id] = null
 			LeekWars.post('forum/get-message-up-votes-names', {topic_id: this.topic.id, message_id: message.id}).then(data => {
-				this.$data.votes_up_names[message.id] = data.farmers.map((f: any) => f[1])
+				this.votes_up_names[message.id] = data.farmers.map((f: any) => f[1])
 			})
 		}
 		loadVotesDown(message: ForumMessage) {
 			if (!this.topic || this.votes_down_names[message.id] !== undefined) { return }
-			this.$data.votes_down_names[message.id] = null
+			this.votes_down_names[message.id] = null
 			LeekWars.post('forum/get-message-down-votes-names', {topic_id: this.topic.id, message_id: message.id}).then(data => {
-				this.$data.votes_down_names[message.id] = data.farmers.map((f: any) => f[1])
+				this.votes_down_names[message.id] = data.farmers.map((f: any) => f[1])
 			})
 		}
 		deleteGeneric(message: ForumMessage) {

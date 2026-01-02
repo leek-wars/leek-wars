@@ -262,30 +262,38 @@
 		<div class="tiles">
 			<a href="https://play.google.com/store/apps/details?id=com.leekwars.app" target="_blank">
 				<panel v-ripple class="android">
-					<div slot="content">
-						<img src="/image/android.png" loading="lazy"> {{ $t('android_app') }}
-					</div>
+					<template #content>
+						<div>
+							<img src="/image/android.png" loading="lazy"> {{ $t('android_app') }}
+						</div>
+					</template>
 				</panel>
 			</a>
 			<a href="https://github.com/leek-wars" target="_blank">
 				<panel v-ripple class="github">
-					<div slot="content">
-						<img src="/image/github_black.png" loading="lazy"> GitHub
-					</div>
+					<template #content>
+						<div>
+							<img src="/image/github_black.png" loading="lazy"> GitHub
+						</div>
+					</template>
 				</panel>
 			</a>
 			<router-link to="/help">
 				<panel v-ripple class="help">
-					<div slot="content">
-						<v-icon>mdi-book-open-page-variant</v-icon> {{ $t('help_tutorial_doc') }}
-					</div>
+					<template #content>
+						<div>
+							<v-icon>mdi-book-open-page-variant</v-icon> {{ $t('help_tutorial_doc') }}
+						</div>
+					</template>
 				</panel>
 			</router-link>
 			<router-link to="/press-kit">
 				<panel v-ripple class="help">
-					<div slot="content">
-						<span class="icon">📦</span> {{ $t('main.press-kit') }}
-					</div>
+					<template #content>
+						<div>
+							<span class="icon">📦</span> {{ $t('main.press-kit') }}
+						</div>
+					</template>
 				</panel>
 			</router-link>
 		</div>
@@ -329,9 +337,9 @@
 	import { defineAsyncComponent } from 'vue'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
 	const SignupCarousel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup-carousel.${locale}.i18n`))
-	const RichTooltipLeek = () => import('@/component/rich-tooltip/rich-tooltip-leek.vue')
-	const RichTooltipFarmer = () => import('@/component/rich-tooltip/rich-tooltip-farmer.vue')
-	const RichTooltipTeam = () => import('@/component/rich-tooltip/rich-tooltip-team.vue')
+	const RichTooltipLeek = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-leek.vue'))
+	const RichTooltipFarmer = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-farmer.vue'))
+	const RichTooltipTeam = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-team.vue'))
 
 	@Options({ name: 'signup', i18n: {}, mixins: [...mixins], components: {
 		ChangelogVersion, SignupCarousel,
@@ -476,7 +484,7 @@
 		}
 		addError(form: string, error: string) {
 			if (!(form in this.errors)) {
-				this.$data.errors[form] = []
+				this.errors[form] = []
 			}
 			this.errors[form].push(error)
 		}
@@ -913,17 +921,16 @@
 	left: 0;
 	bottom: 0;
 	display: flex;
-	width: 100%;
-	height: 100%;
 	align-items: center;
 	justify-content: center;
 	background: #000a;
 	z-index: 10;
 	img {
-		max-width: 1500px;
 		border: 5px solid white;
 		box-shadow: 0px 3px 5px -1px rgb(0 0 0 / 20%), 0px 5px 8px 0px rgb(0 0 0 / 14%), 0px 1px 14px 0px rgb(0 0 0 / 12%);
 		border-radius: 10px;
+		max-width: 90vw;
+		max-height: 90vh;
 	}
 }
 .large-tiles {

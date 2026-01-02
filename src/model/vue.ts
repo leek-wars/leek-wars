@@ -383,7 +383,7 @@ app.directive('chat-code-latex', {
 	}
 })
 
-app.directive('dochash', {
+const dochash = {
 	mounted: (el) => {
 		el.innerHTML = el.innerHTML.replace(/#(\w+)/g, (a, b) => {
 			return "<a href='/help/documentation/" + b + "'>" + b + "</a>"
@@ -397,7 +397,9 @@ app.directive('dochash', {
 			}
 		})
 	}
-})
+}
+
+app.directive('dochash', dochash)
 
 app.directive('emojis', (el) => {
 	el.childNodes.forEach((child) => {
@@ -456,4 +458,4 @@ app.config.globalProperties.$filters = {
 	duration: LeekWars.formatDuration,
 }
 
-export { vueMain, vuetify, displayWarningMessage, app, emitter }
+export { vueMain, vuetify, displayWarningMessage, app, emitter, dochash }

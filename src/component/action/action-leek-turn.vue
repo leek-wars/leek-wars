@@ -1,7 +1,9 @@
 
 <template>
 	<i18n-t tag="div" keypath="fight.turn_of_leek" :a="a">
-		<leek slot="leek" :leek="leeks[action.params[1]]" />
+		<template #leek>
+			<leek :leek="leeks[action.params[1]]" />
+		</template>
 	</i18n-t>
 </template>
 

@@ -1,7 +1,9 @@
 <template>
-	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :nudge-width="expand_leeks ? 500 : 200" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'my-transition'" :open-on-hover="!locked" offset-y @input="open($event)">
+	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :nudge-width="expand_leeks ? 500 : 200" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'my-transition'" :open-on-hover="!locked" offset-y @update:model-value="open($event)">
 		<template v-slot:activator="{ props }">
-			<slot v-bind="props"></slot>
+			<span v-bind="props">
+				<slot></slot>
+			</span>
 		</template>
 		<div class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
 			<loader v-if="!composition" :size="30" />
@@ -79,7 +81,7 @@
 			return this.instant ? 0 : 500
 		}
 		get _close_delay() {
-			return this.instant ? 0 : 0
+			return this.instant ? 0 : 1
 		}
 		@Watch('id')
 		update() {
@@ -87,6 +89,7 @@
 			this.content_created = false
 		}
 		open(v: boolean) {
+			console.log("open")
 			this.expand_leeks = localStorage.getItem('rich-tooltip-composition/expanded') === 'true'
 			if (this.content_created) { return }
 			this.content_created = true
@@ -111,7 +114,7 @@
 			this.locked = event
 			if (!event && !this.mouse) {
 				this.value = false
-				this.$emit('input', false)
+				this.$emit('update:modelValue', false)
 			}
 		}
 	}

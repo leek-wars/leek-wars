@@ -9,74 +9,52 @@
 			<v-list class="menu" :dense="true">
 				<v-list-item v-ripple @click="open()">
 					<v-icon>mdi-card-plus-outline</v-icon>
-					<v-list-item-content>
-						<v-list-item-title>{{ $t('open') }}</v-list-item-title>
-					</v-list-item-content>
+					<v-list-item-title>{{ $t('open') }}</v-list-item-title>
 				</v-list-item>
 				<v-list-item v-if="ai && ai.folder !== -1" v-ripple @click="$emit('test')">
 					<v-icon>mdi-play</v-icon>
-					<v-list-item-content>
-						<v-list-item-title>{{ $t('test') }}</v-list-item-title>
-					</v-list-item-content>
+					<v-list-item-title>{{ $t('test') }}</v-list-item-title>
 				</v-list-item>
 				<v-list-item v-if="ai && ai.folder !== -1" v-ripple @click="renameStart">
 					<v-icon>mdi-pencil</v-icon>
-					<v-list-item-content>
-						<v-list-item-title>{{ $t('rename') }}</v-list-item-title>
-					</v-list-item-content>
+					<v-list-item-title>{{ $t('rename') }}</v-list-item-title>
 				</v-list-item>
 				<v-list-item v-if="ai && ai.folder !== -1" v-ripple @click="deleteDialog = true">
 					<v-icon>mdi-delete</v-icon>
-					<v-list-item-content>
-						<v-list-item-title>{{ $t('delete') }}</v-list-item-title>
-					</v-list-item-content>
+					<v-list-item-title>{{ $t('delete') }}</v-list-item-title>
 				</v-list-item>
 				<v-list-item v-if="ai && ai.folder === -1" v-ripple @click="destroyDialog = true">
 					<v-icon>mdi-delete-forever</v-icon>
-					<v-list-item-content>
-						<v-list-item-title>{{ $t('destroy') }}</v-list-item-title>
-					</v-list-item-content>
+					<v-list-item-title>{{ $t('destroy') }}</v-list-item-title>
 				</v-list-item>
 				<v-list-item v-if="ai && ai.folder === -1" v-ripple @click="restoreAI">
 					<v-icon>mdi-file-restore</v-icon>
-					<v-list-item-content>
-						<v-list-item-title>{{ $t('restore') }}</v-list-item-title>
-					</v-list-item-content>
+					<v-list-item-title>{{ $t('restore') }}</v-list-item-title>
 				</v-list-item>
 				<template v-if="ai && ai.includes && ai.includes.length">
 					<v-menu offset-x open-on-hover>
 						<template v-slot:activator="{ props }">
 							<v-list-item v-ripple v-bind="props">
 								<v-icon>mdi-download</v-icon>
-								<v-list-item-content>
-									<v-list-item-title>{{ $t('download') }}</v-list-item-title>
-								</v-list-item-content>
-								<v-list-item-icon>
-									<v-icon>mdi-menu-right</v-icon>
-								</v-list-item-icon>
+								<v-list-item-title>{{ $t('download') }}</v-list-item-title>
+								<v-icon>mdi-menu-right</v-icon>
 							</v-list-item>
 						</template>
 						<v-list class="menu" :dense="true">
 							<v-list-item v-ripple @click="downloadSimple()">
 								<v-icon>mdi-file-outline</v-icon>
-								<v-list-item-content>
-									<v-list-item-title>{{ $t('download_simple') }}</v-list-item-title>
-								</v-list-item-content>
+								<v-list-item-title>{{ $t('download_simple') }}</v-list-item-title>
 							</v-list-item>
 							<v-list-item v-ripple @click="downloadIncludes()">
 								<v-icon>mdi-file-multiple-outline</v-icon>
-								<v-list-item-content>
-									<v-list-item-title>{{ $t('download_includes') }}</v-list-item-title>
-								</v-list-item-content>
+								<v-list-item-title>{{ $t('download_includes') }}</v-list-item-title>
 							</v-list-item>
 						</v-list>
 					</v-menu>
 				</template>
 				<v-list-item v-else v-ripple @click="downloadSimple()">
 					<v-icon>mdi-download</v-icon>
-					<v-list-item-content>
-						<v-list-item-title>{{ $t('download') }}</v-list-item-title>
-					</v-list-item-content>
+					<v-list-item-title>{{ $t('download') }}</v-list-item-title>
 				</v-list-item>
 			</v-list>
 		</v-menu>
@@ -86,39 +64,27 @@
 			<v-list class="menu" :dense="true">
 				<v-list-item v-if="folder && !folder.closed" v-ripple @click="newAIStart()">
 					<v-icon>mdi-file-plus-outline</v-icon>
-					<v-list-item-content>
-						<v-list-item-title>{{ $t('new_ai') }}</v-list-item-title>
-					</v-list-item-content>
+					<v-list-item-title>{{ $t('new_ai') }}</v-list-item-title>
 				</v-list-item>
 				<v-list-item v-if="folder && !folder.closed" v-ripple @click="newFolderStart()">
 					<v-icon>mdi-folder-plus-outline</v-icon>
-					<v-list-item-content>
-						<v-list-item-title>{{ $t('new_folder') }}</v-list-item-title>
-					</v-list-item-content>
+					<v-list-item-title>{{ $t('new_folder') }}</v-list-item-title>
 				</v-list-item>
 				<v-list-item v-if="folder && !folder.closed" v-ripple @click="renameStart">
 					<v-icon>mdi-pencil</v-icon>
-					<v-list-item-content>
-						<v-list-item-title>{{ $t('rename') }}</v-list-item-title>
-					</v-list-item-content>
+					<v-list-item-title>{{ $t('rename') }}</v-list-item-title>
 				</v-list-item>
 				<v-list-item v-if="folder && folder.closed" v-ripple @click="openFolder()">
 					<v-icon>mdi-folder-open-outline</v-icon>
-					<v-list-item-content>
-						<v-list-item-title>{{ $t('open_folder') }}</v-list-item-title>
-					</v-list-item-content>
+					<v-list-item-title>{{ $t('open_folder') }}</v-list-item-title>
 				</v-list-item>
 				<v-list-item v-else v-ripple @click="closeFolder()">
 					<v-icon>mdi-folder-lock-outline</v-icon>
-					<v-list-item-content>
-						<v-list-item-title>{{ $t('close_folder') }}</v-list-item-title>
-					</v-list-item-content>
+					<v-list-item-title>{{ $t('close_folder') }}</v-list-item-title>
 				</v-list-item>
 				<v-list-item v-ripple @click="deleteDialog = true">
 					<v-icon>mdi-delete</v-icon>
-					<v-list-item-content>
-						<v-list-item-title>{{ $t('delete') }}</v-list-item-title>
-					</v-list-item-content>
+					<v-list-item-title>{{ $t('delete') }}</v-list-item-title>
 				</v-list-item>
 			</v-list>
 		</v-menu>
@@ -128,9 +94,7 @@
 			<v-list class="menu" :dense="true">
 				<v-list-item v-ripple @click="emptyDialog = true">
 					<v-icon>mdi-delete-forever</v-icon>
-					<v-list-item-content>
-						<v-list-item-title>{{ $t('empty_bin') }}</v-list-item-title>
-					</v-list-item-content>
+					<v-list-item-title>{{ $t('empty_bin') }}</v-list-item-title>
 				</v-list-item>
 			</v-list>
 		</v-menu>

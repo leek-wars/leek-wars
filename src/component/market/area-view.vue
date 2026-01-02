@@ -2,12 +2,16 @@
 	<div>
 		<template v-if="area == Area.SINGLE_CELL"></template>
 		<i18n-t v-else-if="area == Area.LASER_LINE" keypath="effect.area_x">
-			<b slot="area">{{ $t('effect.line_until_obstacle') }}</b>
+			<template #area>
+				<b>{{ $t('effect.line_until_obstacle') }}</b>
+			</template>
 		</i18n-t>
 		<div v-else-if="area == Area.CIRCLE1 || area == Area.CIRCLE2 || area == Area.CIRCLE3">
 			<range-view :min="0" :max="width" :type="7" />
 			<i18n-t keypath="effect.area_x">
-				<b slot="area">{{ $t('effect.area_' + area) }}</b>
+				<template #area>
+					<b>{{ $t('effect.area_' + area) }}</b>
+				</template>
 			</i18n-t>
 		</div>
 		<div v-else-if="area == Area.PLUS_2 || area == Area.PLUS_3">

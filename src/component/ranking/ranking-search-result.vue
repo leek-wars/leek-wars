@@ -3,7 +3,7 @@
 		<div v-ripple class="main" @click="$emit('gotoresult', result)">
 			<div class="image">
 				<rich-tooltip-leek v-if="result.type === 'leek'" :id="result.id">
-					<leek-image :leek="result" :scale="1" width="40" height="40" />
+					<leek-image :leek="result" :scale="1" width="44" height="44" />
 				</rich-tooltip-leek>
 				<rich-tooltip-farmer v-else-if="result.type === 'farmer'" :id="result.id">
 					<avatar :farmer="result" />
@@ -19,9 +19,7 @@
 			<div class="level">{{ description }}</div>
 		</div>
 		<router-link :to="'/' + result.type + '/' + result.id">
-			<v-btn text icon color="grey">
-				<v-icon>mdi-account-outline</v-icon>
-			</v-btn>
+			<v-btn variant="text" size="small" color="grey" icon="mdi-account-outline" />
 		</router-link>
 	</div>
 </template>
@@ -50,7 +48,7 @@
 
 <style lang="scss" scoped>
 	.result {
-		height: 44px;
+		height: 48px;
 		display: flex;
 		margin-top: 6px;
 	}
@@ -61,15 +59,15 @@
 		cursor: pointer;
 	}
 	.result img {
-		max-width: 40px;
-		max-height: 40px;
+		max-width: 44px;
+		max-height: 44px;
 	}
 	.result .name {
-		margin: 2px 0;
+		margin: 3px 0;
 	}
 	.result .image {
-		width: 40px;
-		height: 40px;
+		width: 44px;
+		height: 44px;
 		float: left;
 		margin-right: 8px;
 		text-align: center;

@@ -10,12 +10,10 @@
 					<template slot="item" slot-scope="data">
 						<img v-if="data.item.id" class="icon" :src="'/image/trophy/' + data.item.code + '.svg'">
 						<span v-else>{{ $t('main.none') }}</span>
-						<v-list-item-content>
-							<v-list-item-title class="word">
-								<div class="name"></div>
-								<div v-if="data.item.id" class="rarity">{{ formatRarity(data.item.rarity) }}%</div>
-							</v-list-item-title>
-						</v-list-item-content>
+						<v-list-item-title class="word">
+							<div class="name"></div>
+							<div v-if="data.item.id" class="rarity">{{ formatRarity(data.item.rarity) }}%</div>
+						</v-list-item-title>
 					</template>
 				</v-select>
 			</div>
@@ -25,12 +23,10 @@
 						<template slot="item" slot-scope="data">
 							<template v-if="data.item.id">
 								<img class="icon" :src="'/image/trophy/' + data.item.code + '.svg'">
-								<v-list-item-content>
-									<v-list-item-title class="word">
-										<div class="name">{{ data.item.t }}</div>
-										<div class="rarity">{{ formatRarity(data.item.rarity) }}%</div>
-									</v-list-item-title>
-								</v-list-item-content>
+								<v-list-item-title class="word">
+									<div class="name">{{ data.item.t }}</div>
+									<div class="rarity">{{ formatRarity(data.item.rarity) }}%</div>
+								</v-list-item-title>
 							</template>
 							<span v-else>{{ $t('main.none') }}</span>
 						</template>
@@ -51,12 +47,10 @@
 						<template slot="item" slot-scope="data">
 							<template v-if="data.item.id">
 								<img class="icon" :src="'/image/trophy/' + data.item.code + '.svg'">
-								<v-list-item-content>
-									<v-list-item-title class="word">
-										<div class="name">{{ data.item.t }}</div>
-										<div class="rarity">{{ formatRarity(data.item.rarity) }}%</div>
-									</v-list-item-title>
-								</v-list-item-content>
+								<v-list-item-title class="word">
+									<div class="name">{{ data.item.t }}</div>
+									<div class="rarity">{{ formatRarity(data.item.rarity) }}%</div>
+								</v-list-item-title>
 							</template>
 							<span v-else>{{ $t('main.none') }}</span>
 						</template>
