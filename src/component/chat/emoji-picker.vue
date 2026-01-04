@@ -1,27 +1,29 @@
 <template>
-	<v-menu ref="menu" v-model="shown" :close-on-content-click="false" :min-width="width" :max-width="width" location="top" offset-y>
+	<v-menu ref="menu" v-model="shown" :close-on-content-click="false" :width="width" location="top" offset-y>
 		<template v-slot:activator="{ props }">
 			<div v-ripple class="chat-input-emoji" v-bind="props">
 				<div :class="{'emoji-font': !LeekWars.nativeEmojis}"><slot></slot></div>
 			</div>
 		</template>
-		<v-tabs :key="categories.length" class="tabs" grow :show-arrows="false">
-			<v-tab v-for="(category, c) in categories" :key="c" :value="'tab-' + c" class="tab">
-				<span v-emojis>{{ category.icon }}</span>
-			</v-tab>
-		</v-tabs>
-		<v-window v-model="activeTab">
-			<v-window-item v-for="(category, c) in categories" :key="c" v-autostopscroll :value="'tab-' + c" class="content">
-				<div class="grid">
-					<template v-for="(emoji, e) in category.emojis">
-						<template v-if="c == 0 && e < 30">
-							<img v-if="classic !== false" :key="e" :src="'/image/emoji/' + Emojis.custom[emoji] + '.png'" :title="emoji" class="emoji classic" @click="pick(emoji)">
+		<v-card>
+			<v-tabs v-model="activeTab" :key="categories.length" class="tabs" grow :show-arrows="false">
+				<v-tab v-for="(category, c) in categories" :key="c" :value="'tab-' + c" class="tab">
+					<span v-emojis>{{ category.icon }}</span>
+				</v-tab>
+			</v-tabs>
+			<v-tabs-window v-model="activeTab">
+				<v-tabs-window-item v-for="(category, c) in categories" :key="c" v-autostopscroll :value="'tab-' + c" class="content">
+					<div class="grid">
+						<template v-for="(emoji, e) in category.emojis">
+							<template v-if="c == 0 && e < 30">
+								<img v-if="classic !== false" :key="e" :src="'/image/emoji/' + Emojis.custom[emoji] + '.png'" :title="emoji" class="emoji classic" @click="pick(emoji)">
+							</template>
+							<div v-else :key="e" :class="{'emoji-font': !LeekWars.nativeEmojis}" class="emoji" @click="pick(emoji)">{{ emoji }}</div>
 						</template>
-						<div v-else :key="e" :class="{'emoji-font': !LeekWars.nativeEmojis}" class="emoji" @click="pick(emoji)">{{ emoji }}</div>
-					</template>
-				</div>
-			</v-window-item>
-		</v-window>
+					</div>
+				</v-tabs-window-item>
+			</v-tabs-window>
+		</v-card>
 	</v-menu>
 </template>
 
@@ -70,7 +72,7 @@
 		background: #5fad1b;
 	}
 	.tabs {
-		height: 264px;
+		// height: 264px;
 	}
 	.tabs ::v-deep .v-slide-group {
 		height: 38px;

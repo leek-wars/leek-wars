@@ -21,7 +21,9 @@
 					</template>
 					<v-list :dense="true">
 						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="setPageLanguage(language.code)">
-							<flag :code="language.country" :clickable="false" />
+							<template #prepend>
+								<flag :code="language.country" :clickable="false" />
+							</template>
 							<span class="name">{{ language.name }}</span>
 						</v-list-item>
 					</v-list>
@@ -49,7 +51,9 @@
 					<v-list :dense="true">
 						<router-link v-for="(translation, l) in page.translations" :key="l" :to="'/encyclopedia/' + l + '/' + translation">
 							<v-list-item class="language">
-								<flag :code="LeekWars.languages[l].country" :clickable="false" />
+								<template #prepend>
+									<flag :code="LeekWars.languages[l].country" :clickable="false" />
+								</template>
 								<span class="name">{{ translation }}</span>
 							</v-list-item>
 						</router-link>
@@ -143,13 +147,12 @@
 <script lang="ts">
 	import Markdown from '@/component/encyclopedia/markdown.vue'
 	import { locale } from '@/locale'
-	import { mixins } from '@/model/i18n'
+	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import { Route } from 'vue-router'
 	import Breadcrumb from '../forum/breadcrumb.vue'
-	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import { FUNCTIONS } from '@/model/functions'
 	import { nextTick } from 'vue'
@@ -257,13 +260,16 @@
 			}
 		}
 
-		mounted() {
+		async mounted() {
 			// this.editStart()
 
 			emitter.on('ctrlS', () => {
 				this.save()
 			})
 			LeekWars.setActions(this.actions)
+
+			const docMessages = await import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
+			i18n.global.mergeLocaleMessage(locale, { doc: docMessages.default })
 		}
 
 		@Watch('lanuage_and_code', {immediate: true})

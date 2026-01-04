@@ -10,7 +10,7 @@
 				<a href="mailto:contact@leekwars.com" target="_blank">
 					<div class="card" v-ripple>
 						<i18n-t keypath="email">
-							<span slot="email">contact@leekwars.com</span>
+							<template #email>contact@leekwars.com</template>
 						</i18n-t>
 					</div>
 				</a>

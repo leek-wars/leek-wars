@@ -81,9 +81,7 @@
 			</v-list>
 		</v-menu>
 
-		<popup v-model="renameDialog" :width="500">
-			<v-icon slot="icon">mdi-pencil</v-icon>
-			<span slot="title">{{ $t('rename') }}</span>
+		<popup v-model="renameDialog" :width="500" icon="mdi-pencil" :title="$t('rename')">
 			<div class="padding">
 				<input ref="nameInput" v-model="newName" type="text" class="input dialog-input" @keyup.stop @keyup.enter="rename()">
 			</div>
@@ -93,10 +91,11 @@
 			</template>
 		</popup>
 
-		<popup v-model="deleteDialog" :width="500">
-			<v-icon slot="icon">mdi-delete</v-icon>
-			<span v-if="ai" slot="title">{{ $t('delete_ai', [ai.name]) }}</span>
-			<span v-else-if="folder" slot="title">{{ $t('delete_folder', [folder.name]) }}</span>
+		<popup v-model="deleteDialog" :width="500" icon="mdi-delete">
+			<template #title>
+				<span v-if="ai" slot="title">{{ $t('delete_ai', [ai.name]) }}</span>
+				<span v-else-if="folder" slot="title">{{ $t('delete_folder', [folder.name]) }}</span>
+			</template>
 			{{ $t('delete_warning') }}
 			<template #actions>
 				<div v-ripple @click="deleteDialog = false">{{ $t('delete_cancel') }}</div>
@@ -104,9 +103,8 @@
 			</template>
 		</popup>
 
-		<popup v-model="destroyDialog" :width="500">
+		<popup v-model="destroyDialog" :width="500" icon="mdi-delete-forever" :title="$t('destroy_ai', [ai?.name])">
 			<v-icon slot="icon">mdi-delete-forever</v-icon>
-			<span v-if="ai" slot="title">{{ $t('destroy_ai', [ai.name]) }}</span>
 			{{ $t('destroy_warning') }}
 			<template #actions>
 				<div v-ripple @click="destroyDialog = false">{{ $t('delete_cancel') }}</div>
@@ -114,9 +112,7 @@
 			</template>
 		</popup>
 
-		<popup v-model="emptyDialog" :width="500">
-			<v-icon slot="icon">mdi-delete</v-icon>
-			<span slot="title">{{ $t('empty_bin') }}</span>
+		<popup v-model="emptyDialog" :width="500" icon="mdi-delete" :title="$t('empty_bin')">
 			{{ $t('empty_warning') }}
 			<template #actions>
 				<div v-ripple @click="emptyDialog = false">{{ $t('delete_cancel') }}</div>
@@ -124,9 +120,7 @@
 			</template>
 		</popup>
 
-		<popup v-model="newAIDialog" :width="500">
-			<v-icon slot="icon">mdi-plus-circle-outline</v-icon>
-			<span slot="title">{{ $t('new_desc') }}</span>
+		<popup v-model="newAIDialog" :width="500" icon="mdi-plus-circle-outline" :title="$t('new_desc')">
 			<div class="padding">
 				<input ref="newAIInput" v-model="newAIName" :placeholder="$t('ai_name')" type="text" class="input dialog-input" @keyup.stop @keyup.enter="newAI(false, newAIName)">
 			</div>
@@ -136,9 +130,7 @@
 			</template>
 		</popup>
 
-		<popup v-model="newFolderDialog" :width="500">
-			<v-icon slot="icon">mdi-folder-plus</v-icon>
-			<span slot="title">{{ $t('new_folder') }}</span>
+		<popup v-model="newFolderDialog" :width="500" icon="mdi-folder-plus" :title="$t('new_folder')">
 			<div class="padding">
 				<input ref="newFolderInput" v-model="newFolderName" :placeholder="$t('folder_name')" type="text" class="input dialog-input" @keyup.stop @keyup.enter="newFolder(newFolderName)">
 			</div>

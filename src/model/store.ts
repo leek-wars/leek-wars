@@ -13,6 +13,7 @@ import { Leek } from './leek'
 import { displayWarningMessage, emitter, vueMain } from './vue'
 import { Weapon } from './weapon'
 import { SchemeTemplate } from './scheme'
+import { NotificationBuilder } from '@/model/notification-builder'
 
 class LeekWarsState {
 	public token: string | null = null
@@ -467,6 +468,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 
 		notification(state: LeekWarsState, data: { id: number, type: number, date: number, parameters: any[], new: boolean }) {
+
 			if (data.new) {
 				// Received a new trophy, invalidate farmer trophies, add to rewards
 				if (state.farmer && data.type === NotificationType.TROPHY_UNLOCKED) {
@@ -481,17 +483,14 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				}
 			}
 
-			import("@/model/notification-builder").then(module => {
+			const notification = NotificationBuilder.build(data)
+			state.notifications.unshift(notification)
 
-				const notification = module.NotificationBuilder.build(data)
-				state.notifications.unshift(notification)
-
-				if (data.new) {
-					state.unreadNotifications = state.notifications.reduce((sum, n) => sum + (n.read ? 0 : 1), 0)
-					updateTitle(state)
-					LeekWars.squares.addFromNotification(notification)
-				}
-			})
+			if (data.new) {
+				state.unreadNotifications = state.notifications.reduce((sum, n) => sum + (n.read ? 0 : 1), 0)
+				updateTitle(state)
+				LeekWars.squares.addFromNotification(notification)
+			}
 		},
 
 		'chat-censor'(state: LeekWarsState, data: {chat: number, messages: number[], censorer: Farmer}) {

@@ -58,9 +58,9 @@
 
 		<panel :title="$t('team')">
 			<div v-for="(part, p) of team" :key="p" class="devs">
-				<rich-tooltip-farmer v-for="member of part" :key="member.id" :id="member.id" v-slot="{ props }">
+				<rich-tooltip-farmer v-for="member of part" :key="member.id" :id="member.id">
 					<router-link :key="member.id" :to="'/farmer/' + member.id">
-						<div class="dev" :class="member.grade" v-bind="props">
+						<div class="dev" :class="member.grade">
 							<avatar :farmer="{id: member.id, avatar_changed: member.id === 11 ? 0 : 1}" />
 							<h4 :class="member.grade">{{ member.name }}</h4>
 							<div class="role" v-html="member.role"></div>
@@ -70,9 +70,9 @@
 			</div>
 			<h4>{{ $t('contributors') }}</h4>
 			<div class="devs contributors">
-				<rich-tooltip-farmer v-for="member of contributors" :key="member.id" :id="member.id" v-slot="{ props }">
+				<rich-tooltip-farmer v-for="member of contributors" :key="member.id" :id="member.id">
 					<router-link :key="member.id" :to="'/farmer/' + member.id">
-						<div class="contributor" :class="member.grade" v-bind="props">
+						<div class="contributor" :class="member.grade">
 							<avatar :farmer="{id: member.id, avatar_changed: member.avatar_changed}" />
 							<h4 class="contributor">{{ member.name }}</h4>
 							<div class="role" v-html="member.role"></div>
@@ -84,7 +84,9 @@
 
 		<panel :title="$t('contact')">
 			<i18n-t keypath="contact_text" tag="p">
-				<a slot="contact" class="green" target="_blank" rel="noopener" href="mailto:contact@leekwars.com">contact@leekwars.com</a>
+				<template #contact>
+					<a class="green" target="_blank" rel="noopener" href="mailto:contact@leekwars.com">contact@leekwars.com</a>
+				</template>
 			</i18n-t>
 		</panel>
 

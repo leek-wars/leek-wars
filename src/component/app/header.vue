@@ -33,9 +33,13 @@
 					</template>
 					<v-list :dense="true">
 						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="LeekWars.setLocale(language.code)">
-							<flag :code="language.country" :clickable="false" />
+							<template #prepend>
+								<flag :code="language.country" :clickable="false" />
+							</template>
 							<span class="name">{{ language.name }}</span>
-							<span v-if="language.beta" class="beta">bêta</span>
+							<template #append>
+								<span v-if="language.beta" class="beta">bêta</span>
+							</template>
 						</v-list-item>
 					</v-list>
 				</v-menu>

@@ -310,9 +310,9 @@
 		<h1>{{ $t('last_update') }}</h1>
 		<panel v-if="last_version" icon="mdi-star-outline">
 			<template #title>{{ $t('changelog.version_n', [last_version.version_name]) }} ({{ $filters.date(last_version.date) }}) {{ translations[last_version.version] && translations[last_version.version].title ? ' — ' + translations[last_version.version].title : '' }}</template>
-			<div slot="content">
+			<template #content>
 				<changelog-version :version="last_version" />
-			</div>
+			</template>
 		</panel>
 
 		<div v-if="bigImage" class="bigscreen" @click="bigImage = null">

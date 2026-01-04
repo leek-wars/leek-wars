@@ -1,7 +1,9 @@
 
 <template>
 	<i18n-t keypath="fight.leek_state_x_turns" tag="div" :a="a">
-		<leek slot="leek" :leek="leek" />
+		<template #leek>
+			<leek :leek="leek" />
+		</template>
 		<template v-slot:state>
 			<b>{{ $t('effect.state_' + value) }}</b>
 		</template>

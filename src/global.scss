@@ -77,12 +77,6 @@
 	margin-top: 0;
 	padding-top: 0;
 }
-.v-input--switch {
-	display: inline-block !important;
-}
-.v-input--selection-controls__input {
-	margin-right: 8px;
-}
 .v-snack__wrapper.success {
 	background-color: #4caf50 !important;
 	border-color: #4caf50 !important;
@@ -93,10 +87,6 @@
 }
 .v-snack__content {
 	box-sizing: border-box;
-}
-.v-menu__content {
-	background: var(--pure-white);
-	// z-index: 2000 !important;
 }
 .tab-transition-enter {
 	transform: translate(100%, 0);
@@ -448,6 +438,9 @@ ul, ol {
 }
 .page-footer .tabs .tab:first-child:before {
 	border: none;
+}
+.v-icon {
+	flex-shrink: 0;
 }
 .hab {
 	width: 20px;
@@ -1055,15 +1048,10 @@ a.green-link {
 	--v-input-control-height: 24px;
 }
 .v-selection-control--density-default {
-	--v-selection-control-size: 24px;
+	// --v-selection-control-size: 24px;
 }
 
-// Force green primary color for switches (Vue 3 migration)
-.v-switch .v-switch__track {
-	background-color: #5fad1b !important;
-	opacity: 0.5;
-}
-.v-switch .v-selection-control--dirty .v-switch__track {
-	background-color: #5fad1b !important;
-	opacity: 1;
+.v-checkbox .v-selection-control {
+	--v-selection-control-size: 28px;
+	gap: 6px;
 }

@@ -73,7 +73,7 @@ const vuetify = createVuetify({
 			density: 'compact'
 		},
 		VListItem: {
-			density: 'compact'
+			density: 'compact',
 		},
 	},
 })
@@ -300,7 +300,7 @@ app.directive('autostopscroll', {
 	}
 })
 
-app.directive('code', {
+const code = {
 	mounted: (el) => {
 		el.querySelectorAll('code').forEach((c) => {
 			const codeApp = createApp(Code, { code: (c as HTMLElement).innerText })
@@ -310,7 +310,9 @@ app.directive('code', {
 			codeApp.mount(c)
 		})
 	}
-})
+}
+
+app.directive('code', code)
 
 app.directive('single-code', {
 	mounted: (el) => {
@@ -461,4 +463,4 @@ app.config.globalProperties.$filters = {
 	duration: LeekWars.formatDuration,
 }
 
-export { vueMain, vuetify, displayWarningMessage, app, emitter, dochash }
+export { vueMain, vuetify, displayWarningMessage, app, emitter, dochash, code }

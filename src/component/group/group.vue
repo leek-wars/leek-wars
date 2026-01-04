@@ -103,13 +103,12 @@
 						:headers="group.is_supervisor ? headersSupervisor : headers"
 						:items="group.members"
 						hide-default-footer
-						:dense="true"
 						:items-per-page="100"
 						class="elevation-1 members">
-						<div slot="no-data" class="no-member">
+						<template #no-data class="no-member">
 							<span>{{ $t('no_member') }}</span>
 							<v-btn @click="membersDialog = true"><v-icon>mdi-plus</v-icon>&nbsp;{{ $t('add_member') }}</v-btn>
-						</div>
+						</template>
 						<template v-slot:item.name="{ item }">
 							<!-- <router-link class="flex name" :to="'/farmer/' + item.id" v-ripple>
 								<avatar :farmer="item" />
@@ -170,14 +169,14 @@
 				<div class="section">
 					<div class="title">
 						<h4>{{ $t('characteristic.characteristics') }}</h4>
-						<v-icon v-if="equipmentEditing" @click="capitalDialog = true">mdi-pencil</v-icon>
+						<v-icon v-if="equipmentEditing" @click="capitalDialogOpened = true">mdi-pencil</v-icon>
 					</div>
 
 					<div class="level" v-if="equipmentEditing">
 						<b>{{ $t('main.level') }}</b>
 						<input type="number" v-model="group.level" @input="changeLevel" :min="1" :max="301" /> (1 - 301)
 						<div class="spacer"></div>
-						<b :style="{color: $refs.capitalDialog.capital < 0 ? 'red' : 'green'}">{{ $refs.capitalDialog.capital }} capital</b>
+						<!-- <b :style="{color: $refs.capitalDialog.capital < 0 ? 'red' : 'green'}">{{ $refs.capitalDialog.capital }} capital</b> -->
 						<v-icon v-if="$refs.capitalDialog.capital < 0" class="card alert">mdi-alert-circle</v-icon>
 					</div>
 					<b v-else class="level">{{ $t('main.level_n', [group.level]) }}</b>
@@ -251,10 +250,14 @@
 						<span>{{ $t('history') }}</span>
 					</router-link>
 				</template> -->
-				<fights-history slot="content" :fights="group.fights" />
+				<template #content>
+					<fights-history :fights="group.fights" />
+				</template>
 			</panel>
 			<panel v-if="group && group.tournaments && group.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-trophy">
-				<tournaments-history slot="content" :tournaments="group.tournaments" :show-time="true" />
+				<template #content>
+					<tournaments-history :tournaments="group.tournaments" :show-time="true" />
+				</template>
 			</panel>
 		</div>
 
@@ -263,19 +266,18 @@
 				<v-switch v-model="group.setting_chat" :label="$t('setting_chat')" hide-details @change="updateSettingChat" />
 			</panel>
 			<panel :title="$t('member_options')" icon="mdi-settings-outline">
-				<v-switch v-model="group.setting_public_chat" :label="$t('setting_public_chat')" hide-details @change="updateSettingPublicChat" /><br>
-				<v-switch v-model="group.setting_buy_fights" :label="$t('setting_buy_fights')" hide-details @change="updateSettingBuyFights" /><br>
-				<v-switch v-model="group.setting_bank" :label="$t('setting_bank')" hide-details @change="updateSettingBank" /><br>
-				<v-switch v-model="group.setting_tournaments" :label="$t('setting_tournaments')" hide-details @change="updateSettingTournaments" /><br>
-				<v-switch v-model="group.setting_br" :label="$t('setting_br')" hide-details @change="updateSettingBr" /><br>
-				<v-switch v-model="group.setting_new_leek" hide-details :label="$t('new_leek')" @change="updateNewLeek" /><br>
-				<v-switch v-model="group.setting_xp_blocked" hide-details :label="$t('main.xp_blocked')" @change="updateXpBlocked" /><br>
-				<v-switch v-model="group.setting_equipment_blocked" hide-details :label="$t('equipment_blocked')" @change="updateEquipmentBlocked" /><br>
+				<v-switch v-model="group.setting_public_chat" :label="$t('setting_public_chat')" hide-details @change="updateSettingPublicChat" />
+				<v-switch v-model="group.setting_buy_fights" :label="$t('setting_buy_fights')" hide-details @change="updateSettingBuyFights" />
+				<v-switch v-model="group.setting_bank" :label="$t('setting_bank')" hide-details @change="updateSettingBank" />
+				<v-switch v-model="group.setting_tournaments" :label="$t('setting_tournaments')" hide-details @change="updateSettingTournaments" />
+				<v-switch v-model="group.setting_br" :label="$t('setting_br')" hide-details @change="updateSettingBr" />
+				<v-switch v-model="group.setting_new_leek" hide-details :label="$t('new_leek')" @change="updateNewLeek" />
+				<v-switch v-model="group.setting_xp_blocked" hide-details :label="$t('main.xp_blocked')" @change="updateXpBlocked" />
+				<v-switch v-model="group.setting_equipment_blocked" hide-details :label="$t('equipment_blocked')" @change="updateEquipmentBlocked" />
 			</panel>
 		</div>
 
-		<popup v-if="group" v-model="membersDialog" :width="1000" :full="true">
-			<v-icon slot="icon">mdi-account-group</v-icon>
+		<popup v-if="group" v-model="membersDialog" :width="1000" :full="true" icon="mdi-account-group">
 			<template #title>
 				{{ $t('members') }} ({{ group.members.length }})
 			</template>
@@ -341,8 +343,7 @@
 			</div>
 		</popup>
 
-		<popup v-if="group" v-model="settingsDialog" :width="500">
-			<v-icon slot="icon">mdi-settings-outline</v-icon>
+		<popup v-if="group" v-model="settingsDialog" :width="500" icon="mdi-settings-outline">
 			<span slot="title">{{ $t('settings') }}</span>
 			<!-- <h4>{{ $t('group_name') }}</h4>
 			{{ group.name }} -->
@@ -437,7 +438,7 @@
 			</template>
 		</popup>
 
-		<capital-dialog ref="capitalDialog" v-model="capitalDialog" :leek="characteristics" :total-capital="totalCapital" :restat="true" />
+		<capital-dialog ref="capitalDialog" v-model="capitalDialogOpened" :leek="characteristics" :total-capital="totalCapital" :restat="true" />
 
 		<popup v-if="group" v-model="giveItemDialog" :width="800" class="give-item-dialog">
 			<v-icon slot="icon">mdi-gift-outline</v-icon>
@@ -539,6 +540,8 @@
 	import FightsHistory from '@/component/history/fights-history.vue'
 	import TournamentsHistory from '@/component/history/tournaments-history.vue'
 	import Item from '@/component/item.vue'
+	import { defineAsyncComponent } from 'vue'
+	import { emitter } from '@/model/vue'
 
 	@Options({ name: 'group', i18n: {}, mixins: [...mixins], components: {
 		chat: ChatElement, RichTooltipTeam, RichTooltipFarmer, CharacteristicTooltip, RichTooltipItem, CapitalDialog, FightsHistory, TournamentsHistory, Item
@@ -556,7 +559,7 @@
 		draggedChip: number | null = null
 		draggedChipLocation: string | null = null
 		CHIPS = CHIPS
-		capitalDialog: boolean = false
+		capitalDialogOpened: boolean = false
 		applyingEquipment: boolean = false
 		membersDialog: boolean = false
 		characteristics: {[key: string]: number} = {}

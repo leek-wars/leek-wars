@@ -393,7 +393,7 @@
 				</div>
 			</template>
 		</panel>
-		<panel v-else :title="$t('leeks', [team.leek_count])">
+		<panel v-else :title="$t('leeks', [team?.leek_count])">
 			<template #content>
 				<loader v-if="!team" />
 				<div v-else class="leeks">
@@ -579,7 +579,7 @@
 		<popup v-if="team && is_member" v-model="logsDialog" :width="600" icon="mdi-playlist-check" :title="$t('log_change')">
 			<div>{{ $t('log_change_text') }}</div>
 			<br>
-			<v-radio-group v-model="logsLevel" hide-details @change="updateLogsLevel">
+			<v-radio-group v-model="logsLevel" hide-details @update:model-value="updateLogsLevel">
 				<v-radio :value="0" :label="$t('log_level_0') + ' : ' + $t('log_level_0_desc')" />
 				<v-radio :value="1" :label="$t('log_level_1') + ' : ' + $t('log_level_1_desc')" />
 				<v-radio :value="2" :label="$t('log_level_2') + ' : ' + $t('log_level_2_desc')" />

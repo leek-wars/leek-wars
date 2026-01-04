@@ -26,7 +26,7 @@
 				</div>
 				<div class="divider"></div>
 				<div class="column">
-					<v-btn color="black" class="gh-button" @click="githubStart()"> <img src="/image/github_black.png"> {{ $t('main.login_gh') }}</v-btn>
+					<v-btn class="gh-button" @click="githubStart()"> <img src="/image/github_black.png"> {{ $t('main.login_gh') }}</v-btn>
 				</div>
 			</div>
 		</panel>

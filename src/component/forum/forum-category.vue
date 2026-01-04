@@ -12,11 +12,17 @@
 							<img width="10" src="/image/selector.png">
 						</div>
 					</template>
-					<v-list :dense="true">
+					<v-list>
 						<v-list-item v-for="(language, i) in languages" :key="i" class="language" @click="setForumLanguage(language)" :disabled="forumLanguages[language.code] && activeLanguages.length === 1">
-							<v-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" hide-details @click.stop="updateCategories" />
-							<flag :code="language.country" :clickable="false" />
-							<span class="name">{{ language.name }}</span>
+							<template #prepend>
+								<v-list-item-action start>
+									<v-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" hide-details @click.stop="updateCategories" />
+								</v-list-item-action>
+							</template>
+							<div class="flex">
+								<flag :code="language.country" :clickable="false" />
+								<span class="name">{{ language.name }}</span>
+							</div>
 						</v-list-item>
 					</v-list>
 				</v-menu>
@@ -331,6 +337,7 @@ import { emitter } from '@/model/vue'
 		align-items: center;
 		height: 100%;
 		gap: 6px;
+		user-select: none;
 	}
 	.flag {
 		max-width: 30px;

@@ -163,6 +163,7 @@
 	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+	import { emitter } from '@/model/vue'
 
 	class ModerationRequest {
 		faults!: Fault[]

@@ -32,6 +32,7 @@
 		}
 		i {
 			align-self: center;
+			font-size: 24px;
 		}
 	}
 	.breadcrumb:not(.raw) {
