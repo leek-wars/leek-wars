@@ -146,6 +146,7 @@
 	import Type from '@/component/type.vue'
 	import { analyzer, AnalyzerPromise } from './analyzer'
 	import { Keyword, KeywordKind } from '@/model/keyword'
+import { emitter } from '@/model/vue'
 
 	const AUTO_SHORTCUTS = [
 		["lama", "#LamaSwag", "", "Le pouvoir du lama"],

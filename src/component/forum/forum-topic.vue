@@ -88,7 +88,7 @@
 
 								<div class="edit-wrapper">
 									<div v-if="!message.deleted" class="votes">
-										<v-tooltip :key="votes_up_names[message.id] ? message.id * 101 + votes_up_names[message.id].length : message.id * 101" :open-delay="0" :close-delay="0" :disabled="message.votes_up === 0" bottom @input="loadVotesUp(message)">
+										<v-tooltip :key="votes_up_names[message.id] ? message.id * 101 + votes_up_names[message.id].length : message.id * 101" :open-delay="0" :close-delay="0" :disabled="message.votes_up === 0" bottom @update:model-value="loadVotesUp(message)">
 											<template v-slot:activator="{ props }">
 												<div :class="{active: message.my_vote == 1, zero: message.votes_up === 0}" class="vote up" @click="voteUp(message)" v-bind="props">
 													<v-icon>mdi-thumb-up</v-icon>
@@ -100,7 +100,7 @@
 												<div v-for="name in votes_up_names[message.id]" :key="name">{{ name }}</div>
 											</div>
 										</v-tooltip>
-										<v-tooltip :key="votes_down_names[message.id] ? message.id * 100 + votes_down_names[message.id].length : message.id" :open-delay="0" :close-delay="0" :disabled="message.votes_down === 0" bottom @input="loadVotesDown(message)">
+										<v-tooltip :key="votes_down_names[message.id] ? message.id * 100 + votes_down_names[message.id].length : message.id" :open-delay="0" :close-delay="0" :disabled="message.votes_down === 0" bottom @update:model-value="loadVotesDown(message)">
 											<template v-slot:activator="{ props }">
 												<div :class="{active: message.my_vote == -1, zero: !message.votes_down}" class="vote down" @click="voteDown(message)" v-bind="props">
 													<v-icon>mdi-thumb-down</v-icon>
@@ -135,21 +135,16 @@
 
 									<v-menu v-if="$store.state.farmer && !message.deleted && !message.editing && ((message.writer.id === $store.state.farmer.id || category.moderator) || (category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'))" offset-y>
 										<template v-slot:activator="{ props }">
-											<v-btn text small icon color="grey" v-bind="props">
-												<v-icon>mdi-dots-vertical</v-icon>
-											</v-btn>
+											<v-btn variant="text" size="small" icon="mdi-dots-vertical" color="grey" v-bind="props" />
 										</template>
 										<v-list dense class="message-actions">
-											<v-list-item v-if="$store.state.farmer && (message.writer.id === $store.state.farmer.id || category.moderator)" v-ripple @click="edit(message)">
-												<v-icon>mdi-pencil</v-icon>
+											<v-list-item v-if="$store.state.farmer && (message.writer.id === $store.state.farmer.id || category.moderator)" v-ripple @click="edit(message)" prepend-icon="mdi-pencil">
 												<span>{{ $t('edit') }}</span>
 											</v-list-item>
-											<v-list-item v-if="$store.state.farmer && (message.writer.id === $store.state.farmer.id || category.moderator)" v-ripple @click="deleteGeneric(message)">
-												<v-icon>mdi-delete</v-icon>
+											<v-list-item v-if="$store.state.farmer && (message.writer.id === $store.state.farmer.id || category.moderator)" v-ripple @click="deleteGeneric(message)" prepend-icon="mdi-delete">
 												<span>{{ $t('delete') }}</span>
 											</v-list-item>
-											<v-list-item v-if="category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'" v-ripple @click="report(message)">
-												<v-icon>mdi-flag</v-icon>
+											<v-list-item v-if="category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'" v-ripple @click="report(message)" prepend-icon="mdi-flag">
 												<span>{{ $t('warning.report') }}</span>
 											</v-list-item>
 										</v-list>
@@ -494,6 +489,8 @@ import { emitter } from '@/model/vue'
 		padding-right: 0px;
 		.v-icon {
 			vertical-align: text-bottom;
+			font-size: 24px;
+			margin: 0 4px;
 		}
 		.flag {
 			height: 16px;
@@ -777,7 +774,7 @@ import { emitter } from '@/model/vue'
 	.vote i {
 		vertical-align: bottom;
 		font-size: 20px;
-		padding-right: 4px;
+		margin-right: 6px;
 	}
 	.vote.zero {
 		opacity: 0.6;

@@ -43,10 +43,10 @@
 	import { locale } from '@/locale'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
-	import { Options, Vue } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import AIView from '../editor/ai-view.vue'
 	import { AI } from '@/model/ai'
-	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
+	import { emitter } from '@/model/vue'
 
 	@Options({ components: { 'ai-view': AIView } })
 	export default class Console extends Vue {
@@ -57,16 +57,21 @@
 		historyPos: number = 0
 		ai: any = new AI({ id: 0, code: '' })
 		theme: string = 'leekwars'
-		version: number = 4
-		strict: boolean = false
+		leekscript = {
+			version: 4,
+			strict: false,
+		}
 
-		created() {
+		async created() {
 			LeekWars.loadEncyclopedia(locale)
+
+			const docMessages = await import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
+			i18n.global.mergeLocaleMessage(locale, { doc: docMessages.default })
 
 			const defaultTheme = LeekWars.darkMode ? 'monokai' : 'leekwars'
 			this.theme = localStorage.getItem('console/theme') || defaultTheme
-			this.version = parseInt(localStorage.getItem('console/version') || '4')
-			this.strict = localStorage.getItem('console/strict') === 'true'
+			this.leekscript.version = parseInt(localStorage.getItem('console/version') || '4')
+			this.leekscript.strict = localStorage.getItem('console/strict') === 'true'
 
 			this.clear()
 		}
@@ -82,7 +87,7 @@
 			if (this.editor) {
 				this.editor.editor.setValue('')
 			}
-			LeekWars.socket.send([SocketMessage.CONSOLE_NEW, this.version, this.strict])
+			LeekWars.socket.send([SocketMessage.CONSOLE_NEW, this.leekscript.version, this.leekscript.strict])
 		}
 
 		up() {
@@ -170,15 +175,15 @@
 			localStorage.setItem('console/theme', this.theme)
 		}
 
-		setVersion(version: number) {
-			this.version = version
-			localStorage.setItem('console/version', '' + this.version)
+		@Watch('leekscript.version')
+		updateVersion(version: number) {
+			localStorage.setItem('console/version', '' + this.leekscript.version)
 			this.clear()
 		}
 
-		toggleStrictMode() {
-			this.strict = !this.strict
-			localStorage.setItem('console/strict', '' + this.strict)
+		@Watch('leekscript.strict')
+		updateStrictMode() {
+			localStorage.setItem('console/strict', '' + this.leekscript.strict)
 			this.clear()
 		}
 	}

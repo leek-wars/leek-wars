@@ -6,6 +6,7 @@ import { store } from '@/model/store'
 
 import { Farmer } from './farmer'
 import { Keyword } from './keyword'
+import { reactive } from 'vue'
 
 class FileSystem {
 
@@ -301,6 +302,6 @@ class FileSystem {
 	}
 }
 
-const fileSystem = new FileSystem()
+const fileSystem = reactive(new FileSystem())
 
 export { fileSystem, FileSystem }

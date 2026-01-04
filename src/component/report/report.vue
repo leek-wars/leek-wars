@@ -275,7 +275,6 @@
 	import ReportLeekRow from './report-leek-row.vue'
 	const ReportStatistics = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/report/report-statistics.${locale}.i18n`))
 	import { FightStatistics, StatisticsEntity } from './statistics'
-	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
 	import Comments from '@/component/comment/comments.vue'
 	import { CHIPS } from '@/model/chips'
 	import { emitter } from '@/model/vue'
@@ -520,8 +519,11 @@
 			.error(error => this.error = true)
 		}
 
-		created() {
+		async created() {
 			emitter.on('keyup', this.keyup)
+
+			const fightMessages = await import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
+			i18n.global.mergeLocaleMessage(locale, { fight: fightMessages.default })
 		}
 
 		keyup(e: KeyboardEvent) {

@@ -37,7 +37,7 @@
 					</v-tooltip>
 					<div class="tab" v-if="$store.getters.leek_count >= 2" @click="updateGarden">
 						<span>{{ $t('garden') }}</span>
-						<v-switch :input-value="farmer.in_garden" hide-details />
+						<v-switch :model-value="farmer.in_garden" hide-details />
 					</div>
 					<div v-if="$store.state.farmer && $store.state.farmer.verified" class="tab action" @click="logout">
 						<v-icon>mdi-power</v-icon>
@@ -545,8 +545,7 @@
 			</template>
 		</popup>
 
-		<popup v-if="farmer" v-model="renameDialog" :width="600">
-			<v-icon slot="icon">mdi-pencil-outline</v-icon>
+		<popup v-if="farmer" v-model="renameDialog" :width="600" icon="mdi-pencil-outline">
 			<template #title>{{ $t('rename') }}</template>
 			{{ $t('rename_description') }}
 			<br>
@@ -564,8 +563,7 @@
 			</div>
 		</popup>
 
-		<popup v-if="farmer" v-model="trophyDialog" :width="600">
-			<v-icon slot="icon">mdi-trophy-outline</v-icon>
+		<popup v-if="farmer" v-model="trophyDialog" :width="600" icon="mdi-trophy-outline">
 			<template #title>Donner un trophée</template>
 
 			<div>

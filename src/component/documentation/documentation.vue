@@ -82,7 +82,8 @@
 	import DocumentationConstant from './documentation-constant.vue'
 	import DocumentationFunction from './documentation-function.vue'
 	import { emitter } from '@/model/vue'
-import { nextTick } from 'vue'
+	import { nextTick } from 'vue'
+
 	@Options({
 		name: 'documentation',
 		components: { DocumentationFunction, DocumentationConstant, Breadcrumb },
@@ -240,9 +241,11 @@ import { nextTick } from 'vue'
 			this.$router.push('/help/documentation')
 		}
 		beforeUnmount() {
-			LeekWars.large = false
-			LeekWars.footer = true
-			LeekWars.box = false
+			if (!this.popup) {
+				LeekWars.large = false
+				LeekWars.footer = true
+				LeekWars.box = false
+			}
 			emitter.off('back', this.back)
 			emitter.off('doc-navigate', this.navigate)
 		}

@@ -7,7 +7,9 @@
 			<div>{{ $t('accept_1') }}</div>
 			<br>
 			<i18n-t keypath="accept_2" tag="div">
-				<router-link slot="cgu" to="/conditions">{{ $t('cgu') }}</router-link>
+				<template #cgu>
+					<router-link to="/conditions">{{ $t('cgu') }}</router-link>
+				</template>
 			</i18n-t>
 			<v-btn color="primary" @click="accept">{{ $t('i_accept') }}</v-btn>
 		</panel>

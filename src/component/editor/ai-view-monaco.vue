@@ -25,7 +25,7 @@ import { fileSystem } from '@/model/filesystem'
 import './monaco'
 import { AI } from '@/model/ai'
 import { analyzer, AnalyzerPromise } from './analyzer'
-import { dochash, vueMain, vuetify } from '@/model/vue'
+import { code, dochash, vueMain, vuetify } from '@/model/vue'
 import DocumentationConstant from '../documentation/documentation-constant.vue'
 import DocumentationFunction from '../documentation/documentation-function.vue'
 import Javadoc from './javadoc.vue'
@@ -33,6 +33,10 @@ import { FUNCTIONS } from '@/model/functions';
 import { CONSTANTS } from '@/model/constants';
 import { createApp, nextTick } from 'vue';
 import { create } from 'domain';
+import { i18n } from '@/model/i18n';
+import { LeekWars } from '@/model/leekwars';
+import router from '@/router';
+import Code from '@/component/app/code.vue'
 
 @Options({ name: 'ai-view-monaco', components: {
 
@@ -127,14 +131,29 @@ export default class AIViewMonaco extends Vue {
 				body.appendChild(element)
 				const fun = FUNCTIONS.find(f => f.name === docs.innerText)
 				if (fun) {
-					const doc = new DocumentationFunction({ propsData: { fun }, parent: vueMain }).$mount(element)
+					const doc = createApp(DocumentationFunction, { fun })
+						.mixin({ data() { return { LeekWars } }})
+						.use(i18n)
+						.use(vuetify)
+						.use(router)
+						.directive('code', code)
+						.directive('dochash', dochash)
+						.mount(element)
 					setTimeout(() => {
 						suggestionWidget.value._details._placeAtAnchor(suggestionWidget.value._details._anchorBox, { width: 500, height: doc.$el.clientHeight + 10 }, true)
 					})
 				}
 				const constant = CONSTANTS.find(c => c.name === docs.innerText)
 				if (constant) {
-					const doc = new DocumentationConstant({ propsData: { constant }, parent: vueMain }).$mount(element)
+					const doc = createApp(DocumentationConstant, { constant })
+						.mixin({ data() { return { LeekWars } }})
+						.use(i18n)
+						.use(vuetify)
+						.use(router)
+						.component('lw-code', Code)
+						.directive('code', code)
+						.directive('dochash', dochash)
+						.mount(element)
 					setTimeout(() => {
 						suggestionWidget.value._details._placeAtAnchor(suggestionWidget.value._details._anchorBox, { width: 500, height: doc.$el.clientHeight + 10 }, true)
 					})
@@ -172,7 +191,14 @@ export default class AIViewMonaco extends Vue {
 			const fun = FUNCTIONS.find(f => f.name === firstRow.innerText)
 			if (fun) {
 				firstRow.style.display = 'none'
-				const doc = new DocumentationFunction({ propsData: { fun }, parent: vueMain }).$mount(element)
+				const doc = createApp(DocumentationFunction, { fun })
+					.mixin({ data() { return { LeekWars } }})
+					.use(i18n)
+					.use(vuetify)
+					.use(router)
+					.directive('code', code)
+					.directive('dochash', dochash)
+					.mount(element)
 				setTimeout(() => {
 					hoverController._contentWidget.widget._resize({ width: 500, height: doc.$el.clientHeight + 40 })
 				})
@@ -180,7 +206,15 @@ export default class AIViewMonaco extends Vue {
 			const constant = CONSTANTS.find(c => c.name === firstRow.innerText)
 			if (constant) {
 				firstRow.style.display = 'none'
-				const doc = new DocumentationConstant({ propsData: { constant }, parent: vueMain }).$mount(element)
+				const doc = createApp(DocumentationConstant, { constant })
+					.mixin({ data() { return { LeekWars } }})
+					.use(i18n)
+					.use(vuetify)
+					.use(router)
+					.component('lw-code', Code)
+					.directive('code', code)
+					.directive('dochash', dochash)
+					.mount(element)
 				setTimeout(() => {
 					hoverController._contentWidget.widget._resize({ width: 350, height: doc.$el.clientHeight + 40 })
 				})

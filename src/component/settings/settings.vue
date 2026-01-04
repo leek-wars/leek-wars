@@ -98,7 +98,7 @@
 					<div class="setting" id="dark-button">
 						<div>{{ $t('theme') }}</div>
 						<div width="100">
-							<v-radio-group v-model="LeekWars.themeSetting" hide-details row>
+							<v-radio-group v-model="LeekWars.themeSetting" hide-details inline>
 								<v-radio :label="$t('auto')" value="auto"></v-radio>
 								<v-radio :label="$t('light')" value="light"></v-radio>
 								<v-radio :label="$t('dark')" value="dark"></v-radio>
@@ -172,7 +172,7 @@
 				<template #actions>
 					<span class="push-notifs-button" @click="updatePushNotifications">
 						<span>{{ $t('push_notifications') }}</span>
-						<v-switch :input-value="pushNotifications" hide-details />
+						<v-switch :model-value="pushNotifications" hide-details />
 					</span>
 				</template>
 				<template #content>
@@ -558,7 +558,6 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			margin: 8px 0;
 			.v-input--radio-group--row ::v-deep .v-input--radio-group__input {
 				flex-wrap: nowrap;
 			}
@@ -629,13 +628,12 @@
 		}
 	}
 	.push-notifs-button {
-		display: inline-block;
-		margin-top: 8px;
+		display: flex;
 		cursor: pointer;
+		align-items: center;
+		gap: 8px;
+		padding: 0 8px;
 		> span {
-			vertical-align: bottom;
-			padding-bottom: 5px;
-			display: inline-block;
 			color: white;
 		}
 	}
@@ -653,11 +651,6 @@
 		}
 		.item {
 			color: #777;
-			padding-top: 2px;
-			padding-bottom: 5px;
-		}
-		.mail {
-			width: 80px;
 		}
 		.push label, .mail label {
 			cursor: pointer;

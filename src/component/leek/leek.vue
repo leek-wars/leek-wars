@@ -31,7 +31,7 @@
 						<template v-slot:activator="{ props }">
 							<div class="tab" @click="updateGarden" v-bind="props">
 								<span>{{ $t('garden') }}</span>
-								<v-switch :input-value="leek.in_garden" hide-details />
+								<v-switch :model-value="leek.in_garden" hide-details />
 							</div>
 						</template>
 						{{ $t('authorize_agressions') }}
@@ -351,7 +351,7 @@
 					<template v-slot:activator="{ props }">
 						<div class="tab" @click="updateXpBlocked" v-bind="props">
 							<span>{{ $t('main.xp_blocked') }}</span>
-							<v-switch :input-value="leek.xp_blocked" hide-details />
+							<v-switch :model-value="leek.xp_blocked" hide-details />
 						</div>
 					</template>
 					{{ $t('xp_blocked_desc') }}
@@ -584,26 +584,34 @@
 				<div class="container">
 					<div class="column6">
 						<div v-if="$store.state.farmer" class="pomp">
-							<v-switch :input-value="$store.state.farmer.show_ai_lines" hide-details :label="$t('pomp.ai_lines')" :disabled="!showAiLinesEnabled" @change="changeShowAiLines" />
-							<v-tooltip :disabled="showAiLinesEnabled">
-								<template v-slot:activator="{ props }">
-									<img v-bind="props" src="/image/pomp/ai_lines.png">
+							<v-switch :model-value="$store.state.farmer.show_ai_lines" hide-details :disabled="!showAiLinesEnabled" @change="changeShowAiLines">
+								<template #label>
+									<span>{{ $t('pomp.ai_lines') }}</span>
+									<v-tooltip :disabled="showAiLinesEnabled">
+										<template v-slot:activator="{ props }">
+											<img v-bind="props" src="/image/pomp/ai_lines.png">
+										</template>
+										<v-icon>mdi-lock</v-icon> {{ $t('pomp.ai_lines') }}
+									</v-tooltip>
 								</template>
-								<v-icon>mdi-lock</v-icon> {{ $t('pomp.ai_lines') }}
-							</v-tooltip>
+							</v-switch>
 						</div>
 						<div v-if="leek" class="pomp">
-							<v-switch :input-value="leek.metal" hide-details :label="$t('pomp.metal')" :disabled="!metalEnabled" @change="changeMetal" />
-							<v-tooltip :disabled="metalEnabled">
-								<template v-slot:activator="{ props }">
-									<img v-bind="props" src="/image/pomp/metal.png">
+							<v-switch :model-value="leek.metal" hide-details :disabled="!metalEnabled" @change="changeMetal">
+								<template #label>
+									<span>{{ $t('pomp.metal') }}</span>
+									<v-tooltip :disabled="metalEnabled">
+										<template v-slot:activator="{ props }">
+											<img v-bind="props" src="/image/pomp/metal.png">
+										</template>
+										<v-icon>mdi-lock</v-icon> {{ $t('pomp.metal') }}
+									</v-tooltip>
 								</template>
-								<v-icon>mdi-lock</v-icon> {{ $t('pomp.metal') }}
-							</v-tooltip>
+							</v-switch>
 						</div>
 					</div>
 					<div v-if="leek" class="pomp column6">
-						<v-radio-group v-model="leek.face" @change="changeFace" hide-details>
+						<v-radio-group v-model="leek.face" @update:model-value="changeFace" hide-details>
 							<v-radio :value="0">
 								<template v-slot:label>
           							{{ $t('neutral') }}

@@ -107,6 +107,7 @@
 				color: #333;
 				line-height: 42px;
 				font-size: 26px;
+				margin: 8px;
 				&.timersand {
 					animation: rotate 2s linear infinite;
 				}
