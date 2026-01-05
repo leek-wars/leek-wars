@@ -24,8 +24,8 @@
 					</template>
 					<template v-slot:item.supervisor="{ item }">
 						<router-link :to="'/farmer/' + item.supervisor.id">
-							<rich-tooltip-farmer :id="item.supervisor.id" v-slot="{ props }" :bottom="true">
-								<div class="flex name" v-bind="props" v-ripple>
+							<rich-tooltip-farmer :id="item.supervisor.id" :bottom="true">
+								<div class="flex name" v-ripple>
 									<avatar :farmer="item.supervisor" />
 									<span>{{ item.supervisor.name }}</span>
 									<img v-if="item.supervisor.connected" class="status" src="/image/connected.png">

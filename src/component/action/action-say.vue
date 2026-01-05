@@ -1,11 +1,13 @@
 
 <template>
 	<i18n-t tag="div" keypath="fight.leek_speak" :a="a">
-		<leek slot="leek" :leek="action.entity" />
-		<template v-slot:text>
-			<i slot="text">{{ (action.entity.farmer && action.entity.farmer.muted) ? "@*%#$€" : action.params[1] }}</i>
+		<template #leek>
+			<leek :leek="action.entity" />
 		</template>
-		<template v-slot:cost>
+		<template #text>
+			<i>{{ (action.entity.farmer && action.entity.farmer.muted) ? "@*%#$€" : action.params[1] }}</i>
+		</template>
+		<template #cost>
 			<b class="color-tp">{{ $t('fight.n_tp', [1]) }}</b>
 		</template>
 	</i18n-t>

@@ -161,7 +161,7 @@
 								<span class="title"><v-icon>mdi-seed</v-icon> {{ $t('main.seed') }}</span>
 								<span class="desc">{{ $t('main.seed_desc') }}</span>
 							</div>
-							<input v-model="seed" type="text" class="seed" :placeholder="$t('main.seed_placeholder')" @input="updateSeed">
+							<input v-model="seed" type="text" class="seed" :placeholder="$t('main.seed_placeholder')" @update:model-value="updateSeed">
 							<br><br>
 							<div>
 								<span class="title"><v-icon>mdi-arrow-left-right</v-icon> {{ $t('main.side') }}</span>

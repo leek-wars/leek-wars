@@ -21,7 +21,7 @@
 							<div class="tab green">{{ $t('see_tournament') }}</div>
 						</router-link>
 					</template>
-					<v-tooltip v-if="$store.state.farmer.tournaments_enabled && $store.getters.leek_count >= 2" content-class="fluid" @input="loadTournamentRange()">
+					<v-tooltip v-if="$store.state.farmer.tournaments_enabled && $store.getters.leek_count >= 2" content-class="fluid" @update:model-value="loadTournamentRange()">
 						<template v-slot:activator="{ props }">
 							<div class="tab" v-bind="props">
 								<v-icon>mdi-trophy</v-icon>

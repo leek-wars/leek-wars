@@ -33,7 +33,7 @@
 			</i18n-t>
 			<effect-view v-for="(effect, e) in chip.effects" :key="chip.id + '_' + e" :effect="effect" :leek="leek" />
 		</div>
-		<summon-view v-if="summon" :summon="summon" @input="$emit('input', $event)" />
+		<summon-view v-if="summon" :summon="summon" @update:model-value="$emit('input', $event)" />
 	</div>
 </template>
 

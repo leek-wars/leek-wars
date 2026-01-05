@@ -1,11 +1,13 @@
 
 <template>
 	<i18n-t tag="div" keypath="fight.leek_show_cell" :a="a">
-		<leek slot="leek" :leek="action.entity" />
-		<template v-slot:cell>
+		<template #leek>
+			<leek :leek="action.entity" />
+		</template>
+		<template #cell>
 			<b>{{ action.params[1] }}</b>
 		</template>
-		<template v-slot:cost>
+		<template #cost>
 			<b class="color-tp">{{ $t('fight.n_tp', [1]) }}</b>
 		</template>
 	</i18n-t>

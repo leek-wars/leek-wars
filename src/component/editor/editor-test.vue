@@ -83,7 +83,7 @@
 							<span class="title"><v-icon>mdi-seed</v-icon> {{ $t('main.seed') }}</span>
 							<span class="desc">{{ $t('main.seed_desc') }}</span>
 						</div>
-						<input v-model="currentScenario.seed" type="text" class="seed" :placeholder="$t('main.seed_placeholder')" @keyup.stop @input="updateSeed">
+						<input v-model="currentScenario.seed" type="text" class="seed" :placeholder="$t('main.seed_placeholder')" @keyup.stop @update:model-value="updateSeed">
 					</div>
 				</div>
 			</v-window-item>

@@ -20,7 +20,7 @@
 	"arg_type_10": "intervalle",
 	"arg_type_806": "table<?, entier>",
 	"complexity": "Complexité {c}",
-	"operations": "{o} opérations",
+	"operations": "0 opération | {o} opération | {o} opérations",
 	"details": "Détails",
 	"optional": "optionnel",
 	"deprecated_function": "Cette fonction est dépréciée.",

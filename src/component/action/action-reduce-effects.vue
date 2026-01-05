@@ -1,7 +1,9 @@
 
 <template>
 	<i18n-t tag="div" keypath="fight.reduce_effects" :a="a">
-		<leek slot="leek" :leek="leeks[action.params[1]]" />
+		<template #leek>
+			<leek :leek="leeks[action.params[1]]" />
+		</template>
 		<template v-slot:value>
 			<b>{{ action.params[2] }}%</b>
 		</template>

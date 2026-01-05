@@ -13,10 +13,12 @@
 				<br><br>
 				<h4>
 					<i18n-t keypath="you_earn_n_crystals">
-						<div slot="crystals" class="crystals card">
-							{{ crystals }}
-							<span class="crystal"></span>
-						</div>
+						<template #crystals>
+							<div class="crystals card">
+								{{ crystals }}
+								<span class="crystal"></span>
+							</div>
+						</template>
 					</i18n-t>
 				</h4>
 				<br><br><br>

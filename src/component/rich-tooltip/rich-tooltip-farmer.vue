@@ -48,7 +48,7 @@
 					</tr>
 					<tr v-for="leek in farmer.leeks" :key="leek.id">
 						<td class="leek-name">
-							<rich-tooltip-leek :id="leek.id" v-slot="{ props }" :bottom="true" @input="setParent">
+							<rich-tooltip-leek :id="leek.id" v-slot="{ props }" :bottom="true" @update:model-value="setParent">
 								<router-link :to="'/leek/' + leek.id">
 									<span v-bind="props">{{ leek.name }}</span>
 								</router-link>

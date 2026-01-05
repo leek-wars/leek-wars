@@ -1,8 +1,12 @@
 
 <template>
 	<i18n-t tag="div" keypath="fight.summon" :a="a">
-		<leek slot="leek" :leek="leeks[action.params[1]]" />
-		<leek slot="summon" :leek="leeks[action.params[2]]" />
+		<template #leek>
+			<leek :leek="leeks[action.params[1]]" />
+		</template>
+		<template #summon>
+			<leek :leek="leeks[action.params[2]]" />
+		</template>
 	</i18n-t>
 </template>
 

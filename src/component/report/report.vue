@@ -695,6 +695,7 @@
 				// 	// type: Chartist.AutoScaleAxis,
 				// 	// onlyInteger: true,
 				// }
+				aspectRatio: 2.66,
 				elements: { point: { pointStyle: false } },
 				scales: {
 					x: {
