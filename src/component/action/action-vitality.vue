@@ -1,7 +1,9 @@
 
 <template>
 	<i18n-t tag="div" keypath="fight.leek_win_x" :a="a">
-		<leek slot="leek" :leek="leeks[action.params[1]]" />
+		<template #leek>
+			<leek :leek="leeks[action.params[1]]" />
+		</template>
 		<template v-slot:value>
 			<b class="color-life">{{ $t('fight.n_vita', [action.params[2]]) }}</b>
 		</template>

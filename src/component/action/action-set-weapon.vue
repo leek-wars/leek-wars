@@ -1,6 +1,8 @@
 <template>
 	<i18n-t keypath="fight.leek_take_weapon_cost" tag="div" :a="a">
-		<leek slot="leek" :leek="action.entity" />
+		<template #leek>
+			<leek :leek="action.entity" />
+		</template>
 		<template v-slot:weapon>
 			<b>{{ $t('weapon.' + LeekWars.weapons[action.params[1]].name) }}</b>
 		</template>

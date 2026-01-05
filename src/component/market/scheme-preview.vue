@@ -1,6 +1,6 @@
 <template lang="html">
 	<div class="scheme-preview">
-		<scheme ref="schemeElement" :scheme="scheme" :show-result="true" :show-price="false" @input="$emit('input', $event)" />
+		<scheme ref="schemeElement" :scheme="scheme" :show-result="true" :show-price="false" @update:model-value="$emit('input', $event)" />
 
 		<v-btn class="button" :disabled="!$store.getters.scheme_possible(scheme)" @click="emitter.emit('craft', scheme)"><v-icon>mdi-hammer-wrench</v-icon> Fabriquer</v-btn>
 	</div>

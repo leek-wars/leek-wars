@@ -1,7 +1,9 @@
 
 <template>
 	<i18n-t tag="div" keypath="fight.remove_shackles" :a="a">
-		<leek slot="leek" :leek="leeks[action.params[1]]" />
+		<template #leek>
+			<leek :leek="leeks[action.params[1]]" />
+		</template>
 	</i18n-t>
 </template>
 

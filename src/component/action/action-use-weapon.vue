@@ -1,7 +1,9 @@
 <template>
 	<div :a="a">
 		<i18n-t keypath="fight.leek_shoot_cost">
-			<leek slot="leek" :leek="action.entity" />
+			<template #leek>
+				<leek :leek="action.entity" />
+			</template>
 			<template v-slot:weapon>
 				<b>{{ $t('weapon.' + action.item.name) }}</b>
 			</template>

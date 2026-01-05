@@ -32,25 +32,27 @@
 		<div class="container documentation last">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column4">
 				<panel class="first">
-					<div slot="content" class="items-list">
-						<div v-for="(category, c) of filteredCategories" :key="category.id">
-							<h2 v-ripple @click="toggleCategory(c)">
-								<v-icon>mdi-{{ icons[c] }}</v-icon>
-								<!-- {{ $t('doc.function_category_' + c) }} -->
-								<span>{{ c }}</span>
-								<span v-if="query.length">({{ category.length }})</span>
-								<div class="spacer"></div>
-								<v-icon v-if="query.length || categoryState[c]">mdi-chevron-up</v-icon>
-								<v-icon v-else>mdi-chevron-down</v-icon>
-							</h2>
-							<div v-if="query.length || categoryState[c]">
-								<div v-for="(item, i) in category" :key="i" @click="navigate(item.module + '/' + item.function)" :item="item.name" class="item">
-									<span class="method chip" :class="item.method">{{ item.method }}</span>
-									{{ item.function }}
+					<template #content>
+						<div class="items-list">
+							<div v-for="(category, c) of filteredCategories" :key="category.id">
+								<h2 v-ripple @click="toggleCategory(c)">
+									<v-icon>mdi-{{ icons[c] }}</v-icon>
+									<!-- {{ $t('doc.function_category_' + c) }} -->
+									<span>{{ c }}</span>
+									<span v-if="query.length">({{ category.length }})</span>
+									<div class="spacer"></div>
+									<v-icon v-if="query.length || categoryState[c]">mdi-chevron-up</v-icon>
+									<v-icon v-else>mdi-chevron-down</v-icon>
+								</h2>
+								<div v-if="query.length || categoryState[c]">
+									<div v-for="(item, i) in category" :key="i" @click="navigate(item.module + '/' + item.function)" :item="item.name" class="item">
+										<span class="method chip" :class="item.method">{{ item.method }}</span>
+										{{ item.function }}
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
+					</template>
 				</panel>
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column8">
@@ -58,9 +60,9 @@
 					<panel v-for="(service, s) in filteredItems" :key="s" class="service" :item="service.module + '_' + service.function" >
 						<div class="title">
 							<span class="module">{{ service.module }}</span>/<span class="function">{{ service.function }}</span>
-							<template v-for="(parameter, p) in service.parameters">
-								<span :key="p + '-'">/</span>
-								<span :key="p" class="parameter">{{ parameter }}</span>
+							<template v-for="(parameter, p) in service.parameters" :key="p">
+								<span>/</span>
+								<span class="parameter">{{ parameter }}</span>
 							</template>
 							<template v-if="service.returns.length"> → <span class="returns">{{ service.returns.join(", ") }}</span></template>
 						</div>
@@ -113,6 +115,8 @@
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import JsonViewer from 'vue-json-viewer'
 	import Markdown from '@/component/encyclopedia/markdown.vue'
+import { nextTick } from 'vue'
+import { emitter } from '@/model/vue'
 
 	@Options({ name: 'api', i18n: {}, mixins: [...mixins],
 		components: { Breadcrumb, JsonViewer, Markdown }

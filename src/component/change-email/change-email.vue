@@ -39,7 +39,9 @@
 					<br>
 					<br>
 					<i18n-t keypath="email_sent">
-						<b slot="email">{{ email }}</b>
+						<template #email>
+							<b>{{ email }}</b>
+						</template>
 					</i18n-t>
 					<br>
 					<br>

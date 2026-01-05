@@ -47,9 +47,7 @@
 			</v-list>
 		</v-menu>
 
-		<popup v-model="censorDialog" :width="500">
-			<v-icon slot="icon">mdi-gavel</v-icon>
-			<span slot="title">Censurer</span>
+		<popup v-model="censorDialog" :width="500" icon="mdi-gavel" title="Censurer">
 			<div v-if="muteFarmer" class="censor">
 				<i18n-t keypath="warning.censor_farmer">
 					<b slot="farmer">{{ muteFarmer.name }}</b>
@@ -74,9 +72,7 @@
 			</template>
 		</popup>
 
-		<popup v-model="deleteDialog" :width="500">
-			<v-icon slot="icon">mdi-delete</v-icon>
-			<span slot="title">Supprimer</span>
+		<popup v-model="deleteDialog" :width="500" icon="mdi-delete" title="Supprimer">
 			<div v-if="muteFarmer" class="censor">
 				<i18n-t keypath="warning.delete_farmer"></i18n-t>
 				<div class="flex">
@@ -99,9 +95,7 @@
 			</template>
 		</popup>
 
-		<popup v-model="muteDialog" :width="500">
-			<v-icon slot="icon">mdi-gavel</v-icon>
-			<span slot="title">Censurer</span>
+		<popup v-model="muteDialog" :width="500" icon="mdi-gavel" title="Censurer">
 			<div v-if="muteFarmer" class="censor">
 				<i18n-t keypath="warning.mute_popup">
 					<b slot="farmer">{{ muteFarmer.name }}</b>

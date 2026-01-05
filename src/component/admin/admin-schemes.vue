@@ -4,67 +4,64 @@
 			<h1><router-link to="/admin">Administration</router-link> > Schémas ({{ schemes ? schemes.length : '...' }})</h1>
 		</div>
 		<panel class="first">
-			<div class="content" slot="content">
+			<div v-if="schemes" class="schemes">
+				<!-- <div v-for="(scheme, s) in schemes" :key="s" class="scheme">
+					<div v-ripple class="group result">
+						<rich-tooltip-item :item="LeekWars.items[scheme.result]" :bottom="true" :inventory="true" @update:model-value="$emit('input', $event)">
+							<div class="item" v-bind="props" :quantity="1" :class="{['rarity-border-' + LeekWars.items[scheme.result].rarity]: true}">
+								<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[scheme.result].type] + '/' + LeekWars.items[scheme.result].name.replace('hat_', '').replace('potion_', '') + '.png'" :type="LeekWars.items[scheme.result].type">
+								<div v-if="scheme.quantity > 1" class="quantity">{{ $filters.number(scheme.quantity) }}</div>
+							</div>
+						</rich-tooltip-item>
+						<input :value="scheme.result" type="text">
+					</div>
+					<div :key="'__'" class="symbol">{{ " = " }}</div>
+					<div class="items">
+						<template v-for="(ingredient, i) in scheme.items">
+							<div v-if="ingredient">
+								<rich-tooltip-item v-if="LeekWars.items[ingredient[0]]" :key="i" :item="LeekWars.items[ingredient[0]]" :bottom="true" :inventory="true" :quantity="ingredient[1]" @update:model-value="$emit('input', $event)">
+									<div class="item" v-bind="props" :class="{['rarity-border-' + LeekWars.items[ingredient[0]].rarity]: true}">
+										<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[ingredient[0]].type] + '/' + LeekWars.items[ingredient[0]].name.replace('hat_', '').replace('potion_', '').replace('chip_', '') + '.png'" :type="LeekWars.items[ingredient[0]].type">
+										<div v-if="ingredient[1] > 1" class="quantity">{{ $filters.number(ingredient[1]) }}</div>
+									</div>
+								</rich-tooltip-item>
+								<div v-else class="item"></div>
+								<input v-model="ingredient[0]" type="text">
+								<input v-model="ingredient[1]" type="text">
+							</div>
+							<div v-if="ingredient && i < scheme.items.length - 1" :key="'_' + i" class="symbol">{{ " + " }}</div>
+						</template>
+					</div>
+					<div class="spacer"></div>
+					<div>
+						<div>{{ $filters.number(scheme.quantity * LeekWars.items[scheme.result].price) }} <span class="hab"></span></div>
+						<div :class="{wrong: Math.abs((scheme.quantity * LeekWars.items[scheme.result].price) / scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0) - 1.1) > 0.02 }">{{ $filters.number(scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0)) }} ({{ ((scheme.quantity * LeekWars.items[scheme.result].price) / scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0)).toFixed(2) }}) <span class="hab"></span></div>
+					</div>
+				</div> -->
 
-				<div v-if="schemes" class="schemes">
-					<!-- <div v-for="(scheme, s) in schemes" :key="s" class="scheme">
-						<div v-ripple class="group result">
-							<rich-tooltip-item v-slot="{ props }" :item="LeekWars.items[scheme.result]" :bottom="true" :inventory="true" @update:model-value="$emit('input', $event)">
-								<div class="item" v-bind="props" :quantity="1" :class="{['rarity-border-' + LeekWars.items[scheme.result].rarity]: true}">
-									<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[scheme.result].type] + '/' + LeekWars.items[scheme.result].name.replace('hat_', '').replace('potion_', '') + '.png'" :type="LeekWars.items[scheme.result].type">
-									<div v-if="scheme.quantity > 1" class="quantity">{{ $filters.number(scheme.quantity) }}</div>
+				<div v-for="(scheme, s) in schemes" :key="s" class="forge">
+					<div class="grid">
+						<div v-for="(_, i) in 9" :key="i" class="cell" :class="{['cell' + i]: true}">
+							<rich-tooltip-item v-if="scheme.items[i] && LeekWars.items[scheme.items[i][0]]" :key="i" :item="LeekWars.items[scheme.items[i][0]]" :bottom="true" :inventory="true" :quantity="scheme.items[i][1]">
+								<div class="item" :type="LeekWars.items[scheme.items[i][0]].type">
+									<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[scheme.items[i][0]].type] + '/' + LeekWars.items[scheme.items[i][0]].name.replace('hat_', '').replace('potion_', '').replace('chip_', '').replace('weapon_', '') + '.png'">
 								</div>
 							</rich-tooltip-item>
-							<input :value="scheme.result" type="text">
+							<input v-model="scheme.items[i][0]" @keyup="updateScheme(scheme)" class="item-id">
+							<input v-model="scheme.items[i][1]" @keyup="updateScheme(scheme)" class="quantity">
 						</div>
-						<div :key="'__'" class="symbol">{{ " = " }}</div>
-						<div class="items">
-							<template v-for="(ingredient, i) in scheme.items">
-								<div v-if="ingredient">
-									<rich-tooltip-item v-if="LeekWars.items[ingredient[0]]" :key="i" v-slot="{ props }" :item="LeekWars.items[ingredient[0]]" :bottom="true" :inventory="true" :quantity="ingredient[1]" @update:model-value="$emit('input', $event)">
-										<div class="item" v-bind="props" :class="{['rarity-border-' + LeekWars.items[ingredient[0]].rarity]: true}">
-											<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[ingredient[0]].type] + '/' + LeekWars.items[ingredient[0]].name.replace('hat_', '').replace('potion_', '').replace('chip_', '') + '.png'" :type="LeekWars.items[ingredient[0]].type">
-											<div v-if="ingredient[1] > 1" class="quantity">{{ $filters.number(ingredient[1]) }}</div>
-										</div>
-									</rich-tooltip-item>
-									<div v-else class="item"></div>
-									<input v-model="ingredient[0]" type="text">
-									<input v-model="ingredient[1]" type="text">
+						<div class="cell" :class="{cell8: true}">
+							<rich-tooltip-item :item="LeekWars.items[scheme.result]" :bottom="true" :inventory="true" :quantity="scheme.quantity">
+								<div class="item" :type="LeekWars.items[scheme.result].type">
+									<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[scheme.result].type] + '/' + LeekWars.items[scheme.result].name.replace('hat_', '').replace('potion_', '') + '.png'">
+									<input v-model="scheme.quantity" @keyup="updateScheme(scheme)" class="quantity">
 								</div>
-								<div v-if="ingredient && i < scheme.items.length - 1" :key="'_' + i" class="symbol">{{ " + " }}</div>
-							</template>
+							</rich-tooltip-item>
 						</div>
-						<div class="spacer"></div>
-						<div>
-							<div>{{ $filters.number(scheme.quantity * LeekWars.items[scheme.result].price) }} <span class="hab"></span></div>
-							<div :class="{wrong: Math.abs((scheme.quantity * LeekWars.items[scheme.result].price) / scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0) - 1.1) > 0.02 }">{{ $filters.number(scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0)) }} ({{ ((scheme.quantity * LeekWars.items[scheme.result].price) / scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0)).toFixed(2) }}) <span class="hab"></span></div>
-						</div>
-					</div> -->
-
-					<div v-for="(scheme, s) in schemes" :key="s" class="forge">
-						<div class="grid">
-							<div v-for="(_, i) in 9" :key="i" class="cell" :class="{['cell' + i]: true}">
-								<rich-tooltip-item v-if="scheme.items[i] && LeekWars.items[scheme.items[i][0]]" :key="i" v-slot="{ props }" :item="LeekWars.items[scheme.items[i][0]]" :bottom="true" :inventory="true" :quantity="scheme.items[i][1]">
-									<div class="item" v-bind="props" :type="LeekWars.items[scheme.items[i][0]].type">
-										<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[scheme.items[i][0]].type] + '/' + LeekWars.items[scheme.items[i][0]].name.replace('hat_', '').replace('potion_', '').replace('chip_', '').replace('weapon_', '') + '.png'">
-									</div>
-								</rich-tooltip-item>
-								<input v-model="scheme.items[i][0]" @keyup="updateScheme(scheme)" class="item-id">
-								<input v-model="scheme.items[i][1]" @keyup="updateScheme(scheme)" class="quantity">
-							</div>
-							<div class="cell" :class="{cell8: true}">
-								<rich-tooltip-item v-slot="{ props }" :item="LeekWars.items[scheme.result]" :bottom="true" :inventory="true" :quantity="scheme.quantity">
-									<div v-bind="props" class="item" :type="LeekWars.items[scheme.result].type">
-										<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[scheme.result].type] + '/' + LeekWars.items[scheme.result].name.replace('hat_', '').replace('potion_', '') + '.png'">
-										<input v-model="scheme.quantity" @keyup="updateScheme(scheme)" class="quantity">
-									</div>
-								</rich-tooltip-item>
-							</div>
-						</div>
-						<div>
-							<div>{{ $filters.number(scheme.quantity * LeekWars.items[scheme.result].price) }} <span class="hab"></span></div>
-							<div :class="{wrong: Math.abs((scheme.quantity * LeekWars.items[scheme.result].price) / scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0) - 1.1) > 0.03 }">{{ $filters.number(scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0)) }} ({{ ((scheme.quantity * LeekWars.items[scheme.result].price) / scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0)).toFixed(2) }}) <span class="hab"></span></div>
-						</div>
+					</div>
+					<div>
+						<div>{{ $filters.number(scheme.quantity * LeekWars.items[scheme.result].price) }} <span class="hab"></span></div>
+						<div :class="{wrong: Math.abs((scheme.quantity * LeekWars.items[scheme.result].price) / scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0) - 1.1) > 0.03 }">{{ $filters.number(scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0)) }} ({{ ((scheme.quantity * LeekWars.items[scheme.result].price) / scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0)).toFixed(2) }}) <span class="hab"></span></div>
 					</div>
 				</div>
 			</div>

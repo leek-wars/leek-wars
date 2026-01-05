@@ -1,8 +1,12 @@
 
 <template>
 	<i18n-t tag="div" keypath="fight.leek_resurrect" :a="a">
-		<leek slot="leek" :leek="leeks[action.params[1]]" />
-		<leek slot="target" :leek="leeks[action.params[2]]" />
+		<template #leek>
+			<leek :leek="leeks[action.params[1]]" />
+		</template>
+		<template #target>
+			<leek :leek="leeks[action.params[2]]" />
+		</template>
 		<span v-if="action.params[4] === 2">... {{ $t('effect.critical') }}</span>
 	</i18n-t>
 </template>

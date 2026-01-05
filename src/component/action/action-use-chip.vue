@@ -1,11 +1,13 @@
 <template>
 	<div :a="a">
 		<i18n-t keypath="fight.leek_cast_cost">
-			<leek slot="leek" :leek="action.entity" />
-			<template v-slot:chip>
+			<template #leek>
+				<leek :leek="action.entity" />
+			</template>
+			<template #chip>
 				<b>{{ $t('chip.' + action.item.name) }}</b>
 			</template>
-			<template v-slot:cost>
+			<template #cost>
 				<b class="color-tp">{{ $t('fight.n_tp', [action.item.cost]) }}</b>
 			</template>
 		</i18n-t>

@@ -1,7 +1,9 @@
 
 <template>
 	<i18n-t keypath="fight.leek_win_x_turns" tag="div" :a="a">
-		<leek slot="leek" :leek="leek" />
+		<template #leek>
+			<leek :leek="leek" />
+		</template>
 		<template v-slot:value>
 			<b class="color-resistance">{{ $t('fight.n_absolute_shield', [value]) }}</b>
 		</template>

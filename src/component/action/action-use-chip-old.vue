@@ -1,8 +1,10 @@
 <template>
 	<div :a="a">
 		<i18n-t keypath="fight.leek_cast">
-			<leek slot="leek" :leek="action.entity" />
-			<template v-slot:chip>
+			<template #leek>
+				<leek :leek="action.entity" />
+			</template>
+			<template #chip>
 				<b>{{ $t('chip.' + CHIPS[LeekWars.chipTemplates[action.params[3]].item].name) }}</b>
 			</template>
 		</i18n-t>

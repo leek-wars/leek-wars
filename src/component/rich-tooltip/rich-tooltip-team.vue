@@ -28,7 +28,7 @@
 				<div v-if="expand" class="farmers">
 					<template v-for="(farmer, f) in team.farmers" :key="farmer.id">
 						<template v-if="f > 0">, </template>
-						<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }" :bottom="true" @input="setParent">
+						<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }" :bottom="true" @update:model-value="setParent">
 							<router-link :to="'/farmer/' + farmer.id">
 								<span :class="farmer.class" v-bind="props">{{ farmer.name }}</span>
 							</router-link>

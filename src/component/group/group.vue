@@ -174,7 +174,7 @@
 
 					<div class="level" v-if="equipmentEditing">
 						<b>{{ $t('main.level') }}</b>
-						<input type="number" v-model="group.level" @input="changeLevel" :min="1" :max="301" /> (1 - 301)
+						<input type="number" v-model="group.level" @update:model-value="changeLevel" :min="1" :max="301" /> (1 - 301)
 						<div class="spacer"></div>
 						<!-- <b :style="{color: $refs.capitalDialog.capital < 0 ? 'red' : 'green'}">{{ $refs.capitalDialog.capital }} capital</b> -->
 						<v-icon v-if="$refs.capitalDialog.capital < 0" class="card alert">mdi-alert-circle</v-icon>

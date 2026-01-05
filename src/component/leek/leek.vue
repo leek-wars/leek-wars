@@ -13,7 +13,7 @@
 							<div class="tab green">{{ $t('see_tournament') }}</div>
 						</router-link>
 					</template>
-					<v-tooltip v-if="$store.state.farmer.tournaments_enabled && leek.tournament" content-class="fluid" @input="loadTournamentRange">
+					<v-tooltip v-if="$store.state.farmer.tournaments_enabled && leek.tournament" content-class="fluid" @update:model-value="loadTournamentRange">
 						<template v-slot:activator="{ props }">
 							<div class="tab" @click="registerTournament" v-bind="props">
 								<v-icon>mdi-trophy</v-icon>
@@ -23,8 +23,12 @@
 						</template>
 						{{ $t('tournament_time') }}
 						<i18n-t v-if="tournamentRange" tag="div" keypath="main.level_x_to_y">
-							<b slot="min">{{ tournamentRange.min }}</b>
-							<b slot="max">{{ tournamentRange.max }}</b>
+							<template #min>
+								<b>{{ tournamentRange.min }}</b>
+							</template>
+							<template #max>
+								<b>{{ tournamentRange.max }}</b>
+							</template>
 						</i18n-t>
 					</v-tooltip>
 					<v-tooltip>
@@ -323,7 +327,7 @@
 						{{ $t('rename_leek') }}
 					</div>
 				</template>
-				<v-tooltip v-if="leek && my_leek && leek.level >= 20 && $store.state.farmer?.br_enabled" @input="loadBRRange">
+				<v-tooltip v-if="leek && my_leek && leek.level >= 20 && $store.state.farmer?.br_enabled" @update:model-value="loadBRRange">
 					<template v-slot:activator="{ props }">
 						<div class="tab" @click="registerAutoBr" v-bind="props">
 							<v-icon>mdi-trophy</v-icon>

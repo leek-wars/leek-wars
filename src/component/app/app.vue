@@ -111,9 +111,9 @@
 						<h2>Reverse-Engineering : LW101</h2>
 						<h4>Examen pratique</h4>
 						<br>
-						Organisé par <rich-tooltip-farmer :id="50023" v-slot="{ props }" :bottom="true">
+						Organisé par <rich-tooltip-farmer :id="50023" :bottom="true">
 							<avatar :farmer="{id: 50023, avatar_changed: 12}" />
-							<b v-bind="props">Oimat</b>
+							<b>Oimat</b>
 						</rich-tooltip-farmer>
 						<div class="annonce-message">
 							<br>

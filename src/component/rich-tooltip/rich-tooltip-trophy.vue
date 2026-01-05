@@ -6,7 +6,7 @@
 			</span>
 		</template>
 		<div class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
-			<trophy ref="preview" :trophy="trophy" @input="setParent" />
+			<trophy ref="preview" :trophy="trophy" @update:model-value="setParent" />
 		</div>
 	</v-menu>
 </template>

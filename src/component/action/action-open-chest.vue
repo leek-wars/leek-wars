@@ -1,8 +1,12 @@
 
 <template>
 	<i18n-t tag="div" keypath="fight.open_chest" :a="a">
-		<leek slot="entity" :leek="leeks[action.params[1]]" />
-		<leek slot="chest" :leek="leeks[action.params[2]]" />
+		<template #entity>
+			<leek :leek="leeks[action.params[1]]" />
+		</template>
+		<template #chest>
+			<leek :leek="leeks[action.params[2]]" />
+		</template>
 		<template v-slot:resources>
 			<br>
 			<v-tooltip v-for="(quantity, resource) of action.params[3]" :key="resource">

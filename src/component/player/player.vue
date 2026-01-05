@@ -85,56 +85,54 @@
 			</div>
 
 			<div v-if="!creator" class="controls controls-a">
-				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
+				<v-tooltip :open-delay="0" :close-delay="0" location="top" content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ props }">
 						<v-icon v-ripple class="control" @click="pause" v-bind="props">{{ game.paused ? 'mdi-play' : 'mdi-pause' }}</v-icon>
 					</template>
 					{{ $t('pause') }} (P)
 				</v-tooltip>
-				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
+				<v-tooltip :open-delay="0" :close-delay="0" location="top" content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ props }">
 						<v-icon v-ripple class="control" :style="{opacity: game.speedButtonVisible ? 1 : 0}" v-bind="props" @click="game.speedUp()">mdi-fast-forward</v-icon>
 					</template>
 					{{ $t('accelerate') }} (S)
 				</v-tooltip>
-				<v-tooltip v-if="!LeekWars.mobile" :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
+				<v-tooltip v-if="!LeekWars.mobile" :open-delay="0" :close-delay="0" location="top" content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ props }">
 						<v-icon v-ripple class="control" v-bind="props" @click="game.previousAction()">mdi-skip-previous</v-icon>
 					</template>
 					{{ $t('previous_action') }} (←)
 				</v-tooltip>
-				<v-tooltip v-if="!LeekWars.mobile" :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
+				<v-tooltip v-if="!LeekWars.mobile" :open-delay="0" :close-delay="0" location="top" content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ props }">
 						<v-icon v-ripple class="control" v-bind="props" @click="game.nextAction()">mdi-skip-next</v-icon>
 					</template>
 					{{ $t('next_action') }} (→)
 				</v-tooltip>
-				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
+				<v-tooltip :open-delay="0" :close-delay="0" location="top" content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ props }">
 						<v-icon v-ripple class="control" v-bind="props" @click="game.sound = !game.sound">{{ game.sound ? 'mdi-volume-high' : 'mdi-volume-low' }}</v-icon>
 					</template>
 					{{ $t(game.sound ? 'sound_activated' : 'sound_disactivated') }} (V)
 				</v-tooltip>
-				<v-tooltip v-if="game.sound && !LeekWars.mobile" :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
+				<v-tooltip v-if="game.sound && !LeekWars.mobile" :open-delay="0" :close-delay="0" location="top" content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ props }">
 						<input type="range" min="0" max="1" step="0.01" style="width: 100px; padding: 0" v-model="game.volume">
 					</template>
 				</v-tooltip>
-				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
+				<v-tooltip :open-delay="0" :close-delay="0" location="top" content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ props: tooltipProps }">
-						<v-menu :close-on-content-click="false" :min-width="390" top offset-y right :attach="$refs.player">
+						<v-menu :close-on-content-click="false" :width="390" location="top" offset-y right :attach="$refs.player">
 							<template v-slot:activator="{ props: menuProps }">
 								<div v-ripple class="control turn" v-bind="{...tooltipProps, ...menuProps}">{{ horizontal ? game.turn : $t('fight.turn_n', [game.turn]) }}</div>
 								<!-- <v-icon class="control" >mdi-settings-outline</v-icon> -->
 							</template>
 							<v-list :dense="true" class="settings-menu">
 								<div class="section">{{ $t('fight.share') }}</div>
-								<v-list-item>
-									<v-icon>mdi-share-variant</v-icon>
+								<v-list-item prepend-icon="mdi-share-variant">
 									<input type="text" :value="document.location.host + '/fight/' + fightId + '?action=' + game.currentAction" @keyup.stop>
 								</v-list-item>
-								<v-list-item>
-									<v-icon>mdi-share-variant</v-icon>
+								<v-list-item prepend-icon="mdi-share-variant">
 									<input type="text" :value="document.location.host + '/fight/' + fightId + '?turn=' + game.turn" @keyup.stop>
 								</v-list-item>
 							</v-list>
@@ -149,7 +147,7 @@
 
 			<div class="controls constrols-b">
 
-				<v-tooltip v-if="!creator && $store.state.farmer && $store.state.farmer.admin" :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
+				<v-tooltip v-if="!creator && $store.state.farmer && $store.state.farmer.admin" :open-delay="0" :close-delay="0" location="top" content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ props: tooltipProps }">
 						<v-menu :close-on-content-click="false" top offset-y left>
 							<template v-slot:activator="{ props: menuProps }">
@@ -163,67 +161,60 @@
 					Carte
 				</v-tooltip>
 
-				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
+				<v-tooltip :open-delay="0" :close-delay="0" location="top" content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ props }">
 						<v-icon v-ripple class="control" v-bind="props" @click="toggleFullscreen">mdi-aspect-ratio</v-icon>
 					</template>
 					{{ $t('fullscreen') }}
 				</v-tooltip>
-				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
+				<v-tooltip :open-delay="0" :close-delay="0" location="top" content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ props: tooltipProps }">
 						<v-menu :close-on-content-click="false" top offset-y left :attach="$refs.player">
 							<template v-slot:activator="{ props: menuProps }">
 								<v-icon v-ripple class="control" v-bind="{...tooltipProps, ...menuProps}">mdi-settings-outline</v-icon>
 							</template>
-							<v-list :dense="true" class="settings-menu">
+							<v-list density="compact" class="settings-menu">
 								<div class="section">INTERFACE</div>
-								<v-list-item v-ripple @click="game.showLifes = !game.showLifes">
-									<v-icon>mdi-heart-half-full</v-icon>
+								<v-list-item v-ripple @click="game.showLifes = !game.showLifes" prepend-icon="mdi-heart-half-full">
 									<v-switch :model-value="game.showLifes" :label="$t('display_life_bars') + ' (L)'" hide-details />
 								</v-list-item>
-								<v-list-item :ripple="game.showLifes" :class="{disabled: !game.showLifes}" @click="game.showLifes ? (game.showEffects = !game.showEffects) : null">
-									<v-icon>mdi-flare</v-icon>
+								<v-list-item :ripple="game.showLifes" :class="{disabled: !game.showLifes}" @click="game.showLifes ? (game.showEffects = !game.showEffects) : null" prepend-icon="mdi-flare">
 									<v-switch :model-value="game.showEffects" :disabled="!game.showLifes" :label="$t('display_effects') + ' (E)'" hide-details />
 								</v-list-item>
-								<v-list-item v-if="!LeekWars.mobile" v-ripple @click="game.showActions = !game.showActions">
-									<v-icon>mdi-format-list-bulleted</v-icon>
+								<v-list-item v-if="!LeekWars.mobile" v-ripple @click="game.showActions = !game.showActions" prepend-icon="mdi-format-list-bulleted">
 									<v-switch :model-value="game.showActions" :label="$t('show_actions') + ' (A)'" hide-details />
 								</v-list-item>
-								<v-list-item v-if="!LeekWars.mobile" :ripple="game.showActions" :class="{disabled: !game.showActions}" @click="game.showActions ? (game.largeActions = !game.largeActions) : null">
-									<v-icon>mdi-view-split-vertical</v-icon>
+								<v-list-item v-if="!LeekWars.mobile" :ripple="game.showActions" :class="{disabled: !game.showActions}" @click="game.showActions ? (game.largeActions = !game.largeActions) : null" prepend-icon="mdi-view-split-vertical">
 									<v-switch :model-value="game.largeActions" :disabled="!game.showActions" :label="$t('large_actions') + ' (G)'" hide-details />
 								</v-list-item>
-								<v-list-item v-if="!LeekWars.mobile" :ripple="game.displayDebugs" :class="{disabled: !game.showActions}" @click="game.showActions ? (game.displayDebugs = !game.displayDebugs) : null">
-									<v-icon>mdi-math-log</v-icon>
+								<v-list-item v-if="!LeekWars.mobile" :ripple="game.displayDebugs" :class="{disabled: !game.showActions}" @click="game.showActions ? (game.displayDebugs = !game.displayDebugs) : null" prepend-icon="mdi-math-log">
 									<v-switch :model-value="game.displayDebugs" :disabled="!game.showActions" :label="$t('display_logs') + ' (D)'" hide-details />
-									<v-checkbox v-model="game.displayAILines" :disabled="!game.showActions || !game.displayDebugs" :class="{disabled: !game.showActions || !game.displayDebugs}" label="Lignes" hide-details class="ally-debug" @click.stop />
-									<v-checkbox v-model="game.displayAllyDebugs" :disabled="!game.showActions || !game.displayDebugs" :class="{disabled: !game.showActions || !game.displayDebugs}" label="Alliés" hide-details class="ally-debug" @click.stop />
+									<template #append>
+										<v-checkbox v-model="game.displayAILines" :disabled="!game.showActions || !game.displayDebugs" :class="{disabled: !game.showActions || !game.displayDebugs}" label="Lignes" hide-details class="ally-debug" @click.stop />
+										<v-checkbox v-model="game.displayAllyDebugs" :disabled="!game.showActions || !game.displayDebugs" :class="{disabled: !game.showActions || !game.displayDebugs}" label="Alliés" hide-details class="ally-debug" @click.stop />
+									</template>
 								</v-list-item>
 								<div class="section">GRAPHISMES</div>
-								<v-list-item v-ripple @click="game.shadows = !game.shadows">
-									<v-icon>mdi-box-shadow</v-icon>
+								<v-list-item v-ripple @click="game.shadows = !game.shadows" prepend-icon="mdi-box-shadow">
 									<v-switch :model-value="game.shadows" :label="$t('display_shadows') + ' (O)'" hide-details />
 								</v-list-item>
-								<v-list-item>
-									<v-icon>mdi-weather-night</v-icon>
+								<v-list-item prepend-icon="mdi-weather-night">
 									<v-switch v-if="!game.autoDark" v-model="game.dark" :label="$t('dark_mode') + ' (N)'" class="night" hide-details />
-									<v-checkbox v-model="game.autoDark" label="Auto" hide-details />
+									<template #append>
+										<v-checkbox v-model="game.autoDark" label="Auto" hide-details />
+									</template>
 								</v-list-item>
 								<div class="section">DEVELOPEMENT</div>
-								<v-list-item v-ripple @click="game.tactic = !game.tactic">
-									<v-icon>mdi-view-comfy</v-icon>
+								<v-list-item v-ripple @click="game.tactic = !game.tactic" prepend-icon="mdi-view-comfy">
 									<v-switch :model-value="game.tactic" :label="$t('tactic_mode') + ' (T)'" hide-details />
 								</v-list-item>
-								<v-list-item v-ripple @click="game.plainBackground = !game.plainBackground">
-									<v-icon>mdi-format-color-fill</v-icon>
+								<v-list-item v-ripple @click="game.plainBackground = !game.plainBackground" prepend-icon="mdi-format-color-fill">
 									<v-switch :model-value="game.plainBackground" :label="$t('plain_background') + ' (U)'" hide-details />
 								</v-list-item>
-								<v-list-item v-ripple @click="game.showCells = !game.showCells">
-									<v-icon>mdi-numeric-1-box</v-icon>
+								<v-list-item v-ripple @click="game.showCells = !game.showCells" prepend-icon="mdi-numeric-1-box">
 									<v-switch :model-value="game.showCells" :label="$t('display_cell_numbers') + ' (C)'" hide-details />
 								</v-list-item>
-								<v-list-item v-if="!LeekWars.mobile" :ripple="game.showLifes" :class="{disabled: !game.showLifes}" @click="game.showLifes ? (game.showIDs = !game.showIDs) : null">
-									<v-icon>mdi-key</v-icon>
+								<v-list-item v-if="!LeekWars.mobile" :ripple="game.showLifes" :class="{disabled: !game.showLifes}" @click="game.showLifes ? (game.showIDs = !game.showIDs) : null" prepend-icon="mdi-key">
 									<v-switch :model-value="game.showIDs" :disabled="!game.showLifes" :label="$t('show_ids') + ' (I)'" hide-details />
 								</v-list-item>
 							</v-list>
@@ -231,7 +222,7 @@
 					</template>
 					{{ $t('settings') }}
 				</v-tooltip>
-				<v-tooltip v-if="!creator" :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
+				<v-tooltip v-if="!creator" :open-delay="0" :close-delay="0" location="top" content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ props }">
 						<v-icon v-ripple class="control" v-bind="props" @click="quit">mdi-exit-to-app</v-icon>
 					</template>
@@ -926,7 +917,7 @@
 		cursor: pointer;
 		color: white;
 		text-align: center;
-		width: 48px;
+		min-width: 48px;
 		height: 36px;
 		&:is(i) {
 			font-size: 24px;
@@ -1095,14 +1086,19 @@
 		opacity: 0;
 		transform: scale(1.5);
 	}
-	.settings-menu {
+	.v-menu .settings-menu {
 		background: #1E1E1E;
-		i {
-			padding-right: 10px;
+		&:deep(i) {
+			// padding-right: 10px;
 			color: #eee;
+			opacity: 1;
 		}
 		input[type="text"] {
 			width: 100%
+		}
+		.v-list-item {
+			padding-top: 0;
+			padding-bottom: 0;
 		}
 	}
 	.settings-menu ::v-deep label {
