@@ -8,7 +8,7 @@
 	"leek_level": "Niveau {0}",
 	"leek_loose_x": "{leek} perd {value}",
 	"leek_loose_x_turns": "{leek} perd {value} ({turns} tours)",
-	"leek_resurrect": "{leek} ressucite {target}",
+	"leek_resurrect": "{leek} ressuscite {target}",
 	"leek_move": "{leek} se déplace ({cost})",
 	"leek_shoot": "{leek} attaque avec {weapon}",
 	"leek_shoot_cost": "{leek} attaque avec {weapon} ({cost})",
