@@ -9,7 +9,7 @@
 	"damage": "Dégâts",
 	"damage_return": "Renvoi de dégâts",
 	"frequency": "Fréquence",
-	"frequency_desc": "Les fréquences élevées commencent le combat en premier",
+	"frequency_desc": "Les fréquences élevées ont plus de chances de commencer le combat en premier",
 	"heal": "Soins",
 	"invested": "Investi",
 	"invested_capital": "Capital investi",
