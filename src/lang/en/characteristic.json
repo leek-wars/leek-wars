@@ -7,7 +7,7 @@
 	"damage": "Damage",
 	"damage_return": "Damage return",
 	"frequency": "Frequency",
-	"frequency_desc": "Entities with high frequency start the fight first",
+	"frequency_desc": "Entities with high frequency are more likely to start the fight first",
 	"heal": "Heals",
 	"invested_capital": "Invested capital",
 	"life": "Life points",
@@ -37,6 +37,6 @@
 	"operations": "Number of operations",
 	"chips": "Maximum number of chips",
 	"variables": "Variables",
-	"base": "Invested",
+	"base": "Base",
 	"invested": "Invested"
 }
