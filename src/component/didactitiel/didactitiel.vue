@@ -1,7 +1,7 @@
 <template>
 	<popup :modelValue="modelValue" :width="800" :full="true" :title="$t('title')" persistent @update:model-value="input">
 		<template #icon>
-			<v-icon slot="icon">mdi-human-greeting</v-icon>
+			<v-icon>mdi-human-greeting</v-icon>
 		</template>
 
 		<div ref="content" :style="{height: height + 'px'}" class="content">

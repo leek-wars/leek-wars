@@ -33,7 +33,7 @@
 				<!-- <span class="arrow">›</span> -->
 				<v-icon class="arrow">mdi-chevron-right</v-icon>
 				<!-- <input ref="input" v-model="code" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" @keydown.enter="enter"> -->
-				<ai-view class="editor" ref="editor" :ai="ai" :ais="{}" :visible="true" :line-numbers="false" :font-size="17" @enter="enter" :autocomplete-option="true" :popups="true" :console="true" @down="down" @up="up" />
+				<ai-view-monaco class="editor" ref="editor" :ai="ai" :ais="{}" :visible="true" :line-numbers="false" :font-size="17" @enter="enter" :autocomplete-option="true" :popups="true" :console="true" @down="down" @up="up" />
 			</div>
 		</div>
 	</div>
@@ -47,8 +47,10 @@
 	import AIView from '../editor/ai-view.vue'
 	import { AI } from '@/model/ai'
 	import { emitter } from '@/model/vue'
+	import { i18n } from '@/model/i18n'
+	import AIViewMonaco from '../editor/ai-view-monaco.vue'
 
-	@Options({ components: { 'ai-view': AIView } })
+	@Options({ components: { 'ai-view-monaco': AIViewMonaco } })
 	export default class Console extends Vue {
 
 		editor!: AIView
@@ -108,6 +110,7 @@
 
 		mounted() {
 			this.editor = this.$refs.editor as AIView
+			console.log("mounted", this.editor)
 			emitter.on('console', (data: any) => {
 				console.log("on console", data)
 				this.lines.push({ type: 'result', ...data })
@@ -157,6 +160,7 @@
 		}
 
 		focus() {
+			console.log("console editor", this.editor.editor)
 			// (this.$refs.input as HTMLElement).focus()
 			this.editor.editor.focus()
 		}

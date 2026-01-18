@@ -29,7 +29,7 @@
 							</router-link>
 
 							<v-tooltip v-if="$store.state.farmer?.br_enabled" :disabled="battleRoyaleEnabled">
-								<template v-slot:activator="{ props }">
+								<template #activator="{ props }">
 									<router-link v-ripple :class="{ enabled: battleRoyaleEnabled }" :event="battleRoyaleEnabled ? 'click' : ''" to="/garden/battle-royale" class="tab">
 										<div v-bind="props">
 											<h2>{{ $t('category_battle_royale') }}</h2>
@@ -41,7 +41,7 @@
 							</v-tooltip>
 
 							<v-tooltip :disabled="farmerEnabled">
-								<template v-slot:activator="{ props }">
+								<template #activator="{ props }">
 									<router-link v-ripple :class="{ enabled: farmerEnabled }" :event="farmerEnabled ? 'click' : ''" to="/garden/farmer" class="tab">
 										<div v-bind="props">
 											<h2>{{ $t('category_farmer_fight') }}</h2>
@@ -55,7 +55,7 @@
 							</v-tooltip>
 
 							<v-tooltip :disabled="teamEnabled">
-								<template v-slot:activator="{ props }">
+								<template #activator="{ props }">
 									<router-link v-ripple :class="{ enabled: teamEnabled }" :event="teamEnabled ? 'click' : ''" to="/garden/team" class="tab">
 										<div v-bind="props">
 											<h2>{{ $t('category_team_fight') }}</h2>
@@ -69,7 +69,7 @@
 							</v-tooltip>
 
 							<v-tooltip :disabled="bossEnabled">
-								<template v-slot:activator="{ props }">
+								<template #activator="{ props }">
 									<router-link v-ripple :class="{ enabled: bossEnabled }" :event="bossEnabled ? 'click' : ''" to="/garden/boss" class="tab">
 										<div v-bind="props">
 											<h2>{{ $t('category_boss_fight') }}</h2>
@@ -251,7 +251,7 @@
 							<div v-if="!LeekWars.battleRoyale.enabled">
 								<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('select_leek') }}</div>
 								<v-tooltip v-for="leek in $store.state.farmer.leeks" :key="leek.id" :disabled="leek.level >= 20">
-									<template v-slot:activator="{ props }">
+									<template #activator="{ props }">
 										<span v-bind="props">
 											<router-link v-ripple :to="'/garden/battle-royale/' + leek.id" :class="{disabled: leek.level < 20}" :event="leek.level < 20 ? null : 'click'" class="leek my-leek">
 												<garden-leek :leek="leek" />

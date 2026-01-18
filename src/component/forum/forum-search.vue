@@ -63,14 +63,19 @@
 								<v-icon v-if="result.resolved" :title="$t('resolved')" class="attr resolved">mdi-check-circle</v-icon>
 								<v-icon v-if="result.closed" :title="$t('locked')" class="attr">mdi-lock</v-icon>
 								<span v-html="result.title"></span>
-							</router-link>
+								</router-link>
+							</template>
 							<i18n-t tag="div" class="info" keypath="post_by_x_the_x_in_x">
-								<router-link slot="farmer" :to="'/farmer/' + result.fid">
+								<template #farmer>
+								<router-link :to="'/farmer/' + result.fid">
 									<template v-if="options.farmer === ''">{{ result.fname }}</template>
 									<span v-else><b>{{ result.fname }}</b></span>
 								</router-link>
-								<span slot="date" class="dark">{{ $filters.date(result.date) }}</span>
-								<router-link slot="topic" :to="'/forum/category-' + result.cid">
+								<template #date>
+								<span class="dark">{{ $filters.date(result.date) }}</span>
+							</template>
+								<template #topic>
+								<router-link :to="'/forum/category-' + result.cid">
 									{{ $i18n.t('forum-category.' + result.cname) }}
 								</router-link>
 							</i18n-t>

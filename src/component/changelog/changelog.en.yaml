@@ -7,6 +7,7 @@
     - "Editor: improved Ctrl+click to go to symbol definition (more reliable navigation and correct scrolling)."
     - "LeekScript: semicolon after while() in do-while loops is now optional."
   fixed:
+    - Fixed test bots that could have boss weapons and chips.
     - Fixed untranslated "error_name_already_used" error message when creating a leek.
     - "Editor: fixed tab closing when AI was deleted outside the editor."
     - "Boss: fixed fight count deduction when a boss fight starts without participating (#2344)."

@@ -9,11 +9,11 @@
 		<panel class="first">
 
 			<v-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)" hide-details dense variant="solo">
-				<template v-slot:selection>
+				<template #selection>
 					<flag :code="LeekWars.currencies[LeekWars.currency].flag" :clickable="false" />&nbsp;
 					{{ LeekWars.currency }} &nbsp; <span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>
 				</template>
-				<template v-slot:item="{ props, item }">
+				<template #item="{ props, item }">
 					<v-list-item v-bind="props" class="currency">
 						<template #prepend>
 							<flag :code="LeekWars.currencies[item.value].flag" :clickable="false" />

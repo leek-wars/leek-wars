@@ -221,8 +221,8 @@
 		</div>
 
 		<popup v-model="deleteDialog" :width="600">
-			<v-icon slot="icon">mdi-delete</v-icon>
-			<span slot="title">{{ $t('delete_account') }}</span>
+			<template #icon><v-icon>mdi-delete</v-icon></template>
+			<template #title><span>{{ $t('delete_account') }}</span></template>
 			<div v-html="$t('delete_message')"></div>
 			<br v-if="$store.state.farmer?.verified">
 			<v-switch v-if="$store.state.farmer?.verified" v-model="deleteForumMessages" :label="$t('delete_forum_messages')" hide-details />
@@ -233,8 +233,8 @@
 		</popup>
 
 		<popup v-model="deleteConfirmDialog" :width="600">
-			<v-icon slot="icon">mdi-delete</v-icon>
-			<span slot="title">{{ $t('delete_confirmation') }}</span>
+			<template #icon><v-icon>mdi-delete</v-icon></template>
+			<template #title><span>{{ $t('delete_confirmation') }}</span></template>
 			{{ $t('delete_confirmation_password') }} : <br><br>
 			{{ $t('delete_password') }} : <input v-model="deleteConfirmPassword" type="password">
 			<template #actions>
@@ -244,14 +244,14 @@
 		</popup>
 
 		<popup v-model="deleteSuccessDialog" :width="600">
-			<v-icon slot="icon">mdi-delete</v-icon>
-			<span slot="title">{{ $t('delete_success') }}</span>
+			<template #icon><v-icon>mdi-delete</v-icon></template>
+			<template #title><span>{{ $t('delete_success') }}</span></template>
 			{{ $t('delete_success_message') }}
 		</popup>
 
 		<popup v-model="deleteFailedDialog" :width="600">
-			<v-icon slot="icon">mdi-delete</v-icon>
-			<span slot="title">{{ $t('delete_failed') }}</span>
+			<template #icon><v-icon>mdi-delete</v-icon></template>
+			<template #title><span>{{ $t('delete_failed') }}</span></template>
 			{{ $t(deleteFailedError) }}
 		</popup>
 	</div>

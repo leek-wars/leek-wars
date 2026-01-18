@@ -8,7 +8,7 @@
 					<span v-else-if="LeekWars.DEV" class="dev-label">dev</span>
 					<span v-if="env.BETA" class="beta-label">Bêta</span>
 					<!-- <v-tooltip>
-						<template v-slot:activator="{ props }">
+						<template #activator="{ props }">
 							<img v-bind="props" class="hat" src="/image/10years_hat.png">
 						</template>
 						{{ $t('main.10years') }}
@@ -24,7 +24,7 @@
 					</div>
 				</div>
 				<v-menu offset-y>
-					<template v-slot:activator="{ props }">
+					<template #activator="{ props }">
 						<div class="button-wrapper language-button" v-bind="props">
 							<div class="header-button">
 								<flag :code="LeekWars.languages[$i18n.locale].country" :clickable="false" />
@@ -104,7 +104,7 @@
 				</div>
 				<div class="button-wrapper">
 					<v-menu v-if="env.SOCIAL" :nudge-bottom="3" :width="400" :max-height="400" bottom offset-y>
-						<template v-slot:activator="{ props }">
+						<template #activator="{ props }">
 							<div class="header-button messages-button" v-bind="props">
 								<v-icon>mdi-email-outline</v-icon>
 								<span v-show="$store.state.unreadMessages > 0" class="counter">{{ $store.state.unreadMessages }}</span>
@@ -122,7 +122,7 @@
 				</div>
 				<div class="button-wrapper">
 					<v-menu :nudge-bottom="3" :width="400" :max-height="400" bottom offset-y @update:model-value="readNotifications">
-						<template v-slot:activator="{ props }">
+						<template #activator="{ props }">
 							<div class="header-button notifications-button" v-bind="props">
 								<v-icon>mdi-bell-outline</v-icon>
 								<span v-show="$store.state.unreadNotifications > 0" class="counter">{{ $store.state.unreadNotifications }}</span>

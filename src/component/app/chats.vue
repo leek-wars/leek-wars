@@ -1,7 +1,7 @@
 <template>
 	<div v-if="$store.state.farmer" class="chats">
 		<div v-for="(window, i) in LeekWars.chatWindows" :key="window.name" :class="{expanded: window.expanded, unread: $refs.chats && $refs.chats[i] && !$refs.chats[i].read}" class="window">
-			<div v-if="$store.state.chat[window.id]" class="header">
+			<div class="header">
 				<router-link v-if="window.type === ChatType.PM" v-ripple :to="'/farmer/' + getFarmer(window).id">
 					<avatar :farmer="getFarmer(window)" class="image" />
 				</router-link>
@@ -100,6 +100,8 @@
 			}
 			.v-icon {
 				padding: 8px;
+				width: 40px;
+				height: 40px;
 			}
 		}
 		.chat {

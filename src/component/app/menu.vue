@@ -42,8 +42,12 @@
 						</router-link>
 						<span v-if="LeekWars.didactitial_step === 1 && i === 0 && !(isHomePage || $route.path === '/leek/' + leek.id)" class="dida-hint right">
 							<i18n-t class="bubble" keypath="main.dida_2">
-								<img height=18 src="/image/charac/life.png" slot="life">
-								<img height=18 src="/image/charac/strength.png" slot="strength">
+								<template #life>
+									<img height=18 src="/image/charac/life.png">
+								</template>
+								<template #strength>
+									<img height=18 src="/image/charac/strength.png">
+								</template>
 							</i18n-t>
 							<span class="arrow"></span>
 						</span>
@@ -142,7 +146,9 @@
 				</span>
 
 				<popup v-model="battleRoyaleDialog" :width="600">
-					<v-icon slot="icon">mdi-sword-cross</v-icon>
+					<template #icon>
+						<v-icon>mdi-sword-cross</v-icon>
+					</template>
 					<template #title>{{ $t('main.battle_royale') }}</template>
 					<loader v-if="LeekWars.battleRoyale.progress == 0" />
 					<div class="br-leeks">
@@ -161,13 +167,13 @@
 			</div>
 		</div>
 
-		<v-menu v-if="$store.state.farmer && $store.state.farmer.rewards.length" offset-x :nudge-right="15" :max-height="500" :close-on-content-click="false">
-			<template v-slot:activator="{ props }">
+		<v-menu v-if="$store.state.farmer && $store.state.farmer.rewards.length" location="right" :offset="15" :max-height="500" :close-on-content-click="false">
+			<template #activator="{ props }">
 				<div v-ripple class="rewards-button notif-trophy" v-bind="props">
 					<img src="/image/icon/chest.svg">
 				</div>
 			</template>
-			<div class="reward-dialog">
+			<v-card class="reward-dialog">
 				<div class="title">
 					<div>
 						<h4>{{ $t('main.rewards') }} ({{ $store.state.farmer.rewards.length }})</h4>
@@ -186,7 +192,7 @@
 						<v-btn class="get notif-trophy" @click.stop="retrieve(reward)"><img src="/image/icon/arrow-down-right-bold.svg"></v-btn>
 					</div>
 				</div>
-			</div>
+			</v-card>
 		</v-menu>
 	</div>
 </template>

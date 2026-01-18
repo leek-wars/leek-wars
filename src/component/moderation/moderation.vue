@@ -16,8 +16,9 @@
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column7 split-list">
 				<panel>
 					<template #title>Derniers signalements ({{ faults ? faults.length : '...' }})</template>
-					<div slot="content" class="faults">
-						<loader v-if="!faults" />
+					<template #content>
+						<div class="faults">
+							<loader v-if="!faults" />
 						<div v-else>
 							<div v-if="faults.length == 0" class="empty">
 								<v-icon>mdi-check-outline</v-icon>
@@ -40,7 +41,8 @@
 								</div>
 							</router-link>
 						</div>
-					</div>
+						</div>
+					</template>
 				</panel>
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column5 split-content">
@@ -72,10 +74,10 @@
 						<div class="reason">Motif d'origine : <b>{{ $t('warning.reason_' + selectedFault.reason_text) }}</b></div>
 						<div v-if="selectedFault.fight" class="details">Combat : <router-link :to="'/fight/' + selectedFault.fight">{{ selectedFault.fight }}</router-link></div>
 						<v-select v-model="finalReason" :items="reasons" class="select" label="Changer de motif" item-value="id" item-text="t" hide-details :eager="true" dense outlined>
-							<template v-slot:selection>
+							<template #selection>
 								{{ $t('warning.reason_' + finalReason) }}
 							</template>
-							<template slot="item" slot-scope="data">
+							<template #item="data">
 								<v-list-item-title class="select-item">
 									<div class="name">{{ $t('warning.reason_' + data.item) }}</div>
 									<div v-if="$root.$te('warning.reason_' + data.item + '_action', 'fr')" class="desc">{{ $t('warning.reason_' + data.item + '_action') }}</div>
@@ -136,8 +138,10 @@
 		</div>
 
 		<popup v-if="selectedFault" v-model="warningConfirmDialog" :width="600">
-			<v-icon slot="icon">mdi-gavel</v-icon>
-			<span slot="title">Envoyer un avertissement</span>
+			<template #icon>
+				<v-icon>mdi-gavel</v-icon>
+			</template>
+			<template #title>Envoyer un avertissement</template>
 			<h4>Confirmez l'envoi de l'avertissement :</h4>
 			<br>
 			Éleveur : <b>{{ selectedFault.target.name }}</b> <br>

@@ -27,7 +27,7 @@
 				</v-list-item>
 				<template v-if="ai && ai.includes && ai.includes.length">
 					<v-menu submenu open-on-hover>
-						<template v-slot:activator="{ props }">
+						<template #activator="{ props }">
 							<v-list-item v-ripple v-bind="props" prepend-icon="mdi-download" append-icon="mdi-menu-right">
 								<v-list-item-title>{{ $t('download') }}</v-list-item-title>
 							</v-list-item>
@@ -93,8 +93,8 @@
 
 		<popup v-model="deleteDialog" :width="500" icon="mdi-delete">
 			<template #title>
-				<span v-if="ai" slot="title">{{ $t('delete_ai', [ai.name]) }}</span>
-				<span v-else-if="folder" slot="title">{{ $t('delete_folder', [folder.name]) }}</span>
+				<span v-if="ai">{{ $t('delete_ai', [ai.name]) }}</span>
+				<span v-else-if="folder">{{ $t('delete_folder', [folder.name]) }}</span>
 			</template>
 			{{ $t('delete_warning') }}
 			<template #actions>
@@ -104,7 +104,9 @@
 		</popup>
 
 		<popup v-model="destroyDialog" :width="500" icon="mdi-delete-forever" :title="$t('destroy_ai', [ai?.name])">
-			<v-icon slot="icon">mdi-delete-forever</v-icon>
+			<template #icon>
+			<v-icon>mdi-delete-forever</v-icon>
+		</template>
 			{{ $t('destroy_warning') }}
 			<template #actions>
 				<div v-ripple @click="destroyDialog = false">{{ $t('delete_cancel') }}</div>

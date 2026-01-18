@@ -1,8 +1,8 @@
 <template lang="html">
     <v-list class="version-menu">
-        <v-list-item v-ripple @click="model.version = 4" :lines="false">
+        <v-list-item v-ripple @click="version = 4" :lines="false">
             <template #prepend>
-                <v-icon v-if="model.version === 4" class="list-icon">mdi-star</v-icon>
+                <v-icon v-if="version === 4" class="list-icon">mdi-star</v-icon>
                 <v-icon v-else class="list-icon">mdi-star-outline</v-icon>
             </template>
             <v-list-item-title>LeekScript 4</v-list-item-title>
@@ -15,9 +15,9 @@
                 <router-link class="link" to="/encyclopedia/LeekScript_4"><v-icon>mdi-book-open-page-variant</v-icon> {{ $t('leekscript.all_info_ls', ['LeekScript 4']) }}</router-link>
             </v-list-item-subtitle>
         </v-list-item>
-        <v-list-item v-ripple @click="model.version = 3" :lines="false">
+        <v-list-item v-ripple @click="version = 3" :lines="false">
             <template #prepend>
-                <v-icon v-if="model.version === 3" class="list-icon">mdi-star</v-icon>
+                <v-icon v-if="version === 3" class="list-icon">mdi-star</v-icon>
                 <v-icon v-else class="list-icon">mdi-star-outline</v-icon>
             </template>
             <v-list-item-title>LeekScript 3</v-list-item-title>
@@ -30,9 +30,9 @@
                 <router-link class="link" to="/encyclopedia/LeekScript_3"><v-icon>mdi-book-open-page-variant</v-icon> {{ $t('leekscript.all_info_ls', ['LeekScript 3']) }}</router-link>
             </v-list-item-subtitle>
         </v-list-item>
-        <v-list-item v-ripple @click="model.version = 2" :lines="false">
+        <v-list-item v-ripple @click="version = 2" :lines="false">
             <template #prepend>
-                <v-icon v-if="model.version === 2" class="list-icon">mdi-star</v-icon>
+                <v-icon v-if="version === 2" class="list-icon">mdi-star</v-icon>
                 <v-icon v-else class="list-icon">mdi-star-outline</v-icon>
             </template>
             <v-list-item-title>LeekScript 2</v-list-item-title>
@@ -46,9 +46,9 @@
             </v-list-item-subtitle>
         </v-list-item>
 
-        <v-list-item v-ripple @click="model.version = 1" :lines="false">
+        <v-list-item v-ripple @click="version = 1" :lines="false">
             <template #prepend>
-                <v-icon v-if="model.version === 1" class="list-icon">mdi-star</v-icon>
+                <v-icon v-if="version === 1" class="list-icon">mdi-star</v-icon>
                 <v-icon v-else class="list-icon">mdi-star-outline</v-icon>
             </template>
             <v-list-item-title>LeekScript 1</v-list-item-title>
@@ -61,9 +61,9 @@
 
         <v-divider></v-divider>
 
-        <v-list-item v-ripple @click="model.strict = !model.strict" :lines="false">
+        <v-list-item v-ripple @click="strict = !strict" :lines="false">
             <template #prepend>
-                <v-checkbox v-model="model.strict" :hide-details="true" @click.stop />
+                <v-checkbox v-model="strict" :hide-details="true" @click.stop />
             </template>
             <v-list-item-title>{{ $t('leekscript.strict_mode') }}</v-list-item-title>
             <v-list-item-subtitle>
@@ -78,14 +78,9 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from 'vue';
 
-
-const model = defineModel<{ version: number, strict: boolean }>({ required: true })
-
-onMounted(() => {
-    console.log(model)
-})
+const version = defineModel<number>("version", { required: true })
+const strict = defineModel<boolean>("strict", { required: true })
 
 </script>
 

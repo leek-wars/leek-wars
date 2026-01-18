@@ -4,7 +4,8 @@
 			<h1>{{ $t('title') }}</h1>
 		</div>
 		<panel class="first">
-			<div class="content" slot="content">
+			<template #content>
+				<div class="content">
 				<div class="player-wrapper">
 					<player v-if="map" ref="player" class="player" :map="map" :horizontal="false" :creator="true" @fight="playerLoaded" @resize="resize" @edited="edited" />
 				</div>
@@ -71,7 +72,7 @@
 							<div class="title">Sols</div>
 							<div class="assets">
 								<v-tooltip v-for="ground of GROUNDS" :key="ground.id">
-									<template v-slot:activator="{ props }">
+									<template #activator="{ props }">
 										<div v-bind="props" class="asset tile" @click="selectGround(ground)">
 											<img :src="ground.texture.path">
 											<v-icon v-if="game && game.groundPaint === ground">mdi-check</v-icon>
@@ -108,12 +109,16 @@
 						</div>
 					</div>
 				</div>
-			</div>
+			</template>
 		</panel>
 
 		<popup v-if="game" v-model="chipsDialog" :width="767">
-			<v-icon slot="icon">mdi-chip</v-icon>
-			<span slot="title" v-if="game.selectedEntity">{{ $t('select_chips') }} [{{ game.selectedEntity.chips.length }}/{{ game.selectedEntity.ram }}]</span>
+			<template #icon>
+				<v-icon>mdi-chip</v-icon>
+			</template>
+			<template #title>
+				<span v-if="game.selectedEntity">{{ $t('select_chips') }} [{{ game.selectedEntity.chips.length }}/{{ game.selectedEntity.ram }}]</span>
+			</template>
 			<div v-if="game.selectedEntity" class="padding chips-dialog">
 				<rich-tooltip-item v-for="chip of availableChips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[chip.id]" :bottom="true" :nodge="true" :leek="game.selectedEntity">
 					<span :class="{disabled: game.selectedEntity.chips.indexOf(chip.id) !== -1}" v-bind="props">
@@ -124,8 +129,12 @@
 		</popup>
 
 		<popup v-if="game" v-model="weaponsDialog" :width="800">
-			<img slot="icon" src="/image/icon/garden.png">
-			<span slot="title" v-if="game.selectedEntity">{{ $t('select_weapons') }} [{{ game.selectedEntity.weapons.length }}/{{ 4 }}]</span>
+			<template #icon>
+				<img src="/image/icon/garden.png">
+			</template>
+			<template #title>
+				<span v-if="game.selectedEntity">{{ $t('select_weapons') }} [{{ game.selectedEntity.weapons.length }}/{{ 4 }}]</span>
+			</template>
 			<div v-if="game.selectedEntity" class="padding weapons-dialog">
 				<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ props }" :item="LeekWars.items[weapon.item]" :bottom="true" :nodge="true" :leek="game.selectedEntity">
 					<span :class="{disabled: game.selectedEntity.weapons.indexOf(weapon.item) !== -1}" v-bind="props">

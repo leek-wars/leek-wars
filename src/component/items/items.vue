@@ -14,15 +14,17 @@
 			</div>
 		</div>
 		<panel class="first">
-			<div slot="content" class="levels">
-				<span v-for="(items, l) in levels" :key="l" class="level">
-					<span class="title" :class="{bold: (l + 1) % 10 === 0}">{{ l + 1 }}</span>
-					<template v-for="item in items">
-						<div v-if="item.trophy && (!(item.trophy in trophies) || !trophies[item.trophy].unlocked)" :key="item.id" class="locked">?</div>
-						<item v-else :key="item.id" :item="item" />
-					</template>
-				</span>
-			</div>
+			<template #content>
+				<div class="levels">
+					<span v-for="(items, l) in levels" :key="l" class="level">
+						<span class="title" :class="{bold: (l + 1) % 10 === 0}">{{ l + 1 }}</span>
+						<template v-for="item in items">
+							<div v-if="item.trophy && (!(item.trophy in trophies) || !trophies[item.trophy].unlocked)" :key="item.id" class="locked">?</div>
+							<item v-else :key="item.id" :item="item" />
+						</template>
+					</span>
+				</div>
+			</template>
 		</panel>
 	</div>
 </template>

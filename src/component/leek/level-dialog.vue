@@ -15,14 +15,14 @@
 				<br>
 				<div class="center">
 					<v-tooltip>
-						<template v-slot:activator="{ props }">
+						<template #activator="{ props }">
 							<img width="100" src="/image/potion/skin_gold.png" v-bind="props">
 						</template>
 						<b>{{ $t('potion.skin_gold') }}</b>
 					</v-tooltip>
 					&nbsp;&nbsp;&nbsp;&nbsp;
 					<v-tooltip>
-						<template v-slot:activator="{ props }">
+						<template #activator="{ props }">
 							<img width="100" src="/image/hat/crown.png" v-bind="props">
 						</template>
 						<b>{{ $t('hat.crown') }}</b>

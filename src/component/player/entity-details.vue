@@ -2,7 +2,7 @@
 	<div class="details-wrapper">
 		<div class="effects">
 			<v-tooltip v-for="effect in entity.effects" :key="effect.id" :left="true">
-				<template v-slot:activator="{ props }">
+				<template #activator="{ props }">
 					<div :value="effectText(effect)" :turns="effect.turns === -1 ? '∞' : effect.turns" class="effect" :class="{irreductible: effect.modifiers & EffectModifier.IRREDUCTIBLE}" v-bind="props">
 						<img class="image" :src="effect.texture.src">
 						<img class="state" v-if="effect.type === EffectType.ADD_STATE" :src="LeekWars.STATIC + 'image/state/' + effect.value + '.svg'" :style="{ background: FightEntity.stateColors[effect.value] }">

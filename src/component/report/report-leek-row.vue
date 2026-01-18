@@ -16,7 +16,7 @@
 		<td class="xp">
 			<div class="xp-wrapper">
 				<v-tooltip>
-					<template v-slot:activator="{ props }">
+					<template #activator="{ props }">
 						<div class="bar" v-bind="props">
 							<span :style="{width: currentBar + '%'}" class="current_xp"></span>
 							<span :style="{width: newBar + '%'}" class="new_xp"></span>
@@ -27,7 +27,7 @@
 				<span>{{ $filters.number(leek.xp || 0) }}</span>
 				<span v-if="fight.report.bonus > 1" class="bonus">x{{ fight.report.bonus }}</span>
 				<v-tooltip v-if="leek.xp_locked">
-					<template v-slot:activator="{ props }">
+					<template #activator="{ props }">
 						<v-icon v-bind="props" class="xp-blocked">mdi-lock</v-icon>
 					</template>
 					{{ $t('main.xp_blocked') }}
@@ -39,7 +39,7 @@
 		</td>
 		<td v-if="fight.context != FightContext.TEST && fight.context != FightContext.CHALLENGE" class="resources">
 			<v-tooltip v-for="resource of sorted_resources" :key="resource[0]" content-class="fluid">
-				<template v-slot:activator="{ props }">
+				<template #activator="{ props }">
 					<span class="resource" v-bind="props">
 						<scheme-image v-if="LeekWars.items[resource[0]].type === ItemType.SCHEME" class="image" :scheme="LeekWars.schemes[LeekWars.items[resource[0]].params]" />
 						<img v-else :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[resource[0]].type] + '/' + LeekWars.items[resource[0]].name.replace('potion_', '') + '.png'">
@@ -156,7 +156,7 @@
 		margin-left: 27px;
 	}
 	.dead {
-		background-image: url("../../../public/image/cross.png");
+		background-image: url("/image/cross.png");
 		width: 15px;
 		height: 20px;
 		display: inline-block;

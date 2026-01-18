@@ -19,7 +19,7 @@
 				</div>
 				<div v-show="LeekWars.menuExpanded || $store.state.unreadNotifications > 0" v-ripple class="action header-button mobile notifications-button">
 					<v-menu :nudge-bottom="0" :max-width="400" :max-height="434" bottom offset-y @update:model-value="readNotifications">
-						<template v-slot:activator="{ props }">
+						<template #activator="{ props }">
 							<div class="header-button notifications-button" v-bind="props">
 								<v-icon>mdi-information-outline</v-icon>
 								<span v-show="$store.state.unreadNotifications > 0" class="counter notifications-counter">{{ $store.state.unreadNotifications }}</span>

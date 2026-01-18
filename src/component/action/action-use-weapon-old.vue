@@ -4,7 +4,7 @@
 			<template #leek>
 				<leek :leek="leeks[action.params[1]]" />
 			</template>
-			<template v-slot:weapon>
+			<template #weapon>
 				<b>{{ $t('weapon.' + action.item.name) }}</b>
 			</template>
 		</i18n-t>

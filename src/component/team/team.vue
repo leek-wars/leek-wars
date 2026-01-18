@@ -15,7 +15,7 @@
 					</div>
 				</router-link>
 				<v-tooltip v-if="is_member">
-					<template v-slot:activator="{ props }">
+					<template #activator="{ props }">
 						<div class="tab" @click="updateOpened" v-bind="props">
 							<span>{{ $t('opened') }}</span>
 							<v-switch v-model="team.opened" hide-details />
@@ -34,10 +34,10 @@
 
 		<div class="container">
 			<panel class="team-emblem first">
-				<div v-if="team" slot="content" class="content">
+				<template #content><div v-if="team" class="content">
 					<template v-if="owner">
 						<v-tooltip>
-							<template v-slot:activator="{ props }">
+							<template #activator="{ props }">
 								<div class="emblem-input" v-bind="props">
 									<input ref="emblemInput" type="file" accept="image/png, image/jpeg, image/jpg, image/bmp, image/gif, image/webp" @change="changeEmblem">
 									<emblem ref="emblem" :team="team" @click.native="$refs.emblemInput.click()" />
@@ -54,13 +54,13 @@
 						<span class="guillemet">»</span>
 						<span class="edit-pen"></span>
 					</div>
-				</div>
+				</div></template>
 			</panel>
 
 			<panel>
 				<h4 class="team-level">{{ $t('level_n', [team ? team.level : '...']) }}</h4>
 				<v-tooltip v-if="team">
-					<template v-slot:activator="{ props }">
+					<template #activator="{ props }">
 						<div class="bar" v-bind="props">
 							<span :class="{blue: max_level}" :style="{width: xp_bar_width + '%'}" class="xp-bar striked"></span>
 						</div>
@@ -79,7 +79,7 @@
 
 				<div class="info-talent">
 					<v-tooltip>
-						<template v-slot:activator="{ props }">
+						<template #activator="{ props }">
 							<talent :id="team ? team.id : ''" :talent="team ? team.talent : '...'" category="team" v-bind="props" />
 						</template>
 						{{ $t('talent') }}
@@ -89,7 +89,7 @@
 
 				<br>
 				<v-tooltip v-if="team">
-					<template v-slot:activator="{ props }">
+					<template #activator="{ props }">
 						<table class="fights" v-bind="props">
 							<tr>
 								<td class="big">{{ $filters.number(team.victories) }}</td>
@@ -115,7 +115,7 @@
 			</panel>
 
 			<panel class="description">
-				<div v-if="team" slot="content" class="turret-wrapper">
+				<template #content><div v-if="team" class="turret-wrapper">
 					<div class="turret">
 						<turret-image :level="team.level" :skin="1" :scale="0.32" @click.native="turretDialog = true" />
 
@@ -127,7 +127,7 @@
 							<div v-else-if="is_member" class="no-ai" @click="turretAiDialog = true">{{ $t('no_ai') }}</div>
 						</div>
 					</div>
-				</div>
+				</div></template>
 			</panel>
 		</div>
 
@@ -157,7 +157,7 @@
 					<span v-if="captain" class="accept" @click="acceptCandidacy(candidacy)">{{ $t('candidacy_accept') }}</span>
 					<span v-if="captain" class="reject" @click="rejectCandidacy(candidacy)">{{ $t('candidacy_refuse') }}</span>
 				</div>
-			</div>
+			</div></template>
 		</panel>
 
 		<panel v-if="team" icon="mdi-account-supervisor" :title="$t('farmers', [ team.member_count])">
@@ -181,13 +181,13 @@
 										<img v-if="member.connected" class="status" src="/image/connected.png">
 										<img v-else class="status" src="/image/disconnected.png">
 										<v-tooltip v-if="member.grade == 'owner'">
-											<template v-slot:activator="{ props }">
+											<template #activator="{ props }">
 												<span v-bind="props">★</span>
 											</template>
 											<div class="grade">{{ $t('owner') }}</div>
 										</v-tooltip>
 										<v-tooltip v-else-if="member.grade == 'captain'">
-											<template v-slot:activator="{ props }">
+											<template #activator="{ props }">
 												<span v-bind="props">☆</span>
 											</template>
 											<div class="grade">{{ $t('captain') }}</div>
@@ -325,7 +325,7 @@
 					</div>
 					<router-link v-if="composition.tournament.current" :to="'/tournament/' + composition.tournament.current" class="view-tournament button flat">{{ $t('see_tournament') }}</router-link>
 					<v-tooltip v-if="$store.state.farmer.tournaments_enabled && captain" content-class="fluid" @update:model-value="loadTournamentRange(composition)">
-						<template v-slot:activator="{ props }">
+						<template #activator="{ props }">
 							<div class="button flat" v-bind="props" @click="registerTournament(composition)">
 								<v-icon>mdi-trophy</v-icon>
 								<span v-if="!composition.tournament.registered" class="register-tournament">{{ $t('register_tournament') }}</span>
@@ -334,8 +334,8 @@
 						</template>
 						{{ $t('tournament_time') }}
 						<i18n-t v-if="composition.tournamentRange" tag="div" keypath="main.level_x_to_y">
-							<b slot="min">{{ composition.tournamentRange.min }}</b>
-							<b slot="max">{{ composition.tournamentRange.max }}</b>
+							<template #min><b>{{ composition.tournamentRange.min }}</b></template>
+							<template #max><b>{{ composition.tournamentRange.max }}</b></template>
 						</i18n-t>
 					</v-tooltip>
 					<div v-if="captain" class="delete-compo button red" @click="compositionToDelete = composition; deleteCompoDialog = true">
@@ -509,13 +509,13 @@
 						<avatar :farmer="member" />
 						<div class="name">
 							<v-tooltip v-if="member.grade === 'owner'">
-								<template v-slot:activator="{ props }">
+								<template #activator="{ props }">
 									<span v-bind="props">★</span>
 								</template>
 								{{ $t('owner') }}
 							</v-tooltip>
 							<v-tooltip v-else-if="member.grade === 'captain'">
-								<template v-slot:activator="{ props }">
+								<template #activator="{ props }">
 									<span v-bind="props">☆</span>
 								</template>
 								{{ $t('captain') }}
@@ -533,7 +533,7 @@
 
 		<popup v-if="changeOwnerSelected" v-model="changeOwnerConfirmDialog" :width="500" icon="mdi-account-switch" :title="$t('change_owner_confirm_title')">
 			<i18n-t keypath="change_owner_confirm">
-				<b slot="farmer">{{ changeOwnerSelected.name }}</b>
+				<template #farmer><b>{{ changeOwnerSelected.name }}</b></template>
 			</i18n-t>
 			<br><br>
 			{{ $t('enter_password_to_confirm') }}

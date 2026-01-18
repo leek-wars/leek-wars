@@ -187,7 +187,7 @@
 		</template>
 
 		<popup v-model="newScenarioDialog" :width="800" icon="mdi-plus-circle-outline">
-			<span slot="title">{{ $t('create_new_scenario') }}</span>
+			<template #title>{{ $t('create_new_scenario') }}</template>
 			<div class="padding">
 				<input v-model="newScenarioName" :placeholder="$t('scenario_name')" type="text" class="input" @keyup.stop @keyup.enter="createScenario">
 				<br><br>

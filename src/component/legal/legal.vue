@@ -18,7 +18,9 @@
 			<h2>{{ $t('editor') }}</h2>
 			<div v-html="$t('editor_message')"></div>
 			<i18n-t keypath="contact">
-				<a slot="email" href="mailto:contact@leekwars.com">contact@leekwars.com</a>
+				<template #email>
+					<a href="mailto:contact@leekwars.com">contact@leekwars.com</a>
+				</template>
 			</i18n-t>
 		</panel>
 	</div>

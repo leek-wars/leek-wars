@@ -4,7 +4,7 @@
 		<template #leek>
 			<leek :leek="action.entity" />
 		</template>
-		<template v-slot:cost>
+		<template #cost>
 			<b class="color-tp">{{ $t('fight.n_tp', [1]) }}</b>
 		</template>
 	</i18n-t>

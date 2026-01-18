@@ -51,7 +51,7 @@
 		<panel icon="mdi-script-outline" :title="'Schémas (' + (filtered_schemes ? filtered_schemes.length : '...') + '/' + (schemes ? schemes.length : '...') + ')'">
 			<template #actions>
 				<v-menu offset-y>
-					<template v-slot:activator="{ props }">
+					<template #activator="{ props }">
 						<div class="button flat" v-bind="props">
 							<v-icon>mdi-sort</v-icon>
 						</div>
@@ -76,7 +76,7 @@
 					</v-list>
 				</v-menu>
 				<v-menu offset-y>
-					<template v-slot:activator="{ props }">
+					<template #activator="{ props }">
 						<div class="button flat" v-bind="props">
 							<v-icon>mdi-filter-outline</v-icon>
 						</div>
@@ -90,9 +90,11 @@
 					</v-list>
 				</v-menu>
 			</template>
-			<div slot="content" class="schemes">
+			<template #content>
+				<div class="schemes">
 				<scheme v-for="(scheme, s) in sorted_schemes" :key="s" class="scheme" :scheme="scheme" :show-result="true"></scheme>
-			</div>
+				</div>
+			</template>
 		</panel>
 	</div>
 </template>
@@ -103,9 +105,11 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { SchemeTemplate } from '@/model/scheme'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
-	import Inventory from '../inventory/inventory.vue'
+	const Inventory = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/inventory/inventory.${locale}.i18n`))
 	import RichTooltipItem from '../rich-tooltip/rich-tooltip-item.vue'
 	import SchemeView from '../market/scheme.vue'
+	import { defineAsyncComponent } from 'vue'
+	import { locale } from '@/locale'
 
 	enum Sort {
 		DATE, PRICE, PRICE_LOT, QUANTITY, /*NAME, */ LEVEL, RARITY, INGREDIENT_COUNT

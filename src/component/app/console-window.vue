@@ -1,36 +1,38 @@
 <template lang="html">
-	<div class="console v-dialog draggable" :style="{top: consoleY + 'px', left: consoleX + 'px'}">
-		<div class="title" @mousedown="consoleMouseDown">
-			{{ $t('main.console') }}
-			<v-menu v-if="$refs.console" offset-y :close-on-content-click="false">
-				<template v-slot:activator="{ props }">
-					<v-chip v-bind="props" size="small">LS {{ $refs.console.leekscript.version }} {{ $refs.console.leekscript.strict ? 'strict' : '' }} <v-icon>mdi-chevron-down</v-icon></v-chip>
-				</template>
-				<leekscript-versions v-model="$refs.console.leekscript" />
-			</v-menu>
-			<v-chip v-if="$refs.console && !$refs.console.isEmpty()" @click="$refs.console.clear()" size="small"><v-icon>mdi-cancel</v-icon></v-chip>
-			<div class="spacer"></div>
-			<div class="options">
-
-				<div class="option" @click="$refs.console.toggleTheme()"><v-icon>mdi-weather-night</v-icon></div>
-				<!-- <div class="option" @click="consoleRandom"><img src="/image/icon/dice.png"></div> -->
-				<div class="option" @click="consolePopup"><v-icon>mdi-open-in-new</v-icon></div>
-				<div class="option" @click="$emit('close')"><v-icon>mdi-close</v-icon></div>
+	<popup v-model="modelValue" class="draggable" :target="[consoleX,  consoleY]" :full="true">
+		<template #title>
+			<div @mousedown="consoleMouseDown">
+				{{ $t('main.console') }}
+				<v-menu v-if="$refs.console" offset-y :close-on-content-click="false">
+					<template #activator="{ props }">
+						<v-chip v-bind="props" size="small">LS {{ $refs.console.leekscript.version }} {{ $refs.console.leekscript.strict ? 'strict' : '' }} <v-icon>mdi-chevron-down</v-icon></v-chip>
+					</template>
+					<leekscript-versions v-model="$refs.console.leekscript" />
+				</v-menu>
+				<v-chip v-if="$refs.console && !$refs.console.isEmpty()" @click="$refs.console.clear()" size="small"><v-icon>mdi-cancel</v-icon></v-chip>
 			</div>
-		</div>
+		</template>
+		<template #options>
+			<div class="option" @click="$refs.console.toggleTheme()"><v-icon>mdi-weather-night</v-icon></div>
+			<!-- <div class="option" @click="consoleRandom"><img src="/image/icon/dice.png"></div> -->
+			<div class="option" @click="consolePopup"><v-icon>mdi-open-in-new</v-icon></div>
+			<div class="option" @click="$emit('close')"><v-icon>mdi-close</v-icon></div>
+		</template>
 		<console ref="console" class="window" />
-	</div>
+	</popup>
 </template>
 
 <script lang="ts">
 
 import { LeekWars } from '@/model/leekwars'
-import { Options, Vue } from 'vue-property-decorator'
+import { Options, Prop, Vue } from 'vue-property-decorator'
 import Console from './console.vue'
 import LeekscriptVersions from './leekscript-versions.vue'
 
 @Options({ components: { 'console': Console, LeekscriptVersions } })
 export default class ConsoleWindow extends Vue {
+
+	@Prop({ required: true}) modelValue!: boolean
 
 	consoleX: number = 0
 	consoleY: number = 0
@@ -41,16 +43,18 @@ export default class ConsoleWindow extends Vue {
 	consoleDragy: number = 0
 	theme: string = 'leekwars'
 
-	open() {
+	mounted() {
 		this.consoleX = window.innerWidth / 2 - 300
 		this.consoleY = window.innerHeight / 2 - 200
-		// console.log("open", this.consoleX, this.consoleY)
+		console.log("open", this.consoleX, this.consoleY, this.$refs.console)
 		setTimeout(() => {
 			(this.$refs.console as Console).focus()
 		}, 100)
 	}
 
 	consoleMouseDown(e: MouseEvent) {
+
+		console.log("Console mouse down")
 		if (e.button === 2) { return false }
 		this.consoleDragx = e.pageX
 		this.consoleDragy = e.pageY
@@ -62,11 +66,14 @@ export default class ConsoleWindow extends Vue {
 	}
 
 	consoleMouseMove(e: MouseEvent) {
+		console.log("consoleMouseMove", this.consoleDown)
 		if (!this.consoleDown) { return null }
 		this.consoleX = this.consoleStartx + (e.pageX - this.consoleDragx)
 		if (this.consoleX < -15) { this.consoleX = -15 }
 		this.consoleY = this.consoleStarty + (e.pageY - this.consoleDragy)
 		if (this.consoleY < -15) { this.consoleY = -15 }
+
+		console.log("Console pos", this.consoleX, this.consoleY)
 	}
 
 	consoleMouseUp(e: MouseEvent) {

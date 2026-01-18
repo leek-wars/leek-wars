@@ -20,14 +20,14 @@
 					<span v-if="bonuses[c]" class="sup">&nbsp;(+{{ bonuses[c] }})</span>
 					<div class="add-wrapper">
 						<v-tooltip v-for="cost in [1, 10, 100]" :key="cost">
-							<template v-slot:activator="{ props }">
+							<template #activator="{ props }">
 								<span :q="cost" :class="{locked: costs[c + cost].cost > capital}" class="add" @click="add(c, cost)" v-bind="props"></span>
 							</template>
 							<div>{{ costs[c + cost].cost + ' capital ⇔ ' + costs[c + cost].bonus + ' ' + $t('characteristic.' + c) }}</div>
 							<b v-if="useful_level[c] > leek.level">{{ $t('characteristic.too_high', [useful_level[c]]) }}</b>
 						</v-tooltip>
 						<v-tooltip v-if="bonuses[c]">
-							<template v-slot:activator="{ props }">
+							<template #activator="{ props }">
 								<span q="0" class="add" @click="clear(c)" v-bind="props"></span>
 							</template>
 							{{ $t('main.clear') }}

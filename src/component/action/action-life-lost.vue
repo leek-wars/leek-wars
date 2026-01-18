@@ -4,7 +4,7 @@
 		<template #leek>
 			<leek :leek="leeks[action.params[1]]" />
 		</template>
-		<template v-slot:value>
+		<template #value>
 			<b class="color-life">{{ $t('fight.n_life', [action.params[2]]) }}</b>
 		</template>
 	</i18n-t>

@@ -18,6 +18,19 @@
 							{{ node.name }}<img class="status" src="/image/connected.png">
 						</div>
 						<div class="total-wrapper">Total : {{ $filters.number(node.generated) }}</div>
+						<div v-if="node.metrics" class="metrics">
+							<div class="metric">
+								<span class="label">RAM:</span>
+								<span class="value" :class="{ warning: ramPercent(node.metrics) > 75, critical: ramPercent(node.metrics) > 90 }">
+									{{ formatRAM(node.metrics.usedRAM) }} / {{ formatRAM(node.metrics.maxRAM) }}
+									({{ ramPercent(node.metrics) }}%)
+								</span>
+							</div>
+							<div class="metric">
+								<span class="label">Cache IA:</span>
+								<span class="value">{{ $filters.number(node.metrics.cacheSize) }}</span>
+							</div>
+						</div>
 						<div class="threads">
 							<div v-for="(runner, r) in node.runners" :key="r" class="thread">
 								<div class="th-name">
@@ -76,12 +89,21 @@ import { emitter } from '@/model/vue'
 	const LISTEN_DATA = 15
 	const UPDATE_RUNNER = 16
 	const ADMIN_QUEUE = 36
+	const UPDATE_NODE_METRICS = 50
+
+	class NodeMetrics {
+		public usedRAM!: number
+		public maxRAM!: number
+		public cacheSize!: number
+		public lastUpdate!: number
+	}
 
 	class Node {
 		public name!: string
 		public generated!: number
 		public runners!: Runner[]
 		public load!: number
+		public metrics?: NodeMetrics
 	}
 
 	class Runner {
@@ -98,6 +120,7 @@ import { emitter } from '@/model/vue'
 	export default class AdminServers extends Vue {
 
 		runners: {[key: number]: Runner} = {}
+		nodeMetrics: {[key: string]: NodeMetrics} = {}
 		queue: any = []
 		loading: boolean = true
 		colors: {[key: string]: string} = {}
@@ -113,6 +136,10 @@ import { emitter } from '@/model/vue'
 				node.generated += runner.generated
 				node.runners.push(runner)
 				node.load = ((node.runners.length - 1) * node.load + (runner.task ? 1 : 0)) / node.runners.length
+				// Attach metrics if available
+				if (runner.node in this.nodeMetrics) {
+					node.metrics = this.nodeMetrics[runner.node]
+				}
 			}
 			return Object.values(nodes).sort((a, b) => a.name.localeCompare(b.name))
 		}
@@ -144,6 +171,16 @@ import { emitter } from '@/model/vue'
 			}
 			if (type === ADMIN_QUEUE) {
 				this.queue = data
+			}
+			if (type === UPDATE_NODE_METRICS) {
+				for (const m of data) {
+					this.nodeMetrics[m.node] = {
+						usedRAM: m.usedRAM,
+						maxRAM: m.maxRAM,
+						cacheSize: m.cacheSize,
+						lastUpdate: m.lastUpdate
+					}
+				}
 			}
 		}
 
@@ -182,6 +219,15 @@ import { emitter } from '@/model/vue'
 		@Watch('show_ids')
 		updateQueueID() {
 			localStorage.setItem('admin/queue-ids', '' + this.show_ids)
+		}
+
+		formatRAM(bytes: number): string {
+			const gb = bytes / (1024 * 1024 * 1024)
+			return gb.toFixed(1) + ' GB'
+		}
+
+		ramPercent(metrics: NodeMetrics): number {
+			return Math.round((metrics.usedRAM / metrics.maxRAM) * 100)
 		}
 	}
 </script>
@@ -228,6 +274,27 @@ import { emitter } from '@/model/vue'
 	}
 	.server .total-wrapper {
 		color: var(--text-color-secondary);
+	}
+	.server .metrics {
+		margin-top: 8px;
+		font-size: 13px;
+		color: var(--text-color-secondary);
+	}
+	.server .metrics .metric {
+		margin: 4px 0;
+	}
+	.server .metrics .label {
+		font-weight: 500;
+	}
+	.server .metrics .value {
+		margin-left: 4px;
+	}
+	.server .metrics .value.warning {
+		color: #f39c12;
+	}
+	.server .metrics .value.critical {
+		color: #e74c3c;
+		font-weight: bold;
 	}
 	.threads {
 		text-align: left;

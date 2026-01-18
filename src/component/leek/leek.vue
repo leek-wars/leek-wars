@@ -14,7 +14,7 @@
 						</router-link>
 					</template>
 					<v-tooltip v-if="$store.state.farmer.tournaments_enabled && leek.tournament" content-class="fluid" @update:model-value="loadTournamentRange">
-						<template v-slot:activator="{ props }">
+						<template #activator="{ props }">
 							<div class="tab" @click="registerTournament" v-bind="props">
 								<v-icon>mdi-trophy</v-icon>
 								<span v-if="!leek.tournament.registered" class="register">{{ $t('register_to_tournament') }}</span>
@@ -32,7 +32,7 @@
 						</i18n-t>
 					</v-tooltip>
 					<v-tooltip>
-						<template v-slot:activator="{ props }">
+						<template #activator="{ props }">
 							<div class="tab" @click="updateGarden" v-bind="props">
 								<span>{{ $t('garden') }}</span>
 								<v-switch :model-value="leek.in_garden" hide-details />
@@ -81,14 +81,14 @@
 
 			<panel :title="$t('statistics')">
 				<h4 class="level">{{ $t('main.level_n', [leek ? leek.level : '...']) }} <v-tooltip v-if="leek?.xp_blocked">
-					<template v-slot:activator="{ props }">
+					<template #activator="{ props }">
 						<v-icon v-bind="props">mdi-lock</v-icon>
 					</template>
 					{{ $t('main.xp_blocked') }}
 				</v-tooltip></h4>
 
 				<v-tooltip>
-					<template v-slot:activator="{ props }">
+					<template #activator="{ props }">
 						<div class="bar" v-bind="props">
 							<span :class="{ blue: blue_xp_bar }" :style="{width: xp_bar_width + '%'}" class="xp-bar striked"></span>
 						</div>
@@ -106,13 +106,13 @@
 
 				<div class="talent-wrapper">
 					<v-tooltip>
-						<template v-slot:activator="{ props }">
+						<template #activator="{ props }">
 							<talent :id="leek ? leek.id : 0" :talent="leek ? leek.talent : '...'" category="leek" v-bind="props" />
 						</template>
 						{{ $t('talent') }}
 					</v-tooltip>
 					<v-tooltip v-if="leek">
-						<template v-slot:activator="{ props }">
+						<template #activator="{ props }">
 							<div class="talent-more" v-bind="props">({{ leek.talent_more >= 0 ? '+' + leek.talent_more : leek.talent_more }})</div>
 						</template>
 						<template v-if="leek.talent_more > 0">
@@ -126,7 +126,7 @@
 				</div>
 
 				<v-tooltip v-if="leek">
-					<template v-slot:activator="{ props }">
+					<template #activator="{ props }">
 						<table class="fights" v-bind="props">
 							<tr>
 								<td class="big">{{ $filters.number(leek ? leek.victories : '...') }}</td>
@@ -167,8 +167,8 @@
 								<v-btn v-if="(leek.capital > 0 || LeekWars.didactitial_step === 1) && $store.state.farmer.equipment_enabled" color="primary" @click="capitalDialog = true" :class="{bouncing: !capitalDialog && LeekWars.didactitial_step === 1}">{{ $t('main.n_capital', [leek.capital]) }}</v-btn>
 								<span v-if="LeekWars.didactitial_step === 1" class="dida-hint">
 									<i18n-t v-if="LeekWars.didactitial_step === 1" class="bubble" keypath="main.dida_2">
-										<img height=18 src="/image/charac/life.png" slot="life">
-										<img height=18 src="/image/charac/strength.png" slot="strength">
+										<template #life><img height=18 src="/image/charac/life.png"></template>
+										<template #strength><img height=18 src="/image/charac/strength.png"></template>
 									</i18n-t>
 									<span class="arrow"></span>
 								</span>
@@ -328,7 +328,7 @@
 					</div>
 				</template>
 				<v-tooltip v-if="leek && my_leek && leek.level >= 20 && $store.state.farmer?.br_enabled" @update:model-value="loadBRRange">
-					<template v-slot:activator="{ props }">
+					<template #activator="{ props }">
 						<div class="tab" @click="registerAutoBr" v-bind="props">
 							<v-icon>mdi-trophy</v-icon>
 							<span v-if="!leek.auto_br" class="register">{{ $t('register_to_br') }}</span>
@@ -337,13 +337,13 @@
 					</template>
 					{{ $t('br_time') }}
 					<i18n-t v-if="brRange" tag="div" keypath="main.level_x_to_y">
-						<b slot="min">{{ brRange.min }}</b>
-						<b slot="max">{{ brRange.max }}</b>
+						<template #min><b>{{ brRange.min }}</b></template>
+						<template #max><b>{{ brRange.max }}</b></template>
 					</i18n-t>
 				</v-tooltip>
 				<template v-if="leek && leek.level > 1 && $store.state.connected">
 					<v-tooltip>
-						<template v-slot:activator="{ props }">
+						<template #activator="{ props }">
 							<div class="tab" @click="copyAsTest()" v-bind="props" icon="play_arrow">
 								<v-icon class="list-icon">mdi-content-copy</v-icon><span>{{ $t('test') }}</span>
 							</div>
@@ -352,7 +352,7 @@
 					</v-tooltip>
 				</template>
 				<v-tooltip v-if="leek && my_leek && (!$store.state.farmer.group || $store.state.farmer.group.supervisor === $store.state.farmer.id)">
-					<template v-slot:activator="{ props }">
+					<template #activator="{ props }">
 						<div class="tab" @click="updateXpBlocked" v-bind="props">
 							<span>{{ $t('main.xp_blocked') }}</span>
 							<v-switch :model-value="leek.xp_blocked" hide-details />
@@ -390,7 +390,7 @@
 					</rich-tooltip-item>
 				</div>
 				<i18n-t v-if="$store.state.farmer" class="buy-hint" tag="div" keypath="buy_hint">
-					<span slot="hab"><b>{{ $filters.number($store.state.farmer.habs) }}</b> <span class="hab"></span></span>
+					<template #hab><span><b>{{ $filters.number($store.state.farmer.habs) }}</b> <span class="hab"></span></span></template>
 					<template #market>
 						<router-link to="/market">{{ $t('main.market') }}</router-link>
 					</template>
@@ -399,7 +399,7 @@
 		</popup>
 
 		<popup v-if="leek" v-model="renameDialog" :width="600">
-			<v-icon slot="icon">mdi-pencil-outline</v-icon>
+			<template #icon><v-icon>mdi-pencil-outline</v-icon></template>
 			<template #title>{{ $t('rename_leek') }}</template>
 			{{ $t('rename_description') }}
 			<br>
@@ -427,7 +427,7 @@
 			<div class="farmer-potions">
 				<div class="potions-grid">
 					<v-tooltip v-for="(potion, id) in $store.state.farmer.potions" :key="id">
-						<template v-slot:activator="{ props }">
+						<template #activator="{ props }">
 							<div :quantity="potion.quantity" class="potion" @click="usePotion(potion)" v-bind="props">
 								<img :src="'/image/potion/' + LeekWars.potions[potion.template].name + '.png'">
 							</div>
@@ -454,7 +454,7 @@
 			<div class="farmer-potions">
 				<div class="potions-grid">
 					<v-tooltip v-for="(potion, id) in skinPotions" :key="id">
-						<template v-slot:activator="{ props }">
+						<template #activator="{ props }">
 							<div :quantity="potion.quantity" class="potion" @click="usePotion(potion)" v-bind="props">
 								<img :src="'/image/potion/' + LeekWars.potions[potion.template].name + '.png'">
 							</div>
@@ -473,12 +473,12 @@
 		<report-dialog v-if="leek" v-model="reportDialog" :name="leek.farmer.name" :target="leek.farmer" :leek="leek" :reasons="reasons" :parameter="leek.id" />
 
 		<popup v-model="hatDialog" :width="750">
-			<v-icon slot="icon">mdi-hat-fedora</v-icon>
-			<span slot="title">{{ $t('select_a_hat') }}</span>
+			<template #icon><v-icon>mdi-hat-fedora</v-icon></template>
+			<template #title><span>{{ $t('select_a_hat') }}</span></template>
 			<div class="hat-dialog">
 				<div class="hats">
 					<v-tooltip>
-						<template v-slot:activator="{ props }">
+						<template #activator="{ props }">
 							<div v-ripple :quantity="1" class="hat" @click="selectHat(null)" v-bind="props">
 								<img src="/image/hat/no_hat.png">
 							</div>
@@ -486,7 +486,7 @@
 						<b>{{ $t('no_hat') }}</b>
 					</v-tooltip>
 					<v-tooltip v-for="hat in farmer_hats" :key="hat.id">
-						<template v-slot:activator="{ props }">
+						<template #activator="{ props }">
 							<div v-ripple :quantity="hat.quantity" class="hat" @click="selectHat(hat)" v-bind="props">
 								<img :src="'/image/hat/' + hat.name + '.png'">
 							</div>
@@ -502,12 +502,12 @@
 		</popup>
 
 		<popup v-model="skinWeaponDialog" :width="650">
-			<img slot="icon" src="/image/icon/garden.png">
-			<span slot="title">{{ $t('select_a_weapon') }}</span>
+			<template #icon><img src="/image/icon/garden.png"></template>
+			<template #title><span>{{ $t('select_a_weapon') }}</span></template>
 			<div v-if="leek" class="weapons-popup">
 				<div class="leek-weapons">
 					<v-tooltip>
-						<template v-slot:activator="{ props }">
+						<template #activator="{ props }">
 							<div v-ripple :quantity="1" class="weapon" @click="setWeapon(0)" v-bind="props">
 								<img src="/image/weapon/no_weapon.png">
 							</div>
@@ -547,7 +547,7 @@
 					<div v-ripple class="item card" :class="{disabled: !holdWeaponEnabled}" @click="skinWeaponDialog = true">
 						<div class="title">
 							<v-tooltip v-if="holdWeaponEnabled">
-								<template v-slot:activator="{ props }">
+								<template #activator="{ props }">
 									<img src="/image/pomp/hold_weapon.png" v-bind="props">
 								</template>
 								{{ $t('pomp.hold_weapon') }}
@@ -567,7 +567,7 @@
 					<div v-ripple class="item card" :class="{disabled: !leekTitleEnabled}" @click="titleDialog = true">
 						<div class="title">
 							<v-tooltip v-if="leekTitleEnabled">
-								<template v-slot:activator="{ props }">
+								<template #activator="{ props }">
 									<img src="/image/pomp/leek_title.png" v-bind="props">
 								</template>
 								{{ $t('pomp.leek_title') }}
@@ -592,7 +592,7 @@
 								<template #label>
 									<span>{{ $t('pomp.ai_lines') }}</span>
 									<v-tooltip :disabled="showAiLinesEnabled">
-										<template v-slot:activator="{ props }">
+										<template #activator="{ props }">
 											<img v-bind="props" src="/image/pomp/ai_lines.png">
 										</template>
 										<v-icon>mdi-lock</v-icon> {{ $t('pomp.ai_lines') }}
@@ -605,7 +605,7 @@
 								<template #label>
 									<span>{{ $t('pomp.metal') }}</span>
 									<v-tooltip :disabled="metalEnabled">
-										<template v-slot:activator="{ props }">
+										<template #activator="{ props }">
 											<img v-bind="props" src="/image/pomp/metal.png">
 										</template>
 										<v-icon>mdi-lock</v-icon> {{ $t('pomp.metal') }}
@@ -617,15 +617,15 @@
 					<div v-if="leek" class="pomp column6">
 						<v-radio-group v-model="leek.face" @update:model-value="changeFace" hide-details>
 							<v-radio :value="0">
-								<template v-slot:label>
+								<template #label>
           							{{ $t('neutral') }}
 								</template>
 							</v-radio>
 							<v-radio :value="1" :disabled="!happyEnabled">
-								<template v-slot:label>
+								<template #label>
           							{{ $t('happy') }}
 									<v-tooltip :disabled="happyEnabled">
-										<template v-slot:activator="{ props }">
+										<template #activator="{ props }">
 											<img v-bind="props" src="/image/pomp/happy.png">
 										</template>
 										<v-icon>mdi-lock</v-icon> {{ $t('pomp.happy') }}
@@ -633,10 +633,10 @@
 								</template>
 							</v-radio>
 							<v-radio :value="2" :disabled="!angryEnabled">
-								<template v-slot:label>
+								<template #label>
 									{{ $t('angry') }}
 									<v-tooltip :disabled="angryEnabled">
-										<template v-slot:activator="{ props }">
+										<template #activator="{ props }">
 											<img v-bind="props" src="/image/pomp/angry.png">
 										</template>
 										<v-icon>mdi-lock</v-icon> {{ $t('pomp.angry') }}
@@ -651,8 +651,8 @@
 		</popup>
 
 		<popup v-if="leek" v-model="titleDialog" :width="550">
-			<v-icon slot="icon">mdi-medal-outline</v-icon>
-			<span slot="title">{{ $t('main.select_title') }}</span>
+			<template #icon><v-icon>mdi-medal-outline</v-icon></template>
+			<template #title><span>{{ $t('main.select_title') }}</span></template>
 			<div class="title-dialog">
 				<title-picker ref="picker" :title="leek.title" />
 			</div>
@@ -730,8 +730,8 @@
 					</rich-tooltip-item>
 				</div>
 				<i18n-t v-if="$store.state.farmer" class="buy-hint" tag="div" keypath="buy_hint">
-					<span slot="hab"><b>{{ $filters.number($store.state.farmer.habs) }}</b> <span class="hab"></span></span>
-					<router-link slot="market" to="/market">{{ $t('main.market') }}</router-link>
+					<template #hab><span><b>{{ $filters.number($store.state.farmer.habs) }}</b> <span class="hab"></span></span></template>
+					<template #market><router-link to="/market">{{ $t('main.market') }}</router-link></template>
 				</i18n-t>
 			</div>
 		</popup>

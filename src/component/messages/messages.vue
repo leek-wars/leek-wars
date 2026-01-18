@@ -35,7 +35,7 @@
 										<div class="unread"></div>
 									</router-link>
 									<v-tooltip>
-										<template v-slot:activator="{ props }">
+										<template #activator="{ props }">
 											<v-icon v-if="$store.state.chat[chat.id] && $store.state.chat[chat.id].notifications" v-bind="props" class="bell" @click.stop="toggleNotifications(chat.id)">mdi-bell</v-icon>
 											<v-icon v-else v-bind="props" class="bell" @click.stop="toggleNotifications(chat.id)">mdi-bell-off</v-icon>
 										</template>
@@ -64,7 +64,9 @@
 					<div class="admin-warn" v-if="isAdmin">
 						<v-icon>mdi-alert-outline</v-icon>
 						<i18n-t keypath="admin_warn" tag="div">
-							<router-link slot="forum" to="/forum"><u>forum</u></router-link>
+							<template #forum>
+								<router-link to="/forum"><u>forum</u></router-link>
+							</template>
 						</i18n-t>
 					</div>
 					<chat v-if="newConversation" :new-farmer="newFarmer" :large="true" :new-conversation="newConversation" />
@@ -79,8 +81,10 @@
 		</div>
 
 		<popup v-model="quitDialog" :width="500">
-			<v-icon slot="icon">mdi-delete</v-icon>
-			<span slot="title">{{ $t('quit_conversation') }}</span>
+			<template #icon>
+				<v-icon>mdi-delete</v-icon>
+			</template>
+			<template #title>{{ $t('quit_conversation') }}</template>
 			{{ $t('quit_confirm') }}
 			<template #actions>
 				<div v-ripple @click="quitDialog = false">{{ $t('cancel') }}</div>

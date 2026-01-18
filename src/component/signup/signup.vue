@@ -95,7 +95,9 @@
 						</tr>
 					</table>
 					<i18n-t class="cgu" tag="div" keypath="conditions">
-						<router-link slot="link" to="/conditions">{{ $t('conditions_name') }}</router-link>
+						<template #link>
+							<router-link to="/conditions">{{ $t('conditions_name') }}</router-link>
+						</template>
 					</i18n-t>
 					<div class="center">
 						<v-btn v-if="fastRegister" large color="primary" type="submit">{{ $t('play_button') }}</v-btn>
@@ -107,11 +109,13 @@
 		</div>
 
 		<!-- <panel :title="$t('main.partners')">
-			<div slot="content" class="content partners">
-				<a target="_blank" rel="noopener" href="https://www.esiea.fr/">
-					<img class="partner" src="/image/partner/esiea.png" title="ESIEA">
-				</a>
-			</div>
+			<template #content>
+				<div class="content partners">
+					<a target="_blank" rel="noopener" href="https://www.esiea.fr/">
+						<img class="partner" src="/image/partner/esiea.png" title="ESIEA">
+					</a>
+				</div>
+			</template>
 		</panel> -->
 
 		<panel class="features first">
@@ -135,24 +139,26 @@
 
 		<div class="container large large-tiles">
 			<panel v-ripple class="first">
-				<router-link to="/groups" slot="content">
-					<div class="groups">
-						<div class="image">
-							<leek-image :leek="{level: 300, hat: 2, skin: 12, face: 1}" :scale="0.6" />
-							<leek-image :leek="{level: 200, hat: 7, skin: 43, face: 1}" :scale="0.7" />
-							<leek-image :leek="{level: 300, hat: 37, skin: 23, face: 1}" :scale="0.8" style="margin-top: 15px" />
-							<leek-image :leek="{level: 250, hat: 35, skin: 17, face: 1}" :scale="0.7" :invert="true" style="margin-top: 10px" />
-							<leek-image :leek="{level: 200, hat: 7, skin: 20, face: 1}" :scale="0.6" :invert="true" />
-						</div>
-						<div>
-							<h2>{{ $t('groups_title') }}</h2>
-							<div>{{ $t('groups_desc') }}</div>
-							<div class="center">
-								<v-btn>{{ $t('groups_button') }}</v-btn>
+				<template #content>
+					<router-link to="/groups">
+						<div class="groups">
+							<div class="image">
+								<leek-image :leek="{level: 300, hat: 2, skin: 12, face: 1}" :scale="0.6" />
+								<leek-image :leek="{level: 200, hat: 7, skin: 43, face: 1}" :scale="0.7" />
+								<leek-image :leek="{level: 300, hat: 37, skin: 23, face: 1}" :scale="0.8" style="margin-top: 15px" />
+								<leek-image :leek="{level: 250, hat: 35, skin: 17, face: 1}" :scale="0.7" :invert="true" style="margin-top: 10px" />
+								<leek-image :leek="{level: 200, hat: 7, skin: 20, face: 1}" :scale="0.6" :invert="true" />
+							</div>
+							<div>
+								<h2>{{ $t('groups_title') }}</h2>
+								<div>{{ $t('groups_desc') }}</div>
+								<div class="center">
+									<v-btn>{{ $t('groups_button') }}</v-btn>
+								</div>
 							</div>
 						</div>
-					</div>
-				</router-link>
+					</router-link>
+				</template>
 			</panel>
 			<!-- <panel v-ripple>
 				<router-link to="/press-kit" slot="content" class="flex">
@@ -304,7 +310,9 @@
 		</div>
 
 		<panel class="first screenshots">
-			<signup-carousel slot="content" :key="$i18n.locale" />
+			<template #content>
+				<signup-carousel :key="$i18n.locale" />
+			</template>
 		</panel>
 
 		<h1>{{ $t('last_update') }}</h1>

@@ -6,7 +6,7 @@
 			</h1>
 			<div class="tabs">
 				<v-menu bottom offset-y :max-width="600">
-					<template v-slot:activator="{ props }">
+					<template #activator="{ props }">
 						<div class="tab" v-bind="props">
 							<v-icon>{{ sort_icon }}</v-icon> {{ $t('sort_by', [$t('sort_' + sort_by).toLowerCase()]) }}
 						</div>
@@ -61,7 +61,7 @@
 									<div v-if="!LeekWars.mobile"> — </div>
 									<div class="difficulties">
 										<v-tooltip v-for="(c, i) in count_by_difficulty_filter" :key="i">
-											<template v-slot:activator="{ props }">
+											<template #activator="{ props }">
 												<span class="counter" v-bind="props">
 													<img :src="'/image/icon/trophy/' + i + '.svg'">
 													<span>{{ c }}</span>
@@ -115,7 +115,7 @@
 		<panel v-if="!group_by_categories" :icon="LeekWars.trophyCategoriesIcons[0]">
 			<template #title>{{ $t('trophies') }}</template>
 			<template #content>
-				<loader v-show="!loaded" slot="content" />
+				<loader v-show="!loaded" />
 				<div v-if="loaded" class="trophies">
 					<trophy v-for="trophy in sorted_trophies" :key="trophy.id" :trophy="trophy" />
 				</div>
