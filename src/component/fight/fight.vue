@@ -44,7 +44,7 @@
 									<avatar :farmer="farmer" /><br>
 									<span class="name">
 										<v-tooltip>
-											<template v-slot:activator="{ props }">
+											<template #activator="{ props }">
 												<span v-if="farmer.id === fight.starter" class="arrow" v-bind="props">▶</span>
 											</template>
 											{{ $t('starter') }}
@@ -83,7 +83,7 @@
 									<avatar :farmer="farmer" /><br>
 									<span class="name">
 										<v-tooltip>
-											<template v-slot:activator="{ props }">
+											<template #activator="{ props }">
 												<span v-if="farmer.id === fight.starter" class="arrow" v-bind="props">▶</span>
 											</template>
 											{{ $t('starter') }}

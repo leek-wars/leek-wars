@@ -4,7 +4,7 @@
 			<div ref="codemirror" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" :class="{search: searchEnabled}" class="codemirror"></div>
 			<template v-for="(problems, entrypoint) of ai.problems">
 				<v-tooltip v-for="(error, p) of problems" :key="entrypoint + p">
-					<template v-slot:activator="{ props }">
+					<template #activator="{ props }">
 						<div :style="{top: (100 * error.start_line / lines) + '%'}" :class="{warning: error.level === 1, todo: error.level === 2}" class="error-band" v-bind="props" @click="$emit('jump', ai, error.start_line)"></div>
 					</template>
 					<v-icon v-if="error.level === 0" class="tooltip error">mdi-close-circle-outline</v-icon>
@@ -29,13 +29,13 @@
 				</div>
 				<div>
 					<v-tooltip>
-						<template v-slot:activator="{ props }">
+						<template #activator="{ props }">
 							<v-icon class="arrow" v-bind="props" @click="replaceOne">mdi-file-replace-outline</v-icon>
 						</template>
 						{{ $t('main.replace') }}
 					</v-tooltip>
 					<v-tooltip>
-						<template v-slot:activator="{ props }">
+						<template #activator="{ props }">
 							<v-icon class="arrow" v-bind="props" @click="replaceAll">mdi-file-replace</v-icon>
 						</template>
 						{{ $t('main.replace_all') }}
@@ -81,8 +81,12 @@
 					<v-icon>mdi-file-outline</v-icon>
 					<span @click="$emit('jump', selectedHint.ai, selectedHint.line)">
 						<i18n-t class="defined" keypath="leekscript.defined_in">
-							<b slot="0">{{ selectedHint.ai.name }}</b>
-							<b slot="1">{{ selectedHint.line }}</b>
+							<template #0>
+								<b>{{ selectedHint.ai.name }}</b>
+							</template>
+							<template #1>
+								<b>{{ selectedHint.line }}</b>
+							</template>
 						</i18n-t>
 					</span>
 				</div>
@@ -105,8 +109,12 @@
 				<v-icon>mdi-file-outline</v-icon>
 				<span @click="goToDefinition">
 					<i18n-t class="defined" keypath="leekscript.defined_in">
-						<b slot="0">{{ ais[detailDialogContent.details.defined[0]].name }}</b>
-						<b slot="1">{{ detailDialogContent.details.defined[1] }}</b>
+						<template #0>
+							<b>{{ ais[detailDialogContent.details.defined[0]].name }}</b>
+						</template>
+						<template #1>
+							<b>{{ detailDialogContent.details.defined[1] }}</b>
+						</template>
 					</i18n-t>
 				</span>
 			</div>
@@ -146,7 +154,7 @@
 	import Type from '@/component/type.vue'
 	import { analyzer, AnalyzerPromise } from './analyzer'
 	import { Keyword, KeywordKind } from '@/model/keyword'
-import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/vue'
 
 	const AUTO_SHORTCUTS = [
 		["lama", "#LamaSwag", "", "Le pouvoir du lama"],

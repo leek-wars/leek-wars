@@ -14,7 +14,8 @@
 		</div>
 
 		<panel title="Top Voyous">
-			<div slot="content" class="thugs">
+			<template #content>
+				<div class="thugs">
 				<loader v-if="!thugs" />
 				<div v-else>
 					<div v-for="thug in thugs" :key="thug.id" class="thug">
@@ -23,7 +24,7 @@
 						<v-btn @click="ban(thug)">Bannir</v-btn>
 					</div>
 				</div>
-			</div>
+			</template>
 		</panel>
 	</div>
 </template>

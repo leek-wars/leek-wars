@@ -8,7 +8,7 @@
 
 				<v-icon class="console-button" @click="leekscriptConsole">mdi-console</v-icon>
 
-				<console-window v-if="showConsole" ref="console" @close="showConsole = false" />
+				<console-window v-if="showConsole" v-model="showConsole" ref="consoleWindow" @close="showConsole = false" />
 
 				<lw-bar v-if="LeekWars.mobile" />
 
@@ -260,11 +260,12 @@ import { emitter } from '@/model/vue'
 
 		leekscriptConsole() {
 			this.showConsole = true
-			nextTick(() => {
-				if (this.$refs.console) {
-					(this.$refs.console as any).open()
-				}
-			})
+			// nextTick(() => {
+			// 	if (this.$refs.console) {
+			// 		console.log("Open console", this.$refs.console);
+			// 		(this.$refs.console as any).open()
+			// 	}
+			// })
 		}
 
 		clickClover() {
@@ -336,14 +337,14 @@ import { emitter } from '@/model/vue'
 				this.updateClover()
 				this.updateCloverPosition()
 			}
-			if (this.$refs.console) {
-				(this.$refs.console as any).consoleMouseMove(e)
+			if (this.$refs.consoleWindow) {
+				(this.$refs.consoleWindow as any).consoleMouseMove(e)
 			}
 		}
 
 		mouseup(e: MouseEvent) {
-			if (this.$refs.console) {
-				(this.$refs.console as any).consoleMouseUp(e)
+			if (this.$refs.consoleWindow) {
+				(this.$refs.consoleWindow as any).consoleMouseUp(e)
 			}
 		}
 	}

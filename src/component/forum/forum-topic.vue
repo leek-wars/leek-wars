@@ -32,7 +32,8 @@
 		</div>
 
 		<panel class="first last">
-			<div slot="content" class="content">
+			<template #content>
+				<div class="content">
 				<breadcrumb v-if="LeekWars.mobile" :items="breadcrumb_items" />
 				<pagination v-if="topic" :current="page" :total="pages" :url="'/forum/category-' + category.id + '/topic-' + topic.id" />
 				<loader v-if="!topic || !topic.messages" />
@@ -40,11 +41,9 @@
 					<div v-for="message in topic.messages" :id="'message-' + message.id" :key="message.id" class="message-wrapper">
 						<div v-if="!message.writer.deleted" class="profile">
 							<rich-tooltip-farmer :id="message.writer.id" v-slot="{ props }">
-								<div v-bind="props">
-									<router-link :to="'/farmer/' + message.writer.id" class="">
-										<avatar :farmer="message.writer" />
-									</router-link>
-								</div>
+								<router-link :to="'/farmer/' + message.writer.id" class="" v-bind="props">
+									<avatar :farmer="message.writer" />
+								</router-link>
 							</rich-tooltip-farmer>
 							<div class="info">
 								<div class="pseudo">
@@ -57,10 +56,14 @@
 								<div v-else-if="message.writer.color == 'contributor'" class="grade contributor">{{ $t('main.grade_contributor') }}</div>
 								<lw-title v-if="message.writer.title.length" :title="message.writer.title" />
 								<i18n-t class="messages-count" keypath="main.n_messages" tag="div">
-									<b slot="0">{{ message.writer.messages }}</b>
+									<template #0>
+										<b>{{ message.writer.messages }}</b>
+									</template>
 								</i18n-t>
 								<i18n-t class="trophy-count" keypath="main.n_trophies" tag="div">
-									<b slot="0">{{ message.writer.points }}</b>
+									<template #0>
+										<b>{{ message.writer.points }}</b>
+									</template>
 								</i18n-t>
 							</div>
 						</div>
@@ -89,7 +92,7 @@
 								<div class="edit-wrapper">
 									<div v-if="!message.deleted" class="votes">
 										<v-tooltip :key="votes_up_names[message.id] ? message.id * 101 + votes_up_names[message.id].length : message.id * 101" :open-delay="0" :close-delay="0" :disabled="message.votes_up === 0" bottom @update:model-value="loadVotesUp(message)">
-											<template v-slot:activator="{ props }">
+											<template #activator="{ props }">
 												<div :class="{active: message.my_vote == 1, zero: message.votes_up === 0}" class="vote up" @click="voteUp(message)" v-bind="props">
 													<v-icon>mdi-thumb-up</v-icon>
 													<span class="counter">{{ message.votes_up }}</span>
@@ -101,7 +104,7 @@
 											</div>
 										</v-tooltip>
 										<v-tooltip :key="votes_down_names[message.id] ? message.id * 100 + votes_down_names[message.id].length : message.id" :open-delay="0" :close-delay="0" :disabled="message.votes_down === 0" bottom @update:model-value="loadVotesDown(message)">
-											<template v-slot:activator="{ props }">
+											<template #activator="{ props }">
 												<div :class="{active: message.my_vote == -1, zero: !message.votes_down}" class="vote down" @click="voteDown(message)" v-bind="props">
 													<v-icon>mdi-thumb-down</v-icon>
 													<span class="counter">{{ message.votes_down }}</span>
@@ -134,7 +137,7 @@
 									</div>
 
 									<v-menu v-if="$store.state.farmer && !message.deleted && !message.editing && ((message.writer.id === $store.state.farmer.id || category.moderator) || (category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'))" offset-y>
-										<template v-slot:activator="{ props }">
+										<template #activator="{ props }">
 											<v-btn variant="text" size="small" icon="mdi-dots-vertical" color="grey" v-bind="props" />
 										</template>
 										<v-list dense class="message-actions">
@@ -181,12 +184,17 @@
 				<div v-if="$store.state.farmer && !$store.state.farmer.verified" class="green-link editor"><router-link class="green-link" to="/settings">Vérifiez votre compte pour répondre sur le forum</router-link><br><br></div>
 
 				<breadcrumb :items="breadcrumb_items" />
-			</div>
+				</div>
+			</template>
 		</panel>
 
 		<popup v-model="deleteMessageDialog" :width="600">
-			<v-icon slot="icon">mdi-delete</v-icon>
-			<span slot="title">{{ $t('do_you_want_to_delete_message') }}</span>
+			<template #icon>
+				<v-icon>mdi-delete</v-icon>
+			</template>
+			<template #title>
+				<span>{{ $t('do_you_want_to_delete_message') }}</span>
+			</template>
 			{{ $t('undoable_action') }}
 			<template #actions>
 				<div v-ripple @click="deleteMessageDialog = false">{{ $t('cancel') }}</div>
@@ -195,8 +203,12 @@
 		</popup>
 
 		<popup v-model="deleteTopicDialog" :width="600">
-			<v-icon slot="icon">mdi-delete</v-icon>
-			<span slot="title">{{ $t('do_you_want_to_delete_topic') }}</span>
+			<template #icon>
+				<v-icon>mdi-delete</v-icon>
+			</template>
+			<template #title>
+				<span>{{ $t('do_you_want_to_delete_topic') }}</span>
+			</template>
 			{{ $t('undoable_action') }}
 			<template #actions>
 				<div v-ripple @click="deleteTopicDialog = false">{{ $t('cancel') }}</div>

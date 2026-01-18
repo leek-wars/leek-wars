@@ -1,9 +1,11 @@
 <template>
 	<error v-if="error" :title="$t('title')" :message="$t('not_found')" />
 	<error v-else-if="generating" :title="$t('title')" :message="$t('not_generated_yet')">
-		<v-btn slot="button" large color="primary" @click="update">
+		<template #button>
+			<v-btn large color="primary" @click="update">
 			<v-icon>mdi-refresh</v-icon>&nbsp;<span>{{ $t('refresh') }}</span>
 		</v-btn>
+		</template>
 	</error>
 	<div class="page" v-else>
 		<div class="page-header page-bar">
@@ -26,8 +28,9 @@
 		</div>
 
 		<panel class="first">
-			<loader v-if="!report" slot="content" />
-			<div v-else slot="content" class="content">
+			<template #content>
+				<loader v-if="!report" />
+				<div v-else class="content">
 				<div v-if="fight.too_long" class="too-long">
 					{{ $t('generation_too_long') }}
 				</div>
@@ -130,7 +133,8 @@
 						</router-link>
 					</div>
 				</template>
-			</div>
+				</div>
+			</template>
 		</panel>
 
 		<panel v-if="fight" :title="$t('main.comments') + ' (' + fight.comments.length + ')'" icon="mdi-comment-multiple-outline">
@@ -236,7 +240,9 @@
 				</div>
 				<div v-if="warnings.length" class="title">
 					<i18n-t keypath="n_warnings">
-						<b slot="n">{{ warnings.length }}</b>
+						<template #n>
+						<b>{{ warnings.length }}</b>
+					</template>
 					</i18n-t>
 				</div>
 				<div class="errors" @mouseover="mouseover">

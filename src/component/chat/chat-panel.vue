@@ -11,7 +11,7 @@
 		<template #actions>
 			<div class="actions">
 				<v-menu v-if="$store.state.farmer?.public_chat_enabled" location="bottom">
-					<template v-slot:activator="{ props }">
+					<template #activator="{ props }">
 						<div class="language-button" v-ripple v-bind="props">
 							<flag :code="LeekWars.languages[LeekWars.publicChats[chatID].language].country" :clickable="false" />
 							<div class="unread-circle" v-if="Object.values(LeekWars.publicChats).some(chat => $store.state.chat[chat.id] && !$store.state.chat[chat.id].read)"></div>

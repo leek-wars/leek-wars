@@ -12,17 +12,17 @@
 					hide-default-footer
     				:items-per-page="100"
 					class="elevation-1 members">
-					<template v-slot:item.id="{ item }">
+					<template #item.id="{ item }">
 						<router-link :to="'/group/' + item.id" class="flex" v-ripple>
 							{{ item.id }}
 						</router-link>
 					</template>
-					<template v-slot:item.name="{ item }">
+					<template #item.name="{ item }">
 						<router-link :to="'/group/' + item.id" class="flex" v-ripple>
 							{{ item.name }}
 						</router-link>
 					</template>
-					<template v-slot:item.supervisor="{ item }">
+					<template #item.supervisor="{ item }">
 						<router-link :to="'/farmer/' + item.supervisor.id">
 							<rich-tooltip-farmer :id="item.supervisor.id" :bottom="true">
 								<div class="flex name" v-ripple>
@@ -34,10 +34,10 @@
 							</rich-tooltip-farmer>
 						</router-link>
 					</template>
-					<template v-slot:item.creation_date="{ item }">
+					<template #item.creation_date="{ item }">
 						{{ $filters.date(item.creation_date) }}
 					</template>
-					<template v-slot:item.archived="{ item }">
+					<template #item.archived="{ item }">
 						<v-checkbox v-model="item.archived" :hide-details="true" />
 					</template>
 				</v-data-table>

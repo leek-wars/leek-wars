@@ -1,6 +1,6 @@
 <template lang="html">
 	<v-tooltip bottom>
-		<template v-slot:activator="{ props }">
+		<template #activator="{ props }">
 			<span v-bind="props">
 				<slot></slot>
 			</span>

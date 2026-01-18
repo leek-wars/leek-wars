@@ -39,7 +39,7 @@
 				<panel v-if="$store.state.farmer?.buy_fights_enabled" :title="$t('fights')" icon="mdi-sword-cross">*
 					<template #content>
 						<loader v-if="!fight_packs.length" />
-						<div v-else slot="content" class="items fights">
+						<div v-else class="items fights">
 							<router-link v-for="pack in fight_packs" :key="pack.id" v-ripple :to="'/market/' + pack.name" :farmer-count="0" :leek-count="0" class="item fight-pack" @click="selectItem(pack)">
 								<img :src="'/image/fight-pack/fight_pack_' + pack.fights + '.png'">
 								<div>{{ pack.title }}</div>
@@ -84,28 +84,34 @@
 					</template>
 				</panel>
 				<panel :title="$t('potions') + ' [' + potions.length + ']'" icon="mdi-bottle-tonic-plus-outline">
-					<loader v-if="!potions.length" slot="content" />
-					<div v-else slot="content" class="items potions">
-						<router-link v-for="potion in potions" :key="potion.id" v-ripple :to="'/market/' + potion.name" :farmer-count="items[potion.id].farmer_count" :leek-count="items[potion.id].leek_count" class="item potion" :class="{toohigh: potion.level > max_level}">
-							<img :src="'/image/potion/' + potion.name + '.png'">
-						</router-link>
-					</div>
+					<template #content>
+						<loader v-if="!potions.length" />
+						<div v-else class="items potions">
+							<router-link v-for="potion in potions" :key="potion.id" v-ripple :to="'/market/' + potion.name" :farmer-count="items[potion.id].farmer_count" :leek-count="items[potion.id].leek_count" class="item potion" :class="{toohigh: potion.level > max_level}">
+								<img :src="'/image/potion/' + potion.name + '.png'">
+							</router-link>
+						</div>
+					</template>
 				</panel>
 				<panel :title="$t('hats') + ' [' + hats.length + ']'" icon="mdi-hat-fedora">
-					<loader v-if="!hats.length" slot="content" />
-					<div v-else slot="content" class="items hats">
-						<router-link v-for="hat in hats" :key="hat.id" v-ripple :to="'/market/' + hat.name" :farmer-count="items[hat.id].farmer_count" :leek-count="items[hat.id].leek_count" class="item hat" :class="{toohigh: hat.level > max_level}">
-							<img :src="'/image/hat/' + hat.name + '.png?2'">
-						</router-link>
-					</div>
+					<template #content>
+						<loader v-if="!hats.length" />
+						<div v-else class="items hats">
+							<router-link v-for="hat in hats" :key="hat.id" v-ripple :to="'/market/' + hat.name" :farmer-count="items[hat.id].farmer_count" :leek-count="items[hat.id].leek_count" class="item hat" :class="{toohigh: hat.level > max_level}">
+								<img :src="'/image/hat/' + hat.name + '.png?2'">
+							</router-link>
+						</div>
+					</template>
 				</panel>
 				<panel :title="$t('pomps') + ' [' + pomps.length + ']'" icon="mdi-auto-fix">
-					<loader v-if="!pomps.length" slot="content" />
-					<div v-else slot="content" class="items pomps">
-						<router-link v-for="pomp in pomps" :key="pomp.id" :to="'/market/' + pomp.name" :farmer-count="items[pomp.id].farmer_count" :leek-count="items[pomp.id].leek_count" class="item pomp" :class="{toohigh: pomp.level > max_level}">
-							<img :src="'/image/pomp/' + pomp.name + '.png'">
-						</router-link>
-					</div>
+					<template #content>
+						<loader v-if="!pomps.length" />
+						<div v-else class="items pomps">
+							<router-link v-for="pomp in pomps" :key="pomp.id" :to="'/market/' + pomp.name" :farmer-count="items[pomp.id].farmer_count" :leek-count="items[pomp.id].leek_count" class="item pomp" :class="{toohigh: pomp.level > max_level}">
+								<img :src="'/image/pomp/' + pomp.name + '.png'">
+							</router-link>
+						</div>
+					</template>
 				</panel>
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column4">
@@ -120,7 +126,7 @@
 								<router-link v-if="selectedItem.trophy" :to="'/trophy/' + selectedItem.trophy.name" class="trophy">
 									<img :src="'/image/trophy/' + selectedItem.trophy.name + '.svg'">
 									<i18n-t keypath="unlocked_with">
-										<b slot="trophy">{{ $t('trophy.' + selectedItem.trophy.name) }}</b>
+										<template #trophy><b>{{ $t('trophy.' + selectedItem.trophy.name) }}</b></template>
 									</i18n-t>
 								</router-link>
 
@@ -199,11 +205,11 @@
 		</div>
 
 		<popup v-model="buyDialog" :width="600">
-			<v-icon slot="icon">mdi-cash-multiple</v-icon>
-			<span slot="title">{{ $t('confirm_purchase') }}</span>
+			<template #icon><v-icon>mdi-cash-multiple</v-icon></template>
+			<template #title><span>{{ $t('confirm_purchase') }}</span></template>
 			<div v-if="selectedItem && $store.state.farmer">
 				<i18n-t tag="div" keypath="are_you_sure_you_want_to_buy">
-					<b slot="item">{{ buyQuantity }}x {{ translateName(selectedItem) }}</b>
+					<template #item><b>{{ buyQuantity }}x {{ translateName(selectedItem) }}</b></template>
 				</i18n-t>
 				<br>
 				<b>{{ $t('price') }}</b> : {{ $filters.number(selectedItem.price * buyQuantity) }} <span class="hab"></span>
@@ -219,11 +225,11 @@
 		</popup>
 
 		<popup v-model="buyCrystalsDialog" :width="600">
-			<v-icon slot="icon">mdi-cash-multiple</v-icon>
-			<span slot="title">{{ $t('confirm_purchase') }}</span>
+			<template #icon><v-icon>mdi-cash-multiple</v-icon></template>
+			<template #title><span>{{ $t('confirm_purchase') }}</span></template>
 			<div v-if="selectedItem && $store.state.farmer">
 				<i18n-t tag="div" keypath="are_you_sure_you_want_to_buy">
-					<b slot="item">{{ translateName(selectedItem) }}</b>
+					<template #item><b>{{ translateName(selectedItem) }}</b></template>
 				</i18n-t>
 				<br>
 				<b>{{ $t('price') }}</b> : {{ $filters.number(selectedItem.crystals * buyQuantity) }} <span class="crystal"></span>
@@ -239,11 +245,11 @@
 		</popup>
 
 		<popup v-model="sellDialog" :width="600">
-			<v-icon slot="icon">mdi-cash-multiple</v-icon>
-			<span slot="title">{{ $t('confirm_sell') }}</span>
+			<template #icon><v-icon>mdi-cash-multiple</v-icon></template>
+			<template #title><span>{{ $t('confirm_sell') }}</span></template>
 			<div v-if="selectedItem && $store.state.farmer">
 				<i18n-t tag="div" keypath="are_you_sure_you_want_to_sell">
-					<b slot="item">{{ translateName(selectedItem) }}</b>
+					<template #item><b>{{ translateName(selectedItem) }}</b></template>
 				</i18n-t>
 				<br>
 				<b>{{ $t('price') }}</b> : {{ $filters.number(selectedItem.price) }} <span class="hab"></span>
@@ -259,15 +265,15 @@
 		</popup>
 
 		<popup v-model="unseenItemDialog" :width="400" :full="true">
-			<v-icon slot="icon">mdi-new-box</v-icon>
-			<span slot="title">{{ $t('new_item_unlocked') }}</span>
+			<template #icon><v-icon>mdi-new-box</v-icon></template>
+			<template #title><span>{{ $t('new_item_unlocked') }}</span></template>
 			<div v-if="unseenItem" class="unseen-dialog">
 				<item-preview :item="LeekWars.items[unseenItem.id]" />
 
 				<div v-if="unseenItem.trophy" class="card trophy">
 					<img :src="'/image/trophy/' + unseenItem.trophy.name + '.svg'">
 					<i18n-t keypath="unlocked_with">
-						<b slot="trophy">{{ $t('trophy.' + unseenItem.trophy.name) }}</b>
+						<template #trophy><b>{{ $t('trophy.' + unseenItem.trophy.name) }}</b></template>
 					</i18n-t>
 				</div>
 			</div>

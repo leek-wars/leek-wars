@@ -51,10 +51,12 @@
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Options, Vue } from 'vue-property-decorator'
-	import Inventory from './inventory.vue'
+	const Inventory = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/inventory/inventory.${locale}.i18n`))
 	import SchemeView from '../market/scheme.vue'
 	import Forge from '../forge/forge.vue'
 	import { store } from '@/model/store'
+	import { defineAsyncComponent } from 'vue'
+	import { locale } from '@/locale'
 
 	enum Sort {
 		DATE, PRICE, PRICE_LOT, QUANTITY, /*NAME, */ LEVEL, RARITY, INGREDIENT_COUNT

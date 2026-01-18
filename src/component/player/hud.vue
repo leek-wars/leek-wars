@@ -4,7 +4,7 @@
 			<div class="wrapper">
 				<template v-for="team in game.teams">
 					<v-tooltip v-for="entity in team.filter(e => !e.dead)" :key="entity.id" top>
-						<template v-slot:activator="{ props }">
+						<template #activator="{ props }">
 							<div :style="{background: entity.lifeBarGadient, width: Math.max(1, barWidth * (entity.life / totalLife) - 3) + 'px'}" class="bar" v-bind="props"></div>
 						</template>
 						<span v-if="entity instanceof Mob">{{ $t('entity.' + entity.name) }}</span>
@@ -24,7 +24,7 @@
 		</div>
 		<div v-if="!creator && !LeekWars.mobile" class="timeline" :class="{large: !game.showActions}" :style="{left: (game.showActions ? (game.largeActions ? actionsWidth + 5 : 400) : 0) + 'px'}">
 			<v-tooltip v-for="(entity, e) of game.entityOrder" :key="e" top>
-				<template v-slot:activator="{ props }">
+				<template #activator="{ props }">
 					<div :class="{summon: entity.summon, current: entity.id === game.currentPlayer, dead: entity.dead}" :style="{background: entity === game.selectedEntity || entity === game.mouseEntity ? '#fffc' : (entity.id === game.currentPlayer ? entity.color : entity.gradient)}" class="entity" v-bind="props" @mouseenter="entity_enter(entity)" @mouseleave="entity_leave(entity)" @click="entity_click(entity)">
 						<div v-if="!entity.dead" :style="{height: 'calc(6px + ' + ((entity.life / entity.maxLife) * 100) + '%)', background: entity.lifeColor, 'border-color': entity.lifeColorLighter}" class="bar"></div>
 						<div class="image">
@@ -46,8 +46,10 @@
 				<div v-else-if="line.trophy" :key="line.id" class="notif-trophy">
 					<img :src="'/image/trophy/' + line.trophy.name + '.svg'">
 					<i18n-t keypath="trophy.x_unlocks_t">
-						<template slot="farmer">{{ line.trophy.farmer.name }}</template>
-						<b slot="trophy">{{ $t('trophy.' + line.trophy.name) }}</b>
+						<template #farmer>{{ line.trophy.farmer.name }}</template>
+						<template #trophy>
+							<b>{{ $t('trophy.' + line.trophy.name) }}</b>
+						</template>
 					</i18n-t>
 				</div>
 				<action-log v-else-if="game.displayDebugs" :key="line.id" :log="line.log" :leeks="game.leeks" :action="0" :index="0" :lines="game.displayAILines" />

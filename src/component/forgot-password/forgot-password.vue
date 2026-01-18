@@ -30,7 +30,9 @@
 					<br>
 					<br>
 					<i18n-t keypath="mail_sent">
-						<b slot="email">{{ $route.params.email }}</b>
+						<template #email>
+							<b>{{ $route.params.email }}</b>
+						</template>
 					</i18n-t>
 					<br>
 					<br>

@@ -6,7 +6,7 @@
 					<breadcrumb :items="breadcrumb_items" :raw="true" />
 				</h1>
 				<v-menu offset-y>
-					<template v-slot:activator="{ props }">
+					<template #activator="{ props }">
 						<div class="forum-language info" v-bind="props">
 							<flag v-for="l in activeLanguages" :key="l" :code="LeekWars.languages[l].country" :clickable="false" />
 							<img width="10" src="/image/selector.png">
@@ -40,7 +40,8 @@
 		</div>
 
 		<panel class="first">
-			<div slot="content" class="content">
+			<template #content>
+				<div class="content">
 				<breadcrumb v-if="LeekWars.mobile" :items="breadcrumb_items" />
 
 				<div class="flex">
@@ -82,8 +83,8 @@
 								<i18n-t keypath="by_x_the_d">
 									<template #farmer>
 										<router-link v-if="topic.author.name!=''" :to="'/farmer/' + topic.author.id">
-											<rich-tooltip-farmer :id="topic.author.id">
-												{{ topic.author.name }}
+											<rich-tooltip-farmer :id="topic.author.id" v-slot="{ props }">
+												<span v-bind="props">{{ topic.author.name }}</span>
 											</rich-tooltip-farmer>
 										</router-link>
 										<span v-else class="farmer deleted">{{ $t('main.farmer') }}@{{ topic.author.id }}</span>
@@ -104,12 +105,16 @@
 							<div v-if="LeekWars.mobile" class="description grey">
 								<span class="messages"><v-icon>mdi-message-outline</v-icon> {{ topic.messages }} • </span>
 								<i18n-t v-if="LeekWars.mobile" tag="span" keypath="last_message">
-									<span slot="date">{{ LeekWars.formatDuration(topic.last_message_date) }}</span>
-									<router-link slot="farmer" :to="'/forum/category-' + topic.category + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id">
-										<span v-if="topic.last_message_writer!=''">{{ topic.last_message_writer }}</span>
-										<span v-else class="farmer deleted">{{ $t('main.farmer') }}@{{ topic.last_message_writer_id }} </span>
-										►
-									</router-link>
+									<template #date>
+										<span>{{ LeekWars.formatDuration(topic.last_message_date) }}</span>
+									</template>
+									<template #farmer>
+										<router-link :to="'/forum/category-' + topic.category + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id">
+											<span v-if="topic.last_message_writer!=''">{{ topic.last_message_writer }}</span>
+											<span v-else class="farmer deleted">{{ $t('main.farmer') }}@{{ topic.last_message_writer_id }} </span>
+											►
+										</router-link>
+									</template>
 								</i18n-t>
 							</div>
 						</div>
@@ -120,8 +125,8 @@
 								<i18n-t tag="div" keypath="last_by_x">
 									<template #author>
 										<router-link :to="'/forum/category-' + topic.category + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id">
-											<rich-tooltip-farmer v-if="topic.last_message_writer!=''" :id="topic.last_message_writer_id">
-												{{ topic.last_message_writer }}
+											<rich-tooltip-farmer v-if="topic.last_message_writer!=''" :id="topic.last_message_writer_id" v-slot="{ props }">
+												<span v-bind="props">{{ topic.last_message_writer }}</span>
 											</rich-tooltip-farmer>
 											<span v-else class="farmer deleted">{{ $t('main.farmer') }}@{{ topic.last_message_writer_id }} </span>
 											►
@@ -134,7 +139,8 @@
 				</div>
 				<pagination v-if="categories" :current="page" :total="pages" :url="'/forum/category-' + category_ids" />
 				<breadcrumb :items="breadcrumb_items" />
-			</div>
+				</div>
+			</template>
 		</panel>
 
 		<div class="page-footer page-bar">

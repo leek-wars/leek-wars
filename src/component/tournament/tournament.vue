@@ -9,15 +9,17 @@
 			</div>
 		</div>
 		<panel class="first">
-			<div slot="content" ref="sizer" :class="{zoomed: zoomed}" class="content tournament">
+			<template #content>
+				<div ref="sizer" :class="{zoomed: zoomed}" class="content tournament">
 
-				<loader v-if="!tournament" />
-				<tournament-graph v-else :tournament="tournament" :class="{zoomed: zoomed}" :style="{maxHeight: zoomed ? height : 'auto'}" />
+					<loader v-if="!tournament" />
+					<tournament-graph v-else :tournament="tournament" :class="{zoomed: zoomed}" :style="{maxHeight: zoomed ? height : 'auto'}" />
 
-				<pre class="info" v-if="$store.getters.admin && tournament">
+					<pre class="info" v-if="$store.getters.admin && tournament">
 Min power: {{ $filters.number(tournament.min_power) }}
 Max power: {{ $filters.number(tournament.max_power) }}</pre>
-			</div>
+				</div>
+			</template>
 		</panel>
 
 		<div v-show="tooltip" :style="{left: tooltipX + 'px', top: tooltipY + 'px'}" class="tooltip v-tooltip__content">{{ tooltipText }}</div>

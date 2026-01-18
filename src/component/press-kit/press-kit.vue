@@ -31,7 +31,7 @@
 
 				<div>
 					<v-menu offset-y>
-						<template v-slot:activator="{ props }">
+						<template #activator="{ props }">
 							<div v-bind="props" v-ripple class="language-button">
 								<flag :code="language.country" />
 								{{ language.name }}

@@ -50,14 +50,16 @@
 		<popup v-model="censorDialog" :width="500" icon="mdi-gavel" title="Censurer">
 			<div v-if="muteFarmer" class="censor">
 				<i18n-t keypath="warning.censor_farmer">
-					<b slot="farmer">{{ muteFarmer.name }}</b>
+					<template #farmer>
+						<b>{{ muteFarmer.name }}</b>
+					</template>
 				</i18n-t>
 				<div class="flex">
 					<avatar :farmer="muteFarmer" />
 					<div class="messages card">
 						<div v-for="message in censorMessages" :key="message.id">
 							<v-checkbox v-if="message.censored === 0" v-model="censoredMessages[message.id]" :hide-details="true">
-								<template v-slot:label>
+								<template #label>
 									<span v-html="message.content"></span>
 								</template>
 							</v-checkbox>
@@ -80,7 +82,7 @@
 					<div class="messages card">
 						<div v-for="message in deleteMessages" :key="message.id">
 							<v-checkbox v-model="deletedMessages[message.id]" :hide-details="true">
-								<template v-slot:label>
+								<template #label>
 									<span v-html="message.content"></span>
 								</template>
 							</v-checkbox>
@@ -98,7 +100,9 @@
 		<popup v-model="muteDialog" :width="500" icon="mdi-gavel" title="Censurer">
 			<div v-if="muteFarmer" class="censor">
 				<i18n-t keypath="warning.mute_popup">
-					<b slot="farmer">{{ muteFarmer.name }}</b>
+					<template #farmer>
+						<b>{{ muteFarmer.name }}</b>
+					</template>
 				</i18n-t>
 			</div>
 			<template #actions>

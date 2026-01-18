@@ -28,7 +28,7 @@
 			</div>
 			<div class="reactions">
 				<v-tooltip v-for="(reaction, emoji) in message.reactions" :key="emoji" :open-delay="500" :close-delay="0" bottom>
-					<template v-slot:activator="{ props }">
+					<template #activator="{ props }">
 						<div v-bind="props" class="reaction" v-ripple :class="{me: emoji === message.my_reaction}" @click="toggleReaction(emoji)">
 							{{ emoji }} <span v-if="reaction.count > 1" class="count">{{ reaction.count }}</span>
 						</div>

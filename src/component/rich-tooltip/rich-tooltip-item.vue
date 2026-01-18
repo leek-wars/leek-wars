@@ -1,6 +1,6 @@
 <template>
 	<v-menu v-model="value" :close-on-content-click="false" :min-width="280" offset-overflow :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'scale-transition'" :open-on-hover="!locked" :disabled="disabled" offset-y :nudge-right="nodge ? 20 : 0">
-		<template v-slot:activator="{ props }">
+		<template #activator="{ props }">
 			<span v-bind="props">
 				<slot></slot>
 			</span>

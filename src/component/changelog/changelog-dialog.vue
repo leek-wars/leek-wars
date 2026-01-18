@@ -1,14 +1,22 @@
 <template lang="html">
 	<popup :model-value="modelValue" :width="800" :full="true">
-		<v-icon slot="icon">mdi-star</v-icon>
-		<i18n-t slot="title" keypath="changelog.version_online">
-			<b v-if="changelog" slot="version">{{ changelog.version_name }}</b>
-		</i18n-t>
+		<template #icon>
+			<v-icon>mdi-star</v-icon>
+		</template>
+		<template #title>
+			<i18n-t keypath="changelog.version_online">
+				<template #version>
+					<b v-if="changelog">{{ changelog.version_name }}</b>
+				</template>
+			</i18n-t>
+		</template>
 		<div v-if="changelog" class="changelog">
 			<changelog-version :version="changelog" />
 			<div class="all">
 				<i18n-t keypath="changelog.see_all_changes">
-					<router-link slot="changelog" to="/changelog">changelog</router-link>
+					<template #changelog>
+						<router-link to="/changelog">changelog</router-link>
+					</template>
 				</i18n-t>
 			</div>
 		</div>

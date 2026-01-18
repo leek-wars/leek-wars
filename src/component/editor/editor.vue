@@ -97,13 +97,13 @@
 							</div>
 							<div class="status">
 								<v-menu v-if="currentAI" top :offset-y="true" :nudge-top="1" :max-width="600" :close-on-content-click="false">
-									<template v-slot:activator="{ props }">
+									<template #activator="{ props }">
 										<div v-ripple class="version" v-bind="props">
 											LeekScript&nbsp;{{ currentAI.version }} <span v-if="currentAI.strict">&nbsp;({{ $t('strict') }})</span>
 											<v-icon>mdi-chevron-down</v-icon>
 										</div>
 									</template>
-									<leekscript-versions v-model="currentAI" />
+									<leekscript-versions v-model:version="currentAI.version" v-model:strict="currentAI.strict" @update:version="updateVersion" @update:strict="updateStrictMode" />
 								</v-menu>
 								<div v-ripple class="problems" @click="toggleProblems">
 									<span v-if="analyzer.error_count + analyzer.warning_count + analyzer.todo_count === 0" class="no-error">
@@ -856,22 +856,16 @@
 			localStorage.setItem('editor/history', JSON.stringify(this.history.map(ai => ai.id)))
 		}
 
-		setVersion(version: number) {
-			if (this.currentAI) {
-				this.currentAI.version = version
-				LeekWars.put('ai/version', {ai_id: this.currentAI.id, version})
-				this.save(this.currentEditor)
-				this.currentAI.analyze()
-			}
+		updateVersion() {
+			LeekWars.put('ai/version', {ai_id: this.currentAI.id, version: this.currentAI.version})
+			this.save(this.currentEditor)
+			this.currentAI.analyze()
 		}
 
-		toggleStrictMode() {
-			if (this.currentAI) {
-				this.currentAI.strict = !this.currentAI.strict
-				LeekWars.put('ai/strict', {ai_id: this.currentAI.id, strict: this.currentAI.strict})
-				this.save(this.currentEditor)
-				this.currentAI.analyze()
-			}
+		updateStrictMode() {
+			LeekWars.put('ai/strict', {ai_id: this.currentAI.id, strict: this.currentAI.strict})
+			this.save(this.currentEditor)
+			this.currentAI.analyze()
 		}
 
 		setSplitted(splitted: boolean, ai: AI | null = null) {

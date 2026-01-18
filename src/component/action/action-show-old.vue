@@ -4,7 +4,7 @@
 		<template #leek>
 			<leek :leek="leeks[action.params[1]]" />
 		</template>
-		<template v-slot:cell>
+		<template #cell>
 			<b>{{ action.params[2] }}</b>
 		</template>
 	</i18n-t>

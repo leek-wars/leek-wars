@@ -9,16 +9,18 @@
 			</div>
 		</div>
 		<panel class="first">
-			<div slot="content" class="levels">
+			<template #content>
+				<div class="levels">
 
-				<h4>Talent solo</h4>
+					<h4>Talent solo</h4>
 				<div v-if="leekData">Level 301 = {{ leekData.series[0][300] }}</div>
 				<chartist ref="leekChart" :data="leekData" :options="leekOptions" ratio="ct-major-twelfth" class="talent" type="Line" />
 				<h4>Talent éleveur</h4>
 				<div v-if="farmerData">Level 1204 = {{ farmerData.series[0][1204 - 50] }}</div>
 				<chartist ref="farmerChart" :data="farmerData" :options="farmerOptions" ratio="ct-major-twelfth" class="talent" type="Line" />
 
-			</div>
+				</div>
+			</template>
 		</panel>
 	</div>
 </template>

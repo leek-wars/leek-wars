@@ -7,10 +7,10 @@
 		<template #chest>
 			<leek :leek="leeks[action.params[2]]" />
 		</template>
-		<template v-slot:resources>
+		<template #resources>
 			<br>
 			<v-tooltip v-for="(quantity, resource) of action.params[3]" :key="resource">
-				<template v-slot:activator="{ props }">
+				<template #activator="{ props }">
 					<span class="res" v-bind="props">
 						<b>{{ quantity }}</b>
 						<img v-if="LeekWars.items[resource]" :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[resource].type] + '/' + LeekWars.items[resource].name.replace('potion_', '') + '.png'">

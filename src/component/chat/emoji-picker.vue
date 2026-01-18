@@ -1,6 +1,6 @@
 <template>
 	<v-menu ref="menu" v-model="shown" :close-on-content-click="false" :width="width" location="top" offset-y>
-		<template v-slot:activator="{ props }">
+		<template #activator="{ props }">
 			<div v-ripple class="chat-input-emoji" v-bind="props">
 				<div :class="{'emoji-font': !LeekWars.nativeEmojis}"><slot></slot></div>
 			</div>

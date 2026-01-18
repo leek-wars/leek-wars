@@ -8,7 +8,7 @@
 					<div class="tab" :class="{active: category.startsWith('level')}">
 						{{ $t('main.level_n', [rankingLevel]) }}
 						<v-menu offset-y>
-							<template v-slot:activator="{ props }">
+							<template #activator="{ props }">
 								<v-icon v-bind="props" @click.prevent="">mdi-chevron-down</v-icon>
 							</template>
 							<v-list>
@@ -23,7 +23,7 @@
 				<router-link :to="getURL('team', 'talent', country, LeekWars.rankingInactive)"><div class="tab" :class="{active: category === 'team'}">{{ $t('teams') }}</div></router-link>
 
 				<v-menu v-model="countryList" offset-y>
-					<template v-slot:activator="{ props }">
+					<template #activator="{ props }">
 						<div class="tab" v-bind="props" :class="{active: category.startsWith('country')}">
 							<!-- {{ $t('main.country') }} -->
 							<flag v-if="country" :code="country" :clickable="false" />
@@ -60,7 +60,8 @@
 			</div>
 		</div>
 		<panel class="first last">
-			<div v-if="category === 'fun'" slot="content" class="fun-rankings">
+			<template #content>
+				<div v-if="category === 'fun'" class="fun-rankings">
 				<loader v-if="!rankings" />
 				<div v-for="funRanking in rankings" :key="funRanking.title" class="fun-ranking">
 					<h4>{{ $t(funRanking.title + '_title') }}</h4>
@@ -93,7 +94,7 @@
 					</table>
 				</div>
 			</div>
-			<div v-else slot="content">
+			<div v-else>
 				<div class="center">
 					<pagination :current="page" :total="pages" :url="url" :url-query="urlQuery" />
 					<div v-if="$store.state.farmer" class="me-buttons">
@@ -226,6 +227,7 @@
 					<pagination :current="page" :total="pages" :url="url" :url-query="urlQuery" />
 				</div>
 			</div>
+			</template>
 		</panel>
 
 		<popup v-model="searchDialog" :width="500" icon="mdi-magnify" :title="$t('search_in_ranking')">

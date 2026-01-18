@@ -10,7 +10,7 @@
 				<span v-if="ai.warnings" class="count warning">{{ ai.warnings }}</span>
 				<span v-if="ai.todos" class="count todo">{{ ai.todos }}</span>
 				<v-tooltip v-if="leeks.length">
-					<template v-slot:activator="{ props }">
+					<template #activator="{ props }">
 						<span v-if="leeks" v-bind="props" class="count leek">
 							<img src="/image/icon/black/leek.png">
 							{{ leeks.length }}

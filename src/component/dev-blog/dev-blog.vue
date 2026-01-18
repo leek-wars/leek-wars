@@ -9,7 +9,8 @@
 		</div>
 
 		<panel class="first last">
-			<div slot="content" class="content">
+			<template #content>
+				<div class="content">
 
 				<h2>{{ $t('articles') }}</h2>
 
@@ -35,7 +36,7 @@
 						</div>
 					</router-link>
 				</div>
-			</div>
+			</template>
 		</panel>
 	</div>
 </template>

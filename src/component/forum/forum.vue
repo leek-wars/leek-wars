@@ -4,7 +4,7 @@
 			<div>
 				<h1>{{ $t('title') }}</h1>
 				<v-menu offset-y>
-					<template v-slot:activator="{ props }">
+					<template #activator="{ props }">
 						<div class="forum-language info" v-bind="props">
 							<flag v-for="l in activeLanguages" :key="l" :code="LeekWars.languages[l].country" :clickable="false" />
 							<img width="10" src="/image/selector.png">

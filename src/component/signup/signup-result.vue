@@ -7,7 +7,9 @@
 			<img src="/image/map/nexus_block_small.png">
 			<br><br>
 			<i18n-t tag="h2" class="signup-message" keypath="validated_message">
-				<b slot="farmer">{{ farmer }}</b>
+				<template #farmer>
+					<b>{{ farmer }}</b>
+				</template>
 			</i18n-t>
 			<br><br>
 			<slot name="button">

@@ -9,7 +9,7 @@
 		<template #actions>
 			<span class="value" title="Valeur totale">{{ $filters.number(total_estimated) }} <div class="hab"></div></span>
 			<v-menu offset-y>
-				<template v-slot:activator="{ props }">
+				<template #activator="{ props }">
 					<div class="button flat" v-bind="props">
 						<v-icon>mdi-sort</v-icon>
 					</div>
@@ -46,7 +46,7 @@
 				</v-list>
 			</v-menu>
 			<v-menu offset-y>
-				<template v-slot:activator="{ props }">
+				<template #activator="{ props }">
 					<div class="button flat" v-bind="props">
 						<v-icon>mdi-filter-outline</v-icon>
 					</div>
@@ -80,7 +80,6 @@
 				</div>
 
 				<popup v-model="retrieveDialog" :width="400">
-					<v-icon slot="title">mdi-gift-outline</v-icon>
 					<template #title>Objets obtenus</template>
 					<div class="inventory">
 						<div v-for="item in retrieveItems" :key="item.id" class="cell active" :class="'rarity-border-' + LeekWars.items[item.template].rarity">

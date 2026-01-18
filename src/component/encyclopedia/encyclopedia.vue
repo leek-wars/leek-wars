@@ -13,7 +13,7 @@
 			</div>
 			<div v-if="page" class="tabs">
 				<v-menu v-if="contributor && edition" offset-y>
-					<template v-slot:activator="{ props }">
+					<template #activator="{ props }">
 						<div class="page-language info" v-bind="props">
 							<flag :code="LeekWars.languages[page.language].country" :clickable="false" />
 							<img width="10" src="/image/selector.png">
@@ -45,7 +45,7 @@
 					{{ $t('main.edit') }}
 				</div>
 				<v-menu v-if="page && Object.values(page.translations).length" offset-y>
-					<template v-slot:activator="{ props }">
+					<template #activator="{ props }">
 						<div class="tab" v-bind="props"><v-icon>mdi-translate</v-icon></div>
 					</template>
 					<v-list :dense="true">
@@ -74,7 +74,7 @@
 							<v-icon>mdi-book-open-page-variant</v-icon>
 							<br><br>
 							<i18n-t keypath="not_found" tag="div" class="message">
-								<template slot="name">{{ code }}</template>
+								<template #name>{{ code }}</template>
 							</i18n-t>
 							<br>
 							<div v-if="contributor">{{ $t('contributor_create') }}</div>

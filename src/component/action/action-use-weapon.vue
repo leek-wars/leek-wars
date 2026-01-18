@@ -4,10 +4,10 @@
 			<template #leek>
 				<leek :leek="action.entity" />
 			</template>
-			<template v-slot:weapon>
+			<template #weapon>
 				<b>{{ $t('weapon.' + action.item.name) }}</b>
 			</template>
-			<template v-slot:cost>
+			<template #cost>
 				<b class="color-tp">{{ $t('fight.n_tp', [action.item.cost]) }}</b>
 			</template>
 		</i18n-t>

@@ -11,7 +11,8 @@
 			</div>
 		</div>
 		<panel class="first">
-			<div class="content" slot="content">
+			<template #content>
+				<div class="content">
 				<div class="title">
 					<h3>Derniers éleveurs</h3>
 					<loader v-if="loading" :size="40" />
@@ -71,7 +72,7 @@
 						</div>
 					</div>
 				</div>
-			</div>
+			</template>
 		</panel>
 	</div>
 </template>

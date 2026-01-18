@@ -56,8 +56,10 @@
 		</div>
 
 		<popup v-model="twoFactorConfirmDialog" :width="750">
-			<v-icon slot="icon">mdi-security</v-icon>
-			<span slot="title">Enter your password to validate</span>
+			<template #icon>
+				<v-icon>mdi-security</v-icon>
+			</template>
+			<template #title>Enter your password to validate</template>
 			Password : <input id="two-factor-confirm-password" type="password">
 			<template #actions>
 				<div v-ripple class="action dismiss">Cancel</div>

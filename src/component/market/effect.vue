@@ -1,11 +1,13 @@
 <template lang="html">
 	<div class="effect" @click="LeekWars.effectRawOpened = !LeekWars.effectRawOpened">
 		<v-tooltip v-if="icon" content-class="fluid">
-			<template v-slot:activator="{ props }">
+			<template #activator="{ props }">
 				<img class="icon" :src="'/image/charac/small/' + icon + '.png'" v-bind="props">
 			</template>
 			<i18n-t keypath="effect.increased_by">
-				<b slot="charac">{{ $t('characteristic.' + icon) }}</b>
+				<template #charac>
+					<b>{{ $t('characteristic.' + icon) }}</b>
+				</template>
 			</i18n-t>
 			<div>
 				{{ charac }} {{ $t('characteristic.' + icon) }} :
@@ -16,7 +18,9 @@
 
 		<span v-if="passive">{{ $t('effect.passive') }}</span>
 		<i18n-t v-if="effect.id == 14" keypath="effect.type_14_fixed">
-			<b slot="summon">{{ $t('effect.summon_' + effect.value1) }}</b>
+			<template #summon>
+				<b>{{ $t('effect.summon_' + effect.value1) }}</b>
+			</template>
 		</i18n-t>
 		<span v-else-if="effect.value2 == 0" v-html="$t('effect.type_' + effect.id + '_fixed', [value1])"></span>
 		<span v-else v-html="$t('effect.type_' + effect.id, [format(effect.value1), format(effect.value1 + effect.value2)])"></span>
@@ -32,7 +36,9 @@
 
 		<b v-if="effect.turns === -1">{{ $t('effect.infinite') }}</b>
 		<i18n-t v-else-if="effect.turns > 0" keypath="effect.on_n_turns">
-			<span slot="turns" v-html="$tc('effect.n_turns', effect.turns)"></span>
+			<template #turns>
+				<span v-html="$tc('effect.n_turns', effect.turns)"></span>
+			</template>
 		</i18n-t>
 		<span v-if="effect.modifiers & EffectModifier.STACKABLE">
 			(<b>{{ $t('effect.stackable') }}</b>)
@@ -45,7 +51,7 @@
 		</span>
 
 		<v-tooltip v-if="enemies && !allies">
-			<template v-slot:activator="{ props }">
+			<template #activator="{ props }">
 				<span class="ennemies" v-bind="props" />
 			</template>
 			<span>{{ $t('effect.target_enemies') }}</span>
@@ -53,7 +59,7 @@
 
 		<span>
 			<v-tooltip v-if="allies && !enemies">
-				<template v-slot:activator="{ props }">
+				<template #activator="{ props }">
 					<span class="allies" v-bind="props"></span>
 				</template>
 				<span>{{ $t('effect.target_allies') }}</span>
@@ -62,7 +68,7 @@
 
 		<span>
 			<v-tooltip v-if="!caster">
-				<template v-slot:activator="{ props }">
+				<template #activator="{ props }">
 					<span class="not-player" v-bind="props"></span>
 				</template>
 				<span>{{ $t('effect.target_not_player') }}</span>
@@ -71,7 +77,7 @@
 
 		<span>
 			<v-tooltip v-if="!nonSummons">
-				<template v-slot:activator="{ props }">
+				<template #activator="{ props }">
 					<span class="summons" v-bind="props"></span>
 				</template>
 				<span>{{ $t('effect.target_summons') }}</span>
@@ -80,7 +86,7 @@
 
 		<span>
 			<v-tooltip v-if="!summons">
-				<template v-slot:activator="{ props }">
+				<template #activator="{ props }">
 					<span class="not-summons" v-bind="props"></span>
 				</template>
 				<span>{{ $t('effect.target_not_summons') }}</span>

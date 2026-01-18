@@ -1,7 +1,7 @@
 <template>
 	<div class="fight-actions" @mouseover="mouseover">
 		<template v-for="(action, a) in actions" :key="a">
-			<component :is="ActionComponents[action.type]" :action="action" :a="a" :leeks="leeks" />
+			<component :is="ActionComponents[action.type]" :action="action" :a="a" :leeks="leeks" :report="report" :hasErrWarn="hasErrWarn" @goToTurn="goToTurn" />
 			<template v-if="displayLogs && (displayAlliesLogs || action.me) && action.logs.length">
 				<action-log v-for="(log, l) in action.logs" :key="a + 'l' + l" :log="log" :leeks="leeks" :action="a" :index="l" :lines="true" />
 			</template>

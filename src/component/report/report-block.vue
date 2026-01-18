@@ -3,7 +3,7 @@
 		<h3><v-icon>{{ icon }}</v-icon> {{ title }}</h3>
 		<div class="flags">
 			<v-tooltip v-for="flag in flags" :key="flag">
-				<template v-slot:activator="{ props }">
+				<template #activator="{ props }">
 					<div class="flag card" v-bind="props">
 						<img :src="'/image/fight_flag/flag_' + flag + '.svg'">
 					</div>
@@ -55,7 +55,7 @@
 					<td class="level">{{ team.level }}</td>
 					<td class="xp">
 						<v-tooltip>
-							<template v-slot:activator="{ props }">
+							<template #activator="{ props }">
 								<div class="bar" v-bind="props">
 									<span :style="{width: currentBar + '%'}" class="current_xp"></span>
 									<span :style="{width: newBar + '%'}" class="new_xp team"></span>

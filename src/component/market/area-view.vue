@@ -17,29 +17,41 @@
 		<div v-else-if="area == Area.PLUS_2 || area == Area.PLUS_3">
 			<range-view :min="0" :max="width" :type="1" />
 			<i18n-t keypath="effect.area_x">
-				<b slot="area">{{ $t('effect.area_' + area) }}</b>
+				<template #area>
+					<b>{{ $t('effect.area_' + area) }}</b>
+				</template>
 			</i18n-t>
 		</div>
 		<div v-else-if="area == Area.X_1 || area == Area.X_2 || area == Area.X_3">
 			<range-view :min="0" :max="width" :type="9" />
 			<i18n-t keypath="effect.area_x">
-				<b slot="area">{{ $t('effect.area_' + area) }}</b>
+				<template #area>
+					<b>{{ $t('effect.area_' + area) }}</b>
+				</template>
 			</i18n-t>
 		</div>
 		<div v-else-if="area === Area.SQUARE_1 || area === Area.SQUARE_2">
 			<range-view :min="0" :max="width" :type="10" />
 			<i18n-t keypath="effect.area_x">
-				<b slot="area">{{ $t('effect.area_' + area) }}</b>
+				<template #area>
+					<b>{{ $t('effect.area_' + area) }}</b>
+				</template>
 			</i18n-t>
 		</div>
 		<i18n-t v-else-if="area == Area.FIRST_INLINE" keypath="effect.area_x">
-			<b slot="area">{{ $t('effect.first_inline') }}</b>
+			<template #area>
+				<b>{{ $t('effect.first_inline') }}</b>
+			</template>
 		</i18n-t>
 		<i18n-t v-else-if="area == Area.ALLIES" keypath="effect.area_x">
-			<b slot="area">{{ $t('effect.allies') }}</b>
+			<template #area>
+				<b>{{ $t('effect.allies') }}</b>
+			</template>
 		</i18n-t>
 		<i18n-t v-else-if="area == Area.ENEMIES" keypath="effect.area_x">
-			<b slot="area">{{ $t('effect.enemies') }}</b>
+			<template #area>
+				<b>{{ $t('effect.enemies') }}</b>
+			</template>
 		</i18n-t>
 		<div v-else>
 			?
