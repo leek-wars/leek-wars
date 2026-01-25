@@ -1,7 +1,7 @@
 <template lang="html">
 	<div class="scheme">
 		<div v-if="showResult" v-ripple class="group result" @click="possible && emitter.emit('craft', scheme)">
-			<rich-tooltip-item v-slot="{ props }" :item="result" :bottom="true" :inventory="true" @update:model-value="$emit('input', $event)">
+			<rich-tooltip-item v-slot="{ props }" :item="result" :bottom="true" :inventory="true" @update:model-value="$emit('update:modelValue', $event)">
 				<div class="item" v-bind="props" :quantity="1" :class="{['rarity-border-' + result.rarity]: true, 'missing': !possible}">
 					<img :src="'/image/' + ITEM_CATEGORY_NAME[result.type] + '/' + result.name.replace('hat_', '').replace('potion_', '') + '.png'" :type="result.type">
 					<!-- <div class="id">#{{ scheme.result }}</div> -->
@@ -35,6 +35,7 @@
 	import { LeekWars } from '@/model/leekwars';
 	import { SchemeTemplate } from '@/model/scheme';
 	import { store } from '@/model/store';
+	import { emitter } from '@/model/vue';
 	import { defineAsyncComponent } from 'vue';
 	import { Options, Prop, Vue } from 'vue-property-decorator'
 	const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
@@ -46,6 +47,7 @@
 		@Prop({required: true}) scheme!: SchemeTemplate
 		@Prop({required: true}) showResult!: boolean
 		@Prop({required: true}) showPrice!: boolean
+		emitter = emitter
 
 		ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
 
