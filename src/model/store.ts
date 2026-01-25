@@ -14,6 +14,7 @@ import { displayWarningMessage, emitter, vueMain } from './vue'
 import { Weapon } from './weapon'
 import { SchemeTemplate } from './scheme'
 import { NotificationBuilder } from '@/model/notification-builder'
+import { TROPHIES } from './trophies'
 
 class LeekWarsState {
 	public token: string | null = null
@@ -474,11 +475,9 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				if (state.farmer && data.type === NotificationType.TROPHY_UNLOCKED) {
 					delete state.farmer.trophies_list
 					const trophy = parseInt(data.parameters[0], 10)
-					import("@/model/trophies").then(module => {
-						state.farmer!.rewards.push({
-							trophy,
-							habs: module.TROPHIES[trophy - 1].habs
-						})
+					state.farmer!.rewards.push({
+						trophy,
+						habs: TROPHIES[trophy - 1].habs
 					})
 				}
 			}

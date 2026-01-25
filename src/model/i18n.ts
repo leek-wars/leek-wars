@@ -75,12 +75,12 @@ function setI18nLanguage(lang: string) {
 }
 
 function loadLanguageAsync(vue: any, newLocale: string) {
-	const currentRoute = (vue.$router as any).history.current.matched[0]
+	const currentRoute = vue.$router.currentRoute.value?.matched[0]
 	if (currentRoute) {
-		loadComponentLanguage(newLocale, currentRoute.components.default, currentRoute.instances.default)
+		loadComponentLanguage(newLocale, currentRoute.components?.default, currentRoute.instances?.default)
 	}
 	if (!loadedLanguages.includes(newLocale)) {
-		return import(`@/lang/locale/${newLocale}.ts`).then(module => {
+		return import(/* @vite-ignore */ `@/lang/locale/${newLocale}.ts`).then(module => {
 			i18n.global.mergeLocaleMessage(newLocale, module.translations)
 			loadedLanguages.push(newLocale)
 			// vue.onLanguageLoaded()
@@ -110,7 +110,9 @@ function loadInstanceTranslations(newLocale: string, instance: any) {
 
 	return import(/* webpackChunkName: "locale-[request]" */ `@/component/${folder}/${name}.${newLocale}.i18n`).then((module: any) => {
 		const instanceI18n = (instance as any)._i18n
-		instanceI18n.setLocaleMessage(newLocale, module.default)
+		if (instanceI18n) {
+			instanceI18n.setLocaleMessage(newLocale, module.default)
+		}
 	})
 }
 

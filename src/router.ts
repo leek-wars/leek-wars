@@ -79,16 +79,7 @@ import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 import { scroll_to_hash } from './router-functions'
 import AdminComponents from './component/admin/admin-components.vue'
 import { defineAsyncComponent, defineComponent, h } from 'vue'
-
-// Lazy getter for vueMain to avoid circular dependency
-let _vueMain: any = null
-async function getVueMain() {
-	if (!_vueMain) {
-		const vueModule = await import('@/model/vue')
-		_vueMain = vueModule.vueMain
-	}
-	return _vueMain
-}
+import { vueMain } from './model/vue'
 
 const Home = defineComponent({
 	components: { signup: Signup, leek: LeekAsync, messages: Messages },
@@ -256,7 +247,7 @@ const router = createRouter({
 	routes,
 	async scrollBehavior(to, from, savedPosition) {
 		// console.log("scrollBehavior", to, from, savedPosition)
-		const vm = await getVueMain()
+		const vm = vueMain
 		if (vm) {
 			vm.$data.savedPosition = 0
 		}
