@@ -2,8 +2,8 @@ import { LeekWars } from '@/model/leekwars'
 import { register } from 'register-service-worker'
 
 // Only register service worker in production
-if (process.env.NODE_ENV === 'production') {
-	register(`${process.env.BASE_URL}service-worker.js`, {
+if (import.meta.env.PROD) {
+	register(`${import.meta.env.BASE_URL}service-worker.js`, {
 		registered(registration) {
 			LeekWars.service_worker = registration
 		},

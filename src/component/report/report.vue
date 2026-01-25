@@ -50,7 +50,9 @@
 									<!-- <th>Opérations</th> -->
 									<!-- <th v-if="$store.getters.admin" class="gain">Time</th> -->
 								</tr>
-								<report-leek-row v-for="leek in report.leeks" v-if="!leek.summon" :key="leek.id" :leek="leek" :fight="fight" />
+								<template v-for="leek in report.leeks" :key="leek.id">
+									<report-leek-row v-if="!leek.summon" :leek="leek" :fight="fight" />
+								</template>
 							</table>
 						</div>
 					</div>

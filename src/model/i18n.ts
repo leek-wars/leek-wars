@@ -2,6 +2,10 @@ import { locale, messages } from '@/locale'
 import { Options } from 'vue'
 import { createI18n } from 'vue-i18n'
 
+// Pre-load all locale modules for dynamic import with Vite
+const localeModules = import.meta.glob('@/lang/locale/*.ts')
+const componentI18nModules = import.meta.glob('@/component/**/*.i18n')
+
 const i18n = createI18n({
 	legacy: true, // Use legacy mode for compatibility
 	locale,
@@ -56,7 +60,10 @@ const mixins = [{
 			// console.log("Reload translations of component", name)
 			const newLocale = i18n.global.locale
 			const folder = name.startsWith('signup-') ? 'signup' : name
-			return import(/* webpackChunkName: "locale-[request]" */ `@/component/${folder}/${name}.${newLocale}.i18n`).then((module: any) => {
+			const modulePath = `/src/component/${folder}/${name}.${newLocale}.i18n`
+			const loader = componentI18nModules[modulePath]
+			if (!loader) return
+			return loader().then((module: any) => {
 				i18n.global.mergeLocaleMessage(newLocale, { [name]: module.default })
 				const instanceI18n = (this as any).$i18n
 				instanceI18n.setLocaleMessage(newLocale, module.default)
@@ -80,7 +87,13 @@ function loadLanguageAsync(vue: any, newLocale: string) {
 		loadComponentLanguage(newLocale, currentRoute.components?.default, currentRoute.instances?.default)
 	}
 	if (!loadedLanguages.includes(newLocale)) {
-		return import(/* @vite-ignore */ `@/lang/locale/${newLocale}.ts`).then(module => {
+		const modulePath = `/src/lang/locale/${newLocale}.ts`
+		const loader = localeModules[modulePath]
+		if (!loader) {
+			console.error(`Locale module not found: ${modulePath}`)
+			return Promise.resolve(setI18nLanguage(newLocale))
+		}
+		return loader().then((module: any) => {
 			i18n.global.mergeLocaleMessage(newLocale, module.translations)
 			loadedLanguages.push(newLocale)
 			// vue.onLanguageLoaded()
@@ -108,7 +121,10 @@ function loadInstanceTranslations(newLocale: string, instance: any) {
 	if (name.indexOf("forum-") === 0) { folder = "forum" }
 	if (name.indexOf("inventory-") === 0) { folder = "inventory" }
 
-	return import(/* webpackChunkName: "locale-[request]" */ `@/component/${folder}/${name}.${newLocale}.i18n`).then((module: any) => {
+	const modulePath = `/src/component/${folder}/${name}.${newLocale}.i18n`
+	const loader = componentI18nModules[modulePath]
+	if (!loader) return
+	return loader().then((module: any) => {
 		const instanceI18n = (instance as any)._i18n
 		if (instanceI18n) {
 			instanceI18n.setLocaleMessage(newLocale, module.default)
@@ -134,7 +150,10 @@ function loadComponentLanguage(newLocale: string, component: any, instance: Comp
 		// console.log("i18n already set on component!")
 		return
 	}
-	return import(/* webpackChunkName: "locale-[request]" */ `@/component/${name}/${name}.${newLocale}.i18n`).then((module: any) => {
+	const modulePath = `/src/component/${name}/${name}.${newLocale}.i18n`
+	const loader = componentI18nModules[modulePath]
+	if (!loader) return
+	return loader().then((module: any) => {
 		// if (!(name in module.translations)) {
 			// console.log("No messages for '" + name + "' in '" + locale + "'!")
 			// return

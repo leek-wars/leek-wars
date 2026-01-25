@@ -307,15 +307,15 @@ import { emitter } from '@/model/vue'
 				this.count = data.count
 				this.total = data.total
 				if (this.$store.state.farmer && this.id === this.$store.state.farmer.id) {
-					this.title = this.$t('title_me')
+					this.title = this.$i18n.t('title_me')
 				} else {
-					this.title = this.$t('title', [data.farmer.name])
+					this.title = this.$i18n.t('title', [data.farmer.name])
 				}
 				const subtitle = this.count + ' / ' + this.total + ' - ' + Math.floor(100 * this.count / this.total) + '%'
 				if (this.$store.state.farmer && this.id === this.$store.state.farmer.id) {
-					LeekWars.setTitle(this.$t('title_me'), subtitle)
+					LeekWars.setTitle(this.$i18n.t('title_me'), subtitle)
 				} else {
-					LeekWars.setTitle(this.$t('title', [data.farmer.name]), subtitle)
+					LeekWars.setTitle(this.$i18n.t('title', [data.farmer.name]), subtitle)
 				}
 				emitter.emit('loaded')
 				this.loaded = true
