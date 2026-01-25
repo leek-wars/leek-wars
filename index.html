@@ -40,7 +40,8 @@
 				<noscript>You must enable JavaScript to run Leek Wars website.</noscript>
 			</div>
 		</div>
-		<!-- Vite entry point -->
-		<script type="module" src="/src/main-fr.ts"></script>
+		<!-- Vite entry points: locale first (sets translations), then main (uses them) -->
+		<script type="module" src="/src/lang/locale/fr.ts"></script>
+		<script type="module" src="/src/main.ts"></script>
 	</body>
 </html>

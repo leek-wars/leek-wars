@@ -1,10 +1,13 @@
 import { locale, messages } from '@/locale'
-import { Options } from 'vue'
+import { Component, ComponentInstance } from 'vue'
 import { createI18n } from 'vue-i18n'
 
-// Pre-load all locale modules for dynamic import with Vite
-const localeModules = import.meta.glob('@/lang/locale/*.ts')
-const componentI18nModules = import.meta.glob('@/component/**/*.i18n')
+// Pre-declare dynamic imports for Vite to bundle them
+const localeModules = import.meta.glob('/src/lang/locale/*.ts') as Record<string, () => Promise<{ translations: Record<string, unknown> }>>
+const i18nModules = import.meta.glob('/src/component/**/*.i18n', {
+	query: '?raw',
+	import: 'default',
+}) as Record<string, () => Promise<string>>
 
 const i18n = createI18n({
 	legacy: true, // Use legacy mode for compatibility
@@ -20,14 +23,12 @@ const i18n = createI18n({
 
 // Add backward compatibility helpers for Vue 2 -> Vue 3 migration
 // This allows code to use i18n.t() instead of i18n.global.t()
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 Object.defineProperty(i18n, 't', {
 	get() {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		return (i18n.global as any).t
 	}
 })
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 Object.defineProperty(i18n, 'tc', {
 	get() {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -61,12 +62,14 @@ const mixins = [{
 			const newLocale = i18n.global.locale
 			const folder = name.startsWith('signup-') ? 'signup' : name
 			const modulePath = `/src/component/${folder}/${name}.${newLocale}.i18n`
-			const loader = componentI18nModules[modulePath]
+			const loader = i18nModules[modulePath]
 			if (!loader) return
-			return loader().then((module: any) => {
-				i18n.global.mergeLocaleMessage(newLocale, { [name]: module.default })
+			return loader().then((raw) => {
+				const messages = JSON.parse(raw)
+				i18n.global.mergeLocaleMessage(newLocale, { [name]: messages })
+				// console.log("i18n watch set instance messages", newLocale, messages, module)
 				const instanceI18n = (this as any).$i18n
-				instanceI18n.setLocaleMessage(newLocale, module.default)
+				instanceI18n.setLocaleMessage(newLocale, messages)
 			})
 		}
 	}
@@ -82,8 +85,10 @@ function setI18nLanguage(lang: string) {
 }
 
 function loadLanguageAsync(vue: any, newLocale: string) {
+	// console.log("loadLanguageAsync", newLocale)
 	const currentRoute = vue.$router.currentRoute.value?.matched[0]
 	if (currentRoute) {
+		// console.log("loadLanguageAsync", currentRoute)
 		loadComponentLanguage(newLocale, currentRoute.components?.default, currentRoute.instances?.default)
 	}
 	if (!loadedLanguages.includes(newLocale)) {
@@ -93,10 +98,9 @@ function loadLanguageAsync(vue: any, newLocale: string) {
 			console.error(`Locale module not found: ${modulePath}`)
 			return Promise.resolve(setI18nLanguage(newLocale))
 		}
-		return loader().then((module: any) => {
+		return loader().then((module) => {
 			i18n.global.mergeLocaleMessage(newLocale, module.translations)
 			loadedLanguages.push(newLocale)
-			// vue.onLanguageLoaded()
 			return setI18nLanguage(newLocale)
 		})
 	}
@@ -104,7 +108,7 @@ function loadLanguageAsync(vue: any, newLocale: string) {
 }
 
 function loadInstanceTranslations(newLocale: string, instance: any) {
-	// console.log("load instance translations", instance)
+	// console.log("load instance translations", "instance", instance, newLocale)
 	if (!instance.$options.name) {
 		return
 	}
@@ -122,52 +126,56 @@ function loadInstanceTranslations(newLocale: string, instance: any) {
 	if (name.indexOf("inventory-") === 0) { folder = "inventory" }
 
 	const modulePath = `/src/component/${folder}/${name}.${newLocale}.i18n`
-	const loader = componentI18nModules[modulePath]
+	const loader = i18nModules[modulePath]
 	if (!loader) return
-	return loader().then((module: any) => {
-		const instanceI18n = (instance as any)._i18n
+	return loader().then((raw) => {
+		const messages = JSON.parse(raw)
+		const instanceI18n = (instance as any).$i18n
+		// console.log("instance i18n", instanceI18n, instance, "messages", messages)
 		if (instanceI18n) {
-			instanceI18n.setLocaleMessage(newLocale, module.default)
+			instanceI18n.setLocaleMessage(newLocale, messages)
 		}
 	})
 }
 
-function loadComponentLanguage(newLocale: string, component: any, instance: Component | undefined) {
+function loadComponentLanguage(newLocale: string, component: ComponentInstance<Component>, instance: Component | undefined) {
 
-	if (!component.options) { return }
-	let name = (component as any).options.name.toLowerCase().replace(/_/g, '-')
+	// console.log("loadComponentLanguage", newLocale, "component", component, "instance", instance)
+
+	let name = component.name?.toLowerCase().replace(/_/g, '-')
 	if (name === "bankbuy" || name === "bankvalidate") { name = "bank" }
-	if (name === "home") { name = "signup" }
+	if (name === "home" || !name) { name = "signup" }
 
-	if (component === undefined) {
-		return
-	}
 	if (instance && (instance as any).$i18n && (instance as any).$i18n.messages[newLocale]) {
 		// console.log("i18n already loaded on instance!")
 		return
 	}
-	if (component && component.options.i18n && component.options.i18n.messages && component.options.i18n.messages[newLocale]) {
+	if (component && component.i18n && component.i18n.messages && component.i18n.messages[newLocale]) {
 		// console.log("i18n already set on component!")
 		return
 	}
 	const modulePath = `/src/component/${name}/${name}.${newLocale}.i18n`
-	const loader = componentI18nModules[modulePath]
+	const loader = i18nModules[modulePath]
+	// console.log("loader", loader, modulePath, i18nModules)
 	if (!loader) return
-	return loader().then((module: any) => {
+	return loader().then((raw) => {
+		const messages = JSON.parse(raw)
 		// if (!(name in module.translations)) {
 			// console.log("No messages for '" + name + "' in '" + locale + "'!")
 			// return
 		// }
-		// console.log("loadComponentLanguage merge", { [name]: module })
-		i18n.global.mergeLocaleMessage(newLocale, { [name]: module.default })
+		// console.log("messages", messages)
+		i18n.global.mergeLocaleMessage(newLocale, { [name]: messages })
 		if (instance && (instance as any).$i18n) {
 			const instanceI18n = (instance as any).$i18n
-			instanceI18n.setLocaleMessage(newLocale, module.default)
-			// console.log("installed '" + locale + "' messages on instance '" + name + "'")
+			instanceI18n.setLocaleMessage(newLocale, messages)
+			// console.log("installed '" + newLocale + "' messages on instance '" + name + "'")
 		} else {
-			(component as any).options.i18n = {messages: {[newLocale]: module.default}}
-			// console.log("set '" + locale + "' messages on component '" + name + "'")
-		}
+			if (component.i18n) {
+				(component as any).i18n = {messages: {[newLocale]: messages}}
+			}
+			// console.log("set '" + newLocale + "' messages on component '" + name + "'")
+		}	
 	})
 }
 

@@ -352,7 +352,7 @@
 	 */
 	import ChangelogVersion from '@/component/changelog/changelog-version.vue'
 	import { locale } from '@/locale'
-	import { i18n, loadComponentLanguage, mixins } from '@/model/i18n'
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'

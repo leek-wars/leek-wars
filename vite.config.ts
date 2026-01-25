@@ -25,15 +25,16 @@ function multiLanguagePlugin(): Plugin {
 			}
 		},
 
-		// Load virtual HTML files with the correct entry point
+		// Load virtual HTML files with the correct entry point (dev mode)
 		load(id) {
 			const match = id.match(/^index-(\w+)\.html$/)
 			if (match) {
 				const lang = match[1]
 				const template = fs.readFileSync(templatePath, 'utf-8')
+				// Replace fr locale with requested language
 				return template.replace(
-					'<script type="module" src="/src/main-fr.ts"></script>',
-					`<script type="module" src="/src/main-${lang}.ts"></script>`
+					'src="/src/lang/locale/fr.ts"',
+					`src="/src/lang/locale/${lang}.ts"`
 				)
 			}
 		},
@@ -41,25 +42,28 @@ function multiLanguagePlugin(): Plugin {
 		// Generate all language HTML files in the output
 		generateBundle(_options, bundle) {
 			const template = fs.readFileSync(templatePath, 'utf-8')
+			let defaultHtml = ''
 
 			for (const lang of languages) {
-				const htmlContent = template.replace(
-					'<script type="module" src="/src/main-fr.ts"></script>',
-					`<script type="module" src="/src/main-${lang}.ts"></script>`
+				// Find the JS entries for locale and main
+				const localeEntry = Object.keys(bundle).find(name =>
+					name.startsWith(`assets/locale-${lang}`) && name.endsWith('.js')
+				)
+				const mainEntry = Object.keys(bundle).find(name =>
+					name.match(/^assets\/main-[A-Za-z0-9_-]+\.js$/) && !name.includes('locale')
 				)
 
-				// Find the JS entry for this language and update the script src
-				const jsEntry = Object.keys(bundle).find(name =>
-					name.startsWith(`assets/main-${lang}`) && name.endsWith('.js')
-				)
+				// Build script tags: locale first (sets translations), then main (uses them)
+				const scripts = [
+					localeEntry ? `<script type="module" crossorigin src="/${localeEntry}"></script>` : '',
+					mainEntry ? `<script type="module" crossorigin src="/${mainEntry}"></script>` : ''
+				].filter(Boolean).join('\n\t\t')
 
-				let finalHtml = htmlContent
-				if (jsEntry) {
-					finalHtml = finalHtml.replace(
-						`<script type="module" src="/src/main-${lang}.ts"></script>`,
-						`<script type="module" crossorigin src="/${jsEntry}"></script>`
-					)
-				}
+				// Replace the dev script tags with built versions
+				let finalHtml = template.replace(
+					/<script type="module" src="\/src\/lang\/locale\/fr\.ts"><\/script>\s*<script type="module" src="\/src\/main\.ts"><\/script>/,
+					scripts
+				)
 
 				// Add CSS links
 				const cssFiles = Object.keys(bundle).filter(name => name.endsWith('.css'))
@@ -71,7 +75,19 @@ function multiLanguagePlugin(): Plugin {
 					fileName: `index-${lang}.html`,
 					source: finalHtml
 				})
+
+				// Keep French as default
+				if (lang === 'fr') {
+					defaultHtml = finalHtml
+				}
 			}
+
+			// Emit index.html as default (French)
+			this.emitFile({
+				type: 'asset',
+				fileName: 'index.html',
+				source: defaultHtml
+			})
 		}
 	}
 }
@@ -183,10 +199,16 @@ export default defineConfig({
 		// Generate source maps for production (like hidden-source-map in webpack)
 		sourcemap: true,
 		rollupOptions: {
-			// Build all language entry points (no shared index.html to preserve execution order)
-			input: Object.fromEntries(
-				languages.map(lang => [`main-${lang}`, path.resolve(__dirname, `src/main-${lang}.ts`)])
-			),
+			// Two entry points per language: locale (translations) and main (app)
+			// HTML loads locale first, then main, to ensure translations are set before app init
+			input: {
+				// Main app entry point (shared)
+				'main': path.resolve(__dirname, 'src/main.ts'),
+				// Locale entry points (one per language)
+				...Object.fromEntries(
+					languages.map(lang => [`locale-${lang}`, path.resolve(__dirname, `src/lang/locale/${lang}.ts`)])
+				)
+			},
 			output: {
 				manualChunks: {
 					// Vue ecosystem
