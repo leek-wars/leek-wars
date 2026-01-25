@@ -7,6 +7,75 @@ import path from 'path'
 import fs from 'fs'
 import yaml from 'js-yaml'
 
+// List of supported languages
+const languages = ['fr', 'en', 'de', 'es', 'it', 'pt', 'nl', 'pl', 'ru', 'ja', 'ko', 'zh', 'hi', 'id', 'da', 'fi', 'no', 'sv']
+
+// Plugin to generate multiple HTML outputs for each language
+function multiLanguagePlugin(): Plugin {
+	const templatePath = path.resolve(__dirname, 'index.html')
+
+	return {
+		name: 'multi-language-html',
+		enforce: 'pre',
+
+		// Resolve virtual HTML files for each language
+		resolveId(id) {
+			if (id.match(/^index-\w+\.html$/)) {
+				return id
+			}
+		},
+
+		// Load virtual HTML files with the correct entry point
+		load(id) {
+			const match = id.match(/^index-(\w+)\.html$/)
+			if (match) {
+				const lang = match[1]
+				const template = fs.readFileSync(templatePath, 'utf-8')
+				return template.replace(
+					'<script type="module" src="/src/main-fr.ts"></script>',
+					`<script type="module" src="/src/main-${lang}.ts"></script>`
+				)
+			}
+		},
+
+		// Generate all language HTML files in the output
+		generateBundle(_options, bundle) {
+			const template = fs.readFileSync(templatePath, 'utf-8')
+
+			for (const lang of languages) {
+				const htmlContent = template.replace(
+					'<script type="module" src="/src/main-fr.ts"></script>',
+					`<script type="module" src="/src/main-${lang}.ts"></script>`
+				)
+
+				// Find the JS entry for this language and update the script src
+				const jsEntry = Object.keys(bundle).find(name =>
+					name.startsWith(`assets/main-${lang}`) && name.endsWith('.js')
+				)
+
+				let finalHtml = htmlContent
+				if (jsEntry) {
+					finalHtml = finalHtml.replace(
+						`<script type="module" src="/src/main-${lang}.ts"></script>`,
+						`<script type="module" crossorigin src="/${jsEntry}"></script>`
+					)
+				}
+
+				// Add CSS links
+				const cssFiles = Object.keys(bundle).filter(name => name.endsWith('.css'))
+				const cssLinks = cssFiles.map(css => `<link rel="stylesheet" crossorigin href="/${css}">`).join('\n\t\t')
+				finalHtml = finalHtml.replace('</head>', `\t${cssLinks}\n\t</head>`)
+
+				this.emitFile({
+					type: 'asset',
+					fileName: `index-${lang}.html`,
+					source: finalHtml
+				})
+			}
+		}
+	}
+}
+
 // Plugin to handle .i18n and .lang files
 // .i18n files load the corresponding .vue component and inject i18n translations
 function i18nPlugin(): Plugin {
@@ -67,6 +136,7 @@ function yamlPlugin(): Plugin {
 // https://vitejs.dev/config/
 export default defineConfig({
 	plugins: [
+		multiLanguagePlugin(),
 		i18nPlugin(),
 		yamlPlugin(),
 		vue(),
@@ -113,6 +183,10 @@ export default defineConfig({
 		// Generate source maps for production (like hidden-source-map in webpack)
 		sourcemap: true,
 		rollupOptions: {
+			// Build all language entry points (no shared index.html to preserve execution order)
+			input: Object.fromEntries(
+				languages.map(lang => [`main-${lang}`, path.resolve(__dirname, `src/main-${lang}.ts`)])
+			),
 			output: {
 				manualChunks: {
 					// Vue ecosystem
