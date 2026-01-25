@@ -157,7 +157,7 @@
 					<span v-if="captain" class="accept" @click="acceptCandidacy(candidacy)">{{ $t('candidacy_accept') }}</span>
 					<span v-if="captain" class="reject" @click="rejectCandidacy(candidacy)">{{ $t('candidacy_refuse') }}</span>
 				</div>
-			</div></template>
+			</div>
 		</panel>
 
 		<panel v-if="team" icon="mdi-account-supervisor" :title="$t('farmers', [ team.member_count])">

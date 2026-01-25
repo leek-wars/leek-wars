@@ -16,12 +16,13 @@
 		<panel title="Top Voyous">
 			<template #content>
 				<div class="thugs">
-				<loader v-if="!thugs" />
-				<div v-else>
-					<div v-for="thug in thugs" :key="thug.id" class="thug">
-						<avatar :farmer="thug" />
-						<router-link :to="'/farmer/' + thug.id" class="text">{{ thug.name }} ({{ thug.warnings }})</router-link>
-						<v-btn @click="ban(thug)">Bannir</v-btn>
+					<loader v-if="!thugs" />
+					<div v-else>
+						<div v-for="thug in thugs" :key="thug.id" class="thug">
+							<avatar :farmer="thug" />
+							<router-link :to="'/farmer/' + thug.id" class="text">{{ thug.name }} ({{ thug.warnings }})</router-link>
+							<v-btn @click="ban(thug)">Bannir</v-btn>
+						</div>
 					</div>
 				</div>
 			</template>

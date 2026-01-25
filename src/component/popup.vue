@@ -1,5 +1,5 @@
 <template lang="html">
-	<v-dialog :model-value="modelValue" :max-width="width" :persistent="persistent" @update:model-value="$emit('update:modelValue', $event)">
+	<v-dialog :model-value="modelValue" :width="width" :persistent="persistent" content-class="popup" @update:model-value="$emit('update:modelValue', $event)">
 		<template v-if="content_created">
 			<div class="title">
 				<slot name="icon">
@@ -9,9 +9,11 @@
 					<slot name="title">{{ title }}</slot>
 				</div>
 				<div class="options">
-					<div class="option" @click="close">
-						<v-icon>mdi-close</v-icon>
-					</div>
+					<slot name="options">
+						<div class="option" @click="close">
+							<v-icon>mdi-close</v-icon>
+						</div>
+					</slot>
 				</div>
 			</div>
 			<div :class="{full: full}" class="content">
@@ -57,6 +59,15 @@
 	}
 </script>
 
+<style lang="scss">
+
+.v-dialog > .v-overlay__content.popup {
+	margin: 0;
+	max-width: 100% !important;
+}
+
+</style>
+
 <style lang="scss" scoped>
 
 .popup {
@@ -96,7 +107,7 @@
 		margin-top: -6px;
 		margin-bottom: -4px;
 		margin-right: -10px;
-		.option {
+		&:deep(.option) {
 			background: black;
 			height: 40px;
 			width: 40px;
@@ -105,15 +116,15 @@
 				font-size: 26px;
 				vertical-align: baseline;
 			}
+			&:hover {
+				background: #888;
+			}
+			img {
+				width: 26px;
+				height: 26px;
+			}
 		}
 	}
-}
-.title .options .option:hover {
-	background: #888;
-}
-.title .options .option img {
-	width: 26px;
-	height: 26px;
 }
 .draggable .title {
 	cursor: move;

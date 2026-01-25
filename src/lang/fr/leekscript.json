@@ -86,7 +86,7 @@
 	"error_62": "Votre IA n'a pas pu être compilée correctement, un administrateur a été prévenu : {0}.",
 	"error_58": "Impossible d'exécuter \"{0}\"",
 	"error_59": "Impossible d'utiliser cette fonction avec les arguments ({0}), {1} arguments attendus",
-	"error_66": "Votre IA n'a pas pu être compilée correctement car votre code est trop gros.",
+	"error_66": "Votre IA n'a pas pu être compilée correctement car votre code est trop gros. {0}",
 	"error_55": "La fonction {0} va être supprimée, utilisez maintenant {1}",
 	"error_57": "Division par zéro",
 	"error_60": "Vous n'avez pas d'IA",

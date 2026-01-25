@@ -30,10 +30,8 @@
 				</div>
 			</div>
 			<div class="input" @click="focus()">
-				<!-- <span class="arrow">›</span> -->
 				<v-icon class="arrow">mdi-chevron-right</v-icon>
-				<!-- <input ref="input" v-model="code" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" @keydown.enter="enter"> -->
-				<ai-view-monaco class="editor" ref="editor" :ai="ai" :ais="{}" :visible="true" :line-numbers="false" :font-size="17" @enter="enter" :autocomplete-option="true" :popups="true" :console="true" @down="down" @up="up" />
+				<ai-view-monaco class="editor" ref="editor" :ai="ai" :ais="{}" :visible="true" :line-numbers="false" :font-size="17" :line-height="20" @enter="enter" :autocomplete-option="true" :popups="true" :console="true" :theme="theme" @down="down" @up="up" />
 			</div>
 		</div>
 	</div>
@@ -44,20 +42,20 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
-	import AIView from '../editor/ai-view.vue'
 	import { AI } from '@/model/ai'
 	import { emitter } from '@/model/vue'
 	import { i18n } from '@/model/i18n'
 	import AIViewMonaco from '../editor/ai-view-monaco.vue'
+	import { FileSystem, fileSystem } from '@/model/filesystem'
 
 	@Options({ components: { 'ai-view-monaco': AIViewMonaco } })
 	export default class Console extends Vue {
 
-		editor!: AIView
+		editor!: AIViewMonaco
 		lines: any[] = []
 		history: string[] = []
 		historyPos: number = 0
-		ai: any = new AI({ id: 0, code: '' })
+		ai: any = new AI({ id: 0, code: '', path: FileSystem.CONSOLE_MAGIC_KEY + Math.random() + '.leek' })
 		theme: string = 'leekwars'
 		leekscript = {
 			version: 4,
@@ -74,6 +72,7 @@
 			this.theme = localStorage.getItem('console/theme') || defaultTheme
 			this.leekscript.version = parseInt(localStorage.getItem('console/version') || '4')
 			this.leekscript.strict = localStorage.getItem('console/strict') === 'true'
+			fileSystem.consoleAI = this.ai
 
 			this.clear()
 		}
@@ -95,7 +94,7 @@
 		up() {
 			this.historyPos--
 			if (this.historyPos < 0) this.historyPos = 0
-			this.editor.setCode(this.history[this.historyPos])
+			this.editor.editor.setValue(this.history[this.historyPos])
 		}
 
 		down() {
@@ -104,13 +103,12 @@
 				this.historyPos = this.history.length
 				this.editor.editor.setValue('')
 			} else {
-				this.editor.setCode(this.history[this.historyPos])
+				this.editor.editor.setValue(this.history[this.historyPos])
 			}
 		}
 
 		mounted() {
 			this.editor = this.$refs.editor as AIView
-			console.log("mounted", this.editor)
 			emitter.on('console', (data: any) => {
 				console.log("on console", data)
 				this.lines.push({ type: 'result', ...data })
@@ -144,7 +142,6 @@
 		}
 
 		enter() {
-			console.log("Console enter")
 			const code = this.editor.editor.getValue()
 			this.history.push(code)
 			this.historyPos = this.history.length
@@ -153,6 +150,7 @@
 			this.scrollDown()
 			this.editor.editor.setValue('')
 		}
+
 		scrollDown() {
 			setTimeout(() => {
 				(this.$refs.scroll as HTMLElement).scrollTop = (this.$refs.scroll as HTMLElement).scrollHeight
@@ -160,8 +158,6 @@
 		}
 
 		focus() {
-			console.log("console editor", this.editor.editor)
-			// (this.$refs.input as HTMLElement).focus()
 			this.editor.editor.focus()
 		}
 
@@ -174,7 +170,6 @@
 		}
 
 		toggleTheme() {
-			console.log("toggle theme")
 			this.theme = this.theme === 'leekwars' ? 'monokai' : 'leekwars'
 			localStorage.setItem('console/theme', this.theme)
 		}
@@ -241,7 +236,7 @@
 		padding: 2px 0;
 		word-wrap: break-word;
 		display: flex;
-		align-items: flex-start;
+		align-items: center;
 		gap: 5px;
 		font-family: monospace;
 		span, .error {
@@ -251,12 +246,11 @@
 			color: red;
 		}
 		.zigzag {
-			padding-left: 31px;
+			padding-left: 27px;
 			margin-top: -10px;
 		}
 	}
 	.line.result {
-		// color: white;
 		font-weight: bold;
 		font-size: 16px;
 		margin-bottom: 2px;
@@ -264,6 +258,7 @@
 			font-size: 13px;
 			font-weight: normal;
 			color: #888;
+			margin-left: 10px;
 		}
 	}
 	.input {
@@ -312,6 +307,6 @@
 }
 .console::v-deep code {
 	border: none;
-	padding: 0 4px;
+	padding: 0;
 }
 </style>

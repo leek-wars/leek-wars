@@ -221,10 +221,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
-	import { Route } from 'vue-router'
-	import AIView from './ai-view.vue'
 	import AIViewMonaco from './ai-view-monaco.vue'
-	import { Problem } from './problem'
 	import EditorFinder from './editor-finder.vue'
 	import { AIItem, Folder, Item } from './editor-item'
 	import { explorer } from './explorer'
@@ -247,7 +244,6 @@
 	@Options({
 		name: 'editor', i18n: {},
 		components: {
-			'ai-view': AIView,
 			'ai-view-monaco': AIViewMonaco,
 			'editor-test': EditorTest,
 			'editor-tabs': EditorTabs,
@@ -256,8 +252,6 @@
 			'editor-problems': EditorProblems,
 			ai: AIElement,
 			LeekscriptVersions,
-			// 'dockview-vue': DockviewVue,
-			// 'Lumino': Lumino
 		},
 		mixins: [...mixins]
 	})
