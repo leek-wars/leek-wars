@@ -15,7 +15,7 @@ import Popup from '@/component/popup.vue'
 import RankingBadge from '@/component/ranking-badge.vue'
 import Talent from '@/component/talent.vue'
 import { env } from '@/env'
-import { i18n } from '@/model/i18n'
+import { i18n, loadLanguageAsync } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import '@/model/serviceworker'
 import { store } from "@/model/store"
@@ -26,8 +26,6 @@ import { Latex } from './latex'
 import { scroll_to_hash } from '@/router-functions'
 
 import { createVuetify } from 'vuetify'
-import * as components from 'vuetify/components'
-import * as directives from 'vuetify/directives'
 import 'vuetify/styles'
 import '@mdi/font/css/materialdesignicons.css'
 import { formatEmojis } from './emojis'
@@ -36,8 +34,6 @@ import { Farmer } from './farmer'
 import '@/chart'
 
 const vuetify = createVuetify({
-	components,
-	directives,
 	theme: {
 		themes: {
 			dark: {
@@ -77,13 +73,6 @@ const vuetify = createVuetify({
 		},
 	},
 })
-
-// TODO: Fix transitions for Vuetify 3
-// import { createSimpleTransition } from 'vuetify/lib/components/transitions/createTransition'
-// import '../fade-transition.sass'
-// const myTransition = createSimpleTransition('my-transition')
-// Vue.component('my-transition', myTransition)
-
 
 function displayWarningMessage() {
 	const style = "color: black; font-size: 13px; font-weight: bold;"
@@ -428,6 +417,14 @@ app.directive('emojis', (el) => {
 const vueMain = app.mount('#app2') as ComponentPublicInstance & {
 	$once: (event: string, callback: () => void) => void
 	$emit: (event: string, ...args: any[]) => void
+}
+
+// Restore saved locale in dev/local mode
+if (LeekWars.DEV || LeekWars.LOCAL) {
+	const savedLocale = localStorage.getItem('locale')
+	if (savedLocale && savedLocale !== i18n.global.locale) {
+		loadLanguageAsync(vueMain, savedLocale)
+	}
 }
 
 router.afterEach((to: any) => {

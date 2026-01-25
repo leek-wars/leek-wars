@@ -5,7 +5,7 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { CHIP_BY_NAME } from '@/model/sorted_chips'
-	import { vueMain, vuetify } from '@/model/vue'
+	import { vuetify } from '@/model/vue'
 	import markdown from 'markdown-it'
 	import DOMPurify from 'dompurify'
 	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
@@ -19,9 +19,9 @@
 	import { store } from '@/model/store'
 	import { i18n } from '@/model/i18n'
 	import LeekImage from '../leek-image.vue'
-	import { createApp, nextTick } from 'vue'
-import LWLoader from '../app/loader.vue'
-import router from '@/router'
+	import { createApp, nextTick, ref, h, defineComponent } from 'vue'
+	import LWLoader from '../app/loader.vue'
+	import router from '@/router'
 
 	@Options({ name: 'markdown' })
 	export default class Markdown extends Vue {
@@ -49,11 +49,9 @@ import router from '@/router'
 		@Watch('content', {immediate: true})
 		update() {
 
-			const re = /^((https:\/\/leekwars\.com)?\/image\/|https:\/\/(i\.)?imgur\.com\/|https:\/\/(i\.)?ibb.co\/)/
+			const re = /^((https:\/\/leekwars\.com)?\/image\/|https:\/\/(i\.)?imgur\.com\/|https:\/\/(i\.)?ibb\.co\/)/
 
-			// Configure DOMPurify
 			DOMPurify.addHook('uponSanitizeElement', (node, data) => {
-				// Filter images with invalid src
 				if (data.tagName === 'img' && node instanceof Element) {
 					const src = node.getAttribute('src')
 					if (src && !re.test(src)) {
@@ -80,7 +78,6 @@ import router from '@/router'
 				md.querySelectorAll('h1, h2, h3, h4, h5').forEach((item: any) => {
 					const level = parseInt(item.tagName.substring(1), 10)
 					if (level >= 2) {
-						// console.log("element", level, item)
 						const node = {level, title: item.innerText, children: []}
 						const parent = stack[level - 2] || this.summary
 						stack[level - 1] = node
@@ -124,21 +121,30 @@ import router from '@/router'
 				md.querySelectorAll('.encyclopedia-weapon').forEach((item) => {
 					const weapon = LeekWars.weaponByName[item.getAttribute('weapon')!]
 					if (weapon) {
-						new ItemPreview({ propsData: { item: LeekWars.items[weapon.item] }, parent: vueMain }).$mount(item)
+						const app = createApp(ItemPreview, { item: LeekWars.items[weapon.item] })
+						app.use(vuetify).use(i18n).use(store)
+						app.mount(item)
+						this.components.push({ $destroy: () => app.unmount() })
 					}
 				})
 				// Puces
 				md.querySelectorAll('.encyclopedia-chip').forEach((item) => {
 					const chip = CHIP_BY_NAME[item.getAttribute('chip')!]
 					if (chip) {
-						new ItemPreview({ propsData: { item: LeekWars.items[chip.id] }, parent: vueMain }).$mount(item)
+						const app = createApp(ItemPreview, { item: LeekWars.items[chip.id] })
+						app.use(vuetify).use(i18n).use(store)
+						app.mount(item)
+						this.components.push({ $destroy: () => app.unmount() })
 					}
 				})
 				// Potions
 				md.querySelectorAll('.encyclopedia-potion').forEach((item) => {
 					const potion = LeekWars.potionByName[item.getAttribute('potion')!]
 					if (potion) {
-						new ItemPreview({ propsData: { item: LeekWars.items[potion.id] }, parent: vueMain }).$mount(item)
+						const app = createApp(ItemPreview, { item: LeekWars.items[potion.id] })
+						app.use(vuetify).use(i18n).use(store)
+						app.mount(item)
+						this.components.push({ $destroy: () => app.unmount() })
 					}
 				})
 				// Locked pages
@@ -157,7 +163,10 @@ import router from '@/router'
 				})
 				// LoS
 				md.querySelectorAll('.encyclopedia-los').forEach((item) => {
-					new LineOfSight({ propsData: { }, parent: vueMain }).$mount(item)
+					const app = createApp(LineOfSight)
+					app.use(vuetify).use(i18n).use(store)
+					app.mount(item)
+					this.components.push({ $destroy: () => app.unmount() })
 				})
 				// Search bar
 				md.querySelectorAll('.encyclopedia-search-bar').forEach((item) => {
@@ -165,11 +174,17 @@ import router from '@/router'
 				})
 				// Tutorial menu
 				md.querySelectorAll('.tutorial-menu').forEach((item) => {
-					new TutorialMenu({ propsData: { locale: this.locale }, parent: vueMain }).$mount(item)
+					const app = createApp(TutorialMenu, { locale: this.locale })
+					app.use(vuetify).use(i18n).use(store).use(router)
+					app.mount(item)
+					this.components.push({ $destroy: () => app.unmount() })
 				})
 				// Tutorial progress
 				md.querySelectorAll('.tutorial-progress').forEach((item) => {
-					this.components.push(new TutorialProgress({ propsData: { locale: this.locale }, parent: vueMain }).$mount(item))
+					const app = createApp(TutorialProgress, { locale: this.locale })
+					app.use(vuetify).use(i18n).use(store).use(router)
+					app.mount(item)
+					this.components.push({ $destroy: () => app.unmount() })
 				})
 				// Tutorial quizz
 				md.querySelectorAll('.quizz').forEach((item) => {
@@ -188,8 +203,9 @@ import router from '@/router'
 					}
 
 					const completed = store.state.farmer && store.state.farmer.tutorial_progress >= chapter
+					let submitContainer: HTMLElement | null = null
 					const set_finished = () => {
-						;(vbtn.$el as HTMLElement).style.display = 'none'
+						if (submitContainer) submitContainer.style.display = 'none'
 						item.querySelectorAll('ul').forEach((answers, q) => {
 							[...answers.children].forEach(child => child.classList.add('disabled'))
 						})
@@ -204,14 +220,14 @@ import router from '@/router'
 					item.append(bravo)
 					bravo.style.display = 'none'
 
-					const submit = document.createElement('div')
-					item.append(submit)
-					const vbtn = new VBtn({ vuetify: vuetify, propsData: { color: 'primary' } }).$mount(submit)
-					vbtn.$el.innerHTML = i18n.t('main.validate') as string
-					vbtn.$el.classList.add('v-btn--disabled')
-
 					let form = [] as boolean[][]
-					vbtn.$on('click', () => {
+					const btnDisabled = ref(true)
+
+					const updateBtnState = () => {
+						btnDisabled.value = !form.every(q => q.some(a => a))
+					}
+
+					const handleSubmit = () => {
 						let good = true
 						const questions = item.querySelectorAll('ul')
 						questions.forEach((answers, q) => {
@@ -244,7 +260,25 @@ import router from '@/router'
 							// Send new progression
 							store.commit('set-tutorial-progress', chapter)
 						}
+					}
+
+					// Create submit button using Vue 3 createApp with reactive disabled state
+					submitContainer = document.createElement('div')
+					item.append(submitContainer)
+					const BtnWrapper = defineComponent({
+						setup() {
+							return () => h(VBtn, {
+								color: 'primary',
+								disabled: btnDisabled.value,
+								onClick: handleSubmit
+							}, () => i18n.t('main.validate'))
+						}
 					})
+					const btnApp = createApp(BtnWrapper)
+					btnApp.use(vuetify)
+					btnApp.mount(submitContainer)
+					this.components.push({ $destroy: () => btnApp.unmount() })
+
 					item.querySelectorAll('ul').forEach(answers => {
 						;[...answers.children].forEach((child, index) => {
 							child.setAttribute('index', '' + index)
@@ -259,22 +293,44 @@ import router from '@/router'
 							letter.innerText = String.fromCodePoint(65 + index) + ". "
 							letter.classList.add("letter")
 							child.prepend(letter)
-							const checkbox = document.createElement('span')
-							child.prepend(checkbox)
-							const value = completed && child.hasAttribute('correct') ? true : false
-							const vcheckbox = new VCheckbox({ vuetify: vuetify, propsData: { hideDetails: true, inputValue: value } }).$mount(checkbox)
-							vcheckbox.$on('change', (a: any) => {
-								answer[index] = a
-								vcheckbox.$props.inputValue = a
-								vbtn.$el.classList.toggle('v-btn--disabled', !form.every(q => q.some(a => a)))
+
+							// Create Vuetify checkbox using a reactive wrapper component
+							const checkboxContainer = document.createElement('span')
+							checkboxContainer.className = 'quiz-checkbox'
+							child.prepend(checkboxContainer)
+							const initialValue = completed && child.hasAttribute('correct') ? true : false
+							answer[index] = initialValue
+
+							// Create a reactive ref for the checkbox value
+							const checked = ref(initialValue)
+
+							// Create a wrapper component that uses the reactive ref
+							const CheckboxWrapper = defineComponent({
+								setup() {
+									return () => h(VCheckbox, {
+										hideDetails: true,
+										modelValue: checked.value,
+										'onUpdate:modelValue': (newValue: boolean) => {
+											checked.value = newValue
+											answer[index] = newValue
+											updateBtnState()
+										}
+									})
+								}
 							})
-							vcheckbox.$el.addEventListener('click', (e) => {
+
+							const checkboxApp = createApp(CheckboxWrapper)
+							checkboxApp.use(vuetify)
+							checkboxApp.mount(checkboxContainer)
+							this.components.push({ $destroy: () => checkboxApp.unmount() })
+
+							checkboxContainer.addEventListener('click', (e: Event) => {
 								e.stopPropagation()
 							})
 							child.addEventListener('click', () => {
-								answer[index] = !answer[index]
-								vcheckbox.$props.inputValue = answer[index]
-								vbtn.$el.classList.toggle('v-btn--disabled', !form.every(q => q.some(a => a)))
+								checked.value = !checked.value
+								answer[index] = checked.value
+								updateBtnState()
 							})
 						})
 					})
@@ -293,11 +349,17 @@ import router from '@/router'
 
 				// Leeky
 				md.querySelectorAll('.leeky').forEach((item) => {
-					this.components.push(new LeekImage({ propsData: { leek: { level: 10, face: 1 }, scale: 0.55 }, parent: vueMain }).$mount(item))
+					const app = createApp(LeekImage, { leek: { level: 10, face: 1 }, scale: 0.55 })
+					app.use(vuetify).use(i18n).use(store)
+					app.mount(item)
+					this.components.push({ $destroy: () => app.unmount() })
 				})
 				// Domingo
 				md.querySelectorAll('.domingo').forEach((item) => {
-					this.components.push(new LeekImage({ propsData: { leek: { level: 301, face: 2, metal: true, skin: 9 }, scale: 0.45 }, parent: vueMain }).$mount(item))
+					const app = createApp(LeekImage, { leek: { level: 301, face: 2, metal: true, skin: 9 }, scale: 0.45 })
+					app.use(vuetify).use(i18n).use(store)
+					app.mount(item)
+					this.components.push({ $destroy: () => app.unmount() })
 				})
 			})
 		}
@@ -580,6 +642,13 @@ import router from '@/router'
 				.v-input {
 					display: inline-block;
 					color: var(--text-color);
+				}
+				.quiz-checkbox {
+					display: inline-flex;
+					align-items: center;
+					.v-input {
+						flex: none;
+					}
 				}
 				code {
 					pre {
