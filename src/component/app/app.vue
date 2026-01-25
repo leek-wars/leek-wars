@@ -191,7 +191,7 @@
 
 		@Watch('LeekWars.darkMode', {immediate: true})
 		updateDarkMode() {
-			this.$vuetify.theme.dark = LeekWars.darkMode
+			this.$vuetify.theme.change(LeekWars.darkMode ? 'dark' : 'light')
 			if (LeekWars.darkMode)
 				document.body.classList.add('dark')
 			else

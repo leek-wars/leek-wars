@@ -12,14 +12,14 @@
 			<div class="actions">
 				<v-menu v-if="$store.state.farmer?.public_chat_enabled" location="bottom">
 					<template #activator="{ props }">
-						<div class="language-button" v-ripple v-bind="props">
+						<div v-bind="props" v-ripple class="language-button">
 							<flag :code="LeekWars.languages[LeekWars.publicChats[chatID].language].country" :clickable="false" />
 							<div class="unread-circle" v-if="Object.values(LeekWars.publicChats).some(chat => $store.state.chat[chat.id] && !$store.state.chat[chat.id].read)"></div>
 						</div>
 					</template>
 					<v-list :dense="true">
-						<div v-for="(data, language) in LeekWars.languages.filter(l => l.chats)" :key="language" class="language">
-							<flag :code="LeekWars.languages[language].country" />
+						<div v-for="data in Object.values(LeekWars.languages).filter(l => l.chats)" :key="data.code" class="language">
+							<flag :code="data.country" />
 							<v-list-item v-for="(chat, i) in data.chats" :key="i" class="language" @click="setChatLanguage(chat)">
 								<v-icon>{{ LeekWars.publicChats[chat].icon }}</v-icon>
 								<span class="name">{{ LeekWars.publicChats[chat].name }}</span>
