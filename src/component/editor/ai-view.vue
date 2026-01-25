@@ -139,7 +139,6 @@
 </template>
 
 <script lang="ts">
-	import { keywords, keywordsLSOnly } from '@/component/editor/keywords'
 	import { AI } from '@/model/ai'
 	import { fileSystem } from '@/model/filesystem'
 	import { i18n } from '@/model/i18n'

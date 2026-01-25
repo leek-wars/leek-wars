@@ -1,5 +1,5 @@
 <template>
-	<div id="app" :class="{ connected: $store.state.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw, dark: LeekWars.darkMode, 'menu-collapsed': !LeekWars.mobile && LeekWars.menuCollapsed, beta: env.BETA, lightbar: LeekWars.lightBar }" data-app="true" @mousemove="mousemove" @mouseup="mouseup">
+	<div id="app" :class="{ connected: $store.state.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw, dark: LeekWars.darkMode, 'menu-collapsed': !LeekWars.mobile && LeekWars.menuCollapsed, beta: env.BETA, lightbar: LeekWars.lightBar }" data-app="true" @mousemove="mousemove">
 				<div :class="{visible: LeekWars.dark > 0}" :style="{opacity: LeekWars.dark}" class="dark-shadow" @click="darkClick"></div>
 
 				<div class="requests">{{ LeekWars.requests }} <v-btn x-small @click="LeekWars.requests = 0">reset</v-btn></div>
@@ -8,7 +8,7 @@
 
 				<v-icon class="console-button" @click="leekscriptConsole">mdi-console</v-icon>
 
-				<console-window v-if="showConsole" v-model="showConsole" ref="consoleWindow" @close="showConsole = false" />
+				<console-window v-if="showConsole" v-model="consoleValue" ref="consoleWindow" @close="consoleValue = false" />
 
 				<lw-bar v-if="LeekWars.mobile" />
 
@@ -152,7 +152,6 @@
 <script lang='ts'>
 	import Bar from '@/component/app/bar.vue'
 	const Chats = defineAsyncComponent(() => import('@/component/app/chats.vue'))
-	// import Console from '@/component/app/console.vue'
 	const Footer = defineAsyncComponent(() => import('@/component/app/footer.vue'))
 	import Header from '@/component/app/header.vue'
 	const Menu = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/app/menu.vue`))
@@ -161,13 +160,12 @@
 	const Squares = defineAsyncComponent(() => import('@/component/app/squares.vue'))
 	const ChangelogVersion = defineAsyncComponent(() => import('@/component/changelog/changelog-version.vue'))
 	import { locale } from '@/locale'
-	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import ConsoleWindow from './console-window.vue'
 	import { defineAsyncComponent, nextTick } from 'vue'
-import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/vue'
 	const ChangelogDialog = defineAsyncComponent(() => import('../changelog/changelog-dialog.vue'))
 	const Didactitiel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`))
 	const Documentation = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`))
@@ -178,6 +176,7 @@ import { emitter } from '@/model/vue'
 	})
 	export default class App extends Vue {
 		showConsole: boolean = false
+		consoleValue: boolean = false
 		changelog: any = null
 		changelogDialog: boolean = false
 		konami: string = ''
@@ -260,12 +259,7 @@ import { emitter } from '@/model/vue'
 
 		leekscriptConsole() {
 			this.showConsole = true
-			// nextTick(() => {
-			// 	if (this.$refs.console) {
-			// 		console.log("Open console", this.$refs.console);
-			// 		(this.$refs.console as any).open()
-			// 	}
-			// })
+			this.consoleValue = true
 		}
 
 		clickClover() {
@@ -336,15 +330,6 @@ import { emitter } from '@/model/vue'
 				this.cloverSpeed = 200
 				this.updateClover()
 				this.updateCloverPosition()
-			}
-			if (this.$refs.consoleWindow) {
-				(this.$refs.consoleWindow as any).consoleMouseMove(e)
-			}
-		}
-
-		mouseup(e: MouseEvent) {
-			if (this.$refs.consoleWindow) {
-				(this.$refs.consoleWindow as any).consoleMouseUp(e)
 			}
 		}
 	}

@@ -12,29 +12,30 @@
 			<template #content>
 				<div class="content">
 
-				<h2>{{ $t('articles') }}</h2>
+					<h2>{{ $t('articles') }}</h2>
 
-				<loader v-if="!articles" />
-				<div v-else class="articles">
-					<router-link v-for="article of articles" :key="article.id" class="article card" :to="'/forum/category-' + article.category + '/topic-' + article.topic + '-' + formatTitleURL(article.title)" v-ripple>
-						<img :src="article.image">
-						<div class="info">
-							<div class="title">{{ article.title }}</div>
+					<loader v-if="!articles" />
+					<div v-else class="articles">
+						<router-link v-for="article of articles" :key="article.id" class="article card" :to="'/forum/category-' + article.category + '/topic-' + article.topic + '-' + formatTitleURL(article.title)" v-ripple>
+							<img :src="article.image">
+							<div class="info">
+								<div class="title">{{ article.title }}</div>
 
-							<div class="flex subtitle">
-								<div class="date">{{ $filters.date(article.date) }}</div>
-								<div class="spacer"></div>
-								<div :class="{zero: article.votes_up === 0}" class="vote up">
-									<v-icon>mdi-thumb-up-outline</v-icon>
-									<span class="counter">{{ article.votes_up }}</span>
-								</div>
-								<div :class="{zero: article.message_count - 1 === 0}" class="vote">
-									<v-icon>mdi-message-outline</v-icon>
-									<span class="counter">{{ article.message_count - 1 }}</span>
+								<div class="flex subtitle">
+									<div class="date">{{ $filters.date(article.date) }}</div>
+									<div class="spacer"></div>
+									<div :class="{zero: article.votes_up === 0}" class="vote up">
+										<v-icon>mdi-thumb-up-outline</v-icon>
+										<span class="counter">{{ article.votes_up }}</span>
+									</div>
+									<div :class="{zero: article.message_count - 1 === 0}" class="vote">
+										<v-icon>mdi-message-outline</v-icon>
+										<span class="counter">{{ article.message_count - 1 }}</span>
+									</div>
 								</div>
 							</div>
-						</div>
-					</router-link>
+						</router-link>
+					</div>
 				</div>
 			</template>
 		</panel>

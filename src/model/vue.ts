@@ -125,7 +125,9 @@ type Events = {
 	'editor-drag': any
 	'tournament-update': any
 	trophy: any
-	wsmessage: { type: number, data: any, id: number | null }
+	wsmessage: { type: number, data: any, id: number | null },
+	mousemove: any,
+	mouseup: any,
 }
 
 const emitter = mitt<Events>()
@@ -164,6 +166,12 @@ const app = createApp({
 		})
 		window.addEventListener('keyup', (event) => {
 			emitter.emit('keyup', event)
+		})
+		window.addEventListener('mousemove', (event) => {
+			emitter.emit('mousemove', event)
+		})
+		window.addEventListener('mouseup', (event) => {
+			emitter.emit('mouseup', event)
 		})
 		LeekWars.mobile = LeekWars.isMobile()
 		window.addEventListener('resize', () => {

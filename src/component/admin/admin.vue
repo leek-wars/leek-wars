@@ -144,7 +144,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { NotificationBuilder } from '@/model/notification-builder'
 	import { TROPHIES } from '@/model/trophies'
-	import { defineAsyncComponent } from 'vue'
+	import { defineAsyncComponent, nextTick } from 'vue'
 	import { Options, Vue } from 'vue-property-decorator'
 	const Didactitiel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`))
 	const LevelDialog = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/leek/level-dialog.${locale}.i18n`))

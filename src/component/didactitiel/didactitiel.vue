@@ -118,7 +118,7 @@
 				<span v-if="page < 8">{{ $t("next") }} &nbsp;▶</span>
 				<span v-else>{{ $t("play") }}</span>
 			</div>
-		</div>
+		</template>
 	</popup>
 </template>
 
@@ -141,7 +141,7 @@
 		}
 
 		input(event: any) {
-			this.$emit('input', event)
+			this.$emit('update:modelValue', event)
 			this.updateHeight()
 		}
 		created() {
@@ -175,7 +175,7 @@
 			return ''
 		}
 		close() {
-			this.$emit('input', false)
+			this.$emit('update:modelValue', false)
 			this.page = 1
 		}
 	}

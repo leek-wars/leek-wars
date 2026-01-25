@@ -10,6 +10,8 @@ import { reactive } from 'vue'
 
 class FileSystem {
 
+	public static CONSOLE_MAGIC_KEY = '__console_CkG3VwGs3K__'
+
 	public ais: {[key: number]: AI} = {}
 	public folderById: {[key: number]: Folder} = {}
 	public aiByFullPath: {[key: string]: AI} = {}
@@ -35,6 +37,7 @@ class FileSystem {
 			"advanced_strategy", "teleportation", "jump", "blocking"
 		]},
 	]
+	public consoleAI: AI | null = null
 
 	public init(farmer: Farmer) {
 		const folders: {[key: number]: any} = {}
@@ -169,6 +172,13 @@ class FileSystem {
 	public add_folder(folder: Folder, parent: Folder) {
 		this.folderById[folder.id] = folder
 		parent.items.push(folder)
+	}
+
+	public getAIByPath(path: string) {
+		if (path.includes(FileSystem.CONSOLE_MAGIC_KEY)) {
+			return this.consoleAI!
+		}
+		return this.aiByFullPath[path]
 	}
 
 	public find(path: string, folder: number): AI | null {

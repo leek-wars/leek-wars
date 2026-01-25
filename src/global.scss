@@ -678,7 +678,7 @@ code {
 			white-space: pre-wrap;
 		}
 	}
-	&:not(.single) pre {
+	&:not(.single) > pre {
 		border: 6px solid var(--background-header);
 		// background: var(--pure-white);
 		padding: 6px;

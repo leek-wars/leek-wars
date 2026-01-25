@@ -19,9 +19,10 @@
 
 <script lang="ts">
 
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import * as monaco from 'monaco-editor'
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 import { fileSystem } from '@/model/filesystem'
+import { LeekWars } from '@/model/leekwars';
 import './monaco'
 import { AI } from '@/model/ai'
 import { analyzer, AnalyzerPromise } from './analyzer'
@@ -34,7 +35,6 @@ import { CONSTANTS } from '@/model/constants';
 import { createApp, nextTick } from 'vue';
 import { create } from 'domain';
 import { i18n } from '@/model/i18n';
-import { LeekWars } from '@/model/leekwars';
 import router from '@/router';
 import Code from '@/component/app/code.vue'
 
@@ -48,6 +48,8 @@ export default class AIViewMonaco extends Vue {
 	@Prop() fontSize!: number
 	@Prop() lineHeight!: number
 	@Prop() t!: any
+	@Prop() console!: boolean
+	@Prop() lineNumbers!: boolean
 
 	hover: any
 	editor!: monaco.editor.IStandaloneCodeEditor
@@ -72,6 +74,21 @@ export default class AIViewMonaco extends Vue {
 			fontSize: this.fontSize,
 			lineHeight: this.lineHeight,
 			theme: this.theme,
+			lineNumbers: this.lineNumbers ? 'on' : 'off',
+			glyphMargin: this.lineNumbers,
+			folding: this.lineNumbers,
+			scrollbar: {
+				vertical: this.lineNumbers ? 'visible' : 'hidden',
+				useShadows: this.lineNumbers,
+			},
+			overviewRulerBorder: this.lineNumbers,
+			overviewRulerLanes: this.lineNumbers ? 3 : 0,
+			lineDecorationsWidth: this.lineNumbers ? 10 : 0,
+			scrollBeyondLastLine: this.lineNumbers,
+			scrollPredominantAxis: this.lineNumbers,
+			minimap: {
+				enabled: this.lineNumbers,
+			}
 		}, {
 			storageService: {
 				get() {},
@@ -98,9 +115,35 @@ export default class AIViewMonaco extends Vue {
 		// 	}
 		// 	this.$emit('focus')
 		// })
+		this.editor.onKeyDown((e) => {
+			if (e.code === 'Enter') {
+				if (this.console) {
+					e.preventDefault()
+				}
+			}
+		})
 		this.editor.onKeyUp((e) => {
+			// console.log("keyup", e)
 			if (e.code === 'Delete') {
 				e.stopPropagation()
+			}
+			if (e.code === 'Enter') {
+				if (this.console) {
+					this.$emit('enter')
+					e.preventDefault()
+				}
+			}
+			if (e.code === 'ArrowDown') {
+				if (this.console) {
+					this.$emit('down')
+					e.preventDefault()
+				}
+			}
+			if (e.code === 'ArrowUp') {
+				if (this.console) {
+					this.$emit('up')
+					e.preventDefault()
+				}
 			}
 		})
 		this.editor.onDidChangeCursorPosition((e) => {

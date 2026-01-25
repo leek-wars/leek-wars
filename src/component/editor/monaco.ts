@@ -6,11 +6,11 @@ import leekscript from './leekscript-monarch.js'
 import { i18n } from '@/model/i18n';
 import { fileSystem } from '@/model/filesystem';
 import { analyzer } from './analyzer';
-import { emitter, vueMain } from '@/model/vue';
+import { emitter } from '@/model/vue';
 import { AI } from '@/model/ai.js';
-import { keywords } from './keywords';
-import { Keyword, KeywordKind } from '@/model/keyword';
 import { LeekWars } from '@/model/leekwars';
+import { getKeywords } from './keywords';
+import { Keyword, KeywordKind } from '@/model/keyword';
 
 monaco.languages.register({ id: 'leekscript' })
 monaco.languages.setLanguageConfiguration('leekscript', {
@@ -309,7 +309,8 @@ LeekWars.completionsProvider = monaco.languages.registerCompletionItemProvider("
 
 		// console.log("provideCompletionItems", model)
 
-		const ai = fileSystem.aiByFullPath[model.uri.path.substring(1)]
+		const path = model.uri.path.substring(1)
+		const ai = fileSystem.getAIByPath(path)
 
 		const completions = await analyzer.complete(ai, model.getValue(), position.lineNumber, position.column - 2)
 
@@ -373,7 +374,7 @@ LeekWars.completionsProvider = monaco.languages.registerCompletionItemProvider("
 			}
 		} else {
 			addCompletionsFromAI(word.word, suggestions, visited, ai, range)
-			keywords.forEach(maybeAdd)
+			getKeywords().forEach(maybeAdd)
 		}
 
 		return {

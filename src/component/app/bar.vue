@@ -50,6 +50,7 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
+	import { emitter } from '@/model/vue'
 	import { Options, Vue } from 'vue-property-decorator'
 
 	@Options({ name: 'lw-bar' })
@@ -176,14 +177,16 @@
 	}
 	.action i {
 		font-size: 26px;
-		padding: 15px 12px;
+		width: 56px;
+		height: 56px;
+		padding: 12px;
 		color: white;
 	}
 	.action img {
-		width: 54px;
-		height: 54px;
+		width: 56px;
+		height: 56px;
 		opacity: 1;
-		padding: 15px 14px;
+		padding: 16px;
 	}
 	.app-bar.content .action.list:not(.content),
 	.app-bar.list .action.content:not(.list),

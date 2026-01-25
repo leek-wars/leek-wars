@@ -1,8 +1,8 @@
 import { defineConfig, Plugin } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vuetify from 'vite-plugin-vuetify'
-import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import monacoEditorPlugin from 'vite-plugin-monaco-editor'
+import { visualizer } from 'rollup-plugin-visualizer'
 import path from 'path'
 import fs from 'fs'
 import yaml from 'js-yaml'
@@ -76,6 +76,12 @@ export default defineConfig({
 		monacoEditorPlugin({
 			languageWorkers: ['editorWorkerService'],
 			customWorkers: []
+		}),
+		visualizer({
+			filename: 'dist/stats.html',
+			open: false,
+			gzipSize: true,
+			brotliSize: true
 		})
 	],
 	resolve: {
@@ -105,9 +111,21 @@ export default defineConfig({
 	},
 	build: {
 		// Generate source maps for production (like hidden-source-map in webpack)
-		sourcemap: true
-		// TODO: Add multi-entry points for production build later
-		// For now, use single entry point (main-fr.ts)
+		sourcemap: true,
+		rollupOptions: {
+			output: {
+				manualChunks: {
+					// Vue ecosystem
+					'vue-vendor': ['vue', 'vue-router', 'pinia', 'vuex', 'vue-i18n'],
+					// Vuetify (large UI framework)
+					'vuetify': ['vuetify'],
+					// Monaco editor core
+					'monaco': ['monaco-editor'],
+					// Utilities
+					'utils': ['chart.js', 'markdown-it', 'dompurify', 'js-beautify']
+				}
+			}
+		}
 	},
 	optimizeDeps: {
 		include: ['vue', 'vue-router', 'pinia', 'vuetify'],

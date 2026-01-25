@@ -63,21 +63,22 @@
 								<v-icon v-if="result.resolved" :title="$t('resolved')" class="attr resolved">mdi-check-circle</v-icon>
 								<v-icon v-if="result.closed" :title="$t('locked')" class="attr">mdi-lock</v-icon>
 								<span v-html="result.title"></span>
-								</router-link>
-							</template>
+							</router-link>
 							<i18n-t tag="div" class="info" keypath="post_by_x_the_x_in_x">
 								<template #farmer>
-								<router-link :to="'/farmer/' + result.fid">
-									<template v-if="options.farmer === ''">{{ result.fname }}</template>
-									<span v-else><b>{{ result.fname }}</b></span>
-								</router-link>
+									<router-link :to="'/farmer/' + result.fid">
+										<template v-if="options.farmer === ''">{{ result.fname }}</template>
+										<span v-else><b>{{ result.fname }}</b></span>
+									</router-link>
+								</template>
 								<template #date>
-								<span class="dark">{{ $filters.date(result.date) }}</span>
-							</template>
+									<span class="dark">{{ $filters.date(result.date) }}</span>
+								</template>
 								<template #topic>
-								<router-link :to="'/forum/category-' + result.cid">
-									{{ $i18n.t('forum-category.' + result.cname) }}
-								</router-link>
+									<router-link :to="'/forum/category-' + result.cid">
+										{{ $i18n.t('forum-category.' + result.cname) }}
+									</router-link>
+								</template>
 							</i18n-t>
 							<router-link :to="'/forum/category-' + result.cid + '/topic-' + result.tid + '/page-' + (floor(result.pos / 20) + 1) + (result.mid !== -1 ? '#message-' + result.mid : '')">
 								<div class="headline" v-html="result.message"></div>
@@ -110,7 +111,6 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import Pagination from '@/component/pagination.vue'
-import { resolve } from 'path'
 
 	@Options({ name: 'search', i18n: {}, mixins: [...mixins], components: { Pagination } })
 	export default class Search extends Vue {
@@ -262,6 +262,9 @@ import { resolve } from 'path'
 		gap: 4px;
 		.v-icon.resolved {
 			color: #5fad1b;
+		}
+		.v-icon {
+			font-size: 22px;
 		}
 	}
 	.result .headline {

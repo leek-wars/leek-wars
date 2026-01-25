@@ -322,7 +322,7 @@
 		flex: 1;
 		min-height: 0;
 	}
-	.side-column {
+	#app:not(.app) .side-column {
 		flex: 400px 0 0;
 		min-width: 0;
 	}
