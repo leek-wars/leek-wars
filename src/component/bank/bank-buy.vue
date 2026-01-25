@@ -154,7 +154,7 @@
 }
 .v-select {
 	display: inline-block;
-	::v-deep input {
+	:deep(input) {
 		border: none;
 		width: 10px;
 	}
@@ -187,11 +187,11 @@
 	.panel h3 {
 		color: red;
 	}
-	.panel ::v-deep .sk-main-content h3:before {
+	.panel :deep(.sk-main-content h3:before) {
 		width: 0;
 	}
-	.panel ::v-deep .sk-main-content h3:after,
-	.panel ::v-deep .sk-kit-header h1:after {
+	.panel :deep(.sk-main-content h3:after),
+	.panel :deep(.sk-kit-header h1:after) {
 		border: none;
 	}
 </style>

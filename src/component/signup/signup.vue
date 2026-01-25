@@ -48,51 +48,53 @@
 					</div>
 
 					<table v-if="!fastRegister">
-						<tr>
-							<td class="align-right">{{ $t('your_farmer_name') }}</td>
-							<td class="align-left">
-								<input v-model="login" :status="status('login')" name="login" type="text" required>
-								<div v-for="e in errors.login" :key="e" class="error-msg">{{ e }}</div>
-							</td>
-						</tr>
-						<tr>
-							<td class="align-right"><i>{{ $t('godfather') }}</i></td>
-							<td class="align-left">
-								<input v-model="godfather" :status="status('godfather')" type="text">
-								<div v-for="e in errors.godfather" :key="e" class="error-msg">{{ e }}</div>
-							</td>
-						</tr>
-						<tr>
-							<td><div class="space"></div></td>
-						</tr>
-						<tr>
-							<td colspan="2">
-								<v-radio-group v-model="signupMethod" class="radio" :row="true" :dense="true" :hide-details="true">
-									<v-radio :label="$t('email_password')" :value="1" />
-									<v-radio label="GitHub" :value="2" />
-								</v-radio-group>
-							</td>
-						</tr>
-						<tr v-if="signupMethod === 1">
-							<td class="align-right">{{ $t('your_email') }}</td>
-							<td class="align-left">
-								<input v-model="email" :status="status('email')" name="email" type="text" required>
-								<div v-for="e in errors.email" :key="e" class="error-msg">{{ e }}</div>
-							</td>
-						</tr>
-						<tr v-if="signupMethod === 1">
-							<td class="align-right">{{ $t('password') }}</td>
-							<td class="align-left">
-								<input v-model="password1" :status="status('password1')" name="password" type="password" required>
-								<div v-for="e in errors.password1" :key="e" class="error-msg">{{ e }}</div>
-							</td>
-						</tr>
-						<tr>
-							<td><div class="space"></div></td>
-						</tr>
-						<tr v-if="signupMethod === 2">
-							<td><div class="space"></div></td>
-						</tr>
+						<tbody>
+							<tr>
+								<td class="align-right">{{ $t('your_farmer_name') }}</td>
+								<td class="align-left">
+									<input v-model="login" :status="status('login')" name="login" type="text" required>
+									<div v-for="e in errors.login" :key="e" class="error-msg">{{ e }}</div>
+								</td>
+							</tr>
+							<tr>
+								<td class="align-right"><i>{{ $t('godfather') }}</i></td>
+								<td class="align-left">
+									<input v-model="godfather" :status="status('godfather')" type="text">
+									<div v-for="e in errors.godfather" :key="e" class="error-msg">{{ e }}</div>
+								</td>
+							</tr>
+							<tr>
+								<td><div class="space"></div></td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<v-radio-group v-model="signupMethod" class="radio" :row="true" :dense="true" :hide-details="true">
+										<v-radio :label="$t('email_password')" :value="1" />
+										<v-radio label="GitHub" :value="2" />
+									</v-radio-group>
+								</td>
+							</tr>
+							<tr v-if="signupMethod === 1">
+								<td class="align-right">{{ $t('your_email') }}</td>
+								<td class="align-left">
+									<input v-model="email" :status="status('email')" name="email" type="text" required>
+									<div v-for="e in errors.email" :key="e" class="error-msg">{{ e }}</div>
+								</td>
+							</tr>
+							<tr v-if="signupMethod === 1">
+								<td class="align-right">{{ $t('password') }}</td>
+								<td class="align-left">
+									<input v-model="password1" :status="status('password1')" name="password" type="password" required>
+									<div v-for="e in errors.password1" :key="e" class="error-msg">{{ e }}</div>
+								</td>
+							</tr>
+							<tr>
+								<td><div class="space"></div></td>
+							</tr>
+							<tr v-if="signupMethod === 2">
+								<td><div class="space"></div></td>
+							</tr>
+						</tbody>
 					</table>
 					<i18n-t class="cgu" tag="div" keypath="conditions">
 						<template #link>
@@ -180,22 +182,26 @@
 						<h4>{{ $t('main.leek') }} <span class="arrow">▶</span></h4>
 					</router-link>
 					<table class="ranking card">
-						<tr class="header">
-							<th class="p15">{{ $t('main.place') }}</th>
-							<th class="p35">{{ $t('main.leek') }}</th>
-							<th class="p25">{{ $t('main.talent') }}</th>
-						</tr>
-						<tr v-for="(leek, i) in leek_ranking" :key="i" :class="leek.style">
-							<td>{{ i + 1 }}</td>
-							<td :class="leek.class">
-								<rich-tooltip-leek :id="leek.id" v-slot="{ props }">
-									<router-link :to="'/leek/' + leek.id">
-										<span v-bind="props">{{ leek.name }}</span>
-									</router-link>
-								</rich-tooltip-leek>
-							</td>
-							<td>{{ leek.talent }}</td>
-						</tr>
+						<thead>
+							<tr class="header">
+								<th class="p15">{{ $t('main.place') }}</th>
+								<th class="p35">{{ $t('main.leek') }}</th>
+								<th class="p25">{{ $t('main.talent') }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(leek, i) in leek_ranking" :key="i" :class="leek.style">
+								<td>{{ i + 1 }}</td>
+								<td :class="leek.class">
+									<rich-tooltip-leek :id="leek.id" v-slot="{ props }">
+										<router-link :to="'/leek/' + leek.id">
+											<span v-bind="props">{{ leek.name }}</span>
+										</router-link>
+									</rich-tooltip-leek>
+								</td>
+								<td>{{ leek.talent }}</td>
+							</tr>
+						</tbody>
 					</table>
 				</div>
 				<div class="column4">
@@ -203,26 +209,30 @@
 						<h4>{{ $t('main.farmer') }} <span class="arrow">▶</span></h4>
 					</router-link>
 					<table class="ranking card">
-						<tr class="header">
-							<th class="p15">{{ $t('main.place') }}</th>
-							<th class="p35">{{ $t('main.farmer') }}</th>
-							<th class="p20">{{ $t('main.talent') }}</th>
-							<th class="p5">{{ $t('main.country') }}</th>
-						</tr>
-						<tr v-for="(farmer, i) in farmer_ranking" :key="i" :class="farmer.style">
-							<td>{{ i + 1 }}</td>
-							<td :class="farmer.class">
-								<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }">
-									<router-link :to="'/farmer/' + farmer.id">
-										<span v-bind="props">{{ farmer.name }}</span>
-									</router-link>
-								</rich-tooltip-farmer>
-							</td>
-							<td>{{ farmer.talent }}</td>
-							<td>
-								<flag v-if="farmer.country" :code="farmer.country" />
-							</td>
-						</tr>
+						<thead>
+							<tr class="header">
+								<th class="p15">{{ $t('main.place') }}</th>
+								<th class="p35">{{ $t('main.farmer') }}</th>
+								<th class="p20">{{ $t('main.talent') }}</th>
+								<th class="p5">{{ $t('main.country') }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(farmer, i) in farmer_ranking" :key="i" :class="farmer.style">
+								<td>{{ i + 1 }}</td>
+								<td :class="farmer.class">
+									<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }">
+										<router-link :to="'/farmer/' + farmer.id">
+											<span v-bind="props">{{ farmer.name }}</span>
+										</router-link>
+									</rich-tooltip-farmer>
+								</td>
+								<td>{{ farmer.talent }}</td>
+								<td>
+									<flag v-if="farmer.country" :code="farmer.country" />
+								</td>
+							</tr>
+						</tbody>
 					</table>
 				</div>
 				<div class="column4">
@@ -230,22 +240,26 @@
 						<h4>{{ $t('main.team') }} <span class="arrow">▶</span></h4>
 					</router-link>
 					<table class="ranking card">
-						<tr class="header">
-							<th class="p20">{{ $t('main.place') }}</th>
-							<th class="p50">{{ $t('main.team') }}</th>
-							<th class="p30">{{ $t('main.talent') }}</th>
-						</tr>
-						<tr v-for="(team, i) in team_ranking" :key="i" :class="team.style">
-							<td>{{ i + 1 }}</td>
-							<td :class="team.class">
-								<rich-tooltip-team :id="team.id" v-slot="{ props }">
-									<router-link :to="'/team/' + team.id">
-										<span v-bind="props">{{ team.name }}</span>
-									</router-link>
-								</rich-tooltip-team>
-							</td>
-							<td>{{ team.talent }}</td>
-						</tr>
+						<thead>
+							<tr class="header">
+								<th class="p20">{{ $t('main.place') }}</th>
+								<th class="p50">{{ $t('main.team') }}</th>
+								<th class="p30">{{ $t('main.talent') }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(team, i) in team_ranking" :key="i" :class="team.style">
+								<td>{{ i + 1 }}</td>
+								<td :class="team.class">
+									<rich-tooltip-team :id="team.id" v-slot="{ props }">
+										<router-link :to="'/team/' + team.id">
+											<span v-bind="props">{{ team.name }}</span>
+										</router-link>
+									</rich-tooltip-team>
+								</td>
+								<td>{{ team.talent }}</td>
+							</tr>
+						</tbody>
 					</table>
 				</div>
 			</div>

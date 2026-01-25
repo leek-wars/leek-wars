@@ -1662,22 +1662,22 @@
 		// margin-right: -4px;
 		// margin-bottom: -16px;
 		position: relative;
-		::v-deep .ct-line {
+		:deep(.ct-line) {
 			stroke: rgba(95, 173, 27, 0.7);
 			stroke-width: 2px;
 		}
-		::v-deep .ct-point {
+		:deep(.ct-point) {
 			stroke: #5fad1b;
 		}
-		::v-deep .ct-area {
+		:deep(.ct-area) {
 			fill: rgba(95, 173, 27, 1);
 			fill-opacity: 0.2;
 		}
-		::v-deep .ct-label.ct-horizontal {
+		:deep(.ct-label.ct-horizontal) {
 			text-align: center;
 			display: block;
 		}
-		::v-deep &:before {
+		:deep(&:before) {
 			float: none;
 		}
 	}

@@ -396,35 +396,35 @@
 		height: 180px;
 		margin: 5px;
 	}
-	.chart ::v-deep .ct-label {
+	.chart :deep(.ct-label) {
 		font-size: 13px;
 		fill: white;
 		font-weight: bold;
 		pointer-events: none;
 	}
-	.chart ::v-deep .ct-series path {
+	.chart :deep(.ct-series path) {
 		stroke-width: 50px;
 		transition: stroke-width 0.1s ease;
 	}
-	.chart ::v-deep .ct-series.selected path {
+	.chart :deep(.ct-series.selected path) {
 		stroke-width: 60px !important;
 	}
-	.chart ::v-deep .ct-series-a path {
+	.chart :deep(.ct-series-a path) {
 		stroke: #003f5c;
 	}
-	.chart ::v-deep .ct-series-b path {
+	.chart :deep(.ct-series-b path) {
 		stroke: #58508d;
 	}
-	.chart ::v-deep .ct-series-c path {
+	.chart :deep(.ct-series-c path) {
 		stroke: #bc5090;
 	}
-	.chart ::v-deep .ct-series-d path {
+	.chart :deep(.ct-series-d path) {
 		stroke: #ff6361;
 	}
-	.chart ::v-deep .ct-series-e path {
+	.chart :deep(.ct-series-e path) {
 		stroke: #ffa600;
 	}
-	// .chart ::v-deep .ct-series-f path {
+	// .chart :deep(.ct-series-f path) {
 	// 	stroke: #ffa600;
 	// }
 	.category[category="6"] {

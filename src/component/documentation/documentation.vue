@@ -425,10 +425,10 @@
 	.items .function-name {
 		color: black;
 	}
-	.items ::v-deep .item.deprecated .content {
+	.items :deep(.item.deprecated .content) {
 		opacity: 0.6;
 	}
-	.items ::v-deep .item .deprecated-message {
+	.items :deep(.item .deprecated-message) {
 		color: #ff7f00;
 		font-weight: bold;
 		margin: 10px;

@@ -1035,7 +1035,7 @@
 		display: flex;
 		align-items: center;
 		gap: 4px;
-		&::v-deep a {
+		&:deep(a) {
 			cursor: pointer;
 		}
 	}
@@ -1055,7 +1055,7 @@
 		position: relative;
 	}
 	.chart {
-		::v-deep .ct-line {
+		:deep(.ct-line) {
 			stroke-width: 3px;
 		}
 		.ct-label.ct-horizontal {
@@ -1152,48 +1152,48 @@
 			width: 220px;
 			height: 220px;
 		}
-		::v-deep .ct-label {
+		:deep(.ct-label) {
 			font-size: 13px;
 			fill: rgba(0,0,0,.7);
 			font-weight: bold;
 			pointer-events: none;
 		}
-		::v-deep .ct-series path {
+		:deep(.ct-series path) {
 			cursor: pointer;
 			stroke-width: 38px;
 			transition: stroke-width 0.1s ease;
 		}
-		::v-deep .ct-series.selected path {
+		:deep(.ct-series.selected path) {
 			stroke-width: 48px;
 		}
-		::v-deep .ct-series-a path {
+		:deep(.ct-series-a path) {
 			stroke: #e22424;
 		}
-		::v-deep .ct-series-b path {
+		:deep(.ct-series-b path) {
 			stroke: #a017d6;
 		}
-		::v-deep .ct-series-c path {
+		:deep(.ct-series-c path) {
 			stroke: #32b2da;
 		}
-		::v-deep .ct-series-d path {
+		:deep(.ct-series-d path) {
 			stroke: #38e9ae;
 		}
-		::v-deep .ct-series-e path {
+		:deep(.ct-series-e path) {
 			stroke: #f28dff;
 		}
 		.heal {
-			::v-deep .ct-series-a path {
+			:deep(.ct-series-a path) {
 				stroke: #5fad1b;
 			}
-			::v-deep .ct-series-b path {
+			:deep(.ct-series-b path) {
 				stroke: #e22424;
 			}
-			::v-deep .ct-series-c path {
+			:deep(.ct-series-c path) {
 				stroke: #38e9ae;
 			}
 		}
 		.tank {
-			::v-deep .ct-series-a path {
+			:deep(.ct-series-a path) {
 				stroke: orange;
 			}
 		}
@@ -1205,46 +1205,46 @@
 		.chart {
 			height: 380px;
 		}
-		::v-deep .ct-bar {
+		:deep(.ct-bar) {
 			stroke-width: 15px;
 		}
-		::v-deep .ct-series-a line {
+		:deep(.ct-series-a line) {
 			stroke: #e22424;
 		}
-		::v-deep .ct-series-b line {
+		:deep(.ct-series-b line) {
 			stroke: #a017d6;
 		}
-		::v-deep .ct-series-c line {
+		:deep(.ct-series-c line) {
 			stroke: #41d3ff;
 		}
-		::v-deep .ct-series-d line {
+		:deep(.ct-series-d line) {
 			stroke: #38e9ae;
 		}
-		::v-deep .ct-series-e line {
+		:deep(.ct-series-e line) {
 			stroke: #f28dff;
 		}
 		.heal {
-			::v-deep .ct-series-a line {
+			:deep(.ct-series-a line) {
 				stroke: #5fad1b;
 			}
-			::v-deep .ct-series-b line {
+			:deep(.ct-series-b line) {
 				stroke: #e22424;
 			}
-			::v-deep .ct-series-c line {
+			:deep(.ct-series-c line) {
 				stroke: #38e9ae;
 			}
 		}
 		.tank {
-			::v-deep .ct-series-a line {
+			:deep(.ct-series-a line) {
 				stroke: orange;
 			}
 		}
-		::v-deep .total {
+		:deep(.total) {
 			font-weight: 500;
 			font-size: 14px;
 			fill: var(--text-color-secondary);
 		}
-		::v-deep .ct-label.ct-vertical {
+		:deep(.ct-label.ct-vertical) {
 			color: var(--text-color-secondary);
 			white-space: nowrap;
 		}
@@ -1300,7 +1300,7 @@
 			}
 		}
 	}
-	::v-deep .turn {
+	:deep(.turn) {
 		position: sticky;
 		top: 0;
 		background: var(--background);

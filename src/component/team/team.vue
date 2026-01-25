@@ -1359,7 +1359,7 @@ import { emitter } from '@/model/vue'
 	.compo .leeks.dashed {
 		border: 4px dashed #aaa;
 	}
-	.panel ::v-deep .turret-wrapper {
+	.panel :deep(.turret-wrapper) {
 		display: flex;
 		align-items: flex-end;
 		height: 100%;

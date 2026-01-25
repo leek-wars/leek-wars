@@ -574,7 +574,7 @@
 		left: 10px;
 		z-index: 100;
 	}
-	::v-deep .v-overlay__content.doc {
+	:deep(.v-overlay__content.doc) {
 		height: auto;
 		display: flex;
 		flex-direction: row;

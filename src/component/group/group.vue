@@ -1129,10 +1129,10 @@ input[type="text"], input[type="email"] {
 			opacity: 1;
 		}
 	}
-	&::v-deep th {
+	&:deep(th) {
 		text-align: left;
 	}
-	&::v-deep td, &::v-deep th {
+	&:deep(td), &:deep(th) {
 		padding: 0 6px !important;
 		height: 36px !important;
 	}

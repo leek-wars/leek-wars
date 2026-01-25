@@ -107,7 +107,7 @@
 			font-weight: bold;
 		}
 	}
-	.levels ::v-deep .item {
+	.levels :deep(.item) {
 		display: block;
 		height: 67px;
 		margin-bottom: 2px;

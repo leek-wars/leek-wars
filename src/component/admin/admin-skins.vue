@@ -60,7 +60,7 @@
 <style lang="scss" scoped>
 	.panel {
 		position: relative;
-		::v-deep .content {
+		:deep(.content) {
 			padding: 10px;
 		}
 	}

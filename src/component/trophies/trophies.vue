@@ -355,7 +355,7 @@ import { emitter } from '@/model/vue'
 				margin-right: 4px;
 			}
 		}
-		::v-deep .content {
+		:deep(.content) {
 			padding: 0;
 		}
 		.stats {
@@ -460,7 +460,7 @@ import { emitter } from '@/model/vue'
 			background: #008fbb;
 		}
 	}
-	.panel ::v-deep .actions {
+	.panel :deep(.actions) {
 		flex: 1;
 	}
 	.category-bar-wrapper {

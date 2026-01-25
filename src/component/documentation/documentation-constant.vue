@@ -176,7 +176,7 @@
 		color: var(--type-color);
 		font-weight: bold;
 	}
-	::v-deep a {
+	:deep(a) {
 		color: #5fad1b;
 		font-weight: 500;
 		&:hover {
@@ -185,10 +185,10 @@
 	}
 	.doc-constant .md {
 		padding: 0 !important;
-		::v-deep pre code {
+		:deep(pre code) {
 			margin-bottom: 0;
 		}
-		// ::v-deep p {
+		// :deep(p) {
 		// 	font-size: 15px;
 		// }
 	}

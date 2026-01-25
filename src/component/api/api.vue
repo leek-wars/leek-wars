@@ -310,10 +310,10 @@ import { emitter } from '@/model/vue'
 	}
 	.description {
 		padding: 0 !important;
-		::v-deep pre code {
+		:deep(pre code) {
 			margin-bottom: 0;
 		}
-		::v-deep p {
+		:deep(p) {
 			font-size: 15px;
 			margin-bottom: 0;
 		}
@@ -424,10 +424,10 @@ import { emitter } from '@/model/vue'
 	.items .function-name {
 		color: black;
 	}
-	.items ::v-deep .item.deprecated .content {
+	.items :deep(.item.deprecated .content) {
 		opacity: 0.6;
 	}
-	.items ::v-deep .item .deprecated-message {
+	.items :deep(.item .deprecated-message) {
 		color: #ff7f00;
 		font-weight: bold;
 		margin: 10px;
@@ -507,7 +507,7 @@ import { emitter } from '@/model/vue'
 	.example.jv-container {
 		background: var(--pure-white);
 	}
-	.example ::v-deep .jv-code {
+	.example :deep(.jv-code) {
 		color: var(--text-color);
 		border: 1px solid var(--border);
 		padding: 5px;
@@ -522,7 +522,7 @@ import { emitter } from '@/model/vue'
 			color: var(--text-color);
 		}
 	}
-	body.dark .example ::v-deep .jv-code {
+	body.dark .example :deep(.jv-code) {
 		// background: ;
 	}
 </style>

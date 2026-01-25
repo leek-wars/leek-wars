@@ -388,17 +388,17 @@ import router from '@/router'
 	.md {
 		padding: 15px;
 	}
-	.md ::v-deep p, .md ::v-deep ul {
+	.md :deep(p), .md :deep(ul) {
 		line-height: 1.6;
 		margin-bottom: 16px;
 		img {
 			vertical-align: middle;
 		}
 	}
-	.md ::v-deep li img {
+	.md :deep(li img) {
 		vertical-align: middle;
 	}
-	.md ::v-deep h1:first-child {
+	.md :deep(h1:first-child) {
 		border-bottom: 1px solid var(--border);
 		display: block;
 		background: none;
@@ -413,10 +413,10 @@ import router from '@/router'
 			display: none;
 		}
 	}
-	.md ::v-deep h1:first-child + blockquote {
+	.md :deep(h1:first-child + blockquote) {
 		display: none;
 	}
-	.md ::v-deep h2 {
+	.md :deep(h2) {
 		// color: #000;
 		&:not(:first-of-type) {
 			margin-top: 1em;
@@ -425,31 +425,31 @@ import router from '@/router'
 		border-bottom: 1px solid var(--border);
 		margin-bottom: 0.5em;
 	}
-	.md ::v-deep h4 {
+	.md :deep(h4) {
 		margin-bottom: 0.7em;
 		line-height: 1.6;
 		border-bottom: 1px solid var(--border);
 	}
-	.md ::v-deep img {
+	.md :deep(img) {
 		max-width: 100%;
 	}
-	.md ::v-deep a {
+	.md :deep(a) {
 		color: #0645ad;
 		font-weight: 500;
 	}
-	body.dark .md ::v-deep a {
+	body.dark .md :deep(a) {
 		color: #4bbaff;
 	}
-	.md ::v-deep a.new {
+	.md :deep(a.new) {
 		color: #ba0000;
 	}
-	.md ::v-deep a:hover {
+	.md :deep(a:hover) {
 		text-decoration: underline;
 	}
-	.md ::v-deep ul, .md ::v-deep ol {
+	.md :deep(ul), .md :deep(ol) {
 		line-height: 1.6;
 	}
-	.md ::v-deep blockquote {
+	.md :deep(blockquote) {
 		padding: 0 1em;
 		p {
 			color: #777;
@@ -457,27 +457,27 @@ import router from '@/router'
 		}
 		border-left: .3em solid #aaa;
 	}
-	.md ::v-deep code {
+	.md :deep(code) {
 		background: var(--pure-white);
 		padding: 0 4px;
 	}
-	.md ::v-deep pre code {
+	.md :deep(pre code) {
 		display: flex;
 		background: none;
 		border: none;
 		padding: 0;
 		margin-bottom: 1em;
 	}
-	.md ::v-deep table {
+	.md :deep(table) {
 		margin: 15px 0;
 		td, th {
 			padding: 10px;
 		}
 	}
-	.md ::v-deep table, .md ::v-deep tr, .md ::v-deep td, .md ::v-deep th {
+	.md :deep(table), .md :deep(tr), .md :deep(td), .md :deep(th) {
 		border: 1px solid var(--border);
 	}
-	.md ::v-deep a.card {
+	.md :deep(a.card) {
 		.v-icon {
 			color: var(--text-color);
 		}
@@ -488,7 +488,7 @@ import router from '@/router'
 			background: var(--background-disabled);
 		}
 	}
-	.md ::v-deep .summary {
+	.md :deep(.summary) {
 		// border: 1px solid #aaa;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 		display: inline-block;
@@ -502,7 +502,7 @@ import router from '@/router'
 			margin: 0;
 		}
 	}
-	.md ::v-deep .item-preview {
+	.md :deep(.item-preview) {
 		width: 350px;
 		display: inline-block;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
@@ -526,7 +526,7 @@ import router from '@/router'
 			background: none;
 		}
 	}
-	.md ::v-deep .quizz {
+	.md :deep(.quizz) {
 		h5 {
 			font-size: 17px;
 			font-weight: 500;
@@ -594,7 +594,7 @@ import router from '@/router'
 			}
 		}
 	}
-	.md ::v-deep .lock {
+	.md :deep(.lock) {
 		font-weight: 500;
 		&.locked ~ pre {
 			display: none;
@@ -603,7 +603,7 @@ import router from '@/router'
 			display: none;
 		}
 	}
-	.md ::v-deep .tip {
+	.md :deep(.tip) {
 		display: flex;
 		align-items: center;
 		gap: 10px;
@@ -619,7 +619,7 @@ import router from '@/router'
 			margin: 0;
 		}
 	}
-	.md ::v-deep .lstype {
+	.md :deep(.lstype) {
 		color: var(--type-color);
 		font-weight: bold;
 	}

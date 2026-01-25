@@ -558,7 +558,7 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			.v-input--radio-group--row ::v-deep .v-input--radio-group__input {
+			.v-input--radio-group--row :deep(.v-input--radio-group__input) {
 				flex-wrap: nowrap;
 			}
 			.v-radio {

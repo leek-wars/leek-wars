@@ -562,10 +562,10 @@ import { emitter } from '@/model/vue'
 			margin-bottom: 2px;
 			font-size: 13px;
 			font-weight: normal;
-			&::v-deep .quote:first-child {
+			&:deep(.quote:first-child) {
 				padding-left: 0;
 			}
-			&::v-deep .quote:last-child {
+			&:deep(.quote:last-child) {
 				padding-right: 0;
 			}
 		}
@@ -670,7 +670,7 @@ import { emitter } from '@/model/vue'
 		flex: 1;
 		line-height: 1.6;
 	}
-	.message .text ::v-deep a {
+	.message .text :deep(a) {
 		color: #5fad1b;
 	}
 	.message .md {
@@ -678,10 +678,10 @@ import { emitter } from '@/model/vue'
 		word-break: break-word;
 		font-size: 15px;
 		flex: 1;
-		::v-deep p {
+		:deep(p) {
 			font-size: 15px;
 		}
-		::v-deep > p:last-child {
+		:deep(> p:last-child) {
 			margin-bottom: 0;
 		}
 	}
@@ -837,7 +837,7 @@ import { emitter } from '@/model/vue'
 	.edit-buttons {
 		margin: 15px 0;
 	}
-	.message ::v-deep h1 {
+	.message :deep(h1) {
 		margin-left: 0;
 		margin-bottom: 10px;
 		font-size: 28px;
@@ -848,19 +848,19 @@ import { emitter } from '@/model/vue'
 		padding: 0px;
 		text-shadow: none;
 	}
-	.message ::v-deep h1:after {
+	.message :deep(h1:after) {
 		display: none;
 	}
-	.message ::v-deep h1:before {
+	.message :deep(h1:before) {
 		display: none;
 	}
-	.message ::v-deep h2 {
+	.message :deep(h2) {
 		margin-left: 0;
 		margin-bottom: 10px;
 		font-size: 23px;
 		margin-top: 10px;
 	}
-	.message ::v-deep h3 {
+	.message :deep(h3) {
 		margin-left: 0;
 		margin-bottom: 10px;
 		font-size: 20px;
@@ -871,19 +871,19 @@ import { emitter } from '@/model/vue'
 		padding: 0px;
 		text-shadow: none;
 	}
-	.message ::v-deep h3:after {
+	.message :deep(h3:after) {
 		display: none;
 	}
-	.message ::v-deep h3:before {
+	.message :deep(h3:before) {
 		display: none;
 	}
-	.message ::v-deep h5 {
+	.message :deep(h5) {
 		font-size: 17px;
 	}
-	.message ::v-deep h6 {
+	.message :deep(h6) {
 		font-size: 16px;
 	}
-	.message ::v-deep .chat-input-emoji {
+	.message :deep(.chat-input-emoji) {
 		position: absolute;
 		right: 10px;
 		top: 10px;

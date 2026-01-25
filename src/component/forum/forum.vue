@@ -215,7 +215,7 @@ import { emitter } from '@/model/vue'
 	.search-icon {
 		cursor: pointer;
 	}
-	.panel.first ::v-deep .content {
+	.panel.first :deep(.content) {
 		padding: 5px;
 	}
 	.header.category {

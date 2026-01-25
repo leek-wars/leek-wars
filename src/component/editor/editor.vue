@@ -993,7 +993,7 @@
 	.popup.input_popup input {
 		width: 90%;
 	}
-	.ai-list ::v-deep .router-link-active > .item > .label {
+	.ai-list :deep(.router-link-active > .item > .label) {
 		background: #cacaca;
 		color: black;
 	}
@@ -1008,7 +1008,7 @@
 	.folder-content img {
 		width: 80px;
 	}
-	::v-deep .CodeMirror {
+	:deep(.CodeMirror) {
 		height: 100%;
 	}
 	.editor-left {

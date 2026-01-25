@@ -247,7 +247,7 @@
 </script>
 
 <style lang="scss" scoped>
-.panel ::v-deep h2 > div {
+.panel :deep(h2 > div) {
 	width: 145px;
 }
 .inventory-panel {
