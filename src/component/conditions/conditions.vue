@@ -57,7 +57,7 @@
 	#app.app h2 {
 		margin-left: 0;
 	}
-	::v-deep p {
+	:deep(p) {
 		margin-bottom: 10px;
 		margin-left: 20px;
 		margin-right: 20px;

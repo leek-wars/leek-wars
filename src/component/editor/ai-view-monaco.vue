@@ -391,16 +391,16 @@ export default class AIViewMonaco extends Vue {
 	min-width: 0;
 	height: 100%;
 	//position: relative;
-	& ::v-deep code {
+	& :deep(code) {
 		display: inline-flex !important;
 	}
-	& ::v-deep .mtk17 {
+	& :deep(.mtk17) {
 		text-decoration: line-through;
 	}
-	& ::v-deep .lw {
+	& :deep(.lw) {
 		padding: 4px 10px;
 	}
-	& ::v-deep .doc-constant.item {
+	& :deep(.doc-constant.item) {
 		padding: 0;
 		width: 350px;
 		h4 {

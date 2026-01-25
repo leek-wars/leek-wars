@@ -922,7 +922,7 @@
 		&:is(i) {
 			font-size: 24px;
 		}
-		::v-deep &.v-icon::after {
+		:deep(&.v-icon::after) {
 			display: none;
 		}
 	}
@@ -1101,16 +1101,16 @@
 			padding-bottom: 0;
 		}
 	}
-	.settings-menu ::v-deep label {
+	.settings-menu :deep(label) {
 		color: hsla(0,0%,100%,.7);
 		&.v-label--is-disabled {
 			color: hsla(0,0%,100%,.7);
 		}
 	}
-	.settings-menu ::v-deep .v-input--switch.v-input--is-dirty.v-input--is-disabled {
+	.settings-menu :deep(.v-input--switch.v-input--is-dirty.v-input--is-disabled) {
 		opacity: 1;
 	}
-	.settings-menu ::v-deep .theme--light.v-input--selection-controls.v-input--is-disabled:not(.v-input--indeterminate) .v-icon {
+	.settings-menu :deep(.theme--light.v-input--selection-controls.v-input--is-disabled:not(.v-input--indeterminate) .v-icon ) {
 		color: hsla(0,0%,100%,.7) !important;
 	}
 	.settings-menu .v-input--checkbox {
@@ -1154,7 +1154,7 @@
 		color: #eee;
 		padding: 10px;
 		overflow: hidden;
-		::v-deep .theme--light.v-label {
+		:deep(.theme--light.v-label) {
 			color: #eee;
 		}
 	}

@@ -90,7 +90,7 @@ export default class AdminComponents extends Vue {
 .component {
 	display: flex;
 	gap: 10px;
-	::v-deep .item {
+	:deep(.item) {
 		flex: 60px 0 0;
 		height: 60px;
 	}

@@ -1780,7 +1780,7 @@
 				border-bottom: 1px solid var(--border);
 			}
 		}
-		::v-deep .doc-constant.item {
+		:deep(.doc-constant.item) {
 			padding: 0 !important;
 			min-width: 280px;
 			max-width: 320px;
@@ -1792,10 +1792,10 @@
 				margin: 10px;
 			}
 		}
-		::v-deep .deprecated {
+		:deep(.deprecated) {
 			opacity: 0.6;
 		}
-		::v-deep .deprecated-message {
+		:deep(.deprecated-message) {
 			color: #ff7f00;
 			font-weight: bold;
 			margin: 10px 0;

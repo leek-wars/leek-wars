@@ -123,7 +123,7 @@
 		display: flex;
 		justify-content: flex-end;
 	}
-	.header > .actions ::v-deep .button {
+	.header > .actions :deep(.button) {
 		height: 36px;
 		color: white;
 		padding: 0 10px;
@@ -148,21 +148,21 @@
 			color: white;
 		}
 	}
-	.header > .actions ::v-deep > div:last-child.button,
-	.header > .actions ::v-deep > a:last-child .button,
-	.header > .actions ::v-deep > div:last-child .button {
+	.header > .actions :deep(> div:last-child.button),
+	.header > .actions :deep(> a:last-child .button),
+	.header > .actions :deep(> div:last-child .button) {
 		border-top-right-radius: 3px;
 	}
-	.header > .actions ::v-deep .button :last-child {
+	.header > .actions :deep(.button :last-child) {
 		margin-right: 0;
 	}
-	.header > .actions ::v-deep .button:hover {
+	.header > .actions :deep(.button:hover) {
 		background: #888;
 	}
-	.header > .actions ::v-deep .button.green:hover {
+	.header > .actions :deep(.button.green:hover) {
 		background: rgba(110, 201, 31, 0.8) 0%;
 	}
-	.header > .actions ::v-deep .button.red:hover {
+	.header > .actions :deep(.button.red:hover) {
 		background: rgba(201, 31, 31, 0.8) 0%;
 	}
 	.panel:deep( > .content) {

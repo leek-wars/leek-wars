@@ -135,7 +135,7 @@
 .v-select {
 	margin-left: 10px;
 	display: inline-block;
-	::v-deep input {
+	:deep(input) {
 		border: none;
 		width: 10px;
 	}
@@ -148,7 +148,7 @@
 		font-size: 17px;
 		text-align: justify;
 		line-height: 26px;
-		::v-deep .crystal {
+		:deep(.crystal) {
 			margin-bottom: -6px;
 		}
 	}
@@ -168,7 +168,7 @@
 			padding: 10px;
 			color: var(--text-color-secondary);
 		}
-		::v-deep .item {
+		:deep(.item) {
 			width: 80px;
 			height: 80px;
 		}

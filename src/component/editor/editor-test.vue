@@ -1271,11 +1271,11 @@ import { defineAsyncComponent } from 'vue'
 		padding: 0;
 	}
 	.tabs {
-		::v-deep .tab-content {
+		:deep(.tab-content) {
 			min-height: 600px;
 		}
 	}
-	#app.app .tabs ::v-deep .tab-content {
+	#app.app .tabs :deep(.tab-content) {
 		flex-direction: column;
 	}
 	.tabs .tab {

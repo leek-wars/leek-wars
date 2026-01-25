@@ -482,14 +482,14 @@ import { emitter } from '@/model/vue'
 	}
 	.ranking {
 		background: var(--pure-white);
-		::v-deep td {
+		:deep(td) {
 			border-bottom: 1px solid var(--border);
 			border-right: 1px solid var(--border);
 			text-align: center;
 			padding: 5px 7px;
 			white-space: nowrap;
 		}
-		::v-deep td:last-child {
+		:deep(td:last-child) {
 			border-right: none;
 		}
 		tr.header {
@@ -518,36 +518,36 @@ import { emitter } from '@/model/vue'
 		th:last-child {
 			border-right: none;
 		}
-		::v-deep .first a {
+		:deep(.first a) {
 			color: #ffa900;
 			font-weight: bold;
 		}
-		::v-deep .second a {
+		:deep(.second a) {
 			color: #9c9c9c;
 			font-weight: bold;
 		}
-		::v-deep .third a {
+		:deep(.third a) {
 			color: #ae4e00;
 			font-weight: bold;
 		}
 		tr.me {
 			font-weight: bold;
-			::v-deep td {
+			:deep(td) {
 				background: var(--background);
 			}
 		}
 		tr.highlight {
-			::v-deep td {
+			:deep(td) {
 				background: rgba(100, 255, 0, 0.4);
 			}
 		}
 		tr.inactive {
-			::v-deep td, ::v-deep a {
+			:deep(td), :deep(a) {
 				color: #777;
 				font-style: italic;
 			}
 		}
-		::v-deep .country-wrapper {
+		:deep(.country-wrapper) {
 			height: 16px;
 			.flag {
 				height: 16px;

@@ -567,7 +567,7 @@ h1 {
 	overflow-y: auto;
 }
 
-.encyclopedia ::v-deep > .table {
+.encyclopedia :deep(> .table) {
 	display: flex;
 	min-height: 0;
 	flex: 1;
@@ -641,7 +641,7 @@ h1 {
 .search-icon {
 	cursor: pointer;
 }
-::v-deep .md.main h1 {
+:deep(.md.main h1) {
 	display: none;
 }
 .page-language {

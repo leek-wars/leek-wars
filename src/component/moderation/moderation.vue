@@ -361,13 +361,13 @@
 	}
 	.select {
 		margin: 10px 0;
-		::v-deep input {
+		:deep(input) {
 			border: none;
 		}
-		::v-deep legend {
+		:deep(legend) {
 			margin-left: 17px;
 		}
-		::v-deep label.v-label {
+		:deep(label.v-label) {
 			z-index: 2;
 			left: -6px;
 		}

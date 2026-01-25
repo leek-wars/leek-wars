@@ -73,7 +73,7 @@
 			padding: 6px;
 			padding-left: 15px;
 			color: var(--text-color) !important;
-			::v-deep b {
+			:deep(b) {
 				color: #5fad1b;
 				font-weight: bold;
 			}

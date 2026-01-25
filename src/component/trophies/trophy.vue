@@ -60,7 +60,7 @@
 	.global-percent {
 		font-size: 40px;
 	}
-	.panel ::v-deep .actions {
+	.panel :deep(.actions) {
 		flex: 1;
 	}
 	.category-bar-wrapper {

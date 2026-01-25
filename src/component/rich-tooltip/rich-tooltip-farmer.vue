@@ -40,24 +40,28 @@
 				<span class="level">• {{ $t('main.level_n', [farmer.total_level]) }}</span>
 				<v-btn class="expand" variant="text" size="x-small" @click="expand_leeks = !expand_leeks" :icon="expand_leeks ? 'mdi-chevron-up' : 'mdi-chevron-down'" />
 				<table v-if="expand_leeks" class="leeks">
-					<tr>
-						<th>{{ $t('main.name') }}</th>
-						<th>{{ $t('main.level') }}</th>
-						<th><img src="/image/talent.png"></th>
-						<th v-for="c in LeekWars.characteristics" :key="c" class="c"><img :src="'/image/charac/small/' + c + '.png'" :class="{zero: sums[c] === 0}"></th>
-					</tr>
-					<tr v-for="leek in farmer.leeks" :key="leek.id">
-						<td class="leek-name">
-							<rich-tooltip-leek :id="leek.id" v-slot="{ props }" :bottom="true" @update:model-value="setParent">
-								<router-link :to="'/leek/' + leek.id">
-									<span v-bind="props">{{ leek.name }}</span>
-								</router-link>
-							</rich-tooltip-leek>
-						</td>
-						<td>{{ leek.level }}</td>
-						<td><b>{{ leek.talent }}</b></td>
-						<td v-for="c in LeekWars.characteristics" :key="c" :class="['color-' + c, leek['total_' + c] === 0 ? 'zero' : '']" class="c">{{ leek['total_' + c] }}</td>
-					</tr>
+					<thead>
+						<tr>
+							<th>{{ $t('main.name') }}</th>
+							<th>{{ $t('main.level') }}</th>
+							<th><img src="/image/talent.png"></th>
+							<th v-for="c in LeekWars.characteristics" :key="c" class="c"><img :src="'/image/charac/small/' + c + '.png'" :class="{zero: sums[c] === 0}"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="leek in farmer.leeks" :key="leek.id">
+							<td class="leek-name">
+								<rich-tooltip-leek :id="leek.id" v-slot="{ props }" :bottom="true" @update:model-value="setParent">
+									<router-link :to="'/leek/' + leek.id">
+										<span v-bind="props">{{ leek.name }}</span>
+									</router-link>
+								</rich-tooltip-leek>
+							</td>
+							<td>{{ leek.level }}</td>
+							<td><b>{{ leek.talent }}</b></td>
+							<td v-for="c in LeekWars.characteristics" :key="c" :class="['color-' + c, leek['total_' + c] === 0 ? 'zero' : '']" class="c">{{ leek['total_' + c] }}</td>
+						</tr>
+					</tbody>
 				</table>
 			</template>
 		</div>

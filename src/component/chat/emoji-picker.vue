@@ -65,7 +65,7 @@
 			font-size: 20px;
 		}
 	}
-	.tab ::v-deep .emoji {
+	.tab :deep(.emoji) {
 		font-size: 20px;
 	}
 	.indicator {
@@ -74,16 +74,16 @@
 	.tabs {
 		// height: 264px;
 	}
-	.tabs ::v-deep .v-slide-group {
+	.tabs :deep(.v-slide-group) {
 		height: 38px;
 	}
-	.tabs ::v-deep .v-tabs__items {
+	.tabs :deep(.v-tabs__items) {
 		background: #f5f5f5;
 	}
 	.tab {
 		font-size: 20px;
 	}
-	.tabs ::v-deep .v-tab {
+	.tabs :deep(.v-tab) {
 		min-width: 20px;
 		width: 20px;
 	}

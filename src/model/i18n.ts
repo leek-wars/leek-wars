@@ -80,7 +80,7 @@ function loadLanguageAsync(vue: any, newLocale: string) {
 		loadComponentLanguage(newLocale, currentRoute.components.default, currentRoute.instances.default)
 	}
 	if (!loadedLanguages.includes(newLocale)) {
-		return import(/* webpackChunkName: "locale-[request]" */ `@/lang/locale/${newLocale}`).then(module => {
+		return import(`@/lang/locale/${newLocale}.ts`).then(module => {
 			i18n.global.mergeLocaleMessage(newLocale, module.translations)
 			loadedLanguages.push(newLocale)
 			// vue.onLanguageLoaded()

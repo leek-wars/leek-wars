@@ -88,15 +88,15 @@
 	padding: 10px;
 }
 .talent {
-	::v-deep .ct-line {
+	:deep(.ct-line) {
 		stroke: rgba(95, 173, 27, 0.7);
 		stroke-width: 2px;
 	}
-	::v-deep .ct-point {
+	:deep(.ct-point) {
 		stroke: #5fad1b;
 		stroke-width: 4px;
 	}
-	::v-deep .ct-area {
+	:deep(.ct-area) {
 		fill: rgba(95, 173, 27, 1);
 		fill-opacity: 0.2;
 	}

@@ -154,7 +154,7 @@
 }
 .select {
 	margin: 0 4px;
-	::v-deep input {
+	:deep(input) {
 		border: none;
 	}
 }
@@ -169,13 +169,13 @@
 	img {
 		height: 30px;
 	}
-	::v-deep input {
+	:deep(input) {
 		display: none;
 	}
 }
 .select-gender {
 	width: 70px;
-	::v-deep input {
+	:deep(input) {
 		display: none;
 	}
 }

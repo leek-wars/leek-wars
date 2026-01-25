@@ -114,7 +114,7 @@ import { emitter } from '@/model/vue'
 	.wrapper {
 		background: rgba(100,100,100,0.1);
 	}
-	.changelog-page ::v-deep a {
+	.changelog-page :deep(a) {
 		color: green;
 	}
 	.image {

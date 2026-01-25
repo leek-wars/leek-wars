@@ -34,18 +34,22 @@
 				</div>
 				<div v-if="expand_items">
 					<table class="leeks">
-						<tr>
-							<th>{{ $t('main.name') }}</th>
-							<th>{{ $t('main.level') }}</th>
-							<th><img src="/image/talent.png"></th>
-							<th v-for="c in LeekWars.characteristics" :key="c" class="c"><img :src="'/image/charac/small/' + c + '.png'" :class="{zero: leek['total_' + c] === 0}"></th>
-						</tr>
-						<tr>
-							<td class="leek-name"><router-link :to="'/leek/' + leek.id">{{ leek.name }}</router-link></td>
-							<td>{{ leek.level }}</td>
-							<td><b>{{ leek.talent }}</b></td>
-							<td v-for="c in LeekWars.characteristics" :key="c" :class="['color-' + c, leek['total_' + c] === 0 ? 'zero' : '']" class="c">{{ leek['total_' + c] }}</td>
-						</tr>
+						<thead>
+							<tr>
+								<th>{{ $t('main.name') }}</th>
+								<th>{{ $t('main.level') }}</th>
+								<th><img src="/image/talent.png"></th>
+								<th v-for="c in LeekWars.characteristics" :key="c" class="c"><img :src="'/image/charac/small/' + c + '.png'" :class="{zero: leek['total_' + c] === 0}"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="leek-name"><router-link :to="'/leek/' + leek.id">{{ leek.name }}</router-link></td>
+								<td>{{ leek.level }}</td>
+								<td><b>{{ leek.talent }}</b></td>
+								<td v-for="c in LeekWars.characteristics" :key="c" :class="['color-' + c, leek['total_' + c] === 0 ? 'zero' : '']" class="c">{{ leek['total_' + c] }}</td>
+							</tr>
+						</tbody>
 					</table>
 					<div class="items">
 						<div class="weapons">

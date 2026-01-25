@@ -294,7 +294,7 @@
 	// height: 280px;
 	background: transparent !important;
 	position: initial;
-	&::v-deep .CodeMirror {
+	&:deep(.CodeMirror) {
 		.CodeMirror-lines {
 			padding: 0;
 		}
@@ -305,7 +305,7 @@
 		}
 	}
 }
-.console::v-deep code {
+.console:deep(code) {
 	border: none;
 	padding: 0;
 }

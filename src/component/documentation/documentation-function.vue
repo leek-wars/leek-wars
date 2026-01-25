@@ -143,22 +143,22 @@
 		line-height: 17px;
 		vertical-align: top;
 	}
-	::v-deep a {
+	:deep(a) {
 		color: #0645ad;
 		font-weight: 500;
 		&:hover {
 			text-decoration: underline;
 		}
 	}
-	::v-deep ul {
+	:deep(ul) {
 		margin: 5px 0;
 	}
 	.doc-function .md {
 		padding: 0 !important;
-		::v-deep pre code {
+		:deep(pre code) {
 			margin-bottom: 0;
 		}
-		// ::v-deep p {
+		// :deep(p) {
 		// 	font-size: 15px;
 		// }
 	}

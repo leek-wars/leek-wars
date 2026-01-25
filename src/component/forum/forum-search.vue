@@ -271,7 +271,7 @@
 		color: #777;
 		font-size: 14px;
 	}
-	.result ::v-deep b {
+	.result :deep(b) {
 		color: #5fad1b;
 		font-weight: bold;
 	}

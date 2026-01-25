@@ -75,14 +75,14 @@
 		margin-bottom: 8px;
 		font-size: 15px;
 	}
-	::v-deep a {
+	:deep(a) {
 		color: #5fad1b;
 		font-weight: 500;
 		&:hover {
 			text-decoration: underline;
 		}
 	}
-	::v-deep ul {
+	:deep(ul) {
 		margin: 5px 0;
 	}
 	.arrow {

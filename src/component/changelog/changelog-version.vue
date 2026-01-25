@@ -86,7 +86,7 @@ import(/* webpackChunkName: "changelog-[request]" */ `@/component/changelog/chan
 	.change {
 		padding: 0 10px;
 		line-height: 20px;
-		::v-deep .ai {
+		:deep(.ai) {
 			background: #00a3cc;
 			padding: 0 4px;
 			color: white;

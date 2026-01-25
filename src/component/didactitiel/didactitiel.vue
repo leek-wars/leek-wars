@@ -251,7 +251,7 @@
 			padding: 3px;
 		}
 	}
-	.text ::v-deep a {
+	.text :deep(a) {
 		color: #5fad1b;
 	}
 </style>
