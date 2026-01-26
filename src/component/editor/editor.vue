@@ -422,7 +422,7 @@
 				this.dragging = null
 			})
 			emitter.on('connected', this.connected)
-			emitter.on('jump', this.jump)
+			emitter.on('jump', this.jumpEvent)
 
 			if (store.state.farmer) {
 				this.connected()
@@ -571,7 +571,7 @@
 			emitter.off('next')
 			emitter.off('back')
 			emitter.off('connected', this.connected)
-			emitter.off('jump', this.jump)
+			emitter.off('jump', this.jumpEvent)
 			LeekWars.large = false
 			LeekWars.header = true
 			LeekWars.footer = true
@@ -723,8 +723,12 @@
 			return (this.$refs.editors as AIView[]).find(e => e.ai === ai)
 		}
 
+		jumpEvent(event) {
+			this.jump(event.ai, event.line, event.column)
+		}
+
 		jump(ai: AI, line: number, column: number) {
-			// console.log("jump()", ai, line)
+			console.log("jump()", ai, line, column)
 			if (ai.id !== this.currentAI!.id) {
 				this.$router.push('/editor/' + ai.id)
 			}

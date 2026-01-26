@@ -27,14 +27,10 @@
 </template>
 
 <script lang="ts">
-	import { AI } from '@/model/ai'
 	import { fileSystem } from '@/model/filesystem'
 	import { i18n, mixins } from '@/model/i18n'
-	import { LeekWars } from '@/model/leekwars'
 	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { analyzer } from './analyzer'
-	import EditorFolder from './editor-folder.vue'
-	import { Folder } from './editor-item'
 
 	@Options({ name: 'editor-problems', i18n: {}, mixins: [...mixins] })
 	export default class Explorer extends Vue {
@@ -49,7 +45,7 @@
 
 		jumpProblem(path: string, problem: any) {
 			const ai = fileSystem.aiByFullPath[path]
-			this.$emit('jump', ai, problem.start_line)
+			this.$emit('jump', ai, problem.start_line, problem.start_column)
 		}
 	}
 </script>

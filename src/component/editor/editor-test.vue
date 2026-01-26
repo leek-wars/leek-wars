@@ -176,7 +176,7 @@
 			</v-window-item>
 		</v-window>
 		<template #actions>
-			<div v-ripple @click="$emit('input', false)">
+			<div v-ripple @click="$emit('update:modelValue', false)">
 				<v-icon>mdi-close</v-icon>
 				<span>{{ $t('main.cancel') }}</span>
 			</div>

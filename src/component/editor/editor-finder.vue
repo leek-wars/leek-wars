@@ -25,6 +25,7 @@
 	import { AI } from '@/model/ai'
 	import { fileSystem } from '@/model/filesystem'
 	import { mixins } from '@/model/i18n'
+	import { nextTick } from 'vue'
 	import { Options, Prop, Vue } from 'vue-property-decorator'
 
 	@Options({ name: 'editor-finder', components: { } })

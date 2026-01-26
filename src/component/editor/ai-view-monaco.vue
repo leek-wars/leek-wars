@@ -205,6 +205,7 @@ export default class AIViewMonaco extends Vue {
 				const symbol = fileSystem.symbols[docs.innerText]
 				if (symbol) {
 					const doc = createApp(Javadoc, { javadoc: symbol.javadoc, keyword: symbol })
+						.directive('code', code)
 						.directive('dochash', dochash)
 						.mount(element)
 					setTimeout(() => {
@@ -266,6 +267,7 @@ export default class AIViewMonaco extends Vue {
 			if (symbol) {
 				firstRow.style.display = 'none'
 				const doc = createApp(Javadoc, { javadoc: symbol.javadoc, keyword: symbol })
+					.directive('code', code)
 					.directive('dochash', dochash)
 					.mount(element)
 				setTimeout(() => {
@@ -329,7 +331,8 @@ export default class AIViewMonaco extends Vue {
 	}
 
 	public scrollToLine(ai: AI, line: number, column: number = 0) {
-		if (ai.model && this.editor.getModel() === ai.model) {
+		// console.log("scrollToLine", ai, line, column)
+		if (ai.model && this.editor.getModel()?.id === ai.model.id) {
 			this.editor.revealLineInCenterIfOutsideViewport(line, monaco.editor.ScrollType.Immediate)
 			const pos = { lineNumber: line, column: column + 1 }
 			// Set position immediately after reveal
