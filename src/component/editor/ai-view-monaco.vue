@@ -19,20 +19,26 @@
 
 <script lang="ts">
 
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import * as monaco from 'monaco-editor'
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 import { fileSystem } from '@/model/filesystem'
+import { LeekWars } from '@/model/leekwars';
 import './monaco'
 import { AI } from '@/model/ai'
 import { analyzer, AnalyzerPromise } from './analyzer'
-import { vueMain, vuetify } from '@/model/vue'
+import { code, dochash, vueMain, vuetify } from '@/model/vue'
 import DocumentationConstant from '../documentation/documentation-constant.vue'
 import DocumentationFunction from '../documentation/documentation-function.vue'
 import Javadoc from './javadoc.vue'
 import { FUNCTIONS } from '@/model/functions';
 import { CONSTANTS } from '@/model/constants';
+import { createApp, nextTick } from 'vue';
+import { create } from 'domain';
+import { i18n } from '@/model/i18n';
+import router from '@/router';
+import Code from '@/component/app/code.vue'
 
-@Component({ name: 'ai-view-monaco', components: {
+@Options({ name: 'ai-view-monaco', components: {
 
 }})
 export default class AIViewMonaco extends Vue {
@@ -42,6 +48,8 @@ export default class AIViewMonaco extends Vue {
 	@Prop() fontSize!: number
 	@Prop() lineHeight!: number
 	@Prop() t!: any
+	@Prop() console!: boolean
+	@Prop() lineNumbers!: boolean
 
 	hover: any
 	editor!: monaco.editor.IStandaloneCodeEditor
@@ -66,6 +74,21 @@ export default class AIViewMonaco extends Vue {
 			fontSize: this.fontSize,
 			lineHeight: this.lineHeight,
 			theme: this.theme,
+			lineNumbers: this.lineNumbers ? 'on' : 'off',
+			glyphMargin: this.lineNumbers,
+			folding: this.lineNumbers,
+			scrollbar: {
+				vertical: this.lineNumbers ? 'visible' : 'hidden',
+				useShadows: this.lineNumbers,
+			},
+			overviewRulerBorder: this.lineNumbers,
+			overviewRulerLanes: this.lineNumbers ? 3 : 0,
+			lineDecorationsWidth: this.lineNumbers ? 10 : 0,
+			scrollBeyondLastLine: this.lineNumbers,
+			scrollPredominantAxis: this.lineNumbers,
+			minimap: {
+				enabled: this.lineNumbers,
+			}
 		}, {
 			storageService: {
 				get() {},
@@ -85,16 +108,42 @@ export default class AIViewMonaco extends Vue {
 			// console.log('scroll', this.ai.id, e.scrollTop, e.scrollHeight, e.scrollWidth)
 			localStorage.setItem('editor/scroll/' + this.ai.id, '' + e.scrollTop)
 		})
-		this.editor.onDidFocusEditorWidget((e) => {
-			// Verify the correct model is active when focusing
-			if (this.ai && this.ai.model && this.editor.getModel() !== this.ai.model) {
-				this.editor.setModel(this.ai.model)
+		// this.editor.onDidFocusEditorWidget((e) => {
+		// 	// Verify the correct model is active when focusing
+		// 	if (this.ai && this.ai.model && this.editor.getModel() !== this.ai.model) {
+		// 		this.editor.setModel(this.ai.model)
+		// 	}
+		// 	this.$emit('focus')
+		// })
+		this.editor.onKeyDown((e) => {
+			if (e.code === 'Enter') {
+				if (this.console) {
+					e.preventDefault()
+				}
 			}
-			this.$emit('focus')
 		})
 		this.editor.onKeyUp((e) => {
+			// console.log("keyup", e)
 			if (e.code === 'Delete') {
 				e.stopPropagation()
+			}
+			if (e.code === 'Enter') {
+				if (this.console) {
+					this.$emit('enter')
+					e.preventDefault()
+				}
+			}
+			if (e.code === 'ArrowDown') {
+				if (this.console) {
+					this.$emit('down')
+					e.preventDefault()
+				}
+			}
+			if (e.code === 'ArrowUp') {
+				if (this.console) {
+					this.$emit('up')
+					e.preventDefault()
+				}
 			}
 		})
 		this.editor.onDidChangeCursorPosition((e) => {
@@ -125,14 +174,29 @@ export default class AIViewMonaco extends Vue {
 				body.appendChild(element)
 				const fun = FUNCTIONS.find(f => f.name === docs.innerText)
 				if (fun) {
-					const doc = new DocumentationFunction({ propsData: { fun }, parent: vueMain }).$mount(element)
+					const doc = createApp(DocumentationFunction, { fun })
+						.mixin({ data() { return { LeekWars } }})
+						.use(i18n)
+						.use(vuetify)
+						.use(router)
+						.directive('code', code)
+						.directive('dochash', dochash)
+						.mount(element)
 					setTimeout(() => {
 						suggestionWidget.value._details._placeAtAnchor(suggestionWidget.value._details._anchorBox, { width: 500, height: doc.$el.clientHeight + 10 }, true)
 					})
 				}
 				const constant = CONSTANTS.find(c => c.name === docs.innerText)
 				if (constant) {
-					const doc = new DocumentationConstant({ propsData: { constant }, parent: vueMain }).$mount(element)
+					const doc = createApp(DocumentationConstant, { constant })
+						.mixin({ data() { return { LeekWars } }})
+						.use(i18n)
+						.use(vuetify)
+						.use(router)
+						.component('lw-code', Code)
+						.directive('code', code)
+						.directive('dochash', dochash)
+						.mount(element)
 					setTimeout(() => {
 						suggestionWidget.value._details._placeAtAnchor(suggestionWidget.value._details._anchorBox, { width: 500, height: doc.$el.clientHeight + 10 }, true)
 					})
@@ -140,7 +204,10 @@ export default class AIViewMonaco extends Vue {
 				// console.log("suggestion", docs.innerText)
 				const symbol = fileSystem.symbols[docs.innerText]
 				if (symbol) {
-					const doc = new Javadoc({ propsData: { javadoc: symbol.javadoc, keyword: symbol }, parent: vueMain }).$mount(element)
+					const doc = createApp(Javadoc, { javadoc: symbol.javadoc, keyword: symbol })
+						.directive('code', code)
+						.directive('dochash', dochash)
+						.mount(element)
 					setTimeout(() => {
 						suggestionWidget.value._details._placeAtAnchor(suggestionWidget.value._details._anchorBox, { width: 500, height: doc.$el.clientHeight + 10 }, true)
 					})
@@ -168,7 +235,14 @@ export default class AIViewMonaco extends Vue {
 			const fun = FUNCTIONS.find(f => f.name === firstRow.innerText)
 			if (fun) {
 				firstRow.style.display = 'none'
-				const doc = new DocumentationFunction({ propsData: { fun }, parent: vueMain }).$mount(element)
+				const doc = createApp(DocumentationFunction, { fun })
+					.mixin({ data() { return { LeekWars } }})
+					.use(i18n)
+					.use(vuetify)
+					.use(router)
+					.directive('code', code)
+					.directive('dochash', dochash)
+					.mount(element)
 				setTimeout(() => {
 					hoverController._contentWidget.widget._resize({ width: 500, height: doc.$el.clientHeight + 40 })
 				})
@@ -176,7 +250,15 @@ export default class AIViewMonaco extends Vue {
 			const constant = CONSTANTS.find(c => c.name === firstRow.innerText)
 			if (constant) {
 				firstRow.style.display = 'none'
-				const doc = new DocumentationConstant({ propsData: { constant }, parent: vueMain }).$mount(element)
+				const doc = createApp(DocumentationConstant, { constant })
+					.mixin({ data() { return { LeekWars } }})
+					.use(i18n)
+					.use(vuetify)
+					.use(router)
+					.component('lw-code', Code)
+					.directive('code', code)
+					.directive('dochash', dochash)
+					.mount(element)
 				setTimeout(() => {
 					hoverController._contentWidget.widget._resize({ width: 350, height: doc.$el.clientHeight + 40 })
 				})
@@ -184,7 +266,10 @@ export default class AIViewMonaco extends Vue {
 			const symbol = fileSystem.symbols[firstRow.innerText]
 			if (symbol) {
 				firstRow.style.display = 'none'
-				const doc = new Javadoc({ propsData: { javadoc: symbol.javadoc, keyword: symbol }, parent: vueMain }).$mount(element)
+				const doc = createApp(Javadoc, { javadoc: symbol.javadoc, keyword: symbol })
+					.directive('code', code)
+					.directive('dochash', dochash)
+					.mount(element)
 				setTimeout(() => {
 					hoverController._contentWidget.widget._resize({ width: 500, height: doc.$el.clientHeight + 80 })
 				})
@@ -192,7 +277,7 @@ export default class AIViewMonaco extends Vue {
 		})
 	}
 
-	beforeDestroy() {
+	beforeUnmount() {
 		this.scrollListener.dispose()
 		if (this.editor) {
 			this.editor.dispose()
@@ -231,10 +316,9 @@ export default class AIViewMonaco extends Vue {
 			this.setAnalyzerTimeout()
 			this.editor.focus()
 
-			Vue.nextTick(() => {
-
+			nextTick(() => {
 				if (this.jumpToLine) {
-					Vue.nextTick(() => {
+					nextTick(() => {
 						this.scrollToLine(loadedAI, this.jumpToLine!, this.jumpToColumn!)
 					})
 				} else {
@@ -247,7 +331,8 @@ export default class AIViewMonaco extends Vue {
 	}
 
 	public scrollToLine(ai: AI, line: number, column: number = 0) {
-		if (ai.model && this.editor.getModel() === ai.model) {
+		// console.log("scrollToLine", ai, line, column)
+		if (ai.model && this.editor.getModel()?.id === ai.model.id) {
 			this.editor.revealLineInCenterIfOutsideViewport(line, monaco.editor.ScrollType.Immediate)
 			const pos = { lineNumber: line, column: column + 1 }
 			// Set position immediately after reveal
@@ -286,7 +371,7 @@ export default class AIViewMonaco extends Vue {
 					for (const problem of result[entrypoint]) {
 						if (problem[0] === 0) { valid = false; break }
 					}
-					Vue.set(ai, 'valid', valid)
+					ai.valid = valid
 					analyzer.handleProblems(ai, result[entrypoint])
 				}
 				analyzer.updateCount()
@@ -309,16 +394,16 @@ export default class AIViewMonaco extends Vue {
 	min-width: 0;
 	height: 100%;
 	//position: relative;
-	& ::v-deep code {
+	& :deep(code) {
 		display: inline-flex !important;
 	}
-	& ::v-deep .mtk17 {
+	& :deep(.mtk17) {
 		text-decoration: line-through;
 	}
-	& ::v-deep .lw {
+	& :deep(.lw) {
 		padding: 4px 10px;
 	}
-	& ::v-deep .doc-constant.item {
+	& :deep(.doc-constant.item) {
 		padding: 0;
 		width: 350px;
 		h4 {

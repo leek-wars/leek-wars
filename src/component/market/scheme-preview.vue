@@ -1,17 +1,17 @@
 <template lang="html">
 	<div class="scheme-preview">
-		<scheme ref="schemeElement" :scheme="scheme" :show-result="true" :show-price="false" @input="$emit('input', $event)" />
+		<scheme ref="schemeElement" :scheme="scheme" :show-result="true" :show-price="false" @update:model-value="$emit('update:modelValue', $event)" />
 
-		<v-btn class="button" :disabled="!$store.getters.scheme_possible(scheme)" @click="$root.$emit('craft', scheme)"><v-icon>mdi-hammer-wrench</v-icon> Fabriquer</v-btn>
+		<v-btn class="button" :disabled="!$store.getters.scheme_possible(scheme)" @click="emitter.emit('craft', scheme)"><v-icon>mdi-hammer-wrench</v-icon> Fabriquer</v-btn>
 	</div>
 </template>
 
 <script lang="ts">
 	import { SchemeTemplate } from '@/model/scheme'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import SchemeView from './scheme.vue';
 
-	@Component({ components: { 'scheme': SchemeView } })
+	@Options({ components: { 'scheme': SchemeView } })
 	export default class SchemePreview extends Vue {
 		@Prop() scheme!: SchemeTemplate
 

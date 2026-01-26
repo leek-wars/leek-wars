@@ -22,7 +22,7 @@ import { Fight, FightData, FightType } from '@/model/fight'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
-import Vue from 'vue'
+
 import { Chest } from './chest'
 import { Mob } from './mob'
 import { Turret } from './turret'
@@ -563,7 +563,7 @@ class Game {
 			if (entity instanceof Leek) {
 
 				if (this.teams[entity.team - 1] === undefined) {
-					Vue.set(this.teams, entity.team - 1, [])
+					this.teams[entity.team - 1] = []
 				}
 				this.teams[entity.team - 1].push(entity)
 				this.entityOrder.push(entity)
@@ -763,7 +763,7 @@ class Game {
 			for (const action in farmerLogs) {
 				const actionI = parseInt(action, 10)
 				if (!(action in this.logs)) {
-					Vue.set(this.logs, actionI, [])
+					this.logs[actionI] = []
 				}
 				for (const log of farmerLogs[action]) {
 					const type = log[1]
@@ -822,7 +822,7 @@ class Game {
 		}
 		/* Launch! */
 		this.launched = true
-		this.player.$emit('game-launched')
+		this.player.gameLaunched()
 
 		if (this.creator) {
 			this.redraw()
@@ -1783,7 +1783,7 @@ class Game {
 		} else if (effect.item === 48) {
 			leek.stopGaz()
 		}
-		Vue.delete(leek.effects, id)
+		delete leek.effects[id]
 		delete this.effects[id]
 	}
 

@@ -35,9 +35,9 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 
-	@Component({})
+	@Options({})
 	export default class AdminEmails extends Vue {
 		farmers: any = null
 		email: string = ''
@@ -51,7 +51,7 @@
 		send(farmer: any) {
 			if (!farmer.disabled) {
 				LeekWars.post('farmer/resend-activation-mail', {farmer_id: farmer.id})
-				Vue.set(farmer, 'disabled', true)
+				farmer.disabled = true
 			}
 		}
 

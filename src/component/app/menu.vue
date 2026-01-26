@@ -20,10 +20,10 @@
 							</router-link>
 							<div class="moneys">
 								<router-link v-ripple to="/market" @click.native="clickItem">
-									<span class="hab text"></span><span v-if="$store.state.farmer" class="farmer-habs">{{ $store.state.farmer.habs | number }}</span>
+									<span class="hab text"></span><span v-if="$store.state.farmer" class="farmer-habs">{{ $filters.number($store.state.farmer.habs) }}</span>
 								</router-link>
 								<router-link v-ripple class="crystals" to="/bank" @click.native="clickItem">
-									<span class="crystal text"></span><span v-if="$store.state.farmer" class="farmer-crystals">{{ $store.state.farmer.crystals | number }}</span>
+									<span class="crystal text"></span><span v-if="$store.state.farmer" class="farmer-crystals">{{ $filters.number($store.state.farmer.crystals) }}</span>
 								</router-link>
 							</div>
 						</div>
@@ -41,10 +41,14 @@
 							</div>
 						</router-link>
 						<span v-if="LeekWars.didactitial_step === 1 && i === 0 && !(isHomePage || $route.path === '/leek/' + leek.id)" class="dida-hint right">
-							<i18n class="bubble" path="main.dida_2">
-								<img height=18 src="/image/charac/life.png" slot="life">
-								<img height=18 src="/image/charac/strength.png" slot="strength">
-							</i18n>
+							<i18n-t class="bubble" keypath="main.dida_2">
+								<template #life>
+									<img height=18 src="/image/charac/life.png">
+								</template>
+								<template #strength>
+									<img height=18 src="/image/charac/strength.png">
+								</template>
+							</i18n-t>
 							<span class="arrow"></span>
 						</span>
 					</span>
@@ -142,8 +146,10 @@
 				</span>
 
 				<popup v-model="battleRoyaleDialog" :width="600">
-					<v-icon slot="icon">mdi-sword-cross</v-icon>
-					<template slot="title">{{ $t('main.battle_royale') }}</template>
+					<template #icon>
+						<v-icon>mdi-sword-cross</v-icon>
+					</template>
+					<template #title>{{ $t('main.battle_royale') }}</template>
 					<loader v-if="LeekWars.battleRoyale.progress == 0" />
 					<div class="br-leeks">
 						<div v-for="leek in LeekWars.battleRoyale.leeks" :key="leek.id" class="leek">
@@ -154,24 +160,24 @@
 						</div>
 					</div>
 					<br>
-					<center>
+					<div class="center">
 						<v-btn @click="quit"><v-icon>mdi-keyboard-backspace</v-icon>&nbsp;Quitter</v-btn>
-					</center>
+					</div>
 				</popup>
 			</div>
 		</div>
 
-		<v-menu v-if="$store.state.farmer && $store.state.farmer.rewards.length" offset-x :nudge-right="15" :max-height="500" :close-on-content-click="false">
-			<template v-slot:activator="{ on }">
-				<div v-ripple class="rewards-button notif-trophy" v-on="on">
+		<v-menu v-if="$store.state.farmer && $store.state.farmer.rewards.length" location="right" :offset="15" :max-height="500" :close-on-content-click="false">
+			<template #activator="{ props }">
+				<div v-ripple class="rewards-button notif-trophy" v-bind="props">
 					<img src="/image/icon/chest.svg">
 				</div>
 			</template>
-			<div class="reward-dialog">
+			<v-card class="reward-dialog">
 				<div class="title">
 					<div>
 						<h4>{{ $t('main.rewards') }} ({{ $store.state.farmer.rewards.length }})</h4>
-						<div>{{ $store.state.farmer.rewards.reduce((s, r) => s + r.habs, 0) | number }} <span class="hab"></span></div>
+						<div>{{ $filters.number($store.state.farmer.rewards.reduce((s, r) => s + r.habs, 0)) }} <span class="hab"></span></div>
 					</div>
 					<v-btn class="get-all notif-trophy" @click.stop="retrieveAll()"><span v-if="!LeekWars.mobile">{{ $t('main.retrieve_all') }}</span> <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
 				</div>
@@ -181,12 +187,12 @@
 							<img :src="'/image/trophy/' + TROPHIES[reward.trophy - 1].code + '.svg'">
 							{{ $t('trophy.' + TROPHIES[reward.trophy - 1].code) }}
 							<div class="spacer"></div>
-							<div>{{ reward.habs | number }} <span class="hab"></span></div>
+							<div>{{ $filters.number(reward.habs) }} <span class="hab"></span></div>
 						</router-link>
 						<v-btn class="get notif-trophy" @click.stop="retrieve(reward)"><img src="/image/icon/arrow-down-right-bold.svg"></v-btn>
 					</div>
 				</div>
-			</div>
+			</v-card>
 		</v-menu>
 	</div>
 </template>
@@ -194,11 +200,12 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import { TROPHIES } from '@/model/trophies'
 	import { BOSSES } from '@/model/boss'
+	import { emitter } from '@/model/vue'
 
-	@Component({
+	@Options({
 		name: 'lw-menu'
 	})
 	export default class Menu extends Vue {
@@ -308,7 +315,7 @@
 		@Watch('LeekWars.menuCollapsed')
 		update() {
 			localStorage.setItem('main/menu-collapsed', '' + LeekWars.menuCollapsed)
-			this.$root.$emit('resize')
+			emitter.emit('resize')
 		}
 
 		quit(e: Event) {

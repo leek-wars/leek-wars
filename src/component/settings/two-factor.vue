@@ -56,22 +56,24 @@
 		</div>
 
 		<popup v-model="twoFactorConfirmDialog" :width="750">
-			<v-icon slot="icon">mdi-security</v-icon>
-			<span slot="title">Enter your password to validate</span>
+			<template #icon>
+				<v-icon>mdi-security</v-icon>
+			</template>
+			<template #title>Enter your password to validate</template>
 			Password : <input id="two-factor-confirm-password" type="password">
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple class="action dismiss">Cancel</div>
 				<div v-ripple class="action green">Validate</div>
-			</div>
+			</template>
 		</popup>
 	</div>
 </template>
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'two-factor' })
+	@Options({ name: 'two-factor' })
 	export default class TwoFactor extends Vue {
 		twoFactorConfirmDialog: boolean = false
 		step: number = 0

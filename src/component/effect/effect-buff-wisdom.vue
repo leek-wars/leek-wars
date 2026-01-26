@@ -1,22 +1,24 @@
 
-<template functional>
-	<i18n path="fight.leek_win_x_turns" tag="div" :a="props.a">
-		<leek slot="leek" :leek="props.leek" />
-		<template v-slot:value>
-			<b class="color-wisdom">{{ parent.$t('fight.n_wisdom', [props.value]) }}</b>
+<template>
+	<i18n-t keypath="fight.leek_win_x_turns" tag="div" :a="a">
+		<template #leek>
+			<leek :leek="leek" />
 		</template>
-		<template v-slot:turns>
-			<b>{{ parent.formatTurns(props.turns) }}</b>
+		<template #value>
+			<b class="color-wisdom">{{ $t('fight.n_wisdom', [value]) }}</b>
 		</template>
-	</i18n>
+		<template #turns>
+			<b>{{ LeekWars.formatTurns(turns) }}</b>
+		</template>
+	</i18n-t>
 </template>
 
 <script lang="ts">
 	import { FightLeek } from '@/model/fight'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import ActionLeekElement from '../report/action-leek.vue'
 
-	@Component({ components: { leek: ActionLeekElement } })
+	@Options({ components: { leek: ActionLeekElement } })
 	export default class EffectBuffWisdom extends Vue {
 		@Prop() leek!: FightLeek
 		@Prop() value!: number

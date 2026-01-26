@@ -7,10 +7,10 @@
 				<div v-if="LeekWars.didactitial_step === 1" class="content">
 					<div v-if="farmerName.includes('@')" class="text" v-html="$t('main.dida_1_leek', [farmerFirstLeek])"></div>
 					<div v-else class="text" v-html="$t('main.dida_1', [farmerName, farmerFirstLeek])"></div>
-					<i18n class="text" path="main.dida_2">
-						<img height=18 src="/image/charac/life.png" slot="life">
-						<img height=18 src="/image/charac/strength.png" slot="strength">
-					</i18n>
+					<i18n-t class="text" keypath="main.dida_2">
+						<template #life><img height=18 src="/image/charac/life.png"></template>
+						<template #strength><img height=18 src="/image/charac/strength.png"></template>
+					</i18n-t>
 				</div>
 				<div v-else-if="LeekWars.didactitial_step === 2" class="content">
 					<div class="text" v-html="$t('main.dida_3', [farmerName, farmerFirstLeek])"></div>
@@ -26,14 +26,14 @@
 					<div class="text" v-html="$t('main.dida_9')"></div>
 				</div>
 				<div v-else-if="LeekWars.didactitial_step === 5" class="content">
-					<i18n class="text" path="main.dida_10">
-						<router-link slot="help" to="/encyclopedia">{{ $t('main.help') }}</router-link>
-						<router-link slot="tutorial" :to="'/encyclopedia/' + $i18n.locale + '/' + $t('main.tutorial').replace(/ /g, '_')">{{ $t('main.tutorial') }}</router-link>
-					</i18n>
-					<i18n class="text" path="main.dida_11">
-						<router-link slot="chat" to="/messages">{{ $t('main.chat') }}</router-link>
-						<router-link slot="forum" to="/forum">{{ $t('main.forum') }}</router-link>
-					</i18n>
+					<i18n-t class="text" keypath="main.dida_10">
+						<template #help><router-link to="/encyclopedia">{{ $t('main.help') }}</router-link></template>
+						<template #tutorial><router-link :to="'/encyclopedia/' + $i18n.locale + '/' + $t('main.tutorial').replace(/ /g, '_')">{{ $t('main.tutorial') }}</router-link></template>
+					</i18n-t>
+					<i18n-t class="text" keypath="main.dida_11">
+						<template #chat><router-link to="/messages">{{ $t('main.chat') }}</router-link></template>
+						<template #forum><router-link to="/forum">{{ $t('main.forum') }}</router-link></template>
+					</i18n-t>
 					<div class="text" v-html="$t('main.dida_12', [farmerName.includes('@') ? farmerFirstLeek : farmerName])"></div>
 				</div>
 
@@ -58,9 +58,9 @@
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'didactitiel', i18n: {}, mixins: [...mixins] })
+	@Options({ name: 'didactitiel', i18n: {}, mixins: [...mixins] })
 	export default class Didactitiel extends Vue {
 
 		get farmerName() {

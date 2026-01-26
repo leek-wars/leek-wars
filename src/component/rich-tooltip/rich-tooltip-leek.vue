@@ -1,7 +1,9 @@
 <template>
-	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'my-transition'" :open-on-hover="!locked" offset-y @input="open($event)">
-		<template v-slot:activator="{ on }">
-			<slot :on="on"></slot>
+	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :location="bottom ? 'bottom' : 'top'" :transition="instant ? 'none' : 'scale-transition'" :open-on-hover="!locked" offset-y @update:modelValue="open($event)">
+		<template #activator="{ props }">
+			<span v-bind="props">
+				<slot></slot>
+			</span>
 		</template>
 		<div :class="{expanded: expand_items}" class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
 			<loader v-if="!leek" :size="30" />
@@ -27,41 +29,42 @@
 						<span class="talent-more">({{ leek.talent_more >= 0 ? '+' + leek.talent_more : leek.talent_more }})</span>
 						<ranking-badge v-if="leek && leek.ranking && leek.ranking <= 1000 && leek.in_garden" :id="leek.id" :ranking="leek.ranking" category="leek" />
 						<span class="level">• {{ $t('main.level_n', [leek.level]) }}</span>
-						<v-btn class="expand" icon small @click="expand_items = !expand_items">
-							<v-icon v-if="expand_items">mdi-chevron-up</v-icon>
-							<v-icon v-else>mdi-chevron-down</v-icon>
-						</v-btn>
+						<v-btn class="expand" variant="text" size="x-small" @click="expand_items = !expand_items" :icon="expand_items ? 'mdi-chevron-up' : 'mdi-chevron-down'" />
 					</div>
 				</div>
 				<div v-if="expand_items">
 					<table class="leeks">
-						<tr>
-							<th>{{ $t('main.name') }}</th>
-							<th>{{ $t('main.level') }}</th>
-							<th><img src="/image/talent.png"></th>
-							<th v-for="c in LeekWars.characteristics" :key="c" class="c"><img :src="'/image/charac/small/' + c + '.png'" :class="{zero: leek['total_' + c] === 0}"></th>
-						</tr>
-						<tr>
-							<td class="leek-name"><router-link :to="'/leek/' + leek.id">{{ leek.name }}</router-link></td>
-							<td>{{ leek.level }}</td>
-							<td><b>{{ leek.talent }}</b></td>
-							<td v-for="c in LeekWars.characteristics" :key="c" :class="['color-' + c, leek['total_' + c] === 0 ? 'zero' : '']" class="c">{{ leek['total_' + c] }}</td>
-						</tr>
+						<thead>
+							<tr>
+								<th>{{ $t('main.name') }}</th>
+								<th>{{ $t('main.level') }}</th>
+								<th><img src="/image/talent.png"></th>
+								<th v-for="c in LeekWars.characteristics" :key="c" class="c"><img :src="'/image/charac/small/' + c + '.png'" :class="{zero: leek['total_' + c] === 0}"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="leek-name"><router-link :to="'/leek/' + leek.id">{{ leek.name }}</router-link></td>
+								<td>{{ leek.level }}</td>
+								<td><b>{{ leek.talent }}</b></td>
+								<td v-for="c in LeekWars.characteristics" :key="c" :class="['color-' + c, leek['total_' + c] === 0 ? 'zero' : '']" class="c">{{ leek['total_' + c] }}</td>
+							</tr>
+						</tbody>
 					</table>
 					<div class="items">
 						<div class="weapons">
-							<rich-tooltip-item v-for="weapon in leek.weapons" :key="weapon.id" v-slot="{ on }" :item="LeekWars.items[weapon.template]" :bottom="true" :leek="leek" @input="setParent">
-								<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" class="weapon" v-on="on">
+							<rich-tooltip-item v-for="weapon in leek.weapons" :key="weapon.id" v-slot="{ props }" :item="LeekWars.items[weapon.template]" :bottom="true" :leek="leek" @update:modelValue="setParent">
+								<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" class="weapon" v-bind="props">
 							</rich-tooltip-item>
 						</div>
 						<div class="chips">
-							<rich-tooltip-item v-for="chip in leek.chips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[chip.template]" :bottom="true" :leek="leek" @input="setParent">
-								<img :src="'/image/chip/' + CHIPS[chip.template].name + '.png'" class="chip" v-on="on">
+							<rich-tooltip-item v-for="chip in leek.chips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[chip.template]" :bottom="true" :leek="leek" @update:modelValue="setParent">
+								<img :src="'/image/chip/' + CHIPS[chip.template].name + '.png'" class="chip" v-bind="props">
 							</rich-tooltip-item>
 						</div>
 						<div class="components">
-							<rich-tooltip-item v-for="component in leek.components.filter(c => c)" :key="component.id" v-slot="{ on }" :item="LeekWars.items[component.template]" :bottom="true" @input="setParent">
-								<img :src="'/image/component/' + LeekWars.items[component.template].name + '.png'" class="component" v-on="on">
+							<rich-tooltip-item v-for="component in leek.components.filter(c => c)" :key="component.id" v-slot="{ props }" :item="LeekWars.items[component.template]" :bottom="true" @update:modelValue="setParent">
+								<img :src="'/image/component/' + LeekWars.items[component.template].name + '.png'" class="component" v-bind="props">
 							</rich-tooltip-item>
 						</div>
 					</div>
@@ -75,12 +78,13 @@
 
 import { Leek } from '@/model/leek'
 import { LeekWars } from '@/model/leekwars'
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
-const LWTitle = () => import('@/component/title/title.vue')
+const LWTitle = defineAsyncComponent(() => import('@/component/title/title.vue'))
 import { CHIPS } from '@/model/chips'
+import { defineAsyncComponent } from 'vue'
 
-@Component({ components: { RichTooltipItem, 'lw-title': LWTitle } })
+@Options({ components: { RichTooltipItem, 'lw-title': LWTitle } })
 export default class RichTooltipLeek extends Vue {
 
 	@Prop({required: true}) id!: number
@@ -100,7 +104,7 @@ export default class RichTooltipLeek extends Vue {
 		return this.instant ? 0 : 500
 	}
 	get _close_delay() {
-		return this.instant ? 0 : 0
+		return this.instant ? 0 : 1
 	}
 	@Watch('id')
 	update() {
@@ -108,7 +112,7 @@ export default class RichTooltipLeek extends Vue {
 		this.content_created = false
 	}
 	open(v: boolean) {
-		this.$emit('input', v)
+		this.$emit('update:modelValue', v)
 		this.expand_items = localStorage.getItem('richtooltipleek/expanded') === 'true'
 		if (this.content_created) { return }
 		this.content_created = true
@@ -116,7 +120,7 @@ export default class RichTooltipLeek extends Vue {
 			LeekWars.get<Leek>('leek/rich-tooltip/' + this.id).then(leek => {
 				this.leek = new Leek(leek)
 				if (this.expand_items) {
-					(this.$refs.menu as any).onResize()
+					(this.$refs.menu as any)?.updateLocation()
 				}
 			})
 		}
@@ -130,7 +134,7 @@ export default class RichTooltipLeek extends Vue {
 		this.locked = event
 		if (!event && !this.mouse) {
 			this.value = false
-			this.$emit('input', false)
+			this.$emit('update:modelValue', false)
 		}
 	}
 

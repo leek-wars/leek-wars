@@ -10,95 +10,95 @@
 		</div>
 		<div class="container grid large">
 			<panel v-ripple class="first">
-				<router-link slot="content" to="/help/general">
+				<template #content><router-link to="/help/general">
 					<h2>Leek Wars</h2>
 					<img src="/image/help/help_general.png">
 					<br>
 					<span class="description">{{ $t('general_help') }}</span>
-				</router-link>
+				</router-link></template>
 			</panel>
 
 			<panel v-ripple>
-				<router-link slot="content" to="/help/tutorial">
+				<template #content><router-link to="/help/tutorial">
 					<h2>{{ $t('tutorial') }}</h2>
 					<img src="/image/help/interface.png">
 					<br>
 					<span class="description" v-html="$t('tutorial_desc')"></span>
-				</router-link>
+				</router-link></template>
 			</panel>
 
 			<panel v-ripple>
-				<router-link slot="content" to="/help/documentation">
+				<template #content><router-link to="/help/documentation">
 					<h2>{{ $t('documentation') }}</h2>
 					<img src="/image/help/presentation.png">
 					<br>
 					<span class="description" v-html="$t('documentation_desc')"></span>
-				</router-link>
+				</router-link></template>
 			</panel>
 
 			<panel v-ripple>
-				<router-link slot="content" to="/encyclopedia">
+				<template #content><router-link to="/encyclopedia">
 					<h2>Encyclopédie</h2>
 					<v-icon class="bigicon">mdi-book-open-page-variant</v-icon>
 					<br>
 					<span class="description">Encyclopédie de Leek Wars</span>
-				</router-link>
+				</router-link></template>
 			</panel>
 
 		</div>
-		<center>
+		<div class="center">
 			<div class="advanced-button" @click="advanced = !advanced">
 				<span>Avancé</span>
 				<v-icon v-if="advanced">mdi-chevron-up</v-icon>
 				<v-icon v-else>mdi-chevron-down</v-icon>
 			</div>
-		</center>
+		</div>
 
 		<div v-if="advanced" class="container grid large advanced">
 
 			<panel v-ripple>
-				<router-link slot="content" to="/help/api">
+				<template #content><router-link to="/help/api">
 					<h2>API documentation</h2>
 					<v-icon class="bigicon">mdi-api</v-icon>
 					<br>
 					<span class="description">Complete API services documentation</span>
-				</router-link>
+				</router-link></template>
 			</panel>
 
 			<panel v-ripple class="last">
-				<router-link slot="content" to="/help/line-of-sight">
+				<template #content><router-link to="/help/line-of-sight">
 					<h2>Line Of Sight</h2>
 					<v-icon class="bigicon">mdi-grid</v-icon>
 					<br>
 					<span class="description">Little demo for line of sight function</span>
-				</router-link>
+				</router-link></template>
 			</panel>
 
 			<panel v-ripple>
-				<router-link slot="content" to="/help/advanced-fight-description">
+				<template #content><router-link to="/help/advanced-fight-description">
 					<h2>Fight Description</h2>
 					<v-icon class="bigicon">mdi-sword-cross</v-icon>
 					<br>
 					<span class="description">Advanced description of combat rules and order.</span>
-				</router-link>
+				</router-link></template>
 			</panel>
 
 			<panel v-ripple>
-				<router-link slot="content" to="/help/items">
+				<template #content><router-link to="/help/items">
 					<h2>Items</h2>
 					<v-icon class="bigicon">mdi-chip</v-icon>
 					<br>
 					<span class="description">Items</span>
-				</router-link>
+				</router-link></template>
 			</panel>
 
 			<panel v-ripple>
-				<router-link slot="content" to="/talent">
+				<template #content><router-link to="/talent">
 					<h2>Talents</h2>
 					<v-icon class="bigicon">mdi-chart-line</v-icon>
 					<br>
 					<span class="description">Talents</span>
-				</router-link>
+				</router-link></template>
 			</panel>
 
 		</div>
@@ -110,10 +110,11 @@
 	import { locale } from '@/locale'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
-	const Didactitiel = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`)
+	import { defineAsyncComponent } from 'vue'
+	import { Options, Vue } from 'vue-property-decorator'
+	const Didactitiel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`))
 
-	@Component({ name: 'help', i18n: {}, mixins: [...mixins], components: { Didactitiel } })
+	@Options({ name: 'help', i18n: {}, mixins: [...mixins], components: { Didactitiel } })
 	export default class Help extends Vue {
 		advanced: boolean = false
 		didactitiel: boolean = false
@@ -126,7 +127,7 @@
 
 		show_didactitiel() {
 			this.didactitiel_enabled = true
-			Vue.nextTick(() => {
+			nextTick(() => {
 				this.didactitiel = true
 			})
 		}

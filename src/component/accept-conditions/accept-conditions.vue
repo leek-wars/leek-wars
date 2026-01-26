@@ -6,9 +6,11 @@
 		<panel class="first">
 			<div>{{ $t('accept_1') }}</div>
 			<br>
-			<i18n path="accept_2" tag="div">
-				<router-link slot="cgu" to="/conditions">{{ $t('cgu') }}</router-link>
-			</i18n>
+			<i18n-t keypath="accept_2" tag="div">
+				<template #cgu>
+					<router-link to="/conditions">{{ $t('cgu') }}</router-link>
+				</template>
+			</i18n-t>
 			<v-btn color="primary" @click="accept">{{ $t('i_accept') }}</v-btn>
 		</panel>
 	</div>
@@ -16,9 +18,9 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'accept_conditions', i18n: {} })
+	@Options({ name: 'accept_conditions', i18n: {} })
 	export default class AcceptConditions extends Vue {
 		accept() {
 			LeekWars.post('farmer/accept-terms')

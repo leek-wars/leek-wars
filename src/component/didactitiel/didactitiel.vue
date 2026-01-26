@@ -1,7 +1,8 @@
 <template>
-	<popup :value="value" :width="800" :full="true" persistent @input="input">
-		<v-icon slot="icon">mdi-human-greeting</v-icon>
-		<span slot="title">{{ $t("title") }}</span>
+	<popup :modelValue="modelValue" :width="800" :full="true" :title="$t('title')" persistent @update:model-value="input">
+		<template #icon>
+			<v-icon>mdi-human-greeting</v-icon>
+		</template>
 
 		<div ref="content" :style="{height: height + 'px'}" class="content">
 			<div ref="page1" :class="getClass(1)" class="page">
@@ -108,7 +109,7 @@
 			<div class="pagination">{{ page }} / 8</div>
 		</div>
 
-		<div slot="actions">
+		<template #actions>
 			<div v-ripple class="skip-previous" @click="previous">
 				<span v-if="page === 1">❌&nbsp; {{ $t("dismiss") }}</span>
 				<span v-else>◄ {{ $t("previous") }}</span>
@@ -117,18 +118,18 @@
 				<span v-if="page < 8">{{ $t("next") }} &nbsp;▶</span>
 				<span v-else>{{ $t("play") }}</span>
 			</div>
-		</div>
+		</template>
 	</popup>
 </template>
 
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'didactitiel', i18n: {}, mixins: [...mixins] })
+	@Options({ name: 'didactitiel', i18n: {}, mixins: [...mixins] })
 	export default class Didactitiel extends Vue {
-		@Prop() value!: boolean
+		@Prop() modelValue!: boolean
 		page: number = 1
 		height: number = 280
 
@@ -140,7 +141,7 @@
 		}
 
 		input(event: any) {
-			this.$emit('input', event)
+			this.$emit('update:modelValue', event)
 			this.updateHeight()
 		}
 		created() {
@@ -174,7 +175,7 @@
 			return ''
 		}
 		close() {
-			this.$emit('input', false)
+			this.$emit('update:modelValue', false)
 			this.page = 1
 		}
 	}
@@ -250,7 +251,7 @@
 			padding: 3px;
 		}
 	}
-	.text ::v-deep a {
+	.text :deep(a) {
 		color: #5fad1b;
 	}
 </style>

@@ -51,9 +51,9 @@
 <script lang="ts">
 	import { locale } from '@/locale'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'mobile_app', i18n: {} })
+	@Options({ name: 'mobile_app', i18n: {} })
 	export default class MobileApp extends Vue {
 		locale = locale
 		created() {

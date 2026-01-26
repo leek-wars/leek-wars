@@ -1,7 +1,5 @@
 <template>
-	<div id="app" :class="{ connected: $store.state.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw, dark: LeekWars.darkMode, 'menu-collapsed': !LeekWars.mobile && LeekWars.menuCollapsed, beta: env.BETA, lightbar: LeekWars.lightBar }" data-app="true" @mousemove="mousemove" @mouseup="mouseup">
-		<v-theme-provider root>
-			<div class="v-application--wrap">
+	<div id="app" :class="{ connected: $store.state.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw, dark: LeekWars.darkMode, 'menu-collapsed': !LeekWars.mobile && LeekWars.menuCollapsed, beta: env.BETA, lightbar: LeekWars.lightBar }" data-app="true" @mousemove="mousemove">
 				<div :class="{visible: LeekWars.dark > 0}" :style="{opacity: LeekWars.dark}" class="dark-shadow" @click="darkClick"></div>
 
 				<div class="requests">{{ LeekWars.requests }} <v-btn x-small @click="LeekWars.requests = 0">reset</v-btn></div>
@@ -10,7 +8,7 @@
 
 				<v-icon class="console-button" @click="leekscriptConsole">mdi-console</v-icon>
 
-				<console-window v-if="console" ref="console" @close="console = false" />
+				<console-window v-if="showConsole" v-model="consoleValue" ref="consoleWindow" @close="consoleValue = false" />
 
 				<lw-bar v-if="LeekWars.mobile" />
 
@@ -56,7 +54,7 @@
 				<changelog-dialog v-model="changelogDialog" :changelog="changelog" />
 
 				<popup v-model="LeekWars.messagePopup" :width="500">
-					<template slot="title">
+					<template #title>
 						<v-icon>mdi-information-outline</v-icon>
 						{{ LeekWars.message ? $i18n.t(LeekWars.message.title) : '...' }}
 					</template>
@@ -64,7 +62,7 @@
 				</popup>
 
 				<!-- <popup v-model="annonce" :width="800">
-					<template slot="title"><v-icon>mdi-bullhorn-outline</v-icon> Annonce !</template>
+					<template #title><v-icon>mdi-bullhorn-outline</v-icon> Annonce !</template>
 					<div class="annonce">
 						<h2>Concours pour le lancement des Boss</h2>
 						<div class="annonce-message">
@@ -87,7 +85,7 @@
 				</popup> -->
 
 				<!-- <popup v-model="annonce" :width="800">
-					<template slot="title"><v-icon>mdi-bullhorn-outline</v-icon> Annonce !</template>
+					<template #title><v-icon>mdi-bullhorn-outline</v-icon> Annonce !</template>
 					<div class="annonce">
 						<h2>Lancement de la boutique Leek Wars</h2>
 						<div class="annonce-message">
@@ -108,14 +106,14 @@
 
 				<!--
 				<popup v-model="annonce" :width="500">
-					<template slot="title"><v-icon>mdi-bullhorn-outline</v-icon> Annonce de concours !</template>
+					<template #title><v-icon>mdi-bullhorn-outline</v-icon> Annonce de concours !</template>
 					<div class="annonce">
 						<h2>Reverse-Engineering : LW101</h2>
 						<h4>Examen pratique</h4>
 						<br>
-						Organisé par <rich-tooltip-farmer :id="50023" v-slot="{ on }" :bottom="true">
+						Organisé par <rich-tooltip-farmer :id="50023" :bottom="true">
 							<avatar :farmer="{id: 50023, avatar_changed: 12}" />
-							<b v-on="on">Oimat</b>
+							<b>Oimat</b>
 						</rich-tooltip-farmer>
 						<div class="annonce-message">
 							<br>
@@ -149,37 +147,36 @@
 					<documentation ref="doc" :popup="true" />
 				</v-dialog>
 			</div>
-		</v-theme-provider>
-	</div>
 </template>
 
 <script lang='ts'>
 	import Bar from '@/component/app/bar.vue'
-	const Chats = () => import('@/component/app/chats.vue')
-	// import Console from '@/component/app/console.vue'
-	const Footer = () => import('@/component/app/footer.vue')
+	const Chats = defineAsyncComponent(() => import('@/component/app/chats.vue'))
+	const Footer = defineAsyncComponent(() => import('@/component/app/footer.vue'))
 	import Header from '@/component/app/header.vue'
-	const Menu = () => import(/* webpackChunkName: "[request]" */ `@/component/app/menu.vue`)
-	const MobileBR = () => import('@/component/app/mobile-br.vue')
-	const Social = () => import(/* webpackChunkName: "[request]" */ `@/component/app/social.vue`)
-	const Squares = () => import('@/component/app/squares.vue')
-	const ChangelogVersion = () => import('@/component/changelog/changelog-version.vue')
+	const Menu = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/app/menu.vue`))
+	const MobileBR = defineAsyncComponent(() => import('@/component/app/mobile-br.vue'))
+	const Social = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/app/social.vue`))
+	const Squares = defineAsyncComponent(() => import('@/component/app/squares.vue'))
+	const ChangelogVersion = defineAsyncComponent(() => import('@/component/changelog/changelog-version.vue'))
 	import { locale } from '@/locale'
-	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import ConsoleWindow from './console-window.vue'
-	const ChangelogDialog = () => import('../changelog/changelog-dialog.vue')
-	const Didactitiel = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`)
-	const Documentation = () => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`)
-	const DidactitielNew = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel-new/didactitiel-new.${locale}.i18n`)
+	import { defineAsyncComponent, nextTick } from 'vue'
+	import { emitter } from '@/model/vue'
+	const ChangelogDialog = defineAsyncComponent(() => import('../changelog/changelog-dialog.vue'))
+	const Didactitiel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`))
+	const Documentation = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`))
+	const DidactitielNew = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel-new/didactitiel-new.${locale}.i18n`))
 
-	@Component({
+	@Options({
 		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Squares, Didactitiel, Chats, 'mobile-br': MobileBR, ChangelogVersion, ChangelogDialog, Documentation, DidactitielNew, ConsoleWindow }
 	})
 	export default class App extends Vue {
-		console: boolean = false
+		showConsole: boolean = false
+		consoleValue: boolean = false
 		changelog: any = null
 		changelogDialog: boolean = false
 		konami: string = ''
@@ -194,7 +191,7 @@
 
 		@Watch('LeekWars.darkMode', {immediate: true})
 		updateDarkMode() {
-			this.$vuetify.theme.dark = LeekWars.darkMode
+			this.$vuetify.theme.change(LeekWars.darkMode ? 'dark' : 'light')
 			if (LeekWars.darkMode)
 				document.body.classList.add('dark')
 			else
@@ -202,10 +199,10 @@
 		}
 
 		created() {
-			this.$root.$on('connected', () => {
+			emitter.on('connected', () => {
 				if (!this.$store.state.farmer.didactitiel_seen) {
 					LeekWars.show_didactitiel()
-					Vue.nextTick(() => {
+					nextTick(() => {
 						this.$store.commit('didactitiel-seen')
 					})
 				}
@@ -213,12 +210,12 @@
 			if (this.$store.state.connected && localStorage.getItem('changelog_version') !== LeekWars.normal_version) {
 				this.changelogShow()
 			}
-			this.$root.$on('keyup', (event: KeyboardEvent) => {
+			emitter.on('keyup', (event: KeyboardEvent) => {
 				if (event.keyCode === 72 && event.altKey && event.ctrlKey) {
 					this.docEverywhere = true
-					Vue.nextTick(() => {
+					nextTick(() => {
 						this.docEverywhereModel = true
-						Vue.nextTick(() => {
+						nextTick(() => {
 							if (this.$refs.doc) {
 								(this.$refs.doc as any).focus()
 							}
@@ -238,7 +235,7 @@
 				}
 				if (this.konami.length > 12) { this.konami = this.konami.substring(1) }
 			})
-			this.$root.$on('navigate', () => {
+			emitter.on('navigate', () => {
 				this.docEverywhereModel = false
 			})
 
@@ -261,12 +258,8 @@
 		}
 
 		leekscriptConsole() {
-			this.console = true
-			Vue.nextTick(() => {
-				if (this.$refs.console) {
-					(this.$refs.console as any).open()
-				}
-			})
+			this.showConsole = true
+			this.consoleValue = true
 		}
 
 		clickClover() {
@@ -337,15 +330,6 @@
 				this.cloverSpeed = 200
 				this.updateClover()
 				this.updateCloverPosition()
-			}
-			if (this.$refs.console) {
-				(this.$refs.console as any).consoleMouseMove(e)
-			}
-		}
-
-		mouseup(e: MouseEvent) {
-			if (this.$refs.console) {
-				(this.$refs.console as any).consoleMouseUp(e)
 			}
 		}
 	}
@@ -590,9 +574,10 @@
 		left: 10px;
 		z-index: 100;
 	}
-	::v-deep .v-dialog.doc {
+	:deep(.v-overlay__content.doc) {
 		height: auto;
 		display: flex;
+		flex-direction: row;
 		max-height: 80vh;
 		box-shadow: none;
 		align-self: flex-start;

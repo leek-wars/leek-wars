@@ -1,19 +1,21 @@
 <template>
-	<v-menu v-model="value" :close-on-content-click="false" :width="280" offset-overflow :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" transition="none" :bottom="bottom" :open-on-hover="!locked" offset-y @input="$emit('input', $event)">
-		<template v-slot:activator="{ on }">
-			<slot :on="on"></slot>
+	<v-menu v-model="value" :close-on-content-click="false" :width="280" offset-overflow :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" transition="none" :bottom="bottom" :open-on-hover="!locked" offset-y>
+		<template #activator="{ props }">
+			<span v-bind="props">
+				<slot></slot>
+			</span>
 		</template>
 		<div class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
-			<trophy ref="preview" :trophy="trophy" @input="setParent" />
+			<trophy ref="preview" :trophy="trophy" @update:model-value="setParent" />
 		</div>
 	</v-menu>
 </template>
 
 <script lang="ts">
 	import Trophy from '@/component/trophies/trophy.vue'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ components: { Trophy } })
+	@Options({ components: { Trophy } })
 	export default class RichTooltipTrophy extends Vue {
 		@Prop({required: true}) trophy!: any
 		@Prop() bottom!: boolean
@@ -33,7 +35,7 @@
 			this.locked = event
 			if (!event && !this.mouse) {
 				this.value = false
-				this.$emit('input', false)
+				this.$emit('update:modelValue', false)
 			}
 		}
 	}

@@ -7,8 +7,8 @@
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue } from 'vue-property-decorator'
-	@Component({ name: 'range-view' })
+	import { Options, Prop, Vue } from 'vue-property-decorator'
+	@Options({ name: 'range-view' })
 	export default class RangeView extends Vue {
 		@Prop() min!: number
 		@Prop() max!: number

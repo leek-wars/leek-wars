@@ -31,12 +31,12 @@
 					</div>
 
 					<div class="stats">
-						<center>
+						<div class="center">
 							<talent :id="entity.id" :talent="entity.talent" :category="type" />
 							<div v-if="type === 'leek' || type === 'farmer'" class="talent-more">
 								({{ entity.talent_more >= 0 ? '+' + entity.talent_more : entity.talent_more }})
 							</div>
-						</center>
+						</div>
 						<table>
 							<tr>
 								<td class="big">{{ victories }}</td>
@@ -94,11 +94,11 @@
 	import { mixins } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import FightsHistory from '@/component/history/fights-history.vue'
 
-	@Component({ name: 'history', i18n: {}, mixins: [...mixins], components: { Breadcrumb, FightsHistory } })
+	@Options({ name: 'history', i18n: {}, mixins: [...mixins], components: { Breadcrumb, FightsHistory } })
 	export default class History extends Vue {
 		@Prop({required: true}) type!: string
 		fights!: Fight[]

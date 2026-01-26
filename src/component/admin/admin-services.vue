@@ -11,7 +11,7 @@
 			<div v-else id="services">
 				<div v-for="(service, s) of services" :key="s" class="service card">
 					<span class="module">{{ service.module }}</span>/<span class="function">{{ service.function }}</span>
-					<template v-for="(parameter, p) in service.parameters"><span :key="p + '_'">/</span><span :key="p" class="parameter">&lt;{{ parameter }} <span class="parameter-type">{{ service.parameters_types[p] }}</span>&gt;</span>
+					<template v-for="(parameter, p) in service.parameters" :key="p"><span>/</span><span class="parameter">&lt;{{ parameter }} <span class="parameter-type">{{ service.parameters_types[p] }}</span>&gt;</span>
 					</template>
 					<template v-if="service.returns.length > 0">&nbsp;→ <span class="returns">{{ service.returns.join(", ") }}</span></template>
 					<br>
@@ -27,9 +27,9 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 
-	@Component({})
+	@Options({})
 	export default class AdminServices extends Vue {
 		services: any = null
 		created() {

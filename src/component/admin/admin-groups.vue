@@ -12,20 +12,20 @@
 					hide-default-footer
     				:items-per-page="100"
 					class="elevation-1 members">
-					<template v-slot:item.id="{ item }">
+					<template #item.id="{ item }">
 						<router-link :to="'/group/' + item.id" class="flex" v-ripple>
 							{{ item.id }}
 						</router-link>
 					</template>
-					<template v-slot:item.name="{ item }">
+					<template #item.name="{ item }">
 						<router-link :to="'/group/' + item.id" class="flex" v-ripple>
 							{{ item.name }}
 						</router-link>
 					</template>
-					<template v-slot:item.supervisor="{ item }">
+					<template #item.supervisor="{ item }">
 						<router-link :to="'/farmer/' + item.supervisor.id">
-							<rich-tooltip-farmer :id="item.supervisor.id" v-slot="{ on }" :bottom="true">
-								<div class="flex name" v-on="on" v-ripple>
+							<rich-tooltip-farmer :id="item.supervisor.id" :bottom="true">
+								<div class="flex name" v-ripple>
 									<avatar :farmer="item.supervisor" />
 									<span>{{ item.supervisor.name }}</span>
 									<img v-if="item.supervisor.connected" class="status" src="/image/connected.png">
@@ -34,10 +34,10 @@
 							</rich-tooltip-farmer>
 						</router-link>
 					</template>
-					<template v-slot:item.creation_date="{ item }">
-						{{ item.creation_date | date }}
+					<template #item.creation_date="{ item }">
+						{{ $filters.date(item.creation_date) }}
 					</template>
-					<template v-slot:item.archived="{ item }">
+					<template #item.archived="{ item }">
 						<v-checkbox v-model="item.archived" :hide-details="true" />
 					</template>
 				</v-data-table>
@@ -48,10 +48,10 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Component({ components: { RichTooltipFarmer } })
+	@Options({ components: { RichTooltipFarmer } })
 	export default class AdminTrophies extends Vue {
 		groups: any = null
 		headers = [

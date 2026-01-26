@@ -1,7 +1,9 @@
 <template>
-	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :nudge-width="expand_leeks ? 500 : 200" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'my-transition'" :open-on-hover="!locked" offset-y @input="open($event)">
-		<template v-slot:activator="{ on }">
-			<slot :on="on"></slot>
+	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :nudge-width="expand_leeks ? 500 : 200" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'my-transition'" :open-on-hover="!locked" offset-y @update:model-value="open($event)">
+		<template #activator="{ props }">
+			<span v-bind="props">
+				<slot></slot>
+			</span>
 		</template>
 		<div class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
 			<loader v-if="!composition" :size="30" />
@@ -39,9 +41,9 @@
 					</tr>
 					<tr v-for="leek in composition.leeks" :key="leek.id">
 						<td class="leek-name">
-							<rich-tooltip-leek :id="leek.id" v-slot="{ on }" :bottom="true" @input="setParent">
+							<rich-tooltip-leek :id="leek.id" v-slot="{ props }" :bottom="true" @update:model-value="setParent">
 								<router-link :to="'/leek/' + leek.id">
-									<span v-on="on">{{ leek.name }}</span>
+									<span v-bind="props">{{ leek.name }}</span>
 								</router-link>
 							</rich-tooltip-leek>
 						</td>
@@ -58,10 +60,10 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Composition } from '@/model/team'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 
-	@Component({ components: { RichTooltipLeek } })
+	@Options({ components: { RichTooltipLeek } })
 	export default class RichTooltipComposition extends Vue {
 		@Prop({required: true}) id!: number
 		@Prop() disabled!: boolean
@@ -79,7 +81,7 @@
 			return this.instant ? 0 : 500
 		}
 		get _close_delay() {
-			return this.instant ? 0 : 0
+			return this.instant ? 0 : 1
 		}
 		@Watch('id')
 		update() {
@@ -87,6 +89,7 @@
 			this.content_created = false
 		}
 		open(v: boolean) {
+			console.log("open")
 			this.expand_leeks = localStorage.getItem('rich-tooltip-composition/expanded') === 'true'
 			if (this.content_created) { return }
 			this.content_created = true
@@ -94,7 +97,7 @@
 				LeekWars.get<Composition>('team/composition-rich-tooltip/' + this.id).then(composition => {
 					this.composition = composition
 					for (const c of LeekWars.characteristics) {
-						Vue.set(this.sums, c, Object.values(this.composition.leeks).reduce((sum: number, leek: any) => sum + leek[c], 0))
+						this.sums[c] = Object.values(this.composition.leeks).reduce((sum: number, leek: any) => sum + leek[c], 0)
 					}
 					if (this.expand_leeks) {
 						(this.$refs.menu as any).onResize()
@@ -111,7 +114,7 @@
 			this.locked = event
 			if (!event && !this.mouse) {
 				this.value = false
-				this.$emit('input', false)
+				this.$emit('update:modelValue', false)
 			}
 		}
 	}

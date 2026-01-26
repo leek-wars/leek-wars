@@ -9,15 +9,17 @@
 			</div>
 		</div>
 		<panel class="first">
-			<div slot="content" ref="sizer" :class="{zoomed: zoomed}" class="content tournament">
+			<template #content>
+				<div ref="sizer" :class="{zoomed: zoomed}" class="content tournament">
 
-				<loader v-if="!tournament" />
-				<tournament-graph v-else :tournament="tournament" :class="{zoomed: zoomed}" :style="{maxHeight: zoomed ? height : 'auto'}" />
+					<loader v-if="!tournament" />
+					<tournament-graph v-else :tournament="tournament" :class="{zoomed: zoomed}" :style="{maxHeight: zoomed ? height : 'auto'}" />
 
-				<pre class="info" v-if="$store.getters.admin && tournament">
-Min power: {{ tournament.min_power | number }}
-Max power: {{ tournament.max_power | number }}</pre>
-			</div>
+					<pre class="info" v-if="$store.getters.admin && tournament">
+Min power: {{ $filters.number(tournament.min_power) }}
+Max power: {{ $filters.number(tournament.max_power) }}</pre>
+				</div>
+			</template>
 		</panel>
 
 		<div v-show="tooltip" :style="{left: tooltipX + 'px', top: tooltipY + 'px'}" class="tooltip v-tooltip__content">{{ tooltipText }}</div>
@@ -35,13 +37,14 @@ Max power: {{ tournament.max_power | number }}</pre>
 	import { Comment } from '@/model/comment'
 	import { LeekWars } from '@/model/leekwars'
 	import { Tournament } from '@/model/tournament'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import Comments from '@/component/comment/comments.vue'
 	import { SocketMessage } from '@/model/socket'
 	import { mixins } from '@/model/i18n'
 	import TournamentGraph from './tournament-graph.vue'
+	import { emitter } from '@/model/vue'
 
-	@Component({ name: 'tournament', i18n: {}, mixins: [...mixins], components: {
+	@Options({ name: 'tournament', i18n: {}, mixins: [...mixins], components: {
 		'tournament-block': TournamentBlock,
 		'tournament-fight': TournamentFight,
 		TournamentGraph,
@@ -67,7 +70,7 @@ Max power: {{ tournament.max_power | number }}</pre>
 		generating: boolean = false
 
 		created() {
-			this.$root.$on('tournament-update', (data: any) => {
+			emitter.on('tournament-update', (data: any) => {
 				if (this.tournament && data[0] === this.tournament.id) {
 					LeekWars.get<Tournament>('tournament/get/' + this.$route.params.id).then(tournament => {
 						this.tournament = tournament
@@ -100,17 +103,17 @@ Max power: {{ tournament.max_power | number }}</pre>
 					this.setupTimer()
 				}
 				LeekWars.socket.send([SocketMessage.TOURNAMENT_LISTEN, this.tournament.id])
-				this.$root.$emit('loaded')
+				emitter.emit('loaded')
 			})
-			this.$root.$on('tooltip', this.tooltipOpen)
-			this.$root.$on('tooltip-close', this.tooltipClose)
+			emitter.on('tooltip', this.tooltipOpen)
+			emitter.on('tooltip-close', this.tooltipClose)
 		}
 
-		beforeDestroy() {
+		beforeUnmount() {
 			clearTimeout(this.timer)
 			LeekWars.large = false
-			this.$root.$off('tooltip', this.tooltipOpen)
-			this.$root.$off('tooltip-close', this.tooltipClose)
+			emitter.off('tooltip', this.tooltipOpen)
+			emitter.off('tooltip-close', this.tooltipClose)
 			if (this.tournament) {
 				LeekWars.socket.send([SocketMessage.TOURNAMENT_UNLISTEN, this.tournament.id])
 			}

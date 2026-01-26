@@ -8,9 +8,9 @@
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ name: "flag" })
+	@Options({ name: "flag" })
 	export default class Flag extends Vue {
 		@Prop() code!: string
 		@Prop() clickable!: boolean

@@ -9,10 +9,7 @@
 .theme--light.v-icon {
 	color: inherit;
 }
-.v-tooltip {
-	display: none;
-}
-.v-tooltip__content {
+.v-overlay[role="tooltip"] .v-overlay__content, .v-tooltip__content {
 	background: #333 !important;
 	font-size: 14px !important;
 	pointer-events: none;
@@ -27,38 +24,39 @@
 		font-size: 20px;
 		vertical-align: top;
 	}
+	&::before {
+		position: absolute;
+		top: -4px;
+		left: 50%;
+		margin-left: -4px;
+		width: 0;
+		height: 0;
+		border-left: 4px solid transparent;
+		border-right: 4px solid transparent;
+		border-bottom: 4px solid rgba(51,51,51, 0.9);
+		content: " ";
+	}
+	&.top::before {
+		top: auto;
+		bottom: -7px;
+		border-bottom: none;
+		border-top: 7px solid rgba(51,51,51, 0.9);
+	}
+	&.left::before {
+		left: auto;
+		right: -11px;
+		margin-top: -4px;
+		top: 50%;
+		border-bottom: none;
+		border-top: 4px solid transparent;
+		border-left: 7px solid rgba(51,51,51, 0.9);
+		border-bottom: 4px solid transparent;
+	}
+	&.fluid {
+		max-width: none !important;
+	}
 }
-.v-tooltip__content::before {
-	position: absolute;
-	top: -4px;
-	left: 50%;
-	margin-left: -4px;
-	width: 0;
-	height: 0;
-	border-left: 4px solid transparent;
-	border-right: 4px solid transparent;
-	border-bottom: 4px solid rgba(51,51,51, 0.9);
-	content: " ";
-}
-.v-tooltip__content.top::before {
-	top: auto;
-	bottom: -7px;
-	border-bottom: none;
-	border-top: 7px solid rgba(51,51,51, 0.9);
-}
-.v-tooltip__content.left::before {
-	left: auto;
-	right: -11px;
-	margin-top: -4px;
-	top: 50%;
-	border-bottom: none;
-	border-top: 4px solid transparent;
-	border-left: 7px solid rgba(51,51,51, 0.9);
-	border-bottom: 4px solid transparent;
-}
-.v-tooltip__content.fluid {
-	max-width: none !important;
-}
+
 .v-dialog {
 	margin: 12px;
 }
@@ -77,12 +75,6 @@
 	margin-top: 0;
 	padding-top: 0;
 }
-.v-input--switch {
-	display: inline-block !important;
-}
-.v-input--selection-controls__input {
-	margin-right: 8px;
-}
 .v-snack__wrapper.success {
 	background-color: #4caf50 !important;
 	border-color: #4caf50 !important;
@@ -93,12 +85,6 @@
 }
 .v-snack__content {
 	box-sizing: border-box;
-}
-.v-menu__activator, .v-menu {
-	position: static !important;
-}
-.v-menu__content {
-	background: var(--pure-white);
 }
 .tab-transition-enter {
 	transform: translate(100%, 0);
@@ -131,6 +117,13 @@
     padding-top: 4px;
     padding-bottom: 4px;
 }
+.v-list {
+	--v-list-prepend-gap: 16px;
+	.v-list-item-title {
+		font-size: 14px;
+		font-weight: 500;
+	}
+}
 .primary {
     background-color: #5fad1b !important;
     border-color: #5fad1b !important;
@@ -143,7 +136,6 @@ button {
 	text-transform: none;
 	font-size: 17px;
 	margin: 0 3px;
-	color: #333;
 	border-radius: 4px;
 	font-weight: normal;
 	letter-spacing: normal;
@@ -171,6 +163,7 @@ button {
 html {
 	box-sizing: border-box;
 	overflow-y: scroll;
+	line-height: normal;
 }
 *, *:before, *:after {
 	box-sizing: inherit;
@@ -443,12 +436,15 @@ ul, ol {
 .page-footer .tabs .tab:first-child:before {
 	border: none;
 }
+.v-icon {
+	flex-shrink: 0;
+}
 .hab {
 	width: 20px;
 	height: 20px;
 	vertical-align: bottom;
 	display: inline-block;
-	background-image: url("../public/image/hab.webp");
+	background-image: url("/image/hab.webp");
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: 20px;
@@ -460,124 +456,13 @@ ul, ol {
 	margin-top: -15px;
 	margin-bottom: -10px;
 	display: inline-block;
-	background-image: url("../public/image/crystal.webp");
+	background-image: url("/image/crystal.webp");
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: contain;
 }
-.popup {
-	display: none;
-	width: 700px;
-	box-shadow: 0px 0px 50px #111;
-	transition: height ease 0.3s;
-	margin-bottom: 50px;
-	text-align: left;
-}
-.popup.draggable {
-	position: fixed;
-	z-index: 600;
-	top: 0;
-	left: 0;
-}
-.v-dialog > .title {
-	background: #2a2a2a;
-	color: #eee;
-	padding: 0 10px;
-	padding-top: 6px;
-	padding-bottom: 4px;
-	height: 40px;
-	font-size: 20px;
-	line-height: 28px;
-	text-align: left;
-	border-top-left-radius: 2px;
-	border-top-right-radius: 2px;
-	display: flex;
-}
-.v-dialog > .title .main {
-	flex: 1;
-}
-.v-dialog .title .options {
-	display: flex;
-	float: right;
-	cursor: pointer;
-	margin-top: -6px;
-	margin-bottom: -4px;
-	margin-right: -10px;
-}
-.v-dialog .title .options .option {
-	background: black;
-	height: 40px;
-	width: 40px;
-	padding: 7px;
-	i {
-		font-size: 26px;
-		vertical-align: baseline;
-	}
-}
-.v-dialog .title .options .option:hover {
-	background: #888;
-}
-.v-dialog .title .options .option img {
-	width: 26px;
-	height: 26px;
-}
-.v-dialog.draggable .title {
-	cursor: move;
-}
-.v-dialog > .content {
-	background: rgba(240,240,240, 0.95);
-	padding: 15px;
-	max-height: calc(100vh - 104px);
-	overflow-y: auto;
-	overflow-x: hidden;
-}
-body.dark .v-dialog > .content {
-	background: rgba(15,15,15, 0.95);
-}
 .v-dialog:not(.v-dialog--fullscreen) {
 	max-height: 100%;
-}
-.v-dialog.no-actions .content {
-	border-bottom-left-radius: 3px;
-	border-bottom-right-radius: 3px;
-}
-.v-dialog > .actions {
-	height: 40px;
-	display: flex;
-}
-.v-dialog > .actions div {
-	cursor: pointer;
-	display: inline-flex;
-	justify-content: center;
-	align-items: center;
-	background: #555;
-	color: #eee;
-	width: 100%;
-	height: 40px;
-	text-align: center;
-	line-height: 40px;
-	font-size: 20px;
-}
-.v-dialog > .actions div i {
-	margin-right: 4px;
-}
-.v-dialog > .actions div:not(:last-child) {
-	border-right: 1px solid #777;
-}
-.v-dialog > .actions div:hover {
-	background: #777;
-}
-.v-dialog > .actions div.red {
-	background: #c00;
-}
-.v-dialog > .actions div.red:hover {
-	background: #e00;
-}
-.v-dialog > .actions div.green {
-	background: #5fad1b;
-}
-.v-dialog > .actions div.green:hover {
-	background: #73d120;
 }
 input {
 	font-family: "Roboto";
@@ -792,7 +677,7 @@ code {
 			white-space: pre-wrap;
 		}
 	}
-	&:not(.single) pre {
+	&:not(.single) > pre {
 		border: 6px solid var(--background-header);
 		// background: var(--pure-white);
 		padding: 6px;
@@ -1152,4 +1037,18 @@ a.green-link {
 }
 .v-select input {
 	background: transparent;
+}
+
+// Reduce height of switches and inputs (Vue 3 migration)
+.v-input--switch,
+.v-input--density-default {
+	--v-input-control-height: 24px;
+}
+.v-selection-control--density-default {
+	// --v-selection-control-size: 24px;
+}
+
+.v-checkbox .v-selection-control {
+	--v-selection-control-size: 28px;
+	gap: 6px;
 }

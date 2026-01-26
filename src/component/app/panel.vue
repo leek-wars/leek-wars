@@ -13,18 +13,19 @@
 				</div>
 			</div>
 		</div>
-		<slot v-if="expanded" name="content">
-			<div v-if="expanded" class="content">
+		<template v-if="expanded">
+			<slot v-if="$slots.content" name="content"></slot>
+			<div v-else class="content">
 				<slot></slot>
 			</div>
-		</slot>
+		</template>
 	</div>
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'panel' })
+	@Options({ name: 'panel' })
 	export default class Panel extends Vue {
 		@Prop() icon!: string
 		@Prop() title!: string
@@ -32,7 +33,7 @@
 		expanded: boolean = true
 
 		get hasTitle() {
-			return this.title || 'title' in this.$slots
+			return this.title || !!this.$slots.title
 		}
 		created() {
 			if (this.toggle) {
@@ -82,6 +83,30 @@
 		i {
 			margin-right: 7px;
 		}
+		h2 {
+			color: #eee;
+			font-size: 18px;
+			display: inline-flex;
+			align-items: center;
+			height: 36px;
+			line-height: 36px;
+			padding: 0 12px;
+			position: relative;
+			white-space: nowrap;
+			border-top-left-radius: 3px;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			flex: 1;
+			&:deep(a, a:visited) {
+				color: white;
+				font-weight: bold;
+				vertical-align: top;
+			}
+			&:deep(img) {
+				height: 25px;
+				margin-right: 8px;
+			}
+		}
 	}
 	#app.app .panel > .header {
 		border-radius: 0;
@@ -89,30 +114,7 @@
 	.panel.first > .header {
 		border-top-left-radius: 0px;
 	}
-	.panel > .header h2 {
-		color: #eee;
-		font-size: 18px;
-		display: inline-flex;
-		align-items: center;
-		height: 36px;
-		line-height: 36px;
-		padding: 0 12px;
-		position: relative;
-		white-space: nowrap;
-		border-top-left-radius: 3px;
-		text-overflow: ellipsis;
-		overflow: hidden;
-		flex: 1;
-	}
-	.panel > .header h2 a, .panel > .header h2 a:visited {
-		color: white;
-		font-weight: bold;
-		vertical-align: top;
-	}
-	.panel > .header h2 img {
-		height: 25px;
-		margin-right: 8px;
-	}
+	
 	.panel.first > .header h2 {
 		border-top-left-radius: 0px;
 	}
@@ -121,7 +123,7 @@
 		display: flex;
 		justify-content: flex-end;
 	}
-	.header > .actions ::v-deep .button {
+	.header > .actions :deep(.button) {
 		height: 36px;
 		color: white;
 		padding: 0 10px;
@@ -146,24 +148,24 @@
 			color: white;
 		}
 	}
-	.header > .actions ::v-deep > div:last-child.button,
-	.header > .actions ::v-deep > a:last-child .button,
-	.header > .actions ::v-deep > div:last-child .button {
+	.header > .actions :deep(> div:last-child.button),
+	.header > .actions :deep(> a:last-child .button),
+	.header > .actions :deep(> div:last-child .button) {
 		border-top-right-radius: 3px;
 	}
-	.header > .actions ::v-deep .button :last-child {
+	.header > .actions :deep(.button :last-child) {
 		margin-right: 0;
 	}
-	.header > .actions ::v-deep .button:hover {
+	.header > .actions :deep(.button:hover) {
 		background: #888;
 	}
-	.header > .actions ::v-deep .button.green:hover {
+	.header > .actions :deep(.button.green:hover) {
 		background: rgba(110, 201, 31, 0.8) 0%;
 	}
-	.header > .actions ::v-deep .button.red:hover {
+	.header > .actions :deep(.button.red:hover) {
 		background: rgba(201, 31, 31, 0.8) 0%;
 	}
-	.panel > .content {
+	.panel:deep( > .content) {
 		padding: 15px;
 	}
 	.panel.collapsed .content {

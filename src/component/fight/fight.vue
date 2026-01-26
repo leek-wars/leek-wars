@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<div v-if="fight">
 				<h1>{{ fight.title }}</h1>
-				<div class="info">{{ fight.date | date }}</div>
+				<div class="info">{{ $filters.date(fight.date) }}</div>
 			</div>
 			<div class="tabs">
 				<div v-if="fight_id === 'local'" class="tab" @click="reload">
@@ -14,47 +14,49 @@
 		</div>
 
 		<panel class="first">
-			<div slot="content" class="fight">
-				<player v-if="fight_id" :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
-			</div>
+			<template #content>
+				<div class="fight">
+					<player v-if="fight_id" :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
+				</div>
+			</template>
 		</panel>
 
 		<div v-if="fight" class="fight-info">
-			<center v-if="fight.type === FightType.BATTLE_ROYALE">
+			<div class="center" v-if="fight.type === FightType.BATTLE_ROYALE">
 				<span v-for="(farmer, f, i) in fight.farmers1" :key="f">
 					<span v-if="i !== 0" class="br-versus">VS</span>
 					<router-link :to="'/farmer/' + farmer.id">
-						<rich-tooltip-farmer :id="farmer.id" v-slot="{ on: rich }">
-							<div class="farmer" v-on="rich">
+						<rich-tooltip-farmer :id="farmer.id">
+							<div class="farmer">
 								<avatar :farmer="farmer" /><br>
 								<span class="name">{{ farmer.name }}</span>
 							</div>
 						</rich-tooltip-farmer>
 					</router-link>
 				</span>
-			</center>
+			</div>
 			<table v-else>
 				<tr>
 					<td>
 						<router-link v-for="farmer in fight.farmers1" :key="farmer.id" :disabled="farmer.id > 0" :to="'/farmer/' + farmer.id">
-							<rich-tooltip-farmer :id="farmer.id" v-slot="{ on: rich }">
-								<div class="farmer" v-on="rich">
+							<rich-tooltip-farmer :id="farmer.id">
+								<div class="farmer">
 									<avatar :farmer="farmer" /><br>
 									<span class="name">
-										<tooltip>
-											<template v-slot:activator="{ on }">
-												<span v-if="farmer.id === fight.starter" class="arrow" v-on="on">▶</span>
+										<v-tooltip>
+											<template #activator="{ props }">
+												<span v-if="farmer.id === fight.starter" class="arrow" v-bind="props">▶</span>
 											</template>
 											{{ $t('starter') }}
-										</tooltip>
+										</v-tooltip>
 										{{ farmer.name }}
 									</span>
 								</div>
 							</rich-tooltip-farmer>
 						</router-link>
 						<router-link v-if="fight.type === FightType.TEAM && fight.team1" :to="'/team/' + fight.team1.id">
-							<rich-tooltip-team :id="fight.team1.id" v-slot="{ on: rich }">
-								<div class="farmer" v-on="rich">
+							<rich-tooltip-team :id="fight.team1.id">
+								<div class="farmer">
 									<emblem :team="fight.team1" /><br>
 									<span class="name">
 										{{ fight.team1.name }}
@@ -66,8 +68,8 @@
 					<td class="versus">VS</td>
 					<td>
 						<router-link v-if="fight.team2 && fight.type === FightType.TEAM" :to="'/team/' + fight.team2.id">
-							<rich-tooltip-team :id="fight.team2.id" v-slot="{ on: rich }">
-								<div class="farmer" v-on="rich">
+							<rich-tooltip-team :id="fight.team2.id">
+								<div class="farmer">
 									<emblem :team="fight.team2" /><br>
 									<span class="name">
 										{{ fight.team2.name }}
@@ -76,16 +78,16 @@
 							</rich-tooltip-team>
 						</router-link>
 						<router-link v-for="farmer in fight.farmers2" :key="farmer.id" :event="farmer.id > 0 ? 'click' : ''" :to="'/farmer/' + farmer.id">
-							<rich-tooltip-farmer :id="farmer.id" v-slot="{ on: rich }">
-								<div class="farmer" v-on="rich">
+							<rich-tooltip-farmer :id="farmer.id">
+								<div class="farmer">
 									<avatar :farmer="farmer" /><br>
 									<span class="name">
-										<tooltip>
-											<template v-slot:activator="{ on }">
-												<span v-if="farmer.id === fight.starter" class="arrow" v-on="on">▶</span>
+										<v-tooltip>
+											<template #activator="{ props }">
+												<span v-if="farmer.id === fight.starter" class="arrow" v-bind="props">▶</span>
 											</template>
 											{{ $t('starter') }}
-										</tooltip>
+										</v-tooltip>
 										{{ farmer.name }}
 									</span>
 								</div>
@@ -97,9 +99,9 @@
 		</div>
 
 		<panel v-if="fight" :title="$t('main.comments') + ' (' + fight.comments.length + ')'" icon="mdi-comment-multiple-outline">
-			<div slot="actions" class="views-counter">
+			<template #actions class="views-counter">
 				{{ $tc('n_views', fight.views) }}
-			</div>
+			</template>
 			<comments :comments="fight.comments" @comment="comment" />
 		</panel>
 
@@ -127,16 +129,18 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import { GROUND_PADDING_LEFT, GROUND_PADDING_RIGHT, GROUND_PADDING_TOP } from '../player/game/ground'
-	const Player = () => import(/* webpackChunkName: "[request]" */ `@/component/player/player.${locale}.i18n`)
+	const Player = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/player/player.${locale}.i18n`))
 	import Comments from '@/component/comment/comments.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
-import { BOSSES } from '@/model/boss'
+	import { BOSSES } from '@/model/boss'
+	import { defineAsyncComponent, nextTick } from 'vue'
+import { emitter } from '@/model/vue'
 
-	@Component({ name: "fight", components: { Player, Comments, RichTooltipFarmer, RichTooltipTeam, ReportDialog }, i18n: {}, mixins: [...mixins] })
+	@Options({ name: "fight", components: { 'player': Player, Comments, RichTooltipFarmer, RichTooltipTeam, 'report-dialog': ReportDialog }, i18n: {}, mixins: [...mixins] })
 	export default class FightPage extends Vue {
 		fight_id: string | null = null
 		fight: Fight | null = null
@@ -174,10 +178,10 @@ import { BOSSES } from '@/model/boss'
 
 		mounted() {
 			LeekWars.flex = true
-			this.$root.$on('resize', this.resize)
+			emitter.on('resize', this.resize)
 			setTimeout(() => this.resize(), 50)
 
-			this.$root.$on('trophy', this.onTrophy)
+			emitter.on('trophy', this.onTrophy)
 		}
 
 		@Watch('$route.params.id', {immediate: true})
@@ -187,7 +191,7 @@ import { BOSSES } from '@/model/boss'
 
 		reload() {
 			this.fight_id = null
-			Vue.nextTick(() => {
+			nextTick(() => {
 				this.fight_id = this.$route.params.id
 			})
 		}
@@ -195,7 +199,7 @@ import { BOSSES } from '@/model/boss'
 		resize() {
 			LeekWars.lightBar = window.innerWidth / window.innerHeight > 1
 
-			Vue.nextTick(() => {
+			nextTick(() => {
 				const reference = document.querySelector('.app-center') as HTMLElement
 				const offset = 40 + 24
 				const controls = 36
@@ -232,11 +236,11 @@ import { BOSSES } from '@/model/boss'
 			})
 		}
 
-		destroyed() {
+		unmounted() {
 			LeekWars.flex = false
 			LeekWars.lightBar = false
-			this.$root.$off('resize', this.resize)
-			this.$root.$off('trophy', this.onTrophy)
+			emitter.off('resize', this.resize)
+			emitter.off('trophy', this.onTrophy)
 
 			// Notifications de trophées restants
 			for (const message of this.trophyQueue) {

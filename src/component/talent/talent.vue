@@ -9,27 +9,27 @@
 			</div>
 		</div>
 		<panel class="first">
-			<div slot="content" class="levels">
+			<template #content>
+				<div class="levels">
 
-				<h4>Talent solo</h4>
+					<h4>Talent solo</h4>
 				<div v-if="leekData">Level 301 = {{ leekData.series[0][300] }}</div>
 				<chartist ref="leekChart" :data="leekData" :options="leekOptions" ratio="ct-major-twelfth" class="talent" type="Line" />
 				<h4>Talent éleveur</h4>
 				<div v-if="farmerData">Level 1204 = {{ farmerData.series[0][1204 - 50] }}</div>
 				<chartist ref="farmerChart" :data="farmerData" :options="farmerOptions" ratio="ct-major-twelfth" class="talent" type="Line" />
 
-			</div>
+				</div>
+			</template>
 		</panel>
 	</div>
 </template>
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import Chartist from 'vue-chartist'
-	import { Component, Vue } from 'vue-property-decorator'
-	import(/* webpackChunkName: "chartist" */ /* webpackMode: "eager" */ "@/chartist-wrapper")
+	import { Options, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'talent', i18n: {} })
+	@Options({ name: 'talent', i18n: {} })
 	export default class TalentPage extends Vue {
 
 		leekData: any = null
@@ -63,14 +63,14 @@
 		}
 		mounted() {
 			LeekWars.large = true
-			this.$root.$on('resize', this.resize)
+			emitter.on('resize', this.resize)
 		}
-		beforeDestroy() {
+		beforeUnmount() {
 			LeekWars.large = false
-			this.$root.$off('resize', this.resize)
+			emitter.off('resize', this.resize)
 		}
 		resize() {
-			Vue.nextTick(() => {
+			nextTick(() => {
 				(this.$refs.leekChart as any).redraw()
 				(this.$refs.farmerChart as any).redraw()
 			})
@@ -88,15 +88,15 @@
 	padding: 10px;
 }
 .talent {
-	::v-deep .ct-line {
+	:deep(.ct-line) {
 		stroke: rgba(95, 173, 27, 0.7);
 		stroke-width: 2px;
 	}
-	::v-deep .ct-point {
+	:deep(.ct-point) {
 		stroke: #5fad1b;
 		stroke-width: 4px;
 	}
-	::v-deep .ct-area {
+	:deep(.ct-area) {
 		fill: rgba(95, 173, 27, 1);
 		fill-opacity: 0.2;
 	}

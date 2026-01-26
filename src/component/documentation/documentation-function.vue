@@ -25,10 +25,16 @@
 				<markdown :content="section" :pages="{}" mode="encyclopedia" />
 			</div>
 			<div class="operations">
-				<i18n v-if="fun.complexity == 1" path="doc.operations"><b slot="o">{{ fun.operations }}</b></i18n>
-				<i18n v-else path="doc.complexity">
-					<b slot="c">{{ LeekWars.complexities[fun.complexity] }}</b>
-				</i18n>
+				<i18n-t v-if="fun.complexity == 1" keypath="doc.operations" :plural="fun.operations">
+					<template #o>
+						<b>{{ fun.operations }}</b>
+					</template>
+				</i18n-t>
+				<i18n-t v-else keypath="doc.complexity">
+					<template #c>
+						<b>{{ LeekWars.complexities[fun.complexity] }}</b>
+					</template>
+				</i18n-t>
 			</div>
 			<div v-if="Object.values(new_fun.secondary).length" class="expand" @click.stop="expanded = !expanded">{{ $t('doc.details') }} ({{ Object.values(new_fun.secondary).length }})<v-icon v-if="expanded">mdi-chevron-up</v-icon><v-icon v-else>mdi-chevron-down</v-icon></div>
 			<div v-if="expanded" class="secondary">
@@ -56,10 +62,16 @@
 				</ul>
 			</div>
 			<div class="operations">
-				<i18n v-if="fun.complexity == 1" path="doc.operations"><b slot="o">{{ fun.operations }}</b></i18n>
-				<i18n v-else path="doc.complexity">
-					<b slot="c">{{ LeekWars.complexities[fun.complexity] }}</b>
-				</i18n>
+				<i18n-t v-if="fun.complexity == 1" keypath="doc.operations" :plural="fun.operations">
+					<template #o>
+						<b>{{ fun.operations }}</b>
+					</template>
+				</i18n-t>
+				<i18n-t v-else keypath="doc.complexity">
+					<template #c>
+						<b>{{ LeekWars.complexities[fun.complexity] }}</b>
+					</template>
+				</i18n-t>
 			</div>
 		</div>
 	</div>
@@ -71,9 +83,9 @@
 	import { locale } from '@/locale'
 	import { LSFunction } from '@/model/function'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'documentation-function', components: { Markdown } })
+	@Options({ name: 'documentation-function', components: { Markdown } })
 	export default class DocumentationFunction extends Vue {
 
 		@Prop() fun!: LSFunction
@@ -131,22 +143,22 @@
 		line-height: 17px;
 		vertical-align: top;
 	}
-	::v-deep a {
+	:deep(a) {
 		color: #0645ad;
 		font-weight: 500;
 		&:hover {
 			text-decoration: underline;
 		}
 	}
-	::v-deep ul {
+	:deep(ul) {
 		margin: 5px 0;
 	}
 	.doc-function .md {
 		padding: 0 !important;
-		::v-deep pre code {
+		:deep(pre code) {
 			margin-bottom: 0;
 		}
-		// ::v-deep p {
+		// :deep(p) {
 		// 	font-size: 15px;
 		// }
 	}

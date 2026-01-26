@@ -6,10 +6,10 @@ import { CHIP_TEMPLATES, HAT_TEMPLATES, HATS, POMPS, POTIONS, SUMMON_TEMPLATES, 
 import { Socket } from '@/model/socket'
 import { Squares } from '@/model/squares'
 import { store } from '@/model/store'
-import { vueMain } from '@/model/vue'
+import { emitter, vueMain } from '@/model/vue'
 import { WeaponTemplate } from '@/model/weapon'
 import router from '@/router'
-import Vue from 'vue'
+
 import { TranslateResult } from 'vue-i18n'
 import { Chat, ChatWindow } from './chat'
 import { i18n, loadLanguageAsync } from './i18n'
@@ -20,9 +20,25 @@ import { SCHEMES } from './schemes'
 import { COMPONENTS } from './components'
 import { WEAPONS } from './weapons'
 import { BossSquads } from './boss-squads'
+import { nextTick, reactive } from 'vue'
 
 const DEV = window.location.port === '8080'
 const LOCAL = window.location.port === '8500' || window.location.port === '5100'
+
+// Helper functions to avoid TypeScript "excessively deep" errors with vue-i18n
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const $t = (key: string, args?: any): string => {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const t = (i18n.global as any).t
+	return t(key, args)
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const $tc = (key: string, choice: number): string => {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const tc = (i18n.global as any).tc
+	return tc(key, choice)
+}
+const $locale = (): string => i18n.global.locale as string
 
 function ucfirst(str: any) {
 	str += ''
@@ -234,7 +250,7 @@ const invdate = new Date(LOCAL_DATE.toLocaleString('en-US', {
 }))
 const DATE = new Date(invdate.getTime())
 
-const LeekWars = {
+const LeekWars = reactive({
 	version: packageJson.version,
 	normal_version: packageJson.version.replace(/\.\d+$/, ''),
 	smart_version: packageJson.version.replace(/\.0$/, ''),
@@ -316,6 +332,9 @@ const LeekWars = {
 	setLocale(locale: string) {
 		loadLanguageAsync(vueMain, locale)
 		LeekWars.put('farmer/set-language', {language: locale})
+		if (DEV || LOCAL) {
+			localStorage.setItem('locale', locale)
+		}
 	},
 	getLeekAppearance: (level: number): number => {
 		if (level < 10) { return 1 } else if (level < 20) { return 2 } else if (level < 50) { return 3 } else if (level < 80) { return 4 } else if (level < 100) { return 5 } else if (level < 150) { return 6 } else if (level < 200) { return 7 } else if (level < 250) { return 8 } else if (level < 300) { return 9 } else if (level < 301) { return 10 }
@@ -420,6 +439,9 @@ const LeekWars = {
 		if (!result) { return [0, 0, 0] }
 		return [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)]
 	},
+	formatTurns(turns: number) {
+		return turns === -1 ? '∞' : turns
+	},
 	protect(string: any) {
 		return ('' + string).replace(/&/g, "&amp;")
 			.replace(/>/g, "&gt;").replace(/</g, "&lt;")
@@ -502,9 +524,9 @@ const LeekWars = {
 	documentation(locale: string): Promise<any> {
 		if (!(locale in LeekWars._documentationPromises)) {
 			const promise = get<any>('function/doc/' + locale)
-			Vue.set(LeekWars._documentationPromises, locale, promise)
+			LeekWars._documentationPromises[locale] = promise
 			promise.then((data) => {
-				Vue.set(LeekWars._documentation, locale, data)
+				LeekWars._documentation[locale] = data
 			})
 			return promise as any
 		}
@@ -556,7 +578,7 @@ const LeekWars = {
 	fullscreenEnter(element: HTMLElement, callback: (f: boolean) => void) {
 		const fullscreenCallback = () => {
 			LeekWars.fullscreen = !LeekWars.fullscreen
-			vueMain.$emit('resize')
+			emitter.emit('resize')
 			callback(LeekWars.fullscreen)
 		}
 		if (element.requestFullscreen) {
@@ -662,17 +684,20 @@ const LeekWars = {
 			umami.track(event)
 		}
 	},
-	didactitial: false, didactitial_step: 0, didactitial_visible: false, show_didactitiel: () => {
+	didactitial: false,
+	didactitial_step: 0,
+	didactitial_visible: false,
+	show_didactitiel: () => {
 		LeekWars.didactitial = true
 		LeekWars.didactitial_step = 1
-		Vue.nextTick(() => {
+		nextTick(() => {
 			LeekWars.didactitial_visible = true
 		})
 	},
 	didactitial_next: () => {
 		LeekWars.didactitial_step++
 		LeekWars.didactitial_visible = false
-		Vue.nextTick(() => LeekWars.didactitial_visible = true)
+		nextTick(() => LeekWars.didactitial_visible = true)
 	},
 	socket: new Socket(),
 	hats: Object.freeze(HATS),
@@ -721,12 +746,12 @@ const LeekWars = {
 	loadEncyclopedia: (locale: string) => {
 		// console.log("load encyclopedia", locale)
 		if (!LeekWars.encyclopediaLoaded[locale]) {
-			Vue.set(LeekWars.encyclopediaLoaded, locale, true)
+			LeekWars.encyclopediaLoaded[locale] = true
 			LeekWars.get('encyclopedia/get-all-locale/' + locale).then(pages => {
-				Vue.set(LeekWars.encyclopedia, locale, pages)
-				Vue.set(LeekWars.encyclopediaById, locale, {})
+				LeekWars.encyclopedia[locale] = pages
+				LeekWars.encyclopediaById[locale] = {}
 				for (const page in pages) {
-					Vue.set(LeekWars.encyclopediaById[locale], pages[page].id, pages[page])
+					LeekWars.encyclopediaById[locale][pages[page].id] = pages[page]
 				}
 			})
 		}
@@ -753,13 +778,13 @@ const LeekWars = {
 	},
 	logText: (log: any[]) => {
 		if (log[1] === 5) { return "pause()" }
-		if (log[1] === 11) { return i18n.t('leekscript.too_much_debug') }
+		if (log[1] === 11) { return $t('leekscript.too_much_debug') }
 		if (log[1] >= 6 && log[1] <= 8) {
 			if (log[3] === 113) { // HELP_PAGE_LINK
 				const helpPage = LeekWars.logHelpPage(log)
 				return helpPage
 			}
-			return i18n.t('leekscript.error_' + log[3], log[4]) + "\n" + log[2]
+			return $t('leekscript.error_' + log[3], log[4]) + "\n" + log[2]
 		}
 		return log[2]
 	},
@@ -781,7 +806,7 @@ const LeekWars = {
 		// 	LeekWars.completionsProvider.dispose()
 		// }
 	}
-}
+})
 
 function setTitle(title: string | TranslateResult | null, subtitle: string | TranslateResult | null = null) {
 	if (LeekWars.sfw) {
@@ -873,41 +898,41 @@ function formatDuration(timestamp: number, capital: boolean = false) {
 	let text: any = ""
 
 	if (seconds < 60) { // en dessous d'une minute
-		text = i18n.t("main.time_just_now")
+		text = $t("main.time_just_now")
 	} else if (seconds < 3600) { // en dessous d'une heure
 		const minuts = Math.floor(seconds / 60)
 		if (minuts === 1) {
-			text = i18n.t("main.time_1_minute_ago")
+			text = $t("main.time_1_minute_ago")
 		} else {
-			text = i18n.t("main.time_x_minutes_ago", [minuts])
+			text = $t("main.time_x_minutes_ago", [minuts])
 		}
 	} else if (seconds < 24 * 3600) { // en dessous d'un jour
 		const hours = Math.floor(seconds / 3600)
 		if (hours === 1) {
-			text = i18n.t("main.time_1_hour_ago")
+			text = $t("main.time_1_hour_ago")
 		} else {
-			text = i18n.t("main.time_x_hours_ago", [hours])
+			text = $t("main.time_x_hours_ago", [hours])
 		}
 	} else if (seconds < 30 * 24 * 3600) { // en dessous d'un mois
 		const days = Math.floor(seconds / (24 * 3600))
 		if (days === 1) {
-			text = i18n.t("main.time_1_day_ago")
+			text = $t("main.time_1_day_ago")
 		} else {
-			text = i18n.t("main.time_x_days_ago", [days])
+			text = $t("main.time_x_days_ago", [days])
 		}
 	} else if (seconds < 12 * 30 * 24 * 3600) { // en dessous d'un an
 		const months = Math.floor(seconds / (30 * 24 * 3600))
 		if (months === 1) {
-			text = i18n.t("main.time_1_month_ago")
+			text = $t("main.time_1_month_ago")
 		} else {
-			text = i18n.t("main.time_x_months_ago", [months])
+			text = $t("main.time_x_months_ago", [months])
 		}
 	} else { // au dessus d'un an
 		const years = Math.floor(seconds / (12 * 30 * 24 * 3600))
 		if (years === 1) {
-			text = i18n.t("main.time_1_year_ago")
+			text = $t("main.time_1_year_ago")
 		} else {
-			text = i18n.t("main.time_x_years_ago", [years])
+			text = $t("main.time_x_years_ago", [years])
 		}
 	}
 	if (capital === true) {
@@ -921,15 +946,15 @@ function formatDate(timestamp: number) {
 	const day = date.getDate()
 	const month = date.getMonth()
 	const year = date.getFullYear()
-	if (i18n.locale === 'en') {
-		return ucfirst(i18n.t('main.month_' + month)) + ' ' + day + ', ' + year
+	if ($locale() === 'en') {
+		return ucfirst($t('main.month_' + month)) + ' ' + day + ', ' + year
 	} else {
-		return day + ' ' + i18n.t('main.month_' + month) + ' ' + year
+		return day + ' ' + $t('main.month_' + month) + ' ' + year
 	}
 }
 
 function getMonthShort(month: number) {
-	const month_str = i18n.t('main.month_' + month) as string
+	const month_str = $t('main.month_' + month) as string
 	const month_short = month_str.length > 5 ? month_str.substring(0, 4) + '.' : month_str
 	return month_short
 }
@@ -946,7 +971,7 @@ function formatDateTime(timestamp: number) {
 	const hour = date.getHours()
 	let minuts: any = date.getMinutes()
 	if (minuts < 10) { minuts = '0' + minuts }
-	return ucfirst(i18n.t('main.time_at', [ formatDate(timestamp), hour + ":" + minuts]))
+	return ucfirst($t('main.time_at', [ formatDate(timestamp), hour + ":" + minuts]))
 }
 
 function formatTimeSeconds(time: number) {
@@ -970,12 +995,12 @@ function formatLongDuration(seconds: number) {
 	const m = Math.floor((seconds % 3600) / 60);
 	const s = Math.floor(seconds % 60);
 
-	const yDisplay = y > 0 ? i18n.tc('main.n_year', y) : "";
-	const moDisplay = mo > 0 ? i18n.tc('main.n_month', mo) : "";
-	const dDisplay = d > 0 ? i18n.tc('main.n_day', d) : "";
-	const hDisplay = h > 0 ? i18n.tc('main.n_hour', h) : "";
-	const mDisplay = m > 0 ? i18n.tc('main.n_minute', m) : "";
-	const sDisplay = s >= 0 ? i18n.tc('main.n_second', s) : "";
+	const yDisplay = y > 0 ? $tc('main.n_year', y) : "";
+	const moDisplay = mo > 0 ? $tc('main.n_month', mo) : "";
+	const dDisplay = d > 0 ? $tc('main.n_day', d) : "";
+	const hDisplay = h > 0 ? $tc('main.n_hour', h) : "";
+	const mDisplay = m > 0 ? $tc('main.n_minute', m) : "";
+	const sDisplay = s >= 0 ? $tc('main.n_second', s) : "";
 	return (sign < 0 ? '-' : '') + [yDisplay, moDisplay, dDisplay, hDisplay, mDisplay, sDisplay].filter(p => p).slice(0, 3).join(', ')
 }
 

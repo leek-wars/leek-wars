@@ -7,7 +7,7 @@
 		<div v-else-if="chat && chat.messages.length" ref="messages" v-autostopscroll class="messages" @scroll="scroll" @wheel="scroll">
 			<div v-for="(messages, day) in $store.state.chat[id].days" :key="day">
 				<div v-if="messages[0]" class="separator">
-					{{ messages[0].date | date }}
+					{{ $filters.date(messages[0].date) }}
 				</div>
 				<chat-message v-for="(message, m) in messages" :key="message.id" :message="formatMessage(message)" :chat="chat" @scroll="updateScroll" :large="large" :class="'m-' + message.id" @menu="openMenu($event, message)" @emoji="openEmojis($event, message)" />
 			</div>
@@ -47,19 +47,19 @@
 			</v-list>
 		</v-menu>
 
-		<popup v-model="censorDialog" :width="500">
-			<v-icon slot="icon">mdi-gavel</v-icon>
-			<span slot="title">Censurer</span>
+		<popup v-model="censorDialog" :width="500" icon="mdi-gavel" title="Censurer">
 			<div v-if="muteFarmer" class="censor">
-				<i18n path="warning.censor_farmer">
-					<b slot="farmer">{{ muteFarmer.name }}</b>
-				</i18n>
+				<i18n-t keypath="warning.censor_farmer">
+					<template #farmer>
+						<b>{{ muteFarmer.name }}</b>
+					</template>
+				</i18n-t>
 				<div class="flex">
 					<avatar :farmer="muteFarmer" />
 					<div class="messages card">
 						<div v-for="message in censorMessages" :key="message.id">
 							<v-checkbox v-if="message.censored === 0" v-model="censoredMessages[message.id]" :hide-details="true">
-								<template v-slot:label>
+								<template #label>
 									<span v-html="message.content"></span>
 								</template>
 							</v-checkbox>
@@ -68,23 +68,21 @@
 				</div>
 				<v-checkbox v-model="censorMute" label="Mettre en sourdine pour 1h" :hide-details="true" />
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="censorDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="mute red" @click="censorConfirm"><v-icon>mdi-gavel</v-icon> Censurer</div>
-			</div>
+			</template>
 		</popup>
 
-		<popup v-model="deleteDialog" :width="500">
-			<v-icon slot="icon">mdi-delete</v-icon>
-			<span slot="title">Supprimer</span>
+		<popup v-model="deleteDialog" :width="500" icon="mdi-delete" title="Supprimer">
 			<div v-if="muteFarmer" class="censor">
-				<i18n path="warning.delete_farmer"></i18n>
+				<i18n-t keypath="warning.delete_farmer"></i18n-t>
 				<div class="flex">
 					<avatar :farmer="muteFarmer" />
 					<div class="messages card">
 						<div v-for="message in deleteMessages" :key="message.id">
 							<v-checkbox v-model="deletedMessages[message.id]" :hide-details="true">
-								<template v-slot:label>
+								<template #label>
 									<span v-html="message.content"></span>
 								</template>
 							</v-checkbox>
@@ -93,32 +91,32 @@
 				</div>
 				<v-checkbox v-if="isModerator && muteFarmer.color !== 'admin'" v-model="censorMute" label="Mettre en sourdine pour 1h" :hide-details="true" />
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="deleteDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="mute red" @click="deleteConfirm"><v-icon>mdi-delete</v-icon> Supprimer</div>
-			</div>
+			</template>
 		</popup>
 
-		<popup v-model="muteDialog" :width="500">
-			<v-icon slot="icon">mdi-gavel</v-icon>
-			<span slot="title">Censurer</span>
+		<popup v-model="muteDialog" :width="500" icon="mdi-gavel" title="Censurer">
 			<div v-if="muteFarmer" class="censor">
-				<i18n path="warning.mute_popup">
-					<b slot="farmer">{{ muteFarmer.name }}</b>
-				</i18n>
+				<i18n-t keypath="warning.mute_popup">
+					<template #farmer>
+						<b>{{ muteFarmer.name }}</b>
+					</template>
+				</i18n-t>
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="muteDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="mute red" @click="muteConfirm"><v-icon>mdi-gavel</v-icon> Censurer</div>
-			</div>
+			</template>
 		</popup>
 
 		<v-menu v-if="menuMessage && $store.state.farmer.verified" offset-y top :nudge-top="10" v-model="menuEmoji" :activator="menuEmojiActivator" content-class="emojis-dialog">
-			<div class="emojis">
+			<v-card class="emojis">
 				<span v-for="(emoji, e) in emojis" :key="e" class="emoji" :class="{selected: emoji === menuMessage.my_reaction}" @click="toggleReaction(emoji)">{{ emoji }}</span>
 				<span v-if="menuMessage.my_reaction && !emojis.includes(menuMessage.my_reaction)" class="emoji selected" @click="toggleReaction(menuMessage.my_reaction)">{{ menuMessage.my_reaction }}</span>
 				<emoji-picker @pick="toggleReaction" :close-on-selected="true" :classic="false"><v-icon class="more">mdi-dots-horizontal</v-icon></emoji-picker>
-			</div>
+			</v-card>
 		</v-menu>
 	</div>
 </template>
@@ -130,15 +128,17 @@
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
 	import { TeamMemberLevel } from '@/model/team'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { nextTick } from 'vue'
 	import ChatInput from './chat-input.vue'
 	import ChatMessageComponent from './chat-message.vue'
 	import EmojiPicker from './emoji-picker.vue'
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
 	import { Commands } from '@/model/commands'
 	import { formatEmojis } from '@/model/emojis'
+import { emitter } from '@/model/vue'
 
-	@Component({
+	@Options({
 		name: "chat",
 		components: { 'chat-input': ChatInput, 'chat-message': ChatMessageComponent, 'emoji-picker': EmojiPicker, ReportDialog }
 	})
@@ -205,13 +205,13 @@
 		}
 
 		created() {
-			this.$root.$on('chat', this.newMessage)
-			this.$root.$on('chat-history', this.chatHistory)
-			this.$root.$on('resize', this.updateScroll)
+			emitter.on('chat', this.newMessage)
+			emitter.on('chat-history', this.chatHistory)
+			emitter.on('resize', this.updateScroll)
 			if (store.state.wsconnected) {
 				this.update()
 			} else {
-				this.$root.$on('wsconnected', this.update)
+				emitter.on('wsconnected', this.update)
 			}
 		}
 
@@ -219,11 +219,11 @@
 			this.updateScroll()
 		}
 
-		beforeDestroy() {
-			this.$root.$off('chat', this.newMessage)
-			this.$root.$off('chat-history', this.chatHistory)
-			this.$root.$off('resize', this.updateScroll)
-			this.$root.$off('wsconnected', this.update)
+		beforeUnmount() {
+			emitter.off('chat', this.newMessage)
+			emitter.off('chat-history', this.chatHistory)
+			emitter.off('resize', this.updateScroll)
+			emitter.off('wsconnected', this.update)
 		}
 
 		newMessage(e: any) {
@@ -238,7 +238,7 @@
 
 		chatHistory(e: any) {
 			if (e === this.id && this.scrollMessage) {
-				Vue.nextTick(() => {
+				nextTick(() => {
 					const element = this.$el.querySelector('.m-' + this.scrollMessage) as HTMLElement
 					if (element) {
 						(this.$refs.messages as HTMLElement).scrollTop = element.offsetTop
@@ -325,7 +325,7 @@
 
 		read() {
 			if (!this.chat) { return }
-			Vue.nextTick(() => {
+			nextTick(() => {
 				if (!this.chat!.read) {
 					LeekWars.post('message/read', { conversation_id: this.chat!.id })
 				}
@@ -345,11 +345,11 @@
 			this.muteFarmer = message.farmer
 			this.censoredMessages = {}
 			if (message.censored === 0) {
-				Vue.set(this.censoredMessages, message.id, true)
+				this.censoredMessages[message.id] = true
 			}
 			for (const sub of message.subMessages) {
 				if (sub.censored === 0) {
-					Vue.set(this.censoredMessages, sub.id, true)
+					this.censoredMessages[sub.id] = true
 				}
 			}
 		}
@@ -359,10 +359,10 @@
 			this.deletedMessage = message
 			this.muteFarmer = message.farmer
 			this.deletedMessages = {}
-			Vue.set(this.deletedMessages, message.id, true)
+			this.deletedMessages[message.id] = true
 			if (message.subMessages) {
 				for (const sub of message.subMessages) {
-					Vue.set(this.deletedMessages, sub.id, true)
+					this.deletedMessages[sub.id] = true
 				}
 			}
 		}
@@ -399,7 +399,7 @@
 			this.menuMessage = message
 			this.menuActivator = activator.target
 			this.menuEmoji = false
-			Vue.nextTick(() => {
+			nextTick(() => {
 				this.menu = true
 			})
 		}
@@ -408,7 +408,7 @@
 			this.menuMessage = message
 			this.menuEmojiActivator = activator.target
 			this.menu = false
-			Vue.nextTick(() => {
+			nextTick(() => {
 				this.menuEmoji = true
 			})
 		}
@@ -452,12 +452,12 @@
 			const element = document.createElement('div')
 			element.innerHTML = message.content
 			const innerText = element.innerText.trim()
-			Vue.set(message, 'only_emojis', innerText.length === 0 || /^[\s\p{Emoji_Presentation}]+$/gmu.test(innerText))
+			message.only_emojis = innerText.length === 0 || /^[\s\p{Emoji_Presentation}]+$/gmu.test(innerText)
 			if (!('censored' in message)) {
-				Vue.set(message, 'censored', 0)
+				message.censored = 0
 			}
-			Vue.set(message, 'reactionDialog', false)
-			Vue.set(message, 'formatted', true)
+			message.reactionDialog = false
+			message.formatted = true
 			return message
 		}
 	}
@@ -590,7 +590,7 @@
 		contain: inherit;
 		overflow: inherit;
 	}
-	.emojis ::v-deep .chat-input-emoji {
+	.emojis:deep(.chat-input-emoji) {
 		position: relative;
 		display: inline-flex;
 	}

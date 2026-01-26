@@ -1,7 +1,7 @@
 <template>
 	<div class="fight-actions" @mouseover="mouseover">
-		<template v-for="(action, a) in actions">
-			<component :key="a" :is="ActionComponents[action.type]" :action="action" :a="a" />
+		<template v-for="(action, a) in actions" :key="a">
+			<component :is="ActionComponents[action.type]" :action="action" :a="a" :leeks="leeks" :report="report" :hasErrWarn="hasErrWarn" @goToTurn="goToTurn" />
 			<template v-if="displayLogs && (displayAlliesLogs || action.me) && action.logs.length">
 				<action-log v-for="(log, l) in action.logs" :key="a + 'l' + l" :log="log" :leeks="leeks" :action="a" :index="l" :lines="true" />
 			</template>
@@ -17,15 +17,15 @@
 	import { EffectType } from '@/model/effect'
 	import { Fight, Report } from '@/model/fight'
 	import { TEAM_COLORS } from '@/model/team'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import ActionEndFight from '../action/action-end-fight.vue'
 	import ActionLeekElement from './action-leek.vue'
 	import ActionLog from './report-log.vue'
 	import { ITEM_CATEGORY_NAME } from '@/model/item'
-import { fileSystem } from '@/model/filesystem'
-import router from '@/router'
+	import { fileSystem } from '@/model/filesystem'
+	import router from '@/router'
 
-	@Component({ name: "actions", components: {
+	@Options({ name: "actions", components: {
 		leek: ActionLeekElement,
 		'action-end-fight': ActionEndFight,
 		'action-log': ActionLog
@@ -43,8 +43,8 @@ import router from '@/router'
 		ActionType = ActionType
 		EffectType = EffectType
 		TEAM_COLORS = TEAM_COLORS
-		ActionComponents = ActionComponents
-		EffectComponents = EffectComponents
+		ActionComponents = Object.freeze(ActionComponents)
+		EffectComponents = Object.freeze(EffectComponents)
 		currentLink: Element | null = null
 		ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
 		fileSystem = fileSystem
@@ -53,9 +53,6 @@ import router from '@/router'
 			const element = document.getElementById('turn-' + turn)!
 			const sibling = element.parentElement!.nextElementSibling!
 			window.scrollTo(0, sibling.getBoundingClientRect().top + window.scrollY - 42)
-		}
-		formatTurns(turns: number) {
-			return turns === -1 ? '∞' : turns
 		}
 
 		findAction(e: MouseEvent) {

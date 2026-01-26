@@ -47,6 +47,7 @@ const LineOfSight = () => import(/* webpackChunkName: "[request]" */ `@/componen
 const History = () => import(/* webpackChunkName: "[request]" */ `@/component/history/history.${locale}.i18n`)
 const Items = () => import(/* webpackChunkName: "[request]" */ `@/component/items/items.${locale}.i18n`)
 const Leek = () => import(/* webpackChunkName: "[request]" */ `@/component/leek/leek.${locale}.i18n`)
+const LeekAsync = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/leek/leek.${locale}.i18n`))
 const Legal = () => import(/* webpackChunkName: "[request]" */ `@/component/legal/legal.${locale}.i18n`)
 const Login = () => import(/* webpackChunkName: "[request]" */ `@/component/login/login.${locale}.i18n`)
 const Market = () => import(/* webpackChunkName: "[request]" */ `@/component/market/market.${locale}.i18n`)
@@ -60,7 +61,7 @@ const PressKit = () => import(/* webpackChunkName: "[request]" */ `@/component/p
 const Ranking = () => import(/* webpackChunkName: "[request]" */ `@/component/ranking/ranking.${locale}.i18n`)
 const Report = () => import(/* webpackChunkName: "[request]" */ `@/component/report/report.${locale}.i18n`)
 const Settings = () => import(/* webpackChunkName: "[request]" */ `@/component/settings/settings.${locale}.i18n`)
-const Signup = () => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup.${locale}.i18n`)
+const Signup = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup.${locale}.i18n`))
 const Statistics = () => import(/* webpackChunkName: "[request]" */ `@/component/statistics/statistics.${locale}.i18n`)
 const SignupResult = () => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup-result.${locale}.i18n`)
 const TalentPage = () => import(/* webpackChunkName: "[request]" */ `@/component/talent/talent.${locale}.i18n`)
@@ -73,48 +74,45 @@ const Tutorial = () => import(/* webpackChunkName: "[request]" */ `@/component/t
 
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
-import { vueMain } from '@/model/vue'
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
-import Router, { Route, RouteConfig } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
+import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 import { scroll_to_hash } from './router-functions'
 import AdminComponents from './component/admin/admin-components.vue'
+import { defineAsyncComponent, defineComponent, h } from 'vue'
+import { vueMain } from './model/vue'
 
-@Component({
-	components: { signup: Signup, leek: Leek, messages: Messages },
-})
-class Home extends Vue {
-	public functional = true
-	get chatFirst() {
-		return LeekWars.mobile && localStorage.getItem('options/chat-first') === 'true'
-	}
-	public mounted() {
-		if (this.$store.state.connected && this.chatFirst) {
+const Home = defineComponent({
+	components: { signup: Signup, leek: LeekAsync, messages: Messages },
+	computed: {
+		chatFirst() {
+			return LeekWars.mobile && localStorage.getItem('options/chat-first') === 'true'
+		}
+	},
+	mounted() {
+		if (store.state.connected && this.chatFirst) {
 			const chatID = locale === 'fr' ? 1 : 2
 			this.$router.replace('/chat/' + chatID)
 		}
+	},
+	render() {
+		return store.state.connected ? h(LeekAsync) : h(Signup)
 	}
-	public render(h: any) {
-		return this.$store.state.connected ? h('leek') : h('signup')
-	}
-}
+})
 
-const connected = (to: Route, from: Route, next: any) => {
+const connected = (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) => {
 	if (!store.state.connected) {
 		next('/')
 	} else {
 		next()
 	}
 }
-const disconnected = (to: Route, from: Route, next: any) => {
+const disconnected = (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) => {
 	if (store.state.connected) {
 		next('/')
 	} else {
 		next()
 	}
 }
-
-Vue.use(Router)
 
 const routes = [
 	{ path: '/', component: Home },
@@ -215,10 +213,10 @@ const routes = [
 	{ path: '/trophies/:id', component: Trophies },
 	{ path: '/trophy/:code', component: TrophyPage },
 	// { path: '/workshop', component: Workshop },
-	{ path: '*', component: Error },
-] as RouteConfig[]
+	{ path: '/:pathMatch(.*)*', component: Error }, // Vue 3 catch-all route
+]
 
-if (process.env.VUE_APP_SOCIAL === 'true') {
+if (import.meta.env.VITE_SOCIAL !== 'false') {
 	routes.push(
 		{ path: '/forum', component: Forum, beforeEnter: connected },
 		{ path: '/forum/category-:category', component: ForumCategory },
@@ -231,7 +229,7 @@ if (process.env.VUE_APP_SOCIAL === 'true') {
 		{ path: '/chat/new/:farmer_id/:name/:avatar_changed', component: Messages, beforeEnter: connected },
 	)
 }
-if (process.env.VUE_APP_BANK === 'true') {
+if (import.meta.env.VITE_BANK !== 'false') {
 	routes.push(
 		{ path: '/bank', component: Bank, beforeEnter: connected },
 		{ path: '/bank/buy/:pack', component: BankBuy, beforeEnter: connected },
@@ -244,30 +242,52 @@ if (process.env.VUE_APP_BANK === 'true') {
 	)
 }
 
-const router = new Router({
-	mode: 'history',
-	base: process.env.BASE_URL,
+const router = createRouter({
+	history: createWebHistory(import.meta.env.BASE_URL),
 	routes,
-	scrollBehavior(to, from, savedPosition) {
+	async scrollBehavior(to, from, savedPosition) {
 		// console.log("scrollBehavior", to, from, savedPosition)
-		vueMain.$data.savedPosition = 0
+		const vm = vueMain
+		if (vm) {
+			vm.$data.savedPosition = 0
+		}
 		if (to.hash) {
 			setTimeout(() => {
 				scroll_to_hash(to.hash, to)
 			}, 100)
-			return null
+			return false
 		}
 		if (savedPosition && !from.hash) {
-			vueMain.$data.savedPosition = savedPosition.y
+			if (vm) {
+				vm.$data.savedPosition = savedPosition.top
+			}
 		} else if (LeekWars.mobile && !to.meta!.noscrollapp) {
-			return { x: 0, y: 0 }
+			return { left: 0, top: 0 }
 		} else if (!to.meta!.noscrollapp && !to.meta!.noscroll) {
-			return { x: 0, y: 0 }
+			return { left: 0, top: 0 }
 		}
+		return false
 	},
 })
 
-router.beforeEach((to: Route, from: Route, next: any) => {
+// Handle chunk loading errors (e.g., after deployment when old chunks no longer exist)
+router.onError((error, to) => {
+	if (
+		error.message.includes('Failed to fetch dynamically imported module') ||
+		error.message.includes('Loading chunk') ||
+		error.message.includes('Loading CSS chunk') ||
+		error.name === 'ChunkLoadError'
+	) {
+		// Prevent infinite reload loop
+		const reloadKey = 'chunk-reload-' + to.fullPath
+		if (!sessionStorage.getItem(reloadKey)) {
+			sessionStorage.setItem(reloadKey, '1')
+			window.location.href = to.fullPath
+		}
+	}
+})
+
+router.beforeEach((to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) => {
 
 	LeekWars.splitShowList()
 	LeekWars.actions = []

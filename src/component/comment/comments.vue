@@ -4,18 +4,18 @@
 		<div v-else class="comments">
 			<div v-for="(comment, c) in comments" :key="c" class="comment">
 				<router-link :to="'/farmer/' + comment.farmer.id">
-					<rich-tooltip-farmer :id="comment.farmer.id" v-slot="{ on }">
-						<avatar :farmer="comment.farmer" :on="on" />
+					<rich-tooltip-farmer :id="comment.farmer.id">
+						<avatar :farmer="comment.farmer" />
 					</rich-tooltip-farmer>
 				</router-link>
 				<div class="content">
 					<div class="author">
-						<rich-tooltip-farmer :id="comment.farmer.id" v-slot="{ on }">
-							<router-link :to="'/farmer/' + comment.farmer.id"><b v-on="on">{{ comment.farmer.name }}</b></router-link>
+						<rich-tooltip-farmer :id="comment.farmer.id">
+							<router-link :to="'/farmer/' + comment.farmer.id"><b>{{ comment.farmer.name }}</b></router-link>
 						</rich-tooltip-farmer>
 					</div>
 					<div v-emojis class="text" v-text="comment.comment"></div>
-					<div class="date">{{ comment.date | date }}</div>
+					<div class="date">{{ $filters.date(comment.date) }}</div>
 				</div>
 			</div>
 		</div>
@@ -29,11 +29,11 @@
 	import { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import '@/model/emojis'
 
-	@Component({
+	@Options({
 		name: 'comments',
 		components: { 'chat-input': ChatInput, RichTooltipFarmer }
 	})

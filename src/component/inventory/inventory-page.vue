@@ -31,15 +31,17 @@
 		<div class="column">
 			<inventory />
 			<panel class="bottom">
-				<div slot="content" class="content">
-					<!-- <workshop /> -->
-					<div class="forge-wrapper">
-						<forge></forge>
+				<template #content>
+					<div class="content">
+						<!-- <workshop /> -->
+						<div class="forge-wrapper">
+							<forge></forge>
+						</div>
+						<div class="schemes">
+							<scheme v-for="(scheme, s) in schemes" :key="s" class="scheme" :scheme="scheme" :show-result="true" :show-price="false"></scheme>
+						</div>
 					</div>
-					<div class="schemes">
-						<scheme v-for="(scheme, s) in schemes" :key="s" class="scheme" :scheme="scheme" :show-result="true" :show-price="false"></scheme>
-					</div>
-				</div>
+				</template>
 			</panel>
 		</div>
 	</div>
@@ -48,17 +50,19 @@
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
-	import Inventory from './inventory.vue'
+	import { Options, Vue } from 'vue-property-decorator'
+	const Inventory = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/inventory/inventory.${locale}.i18n`))
 	import SchemeView from '../market/scheme.vue'
 	import Forge from '../forge/forge.vue'
 	import { store } from '@/model/store'
+	import { defineAsyncComponent } from 'vue'
+	import { locale } from '@/locale'
 
 	enum Sort {
 		DATE, PRICE, PRICE_LOT, QUANTITY, /*NAME, */ LEVEL, RARITY, INGREDIENT_COUNT
 	}
 
-	@Component({ name: 'inventory-page', i18n: {}, mixins: [...mixins], components: {
+	@Options({ name: 'inventory-page', i18n: {}, mixins: [...mixins], components: {
 		Inventory,
 		'scheme': SchemeView,
 		'forge': Forge
@@ -85,7 +89,7 @@
 			LeekWars.box = true
 		}
 
-		beforeDestroy() {
+		beforeUnmount() {
 			LeekWars.footer = true
 			LeekWars.box = false
 		}

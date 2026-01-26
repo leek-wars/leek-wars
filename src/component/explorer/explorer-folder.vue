@@ -11,10 +11,10 @@
 <script lang="ts">
 	import { fileSystem } from '@/model/filesystem'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import { Folder } from '../editor/editor-item'
 
-	@Component({ name: 'explorer-folder', i18n: {} })
+	@Options({ name: 'explorer-folder', i18n: {} })
 	export default class ExplorerFolder extends Vue {
 		@Prop() folder!: Folder
 		fileSystem = fileSystem

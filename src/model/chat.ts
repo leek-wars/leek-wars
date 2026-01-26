@@ -1,6 +1,4 @@
 import { Farmer } from '@/model/farmer'
-import { i18n } from '@/model/i18n'
-import Vue from 'vue'
 
 enum ChatType { GLOBAL, TEAM, PM, GROUP }
 
@@ -21,6 +19,7 @@ class ChatMessage {
 	only_emojis!: boolean
 	mentions!: Farmer[]
 	formatted: boolean = false
+	reactionDialog: boolean = false
 }
 
 class ChatWindow {
@@ -60,10 +59,10 @@ class Chat {
 		// console.log("chat add", message, this)
 		this.prepare(message)
 		this.messages.push(message)
-		Vue.set(message, 'subMessages', [])
+		message.subMessages = []
 
 		if (!this.messages_by_day[message.day]) {
-			Vue.set(this.messages_by_day, message.day, [])
+			this.messages_by_day[message.day] = []
 			this.days.push(this.messages_by_day[message.day])
 		}
 		const day_messages = this.messages_by_day[message.day]
@@ -74,7 +73,7 @@ class Chat {
 				return
 			}
 		}
-		Vue.set(this, 'last_message', message.content.replace(/<br>/g, '\n'))
+		this.last_message = message.content.replace(/<br>/g, '\n')
 		day_messages.push(message)
 	}
 
@@ -84,7 +83,7 @@ class Chat {
 		this.messages.unshift(message)
 
 		if (!this.messages_by_day[message.day]) {
-			Vue.set(this.messages_by_day, message.day, [])
+			this.messages_by_day[message.day] = []
 			this.days.unshift(this.messages_by_day[message.day])
 		}
 		this.messages_by_day[message.day].unshift(message)
@@ -92,9 +91,9 @@ class Chat {
 
 	prepare(message: ChatMessage) {
 
-		Vue.set(message, 'day', this.getDay(message.date))
+		message.day = this.getDay(message.date)
 		if (!message.reactions) {
-			Vue.set(message, 'reactions', {})
+			message.reactions = {}
 		}
 	}
 

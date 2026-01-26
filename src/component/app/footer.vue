@@ -91,10 +91,11 @@
 <script lang="ts">
 	import { locale } from '@/locale'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
-	const Didactitiel = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`)
+	import { defineAsyncComponent } from 'vue'
+	import { Options, Vue } from 'vue-property-decorator'
+	const Didactitiel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`))
 
-	@Component({ name: 'lw-footer', components: { Didactitiel } })
+	@Options({ name: 'lw-footer', components: { Didactitiel } })
 	export default class Footer extends Vue {
 
 		didactitiel: boolean = false

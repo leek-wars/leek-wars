@@ -4,8 +4,8 @@
 			<div>
 				<h1>{{ $t('title') }}</h1>
 				<v-menu offset-y>
-					<template v-slot:activator="{ on }">
-						<div class="forum-language info" v-on="on">
+					<template #activator="{ props }">
+						<div class="forum-language info" v-bind="props">
 							<flag v-for="l in activeLanguages" :key="l" :code="LeekWars.languages[l].country" :clickable="false" />
 							<img width="10" src="/image/selector.png">
 						</div>
@@ -28,7 +28,7 @@
 					</div>
 				</router-link>
 				<div class="tab action disabled" icon="search" link="/search">
-					<img class="search-icon" src="image/search.png" @click="search">
+					<img class="search-icon" src="/image/search.png" @click="search">
 					<input v-model="searchQuery" type="text" class="search-input" @keyup.enter="search">
 				</div>
 			</div>
@@ -63,8 +63,8 @@
 							<span>{{ $t('n_messages', [LeekWars.formatNumber(category.messages)]) }}</span>
 						</div>
 					</div>
-					<div v-if="!LeekWars.mobile" class="num-topics">{{ category.topics | number }}</div>
-					<div v-if="!LeekWars.mobile" class="num-messages">{{ category.messages | number }}</div>
+					<div v-if="!LeekWars.mobile" class="num-topics">{{ $filters.number(category.topics) }}</div>
+					<div v-if="!LeekWars.mobile" class="num-messages">{{ $filters.number(category.messages) }}</div>
 				</router-link>
 			</template>
 		</panel>
@@ -72,22 +72,22 @@
 		<chat-panel toggle="forum/chat" chat="forum" :height="400" />
 
 		<panel icon="mdi-account-supervisor">
-			<span slot="title">
+			<template #title>
 				<span v-if="connected_farmers.length">{{ $t('connected_farmers', [$store.state.connected_farmers]) }}</span>
-			</span>
-			<div slot="actions">
+			</template>
+			<template #actions>
 				<div class="button flat" @click="expandFarmers = !expandFarmers">
 					<v-icon v-if="expandFarmers">mdi-chevron-down</v-icon>
 					<v-icon v-else>mdi-chevron-up</v-icon>
 				</div>
-			</div>
+			</template>
 			<loader v-if="!connected_farmers.length" />
 			<div v-else :class="{expanded: expandFarmers}" class="connected-farmers">
-				<template v-for="(farmer, f) in connected_farmers">
+				<template v-for="(farmer, f) in connected_farmers" :key="farmer.id">
 					<template v-if="f > 0">, </template>
-					<rich-tooltip-farmer :id="farmer.id" :key="farmer.id" v-slot="{ on }">
+					<rich-tooltip-farmer :id="farmer.id"  v-slot="{ props }">
 						<router-link :to="'/farmer/' + farmer.id">
-							<span :class="farmer.class" v-on="on">{{ farmer.name }}</span>
+							<span :class="farmer.class" v-bind="props">{{ farmer.name }}</span>
 						</router-link>
 					</rich-tooltip-farmer>
 				</template>
@@ -117,15 +117,17 @@
 </template>
 
 <script lang="ts">
-	const ChatPanel = () => import(/* webpackChunkName: "chat" */ `@/component/chat/chat-panel.vue`)
+	const ChatPanel = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat-panel.vue`))
 	import { Farmer } from '@/model/farmer'
 	import { Language, LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import { mixins } from '@/model/i18n'
 	import { store } from '@/model/store'
+	import { defineAsyncComponent } from 'vue'
+import { emitter } from '@/model/vue'
 
-	@Component({ name: 'forum', i18n: {}, mixins: [...mixins], components: { ChatPanel, RichTooltipFarmer } })
+	@Options({ name: 'forum', i18n: {}, mixins: [...mixins], components: { ChatPanel, RichTooltipFarmer } })
 	export default class Forum extends Vue {
 
 		categories: any = null
@@ -143,14 +145,14 @@
 		created() {
 			const languages = (localStorage.getItem('forum/languages') as string || this.$i18n.locale).split(',')
 			for (const l in LeekWars.languages) {
-				Vue.set(this.forumLanguages, l, false)
+				this.forumLanguages[l] = false
 			}
 			for (const l of languages) {
-				Vue.set(this.forumLanguages, l, true)
+				this.forumLanguages[l] = true
 			}
 			LeekWars.get('forum/get-categories/' + this.activeLanguages).then(data => {
 				this.categories = data.categories
-				this.$root.$emit('loaded')
+				emitter.emit('loaded')
 				this.connected_farmers = data.farmers
 				store.commit('connected-count', data.farmers.length)
 				this.connected_languages = data.languages
@@ -213,7 +215,7 @@
 	.search-icon {
 		cursor: pointer;
 	}
-	.panel.first ::v-deep .content {
+	.panel.first :deep(.content) {
 		padding: 5px;
 	}
 	.header.category {

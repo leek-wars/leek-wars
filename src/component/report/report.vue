@@ -1,19 +1,21 @@
 <template>
 	<error v-if="error" :title="$t('title')" :message="$t('not_found')" />
 	<error v-else-if="generating" :title="$t('title')" :message="$t('not_generated_yet')">
-		<v-btn slot="button" large color="primary" @click="update">
+		<template #button>
+			<v-btn large color="primary" @click="update">
 			<v-icon>mdi-refresh</v-icon>&nbsp;<span>{{ $t('refresh') }}</span>
 		</v-btn>
+		</template>
 	</error>
 	<div class="page" v-else>
 		<div class="page-header page-bar">
 			<div>
 				<h1>{{ $t('title') }}</h1>
-				<div v-if="fight" class="info">{{ fight.date | date }}</div>
+				<div v-if="fight" class="info">{{ $filters.date(fight.date) }}</div>
 			</div>
 			<div class="tabs">
 				<div v-if="report && fight && $store.getters.admin" class="tab disabled">
-					{{ (fight.size / 1000) | number }} Ko
+					{{ $filters.number(fight.size / 1000) }} Ko
 				</div>
 				<a v-if="report && (errors.length > 0 || warnings.length > 0)" href="#errors" class="tab">
 					<span v-if="errors.length > 0"><v-icon class="error">mdi-alert-circle</v-icon> {{ errors.length }} </span>
@@ -26,8 +28,9 @@
 		</div>
 
 		<panel class="first">
-			<loader v-if="!report" slot="content" />
-			<div v-else slot="content" class="content">
+			<template #content>
+				<loader v-if="!report" />
+				<div v-else class="content">
 				<div v-if="fight.too_long" class="too-long">
 					{{ $t('generation_too_long') }}
 				</div>
@@ -47,7 +50,9 @@
 									<!-- <th>Opérations</th> -->
 									<!-- <th v-if="$store.getters.admin" class="gain">Time</th> -->
 								</tr>
-								<report-leek-row v-for="leek in report.leeks" v-if="!leek.summon" :key="leek.id" :leek="leek" :fight="fight" />
+								<template v-for="leek in report.leeks" :key="leek.id">
+									<report-leek-row v-if="!leek.summon" :leek="leek" :fight="fight" />
+								</template>
 							</table>
 						</div>
 					</div>
@@ -63,7 +68,7 @@
 					</div>
 				</div>
 
-				<center class="buttons">
+				<div class="center buttons">
 					<router-link :to="'/fight/' + fight.id">
 						<v-btn>
 							<v-icon>mdi-replay</v-icon>
@@ -111,7 +116,7 @@
 							</router-link>
 						</span>
 					</span>
-				</center>
+				</div>
 
 				<div class="seed"><v-icon>mdi-seed</v-icon>{{ $t('seed', [fight.seed]) }}</div>
 
@@ -130,7 +135,8 @@
 						</router-link>
 					</div>
 				</template>
-			</div>
+				</div>
+			</template>
 		</panel>
 
 		<panel v-if="fight" :title="$t('main.comments') + ' (' + fight.comments.length + ')'" icon="mdi-comment-multiple-outline">
@@ -138,7 +144,7 @@
 		</panel>
 
 		<panel :title="$t('life_chart')" toggle="report/graph" icon="mdi-chart-line">
-			<template slot="actions">
+			<template #actions>
 				<div v-if="fight && fight.type === FightType.TEAM" class="button flat" @click="toggleTurrets">
 					<img v-if="turrets" src="/image/icon/turret.png">
 					<img v-else src="/image/icon/turret_off.png">
@@ -157,7 +163,7 @@
 					<div class="spacer"></div>
 					<v-switch v-model="chartDisplaySummons" :label="$t('display_summons')" :hide-details="true" />
 				</div>
-				<chartist ref="chart" :data="chartData" :options="chartOptions" :event-handlers="chartEvents" ratio="ct-major-eleventh" class="chart" :class="{long: statistics && statistics.lives.length >= 30}" type="Line" />
+				<Line ref="chart" :data="chartData" :options="chartOptions" :event-handlers="chartEvents" ratio="ct-major-eleventh" class="chart" :class="{long: statistics && statistics.lives.length >= 30}" />
 				<div v-show="chartTooltipValue" ref="chartTooltip" :style="{top: chartTooltipY + 'px', left: chartTooltipX + 'px'}" class="chart-tooltip v-tooltip__content top" v-html="chartTooltipValue"></div>
 			</div>
 		</panel>
@@ -166,14 +172,14 @@
 			<loader v-if="!loaded" />
 			<template v-else>
 				<div class="damage-options">
-					<v-radio-group v-model="damageChartType" :row="true" :dense="true" :hide-details="true">
+					<v-radio-group v-model="damageChartType" :inline="true" :hide-details="true">
 						<v-radio :value="0" :label="$t('inflicted_damage')" />
 						<v-radio :value="1" :label="$t('received_damage')" />
 						<v-radio :value="2" :label="$t('heal')" />
 						<v-radio :value="3" label="Tank" />
 					</v-radio-group>
 					<div class="spacer"></div>
-					<v-radio-group v-if="fight.type !== FightType.BATTLE_ROYALE && fight.type !== FightType.SOLO" v-model="damagesTeams" :row="true" :dense="true" :hide-details="true">
+					<v-radio-group v-if="fight.type !== FightType.BATTLE_ROYALE && fight.type !== FightType.SOLO" v-model="damagesTeams" :inline="true" :hide-details="true">
 						<v-radio :value="0" label="Entités" />
 						<v-radio :value="1" label="Équipes" />
 					</v-radio-group>
@@ -181,15 +187,15 @@
 				</div>
 				<div class="damages">
 					<div class="damage-chart">
-						<chartist :data="damageChartDamage" :options="damageChartOptions" :class="{heal: damageChartType === 2, tank: damageChartType === 3}" class="right" type="Pie" />
+						<Doughnut :data="damageChartDamage" :options="damageChartOptions" :class="{heal: damageChartType === 2, tank: damageChartType === 3}" class="right" />
 						<div class="legend">
-							<div v-for="(damage, d) in damageChartDamage.series" :key="d">
-								<span :style="{color: legends[d]}">{{ $t('stat_' + damageChartDamage.labels[d]) }}</span> <div class="value">{{ damage | number }}</div>
+							<div v-for="(damage, d) in damageChartDamage.datasets[0].data" :key="d">
+								<span :style="{color: legends[d]}">{{ $t('stat_' + damageChartDamage.labels[d]) }}</span> <div class="value">{{ $filters.number(damage) }}</div>
 							</div>
 						</div>
 					</div>
 					<div class="damages-bars" :style="{height: (damagesBarsHeight - 10) + 'px'}">
-						<chartist :data="damagesBarsData" :options="damagesBarsOptions" :event-handlers="damagesBarsEvents" :class="{heal: damageChartType === 2, tank: damageChartType === 3}" :style="{height: damagesBarsHeight + 'px'}" class="chart" type="Bar" />
+						<Bar :data="damagesBarsData" :options="damagesBarsOptions" :event-handlers="damagesBarsEvents" :class="{heal: damageChartType === 2, tank: damageChartType === 3}" :style="{height: damagesBarsHeight + 'px'}" class="chart" />
 					</div>
 				</div>
 			</template>
@@ -219,7 +225,7 @@
 		</panel>
 
 		<panel v-if="hasErrWarn" id="errors" class="warnings-error" toggle="report/warnings-errors" icon="mdi-alert">
-			<template slot="title">{{ $t('errors_warnings') }} ({{ errors.length + warnings.length }})</template>
+			<template #title>{{ $t('errors_warnings') }} ({{ errors.length + warnings.length }})</template>
 			<div class="logs">
 				<div class="turn">
 					<div id="turn-0" class="black">
@@ -235,9 +241,11 @@
 					</div>
 				</div>
 				<div v-if="warnings.length" class="title">
-					<i18n path="n_warnings">
-						<b slot="n">{{ warnings.length }}</b>
-					</i18n>
+					<i18n-t keypath="n_warnings">
+						<template #n>
+						<b>{{ warnings.length }}</b>
+					</template>
+					</i18n-t>
 				</div>
 				<div class="errors" @mouseover="mouseover">
 					<div v-for="(w, i) in warnings" :key="i" class="log warning" :a="w.action" :i="w.index">
@@ -269,19 +277,29 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { TEAM_COLORS } from '@/model/team'
-	import Chartist from 'chartist'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import ActionsElement from './report-actions.vue'
 	import ReportBlock from './report-block.vue'
 	import ReportLeekRow from './report-leek-row.vue'
-	const ReportStatistics = () => import(/* webpackChunkName: "[request]" */ `@/component/report/report-statistics.${locale}.i18n`)
+	const ReportStatistics = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/report/report-statistics.${locale}.i18n`))
 	import { FightStatistics, StatisticsEntity } from './statistics'
-	import(/* webpackChunkName: "chartist" */ /* webpackMode: "eager" */ "@/chartist-wrapper")
-	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
 	import Comments from '@/component/comment/comments.vue'
 	import { CHIPS } from '@/model/chips'
+	import { emitter } from '@/model/vue'
+	import { defineAsyncComponent } from 'vue'
+	import { Bar, Doughnut, Line } from 'vue-chartjs'
 
-	@Component({ name: 'report', i18n: {}, mixins: [...mixins], components: { actions: ActionsElement, ReportLeekRow, ReportBlock, ReportStatistics, 'lw-map': Map, Comments } })
+	@Options({ name: 'report', i18n: {}, mixins: [...mixins], components: {
+		actions: ActionsElement,
+		ReportLeekRow,
+		ReportBlock,
+		ReportStatistics,
+		'lw-map': Map,
+		Comments,
+		Doughnut,
+		Bar,
+		Line,
+	} })
 	export default class ReportPage extends Vue {
 		TEAM_COLORS = TEAM_COLORS
 		fight: Fight | null = null
@@ -322,20 +340,30 @@
 		damageChartDamage: any = {}
 		damageChartOptions = {
 			donut: true,
-			donutWidth: 38,
-			startAngle: 90,
-			showLabel: false
+			cutout: '70%',
+			rotation: 90,
+			showLabel: false,
+			plugins: { legend: { display: false } },
 		}
 		damagesBarsData: any = {}
 		damagesBarsOptions = {
-			stackBars: true,
-			horizontalBars: true,
-			showLabel: true,
-			chartPadding: {
-				top: 10,
-				right: 35,
-				bottom: 0,
-				left: 90
+			// stackBars: true,
+			// horizontalBars: true,
+			// showLabel: true,
+			// chartPadding: {
+			// 	top: 10,
+			// 	right: 35,
+			// 	bottom: 0,
+			// 	left: 90
+			// },
+			barThickness: 15,
+			plugins: { legend: { display: false } },
+			indexAxis: 'y',
+			scales: {
+				y: {
+					stacked: true,
+					reverse: true,
+				},
 			}
 		}
 		damagesTeams: number = 0
@@ -493,14 +521,17 @@
 					title += this.fight.team1_name + " vs " + this.fight.team2_name
 				}
 				LeekWars.setTitle(title)
-				this.$root.$emit('loaded')
+				emitter.emit('loaded')
 				this.loaded = true
 			})
 			.error(error => this.error = true)
 		}
 
-		created() {
-			this.$root.$on('keyup', this.keyup)
+		async created() {
+			emitter.on('keyup', this.keyup)
+
+			const fightMessages = await import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
+			i18n.global.mergeLocaleMessage(locale, { fight: fightMessages.default })
 		}
 
 		keyup(e: KeyboardEvent) {
@@ -510,8 +541,8 @@
 			}
 		}
 
-		beforeDestroy() {
-			this.$root.$off('keyup', this.keyup)
+		beforeUnmount() {
+			emitter.off('keyup', this.keyup)
 		}
 
 		processLogs() {
@@ -660,16 +691,28 @@
 				series = series.filter((value, index) => this.statistics!.entities[index].leek.type !== 2)
 			}
 			this.chartData = {
-				series
+				datasets: series.map((s, i) => ({
+					data: s,
+					tension: this.smooth ? 0.2 : 0,
+					borderColor: TEAM_COLORS[this.filtered_entities[i].leek.team - 1]
+				}))
 			}
 			this.chartOptions = {
-				showPoint: false,
-				lineSmooth: this.smooth,
-				fullWidth: true,
-				fullHeight: true,
-				axisX: {
-					type: Chartist.AutoScaleAxis,
-					onlyInteger: true,
+				plugins: { legend: { display: false } },
+				// axisX: {
+				// 	// type: Chartist.AutoScaleAxis,
+				// 	// onlyInteger: true,
+				// }
+				aspectRatio: 2.66,
+				elements: { point: { pointStyle: false } },
+				scales: {
+					x: {
+						type: 'linear',
+						position: 'bottom'
+					},
+					y: {
+						type: 'linear'
+					}
 				}
 			}
 			this.chartEvents = [{
@@ -795,9 +838,11 @@
 				series.push(entities.map(e => e[v]))
 			}
 			this.damageEntities = entities
+			const colors = this.damageChartType === 0 || this.damageChartType === 1 ? ['#e22424', '#a017d6', '#41d3ff', '#38e9ae', '#f28dff'] : this.damageChartType === 2 ? ['#5fad1b', '#e22424', '#38e9ae'] : ['orange']
+
 			this.damagesBarsData = {
 				labels: entities.map(e => e[0]),
-				series
+				datasets: series.map((s, i) => ({ label: entities[i], data: s, stack: 'total', backgroundColor: colors[i] }) )
 			}
 			this.damagesBarsHeight = Math.max(370, entities.length * 25)
 			this.damagesBarsEvents = [{
@@ -834,7 +879,10 @@
 			}
 			this.damageChartDamage = {
 				labels,
-				series: chartSeries
+				datasets: [{
+					data: chartSeries,
+					backgroundColor: colors
+				}]
 			}
 			// setTimeout(() => {
 			// 	this.$el.querySelectorAll('.damage-chart').forEach((chart, i) => {
@@ -989,7 +1037,7 @@
 		display: flex;
 		align-items: center;
 		gap: 4px;
-		&::v-deep a {
+		&:deep(a) {
 			cursor: pointer;
 		}
 	}
@@ -1009,10 +1057,7 @@
 		position: relative;
 	}
 	.chart {
-		margin-left: -10px;
-		margin-right: -4px;
-		margin-bottom: -16px;
-		::v-deep .ct-line {
+		:deep(.ct-line) {
 			stroke-width: 3px;
 		}
 		.ct-label.ct-horizontal {
@@ -1109,99 +1154,99 @@
 			width: 220px;
 			height: 220px;
 		}
-		::v-deep .ct-label {
+		:deep(.ct-label) {
 			font-size: 13px;
 			fill: rgba(0,0,0,.7);
 			font-weight: bold;
 			pointer-events: none;
 		}
-		::v-deep .ct-series path {
+		:deep(.ct-series path) {
 			cursor: pointer;
 			stroke-width: 38px;
 			transition: stroke-width 0.1s ease;
 		}
-		::v-deep .ct-series.selected path {
+		:deep(.ct-series.selected path) {
 			stroke-width: 48px;
 		}
-		::v-deep .ct-series-a path {
+		:deep(.ct-series-a path) {
 			stroke: #e22424;
 		}
-		::v-deep .ct-series-b path {
+		:deep(.ct-series-b path) {
 			stroke: #a017d6;
 		}
-		::v-deep .ct-series-c path {
+		:deep(.ct-series-c path) {
 			stroke: #32b2da;
 		}
-		::v-deep .ct-series-d path {
+		:deep(.ct-series-d path) {
 			stroke: #38e9ae;
 		}
-		::v-deep .ct-series-e path {
+		:deep(.ct-series-e path) {
 			stroke: #f28dff;
 		}
 		.heal {
-			::v-deep .ct-series-a path {
+			:deep(.ct-series-a path) {
 				stroke: #5fad1b;
 			}
-			::v-deep .ct-series-b path {
+			:deep(.ct-series-b path) {
 				stroke: #e22424;
 			}
-			::v-deep .ct-series-c path {
+			:deep(.ct-series-c path) {
 				stroke: #38e9ae;
 			}
 		}
 		.tank {
-			::v-deep .ct-series-a path {
+			:deep(.ct-series-a path) {
 				stroke: orange;
 			}
 		}
 	}
 	.damages-bars {
 		flex: 1.8;
-		width: 100%;
+    	min-width: 0;
 		height: 356px;
 		.chart {
 			height: 380px;
 		}
-		::v-deep .ct-bar {
+		:deep(.ct-bar) {
 			stroke-width: 15px;
 		}
-		::v-deep .ct-series-a line {
+		:deep(.ct-series-a line) {
 			stroke: #e22424;
 		}
-		::v-deep .ct-series-b line {
+		:deep(.ct-series-b line) {
 			stroke: #a017d6;
 		}
-		::v-deep .ct-series-c line {
+		:deep(.ct-series-c line) {
 			stroke: #41d3ff;
 		}
-		::v-deep .ct-series-d line {
+		:deep(.ct-series-d line) {
 			stroke: #38e9ae;
 		}
-		::v-deep .ct-series-e line {
+		:deep(.ct-series-e line) {
 			stroke: #f28dff;
 		}
 		.heal {
-			::v-deep .ct-series-a line {
+			:deep(.ct-series-a line) {
 				stroke: #5fad1b;
 			}
-			::v-deep .ct-series-b line {
+			:deep(.ct-series-b line) {
 				stroke: #e22424;
 			}
-			::v-deep .ct-series-c line {
+			:deep(.ct-series-c line) {
 				stroke: #38e9ae;
 			}
 		}
 		.tank {
-			::v-deep .ct-series-a line {
+			:deep(.ct-series-a line) {
 				stroke: orange;
 			}
 		}
-		::v-deep .total {
+		:deep(.total) {
 			font-weight: 500;
 			font-size: 14px;
 			fill: var(--text-color-secondary);
 		}
-		::v-deep .ct-label.ct-vertical {
+		:deep(.ct-label.ct-vertical) {
 			color: var(--text-color-secondary);
 			white-space: nowrap;
 		}
@@ -1257,7 +1302,7 @@
 			}
 		}
 	}
-	::v-deep .turn {
+	:deep(.turn) {
 		position: sticky;
 		top: 0;
 		background: var(--background);

@@ -1,7 +1,7 @@
 <template lang="html">
 	<div class="tabs-wrapper" :class="{active}">
 		<div ref="list" class="list" @wheel.prevent="mousewheel">
-			<div v-for="(ai, i) in tabs" ref="tabs" :key="ai" :class="{selected: ai === current, modified: fileSystem.ais[ai]?.modified}" :title="fileSystem.ais[ai]?.path" class="tab" @click="click($event, fileSystem.ais[ai])" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(ai)">
+			<div v-for="(ai, i) in tabs" ref="tabsEl" :key="ai" :class="{selected: ai === current, modified: fileSystem.ais[ai]?.modified}" :title="fileSystem.ais[ai]?.path" class="tab" @click="click($event, fileSystem.ais[ai])" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(ai)">
 				<div class="name">
 					<v-icon v-if="fileSystem.ais[ai]?.errors" class="icon error">mdi-close-circle</v-icon>
 					<v-icon v-else-if="fileSystem.ais[ai]?.warnings" class="icon warning">mdi-alert-circle</v-icon>
@@ -14,25 +14,16 @@
 				</span>
 			</div>
 		</div>
-		<v-menu ref="menu" :key="currentI" v-model="menu" :activator="activator" offset-y @input="menuChange">
+		<v-menu ref="menu" :key="currentI" v-model="menuOpened" :activator="activator" offset-y @update:model-value="menuChange">
 			<v-list class="menu" :dense="true">
-				<v-list-item v-ripple @click="close(tabs[currentI])">
-					<v-icon>mdi-close-box-outline</v-icon>
-					<v-list-item-content>
-						<v-list-item-title>{{ $t('close') }}</v-list-item-title>
-					</v-list-item-content>
+				<v-list-item v-ripple @click="close(tabs[currentI])" prepend-icon="mdi-close-box-outline">
+					<v-list-item-title>{{ $t('close') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-ripple @click="closeOthers(currentAI)">
-					<v-icon>mdi-close-box-multiple-outline</v-icon>
-					<v-list-item-content>
-						<v-list-item-title>{{ $t('close_others') }}</v-list-item-title>
-					</v-list-item-content>
+				<v-list-item v-ripple @click="closeOthers(currentAI)" prepend-icon="mdi-close-box-multiple-outline">
+					<v-list-item-title>{{ $t('close_others') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-if="!splitted" v-ripple @click="split()">
-					<v-icon>mdi-dock-right</v-icon>
-					<v-list-item-content>
-						<v-list-item-title>{{ $t('split') }}</v-list-item-title>
-					</v-list-item-content>
+				<v-list-item v-if="!splitted" v-ripple @click="split()" prepend-icon="mdi-dock-right">
+					<v-list-item-title>{{ $t('split') }}</v-list-item-title>
 				</v-list-item>
 			</v-list>
 		</v-menu>
@@ -42,15 +33,16 @@
 <script lang="ts">
 	import { AI } from '@/model/ai'
 	import { mixins } from '@/model/i18n'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { fileSystem } from '@/model/filesystem'
+	import { nextTick } from 'vue'
 
 	class Tab {
 		public id!: number
 		public ai!: AI
 	}
 
-	@Component({ name: 'editor-tabs', i18n: {}, mixins: [...mixins] })
+	@Options({ name: 'editor-tabs', i18n: {}, mixins: [...mixins] })
 	export default class EditorTabs extends Vue {
 
 		@Prop({required: true}) ais!: AI[]
@@ -63,7 +55,7 @@
 		fileSystem = fileSystem
 		loaded: boolean = false
 		tabs: number[] = []
-		menu: boolean = false
+		menuOpened: boolean = false
 		activator: any = null
 		currentI: number = 0
 		currentAI: AI | null = null
@@ -85,11 +77,11 @@
 
 		@Watch('$route.params')
 		update() {
-			Vue.nextTick(() => {
+			nextTick(() => {
 				const list = (this.$refs.list as HTMLElement)
 				for (let i = 0; i < this.tabs.length; ++i) {
 					if (this.tabs[i] === this.current) {
-						const tab = (this.$refs.tabs as HTMLElement[])[i]
+						const tab = (this.$refs.tabsEl as HTMLElement[])[i]
 						if (tab && tab.offsetLeft < list.scrollLeft) {
 							list.scrollLeft = tab.offsetLeft
 						} else if (tab && tab.offsetLeft + tab.clientWidth - list.scrollLeft > list.clientWidth) {
@@ -132,10 +124,10 @@
 		openMenu(i: number) {
 			this.currentI = i
 			this.currentAI = fileSystem.ais[this.tabs[i]]
-			this.$nextTick(() => {
-				this.activator = (this.$refs.tabs as Vue[])[i]
-				this.$nextTick(() => {
-					this.menu = true
+			nextTick(() => {
+				this.activator = (this.$refs.tabsEl as HTMLElement[])[i]
+				nextTick(() => {
+					this.menuOpened = true
 				})
 			})
 		}
@@ -143,7 +135,7 @@
 		menuChange() {
 			this.currentI = -1
 			this.activator = null
-			this.menu = false
+			this.menuOpened = false
 		}
 
 		close(id: number, confirm: boolean = true) {

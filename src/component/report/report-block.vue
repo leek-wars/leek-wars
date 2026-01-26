@@ -2,14 +2,14 @@
 	<div>
 		<h3><v-icon>{{ icon }}</v-icon> {{ title }}</h3>
 		<div class="flags">
-			<tooltip v-for="flag in flags" :key="flag">
-				<template v-slot:activator="{ on }">
-					<div class="flag card" v-on="on">
+			<v-tooltip v-for="flag in flags" :key="flag">
+				<template #activator="{ props }">
+					<div class="flag card" v-bind="props">
 						<img :src="'/image/fight_flag/flag_' + flag + '.svg'">
 					</div>
 				</template>
 				{{ $t('flag.flag_' + flag) }}
-			</tooltip>
+			</v-tooltip>
 		</div>
 
 		<table v-if="fight.type === FightType.FARMER" class="report">
@@ -22,8 +22,8 @@
 				<td class="name">
 					<span class="alive">
 						<router-link :to="'/farmer/' + farmer.id">
-							<rich-tooltip-farmer :id="farmer.id" v-slot="{ on }" :bottom="true">
-								<span v-on="on">{{ farmer.name }}</span>
+							<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }" :bottom="true">
+								<span v-bind="props">{{ farmer.name }}</span>
 							</rich-tooltip-farmer>
 						</router-link>
 					</span>
@@ -54,16 +54,16 @@
 					</td>
 					<td class="level">{{ team.level }}</td>
 					<td class="xp">
-						<tooltip>
-							<template v-slot:activator="{ on }">
-								<div class="bar" v-on="on">
+						<v-tooltip>
+							<template #activator="{ props }">
+								<div class="bar" v-bind="props">
 									<span :style="{width: currentBar + '%'}" class="current_xp"></span>
 									<span :style="{width: newBar + '%'}" class="new_xp team"></span>
 								</div>
 							</template>
-							{{ team.cur_xp | number }} / {{ team.next_xp | number }}
-						</tooltip>
-						<span>{{ team.xp | number }}</span>
+							{{ $filters.number(team.cur_xp) }} / {{ $filters.number(team.next_xp) }}
+						</v-tooltip>
+						<span>{{ $filters.number(team.xp) }}</span>
 					</td>
 					<td v-if="fight.context !== FightContext.TEST && fight.context !== FightContext.CHALLENGE" class="talent">
 						<img src="/image/talent.png">
@@ -92,13 +92,13 @@
 				<tr v-if="fight.type !== FightType.SOLO" class="total">
 					<td class="name"><span class="alive">{{ $t('main.total') }}</span></td>
 					<td class="level">{{ totalLevel }}</td>
-					<!-- <td v-if="$store.getters.admin" class="power">{{ totalPower | number }}</td> -->
-					<td class="xp"><div class="bar"></div>{{ totalXP | number }}</td>
+					<!-- <td v-if="$store.getters.admin" class="power">{{ $filters.number(totalPower) }}</td> -->
+					<td class="xp"><div class="bar"></div>{{ $filters.number(totalXP) }}</td>
 					<td class="money">
-						<span>{{ totalMoney | number }} <span class="hab"></span></span>
+						<span>{{ $filters.number(totalMoney) }} <span class="hab"></span></span>
 					</td>
 					<td v-if="fight.context != FightContext.TEST && fight.context != FightContext.CHALLENGE" class="resources"></td>
-					<!-- <td class="gain">{{ totalOpes | number }}</td> -->
+					<!-- <td class="gain">{{ $filters.number(totalOpes) }}</td> -->
 					<!-- <td v-if="$store.getters.admin" class="gain">{{ totalTime }} s</td> -->
 				</tr>
 			</table>
@@ -108,11 +108,11 @@
 
 <script lang="ts">
 	import { Fight, FightContext, FightType, ReportFarmer } from '@/model/fight'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import ReportLeekRow from './report-leek-row.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Component({
+	@Options({
 		components: { ReportLeekRow, RichTooltipFarmer }
 	})
 	export default class ReportBlock extends Vue {

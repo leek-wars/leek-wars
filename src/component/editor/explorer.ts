@@ -1,6 +1,6 @@
 import { AI } from '@/model/ai'
 import { fileSystem } from '@/model/filesystem'
-import Vue from 'vue'
+
 import { Folder } from './editor-item'
 
 class Explorer {
@@ -17,7 +17,7 @@ class Explorer {
 			}
 		}
 		this.selectedAI = ai
-		Vue.set(ai, "selected", true)
+		ai.selected = true
 		const folder = fileSystem.folderById[this.selectedAI.folder]
 		if (folder) {
 			this.selectFolder(folder)
@@ -44,13 +44,13 @@ class Explorer {
 
 	public setExpanded(folder: Folder, expanded: boolean) {
 		// console.log("folder", folder.name, "expanded", expanded)
-		Vue.set(folder, 'expanded', expanded)
+		folder.expanded = expanded
 		localStorage.setItem('editor/folder/' + folder.id, '' + folder.expanded)
 	}
 
 	public setClosed(folder: Folder, closed: boolean) {
 		// console.log("folder", folder.name, "expanded", expanded)
-		Vue.set(folder, 'closed', closed)
+		folder.closed = closed
 		localStorage.setItem('editor/folder/closed/' + folder.id, '' + folder.closed)
 	}
 }

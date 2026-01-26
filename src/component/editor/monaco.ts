@@ -1,5 +1,4 @@
-
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import * as monaco from 'monaco-editor'
 
 // @ts-ignore
 import leekscript from './leekscript-monarch.js'
@@ -7,11 +6,11 @@ import leekscript from './leekscript-monarch.js'
 import { i18n } from '@/model/i18n';
 import { fileSystem } from '@/model/filesystem';
 import { analyzer } from './analyzer';
-import { vueMain } from '@/model/vue';
+import { emitter } from '@/model/vue';
 import { AI } from '@/model/ai.js';
-import { keywords } from './keywords';
-import { Keyword, KeywordKind } from '@/model/keyword';
 import { LeekWars } from '@/model/leekwars';
+import { getKeywords } from './keywords';
+import { Keyword, KeywordKind } from '@/model/keyword';
 
 monaco.languages.register({ id: 'leekscript' })
 monaco.languages.setLanguageConfiguration('leekscript', {
@@ -97,7 +96,7 @@ monaco.editor.addKeybindingRules([
 
 monaco.editor.registerCommand('jump', (accessor, args) => {
 	// console.log("Command jump", args)
-	vueMain.$emit('jump', fileSystem.aiByFullPath[args.ai], args.line, args.column)
+	emitter.emit('jump', fileSystem.aiByFullPath[args.ai], args.line, args.column)
 })
 
 // monaco.languages.registerDocumentSymbolProvider("leekscript", {
@@ -175,7 +174,7 @@ monaco.editor.registerEditorOpener({
 		const model = monaco.editor.getModel(resource) || monaco.editor.createModel(ai.code, 'leekscript', uri)
 		ai.model = model
 		const range = selectionOrPosition as monaco.IRange
-		vueMain.$emit('jump', ai, range.startLineNumber, range.startColumn - 1)
+		emitter.emit('jump', { ai, line: range.startLineNumber, column: range.startColumn - 1 })
 		return true
 	},
 })
@@ -310,7 +309,8 @@ LeekWars.completionsProvider = monaco.languages.registerCompletionItemProvider("
 
 		// console.log("provideCompletionItems", model)
 
-		const ai = fileSystem.aiByFullPath[model.uri.path.substring(1)]
+		const path = model.uri.path.substring(1)
+		const ai = fileSystem.getAIByPath(path)
 
 		const completions = await analyzer.complete(ai, model.getValue(), position.lineNumber, position.column - 2)
 
@@ -374,7 +374,7 @@ LeekWars.completionsProvider = monaco.languages.registerCompletionItemProvider("
 			}
 		} else {
 			addCompletionsFromAI(word.word, suggestions, visited, ai, range)
-			keywords.forEach(maybeAdd)
+			getKeywords().forEach(maybeAdd)
 		}
 
 		return {

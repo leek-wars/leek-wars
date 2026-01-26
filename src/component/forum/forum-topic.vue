@@ -32,19 +32,18 @@
 		</div>
 
 		<panel class="first last">
-			<div slot="content" class="content">
+			<template #content>
+				<div class="content">
 				<breadcrumb v-if="LeekWars.mobile" :items="breadcrumb_items" />
 				<pagination v-if="topic" :current="page" :total="pages" :url="'/forum/category-' + category.id + '/topic-' + topic.id" />
 				<loader v-if="!topic || !topic.messages" />
 				<div v-else>
 					<div v-for="message in topic.messages" :id="'message-' + message.id" :key="message.id" class="message-wrapper">
 						<div v-if="!message.writer.deleted" class="profile">
-							<rich-tooltip-farmer :id="message.writer.id" v-slot="{ on }">
-								<div v-on="on">
-									<router-link :to="'/farmer/' + message.writer.id" class="">
-										<avatar :farmer="message.writer" />
-									</router-link>
-								</div>
+							<rich-tooltip-farmer :id="message.writer.id" v-slot="{ props }">
+								<router-link :to="'/farmer/' + message.writer.id" class="" v-bind="props">
+									<avatar :farmer="message.writer" />
+								</router-link>
 							</rich-tooltip-farmer>
 							<div class="info">
 								<div class="pseudo">
@@ -56,12 +55,16 @@
 								<div v-else-if="message.writer.color == 'moderator'" class="grade moderator">{{ $t('main.grade_moderator') }}</div>
 								<div v-else-if="message.writer.color == 'contributor'" class="grade contributor">{{ $t('main.grade_contributor') }}</div>
 								<lw-title v-if="message.writer.title.length" :title="message.writer.title" />
-								<i18n class="messages-count" path="main.n_messages" tag="div">
-									<b slot="0">{{ message.writer.messages }}</b>
-								</i18n>
-								<i18n class="trophy-count" path="main.n_trophies" tag="div">
-									<b slot="0">{{ message.writer.points }}</b>
-								</i18n>
+								<i18n-t class="messages-count" keypath="main.n_messages" tag="div">
+									<template #n>
+										<b>{{ message.writer.messages }}</b>
+									</template>
+								</i18n-t>
+								<i18n-t class="trophy-count" keypath="main.n_trophies" tag="div">
+									<template #n>
+										<b>{{ message.writer.points }}</b>
+									</template>
+								</i18n-t>
 							</div>
 						</div>
 						<div v-else class="profile">
@@ -88,9 +91,9 @@
 
 								<div class="edit-wrapper">
 									<div v-if="!message.deleted" class="votes">
-										<v-tooltip :key="votes_up_names[message.id] ? message.id * 101 + votes_up_names[message.id].length : message.id * 101" :open-delay="0" :close-delay="0" :disabled="message.votes_up === 0" bottom @input="loadVotesUp(message)">
-											<template v-slot:activator="{ on }">
-												<div :class="{active: message.my_vote == 1, zero: message.votes_up === 0}" class="vote up" @click="voteUp(message)" v-on="on">
+										<v-tooltip :key="votes_up_names[message.id] ? message.id * 101 + votes_up_names[message.id].length : message.id * 101" :open-delay="0" :close-delay="0" :disabled="message.votes_up === 0" bottom @update:model-value="loadVotesUp(message)">
+											<template #activator="{ props }">
+												<div :class="{active: message.my_vote == 1, zero: message.votes_up === 0}" class="vote up" @click="voteUp(message)" v-bind="props">
 													<v-icon>mdi-thumb-up</v-icon>
 													<span class="counter">{{ message.votes_up }}</span>
 												</div>
@@ -100,9 +103,9 @@
 												<div v-for="name in votes_up_names[message.id]" :key="name">{{ name }}</div>
 											</div>
 										</v-tooltip>
-										<v-tooltip :key="votes_down_names[message.id] ? message.id * 100 + votes_down_names[message.id].length : message.id" :open-delay="0" :close-delay="0" :disabled="message.votes_down === 0" bottom @input="loadVotesDown(message)">
-											<template v-slot:activator="{ on }">
-												<div :class="{active: message.my_vote == -1, zero: !message.votes_down}" class="vote down" @click="voteDown(message)" v-on="on">
+										<v-tooltip :key="votes_down_names[message.id] ? message.id * 100 + votes_down_names[message.id].length : message.id" :open-delay="0" :close-delay="0" :disabled="message.votes_down === 0" bottom @update:model-value="loadVotesDown(message)">
+											<template #activator="{ props }">
+												<div :class="{active: message.my_vote == -1, zero: !message.votes_down}" class="vote down" @click="voteDown(message)" v-bind="props">
 													<v-icon>mdi-thumb-down</v-icon>
 													<span class="counter">{{ message.votes_down }}</span>
 												</div>
@@ -134,22 +137,17 @@
 									</div>
 
 									<v-menu v-if="$store.state.farmer && !message.deleted && !message.editing && ((message.writer.id === $store.state.farmer.id || category.moderator) || (category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'))" offset-y>
-										<template v-slot:activator="{ on }">
-											<v-btn text small icon color="grey" v-on="on">
-												<v-icon>mdi-dots-vertical</v-icon>
-											</v-btn>
+										<template #activator="{ props }">
+											<v-btn variant="text" size="small" icon="mdi-dots-vertical" color="grey" v-bind="props" />
 										</template>
 										<v-list dense class="message-actions">
-											<v-list-item v-if="$store.state.farmer && (message.writer.id === $store.state.farmer.id || category.moderator)" v-ripple @click="edit(message)">
-												<v-icon>mdi-pencil</v-icon>
+											<v-list-item v-if="$store.state.farmer && (message.writer.id === $store.state.farmer.id || category.moderator)" v-ripple @click="edit(message)" prepend-icon="mdi-pencil">
 												<span>{{ $t('edit') }}</span>
 											</v-list-item>
-											<v-list-item v-if="$store.state.farmer && (message.writer.id === $store.state.farmer.id || category.moderator)" v-ripple @click="deleteGeneric(message)">
-												<v-icon>mdi-delete</v-icon>
+											<v-list-item v-if="$store.state.farmer && (message.writer.id === $store.state.farmer.id || category.moderator)" v-ripple @click="deleteGeneric(message)" prepend-icon="mdi-delete">
 												<span>{{ $t('delete') }}</span>
 											</v-list-item>
-											<v-list-item v-if="category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'" v-ripple @click="report(message)">
-												<v-icon>mdi-flag</v-icon>
+											<v-list-item v-if="category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'" v-ripple @click="report(message)" prepend-icon="mdi-flag">
 												<span>{{ $t('warning.report') }}</span>
 											</v-list-item>
 										</v-list>
@@ -175,10 +173,10 @@
 				<div v-if="topic && !topic.locked && $store.state.farmer && $store.state.farmer.verified" class="editor">
 					<h4>{{ $t('answer') }}</h4>
 					<textarea v-model="newMessage" class="response card" @keyup="updateDraft"></textarea>
-					<center>
+					<div class="center">
 						<div v-if="page != pages" class="warning"><v-icon>mdi-alert</v-icon> {{ $t('not_last_page') }}</div>
 						<v-btn color="primary" class="send" @click="send"><v-icon>mdi-send-outline</v-icon> {{ $t('send') }}</v-btn>
-					</center>
+					</div>
 					<formatting-rules />
 					<br>
 				</div>
@@ -186,27 +184,36 @@
 				<div v-if="$store.state.farmer && !$store.state.farmer.verified" class="green-link editor"><router-link class="green-link" to="/settings">Vérifiez votre compte pour répondre sur le forum</router-link><br><br></div>
 
 				<breadcrumb :items="breadcrumb_items" />
-			</div>
+				</div>
+			</template>
 		</panel>
 
 		<popup v-model="deleteMessageDialog" :width="600">
-			<v-icon slot="icon">mdi-delete</v-icon>
-			<span slot="title">{{ $t('do_you_want_to_delete_message') }}</span>
+			<template #icon>
+				<v-icon>mdi-delete</v-icon>
+			</template>
+			<template #title>
+				<span>{{ $t('do_you_want_to_delete_message') }}</span>
+			</template>
 			{{ $t('undoable_action') }}
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="deleteMessageDialog = false">{{ $t('cancel') }}</div>
 				<div v-ripple class="red" @click="deleteMessage">{{ $t('delete') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-model="deleteTopicDialog" :width="600">
-			<v-icon slot="icon">mdi-delete</v-icon>
-			<span slot="title">{{ $t('do_you_want_to_delete_topic') }}</span>
+			<template #icon>
+				<v-icon>mdi-delete</v-icon>
+			</template>
+			<template #title>
+				<span>{{ $t('do_you_want_to_delete_topic') }}</span>
+			</template>
 			{{ $t('undoable_action') }}
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="deleteTopicDialog = false">{{ $t('cancel') }}</div>
 				<div v-ripple class="red" @click="deleteTopic">{{ $t('delete') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<report-dialog v-if="reportFarmer" v-model="reportDialog" :target="reportFarmer" :reasons="reasons" :parameter="reportContent" class="report-dialog" />
@@ -221,16 +228,18 @@
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import EmojiPicker from '../chat/emoji-picker.vue'
 	import Breadcrumb from './breadcrumb.vue'
-	const FormattingRules = () => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum-formatting-rules.${locale}.i18n`)
+	const FormattingRules = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum-formatting-rules.${locale}.i18n`))
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
 	import Pagination from '@/component/pagination.vue'
 	import LWTitle from '@/component/title/title.vue'
+import { defineAsyncComponent } from 'vue'
+import { emitter } from '@/model/vue'
 
-	@Component({ name: 'forum_topic', i18n: {}, mixins: [...mixins], components: { Breadcrumb, EmojiPicker, Markdown, FormattingRules, RichTooltipFarmer, ReportDialog, Pagination, 'lw-title': LWTitle } })
+	@Options({ name: 'forum_topic', i18n: {}, mixins: [...mixins], components: { Breadcrumb, EmojiPicker, Markdown, FormattingRules, RichTooltipFarmer, ReportDialog, Pagination, 'lw-title': LWTitle } })
 	export default class ForumTopicPage extends Vue {
 		topic: ForumTopic | null = null
 		category: ForumCategory | null = null
@@ -276,7 +285,7 @@
 			const topic = parseInt(this.$route.params.topic, 10)
 			const page = 'page' in this.$route.params ? parseInt(this.$route.params.page, 10) : 1
 			if (!force && this.topic && this.topic.id === topic && this.page === page) {
-				this.$root.$emit('loaded')
+				emitter.emit('loaded')
 				return
 			}
 			this.page = page
@@ -288,11 +297,11 @@
 				if (!this.topic) { return }
 				this.category = data.category
 				if (this.topic) {
-					Vue.set(this.topic, 'messages', data.messages)
+					this.topic.messages = data.messages
 					if (this.topic.messages) {
 						for (const message of this.topic.messages) {
-							Vue.set(message, 'editing', false)
-							Vue.set(message, 'height', 100)
+							message.editing = false
+							message.height = 100
 						}
 					}
 				}
@@ -300,7 +309,7 @@
 				LeekWars.setTitle(this.topic.name, this.$t('n_messages', [data.total]))
 				LeekWars.setActions([this.action])
 				if (this.topic.subscribed) { this.action.icon = 'mdi-newspaper-minus' }
-				this.$root.$emit('loaded')
+				emitter.emit('loaded')
 				this.newMessage = localStorage.getItem('forum/draft-' + this.topic.id) as string
 			})
 		}
@@ -340,8 +349,8 @@
 				}
 				message.my_vote = 1
 			}
-			delete this.$data.votes_up_names[message.id]
-			delete this.$data.votes_down_names[message.id]
+			delete this.votes_up_names[message.id]
+			delete this.votes_down_names[message.id]
 		}
 		voteDown(message: ForumMessage) {
 			if (message.my_vote === -1) {
@@ -356,21 +365,21 @@
 				}
 				message.my_vote = -1
 			}
-			delete this.$data.votes_up_names[message.id]
-			delete this.$data.votes_down_names[message.id]
+			delete this.votes_up_names[message.id]
+			delete this.votes_down_names[message.id]
 		}
 		loadVotesUp(message: ForumMessage) {
 			if (!this.topic || this.votes_up_names[message.id] !== undefined) { return }
-			Vue.set(this.$data.votes_up_names, message.id, null)
+			this.votes_up_names[message.id] = null
 			LeekWars.post('forum/get-message-up-votes-names', {topic_id: this.topic.id, message_id: message.id}).then(data => {
-				Vue.set(this.$data.votes_up_names, message.id, data.farmers.map((f: any) => f[1]))
+				this.votes_up_names[message.id] = data.farmers.map((f: any) => f[1])
 			})
 		}
 		loadVotesDown(message: ForumMessage) {
 			if (!this.topic || this.votes_down_names[message.id] !== undefined) { return }
-			Vue.set(this.$data.votes_down_names, message.id, null)
+			this.votes_down_names[message.id] = null
 			LeekWars.post('forum/get-message-down-votes-names', {topic_id: this.topic.id, message_id: message.id}).then(data => {
-				Vue.set(this.$data.votes_down_names, message.id, data.farmers.map((f: any) => f[1]))
+				this.votes_down_names[message.id] = data.farmers.map((f: any) => f[1])
 			})
 		}
 		deleteGeneric(message: ForumMessage) {
@@ -492,6 +501,8 @@
 		padding-right: 0px;
 		.v-icon {
 			vertical-align: text-bottom;
+			font-size: 24px;
+			margin: 0 4px;
 		}
 		.flag {
 			height: 16px;
@@ -551,10 +562,10 @@
 			margin-bottom: 2px;
 			font-size: 13px;
 			font-weight: normal;
-			&::v-deep .quote:first-child {
+			&:deep(.quote:first-child) {
 				padding-left: 0;
 			}
-			&::v-deep .quote:last-child {
+			&:deep(.quote:last-child) {
 				padding-right: 0;
 			}
 		}
@@ -659,7 +670,7 @@
 		flex: 1;
 		line-height: 1.6;
 	}
-	.message .text ::v-deep a {
+	.message .text :deep(a) {
 		color: #5fad1b;
 	}
 	.message .md {
@@ -667,10 +678,10 @@
 		word-break: break-word;
 		font-size: 15px;
 		flex: 1;
-		::v-deep p {
+		:deep(p) {
 			font-size: 15px;
 		}
-		::v-deep > p:last-child {
+		:deep(> p:last-child) {
 			margin-bottom: 0;
 		}
 	}
@@ -775,7 +786,7 @@
 	.vote i {
 		vertical-align: bottom;
 		font-size: 20px;
-		padding-right: 4px;
+		margin-right: 6px;
 	}
 	.vote.zero {
 		opacity: 0.6;
@@ -826,7 +837,7 @@
 	.edit-buttons {
 		margin: 15px 0;
 	}
-	.message ::v-deep h1 {
+	.message :deep(h1) {
 		margin-left: 0;
 		margin-bottom: 10px;
 		font-size: 28px;
@@ -837,19 +848,19 @@
 		padding: 0px;
 		text-shadow: none;
 	}
-	.message ::v-deep h1:after {
+	.message :deep(h1:after) {
 		display: none;
 	}
-	.message ::v-deep h1:before {
+	.message :deep(h1:before) {
 		display: none;
 	}
-	.message ::v-deep h2 {
+	.message :deep(h2) {
 		margin-left: 0;
 		margin-bottom: 10px;
 		font-size: 23px;
 		margin-top: 10px;
 	}
-	.message ::v-deep h3 {
+	.message :deep(h3) {
 		margin-left: 0;
 		margin-bottom: 10px;
 		font-size: 20px;
@@ -860,19 +871,19 @@
 		padding: 0px;
 		text-shadow: none;
 	}
-	.message ::v-deep h3:after {
+	.message :deep(h3:after) {
 		display: none;
 	}
-	.message ::v-deep h3:before {
+	.message :deep(h3:before) {
 		display: none;
 	}
-	.message ::v-deep h5 {
+	.message :deep(h5) {
 		font-size: 17px;
 	}
-	.message ::v-deep h6 {
+	.message :deep(h6) {
 		font-size: 16px;
 	}
-	.message ::v-deep .chat-input-emoji {
+	.message :deep(.chat-input-emoji) {
 		position: absolute;
 		right: 10px;
 		top: 10px;

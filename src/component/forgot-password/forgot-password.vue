@@ -16,25 +16,27 @@
 
 					<br>
 					<br>
-					<center>
+					<div class="center">
 						<v-btn type="submit">{{ $t('change_password') }}</v-btn>
-					</center>
+					</div>
 					<br>
 					<div class="error"></div>
 				</form>
 			</template>
 
 			<template v-else-if="state == 'email_sent'">
-				<center>
+				<div class="center">
 					<img src="/image/map/nexus_block_small.png">
 					<br>
 					<br>
-					<i18n path="mail_sent">
-						<b slot="email">{{ $route.params.email }}</b>
-					</i18n>
+					<i18n-t keypath="mail_sent">
+						<template #email>
+							<b>{{ $route.params.email }}</b>
+						</template>
+					</i18n-t>
 					<br>
 					<br>
-				</center>
+				</div>
 			</template>
 
 			<div v-else>
@@ -44,9 +46,9 @@
 					<h2>{{ $t('email_address') }}</h2>
 					<input v-model="email" type="text" name="email">
 					<br><br>
-					<center>
+					<div class="center">
 						<v-btn type="submit">{{ $t('ask_new_password') }}</v-btn>
-					</center>
+					</div>
 					<br>
 					<div class="error"></div>
 				</form>
@@ -57,9 +59,9 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'forgot_password', i18n: {} })
+	@Options({ name: 'forgot_password', i18n: {} })
 	export default class ForgotPassword extends Vue {
 		@Prop() state!: string
 		email: string = ''

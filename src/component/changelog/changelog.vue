@@ -28,17 +28,19 @@
 		</panel>
 		<template v-else>
 			<panel v-for="version in lazy_changelog" :key="version.version" icon="mdi-star">
-				<template slot="title">{{ $t('changelog.version_n', [version.version_name]) }} ({{ version.date | date }}) {{ translations[version.version] && translations[version.version].title ? ' — ' + translations[version.version].title : '' }}</template>
-				<template slot="actions">
+				<template #title>{{ $t('changelog.version_n', [version.version_name]) }} ({{ $filters.date(version.date) }}) {{ translations[version.version] && translations[version.version].title ? ' — ' + translations[version.version].title : '' }}</template>
+				<template #actions>
 					<div class="button flat" @click="showChangelogDialog(version)">
 						<v-icon>mdi-eye-outline</v-icon>
 					</div>
 				</template>
-				<div slot="content" class="wrapper">
-					<div class="content">
-						<changelog-version :version="version" />
+				<template #content>
+					<div class="wrapper">
+						<div class="content">
+							<changelog-version :version="version" />
+						</div>
 					</div>
-				</div>
+				</template>
 			</panel>
 		</template>
 		<changelog-dialog v-model="changelogDialog" :changelog="changelogVersion" />
@@ -47,11 +49,12 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 	import ChangelogDialog from './changelog-dialog.vue'
 	import ChangelogVersion from './changelog-version.vue'
+import { emitter } from '@/model/vue'
 
-	@Component({ name: 'changelog', i18n: {}, components: { ChangelogVersion, ChangelogDialog } })
+	@Options({ name: 'changelog', i18n: {}, components: { ChangelogVersion, ChangelogDialog } })
 	export default class Changelog extends Vue {
 		changelog: any = null
 		changelogDialog: boolean = false
@@ -68,22 +71,22 @@
 			LeekWars.get('changelog/get/' + this.$i18n.locale).then(data => {
 				this.changelog = data.changelog
 				for (const c in this.changelog) {
-					Vue.set(this.changelog[c], 'active', parseInt(c, 10) < 2 ? true : false)
+					this.changelog[c].active = parseInt(c, 10) < 2 ? true : false
 				}
 				const lw_version = parseInt(LeekWars.normal_version.replace(/\./g, ''), 10)
 				if (this.changelog[0].version !== lw_version) {
 					this.changelog.unshift({active: true, image: true, version: lw_version, version_name: LeekWars.normal_version.replace(/\.(\d)$/, '$1'), date: Date.now() / 1000, data: 'changelog_' + lw_version})
 				}
 				LeekWars.setTitle(this.$t('main.changelog'))
-				this.$root.$emit('loaded')
+				emitter.emit('loaded')
 			})
 			window.addEventListener('scroll', this.scroll)
 
-			import(/* webpackChunkName: "changelog-[request]" */ `json-loader!yaml-loader!@/component/changelog/changelog.${this.$i18n.locale}.yaml`).then((translations) => {
-				this.translations = translations
+			import(/* webpackChunkName: "changelog-[request]" */ `@/component/changelog/changelog.${this.$i18n.locale}.yaml`).then((module) => {
+				this.translations = module.default
 			})
 		}
-		destroyed() {
+		unmounted() {
 			window.removeEventListener('scroll', this.scroll)
 		}
 		showChangelogDialog(version: any) {
@@ -111,7 +114,7 @@
 	.wrapper {
 		background: rgba(100,100,100,0.1);
 	}
-	.changelog-page ::v-deep a {
+	.changelog-page :deep(a) {
 		color: green;
 	}
 	.image {
