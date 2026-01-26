@@ -270,6 +270,23 @@ const router = createRouter({
 	},
 })
 
+// Handle chunk loading errors (e.g., after deployment when old chunks no longer exist)
+router.onError((error, to) => {
+	if (
+		error.message.includes('Failed to fetch dynamically imported module') ||
+		error.message.includes('Loading chunk') ||
+		error.message.includes('Loading CSS chunk') ||
+		error.name === 'ChunkLoadError'
+	) {
+		// Prevent infinite reload loop
+		const reloadKey = 'chunk-reload-' + to.fullPath
+		if (!sessionStorage.getItem(reloadKey)) {
+			sessionStorage.setItem(reloadKey, '1')
+			window.location.href = to.fullPath
+		}
+	}
+})
+
 router.beforeEach((to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) => {
 
 	LeekWars.splitShowList()
