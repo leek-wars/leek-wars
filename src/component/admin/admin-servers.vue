@@ -30,6 +30,17 @@
 								<span class="label">Cache IA:</span>
 								<span class="value">{{ $filters.number(node.metrics.cacheSize) }}</span>
 							</div>
+							<div class="metric">
+								<span class="label">Class Space:</span>
+								<span class="value" :class="{ warning: classSpacePercent(node.metrics) > 75, critical: classSpacePercent(node.metrics) > 90 }">
+									{{ formatRAM(node.metrics.compressedClassSpaceUsed) }} / {{ formatRAM(node.metrics.compressedClassSpaceMax) }}
+									({{ classSpacePercent(node.metrics) }}%)
+								</span>
+							</div>
+							<div class="metric">
+								<span class="label">Uptime:</span>
+								<span class="value">{{ formatUptime(node.metrics.bootTime) }}</span>
+							</div>
 						</div>
 						<div class="threads">
 							<div v-for="(runner, r) in node.runners" :key="r" class="thread">
@@ -95,6 +106,9 @@ import { emitter } from '@/model/vue'
 		public usedRAM!: number
 		public maxRAM!: number
 		public cacheSize!: number
+		public compressedClassSpaceUsed!: number
+		public compressedClassSpaceMax!: number
+		public bootTime!: number
 		public lastUpdate!: number
 	}
 
@@ -178,6 +192,9 @@ import { emitter } from '@/model/vue'
 						usedRAM: m.usedRAM,
 						maxRAM: m.maxRAM,
 						cacheSize: m.cacheSize,
+						compressedClassSpaceUsed: m.compressedClassSpaceUsed,
+						compressedClassSpaceMax: m.compressedClassSpaceMax,
+						bootTime: m.bootTime,
 						lastUpdate: m.lastUpdate
 					}
 				}
@@ -223,11 +240,22 @@ import { emitter } from '@/model/vue'
 
 		formatRAM(bytes: number): string {
 			const gb = bytes / (1024 * 1024 * 1024)
-			return gb.toFixed(1) + ' GB'
+			return gb.toFixed(2) + ' GB'
 		}
 
 		ramPercent(metrics: NodeMetrics): number {
 			return Math.round((metrics.usedRAM / metrics.maxRAM) * 100)
+		}
+
+		classSpacePercent(metrics: NodeMetrics): number {
+			if (!metrics.compressedClassSpaceMax) return 0
+			return Math.round((metrics.compressedClassSpaceUsed / metrics.compressedClassSpaceMax) * 100)
+		}
+
+		formatUptime(bootTime: number): string {
+			if (!bootTime) return '-'
+			const uptimeSeconds = Math.floor((Date.now() - bootTime) / 1000)
+			return LeekWars.formatLongDuration(uptimeSeconds)
 		}
 	}
 </script>
