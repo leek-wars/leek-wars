@@ -19,16 +19,21 @@
 			</div>
 			<div class="select-words" :class="$i18n.locale">
 				<div class="select-word select">
-					<v-select v-model="noun" :items="nouns" :label="$t('select_noun')" item-value="id" item-text="t" hide-details dense solo @change="changeNoun">
-						<template #item="data">
-							<template v-if="data.item.id">
-								<img class="icon" :src="'/image/trophy/' + data.item.code + '.svg'">
-								<v-list-item-title class="word">
-									<div class="name">{{ data.item.t }}</div>
-									<div class="rarity">{{ formatRarity(data.item.rarity) }}%</div>
-								</v-list-item-title>
-							</template>
-							<span v-else>{{ $t('main.none') }}</span>
+					<v-select v-model="noun" :items="nouns" item-value="id" item-title="t" hide-details dense solo @change="changeNoun">
+						<template #selection="{ item }">
+							{{ item.props.title }}
+						</template>
+						<template #item="{ props: itemProps, item }">
+							<v-list-item v-bind="itemProps">
+								<template v-if="item.value" #prepend>
+									<img class="icon" :src="'/image/trophy/' + item.raw.code + '.svg'">
+								</template>
+								<template #title v-if="item.value" class="word">
+									<div class="name">{{ item.title }}</div>
+									<div class="rarity">{{ formatRarity(item.raw.rarity) }}%</div>
+								</template>
+								<template #title v-else>{{ $t('main.none') }}</template>
+							</v-list-item>
 						</template>
 					</v-select>
 				</div>
@@ -43,16 +48,21 @@
 					</v-select>
 				</div>
 				<div class="select-word select">
-					<v-select v-model="adjective" :items="adjectives" :label="$t('select_adjective')" item-value="id" item-text="t" hide-details :eager="true" dense solo>
-						<template #item="data">
-							<template v-if="data.item.id">
-								<img class="icon" :src="'/image/trophy/' + data.item.code + '.svg'">
-								<v-list-item-title class="word">
-									<div class="name">{{ data.item.t }}</div>
-									<div class="rarity">{{ formatRarity(data.item.rarity) }}%</div>
-								</v-list-item-title>
-							</template>
-							<span v-else>{{ $t('main.none') }}</span>
+					<v-select v-model="adjective" :items="adjectives" item-value="id" item-title="t" hide-details :eager="true" dense solo>
+						<template #selection="{ item }">
+							{{ item.props.title }}
+						</template>
+						<template #item="{ props: itemProps, item }">
+							<v-list-item v-bind="itemProps">
+								<template v-if="item.value" #prepend>
+									<img class="icon" :src="'/image/trophy/' + item.raw.code + '.svg'">
+								</template>
+								<template #title v-if="item.value" class="word">
+									<div class="name">{{ item.title }}</div>
+									<div class="rarity">{{ formatRarity(item.raw.rarity) }}%</div>
+								</template>
+								<template #title v-else>{{ $t('main.none') }}</template>
+							</v-list-item>
 						</template>
 					</v-select>
 				</div>
@@ -160,6 +170,7 @@
 }
 .select-words {
 	display: flex;
+	flex: 1;
 	&.en {
 		flex-direction: row-reverse;
 	}
