@@ -6,7 +6,7 @@ import { Acceleration, Adrenaline, Alteration, Antidote, Armor, Armoring, Arseni
 import { DamageType, EntityDirection, EntityType, FightEntity } from '@/component/player/game/entity'
 import { Ground, GroundTexture, OBSTACLES } from '@/component/player/game/ground'
 import { Leek } from '@/component/player/game/leek'
-import { Arena, Beach, Castle, Cemetery, DarkNexus, Desert, Factory, Forest, Glacier, Japan, Map, Nexus } from '@/component/player/game/maps'
+import { Beach, Castle, Cemetery, DarkNexus, Desert, Factory, Forest, Glacier, Japan, Map, Nexus, Temple } from '@/component/player/game/maps'
 import { Obstacle } from '@/component/player/game/obstacle'
 import { Particles } from '@/component/player/game/particles'
 import { S, Sound } from '@/component/player/game/sound'
@@ -369,7 +369,7 @@ class Game {
 		new Forest(this),
 		new Glacier(this),
 		new Beach(this),
-		new Arena(this),
+		new Temple(this),
 		new Japan(this),
 		new Castle(this),
 		new Cemetery(this),
