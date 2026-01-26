@@ -35,7 +35,7 @@
 			this.locked = event
 			if (!event && !this.mouse) {
 				this.value = false
-				this.$emit('input', false)
+				this.$emit('update:modelValue', false)
 			}
 		}
 	}

@@ -7,7 +7,7 @@
 			<div v-if="schemes" class="schemes">
 				<!-- <div v-for="(scheme, s) in schemes" :key="s" class="scheme">
 					<div v-ripple class="group result">
-						<rich-tooltip-item :item="LeekWars.items[scheme.result]" :bottom="true" :inventory="true" @update:model-value="$emit('input', $event)">
+						<rich-tooltip-item :item="LeekWars.items[scheme.result]" :bottom="true" :inventory="true" @update:model-value="$emit('update:modelValue', $event)">
 							<div class="item" v-bind="props" :quantity="1" :class="{['rarity-border-' + LeekWars.items[scheme.result].rarity]: true}">
 								<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[scheme.result].type] + '/' + LeekWars.items[scheme.result].name.replace('hat_', '').replace('potion_', '') + '.png'" :type="LeekWars.items[scheme.result].type">
 								<div v-if="scheme.quantity > 1" class="quantity">{{ $filters.number(scheme.quantity) }}</div>
@@ -19,7 +19,7 @@
 					<div class="items">
 						<template v-for="(ingredient, i) in scheme.items">
 							<div v-if="ingredient">
-								<rich-tooltip-item v-if="LeekWars.items[ingredient[0]]" :key="i" :item="LeekWars.items[ingredient[0]]" :bottom="true" :inventory="true" :quantity="ingredient[1]" @update:model-value="$emit('input', $event)">
+								<rich-tooltip-item v-if="LeekWars.items[ingredient[0]]" :key="i" :item="LeekWars.items[ingredient[0]]" :bottom="true" :inventory="true" :quantity="ingredient[1]" @update:model-value="$emit('update:modelValue', $event)">
 									<div class="item" v-bind="props" :class="{['rarity-border-' + LeekWars.items[ingredient[0]].rarity]: true}">
 										<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[ingredient[0]].type] + '/' + LeekWars.items[ingredient[0]].name.replace('hat_', '').replace('potion_', '').replace('chip_', '') + '.png'" :type="LeekWars.items[ingredient[0]].type">
 										<div v-if="ingredient[1] > 1" class="quantity">{{ $filters.number(ingredient[1]) }}</div>

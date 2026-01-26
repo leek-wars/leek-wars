@@ -244,7 +244,7 @@
 		close() {
 			this.validating = false
 			this.reset()
-			this.$emit('input', false)
+			this.$emit('update:modelValue', false)
 		}
 
 		get capital() {

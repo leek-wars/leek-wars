@@ -12,7 +12,7 @@
 		<div v-if="showResult" :key="'__'" class="symbol">{{ " = " }}</div>
 		<div class="items">
 			<template v-for="(ingredient, i) in items">
-				<rich-tooltip-item v-if="ingredient" :key="i" v-slot="{ props }" :item="ingredient.item" :bottom="true" :inventory="true" :quantity="ingredient.quantity" @update:model-value="$emit('input', $event)">
+				<rich-tooltip-item v-if="ingredient" :key="i" v-slot="{ props }" :item="ingredient.item" :bottom="true" :inventory="true" :quantity="ingredient.quantity" @update:model-value="$emit('update:modelValue', $event)">
 					<div class="item" v-bind="props" :class="{['rarity-border-' + ingredient.item.rarity]: true, [item_present[i]]: true}">
 						<img :src="'/image/' + ITEM_CATEGORY_NAME[ingredient.item.type] + '/' + ingredient.item.name.replace('hat_', '').replace('potion_', '').replace('chip_', '').replace('weapon_', '') + '.png'" :type="ingredient.item.type">
 						<!-- <div class="id">#{{ item[0] }}</div> -->

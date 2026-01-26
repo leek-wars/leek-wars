@@ -21,7 +21,7 @@
 			</div>
 		</div>
 		<template #actions>
-			<div v-ripple @click="$emit('input', false)">{{ $t('main.ok') }} :)</div>
+			<div v-ripple @click="$emit('update:modelValue', false)">{{ $t('main.ok') }} :)</div>
 		</template>
 	</popup>
 </template>

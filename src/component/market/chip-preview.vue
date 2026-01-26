@@ -18,7 +18,8 @@
 			<div v-if="chip.cooldown != 0">
 				<i18n-t keypath="effect.cooldown">
 					<template #turns>
-						<span v-html="$tc('effect.n_turns', chip.cooldown >= 0 ? chip.cooldown : '∞')"></span>
+						<span v-if="chip.cooldown === -1">∞</span>
+						<span v-else v-html="$tc('effect.n_turns', chip.cooldown)"></span>
 					</template>
 				</i18n-t>
 				<b v-if="chip.team_cooldown" v-html="'&nbsp;' + $t('effect.team_cooldown')"></b>
@@ -33,7 +34,7 @@
 			</i18n-t>
 			<effect-view v-for="(effect, e) in chip.effects" :key="chip.id + '_' + e" :effect="effect" :leek="leek" />
 		</div>
-		<summon-view v-if="summon" :summon="summon" @update:model-value="$emit('input', $event)" />
+		<summon-view v-if="summon" :summon="summon" @update:model-value="$emit('update:modelValue', $event)" />
 	</div>
 </template>
 

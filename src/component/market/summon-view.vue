@@ -24,7 +24,7 @@
 		</div>
 		<h4>{{ $t('main.chips') }}</h4>
 		<div class="chips">
-			<rich-tooltip-item v-for="chip of summon.chips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[chip]" :bottom="true" @update:model-value="$emit('input', $event)">
+			<rich-tooltip-item v-for="chip of summon.chips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[chip]" :bottom="true" @update:model-value="$emit('update:modelValue', $event)">
 				<img :src="'/image/chip/' + CHIPS[chip].name + '.png'" class="chip" v-bind="props">
 			</rich-tooltip-item>
 		</div>

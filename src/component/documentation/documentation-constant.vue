@@ -41,12 +41,12 @@
 		</ul>
 		<h4 v-if="chips.length + weapons.length">{{ $t('doc.items') }} ({{ chips.length + weapons.length }})</h4>
 		<router-link v-for="chip of chips" :key="chip.id" :to="'/help/documentation/CHIP_' + chip.name.toUpperCase()">
-			<rich-tooltip-item  :item="LeekWars.items[chip.id]" :bottom="true" :instant="true" @update:model-value="$emit('input', $event)">
+			<rich-tooltip-item  :item="LeekWars.items[chip.id]" :bottom="true" :instant="true" @update:model-value="$emit('update:modelValue', $event)">
 				<img :src="'/image/chip/' + chip.name + '.png'" class="item">
 			</rich-tooltip-item>
 		</router-link>
 		<router-link v-for="weapon of weapons" :key="'w' + weapon.id" :to="'/help/documentation/WEAPON_' + weapon.name.toUpperCase()">
-			<rich-tooltip-item :item="LeekWars.items[weapon.item]" :bottom="true" :instant="true" @update:model-value="$emit('input', $event)">
+			<rich-tooltip-item :item="LeekWars.items[weapon.item]" :bottom="true" :instant="true" @update:model-value="$emit('update:modelValue', $event)">
 				<img :src="'/image/weapon/' + weapon.name + '.png'" class="item weapon">
 			</rich-tooltip-item>
 		</router-link>
