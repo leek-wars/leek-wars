@@ -56,12 +56,12 @@
 								<div v-else-if="message.writer.color == 'contributor'" class="grade contributor">{{ $t('main.grade_contributor') }}</div>
 								<lw-title v-if="message.writer.title.length" :title="message.writer.title" />
 								<i18n-t class="messages-count" keypath="main.n_messages" tag="div">
-									<template #0>
+									<template #n>
 										<b>{{ message.writer.messages }}</b>
 									</template>
 								</i18n-t>
 								<i18n-t class="trophy-count" keypath="main.n_trophies" tag="div">
-									<template #0>
+									<template #n>
 										<b>{{ message.writer.points }}</b>
 									</template>
 								</i18n-t>

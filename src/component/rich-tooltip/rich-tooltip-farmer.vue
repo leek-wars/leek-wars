@@ -29,7 +29,7 @@
 								<img class="icon" src="/image/icon/grey/trophy.png">{{ $filters.number(farmer.points) }}
 							</router-link>
 							<router-link v-if="farmer.forum_messages" :to="'/search?farmer=' + farmer.name + '&order=date'" class="stat">
-								<img class="icon" src="/image/forum.png">{{ $t('main.n_messages', [farmer.forum_messages]) }}
+								<img class="icon" src="/image/forum.png">{{ $tc('main.n_messages', farmer.forum_messages) }}
 							</router-link>
 						</div>
 					</div>
@@ -114,7 +114,7 @@
 						this.sums[c] = Object.values(this.farmer.leeks).reduce((sum: number, leek: any) => sum + leek['total_' + c], 0)
 					}
 					if (this.expand_leeks) {
-						(this.$refs.menu as any).updateLocation()
+						(this.$refs.menu as any)?.updateLocation()
 					}
 				})
 			}
