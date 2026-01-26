@@ -68,7 +68,7 @@
 			return this.chat && this.chat.type === ChatType.PM
 		}
 
-		@Watch('message.reactions')
+		@Watch('message.reactions', { deep: true })
 		updateReactions() {
 			this.$emit('scroll')
 		}

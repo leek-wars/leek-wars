@@ -1,7 +1,7 @@
 <template>
 	<div class="details-wrapper">
 		<div class="effects">
-			<v-tooltip v-for="effect in entity.effects" :key="effect.id" :left="true">
+			<v-tooltip v-for="effect in entity.effects" :key="effect.id" location="left" content-class="left">
 				<template #activator="{ props }">
 					<div :value="effectText(effect)" :turns="effect.turns === -1 ? '∞' : effect.turns" class="effect" :class="{irreductible: effect.modifiers & EffectModifier.IRREDUCTIBLE}" v-bind="props">
 						<img class="image" :src="effect.texture.src">

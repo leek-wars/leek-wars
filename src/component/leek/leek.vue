@@ -774,7 +774,7 @@
 	import { ORDERED_CHIPS } from '@/model/sorted_chips'
 	import LeekImage from '../leek-image.vue'
 	import LeekComponent from './leek-component.vue'
-	import { defineAsyncComponent } from 'vue'
+	import { defineAsyncComponent, nextTick } from 'vue'
 	import { emitter } from '@/model/vue'
 	import { Line } from 'vue-chartjs'
 	import { ChartData, ChartOptions, plugins } from 'chart.js'

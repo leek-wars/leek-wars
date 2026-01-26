@@ -7,7 +7,7 @@
 				<b>{{ 50 }}</b>
 			</template>
 			<template #time>
-				<b>{{ $filters.timeseconds($remainingTime) }}</b>
+				<b>{{ $filters.timeseconds(remainingTime) }}</b>
 			</template>
 		</i18n-t>
 		<i18n-t v-if="canbuy" class="buy" tag="div" keypath="buy_fights">

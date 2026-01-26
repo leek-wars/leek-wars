@@ -120,7 +120,7 @@ export default class RichTooltipLeek extends Vue {
 			LeekWars.get<Leek>('leek/rich-tooltip/' + this.id).then(leek => {
 				this.leek = new Leek(leek)
 				if (this.expand_items) {
-					(this.$refs.menu as any).updateLocation()
+					(this.$refs.menu as any)?.updateLocation()
 				}
 			})
 		}

@@ -203,6 +203,7 @@
 	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import { TROPHIES } from '@/model/trophies'
 	import { BOSSES } from '@/model/boss'
+	import { emitter } from '@/model/vue'
 
 	@Options({
 		name: 'lw-menu'

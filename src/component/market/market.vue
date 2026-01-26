@@ -72,7 +72,7 @@
 							</router-link>
 						</div>
 						<div v-else>
-							<div v-for="type in EffectTypeMarket" v-if="!isNaN(type)" :key="type">
+							<div v-for="type in Object.entries(EffectTypeMarket).filter(e => !isNaN(e[0] as any)).map(x => x[0])" :key="type">
 								<h4 :class="{first: type === EffectTypeMarket.ATTACK}">{{ $t('effect.effect_type_' + type) }}</h4>
 								<div class="items chips">
 									<router-link v-for="chip in chipsByType[type]" :key="chip.id" v-ripple :to="'/market/' + chip.name" :farmer-count="items[chip.id].farmer_count" :leek-count="items[chip.id].leek_count" class="item chip" :class="{toohigh: chip.level > max_level}">

@@ -1,5 +1,5 @@
 <template>
-	<popup :width="700">
+	<popup @update:modelValue="close" :width="700">
 		<template #icon>
 			<v-icon>mdi-new-box</v-icon>
 		</template>
@@ -103,7 +103,6 @@
 		@Prop({required: true}) leek!: Leek
 		@Prop({required: true}) levelData!: any
 
-		@Watch('modelValue')
 		close() {
 			LeekWars.post('leek/set-popup-level-seen', {leek_id: this.leek.id})
 		}
