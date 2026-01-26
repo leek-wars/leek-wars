@@ -174,7 +174,7 @@ monaco.editor.registerEditorOpener({
 		const model = monaco.editor.getModel(resource) || monaco.editor.createModel(ai.code, 'leekscript', uri)
 		ai.model = model
 		const range = selectionOrPosition as monaco.IRange
-		emitter.emit('jump', ai, range.startLineNumber, range.startColumn - 1)
+		emitter.emit('jump', { ai, line: range.startLineNumber, column: range.startColumn - 1 })
 		return true
 	},
 })

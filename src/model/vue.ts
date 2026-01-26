@@ -117,6 +117,7 @@ type Events = {
 	wsmessage: { type: number, data: any, id: number | null },
 	mousemove: any,
 	mouseup: any,
+	jump: { ai: AI, line: number, column: number },
 }
 
 const emitter = mitt<Events>()
@@ -211,7 +212,9 @@ const app = createApp({
 		emitter.on('loaded', () => {
 			nextTick(() => {
 				// console.log("loaded", this.$data.savedPosition)
-				if (this.$data.savedPosition > 0) {
+				if (router.currentRoute?.value.hash) {
+					scroll_to_hash(router.currentRoute?.value.hash, router.currentRoute)
+				} else if (this.$data.savedPosition > 0) {
 					// window.scrollTo(0, this.$data.savedPosition)
 					setTimeout(() => {
 						window.scrollTo(0, this.$data.savedPosition)
@@ -245,6 +248,13 @@ const app = createApp({
 	errorCaptured(err: any, vm: any, info: any) {
 
 		if (LeekWars.DEV) return
+
+		// Ignore chunk loading errors (handled by router.onError with page reload)
+		if (err.message?.includes('Failed to fetch dynamically imported module') ||
+			err.message?.includes('Loading chunk') ||
+			err.message?.includes('Loading CSS chunk')) {
+			return
+		}
 
 		if (Date.now() - lastErrorSent < 1000) return
 		lastErrorSent = Date.now()
@@ -430,10 +440,8 @@ if (LeekWars.DEV || LeekWars.LOCAL) {
 router.afterEach((to: any) => {
 	if (to.hash) {
 		setTimeout(() => {
-			setTimeout(() => {
-				scroll_to_hash(to.hash, to)
-			}, 100)
-		}, 0)
+			scroll_to_hash(to.hash, to)
+		}, 100)
 	}
 
 	app.config.globalProperties.$root?.$emit?.('navigate')
