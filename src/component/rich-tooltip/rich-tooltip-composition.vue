@@ -33,13 +33,16 @@
 				</div>
 
 				<table v-if="expand_leeks" class="leeks">
-					<tr>
-						<th>{{ $t('main.name') }}</th>
-						<th>{{ $t('main.level') }}</th>
-						<th><img src="/image/talent.png"></th>
-						<th v-for="c in LeekWars.characteristics" :key="c" class="c"><img :src="'/image/charac/small/' + c + '.png'" :class="{zero: sums[c] === 0}"></th>
-					</tr>
-					<tr v-for="leek in composition.leeks" :key="leek.id">
+					<thead>
+						<tr>
+							<th>{{ $t('main.name') }}</th>
+							<th>{{ $t('main.level') }}</th>
+							<th><img src="/image/talent.png"></th>
+							<th v-for="c in LeekWars.characteristics" :key="c" class="c"><img :src="'/image/charac/small/' + c + '.png'" :class="{zero: sums[c] === 0}"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="leek in composition.leeks" :key="leek.id">
 						<td class="leek-name">
 							<rich-tooltip-leek :id="leek.id" v-slot="{ props }" :bottom="true" @update:model-value="setParent">
 								<router-link :to="'/leek/' + leek.id">
@@ -50,7 +53,8 @@
 						<td>{{ leek.level }}</td>
 						<td><b>{{ leek.talent }}</b></td>
 						<td v-for="c in LeekWars.characteristics" :key="c" :class="['color-' + c, leek['total_' + c] === 0 ? 'zero' : '']" class="c">{{ leek['total_' + c] }}</td>
-					</tr>
+						</tr>
+					</tbody>
 				</table>
 			</template>
 		</div>
