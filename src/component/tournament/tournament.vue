@@ -119,15 +119,15 @@ Max power: {{ $filters.number(tournament.max_power) }}</pre>
 			}
 		}
 
-		tooltipOpen(x: number, y: number, text: string) {
+		tooltipOpen(data: { x: number, y: number, content: string }) {
 			if (!this.tournament) { return }
 			this.tooltip = true
 			const width = (this.$refs.sizer as any).offsetWidth - 30
 			const tournamentWidth = this.tournament!.size === 64 ? 1224 : 944
 			const ratio = width / tournamentWidth
-			this.tooltipX = 15 + (tournamentWidth / 2 + x) * ratio
-			this.tooltipY = 60 + (400 + y) * ratio
-			this.tooltipText = text
+			this.tooltipX = 15 + (tournamentWidth / 2 + data.x) * ratio
+			this.tooltipY = 60 + (400 + data.y) * ratio
+			this.tooltipText = data.content
 		}
 
 		tooltipClose() {
@@ -188,9 +188,11 @@ Max power: {{ $filters.number(tournament.max_power) }}</pre>
 		position: relative;
 	}
 	.tooltip {
+		position: absolute;
 		transform: translate(-50%, 0px);
 		opacity: 0.9;
 		z-index: 10;
+		white-space: nowrap;
 	}
 	.tournament.zoomed {
 		overflow-x: auto;
