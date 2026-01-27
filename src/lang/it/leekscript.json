@@ -9,7 +9,7 @@
 	"ls_function_information": "Informazioni sulla funzione \"{0}\".",
 	"ls_return_nothing": "non restituisce nulla",
 	"lstype_boolean": "booleano",
-	"lstype_float": "galleggiante",
+	"lstype_float": "decimale",
 	"lstype_int": "intero",
 	"lstype_number": "numero",
 	"lstype_string": "catena",

@@ -1,0 +1,28 @@
+243:
+  title: Creazione della communità, fucile quantistico e nuovo server.
+  added:
+    - "Aggiunta dell'arma fucile quantistico. #img_243_quantum_rifle #img_243_quantum_rifle2"
+    - Nuovo server (vedi argomento).
+    - "Aggiunta di nuove emoji (grazie a FdHP). #img_243_emojis"
+    - "Regolazione del volume in combattimento (grazie a TheWiseMan). #img_243_sound"
+    - "Filtri per forzieri e risorse rare nella pagina della cronologia (grazie a temakisushi). #img_243_filters"
+  improved:
+    - Restrizioni (ctrl, alt, shift) sui tasti di scelta rapida in combattimento (grazie a TheWiseMan).
+    - "Rapporto di combattimento: visualizzazione di più porri in grassetto quando le statistiche sono identiche (grazie a WhiteSlash). #img_243_stats"
+    - Quando si copia un leek di prova, vengono copiate anche le statistiche dei componenti (grazie a WhiteSlash).
+    - "Classifica: modifica delle classifiche per livelli predefiniti (grazie a WhiteSlash). #img_243_ranking"
+    - Armonizzazione dell'ordine delle celle per gli oggetti con area d'effetto (grazie a fujiwar).
+    - Il secondo parametro (entity) di useChip è facoltativo nella documentazione (grazie a fujiwar).
+    - "Gestione di errori multipli nell'editor. #img_243_multiple_errors"
+    - "Gestione dei link nei commenti nell'editor. #img_243_links"
+    - "Gestione dei caratteri non validi nell'editor. #img_243_invalid_chars"
+  fixed:
+    - Traduzione del titolo "Poireaux" nel rapporto di combattimento (grazie ad Alexiscomete).
+    - Traduzione delle caratteristiche della torretta nella pagina dedicata alla squadra (grazie a PtitsPoisCarottes).
+    - Correzione di un errore di battitura nel README (grazie a smegg99).
+    - Correzione della visualizzazione di B-Laser nella ricetta del cuore neurale (grazie a FdHP).
+    - Possibilità di formattare un codice LeekScript nell'editor (grazie a FdHP).
+    - Correzione di un bug sulla resurrezione di un bulbo nemico (grazie a WhiteSlash).
+    - Correzione di un bug di lettura dell'intervallo con numeri decimali (grazie a Hazurl).
+    - Ordinamento dei commenti su un combattimento in ordine cronologico (grazie a WhiteSlash)
+    
