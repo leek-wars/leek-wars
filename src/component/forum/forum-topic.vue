@@ -431,14 +431,14 @@ import { emitter } from '@/model/vue'
 			LeekWars.post('forum/subscribe-topic', {topic_id: this.topic.id})
 			this.topic.subscribed = true
 			this.action.icon = 'mdi-newspaper-minus'
-			LeekWars.toast(this.$t('notifications_on'))
+			LeekWars.toast(this.$i18n.t('notifications_on') as string)
 		}
 		unsubscribe() {
 			if (!this.topic) { return }
 			LeekWars.post('forum/unsubscribe-topic', {topic_id: this.topic.id})
 			this.topic.subscribed = false
 			this.action.icon = 'mdi-newspaper-plus'
-			LeekWars.toast(this.$t('notifications_off'))
+			LeekWars.toast(this.$i18n.t('notifications_off') as string)
 		}
 		edit(message: ForumMessage) {
 			message.editing = true
