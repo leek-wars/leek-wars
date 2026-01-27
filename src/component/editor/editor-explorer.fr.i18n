@@ -17,7 +17,7 @@
 	"delete_warning": "Les éléments seront déplacés vers la corbeille.",
 	"destroy": "Détruire définitivement",
 	"destroy_ai": "Détruire l'IA \"{0}\" définitivement ?",
-	"destroy_warning": "Cette action est irreversible.",
+	"destroy_warning": "Cette action est irréversible.",
 	"destroy_validate": "Détruire",
 	"new_ai": "Nouvelle IA",
 	"new_folder": "Nouveau dossier",

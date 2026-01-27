@@ -18,7 +18,7 @@
 	"delete_cancel": "Annuler",
 	"delete_desc": "Supprimer l'IA ou le dossier courant",
 	"delete_validate": "Supprimer",
-	"delete_warning": "Cette action est irreversible.",
+	"delete_warning": "Cette action est irréversible.",
 	"display": "Affichage",
 	"easy": "Facile",
 	"empty_folder": "Dossier vide",
