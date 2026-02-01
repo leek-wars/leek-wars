@@ -90,6 +90,7 @@ enum SocketMessage {
 	CONSOLE_ERROR = 86,
 	CONSOLE_LOG = 87,
 	CONSOLE_CLOSE = 88,
+	ADMIN_ERROR = 89,
 }
 
 class Socket {
@@ -342,6 +343,21 @@ class Socket {
 				}
 				case SocketMessage.EDITOR_COMPLETE: {
 					analyzer.completeResult({ id: request_id, type: id, data })
+					break
+				}
+				case SocketMessage.ADMIN_ERROR: {
+					const source = data[0]
+					const trace = data[1]
+					LeekWars.squares.add({
+						image: 'mdi-alert',
+						icon: true,
+						title: 'Erreur serveur ' + source,
+						message: trace,
+						link: '/admin/errors',
+						padding: true,
+						clazz: '',
+						resultIcon: ''
+					})
 					break
 				}
 			}
