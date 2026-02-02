@@ -358,6 +358,7 @@ class Socket {
 						clazz: '',
 						resultIcon: ''
 					})
+					store.commit('add-error')
 					break
 				}
 			}

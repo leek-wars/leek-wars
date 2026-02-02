@@ -5,6 +5,9 @@
 		</div>
 		<panel class="first last">
 			<div class="errors content">
+				<div v-if="newErrors > 0" class="new-errors" @click="refresh">
+					{{ newErrors }} nouvelle{{ newErrors > 1 ? 's' : '' }} erreur{{ newErrors > 1 ? 's' : '' }}
+				</div>
 				<loader v-if="!errors" />
 				<div v-else>
 					<div class="delete">
@@ -48,16 +51,29 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
+	import { emitter } from '@/model/vue'
 	import { Options, Vue } from 'vue-property-decorator'
 
 	@Options({})
 	export default class AdminErrors extends Vue {
 		errors: any[] | null = null
 		deleteQuery: string = ''
+		newErrors: number = 0
 
 		created() {
 			if (!this.$store.getters.admin) this.$router.replace('/')
 			this.update()
+			emitter.on('wsmessage', this.onWsMessage)
+		}
+
+		beforeUnmount() {
+			emitter.off('wsmessage', this.onWsMessage)
+		}
+
+		onWsMessage(e: any) {
+			if (e.type === 89) {
+				this.newErrors++
+			}
 		}
 
 		update() {
@@ -66,6 +82,11 @@
 				this.$store.commit('error-count', data.count)
 				LeekWars.setTitle("Gestionnaire d'erreur (" + (store.state.farmer ? store.state.farmer!.errors : 0) + ")")
 			})
+		}
+
+		refresh() {
+			this.newErrors = 0
+			this.update()
 		}
 
 		removeError(id: number) {
@@ -156,5 +177,17 @@
 	}
 	.flag {
 		height: 16px;
+	}
+	.new-errors {
+		text-align: center;
+		padding: 8px;
+		margin-bottom: 10px;
+		background: #5fad1b;
+		color: white;
+		border-radius: 5px;
+		cursor: pointer;
+	}
+	.new-errors:hover {
+		background: #4a9010;
 	}
 </style>

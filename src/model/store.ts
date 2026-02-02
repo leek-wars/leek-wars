@@ -939,6 +939,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
+		'add-error'(state: LeekWarsState) {
+			if (state.farmer) {
+				state.farmer.errors++
+			}
+		},
 		'remove-error'(state: LeekWarsState, data: any) {
 			if (state.farmer) {
 				state.farmer.errors--
