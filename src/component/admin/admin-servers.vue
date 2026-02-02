@@ -17,7 +17,7 @@
 						<div class="name">
 							{{ node.name }}<img class="status" src="/image/connected.png">
 						</div>
-						<div class="total-wrapper">Total : {{ $filters.number(node.generated) }}</div>
+						<div class="total-wrapper">Fights : {{ $filters.number(node.generated) }}</div>
 						<div v-if="node.metrics" class="metrics">
 							<div class="metric">
 								<span class="label">RAM:</span>
