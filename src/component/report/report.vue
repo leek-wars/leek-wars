@@ -708,7 +708,8 @@
 				scales: {
 					x: {
 						type: 'linear',
-						position: 'bottom'
+						position: 'bottom',
+						max: this.fight.report.duration + 1
 					},
 					y: {
 						type: 'linear'
