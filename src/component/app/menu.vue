@@ -34,7 +34,7 @@
 			<div class="menu-center">
 				<span v-if="$store.state.farmer && $store.state.farmer.leeks" class="leeks">
 					<span v-for="(leek, key, i) in $store.state.farmer.leeks" :key="leek.id" class="dida-element">
-						<router-link v-ripple :to="{ name: 'leek', params: { id: leek.id }}" :label="($store.state.farmer.equipment_enabled ? leek.capital : 0) || null" :class="{'router-link-active': i == 0 && isHomePage, bouncing: LeekWars.didactitial_step === 1 && i === 0 && !(isHomePage || $route.path === '/leek/' + leek.id)}" class="section">
+						<router-link v-ripple :to="{ name: 'leek', params: { id: leek.id }}" :label="($store.state.farmer.equipment_enabled ? leek.capital : 0) || null" :class="{'router-link-active': (i == 0 && isHomePage) || $route.path.startsWith('/leek/' + leek.id), bouncing: LeekWars.didactitial_step === 1 && i === 0 && !(isHomePage || $route.path === '/leek/' + leek.id)}" class="section">
 							<div :leek="leek.id" :tab="'leek-' + leek.id" @click="clickItem">
 								<img src="/image/icon/house.png">
 								<div class="text">{{ leek.name }}</div>
@@ -61,7 +61,7 @@
 				<div v-if="$store.state.farmer && $store.state.farmer.leeks" class="separator"></div>
 
 				<span class="dida-element">
-					<router-link v-ripple to="/editor" class="section" :class="{bouncing: LeekWars.didactitial_step === 4 && !$route.path.startsWith('/editor')}" @click.native="clickItem">
+					<router-link v-ripple to="/editor" class="section" :class="{'router-link-active': $route.path.startsWith('/editor'), bouncing: LeekWars.didactitial_step === 4 && !$route.path.startsWith('/editor')}" @click.native="clickItem">
 						<v-icon>mdi-code-braces</v-icon>
 						<div class="text">{{ $t("main.editor") }}</div>
 					</router-link>
@@ -72,7 +72,7 @@
 				</span>
 
 				<span class="dida-element">
-					<router-link v-ripple to="/garden" class="section" :class="{bouncing: LeekWars.didactitial_step === 2 && !$route.path.startsWith('/garden')}" :label="$store.state.farmer ? ($store.state.farmer.fights + ($store.state.farmer.team_fights ? '+' + $store.state.farmer.team_fights : '')) : null" @click.native="clickItem">
+					<router-link v-ripple to="/garden" class="section" :class="{'router-link-active': $route.path.startsWith('/garden'), bouncing: LeekWars.didactitial_step === 2 && !$route.path.startsWith('/garden')}" :label="$store.state.farmer ? ($store.state.farmer.fights + ($store.state.farmer.team_fights ? '+' + $store.state.farmer.team_fights : '')) : null" @click.native="clickItem">
 						<img src="/image/icon/garden.png">
 						<div class="text">{{ $t("main.garden") }}</div>
 					</router-link>
@@ -82,32 +82,32 @@
 					</span>
 				</span>
 
-				<router-link v-ripple to="/market" class="section" @click.native="clickItem">
+				<router-link v-ripple to="/market" class="section" :class="{'router-link-active': $route.path.startsWith('/market')}" @click.native="clickItem">
 					<img src="/image/icon/market.png">
 					<div class="text">{{ $t("main.market") }}</div>
 				</router-link>
 
-				<router-link v-if="$store.state.farmer && $store.state.farmer.team" v-ripple to="/team" class="section" @click.native="clickItem">
+				<router-link v-if="$store.state.farmer && $store.state.farmer.team" v-ripple to="/team" class="section" :class="{'router-link-active': $route.path.startsWith('/team')}" @click.native="clickItem">
 					<img src="/image/icon/team.png">
 					<div class="text">{{ $t('main.team') }}</div>
 				</router-link>
 
-				<router-link v-if="$store.state.farmer && $store.state.farmer.trophies" v-ripple to="/trophies" class="section" @click.native="clickItem">
+				<router-link v-if="$store.state.farmer && $store.state.farmer.trophies" v-ripple to="/trophies" class="section" :class="{'router-link-active': $route.path.startsWith('/trophies') || $route.path.startsWith('/trophy')}" @click.native="clickItem">
 					<img src="/image/icon/trophy.png">
 					<div class="text">{{ $t("main.trophies") }}</div>
 				</router-link>
 
-				<router-link v-ripple :to="rankingURL" class="section" @click.native="clickItem">
+				<router-link v-ripple :to="rankingURL" class="section" :class="{'router-link-active': $route.path.startsWith('/ranking')}" @click.native="clickItem">
 					<img src="/image/icon/ranking.png">
 					<div class="text">{{ $t("main.ranking") }}</div>
 				</router-link>
 
-				<router-link v-ripple to="/help" class="section" @click.native="clickItem">
+				<router-link v-ripple to="/help" class="section" :class="{'router-link-active': $route.path.startsWith('/help') || $route.path.startsWith('/encyclopedia')}" @click.native="clickItem">
 					<v-icon>mdi-help-circle-outline</v-icon>
 					<div class="text">{{ $t("main.help") }}</div>
 				</router-link>
 
-				<router-link v-if="env.SOCIAL" v-ripple to="/forum" class="section" @click.native="clickItem">
+				<router-link v-if="env.SOCIAL" v-ripple to="/forum" class="section" :class="{'router-link-active': $route.path.startsWith('/forum')}" @click.native="clickItem">
 					<img src="/image/icon/forum.png">
 					<div class="text">{{ $t("main.forum") }}</div>
 				</router-link>
@@ -122,12 +122,12 @@
 					<div class="text">{{ $store.state.farmer.group.name }}</div>
 				</router-link>
 
-				<router-link v-if="$store.getters.moderator" v-ripple :label="$store.state.farmer.reportings || null" to="/moderation" class="section" tab="moderation" @click.native="clickItem">
+				<router-link v-if="$store.getters.moderator" v-ripple :label="$store.state.farmer.reportings || null" to="/moderation" class="section" :class="{'router-link-active': $route.path.startsWith('/moderation')}" tab="moderation" @click.native="clickItem">
 					<v-icon>mdi-gavel</v-icon>
 					<div class="text">{{ $t('main.moderation') }}</div>
 				</router-link>
 
-				<router-link v-if="$store.getters.admin" v-ripple :label="$store.state.farmer.errors || null" to="/admin" class="section" tab="admin" @click.native="clickItem">
+				<router-link v-if="$store.getters.admin" v-ripple :label="$store.state.farmer.errors || null" to="/admin" class="section" :class="{'router-link-active': $route.path.startsWith('/admin')}" tab="admin" @click.native="clickItem">
 					<v-icon>mdi-security</v-icon>
 					<div class="text">{{ $t('main.admin') }}</div>
 				</router-link>
