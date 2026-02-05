@@ -32,10 +32,10 @@
 
 		<div v-if="inventory" class="stats inventory">
 			<div v-if="item.price">
-				{{ $t('main.estimated_value') }} : <b>{{ $filters.number(item.price) }}</b> <span class='hab'></span>
+				{{ $t('main.estimated_value') }} : <b>{{ LeekWars.formatNumber(item.price) }}</b> <span class='hab'></span>
 			</div>
 			<div v-if="item.price && quantity > 1">
-				{{ $t('main.lot_value') }} : <b>{{ $filters.number(item.price * quantity) }}</b> <span class='hab'></span>
+				{{ $t('main.lot_value') }} : <b>{{ LeekWars.formatNumber(item.price * quantity) }}</b> <span class='hab'></span>
 			</div>
 			<div v-if="item.name.startsWith('box') || ((($store.state.farmer && $store.state.farmer.admin) || LeekWars.christmasPresents) && item.name.startsWith('present'))">
 				<v-btn small class="get-all notif-trophy" @click.stop="retrieveN(1)">{{ $t('main.retrieve') }} <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
@@ -86,6 +86,7 @@ export default class ItemPreview extends Vue {
 	ItemType = ItemType
 	CHIPS = CHIPS
 	WeaponsData = WeaponsData
+	LeekWars = LeekWars
 
 	get category() {
 		return ITEM_CATEGORY_NAME[this.item.type]

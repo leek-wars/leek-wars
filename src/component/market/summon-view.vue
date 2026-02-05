@@ -34,6 +34,7 @@
 <script lang="ts">
 
 import { CHIPS } from '@/model/chips'
+import { LeekWars } from '@/model/leekwars'
 import { Options, Prop, Vue } from 'vue-property-decorator'
 import CharacteristicTooltip from '../leek/characteristic-tooltip.vue'
 import { defineAsyncComponent } from 'vue'
@@ -47,6 +48,7 @@ export default class SummonView extends Vue {
 	@Prop() summon!: any
 
 	CHIPS = CHIPS
+	LeekWars = LeekWars
 }
 
 </script>

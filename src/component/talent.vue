@@ -3,11 +3,12 @@
 		<div v-ripple class="icon">
 			<img src="/image/talent.png">
 		</div>
-		<div v-ripple class="value">{{ $filters.number(talent) }}</div>
+		<div v-ripple class="value">{{ LeekWars.formatNumber(talent) }}</div>
 	</span>
 </template>
 
 <script lang="ts">
+	import { LeekWars } from '@/model/leekwars'
 	import { Options, Prop, Vue } from 'vue-property-decorator'
 	@Options({ name: "talent" })
 	export default class Talent extends Vue {
@@ -15,6 +16,8 @@
 		@Prop() id!: number
 		@Prop() category!: string
 		@Prop() on!: any
+
+		LeekWars = LeekWars
 	}
 </script>
 

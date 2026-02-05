@@ -80,11 +80,12 @@ import { Leek } from '@/model/leek'
 import { LeekWars } from '@/model/leekwars'
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
+import LeekImage from '@/component/leek-image.vue'
 const LWTitle = defineAsyncComponent(() => import('@/component/title/title.vue'))
 import { CHIPS } from '@/model/chips'
 import { defineAsyncComponent } from 'vue'
 
-@Options({ components: { RichTooltipItem, 'lw-title': LWTitle } })
+@Options({ components: { RichTooltipItem, 'lw-title': LWTitle, 'leek-image': LeekImage } })
 export default class RichTooltipLeek extends Vue {
 
 	@Prop({required: true}) id!: number
@@ -93,6 +94,7 @@ export default class RichTooltipLeek extends Vue {
 	@Prop() instant!: boolean
 
 	CHIPS = CHIPS
+	LeekWars = LeekWars
 	content_created: boolean = false
 	leek: Leek | null = null
 	expand_items: boolean = false
@@ -120,7 +122,7 @@ export default class RichTooltipLeek extends Vue {
 			LeekWars.get<Leek>('leek/rich-tooltip/' + this.id).then(leek => {
 				this.leek = new Leek(leek)
 				if (this.expand_items) {
-					(this.$refs.menu as any)?.updateLocation()
+					(this.$refs.menu as any)?.updateLocation?.()
 				}
 			})
 		}

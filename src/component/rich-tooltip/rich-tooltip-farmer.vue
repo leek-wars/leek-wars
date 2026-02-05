@@ -26,7 +26,7 @@
 						</span>
 						<div>
 							<router-link :to="'/trophies/' + farmer.id" class="stat">
-								<img class="icon" src="/image/icon/grey/trophy.png">{{ $filters.number(farmer.points) }}
+								<img class="icon" src="/image/icon/grey/trophy.png">{{ LeekWars.formatNumber(farmer.points) }}
 							</router-link>
 							<router-link v-if="farmer.forum_messages" :to="'/search?farmer=' + farmer.name + '&order=date'" class="stat">
 								<img class="icon" src="/image/forum.png">{{ $tc('main.n_messages', farmer.forum_messages) }}
@@ -83,6 +83,8 @@
 		@Prop() disabled!: boolean
 		@Prop() bottom!: boolean
 		@Prop() instant!: boolean
+
+		LeekWars = LeekWars
 		content_created: boolean = false
 		farmer: Farmer | null = null
 		expand_leeks: boolean = false
@@ -114,7 +116,7 @@
 						this.sums[c] = Object.values(this.farmer.leeks).reduce((sum: number, leek: any) => sum + leek['total_' + c], 0)
 					}
 					if (this.expand_leeks) {
-						(this.$refs.menu as any)?.updateLocation()
+						(this.$refs.menu as any)?.updateLocation?.()
 					}
 				})
 			}

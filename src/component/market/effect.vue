@@ -100,8 +100,9 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { Options, Prop, Vue } from 'vue-property-decorator'
+	import Code from '@/component/app/code.vue'
 
-	@Options({ name: 'effect-view' })
+	@Options({ name: 'effect-view', components: { 'lw-code': Code } })
 	export default class EffectView extends Vue {
 
 		@Prop() effect!: Effect
@@ -110,6 +111,7 @@
 
 		EffectModifier = EffectModifier
 		EffectType = EffectType
+		LeekWars = LeekWars
 		raw_opened: boolean = false
 
 		get value1() {

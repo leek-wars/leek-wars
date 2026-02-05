@@ -73,6 +73,8 @@
 		@Prop() disabled!: boolean
 		@Prop() bottom!: boolean
 		@Prop() instant!: boolean
+
+		LeekWars = LeekWars
 		content_created: boolean = false
 		composition: Composition | null = null
 		expand_leeks: boolean = false
