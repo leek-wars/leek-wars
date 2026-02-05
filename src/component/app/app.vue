@@ -578,10 +578,10 @@
 		height: auto;
 		display: flex;
 		flex-direction: row;
-		max-height: 80vh;
+		max-height: 84vh;
 		box-shadow: none;
 		align-self: flex-start;
-		margin-top: 140px !important;
+		margin-top: 10vh !important;
 		.documentation-page {
 			max-height: 80vh;
 		}
