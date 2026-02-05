@@ -52,7 +52,7 @@
 						</template>
 					</i18n-t>
 				</div>
-				<action-log v-else-if="game.displayDebugs" :key="line.id" :log="line.log" :leeks="game.leeks" :action="0" :index="0" :lines="game.displayAILines" />
+				<action-log v-else-if="game.displayDebugs && line.log" :key="'_' + line.id" :log="line.log" :leeks="game.leeks" :action="0" :index="0" :lines="game.displayAILines" />
 			</template>
 		</div>
 		<div v-if="!creator && game.showActions && game.largeActions" class="resizer" :style="{left: actionsWidth + 'px'}" @mousedown="resizerMousedown"></div>
