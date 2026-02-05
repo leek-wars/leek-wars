@@ -30,10 +30,13 @@
 	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import ActionLeekElement from '../report/action-leek.vue'
 	import { ITEM_CATEGORY_NAME } from '@/model/item'
+	import { Leek } from '@/model/leek'
 
 	@Options({ components: { leek: ActionLeekElement } })
 	export default class ActionOpenChest extends Vue {
 		@Prop() action!: Action
 		@Prop() a!: number
+		@Prop() leeks!: {[key: number]: Leek}
+		ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
 	}
 </script>
