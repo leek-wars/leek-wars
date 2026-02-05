@@ -25,12 +25,8 @@
 		<span v-else-if="effect.value2 == 0" v-html="$t('effect.type_' + effect.id + '_fixed', [value1])"></span>
 		<span v-else v-html="$t('effect.type_' + effect.id, [format(effect.value1), format(effect.value1 + effect.value2)])"></span>
 		<span v-if="effect.modifiers & EffectModifier.ON_CASTER">
-			<span v-if="effectThe">
-				{{ $t('effect.the_caster') }}
-			</span>
-			<span v-else>
-				{{ $t('effect.to_the_caster') }}
-			</span>
+			<span v-if="effectThe">&nbsp;{{ $t('effect.the_caster') }}</span>
+			<span v-else>&nbsp;{{ $t('effect.to_the_caster') }}</span>
 		</span>
 		<b v-if="effect.modifiers & EffectModifier.MULTIPLIED_BY_TARGETS">&nbsp;{{ $t('effect.multiplied_target') }}</b>
 
