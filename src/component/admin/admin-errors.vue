@@ -22,6 +22,7 @@
 							<div class="card">
 								<div class="header">
 									<div>Erreur #{{ error.id }} - <b>{{ LeekWars.formatDateTime(error.time) }}</b> - Type {{ error.type }} - Gravité {{ error.severity }}</div>
+									<span v-if="error.service" class="service" :class="error.service">{{ error.service }}</span>
 									<div class="spacer"></div>
 									<flag class="locale" v-if="error.locale" :code="LeekWars.languages[error.locale]?.country" />
 									<span class="locale" v-if="error.locale">{{ error.locale }}</span>
@@ -131,6 +132,18 @@
 		.ip {
 			font-family: monospace;
 			font-size: 13px;
+		}
+		.service {
+			font-size: 11px;
+			font-weight: bold;
+			padding: 2px 6px;
+			border-radius: 3px;
+			text-transform: uppercase;
+			&.daemon { background: #9c27b0; color: white; }
+			&.worker { background: #ff9800; color: white; }
+			&.api { background: #2196f3; color: white; }
+			&.cron { background: #607d8b; color: white; }
+			&.client { background: #4caf50; color: white; }
 		}
 	}
 	.error code {
