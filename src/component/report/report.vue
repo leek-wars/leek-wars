@@ -724,9 +724,14 @@
 						intersect: false,
 						position: 'nearest',
 						yAlign: 'bottom',
+						usePointStyle: false,
+						boxWidth: 10,
+						boxHeight: 10,
+						boxPadding: 4,
 						callbacks: {
 							title: () => '',
-							label: (context: any) => context.dataset.label + ' : ' + context.parsed.y.toLocaleString() + (this.log ? '%' : '') + ' PV'
+							label: (context: any) => context.dataset.label + ' : ' + context.parsed.y.toLocaleString() + (this.log ? '%' : '') + ' PV',
+							labelColor: (context: any) => ({ backgroundColor: context.dataset.borderColor, borderColor: context.dataset.borderColor })
 						}
 					}
 				},
