@@ -235,6 +235,7 @@
 				}
 				if (this.konami.length > 12) { this.konami = this.konami.substring(1) }
 			})
+			emitter.on('keydown', (event: KeyboardEvent) => this.redirectToLocalhost(event))
 			emitter.on('navigate', () => {
 				this.docEverywhereModel = false
 			})
@@ -332,6 +333,21 @@
 				this.updateCloverPosition()
 			}
 		}
+
+		redirectToLocalhost(event: KeyboardEvent) {
+			// Check for Ctrl + Alt + L
+			if (event.ctrlKey && event.altKey && event.key === "l") {
+				event.preventDefault()
+				const local = 'http://localhost:8080'
+				const prod = 'https://leekwars.com'
+				if (window.location.origin === local) {
+					window.location.href = `${prod}${window.location.pathname}${window.location.search}${window.location.hash}`;
+				} else if (window.location.origin === prod) {
+					window.location.href = `${local}${window.location.pathname}${window.location.search}${window.location.hash}`;
+				}
+			}
+		}
+
 	}
 </script>
 

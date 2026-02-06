@@ -118,6 +118,7 @@ type Events = {
 	mousemove: any,
 	mouseup: any,
 	jump: { ai: AI, line: number, column: number },
+	navigate: void,
 }
 
 const emitter = mitt<Events>()
