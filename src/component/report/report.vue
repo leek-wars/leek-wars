@@ -382,6 +382,7 @@
 		damagesBarsOptions = {
 			maintainAspectRatio: false,
 			barThickness: 15,
+			layout: { padding: { right: 45 } },
 			plugins: {
 				legend: { display: false },
 				tooltip: {
