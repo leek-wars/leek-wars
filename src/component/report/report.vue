@@ -682,7 +682,7 @@
 					data: s,
 					tension: this.smooth ? 0.2 : 0,
 					borderColor: TEAM_COLORS[this.filtered_entities[i].leek.team - 1],
-					label: this.filtered_entities[i].leek.name,
+					label: this.filtered_entities[i].leek.translatedName,
 					pointHitRadius: 20
 				}))
 			}
