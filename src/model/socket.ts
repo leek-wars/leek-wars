@@ -181,7 +181,7 @@ class Socket {
 
 					const message = { id: data[0], type: data[1], date: LeekWars.time, parameters: data[2], new: true }
 					// Envoie de la notif sur la page du combat pour la mettre en file d'attente
-					if (message.type === NotificationType.TROPHY_UNLOCKED && router.currentRoute.path.startsWith('/fight/' + message.parameters[1])) {
+					if (message.type === NotificationType.TROPHY_UNLOCKED && router.currentRoute.value.path.startsWith('/fight/' + message.parameters[1])) {
 						emitter.emit('trophy', message)
 					} else {
 						if (message.type === NotificationType.UP_LEVEL) {
