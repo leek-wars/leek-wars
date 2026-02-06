@@ -379,32 +379,7 @@
 			plugins: { legend: { display: false } },
 		}
 		damagesBarsData: any = {}
-		damagesBarsOptions = {
-			maintainAspectRatio: false,
-			barThickness: 15,
-			layout: { padding: { right: 45 } },
-			plugins: {
-				legend: { display: false },
-				tooltip: {
-					mode: 'index' as any,
-					intersect: true,
-					position: 'stackCenter' as any,
-					yAlign: 'top',
-					callbacks: {
-						title: (items: any[]) => items[0]?.label || '',
-						label: (context: any) => context.raw ? `${context.dataset.label} : ${context.raw.toLocaleString()}` : null,
-					}
-				}
-			},
-			indexAxis: 'y',
-			scales: {
-				x: { stacked: true },
-				y: {
-					stacked: true,
-					reverse: true,
-				},
-			}
-		}
+		damagesBarsOptions: any = null
 		damagesBarsTotal = {
 			id: 'stackTotal',
 			afterDatasetsDraw(chart: any) {
@@ -733,7 +708,7 @@
 			}
 			this.chartData = {
 				datasets: series.map((s, i) => ({
-					data: s,
+					data: s.slice(0, s.findIndex((p: any) => p.y === 0 || p.y === null) + 1 || s.length),
 					tension: this.smooth ? 0.2 : 0,
 					borderColor: TEAM_COLORS[this.filtered_entities[i].leek.team - 1],
 					label: this.filtered_entities[i].leek.translatedName,
@@ -773,9 +748,11 @@
 						position: 'bottom',
 						min: 1,
 						max: this.statistics.duration + 1,
+						grid: { color: 'rgba(128,128,128,0.15)' },
 					},
 					y: {
-						type: 'linear'
+						type: 'linear',
+						grid: { color: 'rgba(128,128,128,0.15)' },
 					}
 				}
 			}
@@ -853,6 +830,7 @@
 		@Watch('damageChartType')
 		@Watch('damagesDisplaySummons')
 		@Watch('damagesTeams')
+		@Watch('LeekWars.darkMode')
 		getChartDamage() {
 			const entities: any[][] = [] // Entities or teams
 
@@ -933,6 +911,31 @@
 				datasets: series.map((s, i) => ({ label: labels[i], data: s, stack: 'total', backgroundColor: colors[i] }) )
 			}
 			this.damagesBarsHeight = Math.max(370, entities.length * 25)
+			const style = getComputedStyle(this.$el)
+			const textColor = style.getPropertyValue('--text-color-secondary').trim() || '#888'
+			this.damagesBarsOptions = {
+				maintainAspectRatio: false,
+				barThickness: 15,
+				layout: { padding: { right: 45 } },
+				plugins: {
+					legend: { display: false },
+					tooltip: {
+						mode: 'index' as any,
+						intersect: true,
+						position: 'stackCenter' as any,
+						yAlign: 'top',
+						callbacks: {
+							title: (items: any[]) => items[0]?.label || '',
+							label: (context: any) => context.raw ? `${context.dataset.label} : ${context.raw.toLocaleString()}` : null,
+						}
+					}
+				},
+				indexAxis: 'y',
+				scales: {
+					x: { stacked: true, grid: { color: 'rgba(128,128,128,0.15)' }, ticks: { color: textColor } },
+					y: { stacked: true, reverse: true, grid: { display: false }, ticks: { color: textColor } },
+				}
+			}
 
 			// Doughnut chart
 			const chartSeries = []
@@ -1179,7 +1182,7 @@
 			& > div {
 				display: flex;
 				padding: 2px 0;
-				border-bottom: 1px solid #ccc;
+				border-bottom: 1px solid var(--border);
 			}
 			span {
 				min-width: 55px;
