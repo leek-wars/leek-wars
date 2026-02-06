@@ -158,13 +158,12 @@
 				</div>
 			</template>
 			<loader v-if="!report" />
-			<div v-else ref="chartPanel" class="chart-panel" @mouseleave="chartMouseLeave" @mousemove="chartMouseMove">
+			<div v-else class="chart-panel">
 				<div class="damage-options">
 					<div class="spacer"></div>
 					<v-switch v-model="chartDisplaySummons" :label="$t('display_summons')" :hide-details="true" />
 				</div>
-				<Line ref="chart" :data="chartData" :options="chartOptions" :event-handlers="chartEvents" ratio="ct-major-eleventh" class="chart" :class="{long: statistics && statistics.lives.length >= 30}" />
-				<div v-show="chartTooltipValue" ref="chartTooltip" :style="{top: chartTooltipY + 'px', left: chartTooltipX + 'px'}" class="chart-tooltip v-tooltip__content top" v-html="chartTooltipValue"></div>
+				<Line ref="lifeChart" :data="chartData" :options="chartOptions" class="chart" :class="{long: statistics && statistics.lives.length >= 30}" />
 			</div>
 		</panel>
 
@@ -288,7 +287,18 @@
 	import { emitter } from '@/model/vue'
 	import { defineAsyncComponent } from 'vue'
 	import { Bar, Doughnut, Line } from 'vue-chartjs'
-	import { ChartOptions } from 'chart.js'
+	import { ChartOptions, Interaction } from 'chart.js'
+
+	let chartFocusedIndex: number | null = null
+
+	// Custom interaction mode: when focused, only return items from the focused dataset
+	;(Interaction.modes as any).focusedNearest = function(chart: any, e: any, options: any, useFinalPosition: any) {
+		const items = Interaction.modes.index(chart, e, options, useFinalPosition)
+		if (chartFocusedIndex !== null) {
+			return items.filter(item => item.datasetIndex === chartFocusedIndex)
+		}
+		return Interaction.modes.nearest(chart, e, options, useFinalPosition)
+	}
 
 	@Options({ name: 'report', i18n: {}, mixins: [...mixins], components: {
 		actions: ActionsElement,
@@ -324,13 +334,6 @@
 		statistics: FightStatistics | null = null
 		chartData: any = null
 		chartOptions: ChartOptions | null = null
-		chartEvents: any = []
-		chartTooltipValue: any = null
-		chartTooltipX: number = 0
-		chartTooltipY: number = 0
-		chartTooltipLeek: number | null = null
-		chartScale: number = 1
-		chart: any
 		chartDisplaySummons: boolean = false
 		actionsDisplayAlliesLogs: boolean = true
 		actionsDisplayLogs: boolean = true
@@ -530,6 +533,7 @@
 
 		async created() {
 			emitter.on('keyup', this.keyup)
+			emitter.on('htmlclick', this.chartUnfocus)
 
 			const fightMessages = await import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
 			i18n.global.mergeLocaleMessage(locale, { fight: fightMessages.default })
@@ -544,6 +548,7 @@
 
 		beforeUnmount() {
 			emitter.off('keyup', this.keyup)
+			emitter.off('htmlclick', this.chartUnfocus)
 		}
 
 		processLogs() {
@@ -659,25 +664,6 @@
 			this.updateChart()
 		}
 
-		chartGetY(line: number, x: number) {
-			const path = (this.$refs.chart as Vue).$el.querySelectorAll('.ct-series path')[line] as any
-			x = Math.max(path.getPointAtLength(0).x, x)
-			x = Math.min(path.getPointAtLength(path.getTotalLength()).x, x)
-			let pos
-			let p1 = 0
-			let p2 = path.getTotalLength()
-			let c
-			let sec = 1000
-			while (sec-- > 0) {
-				c = (p1 + p2) / 2
-				pos = path.getPointAtLength(c)
-				if (Math.abs(x - pos.x) < 1) { break }
-				if (pos.x > x) { p2 = c }
-				else { p1 = c }
-			}
-			return pos.y
-		}
-
 		@Watch('chartDisplaySummons')
 		updateChart() {
 			if (!this.fight || !this.statistics) { return }
@@ -695,11 +681,36 @@
 				datasets: series.map((s, i) => ({
 					data: s,
 					tension: this.smooth ? 0.2 : 0,
-					borderColor: TEAM_COLORS[this.filtered_entities[i].leek.team - 1]
+					borderColor: TEAM_COLORS[this.filtered_entities[i].leek.team - 1],
+					label: this.filtered_entities[i].leek.name,
+					pointHitRadius: 20
 				}))
 			}
+			chartFocusedIndex = null
 			this.chartOptions = {
-				plugins: { legend: { display: false } },
+				plugins: {
+					legend: { display: false },
+					tooltip: {
+						mode: 'focusedNearest' as any,
+						intersect: false,
+						position: 'nearest',
+						yAlign: 'bottom',
+						callbacks: {
+							title: () => '',
+							label: (context: any) => context.dataset.label + ' : ' + context.parsed.y + (this.log ? '%' : '') + ' PV'
+						}
+					}
+				},
+				onClick: (event: any) => {
+					if (chartFocusedIndex !== null) {
+						this.chartUnfocus()
+						return
+					}
+					const nearest = this.findNearestDataset(event)
+					if (nearest !== -1) {
+						this.chartFocus(nearest)
+					}
+				},
 				aspectRatio: 2.66,
 				elements: { point: { pointStyle: false } },
 				scales: {
@@ -713,59 +724,65 @@
 					}
 				}
 			}
-			this.chartEvents = [{
-				event: 'draw', fn: (context: any) => {
-					if (context.type === 'line') {
-						// console.log(context.index)
-						context.element.attr({
-							style: 'stroke: ' + (TEAM_COLORS[this.filtered_entities[context.index].leek.team - 1])
-						})
-					}
-					if (context.type === 'label') {
-						if (this.fight!.report.duration >= 30 && context.axis.units.pos === 'x' && context.text % 2 === 0) {
-							context.element.attr({style: 'padding-top: 12px; overflow: visible'})
-						}
+		}
+
+		hexToRgba(hex: string, alpha: number) {
+			const r = parseInt(hex.slice(1, 3), 16)
+			const g = parseInt(hex.slice(3, 5), 16)
+			const b = parseInt(hex.slice(5, 7), 16)
+			return `rgba(${r},${g},${b},${alpha})`
+		}
+
+		findNearestDataset(event: any) {
+			const chart = (this.$refs.lifeChart as any)?.chart
+			if (!chart) return -1
+			const rect = chart.canvas.getBoundingClientRect()
+			const px = event.native.clientX - rect.left
+			const py = event.native.clientY - rect.top
+			let minDist = Infinity
+			let nearest = -1
+			for (let d = 0; d < chart.data.datasets.length; d++) {
+				const meta = chart.getDatasetMeta(d)
+				const points = meta.data
+				for (let i = 0; i < points.length - 1; i++) {
+					const x1 = points[i].x, y1 = points[i].y
+					const x2 = points[i + 1].x, y2 = points[i + 1].y
+					// Distance point-to-segment
+					const dx = x2 - x1, dy = y2 - y1
+					const len2 = dx * dx + dy * dy
+					const t = len2 === 0 ? 0 : Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / len2))
+					const sx = x1 + t * dx, sy = y1 + t * dy
+					const dist = Math.sqrt((px - sx) * (px - sx) + (py - sy) * (py - sy))
+					if (dist < minDist) {
+						minDist = dist
+						nearest = d
 					}
 				}
-			}, { event: 'created', fn: (c: any) => {
-				if (!this.$refs.chart) { return }
-				const chart = (this.$refs.chart as Vue).$el
-				chart.querySelectorAll('.ct-line').forEach((e, i) => {
-					e.addEventListener('mouseenter', () => {
-						chart.querySelectorAll('.ct-line').forEach((el) => (el as HTMLElement).style.strokeOpacity = '0.3')
-						;(e as HTMLElement).style.strokeOpacity = '1'
-						;(e as HTMLElement).style.strokeWidth = '4px'
-						this.chartTooltipLeek = i
-					})
-				})
-				this.chartScale = (c.axisY.bounds.max - c.axisY.bounds.min)
-				this.chart = c
-			}}]
+			}
+			return minDist < 30 ? nearest : -1
 		}
-		chartMouseLeave() {
-			const chart = (this.$refs.chart as Vue).$el
-			chart.querySelectorAll('.ct-line').forEach((e) => {
-				(e as HTMLElement).style.strokeOpacity = '1'
-				;(e as HTMLElement).style.strokeWidth = '3px'
+
+		chartFocus(index: number) {
+			chartFocusedIndex = index
+			const chart = (this.$refs.lifeChart as any)?.chart
+			if (!chart) return
+			chart.data.datasets.forEach((ds: any, i: number) => {
+				const color = TEAM_COLORS[this.filtered_entities[i].leek.team - 1]
+				ds.borderWidth = i === index ? 4 : 3
+				ds.borderColor = this.hexToRgba(color, i === index ? 1 : 0.2)
 			})
-			this.chartTooltipLeek = null
-			this.chartTooltipValue = null
+			chart.update()
 		}
 
-		chartMouseMove(e: MouseEvent) {
-			const chart = (this.$refs.chart as Vue).$el as HTMLElement
-			const chartPanel = this.$refs.chartPanel as HTMLElement
-			const tooltip = this.$refs.chartTooltip as HTMLElement
-
-			if (this.chartTooltipLeek === null) { return }
-			const x = e.clientX - chartPanel.getBoundingClientRect().left + 10
-
-			const top = this.chartGetY(this.chartTooltipLeek, x)
-			this.chartTooltipX = x - tooltip.offsetWidth / 2 - 10,
-			this.chartTooltipY = top - 40
-
-			const value = Math.round(this.chart.bounds.low + (this.chart.chartRect.y1 - top) * (this.chartScale / (this.chart.chartRect.y1 - this.chart.chartRect.y2)))
-			this.chartTooltipValue = this.filtered_entities[this.chartTooltipLeek].leek.name + '<br>' + value + (this.log ? '%' : '') + ' PV'
+		chartUnfocus() {
+			chartFocusedIndex = null
+			const chart = (this.$refs.lifeChart as any)?.chart
+			if (!chart) return
+			chart.data.datasets.forEach((ds: any, i: number) => {
+				ds.borderWidth = 3
+				ds.borderColor = TEAM_COLORS[this.filtered_entities[i].leek.team - 1]
+			})
+			chart.update()
 		}
 
 		comment(comment: Comment) {
@@ -1055,16 +1072,6 @@
 		position: relative;
 	}
 	.chart {
-		:deep(.ct-line) {
-			stroke-width: 3px;
-		}
-		.ct-label.ct-horizontal {
-			text-align: center;
-		}
-	}
-	.chart-tooltip {
-		pointer-events: none;
-		opacity: 1;
 	}
 	.warnings-errors .title {
 		font-size: 18px;
