@@ -40,5 +40,8 @@
 	"errors": "Fehler",
 	"errors_warnings": "Fehler und Warnungen",
 	"n_errors": "{n} Fehler",
-	"n_warnings": "{n} Warnungen"
+	"n_warnings": "{n} Warnungen",
+	"toggle_turrets": "Türme ein-/ausblenden",
+	"toggle_percent": "Lebensprozentsatz",
+	"toggle_smooth": "Glatte/eckige Kurve"
 }

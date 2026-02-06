@@ -1,17 +1,32 @@
 <template>
 	<panel :title="$t('life_chart')" toggle="report/graph" icon="mdi-chart-line">
 		<template #actions>
-			<div v-if="fight && fight.type === FightType.TEAM" class="button flat" @click="toggleTurrets">
-				<img v-if="turrets" src="/image/icon/turret.png">
-				<img v-else src="/image/icon/turret_off.png">
-			</div>
-			<div class="button flat" @click="toggleLog">
-				<v-icon>mdi-percent-outline</v-icon>
-			</div>
-			<div class="button flat" @click="toggleSmooth">
-				<img v-if="smooth" src="/image/icon/graph_angular.png">
-				<img v-else src="/image/icon/graph_smooth.png">
-			</div>
+			<v-tooltip v-if="fight && fight.type === FightType.TEAM">
+				<template #activator="{ props }">
+					<div v-bind="props" class="button flat" @click="toggleTurrets">
+						<img v-if="turrets" src="/image/icon/turret.png">
+						<img v-else src="/image/icon/turret_off.png">
+					</div>
+				</template>
+				{{ $t('toggle_turrets') }}
+			</v-tooltip>
+			<v-tooltip>
+				<template #activator="{ props }">
+					<div v-bind="props" class="button flat" @click="toggleLog">
+						<v-icon>mdi-percent-outline</v-icon>
+					</div>
+				</template>
+				{{ $t('toggle_percent') }}
+			</v-tooltip>
+			<v-tooltip>
+				<template #activator="{ props }">
+					<div v-bind="props" class="button flat" @click="toggleSmooth">
+						<img v-if="smooth" src="/image/icon/graph_angular.png">
+						<img v-else src="/image/icon/graph_smooth.png">
+					</div>
+				</template>
+				{{ $t('toggle_smooth') }}
+			</v-tooltip>
 		</template>
 		<div class="chart-panel">
 			<div class="damage-options">

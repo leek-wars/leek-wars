@@ -40,5 +40,8 @@
 	"errors": "Erreurs",
 	"errors_warnings": "Erreurs et avertissements",
 	"n_errors": "{n} erreur | {n} erreurs",
-	"n_warnings": "{n} avertissements"
+	"n_warnings": "{n} avertissements",
+	"toggle_turrets": "Afficher/masquer les tourelles",
+	"toggle_percent": "Pourcentage de vie",
+	"toggle_smooth": "Courbe lisse/angulaire"
 }

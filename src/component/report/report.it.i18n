@@ -40,5 +40,8 @@
 	"errors": "Errori",
 	"errors_warnings": "Errori e avvisi",
 	"n_errors": "{n} errori",
-	"n_warnings": "{n} avvisi"
+	"n_warnings": "{n} avvisi",
+	"toggle_turrets": "Mostra/nascondi torrette",
+	"toggle_percent": "Percentuale di vita",
+	"toggle_smooth": "Curva liscia/angolare"
 }

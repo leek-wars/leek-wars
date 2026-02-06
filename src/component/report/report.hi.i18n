@@ -40,5 +40,8 @@
 	"errors": "त्रुटियाँ",
 	"errors_warnings": "त्रुटियाँ और चेतावनियाँ",
 	"n_errors": "{n} त्रुटियां",
-	"n_warnings": "{n} चेतावनी"
+	"n_warnings": "{n} चेतावनी",
+	"toggle_turrets": "बुर्ज दिखाएं/छुपाएं",
+	"toggle_percent": "जीवन प्रतिशत",
+	"toggle_smooth": "चिकनी/कोणीय वक्र"
 }
