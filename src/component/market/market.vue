@@ -763,6 +763,9 @@
 				width: 20px;
 			}
 		}
+		.buy {
+			margin: 5px 0;
+		}
 	}
 	.buy-crystals-button img {
 		vertical-align: middle;
@@ -816,8 +819,5 @@
 				background: var(--pure-white);
 			}
 		}
-	}
-	.buy {
-		margin: 5px 0;
 	}
 </style>

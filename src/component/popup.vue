@@ -1,5 +1,5 @@
 <template lang="html">
-	<v-dialog :model-value="modelValue" :width="width" :persistent="persistent" content-class="popup" @update:model-value="$emit('update:modelValue', $event)">
+	<v-dialog :model-value="modelValue" :width="width" :persistent="persistent" content-class="popup" scroll-strategy="none" @update:model-value="$emit('update:modelValue', $event)">
 		<template v-if="content_created">
 			<div class="title">
 				<slot name="icon">
