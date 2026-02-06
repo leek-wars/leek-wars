@@ -288,6 +288,7 @@
 	import { emitter } from '@/model/vue'
 	import { defineAsyncComponent } from 'vue'
 	import { Bar, Doughnut, Line } from 'vue-chartjs'
+	import { ChartOptions } from 'chart.js'
 
 	@Options({ name: 'report', i18n: {}, mixins: [...mixins], components: {
 		actions: ActionsElement,
@@ -322,7 +323,7 @@
 		turrets: boolean = false
 		statistics: FightStatistics | null = null
 		chartData: any = null
-		chartOptions: any = null
+		chartOptions: ChartOptions | null = null
 		chartEvents: any = []
 		chartTooltipValue: any = null
 		chartTooltipX: number = 0
@@ -699,17 +700,13 @@
 			}
 			this.chartOptions = {
 				plugins: { legend: { display: false } },
-				// axisX: {
-				// 	// type: Chartist.AutoScaleAxis,
-				// 	// onlyInteger: true,
-				// }
 				aspectRatio: 2.66,
 				elements: { point: { pointStyle: false } },
 				scales: {
 					x: {
 						type: 'linear',
 						position: 'bottom',
-						max: this.fight.report.duration + 1
+						max: this.statistics.duration + 1,
 					},
 					y: {
 						type: 'linear'
