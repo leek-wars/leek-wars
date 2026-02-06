@@ -291,13 +291,32 @@
 
 	let chartFocusedIndex: number | null = null
 
+	function nearestDatasetBySegment(chart: any, px: number, py: number) {
+		let minDist = Infinity
+		let nearest = -1
+		for (let d = 0; d < chart.data.datasets.length; d++) {
+			const points = chart.getDatasetMeta(d).data
+			for (let i = 0; i < points.length - 1; i++) {
+				const x1 = points[i].x, y1 = points[i].y
+				const x2 = points[i + 1].x, y2 = points[i + 1].y
+				const dx = x2 - x1, dy = y2 - y1
+				const len2 = dx * dx + dy * dy
+				const t = len2 === 0 ? 0 : Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / len2))
+				const sx = x1 + t * dx, sy = y1 + t * dy
+				const dist = (px - sx) * (px - sx) + (py - sy) * (py - sy)
+				if (dist < minDist) { minDist = dist; nearest = d }
+			}
+		}
+		return { index: nearest, dist: Math.sqrt(minDist) }
+	}
+
 	// Custom interaction mode: when focused, only return items from the focused dataset
 	;(Interaction.modes as any).focusedNearest = function(chart: any, e: any, options: any, useFinalPosition: any) {
 		const items = Interaction.modes.index(chart, e, options, useFinalPosition)
-		if (chartFocusedIndex !== null) {
-			return items.filter(item => item.datasetIndex === chartFocusedIndex)
-		}
-		return Interaction.modes.nearest(chart, e, options, useFinalPosition)
+		if (!items.length) return items
+		const target = chartFocusedIndex ?? nearestDatasetBySegment(chart, e.x, e.y).index
+		if (target === -1) return []
+		return items.filter(item => item.datasetIndex === target)
 	}
 
 	@Options({ name: 'report', i18n: {}, mixins: [...mixins], components: {
@@ -697,7 +716,7 @@
 						yAlign: 'bottom',
 						callbacks: {
 							title: () => '',
-							label: (context: any) => context.dataset.label + ' : ' + context.parsed.y + (this.log ? '%' : '') + ' PV'
+							label: (context: any) => context.dataset.label + ' : ' + context.parsed.y.toLocaleString() + (this.log ? '%' : '') + ' PV'
 						}
 					}
 				},
@@ -717,6 +736,7 @@
 					x: {
 						type: 'linear',
 						position: 'bottom',
+						min: 1,
 						max: this.statistics.duration + 1,
 					},
 					y: {
