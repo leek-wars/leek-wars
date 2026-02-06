@@ -756,6 +756,15 @@ const LeekWars = reactive({
 			})
 		}
 	},
+	trophyWords: null as any[] | null,
+	loadTrophyWords: async () => {
+		if (LeekWars.trophyWords) {
+			return Promise.resolve(LeekWars.trophyWords)
+		}
+		const words = await get('trophy/get-trophy-words')
+		LeekWars.trophyWords = words
+		return words
+	},
 	countries: [] as readonly string[],
 	loadCountries: () => {
 		// console.log("load countries")

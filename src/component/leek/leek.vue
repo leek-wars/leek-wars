@@ -650,7 +650,7 @@
 			</div>
 		</popup>
 
-		<popup v-if="leek" v-model="titleDialog" :width="550">
+		<popup v-if="leek" v-model="titleDialog" :width="600">
 			<template #icon><v-icon>mdi-medal-outline</v-icon></template>
 			<template #title><span>{{ $t('main.select_title') }}</span></template>
 			<div class="title-dialog">
