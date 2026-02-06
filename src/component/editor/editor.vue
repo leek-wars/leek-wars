@@ -353,6 +353,7 @@
 		}
 
 		mounted() {
+			LeekWars.large = this.enlargeWindow
 			LeekWars.footer = false
 			LeekWars.box = true
 
