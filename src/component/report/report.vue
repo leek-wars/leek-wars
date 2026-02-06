@@ -189,12 +189,12 @@
 						<Doughnut :data="damageChartDamage" :options="damageChartOptions" :class="{heal: damageChartType === 2, tank: damageChartType === 3}" class="right" />
 						<div class="legend">
 							<div v-for="(damage, d) in damageChartDamage.datasets[0].data" :key="d">
-								<span :style="{color: legends[d]}">{{ $t('stat_' + damageChartDamage.labels[d]) }}</span> <div class="value">{{ $filters.number(damage) }}</div>
+								<span :style="{color: legends[d]}">{{ damageChartDamage.labels[d] }}</span> <div class="value">{{ $filters.number(damage) }}</div>
 							</div>
 						</div>
 					</div>
-					<div class="damages-bars" :style="{height: (damagesBarsHeight - 10) + 'px'}">
-						<Bar :data="damagesBarsData" :options="damagesBarsOptions" :event-handlers="damagesBarsEvents" :class="{heal: damageChartType === 2, tank: damageChartType === 3}" :style="{height: damagesBarsHeight + 'px'}" class="chart" />
+					<div class="damages-bars" :style="{minHeight: damagesBarsHeight + 'px'}">
+						<Bar :data="damagesBarsData" :options="damagesBarsOptions" :plugins="[damagesBarsTotal]" :class="{heal: damageChartType === 2, tank: damageChartType === 3}" class="chart" />
 					</div>
 				</div>
 			</template>
@@ -287,7 +287,17 @@
 	import { emitter } from '@/model/vue'
 	import { defineAsyncComponent } from 'vue'
 	import { Bar, Doughnut, Line } from 'vue-chartjs'
-	import { ChartOptions, Interaction } from 'chart.js'
+	import { ChartOptions, Interaction, Tooltip } from 'chart.js'
+
+	// Custom tooltip positioner: center on the full stacked bar
+	;(Tooltip.positioners as any).stackCenter = function(items: any[]) {
+		if (!items.length) return false
+		const first = items[0].element
+		// For horizontal bars (indexAxis: 'y'), x is the bar end, base is the bar start
+		const xStart = Math.min(first.base, first.x)
+		const xEnd = Math.max(...items.map((i: any) => Math.max(i.element.x, i.element.base)))
+		return { x: (xStart + xEnd) / 2, y: first.y }
+	}
 
 	let chartFocusedIndex: number | null = null
 
@@ -370,28 +380,52 @@
 		}
 		damagesBarsData: any = {}
 		damagesBarsOptions = {
-			// stackBars: true,
-			// horizontalBars: true,
-			// showLabel: true,
-			// chartPadding: {
-			// 	top: 10,
-			// 	right: 35,
-			// 	bottom: 0,
-			// 	left: 90
-			// },
+			maintainAspectRatio: false,
 			barThickness: 15,
-			plugins: { legend: { display: false } },
+			plugins: {
+				legend: { display: false },
+				tooltip: {
+					mode: 'index' as any,
+					intersect: true,
+					position: 'stackCenter' as any,
+					yAlign: 'top',
+					callbacks: {
+						title: (items: any[]) => items[0]?.label || '',
+						label: (context: any) => context.raw ? `${context.dataset.label} : ${context.raw.toLocaleString()}` : null,
+					}
+				}
+			},
 			indexAxis: 'y',
 			scales: {
+				x: { stacked: true },
 				y: {
 					stacked: true,
 					reverse: true,
 				},
 			}
 		}
+		damagesBarsTotal = {
+			id: 'stackTotal',
+			afterDatasetsDraw(chart: any) {
+				const ctx = chart.ctx
+				const meta = chart.getDatasetMeta(chart.data.datasets.length - 1)
+				ctx.save()
+				ctx.font = 'bold 13px sans-serif'
+				ctx.fillStyle = getComputedStyle(chart.canvas).getPropertyValue('--text-color-secondary') || '#888'
+				ctx.textBaseline = 'middle'
+				meta.data.forEach((bar: any, i: number) => {
+					const total = chart.data.datasets.reduce((sum: number, ds: any) => sum + (ds.data[i] || 0), 0)
+					if (total > 0) {
+						const lastMeta = chart.getDatasetMeta(chart.data.datasets.length - 1)
+						const x = lastMeta.data[i].x
+						ctx.fillText(total.toLocaleString(), x + 6, bar.y)
+					}
+				})
+				ctx.restore()
+			}
+		}
 		damagesTeams: number = 0
 		damagesBarsHeight: number = 0
-		damagesBarsEvents: any
 		damagesDisplaySummons: boolean = false
 		map_obstacles: any
 		map_teams: any = null
@@ -825,7 +859,7 @@
 				const entity = this.statistics!.entities[e]
 				let total = 0
 				let stats: any[] = []
-				const name = entity.name
+				const name = entity.translatedName
 				if (this.damageChartType === 0) {
 					total = entity.dmg_out
 					stats = [name, entity.leek.id, entity.leek.team, total, entity.direct_dmg_out, entity.poison_out, entity.return_out, entity.nova_out, entity.life_dmg_out]
@@ -873,44 +907,36 @@
 				series.push(entities.map(e => e[v]))
 			}
 			this.damageEntities = entities
-			const colors = this.damageChartType === 0 || this.damageChartType === 1 ? ['#e22424', '#a017d6', '#41d3ff', '#38e9ae', '#f28dff'] : this.damageChartType === 2 ? ['#5fad1b', '#e22424', '#38e9ae'] : ['orange']
 
+			// Damage type labels and colors
+			let labelKeys: string[] = []
+			let colors: string[] = []
+			if (this.damageChartType === 0 || this.damageChartType === 1) {
+				labelKeys = ['direct', 'poison', 'return', 'nova', 'life']
+				colors = ['#e22424', '#a017d6', '#41d3ff', '#38e9ae', '#f28dff']
+				this.legends = ['#e22424', '#a017d6', '#32b2da', '#2bc491', '#f28dff']
+			} else if (this.damageChartType === 2) {
+				labelKeys = ['direct', 'steal', 'max_life']
+				colors = ['#5fad1b', '#e22424', '#38e9ae']
+				this.legends = ['#5fad1b', '#e22424', '#38e9ae']
+			} else {
+				labelKeys = ['direct']
+				colors = ['orange']
+				this.legends = ['orange']
+			}
+			const labels = labelKeys.map(k => this.$t('stat_' + k) as string)
+
+			// Bar chart
 			this.damagesBarsData = {
 				labels: entities.map(e => e[0]),
-				datasets: series.map((s, i) => ({ label: entities[i], data: s, stack: 'total', backgroundColor: colors[i] }) )
+				datasets: series.map((s, i) => ({ label: labels[i], data: s, stack: 'total', backgroundColor: colors[i] }) )
 			}
 			this.damagesBarsHeight = Math.max(370, entities.length * 25)
-			this.damagesBarsEvents = [{
-				event: 'draw', fn: (data: any) => {
-					if (data.type === 'bar' && data.seriesIndex === this.damagesBarsData.series.length - 1) {
-						const node = new Chartist.Svg('text', {
-							x: data.x2 + 5,
-							y: data.y2 + 5,
-						}, 'total')
-						node._node.textContent = this.damageEntities[data.index][3]
-						data.group.append(node, 'ct-slice-pie')
-					}
-				}
-			}]
 
-			// Chart
+			// Doughnut chart
 			const chartSeries = []
 			for (let v = 4; v < entities[0].length; ++v) {
 				chartSeries.push(entities.reduce((sum, e) => sum + e[v], 0))
-			}
-			let labels = []
-			if (this.damageChartType === 0) {
-				labels = ['direct', 'poison', 'return', 'nova', 'life']
-				this.legends = ['#e22424', '#a017d6', '#32b2da', '#2bc491', '#f28dff']
-			} else if (this.damageChartType === 1) {
-				labels = ['direct', 'poison', 'return', 'nova', 'life']
-				this.legends = ['#e22424', '#a017d6', '#32b2da', '#2bc491', '#f28dff']
-			} else if (this.damageChartType === 2) {
-				labels = ['direct', 'steal', 'max_life']
-				this.legends = ['#5fad1b', '#e22424', '#38e9ae']
-			} else {
-				labels = ['direct']
-				this.legends = ['orange']
 			}
 			this.damageChartDamage = {
 				labels,
@@ -1142,6 +1168,7 @@
 		display: flex;
 		& > * {
 			flex: 270px 0 0;
+			min-width: 0;
 		}
 		.legend {
 			display: grid;
@@ -1164,7 +1191,7 @@
 			}
 		}
 	}
-	@media screen and (max-width: 599px) {
+	@media screen and (max-width: 800px) {
 		.damages {
 			flex-direction: column;
 		}
@@ -1175,105 +1202,13 @@
 		padding: 10px;
 		padding-top: 15px;
 		padding-bottom: 5px;
-		svg {
-			width: 220px;
-			height: 220px;
-		}
-		:deep(.ct-label) {
-			font-size: 13px;
-			fill: rgba(0,0,0,.7);
-			font-weight: bold;
-			pointer-events: none;
-		}
-		:deep(.ct-series path) {
-			cursor: pointer;
-			stroke-width: 38px;
-			transition: stroke-width 0.1s ease;
-		}
-		:deep(.ct-series.selected path) {
-			stroke-width: 48px;
-		}
-		:deep(.ct-series-a path) {
-			stroke: #e22424;
-		}
-		:deep(.ct-series-b path) {
-			stroke: #a017d6;
-		}
-		:deep(.ct-series-c path) {
-			stroke: #32b2da;
-		}
-		:deep(.ct-series-d path) {
-			stroke: #38e9ae;
-		}
-		:deep(.ct-series-e path) {
-			stroke: #f28dff;
-		}
-		.heal {
-			:deep(.ct-series-a path) {
-				stroke: #5fad1b;
-			}
-			:deep(.ct-series-b path) {
-				stroke: #e22424;
-			}
-			:deep(.ct-series-c path) {
-				stroke: #38e9ae;
-			}
-		}
-		.tank {
-			:deep(.ct-series-a path) {
-				stroke: orange;
-			}
-		}
 	}
 	.damages-bars {
 		flex: 1.8;
-    	min-width: 0;
-		height: 356px;
+		min-width: 0;
 		.chart {
-			height: 380px;
-		}
-		:deep(.ct-bar) {
-			stroke-width: 15px;
-		}
-		:deep(.ct-series-a line) {
-			stroke: #e22424;
-		}
-		:deep(.ct-series-b line) {
-			stroke: #a017d6;
-		}
-		:deep(.ct-series-c line) {
-			stroke: #41d3ff;
-		}
-		:deep(.ct-series-d line) {
-			stroke: #38e9ae;
-		}
-		:deep(.ct-series-e line) {
-			stroke: #f28dff;
-		}
-		.heal {
-			:deep(.ct-series-a line) {
-				stroke: #5fad1b;
-			}
-			:deep(.ct-series-b line) {
-				stroke: #e22424;
-			}
-			:deep(.ct-series-c line) {
-				stroke: #38e9ae;
-			}
-		}
-		.tank {
-			:deep(.ct-series-a line) {
-				stroke: orange;
-			}
-		}
-		:deep(.total) {
-			font-weight: 500;
-			font-size: 14px;
-			fill: var(--text-color-secondary);
-		}
-		:deep(.ct-label.ct-vertical) {
-			color: var(--text-color-secondary);
-			white-space: nowrap;
+			width: 100%;
+			height: 100%;
 		}
 	}
 	.damage-options {
