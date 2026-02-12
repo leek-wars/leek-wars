@@ -120,7 +120,7 @@ Max power: {{ $filters.number(tournament.max_power) }}</pre>
 		}
 
 		tooltipOpen(data: { x: number, y: number, content: string }) {
-			if (!this.tournament) { return }
+			if (!this.tournament || !this.$refs.sizer) { return }
 			this.tooltip = true
 			const width = (this.$refs.sizer as any).offsetWidth - 30
 			const tournamentWidth = this.tournament!.size === 64 ? 1224 : 944
