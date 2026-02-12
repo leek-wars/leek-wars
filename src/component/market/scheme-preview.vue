@@ -10,12 +10,13 @@
 	import { SchemeTemplate } from '@/model/scheme'
 	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import SchemeView from './scheme.vue';
+	import { emitter } from '@/model/vue';
 
 	@Options({ components: { 'scheme': SchemeView } })
 	export default class SchemePreview extends Vue {
 		@Prop() scheme!: SchemeTemplate
 
-
+		emitter = emitter
 	}
 </script>
 
