@@ -11,11 +11,15 @@
 						</div>
 					</template>
 					<v-list :dense="true">
-						<v-list-item v-for="(language, i) in languages" :key="i" class="language" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click="setForumLanguage(language)">
-							<v-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" hide-details @click.stop="pickForumLanguage(language)" />
-							<flag :code="language.country" :clickable="false" />
-							<!-- <img :src="language.flag" class="flag"> -->
-							<span class="name">{{ language.name }}</span>
+						<v-list-item v-for="(language, i) in languages" :key="i" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click="setForumLanguage(language)">
+							<template #prepend>
+								<v-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" hide-details @click.stop="pickForumLanguage(language)" />
+							</template>
+							<div class="language">
+								<flag :code="language.country" :clickable="false" />
+								<!-- <img :src="language.flag" class="flag"> -->
+								<span class="name">{{ language.name }}</span>
+							</div>
 						</v-list-item>
 					</v-list>
 				</v-menu>
@@ -174,6 +178,7 @@ import { emitter } from '@/model/vue'
 			})
 		}
 		pickForumLanguage(language: Language) {
+			this.forumLanguages[language.code] = !this.forumLanguages[language.code]
 			localStorage.setItem('forum/languages', this.activeLanguages.join(','))
 			LeekWars.get('forum/get-categories/' + this.activeLanguages).then(data => {
 				this.categories = data.categories
@@ -319,6 +324,7 @@ import { emitter } from '@/model/vue'
 	}
 	.flag {
 		width: 28px;
+		margin-left: 6px;
 	}
 	.language {
 		display: flex;
