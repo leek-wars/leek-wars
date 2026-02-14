@@ -310,6 +310,10 @@ export default class AIViewMonaco extends Vue {
 			// Ensure we are still on the same AI
 			if (this.ai !== loadedAI) return
 
+			// Dismiss autocomplete widget before switching model to prevent
+			// it from accepting the current suggestion (#821)
+			this.editor.trigger('file-switch', 'hideSuggestWidget', {})
+
 			this.editor.setModel(model)
 			this.currentVersionId = model.getAlternativeVersionId()
 
