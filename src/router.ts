@@ -95,7 +95,10 @@ const Home = defineComponent({
 		}
 	},
 	render() {
-		return store.state.connected ? h(LeekAsync) : h(Signup)
+		if (store.state.connected) {
+			return (this as any).chatFirst ? null : h(LeekAsync)
+		}
+		return h(Signup)
 	}
 })
 
