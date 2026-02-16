@@ -24,6 +24,6 @@ import weapon from '@/lang/id/weapon.json'
 const translations = { component, main, changelog, characteristic, chip, flag, 'fight-pack': fight_pack, 'forum-category': forum_category, weapon, potion, effect, country, entity, hat, leekscript, mail, notification, resource, shortcut, trophy, pomp, warning }
 
 import { setTranslations } from "@/locale"
-setTranslations("id", translations, null)
+setTranslations("id", translations)
 
 export { translations }

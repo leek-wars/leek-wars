@@ -1,22 +1,22 @@
 <template lang="html">
 	<div class="scheme">
-		<div v-if="showResult" v-ripple class="group result" @click="possible && $root.$emit('craft', scheme)">
-			<rich-tooltip-item v-slot="{ on }" :item="result" :bottom="true" :inventory="true" @input="$emit('input', $event)">
-				<div class="item" v-on="on" :quantity="1" :class="{['rarity-border-' + result.rarity]: true, 'missing': !possible}">
+		<div v-if="showResult" v-ripple class="group result" @click="possible && emitter.emit('craft', scheme)">
+			<rich-tooltip-item v-slot="{ props }" :item="result" :bottom="true" :inventory="true" @update:model-value="$emit('update:modelValue', $event)">
+				<div class="item" v-bind="props" :quantity="1" :class="{['rarity-border-' + result.rarity]: true, 'missing': !possible}">
 					<img :src="'/image/' + ITEM_CATEGORY_NAME[result.type] + '/' + result.name.replace('hat_', '').replace('potion_', '') + '.png'" :type="result.type">
 					<!-- <div class="id">#{{ scheme.result }}</div> -->
-					<div v-if="scheme.quantity > 1" class="quantity">{{ scheme.quantity | number }}</div>
+					<div v-if="scheme.quantity > 1" class="quantity">{{ $filters.number(scheme.quantity) }}</div>
 				</div>
 			</rich-tooltip-item>
 		</div>
 		<div v-if="showResult" :key="'__'" class="symbol">{{ " = " }}</div>
 		<div class="items">
 			<template v-for="(ingredient, i) in items">
-				<rich-tooltip-item v-if="ingredient" :key="i" v-slot="{ on }" :item="ingredient.item" :bottom="true" :inventory="true" :quantity="ingredient.quantity" @input="$emit('input', $event)">
-					<div class="item" v-on="on" :class="{['rarity-border-' + ingredient.item.rarity]: true, [item_present[i]]: true}">
+				<rich-tooltip-item v-if="ingredient" :key="i" v-slot="{ props }" :item="ingredient.item" :bottom="true" :inventory="true" :quantity="ingredient.quantity" @update:model-value="$emit('update:modelValue', $event)">
+					<div class="item" v-bind="props" :class="{['rarity-border-' + ingredient.item.rarity]: true, [item_present[i]]: true}">
 						<img :src="'/image/' + ITEM_CATEGORY_NAME[ingredient.item.type] + '/' + ingredient.item.name.replace('hat_', '').replace('potion_', '').replace('chip_', '').replace('weapon_', '') + '.png'" :type="ingredient.item.type">
 						<!-- <div class="id">#{{ item[0] }}</div> -->
-						<div v-if="ingredient.quantity > 1" class="quantity">{{ ingredient.quantity | number }}</div>
+						<div v-if="ingredient.quantity > 1" class="quantity">{{ $filters.number(ingredient.quantity) }}</div>
 					</div>
 				</rich-tooltip-item>
 				<div v-if="ingredient && i < items.length - 1" :key="'_' + i" class="symbol">{{ " + " }}</div>
@@ -24,8 +24,8 @@
 		</div>
 		<div class="spacer"></div>
 		<div v-if="showPrice">
-			<div>{{ scheme.quantity * LeekWars.items[scheme.result].price | number }} <span class="hab"></span></div>
-			<div :class="{wrong: Math.abs((scheme.quantity * LeekWars.items[scheme.result].price) / scheme.items.reduce((s, i) => s + (i ? i[1] * LeekWars.items[i[0]].price : 0), 0) - 1.1) > 0.03 }">{{ scheme.items.reduce((s, i) => s + (i ? i[1] * LeekWars.items[i[0]].price : 0), 0) | number }} ({{ ((scheme.quantity * LeekWars.items[scheme.result].price) / scheme.items.reduce((s, i) => s + (i ? i[1] * LeekWars.items[i[0]].price : 0), 0)).toFixed(2) }}) <span class="hab"></span></div>
+			<div>{{ $filters.number(scheme.quantity * LeekWars.items[scheme.result].price) }} <span class="hab"></span></div>
+			<div :class="{wrong: Math.abs((scheme.quantity * LeekWars.items[scheme.result].price) / scheme.items.reduce((s, i) => s + (i ? i[1] * LeekWars.items[i[0]].price : 0), 0) - 1.1) > 0.03 }">{{ $filters.number(scheme.items.reduce((s, i) => s + (i ? i[1] * LeekWars.items[i[0]].price : 0), 0)) }} ({{ ((scheme.quantity * LeekWars.items[scheme.result].price) / scheme.items.reduce((s, i) => s + (i ? i[1] * LeekWars.items[i[0]].price : 0), 0)).toFixed(2) }}) <span class="hab"></span></div>
 		</div>
 	</div>
 </template>
@@ -35,16 +35,19 @@
 	import { LeekWars } from '@/model/leekwars';
 	import { SchemeTemplate } from '@/model/scheme';
 	import { store } from '@/model/store';
-	import { Component, Prop, Vue } from 'vue-property-decorator'
-	const RichTooltipItem = () => import('@/component/rich-tooltip/rich-tooltip-item.vue')
+	import { emitter } from '@/model/vue';
+	import { defineAsyncComponent } from 'vue';
+	import { Options, Prop, Vue } from 'vue-property-decorator'
+	const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
 
-	@Component({ name: 'scheme', components: {
+	@Options({ name: 'scheme', components: {
 		'rich-tooltip-item': RichTooltipItem,
 	} })
 	export default class SchemeView extends Vue {
 		@Prop({required: true}) scheme!: SchemeTemplate
 		@Prop({required: true}) showResult!: boolean
 		@Prop({required: true}) showPrice!: boolean
+		emitter = emitter
 
 		ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
 

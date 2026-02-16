@@ -26,4 +26,5 @@ class ChipTemplate {
 	public type!: number
 	public max_uses!: number
 }
+
 export { ChipTemplate }

@@ -1,37 +1,35 @@
 <template lang="html">
 	<div class="message" :class="{ me: chat.type === 2 && $store.state.farmer && message.farmer.id === $store.state.farmer.id, react: false, reactions: !LeekWars.isEmptyObj(message.reactions) }">
 		<router-link v-if="message.farmer.id !== 0" :to="'/farmer/' + message.farmer.id" class="avatar-wrapper">
-			<rich-tooltip-farmer :id="message.farmer.id" v-slot="{ on }">
-				<avatar :farmer="message.farmer" :on="on" />
+			<rich-tooltip-farmer :id="message.farmer.id">
+				<avatar :farmer="message.farmer" />
 			</rich-tooltip-farmer>
 		</router-link>
 		<img v-else class="avatar" src="/image/favicon.png">
 		<div class="bubble" :class="{large: large}">
 
 			<router-link v-if="message.farmer.id !== 0" :to="'/farmer/' + message.farmer.id" class="author">
-				<rich-tooltip-farmer :id="message.farmer.id" v-slot="{ on }">
-					<span :class="message.farmer.color" v-on="on">{{ message.farmer.name }}</span>
+				<rich-tooltip-farmer :id="message.farmer.id" v-slot="{ props }">
+					<span :class="message.farmer.color" v-bind="props">{{ message.farmer.name }}</span>
 				</rich-tooltip-farmer>
 			</router-link>
 			<div v-else class="author"><span class="bot">Leek Wars 🤖</span></div>
 
 			<chat-message-text :message="message" />
 
-			<template v-for="(sub, i) in message.subMessages">
+			<template v-for="(sub, i) in message.subMessages" :key="sub.id">
 				<chat-message-text :message="sub" />
 			</template>
 
 			<div class="right">
 				<span :title="LeekWars.formatDateTime(message.date)" class="time">{{ LeekWars.formatTime(message.date) }}</span>
 
-				<v-btn v-if="!privateMessages && (message.farmer.color !== 'admin' || $store.getters.admin) && message.farmer.id !== 0"  text small icon color="grey" @click="$emit('menu', $event)">
-					<v-icon>mdi-dots-vertical</v-icon>
-				</v-btn>
+				<v-btn v-if="!privateMessages && (message.farmer.color !== 'admin' || $store.getters.admin) && message.farmer.id !== 0" size="x-small" variant="text" icon="mdi-dots-vertical" color="grey" @click="$emit('menu', $event)"></v-btn>
 			</div>
 			<div class="reactions">
 				<v-tooltip v-for="(reaction, emoji) in message.reactions" :key="emoji" :open-delay="500" :close-delay="0" bottom>
-					<template v-slot:activator="{ on }">
-						<div v-on="on" class="reaction" v-ripple :class="{me: emoji === message.my_reaction}" @click="toggleReaction(emoji)">
+					<template #activator="{ props }">
+						<div v-bind="props" class="reaction" v-ripple :class="{me: emoji === message.my_reaction}" @click="toggleReaction(emoji)">
 							{{ emoji }} <span v-if="reaction.count > 1" class="count">{{ reaction.count }}</span>
 						</div>
 					</template>
@@ -49,12 +47,12 @@
 <script lang="ts">
 	import { Chat, ChatMessage, ChatType } from '@/model/chat'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import 'katex/dist/katex.min.css'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import ChatMessageText from './chat-message-text.vue'
 
-	@Component({ name: 'ChatMessage', components: { RichTooltipFarmer, ChatMessageText } })
+	@Options({ name: 'ChatMessage', components: { RichTooltipFarmer, ChatMessageText } })
 	export default class ChatMessageComponent extends Vue {
 
 		@Prop({ required: true }) message!: ChatMessage
@@ -70,7 +68,7 @@
 			return this.chat && this.chat.type === ChatType.PM
 		}
 
-		@Watch('message.reactions')
+		@Watch('message.reactions', { deep: true })
 		updateReactions() {
 			this.$emit('scroll')
 		}
@@ -123,7 +121,7 @@
 		.text.large-emojis, &.large .text.large-emojis {
 			line-height: 26px;
 			font-size: 22px;
-			::v-deep .emoji {
+			:deep(.emoji) {
 				width: 24px;
 				height: 24px;
 			}

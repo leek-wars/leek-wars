@@ -1,16 +1,21 @@
 
-<template functional>
-	<component :is="parent.EffectComponents[props.action.params[5]]" :leek="parent.leeks[props.action.params[4]]" :value="props.action.params[6]" :turns="props.action.params[7]" :a="props.a" />
+<template>
+	<component :is="EffectComponents[action.params[5]]" :leek="leeks[action.params[4]]" :value="action.params[6]" :turns="action.params[7]" :a="a" />
 </template>
 
 <script lang="ts">
 	import { Action } from '@/model/action'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import ActionLeekElement from '../report/action-leek.vue'
+	import { EffectComponents } from '@/model/action-components'
+	import { Leek } from '@/model/leek'
 
-	@Component({ components: { leek: ActionLeekElement } })
+	@Options({ components: { leek: ActionLeekElement } })
 	export default class ActionAddEffect extends Vue {
 		@Prop() action!: Action
 		@Prop() a!: number
+		@Prop() leeks!: {[key: number]: Leek}
+
+		EffectComponents = EffectComponents
 	}
 </script>

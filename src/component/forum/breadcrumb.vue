@@ -1,15 +1,15 @@
 <template lang="html">
 	<div :class="{raw: raw}" class="breadcrumb">
-		<template v-for="(item, i) in items">
-			<router-link :key="item.name" v-ripple :to="item.link" class="item">{{ item.name }}</router-link>
+		<template v-for="(item, i) in items" :key="item.name">
+			<router-link v-ripple :to="item.link" class="item">{{ item.name }}</router-link>
 			<v-icon v-if="i < items.length - 1" :key="i">mdi-chevron-right</v-icon>
 		</template>
 	</div>
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue } from 'vue-property-decorator'
-	@Component({})
+	import { Options, Prop, Vue } from 'vue-property-decorator'
+	@Options({})
 	export default class Breadcrumb extends Vue {
 		@Prop({required: true}) items!: any[]
 		@Prop() raw!: boolean
@@ -32,6 +32,7 @@
 		}
 		i {
 			align-self: center;
+			font-size: 24px;
 		}
 	}
 	.breadcrumb:not(.raw) {

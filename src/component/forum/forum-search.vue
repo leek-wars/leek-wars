@@ -64,16 +64,22 @@
 								<v-icon v-if="result.closed" :title="$t('locked')" class="attr">mdi-lock</v-icon>
 								<span v-html="result.title"></span>
 							</router-link>
-							<i18n tag="div" class="info" path="post_by_x_the_x_in_x">
-								<router-link slot="farmer" :to="'/farmer/' + result.fid">
-									<template v-if="options.farmer === ''">{{ result.fname }}</template>
-									<span v-else><b>{{ result.fname }}</b></span>
-								</router-link>
-								<span slot="date" class="dark">{{ result.date | date }}</span>
-								<router-link slot="topic" :to="'/forum/category-' + result.cid">
-									{{ $i18n.t('forum-category.' + result.cname) }}
-								</router-link>
-							</i18n>
+							<i18n-t tag="div" class="info" keypath="post_by_x_the_x_in_x">
+								<template #farmer>
+									<router-link :to="'/farmer/' + result.fid">
+										<template v-if="options.farmer === ''">{{ result.fname }}</template>
+										<span v-else><b>{{ result.fname }}</b></span>
+									</router-link>
+								</template>
+								<template #date>
+									<span class="dark">{{ $filters.date(result.date) }}</span>
+								</template>
+								<template #topic>
+									<router-link :to="'/forum/category-' + result.cid">
+										{{ $i18n.t('forum-category.' + result.cname) }}
+									</router-link>
+								</template>
+							</i18n-t>
 							<router-link :to="'/forum/category-' + result.cid + '/topic-' + result.tid + '/page-' + (floor(result.pos / 20) + 1) + (result.mid !== -1 ? '#message-' + result.mid : '')">
 								<div class="headline" v-html="result.message"></div>
 							</router-link>
@@ -103,11 +109,10 @@
 <script lang="ts">
 	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import Pagination from '@/component/pagination.vue'
-import { resolve } from 'path'
 
-	@Component({ name: 'search', i18n: {}, mixins: [...mixins], components: { Pagination } })
+	@Options({ name: 'search', i18n: {}, mixins: [...mixins], components: { Pagination } })
 	export default class Search extends Vue {
 		options = {
 			query: '',
@@ -258,12 +263,15 @@ import { resolve } from 'path'
 		.v-icon.resolved {
 			color: #5fad1b;
 		}
+		.v-icon {
+			font-size: 22px;
+		}
 	}
 	.result .headline {
 		color: #777;
 		font-size: 14px;
 	}
-	.result ::v-deep b {
+	.result :deep(b) {
 		color: #5fad1b;
 		font-weight: bold;
 	}

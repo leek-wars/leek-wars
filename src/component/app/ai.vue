@@ -11,9 +11,9 @@
 
 <script lang="ts">
 	import { AI } from '@/model/ai'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ name: "ai" })
+	@Options({ name: "ai" })
 	export default class AIElement extends Vue {
 		@Prop({required: true}) ai!: AI
 		@Prop({required: true}) library!: boolean
@@ -38,7 +38,7 @@
 <style lang="scss" scoped>
 	.ai {
 		vertical-align: bottom;
-		background-image: url("../../../public/image/ai/ai.png");
+		background-image: url("/image/ai/ai.png");
 		background-size: 100% 100%;
 		display: inline-flex;
 		flex-direction: column;
@@ -52,19 +52,19 @@
 		text-align: center;
 		margin: 0 auto;
 		&.blue {
-			background-image: url("../../../public/image/ai/ai_blue.png");
+			background-image: url("/image/ai/ai_blue.png");
 			color: white;
 		}
 		&.green {
-			background-image: url("../../../public/image/ai/ai_green.png");
+			background-image: url("/image/ai/ai_green.png");
 			color: white;
 		}
 		&.black {
-			background-image: url("../../../public/image/ai/ai_black.png");
+			background-image: url("/image/ai/ai_black.png");
 			color: white;
 		}
 		&.red {
-			background-image: url("../../../public/image/ai/ai_red.png");
+			background-image: url("/image/ai/ai_red.png");
 			color: white;
 		}
 		.name {
@@ -109,9 +109,9 @@
 		}
 	}
 	body.dark .ai:not(.blue):not(.red):not(.green) {
-		background-image: url("../../../public/image/ai/ai_black.png");
+		background-image: url("/image/ai/ai_black.png");
 		&.black {
-			background-image: url("../../../public/image/ai/ai.png");
+			background-image: url("/image/ai/ai.png");
 			color: black;
 		}
 	}

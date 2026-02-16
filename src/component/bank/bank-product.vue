@@ -1,9 +1,11 @@
 <template lang="html">
 	<div class="pack card">
 		<img :src="'/image/bank/crystals_' + product.id + '.png'">
-		<i18n tag="h2" path="main.pack_of_n_crystals">
-			<b slot="crystals">{{ product.crystals }}</b>
-		</i18n>
+		<i18n-t tag="h2" keypath="main.pack_of_n_crystals">
+			<template #crystals>
+				<b>{{ product.crystals }}</b>
+			</template>
+		</i18n-t>
 		<div class="buy">
 			<span v-if="LeekWars.currencies[LeekWars.currency].prefix" class="price"><span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>{{ format(product.prices[LeekWars.currency]) }}</span>
 			<span v-else class="price">{{ format(product.prices[LeekWars.currency]) }}&nbsp;<span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span></span>
@@ -18,10 +20,10 @@
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import { mixins } from '@/model/i18n'
 
-	@Component({ name: 'bank-product' })
+	@Options({ name: 'bank-product' })
 	export default class BankProduct extends Vue {
 
 		@Prop({ required: true }) product!: any

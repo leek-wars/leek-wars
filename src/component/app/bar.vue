@@ -18,9 +18,9 @@
 					<span v-show="$store.state.unreadMessages > 0" class="counter messages-counter">{{ $store.state.unreadMessages }}</span>
 				</div>
 				<div v-show="LeekWars.menuExpanded || $store.state.unreadNotifications > 0" v-ripple class="action header-button mobile notifications-button">
-					<v-menu :nudge-bottom="0" :max-width="400" :max-height="434" bottom offset-y @input="readNotifications">
-						<template v-slot:activator="{ on }">
-							<div class="header-button notifications-button" v-on="on">
+					<v-menu :nudge-bottom="0" :max-width="400" :max-height="434" bottom offset-y @update:model-value="readNotifications">
+						<template #activator="{ props }">
+							<div class="header-button notifications-button" v-bind="props">
 								<v-icon>mdi-information-outline</v-icon>
 								<span v-show="$store.state.unreadNotifications > 0" class="counter notifications-counter">{{ $store.state.unreadNotifications }}</span>
 							</div>
@@ -50,16 +50,17 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { emitter } from '@/model/vue'
+	import { Options, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'lw-bar' })
+	@Options({ name: 'lw-bar' })
 	export default class Bar extends Vue {
 		dark: boolean = false
 		mainButton() {
 			if (LeekWars.menuExpanded || !LeekWars.splitBack) {
 				LeekWars.toggleMenu()
 			} else {
-				this.$root.$emit('back')
+				emitter.emit('back')
 			}
 		}
 		closeMenu() {
@@ -176,14 +177,16 @@
 	}
 	.action i {
 		font-size: 26px;
-		padding: 15px 12px;
+		width: 56px;
+		height: 56px;
+		padding: 12px;
 		color: white;
 	}
 	.action img {
-		width: 54px;
-		height: 54px;
+		width: 56px;
+		height: 56px;
 		opacity: 1;
-		padding: 15px 14px;
+		padding: 16px;
 	}
 	.app-bar.content .action.list:not(.content),
 	.app-bar.list .action.content:not(.list),

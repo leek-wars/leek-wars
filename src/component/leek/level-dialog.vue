@@ -1,7 +1,11 @@
 <template>
-	<popup :value="value" :width="700" @input="$emit('input', $event)">
-		<v-icon slot="icon">mdi-new-box</v-icon>
-		<span v-if="levelData && leek" slot="title" v-html="$t('title', [leek.name, levelData.level])"></span>
+	<popup @update:modelValue="close" :width="700">
+		<template #icon>
+			<v-icon>mdi-new-box</v-icon>
+		</template>
+		<template #title>
+			<span v-if="levelData && leek" v-html="$t('title', [leek.name, levelData.level])"></span>
+		</template>
 
 		<div v-if="levelData && leek" class="level-popup">
 			<div v-if="leek.level == 301">
@@ -9,21 +13,21 @@
 				<br>
 				<div v-html="$t('301_message')"></div>
 				<br>
-				<center>
-					<tooltip>
-						<template v-slot:activator="{ on }">
-							<img width="100" src="/image/potion/skin_gold.png" v-on="on">
+				<div class="center">
+					<v-tooltip>
+						<template #activator="{ props }">
+							<img width="100" src="/image/potion/skin_gold.png" v-bind="props">
 						</template>
 						<b>{{ $t('potion.skin_gold') }}</b>
-					</tooltip>
+					</v-tooltip>
 					&nbsp;&nbsp;&nbsp;&nbsp;
-					<tooltip>
-						<template v-slot:activator="{ on }">
-							<img width="100" src="/image/hat/crown.png" v-on="on">
+					<v-tooltip>
+						<template #activator="{ props }">
+							<img width="100" src="/image/hat/crown.png" v-bind="props">
 						</template>
 						<b>{{ $t('hat.crown') }}</b>
-					</tooltip>
-				</center>
+					</v-tooltip>
+				</div>
 			</div>
 
 			<table class="gains-table">
@@ -45,7 +49,7 @@
 			</table>
 
 			<div v-if="levelData.weapons.length == 0 && levelData.chips.length == 0 && !levelData.new_chip && !levelData.new_weapon">
-				<center>{{ $t('no_news') }}</center>
+				<div class="center">{{ $t('no_news') }}</div>
 			</div>
 			<div v-else>
 				<div v-if="levelData.weapons.length > 0" class="new">
@@ -92,15 +96,13 @@
 	import { mixins } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'level-dialog', i18n: {}, mixins: [...mixins] })
+	@Options({ name: 'level-dialog', i18n: {}, mixins: [...mixins] })
 	export default class LevelDialog extends Vue {
-		@Prop({required: true}) value!: boolean
 		@Prop({required: true}) leek!: Leek
 		@Prop({required: true}) levelData!: any
 
-		@Watch('value')
 		close() {
 			LeekWars.post('leek/set-popup-level-seen', {leek_id: this.leek.id})
 		}

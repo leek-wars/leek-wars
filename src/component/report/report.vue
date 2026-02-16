@@ -1,19 +1,21 @@
 <template>
 	<error v-if="error" :title="$t('title')" :message="$t('not_found')" />
 	<error v-else-if="generating" :title="$t('title')" :message="$t('not_generated_yet')">
-		<v-btn slot="button" large color="primary" @click="update">
+		<template #button>
+			<v-btn large color="primary" @click="update">
 			<v-icon>mdi-refresh</v-icon>&nbsp;<span>{{ $t('refresh') }}</span>
 		</v-btn>
+		</template>
 	</error>
 	<div class="page" v-else>
 		<div class="page-header page-bar">
 			<div>
 				<h1>{{ $t('title') }}</h1>
-				<div v-if="fight" class="info">{{ fight.date | date }}</div>
+				<div v-if="fight" class="info">{{ $filters.date(fight.date) }}</div>
 			</div>
 			<div class="tabs">
 				<div v-if="report && fight && $store.getters.admin" class="tab disabled">
-					{{ (fight.size / 1000) | number }} Ko
+					{{ $filters.number(fight.size / 1000) }} Ko
 				</div>
 				<a v-if="report && (errors.length > 0 || warnings.length > 0)" href="#errors" class="tab">
 					<span v-if="errors.length > 0"><v-icon class="error">mdi-alert-circle</v-icon> {{ errors.length }} </span>
@@ -26,8 +28,9 @@
 		</div>
 
 		<panel class="first">
-			<loader v-if="!report" slot="content" />
-			<div v-else slot="content" class="content">
+			<template #content>
+				<loader v-if="!report" />
+				<div v-else class="content">
 				<div v-if="fight.too_long" class="too-long">
 					{{ $t('generation_too_long') }}
 				</div>
@@ -47,7 +50,9 @@
 									<!-- <th>Opérations</th> -->
 									<!-- <th v-if="$store.getters.admin" class="gain">Time</th> -->
 								</tr>
-								<report-leek-row v-for="leek in report.leeks" v-if="!leek.summon" :key="leek.id" :leek="leek" :fight="fight" />
+								<template v-for="leek in report.leeks" :key="leek.id">
+									<report-leek-row v-if="!leek.summon" :leek="leek" :fight="fight" />
+								</template>
 							</table>
 						</div>
 					</div>
@@ -63,7 +68,7 @@
 					</div>
 				</div>
 
-				<center class="buttons">
+				<div class="center buttons">
 					<router-link :to="'/fight/' + fight.id">
 						<v-btn>
 							<v-icon>mdi-replay</v-icon>
@@ -111,7 +116,7 @@
 							</router-link>
 						</span>
 					</span>
-				</center>
+				</div>
 
 				<div class="seed"><v-icon>mdi-seed</v-icon>{{ $t('seed', [fight.seed]) }}</div>
 
@@ -130,50 +135,28 @@
 						</router-link>
 					</div>
 				</template>
-			</div>
+				</div>
+			</template>
 		</panel>
 
 		<panel v-if="fight" :title="$t('main.comments') + ' (' + fight.comments.length + ')'" icon="mdi-comment-multiple-outline">
 			<comments :comments="fight.comments" @comment="comment" />
 		</panel>
 
-		<panel :title="$t('life_chart')" toggle="report/graph" icon="mdi-chart-line">
-			<template slot="actions">
-				<div v-if="fight && fight.type === FightType.TEAM" class="button flat" @click="toggleTurrets">
-					<img v-if="turrets" src="/image/icon/turret.png">
-					<img v-else src="/image/icon/turret_off.png">
-				</div>
-				<div class="button flat" @click="toggleLog">
-					<v-icon>mdi-percent-outline</v-icon>
-				</div>
-				<div class="button flat" @click="toggleSmooth">
-					<img v-if="smooth" src="/image/icon/graph_angular.png">
-					<img v-else src="/image/icon/graph_smooth.png">
-				</div>
-			</template>
-			<loader v-if="!report" />
-			<div v-else ref="chartPanel" class="chart-panel" @mouseleave="chartMouseLeave" @mousemove="chartMouseMove">
-				<div class="damage-options">
-					<div class="spacer"></div>
-					<v-switch v-model="chartDisplaySummons" :label="$t('display_summons')" :hide-details="true" />
-				</div>
-				<chartist ref="chart" :data="chartData" :options="chartOptions" :event-handlers="chartEvents" ratio="ct-major-eleventh" class="chart" :class="{long: statistics && statistics.lives.length >= 30}" type="Line" />
-				<div v-show="chartTooltipValue" ref="chartTooltip" :style="{top: chartTooltipY + 'px', left: chartTooltipX + 'px'}" class="chart-tooltip v-tooltip__content top" v-html="chartTooltipValue"></div>
-			</div>
-		</panel>
+		<report-life-chart v-if="statistics" :fight="fight" :statistics="statistics" />
 
 		<panel :title="$t('damages_title')" toggle="report/damage" icon="mdi-chart-pie">
 			<loader v-if="!loaded" />
 			<template v-else>
 				<div class="damage-options">
-					<v-radio-group v-model="damageChartType" :row="true" :dense="true" :hide-details="true">
+					<v-radio-group v-model="damageChartType" :inline="true" :hide-details="true">
 						<v-radio :value="0" :label="$t('inflicted_damage')" />
 						<v-radio :value="1" :label="$t('received_damage')" />
 						<v-radio :value="2" :label="$t('heal')" />
 						<v-radio :value="3" label="Tank" />
 					</v-radio-group>
 					<div class="spacer"></div>
-					<v-radio-group v-if="fight.type !== FightType.BATTLE_ROYALE && fight.type !== FightType.SOLO" v-model="damagesTeams" :row="true" :dense="true" :hide-details="true">
+					<v-radio-group v-if="fight.type !== FightType.BATTLE_ROYALE && fight.type !== FightType.SOLO" v-model="damagesTeams" :inline="true" :hide-details="true">
 						<v-radio :value="0" label="Entités" />
 						<v-radio :value="1" label="Équipes" />
 					</v-radio-group>
@@ -181,15 +164,15 @@
 				</div>
 				<div class="damages">
 					<div class="damage-chart">
-						<chartist :data="damageChartDamage" :options="damageChartOptions" :class="{heal: damageChartType === 2, tank: damageChartType === 3}" class="right" type="Pie" />
+						<Doughnut :data="damageChartDamage" :options="damageChartOptions" :class="{heal: damageChartType === 2, tank: damageChartType === 3}" class="right" />
 						<div class="legend">
-							<div v-for="(damage, d) in damageChartDamage.series" :key="d">
-								<span :style="{color: legends[d]}">{{ $t('stat_' + damageChartDamage.labels[d]) }}</span> <div class="value">{{ damage | number }}</div>
+							<div v-for="(damage, d) in damageChartDamage.datasets[0].data" :key="d">
+								<span :style="{color: legends[d]}">{{ damageChartDamage.labels[d] }}</span> <div class="value">{{ $filters.number(damage) }}</div>
 							</div>
 						</div>
 					</div>
-					<div class="damages-bars" :style="{height: (damagesBarsHeight - 10) + 'px'}">
-						<chartist :data="damagesBarsData" :options="damagesBarsOptions" :event-handlers="damagesBarsEvents" :class="{heal: damageChartType === 2, tank: damageChartType === 3}" :style="{height: damagesBarsHeight + 'px'}" class="chart" type="Bar" />
+					<div class="damages-bars" :style="{minHeight: damagesBarsHeight + 'px'}">
+						<Bar :data="damagesBarsData" :options="damagesBarsOptions" :plugins="[damagesBarsTotal]" :class="{heal: damageChartType === 2, tank: damageChartType === 3}" class="chart" />
 					</div>
 				</div>
 			</template>
@@ -219,7 +202,7 @@
 		</panel>
 
 		<panel v-if="hasErrWarn" id="errors" class="warnings-error" toggle="report/warnings-errors" icon="mdi-alert">
-			<template slot="title">{{ $t('errors_warnings') }} ({{ errors.length + warnings.length }})</template>
+			<template #title>{{ $t('errors_warnings') }} ({{ errors.length + warnings.length }})</template>
 			<div class="logs">
 				<div class="turn">
 					<div id="turn-0" class="black">
@@ -235,9 +218,11 @@
 					</div>
 				</div>
 				<div v-if="warnings.length" class="title">
-					<i18n path="n_warnings">
-						<b slot="n">{{ warnings.length }}</b>
-					</i18n>
+					<i18n-t keypath="n_warnings">
+						<template #n>
+						<b>{{ warnings.length }}</b>
+					</template>
+					</i18n-t>
 				</div>
 				<div class="errors" @mouseover="mouseover">
 					<div v-for="(w, i) in warnings" :key="i" class="log warning" :a="w.action" :i="w.index">
@@ -269,19 +254,41 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { TEAM_COLORS } from '@/model/team'
-	import Chartist from 'chartist'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import ActionsElement from './report-actions.vue'
 	import ReportBlock from './report-block.vue'
 	import ReportLeekRow from './report-leek-row.vue'
-	const ReportStatistics = () => import(/* webpackChunkName: "[request]" */ `@/component/report/report-statistics.${locale}.i18n`)
-	import { FightStatistics, StatisticsEntity } from './statistics'
-	import(/* webpackChunkName: "chartist" */ /* webpackMode: "eager" */ "@/chartist-wrapper")
-	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
+	const ReportStatistics = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/report/report-statistics.${locale}.i18n`))
+	import { FightStatistics } from './statistics'
 	import Comments from '@/component/comment/comments.vue'
 	import { CHIPS } from '@/model/chips'
+	import { emitter } from '@/model/vue'
+	import { defineAsyncComponent } from 'vue'
+	import { Bar, Doughnut } from 'vue-chartjs'
+	import { Tooltip } from 'chart.js'
+	import ReportLifeChart from './report-life-chart.vue'
 
-	@Component({ name: 'report', i18n: {}, mixins: [...mixins], components: { actions: ActionsElement, ReportLeekRow, ReportBlock, ReportStatistics, 'lw-map': Map, Comments } })
+	// Custom tooltip positioner: center on the full stacked bar
+	;(Tooltip.positioners as any).stackCenter = function(items: any[]) {
+		if (!items.length) return false
+		const first = items[0].element
+		// For horizontal bars (indexAxis: 'y'), x is the bar end, base is the bar start
+		const xStart = Math.min(first.base, first.x)
+		const xEnd = Math.max(...items.map((i: any) => Math.max(i.element.x, i.element.base)))
+		return { x: (xStart + xEnd) / 2, y: first.y }
+	}
+
+	@Options({ name: 'report', i18n: {}, mixins: [...mixins], components: {
+		actions: ActionsElement,
+		ReportLeekRow,
+		ReportBlock,
+		ReportStatistics,
+		'lw-map': Map,
+		Comments,
+		Doughnut,
+		Bar,
+		ReportLifeChart,
+	} })
 	export default class ReportPage extends Vue {
 		TEAM_COLORS = TEAM_COLORS
 		fight: Fight | null = null
@@ -299,20 +306,7 @@
 		myFight: boolean = false
 		iWin: boolean = false
 		enemy: any = null
-		smooth: boolean = false
-		log: boolean = false
-		turrets: boolean = false
 		statistics: FightStatistics | null = null
-		chartData: any = null
-		chartOptions: any = null
-		chartEvents: any = []
-		chartTooltipValue: any = null
-		chartTooltipX: number = 0
-		chartTooltipY: number = 0
-		chartTooltipLeek: number | null = null
-		chartScale: number = 1
-		chart: any
-		chartDisplaySummons: boolean = false
 		actionsDisplayAlliesLogs: boolean = true
 		actionsDisplayLogs: boolean = true
 		generating: boolean = false
@@ -322,30 +316,39 @@
 		damageChartDamage: any = {}
 		damageChartOptions = {
 			donut: true,
-			donutWidth: 38,
-			startAngle: 90,
-			showLabel: false
+			cutout: '70%',
+			rotation: 90,
+			showLabel: false,
+			plugins: { legend: { display: false } },
 		}
 		damagesBarsData: any = {}
-		damagesBarsOptions = {
-			stackBars: true,
-			horizontalBars: true,
-			showLabel: true,
-			chartPadding: {
-				top: 10,
-				right: 35,
-				bottom: 0,
-				left: 90
+		damagesBarsOptions: any = null
+		damagesBarsTotal = {
+			id: 'stackTotal',
+			afterDatasetsDraw(chart: any) {
+				const ctx = chart.ctx
+				const meta = chart.getDatasetMeta(chart.data.datasets.length - 1)
+				ctx.save()
+				ctx.font = 'bold 13px sans-serif'
+				ctx.fillStyle = getComputedStyle(chart.canvas).getPropertyValue('--text-color-secondary') || '#888'
+				ctx.textBaseline = 'middle'
+				meta.data.forEach((bar: any, i: number) => {
+					const total = chart.data.datasets.reduce((sum: number, ds: any) => sum + (ds.data[i] || 0), 0)
+					if (total > 0) {
+						const lastMeta = chart.getDatasetMeta(chart.data.datasets.length - 1)
+						const x = lastMeta.data[i].x
+						ctx.fillText(total.toLocaleString(), x + 6, bar.y)
+					}
+				})
+				ctx.restore()
 			}
 		}
 		damagesTeams: number = 0
 		damagesBarsHeight: number = 0
-		damagesBarsEvents: any
 		damagesDisplaySummons: boolean = false
 		map_obstacles: any
 		map_teams: any = null
 		legends: any
-		filtered_entities!: StatisticsEntity[]
 		currentLink: Element | null = null
 
 		get id() {
@@ -383,9 +386,6 @@
 			if (localStorage.getItem('fight/allies-logs') === null) { localStorage.setItem('fight/allies-logs', 'true') }
 			this.actionsDisplayLogs = localStorage.getItem('report/logs') !== 'false'
 			this.actionsDisplayAlliesLogs = localStorage.getItem('report/allies-logs') === 'true'
-			this.smooth = localStorage.getItem('report/graph-type') === 'smooth'
-			this.log = localStorage.getItem('report/log') === 'true'
-			this.turrets = localStorage.getItem('report/turrets') === 'true'
 
 			const id = this.$route.params.id
 			const url = this.$store.getters.admin ? 'fight/get-private/' + id : 'fight/get/' + id
@@ -476,7 +476,6 @@
 						this.warningsErrors()
 					})
 				}
-				this.updateChart()
 				this.getChartDamage()
 				this.updateMap()
 				this.walkedCells(999)
@@ -493,14 +492,17 @@
 					title += this.fight.team1_name + " vs " + this.fight.team2_name
 				}
 				LeekWars.setTitle(title)
-				this.$root.$emit('loaded')
+				emitter.emit('loaded')
 				this.loaded = true
 			})
 			.error(error => this.error = true)
 		}
 
-		created() {
-			this.$root.$on('keyup', this.keyup)
+		async created() {
+			emitter.on('keyup', this.keyup)
+
+			const fightMessages = await import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
+			i18n.global.mergeLocaleMessage(locale, { fight: fightMessages.default })
 		}
 
 		keyup(e: KeyboardEvent) {
@@ -510,8 +512,8 @@
 			}
 		}
 
-		beforeDestroy() {
-			this.$root.$off('keyup', this.keyup)
+		beforeUnmount() {
+			emitter.off('keyup', this.keyup)
 		}
 
 		processLogs() {
@@ -605,127 +607,6 @@
 				})
 			}
 		}
-		toggleSmooth() {
-			if (this.smooth) {
-				localStorage.setItem('report/graph-type', 'angular')
-			} else {
-				localStorage.setItem('report/graph-type', 'smooth')
-			}
-			this.smooth = !this.smooth
-			this.updateChart()
-		}
-
-		toggleLog() {
-			this.log = !this.log
-			localStorage.setItem('report/log', '' + this.log)
-			this.updateChart()
-		}
-
-		toggleTurrets() {
-			this.turrets = !this.turrets
-			localStorage.setItem('report/turrets', '' + this.turrets)
-			this.updateChart()
-		}
-
-		chartGetY(line: number, x: number) {
-			const path = (this.$refs.chart as Vue).$el.querySelectorAll('.ct-series path')[line] as any
-			x = Math.max(path.getPointAtLength(0).x, x)
-			x = Math.min(path.getPointAtLength(path.getTotalLength()).x, x)
-			let pos
-			let p1 = 0
-			let p2 = path.getTotalLength()
-			let c
-			let sec = 1000
-			while (sec-- > 0) {
-				c = (p1 + p2) / 2
-				pos = path.getPointAtLength(c)
-				if (Math.abs(x - pos.x) < 1) { break }
-				if (pos.x > x) { p2 = c }
-				else { p1 = c }
-			}
-			return pos.y
-		}
-
-		@Watch('chartDisplaySummons')
-		updateChart() {
-			if (!this.fight || !this.statistics) { return }
-			let series = this.log ? this.statistics.lives_percent : this.statistics.lives
-			this.filtered_entities = Object.values(this.statistics!.entities)
-			if (!this.chartDisplaySummons) {
-				this.filtered_entities = this.filtered_entities.filter(e => !e.leek.summon)
-				series = series.filter((value, index) => !this.statistics!.entities[index].leek.summon)
-			}
-			if (!this.turrets) {
-				this.filtered_entities = this.filtered_entities.filter(e => e.leek.type !== 2)
-				series = series.filter((value, index) => this.statistics!.entities[index].leek.type !== 2)
-			}
-			this.chartData = {
-				series
-			}
-			this.chartOptions = {
-				showPoint: false,
-				lineSmooth: this.smooth,
-				fullWidth: true,
-				fullHeight: true,
-				axisX: {
-					type: Chartist.AutoScaleAxis,
-					onlyInteger: true,
-				}
-			}
-			this.chartEvents = [{
-				event: 'draw', fn: (context: any) => {
-					if (context.type === 'line') {
-						// console.log(context.index)
-						context.element.attr({
-							style: 'stroke: ' + (TEAM_COLORS[this.filtered_entities[context.index].leek.team - 1])
-						})
-					}
-					if (context.type === 'label') {
-						if (this.fight!.report.duration >= 30 && context.axis.units.pos === 'x' && context.text % 2 === 0) {
-							context.element.attr({style: 'padding-top: 12px; overflow: visible'})
-						}
-					}
-				}
-			}, { event: 'created', fn: (c: any) => {
-				if (!this.$refs.chart) { return }
-				const chart = (this.$refs.chart as Vue).$el
-				chart.querySelectorAll('.ct-line').forEach((e, i) => {
-					e.addEventListener('mouseenter', () => {
-						chart.querySelectorAll('.ct-line').forEach((el) => (el as HTMLElement).style.strokeOpacity = '0.3')
-						;(e as HTMLElement).style.strokeOpacity = '1'
-						;(e as HTMLElement).style.strokeWidth = '4px'
-						this.chartTooltipLeek = i
-					})
-				})
-				this.chartScale = (c.axisY.bounds.max - c.axisY.bounds.min)
-				this.chart = c
-			}}]
-		}
-		chartMouseLeave() {
-			const chart = (this.$refs.chart as Vue).$el
-			chart.querySelectorAll('.ct-line').forEach((e) => {
-				(e as HTMLElement).style.strokeOpacity = '1'
-				;(e as HTMLElement).style.strokeWidth = '3px'
-			})
-			this.chartTooltipLeek = null
-			this.chartTooltipValue = null
-		}
-
-		chartMouseMove(e: MouseEvent) {
-			const chart = (this.$refs.chart as Vue).$el as HTMLElement
-			const chartPanel = this.$refs.chartPanel as HTMLElement
-			const tooltip = this.$refs.chartTooltip as HTMLElement
-
-			if (this.chartTooltipLeek === null) { return }
-			const x = e.clientX - chartPanel.getBoundingClientRect().left + 10
-
-			const top = this.chartGetY(this.chartTooltipLeek, x)
-			this.chartTooltipX = x - tooltip.offsetWidth / 2 - 10,
-			this.chartTooltipY = top - 40
-
-			const value = Math.round(this.chart.bounds.low + (this.chart.chartRect.y1 - top) * (this.chartScale / (this.chart.chartRect.y1 - this.chart.chartRect.y2)))
-			this.chartTooltipValue = this.filtered_entities[this.chartTooltipLeek].leek.name + '<br>' + value + (this.log ? '%' : '') + ' PV'
-		}
 
 		comment(comment: Comment) {
 			if (this.fight) {
@@ -740,6 +621,7 @@
 		@Watch('damageChartType')
 		@Watch('damagesDisplaySummons')
 		@Watch('damagesTeams')
+		@Watch('LeekWars.darkMode')
 		getChartDamage() {
 			const entities: any[][] = [] // Entities or teams
 
@@ -747,7 +629,7 @@
 				const entity = this.statistics!.entities[e]
 				let total = 0
 				let stats: any[] = []
-				const name = entity.name
+				const name = entity.translatedName
 				if (this.damageChartType === 0) {
 					total = entity.dmg_out
 					stats = [name, entity.leek.id, entity.leek.team, total, entity.direct_dmg_out, entity.poison_out, entity.return_out, entity.nova_out, entity.life_dmg_out]
@@ -795,46 +677,68 @@
 				series.push(entities.map(e => e[v]))
 			}
 			this.damageEntities = entities
+
+			// Damage type labels and colors
+			let labelKeys: string[] = []
+			let colors: string[] = []
+			if (this.damageChartType === 0 || this.damageChartType === 1) {
+				labelKeys = ['direct', 'poison', 'return', 'nova', 'life']
+				colors = ['#e22424', '#a017d6', '#41d3ff', '#38e9ae', '#f28dff']
+				this.legends = ['#e22424', '#a017d6', '#32b2da', '#2bc491', '#f28dff']
+			} else if (this.damageChartType === 2) {
+				labelKeys = ['direct', 'steal', 'max_life']
+				colors = ['#5fad1b', '#e22424', '#38e9ae']
+				this.legends = ['#5fad1b', '#e22424', '#38e9ae']
+			} else {
+				labelKeys = ['direct']
+				colors = ['orange']
+				this.legends = ['orange']
+			}
+			const labels = labelKeys.map(k => this.$t('stat_' + k) as string)
+
+			// Bar chart
 			this.damagesBarsData = {
 				labels: entities.map(e => e[0]),
-				series
+				datasets: series.map((s, i) => ({ label: labels[i], data: s, stack: 'total', backgroundColor: colors[i] }) )
 			}
 			this.damagesBarsHeight = Math.max(370, entities.length * 25)
-			this.damagesBarsEvents = [{
-				event: 'draw', fn: (data: any) => {
-					if (data.type === 'bar' && data.seriesIndex === this.damagesBarsData.series.length - 1) {
-						const node = new Chartist.Svg('text', {
-							x: data.x2 + 5,
-							y: data.y2 + 5,
-						}, 'total')
-						node._node.textContent = this.damageEntities[data.index][3]
-						data.group.append(node, 'ct-slice-pie')
+			const style = getComputedStyle(this.$el)
+			const textColor = style.getPropertyValue('--text-color-secondary').trim() || '#888'
+			this.damagesBarsOptions = {
+				maintainAspectRatio: false,
+				barThickness: 15,
+				layout: { padding: { right: 45 } },
+				plugins: {
+					legend: { display: false },
+					tooltip: {
+						mode: 'index' as any,
+						intersect: true,
+						position: 'stackCenter' as any,
+						yAlign: 'top',
+						callbacks: {
+							title: (items: any[]) => items[0]?.label || '',
+							label: (context: any) => context.raw ? `${context.dataset.label} : ${context.raw.toLocaleString()}` : null,
+						}
 					}
+				},
+				indexAxis: 'y',
+				scales: {
+					x: { stacked: true, grid: { color: 'rgba(128,128,128,0.15)' }, ticks: { color: textColor } },
+					y: { stacked: true, reverse: true, grid: { display: false }, ticks: { color: textColor } },
 				}
-			}]
+			}
 
-			// Chart
+			// Doughnut chart
 			const chartSeries = []
 			for (let v = 4; v < entities[0].length; ++v) {
 				chartSeries.push(entities.reduce((sum, e) => sum + e[v], 0))
 			}
-			let labels = []
-			if (this.damageChartType === 0) {
-				labels = ['direct', 'poison', 'return', 'nova', 'life']
-				this.legends = ['#e22424', '#a017d6', '#32b2da', '#2bc491', '#f28dff']
-			} else if (this.damageChartType === 1) {
-				labels = ['direct', 'poison', 'return', 'nova', 'life']
-				this.legends = ['#e22424', '#a017d6', '#32b2da', '#2bc491', '#f28dff']
-			} else if (this.damageChartType === 2) {
-				labels = ['direct', 'steal', 'max_life']
-				this.legends = ['#5fad1b', '#e22424', '#38e9ae']
-			} else {
-				labels = ['direct']
-				this.legends = ['orange']
-			}
 			this.damageChartDamage = {
 				labels,
-				series: chartSeries
+				datasets: [{
+					data: chartSeries,
+					backgroundColor: colors
+				}]
 			}
 			// setTimeout(() => {
 			// 	this.$el.querySelectorAll('.damage-chart').forEach((chart, i) => {
@@ -989,7 +893,7 @@
 		display: flex;
 		align-items: center;
 		gap: 4px;
-		&::v-deep a {
+		&:deep(a) {
 			cursor: pointer;
 		}
 	}
@@ -1004,24 +908,6 @@
 		margin: 20px 100px;
 		background: #ffb6b6;
 		border-radius: 2px;
-	}
-	.chart-panel {
-		position: relative;
-	}
-	.chart {
-		margin-left: -10px;
-		margin-right: -4px;
-		margin-bottom: -16px;
-		::v-deep .ct-line {
-			stroke-width: 3px;
-		}
-		.ct-label.ct-horizontal {
-			text-align: center;
-		}
-	}
-	.chart-tooltip {
-		pointer-events: none;
-		opacity: 1;
 	}
 	.warnings-errors .title {
 		font-size: 18px;
@@ -1072,6 +958,7 @@
 		display: flex;
 		& > * {
 			flex: 270px 0 0;
+			min-width: 0;
 		}
 		.legend {
 			display: grid;
@@ -1081,7 +968,7 @@
 			& > div {
 				display: flex;
 				padding: 2px 0;
-				border-bottom: 1px solid #ccc;
+				border-bottom: 1px solid var(--border);
 			}
 			span {
 				min-width: 55px;
@@ -1094,7 +981,7 @@
 			}
 		}
 	}
-	@media screen and (max-width: 599px) {
+	@media screen and (max-width: 800px) {
 		.damages {
 			flex-direction: column;
 		}
@@ -1105,105 +992,13 @@
 		padding: 10px;
 		padding-top: 15px;
 		padding-bottom: 5px;
-		svg {
-			width: 220px;
-			height: 220px;
-		}
-		::v-deep .ct-label {
-			font-size: 13px;
-			fill: rgba(0,0,0,.7);
-			font-weight: bold;
-			pointer-events: none;
-		}
-		::v-deep .ct-series path {
-			cursor: pointer;
-			stroke-width: 38px;
-			transition: stroke-width 0.1s ease;
-		}
-		::v-deep .ct-series.selected path {
-			stroke-width: 48px;
-		}
-		::v-deep .ct-series-a path {
-			stroke: #e22424;
-		}
-		::v-deep .ct-series-b path {
-			stroke: #a017d6;
-		}
-		::v-deep .ct-series-c path {
-			stroke: #32b2da;
-		}
-		::v-deep .ct-series-d path {
-			stroke: #38e9ae;
-		}
-		::v-deep .ct-series-e path {
-			stroke: #f28dff;
-		}
-		.heal {
-			::v-deep .ct-series-a path {
-				stroke: #5fad1b;
-			}
-			::v-deep .ct-series-b path {
-				stroke: #e22424;
-			}
-			::v-deep .ct-series-c path {
-				stroke: #38e9ae;
-			}
-		}
-		.tank {
-			::v-deep .ct-series-a path {
-				stroke: orange;
-			}
-		}
 	}
 	.damages-bars {
 		flex: 1.8;
-		width: 100%;
-		height: 356px;
+		min-width: 0;
 		.chart {
-			height: 380px;
-		}
-		::v-deep .ct-bar {
-			stroke-width: 15px;
-		}
-		::v-deep .ct-series-a line {
-			stroke: #e22424;
-		}
-		::v-deep .ct-series-b line {
-			stroke: #a017d6;
-		}
-		::v-deep .ct-series-c line {
-			stroke: #41d3ff;
-		}
-		::v-deep .ct-series-d line {
-			stroke: #38e9ae;
-		}
-		::v-deep .ct-series-e line {
-			stroke: #f28dff;
-		}
-		.heal {
-			::v-deep .ct-series-a line {
-				stroke: #5fad1b;
-			}
-			::v-deep .ct-series-b line {
-				stroke: #e22424;
-			}
-			::v-deep .ct-series-c line {
-				stroke: #38e9ae;
-			}
-		}
-		.tank {
-			::v-deep .ct-series-a line {
-				stroke: orange;
-			}
-		}
-		::v-deep .total {
-			font-weight: 500;
-			font-size: 14px;
-			fill: var(--text-color-secondary);
-		}
-		::v-deep .ct-label.ct-vertical {
-			color: var(--text-color-secondary);
-			white-space: nowrap;
+			width: 100%;
+			height: 100%;
 		}
 	}
 	.damage-options {
@@ -1257,7 +1052,7 @@
 			}
 		}
 	}
-	::v-deep .turn {
+	:deep(.turn) {
 		position: sticky;
 		top: 0;
 		background: var(--background);

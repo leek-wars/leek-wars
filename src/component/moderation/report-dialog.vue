@@ -1,9 +1,8 @@
 <template>
-	<popup :value="value" :width="500" @input="$emit('input', $event)">
-		<v-icon slot="icon">mdi-flag</v-icon>
-		<span slot="title">
+	<popup :model-value="modelValue" :width="500" icon="mdi-flag" @update:modelValue="$emit('update:modelValue', $event)">
+		<template #title>
 			<span :class="{pointer: leeks}" @click="leeks ? back : null">{{ title }}</span><span v-if="subtitle" class="subtitle"><v-icon>mdi-chevron-right</v-icon>{{ subtitle }}</span>
-		</span>
+		</template>
 		<div class="report-popup">
 			<div v-if="selectedTarget || !leeks">
 				<div class="targets">
@@ -32,11 +31,11 @@
 				</div>
 			</div>
 		</div>
-		<div v-if="!leeks || selectedTarget" slot="actions">
+		<template v-if="!leeks || selectedTarget" #actions>
 			<div v-if="leeks" v-ripple class="dismiss" @click="back">◄ {{ $t('main.back') }}</div>
 			<div v-else v-ripple class="dismiss" @click="close">{{ $t('main.cancel') }}</div>
-			<div v-ripple class="report-validate red" @click="report"><v-icon slot="icon">mdi-flag</v-icon> {{ $t('warning.report') }}</div>
-		</div>
+			<div v-ripple class="report-validate red" @click="report"><v-icon>mdi-flag</v-icon> {{ $t('warning.report') }}</div>
+		</template>
 	</popup>
 </template>
 
@@ -47,22 +46,25 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { Team } from '@/model/team'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({})
+	@Options({})
 	export default class ReportDialog extends Vue {
+
 		@Prop() reasons!: Warning[]
 		@Prop() target!: Farmer | null
 		@Prop() team!: Team | null
-		@Prop() value!: boolean
+		@Prop() modelValue!: boolean
 		@Prop() parameter!: any
 		@Prop() leeks!: Leek[] | null
 		@Prop() fight!: number
 		@Prop() leek!: Leek | null
+
 		additionalMessage: string = ''
 		selectedReason: Warning | null = null
 		selectedTarget: Farmer | null = null
 		selectedLeek: Leek | null = null
+
 		get title() {
 			return this.$t('warning.report')
 		}
@@ -105,7 +107,7 @@
 			})
 		}
 		close() {
-			this.$emit('input', false)
+			this.$emit('update:modelValue', false)
 		}
 		selectLeek(leek: Leek) {
 			this.selectedTarget = leek.farmer

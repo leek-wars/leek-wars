@@ -2,11 +2,11 @@ import { AI } from '@/model/ai'
 import { fileSystem } from '@/model/filesystem'
 import { LeekWars } from '@/model/leekwars'
 import { SocketMessage } from '@/model/socket'
-import Vue from 'vue'
+
 import { AIItem, Folder } from './editor-item'
 import { Problem } from './problem'
 import { i18n } from '@/model/i18n'
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'
+import * as monaco from 'monaco-editor'
 
 export class AnalyzerPromise {
 	public then!: (data: any) => void
@@ -265,10 +265,10 @@ class Analyzer {
 	public setProblems(entrypoint: number, ai: AI, problems: any) {
 		// console.log("[Analyzer] set ai problems", entrypoint, ai, problems)
 		if (!(entrypoint in this.problems)) {
-			Vue.set(this.problems, entrypoint, {})
+			this.problems[entrypoint] = {}
 		}
-		Vue.set(this.problems[entrypoint], ai.path, problems)
-		Vue.set(ai.problems, entrypoint, problems)
+		this.problems[entrypoint][ai.path] = problems
+		ai.problems[entrypoint] = problems
 		this.updateAiErrors(ai)
 	}
 
@@ -276,11 +276,11 @@ class Analyzer {
 		for (const ai_id in fileSystem.ais) {
 			const ai = fileSystem.ais[ai_id]
 			if (ai.problems && Object.values(ai.problems).length) {
-				Vue.delete(ai.problems, entrypoint.id)
+				delete ai.problems[entrypoint.id]
 				this.updateAiErrors(ai)
 			}
 		}
-		Vue.delete(this.problems, entrypoint.id)
+		delete this.problems[entrypoint.id]
 	}
 
 	public updateAiErrors(ai: AI) {
@@ -292,9 +292,9 @@ class Analyzer {
 			warnings += ai.problems[entrypoint].filter(p => p.level === 1).length
 			todos += ai.problems[entrypoint].filter(p => p.level === 2).length
 		}
-		Vue.set(ai, "errors", errors)
-		Vue.set(ai, "warnings", warnings)
-		Vue.set(ai, "todos", todos)
+		ai.errors = errors
+		ai.warnings = warnings
+		ai.todos = todos
 
 		// Update parent folders
 		let current = fileSystem.folderById[ai.folder] as Folder | null

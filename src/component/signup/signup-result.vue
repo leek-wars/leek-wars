@@ -6,9 +6,11 @@
 		<panel class="first center">
 			<img src="/image/map/nexus_block_small.png">
 			<br><br>
-			<i18n tag="h2" class="signup-message" path="validated_message">
-				<b slot="farmer">{{ farmer }}</b>
-			</i18n>
+			<i18n-t tag="h2" class="signup-message" keypath="validated_message">
+				<template #farmer>
+					<b>{{ farmer }}</b>
+				</template>
+			</i18n-t>
 			<br><br>
 			<slot name="button">
 				<router-link to="/">
@@ -20,8 +22,8 @@
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue } from 'vue-property-decorator'
-	@Component({ name: "signup-result" })
+	import { Options, Prop, Vue } from 'vue-property-decorator'
+	@Options({ name: "signup-result" })
 	export default class SignupResult extends Vue {
 		@Prop() result!: string
 

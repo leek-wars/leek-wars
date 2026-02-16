@@ -37,18 +37,20 @@
 		<panel class="first">
 			<div class="bank-description center" v-html="$t('description')"></div>
 
-			<v-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)" hide-details dense solo>
-				<template v-slot:selection>
+			<v-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)" hide-details dense variant="solo">
+				<template #selection>
 					<flag :code="LeekWars.currencies[LeekWars.currency].flag" :clickable="false" />&nbsp;
 					{{ LeekWars.currency }} &nbsp; <span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>
 				</template>
-				<template slot="item" slot-scope="data">
-					<v-list-item-content>
-						<v-list-item-title class="currency">
-							<flag :code="LeekWars.currencies[data.item].flag" :clickable="false" />&nbsp;
-							{{ data.item }} &nbsp; <span class="symbol">{{ LeekWars.currencies[data.item].symbol }}</span>
-						</v-list-item-title>
-					</v-list-item-content>
+				<template #item="{ props, item }">
+					<v-list-item v-bind="props" class="currency">
+						<template #prepend>
+							<flag :code="LeekWars.currencies[item.value].flag" :clickable="false" />
+						</template>
+						<template #append>
+							<span class="symbol">{{ LeekWars.currencies[item.value].symbol }}</span>
+						</template>
+					</v-list-item>
 				</template>
 			</v-select>
 
@@ -65,15 +67,17 @@
 			</panel>
 			<template v-else>
 				<panel v-for="(item, i) in items" :key="i" class="item-sample">
-					<router-link slot="content"  :to="'/market/' + item.name.replace(/[a-z-]+_/, '')" v-ripple>
-						<item :item="item" />
-						<div class="info">
-							<div class="name">{{ $t(item.name.replace('_', '.')) }}</div>
-							<div class="price">
-								{{ item.crystals | number }} <span class="crystal"></span>
+					<template #content>
+						<router-link :to="'/market/' + item.name.replace(/[a-z-]+_/, '')" v-ripple>
+							<item :item="item" />
+							<div class="info">
+								<div class="name">{{ $t(item.name.replace('_', '.')) }}</div>
+								<div class="price">
+									{{ $filters.number(item.crystals) }} <span class="crystal"></span>
+								</div>
 							</div>
-						</div>
-					</router-link>
+						</router-link>
+					</template>
 				</panel>
 			</template>
 		</div>
@@ -83,12 +87,12 @@
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import Item from '@/component/item.vue'
 	import { locale } from '@/locale'
 	import BankProduct from './bank-product.vue'
 
-	@Component({ name: 'bank', i18n: {}, mixins: [...mixins], components: { Item, BankProduct } })
+	@Options({ name: 'bank', i18n: {}, mixins: [...mixins], components: { Item, BankProduct } })
 	export default class Bank extends Vue {
 		packs: any = null
 		items: any = null
@@ -131,7 +135,7 @@
 .v-select {
 	margin-left: 10px;
 	display: inline-block;
-	::v-deep input {
+	:deep(input) {
 		border: none;
 		width: 10px;
 	}
@@ -144,7 +148,7 @@
 		font-size: 17px;
 		text-align: justify;
 		line-height: 26px;
-		::v-deep .crystal {
+		:deep(.crystal) {
 			margin-bottom: -6px;
 		}
 	}
@@ -164,7 +168,7 @@
 			padding: 10px;
 			color: var(--text-color-secondary);
 		}
-		::v-deep .item {
+		:deep(.item) {
 			width: 80px;
 			height: 80px;
 		}

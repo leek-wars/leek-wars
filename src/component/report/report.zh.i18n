@@ -40,5 +40,8 @@
 	"errors": "错误",
 	"errors_warnings": "错误和警告",
 	"n_errors": "{n} 个错误",
-	"n_warnings": "{n} 个警告"
+	"n_warnings": "{n} 个警告",
+	"toggle_turrets": "显示/隐藏炮塔",
+	"toggle_percent": "生命百分比",
+	"toggle_smooth": "平滑/折线曲线"
 }

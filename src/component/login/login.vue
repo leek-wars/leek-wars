@@ -14,7 +14,7 @@
 						<br><br>
 						<v-checkbox v-model="form.keep_connected" :label="$t('keep_connected')" hide-details />
 						<br><br>
-						<center><v-btn large color="primary" type="submit">{{ $t('connection') }}</v-btn></center>
+						<div class="center"><v-btn large color="primary" type="submit">{{ $t('connection') }}</v-btn></div>
 						<br>
 						<div v-if="error" class="error">
 							<span v-if="error.error">{{ $t('error_' + error.error) }}</span>
@@ -26,7 +26,7 @@
 				</div>
 				<div class="divider"></div>
 				<div class="column">
-					<v-btn color="black" class="gh-button" @click="githubStart()"> <img src="/image/github_black.png"> {{ $t('main.login_gh') }}</v-btn>
+					<v-btn class="gh-button" @click="githubStart()"> <img src="/image/github_black.png"> {{ $t('main.login_gh') }}</v-btn>
 				</div>
 			</div>
 		</panel>
@@ -37,9 +37,9 @@
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'login', i18n: {}, mixins: [...mixins] })
+	@Options({ name: 'login', i18n: {}, mixins: [...mixins] })
 	export default class Login extends Vue {
 		error: any = null
 		form = {

@@ -6,9 +6,9 @@
 
 <script lang="ts">
 	import { locale } from '@/locale'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'tutorial', i18n: {} })
+	@Options({ name: 'tutorial', i18n: {} })
 	export default class Tutorial extends Vue {
 		created() {
 			this.$router.replace('/encyclopedia/' + locale + '/' + (this.$t('main.tutorial') as string).replace(/ /g, '_'))

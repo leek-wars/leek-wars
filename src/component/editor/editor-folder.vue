@@ -1,5 +1,5 @@
 <template lang="html">
-	<div :class="{root: folder.id === 0}" @click="click" @contextmenu.prevent.stop="$root.$emit('editor-menu', folder, false, $event)">
+	<div :class="{root: folder.id === 0}" @click="click" @contextmenu.prevent.stop="emitter.emit('editor-menu', { item: folder, ai: false, e: $event })">
 		<div :class="{empty: !folder.items.length, 'dragover': dragOver > 0, expanded: folder.expanded, root: level === 0, selected: folder.selected}" :draggable="level > 0 && folder.id !== -1" class="item folder" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="drop" @dragstart="dragstart" @dragend="dragend">
 			<div v-if="folder.id != 0" :style="{'padding-left': ((level - 1) * 15 + 10) + 'px'}" class="label" :class="{error: folder.errors, warning: folder.warnings, closed: folder.closed}" @click="toggle(folder)">
 				<div class="triangle"></div>
@@ -15,9 +15,9 @@
 				<span v-if="folder.todos" class="count todo">{{ folder.todos }}</span>
 			</div>
 			<div v-if="folder.expanded" :class="{dragging: dragging}" class="content">
-				<template v-for="(item, i) in folder.items">
-					<editor-folder v-if="item.folder" :key="i" :folder="item" :level="level + 1" />
-					<editor-ai v-else :key="i" :item="item" :level="level" />
+				<template v-for="(item, i) in folder.items" :key="i">
+					<editor-folder v-if="item.folder" :folder="item" :level="level + 1" />
+					<editor-ai v-else :item="item" :level="level" />
 				</template>
 			</div>
 		</div>
@@ -28,17 +28,19 @@
 	import { AI } from '@/model/ai'
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import EditorAI from './editor-ai.vue'
 	import { AIItem, Folder } from './editor-item'
 	import { explorer } from './explorer'
+	import { emitter } from '@/model/vue'
 
-	@Component({ name: 'editor-folder', components: { 'editor-ai': EditorAI } })
+	@Options({ name: 'editor-folder', components: { 'editor-ai': EditorAI } })
 	export default class EditorFolder extends Vue {
 		@Prop() folder!: Folder
 		@Prop() level!: number
 		dragOver: number = 0
 		dragging: boolean = false
+		emitter = emitter
 
 		toggle(folder: Folder) {
 			if (!folder.closed) {
@@ -47,7 +49,7 @@
 		}
 		drop(e: DragEvent) {
 			if (this.folder.id === -1) { return }
-			this.$root.$emit('editor-drop', this.folder)
+			emitter.emit('editor-drop', this.folder)
 			e.preventDefault()
 			e.stopPropagation()
 			this.dragOver = 0
@@ -71,7 +73,7 @@
 			if (this.folder.id === -1) { return }
 			e.dataTransfer!.setData('text/plain', 'drag !!!')
 			this.dragging = true
-			this.$root.$emit('editor-drag', this.folder)
+			emitter.emit('editor-drag', this.folder)
 			e.stopPropagation()
 		}
 		dragend() {

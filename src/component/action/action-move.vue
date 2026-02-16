@@ -1,21 +1,25 @@
 
-<template functional>
-	<i18n tag="div" path="fight.leek_move" :a="props.a">
-		<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
-		<template v-slot:cost>
-			<b class="color-mp">{{ parent.$t('fight.n_mp', [props.action.params[3].length]) }}</b>
+<template>
+	<i18n-t tag="div" keypath="fight.leek_move" :a="a">
+		<template #leek>
+			<leek :leek="leeks[action.params[1]]" />
 		</template>
-	</i18n>
+		<template #cost>
+			<b class="color-mp">{{ $t('fight.n_mp', [action.params[3].length]) }}</b>
+		</template>
+	</i18n-t>
 </template>
 
 <script lang="ts">
 	import { Action } from '@/model/action'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import ActionLeekElement from '../report/action-leek.vue'
+	import { Leek } from '@/model/leek'
 
-	@Component({ components: { leek: ActionLeekElement } })
+	@Options({ components: { leek: ActionLeekElement } })
 	export default class ActionMove extends Vue {
 		@Prop() action!: Action
 		@Prop() a!: number
+		@Prop() leeks!: {[key: number]: Leek}
 	}
 </script>

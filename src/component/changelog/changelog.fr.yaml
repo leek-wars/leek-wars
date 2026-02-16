@@ -9,7 +9,12 @@
     - "Tournois : Tous les joueurs inscrits participent maintenant, répartis équitablement entre plusieurs tournois de 16 à 32 joueurs au lieu d'exclure les joueurs en trop."
     - "Éditeur : amélioration du Ctrl+clic pour aller à la définition d'un symbole (navigation plus fiable et scroll correct)."
     - "LeekScript : le point-virgule après while() dans les boucles do-while est maintenant optionnel."
+    - "Marché : navigation au clavier avec les flèches haut/bas/gauche/droite entre les items."
   fixed:
+    - "LeekScript : correction d'un crash lors de la compilation de classes dans certains cas d'include, et meilleure gestion de la casse sur les mots-clés class et include."
+    - Correction d'un bug empêchant les combats d'équipe quand l'IA de la tourelle était inexistante.
+    - Correction du compteur de notifications non lues qui n'était pas renvoyé à la connexion.
+    - Correction des bots de test qui pouvaient avoir des armes et puces de boss.
     - Correction du message d'erreur "error_name_already_used" non traduit lors de la création d'un poireau.
     - "Éditeur : correction de la fermeture d'onglet quand l'IA a été supprimée en dehors de l'éditeur."
     - "Boss : correction du décompte de combats lors du lancement d'un combat de boss sans y participer (#2344)."

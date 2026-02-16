@@ -7,9 +7,9 @@
 		</div>
 		<div class="dir">
 			<explorer-folder v-if="currentFolder !== fileSystem.rootFolder" v-ripple :folder="{id: -1}" @click.native="currentFolder = fileSystem.folderById[currentFolder.parent]" />
-			<template v-for="(item, i) in currentFolder.items">
-				<explorer-folder v-if="item.folder" :key="i" v-ripple :folder="item" @click.native="currentFolder = item" />
-				<ai v-else :key="i" v-ripple :ai="item.ai" :small="false" :library="false" @click.native="$emit('select', item.ai)" />
+			<template v-for="(item, i) in currentFolder.items" :key="i">
+				<explorer-folder v-if="item.folder" v-ripple :folder="item" @click.native="currentFolder = item" />
+				<ai v-else v-ripple :ai="item.ai" :small="false" :library="false" @click.native="$emit('select', item.ai)" />
 			</template>
 		</div>
 	</div>
@@ -17,11 +17,11 @@
 
 <script lang="ts">
 	import { fileSystem } from '@/model/filesystem'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 	import ExplorerFolder from './explorer-folder.vue'
 	import AIElement from '@/component/app/ai.vue'
 
-	@Component({ name: 'explorer', i18n: {}, components: { 'explorer-folder': ExplorerFolder, ai: AIElement } })
+	@Options({ name: 'explorer', i18n: {}, components: { 'explorer-folder': ExplorerFolder, ai: AIElement } })
 	export default class Explorer extends Vue {
 		fileSystem = fileSystem
 		currentFolder = fileSystem.rootFolder

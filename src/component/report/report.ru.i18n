@@ -40,5 +40,8 @@
 	"errors": "Ошибки",
 	"errors_warnings": "Ошибки и предупреждения",
 	"n_errors": "{n} ошибок",
-	"n_warnings": "{n} предупреждений"
+	"n_warnings": "{n} предупреждений",
+	"toggle_turrets": "Показать/скрыть турели",
+	"toggle_percent": "Процент здоровья",
+	"toggle_smooth": "Плавная/угловая кривая"
 }

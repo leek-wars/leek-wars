@@ -1,5 +1,5 @@
 import { LeekWars } from '@/model/leekwars'
-import { vueMain } from '@/model/vue'
+import { emitter, vueMain } from '@/model/vue'
 import router from '@/router'
 import { ChatMessage } from './chat'
 import { NotificationType } from './notification'
@@ -90,6 +90,7 @@ enum SocketMessage {
 	CONSOLE_ERROR = 86,
 	CONSOLE_LOG = 87,
 	CONSOLE_CLOSE = 88,
+	ADMIN_ERROR = 89,
 }
 
 class Socket {
@@ -148,7 +149,7 @@ class Socket {
 			const request_id = json[2]
 			// console.log("[WS] onmessage", id, data, request_id)
 
-			vueMain.$emit('wsmessage', {type: id, data, id: request_id})
+			emitter.emit('wsmessage', {type: id, data, id: request_id})
 
 			switch (id) {
 				case SocketMessage.PONG: {
@@ -180,8 +181,8 @@ class Socket {
 
 					const message = { id: data[0], type: data[1], date: LeekWars.time, parameters: data[2], new: true }
 					// Envoie de la notif sur la page du combat pour la mettre en file d'attente
-					if (message.type === NotificationType.TROPHY_UNLOCKED && router.currentRoute.path.startsWith('/fight/' + message.parameters[1])) {
-						vueMain.$emit('trophy', message)
+					if (message.type === NotificationType.TROPHY_UNLOCKED && router.currentRoute.value.path.startsWith('/fight/' + message.parameters[1])) {
+						emitter.emit('trophy', message)
 					} else {
 						if (message.type === NotificationType.UP_LEVEL) {
 							const leek = parseInt(message.parameters[0], 10)
@@ -236,15 +237,15 @@ class Socket {
 					break
 				}
 				case SocketMessage.GARDEN_QUEUE: {
-					vueMain.$emit('garden-queue', data)
+					emitter.emit('garden-queue', data)
 					break
 				}
 				case SocketMessage.FIGHT_PROGRESS: {
-					vueMain.$emit('fight-progress', data)
+					emitter.emit('fight-progress', data)
 					break
 				}
 				case SocketMessage.TOURNAMENT_UPDATE: {
-					vueMain.$emit('tournament-update', data)
+					emitter.emit('tournament-update', data)
 					break
 				}
 				case SocketMessage.UPDATE_HABS: {
@@ -254,13 +255,13 @@ class Socket {
 				case SocketMessage.UPDATE_LEEK_XP: {
 					const message = { leek: data[0], xp: data[1] }
 					store.commit('update-xp', message)
-					vueMain.$emit('update-leek-xp', message)
+					emitter.emit('update-leek-xp', message)
 					break
 				}
 				case SocketMessage.UPDATE_LEEK_TALENT: {
 					const message = { leek: data[0], talent: data[1] }
 					store.commit('update-leek-talent', message)
-					vueMain.$emit('update-leek-talent', message)
+					emitter.emit('update-leek-talent', message)
 					break
 				}
 				case SocketMessage.UPDATE_FARMER_TALENT: {
@@ -269,7 +270,7 @@ class Socket {
 				}
 				case SocketMessage.UPDATE_TEAM_TALENT: {
 					const message = { composition: data[0], talent: data[1] }
-					vueMain.$emit('update-team-talent', message)
+					emitter.emit('update-team-talent', message)
 					break
 				}
 				case SocketMessage.CHAT_CENSOR: {
@@ -321,15 +322,15 @@ class Socket {
 					break
 				}
 				case SocketMessage.CONSOLE_RESULT: {
-					vueMain.$emit('console', data)
+					emitter.emit('console', data)
 					break
 				}
 				case SocketMessage.CONSOLE_ERROR: {
-					vueMain.$emit('console-error', data)
+					emitter.emit('console-error', data)
 					break
 				}
 				case SocketMessage.CONSOLE_LOG: {
-					vueMain.$emit('console-log', data)
+					emitter.emit('console-log', data)
 					break
 				}
 				case SocketMessage.EDITOR_ANALYZE: {
@@ -342,6 +343,22 @@ class Socket {
 				}
 				case SocketMessage.EDITOR_COMPLETE: {
 					analyzer.completeResult({ id: request_id, type: id, data })
+					break
+				}
+				case SocketMessage.ADMIN_ERROR: {
+					const source = data[0]
+					const trace = data[1]
+					LeekWars.squares.add({
+						image: 'mdi-alert',
+						icon: true,
+						title: 'Erreur serveur ' + source,
+						message: trace,
+						link: '/admin/errors',
+						padding: true,
+						clazz: '',
+						resultIcon: ''
+					})
+					store.commit('add-error')
 					break
 				}
 			}

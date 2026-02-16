@@ -3,7 +3,7 @@ import { fileSystem } from './filesystem'
 import { i18n } from './i18n'
 import { Keyword, KeywordKind, LSClass } from './keyword'
 import { LeekWars } from './leekwars'
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'
+import type * as monaco from 'monaco-editor'
 
 class AI {
 	public id!: number

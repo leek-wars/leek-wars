@@ -17,14 +17,38 @@
 						<div class="name">
 							{{ node.name }}<img class="status" src="/image/connected.png">
 						</div>
-						<div class="total-wrapper">Total : {{ node.generated | number }}</div>
+						<div class="total-wrapper">Fights : {{ $filters.number(node.generated) }}</div>
+						<div v-if="node.metrics" class="metrics">
+							<div class="metric">
+								<span class="label">RAM:</span>
+								<span class="value" :class="{ warning: ramPercent(node.metrics) > 75, critical: ramPercent(node.metrics) > 90 }">
+									{{ formatRAM(node.metrics.usedRAM) }} / {{ formatRAM(node.metrics.maxRAM) }}
+									({{ ramPercent(node.metrics) }}%)
+								</span>
+							</div>
+							<div class="metric">
+								<span class="label">Cache IA:</span>
+								<span class="value">{{ $filters.number(node.metrics.cacheSize) }}</span>
+							</div>
+							<div class="metric">
+								<span class="label">Class Space:</span>
+								<span class="value" :class="{ warning: classSpacePercent(node.metrics) > 75, critical: classSpacePercent(node.metrics) > 90 }">
+									{{ formatRAM(node.metrics.compressedClassSpaceUsed) }} / {{ formatRAM(node.metrics.compressedClassSpaceMax) }}
+									({{ classSpacePercent(node.metrics) }}%)
+								</span>
+							</div>
+							<div class="metric">
+								<span class="label">Uptime:</span>
+								<span class="value">{{ formatUptime(node.metrics.bootTime) }}</span>
+							</div>
+						</div>
 						<div class="threads">
 							<div v-for="(runner, r) in node.runners" :key="r" class="thread">
 								<div class="th-name">
 									<img class="status" src="/image/connected.png">&nbsp;<b>{{ runner.name }}</b>
 								</div>
-								<span class="green">✔ <span class="generated">{{ runner.generated | number }}</span></span>&nbsp;&nbsp;
-								<span v-if="runner.errors > 0" class="red">✘ <span class="error">{{ runner.errors | number }}</span></span>
+								<span class="green">✔ <span class="generated">{{ $filters.number(runner.generated) }}</span></span>&nbsp;&nbsp;
+								<span v-if="runner.errors > 0" class="red">✘ <span class="error">{{ $filters.number(runner.errors) }}</span></span>
 								<br>
 								<div class="task">
 									<span v-if="runner.task && runner.task.type === 1">
@@ -69,18 +93,31 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+import { emitter } from '@/model/vue'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 
 	const REMOVE_RUNNER = 14
 	const LISTEN_DATA = 15
 	const UPDATE_RUNNER = 16
 	const ADMIN_QUEUE = 36
+	const UPDATE_NODE_METRICS = 50
+
+	class NodeMetrics {
+		public usedRAM!: number
+		public maxRAM!: number
+		public cacheSize!: number
+		public compressedClassSpaceUsed!: number
+		public compressedClassSpaceMax!: number
+		public bootTime!: number
+		public lastUpdate!: number
+	}
 
 	class Node {
 		public name!: string
 		public generated!: number
 		public runners!: Runner[]
 		public load!: number
+		public metrics?: NodeMetrics
 	}
 
 	class Runner {
@@ -93,10 +130,11 @@
 	}
 
 
-	@Component({})
+	@Options({})
 	export default class AdminServers extends Vue {
 
 		runners: {[key: number]: Runner} = {}
+		nodeMetrics: {[key: string]: NodeMetrics} = {}
 		queue: any = []
 		loading: boolean = true
 		colors: {[key: string]: string} = {}
@@ -106,12 +144,16 @@
 			const nodes: {[key: string]: Node} = {}
 			for (const runner of Object.values(this.runners)) {
 				if (!(runner.node in nodes)) {
-					Vue.set(nodes, runner.node, { name: runner.node, generated: 0, runners: [], load: 0 } as Node)
+					nodes[runner.node] = { name: runner.node, generated: 0, runners: [], load: 0 } as Node
 				}
 				const node = nodes[runner.node]
 				node.generated += runner.generated
 				node.runners.push(runner)
 				node.load = ((node.runners.length - 1) * node.load + (runner.task ? 1 : 0)) / node.runners.length
+				// Attach metrics if available
+				if (runner.node in this.nodeMetrics) {
+					node.metrics = this.nodeMetrics[runner.node]
+				}
 			}
 			return Object.values(nodes).sort((a, b) => a.name.localeCompare(b.name))
 		}
@@ -120,11 +162,11 @@
 			if (!this.$store.getters.admin) this.$router.replace('/')
 			LeekWars.socket.send([LISTEN_DATA])
 			LeekWars.setTitle("Admin serveurs")
-			this.$root.$on('wsmessage', this.update)
+			emitter.on('wsmessage', this.update)
 		}
 
-		beforeDestroy() {
-			this.$root.$off('wsmessage', this.update)
+		beforeUnmount() {
+			emitter.off('wsmessage', this.update)
 		}
 
 		update(message: any) {
@@ -144,13 +186,26 @@
 			if (type === ADMIN_QUEUE) {
 				this.queue = data
 			}
+			if (type === UPDATE_NODE_METRICS) {
+				for (const m of data) {
+					this.nodeMetrics[m.node] = {
+						usedRAM: m.usedRAM,
+						maxRAM: m.maxRAM,
+						cacheSize: m.cacheSize,
+						compressedClassSpaceUsed: m.compressedClassSpaceUsed,
+						compressedClassSpaceMax: m.compressedClassSpaceMax,
+						bootTime: m.bootTime,
+						lastUpdate: m.lastUpdate
+					}
+				}
+			}
 		}
 
 		updateRunner(nodeName: string, runnerID: any, runnerName: string, connected: any, task: any, task_start: any, generated: number, errors: number) {
 			const runner = this.runners[runnerID]
 			if (!runner) {
 				const runner = { id: runnerID, name: runnerName, node: nodeName, generated, errors, task } as Runner
-				Vue.set(this.runners, runnerID, runner)
+				this.runners[runnerID] = runner
 			} else {
 				runner.name = runnerName
 				runner.node = nodeName
@@ -162,7 +217,7 @@
 
 		removeRunner(id: number) {
 			if (id in this.runners) {
-				Vue.delete(this.runners, id)
+				delete this.runners[id]
 			}
 		}
 
@@ -181,6 +236,26 @@
 		@Watch('show_ids')
 		updateQueueID() {
 			localStorage.setItem('admin/queue-ids', '' + this.show_ids)
+		}
+
+		formatRAM(bytes: number): string {
+			const gb = bytes / (1024 * 1024 * 1024)
+			return gb.toFixed(2) + ' GB'
+		}
+
+		ramPercent(metrics: NodeMetrics): number {
+			return Math.round((metrics.usedRAM / metrics.maxRAM) * 100)
+		}
+
+		classSpacePercent(metrics: NodeMetrics): number {
+			if (!metrics.compressedClassSpaceMax) return 0
+			return Math.round((metrics.compressedClassSpaceUsed / metrics.compressedClassSpaceMax) * 100)
+		}
+
+		formatUptime(bootTime: number): string {
+			if (!bootTime) return '-'
+			const uptimeSeconds = Math.floor((Date.now() - bootTime) / 1000)
+			return LeekWars.formatLongDuration(uptimeSeconds)
 		}
 	}
 </script>
@@ -227,6 +302,27 @@
 	}
 	.server .total-wrapper {
 		color: var(--text-color-secondary);
+	}
+	.server .metrics {
+		margin-top: 8px;
+		font-size: 13px;
+		color: var(--text-color-secondary);
+	}
+	.server .metrics .metric {
+		margin: 4px 0;
+	}
+	.server .metrics .label {
+		font-weight: 500;
+	}
+	.server .metrics .value {
+		margin-left: 4px;
+	}
+	.server .metrics .value.warning {
+		color: #f39c12;
+	}
+	.server .metrics .value.critical {
+		color: #e74c3c;
+		font-weight: bold;
 	}
 	.threads {
 		text-align: left;

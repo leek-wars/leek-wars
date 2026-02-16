@@ -84,8 +84,8 @@
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
-	import(/* webpackChunkName: "chartist" */ /* webpackMode: "eager" */ "@/chartist-wrapper")
+	import { emitter } from '@/model/vue'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 
 	const GENERAL_CATEGORY = 1
 	const FIGHT_CATEGORY = 2
@@ -105,7 +105,7 @@
 		today_state!: boolean
 	}
 
-	@Component({ name: 'statistics', i18n: {}, mixins: [...mixins] })
+	@Options({ name: 'statistics', i18n: {}, mixins: [...mixins] })
 	export default class Statistics extends Vue {
 		loaded: boolean = false
 		statistics: Array<{[key: string]: Statistic}> = []
@@ -179,7 +179,7 @@
 				for (const c in this.statistics) {
 					for (const s in this.statistics[c]) {
 						const statistic = this.statistics[c][s]
-						Vue.set(statistic, 'today_state', false)
+						statistic.today_state = false
 						if (!statistic.visible || !statistic.interpolate) { continue }
 						statistic.speed = statistic.speed * (DELAY / 1000)
 						if (statistic.speed > 0.002) {
@@ -188,17 +188,17 @@
 					}
 				}
 
-				this.$root.$emit('loaded')
+				emitter.emit('loaded')
 				this.playing = localStorage.getItem('statistics/play') !== 'false'
 				if (this.playing) { this.play() }
 
 				this.resize()
 				this.loaded = true
-				this.$root.$on('resize', () => this.resize())
+				emitter.on('resize', () => this.resize())
 			})
 		}
 
-		beforeDestroy() {
+		beforeUnmount() {
 			clearInterval(this.interval)
 		}
 
@@ -396,35 +396,35 @@
 		height: 180px;
 		margin: 5px;
 	}
-	.chart ::v-deep .ct-label {
+	.chart :deep(.ct-label) {
 		font-size: 13px;
 		fill: white;
 		font-weight: bold;
 		pointer-events: none;
 	}
-	.chart ::v-deep .ct-series path {
+	.chart :deep(.ct-series path) {
 		stroke-width: 50px;
 		transition: stroke-width 0.1s ease;
 	}
-	.chart ::v-deep .ct-series.selected path {
+	.chart :deep(.ct-series.selected path) {
 		stroke-width: 60px !important;
 	}
-	.chart ::v-deep .ct-series-a path {
+	.chart :deep(.ct-series-a path) {
 		stroke: #003f5c;
 	}
-	.chart ::v-deep .ct-series-b path {
+	.chart :deep(.ct-series-b path) {
 		stroke: #58508d;
 	}
-	.chart ::v-deep .ct-series-c path {
+	.chart :deep(.ct-series-c path) {
 		stroke: #bc5090;
 	}
-	.chart ::v-deep .ct-series-d path {
+	.chart :deep(.ct-series-d path) {
 		stroke: #ff6361;
 	}
-	.chart ::v-deep .ct-series-e path {
+	.chart :deep(.ct-series-e path) {
 		stroke: #ffa600;
 	}
-	// .chart ::v-deep .ct-series-f path {
+	// .chart :deep(.ct-series-f path) {
 	// 	stroke: #ffa600;
 	// }
 	.category[category="6"] {

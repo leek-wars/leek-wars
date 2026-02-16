@@ -18,8 +18,8 @@
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue } from 'vue-property-decorator'
-	@Component({ name: "error" })
+	import { Options, Prop, Vue } from 'vue-property-decorator'
+	@Options({ name: "error" })
 	export default class Error extends Vue {
 		@Prop() title!: string
 		@Prop() message!: string
