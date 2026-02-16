@@ -145,7 +145,7 @@
 </template>
 
 <script lang="ts">
-	import * as monaco from 'monaco-editor'
+	import type * as Monaco from 'monaco-editor'
 	import Markdown from '@/component/encyclopedia/markdown.vue'
 	import { locale } from '@/locale'
 	import { i18n, mixins } from '@/model/i18n'
@@ -164,7 +164,7 @@
 		english: string = ''
 		page: any = null
 		edition: boolean = false
-		editor: monaco.editor.IStandaloneCodeEditor | null = null
+		editor: Monaco.editor.IStandaloneCodeEditor | null = null
 		scrolling: boolean = false
 		pages: any = {}
 		modified: boolean = false
@@ -368,66 +368,69 @@ ${ret}
 				return
 			}
 			nextTick(() => {
-				const container = this.$refs.monacoContainer as HTMLElement
-				this.editor = monaco.editor.create(container, {
-					value: "",
-					language: "markdown",
-					automaticLayout: true,
-					wordWrap: "on",
-					fontSize: 14,
-					lineHeight: 22,
-					theme: "vs",
-					tabSize: 4,
-					insertSpaces: false,
-					lineNumbers: "on",
-					folding: true,
-					minimap: { enabled: false },
-					scrollBeyondLastLine: false,
-					overviewRulerLanes: 0,
-					overviewRulerBorder: false,
-					renderLineHighlight: "line",
-				})
-
-				this.setEditorContent()
-
-				this.editor.onDidChangeModelContent(() => {
-					this.page.content = this.editor!.getValue()
-
-					const currentVersionId = this.editor!.getModel()!.getAlternativeVersionId()
-					this.modified = currentVersionId !== this.initialVersionId
-
-					nextTick(() => {
-						const title = (this.$refs.markdown as HTMLElement).querySelector('h1')
-						if (title) {
-							let text = ''
-							for (var i = 0; i < title.childNodes.length; ++i)
-								if (title.childNodes[i].nodeType === Node.TEXT_NODE)
-									text += title.childNodes[i].textContent
-							this.page.title = text.trim()
-						}
-						const parent = (this.$refs.markdown as HTMLElement).querySelector('blockquote')
-						if (parent) {
-							const text = parent.innerText.trim().toLowerCase().replace(/_/g, ' ')
-							if (text in LeekWars.encyclopedia[this.language]) {
-								this.page.parent = LeekWars.encyclopedia[this.language][text].id
-							} else {
-								this.page.parent = 1
-							}
-						}
+				import(/* webpackChunkName: "monaco" */ 'monaco-editor').then((monaco) => {
+					const container = this.$refs.monacoContainer as HTMLElement
+					if (!container) { return }
+					this.editor = monaco.editor.create(container, {
+						value: "",
+						language: "markdown",
+						automaticLayout: true,
+						wordWrap: "on",
+						fontSize: 14,
+						lineHeight: 22,
+						theme: "vs",
+						tabSize: 4,
+						insertSpaces: false,
+						lineNumbers: "on",
+						folding: true,
+						minimap: { enabled: false },
+						scrollBeyondLastLine: false,
+						overviewRulerLanes: 0,
+						overviewRulerBorder: false,
+						renderLineHighlight: "line",
 					})
-				})
 
-				this.editor.onDidScrollChange((e) => {
-					if (this.scrolling) { this.scrolling = false; return }
-					const scrollTop = e.scrollTop
-					const scrollHeight = e.scrollHeight
-					const editorHeight = this.editor!.getLayoutInfo().height
-					if (scrollHeight <= editorHeight) { return }
-					const percent = scrollTop / (scrollHeight - editorHeight)
+					this.setEditorContent()
 
-					this.scrolling = true
-					const markdown = this.$refs.markdown as HTMLElement
-					markdown.scrollTop = (markdown.scrollHeight - markdown.clientHeight) * percent
+					this.editor.onDidChangeModelContent(() => {
+						this.page.content = this.editor!.getValue()
+
+						const currentVersionId = this.editor!.getModel()!.getAlternativeVersionId()
+						this.modified = currentVersionId !== this.initialVersionId
+
+						nextTick(() => {
+							const title = (this.$refs.markdown as HTMLElement).querySelector('h1')
+							if (title) {
+								let text = ''
+								for (var i = 0; i < title.childNodes.length; ++i)
+									if (title.childNodes[i].nodeType === Node.TEXT_NODE)
+										text += title.childNodes[i].textContent
+								this.page.title = text.trim()
+							}
+							const parent = (this.$refs.markdown as HTMLElement).querySelector('blockquote')
+							if (parent) {
+								const text = parent.innerText.trim().toLowerCase().replace(/_/g, ' ')
+								if (text in LeekWars.encyclopedia[this.language]) {
+									this.page.parent = LeekWars.encyclopedia[this.language][text].id
+								} else {
+									this.page.parent = 1
+								}
+							}
+						})
+					})
+
+					this.editor.onDidScrollChange((e) => {
+						if (this.scrolling) { this.scrolling = false; return }
+						const scrollTop = e.scrollTop
+						const scrollHeight = e.scrollHeight
+						const editorHeight = this.editor!.getLayoutInfo().height
+						if (scrollHeight <= editorHeight) { return }
+						const percent = scrollTop / (scrollHeight - editorHeight)
+
+						this.scrolling = true
+						const markdown = this.$refs.markdown as HTMLElement
+						markdown.scrollTop = (markdown.scrollHeight - markdown.clientHeight) * percent
+					})
 				})
 			})
 		}
