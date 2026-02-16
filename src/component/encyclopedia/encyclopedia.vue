@@ -156,7 +156,7 @@
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import { FUNCTIONS } from '@/model/functions'
-	import { nextTick } from 'vue'
+	import { markRaw, nextTick } from 'vue'
 	import { emitter } from '@/model/vue'
 
 	@Options({ name: 'encyclopedia', i18n: {}, mixins: [...mixins], components: { Markdown, Breadcrumb, RichTooltipFarmer } })
@@ -371,8 +371,8 @@ ${ret}
 				import(/* webpackChunkName: "monaco" */ 'monaco-editor').then((monaco) => {
 					const container = this.$refs.monacoContainer as HTMLElement
 					if (!container) { return }
-					this.editor = monaco.editor.create(container, {
-						value: "",
+					this.editor = markRaw(monaco.editor.create(container, {
+						value: this.page ? this.page.content : "",
 						language: "markdown",
 						automaticLayout: true,
 						wordWrap: "on",
@@ -388,35 +388,11 @@ ${ret}
 						overviewRulerLanes: 0,
 						overviewRulerBorder: false,
 						renderLineHighlight: "line",
-					})
-
-					this.setEditorContent()
+					}))
 
 					this.editor.onDidChangeModelContent(() => {
+						this.modified = true
 						this.page.content = this.editor!.getValue()
-
-						const currentVersionId = this.editor!.getModel()!.getAlternativeVersionId()
-						this.modified = currentVersionId !== this.initialVersionId
-
-						nextTick(() => {
-							const title = (this.$refs.markdown as HTMLElement).querySelector('h1')
-							if (title) {
-								let text = ''
-								for (var i = 0; i < title.childNodes.length; ++i)
-									if (title.childNodes[i].nodeType === Node.TEXT_NODE)
-										text += title.childNodes[i].textContent
-								this.page.title = text.trim()
-							}
-							const parent = (this.$refs.markdown as HTMLElement).querySelector('blockquote')
-							if (parent) {
-								const text = parent.innerText.trim().toLowerCase().replace(/_/g, ' ')
-								if (text in LeekWars.encyclopedia[this.language]) {
-									this.page.parent = LeekWars.encyclopedia[this.language][text].id
-								} else {
-									this.page.parent = 1
-								}
-							}
-						})
 					})
 
 					this.editor.onDidScrollChange((e) => {
@@ -431,6 +407,9 @@ ${ret}
 						const markdown = this.$refs.markdown as HTMLElement
 						markdown.scrollTop = (markdown.scrollHeight - markdown.clientHeight) * percent
 					})
+					
+					this.initialVersionId = this.editor.getModel()!.getAlternativeVersionId()
+					this.modified = false
 				})
 			})
 		}
@@ -581,6 +560,7 @@ h1 {
 .monaco-container {
 	height: 100%;
 	min-height: 0;
+	overflow: hidden;
 }
 
 .stats {
