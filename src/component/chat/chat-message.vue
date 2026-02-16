@@ -17,7 +17,7 @@
 
 			<chat-message-text :message="message" />
 
-			<template v-for="(sub, i) in message.subMessages">
+			<template v-for="(sub, i) in message.subMessages" :key="sub.id">
 				<chat-message-text :message="sub" />
 			</template>
 
