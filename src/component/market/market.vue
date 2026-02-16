@@ -443,7 +443,7 @@
 			LeekWars.setActions(this.actions)
 
 			this.onKeyDown = (e: KeyboardEvent) => {
-				if (e.code !== 'ArrowLeft' && e.code !== 'ArrowRight') { return }
+				if (e.code !== 'ArrowLeft' && e.code !== 'ArrowRight' && e.code !== 'ArrowUp' && e.code !== 'ArrowDown') { return }
 				if (!this.selectedItem) { return }
 				if (this.buyDialog || this.buyCrystalsDialog || this.sellDialog || this.unseenItemDialog) { return }
 				const names = this.orderedItemNames
@@ -451,11 +451,20 @@
 				const currentName = this.$route.params.item as string
 				const index = names.indexOf(currentName)
 				if (index === -1) { return }
-				const newIndex = e.code === 'ArrowLeft'
-					? (index - 1 + names.length) % names.length
-					: (index + 1) % names.length
-				e.preventDefault()
-				this.$router.replace('/market/' + names[newIndex])
+
+				if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') {
+					const newIndex = e.code === 'ArrowLeft'
+						? (index - 1 + names.length) % names.length
+						: (index + 1) % names.length
+					e.preventDefault()
+					this.$router.replace('/market/' + names[newIndex])
+				} else {
+					const target = this.findVerticalItem(e.code === 'ArrowUp' ? 'up' : 'down')
+					if (target) {
+						e.preventDefault()
+						this.$router.replace(target)
+					}
+				}
 			}
 			document.addEventListener('keydown', this.onKeyDown)
 		}
@@ -610,6 +619,38 @@
 					}
 				}, 200)
 			}
+		}
+
+		findVerticalItem(direction: 'up' | 'down'): string | null {
+			const active = document.querySelector('.column8 .item.router-link-active') as HTMLElement
+			if (!active) { return null }
+			const activeRect = active.getBoundingClientRect()
+			const activeCenterX = activeRect.left + activeRect.width / 2
+			const allItems = Array.from(document.querySelectorAll('.column8 .items .item')) as HTMLElement[]
+			const candidates = allItems.filter(el => {
+				const rect = el.getBoundingClientRect()
+				return direction === 'down'
+					? rect.top > activeRect.bottom - 5
+					: rect.bottom < activeRect.top + 5
+			})
+			if (!candidates.length) { return null }
+			candidates.sort((a, b) => direction === 'down'
+				? a.getBoundingClientRect().top - b.getBoundingClientRect().top
+				: b.getBoundingClientRect().bottom - a.getBoundingClientRect().bottom
+			)
+			const targetTop = candidates[0].getBoundingClientRect().top
+			const rowItems = candidates.filter(el => Math.abs(el.getBoundingClientRect().top - targetTop) < 5)
+			let closest = rowItems[0]
+			let closestDist = Infinity
+			for (const el of rowItems) {
+				const rect = el.getBoundingClientRect()
+				const dist = Math.abs(rect.left + rect.width / 2 - activeCenterX)
+				if (dist < closestDist) {
+					closestDist = dist
+					closest = el
+				}
+			}
+			return closest.getAttribute('href')
 		}
 
 		scroll(index: number) {
