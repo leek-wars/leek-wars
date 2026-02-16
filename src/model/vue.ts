@@ -197,7 +197,11 @@ const app = createApp({
 			emitter.emit('focus')
 			startIntervals()
 			LeekWars.startIntervals()
-			LeekWars.socket.reconnect()
+		})
+		document.addEventListener('visibilitychange', () => {
+			if (document.visibilityState === 'visible') {
+				LeekWars.socket.reconnect()
+			}
 		})
 		window.addEventListener('click', () => {
 			emitter.emit('htmlclick')

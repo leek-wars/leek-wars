@@ -96,15 +96,13 @@ enum SocketMessage {
 class Socket {
 	public socket!: WebSocket
 	public queue: any[] = []
-	public retry_count: number = 10
 	public retry_delay: number = 1000
+	private intentionallyClosed: boolean = false
+	private pingTimeout: ReturnType<typeof setTimeout> | null = null
+	private retryTimeout: ReturnType<typeof setTimeout> | null = null
 
 	public connect() {
-		// if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
-		// 	const message = "[WS] connect()"
-		// 	console.log(message)
-		// }
-		if (!store.state.farmer || this.connecting() || this.connected()) {
+		if (!store.state.farmer || this.intentionallyClosed || this.connecting() || this.connected()) {
 			return
 		}
 		const url = LeekWars.LOCAL ? "ws://localhost:1213/" : (LeekWars.DEV ? "wss://leekwars.com/ws" : "wss://" + window.location.host + "/ws")
@@ -115,7 +113,6 @@ class Socket {
 			// console.log("[ws] onopen")
 			store.commit('invalidate-chats')
 			store.commit('wsconnected')
-			this.retry_count = 10
 			this.retry_delay = 1000
 			for (const p of this.queue) {
 				this.send(p)
@@ -124,16 +121,20 @@ class Socket {
 			// Relaunch battle royale?
 			LeekWars.battleRoyale.init()
 			LeekWars.bossSquads.init()
+			this.schedulePing()
 		}
 		this.socket.onclose = () => {
 			// console.log("[ws] onclose")
+			this.clearPing()
 			if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
 				const message = "[WS] fermée"
 				console.error(message)
 				// LeekWars.toast(message, 5000)
 			}
 			store.commit('wsclose')
-			this.retry()
+			if (!this.intentionallyClosed) {
+				this.retry()
+			}
 		}
 		this.socket.onerror = (event) => {
 			if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
@@ -366,21 +367,49 @@ class Socket {
 	}
 
 	public reconnect() {
-		this.retry_count = 10
+		this.intentionallyClosed = false
 		this.retry_delay = 1000
+		// Force close any existing socket to handle zombie connections
+		if (this.socket && (this.socket.readyState === WebSocket.OPEN || this.socket.readyState === WebSocket.CONNECTING)) {
+			// Detach handlers to prevent onclose from triggering retry
+			this.socket.onclose = null
+			this.socket.onerror = null
+			this.socket.onmessage = null
+			this.socket.close()
+		}
 		this.connect()
 	}
 
 	public retry() {
 		if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
-			const message = "[WS] retry(" + this.retry_delay + ")"
+			const message = "[WS] retry(" + this.retry_delay + "ms)"
 			console.log(message)
 		}
-		if (this.retry_count > 0) {
-			this.retry_count--
-			// console.log("[ws] retry in", this.retry_delay)
-			setTimeout(() => this.connect(), this.retry_delay)
-			this.retry_delay += 1000
+		if (this.intentionallyClosed) { return }
+		if (this.retryTimeout) { clearTimeout(this.retryTimeout) }
+		this.retryTimeout = setTimeout(() => {
+			this.retryTimeout = null
+			this.connect()
+		}, this.retry_delay)
+		// Exponential backoff capped at 30 seconds
+		this.retry_delay = Math.min(this.retry_delay * 2, 30000)
+	}
+
+	private schedulePing() {
+		this.clearPing()
+		// Send a ping every 50 seconds to keep connection alive and detect dead connections
+		this.pingTimeout = setTimeout(() => {
+			if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+				this.send([SocketMessage.PONG])
+				this.schedulePing()
+			}
+		}, 50000)
+	}
+
+	private clearPing() {
+		if (this.pingTimeout) {
+			clearTimeout(this.pingTimeout)
+			this.pingTimeout = null
 		}
 	}
 
@@ -399,6 +428,12 @@ class Socket {
 		if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
 			const message = "[WS] disconnect()"
 			console.log(message)
+		}
+		this.intentionallyClosed = true
+		this.clearPing()
+		if (this.retryTimeout) {
+			clearTimeout(this.retryTimeout)
+			this.retryTimeout = null
 		}
 		if (this.socket) { this.socket.close() }
 		store.commit('invalidate-chats')
