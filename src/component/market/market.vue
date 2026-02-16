@@ -331,12 +331,36 @@
 		unseenItemDialog: boolean = false
 		pomps: PompTemplate[] = []
 		request: any = null
+		onKeyDown: ((e: KeyboardEvent) => void) | null = null
 
 		get max_level() {
 			if (store.state.farmer) {
 				return LeekWars.first(store.state.farmer.leeks)!.level
 			}
 			return 0
+		}
+
+		get orderedItemNames(): string[] {
+			const names: string[] = []
+			for (const pack of this.fight_packs) {
+				names.push(pack.name)
+			}
+			for (const weapon of this.weapons) {
+				names.push(weapon.name.replace('weapon_', ''))
+			}
+			for (const chip of this.chips) {
+				names.push(chip.name)
+			}
+			for (const potion of this.potions) {
+				names.push(potion.name)
+			}
+			for (const hat of this.hats) {
+				names.push(hat.name)
+			}
+			for (const pomp of this.pomps) {
+				names.push(pomp.name)
+			}
+			return names
 		}
 
 		created() {
@@ -417,6 +441,23 @@
 			})
 			emitter.on('back', this.back)
 			LeekWars.setActions(this.actions)
+
+			this.onKeyDown = (e: KeyboardEvent) => {
+				if (e.code !== 'ArrowLeft' && e.code !== 'ArrowRight') { return }
+				if (!this.selectedItem) { return }
+				if (this.buyDialog || this.buyCrystalsDialog || this.sellDialog || this.unseenItemDialog) { return }
+				const names = this.orderedItemNames
+				if (!names.length) { return }
+				const currentName = this.$route.params.item as string
+				const index = names.indexOf(currentName)
+				if (index === -1) { return }
+				const newIndex = e.code === 'ArrowLeft'
+					? (index - 1 + names.length) % names.length
+					: (index + 1) % names.length
+				e.preventDefault()
+				this.$router.replace('/market/' + names[newIndex])
+			}
+			document.addEventListener('keydown', this.onKeyDown)
 		}
 		back() {
 			this.$router.back()
@@ -425,6 +466,9 @@
 			if (this.request) { this.request.abort() }
 		}
 		unmounted() {
+			if (this.onKeyDown) {
+				document.removeEventListener('keydown', this.onKeyDown)
+			}
 			emitter.off('back', this.back)
 		}
 
