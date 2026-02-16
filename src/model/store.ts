@@ -317,8 +317,8 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				store.commit('chat-set-read', { chat: chatID, read: false })
 			}
 
-			if (data.new && chat.type === ChatType.PM && state.farmer.id !== message.farmer.id) {
-				LeekWars.squares.addFromMessage(message)
+			if (data.new && (chat.type === ChatType.PM || chat.type === ChatType.GROUP) && state.farmer.id !== message.farmer.id) {
+				LeekWars.squares.addFromMessage(message, chat)
 			}
 		},
 

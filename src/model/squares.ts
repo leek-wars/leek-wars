@@ -1,5 +1,5 @@
 import { Notification } from '@/model/notification'
-import { ChatMessage } from './chat'
+import { Chat, ChatMessage, ChatType } from './chat'
 import { i18n } from './i18n'
 import { LeekWars } from './leekwars'
 
@@ -40,11 +40,14 @@ class Squares {
 		})
 	}
 
-	addFromMessage(message: ChatMessage) {
+	addFromMessage(message: ChatMessage, chat: Chat) {
+		const title = chat.type === ChatType.GROUP
+			? chat.name + " — " + message.farmer.name
+			: message.farmer.name
 		this.add({
 			image: LeekWars.getAvatar(message.farmer.id, message.farmer.avatar_changed),
 			icon: false,
-			title: message.farmer.name,
+			title,
 			message: "► " + message.content,
 			link: "/messages/conversation/" + message.chat,
 			padding: false,
