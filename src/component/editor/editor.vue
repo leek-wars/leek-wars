@@ -994,6 +994,7 @@
 		min-height: 0;
 		flex: 1;
 		display: flex;
+		isolation: isolate;
 	}
 	.popup.input_popup input {
 		width: 90%;

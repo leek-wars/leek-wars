@@ -433,7 +433,7 @@ export default class AIViewMonaco extends Vue {
 .ai {
 	min-width: 0;
 	height: 100%;
-	//position: relative;
+	position: relative;
 	& :deep(code) {
 		display: inline-flex !important;
 	}
