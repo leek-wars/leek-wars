@@ -139,6 +139,7 @@
 						</v-tooltip>
 						<ranking-badge v-if="farmer && farmer.ranking && farmer.ranking <= 1000 && farmer.in_garden" :id="farmer.id" :ranking="farmer.ranking" category="farmer" />
 					</div>
+					<Line v-if="chartData" :data="chartData" :options="chartOptions" class="talent-history" />
 					<v-tooltip v-if="farmer">
 						<template #activator="{ props }">
 							<table v-bind="props">
@@ -604,9 +605,11 @@
 	import { TROPHIES } from '@/model/trophies'
 	import LWTitle from '@/component/title/title.vue'
 import { emitter } from '@/model/vue'
+	import { Line } from 'vue-chartjs'
+	import { ChartData, ChartOptions } from 'chart.js'
 
 	@Options({ name: "farmer", i18n: {}, mixins: [...mixins], components: {
-		RichTooltipFarmer, RichTooltipTeam, RichTooltipLeek, FightsHistory, TournamentsHistory, TitlePicker, ReportDialog, 'lw-title': LWTitle, 'rich-tooltip-item': RichTooltipItem
+		RichTooltipFarmer, RichTooltipTeam, RichTooltipLeek, FightsHistory, TournamentsHistory, TitlePicker, ReportDialog, 'lw-title': LWTitle, 'rich-tooltip-item': RichTooltipItem, Line,
 	} })
 	export default class FarmerPage extends Vue {
 		farmer: Farmer | null = null
@@ -655,6 +658,8 @@ import { emitter } from '@/model/vue'
 			10000: { hat: 'gold_fedora', item: 280 },
 		}
 		xp_bar: number = 0
+		chartData: ChartData | null = null
+		chartOptions: ChartOptions | null = null
 
 		get id(): any {
 			return this.$route.params.id ? parseInt(this.$route.params.id, 10) : (this.$store.state.farmer ? this.$store.state.farmer.id : null)
@@ -734,6 +739,7 @@ import { emitter } from '@/model/vue'
 					{icon: 'mdi-email-outline', click: () => this.$router.push('/chat/new/' + farmer.id + '/' + farmer.name + '/'+ farmer.avatar_changed)}
 				])
 			}
+			this.chart()
 			this.getTrophies()
 			this.warnings()
 			this.newWebsite = this.farmer.website
@@ -753,6 +759,41 @@ import { emitter } from '@/model/vue'
 			} else {
 				this.trophiesMode = 'list'
 				localStorage.setItem('farmer/trophies-mode', 'list')
+			}
+		}
+
+		chart() {
+			if (!this.farmer || !this.farmer.talent_history || this.farmer.talent_history.length === 0) { return }
+			const labels = []
+			const time = LeekWars.time
+			for (let i = 1; i <= 7; ++i) {
+				labels.push(LeekWars.formatDayMonthShort(time - i * 24 * 3600))
+			}
+			this.chartData = {
+				labels: labels.reverse(),
+				datasets: [
+					{
+						tension: 0.2,
+						data: this.farmer.talent_history,
+						borderColor: '#5fad1b',
+						pointBackgroundColor: '#5fad1b',
+						borderWidth: 2,
+						fill: {
+							target: 'origin',
+							above: '#5fad1b30',
+						},
+					}
+				]
+			}
+			this.chartOptions = {
+				aspectRatio: 2.5,
+				plugins: { legend: { display: false } },
+				elements: {
+					point: {
+						radius: 4,
+						hoverRadius: 6,
+					}
+				},
 			}
 		}
 
@@ -1105,6 +1146,9 @@ import { emitter } from '@/model/vue'
 		font-size: 18px;
 		margin-left: 5px;
 		color: #888;
+	}
+	.talent-history {
+		margin-top: 3px;
 	}
 	.stats {
 		vertical-align: top;
