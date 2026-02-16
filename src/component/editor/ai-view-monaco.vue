@@ -57,6 +57,8 @@ export default class AIViewMonaco extends Vue {
 	jumpToColumn: number | null = 0
 	scrollListener!: monaco.IDisposable
 	private analyzerTimeout: any
+	private viewStateSaveTimeout: any
+	private currentAiId: number | null = null
 	public analyzing: boolean = false
 	public saving: boolean = false
 	public serverError: boolean = false
@@ -107,6 +109,7 @@ export default class AIViewMonaco extends Vue {
 			if (!this.ai) return
 			// console.log('scroll', this.ai.id, e.scrollTop, e.scrollHeight, e.scrollWidth)
 			localStorage.setItem('editor/scroll/' + this.ai.id, '' + e.scrollTop)
+			this.debouncedSaveViewState()
 		})
 		// this.editor.onDidFocusEditorWidget((e) => {
 		// 	// Verify the correct model is active when focusing
@@ -278,6 +281,7 @@ export default class AIViewMonaco extends Vue {
 	}
 
 	beforeUnmount() {
+		this.saveViewState()
 		this.scrollListener.dispose()
 		if (this.editor) {
 			this.editor.dispose()
@@ -299,6 +303,12 @@ export default class AIViewMonaco extends Vue {
 	update() {
 		if (!this.ai) return
 		// console.log("update ai", this.ai.id)
+
+		// Save view state for the previous AI before switching
+		if (this.currentAiId !== null && this.currentAiId !== this.ai.id) {
+			this.saveViewState()
+		}
+		this.currentAiId = this.ai.id
 
 		fileSystem.load(this.ai).then((loadedAI) => {
 
@@ -322,9 +332,7 @@ export default class AIViewMonaco extends Vue {
 						this.scrollToLine(loadedAI, this.jumpToLine!, this.jumpToColumn!)
 					})
 				} else {
-					const scrollPosition = parseInt(localStorage.getItem('editor/scroll/' + this.ai.id) || '0')
-					// console.log("scroll to", scrollPosition)
-					this.editor.setScrollTop(scrollPosition)
+					this.restoreViewState()
 				}
 			})
 		})
@@ -384,6 +392,38 @@ export default class AIViewMonaco extends Vue {
 		this.currentVersionId = this.ai.model.getAlternativeVersionId()
 		// console.log("save", this.currentVersionId)
 		// console.log(this.editor.getModel())
+	}
+
+	private saveViewState(aiId?: number) {
+		const id = aiId ?? this.currentAiId
+		if (!id) return
+		const viewState = this.editor.saveViewState()
+		if (viewState) {
+			localStorage.setItem('editor/viewstate/' + id, JSON.stringify(viewState))
+		}
+	}
+
+	private restoreViewState() {
+		const viewStateStr = localStorage.getItem('editor/viewstate/' + this.ai.id)
+		if (viewStateStr) {
+			try {
+				const viewState = JSON.parse(viewStateStr)
+				this.editor.restoreViewState(viewState)
+				return
+			} catch (e) {
+				// Fall through to scroll-only restore
+			}
+		}
+		// Fallback: restore scroll position only (backward compatibility)
+		const scrollPosition = parseInt(localStorage.getItem('editor/scroll/' + this.ai.id) || '0')
+		this.editor.setScrollTop(scrollPosition)
+	}
+
+	private debouncedSaveViewState() {
+		clearTimeout(this.viewStateSaveTimeout)
+		this.viewStateSaveTimeout = setTimeout(() => {
+			this.saveViewState()
+		}, 1000)
 	}
 }
 
