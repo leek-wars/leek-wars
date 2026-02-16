@@ -111,13 +111,18 @@ export default class AIViewMonaco extends Vue {
 			localStorage.setItem('editor/scroll/' + this.ai.id, '' + e.scrollTop)
 			this.debouncedSaveViewState()
 		})
-		// this.editor.onDidFocusEditorWidget((e) => {
-		// 	// Verify the correct model is active when focusing
-		// 	if (this.ai && this.ai.model && this.editor.getModel() !== this.ai.model) {
-		// 		this.editor.setModel(this.ai.model)
-		// 	}
-		// 	this.$emit('focus')
-		// })
+		// Restore focus after mouse drag-select to prevent first keystroke
+		// from being lost (#817)
+		this.editor.onMouseUp(() => {
+			requestAnimationFrame(() => {
+				if (!this.editor.hasTextFocus()) {
+					this.editor.focus()
+				}
+			})
+		})
+		this.editor.onDidFocusEditorWidget(() => {
+			this.$emit('focus')
+		})
 		this.editor.onKeyDown((e) => {
 			if (e.code === 'Enter') {
 				if (this.console) {
@@ -464,6 +469,7 @@ export default class AIViewMonaco extends Vue {
 	margin-left: -250px;
 	text-align: center;
 	z-index: 1000;
+	pointer-events: none;
 }
 .compiling {
 	padding: 5px 10px;
@@ -471,6 +477,7 @@ export default class AIViewMonaco extends Vue {
 	background: var(--pure-white);
 	margin: 4px;
 	display: inline-block;
+	pointer-events: auto;
 }
 .compiling .loader {
 	display: inline-block;
@@ -487,6 +494,7 @@ export default class AIViewMonaco extends Vue {
 	padding: 5px 10px;
 	border-radius: 2px;
 	margin: 4px;
+	pointer-events: auto;
 }
 .results {
 	cursor: pointer;
