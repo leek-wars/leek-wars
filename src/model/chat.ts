@@ -135,6 +135,7 @@ class Chat {
 					const subMessage = message.subMessages[s]
 					if (subMessage.id === messageID) {
 						message.subMessages.splice(s, 1)
+						return
 					}
 				}
 			}
