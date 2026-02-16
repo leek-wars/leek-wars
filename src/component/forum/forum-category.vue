@@ -73,7 +73,7 @@
 								<v-icon v-if="topic.resolved" :title="$t('resolved')" class="attr resolved">mdi-check-circle</v-icon>
 								<v-icon v-if="topic.closed" :title="$t('locked')" class="attr">mdi-lock</v-icon>
 								<v-icon v-if="topic.pinned" :title="$t('pinned')" class="attr">mdi-pin</v-icon>
-								<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars-client/issues/' + topic.issue" class="attr issue" target="_blank" rel="noopener">
+								<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars/issues/' + topic.issue" class="attr issue" target="_blank" rel="noopener">
 									#{{ topic.issue }}
 								</a>
 								<router-link :to="'/forum/category-' + topic.category + '/topic-' + topic.id">{{ topic.title }}</router-link>
