@@ -7,7 +7,7 @@
 		"serve": "vite --mode dev",
 		"beta": "vite --mode beta",
 		"local": "vite --mode local",
-		"build": "if test `git rev-parse --abbrev-ref HEAD` = \"master\" ; then vite build; else echo 'Build bloqué sur cette branche (pas master)'; fi;",
+		"build": "vite build",
 		"build-beta": "vite build --mode beta",
 		"preview": "vite preview",
 		"lint": "eslint src --ext .ts,.vue",
