@@ -116,6 +116,23 @@
 						</div>
 						<div v-else-if="myFarmer" class="add add-github" @click="githubDialog = true">{{ $t('add_github') }}</div>
 					</div>
+
+					<div v-if="farmer" class="log-time grey">
+						<span v-if="$store.getters.moderator">{{ $t('registered_the', [LeekWars.formatDateTime(farmer.register_date)]) }}</span>
+						<span v-else>{{ $t('registered_the', [LeekWars.formatDate(farmer.register_date)]) }}</span>
+						<br>
+						<span v-if="farmer.connected">{{ $t('connected') }}</span>
+						<span v-else>{{ $t('last_connection', [LeekWars.formatDuration(farmer.last_connection)]) }}</span>
+						<br>
+						<span v-if="farmer.verified">{{ $t('verified') }}</span>
+						<span v-else>{{ $t('not_verified') }}</span>
+					</div>
+					<div v-if="farmer" class="grades">
+						<div v-if="farmer.admin" class="grade admin">{{ $t('admin') }}</div>
+						<div v-else-if="farmer.moderator" class="grade moderator">{{ $t('moderator') }}</div>
+						<div v-if="farmer.contributor" class="grade contributor">{{ $t('contributor') }}</div>
+					</div>
+					
 				</div></template>
 			</panel>
 
@@ -139,7 +156,7 @@
 						</v-tooltip>
 						<ranking-badge v-if="farmer && farmer.ranking && farmer.ranking <= 1000 && farmer.in_garden" :id="farmer.id" :ranking="farmer.ranking" category="farmer" />
 					</div>
-					<Line v-if="chartData" :data="chartData" :options="chartOptions" class="talent-history" />
+
 					<v-tooltip v-if="farmer">
 						<template #activator="{ props }">
 							<table v-bind="props">
@@ -175,21 +192,8 @@
 						</tr>
 					</table>
 
-					<div v-if="farmer" class="log-time grey">
-						<span v-if="$store.getters.moderator">{{ $t('registered_the', [LeekWars.formatDateTime(farmer.register_date)]) }}</span>
-						<span v-else>{{ $t('registered_the', [LeekWars.formatDate(farmer.register_date)]) }}</span>
-						<br>
-						<span v-if="farmer.connected">{{ $t('connected') }}</span>
-						<span v-else>{{ $t('last_connection', [LeekWars.formatDuration(farmer.last_connection)]) }}</span>
-						<br>
-						<span v-if="farmer.verified">{{ $t('verified') }}</span>
-						<span v-else>{{ $t('not_verified') }}</span>
-					</div>
-					<div v-if="farmer" class="grades">
-						<div v-if="farmer.admin" class="grade admin">{{ $t('admin') }}</div>
-						<div v-else-if="farmer.moderator" class="grade moderator">{{ $t('moderator') }}</div>
-						<div v-if="farmer.contributor" class="grade contributor">{{ $t('contributor') }}</div>
-					</div>
+					<Line v-if="chartData" :data="chartData" :options="chartOptions" class="talent-history" />
+					
 					<div v-if="farmer" class="godfather grey">
 						<div v-if="farmer.godfather">
 							<i18n-t keypath="godson_of" tag="div">
@@ -217,6 +221,7 @@
 							</i18n-t>
 						</div>
 					</div>
+
 				</div></template>
 			</panel>
 
@@ -1060,7 +1065,7 @@ import { emitter } from '@/model/vue'
 	}
 	.infos {
 		text-align: left;
-		width: 250px;
+		padding: 0 15px;
 		margin: 0 auto;
 		margin-top: 6px;
 	}
@@ -1181,36 +1186,36 @@ import { emitter } from '@/model/vue'
 		.v-icon {
 			color: #777;
 		}
-		.log-time, .godfather {
-			margin-top: 10px;
-			padding: 0 20px;
-			font-size: 13px;
-		}
-		.log-time {
-			margin-top: 20px;
-		}
-		.grades {
-			margin-left: 20px;
-		}
-		.grade {
-			border-radius: 5px;
-			color: white;
-			display: inline-block;
-			padding: 3px 6px;
-			margin-top: 5px;
-			font-weight: normal;
-			font-size: 14px;
-			margin-right: 5px;
-		}
-		.grade.admin {
-			background: #ff3333;
-		}
-		.grade.moderator {
-			background: #ffa900;
-		}
-		.grade.contributor {
-			background: #009c1d;
-		}
+	}
+	.log-time, .godfather {
+		margin-top: 10px;
+		padding: 0 15px;
+		font-size: 13px;
+		color: #999;
+		text-align: left;
+	}
+	.grades {
+		margin-left: 15px;
+		text-align: left;
+	}
+	.grade {
+		border-radius: 5px;
+		color: white;
+		display: inline-block;
+		padding: 3px 6px;
+		margin-top: 5px;
+		font-weight: normal;
+		font-size: 14px;
+		margin-right: 5px;
+	}
+	.grade.admin {
+		background: #ff3333;
+	}
+	.grade.moderator {
+		background: #ffa900;
+	}
+	.grade.contributor {
+		background: #009c1d;
 	}
 	#app.app .leeks {
 		display: grid;
