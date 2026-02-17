@@ -199,7 +199,7 @@
 				{ name: "TypeScript", link: "https://www.typescriptlang.org/", image: "typescript.svg" },
 				{ name: "CodeMirror", link: "https://codemirror.net/", image: "codemirror.svg" },
 				{ name: "Vue", link: "https://vuejs.org/", image: "vue.png" },
-				{ name: "Chartist", link: "https://gionkunz.github.io/chartist-js/", image: "chartist.png" },
+				{ name: "Chart.js", link: "https://www.chartjs.org/", image: "chartjs.png" },
 				{ name: "KaTeX", link: "https://katex.org/", image: "katex.png" },
 				{ name: "webpack", link: "https://webpack.js.org/", image: "webpack.png" },
 				{ name: "npm", link: "https://www.npmjs.com/", image: "npm.svg" },

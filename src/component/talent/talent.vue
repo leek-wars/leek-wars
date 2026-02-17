@@ -13,11 +13,11 @@
 				<div class="levels">
 
 					<h4>Talent solo</h4>
-				<div v-if="leekData">Level 301 = {{ leekData.series[0][300] }}</div>
-				<chartist ref="leekChart" :data="leekData" :options="leekOptions" ratio="ct-major-twelfth" class="talent" type="Line" />
+				<div v-if="leekData">Level 301 = {{ leekMax }}</div>
+				<Line v-if="leekData" :data="leekData" :options="leekOptions" class="talent-chart" />
 				<h4>Talent éleveur</h4>
-				<div v-if="farmerData">Level 1204 = {{ farmerData.series[0][1204 - 50] }}</div>
-				<chartist ref="farmerChart" :data="farmerData" :options="farmerOptions" ratio="ct-major-twelfth" class="talent" type="Line" />
+				<div v-if="farmerData">Level 1204 = {{ farmerMax }}</div>
+				<Line v-if="farmerData" :data="farmerData" :options="farmerOptions" class="talent-chart" />
 
 				</div>
 			</template>
@@ -28,52 +28,111 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Options, Vue } from 'vue-property-decorator'
+	import { Line } from 'vue-chartjs'
 
-	@Options({ name: 'talent', i18n: {} })
+	@Options({ name: 'talent', i18n: {}, components: { Line } })
 	export default class TalentPage extends Vue {
 
 		leekData: any = null
 		leekOptions: any = null
+		leekMax: number = 0
 		farmerData: any = null
 		farmerOptions: any = null
+		farmerMax: number = 0
 
 		created() {
 			LeekWars.setTitle("Talent")
 
 			LeekWars.get("talent/farmer").then(talents => {
+				this.farmerMax = talents[talents.length - 1]
 				this.farmerData = {
 					labels: [...Array(talents.length)].map((_, i) => 50 + i),
-					series: [talents]
+					datasets: [{
+						data: talents,
+						tension: 0.2,
+						borderColor: '#5fad1b',
+						borderWidth: 2,
+						pointRadius: 0,
+						pointHitRadius: 5,
+						fill: {
+							target: 'origin',
+							above: '#5fad1b30',
+						},
+					}]
 				}
 				this.farmerOptions = {
-					showArea: true, fullWidth: true, fullHeight: true, low: 50,
-					axisX: { labelInterpolationFnc: (value: any, index: any) => index % 25 === 0 ? value : null }
+					aspectRatio: 2.5,
+					plugins: {
+						legend: { display: false },
+						tooltip: {
+							callbacks: {
+								title: (items: any) => this.$t('main.level_n', [items[0].label]),
+							}
+						}
+					},
+					scales: {
+						x: {
+							ticks: {
+								callback: (value: any, index: any) => index % 25 === 0 ? 50 + index : null,
+								maxRotation: 0,
+							},
+							grid: { color: 'rgba(128,128,128,0.15)' },
+						},
+						y: {
+							min: 50,
+							grid: { color: 'rgba(128,128,128,0.15)' },
+						}
+					},
 				}
 			})
 			LeekWars.get("talent/leek").then(talents => {
+				this.leekMax = talents[talents.length - 1]
 				this.leekData = {
-					labels: [...Array(talents.length)].map((_, i) => i),
-					series: [talents]
+					labels: [...Array(talents.length)].map((_, i) => i + 1),
+					datasets: [{
+						data: talents,
+						tension: 0.2,
+						borderColor: '#5fad1b',
+						borderWidth: 2,
+						pointRadius: 0,
+						pointHitRadius: 5,
+						fill: {
+							target: 'origin',
+							above: '#5fad1b30',
+						},
+					}]
 				}
 				this.leekOptions = {
-					showArea: true, fullWidth: true, fullHeight: true, low: 0,
-					axisX: { labelInterpolationFnc: (value: any, index: any) => index === 0 ? 1 : (index % 10 === 0 ? value : null) }
+					aspectRatio: 2.5,
+					plugins: {
+						legend: { display: false },
+						tooltip: {
+							callbacks: {
+								title: (items: any) => this.$t('main.level_n', [items[0].label]),
+							}
+						}
+					},
+					scales: {
+						x: {
+							ticks: {
+								callback: (value: any, index: any) => index === 0 ? 1 : (index % 10 === 0 ? index + 1 : null),
+								maxRotation: 0,
+							},
+							grid: { color: 'rgba(128,128,128,0.15)' },
+						},
+						y: {
+							min: 0,
+							grid: { color: 'rgba(128,128,128,0.15)' },
+						}
+					},
 				}
 			})
 		}
 		mounted() {
 			LeekWars.large = true
-			emitter.on('resize', this.resize)
 		}
 		beforeUnmount() {
 			LeekWars.large = false
-			emitter.off('resize', this.resize)
-		}
-		resize() {
-			nextTick(() => {
-				(this.$refs.leekChart as any).redraw()
-				(this.$refs.farmerChart as any).redraw()
-			})
 		}
 	}
 </script>
@@ -87,18 +146,8 @@
 .levels {
 	padding: 10px;
 }
-.talent {
-	:deep(.ct-line) {
-		stroke: rgba(95, 173, 27, 0.7);
-		stroke-width: 2px;
-	}
-	:deep(.ct-point) {
-		stroke: #5fad1b;
-		stroke-width: 4px;
-	}
-	:deep(.ct-area) {
-		fill: rgba(95, 173, 27, 1);
-		fill-opacity: 0.2;
-	}
+.talent-chart {
+	margin-top: 5px;
+	margin-bottom: 20px;
 }
 </style>
