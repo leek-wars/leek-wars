@@ -50,6 +50,7 @@ class Team {
 	public description!: string
 	public candidacy!: boolean
 	public talent!: number
+	public talent_history!: number[]
 	public turret_ai!: any
 	public chat!: number
 	public member_level!: number

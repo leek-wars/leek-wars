@@ -105,6 +105,8 @@
 					</template>
 					{{ $t('ratio', [team.ratio]) }}
 				</v-tooltip>
+				
+				<Line v-if="chartData" :data="chartData" :options="chartOptions" class="talent-history" />
 
 				<div class="center" v-if="team && $store.state.farmer && !is_member && $store.state.farmer.team == null">
 					<br>
@@ -612,11 +614,13 @@
 	import TurretImage from '@/component/turret-image.vue'
 	import AIElement from '@/component/app/ai.vue'
 	import { CHIPS } from '@/model/chips'
-import { defineAsyncComponent } from 'vue'
-import { emitter } from '@/model/vue'
+	import { defineAsyncComponent } from 'vue'
+	import { emitter } from '@/model/vue'
+	import { Line } from 'vue-chartjs'
+	import { ChartData, ChartOptions } from 'chart.js'
 
 	@Options({ name: 'team', i18n: {}, mixins: [...mixins], components: {
-		CharacteristicTooltip, Explorer, chat: ChatElement, RichTooltipItem, RichTooltipLeek, RichTooltipFarmer, RichTooltipComposition, RichTooltipTeam, FightsHistory, TournamentsHistory, ReportDialog, TurretImage, ai: AIElement
+		CharacteristicTooltip, Explorer, chat: ChatElement, RichTooltipItem, RichTooltipLeek, RichTooltipFarmer, RichTooltipComposition, RichTooltipTeam, FightsHistory, TournamentsHistory, ReportDialog, TurretImage, ai: AIElement, Line,
 	}})
 	export default class TeamPage extends Vue {
 		ChatType = ChatType
@@ -651,6 +655,8 @@ import { emitter } from '@/model/vue'
 		logsLevel: number = 0
 		rankingsLoading: boolean = false
 		rankingsLoaded: boolean = false
+		chartData: ChartData | null = null
+		chartOptions: ChartOptions | null = null
 
 		get id() { return 'id' in this.$route.params ? parseInt(this.$route.params.id, 10) : (this.$store.state.farmer && this.$store.state.farmer.team !== null ? this.$store.state.farmer.team.id : null) }
 		get max_level() { return this.team && this.team.level === 100 }
@@ -721,6 +727,7 @@ import { emitter } from '@/model/vue'
 				}
 
 				this.addRankingStyles()
+				this.chart()
 
 				this.captain = teamCaptain
 				LeekWars.setTitle(this.team.name)
@@ -1056,6 +1063,41 @@ import { emitter } from '@/model/vue'
 			LeekWars.get('tournament/range-compo/' + power).then(d => composition.tournamentRange = d)
 		}
 
+		chart() {
+			if (!this.team || !this.team.talent_history || this.team.talent_history.length === 0) { return }
+			const labels = []
+			const time = LeekWars.time
+			for (let i = 1; i <= 7; ++i) {
+				labels.push(LeekWars.formatDayMonthShort(time - i * 24 * 3600))
+			}
+			this.chartData = {
+				labels: labels.reverse(),
+				datasets: [
+					{
+						tension: 0.2,
+						data: this.team.talent_history,
+						borderColor: '#5fad1b',
+						pointBackgroundColor: '#5fad1b',
+						borderWidth: 2,
+						fill: {
+							target: 'origin',
+							above: '#5fad1b30',
+						},
+					}
+				]
+			}
+			this.chartOptions = {
+				aspectRatio: 2.5,
+				plugins: { legend: { display: false } },
+				elements: {
+					point: {
+						radius: 4,
+						hoverRadius: 6,
+					}
+				},
+			}
+		}
+
 		loadRankings() {
 			if (!this.team) return
 			this.rankingsLoading = true
@@ -1137,6 +1179,9 @@ import { emitter } from '@/model/vue'
 		align-items: center;
 		justify-content: center;
 		margin-top: 15px;
+	}
+	.talent-history {
+		margin-top: 3px;
 	}
 	.fights {
 		width: 100%;
