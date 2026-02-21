@@ -171,7 +171,7 @@
 			this.results = null
 			// if (this.canSearch) {
 				this.searchStarted = true
-				LeekWars.get('forum/search2/' + this.options.query.replace(/ /g, '+') + '/' + this.options.farmer + '/' + this.options.category + '/' + this.options.page + '/' + (this.options.order || 'pertinence') + '/' + (this.options.admin || false) + '/' + (this.options.moderator || false) + '/' + this.options.resolved).then(data => {
+				LeekWars.get('forum/search2/' + (this.options.query.replace(/ /g, '+') || '-') + '/' + (this.options.farmer || '-') + '/' + this.options.category + '/' + this.options.page + '/' + (this.options.order || 'pertinence') + '/' + (this.options.admin || false) + '/' + (this.options.moderator || false) + '/' + this.options.resolved).then(data => {
 					this.results = data.results
 					this.pages = data.pages
 					this.count = data.count
