@@ -52,7 +52,7 @@
 	import { Options, Vue } from 'vue-property-decorator'
 	import ChangelogDialog from './changelog-dialog.vue'
 	import ChangelogVersion from './changelog-version.vue'
-import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/vue'
 
 	@Options({ name: 'changelog', i18n: {}, components: { ChangelogVersion, ChangelogDialog } })
 	export default class Changelog extends Vue {
