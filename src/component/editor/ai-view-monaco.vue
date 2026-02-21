@@ -32,7 +32,7 @@ import DocumentationFunction from '../documentation/documentation-function.vue'
 import Javadoc from './javadoc.vue'
 import { FUNCTIONS } from '@/model/functions';
 import { CONSTANTS } from '@/model/constants';
-import { createApp, nextTick } from 'vue';
+import { createApp, markRaw, nextTick } from 'vue';
 import { create } from 'domain';
 import { i18n } from '@/model/i18n';
 import router from '@/router';
@@ -69,7 +69,7 @@ export default class AIViewMonaco extends Vue {
 
 	mounted() {
 		// https://microsoft.github.io/monaco-editor/docs.html#interfaces/editor.IEditorOptions.html
-		this.editor = monaco.editor.create(this.$refs.editor as HTMLElement, {
+		this.editor = markRaw(monaco.editor.create(this.$refs.editor as HTMLElement, {
 			language: "leekscript",
 			automaticLayout: true,
 			wordWrap: "on",
@@ -104,7 +104,7 @@ export default class AIViewMonaco extends Vue {
 				onWillSaveState() {},
 				onDidChangeStorage() {}
 			}
-		})
+		}))
 		this.scrollListener = this.editor.onDidScrollChange((e) => {
 			if (!this.ai) return
 			// console.log('scroll', this.ai.id, e.scrollTop, e.scrollHeight, e.scrollWidth)
