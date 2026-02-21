@@ -11,9 +11,9 @@
 <script lang="ts">
 	import { i18n } from '@/model/i18n'
 	import { TROPHIES } from '@/model/trophies'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ name: "lw-title" })
+	@Options({ name: "lw-title" })
 	export default class LWTitle extends Vue {
 
 		TROPHIES = TROPHIES

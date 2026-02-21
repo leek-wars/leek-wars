@@ -139,6 +139,7 @@ class FightStatistics {
 	public field!: Field
 	public newGlobalTurn: boolean = true
 	public time: number = 0
+	public duration: number = 1
 
 	public generate(fight: Fight) {
 
@@ -182,6 +183,7 @@ class FightStatistics {
 						currentTurn = action[1]
 						this.newGlobalTurn = true
 						this.lives_raw.push([])
+						this.duration++
 					}
 					this.addTime()
 					break

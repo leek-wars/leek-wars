@@ -1,130 +1,70 @@
 {
-	"name": "leek-wars-client",
+	"name": "leek-wars",
 	"version": "2.43.0",
 	"scripts": {
-		"start": "NODE_OPTIONS=--max-old-space-size=8192 vue-cli-service serve --mode dev",
-		"serve": "vue-cli-service serve --mode dev",
-		"beta": "vue-cli-service serve --mode beta",
-		"local": "vue-cli-service serve --mode local",
-		"build": "if test `git rev-parse --abbrev-ref HEAD` = \"master\" ; then VUE_MODE=build vue-cli-service build; else echo 'Build bloqué sur cette branche (pas master)'; fi;",
-		"build-beta": "VUE_MODE=build NODE_ENV=production vue-cli-service build --mode beta",
-		"lint": "vue-cli-service lint",
-		"test": "bundlesize"
+		"dev": "vite --mode dev",
+		"start": "vite --mode dev",
+		"serve": "vite --mode dev",
+		"beta": "vite --mode beta",
+		"local": "vite --mode local",
+		"build": "vite build",
+		"build-beta": "vite build --mode beta",
+		"preview": "vite preview",
+		"lint": "eslint src",
+		"test": "bundlesize",
+		"typecheck": "vue-tsc --noEmit",
+		"stats": "xdg-open dist/stats.html"
 	},
 	"dependencies": {
 		"@paypal/paypal-js": "^5.1.4",
-		"@typescript-eslint/typescript-estree": "^8.2.0",
+		"@types/dompurify": "^3.0.5",
+		"@vitejs/plugin-vue": "^6.0.3",
+		"chart.js": "^4.5.1",
 		"codemirror": "^5.65.16",
+		"dompurify": "^3.3.1",
 		"dotenv": "^8.2.0",
 		"js-beautify": "^1.13.0",
 		"katex": "^0.16.11",
 		"markdown-it": "^12.3.2",
+		"mitt": "^3.0.1",
 		"monaco-editor": "^0.55.1",
-		"monaco-editor-webpack-plugin": "^7.1.0",
+		"pinia": "^2.1.0",
 		"register-service-worker": "^1.7.1",
-		"sanitize-html": "^2.2.0",
-		"swiper": "^7.3.1",
-		"vue": "^2.6.14",
-		"vue-chartist": "^2.3.1",
-		"vue-class-component": "^7.2.6",
-		"vue-i18n": "^8.22.2",
-		"vue-json-viewer": "^2.2.22",
-		"vue-property-decorator": "^9.1.2",
-		"vue-router": "^3.4.9",
-		"vuetify": "^2.7.2",
-		"vuex": "^3.6.0",
-		"yaml-loader": "^0.6.0"
+		"swiper": "^12.1.2",
+		"vue": "^3.4.0",
+		"vue-chartjs": "^5.3.3",
+		"vue-facing-decorator": "^4.0.1",
+		"vue-i18n": "^9.5.0",
+		"vue-json-viewer": "^3.0.4",
+		"vue-router": "^4.2.0",
+		"vuetify": "^3.4.0",
+		"vuex": "^4.1.0"
 	},
 	"devDependencies": {
-		"@intlify/vue-i18n-loader": "^1.0.0",
+		"@eslint/js": "^10.0.1",
 		"@mdi/font": "^7.4.47",
 		"@types/codemirror": "0.0.96",
 		"@types/google.analytics": "0.0.40",
-		"@types/node": "^14.14.10",
-		"@types/swiper": "^5.4.1",
-		"@typescript-eslint/eslint-plugin": "^5.30.5",
-		"@typescript-eslint/parser": "^5.30.5",
-		"@vue/cli-plugin-pwa": "^5.0.8",
-		"@vue/cli-plugin-typescript": "^5.0.8",
-		"@vue/cli-service": "^5.0.8",
-		"@vue/eslint-config-prettier": "^6.0.0",
-		"@vue/eslint-config-typescript": "^11.0.0",
-		"babel-plugin-transform-imports": "^2.0.0",
-		"eslint": "^8.19.0",
-		"eslint-plugin-prefer-arrow": "^1.2.3",
-		"eslint-plugin-vue": "^9.2.0",
-		"json-loader": "^0.5.7",
-		"prettier": "2.0.5",
-		"request": "^2.88.2",
-		"request-promise": "^4.2.6",
-		"sass": "~1.32.13",
-		"sass-loader": "^8.0.2",
-		"stylus": "^0.54.8",
-		"stylus-loader": "^3.0.2",
-		"terser-webpack-plugin": "^3.1.0",
-		"typescript": "^4.7.4",
-		"vue-cli-plugin-vuetify": "^2.0.8",
-		"vuetify-loader": "^1.6.0",
-		"webpack-bundle-analyzer": "^4.5.0"
+		"@types/node": "^20.0.0",
+		"autoprefixer": "^10.4.23",
+		"eslint": "^10.0.1",
+		"eslint-config-prettier": "^10.1.8",
+		"eslint-plugin-vue": "^10.8.0",
+		"globals": "^17.3.0",
+		"js-yaml": "^4.1.1",
+		"prettier": "^3.0.0",
+		"rollup-plugin-visualizer": "^6.0.5",
+		"sass": "^1.69.0",
+		"typescript": "^5.3.0",
+		"typescript-eslint": "^8.56.0",
+		"vite": "^7.3.0",
+		"vite-plugin-monaco-editor": "^1.1.0",
+		"vite-plugin-node-polyfills": "^0.2.0",
+		"vite-plugin-vuetify": "^2.0.0",
+		"vue-tsc": "^3.2.1"
 	},
-	"eslintConfig": {
-		"root": true,
-		"env": {
-			"node": true
-		},
-		"extends": [
-			"plugin:vue/essential",
-			"@vue/typescript"
-		],
-		"parserOptions": {
-			"parser": "typescript-estree"
-		},
-		"rules": {
-			"vue/attribute-hyphenation": "error",
-			"vue/html-end-tags": "error",
-			"vue/mustache-interpolation-spacing": "error",
-			"vue/name-property-casing": "error",
-			"vue/no-multi-spaces": "error",
-			"vue/require-default-prop": "error",
-			"vue/require-prop-types": "error",
-			"vue/v-bind-style": "error",
-			"vue/v-on-style": "error",
-			"vue/attributes-order": "error",
-			"vue/html-quotes": "error",
-			"vue/html-indent": [
-				"error",
-				"tab",
-				{
-					"attribute": 1,
-					"closeBracket": 0,
-					"alignAttributesVertically": true
-				}
-			],
-			"vue/html-self-closing": [
-				"error",
-				{
-					"html": {
-						"normal": "never",
-						"component": "always"
-					},
-					"svg": "always"
-				}
-			],
-			"vue/this-in-template": [
-				"error",
-				"never"
-			],
-			"vue/html-closing-bracket-spacing": [
-				"error",
-				{
-					"startTag": "never",
-					"endTag": "never",
-					"selfClosingTag": "always"
-				}
-			],
-			"vue/no-confusing-v-for-v-if": "error",
-			"vue/no-use-v-if-with-v-for": "off"
-		}
+	"overrides": {
+		"minimatch": "^10.2.1"
 	},
 	"postcss": {
 		"plugins": {
@@ -139,12 +79,12 @@
 	"description": "Leek Wars game client website",
 	"repository": {
 		"type": "git",
-		"url": "git+https://5pilow@github.com/leek-wars/leek-wars-client.git"
+		"url": "git+https://5pilow@github.com/leek-wars/leek-wars.git"
 	},
 	"bugs": {
-		"url": "https://github.com/leek-wars/leek-wars-client/issues"
+		"url": "https://github.com/leek-wars/leek-wars/issues"
 	},
-	"homepage": "https://github.com/leek-wars/leek-wars-client#readme",
+	"homepage": "https://github.com/leek-wars/leek-wars#readme",
 	"bundlesize": [
 		{
 			"path": "./dist/js/*.js",

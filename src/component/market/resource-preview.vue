@@ -3,9 +3,9 @@
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'resource-preview' })
+	@Options({ name: 'resource-preview' })
 	export default class ResourcePreview extends Vue {
 		@Prop() resource!: any
 	}

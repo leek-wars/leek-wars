@@ -6,9 +6,9 @@
 				<img :src="'/image/bulb/' + summon.name + '_front.png'" width="width">
 			</div>
 			<div>
-				<characteristic-tooltip v-for="c of LeekWars.characteristics_table" :key="c" v-slot="{ on }" :characteristic="c" :value="c === 'frequency' || c === 'ram' || c === 'cores' ? 0 : summon.characteristics[c][1]" :total="c === 'frequency' || c === 'ram' || c === 'cores' ? 0 : summon.characteristics[c][1]" :leek="summon.characteristics" :test="true">
-					<div class="characteristic" v-on="on">
-						<img :src="'/image/charac/' + c + '.png'" v-on="on">
+				<characteristic-tooltip v-for="c of LeekWars.characteristics_table" :key="c" v-slot="{ props }" :characteristic="c" :value="c === 'frequency' || c === 'ram' || c === 'cores' ? 0 : summon.characteristics[c][1]" :total="c === 'frequency' || c === 'ram' || c === 'cores' ? 0 : summon.characteristics[c][1]" :leek="summon.characteristics" :test="true">
+					<div class="characteristic" v-bind="props">
+						<img :src="'/image/charac/' + c + '.png'" v-bind="props">
 						<span :class="'color-' + c">
 							<span v-if="c == 'frequency' || c === 'ram' || c === 'cores'">0</span>
 							<span v-else-if="summon.characteristics[c][0] == summon.characteristics[c][1]">
@@ -24,8 +24,8 @@
 		</div>
 		<h4>{{ $t('main.chips') }}</h4>
 		<div class="chips">
-			<rich-tooltip-item v-for="chip of summon.chips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[chip]" :bottom="true" @input="$emit('input', $event)">
-				<img :src="'/image/chip/' + CHIPS[chip].name + '.png'" class="chip" v-on="on">
+			<rich-tooltip-item v-for="chip of summon.chips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[chip]" :bottom="true" @update:model-value="$emit('update:modelValue', $event)">
+				<img :src="'/image/chip/' + CHIPS[chip].name + '.png'" class="chip" v-bind="props">
 			</rich-tooltip-item>
 		</div>
 	</div>
@@ -34,11 +34,13 @@
 <script lang="ts">
 
 import { CHIPS } from '@/model/chips'
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { LeekWars } from '@/model/leekwars'
+import { Options, Prop, Vue } from 'vue-property-decorator'
 import CharacteristicTooltip from '../leek/characteristic-tooltip.vue'
-const RichTooltipItem = () => import('@/component/rich-tooltip/rich-tooltip-item.vue')
+import { defineAsyncComponent } from 'vue'
+const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
 
-@Component({ name: 'summon-view', components: {
+@Options({ name: 'summon-view', components: {
 	'characteristic-tooltip': CharacteristicTooltip,
 	'rich-tooltip-item': RichTooltipItem
 }})
@@ -46,6 +48,7 @@ export default class SummonView extends Vue {
 	@Prop() summon!: any
 
 	CHIPS = CHIPS
+	LeekWars = LeekWars
 }
 
 </script>

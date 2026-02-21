@@ -5,22 +5,25 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { CHIP_BY_NAME } from '@/model/sorted_chips'
-	import { vueMain, vuetify } from '@/model/vue'
+	import { vuetify } from '@/model/vue'
 	import markdown from 'markdown-it'
-	import sanitizeHtml from 'sanitize-html'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import DOMPurify from 'dompurify'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import LineOfSight from '../line-of-sight/line-of-sight.vue'
 	import ItemPreview from '../market/item-preview.vue'
 	import SearchBar from './search-bar.vue'
 	import TutorialMenu from '../tutorial/tutorial-menu.vue'
 	import TutorialProgress from '../tutorial/tutorial-progress.vue'
-	import { VBtn, VCheckbox } from 'vuetify/lib/components'
+	import { VBtn, VCheckbox } from 'vuetify/components'
 	import { tutorial_items } from '../tutorial/tutorial-items'
 	import { store } from '@/model/store'
 	import { i18n } from '@/model/i18n'
 	import LeekImage from '../leek-image.vue'
+	import { createApp, nextTick, ref, h, defineComponent } from 'vue'
+	import LWLoader from '../app/loader.vue'
+	import router from '@/router'
 
-	@Component({ name: 'markdown' })
+	@Options({ name: 'markdown' })
 	export default class Markdown extends Vue {
 
 		@Prop({required: true}) content!: string
@@ -46,39 +49,35 @@
 		@Watch('content', {immediate: true})
 		update() {
 
-			const re = /^((https:\/\/leekwars\.com)?\/image\/|https:\/\/(i\.)?imgur\.com\/|https:\/\/(i\.)?ibb.co\/)/
-			const options = {
-				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img', 'center' ]),
-				allowedAttributes: { '*': ['style', 'class', 'width', 'height', 'href', 'src', 'colspan', 'rowspan', 'alt', 'correct'] },
-				exclusiveFilter: function(frame: any) {
-					return frame.tag === 'img' && !re.test(frame.attribs.src)
-				},
-				// allowedStyles: {
-				// 	'*': {
-				// 		'padding': [/^.*$/],
-				// 		'margin': [/^.*$/],
-				// 		'color': [/^.*$/],
-				// 		'background': [/^.*$/],
-				// 		'border': [/^.*$/],
-				// 		'text-align': [/^.*$/],
-				// 		'font-size': [/^.*$/],
-				// 		'font-weight': [/^.*$/],
-				// 		'width': [/^.*$/],
-				// 		'height': [/^.*$/],
-				// 	}
-				// }
-			}
-			this.html = this.links(sanitizeHtml(this.markdown.render(this.content), options))
+			const re = /^((https:\/\/leekwars\.com)?\/image\/|https:\/\/(i\.)?imgur\.com\/|https:\/\/(i\.)?ibb\.co\/)/
+
+			DOMPurify.addHook('uponSanitizeElement', (node, data) => {
+				if (data.tagName === 'img' && node instanceof Element) {
+					const src = node.getAttribute('src')
+					if (src && !re.test(src)) {
+						node.remove()
+					}
+				}
+			})
+
+			const sanitized = DOMPurify.sanitize(this.markdown.render(this.content), {
+				ADD_TAGS: ['img', 'center'],
+				ADD_ATTR: ['style', 'class', 'width', 'height', 'href', 'src', 'colspan', 'rowspan', 'alt', 'correct'],
+				ALLOW_UNKNOWN_PROTOCOLS: false,
+			})
+
+			DOMPurify.removeHook('uponSanitizeElement')
+
+			this.html = this.links(sanitized)
 
 			this.summary = {children: []}
 			const stack = [this.summary] as any[]
 
-			Vue.nextTick(() => {
+			nextTick(() => {
 				const md = this.$refs.md as HTMLElement
 				md.querySelectorAll('h1, h2, h3, h4, h5').forEach((item: any) => {
 					const level = parseInt(item.tagName.substring(1), 10)
 					if (level >= 2) {
-						// console.log("element", level, item)
 						const node = {level, title: item.innerText, children: []}
 						const parent = stack[level - 2] || this.summary
 						stack[level - 1] = node
@@ -122,21 +121,30 @@
 				md.querySelectorAll('.encyclopedia-weapon').forEach((item) => {
 					const weapon = LeekWars.weaponByName[item.getAttribute('weapon')!]
 					if (weapon) {
-						new ItemPreview({ propsData: { item: LeekWars.items[weapon.item] }, parent: vueMain }).$mount(item)
+						const app = createApp(ItemPreview, { item: LeekWars.items[weapon.item] })
+						app.use(vuetify).use(i18n).use(store)
+						app.mount(item)
+						this.components.push({ $destroy: () => app.unmount() })
 					}
 				})
 				// Puces
 				md.querySelectorAll('.encyclopedia-chip').forEach((item) => {
 					const chip = CHIP_BY_NAME[item.getAttribute('chip')!]
 					if (chip) {
-						new ItemPreview({ propsData: { item: LeekWars.items[chip.id] }, parent: vueMain }).$mount(item)
+						const app = createApp(ItemPreview, { item: LeekWars.items[chip.id] })
+						app.use(vuetify).use(i18n).use(store)
+						app.mount(item)
+						this.components.push({ $destroy: () => app.unmount() })
 					}
 				})
 				// Potions
 				md.querySelectorAll('.encyclopedia-potion').forEach((item) => {
 					const potion = LeekWars.potionByName[item.getAttribute('potion')!]
 					if (potion) {
-						new ItemPreview({ propsData: { item: LeekWars.items[potion.id] }, parent: vueMain }).$mount(item)
+						const app = createApp(ItemPreview, { item: LeekWars.items[potion.id] })
+						app.use(vuetify).use(i18n).use(store)
+						app.mount(item)
+						this.components.push({ $destroy: () => app.unmount() })
 					}
 				})
 				// Locked pages
@@ -155,19 +163,28 @@
 				})
 				// LoS
 				md.querySelectorAll('.encyclopedia-los').forEach((item) => {
-					new LineOfSight({ propsData: { }, parent: vueMain }).$mount(item)
+					const app = createApp(LineOfSight)
+					app.use(vuetify).use(i18n).use(store)
+					app.mount(item)
+					this.components.push({ $destroy: () => app.unmount() })
 				})
 				// Search bar
 				md.querySelectorAll('.encyclopedia-search-bar').forEach((item) => {
-					new SearchBar({ propsData: { }, parent: vueMain }).$mount(item)
+					createApp(SearchBar).use(i18n).component('loader', LWLoader).use(router).mount(item)
 				})
 				// Tutorial menu
 				md.querySelectorAll('.tutorial-menu').forEach((item) => {
-					new TutorialMenu({ propsData: { locale: this.locale }, parent: vueMain }).$mount(item)
+					const app = createApp(TutorialMenu, { locale: this.locale })
+					app.use(vuetify).use(i18n).use(store).use(router)
+					app.mount(item)
+					this.components.push({ $destroy: () => app.unmount() })
 				})
 				// Tutorial progress
 				md.querySelectorAll('.tutorial-progress').forEach((item) => {
-					this.components.push(new TutorialProgress({ propsData: { locale: this.locale }, parent: vueMain }).$mount(item))
+					const app = createApp(TutorialProgress, { locale: this.locale })
+					app.use(vuetify).use(i18n).use(store).use(router)
+					app.mount(item)
+					this.components.push({ $destroy: () => app.unmount() })
 				})
 				// Tutorial quizz
 				md.querySelectorAll('.quizz').forEach((item) => {
@@ -186,8 +203,9 @@
 					}
 
 					const completed = store.state.farmer && store.state.farmer.tutorial_progress >= chapter
+					let submitContainer: HTMLElement | null = null
 					const set_finished = () => {
-						;(vbtn.$el as HTMLElement).style.display = 'none'
+						if (submitContainer) submitContainer.style.display = 'none'
 						item.querySelectorAll('ul').forEach((answers, q) => {
 							[...answers.children].forEach(child => child.classList.add('disabled'))
 						})
@@ -202,14 +220,14 @@
 					item.append(bravo)
 					bravo.style.display = 'none'
 
-					const submit = document.createElement('div')
-					item.append(submit)
-					const vbtn = new VBtn({ vuetify: vuetify, propsData: { color: 'primary' } }).$mount(submit)
-					vbtn.$el.innerHTML = i18n.t('main.validate') as string
-					vbtn.$el.classList.add('v-btn--disabled')
-
 					let form = [] as boolean[][]
-					vbtn.$on('click', () => {
+					const btnDisabled = ref(true)
+
+					const updateBtnState = () => {
+						btnDisabled.value = !form.every(q => q.some(a => a))
+					}
+
+					const handleSubmit = () => {
 						let good = true
 						const questions = item.querySelectorAll('ul')
 						questions.forEach((answers, q) => {
@@ -242,7 +260,25 @@
 							// Send new progression
 							store.commit('set-tutorial-progress', chapter)
 						}
+					}
+
+					// Create submit button using Vue 3 createApp with reactive disabled state
+					submitContainer = document.createElement('div')
+					item.append(submitContainer)
+					const BtnWrapper = defineComponent({
+						setup() {
+							return () => h(VBtn, {
+								color: 'primary',
+								disabled: btnDisabled.value,
+								onClick: handleSubmit
+							}, () => i18n.t('main.validate'))
+						}
 					})
+					const btnApp = createApp(BtnWrapper)
+					btnApp.use(vuetify)
+					btnApp.mount(submitContainer)
+					this.components.push({ $destroy: () => btnApp.unmount() })
+
 					item.querySelectorAll('ul').forEach(answers => {
 						;[...answers.children].forEach((child, index) => {
 							child.setAttribute('index', '' + index)
@@ -257,22 +293,44 @@
 							letter.innerText = String.fromCodePoint(65 + index) + ". "
 							letter.classList.add("letter")
 							child.prepend(letter)
-							const checkbox = document.createElement('span')
-							child.prepend(checkbox)
-							const value = completed && child.hasAttribute('correct') ? true : false
-							const vcheckbox = new VCheckbox({ vuetify: vuetify, propsData: { hideDetails: true, inputValue: value } }).$mount(checkbox)
-							vcheckbox.$on('change', (a: any) => {
-								answer[index] = a
-								vcheckbox.$props.inputValue = a
-								vbtn.$el.classList.toggle('v-btn--disabled', !form.every(q => q.some(a => a)))
+
+							// Create Vuetify checkbox using a reactive wrapper component
+							const checkboxContainer = document.createElement('span')
+							checkboxContainer.className = 'quiz-checkbox'
+							child.prepend(checkboxContainer)
+							const initialValue = completed && child.hasAttribute('correct') ? true : false
+							answer[index] = initialValue
+
+							// Create a reactive ref for the checkbox value
+							const checked = ref(initialValue)
+
+							// Create a wrapper component that uses the reactive ref
+							const CheckboxWrapper = defineComponent({
+								setup() {
+									return () => h(VCheckbox, {
+										hideDetails: true,
+										modelValue: checked.value,
+										'onUpdate:modelValue': (newValue: boolean) => {
+											checked.value = newValue
+											answer[index] = newValue
+											updateBtnState()
+										}
+									})
+								}
 							})
-							vcheckbox.$el.addEventListener('click', (e) => {
+
+							const checkboxApp = createApp(CheckboxWrapper)
+							checkboxApp.use(vuetify)
+							checkboxApp.mount(checkboxContainer)
+							this.components.push({ $destroy: () => checkboxApp.unmount() })
+
+							checkboxContainer.addEventListener('click', (e: Event) => {
 								e.stopPropagation()
 							})
 							child.addEventListener('click', () => {
-								answer[index] = !answer[index]
-								vcheckbox.$props.inputValue = answer[index]
-								vbtn.$el.classList.toggle('v-btn--disabled', !form.every(q => q.some(a => a)))
+								checked.value = !checked.value
+								answer[index] = checked.value
+								updateBtnState()
 							})
 						})
 					})
@@ -291,11 +349,17 @@
 
 				// Leeky
 				md.querySelectorAll('.leeky').forEach((item) => {
-					this.components.push(new LeekImage({ propsData: { leek: { level: 10, face: 1 }, scale: 0.55 }, parent: vueMain }).$mount(item))
+					const app = createApp(LeekImage, { leek: { level: 10, face: 1 }, scale: 0.55 })
+					app.use(vuetify).use(i18n).use(store)
+					app.mount(item)
+					this.components.push({ $destroy: () => app.unmount() })
 				})
 				// Domingo
 				md.querySelectorAll('.domingo').forEach((item) => {
-					this.components.push(new LeekImage({ propsData: { leek: { level: 301, face: 2, metal: true, skin: 9 }, scale: 0.45 }, parent: vueMain }).$mount(item))
+					const app = createApp(LeekImage, { leek: { level: 301, face: 2, metal: true, skin: 9 }, scale: 0.45 })
+					app.use(vuetify).use(i18n).use(store)
+					app.mount(item)
+					this.components.push({ $destroy: () => app.unmount() })
 				})
 			})
 		}
@@ -386,17 +450,17 @@
 	.md {
 		padding: 15px;
 	}
-	.md ::v-deep p, .md ::v-deep ul {
+	.md :deep(p), .md :deep(ul) {
 		line-height: 1.6;
 		margin-bottom: 16px;
 		img {
 			vertical-align: middle;
 		}
 	}
-	.md ::v-deep li img {
+	.md :deep(li img) {
 		vertical-align: middle;
 	}
-	.md ::v-deep h1:first-child {
+	.md :deep(h1:first-child) {
 		border-bottom: 1px solid var(--border);
 		display: block;
 		background: none;
@@ -411,10 +475,10 @@
 			display: none;
 		}
 	}
-	.md ::v-deep h1:first-child + blockquote {
+	.md :deep(h1:first-child + blockquote) {
 		display: none;
 	}
-	.md ::v-deep h2 {
+	.md :deep(h2) {
 		// color: #000;
 		&:not(:first-of-type) {
 			margin-top: 1em;
@@ -423,31 +487,31 @@
 		border-bottom: 1px solid var(--border);
 		margin-bottom: 0.5em;
 	}
-	.md ::v-deep h4 {
+	.md :deep(h4) {
 		margin-bottom: 0.7em;
 		line-height: 1.6;
 		border-bottom: 1px solid var(--border);
 	}
-	.md ::v-deep img {
+	.md :deep(img) {
 		max-width: 100%;
 	}
-	.md ::v-deep a {
+	.md :deep(a) {
 		color: #0645ad;
 		font-weight: 500;
 	}
-	body.dark .md ::v-deep a {
+	body.dark .md :deep(a) {
 		color: #4bbaff;
 	}
-	.md ::v-deep a.new {
+	.md :deep(a.new) {
 		color: #ba0000;
 	}
-	.md ::v-deep a:hover {
+	.md :deep(a:hover) {
 		text-decoration: underline;
 	}
-	.md ::v-deep ul, .md ::v-deep ol {
+	.md :deep(ul), .md :deep(ol) {
 		line-height: 1.6;
 	}
-	.md ::v-deep blockquote {
+	.md :deep(blockquote) {
 		padding: 0 1em;
 		p {
 			color: #777;
@@ -455,27 +519,27 @@
 		}
 		border-left: .3em solid #aaa;
 	}
-	.md ::v-deep code {
+	.md :deep(code) {
 		background: var(--pure-white);
 		padding: 0 4px;
 	}
-	.md ::v-deep pre code {
+	.md :deep(pre code) {
 		display: flex;
 		background: none;
 		border: none;
 		padding: 0;
 		margin-bottom: 1em;
 	}
-	.md ::v-deep table {
+	.md :deep(table) {
 		margin: 15px 0;
 		td, th {
 			padding: 10px;
 		}
 	}
-	.md ::v-deep table, .md ::v-deep tr, .md ::v-deep td, .md ::v-deep th {
+	.md :deep(table), .md :deep(tr), .md :deep(td), .md :deep(th) {
 		border: 1px solid var(--border);
 	}
-	.md ::v-deep a.card {
+	.md :deep(a.card) {
 		.v-icon {
 			color: var(--text-color);
 		}
@@ -486,7 +550,7 @@
 			background: var(--background-disabled);
 		}
 	}
-	.md ::v-deep .summary {
+	.md :deep(.summary) {
 		// border: 1px solid #aaa;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 		display: inline-block;
@@ -500,7 +564,7 @@
 			margin: 0;
 		}
 	}
-	.md ::v-deep .item-preview {
+	.md :deep(.item-preview) {
 		width: 350px;
 		display: inline-block;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
@@ -524,7 +588,7 @@
 			background: none;
 		}
 	}
-	.md ::v-deep .quizz {
+	.md :deep(.quizz) {
 		h5 {
 			font-size: 17px;
 			font-weight: 500;
@@ -579,6 +643,13 @@
 					display: inline-block;
 					color: var(--text-color);
 				}
+				.quiz-checkbox {
+					display: inline-flex;
+					align-items: center;
+					.v-input {
+						flex: none;
+					}
+				}
 				code {
 					pre {
 						padding: 0;
@@ -592,7 +663,7 @@
 			}
 		}
 	}
-	.md ::v-deep .lock {
+	.md :deep(.lock) {
 		font-weight: 500;
 		&.locked ~ pre {
 			display: none;
@@ -601,7 +672,7 @@
 			display: none;
 		}
 	}
-	.md ::v-deep .tip {
+	.md :deep(.tip) {
 		display: flex;
 		align-items: center;
 		gap: 10px;
@@ -617,7 +688,7 @@
 			margin: 0;
 		}
 	}
-	.md ::v-deep .lstype {
+	.md :deep(.lstype) {
 		color: var(--type-color);
 		font-weight: bold;
 	}

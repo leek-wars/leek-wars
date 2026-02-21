@@ -39,7 +39,7 @@
 						</select>
 					</td>
 					<td :contenteditable="trophy.category != 6" @focusout="pointsFocusout(trophy, $event)">{{ trophy.category == 6 ? '' : trophy.points }}</td>
-					<td><span v-if="trophy.points">{{ 100 * Math.pow(trophy.points, 2) | number }} <span class="hab"></span></span></td>
+					<td><span v-if="trophy.points">{{ $filters.number(100 * Math.pow(trophy.points, 2)) }} <span class="hab"></span></span></td>
 					<td>
 						<input type="checkbox" :checked="trophy.title & 1" @change="updateTitle(trophy, 1, $event)"> N
 						<input type="checkbox" :checked="trophy.title & 2" @change="updateTitle(trophy, 2, $event)"> A
@@ -83,7 +83,7 @@
 					<td>
 						<input v-model="trophy.public_description" type="checkbox" @change="publicDescUpdate(trophy)">
 					</td>
-					<td>{{ trophy.unlocked | number }}</td>
+					<td>{{ $filters.number(trophy.unlocked) }}</td>
 					<td>{{ trophy.unlocked_percent }}%</td>
 					<td width="130">{{ LeekWars.formatDuration(trophy.last) }}</td>
 				</tr>
@@ -95,9 +95,9 @@
 <script lang="ts">
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 
-	@Component({})
+	@Options({})
 	export default class AdminTrophies extends Vue {
 		trophies: any = null
 		difficulties = [
@@ -118,7 +118,7 @@
 		mounted() {
 			LeekWars.large = true
 		}
-		beforeDestroy() {
+		beforeUnmount() {
 			LeekWars.large = false
 		}
 

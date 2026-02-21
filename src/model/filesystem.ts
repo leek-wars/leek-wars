@@ -3,11 +3,14 @@ import { AIItem, Folder } from '@/component/editor/editor-item'
 import { AI } from '@/model/ai'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
-import Vue from 'vue'
+
 import { Farmer } from './farmer'
 import { Keyword } from './keyword'
+import { reactive } from 'vue'
 
 class FileSystem {
+
+	public static CONSOLE_MAGIC_KEY = '__console_CkG3VwGs3K__'
 
 	public ais: {[key: number]: AI} = {}
 	public folderById: {[key: number]: Folder} = {}
@@ -34,6 +37,7 @@ class FileSystem {
 			"advanced_strategy", "teleportation", "jump", "blocking"
 		]},
 	]
+	public consoleAI: AI | null = null
 
 	public init(farmer: Farmer) {
 		const folders: {[key: number]: any} = {}
@@ -61,35 +65,35 @@ class FileSystem {
 				.filter((ai: any) => ai.folder === id)
 				.map((ai: any) => new AIItem(ai, folder.id))
 			))
-			Vue.set(this.folderById, folder.id, folder)
+			this.folderById[folder.id] = folder
 			return folder
 		}
 		this.rootFolder = buildFolder(0, 0)
 		for (const ai of farmer.ais) {
 			ai.path = this.getAIFullPath(ai)
 			ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
-			Vue.set(this.ais, '' + ai.id, ai)
-			Vue.set(this.aiByFullPath, ai.path, ai)
+			this.ais['' + ai.id] = ai
+			this.aiByFullPath[ai.path] = ai
 			this.items[ai.name] = ai
 		}
 		// Add bot AIs
 		for (const ai of this.botAIs) {
-			Vue.set(this.ais, '' + ai.id, ai)
+			this.ais['' + ai.id] = ai
 		}
 		this.bin = new Folder(-1, 'recycle_bin', 0)
 		this.bin.items = []
-		Vue.set(this.folderById, -1, this.bin)
+		this.folderById[-1] = this.bin
 		for (const id in farmer.bin) {
 			farmer.bin[id] = new AI(farmer.bin[id])
 			const ai = farmer.bin[id]
 			this.bin.items.push(new AIItem(ai, this.bin.id))
 			ai.path = this.getAIFullPath(ai)
 			ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
-			Vue.set(this.aiByFullPath, ai.path, ai)
-			Vue.set(this.ais, '' + ai.id, ai)
+			this.aiByFullPath[ai.path] = ai
+			this.ais['' + ai.id] = ai
 			this.items[ai.name] = ai
 		}
-		Vue.set(this.folderById, -1, this.bin)
+		this.folderById[-1] = this.bin
 		this.initialized = true
 	}
 
@@ -115,8 +119,8 @@ class FileSystem {
 			if (ai) {
 				const timestamp = parseInt(localStorage.getItem('ai/time/' + ai.id) || '0', 10)
 				if (ai.timestamp === 0 || ai.timestamp !== timestamp) {
-					Vue.set(ai, 'timestamp', timestamp)
-					Vue.set(ai, 'code', localStorage.getItem('ai/code/' + ai.id))
+					ai.timestamp = timestamp
+					ai.code = localStorage.getItem('ai/code/' + ai.id)
 					dependencies_timestamps[id] = timestamp
 					new_ais.add(ai)
 				}
@@ -133,8 +137,8 @@ class FileSystem {
 					for (const entry of result) { // Nouveaux timestamp, on met à jour
 						const ai = fileSystem.ais[entry.id]
 						if (ai) {
-							Vue.set(ai, 'code', entry.code)
-							Vue.set(ai, 'timestamp', entry.modified)
+							ai.code = entry.code
+							ai.timestamp = entry.modified
 							localStorage.setItem('ai/time/' + ai.id, '' + entry.modified)
 							localStorage.setItem('ai/code/' + ai.id, '' + entry.code)
 						}
@@ -159,8 +163,8 @@ class FileSystem {
 	public add_ai(ai: AI, folder: Folder) {
 		ai.path = this.getAIFullPath(ai)
 		ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
-		Vue.set(this.ais, ai.id, ai)
-		Vue.set(this.aiByFullPath, ai.path, ai)
+		this.ais[ai.id] = ai
+		this.aiByFullPath[ai.path] = ai
 		folder.items.push(new AIItem(ai, folder.id))
 		store.commit('add-ai', ai)
 	}
@@ -168,6 +172,13 @@ class FileSystem {
 	public add_folder(folder: Folder, parent: Folder) {
 		this.folderById[folder.id] = folder
 		parent.items.push(folder)
+	}
+
+	public getAIByPath(path: string) {
+		if (path.includes(FileSystem.CONSOLE_MAGIC_KEY)) {
+			return this.consoleAI!
+		}
+		return this.aiByFullPath[path]
 	}
 
 	public find(path: string, folder: number): AI | null {
@@ -207,7 +218,7 @@ class FileSystem {
 	public deleteAI(ai: AI) {
 		const folder = this.folderById[ai.folder]
 		const item = folder.items.splice(folder.items.findIndex((i) => !i.folder && (i as AIItem).ai === ai), 1)
-		Vue.delete(this.aiByFullPath, ai.path)
+		delete this.aiByFullPath[ai.path]
 		store.commit('delete-ai', ai.id)
 		LeekWars.delete('ai/delete', {ai_id: ai.id}).error(error => LeekWars.toast(error))
 		// analyzer.delete(ai)
@@ -219,15 +230,15 @@ class FileSystem {
 	public destroyAI(ai: AI) {
 		const folder = this.folderById[ai.folder]
 		folder.items.splice(folder.items.findIndex((i) => !i.folder && (i as AIItem).ai === ai), 1)
-		Vue.delete(this.ais, '' + ai.id)
-		Vue.delete(this.aiByFullPath, ai.path)
+		delete this.ais['' + ai.id]
+		delete this.aiByFullPath[ai.path]
 		LeekWars.delete('ai/destroy', {ai_id: ai.id}).error(error => LeekWars.toast(error))
 	}
 
 	public emptyBin() {
 		for (const item of this.bin.items) {
-			Vue.delete(this.ais, '' + (item as AIItem).ai.id)
-			Vue.delete(this.aiByFullPath, (item as AIItem).ai.path)
+			delete this.ais['' + (item as AIItem).ai.id]
+			delete this.aiByFullPath[(item as AIItem).ai.path]
 		}
 		this.bin.items = []
 		LeekWars.delete('ai/bin').error(error => LeekWars.toast(error))
@@ -239,8 +250,8 @@ class FileSystem {
 		ai.folder = 0 // Move to root folder
 		ai.path = this.getAIFullPath(ai)
 		ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
-		Vue.set(this.ais, '' + ai.id, ai)
-		Vue.set(this.aiByFullPath, ai.path, ai)
+		this.ais['' + ai.id] = ai
+		this.aiByFullPath[ai.path] = ai
 		this.rootFolder.items.push(...item)
 		LeekWars.post('ai/restore', {ai_id: ai.id}).error(error => LeekWars.toast(error))
 	}
@@ -258,7 +269,7 @@ class FileSystem {
 				this.moveToTrash(item as Folder)
 			} else {
 				const ai = (item as AIItem).ai
-				Vue.delete(this.aiByFullPath, ai.path)
+				delete this.aiByFullPath[ai.path]
 				store.commit('delete-ai', ai.id)
 				ai.folder = -1
 				this.bin.items.push(item)
@@ -268,10 +279,10 @@ class FileSystem {
 
 	public renameAI(ai: AI, name: string) {
 		ai.name = name
-		Vue.delete(this.aiByFullPath, ai.path)
+		delete this.aiByFullPath[ai.path]
 		ai.path = this.getAIFullPath(ai)
 		ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
-		Vue.set(this.aiByFullPath, ai.path, ai)
+		this.aiByFullPath[ai.path] = ai
 	}
 
 	public clear() {
@@ -301,6 +312,6 @@ class FileSystem {
 	}
 }
 
-const fileSystem = new FileSystem()
+const fileSystem = reactive(new FileSystem())
 
 export { fileSystem, FileSystem }

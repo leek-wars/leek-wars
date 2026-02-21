@@ -15,13 +15,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Options, Vue } from 'vue-property-decorator'
 import '@/model/emojis'
 import { Notification } from '@/model/notification'
 import { LeekWars } from '@/model/leekwars'
 import { Square } from '@/model/squares'
 
-@Component({})
+@Options({})
 export default class Squares extends Vue {
 
 	click(square: Square) {

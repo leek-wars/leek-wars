@@ -8,9 +8,9 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 
-	@Component({})
+	@Options({})
 	export default class LineOfSight extends Vue {
 		width = 40
 		height = 25
@@ -30,7 +30,7 @@
 				for (let h = 0; h < this.height; ++h) {
 					for (let w = 0; w < this.width; ++w) {
 						if (this.map[h][w] !== 1) {
-							Vue.set(this.map[h], w, 0)
+							this.map[h][w] = 0
 						}
 					}
 				}
@@ -38,11 +38,11 @@
 				for (let h = 0; h < this.height; ++h) {
 					for (let w = 0; w < this.width; ++w) {
 						if (this.map[h][w] !== 1) {
-							Vue.set(this.map[h], w, this.los(x, y, w, h) ? 2 : 0)
+							this.map[h][w] = this.los(x, y, w, h) ? 2 : 0
 						}
 					}
 				}
-				Vue.set(this.map[y], x, 3)
+				this.map[y][x] = 3
 			}
 		}
 		los(x1: number, y1: number, x2: number, y2: number) {

@@ -26,9 +26,9 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 
-	@Component({})
+	@Options({})
 	export default class AdminHats extends Vue {
 
 		front: boolean = true
@@ -41,7 +41,7 @@
 		mounted() {
 			LeekWars.large = true
 		}
-		beforeDestroy() {
+		beforeUnmount() {
 			LeekWars.large = false
 		}
 
@@ -60,7 +60,7 @@
 <style lang="scss" scoped>
 	.panel {
 		position: relative;
-		::v-deep .content {
+		:deep(.content) {
 			padding: 10px;
 		}
 	}

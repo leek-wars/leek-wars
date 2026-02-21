@@ -1,26 +1,26 @@
 <template>
-	<span v-if="type && type.name === 'function'" class="type">(<template v-for="(arg, a) of type.args">
-		<span v-if="a > 0" :key="a">, </span><lw-type :key="a + '_'" :type="arg" />
+	<span v-if="type && type.name === 'function'" class="type">(<template v-for="(arg, a) of type.args" :key="a">
+		<span v-if="a > 0">, </span><lw-type :type="arg" />
 	</template>)
 		→ <lw-type :type="type.return" />
 	</span>
 	<span v-else-if="(type instanceof Array)">
-		<template v-for="(t, i) in type">
-			<lw-type :key="i" :type="t" />
-			<span v-if="i < type.length - 1" :key="i + '_'"> | </span>
+		<template v-for="(t, i) in type" :key="i">
+			<lw-type :type="t" />
+			<span v-if="i < type.length - 1"> | </span>
 		</template>
 	</span>
-	<span v-else-if="type && type.name == 'array' && type.elements" class="type">array[<template v-for="(arg, a) of type.elements">
-		<span v-if="a > 0" :key="a">, </span><lw-type :key="a + '_'" :type="arg" />
+	<span v-else-if="type && type.name == 'array' && type.elements" class="type">array[<template v-for="(arg, a) of type.elements" :key="a">
+		<span v-if="a > 0">, </span><lw-type :type="arg" />
 	</template>]</span>
 	<span v-else-if="(type instanceof Object)"><span class="type">{{ type.name }}</span><span v-if="type.element">&lt;<span v-if="type.key"><lw-type :type="type.key" /> : </span><lw-type :type="type.element" />&gt;</span></span>
 	<span v-else class="type">{{ type }}</span>
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'lw-type' })
+	@Options({ name: 'lw-type' })
 	export default class Type extends Vue {
 		@Prop({required: true}) type!: any
 	}

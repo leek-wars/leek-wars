@@ -1,6 +1,6 @@
 <template lang="html">
-	<rich-tooltip-leek v-if="leek" :id="leek.id" v-slot="{ on }" :bottom="!(leek.id in $store.state.farmer.leeks)" :instant="true">
-		<div v-if="leek" class="leek" v-on="on">
+	<rich-tooltip-leek v-if="leek" :id="leek.id" v-slot="{ props }" :bottom="!(leek.id in $store.state.farmer.leeks)" :instant="true">
+		<div v-if="leek" class="leek" v-bind="props">
 			<div class="image">
 				<leek-image :leek="leek" :scale="0.70" />
 			</div>
@@ -17,10 +17,10 @@
 
 <script lang="ts">
 	import { Leek } from '@/model/leek'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 
-	@Component({ name: 'garden-leek', components: { RichTooltipLeek } })
+	@Options({ name: 'garden-leek', components: { RichTooltipLeek } })
 	export default class GardenLeek extends Vue {
 		@Prop() leek!: Leek
 	}

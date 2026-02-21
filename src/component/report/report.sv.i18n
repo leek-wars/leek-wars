@@ -40,5 +40,8 @@
 	"errors": "Fel",
 	"errors_warnings": "Fel och varningar",
 	"n_errors": "{n} fel",
-	"n_warnings": "{n} varningar"
+	"n_warnings": "{n} varningar",
+	"toggle_turrets": "Visa/dölj torn",
+	"toggle_percent": "Livsprocent",
+	"toggle_smooth": "Jämn/kantig kurva"
 }

@@ -1,16 +1,15 @@
 <template lang="html">
-	<img :src="url" class="avatar" v-on="on">
+	<img :src="url" class="avatar" v-bind="$attrs">
 </template>
 
 <script lang="ts">
 	import { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ name: "avatar" })
+	@Options({ name: "avatar" })
 	export default class Avatar extends Vue {
 		@Prop() farmer!: Farmer
-		@Prop() on!: any
 		get url() {
 			if (this.farmer) {
 				if (this.farmer.id > 0) {

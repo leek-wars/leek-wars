@@ -25,9 +25,10 @@
 	import { AI } from '@/model/ai'
 	import { fileSystem } from '@/model/filesystem'
 	import { mixins } from '@/model/i18n'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { nextTick } from 'vue'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'editor-finder', components: { } })
+	@Options({ name: 'editor-finder', components: { } })
 	export default class EditorFinder extends Vue {
 		@Prop({required: true}) active!: {[key: number]: AI}
 		@Prop({required: true}) history!: AI[]
@@ -122,7 +123,7 @@
 		}
 
 		updateScroll() {
-			Vue.nextTick(() => {
+			nextTick(() => {
 				const height = 30
 				const list = this.$refs.list as HTMLElement
 				if (list) {

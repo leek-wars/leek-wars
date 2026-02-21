@@ -13,15 +13,17 @@
 			</div>
 			<div v-if="page" class="tabs">
 				<v-menu v-if="contributor && edition" offset-y>
-					<template v-slot:activator="{ on }">
-						<div class="page-language info" v-on="on">
+					<template #activator="{ props }">
+						<div class="page-language info" v-bind="props">
 							<flag :code="LeekWars.languages[page.language].country" :clickable="false" />
 							<img width="10" src="/image/selector.png">
 						</div>
 					</template>
 					<v-list :dense="true">
 						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="setPageLanguage(language.code)">
-							<flag :code="language.country" :clickable="false" />
+							<template #prepend>
+								<flag :code="language.country" :clickable="false" />
+							</template>
 							<span class="name">{{ language.name }}</span>
 						</v-list-item>
 					</v-list>
@@ -43,13 +45,15 @@
 					{{ $t('main.edit') }}
 				</div>
 				<v-menu v-if="page && Object.values(page.translations).length" offset-y>
-					<template v-slot:activator="{ on }">
-						<div class="tab" v-on="on"><v-icon>mdi-translate</v-icon></div>
+					<template #activator="{ props }">
+						<div class="tab" v-bind="props"><v-icon>mdi-translate</v-icon></div>
 					</template>
 					<v-list :dense="true">
 						<router-link v-for="(translation, l) in page.translations" :key="l" :to="'/encyclopedia/' + l + '/' + translation">
 							<v-list-item class="language">
-								<flag :code="LeekWars.languages[l].country" :clickable="false" />
+								<template #prepend>
+									<flag :code="LeekWars.languages[l].country" :clickable="false" />
+								</template>
 								<span class="name">{{ translation }}</span>
 							</v-list-item>
 						</router-link>
@@ -58,72 +62,80 @@
 			</div>
 		</div>
 		<panel v-if="page" class="first encyclopedia last">
-			<div slot="content" class="table">
-				<div v-if="edition" ref="codemirror" class="codemirror" :style="{lineHeight: 1.6, fontSize: 14}"></div>
-				<div v-if="LeekWars.encyclopedia[this.language] && Object.keys(LeekWars.encyclopedia[this.language]).length" ref="markdown" class="markdown" @scroll="markdownScroll">
-					<!-- {{ parents }} -->
+			<template #content>
+				<div class="table">
+					<div v-if="edition" ref="monacoContainer" class="monaco-container"></div>
+					<div v-if="LeekWars.encyclopedia[this.language] && Object.keys(LeekWars.encyclopedia[this.language]).length" ref="markdown" class="markdown" @scroll="markdownScroll">
+						<!-- {{ parents }} -->
 
-					<markdown :content="content" mode="encyclopedia" :class="{main: page.reference === 1 }" :locale="page.language" />
+						<markdown :content="content" mode="encyclopedia" :class="{main: page.reference === 1 }" :locale="page.language" />
 
-					<div v-if="page.new && !edition" class="nopage">
-						<v-icon>mdi-book-open-page-variant</v-icon>
-						<br><br>
-						<i18n path="not_found" tag="div" class="message">
-							<template slot="name">{{ code }}</template>
-						</i18n>
-						<br>
-						<div v-if="contributor">{{ $t('contributor_create') }}</div>
-					</div>
-
-					<div v-if="page.creator" class="stats">
-
-						<div class="contributors">
-							<v-icon>mdi-account-multiple</v-icon>
-							<div v-html="$tc('n_contributors', page.contributors.length)"></div>
-							<div class="avatars">
-								<rich-tooltip-farmer v-for="contributor in page.contributors" :id="contributor.id" :key="contributor.id" v-slot="{ on }">
-									<router-link :to="'/farmer/' + contributor.id">
-										<avatar :farmer="contributor" :on="on" />
-									</router-link>
-								</rich-tooltip-farmer>
-							</div>
-							<i18n tag="div" path="n_views" class="views"><b slot="v">{{ page.views | number }}</b></i18n>
-							<div class="fill"></div>
-							<v-icon @click="statsExpanded = !statsExpanded">{{ statsExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+						<div v-if="page.new && !edition" class="nopage">
+							<v-icon>mdi-book-open-page-variant</v-icon>
+							<br><br>
+							<i18n-t keypath="not_found" tag="div" class="message">
+								<template #name>{{ code }}</template>
+							</i18n-t>
+							<br>
+							<div v-if="contributor">{{ $t('contributor_create') }}</div>
 						</div>
 
-						<div v-if="statsExpanded" class="expanded-stats">
-							<div>
-								<i18n path="created_by_x_the_y">
-									<template slot="farmer">
-										<rich-tooltip-farmer :id="page.creator" v-slot="{ on }">
-											<router-link :to="'/farmer/' + page.creator"><span v-on="on">{{ page.creator_name }}</span></router-link>
-										</rich-tooltip-farmer>
-									</template>
-									<span slot="date">{{ page.creation_time | datetime }}</span>
-								</i18n>
+						<div v-if="page.creator" class="stats">
 
-								<i18n path="edited_by_x_the_y" tag="div" v-if="page.last_editor">
-									<template slot="farmer">
-										<rich-tooltip-farmer :id="page.last_editor" v-slot="{ on }">
-											<router-link :to="'/farmer/' + page.last_editor"><span v-on="on">{{ page.last_editor_name }}</span></router-link>
-										</rich-tooltip-farmer>
+							<div class="contributors">
+								<v-icon>mdi-account-multiple</v-icon>
+								<div v-html="$tc('n_contributors', page.contributors.length)"></div>
+								<div class="avatars">
+									<rich-tooltip-farmer v-for="contributor in page.contributors" :id="contributor.id" :key="contributor.id">
+										<router-link :to="'/farmer/' + contributor.id">
+											<avatar :farmer="contributor" />
+										</router-link>
+									</rich-tooltip-farmer>
+								</div>
+								<i18n-t tag="div" keypath="n_views" class="views">
+									<template #v>
+										<b>{{ $filters.number(page.views) }}</b>
 									</template>
-									<span slot="date">{{ page.last_edition_time | datetime }}</span>
-								</i18n>
+								</i18n-t>
+								<div class="fill"></div>
+								<v-icon @click="statsExpanded = !statsExpanded">{{ statsExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
 							</div>
-							<div>
-								<i18n tag="div" path="n_contributions">
-									<b slot="n">{{ page.contributions | number }}</b>
-								</i18n>
-								{{ $tc('main.n_lines', [page.content.split('\n').length]) }}
-								 — {{ $tc('main.n_words', [page.content.split(' ').length]) }}
-								 — {{ $tc('main.n_characters', [page.content.length]) }}
+
+							<div v-if="statsExpanded" class="expanded-stats">
+								<div>
+									<i18n-t keypath="created_by_x_the_y">
+										<template #farmer>
+											<rich-tooltip-farmer :id="page.creator" v-slot="{ props }">
+												<router-link :to="'/farmer/' + page.creator"><span v-bind="props">{{ page.creator_name }}</span></router-link>
+											</rich-tooltip-farmer>
+										</template>
+										<template #date>{{ $filters.datetime(page.creation_time) }}</template>
+									</i18n-t>
+
+									<i18n-t keypath="edited_by_x_the_y" tag="div" v-if="page.last_editor">
+										<template #farmer>
+											<rich-tooltip-farmer :id="page.last_editor" v-slot="{ props }">
+												<router-link :to="'/farmer/' + page.last_editor"><span v-bind="props">{{ page.last_editor_name }}</span></router-link>
+											</rich-tooltip-farmer>
+										</template>
+										<template #date>{{ $filters.datetime(page.last_edition_time) }}</template>
+									</i18n-t>
+								</div>
+								<div>
+									<i18n-t tag="div" keypath="n_contributions">
+										<template #n>
+											<b>{{ $filters.number(page.contributions) }}</b>
+										</template>
+									</i18n-t>
+									{{ $tc('main.n_lines', page.content.split('\n').length) }}
+									— {{ $tc('main.n_words', page.content.split(' ').length) }}
+									— {{ $tc('main.n_characters', page.content.length) }}
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
+			</template>
 		</panel>
 
 		<!-- <panel :title="'Notes des joueurs (' + page.comments.length + ')'">
@@ -133,30 +145,30 @@
 </template>
 
 <script lang="ts">
+	import type * as Monaco from 'monaco-editor'
 	import Markdown from '@/component/encyclopedia/markdown.vue'
 	import { locale } from '@/locale'
-	import { mixins } from '@/model/i18n'
-	import { Leek } from '@/model/leek'
+	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import { Route } from 'vue-router'
 	import Breadcrumb from '../forum/breadcrumb.vue'
-	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import { FUNCTIONS } from '@/model/functions'
+	import { markRaw, nextTick } from 'vue'
+	import { emitter } from '@/model/vue'
 
-	@Component({ name: 'encyclopedia', i18n: {}, mixins: [...mixins], components: { Markdown, Breadcrumb, RichTooltipFarmer } })
+	@Options({ name: 'encyclopedia', i18n: {}, mixins: [...mixins], components: { Markdown, Breadcrumb, RichTooltipFarmer } })
 	export default class Encyclopedia extends Vue {
 		english: string = ''
 		page: any = null
 		edition: boolean = false
-		codemirror: any = null
-		editor: CodeMirror.Editor | null = null
+		editor: Monaco.editor.IStandaloneCodeEditor | null = null
 		scrolling: boolean = false
 		pages: any = {}
 		modified: boolean = false
-		initialGeneration: number = 0
+		initialVersionId: number = 0
 		statsExpanded: boolean = false
 		searchQuery: string = ''
 		actions = [
@@ -237,24 +249,32 @@
 			return content
 		}
 
-		beforeDestroy() {
-			this.$root.$off('ctrlS')
+		beforeUnmount() {
+			emitter.off('ctrlS')
 			LeekWars.large = false
 			LeekWars.box = false
 			LeekWars.footer = true
 
+			if (this.editor) {
+				this.editor.getModel()?.dispose()
+				this.editor.dispose()
+				this.editor = null
+			}
 			if (this.edition) {
 				this.editEnd()
 			}
 		}
 
-		mounted() {
+		async mounted() {
 			// this.editStart()
 
-			this.$root.$on('ctrlS', () => {
+			emitter.on('ctrlS', () => {
 				this.save()
 			})
 			LeekWars.setActions(this.actions)
+
+			const docMessages = await import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
+			i18n.global.mergeLocaleMessage(locale, { doc: docMessages.default })
 		}
 
 		@Watch('lanuage_and_code', {immediate: true})
@@ -278,7 +298,7 @@
 					this.setEditorContent()
 				}
 				LeekWars.setTitle(this.title)
-				this.$root.$emit('loaded')
+				emitter.emit('loaded')
 			})
 			.error(() => {
 				// Pas de page
@@ -347,74 +367,49 @@ ${ret}
 				this.setEditorContent()
 				return
 			}
-			Vue.nextTick(() => {
-				const codeMirrorElement = this.$refs.codemirror as any
-				import(/* webpackChunkName: "codemirror-markdown" */ "@/component/encyclopedia/codemirror-markdown").then(wrapper => {
-					// console.log("CM", wrapper)
-					this.codemirror = wrapper.CodeMirror
-					this.editor = wrapper.CodeMirror(codeMirrorElement, {
-						value: "",
-						mode: "markdown",
-						theme: "leekwars",
+			nextTick(() => {
+				import(/* webpackChunkName: "monaco" */ 'monaco-editor').then((monaco) => {
+					const container = this.$refs.monacoContainer as HTMLElement
+					if (!container) { return }
+					this.editor = markRaw(monaco.editor.create(container, {
+						value: this.page ? this.page.content : "",
+						language: "markdown",
+						automaticLayout: true,
+						wordWrap: "on",
+						fontSize: 14,
+						lineHeight: 22,
+						theme: "vs",
 						tabSize: 4,
-						indentUnit: 4,
-						indentWithTabs: true,
-						highlightSelectionMatches: true,
-						matchBrackets: true,
-						lineNumbers: true,
-						lineWrapping: true,
-						continueComments: true,
-						undoDepth: 200,
-						autofocus: true,
-						smartIndent: true,
-						cursorHeight: 1,
-						foldGutter: true,
-						gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
-					} as any)
+						insertSpaces: false,
+						lineNumbers: "on",
+						folding: true,
+						minimap: { enabled: false },
+						scrollBeyondLastLine: false,
+						overviewRulerLanes: 0,
+						overviewRulerBorder: false,
+						renderLineHighlight: "line",
+					}))
 
-					// console.log(this.editor)
-
-					this.setEditorContent()
-
-					this.editor.on('change', (editor, changes) => {
-						this.page.content = editor.getValue()
-
-						const generation = (editor.getDoc() as any).history.generation
-						// console.log("generation", generation, this.editor.doc)
-						this.modified = generation !== this.initialGeneration
-
-						Vue.nextTick(() => {
-							const title = (this.$refs.markdown as HTMLElement).querySelector('h1')
-							if (title) {
-								let text = ''
-								for (var i = 0; i < title.childNodes.length; ++i)
-									if (title.childNodes[i].nodeType === Node.TEXT_NODE)
-										text += title.childNodes[i].textContent
-								this.page.title = text.trim()
-							}
-							const parent = (this.$refs.markdown as HTMLElement).querySelector('blockquote')
-							if (parent) {
-								const text = parent.innerText.trim().toLowerCase().replace(/_/g, ' ')
-								if (text in LeekWars.encyclopedia[this.language]) {
-									this.page.parent = LeekWars.encyclopedia[this.language][text].id
-								} else {
-									this.page.parent = 1
-								}
-							}
-						})
-						this.scrolling = true
+					this.editor.onDidChangeModelContent(() => {
+						this.modified = true
+						this.page.content = this.editor!.getValue()
 					})
 
-					this.editor.on('scroll', (editor) => {
-						// console.log('scroll editor')
+					this.editor.onDidScrollChange((e) => {
 						if (this.scrolling) { this.scrolling = false; return }
-						const doc = editor.getDoc() as any
-						const percent = doc.scrollTop / (doc.height - (this.editor as any).display.lastWrapHeight)
+						const scrollTop = e.scrollTop
+						const scrollHeight = e.scrollHeight
+						const editorHeight = this.editor!.getLayoutInfo().height
+						if (scrollHeight <= editorHeight) { return }
+						const percent = scrollTop / (scrollHeight - editorHeight)
 
 						this.scrolling = true
 						const markdown = this.$refs.markdown as HTMLElement
 						markdown.scrollTop = (markdown.scrollHeight - markdown.clientHeight) * percent
 					})
+					
+					this.initialVersionId = this.editor.getModel()!.getAlternativeVersionId()
+					this.modified = false
 				})
 			})
 		}
@@ -422,11 +417,8 @@ ${ret}
 		setEditorContent() {
 			if (!this.page || !this.editor) { return }
 			this.editor.setValue(this.page.content)
-			this.editor.getDoc().clearHistory()
-			this.initialGeneration = (this.editor as any).doc.history.generation
-			// console.log("initial generation", this.initialGeneration)
+			this.initialVersionId = this.editor.getModel()!.getAlternativeVersionId()
 			this.modified = false
-			// console.log(this.editor)
 		}
 
 		editEnd() {
@@ -434,7 +426,11 @@ ${ret}
 			LeekWars.large = false
 			LeekWars.box = false
 			LeekWars.footer = true
-			this.editor = null
+			if (this.editor) {
+				this.editor.getModel()?.dispose()
+				this.editor.dispose()
+				this.editor = null
+			}
 			this.page.locker = null
 			this.releasePage()
 		}
@@ -449,16 +445,15 @@ ${ret}
 		}
 
 		markdownScroll(e: Event) {
-			// console.log("scroll markdown", e)
 			if (this.scrolling) { this.scrolling = false; return }
-			// console.log(e)
 			const markdown = (this.$refs.markdown as HTMLElement)
 			const percent = markdown.scrollTop / (markdown.scrollHeight - markdown.clientHeight)
 
 			this.scrolling = true
-			// console.log(percent, this.editor)
 			if (this.editor) {
-				this.editor.scrollTo(0, Math.ceil(((this.editor.getDoc() as any).height - (this.editor as any).display.lastWrapHeight) * percent))
+				const scrollHeight = this.editor.getScrollHeight()
+				const editorHeight = this.editor.getLayoutInfo().height
+				this.editor.setScrollTop(Math.ceil((scrollHeight - editorHeight) * percent))
 			}
 		}
 
@@ -487,8 +482,7 @@ ${ret}
 				}
 			}).error(error => LeekWars.toast("Sauvegarde échouée : " + error.error))
 
-			this.initialGeneration = (this.editor as any).doc.history.generation
-			// console.log("initial generation", this.initialGeneration)
+			this.initialVersionId = this.editor!.getModel()!.getAlternativeVersionId()
 			this.modified = false
 			this.page.last_edition_time = Date.now() / 1000
 			this.page.last_editor = store.state.farmer!.id
@@ -552,7 +546,7 @@ h1 {
 	overflow-y: auto;
 }
 
-.encyclopedia ::v-deep > .table {
+.encyclopedia :deep(> .table) {
 	display: flex;
 	min-height: 0;
 	flex: 1;
@@ -562,9 +556,11 @@ h1 {
 		min-height: 0;
 		min-width: 0;
 	}
-	.codemirror .CodeMirror {
-		height: 100%;
-	}
+}
+.monaco-container {
+	height: 100%;
+	min-height: 0;
+	overflow: hidden;
 }
 
 .stats {
@@ -626,7 +622,7 @@ h1 {
 .search-icon {
 	cursor: pointer;
 }
-::v-deep .md.main h1 {
+:deep(.md.main h1) {
 	display: none;
 }
 .page-language {

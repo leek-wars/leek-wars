@@ -75,10 +75,10 @@
 							<td><div class="space"></div></td>
 						</tr>
 					</table>
-					<center>
+					<div class="center">
 						<v-btn v-if="signupMethod === 1" large color="primary" type="submit">{{ $t('verify') }}</v-btn>
 						<v-btn v-else color="black" type="submit" class="gh-button"> <img src="/image/github_black.png"> {{ $t('verify_gh') }}</v-btn>
-					</center>
+					</div>
 				</form>
 			</div>
 		</panel>
@@ -98,7 +98,7 @@
 					<div class="setting" id="dark-button">
 						<div>{{ $t('theme') }}</div>
 						<div width="100">
-							<v-radio-group v-model="LeekWars.themeSetting" hide-details row>
+							<v-radio-group v-model="LeekWars.themeSetting" hide-details inline>
 								<v-radio :label="$t('auto')" value="auto"></v-radio>
 								<v-radio :label="$t('light')" value="light"></v-radio>
 								<v-radio :label="$t('dark')" value="dark"></v-radio>
@@ -138,7 +138,7 @@
 					<input v-model="newPassword1" name="new_password1" type="password" required> <br>
 					<h4>{{ $t('confirm_password') }}</h4>
 					<input v-model="newPassword2" name="new_password2" type="password" required> <br>
-					<center><v-btn type="submit">{{ $t('change') }}</v-btn></center>
+					<div class="center"><v-btn type="submit">{{ $t('change') }}</v-btn></div>
 				</form>
 
 				<div v-if="$store.state.farmer?.verified" v-ripple class="list-item card" @click="viewChangeEmail = !viewChangeEmail">
@@ -169,46 +169,50 @@
 			</panel>
 
 			<panel v-if="$store.state.farmer?.verified" :title="$t('main.notifications')" icon="mdi-bell-outline">
-				<span slot="actions" class="push-notifs-button" @click="updatePushNotifications">
-					<span>{{ $t('push_notifications') }}</span>
-					<v-switch :input-value="pushNotifications" hide-details />
-				</span>
-				<div slot="content" class="content notifications">
-					<table>
-						<template v-for="category in mails">
-							<tr :key="category.name + '_t'">
-								<td class="category">
-									<v-icon>{{ category.icon }}</v-icon>
-									{{ $t('notification.category_' + category.id) }}
-								</td>
-							</tr>
-							<tr :key="category.name + '_d'">
-								<td class="item">
-									{{ $t('notification.category_' + category.id + '_desc') }}
-								</td>
-								<td class="push">
-									<v-checkbox v-model="settings['push_' + category.name]" hide-details label="Push" @change="updateNotif('push_' + category.name, $event)" />
-								</td>
-								<td class="mail">
-									<v-checkbox v-model="settings['mail_' + category.name]" hide-details label="E-mail" @change="updateNotif('mail_' + category.name, $event)" />
-								</td>
-							</tr>
-						</template>
-					</table>
-					<div class="notif-info">
-						<v-icon>mdi-information-outline</v-icon> {{ $t('notification.info') }}
+				<template #actions>
+					<span class="push-notifs-button" @click="updatePushNotifications">
+						<span>{{ $t('push_notifications') }}</span>
+						<v-switch :model-value="pushNotifications" hide-details />
+					</span>
+				</template>
+				<template #content>
+					<div class="content notifications">
+						<table>
+							<template v-for="category in mails" :key="category.name">
+								<tr>
+									<td class="category">
+										<v-icon>{{ category.icon }}</v-icon>
+										{{ $t('notification.category_' + category.id) }}
+									</td>
+								</tr>
+								<tr>
+									<td class="item">
+										{{ $t('notification.category_' + category.id + '_desc') }}
+									</td>
+									<td class="push">
+										<v-checkbox v-model="settings['push_' + category.name]" hide-details label="Push" @change="updateNotif('push_' + category.name, $event)" />
+									</td>
+									<td class="mail">
+										<v-checkbox v-model="settings['mail_' + category.name]" hide-details label="E-mail" @change="updateNotif('mail_' + category.name, $event)" />
+									</td>
+								</tr>
+							</template>
+						</table>
+						<div class="notif-info">
+							<v-icon>mdi-information-outline</v-icon> {{ $t('notification.info') }}
+						</div>
 					</div>
-				</div>
+				</template>
 			</panel>
 		</div>
 
-		<center>
+		<div class="center">
 			<div class="advanced-button" @click="advanced = !advanced">
 				{{ $t('advanced') }}
 				<v-icon v-if="advanced">mdi-chevron-up</v-icon>
 				<v-icon v-else>mdi-chevron-down</v-icon>
 			</div>
-		</center>
+		</div>
 
 		<div v-if="advanced" class="container grid large">
 			<panel :title="$t('empty_localstorage')" class="last" icon="mdi-eraser">
@@ -217,37 +221,37 @@
 		</div>
 
 		<popup v-model="deleteDialog" :width="600">
-			<v-icon slot="icon">mdi-delete</v-icon>
-			<span slot="title">{{ $t('delete_account') }}</span>
+			<template #icon><v-icon>mdi-delete</v-icon></template>
+			<template #title><span>{{ $t('delete_account') }}</span></template>
 			<div v-html="$t('delete_message')"></div>
 			<br v-if="$store.state.farmer?.verified">
 			<v-switch v-if="$store.state.farmer?.verified" v-model="deleteForumMessages" :label="$t('delete_forum_messages')" hide-details />
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple class="action dismiss" @click="deleteDialog = false">{{ $t('delete_cancel') }}</div>
 				<div v-ripple class="action red" @click="deleteAccountConfirm">{{ $t('delete_confirm') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-model="deleteConfirmDialog" :width="600">
-			<v-icon slot="icon">mdi-delete</v-icon>
-			<span slot="title">{{ $t('delete_confirmation') }}</span>
+			<template #icon><v-icon>mdi-delete</v-icon></template>
+			<template #title><span>{{ $t('delete_confirmation') }}</span></template>
 			{{ $t('delete_confirmation_password') }} : <br><br>
 			{{ $t('delete_password') }} : <input v-model="deleteConfirmPassword" type="password">
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple class="action dismiss" @click="deleteConfirmDialog = false">{{ $t('delete_cancel') }}</div>
 				<div v-ripple class="action red" @click="deleteAccountFinal">{{ $t('delete_finalize') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-model="deleteSuccessDialog" :width="600">
-			<v-icon slot="icon">mdi-delete</v-icon>
-			<span slot="title">{{ $t('delete_success') }}</span>
+			<template #icon><v-icon>mdi-delete</v-icon></template>
+			<template #title><span>{{ $t('delete_success') }}</span></template>
 			{{ $t('delete_success_message') }}
 		</popup>
 
 		<popup v-model="deleteFailedDialog" :width="600">
-			<v-icon slot="icon">mdi-delete</v-icon>
-			<span slot="title">{{ $t('delete_failed') }}</span>
+			<template #icon><v-icon>mdi-delete</v-icon></template>
+			<template #title><span>{{ $t('delete_failed') }}</span></template>
 			{{ $t(deleteFailedError) }}
 		</popup>
 	</div>
@@ -257,9 +261,9 @@
 	import TwoFactor from '@/component/settings/two-factor.vue'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'settings', i18n: {}, mixins: [...mixins], components: {TwoFactor} })
+	@Options({ name: 'settings', i18n: {}, mixins: [...mixins], components: {TwoFactor} })
 	export default class Settings extends Vue {
 		vapid_key = new Uint8Array([4, 92, 237, 40, 114, 162, 99, 215, 179, 242, 70, 151, 236, 60, 216, 10, 167, 186, 77, 27, 233, 193, 117, 111, 78, 20, 121, 201, 142, 186, 91, 13, 111, 26, 241, 126, 12, 216, 94, 160, 38, 110, 214, 161, 249, 147, 233, 133, 128, 210, 170, 161, 158, 57, 24, 54, 194, 103, 195, 94, 49, 182, 20, 62, 184])
 		mails = [
@@ -496,7 +500,7 @@
 
 		addError(form: string, error: string) {
 			if (!(form in this.errors)) {
-				Vue.set(this.$data.errors, form, [])
+				this.errors[form] = []
 			}
 			this.errors[form].push(error)
 		}
@@ -554,8 +558,7 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			margin: 8px 0;
-			.v-input--radio-group--row ::v-deep .v-input--radio-group__input {
+			.v-input--radio-group--row :deep(.v-input--radio-group__input) {
 				flex-wrap: nowrap;
 			}
 			.v-radio {
@@ -625,13 +628,12 @@
 		}
 	}
 	.push-notifs-button {
-		display: inline-block;
-		margin-top: 8px;
+		display: flex;
 		cursor: pointer;
+		align-items: center;
+		gap: 8px;
+		padding: 0 8px;
 		> span {
-			vertical-align: bottom;
-			padding-bottom: 5px;
-			display: inline-block;
 			color: white;
 		}
 	}
@@ -649,11 +651,6 @@
 		}
 		.item {
 			color: #777;
-			padding-top: 2px;
-			padding-bottom: 5px;
-		}
-		.mail {
-			width: 80px;
 		}
 		.push label, .mail label {
 			cursor: pointer;

@@ -17,9 +17,9 @@
 				<img src="/image/charac/small/tp.png">{{ weapon.cost }}
 			</div>
 
-			<i18n v-if="weapon.max_uses != -1" path="effect.max_uses" tag="div">
-				<span slot="uses" v-html="$tc('effect.n_uses', weapon.max_uses)"></span>
-			</i18n>
+			<i18n-t v-if="weapon.max_uses != -1" keypath="effect.max_uses" tag="div">
+				<template #uses><span v-html="$tc('effect.n_uses', weapon.max_uses)"></span></template>
+			</i18n-t>
 
 			<area-view v-if="weapon.area != Area.SINGLE_CELL" :area="weapon.area" />
 
@@ -37,8 +37,8 @@
 	import { Area } from '@/model/area'
 	import { Leek } from '@/model/leek'
 	import { WeaponTemplate } from '@/model/weapon'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
-	@Component({
+	import { Options, Prop, Vue } from 'vue-property-decorator'
+	@Options({
 		components: { 'range-view': RangeView, 'effect-view': EffectView, 'area-view': AreaView }
 	})
 	export default class WeaponPreview extends Vue {

@@ -24,27 +24,27 @@
 		<tr>
 			<td colspan="19" class="header"><b :style="{color: TEAM_COLORS[0]}">{{ $t('team_n', [1]) }}</b></td>
 		</tr>
-		<template v-for="entity in statistics.team1">
-			<report-statistics-entity :key="entity.leek.id" :entity="entity" :stats="stats" :best="best" />
-			<report-statistics-entity v-for="summon in entity.summons" :key="entity.leek.id + '-' + summon.leek.id" :entity="summon" :stats="stats" :best="best" />
+		<template v-for="entity in statistics.team1" :key="entity.leek.id">
+			<report-statistics-entity :entity="entity" :stats="stats" :best="best" />
+			<report-statistics-entity v-for="summon in entity.summons" :entity="summon" :stats="stats" :best="best" />
 		</template>
 		<tr>
 			<td colspan="19" class="header"><b :style="{color: TEAM_COLORS[1]}">{{ $t('team_n', [2]) }}</b></td>
 		</tr>
-		<template v-for="entity in statistics.team2">
-			<report-statistics-entity :key="entity.leek.id" :entity="entity" :stats="stats" :best="best" />
-			<report-statistics-entity v-for="summon in entity.summons" :key="entity.leek.id + '-' + summon.leek.id" :entity="summon" :stats="stats" :best="best" />
+		<template v-for="entity in statistics.team2" :key="entity.leek.id">
+			<report-statistics-entity :entity="entity" :stats="stats" :best="best" />
+			<report-statistics-entity v-for="summon in entity.summons" :entity="summon" :stats="stats" :best="best" />
 		</template>
 	</table>
 </template>
 
 <script lang="ts">
 	import { TEAM_COLORS } from '@/model/team'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import ReportStatisticsEntity from './report-statistics-entity.vue'
 	import { FightStatistics } from './statistics'
 
-	@Component({ components: { ReportStatisticsEntity } })
+	@Options({ components: { ReportStatisticsEntity } })
 	export default class ReportStatistics extends Vue {
 		@Prop({required: true}) fight!: any
 		@Prop({required: true}) statistics!: FightStatistics

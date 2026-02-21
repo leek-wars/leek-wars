@@ -40,5 +40,8 @@
 	"errors": "Fouten",
 	"errors_warnings": "Fouten en waarschuwingen",
 	"n_errors": "{n} fouten",
-	"n_warnings": "{n} waarschuwingen"
+	"n_warnings": "{n} waarschuwingen",
+	"toggle_turrets": "Torens tonen/verbergen",
+	"toggle_percent": "Levenspercentage",
+	"toggle_smooth": "Vloeiende/hoekige curve"
 }

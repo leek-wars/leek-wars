@@ -1,31 +1,39 @@
 <template lang="html">
-	<popup :value="value" :width="800" :full="true" @input="$emit('input', $event)">
-		<v-icon slot="icon">mdi-star</v-icon>
-		<i18n slot="title" path="changelog.version_online">
-			<b v-if="changelog" slot="version">{{ changelog.version_name }}</b>
-		</i18n>
+	<popup :model-value="modelValue" :width="800" :full="true">
+		<template #icon>
+			<v-icon>mdi-star</v-icon>
+		</template>
+		<template #title>
+			<i18n-t keypath="changelog.version_online">
+				<template #version>
+					<b v-if="changelog">{{ changelog.version_name }}</b>
+				</template>
+			</i18n-t>
+		</template>
 		<div v-if="changelog" class="changelog">
 			<changelog-version :version="changelog" />
 			<div class="all">
-				<i18n path="changelog.see_all_changes">
-					<router-link slot="changelog" to="/changelog">changelog</router-link>
-				</i18n>
+				<i18n-t keypath="changelog.see_all_changes">
+					<template #changelog>
+						<router-link to="/changelog">changelog</router-link>
+					</template>
+				</i18n-t>
 			</div>
 		</div>
-		<div slot="actions">
-			<div v-ripple @click="$emit('input', false)">{{ $t('main.ok') }} :)</div>
-		</div>
+		<template #actions>
+			<div v-ripple @click="$emit('update:modelValue', false)">{{ $t('main.ok') }} :)</div>
+		</template>
 	</popup>
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import ChangelogVersion from './changelog-version.vue'
 
-	@Component({ name: 'changelog-dialog', i18n: {}, components: { ChangelogVersion } })
+	@Options({ name: 'changelog-dialog', i18n: {}, components: { ChangelogVersion } })
 	export default class ChangelogDialog extends Vue {
 		@Prop({required: true}) changelog!: any
-		@Prop() value!: boolean
+		@Prop() modelValue!: boolean
 
 	}
 </script>

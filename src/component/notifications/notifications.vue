@@ -4,10 +4,12 @@
 			<h1>{{ $t('title') }}</h1>
 		</div>
 		<panel class="first last">
-			<loader v-if="!notifications" slot="content" />
-			<div v-else slot="content" class="content">
-				<notification v-for="notification in notifications" :key="notification.id" :notification="notification" />
-			</div>
+			<template #content>
+				<loader v-if="!notifications" />
+				<div v-else class="content">
+					<notification v-for="notification in notifications" :key="notification.id" :notification="notification" />
+				</div>
+			</template>
 		</panel>
 	</div>
 </template>
@@ -17,9 +19,9 @@
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { NotificationBuilder } from '@/model/notification-builder'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 
-	@Component({
+	@Options({
 		name: 'notifications', i18n: {}, mixins: [...mixins],
 		components: { notification: NotificationElement }
 	})

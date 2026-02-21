@@ -3,62 +3,71 @@
 		<lw-title v-if="noun" class="preview" :title="[icon, noun, gender, adjective]" />
 		<div class="selection">
 			<div class="select-icon select">
-				<v-select v-model="icon" :items="icons" item-value="id" hide-details dense solo>
-					<template v-slot:selection>
-						<img v-if="icon" slot="prepend" :src="'/image/trophy/' + TROPHIES[icon - 1].code + '.svg'">
+				<v-select v-model="icon" :items="icons" item-value="id" item-title="id" hide-details density="comfortable" variant="solo">
+					<template #selection>
+						<img v-if="icon" :src="'/image/trophy/' + TROPHIES[icon - 1].code + '.svg'">
 					</template>
-					<template slot="item" slot-scope="data">
-						<img v-if="data.item.id" class="icon" :src="'/image/trophy/' + data.item.code + '.svg'">
-						<span v-else>{{ $t('main.none') }}</span>
-						<v-list-item-content>
-							<v-list-item-title class="word">
-								<div class="name"></div>
-								<div v-if="data.item.id" class="rarity">{{ formatRarity(data.item.rarity) }}%</div>
-							</v-list-item-title>
-						</v-list-item-content>
+					<template #item="{ props: itemProps, item }">
+						<v-list-item v-bind="itemProps">
+							<template v-if="item.raw.id" #title>
+								<img class="icon" :src="'/image/trophy/' + item.raw.code + '.svg'">
+							</template>
+							<template v-else #title>{{ $t('main.none') }}</template>
+							<template #append v-if="item.raw.id">
+								<div class="rarity">{{ formatRarity(item.raw.rarity) }}%</div>
+							</template>
+						</v-list-item>
 					</template>
 				</v-select>
 			</div>
 			<div class="select-words" :class="$i18n.locale">
 				<div class="select-word select">
-					<v-select v-model="noun" :items="nouns" :label="$t('select_noun')" item-value="id" item-text="t" hide-details dense solo @change="changeNoun">
-						<template slot="item" slot-scope="data">
-							<template v-if="data.item.id">
-								<img class="icon" :src="'/image/trophy/' + data.item.code + '.svg'">
-								<v-list-item-content>
-									<v-list-item-title class="word">
-										<div class="name">{{ data.item.t }}</div>
-										<div class="rarity">{{ formatRarity(data.item.rarity) }}%</div>
-									</v-list-item-title>
-								</v-list-item-content>
-							</template>
-							<span v-else>{{ $t('main.none') }}</span>
+					<v-select v-model="noun" :items="nouns" item-value="id" item-title="t" hide-details density="comfortable" variant="solo" @change="changeNoun">
+						<template #selection="{ item }">
+							{{ item.props.title }}
+						</template>
+						<template #item="{ props: itemProps, item }">
+							<v-list-item v-bind="itemProps">
+								<template v-if="item.value" #prepend>
+									<img class="icon" :src="'/image/trophy/' + item.raw.code + '.svg'">
+								</template>
+								<template #append v-if="item.value" class="word">
+									<div class="rarity">{{ formatRarity(item.raw.rarity) }}%</div>
+								</template>
+								<template #title v-else>{{ $t('main.none') }}</template>
+							</v-list-item>
 						</template>
 					</v-select>
 				</div>
 				<div v-if="$i18n.locale === 'fr' && (noun && TROPHIES[noun - 1].noun_translation === 3) || (adjective && TROPHIES[adjective - 1].adj_translation === 3)" class="select select-gender">
-					<v-select v-model="gender" :items="genders" :label="$t('select_noun')" item-value="id" item-text="t" hide-details dense solo>
-						<template v-slot:selection>
-							<v-icon :class="genders[gender - 1].code">mdi-gender-{{ genders[gender - 1].code }}</v-icon>
+					<v-select v-model="gender" :items="genders" item-value="id" item-title="code" hide-details density="comfortable" variant="solo">
+						<template #selection>
+							<v-icon v-if="gender" :class="genders[gender - 1].code">mdi-gender-{{ genders[gender - 1].code }}</v-icon>
 						</template>
-						<template slot="item" slot-scope="data">
-							<v-icon :class="data.item.code">mdi-gender-{{ data.item.code }}</v-icon>
+						<template #item="{ props: itemProps, item }">
+							<v-list-item v-bind="itemProps">
+								<template #title>
+									<v-icon :class="item.raw.code">mdi-gender-{{ item.raw.code }}</v-icon>
+								</template>
+							</v-list-item>
 						</template>
 					</v-select>
 				</div>
 				<div class="select-word select">
-					<v-select v-model="adjective" :items="adjectives" :label="$t('select_adjective')" item-value="id" item-text="t" hide-details :eager="true" dense solo>
-						<template slot="item" slot-scope="data">
-							<template v-if="data.item.id">
-								<img class="icon" :src="'/image/trophy/' + data.item.code + '.svg'">
-								<v-list-item-content>
-									<v-list-item-title class="word">
-										<div class="name">{{ data.item.t }}</div>
-										<div class="rarity">{{ formatRarity(data.item.rarity) }}%</div>
-									</v-list-item-title>
-								</v-list-item-content>
-							</template>
-							<span v-else>{{ $t('main.none') }}</span>
+					<v-select v-model="adjective" :items="adjectives" item-value="id" item-title="t" hide-details :eager="true" density="comfortable" variant="solo">
+						<template #selection="{ item }">
+							{{ item.props.title }}
+						</template>
+						<template #item="{ props: itemProps, item }">
+							<v-list-item v-bind="itemProps">
+								<template v-if="item.value" #prepend>
+									<img class="icon" :src="'/image/trophy/' + item.raw.code + '.svg'">
+								</template>
+								<template #append v-if="item.value" class="word">
+									<div class="rarity">{{ formatRarity(item.raw.rarity) }}%</div>
+								</template>
+								<template #title v-else>{{ $t('main.none') }}</template>
+							</v-list-item>
 						</template>
 					</v-select>
 				</div>
@@ -73,10 +82,10 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { TROPHIES } from '@/model/trophies'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import LWTitle from '@/component/title/title.vue'
 
-	@Component({ name: "title-picker", components: { 'lw-title': LWTitle } })
+	@Options({ name: "title-picker", components: { 'lw-title': LWTitle } })
 	export default class TitlePicker extends Vue {
 
 		@Prop() title!: number[]
@@ -117,7 +126,7 @@
 			this.noun = this.title[1] || 0
 			this.gender = this.title[2] || 1
 			this.adjective = this.title[3] || 0
-			LeekWars.get<any[]>('trophy/get-trophy-words').then(words => {
+			LeekWars.loadTrophyWords().then(words => {
 				this.allNouns = words.filter(w => w.title & 1)
 				this.allAdjectives = words.filter(w => w.title & 2)
 				this.icons = [{id: 0, code: '', t: '', rarity: 0}].concat(words)
@@ -160,12 +169,13 @@
 }
 .select {
 	margin: 0 4px;
-	::v-deep input {
+	:deep(input) {
 		border: none;
 	}
 }
 .select-words {
 	display: flex;
+	flex: 1;
 	&.en {
 		flex-direction: row-reverse;
 	}
@@ -173,15 +183,15 @@
 .select-icon {
 	width: 80px;
 	img {
-		height: 30px;
+		height: 25px;
 	}
-	::v-deep input {
+	:deep(input) {
 		display: none;
 	}
 }
 .select-gender {
 	width: 70px;
-	::v-deep input {
+	:deep(input) {
 		display: none;
 	}
 }
@@ -191,15 +201,10 @@
 .v-icon.female {
 	color: rgb(242, 97, 255);
 }
-.word {
-	display: flex;
-	.name {
-		flex: 1;
-		padding-right: 20px;
-	}
-	.rarity {
-		color: #999;
-	}
+.rarity {
+	color: #999;
+	font-size: 13px;
+	padding-left: 20px;
 }
 .select-word {
 	flex: 1;

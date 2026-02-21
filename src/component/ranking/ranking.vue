@@ -8,16 +8,12 @@
 					<div class="tab" :class="{active: category.startsWith('level')}">
 						{{ $t('main.level_n', [rankingLevel]) }}
 						<v-menu offset-y>
-							<template v-slot:activator="{ on }">
-								<v-icon v-on="on" @click.prevent="">mdi-chevron-down</v-icon>
+							<template #activator="{ props }">
+								<v-icon v-bind="props" @click.prevent="">mdi-chevron-down</v-icon>
 							</template>
 							<v-list>
 								<router-link v-for="level of [50, 99, 150, 199, 250, 299]" :key="level" :to="getURL('level-' + level, order, country, LeekWars.rankingInactive)">
-									<v-list-item v-ripple >
-										<v-list-item-content>
-											<v-list-item-title>{{ $t('main.level_n', [level]) }}</v-list-item-title>
-										</v-list-item-content>
-									</v-list-item>
+									<v-list-item v-ripple :title="$t('main.level_n', [level])" />
 								</router-link>
 							</v-list>
 						</v-menu>
@@ -27,8 +23,8 @@
 				<router-link :to="getURL('team', 'talent', country, LeekWars.rankingInactive)"><div class="tab" :class="{active: category === 'team'}">{{ $t('teams') }}</div></router-link>
 
 				<v-menu v-model="countryList" offset-y>
-					<template v-slot:activator="{ on }">
-						<div class="tab" v-on="on" :class="{active: category.startsWith('country')}">
+					<template #activator="{ props }">
+						<div class="tab" v-bind="props" :class="{active: category.startsWith('country')}">
 							<!-- {{ $t('main.country') }} -->
 							<flag v-if="country" :code="country" :clickable="false" />
 							<v-icon v-else :title="$t('main.worldwide')">mdi-earth</v-icon>
@@ -39,23 +35,19 @@
 						<router-link :to="getURL(category, order, null, LeekWars.rankingInactive)">
 							<v-list-item v-ripple>
 								<v-icon>mdi-earth</v-icon>
-								<v-list-item-content>
-									{{ $t('main.worldwide') }}
-								</v-list-item-content>
+								{{ $t('main.worldwide') }}
 							</v-list-item>
 						</router-link>
 						<router-link v-if="$store.state.farmer?.country" :to="getURL(category, order, $store.state.farmer.country, LeekWars.rankingInactive)">
 							<v-list-item v-ripple>
 								<flag :code="$store.state.farmer.country" :clickable="false" />
-								<v-list-item-content>
-									{{ $t('country.' + $store.state.farmer.country) }}
-								</v-list-item-content>
+								{{ $t('country.' + $store.state.farmer.country) }}
 							</v-list-item>
 						</router-link>
 						<router-link v-for="country in LeekWars.countries" :key="country" :to="getURL(category, order, country, LeekWars.rankingInactive)">
-							<v-list-item v-ripple >
+							<v-list-item v-ripple>
 								<flag :code="country" :clickable="false" />
-								<v-list-item-content>{{ $t(`country.${country}`) }}</v-list-item-content>
+								{{ $t(`country.${country}`) }}
 							</v-list-item>
 						</router-link>
 					</v-list>
@@ -68,7 +60,8 @@
 			</div>
 		</div>
 		<panel class="first last">
-			<div v-if="category === 'fun'" slot="content" class="fun-rankings">
+			<template #content>
+				<div v-if="category === 'fun'" class="fun-rankings">
 				<loader v-if="!rankings" />
 				<div v-for="funRanking in rankings" :key="funRanking.title" class="fun-ranking">
 					<h4>{{ $t(funRanking.title + '_title') }}</h4>
@@ -82,26 +75,26 @@
 							<td>{{ parseInt(i) + 1 }}</td>
 							<td :class="farmer.style">
 								<router-link :to="'/farmer/' + farmer.id">
-									<rich-tooltip-farmer :id="farmer.id" v-slot="{ on }">
-										<span v-on="on">{{ farmer.name }}</span>
+									<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }">
+										<span v-bind="props">{{ farmer.name }}</span>
 									</rich-tooltip-farmer>
 								</router-link>
 							</td>
-							<td v-if="funRanking.value_type == 'number'">{{ farmer.value | number }}</td>
-							<td v-else-if="funRanking.value_type == 'money'">{{ farmer.value | number }} <span class="hab"></span></td>
-							<td v-else-if="funRanking.value_type == 'distance'">{{ farmer.value | number }}m</td>
+							<td v-if="funRanking.value_type == 'number'">{{ $filters.number(farmer.value) }}</td>
+							<td v-else-if="funRanking.value_type == 'money'">{{ $filters.number(farmer.value) }} <span class="hab"></span></td>
+							<td v-else-if="funRanking.value_type == 'distance'">{{ $filters.number(farmer.value) }}m</td>
 						</tr>
 						<tr v-if="$store.state.farmer && funRanking.ranking.farmer_rank > 10" class="me">
 							<td>{{ funRanking.ranking.farmer_rank }}</td>
 							<td>{{ $store.state.farmer.name }}</td>
-							<td v-if="funRanking.value_type == 'number'">{{ funRanking.ranking.farmer_value | number }}</td>
-							<td v-if="funRanking.value_type == 'money'">{{ funRanking.ranking.farmer_value | number }} <span class="hab"></span></td>
-							<td v-if="funRanking.value_type == 'distance'">{{ funRanking.ranking.farmer_value | number }}m</td>
+							<td v-if="funRanking.value_type == 'number'">{{ $filters.number(funRanking.ranking.farmer_value) }}</td>
+							<td v-if="funRanking.value_type == 'money'">{{ $filters.number(funRanking.ranking.farmer_value) }} <span class="hab"></span></td>
+							<td v-if="funRanking.value_type == 'distance'">{{ $filters.number(funRanking.ranking.farmer_value) }}m</td>
 						</tr>
 					</table>
 				</div>
 			</div>
-			<div v-else slot="content">
+			<div v-else>
 				<div class="center">
 					<pagination :current="page" :total="pages" :url="url" :url-query="urlQuery" />
 					<div v-if="$store.state.farmer" class="me-buttons">
@@ -234,11 +227,10 @@
 					<pagination :current="page" :total="pages" :url="url" :url-query="urlQuery" />
 				</div>
 			</div>
+			</template>
 		</panel>
 
-		<popup v-model="searchDialog" :width="500">
-			<v-icon slot="icon">mdi-magnify</v-icon>
-			<span slot="title">{{ $t('search_in_ranking') }}</span>
+		<popup v-model="searchDialog" :width="500" icon="mdi-magnify" :title="$t('search_in_ranking')">
 			<input ref="search" v-model="searchQuery" :placeholder="$t('search_name')" class="query" type="text">
 			<div class="flex">
 				<v-checkbox v-model="searchLeeks" :label="$t('leeks')" hide-details />
@@ -262,11 +254,12 @@
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Ranking } from '@/model/ranking'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import Pagination from '@/component/pagination.vue'
+import { emitter } from '@/model/vue'
 
-	@Component({
+	@Options({
 		name: 'ranking', i18n: {}, mixins: [...mixins],
 		components: { 'ranking-leek-row': RankingLeekRowElement, 'ranking-farmer-row': RankingFarmerRowElement, 'ranking-team-row': RankingTeamRowElement, 'ranking-search-result': RankingSearchResult, RichTooltipFarmer, Pagination }
 	})
@@ -356,7 +349,7 @@
 					this.rankings = data.rankings
 					this.ranking = []
 					LeekWars.setTitle(this.$t('title'), this.$t('fun'))
-					this.$root.$emit('loaded')
+					emitter.emit('loaded')
 				})
 			} else {
 				this.ranking = null
@@ -396,7 +389,7 @@
 					this.ranking = ranking
 					LeekWars.setActions([{icon: 'mdi-magnify', click: () => this.openSearch()}])
 					LeekWars.setTitle(this.$t('title'), this.category.includes('level') ? this.$t('main.level_n', [this.rankingLevel]) : this.$t('main.n_' + this.category + 's', [data.total]))
-					this.$root.$emit('loaded')
+					emitter.emit('loaded')
 				})
 			}
 		}
@@ -489,14 +482,14 @@
 	}
 	.ranking {
 		background: var(--pure-white);
-		::v-deep td {
+		:deep(td) {
 			border-bottom: 1px solid var(--border);
 			border-right: 1px solid var(--border);
 			text-align: center;
 			padding: 5px 7px;
 			white-space: nowrap;
 		}
-		::v-deep td:last-child {
+		:deep(td:last-child) {
 			border-right: none;
 		}
 		tr.header {
@@ -525,36 +518,36 @@
 		th:last-child {
 			border-right: none;
 		}
-		::v-deep .first a {
+		:deep(.first a) {
 			color: #ffa900;
 			font-weight: bold;
 		}
-		::v-deep .second a {
+		:deep(.second a) {
 			color: #9c9c9c;
 			font-weight: bold;
 		}
-		::v-deep .third a {
+		:deep(.third a) {
 			color: #ae4e00;
 			font-weight: bold;
 		}
 		tr.me {
 			font-weight: bold;
-			::v-deep td {
+			:deep(td) {
 				background: var(--background);
 			}
 		}
 		tr.highlight {
-			::v-deep td {
+			:deep(td) {
 				background: rgba(100, 255, 0, 0.4);
 			}
 		}
 		tr.inactive {
-			::v-deep td, ::v-deep a {
+			:deep(td), :deep(a) {
 				color: #777;
 				font-style: italic;
 			}
 		}
-		::v-deep .country-wrapper {
+		:deep(.country-wrapper) {
 			height: 16px;
 			.flag {
 				height: 16px;

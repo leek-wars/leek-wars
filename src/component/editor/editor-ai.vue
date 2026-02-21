@@ -1,6 +1,6 @@
 <template lang="html">
 	<div>
-		<div ref="ai" :class="{modified: ai.modified, selected: ai.selected}" class="item ai" @click="click" @contextmenu.prevent.stop="$root.$emit('editor-menu', ai, true, $event)">
+		<div ref="ai" :class="{modified: ai.modified, selected: ai.selected}" class="item ai" @click="click" @contextmenu.prevent.stop="emitter.emit('editor-menu', { item: ai, ai: true, e: $event })">
 			<div :style="{'padding-left': (level * 15 + 15) + 'px'}" class="label" :class="{error: ai.errors, warning: ai.warnings}" :draggable="ai.folder !== -1" @dragstart="dragstart">
 				<v-icon v-if="ai.errors" class="icon error">mdi-close-circle</v-icon>
 				<v-icon v-else-if="ai.warnings" class="icon warning">mdi-alert-circle</v-icon>
@@ -9,15 +9,15 @@
 				<span v-if="ai.errors" class="count error">{{ ai.errors }}</span>
 				<span v-if="ai.warnings" class="count warning">{{ ai.warnings }}</span>
 				<span v-if="ai.todos" class="count todo">{{ ai.todos }}</span>
-				<tooltip v-if="leeks.length">
-					<template v-slot:activator="{ on }">
-						<span v-if="leeks" v-on="on" class="count leek">
+				<v-tooltip v-if="leeks.length">
+					<template #activator="{ props }">
+						<span v-if="leeks" v-bind="props" class="count leek">
 							<img src="/image/icon/black/leek.png">
 							{{ leeks.length }}
 						</span>
 					</template>
 					{{ leeks.join(', ') }}
-				</tooltip>
+				</v-tooltip>
 			</div>
 		</div>
 	</div>
@@ -26,13 +26,15 @@
 <script lang="ts">
 	import { fileSystem } from '@/model/filesystem'
 	import { store } from '@/model/store'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import { AIItem } from './editor-item'
+	import { emitter } from '@/model/vue'
 
-	@Component({ name: 'editor-ai' })
+	@Options({ name: 'editor-ai' })
 	export default class EditorAI extends Vue {
 		@Prop({required: true}) item!: AIItem
 		@Prop({required: true}) level!: number
+		emitter = emitter
 
 		get ai() { return this.item.ai }
 
@@ -45,7 +47,7 @@
 		dragstart(e: DragEvent) {
 			if (this.ai.folder === -1) { e.stopPropagation(); return }
 			e.dataTransfer!.setData('text/plain', 'drag !!!')
-			this.$root.$emit('editor-drag', this.item)
+			emitter.emit('editor-drag', this.item)
 			e.stopPropagation()
 		}
 		click(e: Event) {

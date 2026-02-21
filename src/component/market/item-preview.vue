@@ -21,21 +21,21 @@
 			{{ $t(category + '.' + name_short + '_desc') }}
 		</div>
 		<weapon-preview v-if="item.type === ItemType.WEAPON" :weapon="LeekWars.weapons[item.params]" :leek="leek" />
-		<chip-preview v-else-if="item.type === ItemType.CHIP" :chip="CHIPS[item.id]" :leek="leek" @input="$emit('input', $event)" />
+		<chip-preview v-else-if="item.type === ItemType.CHIP" :chip="CHIPS[item.id]" :leek="leek" @update:model-value="$emit('update:modelValue', $event)" />
 		<potion-preview v-else-if="item.type === ItemType.POTION" :potion="LeekWars.potions[item.id]" />
 		<hat-preview v-else-if="item.type === ItemType.HAT" :hat="LeekWars.hats[item.params]" />
 		<pomp-preview v-else-if="item.type === ItemType.POMP" :pomp="LeekWars.pomps[item.id]" />
 		<resource-preview v-else-if="item.type === ItemType.RESOURCE" :resource="LeekWars.items[item.id]" />
-		<component-preview v-else-if="item.type === ItemType.COMPONENT" :component="LeekWars.components[item.params]" @input="$emit('input', $event)" />
-		<scheme-preview v-else-if="item.type === ItemType.SCHEME" :scheme="LeekWars.schemes[item.params]" @input="$emit('input', $event)" />
+		<component-preview v-else-if="item.type === ItemType.COMPONENT" :component="LeekWars.components[item.params]" @update:model-value="$emit('update:modelValue', $event)" />
+		<scheme-preview v-else-if="item.type === ItemType.SCHEME" :scheme="LeekWars.schemes[item.params]" @update:model-value="$emit('update:modelValue', $event)" />
 		<!-- <fight-pack-preview v-else-if="item.type === ItemType.FIGHT_PACK" :resource="LeekWars.items[item.id]" /> -->
 
 		<div v-if="inventory" class="stats inventory">
 			<div v-if="item.price">
-				{{ $t('main.estimated_value') }} : <b>{{ item.price | number }}</b> <span class='hab'></span>
+				{{ $t('main.estimated_value') }} : <b>{{ LeekWars.formatNumber(item.price) }}</b> <span class='hab'></span>
 			</div>
 			<div v-if="item.price && quantity > 1">
-				{{ $t('main.lot_value') }} : <b>{{ item.price * quantity | number }}</b> <span class='hab'></span>
+				{{ $t('main.lot_value') }} : <b>{{ LeekWars.formatNumber(item.price * quantity) }}</b> <span class='hab'></span>
 			</div>
 			<div v-if="item.name.startsWith('box') || ((($store.state.farmer && $store.state.farmer.admin) || LeekWars.christmasPresents) && item.name.startsWith('present'))">
 				<v-btn small class="get-all notif-trophy" @click.stop="retrieveN(1)">{{ $t('main.retrieve') }} <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import { ItemTemplate, ItemType, ITEM_CATEGORY_NAME } from '@/model/item'
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Options, Prop, Vue } from 'vue-property-decorator'
 import WeaponPreview from '@/component/market/weapon-preview.vue'
 import ChipPreview from '@/component/market/chip-preview.vue'
 import PotionPreview from '@/component/market/potion-preview.vue'
@@ -65,7 +65,7 @@ import SchemePreview from './scheme-preview.vue'
 import SchemeImage from './scheme-image.vue'
 import { Leek } from '@/model/leek'
 
-@Component({ name: 'item-preview', components: {
+@Options({ name: 'item-preview', components: {
 	'weapon-preview': WeaponPreview,
 	'chip-preview': ChipPreview,
 	'potion-preview': PotionPreview,
@@ -86,6 +86,7 @@ export default class ItemPreview extends Vue {
 	ItemType = ItemType
 	CHIPS = CHIPS
 	WeaponsData = WeaponsData
+	LeekWars = LeekWars
 
 	get category() {
 		return ITEM_CATEGORY_NAME[this.item.type]

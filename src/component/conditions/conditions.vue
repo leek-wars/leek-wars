@@ -4,10 +4,10 @@
 			<h1>{{ $t('title') }}</h1>
 		</div>
 		<panel class="first">
-			<center>
+			<div class="center">
 				<h4>{{ $t('version_n', [LeekWars.cgu_version]) }}</h4>
 				<br>
-			</center>
+			</div>
 			<p>{{ $t('intro') }}</p>
 
 			<h2>{{ $t('acceptation') }}</h2>
@@ -39,8 +39,8 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
-	@Component({ name: "conditions", i18n: {} })
+	import { Options, Vue } from 'vue-property-decorator'
+	@Options({ name: "conditions", i18n: {} })
 	export default class Conditions extends Vue {
 		created() {
 			LeekWars.setTitle(this.$t('title'))
@@ -57,7 +57,7 @@
 	#app.app h2 {
 		margin-left: 0;
 	}
-	::v-deep p {
+	:deep(p) {
 		margin-bottom: 10px;
 		margin-left: 20px;
 		margin-right: 20px;

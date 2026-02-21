@@ -4,17 +4,17 @@
 			<h1>{{ $t('title') }}</h1>
 		</div>
 		<panel class="first">
-			<center>
+			<div class="center">
 				<div class="text">{{ $t('intro') }}</div>
 
 				<a href="mailto:contact@leekwars.com" target="_blank">
 					<div class="card" v-ripple>
-						<i18n path="email">
-							<span slot="email">contact@leekwars.com</span>
-						</i18n>
+						<i18n-t keypath="email">
+							<template #email>contact@leekwars.com</template>
+						</i18n-t>
 					</div>
 				</a>
-			</center>
+			</div>
 		</panel>
 	</div>
 </template>
@@ -22,9 +22,9 @@
 <script lang="ts">
 	import { mixins } from '@/model/i18n';
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'contact', i18n: {}, mixins: [...mixins] })
+	@Options({ name: 'contact', i18n: {}, mixins: [...mixins] })
 	export default class Contact extends Vue {
 		created() {
 			LeekWars.setTitle(this.$t('title'))

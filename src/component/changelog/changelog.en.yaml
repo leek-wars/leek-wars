@@ -1,12 +1,27 @@
 244:
   title: WIP
   added:
+    - Added talent history for farmers and teams.
     - Added boss weapon constants WEAPON_ODACHI, WEAPON_EXCALIBUR and WEAPON_SCYTHE.
+    - Added BigIntegers in LeekScript (thanks to Batary).
+    - Added setBit and testBit functions to read or write a specific bit (thanks to Batary).
+    - Added bitLength function which complements leadingZeros for BigInteger (thanks to Batary).
   improved:
     - "Tournaments: All registered players now participate, evenly distributed across multiple tournaments of 16 to 32 players instead of excluding extra players."
     - "Editor: improved Ctrl+click to go to symbol definition (more reliable navigation and correct scrolling)."
     - "LeekScript: semicolon after while() in do-while loops is now optional."
+    - "Market: keyboard navigation with up/down/left/right arrow keys between items."
+    - "LeekScript: check private/protected method access at compile time for typed variables."
+    - "Editor: save and restore code folding state across AI switches and page reloads."
+    - "Report: improved life chart (entity name tooltip, click to focus curve, improved axes)."
+    - "Report: improved damage chart (translations, tooltips, bar totals)."
+    - "Report: dark mode support for charts."
+    - Migrated to Vue 3.
   fixed:
+    - "LeekScript: fixed a crash when compiling classes in certain include scenarios, and improved case handling for class and include keywords."
+    - Fixed a bug preventing team fights when the turret AI was missing.
+    - Fixed unread notifications count not being returned at login.
+    - Fixed test bots that could have boss weapons and chips.
     - Fixed untranslated "error_name_already_used" error message when creating a leek.
     - "Editor: fixed tab closing when AI was deleted outside the editor."
     - "Boss: fixed fight count deduction when a boss fight starts without participating (#2344)."
@@ -14,6 +29,22 @@
     - "Editor: fixed a bug where characters were inserted at the wrong position after navigating with browser back/forward buttons (Firefox)."
     - "Farmer: fixed tooltip not appearing when hovering over the godfather."
     - Fixed many Italian translations (thanks to Casanova).
+    - Fixed mentions disappearing when deleting grouped chat messages.
+    - Fixed unclickable potion/appearance icons on mobile in chat-first mode.
+    - Fixed invisible leeks in tournament table with discrete mode.
+    - Fixed trophy notifications not appearing without page refresh.
+    - Fixed leek name tooltip appearing below model in combat HUD.
+    - Fixed market item card jumping to top on Firefox when opening buy dialog.
+    - Fixed goToAI click in report logs not working.
+    - "Editor: fixed enlarge window setting not always being applied."
+    - Fixed missing space before caster text in chip descriptions.
+    - Fixed debug lines click in report.
+    - Fixed sidebar not highlighting current page on subpages.
+    - Fixed initial cooldown display.
+    - Fixed chat reactions with keycap number emojis (0️⃣-9️⃣).
+    - "Market: fixed Punishment tooltip showing a percentage instead of actual damage."
+    - "LeekScript: fixed cast ambiguity with negative number literals."
+    - "LeekScript: fixed compound assignment operators for union number types (integer|real)."
 
 243:
   title: Community creation, Quantum Rifle and new server.

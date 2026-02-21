@@ -40,5 +40,8 @@
 	"errors": "Fejl",
 	"errors_warnings": "Fejl og advarsler",
 	"n_errors": "{n} fejl",
-	"n_warnings": "{n} advarsler"
+	"n_warnings": "{n} advarsler",
+	"toggle_turrets": "Vis/skjul tårne",
+	"toggle_percent": "Livsprocent",
+	"toggle_smooth": "Jævn/kantet kurve"
 }

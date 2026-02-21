@@ -8,8 +8,8 @@
 
 <script lang="ts">
 	import { HatTemplate } from '@/model/hat'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
-	@Component({})
+	import { Options, Prop, Vue } from 'vue-property-decorator'
+	@Options({})
 	export default class HatPreview extends Vue {
 		@Prop() hat!: HatTemplate
 	}

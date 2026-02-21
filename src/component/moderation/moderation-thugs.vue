@@ -14,16 +14,18 @@
 		</div>
 
 		<panel title="Top Voyous">
-			<div slot="content" class="thugs">
-				<loader v-if="!thugs" />
-				<div v-else>
-					<div v-for="thug in thugs" :key="thug.id" class="thug">
-						<avatar :farmer="thug" />
-						<router-link :to="'/farmer/' + thug.id" class="text">{{ thug.name }} ({{ thug.warnings }})</router-link>
-						<v-btn @click="ban(thug)">Bannir</v-btn>
+			<template #content>
+				<div class="thugs">
+					<loader v-if="!thugs" />
+					<div v-else>
+						<div v-for="thug in thugs" :key="thug.id" class="thug">
+							<avatar :farmer="thug" />
+							<router-link :to="'/farmer/' + thug.id" class="text">{{ thug.name }} ({{ thug.warnings }})</router-link>
+							<v-btn @click="ban(thug)">Bannir</v-btn>
+						</div>
 					</div>
 				</div>
-			</div>
+			</template>
 		</panel>
 	</div>
 </template>
@@ -33,7 +35,7 @@
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Fault, Warning } from '@/model/moderation'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 
 	class ModerationRequest {
@@ -41,7 +43,7 @@
 		thugs!: Farmer[]
 	}
 
-	@Component({ name: "moderation-thugs", i18n: {}, components: { Breadcrumb } })
+	@Options({ name: "moderation-thugs", i18n: {}, components: { Breadcrumb } })
 	export default class ModerationThugs extends Vue {
 		thugs: any = null
 
@@ -147,13 +149,13 @@
 	}
 	.select {
 		margin: 10px 0;
-		::v-deep input {
+		:deep(input) {
 			border: none;
 		}
-		::v-deep legend {
+		:deep(legend) {
 			margin-left: 17px;
 		}
-		::v-deep label.v-label {
+		:deep(label.v-label) {
 			z-index: 2;
 			left: -6px;
 		}

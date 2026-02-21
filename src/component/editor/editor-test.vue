@@ -1,13 +1,12 @@
 <template>
-	<popup :value="value" :width="1060" :full="true" @input="$emit('input', $event)">
-		<v-icon slot="icon">mdi-play</v-icon>
-		<span slot="title">{{ $t('run_test') }}</span>
-		<v-tabs :key="value" v-model="currentTab" class="tabs" grow>
-			<v-tabs-slider class="indicator" />
-			<v-tab class="tab">{{ $t('scenarios') }} ({{ LeekWars.objectSize(scenarios) }})</v-tab>
-			<v-tab class="tab">{{ $t('test_leeks') }} ({{ LeekWars.objectSize(leeks) }})</v-tab>
-			<v-tab class="tab">{{ $t('test_maps') }} ({{ LeekWars.objectSize(maps) }})</v-tab>
-			<v-tab-item class="tab-content">
+	<popup :modelValue="modelValue" :width="1060" :full="true" icon="mdi-play" :title="$t('run_test')" @update:modelValue="$emit('update:modelValue', $event)">
+		<v-tabs :key="modelValue" v-model="currentTab" class="tabs" grow>
+			<v-tab class="tab" value="scenarios">{{ $t('scenarios') }} ({{ LeekWars.objectSize(scenarios) }})</v-tab>
+			<v-tab class="tab" value="leeks">{{ $t('test_leeks') }} ({{ LeekWars.objectSize(leeks) }})</v-tab>
+			<v-tab class="tab" value="maps">{{ $t('test_maps') }} ({{ LeekWars.objectSize(maps) }})</v-tab>
+		</v-tabs>
+		<v-window v-model="currentTab" class="tabs-content">
+			<v-window-item class="tab-content" value="scenarios">
 				<div class="column lateral-column">
 					<h4>{{ $t('test_scenario') }}</h4>
 					<div class="items scenarios">
@@ -84,11 +83,11 @@
 							<span class="title"><v-icon>mdi-seed</v-icon> {{ $t('main.seed') }}</span>
 							<span class="desc">{{ $t('main.seed_desc') }}</span>
 						</div>
-						<input v-model="currentScenario.seed" type="text" class="seed" :placeholder="$t('main.seed_placeholder')" @keyup.stop @input="updateSeed">
+						<input v-model="currentScenario.seed" type="text" class="seed" :placeholder="$t('main.seed_placeholder')" @keyup.stop @update:model-value="updateSeed">
 					</div>
 				</div>
-			</v-tab-item>
-			<v-tab-item class="tab-content">
+			</v-window-item>
+			<v-window-item class="tab-content" value="leeks">
 				<div class="column lateral-column">
 					<h4>{{ $t('test_leeks') }}</h4>
 					<div class="items leeks">
@@ -109,8 +108,8 @@
 						</div>
 						<div class="card characteristics">
 							<div v-for="c in LeekWars.characteristics_table" :key="c" class="characteristic" :class="c">
-								<characteristic-tooltip v-slot="{ on }" :characteristic="c" :value="currentLeek[c]" :total="currentLeek[c]" :leek="currentLeek" :test="true">
-									<img v-on="on" :src="'/image/charac/' + c + '.png'">
+								<characteristic-tooltip v-slot="{ props }" :characteristic="c" :value="currentLeek[c]" :total="currentLeek[c]" :leek="currentLeek" :test="true">
+									<img v-bind="props" :src="'/image/charac/' + c + '.png'">
 								</characteristic-tooltip>
 								<span :contenteditable="!currentLeek.bot" class="stat" :class="'color-' + c" @keyup.stop @focusout="characteristicFocusout(c, $event)" v-html="currentLeek[c]"></span>
 							</div>
@@ -126,8 +125,8 @@
 						<div class="title">{{ $t('main.weapons') }} [{{ currentLeek.weapons.length }}]</div>
 						<div class="weapons">
 							<div class="container">
-								<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ on }" :item="LeekWars.items[weapon.item]" :bottom="true" :nodge="true" :leek="currentLeek">
-									<img :src="'/image/' + LeekWars.items[weapon.item].name.replace('_', '/') + '.png'" :class="{hidden: !hasWeaponEquipped(weapon.item)}" class="weapon" v-on="on" @click="removeLeekWeapon(weapon.item)" :width="WeaponsData[LeekWars.items[weapon.item].params].width">
+								<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ props }" :item="LeekWars.items[weapon.item]" :bottom="true" :nodge="true" :leek="currentLeek">
+									<img :src="'/image/' + LeekWars.items[weapon.item].name.replace('_', '/') + '.png'" :class="{hidden: !hasWeaponEquipped(weapon.item)}" class="weapon" v-bind="props" @click="removeLeekWeapon(weapon.item)" :width="WeaponsData[LeekWars.items[weapon.item].params].width">
 								</rich-tooltip-item>
 								<div v-if="currentLeek.weapons.length < MAX_WEAPONS" class="add" @click="weaponsDialog = true">+</div>
 							</div>
@@ -136,16 +135,16 @@
 						<div class="title">{{ $t('main.chips') }} [{{ currentLeek.chips.length }} / {{ currentLeek.ram }}]</div>
 						<div class="chips">
 							<div class="container">
-								<rich-tooltip-item v-for="(chip, c) of currentLeek.chips" :key="chip" v-slot="{ on }" :item="LeekWars.items[chip]" :nodge="true" :leek="currentLeek">
-									<img :src="'/image/chip/' + LeekWars.items[chip].name.replace('chip_', '') + '.png'" :class="{disabled: c >= currentLeek.ram}" class="chip" v-on="on" @click="removeLeekChip(chip)">
+								<rich-tooltip-item v-for="(chip, c) of currentLeek.chips" :key="chip" v-slot="{ props }" :item="LeekWars.items[chip]" :nodge="true" :leek="currentLeek">
+									<img :src="'/image/chip/' + LeekWars.items[chip].name.replace('chip_', '') + '.png'" :class="{disabled: c >= currentLeek.ram}" class="chip" v-bind="props" @click="removeLeekChip(chip)">
 								</rich-tooltip-item>
 								<div v-if="currentLeek.chips.length < currentLeek.ram" class="add" @click="chipsDialog = true">+</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</v-tab-item>
-			<v-tab-item class="tab-content">
+			</v-window-item>
+			<v-window-item class="tab-content" value="maps">
 				<div class="column lateral-column">
 					<h4>{{ $t('test_maps') }}</h4>
 					<div class="items maps">
@@ -174,10 +173,10 @@
 						<div class="instruction">✔ {{ $t('map_click_right') }}</div>
 					</div>
 				</div>
-			</v-tab-item>
-		</v-tabs>
-		<div slot="actions">
-			<div v-ripple @click="$emit('input', false)">
+			</v-window-item>
+		</v-window>
+		<template #actions>
+			<div v-ripple @click="$emit('update:modelValue', false)">
 				<v-icon>mdi-close</v-icon>
 				<span>{{ $t('main.cancel') }}</span>
 			</div>
@@ -185,11 +184,10 @@
 				<v-icon>mdi-play</v-icon>
 				<span>{{ $t('test_validate') }}</span>
 			</div>
-		</div>
+		</template>
 
-		<popup v-model="newScenarioDialog" :width="800">
-			<v-icon slot="icon">mdi-plus-circle-outline</v-icon>
-			<span slot="title">{{ $t('create_new_scenario') }}</span>
+		<popup v-model="newScenarioDialog" :width="800" icon="mdi-plus-circle-outline">
+			<template #title>{{ $t('create_new_scenario') }}</template>
 			<div class="padding">
 				<input v-model="newScenarioName" :placeholder="$t('scenario_name')" type="text" class="input" @keyup.stop @keyup.enter="createScenario">
 				<br><br>
@@ -216,51 +214,43 @@
 					</div>
 				</div>
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="newScenarioDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="green" @click="createScenario">{{ $t('main.create') }}</div>
-			</div>
+			</template>
 		</popup>
 
-		<popup v-model="newLeekDialog" :width="500">
-			<v-icon slot="icon">mdi-plus-circle-outline</v-icon>
-			<span slot="title">{{ $t('create_new_leek') }}</span>
+		<popup v-model="newLeekDialog" :width="500" icon="mdi-plus-circle-outline" :title="$t('create_new_leek')">
 			<div class="padding">
 				<input v-model="newLeekName" :placeholder="$t('leek_name')" type="text" class="input" @keyup.stop @keyup.enter="createLeek">
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="newLeekDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="green" @click="createLeek">{{ $t('main.create') }}</div>
-			</div>
+			</template>
 		</popup>
 
-		<popup v-model="changeLeekNameDialog" :width="500">
-			<v-icon slot="icon">mdi-pencil</v-icon>
-			<span slot="title">{{ $t('leek_name') }}</span>
+		<popup v-model="changeLeekNameDialog" :width="500" icon="mdi-pencil" :title="$t('leek_name')">
 			<div class="padding">
 				<input v-model="changedLeekName" :placeholder="$t('leek_name')" type="text" class="input" @keyup.stop @keyup.enter="changeLeekName">
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="changeLeekNameDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="green" @click="changeLeekName">{{ $t('main.save') }}</div>
-			</div>
+			</template>
 		</popup>
 
-		<popup v-model="newMapDialog" :width="500">
-			<v-icon slot="icon">mdi-plus-circle-outline</v-icon>
-			<span slot="title">{{ $t('create_new_map') }}</span>
+		<popup v-model="newMapDialog" :width="500" icon="mdi-plus-circle-outline" :title="$t('create_new_map')">
 			<div class="padding">
 				<input v-model="newMapName" :placeholder="$t('map_name')" type="text" class="input" @keyup.stop @keyup.enter="createMap">
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div @click="newMapDialog = false">{{ $t('main.cancel') }}</div>
 				<div class="green" @click="createMap">{{ $t('main.create') }}</div>
-			</div>
+			</template>
 		</popup>
 
-		<popup v-model="mapDialog" :width="870">
-			<v-icon slot="icon">mdi-map</v-icon>
-			<span slot="title">{{ $t('select_map') }}</span>
+		<popup v-model="mapDialog" :width="870" icon="mdi-map" :title="$t('select_map')">
 			<div class="padding map-dialog">
 				<div v-ripple class="map-card card" @click="selectScenarioMap(null)">
 					<img src="/image/map_icon_random.png">
@@ -273,9 +263,7 @@
 			</div>
 		</popup>
 
-		<popup v-model="leekDialog" :width="700">
-			<v-icon slot="icon">mdi-person</v-icon>
-			<span slot="title">{{ $t('select_leek') }}</span>
+		<popup v-model="leekDialog" :width="700" icon="mdi-person" :title="$t('select_leek')">
 			<div class="leek-dialog padding">
 				<div v-for="leek of availableLeeks" :key="leek.id" v-ripple class="leek card" @click="addScenarioLeek(leek)">
 					<leek-image :leek="leek" :scale="0.5" />
@@ -284,9 +272,7 @@
 			</div>
 		</popup>
 
-		<popup v-model="aiDialog" :width="800">
-			<v-icon slot="icon">mdi-code-braces</v-icon>
-			<span slot="title">{{ $t('select_ai') }}</span>
+		<popup v-model="aiDialog" :width="800" icon="mdi-code-braces" :title="$t('select_ai')">
 			<div v-if="aiDialogBot" class="title"><v-icon>mdi-file</v-icon> {{ $t('bot_ais') }}</div>
 			<div v-if="aiDialogBot" class="bot-ai">
 				<div v-for="ai in fileSystem.botAIs" :key="ai.id" v-ripple class="ai" @click="clickDialogAI(ai)">
@@ -299,12 +285,11 @@
 			<explorer class="explorer" @select="clickDialogAI($event)" />
 		</popup>
 
-		<popup v-model="chipsDialog" :width="767">
-			<v-icon slot="icon">mdi-chip</v-icon>
-			<span slot="title" v-if="currentLeek">{{ $t('select_chips') }} [{{ currentLeek.chips.length }}/{{ currentLeek.ram }}]</span>
+		<popup v-model="chipsDialog" :width="767" icon="mdi-chip">
+			<template #title v-if="currentLeek">{{ $t('select_chips') }} [{{ currentLeek.chips.length }}/{{ currentLeek.ram }}]</template>
 			<div v-if="currentLeek" class="padding chips-dialog">
-				<rich-tooltip-item v-for="chip of availableChips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[LeekWars.chipTemplates[chip.template].item]" :bottom="true" :nodge="true" :leek="currentLeek">
-					<span :class="{disabled: hasChipEquipped(chip.id)}" v-on="on">
+				<rich-tooltip-item v-for="chip of availableChips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[LeekWars.chipTemplates[chip.template].item]" :bottom="true" :nodge="true" :leek="currentLeek">
+					<span :class="{disabled: hasChipEquipped(chip.id)}" v-bind="props">
 						<img :src="'/image/chip/' + chip.name + '.png'" class="chip" @click="addOrRemoveLeekChip(chip.id)">
 					</span>
 				</rich-tooltip-item>
@@ -312,12 +297,16 @@
 		</popup>
 
 		<popup v-model="weaponsDialog" :width="800">
-			<img slot="icon" src="/image/icon/garden.png">
-			<span slot="title" v-if="currentLeek">{{ $t('select_weapons') }} [{{ currentLeek.weapons.length }}/{{ MAX_WEAPONS }}]</span>
+			<template #icon>
+				<img src="/image/icon/garden.png">
+			</template>
+			<template #title>
+				<span v-if="currentLeek">{{ $t('select_weapons') }} [{{ currentLeek.weapons.length }}/{{ MAX_WEAPONS }}]</span>
+			</template>
 			<div v-if="currentLeek" class="padding weapons-dialog">
-				<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ on }" :item="LeekWars.items[weapon.item]" :bottom="true" :nodge="true" :leek="currentLeek">
-					<span :class="{disabled: hasWeaponEquipped(weapon.item)}" v-on="on">
-						<img :src="'/image/weapon/' + weapon.name + '.png'" class="weapon" v-on="on" @click="addOrRemoveLeekWeapon(weapon.item)" :width="WeaponsData[LeekWars.items[weapon.item].params].width">
+				<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ props }" :item="LeekWars.items[weapon.item]" :bottom="true" :nodge="true" :leek="currentLeek">
+					<span :class="{disabled: hasWeaponEquipped(weapon.item)}" v-bind="props">
+						<img :src="'/image/weapon/' + weapon.name + '.png'" class="weapon" v-bind="props" @click="addOrRemoveLeekWeapon(weapon.item)" :width="WeaponsData[LeekWars.items[weapon.item].params].width">
 					</span>
 				</rich-tooltip-item>
 			</div>
@@ -327,7 +316,7 @@
 
 <script lang="ts">
 	import { locale } from '@/locale'
-	const Explorer = () => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`)
+	const Explorer = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`))
 	import CharacteristicTooltip from '@/component/leek/characteristic-tooltip.vue'
 	import { AI } from '@/model/ai'
 	import { ChipTemplate } from '@/model/chip'
@@ -337,13 +326,15 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { WeaponTemplate, WeaponsData } from '@/model/weapon'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { fileSystem } from '@/model/filesystem'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 	import AIElement from '@/component/app/ai.vue'
 	import { CHIPS } from '@/model/chips'
 	import { ORDERED_CHIPS } from "@/model/sorted_chips"
 	import Map from "@/component/app/map.vue"
+import { emitter } from '@/model/vue'
+import { defineAsyncComponent } from 'vue'
 
 	class TestScenarioLeek {
 		id!: number
@@ -376,9 +367,9 @@
 		team!: number
 	}
 
-	@Component({ components: { CharacteristicTooltip, 'explorer': Explorer, RichTooltipItem, ai: AIElement, Map }, name: 'editor-test', i18n: {}, mixins: [...mixins] })
+	@Options({ components: { CharacteristicTooltip, 'explorer': Explorer, RichTooltipItem, ai: AIElement, Map }, name: 'editor-test', i18n: {}, mixins: [...mixins] })
 	export default class EditorTest extends Vue {
-		@Prop() value!: boolean
+		@Prop() modelValue!: boolean
 		@Prop() ais!: {[key: number]: AI}
 		@Prop() leekAis!: {[key: number]: number}
 		@Prop({ required: true }) currentAI!: AI | null
@@ -414,7 +405,7 @@
 		map_add = false
 		timeout: number | null = null
 		fileSystem = fileSystem
-		currentTab: number = 0
+		currentTab: string = 'scenarios'
 		MAX_WEAPONS: number = 4
 
 		domingo = {
@@ -636,22 +627,22 @@
 
 		mounted() {
 			this.initMap()
-			this.$root.$on('keyup', this.keyup)
+			emitter.on('keyup', this.keyup)
 		}
 
-		beforeDestroy() {
-			this.$root.$off('keyup', this.keyup)
+		beforeUnmount() {
+			emitter.off('keyup', this.keyup)
 		}
 
 		keyup(e: KeyboardEvent) {
-			if (this.value && e.key === 'Enter') {
+			if (this.modelValue && e.key === 'Enter') {
 				this.launchTest()
 			}
 		}
 
-		@Watch('value', {immediate: true})
+		@Watch('modelValue', {immediate: true})
 		update() {
-			if (this.value) {
+			if (this.modelValue) {
 				this.load()
 				this.loadCompositions()
 				this.updateAI()
@@ -707,9 +698,9 @@
 			const scenario = this.currentScenario
 			if (scenario.id === 0) {
 				LeekWars.post('test-scenario/new', { name: scenario.ai!.name }).then(r => {
-					Vue.delete(this.scenarios, 0)
+					delete this.scenarios[0]
 					scenario.id = r.id
-					Vue.set(this.scenarios, r.id, scenario)
+					this.scenarios[r.id] = scenario
 					scenario.default = false
 					scenario!.ai!.scenario = r.id
 					const json = { type: 0, ai: scenario.ai!.id }
@@ -785,9 +776,9 @@
 				this.map_down = true
 				this.map_add = !(cell.cell in this.currentMap.data.obstacles)
 				if (this.map_add) {
-					Vue.set(this.currentMap.data.obstacles, cell.cell, true)
+					this.currentMap.data.obstacles[cell.cell] = true
 				} else {
-					Vue.delete(this.currentMap.data.obstacles, cell.cell)
+					delete this.currentMap.data.obstacles[cell.cell]
 				}
 				this.resetSaveTimeout()
 			} else if (e.button === 2) {
@@ -800,9 +791,9 @@
 				const has_class = cell.cell in this.currentMap.data.obstacles
 				if (has_class !== this.map_add) {
 					if (this.map_add) {
-						Vue.set(this.currentMap.data.obstacles, cell.cell, true)
+						this.currentMap.data.obstacles[cell.cell] = true
 					} else {
-						Vue.delete(this.currentMap.data.obstacles, cell.cell)
+						delete this.currentMap.data.obstacles[cell.cell]
 					}
 					this.resetSaveTimeout()
 				}
@@ -832,7 +823,7 @@
 			LeekWars.delete('test-map/delete', {id: map.id})
 				.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 
-			Vue.delete(this.$data.maps, map.id)
+			delete this.maps[map.id]
 			// Delete from scenarios
 			for (const s in this.scenarios) {
 				if (this.scenarios[s].map === map.id) { this.scenarios[s].map = null }
@@ -882,7 +873,7 @@
 			LeekWars.delete('test-scenario/delete', {id: scenario.id})
 				.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 
-			Vue.delete(this.scenarios, scenario.id)
+			delete this.scenarios[scenario.id]
 			if (!LeekWars.isEmptyObj(this.scenarios)) {
 				this.selectScenario(LeekWars.first(this.scenarios)!)
 			} else {
@@ -895,14 +886,14 @@
 				const template = LeekWars.clone(this.templates[this.selectedTemplate]) as TestScenario
 				const team1 = template.team1
 				const team2 = template.team2
-				Vue.set(this.scenarios, data.id, {
+				this.scenarios[data.id] = {
 					name: this.newScenarioName,
 					id: data.id,
 					team1,
 					team2,
 					map: null,
 					type: template.type
-				})
+				}
 				const scenario = this.scenarios[data.id]
 				this.updateScenario(scenario, { type: template.type })
 				for (const leek of team1) {
@@ -1051,7 +1042,7 @@
 				const leek = {name: this.newLeekName, id: data.id, ai: -1}
 				this.leeks.push(leek as any)
 				for (const k in data.data) {
-					Vue.set(leek, k, data.data[k])
+					leek[k] = data.data[k]
 				}
 				this.newLeekDialog = false
 				this.newLeekName = ''
@@ -1062,7 +1053,7 @@
 
 		createMap() {
 			LeekWars.post('test-map/new', {name: this.newMapName}).then(data => {
-				Vue.set(this.maps, data.id, {name: this.newMapName, id: data.id, data: {obstacles: {}, team1: [], team2: []}})
+				this.maps[data.id] = {name: this.newMapName, id: data.id, data: {obstacles: {}, team1: [], team2: []}}
 				this.newMapDialog = false
 				this.newMapName = ''
 				this.selectMap(this.maps[data.id])
@@ -1080,7 +1071,7 @@
 			value = Math.max(value, this.characsLimits[characteristic].min)
 			value = Math.min(value, this.characsLimits[characteristic].max)
 			// target.innerText
-			Vue.set(this.currentLeek, characteristic, value)
+			this.currentLeek[characteristic] = value
 			this.saveLeek()
 		}
 
@@ -1112,7 +1103,7 @@
 
 		launchTest() {
 			if (!this.currentScenario || !this.currentAI) { return }
-			Vue.set(this.currentAI, 'scenario', this.currentScenario.id)
+			this.currentAI.scenario = this.currentScenario.id
 			LeekWars.post('ai/test-scenario', { scenario_id: this.currentScenario.id, ai_id: this.currentAI.id }).then(data => {
 				localStorage.setItem('editor/last-scenario', '' + this.currentScenario!.id)
 				localStorage.setItem('editor/last-scenario-ai', '' + this.currentAI!.id)
@@ -1161,9 +1152,9 @@
 		updateScenario(scenario: TestScenario, data: any) {
 			if (scenario.id === 0) {
 				LeekWars.post('test-scenario/new', { name: scenario.ai!.name }).then(r => {
-					Vue.delete(this.scenarios, 0)
+					delete this.scenarios[0]
 					scenario.id = r.id
-					Vue.set(this.scenarios, r.id, scenario)
+					this.scenarios[r.id] = scenario
 					scenario.default = false
 					scenario!.ai!.scenario = r.id
 					const json = { ...data, type: 0, ai: scenario.ai!.id }
@@ -1199,8 +1190,8 @@
 					for (const leek of data.leeks) {
 						this.leeks.push(leek)
 						if (!leek.cores) {
-							Vue.set(leek, 'cores', 20)
-							Vue.set(leek, 'ram', 20)
+							leek.cores = 20
+							leek.ram = 20
 						}
 					}
 					this.generateBots()
@@ -1235,12 +1226,12 @@
 					const compo = compositions[c]
 					for (const leek of compo.leeks) {
 						if (!(leek.ai.id in this.ais)) {
-							Vue.set(leek.ai, 'path', leek.ai.name)
-							Vue.set(this.alliesAIs, leek.ai.id, leek.ai)
+							leek.ai.path = leek.ai.name
+							this.alliesAIs[leek.ai.id] = leek.ai
 						}
 						if (!(leek.id in store.state.farmer!.leeks)) {
-							Vue.set(this.allies, leek.id, leek)
-							Vue.set(leek, 'ally', true)
+							this.allies[leek.id] = leek
+							leek.ally = true
 						}
 						leek.ai = leek.ai ? leek.ai.id : null
 					}
@@ -1276,18 +1267,15 @@
 	h4 {
 		display: inline-block;
 	}
-	.indicator {
-		background: #5fad1b;
-	}
 	.v-dialog .content {
 		padding: 0;
 	}
 	.tabs {
-		::v-deep .tab-content {
+		:deep(.tab-content) {
 			min-height: 600px;
 		}
 	}
-	#app.app .tabs ::v-deep .tab-content {
+	#app.app .tabs :deep(.tab-content) {
 		flex-direction: column;
 	}
 	.tabs .tab {
@@ -1537,9 +1525,6 @@
 		position: absolute;
 		right: 7px;
 		top: 8px;
-	}
-	.leek-column {
-		width: 820px;
 	}
 	#app.app .leek-column {
 		width: auto;

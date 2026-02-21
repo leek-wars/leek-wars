@@ -17,9 +17,9 @@
 <script lang="ts">
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'search-bar' })
+	@Options({ name: 'search-bar' })
 	export default class SearchBar extends Vue {
 
 		query: string = ''
@@ -73,7 +73,7 @@
 			padding: 6px;
 			padding-left: 15px;
 			color: var(--text-color) !important;
-			::v-deep b {
+			:deep(b) {
 				color: #5fad1b;
 				font-weight: bold;
 			}

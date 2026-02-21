@@ -1,40 +1,42 @@
 <template>
-	<popup :value="value" :width="800" @input="$emit('input', $event)">
-		<v-icon slot="icon">mdi-star-outline</v-icon>
-		<span slot="title">{{ $t('main.add_capital_title') }} ({{ totalCapital }})</span>
+	<popup :width="800" @update:modelValue="updateValue">
+		<template #icon>
+			<v-icon>mdi-star-outline</v-icon>
+		</template>
+		<template #title>
+			{{ $t('main.add_capital_title') }} ({{ totalCapital }})
+		</template>
 
-		<center><div v-if="totalCapital" :class="{zero: capital == 0}" class="capital rounded4">{{ $t('main.n_capital', [capital]) }}</div></center>
+		<div class="center"><div v-if="totalCapital" :class="{zero: capital == 0}" class="capital rounded4">{{ $t('main.n_capital', [capital]) }}</div></div>
 
 		<div class="characteristics">
 			<div v-for="c in LeekWars.characteristics" :key="c" class="charac" :class="c">
-				<characteristic-tooltip v-slot="{ on }" :characteristic="c" :value="leek[c]" :total="leek[c]" :leek="leek" :test="false">
-					<template v-on="on">
-						<img :src="'/image/charac/' + c + '.png'" v-on="on">
-					</template>
+				<characteristic-tooltip  :characteristic="c" :value="leek[c]" :total="leek[c]" :leek="leek" :test="false">
+					<img :src="'/image/charac/' + c + '.png'">
 				</characteristic-tooltip>
 				<div>
 					<span v-if="restat" :class="'stat color-' + c">{{ base[c] + bonuses[c] }}</span>
 					<span v-else :class="'stat color-' + c">{{ leek[c] + bonuses[c] }}</span>
 					<span v-if="bonuses[c]" class="sup">&nbsp;(+{{ bonuses[c] }})</span>
 					<div class="add-wrapper">
-						<tooltip v-for="cost in [1, 10, 100]" :key="cost">
-							<template v-slot:activator="{ on }">
-								<span :q="cost" :class="{locked: costs[c + cost].cost > capital}" class="add" @click="add(c, cost)" v-on="on"></span>
+						<v-tooltip v-for="cost in [1, 10, 100]" :key="cost">
+							<template #activator="{ props }">
+								<span :q="cost" :class="{locked: costs[c + cost].cost > capital}" class="add" @click="add(c, cost)" v-bind="props"></span>
 							</template>
 							<div>{{ costs[c + cost].cost + ' capital ⇔ ' + costs[c + cost].bonus + ' ' + $t('characteristic.' + c) }}</div>
 							<b v-if="useful_level[c] > leek.level">{{ $t('characteristic.too_high', [useful_level[c]]) }}</b>
-						</tooltip>
-						<tooltip v-if="bonuses[c]">
-							<template v-slot:activator="{ on }">
-								<span q="0" class="add" @click="clear(c)" v-on="on"></span>
+						</v-tooltip>
+						<v-tooltip v-if="bonuses[c]">
+							<template #activator="{ props }">
+								<span q="0" class="add" @click="clear(c)" v-bind="props"></span>
 							</template>
 							{{ $t('main.clear') }}
-						</tooltip>
+						</v-tooltip>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div v-if="totalCapital" slot="actions">
+		<template v-if="totalCapital" #actions>
 			<div v-ripple class="action" @click="reset">
 				<v-icon>mdi-refresh</v-icon>
 				<span>{{ $t('main.reset') }}</span>
@@ -43,19 +45,18 @@
 				<v-icon>mdi-check</v-icon>
 				<span>{{ $t('main.validate') }}</span>
 			</div>
-		</div>
+		</template>
 	</popup>
 </template>
 
 <script lang="ts">
 	import { COSTS, Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import CharacteristicTooltip from './characteristic-tooltip.vue'
 
-	@Component({ name: 'capital-dialog', components: { "characteristic-tooltip": CharacteristicTooltip } })
+	@Options({ name: 'capital-dialog', components: { "characteristic-tooltip": CharacteristicTooltip } })
 	export default class CapitalDialog extends Vue {
-		@Prop() value!: boolean
 		@Prop({required: true}) leek!: Leek
 		@Prop({required: true}) totalCapital!: number
 		@Prop() restat!: boolean
@@ -154,7 +155,7 @@
 
 		buttonCost(capital: number, charac: string) {
 			let tmpBonus = this.bonuses[charac]
-			Vue.set(this.costs, charac + capital, {cost: 0, bonus: 0})
+			this.costs[charac + capital] = {cost: 0, bonus: 0}
 			let q = capital
 			while (q > 0) {
 				const total = this.added[charac] + tmpBonus
@@ -231,7 +232,6 @@
 			})
 		}
 
-		@Watch('value')
 		updateValue() {
 			if (!this.value) {
 				this.close()
@@ -244,7 +244,7 @@
 		close() {
 			this.validating = false
 			this.reset()
-			this.$emit('input', false)
+			this.$emit('update:modelValue', false)
 		}
 
 		get capital() {

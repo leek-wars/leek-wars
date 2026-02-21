@@ -1,7 +1,7 @@
 <template>
 	<div v-if="$store.state.farmer" class="chats">
 		<div v-for="(window, i) in LeekWars.chatWindows" :key="window.name" :class="{expanded: window.expanded, unread: $refs.chats && $refs.chats[i] && !$refs.chats[i].read}" class="window">
-			<div v-if="$store.state.chat[window.id]" class="header">
+			<div class="header">
 				<router-link v-if="window.type === ChatType.PM" v-ripple :to="'/farmer/' + getFarmer(window).id">
 					<avatar :farmer="getFarmer(window)" class="image" />
 				</router-link>
@@ -17,13 +17,14 @@
 </template>
 
 <script lang="ts">
-	const ChatElement = () => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`)
+	const ChatElement = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
 	import { ChatType, ChatWindow } from '@/model/chat'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { defineAsyncComponent } from 'vue'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({
+	@Options({
 		components: { chat: ChatElement }
 	})
 	export default class Chats extends Vue {
@@ -99,6 +100,8 @@
 			}
 			.v-icon {
 				padding: 8px;
+				width: 40px;
+				height: 40px;
 			}
 		}
 		.chat {

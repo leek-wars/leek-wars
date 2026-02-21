@@ -1,27 +1,23 @@
 <template lang="html">
 	<v-list v-if="filterOptions === null" dense>
 		<v-list-item v-for="(command, c) of commands" :key="command.name" v-ripple class="command" :class="{selected: index === c}" @click="$emit('command', command.name)">
-			<v-list-item-content>
-				<v-list-item-title>/{{ command.name }}</v-list-item-title>
-				<v-list-item-subtitle>{{ command.description }}</v-list-item-subtitle>
-			</v-list-item-content>
+			<v-list-item-title>/{{ command.name }}</v-list-item-title>
+			<v-list-item-subtitle>{{ command.description }}</v-list-item-subtitle>
 		</v-list-item>
 	</v-list>
 	<v-list v-else-if="options.length" dense>
 		<v-list-item v-for="option of options" :key="option.name" v-ripple class="command" @click="$emit('command', commands[0].name + ':' + option.name)">
-			<v-list-item-content>
-				<v-list-item-title>/{{ commands[0].name }}:{{ option.name }}</v-list-item-title>
-				<v-list-item-subtitle>{{ option.description }}</v-list-item-subtitle>
-			</v-list-item-content>
+			<v-list-item-title>/{{ commands[0].name }}:{{ option.name }}</v-list-item-title>
+			<v-list-item-subtitle>{{ option.description }}</v-list-item-subtitle>
 		</v-list-item>
 	</v-list>
 </template>
 
 <script lang="ts">
 	import { Command, Commands } from '@/model/commands'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'chat-commands' })
+	@Options({ name: 'chat-commands' })
 	export default class ChatCommands extends Vue {
 
 		@Prop() filter!: string

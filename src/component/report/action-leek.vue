@@ -1,12 +1,12 @@
-<template functional>
-	<span :class="'team' + props.leek.team">{{ props.leek.translatedName }}</span>
+<template>
+	<span :class="'team' + leek.team">{{ leek.translatedName }}</span>
 </template>
 
 <script lang="ts">
 	import { FightLeek } from '@/model/fight'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({})
+	@Options({})
 	export default class ActionLeekElement extends Vue {
 		@Prop({required: true}) leek!: FightLeek
 	}

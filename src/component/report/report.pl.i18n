@@ -40,5 +40,8 @@
 	"errors": "Błędy",
 	"errors_warnings": "Błędy i ostrzeżenia",
 	"n_errors": "{n} błędów",
-	"n_warnings": "{n} ostrzeżeń"
+	"n_warnings": "{n} ostrzeżeń",
+	"toggle_turrets": "Pokaż/ukryj wieżyczki",
+	"toggle_percent": "Procent życia",
+	"toggle_smooth": "Gładka/kątowa krzywa"
 }

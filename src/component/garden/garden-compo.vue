@@ -1,6 +1,6 @@
 <template lang="html">
-	<rich-tooltip-composition :id="compo.id" v-slot="{ on }" :bottom="true" :instant="true" class="rich">
-		<div class="composition" v-on="on">
+	<rich-tooltip-composition :id="compo.id" v-slot="{ props }" :bottom="true" :instant="true" class="rich">
+		<div class="composition" v-bind="props">
 			<emblem :team="{id: compo.team_id, emblem_changed: compo.emblem_changed}" />
 			<div class="name">
 				{{ compo.team_name }}
@@ -22,10 +22,10 @@
 
 <script lang="ts">
 	import { Composition } from '@/model/team'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
 
-	@Component({ components: { RichTooltipComposition } })
+	@Options({ components: { RichTooltipComposition } })
 	export default class GardenCompo extends Vue {
 		@Prop() compo!: Composition
 	}

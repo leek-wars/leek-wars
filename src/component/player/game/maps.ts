@@ -802,7 +802,7 @@ class DarkNexus extends Map {
 	}
 }
 
-class Arena extends Map {
+class Temple extends Map {
 	constructor(game: Game) {
 		super(game, {
 			sound: S.map_desert,
@@ -1431,4 +1431,4 @@ class Cemetery extends Map {
 	}
 }
 
-export { Cemetery, Map, Beach, Castle, Desert, Factory, Forest, Japan, Glacier, Nexus, Arena, DarkNexus }
+export { Cemetery, Map, Beach, Castle, Desert, Factory, Forest, Japan, Glacier, Nexus, Temple, DarkNexus }

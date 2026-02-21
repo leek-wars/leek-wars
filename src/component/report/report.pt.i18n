@@ -40,5 +40,8 @@
 	"errors": "Erros",
 	"errors_warnings": "Erros e avisos",
 	"n_errors": "{n} erros",
-	"n_warnings": "{n} avisos"
+	"n_warnings": "{n} avisos",
+	"toggle_turrets": "Mostrar/ocultar torres",
+	"toggle_percent": "Porcentagem de vida",
+	"toggle_smooth": "Curva suave/angular"
 }
