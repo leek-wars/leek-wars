@@ -15,7 +15,7 @@
 						<span>{{ $t('main.stats') }}</span>
 					</div>
 				</router-link>
-				<a href="https://github.com/leek-wars/leek-wars-client" target="_blank" rel="noopener">
+				<a href="https://github.com/leek-wars/leek-wars" target="_blank" rel="noopener">
 					<div class="tab action">
 						<img src="/image/github_white.png">
 						<span>GitHub <v-icon>mdi-open-in-new</v-icon></span>

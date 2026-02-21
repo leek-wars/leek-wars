@@ -1,5 +1,5 @@
 {
-	"name": "leek-wars-client",
+	"name": "leek-wars",
 	"version": "2.43.0",
 	"scripts": {
 		"dev": "vite --mode dev",
@@ -79,12 +79,12 @@
 	"description": "Leek Wars game client website",
 	"repository": {
 		"type": "git",
-		"url": "git+https://5pilow@github.com/leek-wars/leek-wars-client.git"
+		"url": "git+https://5pilow@github.com/leek-wars/leek-wars.git"
 	},
 	"bugs": {
-		"url": "https://github.com/leek-wars/leek-wars-client/issues"
+		"url": "https://github.com/leek-wars/leek-wars/issues"
 	},
-	"homepage": "https://github.com/leek-wars/leek-wars-client#readme",
+	"homepage": "https://github.com/leek-wars/leek-wars#readme",
 	"bundlesize": [
 		{
 			"path": "./dist/js/*.js",
