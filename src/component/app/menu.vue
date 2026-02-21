@@ -167,7 +167,7 @@
 			</div>
 		</div>
 
-		<v-menu v-if="$store.state.farmer && $store.state.farmer.rewards.length" location="right" :offset="15" :max-height="500" :close-on-content-click="false">
+		<v-menu v-if="$store.state.farmer?.rewards?.length" location="right" :offset="15" :max-height="500" :close-on-content-click="false">
 			<template #activator="{ props }">
 				<div v-ripple class="rewards-button notif-trophy" v-bind="props">
 					<img src="/image/icon/chest.svg">
