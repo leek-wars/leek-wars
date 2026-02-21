@@ -52,7 +52,7 @@
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import ChatMessageText from './chat-message-text.vue'
 
-	@Options({ name: 'ChatMessage', components: { RichTooltipFarmer, ChatMessageText } })
+	@Options({ name: 'ChatMessage', emits: ['scroll'], components: { RichTooltipFarmer, ChatMessageText } })
 	export default class ChatMessageComponent extends Vue {
 
 		@Prop({ required: true }) message!: ChatMessage
