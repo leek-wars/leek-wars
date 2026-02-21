@@ -9,8 +9,8 @@ const URL_DOC = "/help/documentation"
 const URL_MARKET = "/market"
 const URL_TUTO = "/help/tutorial"
 const URL_UPDATE = "/forum/category-6/topic-"
-const URL_PR = "https://github.com/leek-wars/leek-wars-client/pulls"
-const URL_ISSUE = "https://github.com/leek-wars/leek-wars-client/issues/new"
+const URL_PR = "https://github.com/leek-wars/leek-wars/pulls"
+const URL_ISSUE = "https://github.com/leek-wars/leek-wars/issues/new"
 
 class Command {
 	name!: string
