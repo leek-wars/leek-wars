@@ -7,7 +7,7 @@ The Leek Wars website frontend, in Vue.js + TypeScript. This is the frontend rep
 
 Related projects: [LeekScript](https://github.com/leek-wars/leekscript) and [Leek Wars fight generator](https://github.com/leek-wars/leek-wars-generator).
 
-![Banner](https://github.com/leek-wars/leek-wars/blob/master/banner.jpg)
+![Banner](https://github.com/leek-wars/leek-wars/blob/master/banner.jpg?raw=true)
 
 ## Deployment
 
