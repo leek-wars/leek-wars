@@ -20,7 +20,6 @@ enum SocketMessage {
 	CHAT_RECEIVE = 9,
 	// MP_UNREAD_MESSAGES = 10, // Deprecated
 	MP_READ = 11,
-	FIGHT_LISTEN = 12,
 	FIGHT_GENERATED = 12,
 	FIGHT_WAITING_POSITION = 13,
 	FORUM_CHAT_DISABLE = 19,
@@ -91,6 +90,7 @@ enum SocketMessage {
 	CONSOLE_LOG = 87,
 	CONSOLE_CLOSE = 88,
 	ADMIN_ERROR = 89,
+	PING = 90,
 }
 
 class Socket {
@@ -400,7 +400,7 @@ class Socket {
 		// Send a ping every 50 seconds to keep connection alive and detect dead connections
 		this.pingTimeout = setTimeout(() => {
 			if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-				this.send([SocketMessage.PONG])
+				this.send([SocketMessage.PING])
 				this.schedulePing()
 			}
 		}, 50000)
