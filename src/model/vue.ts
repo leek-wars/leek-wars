@@ -200,7 +200,7 @@ const app = createApp({
 		})
 		document.addEventListener('visibilitychange', () => {
 			if (document.visibilityState === 'visible') {
-				LeekWars.socket.reconnect()
+				LeekWars.socket.connect()
 			}
 		})
 		window.addEventListener('click', () => {
