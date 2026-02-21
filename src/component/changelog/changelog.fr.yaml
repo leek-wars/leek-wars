@@ -1,7 +1,7 @@
 244:
   title: WIP
   added:
-    - Ajout de l'historique de talent d'équipe sur la page d'équipe.
+    - Ajout de l'historique de talent pour les éleveurs et les équipes.
     - Ajout des BigIntegers dans le LeekScript (merci à Batary).
     - Ajout des fonctions setBit et testBit pour lire ou écrire un bit spécifique (merci à Batary).
     - Ajout de la fonction bitLength qui complète leadingZeros pour les BigInteger (merci à Batary).
@@ -11,6 +11,12 @@
     - "Éditeur : amélioration du Ctrl+clic pour aller à la définition d'un symbole (navigation plus fiable et scroll correct)."
     - "LeekScript : le point-virgule après while() dans les boucles do-while est maintenant optionnel."
     - "Marché : navigation au clavier avec les flèches haut/bas/gauche/droite entre les items."
+    - "LeekScript : vérification de l'accès aux méthodes privées/protégées à la compilation pour les variables typées."
+    - "Éditeur : sauvegarde et restauration du pliage de code entre les changements d'IA et les rechargements de page."
+    - "Rapport : amélioration du graphique de vie (tooltip avec noms d'entités, clic pour isoler une courbe, axes améliorés)."
+    - "Rapport : amélioration du graphique de dégâts (traductions, tooltips, totaux par barre)."
+    - "Rapport : support du mode sombre pour les graphiques."
+    - Migration vers Vue 3.
   fixed:
     - "LeekScript : correction d'un crash lors de la compilation de classes dans certains cas d'include, et meilleure gestion de la casse sur les mots-clés class et include."
     - Correction d'un bug empêchant les combats d'équipe quand l'IA de la tourelle était inexistante.
@@ -22,6 +28,21 @@
     - Correction de la progression du combat qui sautait à 99% quand un coffre mourait.
     - "Éditeur : correction d'un bug où les caractères s'inséraient au mauvais endroit après navigation avec les boutons précédent/suivant du navigateur (Firefox)."
     - "Éleveur : correction de la popup qui ne s'affichait pas au survol du parrain."
+    - Correction des mentions disparaissant à la suppression de messages groupés dans le chat.
+    - Correction des icônes de potions/apparences non cliquables sur mobile en mode chat-first.
+    - Correction des poireaux invisibles dans le tableau de tournoi en mode discret.
+    - Correction des notifications de trophées qui n'apparaissaient pas sans rafraîchir la page.
+    - Correction du tooltip du nom de poireau qui apparaissait sous le modèle en combat.
+    - Correction du saut en haut de page sur Firefox lors de l'achat sur le marché.
+    - Correction du clic sur "aller à l'IA" dans les logs du rapport.
+    - "Éditeur : correction du réglage d'agrandissement de fenêtre qui ne s'appliquait pas toujours."
+    - Correction de l'espace manquant avant le texte du lanceur dans les descriptions de puces.
+    - Correction du clic sur les lignes de debug dans le rapport.
+    - Correction de la barre latérale qui ne surlignait pas la page courante dans les sous-pages.
+    - Correction de l'affichage du cooldown initial.
+    - Correction des réactions chat avec les emojis chiffres (0️⃣-9️⃣).
+    - "LeekScript : correction de l'ambiguïté de cast avec les littéraux numériques négatifs."
+    - "LeekScript : correction des opérateurs d'affectation composés pour les types union nombre (integer|real)."
 
 243:
   title: Création de la communauté, Fusil quantique et nouveau serveur.

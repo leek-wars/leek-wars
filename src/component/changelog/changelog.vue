@@ -73,9 +73,19 @@ import { emitter } from '@/model/vue'
 				for (const c in this.changelog) {
 					this.changelog[c].active = parseInt(c, 10) < 2 ? true : false
 				}
-				const lw_version = parseInt(LeekWars.normal_version.replace(/\./g, ''), 10)
+				let lw_version = parseInt(LeekWars.normal_version.replace(/\./g, ''), 10)
+				if (LeekWars.DEV) {
+					lw_version++
+				}
 				if (this.changelog[0].version !== lw_version) {
-					this.changelog.unshift({active: true, image: true, version: lw_version, version_name: LeekWars.normal_version.replace(/\.(\d)$/, '$1'), date: Date.now() / 1000, data: 'changelog_' + lw_version})
+					this.changelog.unshift({
+						active: true,
+						image: true,
+						version: lw_version,
+						version_name: LeekWars.normal_version.replace(/\.(\d+)$/, (_, m) => '.' + (parseInt(m, 10) + 1)).replace(/\.(\d)$/, '$1'),
+						date: Date.now() / 1000,
+						data: 'changelog_' + lw_version
+					})
 				}
 				LeekWars.setTitle(this.$t('main.changelog'))
 				emitter.emit('loaded')
