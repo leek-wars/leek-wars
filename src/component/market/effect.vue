@@ -11,8 +11,8 @@
 			</i18n-t>
 			<div>
 				{{ charac }} {{ $t('characteristic.' + icon) }} :
-				<span v-if="Math.round(effect.value1 * boost) == Math.round((effect.value1 + effect.value2) * boost)" v-html="$t('effect.type_' + effect.id + '_fixed', [Math.round(effect.value1 * boost)])"></span>
-				<span v-else v-html="$t('effect.type_' + effect.id, [Math.round(effect.value1 * boost), Math.round((effect.value1 + effect.value2) * boost)])"></span>
+				<span v-if="Math.round(effect.value1 * boost) == Math.round((effect.value1 + effect.value2) * boost)" v-html="$t('effect.type_' + tooltipEffectId + '_fixed', [Math.round(effect.value1 * boost)])"></span>
+				<span v-else v-html="$t('effect.type_' + tooltipEffectId, [Math.round(effect.value1 * boost), Math.round((effect.value1 + effect.value2) * boost)])"></span>
 			</div>
 		</v-tooltip>
 
@@ -162,6 +162,11 @@
 				}
 			}
 			return 0
+		}
+		get tooltipEffectId() {
+			// After applying the life boost, the value is already in damage units, not a percentage
+			if (this.effect.id === EffectType.LIFE_DAMAGE) return EffectType.DAMAGE
+			return this.effect.id
 		}
 		get boost() {
 			if (this.icon === 'life') {

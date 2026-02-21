@@ -41,6 +41,7 @@
     - Correction de la barre latérale qui ne surlignait pas la page courante dans les sous-pages.
     - Correction de l'affichage du cooldown initial.
     - Correction des réactions chat avec les emojis chiffres (0️⃣-9️⃣).
+    - "Marché : correction du tooltip de châtiment qui affichait un pourcentage au lieu des dégâts réels."
     - "LeekScript : correction de l'ambiguïté de cast avec les littéraux numériques négatifs."
     - "LeekScript : correction des opérateurs d'affectation composés pour les types union nombre (integer|real)."
 

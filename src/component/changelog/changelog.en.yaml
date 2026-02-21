@@ -41,6 +41,7 @@
     - Fixed sidebar not highlighting current page on subpages.
     - Fixed initial cooldown display.
     - Fixed chat reactions with keycap number emojis (0️⃣-9️⃣).
+    - "Market: fixed Punishment tooltip showing a percentage instead of actual damage."
     - "LeekScript: fixed cast ambiguity with negative number literals."
     - "LeekScript: fixed compound assignment operators for union number types (integer|real)."
 
