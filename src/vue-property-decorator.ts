@@ -1,17 +1,12 @@
-/** Compatibility shim for vue-property-decorator v10
- * In v10, @Component is renamed to @Options
- * This shim re-exports Options as Component for backwards compatibility
+/** Compatibility shim: re-exports from vue-facing-decorator
+ * All 248 .vue files import from 'vue-property-decorator' which is aliased
+ * to this file via vite.config.ts resolve.alias.
+ * vue-facing-decorator uses @Component instead of @Options, so we re-export
+ * Component as Options for backward compatibility.
  */
-// Import vue-class-component exports directly
-import { mixins, Options, Vue } from 'vue-class-component'
+import { Component, Vue, Prop, Watch, Ref, Emit, Inject, Provide, mixins } from 'vue-facing-decorator'
 
-export { mixins, Options, Vue }
+// Re-export Component as Options (backward compat with vue-property-decorator)
+const Options = Component
 
-// Import each decorator directly from its file to avoid circular imports
-export { Emit } from '../node_modules/vue-property-decorator/lib/decorators/Emit.js'
-export { Inject } from '../node_modules/vue-property-decorator/lib/decorators/Inject.js'
-export { Model } from '../node_modules/vue-property-decorator/lib/decorators/Model.js'
-export { Prop } from '../node_modules/vue-property-decorator/lib/decorators/Prop.js'
-export { Provide } from '../node_modules/vue-property-decorator/lib/decorators/Provide.js'
-export { Ref } from '../node_modules/vue-property-decorator/lib/decorators/Ref.js'
-export { Watch } from '../node_modules/vue-property-decorator/lib/decorators/Watch.js'
+export { Options, Vue, Prop, Watch, Ref, Emit, Inject, Provide, mixins }

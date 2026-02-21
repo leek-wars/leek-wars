@@ -33,6 +33,7 @@
 		"swiper": "^12.1.2",
 		"vue": "^3.4.0",
 		"vue-chartjs": "^5.3.3",
+		"vue-facing-decorator": "^4.0.1",
 		"vue-i18n": "^9.5.0",
 		"vue-json-viewer": "^3.0.4",
 		"vue-router": "^4.2.0",
@@ -60,8 +61,6 @@
 		"vite-plugin-monaco-editor": "^1.1.0",
 		"vite-plugin-node-polyfills": "^0.2.0",
 		"vite-plugin-vuetify": "^2.0.0",
-		"vue-class-component": "^8.0.0-rc.1",
-		"vue-property-decorator": "^10.0.0-rc.3",
 		"vue-tsc": "^3.2.1"
 	},
 	"overrides": {

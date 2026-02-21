@@ -43,6 +43,13 @@ export default tseslint.config(
 	{
 		files: ['**/*.vue'],
 		rules: {
+			// In <script setup>, component imports (PascalCase) are used in the
+			// template but neither no-unused-vars nor @typescript-eslint/no-unused-vars
+			// can detect template usage (known ecosystem limitation).
+			'@typescript-eslint/no-unused-vars': ['error', {
+				varsIgnorePattern: '^[A-Z]',
+				argsIgnorePattern: '^_',
+			}],
 			'vue/attribute-hyphenation': 'error',
 			'vue/html-end-tags': 'error',
 			'vue/mustache-interpolation-spacing': 'error',
@@ -73,6 +80,7 @@ export default tseslint.config(
 				'selfClosingTag': 'always',
 			}],
 			'vue/no-use-v-if-with-v-for': 'off',
+			'vue/multi-word-component-names': 'off',
 		},
 	},
 

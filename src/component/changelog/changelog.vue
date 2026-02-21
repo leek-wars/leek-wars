@@ -47,91 +47,107 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue } from 'vue-property-decorator'
-	import ChangelogDialog from './changelog-dialog.vue'
-	import ChangelogVersion from './changelog-version.vue'
-	import { emitter } from '@/model/vue'
+<script setup lang="ts">
 
-	@Options({ name: 'changelog', i18n: {}, components: { ChangelogVersion, ChangelogDialog } })
-	export default class Changelog extends Vue {
-		changelog: any = null
-		changelogDialog: boolean = false
-		changelogVersion: any = null
-		translations: any = {}
-		lazy_end: number = 2
+import { ref, computed, onUnmounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { LeekWars } from '@/model/leekwars'
+import { locale } from '@/model/i18n'
+import { emitter } from '@/model/vue'
+import ChangelogDialog from './changelog-dialog.vue'
+import ChangelogVersion from './changelog-version.vue'
 
-		get lazy_changelog() {
-			if (!this.changelog) { return [] }
-			return this.changelog.slice(0, this.lazy_end)
-		}
+const { t } = useI18n()
 
-		created() {
-			LeekWars.get('changelog/get/' + this.$i18n.locale).then(data => {
-				this.changelog = data.changelog
-				for (const c in this.changelog) {
-					this.changelog[c].active = parseInt(c, 10) < 2 ? true : false
-				}
-				let lw_version = parseInt(LeekWars.normal_version.replace(/\./g, ''), 10)
-				if (LeekWars.DEV) {
-					lw_version++
-				}
-				if (this.changelog[0].version !== lw_version) {
-					this.changelog.unshift({
-						active: true,
-						image: true,
-						version: lw_version,
-						version_name: LeekWars.normal_version.replace(/\.(\d+)$/, (_, m) => '.' + (parseInt(m, 10) + 1)).replace(/\.(\d)$/, '$1'),
-						date: Date.now() / 1000,
-						data: 'changelog_' + lw_version
-					})
-				}
-				LeekWars.setTitle(this.$t('main.changelog'))
-				emitter.emit('loaded')
-			})
-			window.addEventListener('scroll', this.scroll)
+interface ChangelogEntry {
+	version: number
+	version_name: string
+	date: number
+	data: string
+	forum_topic?: number | null
+	forum_category?: number | null
+	image: boolean
+	active: boolean
+}
 
-			import(/* webpackChunkName: "changelog-[request]" */ `@/component/changelog/changelog.${this.$i18n.locale}.yaml`).then((module) => {
-				this.translations = module.default
-			})
-		}
-		unmounted() {
-			window.removeEventListener('scroll', this.scroll)
-		}
-		showChangelogDialog(version: any) {
-			this.changelogVersion = version
-			this.changelogDialog = true
-		}
-		scroll(e: Event) {
-			if (!this.changelog) { return }
-			if (this.lazy_changelog.length < this.changelog.length) {
-				if (window.scrollY + window.innerHeight + 2000 > document.body.clientHeight) {
-					this.lazy_end += 2
-				}
-			}
+const changelog = ref<ChangelogEntry[] | null>(null)
+const changelogDialog = ref(false)
+const changelogVersion = ref<ChangelogEntry | null>(null)
+const translations = ref<Record<number, { title?: string }>>({})
+const lazy_end = ref(2)
+
+const lazy_changelog = computed(() => {
+	if (!changelog.value) { return [] }
+	return changelog.value.slice(0, lazy_end.value)
+})
+
+function showChangelogDialog(version: ChangelogEntry) {
+	changelogVersion.value = version
+	changelogDialog.value = true
+}
+
+function scroll() {
+	if (!changelog.value) { return }
+	if (lazy_changelog.value.length < changelog.value.length) {
+		if (window.scrollY + window.innerHeight + 2000 > document.body.clientHeight) {
+			lazy_end.value += 2
 		}
 	}
+}
+
+LeekWars.get<{ changelog: ChangelogEntry[] }>('changelog/get/' + locale).then(data => {
+	changelog.value = data.changelog
+	for (const c in changelog.value) {
+		changelog.value[c].active = parseInt(c, 10) < 2 ? true : false
+	}
+	let lw_version = parseInt(LeekWars.normal_version.replace(/\./g, ''), 10)
+	if (LeekWars.DEV) {
+		lw_version++
+	}
+	if (changelog.value[0].version !== lw_version) {
+		changelog.value.unshift({
+			active: true,
+			image: true,
+			version: lw_version,
+			version_name: LeekWars.normal_version.replace(/\.(\d+)$/, (_, m) => '.' + (parseInt(m, 10) + 1)).replace(/\.(\d)$/, '$1'),
+			date: Date.now() / 1000,
+			data: 'changelog_' + lw_version
+		})
+	}
+	LeekWars.setTitle(t('main.changelog'))
+	emitter.emit('loaded')
+})
+window.addEventListener('scroll', scroll)
+
+import(`@/component/changelog/changelog.${locale}.yaml`).then((module: { default: Record<number, { title?: string }> }) => {
+	translations.value = module.default
+})
+
+onUnmounted(() => {
+	window.removeEventListener('scroll', scroll)
+})
+
 </script>
 
 <style lang="scss" scoped>
-	.changelog-page {
-		font-size: 16px;
-	}
-	.change {
-		padding: 0 10px;
-	}
-	.wrapper {
-		background: rgba(100,100,100,0.1);
-	}
-	.changelog-page :deep(a) {
-		color: green;
-	}
-	.image {
-		width: calc(100% + 30px);
-		margin-left: -15px;
-		margin-right: -15px;
-		margin-bottom: 10px;
-		margin-top: -15px;
-	}
+
+.changelog-page {
+	font-size: 16px;
+}
+.change {
+	padding: 0 10px;
+}
+.wrapper {
+	background: rgba(100,100,100,0.1);
+}
+.changelog-page :deep(a) {
+	color: green;
+}
+.image {
+	width: calc(100% + 30px);
+	margin-left: -15px;
+	margin-right: -15px;
+	margin-bottom: 10px;
+	margin-top: -15px;
+}
 </style>

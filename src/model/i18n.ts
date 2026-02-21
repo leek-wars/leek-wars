@@ -1,4 +1,4 @@
-import { locale, messages } from '@/locale'
+import { locale as initialLocale, messages } from '@/locale'
 import { Component, ComponentInstance } from 'vue'
 import { createI18n } from 'vue-i18n'
 
@@ -11,8 +11,9 @@ const i18nModules = import.meta.glob('/src/component/**/*.i18n', {
 
 const i18n = createI18n({
 	legacy: true, // Use legacy mode for compatibility
-	locale,
-	messages: {[locale]: messages},
+	allowComposition: true, // Allow useI18n() in <script setup>
+	locale: initialLocale,
+	messages: {[initialLocale]: messages},
 	silentTranslationWarn: true,
 	silentFallbackWarn: true,
 	missingWarn: false,
@@ -44,7 +45,7 @@ Object.defineProperty(i18n, 'locale', {
 	}
 })
 
-const loadedLanguages: string[] = [locale]
+const loadedLanguages: string[] = [initialLocale]
 
 const mixins = [{
 	beforeCreate() {
@@ -179,4 +180,10 @@ function loadComponentLanguage(newLocale: string, component: ComponentInstance<C
 	})
 }
 
-export { i18n, mixins, loadComponentLanguage, loadLanguageAsync, loadInstanceTranslations }
+// Helpers for <script setup> components (avoids i18n.global boilerplate)
+function t(key: string, ...args: unknown[]): string {
+	return String((i18n.global as Record<string, Function>).t(key, ...args))
+}
+const locale = i18n.global.locale as string
+
+export { i18n, mixins, loadComponentLanguage, loadLanguageAsync, loadInstanceTranslations, t, locale }

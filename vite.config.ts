@@ -226,6 +226,6 @@ export default defineConfig({
 	optimizeDeps: {
 		include: ['vue', 'vue-router', 'pinia', 'vuetify'],
 		// Exclude from pre-bundling to avoid circular dependency with our shim
-		exclude: ['vue-property-decorator', 'vue-class-component']
+		exclude: ['vue-property-decorator', 'vue-class-component', 'vue-facing-decorator']
 	}
 })
