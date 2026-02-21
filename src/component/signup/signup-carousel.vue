@@ -19,7 +19,8 @@
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
-	import { Swiper, Navigation, Pagination, Autoplay } from 'swiper'
+	import { Swiper } from 'swiper'
+	import { Navigation, Pagination, Autoplay } from 'swiper/modules'
 	import 'swiper/css'
 
 	@Options({ name: 'signup-carousel', i18n: {}, mixins: [...mixins] })
@@ -47,8 +48,8 @@
 		]
 
 		mounted() {
-			Swiper.use([Navigation, Pagination, Autoplay])
 			const swiper = new Swiper('.swiper', {
+				modules: [Navigation, Pagination, Autoplay],
 				slidesPerView: 'auto',
 				spaceBetween: 15,
 				freeMode: true,
