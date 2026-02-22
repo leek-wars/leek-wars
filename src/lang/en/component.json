@@ -52,9 +52,9 @@
 	"switch2": "Switch Pro",
 	"rgb": "RGB",
 	"rgb_desc": "It's expensive, but it looks good!",
-	"recovery_ram": "RAM for troubleshooting",
-	"recovery_core": "Troubleshooting core",
+	"recovery_ram": "Recovery RAM",
+	"recovery_core": "Recovery core",
 	"core_desc": "XN.a-56 computing core: 1 Tera-flops of raw computing power. Clocked at 0.4GHz. 100MB cache memory.",
-	"recovery_ram_desc": "Troubleshooting component. Removes two component slots.",
-	"recovery_core_desc": "Troubleshooting component. Removes two component slots."
+	"recovery_ram_desc": "Recovery component. Removes two component slots.",
+	"recovery_core_desc": "Recovery component. Removes two component slots."
 }
