@@ -1,5 +1,5 @@
 {
-	"core": "Heart XN.a-56",
+	"core": "XN.a-56 computing core",
 	"core2": "X.v-57 computing core",
 	"core2_desc": "X.v-57 computing core: 10 Tera-flops of raw computing power. 2.4 GHz, 3.2 GHz in Turbo mode. 1000MB cache memory.",
 	"core3": "X.v-57 computing core",
@@ -16,8 +16,8 @@
 	"fan": "Fan",
 	"sdcard": "SD card",
 	"cd": "CD",
-	"neural_core": "Neural heart",
-	"neural_core_pro": "Neural Heart Pro",
+	"neural_core": "Neural Core",
+	"neural_core_pro": "Neural Core Pro",
 	"power_supply": "Power supply",
 	"chiyembekezo": "Chiyembekezo",
 	"uzoma": "Uzoma",
