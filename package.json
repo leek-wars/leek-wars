@@ -16,6 +16,7 @@
 		"stats": "xdg-open dist/stats.html"
 	},
 	"dependencies": {
+		"@mdi/font": "^7.4.47",
 		"@paypal/paypal-js": "^5.1.4",
 		"@types/dompurify": "^3.0.5",
 		"@vitejs/plugin-vue": "^6.0.3",
@@ -42,7 +43,6 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
-		"@mdi/font": "^7.4.47",
 		"@types/codemirror": "0.0.96",
 		"@types/google.analytics": "0.0.40",
 		"@types/node": "^20.0.0",
