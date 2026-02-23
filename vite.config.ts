@@ -1,4 +1,4 @@
-import { defineConfig, Plugin } from 'vite'
+import { defineConfig, Plugin, Rollup } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vuetify from 'vite-plugin-vuetify'
 import monacoEditorPlugin from 'vite-plugin-monaco-editor'
@@ -9,6 +9,39 @@ import yaml from 'js-yaml'
 
 // List of supported languages
 const languages = ['fr', 'en', 'de', 'es', 'it', 'pt', 'nl', 'pl', 'ru', 'ja', 'ko', 'zh', 'hi', 'id', 'da', 'fi', 'no', 'sv']
+
+// Collect CSS files that are needed for the initial render (entry chunks + static deps).
+// CSS from lazy-loaded routes will be injected by Vite's __vite_preload at import time.
+function collectCriticalCss(bundle: Rollup.OutputBundle): Set<string> {
+	const visited = new Set<string>()
+	const criticalCss = new Set<string>()
+
+	function walk(fileName: string) {
+		if (visited.has(fileName)) return
+		visited.add(fileName)
+		const chunk = bundle[fileName]
+		if (!chunk || chunk.type !== 'chunk') return
+		// Collect CSS imported by this chunk
+		const meta = chunk.viteMetadata as { importedCss?: Set<string> } | undefined
+		if (meta?.importedCss) {
+			for (const css of meta.importedCss) {
+				criticalCss.add(css)
+			}
+		}
+		// Follow static imports only (not dynamicImports)
+		for (const imp of chunk.imports) {
+			walk(imp)
+		}
+	}
+
+	// Start from entry chunks
+	for (const [fileName, chunk] of Object.entries(bundle)) {
+		if (chunk.type === 'chunk' && chunk.isEntry) {
+			walk(fileName)
+		}
+	}
+	return criticalCss
+}
 
 // Plugin to generate multiple HTML outputs for each language
 function multiLanguagePlugin(): Plugin {
@@ -65,9 +98,10 @@ function multiLanguagePlugin(): Plugin {
 					scripts
 				)
 
-				// Add CSS links
-				const cssFiles = Object.keys(bundle).filter(name => name.endsWith('.css'))
-				const cssLinks = cssFiles.map(css => `<link rel="stylesheet" crossorigin href="/${css}">`).join('\n\t\t')
+				// Only include CSS from entry chunks and their static dependencies.
+				// Lazy-loaded route CSS will be injected by Vite's runtime on demand.
+				const criticalCss = collectCriticalCss(bundle)
+				const cssLinks = [...criticalCss].map(css => `<link rel="stylesheet" crossorigin href="/${css}">`).join('\n\t\t')
 				finalHtml = finalHtml.replace('</head>', `\t${cssLinks}\n\t</head>`)
 
 				this.emitFile({
