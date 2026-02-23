@@ -94,6 +94,7 @@ export default class ChatPanel extends Vue {
 	}
 }
 .unread-circle {
+	display: inline-block;
 	background: #5fad1b;
 	border-radius: 50%;
 	width: 10px;
