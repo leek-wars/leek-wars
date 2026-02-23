@@ -21,7 +21,7 @@
 							</div>
 						</template>
 						<div v-else>
-							<router-link v-ripple to="/garden/solo" class="tab enabled">
+							<router-link v-ripple to="/garden/solo" class="tab enabled" :class="{'router-link-active': category === 'solo'}">
 								<h2>{{ $t('category_solo_fight') }}</h2>
 								<img class="player" src="/image/player.png">
 								<img class="sword" src="/image/icon/grey/garden.png">
@@ -30,7 +30,7 @@
 
 							<v-tooltip v-if="$store.state.farmer?.br_enabled" :disabled="battleRoyaleEnabled">
 								<template #activator="{ props }">
-									<router-link v-ripple :class="{ enabled: battleRoyaleEnabled }" :event="battleRoyaleEnabled ? 'click' : ''" to="/garden/battle-royale" class="tab">
+									<router-link v-ripple :class="{ enabled: battleRoyaleEnabled, 'router-link-active': category === 'battle-royale' }" :event="battleRoyaleEnabled ? 'click' : ''" to="/garden/battle-royale" class="tab">
 										<div v-bind="props">
 											<h2>{{ $t('category_battle_royale') }}</h2>
 											<span class="player-count">10</span>&nbsp;<img class="player" src="/image/player.png">
@@ -56,7 +56,7 @@
 
 							<v-tooltip :disabled="teamEnabled">
 								<template #activator="{ props }">
-									<router-link v-ripple :class="{ enabled: teamEnabled }" :event="teamEnabled ? 'click' : ''" to="/garden/team" class="tab">
+									<router-link v-ripple :class="{ enabled: teamEnabled, 'router-link-active': category === 'team' }" :event="teamEnabled ? 'click' : ''" to="/garden/team" class="tab">
 										<div v-bind="props">
 											<h2>{{ $t('category_team_fight') }}</h2>
 											<span class="player-count">6</span>&nbsp;<img class="player" src="/image/player.png">
@@ -70,7 +70,7 @@
 
 							<v-tooltip :disabled="bossEnabled">
 								<template #activator="{ props }">
-									<router-link v-ripple :class="{ enabled: bossEnabled }" :event="bossEnabled ? 'click' : ''" to="/garden/boss" class="tab">
+									<router-link v-ripple :class="{ enabled: bossEnabled, 'router-link-active': category === 'boss' }" :event="bossEnabled ? 'click' : ''" to="/garden/boss" class="tab">
 										<div v-bind="props">
 											<h2>{{ $t('category_boss_fight') }}</h2>
 											<span class="player-count">8</span>&nbsp;<img class="player" src="/image/player.png">

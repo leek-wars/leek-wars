@@ -34,7 +34,7 @@
 			<div class="menu-center">
 				<span v-if="$store.state.farmer && $store.state.farmer.leeks" class="leeks">
 					<span v-for="(leek, key, i) in $store.state.farmer.leeks" :key="leek.id" class="dida-element">
-						<router-link v-ripple :to="{ name: 'leek', params: { id: leek.id }}" :label="($store.state.farmer.equipment_enabled ? leek.capital : 0) || null" :class="{'router-link-active': (i == 0 && isHomePage) || $route.path.startsWith('/leek/' + leek.id), bouncing: LeekWars.didactitial_step === 1 && i === 0 && !(isHomePage || $route.path === '/leek/' + leek.id)}" class="section">
+						<router-link v-ripple :to="{ name: 'leek', params: { id: leek.id }}" :label="($store.state.farmer.equipment_enabled ? leek.capital : 0) || null" :class="{'router-link-active': (i == 0 && isHomePage) || RegExp('/leek/' + leek.id + '(/|$)').test($route.path), bouncing: LeekWars.didactitial_step === 1 && i === 0 && !(isHomePage || $route.path === '/leek/' + leek.id)}" class="section">
 							<div :leek="leek.id" :tab="'leek-' + leek.id" @click="clickItem">
 								<img src="/image/icon/house.png">
 								<div class="text">{{ leek.name }}</div>
