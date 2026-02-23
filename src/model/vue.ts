@@ -229,7 +229,7 @@ const app = createApp({
 			})
 		})
 		emitter.on('connected', () => {
-			LeekWars.socket.connect()
+			LeekWars.socket.reconnect()
 		})
 		
 		window.onbeforeunload = () => {
