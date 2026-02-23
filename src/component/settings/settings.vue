@@ -93,7 +93,7 @@
 				</div>
 			</panel>
 
-			<panel :title="$t('misc_options')" icon="mdi-settings-outline">
+			<panel :title="$t('misc_options')" icon="mdi-cog-outline">
 				<div class="misc-settings">
 					<div class="setting" id="dark-button">
 						<div>{{ $t('theme') }}</div>

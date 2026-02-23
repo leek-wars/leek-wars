@@ -40,7 +40,7 @@
 								</div>
 								<div class="stats" :class="{empty: farmer.fights + farmer.test_fights + farmer.trophies === 0}">
 									<v-icon>mdi-sword-cross</v-icon> {{ farmer.fights }}
-									<v-icon>mdi-settings-outline</v-icon> {{ farmer.test_fights }}
+									<v-icon>mdi-cog-outline</v-icon> {{ farmer.test_fights }}
 									<v-icon>mdi-trophy-outline</v-icon> {{ farmer.trophies }}
 								</div>
 								<a class="source" :href="farmer.referer" target="_blank" :title="farmer.referer">
@@ -65,7 +65,7 @@
 								<div class="count">{{ $filters.number(source.count) }}</div>
 								<div class="other" :class="{empty: source.fights + source.test_fights + source.trophies === 0}">
 									<v-icon>mdi-sword-cross</v-icon> {{ source.fights }}
-									<v-icon>mdi-settings-outline</v-icon> {{ source.test_fights }}
+									<v-icon>mdi-cog-outline</v-icon> {{ source.test_fights }}
 									<v-icon>mdi-trophy-outline</v-icon> {{ source.trophies }}
 									<v-icon>mdi-flash-outline</v-icon> {{ (source.trophies / source.count).toFixed(1) }}
 								</div>

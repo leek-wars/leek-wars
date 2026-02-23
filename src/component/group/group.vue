@@ -6,7 +6,7 @@
 
 			<!-- <div v-if="group && group.is_supervisor" class="tabs">
 				<div class="tab action" icon="question_answer" @click="settingsDialog = true">
-					<v-icon>mdi-settings-outline</v-icon>
+					<v-icon>mdi-cog-outline</v-icon>
 					<span>{{ $t('settings') }}</span>
 				</div>
 			</div> -->
@@ -262,10 +262,10 @@
 		</div>
 
 		<div v-if="group && group.is_supervisor" class="container last">
-			<panel :title="$t('settings')" icon="mdi-settings-outline">
+			<panel :title="$t('settings')" icon="mdi-cog-outline">
 				<v-switch v-model="group.setting_chat" :label="$t('setting_chat')" hide-details @change="updateSettingChat" />
 			</panel>
-			<panel :title="$t('member_options')" icon="mdi-settings-outline">
+			<panel :title="$t('member_options')" icon="mdi-cog-outline">
 				<v-switch v-model="group.setting_public_chat" :label="$t('setting_public_chat')" hide-details @change="updateSettingPublicChat" />
 				<v-switch v-model="group.setting_buy_fights" :label="$t('setting_buy_fights')" hide-details @change="updateSettingBuyFights" />
 				<v-switch v-model="group.setting_bank" :label="$t('setting_bank')" hide-details @change="updateSettingBank" />
@@ -343,7 +343,7 @@
 			</div>
 		</popup>
 
-		<popup v-if="group" v-model="settingsDialog" :width="500" icon="mdi-settings-outline">
+		<popup v-if="group" v-model="settingsDialog" :width="500" icon="mdi-cog-outline">
 			<template #title>
 				<span>{{ $t('settings') }}</span>
 			</template>

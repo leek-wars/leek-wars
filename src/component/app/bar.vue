@@ -34,7 +34,7 @@
 					</v-menu>
 				</div>
 				<router-link v-show="LeekWars.menuExpanded" v-ripple to="/settings" class="action header-button mobile settings" @click.native="closeMenu">
-					<v-icon>mdi-settings-outline</v-icon>
+					<v-icon>mdi-cog-outline</v-icon>
 				</router-link>
 			</div>
 			<div v-show="!LeekWars.menuExpanded" class="actions">

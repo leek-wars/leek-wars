@@ -125,7 +125,7 @@
 						<v-menu :close-on-content-click="false" :width="390" location="top" offset-y right :attach="$refs.player">
 							<template #activator="{ props: menuProps }">
 								<div v-ripple class="control turn" v-bind="{...tooltipProps, ...menuProps}">{{ horizontal ? game.turn : $t('fight.turn_n', [game.turn]) }}</div>
-								<!-- <v-icon class="control" >mdi-settings-outline</v-icon> -->
+								<!-- <v-icon class="control" >mdi-cog-outline</v-icon> -->
 							</template>
 							<v-list :dense="true" class="settings-menu">
 								<div class="section">{{ $t('fight.share') }}</div>
@@ -171,7 +171,7 @@
 					<template #activator="{ props: tooltipProps }">
 						<v-menu :close-on-content-click="false" top offset-y left :attach="$refs.player">
 							<template #activator="{ props: menuProps }">
-								<v-icon v-ripple class="control" v-bind="{...tooltipProps, ...menuProps}">mdi-settings-outline</v-icon>
+								<v-icon v-ripple class="control" v-bind="{...tooltipProps, ...menuProps}">mdi-cog-outline</v-icon>
 							</template>
 							<v-list density="compact" class="settings-menu">
 								<div class="section">INTERFACE</div>

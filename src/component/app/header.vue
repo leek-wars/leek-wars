@@ -139,7 +139,7 @@
 				<div class="button-wrapper">
 					<router-link to="/settings">
 						<div class="settings-button header-button">
-							<v-icon>mdi-settings-outline</v-icon>
+							<v-icon>mdi-cog-outline</v-icon>
 						</div>
 					</router-link>
 				</div>
