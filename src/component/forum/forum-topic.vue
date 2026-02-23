@@ -16,6 +16,9 @@
 						<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars/issues/' + topic.issue" class="attr issue" target="_blank" rel="noopener">
 							<img src="/image/github_white.png"><span>#{{ topic.issue }}</span>
 						</a>
+						<a v-if="topic.private_issue && $store.state.farmer && $store.state.farmer.admin" :href="'https://github.com/5pilow/leek-wars/issues/' + topic.private_issue" class="attr issue private-issue" target="_blank" rel="noopener">
+							<img src="/image/github_white.png"><span>#{{ topic.private_issue }}</span>
+						</a>
 					</div>
 				</h1>
 				<div v-if="!LeekWars.mobile" class="tabs">
@@ -771,6 +774,9 @@ import { emitter } from '@/model/vue'
 			height: 20px;
 			margin: 2px;
 			margin-right: 5px;
+		}
+		&.private-issue {
+			background: #6f42c1;
 		}
 	}
 	.votes {

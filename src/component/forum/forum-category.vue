@@ -76,6 +76,9 @@
 								<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars/issues/' + topic.issue" class="attr issue" target="_blank" rel="noopener">
 									#{{ topic.issue }}
 								</a>
+								<a v-if="topic.private_issue && $store.state.farmer && $store.state.farmer.admin" :href="'https://github.com/5pilow/leek-wars/issues/' + topic.private_issue" class="attr issue private-issue" target="_blank" rel="noopener">
+									#{{ topic.private_issue }}
+								</a>
 								<router-link :to="'/forum/category-' + topic.category + '/topic-' + topic.id">{{ topic.title }}</router-link>
 								<flag v-if="activeLanguages.length >= 2 && topic.lang" :code="LeekWars.languages[topic.lang].country" :clickable="false" />
 							</span>
@@ -433,6 +436,9 @@ import { emitter } from '@/model/vue'
 			display: inline-block;
 			margin-bottom: 2px;
 			height: auto;
+			&.private-issue {
+				background: #6f42c1;
+			}
 		}
 	}
 	.topic .description {
