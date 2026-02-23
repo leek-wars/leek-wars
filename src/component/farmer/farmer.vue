@@ -82,7 +82,7 @@
 					</div>
 					<lw-title v-if="farmer && farmer.title.length" class="info title" :class="{me: myFarmer}" :title="farmer.title" @click.native="titleDialog = myFarmer" />
 					<div v-if="farmer" class="infos">
-						<div v-if="!farmer.title.length && myFarmer" class="add add-title" :class="{locked: !farmerTitleEnabled}" @click="titleDialog = farmerTitleEnabled">
+						<div v-if="!farmer.title.length && myFarmer" class="add add-title" :class="{locked: !farmerTitleEnabled}" @click="titleDialog = !!farmerTitleEnabled">
 							<v-tooltip :disabled="farmerTitleEnabled">
 								<template #activator="{ props }">
 									<span v-bind="props">
