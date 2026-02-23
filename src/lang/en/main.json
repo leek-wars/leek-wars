@@ -262,6 +262,7 @@
 	"scheme": "Diagram",
 	"schemes": "Schematics",
 	"scheme_x": "Diagram: {0}",
+	"craft": "Craft",
 	"edit": "Edit",
 	"console": "LeekScript console",
 	"side": "Visit",
