@@ -15,9 +15,10 @@
 
 <script lang="ts">
 	import { Command, Commands } from '@/model/commands'
+	import { nextTick } from 'vue'
 	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Options({ name: 'chat-commands' })
+	@Options({ name: 'chat-commands', emits: ['command'] })
 	export default class ChatCommands extends Vue {
 
 		@Prop() filter!: string
@@ -66,9 +67,17 @@
 		up() {
 			this.index--
 			if (this.index < 0) this.index = this.commands.length - 1
+			this.scrollToSelected()
 		}
 		down() {
 			this.index = (this.index + 1) % this.commands.length
+			this.scrollToSelected()
+		}
+		scrollToSelected() {
+			nextTick(() => {
+				const items = (this as any).$el?.parentElement?.querySelectorAll('.command')
+				if (items) (items[this.index] as HTMLElement)?.scrollIntoView({ block: 'nearest' })
+			})
 		}
 	}
 </script>
