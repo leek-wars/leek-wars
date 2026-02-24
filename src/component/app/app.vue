@@ -163,7 +163,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
-	import ConsoleWindow from './console-window.vue'
+	const ConsoleWindow = defineAsyncComponent(() => import('./console-window.vue'))
 	import { defineAsyncComponent, nextTick } from 'vue'
 	import { emitter } from '@/model/vue'
 	const ChangelogDialog = defineAsyncComponent(() => import('../changelog/changelog-dialog.vue'))

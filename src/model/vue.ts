@@ -1,6 +1,5 @@
 import App from '@/component/app/app.vue'
 import Code from '@/component/app/code.vue'
-import Console from '@/component/app/console.vue'
 import Error from '@/component/app/error.vue'
 import LWLoader from '@/component/app/loader.vue'
 import Panel from '@/component/app/panel.vue'
@@ -20,7 +19,7 @@ import { LeekWars } from '@/model/leekwars'
 import '@/model/serviceworker'
 import { store } from "@/model/store"
 import router from '@/router'
-import { createApp, h, nextTick } from 'vue'
+import { createApp, defineAsyncComponent, h, nextTick } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
 import { Latex } from './latex'
 import { scroll_to_hash } from '@/router-functions'
@@ -32,6 +31,8 @@ import { formatEmojis } from './emojis'
 import mitt from 'mitt'
 import { Farmer } from './farmer'
 import '@/chart'
+
+const Console = defineAsyncComponent(() => import('@/component/app/console.vue'))
 
 const vuetify = createVuetify({
 	theme: {
