@@ -5,7 +5,7 @@ import { ChatMessage } from './chat'
 import { NotificationType } from './notification'
 import { store } from './store'
 import { Leek } from './leek'
-import { analyzer } from '@/component/editor/analyzer'
+const getAnalyzer = () => import('@/component/editor/analyzer').then(m => m.analyzer)
 
 enum SocketMessage {
 	AUTH = 0,
@@ -335,15 +335,15 @@ class Socket {
 					break
 				}
 				case SocketMessage.EDITOR_ANALYZE: {
-					analyzer.analyzeResult(data)
+					getAnalyzer().then(a => a.analyzeResult(data))
 					break
 				}
 				case SocketMessage.EDITOR_HOVER: {
-					analyzer.hoverResult(data)
+					getAnalyzer().then(a => a.hoverResult(data))
 					break
 				}
 				case SocketMessage.EDITOR_COMPLETE: {
-					analyzer.completeResult({ id: request_id, type: id, data })
+					getAnalyzer().then(a => a.completeResult({ id: request_id, type: id, data }))
 					break
 				}
 				case SocketMessage.ADMIN_ERROR: {
