@@ -1,4 +1,3 @@
-import { analyzer } from '@/component/editor/analyzer'
 import { AIItem, Folder } from '@/component/editor/editor-item'
 import { AI } from '@/model/ai'
 import { LeekWars } from '@/model/leekwars'
