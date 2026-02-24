@@ -249,8 +249,6 @@ export default defineConfig({
 					'vue-vendor': ['vue', 'vue-router', 'pinia', 'vuex', 'vue-i18n'],
 					// Vuetify (large UI framework)
 					'vuetify': ['vuetify'],
-					// Monaco editor core
-					'monaco': ['monaco-editor'],
 					// Utilities
 					'utils': ['chart.js', 'markdown-it', 'dompurify', 'js-beautify']
 				}
