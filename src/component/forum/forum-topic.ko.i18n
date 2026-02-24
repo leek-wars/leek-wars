@@ -23,5 +23,6 @@
 	"unlock": "터놓다",
 	"unpin": "쓰러뜨리다",
 	"unsolved": "미해결",
+	"create_issue": "Issue 생성",
 	"not_last_page": "주제의 마지막 페이지에 있지 않습니다."
 }

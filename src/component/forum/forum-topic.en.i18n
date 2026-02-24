@@ -23,5 +23,6 @@
 	"unlock": "Unlock",
 	"unpin": "Unpin",
 	"unsolved": "Unresolved",
+	"create_issue": "Create issue",
 	"not_last_page": "You are not on the last page of the topic"
 }

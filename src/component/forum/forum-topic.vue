@@ -129,6 +129,10 @@
 										&nbsp;&nbsp;
 										<span class="action resolve" @click="resolve"><v-icon>mdi-check</v-icon> {{ topic.resolved ? $t('unsolved') : $t('solved') }}</span>
 									</template>
+									<template v-if="message.id == -1 && $store.state.farmer && $store.state.farmer.admin && !topic.private_issue && !topic.resolved">
+										&nbsp;&nbsp;
+										<span class="action create-issue" @click="createIssue"><v-icon>mdi-source-branch</v-icon> {{ $t('create_issue') }}</span>
+									</template>
 								</div>
 								<div class="spacer"></div>
 								<div class="date">
@@ -314,6 +318,14 @@ import { emitter } from '@/model/vue'
 				if (this.topic.subscribed) { this.action.icon = 'mdi-newspaper-minus' }
 				emitter.emit('loaded')
 				this.newMessage = localStorage.getItem('forum/draft-' + this.topic.id) as string
+			})
+		}
+		createIssue() {
+			if (!this.topic) { return }
+			LeekWars.post('forum/create-issue', {topic_id: this.topic.id}).then((data: any) => {
+				if (this.topic) {
+					this.topic.private_issue = data.private_issue
+				}
 			})
 		}
 		resolve() {
