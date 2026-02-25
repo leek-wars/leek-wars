@@ -18,6 +18,7 @@
     - "Rapport : support du mode sombre pour les graphiques."
     - Migration vers Vue 3.
   fixed:
+    - "Éditeur : correction de la coloration syntaxique des opérateurs \\ et \\= (division entière)."
     - "LeekScript : correction d'un crash lors de la compilation de classes dans certains cas d'include, et meilleure gestion de la casse sur les mots-clés class et include."
     - Correction d'un bug empêchant les combats d'équipe quand l'IA de la tourelle était inexistante.
     - Correction du compteur de notifications non lues qui n'était pas renvoyé à la connexion.

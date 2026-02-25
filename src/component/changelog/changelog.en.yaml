@@ -18,6 +18,7 @@
     - "Report: dark mode support for charts."
     - Migrated to Vue 3.
   fixed:
+    - "Editor: fixed syntax highlighting for \\ and \\= operators (integer division)."
     - "LeekScript: fixed a crash when compiling classes in certain include scenarios, and improved case handling for class and include keywords."
     - Fixed a bug preventing team fights when the turret AI was missing.
     - Fixed unread notifications count not being returned at login.
