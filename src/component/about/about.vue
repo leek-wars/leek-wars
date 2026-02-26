@@ -17,7 +17,7 @@
 				</router-link>
 				<router-link to="/app">
 					<div class="tab">
-						<v-icon>mdi-cellphone-android</v-icon>
+						<v-icon>mdi-cellphone</v-icon>
 						<span>{{ $t('main.app') }}</span>
 					</div>
 				</router-link>

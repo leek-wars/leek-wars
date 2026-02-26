@@ -273,7 +273,7 @@
 			{ id: 4, icon: 'mdi-flag', name: 'challenge' },
 			{ id: 5, icon: 'mdi-trophy', name: 'tournament' },
 			{ id: 6, icon: 'mdi-chat', name: 'social' },
-			{ id: 7, icon: 'mdi-android-messages', name: 'private' },
+			{ id: 7, icon: 'mdi-message-text-outline', name: 'private' },
 			{ id: 8, icon: 'mdi-account-multiple', name: 'team' },
 			{ id: 9, icon: 'mdi-gavel', name: 'moderation' }
 		]
@@ -642,6 +642,9 @@
 		table {
 			width: 100%;
 		}
+		:deep(.v-checkbox .v-selection-control) {
+			min-height: unset;
+		}
 		.category {
 			font-size: 16px;
 			.v-icon {
@@ -677,6 +680,9 @@
 	}
 	.v-input--switch {
 		margin-left: 8px;
+	}
+	:deep(.v-switch .v-selection-control) {
+		min-height: unset;
 	}
 	.account {
 		text-align: left;
