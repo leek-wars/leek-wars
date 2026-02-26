@@ -138,7 +138,7 @@
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
 	import { BOSSES } from '@/model/boss'
 	import { defineAsyncComponent, nextTick } from 'vue'
-import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/vue'
 
 	@Options({ name: "fight", components: { 'player': Player, Comments, RichTooltipFarmer, RichTooltipTeam, 'report-dialog': ReportDialog }, i18n: {}, mixins: [...mixins] })
 	export default class FightPage extends Vue {
@@ -182,12 +182,8 @@ import { emitter } from '@/model/vue'
 			emitter.on('resize', this.resize)
 			setTimeout(() => this.resize(), 50)
 
-<<<<<<< patch-2
-			this.$root.$on('trophy', this.onTrophy)
-			this.$root.$on('fight_notification', this.onFightNotification)
-=======
 			emitter.on('trophy', this.onTrophy)
->>>>>>> master
+			emitter.$on('fight_notification', this.onFightNotification)
 		}
 
 		@Watch('$route.params.id', {immediate: true})
@@ -245,14 +241,10 @@ import { emitter } from '@/model/vue'
 		unmounted() {
 			LeekWars.flex = false
 			LeekWars.lightBar = false
-<<<<<<< patch-2
-			this.$root.$off('resize', this.resize)
-			this.$root.$off('trophy', this.onTrophy)
-			this.$root.$off('fight_notification', this.onFightNotification)
-=======
+			
 			emitter.off('resize', this.resize)
 			emitter.off('trophy', this.onTrophy)
->>>>>>> master
+			emitter.off('fight_notification', this.onFightNotification)
 
 			// Notifications de trophées restants
 			for (const message of this.trophyQueue) {
