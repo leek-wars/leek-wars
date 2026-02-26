@@ -49,9 +49,13 @@ class Sound {
 		this.sound.load()
 		return this
 	}
+	public changeVolume(volume: number) {
+		this.sound.volume = volume * this.volume;
+	}
 
 	public play(game: Game) {
 		if (game.sound && this.sound != null) {
+			this.changeVolume(game.volume);
 			this.sound.currentTime = 0
 			this.sound.play()
 		}
@@ -100,6 +104,7 @@ class S {
 	public static burn = new Sound(LeekWars.STATIC + "sound/burn.mp3", 1)
 	public static grapple = new Sound(LeekWars.STATIC + "sound/grapple.mp3", 0.8)
 	public static boxing = new Sound(LeekWars.STATIC + "sound/boxing.mp3", 1)
+	public static quantum_rifle = new Sound(LeekWars.STATIC + "sound/quantum_rifle.mp3", 0.6)
 	// chips
 	public static heal = new Sound(LeekWars.STATIC + "sound/heal.mp3", VOL_DEFFENSIVE_SOUND)
 	public static buff = new Sound(LeekWars.STATIC + "sound/buff.mp3", 0.15)
@@ -135,7 +140,7 @@ class S {
 		if (path in this.cache) {
 			return this.cache[path]
 		}
-		const sound = new Sound(LeekWars.STATIC + path, volume).load(game)
+		const sound = new Sound(LeekWars.STATIC + path, volume*game.volume).load(game)
 		this.cache[path] = sound
 		return sound
 	}

@@ -1,20 +1,26 @@
 
-<template functional>
-	<i18n tag="div" path="fight.leek_resurrect" :a="props.a">
-		<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
-		<leek slot="target" :leek="parent.leeks[props.action.params[2]]" />
-		<span v-if="props.action.params[4] === 2">... {{ parent.$t('effect.critical') }}</span>
-	</i18n>
+<template>
+	<i18n-t tag="div" keypath="fight.leek_resurrect" :a="a">
+		<template #leek>
+			<leek :leek="leeks[action.params[1]]" />
+		</template>
+		<template #target>
+			<leek :leek="leeks[action.params[2]]" />
+		</template>
+		<span v-if="action.params[4] === 2">... {{ $t('effect.critical') }}</span>
+	</i18n-t>
 </template>
 
 <script lang="ts">
 	import { Action } from '@/model/action'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import ActionLeekElement from '../report/action-leek.vue'
+	import { Leek } from '@/model/leek'
 
-	@Component({ components: { leek: ActionLeekElement } })
+	@Options({ components: { leek: ActionLeekElement } })
 	export default class ActionResurrection extends Vue {
 		@Prop() action!: Action
 		@Prop() a!: number
+		@Prop() leeks!: {[key: number]: Leek}
 	}
 </script>

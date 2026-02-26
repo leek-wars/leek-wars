@@ -44,5 +44,7 @@
 	"new_leek": "Tillat dannelse av en annen purre",
 	"start_team_tournament": "Start en lagturnering",
 	"give_item": "Gi en gjenstand",
-	"confirm_give_item": "Bekreft donasjonen av denne gjenstanden til medlem {member} ?"
+	"confirm_give_item": "Bekreft donasjonen av denne gjenstanden til medlem {member} ?",
+	"give_money": "Gi penger til {member}",
+	"everybody": "alle"
 }

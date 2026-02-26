@@ -6,7 +6,7 @@
 
 			<!-- <div v-if="group && group.is_supervisor" class="tabs">
 				<div class="tab action" icon="question_answer" @click="settingsDialog = true">
-					<v-icon>mdi-settings-outline</v-icon>
+					<v-icon>mdi-cog-outline</v-icon>
 					<span>{{ $t('settings') }}</span>
 				</div>
 			</div> -->
@@ -16,15 +16,15 @@
 			<div v-else>
 
 				<h4>{{ $t('supervisor') }}</h4>
-				<rich-tooltip-farmer :id="group.owner.id" v-slot="{ on }" :bottom="true">
-					<!-- <div class="flex name" v-on="on" v-ripple>
+				<rich-tooltip-farmer :id="group.owner.id" v-slot="{ props }" :bottom="true">
+					<!-- <div class="flex name" v-bind="props" v-ripple>
 						<avatar :farmer="item" />
 						<span>{{ item.name }}</span>
 						<img v-if="item.connected" class="status" src="/image/connected.png">
 						<img v-else class="status" src="/image/disconnected.png">
 					</div> -->
 					<router-link :to="'/farmer/' + group.owner.id">
-						<div class="card member" v-on="on" v-ripple>
+						<div class="card member" v-bind="props" v-ripple>
 							<avatar :farmer="group.owner" />
 							<div class="info">
 								<div class="name">
@@ -43,104 +43,114 @@
 
 				<div v-if="group && group.is_supervisor">
 					<br>
-					<tooltip :disabled="group.members.length >= 3">
-						<template v-slot:activator="{ on }">
-							<span v-on="on">
+					<v-tooltip :disabled="group.members.length >= 3">
+						<template #activator="{ props }">
+							<span v-bind="props">
 								<v-btn :disabled="group.members.length < 3" @click="startBattleRoyale"><v-icon>mdi-sword-cross</v-icon>&nbsp;{{ $t('start_br') }}</v-btn>
 							</span>
 						</template>
 						{{ $t('3_members_min') }}
-					</tooltip>
+					</v-tooltip>
 					<router-link v-if="group.tournament" :to="'/tournament/' + group.tournament">
 						<v-btn color="primary"><v-icon>mdi-trophy</v-icon>&nbsp;{{ $t('see_tournament') }}</v-btn>
 					</router-link>
-					<tooltip v-else :disabled="group.members.length >= 4">
-						<template v-slot:activator="{ on }">
-							<span v-on="on">
+					<v-tooltip v-else :disabled="group.members.length >= 4">
+						<template #activator="{ props }">
+							<span v-bind="props">
 								<v-btn :disabled="group.members.length < 4" @click="startTournament"><v-icon>mdi-trophy</v-icon>&nbsp;{{ $t('start_tournament') }}</v-btn>
 							</span>
 						</template>
 						{{ $t('4_members_min') }}
-					</tooltip>
+					</v-tooltip>
 
-					<tooltip v-if="!group.tournament" :disabled="group.members.length >= 4">
-						<template v-slot:activator="{ on }">
-							<span v-on="on">
+					<v-tooltip v-if="!group.tournament" :disabled="group.members.length >= 4">
+						<template #activator="{ props }">
+							<span v-bind="props">
 								<v-btn :disabled="group.members.length < 4" @click="startTeamTournament"><v-icon>mdi-trophy</v-icon>&nbsp;{{ $t('start_team_tournament') }}</v-btn>
 							</span>
 						</template>
 						{{ $t('4_members_min') }}
-					</tooltip>
+					</v-tooltip>
 				</div>
 			</div>
 		</panel>
 
 		<panel v-if="group && group.setting_chat" :title="$t('main.chat')" toggle="group/chat" icon="mdi-chat-outline">
-			<div slot="actions">
+			<template #actions>
 				<div v-if="!LeekWars.mobile && group && $store.state.chat[group.chat]" class="button flat" @click="LeekWars.addChat($store.state.chat[group.chat])">
 					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 				</div>
-			</div>
-			<chat :id="group.chat" slot="content" />
+			</template>
+			<template #content>
+				<chat :id="group.chat" />
+			</template>
 		</panel>
 
 
 		<panel v-if="group" toggle="group/members" icon="mdi-account-group">
-			<template slot="title">{{ $t('members') }} ({{ group.members.length }})</template>
-			<div slot="actions">
+			<template #title>{{ $t('members') }} ({{ group.members.length }})</template>
+			<template #actions>
+				<div v-if="group.is_supervisor" class="button" @click="giveMoneyDialog = true; giveMoneyTarget = null">
+					<v-icon>mdi-hand-coin-outline</v-icon>
+				</div>
 				<div v-if="group.is_supervisor" class="button" @click="membersDialog = true">
 					<v-icon>mdi-pencil</v-icon>
 				</div>
-			</div>
-			<div slot="content" class="content members">
-				<v-data-table
-					:headers="group.is_supervisor ? headersSupervisor : headers"
-					:items="group.members"
-					hide-default-footer
-    				:items-per-page="100"
-					class="elevation-1 members">
-					<div slot="no-data" class="no-member">
-						<span>{{ $t('no_member') }}</span>
-						<v-btn @click="membersDialog = true"><v-icon>mdi-plus</v-icon>&nbsp;{{ $t('add_member') }}</v-btn>
-					</div>
-					<template v-slot:item.name="{ item }">
-						<!-- <router-link class="flex name" :to="'/farmer/' + item.id" v-ripple>
-							<avatar :farmer="item" />
-							<div>{{ item.name }}</div>
-						</router-link> -->
-						<router-link :to="'/farmer/' + item.id">
-							<rich-tooltip-farmer :id="item.id" v-slot="{ on }" :bottom="true">
-								<div class="flex name" v-on="on" v-ripple>
-									<avatar :farmer="item" />
-									<span>{{ item.name }}</span>
-									<img v-if="item.connected" class="status" src="/image/connected.png">
-									<img v-else class="status" src="/image/disconnected.png">
-								</div>
-							</rich-tooltip-farmer>
-						</router-link>
-					</template>
-					<template v-slot:item.team="{ item }">
-						<router-link v-if="item.team"  :to="'/team/' + item.team.id">
-							<rich-tooltip-team :id="item.team.id" v-slot="{ on }" :bottom="true">
-								<div class="flex name" v-on="on" v-ripple>
-									<emblem :team="item.team" />
-									<span>{{ item.team.name }}</span>
-								</div>
-							</rich-tooltip-team>
-						</router-link>
-					</template>
-					<template v-slot:item.message="{ item }">
-						<v-icon @click="sendMessage(item)">mdi-email-outline</v-icon>
-					</template>
-					<template v-slot:item.give="{ item }">
-						<v-icon @click="giveItem(item)">mdi-gift-outline</v-icon>
-					</template>
-				</v-data-table>
-			</div>
+			</template>
+			<template #content>
+				<div class="content members">
+					<v-data-table
+						:headers="group.is_supervisor ? headersSupervisor : headers"
+						:items="group.members"
+						hide-default-footer
+						:items-per-page="100"
+						class="elevation-1 members">
+						<template #no-data class="no-member">
+							<span>{{ $t('no_member') }}</span>
+							<v-btn @click="membersDialog = true"><v-icon>mdi-plus</v-icon>&nbsp;{{ $t('add_member') }}</v-btn>
+						</template>
+						<template #item.name="{ item }">
+							<!-- <router-link class="flex name" :to="'/farmer/' + item.id" v-ripple>
+								<avatar :farmer="item" />
+								<div>{{ item.name }}</div>
+							</router-link> -->
+							<router-link :to="'/farmer/' + item.id">
+								<rich-tooltip-farmer :id="item.id" v-slot="{ props }" :bottom="true">
+									<div class="flex name" v-bind="props" v-ripple>
+										<avatar :farmer="item" />
+										<span>{{ item.name }}</span>
+										<img v-if="item.connected" class="status" src="/image/connected.png">
+										<img v-else class="status" src="/image/disconnected.png">
+									</div>
+								</rich-tooltip-farmer>
+							</router-link>
+						</template>
+						<template #item.team="{ item }">
+							<router-link v-if="item.team"  :to="'/team/' + item.team.id">
+								<rich-tooltip-team :id="item.team.id" v-slot="{ props }" :bottom="true">
+									<div class="flex name" v-bind="props" v-ripple>
+										<emblem :team="item.team" />
+										<span>{{ item.team.name }}</span>
+									</div>
+								</rich-tooltip-team>
+							</router-link>
+						</template>
+						<template #item.message="{ item }">
+							<v-icon @click="sendMessage(item)">mdi-email-outline</v-icon>
+						</template>
+						<template #item.give="{ item }">
+							<div class="flex">
+								<v-icon @click="giveItem(item)">mdi-gift-outline</v-icon>
+								<v-icon @click="giveMoney(item)">mdi-hand-coin-outline</v-icon>
+							</div>
+						</template>
+					</v-data-table>
+				</div>
+			</template>
 		</panel>
 
 		<panel v-if="group" :title="$t('equipment')" icon="mdi-sword" toggle="group/equipment">
-			<div slot="actions">
+			<template #actions>
 				<div v-if="equipmentEditing" class="button green" @click="saveEquipment">
 					<v-icon>mdi-check</v-icon> {{ $t('main.save') }}
 				</div>
@@ -154,26 +164,26 @@
 				<div v-else-if="group.is_supervisor" class="button" @click="equipmentEditing = true">
 					<v-icon>mdi-pencil</v-icon>
 				</div>
-			</div>
+			</template>
 			<div class="equipment">
 				<div class="section">
 					<div class="title">
 						<h4>{{ $t('characteristic.characteristics') }}</h4>
-						<v-icon v-if="equipmentEditing" @click="capitalDialog = true">mdi-pencil</v-icon>
+						<v-icon v-if="equipmentEditing" @click="capitalDialogOpened = true">mdi-pencil</v-icon>
 					</div>
 
 					<div class="level" v-if="equipmentEditing">
 						<b>{{ $t('main.level') }}</b>
-						<input type="number" v-model="group.level" @input="changeLevel" :min="1" :max="301" /> (1 - 301)
+						<input type="number" v-model="group.level" @update:model-value="changeLevel" :min="1" :max="301" /> (1 - 301)
 						<div class="spacer"></div>
-						<b :style="{color: $refs.capitalDialog.capital < 0 ? 'red' : 'green'}">{{ $refs.capitalDialog.capital }} capital</b>
+						<!-- <b :style="{color: $refs.capitalDialog.capital < 0 ? 'red' : 'green'}">{{ $refs.capitalDialog.capital }} capital</b> -->
 						<v-icon v-if="$refs.capitalDialog.capital < 0" class="card alert">mdi-alert-circle</v-icon>
 					</div>
 					<b v-else class="level">{{ $t('main.level_n', [group.level]) }}</b>
 					<div class="card characteristics">
 						<div v-for="c in LeekWars.characteristics_table" :key="c" class="characteristic" :class="c">
-							<characteristic-tooltip  v-slot="{ on }" :characteristic="c" :value="characteristics[c]" :total="characteristics[c]" :leek="characteristics" :test="true">
-								<img v-on="on" :src="'/image/charac/' + c + '.png'">
+							<characteristic-tooltip  v-slot="{ props }" :characteristic="c" :value="characteristics[c]" :total="characteristics[c]" :leek="characteristics" :test="true">
+								<img v-bind="props" :src="'/image/charac/' + c + '.png'">
 							</characteristic-tooltip>
 							<span class="stat" :class="'color-' + c" v-html="characteristics[c]"></span>
 						</div>
@@ -182,50 +192,50 @@
 				<div class="section">
 					<div class="title">
 						<h4>{{ $t('main.weapons') }} ({{ group.weapons.length }}/{{ max_weapons }})
-							<tooltip v-if="group.weapons.length > max_weapons">
-								<template v-slot:activator="{ on }">
-									<v-icon v-on="on" class="card alert">mdi-alert-circle</v-icon>
+							<v-tooltip v-if="group.weapons.length > max_weapons">
+								<template #activator="{ props }">
+									<v-icon v-bind="props" class="card alert">mdi-alert-circle</v-icon>
 								</template>
 								{{ $t('too_much_weapons') }}
-							</tooltip>
+							</v-tooltip>
 						</h4>
 						<v-icon v-if="equipmentEditing" @click="weaponsDialog = true">mdi-pencil</v-icon>
 					</div>
 
-					<rich-tooltip-item v-for="weapon in group.weapons" :key="weapon" v-slot="{ on }" :item="LeekWars.items[weapon]" :bottom="true">
-						<div class="weapon" v-on="on">
+					<rich-tooltip-item v-for="weapon in group.weapons" :key="weapon" v-slot="{ props }" :item="LeekWars.items[weapon]" :bottom="true">
+						<div class="weapon" v-bind="props">
 							<img :src="'/image/' + LeekWars.items[weapon].name.replace('_', '/') + '.png'" @click="setWeapon(weapon)" :width="WeaponsData[LeekWars.items[weapon].params].width">
-							<tooltip v-if="LeekWars.items[weapon].level > group.level">
-								<template v-slot:activator="{ on }">
-									<v-icon v-on="on" class="card alert">mdi-alert-circle</v-icon>
+							<v-tooltip v-if="LeekWars.items[weapon].level > group.level">
+								<template #activator="{ props }">
+									<v-icon v-bind="props" class="card alert">mdi-alert-circle</v-icon>
 								</template>
 								{{ $t('too_high_level', [LeekWars.items[weapon].level]) }}
-							</tooltip>
+							</v-tooltip>
 						</div>
 					</rich-tooltip-item>
 				</div>
 				<div class="section">
 					<div class="title">
 						<h4>{{ $t('main.chips') }} ({{ group.chips.length }}/{{ group.ram }})
-							<tooltip v-if="group.chips.length > group.ram">
-								<template v-slot:activator="{ on }">
-									<v-icon v-on="on" class="card alert">mdi-alert-circle</v-icon>
+							<v-tooltip v-if="group.chips.length > group.ram">
+								<template #activator="{ props }">
+									<v-icon v-bind="props" class="card alert">mdi-alert-circle</v-icon>
 								</template>
 								{{ $t('too_much_chips') }}
-							</tooltip>
+							</v-tooltip>
 						</h4>
 						<v-icon v-if="equipmentEditing" @click="chipsDialog = true">mdi-pencil</v-icon>
 					</div>
 
-					<rich-tooltip-item v-for="chip in group.chips" :key="chip" v-slot="{ on }" :item="LeekWars.items[chip]" :bottom="true">
-						<div class="chip" v-on="on">
+					<rich-tooltip-item v-for="chip in group.chips" :key="chip" v-slot="{ props }" :item="LeekWars.items[chip]" :bottom="true">
+						<div class="chip" v-bind="props">
 							<img :src="'/image/' + LeekWars.items[chip].name.replace('_', '/') + '.png'">
-							<tooltip v-if="LeekWars.items[chip].level > group.level">
-								<template v-slot:activator="{ on }">
-									<v-icon v-on="on" class="card alert">mdi-alert-circle</v-icon>
+							<v-tooltip v-if="LeekWars.items[chip].level > group.level">
+								<template #activator="{ props }">
+									<v-icon v-bind="props" class="card alert">mdi-alert-circle</v-icon>
 								</template>
 								{{ $t('too_high_level', [LeekWars.items[chip].level]) }}
-							</tooltip>
+							</v-tooltip>
 						</div>
 					</rich-tooltip-item>
 				</div>
@@ -234,38 +244,41 @@
 
 		<div class="container large">
 			<panel v-if="group && group.fights && group.fights.length > 0" :title="$t('main.fights')" icon="mdi-sword-cross">
-				<!-- <template v-if="group" slot="actions">
+				<!-- <template v-if="group" #actions>
 					<router-link :to="'/leek/' + group.id + '/history'" class="button flat">
 						<v-icon>mdi-history</v-icon>
 						<span>{{ $t('history') }}</span>
 					</router-link>
 				</template> -->
-				<fights-history slot="content" :fights="group.fights" />
+				<template #content>
+					<fights-history :fights="group.fights" />
+				</template>
 			</panel>
 			<panel v-if="group && group.tournaments && group.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-trophy">
-				<tournaments-history slot="content" :tournaments="group.tournaments" :show-time="true" />
+				<template #content>
+					<tournaments-history :tournaments="group.tournaments" :show-time="true" />
+				</template>
 			</panel>
 		</div>
 
 		<div v-if="group && group.is_supervisor" class="container last">
-			<panel :title="$t('settings')" icon="mdi-settings-outline">
+			<panel :title="$t('settings')" icon="mdi-cog-outline">
 				<v-switch v-model="group.setting_chat" :label="$t('setting_chat')" hide-details @change="updateSettingChat" />
 			</panel>
-			<panel :title="$t('member_options')" icon="mdi-settings-outline">
-				<v-switch v-model="group.setting_public_chat" :label="$t('setting_public_chat')" hide-details @change="updateSettingPublicChat" /><br>
-				<v-switch v-model="group.setting_buy_fights" :label="$t('setting_buy_fights')" hide-details @change="updateSettingBuyFights" /><br>
-				<v-switch v-model="group.setting_bank" :label="$t('setting_bank')" hide-details @change="updateSettingBank" /><br>
-				<v-switch v-model="group.setting_tournaments" :label="$t('setting_tournaments')" hide-details @change="updateSettingTournaments" /><br>
-				<v-switch v-model="group.setting_br" :label="$t('setting_br')" hide-details @change="updateSettingBr" /><br>
-				<v-switch v-model="group.setting_new_leek" hide-details :label="$t('new_leek')" @change="updateNewLeek" /><br>
-				<v-switch v-model="group.setting_xp_blocked" hide-details :label="$t('main.xp_blocked')" @change="updateXpBlocked" /><br>
-				<v-switch v-model="group.setting_equipment_blocked" hide-details :label="$t('equipment_blocked')" @change="updateEquipmentBlocked" /><br>
+			<panel :title="$t('member_options')" icon="mdi-cog-outline">
+				<v-switch v-model="group.setting_public_chat" :label="$t('setting_public_chat')" hide-details @change="updateSettingPublicChat" />
+				<v-switch v-model="group.setting_buy_fights" :label="$t('setting_buy_fights')" hide-details @change="updateSettingBuyFights" />
+				<v-switch v-model="group.setting_bank" :label="$t('setting_bank')" hide-details @change="updateSettingBank" />
+				<v-switch v-model="group.setting_tournaments" :label="$t('setting_tournaments')" hide-details @change="updateSettingTournaments" />
+				<v-switch v-model="group.setting_br" :label="$t('setting_br')" hide-details @change="updateSettingBr" />
+				<v-switch v-model="group.setting_new_leek" hide-details :label="$t('new_leek')" @change="updateNewLeek" />
+				<v-switch v-model="group.setting_xp_blocked" hide-details :label="$t('main.xp_blocked')" @change="updateXpBlocked" />
+				<v-switch v-model="group.setting_equipment_blocked" hide-details :label="$t('equipment_blocked')" @change="updateEquipmentBlocked" />
 			</panel>
 		</div>
 
-		<popup v-if="group" v-model="membersDialog" :width="1000" :full="true">
-			<v-icon slot="icon">mdi-account-group</v-icon>
-			<template slot="title">
+		<popup v-if="group" v-model="membersDialog" :width="1000" :full="true" icon="mdi-account-group">
+			<template #title>
 				{{ $t('members') }} ({{ group.members.length }})
 			</template>
 			<v-data-table
@@ -275,7 +288,7 @@
 				:items-per-page="100"
 				:no-data-text="$t('no_member')"
 				class="elevation-1 members">
-				<template v-slot:item.name="{ item }">
+				<template #item.name="{ item }">
 					<div class="flex name">
 						<avatar :farmer="item" />
 						<div>
@@ -284,44 +297,44 @@
 						</div>
 					</div>
 				</template>
-				<template v-slot:item.leek="{ item }">
+				<template #item.leek="{ item }">
 					<input type="text" v-model="item.leek" :class="{error: item.leek_error}" @focusout="updateMemberLeekName(item)">
 					<div v-if="item.leek_error" class="error">{{ $t('error_' + item.leek_error.error, item.leek_error.params) }}</div>
 				</template>
-				<template v-slot:item.team="{ item }">
-					<rich-tooltip-team :id="item.team.id" v-slot="{ on }" :bottom="true">
-						<div class="flex name" v-on="on">
+				<template #item.team="{ item }">
+					<rich-tooltip-team :id="item.team.id" v-slot="{ props }" :bottom="true">
+						<div class="flex name" v-bind="props">
 							<emblem :team="item.team" />
 							<span>{{ item.team.name }}</span>
 						</div>
 					</rich-tooltip-team>
 				</template>
-				<template v-slot:item.mail="{ item }">
+				<template #item.mail="{ item }">
 					<input type="email" v-model="item.mail" :class="{error: item.mail_error}" @focusout="updateMemberEmail(item)">
 					<div v-if="item.mail_error" class="error">{{ $t('error_' + item.mail_error.error, item.mail_error.params) }}</div>
 				</template>
-				<template v-slot:item.password="{ item }">
+				<template #item.password="{ item }">
 					<input type="text" v-model="item.password" :class="{error: item.password_error}" @focusout="updateMemberPassword(item)">
 					<div v-if="item.password_error" class="error">{{ $t('error_' + item.password_error.error, item.password_error.params) }}</div>
 				</template>
-				<template v-slot:item.actions="{ item }">
+				<template #item.actions="{ item }">
 					<div class="flex actions">
-						<tooltip v-if="!group.use_passwords">
-							<template v-slot:activator="{ on }">
-								<div v-on="on">
+						<v-tooltip v-if="!group.use_passwords">
+							<template #activator="{ props }">
+								<div v-bind="props">
 									<v-icon :disabled="!item.mail" @click="sendInvite(item)">mdi-email-outline</v-icon>
 								</div>
 							</template>
 							{{ $t('send_invite') }}
-						</tooltip>
-						<tooltip>
-							<template v-slot:activator="{ on }">
-								<div v-on="on">
+						</v-tooltip>
+						<v-tooltip>
+							<template #activator="{ props }">
+								<div v-bind="props">
 									<v-icon @click="memberToDelete = item; deleteMemberDialog = true">mdi-delete-outline</v-icon>
 								</div>
 							</template>
 							{{ $t('remove_member') }}
-						</tooltip>
+						</v-tooltip>
 					</div>
 				</template>
 			</v-data-table>
@@ -330,9 +343,10 @@
 			</div>
 		</popup>
 
-		<popup v-if="group" v-model="settingsDialog" :width="500">
-			<v-icon slot="icon">mdi-settings-outline</v-icon>
-			<span slot="title">{{ $t('settings') }}</span>
+		<popup v-if="group" v-model="settingsDialog" :width="500" icon="mdi-cog-outline">
+			<template #title>
+				<span>{{ $t('settings') }}</span>
+			</template>
 			<!-- <h4>{{ $t('group_name') }}</h4>
 			{{ group.name }} -->
 			<!--
@@ -354,30 +368,32 @@
 		</popup>
 
 		<popup v-if="group" v-model="weaponsDialog" :width="800">
-			<img slot="icon" src="/image/icon/garden.png">
-			<template slot="title">
+			<template #icon>
+				<img src="/image/icon/garden.png">
+			</template>
+			<template #title>
 				{{ $t('weapons_of', [group.name]) }}
 				<span class="weapon-count">[{{ group.weapons.length }}/{{ max_weapons }}]</span>
 			</template>
 			<div class="weapons-popup">
 				<div :class="{dashed: draggedWeapon && draggedWeaponLocation === 'farmer'}" class="leek-weapons" @dragover="dragOver" @drop="weaponsDrop('leek', $event)">
-					<rich-tooltip-item v-for="(weapon, i) in orderedWeapons" :key="i" v-slot="{ on }" :item="LeekWars.items[weapon]" :bottom="true" :nodge="true">
-						<div :class="{dragging: draggedWeapon && draggedWeapon.template === weapon.template && draggedWeaponLocation === 'leek'}" class="weapon" draggable="true" v-on="on" @dragstart="weaponDragStart('leek', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="removeWeapon(weapon)">
+					<rich-tooltip-item v-for="(weapon, i) in orderedWeapons" :key="i" v-slot="{ props }" :item="LeekWars.items[weapon]" :bottom="true" :nodge="true">
+						<div :class="{dragging: draggedWeapon && draggedWeapon.template === weapon.template && draggedWeaponLocation === 'leek'}" class="weapon" draggable="true" v-bind="props" @dragstart="weaponDragStart('leek', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="removeWeapon(weapon)">
 							<img :src="'/image/' + LeekWars.items[weapon].name.replace('_', '/') + '.png'" draggable="false">
-							<tooltip v-if="LeekWars.items[weapon].level > group.level">
-								<template v-slot:activator="{ on }">
-									<v-icon v-on="on" class="card alert">mdi-alert-circle</v-icon>
+							<v-tooltip v-if="LeekWars.items[weapon].level > group.level">
+								<template #activator="{ props }">
+									<v-icon v-bind="props" class="card alert">mdi-alert-circle</v-icon>
 								</template>
 								{{ $t('too_high_level', [LeekWars.items[weapon].level]) }}
-							</tooltip>
+							</v-tooltip>
 						</div>
 					</rich-tooltip-item>
 				</div>
 				<br>
 				<h4>{{ $t('main.weapons') }} ({{ farmer_weapons.length }})</h4>
 				<div :class="{dashed: draggedWeapon && draggedWeaponLocation === 'leek'}" class="farmer-weapons" @dragover="dragOver" @drop="weaponsDrop('farmer', $event)">
-					<rich-tooltip-item v-for="(weapon, i) in farmer_weapons" :key="i" v-slot="{ on }" :item="LeekWars.items[weapon]" :bottom="true" :nodge="true">
-						<div :class="{dragging: draggedWeapon && draggedWeapon === weapon && draggedWeaponLocation === 'farmer', locked: LeekWars.items[weapon].level > group.level || (LeekWars.weapons[LeekWars.items[weapon].params].forgotten && hasForgottenWeapon) || group.weapons.find(w => w === weapon) }" :draggable="LeekWars.items[weapon].level <= group.level" class="weapon" v-on="on" @dragstart="weaponDragStart('farmer', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="addWeapon(weapon)">
+					<rich-tooltip-item v-for="(weapon, i) in farmer_weapons" :key="i" v-slot="{ props }" :item="LeekWars.items[weapon]" :bottom="true" :nodge="true">
+						<div :class="{dragging: draggedWeapon && draggedWeapon === weapon && draggedWeaponLocation === 'farmer', locked: LeekWars.items[weapon].level > group.level || (LeekWars.weapons[LeekWars.items[weapon].params].forgotten && hasForgottenWeapon) || group.weapons.find(w => w === weapon) }" :draggable="LeekWars.items[weapon].level <= group.level" class="weapon" v-bind="props" @dragstart="weaponDragStart('farmer', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="addWeapon(weapon)">
 							<img :src="'/image/' + LeekWars.items[weapon].name.replace('_', '/') + '.png'" draggable="false">
 						</div>
 					</rich-tooltip-item>
@@ -386,27 +402,29 @@
 		</popup>
 
 		<popup v-if="group" v-model="chipsDialog" :width="800">
-			<v-icon slot="icon">mdi-chip</v-icon>
-			<template slot="title">{{ $t('chips_of', [group.name]) }} <span class="chip-count">[{{ group.chips.length }}/{{ group.ram }}]</span></template>
+			<template #icon>
+				<v-icon>mdi-chip</v-icon>
+			</template>
+			<template #title>{{ $t('chips_of', [group.name]) }} <span class="chip-count">[{{ group.chips.length }}/{{ group.ram }}]</span></template>
 			<div class="chips-dialog">
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'farmer'}" class="leek-chips" @dragover="dragOver" @drop="chipsDrop('leek', $event)">
-					<rich-tooltip-item v-for="chip in orderedChips" :key="chip" v-slot="{ on }" :item="LeekWars.items[chip]" :bottom="true" :nodge="true">
-						<div :class="{dragging: draggedChip && draggedChip === chip && draggedChipLocation === 'leek'}" class="chip" draggable="true" v-on="on" @dragstart="chipDragStart('leek', chip, $event)" @dragend="chipDragEnd(chip)" @click="removeChip(chip)">
+					<rich-tooltip-item v-for="chip in orderedChips" :key="chip" v-slot="{ props }" :item="LeekWars.items[chip]" :bottom="true" :nodge="true">
+						<div :class="{dragging: draggedChip && draggedChip === chip && draggedChipLocation === 'leek'}" class="chip" draggable="true" v-bind="props" @dragstart="chipDragStart('leek', chip, $event)" @dragend="chipDragEnd(chip)" @click="removeChip(chip)">
 							<img :src="'/image/chip/' + CHIPS[chip].name + '.png'" draggable="false">
-							<tooltip v-if="LeekWars.items[chip].level > group.level">
-								<template v-slot:activator="{ on }">
-									<v-icon v-on="on" class="card alert">mdi-alert-circle</v-icon>
+							<v-tooltip v-if="LeekWars.items[chip].level > group.level">
+								<template #activator="{ props }">
+									<v-icon v-bind="props" class="card alert">mdi-alert-circle</v-icon>
 								</template>
 								{{ $t('too_high_level', [LeekWars.items[chip].level]) }}
-							</tooltip>
+							</v-tooltip>
 						</div>
 					</rich-tooltip-item>
 				</div>
 				<br>
 				<h4>{{ $t('main.chips') }} ({{ farmer_chips.length }})</h4>
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'leek'}" class="farmer-chips" @dragover="dragOver" @drop="chipsDrop('farmer', $event)">
-					<rich-tooltip-item v-for="chip in farmer_chips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[chip]" :bottom="true" :nodge="true">
-						<div :quantity="chip.quantity" :class="{dragging: draggedChip && draggedChip === chip && draggedChipLocation === 'farmer', locked: CHIPS[chip].level > group.level || group.chips.find(c => c === chip) }" :draggable="CHIPS[chip].level <= group.level" class="chip" v-on="on" @dragstart="chipDragStart('farmer', chip, $event)" @dragend="chipDragEnd(chip)" @click="addChip(chip)">
+					<rich-tooltip-item v-for="chip in farmer_chips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[chip]" :bottom="true" :nodge="true">
+						<div :quantity="chip.quantity" :class="{dragging: draggedChip && draggedChip === chip && draggedChipLocation === 'farmer', locked: CHIPS[chip].level > group.level || group.chips.find(c => c === chip) }" :draggable="CHIPS[chip].level <= group.level" class="chip" v-bind="props" @dragstart="chipDragStart('farmer', chip, $event)" @dragend="chipDragEnd(chip)" @click="addChip(chip)">
 							<img :src="'/image/chip/' + CHIPS[chip].name + '.png'" draggable="false">
 						</div>
 					</rich-tooltip-item>
@@ -415,68 +433,114 @@
 		</popup>
 
 		<popup v-if="group" v-model="deleteMemberDialog" :width="600">
-			<v-icon slot="icon">mdi-delete</v-icon>
-			<span v-if="memberToDelete" slot="title">{{ $t('delete_member_confirm_title', [memberToDelete.name]) }}</span>
+			<template #icon>
+				<v-icon>mdi-delete</v-icon>
+			</template>
+			<template #title>
+				<span v-if="memberToDelete">{{ $t('delete_member_confirm_title', [memberToDelete.name]) }}</span>
+			</template>
 			<div v-if="memberToDelete">
 				{{ $t('delete_member_confirm', [memberToDelete.name]) }}
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="deleteMemberDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="red" @click="removeMember()">{{ $t('main.delete') }}</div>
-			</div>
+			</template>
 		</popup>
 
-		<capital-dialog ref="capitalDialog" v-model="capitalDialog" :leek="characteristics" :total-capital="totalCapital" :restat="true" />
+		<capital-dialog ref="capitalDialog" v-model="capitalDialogOpened" :leek="characteristics" :total-capital="totalCapital" :restat="true" />
 
 		<popup v-if="group" v-model="giveItemDialog" :width="800" class="give-item-dialog">
-			<v-icon slot="icon">mdi-gift-outline</v-icon>
-			<div slot="title">{{ $t('give_item') }}</div>
+			<template #icon>
+				<v-icon>mdi-gift-outline</v-icon>
+			</template>
+			<template #title>
+				<div>{{ $t('give_item') }}</div>
+			</template>
 
-			<v-tabs :key="itemCategories.length" class="tabs" grow :show-arrows="false">
-				<v-tabs-slider class="indicator" />
-				<v-tab v-for="(category, c) in itemCategories" :key="c" :href="'#tab-' + c" class="tab">
+			<v-tabs v-model="giveItemTab" :key="itemCategories.length" class="tabs" grow :show-arrows="false">
+				<v-tab v-for="(category, c) in itemCategories" :key="c" :value="'tab-' + c" class="tab">
 					<v-icon>{{ category.icon }}</v-icon>&nbsp;
 					{{ $t('main.' + category.name) }}
 				</v-tab>
-				<v-tab-item :value="'tab-' + 0" class="content grid farmer-weapons weapons-popup">
-					<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ on }" :item="LeekWars.items[LeekWars.weapons[weapon.id].item]" :bottom="true" :instant="true" :nodge="true">
-						<div class="weapon" @click="giveItemConfirm(weapon.item)">
-							<img :src="'/image/weapon/' + weapon.name + '.png'" v-on="on">
-						</div>
-					</rich-tooltip-item>
-				</v-tab-item>
-				<v-tab-item :value="'tab-' + 1" class="content grid chips-popup farmer-chips">
-					<rich-tooltip-item v-for="chip of availableChips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[LeekWars.chipTemplates[chip.template].item]" :bottom="true" :instant="true" :nodge="true">
-						<div class="chip" @click="giveItemConfirm(chip.id)">
-							<img :src="'/image/chip/' + chip.name + '.png'" v-on="on">
-						</div>
-					</rich-tooltip-item>
-				</v-tab-item>
-				<!-- <v-tab-item :value="'tab-' + 2" class="content grid farmer-chips">
-
-				</v-tab-item> -->
 			</v-tabs>
+			<v-window v-model="giveItemTab">
+				<v-window-item :value="'tab-' + 0" class="content grid farmer-weapons weapons-popup">
+					<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ props }" :item="LeekWars.items[LeekWars.weapons[weapon.id].item]" :bottom="true" :instant="true" :nodge="true">
+						<div class="weapon" @click="giveItemConfirm(weapon.item)">
+							<img :src="'/image/weapon/' + weapon.name + '.png'" v-bind="props">
+						</div>
+					</rich-tooltip-item>
+				</v-window-item>
+				<v-window-item :value="'tab-' + 1" class="content grid chips-popup farmer-chips">
+					<rich-tooltip-item v-for="chip of availableChips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[LeekWars.chipTemplates[chip.template].item]" :bottom="true" :instant="true" :nodge="true">
+						<div class="chip" @click="giveItemConfirm(chip.id)">
+							<img :src="'/image/chip/' + chip.name + '.png'" v-bind="props">
+						</div>
+					</rich-tooltip-item>
+				</v-window-item>
+				<!-- <v-window-item :value="'tab-' + 2" class="content grid farmer-chips">
 
-			<div slot="actions">
+				</v-window-item> -->
+			</v-window>
+
+			<template #actions>
 				<div v-ripple @click="giveItemDialog = false">{{ $t('main.cancel') }}</div>
-			</div>
+			</template>
 		</popup>
 
 		<popup v-if="group" v-model="giveItemConfirmDialog" :width="600">
-			<v-icon slot="icon">mdi-gift-outline</v-icon>
-			<div slot="title">{{ $t('give_item') }}</div>
+			<template #icon>
+				<v-icon>mdi-gift-outline</v-icon>
+			</template>
+			<template #title>
+				<div>{{ $t('give_item') }}</div>
+			</template>
 			<div class="give-item-confirm" v-if="itemToGive && giveItemTarget">
 				<div class="item">
 					<item :item="itemToGive" />
 				</div>
-				<i18n path="confirm_give_item">
-					<b slot="member">{{ giveItemTarget.name }}</b>
-				</i18n>
+				<i18n-t keypath="confirm_give_item">
+					<template #member>
+						<b>{{ giveItemTarget.name }}</b>
+					</template>
+				</i18n-t>
 			</div>
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple @click="giveItemConfirmDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="green" @click="giveItemFinal()">{{ $t('give_item') }}</div>
+			</template>
+		</popup>
+
+		<popup v-if="group" v-model="giveMoneyDialog" :width="500" class="give-item-dialog">
+			<template #icon>
+				<v-icon>mdi-gift-outline</v-icon>
+			</template>
+			<template #title>
+				<div>{{ $t('give_money', { member: giveMoneyTarget?.name || $t('everybody') }) }}</div>
+			</template>
+
+			<div class="flex" style="gap: 10px">
+				<div class="column" style="flex: 1">
+					<h4>Habs</h4>
+					<div class="flex" style="justify-content: flex-start; gap: 6px; align-items: center;">
+						<input type="number" v-model="giveMoneyAmount" placeholder="1000000" :min="0" :max="10000000" style="padding: 8px; flex: 1" />
+						<span class="hab"></span>
+					</div>
+				</div>
+				<div class="column" style="flex: 1">
+					<h4>Combats</h4>
+					<div class="flex" style="justify-content: flex-start; gap: 6px; align-items: center;">
+						<input type="number" v-model="giveFightsAmount" placeholder="100" :min="0" :max="100" style="padding: 8px; flex: 1" />
+						<v-icon>mdi-sword-cross</v-icon>
+					</div>
+				</div>
 			</div>
+
+			<template #actions>
+				<div v-ripple @click="giveMoneyDialog = false">{{ $t('main.cancel') }}</div>
+				<div v-ripple class="green" @click="giveMoneyConfirm()">{{ $t('main.send') }}</div>
+			</template>
 		</popup>
 	</div>
 </template>
@@ -484,11 +548,11 @@
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import { Group } from '@/model/group'
 	import { Farmer, Member } from '@/model/farmer'
 	import { store } from '@/model/store'
-	const ChatElement = () => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`)
+	const ChatElement = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
 	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import CharacteristicTooltip from '@/component/leek/characteristic-tooltip.vue'
@@ -500,8 +564,10 @@
 	import FightsHistory from '@/component/history/fights-history.vue'
 	import TournamentsHistory from '@/component/history/tournaments-history.vue'
 	import Item from '@/component/item.vue'
+	import { defineAsyncComponent } from 'vue'
+	import { emitter } from '@/model/vue'
 
-	@Component({ name: 'group', i18n: {}, mixins: [...mixins], components: {
+	@Options({ name: 'group', i18n: {}, mixins: [...mixins], components: {
 		chat: ChatElement, RichTooltipTeam, RichTooltipFarmer, CharacteristicTooltip, RichTooltipItem, CapitalDialog, FightsHistory, TournamentsHistory, Item
 	}})
 	export default class GroupPage extends Vue {
@@ -517,7 +583,7 @@
 		draggedChip: number | null = null
 		draggedChipLocation: string | null = null
 		CHIPS = CHIPS
-		capitalDialog: boolean = false
+		capitalDialogOpened: boolean = false
 		applyingEquipment: boolean = false
 		membersDialog: boolean = false
 		characteristics: {[key: string]: number} = {}
@@ -525,34 +591,39 @@
 		memberToDelete: Member | null = null
 		WeaponsData = WeaponsData
 		giveItemDialog: boolean = false
+		giveItemTab: string = 'tab-0'
 		giveItemConfirmDialog: boolean = false
 		itemToGive: any = null
 		giveItemTarget: Member | null = null
+		giveMoneyDialog: boolean = false
+		giveMoneyTarget: Member | null = null
+		giveMoneyAmount: number = 0
+		giveFightsAmount: number = 0
 
 		headers = [
 			{ text: 'Membre', value: 'name' },
 			{ text: 'Équipe', value: 'team' },
 			{ text: 'Niveau', value: 'total_level' },
-			{ text: 'Combats restants', value: 'day_fight' },
 			{ text: 'Combats', value: 'fights' },
+			{ text: 'Restants', value: 'day_fight' },
 			{ text: 'Victoires', value: 'wins' },
 			{ text: 'Nuls', value: 'draws' },
 			{ text: 'Défaites', value: 'defeats' },
-			{ text: 'Ratio', value: 'ratio' },
-			{ text: 'Combats de test', value: 'test_fights' },
+			{ text: 'Talent', value: 'talent' },
+			{ text: 'Combats test', value: 'test_fights' },
 			{ text: 'Trophées', value: 'trophies' },
         ]
 		headersSupervisor = [
 			{ text: 'Membre', value: 'name' },
 			{ text: 'Équipe', value: 'team' },
 			{ text: 'Niveau', value: 'total_level' },
-			{ text: 'Combats restants', value: 'day_fight' },
 			{ text: 'Combats', value: 'fights' },
+			{ text: 'Restants', value: 'day_fight' },
 			{ text: 'Victoires', value: 'wins' },
 			{ text: 'Nuls', value: 'draws' },
 			{ text: 'Défaites', value: 'defeats' },
-			{ text: 'Ratio', value: 'ratio' },
-			{ text: 'Combats de test', value: 'test_fights' },
+			{ text: 'Talent', value: 'talent' },
+			{ text: 'Tests', value: 'test_fights' },
 			{ text: 'Trophées', value: 'trophies' },
 			{ text: 'Actions', value: 'give' },
         ]
@@ -594,17 +665,17 @@
 			LeekWars.get('groupe/get/' + this.group_id).then(group => {
 				this.group = group
 				this.headersDialog = group.use_passwords ? this.headersDialogPassword : this.headersDialogEmails
-				Vue.set(this.characteristics, 'level', group.level)
-				Vue.set(this.characteristics, 'baseLife', 100 + (group.level - 1) * 3)
+				this.characteristics['level'] = group.level
+				this.characteristics['baseLife'] = 100 + (group.level - 1) * 3
 				for (const charac of LeekWars.characteristics) {
-					Vue.set(this.characteristics, charac, group[charac])
+					this.characteristics[charac] = group[charac]
 				}
 				for (const member of group.members) {
-					Vue.set(member, 'give', {})
+					member.give = {}
 				}
 				this.renameGroupName = group.name
 				LeekWars.setTitle(group.name)
-				this.$root.$emit('loaded')
+				emitter.emit('loaded')
 			})
 		}
 
@@ -832,10 +903,10 @@
 				this.group.level = parseInt(e.target!.value)
 				if (this.group.level < 1) this.group.level = 1
 				if (this.group.level > 301) this.group.level = 301
-				Vue.set(this.characteristics, 'level', this.group.level)
-				Vue.set(this.characteristics, 'baseLife', 100 + (this.group.level - 1) * 3)
+				this.characteristics['level'] = this.group.level
+				this.characteristics['baseLife'] = 100 + (this.group.level - 1) * 3
 				if (this.characteristics.life < this.characteristics.baseLife) {
-					Vue.set(this.characteristics, 'life', this.characteristics.baseLife)
+					this.characteristics['life'] = this.characteristics.baseLife
 				}
 			}
 		}
@@ -916,10 +987,10 @@
 				member_id: member.id,
 				name: member.name,
 			}).then(result => {
-				Vue.delete(member, 'name_error')
+				delete member['name_error']
 			}).error(error => {
-				Vue.delete(member, 'name_error')
-				Vue.set(member, 'name_error', error)
+				delete member['name_error']
+				member['name_error'] = error
 			})
 		}
 
@@ -930,10 +1001,10 @@
 				member_id: member.id,
 				leek_name: member.leek,
 			}).then(result => {
-				Vue.delete(member, 'leek_error')
+				delete member['leek_error']
 			}).error(error => {
-				Vue.delete(member, 'leek_error')
-				Vue.set(member, 'leek_error', error)
+				delete member['leek_error']
+				member['leek_error'] = error
 			})
 		}
 
@@ -944,10 +1015,10 @@
 				member_id: member.id,
 				email: member.mail
 			}).then(result => {
-				Vue.delete(member, 'mail_error')
+				delete member['mail_error']
 			}).error(error => {
-				Vue.delete(member, 'mail_error')
-				Vue.set(member, 'mail_error', error)
+				delete member['mail_error']
+				member['mail_error'] = error
 			})
 		}
 
@@ -958,10 +1029,10 @@
 				member_id: member.id,
 				password: member.password
 			}).then(result => {
-				Vue.delete(member, 'password_error')
+				delete member['password_error']
 			}).error(error => {
-				Vue.delete(member, 'password_error')
-				Vue.set(member, 'password_error', error)
+				delete member['password_error']
+				member['password_error'] = error
 			})
 		}
 
@@ -985,6 +1056,31 @@
 			})
 			this.giveItemConfirmDialog = false
 			this.giveItemDialog = false
+		}
+
+		giveMoney(member: Member) {
+			this.giveMoneyDialog = true
+			this.giveMoneyTarget = member
+		}
+
+		giveMoneyConfirm() {
+			if (!this.group) { return }
+			if (this.giveMoneyTarget) {
+				LeekWars.post('groupe/give-money-fights', {
+					group_id: this.group.id,
+					member_id: this.giveMoneyTarget!.id,
+					amount: this.giveMoneyAmount,
+					fights: this.giveFightsAmount,
+				})
+			} else {
+				LeekWars.post('groupe/give-money-fights-all', {
+					group_id: this.group.id,
+					amount: this.giveMoneyAmount,
+					fights: this.giveFightsAmount,
+				})
+			}
+			this.giveMoneyDialog = false
+			this.giveMoneyTarget = null
 		}
 	}
 </script>
@@ -1015,11 +1111,6 @@ h4 {
 .chat {
 	height: 300px;
 }
-.members {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-}
 input[type="text"], input[type="email"] {
 	height: 28px;
 	vertical-align: bottom;
@@ -1029,11 +1120,20 @@ input[type="text"], input[type="email"] {
 	}
 }
 .members {
-	&::v-deep th {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	.v-icon {
+		opacity: 0.7;
+		&:hover {
+			opacity: 1;
+		}
+	}
+	&:deep(th) {
 		text-align: left;
 	}
-	&::v-deep td {
-		padding: 0 10px !important;
+	&:deep(td), &:deep(th) {
+		padding: 0 6px !important;
 		height: 36px !important;
 	}
 	.name {
@@ -1231,4 +1331,9 @@ div.error {
 		display: flex;
 	}
 }
+.column {
+	display: flex;
+	flex-direction: column;
+}
+
 </style>

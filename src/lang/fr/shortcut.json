@@ -10,7 +10,7 @@
 	"shortcut_9": "<b>Alt + gauche/droite</b> : basculer entre les fichiers ouverts",
 	"shortcut_10": "<b>Ctrl + Espace</b> : complétion automatique",
 	"shortcut_11": "<b>Ctrl + Clic</b> : aller à la définition du symbole",
-	"shortcut_12": "<b>Ctrl + Shift + F</b> : formatage et indentation automatique du code",
+	"shortcut_12": "<b>Alt + Shift + F</b> : formatage et indentation automatique du code",
 	"shortcut_13": "<b>Ctrl + U</b> : replier/déplier le bloc de code courant",
 	"shortcut_14": "<b>Ctrl + J</b> : replier tous les blocs de code",
 	"shortcut_15": "<b>Ctrl + I</b> : déplier tous les blocs de code"

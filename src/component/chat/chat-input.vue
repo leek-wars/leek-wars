@@ -12,12 +12,12 @@
 	import { Commands } from '@/model/commands'
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import ChatCommands from './chat-commands.vue'
 	import ChatPseudos from './chat-pseudos.vue'
 	import EmojiPicker from './emoji-picker.vue'
 
-	@Component({ components: { 'emoji-picker': EmojiPicker, ChatCommands, ChatPseudos } })
+	@Options({ components: { 'emoji-picker': EmojiPicker, ChatCommands, ChatPseudos } })
 	export default class ChatInput extends Vue {
 
 		@Prop({ required: true }) chat!: number
@@ -220,6 +220,7 @@
 		z-index: 8;
 		width: 400px;
 		max-height: 250px;
+		overflow-y: auto;
 		background: var(--pure-white);
 		bottom: 39px;
 		position: absolute;

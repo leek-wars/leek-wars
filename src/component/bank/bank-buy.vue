@@ -8,18 +8,20 @@
 		</div>
 		<panel class="first">
 
-			<v-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)" hide-details dense solo>
-				<template v-slot:selection>
+			<v-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)" hide-details dense variant="solo">
+				<template #selection>
 					<flag :code="LeekWars.currencies[LeekWars.currency].flag" :clickable="false" />&nbsp;
 					{{ LeekWars.currency }} &nbsp; <span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>
 				</template>
-				<template slot="item" slot-scope="data">
-					<v-list-item-content>
-						<v-list-item-title class="currency">
-							<flag :code="LeekWars.currencies[data.item].flag" :clickable="false" />&nbsp;
-							{{ data.item }} &nbsp; <span class="symbol">{{ LeekWars.currencies[data.item].symbol }}</span>
-						</v-list-item-title>
-					</v-list-item-content>
+				<template #item="{ props, item }">
+					<v-list-item v-bind="props" class="currency">
+						<template #prepend>
+							<flag :code="LeekWars.currencies[item.value].flag" :clickable="false" />
+						</template>
+						<template #append>
+							<span class="symbol">{{ LeekWars.currencies[item.value].symbol }}</span>
+						</template>
+					</v-list-item>
 				</template>
 			</v-select>
 
@@ -47,14 +49,14 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import { loadScript } from "@paypal/paypal-js"
 	import { mixins } from '@/model/i18n'
 	import { locale } from '@/locale'
 	import BankProduct from './bank-product.vue'
 	import { store } from '@/model/store'
 
-	@Component({ name: 'bank-buy', i18n: {}, mixins: [...mixins], components: { BankProduct } })
+	@Options({ name: 'bank-buy', i18n: {}, mixins: [...mixins], components: { BankProduct } })
 	export default class BankBuy extends Vue {
 		pack!: number
 		offer!: number
@@ -152,7 +154,7 @@
 }
 .v-select {
 	display: inline-block;
-	::v-deep input {
+	:deep(input) {
 		border: none;
 		width: 10px;
 	}
@@ -185,11 +187,11 @@
 	.panel h3 {
 		color: red;
 	}
-	.panel ::v-deep .sk-main-content h3:before {
+	.panel :deep(.sk-main-content h3:before) {
 		width: 0;
 	}
-	.panel ::v-deep .sk-main-content h3:after,
-	.panel ::v-deep .sk-kit-header h1:after {
+	.panel :deep(.sk-main-content h3:after),
+	.panel :deep(.sk-kit-header h1:after) {
 		border: none;
 	}
 </style>

@@ -44,5 +44,7 @@
 	"new_leek": "允许创建另一个韭菜",
 	"start_team_tournament": "发起团队锦标赛",
 	"give_item": "赠送物品",
-	"confirm_give_item": "确认将此物品捐赠给会员 {member} ?"
+	"confirm_give_item": "确认将此物品捐赠给会员 {member} ?",
+	"give_money": "给{member}钱",
+	"everybody": "每个人"
 }

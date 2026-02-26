@@ -43,5 +43,7 @@
 	"solo_tournaments_title": "赢得的个人比赛",
 	"farmer_tournaments_title": "赢得的饲养员比赛",
 	"team_tournaments_title": "赢得的团体比赛",
-	"tournaments": "锦标赛"
+	"tournaments": "锦标赛",
+	"chests_title": "已开宝箱",
+	"chests": "宝箱"
 }

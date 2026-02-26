@@ -6,9 +6,9 @@
 	import { env } from '@/env'
 	import { LeekWars } from '@/model/leekwars'
 	import { Team } from '@/model/team'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
-	@Component({ name: "emblem" })
-	export default class Avatar extends Vue {
+	import { Options, Prop, Vue } from 'vue-property-decorator'
+	@Options({ name: "emblem" })
+	export default class Emblem extends Vue {
 		@Prop() team!: Team
 		get url() {
 			if (this.team.emblem_changed > 0) {

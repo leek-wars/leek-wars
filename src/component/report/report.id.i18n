@@ -40,5 +40,8 @@
 	"errors": "Kesalahan",
 	"errors_warnings": "Kesalahan dan peringatan",
 	"n_errors": "{n} kesalahan",
-	"n_warnings": "{n} peringatan"
+	"n_warnings": "{n} peringatan",
+	"toggle_turrets": "Tampilkan/sembunyikan menara",
+	"toggle_percent": "Persentase nyawa",
+	"toggle_smooth": "Kurva halus/bersudut"
 }

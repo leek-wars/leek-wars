@@ -33,24 +33,26 @@
 		<div class="container documentation last">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column4">
 				<panel class="first">
-					<div slot="content"class="items-list">
-						<div v-for="(category, c) of filteredCategories" :key="category.id">
-							<h2 v-ripple @click="toggleCategory(c)">
-								<v-icon>{{ icons[c] }}</v-icon> {{ $t('doc.function_category_' + categories[c].name) }} <span v-if="query.length">({{ category.length }})</span>
-								<div class="spacer"></div>
-								<v-icon v-if="query.length || categoryState[c]">mdi-chevron-up</v-icon>
-								<v-icon v-else>mdi-chevron-down</v-icon>
-							</h2>
-							<div v-if="query.length || categoryState[c]">
-								<div v-for="(item, i) in category" :key="i" @click="navigate(item.name)" :item="item.name" class="item">
-									{{ item.name }}<span class="arguments" v-if="item.arguments_types">(<span v-for="(arg, i) in item.arguments_names" :key="i"><span v-if="item.optional[i]">[</span><span class="argument">{{ $t('doc.arg_type_' + item.arguments_types[i]) }}</span>&nbsp;{{ arg }}<span v-if="item.optional[i]">]</span><span v-if="i < item.arguments_names.length - 1">, </span></span>)
-									<span v-if="item.return_type != 0">
-										<span class="arrow">→</span> <span class="argument"> {{ $t('doc.arg_type_' + item.return_type) }}</span>&nbsp;{{ item.return_name }}
-									</span></span>
+					<template #content>
+						<div class="items-list">
+							<div v-for="(category, c) of filteredCategories" :key="category.id">
+								<h2 v-ripple @click="toggleCategory(c)">
+									<v-icon>{{ icons[c] }}</v-icon> {{ $t('doc.function_category_' + categories[c].name) }} <span v-if="query.length">({{ category.length }})</span>
+									<div class="spacer"></div>
+									<v-icon v-if="query.length || categoryState[c]">mdi-chevron-up</v-icon>
+									<v-icon v-else>mdi-chevron-down</v-icon>
+								</h2>
+								<div v-if="query.length || categoryState[c]">
+									<div v-for="(item, i) in category" :key="i" @click="navigate(item.name)" :item="item.name" class="item">
+										{{ item.name }}<span class="arguments" v-if="item.arguments_types">(<span v-for="(arg, i) in item.arguments_names" :key="i"><span v-if="item.optional[i]">[</span><span class="argument">{{ $t('doc.arg_type_' + item.arguments_types[i]) }}</span>&nbsp;{{ arg }}<span v-if="item.optional[i]">]</span><span v-if="i < item.arguments_names.length - 1">, </span></span>)
+										<span v-if="item.return_type != 0">
+											<span class="arrow">→</span> <span class="argument"> {{ $t('doc.arg_type_' + item.return_type) }}</span>&nbsp;{{ item.return_name }}
+										</span></span>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
+					</template>
 				</panel>
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column8">
@@ -73,15 +75,16 @@
 	import { FUNCTION_BY_ID } from '@/model/function_by_id'
 	import { CONSTANTS } from '@/model/constants'
 	import { CONSTANT_BY_ID } from '@/model/constant_by_id'
-	import { mixins } from '@/model/i18n'
+	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import DocumentationConstant from './documentation-constant.vue'
 	import DocumentationFunction from './documentation-function.vue'
-	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
+	import { emitter } from '@/model/vue'
+	import { nextTick } from 'vue'
 
-	@Component({
+	@Options({
 		name: 'documentation',
 		components: { DocumentationFunction, DocumentationConstant, Breadcrumb },
 		i18n: {},
@@ -145,16 +148,19 @@
 			return categories
 		}
 
-		created() {
+		async created() {
+			// Load doc translations
+			const docMessages = await import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
+			i18n.global.mergeLocaleMessage(locale, { doc: docMessages.default })
 
 			LeekWars.loadEncyclopedia(locale)
 
 			const get_categories = (callback: any) => {
-				if (localStorage.getItem('data/function_categories_v3')) {
-					callback({categories: JSON.parse(localStorage.getItem('data/function_categories_v3') || '[]')})
+				if (localStorage.getItem('data/function_categories_v4')) {
+					callback({categories: JSON.parse(localStorage.getItem('data/function_categories_v4') || '[]')})
 				} else {
 					LeekWars.get('function/get-categories').then(data => {
-						localStorage.setItem('data/function_categories_v3', JSON.stringify(data.categories))
+						localStorage.setItem('data/function_categories_v4', JSON.stringify(data.categories))
 						callback(data)
 					})
 				}
@@ -162,7 +168,7 @@
 			get_categories((data: any) => {
 				this.categories = data.categories
 				for (const category in this.categories) {
-					Vue.set(this.categoryState, category, localStorage.getItem('documentation/category-' + category) === 'true')
+					this.categoryState[category] = localStorage.getItem('documentation/category-' + category) === 'true'
 				}
 				let id = 0
 				for (const item of FUNCTIONS) {
@@ -225,8 +231,8 @@
 				LeekWars.box = true
 			}
 			(this.$refs.search as HTMLElement).focus()
-			this.$root.$on('back', this.back)
-			this.$root.$on('doc-navigate', this.navigate)
+			emitter.on('back', this.back)
+			emitter.on('doc-navigate', this.navigate)
 		}
 		focus() {
 			(this.$refs.search as HTMLElement).focus()
@@ -234,12 +240,14 @@
 		back() {
 			this.$router.push('/help/documentation')
 		}
-		beforeDestroy() {
-			LeekWars.large = false
-			LeekWars.footer = true
-			LeekWars.box = false
-			this.$root.$off('back', this.back)
-			this.$root.$off('doc-navigate', this.navigate)
+		beforeUnmount() {
+			if (!this.popup) {
+				LeekWars.large = false
+				LeekWars.footer = true
+				LeekWars.box = false
+			}
+			emitter.off('back', this.back)
+			emitter.off('doc-navigate', this.navigate)
 		}
 
 		@Watch('$route.params')
@@ -267,7 +275,7 @@
 			if (!this.filteredItems.find((it) => it.name === item)) {
 				this.query = ''
 			}
-			Vue.nextTick(() => {
+			nextTick(() => {
 				const index = this.filteredItems.findIndex((it) => it.name === item)
 				if (index !== -1) {
 					this.lazy_start = Math.max(0, index - 2)
@@ -417,10 +425,10 @@
 	.items .function-name {
 		color: black;
 	}
-	.items ::v-deep .item.deprecated .content {
+	.items :deep(.item.deprecated .content) {
 		opacity: 0.6;
 	}
-	.items ::v-deep .item .deprecated-message {
+	.items :deep(.item .deprecated-message) {
 		color: #ff7f00;
 		font-weight: bold;
 		margin: 10px;

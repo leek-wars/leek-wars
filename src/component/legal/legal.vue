@@ -17,18 +17,20 @@
 			<br><br>
 			<h2>{{ $t('editor') }}</h2>
 			<div v-html="$t('editor_message')"></div>
-			<i18n path="contact">
-				<a slot="email" href="mailto:contact@leekwars.com">contact@leekwars.com</a>
-			</i18n>
+			<i18n-t keypath="contact">
+				<template #email>
+					<a href="mailto:contact@leekwars.com">contact@leekwars.com</a>
+				</template>
+			</i18n-t>
 		</panel>
 	</div>
 </template>
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'legal', i18n: {} })
+	@Options({ name: 'legal', i18n: {} })
 	export default class Legal extends Vue {
 		created() {
 			LeekWars.setTitle(this.$t('title'))

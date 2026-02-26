@@ -933,4 +933,49 @@ class Bazooka extends Firegun {
 	}
 }
 
-export { WeaponAnimation, WhiteWeaponAnimation, Axe, Bazooka, BLaser, Broadsword, DarkKatana, Destroyer, DoubleGun, Electrisor, EnhancedLightninger, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, Neutrino, Rhino, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rifle, Shotgun, UnbridledGazor, UnstableDestroyer, Sword, HeavySword }
+class QuantumRifle extends Firegun {
+	static textures = [T.shots, T.bullet, T.quantum_rifle, T.cart_quantum_rifle, T.orbital, T.blue_lightning]
+	static sounds = [S.quantum_rifle]
+	static EXPLOSION_DURATION = 40
+	life: number = 100
+	target_z!: number
+	add_orbital: number = 0
+
+	constructor(game: Game) {
+		super(game, T.quantum_rifle, T.cart_quantum_rifle, S.quantum_rifle, 40, DamageType.DEFAULT)
+	}
+
+	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
+
+		this.targets = targets
+		const distance = this.game.ground.field.real_distance(caster.cell!, cell)
+		const duration = (distance - 2) * LighningBall.SPEED * 2
+		this.life = duration + QuantumRifle.EXPLOSION_DURATION
+		this.target_z = z
+
+		this.game.particles.addOrbital(x, y, z, angle - 0.05 + Math.random() * 0.1, duration, 40, 0.2, 4 + Math.random() * 0.5)
+		this.game.particles.addOrbital(x, y, z, angle - 0.05 + Math.random() * 0.1, duration, 40, 0.2, 4 + Math.random() * 0.5)
+		this.game.particles.addOrbital(x, y, z, angle, duration, 40, 0.4, 4 + Math.random() * 0.5)
+		this.game.particles.addOrbital(x, y, z, angle - 0.05 + Math.random() * 0.1, duration, 40, 0.2, 4 + Math.random() * 0.5)
+		this.game.particles.addOrbital(x, y, z, angle - 0.05 + Math.random() * 0.1, duration, 40, 0.2, 4 + Math.random() * 0.5)
+		this.game.setEffectArea(cell, Area.X_2, '#ff0000', duration + QuantumRifle.EXPLOSION_DURATION)
+
+		return duration + QuantumRifle.EXPLOSION_DURATION
+	}
+
+	public update(dt: number) {
+		super.update(dt)
+		this.life -= dt
+		if (this.life > 0 && this.life < QuantumRifle.EXPLOSION_DURATION && this.targets) {
+			this.add_orbital -= dt
+			if (this.add_orbital <= 0) {
+				for (const target of this.targets) {
+					this.game.particles.addSpinningParticle(target.ox, target.oy, Math.PI / 2, T.orbital)
+				}
+				this.add_orbital = 5
+			}
+		}
+	}
+}
+
+export { WeaponAnimation, WhiteWeaponAnimation, Axe, Bazooka, BLaser, Broadsword, DarkKatana, Destroyer, DoubleGun, Electrisor, EnhancedLightninger, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, Neutrino, Rhino, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rifle, Shotgun, UnbridledGazor, UnstableDestroyer, Sword, HeavySword, QuantumRifle }

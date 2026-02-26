@@ -199,26 +199,23 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { mixins } from '@/model/i18n'
-	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
-	import Breadcrumb from '../forum/breadcrumb.vue'
+<script setup lang="ts">
+import { computed } from 'vue'
+import { LeekWars } from '@/model/leekwars'
+import { mixins } from '@/model/i18n'
+import { useI18n } from 'vue-i18n'
+import Breadcrumb from '../forum/breadcrumb.vue'
 
-	@Component({ name: 'groups', i18n: {}, mixins: [...mixins], components: { Breadcrumb } })
-	export default class Groups extends Vue {
+defineOptions({ name: 'Groups', i18n: {}, mixins: [...mixins] })
 
-		get breadcrumb_items() {
-			return [
-				{ name: 'Leek Wars', link: '/' },
-				{ name: this.$t('title'), link: '/groups' },
-			]
-		}
+const { t } = useI18n()
 
-		created() {
-			LeekWars.setTitle(this.$t('title'))
-		}
-	}
+const breadcrumb_items = computed(() => [
+	{ name: 'Leek Wars', link: '/' },
+	{ name: t('title'), link: '/groups' },
+])
+
+LeekWars.setTitle(t('title'))
 </script>
 
 <style lang="scss" scoped>

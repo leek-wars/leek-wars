@@ -16,6 +16,7 @@ class ForumTopic {
 	public pinned!: boolean
 	public subscribed!: boolean
 	public issue!: number
+	public private_issue!: number
 }
 
 class ForumMessage {

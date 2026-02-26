@@ -1,19 +1,19 @@
 <template lang="html">
 	<div>
 		<div class="stats">
-			<template v-for="(effect, e) of potion.effects">
+			<template v-for="(effect, e) of potion.effects" :key="e">
 				<template v-if="effect.type == PotionEffect.CHANGE_SKIN">
-					<div :key="e" v-html="$t('potion.effect_' + effect.type, [$t('potion.skin_' + effect.params[0])])"></div>
-					<div :key="e + '_'" class="leek-preview">
+					<div v-html="$t('potion.effect_' + effect.type, [$t('potion.skin_' + effect.params[0])])"></div>
+					<div class="leek-preview">
 						<leek-image :leek="{level: 30, skin: effect.params[0]}" :scale="0.55" />
 						<leek-image :leek="{level: 90, skin: effect.params[0]}" :scale="0.65" />
 						<leek-image :leek="{level: 250, skin: effect.params[0]}" :scale="0.7" />
 					</div>
 				</template>
-				<div v-else-if="effect.type == PotionEffect.RESTAT" :key="e">
+				<div v-else-if="effect.type == PotionEffect.RESTAT">
 					<div>{{ $t('potion.effect_' + effect.type) }}</div>
 				</div>
-				<div v-else :key="e">
+				<div v-else>
 					<div>
 						<img class="icon" :src="'/image/charac/small/strength.png'">
 						<span v-html="$t('potion.effect_' + effect.type, [ effect.params[1], $t('characteristic.strength'), potion.duration ])"></span>
@@ -33,9 +33,9 @@
 	import EffectView from '@/component/market/effect.vue'
 	import RangeView from '@/component/market/range-view.vue'
 	import { PotionEffect, PotionTemplate } from '@/model/potion'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({
+	@Options({
 		name: 'potion-preview',
 		components: { 'range-view': RangeView, 'effect-view': EffectView, 'area-view': AreaView }
 	})

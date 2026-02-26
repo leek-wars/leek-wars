@@ -1,41 +1,40 @@
 {
 	"compilerOptions": {
-		"target": "esnext",
-		"module": "esnext",
+		"target": "ESNext",
+		"useDefineForClassFields": true,
+		"module": "ESNext",
+		"moduleResolution": "bundler",
 		"strict": true,
 		"jsx": "preserve",
-		"importHelpers": true,
-		"moduleResolution": "node",
-		"experimentalDecorators": true,
+		"resolveJsonModule": true,
+		"isolatedModules": true,
 		"esModuleInterop": true,
 		"allowSyntheticDefaultImports": true,
-		"resolveJsonModule": true,
+		"lib": ["ESNext", "DOM", "DOM.Iterable"],
+		"skipLibCheck": true,
+		"noEmit": true,
 		"sourceMap": true,
 		"baseUrl": ".",
+		"paths": {
+			"@/*": ["src/*"]
+		},
 		"types": [
 			"node",
-			"vuetify"
+			"vite/client"
 		],
-		"paths": {
-			"@/*": [
-				"src/*"
-			]
-		},
-		"lib": [
-			"esnext",
-			"dom",
-			"dom.iterable",
-			"scripthost"
-		]
+		"experimentalDecorators": true
 	},
 	"include": [
 		"src/**/*.ts",
 		"src/**/*.tsx",
 		"src/**/*.vue",
-		"tests/**/*.ts",
-		"tests/**/*.tsx",
+		"vite.config.ts"
 	],
 	"exclude": [
-		"node_modules"
+		"node_modules",
+		"dist"
+	],
+	"references": [
+		{ "path": "./tsconfig.node.json" }
 	]
 }

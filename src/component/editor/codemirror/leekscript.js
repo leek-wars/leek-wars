@@ -59,7 +59,7 @@ import { CONSTANTS } from '@/model/constants'
         return k
     }();
 
-    var isOperatorChar = /[+\-*&%=<>!?|~^@]/;
+    var isOperatorChar = /[+\-*&%=<>!?|~^@\\]/;
     var isJsonldKeyword = /^@(context|id|value|language|type|container|list|set|reverse|index|base|vocab|graph)"/;
 
     function readRegexp(stream) {

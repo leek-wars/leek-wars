@@ -43,5 +43,7 @@
 	"solo_tournaments_title": "Wygrane turnieje solo",
 	"farmer_tournaments_title": "Wygrane turnieje hodowców",
 	"team_tournaments_title": "Wygrane turnieje drużynowe",
-	"tournaments": "Turnieje"
+	"tournaments": "Turnieje",
+	"chests_title": "Otwarte skrzynie",
+	"chests": "Skrzynie"
 }

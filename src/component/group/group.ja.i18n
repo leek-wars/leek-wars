@@ -44,5 +44,7 @@
 	"new_leek": "別のネギの作成を許可する",
 	"start_team_tournament": "チームトーナメントを立ち上げる",
 	"give_item": "品物を贈る",
-	"confirm_give_item": "この品物の会員{member}への寄付を確認しますか？"
+	"confirm_give_item": "この品物の会員{member}への寄付を確認しますか？",
+	"give_money": "{member}にお金を渡す",
+	"everybody": "みんな"
 }

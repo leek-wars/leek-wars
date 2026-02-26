@@ -22,7 +22,6 @@
 	"m_laser": "M-Laser",
 	"neutrino": "Neutrino",
 	"pistol": "Pistolet",
-	"proton_canon": "Canon à protons",
 	"shotgun": "Fusil à pompe",
 	"illicit_grenade_launcher": "Lance-grenades illicite",
 	"mysterious_electrisor": "Électriseur mystérieux",
@@ -35,5 +34,6 @@
 	"taser": "Taser",
 	"odachi": "Odachi",
 	"excalibur": "Excalibur",
-	"scythe": "Faux"
+	"scythe": "Faux",
+	"quantum_rifle": "Fusil quantique"
 }

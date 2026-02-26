@@ -21,9 +21,9 @@
 						<span>{{ $t('main.app') }}</span>
 					</div>
 				</router-link>
-				<a href="https://github.com/leek-wars/leek-wars-client" target="_blank" rel="noopener">
+				<a href="https://github.com/leek-wars/leek-wars" target="_blank" rel="noopener">
 					<div class="tab action">
-						<img src="image/github_white.png">
+						<img src="/image/github_white.png">
 						<span>GitHub <v-icon>mdi-open-in-new</v-icon></span>
 					</div>
 				</a>
@@ -38,10 +38,10 @@
 				<h4>{{ $t('version_n', [LeekWars.version]) }}</h4>
 				<br>
 				<a href="https://www.facebook.com/LeekWars">
-					<img height="28" src="image/about/facebook_like.png">
+					<img height="28" src="/image/about/facebook_like.png">
 				</a>
 				<span ref="github"></span>
-				<span class="github-button"><a class="github-button" href="https://github.com/leek-wars/leek-wars-client" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star Leek Wars on GitHub">Star</a></span>
+				<span class="github-button"><a class="github-button" href="https://github.com/leek-wars/leek-wars" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star Leek Wars on GitHub">Star</a></span>
 				<iframe class="twitter-button" allowtransparency="true" frameborder="0" scrolling="no" src="//platform.twitter.com/widgets/follow_button.html?screen_name=LeekWars&size=l" width="250" height="28"></iframe>
 			</div>
 		</panel>
@@ -58,9 +58,9 @@
 
 		<panel :title="$t('team')">
 			<div v-for="(part, p) of team" :key="p" class="devs">
-				<rich-tooltip-farmer v-for="member of part" :key="member.id" :id="member.id" v-slot="{ on }">
+				<rich-tooltip-farmer v-for="member of part" :key="member.id" :id="member.id">
 					<router-link :key="member.id" :to="'/farmer/' + member.id">
-						<div class="dev" :class="member.grade" v-on="on">
+						<div class="dev" :class="member.grade">
 							<avatar :farmer="{id: member.id, avatar_changed: member.id === 11 ? 0 : 1}" />
 							<h4 :class="member.grade">{{ member.name }}</h4>
 							<div class="role" v-html="member.role"></div>
@@ -70,9 +70,9 @@
 			</div>
 			<h4>{{ $t('contributors') }}</h4>
 			<div class="devs contributors">
-				<rich-tooltip-farmer v-for="member of contributors" :key="member.id" :id="member.id" v-slot="{ on }">
+				<rich-tooltip-farmer v-for="member of contributors" :key="member.id" :id="member.id">
 					<router-link :key="member.id" :to="'/farmer/' + member.id">
-						<div class="contributor" :class="member.grade" v-on="on">
+						<div class="contributor" :class="member.grade">
 							<avatar :farmer="{id: member.id, avatar_changed: member.avatar_changed}" />
 							<h4 class="contributor">{{ member.name }}</h4>
 							<div class="role" v-html="member.role"></div>
@@ -83,9 +83,11 @@
 		</panel>
 
 		<panel :title="$t('contact')">
-			<i18n path="contact_text" tag="p">
-				<a slot="contact" class="green" target="_blank" rel="noopener" href="mailto:contact@leekwars.com">contact@leekwars.com</a>
-			</i18n>
+			<i18n-t keypath="contact_text" tag="p">
+				<template #contact>
+					<a class="green" target="_blank" rel="noopener" href="mailto:contact@leekwars.com">contact@leekwars.com</a>
+				</template>
+			</i18n-t>
 		</panel>
 
 		<panel :title="$t('we_talk_about_leeks')">
@@ -114,9 +116,9 @@
 						<h4>Facebook</h4>
 					</div>
 				</a>
-				<a href="https://github.com/leek-wars/leek-wars-client" target="_blank" rel="noopener">
+				<a href="https://github.com/leek-wars/leek-wars" target="_blank" rel="noopener">
 					<div class="item">
-						<img src="image/about/github.png">
+						<img src="/image/about/github.png">
 						<h4>GitHub</h4>
 					</div>
 				</a>
@@ -164,6 +166,7 @@
 				<li>Flamethrower, pugaeme, CC BY 3.0 license.</li>
 				<li>Punch 1.wav, JakeEaton, CC 0 license.</li>
 				<li>Chains - heavy, Vrymaa, CC 0 license.</li>
+				<li>Quantum harmonic spaced.wav by aceinet, Creative Commons 0 license</li>
 			</ul>
 		</panel>
 	</div>
@@ -173,10 +176,10 @@
 	import { Farmer } from '@/model/farmer'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Component({ name: 'about', i18n: {}, mixins: [...mixins], components: { RichTooltipFarmer } })
+	@Options({ name: 'about', i18n: {}, mixins: [...mixins], components: { RichTooltipFarmer } })
 	export default class About extends Vue {
 		links = [
 			["Korben", "http://korben.info/leek-wars.html"],
@@ -196,7 +199,7 @@
 				{ name: "TypeScript", link: "https://www.typescriptlang.org/", image: "typescript.svg" },
 				{ name: "CodeMirror", link: "https://codemirror.net/", image: "codemirror.svg" },
 				{ name: "Vue", link: "https://vuejs.org/", image: "vue.png" },
-				{ name: "Chartist", link: "https://gionkunz.github.io/chartist-js/", image: "chartist.png" },
+				{ name: "Chart.js", link: "https://www.chartjs.org/", image: "chartjs.png" },
 				{ name: "KaTeX", link: "https://katex.org/", image: "katex.png" },
 				{ name: "webpack", link: "https://webpack.js.org/", image: "webpack.png" },
 				{ name: "npm", link: "https://www.npmjs.com/", image: "npm.svg" },
@@ -252,7 +255,7 @@
 
 		created() {
 			LeekWars.setTitle(this.$i18n.t('title'))
-			LeekWars.setActions([{image: 'github_white.png', click: () => window.open('https://github.com/leek-wars/leek-wars-client', '_newtab')}])
+			LeekWars.setActions([{image: 'github_white.png', click: () => window.open('https://github.com/leek-wars/leek-wars', '_newtab')}])
 		}
 
 		mounted() {

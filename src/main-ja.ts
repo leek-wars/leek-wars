@@ -1,2 +1,2 @@
-import "@/lang/locale/hi"
+import "@/lang/locale/ja"
 import './main'

@@ -44,5 +44,7 @@
 	"new_leek": "Permitir a criação de outro alho-poró",
 	"start_team_tournament": "Lançar um torneio de equipas",
 	"give_item": "Dar um artigo",
-	"confirm_give_item": "Confirmar a doação deste artigo ao membro {member} ?"
+	"confirm_give_item": "Confirmar a doação deste artigo ao membro {member} ?",
+	"give_money": "Dar dinheiro a {member}",
+	"everybody": "todos"
 }

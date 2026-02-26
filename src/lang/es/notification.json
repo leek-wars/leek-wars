@@ -96,5 +96,9 @@
 	"title_35": "{0} ha lanzado una batalla contra un jefe",
 	"message_35": "Ver la lucha",
 	"title_36": "{0} ha creado un nuevo tema: {1}",
-	"message_36": "Ver tema"
+	"message_36": "Ver tema",
+	"title_37": "{0} te dio {1} habs",
+	"message_37": "Ver el mercado",
+	"title_38": "{0} te dio {1} peleas",
+	"message_38": "Ir al huerto"
 }

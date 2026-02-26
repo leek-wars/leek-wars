@@ -1,6 +1,6 @@
 import { FightEntity } from '@/component/player/game/entity'
 import { Game } from "@/component/player/game/game"
-import { Blood, Bubble, Bullet, BuryParticle, Cartridge, CriticalParticle, Explosion, Fire, Garbage, Gaz, Grenade, ImageParticle, Laser, LighningBall, Lightning, LineParticle, Meteorite, NUM_BLOOD_SPRITES, Particle, Plasma, PrismParticle, RealisticExplosion, Rectangle, Rocket, Shot, SimpleFire, SmallExplosion, SpikeParticle, SpinningParticle } from '@/component/player/game/particle'
+import { Blood, Bubble, Bullet, BuryParticle, Cartridge, CriticalParticle, Explosion, Fire, Garbage, Gaz, Grenade, ImageParticle, Laser, LighningBall, Lightning, LineParticle, Meteorite, NUM_BLOOD_SPRITES, Orbital, Particle, Plasma, PrismParticle, RealisticExplosion, Rectangle, Rocket, Shot, SimpleFire, SmallExplosion, SpikeParticle, SpinningParticle } from '@/component/player/game/particle'
 import { Position } from '@/component/player/game/position'
 import { T, Texture } from '@/component/player/game/texture'
 import { Cell } from '@/model/cell'
@@ -142,6 +142,9 @@ class Particles {
 	}
 	public addPrism(x: number, y: number, z: number, life: number) {
 		this.add(new PrismParticle(this.game, x, y, z, life))
+	}
+	public addOrbital(x: number, y: number, z: number, angle: number, duration: number, radius: number, scale: number, speed: number) {
+		this.add(new Orbital(this.game, x, y, z, angle, duration, radius, scale, speed))
 	}
 
 	public add(particle: Particle, onground: boolean = false) {

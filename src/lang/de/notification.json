@@ -96,5 +96,9 @@
 	"title_35": "{0} hat einen Bosskampf gestartet",
 	"message_35": "Kampf ansehen",
 	"title_36": "{0} hat ein neues Thema erstellt: {1}",
-	"message_36": "Thema anzeigen"
+	"message_36": "Thema anzeigen",
+	"title_37": "{0} hat Ihnen {1} habs gegeben",
+	"message_37": "Markt ansehen",
+	"title_38": "{0} hat Ihnen {1} Kämpfe gegeben",
+	"message_38": "In den Gemüsegarten gehen"
 }

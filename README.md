@@ -3,11 +3,11 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/46d001bcd2944ad5b6ba45d772e6099f)](https://www.codacy.com/gh/leek-wars/leek-wars/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=leek-wars/leek-wars&amp;utm_campaign=Badge_Grade)
 [![CI](https://github.com/leek-wars/leek-wars/actions/workflows/build.yml/badge.svg)](https://github.com/leek-wars/leek-wars/actions/workflows/build.yml)
 
-The Leek Wars website frontend, in Vue.js + TypeScript. This is the frontend repository, altough it also contains all the information about the whole Leek Wars projet.
+The Leek Wars website frontend, in Vue.js + TypeScript. This is the frontend repository, although it also contains all the information about the whole Leek Wars project.
 
 Related projects: [LeekScript](https://github.com/leek-wars/leekscript) and [Leek Wars fight generator](https://github.com/leek-wars/leek-wars-generator).
 
-![Banner](https://github.com/leek-wars/leek-wars-client/blob/master/banner.jpg)
+![Banner](https://raw.githubusercontent.com/leek-wars/leek-wars/refs/heads/master/banner.jpg)
 
 ## Deployment
 
@@ -30,7 +30,7 @@ production server. When you log into this local version, you will use your real 
 - LeekScript : https://github.com/leek-wars/leekscript
 
 ## Hacking
-I gladly accept pull requests to Leek Wars. Before starting work on a feature, see the [contribution guidelines](https://github.com/leek-wars/leek-wars-client/blob/master/CONTRIBUTING.md).
+I gladly accept pull requests to Leek Wars. Before starting work on a feature, see the [contribution guidelines](https://github.com/leek-wars/leek-wars/blob/master/CONTRIBUTING.md).
 
 ## Libraries used
 

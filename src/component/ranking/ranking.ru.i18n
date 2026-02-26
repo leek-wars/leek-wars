@@ -43,5 +43,7 @@
 	"solo_tournaments_title": "Победа в одиночных турнирах",
 	"farmer_tournaments_title": "Победа в турнирах селекционеров",
 	"team_tournaments_title": "Выигранные командные турниры",
-	"tournaments": "Турниры"
+	"tournaments": "Турниры",
+	"chests_title": "Открытые сундуки",
+	"chests": "Сундуки"
 }

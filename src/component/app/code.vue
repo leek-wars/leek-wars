@@ -11,9 +11,9 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'lw-code' })
+	@Options({ name: 'lw-code' })
 	export default class Code extends Vue {
 
 		@Prop({required: true}) code!: string

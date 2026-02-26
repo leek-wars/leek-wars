@@ -12,10 +12,10 @@
 				</div>
 			</panel>
 			<panel v-if="env.SIGN_UP" :title="fastRegister ? $t('play') : $t('main.signup')" :icon="fastRegister ? 'mdi-sword-cross' : 'mdi-account-plus'">
-				<div slot="actions">
+				<template #actions>
 					<div v-if="fastRegister" class="button" @click="fastRegister = false"><v-icon>mdi-account-plus</v-icon><span>{{ $t('classic_register') }}</span></div>
 					<div v-else class="button" @click="fastRegister = true"><v-icon>mdi-flash-outline</v-icon><span>{{ $t('fast_register') }}</span></div>
-				</div>
+				</template>
 				<form class="signup-form" method="post" @submit="submit">
 
 					<div class="leek-creator" :class="{fast: fastRegister}">
@@ -48,70 +48,76 @@
 					</div>
 
 					<table v-if="!fastRegister">
-						<tr>
-							<td class="align-right">{{ $t('your_farmer_name') }}</td>
-							<td class="align-left">
-								<input v-model="login" :status="status('login')" name="login" type="text" required>
-								<div v-for="e in errors.login" :key="e" class="error-msg">{{ e }}</div>
-							</td>
-						</tr>
-						<tr>
-							<td class="align-right"><i>{{ $t('godfather') }}</i></td>
-							<td class="align-left">
-								<input v-model="godfather" :status="status('godfather')" type="text">
-								<div v-for="e in errors.godfather" :key="e" class="error-msg">{{ e }}</div>
-							</td>
-						</tr>
-						<tr>
-							<td><div class="space"></div></td>
-						</tr>
-						<tr>
-							<td colspan="2">
-								<v-radio-group v-model="signupMethod" class="radio" :row="true" :dense="true" :hide-details="true">
-									<v-radio :label="$t('email_password')" :value="1" />
-									<v-radio label="GitHub" :value="2" />
-								</v-radio-group>
-							</td>
-						</tr>
-						<tr v-if="signupMethod === 1">
-							<td class="align-right">{{ $t('your_email') }}</td>
-							<td class="align-left">
-								<input v-model="email" :status="status('email')" name="email" type="text" required>
-								<div v-for="e in errors.email" :key="e" class="error-msg">{{ e }}</div>
-							</td>
-						</tr>
-						<tr v-if="signupMethod === 1">
-							<td class="align-right">{{ $t('password') }}</td>
-							<td class="align-left">
-								<input v-model="password1" :status="status('password1')" name="password" type="password" required>
-								<div v-for="e in errors.password1" :key="e" class="error-msg">{{ e }}</div>
-							</td>
-						</tr>
-						<tr>
-							<td><div class="space"></div></td>
-						</tr>
-						<tr v-if="signupMethod === 2">
-							<td><div class="space"></div></td>
-						</tr>
+						<tbody>
+							<tr>
+								<td class="align-right">{{ $t('your_farmer_name') }}</td>
+								<td class="align-left">
+									<input v-model="login" :status="status('login')" name="login" type="text" required>
+									<div v-for="e in errors.login" :key="e" class="error-msg">{{ e }}</div>
+								</td>
+							</tr>
+							<tr>
+								<td class="align-right"><i>{{ $t('godfather') }}</i></td>
+								<td class="align-left">
+									<input v-model="godfather" :status="status('godfather')" type="text">
+									<div v-for="e in errors.godfather" :key="e" class="error-msg">{{ e }}</div>
+								</td>
+							</tr>
+							<tr>
+								<td><div class="space"></div></td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<v-radio-group v-model="signupMethod" class="radio" :row="true" :dense="true" :hide-details="true">
+										<v-radio :label="$t('email_password')" :value="1" />
+										<v-radio label="GitHub" :value="2" />
+									</v-radio-group>
+								</td>
+							</tr>
+							<tr v-if="signupMethod === 1">
+								<td class="align-right">{{ $t('your_email') }}</td>
+								<td class="align-left">
+									<input v-model="email" :status="status('email')" name="email" type="text" required>
+									<div v-for="e in errors.email" :key="e" class="error-msg">{{ e }}</div>
+								</td>
+							</tr>
+							<tr v-if="signupMethod === 1">
+								<td class="align-right">{{ $t('password') }}</td>
+								<td class="align-left">
+									<input v-model="password1" :status="status('password1')" name="password" type="password" required>
+									<div v-for="e in errors.password1" :key="e" class="error-msg">{{ e }}</div>
+								</td>
+							</tr>
+							<tr>
+								<td><div class="space"></div></td>
+							</tr>
+							<tr v-if="signupMethod === 2">
+								<td><div class="space"></div></td>
+							</tr>
+						</tbody>
 					</table>
-					<i18n class="cgu" tag="div" path="conditions">
-						<router-link slot="link" to="/conditions">{{ $t('conditions_name') }}</router-link>
-					</i18n>
-					<center>
+					<i18n-t class="cgu" tag="div" keypath="conditions">
+						<template #link>
+							<router-link to="/conditions">{{ $t('conditions_name') }}</router-link>
+						</template>
+					</i18n-t>
+					<div class="center">
 						<v-btn v-if="fastRegister" large color="primary" type="submit">{{ $t('play_button') }}</v-btn>
 						<v-btn v-else-if="signupMethod === 1" large color="primary" type="submit">{{ $t('signup') }}</v-btn>
 						<v-btn v-else color="black" type="submit" class="gh-button"> <img src="/image/github_black.png"> {{ $t('signup_gh') }}</v-btn>
-					</center>
+					</div>
 				</form>
 			</panel>
 		</div>
 
 		<!-- <panel :title="$t('main.partners')">
-			<div slot="content" class="content partners">
-				<a target="_blank" rel="noopener" href="https://www.esiea.fr/">
-					<img class="partner" src="/image/partner/esiea.png" title="ESIEA">
-				</a>
-			</div>
+			<template #content>
+				<div class="content partners">
+					<a target="_blank" rel="noopener" href="https://www.esiea.fr/">
+						<img class="partner" src="/image/partner/esiea.png" title="ESIEA">
+					</a>
+				</div>
+			</template>
 		</panel> -->
 
 		<panel class="features first">
@@ -135,24 +141,26 @@
 
 		<div class="container large large-tiles">
 			<panel v-ripple class="first">
-				<router-link to="/groups" slot="content">
-					<div class="groups">
-						<div class="image">
-							<leek-image :leek="{level: 300, hat: 2, skin: 12, face: 1}" :scale="0.6" />
-							<leek-image :leek="{level: 200, hat: 7, skin: 43, face: 1}" :scale="0.7" />
-							<leek-image :leek="{level: 300, hat: 37, skin: 23, face: 1}" :scale="0.8" style="margin-top: 15px" />
-							<leek-image :leek="{level: 250, hat: 35, skin: 17, face: 1}" :scale="0.7" :invert="true" style="margin-top: 10px" />
-							<leek-image :leek="{level: 200, hat: 7, skin: 20, face: 1}" :scale="0.6" :invert="true" />
+				<template #content>
+					<router-link to="/groups">
+						<div class="groups">
+							<div class="image">
+								<leek-image :leek="{level: 300, hat: 2, skin: 12, face: 1}" :scale="0.6" />
+								<leek-image :leek="{level: 200, hat: 7, skin: 43, face: 1}" :scale="0.7" />
+								<leek-image :leek="{level: 300, hat: 37, skin: 23, face: 1}" :scale="0.8" style="margin-top: 15px" />
+								<leek-image :leek="{level: 250, hat: 35, skin: 17, face: 1}" :scale="0.7" :invert="true" style="margin-top: 10px" />
+								<leek-image :leek="{level: 200, hat: 7, skin: 20, face: 1}" :scale="0.6" :invert="true" />
+							</div>
+							<div>
+								<h2>{{ $t('groups_title') }}</h2>
+								<div>{{ $t('groups_desc') }}</div>
+								<div class="center">
+									<v-btn>{{ $t('groups_button') }}</v-btn>
+								</div>
+							</div>
 						</div>
-						<div>
-							<h2>{{ $t('groups_title') }}</h2>
-							<div>{{ $t('groups_desc') }}</div>
-							<center>
-								<v-btn>{{ $t('groups_button') }}</v-btn>
-							</center>
-						</div>
-					</div>
-				</router-link>
+					</router-link>
+				</template>
 			</panel>
 			<!-- <panel v-ripple>
 				<router-link to="/press-kit" slot="content" class="flex">
@@ -174,22 +182,26 @@
 						<h4>{{ $t('main.leek') }} <span class="arrow">▶</span></h4>
 					</router-link>
 					<table class="ranking card">
-						<tr class="header">
-							<th class="p15">{{ $t('main.place') }}</th>
-							<th class="p35">{{ $t('main.leek') }}</th>
-							<th class="p25">{{ $t('main.talent') }}</th>
-						</tr>
-						<tr v-for="(leek, i) in leek_ranking" :key="i" :class="leek.style">
-							<td>{{ i + 1 }}</td>
-							<td :class="leek.class">
-								<rich-tooltip-leek :id="leek.id" v-slot="{ on }">
-									<router-link :to="'/leek/' + leek.id">
-										<span v-on="on">{{ leek.name }}</span>
-									</router-link>
-								</rich-tooltip-leek>
-							</td>
-							<td>{{ leek.talent }}</td>
-						</tr>
+						<thead>
+							<tr class="header">
+								<th class="p15">{{ $t('main.place') }}</th>
+								<th class="p35">{{ $t('main.leek') }}</th>
+								<th class="p25">{{ $t('main.talent') }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(leek, i) in leek_ranking" :key="i" :class="leek.style">
+								<td>{{ i + 1 }}</td>
+								<td :class="leek.class">
+									<rich-tooltip-leek :id="leek.id" v-slot="{ props }">
+										<router-link :to="'/leek/' + leek.id">
+											<span v-bind="props">{{ leek.name }}</span>
+										</router-link>
+									</rich-tooltip-leek>
+								</td>
+								<td>{{ leek.talent }}</td>
+							</tr>
+						</tbody>
 					</table>
 				</div>
 				<div class="column4">
@@ -197,26 +209,30 @@
 						<h4>{{ $t('main.farmer') }} <span class="arrow">▶</span></h4>
 					</router-link>
 					<table class="ranking card">
-						<tr class="header">
-							<th class="p15">{{ $t('main.place') }}</th>
-							<th class="p35">{{ $t('main.farmer') }}</th>
-							<th class="p20">{{ $t('main.talent') }}</th>
-							<th class="p5">{{ $t('main.country') }}</th>
-						</tr>
-						<tr v-for="(farmer, i) in farmer_ranking" :key="i" :class="farmer.style">
-							<td>{{ i + 1 }}</td>
-							<td :class="farmer.class">
-								<rich-tooltip-farmer :id="farmer.id" v-slot="{ on }">
-									<router-link :to="'/farmer/' + farmer.id">
-										<span v-on="on">{{ farmer.name }}</span>
-									</router-link>
-								</rich-tooltip-farmer>
-							</td>
-							<td>{{ farmer.talent }}</td>
-							<td>
-								<flag v-if="farmer.country" :code="farmer.country" />
-							</td>
-						</tr>
+						<thead>
+							<tr class="header">
+								<th class="p15">{{ $t('main.place') }}</th>
+								<th class="p35">{{ $t('main.farmer') }}</th>
+								<th class="p20">{{ $t('main.talent') }}</th>
+								<th class="p5">{{ $t('main.country') }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(farmer, i) in farmer_ranking" :key="i" :class="farmer.style">
+								<td>{{ i + 1 }}</td>
+								<td :class="farmer.class">
+									<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }">
+										<router-link :to="'/farmer/' + farmer.id">
+											<span v-bind="props">{{ farmer.name }}</span>
+										</router-link>
+									</rich-tooltip-farmer>
+								</td>
+								<td>{{ farmer.talent }}</td>
+								<td>
+									<flag v-if="farmer.country" :code="farmer.country" />
+								</td>
+							</tr>
+						</tbody>
 					</table>
 				</div>
 				<div class="column4">
@@ -224,22 +240,26 @@
 						<h4>{{ $t('main.team') }} <span class="arrow">▶</span></h4>
 					</router-link>
 					<table class="ranking card">
-						<tr class="header">
-							<th class="p20">{{ $t('main.place') }}</th>
-							<th class="p50">{{ $t('main.team') }}</th>
-							<th class="p30">{{ $t('main.talent') }}</th>
-						</tr>
-						<tr v-for="(team, i) in team_ranking" :key="i" :class="team.style">
-							<td>{{ i + 1 }}</td>
-							<td :class="team.class">
-								<rich-tooltip-team :id="team.id" v-slot="{ on }">
-									<router-link :to="'/team/' + team.id">
-										<span v-on="on">{{ team.name }}</span>
-									</router-link>
-								</rich-tooltip-team>
-							</td>
-							<td>{{ team.talent }}</td>
-						</tr>
+						<thead>
+							<tr class="header">
+								<th class="p20">{{ $t('main.place') }}</th>
+								<th class="p50">{{ $t('main.team') }}</th>
+								<th class="p30">{{ $t('main.talent') }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(team, i) in team_ranking" :key="i" :class="team.style">
+								<td>{{ i + 1 }}</td>
+								<td :class="team.class">
+									<rich-tooltip-team :id="team.id" v-slot="{ props }">
+										<router-link :to="'/team/' + team.id">
+											<span v-bind="props">{{ team.name }}</span>
+										</router-link>
+									</rich-tooltip-team>
+								</td>
+								<td>{{ team.talent }}</td>
+							</tr>
+						</tbody>
 					</table>
 				</div>
 			</div>
@@ -252,9 +272,9 @@
 				<div class="column4">
 					<img width="100%" src="/image/shop/shop.webp">
 					<br><br>
-					<center>
+					<div class="center">
 						<v-btn>{{ $t('shop_desc') }}</v-btn>
-					</center>
+					</div>
 				</div>
 			</a>
 		</panel>
@@ -262,30 +282,38 @@
 		<div class="tiles">
 			<a href="https://play.google.com/store/apps/details?id=com.leekwars.app" target="_blank">
 				<panel v-ripple class="android">
-					<div slot="content">
-						<img src="/image/android.png" loading="lazy"> {{ $t('android_app') }}
-					</div>
+					<template #content>
+						<div>
+							<img src="/image/android.png" loading="lazy"> {{ $t('android_app') }}
+						</div>
+					</template>
 				</panel>
 			</a>
 			<a href="https://github.com/leek-wars" target="_blank">
 				<panel v-ripple class="github">
-					<div slot="content">
-						<img src="/image/github_black.png" loading="lazy"> GitHub
-					</div>
+					<template #content>
+						<div>
+							<img src="/image/github_black.png" loading="lazy"> GitHub
+						</div>
+					</template>
 				</panel>
 			</a>
 			<router-link to="/help">
 				<panel v-ripple class="help">
-					<div slot="content">
-						<v-icon>mdi-book-open-page-variant</v-icon> {{ $t('help_tutorial_doc') }}
-					</div>
+					<template #content>
+						<div>
+							<v-icon>mdi-book-open-page-variant</v-icon> {{ $t('help_tutorial_doc') }}
+						</div>
+					</template>
 				</panel>
 			</router-link>
 			<router-link to="/press-kit">
 				<panel v-ripple class="help">
-					<div slot="content">
-						<span class="icon">📦</span> {{ $t('main.press-kit') }}
-					</div>
+					<template #content>
+						<div>
+							<span class="icon">📦</span> {{ $t('main.press-kit') }}
+						</div>
+					</template>
 				</panel>
 			</router-link>
 		</div>
@@ -296,15 +324,17 @@
 		</div>
 
 		<panel class="first screenshots">
-			<signup-carousel slot="content" :key="$i18n.locale" />
+			<template #content>
+				<signup-carousel :key="$i18n.locale" />
+			</template>
 		</panel>
 
 		<h1>{{ $t('last_update') }}</h1>
 		<panel v-if="last_version" icon="mdi-star-outline">
-			<template slot="title">{{ $t('changelog.version_n', [last_version.version_name]) }} ({{ last_version.date | date }}) {{ translations[last_version.version] && translations[last_version.version].title ? ' — ' + translations[last_version.version].title : '' }}</template>
-			<div slot="content">
+			<template #title>{{ $t('changelog.version_n', [last_version.version_name]) }} ({{ $filters.date(last_version.date) }}) {{ translations[last_version.version] && translations[last_version.version].title ? ' — ' + translations[last_version.version].title : '' }}</template>
+			<template #content>
 				<changelog-version :version="last_version" />
-			</div>
+			</template>
 		</panel>
 
 		<div v-if="bigImage" class="bigscreen" @click="bigImage = null">
@@ -322,16 +352,18 @@
 	 */
 	import ChangelogVersion from '@/component/changelog/changelog-version.vue'
 	import { locale } from '@/locale'
-	import { i18n, loadComponentLanguage, mixins } from '@/model/i18n'
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
-	const SignupCarousel = () => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup-carousel.${locale}.i18n`)
-	const RichTooltipLeek = () => import('@/component/rich-tooltip/rich-tooltip-leek.vue')
-	const RichTooltipFarmer = () => import('@/component/rich-tooltip/rich-tooltip-farmer.vue')
-	const RichTooltipTeam = () => import('@/component/rich-tooltip/rich-tooltip-team.vue')
+	import { emitter } from '@/model/vue'
+	import { defineAsyncComponent } from 'vue'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
+	const SignupCarousel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup-carousel.${locale}.i18n`))
+	const RichTooltipLeek = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-leek.vue'))
+	const RichTooltipFarmer = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-farmer.vue'))
+	const RichTooltipTeam = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-team.vue'))
 
-	@Component({ name: 'signup', i18n: {}, mixins: [...mixins], components: {
+	@Options({ name: 'signup', i18n: {}, mixins: [...mixins], components: {
 		ChangelogVersion, SignupCarousel,
 		RichTooltipLeek, RichTooltipFarmer, RichTooltipTeam
 	} })
@@ -421,14 +453,14 @@
 				this.leek_ranking = data.leeks
 				this.team_ranking = data.teams
 			})
-			import(/* webpackChunkName: "changelog-[request]" */ `json-loader!yaml-loader!@/component/changelog/changelog.${this.$i18n.locale}.yaml`).then((translations) => {
-				this.translations = translations
+			import(/* webpackChunkName: "changelog-[request]" */ `@/component/changelog/changelog.${this.$i18n.locale}.yaml`).then((module) => {
+				this.translations = module.default
 			})
 			LeekWars.get('changelog/get/' + this.$i18n.locale).then(data => {
 				this.last_version = data.changelog[0]
 			})
 
-			this.$root.$emit('loaded')
+			emitter.emit('loaded')
 		}
 
 		submit(e: Event) {
@@ -474,7 +506,7 @@
 		}
 		addError(form: string, error: string) {
 			if (!(form in this.errors)) {
-				Vue.set(this.$data.errors, form, [])
+				this.errors[form] = []
 			}
 			this.errors[form].push(error)
 		}
@@ -911,17 +943,16 @@
 	left: 0;
 	bottom: 0;
 	display: flex;
-	width: 100%;
-	height: 100%;
 	align-items: center;
 	justify-content: center;
 	background: #000a;
 	z-index: 10;
 	img {
-		max-width: 1500px;
 		border: 5px solid white;
 		box-shadow: 0px 3px 5px -1px rgb(0 0 0 / 20%), 0px 5px 8px 0px rgb(0 0 0 / 14%), 0px 1px 14px 0px rgb(0 0 0 / 12%);
 		border-radius: 10px;
+		max-width: 90vw;
+		max-height: 90vh;
 	}
 }
 .large-tiles {

@@ -40,5 +40,8 @@
 	"errors": "エラー",
 	"errors_warnings": "エラーと警告",
 	"n_errors": "{n} エラー",
-	"n_warnings": "{n} 警告"
+	"n_warnings": "{n} 警告",
+	"toggle_turrets": "タレットの表示/非表示",
+	"toggle_percent": "ライフの割合",
+	"toggle_smooth": "滑らか/角ばった曲線"
 }

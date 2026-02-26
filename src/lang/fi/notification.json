@@ -96,5 +96,9 @@
 	"title_35": "{0} on aloittanut pomotaistelun",
 	"message_35": "Katso taistelu",
 	"title_36": "{0} on luonut uuden aiheen: {1}",
-	"message_36": "Näytä aihe"
+	"message_36": "Näytä aihe",
+	"title_37": "{0} antoi sinulle {1} habs",
+	"message_37": "Katso markkinat",
+	"title_38": "{0} antoi sinulle {1} tappeluita",
+	"message_38": "Mene vihannespuutarhaan"
 }

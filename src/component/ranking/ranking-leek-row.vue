@@ -3,18 +3,18 @@
 		<td>{{ row.rank }}</td>
 		<td :class="row.style">
 			<router-link :to="'/leek/' + row.id">
-				<rich-tooltip-leek :id="row.id" v-slot="{ on }" :bottom="true">
-					<span v-on="on">{{ row.name }}</span>
+				<rich-tooltip-leek :id="row.id" v-slot="{ props }" :bottom="true">
+					<span v-bind="props">{{ row.name }}</span>
 				</rich-tooltip-leek>
 			</router-link>
 		</td>
-		<td>{{ row.talent | number }}</td>
+		<td>{{ $filters.number(row.talent) }}</td>
 		<td>{{ row.level }}</td>
-		<td>{{ row.xp | number }}</td>
+		<td>{{ $filters.number(row.xp) }}</td>
 		<td>
 			<router-link :to="'/farmer/' + row.farmer_id">
-				<rich-tooltip-farmer :id="row.farmer_id" v-slot="{ on }" :bottom="true">
-					<span v-on="on">{{ row.farmer }}</span>
+				<rich-tooltip-farmer :id="row.farmer_id" v-slot="{ props }" :bottom="true">
+					<span v-bind="props">{{ row.farmer }}</span>
 				</rich-tooltip-farmer>
 			</router-link>
 		</td>
@@ -25,8 +25,8 @@
 		</td>
 		<td>
 			<router-link v-if="row.team" :to="'/team/' + row.team_id">
-				<rich-tooltip-team :id="row.team_id" v-slot="{ on }" :bottom="true">
-					<span v-on="on">{{ row.team }}</span>
+				<rich-tooltip-team :id="row.team_id" v-slot="{ props }" :bottom="true">
+					<span v-bind="props">{{ row.team }}</span>
 				</rich-tooltip-team>
 			</router-link>
 		</td>
@@ -35,12 +35,12 @@
 
 <script lang="ts">
 	import { RankingLeekRow } from '@/model/ranking'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 
-	@Component({ components: { RichTooltipFarmer, RichTooltipLeek, RichTooltipTeam } })
+	@Options({ components: { RichTooltipFarmer, RichTooltipLeek, RichTooltipTeam } })
 	export default class RankingLeekRowElement extends Vue {
 		@Prop({ required: true }) row!: RankingLeekRow
 	}

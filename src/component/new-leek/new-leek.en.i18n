@@ -4,6 +4,7 @@
 	"error_under_required_level_1": "Your first leek must be at least level {0}",
 	"error_under_required_level_2": "Your second leek must be at least level {0}",
 	"error_under_required_level_3": "Your third leek must be at least level {0}",
+	"error_name_already_used": "This leek name is already taken",
 	"name": "Name",
 	"name_length": "The leek's name must contain {0} to {1} characters",
 	"name_format": "Special characters are forbidden in the leek's name",

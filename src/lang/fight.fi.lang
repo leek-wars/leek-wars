@@ -51,6 +51,6 @@
 	"end_of_fight": "Taistelun loppu!",
 	"lama": "{leek} käyttää 🦙:n voimia ({cost})",
 	"help_page": "Lisätietoja:",
-	"leek_state_x_turns": "{leek} siirtyy {tilaan} tilaan ({kääntyy} kääntyy)",
+	"leek_state_x_turns": "{leek} siirtyy {state} tilaan ({turns} kääntyy)",
 	"state_x": "Tila {0}"
 }

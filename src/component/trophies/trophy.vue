@@ -8,26 +8,30 @@
 					<div v-if="trophy.points" class="points">{{ trophy.points }}</div>
 				</div>
 				<div class="description">{{ trophy.description }}</div>
-				<div v-if="trophy.habs" class="habs">{{ trophy.habs | number }} <span class="hab"></span></div>
-				<tooltip v-if="trophy.progression != null">
-					<template v-slot:activator="{ on }">
-						<div class="trophy-bar" :class="{full: trophy.unlocked}" v-on="on">
+				<div v-if="trophy.habs" class="habs">{{ $filters.number(trophy.habs) }} <span class="hab"></span></div>
+				<v-tooltip v-if="trophy.progression != null">
+					<template #activator="{ props }">
+						<div class="trophy-bar" :class="{full: trophy.unlocked}" v-bind="props">
 							<div :style="{width: Math.floor(100 * Math.min(trophy.threshold, trophy.progression) / trophy.threshold) + '%'}" class="bar striked"></div>
 						</div>
 					</template>
-					{{ trophy.progression | number }} / {{ trophy.threshold | number }}
-				</tooltip>
+					{{ $filters.number(trophy.progression) }} / {{ $filters.number(trophy.threshold) }}
+				</v-tooltip>
 			</div>
 		</div>
 		<div class="unlock">
 			<img v-if="trophy.in_fight" class="fight-icon" src="/image/trophy/winner.svg" :title="$t('trophy.unlockable_fight')">
 			<template v-if="trophy.unlocked">
-				<i18n v-if="trophy.fight" tag="span" class="date" path="main.unlocked_the">
-					<router-link slot="date" :to="'/fight/' + trophy.fight" class="fight">{{ trophy.date | date }}</router-link>
-				</i18n>
-				<i18n v-else tag="span" class="date" path="main.unlocked_the">
-					<span slot="date">{{ trophy.date | date }}</span>
-				</i18n>
+				<i18n-t v-if="trophy.fight" tag="span" class="date" keypath="main.unlocked_the">
+					<template #date>
+						<router-link :to="'/fight/' + trophy.fight" class="fight">{{ $filters.date(trophy.date) }}</router-link>
+					</template>
+				</i18n-t>
+				<i18n-t v-else tag="span" class="date" keypath="main.unlocked_the">
+					<template #date>
+						<span>{{ $filters.date(trophy.date) }}</span>
+					</template>
+				</i18n-t>
 			</template>
 			<span class="rarity"><span v-if="trophy.unlocked"> • </span>{{ trophy.total }} • {{ (trophy.rarity * 100).toPrecision(2) }}%</span>
 		</div>
@@ -37,9 +41,9 @@
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'trophy' })
+	@Options({ name: 'trophy' })
 	export default class Trophy extends Vue {
 		@Prop({ required: true }) trophy: any
 	}
@@ -56,7 +60,7 @@
 	.global-percent {
 		font-size: 40px;
 	}
-	.panel ::v-deep .actions {
+	.panel :deep(.actions) {
 		flex: 1;
 	}
 	.category-bar-wrapper {

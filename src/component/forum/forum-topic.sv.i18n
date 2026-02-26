@@ -23,5 +23,6 @@
 	"unlock": "Låsa upp",
 	"unpin": "Att ta ner",
 	"unsolved": "Olöst",
+	"create_issue": "Skapa issue",
 	"not_last_page": "Du är inte på sista sidan i ämnet"
 }

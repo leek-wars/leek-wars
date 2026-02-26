@@ -10,7 +10,7 @@
 	"shortcut_9": "<b>Alt + links/rechts</b>: schakelen tussen geopende bestanden",
 	"shortcut_10": "<b>Ctrl + spatiebalk</b>: automatisch aanvullen",
 	"shortcut_11": "<b>Ctrl + klik</b>: ga naar symbooldefinitie",
-	"shortcut_12": "<b>Ctrl + Shift + F</b>: automatische codeopmaak en inspringing",
+	"shortcut_12": "<b>Alt + Shift + F</b>: automatische codeopmaak en inspringing",
 	"shortcut_13": "<b>Ctrl + U</b>: vouw/ontvouw het huidige codeblok",
 	"shortcut_14": "<b>Ctrl + J</b>: Vouw alle codeblokken samen",
 	"shortcut_15": "<b>Ctrl + I</b>: vouw alle codeblokken uit"

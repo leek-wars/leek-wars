@@ -6,12 +6,12 @@ import { Acceleration, Adrenaline, Alteration, Antidote, Armor, Armoring, Arseni
 import { DamageType, EntityDirection, EntityType, FightEntity } from '@/component/player/game/entity'
 import { Ground, GroundTexture, OBSTACLES } from '@/component/player/game/ground'
 import { Leek } from '@/component/player/game/leek'
-import { Arena, Beach, Castle, Cemetery, DarkNexus, Desert, Factory, Forest, Glacier, Japan, Map, Nexus } from '@/component/player/game/maps'
+import { Beach, Castle, Cemetery, DarkNexus, Desert, Factory, Forest, Glacier, Japan, Map, Nexus, Temple } from '@/component/player/game/maps'
 import { Obstacle } from '@/component/player/game/obstacle'
 import { Particles } from '@/component/player/game/particles'
 import { S, Sound } from '@/component/player/game/sound'
 import { T, Texture } from '@/component/player/game/texture'
-import { Axe, Bazooka, BLaser, Broadsword, DarkKatana, Destroyer, DoubleGun, Electrisor, EnhancedLightninger, Excalibur, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, HeavySword, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, MLaser, MysteriousElectrisor, Neutrino, Odachi, Pistol, RevokedMLaser, Rhino, Rifle, Scythe, Shotgun, Sword, UnbridledGazor, UnstableDestroyer } from '@/component/player/game/weapons'
+import { Axe, Bazooka, BLaser, Broadsword, DarkKatana, Destroyer, DoubleGun, Electrisor, EnhancedLightninger, Excalibur, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, HeavySword, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, MLaser, MysteriousElectrisor, Neutrino, Odachi, Pistol, RevokedMLaser, Rhino, Rifle, Scythe, Shotgun, Sword, UnbridledGazor, UnstableDestroyer, QuantumRifle } from '@/component/player/game/weapons'
 import { locale } from '@/locale'
 import { Action, ActionType } from '@/model/action'
 import { Area } from '@/model/area'
@@ -22,7 +22,7 @@ import { Fight, FightData, FightType } from '@/model/fight'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
-import Vue from 'vue'
+
 import { Chest } from './chest'
 import { Mob } from './mob'
 import { Turret } from './turret'
@@ -125,6 +125,7 @@ export const WEAPONS = [
 	Odachi, // 37
 	Excalibur, // 38
 	Scythe, // 39
+	QuantumRifle, // 40
 ]
 
 const CHIP_ANIMATIONS = [
@@ -321,6 +322,7 @@ class Game {
 	public displayAILines: boolean = true
 	public plainBackground: boolean = false
 	public sound: boolean = false
+	public volume: number = 0.5;
 	public atmosphere!: Sound
 	public obstacles!: {[key: number]: number[]}
 	public error: boolean = false
@@ -367,7 +369,7 @@ class Game {
 		new Forest(this),
 		new Glacier(this),
 		new Beach(this),
-		new Arena(this),
+		new Temple(this),
 		new Japan(this),
 		new Castle(this),
 		new Cemetery(this),
@@ -561,7 +563,7 @@ class Game {
 			if (entity instanceof Leek) {
 
 				if (this.teams[entity.team - 1] === undefined) {
-					Vue.set(this.teams, entity.team - 1, [])
+					this.teams[entity.team - 1] = []
 				}
 				this.teams[entity.team - 1].push(entity)
 				this.entityOrder.push(entity)
@@ -761,7 +763,7 @@ class Game {
 			for (const action in farmerLogs) {
 				const actionI = parseInt(action, 10)
 				if (!(action in this.logs)) {
-					Vue.set(this.logs, actionI, [])
+					this.logs[actionI] = []
 				}
 				for (const log of farmerLogs[action]) {
 					const type = log[1]
@@ -781,6 +783,7 @@ class Game {
 	public launch() {
 		// Atmosphere sound
 		if (!this.creator && this.atmosphere != null && this.sound) {
+			this.changeVolume();
 			this.atmosphere.loop(this)
 		}
 		for (const obstacle of this.ground.obstacles) {
@@ -819,7 +822,7 @@ class Game {
 		}
 		/* Launch! */
 		this.launched = true
-		this.player.$emit('game-launched')
+		this.player.gameLaunched()
 
 		if (this.creator) {
 			this.redraw()
@@ -906,6 +909,11 @@ class Game {
 			} else {
 				this.atmosphere.stop()
 			}
+		}
+	}
+	public changeVolume() {
+		if (this.atmosphere != null) {
+			this.atmosphere.changeVolume(this.volume);
 		}
 	}
 
@@ -1015,7 +1023,7 @@ class Game {
 
 	public pause() {
 		if (!this.requestPause && !this.paused) {
-			if (this.atmosphere != null && this.sound) {
+			if (this.atmosphere != null) {
 				this.atmosphere.stop()
 			}
 			this.requestPause = true
@@ -1775,7 +1783,7 @@ class Game {
 		} else if (effect.item === 48) {
 			leek.stopGaz()
 		}
-		Vue.delete(leek.effects, id)
+		delete leek.effects[id]
 		delete this.effects[id]
 	}
 

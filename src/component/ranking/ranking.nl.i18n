@@ -43,5 +43,7 @@
 	"solo_tournaments_title": "Solo toernooien gewonnen",
 	"farmer_tournaments_title": "Fokkertoernooien gewonnen",
 	"team_tournaments_title": "Teamtoernooien gewonnen",
-	"tournaments": "Toernooien"
+	"tournaments": "Toernooien",
+	"chests_title": "Geopende kisten",
+	"chests": "Kisten"
 }

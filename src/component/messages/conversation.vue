@@ -1,7 +1,7 @@
 <template>
 	<div v-if="chat" v-ripple class="conversation" :class="{unread: !chat.read}">
-		<rich-tooltip-farmer :id="farmer ? farmer.id : 0" v-slot="{ on }">
-			<avatar :farmer="farmer" :on="on" />
+		<rich-tooltip-farmer :id="farmer ? farmer.id : 0" v-slot="{ props }">
+			<avatar :farmer="farmer" v-bind="props" />
 		</rich-tooltip-farmer>
 		<div class="content">
 			<div class="name">{{ farmer ? farmer.name : '?' }}</div>
@@ -16,10 +16,10 @@
 
 <script lang="ts">
 	import { Chat } from '@/model/chat'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Component({ name: 'conversation', components: { RichTooltipFarmer } })
+	@Options({ name: 'conversation', components: { RichTooltipFarmer } })
 	export default class ConversationElement extends Vue {
 
 		@Prop({required: true}) chat!: Chat

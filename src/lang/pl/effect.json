@@ -148,5 +148,5 @@
 	"enemies": "Wszyscy wrogowie",
 	"state_11": "Statyczny",
 	"n_uses": "<b>1</b> użycie | <b>{n}</b> użyć",
-	"max_uses": "maksymalne {użycia} na rundę"
+	"max_uses": "maksymalne {uses} na rundę"
 }

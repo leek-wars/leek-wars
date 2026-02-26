@@ -10,7 +10,7 @@
 	"shortcut_9": "<b>Alt + kiri/kanan</b>: beralih di antara file yang terbuka",
 	"shortcut_10": "<b>Ctrl + Spasi</b>: penyelesaian otomatis",
 	"shortcut_11": "<b>Ctrl + Klik</b>: buka definisi simbol",
-	"shortcut_12": "<b>Ctrl + Shift + F</b>: pemformatan dan indentasi kode otomatis",
+	"shortcut_12": "<b>Alt + Shift + F</b>: pemformatan dan indentasi kode otomatis",
 	"shortcut_13": "<b>Ctrl + U</b>: lipat/buka blok kode saat ini",
 	"shortcut_14": "<b>Ctrl + J</b>: Ciutkan semua blok kode",
 	"shortcut_15": "<b>Ctrl + I</b>: luaskan semua blok kode"

@@ -96,5 +96,9 @@
 	"title_35": "{0} heeft een eindbaasgevecht gelanceerd",
 	"message_35": "Bekijk het gevecht",
 	"title_36": "{0} heeft een nieuw onderwerp aangemaakt: {1}",
-	"message_36": "Onderwerp bekijken"
+	"message_36": "Onderwerp bekijken",
+	"title_37": "{0} gaf je {1} habs",
+	"message_37": "Bekijk de markt",
+	"title_38": "{0} gaf jou {1} gevechten",
+	"message_38": "Ga naar de moestuin"
 }

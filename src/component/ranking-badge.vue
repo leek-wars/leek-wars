@@ -1,19 +1,18 @@
 <template lang="html">
-	<span v-ripple class="badge" :class="{first: ranking === 1, second: ranking === 2, third: ranking === 3, ten: ranking <= 10, cent: ranking <= 100}" v-on="on" @click.stop="LeekWars.goToRanking(category, 'talent', id)">
+	<span v-ripple class="badge" :class="{first: ranking === 1, second: ranking === 2, third: ranking === 3, ten: ranking <= 10, cent: ranking <= 100}" @click.stop="LeekWars.goToRanking(category, 'talent', id)">
 		<v-icon>mdi-chevron-triple-up</v-icon>
 		<span class="value">{{ ranking }}</span>
 	</span>
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ name: "ranking-badge" })
+	@Options({ name: "ranking-badge" })
 	export default class RankingBadge extends Vue {
 		@Prop() ranking!: number
 		@Prop() id!: number
 		@Prop() category!: string
-		@Prop() on!: any
 	}
 </script>
 

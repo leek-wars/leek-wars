@@ -3,15 +3,15 @@
 		<div class="codemirror-wrapper">
 			<div ref="codemirror" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" :class="{search: searchEnabled}" class="codemirror"></div>
 			<template v-for="(problems, entrypoint) of ai.problems">
-				<tooltip v-for="(error, p) of problems" :key="entrypoint + p">
-					<template v-slot:activator="{ on }">
-						<div :style="{top: (100 * error.start_line / lines) + '%'}" :class="{warning: error.level === 1, todo: error.level === 2}" class="error-band" v-on="on" @click="$emit('jump', ai, error.start_line)"></div>
+				<v-tooltip v-for="(error, p) of problems" :key="entrypoint + p">
+					<template #activator="{ props }">
+						<div :style="{top: (100 * error.start_line / lines) + '%'}" :class="{warning: error.level === 1, todo: error.level === 2}" class="error-band" v-bind="props" @click="$emit('jump', ai, error.start_line)"></div>
 					</template>
 					<v-icon v-if="error.level === 0" class="tooltip error">mdi-close-circle-outline</v-icon>
 					<v-icon v-else-if="error.level === 1" class="tooltip warning">mdi-alert-circle-outline</v-icon>
 					<v-icon v-else class="tooltip todo">mdi-format-list-checks</v-icon>
 					{{ error.info }}
-				</tooltip>
+				</v-tooltip>
 			</template>
 		</div>
 		<div v-show="searchEnabled" class="search-panel">
@@ -28,18 +28,18 @@
 					<v-icon class="arrow" @click="closeSearch">mdi-close</v-icon>
 				</div>
 				<div>
-					<tooltip>
-						<template v-slot:activator="{ on }">
-							<v-icon class="arrow" v-on="on" @click="replaceOne">mdi-file-replace-outline</v-icon>
+					<v-tooltip>
+						<template #activator="{ props }">
+							<v-icon class="arrow" v-bind="props" @click="replaceOne">mdi-file-replace-outline</v-icon>
 						</template>
 						{{ $t('main.replace') }}
-					</tooltip>
-					<tooltip>
-						<template v-slot:activator="{ on }">
-							<v-icon class="arrow" v-on="on" @click="replaceAll">mdi-file-replace</v-icon>
+					</v-tooltip>
+					<v-tooltip>
+						<template #activator="{ props }">
+							<v-icon class="arrow" v-bind="props" @click="replaceAll">mdi-file-replace</v-icon>
 						</template>
 						{{ $t('main.replace_all') }}
-					</tooltip>
+					</v-tooltip>
 				</div>
 			</div>
 		</div>
@@ -80,10 +80,14 @@
 				<div v-if="selectedHint.ai" class="definition">
 					<v-icon>mdi-file-outline</v-icon>
 					<span @click="$emit('jump', selectedHint.ai, selectedHint.line)">
-						<i18n class="defined" path="leekscript.defined_in">
-							<b slot="0">{{ selectedHint.ai.name }}</b>
-							<b slot="1">{{ selectedHint.line }}</b>
-						</i18n>
+						<i18n-t class="defined" keypath="leekscript.defined_in">
+							<template #0>
+								<b>{{ selectedHint.ai.name }}</b>
+							</template>
+							<template #1>
+								<b>{{ selectedHint.line }}</b>
+							</template>
+						</i18n-t>
 					</span>
 				</div>
 			</div>
@@ -104,10 +108,14 @@
 			<div v-if="detailDialogContent.details.defined && ais[detailDialogContent.details.defined[0]]" class="definition">
 				<v-icon>mdi-file-outline</v-icon>
 				<span @click="goToDefinition">
-					<i18n class="defined" path="leekscript.defined_in">
-						<b slot="0">{{ ais[detailDialogContent.details.defined[0]].name }}</b>
-						<b slot="1">{{ detailDialogContent.details.defined[1] }}</b>
-					</i18n>
+					<i18n-t class="defined" keypath="leekscript.defined_in">
+						<template #0>
+							<b>{{ ais[detailDialogContent.details.defined[0]].name }}</b>
+						</template>
+						<template #1>
+							<b>{{ detailDialogContent.details.defined[1] }}</b>
+						</template>
+					</i18n-t>
 				</span>
 			</div>
 			<div v-if="detailDialogContent.details.type">
@@ -131,13 +139,12 @@
 </template>
 
 <script lang="ts">
-	import { keywords, keywordsLSOnly } from '@/component/editor/keywords'
 	import { AI } from '@/model/ai'
 	import { fileSystem } from '@/model/filesystem'
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import CodeMirror, { Token } from 'codemirror'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import DocumentationConstant from '../documentation/documentation-constant.vue'
 	import DocumentationFunction from '../documentation/documentation-function.vue'
 	import ItemPreview from '../market/item-preview.vue'
@@ -146,6 +153,7 @@
 	import Type from '@/component/type.vue'
 	import { analyzer, AnalyzerPromise } from './analyzer'
 	import { Keyword, KeywordKind } from '@/model/keyword'
+	import { emitter } from '@/model/vue'
 
 	const AUTO_SHORTCUTS = [
 		["lama", "#LamaSwag", "", "Le pouvoir du lama"],
@@ -155,7 +163,7 @@
 		["if", 'if (', ') {\n\t\n}', "<h4>Condition if</h4><br>if ( ... ) { ... }"]
 	]
 
-	@Component({ name: 'ai-view', components: {
+	@Options({ name: 'ai-view', components: {
 		'item-preview': ItemPreview,
 		'documentation-function': DocumentationFunction,
 		'documentation-constant': DocumentationConstant,
@@ -404,8 +412,8 @@
 
 				this.lines = this.editor.getDoc().lineCount()
 				this.characters = this.editor.getDoc().getValue().length
-				Vue.set(this.ai, 'included_lines', this.ai.total_lines - this.lines)
-				Vue.set(this.ai, 'included_chars', this.ai.total_chars - this.ai.code.length)
+				this.ai.included_lines = this.ai.total_lines - this.lines
+				this.ai.included_chars = this.ai.total_chars - this.ai.code.length
 				if (this.$route.path.startsWith('/editor/')) {
 					LeekWars.setSubTitle(this.$i18n.tc('main.n_lines', this.lines))
 				}
@@ -444,13 +452,13 @@
 				this.editor.on("mousedown", this.editorMousedown as any)
 			})
 
-			this.$root.$on('keydown', this.keydown)
-			this.$root.$on('keyup', this.keyup)
+			emitter.on('keydown', this.keydown)
+			emitter.on('keyup', this.keyup)
 		}
 
-		beforeDestroy() {
-			this.$root.$off('keydown', this.keydown)
-			this.$root.$off('keyup', this.keyup)
+		beforeUnmount() {
+			emitter.off('keydown', this.keydown)
+			emitter.off('keyup', this.keyup)
 		}
 
 		public editorMousedown(editor: CodeMirror.Editor, e: MouseEvent) {
@@ -513,7 +521,7 @@
 			for (const entrypoint in this.errorOverlays) {
 				if (!this.ai.problems[entrypoint]) {
 					this.editor.removeOverlay(this.errorOverlays[entrypoint])
-					Vue.delete(this.errorOverlays, entrypoint)
+					delete this.errorOverlays[entrypoint]
 				}
 			}
 
@@ -522,7 +530,7 @@
 
 				if (this.errorOverlays[entrypoint]) {
 					this.editor.removeOverlay(this.errorOverlays[entrypoint])
-					Vue.delete(this.errorOverlays, entrypoint)
+					delete this.errorOverlays[entrypoint]
 				}
 				const error_by_line = {} as {[key: number]: Problem[]}
 				for (const error of problems) {
@@ -598,7 +606,7 @@
 						for (const problem of result[entrypoint]) {
 							if (problem[0] === 0) { valid = false; break }
 						}
-						Vue.set(ai, 'valid', valid)
+						ai.valid = valid
 						analyzer.handleProblems(ai, result[entrypoint])
 					}
 					analyzer.updateCount()
@@ -1007,7 +1015,7 @@
 					this.detailDialogLeft = window.innerWidth - width - offset.left - 20
 				}
 			}
-			Vue.nextTick(fixPosition)
+			nextTick(fixPosition)
 
 			const start_line = raw_data.location[1] - 1
 			const start_char = raw_data.location[2]
@@ -1403,7 +1411,7 @@
 		public selectHint(index: number) {
 			this.selectedCompletion = index
 			this.selectedHint = this.hints[index]
-			Vue.nextTick(() => {
+			nextTick(() => {
 				const hints = this.$refs.hints as HTMLElement
 				if (hints) {
 					const hintList = (this.$refs.hintDialog as HTMLElement).querySelectorAll('.hint') as any
@@ -1532,7 +1540,7 @@
 			this.searchEnabled = true
 			this.searchQuery = selection
 			this.searchUpdate()
-			Vue.nextTick(() => {
+			nextTick(() => {
 				if (this.$refs.searchInput) {
 					(this.$refs.searchInput as HTMLElement).focus()
 				}
@@ -1772,7 +1780,7 @@
 				border-bottom: 1px solid var(--border);
 			}
 		}
-		::v-deep .doc-constant.item {
+		:deep(.doc-constant.item) {
 			padding: 0 !important;
 			min-width: 280px;
 			max-width: 320px;
@@ -1784,10 +1792,10 @@
 				margin: 10px;
 			}
 		}
-		::v-deep .deprecated {
+		:deep(.deprecated) {
 			opacity: 0.6;
 		}
-		::v-deep .deprecated-message {
+		:deep(.deprecated-message) {
 			color: #ff7f00;
 			font-weight: bold;
 			margin: 10px 0;

@@ -32,25 +32,27 @@
 		<div class="container documentation last">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column4">
 				<panel class="first">
-					<div slot="content" class="items-list">
-						<div v-for="(category, c) of filteredCategories" :key="category.id">
-							<h2 v-ripple @click="toggleCategory(c)">
-								<v-icon>mdi-{{ icons[c] }}</v-icon>
-								<!-- {{ $t('doc.function_category_' + c) }} -->
-								<span>{{ c }}</span>
-								<span v-if="query.length">({{ category.length }})</span>
-								<div class="spacer"></div>
-								<v-icon v-if="query.length || categoryState[c]">mdi-chevron-up</v-icon>
-								<v-icon v-else>mdi-chevron-down</v-icon>
-							</h2>
-							<div v-if="query.length || categoryState[c]">
-								<div v-for="(item, i) in category" :key="i" @click="navigate(item.module + '/' + item.function)" :item="item.name" class="item">
-									<span class="method chip" :class="item.method">{{ item.method }}</span>
-									{{ item.function }}
+					<template #content>
+						<div class="items-list">
+							<div v-for="(category, c) of filteredCategories" :key="category.id">
+								<h2 v-ripple @click="toggleCategory(c)">
+									<v-icon>mdi-{{ icons[c] }}</v-icon>
+									<!-- {{ $t('doc.function_category_' + c) }} -->
+									<span>{{ c }}</span>
+									<span v-if="query.length">({{ category.length }})</span>
+									<div class="spacer"></div>
+									<v-icon v-if="query.length || categoryState[c]">mdi-chevron-up</v-icon>
+									<v-icon v-else>mdi-chevron-down</v-icon>
+								</h2>
+								<div v-if="query.length || categoryState[c]">
+									<div v-for="(item, i) in category" :key="i" @click="navigate(item.module + '/' + item.function)" :item="item.name" class="item">
+										<span class="method chip" :class="item.method">{{ item.method }}</span>
+										{{ item.function }}
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
+					</template>
 				</panel>
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column8">
@@ -58,9 +60,9 @@
 					<panel v-for="(service, s) in filteredItems" :key="s" class="service" :item="service.module + '_' + service.function" >
 						<div class="title">
 							<span class="module">{{ service.module }}</span>/<span class="function">{{ service.function }}</span>
-							<template v-for="(parameter, p) in service.parameters">
-								<span :key="p + '-'">/</span>
-								<span :key="p" class="parameter">{{ parameter }}</span>
+							<template v-for="(parameter, p) in service.parameters" :key="p">
+								<span>/</span>
+								<span class="parameter">{{ parameter }}</span>
 							</template>
 							<template v-if="service.returns.length"> → <span class="returns">{{ service.returns.join(", ") }}</span></template>
 						</div>
@@ -109,12 +111,14 @@
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import JsonViewer from 'vue-json-viewer'
 	import Markdown from '@/component/encyclopedia/markdown.vue'
+import { nextTick } from 'vue'
+import { emitter } from '@/model/vue'
 
-	@Component({ name: 'api', i18n: {}, mixins: [...mixins],
+	@Options({ name: 'api', i18n: {}, mixins: [...mixins],
 		components: { Breadcrumb, JsonViewer, Markdown }
 	})
 	export default class Api extends Vue {
@@ -195,7 +199,7 @@
 			const categories: {[key: number]: any} = {}
 			for (const item of this.filteredItems) {
 				if (item.deprecated) continue
-				if (!(item.module in categories)) Vue.set(categories, item.module, [])
+				if (!(item.module in categories)) categories[item.module] = []
 				categories[item.module].push(item)
 			}
 			return categories
@@ -205,17 +209,16 @@
 			LeekWars.get('service/get-all').then(services => {
 				this.services = services
 				for (const service of services) {
-					// Vue.set(service, 'function_lower', service.function.toLowerCase())
 					if (service.example) {
 						service.example = JSON.parse(service.example)
 					}
 					if (!(service.module in this.categories)) {
-						Vue.set(this.categories, service.module, [])
+						this.categories[service.module] = []
 					}
 					this.categories[service.module].push(service)
 				}
 				for (const category in this.categories) {
-					Vue.set(this.categoryState, category, localStorage.getItem('api-doc/category-' + category) === 'true')
+					this.categoryState[category] = localStorage.getItem('api-doc/category-' + category) === 'true'
 				}
 				LeekWars.setTitle('API')
 				this.update()
@@ -239,7 +242,7 @@
 			if (!this.filteredItems.find((it) => it.name === item)) {
 				this.query = ''
 			}
-			Vue.nextTick(() => {
+			nextTick(() => {
 				setTimeout(() => {
 					const element: any = document.querySelector('.items .service[item=' + item + ']')
 					const elements = this.$refs.elements as HTMLElement
@@ -275,7 +278,7 @@
 			LeekWars.footer = false
 			LeekWars.box = true
 			;(this.$refs.search as HTMLElement).focus()
-			this.$root.$on('back', this.back)
+			emitter.on('back', this.back)
 		}
 		focus() {
 			(this.$refs.search as HTMLElement).focus()
@@ -283,11 +286,11 @@
 		back() {
 			this.$router.push('/help/api')
 		}
-		beforeDestroy() {
+		beforeUnmount() {
 			LeekWars.large = false
 			LeekWars.footer = true
 			LeekWars.box = false
-			this.$root.$off('back', this.back)
+			emitter.off('back', this.back)
 		}
 	}
 </script>
@@ -307,10 +310,10 @@
 	}
 	.description {
 		padding: 0 !important;
-		::v-deep pre code {
+		:deep(pre code) {
 			margin-bottom: 0;
 		}
-		::v-deep p {
+		:deep(p) {
 			font-size: 15px;
 			margin-bottom: 0;
 		}
@@ -421,10 +424,10 @@
 	.items .function-name {
 		color: black;
 	}
-	.items ::v-deep .item.deprecated .content {
+	.items :deep(.item.deprecated .content) {
 		opacity: 0.6;
 	}
-	.items ::v-deep .item .deprecated-message {
+	.items :deep(.item .deprecated-message) {
 		color: #ff7f00;
 		font-weight: bold;
 		margin: 10px;
@@ -504,7 +507,7 @@
 	.example.jv-container {
 		background: var(--pure-white);
 	}
-	.example ::v-deep .jv-code {
+	.example :deep(.jv-code) {
 		color: var(--text-color);
 		border: 1px solid var(--border);
 		padding: 5px;
@@ -519,7 +522,7 @@
 			color: var(--text-color);
 		}
 	}
-	body.dark .example ::v-deep .jv-code {
+	body.dark .example :deep(.jv-code) {
 		// background: ;
 	}
 </style>

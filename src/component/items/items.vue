@@ -14,15 +14,17 @@
 			</div>
 		</div>
 		<panel class="first">
-			<div slot="content" class="levels">
-				<span v-for="(items, l) in levels" :key="l" class="level">
-					<span class="title" :class="{bold: (l + 1) % 10 === 0}">{{ l + 1 }}</span>
-					<template v-for="item in items">
-						<div v-if="item.trophy && (!(item.trophy in trophies) || !trophies[item.trophy].unlocked)" :key="item.id" class="locked">?</div>
-						<item v-else :key="item.id" :item="item" />
-					</template>
-				</span>
-			</div>
+			<template #content>
+				<div class="levels">
+					<span v-for="(items, l) in levels" :key="l" class="level">
+						<span class="title" :class="{bold: (l + 1) % 10 === 0}">{{ l + 1 }}</span>
+						<template v-for="item in items">
+							<div v-if="item.trophy && (!(item.trophy in trophies) || !trophies[item.trophy].unlocked)" :key="item.id" class="locked">?</div>
+							<item v-else :key="item.id" :item="item" />
+						</template>
+					</span>
+				</div>
+			</template>
 		</panel>
 	</div>
 </template>
@@ -31,14 +33,15 @@
 	import { ItemTemplate, ItemType } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Options, Vue } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import Item from '@/component/item.vue'
 
-	@Component({ name: 'items', i18n: {}, components: { Breadcrumb, Item } })
+	@Options({ name: 'items', i18n: {}, components: { Breadcrumb, Item } })
 	export default class Items extends Vue {
 
 		trophies: any = {}
+		ignoredItems = new Set([406, 407, 408, 409, 410, 425, 419, 418, 417, 416, 415, 414, 413, 412, 411])
 
 		created() {
 			LeekWars.setTitle("Items")
@@ -48,12 +51,12 @@
 			if (store.state.connected) {
 				LeekWars.get('trophy/my-trophies/' + this.$i18n.locale).then(data => {
 					for (const trophy of data.trophies) {
-						Vue.set(this.trophies, trophy.id, trophy)
+						this.trophies[trophy.id] = trophy
 					}
 				})
 			}
 		}
-		beforeDestroy() {
+		beforeUnmount() {
 			LeekWars.large = false
 		}
 		get breadcrumb_items() {
@@ -81,7 +84,7 @@
 
 		get items() {
 			return Object.values(LeekWars.items)
-				.filter(i => i.id < 408 && !i.name.startsWith('recovery_') && (i.type === ItemType.WEAPON || i.type === ItemType.CHIP || i.type === ItemType.COMPONENT))
+				.filter(i => !this.ignoredItems.has(i.id) && (i.type === ItemType.WEAPON || i.type === ItemType.CHIP || i.type === ItemType.COMPONENT))
 				.sort((a, b) => a.level - b.level)
 		}
 	}
@@ -104,7 +107,7 @@
 			font-weight: bold;
 		}
 	}
-	.levels ::v-deep .item {
+	.levels :deep(.item) {
 		display: block;
 		height: 67px;
 		margin-bottom: 2px;

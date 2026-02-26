@@ -15,9 +15,10 @@
 		<div class="container">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column7 split-list">
 				<panel>
-					<template slot="title">Derniers signalements ({{ faults ? faults.length : '...' }})</template>
-					<div slot="content" class="faults">
-						<loader v-if="!faults" />
+					<template #title>Derniers signalements ({{ faults ? faults.length : '...' }})</template>
+					<template #content>
+						<div class="faults">
+							<loader v-if="!faults" />
 						<div v-else>
 							<div v-if="faults.length == 0" class="empty">
 								<v-icon>mdi-check-outline</v-icon>
@@ -40,7 +41,8 @@
 								</div>
 							</router-link>
 						</div>
-					</div>
+						</div>
+					</template>
 				</panel>
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column5 split-content">
@@ -48,15 +50,15 @@
 					<div class="card farmer">
 						<div class="title">Éleveur ciblé</div>
 						<div class="flex">
-							<rich-tooltip-farmer :id="selectedFault.target.id" v-slot="{ on }" :instant="true">
-								<avatar :farmer="selectedFault.target" :on="on" />
+							<rich-tooltip-farmer :id="selectedFault.target.id" :instant="true">
+								<avatar :farmer="selectedFault.target" />
 							</rich-tooltip-farmer>
 							<div class="infos">
 								<router-link :to="'/farmer/' + selectedFault.target.id">
 									<div class="name">{{ selectedFault.target.name }}</div>
 								</router-link>
-								<div class="info"><v-icon>mdi-account-plus</v-icon> Inscrit le <b>{{ selectedFault.target.register_time | date }}</b></div>
-								<div class="info"><v-icon>mdi-power</v-icon> Connecté <b>{{ selectedFault.target.last_time | duration }}</b></div>
+								<div class="info"><v-icon>mdi-account-plus</v-icon> Inscrit le <b>{{ $filters.date(selectedFault.target.register_time) }}</b></div>
+								<div class="info"><v-icon>mdi-power</v-icon> Connecté <b>{{ $filters.duration(selectedFault.target.last_time) }}</b></div>
 								<div class="info"><v-icon>mdi-sword</v-icon> Niveau total : {{ selectedFault.target.total_level }}</div>
 								<div class="info"><img src="/image/icon/black/trophy.png"> {{ selectedFault.target.trophies }} trophées</div>
 								<div v-if="selectedFault.target.messages" class="info">
@@ -72,24 +74,22 @@
 						<div class="reason">Motif d'origine : <b>{{ $t('warning.reason_' + selectedFault.reason_text) }}</b></div>
 						<div v-if="selectedFault.fight" class="details">Combat : <router-link :to="'/fight/' + selectedFault.fight">{{ selectedFault.fight }}</router-link></div>
 						<v-select v-model="finalReason" :items="reasons" class="select" label="Changer de motif" item-value="id" item-text="t" hide-details :eager="true" dense outlined>
-							<template v-slot:selection>
+							<template #selection>
 								{{ $t('warning.reason_' + finalReason) }}
 							</template>
-							<template slot="item" slot-scope="data">
-								<v-list-item-content>
-									<v-list-item-title class="select-item">
-										<div class="name">{{ $t('warning.reason_' + data.item) }}</div>
-										<div v-if="$root.$te('warning.reason_' + data.item + '_action', 'fr')" class="desc">{{ $t('warning.reason_' + data.item + '_action') }}</div>
-									</v-list-item-title>
-								</v-list-item-content>
+							<template #item="data">
+								<v-list-item-title class="select-item">
+									<div class="name">{{ $t('warning.reason_' + data.item) }}</div>
+									<div v-if="$root.$te('warning.reason_' + data.item + '_action', 'fr')" class="desc">{{ $t('warning.reason_' + data.item + '_action') }}</div>
+								</v-list-item-title>
 							</template>
 						</v-select>
 						<div class="details">
 							<div v-if="finalReason === Warning.INCORRECT_LEEK_NAME">
 								Poireau :
-								<rich-tooltip-leek :id="selectedFault.parameter" v-slot="{ on }" :instant="true">
+								<rich-tooltip-leek :id="selectedFault.parameter" v-slot="{ props }" :instant="true">
 									<router-link :to="'/leek/' + selectedFault.parameter">
-										<span v-on="on">{{ selectedFault.data }}</span>
+										<span v-bind="props">{{ selectedFault.data }}</span>
 									</router-link>
 								</rich-tooltip-leek>
 							</div>
@@ -129,17 +129,19 @@
 						<div class="title">Message (facultatif)</div>
 						<textarea v-model="message" class="warning-message" placeholder="Précisions sur l'avertissement, contexte etc."></textarea>
 					</div>
-					<center class="buttons">
+					<div class="center buttons">
 						<v-btn color="primary" @click="archiveReporting"><v-icon>mdi-thumb-up-outline</v-icon> Archiver</v-btn>
 						<v-btn color="error" @click="warningConfirmDialog = true"><v-icon>mdi-gavel</v-icon> Sanctionner</v-btn>
-					</center>
+					</div>
 				</panel>
 			</div>
 		</div>
 
 		<popup v-if="selectedFault" v-model="warningConfirmDialog" :width="600">
-			<v-icon slot="icon">mdi-gavel</v-icon>
-			<span slot="title">Envoyer un avertissement</span>
+			<template #icon>
+				<v-icon>mdi-gavel</v-icon>
+			</template>
+			<template #title>Envoyer un avertissement</template>
 			<h4>Confirmez l'envoi de l'avertissement :</h4>
 			<br>
 			Éleveur : <b>{{ selectedFault.target.name }}</b> <br>
@@ -147,10 +149,10 @@
 			Gravité : <b>{{ severity }}</b> <br>
 			<span v-if="message">Message : "{{ message }}"</span>
 			<div v-if="$root.$te('warning.reason_' + finalReason + '_action')" class="warn-action">Action prise : <span class="text">{{ $t('warning.reason_' + finalReason + '_action') }}</span></div>
-			<div slot="actions">
+			<template #actions>
 				<div v-ripple class="dismiss" @click="warningConfirmDialog = false">Annuler</div>
 				<div v-ripple class="red" @click="sendWarning"><v-icon>mdi-gavel</v-icon> Sanctionner</div>
-			</div>
+			</template>
 		</popup>
 	</div>
 </template>
@@ -162,16 +164,17 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Fault, Warning } from '@/model/moderation'
 	import router from '@/router'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+	import { emitter } from '@/model/vue'
 
 	class ModerationRequest {
 		faults!: Fault[]
 		thugs!: Farmer[]
 	}
 
-	@Component({ name: "moderation", i18n: {}, components: { Markdown, RichTooltipFarmer, RichTooltipLeek } })
+	@Options({ name: "moderation", i18n: {}, components: { Markdown, RichTooltipFarmer, RichTooltipLeek } })
 	export default class Moderation extends Vue {
 		faults: Fault[] | null = null
 		faultsById: {[key: number]: Fault} = {}
@@ -221,7 +224,7 @@
 				LeekWars.setTitle(this.$t('title'), data.faults.length + ' signalements')
 				this.update()
 			})
-			this.$root.$on('back', () => {
+			emitter.on('back', () => {
 				this.$router.push('/moderation')
 			})
 		}
@@ -258,7 +261,7 @@
 			LeekWars.post('moderation/archive', {target_id: fault.target.id, reason: fault.reason, parameter: fault.parameter}).then(data => {
 				LeekWars.toast(this.$t('reporting_deleted') as string)
 				this.faults!.splice(this.faults!.indexOf(fault), 1)
-				Vue.delete(this.faultsById, '' + fault.id)
+				delete this.faultsById['' + fault.id]
 				this.$router.push('/moderation')
 			}).error(error => {
 				LeekWars.toast(error)
@@ -270,7 +273,7 @@
 			LeekWars.post('moderation/warn', {target_id: fault.target.id, reason: fault.reason, new_reason: this.finalReason, message: this.message, severity: this.severity, parameter: this.selectedFault.parameter}).then(data => {
 				LeekWars.toast(i18n.t('moderation.warning_sent') as string)
 				this.faults!.splice(this.faults!.indexOf(fault), 1)
-				Vue.delete(this.faultsById, '' + fault.id)
+				delete this.faultsById['' + fault.id]
 				this.warningConfirmDialog = false
 				this.$router.push('/moderation')
 			}).error(error => {
@@ -358,13 +361,13 @@
 	}
 	.select {
 		margin: 10px 0;
-		::v-deep input {
+		:deep(input) {
 			border: none;
 		}
-		::v-deep legend {
+		:deep(legend) {
 			margin-left: 17px;
 		}
-		::v-deep label.v-label {
+		:deep(label.v-label) {
 			z-index: 2;
 			left: -6px;
 		}

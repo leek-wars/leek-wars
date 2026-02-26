@@ -43,5 +43,7 @@
 	"solo_tournaments_title": "솔로 토너먼트 우승 횟수",
 	"farmer_tournaments_title": "브리더 토너먼트 우승",
 	"team_tournaments_title": "팀 토너먼트 우승",
-	"tournaments": "토너먼트"
+	"tournaments": "토너먼트",
+	"chests_title": "열어본 상자",
+	"chests": "상자"
 }

@@ -23,5 +23,6 @@
 	"unlock": "开锁",
 	"unpin": "拿下来",
 	"unsolved": "未解决",
+	"create_issue": "创建Issue",
 	"not_last_page": "您不在主题的最后一页"
 }

@@ -36,23 +36,23 @@
 			<h2>{{ $t('category_' + category_id) }}</h2>
 			<div :class="{ai: category_id == 3, code: category_id == 6}" class="category">
 				<div v-if="category_id == 2" class="chart-wrap left">
-					<chartist ref="charts" :data="chartFightType" :options="chartOptions" class="chart" type="Pie" />
+					<div class="chart"><Doughnut ref="charts" :data="chartFightType" :options="chartOptions" /></div>
 					<div class="title">{{ $t('chart_fight_type') }}</div>
 				</div>
 				<div v-if="category_id == 3" class="chart-wrap left">
-					<chartist ref="charts" :data="chartAI" :options="chartOptions" class="chart" type="Pie" />
+					<div class="chart"><Doughnut ref="charts" :data="chartAI" :options="chartOptions" /></div>
 					<div class="title">{{ $t('chart_ai_version') }}</div>
 				</div>
 				<div v-if="category_id == 6" class="chart-wrap left">
-					<chartist ref="charts" :data="chartLanguages" :options="chartOptions" class="chart" type="Pie" />
+					<div class="chart"><Doughnut ref="charts" :data="chartLanguages" :options="chartOptions" /></div>
 					<div class="title">{{ $t('chart_languages') }}</div>
 				</div>
 				<div v-if="category_id == 7" class="chart-wrap right">
-					<chartist ref="charts" :data="chartItems" :options="chartOptions" class="chart" type="Pie" />
+					<div class="chart"><Doughnut ref="charts" :data="chartItems" :options="chartOptions" /></div>
 					<div class="title">{{ $t('chart_items') }}</div>
 				</div>
 				<div v-if="category_id == 8" class="chart-wrap left">
-					<chartist ref="charts" :data="chartChests" :options="chartOptions" class="chart left" type="Pie" />
+					<div class="chart"><Doughnut ref="charts" :data="chartChests" :options="chartOptions" /></div>
 					<div class="title">{{ $t('chart_chests') }}</div>
 				</div>
 				<template v-for="(statistic, name) in category">
@@ -64,15 +64,15 @@
 					</div>
 					<div v-if="name === 'fight_tournament' || name === 'turrets_killed' || name === 'ais_v4' || name === 'godsons'" :key="name + '1'" class="delimiter"></div>
 					<div v-if="name === 'godsons'" class="chart-wrap left" :key="name + '2'">
-						<chartist ref="charts" :data="chartLanguage" :options="chartOptions" class="chart" type="Pie" />
+						<div class="chart"><Doughnut ref="charts" :data="chartLanguage" :options="chartOptions" /></div>
 						<div class="title">{{ $t('chart_language') }}</div>
 					</div>
 					<div v-if="name === 'damage'" class="chart-wrap left"  :key="name + '2'">
-						<chartist ref="charts" :data="chartDamage" :options="chartOptions" class="chart" type="Pie" />
+						<div class="chart"><Doughnut ref="charts" :data="chartDamage" :options="chartOptions" /></div>
 						<div class="title">{{ $t('chart_damage_type') }}</div>
 					</div>
 					<div v-if="name === 'fight_tournament'" class="chart-wrap right" :key="name + '2'">
-						<chartist ref="charts" :data="chartFightContext" :options="chartOptions" class="chart" type="Pie" />
+						<div class="chart"><Doughnut ref="charts" :data="chartFightContext" :options="chartOptions" /></div>
 						<div class="title">{{ $t('chart_fight_context') }}</div>
 					</div>
 				</template>
@@ -84,8 +84,8 @@
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
-	import(/* webpackChunkName: "chartist" */ /* webpackMode: "eager" */ "@/chartist-wrapper")
+	import { Options, Vue, Watch } from 'vue-property-decorator'
+	import { Doughnut } from 'vue-chartjs'
 
 	const GENERAL_CATEGORY = 1
 	const FIGHT_CATEGORY = 2
@@ -94,6 +94,7 @@
 	const ITEM_CATEGORY = 7
 	const CHEST_CATEGORY = 8
 	const DELAY = 80
+	const CHART_COLORS = ['#003f5c', '#58508d', '#bc5090', '#ff6361', '#ffa600', '#488f31']
 
 	class Statistic {
 		speed!: number
@@ -105,7 +106,7 @@
 		today_state!: boolean
 	}
 
-	@Component({ name: 'statistics', i18n: {}, mixins: [...mixins] })
+	@Options({ name: 'statistics', i18n: {}, mixins: [...mixins], components: { Doughnut } })
 	export default class Statistics extends Vue {
 		loaded: boolean = false
 		statistics: Array<{[key: string]: Statistic}> = []
@@ -115,12 +116,7 @@
 		playing: boolean = true
 		selectedStatistic: string = ''
 		selectedStatisticColor: string = ''
-		chartOptions = {
-			donut: true,
-			donutWidth: 50,
-			startAngle: 90,
-			showLabel: true
-		}
+		chartOptions: any = null
 		actions = [{icon: 'mdi-play', click: () => this.toggleAction()}]
 
 		get chartFightType() {
@@ -150,17 +146,42 @@
 
 		makeChartData(category: number, values: string[]) {
 			const statistics = this.statistics_cloned[category]
-			if (!statistics) { return {} }
+			if (!statistics) { return { labels: [], datasets: [{ data: [] }] } }
 			const total = values.reduce((t, s) => t + statistics[s].value, 0)
 			const filtered_values = values.filter(s => statistics[s].value / total > 0.01)
 			filtered_values.sort((a, b) => statistics[b].value - statistics[a].value)
 			return {
 				labels: filtered_values.map(s => this.$i18n.te(s + '_chart') ? this.$i18n.t(s + '_chart') : this.$i18n.t(s)),
-				series: filtered_values.map(s => { return { value: statistics[s].value, meta: s } })
+				datasets: [{
+					data: filtered_values.map(s => statistics[s].value),
+					backgroundColor: CHART_COLORS.slice(0, filtered_values.length),
+					hoverOffset: 0,
+					keys: filtered_values,
+				}]
 			}
 		}
 
 		created() {
+			this.chartOptions = {
+				responsive: true,
+				aspectRatio: 1,
+				cutout: '50%',
+				plugins: {
+					legend: { display: false },
+				},
+				onHover: (_event: any, elements: any, chart: any) => {
+					if (elements.length > 0) {
+						const idx = elements[0].index
+						const keys = (chart.data.datasets[0] as any).keys
+						this.selectedStatistic = keys[idx]
+						this.selectedStatisticColor = chart.data.datasets[0].backgroundColor[idx]
+					} else {
+						this.selectedStatistic = ''
+						this.selectedStatisticColor = ''
+					}
+				},
+			}
+
 			LeekWars.get('statistic/get-all').then(data => {
 				LeekWars.setTitle(this.$i18n.t('title'))
 				LeekWars.setActions(this.actions)
@@ -179,7 +200,7 @@
 				for (const c in this.statistics) {
 					for (const s in this.statistics[c]) {
 						const statistic = this.statistics[c][s]
-						Vue.set(statistic, 'today_state', false)
+						statistic.today_state = false
 						if (!statistic.visible || !statistic.interpolate) { continue }
 						statistic.speed = statistic.speed * (DELAY / 1000)
 						if (statistic.speed > 0.002) {
@@ -188,39 +209,15 @@
 					}
 				}
 
-				this.$root.$emit('loaded')
 				this.playing = localStorage.getItem('statistics/play') !== 'false'
 				if (this.playing) { this.play() }
 
-				this.resize()
 				this.loaded = true
-				this.$root.$on('resize', () => this.resize())
 			})
 		}
 
-		beforeDestroy() {
+		beforeUnmount() {
 			clearInterval(this.interval)
-		}
-
-		resize() {
-			setTimeout(() => {
-				this.$el.querySelectorAll('.chart').forEach((chart, i) => {
-					chart.querySelectorAll('.ct-series path').forEach((e) => (e as HTMLElement).style.strokeWidth = '')
-					chart.querySelectorAll('.ct-series').forEach((e, j) => {
-						e.addEventListener('mouseenter', () => {
-							e.classList.add('selected')
-							const path = e.querySelector('path')!
-							this.selectedStatistic = path.attributes.getNamedItem('ct:meta')!.value
-							this.selectedStatisticColor = getComputedStyle(path).stroke
-						})
-						e.addEventListener('mouseleave', () => {
-							e.classList.remove('selected')
-							this.selectedStatistic = ''
-							this.selectedStatisticColor = ''
-						})
-					})
-				})
-			}, 500)
 		}
 
 		toggleAction() {
@@ -249,30 +246,35 @@
 		}
 
 		hoverStat(stat: string) {
-			// console.log("hoverStat", stat)
-			;(this.$refs.charts as Vue[]).forEach(chart => {
-				const series = chart.$el.querySelectorAll('.ct-series')
-				series.forEach(s => {
-					const path = s.querySelector('path')!
-					const name = path.attributes.getNamedItem('ct:meta')
-					if (name && name.value === stat) {
-						s.classList.add('selected')
-						this.selectedStatisticColor = getComputedStyle(path).stroke
-					}
-				})
-			})
 			this.selectedStatistic = stat
+			const charts = this.$refs.charts as any[]
+			if (!charts) return
+			for (const chartComponent of charts) {
+				const chart = chartComponent?.chart
+				if (!chart?.data?.datasets?.[0]) continue
+				const keys = (chart.data.datasets[0] as any).keys
+				if (!keys) continue
+				const idx = keys.indexOf(stat)
+				if (idx !== -1) {
+					this.selectedStatisticColor = chart.data.datasets[0].backgroundColor[idx]
+					chart.setActiveElements([{datasetIndex: 0, index: idx}])
+					chart.update('none')
+					break
+				}
+			}
 		}
 
 		hoverLeave() {
 			this.selectedStatistic = ''
 			this.selectedStatisticColor = ''
-			;(this.$refs.charts as Vue[]).forEach(chart => {
-				const series = chart.$el.querySelectorAll('.ct-series')
-				series.forEach(s => {
-					s.classList.remove('selected')
-				})
-			})
+			const charts = this.$refs.charts as any[]
+			if (!charts) return
+			for (const chartComponent of charts) {
+				const chart = chartComponent?.chart
+				if (!chart) continue
+				chart.setActiveElements([])
+				chart.update('none')
+			}
 		}
 	}
 </script>
@@ -396,37 +398,6 @@
 		height: 180px;
 		margin: 5px;
 	}
-	.chart ::v-deep .ct-label {
-		font-size: 13px;
-		fill: white;
-		font-weight: bold;
-		pointer-events: none;
-	}
-	.chart ::v-deep .ct-series path {
-		stroke-width: 50px;
-		transition: stroke-width 0.1s ease;
-	}
-	.chart ::v-deep .ct-series.selected path {
-		stroke-width: 60px !important;
-	}
-	.chart ::v-deep .ct-series-a path {
-		stroke: #003f5c;
-	}
-	.chart ::v-deep .ct-series-b path {
-		stroke: #58508d;
-	}
-	.chart ::v-deep .ct-series-c path {
-		stroke: #bc5090;
-	}
-	.chart ::v-deep .ct-series-d path {
-		stroke: #ff6361;
-	}
-	.chart ::v-deep .ct-series-e path {
-		stroke: #ffa600;
-	}
-	// .chart ::v-deep .ct-series-f path {
-	// 	stroke: #ffa600;
-	// }
 	.category[category="6"] {
 		max-width: 650px;
 	}

@@ -44,5 +44,7 @@
 	"new_leek": "Erstellen eines weiteren Lauchs zulassen",
 	"start_team_tournament": "Ein Teamturnier starten",
 	"give_item": "Ein Item abgeben",
-	"confirm_give_item": "Bestätigen Sie die Spende dieses Items an das Mitglied {member}?"
+	"confirm_give_item": "Bestätigen Sie die Spende dieses Items an das Mitglied {member}?",
+	"give_money": "Geld an {member} spenden",
+	"everybody": "alle"
 }

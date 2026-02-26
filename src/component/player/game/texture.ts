@@ -197,6 +197,9 @@ class T {
 	public static odachi = new Texture(LeekWars.STATIC + 'image/weapon/odachi.png', true, SHADOW_QUALITY)
 	public static excalibur = new Texture(LeekWars.STATIC + 'image/weapon/excalibur.png', true, SHADOW_QUALITY)
 	public static scythe = new Texture(LeekWars.STATIC + 'image/weapon/scythe.png', true, SHADOW_QUALITY)
+	public static quantum_rifle = new Texture(LeekWars.STATIC + 'image/weapon/quantum_rifle.png', true, SHADOW_QUALITY)
+	public static orbital = new Texture(LeekWars.STATIC + 'image/weapon/orbital.png')
+	public static cart_quantum_rifle = new Texture(LeekWars.STATIC + 'image/weapon/cart_quantum_rifle.png')
 
 	// Cartes
 	public static box = new Texture(LeekWars.STATIC + 'image/map/box.png', true, 1)

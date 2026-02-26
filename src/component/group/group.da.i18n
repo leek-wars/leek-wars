@@ -44,5 +44,7 @@
 	"new_leek": "Tillad skabelsen af endnu en porre",
 	"start_team_tournament": "Start en holdturnering",
 	"give_item": "Giv en genstand",
-	"confirm_give_item": "Bekræft donationen af denne genstand til medlem {member}?"
+	"confirm_give_item": "Bekræft donationen af denne genstand til medlem {member}?",
+	"give_money": "Giv penge til {member}",
+	"everybody": "alle"
 }

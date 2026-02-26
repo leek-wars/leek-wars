@@ -23,5 +23,6 @@
 	"unlock": "Desbloquear",
 	"unpin": "Tumbar",
 	"unsolved": "Irresoluto",
+	"create_issue": "Crear issue",
 	"not_last_page": "No estás en la última página del tema."
 }

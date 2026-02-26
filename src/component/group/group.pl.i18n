@@ -44,5 +44,7 @@
 	"new_leek": "Pozwól na utworzenie kolejnego pora",
 	"start_team_tournament": "Rozpoczęcie turnieju drużynowego",
 	"give_item": "Podaruj przedmiot",
-	"confirm_give_item": "Potwierdzić przekazanie tego przedmiotu członkowi {member}?"
+	"confirm_give_item": "Potwierdzić przekazanie tego przedmiotu członkowi {member}?",
+	"give_money": "Przekaż pieniądze {member}",
+	"everybody": "każdy"
 }

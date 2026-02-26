@@ -1,7 +1,9 @@
 <template lang="html">
-	<tooltip bottom>
-		<template v-slot:activator="{ on }">
-			<slot :on="on"></slot>
+	<v-tooltip bottom>
+		<template #activator="{ props }">
+			<span v-bind="props">
+				<slot></slot>
+			</span>
 		</template>
 		<div class="tooltip">
 			<b>{{ $t('characteristic.' + characteristic) }}</b>
@@ -47,14 +49,14 @@
 				</template>
 			</template>
 		</div>
-	</tooltip>
+	</v-tooltip>
 </template>
 
 <script lang="ts">
 	import { COSTS } from '@/model/leek'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ name: "characteristic-tooltip" })
+	@Options({ name: "characteristic-tooltip" })
 	export default class CharacteristicTooltip extends Vue {
 		@Prop({ required: true }) characteristic!: string
 		@Prop({ required: true }) value!: number

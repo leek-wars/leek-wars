@@ -9,9 +9,9 @@
 				<div class="right">
 					<div class="name">
 						{{ $t('trophy.' + code) }}
-						<i18n tag="div" path="n_points" v-if="trophy.points" class="points">
-							<template slot="p">{{ trophy.points }}</template>
-						</i18n>
+						<i18n-t tag="div" keypath="n_points" v-if="trophy.points" class="points">
+							<template #p>{{ trophy.points }}</template>
+						</i18n-t>
 					</div>
 					<div class="description">{{ trophy.description }}</div>
 					<div class="badges">
@@ -28,12 +28,12 @@
 					<h4><v-icon>mdi-treasure-chest</v-icon> {{ $t('rewards') }}</h4>
 					<div class="rarity">
 						<ul>
-							<li v-if="trophy.habs"><span class="hab"></span> {{ trophy.habs | number }} habs</li>
+							<li v-if="trophy.habs"><span class="hab"></span> {{ $filters.number(trophy.habs) }} habs</li>
 							<li v-for="item in items" :key="item.id">
-								<rich-tooltip-item v-slot="{ on }" :bottom="true" :instant="true" :item="item">
-									<div v-if="item.type === ItemType.WEAPON" v-on="on">{{ $t('weapon.' + LeekWars.weapons[item.params].name) }}</div>
-									<div v-else-if="item.type === ItemType.HAT" v-on="on">{{ $t('hat.' + LeekWars.hats[item.params].name) }}</div>
-									<div v-else-if="item.type === ItemType.POTION" v-on="on">{{ $t('potion.' + LeekWars.potions[item.id].name) }}</div>
+								<rich-tooltip-item v-slot="{ props }" :bottom="true" :instant="true" :item="item">
+									<div v-if="item.type === ItemType.WEAPON" v-bind="props">{{ $t('weapon.' + LeekWars.weapons[item.params].name) }}</div>
+									<div v-else-if="item.type === ItemType.HAT" v-bind="props">{{ $t('hat.' + LeekWars.hats[item.params].name) }}</div>
+									<div v-else-if="item.type === ItemType.POTION" v-bind="props">{{ $t('potion.' + LeekWars.potions[item.id].name) }}</div>
 								</rich-tooltip-item>
 							</li>
 						</ul>
@@ -42,23 +42,23 @@
 				<div>
 					<h4><v-icon>mdi-chart-line-variant</v-icon> {{ $t('progress') }}</h4>
 					<div v-if="trophy.variable" class="bar-wrapper">
-						{{ trophy.progression | number }} / {{ trophy.threshold | number }}
+						{{ $filters.number(trophy.progression) }} / {{ $filters.number(trophy.threshold) }}
 						<div class="trophy-bar" :class="{full: trophy.unlocked}">
 							<div :style="{width: Math.floor(100 * Math.min(trophy.threshold, trophy.progression) / trophy.threshold) + '%'}" class="bar striked"></div>
 						</div>
 					</div>
-					<i18n v-if="trophy.unlocked" path="unlocked_the_x" tag="div" class="rarity">
-						<template slot="date">{{ trophy.date | datetime }}</template>
-					</i18n>
+					<i18n-t v-if="trophy.unlocked" keypath="unlocked_the_x" tag="div" class="rarity">
+						<template #date>{{ $filters.datetime(trophy.date) }}</template>
+					</i18n-t>
 					<div v-else class="rarity">{{ $t('not_unlocked') }}</div>
 					<router-link v-if="trophy.fight" class="rarity" :to="'/fight/' + trophy.fight + (trophy.action ? '?action=' + (trophy.action - 15) : '')">{{ $t('see_fight') }}</router-link>
 				</div>
 				<div>
 					<h4><v-icon>mdi-chart-line</v-icon> {{ $t('stats') }}</h4>
 					<div class="rarity">{{ $t('created_the', [ LeekWars.formatDate(trophy.created_time) ]) }}</div>
-					<div class="rarity">{{ (trophy.rarity * 100).toPrecision(2) }}% • <i18n tag="span" path="n_pocessors">
-						<template slot="n">{{ trophy.total | number }}</template>
-					</i18n></div>
+					<div class="rarity">{{ (trophy.rarity * 100).toPrecision(2) }}% • <i18n-t tag="span" keypath="n_pocessors">
+						<template #n>{{ $filters.number(trophy.total) }}</template>
+					</i18n-t></div>
 				</div>
 			</div>
 		</panel>
@@ -73,9 +73,9 @@
 						{{ LeekWars.formatLongDuration(farmer.time - trophy.created_time) }}
 					</div>
 					<router-link v-if="farmer.fight" :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight" v-ripple>
-						<v-icon>mdi-sword-cross</v-icon> {{ farmer.time | date }}
+						<v-icon>mdi-sword-cross</v-icon> {{ $filters.date(farmer.time) }}
 					</router-link>
-					<span v-else class="fight">{{ farmer.time | date }}</span>
+					<span v-else class="fight">{{ $filters.date(farmer.time) }}</span>
 				</div>
 			</panel>
 			<panel v-if="trophy.last_farmers.length" :title="$t('last_farmers')" icon="mdi-sort-ascending" class="last">
@@ -88,9 +88,9 @@
 						{{ LeekWars.formatLongDuration(farmer.time - trophy.created_time) }}
 					</div>
 					<router-link v-if="farmer.fight" :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight" v-ripple>
-						<v-icon>mdi-sword-cross</v-icon> {{ farmer.time | date }}
+						<v-icon>mdi-sword-cross</v-icon> {{ $filters.date(farmer.time) }}
 					</router-link>
-					<span v-else class="fight">{{ farmer.time | date }}</span>
+					<span v-else class="fight">{{ $filters.date(farmer.time) }}</span>
 				</div>
 			</panel>
 			<panel v-if="trophy.fastest_farmers?.length" :title="$t('fastest_farmers')" icon="mdi-flash" class="last">
@@ -103,9 +103,9 @@
 						{{ LeekWars.formatLongDuration(farmer.duration) }}
 					</div>
 					<router-link v-if="farmer.fight" :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight" v-ripple>
-						<v-icon>mdi-sword-cross</v-icon> {{ farmer.time | date }}
+						<v-icon>mdi-sword-cross</v-icon> {{ $filters.date(farmer.time) }}
 					</router-link>
-					<span v-else class="fight">{{ farmer.time | date }}</span>
+					<span v-else class="fight">{{ $filters.date(farmer.time) }}</span>
 				</div>
 			</panel>
 			<panel v-if="trophy.slowest_farmers?.length" :title="$t('slowest_farmers')" icon="mdi-sleep" class="last">
@@ -118,9 +118,9 @@
 						{{ LeekWars.formatLongDuration(farmer.duration) }}
 					</div>
 					<router-link v-if="farmer.fight" :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight" v-ripple>
-						<v-icon>mdi-sword-cross</v-icon> {{ farmer.time | date }}
+						<v-icon>mdi-sword-cross</v-icon> {{ $filters.date(farmer.time) }}
 					</router-link>
-					<span v-else class="fight">{{ farmer.time | date }}</span>
+					<span v-else class="fight">{{ $filters.date(farmer.time) }}</span>
 				</div>
 			</panel>
 			<panel v-if="trophy.title_farmers?.length" :title="$t('title_farmers')" icon="mdi-format-letter-case" class="last">
@@ -141,11 +141,11 @@
 	import { mixins } from '@/model/i18n'
 	import { ItemType } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 	import LWTitle from '@/component/title/title.vue'
 
-	@Component({ name: 'trophy', i18n: {}, mixins: [...mixins], components: { 'lw-title': LWTitle, RichTooltipItem } })
+	@Options({ name: 'trophy', i18n: {}, mixins: [...mixins], components: { 'lw-title': LWTitle, RichTooltipItem } })
 	export default class Trophy extends Vue {
 		code: any = null
 		trophy: any = null

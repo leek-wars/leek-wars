@@ -12,12 +12,14 @@
 				<div class="thank-you-2">{{ $t('for_your_support') }}</div>
 				<br><br>
 				<h4>
-					<i18n path="you_earn_n_crystals">
-						<div slot="crystals" class="crystals card">
-							{{ crystals }}
-							<span class="crystal"></span>
-						</div>
-					</i18n>
+					<i18n-t keypath="you_earn_n_crystals">
+						<template #crystals>
+							<div class="crystals card">
+								{{ crystals }}
+								<span class="crystal"></span>
+							</div>
+						</template>
+					</i18n-t>
 				</h4>
 				<br><br><br>
 				<router-link to="/bank">
@@ -43,9 +45,9 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({
+	@Options({
 		name: 'bank-validate', i18n: {}
 	})
 	export default class BankValidate extends Vue {
@@ -106,7 +108,7 @@
 		display: inline-block;
 		padding: 4px 8px;
 		margin: 0 2px;
-		color: black;
+		// color: black;
 	}
 	.thank-you {
 		font-size: 30px;

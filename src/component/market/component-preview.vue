@@ -9,8 +9,8 @@
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue } from 'vue-property-decorator'
-	@Component({ name: 'component-preview' })
+	import { Options, Prop, Vue } from 'vue-property-decorator'
+	@Options({ name: 'component-preview' })
 	export default class ComponentPreview extends Vue {
 		@Prop() component!: any
 	}

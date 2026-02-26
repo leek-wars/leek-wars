@@ -1,5 +1,4 @@
-
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import * as monaco from 'monaco-editor'
 
 // @ts-ignore
 import leekscript from './leekscript-monarch.js'
@@ -7,11 +6,11 @@ import leekscript from './leekscript-monarch.js'
 import { i18n } from '@/model/i18n';
 import { fileSystem } from '@/model/filesystem';
 import { analyzer } from './analyzer';
-import { vueMain } from '@/model/vue';
+import { emitter } from '@/model/vue';
 import { AI } from '@/model/ai.js';
-import { keywords } from './keywords';
-import { Keyword, KeywordKind } from '@/model/keyword';
 import { LeekWars } from '@/model/leekwars';
+import { getKeywords } from './keywords';
+import { Keyword, KeywordKind } from '@/model/keyword';
 
 monaco.languages.register({ id: 'leekscript' })
 monaco.languages.setLanguageConfiguration('leekscript', {
@@ -37,6 +36,12 @@ monaco.languages.setLanguageConfiguration('leekscript', {
 		["[", "]"],
 		// ["<", ">"],
 	],
+	indentationRules: {
+		decreaseIndentPattern: new RegExp("^\\s*[\\}\\]\\)].*$"),
+		increaseIndentPattern: new RegExp("^.*(\\{[^}]*|\\([^)]*|\\[[^\\]]*)$"),
+		unIndentedLinePattern: new RegExp("^(\\t|[ ])*[ ]\\*[^/]*\\*/\\s*$|^(\\t|[ ])*[ ]\\*/\\s*$|^(\\t|[ ])*[ ]\\*([ ]([^\\*]|\\*(?!/))*)?$"),
+		indentNextLinePattern: new RegExp("^((.*=>\\s*)|((.*[^\\w]+|\\s*)(if|while|for)\\s*\\(.*\\)\\s*))$")
+	},
 })
 monaco.languages.setMonarchTokensProvider('leekscript', leekscript)
 monaco.languages.registerDocumentSemanticTokensProvider('leekscript', leekscript)
@@ -68,6 +73,11 @@ monaco.editor.addKeybindingRules([
 		when: "textInputFocus",
 	},
 	{
+		keybinding: monaco.KeyMod.Alt | monaco.KeyCode.Shift | monaco.KeyCode.KeyF,
+		command: "editor.action.formatDocument",
+		when: "textInputFocus",
+	},
+	{
 		keybinding: monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyJ,
 		command: "editor.foldAll",
 		when: "textInputFocus",
@@ -81,12 +91,12 @@ monaco.editor.addKeybindingRules([
 		keybinding: monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyU,
 		command: "editor.toggleFold",
 		when: "textInputFocus",
-	},
+	}
 ]);
 
 monaco.editor.registerCommand('jump', (accessor, args) => {
 	// console.log("Command jump", args)
-	vueMain.$emit('jump', fileSystem.aiByFullPath[args.ai], args.line, args.column)
+	emitter.emit('jump', fileSystem.aiByFullPath[args.ai], args.line, args.column)
 })
 
 // monaco.languages.registerDocumentSymbolProvider("leekscript", {
@@ -157,9 +167,14 @@ monaco.editor.defineTheme("monokai", {
 })
 
 monaco.editor.registerEditorOpener({
-	openCodeEditor: (source, resource, selectionOrPosition) => {
-		console.log("open", source, resource, selectionOrPosition)
-		vueMain.$emit('jump', fileSystem.aiByFullPath[resource.path.substring(1)], (selectionOrPosition as monaco.IRange).startLineNumber)
+	openCodeEditor: async (source, resource, selectionOrPosition) => {
+		const ai = fileSystem.aiByFullPath[resource.path.substring(1)]
+		await fileSystem.load(ai)
+		const uri = monaco.Uri.parse('file:///' + ai.path)
+		const model = monaco.editor.getModel(resource) || monaco.editor.createModel(ai.code, 'leekscript', uri)
+		ai.model = model
+		const range = selectionOrPosition as monaco.IRange
+		emitter.emit('jump', { ai, line: range.startLineNumber, column: range.startColumn - 1 })
 		return true
 	},
 })
@@ -181,7 +196,7 @@ monaco.languages.registerHoverProvider("leekscript", {
 				hover.location[4] + 2,
 			)
 			let details = ''
-			let text = model.getValueInRange(range)
+			const text = model.getValueInRange(range)
 			const previousToken = text.includes('.') ? text.split('.')[0] : undefined
 			const mainToken = text.includes('.') ? text.split('.')[1] : text
 
@@ -192,11 +207,6 @@ monaco.languages.registerHoverProvider("leekscript", {
 				const column = hover.defined[2]
 				const args = encodeURIComponent(JSON.stringify({ ai: ai.path, line, column }))
 				details += "[" + i18n.t('leekscript.defined_in', [ '`' + ai.path + '`', line ]) + "](command:jump?" + args + ' "' + ai.path + ':' + line + ':' + column + '")'
-				// console.log(details)
-				const uri = monaco.Uri.parse('file:///' + ai.path)
-				if (monaco.editor.getModel(uri) === null) {
-					monaco.editor.createModel(ai.code, 'leekscript', uri)
-				}
 				if (symbol) {
 					fileSystem.symbols[text] = symbol
 				}
@@ -225,10 +235,13 @@ monaco.languages.registerHoverProvider("leekscript", {
 })
 
 monaco.languages.registerDefinitionProvider("leekscript", {
-	provideDefinition: (model, position, token) => {
-		// console.log("provideDefinition")
-		// console.log("provideDefinition", model, position, token)
-		const hover = analyzer.lastHover
+	provideDefinition: async (model, position, token) => {
+		// console.log("provideDefinition", model.uri.path, position.lineNumber, position.column)
+
+		// Make a fresh hover request instead of using potentially stale lastHover
+		const ai = fileSystem.aiByFullPath[model.uri.path.substring(1)]
+		const hover = await analyzer.hover(ai, position.lineNumber, position.column - 1)
+
 		if (hover?.defined) {
 			// console.log("provideDefinition defined", hover.defined)
 			const range = new monaco.Range(
@@ -237,11 +250,11 @@ monaco.languages.registerDefinitionProvider("leekscript", {
 				hover.defined[3],
 				hover.defined[4],
 			)
-			// console.log(model.uri)
-			const ai = fileSystem.ais[hover.defined[0]]
+			const targetAi = fileSystem.ais[hover.defined[0]]
+			const uri = monaco.Uri.parse('file:///' + targetAi.path)
 			return {
 				range,
-				uri: monaco.Uri.parse('file:///' + ai.path)
+				uri
 			}
 		}
 		return {
@@ -256,6 +269,39 @@ monaco.languages.registerDefinitionProvider("leekscript", {
 	},
 })
 
+monaco.languages.registerDocumentFormattingEditProvider("leekscript", {
+	async provideDocumentFormattingEdits(model) {
+		const formattedText = await formatLeekScript(model.getValue());
+		return [
+			{
+				range: model.getFullModelRange(),
+				text: formattedText,
+			},
+		];
+	},
+});
+
+async function formatLeekScript(code:string): Promise<string> {
+	let formattedCode:string = code;
+
+	await import(/* webpackChunkName: "js-beautify" */ "js-beautify").then(js_beautify => {
+
+		const hex_literals = code.matchAll(/0(?:x[\dA-Fa-f_.p]+|o[0-7_]+|b[01_]+)/g)
+		let formatted = js_beautify.default.js_beautify(code, {indent_size: 1, indent_char: '\t'})
+
+		// js-beautify doesn't recognize hexadecimal floating point, and will split them as:
+		// 0x1 .0 p53
+		// this code restore the correct litteral after the formatting:
+		for (const lit of hex_literals) {
+			const fLit = lit[0].replace(/\./, ' .').replace(/p/, ' p')
+			formatted = formatted.replace(fLit, lit[0])
+		}
+		formattedCode = formatted;
+	})
+	return formattedCode;
+
+}
+
 LeekWars.completionsProvider = monaco.languages.registerCompletionItemProvider("leekscript", {
 	triggerCharacters: ["."],
 
@@ -263,7 +309,8 @@ LeekWars.completionsProvider = monaco.languages.registerCompletionItemProvider("
 
 		// console.log("provideCompletionItems", model)
 
-		const ai = fileSystem.aiByFullPath[model.uri.path.substring(1)]
+		const path = model.uri.path.substring(1)
+		const ai = fileSystem.getAIByPath(path)
 
 		const completions = await analyzer.complete(ai, model.getValue(), position.lineNumber, position.column - 2)
 
@@ -327,7 +374,7 @@ LeekWars.completionsProvider = monaco.languages.registerCompletionItemProvider("
 			}
 		} else {
 			addCompletionsFromAI(word.word, suggestions, visited, ai, range)
-			keywords.forEach(maybeAdd)
+			getKeywords().forEach(maybeAdd)
 		}
 
 		return {

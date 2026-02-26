@@ -96,5 +96,9 @@
 	"title_35": "{0} rozpoczął walkę z bossem",
 	"message_35": "Zobacz walkę",
 	"title_36": "{0} utworzył nowy temat: {1}",
-	"message_36": "Wyświetl temat"
+	"message_36": "Wyświetl temat",
+	"title_37": "{0} dał ci {1} habs",
+	"message_37": "Zobacz rynek",
+	"title_38": "{0} dał ci {1} walk",
+	"message_38": "Idź do ogrodu warzywnego"
 }

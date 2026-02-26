@@ -23,5 +23,6 @@
 	"unlock": "Freischalten",
 	"unpin": "Abzunehmen",
 	"unsolved": "Ungelöst",
+	"create_issue": "Issue erstellen",
 	"not_last_page": "Sie befinden sich nicht auf der letzten Seite des Themas"
 }

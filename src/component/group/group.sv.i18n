@@ -44,5 +44,7 @@
 	"new_leek": "Tillåt skapandet av ytterligare en purjolök",
 	"start_team_tournament": "Starta en lagturnering",
 	"give_item": "Ge ett objekt",
-	"confirm_give_item": "Bekräfta donationen av denna artikel till medlem {member} ?"
+	"confirm_give_item": "Bekräfta donationen av denna artikel till medlem {member} ?",
+	"give_money": "Ge pengar till {member}",
+	"everybody": "alla"
 }

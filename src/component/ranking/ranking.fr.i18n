@@ -43,5 +43,7 @@
 	"solo_tournaments_title": "Tournois solo gagnés",
 	"farmer_tournaments_title": "Tournois d'éleveur gagnés",
 	"team_tournaments_title": "Tournois d'équipe gagnés",
-	"tournaments": "Tournois"
+	"tournaments": "Tournois",
+	"chests_title": "Coffres ouverts",
+	"chests": "Coffres"
 }

@@ -16,9 +16,9 @@
 
 					<br>
 					<br>
-					<center>
+					<div class="center">
 						<v-btn type="submit">{{ $t('send_confirmation') }}</v-btn>
-					</center>
+					</div>
 					<br>
 					<div class="error">{{ error }}</div>
 				</form>
@@ -26,28 +26,30 @@
 
 			<template v-else-if="state == 2">
 				<loader v-if="!error" />
-				<center v-else>
+				<div class="center" v-else>
 					<img src="/image/notgood.png">
 					<br><br>
 					<div class="error">{{ error }}</div>
-				</center>
+				</div>
 			</template>
 
 			<template v-else-if="state == 3">
-				<center>
+				<div class="center">
 					<img src="/image/map/nexus_block_small.png">
 					<br>
 					<br>
-					<i18n path="email_sent">
-						<b slot="email">{{ email }}</b>
-					</i18n>
+					<i18n-t keypath="email_sent">
+						<template #email>
+							<b>{{ email }}</b>
+						</template>
+					</i18n-t>
 					<br>
 					<br>
-				</center>
+				</div>
 			</template>
 
 			<template v-else-if="state == 4">
-				<center>
+				<div class="center">
 					<img src="/image/map/nexus_block_small.png">
 					<br>
 					<br>
@@ -55,7 +57,7 @@
 					<br>
 					<br>
 					<v-btn color="primary">{{ $t('back_home') }}</v-btn>
-				</center>
+				</div>
 			</template>
 		</panel>
 	</div>
@@ -63,9 +65,9 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'change_email', i18n: {} })
+	@Options({ name: 'change_email', i18n: {} })
 	export default class ChangeEmail extends Vue {
 		state: number = 0
 		email: string = ''

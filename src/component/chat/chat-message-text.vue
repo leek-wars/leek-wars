@@ -5,42 +5,61 @@
 
 <script lang="ts">
 	import { store } from '@/model/store'
-	import { vueMain } from '@/model/vue'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { vueMain, vuetify } from '@/model/vue'
+	import { i18n } from '@/model/i18n'
+	import router from '@/router'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import Pseudo from '../app/pseudo.vue'
 	import 'katex/dist/katex.min.css'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import { ChatMessage } from '@/model/chat'
+	import { createApp, App } from 'vue'
+	import Loader from '@/component/app/loader.vue'
+	import Avatar from '../avatar.vue'
+	import Flag from '../flag.vue'
+	import Emblem from '../emblem.vue'
+	import Talent from '../talent.vue'
+	import RankingBadge from '../ranking-badge.vue'
 
-	@Component({ name: 'ChatMessageText', components: { RichTooltipFarmer } })
+	@Options({ name: 'ChatMessageText', components: { RichTooltipFarmer } })
 	export default class ChatMessageText extends Vue {
 
 		@Prop({ required: true }) message!: ChatMessage
 
-		pseudos: Vue[] = []
+		pseudos: App[] = []
 
 		mounted() {
 			this.$el.querySelectorAll('.pseudo').forEach((c) => {
 				const name = (c as HTMLElement).innerText
 				const farmer = store.state.farmer_by_name[name]
 				if (farmer) {
-					const pseudo = new Pseudo({ propsData: { farmer }, parent: vueMain })
-					pseudo.$mount(c)
-					this.pseudos.push(pseudo)
+					const app = createApp(Pseudo, { farmer })
+					app.use(router)
+					app.use(vuetify)
+					app.use(i18n)
+					app.use(store)
+					app.component('loader', Loader)
+					app.component('avatar', Avatar)
+					app.component('emblem', Emblem)
+					app.component('flag', Flag)
+					app.component('talent', Talent)
+					app.component('ranking-badge', RankingBadge)
+					app.mount(c)
+					this.pseudos.push(app)
 				}
 			})
 		}
 
-		beforeDestroy() {
+		beforeUnmount() {
 			for (const pseudo of this.pseudos) {
-				pseudo.$destroy()
+				pseudo.unmount()
 			}
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
-	.text ::v-deep a {
+	.text:deep(a) {
 		color: #5fad1b;
 		&.lw {
 			border: 1px solid var(--border);
@@ -51,7 +70,7 @@
 			}
 		}
 	}
-	.text ::v-deep .v-icon {
+	.text:deep(.v-icon) {
 		color: #5fad1b;
 		font-size: 18px;
 		margin-right: 4px;

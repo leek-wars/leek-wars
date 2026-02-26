@@ -23,5 +23,6 @@
 	"unlock": "ロック解除",
 	"unpin": "降ろす",
 	"unsolved": "未解決",
+	"create_issue": "Issueを作成",
 	"not_last_page": "あなたはトピックの最後のページにいません"
 }

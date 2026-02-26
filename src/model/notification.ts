@@ -37,6 +37,8 @@ enum NotificationType {
 	GIVE_ITEM = 34, // Don d'item
 	BOSS_STARTED = 35, // Démarrage d'un boss
 	FORUM_TOPIC = 36, // Création d'un nouveau topic
+	GIVE_MONEY = 37, // Don d'argent
+	GIVE_FIGHTS = 38, // Don de combats
 }
 
 class Notification {

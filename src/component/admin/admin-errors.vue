@@ -5,6 +5,9 @@
 		</div>
 		<panel class="first last">
 			<div class="errors content">
+				<div v-if="newErrors > 0" class="new-errors" @click="refresh">
+					{{ newErrors }} nouvelle{{ newErrors > 1 ? 's' : '' }} erreur{{ newErrors > 1 ? 's' : '' }}
+				</div>
 				<loader v-if="!errors" />
 				<div v-else>
 					<div class="delete">
@@ -19,6 +22,7 @@
 							<div class="card">
 								<div class="header">
 									<div>Erreur #{{ error.id }} - <b>{{ LeekWars.formatDateTime(error.time) }}</b> - Type {{ error.type }} - Gravité {{ error.severity }}</div>
+									<span v-if="error.service" class="service" :class="error.service">{{ error.service }}</span>
 									<div class="spacer"></div>
 									<flag class="locale" v-if="error.locale" :code="LeekWars.languages[error.locale]?.country" />
 									<span class="locale" v-if="error.locale">{{ error.locale }}</span>
@@ -48,16 +52,29 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { emitter } from '@/model/vue'
+	import { Options, Vue } from 'vue-property-decorator'
 
-	@Component({})
+	@Options({})
 	export default class AdminErrors extends Vue {
 		errors: any[] | null = null
 		deleteQuery: string = ''
+		newErrors: number = 0
 
 		created() {
 			if (!this.$store.getters.admin) this.$router.replace('/')
 			this.update()
+			emitter.on('wsmessage', this.onWsMessage)
+		}
+
+		beforeUnmount() {
+			emitter.off('wsmessage', this.onWsMessage)
+		}
+
+		onWsMessage(e: any) {
+			if (e.type === 89) {
+				this.newErrors++
+			}
 		}
 
 		update() {
@@ -66,6 +83,11 @@
 				this.$store.commit('error-count', data.count)
 				LeekWars.setTitle("Gestionnaire d'erreur (" + (store.state.farmer ? store.state.farmer!.errors : 0) + ")")
 			})
+		}
+
+		refresh() {
+			this.newErrors = 0
+			this.update()
 		}
 
 		removeError(id: number) {
@@ -110,6 +132,18 @@
 		.ip {
 			font-family: monospace;
 			font-size: 13px;
+		}
+		.service {
+			font-size: 11px;
+			font-weight: bold;
+			padding: 2px 6px;
+			border-radius: 3px;
+			text-transform: uppercase;
+			&.daemon { background: #9c27b0; color: white; }
+			&.worker { background: #ff9800; color: white; }
+			&.api { background: #2196f3; color: white; }
+			&.cron { background: #607d8b; color: white; }
+			&.client { background: #4caf50; color: white; }
 		}
 	}
 	.error code {
@@ -156,5 +190,17 @@
 	}
 	.flag {
 		height: 16px;
+	}
+	.new-errors {
+		text-align: center;
+		padding: 8px;
+		margin-bottom: 10px;
+		background: #5fad1b;
+		color: white;
+		border-radius: 5px;
+		cursor: pointer;
+	}
+	.new-errors:hover {
+		background: #4a9010;
 	}
 </style>

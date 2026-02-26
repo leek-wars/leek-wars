@@ -1,7 +1,9 @@
 <template>
-	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :max-width="600" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'my-transition'" :open-on-hover="!locked" offset-y @input="open($event)">
-		<template v-slot:activator="{ on }">
-			<slot :on="on"></slot>
+	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :max-width="600" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'scale-transition'" :open-on-hover="!locked" offset-y @update:model-value="open($event)">
+		<template #activator="{ props }">
+			<span v-bind="props">
+				<slot></slot>
+			</span>
 		</template>
 		<div class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
 			<loader v-if="!team" :size="30" />
@@ -20,18 +22,15 @@
 							• {{ $t('main.n_farmers', [team.farmers.length]) }}
 							• {{ team.leek_count }} <img src="/image/icon/black/leek.png">
 							• {{ $t('main.level_n', [team.level]) }}</span>
-						<v-btn class="expand" icon small @click="expand = !expand">
-							<v-icon v-if="expand">mdi-chevron-up</v-icon>
-							<v-icon v-else>mdi-chevron-down</v-icon>
-						</v-btn>
+						<v-btn class="expand" variant="text" size="x-small" @click="expand = !expand" :icon="expand ? 'mdi-chevron-up' : 'mdi-chevron-down'" />
 					</div>
 				</div>
 				<div v-if="expand" class="farmers">
-					<template v-for="(farmer, f) in team.farmers">
+					<template v-for="(farmer, f) in team.farmers" :key="farmer.id">
 						<template v-if="f > 0">, </template>
-						<rich-tooltip-farmer :id="farmer.id" :key="farmer.id" v-slot="{ on }" :bottom="true" @input="setParent">
+						<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }" :bottom="true" @update:model-value="setParent">
 							<router-link :to="'/farmer/' + farmer.id">
-								<span :class="farmer.class" v-on="on">{{ farmer.name }}</span>
+								<span :class="farmer.class" v-bind="props">{{ farmer.name }}</span>
 							</router-link>
 						</rich-tooltip-farmer>
 					</template>
@@ -44,10 +43,10 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Team } from '@/model/team'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Component({ components: { RichTooltipFarmer } })
+	@Options({ components: { RichTooltipFarmer } })
 	export default class RichTooltipTeam extends Vue {
 		@Prop({required: true}) id!: number
 		@Prop() disabled!: boolean
@@ -65,7 +64,7 @@
 			return this.instant ? 0 : 500
 		}
 		get _close_delay() {
-			return this.instant ? 0 : 0
+			return this.instant ? 0 : 1
 		}
 		@Watch('id')
 		update() {
@@ -95,7 +94,7 @@
 			this.locked = event
 			if (!event && !this.mouse) {
 				this.value = false
-				this.$emit('input', false)
+				this.$emit('update:modelValue', false)
 			}
 		}
 	}

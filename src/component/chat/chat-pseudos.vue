@@ -1,7 +1,9 @@
 <template lang="html">
 	<v-list dense>
 		<v-list-item v-for="(farmer, f) of farmers" :key="farmer.id" v-ripple class="command" :class="{selected: index === f}" @click="$emit('pseudo', farmer.name)">
-			<avatar :farmer="farmer" />
+			<template #prepend>
+				<avatar :farmer="farmer" />
+			</template>
 			<v-list-item-title>@{{ farmer.name }}</v-list-item-title>
 		</v-list-item>
 	</v-list>
@@ -10,9 +12,10 @@
 <script lang="ts">
 	import { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { nextTick } from 'vue'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'chat-pseudos' })
+	@Options({ name: 'chat-pseudos', emits: ['pseudo'] })
 	export default class ChatPseudos extends Vue {
 
 		@Prop({ required: true }) chat!: number
@@ -40,9 +43,17 @@
 		up() {
 			this.index--
 			if (this.index < 0) this.index = this.farmers.length - 1
+			this.scrollToSelected()
 		}
 		down() {
 			this.index = (this.index + 1) % this.farmers.length
+			this.scrollToSelected()
+		}
+		scrollToSelected() {
+			nextTick(() => {
+				const items = (this as any).$el?.parentElement?.querySelectorAll('.command')
+				if (items) (items[this.index] as HTMLElement)?.scrollIntoView({ block: 'nearest' })
+			})
 		}
 	}
 </script>

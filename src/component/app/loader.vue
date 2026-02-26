@@ -5,8 +5,8 @@
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue } from 'vue-property-decorator'
-	@Component({ name: "loader" })
+	import { Options, Prop, Vue } from 'vue-property-decorator'
+	@Options({ name: "loader" })
 	export default class LWLoader extends Vue {
 		@Prop() size!: number
 		get s() { return this.size || 60 }

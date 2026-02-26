@@ -7,12 +7,12 @@
 					<span v-if="LeekWars.LOCAL" class="local-label">local</span>
 					<span v-else-if="LeekWars.DEV" class="dev-label">dev</span>
 					<span v-if="env.BETA" class="beta-label">Bêta</span>
-					<!-- <tooltip>
-						<template v-slot:activator="{ on }">
-							<img v-on="on" class="hat" src="/image/10years_hat.png">
+					<!-- <v-tooltip>
+						<template #activator="{ props }">
+							<img v-bind="props" class="hat" src="/image/10years_hat.png">
 						</template>
 						{{ $t('main.10years') }}
-					</tooltip> -->
+					</v-tooltip> -->
 				</div>
 			</router-link>
 		</div>
@@ -24,8 +24,8 @@
 					</div>
 				</div>
 				<v-menu offset-y>
-					<template v-slot:activator="{ on }">
-						<div class="button-wrapper language-button" v-on="on">
+					<template #activator="{ props }">
+						<div class="button-wrapper language-button" v-bind="props">
 							<div class="header-button">
 								<flag :code="LeekWars.languages[$i18n.locale].country" :clickable="false" />
 							</div>
@@ -33,9 +33,13 @@
 					</template>
 					<v-list :dense="true">
 						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="LeekWars.setLocale(language.code)">
-							<flag :code="language.country" :clickable="false" />
+							<template #prepend>
+								<flag :code="language.country" :clickable="false" />
+							</template>
 							<span class="name">{{ language.name }}</span>
-							<span v-if="language.beta" class="beta">bêta</span>
+							<template #append>
+								<span v-if="language.beta" class="beta">bêta</span>
+							</template>
 						</v-list-item>
 					</v-list>
 				</v-menu>
@@ -72,7 +76,7 @@
 				<div v-if="env.BANK && $store.state.farmer.verified && $store.state.farmer.bank_enabled" class="button-wrapper">
 					<router-link to="/bank">
 						<div v-if="$store.state.farmer" class="header-button">
-							<span class="farmer-crystals text">{{ Math.round($store.state.farmer.animated_crystals) | number }}</span>
+							<span class="farmer-crystals text">{{ $filters.number(Math.round($store.state.farmer.animated_crystals)) }}</span>
 							<span class="crystal text"></span>
 							<span v-if="$store.state.farmer.animated_crystals < $store.state.farmer.crystals" class="crystal win"></span>
 							<span v-else-if="$store.state.farmer.animated_crystals > $store.state.farmer.crystals" class="crystal lose"></span>
@@ -82,7 +86,7 @@
 				<div class="button-wrapper">
 					<router-link to="/market">
 						<div v-if="$store.state.farmer" class="header-button">
-							<span class="farmer-habs text">{{ Math.round($store.state.farmer.animated_habs) | number }}</span>
+							<span class="farmer-habs text">{{ $filters.number(Math.round($store.state.farmer.animated_habs)) }}</span>
 							<span class="hab text"></span>
 							<span v-if="$store.state.farmer.animated_habs < $store.state.farmer.habs" class="hab win"></span>
 							<span v-else-if="$store.state.farmer.animated_habs > $store.state.farmer.habs" class="hab lose"></span>
@@ -92,16 +96,16 @@
 				<div class="button-wrapper">
 					<router-link to="/garden">
 						<div class="header-button fights-button">
-							<span v-if="$store.state.farmer" class="farmer-fights text">{{ $store.state.farmer.fights | number }}</span>
-							<span v-if="$store.state.farmer?.team_fights" class="farmer-fights text">+ {{ $store.state.farmer.team_fights | number }}</span>
+							<span v-if="$store.state.farmer" class="farmer-fights text">{{ $filters.number($store.state.farmer.fights) }}</span>
+							<span v-if="$store.state.farmer?.team_fights" class="farmer-fights text">+ {{ $filters.number($store.state.farmer.team_fights) }}</span>
 							<img src="/image/icon/garden.png">
 						</div>
 					</router-link>
 				</div>
 				<div class="button-wrapper">
 					<v-menu v-if="env.SOCIAL" :nudge-bottom="3" :width="400" :max-height="400" bottom offset-y>
-						<template v-slot:activator="{ on }">
-							<div class="header-button messages-button" v-on="on">
+						<template #activator="{ props }">
+							<div class="header-button messages-button" v-bind="props">
 								<v-icon>mdi-email-outline</v-icon>
 								<span v-show="$store.state.unreadMessages > 0" class="counter">{{ $store.state.unreadMessages }}</span>
 							</div>
@@ -117,9 +121,9 @@
 					</v-menu>
 				</div>
 				<div class="button-wrapper">
-					<v-menu :nudge-bottom="3" :width="400" :max-height="400" bottom offset-y @input="readNotifications">
-						<template v-slot:activator="{ on }">
-							<div class="header-button notifications-button" v-on="on">
+					<v-menu :nudge-bottom="3" :width="400" :max-height="400" bottom offset-y @update:model-value="readNotifications">
+						<template #activator="{ props }">
+							<div class="header-button notifications-button" v-bind="props">
 								<v-icon>mdi-bell-outline</v-icon>
 								<span v-show="$store.state.unreadNotifications > 0" class="counter">{{ $store.state.unreadNotifications }}</span>
 							</div>
@@ -135,7 +139,7 @@
 				<div class="button-wrapper">
 					<router-link to="/settings">
 						<div class="settings-button header-button">
-							<v-icon>mdi-settings-outline</v-icon>
+							<v-icon>mdi-cog-outline</v-icon>
 						</div>
 					</router-link>
 				</div>
@@ -155,10 +159,11 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Notification } from '@/model/notification'
-	import { Component, Vue } from 'vue-property-decorator'
-	const ConversationElement = () => import('@/component/messages/conversation.vue')
+	import { defineAsyncComponent } from 'vue'
+	import { Options, Vue } from 'vue-property-decorator'
+	const ConversationElement = defineAsyncComponent(() => import('@/component/messages/conversation.vue'))
 
-	@Component({ name: 'lw-header', components: { 'conversation': ConversationElement } })
+	@Options({ name: 'lw-header', components: { 'conversation': ConversationElement } })
 	export default class Header extends Vue {
 
 		readNotifications() {

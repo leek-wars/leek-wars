@@ -7,8 +7,8 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
-	@Component({ name: 'screen' })
+	import { Options, Prop, Vue } from 'vue-property-decorator'
+	@Options({ name: 'screen' })
 	export default class Screen extends Vue {
 		@Prop({required: true}) src!: string
 		@Prop({required: true}) legend!: string

@@ -4,6 +4,7 @@
 	"error_under_required_level_1": "Il tuo primo porro deve essere almeno di livello {0}",
 	"error_under_required_level_2": "Il tuo secondo porro deve essere almeno di livello {0}",
 	"error_under_required_level_3": "Il tuo terzo porro deve essere almeno di livello {0}",
+	"error_name_already_used": "Il nome del tuo porro è già in uso",
 	"name": "Nome",
 	"name_length": "Il nome del porro deve contenere tra {0} e {1} caratteri",
 	"name_format": "I caratteri speciali non sono ammessi nel nome",

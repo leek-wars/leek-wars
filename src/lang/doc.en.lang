@@ -145,7 +145,7 @@
 	"func_arrayPartition_arg_1": "Source array.",
 	"func_arrayPartition_arg_2": "Callback function.",
 	"func_arrayPartition_return": "Resulting two element array.",
-	"func_arraySort": "Sorts the elements from given <b>array</b> according to <b>callback</b> function. Elements are compared by pairs, each one being an input of the callback function. The callback functions needs to return\n-1, 0 or 1, respectively if the first input element is before, at the same place or after the second input element.\n\nIf the <b>callback</b> function requires two inputs, it is\napplied on the array's values, if the <b>callback</b>\nfunction requires four inputs, it is applied on the array's (key: value) pairs.\n\n<code>var tableau = [1, 8, 4, 5, 3, 2, 7, 6];\ndebug(arraySort(tableau, function(a, b) {\n    return (a == b) ? 0 : (a < b ? (-1) : 1);\n})); // returns [1, 2, 3, 4, 5, 6, 7, 8]</code>",
+	"func_arraySort": "Sorts the elements from given <b>array</b> according to <b>callback</b> function. Elements are compared by pairs, each one being an input of the callback function. The callback functions needs to return\n-1, 0 or 1, respectively if the first input element is before, at the same place or after the second input element.\n\nIf the <b>callback</b> function requires two inputs, it is\napplied on the array's values, if the <b>callback</b>\nfunction requires four inputs, it is applied on the array's (key: value) pairs.\n\n<code>var tableau = [1, 8, 4, 5, 3, 2, 7, 6];\ndebug(arraySort(tableau, function(a, b) {'{'}\n    return (a == b) ? 0 : (a < b ? (-1) : 1);\n{'}'})); // returns [1, 2, 3, 4, 5, 6, 7, 8]</code>",
 	"func_arraySort_arg_1": "Source array.",
 	"func_arraySort_arg_2": "Sorting function.",
 	"func_arraySort_return": "Sorted array",

@@ -1,6 +1,6 @@
 <template lang="html">
-	<rich-tooltip-farmer :id="farmer.id" v-slot="{ on }" :bottom="farmer.id !== $store.state.farmer.id" :instant="true" class="rich">
-		<div class="elem" v-on="on">
+	<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }" :bottom="farmer.id !== $store.state.farmer.id" :instant="true" class="rich">
+		<div class="elem" v-bind="props">
 			<avatar :farmer="farmer" />
 			<div class="name">{{ farmer.name }}</div>
 			<talent :id="farmer.id" :talent="farmer.talent" category="farmer" />
@@ -13,11 +13,11 @@
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import Avatar from '../avatar.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Component({
+	@Options({
 		components: { avatar: Avatar, RichTooltipFarmer }
 	})
 	export default class GardenFarmer extends Vue {

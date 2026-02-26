@@ -909,6 +909,26 @@ class LighningBall extends Particle {
 	}
 }
 
+class Orbital extends Particle {
+	radius: number
+	scale: number
+
+	public constructor(game: Game, x: number, y: number, z: number, angle: number, duration: number, radius: number, scale: number, speed: number) {
+		super(game, x, y, z, duration)
+		this.dx = Math.cos(angle) * speed
+		this.dy = Math.sin(angle) * speed
+		this.angle = angle
+		this.radius = radius
+		this.rotation = (0.2 + Math.random() * 0.1) * (Math.random() > 0.5 ? 1 : -1)
+		this.scale = scale
+	}
+
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	public draw(ctx: CanvasRenderingContext2D): void {
+		ctx.drawImage(T.orbital.texture, -T.orbital.texture.width / 2 * this.scale, -T.orbital.texture.height / 2 * this.scale, T.orbital.texture.width * this.scale, T.orbital.texture.height * this.scale)
+	}
+}
+
 class BuryParticle extends Particle {
 	static LIFE = 25
 	texture: Texture
@@ -1004,4 +1024,4 @@ class PrismParticle extends Particle {
 	}
 }
 
-export { Particle, Bubble, Bullet, BuryParticle, CriticalParticle, Laser, Lightning, Fire, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, LighningBall, LineParticle, Plasma, Rectangle, Blood, PrismParticle, RealisticExplosion, Rocket, SmallExplosion, SpikeParticle, SpinningParticle, NUM_BLOOD_SPRITES }
+export { Particle, Bubble, Bullet, BuryParticle, CriticalParticle, Laser, Lightning, Fire, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, LighningBall, LineParticle, Plasma, Rectangle, Blood, PrismParticle, RealisticExplosion, Rocket, SmallExplosion, SpikeParticle, SpinningParticle, NUM_BLOOD_SPRITES, Orbital }

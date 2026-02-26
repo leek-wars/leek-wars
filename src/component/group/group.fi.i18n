@@ -44,5 +44,7 @@
 	"new_leek": "Anna luoda toinen purjo",
 	"start_team_tournament": "Käynnistä tiimiturnaus",
 	"give_item": "Anna esine",
-	"confirm_give_item": "Vahvista tämän esineen lahjoittaminen jäsenelle {member} ?"
+	"confirm_give_item": "Vahvista tämän esineen lahjoittaminen jäsenelle {member} ?",
+	"give_money": "Anna rahaa {member}",
+	"everybody": "kaikki"
 }

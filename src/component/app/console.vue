@@ -30,10 +30,8 @@
 				</div>
 			</div>
 			<div class="input" @click="focus()">
-				<!-- <span class="arrow">›</span> -->
 				<v-icon class="arrow">mdi-chevron-right</v-icon>
-				<!-- <input ref="input" v-model="code" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" @keydown.enter="enter"> -->
-				<ai-view class="editor" ref="editor" :ai="ai" :ais="{}" :visible="true" :line-numbers="false" :font-size="17" @enter="enter" :autocomplete-option="true" :popups="true" :console="true" @down="down" @up="up" />
+				<ai-view-monaco class="editor" ref="editor" :ai="ai" :ais="{}" :visible="true" :line-numbers="false" :font-size="17" :line-height="20" @enter="enter" :autocomplete-option="true" :popups="true" :console="true" :theme="theme" @down="down" @up="up" />
 			</div>
 		</div>
 	</div>
@@ -43,30 +41,38 @@
 	import { locale } from '@/locale'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
-	import { Component, Vue } from 'vue-property-decorator'
-	import AIView from '../editor/ai-view.vue'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import { AI } from '@/model/ai'
-	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
+	import { emitter } from '@/model/vue'
+	import { i18n } from '@/model/i18n'
+	import AIViewMonaco from '../editor/ai-view-monaco.vue'
+	import { FileSystem, fileSystem } from '@/model/filesystem'
 
-	@Component({ components: { 'ai-view': AIView } })
+	@Options({ components: { 'ai-view-monaco': AIViewMonaco } })
 	export default class Console extends Vue {
 
-		editor!: AIView
+		editor!: AIViewMonaco
 		lines: any[] = []
 		history: string[] = []
 		historyPos: number = 0
-		ai: any = new AI({ id: 0, code: '' })
+		ai: any = new AI({ id: 0, code: '', path: FileSystem.CONSOLE_MAGIC_KEY + Math.random() + '.leek' })
 		theme: string = 'leekwars'
-		version: number = 4
-		strict: boolean = false
+		leekscript = {
+			version: 4,
+			strict: false,
+		}
 
-		created() {
+		async created() {
 			LeekWars.loadEncyclopedia(locale)
+
+			const docMessages = await import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
+			i18n.global.mergeLocaleMessage(locale, { doc: docMessages.default })
 
 			const defaultTheme = LeekWars.darkMode ? 'monokai' : 'leekwars'
 			this.theme = localStorage.getItem('console/theme') || defaultTheme
-			this.version = parseInt(localStorage.getItem('console/version') || '4')
-			this.strict = localStorage.getItem('console/strict') === 'true'
+			this.leekscript.version = parseInt(localStorage.getItem('console/version') || '4')
+			this.leekscript.strict = localStorage.getItem('console/strict') === 'true'
+			fileSystem.consoleAI = this.ai
 
 			this.clear()
 		}
@@ -82,13 +88,13 @@
 			if (this.editor) {
 				this.editor.editor.setValue('')
 			}
-			LeekWars.socket.send([SocketMessage.CONSOLE_NEW, this.version, this.strict])
+			LeekWars.socket.send([SocketMessage.CONSOLE_NEW, this.leekscript.version, this.leekscript.strict])
 		}
 
 		up() {
 			this.historyPos--
 			if (this.historyPos < 0) this.historyPos = 0
-			this.editor.setCode(this.history[this.historyPos])
+			this.editor.editor.setValue(this.history[this.historyPos])
 		}
 
 		down() {
@@ -97,18 +103,18 @@
 				this.historyPos = this.history.length
 				this.editor.editor.setValue('')
 			} else {
-				this.editor.setCode(this.history[this.historyPos])
+				this.editor.editor.setValue(this.history[this.historyPos])
 			}
 		}
 
 		mounted() {
 			this.editor = this.$refs.editor as AIView
-			this.$root.$on('console', (data: any) => {
+			emitter.on('console', (data: any) => {
 				console.log("on console", data)
 				this.lines.push({ type: 'result', ...data })
 				this.scrollDown()
 			})
-			this.$root.$on('console-error', (data: any) => {
+			emitter.on('console-error', (data: any) => {
 				console.log("on console-error", data)
 				let zigzags = ""
 				if (data.location) {
@@ -118,25 +124,24 @@
 				this.lines.push({ type: 'error', ...data, zigzags })
 				this.scrollDown()
 			})
-			this.$root.$on('console-log', (data: any) => {
+			emitter.on('console-log', (data: any) => {
 				console.log("on console-log", data)
 				this.lines.push({ type: 'log', log: data })
 				this.scrollDown()
 			})
-			this.$root.$on("wsconnected", () => {
+			emitter.on("wsconnected", () => {
 				this.clear()
 			})
 		}
 
-		beforeDestroy() {
-			this.$root.$off('console')
-			this.$root.$off('console-error')
-			this.$root.$off('console-log')
+		beforeUnmount() {
+			emitter.off('console')
+			emitter.off('console-error')
+			emitter.off('console-log')
 			LeekWars.socket.send([SocketMessage.CONSOLE_CLOSE])
 		}
 
 		enter() {
-			console.log("Console enter")
 			const code = this.editor.editor.getValue()
 			this.history.push(code)
 			this.historyPos = this.history.length
@@ -145,6 +150,7 @@
 			this.scrollDown()
 			this.editor.editor.setValue('')
 		}
+
 		scrollDown() {
 			setTimeout(() => {
 				(this.$refs.scroll as HTMLElement).scrollTop = (this.$refs.scroll as HTMLElement).scrollHeight
@@ -152,7 +158,6 @@
 		}
 
 		focus() {
-			// (this.$refs.input as HTMLElement).focus()
 			this.editor.editor.focus()
 		}
 
@@ -165,20 +170,19 @@
 		}
 
 		toggleTheme() {
-			console.log("toggle theme")
 			this.theme = this.theme === 'leekwars' ? 'monokai' : 'leekwars'
 			localStorage.setItem('console/theme', this.theme)
 		}
 
-		setVersion(version: number) {
-			this.version = version
-			localStorage.setItem('console/version', '' + this.version)
+		@Watch('leekscript.version')
+		updateVersion(version: number) {
+			localStorage.setItem('console/version', '' + this.leekscript.version)
 			this.clear()
 		}
 
-		toggleStrictMode() {
-			this.strict = !this.strict
-			localStorage.setItem('console/strict', '' + this.strict)
+		@Watch('leekscript.strict')
+		updateStrictMode() {
+			localStorage.setItem('console/strict', '' + this.leekscript.strict)
 			this.clear()
 		}
 	}
@@ -232,7 +236,7 @@
 		padding: 2px 0;
 		word-wrap: break-word;
 		display: flex;
-		align-items: flex-start;
+		align-items: center;
 		gap: 5px;
 		font-family: monospace;
 		span, .error {
@@ -242,12 +246,11 @@
 			color: red;
 		}
 		.zigzag {
-			padding-left: 31px;
+			padding-left: 27px;
 			margin-top: -10px;
 		}
 	}
 	.line.result {
-		// color: white;
 		font-weight: bold;
 		font-size: 16px;
 		margin-bottom: 2px;
@@ -255,6 +258,7 @@
 			font-size: 13px;
 			font-weight: normal;
 			color: #888;
+			margin-left: 10px;
 		}
 	}
 	.input {
@@ -290,7 +294,7 @@
 	// height: 280px;
 	background: transparent !important;
 	position: initial;
-	&::v-deep .CodeMirror {
+	&:deep(.CodeMirror) {
 		.CodeMirror-lines {
 			padding: 0;
 		}
@@ -301,8 +305,8 @@
 		}
 	}
 }
-.console::v-deep code {
+.console:deep(code) {
 	border: none;
-	padding: 0 4px;
+	padding: 0;
 }
 </style>

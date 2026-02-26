@@ -10,7 +10,7 @@
 	"shortcut_9": "<b>Alt + venstre/høyre</b>: bytt mellom åpne filer",
 	"shortcut_10": "<b>Ctrl + Mellomrom</b>: automatisk fullføring",
 	"shortcut_11": "<b>Ctrl + Klikk</b>: gå til symboldefinisjon",
-	"shortcut_12": "<b>Ctrl + Shift + F</b>: automatisk kodeformatering og innrykk",
+	"shortcut_12": "<b>Alt + Shift + F</b>: automatisk kodeformatering og innrykk",
 	"shortcut_13": "<b>Ctrl + U</b>: brett/fold ut gjeldende kodeblokk",
 	"shortcut_14": "<b>Ctrl + J</b>: Skjul alle kodeblokker",
 	"shortcut_15": "<b>Ctrl + I</b>: utvider alle kodeblokker"

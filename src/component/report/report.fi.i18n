@@ -40,5 +40,8 @@
 	"errors": "Virheet",
 	"errors_warnings": "Virheet ja varoitukset",
 	"n_errors": "{n} virhettä",
-	"n_warnings": "{n} varoitusta"
+	"n_warnings": "{n} varoitusta",
+	"toggle_turrets": "Näytä/piilota tornit",
+	"toggle_percent": "Elämäprosentti",
+	"toggle_smooth": "Tasainen/kulmikas käyrä"
 }

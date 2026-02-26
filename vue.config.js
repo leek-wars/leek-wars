@@ -10,14 +10,24 @@ if (match) {
 dotenv.config({ path: path.resolve(process.cwd(), 'src', 'env', '.env') })
 
 module.exports = {
-	configureWebpack: {
-		performance: {
-			hints: false
+	// Generate source maps in production for error decoding
+	// Files are NOT exposed to users (hidden-source-map)
+	productionSourceMap: true,
+
+	devServer: {
+		static: {
+			directory: path.resolve(__dirname, 'static'),
+			publicPath: '/static',
+			watch: false,
 		},
+		client: {
+			overlay: false,
+		},
+	},
+	configureWebpack: {
+		devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'eval-source-map',
 		plugins: [
-			new MonacoWebpackPlugin({
-				languages: ['typescript', 'javascript', 'css']
-			})
+			new MonacoWebpackPlugin()
 		]
 	},
 	pages: {
@@ -42,6 +52,20 @@ module.exports = {
 		'app-ko': {entry: 'src/main-ko'},
 	},
     chainWebpack: config => {
+		config.watchOptions({
+			ignored: '/static/'
+		})
+		config.module
+			.rule('vue')
+			.use('vue-loader')
+			.tap(options => ({
+				...options,
+				compilerOptions: {
+					...options?.compilerOptions,
+					whitespace: 'preserve'
+				}
+			}))
+
 		config.module
 			.rule('i18n')
 			.test(/\.\w\w\.i18n/)

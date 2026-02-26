@@ -51,6 +51,6 @@
 	"end_of_fight": "Einde van het gevecht!",
 	"lama": "{leek} doet een beroep op de krachten van 🦙 ({cost})",
 	"help_page": "Meer informatie gebruiksaanwijzing :",
-	"leek_state_x_turns": "{leek} gaat de {staat} in ({draait} draait)",
+	"leek_state_x_turns": "{leek} gaat de {state} in ({turns} draait)",
 	"state_x": "Status {0}"
 }

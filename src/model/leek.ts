@@ -2,7 +2,7 @@ import { AI } from '@/model/ai'
 import { Chip } from '@/model/chip'
 import { Weapon } from '@/model/weapon'
 import { Hat } from './hat'
-import { Component } from './component'
+import { Options } from './component'
 
 enum Characteristic {
 	LIFE = 0,

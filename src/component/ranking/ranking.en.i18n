@@ -43,5 +43,7 @@
 	"solo_tournaments_title": "Solo Tournaments Won",
 	"farmer_tournaments_title": "Farmer Tournaments Won",
 	"team_tournaments_title": "Team Tournaments Won",
-	"tournaments": "Tournaments"
+	"tournaments": "Tournaments",
+	"chests_title": "Chests opened",
+	"chests": "Chests"
 }

@@ -17,7 +17,7 @@
 	"ai_restore": "Restore l'IA **ai_id** et la sort de la corbeille.",
 	"ai_save": "Sauvegarde l'IA **ai_id** et renvoie les éventuelles erreurs.",
 	"ai_strict": "Active ou non le mode strict sur l'IA **ai_id**.",
-	"ai_sync": "Prend une liste d'id d'IA **ais** sous la forme `{ ai: timestamp }` et renvoie les codes des IA qui ne sont plus à jour.",
+	"ai_sync": "Prend une liste d'id d'IA **ais** sous la forme `{'{'} ai: timestamp {'}'}` et renvoie les codes des IA qui ne sont plus à jour.",
 	"ai_test-scenario": "Lance le scénario **scenario_id** ou le scénario par défaut pour l'IA **ai_id** si **scenario_id** vaut `0`.",
 	"ai_version": "Change la version de l'IA **ai_id** en **version**.",
 	"ai-folder_change-folder": "Déplace le dossier **folder_id** vers **dest_folder_id**.",

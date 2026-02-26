@@ -2,18 +2,18 @@
 	<div class="forge">
 		<div class="grid">
 			<div v-for="(item, i) in forge" :key="i" class="cell" :class="{['cell' + i]: true, active: !!item, building: item && building}">
-				<rich-tooltip-item v-if="item" :key="item[0]" v-slot="{ on }" :item="LeekWars.items[item[0]]" :inventory="true" :quantity="item[1]">
-					<div class="item" v-on="on" :type="LeekWars.items[item[0]].type">
-						<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[item[0]].type] + '/' + LeekWars.items[item[0]].name.replace('hat_', '').replace('potion_', '').replace('chip_', '') + '.png'">
-						<div v-if="item[1] > 1" class="quantity">{{ item[1] | number }}</div>
+				<rich-tooltip-item v-if="item" :key="item[0]" v-slot="{ props }" :item="LeekWars.items[item[0]]" :inventory="true" :quantity="item[1]">
+					<div class="item" v-bind="props" :type="LeekWars.items[item[0]].type">
+						<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[item[0]].type] + '/' + LeekWars.items[item[0]].name.replace('hat_', '').replace('potion_', '').replace('chip_', '').replace('weapon_', '') + '.png'">
+						<div v-if="item[1] > 1" class="quantity">{{ $filters.number(item[1]) }}</div>
 					</div>
 				</rich-tooltip-item>
 			</div>
 			<div class="cell" :class="{cell8: true, active: !!result && !built, built}" @click="craft">
-				<rich-tooltip-item v-if="result" v-slot="{ on }" :item="LeekWars.items[result]" :inventory="true" :quantity="scheme.quantity" :open-delay="built ? 500 : 1000">
-					<div v-on="on" v-ripple class="item" :class="{building}" :type="LeekWars.items[result].type">
+				<rich-tooltip-item v-if="result" v-slot="{ props }" :item="LeekWars.items[result]" :inventory="true" :quantity="scheme.quantity" :open-delay="built ? 500 : 1000">
+					<div v-bind="props" v-ripple class="item" :class="{building}" :type="LeekWars.items[result].type">
 						<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[result].type] + '/' + LeekWars.items[result].name.replace('hat_', '').replace('potion_', '') + '.png'">
-						<div v-if="scheme.quantity > 1" class="quantity">{{ scheme.quantity | number }}</div>
+						<div v-if="scheme.quantity > 1" class="quantity">{{ $filters.number(scheme.quantity) }}</div>
 					</div>
 				</rich-tooltip-item>
 				<v-icon v-if="result && !built && !building">mdi-hammer-wrench</v-icon>
@@ -29,15 +29,16 @@
 	import { ForumCategory, ForumMessage, ForumTopic } from '@/model/forum'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import { SchemeTemplate } from '@/model/scheme'
 	import { ItemTypes, ITEM_CATEGORY_NAME } from '@/model/item'
-import { Store } from 'vuex'
-import { store } from '@/model/store'
-	const RichTooltipItem = () => import('@/component/rich-tooltip/rich-tooltip-item.vue')
+	import { store } from '@/model/store'
+	import { emitter } from '@/model/vue'
+	import { defineAsyncComponent } from 'vue'
+	const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
 
-	@Component({ name: 'forge', components: { Breadcrumb, 'rich-tooltip-item': RichTooltipItem } })
+	@Options({ name: 'forge', components: { Breadcrumb, 'rich-tooltip-item': RichTooltipItem } })
 	export default class Forge extends Vue {
 
 		ItemTypes = ItemTypes
@@ -51,11 +52,11 @@ import { store } from '@/model/store'
 		mounted() {
 			LeekWars.footer = false
 			LeekWars.box = true
-			this.$root.$on('craft', (scheme: SchemeTemplate) => {
+			emitter.on('craft', (scheme: SchemeTemplate) => {
 				this.clear()
 				this.scheme = scheme
 				for (let i = 0; i < scheme.items.length; ++i) {
-					Vue.set(this.forge, i, scheme.items[i])
+					this.forge[i] = scheme.items[i]
 				}
 				this.result = scheme.result
 			})
@@ -63,7 +64,7 @@ import { store } from '@/model/store'
 
 		clearIngredients() {
 			for (let i = 0; i < 8; ++i) {
-				Vue.set(this.forge, i, null)
+				this.forge[i] = null
 			}
 		}
 		clear() {
@@ -74,8 +75,8 @@ import { store } from '@/model/store'
 			this.built = false
 		}
 
-		beforeDestroy() {
-			this.$root.$off('craft')
+		beforeUnmount() {
+			emitter.off('craft')
 		}
 
 		craft() {
@@ -201,7 +202,7 @@ import { store } from '@/model/store'
 			pointer-events: none;
 			box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
 		}
-		& ::v-deep .v-ripple__container {
+		& :deep(.v-ripple__container) {
 			border-radius: 20px;
 		}
 		.item.building {

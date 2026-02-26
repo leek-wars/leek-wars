@@ -13,7 +13,7 @@
 		<div class="container last">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column3">
 				<panel class="garden-left first last">
-					<div slot="content">
+					<template #content>
 						<template v-if="category === 'challenge'">
 							<div class="tab active enabled router-link-active">
 								<h2>{{ $t('challenge') }}</h2>
@@ -21,29 +21,29 @@
 							</div>
 						</template>
 						<div v-else>
-							<router-link v-ripple to="/garden/solo" class="tab enabled">
+							<router-link v-ripple to="/garden/solo" class="tab enabled" :class="{'router-link-active': category === 'solo'}">
 								<h2>{{ $t('category_solo_fight') }}</h2>
 								<img class="player" src="/image/player.png">
 								<img class="sword" src="/image/icon/grey/garden.png">
 								<img class="player" src="/image/player.png">
 							</router-link>
 
-							<tooltip v-if="$store.state.farmer?.br_enabled" :disabled="battleRoyaleEnabled">
-								<template v-slot:activator="{ on }">
-									<router-link v-ripple :class="{ enabled: battleRoyaleEnabled }" :event="battleRoyaleEnabled ? 'click' : ''" to="/garden/battle-royale" class="tab">
-										<div v-on="on">
+							<v-tooltip v-if="$store.state.farmer?.br_enabled" :disabled="battleRoyaleEnabled">
+								<template #activator="{ props }">
+									<router-link v-ripple :class="{ enabled: battleRoyaleEnabled, 'router-link-active': category === 'battle-royale' }" :event="battleRoyaleEnabled ? 'click' : ''" to="/garden/battle-royale" class="tab">
+										<div v-bind="props">
 											<h2>{{ $t('category_battle_royale') }}</h2>
 											<span class="player-count">10</span>&nbsp;<img class="player" src="/image/player.png">
 										</div>
 									</router-link>
 								</template>
 								{{ $t('you_must_be_level_20') }}
-							</tooltip>
+							</v-tooltip>
 
-							<tooltip :disabled="farmerEnabled">
-								<template v-slot:activator="{ on }">
+							<v-tooltip :disabled="farmerEnabled">
+								<template #activator="{ props }">
 									<router-link v-ripple :class="{ enabled: farmerEnabled }" :event="farmerEnabled ? 'click' : ''" to="/garden/farmer" class="tab">
-										<div v-on="on">
+										<div v-bind="props">
 											<h2>{{ $t('category_farmer_fight') }}</h2>
 											<span class="player-count">4</span>&nbsp;<img class="player" src="/image/player.png">
 											<img class="sword" src="/image/icon/grey/garden.png">
@@ -52,12 +52,12 @@
 									</router-link>
 								</template>
 								{{ $t('you_must_have_2_leeks') }}
-							</tooltip>
+							</v-tooltip>
 
-							<tooltip :disabled="teamEnabled">
-								<template v-slot:activator="{ on }">
-									<router-link v-ripple :class="{ enabled: teamEnabled }" :event="teamEnabled ? 'click' : ''" to="/garden/team" class="tab">
-										<div v-on="on">
+							<v-tooltip :disabled="teamEnabled">
+								<template #activator="{ props }">
+									<router-link v-ripple :class="{ enabled: teamEnabled, 'router-link-active': category === 'team' }" :event="teamEnabled ? 'click' : ''" to="/garden/team" class="tab">
+										<div v-bind="props">
 											<h2>{{ $t('category_team_fight') }}</h2>
 											<span class="player-count">6</span>&nbsp;<img class="player" src="/image/player.png">
 											<img class="sword" src="/image/icon/grey/garden.png">
@@ -66,12 +66,12 @@
 									</router-link>
 								</template>
 								{{ $t('you_must_have_a_team') }}
-							</tooltip>
+							</v-tooltip>
 
-							<tooltip :disabled="bossEnabled">
-								<template v-slot:activator="{ on }">
-									<router-link v-ripple :class="{ enabled: bossEnabled }" :event="bossEnabled ? 'click' : ''" to="/garden/boss" class="tab">
-										<div v-on="on">
+							<v-tooltip :disabled="bossEnabled">
+								<template #activator="{ props }">
+									<router-link v-ripple :class="{ enabled: bossEnabled, 'router-link-active': category === 'boss' }" :event="bossEnabled ? 'click' : ''" to="/garden/boss" class="tab">
+										<div v-bind="props">
 											<h2>{{ $t('category_boss_fight') }}</h2>
 											<span class="player-count">8</span>&nbsp;<img class="player" src="/image/player.png">
 											<img class="sword" src="/image/icon/grey/garden.png">
@@ -80,14 +80,14 @@
 									</router-link>
 								</template>
 								{{ $t('boss_extension_locked') }}
-							</tooltip>
+							</v-tooltip>
 
 							<div v-if="queue > 0" class="queue">
 								<div class="title">{{ $t('queue') }}</div>
 								<div class="count">{{ $tc('n_fights', queue) }}</div>
 							</div>
 						</div>
-					</div>
+					</template>
 				</panel>
 			</div>
 
@@ -161,7 +161,7 @@
 								<span class="title"><v-icon>mdi-seed</v-icon> {{ $t('main.seed') }}</span>
 								<span class="desc">{{ $t('main.seed_desc') }}</span>
 							</div>
-							<input v-model="seed" type="text" class="seed" :placeholder="$t('main.seed_placeholder')" @input="updateSeed">
+							<input v-model="seed" type="text" class="seed" :placeholder="$t('main.seed_placeholder')" @update:model-value="updateSeed">
 							<br><br>
 							<div>
 								<span class="title"><v-icon>mdi-arrow-left-right</v-icon> {{ $t('main.side') }}</span>
@@ -250,16 +250,16 @@
 						<div v-else-if="category == 'battle-royale'">
 							<div v-if="!LeekWars.battleRoyale.enabled">
 								<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('select_leek') }}</div>
-								<tooltip v-for="leek in $store.state.farmer.leeks" :key="leek.id" :disabled="leek.level >= 20">
-									<template v-slot:activator="{ on }">
-										<span v-on="on">
+								<v-tooltip v-for="leek in $store.state.farmer.leeks" :key="leek.id" :disabled="leek.level >= 20">
+									<template #activator="{ props }">
+										<span v-bind="props">
 											<router-link v-ripple :to="'/garden/battle-royale/' + leek.id" :class="{disabled: leek.level < 20}" :event="leek.level < 20 ? null : 'click'" class="leek my-leek">
 												<garden-leek :leek="leek" />
 											</router-link>
 										</span>
 									</template>
 									Level &lt; 20
-								</tooltip>
+								</v-tooltip>
 								<br><br>
 								<v-btn v-if="garden.fights" color="primary" @click="battleRoyaleRegister">{{ $t('main.select') }}</v-btn>
 								<garden-no-fights v-else :canbuy="true" />
@@ -314,8 +314,8 @@
 								<div v-else>
 									<h4>Participants</h4>
 									<div class="participants">
-										<rich-tooltip-leek v-for="(leek,p) of LeekWars.bossSquads.squad.engaged_leeks" :key="p" :id="leek.id" v-slot="{ on }">
-											<div v-on="on" class="participant" :class="{active: true}" @click="LeekWars.bossSquads.removeLeek(leek)">
+										<rich-tooltip-leek v-for="(leek,p) of LeekWars.bossSquads.squad.engaged_leeks" :key="p" :id="leek.id" v-slot="{ props }">
+											<div v-bind="props" class="participant" :class="{active: true}" @click="LeekWars.bossSquads.removeLeek(leek)">
 												<leek-image :leek="leek" :scale="0.42"></leek-image>
 												<div class="name">
 													<avatar :farmer="LeekWars.bossSquads.squad.farmers.find(f => f.id === leek.farmer)" />
@@ -328,8 +328,8 @@
 									</div>
 									<h4 v-if="LeekWars.bossSquads.squad.available_leeks.length">Poireaux disponibles</h4>
 									<div class="participants">
-										<rich-tooltip-leek v-for="leek of LeekWars.bossSquads.squad.available_leeks" :key="leek.id" :id="leek.id" v-slot="{ on }">
-											<div v-on="on" class="participant" :class="{active: true}" @click="LeekWars.bossSquads.addLeek(leek)">
+										<rich-tooltip-leek v-for="leek of LeekWars.bossSquads.squad.available_leeks" :key="leek.id" :id="leek.id" v-slot="{ props }">
+											<div v-bind="props" class="participant" :class="{active: true}" @click="LeekWars.bossSquads.addLeek(leek)">
 												<leek-image :leek="leek" :scale="0.42"></leek-image>
 												<div class="name">
 													<avatar :farmer="LeekWars.bossSquads.squad.farmers.find(f => f.id === leek.farmer)" />
@@ -344,8 +344,8 @@
 										<div class="farmers">
 											<v-icon v-if="LeekWars.bossSquads.squad.locked" :disabled="LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="LeekWars.bossSquads.open()">mdi-lock</v-icon>
 											<v-icon v-else :disabled="LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="LeekWars.bossSquads.lock()">mdi-earth</v-icon>
-											<rich-tooltip-farmer v-for="farmer of LeekWars.bossSquads.squad.farmers" :key="farmer.id" :id="farmer.id" v-slot="{ on }">
-												<avatar :on="on" :farmer="farmer" :class="{master: LeekWars.bossSquads.squad.master === farmer.id}" />
+											<rich-tooltip-farmer v-for="farmer of LeekWars.bossSquads.squad.farmers" :key="farmer.id" :id="farmer.id">
+												<avatar :farmer="farmer" :class="{master: LeekWars.bossSquads.squad.master === farmer.id}" />
 											</rich-tooltip-farmer>
 										</div>
 										<v-btn color="primary" :disabled="LeekWars.bossSquads.squad.engaged_leeks.length === 0 || LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="LeekWars.bossSquads.attack()"><v-icon>mdi-sword-cross</v-icon>&nbsp;{{ $t('attack') }}</v-btn>
@@ -369,16 +369,18 @@
 	import { SocketMessage } from '@/model/socket'
 	import { store } from '@/model/store'
 	import { Composition } from '@/model/team'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import GardenCompo from './garden-compo.vue'
 	import GardenFarmer from './garden-farmer.vue'
 	import GardenLeek from './garden-leek.vue'
 	import { BOSSES, Boss } from '@/model/boss'
-	const GardenNoFights = () => import(/* webpackChunkName: "[request]" */ `@/component/garden/garden-no-fights.${locale}.i18n`)
+	const GardenNoFights = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/garden/garden-no-fights.${locale}.i18n`))
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+	import { defineAsyncComponent } from 'vue'
+import { emitter } from '@/model/vue'
 
-	@Component({
+	@Options({
 		name: 'garden', i18n: {}, mixins: [...mixins],
 		components: {
 			RichTooltipLeek,
@@ -432,11 +434,12 @@
 				}
 				this.update()
 			})
-			this.$root.$on('back', this.back)
+			
+			emitter.on('back', this.back)
 			LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_REGISTER])
-			this.$root.$on('garden-queue', (data: number) => this.queue = data)
+			emitter.on('garden-queue', (data: number) => this.queue = data)
 
-			this.$root.$on('update-team-talent', (message: any) => {
+			emitter.on('update-team-talent', (message: any) => {
 				if (message.composition in this.compositions_by_id) {
 					this.compositions_by_id[message.composition].talent += message.talent
 				}
@@ -446,7 +449,7 @@
 			if (store.state.wsconnected) {
 				this.updateWS()
 			} else {
-				this.$root.$on('wsconnected', this.updateWS)
+				emitter.on('wsconnected', this.updateWS)
 			}
 		}
 		back() {
@@ -457,11 +460,11 @@
 			}
 			localStorage.removeItem('garden/category')
 		}
-		beforeDestroy() {
-			this.$root.$off('back')
+		beforeUnmount() {
+			emitter.off('back')
 			if (this.request) { this.request.abort() }
 			LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_UNREGISTER])
-			this.$root.$off('wsconnected', this.updateWS)
+			emitter.off('wsconnected', this.updateWS)
 			LeekWars.socket.send([SocketMessage.GARDEN_BOSS_UNLISTEN])
 		}
 
@@ -554,9 +557,9 @@
 				return
 			}
 			LeekWars.get('garden/get-leek-opponents/' + leek.id).then(data => {
-				Vue.set(this.$data.leekOpponents, leek.id, data.opponents)
+				this.leekOpponents[leek.id] = data.opponents
 			}).error(error => {
-				Vue.set(this.$data.leekErrors, leek.id, error.error)
+				this.leekErrors[leek.id] = error.error
 			})
 		}
 		selectFarmer() {
@@ -575,7 +578,7 @@
 				return
 			}
 			LeekWars.get('garden/get-composition-opponents/' + composition.id).then(data => {
-				Vue.set(this.$data.teamOpponents, composition.id, data.opponents)
+				this.teamOpponents[composition.id] = data.opponents
 			}).error(error => {
 				LeekWars.toast(error)
 			})
@@ -872,7 +875,7 @@
 		background-color: var(--pure-white);
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
-	::v-deep .talent {
+	:deep(.talent) {
 		font-size: 22px;
 		font-weight: 300;
 		margin: 3px;

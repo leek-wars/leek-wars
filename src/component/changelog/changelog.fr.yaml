@@ -1,3 +1,80 @@
+244:
+  title: WIP
+  added:
+    - Ajout de l'historique de talent pour les éleveurs et les équipes.
+    - Ajout des BigIntegers dans le LeekScript (merci à Batary).
+    - Ajout des fonctions setBit et testBit pour lire ou écrire un bit spécifique (merci à Batary).
+    - Ajout de la fonction bitLength qui complète leadingZeros pour les BigInteger (merci à Batary).
+    - Ajout des constantes d'armes de boss WEAPON_ODACHI, WEAPON_EXCALIBUR et WEAPON_SCYTHE.
+    - Ajout du classement fun des coffres ouverts.
+  improved:
+    - "Tournois : Tous les joueurs inscrits participent maintenant, répartis équitablement entre plusieurs tournois de 16 à 32 joueurs au lieu d'exclure les joueurs en trop."
+    - "Éditeur : amélioration du Ctrl+clic pour aller à la définition d'un symbole (navigation plus fiable et scroll correct)."
+    - "LeekScript : le point-virgule après while() dans les boucles do-while est maintenant optionnel."
+    - "Marché : navigation au clavier avec les flèches haut/bas/gauche/droite entre les items."
+    - "LeekScript : vérification de l'accès aux méthodes privées/protégées à la compilation pour les variables typées."
+    - "Éditeur : sauvegarde et restauration du pliage de code entre les changements d'IA et les rechargements de page."
+    - "Rapport : amélioration du graphique de vie (tooltip avec noms d'entités, clic pour isoler une courbe, axes améliorés)."
+    - "Rapport : amélioration du graphique de dégâts (traductions, tooltips, totaux par barre)."
+    - "Rapport : support du mode sombre pour les graphiques."
+    - Migration vers Vue 3.
+  fixed:
+    - "Éditeur : correction de la coloration syntaxique des opérateurs \\ et \\= (division entière)."
+    - "LeekScript : correction d'un crash lors de la compilation de classes dans certains cas d'include, et meilleure gestion de la casse sur les mots-clés class et include."
+    - Correction d'un bug empêchant les combats d'équipe quand l'IA de la tourelle était inexistante.
+    - Correction du compteur de notifications non lues qui n'était pas renvoyé à la connexion.
+    - Correction des bots de test qui pouvaient avoir des armes et puces de boss.
+    - Correction du message d'erreur "error_name_already_used" non traduit lors de la création d'un poireau.
+    - "Éditeur : correction de la fermeture d'onglet quand l'IA a été supprimée en dehors de l'éditeur."
+    - "Boss : correction du décompte de combats lors du lancement d'un combat de boss sans y participer (#2344)."
+    - Correction de la progression du combat qui sautait à 99% quand un coffre mourait.
+    - "Éditeur : correction d'un bug où les caractères s'inséraient au mauvais endroit après navigation avec les boutons précédent/suivant du navigateur (Firefox)."
+    - "Éleveur : correction de la popup qui ne s'affichait pas au survol du parrain."
+    - Correction des mentions disparaissant à la suppression de messages groupés dans le chat.
+    - Correction des icônes de potions/apparences non cliquables sur mobile en mode chat-first.
+    - Correction des poireaux invisibles dans le tableau de tournoi en mode discret.
+    - Correction des notifications de trophées qui n'apparaissaient pas sans rafraîchir la page.
+    - Correction du tooltip du nom de poireau qui apparaissait sous le modèle en combat.
+    - Correction du saut en haut de page sur Firefox lors de l'achat sur le marché.
+    - Correction du clic sur "aller à l'IA" dans les logs du rapport.
+    - "Éditeur : correction du réglage d'agrandissement de fenêtre qui ne s'appliquait pas toujours."
+    - Correction de l'espace manquant avant le texte du lanceur dans les descriptions de puces.
+    - Correction du clic sur les lignes de debug dans le rapport.
+    - Correction de la barre latérale qui ne surlignait pas la page courante dans les sous-pages.
+    - Correction de l'affichage du cooldown initial.
+    - Correction des réactions chat avec les emojis chiffres (0️⃣-9️⃣).
+    - "Marché : correction du tooltip de châtiment qui affichait un pourcentage au lieu des dégâts réels."
+    - "LeekScript : correction de l'ambiguïté de cast avec les littéraux numériques négatifs."
+    - "LeekScript : correction des opérateurs d'affectation composés pour les types union nombre (integer|real)."
+
+243:
+  title: Création de la communauté, Fusil quantique et nouveau serveur.
+  added:
+    - "Ajout de l'arme Fusil Quantique. #img_243_quantum_rifle #img_243_quantum_rifle2"
+    - Nouveau serveur (voir le topic).
+    - "Ajout de nouveaux émojis (merci à FdHP). #img_243_emojis"
+    - "Réglage du volume en combat (merci à TheWiseMan). #img_243_sound"
+    - "Filtres coffres et ressources rares sur la page historique (merci à temakisushi). #img_243_filters"
+  improved:
+    - Restrictions (ctrl, alt, shift) sur les touches raccourci en combat (merci à TheWiseMan).
+    - "Rapport de combat : affichage de plusieurs poireaux en gras quand les stats sont identiques (merci à WhiteSlash). #img_243_stats"
+    - Quand on copie un leek de test, copie aussi les stats composants (merci à WhiteSlash).
+    - "Classement : changement des classements par niveaux par défaut (merci à WhiteSlash). #img_243_ranking"
+    - Harmonisation de l'ordre des cellules pour les items à zone d'effet (merci à fujiwar).
+    - Le second paramètre (entity) de useChip est optionnel dans la doc (merci à fujiwar).
+    - "Gestion des erreurs multiples dans l'éditeur. #img_243_multiple_errors"
+    - "Gestion des liens dans les commentaires dans l'editeur. #img_243_links"
+    - "Gestion des caractères invalides l'editeur. #img_243_invalid_chars"
+  fixed:
+    - Traduction du titre "Poireaux" dans le rapport de combat (merci à Alexiscomete).
+    - Traduction des caractéristiques de la tourelle sur la page équipe (merci à PtitsPoisCarottes).
+    - Correction d'une typo dans le README (merci à smegg99).
+    - Correction affiche B-Laser dans la recette du coeur neuronal (merci à FdHP).
+    - Possibilité de formater un code LeekScript dans l'éditeur (merci à FdHP).
+    - Correction d'un bug sur la résurrection d'un bulbe ennemi (merci à WhiteSlash).
+    - Correction d'un bug de lecture d'intervalle avec des nombres à virgule (merci à Hazurl).
+    - Tri des commentaires sur un combat par order chronologique (merci à WhiteSlash)
+
 242:
   title: Fonctionnalités attendues depuis longtemps et limite d'utilisation d'arme et de puce.
   added:

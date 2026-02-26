@@ -1,11 +1,11 @@
 import { LeekWars } from '@/model/leekwars'
-import { vueMain } from '@/model/vue'
+import { emitter, vueMain } from '@/model/vue'
 import router from '@/router'
 import { ChatMessage } from './chat'
 import { NotificationType } from './notification'
 import { store } from './store'
 import { Leek } from './leek'
-import { analyzer } from '@/component/editor/analyzer'
+const getAnalyzer = () => import('@/component/editor/analyzer').then(m => m.analyzer)
 
 enum SocketMessage {
 	AUTH = 0,
@@ -20,7 +20,6 @@ enum SocketMessage {
 	CHAT_RECEIVE = 9,
 	// MP_UNREAD_MESSAGES = 10, // Deprecated
 	MP_READ = 11,
-	FIGHT_LISTEN = 12,
 	FIGHT_GENERATED = 12,
 	FIGHT_WAITING_POSITION = 13,
 	FORUM_CHAT_DISABLE = 19,
@@ -90,23 +89,23 @@ enum SocketMessage {
 	CONSOLE_ERROR = 86,
 	CONSOLE_LOG = 87,
 	CONSOLE_CLOSE = 88,
+	ADMIN_ERROR = 89,
+	PING = 90,
 }
 
 class Socket {
 	public socket!: WebSocket
 	public queue: any[] = []
-	public retry_count: number = 10
 	public retry_delay: number = 1000
+	private intentionallyClosed: boolean = false
+	private pingTimeout: ReturnType<typeof setTimeout> | null = null
+	private retryTimeout: ReturnType<typeof setTimeout> | null = null
 
 	public connect() {
-		// if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
-		// 	const message = "[WS] connect()"
-		// 	console.log(message)
-		// }
-		if (!store.state.farmer || this.connecting() || this.connected()) {
+		if (!store.state.farmer || this.intentionallyClosed || this.connecting() || this.connected()) {
 			return
 		}
-		const url = LeekWars.LOCAL ? "ws://localhost:1213/" : "wss://leekwars.com/ws"
+		const url = LeekWars.LOCAL ? "ws://localhost:1213/" : (LeekWars.DEV ? "wss://leekwars.com/ws" : "wss://" + window.location.host + "/ws")
 		this.socket = new WebSocket(url, [ 'leek-wars', store.state.token! ])
 		// console.log("[socket] socket", this.socket)
 
@@ -114,7 +113,6 @@ class Socket {
 			// console.log("[ws] onopen")
 			store.commit('invalidate-chats')
 			store.commit('wsconnected')
-			this.retry_count = 10
 			this.retry_delay = 1000
 			for (const p of this.queue) {
 				this.send(p)
@@ -123,16 +121,20 @@ class Socket {
 			// Relaunch battle royale?
 			LeekWars.battleRoyale.init()
 			LeekWars.bossSquads.init()
+			this.schedulePing()
 		}
 		this.socket.onclose = () => {
 			// console.log("[ws] onclose")
+			this.clearPing()
 			if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
 				const message = "[WS] fermée"
 				console.error(message)
 				// LeekWars.toast(message, 5000)
 			}
 			store.commit('wsclose')
-			this.retry()
+			if (!this.intentionallyClosed) {
+				this.retry()
+			}
 		}
 		this.socket.onerror = (event) => {
 			if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
@@ -148,7 +150,7 @@ class Socket {
 			const request_id = json[2]
 			// console.log("[WS] onmessage", id, data, request_id)
 
-			vueMain.$emit('wsmessage', {type: id, data, id: request_id})
+			emitter.emit('wsmessage', {type: id, data, id: request_id})
 
 			switch (id) {
 				case SocketMessage.PONG: {
@@ -184,13 +186,13 @@ class Socket {
 
 					// Envoie de la notif sur la page du combat pour la mettre en file d'attente
 					if (message.type === NotificationType.TROPHY_UNLOCKED && router.currentRoute.path.startsWith('/fight/' + message.parameters[1])) {
-						vueMain.$emit('trophy', message)
+						emitter.emit('trophy', message)
 					} else if (
 						spoilableTypes.indexOf(message.type) !== -1
 						&& (
 							((message.type === NotificationType.BATTLE_ROYALE_STARTED || message.type === NotificationType.FARMER_CHALLENGE) && router.currentRoute.path.startsWith('/fight/' + message.parameters[0]))
 							|| ((message.type === NotificationType.FIGHT_REPORT || message.type === NotificationType.FARMER_FIGHT_REPORT || message.type === NotificationType.COMPOSITION_FIGHT_REPORT || message.type === NotificationType.CHALLENGE) && router.currentRoute.path.startsWith('/fight/' + message.parameters[1]))
-							|| ((message.type ===NotificationType.TOURNAMENT_WINNER || message.type ===NotificationType.FARMER_TOURNAMENT_WIN || message.type ===NotificationType.TEAM_TOURNAMENT_WIN) && router.currentRoute.path.startsWith('/fight/' + message.parameters[2]))
+							|| ((message.type === NotificationType.TOURNAMENT_WINNER || message.type === NotificationType.FARMER_TOURNAMENT_WIN || message.type === NotificationType.TEAM_TOURNAMENT_WIN) && router.currentRoute.path.startsWith('/fight/' + message.parameters[2]))
 						)
 					) {
 						vueMain.$emit('fight_notification', message)
@@ -248,15 +250,15 @@ class Socket {
 					break
 				}
 				case SocketMessage.GARDEN_QUEUE: {
-					vueMain.$emit('garden-queue', data)
+					emitter.emit('garden-queue', data)
 					break
 				}
 				case SocketMessage.FIGHT_PROGRESS: {
-					vueMain.$emit('fight-progress', data)
+					emitter.emit('fight-progress', data)
 					break
 				}
 				case SocketMessage.TOURNAMENT_UPDATE: {
-					vueMain.$emit('tournament-update', data)
+					emitter.emit('tournament-update', data)
 					break
 				}
 				case SocketMessage.UPDATE_HABS: {
@@ -266,13 +268,13 @@ class Socket {
 				case SocketMessage.UPDATE_LEEK_XP: {
 					const message = { leek: data[0], xp: data[1] }
 					store.commit('update-xp', message)
-					vueMain.$emit('update-leek-xp', message)
+					emitter.emit('update-leek-xp', message)
 					break
 				}
 				case SocketMessage.UPDATE_LEEK_TALENT: {
 					const message = { leek: data[0], talent: data[1] }
 					store.commit('update-leek-talent', message)
-					vueMain.$emit('update-leek-talent', message)
+					emitter.emit('update-leek-talent', message)
 					break
 				}
 				case SocketMessage.UPDATE_FARMER_TALENT: {
@@ -281,7 +283,7 @@ class Socket {
 				}
 				case SocketMessage.UPDATE_TEAM_TALENT: {
 					const message = { composition: data[0], talent: data[1] }
-					vueMain.$emit('update-team-talent', message)
+					emitter.emit('update-team-talent', message)
 					break
 				}
 				case SocketMessage.CHAT_CENSOR: {
@@ -333,27 +335,43 @@ class Socket {
 					break
 				}
 				case SocketMessage.CONSOLE_RESULT: {
-					vueMain.$emit('console', data)
+					emitter.emit('console', data)
 					break
 				}
 				case SocketMessage.CONSOLE_ERROR: {
-					vueMain.$emit('console-error', data)
+					emitter.emit('console-error', data)
 					break
 				}
 				case SocketMessage.CONSOLE_LOG: {
-					vueMain.$emit('console-log', data)
+					emitter.emit('console-log', data)
 					break
 				}
 				case SocketMessage.EDITOR_ANALYZE: {
-					analyzer.analyzeResult(data)
+					getAnalyzer().then(a => a.analyzeResult(data))
 					break
 				}
 				case SocketMessage.EDITOR_HOVER: {
-					analyzer.hoverResult(data)
+					getAnalyzer().then(a => a.hoverResult(data))
 					break
 				}
 				case SocketMessage.EDITOR_COMPLETE: {
-					analyzer.completeResult({ id: request_id, type: id, data })
+					getAnalyzer().then(a => a.completeResult({ id: request_id, type: id, data }))
+					break
+				}
+				case SocketMessage.ADMIN_ERROR: {
+					const source = data[0]
+					const trace = data[1]
+					LeekWars.squares.add({
+						image: 'mdi-alert',
+						icon: true,
+						title: 'Erreur serveur ' + source,
+						message: trace,
+						link: '/admin/errors',
+						padding: true,
+						clazz: '',
+						resultIcon: ''
+					})
+					store.commit('add-error')
 					break
 				}
 			}
@@ -361,21 +379,49 @@ class Socket {
 	}
 
 	public reconnect() {
-		this.retry_count = 10
+		this.intentionallyClosed = false
 		this.retry_delay = 1000
+		// Force close any existing socket to handle zombie connections
+		if (this.socket && (this.socket.readyState === WebSocket.OPEN || this.socket.readyState === WebSocket.CONNECTING)) {
+			// Detach handlers to prevent onclose from triggering retry
+			this.socket.onclose = null
+			this.socket.onerror = null
+			this.socket.onmessage = null
+			this.socket.close()
+		}
 		this.connect()
 	}
 
 	public retry() {
 		if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
-			const message = "[WS] retry(" + this.retry_delay + ")"
+			const message = "[WS] retry(" + this.retry_delay + "ms)"
 			console.log(message)
 		}
-		if (this.retry_count > 0) {
-			this.retry_count--
-			// console.log("[ws] retry in", this.retry_delay)
-			setTimeout(() => this.connect(), this.retry_delay)
-			this.retry_delay += 1000
+		if (this.intentionallyClosed) { return }
+		if (this.retryTimeout) { clearTimeout(this.retryTimeout) }
+		this.retryTimeout = setTimeout(() => {
+			this.retryTimeout = null
+			this.connect()
+		}, this.retry_delay)
+		// Exponential backoff capped at 30 seconds
+		this.retry_delay = Math.min(this.retry_delay * 2, 30000)
+	}
+
+	private schedulePing() {
+		this.clearPing()
+		// Send a ping every 50 seconds to keep connection alive and detect dead connections
+		this.pingTimeout = setTimeout(() => {
+			if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+				this.send([SocketMessage.PING])
+				this.schedulePing()
+			}
+		}, 50000)
+	}
+
+	private clearPing() {
+		if (this.pingTimeout) {
+			clearTimeout(this.pingTimeout)
+			this.pingTimeout = null
 		}
 	}
 
@@ -394,6 +440,12 @@ class Socket {
 		if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
 			const message = "[WS] disconnect()"
 			console.log(message)
+		}
+		this.intentionallyClosed = true
+		this.clearPing()
+		if (this.retryTimeout) {
+			clearTimeout(this.retryTimeout)
+			this.retryTimeout = null
 		}
 		if (this.socket) { this.socket.close() }
 		store.commit('invalidate-chats')

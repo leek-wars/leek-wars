@@ -6,15 +6,15 @@
 			<span class="text">{{ entity.translatedName }}</span>
 		</td>
 		<td>{{ entity.level }}</td>
-		<td v-for="stat in stats" :key="stat" :class="{best: best[stat] === entity.leek.id}">
-			<template v-if="entity[stat]">{{ entity[stat] | number }}</template>
+		<td v-for="stat in stats" :key="stat" :class="{best: best[stat].indexOf(entity.leek.id) !== -1}">
+			<template v-if="entity[stat]">{{ $filters.number(entity[stat]) }}</template>
 		</td>
 	</tr>
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue } from 'vue-property-decorator'
-	@Component({})
+	import { Options, Prop, Vue } from 'vue-property-decorator'
+	@Options({})
 	export default class ReportStatisticsEntity extends Vue {
 		@Prop({required: true}) entity!: any
 		@Prop({required: true}) stats!: string[]
@@ -47,7 +47,7 @@
 		margin-left: 21px;
 	}
 	.dead {
-		background-image: url("../../../public/image/cross.png");
+		background-image: url("/image/cross.png");
 		width: 15px;
 		height: 20px;
 		display: inline-block;

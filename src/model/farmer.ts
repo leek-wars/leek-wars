@@ -43,6 +43,7 @@ class Farmer {
 	public moderator!: boolean
 	public admin!: boolean
 	public talent!: number
+	public talent_history!: number[]
 	public team!: Team | null
 	public total_level!: number
 	public ais!: AI[]

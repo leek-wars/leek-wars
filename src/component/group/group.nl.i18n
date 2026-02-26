@@ -44,5 +44,7 @@
 	"new_leek": "Sta creatie van een andere prei toe",
 	"start_team_tournament": "Start een teamtoernooi",
 	"give_item": "Geef een item",
-	"confirm_give_item": "Bevestig de donatie van dit item aan lid {member} ?"
+	"confirm_give_item": "Bevestig de donatie van dit item aan lid {member} ?",
+	"give_money": "Geef geld aan {member}",
+	"everybody": "iedereen"
 }
