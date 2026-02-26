@@ -138,7 +138,7 @@
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
 	import { BOSSES } from '@/model/boss'
 	import { defineAsyncComponent, nextTick } from 'vue'
-import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/vue'
 
 	@Options({ name: "fight", components: { 'player': Player, Comments, RichTooltipFarmer, RichTooltipTeam, 'report-dialog': ReportDialog }, i18n: {}, mixins: [...mixins] })
 	export default class FightPage extends Vue {
@@ -281,7 +281,7 @@ import { emitter } from '@/model/vue'
 
 		// Réception des notifications pour les mettre en attente
 		onFightNotification(message: any) {
-			this.notificationQueue.push(message)
+			this.fightNotificationQueue.push(message)
 		}
 
 		// Le player a joué un trophée, on peut l'afficher
