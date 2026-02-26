@@ -52,6 +52,7 @@
 import { ref, computed, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { LeekWars } from '@/model/leekwars'
+import { store } from '@/model/store'
 import { locale } from '@/model/i18n'
 import { emitter } from '@/model/vue'
 import ChangelogDialog from './changelog-dialog.vue'
@@ -101,7 +102,7 @@ LeekWars.get<{ changelog: ChangelogEntry[] }>('changelog/get/' + locale).then(da
 		changelog.value[c].active = parseInt(c, 10) < 2 ? true : false
 	}
 	let lw_version = parseInt(LeekWars.normal_version.replace(/\./g, ''), 10)
-	if (LeekWars.DEV) {
+	if (LeekWars.DEV || store.getters.admin) {
 		lw_version++
 	}
 	if (changelog.value[0].version !== lw_version) {
