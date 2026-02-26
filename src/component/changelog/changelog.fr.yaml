@@ -6,6 +6,7 @@
     - Ajout des fonctions setBit et testBit pour lire ou écrire un bit spécifique (merci à Batary).
     - Ajout de la fonction bitLength qui complète leadingZeros pour les BigInteger (merci à Batary).
     - Ajout des constantes d'armes de boss WEAPON_ODACHI, WEAPON_EXCALIBUR et WEAPON_SCYTHE.
+    - Ajout du classement fun des coffres ouverts.
   improved:
     - "Tournois : Tous les joueurs inscrits participent maintenant, répartis équitablement entre plusieurs tournois de 16 à 32 joueurs au lieu d'exclure les joueurs en trop."
     - "Éditeur : amélioration du Ctrl+clic pour aller à la définition d'un symbole (navigation plus fiable et scroll correct)."

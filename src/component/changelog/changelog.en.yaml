@@ -3,6 +3,7 @@
   added:
     - Added talent history for farmers and teams.
     - Added boss weapon constants WEAPON_ODACHI, WEAPON_EXCALIBUR and WEAPON_SCYTHE.
+    - Added chests opened fun ranking.
     - Added BigIntegers in LeekScript (thanks to Batary).
     - Added setBit and testBit functions to read or write a specific bit (thanks to Batary).
     - Added bitLength function which complements leadingZeros for BigInteger (thanks to Batary).
