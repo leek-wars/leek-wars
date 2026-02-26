@@ -87,12 +87,18 @@ function displayWarningMessage() {
 }
 
 // Handle Vite CSS/JS preload errors after deployment (stale hashed assets)
-window.addEventListener('vite:preloadError', (e) => {
-	const reloadKey = 'vite-preload-reload'
-	if (!sessionStorage.getItem(reloadKey)) {
-		sessionStorage.setItem(reloadKey, '1')
+// The guard flag prevents infinite reload loops if the error persists after reload.
+// It is cleared on successful page load so that future deploys can trigger a reload again.
+const PRELOAD_RELOAD_KEY = 'vite-preload-reload'
+window.addEventListener('vite:preloadError', () => {
+	if (!sessionStorage.getItem(PRELOAD_RELOAD_KEY)) {
+		sessionStorage.setItem(PRELOAD_RELOAD_KEY, '1')
 		window.location.reload()
 	}
+})
+// Clear the guard once the page has loaded successfully (assets are fresh)
+window.addEventListener('load', () => {
+	sessionStorage.removeItem(PRELOAD_RELOAD_KEY)
 })
 
 let lastErrorSent = 0
