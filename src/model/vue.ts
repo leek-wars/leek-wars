@@ -86,6 +86,15 @@ function displayWarningMessage() {
 	console.log("")
 }
 
+// Handle Vite CSS/JS preload errors after deployment (stale hashed assets)
+window.addEventListener('vite:preloadError', (e) => {
+	const reloadKey = 'vite-preload-reload'
+	if (!sessionStorage.getItem(reloadKey)) {
+		sessionStorage.setItem(reloadKey, '1')
+		window.location.reload()
+	}
+})
+
 let lastErrorSent = 0
 
 let secondInterval: any = null, minuteInterval: any = null
@@ -255,10 +264,11 @@ const app = createApp({
 
 		if (LeekWars.DEV) return
 
-		// Ignore chunk loading errors (handled by router.onError with page reload)
+		// Ignore chunk loading errors (handled by router.onError / vite:preloadError with page reload)
 		if (err.message?.includes('Failed to fetch dynamically imported module') ||
 			err.message?.includes('Loading chunk') ||
-			err.message?.includes('Loading CSS chunk')) {
+			err.message?.includes('Loading CSS chunk') ||
+			err.message?.includes('Unable to preload CSS')) {
 			return
 		}
 

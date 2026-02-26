@@ -279,6 +279,7 @@ router.onError((error, to) => {
 		error.message.includes('Failed to fetch dynamically imported module') ||
 		error.message.includes('Loading chunk') ||
 		error.message.includes('Loading CSS chunk') ||
+		error.message.includes('Unable to preload CSS') ||
 		error.name === 'ChunkLoadError'
 	) {
 		// Prevent infinite reload loop
