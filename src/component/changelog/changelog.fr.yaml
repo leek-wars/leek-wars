@@ -30,6 +30,7 @@
     - Correction de la progression du combat qui sautait à 99% quand un coffre mourait.
     - "Éditeur : correction d'un bug où les caractères s'inséraient au mauvais endroit après navigation avec les boutons précédent/suivant du navigateur (Firefox)."
     - "Éleveur : correction de la popup qui ne s'affichait pas au survol du parrain."
+    - Correction de nombreuses traductions en italien (merci à Casanova).
     - Correction des mentions disparaissant à la suppression de messages groupés dans le chat.
     - Correction des icônes de potions/apparences non cliquables sur mobile en mode chat-first.
     - Correction des poireaux invisibles dans le tableau de tournoi en mode discret.

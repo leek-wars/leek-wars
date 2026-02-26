@@ -3,7 +3,7 @@
 	"date_format": "Il {0}",
 	"deleted_farmer": "allevatore rimosso",
 	"deleted_leek": "porro rimosso",
-	"deleted_team": "squadra eliminata",
+	"deleted_team": "squadra rimossa",
 	"n_views": "nessuna vista | 1 vista | {n} visualizzazioni",
 	"not_found": "Combattimento non trovato :(",
 	"not_found_id": "ID combattimento <b>{0}</b> non trovato :(",
