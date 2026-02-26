@@ -43,5 +43,7 @@
 	"solo_tournaments_title": "Torneios a solo ganhos",
 	"farmer_tournaments_title": "Torneios de criadores ganhos",
 	"team_tournaments_title": "Torneios de equipas ganhos",
-	"tournaments": "Torneios"
+	"tournaments": "Torneios",
+	"chests_title": "Baús abertos",
+	"chests": "Baús"
 }

@@ -43,5 +43,7 @@
 	"solo_tournaments_title": "Torneos individuales ganados",
 	"farmer_tournaments_title": "Torneos de criadores ganados",
 	"team_tournaments_title": "Torneos ganados por equipos",
-	"tournaments": "Torneos"
+	"tournaments": "Torneos",
+	"chests_title": "Cofres abiertos",
+	"chests": "Cofres"
 }

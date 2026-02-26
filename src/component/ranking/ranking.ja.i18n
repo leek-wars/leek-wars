@@ -43,5 +43,7 @@
 	"solo_tournaments_title": "ソロ・トーナメント優勝",
 	"farmer_tournaments_title": "ブリーダー・トーナメント優勝",
 	"team_tournaments_title": "チームトーナメント優勝",
-	"tournaments": "トーナメント"
+	"tournaments": "トーナメント",
+	"chests_title": "開けた宝箱",
+	"chests": "宝箱"
 }

@@ -43,5 +43,7 @@
 	"solo_tournaments_title": "Voitetut sooloturnaukset",
 	"farmer_tournaments_title": "Voitetut kasvattajaturnaukset",
 	"team_tournaments_title": "Voitetut joukkueturnaukset",
-	"tournaments": "Turnaukset"
+	"tournaments": "Turnaukset",
+	"chests_title": "Avatut arkut",
+	"chests": "Arkut"
 }

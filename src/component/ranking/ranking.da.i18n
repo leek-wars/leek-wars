@@ -43,5 +43,7 @@
 	"solo_tournaments_title": "Vundne soloturneringer",
 	"farmer_tournaments_title": "Vundne opdrætterturneringer",
 	"team_tournaments_title": "Vundne holdturneringer",
-	"tournaments": "Turneringer"
+	"tournaments": "Turneringer",
+	"chests_title": "Kister åbnet",
+	"chests": "Kister"
 }

@@ -43,5 +43,7 @@
 	"solo_tournaments_title": "Turnamen tunggal yang dimenangkan",
 	"farmer_tournaments_title": "Turnamen peternak yang dimenangkan",
 	"team_tournaments_title": "Turnamen tim yang dimenangkan",
-	"tournaments": "Turnamen"
+	"tournaments": "Turnamen",
+	"chests_title": "Peti dibuka",
+	"chests": "Peti"
 }

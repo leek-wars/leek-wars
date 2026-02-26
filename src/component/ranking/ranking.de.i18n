@@ -43,5 +43,7 @@
 	"solo_tournaments_title": "Gewonnene Soloturniere",
 	"farmer_tournaments_title": "Gewonnene Züchterturniere",
 	"team_tournaments_title": "Gewonnene Mannschaftsturniere",
-	"tournaments": "Turniere"
+	"tournaments": "Turniere",
+	"chests_title": "Geöffnete Truhen",
+	"chests": "Truhen"
 }
