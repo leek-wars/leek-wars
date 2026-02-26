@@ -349,8 +349,9 @@ import { emitter } from '@/model/vue'
 		user-select: none;
 	}
 	.flag {
-		max-width: 30px;
+		max-width: 28px;
 		max-height: 20px;
+		margin-right: 4px;
 	}
 	.language {
 		display: flex;
