@@ -277,5 +277,6 @@
 	"n_second": "1 s | {n} s",
 	"saving": "Backup...",
 	"server_error": "Server error",
-	"valid_ai": "<b>{0}</b> valid"
+	"valid_ai": "<b>{0}</b> valid",
+	"x_to_y": "{0} to {1}"
 }

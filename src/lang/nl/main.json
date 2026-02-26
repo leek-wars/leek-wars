@@ -276,5 +276,6 @@
 	"n_second": "1 s | {n} s",
 	"saving": "Back-up...",
 	"server_error": "Serverfout",
-	"valid_ai": "<b>{0}</b> geldig"
+	"valid_ai": "<b>{0}</b> geldig",
+	"x_to_y": "{0} tot {1}"
 }

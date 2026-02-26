@@ -276,5 +276,6 @@
 	"n_second": "1 s | {n} s",
 	"saving": "Varmuuskopiointi...",
 	"server_error": "Palvelimen virhe",
-	"valid_ai": "<b>{0}</b> kelvollinen"
+	"valid_ai": "<b>{0}</b> kelvollinen",
+	"x_to_y": "{0} – {1}"
 }

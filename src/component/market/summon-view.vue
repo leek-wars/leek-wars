@@ -15,7 +15,7 @@
 								{{ summon.characteristics[c][0] }}
 							</span>
 							<span v-else>
-								{{ summon.characteristics[c][0] + " à " + summon.characteristics[c][1] }}
+								{{ $t('main.x_to_y', [summon.characteristics[c][0], summon.characteristics[c][1]]) }}
 							</span>
 						</span>
 					</div>

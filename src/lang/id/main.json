@@ -276,5 +276,6 @@
 	"n_second": "1 s | {n} s",
 	"saving": "Pencadangan...",
 	"server_error": "Kesalahan server",
-	"valid_ai": "<b>{0}</b> valid"
+	"valid_ai": "<b>{0}</b> valid",
+	"x_to_y": "{0} sampai {1}"
 }

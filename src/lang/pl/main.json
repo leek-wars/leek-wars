@@ -276,5 +276,6 @@
 	"n_second": "1 s | {n} s",
 	"saving": "Kopia zapasowa...",
 	"server_error": "Błąd serwera",
-	"valid_ai": "<b>{0}</b> ważny"
+	"valid_ai": "<b>{0}</b> ważny",
+	"x_to_y": "{0} do {1}"
 }

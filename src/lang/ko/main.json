@@ -276,5 +276,6 @@
 	"n_second": "1초 | {n}초",
 	"saving": "백업...",
 	"server_error": "서버 오류",
-	"valid_ai": "<b>{0}</b> 유효"
+	"valid_ai": "<b>{0}</b> 유효",
+	"x_to_y": "{0}에서 {1}"
 }

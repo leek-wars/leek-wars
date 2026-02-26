@@ -276,5 +276,6 @@
 	"n_second": "1 s | {n} s",
 	"saving": "备份...",
 	"server_error": "服务器错误",
-	"valid_ai": "<b>{0}</b>有效"
+	"valid_ai": "<b>{0}</b>有效",
+	"x_to_y": "{0}到{1}"
 }
