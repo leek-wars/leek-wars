@@ -18,7 +18,7 @@ import { i18n, loadLanguageAsync } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import '@/model/serviceworker'
 import { store } from "@/model/store"
-import router from '@/router'
+import router, { getRedirectAfterLogin } from '@/router'
 import { createApp, defineAsyncComponent, h, nextTick } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
 import { Latex } from './latex'
@@ -485,6 +485,10 @@ if (window.__FARMER__) {
 	} else if (localStorage.getItem('login-attempt') === 'true') {
 		LeekWars.get('farmer/get-from-token').then(data => {
 			store.commit('connect', {...data, token})
+			const redirect = getRedirectAfterLogin()
+			if (redirect !== '/') {
+				router.push(redirect)
+			}
 		})
 	}
 }

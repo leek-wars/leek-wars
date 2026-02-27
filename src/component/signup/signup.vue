@@ -356,6 +356,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
+	import { getRedirectAfterLogin } from '@/router'
 	import { defineAsyncComponent } from 'vue'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
 	const SignupCarousel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup-carousel.${locale}.i18n`))
@@ -484,7 +485,7 @@
 				if (this.fastRegister) {
 					store.commit('connect', data)
 					store.commit('connected', '$')
-					this.$router.push('/')
+					this.$router.push(getRedirectAfterLogin())
 				} else if (this.signupMethod === 1) {
 					localStorage.setItem('login-attempt', 'true')
 					this.$router.push('/signup/success/' + this.login)
