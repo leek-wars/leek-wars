@@ -10,6 +10,11 @@
 						<v-icon>mdi-emoticon-devil-outline</v-icon> Voyous
 					</div>
 				</router-link>
+				<router-link to="/moderation/muted">
+					<div class="tab action content" icon="mdi-volume-off">
+						<v-icon>mdi-volume-off</v-icon> Mutés
+					</div>
+				</router-link>
 			</div>
 		</div>
 		<div class="container">
