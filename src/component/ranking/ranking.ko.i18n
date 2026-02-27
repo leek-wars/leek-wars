@@ -47,5 +47,7 @@
 	"chests_title": "열어본 상자",
 	"chests": "상자",
 	"crashes_title": "크래시 횟수",
-	"crashes": "크래시"
+	"crashes": "크래시",
+	"boss_killed_title": "보스 처치 수",
+	"boss_killed": "보스"
 }

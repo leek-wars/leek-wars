@@ -47,5 +47,7 @@
 	"chests_title": "開けた宝箱",
 	"chests": "宝箱",
 	"crashes_title": "クラッシュ回数",
-	"crashes": "クラッシュ"
+	"crashes": "クラッシュ",
+	"boss_killed_title": "ボス撃破数",
+	"boss_killed": "ボス"
 }

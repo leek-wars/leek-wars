@@ -47,5 +47,7 @@
 	"chests_title": "Открытые сундуки",
 	"chests": "Сундуки",
 	"crashes_title": "Количество крашей",
-	"crashes": "Краши"
+	"crashes": "Краши",
+	"boss_killed_title": "Боссов убито",
+	"boss_killed": "Боссы"
 }

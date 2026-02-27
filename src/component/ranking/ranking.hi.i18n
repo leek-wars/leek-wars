@@ -43,5 +43,7 @@
 	"chests_title": "खोले गए संदूक",
 	"chests": "संदूक",
 	"crashes_title": "क्रैश की संख्या",
-	"crashes": "क्रैश"
+	"crashes": "क्रैश",
+	"boss_killed_title": "बॉस मारे गए",
+	"boss_killed": "बॉस"
 }

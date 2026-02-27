@@ -47,5 +47,7 @@
 	"chests_title": "Coffres ouverts",
 	"chests": "Coffres",
 	"crashes_title": "Nombre de crashes",
-	"crashes": "Crashes"
+	"crashes": "Crashes",
+	"boss_killed_title": "Boss tués",
+	"boss_killed": "Boss"
 }

@@ -47,5 +47,7 @@
 	"chests_title": "Peti dibuka",
 	"chests": "Peti",
 	"crashes_title": "Jumlah crash",
-	"crashes": "Crash"
+	"crashes": "Crash",
+	"boss_killed_title": "Bos dikalahkan",
+	"boss_killed": "Bos"
 }

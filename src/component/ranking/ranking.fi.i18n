@@ -47,5 +47,7 @@
 	"chests_title": "Avatut arkut",
 	"chests": "Arkut",
 	"crashes_title": "Kaatumisten määrä",
-	"crashes": "Kaatumiset"
+	"crashes": "Kaatumiset",
+	"boss_killed_title": "Possit voitettu",
+	"boss_killed": "Possit"
 }

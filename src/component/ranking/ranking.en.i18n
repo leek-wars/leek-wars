@@ -47,5 +47,7 @@
 	"chests_title": "Chests opened",
 	"chests": "Chests",
 	"crashes_title": "Number of crashes",
-	"crashes": "Crashes"
+	"crashes": "Crashes",
+	"boss_killed_title": "Bosses killed",
+	"boss_killed": "Bosses"
 }

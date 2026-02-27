@@ -47,5 +47,7 @@
 	"chests_title": "Otwarte skrzynie",
 	"chests": "Skrzynie",
 	"crashes_title": "Liczba crashy",
-	"crashes": "Crashe"
+	"crashes": "Crashe",
+	"boss_killed_title": "Pokonani bossowie",
+	"boss_killed": "Bossowie"
 }

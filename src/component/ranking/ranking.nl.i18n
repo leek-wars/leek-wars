@@ -47,5 +47,7 @@
 	"chests_title": "Geopende kisten",
 	"chests": "Kisten",
 	"crashes_title": "Aantal crashes",
-	"crashes": "Crashes"
+	"crashes": "Crashes",
+	"boss_killed_title": "Bazen verslagen",
+	"boss_killed": "Bazen"
 }

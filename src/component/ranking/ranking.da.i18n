@@ -47,5 +47,7 @@
 	"chests_title": "Kister åbnet",
 	"chests": "Kister",
 	"crashes_title": "Antal crashes",
-	"crashes": "Crashes"
+	"crashes": "Crashes",
+	"boss_killed_title": "Bosser besejret",
+	"boss_killed": "Bosser"
 }

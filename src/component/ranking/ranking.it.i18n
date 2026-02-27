@@ -47,5 +47,7 @@
 	"chests_title": "Forzieri aperti",
 	"chests": "Forzieri",
 	"crashes_title": "Numero di crash",
-	"crashes": "Crash"
+	"crashes": "Crash",
+	"boss_killed_title": "Boss uccisi",
+	"boss_killed": "Boss"
 }

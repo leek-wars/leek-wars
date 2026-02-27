@@ -47,5 +47,7 @@
 	"chests_title": "Baús abertos",
 	"chests": "Baús",
 	"crashes_title": "Número de crashes",
-	"crashes": "Crashes"
+	"crashes": "Crashes",
+	"boss_killed_title": "Chefes derrotados",
+	"boss_killed": "Chefes"
 }

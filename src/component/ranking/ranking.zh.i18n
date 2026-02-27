@@ -47,5 +47,7 @@
 	"chests_title": "已开宝箱",
 	"chests": "宝箱",
 	"crashes_title": "崩溃次数",
-	"crashes": "崩溃"
+	"crashes": "崩溃",
+	"boss_killed_title": "击杀Boss数",
+	"boss_killed": "Boss"
 }

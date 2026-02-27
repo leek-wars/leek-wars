@@ -47,5 +47,7 @@
 	"chests_title": "Geöffnete Truhen",
 	"chests": "Truhen",
 	"crashes_title": "Anzahl der Crashes",
-	"crashes": "Crashes"
+	"crashes": "Crashes",
+	"boss_killed_title": "Bosse besiegt",
+	"boss_killed": "Bosse"
 }

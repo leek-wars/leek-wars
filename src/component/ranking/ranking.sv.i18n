@@ -47,5 +47,7 @@
 	"chests_title": "Öppnade kistor",
 	"chests": "Kistor",
 	"crashes_title": "Antal krascher",
-	"crashes": "Krascher"
+	"crashes": "Krascher",
+	"boss_killed_title": "Bossar besegrade",
+	"boss_killed": "Bossar"
 }
