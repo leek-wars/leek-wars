@@ -570,25 +570,30 @@ import { emitter } from '@/model/vue'
 	.fun-rankings {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-		gap: 8px 6px;
+		gap: 15px;
 		text-align: center;
+		margin: 15px;
 		h2 {
 			text-align: left;
 		}
+		.fun-ranking {
+			min-width: 0;
+		}
 		table {
 			width: 100%;
-			table-layout: fixed;
 		}
-		.ranking tr td:first-child, .ranking tr th:first-child {
+		.ranking tr td:first-child {
 			width: 45px;
 		}
-		.ranking tr td:last-child, .ranking tr th:last-child {
-			width: 120px;
-		}
 		.ranking tr td:nth-child(2) {
+			width: 100%;
+			max-width: 0;
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
+		}
+		.ranking tr td:last-child, .ranking tr th:last-child {
+			min-width: 120px;
 		}
 	}
 	#app.app .fun-rankings {
