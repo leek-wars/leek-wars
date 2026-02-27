@@ -476,13 +476,13 @@ if (window.__FARMER__) {
 	const token = LeekWars.DEV ? localStorage.getItem('token') : '$'
 	if (localStorage.getItem('connected') === 'true') {
 		store.commit('connected', token)
+		const initialPath = window.location.pathname + window.location.search + window.location.hash
 		LeekWars.get('farmer/get-from-token').then(data => {
 			store.commit('connect', {...data, token})
 		}).error(() => {
 			store.commit('disconnect')
-			const current = router.currentRoute.value.fullPath
-			if (current !== '/') {
-				sessionStorage.setItem('redirect_after_login', current)
+			if (initialPath !== '/') {
+				sessionStorage.setItem('redirect_after_login', initialPath)
 			}
 			router.push('/')
 		})
