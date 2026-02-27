@@ -568,31 +568,32 @@ import { emitter } from '@/model/vue'
 		}
 	}
 	.fun-rankings {
-		margin: 0 0px;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+		gap: 8px 6px;
 		text-align: center;
 		h2 {
 			text-align: left;
 		}
-		.fun-ranking {
-			display: inline-block;
-			margin: 8px 3px;
-		}
-		table {
-			margin: 4px;
-			width: 320px;
-		}
-		.ranking tr td:first-child {
-			width: 45px;
-		}
-		.ranking tr td:last-child {
-			width: 120px;
-		}
-	}
-	#app.app .fun-rankings .fun-ranking {
-		width: 100%;
-		margin: 0px;
 		table {
 			width: 100%;
+			table-layout: fixed;
+		}
+		.ranking tr td:first-child, .ranking tr th:first-child {
+			width: 45px;
+		}
+		.ranking tr td:last-child, .ranking tr th:last-child {
+			width: 120px;
+		}
+		.ranking tr td:nth-child(2) {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+	}
+	#app.app .fun-rankings {
+		grid-template-columns: 1fr;
+		table {
 			margin: 6px 0;
 		}
 	}
