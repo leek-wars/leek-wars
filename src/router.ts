@@ -104,6 +104,7 @@ const Home = defineComponent({
 
 const connected = (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) => {
 	if (!store.state.connected) {
+		sessionStorage.setItem('redirect_after_login', to.fullPath)
 		next('/')
 	} else {
 		next()
@@ -307,5 +308,11 @@ router.beforeEach((to: RouteLocationNormalized, _from: RouteLocationNormalized, 
 
 	next()
 })
+
+export function getRedirectAfterLogin(): string {
+	const redirect = sessionStorage.getItem('redirect_after_login')
+	sessionStorage.removeItem('redirect_after_login')
+	return redirect || '/'
+}
 
 export default router
