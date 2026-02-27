@@ -179,7 +179,10 @@
 
 				<div v-if="topic && !topic.locked && $store.state.farmer && $store.state.farmer.verified" class="editor">
 					<h4>{{ $t('answer') }}</h4>
-					<textarea v-model="newMessage" class="response card" @keyup="updateDraft"></textarea>
+					<div class="response-wrapper">
+						<textarea ref="responseTextarea" v-model="newMessage" class="response card" @keyup="updateDraft"></textarea>
+						<emoji-picker @pick="addEmojiNewMessage">😀</emoji-picker>
+					</div>
 					<div class="center">
 						<div v-if="page != pages" class="warning"><v-icon>mdi-alert</v-icon> {{ $t('not_last_page') }}</div>
 						<v-btn color="primary" class="send" @click="send"><v-icon>mdi-send-outline</v-icon> {{ $t('send') }}</v-btn>
@@ -493,6 +496,16 @@ import { emitter } from '@/model/vue'
 			const index = textarea.selectionStart
 			message.message = message.message.slice(0, index) + emoji + message.message.slice(index, message.message.length)
 		}
+		addEmojiNewMessage(emoji: string) {
+			const textarea = this.$refs.responseTextarea as HTMLTextAreaElement
+			const index = textarea.selectionStart
+			const text = this.newMessage || ''
+			this.newMessage = text.slice(0, index) + emoji + text.slice(index)
+			this.$nextTick(() => {
+				textarea.focus()
+				textarea.selectionStart = textarea.selectionEnd = index + emoji.length
+			})
+		}
 
 		report(message: ForumMessage) {
 			this.reportFarmer = message.writer
@@ -745,6 +758,14 @@ import { emitter } from '@/model/vue'
 	#app.app .editor {
 		margin-left: 10px;
 		margin-right: 10px;
+	}
+	.response-wrapper {
+		position: relative;
+		:deep(.chat-input-emoji) {
+			position: absolute;
+			right: 10px;
+			top: 10px;
+		}
 	}
 	.response {
 		width: 100%;
