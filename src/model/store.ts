@@ -302,6 +302,9 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				chat.add(message)
 				emitter.emit('chat', [chatID])
 			}
+			if (data.new && chat.messages.length > Chat.MAX_MESSAGES) {
+				chat.trim(Chat.MAX_MESSAGES)
+			}
 
 			if (chat.type === ChatType.PM) {
 				if (newChat) {

@@ -30,6 +30,8 @@ class ChatWindow {
 }
 
 class Chat {
+	static MAX_MESSAGES = 200
+
 	id: number
 	type: ChatType
 	name!: string
@@ -146,6 +148,31 @@ class Chat {
 		this.messages = []
 		this.messages_by_day = {}
 		this.days = []
+	}
+
+	trim(max: number) {
+		if (this.messages.length <= max) return
+		this.messages.splice(0, this.messages.length - max)
+		// Rebuild messages_by_day and days from remaining messages
+		this.messages_by_day = {}
+		this.days = []
+		for (const message of this.messages) {
+			message.subMessages = []
+			if (!this.messages_by_day[message.day]) {
+				this.messages_by_day[message.day] = []
+				this.days.push(this.messages_by_day[message.day])
+			}
+			const day_messages = this.messages_by_day[message.day]
+			if (day_messages.length) {
+				const lastMessage = day_messages[day_messages.length - 1]
+				if (lastMessage.farmer.id === message.farmer.id && message.date - lastMessage.date < 120) {
+					lastMessage.subMessages.push(message)
+					continue
+				}
+			}
+			day_messages.push(message)
+		}
+		this.fully_loaded = false
 	}
 }
 
