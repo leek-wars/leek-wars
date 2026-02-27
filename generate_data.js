@@ -1,5 +1,4 @@
 const fs = require('fs')
-const request = require('request-promise')
 const util = require('util')
 const { execSync } = require('child_process')
 
@@ -33,7 +32,7 @@ let r = 0
 for (const value of new_values) {
 
 	setTimeout(() => {
-		request(host + 'api/' + value[2]).then(data => {
+		fetch(host + 'api/' + value[2]).then(r => r.text()).then(data => {
 			const json = JSON.parse(data)
 			const file = 'src/model/' + value[0] + '.ts'
 			const content = value[4] + "\n\nexport const " + value[0].toUpperCase()
@@ -47,7 +46,7 @@ for (const value of new_values) {
 for (const value of values) {
 
 	setTimeout(() => {
-		const p = request(host + 'api/' + value[2])
+		const p = fetch(host + 'api/' + value[2]).then(r => r.text())
 		promises.push(p.then((data) => {
 			const json = JSON.parse(data)
 			console.log('received', value[0])
@@ -56,7 +55,7 @@ for (const value of values) {
 				+ " = " + util.inspect(value[1] ? json[value[1]] : json, {depth: Infinity, breakLength: Infinity, maxArrayLength: Infinity})
 				+ "\nexport { " + value[0].toUpperCase() + " }"
 		}).catch((err) => {
-			console.log("ERROR request failed for", value[0], ":", err.statusCode, err.error)
+			console.log("ERROR request failed for", value[0], ":", err.message || err)
 			process.exit()
 	})) }, r += (master ? 250 : 0))
 }

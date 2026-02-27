@@ -1,4 +1,4 @@
-import { OptionsTemplate } from '@/model/component'
+import { ComponentTemplate } from '@/model/component'
 
 export const COMPONENTS: {[key: string]: ComponentTemplate} = Object.freeze({
   '1': { id: 1, name: 'core', stats: [ [ 'cores', 4 ] ], template: 290 },
