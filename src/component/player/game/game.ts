@@ -324,6 +324,7 @@ class Game {
 	public sound: boolean = false
 	public volume: number = 0.5;
 	public atmosphere!: Sound
+	public activeSounds: Set<Sound> = new Set()
 	public obstacles!: {[key: number]: number[]}
 	public error: boolean = false
 	public fps: number = 0
@@ -889,31 +890,43 @@ class Game {
 	public speedUp() {
 		if (this.speed === 1) {
 			this.speed = 3
-			// LW.setTooltipContent($('#tt_speed-button'), i18n.t('fight.accelerate_again') + ' (S)');
 		} else if (this.speed === 3) {
 			this.speed = 12
-			// LW.setTooltipContent($('#tt_speed-button'), i18n.t('fight.decelerate') + ' (S)');
 		} else {
 			this.speed = 1
-			// LW.setTooltipContent($('#tt_speed-button'), i18n.t('fight.accelerate') + ' (S)');
-			// $('#speed-button').css('opacity', '');
+		}
+		this.updateSoundsSpeed()
+	}
+	public updateSoundsSpeed() {
+		for (const sound of this.activeSounds) {
+			if (sound !== this.atmosphere) {
+				sound.sound.playbackRate = this.speed
+			}
 		}
 	}
 	public toggleShadows() {
 		this.ground.resize(this.width, this.height, this.shadows)
 	}
 	public toggleSound() {
-		if (this.atmosphere != null) {
-			if (this.sound) {
+		if (this.sound) {
+			if (this.atmosphere != null) {
 				this.atmosphere.loop(this)
-			} else {
+			}
+			for (const sound of this.activeSounds) {
+				sound.changeVolume(this.volume)
+			}
+		} else {
+			if (this.atmosphere != null) {
 				this.atmosphere.stop()
+			}
+			for (const sound of this.activeSounds) {
+				sound.changeVolume(0)
 			}
 		}
 	}
 	public changeVolume() {
-		if (this.atmosphere != null) {
-			this.atmosphere.changeVolume(this.volume);
+		for (const sound of this.activeSounds) {
+			sound.changeVolume(this.volume)
 		}
 	}
 
@@ -1021,10 +1034,22 @@ class Game {
 		}
 	}
 
+	public stopAllSounds() {
+		for (const sound of this.activeSounds) {
+			sound.stop()
+		}
+		this.activeSounds.clear()
+	}
+
 	public pause() {
 		if (!this.requestPause && !this.paused) {
 			if (this.atmosphere != null) {
 				this.atmosphere.stop()
+			}
+			for (const sound of this.activeSounds) {
+				if (sound !== this.atmosphere) {
+					sound.sound.pause()
+				}
 			}
 			this.requestPause = true
 		}
@@ -1034,6 +1059,11 @@ class Game {
 		if (this.paused && !this.creator) {
 			if (this.atmosphere != null) {
 				this.atmosphere.loop(this)
+			}
+			for (const sound of this.activeSounds) {
+				if (sound !== this.atmosphere) {
+					sound.sound.play()
+				}
 			}
 			this.paused = false
 			this.updateFrame()
@@ -2848,6 +2878,7 @@ class Game {
 	}
 
 	public previousAction() {
+		this.stopAllSounds()
 		let i = this.currentAction
 		if (i >= this.actions.length) i = this.actions.length - 1
 		for (; i >= 0; i--) {
@@ -2861,6 +2892,7 @@ class Game {
 	}
 
 	public nextAction() {
+		this.stopAllSounds()
 		let i = this.currentAction + 2
 		for (; i < this.actions.length; i++) {
 			if (this.actions[i].type !== ActionType.REMOVE_EFFECT &&

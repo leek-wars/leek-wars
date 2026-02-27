@@ -8,6 +8,7 @@
     - Ajout des constantes d'armes de boss WEAPON_ODACHI, WEAPON_EXCALIBUR et WEAPON_SCYTHE.
     - Ajout du classement fun des coffres ouverts.
   improved:
+    - "Player : les sons s'arrêtent immédiatement quand on coupe le son, le volume modifie tous les sons en cours, les effets sonores sont accélérés avec la vitesse de lecture, et pause/resume fonctionne aussi sur les bruitages."
     - "Tournois : Tous les joueurs inscrits participent maintenant, répartis équitablement entre plusieurs tournois de 16 à 32 joueurs au lieu d'exclure les joueurs en trop."
     - "Éditeur : amélioration du Ctrl+clic pour aller à la définition d'un symbole (navigation plus fiable et scroll correct)."
     - "LeekScript : le point-virgule après while() dans les boucles do-while est maintenant optionnel."

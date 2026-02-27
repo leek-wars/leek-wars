@@ -14,6 +14,7 @@ class Sound {
 	public src!: string
 	public volume!: number
 	public sound!: HTMLAudioElement
+	public currentGame: Game | null = null
 
 	constructor(src: string, volume: number) {
 		this.src = src
@@ -44,6 +45,13 @@ class Sound {
 		this.sound.addEventListener("error", listener)
 		this.sound.addEventListener("abort", listener)
 
+		this.sound.addEventListener('ended', () => {
+			if (this.currentGame) {
+				this.currentGame.activeSounds.delete(this)
+				this.currentGame = null
+			}
+		})
+
 		this.sound.volume = this.volume
 		this.sound.src = this.src
 		this.sound.load()
@@ -54,14 +62,19 @@ class Sound {
 	}
 
 	public play(game: Game) {
-		if (game.sound && this.sound != null) {
-			this.changeVolume(game.volume);
+		if (this.sound != null) {
+			this.currentGame = game
+			game.activeSounds.add(this)
+			this.changeVolume(game.sound ? game.volume : 0)
+			this.sound.playbackRate = game.speed
 			this.sound.currentTime = 0
 			this.sound.play()
 		}
 	}
 	public loop(game: Game) {
 		if (game.sound && this.sound != null) {
+			this.currentGame = game
+			game.activeSounds.add(this)
 			if (typeof this.sound.loop === 'boolean') {
 				this.sound.loop = true
 			} else {
@@ -77,6 +90,10 @@ class Sound {
 		if (this.sound != null) {
 			this.sound.pause()
 			this.sound.currentTime = 0
+		}
+		if (this.currentGame) {
+			this.currentGame.activeSounds.delete(this)
+			this.currentGame = null
 		}
 	}
 }
