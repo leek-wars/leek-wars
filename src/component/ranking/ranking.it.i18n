@@ -45,5 +45,7 @@
 	"team_tournaments_title": "Tornei a squadre vinti",
 	"tournaments": "Tornei",
 	"chests_title": "Forzieri aperti",
-	"chests": "Forzieri"
+	"chests": "Forzieri",
+	"crashes_title": "Numero di crash",
+	"crashes": "Crash"
 }

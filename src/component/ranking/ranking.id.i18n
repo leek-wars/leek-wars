@@ -45,5 +45,7 @@
 	"team_tournaments_title": "Turnamen tim yang dimenangkan",
 	"tournaments": "Turnamen",
 	"chests_title": "Peti dibuka",
-	"chests": "Peti"
+	"chests": "Peti",
+	"crashes_title": "Jumlah crash",
+	"crashes": "Crash"
 }

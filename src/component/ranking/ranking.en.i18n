@@ -45,5 +45,7 @@
 	"team_tournaments_title": "Team Tournaments Won",
 	"tournaments": "Tournaments",
 	"chests_title": "Chests opened",
-	"chests": "Chests"
+	"chests": "Chests",
+	"crashes_title": "Number of crashes",
+	"crashes": "Crashes"
 }

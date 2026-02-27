@@ -41,5 +41,7 @@
 	"no_results": "कोई परिणाम नहीं",
 	"xp": "एक्सपी",
 	"chests_title": "खोले गए संदूक",
-	"chests": "संदूक"
+	"chests": "संदूक",
+	"crashes_title": "क्रैश की संख्या",
+	"crashes": "क्रैश"
 }

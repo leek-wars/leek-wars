@@ -45,5 +45,7 @@
 	"team_tournaments_title": "Tournois d'équipe gagnés",
 	"tournaments": "Tournois",
 	"chests_title": "Coffres ouverts",
-	"chests": "Coffres"
+	"chests": "Coffres",
+	"crashes_title": "Nombre de crashes",
+	"crashes": "Crashes"
 }

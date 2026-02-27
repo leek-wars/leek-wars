@@ -45,5 +45,7 @@
 	"team_tournaments_title": "Wygrane turnieje drużynowe",
 	"tournaments": "Turnieje",
 	"chests_title": "Otwarte skrzynie",
-	"chests": "Skrzynie"
+	"chests": "Skrzynie",
+	"crashes_title": "Liczba crashy",
+	"crashes": "Crashe"
 }

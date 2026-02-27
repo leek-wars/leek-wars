@@ -45,5 +45,7 @@
 	"team_tournaments_title": "Vunna lagturneringar",
 	"tournaments": "Turneringar",
 	"chests_title": "Öppnade kistor",
-	"chests": "Kistor"
+	"chests": "Kistor",
+	"crashes_title": "Antal krascher",
+	"crashes": "Krascher"
 }

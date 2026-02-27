@@ -45,5 +45,7 @@
 	"team_tournaments_title": "Vunne lagturneringer",
 	"tournaments": "Turneringer",
 	"chests_title": "Kister åpnet",
-	"chests": "Kister"
+	"chests": "Kister",
+	"crashes_title": "Antall krasjer",
+	"crashes": "Krasjer"
 }

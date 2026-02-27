@@ -45,5 +45,7 @@
 	"team_tournaments_title": "Выигранные командные турниры",
 	"tournaments": "Турниры",
 	"chests_title": "Открытые сундуки",
-	"chests": "Сундуки"
+	"chests": "Сундуки",
+	"crashes_title": "Количество крашей",
+	"crashes": "Краши"
 }

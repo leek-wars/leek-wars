@@ -45,5 +45,7 @@
 	"team_tournaments_title": "팀 토너먼트 우승",
 	"tournaments": "토너먼트",
 	"chests_title": "열어본 상자",
-	"chests": "상자"
+	"chests": "상자",
+	"crashes_title": "크래시 횟수",
+	"crashes": "크래시"
 }

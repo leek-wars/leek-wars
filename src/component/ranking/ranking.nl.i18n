@@ -45,5 +45,7 @@
 	"team_tournaments_title": "Teamtoernooien gewonnen",
 	"tournaments": "Toernooien",
 	"chests_title": "Geopende kisten",
-	"chests": "Kisten"
+	"chests": "Kisten",
+	"crashes_title": "Aantal crashes",
+	"crashes": "Crashes"
 }

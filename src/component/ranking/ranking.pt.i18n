@@ -45,5 +45,7 @@
 	"team_tournaments_title": "Torneios de equipas ganhos",
 	"tournaments": "Torneios",
 	"chests_title": "Baús abertos",
-	"chests": "Baús"
+	"chests": "Baús",
+	"crashes_title": "Número de crashes",
+	"crashes": "Crashes"
 }

@@ -45,5 +45,7 @@
 	"team_tournaments_title": "Voitetut joukkueturnaukset",
 	"tournaments": "Turnaukset",
 	"chests_title": "Avatut arkut",
-	"chests": "Arkut"
+	"chests": "Arkut",
+	"crashes_title": "Kaatumisten määrä",
+	"crashes": "Kaatumiset"
 }
