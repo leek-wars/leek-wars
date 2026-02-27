@@ -1137,6 +1137,14 @@ function lucky(isFake: boolean = false) {
 		const audio = new Audio('/sound/move.mp3')
 		audio.volume = 0.4
 		audio.play()
+		if (document.hidden) {
+			const cancel = () => {
+				audio.pause()
+				audio.currentTime = 0
+				document.removeEventListener('visibilitychange', cancel)
+			}
+			document.addEventListener('visibilitychange', cancel)
+		}
 	}
 }
 
