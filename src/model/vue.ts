@@ -480,6 +480,10 @@ if (window.__FARMER__) {
 			store.commit('connect', {...data, token})
 		}).error(() => {
 			store.commit('disconnect')
+			const current = router.currentRoute.value.fullPath
+			if (current !== '/') {
+				sessionStorage.setItem('redirect_after_login', current)
+			}
 			router.push('/')
 		})
 	} else if (localStorage.getItem('login-attempt') === 'true') {
