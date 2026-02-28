@@ -377,7 +377,7 @@
 
 		download(filename: string, text: string) {
 			const data = "/** Exporté le " + new Date().toLocaleString() + " **/\n\n" + text
-			if (!filename.includes(".")) {
+			if (!filename.endsWith(".leek")) {
 				filename += ".leek"
 			}
 			const element = document.createElement('a')
