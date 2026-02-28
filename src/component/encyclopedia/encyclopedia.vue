@@ -176,6 +176,7 @@
 		statsExpanded: boolean = false
 		searchQuery: string = ''
 		redirectedFrom: string | null = null
+		boundBeforeUnload!: () => void
 		actions = [
 			{icon: 'mdi-information-variant', click: () => this.$router.push('/about')},
 			{icon: 'mdi-pencil', click: () => this.editStart()},
@@ -256,6 +257,7 @@
 
 		beforeUnmount() {
 			emitter.off('ctrlS')
+			window.removeEventListener('beforeunload', this.boundBeforeUnload)
 			LeekWars.large = false
 			LeekWars.box = false
 			LeekWars.footer = true
@@ -277,6 +279,9 @@
 				this.save()
 			})
 			LeekWars.setActions(this.actions)
+
+			this.boundBeforeUnload = this.onBeforeUnload.bind(this)
+			window.addEventListener('beforeunload', this.boundBeforeUnload)
 
 			const docMessages = await import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
 			i18n.global.mergeLocaleMessage(locale, { doc: docMessages.default })
@@ -462,6 +467,13 @@ ${ret}
 
 		releasePage() {
 			LeekWars.post('encyclopedia/end-edition', {page_id: this.page.id})
+		}
+
+		onBeforeUnload() {
+			if (this.edition && this.page && this.page.id !== 0) {
+				const data = JSON.stringify({page_id: this.page.id})
+				navigator.sendBeacon(LeekWars.API + 'encyclopedia/end-edition', new Blob([data], {type: 'application/json'}))
+			}
 		}
 
 		markdownScroll(e: Event) {
