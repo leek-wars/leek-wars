@@ -113,9 +113,10 @@ export default class AIViewMonaco extends Vue {
 		})
 		// Restore focus after mouse drag-select to prevent first keystroke
 		// from being lost (#817)
-		this.editor.onMouseUp(() => {
+		this.editor.onMouseUp((e) => {
+			if (e.event.rightButton) return
 			requestAnimationFrame(() => {
-				if (!this.editor.hasTextFocus()) {
+				if (!this.editor.hasTextFocus() && !this.editor.hasWidgetFocus()) {
 					this.editor.focus()
 				}
 			})
