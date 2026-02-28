@@ -203,12 +203,12 @@ const Commands = {
 		marketCommand.options = []
 		for (const w in LeekWars.weapons) {
 			const weapon = LeekWars.weapons[w]
-			if (!LeekWars.items[weapon.id]?.market) { continue }
+			if (!LeekWars.items[weapon.item]?.market) { continue }
 			marketCommand.options.push({name: weapon.name, nameLower: weapon.name.toLowerCase(), description: "Ajoute un lien vers l'arme \"" + weapon.name + "\" du marché au message"})
 		}
 		for (const c in CHIPS) {
 			const chip = CHIPS[c]
-			if (!LeekWars.items[chip.id]?.market) { continue }
+			if (!LeekWars.items[LeekWars.chipTemplates[chip.id]?.item]?.market) { continue }
 			marketCommand.options.push({name: chip.name, nameLower: chip.name.toLowerCase(), description: "Ajoute un lien vers la puce \"" + chip.name + "\" du marché au message"})
 		}
 		for (const key in LeekWars.potions) {
@@ -218,7 +218,7 @@ const Commands = {
 		}
 		for (const key in LeekWars.hats) {
 			const hat = LeekWars.hats[key]
-			if (!LeekWars.items[hat.id]?.market) { continue }
+			if (!LeekWars.items[hat.item]?.market) { continue }
 			marketCommand.options.push({name: hat.name, nameLower: hat.name.toLowerCase(), description: "Ajoute un lien vers le chapeau \"" + hat.name + "\" du marché au message"})
 		}
 	}
