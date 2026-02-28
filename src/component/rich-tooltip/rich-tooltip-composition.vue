@@ -103,7 +103,7 @@
 						this.sums[c] = Object.values(this.composition.leeks).reduce((sum: number, leek: any) => sum + leek[c], 0)
 					}
 					if (this.expand_leeks) {
-						(this.$refs.menu as any).onResize()
+						(this.$refs.menu as any)?.updateLocation?.()
 					}
 				})
 			}

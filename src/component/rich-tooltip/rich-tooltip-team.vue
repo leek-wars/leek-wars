@@ -79,7 +79,7 @@
 				LeekWars.get<Team>('team/rich-tooltip/' + this.id).then(team => {
 					this.team = team
 					if (this.expand) {
-						(this.$refs.menu as any).onResize()
+						(this.$refs.menu as any)?.updateLocation?.()
 					}
 				})
 			}
