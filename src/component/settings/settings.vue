@@ -642,9 +642,6 @@
 		table {
 			width: 100%;
 		}
-		:deep(.v-checkbox .v-selection-control) {
-			min-height: unset;
-		}
 		.category {
 			font-size: 16px;
 			.v-icon {

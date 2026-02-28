@@ -376,7 +376,6 @@ import { emitter } from '@/model/vue'
 		min-height: 36px;
 	}
 	.mobile-forum-languages .v-checkbox .v-selection-control {
-		min-height: auto;
 		margin-right: 10px;
 	}
 </style>

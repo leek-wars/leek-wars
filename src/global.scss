@@ -1066,5 +1066,6 @@ a.green-link {
 
 .v-checkbox .v-selection-control {
 	--v-selection-control-size: 28px;
+	min-height: auto !important;
 	gap: 6px;
 }
