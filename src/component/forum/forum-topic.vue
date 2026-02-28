@@ -131,7 +131,7 @@
 									</template>
 									<template v-if="message.id == -1 && $store.state.farmer && $store.state.farmer.admin && !topic.private_issue && !topic.resolved">
 										&nbsp;&nbsp;
-										<span class="action create-issue" @click="createIssue"><v-icon>mdi-source-branch</v-icon> {{ $t('create_issue') }}</span>
+										<span class="action create-issue" @click="createIssue"><v-icon>{{ creatingIssue ? 'mdi-loading mdi-spin' : 'mdi-source-branch' }}</v-icon> {{ $t('create_issue') }}</span>
 									</template>
 								</div>
 								<div class="spacer"></div>
@@ -264,6 +264,7 @@ import { emitter } from '@/model/vue'
 		topicEditing: boolean = false
 		action = {icon: 'mdi-newspaper-plus', click: () => this.toggleSubscribe()}
 		sendingMessage: boolean = false
+		creatingIssue: boolean = false
 		forumLanguages: string[] = []
 		reportDialog: boolean = false
 		reportFarmer: Farmer | null = null
@@ -324,11 +325,13 @@ import { emitter } from '@/model/vue'
 			})
 		}
 		createIssue() {
-			if (!this.topic) { return }
+			if (!this.topic || this.creatingIssue) { return }
+			this.creatingIssue = true
 			LeekWars.post('forum/create-issue', {topic_id: this.topic.id}).then((data: any) => {
 				if (this.topic) {
 					this.topic.private_issue = data.private_issue
 				}
+				this.creatingIssue = false
 			})
 		}
 		resolve() {
