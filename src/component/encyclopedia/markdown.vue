@@ -161,6 +161,13 @@
 						item.querySelectorAll('a').forEach(linkify)
 					})
 				})
+				// Most viewed pages
+				md.querySelectorAll('.encyclopedia-most-viewed').forEach((item) => {
+					LeekWars.get<any[]>('encyclopedia/get-most-viewed/' + this.language).then(pages => {
+						item.innerHTML = '<ol>' + pages.map(p => '<li><a href="/encyclopedia/' + this.language + '/' + p.title + '">' + p.title + '</a> — ' + LeekWars.formatNumber(p.views) + ' views</li>').join('') + '</ol>'
+						item.querySelectorAll('a').forEach(linkify)
+					})
+				})
 				// LoS
 				md.querySelectorAll('.encyclopedia-los').forEach((item) => {
 					const app = createApp(LineOfSight)
@@ -421,6 +428,8 @@
 					return "<div class='encyclopedia-locked-pages'></div>"
 				} else if (tag.startsWith('last-modifications')) {
 					return "<div class='encyclopedia-last-modifications'></div>"
+				} else if (tag.startsWith('most-viewed')) {
+					return "<div class='encyclopedia-most-viewed'></div>"
 				} else if (tag.startsWith('line-of-sight')) {
 					return "<div class='encyclopedia-los'></div>"
 				} else if (tag.startsWith('tutorial-menu')) {
