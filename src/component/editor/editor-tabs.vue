@@ -75,20 +75,13 @@
 			this.update()
 		}
 
-		@Watch('$route.params')
+		@Watch('current')
 		update() {
 			nextTick(() => {
-				const list = (this.$refs.list as HTMLElement)
-				for (let i = 0; i < this.tabs.length; ++i) {
-					if (this.tabs[i] === this.current) {
-						const tab = (this.$refs.tabsEl as HTMLElement[])[i]
-						if (tab && tab.offsetLeft < list.scrollLeft) {
-							list.scrollLeft = tab.offsetLeft
-						} else if (tab && tab.offsetLeft + tab.clientWidth - list.scrollLeft > list.clientWidth) {
-							list.scrollLeft = tab.offsetLeft + tab.clientWidth - list.clientWidth
-						}
-						return
-					}
+				const i = this.tabs.indexOf(this.current)
+				if (i !== -1) {
+					const tab = (this.$refs.tabsEl as HTMLElement[])[i]
+					tab?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
 				}
 			})
 		}
