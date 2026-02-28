@@ -20,6 +20,7 @@
 	"n_challenges": "{0} 도전",
 	"n_remaining_fights": "{0} 경기 남음",
 	"n_fights": "1 싸움 | {count} 싸움",
+	"no_composition": "어떤 구성에도 포함되어 있지 않습니다",
 	"no_opponent_of_your_size": "당신의 크기에 상대가 없습니다!",
 	"no_team_of_your_size": "당신의 규모에 맞는 팀이 없습니다!",
 	"select_compo": "구성 선택",

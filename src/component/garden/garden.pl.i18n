@@ -20,6 +20,7 @@
 	"n_challenges": "{0} wyzwań",
 	"n_remaining_fights": "pozostało {0} walk",
 	"n_fights": "1 walka | {count} walk",
+	"no_composition": "Nie jesteś w żadnej kompozycji",
 	"no_opponent_of_your_size": "Nie ma przeciwnika w twoim rozmiarze!",
 	"no_team_of_your_size": "Brak zespołu w twoim rozmiarze!",
 	"select_compo": "Wybierz swoją kompozycję",

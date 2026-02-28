@@ -20,6 +20,7 @@
 	"n_challenges": "{0} uitdagingen",
 	"n_remaining_fights": "{0} resterende gevechten",
 	"n_fights": "1 gevecht | {count} gevechten",
+	"no_composition": "Je zit niet in een compositie",
 	"no_opponent_of_your_size": "Geen tegenstander van jouw maat!",
 	"no_team_of_your_size": "Geen team in jouw maat!",
 	"select_compo": "Selecteer je compositie",

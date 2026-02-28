@@ -20,6 +20,7 @@
 	"n_challenges": "{0} utmaningar",
 	"n_remaining_fights": "{0} slagsmål kvar",
 	"n_fights": "1 kamp | {count} slagsmål",
+	"no_composition": "Du är inte med i någon komposition",
 	"no_opponent_of_your_size": "Ingen motståndare till din storlek!",
 	"no_team_of_your_size": "Inget lag i din storlek!",
 	"select_compo": "Välj din komposition",

@@ -20,6 +20,7 @@
 	"n_challenges": "{0} Herausforderungen",
 	"n_remaining_fights": "{0} verbleibende Kämpfe",
 	"n_fights": "1 Kampf | {count} kämpft",
+	"no_composition": "Sie sind in keiner Komposition",
 	"no_opponent_of_your_size": "Kein Gegner für deine Größe!",
 	"no_team_of_your_size": "Kein Team in Ihrer Größe!",
 	"select_compo": "Wählen Sie Ihre Komposition aus",

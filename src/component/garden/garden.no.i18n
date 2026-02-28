@@ -20,6 +20,7 @@
 	"n_challenges": "{0} utfordringer",
 	"n_remaining_fights": "{0} kamper gjenstår",
 	"n_fights": "1 kamp | {count} kamper",
+	"no_composition": "Du er ikke i noen komposisjon",
 	"no_opponent_of_your_size": "Ingen motstander av størrelsen din!",
 	"no_team_of_your_size": "Ingen lag i din størrelse!",
 	"select_compo": "Velg komposisjonen din",

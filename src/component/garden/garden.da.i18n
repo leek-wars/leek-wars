@@ -20,6 +20,7 @@
 	"n_challenges": "{0} udfordringer",
 	"n_remaining_fights": "{0} kampe tilbage",
 	"n_fights": "1 kamp | {count} kampe",
+	"no_composition": "Du er ikke i nogen komposition",
 	"no_opponent_of_your_size": "Ingen modstander til din størrelse!",
 	"no_team_of_your_size": "Intet hold i din størrelse!",
 	"select_compo": "Vælg din build",

@@ -20,6 +20,7 @@
 	"n_challenges": "{0} haastetta",
 	"n_remaining_fights": "{0} ottelua jäljellä",
 	"n_fights": "1 taistelu | {count} tappelua",
+	"no_composition": "Et ole missään kokoonpanossa",
 	"no_opponent_of_your_size": "Ei vastustaja kokoasi!",
 	"no_team_of_your_size": "Ei joukkuettasi kokoasi!",
 	"select_compo": "Valitse rakennelmasi",

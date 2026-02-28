@@ -20,6 +20,7 @@
 	"n_challenges": "{0} tantangan",
 	"n_remaining_fights": "{0} pertarungan tersisa",
 	"n_fights": "1 pertarungan | {count} perkelahian",
+	"no_composition": "Anda tidak berada dalam komposisi apa pun",
 	"no_opponent_of_your_size": "Tidak ada lawan untuk ukuran Anda!",
 	"no_team_of_your_size": "Tidak ada tim seukuran Anda!",
 	"select_compo": "Pilih bangunan Anda",

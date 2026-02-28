@@ -20,6 +20,7 @@
 	"n_challenges": "{0} 个挑战",
 	"n_remaining_fights": "剩余 {0} 场战斗",
 	"n_fights": "1 场战斗 | {count} 场战斗",
+	"no_composition": "你不在任何阵容中",
 	"no_opponent_of_your_size": "你的身材没有对手！",
 	"no_team_of_your_size": "没有你规模的团队！",
 	"select_compo": "选择你的作文",
