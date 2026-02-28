@@ -297,7 +297,9 @@ async function formatLeekScript(code:string): Promise<string> {
 			formatted = formatted.replace(fLit, lit[0])
 		}
 		// js-beautify doesn't recognize the \= operator and will split it as: \ =
-		formatted = formatted.replace(/\\ =/g, '\\=')
+		formatted = formatted.replace(/\\ =/g, ' \\=')
+		// js-beautify doesn't recognize the .. operator and will split it as: \ =
+		formatted = formatted.replace(/\. \./g, '..')
 		formattedCode = formatted;
 	})
 	return formattedCode;
