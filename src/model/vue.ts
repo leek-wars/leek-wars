@@ -279,6 +279,17 @@ const app = createApp({
 			return
 		}
 
+		// Ignore async component loader failures (Vue runtime-13) — same root cause as chunk
+		// loading errors (stale cache after deploy, network issues). Reload the page once to
+		// try loading fresh assets, like the vite:preloadError handler does.
+		if (info?.includes?.('runtime-13')) {
+			if (!sessionStorage.getItem(PRELOAD_RELOAD_KEY)) {
+				sessionStorage.setItem(PRELOAD_RELOAD_KEY, '1')
+				window.location.reload()
+			}
+			return
+		}
+
 		if (Date.now() - lastErrorSent < 1000) return
 		lastErrorSent = Date.now()
 
