@@ -297,8 +297,9 @@ const app = createApp({
 		const file = document.location.href
 		const stack = err.stack + '\n' + info
 		const locale = i18n.global.locale
+		const user_agent = navigator.userAgent
 
-		LeekWars.post('error/report', { error, stack, file, locale })
+		LeekWars.post('error/report', { error, stack, file, locale, user_agent })
 	}
 })
 

@@ -31,6 +31,7 @@
 										<avatar :farmer="error.farmer" />
 									</router-link>
 									<span class="ip" v-if="error.ip">{{ error.ip }}</span>
+								<span v-if="error.user_agent" class="user-agent" :title="error.user_agent">{{ formatUA(error.user_agent) }}</span>
 									<span class="ls" v-if="error.ai_version">LS {{ error.ai_version }}</span>
 									<span class="ls" v-if="error.ai">IA {{ error.ai }}</span>
 									<!-- <a :href="LeekWars.API + 'ai/download/' + error.ai" target="_blank"><v-btn v-if="error.ai" color="primary" small>IA {{ error.ai }}</v-btn></a> -->
@@ -104,6 +105,15 @@
 			})
 		}
 
+		formatUA(ua: string) {
+			// Extract browser and OS from user agent string
+			const match = ua.match(/(Chrome|Firefox|Safari|Edge|Opera|OPR|SamsungBrowser|UCBrowser)\/[\d.]+/)
+			if (match) {
+				return match[0].replace('OPR', 'Opera')
+			}
+			return ua.substring(0, 30)
+		}
+
 		deleteErrors() {
 			LeekWars.delete('error/delete-query', { query: this.deleteQuery }).then(() => {
 				this.deleteQuery = ''
@@ -140,6 +150,15 @@
 		.ip {
 			font-family: monospace;
 			font-size: 13px;
+		}
+		.user-agent {
+			font-family: monospace;
+			font-size: 11px;
+			color: #666;
+			max-width: 200px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 		.service {
 			font-size: 11px;
