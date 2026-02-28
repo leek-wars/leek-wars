@@ -22,7 +22,7 @@
 							<flag v-if="farmer.country" :code="farmer.country" class="country" />
 							<lw-title v-if="farmer.title.length" :title="farmer.title" />
 							<div class="spacer"></div>
-							<v-btn v-if="!$store.state.farmer || id != $store.state.farmer.id" variant="text" icon="mdi-chat" small @click="sendMessage()" />
+							<v-btn v-if="!$store.state.farmer || id != $store.state.farmer.id" variant="text" icon="mdi-chat" size="small" @click="sendMessage()" />
 						</span>
 						<div>
 							<router-link :to="'/trophies/' + farmer.id" class="stat">

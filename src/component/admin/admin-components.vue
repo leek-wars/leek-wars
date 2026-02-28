@@ -18,10 +18,10 @@
 									<img :src="'/image/charac/' + stat[0] + '.png'">
 									<input v-model="stat[0]" type="text" @keyup="updateComponent(component)">
 									<input v-model="stat[1]" type="text" :class="{positive: stat[1] > 0, negative: stat[1] < 0}" @keyup="updateComponent(component)">
-									<v-btn :disabled="s === 0" small @click="up(component, s)"><v-icon>mdi-arrow-up</v-icon></v-btn>
-									<v-btn small @click="component.stats.splice(s, 1); updateComponent(component)"><v-icon>mdi-close</v-icon></v-btn>
+									<v-btn :disabled="s === 0" size="small" @click="up(component, s)"><v-icon>mdi-arrow-up</v-icon></v-btn>
+									<v-btn size="small" @click="component.stats.splice(s, 1); updateComponent(component)"><v-icon>mdi-close</v-icon></v-btn>
 								</div>
-								<v-btn class="add" small @click="component.stats.push(['', 0]); updateComponent(component)">Ajouter</v-btn>
+								<v-btn class="add" size="small" @click="component.stats.push(['', 0]); updateComponent(component)">Ajouter</v-btn>
 							</div>
 						</div>
 					</div>

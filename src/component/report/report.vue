@@ -2,7 +2,7 @@
 	<error v-if="error" :title="$t('title')" :message="$t('not_found')" />
 	<error v-else-if="generating" :title="$t('title')" :message="$t('not_generated_yet')">
 		<template #button>
-			<v-btn large color="primary" @click="update">
+			<v-btn size="large" color="primary" @click="update">
 			<v-icon>mdi-refresh</v-icon>&nbsp;<span>{{ $t('refresh') }}</span>
 		</v-btn>
 		</template>

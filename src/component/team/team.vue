@@ -215,7 +215,7 @@
 								<option value="member">{{ $t('member') }}</option>
 							</select>
 							<br>
-							<v-btn v-if="member.id !== $store.state.farmer.id" class="ban" small @click="banMemberStart(member)">
+							<v-btn v-if="member.id !== $store.state.farmer.id" class="ban" size="small" @click="banMemberStart(member)">
 								<v-icon>mdi-hand-pointing-right</v-icon>
 								{{ $t('ban') }}
 							</v-btn>
@@ -300,7 +300,7 @@
 			</div>
 			<div v-if="team.leek_count > 10 && !rankingsLoaded" class="load-rankings">
 				<loader v-if="rankingsLoading" />
-				<v-btn small v-else @click="loadRankings">{{ $t('load_all') }}</v-btn>
+				<v-btn size="small" v-else @click="loadRankings">{{ $t('load_all') }}</v-btn>
 			</div>
 		</panel>
 

@@ -150,17 +150,12 @@ button {
 }
 .v-btn {
 	text-transform: none;
-	font-size: 17px;
 	margin: 0 3px;
 	border-radius: 4px;
 	font-weight: normal;
 	letter-spacing: normal;
 }
-.v-btn.v-size--default {
-	font-size: 17px;
-}
 .v-btn.v-size--large, .v-btn:not(.v-btn--round).v-size--large {
-	font-size: 18px;
 	height: 40px;
 	padding: 0 32px;
 }

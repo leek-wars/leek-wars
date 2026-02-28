@@ -15,7 +15,7 @@
 			<v-icon v-if="notification.clazz === 'notif-bigwin'" class="large-icon">mdi-crown</v-icon>
 			<v-icon v-else-if="notification.clazz === 'notif-trophy'" class="large-icon">mdi-trophy</v-icon>
 		</router-link>
-		<v-btn v-if="!notification.read" class="read" small color="primary" @click.stop="read"><v-icon>mdi-check</v-icon></v-btn>
+		<v-btn v-if="!notification.read" class="read" size="small" color="primary" @click.stop="read"><v-icon>mdi-check</v-icon></v-btn>
 	</div>
 </template>
 

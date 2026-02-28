@@ -10,7 +10,7 @@
 			<br><br>
 			<slot name="button">
 				<router-link to="/">
-					<v-btn large color="primary">{{ $t('main.back_to_home') }}</v-btn>
+					<v-btn size="large" color="primary">{{ $t('main.back_to_home') }}</v-btn>
 				</router-link>
 			</slot>
 		</panel>

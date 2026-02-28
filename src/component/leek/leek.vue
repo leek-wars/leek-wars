@@ -646,7 +646,7 @@
 						</v-radio-group>
 					</div>
 				</div>
-				<v-btn small @click="downloadLeekImage">{{ $t('download_leek_image') }}</v-btn>
+				<v-btn size="small" @click="downloadLeekImage">{{ $t('download_leek_image') }}</v-btn>
 			</div>
 		</popup>
 
@@ -701,7 +701,7 @@
 						</div>
 						<div class="center">
 							<router-link to="/inventory">
-								<v-btn><v-icon left>mdi-treasure-chest</v-icon> {{ $t('main.inventory') }}</v-btn>
+								<v-btn prepend-icon="mdi-treasure-chest">{{ $t('main.inventory') }}</v-btn>
 							</router-link>
 						</div>
 					</div>

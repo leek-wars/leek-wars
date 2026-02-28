@@ -76,7 +76,7 @@
 						</tr>
 					</table>
 					<div class="center">
-						<v-btn v-if="signupMethod === 1" large color="primary" type="submit">{{ $t('verify') }}</v-btn>
+						<v-btn v-if="signupMethod === 1" size="large" color="primary" type="submit">{{ $t('verify') }}</v-btn>
 						<v-btn v-else color="black" type="submit" class="gh-button"> <img src="/image/github_black.png"> {{ $t('verify_gh') }}</v-btn>
 					</div>
 				</form>
