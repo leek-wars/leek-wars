@@ -80,6 +80,13 @@
 							<i18n-t keypath="not_found" tag="div" class="message">
 								<template #name>{{ code }}</template>
 							</i18n-t>
+							<div v-if="Object.keys(page.translations).length" class="available-translations">
+								{{ $t('available_in') }}
+								<router-link v-for="(title, lang) in page.translations" :key="lang" :to="'/encyclopedia/' + lang + '/' + title.replace(/ /g, '_')">
+									<flag :code="LeekWars.languages[lang].country" :clickable="false" />
+									{{ LeekWars.languages[lang].name }}
+								</router-link>
+							</div>
 							<br>
 							<div v-if="contributor">{{ $t('contributor_create') }}</div>
 						</div>
@@ -325,7 +332,7 @@
 				LeekWars.setTitle(this.title)
 				emitter.emit('loaded')
 			})
-			.error(() => {
+			.error((result: any) => {
 				// Pas de page
 				let fun = null as any
 				let args = ''
@@ -347,7 +354,7 @@
 					id: 0,
 					title: this.code,
 					language: this.language,
-					translations: {},
+					translations: result && result.translations ? result.translations : {},
 					content: fun ?  `# ${this.code}
 > Fonctions
 
@@ -650,6 +657,22 @@ h1 {
 	.v-icon {
 		color: #ccc;
 		font-size: 150px;
+	}
+	.available-translations {
+		margin-top: 15px;
+		font-size: 16px;
+		a {
+			display: inline-flex;
+			align-items: center;
+			gap: 5px;
+			margin: 0 8px;
+			color: #5fad1b;
+			font-weight: bold;
+			.flag {
+				max-width: 25px;
+				max-height: 16px;
+			}
+		}
 	}
 }
 .redirected-from {
