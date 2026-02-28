@@ -666,7 +666,9 @@
 		}
 
 		startDelete() {
-			(this.$refs.explorerEl as any).deleteDialog = true
+			const explorer = this.$refs.explorerEl as any
+			if (!explorer) return
+			explorer.deleteDialog = true
 		}
 		startTest(editor = this.currentEditor) {
 			if (!editor || !editor.ai) { return }
