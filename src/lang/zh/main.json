@@ -270,7 +270,7 @@
 	"side_right": "向右",
 	"n_year": "1 年 | {n} 年",
 	"n_month": "1 个月 | {n} 个月",
-	"n_day": "1 j | {n} j",
+	"n_day": "1 天 | {n} 天",
 	"n_hour": "1 h | {n} h",
 	"n_minute": "1 min | {n} min",
 	"n_second": "1 s | {n} s",

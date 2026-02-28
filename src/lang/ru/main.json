@@ -270,7 +270,7 @@
 	"side_right": "Направо",
 	"n_year": "1 год | {n} лет",
 	"n_month": "1 месяц | {n} месяцев",
-	"n_day": "1 j | {n} j",
+	"n_day": "1 д | {n} д",
 	"n_hour": "1 h | {n} h",
 	"n_minute": "1 мин | {n} мин",
 	"n_second": "1 s | {n} s",
