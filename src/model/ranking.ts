@@ -12,7 +12,10 @@ class RankingFarmerRow extends RankingRow {
 class RankingTeamRow extends RankingRow {
 
 }
+class RankingCompositionRow extends RankingRow {
+
+}
 
 type Ranking = RankingRow[]
 
-export { Ranking, RankingRow, RankingLeekRow, RankingFarmerRow, RankingTeamRow }
+export { Ranking, RankingRow, RankingLeekRow, RankingFarmerRow, RankingTeamRow, RankingCompositionRow }

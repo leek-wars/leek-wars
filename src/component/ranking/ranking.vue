@@ -20,7 +20,7 @@
 					</div>
 				</router-link>
 				<router-link :to="getURL('farmer', 'talent', country, LeekWars.rankingInactive)"><div class="tab" :class="{active: category === 'farmer'}">{{ $t('farmers') }}</div></router-link>
-				<router-link :to="getURL('team', 'talent', country, LeekWars.rankingInactive)"><div class="tab" :class="{active: category === 'team'}">{{ $t('teams') }}</div></router-link>
+				<router-link :to="getURL(teamMode, 'talent', country, LeekWars.rankingInactive)"><div class="tab" :class="{active: category === 'team' || category === 'composition'}">{{ $t('teams') }}</div></router-link>
 
 				<v-menu v-model="countryList" offset-y>
 					<template #activator="{ props }">
@@ -105,6 +105,7 @@
 						<v-btn v-else-if="category === 'team' && $store.state.farmer.team" @click="LeekWars.goToRanking('team', order, $store.state.farmer.team.id)">{{ $t('my_team') }}</v-btn>
 					</div>
 					<v-switch v-model="activeSwitch" :label="$t('hide_inactives')" hide-details class="inactives" @change="toggleInactives" />
+					<v-switch v-if="category === 'team' || category === 'composition'" v-model="compositionMode" :label="$t('compositions')" hide-details class="inactives" @change="toggleCompositionMode" />
 				</div>
 				<div class="scroll-x">
 					<table v-if="displayCategory === 'leek'" class="ranking large">
@@ -173,7 +174,7 @@
 						</tr>
 						<ranking-farmer-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: searchResult == row.rank}" />
 					</table>
-					<table v-else class="ranking large">
+					<table v-else-if="displayCategory === 'team'" class="ranking large">
 						<tr class="header">
 							<th class="ranking-column">{{ $t('place') }}</th>
 							<th>
@@ -221,6 +222,37 @@
 						</tr>
 						<ranking-team-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: searchResult == row.rank}" />
 					</table>
+					<table v-else-if="displayCategory === 'composition'" class="ranking large">
+						<tr class="header">
+							<th class="ranking-column">{{ $t('place') }}</th>
+							<th>
+								<router-link :to="getURL('composition', 'name', country, inactive)">
+									<span>{{ $t('composition') }}</span>
+									<v-icon v-if="order === 'name'">mdi-chevron-up</v-icon>
+								</router-link>
+							</th>
+							<th>
+								<router-link :to="getURL('composition', 'talent', country, inactive)">
+									<span>{{ $t('main.talent') }}</span>
+									<v-icon v-if="order === 'talent'">mdi-chevron-up</v-icon>
+								</router-link>
+							</th>
+							<th>{{ $t('main.team') }}</th>
+							<th>
+								<router-link :to="getURL('composition', 'total-level', country, inactive)">
+									<span>{{ $t('total_level') }}</span>
+									<v-icon v-if="order === 'total-level'">mdi-chevron-up</v-icon>
+								</router-link>
+							</th>
+							<th>
+								<router-link :to="getURL('composition', 'leeks', country, inactive)">
+									<span>{{ $t('leeks') }}</span>
+									<v-icon v-if="order === 'leeks'">mdi-chevron-up</v-icon>
+								</router-link>
+							</th>
+						</tr>
+						<ranking-composition-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: searchResult == row.rank}" />
+					</table>
 					<loader v-if="!ranking" />
 				</div>
 				<div class="center">
@@ -251,9 +283,10 @@
 	import RankingLeekRowElement from '@/component/ranking/ranking-leek-row.vue'
 	import RankingSearchResult from '@/component/ranking/ranking-search-result.vue'
 	import RankingTeamRowElement from '@/component/ranking/ranking-team-row.vue'
+	import RankingCompositionRowElement from '@/component/ranking/ranking-composition-row.vue'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Ranking } from '@/model/ranking'
+	import { Ranking, RankingRow } from '@/model/ranking'
 	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import Pagination from '@/component/pagination.vue'
@@ -261,7 +294,7 @@ import { emitter } from '@/model/vue'
 
 	@Options({
 		name: 'ranking', i18n: {}, mixins: [...mixins],
-		components: { 'ranking-leek-row': RankingLeekRowElement, 'ranking-farmer-row': RankingFarmerRowElement, 'ranking-team-row': RankingTeamRowElement, 'ranking-search-result': RankingSearchResult, RichTooltipFarmer, Pagination }
+		components: { 'ranking-leek-row': RankingLeekRowElement, 'ranking-farmer-row': RankingFarmerRowElement, 'ranking-team-row': RankingTeamRowElement, 'ranking-composition-row': RankingCompositionRowElement, 'ranking-search-result': RankingSearchResult, RichTooltipFarmer, Pagination }
 	})
 	export default class RankingPage extends Vue {
 		fun: boolean = false
@@ -278,8 +311,13 @@ import { emitter } from '@/model/vue'
 		searchQuery: string = ''
 		searchResults: any[] | null = null
 		activeSwitch: boolean = false
+		compositionMode: boolean = localStorage.getItem('ranking/team-mode') === 'composition'
 		countryList: boolean = false
 		displayCategory: string = ''
+
+		get teamMode(): string {
+			return this.compositionMode ? 'composition' : 'team'
+		}
 
 		get url() {
 			return this.getURLBase(this.category, this.order)
@@ -309,6 +347,9 @@ import { emitter } from '@/model/vue'
 			if (this.category.startsWith('level-')) {
 				this.displayCategory = 'leek'
 				localStorage.setItem('ranking/level', '' + this.rankingLevel)
+			}
+			if (this.category === 'team' || this.category === 'composition') {
+				this.compositionMode = this.category === 'composition'
 			}
 
 			// localStorage.setItem('ranking/country', this.$route.params.country)
@@ -381,6 +422,10 @@ import { emitter } from '@/model/vue'
 								if (this.$store.state.farmer.team && row.id === this.$store.state.farmer.team.id) {
 									row.me = 'me'
 								}
+							} else if (this.category === 'composition') {
+								if (this.$store.state.farmer.team && (row as RankingRow & {team_id: number}).team_id === this.$store.state.farmer.team.id) {
+									row.me = 'me'
+								}
 							}
 						}
 					}
@@ -388,7 +433,8 @@ import { emitter } from '@/model/vue'
 					this.pages = data.pages
 					this.ranking = ranking
 					LeekWars.setActions([{icon: 'mdi-magnify', click: () => this.openSearch()}])
-					LeekWars.setTitle(this.$t('title'), this.category.includes('level') ? this.$t('main.level_n', [this.rankingLevel]) : this.$t('main.n_' + this.category + 's', [data.total]))
+					const subtitle = this.category.includes('level') ? this.$t('main.level_n', [this.rankingLevel]) : this.$t('main.n_' + this.category + 's', [data.total])
+					LeekWars.setTitle(this.$t('title'), subtitle)
 					emitter.emit('loaded')
 				})
 			}
@@ -420,6 +466,12 @@ import { emitter } from '@/model/vue'
 			LeekWars.rankingInactive = !this.activeSwitch
 			localStorage.setItem('options/ranking-inactive', '' + LeekWars.rankingInactive)
 			this.$router.push(this.url + this.urlQuery)
+		}
+
+		toggleCompositionMode() {
+			const mode = this.compositionMode ? 'composition' : 'team'
+			localStorage.setItem('ranking/team-mode', mode)
+			this.$router.push(this.getURL(mode, 'talent', this.country, this.inactive))
 		}
 
 		@Watch('countryList')

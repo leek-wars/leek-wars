@@ -87,6 +87,7 @@
 	"n_lines": "0 line | 1 line | {n} lines",
 	"n_messages": "{n} messages",
 	"n_teams": "{0} teams",
+	"n_compositions": "{0} compositions",
 	"n_total_chars": "0 total character | 1 total character | {n} total characters",
 	"n_total_lines": "0 total line | 1 total line | {n} total lines",
 	"n_trophies": "{n} trophies",

@@ -49,5 +49,8 @@
 	"crashes_title": "Nombre de crashes",
 	"crashes": "Crashes",
 	"boss_killed_title": "Boss tués",
-	"boss_killed": "Boss"
+	"boss_killed": "Boss",
+	"compositions": "Compositions",
+	"composition": "Composition",
+	"won": "Victoires"
 }
