@@ -361,7 +361,7 @@ import { emitter } from '@/model/vue'
 		padding-left: 8px;
 	}
 	.forum-header {
-		font-size: 20px;
+		font-size: 18px;
 		font-weight: 300;
 		background: none;
 		margin: 0;
@@ -388,7 +388,6 @@ import { emitter } from '@/model/vue'
 		margin-right: 4px;
 		padding: 2px 0;
 		vertical-align: bottom;
-		margin-bottom: 2px;
 	}
 	i.attr.resolved {
 		color: #5fad1b;
@@ -424,14 +423,14 @@ import { emitter } from '@/model/vue'
 		margin-bottom: 3px;
 	}
 	.topic .title {
-		font-size: 18px;
+		font-size: 17px;
 		margin-bottom: 5px;
 		display: inline-block;
 		.issue {
 			background: #0366d6;
 			color: white;
 			border-radius: 5px;
-			font-size: 15px;
+			font-size: 13px;
 			font-weight: 500;
 			padding: 0 4px;
 			display: inline-block;
@@ -500,6 +499,7 @@ import { emitter } from '@/model/vue'
 		flex: 0 0 176px;
 		text-align: center;
 		vertical-align: top;
+   		white-space: nowrap;
 	}
 	.topic .last-message-wrapper {
 		display: inline-block;
