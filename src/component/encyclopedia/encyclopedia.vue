@@ -68,6 +68,10 @@
 					<div v-if="LeekWars.encyclopedia[this.language] && Object.keys(LeekWars.encyclopedia[this.language]).length" ref="markdown" class="markdown" @scroll="markdownScroll">
 						<!-- {{ parents }} -->
 
+						<div v-if="redirectedFrom" class="redirected-from">
+							{{ $t('redirected_from', [redirectedFrom]) }}
+						</div>
+
 						<markdown :content="content" mode="encyclopedia" :class="{main: page.reference === 1 }" :locale="page.language" />
 
 						<div v-if="page.new && !edition" class="nopage">
@@ -171,6 +175,7 @@
 		initialVersionId: number = 0
 		statsExpanded: boolean = false
 		searchQuery: string = ''
+		redirectedFrom: string | null = null
 		actions = [
 			{icon: 'mdi-information-variant', click: () => this.$router.push('/about')},
 			{icon: 'mdi-pencil', click: () => this.editStart()},
@@ -278,8 +283,8 @@
 		}
 
 		@Watch('lanuage_and_code', {immediate: true})
-		update() {
-			LeekWars.loadEncyclopedia(this.language)
+		async update() {
+			await LeekWars.loadEncyclopedia(this.language)
 
 			if (this.code === 'Page au hasard') {
 				const pages = Object.values(LeekWars.encyclopedia[this.$i18n.locale])
@@ -287,7 +292,22 @@
 				return
 			}
 
+			// Vérifier si c'est un alias
+			const key = this.code.toLowerCase().replace(/_/g, ' ')
+			const entry = LeekWars.encyclopedia[this.language]?.[key]
+			if (entry?.alias) {
+				this.$router.replace('/encyclopedia/' + this.language + '/' + entry.title.replace(/ /g, '_') + '?from=' + encodeURIComponent(this.code))
+				return
+			}
+
+			this.redirectedFrom = this.$route.query.from as string || null
+
 			LeekWars.get<any>('encyclopedia/get/' + this.language + '/' + this.code).then(page => {
+				// Redirection alias côté serveur (fallback)
+				if (page.redirect) {
+					this.$router.replace('/encyclopedia/' + this.language + '/' + page.redirect.replace(/ /g, '_') + '?from=' + encodeURIComponent(this.code))
+					return
+				}
 				if (this.edition) {
 					// Previous page was in edition
 					this.releasePage()
@@ -618,6 +638,12 @@ h1 {
 		color: #ccc;
 		font-size: 150px;
 	}
+}
+.redirected-from {
+	padding: 5px 15px;
+	font-size: 13px;
+	color: var(--text-color-secondary);
+	font-style: italic;
 }
 .search-icon {
 	cursor: pointer;

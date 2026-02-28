@@ -9,5 +9,7 @@
 	"contributor_create": "You are a contributor 😎 Click Edit to start editing this page",
 	"locked": "Finish the chapter to unlock the complete AI",
 	"end_edition": "End editing",
-	"editing_by_x": "Currently being edited by {0}"
+	"editing_by_x": "Currently being edited by {0}",
+	"redirected_from": "Redirected from {0}",
+	"aliases": "Also known as: {0}"
 }
