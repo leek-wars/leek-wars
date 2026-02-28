@@ -131,7 +131,14 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		"disconnect"(state: LeekWarsState) {
 			LeekWars.post('farmer/disconnect')
 			store.commit("reset")
-			localStorage.removeItem('editor/tabs')
+			// Supprime le cache des IAs et l'état de l'éditeur (confidentialité + évite les collisions entre comptes)
+			for (const key of Object.keys(localStorage)) {
+				if (key.startsWith('ai/') || key.startsWith('editor/tabs') || key.startsWith('editor/last-code-')
+					|| key.startsWith('editor/scroll/') || key.startsWith('editor/viewstate/')
+					|| key === 'editor/history') {
+					localStorage.removeItem(key)
+				}
+			}
 			localStorage.removeItem('garden/category') // On revient à la catégorie potager par défaut
 			LeekWars.battleRoyale.leave()
 			LeekWars.bossSquads.leaveSquad()
