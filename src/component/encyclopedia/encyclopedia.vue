@@ -544,10 +544,11 @@ h1 {
 	&::after {
 		border-color: transparent transparent transparent #222;
 	}
+	gap: 10px;
 	.book {
 		margin-right: 10px;
-		font-size: 23px;
-		margin-bottom: 5px;
+		font-size: 22px;
+		margin: 6px 0;
 	}
 }
 .page-header .flex {
@@ -640,7 +641,8 @@ h1 {
 	}
 }
 .redirected-from {
-	padding: 5px 15px;
+	padding: 15px;
+	padding-bottom: 0;
 	font-size: 13px;
 	color: var(--text-color-secondary);
 	font-style: italic;
