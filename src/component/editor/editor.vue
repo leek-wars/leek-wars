@@ -7,7 +7,7 @@
 					<div ref="fileButton" class="tab first action" icon="settings">
 						<v-icon>mdi-file-outline</v-icon> {{ $t('file') }}
 					</div>
-					<v-menu v-model="fileMenu" :activator="LeekWars.mobile ? fileMenuActivator : $refs.fileButton" offset-y>
+					<v-menu v-model="fileMenu" :activator="LeekWars.mobile ? undefined : $refs.fileButton" :target="LeekWars.mobile ? fileMenuActivator : undefined" offset-y>
 						<v-list>
 							<v-list-subheader v-if="currentFolder && currentFolder.id > 0" class="menu-title">
 								<v-icon>mdi-folder-outline</v-icon> {{ currentFolder.name }}
@@ -288,15 +288,19 @@
 		history: AI[] = []
 		alreadyOpenedDialog: boolean = false
 		broadcast: BroadcastChannel = new BroadcastChannel('channel')
-		actions_list = [
-			{icon: 'mdi-plus', click: (e: any) => this.add(e)},
-			{icon: 'mdi-cogs', click: () => this.settings() }
-		]
-		actions_content = [
-			{icon: 'mdi-content-save', click: () => this.save()},
-			{icon: 'mdi-delete', click: () => this.startDelete()},
-			{icon: 'mdi-play', click: () => this.startTest()},
-		]
+		get actions_list() {
+			return [
+				{icon: 'mdi-plus', click: (e: any) => this.add(e)},
+				{icon: 'mdi-cogs', click: () => this.settings() }
+			]
+		}
+		get actions_content() {
+			return [
+				{icon: 'mdi-content-save', click: () => this.save()},
+				{icon: 'mdi-delete', click: () => this.startDelete()},
+				{icon: 'mdi-play', click: () => this.startTest()},
+			]
+		}
 		editor1Width: number = 0.5
 		editor2Width: number = 0.5
 		editorTotalWidth: number = 800
@@ -555,6 +559,8 @@
 					this.$router.replace('/editor/0') // Go to root folder to be able to create a new AI
 				}
 			} else {
+				this.currentFolder = fileSystem.rootFolder
+				this.currentType = 'folder'
 				LeekWars.splitShowList()
 				LeekWars.setActions(this.actions_list)
 			}
@@ -686,10 +692,10 @@
 			this.settingsDialog = true
 		}
 		add(event: any) {
-			if (!this.fileMenuActivator) {
+			this.fileMenuActivator = event.currentTarget
+			nextTick(() => {
 				this.fileMenu = true
-				this.fileMenuActivator = event.target
-			}
+			})
 		}
 		@Watch('theme') themeChange() {
 			localStorage.setItem('editor/theme', this.theme)

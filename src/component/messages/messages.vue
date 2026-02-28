@@ -80,6 +80,19 @@
 			</div> -->
 		</div>
 
+		<v-menu v-model="languageDialog" :target="menuTarget" location="bottom end">
+			<v-list :dense="true">
+				<div v-for="data in Object.values(LeekWars.languages).filter(l => l.chats)" :key="data.code" class="language">
+					<flag :code="data.country" />
+					<v-list-item v-for="(chatId, i) in data.chats" :key="i" class="language" @click="$router.push('/chat/' + chatId)">
+						<v-icon>{{ LeekWars.publicChats[chatId].icon }}</v-icon>
+						<span class="name">{{ LeekWars.publicChats[chatId].name }}</span>
+						<span class="unread-circle" v-if="$store.state.chat[chatId] && !$store.state.chat[chatId].read"></span>
+					</v-list-item>
+				</div>
+			</v-list>
+		</v-menu>
+
 		<popup v-model="quitDialog" :width="500">
 			<template #icon>
 				<v-icon>mdi-delete</v-icon>
@@ -112,6 +125,8 @@
 		newFarmer_: any = null
 		currentID: number | null = null
 		quitDialog: boolean = false
+		languageDialog: boolean = false
+		menuTarget: HTMLElement | null = null
 		actions = [{icon: 'mdi-delete', click: () => this.showQuitDialog()}]
 		loadingConversations: boolean = false
 
@@ -209,6 +224,10 @@
 			return this.chat && this.chat.type === ChatType.PM
 		}
 
+		get isPublicChat() {
+			return this.currentID !== null && LeekWars.isPublicChat(this.currentID)
+		}
+
 		@Watch('$route.params')
 		update() {
 			// console.log("update", this.$route.params)
@@ -229,6 +248,8 @@
 			LeekWars.splitShowContent()
 			if (this.chat && this.chat.type === ChatType.PM) {
 				LeekWars.setActions(this.actions)
+			} else if (LeekWars.isPublicChat(id)) {
+				LeekWars.setActions([{icon: 'mdi-translate', click: (e: Event) => this.showLanguageDialog(e)}])
 			}
 			if (id === 0) {
 				LeekWars.setTitle(this.$i18n.t('new_message'))
@@ -256,6 +277,11 @@
 					}
 				}
 			}
+		}
+
+		showLanguageDialog(e: Event) {
+			this.menuTarget = e.currentTarget as HTMLElement
+			this.languageDialog = true
 		}
 
 		showQuitDialog() {
@@ -414,6 +440,27 @@
 				display: inline-block;
 			}
 		}
+	}
+	.language {
+		display: flex;
+		align-items: center;
+		padding-left: 10px;
+		.flag {
+			max-width: 30px;
+			max-height: 20px;
+			flex-shrink: 0;
+		}
+		.name {
+			padding-left: 8px;
+		}
+	}
+	.unread-circle {
+		display: inline-block;
+		background: #5fad1b;
+		border-radius: 50%;
+		width: 10px;
+		height: 10px;
+		margin-left: 8px;
 	}
 	.admin-warn {
 		padding: 15px 20px;
