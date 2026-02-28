@@ -7,6 +7,6 @@
 	"n_views": "brak widoku | 1 widok | {n} wyświetleń",
 	"not_found": "Nie znaleziono walki :(",
 	"not_found_id": "Nie znaleziono identyfikatora walki <b>{0}</b> :(",
-	"pause_message": "Kliknij lub naciśnij „P”, aby wznowić",
+	"pause_message": "Kliknij lub naciśnij \u201EP\u201D, aby wznowić",
 	"starter": "Wyrzutnia walki"
 }

@@ -7,6 +7,6 @@
 	"n_views": "没有观点 | 1 视图 | {n} 次观看",
 	"not_found": "找不到战斗:(",
 	"not_found_id": "战斗 ID <b>{0}</b> 未找到 :(",
-	"pause_message": "单击或按“P”继续",
+	"pause_message": "单击或按\u201CP\u201D继续",
 	"starter": "战斗发射器"
 }

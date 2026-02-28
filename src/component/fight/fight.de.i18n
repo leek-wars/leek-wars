@@ -7,6 +7,6 @@
 	"n_views": "keine Aussicht | 1 Ansicht | {n} Aufrufe",
 	"not_found": "Kampf nicht gefunden :(",
 	"not_found_id": "Kampf-ID <b>{0}</b> nicht gefunden :(",
-	"pause_message": "Klicken Sie auf oder drücken Sie „P“, um fortzufahren",
+	"pause_message": "Klicken Sie auf oder drücken Sie \u201EP\u201C, um fortzufahren",
 	"starter": "Launcher bekämpfen"
 }

@@ -1,6 +1,6 @@
 {
 	"android_app": "Android App",
-	"conditions": "Indem Sie auf die Schaltfläche „Registrieren“ klicken, akzeptieren Sie den {link}.",
+	"conditions": "Indem Sie auf die Schaltfläche \u201ERegistrieren\u201C klicken, akzeptieren Sie den {link}.",
 	"conditions_name": "nutzungsbedingungen",
 	"confirm_password": "Bestätigung",
 	"country": "Land",
