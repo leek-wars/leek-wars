@@ -9,5 +9,7 @@
 	"contributor_create": "あなたは寄稿者です😎 [編集] をクリックして、このページの編集を開始します",
 	"locked": "チャプターを完了すると、完全な AI のロックが解除されます",
 	"end_edition": "編集終了",
-	"editing_by_x": "現在編集中。{0}"
+	"editing_by_x": "現在編集中。{0}",
+	"redirected_from": "{0} からリダイレクト",
+	"aliases": "別名: {0}"
 }

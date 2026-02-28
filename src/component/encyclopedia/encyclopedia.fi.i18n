@@ -9,5 +9,7 @@
 	"contributor_create": "Olet avustaja 😎 Aloita tämän sivun muokkaaminen napsauttamalla Muokkaa",
 	"locked": "Suorita luku avataksesi koko tekoälyn",
 	"end_edition": "Lopeta muokkaus",
-	"editing_by_x": "Tällä hetkellä muokkaa {0}"
+	"editing_by_x": "Tällä hetkellä muokkaa {0}",
+	"redirected_from": "Uudelleenohjattu kohteesta {0}",
+	"aliases": "Tunnetaan myös nimellä: {0}"
 }

@@ -9,5 +9,7 @@
 	"contributor_create": "Du är en bidragsgivare 😎 Klicka på Redigera för att börja redigera den här sidan",
 	"locked": "Slutför kapitlet för att låsa upp hela AI",
 	"end_edition": "Avsluta redigering",
-	"editing_by_x": "Redigeras för närvarande av {0}"
+	"editing_by_x": "Redigeras för närvarande av {0}",
+	"redirected_from": "Omdirigerad från {0}",
+	"aliases": "Även känd som: {0}"
 }

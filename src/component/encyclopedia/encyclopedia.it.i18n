@@ -9,5 +9,7 @@
 	"contributor_create": "Sei un collaboratore 😎 Fai clic su Modifica per iniziare a modificare questa pagina",
 	"locked": "Completa il capitolo per sbloccare l'IA completa",
 	"end_edition": "Fine dell'editing",
-	"editing_by_x": "Attualmente in corso di modifica da parte di {0}"
+	"editing_by_x": "Attualmente in corso di modifica da parte di {0}",
+	"redirected_from": "Reindirizzato da {0}",
+	"aliases": "Conosciuto anche come: {0}"
 }
