@@ -270,7 +270,7 @@
 	"side_right": "A la derecha",
 	"n_year": "1 año | {n} años",
 	"n_month": "1 mes | {n} meses",
-	"n_day": "1 j | {n} j",
+	"n_day": "1 d | {n} d",
 	"n_hour": "1 h | {n} h",
 	"n_minute": "1 min | {n} min",
 	"n_second": "1 s | {n} s",
