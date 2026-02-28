@@ -1,5 +1,5 @@
 import { LeekWars } from '@/model/leekwars'
-import { emitter, vueMain } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 import router from '@/router'
 import { ChatMessage } from './chat'
 import { NotificationType } from './notification'

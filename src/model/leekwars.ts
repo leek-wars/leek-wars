@@ -6,7 +6,7 @@ import { CHIP_TEMPLATES, HAT_TEMPLATES, HATS, POMPS, POTIONS, SUMMON_TEMPLATES, 
 import { Socket } from '@/model/socket'
 import { Squares } from '@/model/squares'
 import { store } from '@/model/store'
-import { emitter, vueMain } from '@/model/vue'
+import { emitter, vueMain } from '@/model/emitter'
 import { WeaponTemplate } from '@/model/weapon'
 import router from '@/router'
 

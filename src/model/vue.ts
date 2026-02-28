@@ -28,8 +28,7 @@ import { createVuetify } from 'vuetify'
 import 'vuetify/styles'
 import '@mdi/font/css/materialdesignicons.css'
 import { formatEmojis } from './emojis'
-import mitt from 'mitt'
-import { Farmer } from './farmer'
+import { emitter, setVueMain } from './emitter'
 import '@/chart'
 
 const Console = defineAsyncComponent(() => import('@/component/app/console.vue'))
@@ -104,41 +103,6 @@ window.addEventListener('load', () => {
 let lastErrorSent = 0
 
 let secondInterval: any = null, minuteInterval: any = null
-
-type Events = {
-	keydown: KeyboardEvent
-	ctrlShiftS: void
-	ctrlS: void
-	ctrlQ: void
-	ctrlF: KeyboardEvent
-	escape: void
-	previous: KeyboardEvent
-	next: KeyboardEvent
-	ctrlP: KeyboardEvent
-	keyup: KeyboardEvent
-	resize: void
-	focus: void
-	htmlclick: void
-	loaded: void
-	connected: Farmer
-	back: void
-	chat: any
-	'chat-history': any
-	wsconnected: void
-	tooltip: { x: number, y: number, content: string }
-	'tooltip-close': void
-	'editor-drag': any
-	'tournament-update': any
-	trophy: any
-	fight_notification: any
-	wsmessage: { type: number, data: any, id: number | null },
-	mousemove: any,
-	mouseup: any,
-	jump: { ai: AI, line: number, column: number },
-	navigate: void,
-}
-
-const emitter = mitt<Events>()
 
 const app = createApp({
 	data() {
@@ -459,16 +423,17 @@ app.directive('emojis', (el) => {
 	})
 })
 
-const vueMain = app.mount('#app2') as ComponentPublicInstance & {
+const vm = app.mount('#app2') as ComponentPublicInstance & {
 	$once: (event: string, callback: () => void) => void
 	$emit: (event: string, ...args: any[]) => void
 }
+setVueMain(vm)
 
 // Restore saved locale in dev/local mode
 if (LeekWars.DEV || LeekWars.LOCAL) {
 	const savedLocale = localStorage.getItem('locale')
 	if (savedLocale && savedLocale !== i18n.global.locale) {
-		loadLanguageAsync(vueMain, savedLocale)
+		loadLanguageAsync(vm, savedLocale)
 	}
 }
 
@@ -496,7 +461,7 @@ if (window.__FARMER__) {
 			if (initialPath !== '/') {
 				sessionStorage.setItem('redirect_after_login', initialPath)
 			}
-			router.push('/')
+			router.push('/login')
 		})
 	} else if (localStorage.getItem('login-attempt') === 'true') {
 		LeekWars.get('farmer/get-from-token').then(data => {
@@ -519,4 +484,5 @@ app.config.globalProperties.$filters = {
 	duration: LeekWars.formatDuration,
 }
 
-export { vueMain, vuetify, displayWarningMessage, app, emitter, dochash, code }
+export { vueMain } from './emitter'
+export { vuetify, displayWarningMessage, app, emitter, dochash, code }
