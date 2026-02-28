@@ -24,5 +24,6 @@
 	"title": "Форум",
 	"topic_not_found": "Тема с идентификатором <b>{0}</b> не найдена :(",
 	"topics": "Темы",
-	"new_topic_notification": "Сообщайте нам о новых предметах"
+	"new_topic_notification": "Сообщайте нам о новых предметах",
+	"resolved": "resolved"
 }

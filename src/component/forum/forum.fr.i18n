@@ -24,5 +24,6 @@
 	"title": "Forum",
 	"topic_not_found": "Sujet d'id <b>{0}</b> introuvable :(",
 	"topics": "Sujets",
-	"new_topic_notification": "Notifier les nouveaux sujets"
+	"new_topic_notification": "Notifier les nouveaux sujets",
+	"resolved": "résolus"
 }

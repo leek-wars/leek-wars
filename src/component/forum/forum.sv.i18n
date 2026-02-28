@@ -24,5 +24,6 @@
 	"title": "Forum",
 	"topic_not_found": "Ämnet med id <b>{0}</b> hittades inte :(",
 	"topics": "Ämnen",
-	"new_topic_notification": "Meddela oss om nya ämnen"
+	"new_topic_notification": "Meddela oss om nya ämnen",
+	"resolved": "resolved"
 }

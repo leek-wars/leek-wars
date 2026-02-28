@@ -23,5 +23,6 @@
 	"team_forum_description": "आपकी टीम का निजी मंच",
 	"title": "मंच",
 	"topic_not_found": "आईडी <b>{0}</b> वाला विषय नहीं मिला :(",
-	"topics": "विषय"
+	"topics": "विषय",
+	"resolved": "resolved"
 }

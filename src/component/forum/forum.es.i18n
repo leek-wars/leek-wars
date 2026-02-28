@@ -24,5 +24,6 @@
 	"title": "Foro",
 	"topic_not_found": "Asunto con ID <b>{0}</b> no encontrado :(",
 	"topics": "Temas",
-	"new_topic_notification": "Notifíquenos nuevos temas"
+	"new_topic_notification": "Notifíquenos nuevos temas",
+	"resolved": "resolved"
 }

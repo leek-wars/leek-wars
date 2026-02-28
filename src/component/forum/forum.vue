@@ -76,7 +76,10 @@
 					<div class="text">
 						<template v-if="category.type == 'normal'">
 							<div class="title">{{ $t('forum-category.' + category.name) }}</div>
-							<div class="description">{{ $t('forum-category.' + category.name + '_desc') }}</div>
+							<div class="description">
+								{{ $t('forum-category.' + category.name + '_desc') }}
+								<span v-if="category.total_count" class="resolved-info">— {{ Math.round(category.resolved_count / category.total_count * 100) }}% {{ $t('resolved') }}</span>
+							</div>
 						</template>
 						<div v-else-if="category.type == 'team'">
 							<div class="title">{{ category.name }}</div>
@@ -306,6 +309,9 @@ import { emitter } from '@/model/vue'
 	.category .description {
 		color: var(--text-color-secondary);
 		font-size: 14px;
+	}
+	.resolved-info {
+		color: #4caf50;
 	}
 	.category .mobile-info {
 		margin-top: 5px;

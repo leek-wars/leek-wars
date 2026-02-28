@@ -24,5 +24,6 @@
 	"title": "フォーラム",
 	"topic_not_found": "ID <b>{0}</b> の件名が見つかりません:(",
 	"topics": "トピック",
-	"new_topic_notification": "新しいテーマを通知する"
+	"new_topic_notification": "新しいテーマを通知する",
+	"resolved": "resolved"
 }

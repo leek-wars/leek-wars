@@ -24,5 +24,6 @@
 	"title": "论坛",
 	"topic_not_found": "未找到 ID 为 <b>{0}</b> 的主题:(",
 	"topics": "主题",
-	"new_topic_notification": "通知我们新的主题"
+	"new_topic_notification": "通知我们新的主题",
+	"resolved": "resolved"
 }

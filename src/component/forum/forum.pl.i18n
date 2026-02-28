@@ -24,5 +24,6 @@
 	"title": "Forum",
 	"topic_not_found": "Nie znaleziono podmiotu o identyfikatorze <b>{0}</b> :(",
 	"topics": "Tematy",
-	"new_topic_notification": "Powiadom nas o nowych tematach"
+	"new_topic_notification": "Powiadom nas o nowych tematach",
+	"resolved": "resolved"
 }

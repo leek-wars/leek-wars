@@ -24,5 +24,6 @@
 	"topic_not_found": "Topic id <b>{0}</b> not found :(",
 	"topics": "Topics",
 	"send": "Send",
-	"new_topic_notification": "Notify us of new topics"
+	"new_topic_notification": "Notify us of new topics",
+	"resolved": "resolved"
 }
