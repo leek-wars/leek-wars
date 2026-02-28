@@ -116,7 +116,7 @@ export default class AIViewMonaco extends Vue {
 		this.editor.onMouseUp((e) => {
 			if (e.event.rightButton) return
 			requestAnimationFrame(() => {
-				if (!this.editor.hasTextFocus() && !this.editor.hasWidgetFocus()) {
+				if (!this.editor.hasWidgetFocus()) {
 					this.editor.focus()
 				}
 			})
