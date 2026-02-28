@@ -80,7 +80,7 @@ import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 import { scroll_to_hash } from './router-functions'
 import AdminComponents from './component/admin/admin-components.vue'
 import { defineAsyncComponent, defineComponent, h } from 'vue'
-import { vueMain } from './model/vue'
+import { vueMain } from './model/emitter'
 
 const Home = defineComponent({
 	components: { signup: Signup, leek: LeekAsync, messages: Messages },
