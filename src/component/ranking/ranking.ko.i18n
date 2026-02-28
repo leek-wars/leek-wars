@@ -49,5 +49,7 @@
 	"crashes_title": "크래시 횟수",
 	"crashes": "크래시",
 	"boss_killed_title": "보스 처치 수",
-	"boss_killed": "보스"
+	"boss_killed": "보스",
+	"turrets_killed": "포탑",
+	"turrets_killed_title": "포탑 파괴 수"
 }

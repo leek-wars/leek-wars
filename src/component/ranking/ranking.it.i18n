@@ -49,5 +49,7 @@
 	"crashes_title": "Numero di crash",
 	"crashes": "Crash",
 	"boss_killed_title": "Boss uccisi",
-	"boss_killed": "Boss"
+	"boss_killed": "Boss",
+	"turrets_killed": "Torrette",
+	"turrets_killed_title": "Torrette distrutte"
 }

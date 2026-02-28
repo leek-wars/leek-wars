@@ -49,5 +49,7 @@
 	"crashes_title": "Aantal crashes",
 	"crashes": "Crashes",
 	"boss_killed_title": "Bazen verslagen",
-	"boss_killed": "Bazen"
+	"boss_killed": "Bazen",
+	"turrets_killed": "Geschutstorens",
+	"turrets_killed_title": "Geschutstorens vernietigd"
 }

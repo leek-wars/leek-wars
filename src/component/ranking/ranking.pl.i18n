@@ -49,5 +49,7 @@
 	"crashes_title": "Liczba crashy",
 	"crashes": "Crashe",
 	"boss_killed_title": "Pokonani bossowie",
-	"boss_killed": "Bossowie"
+	"boss_killed": "Bossowie",
+	"turrets_killed": "Wieżyczki",
+	"turrets_killed_title": "Wieżyczki zniszczone"
 }

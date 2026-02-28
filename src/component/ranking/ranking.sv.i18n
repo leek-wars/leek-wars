@@ -49,5 +49,7 @@
 	"crashes_title": "Antal krascher",
 	"crashes": "Krascher",
 	"boss_killed_title": "Bossar besegrade",
-	"boss_killed": "Bossar"
+	"boss_killed": "Bossar",
+	"turrets_killed": "Torn",
+	"turrets_killed_title": "Torn förstörda"
 }

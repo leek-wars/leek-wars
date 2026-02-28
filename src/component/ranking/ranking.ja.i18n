@@ -49,5 +49,7 @@
 	"crashes_title": "クラッシュ回数",
 	"crashes": "クラッシュ",
 	"boss_killed_title": "ボス撃破数",
-	"boss_killed": "ボス"
+	"boss_killed": "ボス",
+	"turrets_killed": "タレット",
+	"turrets_killed_title": "タレット破壊数"
 }

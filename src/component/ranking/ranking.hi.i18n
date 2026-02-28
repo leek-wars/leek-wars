@@ -45,5 +45,7 @@
 	"crashes_title": "क्रैश की संख्या",
 	"crashes": "क्रैश",
 	"boss_killed_title": "बॉस मारे गए",
-	"boss_killed": "बॉस"
+	"boss_killed": "बॉस",
+	"turrets_killed": "बुर्ज",
+	"turrets_killed_title": "बुर्ज नष्ट किए"
 }

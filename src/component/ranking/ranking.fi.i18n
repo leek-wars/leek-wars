@@ -49,5 +49,7 @@
 	"crashes_title": "Kaatumisten määrä",
 	"crashes": "Kaatumiset",
 	"boss_killed_title": "Possit voitettu",
-	"boss_killed": "Possit"
+	"boss_killed": "Possit",
+	"turrets_killed": "Tornit",
+	"turrets_killed_title": "Torneja tuhottu"
 }

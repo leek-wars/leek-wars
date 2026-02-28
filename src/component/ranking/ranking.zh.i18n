@@ -49,5 +49,7 @@
 	"crashes_title": "崩溃次数",
 	"crashes": "崩溃",
 	"boss_killed_title": "击杀Boss数",
-	"boss_killed": "Boss"
+	"boss_killed": "Boss",
+	"turrets_killed": "炮塔",
+	"turrets_killed_title": "摧毁炮塔数"
 }

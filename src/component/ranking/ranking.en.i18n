@@ -52,5 +52,7 @@
 	"boss_killed": "Bosses",
 	"compositions": "Compositions",
 	"composition": "Composition",
+	"turrets_killed": "Turrets",
+	"turrets_killed_title": "Turrets destroyed",
 	"won": "Won"
 }

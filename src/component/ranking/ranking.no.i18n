@@ -49,5 +49,7 @@
 	"crashes_title": "Antall krasjer",
 	"crashes": "Krasjer",
 	"boss_killed_title": "Bosser beseiret",
-	"boss_killed": "Bosser"
+	"boss_killed": "Bosser",
+	"turrets_killed": "Tårn",
+	"turrets_killed_title": "Tårn ødelagt"
 }

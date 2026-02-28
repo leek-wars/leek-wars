@@ -49,5 +49,7 @@
 	"crashes_title": "Количество крашей",
 	"crashes": "Краши",
 	"boss_killed_title": "Боссов убито",
-	"boss_killed": "Боссы"
+	"boss_killed": "Боссы",
+	"turrets_killed": "Турели",
+	"turrets_killed_title": "Турелей уничтожено"
 }
