@@ -78,7 +78,10 @@
 							<div class="title">{{ $t('forum-category.' + category.name) }}</div>
 							<div class="description">
 								{{ $t('forum-category.' + category.name + '_desc') }}
-								<span v-if="category.total_count" class="resolved-info">— {{ Math.round(category.resolved_count / category.total_count * 100) }}% {{ $t('resolved') }}</span>
+								<span v-if="category.total_count" class="resolved-info" :class="resolvedClass(category)">
+									<v-progress-circular :model-value="Math.round(category.resolved_count / category.total_count * 100)" :size="16" :width="2" :color="resolvedColor(category)" />
+									{{ Math.round(category.resolved_count / category.total_count * 100) }}% {{ $t('resolved') }}
+								</span>
 							</div>
 						</template>
 						<div v-else-if="category.type == 'team'">
@@ -218,6 +221,14 @@ import { emitter } from '@/model/vue'
 		get activeLanguages() {
 			return Object.entries(this.forumLanguages).filter(e => e[1]).map(e => e[0])
 		}
+		resolvedColor(category: { resolved_count: number, total_count: number }) {
+			const ratio = category.resolved_count / category.total_count
+			return ratio >= 0.8 ? '#4caf50' : ratio >= 0.5 ? '#2196f3' : '#ff9800'
+		}
+		resolvedClass(category: { resolved_count: number, total_count: number }) {
+			const ratio = category.resolved_count / category.total_count
+			return ratio >= 0.8 ? 'high' : ratio >= 0.5 ? 'mid' : 'low'
+		}
 
 		@Watch('notifyNewTopics')
 		updateNotifyNewTopics() {
@@ -309,9 +320,18 @@ import { emitter } from '@/model/vue'
 	.category .description {
 		color: var(--text-color-secondary);
 		font-size: 14px;
+		display: inline-flex;
+		flex-wrap: wrap;
+		gap: 4px 8px;
 	}
 	.resolved-info {
-		color: #4caf50;
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		vertical-align: bottom;
+		&.high { color: #4caf50; }
+		&.mid { color: #2196f3; }
+		&.low { color: #ff9800; }
 	}
 	.category .mobile-info {
 		margin-top: 5px;
