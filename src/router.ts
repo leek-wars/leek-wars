@@ -106,7 +106,7 @@ const Home = defineComponent({
 const connected = (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) => {
 	if (!store.state.connected) {
 		sessionStorage.setItem('redirect_after_login', to.fullPath)
-		next('/')
+		next('/login')
 	} else {
 		next()
 	}
