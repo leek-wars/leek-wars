@@ -283,6 +283,8 @@ export default class AIViewMonaco extends Vue {
 				})
 			}
 		})
+
+		this.update()
 	}
 
 	beforeUnmount() {
@@ -315,31 +317,25 @@ export default class AIViewMonaco extends Vue {
 		}
 		this.currentAiId = this.ai.id
 
-		fileSystem.load(this.ai).then((loadedAI) => {
+		const uri = monaco.Uri.parse('file:///' + this.ai.path)
+		const model = monaco.editor.getModel(uri) || monaco.editor.createModel(this.ai.code, 'leekscript', uri)
+		this.ai.model = model
 
-			// Update or create model with real content
-			const uri = monaco.Uri.parse('file:///' + loadedAI.path)
-			let model = monaco.editor.getModel(uri) || monaco.editor.createModel(loadedAI.code, 'leekscript', uri)
-			loadedAI.model = model
+		if (!this.editor) return
+		this.editor.setModel(model)
+		this.currentVersionId = model.getAlternativeVersionId()
 
-			// Ensure we are still on the same AI
-			if (this.ai !== loadedAI) return
+		this.setAnalyzerTimeout()
+		this.editor.focus()
 
-			this.editor.setModel(model)
-			this.currentVersionId = model.getAlternativeVersionId()
-
-			this.setAnalyzerTimeout()
-			this.editor.focus()
-
-			nextTick(() => {
-				if (this.jumpToLine) {
-					nextTick(() => {
-						this.scrollToLine(loadedAI, this.jumpToLine!, this.jumpToColumn!)
-					})
-				} else {
-					this.restoreViewState()
-				}
-			})
+		nextTick(() => {
+			if (this.jumpToLine) {
+				nextTick(() => {
+					this.scrollToLine(this.ai, this.jumpToLine!, this.jumpToColumn!)
+				})
+			} else {
+				this.restoreViewState()
+			}
 		})
 	}
 

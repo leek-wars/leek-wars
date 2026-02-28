@@ -496,13 +496,15 @@
 				// console.log("fileSystem", Object.values(fileSystem.ais).length)
 				if (id > 0 && id in fileSystem.ais) {
 					const ai = fileSystem.ais[id]
-					if (this.currentSide === 1) {
-						this.currentAI1 = id
-					} else {
-						this.currentAI2 = id
-					}
-					nextTick(() => {
-						this.currentEditor = (this.currentSide === 1 ? this.$refs.editor1 : this.$refs.editor2) as AIViewMonaco
+					fileSystem.load(ai).then(() => {
+						if (this.currentSide === 1) {
+							this.currentAI1 = id
+						} else {
+							this.currentAI2 = id
+						}
+						nextTick(() => {
+							this.currentEditor = (this.currentSide === 1 ? this.$refs.editor1 : this.$refs.editor2) as AIViewMonaco
+						})
 					})
 					localStorage.setItem('editor/last-code-' + this.currentSide, '' + id)
 					this.currentType = 'ai'
@@ -606,7 +608,7 @@
 			aiEditor.save()
 			aiEditor.serverError = false
 
-			const saveID = aiEditor.ai ? aiEditor.ai.id : 0
+			const saveID = aiEditor.ai.id
 			const content = aiEditor.editor.getValue()
 			aiEditor.ai.code = content
 
@@ -873,7 +875,9 @@
 			if (this.splitted) {
 				this.editor1Width = 0.5
 				this.editor2Width = 0.5
-				this.currentAI2 = ai!.id
+				fileSystem.load(ai!).then(() => {
+					this.currentAI2 = ai!.id
+				})
 				this.setSide(2)
 				localStorage.setItem('editor/last-code-2', '' + ai!.id)
 				nextTick(() => {
@@ -890,7 +894,12 @@
 
 		open(ai: number, side: number) {
 			this.setSide(side)
-			side === 1 ? this.currentAI1 = ai : this.currentAI2 = ai
+			const aiObj = fileSystem.ais[ai]
+			if (aiObj) {
+				fileSystem.load(aiObj).then(() => {
+					side === 1 ? this.currentAI1 = ai : this.currentAI2 = ai
+				})
+			}
 			const tabs = (side === 1 ? this.$refs.tabs : this.$refs.tabs2) as any
 			tabs.add(ai)
 			localStorage.setItem('editor/last-code-' + side, '' + ai)
