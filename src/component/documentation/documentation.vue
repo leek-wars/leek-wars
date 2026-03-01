@@ -220,7 +220,9 @@
 						item.data += item.replacer.lower_name!
 					}
 				}
-				LeekWars.setTitle(this.$i18n.t('title'))
+				if (!this.popup) {
+					LeekWars.setTitle(this.$i18n.t('title'))
+				}
 				this.update()
 			})
 		}
@@ -258,7 +260,6 @@
 				LeekWars.setTitle(this.$route.params.item)
 			} else {
 				LeekWars.splitShowList()
-				LeekWars.setTitle(this.$i18n.t('title'))
 			}
 		}
 
