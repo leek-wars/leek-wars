@@ -27,8 +27,21 @@
 		results: any[] | null = null
 		timer: any
 
+		created() {
+			const urlQuery = this.$route.query.query as string
+			if (urlQuery) {
+				this.query = urlQuery.replace(/\+/g, ' ')
+			}
+		}
+
 		@Watch('query')
 		update() {
+			const encoded = this.query.replace(/ /g, '+')
+			const currentUrlQuery = (this.$route.query.query as string) || ''
+			if (encoded !== currentUrlQuery) {
+				this.$router.replace({ query: { ...this.$route.query, query: encoded || undefined } })
+			}
+
 			this.results = []
 			if (this.query === '') {
 				clearTimeout(this.timer)
@@ -43,11 +56,8 @@
 				LeekWars.get('encyclopedia/search/' + i18n.locale + '/' + this.query.replace(/ /g, '+') + '/1').then(data => {
 					this.results = data.results
 					this.loading = false
-					// this.pages = data.pages
-					// this.count = data.count
 				}).error(error => {
 					this.results = []
-					// this.count = 0
 					LeekWars.toast(error.error)
 				})
 			}, 200)

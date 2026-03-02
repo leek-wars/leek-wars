@@ -10,7 +10,7 @@
 			<div class="search">
 				<div class="search-box">
 					<div class="label">{{ $t('query') }}</div>
-					<input v-model="options.query" class="query card" type="text" @keydown.enter="search">
+					<input :value="options.query" class="query card" type="text" @input="onQueryInput" @keydown.enter="search">
 				</div>
 
 				<div class="center">
@@ -70,6 +70,8 @@
 		count: number = 0
 		floor = Math.floor
 
+		urlSyncing = false
+
 		get canSearch() {
 			return this.options.query
 		}
@@ -77,13 +79,30 @@
 			LeekWars.setTitle(this.$i18n.t('title'))
 		}
 
+		onQueryInput(e: Event) {
+			const query = (e.target as HTMLInputElement).value
+			this.options.query = query
+			const currentUrlQuery = (this.$route.query.query as string || '').replace(/\+/g, ' ')
+			if (query !== currentUrlQuery) {
+				this.urlSyncing = true
+				this.$router.replace('/encyclopedia-search' + (query ? '?query=' + query.replace(/ /g, '+') : ''))
+			}
+		}
+
 		@Watch('$route.query', {immediate: true})
 		update() {
-			this.options.query = (this.$route.query.query as string || '').replace(/\+/g, ' ')
+			if (this.urlSyncing) {
+				this.urlSyncing = false
+				return
+			}
+			const query = (this.$route.query.query as string || '').replace(/\+/g, ' ')
+			this.options.query = query === '-' ? '' : query
 			this.queryLower = this.options.query.toLowerCase()
-			if (this.options.query === '-') { this.options.query = '' }
 			this.options.page = parseInt(this.$route.query.page as string, 10) || 1
 
+			this.doSearch()
+		}
+		doSearch() {
 			this.searchStarted = false
 			this.results = null
 			if (this.canSearch) {
@@ -111,7 +130,10 @@
 			return url + '?' + options
 		}
 		search() {
-			this.$router.push(this.url)
+			if (!this.canSearch) return
+			this.$router.push(this.url).then((failure: any) => {
+				if (failure) this.doSearch()
+			})
 		}
 		searchButton() {
 			if (!this.canSearch) {
