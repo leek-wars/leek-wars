@@ -68,6 +68,7 @@
 					<v-icon>mdi-email-outline</v-icon>
 				</a>
 			</div>
+			<v-icon class="theme-toggle" @click="toggleTheme">{{ LeekWars.darkMode ? 'mdi-weather-sunny' : 'mdi-weather-night' }}</v-icon>
 		</div>
 		<div class="column">
 			<h4>{{ $t('main.legal') }}</h4>
@@ -106,6 +107,16 @@
 		created() {
 			// this.throwCookies()
 			// LeekWars.didactitial = true
+		}
+
+		toggleTheme() {
+			if (LeekWars.darkMode) {
+				LeekWars.themeSetting = 'light'
+			} else {
+				LeekWars.themeSetting = 'dark'
+			}
+			localStorage.setItem('theme', LeekWars.themeSetting)
+			LeekWars.darkMode = LeekWars.themeSetting === 'dark'
 		}
 
 		throwCookies() {
@@ -226,6 +237,14 @@
 		gap: 10px;
 		a .v-icon {
 			font-size: 20px;
+		}
+	}
+	.theme-toggle {
+		margin-top: 12px;
+		cursor: pointer;
+		font-size: 20px;
+		&:hover {
+			color: #5fad1b !important;
 		}
 	}
 </style>
