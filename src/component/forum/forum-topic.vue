@@ -10,9 +10,12 @@
 					<flag v-if="category && forumLanguages.length >= 2 && category.lang" :code="LeekWars.languages[category.lang].country" />
 					<span ref="topicTitle" :contenteditable="topicEditing" class="topic-title">{{ topic ? topic.name : '...' }}</span>
 					<div v-if="topic" class="info attrs">
-						<v-icon v-if="topic.resolved" :title="$t('resolved')" class="attr">mdi-check-circle</v-icon>
+						<v-icon v-if="topic.status === ForumTopicStatus.RESOLVED" :title="$t('status_resolved')" class="attr status-resolved">mdi-check-circle</v-icon>
+						<v-icon v-if="topic.status === ForumTopicStatus.NOT_REPRODUCED" :title="$t('status_not_reproduced')" class="attr status-not-reproduced">mdi-help-circle</v-icon>
+						<v-icon v-if="topic.status === ForumTopicStatus.NOT_PLANNED" :title="$t('status_not_planned')" class="attr status-not-planned">mdi-minus-circle</v-icon>
 						<v-icon v-if="topic.locked" :title="$t('locked')" class="attr">mdi-lock</v-icon>
 						<v-icon v-if="topic.pinned" :title="$t('pinned')" class="attr">mdi-pin</v-icon>
+						<v-icon v-if="topic.acknowledged && !topic.private_issue" :title="$t('status_acknowledged')" class="attr status-acknowledged">mdi-eye</v-icon>
 						<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars/issues/' + topic.issue" class="attr issue" target="_blank" rel="noopener">
 							<img src="/image/github_white.png"><span>#{{ topic.issue }}</span>
 						</a>
@@ -122,15 +125,23 @@
 
 									<template v-if="message.id == -1 && $store.state.connected && category.moderator">
 										<span class="action lock" @click="lock"><v-icon>mdi-lock</v-icon> {{ topic.locked ? $t('unlock') : $t('lock') }}</span>
-										&nbsp;&nbsp;
 										<span class="action pin" @click="pin"><v-icon>mdi-pin</v-icon> {{ topic.pinned ? $t('unpin') : $t('pin') }}</span>
 									</template>
 									<template v-if="message.id == -1 && $store.state.connected && (($store.state.farmer && topic.owner === $store.state.farmer.id) || category.moderator)">
-										&nbsp;&nbsp;
-										<span class="action resolve" @click="resolve"><v-icon>mdi-check</v-icon> {{ topic.resolved ? $t('unsolved') : $t('solved') }}</span>
+										<v-select v-model="topic.status" :items="statusItems" hide-details dense variant="outlined" class="status-select" @update:model-value="setStatus">
+											<template #selection="{ item }">
+												<v-icon :color="item.raw.color" size="16">{{ item.raw.icon }}</v-icon>&nbsp;{{ item.raw.title }}
+											</template>
+											<template #item="{ props, item }">
+												<v-list-item v-bind="props">
+													<template #prepend>
+														<v-icon :color="item.raw.color" size="18" class="status-icon">{{ item.raw.icon }}</v-icon>
+													</template>
+												</v-list-item>
+											</template>
+										</v-select>
 									</template>
-									<template v-if="message.id == -1 && $store.state.farmer && $store.state.farmer.admin && !topic.private_issue && !topic.resolved">
-										&nbsp;&nbsp;
+									<template v-if="message.id == -1 && $store.state.farmer && $store.state.farmer.admin && !topic.private_issue && topic.status === ForumTopicStatus.OPEN">
 										<span class="action create-issue" @click="createIssue"><v-icon>{{ creatingIssue ? 'mdi-loading mdi-spin' : 'mdi-source-branch' }}</v-icon> {{ $t('create_issue') }}</span>
 									</template>
 								</div>
@@ -166,7 +177,7 @@
 								<v-btn color="primary" class="confirm-edit send" @click="confirmEdit(message)"><v-icon>mdi-send-outline</v-icon> {{ $t('main.send') }}</v-btn>
 								<v-btn class="cancel-edit" @click="endEdit(message)">{{ $t('main.cancel') }}</v-btn>
 								<span v-if="message.id == -1">
-									&nbsp;GitHub Issue <input v-model.number="topic.issue" type="number">
+									GitHub Issue <input v-model.number="topic.issue" type="number">
 								</span>
 							</div>
 
@@ -234,7 +245,7 @@
 	import Markdown from '@/component/encyclopedia/markdown.vue'
 	import { locale } from '@/locale'
 	import { Farmer } from '@/model/farmer'
-	import { ForumCategory, ForumMessage, ForumTopic } from '@/model/forum'
+	import { ForumCategory, ForumMessage, ForumTopic, ForumTopicStatus } from '@/model/forum'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
@@ -251,6 +262,7 @@ import { emitter } from '@/model/vue'
 
 	@Options({ name: 'forum_topic', i18n: {}, mixins: [...mixins], components: { Breadcrumb, EmojiPicker, Markdown, FormattingRules, RichTooltipFarmer, ReportDialog, Pagination, 'lw-title': LWTitle } })
 	export default class ForumTopicPage extends Vue {
+		ForumTopicStatus = ForumTopicStatus
 		topic: ForumTopic | null = null
 		category: ForumCategory | null = null
 		page: number = 0
@@ -334,11 +346,21 @@ import { emitter } from '@/model/vue'
 				this.creatingIssue = false
 			})
 		}
-		resolve() {
+		get statusItems() {
+			const items: {title: string, value: ForumTopicStatus, icon: string, color: string}[] = [
+				{ title: this.$t('status_open') as string, value: ForumTopicStatus.OPEN, icon: 'mdi-circle-outline', color: 'grey' },
+				{ title: this.$t('status_resolved') as string, value: ForumTopicStatus.RESOLVED, icon: 'mdi-check-circle', color: 'green' },
+			]
+			if (this.category?.moderator) {
+				items.push({ title: this.$t('status_not_reproduced') as string, value: ForumTopicStatus.NOT_REPRODUCED, icon: 'mdi-help-circle', color: 'orange' })
+				items.push({ title: this.$t('status_not_planned') as string, value: ForumTopicStatus.NOT_PLANNED, icon: 'mdi-minus-circle', color: 'grey' })
+			}
+			return items
+		}
+		setStatus(status: ForumTopicStatus) {
 			if (!this.topic) { return }
-			const service = this.topic.resolved ? 'forum/unresolve-topic' : 'forum/resolve-topic'
-			LeekWars.post(service, {topic_id: this.topic.id})
-			this.topic.resolved = !this.topic.resolved
+			LeekWars.post('forum/set-topic-status', {topic_id: this.topic.id, status})
+			this.topic.status = status
 		}
 		lock() {
 			if (!this.topic) { return }
@@ -734,6 +756,30 @@ import { emitter } from '@/model/vue'
 			margin-right: 4px;
 		}
 	}
+	.status-select {
+		display: inline-flex;
+		vertical-align: middle;
+		flex-grow: 0;
+		:deep(.v-field) {
+			font-size: 13px;
+			min-height: 28px;
+			padding: 4px 8px;
+		}
+		:deep(.v-field__input) {
+			padding: 0;
+			min-height: unset;
+			align-items: center;
+		}
+		:deep(.v-icon) {
+			opacity: 1 !important;
+		}
+		:deep(.v-select__selection) {
+			color: var(--text-color);
+		}
+	}
+	:global(.v-list-item__prepend .v-icon.status-icon) {
+		opacity: 1 !important;
+	}
 	.message .date {
 		color: var(--text-color-secondary);
 		font-size: 12px;
@@ -749,6 +795,10 @@ import { emitter } from '@/model/vue'
 		color: var(--text-color-secondary);
 		font-size: 14px;
 		cursor: pointer;
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 12px;
 		span .v-icon {
 			font-size: 17px;
 			vertical-align: bottom;
@@ -816,14 +866,20 @@ import { emitter } from '@/model/vue'
 		}
 	}
 	.votes {
-		display: inline-block;
+		display: inline-flex;
+		gap: 6px;
 	}
 	.vote {
 		display: inline-block;
 		font-size: 16px;
-		margin-right: 6px;
 		padding: 2px 6px;
 		border-radius: 6px;
+		&.up:hover {
+			background: #5fad1b11;
+		}
+		&.down:hover {
+			background: #ff000011;
+		}
 	}
 	.vote i {
 		vertical-align: bottom;
@@ -853,7 +909,6 @@ import { emitter } from '@/model/vue'
 	}
 	.vote.down, .vote.down.zero:hover {
 		color: red;
-		margin-right: 20px;
 		.v-icon {
 			color: red;
 		}

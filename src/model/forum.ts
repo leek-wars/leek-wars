@@ -7,14 +7,22 @@ class ForumCategory {
 	public topics!: ForumTopic[] | null
 }
 
+enum ForumTopicStatus {
+	OPEN = 0,
+	RESOLVED = 1,
+	NOT_REPRODUCED = 2,
+	NOT_PLANNED = 3,
+}
+
 class ForumTopic {
 	public id!: number
 	public name!: string
 	public messages!: ForumMessage[] | null
-	public resolved!: boolean
+	public status!: ForumTopicStatus
 	public locked!: boolean
 	public pinned!: boolean
 	public subscribed!: boolean
+	public acknowledged!: boolean
 	public issue!: number
 	public private_issue!: number
 }
@@ -32,4 +40,4 @@ class ForumMessage {
 	public writer!: Farmer
 }
 
-export { ForumCategory, ForumTopic, ForumMessage }
+export { ForumCategory, ForumTopic, ForumMessage, ForumTopicStatus }

@@ -70,9 +70,12 @@
 						</div>
 						<div>
 							<span v-ripple class="title">
-								<v-icon v-if="topic.resolved" :title="$t('resolved')" class="attr resolved">mdi-check-circle</v-icon>
+								<v-icon v-if="topic.status === ForumTopicStatus.RESOLVED" :title="$t('status_resolved')" class="attr resolved">mdi-check-circle</v-icon>
+								<v-icon v-if="topic.status === ForumTopicStatus.NOT_REPRODUCED" :title="$t('status_not_reproduced')" class="attr not-reproduced">mdi-help-circle</v-icon>
+								<v-icon v-if="topic.status === ForumTopicStatus.NOT_PLANNED" :title="$t('status_not_planned')" class="attr not-planned">mdi-minus-circle</v-icon>
 								<v-icon v-if="topic.closed" :title="$t('locked')" class="attr">mdi-lock</v-icon>
 								<v-icon v-if="topic.pinned" :title="$t('pinned')" class="attr">mdi-pin</v-icon>
+								<v-icon v-if="topic.acknowledged && !topic.private_issue" :title="$t('status_acknowledged')" class="attr acknowledged">mdi-eye</v-icon>
 								<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars/issues/' + topic.issue" class="attr issue" target="_blank" rel="noopener">
 									#{{ topic.issue }}
 								</a>
@@ -197,7 +200,7 @@
 
 <script lang="ts">
 	import { locale } from '@/locale'
-	import { ForumCategory, ForumTopic } from '@/model/forum'
+	import { ForumCategory, ForumTopic, ForumTopicStatus } from '@/model/forum'
 	import { mixins } from '@/model/i18n'
 	import { Language, LeekWars } from '@/model/leekwars'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
@@ -210,6 +213,7 @@ import { emitter } from '@/model/vue'
 
 	@Options({ name: 'forum_category', i18n: {}, mixins: [...mixins], components: { Breadcrumb, FormattingRules, RichTooltipFarmer, Pagination } })
 	export default class ForumCategoryPage extends Vue {
+		ForumTopicStatus = ForumTopicStatus
 		categories: ForumCategory[] | null = null
 		topics: ForumTopic[] | null = null
 		page: number = 0
@@ -389,12 +393,18 @@ import { emitter } from '@/model/vue'
 		padding: 2px 0;
 		vertical-align: bottom;
 	}
-	i.attr.resolved {
-		color: #5fad1b;
-	}
 	i.attr {
 		color: #666;
 		font-size: 19px;
+		&.resolved {
+			color: #5fad1b;
+		}
+		&.not-reproduced {
+			color: orange;
+		}
+		&.not-planned {
+			color: var(--text-color);
+		}
 	}
 	.topic > div {
 		padding: 8px;
