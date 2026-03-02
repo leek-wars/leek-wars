@@ -106,6 +106,7 @@ import { emitter } from '@/model/vue'
 		}
 
 		readAllNotifications() {
+			this.$store.commit('read-notifications')
 			LeekWars.post('notification/read-all')
 		}
 	}
