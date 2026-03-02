@@ -39,7 +39,7 @@
 	"register_mail": "Félicitations %s, tu es inscrit sur Leek Wars.\n\nPour valider ton compte, rends toi sur cette page : %s\n",
 	"register_mail_html": "Félicitations <b>%s</b>, tu es inscrit sur Leek Wars !<br/><br/>Pour valider ton compte, <a href='%s'>Clique ici</a>",
 	"register_mail_subject": "Leek Wars : Inscription",
-	"reset_mail": "Bonjour <b>%s</b> !\n\nVotre demande de réinitialisation du mot de passe a bien été enregistrée. \n\nPour pour changer votre mot de passe cliquez sur ce lien : %s.",
+	"reset_mail": "Bonjour %s !\n\nVotre demande de réinitialisation du mot de passe a bien été enregistrée.\n\nPour changer votre mot de passe, cliquez sur ce lien : %s.",
 	"reset_mail_html": "Bonjour <b>%s</b> !\n<br><br>\nVotre demande de réinitialisation du mot de passe a bien été enregistrée.\n<br><br>\nPour pour changer votre mot de passe, cliquez sur <a href='%s'>ce lien</a>.\n<br><br>\nÀ bientôt sur Leek Wars !",
 	"reset_mail_subject": "Leek Wars : Réinitialisation du mot de passe",
 	"see_the_fight": "Voir le combat",
