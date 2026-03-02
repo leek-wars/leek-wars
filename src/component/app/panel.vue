@@ -85,7 +85,7 @@
 		}
 		h2 {
 			color: #eee;
-			font-size: 18px;
+			font-size: 17px;
 			display: inline-flex;
 			align-items: center;
 			height: 36px;
@@ -114,7 +114,7 @@
 	.panel.first > .header {
 		border-top-left-radius: 0px;
 	}
-	
+
 	.panel.first > .header h2 {
 		border-top-left-radius: 0px;
 	}

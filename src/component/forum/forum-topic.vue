@@ -545,7 +545,6 @@ import { emitter } from '@/model/vue'
 		flex: 1;
 	}
 	h1 {
-		font-size: 22px;
 		display: inline;
 		line-height: 36px;
 		min-height: 36px;
