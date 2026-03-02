@@ -28,7 +28,7 @@ import { createVuetify } from 'vuetify'
 import 'vuetify/styles'
 import '@mdi/font/css/materialdesignicons.css'
 import { formatEmojis } from './emojis'
-import { emitter, setVueMain } from './emitter'
+import { displayWarningMessage, emitter, setVueMain } from './emitter'
 import '@/chart'
 
 const Console = defineAsyncComponent(() => import('@/component/app/console.vue'))
@@ -73,17 +73,6 @@ const vuetify = createVuetify({
 		},
 	},
 })
-
-function displayWarningMessage() {
-	const style = "color: black; font-size: 13px; font-weight: bold;"
-	const styleRed = "color: red; font-size: 14px; font-weight: bold;"
-	console.log("%c" + i18n.global.t('main.console_alert_1'), style)
-	console.log("%c" + i18n.global.t('main.console_alert_2'), styleRed)
-	console.log("%c" + i18n.global.t('main.console_alert_3'), style)
-	console.log("")
-	console.log("%c✔️ " + i18n.global.t('main.console_github'), style)
-	console.log("")
-}
 
 // Handle Vite CSS/JS preload errors after deployment (stale hashed assets)
 // The guard flag prevents infinite reload loops if the error persists after reload.
