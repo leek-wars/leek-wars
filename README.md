@@ -3,7 +3,7 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/46d001bcd2944ad5b6ba45d772e6099f)](https://www.codacy.com/gh/leek-wars/leek-wars/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=leek-wars/leek-wars&amp;utm_campaign=Badge_Grade)
 [![CI](https://github.com/leek-wars/leek-wars/actions/workflows/build.yml/badge.svg)](https://github.com/leek-wars/leek-wars/actions/workflows/build.yml)
 
-The Leek Wars website frontend, in Vue.js + TypeScript. This is the frontend repository, although it also contains all the information about the whole Leek Wars project.
+The Leek Wars website frontend, in Vue 3 + TypeScript. This is the frontend repository, although it also contains all the information about the whole Leek Wars project.
 
 Related projects: [LeekScript](https://github.com/leek-wars/leekscript) and [Leek Wars fight generator](https://github.com/leek-wars/leek-wars-generator).
 
@@ -29,23 +29,27 @@ production server. When you log into this local version, you will use your real 
 - Generator : https://github.com/leek-wars/leek-wars-generator
 - LeekScript : https://github.com/leek-wars/leekscript
 
-## Hacking
+## Contributing
 I gladly accept pull requests to Leek Wars. Before starting work on a feature, see the [contribution guidelines](https://github.com/leek-wars/leek-wars/blob/master/CONTRIBUTING.md).
 
 ## Libraries used
 
-- Vue.js https://github.com/vuejs/vue
+- Vue 3 https://github.com/vuejs/core
+- Vuetify https://github.com/vuetifyjs/vuetify
 - Vuex https://github.com/vuejs/vuex
+- Pinia https://github.com/vuejs/pinia
+- Vite https://github.com/vitejs/vite
+- Monaco Editor https://github.com/microsoft/monaco-editor
 - CodeMirror https://github.com/codemirror/codemirror
-- Chartist https://github.com/gionkunz/chartist-js
+- Chart.js https://github.com/chartjs/Chart.js
 - Katex https://github.com/Khan/KaTeX
 - Flags https://github.com/hampusborgos/country-flags
 
 ## Social media
-- Twitter : https://twitter.com/LeekWars
+- X (Twitter) : https://twitter.com/LeekWars
 - Facebook : https://www.facebook.com/LeekWars/
 - GitHub (this repo) : https://github.com/leek-wars/leek-wars
 
 ## License
 
-Distributed under the GPL3 license. Copyright (c) 2016-2023, Pilow
+Distributed under the GPL3 license. Copyright (c) 2016-2026, Pilow
