@@ -10,18 +10,12 @@
 					<flag v-if="category && forumLanguages.length >= 2 && category.lang" :code="LeekWars.languages[category.lang].country" />
 					<span ref="topicTitle" :contenteditable="topicEditing" class="topic-title">{{ topic ? topic.name : '...' }}</span>
 					<div v-if="topic" class="info attrs">
+						<v-icon v-if="topic.locked" :title="$t('locked')" class="attr">mdi-lock</v-icon>
+						<v-icon v-if="topic.pinned" :title="$t('pinned')" class="attr">mdi-pin</v-icon>
 						<v-icon v-if="topic.status === ForumTopicStatus.RESOLVED" :title="$t('status_resolved')" class="attr status-resolved">mdi-check-circle</v-icon>
 						<v-icon v-if="topic.status === ForumTopicStatus.NOT_REPRODUCED" :title="$t('status_not_reproduced')" class="attr status-not-reproduced">mdi-help-circle</v-icon>
 						<v-icon v-if="topic.status === ForumTopicStatus.NOT_PLANNED" :title="$t('status_not_planned')" class="attr status-not-planned">mdi-minus-circle</v-icon>
-						<v-icon v-if="topic.locked" :title="$t('locked')" class="attr">mdi-lock</v-icon>
-						<v-icon v-if="topic.pinned" :title="$t('pinned')" class="attr">mdi-pin</v-icon>
-						<v-icon v-if="topic.acknowledged && !topic.private_issue" :title="$t('status_acknowledged')" class="attr status-acknowledged">mdi-eye</v-icon>
-						<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars/issues/' + topic.issue" class="attr issue" target="_blank" rel="noopener">
-							<img src="/image/github_white.png"><span>#{{ topic.issue }}</span>
-						</a>
-						<a v-if="topic.private_issue && $store.state.farmer && $store.state.farmer.admin" :href="'https://github.com/5pilow/leek-wars/issues/' + topic.private_issue" class="attr issue private-issue" target="_blank" rel="noopener">
-							<img src="/image/github_white.png"><span>#{{ topic.private_issue }}</span>
-						</a>
+						<v-icon v-if="topic.status === ForumTopicStatus.NOT_A_BUG" :title="$t('status_not_a_bug')" class="attr status-not-a-bug">mdi-close-circle</v-icon>
 					</div>
 				</h1>
 				<div v-if="!LeekWars.mobile" class="tabs">
@@ -95,82 +89,90 @@
 
 							<div class="bottom">
 
-								<div class="edit-wrapper">
-									<div v-if="!message.deleted" class="votes">
-										<v-tooltip :key="votes_up_names[message.id] ? message.id * 101 + votes_up_names[message.id].length : message.id * 101" :open-delay="0" :close-delay="0" :disabled="message.votes_up === 0" bottom @update:model-value="loadVotesUp(message)">
-											<template #activator="{ props }">
-												<div :class="{active: message.my_vote == 1, zero: message.votes_up === 0}" class="vote up" @click="voteUp(message)" v-bind="props">
-													<v-icon>mdi-thumb-up</v-icon>
-													<span class="counter">{{ message.votes_up }}</span>
-												</div>
-											</template>
-											<loader v-if="!votes_up_names[message.id]" :size="30" />
-											<div v-else>
-												<div v-for="name in votes_up_names[message.id]" :key="name">{{ name }}</div>
-											</div>
-										</v-tooltip>
-										<v-tooltip :key="votes_down_names[message.id] ? message.id * 100 + votes_down_names[message.id].length : message.id" :open-delay="0" :close-delay="0" :disabled="message.votes_down === 0" bottom @update:model-value="loadVotesDown(message)">
-											<template #activator="{ props }">
-												<div :class="{active: message.my_vote == -1, zero: !message.votes_down}" class="vote down" @click="voteDown(message)" v-bind="props">
-													<v-icon>mdi-thumb-down</v-icon>
-													<span class="counter">{{ message.votes_down }}</span>
-												</div>
-											</template>
-											<loader v-if="!votes_down_names[message.id]" :size="30" />
-											<div v-else>
-												<div v-for="name in votes_down_names[message.id]" :key="name">{{ name }}</div>
-											</div>
-										</v-tooltip>
-									</div>
-
-									<template v-if="message.id == -1 && $store.state.connected && category.moderator">
-										<span class="action lock" @click="lock"><v-icon>mdi-lock</v-icon> {{ topic.locked ? $t('unlock') : $t('lock') }}</span>
-										<span class="action pin" @click="pin"><v-icon>mdi-pin</v-icon> {{ topic.pinned ? $t('unpin') : $t('pin') }}</span>
-									</template>
-									<template v-if="message.id == -1 && $store.state.connected && (($store.state.farmer && topic.owner === $store.state.farmer.id) || category.moderator)">
-										<v-select v-model="topic.status" :items="statusItems" hide-details dense variant="outlined" class="status-select" @update:model-value="setStatus">
-											<template #selection="{ item }">
-												<v-icon :color="item.raw.color" size="16">{{ item.raw.icon }}</v-icon>&nbsp;{{ item.raw.title }}
-											</template>
-											<template #item="{ props, item }">
-												<v-list-item v-bind="props">
-													<template #prepend>
-														<v-icon :color="item.raw.color" size="18" class="status-icon">{{ item.raw.icon }}</v-icon>
-													</template>
-												</v-list-item>
-											</template>
-										</v-select>
-									</template>
-									<template v-if="message.id == -1 && $store.state.farmer && $store.state.farmer.admin && !topic.private_issue && topic.status === ForumTopicStatus.OPEN">
-										<span class="action create-issue" @click="createIssue"><v-icon>{{ creatingIssue ? 'mdi-loading mdi-spin' : 'mdi-source-branch' }}</v-icon> {{ $t('create_issue') }}</span>
-									</template>
-								</div>
-								<div class="spacer"></div>
-								<div class="date">
-									<div>
-										<div>{{ LeekWars.formatDateTime(message.date) }}</div>
-										<div v-if="message.edition_date != null">
-											{{ $t('edited_the', [LeekWars.formatDateTime(message.edition_date)]) }}
-										</div>
-									</div>
-
-									<v-menu v-if="$store.state.farmer && !message.deleted && !message.editing && ((message.writer.id === $store.state.farmer.id || category.moderator) || (category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'))" offset-y>
+								<div v-if="!message.deleted" class="votes">
+									<v-tooltip :key="votes_up_names[message.id] ? message.id * 101 + votes_up_names[message.id].length : message.id * 101" :open-delay="0" :close-delay="0" :disabled="message.votes_up === 0" bottom @update:model-value="loadVotesUp(message)">
 										<template #activator="{ props }">
-											<v-btn variant="text" size="small" icon="mdi-dots-vertical" color="grey" v-bind="props" />
+											<div :class="{active: message.my_vote == 1, zero: message.votes_up === 0}" class="vote up" @click="voteUp(message)" v-bind="props">
+												<v-icon>mdi-thumb-up</v-icon>
+												<span class="counter">{{ message.votes_up }}</span>
+											</div>
 										</template>
-										<v-list dense class="message-actions">
-											<v-list-item v-if="$store.state.farmer && (message.writer.id === $store.state.farmer.id || category.moderator)" v-ripple @click="edit(message)" prepend-icon="mdi-pencil">
-												<span>{{ $t('edit') }}</span>
-											</v-list-item>
-											<v-list-item v-if="$store.state.farmer && (message.writer.id === $store.state.farmer.id || category.moderator)" v-ripple @click="deleteGeneric(message)" prepend-icon="mdi-delete">
-												<span>{{ $t('delete') }}</span>
-											</v-list-item>
-											<v-list-item v-if="category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'" v-ripple @click="report(message)" prepend-icon="mdi-flag">
-												<span>{{ $t('warning.report') }}</span>
-											</v-list-item>
-										</v-list>
-									</v-menu>
+										<loader v-if="!votes_up_names[message.id]" :size="30" />
+										<div v-else>
+											<div v-for="name in votes_up_names[message.id]" :key="name">{{ name }}</div>
+										</div>
+									</v-tooltip>
+									<v-tooltip :key="votes_down_names[message.id] ? message.id * 100 + votes_down_names[message.id].length : message.id" :open-delay="0" :close-delay="0" :disabled="message.votes_down === 0" bottom @update:model-value="loadVotesDown(message)">
+										<template #activator="{ props }">
+											<div :class="{active: message.my_vote == -1, zero: !message.votes_down}" class="vote down" @click="voteDown(message)" v-bind="props">
+												<v-icon>mdi-thumb-down</v-icon>
+												<span class="counter">{{ message.votes_down }}</span>
+											</div>
+										</template>
+										<loader v-if="!votes_down_names[message.id]" :size="30" />
+										<div v-else>
+											<div v-for="name in votes_down_names[message.id]" :key="name">{{ name }}</div>
+										</div>
+									</v-tooltip>
 								</div>
+
+								<template v-if="message.id == -1 && $store.state.connected && category.moderator">
+									<span class="action lock" @click="lock"><v-icon>mdi-lock</v-icon> {{ topic.locked ? $t('unlock') : $t('lock') }}</span>
+									<span class="action pin" @click="pin"><v-icon>mdi-pin</v-icon> {{ topic.pinned ? $t('unpin') : $t('pin') }}</span>
+								</template>
+								<template v-if="message.id == -1 && canEditStatus">
+									<v-select v-model="topic.status" :items="statusItems" hide-details dense variant="outlined" class="status-select" @update:model-value="setStatus">
+										<template #selection="{ item }">
+											<v-icon :color="item.raw.color">{{ item.raw.icon }}</v-icon>&nbsp;{{ item.raw.title }}
+										</template>
+										<template #item="{ props, item }">
+											<v-list-item v-bind="props">
+												<template #prepend>
+													<v-icon :color="item.raw.color" class="status-icon">{{ item.raw.icon }}</v-icon>
+												</template>
+											</v-list-item>
+										</template>
+									</v-select>
+								</template>
+								<span v-else-if="message.id == -1 && topic.status !== ForumTopicStatus.OPEN && currentStatusInfo" class="status-text">
+									<v-icon :color="currentStatusInfo.color">{{ currentStatusInfo.icon }}</v-icon> {{ currentStatusInfo.title }}
+								</span>
+								<template v-if="message.id == -1">
+									<span v-if="topic.acknowledged && !topic.private_issue && !($store.state.farmer && $store.state.farmer.admin)" class="status-text"><v-icon color="#6f42c1">mdi-eye</v-icon> {{ $t('status_acknowledged') }}</span>
+									<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars/issues/' + topic.issue" class="issue-badge" target="_blank" rel="noopener">
+										<img src="/image/github_white.png"><span>#{{ topic.issue }}</span>
+									</a>
+									<a v-if="topic.private_issue && $store.state.farmer && $store.state.farmer.admin" :href="'https://github.com/5pilow/leek-wars/issues/' + topic.private_issue" class="issue-badge private-issue" target="_blank" rel="noopener">
+										<img src="/image/github_white.png"><span>#{{ topic.private_issue }}</span>
+									</a>
+									<span v-if="$store.state.farmer && $store.state.farmer.admin && !topic.private_issue && topic.status === ForumTopicStatus.OPEN" class="action create-issue" @click="createIssue"><v-icon>{{ creatingIssue ? 'mdi-loading mdi-spin' : 'mdi-source-branch' }}</v-icon> {{ $t('create_issue') }}</span>
+								</template>
+
+								<v-spacer />
+
+								<div class="date">
+									<div>{{ LeekWars.formatDateTime(message.date) }}</div>
+									<div v-if="message.edition_date != null">
+										{{ $t('edited_the', [LeekWars.formatDateTime(message.edition_date)]) }}
+									</div>
+								</div>
+
+								<v-menu v-if="$store.state.farmer && !message.deleted && !message.editing && ((message.writer.id === $store.state.farmer.id || category.moderator) || (category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'))" offset-y>
+									<template #activator="{ props }">
+										<v-btn variant="text" density="compact" icon="mdi-dots-vertical" color="grey" v-bind="props" />
+									</template>
+									<v-list dense class="message-actions">
+										<v-list-item v-if="$store.state.farmer && (message.writer.id === $store.state.farmer.id || category.moderator)" v-ripple @click="edit(message)" prepend-icon="mdi-pencil">
+											<span>{{ $t('edit') }}</span>
+										</v-list-item>
+										<v-list-item v-if="$store.state.farmer && (message.writer.id === $store.state.farmer.id || category.moderator)" v-ripple @click="deleteGeneric(message)" prepend-icon="mdi-delete">
+											<span>{{ $t('delete') }}</span>
+										</v-list-item>
+										<v-list-item v-if="category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'" v-ripple @click="report(message)" prepend-icon="mdi-flag">
+											<span>{{ $t('warning.report') }}</span>
+										</v-list-item>
+									</v-list>
+								</v-menu>
 							</div>
 
 							<div v-if="message.editing" class="edit-buttons">
@@ -346,14 +348,33 @@ import { emitter } from '@/model/vue'
 				this.creatingIssue = false
 			})
 		}
+		get canEditStatus() {
+			return this.$store.state.connected && ((this.$store.state.farmer && this.topic?.owner === this.$store.state.farmer.id) || this.category?.moderator)
+		}
+		get allStatuses(): {[key: number]: {title: string, value: ForumTopicStatus, icon: string, color: string}} {
+			return {
+				[ForumTopicStatus.OPEN]: { title: this.$t('status_open') as string, value: ForumTopicStatus.OPEN, icon: 'mdi-circle-outline', color: 'grey' },
+				[ForumTopicStatus.RESOLVED]: { title: this.$t('status_resolved') as string, value: ForumTopicStatus.RESOLVED, icon: 'mdi-check-circle', color: 'green' },
+				[ForumTopicStatus.NOT_REPRODUCED]: { title: this.$t('status_not_reproduced') as string, value: ForumTopicStatus.NOT_REPRODUCED, icon: 'mdi-help-circle', color: 'orange' },
+				[ForumTopicStatus.NOT_PLANNED]: { title: this.$t('status_not_planned') as string, value: ForumTopicStatus.NOT_PLANNED, icon: 'mdi-minus-circle', color: 'grey' },
+				[ForumTopicStatus.NOT_A_BUG]: { title: this.$t('status_not_a_bug') as string, value: ForumTopicStatus.NOT_A_BUG, icon: 'mdi-close-circle', color: 'grey' },
+			}
+		}
+		get currentStatusInfo() {
+			return this.topic ? this.allStatuses[this.topic.status] : null
+		}
 		get statusItems() {
-			const items: {title: string, value: ForumTopicStatus, icon: string, color: string}[] = [
-				{ title: this.$t('status_open') as string, value: ForumTopicStatus.OPEN, icon: 'mdi-circle-outline', color: 'grey' },
-				{ title: this.$t('status_resolved') as string, value: ForumTopicStatus.RESOLVED, icon: 'mdi-check-circle', color: 'green' },
-			]
+			const items = [this.allStatuses[ForumTopicStatus.OPEN], this.allStatuses[ForumTopicStatus.RESOLVED]]
 			if (this.category?.moderator) {
-				items.push({ title: this.$t('status_not_reproduced') as string, value: ForumTopicStatus.NOT_REPRODUCED, icon: 'mdi-help-circle', color: 'orange' })
-				items.push({ title: this.$t('status_not_planned') as string, value: ForumTopicStatus.NOT_PLANNED, icon: 'mdi-minus-circle', color: 'grey' })
+				const isBug = this.category?.name === 'bug_reports'
+				const isSuggestion = this.category?.name === 'suggestions_ideas'
+				if (isBug) {
+					items.push(this.allStatuses[ForumTopicStatus.NOT_REPRODUCED])
+					items.push(this.allStatuses[ForumTopicStatus.NOT_A_BUG])
+				}
+				if (isSuggestion) {
+					items.push(this.allStatuses[ForumTopicStatus.NOT_PLANNED])
+				}
 			}
 			return items
 		}
@@ -714,9 +735,6 @@ import { emitter } from '@/model/vue'
 	.message:hover .link {
 		display: block;
 	}
-	.edit-wrapper > span:hover {
-		color: black;
-	}
 	.message .text {
 		word-break: break-word;
 		flex: 1;
@@ -748,12 +766,41 @@ import { emitter } from '@/model/vue'
 		display: flex;
 		align-items: center;
 		margin-top: 10px;
-	}
-	.message .action {
-		display: inline-flex;
-		i {
-			margin-right: 4px;
+		color: var(--text-color-secondary);
+		font-size: 14px;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 12px;
+		span .v-icon {
+			font-size: 17px;
+			vertical-align: bottom;
 		}
+		.action {
+			cursor: pointer;
+			display: inline-flex;
+			gap: 4px;
+			padding: 6px;
+			border-radius: 6px;
+		}
+		.action:hover {
+			color: var(--text-color);
+			background: var(--background);
+			.v-icon {
+				opacity: 1 !important;
+			}
+		}
+		.date {
+			color: var(--text-color-secondary);
+			font-size: 12px;
+			line-height: 1.5;
+			text-align: right;
+		}
+	}
+	.status-text {
+		display: inline-flex;
+		align-items: center;
+		gap: 5px;
+		font-size: 14px;
 	}
 	.status-select {
 		display: inline-flex;
@@ -778,30 +825,6 @@ import { emitter } from '@/model/vue'
 	}
 	:global(.v-list-item__prepend .v-icon.status-icon) {
 		opacity: 1 !important;
-	}
-	.message .date {
-		color: var(--text-color-secondary);
-		font-size: 12px;
-		text-align: right;
-		display: flex;
-		align-items: center;
-		margin-left: -5px;
-		.v-btn {
-			margin-right: 0;
-		}
-	}
-	.edit-wrapper {
-		color: var(--text-color-secondary);
-		font-size: 14px;
-		cursor: pointer;
-		display: flex;
-		align-items: center;
-		flex-wrap: wrap;
-		gap: 12px;
-		span .v-icon {
-			font-size: 17px;
-			vertical-align: bottom;
-		}
 	}
 	.editor {
 		margin-left: 140px;
@@ -843,22 +866,26 @@ import { emitter } from '@/model/vue'
 	i.attr {
 		font-size: 22px;
 		margin: 0 6px;
+		&.status-not-a-bug {
+			color: white;
+		}
+		&.status-acknowledged {
+			color: #6f42c1;
+		}
 	}
-	.issue {
+	.issue-badge {
 		background: #0366d6;
 		color: white;
 		border-radius: 5px;
-		font-size: 15px;
+		font-size: 13px;
 		font-weight: 500;
-		padding: 0 4px;
+		padding: 0 6px;
 		display: inline-flex;
 		align-items: center;
-		height: 25px;
-		line-height: auto;
+		height: 22px;
 		img {
-			height: 20px;
-			margin: 2px;
-			margin-right: 5px;
+			height: 16px;
+			margin-right: 4px;
 		}
 		&.private-issue {
 			background: #6f42c1;
@@ -870,14 +897,15 @@ import { emitter } from '@/model/vue'
 	}
 	.vote {
 		display: inline-block;
+		cursor: pointer;
 		font-size: 16px;
 		padding: 2px 6px;
 		border-radius: 6px;
 		&.up:hover {
-			background: #5fad1b11;
+			background: #5fad1b22;
 		}
 		&.down:hover {
-			background: #ff000011;
+			background: #ff000022;
 		}
 	}
 	.vote i {

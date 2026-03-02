@@ -12,6 +12,7 @@ enum ForumTopicStatus {
 	RESOLVED = 1,
 	NOT_REPRODUCED = 2,
 	NOT_PLANNED = 3,
+	NOT_A_BUG = 4,
 }
 
 class ForumTopic {

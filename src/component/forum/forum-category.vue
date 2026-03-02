@@ -73,6 +73,7 @@
 								<v-icon v-if="topic.status === ForumTopicStatus.RESOLVED" :title="$t('status_resolved')" class="attr resolved">mdi-check-circle</v-icon>
 								<v-icon v-if="topic.status === ForumTopicStatus.NOT_REPRODUCED" :title="$t('status_not_reproduced')" class="attr not-reproduced">mdi-help-circle</v-icon>
 								<v-icon v-if="topic.status === ForumTopicStatus.NOT_PLANNED" :title="$t('status_not_planned')" class="attr not-planned">mdi-minus-circle</v-icon>
+								<v-icon v-if="topic.status === ForumTopicStatus.NOT_A_BUG" :title="$t('status_not_a_bug')" class="attr not-a-bug">mdi-close-circle</v-icon>
 								<v-icon v-if="topic.closed" :title="$t('locked')" class="attr">mdi-lock</v-icon>
 								<v-icon v-if="topic.pinned" :title="$t('pinned')" class="attr">mdi-pin</v-icon>
 								<v-icon v-if="topic.acknowledged && !topic.private_issue" :title="$t('status_acknowledged')" class="attr acknowledged">mdi-eye</v-icon>
@@ -394,7 +395,7 @@ import { emitter } from '@/model/vue'
 		vertical-align: bottom;
 	}
 	i.attr {
-		color: #666;
+		// color: #666;
 		font-size: 19px;
 		&.resolved {
 			color: #5fad1b;
@@ -404,6 +405,13 @@ import { emitter } from '@/model/vue'
 		}
 		&.not-planned {
 			color: var(--text-color);
+			opacity: 0.7;
+		}
+		&.not-a-bug {
+			color: white;
+		}
+		&.acknowledged {
+			color: #6f42c1;
 		}
 	}
 	.topic > div {
