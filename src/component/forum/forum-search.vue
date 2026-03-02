@@ -76,7 +76,7 @@
 								</template>
 								<template #topic>
 									<router-link :to="'/forum/category-' + result.cid">
-										{{ $i18n.t('forum-category.' + result.cname) }}
+										{{ $i18n.te('forum-category.' + result.cname) ? $i18n.t('forum-category.' + result.cname) : result.cname }}
 									</router-link>
 								</template>
 							</i18n-t>
