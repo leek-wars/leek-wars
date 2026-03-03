@@ -42,16 +42,29 @@
 		<panel class="first">
 			<template #content>
 				<div class="content">
-				<breadcrumb v-if="LeekWars.mobile" :items="breadcrumb_items" />
-
+				<div class="flex breadcrumb-sort">
+					<breadcrumb v-if="LeekWars.mobile" :items="breadcrumb_items" />
+					<v-spacer />
+					<div>
+						<v-select v-model="order" :items="orderItems" item-value="value" item-title="title" hide-details density="compact" variant="solo" class="order-select">
+							<template #selection="{ item }">
+								<v-icon size="small">{{ item.raw.icon }}</v-icon>&nbsp;{{ item.raw.title }}
+							</template>
+							<template #item="{ props, item }">
+								<v-list-item v-bind="props">
+									<template #prepend>
+										<v-icon size="small">{{ item.raw.icon }}</v-icon>
+									</template>
+								</v-list-item>
+							</template>
+						</v-select>
+					</div>
+				</div>
 				<div class="flex">
 					<v-spacer />
 					<pagination v-if="categories" :current="page" :total="pages" :url="'/forum/category-' + category_ids" />
 					<v-spacer />
-					<select v-model="order">
-						<option value="date">Date</option>
-						<option value="votes">Votes</option>
-					</select>
+
 				</div>
 
 				<div v-if="!LeekWars.mobile" class="topic header forum-header">
@@ -229,6 +242,10 @@ import { emitter } from '@/model/vue'
 		translations: any[] = []
 		showResolved: boolean = true
 		order: string = localStorage.getItem('forum/topic-order') || 'date'
+		orderItems = [
+			{ value: 'date', title: 'Date', icon: 'mdi-clock-outline' },
+			{ value: 'votes', title: 'Votes', icon: 'mdi-thumb-up-outline' },
+		]
 
 		get languages() {
 			return Object.values(LeekWars.languages).filter(l => l.forum)
@@ -344,218 +361,220 @@ import { emitter } from '@/model/vue'
 </script>
 
 <style lang="scss" scoped>
-	.forum-language {
-		display: inline-flex;
+
+.forum-language {
+	display: inline-flex;
+	padding: 0 4px;
+	cursor: pointer;
+	align-items: center;
+	height: 100%;
+	gap: 6px;
+	user-select: none;
+}
+.flag {
+	max-width: 28px;
+	max-height: 20px;
+	margin-right: 4px;
+}
+.language {
+	display: flex;
+	align-items: center;
+}
+.language .name {
+	padding-left: 8px;
+}
+.forum-header {
+	font-size: 18px;
+	font-weight: 300;
+	background: none;
+	margin: 0;
+}
+#app.app .panel .content {
+	padding: 0;
+}
+.topics {
+	padding: 0 5px;
+}
+.topic {
+	margin-bottom: 5px;
+	display: flex;
+	align-items: center;
+}
+.topic:not(.header) {
+	border: 1px solid var(--border);
+}
+.topic.pinned {
+	background: var(--pure-white);
+}
+.topic .attr {
+	height: 19px;
+	margin-right: 4px;
+	padding: 2px 0;
+	vertical-align: bottom;
+}
+i.attr {
+	// color: #666;
+	font-size: 19px;
+	&.resolved {
+		color: #5fad1b;
+	}
+	&.not-reproduced {
+		color: orange;
+	}
+	&.not-planned {
+		color: var(--text-color);
+		opacity: 0.7;
+	}
+	&.not-a-bug {
+		color: var(--text-color-secondary);
+	}
+	&.acknowledged {
+		color: #6f42c1;
+	}
+}
+.topic > div {
+	padding: 8px;
+	flex: 1;
+}
+.topic:not(.header):hover {
+	background-color: var(--pure-white);
+	box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+}
+.topic > .seen {
+	flex: 0 0 40px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-right: 5px;
+}
+.topic .seen img {
+	height: 40px;
+}
+body.dark .topic .seen img.seen {
+	filter: invert(0.85);
+}
+.topic .flag {
+	height: 13px;
+	margin-left: 6px;
+	vertical-align: bottom;
+	margin-bottom: 3px;
+}
+.topic .title {
+	font-size: 17px;
+	margin-bottom: 5px;
+	display: inline-block;
+	.issue {
+		background: #0366d6;
+		color: white;
+		border-radius: 5px;
+		font-size: 13px;
+		font-weight: 500;
 		padding: 0 4px;
-		cursor: pointer;
-		align-items: center;
-		height: 100%;
+		display: inline-block;
+		margin-bottom: 2px;
+		height: auto;
+		&.private-issue {
+			background: #6f42c1;
+		}
+	}
+}
+.topic .description {
+	font-size: 14px;
+	margin-top: 4px;
+	display: flex;
+	gap: 10px;
+	.votes {
+		display: flex;
 		gap: 6px;
-		user-select: none;
-	}
-	.flag {
-		max-width: 28px;
-		max-height: 20px;
-		margin-right: 4px;
-	}
-	.language {
-		display: flex;
 		align-items: center;
-	}
-	.language .name {
-		padding-left: 8px;
-	}
-	.forum-header {
-		font-size: 18px;
-		font-weight: 300;
-		background: none;
-		margin: 0;
-	}
-	#app.app .panel .content {
-		padding: 0;
-	}
-	.topics {
-		padding: 0 5px;
-	}
-	.topic {
-		margin-bottom: 5px;
-		display: flex;
-		align-items: center;
-	}
-	.topic:not(.header) {
-		border: 1px solid var(--border);
-	}
-	.topic.pinned {
-		background: var(--pure-white);
-	}
-	.topic .attr {
-		height: 19px;
-		margin-right: 4px;
-		padding: 2px 0;
-		vertical-align: bottom;
-	}
-	i.attr {
-		// color: #666;
-		font-size: 19px;
-		&.resolved {
+		.vote {
+			display: inline-block;
+			border-radius: 6px;
+		}
+		.vote i {
+			vertical-align: bottom;
+			font-size: 15px;
+			margin-right: 3px;
+		}
+		.vote.zero {
+			opacity: 0.3;
+		}
+		.vote.active {
+			font-weight: bold;
+		}
+		.vote.up, .vote.up i {
 			color: #5fad1b;
 		}
-		&.not-reproduced {
-			color: orange;
-		}
-		&.not-planned {
-			color: var(--text-color);
-			opacity: 0.7;
-		}
-		&.not-a-bug {
-			color: var(--text-color-secondary);
-		}
-		&.acknowledged {
-			color: #6f42c1;
-		}
-	}
-	.topic > div {
-		padding: 8px;
-		flex: 1;
-	}
-	.topic:not(.header):hover {
-		background-color: var(--pure-white);
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
-	}
-	.topic > .seen {
-		flex: 0 0 40px;
-		padding-top: 10px;
-		padding-bottom: 10px;
-		padding-right: 5px;
-	}
-	.topic .seen img {
-		height: 40px;
-	}
-	body.dark .topic .seen img.seen {
-		filter: invert(0.85);
-	}
-	.topic .flag {
-		height: 13px;
-		margin-left: 6px;
-		vertical-align: bottom;
-		margin-bottom: 3px;
-	}
-	.topic .title {
-		font-size: 17px;
-		margin-bottom: 5px;
-		display: inline-block;
-		.issue {
-			background: #0366d6;
-			color: white;
-			border-radius: 5px;
-			font-size: 13px;
-			font-weight: 500;
-			padding: 0 4px;
-			display: inline-block;
-			margin-bottom: 2px;
-			height: auto;
-			&.private-issue {
-				background: #6f42c1;
-			}
-		}
-	}
-	.topic .description {
-		font-size: 14px;
-		margin-top: 4px;
-		display: flex;
-		gap: 10px;
-		.votes {
-			display: flex;
-			gap: 6px;
-			align-items: center;
-			.vote {
-				display: inline-block;
-				border-radius: 6px;
-			}
-			.vote i {
-				vertical-align: bottom;
-				font-size: 15px;
-				margin-right: 3px;
-			}
-			.vote.zero {
-				opacity: 0.3;
-			}
-			.vote.active {
-				font-weight: bold;
-			}
-			.vote.up, .vote.up i {
-				color: #5fad1b;
-			}
-			.vote.down {
+		.vote.down {
+			color: red;
+			i {
 				color: red;
-				i {
-					color: red;
-				}
 			}
-			.vote.up.zero, .vote.down.zero {
+		}
+		.vote.up.zero, .vote.down.zero {
+			color: #555;
+			i {
 				color: #555;
-				i {
-					color: #555;
-				}
 			}
 		}
 	}
-	.topic .description i {
-		font-size: 14px;
-		vertical-align: bottom;
-	}
+}
+.topic .description i {
+	font-size: 14px;
+	vertical-align: bottom;
+}
 
-	.topic .farmer.deleted {
-		font-style: italic;
-		color: #aaa;
-	}
-	.topic .num-messages {
-		flex: 0 0 100px;
-		text-align: center;
-	}
-	.topic .last-message {
-		flex: 0 0 176px;
-		text-align: center;
-		vertical-align: top;
-   		white-space: nowrap;
-	}
-	.topic .last-message-wrapper {
-		display: inline-block;
-		white-space: nowrap;
-		max-width: 110px;
-		text-overflow: ellipsis;
-		overflow-x: hidden;
-		margin-bottom: -4px;
-	}
-	.topic .messages {
-		color: var(--text-color);
-	}
-	.create-popup .topic-name {
-		width: 100%;
-		padding: 10px;
-		font-size: 17px;
-	}
-	.create-popup .topic-message {
-		min-width: 100%;
-		max-width: 100%;
-		min-height: 100%;
-		height: 180px;
-		max-height: 500px;
-		margin-top: 5px;
-		margin-bottom: 10px;
-		padding: 10px;
-		font-size: 15px;
-		font-family: "Roboto", sans-serif;
-	}
-	.search-box img {
-		cursor: pointer;
-	}
-	.grey {
-		color: #888;
-	}
+.topic .farmer.deleted {
+	font-style: italic;
+	color: #aaa;
+}
+.topic .num-messages {
+	flex: 0 0 100px;
+	text-align: center;
+}
+.topic .last-message {
+	flex: 0 0 176px;
+	text-align: center;
+	vertical-align: top;
+	white-space: nowrap;
+}
+.topic .last-message-wrapper {
+	display: inline-block;
+	white-space: nowrap;
+	max-width: 110px;
+	text-overflow: ellipsis;
+	overflow-x: hidden;
+	margin-bottom: -4px;
+}
+.topic .messages {
+	color: var(--text-color);
+}
+.create-popup .topic-name {
+	width: 100%;
+	padding: 10px;
+	font-size: 17px;
+}
+.create-popup .topic-message {
+	min-width: 100%;
+	max-width: 100%;
+	min-height: 100%;
+	height: 180px;
+	max-height: 500px;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	padding: 10px;
+	font-size: 15px;
+	font-family: "Roboto", sans-serif;
+}
+.search-box img {
+	cursor: pointer;
+}
+.grey {
+	color: #888;
+}
 
-select {
-	align-self: center;
+#app.app .breadcrumb-sort {
+	padding: 8px;
+	padding-bottom: 0;
 }
 
 </style>
