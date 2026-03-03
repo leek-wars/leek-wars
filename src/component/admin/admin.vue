@@ -129,6 +129,7 @@
 					<v-btn @click="showLevelDialog(301)">Level Dialog 301</v-btn>
 					<v-btn @click="sendError()">Send JS error</v-btn>
 					<v-btn @click="testPush()">Test push notif</v-btn>
+					<v-btn @click="testMailSend()">Test email</v-btn>
 				</div>
 			</template>
 		</panel>
@@ -229,6 +230,14 @@
 		testPush() {
 			LeekWars.post('notification/test-push').then((data: any) => {
 				LeekWars.toast("Push envoyé à " + data.endpoints + " endpoint(s)")
+			}).error((error: any) => {
+				LeekWars.toast("Erreur : " + error.error)
+			})
+		}
+
+		testMailSend() {
+			LeekWars.post('notification/test-mail-send').then((data: any) => {
+				LeekWars.toast("Email envoyé à " + data.email)
 			}).error((error: any) => {
 				LeekWars.toast("Erreur : " + error.error)
 			})
