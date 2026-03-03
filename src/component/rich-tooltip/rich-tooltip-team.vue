@@ -46,7 +46,7 @@
 	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Options({ components: { RichTooltipFarmer } })
+	@Options({ components: { RichTooltipFarmer }, emits: ['update:modelValue'] })
 	export default class RichTooltipTeam extends Vue {
 		@Prop({required: true}) id!: number
 		@Prop() disabled!: boolean

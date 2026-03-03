@@ -85,7 +85,7 @@ const LWTitle = defineAsyncComponent(() => import('@/component/title/title.vue')
 import { CHIPS } from '@/model/chips'
 import { defineAsyncComponent } from 'vue'
 
-@Options({ components: { RichTooltipItem, 'lw-title': LWTitle, 'leek-image': LeekImage } })
+@Options({ components: { RichTooltipItem, 'lw-title': LWTitle, 'leek-image': LeekImage }, emits: ['update:modelValue'] })
 export default class RichTooltipLeek extends Vue {
 
 	@Prop({required: true}) id!: number

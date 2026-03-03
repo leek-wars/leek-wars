@@ -19,7 +19,7 @@
 
 	@Options({ name: 'rich-tooltip-item', components: {
 		'item-preview': ItemPreview
-	}})
+	}, emits: ['update:modelValue', 'retrieve'] })
 	export default class RichTooltipItem extends Vue {
 		@Prop() item!: any
 		@Prop() quantity!: number

@@ -77,7 +77,7 @@
 	import { defineAsyncComponent } from 'vue'
 	const LWTitle = defineAsyncComponent(() => import('@/component/title/title.vue'))
 
-	@Options({ components: { RichTooltipLeek, 'lw-title': LWTitle } })
+	@Options({ components: { RichTooltipLeek, 'lw-title': LWTitle }, emits: ['update:modelValue'] })
 	export default class RichTooltipFarmer extends Vue {
 		@Prop({required: true}) id!: number
 		@Prop() disabled!: boolean

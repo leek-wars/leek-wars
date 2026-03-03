@@ -15,7 +15,7 @@
 	import Trophy from '@/component/trophies/trophy.vue'
 	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Options({ components: { Trophy } })
+	@Options({ components: { Trophy }, emits: ['update:modelValue'] })
 	export default class RichTooltipTrophy extends Vue {
 		@Prop({required: true}) trophy!: any
 		@Prop() bottom!: boolean

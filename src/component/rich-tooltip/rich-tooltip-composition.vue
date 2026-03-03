@@ -64,7 +64,7 @@
 	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 
-	@Options({ components: { RichTooltipLeek } })
+	@Options({ components: { RichTooltipLeek }, emits: ['update:modelValue'] })
 	export default class RichTooltipComposition extends Vue {
 		@Prop({required: true}) id!: number
 		@Prop() disabled!: boolean
