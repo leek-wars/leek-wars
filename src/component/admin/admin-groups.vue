@@ -11,6 +11,7 @@
 					:items="groups"
 					hide-default-footer
     				:items-per-page="100"
+					density="comfortable"
 					class="elevation-1 members">
 					<template #item.id="{ item }">
 						<router-link :to="'/group/' + item.id" class="flex" v-ripple>
@@ -55,12 +56,12 @@
 	export default class AdminTrophies extends Vue {
 		groups: any = null
 		headers = [
-          { text: 'ID', value: 'id' },
-          { text: 'Nom', value: 'name' },
-          { text: 'Supervisor', value: 'supervisor' },
-          { text: 'Membres', value: 'members' },
-          { text: 'Date de création', value: 'creation_date' },
-          { text: 'Archivé', value: 'archived' },
+          { title: 'ID', value: 'id' },
+          { title: 'Nom', value: 'name' },
+          { title: 'Supervisor', value: 'supervisor' },
+          { title: 'Membres', value: 'members' },
+          { title: 'Date de création', value: 'creation_date' },
+          { title: 'Archivé', value: 'archived' },
         //   { text: 'Combats restants', value: 'day_fight' },
         //   { text: 'Combats', value: 'fights' },
         //   { text: 'Victoires', value: 'wins' },
@@ -84,11 +85,11 @@
 
 <style lang="scss" scoped>
 .avatar {
-	width: 40px;
-	height: 40px;
+	width: 36px;
+	height: 36px;
 }
 .flex {
-	height: 47px;
+	// height: 47px;
 	align-items: center;
 }
 .name {
