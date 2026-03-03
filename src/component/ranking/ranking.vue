@@ -95,7 +95,7 @@
 				</div>
 			</div>
 			<div v-else>
-				<div class="center">
+				<div class="pagination-buttons-filters">
 					<pagination :current="page" :total="pages" :url="url" :url-query="urlQuery" />
 					<div v-if="$store.state.farmer" class="me-buttons">
 						<template v-if="category === 'leek'">
@@ -255,7 +255,7 @@
 					</table>
 					<loader v-if="!ranking" />
 				</div>
-				<div class="center">
+				<div class="pagination-buttons-filters">
 					<pagination :current="page" :total="pages" :url="url" :url-query="urlQuery" />
 				</div>
 			</div>
@@ -499,21 +499,19 @@ import { emitter } from '@/model/vue'
 </script>
 
 <style lang="scss" scoped>
-	.center {
+	.pagination-buttons-filters {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		flex-wrap: wrap;
+		padding: 15px 0;
+		gap: 10px 20px;
 	}
 	.tab button {
 		margin-right: -6px;
 	}
 	.panel .content {
 		padding: 0
-	}
-	.pagination {
-		text-align: center;
-		display: inline-block;
 	}
 	.me-buttons {
 		display: inline-flex;
@@ -522,7 +520,6 @@ import { emitter } from '@/model/vue'
 		}
 	}
 	.inactives {
-		padding: 10px;
 		vertical-align: bottom;
 	}
 	.ranking.large {

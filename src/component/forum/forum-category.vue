@@ -45,6 +45,8 @@
 				<div class="flex breadcrumb-sort">
 					<breadcrumb v-if="LeekWars.mobile" :items="breadcrumb_items" />
 					<v-spacer />
+					<pagination v-if="categories" :current="page" :total="pages" :url="'/forum/category-' + category_ids" />
+					<v-spacer />
 					<div>
 						<v-select v-model="order" :items="orderItems" item-value="value" item-title="title" hide-details density="compact" variant="solo" class="order-select">
 							<template #selection="{ item }">
@@ -59,12 +61,6 @@
 							</template>
 						</v-select>
 					</div>
-				</div>
-				<div class="flex">
-					<v-spacer />
-					<pagination v-if="categories" :current="page" :total="pages" :url="'/forum/category-' + category_ids" />
-					<v-spacer />
-
 				</div>
 
 				<div v-if="!LeekWars.mobile" class="topic header forum-header">
@@ -392,7 +388,7 @@ import { emitter } from '@/model/vue'
 #app.app .panel .content {
 	padding: 0;
 }
-.topics {
+#app.app .topics {
 	padding: 0 5px;
 }
 .topic {
@@ -572,9 +568,13 @@ body.dark .topic .seen img.seen {
 	color: #888;
 }
 
+.breadcrumb-sort {
+	padding-bottom: 8px;
+}
 #app.app .breadcrumb-sort {
 	padding: 8px;
-	padding-bottom: 0;
+	flex-wrap: wrap;
+	align-items: center;
 }
 
 </style>
