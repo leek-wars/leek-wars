@@ -8,7 +8,10 @@ import { Squares } from '@/model/squares'
 import { store } from '@/model/store'
 import { emitter, vueMain } from '@/model/emitter'
 import { WeaponTemplate } from '@/model/weapon'
-import router from '@/router'
+import type { Router } from 'vue-router'
+
+let _router: Router
+export function setRouter(r: Router) { _router = r }
 
 import { TranslateResult } from 'vue-i18n'
 import { Chat, ChatWindow } from './chat'
@@ -1183,8 +1186,8 @@ function goToRanking(type: string, order: string, id: number = 0) {
 		const page = 1 + Math.floor((data.rank - 1) / 50)
 		const active_url = data.active ? '' : '?inactive'
 		const newRoute = '/ranking/' + type + '/' + order + '/page-' + page + active_url + '#rank-' + data.rank
-		if (router.currentRoute.fullPath !== newRoute) {
-			router.push(newRoute)
+		if (_router.currentRoute.value.fullPath !== newRoute) {
+			_router.push(newRoute)
 		}
 	})
 }

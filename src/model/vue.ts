@@ -15,7 +15,7 @@ import RankingBadge from '@/component/ranking-badge.vue'
 import Talent from '@/component/talent.vue'
 import { env } from '@/env'
 import { i18n, loadLanguageAsync } from '@/model/i18n'
-import { LeekWars } from '@/model/leekwars'
+import { LeekWars, setRouter } from '@/model/leekwars'
 import '@/model/serviceworker'
 import { store } from "@/model/store"
 import router, { getRedirectAfterLogin } from '@/router'
@@ -256,6 +256,7 @@ const app = createApp({
 	}
 })
 
+setRouter(router)
 app.use(router)
 app.use(i18n)
 app.use(store)
