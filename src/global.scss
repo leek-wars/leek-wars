@@ -1077,8 +1077,12 @@ a.green-link {
 	// --v-selection-control-size: 24px;
 }
 
-.v-checkbox .v-selection-control, .v-switch .v-selection-control {
+.v-checkbox .v-selection-control {
 	--v-selection-control-size: 28px;
+	min-height: auto !important;
+	gap: 6px;
+}
+.v-switch .v-selection-control {
 	min-height: auto !important;
 	gap: 6px;
 }

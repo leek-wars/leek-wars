@@ -390,6 +390,7 @@ import { emitter } from '@/model/vue'
 }
 #app.app .topics {
 	padding: 0 5px;
+	margin-bottom: 10px;
 }
 .topic {
 	margin-bottom: 5px;

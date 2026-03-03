@@ -1063,4 +1063,7 @@ import { emitter } from '@/model/vue'
 		color: #ff5f00;
 		padding: 10px;
 	}
+	#app:not(.app) .pagination {
+		margin-bottom: 15px;
+	}
 </style>
