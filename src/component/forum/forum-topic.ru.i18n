@@ -17,6 +17,12 @@
 	"resolved": "Тема решена",
 	"send": "Отправлять",
 	"solved": "Решено",
+	"status_open": "Открыто",
+	"status_resolved": "Решено",
+	"status_not_reproduced": "Не воспроизведено",
+	"status_not_planned": "Не запланировано",
+	"status_not_a_bug": "Не баг",
+	"status_acknowledged": "Принято к сведению",
 	"subscribe": "Подпишитесь на тему",
 	"undoable_action": "Это действие необратимо.",
 	"unsubscribe": "Отписаться от темы",
@@ -24,5 +30,6 @@
 	"unpin": "Чтобы снять",
 	"unsolved": "Нерешенный",
 	"create_issue": "Создать issue",
+	"move": "Переместить",
 	"not_last_page": "Вы не на последней странице темы"
 }

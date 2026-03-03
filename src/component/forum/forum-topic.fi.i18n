@@ -17,6 +17,12 @@
 	"resolved": "Aihe ratkaistu",
 	"send": "Lähettää",
 	"solved": "Ratkaistu",
+	"status_open": "Avoin",
+	"status_resolved": "Ratkaistu",
+	"status_not_reproduced": "Ei toistettu",
+	"status_not_planned": "Ei suunniteltu",
+	"status_not_a_bug": "Ei bugi",
+	"status_acknowledged": "Huomioitu",
 	"subscribe": "Tilaa aihe",
 	"undoable_action": "Tämä toimenpide on peruuttamaton.",
 	"unsubscribe": "Peruuta aiheen tilaus",
@@ -24,5 +30,6 @@
 	"unpin": "Ottamaan alas",
 	"unsolved": "Ratkaisematon",
 	"create_issue": "Luo issue",
+	"move": "Siirrä",
 	"not_last_page": "Et ole aiheen viimeisellä sivulla"
 }

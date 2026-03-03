@@ -171,6 +171,18 @@
 										<v-list-item v-if="category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'" v-ripple @click="report(message)" prepend-icon="mdi-flag">
 											<span>{{ $t('warning.report') }}</span>
 										</v-list-item>
+										<v-menu v-if="message.id === -1 && canMoveTopic" submenu open-on-hover>
+											<template #activator="{ props }">
+												<v-list-item v-bind="props" v-ripple prepend-icon="mdi-folder-move" append-icon="mdi-chevron-right" @click.stop>
+													<span>{{ $t('move') }}</span>
+												</v-list-item>
+											</template>
+											<v-list dense>
+												<v-list-item v-for="cat in moveCategories" :key="cat.id" v-ripple @click="moveTopic(cat.id)">
+													<span>{{ cat.name }}</span>
+												</v-list-item>
+											</v-list>
+										</v-menu>
 									</v-list>
 								</v-menu>
 							</div>
@@ -283,6 +295,7 @@ import { emitter } from '@/model/vue'
 		reportDialog: boolean = false
 		reportFarmer: Farmer | null = null
 		reportContent: string = ''
+		moveCategories: {id: number, name: string}[] = []
 		reasons = [
 			Warning.RUDE_FORUM,
 			Warning.FLOOD_FORUM,
@@ -336,6 +349,9 @@ import { emitter } from '@/model/vue'
 				if (this.topic.subscribed) { this.action.icon = 'mdi-newspaper-minus' }
 				emitter.emit('loaded')
 				this.newMessage = localStorage.getItem('forum/draft-' + this.topic.id) as string
+				if (this.canMoveTopic) {
+					this.loadMoveCategories()
+				}
 			})
 		}
 		createIssue() {
@@ -347,6 +363,11 @@ import { emitter } from '@/model/vue'
 				}
 				this.creatingIssue = false
 			})
+		}
+		get canMoveTopic() {
+			if (!this.category || !this.$store.state.farmer) { return false }
+			if (this.category.team !== -1 || this.category.name === 'admin' || this.category.name === 'moderation') { return false }
+			return this.category.moderator || this.topic?.owner === this.$store.state.farmer.id
 		}
 		get canEditStatus() {
 			return this.$store.state.connected && ((this.$store.state.farmer && this.topic?.owner === this.$store.state.farmer.id) || this.category?.moderator)
@@ -471,6 +492,25 @@ import { emitter } from '@/model/vue'
 					this.deleteTopicDialog = false
 					this.$router.push("/forum/category-" + this.category.id)
 				}
+			})
+		}
+		loadMoveCategories() {
+			if (!this.category) { return }
+			const languages = this.forumLanguages.join(',')
+			LeekWars.get('forum/get-categories/' + languages).then((data: any) => {
+				this.moveCategories = data.categories
+					.filter((c: any) => c.id !== this.category!.id && c.type !== 'team' && c.name !== 'admin' && c.name !== 'moderation')
+					.map((c: any) => ({
+						id: c.id,
+						name: this.$t('forum-category.' + c.name) as string
+					}))
+			})
+		}
+		moveTopic(categoryId: number) {
+			if (!this.topic) { return }
+			LeekWars.post('forum/move-topic', {topic_id: this.topic.id, category_id: categoryId}).then(() => {
+				this.$router.push('/forum/category-' + categoryId + '/topic-' + this.topic!.id)
+				this.category!.id = categoryId
 			})
 		}
 		updateDraft() {

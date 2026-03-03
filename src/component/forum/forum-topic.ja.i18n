@@ -17,6 +17,12 @@
 	"resolved": "トピックが解決されました",
 	"send": "送信",
 	"solved": "解決済み",
+	"status_open": "未解決",
+	"status_resolved": "解決済み",
+	"status_not_reproduced": "再現不可",
+	"status_not_planned": "対応予定なし",
+	"status_not_a_bug": "バグではない",
+	"status_acknowledged": "確認済み",
 	"subscribe": "トピックを購読する",
 	"undoable_action": "このアクションは元に戻せません。",
 	"unsubscribe": "トピックから退会する",
@@ -24,5 +30,6 @@
 	"unpin": "降ろす",
 	"unsolved": "未解決",
 	"create_issue": "Issueを作成",
+	"move": "移動",
 	"not_last_page": "あなたはトピックの最後のページにいません"
 }

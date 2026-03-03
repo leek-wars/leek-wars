@@ -17,6 +17,12 @@
 	"resolved": "Tema resuelto",
 	"send": "Enviar a",
 	"solved": "Resuelto",
+	"status_open": "Abierto",
+	"status_resolved": "Resuelto",
+	"status_not_reproduced": "No reproducido",
+	"status_not_planned": "No planificado",
+	"status_not_a_bug": "No es un bug",
+	"status_acknowledged": "Tomado en cuenta",
 	"subscribe": "Suscríbete al tema",
 	"undoable_action": "Esta acción es irreversible.",
 	"unsubscribe": "Darse de baja del tema",
@@ -24,5 +30,6 @@
 	"unpin": "Tumbar",
 	"unsolved": "Irresoluto",
 	"create_issue": "Crear issue",
+	"move": "Mover",
 	"not_last_page": "No estás en la última página del tema."
 }

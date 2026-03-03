@@ -17,6 +17,12 @@
 	"resolved": "विषय हल हो गया",
 	"send": "भेजना",
 	"solved": "हल किया",
+	"status_open": "खुला",
+	"status_resolved": "हल किया गया",
+	"status_not_reproduced": "पुन: उत्पन्न नहीं हुआ",
+	"status_not_planned": "योजना में नहीं",
+	"status_not_a_bug": "बग नहीं है",
+	"status_acknowledged": "स्वीकार किया गया",
 	"subscribe": "विषय की सदस्यता लें",
 	"undoable_action": "यह क्रिया अपरिवर्तनीय है।",
 	"unsubscribe": "विषय से सदस्यता समाप्त करें",
@@ -24,5 +30,6 @@
 	"unpin": "नीचे लेने के लिए",
 	"unsolved": "अनसुलझे",
 	"create_issue": "Issue बनाएं",
+	"move": "स्थानांतरित करें",
 	"not_last_page": "आप विषय के अंतिम पृष्ठ पर नहीं हैं"
 }

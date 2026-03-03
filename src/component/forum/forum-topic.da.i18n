@@ -17,6 +17,12 @@
 	"resolved": "Emne løst",
 	"send": "Sende",
 	"solved": "Løst",
+	"status_open": "Åben",
+	"status_resolved": "Løst",
+	"status_not_reproduced": "Ikke reproduceret",
+	"status_not_planned": "Ikke planlagt",
+	"status_not_a_bug": "Ikke en bug",
+	"status_acknowledged": "Taget til efterretning",
 	"subscribe": "Abonner på emnet",
 	"undoable_action": "Denne handling er irreversibel.",
 	"unsubscribe": "Afmeld emnet",
@@ -24,5 +30,6 @@
 	"unpin": "At tage ned",
 	"unsolved": "Uafklaret",
 	"create_issue": "Opret issue",
+	"move": "Flyt",
 	"not_last_page": "Du er ikke på den sidste side af emnet"
 }

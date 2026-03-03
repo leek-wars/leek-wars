@@ -17,6 +17,12 @@
 	"resolved": "Topik diselesaikan",
 	"send": "Mengirim",
 	"solved": "Terselesaikan",
+	"status_open": "Terbuka",
+	"status_resolved": "Terselesaikan",
+	"status_not_reproduced": "Tidak dapat direproduksi",
+	"status_not_planned": "Tidak direncanakan",
+	"status_not_a_bug": "Bukan bug",
+	"status_acknowledged": "Diterima",
 	"subscribe": "Berlangganan ke topik",
 	"undoable_action": "Tindakan ini tidak dapat diubah.",
 	"unsubscribe": "Berhenti berlangganan dari topik",
@@ -24,5 +30,6 @@
 	"unpin": "Untuk mencatat",
 	"unsolved": "Belum terselesaikan",
 	"create_issue": "Buat issue",
+	"move": "Pindahkan",
 	"not_last_page": "Anda tidak berada di halaman terakhir topik"
 }

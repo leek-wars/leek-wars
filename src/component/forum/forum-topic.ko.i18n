@@ -17,6 +17,12 @@
 	"resolved": "해결된 주제",
 	"send": "보내다",
 	"solved": "해결됨",
+	"status_open": "열림",
+	"status_resolved": "해결됨",
+	"status_not_reproduced": "재현 불가",
+	"status_not_planned": "계획 없음",
+	"status_not_a_bug": "버그 아님",
+	"status_acknowledged": "확인됨",
 	"subscribe": "주제 구독",
 	"undoable_action": "이 작업은 되돌릴 수 없습니다.",
 	"unsubscribe": "주제 구독 취소",
@@ -24,5 +30,6 @@
 	"unpin": "쓰러뜨리다",
 	"unsolved": "미해결",
 	"create_issue": "Issue 생성",
+	"move": "이동",
 	"not_last_page": "주제의 마지막 페이지에 있지 않습니다."
 }

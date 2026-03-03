@@ -17,6 +17,12 @@
 	"resolved": "Ämnet löst",
 	"send": "Skicka",
 	"solved": "Löst",
+	"status_open": "Öppen",
+	"status_resolved": "Löst",
+	"status_not_reproduced": "Ej reproducerad",
+	"status_not_planned": "Ej planerad",
+	"status_not_a_bug": "Inte en bugg",
+	"status_acknowledged": "Uppmärksammat",
 	"subscribe": "Prenumerera på ämnet",
 	"undoable_action": "Denna åtgärd är oåterkallelig.",
 	"unsubscribe": "Avsluta prenumeration från ämnet",
@@ -24,5 +30,6 @@
 	"unpin": "Att ta ner",
 	"unsolved": "Olöst",
 	"create_issue": "Skapa issue",
+	"move": "Flytta",
 	"not_last_page": "Du är inte på sista sidan i ämnet"
 }

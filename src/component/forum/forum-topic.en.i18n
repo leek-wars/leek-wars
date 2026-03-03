@@ -20,9 +20,7 @@
 	"status_open": "Open",
 	"status_resolved": "Solved",
 	"status_not_reproduced": "Not reproduced",
-	"status_not_reproduced_undo": "Undo not reproduced",
 	"status_not_planned": "Not planned",
-	"status_not_planned_undo": "Undo not planned",
 	"status_not_a_bug": "Not a bug",
 	"status_acknowledged": "Acknowledged",
 	"subscribe": "Subscribe to topic",
@@ -32,5 +30,6 @@
 	"unpin": "Unpin",
 	"unsolved": "Unresolved",
 	"create_issue": "Create issue",
+	"move": "Move",
 	"not_last_page": "You are not on the last page of the topic"
 }

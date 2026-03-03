@@ -17,6 +17,12 @@
 	"resolved": "题目解决了",
 	"send": "发送",
 	"solved": "解决",
+	"status_open": "打开",
+	"status_resolved": "已解决",
+	"status_not_reproduced": "无法复现",
+	"status_not_planned": "未计划",
+	"status_not_a_bug": "不是Bug",
+	"status_acknowledged": "已确认",
 	"subscribe": "订阅主题",
 	"undoable_action": "这个动作是不可逆的。",
 	"unsubscribe": "退订主题",
@@ -24,5 +30,6 @@
 	"unpin": "拿下来",
 	"unsolved": "未解决",
 	"create_issue": "创建Issue",
+	"move": "移动",
 	"not_last_page": "您不在主题的最后一页"
 }
