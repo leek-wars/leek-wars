@@ -408,7 +408,7 @@ import { emitter } from '@/model/vue'
 			opacity: 0.7;
 		}
 		&.not-a-bug {
-			color: white;
+			color: var(--text-color-secondary);
 		}
 		&.acknowledged {
 			color: #6f42c1;
