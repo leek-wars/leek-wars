@@ -12,6 +12,7 @@ import type { Router } from 'vue-router'
 
 let _router: Router
 export function setRouter(r: Router) { _router = r }
+export function getRouter() { return _router }
 
 import { TranslateResult } from 'vue-i18n'
 import { Chat, ChatWindow } from './chat'
