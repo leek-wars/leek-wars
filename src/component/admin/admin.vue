@@ -5,7 +5,7 @@
 		</div>
 		<panel class="first">
 			<template #content>
-				<div class="admin">
+				<div class="admin-grid">
 					<router-link to="/admin/servers">
 						<div v-ripple class="section card">
 							<v-icon>mdi-server</v-icon>
@@ -113,23 +113,23 @@
 		</panel>
 		<panel class="last">
 			<template #content>
-				<div class="admin">
-					<v-btn @click="square">Square notif image</v-btn>
-					<v-btn @click="squareIcon">Square notif icon</v-btn>
-					<v-btn @click="squareTrophy">Square notif trophy</v-btn>
-					<v-btn @click="squareTournament">Notif tournament</v-btn>
-					<v-btn @click="squareMP">Square MP</v-btn>
-					<v-btn @click="show_didactitiel">Didactitiel</v-btn>
-					<v-btn @click="showLevelDialog(2)">Level Dialog 2</v-btn>
-					<v-btn @click="showLevelDialog(20)">Level Dialog 20</v-btn>
-					<v-btn @click="showLevelDialog(50)">Level Dialog 50</v-btn>
-					<v-btn @click="showLevelDialog(97)">Level Dialog 97</v-btn>
-					<v-btn @click="showLevelDialog(200)">Level Dialog 200</v-btn>
-					<v-btn @click="showLevelDialog(211)">Level Dialog 211</v-btn>
-					<v-btn @click="showLevelDialog(301)">Level Dialog 301</v-btn>
-					<v-btn @click="sendError()">Send JS error</v-btn>
-					<v-btn @click="testPush()">Test push notif</v-btn>
-					<v-btn @click="testMailSend()">Test email</v-btn>
+				<div class="admin-grid">
+					<v-btn prepend-icon="mdi-image" @click="square">Square notif image</v-btn>
+					<v-btn prepend-icon="mdi-star" @click="squareIcon">Square notif icon</v-btn>
+					<v-btn prepend-icon="mdi-trophy" @click="squareTrophy">Square notif trophy</v-btn>
+					<v-btn prepend-icon="mdi-sword-cross" @click="squareTournament">Notif tournament</v-btn>
+					<v-btn prepend-icon="mdi-message" @click="squareMP">Square MP</v-btn>
+					<v-btn prepend-icon="mdi-school" @click="show_didactitiel">Didactitiel</v-btn>
+					<v-btn prepend-icon="mdi-arrow-up-bold" @click="showLevelDialog(2)">Level 2</v-btn>
+					<v-btn prepend-icon="mdi-arrow-up-bold" @click="showLevelDialog(20)">Level 20</v-btn>
+					<v-btn prepend-icon="mdi-arrow-up-bold" @click="showLevelDialog(50)">Level 50</v-btn>
+					<v-btn prepend-icon="mdi-arrow-up-bold" @click="showLevelDialog(97)">Level 97</v-btn>
+					<v-btn prepend-icon="mdi-arrow-up-bold" @click="showLevelDialog(200)">Level 200</v-btn>
+					<v-btn prepend-icon="mdi-arrow-up-bold" @click="showLevelDialog(211)">Level 211</v-btn>
+					<v-btn prepend-icon="mdi-arrow-up-bold" @click="showLevelDialog(301)">Level 301</v-btn>
+					<v-btn prepend-icon="mdi-bug" @click="sendError()">Send JS error</v-btn>
+					<v-btn prepend-icon="mdi-bell-ring" @click="testPush()">Test push notif</v-btn>
+					<v-btn prepend-icon="mdi-email-fast" @click="testMailSend()">Test email</v-btn>
 				</div>
 			</template>
 		</panel>
@@ -246,7 +246,7 @@
 		sendError() {
 			const err = new Error()
 			const info = "test"
-			
+
 			const error = err.name + ": " + err.message
 			const file = document.location.href
 			const stack = err.stack + '\n' + info
@@ -258,7 +258,7 @@
 </script>
 
 <style lang="scss" scoped>
-	.admin {
+	.admin-grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
 		grid-gap: 10px;
