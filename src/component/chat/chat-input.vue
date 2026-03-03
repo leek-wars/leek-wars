@@ -17,7 +17,7 @@
 	import ChatPseudos from './chat-pseudos.vue'
 	import EmojiPicker from './emoji-picker.vue'
 
-	@Options({ components: { 'emoji-picker': EmojiPicker, ChatCommands, ChatPseudos } })
+	@Options({ components: { 'emoji-picker': EmojiPicker, ChatCommands, ChatPseudos }, emits: ['message'] })
 	export default class ChatInput extends Vue {
 
 		@Prop({ required: true }) chat!: number
