@@ -7,7 +7,7 @@
 				<div v-if="LeekWars.didactitial_step === 1" class="content">
 					<div v-if="farmerName.includes('@')" class="text" v-html="$t('main.dida_1_leek', [farmerFirstLeek])"></div>
 					<div v-else class="text" v-html="$t('main.dida_1', [farmerName, farmerFirstLeek])"></div>
-					<i18n-t class="text" keypath="main.dida_2">
+					<i18n-t class="text" keypath="main.dida_2" tag="div">
 						<template #life><img height=18 src="/image/charac/life.png"></template>
 						<template #strength><img height=18 src="/image/charac/strength.png"></template>
 					</i18n-t>
@@ -26,11 +26,11 @@
 					<div class="text" v-html="$t('main.dida_9')"></div>
 				</div>
 				<div v-else-if="LeekWars.didactitial_step === 5" class="content">
-					<i18n-t class="text" keypath="main.dida_10">
+					<i18n-t class="text" keypath="main.dida_10" tag="div">
 						<template #help><router-link to="/encyclopedia">{{ $t('main.help') }}</router-link></template>
 						<template #tutorial><router-link :to="'/encyclopedia/' + $i18n.locale + '/' + $t('main.tutorial').replace(/ /g, '_')">{{ $t('main.tutorial') }}</router-link></template>
 					</i18n-t>
-					<i18n-t class="text" keypath="main.dida_11">
+					<i18n-t class="text" keypath="main.dida_11" tag="div">
 						<template #chat><router-link to="/messages">{{ $t('main.chat') }}</router-link></template>
 						<template #forum><router-link to="/forum">{{ $t('main.forum') }}</router-link></template>
 					</i18n-t>
@@ -133,6 +133,9 @@
 		color: #5fad1b;
 		font-weight: 500;
 	}
+	img {
+		vertical-align: middle;
+	}
 }
 #app.app .bubble {
 	margin-bottom: 50px;
@@ -159,6 +162,8 @@
 	right: -55px;
 	top: 8px;
 	font-size: 30px;
+	width: 40px;
+	height: 40px;
 	background: var(--pure-white);
 	border-radius: 50%;
 	padding: 5px;
