@@ -413,6 +413,15 @@ app.directive('emojis', (el) => {
 	})
 })
 
+app.config.globalProperties.$filters = {
+	number: LeekWars.formatNumber,
+	date: LeekWars.formatDate,
+	datetime: LeekWars.formatDateTime,
+	timeseconds: LeekWars.formatTimeSeconds,
+	time: LeekWars.formatTime,
+	duration: LeekWars.formatDuration,
+}
+
 const vm = app.mount('#app2') as ComponentPublicInstance & {
 	$once: (event: string, callback: () => void) => void
 	$emit: (event: string, ...args: any[]) => void
@@ -462,16 +471,6 @@ if (window.__FARMER__) {
 			}
 		})
 	}
-}
-
-// Register Vue filters after LeekWars is fully initialized
-app.config.globalProperties.$filters = {
-	number: LeekWars.formatNumber,
-	date: LeekWars.formatDate,
-	datetime: LeekWars.formatDateTime,
-	timeseconds: LeekWars.formatTimeSeconds,
-	time: LeekWars.formatTime,
-	duration: LeekWars.formatDuration,
 }
 
 export { vueMain } from './emitter'
