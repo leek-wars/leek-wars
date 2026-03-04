@@ -6,7 +6,7 @@
     - Added bitLength function which complements leadingZeros for BigInteger (thanks to Batary).
 
 244:
-  title: "Vue 3 migration, forum and encyclopedia."
+  title: "Vue 3 migration, new rankings, practical additions and fixes."
   added:
     - "Added talent history for farmers and teams. #img_244_talent_history"
     - "Added team composition ranking. #img_244_composition_ranking"
@@ -19,28 +19,26 @@
     - "Encyclopedia: display available languages when a page doesn't exist in the current language."
     - "Encyclopedia: alias management with redirection and display. #img_244_alias"
     - Added boss weapon constants WEAPON_ODACHI, WEAPON_EXCALIBUR and WEAPON_SCYTHE.
-    - "Added boss kills fun ranking. #img_244_fun_rankings"
-    - "Added chests opened fun ranking. #img_244_fun_rankings2"
-    - "Added destroyed turrets fun ranking. #img_244_fun_rankings3"
-    - "Added crashes fun ranking. #img_244_fun_rankings4"
+    - "Added boss kills fun ranking. #img_244_boss_ranking"
+    - "Added chests opened fun ranking. #img_244_chest_ranking"
+    - "Added destroyed turrets fun ranking. #img_244_turret_ranking"
+    - "Added crashes fun ranking. #img_244_crashes_ranking"
     - "Mobile: added language selector in chat. #img_244_mobile_lang"
   improved:
-    - Migrated to Vue 3.
+    - "Migrated to Vue 3. #img_244_vue3"
     - "Tournaments: all registered players now participate, split across multiple 16-32 player tournaments."
-    - "Player: instant mute, real-time volume, sound effects speed up with playback, and pause/resume. #img_244_player"
+    - "Player: instant mute, real-time volume, sound effects speed up with playback, and pause/resume."
     - Redirect to the requested page after login instead of the homepage.
     - "Editor: improved Ctrl+click to go to symbol definition (navigation and scrolling fixed)."
     - "Editor: save and restore code folding state across AI switches and page reloads."
-    - "Report: improved life chart (entity name tooltip, click to focus curve, improved axes). #img_244_charts"
-    - "Report: improved damage chart (translations, tooltips, bar totals)."
-    - "Report: dark mode support for charts."
-    - "Market: keyboard navigation with up/down/left/right arrow keys between items. #img_244_market_keyboard"
+    - "Market: keyboard navigation with up/down/left/right arrow keys between items."
     - "LeekScript: semicolon after while() in do-while loops is now optional."
     - "LeekScript: check private/protected method access at compile time for typed variables."
     - "Encyclopedia: search query preserved in URL for sharing and back navigation."
     - "Composition ranking: replaced fights/victories with total level."
     - "Chat: filter unavailable items in the /market command."
     - Self-hosted Roboto font (removed Google Fonts dependency).
+    - "Display AI line number in the error when the AI is too large. #img_244_error_large"
   fixed:
     - Fixed a bug preventing team fights when the turret AI was missing.
     - "Boss: fixed fight count deduction when a boss fight starts without participating (#2344)."

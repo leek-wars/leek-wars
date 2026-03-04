@@ -1,12 +1,12 @@
 <template lang="html">
 	<div class="version">
-		<img v-if="version.image" :src="'/image/mail/mail_' + version.version + '.webp'" class="image" loading="lazy">
+		<img v-if="version.image" :src="'/image/mail/mail_' + version.version + '.webp'" class="image" loading="lazy" @error="($event.target as HTMLImageElement).style.display = 'none'">
 		<div class="wrapper">
 			<div v-for="(changes, s) in sections" :key="s" class="section">
 				<h4 v-if="sections.length > 1" :class="{first: s === 0}">{{ $t('changelog.title_' + s) }}</h4>
 				<div v-for="(change, c) in changes" :key="c" class="change">
 					<span v-html="'➤ ' + change.text"></span>
-					<v-menu v-for="image in change.images" :key="image" :close-on-content-click="false" :width="280" offset-overflow :nudge-top="0" transition="none" :open-on-hover="true" :open-delay="200" offset-y>
+					<v-menu v-for="image in change.images" :key="image" :close-on-content-click="false" :max-width="500" :max-height="300" offset-overflow :nudge-top="0" transition="none" :open-on-hover="true" :open-delay="200" offset-y>
 						<template #activator="{ props }">
 							<v-icon class="screenshot" v-bind="props">mdi-tooltip-image-outline</v-icon>
 						</template>

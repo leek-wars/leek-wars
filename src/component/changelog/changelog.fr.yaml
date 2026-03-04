@@ -6,7 +6,7 @@
     - Ajout de la fonction bitLength qui complète leadingZeros pour les BigInteger (merci à Batary).
 
 244:
-  title: "Migration Vue 3, forum et encyclopédie."
+  title: "Migration Vue 3, nouveaux classements, ajouts pratiques et corrections."
   added:
     - "Ajout de l'historique de talent pour les éleveurs et les équipes. #img_244_talent_history"
     - "Ajout du classement des compositions d'équipe. #img_244_composition_ranking"
@@ -19,28 +19,26 @@
     - "Encyclopédie : affichage des langues disponibles quand une page n'existe pas."
     - "Encyclopédie : gestion des alias avec redirection et affichage. #img_244_alias"
     - Ajout des constantes d'armes de boss WEAPON_ODACHI, WEAPON_EXCALIBUR et WEAPON_SCYTHE.
-    - "Ajout du classement fun des boss tués. #img_244_fun_rankings"
-    - "Ajout du classement fun des coffres ouverts. #img_244_fun_rankings2"
-    - "Ajout du classement fun des tourelles détruites. #img_244_fun_rankings3"
-    - "Ajout du classement fun des crashes. #img_244_fun_rankings4"
+    - "Ajout du classement fun des boss tués. #img_244_boss_ranking"
+    - "Ajout du classement fun des coffres ouverts. #img_244_chest_ranking"
+    - "Ajout du classement fun des tourelles détruites. #img_244_turret_ranking"
+    - "Ajout du classement fun des crashes. #img_244_crashes_ranking"
     - "Mobile : ajout du sélecteur de langue dans le chat. #img_244_mobile_lang"
   improved:
-    - Migration vers Vue 3.
+    - "Migration vers Vue 3. #img_244_vue3"
     - "Tournois : tous les inscrits participent, répartis entre plusieurs tournois de 16 à 32 joueurs."
-    - "Player : mute instantané, volume en temps réel, bruitages accélérés et pause/resume. #img_244_player"
+    - "Player : mute instantané, volume en temps réel, bruitages accélérés et pause/resume."
     - Redirection vers la page demandée après connexion au lieu de la page d'accueil.
     - "Éditeur : amélioration du Ctrl+clic vers la définition (navigation et scroll corrigés)."
     - "Éditeur : sauvegarde et restauration du pliage de code entre les changements d'IA."
-    - "Rapport : amélioration du graphique de vie (tooltips, clic pour isoler, axes améliorés). #img_244_charts"
-    - "Rapport : amélioration du graphique de dégâts (traductions, tooltips, totaux par barre)."
-    - "Rapport : support du mode sombre pour les graphiques."
-    - "Marché : navigation au clavier avec les flèches haut/bas/gauche/droite entre les items. #img_244_market_keyboard"
+    - "Marché : navigation au clavier avec les flèches haut/bas/gauche/droite entre les items."
     - "LeekScript : le point-virgule après while() dans les boucles do-while est maintenant optionnel."
     - "LeekScript : vérification de l'accès aux méthodes privées/protégées à la compilation."
     - "Encyclopédie : conservation de la recherche dans l'URL pour le partage et la navigation arrière."
     - "Classement compositions : remplacement des combats/victoires par le niveau total."
     - "Chat : filtrage des items non disponibles dans la commande /market."
     - Hébergement de la police Roboto en local (suppression de la dépendance à Google Fonts).
+    - "Affichage de la ligne de l'IA dans l'erreur quand l'IA est trop grosse. #img_244_error_large"
   fixed:
     - Correction d'un bug empêchant les combats d'équipe quand l'IA de la tourelle était inexistante.
     - "Boss : correction du décompte de combats au lancement d'un boss sans y participer (#2344)."
