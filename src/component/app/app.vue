@@ -206,10 +206,10 @@
 						this.$store.commit('didactitiel-seen')
 					})
 				}
+				if (localStorage.getItem('changelog_version') !== LeekWars.normal_version) {
+					this.changelogShow()
+				}
 			})
-			if (this.$store.state.connected && localStorage.getItem('changelog_version') !== LeekWars.normal_version) {
-				this.changelogShow()
-			}
 			emitter.on('keyup', (event: KeyboardEvent) => {
 				if (event.keyCode === 72 && event.altKey && event.ctrlKey) {
 					this.docEverywhere = true
