@@ -90,7 +90,8 @@ export default class AIViewMonaco extends Vue {
 			scrollPredominantAxis: this.lineNumbers,
 			minimap: {
 				enabled: this.lineNumbers,
-			}
+			},
+			accessibilitySupport: 'off', // Workaround Firefox : sélection backward + remplacement (#2802)
 		}, {
 			storageService: {
 				get() {},
