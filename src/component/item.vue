@@ -9,7 +9,8 @@
 <script lang="ts">
 	import { ItemTemplate, ItemType, ITEM_CATEGORY_NAME } from '@/model/item'
 	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
+	import { defineAsyncComponent } from 'vue'
+	const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
 
 	@Options({ name: "item", components: { RichTooltipItem } })
 	export default class ItemView extends Vue {
