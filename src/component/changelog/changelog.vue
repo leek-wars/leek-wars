@@ -101,20 +101,7 @@ LeekWars.get<{ changelog: ChangelogEntry[] }>('changelog/get/' + locale).then(da
 	for (const c in changelog.value) {
 		changelog.value[c].active = parseInt(c, 10) < 2 ? true : false
 	}
-	let lw_version = parseInt(LeekWars.normal_version.replace(/\./g, ''), 10)
-	if (LeekWars.DEV || store.getters.admin) {
-		lw_version++
-	}
-	if (changelog.value[0].version !== lw_version) {
-		changelog.value.unshift({
-			active: true,
-			image: true,
-			version: lw_version,
-			version_name: LeekWars.normal_version.replace(/\.(\d+)$/, (_, m) => '.' + (parseInt(m, 10) + 1)).replace(/\.(\d)$/, '$1'),
-			date: Date.now() / 1000,
-			data: 'changelog_' + lw_version
-		})
-	}
+	addDevVersions()
 	LeekWars.setTitle(t('main.changelog'))
 	emitter.emit('loaded')
 })
@@ -122,7 +109,28 @@ window.addEventListener('scroll', scroll)
 
 import(`@/component/changelog/changelog.${locale}.yaml`).then((module: { default: Record<number, { title?: string }> }) => {
 	translations.value = module.default
+	addDevVersions()
 })
+
+const addDevVersions = () => {
+	if (!changelog.value || !translations.value) return
+	if (LeekWars.DEV || store.getters.admin) {
+		for (const version of Object.keys(translations.value)) {
+			const versionNumber = parseInt(version)
+			if (!changelog.value.find(v => v.version === versionNumber)) {
+				const name = '' + versionNumber
+				changelog.value.unshift({
+					active: true,
+					image: true,
+					version: versionNumber,
+					version_name: name.substring(0, 1) + '.' + name.substring(1),
+					date: Date.now() / 1000,
+					data: 'changelog_' + versionNumber
+				})
+			}
+		}
+	}
+}
 
 onUnmounted(() => {
 	window.removeEventListener('scroll', scroll)

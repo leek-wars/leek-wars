@@ -27,7 +27,7 @@ Les changelogs sont dans `src/component/changelog/` au format YAML.
 ```
 
 ### Règles
-- Toujours mettre à jour **FR et EN** ensemble
+- Toujours mettre à jour **FR, EN et IT** ensemble
 - Les images sont référencées avec `#img_<version>_<nom>`
 - La version en cours de développement a le titre "WIP"
 - Créditer les contributeurs avec "(merci à <pseudo>)"
