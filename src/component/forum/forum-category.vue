@@ -92,6 +92,8 @@
 								<a v-if="topic.private_issue && $store.state.farmer && $store.state.farmer.admin" :href="'https://github.com/5pilow/leek-wars/issues/' + topic.private_issue" class="attr issue private-issue" target="_blank" rel="noopener">
 									#{{ topic.private_issue }}
 								</a>
+								<v-icon v-if="topic.hidden" :title="$t('hidden_topic')" class="attr hidden-icon">mdi-eye-off</v-icon>
+								<span v-if="topic.release" class="attr release-badge">v{{ String(topic.release).charAt(0) + '.' + String(topic.release).slice(1) }}</span>
 								<router-link :to="'/forum/category-' + topic.category + '/topic-' + topic.id">{{ topic.title }}</router-link>
 								<flag v-if="activeLanguages.length >= 2 && topic.lang" :code="LeekWars.languages[topic.lang].country" :clickable="false" />
 							</span>
@@ -184,9 +186,18 @@
 				<input v-model="createTitle" @keyup="updateDraftTitle" class="topic-name card" type="text">
 				<h3>{{ $t('new_topic_message') }}</h3>
 				<textarea v-model="createMessage" @keyup="updateDraft" class="topic-message card"></textarea>
-				<v-radio-group v-if="Object.values(forumLanguages).length > 1" v-model="createMessageLang">
-					<v-radio v-for="(_, lang) in forumLanguages" :key="lang" :value="lang" :label="LeekWars.languages[lang].name" />
-				</v-radio-group>
+
+				<div class="grid">
+					<v-radio-group v-if="Object.values(forumLanguages).length > 1" v-model="createMessageLang" hide-details>
+						<v-radio v-for="(_, lang) in forumLanguages" :key="lang" :value="lang" :label="LeekWars.languages[lang].name" />
+					</v-radio-group>
+					<template v-if="$store.state.farmer && $store.state.farmer.admin">
+						<div>
+							<v-text-field v-model.number="createRelease" label="Release" type="number" placeholder="245" hide-details variant="outlined" density="compact" />
+						</div>
+						<v-checkbox v-model="createHidden" :label="$t('hidden_topic')" hide-details />
+					</template>
+				</div>
 				<formatting-rules />
 			</div>
 			<template #actions>
@@ -234,6 +245,8 @@ import { emitter } from '@/model/vue'
 		query: string = ''
 		createMessageLang: string = 'fr'
 		markAsReadDialog: boolean = false
+		createRelease: number | null = null
+		createHidden: boolean = false
 		forumLanguages: {[key: string]: boolean} = {}
 		translations: any[] = []
 		showResolved: boolean = true
@@ -298,10 +311,15 @@ import { emitter } from '@/model/vue'
 		}
 		create() {
 			if (!this.categories) { return }
-			LeekWars.post('forum/create-topic', {category_id: this.categories[0].id, title: this.createTitle, message: this.createMessage, issue: 0, lang: this.createMessageLang}).then(data => {
+			const params: any = {category_id: this.categories[0].id, title: this.createTitle, message: this.createMessage, issue: 0, lang: this.createMessageLang}
+			params.release = this.createRelease || 0
+			params.hidden = this.createHidden
+			LeekWars.post('forum/create-topic', params).then(data => {
 				this.createDialog = false
 				localStorage.setItem('forum/draft', '')
 				localStorage.setItem('forum/draft-title', '')
+				this.createRelease = null
+				this.createHidden = false
 				if (this.categories) {
 					this.$router.push("/forum/category-" + this.category_ids + "/topic-" + data.topic_id)
 				}
@@ -459,7 +477,7 @@ body.dark .topic .seen img.seen {
 	font-size: 17px;
 	margin-bottom: 5px;
 	display: inline-block;
-	.issue {
+	.issue, .release-badge {
 		background: #0366d6;
 		color: white;
 		border-radius: 5px;
@@ -472,6 +490,9 @@ body.dark .topic .seen img.seen {
 		&.private-issue {
 			background: #6f42c1;
 		}
+	}
+	.release-badge {
+		background: #28a745;
 	}
 }
 .topic .description {
@@ -544,6 +565,15 @@ body.dark .topic .seen img.seen {
 }
 .topic .messages {
 	color: var(--text-color);
+}
+.create-popup {
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+		gap: 20px;
+		align-items: center;
+		margin-bottom: 10px;
+	}
 }
 .create-popup .topic-name {
 	width: 100%;

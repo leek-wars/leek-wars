@@ -22,5 +22,6 @@
 	"status_not_reproduced": "Non reproduit",
 	"status_not_planned": "Non planifié",
 	"status_not_a_bug": "Pas un bug",
-	"status_acknowledged": "Pris en compte"
+	"status_acknowledged": "Pris en compte",
+	"hidden_topic": "Sujet masqué"
 }

@@ -31,5 +31,9 @@
 	"unsolved": "Non résolu",
 	"create_issue": "Créer issue",
 	"move": "Déplacer",
-	"not_last_page": "Vous n'êtes pas sur la dernière page du sujet"
+	"not_last_page": "Vous n'êtes pas sur la dernière page du sujet",
+	"hide_topic": "Masquer",
+	"show_topic": "Afficher",
+	"set_release": "Release",
+	"release_hint": "Entrez 0 pour retirer la release"
 }

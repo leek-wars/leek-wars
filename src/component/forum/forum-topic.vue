@@ -16,6 +16,7 @@
 						<v-icon v-if="topic.status === ForumTopicStatus.NOT_REPRODUCED" :title="$t('status_not_reproduced')" class="attr status-not-reproduced">mdi-help-circle</v-icon>
 						<v-icon v-if="topic.status === ForumTopicStatus.NOT_PLANNED" :title="$t('status_not_planned')" class="attr status-not-planned">mdi-minus-circle</v-icon>
 						<v-icon v-if="topic.status === ForumTopicStatus.NOT_A_BUG" :title="$t('status_not_a_bug')" class="attr status-not-a-bug">mdi-close-circle</v-icon>
+						<v-icon v-if="topic.hidden" :title="$t('hide_topic')" class="attr hidden-icon">mdi-eye-off</v-icon>
 					</div>
 				</h1>
 				<div v-if="!LeekWars.mobile" class="tabs">
@@ -137,6 +138,11 @@
 								<span v-else-if="message.id == -1 && topic.status !== ForumTopicStatus.OPEN && currentStatusInfo" class="status-text">
 									<v-icon :color="currentStatusInfo.color">{{ currentStatusInfo.icon }}</v-icon> {{ currentStatusInfo.title }}
 								</span>
+								<template v-if="message.id == -1 && $store.state.farmer && $store.state.farmer.admin">
+									<span class="action" @click="releaseInput = topic.release; releaseDialog = true">
+										<v-icon>mdi-tag</v-icon> {{ topic.release ? 'v' + String(topic.release).charAt(0) + '.' + String(topic.release).slice(1) : $t('set_release') }}
+									</span>
+								</template>
 								<template v-if="message.id == -1">
 									<span v-if="topic.acknowledged && !topic.private_issue && !($store.state.farmer && $store.state.farmer.admin)" class="status-text"><v-icon color="#6f42c1">mdi-eye</v-icon> {{ $t('status_acknowledged') }}</span>
 									<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars/issues/' + topic.issue" class="issue-badge" target="_blank" rel="noopener">
@@ -183,6 +189,9 @@
 												</v-list-item>
 											</v-list>
 										</v-menu>
+										<v-list-item v-if="message.id === -1 && $store.state.farmer && $store.state.farmer.admin" v-ripple @click="toggleHidden" :prepend-icon="topic.hidden ? 'mdi-eye' : 'mdi-eye-off'">
+											<span>{{ topic.hidden ? $t('show_topic') : $t('hide_topic') }}</span>
+										</v-list-item>
 									</v-list>
 								</v-menu>
 							</div>
@@ -251,6 +260,18 @@
 			</template>
 		</popup>
 
+		<popup v-model="releaseDialog" :width="400">
+			<template #icon><v-icon>mdi-tag</v-icon></template>
+			<template #title>{{ $t('set_release') }}</template>
+			<div>
+				<v-text-field v-model.number="releaseInput" type="number" placeholder="245" style="width: 100%" :hint="$t('release_hint')" />
+			</div>
+			<template #actions>
+				<div v-ripple @click="releaseDialog = false">{{ $t('cancel') }}</div>
+				<div v-ripple class="action green" @click="setRelease">OK</div>
+			</template>
+		</popup>
+
 		<report-dialog v-if="reportFarmer" v-model="reportDialog" :target="reportFarmer" :reasons="reasons" :parameter="reportContent" class="report-dialog" />
 	</div>
 </template>
@@ -296,6 +317,8 @@ import { emitter } from '@/model/vue'
 		reportFarmer: Farmer | null = null
 		reportContent: string = ''
 		moveCategories: {id: number, name: string}[] = []
+		releaseDialog: boolean = false
+		releaseInput: number | null = null
 		reasons = [
 			Warning.RUDE_FORUM,
 			Warning.FLOOD_FORUM,
@@ -575,7 +598,13 @@ import { emitter } from '@/model/vue'
 			} else {
 				const input = this.$refs.topicTitle as HTMLElement
 				const title = input.innerText
-				LeekWars.post("forum/edit-topic", {topic_id: this.topic.id, title, message: message.message, issue: this.topic.issue || 0}).then(callback)
+				LeekWars.post("forum/edit-topic", {
+					topic_id: this.topic.id,
+					title,
+					message: message.message,
+					issue: this.topic.issue || 0,
+					release: this.topic.release || 0,
+				}).then(callback)
 			}
 		}
 		addEmoji(message: ForumMessage, emoji: string, textarea: any) {
@@ -593,6 +622,23 @@ import { emitter } from '@/model/vue'
 			})
 		}
 
+		toggleHidden() {
+			if (!this.topic) { return }
+			LeekWars.post('forum/toggle-hidden', {topic_id: this.topic.id}).then((data: any) => {
+				if (this.topic) {
+					this.topic.hidden = data.hidden
+				}
+			})
+		}
+		setRelease() {
+			if (!this.topic) { return }
+			LeekWars.post('forum/set-release', {topic_id: this.topic.id, release: this.releaseInput || 0}).then(() => {
+				if (this.topic) {
+					this.topic.release = this.releaseInput || null
+					this.releaseDialog = false
+				}
+			})
+		}
 		report(message: ForumMessage) {
 			this.reportFarmer = message.writer
 			this.reportContent = message.id === -1 ? 't' + this.topic!.id : 'm' + message.id
@@ -912,6 +958,20 @@ import { emitter } from '@/model/vue'
 		&.status-acknowledged {
 			color: #6f42c1;
 		}
+		&.hidden-icon {
+			color: white;
+		}
+	}
+	.release-badge {
+		background: #28a745;
+		color: white;
+		border-radius: 5px;
+		font-size: 13px;
+		font-weight: 500;
+		padding: 2px 6px;
+		display: inline-block;
+		vertical-align: middle;
+		margin: 0 4px;
 	}
 	.issue-badge {
 		background: #0366d6;
