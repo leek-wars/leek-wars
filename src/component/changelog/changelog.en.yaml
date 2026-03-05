@@ -27,6 +27,7 @@
   improved:
     - "Migrated to Vue 3. #img_244_vue3"
     - "Tournaments: all registered players now participate, split across multiple 16-32 player tournaments."
+    - Relaxed matchmaking with wider talent ranges and adjusted sorting coefficients.
     - "Player: instant mute, real-time volume, sound effects speed up with playback, and pause/resume."
     - Redirect to the requested page after login instead of the homepage.
     - "Editor: improved Ctrl+click to go to symbol definition (navigation and scrolling fixed)."
@@ -38,6 +39,11 @@
     - "Composition ranking: replaced fights/victories with total level."
     - "Chat: filter unavailable items in the /market command."
     - Self-hosted Roboto font (removed Google Fonts dependency).
+    - "Reports: migrated charts to Chart.js with tooltips, click-to-focus and dark mode support."
+    - Chat: limited messages in memory with reload on scroll.
+    - Encyclopedia: automatic lock release when closing the tab.
+    - Improved WebSocket reconnection (exponential backoff, dead connection detection).
+    - Brotli compression for faster page loads.
     - "Display AI line number in the error when the AI is too large. #img_244_error_large"
   fixed:
     - Fixed a bug preventing team fights when the turret AI was missing.
