@@ -4,6 +4,8 @@
     - Aggiunta dei BigInteger in LeekScript (grazie a Batary).
     - Aggiunta delle funzioni setBit e testBit per leggere o scrivere un bit specifico (grazie a Batary).
     - Aggiunta della funzione bitLength che completa leadingZeros per i BigInteger (grazie a Batary).
+  improved:
+    - "Enciclopedia: precisato il comportamento di arrayFoldLeft e arrayFoldRight con un array vuoto (grazie a Loutreavin)."
 
 244:
   title: "Migrazione Vue 3, nuove classifiche, aggiunte pratiche e correzioni."

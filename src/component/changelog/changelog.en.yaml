@@ -4,6 +4,8 @@
     - Added BigIntegers in LeekScript (thanks to Batary).
     - Added setBit and testBit functions to read or write a specific bit (thanks to Batary).
     - Added bitLength function which complements leadingZeros for BigInteger (thanks to Batary).
+  improved:
+    - "Encyclopedia: clarified arrayFoldLeft and arrayFoldRight behavior with an empty array (thanks to Loutreavin)."
 
 244:
   title: "Vue 3 migration, new rankings, practical additions and fixes."
