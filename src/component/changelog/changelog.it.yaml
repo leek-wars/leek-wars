@@ -4,6 +4,7 @@
     - Aggiunta dei BigInteger in LeekScript (grazie a Batary).
     - Aggiunta delle funzioni setBit e testBit per leggere o scrivere un bit specifico (grazie a Batary).
     - Aggiunta della funzione bitLength che completa leadingZeros per i BigInteger (grazie a Batary).
+    - "Visualizzazione dei ranghi di classifica dei porri sulla pagina allevatore. #img_245_ranking_badges"
   improved:
     - "Enciclopedia: precisato il comportamento di arrayFoldLeft e arrayFoldRight con un array vuoto (grazie a Loutreavin)."
 

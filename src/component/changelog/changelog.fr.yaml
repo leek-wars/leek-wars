@@ -4,6 +4,7 @@
     - Ajout des BigIntegers dans le LeekScript (merci à Batary).
     - Ajout des fonctions setBit et testBit pour lire ou écrire un bit spécifique (merci à Batary).
     - Ajout de la fonction bitLength qui complète leadingZeros pour les BigInteger (merci à Batary).
+    - "Affichage des rangs de classement des poireaux sur la page éleveur. #img_245_ranking_badges"
   improved:
     - "Encyclopédie : précision du comportement de arrayFoldLeft et arrayFoldRight avec un tableau vide (merci à Loutreavin)."
 
