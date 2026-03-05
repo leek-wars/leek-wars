@@ -16,18 +16,18 @@
 						<div class="main">
 							<b>Version {{ newsletter.version }}</b>
 							<div class="spacer"></div>
-							<v-btn @click="test(newsletter, $store.getters.farmer.id)"><v-icon>mdi-cog-outline</v-icon> Test compte normal</v-btn>
+							<v-btn @click="test(newsletter, $store.state.farmer.id)"><v-icon>mdi-cog-outline</v-icon> Test compte normal</v-btn>
 							<v-btn @click="test(newsletter, 73156)"><v-icon>mdi-cog-outline</v-icon> Test compte random</v-btn>
 							<!-- <v-btn v-if="newsletter.sent === 0" color="primary" @click="send(newsletter)"><v-icon>mdi-send-outline</v-icon> Envoyer</v-btn> -->
 							<div v-if="newsletter.sent !== 0">Envoyé le {{ $filters.date(newsletter.sent) }}</div>
 						</div>
 						<div class="content">
 							<v-card>
-								<div><flag code="fr" /> {{ newsletter.title_fr }}</div>
+								<div class="subject"><flag code="fr" /> {{ newsletter.title_fr }}</div>
 								<div v-html="html(newsletter.content_fr)"></div>
 							</v-card>
 							<v-card>
-								<div><flag code="gb" /> {{ newsletter.title_en }}</div>
+								<div class="subject"><flag code="gb" /> {{ newsletter.title_en }}</div>
 								<div v-html="html(newsletter.content_en)"></div>
 							</v-card>
 						</div>
@@ -135,6 +135,11 @@
 		.v-card {
 			flex: 700px 0 0;
 			padding: 15px;
+		}
+		.subject {
+			font-weight: bold;
+			font-size: 18px;
+			margin-bottom: 10px;
 		}
 	}
 	.progress {
