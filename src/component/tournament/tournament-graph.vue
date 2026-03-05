@@ -365,7 +365,7 @@
 		@Prop({ required: true }) tournament!: Tournament
 
 		get viewBox() {
-			return this.tournament.size === 64 ? "-612 -400 1224 800" : "-472 -400 944 800"
+			return this.tournament.size === 64 ? "-617 -400 1234 805" : "-477 -400 954 805"
 		}
 
 		get thirtyseconds() { return this.tournament.rounds.thirtyseconds }
