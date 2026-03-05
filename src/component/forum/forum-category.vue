@@ -494,7 +494,9 @@ body.dark .topic .seen img.seen {
 		margin-bottom: 2px;
 		height: auto;
 		&.private-issue {
-			background: #6f42c1;
+			background: none;
+			color: #6f42c1;
+    		border: 1px solid #6f42c1;
 		}
 	}
 	.release-badge {
