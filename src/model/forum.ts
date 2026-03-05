@@ -28,6 +28,7 @@ class ForumTopic {
 	public private_issue!: number
 	public release!: number | null
 	public hidden!: boolean | null
+	public priority!: number
 }
 
 class ForumMessage {

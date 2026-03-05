@@ -31,5 +31,13 @@
 	"unsolved": "Ungelöst",
 	"create_issue": "Issue erstellen",
 	"move": "Verschieben",
-	"not_last_page": "Sie befinden sich nicht auf der letzten Seite des Themas"
+	"not_last_page": "Sie befinden sich nicht auf der letzten Seite des Themas",
+	"priority_none": "Keine Priorität",
+	"priority_high": "Hoch",
+	"priority_medium": "Mittel",
+	"priority_low": "Niedrig",
+	"hide_topic": "Ausblenden",
+	"show_topic": "Anzeigen",
+	"set_release": "Release",
+	"release_hint": "0 eingeben um die Release zu entfernen"
 }

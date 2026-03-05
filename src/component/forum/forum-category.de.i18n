@@ -17,5 +17,15 @@
 	"topic": "Thema",
 	"mark_as_read": "Als gelesen markieren",
 	"mark_as_read_text": "Alle Themen in allen Forenkategorien werden als gelesen markiert. Nach dieser Aktion werden nur neue Themen oder neue Antworten angezeigt.",
-	"show_resolved": "Gelöste Themen anzeigen"
+	"show_resolved": "Gelöste Themen anzeigen",
+	"priority": "Priorität",
+	"priority_high": "Hoch",
+	"priority_medium": "Mittel",
+	"priority_low": "Niedrig",
+	"hidden_topic": "Verstecktes Thema",
+	"status_acknowledged": "Zur Kenntnis genommen",
+	"status_not_a_bug": "Kein Bug",
+	"status_not_planned": "Nicht geplant",
+	"status_not_reproduced": "Nicht reproduziert",
+	"status_resolved": "Gelöst"
 }

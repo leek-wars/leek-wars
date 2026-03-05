@@ -31,5 +31,13 @@
 	"unsolved": "未解决",
 	"create_issue": "创建Issue",
 	"move": "移动",
-	"not_last_page": "您不在主题的最后一页"
+	"not_last_page": "您不在主题的最后一页",
+	"priority_none": "无优先级",
+	"priority_high": "高",
+	"priority_medium": "中",
+	"priority_low": "低",
+	"hide_topic": "隐藏",
+	"show_topic": "显示",
+	"set_release": "版本",
+	"release_hint": "输入0以移除版本"
 }

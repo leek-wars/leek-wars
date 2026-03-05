@@ -31,5 +31,13 @@
 	"unsolved": "Uløst",
 	"create_issue": "Opprett issue",
 	"move": "Flytt",
-	"not_last_page": "Du er ikke på siste side av emnet"
+	"not_last_page": "Du er ikke på siste side av emnet",
+	"priority_none": "Ingen prioritet",
+	"priority_high": "Høy",
+	"priority_medium": "Middels",
+	"priority_low": "Lav",
+	"hide_topic": "Skjul",
+	"show_topic": "Vis",
+	"set_release": "Utgivelse",
+	"release_hint": "Skriv inn 0 for å fjerne utgivelsen"
 }

@@ -35,5 +35,9 @@
 	"hide_topic": "Hide",
 	"show_topic": "Show",
 	"set_release": "Release",
-	"release_hint": "Enter 0 to remove the release"
+	"release_hint": "Enter 0 to remove the release",
+	"priority_none": "No priority",
+	"priority_high": "High",
+	"priority_medium": "Medium",
+	"priority_low": "Low"
 }

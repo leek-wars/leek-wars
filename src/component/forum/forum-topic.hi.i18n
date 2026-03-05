@@ -31,5 +31,13 @@
 	"unsolved": "अनसुलझे",
 	"create_issue": "Issue बनाएं",
 	"move": "स्थानांतरित करें",
-	"not_last_page": "आप विषय के अंतिम पृष्ठ पर नहीं हैं"
+	"not_last_page": "आप विषय के अंतिम पृष्ठ पर नहीं हैं",
+	"priority_none": "कोई प्राथमिकता नहीं",
+	"priority_high": "उच्च",
+	"priority_medium": "मध्यम",
+	"priority_low": "निम्न",
+	"hide_topic": "छिपाएं",
+	"show_topic": "दिखाएं",
+	"set_release": "रिलीज़",
+	"release_hint": "रिलीज़ हटाने के लिए 0 दर्ज करें"
 }

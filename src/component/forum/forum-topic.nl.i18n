@@ -31,5 +31,13 @@
 	"unsolved": "Onopgelost",
 	"create_issue": "Issue aanmaken",
 	"move": "Verplaatsen",
-	"not_last_page": "U bevindt zich niet op de laatste pagina van het onderwerp"
+	"not_last_page": "U bevindt zich niet op de laatste pagina van het onderwerp",
+	"priority_none": "Geen prioriteit",
+	"priority_high": "Hoog",
+	"priority_medium": "Gemiddeld",
+	"priority_low": "Laag",
+	"hide_topic": "Verbergen",
+	"show_topic": "Tonen",
+	"set_release": "Release",
+	"release_hint": "Voer 0 in om de release te verwijderen"
 }

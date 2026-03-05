@@ -31,5 +31,13 @@
 	"unsolved": "Нерешенный",
 	"create_issue": "Создать issue",
 	"move": "Переместить",
-	"not_last_page": "Вы не на последней странице темы"
+	"not_last_page": "Вы не на последней странице темы",
+	"priority_none": "Без приоритета",
+	"priority_high": "Высокий",
+	"priority_medium": "Средний",
+	"priority_low": "Низкий",
+	"hide_topic": "Скрыть",
+	"show_topic": "Показать",
+	"set_release": "Релиз",
+	"release_hint": "Введите 0, чтобы удалить релиз"
 }

@@ -17,5 +17,15 @@
 	"topic": "Предмет",
 	"mark_as_read": "Пометить, как прочитанное",
 	"mark_as_read_text": "Все темы во всех категориях форума будут отмечены как прочитанные. После этого действия будут отображаться только новые темы или новые ответы.",
-	"show_resolved": "Показать решенные темы"
+	"show_resolved": "Показать решенные темы",
+	"priority": "Приоритет",
+	"priority_high": "Высокий",
+	"priority_medium": "Средний",
+	"priority_low": "Низкий",
+	"hidden_topic": "Скрытая тема",
+	"status_acknowledged": "Принято к сведению",
+	"status_not_a_bug": "Не баг",
+	"status_not_planned": "Не запланировано",
+	"status_not_reproduced": "Не воспроизведено",
+	"status_resolved": "Решено"
 }

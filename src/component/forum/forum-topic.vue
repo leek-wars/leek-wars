@@ -139,9 +139,21 @@
 									<v-icon :color="currentStatusInfo.color">{{ currentStatusInfo.icon }}</v-icon> {{ currentStatusInfo.title }}
 								</span>
 								<template v-if="message.id == -1 && $store.state.farmer && $store.state.farmer.admin">
-									<span class="action" @click="releaseInput = topic.release; releaseDialog = true">
-										<v-icon>mdi-tag</v-icon> {{ topic.release ? 'v' + String(topic.release).charAt(0) + '.' + String(topic.release).slice(1) : $t('set_release') }}
+									<span v-if="topic.release" class="action" @click="releaseInput = topic.release; releaseDialog = true">
+										<v-icon>mdi-tag</v-icon> {{ 'v' + String(topic.release).charAt(0) + '.' + String(topic.release).slice(1) }}
 									</span>
+									<v-select v-model="topic.priority" :items="priorityItems" hide-details dense variant="outlined" class="priority-select" @update:model-value="setPriority">
+										<template #selection="{ item }">
+											<v-icon :color="item.raw.color" size="small">{{ item.raw.icon }}</v-icon>&nbsp;{{ item.raw.title }}
+										</template>
+										<template #item="{ props, item }">
+											<v-list-item v-bind="props">
+												<template #prepend>
+													<v-icon :color="item.raw.color" size="small">{{ item.raw.icon }}</v-icon>
+												</template>
+											</v-list-item>
+										</template>
+									</v-select>
 								</template>
 								<template v-if="message.id == -1">
 									<span v-if="topic.acknowledged && !topic.private_issue && !($store.state.farmer && $store.state.farmer.admin)" class="status-text"><v-icon color="#6f42c1">mdi-eye</v-icon> {{ $t('status_acknowledged') }}</span>
@@ -191,6 +203,9 @@
 										</v-menu>
 										<v-list-item v-if="message.id === -1 && $store.state.farmer && $store.state.farmer.admin" v-ripple @click="toggleHidden" :prepend-icon="topic.hidden ? 'mdi-eye' : 'mdi-eye-off'">
 											<span>{{ topic.hidden ? $t('show_topic') : $t('hide_topic') }}</span>
+										</v-list-item>
+										<v-list-item v-if="message.id === -1 && $store.state.farmer && $store.state.farmer.admin && !topic.release" v-ripple prepend-icon="mdi-tag" @click="releaseInput = topic.release; releaseDialog = true">
+											<span>{{ $t('set_release') }}</span>
 										</v-list-item>
 									</v-list>
 								</v-menu>
@@ -319,6 +334,14 @@ import { emitter } from '@/model/vue'
 		moveCategories: {id: number, name: string}[] = []
 		releaseDialog: boolean = false
 		releaseInput: number | null = null
+		get priorityItems() {
+			return [
+				{ value: 0, title: this.$t('priority_none') as string, icon: 'mdi-flag-outline', color: '' },
+				{ value: 1, title: this.$t('priority_high') as string, icon: 'mdi-flag', color: '#e53935' },
+				{ value: 2, title: this.$t('priority_medium') as string, icon: 'mdi-flag', color: '#fb8c00' },
+				{ value: 3, title: this.$t('priority_low') as string, icon: 'mdi-flag', color: '#757575' },
+			]
+		}
 		reasons = [
 			Warning.RUDE_FORUM,
 			Warning.FLOOD_FORUM,
@@ -639,6 +662,10 @@ import { emitter } from '@/model/vue'
 				}
 			})
 		}
+		setPriority(priority: number) {
+			if (!this.topic) { return }
+			LeekWars.post('forum/set-topic-priority', {topic_id: this.topic.id, priority})
+		}
 		report(message: ForumMessage) {
 			this.reportFarmer = message.writer
 			this.reportContent = message.id === -1 ? 't' + this.topic!.id : 'm' + message.id
@@ -911,6 +938,40 @@ import { emitter } from '@/model/vue'
 	}
 	:global(.v-list-item__prepend .v-icon.status-icon) {
 		opacity: 1 !important;
+	}
+	:global(.v-list-item__prepend .v-icon) {
+		opacity: 1 !important;
+	}
+	.priority-select {
+		display: inline-flex;
+		vertical-align: middle;
+		flex-grow: 0;
+		:deep(.v-field) {
+			font-size: 13px;
+			min-height: 28px;
+			padding: 4px 8px;
+		}
+		:deep(.v-field__input) {
+			padding: 0;
+			min-height: unset;
+			align-items: center;
+		}
+		:deep(.v-icon) {
+			opacity: 1 !important;
+		}
+		:deep(.v-select__selection) {
+			color: var(--text-color);
+		}
+	}
+	.priority-badge {
+		border-radius: 5px;
+		font-size: 13px;
+		font-weight: 500;
+		padding: 0 4px;
+		color: white;
+		&.priority-high { background: #e53935; }
+		&.priority-medium { background: #fb8c00; }
+		&.priority-low { background: #757575; }
 	}
 	.editor {
 		margin-left: 140px;

@@ -31,5 +31,13 @@
 	"unsolved": "Irrisolto",
 	"create_issue": "Crea issue",
 	"move": "Sposta",
-	"not_last_page": "Non sei all'ultima pagina dell'argomento"
+	"not_last_page": "Non sei all'ultima pagina dell'argomento",
+	"priority_none": "Nessuna priorità",
+	"priority_high": "Alta",
+	"priority_medium": "Media",
+	"priority_low": "Bassa",
+	"hide_topic": "Nascondi",
+	"show_topic": "Mostra",
+	"set_release": "Release",
+	"release_hint": "Inserisci 0 per rimuovere la release"
 }

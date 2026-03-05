@@ -31,5 +31,13 @@
 	"unsolved": "未解決",
 	"create_issue": "Issueを作成",
 	"move": "移動",
-	"not_last_page": "あなたはトピックの最後のページにいません"
+	"not_last_page": "あなたはトピックの最後のページにいません",
+	"priority_none": "優先度なし",
+	"priority_high": "高",
+	"priority_medium": "中",
+	"priority_low": "低",
+	"hide_topic": "非表示",
+	"show_topic": "表示",
+	"set_release": "リリース",
+	"release_hint": "リリースを削除するには0を入力"
 }

@@ -17,5 +17,15 @@
 	"topic": "主題",
 	"mark_as_read": "既読にする",
 	"mark_as_read_text": "すべてのフォーラム カテゴリのすべてのトピックが既読としてマークされます。このアクションの後、新しいトピックまたは新しい返信のみが表示されます。",
-	"show_resolved": "解決済みのトピックを表示"
+	"show_resolved": "解決済みのトピックを表示",
+	"priority": "優先度",
+	"priority_high": "高",
+	"priority_medium": "中",
+	"priority_low": "低",
+	"hidden_topic": "非表示トピック",
+	"status_acknowledged": "確認済み",
+	"status_not_a_bug": "バグではない",
+	"status_not_planned": "対応予定なし",
+	"status_not_reproduced": "再現不可",
+	"status_resolved": "解決済み"
 }

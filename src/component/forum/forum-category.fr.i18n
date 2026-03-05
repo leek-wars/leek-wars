@@ -23,5 +23,9 @@
 	"status_not_planned": "Non planifié",
 	"status_not_a_bug": "Pas un bug",
 	"status_acknowledged": "Pris en compte",
-	"hidden_topic": "Sujet masqué"
+	"hidden_topic": "Sujet masqué",
+	"priority": "Priorité",
+	"priority_high": "Haute",
+	"priority_medium": "Moyenne",
+	"priority_low": "Basse"
 }

@@ -93,6 +93,9 @@
 									#{{ topic.private_issue }}
 								</a>
 								<v-icon v-if="topic.hidden" :title="$t('hidden_topic')" class="attr hidden-icon">mdi-eye-off</v-icon>
+								<v-icon v-if="topic.priority === 1" :title="$t('priority_high')" class="attr priority-flag priority-high">mdi-flag</v-icon>
+								<v-icon v-if="topic.priority === 2" :title="$t('priority_medium')" class="attr priority-flag priority-medium">mdi-flag</v-icon>
+								<v-icon v-if="topic.priority === 3" :title="$t('priority_low')" class="attr priority-flag priority-low">mdi-flag</v-icon>
 								<span v-if="topic.release" class="attr release-badge">v{{ String(topic.release).charAt(0) + '.' + String(topic.release).slice(1) }}</span>
 								<router-link :to="'/forum/category-' + topic.category + '/topic-' + topic.id">{{ topic.title }}</router-link>
 								<flag v-if="activeLanguages.length >= 2 && topic.lang" :code="LeekWars.languages[topic.lang].country" :clickable="false" />
@@ -251,10 +254,13 @@ import { emitter } from '@/model/vue'
 		translations: any[] = []
 		showResolved: boolean = true
 		order: string = localStorage.getItem('forum/topic-order') || 'date'
-		orderItems = [
-			{ value: 'date', title: 'Date', icon: 'mdi-clock-outline' },
-			{ value: 'votes', title: 'Votes', icon: 'mdi-thumb-up-outline' },
-		]
+		get orderItems() {
+			return [
+				{ value: 'date', title: 'Date', icon: 'mdi-clock-outline' },
+				{ value: 'votes', title: 'Votes', icon: 'mdi-thumb-up-outline' },
+				{ value: 'priority', title: this.$t('priority') as string, icon: 'mdi-flag-outline' },
+			]
+		}
 
 		get languages() {
 			return Object.values(LeekWars.languages).filter(l => l.forum)
@@ -493,6 +499,13 @@ body.dark .topic .seen img.seen {
 	}
 	.release-badge {
 		background: #28a745;
+	}
+	.priority-flag {
+		font-size: 18px;
+		opacity: 1;
+		&.priority-high { color: #e53935; }
+		&.priority-medium { color: #fb8c00; }
+		&.priority-low { color: #757575; }
 	}
 }
 .topic .description {

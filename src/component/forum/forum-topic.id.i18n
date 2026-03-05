@@ -31,5 +31,13 @@
 	"unsolved": "Belum terselesaikan",
 	"create_issue": "Buat issue",
 	"move": "Pindahkan",
-	"not_last_page": "Anda tidak berada di halaman terakhir topik"
+	"not_last_page": "Anda tidak berada di halaman terakhir topik",
+	"priority_none": "Tanpa prioritas",
+	"priority_high": "Tinggi",
+	"priority_medium": "Sedang",
+	"priority_low": "Rendah",
+	"hide_topic": "Sembunyikan",
+	"show_topic": "Tampilkan",
+	"set_release": "Rilis",
+	"release_hint": "Masukkan 0 untuk menghapus rilis"
 }

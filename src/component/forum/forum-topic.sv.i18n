@@ -31,5 +31,13 @@
 	"unsolved": "Olöst",
 	"create_issue": "Skapa issue",
 	"move": "Flytta",
-	"not_last_page": "Du är inte på sista sidan i ämnet"
+	"not_last_page": "Du är inte på sista sidan i ämnet",
+	"priority_none": "Ingen prioritet",
+	"priority_high": "Hög",
+	"priority_medium": "Medel",
+	"priority_low": "Låg",
+	"hide_topic": "Dölj",
+	"show_topic": "Visa",
+	"set_release": "Release",
+	"release_hint": "Ange 0 för att ta bort releasen"
 }

@@ -17,5 +17,15 @@
 	"topic": "Aihe",
 	"mark_as_read": "Merkitse luetuksi",
 	"mark_as_read_text": "Kaikki aiheet kaikissa foorumiluokissa merkitään luetuiksi. Tämän toiminnon jälkeen vain uudet aiheet tai uudet vastaukset näytetään.",
-	"show_resolved": "Näytä ratkaistut aiheet"
+	"show_resolved": "Näytä ratkaistut aiheet",
+	"priority": "Prioriteetti",
+	"priority_high": "Korkea",
+	"priority_medium": "Keskitaso",
+	"priority_low": "Matala",
+	"hidden_topic": "Piilotettu aihe",
+	"status_acknowledged": "Huomioitu",
+	"status_not_a_bug": "Ei bugi",
+	"status_not_planned": "Ei suunniteltu",
+	"status_not_reproduced": "Ei toistettu",
+	"status_resolved": "Ratkaistu"
 }
