@@ -348,8 +348,10 @@
 							<leek-image :leek="leek" :scale="0.9" />
 							<div class="name">{{ leek.name }}</div>
 							<lw-title v-if="leek.title.length" :title="leek.title" />
-							<talent :id="leek.id" :talent="leek.talent" category="leek" />
-							<br>
+							<div class="talent-ranking">
+								<talent :id="leek.id" :talent="leek.talent" category="leek" />
+								<ranking-badge v-if="leek.ranking && leek.ranking <= 1000 && leek.in_garden" :id="leek.id" :ranking="leek.ranking" category="leek" />
+							</div>
 							<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>
 						</div>
 					</router-link>
@@ -1236,9 +1238,12 @@ import { emitter } from '@/model/vue'
 			overflow: hidden;
 			white-space: nowrap;
 		}
-		.talent {
+		.talent-ranking {
 			margin-top: 2px;
 			margin-bottom: 5px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
 		}
 		.level {
 			font-size: 17px;
