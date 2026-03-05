@@ -9,24 +9,27 @@
 		<panel class="first">
 			<template #content>
 				<div class="newsletters">
-					<div ref="progress" class="progress">
+					<!-- <div ref="progress" class="progress">
 						<div v-for="p in progress" :key="p.id">{{ p.progress }} --- {{ p.farmer }} ({{ p.id }}) --- {{ p.email }}</div>
-					</div>
+					</div> -->
 					<div v-for="newsletter in newsletters" :key="newsletter.id" class="newsletter card">
 						<div class="main">
 							<b>Version {{ newsletter.version }}</b>
-							<div>FR : {{ newsletter.title_fr }}</div>
-							<div>EN : {{ newsletter.title_en }}</div>
 							<div class="spacer"></div>
-							<v-btn @click="test(newsletter)"><v-icon>mdi-cog-outline</v-icon> Test</v-btn>
-							<v-btn v-if="newsletter.sent === 0" color="primary" @click="send(newsletter)"><v-icon>mdi-send-outline</v-icon> Envoyer</v-btn>
-							<div v-else>Envoyé le {{ $filters.date(newsletter.sent) }}</div>
+							<v-btn @click="test(newsletter, $store.getters.farmer.id)"><v-icon>mdi-cog-outline</v-icon> Test compte normal</v-btn>
+							<v-btn @click="test(newsletter, 73156)"><v-icon>mdi-cog-outline</v-icon> Test compte random</v-btn>
+							<!-- <v-btn v-if="newsletter.sent === 0" color="primary" @click="send(newsletter)"><v-icon>mdi-send-outline</v-icon> Envoyer</v-btn> -->
+							<div v-if="newsletter.sent !== 0">Envoyé le {{ $filters.date(newsletter.sent) }}</div>
 						</div>
 						<div class="content">
-							FR :
-							<div v-html="html(newsletter.content_fr)"></div>
-							EN :
-							<div v-html="html(newsletter.content_en)"></div>
+							<v-card>
+								<div><flag code="fr" /> {{ newsletter.title_fr }}</div>
+								<div v-html="html(newsletter.content_fr)"></div>
+							</v-card>
+							<v-card>
+								<div><flag code="gb" /> {{ newsletter.title_en }}</div>
+								<div v-html="html(newsletter.content_en)"></div>
+							</v-card>
 						</div>
 					</div>
 				</div>
@@ -58,8 +61,8 @@
 			return html.replace("\n", "")
 		}
 
-		test(newsletter: any) {
-			LeekWars.post('newsletter/test', {id: newsletter.id}).then(x => LeekWars.toast("Envoyé !"))
+		test(newsletter: any, target: any) {
+			LeekWars.post('newsletter/test', {id: newsletter.id, target: target}).then(x => LeekWars.toast("Envoyé !"))
 		}
 
 		send(newsletter: any) {
@@ -112,9 +115,13 @@
 		margin: 15px;
 	}
 	.newsletter {
+		.flag {
+			height: 15px;
+		}
 		.main {
 			display: flex;
 			align-items: center;
+			flex-wrap: wrap;
 			padding: 10px;
 			gap: 10px;
 			height: 64px;
@@ -123,6 +130,11 @@
 			display: flex;
 			justify-content: center;
 			padding-bottom: 15px;
+			gap: 15px;
+		}
+		.v-card {
+			flex: 700px 0 0;
+			padding: 15px;
 		}
 	}
 	.progress {
