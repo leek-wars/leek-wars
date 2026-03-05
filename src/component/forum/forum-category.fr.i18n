@@ -25,7 +25,7 @@
 	"status_acknowledged": "Pris en compte",
 	"hidden_topic": "Sujet masqué",
 	"priority": "Priorité",
-	"priority_high": "Haute",
-	"priority_medium": "Moyenne",
-	"priority_low": "Basse"
+	"priority_high": "Priorité haute",
+	"priority_medium": "Priorité moyenne",
+	"priority_low": "Priorité basse"
 }

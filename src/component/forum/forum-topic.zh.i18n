@@ -32,7 +32,7 @@
 	"create_issue": "创建Issue",
 	"move": "移动",
 	"not_last_page": "您不在主题的最后一页",
-	"priority_none": "无优先级",
+	"priority_none": "无",
 	"priority_high": "高",
 	"priority_medium": "中",
 	"priority_low": "低",

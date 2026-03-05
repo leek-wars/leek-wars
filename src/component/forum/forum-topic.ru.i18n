@@ -32,7 +32,7 @@
 	"create_issue": "Создать issue",
 	"move": "Переместить",
 	"not_last_page": "Вы не на последней странице темы",
-	"priority_none": "Без приоритета",
+	"priority_none": "Нет",
 	"priority_high": "Высокий",
 	"priority_medium": "Средний",
 	"priority_low": "Низкий",

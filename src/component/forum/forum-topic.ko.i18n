@@ -32,7 +32,7 @@
 	"create_issue": "Issue 생성",
 	"move": "이동",
 	"not_last_page": "주제의 마지막 페이지에 있지 않습니다.",
-	"priority_none": "우선순위 없음",
+	"priority_none": "없음",
 	"priority_high": "높음",
 	"priority_medium": "보통",
 	"priority_low": "낮음",

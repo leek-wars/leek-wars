@@ -32,7 +32,7 @@
 	"create_issue": "Issueを作成",
 	"move": "移動",
 	"not_last_page": "あなたはトピックの最後のページにいません",
-	"priority_none": "優先度なし",
+	"priority_none": "なし",
 	"priority_high": "高",
 	"priority_medium": "中",
 	"priority_low": "低",

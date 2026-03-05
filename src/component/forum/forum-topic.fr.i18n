@@ -36,7 +36,7 @@
 	"show_topic": "Afficher",
 	"set_release": "Release",
 	"release_hint": "Entrez 0 pour retirer la release",
-	"priority_none": "Pas de priorité",
+	"priority_none": "Aucune",
 	"priority_high": "Haute",
 	"priority_medium": "Moyenne",
 	"priority_low": "Basse"

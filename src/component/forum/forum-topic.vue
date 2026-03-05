@@ -155,6 +155,10 @@
 										</template>
 									</v-select>
 								</template>
+								<span v-if="message.id == -1 && topic.priority && !($store.state.farmer && $store.state.farmer.admin)" class="priority-label" :class="'priority-' + topic.priority">
+									<v-icon :color="topic.priority === 1 ? '#e53935' : topic.priority === 2 ? '#fb8c00' : '#757575'" size="small">mdi-flag</v-icon>
+									{{ topic.priority === 1 ? $t('priority_high') : topic.priority === 2 ? $t('priority_medium') : $t('priority_low') }}
+								</span>
 								<template v-if="message.id == -1">
 									<span v-if="topic.acknowledged && !topic.private_issue && !($store.state.farmer && $store.state.farmer.admin)" class="status-text"><v-icon color="#6f42c1">mdi-eye</v-icon> {{ $t('status_acknowledged') }}</span>
 									<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars/issues/' + topic.issue" class="issue-badge" target="_blank" rel="noopener">
@@ -963,15 +967,15 @@ import { emitter } from '@/model/vue'
 			color: var(--text-color);
 		}
 	}
-	.priority-badge {
-		border-radius: 5px;
+	.priority-label {
 		font-size: 13px;
 		font-weight: 500;
-		padding: 0 4px;
-		color: white;
-		&.priority-high { background: #e53935; }
-		&.priority-medium { background: #fb8c00; }
-		&.priority-low { background: #757575; }
+		display: inline-flex;
+		align-items: center;
+		gap: 2px;
+		&.priority-1 { color: #e53935; }
+		&.priority-2 { color: #fb8c00; }
+		&.priority-3 { color: #757575; }
 	}
 	.editor {
 		margin-left: 140px;
