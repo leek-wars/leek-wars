@@ -40,8 +40,8 @@
     - "Chat: filtraggio degli oggetti non disponibili nel comando /market."
     - Hosting locale del font Roboto (rimozione della dipendenza da Google Fonts).
     - "Rapporti: migrazione dei grafici a Chart.js con tooltip, click-to-focus e supporto dark mode."
-    - Chat: limitazione dei messaggi in memoria con ricaricamento allo scroll.
-    - Enciclopedia: rilascio automatico del blocco alla chiusura della scheda.
+    - "Chat: limitazione dei messaggi in memoria con ricaricamento allo scroll."
+    - "Enciclopedia: rilascio automatico del blocco alla chiusura della scheda."
     - Miglioramento della riconnessione WebSocket (backoff esponenziale, rilevamento connessioni morte).
     - Compressione Brotli delle pagine per caricamenti più rapidi.
     - "Visualizzazione del numero di riga dell'IA nell'errore quando l'IA è troppo grande. #img_244_error_large"

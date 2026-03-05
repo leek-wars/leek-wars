@@ -40,8 +40,8 @@
     - "Chat: filter unavailable items in the /market command."
     - Self-hosted Roboto font (removed Google Fonts dependency).
     - "Reports: migrated charts to Chart.js with tooltips, click-to-focus and dark mode support."
-    - Chat: limited messages in memory with reload on scroll.
-    - Encyclopedia: automatic lock release when closing the tab.
+    - "Chat: limited messages in memory with reload on scroll."
+    - "Encyclopedia: automatic lock release when closing the tab."
     - Improved WebSocket reconnection (exponential backoff, dead connection detection).
     - Brotli compression for faster page loads.
     - "Display AI line number in the error when the AI is too large. #img_244_error_large"

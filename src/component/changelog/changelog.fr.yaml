@@ -40,8 +40,8 @@
     - "Chat : filtrage des items non disponibles dans la commande /market."
     - Hébergement de la police Roboto en local (suppression de la dépendance à Google Fonts).
     - "Rapports : migration des graphiques vers Chart.js avec tooltips, click-to-focus et dark mode."
-    - Chat : limitation des messages en mémoire avec rechargement au scroll.
-    - Encyclopédie : relâchement automatique du verrou à la fermeture de l'onglet.
+    - "Chat : limitation des messages en mémoire avec rechargement au scroll."
+    - "Encyclopédie : relâchement automatique du verrou à la fermeture de l'onglet."
     - Amélioration de la reconnexion WebSocket (backoff exponentiel, détection de connexions mortes).
     - Compression Brotli des pages pour des chargements plus rapides.
     - "Affichage de la ligne de l'IA dans l'erreur quand l'IA est trop grosse. #img_244_error_large"
