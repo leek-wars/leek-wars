@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="page">
 		<div class="page-header page-bar">
 			<div>
 				<h1><router-link to="/admin">Administration</router-link> > Newsletters</h1>
@@ -54,7 +54,10 @@
 			LeekWars.setTitle("Admin Newsletters")
 
 			LeekWars.get('newsletter/all').then(newsletters => this.newsletters = newsletters)
-			LeekWars.get('newsletter/count').then(count => this.count = count)
+			LeekWars.get('newsletter/count').then(count => {
+				this.count = count
+				LeekWars.setSubTitle(count + " inscrits")
+			})
 		}
 
 		html(html: string) {
@@ -124,7 +127,6 @@
 			flex-wrap: wrap;
 			padding: 10px;
 			gap: 10px;
-			height: 64px;
 		}
 		.content {
 			display: flex;
@@ -140,6 +142,12 @@
 			font-weight: bold;
 			font-size: 18px;
 			margin-bottom: 10px;
+		}
+	}
+	#app.app .content {
+		flex-wrap: wrap;
+		.v-card {
+			flex: 100% 0 0;
 		}
 	}
 	.progress {
