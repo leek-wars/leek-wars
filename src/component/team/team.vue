@@ -105,7 +105,7 @@
 					</template>
 					{{ $t('ratio', [team.ratio]) }}
 				</v-tooltip>
-				
+
 				<Line v-if="chartData" :data="chartData" :options="chartOptions" class="talent-history" />
 
 				<div class="center" v-if="team && $store.state.farmer && !is_member && $store.state.farmer.team == null">
@@ -164,6 +164,9 @@
 
 		<panel v-if="team" icon="mdi-account-supervisor" :title="$t('farmers', [ team.member_count])">
 			<template #actions>
+				<div v-if="is_member || $store.state.farmer?.admin" class="button flat" @click="toggleMembersView">
+					<v-icon>{{ membersTableView ? 'mdi-view-grid' : 'mdi-view-list' }}</v-icon>
+				</div>
 				<div v-if="owner && !editMembers" class="button flat" @click="editMembers = true">
 					<v-icon>mdi-pencil</v-icon>
 				</div>
@@ -173,7 +176,7 @@
 			</template>
 			<template #content>
 				<loader v-if="!team" />
-				<div v-else class="members">
+				<div v-else-if="(!is_member && !$store.state.farmer?.admin) || !membersTableView" class="members">
 					<div v-for="member in team.members" :key="member.id" class="farmer">
 						<router-link :to="'/farmer/' + member.id">
 							<rich-tooltip-farmer :id="member.id" v-slot="{ props }">
@@ -222,6 +225,55 @@
 						</template>
 					</div>
 				</div>
+				<v-data-table v-else
+					:headers="membersHeaders"
+					:items="team.members"
+					hide-default-footer
+					:items-per-page="100"
+					density="compact"
+					:sort-by="[{ key: 'last_connection', order: 'desc' }]"
+					class="members-table">
+					<template #item.name="{ item }">
+						<router-link v-ripple :to="'/farmer/' + item.id" class="member-link">
+							<rich-tooltip-farmer :id="item.id" v-slot="{ props }">
+								<span v-bind="props" class="member-info">
+									<avatar :farmer="item" class="table-avatar" />
+									<img v-if="item.connected" class="status" src="/image/connected.png">
+									<img v-else class="status" src="/image/disconnected.png">
+									{{ item.name }}
+								</span>
+							</rich-tooltip-farmer>
+						</router-link>
+					</template>
+					<template #item.grade="{ item }">
+						<span :class="item.color">
+							<span v-if="item.grade == 'owner'">★ </span>
+							<span v-else-if="item.grade == 'captain'">☆ </span>
+							{{ $t(item.grade) }}
+						</span>
+					</template>
+					<template #item.country="{ item }">
+						<flag v-if="item.country" :code="item.country" />
+					</template>
+					<template #item.talent="{ item }">
+						{{ $filters.number(item.talent) }}
+					</template>
+					<template #item.points="{ item }">
+						{{ $filters.number(item.points) }}
+					</template>
+					<template #item.victories="{ item }">
+						{{ $filters.number(item.victories) }}
+					</template>
+					<template #item.draws="{ item }">
+						{{ $filters.number(item.draws) }}
+					</template>
+					<template #item.defeats="{ item }">
+						{{ $filters.number(item.defeats) }}
+					</template>
+					<template #[`item.last_connection`]="{ item }">
+						{{ item.connected ? $t('main.connected') : LeekWars.formatDuration(item.last_connection) }}
+					</template>
+				</v-data-table>
 			</template>
 		</panel>
 
@@ -652,6 +704,7 @@
 		turretAiDialog: boolean = false
 		logsDialog: boolean = false
 		editMembers: boolean = false
+		membersTableView: boolean = localStorage.getItem('team/members-table-view') !== 'false'
 		logsLevel: number = 0
 		rankingsLoading: boolean = false
 		rankingsLoaded: boolean = false
@@ -663,6 +716,21 @@
 		get xp_bar_width() { return this.team ? this.team.level === 100 ? 100 : Math.floor(100 * (this.team.xp - this.team.down_xp) / (this.team.up_xp - this.team.down_xp)) : 0 }
 		get is_member() { return !this.$route.params.id || (this.team && this.$store.state.farmer && this.$store.state.farmer.team !== null && this.team.id === this.$store.state.farmer.team.id) }
 		get my_member() { return this.is_member ? this.team!.membersById[this.$store.state.farmer.id] : null }
+
+		get membersHeaders() {
+			return [
+				{ title: this.$t('main.farmer'), value: 'name', sortable: true },
+				{ title: this.$t('main.grade'), value: 'grade', sortable: true },
+				{ title: this.$t('main.country'), value: 'country', sortable: true, align: 'center' },
+				{ title: this.$t('main.talent'), value: 'talent', sortable: true, align: 'end' },
+				{ title: this.$t('main.level'), value: 'total_level', sortable: true, align: 'end' },
+				{ title: this.$t('main.trophies'), value: 'points', sortable: true, align: 'end' },
+				{ title: this.$t('main.victories'), value: 'victories', sortable: true, align: 'end' },
+				{ title: this.$t('main.draws'), value: 'draws', sortable: true, align: 'end' },
+				{ title: this.$t('main.defeats'), value: 'defeats', sortable: true, align: 'end' },
+				{ title: this.$t('main.last_connection'), value: 'last_connection', sortable: true },
+			]
+		}
 
 		get turret() {
 			if (!this.team) { return {} }
@@ -952,6 +1020,10 @@
 				this.update()
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
+		}
+		toggleMembersView() {
+			this.membersTableView = !this.membersTableView
+			localStorage.setItem('team/members-table-view', String(this.membersTableView))
 		}
 		sendCandidacy() {
 			if (!this.team) { return }
@@ -1279,6 +1351,29 @@
 		margin: 2px 0;
 		span {
 			padding-left: 2px;
+		}
+	}
+	.members-table {
+		white-space: nowrap;
+		:deep(td), :deep(th) {
+			padding: 0 8px !important;
+		}
+		.member-info {
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
+		.table-avatar {
+			width: 36px;
+			height: 36px;
+			margin-right: 8px;
+		}
+		.status {
+			width: 13px;
+			margin-right: 2px;
+		}
+		.flag {
+			height: 16px;
 		}
 	}
 	.farmer .status {
