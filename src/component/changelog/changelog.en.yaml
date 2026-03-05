@@ -5,6 +5,7 @@
     - Added setBit and testBit functions to read or write a specific bit (thanks to Batary).
     - Added bitLength function which complements leadingZeros for BigInteger (thanks to Batary).
     - "Display leek ranking badges on the farmer page. #img_245_ranking_badges"
+    - "Display farmer avatars in solo tournaments. #img_245_tournament_avatars"
   improved:
     - "Encyclopedia: clarified arrayFoldLeft and arrayFoldRight behavior with an empty array (thanks to Loutreavin)."
 
