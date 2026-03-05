@@ -45,6 +45,7 @@
     - Amélioration de la reconnexion WebSocket (backoff exponentiel, détection de connexions mortes).
     - Compression Brotli des pages pour des chargements plus rapides.
     - "Affichage de la ligne de l'IA dans l'erreur quand l'IA est trop grosse. #img_244_error_large"
+    - "Documentation : Ctrl+Alt+H ne change plus le titre de la page (merci à Casanova)."
   fixed:
     - Correction d'un bug empêchant les combats d'équipe quand l'IA de la tourelle était inexistante.
     - "Boss : correction du décompte de combats au lancement d'un boss sans y participer (#2344)."

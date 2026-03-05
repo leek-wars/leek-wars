@@ -45,6 +45,7 @@
     - Miglioramento della riconnessione WebSocket (backoff esponenziale, rilevamento connessioni morte).
     - Compressione Brotli delle pagine per caricamenti più rapidi.
     - "Visualizzazione del numero di riga dell'IA nell'errore quando l'IA è troppo grande. #img_244_error_large"
+    - "Documentazione: Ctrl+Alt+H non cambia più il titolo della pagina (grazie a Casanova)."
   fixed:
     - Correzione di un bug che impediva i combattimenti di squadra quando l'IA della torretta mancava.
     - "Boss: correzione del conteggio combattimenti al lancio di un boss senza parteciparvi (#2344)."
