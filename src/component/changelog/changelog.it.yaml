@@ -1,14 +1,37 @@
 245:
-  title: WIP
+  title: "Like, animazioni di combattimento, BigInteger e miglioramenti forum."
   added:
-    - Aggiunta dei BigInteger in LeekScript (grazie a Batary).
-    - Aggiunta delle funzioni setBit e testBit per leggere o scrivere un bit specifico (grazie a Batary).
-    - Aggiunta della funzione bitLength che completa leadingZeros per i BigInteger (grazie a Batary).
+    - "Pulsante like sui profili degli allevatori. #img_245_likes"
+    - "Animazione dei cambiamenti di vita nel player di combattimento. #img_245_life_animation"
+    - "Pulsante per cancellare mark() e markText() nel player (scorciatoia M)."
+    - "Aggiunta dei BigInteger in LeekScript (grazie a Batary)."
+    - "Aggiunta delle funzioni setBit, testBit e bitLength per i BigInteger (grazie a Batary)."
     - "Visualizzazione dei ranghi di classifica dei porri sulla pagina allevatore. #img_245_ranking_badges"
     - "Visualizzazione degli avatar degli allevatori nei tornei solo. #img_245_tournament_avatars"
-    - "Visualizzazione dei tooltip con le statistiche al passaggio del mouse sui partecipanti nei tornei. #img_245_tooltips_tournament"
+    - "Tooltip con le statistiche al passaggio del mouse nei tornei. #img_245_tooltips_tournament"
+    - "Tabella dettagliata delle statistiche dei membri nella pagina squadra. #img_245_team_stats"
+    - "Aggiunta della classifica fun dei danni inflitti. #img_245_damage_ranking"
+    - "Contatore di visualizzazioni sui topic del forum. #img_245_forum_views"
+    - "Notifiche per i voti positivi e negativi sul forum."
+    - "Avviso prima di rispondere a un topic vecchio (> 1 anno). #img_245_old_topic"
+    - "Ordinamento dei topic per numero di messaggi."
+    - "Sistema di priorita per i topic del forum."
+    - "Annuncio dei vincitori dei tornei nella chat."
+    - "Pulsante di espansione nella pagina mercato. #img_245_market_expand"
+    - "URL /release/:version per vedere un changelog specifico."
+    - "Pagina della cronologia dei giudizi di moderazione."
+    - "Parametro entity opzionale per getNextPlayer e getPreviousPlayer."
   improved:
-    - "Enciclopedia: precisato il comportamento di arrayFoldLeft e arrayFoldRight con un array vuoto (grazie a Loutreavin)."
+    - "Enciclopedia: comportamento di arrayFoldLeft/Right con un array vuoto (grazie a Loutreavin)."
+    - "Forum: miglioramento del layout mobile delle categorie."
+    - "Annuncio dei tornei 30 minuti prima invece di un'ora."
+  fixed:
+    - "Editor: sostituzione del testo selezionato da destra a sinistra su Firefox."
+    - "Caratteristica cuori tradotta come hearts invece di cores."
+    - "Pulsante annulla che non chiudeva la finestra di creazione squadra."
+    - "Breadcrumb del forum che deborda su mobile."
+    - "Pulsanti di azione mobile rotti dalla migrazione Vue 3."
+    - "Correzioni di visualizzazione del tutorial."
 
 244:
   title: "Migrazione Vue 3, nuove classifiche, aggiunte pratiche e correzioni."

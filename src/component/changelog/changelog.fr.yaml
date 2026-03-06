@@ -1,14 +1,35 @@
 245:
-  title: WIP
+  title: "Likes, animations de combat, BigIntegers et améliorations forum."
   added:
-    - Ajout des BigIntegers dans le LeekScript (merci à Batary).
-    - Ajout des fonctions setBit et testBit pour lire ou écrire un bit spécifique (merci à Batary).
-    - Ajout de la fonction bitLength qui complète leadingZeros pour les BigInteger (merci à Batary).
+    - "Bouton like sur les profils d'éleveurs. #img_245_likes"
+    - "Animation des changements de vie dans le player de combat. #img_245_life_animation"
+    - "Bouton pour effacer les mark() et markText() dans le player (raccourci M)."
     - "Affichage des rangs de classement des poireaux sur la page éleveur. #img_245_ranking_badges"
     - "Affichage des avatars des éleveurs dans les tournois solo. #img_245_tournament_avatars"
-    - "Affichage des tooltips avec les stats au survol des participants dans les tournois. #img_245_tooltips_tournament"
+    - "Tooltips avec les stats au survol des participants dans les tournois. #img_245_tooltips_tournament"
+    - "Tableau détaillé des statistiques des membres sur la page d'équipe. #img_245_team_stats"
+    - "Ajout du classement fun des dégâts infligés. #img_245_damage_ranking"
+    - "Compteur de vues sur les topics du forum. #img_245_forum_views"
+    - "Notifications pour les votes positifs et négatifs sur le forum."
+    - "Avertissement avant de répondre à un topic ancien (> 1 an). #img_245_old_topic"
+    - "Tri des topics par nombre de messages."
+    - "Système de priorité pour les topics du forum."
+    - "Annonce des vainqueurs de tournois dans le chat."
+    - "Bouton d'agrandissement sur la page marché. #img_245_market_expand"
+    - "URL /release/:version pour voir un changelog spécifique."
+    - "Page d'historique des jugements de modération."
+    - "Paramètre entity optionnel pour getNextPlayer et getPreviousPlayer."
   improved:
-    - "Encyclopédie : précision du comportement de arrayFoldLeft et arrayFoldRight avec un tableau vide (merci à Loutreavin)."
+    - "Encyclopédie : comportement de arrayFoldLeft/Right avec un tableau vide (merci à Loutreavin)."
+    - "Forum : amélioration de la mise en page mobile des catégories."
+    - "Annonce des tournois 30 minutes avant au lieu d'une heure."
+  fixed:
+    - "Éditeur : remplacement de texte sélectionné de droite à gauche sous Firefox."
+    - "Caractéristique coeurs traduite par hearts au lieu de cores."
+    - "Bouton annuler ne fermant pas la popup de création d'équipe."
+    - "Fil d'Ariane du forum qui déborde sur mobile."
+    - "Boutons d'action mobile cassés par la migration Vue 3."
+    - "Corrections d'affichage du didacticiel."
 
 244:
   title: "Migration Vue 3, nouveaux classements, ajouts pratiques et corrections."
