@@ -117,6 +117,8 @@
 									</v-tooltip>
 								</div>
 
+								<span v-if="message.id == -1" class="views-counter"><v-icon>mdi-eye</v-icon> {{ $tc('main.n_views', topic.views) }}</span>
+
 								<template v-if="message.id == -1 && $store.state.connected && category.moderator">
 									<span class="action lock" @click="lock"><v-icon>mdi-lock</v-icon> {{ topic.locked ? $t('unlock') : $t('lock') }}</span>
 									<span class="action pin" @click="pin"><v-icon>mdi-pin</v-icon> {{ topic.pinned ? $t('unpin') : $t('pin') }}</span>
@@ -247,9 +249,6 @@
 
 				<div v-if="$store.state.farmer && !$store.state.farmer.verified" class="green-link editor"><router-link class="green-link" to="/settings">Vérifiez votre compte pour répondre sur le forum</router-link><br><br></div>
 
-				<div v-if="topic" class="views-counter">
-					<v-icon>mdi-eye</v-icon> {{ $tc('main.n_views', topic.views) }}
-				</div>
 				<breadcrumb :items="breadcrumb_items" />
 				</div>
 			</template>
