@@ -31,7 +31,7 @@
 		</panel>
 		<template v-else>
 			<panel v-for="version in lazy_changelog" :key="version.version" icon="mdi-star">
-				<template #title><router-link :to="'/release/' + version.version_name">{{ $t('changelog.version_n', [version.version_name]) }}</router-link> ({{ $filters.date(version.date) }}) {{ translations[version.version] && translations[version.version].title ? ' — ' + translations[version.version].title : '' }}</template>
+				<template #title><router-link :to="'/release/' + version.version_name">{{ $t('changelog.version_n', [version.version_name]) }}</router-link>&nbsp;({{ $filters.date(version.date) }}) {{ translations[version.version] && translations[version.version].title ? ' — ' + translations[version.version].title : '' }}</template>
 				<template #actions>
 					<router-link v-if="!routeVersion" :to="'/release/' + version.version_name" class="button flat">
 						<v-icon>mdi-link-variant</v-icon>
