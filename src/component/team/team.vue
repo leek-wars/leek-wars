@@ -1364,8 +1364,8 @@
 			gap: 4px;
 		}
 		.table-avatar {
-			width: 36px;
-			height: 36px;
+			width: 33px;
+			height: 33px;
 			margin-right: 8px;
 		}
 		.status {
