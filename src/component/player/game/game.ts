@@ -479,6 +479,7 @@ class Game {
 
 			// Life
 			entity.life = e.life
+			entity.displayLife = e.life
 			entity.maxLife = entity.life
 			entity.initialMaxLife = entity.maxLife
 
@@ -631,6 +632,7 @@ class Game {
 					entity.drawID = this.addDrawableElement(entity, entity.y)
 				} else {
 					entity.life = 0
+					entity.displayLife = 0
 					entity.dead = true
 				}
 				this.entityOrder.push(entity)
@@ -1433,6 +1435,7 @@ class Game {
 			const entity = this.leeks[target]
 
 			entity.life = life
+			entity.displayLife = life
 			entity.maxLife = maxLife
 			if (entity.initialMaxLife === 0) {
 				entity.initialMaxLife = entity.maxLife
@@ -2149,6 +2152,9 @@ class Game {
 	public clearMarks() {
 		this.markers = []
 		this.markersText = []
+		if (this.paused) {
+			this.redraw()
+		}
 	}
 
 	public addObstacle(obstacle: Obstacle) {
@@ -2771,6 +2777,7 @@ class Game {
 			const leek = this.leeks[i] as Leek
 			leek.active = this.states[i].active && this.states[i].cell
 			leek.life = this.states[i].life
+			leek.displayLife = this.states[i].life
 			leek.maxLife = this.states[i].maxLife
 			leek.tp = this.states[i].tp
 			leek.mp = this.states[i].mp
