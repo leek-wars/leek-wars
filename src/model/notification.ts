@@ -39,6 +39,8 @@ enum NotificationType {
 	FORUM_TOPIC = 36, // Création d'un nouveau topic
 	GIVE_MONEY = 37, // Don d'argent
 	GIVE_FIGHTS = 38, // Don de combats
+	FORUM_VOTE_UP = 39, // Vote positif sur un message/topic forum
+	FORUM_VOTE_DOWN = 40, // Vote négatif sur un message/topic forum
 }
 
 class Notification {

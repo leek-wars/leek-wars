@@ -100,5 +100,9 @@
 	"title_37": "{0} ti ha dato {1} habs",
 	"message_37": "Vedere il mercato",
 	"title_38": "{0} ti ha dato {1} combattimenti",
-	"message_38": "Andare nell'orto"
+	"message_38": "Andare nell'orto",
+	"title_39": "{0} ha votato positivamente il tuo messaggio in {1}",
+	"message_39": "Visualizza messaggio",
+	"title_40": "{0} ha votato negativamente il tuo messaggio in {1}",
+	"message_40": "Visualizza messaggio"
 }
