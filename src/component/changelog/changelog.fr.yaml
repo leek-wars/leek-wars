@@ -6,6 +6,7 @@
     - Ajout de la fonction bitLength qui complète leadingZeros pour les BigInteger (merci à Batary).
     - "Affichage des rangs de classement des poireaux sur la page éleveur. #img_245_ranking_badges"
     - "Affichage des avatars des éleveurs dans les tournois solo. #img_245_tournament_avatars"
+    - "Affichage des tooltips avec les stats au survol des participants dans les tournois. #img_245_tooltips_tournament"
   improved:
     - "Encyclopédie : précision du comportement de arrayFoldLeft et arrayFoldRight avec un tableau vide (merci à Loutreavin)."
 

@@ -6,6 +6,7 @@
     - Added bitLength function which complements leadingZeros for BigInteger (thanks to Batary).
     - "Display leek ranking badges on the farmer page. #img_245_ranking_badges"
     - "Display farmer avatars in solo tournaments. #img_245_tournament_avatars"
+    - "Display tooltips with stats when hovering over tournament participants. #img_245_tooltips_tournament"
   improved:
     - "Encyclopedia: clarified arrayFoldLeft and arrayFoldRight behavior with an empty array (thanks to Loutreavin)."
 
