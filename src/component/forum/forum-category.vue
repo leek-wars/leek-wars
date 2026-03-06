@@ -465,7 +465,7 @@ i.attr {
 	box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 }
 .topic > .seen {
-	flex: 0 0 40px;
+	flex: 0 0 50px;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	padding-right: 5px;
