@@ -30,11 +30,11 @@
 		padding: 10px;
 		display: block;
 		i {
-			margin-left: -6px;
-			margin-right: -6px;
+			padding-right: 8px;
+			margin-bottom: 2px;
 		}
 		.item {
-			padding: 0 4px;
+			padding-right: 8px;
 		}
 	}
 </style>
