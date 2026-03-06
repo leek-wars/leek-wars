@@ -1,7 +1,10 @@
 <template lang="html">
 	<div class="page changelog-page">
 		<div class="page-header page-bar">
-			<h1>{{ $t('main.changelog') }}</h1>
+			<h1>
+				<breadcrumb v-if="routeVersion" :items="breadcrumb_items" :raw="true" />
+				<template v-else>{{ $t('main.changelog') }}</template>
+			</h1>
 			<div class="tabs">
 				<router-link to="/about">
 					<div class="tab">
@@ -28,8 +31,11 @@
 		</panel>
 		<template v-else>
 			<panel v-for="version in lazy_changelog" :key="version.version" icon="mdi-star">
-				<template #title>{{ $t('changelog.version_n', [version.version_name]) }} ({{ $filters.date(version.date) }}) {{ translations[version.version] && translations[version.version].title ? ' — ' + translations[version.version].title : '' }}</template>
+				<template #title><router-link :to="'/release/' + version.version_name">{{ $t('changelog.version_n', [version.version_name]) }}</router-link> ({{ $filters.date(version.date) }}) {{ translations[version.version] && translations[version.version].title ? ' — ' + translations[version.version].title : '' }}</template>
 				<template #actions>
+					<router-link v-if="!routeVersion" :to="'/release/' + version.version_name" class="button flat">
+						<v-icon>mdi-link-variant</v-icon>
+					</router-link>
 					<div class="button flat" @click="showChangelogDialog(version)">
 						<v-icon>mdi-eye-outline</v-icon>
 					</div>
@@ -51,14 +57,18 @@
 
 import { ref, computed, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { locale } from '@/model/i18n'
 import { emitter } from '@/model/vue'
+import Breadcrumb from '../forum/breadcrumb.vue'
 import ChangelogDialog from './changelog-dialog.vue'
 import ChangelogVersion from './changelog-version.vue'
 
 const { t } = useI18n()
+const route = useRoute()
+const routeVersion = computed(() => route.params.version ? parseInt((route.params.version as string).replace('.', ''), 10) : null)
 
 interface ChangelogEntry {
 	version: number
@@ -77,8 +87,16 @@ const changelogVersion = ref<ChangelogEntry | null>(null)
 const translations = ref<Record<number, { title?: string }>>({})
 const lazy_end = ref(2)
 
+const breadcrumb_items = computed(() => [
+	{ name: t('main.changelog'), link: '/changelog' },
+	{ name: t('changelog.version_n', [route.params.version]), link: '/release/' + route.params.version },
+])
+
 const lazy_changelog = computed(() => {
 	if (!changelog.value) { return [] }
+	if (routeVersion.value) {
+		return changelog.value.filter(v => v.version === routeVersion.value)
+	}
 	return changelog.value.slice(0, lazy_end.value)
 })
 
@@ -102,7 +120,12 @@ LeekWars.get<{ changelog: ChangelogEntry[] }>('changelog/get/' + locale).then(da
 		changelog.value[c].active = parseInt(c, 10) < 2 ? true : false
 	}
 	addDevVersions()
-	LeekWars.setTitle(t('main.changelog'))
+	if (routeVersion.value) {
+		const version = data.changelog.find(v => v.version === routeVersion.value)
+		LeekWars.setTitle(t('main.changelog') + ' — ' + (version ? version.version_name : route.params.version))
+	} else {
+		LeekWars.setTitle(t('main.changelog'))
+	}
 	emitter.emit('loaded')
 })
 window.addEventListener('scroll', scroll)
@@ -149,7 +172,7 @@ onUnmounted(() => {
 .wrapper {
 	background: rgba(100,100,100,0.1);
 }
-.changelog-page :deep(a) {
+.changelog-page :deep(.panel a) {
 	color: green;
 }
 .image {

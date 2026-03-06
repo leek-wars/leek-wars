@@ -143,6 +143,7 @@ const routes = [
 	{ path: '/conditions', component: Conditions },
 	{ path: '/console', component: ConsolePage },
 	{ path: '/changelog', component: Changelog },
+	{ path: '/release/:version', component: Changelog },
 	{ path: '/change-email/:state/:token', component: ChangeEmail },
 	{ path: '/contact', component: Contact },
 	{ path: '/dev-blog', component: DevBlog },

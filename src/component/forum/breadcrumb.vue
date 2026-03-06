@@ -18,31 +18,23 @@
 
 <style lang="scss" scoped>
 	.breadcrumb {
-		display: inline-flex;
-		margin: 0 -6px;
-		height: 100%;
-		.item {
-			padding: 0 6px;
-			height: 100%;
-		}
-		.item:not(:first-child) {
-			white-space: nowrap;
-			text-overflow: ellipsis;
-			overflow: hidden;
-		}
+		display: inline;
 		i {
-			align-self: center;
+			vertical-align: middle;
 			font-size: 24px;
 		}
 	}
 	.breadcrumb:not(.raw) {
 		font-size: 16px;
+		line-height: 30px;
+		padding: 10px;
+		display: block;
 		i {
 			margin-left: -6px;
 			margin-right: -6px;
 		}
 		.item {
-			padding: 10px;
+			padding: 0 4px;
 		}
 	}
 </style>
