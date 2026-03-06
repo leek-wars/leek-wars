@@ -51,5 +51,7 @@
 	"boss_killed_title": "Possit voitettu",
 	"boss_killed": "Possit",
 	"turrets_killed": "Tornit",
-	"turrets_killed_title": "Torneja tuhottu"
+	"turrets_killed_title": "Torneja tuhottu",
+	"damage_dealt": "Vahinko",
+	"damage_dealt_title": "Aiheutettu vahinko"
 }

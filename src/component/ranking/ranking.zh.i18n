@@ -51,5 +51,7 @@
 	"boss_killed_title": "击杀Boss数",
 	"boss_killed": "Boss",
 	"turrets_killed": "炮塔",
-	"turrets_killed_title": "摧毁炮塔数"
+	"turrets_killed_title": "摧毁炮塔数",
+	"damage_dealt": "伤害",
+	"damage_dealt_title": "造成的伤害"
 }

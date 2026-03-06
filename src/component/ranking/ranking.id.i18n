@@ -51,5 +51,7 @@
 	"boss_killed_title": "Bos dikalahkan",
 	"boss_killed": "Bos",
 	"turrets_killed": "Menara",
-	"turrets_killed_title": "Menara dihancurkan"
+	"turrets_killed_title": "Menara dihancurkan",
+	"damage_dealt": "Kerusakan",
+	"damage_dealt_title": "Kerusakan yang diberikan"
 }

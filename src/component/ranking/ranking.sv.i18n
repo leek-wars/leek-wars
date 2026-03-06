@@ -51,5 +51,7 @@
 	"boss_killed_title": "Bossar besegrade",
 	"boss_killed": "Bossar",
 	"turrets_killed": "Torn",
-	"turrets_killed_title": "Torn förstörda"
+	"turrets_killed_title": "Torn förstörda",
+	"damage_dealt": "Skada",
+	"damage_dealt_title": "Skada orsakad"
 }

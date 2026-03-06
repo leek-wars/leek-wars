@@ -54,5 +54,7 @@
 	"composition": "Composition",
 	"turrets_killed": "Tourelles",
 	"turrets_killed_title": "Tourelles détruites",
-	"won": "Victoires"
+	"won": "Victoires",
+	"damage_dealt": "Dégâts",
+	"damage_dealt_title": "Dégâts infligés"
 }

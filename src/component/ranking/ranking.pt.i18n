@@ -51,5 +51,7 @@
 	"boss_killed_title": "Chefes derrotados",
 	"boss_killed": "Chefes",
 	"turrets_killed": "Torretas",
-	"turrets_killed_title": "Torretas destruídas"
+	"turrets_killed_title": "Torretas destruídas",
+	"damage_dealt": "Dano",
+	"damage_dealt_title": "Dano infligido"
 }

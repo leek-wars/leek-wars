@@ -51,5 +51,7 @@
 	"boss_killed_title": "Bosse besiegt",
 	"boss_killed": "Bosse",
 	"turrets_killed": "Geschütztürme",
-	"turrets_killed_title": "Geschütztürme zerstört"
+	"turrets_killed_title": "Geschütztürme zerstört",
+	"damage_dealt": "Schaden",
+	"damage_dealt_title": "Verursachter Schaden"
 }
