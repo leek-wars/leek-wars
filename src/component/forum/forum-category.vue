@@ -66,6 +66,7 @@
 				<div v-if="!LeekWars.mobile" class="topic header forum-header">
 					<div class="seen"></div>
 					<div>{{ $t('topic') }}</div>
+					<div class="num-views">{{ $t('main.views') }}</div>
 					<div class="num-messages">{{ $t('messages') }}</div>
 					<div class="last-message">{{ $t('last') }}</div>
 				</div>
@@ -139,6 +140,7 @@
 								</i18n-t>
 							</div>
 						</div>
+						<div v-if="!LeekWars.mobile" class="num-views">{{ $tc('main.n_views', topic.views) }}</div>
 						<div v-if="!LeekWars.mobile" class="num-messages">{{ topic.messages }}</div>
 						<div v-if="!LeekWars.mobile" class="last-message grey">
 							<div>
@@ -258,6 +260,7 @@ import { emitter } from '@/model/vue'
 			return [
 				{ value: 'date', title: 'Date', icon: 'mdi-clock-outline' },
 				{ value: 'votes', title: 'Votes', icon: 'mdi-thumb-up-outline' },
+				{ value: 'views', title: this.$t('main.views') as string, icon: 'mdi-eye-outline' },
 				{ value: 'priority', title: this.$t('priority') as string, icon: 'mdi-flag-outline' },
 			]
 		}
@@ -559,6 +562,10 @@ body.dark .topic .seen img.seen {
 .topic .farmer.deleted {
 	font-style: italic;
 	color: #aaa;
+}
+.topic .num-views {
+	flex: 0 0 100px;
+	text-align: center;
 }
 .topic .num-messages {
 	flex: 0 0 100px;

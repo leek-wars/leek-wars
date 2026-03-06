@@ -212,7 +212,6 @@
 	"search_bar": "Rechercher une notion, une fonction ou un guide...",
 	"more_results": "Plus de résultats",
 	"hat": "Chapeau",
-	"hats": "Chapeaux",
 	"place": "Place",
 	"press-kit": "Kit de presse",
 	"education": "Éducation",
@@ -288,5 +287,7 @@
 	"saving": "Sauvegarde...",
 	"server_error": "Erreur du serveur",
 	"valid_ai": "<b>{0}</b> valide",
-	"x_to_y": "{0} à {1}"
+	"x_to_y": "{0} à {1}",
+	"n_views": "pas de vue | 1 vue | {n} vues",
+	"views": "Vues"
 }

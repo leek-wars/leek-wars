@@ -247,6 +247,9 @@
 
 				<div v-if="$store.state.farmer && !$store.state.farmer.verified" class="green-link editor"><router-link class="green-link" to="/settings">Vérifiez votre compte pour répondre sur le forum</router-link><br><br></div>
 
+				<div v-if="topic" class="views-counter">
+					<v-icon>mdi-eye</v-icon> {{ $tc('main.n_views', topic.views) }}
+				</div>
 				<breadcrumb :items="breadcrumb_items" />
 				</div>
 			</template>
@@ -1221,5 +1224,14 @@ import { emitter } from '@/model/vue'
 	}
 	#app:not(.app) .pagination {
 		margin-bottom: 15px;
+	}
+	.views-counter {
+		display: flex;
+		align-items: center;
+		gap: 5px;
+		color: var(--text-color-secondary);
+		font-size: 14px;
+		padding: 5px 10px;
+		i { font-size: 18px; }
 	}
 </style>

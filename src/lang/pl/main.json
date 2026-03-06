@@ -277,5 +277,7 @@
 	"saving": "Kopia zapasowa...",
 	"server_error": "Błąd serwera",
 	"valid_ai": "<b>{0}</b> ważny",
-	"x_to_y": "{0} do {1}"
+	"x_to_y": "{0} do {1}",
+	"n_views": "brak wyświetleń | 1 wyświetlenie | {n} wyświetleń",
+	"views": "Wyświetlenia"
 }

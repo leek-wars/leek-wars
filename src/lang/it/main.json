@@ -277,5 +277,7 @@
 	"saving": "Backup...",
 	"server_error": "Errore del server",
 	"valid_ai": "<b>{0}</b> valido",
-	"x_to_y": "{0} a {1}"
+	"x_to_y": "{0} a {1}",
+	"n_views": "nessuna vista | 1 vista | {n} visualizzazioni",
+	"views": "Visite"
 }

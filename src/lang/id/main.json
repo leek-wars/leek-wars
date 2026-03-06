@@ -277,5 +277,7 @@
 	"saving": "Pencadangan...",
 	"server_error": "Kesalahan server",
 	"valid_ai": "<b>{0}</b> valid",
-	"x_to_y": "{0} sampai {1}"
+	"x_to_y": "{0} sampai {1}",
+	"n_views": "tidak ada tampilan | 1 tampilan | {n} dilihat",
+	"views": "Dilihat"
 }

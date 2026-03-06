@@ -277,5 +277,7 @@
 	"saving": "Backup...",
 	"server_error": "Serverfeil",
 	"valid_ai": "<b>{0}</b> gyldig",
-	"x_to_y": "{0} til {1}"
+	"x_to_y": "{0} til {1}",
+	"n_views": "ingen visning | 1 visning | {n} visninger",
+	"views": "Visninger"
 }

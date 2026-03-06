@@ -277,5 +277,7 @@
 	"saving": "Back-up...",
 	"server_error": "Serverfout",
 	"valid_ai": "<b>{0}</b> geldig",
-	"x_to_y": "{0} tot {1}"
+	"x_to_y": "{0} tot {1}",
+	"n_views": "geen weergave | 1 weergave | {n} weergaven",
+	"views": "Weergaven"
 }
