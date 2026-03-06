@@ -504,7 +504,7 @@
 			<template #title><span>{{ $t('create_team') }}</span></template>
 			{{ $t('team_name') }} <input v-model="createTeamName" type="text">
 			<template #actions>
-				<div v-ripple class="dismiss">{{ $t('cancel') }}</div>
+				<div v-ripple @click="createTeamDialog = false" class="dismiss">{{ $t('cancel') }}</div>
 				<div v-ripple @click="createTeam">{{ $t('create') }}</div>
 			</template>
 		</popup>
