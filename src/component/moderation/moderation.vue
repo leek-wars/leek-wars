@@ -15,6 +15,11 @@
 						<v-icon>mdi-volume-off</v-icon> Mutés
 					</div>
 				</router-link>
+				<router-link to="/moderation/history">
+					<div class="tab action content" icon="mdi-history">
+						<v-icon>mdi-history</v-icon> Historique
+					</div>
+				</router-link>
 			</div>
 		</div>
 		<div class="container">

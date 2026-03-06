@@ -55,6 +55,7 @@ const Messages = () => import(/* webpackChunkName: "[request]" */ `@/component/m
 const MobileApp = () => import(/* webpackChunkName: "[request]" */ `@/component/mobile-app/mobile-app.${locale}.i18n`)
 const Moderation = () => import(/* webpackChunkName: "[request]" */ `@/component/moderation/moderation.${locale}.i18n`)
 const ModerationThugs = () => import(/* webpackChunkName: "[request]" */ `@/component/moderation/moderation-thugs.${locale}.i18n`)
+const ModerationHistory = () => import('@/component/moderation/moderation-history.vue')
 const ModerationMuted = () => import('@/component/moderation/moderation-muted.vue')
 const NewLeek = () => import(/* webpackChunkName: "[request]" */ `@/component/new-leek/new-leek.${locale}.i18n`)
 const Notifications = () => import(/* webpackChunkName: "[request]" */ `@/component/notifications/notifications.${locale}.i18n`)
@@ -195,6 +196,7 @@ const routes = [
 	{ path: '/moderation', component: Moderation, meta: {noscroll: true}, beforeEnter: connected },
 	{ path: '/moderation/fault/:id', component: Moderation, meta: {noscroll: true}, beforeEnter: connected },
 	{ path: '/moderation/thugs', component: ModerationThugs, meta: {noscroll: true}, beforeEnter: connected },
+	{ path: '/moderation/history', component: ModerationHistory, meta: {noscroll: true}, beforeEnter: connected },
 	{ path: '/moderation/muted', component: ModerationMuted, meta: {noscroll: true}, beforeEnter: connected },
 	{ path: '/new-leek', component: NewLeek, beforeEnter: connected },
 	{ path: '/notifications', component: Notifications, beforeEnter: connected },
