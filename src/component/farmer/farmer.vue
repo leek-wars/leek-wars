@@ -76,8 +76,8 @@
 							</template>
 							{{ $t('click_to_change_avatar') }}
 						</v-tooltip>
-						<v-btn v-if="farmer" class="like-overlay no-click" size="small" :ripple="false">
-							<template #prepend><v-icon size="small">mdi-heart-outline</v-icon></template>
+						<v-btn v-if="farmer" class="like-overlay no-click" :class="{liked: farmer.likes > 0}" size="small" :ripple="false">
+							<template #prepend><v-icon size="small" :color="farmer.likes > 0 ? 'red' : ''">{{ farmer.likes > 0 ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon></template>
 							{{ farmer.likes }}
 						</v-btn>
 					</div>
