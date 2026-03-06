@@ -66,7 +66,7 @@
 		<div class="container">
 			<panel class="first">
 				<template #content><div class="content avatar-td">
-					<div v-if="myFarmer">
+					<div v-if="myFarmer" class="avatar-wrapper">
 						<v-tooltip>
 							<template #activator="{ props }">
 								<div class="avatar-input" v-bind="props">
@@ -76,9 +76,17 @@
 							</template>
 							{{ $t('click_to_change_avatar') }}
 						</v-tooltip>
+						<v-btn v-if="farmer" class="like-overlay no-click" size="small" :ripple="false">
+							<template #prepend><v-icon size="small">mdi-heart-outline</v-icon></template>
+							{{ farmer.likes }}
+						</v-btn>
 					</div>
-					<div v-else>
+					<div v-else class="avatar-wrapper">
 						<avatar :farmer="farmer" />
+						<v-btn v-if="farmer" class="like-overlay" :class="{liked: farmer.liked}" size="small" @click="toggleLike">
+							<template #prepend><v-icon :color="farmer.liked ? 'red' : ''">{{ farmer.liked ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon></template>
+							{{ farmer.likes }}
+						</v-btn>
 					</div>
 					<lw-title v-if="farmer && farmer.title.length" class="info title" :class="{me: myFarmer}" :title="farmer.title" @click.native="titleDialog = myFarmer" />
 					<div v-if="farmer" class="infos">
@@ -132,7 +140,8 @@
 						<div v-else-if="farmer.moderator" class="grade moderator">{{ $t('moderator') }}</div>
 						<div v-if="farmer.contributor" class="grade contributor">{{ $t('contributor') }}</div>
 					</div>
-					
+
+
 				</div></template>
 			</panel>
 
@@ -193,7 +202,7 @@
 					</table>
 
 					<Line v-if="chartData" :data="chartData" :options="chartOptions" class="talent-history" />
-					
+
 					<div v-if="farmer" class="godfather grey">
 						<div v-if="farmer.godfather">
 							<i18n-t keypath="godson_of" tag="div">
@@ -999,6 +1008,24 @@ import { emitter } from '@/model/vue'
 			}
 		}
 
+		toggleLike() {
+			if (!this.farmer) { return }
+			const liked = this.farmer.liked
+			this.farmer.liked = !liked
+			this.farmer.likes += liked ? -1 : 1
+			const endpoint = liked ? 'farmer/unlike' : 'farmer/like'
+			LeekWars.post(endpoint, {target_id: this.farmer.id}).then(data => {
+				if (this.farmer) {
+					this.farmer.likes = data.likes
+				}
+			}).error(() => {
+				if (this.farmer) {
+					this.farmer.liked = liked
+					this.farmer.likes += liked ? 1 : -1
+				}
+			})
+		}
+
 		openCountryDialog() {
 			this.countryDialog = true
 			LeekWars.loadCountries()
@@ -1034,6 +1061,7 @@ import { emitter } from '@/model/vue'
 	.avatar-input {
 		cursor: pointer;
 		text-align: center;
+		border-radius: 50%;
 		input {
 			display: none;
 		}
@@ -1218,6 +1246,27 @@ import { emitter } from '@/model/vue'
 	}
 	.grade.contributor {
 		background: #009c1d;
+	}
+	.avatar-wrapper {
+		position: relative;
+		display: inline-block;
+	}
+	.like-overlay {
+		position: absolute;
+		bottom: 4px;
+		right: 4px;
+		text-transform: none;
+		min-width: 0;
+		.like-count {
+			margin-left: 2px;
+		}
+		&.liked {
+			color: #e53935;
+		}
+		&.no-click {
+			cursor: default;
+			pointer-events: none;
+		}
 	}
 	#app.app .leeks {
 		display: grid;
