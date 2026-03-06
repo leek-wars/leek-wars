@@ -100,5 +100,9 @@
 	"title_37": "{0} hat Ihnen {1} habs gegeben",
 	"message_37": "Markt ansehen",
 	"title_38": "{0} hat Ihnen {1} Kämpfe gegeben",
-	"message_38": "In den Gemüsegarten gehen"
+	"message_38": "In den Gemüsegarten gehen",
+	"title_39": "{0} hat deine Nachricht in {1} positiv bewertet",
+	"message_39": "Nachricht ansehen",
+	"title_40": "{0} hat deine Nachricht in {1} negativ bewertet",
+	"message_40": "Nachricht ansehen"
 }

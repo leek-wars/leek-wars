@@ -100,5 +100,9 @@
 	"title_37": "{0} dał ci {1} habs",
 	"message_37": "Zobacz rynek",
 	"title_38": "{0} dał ci {1} walk",
-	"message_38": "Idź do ogrodu warzywnego"
+	"message_38": "Idź do ogrodu warzywnego",
+	"title_39": "{0} zagłosował pozytywnie na Twoją wiadomość w {1}",
+	"message_39": "Zobacz wiadomość",
+	"title_40": "{0} zagłosował negatywnie na Twoją wiadomość w {1}",
+	"message_40": "Zobacz wiadomość"
 }

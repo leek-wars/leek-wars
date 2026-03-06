@@ -100,5 +100,9 @@
 	"title_37": "{0} gav dig {1} habs",
 	"message_37": "Se marknaden",
 	"title_38": "{0} gav dig {1} slagsmål",
-	"message_38": "Gå till grönsaksgården"
+	"message_38": "Gå till grönsaksgården",
+	"title_39": "{0} röstade positivt på ditt meddelande i {1}",
+	"message_39": "Se meddelandet",
+	"title_40": "{0} röstade negativt på ditt meddelande i {1}",
+	"message_40": "Se meddelandet"
 }

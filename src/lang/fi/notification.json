@@ -100,5 +100,9 @@
 	"title_37": "{0} antoi sinulle {1} habs",
 	"message_37": "Katso markkinat",
 	"title_38": "{0} antoi sinulle {1} tappeluita",
-	"message_38": "Mene vihannespuutarhaan"
+	"message_38": "Mene vihannespuutarhaan",
+	"title_39": "{0} äänesti viestiäsi ylös aiheessa {1}",
+	"message_39": "Näytä viesti",
+	"title_40": "{0} äänesti viestiäsi alas aiheessa {1}",
+	"message_40": "Näytä viesti"
 }

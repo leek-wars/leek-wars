@@ -100,5 +100,9 @@
 	"title_37": "{0} gaf je {1} habs",
 	"message_37": "Bekijk de markt",
 	"title_38": "{0} gaf jou {1} gevechten",
-	"message_38": "Ga naar de moestuin"
+	"message_38": "Ga naar de moestuin",
+	"title_39": "{0} heeft je bericht in {1} positief beoordeeld",
+	"message_39": "Bekijk het bericht",
+	"title_40": "{0} heeft je bericht in {1} negatief beoordeeld",
+	"message_40": "Bekijk het bericht"
 }
