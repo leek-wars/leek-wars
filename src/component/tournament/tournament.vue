@@ -13,7 +13,7 @@
 				<div ref="sizer" :class="{zoomed: zoomed}" class="content tournament">
 
 					<loader v-if="!tournament" />
-					<tournament-graph v-else :tournament="tournament" :class="{zoomed: zoomed}" :style="{maxHeight: zoomed ? height : 'auto'}" />
+					<tournament-graph v-else :tournament="tournament" :class="{zoomed: zoomed}" :style="{maxHeight: zoomed ? height : 'auto', minWidth: zoomed && LeekWars.mobile ? '950px' : ''}" />
 
 					<pre class="info" v-if="$store.getters.admin && tournament">
 Min power: {{ $filters.number(tournament.min_power) }}
@@ -66,10 +66,11 @@ Max power: {{ $filters.number(tournament.max_power) }}</pre>
 		height: number = 0
 		timerText: string = ''
 		timer: any
-		actions = [{icon: 'mdi-magnify-plus-outline', click: () => this.zoom()}]
+		actions: any[] = []
 		generating: boolean = false
 
 		created() {
+			this.actions = [{icon: 'mdi-magnify-plus-outline', click: () => this.zoom()}]
 			emitter.on('tournament-update', (data: any) => {
 				if (this.tournament && data[0] === this.tournament.id) {
 					LeekWars.get<Tournament>('tournament/get/' + this.$route.params.id).then(tournament => {

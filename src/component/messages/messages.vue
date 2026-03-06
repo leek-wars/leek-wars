@@ -127,7 +127,7 @@
 		quitDialog: boolean = false
 		languageDialog: boolean = false
 		menuTarget: HTMLElement | null = null
-		actions = [{icon: 'mdi-delete', click: () => this.showQuitDialog()}]
+		actions: any[] = []
 		loadingConversations: boolean = false
 
 		get chats() {
@@ -150,6 +150,7 @@
 		}
 
 		created() {
+			this.actions = [{icon: 'mdi-delete', click: () => this.showQuitDialog()}]
 			if (!this.env.SOCIAL) {
 				this.$router.push('/')
 				return
