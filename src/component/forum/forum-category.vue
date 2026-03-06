@@ -261,6 +261,7 @@ import { emitter } from '@/model/vue'
 				{ value: 'date', title: 'Date', icon: 'mdi-clock-outline' },
 				{ value: 'votes', title: 'Votes', icon: 'mdi-thumb-up-outline' },
 				{ value: 'views', title: this.$t('main.views') as string, icon: 'mdi-eye-outline' },
+				{ value: 'messages', title: 'Messages', icon: 'mdi-message-outline' },
 				{ value: 'priority', title: this.$t('priority') as string, icon: 'mdi-flag-outline' },
 			]
 		}
