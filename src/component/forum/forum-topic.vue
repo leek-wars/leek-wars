@@ -238,6 +238,7 @@
 					</div>
 					<div class="center">
 						<div v-if="page != pages" class="warning"><v-icon>mdi-alert</v-icon> {{ $t('not_last_page') }}</div>
+						<div v-if="isOldTopic" class="warning"><v-icon>mdi-alert</v-icon> {{ $t('old_topic_warning') }}</div>
 						<v-btn color="primary" class="send" @click="send"><v-icon>mdi-send-outline</v-icon> {{ $t('send') }}</v-btn>
 					</div>
 					<formatting-rules />
@@ -291,6 +292,20 @@
 			</template>
 		</popup>
 
+		<popup v-model="oldTopicDialog" :width="600">
+			<template #icon>
+				<v-icon>mdi-alert</v-icon>
+			</template>
+			<template #title>
+				<span>{{ $t('old_topic_title') }}</span>
+			</template>
+			{{ $t('old_topic_confirm') }}
+			<template #actions>
+				<div v-ripple @click="oldTopicDialog = false">{{ $t('cancel') }}</div>
+				<div v-ripple class="green" @click="send">{{ $t('send') }}</div>
+			</template>
+		</popup>
+
 		<report-dialog v-if="reportFarmer" v-model="reportDialog" :target="reportFarmer" :reasons="reasons" :parameter="reportContent" class="report-dialog" />
 	</div>
 </template>
@@ -330,6 +345,7 @@ import { emitter } from '@/model/vue'
 		topicEditing: boolean = false
 		action = {icon: 'mdi-newspaper-plus', click: () => this.toggleSubscribe()}
 		sendingMessage: boolean = false
+		oldTopicDialog: boolean = false
 		creatingIssue: boolean = false
 		forumLanguages: string[] = []
 		reportDialog: boolean = false
@@ -568,6 +584,11 @@ import { emitter } from '@/model/vue'
 		}
 		send() {
 			if (!this.topic || this.sendingMessage) { return }
+			if (this.isOldTopic && !this.oldTopicDialog) {
+				this.oldTopicDialog = true
+				return
+			}
+			this.oldTopicDialog = false
 			this.sendingMessage = true
 			LeekWars.post("forum/post-message", {topic_id: this.topic.id, message: this.newMessage}).then(data => {
 				localStorage.removeItem('forum/draft-' + this.topic!.id)
@@ -669,6 +690,11 @@ import { emitter } from '@/model/vue'
 		setPriority(priority: number) {
 			if (!this.topic) { return }
 			LeekWars.post('forum/set-topic-priority', {topic_id: this.topic.id, priority})
+		}
+		get isOldTopic(): boolean {
+			if (!this.topic || !this.topic.last_message_date) { return false }
+			const oneYearAgo = (Date.now() / 1000) - 365 * 24 * 3600
+			return this.topic.last_message_date < oneYearAgo
 		}
 		report(message: ForumMessage) {
 			this.reportFarmer = message.writer
@@ -1184,9 +1210,14 @@ import { emitter } from '@/model/vue'
 	.v-btn.send .v-icon {
 		margin-right: 6px;
 	}
+	.center {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 15px;
+	}
 	.warning {
 		color: #ff5f00;
-		padding: 10px;
 	}
 	#app:not(.app) .pagination {
 		margin-bottom: 15px;

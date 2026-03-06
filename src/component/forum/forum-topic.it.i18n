@@ -39,5 +39,8 @@
 	"hide_topic": "Nascondi",
 	"show_topic": "Mostra",
 	"set_release": "Release",
-	"release_hint": "Inserisci 0 per rimuovere la release"
+	"release_hint": "Inserisci 0 per rimuovere la release",
+	"old_topic_warning": "L'ultimo messaggio di questo argomento risale a più di un anno fa.",
+	"old_topic_title": "Argomento vecchio",
+	"old_topic_confirm": "L'ultimo messaggio di questo argomento risale a più di un anno fa. Vuoi davvero rispondere?"
 }

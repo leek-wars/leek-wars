@@ -39,5 +39,8 @@
 	"priority_none": "Aucune",
 	"priority_high": "Haute",
 	"priority_medium": "Moyenne",
-	"priority_low": "Basse"
+	"priority_low": "Basse",
+	"old_topic_warning": "Le dernier message de ce sujet date de plus d'un an.",
+	"old_topic_title": "Sujet ancien",
+	"old_topic_confirm": "Le dernier message de ce sujet date de plus d'un an. Voulez-vous vraiment y répondre ?"
 }

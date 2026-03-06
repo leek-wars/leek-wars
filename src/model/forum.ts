@@ -29,10 +29,13 @@ class ForumTopic {
 	public release!: number | null
 	public hidden!: boolean | null
 	public priority!: number
+	public views!: number
+	public last_message_date!: number
 }
 
 class ForumMessage {
 	public id!: number
+	public date!: number
 	public message!: string
 	public html!: string | null
 	public votes_up!: number
