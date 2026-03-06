@@ -32,6 +32,9 @@
 						<span>{{ $t('main.workshop') }}</span>
 					</div>
 				</router-link> -->
+				<div v-if="!LeekWars.mobile" class="tab action" @click="toggleExpanded">
+					<v-icon>{{ expanded ? 'mdi-arrow-collapse' : 'mdi-arrow-expand' }}</v-icon>
+				</div>
 			</div>
 		</div>
 		<div class="container">
@@ -324,6 +327,7 @@
 		buyQuantity: number = 1
 		sellDialog: boolean = false
 		chipMode: string = localStorage.getItem('market/sort_mode') === 'type' ? 'type' : 'level'
+		expanded: boolean = localStorage.getItem('market/expanded') === 'true'
 		EffectTypeMarket = EffectTypeMarket
 		actions: any
 		unseen_items: ItemTemplate[] = []
@@ -364,6 +368,9 @@
 		}
 
 		created() {
+			if (this.expanded) {
+				LeekWars.large = true
+			}
 			this.actions = [
 				{icon: 'mdi-cart-outline', click: () => window.open('https://leek-wars.myspreadshop.fr', '_blank')!.focus() },
 				{icon: 'mdi-bank', click: () => this.$router.push('/bank')},
@@ -473,6 +480,7 @@
 		}
 		beforeUnmount() {
 			if (this.request) { this.request.abort() }
+			LeekWars.large = false
 		}
 		unmounted() {
 			if (this.onKeyDown) {
@@ -559,6 +567,12 @@
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 			this.sellDialog = false
+		}
+
+		toggleExpanded() {
+			this.expanded = !this.expanded
+			LeekWars.large = this.expanded
+			localStorage.setItem('market/expanded', '' + this.expanded)
 		}
 
 		updateChipMode() {
