@@ -44,9 +44,7 @@
 				<div class="content">
 				<div class="flex breadcrumb-sort">
 					<breadcrumb v-if="LeekWars.mobile" :items="breadcrumb_items" />
-					<v-spacer />
 					<pagination v-if="categories" :current="page" :total="pages" :url="'/forum/category-' + category_ids" />
-					<v-spacer />
 					<div>
 						<v-select v-model="order" :items="orderItems" item-value="value" item-title="title" hide-details density="compact" variant="solo" class="order-select">
 							<template #selection="{ item }">
@@ -125,7 +123,7 @@
 								</div>
 							</div>
 							<div v-if="LeekWars.mobile" class="description grey">
-								<span class="messages"><v-icon>mdi-message-outline</v-icon> {{ topic.messages }} • </span>
+								<span class="messages"><v-icon>mdi-eye-outline</v-icon> {{ topic.views }} • <v-icon>mdi-message-outline</v-icon> {{ topic.messages }} • </span>
 								<i18n-t v-if="LeekWars.mobile" tag="span" keypath="last_message">
 									<template #date>
 										<span>{{ LeekWars.formatDuration(topic.last_message_date) }}</span>
@@ -134,10 +132,10 @@
 										<router-link :to="'/forum/category-' + topic.category + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id">
 											<span v-if="topic.last_message_writer!=''">{{ topic.last_message_writer }}</span>
 											<span v-else class="farmer deleted">{{ $t('main.farmer') }}@{{ topic.last_message_writer_id }} </span>
-											►
 										</router-link>
 									</template>
 								</i18n-t>
+								<router-link :to="'/forum/category-' + topic.category + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id" class="goto">►</router-link>
 							</div>
 						</div>
 						<div v-if="!LeekWars.mobile" class="num-views">{{ $tc('main.n_views', topic.views) }}</div>
@@ -460,6 +458,7 @@ i.attr {
 .topic > div {
 	padding: 8px;
 	flex: 1;
+	min-width: 0;
 }
 .topic:not(.header):hover {
 	background-color: var(--pure-white);
@@ -485,7 +484,7 @@ body.dark .topic .seen img.seen {
 }
 .topic .title {
 	font-size: 17px;
-	margin-bottom: 5px;
+	margin-bottom: 4px;
 	display: inline-block;
 	.issue, .release-badge {
 		background: #0366d6;
@@ -514,15 +513,21 @@ body.dark .topic .seen img.seen {
 		&.priority-low { color: #757575; }
 	}
 }
+#app.app .topic .title {
+	.issue, .release-badge {
+		margin-bottom: 0;
+	}
+}
 .topic .description {
 	font-size: 14px;
-	margin-top: 4px;
+	margin-top: 5px;
 	display: flex;
-	gap: 10px;
+	gap: 4px;
 	.votes {
 		display: flex;
 		gap: 6px;
 		align-items: center;
+		margin-left: 6px;
 		.vote {
 			display: inline-block;
 			border-radius: 6px;
@@ -558,6 +563,22 @@ body.dark .topic .seen img.seen {
 .topic .description i {
 	font-size: 14px;
 	vertical-align: bottom;
+}
+.topic .description:has(.messages) {
+	display: flex;
+	white-space: nowrap;
+	overflow: hidden;
+	.messages {
+		flex-shrink: 0;
+	}
+	span {
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	.goto {
+		flex-shrink: 0;
+		margin-left: 2px;
+	}
 }
 
 .topic .farmer.deleted {
@@ -624,11 +645,23 @@ body.dark .topic .seen img.seen {
 
 .breadcrumb-sort {
 	padding-bottom: 8px;
+	.pagination {
+		margin: auto;
+	}
 }
 #app.app .breadcrumb-sort {
-	padding: 8px;
 	flex-wrap: wrap;
 	align-items: center;
+	display: grid;
+	grid-template: "a b" auto
+				   "c c" auto / 1fr auto;
+	row-gap: 8px;
+	.pagination {
+		grid-area: c;
+	}
+	.order-select {
+		margin-right: 8px;
+	}
 }
 
 </style>
