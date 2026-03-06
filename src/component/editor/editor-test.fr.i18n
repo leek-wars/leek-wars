@@ -52,5 +52,8 @@
 	"test_maps": "Cartes",
 	"test_advanced": "Avancé",
 	"templates": "Modèles",
+	"max_turns": "Tours maximum",
+	"max_turns_desc": "Nombre de tours maximum du combat (par défaut 64)",
+	"max_turns_placeholder": "Nombre entier entre 1 et 64. Défaut = 64",
 	"free": "Libre"
 }

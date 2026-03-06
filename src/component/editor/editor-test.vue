@@ -78,12 +78,21 @@
 						<v-icon v-if="advanced">mdi-chevron-up</v-icon>
 						<v-icon v-else>mdi-chevron-down</v-icon>
 					</div>
-					<div v-if="advanced">
+					<div v-if="advanced" class="advanced-options">
 						<div>
-							<span class="title"><v-icon>mdi-seed</v-icon> {{ $t('main.seed') }}</span>
-							<span class="desc">{{ $t('main.seed_desc') }}</span>
+							<div>
+								<span class="title"><v-icon>mdi-seed</v-icon> {{ $t('main.seed') }}</span>
+								<span class="desc">{{ $t('main.seed_desc') }}</span>
+							</div>
+							<input v-model="currentScenario.seed" type="text" class="seed" :placeholder="$t('main.seed_placeholder')" @keyup.stop @update:model-value="updateSeed">
 						</div>
-						<input v-model="currentScenario.seed" type="text" class="seed" :placeholder="$t('main.seed_placeholder')" @keyup.stop @update:model-value="updateSeed">
+						<div>
+							<div>
+								<span class="title"><v-icon>mdi-timer-sand</v-icon> {{ $t('max_turns') }}</span>
+								<span class="desc">{{ $t('max_turns_desc') }}</span>
+							</div>
+							<input v-model="currentScenario.max_turns" type="number" min="1" max="64" class="seed" :placeholder="$t('max_turns_placeholder')" @keyup.stop @update:model-value="updateMaxTurns">
+						</div>
 					</div>
 				</div>
 			</v-window-item>
@@ -355,6 +364,7 @@ import { defineAsyncComponent } from 'vue'
 		name!: string
 		type!: number
 		seed!: any
+		max_turns!: any
 		default!: boolean
 		ai!: AI | null // AI for default scenario
 	}
@@ -1260,6 +1270,22 @@ import { defineAsyncComponent } from 'vue'
 				this.updateScenario(this.currentScenario, { seed: this.currentScenario.seed || 0 })
 			}
 		}
+
+		updateMaxTurns(event: InputEvent) {
+			if (this.currentScenario) {
+				if (this.currentScenario.max_turns) {
+					this.currentScenario.max_turns = parseInt(this.currentScenario.max_turns)
+					if (this.currentScenario.max_turns > 64) {
+						this.currentScenario.max_turns = 64
+					} else if (this.currentScenario.max_turns < 1) {
+						this.currentScenario.max_turns = 1
+					} else if (isNaN(this.currentScenario.max_turns)) {
+						this.currentScenario.max_turns = null
+					}
+				}
+				this.updateScenario(this.currentScenario, { max_turns: this.currentScenario.max_turns || 0 })
+			}
+		}
 	}
 </script>
 
@@ -1384,6 +1410,13 @@ import { defineAsyncComponent } from 'vue'
 		&.advanced {
 			cursor: pointer;
 			user-select: none;
+		}
+	}
+	.advanced-options {
+		display: flex;
+		gap: 10px;
+		& > * {
+			flex: 1;
 		}
 	}
 	.desc {
@@ -1734,7 +1767,7 @@ import { defineAsyncComponent } from 'vue'
 	input.seed {
 		margin-top: 4px;
 		padding: 0 6px;
-		font-size: 18px;
+		font-size: 16px;
 	}
 	.bot-ai {
 		width: 100%;
