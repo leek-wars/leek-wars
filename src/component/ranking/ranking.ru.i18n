@@ -52,6 +52,6 @@
 	"boss_killed": "Боссы",
 	"turrets_killed": "Турели",
 	"turrets_killed_title": "Турелей уничтожено",
-	"damage_dealt": "Урон",
-	"damage_dealt_title": "Нанесённый урон"
+	"damage": "Урон",
+	"damage_title": "Нанесённый урон"
 }

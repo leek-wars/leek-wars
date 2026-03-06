@@ -52,6 +52,6 @@
 	"boss_killed": "Bazen",
 	"turrets_killed": "Geschutstorens",
 	"turrets_killed_title": "Geschutstorens vernietigd",
-	"damage_dealt": "Schade",
-	"damage_dealt_title": "Toegebrachte schade"
+	"damage": "Schade",
+	"damage_title": "Toegebrachte schade"
 }

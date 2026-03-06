@@ -55,6 +55,6 @@
 	"turrets_killed": "Turrets",
 	"turrets_killed_title": "Turrets destroyed",
 	"won": "Won",
-	"damage_dealt": "Damage",
-	"damage_dealt_title": "Damage dealt"
+	"damage": "Damage",
+	"damage_title": "Damage dealt"
 }

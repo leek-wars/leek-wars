@@ -52,6 +52,6 @@
 	"boss_killed": "Bossowie",
 	"turrets_killed": "Wieżyczki",
 	"turrets_killed_title": "Wieżyczki zniszczone",
-	"damage_dealt": "Obrażenia",
-	"damage_dealt_title": "Zadane obrażenia"
+	"damage": "Obrażenia",
+	"damage_title": "Zadane obrażenia"
 }

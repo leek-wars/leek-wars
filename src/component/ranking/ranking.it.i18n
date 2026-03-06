@@ -52,6 +52,6 @@
 	"boss_killed": "Boss",
 	"turrets_killed": "Torrette",
 	"turrets_killed_title": "Torrette distrutte",
-	"damage_dealt": "Danni",
-	"damage_dealt_title": "Danni inflitti"
+	"damage": "Danni",
+	"damage_title": "Danni inflitti"
 }

@@ -52,6 +52,6 @@
 	"boss_killed": "Bosser",
 	"turrets_killed": "Tårne",
 	"turrets_killed_title": "Tårne ødelagt",
-	"damage_dealt": "Skade",
-	"damage_dealt_title": "Skade påført"
+	"damage": "Skade",
+	"damage_title": "Skade påført"
 }

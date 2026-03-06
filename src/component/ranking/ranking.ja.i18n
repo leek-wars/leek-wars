@@ -52,6 +52,6 @@
 	"boss_killed": "ボス",
 	"turrets_killed": "タレット",
 	"turrets_killed_title": "タレット破壊数",
-	"damage_dealt": "ダメージ",
-	"damage_dealt_title": "与えたダメージ"
+	"damage": "ダメージ",
+	"damage_title": "与えたダメージ"
 }

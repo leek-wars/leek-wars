@@ -48,6 +48,6 @@
 	"boss_killed": "बॉस",
 	"turrets_killed": "बुर्ज",
 	"turrets_killed_title": "बुर्ज नष्ट किए",
-	"damage_dealt": "क्षति",
-	"damage_dealt_title": "पहुँचाई गई क्षति"
+	"damage": "क्षति",
+	"damage_title": "पहुँचाई गई क्षति"
 }

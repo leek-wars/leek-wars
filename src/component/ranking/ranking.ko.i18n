@@ -52,6 +52,6 @@
 	"boss_killed": "보스",
 	"turrets_killed": "포탑",
 	"turrets_killed_title": "포탑 파괴 수",
-	"damage_dealt": "피해",
-	"damage_dealt_title": "가한 피해"
+	"damage": "피해",
+	"damage_title": "가한 피해"
 }
