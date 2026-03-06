@@ -2875,6 +2875,11 @@ class Game {
 		}
 		this.updateReachableCells()
 
+		// Sync displayLife
+		for (const entity of this.leeks) {
+			entity.displayLife = entity.life
+		}
+
 		// End
 		this.jumping = false
 		this.currentAction = this.currentAction - 1

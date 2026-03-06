@@ -56,6 +56,7 @@ abstract class FightEntity extends Entity {
 	public initially_dead!: boolean
 	// Caractéristiques
 	public life = 0
+	public displayLife = 0
 	public strength = 0
 	public wisdom = 0
 	public agility = 0
@@ -486,6 +487,7 @@ abstract class FightEntity extends Entity {
 	public boostVita(life: number, jump: boolean) {
 
 		this.life += life
+		this.displayLife += life
 		this.maxLife += life
 		this.updateGrowth()
 
@@ -644,6 +646,17 @@ abstract class FightEntity extends Entity {
 		// Update bubble
 		if (this.bubble != null) {
 			this.bubble.update(dt)
+		}
+
+		// Update display life animation
+		if (this.displayLife !== this.life) {
+			const diff = this.life - this.displayLife
+			const speed = Math.max(1, Math.abs(diff) * 0.1) * dt
+			if (Math.abs(diff) < speed) {
+				this.displayLife = this.life
+			} else {
+				this.displayLife += Math.sign(diff) * speed
+			}
 		}
 
 		// Update info text
@@ -1103,7 +1116,7 @@ abstract class FightEntity extends Entity {
 
 		ctx.font = "500 11pt Roboto"
 
-		let text = this.translatedName + " (" + this.life + ")"
+		let text = this.translatedName + " (" + Math.round(this.displayLife) + ")"
 		if (this.game.showIDs) { text = '#' + this.id + ' • ' + text }
 		const width = Math.max(120, ctx.measureText(text).width + 14)
 		const height = 22
@@ -1125,7 +1138,7 @@ abstract class FightEntity extends Entity {
 
 		// Barre de vie
 		if (this.life > 0) {
-			const life = this.life / this.maxLife
+			const life = this.displayLife / this.maxLife
 			const barWidth = life * width
 			ctx.fillStyle = this.lifeColor
 			ctx.strokeStyle = this.lifeColorLighter
