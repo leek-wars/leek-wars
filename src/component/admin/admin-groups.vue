@@ -1,7 +1,7 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><router-link to="/admin">Administration</router-link> > Groupes</h1>
+			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Groupes', link: '/admin/groups'}]" :raw="true" /></h1>
 		</div>
 		<panel class="first">
 			<loader v-if="!groups" />
@@ -52,7 +52,9 @@
 	import { Options, Vue } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Options({ components: { RichTooltipFarmer } })
+	import Breadcrumb from '@/component/forum/breadcrumb.vue'
+
+	@Options({ components: { RichTooltipFarmer, Breadcrumb } })
 	export default class AdminTrophies extends Vue {
 		groups: any = null
 		headers = [

@@ -1,7 +1,7 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><router-link to="/admin">Administration</router-link> > Skins</h1>
+			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Skins', link: '/admin/skins'}]" :raw="true" /></h1>
 			<div class="tabs">
 				<div class="tab action" @click="front = !front">
 					<span>{{ front ? 'Face' : 'Dos' }}</span>
@@ -27,8 +27,9 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { Options, Vue } from 'vue-property-decorator'
+	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
-	@Options({})
+	@Options({ components: { Breadcrumb } })
 	export default class AdminHats extends Vue {
 
 		front: boolean = true

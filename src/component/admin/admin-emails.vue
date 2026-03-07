@@ -1,7 +1,7 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><router-link to="/admin">Administration</router-link> > Mails</h1>
+			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Mails', link: '/admin/emails'}]" :raw="true" /></h1>
 		</div>
 		<panel class="first">
 			<loader v-if="!farmers" />
@@ -36,8 +36,9 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Options, Vue } from 'vue-property-decorator'
+	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
-	@Options({})
+	@Options({ components: { Breadcrumb } })
 	export default class AdminEmails extends Vue {
 		farmers: any = null
 		email: string = ''

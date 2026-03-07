@@ -1,7 +1,7 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><router-link to="/admin">Administration</router-link> > Chapeaux</h1>
+			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Chapeaux', link: '/admin/hats'}]" :raw="true" /></h1>
 		</div>
 		<panel v-for="hat in LeekWars.hats" :key="hat.id">
 			<h4>{{ $t('hat.' + hat.name) }} ({{ hat.id }})</h4>
@@ -16,8 +16,9 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { Options, Vue } from 'vue-property-decorator'
+	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
-	@Options({})
+	@Options({ components: { Breadcrumb } })
 	export default class AdminHats extends Vue {
 
 		created() {

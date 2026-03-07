@@ -2,7 +2,7 @@
 	<div class="page">
 		<div class="page-header page-bar">
 			<div>
-				<h1><router-link to="/admin">Administration</router-link> > Newsletters</h1>
+				<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Newsletters', link: '/admin/newsletters'}]" :raw="true" /></h1>
 				<div class="info">{{ count }} inscrits</div>
 			</div>
 		</div>
@@ -41,8 +41,9 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Options, Vue } from 'vue-property-decorator'
+	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
-	@Options({})
+	@Options({ components: { Breadcrumb } })
 	export default class AdminNewsletters extends Vue {
 
 		newsletters: any = []

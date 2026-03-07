@@ -1,7 +1,7 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><router-link to="/admin">Administration</router-link> > Composants ({{ components ? components.length : '...' }})</h1>
+			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Composants (' + (components ? components.length : '...') + ')', link: '/admin/components'}]" :raw="true" /></h1>
 		</div>
 		<panel class="first">
 			<template #content>
@@ -38,7 +38,9 @@ import { LeekWars } from '@/model/leekwars'
 import { Options, Vue, Watch } from 'vue-property-decorator'
 import ItemView from '../item.vue'
 
-@Options({ components: { item: ItemView } })
+import Breadcrumb from '@/component/forum/breadcrumb.vue'
+
+@Options({ components: { item: ItemView, Breadcrumb } })
 export default class AdminComponents extends Vue {
 	ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
 	data: any = null

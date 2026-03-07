@@ -84,6 +84,12 @@
 							<h2>Schémas</h2>
 						</div>
 					</router-link>
+					<router-link to="/admin/tournaments">
+						<div v-ripple class="section card">
+							<v-icon>mdi-sword-cross</v-icon>
+							<h2>Tournois & BR</h2>
+						</div>
+					</router-link>
 					<router-link to="/admin/newsletters">
 						<div v-ripple class="section card">
 							<v-icon>mdi-email-newsletter</v-icon>

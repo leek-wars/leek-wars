@@ -1,7 +1,7 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><router-link to="/admin">Administration</router-link> > Gestionnaire d'erreur</h1>
+			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Gestionnaire d\'erreur', link: '/admin/errors'}]" :raw="true" /></h1>
 		</div>
 		<panel class="first last">
 			<div class="errors content">
@@ -57,8 +57,9 @@
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
 	import { Options, Vue } from 'vue-property-decorator'
+	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
-	@Options({})
+	@Options({ components: { Breadcrumb } })
 	export default class AdminErrors extends Vue {
 		errors: any[] | null = null
 		deleteQuery: string = ''

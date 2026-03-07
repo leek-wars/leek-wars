@@ -1,7 +1,7 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><router-link to="/admin">Administration</router-link> > Sources</h1>
+			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Sources', link: '/admin/sources'}]" :raw="true" /></h1>
 
 			<div v-if="!LeekWars.mobile" class="tabs">
 				<div class="tab" @click="refresh">
@@ -83,7 +83,9 @@
 	import { Options, Vue } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Options({ components: { RichTooltipFarmer } })
+	import Breadcrumb from '@/component/forum/breadcrumb.vue'
+
+	@Options({ components: { RichTooltipFarmer, Breadcrumb } })
 	export default class AdminSources extends Vue {
 		data: any = null
 		sources: any = null
