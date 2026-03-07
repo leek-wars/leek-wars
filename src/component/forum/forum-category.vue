@@ -16,7 +16,7 @@
 						<v-list-item v-for="(language, i) in languages" :key="i" class="language" @click="setForumLanguage(language)" :disabled="forumLanguages[language.code] && activeLanguages.length === 1">
 							<template #prepend>
 								<v-list-item-action start>
-									<v-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" hide-details @click.stop="updateCategories" />
+									<v-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" hide-details @click.stop @update:model-value="updateCategories" />
 								</v-list-item-action>
 							</template>
 							<div class="flex">
