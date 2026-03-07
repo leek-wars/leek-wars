@@ -138,7 +138,7 @@
 								<router-link :to="'/forum/category-' + topic.category + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id" class="goto">►</router-link>
 							</div>
 						</div>
-						<div v-if="!LeekWars.mobile" class="num-views">{{ $tc('main.n_views', topic.views) }}</div>
+						<div v-if="!LeekWars.mobile" class="num-views">{{ topic.views }}</div>
 						<div v-if="!LeekWars.mobile" class="num-messages">{{ topic.messages }}</div>
 						<div v-if="!LeekWars.mobile" class="last-message grey">
 							<div>
