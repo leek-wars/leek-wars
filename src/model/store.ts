@@ -131,6 +131,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 
 		"disconnect"(state: LeekWarsState) {
 			LeekWars.post('farmer/disconnect')
+			localStorage.setItem('logout', '' + Date.now())
 			store.commit("reset")
 			// Supprime le cache des IAs et l'état de l'éditeur (confidentialité + évite les collisions entre comptes)
 			for (const key of Object.keys(localStorage)) {

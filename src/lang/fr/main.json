@@ -195,6 +195,7 @@
 	"verify_message": "Terminer votre inscription avec votre adresse e-mail pour ne pas perdre votre compte.",
 	"verify_info": "Plus d'informations",
 	"verify_chat": "Vérifiez votre compte pour discuter",
+	"logged_out_other_tab": "Vous avez été déconnecté depuis un autre onglet.",
 	"donation": "Faire un don",
 	"discover": "Découverte",
 	"resources_help": "Ressources et aide",

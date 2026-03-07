@@ -185,6 +185,7 @@
 	"verify_message": "Complete your registration with your email address so you don't lose your account.",
 	"verify_info": "More information",
 	"verify_chat": "Verify your account to chat",
+	"logged_out_other_tab": "You have been logged out from another tab.",
 	"donation": "Make a donation",
 	"discover": "Discover",
 	"resources_help": "Resources and help",

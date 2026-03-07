@@ -180,6 +180,7 @@
 	"verify_message": "Vervollständigen Sie Ihre Registrierung mit Ihrer E-Mail-Adresse, um Ihr Konto nicht zu verlieren.",
 	"verify_info": "Mehr Informationen",
 	"verify_chat": "Bestätigen Sie Ihr Konto, um zu chatten",
+	"logged_out_other_tab": "Sie wurden von einem anderen Tab abgemeldet.",
 	"donation": "Spenden",
 	"discover": "Entdeckung",
 	"resources_help": "Ressourcen und Hilfe",

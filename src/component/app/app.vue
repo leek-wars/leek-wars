@@ -143,7 +143,16 @@
 					</div>
 				</popup>
 				-->
-				<v-dialog v-if="docEverywhere" v-model="docEverywhereModel" content-class="doc" :max-width="1400">
+				<popup v-model="loggedOutOtherTab" :width="500" :persistent="true">
+				<template #title>
+					<v-icon>mdi-logout</v-icon>
+					{{ $t('main.disconnected') }}
+				</template>
+				<template #options><span></span></template>
+				<div>{{ $t('main.logged_out_other_tab') }}</div>
+			</popup>
+
+			<v-dialog v-if="docEverywhere" v-model="docEverywhereModel" content-class="doc" :max-width="1400">
 					<documentation ref="doc" :popup="true" />
 				</v-dialog>
 			</div>
@@ -188,6 +197,7 @@
 		mouseY = 0
 		cloverSpeed = 200
 		verifyMessage = true
+		loggedOutOtherTab = false
 
 		@Watch('LeekWars.darkMode', {immediate: true})
 		updateDarkMode() {
@@ -238,6 +248,20 @@
 			emitter.on('keydown', (event: KeyboardEvent) => this.redirectToLocalhost(event))
 			emitter.on('navigate', () => {
 				this.docEverywhereModel = false
+			})
+
+			window.addEventListener('storage', (e: StorageEvent) => {
+				if (e.key === 'logout' && e.newValue !== null && this.$store.state.connected) {
+					this.$store.commit('reset')
+					LeekWars.socket.disconnect()
+					this.$router.push('/')
+					nextTick(() => {
+						this.loggedOutOtherTab = true
+					})
+				}
+				if (e.key === 'connected' && e.newValue === 'true' && !this.$store.state.connected) {
+					window.location.reload()
+				}
 			})
 
 			// if (this.$store.state.connected && !localStorage.getItem('annonce/boss-poll')) {
