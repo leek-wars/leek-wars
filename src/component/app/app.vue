@@ -143,12 +143,11 @@
 					</div>
 				</popup>
 				-->
-				<popup v-model="loggedOutOtherTab" :width="500" :persistent="true">
+				<popup v-model="loggedOutOtherTab" :width="500">
 				<template #title>
 					<v-icon>mdi-logout</v-icon>
 					{{ $t('main.disconnected') }}
 				</template>
-				<template #options><span></span></template>
 				<div>{{ $t('main.logged_out_other_tab') }}</div>
 			</popup>
 
