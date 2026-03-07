@@ -39,8 +39,7 @@
 				<pagination v-if="topic" :current="page" :total="pages" :url="'/forum/category-' + category.id + '/topic-' + topic.id" />
 				<loader v-if="!topic || !topic.messages" />
 				<div v-else>
-					<template v-for="message in topic.messages" :key="message.id">
-					<div :id="'message-' + message.id" class="message-wrapper">
+					<div v-for="message in topic.messages" :id="'message-' + message.id" :key="message.id" class="message-wrapper">
 						<div v-if="!message.writer.deleted" class="profile">
 							<rich-tooltip-farmer :id="message.writer.id" v-slot="{ props }">
 								<router-link :to="'/farmer/' + message.writer.id" class="" v-bind="props">
@@ -88,6 +87,14 @@
 							<markdown v-else :content="message.message" mode="forum" />
 
 							<emoji-picker v-if="message.editing" class="emoji-picker" @pick="addEmoji(message, $event, $refs.textarea[0])" />
+
+							<router-link v-if="message.id === -1 && topic.release" :to="'/release/' + releaseVersion.substring(1)" class="changelog-banner">
+								<img :src="'/image/mail/mail_' + topic.release + '.webp'" class="changelog-banner-image" @error="($event.target as HTMLImageElement).style.display = 'none'">
+								<span class="changelog-banner-link">
+									<v-icon>mdi-newspaper-variant-outline</v-icon>
+									{{ $t('see_changelog', [releaseVersion]) }}
+								</span>
+							</router-link>
 
 							<div class="bottom">
 
@@ -229,11 +236,6 @@
 							<formatting-rules v-if="message.editing" />
 						</div>
 					</div>
-					<router-link v-if="message.id === -1 && topic.release" :to="'/release/' + topic.release" class="changelog-banner">
-						<v-icon>mdi-newspaper-variant-outline</v-icon>
-						{{ $t('see_changelog', [releaseVersion]) }}
-					</router-link>
-					</template>
 				</div>
 
 				<pagination v-if="topic" :current="page" :total="pages" :url="'/forum/category-' + category.id + '/topic-' + topic.id" />
@@ -1241,20 +1243,29 @@ import { emitter } from '@/model/vue'
 	}
 	.changelog-banner {
 		display: flex;
+		flex-direction: column;
+		margin: 15px 0;
+		border-radius: 4px;
+		overflow: hidden;
+		text-decoration: none;
+		transition: opacity 0.2s;
+		&:hover {
+			opacity: 0.9;
+		}
+	}
+	.changelog-banner-image {
+		width: 100%;
+		display: block;
+	}
+	.changelog-banner-link {
+		display: flex;
 		align-items: center;
 		gap: 8px;
 		padding: 12px 16px;
-		margin: 15px 0;
-		background: #4caf50;
+		background: #5fad1b;
 		color: white;
-		border-radius: 4px;
 		font-weight: 500;
 		font-size: 15px;
-		text-decoration: none;
-		transition: background 0.2s;
-		&:hover {
-			background: #43a047;
-		}
 		.v-icon {
 			color: white;
 		}
