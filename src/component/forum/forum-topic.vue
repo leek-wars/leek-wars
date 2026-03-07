@@ -1177,6 +1177,8 @@ import { emitter } from '@/model/vue'
 		font-size: 28px;
 		margin-top: 10px;
 		display: block;
+		height: auto;
+		line-height: normal;
 		background: transparent;
 		color: var(--text-color-secondary);
 		padding: 0px;
