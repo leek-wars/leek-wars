@@ -96,7 +96,7 @@ monaco.editor.addKeybindingRules([
 
 monaco.editor.registerCommand('jump', (accessor, args) => {
 	// console.log("Command jump", args)
-	emitter.emit('jump', fileSystem.aiByFullPath[args.ai], args.line, args.column)
+	emitter.emit('jump', { ai: fileSystem.aiByFullPath[args.ai], line: args.line, column: args.column })
 })
 
 // monaco.languages.registerDocumentSymbolProvider("leekscript", {
