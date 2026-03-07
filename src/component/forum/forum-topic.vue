@@ -294,7 +294,7 @@
 			<template #icon><v-icon>mdi-tag</v-icon></template>
 			<template #title>{{ $t('set_release') }}</template>
 			<div>
-				<v-text-field v-model.number="releaseInput" type="number" placeholder="245" style="width: 100%" :hint="$t('release_hint')" />
+				<v-text-field ref="releaseField" v-model.number="releaseInput" type="number" placeholder="245" style="width: 100%" :hint="$t('release_hint')" autofocus />
 			</div>
 			<template #actions>
 				<div v-ripple @click="releaseDialog = false">{{ $t('cancel') }}</div>
