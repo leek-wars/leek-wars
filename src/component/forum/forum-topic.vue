@@ -39,7 +39,8 @@
 				<pagination v-if="topic" :current="page" :total="pages" :url="'/forum/category-' + category.id + '/topic-' + topic.id" />
 				<loader v-if="!topic || !topic.messages" />
 				<div v-else>
-					<div v-for="message in topic.messages" :id="'message-' + message.id" :key="message.id" class="message-wrapper">
+					<template v-for="message in topic.messages" :key="message.id">
+					<div :id="'message-' + message.id" class="message-wrapper">
 						<div v-if="!message.writer.deleted" class="profile">
 							<rich-tooltip-farmer :id="message.writer.id" v-slot="{ props }">
 								<router-link :to="'/farmer/' + message.writer.id" class="" v-bind="props">
@@ -189,7 +190,7 @@
 										<v-list-item v-if="$store.state.farmer && (message.writer.id === $store.state.farmer.id || category.moderator)" v-ripple @click="edit(message)" prepend-icon="mdi-pencil">
 											<span>{{ $t('edit') }}</span>
 										</v-list-item>
-										<v-list-item v-if="$store.state.farmer && (message.writer.id === $store.state.farmer.id || category.moderator)" v-ripple @click="deleteGeneric(message)" prepend-icon="mdi-delete">
+										<v-list-item v-if="$store.state.farmer && (message.id !== -1 ? (message.writer.id === $store.state.farmer.id || category.moderator) : canDeleteTopic)" v-ripple @click="deleteGeneric(message)" prepend-icon="mdi-delete">
 											<span>{{ $t('delete') }}</span>
 										</v-list-item>
 										<v-list-item v-if="category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'" v-ripple @click="report(message)" prepend-icon="mdi-flag">
@@ -228,6 +229,11 @@
 							<formatting-rules v-if="message.editing" />
 						</div>
 					</div>
+					<router-link v-if="message.id === -1 && topic.release" :to="'/release/' + topic.release" class="changelog-banner">
+						<v-icon>mdi-newspaper-variant-outline</v-icon>
+						{{ $t('see_changelog', [releaseVersion]) }}
+					</router-link>
+					</template>
 				</div>
 
 				<pagination v-if="topic" :current="page" :total="pages" :url="'/forum/category-' + category.id + '/topic-' + topic.id" />
@@ -372,6 +378,10 @@ import { emitter } from '@/model/vue'
 			Warning.INCORRECT_AVATAR,
 		]
 
+		get releaseVersion() {
+			if (!this.topic || !this.topic.release) { return '' }
+			return 'v' + String(this.topic.release).charAt(0) + '.' + String(this.topic.release).slice(1)
+		}
 		get categoryName() {
 			return this.category ? this.category.team > 0 ? this.category.name : this.$t('forum-category.' + this.category.name) : ''
 		}
@@ -439,6 +449,11 @@ import { emitter } from '@/model/vue'
 		}
 		get canEditStatus() {
 			return this.$store.state.connected && ((this.$store.state.farmer && this.topic?.owner === this.$store.state.farmer.id) || this.category?.moderator)
+		}
+		get canDeleteTopic() {
+			if (!this.category || !this.$store.state.farmer) { return false }
+			if (this.category.moderator) { return true }
+			return this.topic?.owner === this.$store.state.farmer.id && this.pages <= 1 && this.topic?.messages?.length === 1
 		}
 		get allStatuses(): {[key: number]: {title: string, value: ForumTopicStatus, icon: string, color: string}} {
 			return {
@@ -1223,6 +1238,26 @@ import { emitter } from '@/model/vue'
 	}
 	#app:not(.app) .pagination {
 		margin-bottom: 15px;
+	}
+	.changelog-banner {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 12px 16px;
+		margin: 15px 0;
+		background: #4caf50;
+		color: white;
+		border-radius: 4px;
+		font-weight: 500;
+		font-size: 15px;
+		text-decoration: none;
+		transition: background 0.2s;
+		&:hover {
+			background: #43a047;
+		}
+		.v-icon {
+			color: white;
+		}
 	}
 	.views-counter {
 		display: flex;
