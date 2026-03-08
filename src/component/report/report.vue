@@ -17,6 +17,9 @@
 				<div v-if="report && fight && $store.getters.admin" class="tab disabled">
 					{{ $filters.number(fight.size / 1000) }} Ko
 				</div>
+				<div v-if="report && fight && fight.generation_time && $store.getters.admin" class="tab disabled">
+					{{ $filters.number(fight.generation_time / 1000, 1) }}s
+				</div>
 				<a v-if="report && (errors.length > 0 || warnings.length > 0)" href="#errors" class="tab">
 					<span v-if="errors.length > 0"><v-icon class="error">mdi-alert-circle</v-icon> {{ errors.length }} </span>
 					<span v-if="warnings.length > 0"><v-icon class="warning">mdi-alert</v-icon> {{ warnings.length }}</span>

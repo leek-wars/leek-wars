@@ -88,6 +88,7 @@ class Fight {
 	public boss_name?: string
 	public chests!: number
 	public size!: number
+	public generation_time!: number
 	public levelups!: number
 	public rareloot!: number
 }
