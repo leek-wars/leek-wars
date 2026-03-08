@@ -407,6 +407,7 @@
 	}
 	.beta {
 		background: white;
+		color: #333;
 		padding: 2px 4px;
 		border: 1px solid #aaa;
 		border-radius: 4px;
