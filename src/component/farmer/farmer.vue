@@ -260,6 +260,22 @@
 								<br><br>
 								<v-btn @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</v-btn>
 							</div>
+							<div v-if="$store.state.farmer && $store.state.farmer.team_invitations && $store.state.farmer.team_invitations.length > 0" class="invitations">
+								<br>
+								<h4>{{ $t('team_invitations') }}</h4>
+								<div v-for="invitation in $store.state.farmer.team_invitations" :key="invitation.id" class="invitation">
+									<rich-tooltip-team :id="invitation.team_id" v-slot="{ props }">
+										<router-link :to="'/team/' + invitation.team_id" v-bind="props">
+											<emblem :team="{id: invitation.team_id, emblem_changed: invitation.emblem_changed}" />
+											<span>{{ invitation.team_name }}</span>
+										</router-link>
+									</rich-tooltip-team>
+									<div class="invitation-actions">
+										<v-btn color="green" size="small" @click="acceptInvitation(invitation)">{{ $t('accept') }}</v-btn>
+										<v-btn size="small" @click="rejectInvitation(invitation)">{{ $t('reject') }}</v-btn>
+									</div>
+								</div>
+							</div>
 						</div>
 						<div v-else>
 							<span class="grey">{{ $t('no_team') }}</span>
@@ -268,19 +284,6 @@
 								<v-icon start>mdi-account-plus</v-icon>
 								{{ alreadyInvited ? $t('invitation_sent') : $t('invite_to_team') }}
 							</v-btn>
-							<div v-if="myFarmer && farmer.team_invitations && farmer.team_invitations.length > 0" class="invitations">
-								<h4>{{ $t('team_invitations') }}</h4>
-								<div v-for="invitation in farmer.team_invitations" :key="invitation.id" class="invitation">
-									<router-link :to="'/team/' + invitation.team_id">
-										<emblem :team="{id: invitation.team_id, emblem_changed: invitation.emblem_changed}" />
-										<span>{{ invitation.team_name }}</span>
-									</router-link>
-									<div class="invitation-actions">
-										<v-btn color="green" size="small" @click="acceptInvitation(invitation)">{{ $t('accept') }}</v-btn>
-										<v-btn size="small" @click="rejectInvitation(invitation)">{{ $t('reject') }}</v-btn>
-									</div>
-								</div>
-							</div>
 						</div>
 					</div>
 				</div></template>

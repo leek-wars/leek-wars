@@ -108,13 +108,11 @@
 
 				<Line v-if="chartData" :data="chartData" :options="chartOptions" class="talent-history" />
 
-				<div class="center" v-if="team && $store.state.farmer && !is_member && $store.state.farmer.team == null">
+				<div class="center" v-if="team && $store.state.farmer && !is_member && $store.state.farmer.team == null && !myInvitation">
 					<br>
-					<template v-if="!myInvitation">
-						<v-btn v-if="team.candidacy" @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</v-btn>
-						<v-btn v-if="team.opened && !team.candidacy" @click="sendCandidacy">{{ $t('join_team') }}</v-btn>
-						<i v-else-if="!team.opened">{{ $t('closed_team') }}</i>
-					</template>
+					<v-btn v-if="team.candidacy" @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</v-btn>
+					<v-btn v-if="team.opened && !team.candidacy" @click="sendCandidacy">{{ $t('join_team') }}</v-btn>
+					<i v-else-if="!team.opened">{{ $t('closed_team') }}</i>
 				</div>
 			</panel>
 
