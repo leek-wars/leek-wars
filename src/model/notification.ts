@@ -43,6 +43,7 @@ enum NotificationType {
 	FORUM_VOTE_DOWN = 40, // Vote négatif sur un message/topic forum
 	TEAM_INVITATION = 41, // Invitation à rejoindre une équipe
 	TEAM_INVITATION_ACCEPTED = 42, // Invitation acceptée par le joueur
+	BATTLE_ROYALE_REPORT = 43, // Rapport de Battle Royale (avec nom du poireau)
 }
 
 class Notification {

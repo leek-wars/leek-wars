@@ -108,5 +108,7 @@
 	"title_41": "L'équipe {0} vous invite à la rejoindre !",
 	"message_41": "Voir la page de l'équipe",
 	"title_42": "{0} a accepté votre invitation !",
-	"message_42": "Voir la page de l'équipe"
+	"message_42": "Voir la page de l'équipe",
+	"title_43": "{0} a participé à une Battle Royale !",
+	"message_43": "Voir la Battle Royale"
 }

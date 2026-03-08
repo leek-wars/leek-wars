@@ -206,6 +206,11 @@ class NotificationBuilder {
 			const teamID = params[0]
 			const farmerName = params[1]
 			return new Notification(data, "/team/" + teamID, "team_accepted.png", [farmerName])
+		} else if (type === NotificationType.BATTLE_ROYALE_REPORT) {
+			const fightID = params[0]
+			const result = params.length > 1 ? parseInt(params[1]) : 0
+			const leekName = params.length > 2 ? params[2] : ''
+			return new Notification(data, "/fight/" + fightID, "mdi-sword-cross", [leekName], [], result)
 		} else {
 			return new Notification(data, null, null, ["? type " + type])
 		}

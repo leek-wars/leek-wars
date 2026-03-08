@@ -104,5 +104,7 @@
 	"title_39": "{0} votou positivamente na sua mensagem em {1}",
 	"message_39": "Ver a mensagem",
 	"title_40": "{0} votou negativamente na sua mensagem em {1}",
-	"message_40": "Ver a mensagem"
+	"message_40": "Ver a mensagem",
+	"title_43": "{0} participou de uma Battle Royale!",
+	"message_43": "Ver a Battle Royale"
 }

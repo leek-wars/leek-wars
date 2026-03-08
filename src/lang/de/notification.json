@@ -104,5 +104,7 @@
 	"title_39": "{0} hat deine Nachricht in {1} positiv bewertet",
 	"message_39": "Nachricht ansehen",
 	"title_40": "{0} hat deine Nachricht in {1} negativ bewertet",
-	"message_40": "Nachricht ansehen"
+	"message_40": "Nachricht ansehen",
+	"title_43": "{0} hat an einer Battle Royale teilgenommen!",
+	"message_43": "Battle Royale ansehen"
 }
