@@ -263,6 +263,24 @@
 						</div>
 						<div v-else>
 							<span class="grey">{{ $t('no_team') }}</span>
+							<br><br>
+							<v-btn v-if="canInvite" :disabled="alreadyInvited" @click="inviteToTeam">
+								<v-icon start>mdi-account-plus</v-icon>
+								{{ alreadyInvited ? $t('invitation_sent') : $t('invite_to_team') }}
+							</v-btn>
+							<div v-if="myFarmer && farmer.team_invitations && farmer.team_invitations.length > 0" class="invitations">
+								<h4>{{ $t('team_invitations') }}</h4>
+								<div v-for="invitation in farmer.team_invitations" :key="invitation.id" class="invitation">
+									<router-link :to="'/team/' + invitation.team_id">
+										<emblem :team="{id: invitation.team_id, emblem_changed: invitation.emblem_changed}" />
+										<span>{{ invitation.team_name }}</span>
+									</router-link>
+									<div class="invitation-actions">
+										<v-btn color="green" size="small" @click="acceptInvitation(invitation)">{{ $t('accept') }}</v-btn>
+										<v-btn size="small" @click="rejectInvitation(invitation)">{{ $t('reject') }}</v-btn>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div></template>
@@ -367,6 +385,7 @@
 				</rich-tooltip-leek>
 			</div>
 		</panel>
+
 
 		<panel :title="$t('sponsorship')" toggle="trophies/sponsorship" icon="mdi-hat-fedora">
 			<template #actions>
@@ -607,7 +626,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
-	import { Team } from '@/model/team'
+	import { Team, TeamMemberLevel } from '@/model/team'
 	import { mixins } from '@/model/i18n'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
@@ -673,6 +692,7 @@ import { emitter } from '@/model/vue'
 			5000: { potion: 'mafia', item: 282 },
 			10000: { hat: 'gold_fedora', item: 280 },
 		}
+		invitationSent: boolean = false
 		xp_bar: number = 0
 		chartData: ChartData | null = null
 		chartOptions: ChartOptions | null = null
@@ -682,6 +702,18 @@ import { emitter } from '@/model/vue'
 		}
 		get myFarmer() {
 			return this.$store.state.farmer && this.id === this.$store.state.farmer.id
+		}
+		get canInvite() {
+			const me = this.$store.state.farmer
+			return this.farmer && !this.myFarmer && !this.farmer.team && me && me.team && me.team.member_level >= TeamMemberLevel.CAPTAIN
+		}
+		get alreadyInvited() {
+			if (this.invitationSent) { return true }
+			const me = this.$store.state.farmer
+			if (me && me.team && me.team.sent_invitations && this.farmer) {
+				return me.team.sent_invitations.includes(this.farmer.id)
+			}
+			return false
 		}
 		get talent_gains() {
 			return this.farmer ? Math.round(this.farmer.talent_more / 3) : 0
@@ -723,6 +755,7 @@ import { emitter } from '@/model/vue'
 			this.farmer = null
 			this.trophies = null
 			this.notfound = false
+			this.invitationSent = false
 			this.tournamentRangeLoading = false
 			if (this.id === null) { return }
 			if (this.myFarmer) {
@@ -922,6 +955,41 @@ import { emitter } from '@/model/vue'
 				team.talent = 1000
 				team.opened = true
 				store.commit('create-team', team)
+			}).error(error => {
+				LeekWars.toast(this.$i18n.t(error.error))
+			})
+		}
+
+		inviteToTeam() {
+			if (!this.farmer) { return }
+			LeekWars.post('team/send-invitation', {farmer_name: this.farmer.name}).then(data => {
+				this.invitationSent = true
+				const me = this.$store.state.farmer
+				if (me && me.team) {
+					if (!me.team.sent_invitations) { me.team.sent_invitations = [] }
+					me.team.sent_invitations.push(this.farmer!.id)
+				}
+				LeekWars.toast(this.$i18n.t('invitation_sent'))
+			}).error(error => {
+				LeekWars.toast(this.$i18n.t(error.error))
+			})
+		}
+
+		acceptInvitation(invitation: any) {
+			LeekWars.post('team/accept-invitation', {invitation_id: invitation.id}).then(data => {
+				LeekWars.toast(this.$i18n.t('invitation_accepted'))
+				this.$router.push('/team/' + invitation.team_id)
+			}).error(error => {
+				LeekWars.toast(this.$i18n.t(error.error))
+			})
+		}
+
+		rejectInvitation(invitation: any) {
+			LeekWars.post('team/reject-invitation', {invitation_id: invitation.id}).then(data => {
+				if (this.farmer) {
+					LeekWars.toast(this.$i18n.t('invitation_rejected'))
+					this.farmer.team_invitations.splice(this.farmer.team_invitations.indexOf(invitation), 1)
+				}
 			}).error(error => {
 				LeekWars.toast(this.$i18n.t(error.error))
 			})
@@ -1385,6 +1453,32 @@ import { emitter } from '@/model/vue'
 	}
 	.candidacy {
 		color: #999;
+	}
+	.invitations {
+		h4 {
+			margin-bottom: 8px;
+			color: #777;
+		}
+		.invitation {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			padding: 5px 0;
+			a {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+			}
+			.emblem {
+				width: 40px;
+				height: 40px;
+			}
+			.invitation-actions {
+				display: flex;
+				gap: 5px;
+				margin-left: auto;
+			}
+		}
 	}
 	.rename-button {
 		b {

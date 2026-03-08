@@ -109,5 +109,19 @@
 	"xp": "XP: {0}",
 	"you_left_team": "You left the team",
 	"load_all": "Load all",
-	"rankings": "Rankings"
+	"rankings": "Rankings",
+	"invitations": "Invitations",
+	"no_invitations": "No invitations sent",
+	"invite_farmer": "Invite a farmer",
+	"invite_farmer_desc": "Enter the name of the farmer you want to invite to the team.",
+	"invite_farmer_name": "Farmer name",
+	"invite_send": "Invite",
+	"invitation_sent": "Invitation sent!",
+	"invitation_cancelled": "Invitation cancelled",
+	"cancel": "Cancel",
+	"you_are_invited": "You have been invited by {sender} to join this team!",
+	"accept_invitation": "Accept",
+	"reject_invitation": "Reject",
+	"invitation_accepted": "Invitation accepted!",
+	"invitation_rejected": "Invitation rejected"
 }

@@ -30,6 +30,7 @@ class Farmer {
 	public country!: string | null
 	public warnings!: any[]
 	public candidacy!: any
+	public team_invitations!: any[]
 	public website!: string
 	public github!: string
 	public hats!: Hat[]

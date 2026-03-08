@@ -106,5 +106,12 @@
 	"display_team": "team",
 	"trophy_x": "Trophy {0}",
 	"sponsorship": "Sponsorship",
-	"godsons_level": "Recursive total level of referrals"
+	"godsons_level": "Recursive total level of referrals",
+	"team_invitations": "Team invitations",
+	"accept": "Accept",
+	"reject": "Reject",
+	"invitation_accepted": "Invitation accepted!",
+	"invitation_rejected": "Invitation rejected",
+	"invite_to_team": "Invite to team",
+	"invitation_sent": "Invitation sent!"
 }

@@ -198,6 +198,14 @@ class NotificationBuilder {
 				: "/forum/category-" + categoryId + "/topic-" + topicId + (page > 1 ? "/page-" + page : "") + "#message-" + messageId
 			const icon = type === NotificationType.FORUM_VOTE_UP ? "mdi-thumb-up" : "mdi-thumb-down"
 			return new Notification(data, link, icon, [farmerName, topicTitle])
+		} else if (type === NotificationType.TEAM_INVITATION) {
+			const teamID = params[0]
+			const teamName = params[1]
+			return new Notification(data, "/team/" + teamID, "team_candidacy.png", [teamName])
+		} else if (type === NotificationType.TEAM_INVITATION_ACCEPTED) {
+			const teamID = params[0]
+			const farmerName = params[1]
+			return new Notification(data, "/team/" + teamID, "team_accepted.png", [farmerName])
 		} else {
 			return new Notification(data, null, null, ["? type " + type])
 		}

@@ -104,5 +104,9 @@
 	"title_39": "{0} a +1 votre message dans {1}",
 	"message_39": "Voir le message",
 	"title_40": "{0} a -1 votre message dans {1}",
-	"message_40": "Voir le message"
+	"message_40": "Voir le message",
+	"title_41": "L'équipe {0} vous invite à la rejoindre !",
+	"message_41": "Voir la page de l'équipe",
+	"title_42": "{0} a accepté votre invitation !",
+	"message_42": "Voir la page de l'équipe"
 }

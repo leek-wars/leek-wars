@@ -109,5 +109,19 @@
 	"xp": "PE: {0}",
 	"you_left_team": "Hai lasciato la squadra",
 	"load_all": "Carica tutto",
-	"rankings": "Classifiche"
+	"rankings": "Classifiche",
+	"invitations": "Inviti",
+	"no_invitations": "Nessun invito inviato",
+	"invite_farmer": "Invita un allevatore",
+	"invite_farmer_desc": "Inserisci il nome dell'allevatore che vuoi invitare nella squadra.",
+	"invite_farmer_name": "Nome dell'allevatore",
+	"invite_send": "Invitare",
+	"invitation_sent": "Invito inviato!",
+	"invitation_cancelled": "Invito annullato",
+	"cancel": "Annulla",
+	"you_are_invited": "Sei stato invitato da {sender} a unirti a questa squadra!",
+	"accept_invitation": "Accettare",
+	"reject_invitation": "Rifiutare",
+	"invitation_accepted": "Invito accettato!",
+	"invitation_rejected": "Invito rifiutato"
 }

@@ -106,5 +106,12 @@
 	"display_team": "squadra",
 	"trophy_x": "Trofeo {0}",
 	"sponsorship": "Sponsorizzazione",
-	"godsons_level": "Livello totale ricorsivo di rinvii"
+	"godsons_level": "Livello totale ricorsivo di rinvii",
+	"team_invitations": "Inviti di squadre",
+	"accept": "Accettare",
+	"reject": "Rifiutare",
+	"invitation_accepted": "Invito accettato!",
+	"invitation_rejected": "Invito rifiutato",
+	"invite_to_team": "Invita nella squadra",
+	"invitation_sent": "Invito inviato!"
 }

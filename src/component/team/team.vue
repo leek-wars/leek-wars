@@ -110,9 +110,11 @@
 
 				<div class="center" v-if="team && $store.state.farmer && !is_member && $store.state.farmer.team == null">
 					<br>
-					<v-btn v-if="team.candidacy" @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</v-btn>
-					<v-btn v-if="team.opened && !team.candidacy" @click="sendCandidacy">{{ $t('join_team') }}</v-btn>
-					<i v-else-if="!team.opened">{{ $t('closed_team') }}</i>
+					<template v-if="!myInvitation">
+						<v-btn v-if="team.candidacy" @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</v-btn>
+						<v-btn v-if="team.opened && !team.candidacy" @click="sendCandidacy">{{ $t('join_team') }}</v-btn>
+						<i v-else-if="!team.opened">{{ $t('closed_team') }}</i>
+					</template>
 				</div>
 			</panel>
 
@@ -132,6 +134,21 @@
 				</div></template>
 			</panel>
 		</div>
+
+		<panel v-if="myInvitation">
+			<div class="center">
+				<b><i18n-t keypath="you_are_invited">
+					<template #sender>
+						<rich-tooltip-farmer :id="myInvitation.sender_id" v-slot="{ props }">
+							<router-link :to="'/farmer/' + myInvitation.sender_id" v-bind="props" style="color: #5fad1b; font-weight: bold">{{ myInvitation.sender_name }}</router-link>
+						</rich-tooltip-farmer>
+					</template>
+				</i18n-t></b>
+				<br><br>
+				<v-btn color="primary" @click="acceptInvitation">{{ $t('accept_invitation') }}</v-btn>
+				<v-btn class="ml-2" @click="rejectInvitation">{{ $t('reject_invitation') }}</v-btn>
+			</div>
+		</panel>
 
 		<panel v-if="team && is_member" :title="$t('chat')" toggle="team/chat" icon="mdi-chat-outline">
 			<template #actions>
@@ -275,6 +292,23 @@
 					</template>
 				</v-data-table>
 			</template>
+		</panel>
+
+		<panel v-if="team && captain && team.invitations && team.invitations.length > 0">
+			<template #title>{{ $t('invitations') }} ({{ team.invitations.length }})</template>
+			<div class="content candidacies">
+				<div v-for="invitation in team.invitations" :key="invitation.id" class="farmer">
+					<rich-tooltip-farmer :id="invitation.farmer.id" v-slot="{ props }">
+						<router-link :to="'/farmer/' + invitation.farmer.id">
+							<div v-bind="props">
+								<avatar :farmer="invitation.farmer" />
+								<div class="name">{{ invitation.farmer.name }}</div>
+							</div>
+						</router-link>
+					</rich-tooltip-farmer>
+					<span class="reject" @click="cancelInvitation(invitation)">{{ $t('cancel') }}</span>
+				</div>
+			</div>
 		</panel>
 
 		<panel v-if="team" icon="mdi-podium">
@@ -639,6 +673,7 @@
 				<v-radio :value="2" :label="$t('log_level_2') + ' : ' + $t('log_level_2_desc')" />
 			</v-radio-group>
 		</popup>
+
 	</div>
 </template>
 
@@ -716,6 +751,13 @@
 		get xp_bar_width() { return this.team ? this.team.level === 100 ? 100 : Math.floor(100 * (this.team.xp - this.team.down_xp) / (this.team.up_xp - this.team.down_xp)) : 0 }
 		get is_member() { return !this.$route.params.id || (this.team && this.$store.state.farmer && this.$store.state.farmer.team !== null && this.team.id === this.$store.state.farmer.team.id) }
 		get my_member() { return this.is_member ? this.team!.membersById[this.$store.state.farmer.id] : null }
+		get myInvitation() {
+			const me = this.$store.state.farmer
+			if (me && me.team_invitations && this.team) {
+				return me.team_invitations.find((inv: any) => inv.team_id === this.team!.id) || null
+			}
+			return null
+		}
 
 		get membersHeaders() {
 			return [
@@ -1025,6 +1067,38 @@
 			this.membersTableView = !this.membersTableView
 			localStorage.setItem('team/members-table-view', String(this.membersTableView))
 		}
+		cancelInvitation(invitation: any) {
+			if (!this.team) { return }
+			LeekWars.post('team/cancel-invitation', {invitation_id: invitation.id}).then(data => {
+				if (this.team) {
+					LeekWars.toast(this.$i18n.t('invitation_cancelled'))
+					this.team.invitations.splice(this.team.invitations.indexOf(invitation), 1)
+				}
+			})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
+		}
+		acceptInvitation() {
+			const inv = this.myInvitation
+			if (!inv) { return }
+			LeekWars.post('team/accept-invitation', {invitation_id: inv.id}).then(() => {
+				LeekWars.toast(this.$i18n.t('invitation_accepted'))
+				this.$router.push('/team/' + inv.team_id)
+				LeekWars.get('farmer/get-login-data').then((d) => {
+					this.$store.commit('connected', d)
+				})
+			}).error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
+		}
+		rejectInvitation() {
+			const inv = this.myInvitation
+			if (!inv) { return }
+			LeekWars.post('team/reject-invitation', {invitation_id: inv.id}).then(() => {
+				LeekWars.toast(this.$i18n.t('invitation_rejected'))
+				const me = this.$store.state.farmer
+				if (me && me.team_invitations) {
+					me.team_invitations.splice(me.team_invitations.indexOf(inv), 1)
+				}
+			}).error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
+		}
 		sendCandidacy() {
 			if (!this.team) { return }
 			LeekWars.post('team/send-candidacy', {team_id: this.team.id}).then(data => {
@@ -1270,6 +1344,11 @@
 		tr > td:nth-child(n+2) {
 			border-left: 2px solid var(--border);
 		}
+	}
+	.candidacies .empty {
+		padding: 10px;
+		color: #999;
+		text-align: center;
 	}
 	.candidacies .farmer {
 		text-align: center;

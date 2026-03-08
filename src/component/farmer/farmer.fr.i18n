@@ -106,5 +106,12 @@
 	"display_team": "équipe",
 	"trophy_x": "Trophée {0}",
 	"sponsorship": "Parrainage",
-	"godsons_level": "Niveau total récursif des filleuls"
+	"godsons_level": "Niveau total récursif des filleuls",
+	"team_invitations": "Invitations d'équipes",
+	"accept": "Accepter",
+	"reject": "Refuser",
+	"invitation_accepted": "Invitation acceptée !",
+	"invitation_rejected": "Invitation refusée",
+	"invite_to_team": "Inviter dans l'équipe",
+	"invitation_sent": "Invitation envoyée !"
 }

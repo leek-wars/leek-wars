@@ -109,5 +109,19 @@
 	"xp": "XP : {0}",
 	"you_left_team": "Vous avez quitté l'équipe",
 	"load_all": "Charger tout",
-	"rankings": "Classements"
+	"rankings": "Classements",
+	"invitations": "Invitations",
+	"no_invitations": "Aucune invitation envoyée",
+	"invite_farmer": "Inviter un éleveur",
+	"invite_farmer_desc": "Entrez le nom de l'éleveur que vous souhaitez inviter dans l'équipe.",
+	"invite_farmer_name": "Nom de l'éleveur",
+	"invite_send": "Inviter",
+	"invitation_sent": "Invitation envoyée !",
+	"invitation_cancelled": "Invitation annulée",
+	"cancel": "Annuler",
+	"you_are_invited": "Vous avez été invité par {sender} à rejoindre cette équipe !",
+	"accept_invitation": "Accepter",
+	"reject_invitation": "Refuser",
+	"invitation_accepted": "Invitation acceptée !",
+	"invitation_rejected": "Invitation refusée"
 }

@@ -41,6 +41,8 @@ enum NotificationType {
 	GIVE_FIGHTS = 38, // Don de combats
 	FORUM_VOTE_UP = 39, // Vote positif sur un message/topic forum
 	FORUM_VOTE_DOWN = 40, // Vote négatif sur un message/topic forum
+	TEAM_INVITATION = 41, // Invitation à rejoindre une équipe
+	TEAM_INVITATION_ACCEPTED = 42, // Invitation acceptée par le joueur
 }
 
 class Notification {

@@ -49,6 +49,8 @@ class Team {
 	public opened!: boolean
 	public description!: string
 	public candidacy!: boolean
+	public candidacies!: any[]
+	public invitations!: any[]
 	public talent!: number
 	public talent_history!: number[]
 	public turret_ai!: any
