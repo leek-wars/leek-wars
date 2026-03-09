@@ -27,6 +27,7 @@ class Squares {
 	}
 
 	addFromNotification(notification: Notification) {
+		if (!LeekWars.notifsPopups) { return }
 		this.add({
 			notification,
 			image: (notification.icon ? notification.image : '/image/' + notification.image),
