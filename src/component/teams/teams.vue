@@ -63,7 +63,7 @@
 						<template #activator="{ props }">
 							<span v-bind="props">{{ activityLabel(item.activity_score) }}</span>
 						</template>
-						{{ activityTooltip(item.activity_score) }} ({{ item.activity_score }})
+						{{ activityTooltip(item.activity_score) }} <template v-if="$store.state.farmer && $store.state.farmer.admin"> ({{ item.activity_score }})</template>
 					</v-tooltip>
 				</template>
 				<template #item.match_score="{ item }">
