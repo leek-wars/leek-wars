@@ -74,7 +74,14 @@
 			</panel>
 
 			<panel>
-				<h4 class="team-level">{{ $t('level_n', [team ? team.level : '...']) }}</h4>
+				<h4 class="team-level">{{ $t('level_n', [team ? team.level : '...']) }}
+					<v-tooltip v-if="team && activityLabel">
+						<template #activator="{ props }">
+							<span v-bind="props" class="team-activity">{{ activityLabel }}</span>
+						</template>
+						{{ activityTooltip }} <template v-if="$store.state.farmer && $store.state.farmer.admin">({{ team.activity.toFixed(1) }})</template>
+					</v-tooltip>
+				</h4>
 				<v-tooltip v-if="team">
 					<template #activator="{ props }">
 						<div class="bar" v-bind="props">
@@ -761,6 +768,21 @@
 		chartOptions: ChartOptions | null = null
 
 		get id() { return 'id' in this.$route.params ? parseInt(this.$route.params.id, 10) : (this.$store.state.farmer && this.$store.state.farmer.team !== null ? this.$store.state.farmer.team.id : null) }
+		get activityLabel() {
+			if (!this.team) return ''
+			const score = this.team.activity
+			if (score >= 200) return '🔥🔥🔥'
+			if (score >= 100) return '🔥🔥'
+			if (score >= 10) return '🔥'
+			return ''
+		}
+		get activityTooltip() {
+			if (!this.team) return ''
+			const score = this.team.activity
+			if (score >= 200) return this.$t('very_active')
+			if (score >= 100) return this.$t('active')
+			return this.$t('low_activity')
+		}
 		get max_level() { return this.team && this.team.level === 100 }
 		get xp_bar_width() { return this.team ? this.team.level === 100 ? 100 : Math.floor(100 * (this.team.xp - this.team.down_xp) / (this.team.up_xp - this.team.down_xp)) : 0 }
 		get is_member() { return !this.$route.params.id || (this.team && this.$store.state.farmer && this.$store.state.farmer.team !== null && this.team.id === this.$store.state.farmer.team.id) }
@@ -1287,6 +1309,13 @@
 <style lang="scss" scoped>
 	.team-level {
 		font-size: 20px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+	.team-activity {
+		cursor: default;
+		font-size: 18px;
 	}
 	.v-input--switch {
 		margin-left: 8px;
@@ -1308,7 +1337,7 @@
 		vertical-align: bottom;
 		padding-top: 8px;
 		.text {
-			font-size: 20px;
+			font-size: 17px;
 			color: var(--text-color-secondary);
 			font-weight: 300;
 		}
@@ -1337,8 +1366,8 @@
 		}
 	}
 	.guillemet {
-		font-size: 34px;
-		line-height: 22px;
+		font-size: 30px;
+		line-height: 18px;
 		vertical-align: top;
 		color: var(--text-color-secondary);
 		font-weight: 300;
