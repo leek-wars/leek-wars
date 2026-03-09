@@ -75,7 +75,7 @@ class Notification {
 				this.icon = true
 			}
 		}
-		this.title = title.map(LeekWars.protect)
+		this.title = title.map(t => '<b>' + LeekWars.protect(t) + '</b>')
 		this.message = message.map(LeekWars.protect)
 		this.result = result
 		this.read = data.read

@@ -85,6 +85,9 @@
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		overflow: hidden;
+		::v-deep(b) {
+			font-weight: 500;
+		}
 	}
 	.result {
 		position: absolute;
@@ -148,5 +151,6 @@
 	.image.v-icon {
 		font-size: 32px;
 		color: var(--text-color);
+		opacity: 0.8;
 	}
 </style>
