@@ -102,6 +102,12 @@
 							<h2>Webmail <v-icon>mdi-open-in-new</v-icon></h2>
 						</div>
 					</a>
+					<a target="_blank" rel="noopener" href="https://grafana.leekwars.com/d/JfN9Xkh4z/leek-wars?orgId=1&amp;from=now-24h&amp;to=now&amp;timezone=browser&amp;refresh=5s">
+						<div v-ripple class="section card">
+							<v-icon>mdi-chart-line</v-icon>
+							<h2>Grafana <v-icon>mdi-open-in-new</v-icon></h2>
+						</div>
+					</a>
 					<a target="_blank" rel="noopener" href="https://www.paypal.com/webapps/business/">
 						<div v-ripple class="section card">
 							<v-icon>mdi-currency-eur</v-icon>
