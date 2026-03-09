@@ -412,7 +412,7 @@
 					this.leeks[leek.id] = leek as any
 					leek.translatedName = leek.name
 					if (leek.type !== 0) {
-						leek.translatedName = this.$i18n.t('entity.' + leek.name) as string
+						leek.translatedName = this.$i18n.te('entity.' + leek.name) ? this.$i18n.t('entity.' + leek.name) as string : leek.name
 					}
 					leek.farmer = this.farmers[leek.farmer]
 				}

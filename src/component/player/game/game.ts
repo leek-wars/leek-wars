@@ -589,7 +589,8 @@ class Game {
 
 			} else if (entity instanceof Bulb) {
 
-				entity.translatedName = i18n.t('entity.' + entity.name) as string
+				const key = 'entity.' + entity.name
+				entity.translatedName = i18n.global.te(key) ? i18n.t(key) as string : entity.name
 				if (e.critical) {
 					entity.translatedName += (locale === 'fr' ? ' !' : '!')
 					entity.initialMaxLife = entity.initialMaxLife / 1.2
