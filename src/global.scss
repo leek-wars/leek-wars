@@ -1088,4 +1088,7 @@ a.green-link {
 .v-switch .v-selection-control {
 	min-height: auto !important;
 	gap: 6px;
+	.v-selection-control__wrapper {
+		height: 30px;
+	}
 }
