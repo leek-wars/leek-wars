@@ -85,9 +85,6 @@
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		overflow: hidden;
-		::v-deep(b) {
-			font-weight: 500;
-		}
 	}
 	.result {
 		position: absolute;
