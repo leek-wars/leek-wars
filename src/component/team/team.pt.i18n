@@ -109,5 +109,8 @@
 	"xp": "EXP: {0}",
 	"you_left_team": "Você deixou o time",
 	"load_all": "Carregar tudo",
-	"rankings": "Classificações"
+	"rankings": "Classificações",
+	"all_teams": "Todas as equipas",
+	"recruitment_message": "Mensagem de recrutamento",
+	"no_recruitment_message": "sem mensagem de recrutamento"
 }

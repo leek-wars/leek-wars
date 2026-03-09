@@ -109,5 +109,8 @@
 	"xp": "경험치: {0}",
 	"you_left_team": "당신은 팀을 떠났습니다.",
 	"load_all": "모두 로드",
-	"rankings": "랭킹"
+	"rankings": "랭킹",
+	"all_teams": "모든 팀",
+	"recruitment_message": "모집 메시지",
+	"no_recruitment_message": "모집 메시지 없음"
 }

@@ -109,5 +109,8 @@
 	"xp": "XP: {0}",
 	"you_left_team": "Opuściłeś drużynę",
 	"load_all": "Załaduj wszystko",
-	"rankings": "Rankingi"
+	"rankings": "Rankingi",
+	"all_teams": "Wszystkie drużyny",
+	"recruitment_message": "Wiadomość rekrutacyjna",
+	"no_recruitment_message": "brak wiadomości rekrutacyjnej"
 }

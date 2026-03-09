@@ -11,6 +11,7 @@
 	"cancel": "Peruuttaa",
 	"cancel_candidacy": "Peruuta pyyntö",
 	"candidacy_canceled": "Hakemus peruutettu",
+	"candidacies": "Vireillä olevat hakemukset",
 	"candidacy_for_team": "Pyyntö joukkueelle {team}",
 	"challenge": "Haaste",
 	"click_to_change_avatar": "Muuta napsauttamalla",

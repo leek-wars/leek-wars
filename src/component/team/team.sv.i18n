@@ -109,5 +109,8 @@
 	"xp": "XP: {0}",
 	"you_left_team": "Du lämnade laget",
 	"load_all": "Ladda alla",
-	"rankings": "Ranking"
+	"rankings": "Ranking",
+	"all_teams": "Alla lag",
+	"recruitment_message": "Rekryteringsmeddelande",
+	"no_recruitment_message": "inget rekryteringsmeddelande"
 }

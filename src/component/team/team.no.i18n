@@ -109,5 +109,8 @@
 	"xp": "XP: {0}",
 	"you_left_team": "Du forlot laget",
 	"load_all": "Last inn alle",
-	"rankings": "Rangeringer"
+	"rankings": "Rangeringer",
+	"all_teams": "Alle lag",
+	"recruitment_message": "Rekrutteringsmelding",
+	"no_recruitment_message": "ingen rekrutteringsmelding"
 }

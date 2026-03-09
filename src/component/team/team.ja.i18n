@@ -109,5 +109,8 @@
 	"xp": "XP: {0}",
 	"you_left_team": "あなたはチームを去りました",
 	"load_all": "すべてロード",
-	"rankings": "ランキング"
+	"rankings": "ランキング",
+	"all_teams": "すべてのチーム",
+	"recruitment_message": "募集メッセージ",
+	"no_recruitment_message": "募集メッセージなし"
 }

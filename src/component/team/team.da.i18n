@@ -109,5 +109,8 @@
 	"xp": "XP: {0}",
 	"you_left_team": "Du forlod holdet",
 	"load_all": "Indlæs alle",
-	"rankings": "Placeringer"
+	"rankings": "Placeringer",
+	"all_teams": "Alle hold",
+	"recruitment_message": "Rekrutteringsbesked",
+	"no_recruitment_message": "ingen rekrutteringsbesked"
 }

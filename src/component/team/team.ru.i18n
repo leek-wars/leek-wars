@@ -109,5 +109,8 @@
 	"xp": "Опыт: {0}",
 	"you_left_team": "Вы покинули команду",
 	"load_all": "Загрузить все",
-	"rankings": "Рейтинги"
+	"rankings": "Рейтинги",
+	"all_teams": "Все команды",
+	"recruitment_message": "Сообщение о наборе",
+	"no_recruitment_message": "нет сообщения о наборе"
 }

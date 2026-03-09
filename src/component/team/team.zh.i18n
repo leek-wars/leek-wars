@@ -109,5 +109,8 @@
 	"xp": "经验值：{0}",
 	"you_left_team": "你离开了团队",
 	"load_all": "全部加载",
-	"rankings": "排行榜"
+	"rankings": "排行榜",
+	"all_teams": "所有队伍",
+	"recruitment_message": "招募消息",
+	"no_recruitment_message": "没有招募消息"
 }

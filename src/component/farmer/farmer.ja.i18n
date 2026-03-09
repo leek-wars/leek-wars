@@ -11,6 +11,7 @@
 	"cancel": "キャンセル",
 	"cancel_candidacy": "リクエストをキャンセルする",
 	"candidacy_canceled": "申し込みがキャンセルされました",
+	"candidacies": "応募中",
 	"candidacy_for_team": "チーム {team} へのリクエスト",
 	"challenge": "チャレンジ",
 	"click_to_change_avatar": "クリックして変更",

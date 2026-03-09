@@ -11,6 +11,7 @@
 	"cancel": "취소",
 	"cancel_candidacy": "요청 취소",
 	"candidacy_canceled": "신청 취소됨",
+	"candidacies": "진행 중인 지원",
 	"candidacy_for_team": "팀 {team}에 대한 요청",
 	"challenge": "도전",
 	"click_to_change_avatar": "클릭하여 변경",

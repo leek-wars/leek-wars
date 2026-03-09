@@ -109,5 +109,8 @@
 	"xp": "EP: {0}",
 	"you_left_team": "Du hast das Team verlassen",
 	"load_all": "Alle laden",
-	"rankings": "Ranglisten"
+	"rankings": "Ranglisten",
+	"all_teams": "Alle Teams",
+	"recruitment_message": "Rekrutierungsnachricht",
+	"no_recruitment_message": "keine Rekrutierungsnachricht"
 }

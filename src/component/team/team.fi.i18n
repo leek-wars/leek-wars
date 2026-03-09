@@ -109,5 +109,8 @@
 	"xp": "XP: {0}",
 	"you_left_team": "Lähdit joukkueesta",
 	"load_all": "Lataa kaikki",
-	"rankings": "Rankingit"
+	"rankings": "Rankingit",
+	"all_teams": "Kaikki tiimit",
+	"recruitment_message": "Rekrytointiviesti",
+	"no_recruitment_message": "ei rekrytointiviestiä"
 }

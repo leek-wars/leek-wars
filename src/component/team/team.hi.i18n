@@ -109,5 +109,8 @@
 	"xp": "एक्सपी: {0}",
 	"you_left_team": "आपने टीम छोड़ दी",
 	"load_all": "सभी को लोड करें",
-	"rankings": "रैंकिंग"
+	"rankings": "रैंकिंग",
+	"all_teams": "सभी टीमें",
+	"recruitment_message": "भर्ती संदेश",
+	"no_recruitment_message": "कोई भर्ती संदेश नहीं"
 }
