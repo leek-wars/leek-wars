@@ -130,7 +130,7 @@
 			return this.leeks.reduce((sum: number, leek: any) => sum + leek.level, 0)
 		}
 		get totalXP() {
-			return this.leeks.reduce((sum: number, leek: any) => sum + leek.xp, 0)
+			return this.leeks.reduce((sum: number, leek: any) => sum + (leek.xp || 0), 0)
 		}
 		get totalPower() {
 			return Math.round(this.leeks.reduce((sum: number, leek: any) => sum + Math.pow(leek.level, 4.2), 0))
