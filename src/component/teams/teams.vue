@@ -320,4 +320,7 @@ export default class Teams extends Vue {
 :deep(.v-data-table td), :deep(.v-data-table th) {
 	padding: 6px !important;
 }
+.match-score {
+	padding: 0 15px;
+}
 </style>
