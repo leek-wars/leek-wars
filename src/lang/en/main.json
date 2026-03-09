@@ -142,6 +142,7 @@
 	"talent_difference_farmer_no_gains": "This farmer <b>{0}</b> has no more talent points than the average of his level, his gains are not increased.",
 	"talent_difference_no_gains": "The Leek <b>{0}</b> has no more talent points than the average of his level, his gains are not increased.",
 	"team": "Team",
+	"teams": "Teams",
 	"team_level": "Team level {0}",
 	"time_1_day_ago": "one day ago",
 	"time_1_hour_ago": "one hour ago",

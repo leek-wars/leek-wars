@@ -252,13 +252,15 @@
 					<div v-else>
 						<div v-if="myFarmer">
 							<v-btn @click="createTeamDialog = true">{{ $t('create_team') }}</v-btn>
-							<div v-if="farmer.candidacy">
-								<br><br><br>
-								<i18n-t keypath="candidacy_for_team" class="candidacy">
-									<template #team><a :href="'/team/' + farmer.candidacy.team_id">{{ farmer.candidacy.team_name }}</a></template>
-								</i18n-t>
-								<br><br>
-								<v-btn @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</v-btn>
+							<div v-if="farmer.candidacies && farmer.candidacies.length" class="candidacies">
+								<h4>{{ $t('candidacies') }}</h4>
+								<div v-for="c in farmer.candidacies" :key="c.team_id" class="candidacy-item">
+									<rich-tooltip-team :id="c.team_id">
+										<emblem :team="{id: c.team_id, emblem_changed: c.emblem_changed}" />
+									</rich-tooltip-team>
+									<router-link :to="'/team/' + c.team_id">{{ c.team_name }}</router-link>
+									<v-btn size="small" variant="outlined" @click="cancelCandidacy(c)">{{ $t('cancel_candidacy') }}</v-btn>
+								</div>
 							</div>
 							<div v-if="$store.state.farmer && $store.state.farmer.team_invitations && $store.state.farmer.team_invitations.length > 0" class="invitations">
 								<br>
@@ -998,11 +1000,11 @@ import { emitter } from '@/model/vue'
 			})
 		}
 
-		cancelCandidacy() {
-			LeekWars.post('team/cancel-candidacy').then(data => {
+		cancelCandidacy(candidacy: { team_id: number }) {
+			LeekWars.post('team/cancel-candidacy-for-team', { team_id: candidacy.team_id }).then(() => {
 				if (this.farmer) {
 					LeekWars.toast(this.$i18n.t('candidacy_canceled'))
-					this.farmer.candidacy = null
+					this.farmer.candidacies = this.farmer.candidacies.filter((c: any) => c.team_id !== candidacy.team_id)
 				}
 			}).error(error => {
 				LeekWars.toast(error)
@@ -1454,8 +1456,26 @@ import { emitter } from '@/model/vue'
 		text-align: center;
 		word-break: break-all;
 	}
-	.candidacy {
-		color: #999;
+	.candidacies {
+		margin-top: 15px;
+		h4 {
+			margin-bottom: 8px;
+			color: #777;
+		}
+		.candidacy-item {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			padding: 4px 0;
+			.emblem {
+				width: 36px;
+				height: 36px;
+			}
+			a {
+				flex: 1;
+				text-align: left;
+			}
+		}
 	}
 	.invitations {
 		h4 {

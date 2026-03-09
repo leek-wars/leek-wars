@@ -123,5 +123,8 @@
 	"accept_invitation": "Accettare",
 	"reject_invitation": "Rifiutare",
 	"invitation_accepted": "Invito accettato!",
-	"invitation_rejected": "Invito rifiutato"
+	"invitation_rejected": "Invito rifiutato",
+	"all_teams": "Tutte le squadre",
+	"recruitment_message": "Messaggio di reclutamento",
+	"no_recruitment_message": "nessun messaggio di reclutamento"
 }

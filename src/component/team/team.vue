@@ -29,6 +29,12 @@
 						<span>{{ $t('main.challenge') }}</span>
 					</div>
 				</router-link>
+				<router-link to="/teams">
+					<div class="tab action">
+						<v-icon>mdi-account-group</v-icon>
+						<span>{{ $t('all_teams') }}</span>
+					</div>
+				</router-link>
 			</div>
 		</div>
 
@@ -53,6 +59,16 @@
 						<span v-else class="text team-status">{{ team.description }}</span>
 						<span class="guillemet">»</span>
 						<span class="edit-pen"></span>
+					</div>
+					<div v-if="team.recruitment_message || captain" class="recruitment-message">
+						<v-tooltip>
+							<template #activator="{ props }">
+								<v-icon v-bind="props" size="small">mdi-bullhorn-outline</v-icon>
+							</template>
+							{{ $t('recruitment_message') }}
+						</v-tooltip>
+						<span v-if="captain" ref="recruitmentElement" class="team-status text" contenteditable :data-placeholder="$t('no_recruitment_message')" @blur="saveRecruitmentMessage">{{ team.recruitment_message }}</span>
+						<span v-else class="text">{{ team.recruitment_message }}</span>
 					</div>
 				</div></template>
 			</panel>
@@ -1047,6 +1063,19 @@
 			}
 		}
 
+		savingRecruitment = false
+		saveRecruitmentMessage() {
+			if (!this.team || this.savingRecruitment) { return }
+			this.savingRecruitment = true
+			;(this.$refs.recruitmentElement as HTMLElement).blur()
+			const text = ('' + (this.$refs.recruitmentElement as HTMLElement).innerText).trim()
+			this.team.recruitment_message = text
+			LeekWars.put('team/change-recruitment-message', {message: text}).error((e: any) => {
+				LeekWars.toast("Error: " + JSON.stringify(e))
+			})
+			this.$nextTick(() => { this.savingRecruitment = false })
+		}
+
 		acceptCandidacy(candidacy: any) {
 			LeekWars.post('team/accept-candidacy', {candidacy_id: candidacy.id}).then(data => {
 				LeekWars.toast(this.$i18n.t('farmer_accepted'))
@@ -1282,6 +1311,29 @@
 			font-size: 20px;
 			color: var(--text-color-secondary);
 			font-weight: 300;
+		}
+	}
+	.recruitment-message {
+		padding-top: 6px;
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		color: var(--text-color-secondary);
+		font-size: 14px;
+		text-align: left;
+		.v-icon {
+			color: var(--text-color-secondary);
+		}
+		.text {
+			padding: 0 4px;
+		}
+		[contenteditable] {
+			cursor: text;
+		}
+		[contenteditable]:empty:before {
+			content: attr(data-placeholder);
+			font-style: italic;
+			color: #999;
 		}
 	}
 	.guillemet {

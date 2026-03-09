@@ -152,6 +152,7 @@
 	"talent_difference_farmer_no_gains": "L'éleveur <b>{0}</b> n'a pas de talent de plus que la moyenne de son niveau, ses gains ne sont pas augmentés.",
 	"talent_difference_no_gains": "Le poireau <b>{0}</b> n'a pas de talent de plus que la moyenne de son niveau, ses gains ne sont pas augmentés.",
 	"team": "Équipe",
+	"teams": "Équipes",
 	"team_level": "Équipe niveau {0}",
 	"time_1_day_ago": "il y a un jour",
 	"time_1_hour_ago": "il y a une heure",

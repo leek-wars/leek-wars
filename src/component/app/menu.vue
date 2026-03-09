@@ -91,6 +91,10 @@
 					<img src="/image/icon/team.png">
 					<div class="text">{{ $t('main.team') }}</div>
 				</router-link>
+				<router-link v-else-if="$store.state.farmer && $store.state.farmer.total_level >= 5" v-ripple to="/teams" class="section" :class="{'router-link-active': $route.path.startsWith('/teams')}" @click.native="clickItem">
+					<img src="/image/icon/team.png">
+					<div class="text">{{ $t('main.teams') }}</div>
+				</router-link>
 
 				<router-link v-if="$store.state.farmer && $store.state.farmer.trophies" v-ripple to="/trophies" class="section" :class="{'router-link-active': $route.path.startsWith('/trophies') || $route.path.startsWith('/trophy')}" @click.native="clickItem">
 					<img src="/image/icon/trophy.png">

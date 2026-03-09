@@ -48,6 +48,7 @@ class Team {
 	public unengaged_leeks!: Leek[]
 	public opened!: boolean
 	public description!: string
+	public recruitment_message!: string
 	public candidacy!: boolean
 	public candidacies!: any[]
 	public invitations!: any[]
