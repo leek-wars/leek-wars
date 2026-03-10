@@ -217,7 +217,7 @@
 				<div v-if="errors.length" class="title">{{ $tc('n_errors', errors.length) }}</div>
 				<div class="errors" @mouseover="mouseover">
 					<div v-for="(e, i) in errors" :key="i" class="log error" :a="e.action" :i="e.index">
-						<pre>[{{ e.entity }}] {{ e.data }}</pre>
+						<pre>[{{ e.entity }}] {{ e.data }} <span v-if="e.ai && fileSystem.ais[e.ai]" class="ai" @click="goToAI(e.ai, e.line)">[{{ fileSystem.ais[e.ai].path }}:{{ e.line }}]</span></pre>
 					</div>
 				</div>
 				<div v-if="warnings.length" class="title">
@@ -229,7 +229,7 @@
 				</div>
 				<div class="errors" @mouseover="mouseover">
 					<div v-for="(w, i) in warnings" :key="i" class="log warning" :a="w.action" :i="w.index">
-						<pre>[{{ w.entity }}] {{ w.data }}</pre>
+						<pre>[{{ w.entity }}] {{ w.data }} <span v-if="w.ai && fileSystem.ais[w.ai]" class="ai" @click="goToAI(w.ai, w.line)">[{{ fileSystem.ais[w.ai].path }}:{{ w.line }}]</span></pre>
 					</div>
 				</div>
 			</div>
@@ -265,8 +265,10 @@
 	import { FightStatistics } from './statistics'
 	import Comments from '@/component/comment/comments.vue'
 	import { CHIPS } from '@/model/chips'
+	import { fileSystem } from '@/model/filesystem'
+	import router from '@/router'
 	import { emitter } from '@/model/vue'
-	import { defineAsyncComponent } from 'vue'
+	import { defineAsyncComponent, nextTick } from 'vue'
 	import { Bar, Doughnut } from 'vue-chartjs'
 	import { Tooltip } from 'chart.js'
 	import ReportLifeChart from './report-life-chart.vue'
@@ -294,6 +296,7 @@
 	} })
 	export default class ReportPage extends Vue {
 		TEAM_COLORS = TEAM_COLORS
+		fileSystem = fileSystem
 		fight: Fight | null = null
 		report: Report | null = null
 		actions: readonly Action[] | null = null
@@ -472,13 +475,6 @@
 				this.statistics.generate(this.fight)
 				// console.log(this.statistics)
 
-				if (this.$store.state.farmer) {
-					LeekWars.get('fight/get-logs/' + id).then(d => {
-						this.logs = Object.freeze(d)
-						this.processLogs()
-						this.warningsErrors()
-					})
-				}
 				this.getChartDamage()
 				this.updateMap()
 				this.walkedCells(999)
@@ -495,8 +491,17 @@
 					title += this.fight.team1_name + " vs " + this.fight.team2_name
 				}
 				LeekWars.setTitle(title)
-				emitter.emit('loaded')
 				this.loaded = true
+				if (this.$store.state.farmer) {
+					LeekWars.get('fight/get-logs/' + id).then(d => {
+						this.logs = Object.freeze(d)
+						this.processLogs()
+						this.warningsErrors()
+						setTimeout(() => emitter.emit('loaded'), 100)
+					})
+				} else {
+					nextTick(() => emitter.emit('loaded'))
+				}
 			})
 			.error(error => this.error = true)
 		}
@@ -554,9 +559,9 @@
 						const type = log[1]
 						const message = (type >= 6 && type <= 8) ? i18n.t('leekscript.error_' + log[3], log[4]) + "\n" + log[2] : log[2]
 						if (type === 2 || type === 7) {
-							this.warnings.push({entity: this.leeks[leek].name, data: message, action: a, index: i})
+							this.warnings.push({entity: this.leeks[leek].name, data: message, action: a, index: i, ai: log[4], line: log[5]})
 						} else if (type === 3 || type === 8) {
-							this.errors.push({entity: this.leeks[leek].name, data: message, action: a, index: i})
+							this.errors.push({entity: this.leeks[leek].name, data: message, action: a, index: i, ai: log[4], line: log[5]})
 						}
 						i++
 					}
@@ -781,6 +786,10 @@
 			}
 		}
 
+		goToAI(file: number, line: number) {
+			router.push('/editor/' + file + '?line=' + line)
+		}
+
 		goToTurn(turn: number) {
 			const element = document.getElementById('turn-' + turn)
 			if (element) {
@@ -826,6 +835,7 @@
 			let target = (e.target as Element)
 			if (target.tagName === 'PRE') target = target.parentElement as Element
 			else if (target.tagName === 'A') target = target.parentElement as Element
+			else if (target.tagName === 'SPAN') target = target.closest('.log') as Element || target
 			if (this.currentLink && this.currentLink !== target) {
 				const l = this.currentLink.querySelector('a')
 				if (l) {
@@ -911,6 +921,13 @@
 		margin: 20px 100px;
 		background: #ffb6b6;
 		border-radius: 2px;
+	}
+	.warnings-error .ai {
+		color: var(--text-color-secondary);
+		cursor: pointer;
+		&:hover {
+			color: var(--primary);
+		}
 	}
 	.warnings-errors .title {
 		font-size: 18px;

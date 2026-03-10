@@ -257,6 +257,7 @@
 	@Options({
 		name: 'player',
 		components: { Hud, 'lw-title': LWTitle },
+		emits: ['resize', 'fight'],
 		i18n: {},
 		mixins: [...mixins]
 	})

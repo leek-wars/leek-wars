@@ -535,6 +535,7 @@
 
 					if ('line' in this.$route.query) {
 						this.jump(ai, parseInt(this.$route.query.line as string), 0)
+						this.$router.replace('/editor/' + id)
 					}
 				} else {
 					this.currentFolder = fileSystem.folderById[id]
@@ -740,7 +741,7 @@
 
 		jump(ai: AI, line: number, column: number) {
 			console.log("jump()", ai, line, column)
-			if (ai.id !== this.currentAI!.id) {
+			if (!this.currentAI || ai.id !== this.currentAI.id) {
 				this.$router.push('/editor/' + ai.id)
 			}
 			nextTick(() => {
