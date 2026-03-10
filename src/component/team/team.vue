@@ -151,6 +151,17 @@
 
 			<panel class="description">
 				<template #content><div v-if="team" class="turret-wrapper">
+					<router-link v-if="teamOwner" class="team-owner" :to="'/farmer/' + teamOwner.id">
+						<rich-tooltip-farmer :id="teamOwner.id" v-slot="{ props }">
+							<div class="owner-content" v-bind="props">
+								<avatar :farmer="teamOwner" />
+								<div class="owner-info">
+									<div class="owner-name" :class="teamOwner.color">{{ teamOwner.name }}</div>
+									<div class="owner-label">{{ $t('owner') }}</div>
+								</div>
+							</div>
+						</rich-tooltip-farmer>
+					</router-link>
 					<div class="turret">
 						<turret-image :level="team.level" :skin="1" :scale="0.32" @click.native="turretDialog = true" />
 
@@ -797,6 +808,7 @@
 		get xp_bar_width() { return this.team ? this.team.level === 100 ? 100 : Math.floor(100 * (this.team.xp - this.team.down_xp) / (this.team.up_xp - this.team.down_xp)) : 0 }
 		get is_member() { return !this.$route.params.id || (this.team && this.$store.state.farmer && this.$store.state.farmer.team !== null && this.team.id === this.$store.state.farmer.team.id) }
 		get my_member() { return this.is_member ? this.team!.membersById[this.$store.state.farmer.id] : null }
+		get teamOwner() { return this.team ? this.team.members.find(m => m.grade === 'owner') : null }
 		get myInvitation() {
 			const me = this.$store.state.farmer
 			if (me && me.team_invitations && this.team) {
@@ -1684,8 +1696,41 @@
 	}
 	.panel :deep(.turret-wrapper) {
 		display: flex;
-		align-items: flex-end;
+		flex-direction: column;
+		align-items: center;
 		height: 100%;
+    	justify-content: space-between;
+		.team-owner {
+			text-decoration: none;
+			color: var(--text-color);
+			padding: 10px;
+			.owner-content {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				padding: 6px 12px;
+				border-radius: 8px;
+				transition: background 0.15s;
+				&:hover {
+					background: rgba(128, 128, 128, 0.1);
+				}
+			}
+			.avatar {
+				width: 50px;
+				height: 50px;
+			}
+			.owner-info {
+				display: flex;
+				flex-direction: column;
+			}
+			.owner-name {
+				font-weight: bold;
+			}
+			.owner-label {
+				font-size: 13px;
+				color: var(--text-color-secondary);
+			}
+		}
 		.turret {
 			display: flex;
 			justify-content: center;
