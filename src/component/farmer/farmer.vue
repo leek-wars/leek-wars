@@ -309,7 +309,7 @@
 					<loader v-if="!farmer || !trophies" />
 					<template v-else-if="farmer.trophies > 0 && trophies_list && trophies_grid">
 						<div v-show="trophiesMode == 'list'" class="list trophies-container">
-							<v-tooltip v-for="(trophy, t) in trophies_list" :key="t">
+							<v-tooltip v-for="(trophy, t) in trophies_list" :key="t" :open-delay="10" :close-delay="1">
 								<template #activator="{ props }">
 									<router-link :to="'/trophy/' + trophy.code">
 										<img class="trophy" v-bind="props" :src="'/image/trophy/' + trophy.code + '.svg'">
@@ -324,7 +324,7 @@
 							</v-tooltip>
 						</div>
 						<div v-show="trophiesMode == 'grid'" class="grid trophies-container">
-							<v-tooltip v-for="(trophy, t) in trophies_grid" :key="t" :disabled="!trophy">
+							<v-tooltip v-for="(trophy, t) in trophies_grid" :key="t" :disabled="!trophy" :open-delay="10" :close-delay="1">
 								<template #activator="{ props }">
 									<router-link v-if="trophy != null" :to="'/trophy/' + trophy.code" class="card">
 										<img :src="'/image/trophy/' + trophy.code + '.svg'" v-bind="props" class="trophy">

@@ -25,10 +25,10 @@
 		value: boolean = false
 
 		get _open_delay() {
-			return this.instant ? 0 : 500
+			return this.instant ? 1 : 500
 		}
 		get _close_delay() {
-			return this.instant ? 0 : 0
+			return this.instant ? 1 : 1
 		}
 
 		setParent(event: boolean) {

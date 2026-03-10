@@ -103,10 +103,10 @@ export default class RichTooltipLeek extends Vue {
 	value: boolean = false
 
 	get _open_delay() {
-		return this.instant ? 0 : 500
+		return this.instant ? 1 : 500
 	}
 	get _close_delay() {
-		return this.instant ? 0 : 1
+		return this.instant ? 1 : 1
 	}
 	@Watch('id')
 	update() {

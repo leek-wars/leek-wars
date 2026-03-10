@@ -35,7 +35,7 @@
 		disabled: boolean = false
 
 		get _open_delay() {
-			return this.instant || LeekWars.mobile ? 0 : (this.openDelay || 500)
+			return this.instant || LeekWars.mobile ? 1 : (this.openDelay || 500)
 		}
 		get _close_delay() {
 			return 1
