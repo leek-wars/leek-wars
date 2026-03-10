@@ -23,5 +23,7 @@
 	"error_already_have_candidacy": "Tu as déjà une candidature en cours.",
 	"error_already_in_team": "Tu es déjà dans une équipe.",
 	"error_team_full": "Cette équipe est pleine.",
-	"error_too_many_candidacies": "Tu as déjà 5 candidatures en cours."
+	"error_too_many_candidacies": "Tu as déjà 5 candidatures en cours.",
+	"show_closed": "Voir les fermées",
+	"closed": "Fermée"
 }

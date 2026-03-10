@@ -22,6 +22,7 @@
 				<v-text-field v-model="search" :label="$t('search')" prepend-inner-icon="mdi-magnify" density="compact" variant="outlined" hide-details clearable class="filter-search" />
 				<v-select v-model="activityFilter" :items="activityOptions" :label="$t('activity')" density="compact" variant="outlined" hide-details class="filter-select" />
 				<v-select v-model="sizeFilter" :items="sizeOptions" :label="$t('team_size')" density="compact" variant="outlined" hide-details class="filter-select" />
+				<v-switch v-model="showClosed" :label="$t('show_closed')" density="compact" hide-details color="primary" class="filter-switch" />
 			</div>
 
 			<loader v-if="!teams" />
@@ -31,6 +32,7 @@
 				:items-per-page="10"
 				:search="search"
 				density="compact"
+				:row-props="rowProps"
 				class="elevation-1">
 				<template #item.name="{ item }">
 					<div class="team-cell">
@@ -41,7 +43,8 @@
 						</rich-tooltip-team>
 						<div>
 							<router-link :to="'/team/' + item.id" class="team-name">{{ item.name }}</router-link>
-							<div v-if="item.recruitment_message" class="recruitment-message">{{ item.recruitment_message }}</div>
+							<div v-if="!item.opened" class="closed-badge"><v-icon size="small">mdi-lock</v-icon> {{ $t('closed') }}</div>
+							<div v-else-if="item.recruitment_message" class="recruitment-message">{{ item.recruitment_message }}</div>
 							<div v-if="item.recent_members" class="recent-members">
 								<rich-tooltip-farmer v-for="m in item.recent_members" :id="m.id" :key="m.id">
 									<router-link :to="'/farmer/' + m.id" class="member-avatar-wrapper">
@@ -72,7 +75,7 @@
 					<span class="match-score" :style="{ color: matchColor(item.match_score), fontWeight: item.match_score >= 0.6 ? 'bold' : 'normal' }">{{ Math.round(item.match_score * 100) }}%</span>
 				</template>
 				<template #item.apply="{ item }">
-					<template v-if="canApply">
+					<template v-if="canApply && item.opened">
 						<v-btn v-if="candidacyTeams.includes(item.id)" size="small" variant="outlined" @click="cancelCandidacy(item)">{{ $t('cancel') }}</v-btn>
 						<v-btn v-else-if="candidacyTeams.length < 5" size="small" color="primary" prepend-icon="mdi-send" @click="sendCandidacy(item)">{{ $t('apply') }}</v-btn>
 					</template>
@@ -85,7 +88,7 @@
 <script lang="ts">
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
-import { Component, Vue } from 'vue-facing-decorator'
+import { Component, Vue, Watch } from 'vue-facing-decorator'
 import { mixins } from '@/model/i18n'
 import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
@@ -98,6 +101,7 @@ export default class Teams extends Vue {
 	search: string = ''
 	activityFilter: string = 'all'
 	sizeFilter: string = 'all'
+	showClosed: boolean = localStorage.getItem('teams/show-closed') === 'true'
 	candidacyTeams: number[] = []
 
 	get activityOptions() {
@@ -190,13 +194,28 @@ export default class Teams extends Vue {
 		return `hsl(${hue}, 70%, 40%)`
 	}
 
-	created() {
-		LeekWars.setTitle(this.$t('title'))
-		LeekWars.get('team/get-recruiting').then((data: any) => {
+	rowProps({ item }: { item: any }) {
+		return item.opened === false ? { class: 'closed-row' } : {}
+	}
+
+	@Watch('showClosed')
+	onShowClosedChanged() {
+		localStorage.setItem('teams/show-closed', '' + this.showClosed)
+		this.loadTeams()
+	}
+
+	loadTeams() {
+		this.teams = null
+		LeekWars.get('team/get-recruiting?include_closed=' + this.showClosed).then((data: any) => {
 			this.teams = data.teams
 			this.hasMatch = this.teams !== null && this.teams.length > 0 && this.teams[0].match_score !== undefined
 			this.candidacyTeams = data.candidacy_teams || []
 		})
+	}
+
+	created() {
+		LeekWars.setTitle(this.$t('title'))
+		this.loadTeams()
 	}
 }
 </script>
@@ -238,6 +257,7 @@ export default class Teams extends Vue {
 	flex-wrap: wrap;
 }
 .filter-search {
+	min-width: 250px;
 	max-width: 300px;
 	:deep(input) {
 		background: transparent !important;
@@ -324,5 +344,18 @@ export default class Teams extends Vue {
 }
 .match-score {
 	padding: 0 15px;
+}
+.filter-switch {
+	flex: none;
+}
+.closed-badge {
+	color: #999;
+	font-size: 12px;
+	display: flex;
+	align-items: center;
+	gap: 3px;
+}
+:deep(.closed-row) {
+	opacity: 0.7;
 }
 </style>

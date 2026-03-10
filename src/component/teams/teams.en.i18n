@@ -23,5 +23,7 @@
 	"error_already_have_candidacy": "You already have a pending application.",
 	"error_already_in_team": "You are already in a team.",
 	"error_team_full": "This team is full.",
-	"error_too_many_candidacies": "You already have 5 pending applications."
+	"error_too_many_candidacies": "You already have 5 pending applications.",
+	"show_closed": "Show closed",
+	"closed": "Closed"
 }
