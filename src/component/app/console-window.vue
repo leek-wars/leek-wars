@@ -13,7 +13,14 @@
 			</div>
 		</template>
 		<template #options>
-			<div class="option" @click="$refs.console.toggleTheme()"><v-icon>mdi-weather-night</v-icon></div>
+			<v-menu offset-y :close-on-content-click="false">
+				<template #activator="{ props }">
+					<div class="option" v-bind="props"><v-icon>mdi-weather-night</v-icon></div>
+				</template>
+				<div class="theme-menu">
+					<div v-for="t in themes" :key="t.value" class="theme-item" :class="{ active: $refs.console && $refs.console.theme === t.value }" @click="setTheme(t.value)">{{ t.label }}</div>
+				</div>
+			</v-menu>
 			<!-- <div class="option" @click="consoleRandom"><img src="/image/icon/dice.png"></div> -->
 			<div class="option" @click="consolePopup"><v-icon>mdi-open-in-new</v-icon></div>
 			<div class="option" @click="$emit('close')"><v-icon>mdi-close</v-icon></div>
@@ -42,7 +49,14 @@ export default class ConsoleWindow extends Vue {
 	consoleStarty: number = 0
 	consoleDragx: number = 0
 	consoleDragy: number = 0
-	theme: string = 'leekwars'
+	themes = [
+		{ value: 'leek-wars', label: 'Leek Wars' },
+		{ value: 'monokai', label: 'Monokai' },
+		{ value: 'vs', label: 'VS Code clair' },
+		{ value: 'vs-dark', label: 'VS Code sombre' },
+		{ value: 'hc-light', label: 'High Contrast clair' },
+		{ value: 'hc-black', label: 'High Contrast sombre' },
+	]
 
 	mounted() {
 		this.consoleX = window.innerWidth / 2 - 300
@@ -84,6 +98,12 @@ export default class ConsoleWindow extends Vue {
 		this.consoleDown = false
 	}
 
+	setTheme(theme: string) {
+		const console = this.$refs.console as Console
+		console.theme = theme
+		console.saveTheme()
+	}
+
 	consolePopup() {
 		LeekWars.popupWindow("/full-console", "title", 600, 320)
 		this.$emit('close')
@@ -100,6 +120,15 @@ export default class ConsoleWindow extends Vue {
 	margin: 0;
 	box-shadow: 0 11px 15px -7px #0003, 0 24px 38px 3px #00000024, 0 9px 46px 8px #0000001f;
 }
+body.dark .theme-menu {
+	background: #2a2a2a;
+	.theme-item {
+		color: #eee;
+		&:hover {
+			background: #3a3a3a;
+		}
+	}
+}
 
 </style>
 
@@ -107,6 +136,24 @@ export default class ConsoleWindow extends Vue {
 
 .v-chip {
 	margin-left: 8px;
+}
+
+.theme-menu {
+	background: white;
+	padding: 4px 0;
+	.theme-item {
+		padding: 6px 16px;
+		cursor: pointer;
+		font-size: 14px;
+		white-space: nowrap;
+		&:hover {
+			background: #eee;
+		}
+		&.active {
+			font-weight: bold;
+			color: #5fad1b;
+		}
+	}
 }
 
 </style>

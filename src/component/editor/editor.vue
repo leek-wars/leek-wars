@@ -239,7 +239,7 @@
 
 	const DEFAULT_FONT_SIZE = 16
 	const DEFAULT_LINE_HEIGHT = 24
-	const DEFAULT_THEME = "leek-wars"
+	const DEFAULT_THEME = () => LeekWars.darkMode ? "monokai" : "leek-wars"
 
 	@Options({
 		name: 'editor', i18n: {},
@@ -323,7 +323,7 @@
 			if (localStorage.getItem('editor/popups') === null) { localStorage.setItem('editor/popups', 'true') }
 			if (localStorage.getItem('editor/analyzer') === null) { localStorage.setItem('editor/analyzer', 'false') }
 			LeekWars.large = this.enlargeWindow = localStorage.getItem('editor/large') === 'true'
-			this.theme = localStorage.getItem('editor/theme') || DEFAULT_THEME
+			this.theme = localStorage.getItem('editor/theme') || DEFAULT_THEME()
 			this.autoClosing = localStorage.getItem('editor/auto_closing') === 'true'
 			this.autocomplete = localStorage.getItem('editor/autocomplete') === 'true'
 			this.popups = localStorage.getItem('editor/popups') === 'true'

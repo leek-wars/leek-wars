@@ -184,6 +184,7 @@ monaco.languages.registerHoverProvider("leekscript", {
 		// console.log("hover", model.uri.path)
 
 		const ai = fileSystem.aiByFullPath[model.uri.path.substring(1)]
+		if (!ai) { return null }
 
 		const hover = await analyzer.hover(ai, position.lineNumber, position.column - 1)
 		// console.log(hover)
