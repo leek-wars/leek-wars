@@ -31,8 +31,8 @@
 		get nameSize() {
 			const base = this.small ? 12 : 16
 			const length = this.displayName.length
-			if (length <= 10) return base
-			return Math.max(base * 0.7, base * 10 / length)
+			if (length <= 16) return base
+			return Math.max(base * 0.75, base * 16 / length)
 		}
 
 		get show_lines() {
@@ -56,6 +56,7 @@
 		align-items: center;
 		justify-content: center;
 		padding: 12px;
+    	padding-top: 20px;
 		width: 103px;
 		height: 120px;
 		position: relative;
