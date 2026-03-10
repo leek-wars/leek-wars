@@ -63,14 +63,16 @@ export class BossSquads {
 		this.squad = squad
 		const route = '/garden/boss/' + BOSSES[squad.boss].name + '/' + squad.id
 		getRouter().isReady().then(() => {
-			if (getRouter().currentRoute.value.path.startsWith("/garden/") && getRouter().currentRoute.value.path !== route) {
+			const currentPath = getRouter().currentRoute.value.path
+			if (currentPath.startsWith("/garden/boss") && currentPath !== route) {
 				getRouter().push(route)
 			}
 		})
 	}
 	noSuchSquad() {
+		localStorage.removeItem('garden/boss-squad')
 		getRouter().isReady().then(() => {
-			if (getRouter().currentRoute.value.path.startsWith("/garden/") && getRouter().currentRoute.value.path !== "/garden/boss") {
+			if (getRouter().currentRoute.value.path.startsWith("/garden/boss") && getRouter().currentRoute.value.path !== "/garden/boss") {
 				getRouter().push('/garden/boss')
 			}
 		})
@@ -86,7 +88,7 @@ export class BossSquads {
 	}
 	left() {
 		getRouter().isReady().then(() => {
-			if (getRouter().currentRoute.value.path.startsWith("/garden/")) {
+			if (getRouter().currentRoute.value.path.startsWith("/garden/boss")) {
 				getRouter().push('/garden/boss/')
 			}
 		})
