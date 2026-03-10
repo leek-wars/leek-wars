@@ -129,6 +129,16 @@
 					{{ $t('ratio', [team.ratio]) }}
 				</v-tooltip>
 
+				<v-tooltip v-if="team && team.won_tournaments > 0">
+					<template #activator="{ props }">
+						<div v-bind="props" class="tournaments">
+							<v-icon class="grey">mdi-trophy-outline</v-icon>
+							<span class="big">{{ $filters.number(team.won_tournaments) }}</span>
+						</div>
+					</template>
+					{{ $t('tournaments') }}
+				</v-tooltip>
+
 				<Line v-if="chartData" :data="chartData" :options="chartOptions" class="talent-history" />
 
 				<div class="center" v-if="team && $store.state.farmer && !is_member && $store.state.farmer.team == null && !myInvitation">
@@ -1410,7 +1420,7 @@
 	.talent-history {
 		margin-top: 3px;
 	}
-	.fights {
+	.fights, .tournaments {
 		width: 100%;
 		border-collapse: collapse;
 		text-align: center;
@@ -1424,6 +1434,19 @@
 		}
 		tr > td:nth-child(n+2) {
 			border-left: 2px solid var(--border);
+		}
+	}
+	.tournaments {
+		margin-top: 10px;
+		margin-bottom: 5px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 6px;
+		.big {
+			font-size: 22px;
+			font-weight: 300;
+			color: var(--text-color-secondary);
 		}
 	}
 	.candidacies .empty {
