@@ -226,7 +226,7 @@
 										<garden-farmer :farmer="farmer" />
 									</span>
 								</div>
-								<div v-if="!farmerOpponents.length" class="no-opponent">
+								<div v-if="farmerOpponents && !farmerOpponents.length" class="no-opponent">
 									<img src="/image/notgood.png">
 									<h4>{{ $t('no_opponent_of_your_size') }}</h4>
 								</div>
@@ -258,7 +258,7 @@
 											<garden-compo :compo="compo" />
 										</span>
 									</div>
-									<div v-if="!teamOpponents[selectedComposition.id].length" class="no-opponent">
+									<div v-if="teamOpponents[selectedComposition.id] && !teamOpponents[selectedComposition.id].length" class="no-opponent">
 										<img src="/image/notgood.png">
 										<h4>{{ $t('no_opponent_of_your_size') }}</h4>
 									</div>
