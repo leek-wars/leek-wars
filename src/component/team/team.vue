@@ -881,11 +881,13 @@
 				if (this.is_member) {
 					this.logsLevel = this.my_member!.logs_level
 					LeekWars.setActions([
-						{icon: 'mdi-chat-outline', click: () => this.$router.push('/forum/category-' + team.forum)}
+						{icon: 'mdi-chat-outline', click: () => this.$router.push('/forum/category-' + team.forum)},
+						{icon: 'mdi-account-group', click: () => this.$router.push('/teams')}
 					])
 				} else {
 					LeekWars.setActions([
-						{icon: 'mdi-flag-outline', click: () => this.$router.push('/garden/challenge/team/' + team.id)}
+						{icon: 'mdi-flag-outline', click: () => this.$router.push('/garden/challenge/team/' + team.id)},
+						{icon: 'mdi-account-group', click: () => this.$router.push('/teams')}
 					])
 				}
 				emitter.emit('loaded')
