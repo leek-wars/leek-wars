@@ -38,7 +38,7 @@ import { i18n } from '@/model/i18n';
 import router from '@/router';
 import Code from '@/component/app/code.vue'
 
-@Options({ name: 'ai-view-monaco', components: {
+@Options({ name: 'ai-view-monaco', emits: ['focus'], components: {
 
 }})
 export default class AIViewMonaco extends Vue {

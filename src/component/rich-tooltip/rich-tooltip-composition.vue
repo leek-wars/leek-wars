@@ -92,7 +92,6 @@
 			this.content_created = false
 		}
 		open(v: boolean) {
-			console.log("open")
 			this.expand_leeks = localStorage.getItem('rich-tooltip-composition/expanded') === 'true'
 			if (this.content_created) { return }
 			this.content_created = true
