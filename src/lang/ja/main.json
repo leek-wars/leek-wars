@@ -279,5 +279,8 @@
 	"valid_ai": "<b>{0}</b>有効",
 	"x_to_y": "{0}～{1}",
 	"n_views": "ビューなし | 1 ビュー | {n}ビュー",
-	"views": "閲覧数"
+	"views": "閲覧数",
+	"very_active": "非常に活発",
+	"active": "活発",
+	"low_activity": "活動が少ない"
 }

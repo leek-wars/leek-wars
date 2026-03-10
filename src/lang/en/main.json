@@ -291,5 +291,8 @@
 	"valid_ai": "<b>{0}</b> valid",
 	"x_to_y": "{0} to {1}",
 	"n_views": "no view | 1 view | {n} views",
-	"views": "Views"
+	"views": "Views",
+	"very_active": "Very active",
+	"active": "Active",
+	"low_activity": "Low activity"
 }

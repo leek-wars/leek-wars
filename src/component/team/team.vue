@@ -779,9 +779,9 @@
 		get activityTooltip() {
 			if (!this.team) return ''
 			const score = this.team.activity
-			if (score >= 200) return this.$t('very_active')
-			if (score >= 100) return this.$t('active')
-			return this.$t('low_activity')
+			if (score >= 200) return this.$t('main.very_active')
+			if (score >= 100) return this.$t('main.active')
+			return this.$t('main.low_activity')
 		}
 		get max_level() { return this.team && this.team.level === 100 }
 		get xp_bar_width() { return this.team ? this.team.level === 100 ? 100 : Math.floor(100 * (this.team.xp - this.team.down_xp) / (this.team.up_xp - this.team.down_xp)) : 0 }

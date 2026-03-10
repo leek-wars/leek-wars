@@ -279,5 +279,8 @@
 	"valid_ai": "<b>{0}</b> giltig",
 	"x_to_y": "{0} till {1}",
 	"n_views": "ingen visning | 1 visning | {n} visningar",
-	"views": "Visningar"
+	"views": "Visningar",
+	"very_active": "Mycket aktiv",
+	"active": "Aktiv",
+	"low_activity": "Låg aktivitet"
 }

@@ -279,5 +279,8 @@
 	"valid_ai": "<b>{0}</b>有效",
 	"x_to_y": "{0}到{1}",
 	"n_views": "没有浏览 | 1 次浏览 | {n} 次浏览",
-	"views": "浏览"
+	"views": "浏览",
+	"very_active": "非常活跃",
+	"active": "活跃",
+	"low_activity": "活动较少"
 }

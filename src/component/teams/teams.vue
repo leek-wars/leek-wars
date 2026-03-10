@@ -35,7 +35,9 @@
 				<template #item.name="{ item }">
 					<div class="team-cell">
 						<rich-tooltip-team :id="item.id">
-							<emblem :team="item" />
+							<router-link :to="'/team/' + item.id">
+								<emblem :team="item" />
+							</router-link>
 						</rich-tooltip-team>
 						<div>
 							<router-link :to="'/team/' + item.id" class="team-name">{{ item.name }}</router-link>
@@ -101,8 +103,8 @@ export default class Teams extends Vue {
 	get activityOptions() {
 		return [
 			{ title: this.$t('all'), value: 'all' },
-			{ title: this.$t('very_active'), value: 'very_active' },
-			{ title: this.$t('active'), value: 'active' },
+			{ title: this.$t('main.very_active'), value: 'very_active' },
+			{ title: this.$t('main.active'), value: 'active' },
 		]
 	}
 
@@ -159,9 +161,9 @@ export default class Teams extends Vue {
 	}
 
 	activityTooltip(score: number) {
-		if (score >= 200) return this.$t('very_active')
-		if (score >= 100) return this.$t('active')
-		return this.$t('low_activity')
+		if (score >= 200) return this.$t('main.very_active')
+		if (score >= 100) return this.$t('main.active')
+		return this.$t('main.low_activity')
 	}
 
 	get canApply(): boolean {

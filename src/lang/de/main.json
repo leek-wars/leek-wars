@@ -280,5 +280,8 @@
 	"valid_ai": "<b>{0}</b> gültig",
 	"x_to_y": "{0} bis {1}",
 	"n_views": "keine Ansicht | 1 Ansicht | {n} Aufrufe",
-	"views": "Aufrufe"
+	"views": "Aufrufe",
+	"very_active": "Sehr aktiv",
+	"active": "Aktiv",
+	"low_activity": "Wenig aktiv"
 }

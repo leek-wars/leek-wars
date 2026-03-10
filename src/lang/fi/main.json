@@ -279,5 +279,8 @@
 	"valid_ai": "<b>{0}</b> kelvollinen",
 	"x_to_y": "{0} – {1}",
 	"n_views": "ei näyttökertaa | 1 näyttökerta | {n} näyttökertaa",
-	"views": "Katselut"
+	"views": "Katselut",
+	"very_active": "Erittäin aktiivinen",
+	"active": "Aktiivinen",
+	"low_activity": "Vähän aktiivinen"
 }

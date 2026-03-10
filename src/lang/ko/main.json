@@ -279,5 +279,8 @@
 	"valid_ai": "<b>{0}</b> 유효",
 	"x_to_y": "{0}에서 {1}",
 	"n_views": "보기 없음 | 조회수 1회 | {n} 조회수",
-	"views": "조회수"
+	"views": "조회수",
+	"very_active": "매우 활발",
+	"active": "활발",
+	"low_activity": "활동 적음"
 }
