@@ -332,12 +332,6 @@ export default class Teams extends Vue {
 	color: var(--text-color-secondary);
 	font-size: 13px;
 	max-width: 300px;
-	white-space: pre-line;
-	display: -webkit-box;
-	-webkit-line-clamp: 3;
-	line-clamp: 3;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
 }
 :deep(.v-data-table td), :deep(.v-data-table th) {
 	padding: 6px !important;
