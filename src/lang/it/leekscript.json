@@ -181,5 +181,7 @@
 	"intial_version": "Versione iniziale",
 	"strict_mode": "Modalità rigorosa (avanzata)",
 	"all_info_ls": "Tutte le informazioni su {0}",
-	"size": "Formato"
+	"size": "Formato",
+	"error_146": "\"case\" o \"default\" atteso.",
+	"error_147": "Due punti attesi dopo \"case\"."
 }

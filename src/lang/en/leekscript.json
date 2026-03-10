@@ -181,5 +181,7 @@
 	"intial_version": "Initial version",
 	"strict_mode": "Strict mode (advanced)",
 	"all_info_ls": "All information on {0}",
-	"size": "Size"
+	"size": "Size",
+	"error_146": "\"case\" or \"default\" expected.",
+	"error_147": "Colon expected after \"case\"."
 }

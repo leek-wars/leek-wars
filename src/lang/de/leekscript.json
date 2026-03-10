@@ -181,5 +181,7 @@
 	"intial_version": "Ursprüngliche Version",
 	"strict_mode": "Strenger Modus (fortgeschritten)",
 	"all_info_ls": "Alle Informationen über den {0}",
-	"size": "Größe"
+	"size": "Größe",
+	"error_146": "\"case\" oder \"default\" erwartet.",
+	"error_147": "Doppelpunkt nach \"case\" erwartet."
 }

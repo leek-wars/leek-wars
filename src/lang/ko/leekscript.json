@@ -181,5 +181,7 @@
 	"intial_version": "초기 버전",
 	"strict_mode": "엄격 모드(고급)",
 	"all_info_ls": "{0}에 대한 모든 정보",
-	"size": "크기"
+	"size": "크기",
+	"error_146": "\"case\" 또는 \"default\"가 예상됩니다.",
+	"error_147": "\"case\" 뒤에 콜론이 예상됩니다."
 }

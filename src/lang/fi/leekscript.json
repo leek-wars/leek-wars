@@ -181,5 +181,7 @@
 	"intial_version": "Alkuperäinen versio",
 	"strict_mode": "Tiukka tila (edistynyt)",
 	"all_info_ls": "Kaikki tiedot {0}",
-	"size": "Koko"
+	"size": "Koko",
+	"error_146": "\"case\" tai \"default\" odotettu.",
+	"error_147": "Kaksoispiste odotettu \"case\"-sanan jälkeen."
 }

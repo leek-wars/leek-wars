@@ -181,5 +181,7 @@
 	"intial_version": "初期バージョン",
 	"strict_mode": "ストリクトモード（上級者向け）",
 	"all_info_ls": "{0}のすべての情報",
-	"size": "サイズ"
+	"size": "サイズ",
+	"error_146": "「case」または「default」が必要です。",
+	"error_147": "「case」の後にコロンが必要です。"
 }
