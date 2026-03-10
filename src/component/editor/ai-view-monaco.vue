@@ -75,7 +75,8 @@ export default class AIViewMonaco extends Vue {
 			wordWrap: "on",
 			fontSize: this.fontSize,
 			lineHeight: this.lineHeight,
-			theme: this.theme,
+			// Monaco themes are global: don't let the console editor override the main editor's theme (#3020)
+			theme: this.console ? undefined : this.theme,
 			lineNumbers: this.lineNumbers ? 'on' : 'off',
 			glyphMargin: this.lineNumbers,
 			folding: this.lineNumbers,
@@ -302,7 +303,9 @@ export default class AIViewMonaco extends Vue {
 	@Watch('fontSize')
 	updateSettings() {
 		this.editor.updateOptions({
-			theme: this.theme,
+			// Monaco themes are global: only the main editor should set the theme,
+			// otherwise the console's theme overrides the main editor's theme (#3020)
+			theme: this.console ? undefined : this.theme,
 			lineHeight: this.lineHeight,
 			fontSize: this.fontSize,
 		})
