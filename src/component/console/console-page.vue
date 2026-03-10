@@ -2,16 +2,24 @@
 	<div class="page">
 		<div class="page-header page-bar">
 			<h1>{{ $t('main.console') }}</h1>
-			<div class="flex"></div>
-			<v-menu offset-y :close-on-content-click="false">
-				<template #activator="{ props }">
-					<div class="header-button" v-bind="props"><v-icon>mdi-weather-night</v-icon></div>
-				</template>
-				<div class="theme-menu">
-					<div v-for="t in themes" :key="t.value" class="theme-item" :class="{ active: $refs.console && $refs.console.theme === t.value }" @click="setTheme(t.value)">{{ t.label }}</div>
-				</div>
-			</v-menu>
+			<div class="tabs">
+				<v-menu v-if="!LeekWars.mobile" offset-y :close-on-content-click="false">
+					<template #activator="{ props }">
+						<div class="tab action" v-bind="props">
+							<v-icon>mdi-weather-night</v-icon>
+						</div>
+					</template>
+					<div class="theme-menu">
+						<div v-for="t in themes" :key="t.value" class="theme-item" :class="{ active: $refs.console && $refs.console.theme === t.value }" @click="setTheme(t.value)">{{ t.label }}</div>
+					</div>
+				</v-menu>
+			</div>
 		</div>
+		<v-menu v-if="LeekWars.mobile" v-model="themeMenu" :target="themeMenuTarget" offset-y :close-on-content-click="false">
+			<div class="theme-menu">
+				<div v-for="t in themes" :key="t.value" class="theme-item" :class="{ active: $refs.console && $refs.console.theme === t.value }" @click="setTheme(t.value)">{{ t.label }}</div>
+			</div>
+		</v-menu>
 		<div>
 			<console ref="console" />
 		</div>
@@ -24,11 +32,15 @@
 	import { Options, Vue } from 'vue-property-decorator'
 	import { store } from '@/model/store'
 	import Console from '../app/console.vue'
+	import { nextTick } from 'vue'
 
 	@Options({ name: 'console-page', components: {
 		Console
 	} })
 	export default class ConsolePage extends Vue {
+
+		themeMenu: boolean = false
+		themeMenuTarget: any = undefined
 
 		themes = [
 			{ value: 'leek-wars', label: 'Leek Wars' },
@@ -41,6 +53,14 @@
 
 		created() {
 			LeekWars.setTitle(this.$t('main.console'))
+			if (LeekWars.mobile) {
+				LeekWars.setActions([
+					{icon: 'mdi-weather-night', click: (e: Event) => {
+						this.themeMenuTarget = e.currentTarget
+						nextTick(() => { this.themeMenu = !this.themeMenu })
+					}}
+				])
+			}
 		}
 
 		setTheme(theme: string) {
