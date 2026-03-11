@@ -290,7 +290,6 @@
 					:items-per-page="100"
 					density="compact"
 					:sort-by="[{ key: 'last_connection', order: 'desc' }]"
-					:row-props="memberRowProps"
 					class="members-table">
 					<template #item.name="{ item }">
 						<router-link v-ripple :to="'/farmer/' + item.id" class="member-link">
@@ -299,13 +298,13 @@
 									<avatar :farmer="item" class="table-avatar" />
 									<img v-if="item.connected" class="status" src="/image/connected.png">
 									<img v-else class="status" src="/image/disconnected.png">
-									{{ item.name }}
+									<span :class="item.color">{{ item.name }}</span>
 								</span>
 							</rich-tooltip-farmer>
 						</router-link>
 					</template>
 					<template #item.grade="{ item }">
-						<span :class="item.color">
+						<span>
 							<span v-if="item.grade == 'owner'">★ </span>
 							<span v-else-if="item.grade == 'captain'">☆ </span>
 							{{ $t(item.grade) }}
@@ -330,10 +329,12 @@
 						{{ $filters.number(item.defeats) }}
 					</template>
 					<template #[`item.join_date`]="{ item }">
-						{{ $filters.date(item.join_date) }}
+						<span class="date-cell">{{ $filters.date(item.join_date) }}</span>
 					</template>
 					<template #[`item.last_connection`]="{ item }">
-						{{ item.connected ? $t('main.connected') : LeekWars.formatDuration(item.last_connection) }}
+						<span class="date-cell" :class="{ inactive: !item.connected && item.last_connection < Date.now() / 1000 - 30 * 24 * 3600 }">
+							{{ item.connected ? $t('main.connected') : LeekWars.formatDuration(item.last_connection) }}
+						</span>
 					</template>
 				</v-data-table>
 			</template>
@@ -831,7 +832,7 @@
 				{ title: this.$t('main.victories'), value: 'victories', sortable: true, align: 'end' },
 				{ title: this.$t('main.draws'), value: 'draws', sortable: true, align: 'end' },
 				{ title: this.$t('main.defeats'), value: 'defeats', sortable: true, align: 'end' },
-				{ title: this.$t('main.last_connection'), value: 'last_connection', sortable: true },
+				{ title: this.$t('main.connection'), value: 'last_connection', sortable: true },
 				{ title: this.$t('main.join_date'), value: 'join_date', sortable: true },
 			]
 		}
@@ -857,11 +858,6 @@
 				tp: Math.floor(12 * team_ratio),
 				mp: 0
 			}
-		}
-
-		memberRowProps({ item }: { item: any }) {
-			const oneMonthAgo = Date.now() / 1000 - 30 * 24 * 3600
-			return item.last_connection < oneMonthAgo && !item.connected ? { class: 'inactive-member' } : {}
 		}
 
 		@Watch('id', {immediate: true})
@@ -1559,8 +1555,11 @@
 	}
 	.members-table {
 		white-space: nowrap;
-		:deep(.inactive-member) {
-			opacity: 0.8;
+		.date-cell {
+			font-size: 12px;
+		}
+		.inactive {
+			opacity: 0.4;
 		}
 		:deep(td), :deep(th) {
 			padding: 0 8px !important;
@@ -1573,7 +1572,7 @@
 		.table-avatar {
 			width: 33px;
 			height: 33px;
-			margin-right: 8px;
+			margin-right: 4px;
 		}
 		.status {
 			width: 13px;
