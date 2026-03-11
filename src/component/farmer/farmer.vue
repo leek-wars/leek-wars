@@ -148,12 +148,7 @@
 			<panel>
 				<template #content><div class="content stats">
 					<div class="talent-wrapper">
-						<v-tooltip>
-							<template #activator="{ props }">
-								<talent :id="farmer ? farmer.id : 0" :talent="farmer ? farmer.talent : '...'" category="farmer" v-bind="props" />
-							</template>
-							<div>{{ $t('talent') }}</div>
-						</v-tooltip>
+						<talent :id="farmer?.id ?? 0" :talent="farmer?.talent ?? '...'" :max_talent="farmer?.max_talent" :label="$t('talent')" category="farmer" />
 						<v-tooltip v-if="farmer">
 							<template #activator="{ props }">
 								<div class="talent-more" v-bind="props">({{ farmer.talent_more >= 0 ? '+' : '' }} {{ $filters.number(farmer.talent_more) }})</div>
@@ -165,7 +160,6 @@
 						</v-tooltip>
 						<ranking-badge v-if="farmer && farmer.ranking && farmer.ranking <= 1000 && farmer.in_garden" :id="farmer.id" :ranking="farmer.ranking" category="farmer" />
 					</div>
-
 					<v-tooltip v-if="farmer">
 						<template #activator="{ props }">
 							<table v-bind="props">
@@ -347,7 +341,7 @@
 							<div class="name">{{ leek.name }}</div>
 							<lw-title v-if="leek.title.length" :title="leek.title" />
 							<div class="talent-ranking">
-								<talent :id="leek.id" :talent="leek.talent" category="leek" />
+								<talent :id="leek.id" :talent="leek.talent" :max_talent="leek.max_talent" category="leek" />
 								<ranking-badge v-if="leek.ranking && leek.ranking <= 1000 && leek.in_garden" :id="leek.id" :ranking="leek.ranking" category="leek" />
 							</div>
 							<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>

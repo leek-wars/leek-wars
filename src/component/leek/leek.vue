@@ -105,12 +105,7 @@
 				</v-tooltip>
 
 				<div class="talent-wrapper">
-					<v-tooltip>
-						<template #activator="{ props }">
-							<talent :id="leek ? leek.id : 0" :talent="leek ? leek.talent : '...'" category="leek" v-bind="props" />
-						</template>
-						{{ $t('talent') }}
-					</v-tooltip>
+					<talent :id="leek ? leek.id : 0" :talent="leek ? leek.talent : '...'" :max_talent="leek?.max_talent" :label="$t('talent')" category="leek" />
 					<v-tooltip v-if="leek">
 						<template #activator="{ props }">
 							<div class="talent-more" v-bind="props">({{ leek.talent_more >= 0 ? '+' + leek.talent_more : leek.talent_more }})</div>

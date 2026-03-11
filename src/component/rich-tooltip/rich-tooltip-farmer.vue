@@ -34,7 +34,7 @@
 						</div>
 					</div>
 				</div>
-				<talent :id="farmer.id" :talent="farmer.talent" category="farmer" />
+				<talent :id="farmer.id" :talent="farmer.talent" :max_talent="farmer.max_talent" category="farmer" />
 				<span class="talent-more">({{ farmer.talent_more >= 0 ? '+' + farmer.talent_more : farmer.talent_more }})</span>
 				<ranking-badge v-if="farmer && farmer.ranking && farmer.ranking <= 1000 && farmer.in_garden" :id="farmer.id" :ranking="farmer.ranking" category="farmer" />
 				<span class="level">• {{ $t('main.level_n', [farmer.total_level]) }}</span>

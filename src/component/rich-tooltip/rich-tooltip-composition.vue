@@ -19,7 +19,7 @@
 								<emblem :team="farmer.team" :title="farmer.team.name" />
 							</router-link> -->
 						</span>
-						<talent :id="composition.id" :talent="composition.talent" category="team" />
+						<talent :id="composition.id" :talent="composition.talent" :max_talent="composition.max_talent" category="team" />
 						<ranking-badge v-if="composition && composition.ranking <= 1000 && composition.in_garden" :id="composition.id" :ranking="composition.ranking" category="team" />
 						<span class="level">
 							• {{ composition.leeks.length }} <img src="/image/icon/black/leek.png">

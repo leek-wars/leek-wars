@@ -101,12 +101,7 @@
 				</v-tooltip>
 
 				<div class="info-talent">
-					<v-tooltip>
-						<template #activator="{ props }">
-							<talent :id="team ? team.id : ''" :talent="team ? team.talent : '...'" category="team" v-bind="props" />
-						</template>
-						{{ $t('talent') }}
-					</v-tooltip>
+					<talent :id="team ? team.id : ''" :talent="team ? team.talent : '...'" :max_talent="team?.max_talent" :label="$t('talent')" category="team" />
 					<ranking-badge v-if="team && team.ranking <= 1000" :id="team.id" :ranking="team.ranking" category="team" />
 				</div>
 
@@ -262,7 +257,7 @@
 										</v-tooltip>
 										<span :title="member.name">{{ member.name }}</span>
 									</div>
-									<talent :id="member.id" :talent="member.talent" category="farmer" />
+									<talent :id="member.id" :talent="member.talent" :max_talent="member.max_talent" category="farmer" />
 								</div>
 							</rich-tooltip-farmer>
 						</router-link>
@@ -455,7 +450,7 @@
 				<template #actions>
 					<div class="level-talent">
 						<span class="level">{{ $t('level_n', [composition.total_level]) }}</span>
-						<talent :id="team.id" :talent="composition.talent" category="team" />
+						<talent :id="team.id" :talent="composition.talent" :max_talent="composition.max_talent" category="team" />
 					</div>
 					<router-link v-if="composition.tournament.current" :to="'/tournament/' + composition.tournament.current" class="view-tournament button flat">{{ $t('see_tournament') }}</router-link>
 					<v-tooltip v-if="$store.state.farmer.tournaments_enabled && captain" content-class="fluid" @update:model-value="loadTournamentRange(composition)">

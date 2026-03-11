@@ -53,6 +53,7 @@ class Team {
 	public candidacies!: any[]
 	public invitations!: any[]
 	public talent!: number
+	public max_talent!: number
 	public talent_history!: number[]
 	public turret_ai!: any
 	public chat!: number
@@ -82,6 +83,7 @@ class Composition {
 	public tournamentRange!: any
 	public tournamentRangeLoading!: any
 	public talent!: number
+	public max_talent!: number
 }
 
 export { Composition, Team, TeamMember, TeamMemberLevel, TEAM_COLORS }

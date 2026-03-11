@@ -16,7 +16,7 @@
 						<span class="name">
 							<router-link :to="'/team/' + team.id" class="text">{{ team.name }}</router-link>
 						</span>
-						<talent :id="team.id" :talent="team.talent" category="team" />
+						<talent :id="team.id" :talent="team.talent" :max_talent="team.max_talent" category="team" />
 						<ranking-badge v-if="team && team.ranking <= 1000" :id="team.id" :ranking="team.ranking" category="team" />
 						<span class="level">
 							• {{ $t('main.n_farmers', [team.farmers.length]) }}

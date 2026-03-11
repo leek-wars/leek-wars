@@ -69,6 +69,7 @@ class Leek {
 	public tp!: number
 	public mp!: number
 	public talent!: number
+	public max_talent!: number
 	public weapon!: number
 	public title!: number[]
 	public auto_br!: boolean
