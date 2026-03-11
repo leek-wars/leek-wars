@@ -133,6 +133,7 @@
 	"stats": "Statistiken",
 	"stay": "Bleiben",
 	"talent": "Talent",
+	"max_talent": "Max: {0}",
 	"talent_difference": "Lauch <b>{0}</b> hat <b>{1}</b> mehr Talentpunkte als der Durchschnitt seiner Stufe. Seine Gewinne werden um <b>{2}</b> erhöht.",
 	"talent_difference_farmer": "Der Züchter <b>{0}</b> hat <b>{1}</b> mehr Talentpunkte als der Durchschnitt seiner Stufe. Gewinne aus seinem Lauch werden um <b>{2}</b> erhöht.",
 	"talent_difference_farmer_no_gains": "Züchter <b>{0}</b> hat nicht mehr Talente als der Durchschnitt seiner Stufe, seine Gewinne werden nicht erhöht.",

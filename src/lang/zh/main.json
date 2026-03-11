@@ -133,6 +133,7 @@
 	"stats": "统计数据",
 	"stay": "停留",
 	"talent": "天赋",
+	"max_talent": "最高: {0}",
 	"talent_difference": "韭葱 <b>{0}</b> 的天赋点数比同等级的平均水平多 <b>{1}</b>。它的收益增加了<b>{2}</b>。",
 	"talent_difference_farmer": "饲养员 <b>{0}</b> 的天赋点数比其等级的平均水平高 <b>{1}</b>。从他的韭菜中获得的收益增加了<b>{2}</b>。",
 	"talent_difference_farmer_no_gains": "饲养员 <b>{0}</b> 的天赋不超过他的平均水平，他的收入不会增加。",

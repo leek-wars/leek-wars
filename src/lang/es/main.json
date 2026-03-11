@@ -131,6 +131,7 @@
 	"stats": "Estadísticas",
 	"stay": "Quedarse",
 	"talent": "Talento",
+	"max_talent": "Máx: {0}",
 	"talent_difference": "Puerro <b>{0}</b> tiene <b>{1}</b> más puntos de talento que la media de su nivel. Sus ganancias aumentan en <b>{2}</b>.",
 	"talent_difference_farmer": "El criador <b>{0}</b> tiene <b>{1}</b> más puntos de talento que la media de su nivel. Las ganancias de sus puerros se incrementan en <b>{2}</b>.",
 	"talent_difference_farmer_no_gains": "El criador <b>{0}</b> no tiene más talentos que el promedio de su nivel, sus ganancias no aumentan.",

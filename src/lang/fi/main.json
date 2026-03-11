@@ -133,6 +133,7 @@
 	"stats": "Tilastot",
 	"stay": "Pysyä",
 	"talent": "Lahjakkuus",
+	"max_talent": "Maks: {0}",
 	"talent_difference": "Purjolla <b>{0}</b> on <b>{1}</b> lahjakkuuspistettä enemmän kuin omalla tasollaan keskimäärin. Sen voittoja lisätään <b>{2}</b>.",
 	"talent_difference_farmer": "Kasvattajalla <b>{0}</b> on <b>{1}</b> lahjakkuuspistettä enemmän kuin hänen tasollaan keskimäärin. Hänen purjonsa tuottoa lisäävät <b>{2}</b>.",
 	"talent_difference_farmer_no_gains": "Kasvattajalla <b>{0}</b> ei ole enempää kykyjä kuin hänen tasonsa keskiarvo, hänen voittonsa eivät kasva.",

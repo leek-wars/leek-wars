@@ -133,6 +133,7 @@
 	"stats": "Statystyka",
 	"stay": "Zostawać",
 	"talent": "Talent",
+	"max_talent": "Maks: {0}",
 	"talent_difference": "Leek <b>{0}</b> ma o <b>{1}</b> więcej punktów talentu niż średnia dla jego poziomu. Jego zyski są zwiększone o <b>{2}</b>.",
 	"talent_difference_farmer": "Hodowca <b>{0}</b> ma <b>{1}</b> więcej punktów talentu niż średnia dla jego poziomu. Zyski z jego porów są zwiększone o <b>{2}</b>.",
 	"talent_difference_farmer_no_gains": "Hodowca <b>{0}</b> nie ma więcej talentów niż średnia jego poziomu, jego przyrosty nie są zwiększane.",

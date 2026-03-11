@@ -133,6 +133,7 @@
 	"stats": "Statistik",
 	"stay": "Tinggal",
 	"talent": "Bakat",
+	"max_talent": "Maks: {0}",
 	"talent_difference": "Leek <b>{0}</b> memiliki <b>{1}</b> poin bakat lebih banyak daripada rata-rata untuk levelnya. Perolehannya meningkat sebesar <b>{2}</b>.",
 	"talent_difference_farmer": "Peternak <b>{0}</b> memiliki <b>{1}</b> poin bakat lebih banyak daripada rata-rata untuk levelnya. Keuntungan dari daun bawangnya meningkat sebesar <b>{2}</b>.",
 	"talent_difference_farmer_no_gains": "Peternak <b>{0}</b> tidak memiliki bakat lebih dari rata-rata levelnya, penghasilannya tidak meningkat.",

@@ -133,6 +133,7 @@
 	"stats": "Statistieken",
 	"stay": "Verblijf",
 	"talent": "Talent",
+	"max_talent": "Max: {0}",
 	"talent_difference": "Prei <b>{0}</b> heeft <b>{1}</b> meer talentpunten dan het gemiddelde voor zijn niveau. De winst wordt verhoogd met <b>{2}</b>.",
 	"talent_difference_farmer": "De fokker <b>{0}</b> heeft <b>{1}</b> meer talentpunten dan het gemiddelde voor zijn niveau. De opbrengst van zijn prei wordt verhoogd met <b>{2}</b>.",
 	"talent_difference_farmer_no_gains": "Fokker <b>{0}</b> heeft niet meer talenten dan het gemiddelde van zijn niveau, zijn verdiensten worden niet verhoogd.",

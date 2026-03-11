@@ -133,6 +133,7 @@
 	"stats": "Statistikker",
 	"stay": "Bliv",
 	"talent": "Talent",
+	"max_talent": "Maks: {0}",
 	"talent_difference": "Porre <b>{0}</b> har <b>{1}</b> flere talentpoint end gennemsnittet for sit niveau. Dens gevinster øges med <b>{2}</b>.",
 	"talent_difference_farmer": "Opdrætteren <b>{0}</b> har <b>{1}</b> flere talentpoint end gennemsnittet for sit niveau. Gevinsten fra hans porrer øges med <b>{2}</b>.",
 	"talent_difference_farmer_no_gains": "Opdrætter <b>{0}</b> har ikke flere talenter end gennemsnittet af hans niveau, hans indtjening øges ikke.",

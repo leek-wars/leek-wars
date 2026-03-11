@@ -9,7 +9,7 @@
 			</span>
 		</template>
 		<div v-if="label">{{ label }}</div>
-		<div v-if="max_talent">Max : {{ LeekWars.formatNumber(max_talent) }}</div>
+		<div v-if="max_talent">{{ $t('main.max_talent', [LeekWars.formatNumber(max_talent)]) }}</div>
 	</v-tooltip>
 </template>
 

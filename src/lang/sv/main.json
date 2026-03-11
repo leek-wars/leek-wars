@@ -133,6 +133,7 @@
 	"stats": "Statistik",
 	"stay": "Stanna kvar",
 	"talent": "Talang",
+	"max_talent": "Max: {0}",
 	"talent_difference": "Purjolök <b>{0}</b> har <b>{1}</b> fler talangpoäng än genomsnittet för sin nivå. Vinsterna ökar med <b>{2}</b>.",
 	"talent_difference_farmer": "Uppfödaren <b>{0}</b> har <b>{1}</b> fler talangpoäng än genomsnittet för sin nivå. Vinsten från hans purjolök ökar med <b>{2}</b>.",
 	"talent_difference_farmer_no_gains": "Uppfödaren <b>{0}</b> har inte fler talanger än genomsnittet av hans nivå, hans inkomster ökar inte.",

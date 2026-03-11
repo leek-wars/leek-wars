@@ -133,6 +133,7 @@
 	"stats": "Statistikk",
 	"stay": "Oppholde seg",
 	"talent": "Talent",
+	"max_talent": "Maks: {0}",
 	"talent_difference": "Purre <b>{0}</b> har <b>{1}</b> flere talentpoeng enn gjennomsnittet for nivået. Gevinsten økes med <b>{2}</b>.",
 	"talent_difference_farmer": "Oppdretteren <b>{0}</b> har <b>{1}</b> flere talentpoeng enn gjennomsnittet for nivået hans. Gevinsten fra purren hans økes med <b>{2}</b>.",
 	"talent_difference_farmer_no_gains": "Oppdretter <b>{0}</b> har ikke flere talenter enn gjennomsnittet av nivået hans, hans gevinster økes ikke.",

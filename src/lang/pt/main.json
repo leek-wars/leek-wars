@@ -133,6 +133,7 @@
 	"stats": "Estatisticas",
 	"stay": "Ficar",
 	"talent": "Talento",
+	"max_talent": "Máx: {0}",
 	"talent_difference": "Leek <b>{0}</b> tem <b>{1}</b> mais pontos de talento do que a média de seu nível. Seus ganhos são aumentados em <b>{2}</b>.",
 	"talent_difference_farmer": "O criador <b>{0}</b> tem <b>{1}</b> mais pontos de talento do que a média de seu nível. Os ganhos de seu alho-poró são aumentados em <b>{2}</b>.",
 	"talent_difference_farmer_no_gains": "Criador <b>{0}</b> não tem mais talentos do que a média de seu nível, seus ganhos não são aumentados.",

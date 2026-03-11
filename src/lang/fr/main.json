@@ -147,6 +147,7 @@
 	"stats": "Statistiques",
 	"stay": "Rester",
 	"talent": "Talent",
+	"max_talent": "Max : {0}",
 	"talent_difference": "Le poireau <b>{0}</b> a <b>{1}</b> points de talent de plus que la moyenne de son niveau. Ses gains sont augmentés de <b>{2}</b>.",
 	"talent_difference_farmer": "L'éleveur <b>{0}</b> a <b>{1}</b> points de talent de plus que la moyenne de son niveau. Les gains de ses poireaux sont augmentés de <b>{2}</b>.",
 	"talent_difference_farmer_no_gains": "L'éleveur <b>{0}</b> n'a pas de talent de plus que la moyenne de son niveau, ses gains ne sont pas augmentés.",
