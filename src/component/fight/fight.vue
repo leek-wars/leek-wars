@@ -390,4 +390,18 @@
 		font-size: 20px;
 		padding: 6px 12px;
 	}
+	#app.app {
+		.br-versus {
+			padding: 0;
+		}
+		.fight-info .farmer {
+			.name {
+				font-size: 11px;
+			}
+			img {
+				width: 50px;
+				height: 50px;
+			}
+		}
+	}
 </style>
