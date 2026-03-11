@@ -530,12 +530,16 @@
 					this.history.unshift(ai)
 
 					LeekWars.setTitle(ai.name)
-					LeekWars.splitShowContent()
-					LeekWars.setActions(this.actions_content)
 
 					if ('line' in this.$route.query) {
 						this.jump(ai, parseInt(this.$route.query.line as string), 0)
-						this.$router.replace('/editor/' + id)
+						this.$router.replace('/editor/' + id).then(() => {
+							LeekWars.splitShowContent()
+							LeekWars.setActions(this.actions_content)
+						})
+					} else {
+						LeekWars.splitShowContent()
+						LeekWars.setActions(this.actions_content)
 					}
 				} else {
 					this.currentFolder = fileSystem.folderById[id]
