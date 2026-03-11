@@ -328,6 +328,9 @@
 					<template #item.defeats="{ item }">
 						{{ $filters.number(item.defeats) }}
 					</template>
+					<template #[`item.join_date`]="{ item }">
+						{{ $filters.date(item.join_date) }}
+					</template>
 					<template #[`item.last_connection`]="{ item }">
 						{{ item.connected ? $t('main.connected') : LeekWars.formatDuration(item.last_connection) }}
 					</template>
@@ -828,6 +831,7 @@
 				{ title: this.$t('main.draws'), value: 'draws', sortable: true, align: 'end' },
 				{ title: this.$t('main.defeats'), value: 'defeats', sortable: true, align: 'end' },
 				{ title: this.$t('main.last_connection'), value: 'last_connection', sortable: true },
+				{ title: this.$t('main.join_date'), value: 'join_date', sortable: true },
 			]
 		}
 

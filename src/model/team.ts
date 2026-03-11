@@ -65,6 +65,7 @@ class Team {
 
 class TeamMember extends Farmer {
 	public logs_level!: number
+	public join_date!: number
 }
 
 enum TeamMemberLevel {
