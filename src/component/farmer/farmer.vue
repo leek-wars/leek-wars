@@ -299,7 +299,7 @@
 				</div>
 			</template>
 			<template #content>
-				<div class="trophies">
+				<div class="trophies" @mouseleave="hideTrophyTooltip">
 					<loader v-if="!farmer || !trophies" />
 					<template v-else-if="farmer.trophies > 0 && trophies_list && trophies_grid">
 						<div v-show="trophiesMode == 'list'" class="list trophies-container">
