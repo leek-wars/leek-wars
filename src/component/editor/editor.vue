@@ -352,8 +352,8 @@
 					this.history.push(fileSystem.ais[id])
 				}
 			}
-			this.update()
 			LeekWars.setTitle(this.$t('title'), this.$t('n_ais', [fileSystem.aiCount]))
+			this.update()
 		}
 
 		mounted() {
