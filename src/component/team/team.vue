@@ -156,7 +156,11 @@
 							<div class="owner-content" v-bind="props">
 								<avatar :farmer="teamOwner" />
 								<div class="owner-info">
-									<div class="owner-name" :class="teamOwner.color">{{ teamOwner.name }}</div>
+									<div class="owner-name" :class="teamOwner.color">
+										{{ teamOwner.name }}
+										<img v-if="teamOwner.connected" class="owner-status" src="/image/connected.png">
+										<img v-else class="owner-status" src="/image/disconnected.png">
+									</div>
 									<div class="owner-label">{{ $t('owner') }}</div>
 								</div>
 							</div>
@@ -1729,6 +1733,11 @@
 			.owner-label {
 				font-size: 13px;
 				color: var(--text-color-secondary);
+			}
+			.owner-status {
+				width: 14px;
+				vertical-align: middle;
+				margin-right: 2px;
 			}
 		}
 		.turret {
