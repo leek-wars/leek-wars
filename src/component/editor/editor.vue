@@ -545,6 +545,7 @@
 					this.currentFolder = fileSystem.folderById[id]
 					this.currentType = 'folder'
 					explorer.selectFolder(this.currentFolder)
+					LeekWars.setTitle(this.$t('title'), this.$t('n_ais', [fileSystem.aiCount]))
 					LeekWars.splitShowList()
 					LeekWars.setActions(this.actions_list)
 				}
@@ -566,6 +567,7 @@
 			} else {
 				this.currentFolder = fileSystem.rootFolder
 				this.currentType = 'folder'
+				LeekWars.setTitle(this.$t('title'), this.$t('n_ais', [fileSystem.aiCount]))
 				LeekWars.splitShowList()
 				LeekWars.setActions(this.actions_list)
 			}
