@@ -33,9 +33,21 @@
 
 		pseudosEnabled: boolean = false
 		pseudosFilter: string = ''
+		rootEl!: HTMLElement
 
 		mounted() {
 			LeekWars.contenteditable_paste_protect(this.$refs.input as HTMLElement)
+			this.rootEl = (this.$refs.input as HTMLElement).parentElement as HTMLElement
+			document.addEventListener('mousedown', this.onClickOutside)
+		}
+		beforeUnmount() {
+			document.removeEventListener('mousedown', this.onClickOutside)
+		}
+		onClickOutside(e: MouseEvent) {
+			if (!this.rootEl.contains(e.target as Node)) {
+				this.pseudosEnabled = false
+				this.commandsEnabled = false
+			}
 		}
 		updateCursor() {
 			const input = this.$refs.input as HTMLElement
@@ -224,6 +236,7 @@
 		background: var(--pure-white);
 		bottom: 39px;
 		position: absolute;
+		box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
 	}
 	.avatar {
 		position: absolute;
