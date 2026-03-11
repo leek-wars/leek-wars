@@ -309,60 +309,26 @@
 					<loader v-if="!farmer || !trophies" />
 					<template v-else-if="farmer.trophies > 0 && trophies_list && trophies_grid">
 						<div v-show="trophiesMode == 'list'" class="list trophies-container">
-							<v-tooltip v-for="(trophy, t) in trophies_list" :key="t" :open-delay="10" :close-delay="1">
-								<template #activator="{ props }">
-									<router-link :to="'/trophy/' + trophy.code">
-										<img class="trophy" v-bind="props" :src="'/image/trophy/' + trophy.code + '.svg'">
-									</router-link>
-								</template>
-								<div class="header">
-									<b>{{ $t('trophy.' + trophy.code) }}</b>
-									<b>{{ trophy.points }}</b>
-								</div>
-								<div>{{ trophy.description }}</div>
-								<span class="trophy-date">{{ LeekWars.formatDuration(trophy.date) }}</span>
-							</v-tooltip>
+							<router-link v-for="(trophy, t) in trophies_list" :key="t" :to="'/trophy/' + trophy.code" @mouseenter="showTrophyTooltip(trophy, $event)" @mouseleave="hideTrophyTooltip">
+								<img class="trophy" :src="'/image/trophy/' + trophy.code + '.svg'" loading="lazy">
+							</router-link>
 						</div>
 						<div v-show="trophiesMode == 'grid'" class="grid trophies-container">
-							<v-tooltip v-for="(trophy, t) in trophies_grid" :key="t" :disabled="!trophy" :open-delay="10" :close-delay="1">
-								<template #activator="{ props }">
-									<router-link v-if="trophy != null" :to="'/trophy/' + trophy.code" class="card">
-										<img :src="'/image/trophy/' + trophy.code + '.svg'" v-bind="props" class="trophy">
-									</router-link>
-									<div v-else class="locked" v-bind="props">
-										<img class="trophy" src="/image/unknown.png">
-									</div>
-								</template>
-								<span v-if="trophy">
-									<div class="header">
-										<b>{{ $t('trophy.' + trophy.code) }}</b>
-										<b>{{ trophy.points }}</b>
-									</div>
-									<div v-if="trophy.description">
-										{{ trophy.description }}
-									</div>
-									<i18n-t tag="span" class="trophy-date" keypath="main.unlocked_the">
-										<template #date><span>{{ $filters.date(trophy.date) }}</span></template>
-									</i18n-t>
-								</span>
-							</v-tooltip>
+							<template v-for="(trophy, t) in trophies_grid" :key="t">
+								<router-link v-if="trophy != null" :to="'/trophy/' + trophy.code" class="card" @mouseenter="showTrophyTooltip(trophy, $event)" @mouseleave="hideTrophyTooltip">
+									<img :src="'/image/trophy/' + trophy.code + '.svg'" class="trophy" loading="lazy">
+								</router-link>
+								<div v-else class="locked">
+									<img class="trophy" src="/image/unknown.png" loading="lazy">
+								</div>
+							</template>
 						</div>
 						<div v-if="bonus_trophies && bonus_trophies.length > 0">
 							<h4 class="trophies-bonus">{{ $t('bonus_trophies') }}</h4>
 							<div class="trophies-container">
-								<v-tooltip v-for="trophy in bonus_trophies" :key="trophy.id">
-									<template #activator="{ props }">
-										<router-link :to="'/trophy/' + trophy.code" :class="{card: trophiesMode == 'grid'}">
-											<img class="trophy" :src="'/image/trophy/' + trophy.code + '.svg'" v-bind="props">
-										</router-link>
-									</template>
-									<div class="header">
-										<b>{{ $t('trophy.' + trophy.code) }}</b>
-										<b v-if="trophy.points">{{ trophy.points }}</b>
-									</div>
-									<div>{{ trophy.description }}</div>
-									<span class="date">{{ LeekWars.formatDuration(trophy.date) }}</span>
-								</v-tooltip>
+								<router-link v-for="trophy in bonus_trophies" :key="trophy.id" :to="'/trophy/' + trophy.code" :class="{card: trophiesMode == 'grid'}" @mouseenter="showTrophyTooltip(trophy, $event)" @mouseleave="hideTrophyTooltip">
+									<img class="trophy" :src="'/image/trophy/' + trophy.code + '.svg'" loading="lazy">
+								</router-link>
 							</div>
 						</div>
 					</template>
@@ -623,6 +589,20 @@
 				<div v-ripple class="green" @click="giveTrophy()">Donner</div>
 			</template>
 		</popup>
+
+		<v-tooltip v-model="trophyTooltip.show" :open-on-hover="false" location="bottom">
+			<template #activator="{ props }">
+				<div ref="trophyTooltipAnchor" v-bind="props" class="trophy-tooltip-anchor" :style="{ left: trophyTooltip.x + 'px', top: trophyTooltip.y + 'px' }"></div>
+			</template>
+			<template v-if="trophyTooltip.trophy">
+				<div class="header">
+					<b>{{ $t('trophy.' + trophyTooltip.trophy.code) }}</b>
+					<b>{{ trophyTooltip.trophy.points }}</b>
+				</div>
+				<div v-if="trophyTooltip.trophy.description">{{ trophyTooltip.trophy.description }}</div>
+				<span class="trophy-date">{{ LeekWars.formatDuration(trophyTooltip.trophy.date) }}</span>
+			</template>
+		</v-tooltip>
 	</div>
 </template>
 
@@ -655,6 +635,7 @@ import { emitter } from '@/model/vue'
 		farmer: Farmer | null = null
 		trophies: any = null
 		trophiesMode: string = 'list'
+		trophyTooltip: { show: boolean, trophy: any, x: number, y: number } = { show: false, trophy: null, x: 0, y: 0 }
 		godfatherDialog: boolean = false
 		countryDialog: boolean = false
 		createTeamDialog: boolean = false
@@ -804,6 +785,19 @@ import { emitter } from '@/model/vue'
 		logout() {
 			this.$store.commit('disconnect')
 			this.$router.push('/')
+		}
+
+		showTrophyTooltip(trophy: any, event: MouseEvent) {
+			const rect = (event.currentTarget as HTMLElement).getBoundingClientRect()
+			this.trophyTooltip = {
+				show: true,
+				trophy,
+				x: rect.left + rect.width / 2,
+				y: rect.bottom,
+			}
+		}
+		hideTrophyTooltip() {
+			this.trophyTooltip.show = false
 		}
 
 		trophiesModeButton() {
@@ -1597,5 +1591,11 @@ import { emitter } from '@/model/vue'
 		.xp-bar.blue {
 			background: #008fbb;
 		}
+	}
+	.trophy-tooltip-anchor {
+		position: fixed;
+		width: 1px;
+		height: 1px;
+		pointer-events: none;
 	}
 </style>
