@@ -961,6 +961,7 @@ function formatDuration(timestamp: number, capital: boolean = false) {
 }
 
 function formatDate(timestamp: number) {
+	if (!timestamp) { return '' }
 	const date = new Date(timestamp * 1000)
 	const day = date.getDate()
 	const month = date.getMonth()

@@ -290,6 +290,7 @@
 					:items-per-page="100"
 					density="compact"
 					:sort-by="[{ key: 'last_connection', order: 'desc' }]"
+					:row-props="memberRowProps"
 					class="members-table">
 					<template #item.name="{ item }">
 						<router-link v-ripple :to="'/farmer/' + item.id" class="member-link">
@@ -856,6 +857,11 @@
 				tp: Math.floor(12 * team_ratio),
 				mp: 0
 			}
+		}
+
+		memberRowProps({ item }: { item: any }) {
+			const oneMonthAgo = Date.now() / 1000 - 30 * 24 * 3600
+			return item.last_connection < oneMonthAgo && !item.connected ? { class: 'inactive-member' } : {}
 		}
 
 		@Watch('id', {immediate: true})
@@ -1553,6 +1559,9 @@
 	}
 	.members-table {
 		white-space: nowrap;
+		:deep(.inactive-member) {
+			opacity: 0.8;
+		}
 		:deep(td), :deep(th) {
 			padding: 0 8px !important;
 		}
