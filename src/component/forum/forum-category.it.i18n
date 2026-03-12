@@ -25,6 +25,7 @@
 	"hidden_topic": "Argomento nascosto",
 	"status_acknowledged": "Preso in carico",
 	"status_not_a_bug": "Non è un bug",
+	"status_obsolete": "Obsoleto",
 	"status_not_planned": "Non pianificato",
 	"status_not_reproduced": "Non riprodotto",
 	"status_resolved": "Risolto"

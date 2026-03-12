@@ -26,6 +26,7 @@
 	"status_acknowledged": "स्वीकार किया गया",
 	"status_not_a_bug": "बग नहीं है",
 	"status_not_planned": "योजना में नहीं",
+	"status_obsolete": "अप्रचलित",
 	"status_not_reproduced": "पुन: उत्पन्न नहीं हुआ",
 	"status_resolved": "हल किया गया"
 }

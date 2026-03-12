@@ -26,6 +26,7 @@
 	"status_acknowledged": "Levado em conta",
 	"status_not_a_bug": "Não é um bug",
 	"status_not_planned": "Não planejado",
+	"status_obsolete": "Obsoleto",
 	"status_not_reproduced": "Não reproduzido",
 	"status_resolved": "Resolvido"
 }

@@ -22,6 +22,7 @@
 	"status_not_reproduced": "Nie odtworzony",
 	"status_not_planned": "Nie planowany",
 	"status_not_a_bug": "To nie bug",
+	"status_obsolete": "Przestarzałe",
 	"status_acknowledged": "Przyjęto do wiadomości",
 	"subscribe": "Subskrybuj temat",
 	"undoable_action": "Ta czynność jest nieodwracalna.",

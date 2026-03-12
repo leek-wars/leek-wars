@@ -22,6 +22,7 @@
 	"status_not_reproduced": "Tidak dapat direproduksi",
 	"status_not_planned": "Tidak direncanakan",
 	"status_not_a_bug": "Bukan bug",
+	"status_obsolete": "Usang",
 	"status_acknowledged": "Diterima",
 	"subscribe": "Berlangganan ke topik",
 	"undoable_action": "Tindakan ini tidak dapat diubah.",

@@ -26,6 +26,7 @@
 	"status_acknowledged": "確認済み",
 	"status_not_a_bug": "バグではない",
 	"status_not_planned": "対応予定なし",
+	"status_obsolete": "廃止",
 	"status_not_reproduced": "再現不可",
 	"status_resolved": "解決済み"
 }

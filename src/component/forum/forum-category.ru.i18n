@@ -26,6 +26,7 @@
 	"status_acknowledged": "Принято к сведению",
 	"status_not_a_bug": "Не баг",
 	"status_not_planned": "Не запланировано",
+	"status_obsolete": "Устаревшее",
 	"status_not_reproduced": "Не воспроизведено",
 	"status_resolved": "Решено"
 }

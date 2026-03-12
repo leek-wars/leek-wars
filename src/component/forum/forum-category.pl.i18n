@@ -26,6 +26,7 @@
 	"status_acknowledged": "Przyjęto do wiadomości",
 	"status_not_a_bug": "To nie bug",
 	"status_not_planned": "Nie planowany",
+	"status_obsolete": "Przestarzałe",
 	"status_not_reproduced": "Nie odtworzony",
 	"status_resolved": "Rozwiązany"
 }

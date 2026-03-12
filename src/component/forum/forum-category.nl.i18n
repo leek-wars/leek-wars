@@ -26,6 +26,7 @@
 	"status_acknowledged": "In behandeling genomen",
 	"status_not_a_bug": "Geen bug",
 	"status_not_planned": "Niet gepland",
+	"status_obsolete": "Verouderd",
 	"status_not_reproduced": "Niet gereproduceerd",
 	"status_resolved": "Opgelost"
 }

@@ -26,6 +26,7 @@
 	"status_acknowledged": "Uppmärksammat",
 	"status_not_a_bug": "Inte en bugg",
 	"status_not_planned": "Ej planerad",
+	"status_obsolete": "Föråldrad",
 	"status_not_reproduced": "Ej reproducerad",
 	"status_resolved": "Löst"
 }

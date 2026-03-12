@@ -26,6 +26,7 @@
 	"status_acknowledged": "已确认",
 	"status_not_a_bug": "不是Bug",
 	"status_not_planned": "未计划",
+	"status_obsolete": "已过时",
 	"status_not_reproduced": "无法复现",
 	"status_resolved": "已解决"
 }

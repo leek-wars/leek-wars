@@ -22,6 +22,7 @@
 	"status_not_reproduced": "Niet gereproduceerd",
 	"status_not_planned": "Niet gepland",
 	"status_not_a_bug": "Geen bug",
+	"status_obsolete": "Verouderd",
 	"status_acknowledged": "In behandeling genomen",
 	"subscribe": "Abonneren op onderwerp",
 	"undoable_action": "Deze actie is onomkeerbaar.",

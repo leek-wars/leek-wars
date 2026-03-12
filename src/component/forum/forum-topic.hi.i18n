@@ -22,6 +22,7 @@
 	"status_not_reproduced": "पुन: उत्पन्न नहीं हुआ",
 	"status_not_planned": "योजना में नहीं",
 	"status_not_a_bug": "बग नहीं है",
+	"status_obsolete": "अप्रचलित",
 	"status_acknowledged": "स्वीकार किया गया",
 	"subscribe": "विषय की सदस्यता लें",
 	"undoable_action": "यह क्रिया अपरिवर्तनीय है।",

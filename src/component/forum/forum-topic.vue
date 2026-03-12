@@ -16,6 +16,7 @@
 						<v-icon v-if="topic.status === ForumTopicStatus.NOT_REPRODUCED" :title="$t('status_not_reproduced')" class="attr status-not-reproduced">mdi-help-circle</v-icon>
 						<v-icon v-if="topic.status === ForumTopicStatus.NOT_PLANNED" :title="$t('status_not_planned')" class="attr status-not-planned">mdi-minus-circle</v-icon>
 						<v-icon v-if="topic.status === ForumTopicStatus.NOT_A_BUG" :title="$t('status_not_a_bug')" class="attr status-not-a-bug">mdi-close-circle</v-icon>
+						<v-icon v-if="topic.status === ForumTopicStatus.OBSOLETE" :title="$t('status_obsolete')" class="attr status-obsolete">mdi-archive</v-icon>
 						<v-icon v-if="topic.hidden" :title="$t('hide_topic')" class="attr hidden-icon">mdi-eye-off</v-icon>
 					</div>
 				</h1>
@@ -464,6 +465,7 @@ import { emitter } from '@/model/vue'
 				[ForumTopicStatus.NOT_REPRODUCED]: { title: this.$t('status_not_reproduced') as string, value: ForumTopicStatus.NOT_REPRODUCED, icon: 'mdi-help-circle', color: 'orange' },
 				[ForumTopicStatus.NOT_PLANNED]: { title: this.$t('status_not_planned') as string, value: ForumTopicStatus.NOT_PLANNED, icon: 'mdi-minus-circle', color: 'grey' },
 				[ForumTopicStatus.NOT_A_BUG]: { title: this.$t('status_not_a_bug') as string, value: ForumTopicStatus.NOT_A_BUG, icon: 'mdi-close-circle', color: 'grey' },
+				[ForumTopicStatus.OBSOLETE]: { title: this.$t('status_obsolete') as string, value: ForumTopicStatus.OBSOLETE, icon: 'mdi-archive', color: 'grey' },
 			}
 		}
 		get currentStatusInfo() {
@@ -480,6 +482,7 @@ import { emitter } from '@/model/vue'
 				}
 				if (isSuggestion) {
 					items.push(this.allStatuses[ForumTopicStatus.NOT_PLANNED])
+					items.push(this.allStatuses[ForumTopicStatus.OBSOLETE])
 				}
 			}
 			return items
@@ -1067,6 +1070,10 @@ import { emitter } from '@/model/vue'
 		}
 		&.status-acknowledged {
 			color: #6f42c1;
+		}
+		&.status-obsolete {
+			color: var(--text-color);
+			opacity: 0.7;
 		}
 		&.hidden-icon {
 			color: white;

@@ -22,6 +22,7 @@
 	"status_not_reproduced": "재현 불가",
 	"status_not_planned": "계획 없음",
 	"status_not_a_bug": "버그 아님",
+	"status_obsolete": "폐기됨",
 	"status_acknowledged": "확인됨",
 	"subscribe": "주제 구독",
 	"undoable_action": "이 작업은 되돌릴 수 없습니다.",

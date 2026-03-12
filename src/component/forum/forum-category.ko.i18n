@@ -26,6 +26,7 @@
 	"status_acknowledged": "확인됨",
 	"status_not_a_bug": "버그 아님",
 	"status_not_planned": "계획 없음",
+	"status_obsolete": "폐기됨",
 	"status_not_reproduced": "재현 불가",
 	"status_resolved": "해결됨"
 }

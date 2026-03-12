@@ -13,6 +13,7 @@ enum ForumTopicStatus {
 	NOT_REPRODUCED = 2,
 	NOT_PLANNED = 3,
 	NOT_A_BUG = 4,
+	OBSOLETE = 5,
 }
 
 class ForumTopic {

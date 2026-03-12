@@ -26,6 +26,7 @@
 	"status_acknowledged": "Huomioitu",
 	"status_not_a_bug": "Ei bugi",
 	"status_not_planned": "Ei suunniteltu",
+	"status_obsolete": "Vanhentunut",
 	"status_not_reproduced": "Ei toistettu",
 	"status_resolved": "Ratkaistu"
 }

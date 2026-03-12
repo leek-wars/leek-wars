@@ -22,6 +22,7 @@
 	"status_not_reproduced": "Not reproduced",
 	"status_not_planned": "Not planned",
 	"status_not_a_bug": "Not a bug",
+	"status_obsolete": "Obsolete",
 	"status_acknowledged": "Acknowledged",
 	"subscribe": "Subscribe to topic",
 	"undoable_action": "This action is irreversible.",

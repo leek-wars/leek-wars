@@ -22,6 +22,7 @@
 	"status_not_reproduced": "Ej reproducerad",
 	"status_not_planned": "Ej planerad",
 	"status_not_a_bug": "Inte en bugg",
+	"status_obsolete": "Föråldrad",
 	"status_acknowledged": "Uppmärksammat",
 	"subscribe": "Prenumerera på ämnet",
 	"undoable_action": "Denna åtgärd är oåterkallelig.",

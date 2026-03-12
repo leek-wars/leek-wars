@@ -82,6 +82,7 @@
 								<v-icon v-if="topic.status === ForumTopicStatus.NOT_REPRODUCED" :title="$t('status_not_reproduced')" class="attr not-reproduced">mdi-help-circle</v-icon>
 								<v-icon v-if="topic.status === ForumTopicStatus.NOT_PLANNED" :title="$t('status_not_planned')" class="attr not-planned">mdi-minus-circle</v-icon>
 								<v-icon v-if="topic.status === ForumTopicStatus.NOT_A_BUG" :title="$t('status_not_a_bug')" class="attr not-a-bug">mdi-close-circle</v-icon>
+								<v-icon v-if="topic.status === ForumTopicStatus.OBSOLETE" :title="$t('status_obsolete')" class="attr obsolete">mdi-archive</v-icon>
 								<v-icon v-if="topic.closed" :title="$t('locked')" class="attr">mdi-lock</v-icon>
 								<v-icon v-if="topic.pinned" :title="$t('pinned')" class="attr">mdi-pin</v-icon>
 								<v-icon v-if="topic.acknowledged && !topic.private_issue" :title="$t('status_acknowledged')" class="attr acknowledged">mdi-eye</v-icon>
@@ -453,6 +454,10 @@ i.attr {
 	}
 	&.acknowledged {
 		color: #6f42c1;
+	}
+	&.obsolete {
+		color: var(--text-color);
+		opacity: 0.7;
 	}
 }
 .topic > div {

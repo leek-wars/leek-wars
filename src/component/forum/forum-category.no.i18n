@@ -26,6 +26,7 @@
 	"status_acknowledged": "Tatt til etterretning",
 	"status_not_a_bug": "Ikke en bug",
 	"status_not_planned": "Ikke planlagt",
+	"status_obsolete": "Foreldet",
 	"status_not_reproduced": "Ikke reprodusert",
 	"status_resolved": "Løst"
 }

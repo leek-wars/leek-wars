@@ -22,6 +22,7 @@
 	"status_not_reproduced": "No reproducido",
 	"status_not_planned": "No planificado",
 	"status_not_a_bug": "No es un bug",
+	"status_obsolete": "Obsoleto",
 	"status_acknowledged": "Tomado en cuenta",
 	"subscribe": "Suscríbete al tema",
 	"undoable_action": "Esta acción es irreversible.",

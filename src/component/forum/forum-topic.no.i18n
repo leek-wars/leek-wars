@@ -22,6 +22,7 @@
 	"status_not_reproduced": "Ikke reprodusert",
 	"status_not_planned": "Ikke planlagt",
 	"status_not_a_bug": "Ikke en bug",
+	"status_obsolete": "Foreldet",
 	"status_acknowledged": "Tatt til etterretning",
 	"subscribe": "Abonner på emnet",
 	"undoable_action": "Denne handlingen er irreversibel.",

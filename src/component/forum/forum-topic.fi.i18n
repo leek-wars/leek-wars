@@ -22,6 +22,7 @@
 	"status_not_reproduced": "Ei toistettu",
 	"status_not_planned": "Ei suunniteltu",
 	"status_not_a_bug": "Ei bugi",
+	"status_obsolete": "Vanhentunut",
 	"status_acknowledged": "Huomioitu",
 	"subscribe": "Tilaa aihe",
 	"undoable_action": "Tämä toimenpide on peruuttamaton.",
