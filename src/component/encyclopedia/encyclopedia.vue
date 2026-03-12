@@ -184,10 +184,7 @@
 		searchQuery: string = ''
 		redirectedFrom: string | null = null
 		boundBeforeUnload!: () => void
-		actions = [
-			{icon: 'mdi-information-variant', click: () => this.$router.push('/about')},
-			{icon: 'mdi-pencil', click: () => this.editStart()},
-		]
+		actions: any[] = []
 
 		get language() {
 			return this.$route.params && this.$route.params.lang ? this.$route.params.lang : this.$i18n.locale
@@ -285,6 +282,10 @@
 			emitter.on('ctrlS', () => {
 				this.save()
 			})
+			this.actions = [
+				{icon: 'mdi-information-variant', click: () => this.$router.push('/about')},
+				{icon: 'mdi-pencil', click: () => this.editStart()},
+			]
 			LeekWars.setActions(this.actions)
 
 			this.boundBeforeUnload = this.onBeforeUnload.bind(this)
@@ -374,6 +375,7 @@ ${ret}
 		}
 
 		editStart() {
+			if (!this.page) { return }
 			if (this.page.id === 0) { // Nouvelle page pas besoin de prendre un lock
 				this.edition = true
 				LeekWars.large = true
