@@ -94,7 +94,21 @@
 					</router-link>
 				</div>
 				<div class="button-wrapper">
-					<router-link to="/garden">
+					<v-tooltip v-if="$store.state.farmer?.bought_fights || $store.state.farmer?.team_fights" bottom>
+						<template #activator="{ props }">
+							<router-link to="/garden" v-bind="props">
+								<div class="header-button fights-button">
+									<span class="farmer-fights text">{{ $filters.number($store.state.farmer.fights) }}</span>
+									<span v-if="$store.state.farmer?.team_fights" class="farmer-fights text">+ {{ $filters.number($store.state.farmer.team_fights) }}</span>
+									<img src="/image/icon/garden.png">
+								</div>
+							</router-link>
+						</template>
+						{{ $t('main.free_fights') }} : {{ $filters.number($store.state.farmer.fights - $store.state.farmer.bought_fights) }}<br>
+						{{ $t('main.paid_fights') }} : {{ $filters.number($store.state.farmer.bought_fights) }}<template v-if="$store.state.farmer.team_fights"><br>
+						{{ $t('main.team') }} : {{ $filters.number($store.state.farmer.team_fights) }}</template>
+					</v-tooltip>
+					<router-link v-else to="/garden">
 						<div class="header-button fights-button">
 							<span v-if="$store.state.farmer" class="farmer-fights text">{{ $filters.number($store.state.farmer.fights) }}</span>
 							<span v-if="$store.state.farmer?.team_fights" class="farmer-fights text">+ {{ $filters.number($store.state.farmer.team_fights) }}</span>
