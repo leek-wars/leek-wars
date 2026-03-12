@@ -876,7 +876,7 @@
 		get activityLabel() {
 			if (!this.team) return ''
 			const score = this.team.activity
-			if (score >= 200) return '🔥🔥🔥'
+			if (score >= 250) return '🔥🔥🔥'
 			if (score >= 100) return '🔥🔥'
 			if (score >= 10) return '🔥'
 			return ''
@@ -884,7 +884,7 @@
 		get activityTooltip() {
 			if (!this.team) return ''
 			const score = this.team.activity
-			if (score >= 200) return this.$t('main.very_active')
+			if (score >= 250) return this.$t('main.very_active')
 			if (score >= 100) return this.$t('main.active')
 			return this.$t('main.low_activity')
 		}
