@@ -83,15 +83,17 @@
 						<div class="title">Motif</div>
 						<div class="reason">Motif d'origine : <b>{{ $t('warning.reason_' + selectedFault.reason_text) }}</b></div>
 						<div v-if="selectedFault.fight" class="details">Combat : <router-link :to="'/fight/' + selectedFault.fight">{{ selectedFault.fight }}</router-link></div>
-						<v-select v-model="finalReason" :items="reasons" class="select" label="Changer de motif" item-value="id" item-text="t" hide-details :eager="true" dense outlined>
+						<v-select v-model="finalReason" :items="reasons" class="select" label="Changer de motif" hide-details :eager="true" dense outlined>
 							<template #selection>
 								{{ $t('warning.reason_' + finalReason) }}
 							</template>
-							<template #item="data">
-								<v-list-item-title class="select-item">
-									<div class="name">{{ $t('warning.reason_' + data.item) }}</div>
-									<div v-if="$root.$te('warning.reason_' + data.item + '_action', 'fr')" class="desc">{{ $t('warning.reason_' + data.item + '_action') }}</div>
-								</v-list-item-title>
+							<template #item="{ item, props }">
+								<v-list-item v-bind="props" class="select-item">
+									<template #title>
+										<div class="name">{{ $t('warning.reason_' + item.value) }}</div>
+										<div v-if="$root.$te('warning.reason_' + item.value + '_action', 'fr')" class="desc">{{ $t('warning.reason_' + item.value + '_action') }}</div>
+									</template>
+								</v-list-item>
 							</template>
 						</v-select>
 						<div class="details">
