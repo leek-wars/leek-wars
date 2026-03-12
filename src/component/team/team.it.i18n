@@ -126,5 +126,8 @@
 	"invitation_rejected": "Invito rifiutato",
 	"all_teams": "Tutte le squadre",
 	"recruitment_message": "Messaggio di reclutamento",
-	"no_recruitment_message": "nessun messaggio di reclutamento"
+	"no_recruitment_message": "nessun messaggio di reclutamento",
+	"configure_columns": "Configura colonne",
+	"default_sort": "Ordinamento predefinito",
+	"reset_columns": "Ripristina"
 }

@@ -112,5 +112,8 @@
 	"rankings": "Ranking",
 	"all_teams": "Alla lag",
 	"recruitment_message": "Rekryteringsmeddelande",
-	"no_recruitment_message": "inget rekryteringsmeddelande"
+	"no_recruitment_message": "inget rekryteringsmeddelande",
+	"configure_columns": "Konfigurera kolumner",
+	"default_sort": "Standardsortering",
+	"reset_columns": "Återställ"
 }

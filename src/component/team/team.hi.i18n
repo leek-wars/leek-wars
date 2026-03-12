@@ -112,5 +112,8 @@
 	"rankings": "रैंकिंग",
 	"all_teams": "सभी टीमें",
 	"recruitment_message": "भर्ती संदेश",
-	"no_recruitment_message": "कोई भर्ती संदेश नहीं"
+	"no_recruitment_message": "कोई भर्ती संदेश नहीं",
+	"configure_columns": "कॉलम कॉन्फ़िगर करें",
+	"default_sort": "डिफ़ॉल्ट क्रम",
+	"reset_columns": "रीसेट"
 }

@@ -112,5 +112,8 @@
 	"rankings": "Peringkat",
 	"all_teams": "Semua tim",
 	"recruitment_message": "Pesan perekrutan",
-	"no_recruitment_message": "tidak ada pesan perekrutan"
+	"no_recruitment_message": "tidak ada pesan perekrutan",
+	"configure_columns": "Konfigurasi kolom",
+	"default_sort": "Urutan default",
+	"reset_columns": "Atur ulang"
 }

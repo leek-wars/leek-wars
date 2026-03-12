@@ -112,5 +112,8 @@
 	"rankings": "Classificações",
 	"all_teams": "Todas as equipas",
 	"recruitment_message": "Mensagem de recrutamento",
-	"no_recruitment_message": "sem mensagem de recrutamento"
+	"no_recruitment_message": "sem mensagem de recrutamento",
+	"configure_columns": "Configurar colunas",
+	"default_sort": "Ordenação padrão",
+	"reset_columns": "Redefinir"
 }

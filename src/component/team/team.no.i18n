@@ -112,5 +112,8 @@
 	"rankings": "Rangeringer",
 	"all_teams": "Alle lag",
 	"recruitment_message": "Rekrutteringsmelding",
-	"no_recruitment_message": "ingen rekrutteringsmelding"
+	"no_recruitment_message": "ingen rekrutteringsmelding",
+	"configure_columns": "Konfigurer kolonner",
+	"default_sort": "Standard sortering",
+	"reset_columns": "Tilbakestill"
 }

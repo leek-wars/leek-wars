@@ -222,14 +222,41 @@
 
 		<panel v-if="team" icon="mdi-account-supervisor" :title="$t('farmers', [ team.member_count])">
 			<template #actions>
-				<div v-if="is_member || $store.state.farmer?.admin" class="button flat" @click="toggleMembersView">
-					<v-icon>{{ membersTableView ? 'mdi-view-grid' : 'mdi-view-list' }}</v-icon>
-				</div>
-				<div v-if="owner && !editMembers" class="button flat" @click="editMembers = true">
+				<v-menu v-if="owner && membersTableView" v-model="columnsDialog" location="top end" :close-on-content-click="false" @update:model-value="$event && openColumnsDialog()">
+					<template #activator="{ props: menuProps }">
+						<div class="button flat" v-bind="menuProps">
+							<v-icon>mdi-table-cog</v-icon>
+						</div>
+					</template>
+					<div class="columns-menu">
+						<div class="columns-menu-header">
+							<div class="columns-menu-title">{{ $t('configure_columns') }}</div>
+							<v-icon class="columns-reset" size="small" @click="resetColumnsConfig">mdi-refresh</v-icon>
+						</div>
+						<div ref="columnsConfigListEl" class="columns-config-list">
+							<div v-for="col in columnsConfigList" :key="col.key"
+								class="column-config-item" :data-key="col.key">
+								<v-icon class="drag-handle">mdi-drag</v-icon>
+								<v-checkbox-btn v-model="col.visible" :disabled="col.key === 'name'" density="compact" color="primary" :label="columnLabel(col)" class="column-checkbox" @change="saveColumnsConfig" />
+							</div>
+						</div>
+						<div class="sort-config">
+							<span class="sort-label">{{ $t('default_sort') }}</span>
+							<select v-model="columnsSortKey" class="sort-select" @change="saveColumnsConfig">
+								<option v-for="col in visibleConfigColumns" :key="col.key" :value="col.key">{{ columnLabel(col) }}</option>
+							</select>
+							<v-icon class="sort-order" @click="toggleSortOrder">{{ columnsSortOrder === 'asc' ? 'mdi-sort-ascending' : 'mdi-sort-descending' }}</v-icon>
+						</div>
+					</div>
+				</v-menu>
+				<div v-if="owner && !membersTableView && !editMembers" class="button flat" @click="editMembers = true">
 					<v-icon>mdi-pencil</v-icon>
 				</div>
-				<div v-if="owner && editMembers" class="button flat" @click="editMembers = false">
+				<div v-if="owner && !membersTableView && editMembers" class="button flat" @click="editMembers = false">
 					<v-icon>mdi-check</v-icon>
+				</div>
+				<div v-if="is_member || $store.state.farmer?.admin" class="button flat" @click="toggleMembersView">
+					<v-icon>{{ membersTableView ? 'mdi-view-grid' : 'mdi-view-list' }}</v-icon>
 				</div>
 			</template>
 			<template #content>
@@ -289,7 +316,8 @@
 					hide-default-footer
 					:items-per-page="100"
 					density="compact"
-					:sort-by="[{ key: 'last_connection', order: 'desc' }]"
+					:sort-by="membersSort"
+					:custom-key-sort="customKeySort"
 					class="members-table">
 					<template #item.name="{ item }">
 						<router-link v-ripple :to="'/farmer/' + item.id" class="member-link">
@@ -330,6 +358,18 @@
 					</template>
 					<template #[`item.join_date`]="{ item }">
 						<span class="date-cell">{{ $filters.date(item.join_date) }}</span>
+					</template>
+					<template #[`item.fights`]="{ item }">
+						{{ $filters.number(item.victories + item.draws + item.defeats) }}
+					</template>
+					<template #[`item.ratio`]="{ item }">
+						{{ item.defeats === 0 && item.victories > 0 ? '∞' : item.defeats > 0 ? (item.victories / item.defeats).toFixed(2) : '-' }}
+					</template>
+					<template #[`item.leek_count`]="{ item }">
+						{{ item.leek_count }}
+					</template>
+					<template #[`item.ranking`]="{ item }">
+						<ranking-badge v-if="item.ranking" :id="item.id" :ranking="item.ranking" category="farmer" class="ranking-badge-small" />
 					</template>
 					<template #[`item.last_connection`]="{ item }">
 						<span class="date-cell" :class="{ inactive: !item.connected && item.last_connection < Date.now() / 1000 - 30 * 24 * 3600 }">
@@ -751,6 +791,41 @@
 	import { emitter } from '@/model/vue'
 	import { Line } from 'vue-chartjs'
 	import { ChartData, ChartOptions } from 'chart.js'
+	import Sortable from 'sortablejs'
+
+	interface ColumnDef {
+		key: string
+		titleKey: string
+		align?: string
+	}
+	interface ColumnConfigItem extends ColumnDef {
+		visible: boolean
+	}
+	const ALL_MEMBER_COLUMNS: ColumnDef[] = [
+		{ key: 'name', titleKey: 'main.farmer' },
+		{ key: 'grade', titleKey: 'main.grade' },
+		{ key: 'country', titleKey: 'main.country', align: 'center' },
+		{ key: 'talent', titleKey: 'main.talent', align: 'end' },
+		{ key: 'ranking', titleKey: 'main.ranking', align: 'end' },
+		{ key: 'total_level', titleKey: 'main.level', align: 'end' },
+		{ key: 'points', titleKey: 'main.trophies', align: 'end' },
+		{ key: 'fights', titleKey: 'main.fights', align: 'end' },
+		{ key: 'victories', titleKey: 'main.victories', align: 'end' },
+		{ key: 'draws', titleKey: 'main.draws', align: 'end' },
+		{ key: 'defeats', titleKey: 'main.defeats', align: 'end' },
+		{ key: 'ratio', titleKey: 'main.ratio', align: 'end' },
+		{ key: 'leek_count', titleKey: 'main.leeks', align: 'end' },
+		{ key: 'won_team_tournaments', titleKey: 'main.tournaments', align: 'end' },
+		{ key: 'won_br', titleKey: 'main.battle_royale', align: 'end' },
+		{ key: 'clovers', titleKey: 'main.clovers', align: 'end' },
+		{ key: 'turrets_killed', titleKey: 'main.turrets', align: 'end' },
+		{ key: 'last_connection', titleKey: 'main.connection' },
+		{ key: 'join_date', titleKey: 'main.join_date' },
+	]
+	const ALL_MEMBER_COLUMNS_MAP: { [key: string]: ColumnDef } = {}
+	for (const col of ALL_MEMBER_COLUMNS) ALL_MEMBER_COLUMNS_MAP[col.key] = col
+	const DEFAULT_MEMBER_COLUMNS = ['name', 'grade', 'country', 'talent', 'ranking', 'total_level', 'points', 'fights', 'last_connection', 'join_date']
+	const DEFAULT_MEMBER_SORT = { key: 'last_connection', order: 'desc' }
 
 	@Options({ name: 'team', i18n: {}, mixins: [...mixins], components: {
 		CharacteristicTooltip, Explorer, chat: ChatElement, RichTooltipItem, RichTooltipLeek, RichTooltipFarmer, RichTooltipComposition, RichTooltipTeam, FightsHistory, TournamentsHistory, ReportDialog, TurretImage, ai: AIElement, Line,
@@ -786,6 +861,11 @@
 		logsDialog: boolean = false
 		editMembers: boolean = false
 		membersTableView: boolean = localStorage.getItem('team/members-table-view') !== 'false'
+		columnsDialog: boolean = false
+		columnsConfigList: ColumnConfigItem[] = []
+		columnsSortKey: string = DEFAULT_MEMBER_SORT.key
+		columnsSortOrder: string = DEFAULT_MEMBER_SORT.order
+		columnsSortable: Sortable | null = null
 		logsLevel: number = 0
 		rankingsLoading: boolean = false
 		rankingsLoaded: boolean = false
@@ -821,20 +901,29 @@
 			return null
 		}
 
+		get membersColumns() {
+			return this.team?.members_columns?.columns || DEFAULT_MEMBER_COLUMNS
+		}
+		get membersSort() {
+			const sort = this.team?.members_columns?.sort || DEFAULT_MEMBER_SORT
+			return [{ key: sort.key, order: sort.order }]
+		}
+		customKeySort: Record<string, (a: number | null, b: number | null) => number> = {
+			ranking: (a: number | null, b: number | null) => {
+				if (a === null && b === null) return 0
+				if (a === null) return 1
+				if (b === null) return -1
+				return a - b
+			}
+		}
 		get membersHeaders() {
-			return [
-				{ title: this.$t('main.farmer'), value: 'name', sortable: true },
-				{ title: this.$t('main.grade'), value: 'grade', sortable: true },
-				{ title: this.$t('main.country'), value: 'country', sortable: true, align: 'center' },
-				{ title: this.$t('main.talent'), value: 'talent', sortable: true, align: 'end' },
-				{ title: this.$t('main.level'), value: 'total_level', sortable: true, align: 'end' },
-				{ title: this.$t('main.trophies'), value: 'points', sortable: true, align: 'end' },
-				{ title: this.$t('main.victories'), value: 'victories', sortable: true, align: 'end' },
-				{ title: this.$t('main.draws'), value: 'draws', sortable: true, align: 'end' },
-				{ title: this.$t('main.defeats'), value: 'defeats', sortable: true, align: 'end' },
-				{ title: this.$t('main.connection'), value: 'last_connection', sortable: true },
-				{ title: this.$t('main.join_date'), value: 'join_date', sortable: true },
-			]
+			return this.membersColumns
+				.map(key => {
+					const col = ALL_MEMBER_COLUMNS_MAP[key]
+					if (!col) return null
+					return { title: this.$t(col.titleKey), value: key, sortable: true, align: col.align }
+				})
+				.filter(Boolean)
 		}
 
 		get turret() {
@@ -1144,6 +1233,71 @@
 		toggleMembersView() {
 			this.membersTableView = !this.membersTableView
 			localStorage.setItem('team/members-table-view', String(this.membersTableView))
+		}
+		openColumnsDialog() {
+			if (this.columnsConfigList.length === 0) {
+				const config = this.team?.members_columns
+				const columns = config?.columns || DEFAULT_MEMBER_COLUMNS
+				const order = config?.order || ALL_MEMBER_COLUMNS.map(c => c.key)
+				const sort = config?.sort || DEFAULT_MEMBER_SORT
+				for (const key of order) {
+					const col = ALL_MEMBER_COLUMNS_MAP[key]
+					if (col) this.columnsConfigList.push({ ...col, visible: columns.includes(key) })
+				}
+				// Add any new columns not yet in saved order
+				for (const col of ALL_MEMBER_COLUMNS) {
+					if (!order.includes(col.key)) {
+						this.columnsConfigList.push({ ...col, visible: false })
+					}
+				}
+				this.columnsSortKey = sort.key
+				this.columnsSortOrder = sort.order
+			}
+			this.$nextTick(() => {
+				const el = this.$refs.columnsConfigListEl as HTMLElement
+				if (!el) return
+				if (this.columnsSortable) this.columnsSortable.destroy()
+				this.columnsSortable = Sortable.create(el, {
+					handle: '.drag-handle',
+					animation: 150,
+					onEnd: (evt) => {
+						if (evt.oldIndex === undefined || evt.newIndex === undefined) return
+						const item = this.columnsConfigList.splice(evt.oldIndex, 1)[0]
+						this.columnsConfigList.splice(evt.newIndex, 0, item)
+						this.saveColumnsConfig()
+					}
+				})
+			})
+		}
+		saveColumnsConfig() {
+			const columns = this.columnsConfigList.filter(c => c.visible).map(c => c.key)
+			if (!columns.includes('name')) columns.unshift('name')
+			if (!columns.includes(this.columnsSortKey)) {
+				this.columnsSortKey = columns[0]
+			}
+			const order = this.columnsConfigList.map(c => c.key)
+			const config = { columns, order, sort: { key: this.columnsSortKey, order: this.columnsSortOrder } }
+			this.team!.members_columns = config
+			LeekWars.put('team/set-members-columns', { columns: JSON.stringify(config) })
+		}
+		columnLabel(col: ColumnDef) {
+			return this.$t(col.titleKey) as string
+		}
+		get visibleConfigColumns() {
+			return this.columnsConfigList.filter(c => c.visible)
+		}
+		toggleSortOrder() {
+			this.columnsSortOrder = this.columnsSortOrder === 'asc' ? 'desc' : 'asc'
+			this.saveColumnsConfig()
+		}
+		resetColumnsConfig() {
+			this.columnsSortKey = DEFAULT_MEMBER_SORT.key
+			this.columnsSortOrder = DEFAULT_MEMBER_SORT.order
+			this.columnsConfigList = ALL_MEMBER_COLUMNS.map(col => ({
+				...col,
+				visible: DEFAULT_MEMBER_COLUMNS.includes(col.key)
+			}))
+			this.saveColumnsConfig()
 		}
 		cancelInvitation(invitation: any) {
 			if (!this.team) { return }
@@ -1561,6 +1715,11 @@
 		.inactive {
 			opacity: 0.4;
 		}
+		.ranking-badge-small {
+			transform: scale(0.8);
+			transform-origin: center;
+			margin: 0;
+		}
 		:deep(td), :deep(th) {
 			padding: 0 8px !important;
 		}
@@ -1580,6 +1739,87 @@
 		}
 		.flag {
 			height: 16px;
+		}
+	}
+	.columns-menu {
+		background: var(--background);
+		padding: 12px;
+		min-width: 280px;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+		.columns-menu-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding-bottom: 8px;
+			border-bottom: 1px solid var(--border-color);
+			margin-bottom: 4px;
+		}
+		.columns-menu-title {
+			font-weight: 500;
+		}
+		.columns-reset {
+			cursor: pointer;
+			opacity: 0.6;
+			&:hover {
+				opacity: 1;
+			}
+		}
+	}
+	.columns-config-list {
+		.column-config-item {
+			display: flex;
+			align-items: center;
+			padding: 0 8px;
+			border-radius: 4px;
+			transition: background 0.15s;
+			&:hover {
+				background: rgba(128, 128, 128, 0.1);
+			}
+			.drag-handle {
+				color: var(--text-color-secondary);
+				margin-right: 4px;
+				cursor: grab;
+			}
+			.column-checkbox {
+				flex: 1;
+				:deep(.v-selection-control) {
+					min-height: 36px;
+				}
+				:deep(.v-label) {
+					user-select: none;
+					text-align: left;
+					padding: 8px 0;
+					width: 100%;
+					height: 100%;
+					font-size: 13px;
+					margin-left: 6px;
+				}
+			}
+		}
+	}
+	.sort-config {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 12px 8px 4px;
+		border-top: 1px solid var(--border-color);
+		.sort-label {
+			white-space: nowrap;
+			font-weight: 500;
+		}
+		.sort-select {
+			flex: 1;
+			padding: 4px 8px;
+			border-radius: 4px;
+			border: 1px solid var(--border-color);
+			background: var(--background);
+			color: var(--text-color);
+		}
+		.sort-order {
+			cursor: pointer;
+			&:hover {
+				color: #5fad1b;
+			}
 		}
 	}
 	.farmer .status {

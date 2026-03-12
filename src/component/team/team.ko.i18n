@@ -112,5 +112,8 @@
 	"rankings": "랭킹",
 	"all_teams": "모든 팀",
 	"recruitment_message": "모집 메시지",
-	"no_recruitment_message": "모집 메시지 없음"
+	"no_recruitment_message": "모집 메시지 없음",
+	"configure_columns": "열 구성",
+	"default_sort": "기본 정렬",
+	"reset_columns": "초기화"
 }

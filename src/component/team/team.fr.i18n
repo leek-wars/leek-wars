@@ -126,5 +126,8 @@
 	"invitation_rejected": "Invitation refusée",
 	"all_teams": "Toutes les équipes",
 	"recruitment_message": "Message de recrutement",
-	"no_recruitment_message": "pas de message de recrutement"
+	"no_recruitment_message": "pas de message de recrutement",
+	"configure_columns": "Configurer les colonnes",
+	"default_sort": "Tri par défaut",
+	"reset_columns": "Réinitialiser"
 }

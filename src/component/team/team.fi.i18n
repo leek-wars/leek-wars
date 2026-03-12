@@ -112,5 +112,8 @@
 	"rankings": "Rankingit",
 	"all_teams": "Kaikki tiimit",
 	"recruitment_message": "Rekrytointiviesti",
-	"no_recruitment_message": "ei rekrytointiviestiä"
+	"no_recruitment_message": "ei rekrytointiviestiä",
+	"configure_columns": "Määritä sarakkeet",
+	"default_sort": "Oletusjärjestys",
+	"reset_columns": "Nollaa"
 }

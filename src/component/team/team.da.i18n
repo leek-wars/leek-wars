@@ -112,5 +112,8 @@
 	"rankings": "Placeringer",
 	"all_teams": "Alle hold",
 	"recruitment_message": "Rekrutteringsbesked",
-	"no_recruitment_message": "ingen rekrutteringsbesked"
+	"no_recruitment_message": "ingen rekrutteringsbesked",
+	"configure_columns": "Konfigurer kolonner",
+	"default_sort": "Standard sortering",
+	"reset_columns": "Nulstil"
 }

@@ -112,5 +112,8 @@
 	"rankings": "Ranglijsten",
 	"all_teams": "Alle teams",
 	"recruitment_message": "Rekruteringsbericht",
-	"no_recruitment_message": "geen rekruteringsbericht"
+	"no_recruitment_message": "geen rekruteringsbericht",
+	"configure_columns": "Kolommen configureren",
+	"default_sort": "Standaard sortering",
+	"reset_columns": "Herstellen"
 }

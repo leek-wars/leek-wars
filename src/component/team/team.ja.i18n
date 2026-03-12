@@ -112,5 +112,8 @@
 	"rankings": "ランキング",
 	"all_teams": "すべてのチーム",
 	"recruitment_message": "募集メッセージ",
-	"no_recruitment_message": "募集メッセージなし"
+	"no_recruitment_message": "募集メッセージなし",
+	"configure_columns": "列を設定",
+	"default_sort": "デフォルトの並び順",
+	"reset_columns": "リセット"
 }

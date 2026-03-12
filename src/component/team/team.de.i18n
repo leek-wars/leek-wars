@@ -112,5 +112,8 @@
 	"rankings": "Ranglisten",
 	"all_teams": "Alle Teams",
 	"recruitment_message": "Rekrutierungsnachricht",
-	"no_recruitment_message": "keine Rekrutierungsnachricht"
+	"no_recruitment_message": "keine Rekrutierungsnachricht",
+	"configure_columns": "Spalten konfigurieren",
+	"default_sort": "Standardsortierung",
+	"reset_columns": "Zurücksetzen"
 }

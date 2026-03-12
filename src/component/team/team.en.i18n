@@ -126,5 +126,8 @@
 	"invitation_rejected": "Invitation rejected",
 	"all_teams": "All teams",
 	"recruitment_message": "Recruitment message",
-	"no_recruitment_message": "no recruitment message"
+	"no_recruitment_message": "no recruitment message",
+	"configure_columns": "Configure columns",
+	"default_sort": "Default sort",
+	"reset_columns": "Reset"
 }

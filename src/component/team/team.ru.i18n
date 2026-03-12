@@ -112,5 +112,8 @@
 	"rankings": "Рейтинги",
 	"all_teams": "Все команды",
 	"recruitment_message": "Сообщение о наборе",
-	"no_recruitment_message": "нет сообщения о наборе"
+	"no_recruitment_message": "нет сообщения о наборе",
+	"configure_columns": "Настроить столбцы",
+	"default_sort": "Сортировка по умолчанию",
+	"reset_columns": "Сбросить"
 }
