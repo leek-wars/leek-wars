@@ -584,7 +584,7 @@
 			</template>
 		</popup>
 
-		<v-tooltip v-model="trophyTooltip.show" :open-on-hover="false" location="bottom">
+		<v-tooltip v-if="trophyTooltip.show" v-model="trophyTooltip.show" :open-on-hover="false" location="bottom">
 			<template #activator="{ props }">
 				<div ref="trophyTooltipAnchor" v-bind="props" class="trophy-tooltip-anchor" :style="{ left: trophyTooltip.x + 'px', top: trophyTooltip.y + 'px' }"></div>
 			</template>
@@ -862,7 +862,7 @@ import { emitter } from '@/model/vue'
 				if (this.farmer.tournament.registered) {
 					this.farmer.tournament.registered = false
 					LeekWars.post('farmer/unregister-tournament')
-				} else {
+				} else {
 					this.farmer.tournament.registered = true
 					LeekWars.post('farmer/register-tournament')
 				}
