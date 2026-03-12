@@ -244,7 +244,7 @@
 			let aborted = false
 			const menu_element = document.querySelector('.menu') as HTMLElement
 			const center_element = document.querySelector('.app-center') as HTMLElement
-			const dark_element = document.querySelector('#app .dark') as HTMLElement
+			const dark_element = document.querySelector('#app .dark-shadow') as HTMLElement
 			let d = 0
 			let lastT = 0
 
@@ -252,6 +252,17 @@
 				downX = e.clientX
 				downY = e.clientY
 				if (LeekWars.menuExpanded || downX < window.innerWidth / 3) {
+					// Don't trigger menu open if the target has horizontal scroll
+					if (!LeekWars.menuExpanded) {
+						let el = e.target as HTMLElement | null
+						while (el && el !== document.body) {
+							const overflowX = getComputedStyle(el).overflowX
+							if (el.scrollWidth > el.clientWidth + 1 && el.scrollLeft > 0 && (overflowX === 'auto' || overflowX === 'scroll')) {
+								return
+							}
+							el = el.parentElement
+						}
+					}
 					down = true
 					aborted = false
 					menu_visible = LeekWars.menuExpanded
@@ -286,7 +297,10 @@
 			}, {passive: true})
 
 			document.addEventListener('touchend', (e) => {
-				if (!down || !enabled || aborted) { return }
+				if (!down || !enabled || aborted) {
+					down = false
+					return
+				}
 				const transition = 'transform ease 200ms'
 				menu_element.style.transition = transition
 				menu_element.style.transform = ''
