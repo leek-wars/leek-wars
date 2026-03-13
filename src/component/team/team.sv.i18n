@@ -116,5 +116,16 @@
 	"no_recruitment_message": "inget rekryteringsmeddelande",
 	"configure_columns": "Konfigurera kolumner",
 	"default_sort": "Standardsortering",
-	"reset_columns": "Återställ"
+	"reset_columns": "Återställ",
+	"rename_team": "Byt namn på lag",
+	"rename_team_description": "Denna åtgärd låter dig byta namn på ditt lag (max en gång i veckan). Du kan betala med Habs eller med kristaller.",
+	"rename_team_new_name": "Nytt namn",
+	"rename_team_done": "Laget har bytt namn!",
+	"rename_team_pay_habs": "Betala med Habs",
+	"rename_team_pay_crystals": "Betala med kristaller",
+	"error_rename_not_enough_habs": "Du har inte tillräckligt med Habs.",
+	"error_rename_not_enough_crystals": "Du har inte tillräckligt med kristaller.",
+	"error_name_already_used": "Detta lagnamn är redan taget",
+	"error_invalid_name": "Lagnamnet måste vara mellan {0} och {1} tecken",
+	"error_rename_delay": "Du kan bara byta namn på laget en gång i veckan."
 }

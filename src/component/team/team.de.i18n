@@ -116,5 +116,16 @@
 	"no_recruitment_message": "keine Rekrutierungsnachricht",
 	"configure_columns": "Spalten konfigurieren",
 	"default_sort": "Standardsortierung",
-	"reset_columns": "Zurücksetzen"
+	"reset_columns": "Zurücksetzen",
+	"rename_team": "Team umbenennen",
+	"rename_team_description": "Mit dieser Aktion können Sie Ihr Team umbenennen (maximal einmal pro Woche). Sie können mit Habs oder Kristallen bezahlen.",
+	"rename_team_new_name": "Neuer Name",
+	"rename_team_done": "Team umbenannt!",
+	"rename_team_pay_habs": "Mit Habs bezahlen",
+	"rename_team_pay_crystals": "Mit Kristallen bezahlen",
+	"error_rename_not_enough_habs": "Sie haben nicht genug Habs.",
+	"error_rename_not_enough_crystals": "Sie haben nicht genug Kristalle.",
+	"error_name_already_used": "Dieser Teamname ist bereits vergeben",
+	"error_invalid_name": "Der Teamname muss zwischen {0} und {1} Zeichen lang sein",
+	"error_rename_delay": "Sie können das Team nur einmal pro Woche umbenennen."
 }

@@ -116,5 +116,16 @@
 	"no_recruitment_message": "brak wiadomości rekrutacyjnej",
 	"configure_columns": "Konfiguruj kolumny",
 	"default_sort": "Domyślne sortowanie",
-	"reset_columns": "Resetuj"
+	"reset_columns": "Resetuj",
+	"rename_team": "Zmień nazwę zespołu",
+	"rename_team_description": "Ta operacja pozwala zmienić nazwę zespołu (maksymalnie raz na tydzień). Możesz zapłacić Habami lub kryształami.",
+	"rename_team_new_name": "Nowa nazwa",
+	"rename_team_done": "Zespół przemianowany!",
+	"rename_team_pay_habs": "Zapłać Habami",
+	"rename_team_pay_crystals": "Zapłać kryształami",
+	"error_rename_not_enough_habs": "Nie masz wystarczająco dużo Habów.",
+	"error_rename_not_enough_crystals": "Nie masz wystarczająco dużo kryształów.",
+	"error_name_already_used": "Ta nazwa zespołu jest już zajęta",
+	"error_invalid_name": "Nazwa zespołu musi zawierać od {0} do {1} znaków",
+	"error_rename_delay": "Możesz zmienić nazwę zespołu tylko raz na tydzień."
 }

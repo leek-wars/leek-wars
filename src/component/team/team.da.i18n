@@ -116,5 +116,16 @@
 	"no_recruitment_message": "ingen rekrutteringsbesked",
 	"configure_columns": "Konfigurer kolonner",
 	"default_sort": "Standard sortering",
-	"reset_columns": "Nulstil"
+	"reset_columns": "Nulstil",
+	"rename_team": "Omdøb hold",
+	"rename_team_description": "Denne handling giver dig mulighed for at omdøbe dit hold (højst én gang om ugen). Du kan betale med Habs eller med krystaller.",
+	"rename_team_new_name": "Nyt navn",
+	"rename_team_done": "Hold omdøbt!",
+	"rename_team_pay_habs": "Betal med Habs",
+	"rename_team_pay_crystals": "Betal med krystaller",
+	"error_rename_not_enough_habs": "Du har ikke nok Habs.",
+	"error_rename_not_enough_crystals": "Du har ikke nok krystaller.",
+	"error_name_already_used": "Dette holdnavn er allerede i brug",
+	"error_invalid_name": "Holdnavnet skal være mellem {0} og {1} tegn",
+	"error_rename_delay": "Du kan kun omdøbe holdet én gang om ugen."
 }

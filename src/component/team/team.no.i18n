@@ -116,5 +116,16 @@
 	"no_recruitment_message": "ingen rekrutteringsmelding",
 	"configure_columns": "Konfigurer kolonner",
 	"default_sort": "Standard sortering",
-	"reset_columns": "Tilbakestill"
+	"reset_columns": "Tilbakestill",
+	"rename_team": "Gi laget nytt navn",
+	"rename_team_description": "Denne handlingen lar deg gi laget ditt nytt navn (maks én gang i uken). Du kan betale med Habs eller med krystaller.",
+	"rename_team_new_name": "Nytt navn",
+	"rename_team_done": "Laget er omdøpt!",
+	"rename_team_pay_habs": "Betal med Habs",
+	"rename_team_pay_crystals": "Betal med krystaller",
+	"error_rename_not_enough_habs": "Du har ikke nok Habs.",
+	"error_rename_not_enough_crystals": "Du har ikke nok krystaller.",
+	"error_name_already_used": "Dette lagnavnet er allerede i bruk",
+	"error_invalid_name": "Lagnavnet må være mellom {0} og {1} tegn",
+	"error_rename_delay": "Du kan bare gi laget nytt navn én gang i uken."
 }
