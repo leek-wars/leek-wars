@@ -116,5 +116,16 @@
 	"no_recruitment_message": "ei rekrytointiviestiä",
 	"configure_columns": "Määritä sarakkeet",
 	"default_sort": "Oletusjärjestys",
-	"reset_columns": "Nollaa"
+	"reset_columns": "Nollaa",
+	"rename_team": "Nimeä joukkue uudelleen",
+	"rename_team_description": "Tämä toiminto antaa sinun nimetä joukkueesi uudelleen (enintään kerran viikossa). Voit maksaa Habeilla tai kristalleilla.",
+	"rename_team_new_name": "Uusi nimi",
+	"rename_team_done": "Joukkue nimetty uudelleen!",
+	"rename_team_pay_habs": "Maksa Habeilla",
+	"rename_team_pay_crystals": "Maksa kristalleilla",
+	"error_rename_not_enough_habs": "Sinulla ei ole tarpeeksi Habeja.",
+	"error_rename_not_enough_crystals": "Sinulla ei ole tarpeeksi kristalleja.",
+	"error_name_already_used": "Tämä joukkueen nimi on jo käytössä",
+	"error_invalid_name": "Joukkueen nimessä on oltava {0}–{1} merkkiä",
+	"error_rename_delay": "Voit nimetä joukkueen uudelleen vain kerran viikossa."
 }

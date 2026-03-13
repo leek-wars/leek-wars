@@ -49,18 +49,32 @@
 		<div class="container">
 			<panel class="team-emblem first">
 				<template #content><div v-if="team" class="content">
-					<template v-if="owner">
-						<v-tooltip>
-							<template #activator="{ props }">
-								<div class="emblem-input" v-bind="props">
-									<input ref="emblemInput" type="file" accept="image/png, image/jpeg, image/jpg, image/bmp, image/gif, image/webp" @change="changeEmblem">
-									<emblem ref="emblem" :team="team" @click.native="$refs.emblemInput.click()" />
-								</div>
-							</template>
-							{{ $t('change_emblem') }}
-						</v-tooltip>
-					</template>
-					<emblem v-else :team="team" />
+					<div class="emblem-wrapper">
+						<template v-if="owner">
+							<v-tooltip>
+								<template #activator="{ props }">
+									<div class="emblem-input" v-bind="props">
+										<input ref="emblemInput" type="file" accept="image/png, image/jpeg, image/jpg, image/bmp, image/gif, image/webp" @change="changeEmblem">
+										<emblem ref="emblem" :team="team" @click.native="$refs.emblemInput.click()" />
+									</div>
+								</template>
+								{{ $t('change_emblem') }}
+							</v-tooltip>
+						</template>
+						<emblem v-else :team="team" />
+						<v-btn v-if="is_member" class="like-overlay" :class="{liked: team.liked}" size="small" @click.stop="toggleLike">
+							<template #prepend><v-icon size="small" :color="team.liked ? 'red' : ''">{{ team.liked ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon></template>
+							{{ team.likes }}
+						</v-btn>
+						<v-btn v-else-if="$store.state.connected" class="like-overlay" :class="{liked: team.liked}" size="small" @click="toggleLike">
+							<template #prepend><v-icon :color="team.liked ? 'red' : ''">{{ team.liked ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon></template>
+							{{ team.likes }}
+						</v-btn>
+						<v-btn v-else class="like-overlay no-click" :class="{liked: team.likes > 0}" size="small" :ripple="false">
+							<template #prepend><v-icon size="small" :color="team.likes > 0 ? 'red' : ''">{{ team.likes > 0 ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon></template>
+							{{ team.likes }}
+						</v-btn>
+					</div>
 					<div v-if="team.description || is_member" class="description">
 						<span class="guillemet">«</span>
 						<span v-if="owner" ref="descriptionElement" :class="{empty: !team.description && !editingDescription}" class="team-status text" contenteditable @click="startEditingDescription" @blur="saveDescription" @keydown.enter.prevent="saveDescription">{{ team.description }}</span>
@@ -612,12 +626,15 @@
 					<tournaments-history v-if="team" :tournaments="team.tournaments" />
 				</template>
 			</panel>
+
 		</div>
 
 		<div class="page-footer page-bar">
 			<div class="tabs">
 				<div v-if="is_member" class="tab" @click="quitTeamStart">{{ $t('quit_team') }}</div>
+				<div v-if="owner" class="tab" @click="renameTeamDialog = true"><v-icon>mdi-pencil-outline</v-icon> {{ $t('rename_team') }}</div>
 				<div v-if="owner" class="tab" @click="changeOwnerStart">{{ $t('change_owner') }}</div>
+				<div v-if="owner" class="tab" @click="languageDialog = true"><flag v-if="team.language" :code="LeekWars.languages[team.language]?.country" :clickable="false" /> {{ $t('team_language') }}</div>
 				<div v-if="owner" class="tab" @click="dissolveDialog = true">{{ $t('disolve_team') }}</div>
 				<div v-if="!is_member && $store.state.connected">
 					<div class="report-button tab" @click="reportDialog = true">
@@ -672,6 +689,30 @@
 				<div v-ripple @click="dissolveDialog = false">{{ $t('disolve_cancel') }}</div>
 				<div v-ripple class="red" @click="dissolveTeam">{{ $t('disolve_disolve') }}</div>
 			</template>
+		</popup>
+
+		<popup v-if="team" v-model="renameTeamDialog" :width="600">
+			<template #icon><v-icon>mdi-pencil-outline</v-icon></template>
+			<template #title>{{ $t('rename_team') }}</template>
+			{{ $t('rename_team_description') }}
+			<br><br>
+			{{ $t('rename_team_new_name') }} : <input v-model="renameTeamName" type="text" @keyup.enter="renameTeam('habs')">
+			<br><br>
+			<div class="center">
+				<v-btn class="rename-button" @click="renameTeam('habs')">{{ $t('rename_team_pay_habs') }} :&nbsp;<b>{{ $filters.number(rename_team_price_habs) }}</b><img src="/image/hab.png"></v-btn>
+				&nbsp;
+				<v-btn class="rename-button" @click="renameTeam('crystals')">{{ $t('rename_team_pay_crystals') }} :&nbsp;<b>{{ $filters.number(rename_team_price_crystals) }}</b><span class="crystal"></span></v-btn>
+			</div>
+		</popup>
+
+		<popup v-if="team" v-model="languageDialog" :width="600" icon="mdi-translate" :title="$t('team_language')">
+			<div class="team-language-popup">
+				<div v-for="language in LeekWars.languages" :key="language.code" v-ripple :class="{selected: language.code == team.language}" class="language" @click="setTeamLanguage(language.code)">
+					<flag :code="language.country" :clickable="false" />
+					<br>
+					{{ language.name }}
+				</div>
+			</div>
 		</popup>
 
 		<popup v-if="banMemberTarget" v-model="banDialog" :width="500" icon="mdi-delete" :title="$t('ban_member_confirm_title', [banMemberTarget.name])">
@@ -782,6 +823,7 @@
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
+	import { store } from '@/model/store'
 	import { Composition, Team, TeamMember } from '@/model/team'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
@@ -858,6 +900,11 @@
 		banMemberTarget: Farmer | null = null
 		quitTeamDialog: boolean = false
 		dissolveDialog: boolean = false
+		renameTeamDialog: boolean = false
+		renameTeamName: string = ''
+		rename_team_price_habs: number = 10000000
+		rename_team_price_crystals: number = 200
+		languageDialog: boolean = false
 		changeOwnerDialog: boolean = false
 		changeOwnerConfirmDialog: boolean = false
 		changeOwnerSelected: TeamMember | null = null
@@ -1196,6 +1243,32 @@
 			}
 		}
 
+		setTeamLanguage(code: string) {
+			if (this.team) {
+				this.team.language = code
+				LeekWars.put('team/set-language', {language: code})
+			}
+		}
+
+		renameTeam(currency: string) {
+			if (!this.team) { return }
+			const method = currency === 'habs' ? 'team/rename-habs' : 'team/rename-crystals'
+			LeekWars.post(method, {name: this.renameTeamName}).then(() => {
+				if (this.team) {
+					this.team.name = this.renameTeamName
+					if (currency === 'habs') {
+						store.commit('update-habs', -this.rename_team_price_habs)
+					} else {
+						store.commit('update-crystals', -this.rename_team_price_crystals)
+					}
+					this.renameTeamDialog = false
+					LeekWars.toast(this.$t('rename_team_done'))
+				}
+			}).error((error) => {
+				LeekWars.toast(this.$t('error_' + error.error, error.params))
+			})
+		}
+
 		startEditingDescription() {
 			if (!this.team) { return }
 			this.editingDescription = true
@@ -1488,6 +1561,24 @@
 			}
 		}
 
+		toggleLike() {
+			if (!this.team) { return }
+			const liked = this.team.liked
+			this.team.liked = !liked
+			this.team.likes += liked ? -1 : 1
+			const endpoint = liked ? 'team/unlike' : 'team/like'
+			LeekWars.post(endpoint, {target_id: this.team.id}).then(data => {
+				if (this.team) {
+					this.team.likes = data.likes
+				}
+			}).error(() => {
+				if (this.team) {
+					this.team.liked = liked
+					this.team.likes += liked ? 1 : -1
+				}
+			})
+		}
+
 		loadRankings() {
 			if (!this.team) return
 			this.rankingsLoading = true
@@ -1521,6 +1612,24 @@
 	.emblem {
 		width: 200px;
 		height: 200px;
+	}
+	.emblem-wrapper {
+		position: relative;
+		display: inline-block;
+	}
+	.like-overlay {
+		position: absolute;
+		bottom: 0;
+		right: -8px;
+		text-transform: none;
+		min-width: 0;
+		&.liked {
+			color: #e53935;
+		}
+		&.no-click {
+			cursor: default;
+			pointer-events: none;
+		}
 	}
 	.emblem-input {
 		cursor: pointer;
@@ -2170,5 +2279,33 @@
 	}
 	.compos {
 		margin-bottom: 12px;
+	}
+	.team-language-popup {
+		text-align: center;
+		.language {
+			display: inline-block;
+			padding: 7px;
+			text-align: center;
+			margin: 5px;
+			cursor: pointer;
+			border: 1px solid var(--border);
+			border-radius: 2px;
+			.flag {
+				height: 22px;
+				margin-bottom: 10px;
+			}
+			&.selected {
+				background: var(--pure-white);
+				box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+			}
+		}
+	}
+	.rename-button {
+		b {
+			padding-right: 4px;
+		}
+		img {
+			width: 20px;
+		}
 	}
 </style>

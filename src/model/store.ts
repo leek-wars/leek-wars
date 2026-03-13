@@ -35,6 +35,7 @@ class LeekWarsState {
 	public habs_timer: any = null
 	public crystals_timer: any = null
 	public farmer_by_name: {[key: string]: Farmer} = {}
+	public brCounts: number[] = [0, 0, 0, 0]
 }
 
 function updateTitle(state: LeekWarsState) {
@@ -120,9 +121,6 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			for (const conversation of data.conversations) {
 				store.commit('new-conversation', conversation)
 			}
-			for (const chat of data.chats) {
-				store.commit('register-chat', chat)
-			}
 			fileSystem.init(data.farmer)
 			LeekWars.startIntervals()
 			updateTitle(state)
@@ -190,7 +188,6 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 
 		'register-chat'(state: LeekWarsState, data: {id: number, name: string, notifications: boolean}) {
-			// console.log("register-chat", data.id)
 			LeekWars.socket.enableChannel(data.id)
 			if (!state.chat[data.id]) {
 				const teamChat = state.farmer && state.farmer.team ? state.farmer.team.chat : null
@@ -977,7 +974,15 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (state.farmer) {
 				state.farmer.tutorial_progress = progress
 			}
-		}
+		},
+
+		'br-counts'(state: LeekWarsState, data: [number[], number]) {
+			const [counts, startedRange] = data
+			if (startedRange >= 0) {
+				emitter.emit('br-started', startedRange)
+			}
+			state.brCounts = counts
+		},
 	},
 })
 export { store }

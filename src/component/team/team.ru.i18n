@@ -116,5 +116,16 @@
 	"no_recruitment_message": "нет сообщения о наборе",
 	"configure_columns": "Настроить столбцы",
 	"default_sort": "Сортировка по умолчанию",
-	"reset_columns": "Сбросить"
+	"reset_columns": "Сбросить",
+	"rename_team": "Переименовать команду",
+	"rename_team_description": "Эта операция позволяет переименовать вашу команду (максимум раз в неделю). Вы можете заплатить Хабами или кристаллами.",
+	"rename_team_new_name": "Новое имя",
+	"rename_team_done": "Команда переименована!",
+	"rename_team_pay_habs": "Оплатить Хабами",
+	"rename_team_pay_crystals": "Оплатить кристаллами",
+	"error_rename_not_enough_habs": "У вас недостаточно Хабов.",
+	"error_rename_not_enough_crystals": "У вас недостаточно кристаллов.",
+	"error_name_already_used": "Это название команды уже занято",
+	"error_invalid_name": "Название команды должно содержать от {0} до {1} символов",
+	"error_rename_delay": "Вы можете переименовать команду только раз в неделю."
 }

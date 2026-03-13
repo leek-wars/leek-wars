@@ -6,13 +6,31 @@ import { getRouter } from '@/model/leekwars'
 import { Leek } from './leek'
 
 class BattleRoyale {
+	static readonly RANGES = [20, 100, 200, 300]
+	static readonly ROOM_SIZE = 10
+
 	leeks: {[key: number]: Leek} = {}
 	progress: number = 0
 	enabled: boolean = false
 
+	static getRangeIndex(level: number): number {
+		for (let i = BattleRoyale.RANGES.length - 1; i >= 0; i--) {
+			if (level >= BattleRoyale.RANGES[i]) { return i }
+		}
+		return -1
+	}
+
+	static getRange(level: number): { min: number, max: number } | null {
+		const idx = BattleRoyale.getRangeIndex(level)
+		if (idx < 0) { return null }
+		const min = BattleRoyale.RANGES[idx]
+		const max = idx < BattleRoyale.RANGES.length - 1 ? BattleRoyale.RANGES[idx + 1] - 1 : 301
+		return { min, max }
+	}
+
 	init() {
 		const leek = parseInt(localStorage.getItem('battle-royale') || '', 10)
-		if (leek) {	this.register(leek) }
+		if (leek) { this.register(leek) }
 	}
 	register(leek: number) {
 		LeekWars.socket.send([SocketMessage.BATTLE_ROYALE_REGISTER, leek])

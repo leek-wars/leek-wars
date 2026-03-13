@@ -22,6 +22,11 @@ class Command {
 
 const COMMANDS = [
 	{
+		name: "br",
+		description: "Inviter à rejoindre la Battle Royale",
+		regex: /(^| )\/br(?::(\d+))?(?=$|\s)/gi,
+		replacement: (_: string, space: string, level: string) => space + '<span class="br-invite" data-level="' + (level || '') + '"></span>'
+	}, {
 		name: "doc",
 		description: "Lien vers la documentation",
 		regex: /(?:^|(\s))\/doc(?::([^\s#]+))?(?=\s|$)/gi,

@@ -116,5 +116,16 @@
 	"no_recruitment_message": "कोई भर्ती संदेश नहीं",
 	"configure_columns": "कॉलम कॉन्फ़िगर करें",
 	"default_sort": "डिफ़ॉल्ट क्रम",
-	"reset_columns": "रीसेट"
+	"reset_columns": "रीसेट",
+	"rename_team": "टीम का नाम बदलें",
+	"rename_team_description": "यह ऑपरेशन आपको अपनी टीम का नाम बदलने की अनुमति देता है (सप्ताह में अधिकतम एक बार)। आप Habs या क्रिस्टल से भुगतान कर सकते हैं।",
+	"rename_team_new_name": "नया नाम",
+	"rename_team_done": "टीम का नाम बदल दिया गया!",
+	"rename_team_pay_habs": "Habs से भुगतान करें",
+	"rename_team_pay_crystals": "क्रिस्टल से भुगतान करें",
+	"error_rename_not_enough_habs": "आपके पास पर्याप्त Habs नहीं हैं।",
+	"error_rename_not_enough_crystals": "आपके पास पर्याप्त क्रिस्टल नहीं हैं।",
+	"error_name_already_used": "यह टीम नाम पहले से उपयोग में है",
+	"error_invalid_name": "टीम का नाम {0} और {1} अक्षरों के बीच होना चाहिए",
+	"error_rename_delay": "आप सप्ताह में केवल एक बार टीम का नाम बदल सकते हैं।"
 }

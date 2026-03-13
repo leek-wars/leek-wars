@@ -62,6 +62,9 @@ class Team {
 	public leek_count!: number
 	public rankings!: {leeks: any[], farmers: any[], trophies: any[]}
 	public members_columns!: { columns: string[], order?: string[], sort: { key: string, order: string } } | null
+	public likes!: number
+	public liked!: boolean
+	public language!: string
 }
 
 class TeamMember extends Farmer {

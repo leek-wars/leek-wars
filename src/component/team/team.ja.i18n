@@ -116,5 +116,16 @@
 	"no_recruitment_message": "募集メッセージなし",
 	"configure_columns": "列を設定",
 	"default_sort": "デフォルトの並び順",
-	"reset_columns": "リセット"
+	"reset_columns": "リセット",
+	"rename_team": "チーム名を変更",
+	"rename_team_description": "この操作でチーム名を変更できます（週1回まで）。Habsまたはクリスタルで支払うことができます。",
+	"rename_team_new_name": "新しい名前",
+	"rename_team_done": "チーム名が変更されました！",
+	"rename_team_pay_habs": "Habsで支払う",
+	"rename_team_pay_crystals": "クリスタルで支払う",
+	"error_rename_not_enough_habs": "Habsが足りません。",
+	"error_rename_not_enough_crystals": "クリスタルが足りません。",
+	"error_name_already_used": "このチーム名は既に使用されています",
+	"error_invalid_name": "チーム名は{0}文字から{1}文字の間でなければなりません",
+	"error_rename_delay": "チーム名の変更は週に1回のみです。"
 }

@@ -116,5 +116,16 @@
 	"no_recruitment_message": "모집 메시지 없음",
 	"configure_columns": "열 구성",
 	"default_sort": "기본 정렬",
-	"reset_columns": "초기화"
+	"reset_columns": "초기화",
+	"rename_team": "팀 이름 변경",
+	"rename_team_description": "이 작업으로 팀 이름을 변경할 수 있습니다 (주 1회 최대). Habs 또는 크리스탈로 결제할 수 있습니다.",
+	"rename_team_new_name": "새 이름",
+	"rename_team_done": "팀 이름이 변경되었습니다!",
+	"rename_team_pay_habs": "Habs로 결제",
+	"rename_team_pay_crystals": "크리스탈로 결제",
+	"error_rename_not_enough_habs": "Habs가 부족합니다.",
+	"error_rename_not_enough_crystals": "크리스탈이 부족합니다.",
+	"error_name_already_used": "이 팀 이름은 이미 사용 중입니다",
+	"error_invalid_name": "팀 이름은 {0}자에서 {1}자 사이여야 합니다",
+	"error_rename_delay": "팀 이름은 일주일에 한 번만 변경할 수 있습니다."
 }

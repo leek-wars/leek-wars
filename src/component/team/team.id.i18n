@@ -116,5 +116,16 @@
 	"no_recruitment_message": "tidak ada pesan perekrutan",
 	"configure_columns": "Konfigurasi kolom",
 	"default_sort": "Urutan default",
-	"reset_columns": "Atur ulang"
+	"reset_columns": "Atur ulang",
+	"rename_team": "Ganti nama tim",
+	"rename_team_description": "Operasi ini memungkinkan Anda mengganti nama tim (maksimal sekali seminggu). Anda dapat membayar dengan Habs atau dengan kristal.",
+	"rename_team_new_name": "Nama baru",
+	"rename_team_done": "Tim diganti namanya!",
+	"rename_team_pay_habs": "Bayar dengan Habs",
+	"rename_team_pay_crystals": "Bayar dengan kristal",
+	"error_rename_not_enough_habs": "Anda tidak memiliki cukup Habs.",
+	"error_rename_not_enough_crystals": "Anda tidak memiliki cukup kristal.",
+	"error_name_already_used": "Nama tim ini sudah digunakan",
+	"error_invalid_name": "Nama tim harus antara {0} dan {1} karakter",
+	"error_rename_delay": "Anda hanya dapat mengganti nama tim sekali seminggu."
 }

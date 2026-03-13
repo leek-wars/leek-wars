@@ -116,5 +116,16 @@
 	"no_recruitment_message": "geen rekruteringsbericht",
 	"configure_columns": "Kolommen configureren",
 	"default_sort": "Standaard sortering",
-	"reset_columns": "Herstellen"
+	"reset_columns": "Herstellen",
+	"rename_team": "Team hernoemen",
+	"rename_team_description": "Met deze actie kun je je team hernoemen (maximaal één keer per week). Je kunt betalen met Habs of met kristallen.",
+	"rename_team_new_name": "Nieuwe naam",
+	"rename_team_done": "Team hernoemd!",
+	"rename_team_pay_habs": "Betaal met Habs",
+	"rename_team_pay_crystals": "Betaal met kristallen",
+	"error_rename_not_enough_habs": "Je hebt niet genoeg Habs.",
+	"error_rename_not_enough_crystals": "Je hebt niet genoeg kristallen.",
+	"error_name_already_used": "Deze teamnaam is al in gebruik",
+	"error_invalid_name": "De teamnaam moet tussen {0} en {1} tekens bevatten",
+	"error_rename_delay": "Je kunt het team slechts één keer per week hernoemen."
 }

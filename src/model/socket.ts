@@ -233,7 +233,7 @@ class Socket {
 					break
 				}
 				case SocketMessage.BATTLE_ROYALE_CHAT_NOTIF: {
-					store.commit('br', data)
+					store.commit('br-counts', data)
 					break
 				}
 				case SocketMessage.BATTLE_ROYALE_UPDATE: {

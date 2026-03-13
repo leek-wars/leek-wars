@@ -43,6 +43,7 @@ type Events = {
 	'console-error': any,
 	'console-log': any,
 	'editor-menu': any,
+	'br-started': number,
 }
 
 const emitter = mitt<Events>()

@@ -644,7 +644,7 @@ import { emitter } from '@/model/vue'
 		titleDialog: boolean = false
 		renameDialog: boolean = false
 		renameName: string = ''
-		rename_price_habs: number = 2000000
+		rename_price_habs: number = 10000000
 		rename_price_crystals: number = 200
 		tournamentRangeLoading: boolean = false
 		tournamentRange: any = null

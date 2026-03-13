@@ -116,5 +116,16 @@
 	"no_recruitment_message": "没有招募消息",
 	"configure_columns": "配置列",
 	"default_sort": "默认排序",
-	"reset_columns": "重置"
+	"reset_columns": "重置",
+	"rename_team": "重命名团队",
+	"rename_team_description": "此操作允许您重命名团队（每周最多一次）。您可以使用Habs或水晶支付。",
+	"rename_team_new_name": "新名称",
+	"rename_team_done": "团队已重命名！",
+	"rename_team_pay_habs": "使用Habs支付",
+	"rename_team_pay_crystals": "使用水晶支付",
+	"error_rename_not_enough_habs": "您没有足够的Habs。",
+	"error_rename_not_enough_crystals": "您没有足够的水晶。",
+	"error_name_already_used": "此团队名称已被使用",
+	"error_invalid_name": "团队名称必须在{0}到{1}个字符之间",
+	"error_rename_delay": "您每周只能重命名一次团队。"
 }
