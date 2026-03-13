@@ -77,7 +77,8 @@
 	"no_ai": "Pilih AI",
 	"no_compositions": "Tidak ada komp",
 	"no_description": "tidak ada deskripsi",
-	"not_found_id": "ID tim <b>{0}</b> tidak ditemukan :(",
+	"not_found": "Tim tidak ditemukan",
+	"not_found_id": "ID tim {id} tidak ditemukan :(",
 	"opened": "Dibuka",
 	"owner": "Pemilik",
 	"owner_has_been_changed": "Pemilik telah diubah.",
@@ -109,5 +110,11 @@
 	"xp": "XP: {0}",
 	"you_left_team": "Anda meninggalkan tim",
 	"load_all": "Muat semua",
-	"rankings": "Peringkat"
+	"rankings": "Peringkat",
+	"all_teams": "Semua tim",
+	"recruitment_message": "Pesan perekrutan",
+	"no_recruitment_message": "tidak ada pesan perekrutan",
+	"configure_columns": "Konfigurasi kolom",
+	"default_sort": "Urutan default",
+	"reset_columns": "Atur ulang"
 }

@@ -6,7 +6,7 @@
 		<panel class="first center">
 			<img src="/image/notgood.png">
 			<br><br>
-			{{ _message }}
+			<slot name="message">{{ _message }}</slot>
 			<br><br>
 			<slot name="button">
 				<router-link to="/">

@@ -39,6 +39,11 @@ enum NotificationType {
 	FORUM_TOPIC = 36, // Création d'un nouveau topic
 	GIVE_MONEY = 37, // Don d'argent
 	GIVE_FIGHTS = 38, // Don de combats
+	FORUM_VOTE_UP = 39, // Vote positif sur un message/topic forum
+	FORUM_VOTE_DOWN = 40, // Vote négatif sur un message/topic forum
+	TEAM_INVITATION = 41, // Invitation à rejoindre une équipe
+	TEAM_INVITATION_ACCEPTED = 42, // Invitation acceptée par le joueur
+	BATTLE_ROYALE_REPORT = 43, // Rapport de Battle Royale (avec nom du poireau)
 }
 
 class Notification {
@@ -70,7 +75,7 @@ class Notification {
 				this.icon = true
 			}
 		}
-		this.title = title.map(LeekWars.protect)
+		this.title = title.map(t => '<b>' + LeekWars.protect(t) + '</b>')
 		this.message = message.map(LeekWars.protect)
 		this.result = result
 		this.read = data.read

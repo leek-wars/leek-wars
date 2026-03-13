@@ -27,7 +27,7 @@
 	"results": "Wyniki",
 	"richest_title": "Zarobione pieniądze",
 	"search_in_ranking": "Szukaj w rankingu",
-	"search_name": "Nazwa",
+	"search_name": "Nazwa lub ID",
 	"shots": "Strzały",
 	"shots_title": "Całkowita liczba strzałów",
 	"summons": "Modły",
@@ -51,5 +51,7 @@
 	"boss_killed_title": "Pokonani bossowie",
 	"boss_killed": "Bossowie",
 	"turrets_killed": "Wieżyczki",
-	"turrets_killed_title": "Wieżyczki zniszczone"
+	"turrets_killed_title": "Wieżyczki zniszczone",
+	"damage": "Obrażenia",
+	"damage_title": "Zadane obrażenia"
 }

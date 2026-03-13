@@ -17,5 +17,16 @@
 	"topic": "Emne",
 	"mark_as_read": "Marker som læst",
 	"mark_as_read_text": "Alle emner i alle forumkategorier vil blive markeret som læst. Efter denne handling vil kun nye emner eller nye svar blive vist.",
-	"show_resolved": "Vis løste emner"
+	"show_resolved": "Vis løste emner",
+	"priority": "Prioritet",
+	"priority_high": "Høj prioritet",
+	"priority_medium": "Mellem prioritet",
+	"priority_low": "Lav prioritet",
+	"hidden_topic": "Skjult emne",
+	"status_acknowledged": "Taget til efterretning",
+	"status_not_a_bug": "Ikke en bug",
+	"status_not_planned": "Ikke planlagt",
+	"status_obsolete": "Forældet",
+	"status_not_reproduced": "Ikke reproduceret",
+	"status_resolved": "Løst"
 }

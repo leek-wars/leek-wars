@@ -11,6 +11,7 @@
 	"cancel": "取消",
 	"cancel_candidacy": "取消请求",
 	"candidacy_canceled": "申请取消",
+	"candidacies": "待处理的申请",
 	"candidacy_for_team": "请求团队{team}",
 	"challenge": "挑战",
 	"click_to_change_avatar": "点击更改",

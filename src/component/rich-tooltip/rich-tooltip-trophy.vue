@@ -15,7 +15,7 @@
 	import Trophy from '@/component/trophies/trophy.vue'
 	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Options({ components: { Trophy } })
+	@Options({ components: { Trophy }, emits: ['update:modelValue'] })
 	export default class RichTooltipTrophy extends Vue {
 		@Prop({required: true}) trophy!: any
 		@Prop() bottom!: boolean
@@ -25,10 +25,10 @@
 		value: boolean = false
 
 		get _open_delay() {
-			return this.instant ? 0 : 500
+			return this.instant ? 1 : 500
 		}
 		get _close_delay() {
-			return this.instant ? 0 : 0
+			return this.instant ? 1 : 1
 		}
 
 		setParent(event: boolean) {

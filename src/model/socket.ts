@@ -1,6 +1,5 @@
-import { LeekWars } from '@/model/leekwars'
+import { LeekWars, getRouter } from '@/model/leekwars'
 import { emitter } from '@/model/emitter'
-import router from '@/router'
 import { ChatMessage } from './chat'
 import { NotificationType } from './notification'
 import { store } from './store'
@@ -185,14 +184,14 @@ class Socket {
 					const spoilableTypes: number[] = [NotificationType.BATTLE_ROYALE_STARTED, NotificationType.FIGHT_REPORT, NotificationType.FARMER_FIGHT_REPORT, NotificationType.COMPOSITION_FIGHT_REPORT, NotificationType.CHALLENGE, NotificationType.FARMER_CHALLENGE, NotificationType.TOURNAMENT_WINNER, NotificationType.FARMER_TOURNAMENT_WIN, NotificationType.TEAM_TOURNAMENT_WIN]
 
 					// Envoie de la notif sur la page du combat pour la mettre en file d'attente
-					if (message.type === NotificationType.TROPHY_UNLOCKED && router.currentRoute.value.path.startsWith('/fight/' + message.parameters[1])) {
+					if (message.type === NotificationType.TROPHY_UNLOCKED && getRouter().currentRoute.value.path.startsWith('/fight/' + message.parameters[1])) {
 						emitter.emit('trophy', message)
 					} else if (
 						spoilableTypes.indexOf(message.type) !== -1
 						&& (
-							((message.type === NotificationType.BATTLE_ROYALE_STARTED || message.type === NotificationType.FARMER_CHALLENGE) && router.currentRoute.value.path.startsWith('/fight/' + message.parameters[0]))
-							|| ((message.type === NotificationType.FIGHT_REPORT || message.type === NotificationType.FARMER_FIGHT_REPORT || message.type === NotificationType.COMPOSITION_FIGHT_REPORT || message.type === NotificationType.CHALLENGE) && router.currentRoute.value.path.startsWith('/fight/' + message.parameters[1]))
-							|| ((message.type === NotificationType.TOURNAMENT_WINNER || message.type === NotificationType.FARMER_TOURNAMENT_WIN || message.type === NotificationType.TEAM_TOURNAMENT_WIN) && router.currentRoute.value.path.startsWith('/fight/' + message.parameters[2]))
+							((message.type === NotificationType.BATTLE_ROYALE_STARTED || message.type === NotificationType.FARMER_CHALLENGE) && getRouter().currentRoute.value.path.startsWith('/fight/' + message.parameters[0]))
+							|| ((message.type === NotificationType.FIGHT_REPORT || message.type === NotificationType.FARMER_FIGHT_REPORT || message.type === NotificationType.COMPOSITION_FIGHT_REPORT || message.type === NotificationType.CHALLENGE) && getRouter().currentRoute.value.path.startsWith('/fight/' + message.parameters[1]))
+							|| ((message.type === NotificationType.TOURNAMENT_WINNER || message.type === NotificationType.FARMER_TOURNAMENT_WIN || message.type === NotificationType.TEAM_TOURNAMENT_WIN) && getRouter().currentRoute.value.path.startsWith('/fight/' + message.parameters[2]))
 						)
 					) {
 						emitter.emit('fight_notification', message)

@@ -1,7 +1,7 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><router-link to="/admin">Administration</router-link> > Services</h1>
+			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Services', link: '/admin/services'}]" :raw="true" /></h1>
 			<div class="tabs">
 				<div class="tab disabled">{{ services ? services.length : '...' }} services</div>
 			</div>
@@ -28,8 +28,9 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Options, Vue } from 'vue-property-decorator'
+	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
-	@Options({})
+	@Options({ components: { Breadcrumb } })
 	export default class AdminServices extends Vue {
 		services: any = null
 		created() {

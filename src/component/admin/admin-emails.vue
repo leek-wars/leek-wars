@@ -1,11 +1,25 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><router-link to="/admin">Administration</router-link> > Mails</h1>
+			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Mails', link: '/admin/emails'}]" :raw="true" /></h1>
 		</div>
 		<panel class="first">
 			<loader v-if="!farmers" />
 			<div v-else>
+				<h4>Supprimer un compte par email</h4>
+				<div class="delete-account">
+					<input type="email" placeholder="Email du compte à supprimer" v-model="deleteEmail">
+					<v-btn @click="searchAccount" :disabled="!deleteEmail">Rechercher</v-btn>
+				</div>
+				<div v-if="deleteTarget" class="delete-confirm">
+					<p>Compte trouvé : <b>{{ deleteTarget.name }}</b> (id: {{ deleteTarget.id }})</p>
+					<p>Pour confirmer la suppression, tapez le nom du joueur :</p>
+					<input type="text" v-model="deleteConfirm" :placeholder="deleteTarget.name">
+					<v-btn color="red" @click="deleteAccount" :disabled="deleteConfirm !== deleteTarget.name">Supprimer définitivement</v-btn>
+				</div>
+				<div v-if="deleteSuccess" class="delete-success">{{ deleteSuccess }}</div>
+				<div v-if="deleteError" class="delete-error">{{ deleteError }}</div>
+				<br>
 				<h4>Désinscrire totalement une email</h4>
 				<input type="email" placeholder="Désinscrire totalement une email" v-model="email"> <v-btn @click="unsubscribe">Désinscrire</v-btn>
 				<br><br>
@@ -36,11 +50,17 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Options, Vue } from 'vue-property-decorator'
+	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
-	@Options({})
+	@Options({ components: { Breadcrumb } })
 	export default class AdminEmails extends Vue {
 		farmers: any = null
 		email: string = ''
+		deleteEmail: string = ''
+		deleteTarget: any = null
+		deleteConfirm: string = ''
+		deleteError: string = ''
+		deleteSuccess: string = ''
 
 		created() {
 			if (!this.$store.getters.admin) this.$router.replace('/')
@@ -53,6 +73,36 @@
 				LeekWars.post('farmer/resend-activation-mail', {farmer_id: farmer.id})
 				farmer.disabled = true
 			}
+		}
+
+		searchAccount() {
+			this.deleteTarget = null
+			this.deleteConfirm = ''
+			this.deleteError = ''
+			this.deleteSuccess = ''
+			LeekWars.get('admin/search-by-email/' + encodeURIComponent(this.deleteEmail))
+				.then(data => {
+					this.deleteTarget = data.farmer
+				})
+				.error((error) => {
+					this.deleteError = 'Compte non trouvé'
+				})
+		}
+
+		deleteAccount() {
+			if (!this.deleteTarget || this.deleteConfirm !== this.deleteTarget.name) return
+			const name = this.deleteTarget.name
+			LeekWars.delete('admin/delete-by-email', { email: this.deleteEmail })
+				.then(() => {
+					this.deleteSuccess = 'Le compte « ' + name + ' » a été supprimé avec succès.'
+					this.deleteTarget = null
+					this.deleteConfirm = ''
+					this.deleteEmail = ''
+					this.deleteError = ''
+				})
+				.error((error) => {
+					this.deleteError = 'Erreur : ' + error.error
+				})
 		}
 
 		unsubscribe() {
@@ -96,5 +146,30 @@
 	input {
 		width: 400px;
 		height: 36px;
+	}
+	.delete-account {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin-bottom: 10px;
+	}
+	.delete-confirm {
+		margin: 10px 0;
+		padding: 10px;
+		background: #fff3cd;
+		border: 1px solid #ffc107;
+		border-radius: 4px;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		p { margin: 0; }
+	}
+	.delete-success {
+		margin-top: 10px;
+		color: green;
+	}
+	.delete-error {
+		margin-top: 10px;
+		color: red;
 	}
 </style>

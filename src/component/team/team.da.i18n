@@ -77,7 +77,8 @@
 	"no_ai": "Vælg en AI",
 	"no_compositions": "Ingen komp",
 	"no_description": "ingen beskrivelse",
-	"not_found_id": "Team-id <b>{0}</b> ikke fundet :(",
+	"not_found": "Hold ikke fundet",
+	"not_found_id": "Team-id {id} ikke fundet :(",
 	"opened": "Åbnet",
 	"owner": "Ejer",
 	"owner_has_been_changed": "Ejer er blevet skiftet.",
@@ -109,5 +110,11 @@
 	"xp": "XP: {0}",
 	"you_left_team": "Du forlod holdet",
 	"load_all": "Indlæs alle",
-	"rankings": "Placeringer"
+	"rankings": "Placeringer",
+	"all_teams": "Alle hold",
+	"recruitment_message": "Rekrutteringsbesked",
+	"no_recruitment_message": "ingen rekrutteringsbesked",
+	"configure_columns": "Konfigurer kolonner",
+	"default_sort": "Standard sortering",
+	"reset_columns": "Nulstil"
 }

@@ -96,7 +96,7 @@ monaco.editor.addKeybindingRules([
 
 monaco.editor.registerCommand('jump', (accessor, args) => {
 	// console.log("Command jump", args)
-	emitter.emit('jump', fileSystem.aiByFullPath[args.ai], args.line, args.column)
+	emitter.emit('jump', { ai: fileSystem.aiByFullPath[args.ai], line: args.line, column: args.column })
 })
 
 // monaco.languages.registerDocumentSymbolProvider("leekscript", {
@@ -184,6 +184,7 @@ monaco.languages.registerHoverProvider("leekscript", {
 		// console.log("hover", model.uri.path)
 
 		const ai = fileSystem.aiByFullPath[model.uri.path.substring(1)]
+		if (!ai) { return null }
 
 		const hover = await analyzer.hover(ai, position.lineNumber, position.column - 1)
 		// console.log(hover)

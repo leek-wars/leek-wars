@@ -25,7 +25,7 @@
 							</router-link>
 							<lw-title v-if="leek.title.length" :title="leek.title" />
 						</span>
-						<talent :id="leek.id" :talent="leek.talent" category="leek" />
+						<talent :id="leek.id" :talent="leek.talent" :max_talent="leek.max_talent" category="leek" />
 						<span class="talent-more">({{ leek.talent_more >= 0 ? '+' + leek.talent_more : leek.talent_more }})</span>
 						<ranking-badge v-if="leek && leek.ranking && leek.ranking <= 1000 && leek.in_garden" :id="leek.id" :ranking="leek.ranking" category="leek" />
 						<span class="level">• {{ $t('main.level_n', [leek.level]) }}</span>
@@ -85,7 +85,7 @@ const LWTitle = defineAsyncComponent(() => import('@/component/title/title.vue')
 import { CHIPS } from '@/model/chips'
 import { defineAsyncComponent } from 'vue'
 
-@Options({ components: { RichTooltipItem, 'lw-title': LWTitle, 'leek-image': LeekImage } })
+@Options({ components: { RichTooltipItem, 'lw-title': LWTitle, 'leek-image': LeekImage }, emits: ['update:modelValue'] })
 export default class RichTooltipLeek extends Vue {
 
 	@Prop({required: true}) id!: number
@@ -103,10 +103,10 @@ export default class RichTooltipLeek extends Vue {
 	value: boolean = false
 
 	get _open_delay() {
-		return this.instant ? 0 : 500
+		return this.instant ? 1 : 500
 	}
 	get _close_delay() {
-		return this.instant ? 0 : 1
+		return this.instant ? 1 : 1
 	}
 	@Watch('id')
 	update() {

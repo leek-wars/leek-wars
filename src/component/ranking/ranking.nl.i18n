@@ -27,7 +27,7 @@
 	"results": "Resultaten",
 	"richest_title": "Verdiend geld",
 	"search_in_ranking": "Rang zoeken",
-	"search_name": "Naam",
+	"search_name": "Naam of ID",
 	"shots": "Schoten",
 	"shots_title": "Totaal aantal schoten",
 	"summons": "Aanroepingen",
@@ -51,5 +51,7 @@
 	"boss_killed_title": "Bazen verslagen",
 	"boss_killed": "Bazen",
 	"turrets_killed": "Geschutstorens",
-	"turrets_killed_title": "Geschutstorens vernietigd"
+	"turrets_killed_title": "Geschutstorens vernietigd",
+	"damage": "Schade",
+	"damage_title": "Toegebrachte schade"
 }

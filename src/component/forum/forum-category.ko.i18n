@@ -17,5 +17,16 @@
 	"topic": "주제",
 	"mark_as_read": "읽은 상태로 표시",
 	"mark_as_read_text": "모든 포럼 카테고리의 모든 주제는 읽은 것으로 표시됩니다. 이 작업 후에는 새 주제 또는 새 답글만 표시됩니다.",
-	"show_resolved": "해결된 주제 표시"
+	"show_resolved": "해결된 주제 표시",
+	"priority": "우선순위",
+	"priority_high": "높은 우선순위",
+	"priority_medium": "보통 우선순위",
+	"priority_low": "낮은 우선순위",
+	"hidden_topic": "숨겨진 주제",
+	"status_acknowledged": "확인됨",
+	"status_not_a_bug": "버그 아님",
+	"status_not_planned": "계획 없음",
+	"status_obsolete": "폐기됨",
+	"status_not_reproduced": "재현 불가",
+	"status_resolved": "해결됨"
 }

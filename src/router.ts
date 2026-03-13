@@ -13,6 +13,7 @@ const AdminTrophies = () => import(/* webpackChunkName: "admin" */ `@/component/
 const AdminGroups = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-groups.vue`)
 const AdminSources = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-sources.vue`)
 const AdminSchemes = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-schemes.vue`)
+const AdminTournaments = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-tournaments.vue`)
 const Admin = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin.vue`)
 const Api = () => import(/* webpackChunkName: "[request]" */ `@/component/api/api.${locale}.i18n`)
 import Error from '@/component/app/error.vue'
@@ -55,6 +56,7 @@ const Messages = () => import(/* webpackChunkName: "[request]" */ `@/component/m
 const MobileApp = () => import(/* webpackChunkName: "[request]" */ `@/component/mobile-app/mobile-app.${locale}.i18n`)
 const Moderation = () => import(/* webpackChunkName: "[request]" */ `@/component/moderation/moderation.${locale}.i18n`)
 const ModerationThugs = () => import(/* webpackChunkName: "[request]" */ `@/component/moderation/moderation-thugs.${locale}.i18n`)
+const ModerationHistory = () => import('@/component/moderation/moderation-history.vue')
 const ModerationMuted = () => import('@/component/moderation/moderation-muted.vue')
 const NewLeek = () => import(/* webpackChunkName: "[request]" */ `@/component/new-leek/new-leek.${locale}.i18n`)
 const Notifications = () => import(/* webpackChunkName: "[request]" */ `@/component/notifications/notifications.${locale}.i18n`)
@@ -67,6 +69,7 @@ const Statistics = () => import(/* webpackChunkName: "[request]" */ `@/component
 const SignupResult = () => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup-result.${locale}.i18n`)
 const TalentPage = () => import(/* webpackChunkName: "[request]" */ `@/component/talent/talent.${locale}.i18n`)
 const Team = () => import(/* webpackChunkName: "[request]" */ `@/component/team/team.${locale}.i18n`)
+const Teams = () => import(/* webpackChunkName: "[request]" */ `@/component/teams/teams.${locale}.i18n`)
 const Tournament = () => import(/* webpackChunkName: "[request]" */ `@/component/tournament/tournament.${locale}.i18n`)
 const Trophies = () => import(/* webpackChunkName: "[request]" */ `@/component/trophies/trophies.${locale}.i18n`)
 const TrophyPage = () => import(/* webpackChunkName: "[request]" */ `@/component/trophy/trophy.${locale}.i18n`)
@@ -137,11 +140,13 @@ const routes = [
 	{ path: '/admin/sources', component: AdminSources, beforeEnter: connected },
 	{ path: '/admin/schemes', component: AdminSchemes, beforeEnter: connected },
 	{ path: '/admin/components', component: AdminComponents, beforeEnter: connected },
+	{ path: '/admin/tournaments', component: AdminTournaments, beforeEnter: connected },
 	{ path: '/about', component: About },
 	{ path: '/app', component: MobileApp },
 	{ path: '/conditions', component: Conditions },
 	{ path: '/console', component: ConsolePage },
 	{ path: '/changelog', component: Changelog },
+	{ path: '/release/:version', component: Changelog },
 	{ path: '/change-email/:state/:token', component: ChangeEmail },
 	{ path: '/contact', component: Contact },
 	{ path: '/dev-blog', component: DevBlog },
@@ -195,6 +200,7 @@ const routes = [
 	{ path: '/moderation', component: Moderation, meta: {noscroll: true}, beforeEnter: connected },
 	{ path: '/moderation/fault/:id', component: Moderation, meta: {noscroll: true}, beforeEnter: connected },
 	{ path: '/moderation/thugs', component: ModerationThugs, meta: {noscroll: true}, beforeEnter: connected },
+	{ path: '/moderation/history', component: ModerationHistory, meta: {noscroll: true}, beforeEnter: connected },
 	{ path: '/moderation/muted', component: ModerationMuted, meta: {noscroll: true}, beforeEnter: connected },
 	{ path: '/new-leek', component: NewLeek, beforeEnter: connected },
 	{ path: '/notifications', component: Notifications, beforeEnter: connected },
@@ -211,6 +217,7 @@ const routes = [
 	{ path: '/signup/failed', component: SignupResult, props: { result: 'failed' } },
 	{ path: '/statistics', component: Statistics },
 	{ path: '/talent', component: TalentPage },
+	{ path: '/teams', component: Teams },
 	{ path: '/team', component: Team, beforeEnter: connected },
 	{ path: '/team/:id', component: Team },
 	{ path: '/team/:id/history', component: History, props: {type: 'team'} },

@@ -77,7 +77,8 @@
 	"no_ai": "Velg en AI",
 	"no_compositions": "Ingen komp",
 	"no_description": "ingen beskrivelse",
-	"not_found_id": "Team-ID <b>{0}</b> ikke funnet :(",
+	"not_found": "Lag ikke funnet",
+	"not_found_id": "Team-ID {id} ikke funnet :(",
 	"opened": "Åpnet",
 	"owner": "Eieren",
 	"owner_has_been_changed": "Eieren er endret.",
@@ -109,5 +110,11 @@
 	"xp": "XP: {0}",
 	"you_left_team": "Du forlot laget",
 	"load_all": "Last inn alle",
-	"rankings": "Rangeringer"
+	"rankings": "Rangeringer",
+	"all_teams": "Alle lag",
+	"recruitment_message": "Rekrutteringsmelding",
+	"no_recruitment_message": "ingen rekrutteringsmelding",
+	"configure_columns": "Konfigurer kolonner",
+	"default_sort": "Standard sortering",
+	"reset_columns": "Tilbakestill"
 }

@@ -1,6 +1,6 @@
 <template lang="html">
 	<div draggable="true" class="ai" :class="{[ai.color]: true, small, locked}">
-		<div class="name">
+		<div class="name" :style="{ fontSize: nameSize + 'px' }">
 			{{ ai.bot ? $t('leekscript.' + ai.name) : ai.name }}
 			<v-icon v-if="!ai.valid">mdi-close-circle</v-icon>
 		</div>
@@ -24,6 +24,17 @@
 			return this.$store.state.farmer && this.$store.state.farmer.ais.some((ai: AI) => ai.id === this.ai.id)
 		}
 
+		get displayName() {
+			return this.ai.bot ? this.$t('leekscript.' + this.ai.name) as string : this.ai.name
+		}
+
+		get nameSize() {
+			const base = this.small ? 12 : 16
+			const length = this.displayName.length
+			if (length <= 16) return base
+			return Math.max(base * 0.75, base * 16 / length)
+		}
+
 		get show_lines() {
 			if (this.small) { return false }
 			if (this.library) { return true }
@@ -45,6 +56,7 @@
 		align-items: center;
 		justify-content: center;
 		padding: 12px;
+    	padding-top: 20px;
 		width: 103px;
 		height: 120px;
 		position: relative;

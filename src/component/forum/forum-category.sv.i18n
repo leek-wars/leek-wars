@@ -17,5 +17,16 @@
 	"topic": "Ämne",
 	"mark_as_read": "Markera som läst",
 	"mark_as_read_text": "Alla ämnen i alla forumkategorier kommer att markeras som lästa. Efter denna åtgärd kommer endast nya ämnen eller nya svar att visas.",
-	"show_resolved": "Visa lösta ämnen"
+	"show_resolved": "Visa lösta ämnen",
+	"priority": "Prioritet",
+	"priority_high": "Hög prioritet",
+	"priority_medium": "Medel prioritet",
+	"priority_low": "Låg prioritet",
+	"hidden_topic": "Dolt ämne",
+	"status_acknowledged": "Uppmärksammat",
+	"status_not_a_bug": "Inte en bugg",
+	"status_not_planned": "Ej planerad",
+	"status_obsolete": "Föråldrad",
+	"status_not_reproduced": "Ej reproducerad",
+	"status_resolved": "Löst"
 }

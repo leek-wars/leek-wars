@@ -181,5 +181,7 @@
 	"intial_version": "Versão inicial",
 	"strict_mode": "Modo estrito (avançado)",
 	"all_info_ls": "Toda a informação sobre {0}",
-	"size": "Tamanho"
+	"size": "Tamanho",
+	"error_146": "\"case\" ou \"default\" esperado.",
+	"error_147": "Dois pontos esperados após \"case\"."
 }

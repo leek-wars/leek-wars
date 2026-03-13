@@ -27,7 +27,7 @@
 	"results": "Hasil",
 	"richest_title": "Uang diperoleh",
 	"search_in_ranking": "Cari di peringkat",
-	"search_name": "Nama",
+	"search_name": "Nama atau ID",
 	"shots": "Tembakan",
 	"shots_title": "Jumlah tembakan",
 	"summons": "Doa",
@@ -51,5 +51,7 @@
 	"boss_killed_title": "Bos dikalahkan",
 	"boss_killed": "Bos",
 	"turrets_killed": "Menara",
-	"turrets_killed_title": "Menara dihancurkan"
+	"turrets_killed_title": "Menara dihancurkan",
+	"damage": "Kerusakan",
+	"damage_title": "Kerusakan yang diberikan"
 }

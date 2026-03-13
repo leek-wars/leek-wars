@@ -77,7 +77,8 @@
 	"no_ai": "Escolha uma IA",
 	"no_compositions": "Sem cortesias",
 	"no_description": "sem descrição",
-	"not_found_id": "ID da equipe <b>{0}</b> não encontrado :(",
+	"not_found": "Equipe não encontrada",
+	"not_found_id": "ID da equipe {id} não encontrado :(",
 	"opened": "Aberto",
 	"owner": "Proprietário",
 	"owner_has_been_changed": "O proprietário foi alterado.",
@@ -109,5 +110,11 @@
 	"xp": "EXP: {0}",
 	"you_left_team": "Você deixou o time",
 	"load_all": "Carregar tudo",
-	"rankings": "Classificações"
+	"rankings": "Classificações",
+	"all_teams": "Todas as equipas",
+	"recruitment_message": "Mensagem de recrutamento",
+	"no_recruitment_message": "sem mensagem de recrutamento",
+	"configure_columns": "Configurar colunas",
+	"default_sort": "Ordenação padrão",
+	"reset_columns": "Redefinir"
 }

@@ -77,7 +77,8 @@
 	"no_ai": "AIを選ぶ",
 	"no_compositions": "コンプなし",
 	"no_description": "説明なし",
-	"not_found_id": "チーム ID <b>{0}</b> が見つかりません:(",
+	"not_found": "チームが見つかりません",
+	"not_found_id": "チーム ID {id} が見つかりません:(",
 	"opened": "開いた",
 	"owner": "オーナー",
 	"owner_has_been_changed": "所有者が変更されました。",
@@ -109,5 +110,11 @@
 	"xp": "XP: {0}",
 	"you_left_team": "あなたはチームを去りました",
 	"load_all": "すべてロード",
-	"rankings": "ランキング"
+	"rankings": "ランキング",
+	"all_teams": "すべてのチーム",
+	"recruitment_message": "募集メッセージ",
+	"no_recruitment_message": "募集メッセージなし",
+	"configure_columns": "列を設定",
+	"default_sort": "デフォルトの並び順",
+	"reset_columns": "リセット"
 }

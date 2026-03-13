@@ -181,5 +181,7 @@
 	"intial_version": "初始版本",
 	"strict_mode": "严格模式（高级）",
 	"all_info_ls": "关于 {0} 的所有信息",
-	"size": "尺寸"
+	"size": "尺寸",
+	"error_146": "期望 \"case\" 或 \"default\"。",
+	"error_147": "\"case\" 后面期望冒号。"
 }

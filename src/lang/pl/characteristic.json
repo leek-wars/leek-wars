@@ -30,7 +30,7 @@
 	"wisdom": "Mądrość",
 	"wisdom_desc": "Mądrość zwiększa leczenie i kradzież życia",
 	"too_high": "Ta funkcja jest przydatna od poziomu {0}.",
-	"cores": "Serca",
+	"cores": "Rdzenie",
 	"cores_desc": "Rdzenie zwiększają maksymalną liczbę wykonywalnych operacji na obrót. 1 rdzeń zwiększa maksymalną liczbę operacji o 1 milion.",
 	"ram": "Pamięć o dostępie swobodnym",
 	"ram_desc": "Jedna jednostka pamięci RAM daje 1 lokalizację układu i milion zmiennych, które mogą być używane przez sztuczną inteligencję",

@@ -1,53 +1,109 @@
-244:
-  title: WIP
+245:
+  title: "Likes, fight animations, BigIntegers and forum improvements."
   added:
-    - Added talent history for farmers and teams.
-    - Added boss weapon constants WEAPON_ODACHI, WEAPON_EXCALIBUR and WEAPON_SCYTHE.
-    - Added chests opened fun ranking.
-    - Added BigIntegers in LeekScript (thanks to Batary).
-    - Added setBit and testBit functions to read or write a specific bit (thanks to Batary).
-    - Added bitLength function which complements leadingZeros for BigInteger (thanks to Batary).
+    - "Like button on farmer profiles. #img_245_likes"
+    - "Animated life changes in the fight player. #img_245_life_animation"
+    - "Button to clear mark() and markText() in the fight player (shortcut M)."
+    - "Added BigIntegers in LeekScript (thanks to Batary)."
+    - "Added setBit, testBit and bitLength functions for BigInteger (thanks to Batary)."
+    - "Display leek ranking badges on the farmer page. #img_245_ranking_badges"
+    - "Display farmer avatars in solo tournaments. #img_245_tournament_avatars"
+    - "Tooltips with stats when hovering over tournament participants. #img_245_tooltips_tournament"
+    - "Detailed member statistics table on the team page. #img_245_team_stats"
+    - "Added damage dealt fun ranking. #img_245_damage_ranking"
+    - "Views counter on forum topics. #img_245_forum_views"
+    - "Notifications for upvotes and downvotes on the forum."
+    - "Warning before replying to old forum topics (> 1 year). #img_245_old_topic"
+    - "Sort forum topics by number of messages."
+    - "Priority system for forum topics."
+    - "Tournament winner announcements in chat."
+    - "Expand button on the market page. #img_245_market_expand"
+    - "URL /release/:version to view a specific changelog."
+    - "Moderation judgment history page."
+    - "Optional entity parameter for getNextPlayer and getPreviousPlayer."
   improved:
-    - "Player: sounds stop immediately when muting, volume changes affect all playing sounds, sound effects speed up with playback speed, and pause/resume also works on sound effects."
-    - "Tournaments: All registered players now participate, evenly distributed across multiple tournaments of 16 to 32 players instead of excluding extra players."
-    - "Editor: improved Ctrl+click to go to symbol definition (more reliable navigation and correct scrolling)."
-    - "LeekScript: semicolon after while() in do-while loops is now optional."
-    - "Market: keyboard navigation with up/down/left/right arrow keys between items."
-    - "LeekScript: check private/protected method access at compile time for typed variables."
-    - "Editor: save and restore code folding state across AI switches and page reloads."
-    - "Report: improved life chart (entity name tooltip, click to focus curve, improved axes)."
-    - "Report: improved damage chart (translations, tooltips, bar totals)."
-    - "Report: dark mode support for charts."
-    - Migrated to Vue 3.
+    - "Encyclopedia: arrayFoldLeft/Right behavior with an empty array (thanks to Loutreavin)."
+    - "Forum: improved mobile layout for categories."
+    - "Tournament announcements 30 minutes before instead of one hour."
   fixed:
-    - "Editor: fixed syntax highlighting for \\ and \\= operators (integer division)."
-    - "LeekScript: fixed a crash when compiling classes in certain include scenarios, and improved case handling for class and include keywords."
+    - "Editor: replacing text selected right-to-left on Firefox."
+    - "Cores characteristic translated as hearts instead of cores."
+    - "Cancel button not closing the create team dialog."
+    - "Forum breadcrumb wrapping on mobile."
+    - "Mobile action buttons broken by Vue 3 migration."
+    - "Tutorial display fixes."
+
+244:
+  title: "Vue 3 migration, new rankings, practical additions and fixes."
+  added:
+    - "Added talent history for farmers and teams. #img_244_talent_history"
+    - "Added team composition ranking. #img_244_composition_ranking"
+    - "Added light/dark theme toggle in footer. #img_244_theme_toggle"
+    - "Forum: added topic status management (not reproduced, not planned, not a bug). #img_244_topic_status"
+    - "Forum: added topic moving between categories. #img_244_topic_move"
+    - "Forum: display of resolution percentage for Suggestions and Bugs topics. #img_244_resolution"
+    - "Forum: added emoji selector in reply field. #img_244_emoji_selector"
+    - "Encyclopedia: added most viewed pages display. #img_244_most_viewed"
+    - "Encyclopedia: display available languages when a page doesn't exist in the current language."
+    - "Encyclopedia: alias management with redirection and display. #img_244_alias"
+    - Added boss weapon constants WEAPON_ODACHI, WEAPON_EXCALIBUR and WEAPON_SCYTHE.
+    - "Added boss kills fun ranking. #img_244_boss_ranking"
+    - "Added chests opened fun ranking. #img_244_chest_ranking"
+    - "Added destroyed turrets fun ranking. #img_244_turret_ranking"
+    - "Added crashes fun ranking. #img_244_crashes_ranking"
+    - "Mobile: added language selector in chat. #img_244_mobile_lang"
+  improved:
+    - "Migrated to Vue 3. #img_244_vue3"
+    - "Tournaments: all registered players now participate, split across multiple 16-32 player tournaments."
+    - Relaxed matchmaking with wider talent ranges and adjusted sorting coefficients.
+    - "Player: instant mute, real-time volume, sound effects speed up with playback, and pause/resume."
+    - Redirect to the requested page after login instead of the homepage.
+    - "Editor: improved Ctrl+click to go to symbol definition (navigation and scrolling fixed)."
+    - "Editor: save and restore code folding state across AI switches and page reloads."
+    - "Market: keyboard navigation with up/down/left/right arrow keys between items."
+    - "LeekScript: semicolon after while() in do-while loops is now optional."
+    - "LeekScript: check private/protected method access at compile time for typed variables."
+    - "Encyclopedia: search query preserved in URL for sharing and back navigation."
+    - "Composition ranking: replaced fights/victories with total level."
+    - "Chat: filter unavailable items in the /market command."
+    - Self-hosted Roboto font (removed Google Fonts dependency).
+    - "Reports: migrated charts to Chart.js with tooltips, click-to-focus and dark mode support."
+    - "Chat: limited messages in memory with reload on scroll."
+    - "Encyclopedia: automatic lock release when closing the tab."
+    - Improved WebSocket reconnection (exponential backoff, dead connection detection).
+    - Brotli compression for faster page loads.
+    - "Display AI line number in the error when the AI is too large. #img_244_error_large"
+    - "Documentation: Ctrl+Alt+H no longer changes the page title (thanks to Casanova)."
+  fixed:
     - Fixed a bug preventing team fights when the turret AI was missing.
-    - Fixed unread notifications count not being returned at login.
-    - Fixed test bots that could have boss weapons and chips.
-    - Fixed untranslated "error_name_already_used" error message when creating a leek.
-    - "Editor: fixed tab closing when AI was deleted outside the editor."
     - "Boss: fixed fight count deduction when a boss fight starts without participating (#2344)."
     - Fixed fight progress jumping to 99% when a chest died.
-    - "Editor: fixed a bug where characters were inserted at the wrong position after navigating with browser back/forward buttons (Firefox)."
-    - "Farmer: fixed tooltip not appearing when hovering over the godfather."
-    - Fixed many Italian translations (thanks to Casanova).
-    - Fixed mentions disappearing when deleting grouped chat messages.
-    - Fixed unclickable potion/appearance icons on mobile in chat-first mode.
-    - Fixed invisible leeks in tournament table with discrete mode.
-    - Fixed trophy notifications not appearing without page refresh.
-    - Fixed leek name tooltip appearing below model in combat HUD.
-    - Fixed market item card jumping to top on Firefox when opening buy dialog.
-    - Fixed goToAI click in report logs not working.
-    - "Editor: fixed enlarge window setting not always being applied."
-    - Fixed missing space before caster text in chip descriptions.
-    - Fixed debug lines click in report.
-    - Fixed sidebar not highlighting current page on subpages.
-    - Fixed initial cooldown display.
-    - Fixed chat reactions with keycap number emojis (0️⃣-9️⃣).
+    - Fixed unread notifications count not being returned at login.
+    - Fixed test bots that could have boss weapons and chips.
     - "Market: fixed Punishment tooltip showing a percentage instead of actual damage."
+    - "Market: fixed level requirement using first leek's level instead of max level."
+    - Fixed AI cache not cleared from localStorage on logout.
+    - Fixed untranslated "error_name_already_used" error message when creating a leek.
+    - "Editor: fixed syntax highlighting for \\ and \\= operators (integer division)."
+    - "Editor: fixed tab closing when AI was deleted outside the editor."
+    - "Editor: fixed characters inserted at wrong position after back/forward navigation (Firefox)."
+    - "Editor: fixed missing .leek extension when downloading if AI name contains a dot."
+    - "Editor: fixed first keystroke ignored after drag-select."
+    - Fixed extended chat going behind the editor scrollbar.
+    - "Farmer: fixed tooltip not appearing when hovering over the godfather."
+    - Fixed chat reactions with keycap number emojis (0️⃣-9️⃣).
+    - Fixed team forum name display in search.
+    - Fixed search in team forums.
+    - Fixed many Italian translations (thanks to Casanova).
+    - "LeekScript: fixed a crash when compiling classes with includes."
+    - "LeekScript: improved case handling for class and include keywords."
     - "LeekScript: fixed cast ambiguity with negative number literals."
     - "LeekScript: fixed compound assignment operators for union number types (integer|real)."
+    - "LeekScript: fixed user function equality always returning false."
+    - "LeekScript: fixed ternary operator validation detection."
+    - "LeekScript: fixed intervalContains compilation error with Number type."
+    - "LeekScript: fixed cast of static field as a simple variable."
+    - "LeekScript: fixed incorrect stacktrace line in foreach loops."
 
 243:
   title: Community creation, Quantum Rifle and new server.

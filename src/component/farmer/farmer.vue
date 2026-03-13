@@ -66,7 +66,7 @@
 		<div class="container">
 			<panel class="first">
 				<template #content><div class="content avatar-td">
-					<div v-if="myFarmer">
+					<div v-if="myFarmer" class="avatar-wrapper">
 						<v-tooltip>
 							<template #activator="{ props }">
 								<div class="avatar-input" v-bind="props">
@@ -76,9 +76,17 @@
 							</template>
 							{{ $t('click_to_change_avatar') }}
 						</v-tooltip>
+						<v-btn v-if="farmer" class="like-overlay no-click" :class="{liked: farmer.likes > 0}" size="small" :ripple="false">
+							<template #prepend><v-icon size="small" :color="farmer.likes > 0 ? 'red' : ''">{{ farmer.likes > 0 ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon></template>
+							{{ farmer.likes }}
+						</v-btn>
 					</div>
-					<div v-else>
+					<div v-else class="avatar-wrapper">
 						<avatar :farmer="farmer" />
+						<v-btn v-if="farmer" class="like-overlay" :class="{liked: farmer.liked}" size="small" @click="toggleLike">
+							<template #prepend><v-icon :color="farmer.liked ? 'red' : ''">{{ farmer.liked ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon></template>
+							{{ farmer.likes }}
+						</v-btn>
 					</div>
 					<lw-title v-if="farmer && farmer.title.length" class="info title" :class="{me: myFarmer}" :title="farmer.title" @click.native="titleDialog = myFarmer" />
 					<div v-if="farmer" class="infos">
@@ -132,19 +140,15 @@
 						<div v-else-if="farmer.moderator" class="grade moderator">{{ $t('moderator') }}</div>
 						<div v-if="farmer.contributor" class="grade contributor">{{ $t('contributor') }}</div>
 					</div>
-					
+
+
 				</div></template>
 			</panel>
 
 			<panel>
 				<template #content><div class="content stats">
 					<div class="talent-wrapper">
-						<v-tooltip>
-							<template #activator="{ props }">
-								<talent :id="farmer ? farmer.id : 0" :talent="farmer ? farmer.talent : '...'" category="farmer" v-bind="props" />
-							</template>
-							<div>{{ $t('talent') }}</div>
-						</v-tooltip>
+						<talent :id="farmer?.id ?? 0" :talent="farmer?.talent ?? '...'" :max_talent="farmer?.max_talent" :label="$t('talent')" category="farmer" />
 						<v-tooltip v-if="farmer">
 							<template #activator="{ props }">
 								<div class="talent-more" v-bind="props">({{ farmer.talent_more >= 0 ? '+' : '' }} {{ $filters.number(farmer.talent_more) }})</div>
@@ -156,7 +160,6 @@
 						</v-tooltip>
 						<ranking-badge v-if="farmer && farmer.ranking && farmer.ranking <= 1000 && farmer.in_garden" :id="farmer.id" :ranking="farmer.ranking" category="farmer" />
 					</div>
-
 					<v-tooltip v-if="farmer">
 						<template #activator="{ props }">
 							<table v-bind="props">
@@ -193,7 +196,7 @@
 					</table>
 
 					<Line v-if="chartData" :data="chartData" :options="chartOptions" class="talent-history" />
-					
+
 					<div v-if="farmer" class="godfather grey">
 						<div v-if="farmer.godfather">
 							<i18n-t keypath="godson_of" tag="div">
@@ -243,17 +246,40 @@
 					<div v-else>
 						<div v-if="myFarmer">
 							<v-btn @click="createTeamDialog = true">{{ $t('create_team') }}</v-btn>
-							<div v-if="farmer.candidacy">
-								<br><br><br>
-								<i18n-t keypath="candidacy_for_team" class="candidacy">
-									<template #team><a :href="'/team/' + farmer.candidacy.team_id">{{ farmer.candidacy.team_name }}</a></template>
-								</i18n-t>
-								<br><br>
-								<v-btn @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</v-btn>
+							<div v-if="farmer.candidacies && farmer.candidacies.length" class="candidacies">
+								<h4>{{ $t('candidacies') }}</h4>
+								<div v-for="c in farmer.candidacies" :key="c.team_id" class="candidacy-item">
+									<rich-tooltip-team :id="c.team_id">
+										<emblem :team="{id: c.team_id, emblem_changed: c.emblem_changed}" />
+									</rich-tooltip-team>
+									<router-link :to="'/team/' + c.team_id">{{ c.team_name }}</router-link>
+									<v-btn size="small" variant="outlined" @click="cancelCandidacy(c)">{{ $t('cancel_candidacy') }}</v-btn>
+								</div>
+							</div>
+							<div v-if="$store.state.farmer && $store.state.farmer.team_invitations && $store.state.farmer.team_invitations.length > 0" class="invitations">
+								<br>
+								<h4>{{ $t('team_invitations') }}</h4>
+								<div v-for="invitation in $store.state.farmer.team_invitations" :key="invitation.id" class="invitation">
+									<rich-tooltip-team :id="invitation.team_id" v-slot="{ props }">
+										<router-link :to="'/team/' + invitation.team_id" v-bind="props">
+											<emblem :team="{id: invitation.team_id, emblem_changed: invitation.emblem_changed}" />
+											<span>{{ invitation.team_name }}</span>
+										</router-link>
+									</rich-tooltip-team>
+									<div class="invitation-actions">
+										<v-btn color="green" size="small" @click="acceptInvitation(invitation)">{{ $t('accept') }}</v-btn>
+										<v-btn size="small" @click="rejectInvitation(invitation)">{{ $t('reject') }}</v-btn>
+									</div>
+								</div>
 							</div>
 						</div>
 						<div v-else>
 							<span class="grey">{{ $t('no_team') }}</span>
+							<br><br>
+							<v-btn v-if="canInvite" :disabled="alreadyInvited" @click="inviteToTeam">
+								<v-icon start>mdi-account-plus</v-icon>
+								{{ alreadyInvited ? $t('invitation_sent') : $t('invite_to_team') }}
+							</v-btn>
 						</div>
 					</div>
 				</div></template>
@@ -273,64 +299,30 @@
 				</div>
 			</template>
 			<template #content>
-				<div class="trophies">
+				<div class="trophies" @mouseleave="hideTrophyTooltip">
 					<loader v-if="!farmer || !trophies" />
 					<template v-else-if="farmer.trophies > 0 && trophies_list && trophies_grid">
 						<div v-show="trophiesMode == 'list'" class="list trophies-container">
-							<v-tooltip v-for="(trophy, t) in trophies_list" :key="t">
-								<template #activator="{ props }">
-									<router-link :to="'/trophy/' + trophy.code">
-										<img class="trophy" v-bind="props" :src="'/image/trophy/' + trophy.code + '.svg'">
-									</router-link>
-								</template>
-								<div class="header">
-									<b>{{ $t('trophy.' + trophy.code) }}</b>
-									<b>{{ trophy.points }}</b>
-								</div>
-								<div>{{ trophy.description }}</div>
-								<span class="trophy-date">{{ LeekWars.formatDuration(trophy.date) }}</span>
-							</v-tooltip>
+							<router-link v-for="(trophy, t) in trophies_list" :key="t" :to="'/trophy/' + trophy.code" @mouseenter="showTrophyTooltip(trophy, $event)" @mouseleave="hideTrophyTooltip">
+								<img class="trophy" :src="'/image/trophy/' + trophy.code + '.svg'" loading="lazy">
+							</router-link>
 						</div>
 						<div v-show="trophiesMode == 'grid'" class="grid trophies-container">
-							<v-tooltip v-for="(trophy, t) in trophies_grid" :key="t" :disabled="!trophy">
-								<template #activator="{ props }">
-									<router-link v-if="trophy != null" :to="'/trophy/' + trophy.code" class="card">
-										<img :src="'/image/trophy/' + trophy.code + '.svg'" v-bind="props" class="trophy">
-									</router-link>
-									<div v-else class="locked" v-bind="props">
-										<img class="trophy" src="/image/unknown.png">
-									</div>
-								</template>
-								<span v-if="trophy">
-									<div class="header">
-										<b>{{ $t('trophy.' + trophy.code) }}</b>
-										<b>{{ trophy.points }}</b>
-									</div>
-									<div v-if="trophy.description">
-										{{ trophy.description }}
-									</div>
-									<i18n-t tag="span" class="trophy-date" keypath="main.unlocked_the">
-										<template #date><span>{{ $filters.date(trophy.date) }}</span></template>
-									</i18n-t>
-								</span>
-							</v-tooltip>
+							<template v-for="(trophy, t) in trophies_grid" :key="t">
+								<router-link v-if="trophy != null" :to="'/trophy/' + trophy.code" class="card" @mouseenter="showTrophyTooltip(trophy, $event)" @mouseleave="hideTrophyTooltip">
+									<img :src="'/image/trophy/' + trophy.code + '.svg'" class="trophy" loading="lazy">
+								</router-link>
+								<div v-else class="locked">
+									<img class="trophy" src="/image/unknown.png" loading="lazy">
+								</div>
+							</template>
 						</div>
 						<div v-if="bonus_trophies && bonus_trophies.length > 0">
 							<h4 class="trophies-bonus">{{ $t('bonus_trophies') }}</h4>
 							<div class="trophies-container">
-								<v-tooltip v-for="trophy in bonus_trophies" :key="trophy.id">
-									<template #activator="{ props }">
-										<router-link :to="'/trophy/' + trophy.code" :class="{card: trophiesMode == 'grid'}">
-											<img class="trophy" :src="'/image/trophy/' + trophy.code + '.svg'" v-bind="props">
-										</router-link>
-									</template>
-									<div class="header">
-										<b>{{ $t('trophy.' + trophy.code) }}</b>
-										<b v-if="trophy.points">{{ trophy.points }}</b>
-									</div>
-									<div>{{ trophy.description }}</div>
-									<span class="date">{{ LeekWars.formatDuration(trophy.date) }}</span>
-								</v-tooltip>
+								<router-link v-for="trophy in bonus_trophies" :key="trophy.id" :to="'/trophy/' + trophy.code" :class="{card: trophiesMode == 'grid'}" @mouseenter="showTrophyTooltip(trophy, $event)" @mouseleave="hideTrophyTooltip">
+									<img class="trophy" :src="'/image/trophy/' + trophy.code + '.svg'" loading="lazy">
+								</router-link>
 							</div>
 						</div>
 					</template>
@@ -348,14 +340,17 @@
 							<leek-image :leek="leek" :scale="0.9" />
 							<div class="name">{{ leek.name }}</div>
 							<lw-title v-if="leek.title.length" :title="leek.title" />
-							<talent :id="leek.id" :talent="leek.talent" category="leek" />
-							<br>
+							<div class="talent-ranking">
+								<talent :id="leek.id" :talent="leek.talent" :max_talent="leek.max_talent" category="leek" />
+								<ranking-badge v-if="leek.ranking && leek.ranking <= 1000 && leek.in_garden" :id="leek.id" :ranking="leek.ranking" category="leek" />
+							</div>
 							<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>
 						</div>
 					</router-link>
 				</rich-tooltip-leek>
 			</div>
 		</panel>
+
 
 		<panel :title="$t('sponsorship')" toggle="trophies/sponsorship" icon="mdi-hat-fedora">
 			<template #actions>
@@ -493,7 +488,7 @@
 			<template #title><span>{{ $t('create_team') }}</span></template>
 			{{ $t('team_name') }} <input v-model="createTeamName" type="text">
 			<template #actions>
-				<div v-ripple class="dismiss">{{ $t('cancel') }}</div>
+				<div v-ripple @click="createTeamDialog = false" class="dismiss">{{ $t('cancel') }}</div>
 				<div v-ripple @click="createTeam">{{ $t('create') }}</div>
 			</template>
 		</popup>
@@ -588,6 +583,20 @@
 				<div v-ripple class="green" @click="giveTrophy()">Donner</div>
 			</template>
 		</popup>
+
+		<v-tooltip v-if="trophyTooltip.show" v-model="trophyTooltip.show" :open-on-hover="false" location="bottom">
+			<template #activator="{ props }">
+				<div ref="trophyTooltipAnchor" v-bind="props" class="trophy-tooltip-anchor" :style="{ left: trophyTooltip.x + 'px', top: trophyTooltip.y + 'px' }"></div>
+			</template>
+			<template v-if="trophyTooltip.trophy">
+				<div class="header">
+					<b>{{ $t('trophy.' + trophyTooltip.trophy.code) }}</b>
+					<b>{{ trophyTooltip.trophy.points }}</b>
+				</div>
+				<div v-if="trophyTooltip.trophy.description">{{ trophyTooltip.trophy.description }}</div>
+				<span class="trophy-date">{{ LeekWars.formatDuration(trophyTooltip.trophy.date) }}</span>
+			</template>
+		</v-tooltip>
 	</div>
 </template>
 
@@ -596,7 +605,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
-	import { Team } from '@/model/team'
+	import { Team, TeamMemberLevel } from '@/model/team'
 	import { mixins } from '@/model/i18n'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
@@ -620,6 +629,7 @@ import { emitter } from '@/model/vue'
 		farmer: Farmer | null = null
 		trophies: any = null
 		trophiesMode: string = 'list'
+		trophyTooltip: { show: boolean, trophy: any, x: number, y: number } = { show: false, trophy: null, x: 0, y: 0 }
 		godfatherDialog: boolean = false
 		countryDialog: boolean = false
 		createTeamDialog: boolean = false
@@ -662,6 +672,7 @@ import { emitter } from '@/model/vue'
 			5000: { potion: 'mafia', item: 282 },
 			10000: { hat: 'gold_fedora', item: 280 },
 		}
+		invitationSent: boolean = false
 		xp_bar: number = 0
 		chartData: ChartData | null = null
 		chartOptions: ChartOptions | null = null
@@ -671,6 +682,18 @@ import { emitter } from '@/model/vue'
 		}
 		get myFarmer() {
 			return this.$store.state.farmer && this.id === this.$store.state.farmer.id
+		}
+		get canInvite() {
+			const me = this.$store.state.farmer
+			return this.farmer && !this.myFarmer && !this.farmer.team && me && me.team && me.team.member_level >= TeamMemberLevel.CAPTAIN
+		}
+		get alreadyInvited() {
+			if (this.invitationSent) { return true }
+			const me = this.$store.state.farmer
+			if (me && me.team && me.team.sent_invitations && this.farmer) {
+				return me.team.sent_invitations.includes(this.farmer.id)
+			}
+			return false
 		}
 		get talent_gains() {
 			return this.farmer ? Math.round(this.farmer.talent_more / 3) : 0
@@ -712,6 +735,7 @@ import { emitter } from '@/model/vue'
 			this.farmer = null
 			this.trophies = null
 			this.notfound = false
+			this.invitationSent = false
 			this.tournamentRangeLoading = false
 			if (this.id === null) { return }
 			if (this.myFarmer) {
@@ -755,6 +779,19 @@ import { emitter } from '@/model/vue'
 		logout() {
 			this.$store.commit('disconnect')
 			this.$router.push('/')
+		}
+
+		showTrophyTooltip(trophy: any, event: MouseEvent) {
+			const rect = (event.currentTarget as HTMLElement).getBoundingClientRect()
+			this.trophyTooltip = {
+				show: true,
+				trophy,
+				x: rect.left + rect.width / 2,
+				y: rect.bottom,
+			}
+		}
+		hideTrophyTooltip() {
+			this.trophyTooltip.show = false
 		}
 
 		trophiesModeButton() {
@@ -825,7 +862,7 @@ import { emitter } from '@/model/vue'
 				if (this.farmer.tournament.registered) {
 					this.farmer.tournament.registered = false
 					LeekWars.post('farmer/unregister-tournament')
-				} else {
+				} else {
 					this.farmer.tournament.registered = true
 					LeekWars.post('farmer/register-tournament')
 				}
@@ -916,11 +953,46 @@ import { emitter } from '@/model/vue'
 			})
 		}
 
-		cancelCandidacy() {
-			LeekWars.post('team/cancel-candidacy').then(data => {
+		inviteToTeam() {
+			if (!this.farmer) { return }
+			LeekWars.post('team/send-invitation', {farmer_name: this.farmer.name}).then(data => {
+				this.invitationSent = true
+				const me = this.$store.state.farmer
+				if (me && me.team) {
+					if (!me.team.sent_invitations) { me.team.sent_invitations = [] }
+					me.team.sent_invitations.push(this.farmer!.id)
+				}
+				LeekWars.toast(this.$i18n.t('invitation_sent'))
+			}).error(error => {
+				LeekWars.toast(this.$i18n.t(error.error))
+			})
+		}
+
+		acceptInvitation(invitation: any) {
+			LeekWars.post('team/accept-invitation', {invitation_id: invitation.id}).then(data => {
+				LeekWars.toast(this.$i18n.t('invitation_accepted'))
+				this.$router.push('/team/' + invitation.team_id)
+			}).error(error => {
+				LeekWars.toast(this.$i18n.t(error.error))
+			})
+		}
+
+		rejectInvitation(invitation: any) {
+			LeekWars.post('team/reject-invitation', {invitation_id: invitation.id}).then(data => {
+				if (this.farmer) {
+					LeekWars.toast(this.$i18n.t('invitation_rejected'))
+					this.farmer.team_invitations.splice(this.farmer.team_invitations.indexOf(invitation), 1)
+				}
+			}).error(error => {
+				LeekWars.toast(this.$i18n.t(error.error))
+			})
+		}
+
+		cancelCandidacy(candidacy: { team_id: number }) {
+			LeekWars.post('team/cancel-candidacy-for-team', { team_id: candidacy.team_id }).then(() => {
 				if (this.farmer) {
 					LeekWars.toast(this.$i18n.t('candidacy_canceled'))
-					this.farmer.candidacy = null
+					this.farmer.candidacies = this.farmer.candidacies.filter((c: any) => c.team_id !== candidacy.team_id)
 				}
 			}).error(error => {
 				LeekWars.toast(error)
@@ -997,6 +1069,24 @@ import { emitter } from '@/model/vue'
 			}
 		}
 
+		toggleLike() {
+			if (!this.farmer) { return }
+			const liked = this.farmer.liked
+			this.farmer.liked = !liked
+			this.farmer.likes += liked ? -1 : 1
+			const endpoint = liked ? 'farmer/unlike' : 'farmer/like'
+			LeekWars.post(endpoint, {target_id: this.farmer.id}).then(data => {
+				if (this.farmer) {
+					this.farmer.likes = data.likes
+				}
+			}).error(() => {
+				if (this.farmer) {
+					this.farmer.liked = liked
+					this.farmer.likes += liked ? 1 : -1
+				}
+			})
+		}
+
 		openCountryDialog() {
 			this.countryDialog = true
 			LeekWars.loadCountries()
@@ -1032,6 +1122,7 @@ import { emitter } from '@/model/vue'
 	.avatar-input {
 		cursor: pointer;
 		text-align: center;
+		border-radius: 50%;
 		input {
 			display: none;
 		}
@@ -1217,6 +1308,27 @@ import { emitter } from '@/model/vue'
 	.grade.contributor {
 		background: #009c1d;
 	}
+	.avatar-wrapper {
+		position: relative;
+		display: inline-block;
+	}
+	.like-overlay {
+		position: absolute;
+		bottom: 4px;
+		right: 4px;
+		text-transform: none;
+		min-width: 0;
+		.like-count {
+			margin-left: 2px;
+		}
+		&.liked {
+			color: #e53935;
+		}
+		&.no-click {
+			cursor: default;
+			pointer-events: none;
+		}
+	}
 	#app.app .leeks {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
@@ -1236,9 +1348,12 @@ import { emitter } from '@/model/vue'
 			overflow: hidden;
 			white-space: nowrap;
 		}
-		.talent {
+		.talent-ranking {
 			margin-top: 2px;
 			margin-bottom: 5px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
 		}
 		.level {
 			font-size: 17px;
@@ -1329,8 +1444,52 @@ import { emitter } from '@/model/vue'
 		text-align: center;
 		word-break: break-all;
 	}
-	.candidacy {
-		color: #999;
+	.candidacies {
+		margin-top: 15px;
+		h4 {
+			margin-bottom: 8px;
+			color: #777;
+		}
+		.candidacy-item {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			padding: 4px 0;
+			.emblem {
+				width: 36px;
+				height: 36px;
+			}
+			a {
+				flex: 1;
+				text-align: left;
+			}
+		}
+	}
+	.invitations {
+		h4 {
+			margin-bottom: 8px;
+			color: #777;
+		}
+		.invitation {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			padding: 5px 0;
+			a {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+			}
+			.emblem {
+				width: 40px;
+				height: 40px;
+			}
+			.invitation-actions {
+				display: flex;
+				gap: 5px;
+				margin-left: auto;
+			}
+		}
 	}
 	.rename-button {
 		b {
@@ -1426,5 +1585,11 @@ import { emitter } from '@/model/vue'
 		.xp-bar.blue {
 			background: #008fbb;
 		}
+	}
+	.trophy-tooltip-anchor {
+		position: fixed;
+		width: 1px;
+		height: 1px;
+		pointer-events: none;
 	}
 </style>

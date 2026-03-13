@@ -77,7 +77,8 @@
 	"no_ai": "Wybierz sztuczną inteligencję",
 	"no_compositions": "Brak kompilacji",
 	"no_description": "bez opisu",
-	"not_found_id": "Nie znaleziono identyfikatora zespołu <b>{0}</b> :(",
+	"not_found": "Nie znaleziono zespołu",
+	"not_found_id": "Nie znaleziono identyfikatora zespołu {id} :(",
 	"opened": "Otwierany",
 	"owner": "Właściciel",
 	"owner_has_been_changed": "Właściciel został zmieniony.",
@@ -109,5 +110,11 @@
 	"xp": "XP: {0}",
 	"you_left_team": "Opuściłeś drużynę",
 	"load_all": "Załaduj wszystko",
-	"rankings": "Rankingi"
+	"rankings": "Rankingi",
+	"all_teams": "Wszystkie drużyny",
+	"recruitment_message": "Wiadomość rekrutacyjna",
+	"no_recruitment_message": "brak wiadomości rekrutacyjnej",
+	"configure_columns": "Konfiguruj kolumny",
+	"default_sort": "Domyślne sortowanie",
+	"reset_columns": "Resetuj"
 }

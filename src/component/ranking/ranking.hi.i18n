@@ -27,7 +27,7 @@
 	"results": "परिणाम",
 	"richest_title": "पैसा कमाया",
 	"search_in_ranking": "रैंकिंग में खोजें",
-	"search_name": "नाम",
+	"search_name": "नाम या ID",
 	"shots": "फुहार",
 	"shots_title": "शॉट्स की कुल संख्या",
 	"summons": "आमंत्रण",
@@ -47,5 +47,7 @@
 	"boss_killed_title": "बॉस मारे गए",
 	"boss_killed": "बॉस",
 	"turrets_killed": "बुर्ज",
-	"turrets_killed_title": "बुर्ज नष्ट किए"
+	"turrets_killed_title": "बुर्ज नष्ट किए",
+	"damage": "क्षति",
+	"damage_title": "पहुँचाई गई क्षति"
 }

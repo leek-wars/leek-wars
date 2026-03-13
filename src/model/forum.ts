@@ -13,6 +13,7 @@ enum ForumTopicStatus {
 	NOT_REPRODUCED = 2,
 	NOT_PLANNED = 3,
 	NOT_A_BUG = 4,
+	OBSOLETE = 5,
 }
 
 class ForumTopic {
@@ -26,10 +27,16 @@ class ForumTopic {
 	public acknowledged!: boolean
 	public issue!: number
 	public private_issue!: number
+	public release!: number | null
+	public hidden!: boolean | null
+	public priority!: number
+	public views!: number
+	public last_message_date!: number
 }
 
 class ForumMessage {
 	public id!: number
+	public date!: number
 	public message!: string
 	public html!: string | null
 	public votes_up!: number

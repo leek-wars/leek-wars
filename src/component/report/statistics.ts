@@ -82,7 +82,7 @@ class StatisticsEntity extends Entity {
 		this.name = leek.name
 		this.translatedName = leek.name
 		if (leek.type !== 0) {
-			this.translatedName = i18n.t('entity.' + leek.name) as string
+			this.translatedName = i18n.global.te('entity.' + leek.name) ? i18n.t('entity.' + leek.name) as string : leek.name
 		}
 		this.level = leek.level
 		this.team = leek.team

@@ -100,5 +100,15 @@
 	"title_37": "{0} ti ha dato {1} habs",
 	"message_37": "Vedere il mercato",
 	"title_38": "{0} ti ha dato {1} combattimenti",
-	"message_38": "Andare nell'orto"
+	"message_38": "Andare nell'orto",
+	"title_39": "{0} ha votato positivamente il tuo messaggio in {1}",
+	"message_39": "Visualizza messaggio",
+	"title_40": "{0} ha votato negativamente il tuo messaggio in {1}",
+	"message_40": "Visualizza messaggio",
+	"title_41": "La squadra {0} ti invita a unirti!",
+	"message_41": "Consulta la pagina della squadra",
+	"title_42": "{0} ha accettato il tuo invito!",
+	"message_42": "Consulta la pagina della squadra",
+	"title_43": "{0} ha partecipato a una Battle Royale!",
+	"message_43": "Vedi la Battle Royale"
 }

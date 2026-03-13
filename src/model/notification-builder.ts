@@ -186,6 +186,31 @@ class NotificationBuilder {
 			const farmer_name = params[0]
 			const fights = params[1]
 			return new Notification(data, "/market", "mdi-sword-cross", [farmer_name, fights])
+		} else if (type === NotificationType.FORUM_VOTE_UP || type === NotificationType.FORUM_VOTE_DOWN) {
+			const farmerName = params[0]
+			const topicId = params[1]
+			const messageId = parseInt(params[2], 10)
+			const categoryId = params[3]
+			const page = parseInt(params[4], 10)
+			const topicTitle = params[5]
+			const link = messageId === -1
+				? "/forum/category-" + categoryId + "/topic-" + topicId
+				: "/forum/category-" + categoryId + "/topic-" + topicId + (page > 1 ? "/page-" + page : "") + "#message-" + messageId
+			const icon = type === NotificationType.FORUM_VOTE_UP ? "mdi-thumb-up" : "mdi-thumb-down"
+			return new Notification(data, link, icon, [farmerName, topicTitle])
+		} else if (type === NotificationType.TEAM_INVITATION) {
+			const teamID = params[0]
+			const teamName = params[1]
+			return new Notification(data, "/team/" + teamID, "team_candidacy.png", [teamName])
+		} else if (type === NotificationType.TEAM_INVITATION_ACCEPTED) {
+			const teamID = params[0]
+			const farmerName = params[1]
+			return new Notification(data, "/team/" + teamID, "team_accepted.png", [farmerName])
+		} else if (type === NotificationType.BATTLE_ROYALE_REPORT) {
+			const fightID = params[0]
+			const result = params.length > 1 ? parseInt(params[1]) : 0
+			const leekName = params.length > 2 ? params[2] : ''
+			return new Notification(data, "/fight/" + fightID, "mdi-sword-cross", [leekName], [], result)
 		} else {
 			return new Notification(data, null, null, ["? type " + type])
 		}

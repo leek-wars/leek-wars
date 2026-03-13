@@ -77,7 +77,8 @@
 	"no_ai": "Kies een AI",
 	"no_compositions": "Geen composities",
 	"no_description": "geen beschrijving",
-	"not_found_id": "Team-ID <b>{0}</b> niet gevonden :(",
+	"not_found": "Team niet gevonden",
+	"not_found_id": "Team-ID {id} niet gevonden :(",
 	"opened": "Geopend",
 	"owner": "Eigenaar",
 	"owner_has_been_changed": "De eigenaar is gewijzigd.",
@@ -109,5 +110,11 @@
 	"xp": "XP: {0}",
 	"you_left_team": "Je hebt het team verlaten",
 	"load_all": "Alles laden",
-	"rankings": "Ranglijsten"
+	"rankings": "Ranglijsten",
+	"all_teams": "Alle teams",
+	"recruitment_message": "Rekruteringsbericht",
+	"no_recruitment_message": "geen rekruteringsbericht",
+	"configure_columns": "Kolommen configureren",
+	"default_sort": "Standaard sortering",
+	"reset_columns": "Herstellen"
 }

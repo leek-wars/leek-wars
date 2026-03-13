@@ -17,5 +17,16 @@
 	"topic": "Emne",
 	"mark_as_read": "Merk som lest",
 	"mark_as_read_text": "Alle emner i alle forumkategorier vil bli merket som lest. Etter denne handlingen vil bare nye emner eller nye svar vises.",
-	"show_resolved": "Vis løste emner"
+	"show_resolved": "Vis løste emner",
+	"priority": "Prioritet",
+	"priority_high": "Høy prioritet",
+	"priority_medium": "Middels prioritet",
+	"priority_low": "Lav prioritet",
+	"hidden_topic": "Skjult emne",
+	"status_acknowledged": "Tatt til etterretning",
+	"status_not_a_bug": "Ikke en bug",
+	"status_not_planned": "Ikke planlagt",
+	"status_obsolete": "Foreldet",
+	"status_not_reproduced": "Ikke reprodusert",
+	"status_resolved": "Løst"
 }

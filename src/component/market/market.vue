@@ -32,6 +32,9 @@
 						<span>{{ $t('main.workshop') }}</span>
 					</div>
 				</router-link> -->
+				<div v-if="!LeekWars.mobile" class="tab action" @click="toggleExpanded">
+					<v-icon>{{ expanded ? 'mdi-arrow-collapse' : 'mdi-arrow-expand' }}</v-icon>
+				</div>
 			</div>
 		</div>
 		<div class="container">
@@ -51,8 +54,12 @@
 					<template #content>
 						<loader v-if="!weapons.length" />
 						<div v-else class="items weapons">
-							<router-link v-for="weapon in weapons" :key="weapon.id" v-ripple :to="'/market/' + weapon.name.replace('weapon_', '')" :farmer-count="items[weapon.id].farmer_count" :leek-count="items[weapon.id].leek_count" class="item weapon" :class="{toohigh: weapon.level > max_level}">
+							<router-link v-for="weapon in weapons" :key="weapon.id" v-ripple :to="'/market/' + weapon.name.replace('weapon_', '')" class="item weapon" :class="{toohigh: weapon.level > max_level}">
 								<img :src="'/image/' + weapon.name.replace('_', '/') + '.png'">
+								<div v-if="items[weapon.id].leek_count || items[weapon.id].farmer_count" class="counts">
+									<span v-if="items[weapon.id].leek_count" class="leek-count">{{ items[weapon.id].leek_count }}</span>
+									<span v-if="items[weapon.id].farmer_count" class="farmer-count">{{ items[weapon.id].farmer_count }}</span>
+								</div>
 							</router-link>
 						</div>
 					</template>
@@ -67,16 +74,24 @@
 					<template #content>
 						<loader v-if="!chips.length" />
 						<div v-else-if="chipMode === 'level'" class="items chips">
-							<router-link v-for="chip in chips" :key="chip.id" v-ripple :to="'/market/' + chip.name" :farmer-count="items[chip.id].farmer_count" :leek-count="items[chip.id].leek_count" class="item chip" :class="{toohigh: chip.level > max_level}">
+							<router-link v-for="chip in chips" :key="chip.id" v-ripple :to="'/market/' + chip.name" class="item chip" :class="{toohigh: chip.level > max_level}">
 								<img :src="'/image/chip/' + chip.name + '.png'">
+								<div v-if="items[chip.id].leek_count || items[chip.id].farmer_count" class="counts">
+									<span v-if="items[chip.id].leek_count" class="leek-count">{{ items[chip.id].leek_count }}</span>
+									<span v-if="items[chip.id].farmer_count" class="farmer-count">{{ items[chip.id].farmer_count }}</span>
+								</div>
 							</router-link>
 						</div>
 						<div v-else>
 							<div v-for="type in Object.entries(EffectTypeMarket).filter(e => !isNaN(e[0] as any)).map(x => x[0])" :key="type">
 								<h4 :class="{first: type === EffectTypeMarket.ATTACK}">{{ $t('effect.effect_type_' + type) }}</h4>
 								<div class="items chips">
-									<router-link v-for="chip in chipsByType[type]" :key="chip.id" v-ripple :to="'/market/' + chip.name" :farmer-count="items[chip.id].farmer_count" :leek-count="items[chip.id].leek_count" class="item chip" :class="{toohigh: chip.level > max_level}">
+									<router-link v-for="chip in chipsByType[type]" :key="chip.id" v-ripple :to="'/market/' + chip.name" class="item chip" :class="{toohigh: chip.level > max_level}">
 										<img :src="'/image/chip/' + chip.name + '.png'">
+										<div v-if="items[chip.id].leek_count || items[chip.id].farmer_count" class="counts">
+											<span v-if="items[chip.id].leek_count" class="leek-count">{{ items[chip.id].leek_count }}</span>
+											<span v-if="items[chip.id].farmer_count" class="farmer-count">{{ items[chip.id].farmer_count }}</span>
+										</div>
 									</router-link>
 								</div>
 							</div>
@@ -87,8 +102,12 @@
 					<template #content>
 						<loader v-if="!potions.length" />
 						<div v-else class="items potions">
-							<router-link v-for="potion in potions" :key="potion.id" v-ripple :to="'/market/' + potion.name" :farmer-count="items[potion.id].farmer_count" :leek-count="items[potion.id].leek_count" class="item potion" :class="{toohigh: potion.level > max_level}">
+							<router-link v-for="potion in potions" :key="potion.id" v-ripple :to="'/market/' + potion.name" class="item potion" :class="{toohigh: potion.level > max_level}">
 								<img :src="'/image/potion/' + potion.name + '.png'">
+								<div v-if="items[potion.id].leek_count || items[potion.id].farmer_count" class="counts">
+									<span v-if="items[potion.id].leek_count" class="leek-count">{{ items[potion.id].leek_count }}</span>
+									<span v-if="items[potion.id].farmer_count" class="farmer-count">{{ items[potion.id].farmer_count }}</span>
+								</div>
 							</router-link>
 						</div>
 					</template>
@@ -97,8 +116,12 @@
 					<template #content>
 						<loader v-if="!hats.length" />
 						<div v-else class="items hats">
-							<router-link v-for="hat in hats" :key="hat.id" v-ripple :to="'/market/' + hat.name" :farmer-count="items[hat.id].farmer_count" :leek-count="items[hat.id].leek_count" class="item hat" :class="{toohigh: hat.level > max_level}">
+							<router-link v-for="hat in hats" :key="hat.id" v-ripple :to="'/market/' + hat.name" class="item hat" :class="{toohigh: hat.level > max_level}">
 								<img :src="'/image/hat/' + hat.name + '.png?2'">
+								<div v-if="items[hat.id].leek_count || items[hat.id].farmer_count" class="counts">
+									<span v-if="items[hat.id].leek_count" class="leek-count">{{ items[hat.id].leek_count }}</span>
+									<span v-if="items[hat.id].farmer_count" class="farmer-count">{{ items[hat.id].farmer_count }}</span>
+								</div>
 							</router-link>
 						</div>
 					</template>
@@ -107,8 +130,12 @@
 					<template #content>
 						<loader v-if="!pomps.length" />
 						<div v-else class="items pomps">
-							<router-link v-for="pomp in pomps" :key="pomp.id" :to="'/market/' + pomp.name" :farmer-count="items[pomp.id].farmer_count" :leek-count="items[pomp.id].leek_count" class="item pomp" :class="{toohigh: pomp.level > max_level}">
+							<router-link v-for="pomp in pomps" :key="pomp.id" :to="'/market/' + pomp.name" class="item pomp" :class="{toohigh: pomp.level > max_level}">
 								<img :src="'/image/pomp/' + pomp.name + '.png'">
+								<div v-if="items[pomp.id].leek_count || items[pomp.id].farmer_count" class="counts">
+									<span v-if="items[pomp.id].leek_count" class="leek-count">{{ items[pomp.id].leek_count }}</span>
+									<span v-if="items[pomp.id].farmer_count" class="farmer-count">{{ items[pomp.id].farmer_count }}</span>
+								</div>
 							</router-link>
 						</div>
 					</template>
@@ -324,6 +351,7 @@
 		buyQuantity: number = 1
 		sellDialog: boolean = false
 		chipMode: string = localStorage.getItem('market/sort_mode') === 'type' ? 'type' : 'level'
+		expanded: boolean = localStorage.getItem('market/expanded') === 'true'
 		EffectTypeMarket = EffectTypeMarket
 		actions: any
 		unseen_items: ItemTemplate[] = []
@@ -364,6 +392,9 @@
 		}
 
 		created() {
+			if (this.expanded) {
+				LeekWars.large = true
+			}
 			this.actions = [
 				{icon: 'mdi-cart-outline', click: () => window.open('https://leek-wars.myspreadshop.fr', '_blank')!.focus() },
 				{icon: 'mdi-bank', click: () => this.$router.push('/bank')},
@@ -473,6 +504,7 @@
 		}
 		beforeUnmount() {
 			if (this.request) { this.request.abort() }
+			LeekWars.large = false
 		}
 		unmounted() {
 			if (this.onKeyDown) {
@@ -540,6 +572,7 @@
 				}
 				if (item.type === ItemType.FIGHT_PACK) {
 					this.$store.commit('update-fights', data.fights)
+					this.$store.commit('update-bought-fights', data.fights)
 				}
 				this.$store.commit('add-inventory', { type: item.type, id: data.item, template: id, quantity: this.buyQuantity, time: Date.now() / 1000 })
 				this.updateSubtitle()
@@ -559,6 +592,12 @@
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 			this.sellDialog = false
+		}
+
+		toggleExpanded() {
+			this.expanded = !this.expanded
+			LeekWars.large = this.expanded
+			localStorage.setItem('market/expanded', '' + this.expanded)
 		}
 
 		updateChipMode() {
@@ -735,40 +774,28 @@
 	.buy-label {
 		display: inline-block;
 	}
-	.items .item:not([leek-count="0"]):before {
+	.items .item .counts {
 		position: absolute;
 		bottom: -5px;
 		right: -5px;
-		min-width: 20px;
-		height: 20px;
-		padding: 1px 5px;
-		content: attr(leek-count);
-		text-align: center;
-		color: #eee;
+		display: flex;
 		border-radius: 20px;
-		background-color: #5fad1b;
-		font-weight: bold;
-	}
-	.items .item:not([farmer-count="0"]):after {
-		position: absolute;
-		bottom: -5px;
-		right: -5px;
-		min-width: 20px;
-		height: 20px;
-		padding: 1px 5px;
-		content: attr(farmer-count);
-		text-align: center;
-		color: #eee;
-		border-radius: 20px;
-		font-weight: bold;
-		background-color: #777;
-	}
-	.items .item:not([farmer-count="0"]):not([leek-count="0"]):before {
-		border-radius: 20px 0 0 20px;
-		right: 16px;
-	}
-	.items .item:not([farmer-count="0"]):not([leek-count="0"]):after {
-		border-radius: 0 20px 20px 0;
+		overflow: hidden;
+		span {
+			min-width: 18px;
+			height: 18px;
+			padding: 2px 4px;
+			font-size: 12px;
+			text-align: center;
+			color: #eee;
+			font-weight: bold;
+		}
+		.leek-count {
+			background-color: #5fad1b;
+		}
+		.farmer-count {
+			background-color: #555;
+		}
 	}
 	.items .item.too-expensive img {
 		opacity: 0.4;

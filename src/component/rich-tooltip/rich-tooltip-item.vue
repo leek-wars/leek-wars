@@ -19,7 +19,7 @@
 
 	@Options({ name: 'rich-tooltip-item', components: {
 		'item-preview': ItemPreview
-	}})
+	}, emits: ['update:modelValue', 'retrieve'] })
 	export default class RichTooltipItem extends Vue {
 		@Prop() item!: any
 		@Prop() quantity!: number
@@ -35,7 +35,7 @@
 		disabled: boolean = false
 
 		get _open_delay() {
-			return this.instant || LeekWars.mobile ? 0 : (this.openDelay || 500)
+			return this.instant || LeekWars.mobile ? 1 : (this.openDelay || 500)
 		}
 		get _close_delay() {
 			return 1

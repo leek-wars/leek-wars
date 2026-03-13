@@ -105,12 +105,7 @@
 				</v-tooltip>
 
 				<div class="talent-wrapper">
-					<v-tooltip>
-						<template #activator="{ props }">
-							<talent :id="leek ? leek.id : 0" :talent="leek ? leek.talent : '...'" category="leek" v-bind="props" />
-						</template>
-						{{ $t('talent') }}
-					</v-tooltip>
+					<talent :id="leek ? leek.id : 0" :talent="leek ? leek.talent : '...'" :max_talent="leek?.max_talent" :label="$t('talent')" category="leek" />
 					<v-tooltip v-if="leek">
 						<template #activator="{ props }">
 							<div class="talent-more" v-bind="props">({{ leek.talent_more >= 0 ? '+' + leek.talent_more : leek.talent_more }})</div>
@@ -166,7 +161,7 @@
 							<span class="dida-element">
 								<v-btn v-if="(leek.capital > 0 || LeekWars.didactitial_step === 1) && $store.state.farmer.equipment_enabled" color="primary" @click="capitalDialog = true" :class="{bouncing: !capitalDialog && LeekWars.didactitial_step === 1}">{{ $t('main.n_capital', [leek.capital]) }}</v-btn>
 								<span v-if="LeekWars.didactitial_step === 1" class="dida-hint">
-									<i18n-t v-if="LeekWars.didactitial_step === 1" class="bubble" keypath="main.dida_2">
+									<i18n-t v-if="LeekWars.didactitial_step === 1" tag="div" class="bubble" keypath="main.dida_2">
 										<template #life><img height=18 src="/image/charac/life.png"></template>
 										<template #strength><img height=18 src="/image/charac/strength.png"></template>
 									</i18n-t>

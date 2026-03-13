@@ -100,5 +100,15 @@
 	"title_37": "{0} gave you {1} habs",
 	"message_37": "See the market",
 	"title_38": "{0} gave you {1} fights",
-	"message_38": "Go to the vegetable garden"
+	"message_38": "Go to the vegetable garden",
+	"title_39": "{0} upvoted your message in {1}",
+	"message_39": "See the message",
+	"title_40": "{0} downvoted your message in {1}",
+	"message_40": "See the message",
+	"title_41": "Team {0} has invited you to join!",
+	"message_41": "See the team page",
+	"title_42": "{0} accepted your invitation!",
+	"message_42": "See the team page",
+	"title_43": "{0} participated in a Battle Royale!",
+	"message_43": "See the Battle Royale"
 }

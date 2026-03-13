@@ -1,10 +1,16 @@
 <template lang="html">
-	<span class="talent" v-bind="$props" @click.stop="LeekWars.goToRanking(category, 'talent', id)">
-		<div v-ripple class="icon">
-			<img src="/image/talent.png">
-		</div>
-		<div v-ripple class="value">{{ LeekWars.formatNumber(talent) }}</div>
-	</span>
+	<v-tooltip :disabled="!label && !max_talent">
+		<template #activator="{ props: tp }">
+			<span class="talent" v-bind="{ ...$props, ...tp }" @click.stop="LeekWars.goToRanking(category, 'talent', id)">
+				<div v-ripple class="icon">
+					<img src="/image/talent.png">
+				</div>
+				<div v-ripple class="value">{{ LeekWars.formatNumber(talent) }}</div>
+			</span>
+		</template>
+		<div v-if="label">{{ label }}</div>
+		<div v-if="max_talent">{{ $t('main.max_talent', [LeekWars.formatNumber(max_talent)]) }}</div>
+	</v-tooltip>
 </template>
 
 <script lang="ts">
@@ -13,6 +19,8 @@
 	@Options({ name: "talent" })
 	export default class Talent extends Vue {
 		@Prop() talent!: number
+		@Prop() max_talent!: number
+		@Prop() label!: string
 		@Prop() id!: number
 		@Prop() category!: string
 		@Prop() on!: any

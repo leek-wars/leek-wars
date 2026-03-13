@@ -77,7 +77,8 @@
 	"no_ai": "Выберите ИИ",
 	"no_compositions": "Нет комп.",
 	"no_description": "без описания",
-	"not_found_id": "Идентификатор команды <b>{0}</b> не найден :(",
+	"not_found": "Команда не найдена",
+	"not_found_id": "Идентификатор команды {id} не найден :(",
 	"opened": "Открыто",
 	"owner": "Владелец",
 	"owner_has_been_changed": "Сменился владелец.",
@@ -109,5 +110,11 @@
 	"xp": "Опыт: {0}",
 	"you_left_team": "Вы покинули команду",
 	"load_all": "Загрузить все",
-	"rankings": "Рейтинги"
+	"rankings": "Рейтинги",
+	"all_teams": "Все команды",
+	"recruitment_message": "Сообщение о наборе",
+	"no_recruitment_message": "нет сообщения о наборе",
+	"configure_columns": "Настроить столбцы",
+	"default_sort": "Сортировка по умолчанию",
+	"reset_columns": "Сбросить"
 }

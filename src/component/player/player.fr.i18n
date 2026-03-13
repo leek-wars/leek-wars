@@ -33,5 +33,6 @@
 	"show_ids": "Afficher les IDs",
 	"sound_activated": "Son activé",
 	"sound_disactivated": "Son coupé",
+	"clear_marks": "Effacer les mark()",
 	"tactic_mode": "Mode tactique"
 }

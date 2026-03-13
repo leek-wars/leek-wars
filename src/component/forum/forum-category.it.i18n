@@ -17,5 +17,16 @@
 	"topic": "Soggetto",
 	"mark_as_read": "Segna come letto",
 	"mark_as_read_text": "Tutti gli argomenti in tutte le categorie del forum verranno contrassegnati come letti. Dopo questa azione, verranno mostrati solo i nuovi argomenti o le nuove risposte.",
-	"show_resolved": "Mostra argomenti risolti"
+	"show_resolved": "Mostra argomenti risolti",
+	"priority": "Priorità",
+	"priority_high": "Priorità alta",
+	"priority_medium": "Priorità media",
+	"priority_low": "Priorità bassa",
+	"hidden_topic": "Argomento nascosto",
+	"status_acknowledged": "Preso in carico",
+	"status_not_a_bug": "Non è un bug",
+	"status_obsolete": "Obsoleto",
+	"status_not_planned": "Non pianificato",
+	"status_not_reproduced": "Non riprodotto",
+	"status_resolved": "Risolto"
 }

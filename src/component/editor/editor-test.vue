@@ -33,6 +33,14 @@
 					<br>
 					<div class="team">
 						<div class="leeks">
+							<div v-if="currentScenario.type === FightType.TEAM" class="leek turret">
+								<div class="card">
+									<turret-image :level="100" :skin="0" :scale="0.4" />
+									<div>{{ $t('main.turret') }}</div>
+								</div>
+								<ai v-if="turretAI1" v-ripple :ai="turretAI1" :small="true" :library="false" @click="clickTurretAI(1)" />
+								<div v-else v-ripple class="ai-placeholder" @click="clickTurretAI(1)"></div>
+							</div>
 							<div v-for="leek of currentScenario.team1" :key="leek.id" class="leek">
 								<div v-if="!currentScenario.base" v-ripple class="delete" @click="deleteLeek(leek, 0)">×</div>
 								<div v-if="leek.id in allLeeks" class="card">
@@ -48,6 +56,14 @@
 					<div v-if="currentScenario.type !== FightType.BATTLE_ROYALE" class="vs">VS</div>
 					<div v-if="currentScenario.type !== FightType.BATTLE_ROYALE" class="team">
 						<div class="leeks">
+							<div v-if="currentScenario.type === FightType.TEAM" class="leek turret">
+								<div class="card">
+									<turret-image :level="100" :skin="1" :scale="0.4" />
+									<div>{{ $t('main.turret') }}</div>
+								</div>
+								<ai v-if="turretAI2" v-ripple :ai="turretAI2" :small="true" :library="false" @click="clickTurretAI(2)" />
+								<div v-else v-ripple class="ai-placeholder" @click="clickTurretAI(2)"></div>
+							</div>
 							<div v-for="leek of currentScenario.team2" :key="leek.id" class="leek">
 								<div v-if="!currentScenario.base" v-ripple class="delete" @click="deleteLeek(leek, 1)">×</div>
 								<div v-if="leek.id in allLeeks" class="card">
@@ -78,12 +94,21 @@
 						<v-icon v-if="advanced">mdi-chevron-up</v-icon>
 						<v-icon v-else>mdi-chevron-down</v-icon>
 					</div>
-					<div v-if="advanced">
+					<div v-if="advanced" class="advanced-options">
 						<div>
-							<span class="title"><v-icon>mdi-seed</v-icon> {{ $t('main.seed') }}</span>
-							<span class="desc">{{ $t('main.seed_desc') }}</span>
+							<div>
+								<span class="title"><v-icon>mdi-seed</v-icon> {{ $t('main.seed') }}</span>
+								<span class="desc">{{ $t('main.seed_desc') }}</span>
+							</div>
+							<input v-model="currentScenario.seed" type="text" class="seed" :placeholder="$t('main.seed_placeholder')" @keyup.stop @update:model-value="updateSeed">
 						</div>
-						<input v-model="currentScenario.seed" type="text" class="seed" :placeholder="$t('main.seed_placeholder')" @keyup.stop @update:model-value="updateSeed">
+						<div>
+							<div>
+								<span class="title"><v-icon>mdi-timer-sand</v-icon> {{ $t('max_turns') }}</span>
+								<span class="desc">{{ $t('max_turns_desc') }}</span>
+							</div>
+							<input v-model="currentScenario.max_turns" type="number" min="1" max="64" class="seed" :placeholder="$t('max_turns_placeholder')" @keyup.stop @update:model-value="updateMaxTurns">
+						</div>
 					</div>
 				</div>
 			</v-window-item>
@@ -333,6 +358,7 @@
 	import { CHIPS } from '@/model/chips'
 	import { ORDERED_CHIPS } from "@/model/sorted_chips"
 	import Map from "@/component/app/map.vue"
+	import TurretImage from "@/component/turret-image.vue"
 import { emitter } from '@/model/vue'
 import { defineAsyncComponent } from 'vue'
 
@@ -355,8 +381,11 @@ import { defineAsyncComponent } from 'vue'
 		name!: string
 		type!: number
 		seed!: any
+		max_turns?: any
 		default!: boolean
 		ai!: AI | null // AI for default scenario
+		turret_ai_team1?: number | null
+		turret_ai_team2?: number | null
 	}
 	class TestMap {
 		id!: number
@@ -367,7 +396,7 @@ import { defineAsyncComponent } from 'vue'
 		team!: number
 	}
 
-	@Options({ components: { CharacteristicTooltip, 'explorer': Explorer, RichTooltipItem, ai: AIElement, Map }, name: 'editor-test', i18n: {}, mixins: [...mixins] })
+	@Options({ components: { CharacteristicTooltip, 'explorer': Explorer, RichTooltipItem, ai: AIElement, Map, TurretImage }, name: 'editor-test', i18n: {}, mixins: [...mixins] })
 	export default class EditorTest extends Vue {
 		@Prop() modelValue!: boolean
 		@Prop() ais!: {[key: number]: AI}
@@ -398,6 +427,7 @@ import { defineAsyncComponent } from 'vue'
 		aiDialog: boolean = false
 		aiDialogBot: boolean = false
 		aiLeek: Leek | null = null
+		turretTeam: number = 0
 		chipsDialog: boolean = false
 		weaponsDialog: boolean = false
 		map: any = []
@@ -526,6 +556,7 @@ import { defineAsyncComponent } from 'vue'
 		compositionTemplates: any[] = []
 		allies: {[key: number]: Leek} = {}
 		alliesAIs: {[key: number]: AI} = {}
+		teamTurretAI: AI | null = null
 		advanced: boolean = false
 
 		get templates(): TestScenario[] {
@@ -602,6 +633,18 @@ import { defineAsyncComponent } from 'vue'
 				ais[ai] = this.alliesAIs[ai]
 			}
 			return ais
+		}
+		get turretAI1(): AI | null {
+			if (this.currentScenario?.turret_ai_team1 && this.currentScenario.turret_ai_team1 in this.allAis) {
+				return this.allAis[this.currentScenario.turret_ai_team1]
+			}
+			return this.teamTurretAI
+		}
+		get turretAI2(): AI | null {
+			if (this.currentScenario?.turret_ai_team2 && this.currentScenario.turret_ai_team2 in this.allAis) {
+				return this.allAis[this.currentScenario.turret_ai_team2]
+			}
+			return this.teamTurretAI
 		}
 		get availableWeapons() {
 			if (!this.currentLeek) { return [] }
@@ -856,13 +899,34 @@ import { defineAsyncComponent } from 'vue'
 
 		clickLeekAI(leek: any) {
 			if (this.allLeeks[leek.id] && this.allLeeks[leek.id].ally) { return }
+			this.turretTeam = 0
 			this.aiDialog = true
 			this.aiDialogBot = leek.id < 0
 			this.aiLeek = leek
 		}
 
+		clickTurretAI(team: number) {
+			this.turretTeam = team
+			this.aiLeek = null
+			this.aiDialog = true
+			this.aiDialogBot = false
+		}
+
 		clickDialogAI(ai: AI) {
-			if (!this.currentScenario || !this.aiLeek) { return }
+			if (!this.currentScenario) { return }
+			if (this.turretTeam > 0) {
+				if (this.turretTeam === 1) {
+					this.currentScenario.turret_ai_team1 = ai.id
+					this.updateScenario(this.currentScenario, { turret_ai_team1: ai.id })
+				} else {
+					this.currentScenario.turret_ai_team2 = ai.id
+					this.updateScenario(this.currentScenario, { turret_ai_team2: ai.id })
+				}
+				this.turretTeam = 0
+				this.aiDialog = false
+				return
+			}
+			if (!this.aiLeek) { return }
 			this.aiLeek.ai = ai.id as any
 			LeekWars.post('test-scenario/add-leek', {scenario_id: this.currentScenario.id, leek: this.aiLeek.id, team: -1, ai: ai.id})
 			this.aiDialog = false
@@ -1146,6 +1210,13 @@ import { defineAsyncComponent } from 'vue'
 				}
 				this.currentScenario.team2.length = 0
 			}
+			if (this.currentScenario.type === FightType.TEAM && this.teamTurretAI) {
+				if (!this.currentScenario.turret_ai_team1) {
+					this.currentScenario.turret_ai_team1 = this.teamTurretAI.id
+					this.updateScenario(this.currentScenario, { type: this.currentScenario.type, turret_ai_team1: this.teamTurretAI.id })
+					return
+				}
+			}
 			this.updateScenario(this.currentScenario, { type: this.currentScenario.type })
 		}
 
@@ -1185,6 +1256,11 @@ import { defineAsyncComponent } from 'vue'
 				LeekWars.get('test-scenario/get-all').then(data => {
 					this.initialized = true
 					this.scenarios = data.scenarios
+					if (data.turret_ai) {
+						this.teamTurretAI = data.turret_ai
+						data.turret_ai.path = data.turret_ai.name
+						this.alliesAIs[data.turret_ai.id] = data.turret_ai
+					}
 					this.updateAI()
 
 					for (const leek of data.leeks) {
@@ -1258,6 +1334,22 @@ import { defineAsyncComponent } from 'vue'
 					}
 				}
 				this.updateScenario(this.currentScenario, { seed: this.currentScenario.seed || 0 })
+			}
+		}
+
+		updateMaxTurns(event: InputEvent) {
+			if (this.currentScenario) {
+				if (this.currentScenario.max_turns) {
+					this.currentScenario.max_turns = parseInt(this.currentScenario.max_turns)
+					if (this.currentScenario.max_turns > 64) {
+						this.currentScenario.max_turns = 64
+					} else if (this.currentScenario.max_turns < 1) {
+						this.currentScenario.max_turns = 1
+					} else if (isNaN(this.currentScenario.max_turns)) {
+						this.currentScenario.max_turns = null
+					}
+				}
+				this.updateScenario(this.currentScenario, { max_turns: this.currentScenario.max_turns || 0 })
 			}
 		}
 	}
@@ -1384,6 +1476,13 @@ import { defineAsyncComponent } from 'vue'
 		&.advanced {
 			cursor: pointer;
 			user-select: none;
+		}
+	}
+	.advanced-options {
+		display: flex;
+		gap: 10px;
+		& > * {
+			flex: 1;
 		}
 	}
 	.desc {
@@ -1689,7 +1788,7 @@ import { defineAsyncComponent } from 'vue'
 			cursor: pointer;
 			text-align: center;
 			border: 3px solid transparent;
-			background: #f7f7f7;
+			background: var(--background-secondary);
 			font-size: 17px;
 			display: flex;
 			flex-direction: column;
@@ -1716,7 +1815,7 @@ import { defineAsyncComponent } from 'vue'
 			}
 			&.selected {
 				border: 3px solid #5fad1b;
-				background: white;
+				background: var(--pure-white);
 			}
 		}
 	}
@@ -1734,7 +1833,7 @@ import { defineAsyncComponent } from 'vue'
 	input.seed {
 		margin-top: 4px;
 		padding: 0 6px;
-		font-size: 18px;
+		font-size: 16px;
 	}
 	.bot-ai {
 		width: 100%;
@@ -1768,7 +1867,7 @@ import { defineAsyncComponent } from 'vue'
 		margin-top: 10px;
 		margin-left: -30px;
 		vertical-align: top;
-		background: white;
+		background: var(--pure-white);
 		border-radius: 4px;
 		cursor: pointer;
 	}

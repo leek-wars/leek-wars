@@ -181,5 +181,7 @@
 	"intial_version": "Ursprunglig version",
 	"strict_mode": "Strikt läge (avancerat)",
 	"all_info_ls": "All information om {0}",
-	"size": "Storlek"
+	"size": "Storlek",
+	"error_146": "\"case\" eller \"default\" förväntades.",
+	"error_147": "Kolon förväntat efter \"case\"."
 }

@@ -131,6 +131,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 
 		"disconnect"(state: LeekWarsState) {
 			LeekWars.post('farmer/disconnect')
+			localStorage.setItem('logout', '' + Date.now())
 			store.commit("reset")
 			// Supprime le cache des IAs et l'état de l'éditeur (confidentialité + évite les collisions entre comptes)
 			for (const key of Object.keys(localStorage)) {
@@ -390,7 +391,14 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 
 		'update-fights'(state: LeekWarsState, fights: number) {
-			if (state.farmer) { state.farmer.fights += fights }
+			if (state.farmer) {
+				state.farmer.fights += fights
+				state.farmer.bought_fights = Math.min(state.farmer.bought_fights, state.farmer.fights)
+			}
+		},
+
+		'update-bought-fights'(state: LeekWarsState, fights: number) {
+			if (state.farmer) { state.farmer.bought_fights += fights }
 		},
 
 		'update-team-fights'(state: LeekWarsState, fights: number) {

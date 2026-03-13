@@ -100,5 +100,11 @@
 	"title_37": "{0} ga deg {1} habs",
 	"message_37": "Se markedet",
 	"title_38": "{0} ga deg {1} kamper",
-	"message_38": "Gå til grønnsakshagen"
+	"message_38": "Gå til grønnsakshagen",
+	"title_39": "{0} stemte positivt på meldingen din i {1}",
+	"message_39": "Se meldingen",
+	"title_40": "{0} stemte negativt på meldingen din i {1}",
+	"message_40": "Se meldingen",
+	"title_43": "{0} deltok i en Battle Royale!",
+	"message_43": "Se Battle Royale"
 }

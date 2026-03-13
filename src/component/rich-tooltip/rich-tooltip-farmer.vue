@@ -34,7 +34,7 @@
 						</div>
 					</div>
 				</div>
-				<talent :id="farmer.id" :talent="farmer.talent" category="farmer" />
+				<talent :id="farmer.id" :talent="farmer.talent" :max_talent="farmer.max_talent" category="farmer" />
 				<span class="talent-more">({{ farmer.talent_more >= 0 ? '+' + farmer.talent_more : farmer.talent_more }})</span>
 				<ranking-badge v-if="farmer && farmer.ranking && farmer.ranking <= 1000 && farmer.in_garden" :id="farmer.id" :ranking="farmer.ranking" category="farmer" />
 				<span class="level">• {{ $t('main.level_n', [farmer.total_level]) }}</span>
@@ -77,7 +77,7 @@
 	import { defineAsyncComponent } from 'vue'
 	const LWTitle = defineAsyncComponent(() => import('@/component/title/title.vue'))
 
-	@Options({ components: { RichTooltipLeek, 'lw-title': LWTitle } })
+	@Options({ components: { RichTooltipLeek, 'lw-title': LWTitle }, emits: ['update:modelValue'] })
 	export default class RichTooltipFarmer extends Vue {
 		@Prop({required: true}) id!: number
 		@Prop() disabled!: boolean
@@ -94,10 +94,10 @@
 		value: boolean = false
 
 		get _open_delay() {
-			return this.instant ? 0 : 500
+			return this.instant ? 1 : 500
 		}
 		get _close_delay() {
-			return this.instant ? 0 : 1
+			return this.instant ? 1 : 1
 		}
 		@Watch('id')
 		update() {

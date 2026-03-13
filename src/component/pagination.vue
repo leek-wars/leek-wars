@@ -30,21 +30,25 @@
 
 <style lang="scss" scoped>
 	.pagination {
-		padding: 10px;
 		text-align: center;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 2px;
 	}
 	a {
-		padding: 5px 7px;
+		padding: 5px 10px;
 		vertical-align: middle;
 		font-size: 18px;
 		display: inline-block;
 		border-radius: 20px;
-		margin: 0 2px;
+		&:hover {
+			background: var(--border);
+		}
 	}
 	a.current {
-		padding: 5px 10px;
 		color: white;
 		background-color: #5fad1b;
-		font-weight: bold;
+		font-weight: 500;
 	}
 </style>

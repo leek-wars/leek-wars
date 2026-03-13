@@ -92,7 +92,7 @@
 					<div class="spacer"></div>
 					<span class="level">{{ $t('main.level_n', [entity.level]) }}</span>
 					<div class="bar-wrapper">
-						<div :style="{width: (100 * entity.life / entity.maxLife) + '%', background: entity.lifeColor}" class="details-bar"></div>
+						<div :style="{width: (100 * entity.displayLife / entity.maxLife) + '%', background: entity.lifeColor}" class="details-bar"></div>
 					</div>
 					<div>{{ entity.farmer_name }}</div>
 					<avatar :farmer="entity.farmer" class="farmer-avatar" />
@@ -100,7 +100,7 @@
 				<div class="stats">
 					<div :class="{zero: entity.life === 0}" class="stat life">
 						<img src="/image/charac/small/life.png">
-						<div :class="{small: entity.maxLife > 9999}" class="color-life">{{ entity.life + ' / ' + entity.maxLife }}</div>
+						<div :class="{small: entity.maxLife > 9999}" class="color-life">{{ Math.round(entity.displayLife) + ' / ' + entity.maxLife }}</div>
 					</div>
 					<div :class="{zero: entity.tp === 0}" class="stat">
 						<img src="/image/charac/small/tp.png">

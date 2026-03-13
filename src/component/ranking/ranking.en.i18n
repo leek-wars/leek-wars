@@ -27,7 +27,7 @@
 	"results": "Results",
 	"richest_title": "Money earned",
 	"search_in_ranking": "Search in the ranking",
-	"search_name": "Name",
+	"search_name": "Name or ID",
 	"shots": "Shots",
 	"shots_title": "Total shots count",
 	"summons": "Summons",
@@ -54,5 +54,7 @@
 	"composition": "Composition",
 	"turrets_killed": "Turrets",
 	"turrets_killed_title": "Turrets destroyed",
-	"won": "Won"
+	"won": "Won",
+	"damage": "Damage",
+	"damage_title": "Damage dealt"
 }

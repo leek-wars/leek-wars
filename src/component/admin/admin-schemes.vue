@@ -1,7 +1,7 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><router-link to="/admin">Administration</router-link> > Schémas ({{ schemes ? schemes.length : '...' }})</h1>
+			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Schémas (' + (schemes ? schemes.length : '...') + ')', link: '/admin/schemes'}]" :raw="true" /></h1>
 		</div>
 		<panel class="first">
 			<div v-if="schemes" class="schemes">
@@ -78,7 +78,9 @@
 	import { defineAsyncComponent } from 'vue'
 	const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
 
-	@Options({ components: { RichTooltipFarmer, RichTooltipItem } })
+	import Breadcrumb from '@/component/forum/breadcrumb.vue'
+
+	@Options({ components: { RichTooltipFarmer, RichTooltipItem, Breadcrumb } })
 	export default class AdminSchemes extends Vue {
 		ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
 		data: any = null

@@ -17,5 +17,16 @@
 	"topic": "Temat",
 	"mark_as_read": "Oznacz jako przeczytane",
 	"mark_as_read_text": "Wszystkie tematy we wszystkich kategoriach forum zostaną oznaczone jako przeczytane. Po tej akcji będą wyświetlane tylko nowe tematy lub nowe odpowiedzi.",
-	"show_resolved": "Pokaż rozwiązane tematy"
+	"show_resolved": "Pokaż rozwiązane tematy",
+	"priority": "Priorytet",
+	"priority_high": "Wysoki priorytet",
+	"priority_medium": "Średni priorytet",
+	"priority_low": "Niski priorytet",
+	"hidden_topic": "Ukryty temat",
+	"status_acknowledged": "Przyjęto do wiadomości",
+	"status_not_a_bug": "To nie bug",
+	"status_not_planned": "Nie planowany",
+	"status_obsolete": "Przestarzałe",
+	"status_not_reproduced": "Nie odtworzony",
+	"status_resolved": "Rozwiązany"
 }

@@ -1,3 +1,110 @@
+245:
+  title: "Like, animazioni di combattimento, BigInteger e miglioramenti forum."
+  added:
+    - "Pulsante like sui profili degli allevatori. #img_245_likes"
+    - "Animazione dei cambiamenti di vita nel player di combattimento. #img_245_life_animation"
+    - "Pulsante per cancellare mark() e markText() nel player (scorciatoia M)."
+    - "Aggiunta dei BigInteger in LeekScript (grazie a Batary)."
+    - "Aggiunta delle funzioni setBit, testBit e bitLength per i BigInteger (grazie a Batary)."
+    - "Visualizzazione dei ranghi di classifica dei porri sulla pagina allevatore. #img_245_ranking_badges"
+    - "Visualizzazione degli avatar degli allevatori nei tornei solo. #img_245_tournament_avatars"
+    - "Tooltip con le statistiche al passaggio del mouse nei tornei. #img_245_tooltips_tournament"
+    - "Tabella dettagliata delle statistiche dei membri nella pagina squadra. #img_245_team_stats"
+    - "Aggiunta della classifica fun dei danni inflitti. #img_245_damage_ranking"
+    - "Contatore di visualizzazioni sui topic del forum. #img_245_forum_views"
+    - "Notifiche per i voti positivi e negativi sul forum."
+    - "Avviso prima di rispondere a un topic vecchio (> 1 anno). #img_245_old_topic"
+    - "Ordinamento dei topic per numero di messaggi."
+    - "Sistema di priorita per i topic del forum."
+    - "Annuncio dei vincitori dei tornei nella chat."
+    - "Pulsante di espansione nella pagina mercato. #img_245_market_expand"
+    - "URL /release/:version per vedere un changelog specifico."
+    - "Pagina della cronologia dei giudizi di moderazione."
+    - "Parametro entity opzionale per getNextPlayer e getPreviousPlayer."
+  improved:
+    - "Enciclopedia: comportamento di arrayFoldLeft/Right con un array vuoto (grazie a Loutreavin)."
+    - "Forum: miglioramento del layout mobile delle categorie."
+    - "Annuncio dei tornei 30 minuti prima invece di un'ora."
+  fixed:
+    - "Editor: sostituzione del testo selezionato da destra a sinistra su Firefox."
+    - "Caratteristica cuori tradotta come hearts invece di cores."
+    - "Pulsante annulla che non chiudeva la finestra di creazione squadra."
+    - "Breadcrumb del forum che deborda su mobile."
+    - "Pulsanti di azione mobile rotti dalla migrazione Vue 3."
+    - "Correzioni di visualizzazione del tutorial."
+
+244:
+  title: "Migrazione Vue 3, nuove classifiche, aggiunte pratiche e correzioni."
+  added:
+    - "Aggiunta della cronologia del talento per allevatori e squadre. #img_244_talent_history"
+    - "Aggiunta della classifica delle composizioni di squadra. #img_244_composition_ranking"
+    - "Aggiunta del toggle tema chiaro/scuro nel piè di pagina. #img_244_theme_toggle"
+    - "Forum: gestione degli stati dei topic (non riprodotto, non pianificato, non è un bug). #img_244_topic_status"
+    - "Forum: aggiunta dello spostamento dei topic tra categorie. #img_244_topic_move"
+    - "Forum: visualizzazione della percentuale di risoluzione dei topic Suggerimenti e Bug. #img_244_resolution"
+    - "Forum: aggiunta del selettore di emoji nel campo di risposta. #img_244_emoji_selector"
+    - "Enciclopedia: aggiunta della visualizzazione delle pagine più viste. #img_244_most_viewed"
+    - "Enciclopedia: lingue disponibili mostrate quando una pagina non esiste nella lingua corrente."
+    - "Enciclopedia: gestione degli alias con reindirizzamento e visualizzazione. #img_244_alias"
+    - Aggiunta delle costanti delle armi boss WEAPON_ODACHI, WEAPON_EXCALIBUR e WEAPON_SCYTHE.
+    - "Aggiunta della classifica divertente dei boss uccisi. #img_244_boss_ranking"
+    - "Aggiunta della classifica divertente dei forzieri aperti. #img_244_chest_ranking"
+    - "Aggiunta della classifica divertente delle torrette distrutte. #img_244_turret_ranking"
+    - "Aggiunta della classifica divertente dei crash. #img_244_crashes_ranking"
+    - "Mobile: aggiunta del selettore di lingua nella chat. #img_244_mobile_lang"
+  improved:
+    - "Migrazione a Vue 3. #img_244_vue3"
+    - "Tornei: tutti gli iscritti partecipano, distribuiti tra più tornei da 16 a 32 giocatori."
+    - Ammorbidimento del matchmaking con intervalli di talento più ampi e coefficienti regolati.
+    - "Player: mute istantaneo, volume in tempo reale, effetti accelerati e pausa/ripresa."
+    - Reindirizzamento alla pagina richiesta dopo il login invece della homepage.
+    - "Editor: miglioramento del Ctrl+clic verso la definizione (navigazione e scroll corretti)."
+    - "Editor: salvataggio e ripristino della piegatura del codice tra i cambi di IA."
+    - "Mercato: navigazione da tastiera con i tasti freccia su/giù/sinistra/destra tra gli oggetti."
+    - "LeekScript: il punto e virgola dopo while() nei cicli do-while è ora facoltativo."
+    - "LeekScript: verifica dell'accesso ai metodi privati/protetti alla compilazione."
+    - "Enciclopedia: conservazione della ricerca nell'URL per la condivisione e la navigazione indietro."
+    - "Classifica composizioni: sostituzione di combattimenti/vittorie con il livello totale."
+    - "Chat: filtraggio degli oggetti non disponibili nel comando /market."
+    - Hosting locale del font Roboto (rimozione della dipendenza da Google Fonts).
+    - "Rapporti: migrazione dei grafici a Chart.js con tooltip, click-to-focus e supporto dark mode."
+    - "Chat: limitazione dei messaggi in memoria con ricaricamento allo scroll."
+    - "Enciclopedia: rilascio automatico del blocco alla chiusura della scheda."
+    - Miglioramento della riconnessione WebSocket (backoff esponenziale, rilevamento connessioni morte).
+    - Compressione Brotli delle pagine per caricamenti più rapidi.
+    - "Visualizzazione del numero di riga dell'IA nell'errore quando l'IA è troppo grande. #img_244_error_large"
+    - "Documentazione: Ctrl+Alt+H non cambia più il titolo della pagina (grazie a Casanova)."
+  fixed:
+    - Correzione di un bug che impediva i combattimenti di squadra quando l'IA della torretta mancava.
+    - "Boss: correzione del conteggio combattimenti al lancio di un boss senza parteciparvi (#2344)."
+    - Correzione della progressione del combattimento che saltava al 99% quando un forziere moriva.
+    - Correzione del contatore di notifiche non lette che non veniva restituito alla connessione.
+    - Correzione dei bot di test che potevano avere armi e chip da boss.
+    - "Mercato: correzione del tooltip di Punizione che mostrava una percentuale invece dei danni reali."
+    - "Mercato: correzione del livello prerequisiti che usava il primo porro invece del massimo."
+    - Correzione della cache delle IA non cancellata dal localStorage alla disconnessione.
+    - Correzione del messaggio "error_name_already_used" non tradotto alla creazione di un porro.
+    - "Editor: correzione della colorazione sintattica degli operatori \\ e \\= (divisione intera)."
+    - "Editor: correzione della chiusura della scheda quando l'IA è stata eliminata fuori dall'editor."
+    - "Editor: correzione dei caratteri inseriti nella posizione sbagliata dopo avanti/indietro (Firefox)."
+    - "Editor: correzione dell'estensione .leek mancante se il nome dell'IA contiene un punto."
+    - "Editor: correzione del primo tasto ignorato dopo una selezione per trascinamento."
+    - Correzione della chat estesa che passava dietro lo scrollbar dell'editor.
+    - "Allevatore: correzione del tooltip che non appariva al passaggio del mouse sul padrino."
+    - Correzione delle reazioni chat con gli emoji numerici (0️⃣-9️⃣).
+    - Correzione della visualizzazione del nome dei forum di squadra nella ricerca.
+    - Correzione della ricerca nei forum di squadra.
+    - Correzione di numerose traduzioni in italiano (grazie a Casanova).
+    - "LeekScript: correzione di un crash di compilazione di classi con include."
+    - "LeekScript: miglior gestione delle maiuscole/minuscole per class e include."
+    - "LeekScript: correzione dell'ambiguità di cast con i letterali numerici negativi."
+    - "LeekScript: correzione degli operatori di assegnazione composti per integer|real."
+    - "LeekScript: correzione dell'uguaglianza delle funzioni utente che restituiva sempre false."
+    - "LeekScript: correzione del rilevamento di validazione dell'operatore ternario."
+    - "LeekScript: correzione di un errore di compilazione di intervalContains con il tipo Number."
+    - "LeekScript: correzione del cast di un campo statico come variabile semplice."
+    - "LeekScript: correzione della riga di stacktrace errata nei cicli foreach."
+
 243:
   title: Creazione della communità, fucile quantistico e nuovo server.
   added:
@@ -25,4 +132,4 @@
     - Correzione di un bug sulla resurrezione di un bulbo nemico (grazie a WhiteSlash).
     - Correzione di un bug di lettura dell'intervallo con numeri decimali (grazie a Hazurl).
     - Ordinamento dei commenti su un combattimento in ordine cronologico (grazie a WhiteSlash)
-    
+

@@ -1,53 +1,107 @@
-244:
-  title: WIP
+245:
+  title: "Likes, animations de combat, BigIntegers et améliorations forum."
   added:
-    - Ajout de l'historique de talent pour les éleveurs et les équipes.
-    - Ajout des BigIntegers dans le LeekScript (merci à Batary).
-    - Ajout des fonctions setBit et testBit pour lire ou écrire un bit spécifique (merci à Batary).
-    - Ajout de la fonction bitLength qui complète leadingZeros pour les BigInteger (merci à Batary).
-    - Ajout des constantes d'armes de boss WEAPON_ODACHI, WEAPON_EXCALIBUR et WEAPON_SCYTHE.
-    - Ajout du classement fun des coffres ouverts.
+    - "Bouton like sur les profils d'éleveurs. #img_245_likes"
+    - "Animation des changements de vie dans le player de combat. #img_245_life_animation"
+    - "Bouton pour effacer les mark() et markText() dans le player (raccourci M)."
+    - "Affichage des rangs de classement des poireaux sur la page éleveur. #img_245_ranking_badges"
+    - "Affichage des avatars des éleveurs dans les tournois solo. #img_245_tournament_avatars"
+    - "Tooltips avec les stats au survol des participants dans les tournois. #img_245_tooltips_tournament"
+    - "Tableau détaillé des statistiques des membres sur la page d'équipe. #img_245_team_stats"
+    - "Ajout du classement fun des dégâts infligés. #img_245_damage_ranking"
+    - "Compteur de vues sur les topics du forum. #img_245_forum_views"
+    - "Notifications pour les votes positifs et négatifs sur le forum."
+    - "Avertissement avant de répondre à un topic ancien (> 1 an). #img_245_old_topic"
+    - "Tri des topics par nombre de messages."
+    - "Système de priorité pour les topics du forum."
+    - "Annonce des vainqueurs de tournois dans le chat."
+    - "Bouton d'agrandissement sur la page marché. #img_245_market_expand"
+    - "URL /release/:version pour voir un changelog spécifique."
+    - "Page d'historique des jugements de modération."
+    - "Paramètre entity optionnel pour getNextPlayer et getPreviousPlayer."
   improved:
-    - "Player : les sons s'arrêtent immédiatement quand on coupe le son, le volume modifie tous les sons en cours, les effets sonores sont accélérés avec la vitesse de lecture, et pause/resume fonctionne aussi sur les bruitages."
-    - "Tournois : Tous les joueurs inscrits participent maintenant, répartis équitablement entre plusieurs tournois de 16 à 32 joueurs au lieu d'exclure les joueurs en trop."
-    - "Éditeur : amélioration du Ctrl+clic pour aller à la définition d'un symbole (navigation plus fiable et scroll correct)."
-    - "LeekScript : le point-virgule après while() dans les boucles do-while est maintenant optionnel."
-    - "Marché : navigation au clavier avec les flèches haut/bas/gauche/droite entre les items."
-    - "LeekScript : vérification de l'accès aux méthodes privées/protégées à la compilation pour les variables typées."
-    - "Éditeur : sauvegarde et restauration du pliage de code entre les changements d'IA et les rechargements de page."
-    - "Rapport : amélioration du graphique de vie (tooltip avec noms d'entités, clic pour isoler une courbe, axes améliorés)."
-    - "Rapport : amélioration du graphique de dégâts (traductions, tooltips, totaux par barre)."
-    - "Rapport : support du mode sombre pour les graphiques."
-    - Migration vers Vue 3.
+    - "Encyclopédie : comportement de arrayFoldLeft/Right avec un tableau vide (merci à Loutreavin)."
+    - "Forum : amélioration de la mise en page mobile des catégories."
+    - "Annonce des tournois 30 minutes avant au lieu d'une heure."
   fixed:
-    - "Éditeur : correction de la coloration syntaxique des opérateurs \\ et \\= (division entière)."
-    - "LeekScript : correction d'un crash lors de la compilation de classes dans certains cas d'include, et meilleure gestion de la casse sur les mots-clés class et include."
+    - "Éditeur : remplacement de texte sélectionné de droite à gauche sous Firefox."
+    - "Caractéristique coeurs traduite par hearts au lieu de cores."
+    - "Bouton annuler ne fermant pas la popup de création d'équipe."
+    - "Fil d'Ariane du forum qui déborde sur mobile."
+    - "Boutons d'action mobile cassés par la migration Vue 3."
+    - "Corrections d'affichage du didacticiel."
+
+244:
+  title: "Migration Vue 3, nouveaux classements, ajouts pratiques et corrections."
+  added:
+    - "Ajout de l'historique de talent pour les éleveurs et les équipes. #img_244_talent_history"
+    - "Ajout du classement des compositions d'équipe. #img_244_composition_ranking"
+    - "Ajout du toggle de thème clair/sombre dans le pied de page. #img_244_theme_toggle"
+    - "Forum : ajout de la gestion des statuts de topics (non reproduit, non planifié, pas un bug). #img_244_topic_status"
+    - "Forum : ajout du déplacement de topics entre catégories. #img_244_topic_move"
+    - "Forum : affichage du pourcentage de résolution des topics Suggestions et Bugs. #img_244_resolution"
+    - "Forum : ajout du sélecteur d'emojis dans le champ de réponse. #img_244_emoji_selector"
+    - "Encyclopédie : ajout de l'affichage des pages les plus vues. #img_244_most_viewed"
+    - "Encyclopédie : affichage des langues disponibles quand une page n'existe pas."
+    - "Encyclopédie : gestion des alias avec redirection et affichage. #img_244_alias"
+    - Ajout des constantes d'armes de boss WEAPON_ODACHI, WEAPON_EXCALIBUR et WEAPON_SCYTHE.
+    - "Ajout du classement fun des boss tués. #img_244_boss_ranking"
+    - "Ajout du classement fun des coffres ouverts. #img_244_chest_ranking"
+    - "Ajout du classement fun des tourelles détruites. #img_244_turret_ranking"
+    - "Ajout du classement fun des crashes. #img_244_crashes_ranking"
+    - "Mobile : ajout du sélecteur de langue dans le chat. #img_244_mobile_lang"
+  improved:
+    - "Migration vers Vue 3. #img_244_vue3"
+    - "Tournois : tous les inscrits participent, répartis entre plusieurs tournois de 16 à 32 joueurs."
+    - Assouplissement du matchmaking avec des plages de talent élargies et des coefficients ajustés.
+    - "Player : mute instantané, volume en temps réel, bruitages accélérés et pause/resume."
+    - Redirection vers la page demandée après connexion au lieu de la page d'accueil.
+    - "Éditeur : amélioration du Ctrl+clic vers la définition (navigation et scroll corrigés)."
+    - "Éditeur : sauvegarde et restauration du pliage de code entre les changements d'IA."
+    - "Marché : navigation au clavier avec les flèches haut/bas/gauche/droite entre les items."
+    - "LeekScript : le point-virgule après while() dans les boucles do-while est maintenant optionnel."
+    - "LeekScript : vérification de l'accès aux méthodes privées/protégées à la compilation."
+    - "Encyclopédie : conservation de la recherche dans l'URL pour le partage et la navigation arrière."
+    - "Classement compositions : remplacement des combats/victoires par le niveau total."
+    - "Chat : filtrage des items non disponibles dans la commande /market."
+    - Hébergement de la police Roboto en local (suppression de la dépendance à Google Fonts).
+    - "Rapports : migration des graphiques vers Chart.js avec tooltips, click-to-focus et dark mode."
+    - "Chat : limitation des messages en mémoire avec rechargement au scroll."
+    - "Encyclopédie : relâchement automatique du verrou à la fermeture de l'onglet."
+    - Amélioration de la reconnexion WebSocket (backoff exponentiel, détection de connexions mortes).
+    - Compression Brotli des pages pour des chargements plus rapides.
+    - "Affichage de la ligne de l'IA dans l'erreur quand l'IA est trop grosse. #img_244_error_large"
+    - "Documentation : Ctrl+Alt+H ne change plus le titre de la page (merci à Casanova)."
+  fixed:
     - Correction d'un bug empêchant les combats d'équipe quand l'IA de la tourelle était inexistante.
+    - "Boss : correction du décompte de combats au lancement d'un boss sans y participer (#2344)."
+    - Correction de la progression du combat qui sautait à 99% quand un coffre mourait.
     - Correction du compteur de notifications non lues qui n'était pas renvoyé à la connexion.
     - Correction des bots de test qui pouvaient avoir des armes et puces de boss.
-    - Correction du message d'erreur "error_name_already_used" non traduit lors de la création d'un poireau.
-    - "Éditeur : correction de la fermeture d'onglet quand l'IA a été supprimée en dehors de l'éditeur."
-    - "Boss : correction du décompte de combats lors du lancement d'un combat de boss sans y participer (#2344)."
-    - Correction de la progression du combat qui sautait à 99% quand un coffre mourait.
-    - "Éditeur : correction d'un bug où les caractères s'inséraient au mauvais endroit après navigation avec les boutons précédent/suivant du navigateur (Firefox)."
-    - "Éleveur : correction de la popup qui ne s'affichait pas au survol du parrain."
-    - Correction de nombreuses traductions en italien (merci à Casanova).
-    - Correction des mentions disparaissant à la suppression de messages groupés dans le chat.
-    - Correction des icônes de potions/apparences non cliquables sur mobile en mode chat-first.
-    - Correction des poireaux invisibles dans le tableau de tournoi en mode discret.
-    - Correction des notifications de trophées qui n'apparaissaient pas sans rafraîchir la page.
-    - Correction du tooltip du nom de poireau qui apparaissait sous le modèle en combat.
-    - Correction du saut en haut de page sur Firefox lors de l'achat sur le marché.
-    - Correction du clic sur "aller à l'IA" dans les logs du rapport.
-    - "Éditeur : correction du réglage d'agrandissement de fenêtre qui ne s'appliquait pas toujours."
-    - Correction de l'espace manquant avant le texte du lanceur dans les descriptions de puces.
-    - Correction du clic sur les lignes de debug dans le rapport.
-    - Correction de la barre latérale qui ne surlignait pas la page courante dans les sous-pages.
-    - Correction de l'affichage du cooldown initial.
-    - Correction des réactions chat avec les emojis chiffres (0️⃣-9️⃣).
     - "Marché : correction du tooltip de châtiment qui affichait un pourcentage au lieu des dégâts réels."
+    - "Marché : correction du niveau des prérequis qui utilisait le premier poireau au lieu du max."
+    - Correction du cache des IAs non supprimé du localStorage à la déconnexion.
+    - Correction du message "error_name_already_used" non traduit à la création d'un poireau.
+    - "Éditeur : correction de la coloration syntaxique des opérateurs \\ et \\= (division entière)."
+    - "Éditeur : correction de la fermeture d'onglet quand l'IA a été supprimée en dehors de l'éditeur."
+    - "Éditeur : correction des caractères insérés au mauvais endroit après précédent/suivant (Firefox)."
+    - "Éditeur : correction de l'extension .leek manquante si le nom de l'IA contient un point."
+    - "Éditeur : correction de la première touche ignorée après une sélection par glisser."
+    - Correction du chat étendu qui passait derrière la scrollbar de l'éditeur.
+    - "Éleveur : correction de la popup qui ne s'affichait pas au survol du parrain."
+    - Correction des réactions chat avec les emojis chiffres (0️⃣-9️⃣).
+    - Correction de l'affichage du nom des forums d'équipe dans la recherche.
+    - Correction de la recherche dans les forums d'équipe.
+    - Correction de nombreuses traductions en italien (merci à Casanova).
+    - "LeekScript : correction d'un crash de compilation de classes avec include."
+    - "LeekScript : meilleure gestion de la casse sur les mots-clés class et include."
     - "LeekScript : correction de l'ambiguïté de cast avec les littéraux numériques négatifs."
-    - "LeekScript : correction des opérateurs d'affectation composés pour les types union nombre (integer|real)."
+    - "LeekScript : correction des opérateurs d'affectation composés pour integer|real."
+    - "LeekScript : correction de l'égalité des fonctions utilisateur qui retournait toujours false."
+    - "LeekScript : correction de la détection de validation de l'opérateur ternaire."
+    - "LeekScript : correction d'une erreur de compilation d'intervalContains avec le type Number."
+    - "LeekScript : correction du cast d'un champ statique comme variable simple."
+    - "LeekScript : correction de la ligne de stacktrace incorrecte dans les boucles foreach."
 
 243:
   title: Création de la communauté, Fusil quantique et nouveau serveur.

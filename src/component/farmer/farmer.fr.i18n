@@ -11,6 +11,7 @@
 	"cancel": "Annuler",
 	"cancel_candidacy": "Annuler la demande",
 	"candidacy_canceled": "Candidature annulée",
+	"candidacies": "Candidatures en cours",
 	"candidacy_for_team": "Demande pour l'équipe {team}",
 	"challenge": "Défier",
 	"click_to_change_avatar": "Cliquer pour changer",
@@ -106,5 +107,12 @@
 	"display_team": "équipe",
 	"trophy_x": "Trophée {0}",
 	"sponsorship": "Parrainage",
-	"godsons_level": "Niveau total récursif des filleuls"
+	"godsons_level": "Niveau total récursif des filleuls",
+	"team_invitations": "Invitations d'équipes",
+	"accept": "Accepter",
+	"reject": "Refuser",
+	"invitation_accepted": "Invitation acceptée !",
+	"invitation_rejected": "Invitation refusée",
+	"invite_to_team": "Inviter dans l'équipe",
+	"invitation_sent": "Invitation envoyée !"
 }

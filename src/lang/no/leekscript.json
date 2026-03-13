@@ -181,5 +181,7 @@
 	"intial_version": "Første versjon",
 	"strict_mode": "Streng modus (avansert)",
 	"all_info_ls": "All informasjon om {0}",
-	"size": "Størrelse"
+	"size": "Størrelse",
+	"error_146": "\"case\" eller \"default\" forventet.",
+	"error_147": "Kolon forventet etter \"case\"."
 }

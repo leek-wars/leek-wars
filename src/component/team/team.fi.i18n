@@ -77,7 +77,8 @@
 	"no_ai": "Valitse AI",
 	"no_compositions": "Ei komposteja",
 	"no_description": "ei kuvausta",
-	"not_found_id": "Tiimin tunnusta <b>{0}</b> ei löydy :(",
+	"not_found": "Tiimiä ei löytynyt",
+	"not_found_id": "Tiimin tunnusta {id} ei löydy :(",
 	"opened": "Avattu",
 	"owner": "Omistaja",
 	"owner_has_been_changed": "Omistaja on vaihtunut.",
@@ -109,5 +110,11 @@
 	"xp": "XP: {0}",
 	"you_left_team": "Lähdit joukkueesta",
 	"load_all": "Lataa kaikki",
-	"rankings": "Rankingit"
+	"rankings": "Rankingit",
+	"all_teams": "Kaikki tiimit",
+	"recruitment_message": "Rekrytointiviesti",
+	"no_recruitment_message": "ei rekrytointiviestiä",
+	"configure_columns": "Määritä sarakkeet",
+	"default_sort": "Oletusjärjestys",
+	"reset_columns": "Nollaa"
 }

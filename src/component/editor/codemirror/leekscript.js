@@ -36,7 +36,7 @@ import { CONSTANTS } from '@/model/constants'
         "var": kw("var"), "global": kw("global"),
         "function": kw("function"),
         "for": kw("for"),
-        // "switch": kw("switch"), "case": kw("case"), "default": kw("default"), "typeof": operator, "undefined": atom,
+        "switch": kw("switch"), "case": kw("case"), "default": kw("default"), // "typeof": operator, "undefined": atom,
         "in": operator, "instanceof": operator, "and": operator, "or": operator, "xor": operator, "not": operator,
         "true": atom, "false": atom, "null": atom, "NaN": atom, "Infinity": atom,
         "this": kw("this"), "class": kw("class"), "super": kw("atom"),

@@ -7,11 +7,11 @@ export default {
 	tokenPostfix: '.js',
 
 	keywords: [
-		'break', 'class', 'continue',
-		'constructor', 'do', 'else',
+		'break', 'case', 'class', 'continue',
+		'constructor', 'default', 'do', 'else',
 		'extends', 'for', 'function',
 		'if', 'in', 'new',
-		'return', 'super', 'this',
+		'return', 'super', 'switch', 'this',
 		'var', 'void', 'while',
 		'private', 'public', 'protected', 'static',
 		'not', 'global', 'and', 'or', 'xor', 'instanceof',

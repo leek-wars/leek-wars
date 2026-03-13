@@ -14,7 +14,10 @@
 			<talent :id="compo.team_id" :talent="compo.talent" category="team" />
 			<br>
 			<div class="level">
-				{{ compo.leek_count }} <img class="icon" src="/image/icon/black/leek.png"> • {{ $t('main.level_n', [compo.total_level]) }}
+				<span class="flex">
+				{{ compo.leek_count }} <img class="icon" src="/image/icon/black/leek.png">
+				</span>
+				{{ $t('main.level_n', [compo.total_level]) }}
 			</div>
 		</div>
 	</rich-tooltip-composition>
@@ -36,11 +39,11 @@
 		padding: 10px 0;
 	}
 	.emblem {
-		width: 120px;
-		height: 120px;
+		width: 80%;
+		aspect-ratio: 1;
 	}
 	.name {
-		font-size: 18px;
+		font-size: 17px;
 		font-weight: 500;
 		padding: 5px;
 		padding-bottom: 3px;
@@ -52,20 +55,27 @@
 		margin: 5px 0;
 	}
 	.level {
-		font-size: 15px;
+		font-size: 14px;
 		padding-top: 3px;
 		color: var(--text-color-secondary);
 		font-weight: 500;
 		display: flex;
 		align-items: flex-start;
 		justify-content: center;
+		flex-wrap: wrap;
+		gap: 4px 2px;
 		img {
 			width: 16px;
 			opacity: 0.5;
 			margin: 0 3px;
 		}
 	}
-#app.dark .icon {
-	filter: invert(1);
-}
+	#app.app {
+		.level {
+			font-size: 13px;
+		}
+	}
+	#app.dark .icon {
+		filter: invert(1);
+	}
 </style>

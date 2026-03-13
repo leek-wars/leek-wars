@@ -16,7 +16,7 @@
 						<span class="name">
 							<router-link :to="'/team/' + team.id" class="text">{{ team.name }}</router-link>
 						</span>
-						<talent :id="team.id" :talent="team.talent" category="team" />
+						<talent :id="team.id" :talent="team.talent" :max_talent="team.max_talent" category="team" />
 						<ranking-badge v-if="team && team.ranking <= 1000" :id="team.id" :ranking="team.ranking" category="team" />
 						<span class="level">
 							• {{ $t('main.n_farmers', [team.farmers.length]) }}
@@ -46,7 +46,7 @@
 	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Options({ components: { RichTooltipFarmer } })
+	@Options({ components: { RichTooltipFarmer }, emits: ['update:modelValue'] })
 	export default class RichTooltipTeam extends Vue {
 		@Prop({required: true}) id!: number
 		@Prop() disabled!: boolean
@@ -61,10 +61,10 @@
 		value: boolean = false
 
 		get _open_delay() {
-			return this.instant ? 0 : 500
+			return this.instant ? 1 : 500
 		}
 		get _close_delay() {
-			return this.instant ? 0 : 1
+			return this.instant ? 1 : 1
 		}
 		@Watch('id')
 		update() {

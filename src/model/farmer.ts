@@ -30,12 +30,14 @@ class Farmer {
 	public country!: string | null
 	public warnings!: any[]
 	public candidacy!: any
+	public team_invitations!: any[]
 	public website!: string
 	public github!: string
 	public hats!: Hat[]
 	public grade!: string
 	public muted!: boolean
 	public fights!: number
+	public bought_fights!: number
 	public team_fights!: number
 	public chips!: Chip[]
 	public didactitiel_seen!: boolean
@@ -43,6 +45,7 @@ class Farmer {
 	public moderator!: boolean
 	public admin!: boolean
 	public talent!: number
+	public max_talent!: number
 	public talent_history!: number[]
 	public team!: Team | null
 	public total_level!: number

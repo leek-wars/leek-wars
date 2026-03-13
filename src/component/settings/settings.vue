@@ -109,6 +109,10 @@
 						<div>{{ $t('activate_discrete_mode') }}</div>
 						<div><v-switch v-model="sfwMode" hide-details /></div>
 					</div>
+					<div class="setting" id="notifs-popups-button">
+						<div>{{ $t('notifs_popups') }}</div>
+						<div><v-switch v-model="notifsPopups" hide-details /></div>
+					</div>
 					<div class="setting" id="notifs-results-button">
 						<div>{{ $t('notifs_results') }}</div>
 						<div><v-switch v-model="notifsResults" hide-details /></div>
@@ -280,6 +284,7 @@
 
 		settings: any = null
 		sfwMode: boolean = localStorage.getItem('sfw') === 'true'
+		notifsPopups: boolean = localStorage.getItem('options/notifs-popups') !== 'false'
 		notifsResults: boolean = localStorage.getItem('options/notifs-results') === 'true'
 		chatFirst: boolean = localStorage.getItem('options/chat-first') === 'true'
 		pushNotifications: boolean = localStorage.getItem('options/push-notifs') === 'true'
@@ -383,6 +388,12 @@
 		updateTheme() {
 			localStorage.setItem('theme', '' + LeekWars.themeSetting)
 			LeekWars.darkMode = LeekWars.themeSetting !== 'auto' ? LeekWars.themeSetting === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
+		}
+
+		@Watch('notifsPopups')
+		updateNotifsPopups() {
+			localStorage.setItem('options/notifs-popups', '' + this.notifsPopups)
+			LeekWars.notifsPopups = this.notifsPopups
 		}
 
 		@Watch('notifsResults')

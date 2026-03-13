@@ -11,6 +11,7 @@
 	"cancel": "Отмена",
 	"cancel_candidacy": "Отменить запрос",
 	"candidacy_canceled": "Заявка отменена",
+	"candidacies": "Активные заявки",
 	"candidacy_for_team": "Заявка на команду {team}",
 	"challenge": "Испытание",
 	"click_to_change_avatar": "Нажмите, чтобы изменить",

@@ -1,32 +1,35 @@
 <template>
-	<div>
+	<div class="page">
 		<div class="page-header page-bar">
 			<div>
-				<h1><router-link to="/admin">Administration</router-link> > Newsletters</h1>
+				<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Newsletters', link: '/admin/newsletters'}]" :raw="true" /></h1>
 				<div class="info">{{ count }} inscrits</div>
 			</div>
 		</div>
 		<panel class="first">
 			<template #content>
 				<div class="newsletters">
-					<div ref="progress" class="progress">
+					<!-- <div ref="progress" class="progress">
 						<div v-for="p in progress" :key="p.id">{{ p.progress }} --- {{ p.farmer }} ({{ p.id }}) --- {{ p.email }}</div>
-					</div>
+					</div> -->
 					<div v-for="newsletter in newsletters" :key="newsletter.id" class="newsletter card">
 						<div class="main">
 							<b>Version {{ newsletter.version }}</b>
-							<div>FR : {{ newsletter.title_fr }}</div>
-							<div>EN : {{ newsletter.title_en }}</div>
 							<div class="spacer"></div>
-							<v-btn @click="test(newsletter)"><v-icon>mdi-cog-outline</v-icon> Test</v-btn>
-							<v-btn v-if="newsletter.sent === 0" color="primary" @click="send(newsletter)"><v-icon>mdi-send-outline</v-icon> Envoyer</v-btn>
-							<div v-else>Envoyé le {{ $filters.date(newsletter.sent) }}</div>
+							<v-btn @click="test(newsletter, $store.state.farmer.id)"><v-icon>mdi-cog-outline</v-icon> Test compte normal</v-btn>
+							<v-btn @click="test(newsletter, 73156)"><v-icon>mdi-cog-outline</v-icon> Test compte random</v-btn>
+							<!-- <v-btn v-if="newsletter.sent === 0" color="primary" @click="send(newsletter)"><v-icon>mdi-send-outline</v-icon> Envoyer</v-btn> -->
+							<div v-if="newsletter.sent !== 0">Envoyé le {{ $filters.date(newsletter.sent) }}</div>
 						</div>
 						<div class="content">
-							FR :
-							<div v-html="html(newsletter.content_fr)"></div>
-							EN :
-							<div v-html="html(newsletter.content_en)"></div>
+							<v-card>
+								<div class="subject"><flag code="fr" /> {{ newsletter.title_fr }}</div>
+								<div v-html="html(newsletter.content_fr)"></div>
+							</v-card>
+							<v-card>
+								<div class="subject"><flag code="gb" /> {{ newsletter.title_en }}</div>
+								<div v-html="html(newsletter.content_en)"></div>
+							</v-card>
 						</div>
 					</div>
 				</div>
@@ -38,8 +41,9 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Options, Vue } from 'vue-property-decorator'
+	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
-	@Options({})
+	@Options({ components: { Breadcrumb } })
 	export default class AdminNewsletters extends Vue {
 
 		newsletters: any = []
@@ -51,15 +55,18 @@
 			LeekWars.setTitle("Admin Newsletters")
 
 			LeekWars.get('newsletter/all').then(newsletters => this.newsletters = newsletters)
-			LeekWars.get('newsletter/count').then(count => this.count = count)
+			LeekWars.get('newsletter/count').then(count => {
+				this.count = count
+				LeekWars.setSubTitle(count + " inscrits")
+			})
 		}
 
 		html(html: string) {
 			return html.replace("\n", "")
 		}
 
-		test(newsletter: any) {
-			LeekWars.post('newsletter/test', {id: newsletter.id}).then(x => LeekWars.toast("Envoyé !"))
+		test(newsletter: any, target: any) {
+			LeekWars.post('newsletter/test', {id: newsletter.id, target: target}).then(x => LeekWars.toast("Envoyé !"))
 		}
 
 		send(newsletter: any) {
@@ -112,17 +119,36 @@
 		margin: 15px;
 	}
 	.newsletter {
+		.flag {
+			height: 15px;
+		}
 		.main {
 			display: flex;
 			align-items: center;
+			flex-wrap: wrap;
 			padding: 10px;
 			gap: 10px;
-			height: 64px;
 		}
 		.content {
 			display: flex;
 			justify-content: center;
 			padding-bottom: 15px;
+			gap: 15px;
+		}
+		.v-card {
+			flex: 700px 0 0;
+			padding: 15px;
+		}
+		.subject {
+			font-weight: bold;
+			font-size: 18px;
+			margin-bottom: 10px;
+		}
+	}
+	#app.app .content {
+		flex-wrap: wrap;
+		.v-card {
+			flex: 100% 0 0;
 		}
 	}
 	.progress {

@@ -76,6 +76,12 @@
 					</div>
 				</div>
 				<hud ref="hud" :game="game" :creator="creator" />
+				<v-tooltip v-if="hasMarks" :open-delay="0" :close-delay="0" location="bottom" :attach="$refs.player">
+					<template #activator="{ props }">
+						<v-icon v-ripple class="clear-marks" v-bind="props" @click="game.clearMarks()">mdi-eraser</v-icon>
+					</template>
+					{{ $t('clear_marks') }} (M)
+				</v-tooltip>
 				<transition v-if="!creator" name="fade">
 					<v-icon v-if="game.paused" class="play-pause">mdi-pause</v-icon>
 				</transition>
@@ -251,6 +257,7 @@
 	@Options({
 		name: 'player',
 		components: { Hud, 'lw-title': LWTitle },
+		emits: ['resize', 'fight'],
 		i18n: {},
 		mixins: [...mixins]
 	})
@@ -368,6 +375,10 @@
 			return (this.$refs.player as HTMLElement).parentElement!.clientHeight
 		}
 
+		get hasMarks() {
+			return Object.keys(this.game.markers).length > 0 || Object.keys(this.game.markersText).length > 0
+		}
+
 		get progressBarWidth() {
 			return this.game && this.game.actions ? 100 * this.game.currentAction / this.game.actions.length : 0
 		}
@@ -483,6 +494,9 @@
 				e.preventDefault()
 			} else if ((e.keyCode === 86) && !e.ctrlKey && !e.shiftKey && !e.altKey) { // V
 				this.game.sound = !this.game.sound
+				e.preventDefault()
+			} else if ((e.keyCode === 77) && !e.ctrlKey && !e.shiftKey && !e.altKey) { // M
+				this.game.clearMarks()
 				e.preventDefault()
 			} else if (e.keyCode === 88 && !this.game.creator) { // X
 				this.game.map.seed = Math.random() * 10000000 | 0
@@ -1061,6 +1075,24 @@
 		font-size: 17px;
 		color: var(--text-color-secondary);
 		font-weight: 500;
+	}
+	.clear-marks {
+		position: absolute;
+		top: 8px;
+		right: 8px;
+		background: #2a2a2a;
+		color: white;
+		cursor: pointer;
+		font-size: 24px;
+		z-index: 5;
+		width: 36px;
+		height: 36px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		&:hover {
+			background: #444;
+		}
 	}
 	.play-pause {
 		position: absolute;

@@ -1,7 +1,7 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><router-link to="/admin">Administration</router-link> > Groupes</h1>
+			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Groupes', link: '/admin/groups'}]" :raw="true" /></h1>
 		</div>
 		<panel class="first">
 			<loader v-if="!groups" />
@@ -11,6 +11,7 @@
 					:items="groups"
 					hide-default-footer
     				:items-per-page="100"
+					density="comfortable"
 					class="elevation-1 members">
 					<template #item.id="{ item }">
 						<router-link :to="'/group/' + item.id" class="flex" v-ripple>
@@ -51,16 +52,18 @@
 	import { Options, Vue } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Options({ components: { RichTooltipFarmer } })
+	import Breadcrumb from '@/component/forum/breadcrumb.vue'
+
+	@Options({ components: { RichTooltipFarmer, Breadcrumb } })
 	export default class AdminTrophies extends Vue {
 		groups: any = null
 		headers = [
-          { text: 'ID', value: 'id' },
-          { text: 'Nom', value: 'name' },
-          { text: 'Supervisor', value: 'supervisor' },
-          { text: 'Membres', value: 'members' },
-          { text: 'Date de création', value: 'creation_date' },
-          { text: 'Archivé', value: 'archived' },
+          { title: 'ID', value: 'id' },
+          { title: 'Nom', value: 'name' },
+          { title: 'Supervisor', value: 'supervisor' },
+          { title: 'Membres', value: 'members' },
+          { title: 'Date de création', value: 'creation_date' },
+          { title: 'Archivé', value: 'archived' },
         //   { text: 'Combats restants', value: 'day_fight' },
         //   { text: 'Combats', value: 'fights' },
         //   { text: 'Victoires', value: 'wins' },
@@ -84,11 +87,11 @@
 
 <style lang="scss" scoped>
 .avatar {
-	width: 40px;
-	height: 40px;
+	width: 36px;
+	height: 36px;
 }
 .flex {
-	height: 47px;
+	// height: 47px;
 	align-items: center;
 }
 .name {

@@ -17,5 +17,16 @@
 	"topic": "主题",
 	"mark_as_read": "标记为已读",
 	"mark_as_read_text": "所有论坛类别中的所有主题都将标记为已读。此操作后，将仅显示新主题或新回复。",
-	"show_resolved": "显示已解决的主题"
+	"show_resolved": "显示已解决的主题",
+	"priority": "优先级",
+	"priority_high": "高优先级",
+	"priority_medium": "中优先级",
+	"priority_low": "低优先级",
+	"hidden_topic": "隐藏主题",
+	"status_acknowledged": "已确认",
+	"status_not_a_bug": "不是Bug",
+	"status_not_planned": "未计划",
+	"status_obsolete": "已过时",
+	"status_not_reproduced": "无法复现",
+	"status_resolved": "已解决"
 }

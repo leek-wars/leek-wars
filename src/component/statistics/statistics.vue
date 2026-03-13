@@ -117,7 +117,7 @@
 		selectedStatistic: string = ''
 		selectedStatisticColor: string = ''
 		chartOptions: any = null
-		actions = [{icon: 'mdi-play', click: () => this.toggleAction()}]
+		actions: any[] = []
 
 		get chartFightType() {
 			return this.makeChartData(FIGHT_CATEGORY, ['fight_solo', 'fight_farmer', 'fight_team', 'fight_br'])
@@ -162,6 +162,7 @@
 		}
 
 		created() {
+			this.actions = [{icon: 'mdi-play', click: () => this.toggleAction()}]
 			this.chartOptions = {
 				responsive: true,
 				aspectRatio: 1,

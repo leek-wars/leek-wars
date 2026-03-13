@@ -239,7 +239,7 @@
 
 	const DEFAULT_FONT_SIZE = 16
 	const DEFAULT_LINE_HEIGHT = 24
-	const DEFAULT_THEME = "leek-wars"
+	const DEFAULT_THEME = () => LeekWars.darkMode ? "monokai" : "leek-wars"
 
 	@Options({
 		name: 'editor', i18n: {},
@@ -323,7 +323,7 @@
 			if (localStorage.getItem('editor/popups') === null) { localStorage.setItem('editor/popups', 'true') }
 			if (localStorage.getItem('editor/analyzer') === null) { localStorage.setItem('editor/analyzer', 'false') }
 			LeekWars.large = this.enlargeWindow = localStorage.getItem('editor/large') === 'true'
-			this.theme = localStorage.getItem('editor/theme') || DEFAULT_THEME
+			this.theme = localStorage.getItem('editor/theme') || DEFAULT_THEME()
 			this.autoClosing = localStorage.getItem('editor/auto_closing') === 'true'
 			this.autocomplete = localStorage.getItem('editor/autocomplete') === 'true'
 			this.popups = localStorage.getItem('editor/popups') === 'true'
@@ -352,8 +352,8 @@
 					this.history.push(fileSystem.ais[id])
 				}
 			}
-			this.update()
 			LeekWars.setTitle(this.$t('title'), this.$t('n_ais', [fileSystem.aiCount]))
+			this.update()
 		}
 
 		mounted() {
@@ -530,16 +530,22 @@
 					this.history.unshift(ai)
 
 					LeekWars.setTitle(ai.name)
-					LeekWars.splitShowContent()
-					LeekWars.setActions(this.actions_content)
 
 					if ('line' in this.$route.query) {
 						this.jump(ai, parseInt(this.$route.query.line as string), 0)
+						this.$router.replace('/editor/' + id).then(() => {
+							LeekWars.splitShowContent()
+							LeekWars.setActions(this.actions_content)
+						})
+					} else {
+						LeekWars.splitShowContent()
+						LeekWars.setActions(this.actions_content)
 					}
 				} else {
 					this.currentFolder = fileSystem.folderById[id]
 					this.currentType = 'folder'
 					explorer.selectFolder(this.currentFolder)
+					LeekWars.setTitle(this.$t('title'), this.$t('n_ais', [fileSystem.aiCount]))
 					LeekWars.splitShowList()
 					LeekWars.setActions(this.actions_list)
 				}
@@ -561,6 +567,7 @@
 			} else {
 				this.currentFolder = fileSystem.rootFolder
 				this.currentType = 'folder'
+				LeekWars.setTitle(this.$t('title'), this.$t('n_ais', [fileSystem.aiCount]))
 				LeekWars.splitShowList()
 				LeekWars.setActions(this.actions_list)
 			}
@@ -740,7 +747,7 @@
 
 		jump(ai: AI, line: number, column: number) {
 			console.log("jump()", ai, line, column)
-			if (ai.id !== this.currentAI!.id) {
+			if (!this.currentAI || ai.id !== this.currentAI.id) {
 				this.$router.push('/editor/' + ai.id)
 			}
 			nextTick(() => {

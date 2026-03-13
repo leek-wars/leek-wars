@@ -148,5 +148,6 @@
 	.image.v-icon {
 		font-size: 32px;
 		color: var(--text-color);
+		opacity: 0.8;
 	}
 </style>

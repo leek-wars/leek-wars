@@ -5,11 +5,11 @@
 				<template v-for="team in game.teams">
 					<v-tooltip v-for="entity in team.filter(e => !e.dead)" :key="entity.id" top>
 						<template #activator="{ props }">
-							<div :style="{background: entity.lifeBarGadient, width: Math.max(1, barWidth * (entity.life / totalLife) - 3) + 'px'}" class="bar" v-bind="props"></div>
+							<div :style="{background: entity.lifeBarGadient, width: Math.max(1, barWidth * (entity.displayLife / totalLife) - 3) + 'px'}" class="bar" v-bind="props"></div>
 						</template>
 						<span v-if="entity instanceof Mob">{{ $t('entity.' + entity.name) }}</span>
 						<span v-else>{{ entity.name }}</span>
-						({{ entity.life }})
+						({{ Math.round(entity.displayLife) }})
 					</v-tooltip>
 				</template>
 			</div>
@@ -26,7 +26,7 @@
 			<v-tooltip v-for="(entity, e) of game.entityOrder" :key="e" location="top">
 				<template #activator="{ props }">
 					<div :class="{summon: entity.summon, current: entity.id === game.currentPlayer, dead: entity.dead}" :style="{background: entity === game.selectedEntity || entity === game.mouseEntity ? '#fffc' : (entity.id === game.currentPlayer ? entity.color : entity.gradient)}" class="entity" v-bind="props" @mouseenter="entity_enter(entity)" @mouseleave="entity_leave(entity)" @click="entity_click(entity)">
-						<div v-if="!entity.dead" :style="{height: 'calc(6px + ' + ((entity.life / entity.maxLife) * 100) + '%)', background: entity.lifeColor, 'border-color': entity.lifeColorLighter}" class="bar"></div>
+						<div v-if="!entity.dead" :style="{height: 'calc(6px + ' + ((entity.displayLife / entity.maxLife) * 100) + '%)', background: entity.lifeColor, 'border-color': entity.lifeColorLighter}" class="bar"></div>
 						<div class="image">
 							<img v-if="entity.summon" :src="'/image/bulb/' + entity.bulbName + '_front.png'">
 							<turret-image v-else-if="(entity instanceof Turret)" :level="entity.level" :skin="entity.team" :scale="1" />
@@ -101,7 +101,7 @@
 			return LeekWars.mobile ? 300 : 500
 		}
 		get totalLife() {
-			return this.game.leeks.reduce((total, e) => total + (!e.summon ? e.life : 0), 0)
+			return this.game.leeks.reduce((total, e) => total + (!e.summon ? e.displayLife : 0), 0)
 		}
 		get darkEnabledtest() {
 			return this.game.dark
@@ -307,6 +307,7 @@
 				width: 600px !important;
 				background-color: #f2f2f2ee;
 				border-top-right-radius: 0;
+				overflow-y: auto;
 			}
 			.log {
 				width: 600px;
@@ -318,6 +319,7 @@
 			max-width: 1000px;
 			border-top-right-radius: 0;
 			background-color: #fff;
+			overflow-y: auto;
 			&:hover {
 				width: max(100%, 600px) !important;
 				background-color: #f2f2f2dd;

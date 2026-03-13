@@ -1003,6 +1003,9 @@ a.green-link {
 		padding: 18px;
 		box-shadow: rgba(0, 0, 0, 0.7) 0px 10px 30px;
 		line-height: 1.4;
+		img {
+			vertical-align: middle;
+		}
 	}
 	.arrow {
 		height: 0;
@@ -1035,7 +1038,7 @@ a.green-link {
 	.arrow {
 		height: 0;
 		width: 0;
-		border-bottom: 20px solid var(--pure-white);;
+		border-bottom: 20px solid var(--pure-white);
 		border-left: 15px solid transparent;
 		border-right: 15px solid transparent;
 		border-top: none;
@@ -1081,4 +1084,11 @@ a.green-link {
 	--v-selection-control-size: 28px;
 	min-height: auto !important;
 	gap: 6px;
+}
+.v-switch .v-selection-control {
+	min-height: auto !important;
+	gap: 6px;
+	.v-selection-control__wrapper {
+		height: 30px;
+	}
 }

@@ -28,7 +28,7 @@
 
 <script lang="ts">
 	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
-	@Options({ name: "popup" })
+	@Options({ name: "popup", emits: ['update:modelValue'] })
 	export default class Popup extends Vue {
 		@Prop() modelValue!: boolean
 		@Prop() icon!: string

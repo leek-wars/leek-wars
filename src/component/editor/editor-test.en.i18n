@@ -52,5 +52,8 @@
 	"resurrection": "Resurrection",
 	"teleportation": "Teleportation",
 	"templates": "Models",
+	"max_turns": "Max turns",
+	"max_turns_desc": "Maximum number of turns for the fight (default 64)",
+	"max_turns_placeholder": "Integer between 1 and 64. Default = 64",
 	"free": "Free"
 }

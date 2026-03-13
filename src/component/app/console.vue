@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="console" :class="'theme-' + theme">
+	<div class="console" :class="'theme-' + cssTheme">
 		<div ref="scroll" class="scroll" v-autostopscroll >
 			<div class="lines">
 				<div v-for="(line, l) in lines" :key="l" class="line">
@@ -56,7 +56,7 @@
 		history: string[] = []
 		historyPos: number = 0
 		ai: any = new AI({ id: 0, code: '', path: FileSystem.CONSOLE_MAGIC_KEY + Math.random() + '.leek' })
-		theme: string = 'leekwars'
+		theme: string = localStorage.getItem('editor/theme') || (LeekWars.darkMode ? 'monokai' : 'leek-wars')
 		leekscript = {
 			version: 4,
 			strict: false,
@@ -67,9 +67,6 @@
 
 			const docMessages = await import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
 			i18n.global.mergeLocaleMessage(locale, { doc: docMessages.default })
-
-			const defaultTheme = LeekWars.darkMode ? 'monokai' : 'leekwars'
-			this.theme = localStorage.getItem('console/theme') || defaultTheme
 			this.leekscript.version = parseInt(localStorage.getItem('console/version') || '4')
 			this.leekscript.strict = localStorage.getItem('console/strict') === 'true'
 			fileSystem.consoleAI = this.ai
@@ -169,9 +166,12 @@
 			})
 		}
 
-		toggleTheme() {
-			this.theme = this.theme === 'leekwars' ? 'monokai' : 'leekwars'
-			localStorage.setItem('console/theme', this.theme)
+		get cssTheme() {
+			return ['monokai', 'vs-dark', 'hc-black'].includes(this.theme) ? 'monokai' : 'leekwars'
+		}
+
+		saveTheme() {
+			localStorage.setItem('editor/theme', this.theme)
 		}
 
 		@Watch('leekscript.version')
@@ -294,6 +294,24 @@
 	// height: 280px;
 	background: transparent !important;
 	position: initial;
+	&:deep(.monaco-editor),
+	&:deep(.monaco-editor .overflow-guard),
+	&:deep(.monaco-editor .monaco-scrollable-element),
+	&:deep(.monaco-editor .inputarea.ime-input),
+	&:deep(.monaco-editor .margin),
+	&:deep(.monaco-editor .lines-content) {
+		background: transparent !important;
+	}
+	&:deep(.monaco-editor),
+	&:deep(.monaco-editor .overflow-guard),
+	&:deep(.monaco-editor .monaco-editor-background),
+	&:deep(.monaco-editor .view-overlays),
+	&:deep(.monaco-editor .current-line),
+	&:deep(.monaco-editor .view-line) {
+		border: none !important;
+		outline: none !important;
+		box-shadow: none !important;
+	}
 	&:deep(.CodeMirror) {
 		.CodeMirror-lines {
 			padding: 0;

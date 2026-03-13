@@ -15,7 +15,7 @@
 		<!-- <td v-if="$store.getters.admin" class="power">{{ $filters.number(Math.round(Math.pow(leek.level, 4.2))) }}</td> -->
 		<td class="xp">
 			<div class="xp-wrapper">
-				<v-tooltip>
+				<v-tooltip v-if="!leek.mob">
 					<template #activator="{ props }">
 						<div class="bar" v-bind="props">
 							<span :style="{width: currentBar + '%'}" class="current_xp"></span>
@@ -24,6 +24,7 @@
 					</template>
 					{{ $filters.number(leek.cur_xp) }} / {{ $filters.number(leek.next_xp) }}
 				</v-tooltip>
+				<div v-else class="bar"></div>
 				<span>{{ $filters.number(leek.xp || 0) }}</span>
 				<span v-if="fight.report.bonus > 1" class="bonus">x{{ fight.report.bonus }}</span>
 				<v-tooltip v-if="leek.xp_locked">

@@ -77,7 +77,8 @@
 	"no_ai": "选择一个人工智能",
 	"no_compositions": "没有补偿",
 	"no_description": "没有说明",
-	"not_found_id": "未找到团队 ID <b>{0}</b> :(",
+	"not_found": "未找到团队",
+	"not_found_id": "未找到团队 ID {id} :(",
 	"opened": "开业",
 	"owner": "所有者",
 	"owner_has_been_changed": "所有者已更改。",
@@ -109,5 +110,11 @@
 	"xp": "经验值：{0}",
 	"you_left_team": "你离开了团队",
 	"load_all": "全部加载",
-	"rankings": "排行榜"
+	"rankings": "排行榜",
+	"all_teams": "所有队伍",
+	"recruitment_message": "招募消息",
+	"no_recruitment_message": "没有招募消息",
+	"configure_columns": "配置列",
+	"default_sort": "默认排序",
+	"reset_columns": "重置"
 }

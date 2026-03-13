@@ -27,7 +27,7 @@
 	"results": "结果",
 	"richest_title": "挣钱",
 	"search_in_ranking": "排名搜索",
-	"search_name": "姓名",
+	"search_name": "姓名或ID",
 	"shots": "镜头",
 	"shots_title": "总拍摄张数",
 	"summons": "调用",
@@ -51,5 +51,7 @@
 	"boss_killed_title": "击杀Boss数",
 	"boss_killed": "Boss",
 	"turrets_killed": "炮塔",
-	"turrets_killed_title": "摧毁炮塔数"
+	"turrets_killed_title": "摧毁炮塔数",
+	"damage": "伤害",
+	"damage_title": "造成的伤害"
 }

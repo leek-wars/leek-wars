@@ -19,7 +19,7 @@
 								<emblem :team="farmer.team" :title="farmer.team.name" />
 							</router-link> -->
 						</span>
-						<talent :id="composition.id" :talent="composition.talent" category="team" />
+						<talent :id="composition.id" :talent="composition.talent" :max_talent="composition.max_talent" category="team" />
 						<ranking-badge v-if="composition && composition.ranking <= 1000 && composition.in_garden" :id="composition.id" :ranking="composition.ranking" category="team" />
 						<span class="level">
 							• {{ composition.leeks.length }} <img src="/image/icon/black/leek.png">
@@ -64,7 +64,7 @@
 	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 
-	@Options({ components: { RichTooltipLeek } })
+	@Options({ components: { RichTooltipLeek }, emits: ['update:modelValue'] })
 	export default class RichTooltipComposition extends Vue {
 		@Prop({required: true}) id!: number
 		@Prop() disabled!: boolean
@@ -81,10 +81,10 @@
 		value: boolean = false
 
 		get _open_delay() {
-			return this.instant ? 0 : 500
+			return this.instant ? 1 : 500
 		}
 		get _close_delay() {
-			return this.instant ? 0 : 1
+			return this.instant ? 1 : 1
 		}
 		@Watch('id')
 		update() {
@@ -92,7 +92,6 @@
 			this.content_created = false
 		}
 		open(v: boolean) {
-			console.log("open")
 			this.expand_leeks = localStorage.getItem('rich-tooltip-composition/expanded') === 'true'
 			if (this.content_created) { return }
 			this.content_created = true

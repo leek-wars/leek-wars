@@ -1,5 +1,13 @@
 <template>
-	<div class="page">
+	<error v-if="error" :title="$t('not_found')">
+		<template #message><i18n-t keypath="not_found_id" tag="span"><template #id><b>{{ id }}</b></template></i18n-t></template>
+		<template #button>
+			<router-link to="/teams">
+				<v-btn size="large" color="primary">{{ $t('all_teams') }}</v-btn>
+			</router-link>
+		</template>
+	</error>
+	<div v-else class="page">
 		<div class="page-header page-bar">
 
 			<rich-tooltip-team v-if="team" :id="team.id" v-slot="{ props }" :bottom="true">
@@ -29,6 +37,12 @@
 						<span>{{ $t('main.challenge') }}</span>
 					</div>
 				</router-link>
+				<router-link to="/teams">
+					<div class="tab action">
+						<v-icon>mdi-account-group</v-icon>
+						<span>{{ $t('all_teams') }}</span>
+					</div>
+				</router-link>
 			</div>
 		</div>
 
@@ -54,11 +68,28 @@
 						<span class="guillemet">»</span>
 						<span class="edit-pen"></span>
 					</div>
+					<div v-if="team.recruitment_message || captain" class="recruitment-message">
+						<v-tooltip>
+							<template #activator="{ props }">
+								<v-icon v-bind="props" size="small">mdi-bullhorn-outline</v-icon>
+							</template>
+							{{ $t('recruitment_message') }}
+						</v-tooltip>
+						<span v-if="captain" ref="recruitmentElement" class="team-status text" contenteditable :data-placeholder="$t('no_recruitment_message')" @blur="saveRecruitmentMessage">{{ team.recruitment_message }}</span>
+						<span v-else class="text">{{ team.recruitment_message }}</span>
+					</div>
 				</div></template>
 			</panel>
 
 			<panel>
-				<h4 class="team-level">{{ $t('level_n', [team ? team.level : '...']) }}</h4>
+				<h4 class="team-level">{{ $t('level_n', [team ? team.level : '...']) }}
+					<v-tooltip v-if="team && activityLabel">
+						<template #activator="{ props }">
+							<span v-bind="props" class="team-activity">{{ activityLabel }}</span>
+						</template>
+						{{ activityTooltip }} <template v-if="$store.state.farmer && $store.state.farmer.admin">({{ team.activity.toFixed(1) }})</template>
+					</v-tooltip>
+				</h4>
 				<v-tooltip v-if="team">
 					<template #activator="{ props }">
 						<div class="bar" v-bind="props">
@@ -78,12 +109,7 @@
 				</v-tooltip>
 
 				<div class="info-talent">
-					<v-tooltip>
-						<template #activator="{ props }">
-							<talent :id="team ? team.id : ''" :talent="team ? team.talent : '...'" category="team" v-bind="props" />
-						</template>
-						{{ $t('talent') }}
-					</v-tooltip>
+					<talent :id="team ? team.id : ''" :talent="team ? team.talent : '...'" :max_talent="team?.max_talent" :label="$t('talent')" category="team" />
 					<ranking-badge v-if="team && team.ranking <= 1000" :id="team.id" :ranking="team.ranking" category="team" />
 				</div>
 
@@ -105,10 +131,20 @@
 					</template>
 					{{ $t('ratio', [team.ratio]) }}
 				</v-tooltip>
-				
+
+				<v-tooltip v-if="team && team.won_tournaments > 0">
+					<template #activator="{ props }">
+						<div v-bind="props" class="tournaments">
+							<v-icon class="grey">mdi-trophy-outline</v-icon>
+							<span class="big">{{ $filters.number(team.won_tournaments) }}</span>
+						</div>
+					</template>
+					{{ $t('tournaments') }}
+				</v-tooltip>
+
 				<Line v-if="chartData" :data="chartData" :options="chartOptions" class="talent-history" />
 
-				<div class="center" v-if="team && $store.state.farmer && !is_member && $store.state.farmer.team == null">
+				<div class="center" v-if="team && $store.state.farmer && !is_member && $store.state.farmer.team == null && !myInvitation">
 					<br>
 					<v-btn v-if="team.candidacy" @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</v-btn>
 					<v-btn v-if="team.opened && !team.candidacy" @click="sendCandidacy">{{ $t('join_team') }}</v-btn>
@@ -118,6 +154,21 @@
 
 			<panel class="description">
 				<template #content><div v-if="team" class="turret-wrapper">
+					<router-link v-if="teamOwner" class="team-owner" :to="'/farmer/' + teamOwner.id">
+						<rich-tooltip-farmer :id="teamOwner.id" v-slot="{ props }">
+							<div class="owner-content" v-bind="props">
+								<avatar :farmer="teamOwner" />
+								<div class="owner-info">
+									<div class="owner-name" :class="teamOwner.color">
+										{{ teamOwner.name }}
+										<img v-if="teamOwner.connected" class="owner-status" src="/image/connected.png">
+										<img v-else class="owner-status" src="/image/disconnected.png">
+									</div>
+									<div class="owner-label">{{ $t('owner') }}</div>
+								</div>
+							</div>
+						</rich-tooltip-farmer>
+					</router-link>
 					<div class="turret">
 						<turret-image :level="team.level" :skin="1" :scale="0.32" @click.native="turretDialog = true" />
 
@@ -132,6 +183,21 @@
 				</div></template>
 			</panel>
 		</div>
+
+		<panel v-if="myInvitation">
+			<div class="center">
+				<b><i18n-t keypath="you_are_invited">
+					<template #sender>
+						<rich-tooltip-farmer :id="myInvitation.sender_id" v-slot="{ props }">
+							<router-link :to="'/farmer/' + myInvitation.sender_id" v-bind="props" style="color: #5fad1b; font-weight: bold">{{ myInvitation.sender_name }}</router-link>
+						</rich-tooltip-farmer>
+					</template>
+				</i18n-t></b>
+				<br><br>
+				<v-btn color="primary" @click="acceptInvitation">{{ $t('accept_invitation') }}</v-btn>
+				<v-btn class="ml-2" @click="rejectInvitation">{{ $t('reject_invitation') }}</v-btn>
+			</div>
+		</panel>
 
 		<panel v-if="team && is_member" :title="$t('chat')" toggle="team/chat" icon="mdi-chat-outline">
 			<template #actions>
@@ -164,16 +230,46 @@
 
 		<panel v-if="team" icon="mdi-account-supervisor" :title="$t('farmers', [ team.member_count])">
 			<template #actions>
-				<div v-if="owner && !editMembers" class="button flat" @click="editMembers = true">
+				<v-menu v-if="owner && membersTableView" v-model="columnsDialog" location="top end" :close-on-content-click="false" @update:model-value="$event && openColumnsDialog()">
+					<template #activator="{ props: menuProps }">
+						<div class="button flat" v-bind="menuProps">
+							<v-icon>mdi-table-cog</v-icon>
+						</div>
+					</template>
+					<div class="columns-menu">
+						<div class="columns-menu-header">
+							<div class="columns-menu-title">{{ $t('configure_columns') }}</div>
+							<v-icon class="columns-reset" size="small" @click="resetColumnsConfig">mdi-refresh</v-icon>
+						</div>
+						<div ref="columnsConfigListEl" class="columns-config-list">
+							<div v-for="col in columnsConfigList" :key="col.key"
+								class="column-config-item" :data-key="col.key">
+								<v-icon class="drag-handle">mdi-drag</v-icon>
+								<v-checkbox-btn v-model="col.visible" :disabled="col.key === 'name'" density="compact" color="primary" :label="columnLabel(col)" class="column-checkbox" @change="saveColumnsConfig" />
+							</div>
+						</div>
+						<div class="sort-config">
+							<span class="sort-label">{{ $t('default_sort') }}</span>
+							<select v-model="columnsSortKey" class="sort-select" @change="saveColumnsConfig">
+								<option v-for="col in visibleConfigColumns" :key="col.key" :value="col.key">{{ columnLabel(col) }}</option>
+							</select>
+							<v-icon class="sort-order" @click="toggleSortOrder">{{ columnsSortOrder === 'asc' ? 'mdi-sort-ascending' : 'mdi-sort-descending' }}</v-icon>
+						</div>
+					</div>
+				</v-menu>
+				<div v-if="owner && !membersTableView && !editMembers" class="button flat" @click="editMembers = true">
 					<v-icon>mdi-pencil</v-icon>
 				</div>
-				<div v-if="owner && editMembers" class="button flat" @click="editMembers = false">
+				<div v-if="owner && !membersTableView && editMembers" class="button flat" @click="editMembers = false">
 					<v-icon>mdi-check</v-icon>
+				</div>
+				<div v-if="is_member || $store.state.farmer?.admin" class="button flat" @click="toggleMembersView">
+					<v-icon>{{ membersTableView ? 'mdi-view-grid' : 'mdi-view-list' }}</v-icon>
 				</div>
 			</template>
 			<template #content>
 				<loader v-if="!team" />
-				<div v-else class="members">
+				<div v-else-if="(!is_member && !$store.state.farmer?.admin) || !membersTableView" class="members">
 					<div v-for="member in team.members" :key="member.id" class="farmer">
 						<router-link :to="'/farmer/' + member.id">
 							<rich-tooltip-farmer :id="member.id" v-slot="{ props }">
@@ -196,7 +292,7 @@
 										</v-tooltip>
 										<span :title="member.name">{{ member.name }}</span>
 									</div>
-									<talent :id="member.id" :talent="member.talent" category="farmer" />
+									<talent :id="member.id" :talent="member.talent" :max_talent="member.max_talent" category="farmer" />
 								</div>
 							</rich-tooltip-farmer>
 						</router-link>
@@ -222,7 +318,91 @@
 						</template>
 					</div>
 				</div>
+				<v-data-table v-else
+					:headers="membersHeaders"
+					:items="team.members"
+					hide-default-footer
+					:items-per-page="100"
+					density="compact"
+					:sort-by="membersSort"
+					:custom-key-sort="customKeySort"
+					class="members-table">
+					<template #item.name="{ item }">
+						<router-link v-ripple :to="'/farmer/' + item.id" class="member-link">
+							<rich-tooltip-farmer :id="item.id" v-slot="{ props }">
+								<span v-bind="props" class="member-info">
+									<avatar :farmer="item" class="table-avatar" />
+									<img v-if="item.connected" class="status" src="/image/connected.png">
+									<img v-else class="status" src="/image/disconnected.png">
+									<span :class="item.color">{{ item.name }}</span>
+								</span>
+							</rich-tooltip-farmer>
+						</router-link>
+					</template>
+					<template #item.grade="{ item }">
+						<span>
+							<span v-if="item.grade == 'owner'">★ </span>
+							<span v-else-if="item.grade == 'captain'">☆ </span>
+							{{ $t(item.grade) }}
+						</span>
+					</template>
+					<template #item.country="{ item }">
+						<flag v-if="item.country" :code="item.country" />
+					</template>
+					<template #item.talent="{ item }">
+						{{ $filters.number(item.talent) }}
+					</template>
+					<template #item.points="{ item }">
+						{{ $filters.number(item.points) }}
+					</template>
+					<template #item.victories="{ item }">
+						{{ $filters.number(item.victories) }}
+					</template>
+					<template #item.draws="{ item }">
+						{{ $filters.number(item.draws) }}
+					</template>
+					<template #item.defeats="{ item }">
+						{{ $filters.number(item.defeats) }}
+					</template>
+					<template #[`item.join_date`]="{ item }">
+						<span class="date-cell">{{ $filters.date(item.join_date) }}</span>
+					</template>
+					<template #[`item.fights`]="{ item }">
+						{{ $filters.number(item.victories + item.draws + item.defeats) }}
+					</template>
+					<template #[`item.ratio`]="{ item }">
+						{{ item.defeats === 0 && item.victories > 0 ? '∞' : item.defeats > 0 ? (item.victories / item.defeats).toFixed(2) : '-' }}
+					</template>
+					<template #[`item.leek_count`]="{ item }">
+						{{ item.leek_count }}
+					</template>
+					<template #[`item.ranking`]="{ item }">
+						<ranking-badge v-if="item.ranking" :id="item.id" :ranking="item.ranking" category="farmer" class="ranking-badge-small" />
+					</template>
+					<template #[`item.last_connection`]="{ item }">
+						<span class="date-cell" :class="{ inactive: !item.connected && item.last_connection < Date.now() / 1000 - 30 * 24 * 3600 }">
+							{{ item.connected ? $t('main.connected') : LeekWars.formatDuration(item.last_connection) }}
+						</span>
+					</template>
+				</v-data-table>
 			</template>
+		</panel>
+
+		<panel v-if="team && captain && team.invitations && team.invitations.length > 0">
+			<template #title>{{ $t('invitations') }} ({{ team.invitations.length }})</template>
+			<div class="content candidacies">
+				<div v-for="invitation in team.invitations" :key="invitation.id" class="farmer">
+					<rich-tooltip-farmer :id="invitation.farmer.id" v-slot="{ props }">
+						<router-link :to="'/farmer/' + invitation.farmer.id">
+							<div v-bind="props">
+								<avatar :farmer="invitation.farmer" />
+								<div class="name">{{ invitation.farmer.name }}</div>
+							</div>
+						</router-link>
+					</rich-tooltip-farmer>
+					<span class="reject" @click="cancelInvitation(invitation)">{{ $t('cancel') }}</span>
+				</div>
+			</div>
 		</panel>
 
 		<panel v-if="team" icon="mdi-podium">
@@ -323,7 +503,7 @@
 				<template #actions>
 					<div class="level-talent">
 						<span class="level">{{ $t('level_n', [composition.total_level]) }}</span>
-						<talent :id="team.id" :talent="composition.talent" category="team" />
+						<talent :id="team.id" :talent="composition.talent" :max_talent="composition.max_talent" category="team" />
 					</div>
 					<router-link v-if="composition.tournament.current" :to="'/tournament/' + composition.tournament.current" class="view-tournament button flat">{{ $t('see_tournament') }}</router-link>
 					<v-tooltip v-if="$store.state.farmer.tournaments_enabled && captain" content-class="fluid" @update:model-value="loadTournamentRange(composition)">
@@ -587,6 +767,7 @@
 				<v-radio :value="2" :label="$t('log_level_2') + ' : ' + $t('log_level_2_desc')" />
 			</v-radio-group>
 		</popup>
+
 	</div>
 </template>
 
@@ -618,6 +799,41 @@
 	import { emitter } from '@/model/vue'
 	import { Line } from 'vue-chartjs'
 	import { ChartData, ChartOptions } from 'chart.js'
+	import Sortable from 'sortablejs'
+
+	interface ColumnDef {
+		key: string
+		titleKey: string
+		align?: string
+	}
+	interface ColumnConfigItem extends ColumnDef {
+		visible: boolean
+	}
+	const ALL_MEMBER_COLUMNS: ColumnDef[] = [
+		{ key: 'name', titleKey: 'main.farmer' },
+		{ key: 'grade', titleKey: 'main.grade' },
+		{ key: 'country', titleKey: 'main.country', align: 'center' },
+		{ key: 'talent', titleKey: 'main.talent', align: 'end' },
+		{ key: 'ranking', titleKey: 'main.ranking', align: 'end' },
+		{ key: 'total_level', titleKey: 'main.level', align: 'end' },
+		{ key: 'points', titleKey: 'main.trophies', align: 'end' },
+		{ key: 'fights', titleKey: 'main.fights', align: 'end' },
+		{ key: 'victories', titleKey: 'main.victories', align: 'end' },
+		{ key: 'draws', titleKey: 'main.draws', align: 'end' },
+		{ key: 'defeats', titleKey: 'main.defeats', align: 'end' },
+		{ key: 'ratio', titleKey: 'main.ratio', align: 'end' },
+		{ key: 'leek_count', titleKey: 'main.leeks', align: 'end' },
+		{ key: 'won_team_tournaments', titleKey: 'main.tournaments', align: 'end' },
+		{ key: 'won_br', titleKey: 'main.battle_royale', align: 'end' },
+		{ key: 'clovers', titleKey: 'main.clovers', align: 'end' },
+		{ key: 'turrets_killed', titleKey: 'main.turrets', align: 'end' },
+		{ key: 'last_connection', titleKey: 'main.connection' },
+		{ key: 'join_date', titleKey: 'main.join_date' },
+	]
+	const ALL_MEMBER_COLUMNS_MAP: { [key: string]: ColumnDef } = {}
+	for (const col of ALL_MEMBER_COLUMNS) ALL_MEMBER_COLUMNS_MAP[col.key] = col
+	const DEFAULT_MEMBER_COLUMNS = ['name', 'grade', 'country', 'talent', 'ranking', 'total_level', 'points', 'fights', 'last_connection', 'join_date']
+	const DEFAULT_MEMBER_SORT = { key: 'last_connection', order: 'desc' }
 
 	@Options({ name: 'team', i18n: {}, mixins: [...mixins], components: {
 		CharacteristicTooltip, Explorer, chat: ChatElement, RichTooltipItem, RichTooltipLeek, RichTooltipFarmer, RichTooltipComposition, RichTooltipTeam, FightsHistory, TournamentsHistory, ReportDialog, TurretImage, ai: AIElement, Line,
@@ -626,6 +842,7 @@
 		ChatType = ChatType
 		CHIPS = CHIPS
 		team: Team | null = null
+		error: boolean = false
 		captain: boolean = false
 		owner: boolean = false
 		reportDialog: boolean = false
@@ -652,6 +869,12 @@
 		turretAiDialog: boolean = false
 		logsDialog: boolean = false
 		editMembers: boolean = false
+		membersTableView: boolean = localStorage.getItem('team/members-table-view') !== 'false'
+		columnsDialog: boolean = false
+		columnsConfigList: ColumnConfigItem[] = []
+		columnsSortKey: string = DEFAULT_MEMBER_SORT.key
+		columnsSortOrder: string = DEFAULT_MEMBER_SORT.order
+		columnsSortable: Sortable | null = null
 		logsLevel: number = 0
 		rankingsLoading: boolean = false
 		rankingsLoaded: boolean = false
@@ -659,10 +882,58 @@
 		chartOptions: ChartOptions | null = null
 
 		get id() { return 'id' in this.$route.params ? parseInt(this.$route.params.id, 10) : (this.$store.state.farmer && this.$store.state.farmer.team !== null ? this.$store.state.farmer.team.id : null) }
+		get activityLabel() {
+			if (!this.team) return ''
+			const score = this.team.activity
+			if (score >= 250) return '🔥🔥🔥'
+			if (score >= 100) return '🔥🔥'
+			if (score >= 10) return '🔥'
+			return ''
+		}
+		get activityTooltip() {
+			if (!this.team) return ''
+			const score = this.team.activity
+			if (score >= 250) return this.$t('main.very_active')
+			if (score >= 100) return this.$t('main.active')
+			return this.$t('main.low_activity')
+		}
 		get max_level() { return this.team && this.team.level === 100 }
 		get xp_bar_width() { return this.team ? this.team.level === 100 ? 100 : Math.floor(100 * (this.team.xp - this.team.down_xp) / (this.team.up_xp - this.team.down_xp)) : 0 }
 		get is_member() { return !this.$route.params.id || (this.team && this.$store.state.farmer && this.$store.state.farmer.team !== null && this.team.id === this.$store.state.farmer.team.id) }
 		get my_member() { return this.is_member ? this.team!.membersById[this.$store.state.farmer.id] : null }
+		get teamOwner() { return this.team ? this.team.members.find(m => m.grade === 'owner') : null }
+		get myInvitation() {
+			const me = this.$store.state.farmer
+			if (me && me.team_invitations && this.team) {
+				return me.team_invitations.find((inv: any) => inv.team_id === this.team!.id) || null
+			}
+			return null
+		}
+
+		get membersColumns() {
+			return this.team?.members_columns?.columns || DEFAULT_MEMBER_COLUMNS
+		}
+		get membersSort() {
+			const sort = this.team?.members_columns?.sort || DEFAULT_MEMBER_SORT
+			return [{ key: sort.key, order: sort.order }]
+		}
+		customKeySort: Record<string, (a: number | null, b: number | null) => number> = {
+			ranking: (a: number | null, b: number | null) => {
+				if (a === null && b === null) return 0
+				if (a === null) return 1
+				if (b === null) return -1
+				return a - b
+			}
+		}
+		get membersHeaders() {
+			return this.membersColumns
+				.map(key => {
+					const col = ALL_MEMBER_COLUMNS_MAP[key]
+					if (!col) return null
+					return { title: this.$t(col.titleKey), value: key, sortable: true, align: col.align }
+				})
+				.filter(Boolean)
+		}
 
 		get turret() {
 			if (!this.team) { return {} }
@@ -698,6 +969,7 @@
 					request = 'team/get-connected/' + this.id
 				}
 			}
+			this.error = false
 			this.rankingsLoading = false
 			this.rankingsLoaded = false
 			LeekWars.get<Team>(request).then(team => {
@@ -735,14 +1007,18 @@
 				if (this.is_member) {
 					this.logsLevel = this.my_member!.logs_level
 					LeekWars.setActions([
-						{icon: 'mdi-chat-outline', click: () => this.$router.push('/forum/category-' + team.forum)}
+						{icon: 'mdi-chat-outline', click: () => this.$router.push('/forum/category-' + team.forum)},
+						{icon: 'mdi-account-group', click: () => this.$router.push('/teams')}
 					])
 				} else {
 					LeekWars.setActions([
-						{icon: 'mdi-flag-outline', click: () => this.$router.push('/garden/challenge/team/' + team.id)}
+						{icon: 'mdi-flag-outline', click: () => this.$router.push('/garden/challenge/team/' + team.id)},
+						{icon: 'mdi-account-group', click: () => this.$router.push('/teams')}
 					])
 				}
 				emitter.emit('loaded')
+			}).error(() => {
+				this.error = true
 			})
 		}
 
@@ -939,6 +1215,19 @@
 			}
 		}
 
+		savingRecruitment = false
+		saveRecruitmentMessage() {
+			if (!this.team || this.savingRecruitment) { return }
+			this.savingRecruitment = true
+			;(this.$refs.recruitmentElement as HTMLElement).blur()
+			const text = ('' + (this.$refs.recruitmentElement as HTMLElement).innerText).trim()
+			this.team.recruitment_message = text
+			LeekWars.put('team/change-recruitment-message', {message: text}).error((e: any) => {
+				LeekWars.toast("Error: " + JSON.stringify(e))
+			})
+			this.$nextTick(() => { this.savingRecruitment = false })
+		}
+
 		acceptCandidacy(candidacy: any) {
 			LeekWars.post('team/accept-candidacy', {candidacy_id: candidacy.id}).then(data => {
 				LeekWars.toast(this.$i18n.t('farmer_accepted'))
@@ -952,6 +1241,107 @@
 				this.update()
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
+		}
+		toggleMembersView() {
+			this.membersTableView = !this.membersTableView
+			localStorage.setItem('team/members-table-view', String(this.membersTableView))
+		}
+		openColumnsDialog() {
+			if (this.columnsConfigList.length === 0) {
+				const config = this.team?.members_columns
+				const columns = config?.columns || DEFAULT_MEMBER_COLUMNS
+				const order = config?.order || ALL_MEMBER_COLUMNS.map(c => c.key)
+				const sort = config?.sort || DEFAULT_MEMBER_SORT
+				for (const key of order) {
+					const col = ALL_MEMBER_COLUMNS_MAP[key]
+					if (col) this.columnsConfigList.push({ ...col, visible: columns.includes(key) })
+				}
+				// Add any new columns not yet in saved order
+				for (const col of ALL_MEMBER_COLUMNS) {
+					if (!order.includes(col.key)) {
+						this.columnsConfigList.push({ ...col, visible: false })
+					}
+				}
+				this.columnsSortKey = sort.key
+				this.columnsSortOrder = sort.order
+			}
+			this.$nextTick(() => {
+				const el = this.$refs.columnsConfigListEl as HTMLElement
+				if (!el) return
+				if (this.columnsSortable) this.columnsSortable.destroy()
+				this.columnsSortable = Sortable.create(el, {
+					handle: '.drag-handle',
+					animation: 150,
+					onEnd: (evt) => {
+						if (evt.oldIndex === undefined || evt.newIndex === undefined) return
+						const item = this.columnsConfigList.splice(evt.oldIndex, 1)[0]
+						this.columnsConfigList.splice(evt.newIndex, 0, item)
+						this.saveColumnsConfig()
+					}
+				})
+			})
+		}
+		saveColumnsConfig() {
+			const columns = this.columnsConfigList.filter(c => c.visible).map(c => c.key)
+			if (!columns.includes('name')) columns.unshift('name')
+			if (!columns.includes(this.columnsSortKey)) {
+				this.columnsSortKey = columns[0]
+			}
+			const order = this.columnsConfigList.map(c => c.key)
+			const config = { columns, order, sort: { key: this.columnsSortKey, order: this.columnsSortOrder } }
+			this.team!.members_columns = config
+			LeekWars.put('team/set-members-columns', { columns: JSON.stringify(config) })
+		}
+		columnLabel(col: ColumnDef) {
+			return this.$t(col.titleKey) as string
+		}
+		get visibleConfigColumns() {
+			return this.columnsConfigList.filter(c => c.visible)
+		}
+		toggleSortOrder() {
+			this.columnsSortOrder = this.columnsSortOrder === 'asc' ? 'desc' : 'asc'
+			this.saveColumnsConfig()
+		}
+		resetColumnsConfig() {
+			this.columnsSortKey = DEFAULT_MEMBER_SORT.key
+			this.columnsSortOrder = DEFAULT_MEMBER_SORT.order
+			this.columnsConfigList = ALL_MEMBER_COLUMNS.map(col => ({
+				...col,
+				visible: DEFAULT_MEMBER_COLUMNS.includes(col.key)
+			}))
+			this.saveColumnsConfig()
+		}
+		cancelInvitation(invitation: any) {
+			if (!this.team) { return }
+			LeekWars.post('team/cancel-invitation', {invitation_id: invitation.id}).then(data => {
+				if (this.team) {
+					LeekWars.toast(this.$i18n.t('invitation_cancelled'))
+					this.team.invitations.splice(this.team.invitations.indexOf(invitation), 1)
+				}
+			})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
+		}
+		acceptInvitation() {
+			const inv = this.myInvitation
+			if (!inv) { return }
+			LeekWars.post('team/accept-invitation', {invitation_id: inv.id}).then(() => {
+				LeekWars.toast(this.$i18n.t('invitation_accepted'))
+				this.$router.push('/team/' + inv.team_id)
+				LeekWars.get('farmer/get-login-data').then((d) => {
+					this.$store.commit('connected', d)
+				})
+			}).error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
+		}
+		rejectInvitation() {
+			const inv = this.myInvitation
+			if (!inv) { return }
+			LeekWars.post('team/reject-invitation', {invitation_id: inv.id}).then(() => {
+				LeekWars.toast(this.$i18n.t('invitation_rejected'))
+				const me = this.$store.state.farmer
+				if (me && me.team_invitations) {
+					me.team_invitations.splice(me.team_invitations.indexOf(inv), 1)
+				}
+			}).error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 		sendCandidacy() {
 			if (!this.team) { return }
@@ -1114,6 +1504,13 @@
 <style lang="scss" scoped>
 	.team-level {
 		font-size: 20px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+	.team-activity {
+		cursor: default;
+		font-size: 18px;
 	}
 	.v-input--switch {
 		margin-left: 8px;
@@ -1135,14 +1532,37 @@
 		vertical-align: bottom;
 		padding-top: 8px;
 		.text {
-			font-size: 20px;
+			font-size: 17px;
 			color: var(--text-color-secondary);
 			font-weight: 300;
 		}
 	}
+	.recruitment-message {
+		padding-top: 6px;
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		color: var(--text-color-secondary);
+		font-size: 14px;
+		text-align: left;
+		.v-icon {
+			color: var(--text-color-secondary);
+		}
+		.text {
+			padding: 0 4px;
+		}
+		[contenteditable] {
+			cursor: text;
+		}
+		[contenteditable]:empty:before {
+			content: attr(data-placeholder);
+			font-style: italic;
+			color: #999;
+		}
+	}
 	.guillemet {
-		font-size: 34px;
-		line-height: 22px;
+		font-size: 30px;
+		line-height: 18px;
 		vertical-align: top;
 		color: var(--text-color-secondary);
 		font-weight: 300;
@@ -1183,7 +1603,7 @@
 	.talent-history {
 		margin-top: 3px;
 	}
-	.fights {
+	.fights, .tournaments {
 		width: 100%;
 		border-collapse: collapse;
 		text-align: center;
@@ -1198,6 +1618,24 @@
 		tr > td:nth-child(n+2) {
 			border-left: 2px solid var(--border);
 		}
+	}
+	.tournaments {
+		margin-top: 10px;
+		margin-bottom: 5px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 6px;
+		.big {
+			font-size: 22px;
+			font-weight: 300;
+			color: var(--text-color-secondary);
+		}
+	}
+	.candidacies .empty {
+		padding: 10px;
+		color: #999;
+		text-align: center;
 	}
 	.candidacies .farmer {
 		text-align: center;
@@ -1279,6 +1717,121 @@
 		margin: 2px 0;
 		span {
 			padding-left: 2px;
+		}
+	}
+	.members-table {
+		white-space: nowrap;
+		.date-cell {
+			font-size: 12px;
+		}
+		.inactive {
+			opacity: 0.4;
+		}
+		.ranking-badge-small {
+			transform: scale(0.8);
+			transform-origin: center;
+			margin: 0;
+		}
+		:deep(td), :deep(th) {
+			padding: 0 8px !important;
+		}
+		.member-info {
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
+		.table-avatar {
+			width: 33px;
+			height: 33px;
+			margin-right: 4px;
+		}
+		.status {
+			width: 13px;
+			margin-right: 2px;
+		}
+		.flag {
+			height: 16px;
+		}
+	}
+	.columns-menu {
+		background: var(--background);
+		padding: 12px;
+		min-width: 280px;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+		.columns-menu-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding-bottom: 8px;
+			border-bottom: 1px solid var(--border-color);
+			margin-bottom: 4px;
+		}
+		.columns-menu-title {
+			font-weight: 500;
+		}
+		.columns-reset {
+			cursor: pointer;
+			opacity: 0.6;
+			&:hover {
+				opacity: 1;
+			}
+		}
+	}
+	.columns-config-list {
+		.column-config-item {
+			display: flex;
+			align-items: center;
+			padding: 0 8px;
+			border-radius: 4px;
+			transition: background 0.15s;
+			&:hover {
+				background: rgba(128, 128, 128, 0.1);
+			}
+			.drag-handle {
+				color: var(--text-color-secondary);
+				margin-right: 4px;
+				cursor: grab;
+			}
+			.column-checkbox {
+				flex: 1;
+				:deep(.v-selection-control) {
+					min-height: 36px;
+				}
+				:deep(.v-label) {
+					user-select: none;
+					text-align: left;
+					padding: 8px 0;
+					width: 100%;
+					height: 100%;
+					font-size: 13px;
+					margin-left: 6px;
+				}
+			}
+		}
+	}
+	.sort-config {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 12px 8px 4px;
+		border-top: 1px solid var(--border-color);
+		.sort-label {
+			white-space: nowrap;
+			font-weight: 500;
+		}
+		.sort-select {
+			flex: 1;
+			padding: 4px 8px;
+			border-radius: 4px;
+			border: 1px solid var(--border-color);
+			background: var(--background);
+			color: var(--text-color);
+		}
+		.sort-order {
+			cursor: pointer;
+			&:hover {
+				color: #5fad1b;
+			}
 		}
 	}
 	.farmer .status {
@@ -1406,8 +1959,46 @@
 	}
 	.panel :deep(.turret-wrapper) {
 		display: flex;
-		align-items: flex-end;
+		flex-direction: column;
+		align-items: center;
 		height: 100%;
+    	justify-content: space-between;
+		.team-owner {
+			text-decoration: none;
+			color: var(--text-color);
+			padding: 10px;
+			.owner-content {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				padding: 6px 12px;
+				border-radius: 8px;
+				transition: background 0.15s;
+				&:hover {
+					background: rgba(128, 128, 128, 0.1);
+				}
+			}
+			.avatar {
+				width: 50px;
+				height: 50px;
+			}
+			.owner-info {
+				display: flex;
+				flex-direction: column;
+			}
+			.owner-name {
+				font-weight: bold;
+			}
+			.owner-label {
+				font-size: 13px;
+				color: var(--text-color-secondary);
+			}
+			.owner-status {
+				width: 14px;
+				vertical-align: middle;
+				margin-right: 2px;
+			}
+		}
 		.turret {
 			display: flex;
 			justify-content: center;

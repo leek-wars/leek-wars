@@ -8,7 +8,11 @@ import { Squares } from '@/model/squares'
 import { store } from '@/model/store'
 import { emitter, vueMain } from '@/model/emitter'
 import { WeaponTemplate } from '@/model/weapon'
-import router from '@/router'
+import type { Router } from 'vue-router'
+
+let _router: Router
+export function setRouter(r: Router) { _router = r }
+export function getRouter() { return _router }
 
 import { TranslateResult } from 'vue-i18n'
 import { Chat, ChatWindow } from './chat'
@@ -229,7 +233,7 @@ const LANGUAGES = Object.freeze({
 	es: { code: 'es', name: 'Español', country: 'es', flag: '/image/flag/es.png', chat: 2, encyclopedia: 'Enciclopedia', chats: null, currency: 'EUR', beta: true, forum: false } as Language,
 	de: { code: 'de', name: 'Deutsch', country: 'de', flag: '/image/flag/de.png', chat: 2, encyclopedia: 'Enzyklopädie', chats: null, currency: 'EUR', beta: true, forum: false } as Language,
 	it: { code: 'it', name: 'Italiano', country: 'it', flag: '/image/flag/it.png', chat: 2, encyclopedia: 'Enciclopedia', chats: null, currency: 'EUR', beta: false, forum: false } as Language,
-	pt: { code: 'pt', name: 'Portugais', country: 'pt', flag: '/image/flag/pt.png', chat: 2, encyclopedia: 'Enciclopédia', chats: null, currency: 'EUR', beta: true, forum: false } as Language,
+	pt: { code: 'pt', name: 'Português', country: 'pt', flag: '/image/flag/pt.png', chat: 2, encyclopedia: 'Enciclopédia', chats: null, currency: 'EUR', beta: true, forum: false } as Language,
 	da: { code: 'da', name: 'Dansk', country: 'dk', flag: '/image/flag/da.png', chat: 2, encyclopedia: 'Encyklopædi', chats: null, currency: 'DKK', beta: true, forum: false } as Language,
 	fi: { code: 'fi', name: 'Suomi', country: 'fi', flag: '/image/flag/fi.png', chat: 2, encyclopedia: 'Tietosanakirja', chats: null, currency: 'EUR', beta: true, forum: false } as Language,
 	nl: { code: 'nl', name: 'Nederlands', country: 'nl', flag: '/image/flag/nl.png', chat: 2, encyclopedia: 'Encyclopedie', chats: null, currency: 'EUR', beta: true, forum: false } as Language,
@@ -280,6 +284,7 @@ const LeekWars = reactive({
 	titleTag: null,
 	requests: 0,
 	notifsResults: localStorage.getItem('options/notifs-results') === 'true',
+	notifsPopups: localStorage.getItem('options/notifs-popups') !== 'false',
 	rankingInactive: localStorage.getItem('options/ranking-inactive') === 'true',
 	service_worker: null as ServiceWorkerRegistration | null,
 	battleRoyale: new BattleRoyale(),
@@ -956,6 +961,7 @@ function formatDuration(timestamp: number, capital: boolean = false) {
 }
 
 function formatDate(timestamp: number) {
+	if (!timestamp) { return '' }
 	const date = new Date(timestamp * 1000)
 	const day = date.getDate()
 	const month = date.getMonth()
@@ -1183,8 +1189,8 @@ function goToRanking(type: string, order: string, id: number = 0) {
 		const page = 1 + Math.floor((data.rank - 1) / 50)
 		const active_url = data.active ? '' : '?inactive'
 		const newRoute = '/ranking/' + type + '/' + order + '/page-' + page + active_url + '#rank-' + data.rank
-		if (router.currentRoute.fullPath !== newRoute) {
-			router.push(newRoute)
+		if (_router.currentRoute.value.fullPath !== newRoute) {
+			_router.push(newRoute)
 		}
 	})
 }

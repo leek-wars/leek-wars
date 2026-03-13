@@ -1,7 +1,7 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><router-link to="/admin">Administration</router-link> > Serveurs</h1>
+			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Serveurs', link: '/admin/servers'}]" :raw="true" /></h1>
 		</div>
 		<panel class="first last">
 			<loader v-if="loading" />
@@ -130,7 +130,9 @@ import { emitter } from '@/model/vue'
 	}
 
 
-	@Options({})
+	import Breadcrumb from '@/component/forum/breadcrumb.vue'
+
+	@Options({ components: { Breadcrumb } })
 	export default class AdminServers extends Vue {
 
 		runners: {[key: number]: Runner} = {}

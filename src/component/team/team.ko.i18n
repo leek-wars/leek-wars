@@ -77,7 +77,8 @@
 	"no_ai": "AI 선택",
 	"no_compositions": "보상 없음",
 	"no_description": "설명 없음",
-	"not_found_id": "팀 ID <b>{0}</b>을(를) 찾을 수 없습니다.",
+	"not_found": "팀을 찾을 수 없습니다",
+	"not_found_id": "팀 ID {id}을(를) 찾을 수 없습니다.",
 	"opened": "개봉",
 	"owner": "소유자",
 	"owner_has_been_changed": "소유자가 변경되었습니다.",
@@ -109,5 +110,11 @@
 	"xp": "경험치: {0}",
 	"you_left_team": "당신은 팀을 떠났습니다.",
 	"load_all": "모두 로드",
-	"rankings": "랭킹"
+	"rankings": "랭킹",
+	"all_teams": "모든 팀",
+	"recruitment_message": "모집 메시지",
+	"no_recruitment_message": "모집 메시지 없음",
+	"configure_columns": "열 구성",
+	"default_sort": "기본 정렬",
+	"reset_columns": "초기화"
 }

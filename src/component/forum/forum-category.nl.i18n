@@ -17,5 +17,16 @@
 	"topic": "Onderwerp",
 	"mark_as_read": "Markeer als gelezen",
 	"mark_as_read_text": "Alle onderwerpen in alle forumcategorieën worden gemarkeerd als gelezen. Na deze actie worden alleen nieuwe onderwerpen of nieuwe antwoorden getoond.",
-	"show_resolved": "Toon opgeloste onderwerpen"
+	"show_resolved": "Toon opgeloste onderwerpen",
+	"priority": "Prioriteit",
+	"priority_high": "Hoge prioriteit",
+	"priority_medium": "Gemiddelde prioriteit",
+	"priority_low": "Lage prioriteit",
+	"hidden_topic": "Verborgen onderwerp",
+	"status_acknowledged": "In behandeling genomen",
+	"status_not_a_bug": "Geen bug",
+	"status_not_planned": "Niet gepland",
+	"status_obsolete": "Verouderd",
+	"status_not_reproduced": "Niet gereproduceerd",
+	"status_resolved": "Opgelost"
 }

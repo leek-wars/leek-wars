@@ -17,5 +17,16 @@
 	"topic": "Subjek",
 	"mark_as_read": "Tandai sebagai membaca",
 	"mark_as_read_text": "Semua topik di semua kategori forum akan ditandai sebagai telah dibaca. Setelah tindakan ini, hanya topik baru atau balasan baru yang akan ditampilkan.",
-	"show_resolved": "Tampilkan topik yang diselesaikan"
+	"show_resolved": "Tampilkan topik yang diselesaikan",
+	"priority": "Prioritas",
+	"priority_high": "Prioritas tinggi",
+	"priority_medium": "Prioritas sedang",
+	"priority_low": "Prioritas rendah",
+	"hidden_topic": "Topik tersembunyi",
+	"status_acknowledged": "Diterima",
+	"status_not_a_bug": "Bukan bug",
+	"status_not_planned": "Tidak direncanakan",
+	"status_obsolete": "Usang",
+	"status_not_reproduced": "Tidak dapat direproduksi",
+	"status_resolved": "Terselesaikan"
 }
