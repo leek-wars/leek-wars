@@ -39,6 +39,7 @@
 	"defeats": "sconfitte",
 	"delete_compo": "Eliminare",
 	"delete_confirm": "Eliminare",
+	"rename_team": "Rinomina squadra",
 	"rename_compo": "Rinominare",
 	"rename_confirm": "Rinominare",
 	"delete_cancel": "Annulla",
@@ -77,7 +78,8 @@
 	"no_ai": "Scegli un'intelligenza artificiale",
 	"no_compositions": "Nessun comp",
 	"no_description": "nessuna descrizione",
-	"not_found_id": "ID squadra <b>{0}</b> non trovato :(",
+	"not_found": "Squadra non trovata",
+	"not_found_id": "ID squadra {id} non trovato :(",
 	"opened": "Ha aperto",
 	"owner": "Proprietario",
 	"owner_has_been_changed": "Il proprietario è stato cambiato.",
@@ -129,5 +131,6 @@
 	"no_recruitment_message": "nessun messaggio di reclutamento",
 	"configure_columns": "Configura colonne",
 	"default_sort": "Ordinamento predefinito",
-	"reset_columns": "Ripristina"
+	"reset_columns": "Ripristina",
+	"team_language": "Lingua della squadra"
 }

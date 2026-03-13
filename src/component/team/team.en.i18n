@@ -39,6 +39,7 @@
 	"defeats": "losses",
 	"delete_compo": "Delete",
 	"delete_confirm": "Delete",
+	"rename_team": "Rename team",
 	"rename_compo": "Rename",
 	"rename_confirm": "Rename",
 	"delete_cancel": "Cancel",
@@ -77,7 +78,8 @@
 	"no_ai": "Click to set AI",
 	"no_compositions": "No compositions",
 	"no_description": "no description",
-	"not_found_id": "Team of ID <b>{0}</b> can not be found :(",
+	"not_found": "Team not found",
+	"not_found_id": "Team of ID {id} can not be found :(",
 	"opened": "Open",
 	"owner": "Owner",
 	"owner_has_been_changed": "The owner has been changed.",
@@ -129,5 +131,6 @@
 	"no_recruitment_message": "no recruitment message",
 	"configure_columns": "Configure columns",
 	"default_sort": "Default sort",
-	"reset_columns": "Reset"
+	"reset_columns": "Reset",
+	"team_language": "Team language"
 }

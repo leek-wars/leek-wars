@@ -1,5 +1,13 @@
 <template>
-	<div class="page">
+	<error v-if="error" :title="$t('not_found')">
+		<template #message><i18n-t keypath="not_found_id" tag="span"><template #id><b>{{ id }}</b></template></i18n-t></template>
+		<template #button>
+			<router-link to="/teams">
+				<v-btn size="large" color="primary">{{ $t('all_teams') }}</v-btn>
+			</router-link>
+		</template>
+	</error>
+	<div v-else class="page">
 		<div class="page-header page-bar">
 
 			<rich-tooltip-team v-if="team" :id="team.id" v-slot="{ props }" :bottom="true">
@@ -834,6 +842,7 @@
 		ChatType = ChatType
 		CHIPS = CHIPS
 		team: Team | null = null
+		error: boolean = false
 		captain: boolean = false
 		owner: boolean = false
 		reportDialog: boolean = false
@@ -960,6 +969,7 @@
 					request = 'team/get-connected/' + this.id
 				}
 			}
+			this.error = false
 			this.rankingsLoading = false
 			this.rankingsLoaded = false
 			LeekWars.get<Team>(request).then(team => {
@@ -1007,6 +1017,8 @@
 					])
 				}
 				emitter.emit('loaded')
+			}).error(() => {
+				this.error = true
 			})
 		}
 
