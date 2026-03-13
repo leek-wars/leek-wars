@@ -49,16 +49,19 @@
 							{{ $t('fight.n_tp', [effect.value]) }}
 						</b>
 						<b v-else-if="effect.type === EffectType.SHACKLE_TP" class="color-tp">
-							{{ $t('fight.n_tp', [effect.value]) }}
+							{{ $t('fight.n_tp', [-effect.value]) }}
 						</b>
 						<b v-else-if="effect.type === EffectType.SHACKLE_MP" class="color-mp">
-							{{ $t('fight.n_mp', [effect.value]) }}
+							{{ $t('fight.n_mp', [-effect.value]) }}
 						</b>
 						<b v-else-if="effect.type === EffectType.SHACKLE_STRENGTH" class="color-strength">
-							{{ $t('fight.n_strength', [effect.value]) }}
+							{{ $t('fight.n_strength', [-effect.value]) }}
 						</b>
 						<b v-else-if="effect.type === EffectType.SHACKLE_MAGIC" class="color-magic">
-							{{ $t('fight.n_magic', [effect.value]) }}
+							{{ $t('fight.n_magic', [-effect.value]) }}
+						</b>
+						<b v-else-if="effect.type === EffectType.SHACKLE_WISDOM" class="color-wisdom">
+							{{ $t('fight.n_wisdom', [-effect.value]) }}
 						</b>
 						<b v-else-if="effect.type === EffectType.DAMAGE_RETURN">
 							{{ $t('fight.n_damage_return', [effect.value + '%']) }}
