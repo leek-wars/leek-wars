@@ -13,6 +13,8 @@
 	import { emitter } from '@/model/emitter'
 	import { Options, Prop, Vue } from 'vue-property-decorator'
 
+	const rangeCache: { [level: number]: Promise<{ min: number, max: number }> } = {}
+
 	@Options({})
 	export default class BrInvite extends Vue {
 		@Prop() level!: number
@@ -65,7 +67,10 @@
 
 		mounted() {
 			if (this.level) {
-				LeekWars.get('tournament/range-br/' + this.level).then((d: any) => {
+				if (!(this.level in rangeCache)) {
+					rangeCache[this.level] = LeekWars.get('tournament/range-br/' + this.level)
+				}
+				rangeCache[this.level].then((d: any) => {
 					this.range = d
 				})
 			}
