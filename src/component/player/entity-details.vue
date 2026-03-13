@@ -60,6 +60,9 @@
 						<b v-else-if="effect.type === EffectType.SHACKLE_MAGIC" class="color-magic">
 							{{ $t('fight.n_magic', [-effect.value]) }}
 						</b>
+						<b v-else-if="effect.type === EffectType.SHACKLE_WISDOM" class="color-wisdom">
+							{{ $t('fight.n_wisdom', [-effect.value]) }}
+						</b>
 						<b v-else-if="effect.type === EffectType.DAMAGE_RETURN">
 							{{ $t('fight.n_damage_return', [effect.value + '%']) }}
 						</b>
