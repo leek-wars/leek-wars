@@ -1,6 +1,5 @@
 <template>
-	<span v-if="expired">/br</span>
-	<span v-else class="br-invite-card">
+	<span class="br-invite-card">
 		⚔️ BR
 		<span v-if="range" class="range">{{ range.min }}-{{ range.max }}</span>
 		<span v-if="rangeCount >= 0" class="progress">{{ rangeCount }}&nbsp;/&nbsp;10</span>
@@ -11,13 +10,11 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { BattleRoyale } from '@/model/battle-royale'
-	import { emitter } from '@/model/emitter'
 	import { Options, Prop, Vue } from 'vue-property-decorator'
 
 	@Options({})
 	export default class BrInvite extends Vue {
 		@Prop() level!: number
-		expired: boolean = false
 
 		get rangeIndex() {
 			return BattleRoyale.getRangeIndex(this.level)
@@ -62,20 +59,6 @@
 				}
 			}
 			return null
-		}
-
-		mounted() {
-			emitter.on('br-started', this.onBrStarted)
-		}
-
-		beforeUnmount() {
-			emitter.off('br-started', this.onBrStarted)
-		}
-
-		onBrStarted(rangeIdx: number) {
-			if (this.rangeIndex === rangeIdx) {
-				this.expired = true
-			}
 		}
 
 		findEligibleLeek() {
