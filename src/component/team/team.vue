@@ -617,6 +617,7 @@
 		<div class="page-footer page-bar">
 			<div class="tabs">
 				<div v-if="is_member" class="tab" @click="quitTeamStart">{{ $t('quit_team') }}</div>
+				<div v-if="owner" class="tab" @click="renameTeamDialog = true"><v-icon>mdi-pencil-outline</v-icon> {{ $t('rename_team') }}</div>
 				<div v-if="owner" class="tab" @click="changeOwnerStart">{{ $t('change_owner') }}</div>
 				<div v-if="owner" class="tab" @click="dissolveDialog = true">{{ $t('disolve_team') }}</div>
 				<div v-if="!is_member && $store.state.connected">
@@ -672,6 +673,20 @@
 				<div v-ripple @click="dissolveDialog = false">{{ $t('disolve_cancel') }}</div>
 				<div v-ripple class="red" @click="dissolveTeam">{{ $t('disolve_disolve') }}</div>
 			</template>
+		</popup>
+
+		<popup v-if="team" v-model="renameTeamDialog" :width="600">
+			<template #icon><v-icon>mdi-pencil-outline</v-icon></template>
+			<template #title>{{ $t('rename_team') }}</template>
+			{{ $t('rename_team_description') }}
+			<br><br>
+			{{ $t('rename_team_new_name') }} : <input v-model="renameTeamName" type="text" @keyup.enter="renameTeam('habs')">
+			<br><br>
+			<div class="center">
+				<v-btn class="rename-button" @click="renameTeam('habs')">{{ $t('rename_team_pay_habs') }} :&nbsp;<b>{{ $filters.number(rename_team_price_habs) }}</b><img src="/image/hab.png"></v-btn>
+				&nbsp;
+				<v-btn class="rename-button" @click="renameTeam('crystals')">{{ $t('rename_team_pay_crystals') }} :&nbsp;<b>{{ $filters.number(rename_team_price_crystals) }}</b><span class="crystal"></span></v-btn>
+			</div>
 		</popup>
 
 		<popup v-if="banMemberTarget" v-model="banDialog" :width="500" icon="mdi-delete" :title="$t('ban_member_confirm_title', [banMemberTarget.name])">
@@ -858,6 +873,10 @@
 		banMemberTarget: Farmer | null = null
 		quitTeamDialog: boolean = false
 		dissolveDialog: boolean = false
+		renameTeamDialog: boolean = false
+		renameTeamName: string = ''
+		rename_team_price_habs: number = 10000000
+		rename_team_price_crystals: number = 200
 		changeOwnerDialog: boolean = false
 		changeOwnerConfirmDialog: boolean = false
 		changeOwnerSelected: TeamMember | null = null
@@ -1194,6 +1213,25 @@
 				this.team.opened = !this.team.opened
 				LeekWars.post('team/set-opened', {opened: this.team.opened})
 			}
+		}
+
+		renameTeam(currency: string) {
+			if (!this.team) { return }
+			const method = currency === 'habs' ? 'team/rename-habs' : 'team/rename-crystals'
+			LeekWars.post(method, {name: this.renameTeamName}).then(() => {
+				if (this.team) {
+					this.team.name = this.renameTeamName
+					if (currency === 'habs') {
+						store.commit('update-habs', -this.rename_team_price_habs)
+					} else {
+						store.commit('update-crystals', -this.rename_team_price_crystals)
+					}
+					this.renameTeamDialog = false
+					LeekWars.toast(this.$t('rename_team_done'))
+				}
+			}).error((error) => {
+				LeekWars.toast(this.$t('error_' + error.error, error.params))
+			})
 		}
 
 		startEditingDescription() {
@@ -2170,5 +2208,13 @@
 	}
 	.compos {
 		margin-bottom: 12px;
+	}
+	.rename-button {
+		b {
+			padding-right: 4px;
+		}
+		img {
+			width: 20px;
+		}
 	}
 </style>

@@ -802,7 +802,7 @@
 		draggedWeaponLocation: string | null = null
 		xp_bar: number = 0
 		renameDialog: boolean = false
-		rename_price_habs: number = 2000000
+		rename_price_habs: number = 10000000
 		rename_price_crystals: number = 200
 		renameName: string = ''
 		renameSuccess: boolean = false
