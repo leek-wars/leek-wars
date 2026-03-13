@@ -498,7 +498,8 @@ import { emitter } from '@/model/vue'
 				}
 			}
 			if ((this.category === 'solo' || this.category === 'battle-royale') && !params.item) {
-				let defaultLeek = parseInt(localStorage.getItem('garden/leek') || '0', 10)
+				const key = this.category === 'battle-royale' ? 'battle-royale' : 'garden/leek'
+				let defaultLeek = parseInt(localStorage.getItem(key) || '0', 10)
 				if (!(defaultLeek in store.state.farmer!.leeks)) {
 					defaultLeek = LeekWars.first(store.state.farmer!.leeks)!.id
 				}
@@ -708,7 +709,8 @@ import { emitter } from '@/model/vue'
 		@Watch('selectedLeek')
 		updateLeek() {
 			if (this.selectedLeek) {
-				localStorage.setItem('garden/leek', '' + this.selectedLeek.id)
+				const key = this.category === 'battle-royale' ? 'battle-royale' : 'garden/leek'
+				localStorage.setItem(key, '' + this.selectedLeek.id)
 			}
 		}
 		@Watch('selectedComposition')

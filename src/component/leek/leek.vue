@@ -322,7 +322,7 @@
 						{{ $t('rename_leek') }}
 					</div>
 				</template>
-				<v-tooltip v-if="leek && my_leek && leek.level >= 20 && $store.state.farmer?.br_enabled" @update:model-value="loadBRRange">
+				<v-tooltip v-if="leek && my_leek && leek.level >= 20 && $store.state.farmer?.br_enabled">
 					<template #activator="{ props }">
 						<div class="tab" @click="registerAutoBr" v-bind="props">
 							<v-icon>mdi-trophy</v-icon>
@@ -738,6 +738,7 @@
 <script lang="ts">
 	import { locale } from '@/locale'
 	import { AI } from '@/model/ai'
+	import { BattleRoyale } from '@/model/battle-royale'
 	import { Chip } from '@/model/chip'
 	import { Options } from '@/model/component'
 	import { Hat } from '@/model/hat'
@@ -830,8 +831,9 @@
 		skinPotionDialog: boolean = false
 		tournamentRangeLoading: boolean = false
 		tournamentRange: any = null
-		brRangeLoading: boolean = false
-		brRange: any = null
+		get brRange() {
+			return this.leek ? BattleRoyale.getRange(this.leek.level) : null
+		}
 		request: any = null
 		MAX_COMPONENTS = 8
 
@@ -960,8 +962,6 @@
 			this.leek = null
 			this.tournamentRange = null
 			this.tournamentRangeLoading = false
-			this.brRange = null
-			this.brRangeLoading = false
 			this.error = false
 			if (!this.id) { return }
 			const method = this.my_leek ? 'leek/get-private/' + this.id : 'leek/get/' + this.id
@@ -1506,11 +1506,6 @@
 			LeekWars.get('tournament/range-leek/' + this.leek.level).then(d => this.tournamentRange = d)
 		}
 
-		loadBRRange() {
-			if (!this.leek || this.brRange || this.brRangeLoading) { return }
-			this.brRangeLoading = true
-			LeekWars.get('tournament/range-br/' + this.leek.level).then(d => this.brRange = d)
-		}
 
 		copyAsTest() {
 			if (!this.leek) { return }

@@ -10,25 +10,21 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
+	import { BattleRoyale } from '@/model/battle-royale'
 	import { emitter } from '@/model/emitter'
 	import { Options, Prop, Vue } from 'vue-property-decorator'
-
-	const rangeCache: { [level: number]: Promise<{ min: number, max: number }> } = {}
 
 	@Options({})
 	export default class BrInvite extends Vue {
 		@Prop() level!: number
-		range: { min: number, max: number } | null = null
 		expired: boolean = false
 
-		static readonly RANGES = [20, 100, 200, 300]
-
 		get rangeIndex() {
-			if (!this.range) { return -1 }
-			for (let i = BrInvite.RANGES.length - 1; i >= 0; i--) {
-				if (this.range.min >= BrInvite.RANGES[i]) { return i }
-			}
-			return -1
+			return BattleRoyale.getRangeIndex(this.level)
+		}
+
+		get range() {
+			return BattleRoyale.getRange(this.level)
 		}
 
 		get rangeCount() {
@@ -49,11 +45,14 @@
 		get eligibleLeek() {
 			const farmer = this.$store.state.farmer
 			if (!farmer || !this.range) { return null }
-			const lastLeek = parseInt(localStorage.getItem('garden/leek') || '', 10)
-			if (lastLeek && farmer.leeks[lastLeek]) {
-				const lvl = farmer.leeks[lastLeek].level
-				if (lvl >= this.range.min && lvl <= this.range.max) {
-					return lastLeek
+			// Priorité : leek BR actuel > dernier leek potager > premier éligible
+			for (const key of ['battle-royale', 'garden/leek']) {
+				const id = parseInt(localStorage.getItem(key) || '', 10)
+				if (id && farmer.leeks[id]) {
+					const lvl = farmer.leeks[id].level
+					if (lvl >= this.range.min && lvl <= this.range.max) {
+						return id
+					}
 				}
 			}
 			for (const id in farmer.leeks) {
@@ -66,14 +65,6 @@
 		}
 
 		mounted() {
-			if (this.level) {
-				if (!(this.level in rangeCache)) {
-					rangeCache[this.level] = LeekWars.get('tournament/range-br/' + this.level)
-				}
-				rangeCache[this.level].then((d: any) => {
-					this.range = d
-				})
-			}
 			emitter.on('br-started', this.onBrStarted)
 		}
 
@@ -87,9 +78,31 @@
 			}
 		}
 
+		findEligibleLeek() {
+			const farmer = this.$store.state.farmer
+			if (!farmer || !this.range) { return null }
+			for (const key of ['battle-royale', 'garden/leek']) {
+				const id = parseInt(localStorage.getItem(key) || '', 10)
+				if (id && farmer.leeks[id]) {
+					const lvl = farmer.leeks[id].level
+					if (lvl >= this.range!.min && lvl <= this.range!.max) {
+						return id
+					}
+				}
+			}
+			for (const id in farmer.leeks) {
+				const lvl = farmer.leeks[id].level
+				if (lvl >= this.range!.min && lvl <= this.range!.max) {
+					return farmer.leeks[id].id
+				}
+			}
+			return null
+		}
+
 		joinBR() {
-			if (this.eligibleLeek) {
-				LeekWars.battleRoyale.register(this.eligibleLeek)
+			const leek = this.findEligibleLeek()
+			if (leek) {
+				LeekWars.battleRoyale.register(leek)
 			}
 		}
 	}
