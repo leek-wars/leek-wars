@@ -62,8 +62,8 @@
 							</v-tooltip>
 						</template>
 						<emblem v-else :team="team" />
-						<v-btn v-if="is_member" class="like-overlay no-click" :class="{liked: team.likes > 0}" size="small" :ripple="false">
-							<template #prepend><v-icon size="small" :color="team.likes > 0 ? 'red' : ''">{{ team.likes > 0 ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon></template>
+						<v-btn v-if="is_member" class="like-overlay" :class="{liked: team.liked}" size="small" @click.stop="toggleLike">
+							<template #prepend><v-icon size="small" :color="team.liked ? 'red' : ''">{{ team.liked ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon></template>
 							{{ team.likes }}
 						</v-btn>
 						<v-btn v-else-if="$store.state.connected" class="like-overlay" :class="{liked: team.liked}" size="small" @click="toggleLike">
@@ -1619,8 +1619,8 @@
 	}
 	.like-overlay {
 		position: absolute;
-		bottom: 4px;
-		right: 4px;
+		bottom: 0;
+		right: -8px;
 		text-transform: none;
 		min-width: 0;
 		&.liked {
