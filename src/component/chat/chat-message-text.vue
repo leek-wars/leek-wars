@@ -7,6 +7,7 @@
 	import { store } from '@/model/store'
 	import { vueMain, vuetify } from '@/model/vue'
 	import { i18n } from '@/model/i18n'
+	import { LeekWars } from '@/model/leekwars'
 	import router from '@/router'
 	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import Pseudo from '../app/pseudo.vue'
@@ -20,13 +21,14 @@
 	import Emblem from '../emblem.vue'
 	import Talent from '../talent.vue'
 	import RankingBadge from '../ranking-badge.vue'
+	import BrInvite from './br-invite.vue'
 
 	@Options({ name: 'ChatMessageText', components: { RichTooltipFarmer } })
 	export default class ChatMessageText extends Vue {
 
 		@Prop({ required: true }) message!: ChatMessage
 
-		pseudos: App[] = []
+		subApps: App[] = []
 
 		mounted() {
 			this.$el.querySelectorAll('.pseudo').forEach((c) => {
@@ -45,14 +47,25 @@
 					app.component('talent', Talent)
 					app.component('ranking-badge', RankingBadge)
 					app.mount(c)
-					this.pseudos.push(app)
+					this.subApps.push(app)
 				}
+			})
+			this.$el.querySelectorAll('.br-invite').forEach((c) => {
+				const level = parseInt((c as HTMLElement).dataset.level || '', 10) || 0
+				const app = createApp(BrInvite, { level })
+				app.use(router)
+				app.use(vuetify)
+				app.use(i18n)
+				app.use(store)
+				app.mixin({ data() { return { LeekWars } } })
+				app.mount(c)
+				this.subApps.push(app)
 			})
 		}
 
 		beforeUnmount() {
-			for (const pseudo of this.pseudos) {
-				pseudo.unmount()
+			for (const app of this.subApps) {
+				app.unmount()
 			}
 		}
 	}

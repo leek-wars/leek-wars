@@ -310,6 +310,17 @@ import { emitter } from '@/model/vue'
 			if (message.startsWith('/ping')) {
 				this.$store.commit('last-ping', Date.now())
 			}
+			if (message.match(/(^|\s)\/br(\s|$)/)) {
+				if (!LeekWars.battleRoyale.enabled) {
+					LeekWars.toast(this.$t('main.br_not_in_br'))
+					return
+				}
+				const brLeekId = parseInt(localStorage.getItem('battle-royale') || '', 10)
+				const brLeek = brLeekId ? this.$store.state.farmer?.leeks[brLeekId] : null
+				if (brLeek) {
+					message = message.replace(/(^|\s)\/br(\s|$)/, '$1/br:' + brLeek.level + '$2')
+				}
+			}
 			if (this.chat === null) {
 				LeekWars.post('message/create-conversation', {farmer_id: this.newFarmer.id, message}).then(data => {
 					this.newConversation.id = data.conversation_id
@@ -439,6 +450,9 @@ import { emitter } from '@/model/vue'
 			content = LeekWars.linkify(content)
 			content = formatEmojis(content)
 			content = Commands.execute(content, message.farmer.name)
+			if (Date.now() / 1000 - message.date > 3600) {
+				content = content.replace(/<span class="br-invite"[^>]*><\/span>/g, '/br')
+			}
 			content = content.replace(/@(\w+)/g, (a, b) => {
 				const farmer = store.state.farmer_by_name[b]
 				if (farmer) {
@@ -452,7 +466,7 @@ import { emitter } from '@/model/vue'
 			const element = document.createElement('div')
 			element.innerHTML = message.content
 			const innerText = element.innerText.trim()
-			message.only_emojis = innerText.length === 0 || /^[\s\p{Emoji_Presentation}]+$/gmu.test(innerText)
+			message.only_emojis = !element.querySelector('.br-invite') && (innerText.length === 0 || /^[\s\p{Emoji_Presentation}]+$/gmu.test(innerText))
 			if (!('censored' in message)) {
 				message.censored = 0
 			}

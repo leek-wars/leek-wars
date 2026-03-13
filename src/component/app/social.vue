@@ -47,7 +47,7 @@
 					</template>
 				</panel>
 
-				<chat-panel v-if="env.SOCIAL" toggle="social/chat" chat="social" :height="300" />
+				<chat-panel v-if="env.SOCIAL && socialEverOpened" toggle="social/chat" chat="social" :height="300" />
 			</div>
 		</div>
 	</div>
@@ -66,11 +66,13 @@ import { emitter } from '@/model/vue'
 	export default class Social extends Vue {
 
 		panelWidth: number = 400
+		socialEverOpened: boolean = false
 
 		created() {
 			if (localStorage.getItem('main/social-collapsed') === 'true') {
 				LeekWars.socialCollapsed = true
 			}
+			this.socialEverOpened = !LeekWars.socialCollapsed
 			const width = localStorage.getItem('main/social-width')
 			if (width) {
 				this.panelWidth = parseInt(width, 10)
@@ -79,6 +81,9 @@ import { emitter } from '@/model/vue'
 
 		toggleSocial() {
 			LeekWars.socialCollapsed = !LeekWars.socialCollapsed
+			if (!LeekWars.socialCollapsed) {
+				this.socialEverOpened = true
+			}
 			localStorage.setItem('main/social-collapsed', '' + LeekWars.socialCollapsed)
 			nextTick(() => {
 				emitter.emit('resize')

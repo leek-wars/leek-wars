@@ -9,7 +9,6 @@ class BattleRoyale {
 	leeks: {[key: number]: Leek} = {}
 	progress: number = 0
 	enabled: boolean = false
-
 	init() {
 		const leek = parseInt(localStorage.getItem('battle-royale') || '', 10)
 		if (leek) {	this.register(leek) }
