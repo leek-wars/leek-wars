@@ -83,7 +83,7 @@
 							</template>
 
 							<div v-if="message.deleted" class="text deleted">{{ $t('deleted_message') }}</div>
-							<textarea v-else-if="message.editing" ref="textarea" v-model="message.message" :style="{height: message.height + 'px'}" class="original"></textarea>
+							<textarea v-else-if="message.editing" ref="textarea" v-model="message.message" :style="{height: message.height + 'px'}" class="original" @input="autoResize(message, $event)"></textarea>
 							<div v-else-if="message.html" v-emojis v-code class="text" v-html="message.html"></div>
 							<markdown v-else :content="message.message" mode="forum" />
 
@@ -638,13 +638,19 @@ import { emitter } from '@/model/vue'
 			LeekWars.toast(this.$i18n.t('notifications_off') as string)
 		}
 		edit(message: ForumMessage) {
+			const textElement = document.querySelector('#message-' + message.id + ' .text, #message-' + message.id + ' .md') as HTMLElement
+			if (textElement) {
+				message.height = textElement.offsetHeight - 14
+			}
 			message.editing = true
 			if (message.id === -1) {
 				this.topicEditing = true
 			}
-			const textElement = document.querySelector('#message-' + message.id + ' .text') as HTMLElement
-			if (textElement) {
-				message.height = textElement.offsetHeight - 14
+		}
+		autoResize(message: ForumMessage, e: Event) {
+			const textarea = e.target as HTMLTextAreaElement
+			if (textarea.scrollHeight > message.height) {
+				message.height = textarea.scrollHeight
 			}
 		}
 		endEdit(message: ForumMessage) {
