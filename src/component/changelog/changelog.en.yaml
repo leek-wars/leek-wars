@@ -64,7 +64,7 @@
     - "Trophies: optimized rendering on farmer page."
     - "Mobile menu: improved swipe gesture handling."
   fixed:
-    - "Nova damage not triggering on aftereffect damage."
+    - "Unbridled gazor passive not triggering on aftereffect damage."
     - "Editor: replacing text selected right-to-left on Firefox."
     - "Changelog popup not showing after login."
     - "Mobile action buttons broken by Vue 3 migration."

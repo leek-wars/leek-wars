@@ -64,7 +64,7 @@
     - "Trophées : optimisation du rendu sur la page éleveur."
     - "Menu mobile : amélioration de la gestion du swipe."
   fixed:
-    - "Dégâts nova non déclenchés sur les dégâts rémanents."
+    - "Passif du Gazeur débridé non déclenché sur les dégâts de séquelle."
     - "Éditeur : remplacement de texte sélectionné de droite à gauche sous Firefox."
     - "Popup du changelog qui ne s'affichait pas après la connexion."
     - "Boutons d'action mobile cassés par la migration Vue 3."

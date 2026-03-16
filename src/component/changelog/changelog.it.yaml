@@ -64,7 +64,7 @@
     - "Trofei: ottimizzazione del rendering nella pagina allevatore."
     - "Menu mobile: miglioramento della gestione dello swipe."
   fixed:
-    - "Danni nova non attivati sui danni residui."
+    - "Passivo del Gasatore sfrenato non attivato sui danni da postumi."
     - "Editor: sostituzione del testo selezionato da destra a sinistra su Firefox."
     - "Popup del changelog che non si visualizzava dopo il login."
     - "Pulsanti di azione mobile rotti dalla migrazione Vue 3."
