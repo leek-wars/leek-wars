@@ -17,7 +17,8 @@
 							<b>Version {{ newsletter.version }}</b>
 							<div class="spacer"></div>
 							<v-btn @click="test(newsletter, $store.state.farmer.id)"><v-icon>mdi-cog-outline</v-icon> Test compte normal</v-btn>
-							<v-btn @click="test(newsletter, 73156)"><v-icon>mdi-cog-outline</v-icon> Test compte random</v-btn>
+							<v-text-field v-model="newsletter.testTarget" type="number" label="Farmer ID" density="compact" hide-details style="max-width: 150px" />
+							<v-btn @click="test(newsletter, newsletter.testTarget)"><v-icon>mdi-cog-outline</v-icon> Test</v-btn>
 							<!-- <v-btn v-if="newsletter.sent === 0" color="primary" @click="send(newsletter)"><v-icon>mdi-send-outline</v-icon> Envoyer</v-btn> -->
 							<div v-if="newsletter.sent !== 0">Envoyé le {{ $filters.date(newsletter.sent) }}</div>
 						</div>
@@ -54,7 +55,10 @@
 			if (!this.$store.getters.admin) this.$router.replace('/')
 			LeekWars.setTitle("Admin Newsletters")
 
-			LeekWars.get('newsletter/all').then(newsletters => this.newsletters = newsletters)
+			LeekWars.get('newsletter/all').then(newsletters => {
+				for (const n of newsletters) n.testTarget = 73156
+				this.newsletters = newsletters
+			})
 			LeekWars.get('newsletter/count').then(count => {
 				this.count = count
 				LeekWars.setSubTitle(count + " inscrits")
