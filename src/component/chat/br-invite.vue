@@ -32,7 +32,7 @@
 
 		get inSameRange() {
 			if (!LeekWars.battleRoyale.enabled || !this.range) { return false }
-			const brLeekId = parseInt(localStorage.getItem('battle-royale') || '', 10)
+			const brLeekId = parseInt(localStorage.getItem('battle-royale-leek') || '', 10)
 			const farmer = this.$store.state.farmer
 			if (!brLeekId || !farmer || !farmer.leeks[brLeekId]) { return false }
 			const lvl = farmer.leeks[brLeekId].level
@@ -43,7 +43,7 @@
 			const farmer = this.$store.state.farmer
 			if (!farmer || !this.range) { return null }
 			// Priorité : leek BR actuel > dernier leek potager > premier éligible
-			for (const key of ['battle-royale', 'garden/leek']) {
+			for (const key of ['battle-royale-leek', 'garden/leek']) {
 				const id = parseInt(localStorage.getItem(key) || '', 10)
 				if (id && farmer.leeks[id]) {
 					const lvl = farmer.leeks[id].level
@@ -64,7 +64,7 @@
 		findEligibleLeek() {
 			const farmer = this.$store.state.farmer
 			if (!farmer || !this.range) { return null }
-			for (const key of ['battle-royale', 'garden/leek']) {
+			for (const key of ['battle-royale-leek', 'garden/leek']) {
 				const id = parseInt(localStorage.getItem(key) || '', 10)
 				if (id && farmer.leeks[id]) {
 					const lvl = farmer.leeks[id].level
