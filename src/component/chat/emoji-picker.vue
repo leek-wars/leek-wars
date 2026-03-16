@@ -31,7 +31,7 @@
 	import { Emojis } from '@/model/emojis'
 	import { Options, Prop, Vue } from 'vue-property-decorator'
 
-	@Options({})
+	@Options({ emits: ['pick'] })
 	export default class EmojiPicker extends Vue {
 		width: number = 352
 		categories = Emojis.categories
