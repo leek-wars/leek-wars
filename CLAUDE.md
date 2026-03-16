@@ -32,6 +32,10 @@ Les changelogs sont dans `src/component/changelog/` au format YAML.
 - La version en cours de développement a le titre "WIP"
 - Créditer les contributeurs avec "(merci à <pseudo>)"
 
+## Terminologie du jeu
+- **Potager** (pas "Jardin") : page de matchmaking et lancement de combat.
+- **Habs** (pas "HABs" ni "HAB") : monnaie du jeu, H majuscule, reste en minuscule.
+
 ## Éditeur Monaco
 
 Le code de l'éditeur est dans `src/component/editor/` :
