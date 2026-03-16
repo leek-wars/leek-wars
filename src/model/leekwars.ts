@@ -323,9 +323,6 @@ const LeekWars = reactive({
 		if (LeekWars.keepConnected || !store.state.connected) { return }
 		LeekWars.keepConnected = setInterval(() => {
 			store.commit('last-connection', LeekWars.time)
-			LeekWars.post('farmer/update').then(data => {
-				store.commit('connected-count', data.farmers)
-			})
 		}, 59 * 1000)
 	},
 	clearIntervals: () => {
