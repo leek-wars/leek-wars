@@ -90,6 +90,7 @@ enum SocketMessage {
 	CONSOLE_CLOSE = 88,
 	ADMIN_ERROR = 89,
 	PING = 90,
+	CONNECTED_COUNT = 91,
 }
 
 class Socket {
@@ -355,6 +356,10 @@ class Socket {
 				}
 				case SocketMessage.EDITOR_COMPLETE: {
 					getAnalyzer().then(a => a.completeResult({ id: request_id, type: id, data }))
+					break
+				}
+				case SocketMessage.CONNECTED_COUNT: {
+					store.commit('connected-count', data)
 					break
 				}
 				case SocketMessage.ADMIN_ERROR: {

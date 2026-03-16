@@ -347,20 +347,18 @@ app.directive('chat-code-latex', {
 			return "<code>" + code + "</code>"
 		})
 		el.querySelectorAll('code').forEach((c) => {
+			let props
 			if (c.innerHTML.indexOf("<br>") !== -1) {
-				const code = LeekWars.decodehtmlentities(c.innerHTML).replace(/<br>/gi, "\n").trim()
-				const codeApp = createApp(Code, { code, expandable: true })
-				codeApp.use(vuetify)
-				codeApp.use(i18n)
-				codeApp.use(store)
-				codeApp.mount(c)
+				props = { code: LeekWars.decodehtmlentities(c.innerHTML).replace(/<br>/gi, "\n").trim(), expandable: true }
 			} else {
-				const codeApp = createApp(Code, { code: c.textContent || '', single: true })
-				codeApp.use(vuetify)
-				codeApp.use(i18n)
-				codeApp.use(store)
-				codeApp.mount(c)
+				props = { code: c.textContent || '', single: true }
 			}
+			const codeApp = createApp(Code, props)
+			codeApp.use(vuetify)
+			codeApp.use(i18n)
+			codeApp.use(store)
+			const vm = codeApp.mount(c)
+			c.replaceWith(vm.$el)
 		})
 		el.querySelectorAll('latex').forEach((c) => {
 			Latex.latexify(c.innerHTML).then(result => {

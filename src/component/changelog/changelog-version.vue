@@ -1,12 +1,12 @@
 <template lang="html">
 	<div class="version">
-		<img v-if="version.image" :src="'/image/mail/mail_' + version.version + '.webp'" class="image" loading="lazy" @error="($event.target as HTMLImageElement).style.display = 'none'">
+		<img :src="'/image/mail/mail_' + version.version + '.webp'" class="image" loading="lazy" @error="($event.target as HTMLImageElement).style.display = 'none'">
 		<div class="wrapper">
 			<div v-for="(changes, s) in sections" :key="s" class="section">
 				<h4 v-if="sections.length > 1" :class="{first: s === 0}">{{ $t('changelog.title_' + s) }}</h4>
 				<div v-for="(change, c) in changes" :key="c" class="change">
 					<span v-html="'➤ ' + change.text"></span>
-					<v-menu v-for="image in change.images" :key="image" :close-on-content-click="false" :max-width="500" :max-height="300" offset-overflow :nudge-top="0" transition="none" :open-on-hover="true" :open-delay="200" offset-y>
+					<v-menu v-for="image in change.images" :key="image" :close-on-content-click="false" offset-overflow :nudge-top="0" transition="none" :open-on-hover="true" :open-delay="200" :close-delay="10" offset-y location="top">
 						<template #activator="{ props }">
 							<v-icon class="screenshot" v-bind="props">mdi-tooltip-image-outline</v-icon>
 						</template>
@@ -109,8 +109,9 @@ import(/* webpackChunkName: "changelog-[request]" */ `@/component/changelog/chan
 	}
 	.image-menu {
 		vertical-align: bottom;
-		max-width: 800px;
+		max-width: 700px;
 		max-height: 600px;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 	}
 	.image {
 		width: 100%;

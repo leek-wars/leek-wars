@@ -315,7 +315,7 @@ import { emitter } from '@/model/vue'
 					LeekWars.toast(this.$t('main.br_not_in_br'))
 					return
 				}
-				const brLeekId = parseInt(localStorage.getItem('battle-royale') || '', 10)
+				const brLeekId = parseInt(localStorage.getItem('battle-royale-leek') || '', 10)
 				const brLeek = brLeekId ? this.$store.state.farmer?.leeks[brLeekId] : null
 				if (brLeek) {
 					message = message.replace(/(^|\s)\/br(\s|$)/, '$1/br:' + brLeek.level + '$2')

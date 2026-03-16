@@ -77,7 +77,6 @@ interface ChangelogEntry {
 	data: string
 	forum_topic?: number | null
 	forum_category?: number | null
-	image: boolean
 	active: boolean
 }
 
