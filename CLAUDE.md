@@ -35,6 +35,8 @@ Les changelogs sont dans `src/component/changelog/` au format YAML.
 ## Terminologie du jeu
 - **Potager** (pas "Jardin") : page de matchmaking et lancement de combat.
 - **Habs** (pas "HABs" ni "HAB") : monnaie du jeu, H majuscule, reste en minuscule.
+- **Séquelle** (pas "rémanent" ni "poison") : type de dégâts "aftereffect" en anglais. Utiliser les noms des fichiers de traduction (`src/lang/*/effect.json`).
+- **Noms d'armes/puces** : toujours utiliser les noms officiels des fichiers de traduction (`src/lang/*/weapon.json`, `src/lang/*/chip.json`), pas d'approximation.
 
 ## Éditeur Monaco
 
