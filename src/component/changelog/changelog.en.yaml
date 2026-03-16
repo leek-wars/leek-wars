@@ -37,7 +37,7 @@
     - "/br chat command to invite players to Battle Royale. #img_245_br_invite"
     - "Expand button on the market page. #img_245_market_expand"
     - "Tooltip on fight counter showing free/paid/team breakdown. #img_245_fight_tooltip"
-    - "Leek name in Battle Royale notifications. #img_245_notify_br"
+    - "Leek name in Battle Royale notifications. #img_245_notif_br"
     - "#ai Optional name parameter for the summon function. #img_245_named_bulbs"
     - "#ai getBulbType, getBulbStats, getStat, getMobType functions and related constants."
     - "Turret AI selector in team test scenarios. #img_245_turret_test_ai"

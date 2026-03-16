@@ -37,7 +37,7 @@
     - "Comando /br nella chat per invitare in Battle Royale. #img_245_br_invite"
     - "Pulsante di espansione nella pagina mercato. #img_245_market_expand"
     - "Tooltip sul contatore di combattimenti con dettaglio gratuiti/pagati/squadra. #img_245_fight_tooltip"
-    - "Nome del porro nelle notifiche di Battle Royale. #img_245_notify_br"
+    - "Nome del porro nelle notifiche di Battle Royale. #img_245_notif_br"
     - "#ai Parametro opzionale di nome per la funzione summon. #img_245_named_bulbs"
     - "#ai Funzioni getBulbType, getBulbStats, getStat, getMobType e costanti associate."
     - "Selettore di IA della torretta negli scenari di test di squadra. #img_245_turret_test_ai"

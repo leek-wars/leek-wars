@@ -37,7 +37,7 @@
     - "Commande /br dans le chat pour inviter en Battle Royale. #img_245_br_invite"
     - "Bouton d'agrandissement sur la page marché. #img_245_market_expand"
     - "Tooltip sur le compteur de combats détaillant gratuits/payés/équipe. #img_245_fight_tooltip"
-    - "Nom du poireau dans les notifications de Battle Royale. #img_245_notify_br"
+    - "Nom du poireau dans les notifications de Battle Royale. #img_245_notif_br"
     - "#ai Paramètre optionnel de nom pour la fonction summon. #img_245_named_bulbs"
     - "#ai Fonctions getBulbType, getBulbStats, getStat, getMobType et constantes associées."
     - "Sélecteur d'IA de tourelle dans les scénarios de test d'équipe. #img_245_turret_test_ai"
