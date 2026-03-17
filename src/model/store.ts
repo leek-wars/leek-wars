@@ -121,10 +121,8 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			for (const conversation of data.conversations) {
 				store.commit('new-conversation', conversation)
 			}
-			for (const chatData of data.chats) {
-				if (!state.chat[chatData.id] && LeekWars.isPublicChat(chatData.id)) {
-					state.chat[chatData.id] = new Chat(chatData.id, ChatType.GLOBAL, LeekWars.publicChats[chatData.id].name, chatData.notifications)
-				}
+			for (const chat of data.chats) {
+				store.commit('register-chat', chat)
 			}
 			fileSystem.init(data.farmer)
 			LeekWars.startIntervals()
