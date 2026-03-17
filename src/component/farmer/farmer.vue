@@ -335,8 +335,8 @@
 			<loader v-if="!farmer" />
 			<div v-else class="leeks">
 				<rich-tooltip-leek v-for="leek in farmer.leeks" :id="leek.id" :key="leek.id" v-slot="{ props }">
-					<router-link v-ripple :to="'/leek/' + leek.id" class="leek">
-						<div v-bind="props">
+					<router-link v-ripple :to="'/leek/' + leek.id" class="leek" v-bind="props">
+						<div>
 							<leek-image :leek="leek" :scale="0.9" />
 							<div class="name">{{ leek.name }}</div>
 							<lw-title v-if="leek.title.length" :title="leek.title" />

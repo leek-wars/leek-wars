@@ -2,8 +2,8 @@
 	<div class="result card">
 		<div v-ripple class="main" @click="$emit('gotoresult', result)">
 			<div class="image">
-				<rich-tooltip-leek v-if="result.type === 'leek'" :id="result.id">
-					<leek-image :leek="result" :scale="1" width="44" height="44" />
+				<rich-tooltip-leek v-if="result.type === 'leek'" :id="result.id" v-slot="{ props }">
+					<span v-bind="props"><leek-image :leek="result" :scale="1" width="44" height="44" /></span>
 				</rich-tooltip-leek>
 				<rich-tooltip-farmer v-else-if="result.type === 'farmer'" :id="result.id">
 					<avatar :farmer="result" />
