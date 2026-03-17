@@ -94,7 +94,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				unread: number,
 				notifications: Notification[],
 				conversations: any[],
-				chats: {id: number, read: boolean}[],
+				chats: {id: number, read: boolean, notifications: boolean}[],
 				token: string
 			}) {
 			store.commit("reset")
@@ -120,6 +120,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 			for (const conversation of data.conversations) {
 				store.commit('new-conversation', conversation)
+			}
+			for (const chatData of data.chats) {
+				if (!state.chat[chatData.id] && LeekWars.isPublicChat(chatData.id)) {
+					state.chat[chatData.id] = new Chat(chatData.id, ChatType.GLOBAL, LeekWars.publicChats[chatData.id].name, chatData.notifications)
+				}
 			}
 			fileSystem.init(data.farmer)
 			LeekWars.startIntervals()
@@ -194,7 +199,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				const groupChat = state.farmer && state.farmer.group ? state.farmer.group.chat : null
 				const type = LeekWars.isPublicChat(data.id) ? ChatType.GLOBAL : (data.id === teamChat ? ChatType.TEAM : (data.id === groupChat ? ChatType.GROUP : ChatType.PM))
 				const name = type === ChatType.GLOBAL ? LeekWars.publicChats[data.id].name : (type === ChatType.TEAM ? state.farmer!.team!.name : (type === ChatType.GROUP ? state.farmer!.group!.name : data.name))
-				const chat = new Chat(data.id, type, name, data.notifications)
+				const chat = new Chat(data.id, type, name, data.notifications !== undefined ? data.notifications : true)
 				state.chat[data.id] = chat
 			}
 		},
