@@ -1,0 +1,16 @@
+export const FUNCTION_CATEGORIES: { [key: number]: { id: number, name: string } } = {
+	1: { id: 1, name: 'math' },
+	2: { id: 2, name: 'string' },
+	3: { id: 3, name: 'array' },
+	4: { id: 4, name: 'map' },
+	5: { id: 5, name: 'leek' },
+	6: { id: 6, name: 'weapon' },
+	7: { id: 7, name: 'chip' },
+	8: { id: 8, name: 'field' },
+	9: { id: 9, name: 'fight' },
+	10: { id: 10, name: 'utils' },
+	11: { id: 11, name: 'network' },
+	12: { id: 12, name: 'color' },
+	13: { id: 13, name: 'set' },
+	14: { id: 14, name: 'interval' },
+}
