@@ -1,18 +1,29 @@
 <template lang="html">
 	<div class="problems-details">
+		<div class="filter-bar">
+			<span v-if="analyzer.error_count" :class="['filter-btn', 'error', { active: filterErrors }]" @click="toggleFilter(0)">
+				<v-icon>mdi-close-circle-outline</v-icon> {{ analyzer.error_count }}
+			</span>
+			<span v-if="analyzer.warning_count" :class="['filter-btn', 'warning', { active: filterWarnings }]" @click="toggleFilter(1)">
+				<v-icon>mdi-alert-circle-outline</v-icon> {{ analyzer.warning_count }}
+			</span>
+			<span v-if="analyzer.todo_count" :class="['filter-btn', 'todo', { active: filterTodos }]" @click="toggleFilter(2)">
+				<v-icon>mdi-format-list-checks</v-icon> {{ analyzer.todo_count }}
+			</span>
+		</div>
 		<div v-for="(ais, entrypoint) in analyzer.problems" :key="entrypoint">
 			<div v-for="(problems, ai) in ais" :key="ai">
-				<template v-if="problems.length && fileSystem.aiByFullPath[ai]">
+				<template v-if="filteredCount(problems) && fileSystem.aiByFullPath[ai]">
 					<div class="file" @click="toggleProblemFile(entrypoint + ai)">
 						<v-icon>{{ problemsCollapsed[entrypoint + ai] ? 'mdi-chevron-right' : 'mdi-chevron-down' }}</v-icon>
 						<span v-if="fileSystem.aiByFullPath[ai].entrypoints.length > 1 && fileSystem.ais[entrypoint]">{{ fileSystem.ais[entrypoint].name }} {{ ' ➞ ' }}</span>
 						{{ ai }}
-						<span v-if="fileSystem.aiByFullPath[ai].errors" class="count error">{{ fileSystem.aiByFullPath[ai].errors }}</span>
-						<span v-if="fileSystem.aiByFullPath[ai].warnings" class="count warning">{{ fileSystem.aiByFullPath[ai].warnings }}</span>
-						<span v-if="fileSystem.aiByFullPath[ai].todos" class="count todo">{{ fileSystem.aiByFullPath[ai].todos }}</span>
+						<span v-if="filterErrors && fileSystem.aiByFullPath[ai].errors" class="count error">{{ fileSystem.aiByFullPath[ai].errors }}</span>
+						<span v-if="filterWarnings && fileSystem.aiByFullPath[ai].warnings" class="count warning">{{ fileSystem.aiByFullPath[ai].warnings }}</span>
+						<span v-if="filterTodos && fileSystem.aiByFullPath[ai].todos" class="count todo">{{ fileSystem.aiByFullPath[ai].todos }}</span>
 					</div>
 					<div v-if="!problemsCollapsed[entrypoint + ai]">
-						<div v-for="(problem, p) in problems" :key="p" class="problem" @click="jumpProblem(ai, problem)">
+						<div v-for="(problem, p) in filteredProblems(problems)" :key="p" class="problem" @click="jumpProblem(ai, problem)">
 							<v-icon v-if="problem.level === 0" class="error">mdi-close-circle-outline</v-icon>
 							<v-icon v-else-if="problem.level === 1" class="warning">mdi-alert-circle-outline</v-icon>
 							<v-icon v-else class="todo">mdi-format-list-checks</v-icon>
@@ -38,9 +49,37 @@
 		analyzer = analyzer
 		problemsCollapsed: {[key: string]: boolean} = {}
 		fileSystem = fileSystem
+		filterErrors: boolean = localStorage.getItem('editor/filter-errors') !== 'false'
+		filterWarnings: boolean = localStorage.getItem('editor/filter-warnings') !== 'false'
+		filterTodos: boolean = localStorage.getItem('editor/filter-todos') !== 'false'
 
 		toggleProblemFile(ai: string) {
 			this.problemsCollapsed[ai] = !this.problemsCollapsed[ai]
+		}
+
+		toggleFilter(level: number) {
+			if (level === 0) {
+				this.filterErrors = !this.filterErrors
+				localStorage.setItem('editor/filter-errors', '' + this.filterErrors)
+			} else if (level === 1) {
+				this.filterWarnings = !this.filterWarnings
+				localStorage.setItem('editor/filter-warnings', '' + this.filterWarnings)
+			} else {
+				this.filterTodos = !this.filterTodos
+				localStorage.setItem('editor/filter-todos', '' + this.filterTodos)
+			}
+		}
+
+		filteredProblems(problems: any[]) {
+			return problems.filter(p =>
+				(p.level === 0 && this.filterErrors) ||
+				(p.level === 1 && this.filterWarnings) ||
+				(p.level === 2 && this.filterTodos)
+			)
+		}
+
+		filteredCount(problems: any[]) {
+			return this.filteredProblems(problems).length
 		}
 
 		jumpProblem(path: string, problem: any) {
@@ -57,6 +96,30 @@
 	overflow-y: auto;
 	position: relative;
 	height: 100%;
+	.filter-bar {
+		display: flex;
+		gap: 4px;
+		padding: 4px 6px;
+		border-bottom: 1px solid var(--border);
+		.filter-btn {
+			display: flex;
+			align-items: center;
+			gap: 3px;
+			padding: 2px 8px;
+			border-radius: 10px;
+			font-size: 13px;
+			font-weight: 500;
+			cursor: pointer;
+			user-select: none;
+			opacity: 0.35;
+			border: 1px solid transparent;
+			.v-icon { font-size: 16px; color: inherit; }
+			&.active { opacity: 1; border-color: currentColor; }
+			&.error { color: red; }
+			&.warning { color: #ff9100; }
+			&.todo { color: #0099ff; }
+		}
+	}
 	.v-icon {
 		font-size: 20px;
 		color: var(--text-color);
