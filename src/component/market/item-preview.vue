@@ -30,6 +30,18 @@
 		<scheme-preview v-else-if="item.type === ItemType.SCHEME" :scheme="LeekWars.schemes[item.params]" @update:model-value="$emit('update:modelValue', $event)" />
 		<!-- <fight-pack-preview v-else-if="item.type === ItemType.FIGHT_PACK" :resource="LeekWars.items[item.id]" /> -->
 
+		<div v-if="itemStats" class="stats usage-stats">
+			<svg v-if="itemHistogram" class="sparkline" :viewBox="'0 0 ' + itemHistogram.length * 3 + ' 20'" preserveAspectRatio="none">
+				<rect v-for="(v, i) in itemHistogram" :key="i"
+					:x="i * 3" :y="20 - v" :width="2.5" :height="v"
+					:fill="v > 0 ? '#5fad1b' : 'var(--background-disabled)'" />
+			</svg>
+			<div>
+				<v-icon size="15">mdi-chart-bar</v-icon>
+				{{ $t('effect.usage_stats', [itemStats.avg]) }}
+			</div>
+		</div>
+
 		<div v-if="inventory" class="stats inventory">
 			<div v-if="item.price">
 				{{ $t('main.estimated_value') }} : <b>{{ LeekWars.formatNumber(item.price) }}</b> <span class='hab'></span>
@@ -87,6 +99,35 @@ export default class ItemPreview extends Vue {
 	CHIPS = CHIPS
 	WeaponsData = WeaponsData
 	LeekWars = LeekWars
+
+	mounted() {
+		if (this.leek && this.myLeek && (this.item.type === ItemType.WEAPON || this.item.type === ItemType.CHIP) && this.leek.itemUsageStats === null) {
+			LeekWars.get<{ stats: { [key: number]: { uses: number, fights: number } }, histograms: { [key: number]: number[] } }>('item-usage/get-by-leek/' + this.leek.id).then(data => {
+				this.leek.itemUsageStats = data.stats
+				this.leek.itemUsageHistograms = data.histograms
+			})
+		}
+	}
+
+	get myLeek(): boolean {
+		const farmer = store.state.farmer
+		return farmer && this.leek.id in farmer.leeks
+	}
+
+	get itemStats(): { uses: number, fights: number, avg: string } | null {
+		if (!this.leek?.itemUsageStats || (this.item.type !== ItemType.WEAPON && this.item.type !== ItemType.CHIP)) return null
+		const stats = this.leek.itemUsageStats[this.item.id]
+		if (!stats) return { uses: 0, fights: 0, avg: '0.0' }
+		const avg = stats.fights > 0 ? (stats.uses / stats.fights).toFixed(1) : '0.0'
+		return { uses: stats.uses, fights: stats.fights, avg }
+	}
+
+	get itemHistogram(): number[] | null {
+		if (!this.leek?.itemUsageHistograms || (this.item.type !== ItemType.WEAPON && this.item.type !== ItemType.CHIP)) return null
+		const data = this.leek.itemUsageHistograms[this.item.id] || new Array(84).fill(0)
+		const max = Math.max(...data, 1)
+		return data.map(v => (v / max) * 18 + (v > 0 ? 2 : 1))
+	}
 
 	get category() {
 		return ITEM_CATEGORY_NAME[this.item.type]
@@ -228,6 +269,24 @@ export default class ItemPreview extends Vue {
 	background: #f2f2f2;
 	div {
 		padding: 5px;
+	}
+}
+.usage-stats {
+	background: var(--background-secondary);
+	padding: 10px;
+	.sparkline {
+		width: 100%;
+		height: 30px;
+		display: block;
+	}
+	div {
+		color: var(--text-color-secondary);
+		font-size: 13px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 5px;
+		padding: 4px;
 	}
 }
 </style>

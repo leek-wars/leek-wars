@@ -149,5 +149,6 @@
 	"allies": "Tous les alliés",
 	"enemies": "Tous les ennemis",
 	"n_uses": "<b>1</b> utilisation | <b>{n}</b> utilisations",
-	"max_uses": "{uses} maximum par tour"
+	"max_uses": "{uses} maximum par tour",
+	"usage_stats": "~{0} utilisations/combat (une semaine)"
 }
