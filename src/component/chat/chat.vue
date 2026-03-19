@@ -312,8 +312,15 @@ import { emitter } from '@/model/vue'
 			}
 			if (message.match(/(^|\s)\/br(\s|$)/)) {
 				if (!LeekWars.battleRoyale.enabled) {
-					LeekWars.toast(this.$t('main.br_not_in_br'))
-					return
+					// Auto-inscription en BR avec le dernier poireau utilisé ou le premier disponible
+					const farmer = this.$store.state.farmer
+					if (farmer) {
+						const lastLeekId = parseInt(localStorage.getItem('garden/leek') || '', 10)
+						const leek = (lastLeekId && farmer.leeks[lastLeekId]) ? farmer.leeks[lastLeekId] : Object.values(farmer.leeks)[0] as any
+						if (leek) {
+							LeekWars.battleRoyale.register(leek.id)
+						}
+					}
 				}
 				const brLeekId = parseInt(localStorage.getItem('battle-royale-leek') || '', 10)
 				const brLeek = brLeekId ? this.$store.state.farmer?.leeks[brLeekId] : null
