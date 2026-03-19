@@ -102,8 +102,9 @@ export default class ItemPreview extends Vue {
 
 	mounted() {
 		if (this.leek && this.myLeek && (this.item.type === ItemType.WEAPON || this.item.type === ItemType.CHIP) && this.leek.itemUsageStats === null) {
-			LeekWars.get<{ stats: { [key: number]: { uses: number, fights: number } }, histograms: { [key: number]: number[] } }>('item-usage/get-by-leek/' + this.leek.id).then(data => {
+			LeekWars.get<{ stats: { [key: number]: { uses: number, fights: number } }, total_fights: number, histograms: { [key: number]: number[] } }>('item-usage/get-by-leek/' + this.leek.id).then(data => {
 				this.leek.itemUsageStats = data.stats
+				this.leek.itemUsageTotalFights = data.total_fights
 				this.leek.itemUsageHistograms = data.histograms
 			})
 		}
@@ -116,10 +117,11 @@ export default class ItemPreview extends Vue {
 
 	get itemStats(): { uses: number, fights: number, avg: string } | null {
 		if (!this.leek?.itemUsageStats || (this.item.type !== ItemType.WEAPON && this.item.type !== ItemType.CHIP)) return null
+		const totalFights = this.leek.itemUsageTotalFights
 		const stats = this.leek.itemUsageStats[this.item.id]
-		if (!stats) return { uses: 0, fights: 0, avg: '0.0' }
-		const avg = stats.fights > 0 ? (stats.uses / stats.fights).toFixed(1) : '0.0'
-		return { uses: stats.uses, fights: stats.fights, avg }
+		if (!stats) return { uses: 0, fights: totalFights, avg: '0' }
+		const avg = totalFights > 0 ? (stats.uses / totalFights).toFixed(1) : '0'
+		return { uses: stats.uses, fights: totalFights, avg }
 	}
 
 	get itemHistogram(): number[] | null {
