@@ -7,6 +7,7 @@ import { AIItem, Folder } from './editor-item'
 import { Problem } from './problem'
 import { i18n } from '@/model/i18n'
 import * as monaco from 'monaco-editor'
+import { reactive } from 'vue'
 
 export class AnalyzerPromise {
 	public then!: (data: any) => void
@@ -226,22 +227,17 @@ class Analyzer {
 		for (const problem of problems) {
 			const level = problem[0]
 			const ai_id = problem[1]
-			const line = problem[2]
-			let info
-			if (problem.length === 8) {
-				info = i18n.t('leekscript.error_' + problem[6], problem[7])
-			} else {
-				info = i18n.t('leekscript.error_' + problem[6])
-			}
-			const problemObject = new Problem(line, problem[3], problem[4], problem[5], level, info as string)
+			const info = problem.length === 8
+				? i18n.t('leekscript.error_' + problem[6], problem[7]) as string
+				: i18n.t('leekscript.error_' + problem[6]) as string
 			if (!problemsByAI[ai_id]) {
 				problemsByAI[ai_id] = []
 				markersByAI[ai_id] = []
 			}
-			problemsByAI[ai_id].push(problemObject)
+			problemsByAI[ai_id].push(new Problem(problem[2], problem[3], problem[4], problem[5], level, info))
 			markersByAI[ai_id].push({
-				message: problem.length === 8 ? i18n.t('leekscript.error_' + problem[6], problem[7]) as string : i18n.t('leekscript.error_' + problem[6]) as string,
-				severity: problem[0] === 0 ? monaco.MarkerSeverity.Error : monaco.MarkerSeverity.Warning,
+				message: info,
+				severity: level === 0 ? monaco.MarkerSeverity.Error : monaco.MarkerSeverity.Warning,
 				startLineNumber: problem[2],
 				startColumn: problem[3] + 1,
 				endLineNumber: problem[4],
@@ -306,6 +302,118 @@ class Analyzer {
 		}
 	}
 
+	public updateTodos(ai: AI) {
+		// Collect full entrypoint tree
+		const ids = new Set<number>([ai.id])
+		for (const id of ai.includes_ids || []) ids.add(id)
+		for (const epId of ai.entrypoints || []) {
+			ids.add(epId)
+			for (const id of fileSystem.ais[epId]?.includes_ids || []) ids.add(id)
+		}
+
+		// Scan all involved AIs for TODOs
+		const todos = Array.from(ids).flatMap(id => {
+			const a = fileSystem.ais[id]
+			return a?.code ? this.scanTodos(a, a.code) : []
+		})
+
+		// Build problems + Monaco markers in one pass
+		const byAI: {[key: number]: Problem[]} = {}
+		const markers: {[key: number]: monaco.editor.IMarkerData[]} = {}
+		for (const id of ids) markers[id] = []
+		for (const t of todos) {
+			if (!byAI[t[1]]) byAI[t[1]] = []
+			byAI[t[1]].push(new Problem(t[2], t[3], t[4], t[5], 2, t[6]))
+			markers[t[1]]?.push({
+				message: t[6],
+				severity: monaco.MarkerSeverity.Info,
+				startLineNumber: t[2],
+				startColumn: t[3] + 1,
+				endLineNumber: t[4],
+				endColumn: t[5] + 2,
+			})
+		}
+
+		// Update problems for scanned AIs only (stored under entrypoint key -1)
+		if (!this.problems[-1]) this.problems[-1] = {}
+		for (const id of ids) {
+			const a = fileSystem.ais[id]
+			if (!a) continue
+			if (byAI[id]) {
+				this.setProblems(-1, a, byAI[id])
+			} else if (a.problems && (-1 in a.problems)) {
+				delete a.problems[-1]
+				delete this.problems[-1][a.path]
+				this.updateAiErrors(a)
+			}
+			// Monaco markers (separate "todos" owner)
+			if (a.model) monaco.editor.setModelMarkers(a.model, 'todos', markers[id] || [])
+		}
+		this.updateCount()
+	}
+
+	private scanTodos(ai: AI, code: string) {
+		const todos: [number, number, number, number, number, number, string][] = []
+		const lines = code.split('\n')
+		let inBlockComment = false
+
+		for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
+			const line = lines[lineIdx]
+			const lineNum = lineIdx + 1
+
+			if (inBlockComment) {
+				const closeIdx = line.indexOf('*/')
+				const commentText = closeIdx !== -1 ? line.substring(0, closeIdx) : line
+				this.findTodoInText(ai, todos, lineNum, 0, commentText)
+				if (closeIdx !== -1) inBlockComment = false
+				continue
+			}
+
+			let i = 0
+			let inString: string | null = null
+			while (i < line.length) {
+				const c = line[i]
+				if (inString) {
+					if (c === '\\') i++ // skip escape
+					else if (c === inString) inString = null
+				} else if (c === '"' || c === "'") {
+					inString = c
+				} else if (c === '/' && i + 1 < line.length) {
+					if (line[i + 1] === '/') {
+						this.findTodoInText(ai, todos, lineNum, i + 2, line.substring(i + 2))
+						break
+					} else if (line[i + 1] === '*') {
+						i += 2
+						const closeIdx = line.indexOf('*/', i)
+						if (closeIdx !== -1) {
+							this.findTodoInText(ai, todos, lineNum, i, line.substring(i, closeIdx))
+							i = closeIdx + 1
+						} else {
+							this.findTodoInText(ai, todos, lineNum, i, line.substring(i))
+							inBlockComment = true
+							break
+						}
+					}
+				}
+				i++
+			}
+		}
+		return todos
+	}
+
+	private findTodoInText(ai: AI, todos: [number, number, number, number, number, number, string][], lineNum: number, colOffset: number, text: string) {
+		const upperText = text.toUpperCase()
+		const todoIdx = upperText.indexOf('TODO')
+		if (todoIdx === -1) return
+		const before = upperText[todoIdx - 1]
+		if (before && /\w/.test(before)) return
+		const after = upperText[todoIdx + 4]
+		if (after && /\w/.test(after)) return
+		const comment = text.trim()
+		const startCol = colOffset + text.length - text.trimStart().length
+		todos.push([2, ai.id, lineNum, startCol, lineNum, startCol + comment.length - 1, comment])
+	}
+
 	private loadJs(url: string) {
 		return new Promise((resolve, reject) => {
 			if (document.querySelector(`head > script[ src = "${url}" ]`) !== null) {
@@ -323,6 +431,6 @@ class Analyzer {
 	}
 }
 
-const analyzer = new Analyzer()
+const analyzer = reactive(new Analyzer()) as Analyzer
 
 export { analyzer, Analyzer }

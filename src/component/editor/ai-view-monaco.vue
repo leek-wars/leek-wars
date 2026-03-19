@@ -232,6 +232,7 @@ export default class AIViewMonaco extends Vue {
 			// console.log("Show hover", hoverController)
 			const widget = hoverController._contentWidget.widget._resizableNode
 			const body = widget.domNode.querySelector('.hover-row-contents')
+			if (!body) return
 			body.querySelectorAll('.lw').forEach((e: any) => {
 				e.remove()
 			})
@@ -361,29 +362,33 @@ export default class AIViewMonaco extends Vue {
 	setAnalyzerTimeout() {
 		clearTimeout(this.analyzerTimeout)
 		this.analyzerTimeout = setTimeout(() => {
+			const ai = this.ai  // Capture before any async/navigation
 
 			this.analyzing = true
-			this.ai.code = this.editor.getValue()
-			this.ai.analyze()
+			ai.code = this.editor.getValue()
+			ai.analyze()
+
+			// Scan TODOs immediately (client-side, no server needed)
+			analyzer.updateTodos(ai)
 
 			// DISABLE AUTO ANALYZE
 			// if (true) return;
 
-			analyzer.analyze(this.ai, this.ai.code).then((result) => {
+			analyzer.analyze(ai, ai.code).then((result) => {
 				// console.log("analyze", result)
 				this.analyzing = false
 
 				for (const entrypoint in result) {
 					const entrypoint_id = parseInt(entrypoint, 10)
-					const ai = fileSystem.ais[entrypoint_id]
+					const entrypointAi = fileSystem.ais[entrypoint_id]
 
 					// Valid?
 					let valid = true
 					for (const problem of result[entrypoint]) {
 						if (problem[0] === 0) { valid = false; break }
 					}
-					ai.valid = valid
-					analyzer.handleProblems(ai, result[entrypoint])
+					entrypointAi.valid = valid
+					analyzer.handleProblems(entrypointAi, result[entrypoint])
 				}
 				analyzer.updateCount()
 			})

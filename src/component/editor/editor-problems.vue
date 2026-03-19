@@ -40,7 +40,7 @@
 <script lang="ts">
 	import { fileSystem } from '@/model/filesystem'
 	import { i18n, mixins } from '@/model/i18n'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import { analyzer } from './analyzer'
 
 	@Options({ name: 'editor-problems', i18n: {}, mixins: [...mixins] })

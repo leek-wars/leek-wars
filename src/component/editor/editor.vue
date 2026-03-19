@@ -106,19 +106,17 @@
 									<leekscript-versions v-model:version="currentAI.version" v-model:strict="currentAI.strict" @update:version="updateVersion" @update:strict="updateStrictMode" />
 								</v-menu>
 								<div v-ripple class="problems" @click="toggleProblems">
-									<span v-if="analyzer.error_count + analyzer.warning_count + analyzer.todo_count === 0" class="no-error">
+									<span v-if="!analyzer.error_count && !analyzer.warning_count" class="no-error">
 										<v-icon>mdi-check-circle</v-icon> <span v-if="!LeekWars.mobile">{{ $t('no_problem') }}</span>
 									</span>
-									<span v-else>
-										<span v-if="analyzer.error_count" class="errors">
-											<v-icon>mdi-close-circle</v-icon> {{ analyzer.error_count }} {{ $tc('error', analyzer.error_count).toLowerCase() }}
-										</span>
-										<span v-if="analyzer.warning_count" class="warnings">
-											<v-icon>mdi-alert-circle</v-icon> {{ analyzer.warning_count }} {{ $tc('warning', analyzer.warning_count).toLowerCase() }}
-										</span>
-										<span v-if="analyzer.todo_count" class="todos">
-											<v-icon>mdi-format-list-checks</v-icon> {{ analyzer.todo_count }} {{ $tc('todo', analyzer.todo_count).toLowerCase() }}
-										</span>
+									<span v-if="analyzer.error_count" class="errors">
+										<v-icon>mdi-close-circle</v-icon> {{ analyzer.error_count }} {{ $tc('error', analyzer.error_count).toLowerCase() }}
+									</span>
+									<span v-if="analyzer.warning_count" class="warnings">
+										<v-icon>mdi-alert-circle</v-icon> {{ analyzer.warning_count }} {{ $tc('warning', analyzer.warning_count).toLowerCase() }}
+									</span>
+									<span v-if="analyzer.todo_count" class="todos">
+										<v-icon>mdi-format-list-checks</v-icon> {{ analyzer.todo_count }} {{ $tc('todo', analyzer.todo_count).toLowerCase() }}
 									</span>
 								</div>
 								<div class="filler"></div>
@@ -339,7 +337,7 @@
 			this.currentAI2 = parseInt(localStorage.getItem('editor/last-code-2') || '') || null
 
 			LeekWars.loadEncyclopedia(locale)
-			
+
 			const docMessages = await import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
 			i18n.global.mergeLocaleMessage(locale, { doc: docMessages.default })
 		}
@@ -1158,6 +1156,8 @@
 			padding: 0 10px;
 			cursor: pointer;
 			user-select: none;
+			display: flex;
+			gap: 8px;
 			i {
 				font-size: 17px;
 				margin-bottom: 3px;
@@ -1173,7 +1173,6 @@
 				i {
 					color: red;
 				}
-				margin-right: 5px;
 			}
 			.warnings {
 				color: #ff9100;
