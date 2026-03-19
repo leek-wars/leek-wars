@@ -148,5 +148,6 @@
 	"enemies": "Kaikki viholliset",
 	"state_11": "Staattinen",
 	"n_uses": "<b>1</b> käyttö | <b>{n}</b> käyttötapoja",
-	"max_uses": "enintään {uses} kierrosta kohti"
+	"max_uses": "enintään {uses} kierrosta kohti",
+	"usage_stats": "~{0} käyttöä/taistelu (yksi viikko)"
 }

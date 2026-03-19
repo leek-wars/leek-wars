@@ -148,5 +148,6 @@
 	"enemies": "Alle fjender",
 	"state_11": "Statisk",
 	"n_uses": "<b>1</b> brug | <b>{n}</b> brug",
-	"max_uses": "maksimalt {uses} pr. runde"
+	"max_uses": "maksimalt {uses} pr. runde",
+	"usage_stats": "~{0} brug/kamp (en uge)"
 }
