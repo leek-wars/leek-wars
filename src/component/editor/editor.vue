@@ -654,6 +654,7 @@
 					ai['valid'] = valid
 					analyzer.handleProblems(ai, data.result[entrypoint])
 				}
+				analyzer.updateTodos(aiEditor.ai)
 				analyzer.updateCount()
 				setTimeout(() => aiEditor.goods = [], 2000)
 

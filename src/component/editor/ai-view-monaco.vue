@@ -390,6 +390,7 @@ export default class AIViewMonaco extends Vue {
 					entrypointAi.valid = valid
 					analyzer.handleProblems(entrypointAi, result[entrypoint])
 				}
+				analyzer.updateTodos(ai)
 				analyzer.updateCount()
 			})
 		}, 1000)

@@ -334,18 +334,40 @@ class Analyzer {
 			})
 		}
 
-		// Update problems for scanned AIs only (stored under entrypoint key -1)
-		if (!this.problems[-1]) this.problems[-1] = {}
+		// Merge TODOs into existing entrypoints (alongside errors/warnings)
 		for (const id of ids) {
 			const a = fileSystem.ais[id]
 			if (!a) continue
-			if (byAI[id]) {
-				this.setProblems(-1, a, byAI[id])
-			} else if (a.problems && (-1 in a.problems)) {
-				delete a.problems[-1]
-				delete this.problems[-1][a.path]
-				this.updateAiErrors(a)
+
+			// Find a real entrypoint that already has problems for this AI
+			let ep = -1
+			for (const e in a.problems) {
+				if (parseInt(e) !== -1 && a.problems[e].length > 0) { ep = parseInt(e); break }
 			}
+
+			// Remove old TODOs from all entrypoints for this AI
+			for (const e in a.problems) {
+				const before = a.problems[e].length
+				a.problems[e] = a.problems[e].filter((p: Problem) => p.level !== 2)
+				if (this.problems[e]?.[a.path]) this.problems[e][a.path] = a.problems[e]
+				if (a.problems[e].length === 0 && before > 0) {
+					delete a.problems[e]
+					if (this.problems[e]) delete this.problems[e][a.path]
+				}
+			}
+
+			// Append new TODOs
+			if (byAI[id]) {
+				if (ep !== -1 && a.problems[ep]) {
+					a.problems[ep].push(...byAI[id])
+					this.problems[ep][a.path] = a.problems[ep]
+				} else {
+					if (!this.problems[-1]) this.problems[-1] = {}
+					this.setProblems(-1, a, byAI[id])
+				}
+			}
+			this.updateAiErrors(a)
+
 			// Monaco markers (separate "todos" owner)
 			if (a.model) monaco.editor.setModelMarkers(a.model, 'todos', markers[id] || [])
 		}
