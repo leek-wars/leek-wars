@@ -28,5 +28,21 @@
 	"status_not_planned": "योजना में नहीं",
 	"status_obsolete": "अप्रचलित",
 	"status_not_reproduced": "पुन: उत्पन्न नहीं हुआ",
-	"status_resolved": "हल किया गया"
+	"status_resolved": "हल किया गया",
+	"filter": "Filter",
+	"filter_all": "All",
+	"filter_status": "Status",
+	"filter_acknowledged": "Acknowledged",
+	"filter_not_acknowledged": "Not acknowledged",
+	"filter_locked": "Locked",
+	"filter_not_locked": "Not locked",
+	"filter_priority": "Priority",
+	"status_open": "Open",
+	"filter_read": "पढ़ा / अपठित",
+	"filter_read_yes": "पढ़ा",
+	"filter_read_no": "अपठित",
+	"no_topics": "कोई विषय प्रदर्शित करने के लिए नहीं",
+	"no_topics_filters": "अधिक परिणाम देखने के लिए अपने फ़िल्टर बदलने का प्रयास करें।",
+	"clear_filters": "Clear filters",
+	"priority_none": "No priority"
 }

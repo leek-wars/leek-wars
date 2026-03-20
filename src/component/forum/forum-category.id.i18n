@@ -28,5 +28,21 @@
 	"status_not_planned": "Tidak direncanakan",
 	"status_obsolete": "Usang",
 	"status_not_reproduced": "Tidak dapat direproduksi",
-	"status_resolved": "Terselesaikan"
+	"status_resolved": "Terselesaikan",
+	"filter": "Filter",
+	"filter_all": "Semua",
+	"filter_status": "Status",
+	"filter_acknowledged": "Diakui",
+	"filter_not_acknowledged": "Tidak diakui",
+	"filter_locked": "Terkunci",
+	"filter_not_locked": "Tidak terkunci",
+	"filter_priority": "Prioritas",
+	"status_open": "Terbuka",
+	"filter_read": "Dibaca / Belum dibaca",
+	"filter_read_yes": "Dibaca",
+	"filter_read_no": "Belum dibaca",
+	"no_topics": "Tidak ada topik untuk ditampilkan",
+	"no_topics_filters": "Coba sesuaikan filter Anda untuk melihat lebih banyak hasil.",
+	"clear_filters": "Hapus filter",
+	"priority_none": "Tanpa prioritas"
 }

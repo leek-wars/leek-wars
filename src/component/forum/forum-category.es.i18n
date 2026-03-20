@@ -28,5 +28,21 @@
 	"status_not_planned": "No planificado",
 	"status_obsolete": "Obsoleto",
 	"status_not_reproduced": "No reproducido",
-	"status_resolved": "Resuelto"
+	"status_resolved": "Resuelto",
+	"filter": "Filtrar",
+	"filter_all": "Todos",
+	"filter_status": "Estado",
+	"filter_acknowledged": "Reconocido",
+	"filter_not_acknowledged": "No reconocido",
+	"filter_locked": "Bloqueado",
+	"filter_not_locked": "No bloqueado",
+	"filter_priority": "Prioridad",
+	"status_open": "Abierto",
+	"filter_read": "Leído / No leído",
+	"filter_read_yes": "Leído",
+	"filter_read_no": "No leído",
+	"no_topics": "No hay temas para mostrar",
+	"no_topics_filters": "Intenta ajustar tus filtros para ver más resultados.",
+	"clear_filters": "Limpiar filtros",
+	"priority_none": "Sin prioridad"
 }

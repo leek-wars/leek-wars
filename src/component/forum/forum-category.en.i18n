@@ -28,5 +28,21 @@
 	"priority": "Priority",
 	"priority_high": "High priority",
 	"priority_medium": "Medium priority",
-	"priority_low": "Low priority"
+	"priority_low": "Low priority",
+	"filter": "Filter",
+	"filter_all": "All",
+	"filter_status": "Status",
+	"filter_acknowledged": "Acknowledged",
+	"filter_not_acknowledged": "Not acknowledged",
+	"filter_locked": "Locked",
+	"filter_not_locked": "Not locked",
+	"filter_priority": "Priority",
+	"status_open": "Open",
+	"priority_none": "No priority",
+	"filter_read": "Read / Unread",
+	"filter_read_yes": "Read",
+	"filter_read_no": "Unread",
+	"no_topics": "No topics to display",
+	"no_topics_filters": "Try adjusting your filters to see more results.",
+	"clear_filters": "Clear filters"
 }

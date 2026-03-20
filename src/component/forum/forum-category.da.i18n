@@ -28,5 +28,21 @@
 	"status_not_planned": "Ikke planlagt",
 	"status_obsolete": "Forældet",
 	"status_not_reproduced": "Ikke reproduceret",
-	"status_resolved": "Løst"
+	"status_resolved": "Løst",
+	"filter": "Filtrer",
+	"filter_all": "Alle",
+	"filter_status": "Status",
+	"filter_acknowledged": "Bekræftet",
+	"filter_not_acknowledged": "Ikke bekræftet",
+	"filter_locked": "Låst",
+	"filter_not_locked": "Ikke låst",
+	"filter_priority": "Prioritet",
+	"status_open": "Åben",
+	"filter_read": "Læst / Ulæst",
+	"filter_read_yes": "Læst",
+	"filter_read_no": "Ulæst",
+	"no_topics": "Ingen emner at vise",
+	"no_topics_filters": "Prøv at ændre dine filtre for at se flere resultater.",
+	"clear_filters": "Ryd filtre",
+	"priority_none": "Ingen prioritet"
 }

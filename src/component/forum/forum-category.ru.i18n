@@ -28,5 +28,21 @@
 	"status_not_planned": "Не запланировано",
 	"status_obsolete": "Устаревшее",
 	"status_not_reproduced": "Не воспроизведено",
-	"status_resolved": "Решено"
+	"status_resolved": "Решено",
+	"filter": "Фильтр",
+	"filter_all": "Все",
+	"filter_status": "Статус",
+	"filter_acknowledged": "Принято",
+	"filter_not_acknowledged": "Не принято",
+	"filter_locked": "Заблокировано",
+	"filter_not_locked": "Не заблокировано",
+	"filter_priority": "Приоритет",
+	"status_open": "Открыто",
+	"filter_read": "Прочитано / Не прочитано",
+	"filter_read_yes": "Прочитано",
+	"filter_read_no": "Не прочитано",
+	"no_topics": "Нет тем для отображения",
+	"no_topics_filters": "Попробуйте изменить фильтры, чтобы увидеть больше результатов.",
+	"clear_filters": "Сбросить фильтры",
+	"priority_none": "Без приоритета"
 }
