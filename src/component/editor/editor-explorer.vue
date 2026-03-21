@@ -83,12 +83,16 @@
 
 		<popup v-model="renameDialog" :width="500" icon="mdi-pencil" :title="$t('rename')">
 			<div class="padding">
-				<input ref="nameInput" v-model="newName" type="text" class="input dialog-input" @keyup.stop @keyup.enter="rename()">
-				<div v-if="windowsWarning(newName)" class="windows-warning">{{ isWindowsReservedName(newName) ? $t('windows_warning_reserved', [newName]) : $t('windows_warning_char', [windowsWarning(newName)]) }}</div>
+				<v-text-field ref="nameInput" v-model="newName" variant="outlined" density="compact" autofocus
+					:error-messages="nameError(newName) ? [nameError(newName)!] : []"
+					:messages="!nameError(newName) && windowsWarning(newName) ? [isWindowsReservedName(newName) ? $t('windows_warning_reserved', [newName]) : $t('windows_warning_char', [windowsWarning(newName)])] : []"
+					:color="!nameError(newName) && windowsWarning(newName) ? 'warning' : undefined"
+					:class="{'text-field-warning': !nameError(newName) && windowsWarning(newName)}"
+					@keyup.stop @keyup.enter="!nameError(newName) && rename()" />
 			</div>
 			<template #actions>
 				<div v-ripple @click="renameDialog = false">{{ $t('main.cancel') }}</div>
-				<div v-ripple class="green" @click="rename()">{{ $t('rename') }}</div>
+				<div v-ripple :class="{green: !nameError(newName), disabled: !!nameError(newName)}" @click="!nameError(newName) && rename()">{{ $t('rename') }}</div>
 			</template>
 		</popup>
 
@@ -125,23 +129,31 @@
 
 		<popup v-model="newAIDialog" :width="500" icon="mdi-plus-circle-outline" :title="$t('new_desc')">
 			<div class="padding">
-				<input ref="newAIInput" v-model="newAIName" :placeholder="$t('ai_name')" type="text" class="input dialog-input" @keyup.stop @keyup.enter="newAI(false, newAIName)">
-				<div v-if="windowsWarning(newAIName)" class="windows-warning">{{ isWindowsReservedName(newAIName) ? $t('windows_warning_reserved', [newAIName]) : $t('windows_warning_char', [windowsWarning(newAIName)]) }}</div>
+				<v-text-field ref="newAIInput" v-model="newAIName" :placeholder="$t('ai_name')" variant="outlined" density="compact" autofocus
+					:error-messages="nameError(newAIName) ? [nameError(newAIName)!] : []"
+					:messages="!nameError(newAIName) && windowsWarning(newAIName) ? [isWindowsReservedName(newAIName) ? $t('windows_warning_reserved', [newAIName]) : $t('windows_warning_char', [windowsWarning(newAIName)])] : []"
+					:color="!nameError(newAIName) && windowsWarning(newAIName) ? 'warning' : undefined"
+					:class="{'text-field-warning': !nameError(newAIName) && windowsWarning(newAIName)}"
+					@keyup.stop @keyup.enter="!nameError(newAIName) && newAI(false, newAIName)" />
 			</div>
 			<template #actions>
 				<div v-ripple @click="newAIDialog = false">{{ $t('main.cancel') }}</div>
-				<div v-ripple class="green" @click="newAI(false, newAIName)">{{ $t('main.create') }}</div>
+				<div v-ripple :class="{green: !nameError(newAIName), disabled: !!nameError(newAIName)}" @click="!nameError(newAIName) && newAI(false, newAIName)">{{ $t('main.create') }}</div>
 			</template>
 		</popup>
 
 		<popup v-model="newFolderDialog" :width="500" icon="mdi-folder-plus" :title="$t('new_folder')">
 			<div class="padding">
-				<input ref="newFolderInput" v-model="newFolderName" :placeholder="$t('folder_name')" type="text" class="input dialog-input" @keyup.stop @keyup.enter="newFolder(newFolderName)">
-				<div v-if="windowsWarning(newFolderName)" class="windows-warning">{{ isWindowsReservedName(newFolderName) ? $t('windows_warning_reserved', [newFolderName]) : $t('windows_warning_char', [windowsWarning(newFolderName)]) }}</div>
+				<v-text-field ref="newFolderInput" v-model="newFolderName" :placeholder="$t('folder_name')" variant="outlined" density="compact" autofocus
+					:error-messages="nameError(newFolderName) ? [nameError(newFolderName)!] : []"
+					:messages="!nameError(newFolderName) && windowsWarning(newFolderName) ? [isWindowsReservedName(newFolderName) ? $t('windows_warning_reserved', [newFolderName]) : $t('windows_warning_char', [windowsWarning(newFolderName)])] : []"
+					:color="!nameError(newFolderName) && windowsWarning(newFolderName) ? 'warning' : undefined"
+					:class="{'text-field-warning': !nameError(newFolderName) && windowsWarning(newFolderName)}"
+					@keyup.stop @keyup.enter="!nameError(newFolderName) && newFolder(newFolderName)" />
 			</div>
 			<template #actions>
 				<div v-ripple @click="newFolderDialog = false">{{ $t('main.cancel') }}</div>
-				<div v-ripple class="green" @click="newFolder(newFolderName)">{{ $t('main.create') }}</div>
+				<div v-ripple :class="{green: !nameError(newFolderName), disabled: !!nameError(newFolderName)}" @click="!nameError(newFolderName) && newFolder(newFolderName)">{{ $t('main.create') }}</div>
 			</template>
 		</popup>
 	</div>
@@ -229,6 +241,13 @@
 
 		isWindowsReservedName(name: string): boolean {
 			return this.windowsReservedNames.includes(name.toUpperCase())
+		}
+
+		nameError(name: string): string | null {
+			if (name === '') return this.$t('invalid_name_empty') as string
+			if (name === '.' || name === '..') return this.$t('invalid_name_dots') as string
+			if (name.includes('/')) return this.$t('invalid_name_slash') as string
+			return null
 		}
 
 		renameStart() {
@@ -427,9 +446,11 @@
 	width: 100%;
 	padding: 10px;
 }
-.windows-warning {
-	color: #e67e22;
-	font-size: 13px;
-	margin-top: 6px;
+.disabled {
+	opacity: 0.5;
+	pointer-events: none;
+}
+.text-field-warning :deep(.v-messages__message) {
+	color: #d35400;
 }
 </style>

@@ -27,6 +27,9 @@
 	"restore": "戻す",
 	"close_folder": "フォルダを閉じる",
 	"open_folder": "フォルダを開く",
+	"invalid_name_empty": "名前を空にすることはできません。",
+	"invalid_name_dots": "名前を「.」や「..」にすることはできません。",
+	"invalid_name_slash": "名前に「/」は使用できません。",
 	"windows_warning_char": "文字「{0}」はWindowsで使用できません。この名前はgitで問題を起こす可能性があります。",
 	"windows_warning_reserved": "「{0}」はWindowsの予約名です。この名前はgitで問題を起こす可能性があります。"
 }

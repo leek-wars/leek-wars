@@ -27,6 +27,9 @@
 	"restore": "Ristabilire",
 	"close_folder": "Chiudere la cartella",
 	"open_folder": "Aprire la cartella",
+	"invalid_name_empty": "Il nome non può essere vuoto.",
+	"invalid_name_dots": "Il nome non può essere \".\" o \"..\".",
+	"invalid_name_slash": "Il carattere \"/\" non è consentito nei nomi.",
 	"windows_warning_char": "Il carattere \"{0}\" non è consentito su Windows, questo nome potrebbe causare problemi con git.",
 	"windows_warning_reserved": "\"{0}\" è un nome riservato su Windows, questo nome potrebbe causare problemi con git."
 }

@@ -27,6 +27,9 @@
 	"restore": "Przywrócić",
 	"close_folder": "Zamknij folder",
 	"open_folder": "Otwórz folder",
+	"invalid_name_empty": "Nazwa nie może być pusta.",
+	"invalid_name_dots": "Nazwa nie może być \".\" ani \"..\".",
+	"invalid_name_slash": "Znak \"/\" nie jest dozwolony w nazwach.",
 	"windows_warning_char": "Znak \"{0}\" jest niedozwolony w systemie Windows, ta nazwa może powodować problemy z gitem.",
 	"windows_warning_reserved": "\"{0}\" jest zarezerwowaną nazwą w systemie Windows, ta nazwa może powodować problemy z gitem."
 }

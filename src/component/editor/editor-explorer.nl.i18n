@@ -27,6 +27,9 @@
 	"restore": "Herstellen",
 	"close_folder": "Map sluiten",
 	"open_folder": "Map openen",
+	"invalid_name_empty": "De naam mag niet leeg zijn.",
+	"invalid_name_dots": "De naam mag niet \".\" of \"..\" zijn.",
+	"invalid_name_slash": "Het teken \"/\" is niet toegestaan in namen.",
 	"windows_warning_char": "Het teken \"{0}\" is niet toegestaan op Windows, deze naam kan problemen veroorzaken met git.",
 	"windows_warning_reserved": "\"{0}\" is een gereserveerde naam op Windows, deze naam kan problemen veroorzaken met git."
 }
