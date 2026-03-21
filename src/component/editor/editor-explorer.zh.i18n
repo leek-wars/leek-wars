@@ -26,5 +26,7 @@
 	"recycle_bin": "篮子",
 	"restore": "恢复",
 	"close_folder": "关闭文件夹",
-	"open_folder": "打开文件夹"
+	"open_folder": "打开文件夹",
+	"windows_warning_char": "字符「{0}」在Windows上不允许使用，此名称可能导致git出现问题。",
+	"windows_warning_reserved": "「{0}」是Windows上的保留名称，此名称可能导致git出现问题。"
 }

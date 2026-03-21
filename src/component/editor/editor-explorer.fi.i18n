@@ -26,5 +26,7 @@
 	"recycle_bin": "Kori",
 	"restore": "Palauttaa",
 	"close_folder": "Sulje kansio",
-	"open_folder": "Avaa kansio"
+	"open_folder": "Avaa kansio",
+	"windows_warning_char": "Merkki \"{0}\" on kielletty Windowsissa, tämä nimi voi aiheuttaa ongelmia gitin kanssa.",
+	"windows_warning_reserved": "\"{0}\" on varattu nimi Windowsissa, tämä nimi voi aiheuttaa ongelmia gitin kanssa."
 }

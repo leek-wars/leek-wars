@@ -26,5 +26,7 @@
 	"recycle_bin": "Korg",
 	"restore": "Återställ",
 	"close_folder": "Stäng mappen",
-	"open_folder": "Öppna mappen"
+	"open_folder": "Öppna mappen",
+	"windows_warning_char": "Tecknet \"{0}\" är inte tillåtet på Windows, detta namn kan orsaka problem med git.",
+	"windows_warning_reserved": "\"{0}\" är ett reserverat namn på Windows, detta namn kan orsaka problem med git."
 }

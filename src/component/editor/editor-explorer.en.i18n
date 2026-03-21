@@ -26,5 +26,7 @@
 	"restore": "Restore",
 	"folder_name": "Folder name",
 	"close_folder": "Close folder",
-	"open_folder": "Open folder"
+	"open_folder": "Open folder",
+	"windows_warning_char": "The character \"{0}\" is not allowed on Windows, this name may cause issues with git.",
+	"windows_warning_reserved": "\"{0}\" is a reserved name on Windows, this name may cause issues with git."
 }

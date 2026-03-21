@@ -26,5 +26,7 @@
 	"recycle_bin": "バスケット",
 	"restore": "戻す",
 	"close_folder": "フォルダを閉じる",
-	"open_folder": "フォルダを開く"
+	"open_folder": "フォルダを開く",
+	"windows_warning_char": "文字「{0}」はWindowsで使用できません。この名前はgitで問題を起こす可能性があります。",
+	"windows_warning_reserved": "「{0}」はWindowsの予約名です。この名前はgitで問題を起こす可能性があります。"
 }

@@ -26,5 +26,7 @@
 	"recycle_bin": "Corbeille",
 	"restore": "Restaurer",
 	"close_folder": "Fermer le dossier",
-	"open_folder": "Ouvrir le dossier"
+	"open_folder": "Ouvrir le dossier",
+	"windows_warning_char": "Le caractère \"{0}\" est interdit sur Windows, ce nom pourrait poser problème avec git.",
+	"windows_warning_reserved": "\"{0}\" est un nom réservé sur Windows, ce nom pourrait poser problème avec git."
 }

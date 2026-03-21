@@ -26,5 +26,7 @@
 	"recycle_bin": "Kosz",
 	"restore": "Przywrócić",
 	"close_folder": "Zamknij folder",
-	"open_folder": "Otwórz folder"
+	"open_folder": "Otwórz folder",
+	"windows_warning_char": "Znak \"{0}\" jest niedozwolony w systemie Windows, ta nazwa może powodować problemy z gitem.",
+	"windows_warning_reserved": "\"{0}\" jest zarezerwowaną nazwą w systemie Windows, ta nazwa może powodować problemy z gitem."
 }

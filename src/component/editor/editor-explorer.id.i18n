@@ -26,5 +26,7 @@
 	"recycle_bin": "Keranjang",
 	"restore": "Memulihkan",
 	"close_folder": "Tutup folder",
-	"open_folder": "Buka folder"
+	"open_folder": "Buka folder",
+	"windows_warning_char": "Karakter \"{0}\" tidak diperbolehkan di Windows, nama ini mungkin bermasalah dengan git.",
+	"windows_warning_reserved": "\"{0}\" adalah nama yang dicadangkan di Windows, nama ini mungkin bermasalah dengan git."
 }

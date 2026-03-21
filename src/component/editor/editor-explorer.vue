@@ -84,6 +84,7 @@
 		<popup v-model="renameDialog" :width="500" icon="mdi-pencil" :title="$t('rename')">
 			<div class="padding">
 				<input ref="nameInput" v-model="newName" type="text" class="input dialog-input" @keyup.stop @keyup.enter="rename()">
+				<div v-if="windowsWarning(newName)" class="windows-warning">{{ isWindowsReservedName(newName) ? $t('windows_warning_reserved', [newName]) : $t('windows_warning_char', [windowsWarning(newName)]) }}</div>
 			</div>
 			<template #actions>
 				<div v-ripple @click="renameDialog = false">{{ $t('main.cancel') }}</div>
@@ -125,6 +126,7 @@
 		<popup v-model="newAIDialog" :width="500" icon="mdi-plus-circle-outline" :title="$t('new_desc')">
 			<div class="padding">
 				<input ref="newAIInput" v-model="newAIName" :placeholder="$t('ai_name')" type="text" class="input dialog-input" @keyup.stop @keyup.enter="newAI(false, newAIName)">
+				<div v-if="windowsWarning(newAIName)" class="windows-warning">{{ isWindowsReservedName(newAIName) ? $t('windows_warning_reserved', [newAIName]) : $t('windows_warning_char', [windowsWarning(newAIName)]) }}</div>
 			</div>
 			<template #actions>
 				<div v-ripple @click="newAIDialog = false">{{ $t('main.cancel') }}</div>
@@ -135,6 +137,7 @@
 		<popup v-model="newFolderDialog" :width="500" icon="mdi-folder-plus" :title="$t('new_folder')">
 			<div class="padding">
 				<input ref="newFolderInput" v-model="newFolderName" :placeholder="$t('folder_name')" type="text" class="input dialog-input" @keyup.stop @keyup.enter="newFolder(newFolderName)">
+				<div v-if="windowsWarning(newFolderName)" class="windows-warning">{{ isWindowsReservedName(newFolderName) ? $t('windows_warning_reserved', [newFolderName]) : $t('windows_warning_char', [windowsWarning(newFolderName)]) }}</div>
 			</div>
 			<template #actions>
 				<div v-ripple @click="newFolderDialog = false">{{ $t('main.cancel') }}</div>
@@ -177,6 +180,8 @@
 		newAIDialog: boolean = false
 		newFolderDialog: boolean = false
 		newFolderName: string = ''
+		windowsForbiddenChars = ['\\', ':', '*', '?', '"', '<', '>', '|']
+		windowsReservedNames = ['CON', 'PRN', 'AUX', 'NUL', 'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9', 'LPT1', 'LPT2', 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9']
 
 		created() {
 			emitter.on('editor-menu', this.openMenu)
@@ -212,6 +217,18 @@
 				}
 			}
 			console.log("openMenu", event, this.x, this.y)
+		}
+
+		windowsWarning(name: string): string | null {
+			for (const char of this.windowsForbiddenChars) {
+				if (name.includes(char)) return char
+			}
+			if (this.windowsReservedNames.includes(name.toUpperCase())) return name
+			return null
+		}
+
+		isWindowsReservedName(name: string): boolean {
+			return this.windowsReservedNames.includes(name.toUpperCase())
 		}
 
 		renameStart() {
@@ -409,5 +426,10 @@
 .dialog-input {
 	width: 100%;
 	padding: 10px;
+}
+.windows-warning {
+	color: #e67e22;
+	font-size: 13px;
+	margin-top: 6px;
 }
 </style>

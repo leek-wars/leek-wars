@@ -26,5 +26,7 @@
 	"recycle_bin": "Корзина",
 	"restore": "Восстановить",
 	"close_folder": "Закрыть папку",
-	"open_folder": "Открыть папку"
+	"open_folder": "Открыть папку",
+	"windows_warning_char": "Символ \"{0}\" запрещён в Windows, это имя может вызвать проблемы с git.",
+	"windows_warning_reserved": "\"{0}\" — зарезервированное имя в Windows, это имя может вызвать проблемы с git."
 }

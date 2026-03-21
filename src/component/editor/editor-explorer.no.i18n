@@ -26,5 +26,7 @@
 	"recycle_bin": "Kurv",
 	"restore": "Restaurere",
 	"close_folder": "Lukk mappen",
-	"open_folder": "Åpne mappe"
+	"open_folder": "Åpne mappe",
+	"windows_warning_char": "Tegnet \"{0}\" er forbudt på Windows, dette navnet kan forårsake problemer med git.",
+	"windows_warning_reserved": "\"{0}\" er et reservert navn på Windows, dette navnet kan forårsake problemer med git."
 }

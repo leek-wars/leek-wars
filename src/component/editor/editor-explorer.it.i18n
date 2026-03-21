@@ -26,5 +26,7 @@
 	"recycle_bin": "Cestino",
 	"restore": "Ristabilire",
 	"close_folder": "Chiudere la cartella",
-	"open_folder": "Aprire la cartella"
+	"open_folder": "Aprire la cartella",
+	"windows_warning_char": "Il carattere \"{0}\" non è consentito su Windows, questo nome potrebbe causare problemi con git.",
+	"windows_warning_reserved": "\"{0}\" è un nome riservato su Windows, questo nome potrebbe causare problemi con git."
 }

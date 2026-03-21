@@ -26,5 +26,7 @@
 	"recycle_bin": "Mand",
 	"restore": "Herstellen",
 	"close_folder": "Map sluiten",
-	"open_folder": "Map openen"
+	"open_folder": "Map openen",
+	"windows_warning_char": "Het teken \"{0}\" is niet toegestaan op Windows, deze naam kan problemen veroorzaken met git.",
+	"windows_warning_reserved": "\"{0}\" is een gereserveerde naam op Windows, deze naam kan problemen veroorzaken met git."
 }

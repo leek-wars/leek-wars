@@ -26,5 +26,7 @@
 	"recycle_bin": "바구니",
 	"restore": "복원하다",
 	"close_folder": "폴더 닫기",
-	"open_folder": "폴더 열기"
+	"open_folder": "폴더 열기",
+	"windows_warning_char": "문자 \"{0}\"은(는) Windows에서 사용할 수 없으며, 이 이름은 git에서 문제를 일으킬 수 있습니다.",
+	"windows_warning_reserved": "\"{0}\"은(는) Windows에서 예약된 이름이며, git에서 문제를 일으킬 수 있습니다."
 }
