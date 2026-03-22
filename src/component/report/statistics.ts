@@ -558,12 +558,11 @@ class FightStatistics {
 				}
 				case ActionType.RESURRECTION: {
 					entities[action[2]].resurrection++
+					this.updateLifes() // Enregistrer un null pour créer un gap avant la résurrection
 					entities[action[2]].life = action[4]
 					const cell = this.field.cells[action[3]]
 					entities[action[2]].move(cell)
-					if (preciseLives) {
-						this.updateLifes()
-					}
+					this.updateLifes()
 					this.addTime()
 					break
 				}
@@ -652,7 +651,7 @@ class FightStatistics {
 					previous_life = last_turn[last_turn.length - 1][0][j]
 				}
 			}
-			if (previous_life === 0 && this.entities[j].life === 0) {
+			if ((previous_life === 0 || previous_life === null) && this.entities[j].life === 0) {
 				lives.push(null)
 				lives_percent.push(null)
 			} else {
