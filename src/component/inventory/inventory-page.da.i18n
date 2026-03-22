@@ -11,5 +11,10 @@
 	"potions": "Trylledrikke",
 	"hats": "Hatte",
 	"pomps": "Udseende",
-	"resources": "Ressourcer"
+	"resources": "Ressourcer",
+	"no_group": "Ingen gruppe",
+	"type": "Type",
+	"rarity": "Sjældenhed",
+	"craftable": "Kan fremstilles",
+	"ingredient_count": "Antal ingredienser"
 }

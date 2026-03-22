@@ -11,5 +11,10 @@
 	"potions": "药剂",
 	"hats": "帽子",
 	"pomps": "出场",
-	"resources": "资源"
+	"resources": "资源",
+	"no_group": "不分组",
+	"type": "类型",
+	"rarity": "稀有度",
+	"craftable": "可制作",
+	"ingredient_count": "材料数量"
 }

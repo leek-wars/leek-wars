@@ -82,9 +82,9 @@
 					</span>
 				</span>
 
-				<router-link v-ripple to="/market" class="section" :class="{'router-link-active': $route.path.startsWith('/market')}" @click.native="clickItem">
-					<img src="/image/icon/market.png">
-					<div class="text">{{ $t("main.market") }}</div>
+				<router-link v-ripple to="/inventory" class="section" :class="{'router-link-active': $route.path.startsWith('/inventory')}" @click.native="clickItem">
+					<v-icon>mdi-treasure-chest</v-icon>
+					<div class="text">{{ $t("main.inventory") }}</div>
 				</router-link>
 
 				<router-link v-if="$store.state.farmer && $store.state.farmer.team" v-ripple to="/team" class="section" :class="{'router-link-active': $route.path.startsWith('/team')}" @click.native="clickItem">

@@ -5,5 +5,7 @@
 	"name": "Nimi",
 	"level": "Taso",
 	"date": "Päivämäärä",
-	"rarity": "Niukkuus"
+	"rarity": "Niukkuus",
+	"type": "Type",
+	"no_group": "Ei ryhmää"
 }

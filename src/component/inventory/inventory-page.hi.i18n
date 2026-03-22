@@ -12,5 +12,9 @@
 	"hats": "टोपी",
 	"pomps": "उपकरण",
 	"resources": "संसाधन",
-	"rarity": "कमी"
+	"no_group": "कोई समूह नहीं",
+	"type": "प्रकार",
+	"rarity": "कमी",
+	"craftable": "बनाने योग्य",
+	"ingredient_count": "सामग्री की संख्या"
 }

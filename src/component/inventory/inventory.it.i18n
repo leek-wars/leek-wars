@@ -5,5 +5,7 @@
 	"name": "Nome",
 	"level": "Livello",
 	"date": "Data",
-	"rarity": "Scarsità"
+	"rarity": "Scarsità",
+	"type": "Type",
+	"no_group": "Nessun gruppo"
 }

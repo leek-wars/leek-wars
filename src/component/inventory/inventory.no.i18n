@@ -5,5 +5,7 @@
 	"name": "Navn",
 	"level": "Nivå",
 	"date": "Dato",
-	"rarity": "Knapphet"
+	"rarity": "Knapphet",
+	"type": "Type",
+	"no_group": "Ingen gruppe"
 }

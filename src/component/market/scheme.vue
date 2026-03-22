@@ -1,7 +1,7 @@
 <template lang="html">
-	<div class="scheme">
+	<div class="scheme" :class="{ 'not-craftable': showResult && !possible }">
 		<div v-if="showResult" v-ripple class="group result" @click="possible && emitter.emit('craft', scheme)">
-			<rich-tooltip-item v-slot="{ props }" :item="result" :bottom="true" :inventory="true" @update:model-value="$emit('update:modelValue', $event)">
+			<rich-tooltip-item v-slot="{ props }" :item="result" :bottom="true" :inventory="true" :craft-cost="ingredientCost" @update:model-value="$emit('update:modelValue', $event)">
 				<div class="item" v-bind="props" :quantity="1" :class="{['rarity-border-' + result.rarity]: true, 'missing': !possible}">
 					<img :src="'/image/' + ITEM_CATEGORY_NAME[result.type] + '/' + result.name.replace('hat_', '').replace('potion_', '') + '.png'" :type="result.type">
 					<!-- <div class="id">#{{ scheme.result }}</div> -->
@@ -36,9 +36,8 @@
 	import { SchemeTemplate } from '@/model/scheme';
 	import { store } from '@/model/store';
 	import { emitter } from '@/model/vue';
-	import { defineAsyncComponent } from 'vue';
 	import { Options, Prop, Vue } from 'vue-property-decorator'
-	const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
+	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 
 	@Options({ name: 'scheme', components: {
 		'rich-tooltip-item': RichTooltipItem,
@@ -56,6 +55,10 @@
 		}
 		get items() {
 			return this.scheme.items.filter(i => !!i).map(item => { return { item: LeekWars.items[item![0]], quantity: item![1] } })
+		}
+
+		get ingredientCost() {
+			return this.scheme.items.reduce((s, i) => s + (i ? i[1] * LeekWars.items[i[0]].price! : 0), 0)
 		}
 
 		get possible() {
@@ -192,5 +195,11 @@
 }
 .wrong {
 	color: red;
+}
+.scheme.not-craftable {
+	background: #f001;
+	&:nth-child(2n) {
+		background: #f002;
+	}
 }
 </style>

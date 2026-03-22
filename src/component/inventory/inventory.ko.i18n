@@ -5,5 +5,7 @@
 	"name": "이름",
 	"level": "수준",
 	"date": "날짜",
-	"rarity": "부족"
+	"rarity": "부족",
+	"type": "유형",
+	"no_group": "그룹 없음"
 }

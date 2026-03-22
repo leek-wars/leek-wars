@@ -11,5 +11,10 @@
 	"potions": "Poções",
 	"hats": "Chapéus",
 	"pomps": "Aparições",
-	"resources": "Recursos"
+	"resources": "Recursos",
+	"no_group": "Sem grupo",
+	"type": "Type",
+	"rarity": "Raridade",
+	"craftable": "Fabricável",
+	"ingredient_count": "Número de ingredientes"
 }

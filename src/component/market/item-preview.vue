@@ -49,6 +49,9 @@
 			<div v-if="item.price && quantity > 1">
 				{{ $t('main.lot_value') }} : <b>{{ LeekWars.formatNumber(item.price * quantity) }}</b> <span class='hab'></span>
 			</div>
+			<div v-if="displayCraftCost > 0">
+				{{ $t('main.craft_cost') }} : <b>{{ LeekWars.formatNumber(displayCraftCost) }}</b> <span class='hab'></span>
+			</div>
 			<div v-if="item.name.startsWith('box') || ((($store.state.farmer && $store.state.farmer.admin) || LeekWars.christmasPresents) && item.name.startsWith('present'))">
 				<v-btn size="small" class="get-all notif-trophy" @click.stop="retrieveN(1)">{{ $t('main.retrieve') }} <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
 				<v-btn v-if="quantity >= 10" size="small" class="get-all notif-trophy" @click.stop="retrieveN(10)">x10 <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
@@ -94,6 +97,7 @@ export default class ItemPreview extends Vue {
 	@Prop() quantity!: number
 	@Prop() inventory!: boolean
 	@Prop() leek!: Leek
+	@Prop({ default: 0 }) craftCost!: number
 
 	ItemType = ItemType
 	CHIPS = CHIPS
@@ -150,6 +154,15 @@ export default class ItemPreview extends Vue {
 	}
 	get schemeName() {
 		return this.schemeItem ? this.schemeItem.name.replace(this.schemeCategory + '_', ''): null
+	}
+
+	get schemeCraftCost() {
+		if (!this.scheme) return 0
+		return this.scheme.items.reduce((s: number, i: any) => s + (i ? i[1] * LeekWars.items[i[0]].price! : 0), 0)
+	}
+
+	get displayCraftCost() {
+		return this.craftCost || this.schemeCraftCost
 	}
 
 	retrieveN(n: number) {

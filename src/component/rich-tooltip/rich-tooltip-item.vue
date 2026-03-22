@@ -6,7 +6,7 @@
 			</span>
 		</template>
 		<div class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
-			<item-preview :item="item" :quantity="quantity" :inventory="inventory" :leek="leek" @update:modelValue="setParent" @retrieve="$emit('retrieve', $event)" />
+			<item-preview :item="item" :quantity="quantity" :inventory="inventory" :leek="leek" :craft-cost="craftCost" @update:modelValue="setParent" @retrieve="$emit('retrieve', $event)" />
 		</div>
 	</v-menu>
 </template>
@@ -16,6 +16,7 @@
 	import ItemPreview from '@/component/market/item-preview.vue'
 	import { LeekWars } from '@/model/leekwars'
 	import { Leek } from '@/model/leek'
+	import { emitter } from '@/model/vue'
 
 	@Options({ name: 'rich-tooltip-item', components: {
 		'item-preview': ItemPreview
@@ -29,6 +30,7 @@
 		@Prop() inventory!: boolean
 		@Prop() openDelay!: number
 		@Prop() leek!: Leek
+		@Prop({ default: 0 }) craftCost!: number
 		locked: boolean = false
 		mouse: boolean = false
 		value: boolean = false
@@ -47,6 +49,20 @@
 				this.value = false
 				this.$emit('update:modelValue', false)
 			}
+		}
+
+		close() {
+			this.value = false
+			this.locked = false
+			this.disabled = true
+			setTimeout(() => this.disabled = false, 500)
+		}
+
+		mounted() {
+			emitter.on('craft', this.close)
+		}
+		beforeUnmount() {
+			emitter.off('craft', this.close)
 		}
 	}
 </script>

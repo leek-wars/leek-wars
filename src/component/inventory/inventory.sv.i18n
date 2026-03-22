@@ -5,5 +5,7 @@
 	"name": "Namn",
 	"level": "Nivå",
 	"date": "Datum",
-	"rarity": "Brist"
+	"rarity": "Brist",
+	"type": "Type",
+	"no_group": "Ingen grupp"
 }

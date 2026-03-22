@@ -11,5 +11,10 @@
 	"potions": "Зелья",
 	"hats": "Шапки",
 	"pomps": "Внешний вид",
-	"resources": "Ресурсы"
+	"resources": "Ресурсы",
+	"no_group": "Без группы",
+	"type": "Тип",
+	"rarity": "Редкость",
+	"craftable": "Можно создать",
+	"ingredient_count": "Количество ингредиентов"
 }

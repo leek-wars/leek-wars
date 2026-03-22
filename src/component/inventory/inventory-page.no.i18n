@@ -11,5 +11,10 @@
 	"potions": "Drikker",
 	"hats": "Hatter",
 	"pomps": "Opptredener",
-	"resources": "Ressurser"
+	"resources": "Ressurser",
+	"no_group": "Ingen gruppe",
+	"type": "Type",
+	"rarity": "Sjeldenhet",
+	"craftable": "Kan lages",
+	"ingredient_count": "Antall ingredienser"
 }

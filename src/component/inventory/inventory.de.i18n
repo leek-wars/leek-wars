@@ -5,5 +5,7 @@
 	"name": "Name",
 	"level": "Eben",
 	"date": "Datum",
-	"rarity": "Knappheit"
+	"rarity": "Knappheit",
+	"type": "Type",
+	"no_group": "Keine Gruppe"
 }
