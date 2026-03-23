@@ -24,7 +24,7 @@
 	"unlocked_the_x": "Upplåst den {date}",
 	"see_fight": "Se kampen",
 	"progress": "Framsteg",
-	"n_pocessors": "ingen innehavare | 1 innehavare | {n} innehavare",
+	"n_pocessors": "ingen innehavare | 1 innehavare | {0} innehavare",
 	"first_farmers": "Tidiga uppfödare",
 	"last_farmers": "Senaste uppfödare",
 	"fastest_farmers": "Snabbaste uppfödarna",

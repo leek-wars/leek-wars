@@ -24,7 +24,7 @@
 	"unlocked_the_x": "Låst op den {date}",
 	"see_fight": "Se kampen",
 	"progress": "Fremskridt",
-	"n_pocessors": "ingen besidder | 1 besidder | {n} besiddere",
+	"n_pocessors": "ingen besidder | 1 besidder | {0} besiddere",
 	"first_farmers": "Tidlige opdrættere",
 	"last_farmers": "Seneste opdrættere",
 	"fastest_farmers": "Hurtigste opdrættere",

@@ -24,7 +24,7 @@
 	"unlocked_the_x": "于 {date} 解锁",
 	"see_fight": "看战斗",
 	"progress": "进步",
-	"n_pocessors": "没有拥有者 | 1 个拥有者 | {n} 个拥有者",
+	"n_pocessors": "没有拥有者 | 1 个拥有者 | {0} 个拥有者",
 	"first_farmers": "早期育种者",
 	"last_farmers": "最新育种者",
 	"fastest_farmers": "繁殖速度最快",

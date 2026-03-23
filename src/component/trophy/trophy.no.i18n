@@ -24,7 +24,7 @@
 	"unlocked_the_x": "Låst opp {date}",
 	"see_fight": "Se kampen",
 	"progress": "Framgang",
-	"n_pocessors": "ingen eier | 1 eier | {n} eiere",
+	"n_pocessors": "ingen eier | 1 eier | {0} eiere",
 	"first_farmers": "Tidlige oppdrettere",
 	"last_farmers": "Siste oppdrettere",
 	"fastest_farmers": "Raskeste oppdrettere",

@@ -24,7 +24,7 @@
 	"unlocked_the_x": "Sbloccato il giorno {date}",
 	"see_fight": "Guarda il combattimento",
 	"progress": "Progresso",
-	"n_pocessors": "nessun possessore | 1 possessore | {n} possessori",
+	"n_pocessors": "nessun possessore | 1 possessore | {0} possessori",
 	"first_farmers": "I primi allevatori",
 	"last_farmers": "Ultimi allevatori",
 	"fastest_farmers": "Gli allevatori più veloci",

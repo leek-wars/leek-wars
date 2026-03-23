@@ -56,7 +56,7 @@
 				<div>
 					<h4><v-icon>mdi-chart-line</v-icon> {{ $t('stats') }}</h4>
 					<div class="rarity">{{ $t('created_the', [ LeekWars.formatDate(trophy.created_time) ]) }}</div>
-					<div class="rarity">{{ (trophy.rarity * 100).toPrecision(2) }}% • {{ $tc('n_pocessors', trophy.total) }}</div>
+					<div class="rarity">{{ (trophy.rarity * 100).toPrecision(2) }}% • {{ $tc('n_pocessors', trophy.total, [$filters.number(trophy.total)]) }}</div>
 				</div>
 			</div>
 		</panel>
