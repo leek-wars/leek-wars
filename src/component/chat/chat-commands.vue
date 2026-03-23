@@ -58,6 +58,7 @@
 			return this.commands[this.index].options ? this.options[this.index] : null
 		}
 		selectFirst() {
+			if (!this.commands[this.index]) return
 			let command = this.commands[this.index].name
 			if (this.options.length) {
 				command += ':' + this.options[0].name
