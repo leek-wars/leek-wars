@@ -201,7 +201,9 @@
 	}
 	&.not-craftable .result {
 		cursor: default;
-		pointer-events: none;
+		&:hover .item {
+			background: #f004;
+		}
 	}
 }
 .symbol {
