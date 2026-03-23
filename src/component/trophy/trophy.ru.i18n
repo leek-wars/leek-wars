@@ -24,7 +24,7 @@
 	"unlocked_the_x": "Разблокировано {date}",
 	"see_fight": "Увидеть бой",
 	"progress": "Прогресс",
-	"n_pocessors": "{n} владельцев",
+	"n_pocessors": "нет владельцев | 1 владелец | {n} владельцев",
 	"first_farmers": "Ранние заводчики",
 	"last_farmers": "Последние заводчики",
 	"fastest_farmers": "Самые быстрые размноженцы",

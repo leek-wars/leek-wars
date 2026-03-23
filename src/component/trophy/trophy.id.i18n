@@ -24,7 +24,7 @@
 	"unlocked_the_x": "Dibuka pada {date}",
 	"see_fight": "Lihat pertarungannya",
 	"progress": "Kemajuan",
-	"n_pocessors": "{n} pemilik",
+	"n_pocessors": "tidak ada pemilik | 1 pemilik | {n} pemilik",
 	"first_farmers": "Peternak Awal",
 	"last_farmers": "Peternak Terbaru",
 	"fastest_farmers": "Peternak tercepat",

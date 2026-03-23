@@ -24,7 +24,7 @@
 	"unlocked_the_x": "Avattu {date}",
 	"see_fight": "Katso taistelu",
 	"progress": "Edistystä",
-	"n_pocessors": "{n} haltijaa",
+	"n_pocessors": "ei haltijaa | 1 haltija | {n} haltijaa",
 	"first_farmers": "Varhaiset kasvattajat",
 	"last_farmers": "Uusimmat kasvattajat",
 	"fastest_farmers": "Nopeimmat kasvattajat",

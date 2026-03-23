@@ -24,7 +24,7 @@
 	"unlocked_the_x": "{date}에 잠금 해제됨",
 	"see_fight": "싸움을 참조하십시오",
 	"progress": "진전",
-	"n_pocessors": "{n} 소유자",
+	"n_pocessors": "소유자 없음 | 1 소유자 | {n} 소유자",
 	"first_farmers": "초기 육종가",
 	"last_farmers": "최신 육종가",
 	"fastest_farmers": "가장 빠른 육종가",

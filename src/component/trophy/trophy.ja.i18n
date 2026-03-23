@@ -24,7 +24,7 @@
 	"unlocked_the_x": "{date} にロック解除",
 	"see_fight": "戦いを見る",
 	"progress": "進捗",
-	"n_pocessors": "{n}人の所有者",
+	"n_pocessors": "所有者なし | 1人の所有者 | {n}人の所有者",
 	"first_farmers": "初期のブリーダー",
 	"last_farmers": "最新のブリーダー",
 	"fastest_farmers": "最速ブリーダー",

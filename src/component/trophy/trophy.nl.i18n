@@ -24,7 +24,7 @@
 	"unlocked_the_x": "Ontgrendeld op {date}",
 	"see_fight": "Zie het gevecht",
 	"progress": "Voortgang",
-	"n_pocessors": "{n} bezitters",
+	"n_pocessors": "geen bezitter | 1 bezitter | {n} bezitters",
 	"first_farmers": "Vroege fokkers",
 	"last_farmers": "Laatste fokkers",
 	"fastest_farmers": "Snelste fokkers",

@@ -20,7 +20,7 @@
 	"unlocked_the_x": "Unlocked on {date}",
 	"see_fight": "See the fight",
 	"progress": "Progress",
-	"n_pocessors": "{n} possessors",
+	"n_pocessors": "no possessor | 1 possessor | {n} possessors",
 	"first_farmers": "First farmers",
 	"last_farmers": "Last farmers",
 	"group_by_categories": "Categories",
