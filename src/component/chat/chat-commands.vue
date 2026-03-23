@@ -1,5 +1,5 @@
 <template lang="html">
-	<v-list v-if="filterOptions === null" dense>
+	<v-list v-if="filterOptions === null && commands.length" dense>
 		<v-list-item v-for="(command, c) of commands" :key="command.name" v-ripple class="command" :class="{selected: index === c}" @click="$emit('command', command.name)">
 			<v-list-item-title>/{{ command.name }}</v-list-item-title>
 			<v-list-item-subtitle>{{ command.description }}</v-list-item-subtitle>
