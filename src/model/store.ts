@@ -493,26 +493,32 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 
 		notification(state: LeekWarsState, data: { id: number, type: number, date: number, parameters: any[], new: boolean }) {
-
-			if (data.new) {
-				// Received a new trophy, invalidate farmer trophies, add to rewards
-				if (state.farmer && data.type === NotificationType.TROPHY_UNLOCKED) {
-					delete state.farmer.trophies_list
-					const trophy = parseInt(data.parameters[0], 10)
-					state.farmer!.rewards.push({
-						trophy,
-						habs: TROPHIES[trophy - 1].habs
-					})
+			try {
+				if (data.new) {
+					// Received a new trophy, invalidate farmer trophies, add to rewards
+					if (state.farmer && data.type === NotificationType.TROPHY_UNLOCKED) {
+						delete state.farmer.trophies_list
+						const trophy = parseInt(data.parameters[0], 10)
+						const trophyTemplate = TROPHIES[trophy - 1]
+						if (trophyTemplate) {
+							state.farmer!.rewards.push({
+								trophy,
+								habs: trophyTemplate.habs
+							})
+						}
+					}
 				}
-			}
 
-			const notification = NotificationBuilder.build(data)
-			state.notifications.unshift(notification)
+				const notification = NotificationBuilder.build(data)
+				state.notifications.unshift(notification)
 
-			if (data.new) {
-				state.unreadNotifications = state.notifications.reduce((sum, n) => sum + (n.read ? 0 : 1), 0)
-				updateTitle(state)
-				LeekWars.squares.addFromNotification(notification)
+				if (data.new) {
+					state.unreadNotifications = state.notifications.reduce((sum, n) => sum + (n.read ? 0 : 1), 0)
+					updateTitle(state)
+					LeekWars.squares.addFromNotification(notification)
+				}
+			} catch (e) {
+				console.warn("Failed to build notification", data, e)
 			}
 		},
 

@@ -72,6 +72,9 @@ class NotificationBuilder {
 		} else if (type === NotificationType.TROPHY_UNLOCKED) {
 			const trophyID = parseInt(params[0], 10)
 			const trophy = TROPHIES[trophyID - 1]
+			if (!trophy) {
+				return new Notification(data, "/trophies", "mdi-trophy", ["#" + trophyID])
+			}
 			const trophyName = i18n.t('trophy.' + trophy.code) as string
 			return new Notification(data, "/trophy/" + trophy.code, "trophy/" + trophy.code + '.svg', [trophyName])
 		} else if (type === NotificationType.FIGHT_COMMENT) {
