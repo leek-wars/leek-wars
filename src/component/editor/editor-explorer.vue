@@ -243,17 +243,14 @@
 			return this.windowsReservedNames.includes(name.toUpperCase())
 		}
 
-		nameError(name: string, parentFolderId?: number, excludeId?: number): string | null {
+		nameError(name: string, parentFolder?: Folder, excludeName?: string): string | null {
 			if (name === '') return this.$t('invalid_name_empty') as string
 			if (name === '.' || name === '..') return this.$t('invalid_name_dots') as string
 			if (name.includes('/')) return this.$t('invalid_name_slash') as string
-			if (parentFolderId !== undefined) {
-				const parent = fileSystem.folderById[parentFolderId] || fileSystem.rootFolder
-				if (parent) {
-					for (const item of parent.items) {
-						if (item.name === name && item.id !== excludeId) {
-							return this.$t('name_conflict') as string
-						}
+			if (parentFolder && name !== excludeName) {
+				for (const item of parentFolder.items) {
+					if (item.name === name) {
+						return this.$t('name_conflict') as string
 					}
 				}
 			}
@@ -261,20 +258,24 @@
 		}
 
 		get renameError(): string | null {
-			if (!this.ai && !this.folder) return null
-			const parentId = this.ai ? this.ai.folder : this.folder!.folder
-			const excludeId = (this.ai || this.folder)!.id
-			return this.nameError(this.newName, parentId, excludeId)
+			if (this.ai) {
+				const parent = fileSystem.folderById[this.ai.folder] || fileSystem.rootFolder
+				return this.nameError(this.newName, parent, this.ai.name)
+			} else if (this.folder) {
+				const parent = fileSystem.folderById[this.folder.parent] || fileSystem.rootFolder
+				return this.nameError(this.newName, parent, this.folder.name)
+			}
+			return null
 		}
 
 		get newAIError(): string | null {
 			if (!this.folder) return null
-			return this.nameError(this.newAIName, this.folder.id)
+			return this.nameError(this.newAIName, this.folder)
 		}
 
 		get newFolderError(): string | null {
 			if (!this.folder) return null
-			return this.nameError(this.newFolderName, this.folder.id)
+			return this.nameError(this.newFolderName, this.folder)
 		}
 
 		renameStart() {
