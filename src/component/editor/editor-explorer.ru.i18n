@@ -29,7 +29,7 @@
 	"open_folder": "Открыть папку",
 	"name_conflict": "Это имя уже используется в этой папке.",
 	"invalid_name_empty": "Имя не может быть пустым.",
-	"invalid_name_dots": "Имя не может быть \".\" или \"..\".",
+	"invalid_name_reserved": "Это имя зарезервировано.",
 	"invalid_name_slash": "Символ \"/\" не допускается в именах.",
 	"windows_warning_char": "Символ \"{0}\" запрещён в Windows, это имя может вызвать проблемы с git.",
 	"windows_warning_reserved": "\"{0}\" — зарезервированное имя в Windows, это имя может вызвать проблемы с git."

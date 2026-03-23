@@ -245,7 +245,7 @@
 
 		nameError(name: string, parentFolder?: Folder, excludeName?: string): string | null {
 			if (name === '') return this.$t('invalid_name_empty') as string
-			if (name === '.' || name === '..') return this.$t('invalid_name_dots') as string
+			if (name === '.' || name === '..' || name === '.trash') return this.$t('invalid_name_reserved') as string
 			if (name.includes('/')) return this.$t('invalid_name_slash') as string
 			if (parentFolder && name !== excludeName) {
 				for (const item of parentFolder.items) {

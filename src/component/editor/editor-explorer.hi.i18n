@@ -27,7 +27,7 @@
 	"restore": "पुनर्स्थापित करना",
 	"name_conflict": "यह नाम इस फ़ोल्डर में पहले से उपयोग में है।",
 	"invalid_name_empty": "नाम खाली नहीं हो सकता।",
-	"invalid_name_dots": "नाम \".\" या \"..\" नहीं हो सकता।",
+	"invalid_name_reserved": "यह नाम आरक्षित है।",
 	"invalid_name_slash": "नाम में \"/\" वर्ण की अनुमति नहीं है।",
 	"windows_warning_char": "वर्ण \"{0}\" Windows पर प्रतिबंधित है, इस नाम से git में समस्या हो सकती है।",
 	"windows_warning_reserved": "\"{0}\" Windows पर एक आरक्षित नाम है, इस नाम से git में समस्या हो सकती है।"

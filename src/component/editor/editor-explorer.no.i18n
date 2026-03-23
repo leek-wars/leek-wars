@@ -29,7 +29,7 @@
 	"open_folder": "Åpne mappe",
 	"name_conflict": "Dette navnet er allerede i bruk i denne mappen.",
 	"invalid_name_empty": "Navnet kan ikke være tomt.",
-	"invalid_name_dots": "Navnet kan ikke være \".\" eller \"..\".",
+	"invalid_name_reserved": "Dette navnet er reservert.",
 	"invalid_name_slash": "Tegnet \"/\" er ikke tillatt i navn.",
 	"windows_warning_char": "Tegnet \"{0}\" er forbudt på Windows, dette navnet kan forårsake problemer med git.",
 	"windows_warning_reserved": "\"{0}\" er et reservert navn på Windows, dette navnet kan forårsake problemer med git."

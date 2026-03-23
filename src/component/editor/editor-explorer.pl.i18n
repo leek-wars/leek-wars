@@ -29,7 +29,7 @@
 	"open_folder": "Otwórz folder",
 	"name_conflict": "Ta nazwa jest już używana w tym folderze.",
 	"invalid_name_empty": "Nazwa nie może być pusta.",
-	"invalid_name_dots": "Nazwa nie może być \".\" ani \"..\".",
+	"invalid_name_reserved": "Ta nazwa jest zarezerwowana.",
 	"invalid_name_slash": "Znak \"/\" nie jest dozwolony w nazwach.",
 	"windows_warning_char": "Znak \"{0}\" jest niedozwolony w systemie Windows, ta nazwa może powodować problemy z gitem.",
 	"windows_warning_reserved": "\"{0}\" jest zarezerwowaną nazwą w systemie Windows, ta nazwa może powodować problemy z gitem."

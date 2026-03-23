@@ -29,7 +29,7 @@
 	"open_folder": "Avaa kansio",
 	"name_conflict": "Tämä nimi on jo käytössä tässä kansiossa.",
 	"invalid_name_empty": "Nimi ei voi olla tyhjä.",
-	"invalid_name_dots": "Nimi ei voi olla \".\" tai \"..\".",
+	"invalid_name_reserved": "Tämä nimi on varattu.",
 	"invalid_name_slash": "Merkki \"/\" ei ole sallittu nimissä.",
 	"windows_warning_char": "Merkki \"{0}\" on kielletty Windowsissa, tämä nimi voi aiheuttaa ongelmia gitin kanssa.",
 	"windows_warning_reserved": "\"{0}\" on varattu nimi Windowsissa, tämä nimi voi aiheuttaa ongelmia gitin kanssa."

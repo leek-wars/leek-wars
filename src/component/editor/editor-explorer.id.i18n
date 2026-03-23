@@ -29,7 +29,7 @@
 	"open_folder": "Buka folder",
 	"name_conflict": "Nama ini sudah digunakan di folder ini.",
 	"invalid_name_empty": "Nama tidak boleh kosong.",
-	"invalid_name_dots": "Nama tidak boleh \".\" atau \"..\".",
+	"invalid_name_reserved": "Nama ini sudah dicadangkan.",
 	"invalid_name_slash": "Karakter \"/\" tidak diperbolehkan dalam nama.",
 	"windows_warning_char": "Karakter \"{0}\" tidak diperbolehkan di Windows, nama ini mungkin bermasalah dengan git.",
 	"windows_warning_reserved": "\"{0}\" adalah nama yang dicadangkan di Windows, nama ini mungkin bermasalah dengan git."

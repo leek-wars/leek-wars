@@ -29,7 +29,7 @@
 	"open_folder": "打开文件夹",
 	"name_conflict": "此名称已在此文件夹中使用。",
 	"invalid_name_empty": "名称不能为空。",
-	"invalid_name_dots": "名称不能为「.」或「..」。",
+	"invalid_name_reserved": "此名称已被保留。",
 	"invalid_name_slash": "名称中不允许使用「/」字符。",
 	"windows_warning_char": "字符「{0}」在Windows上不允许使用，此名称可能导致git出现问题。",
 	"windows_warning_reserved": "「{0}」是Windows上的保留名称，此名称可能导致git出现问题。"
