@@ -724,6 +724,7 @@ import { emitter } from '@/model/vue'
 					bonus.push(this.trophies[t])
 				}
 			}
+			bonus.sort((a: any, b: any) => a.id - b.id)
 			return bonus
 		}
 		get farmerTitleEnabled() {
