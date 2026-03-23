@@ -27,6 +27,7 @@
 	"restore": "Restaurere",
 	"close_folder": "Lukk mappen",
 	"open_folder": "Åpne mappe",
+	"name_conflict": "Dette navnet er allerede i bruk i denne mappen.",
 	"invalid_name_empty": "Navnet kan ikke være tomt.",
 	"invalid_name_dots": "Navnet kan ikke være \".\" eller \"..\".",
 	"invalid_name_slash": "Tegnet \"/\" er ikke tillatt i navn.",

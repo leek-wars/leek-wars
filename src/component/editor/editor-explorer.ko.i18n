@@ -27,6 +27,7 @@
 	"restore": "복원하다",
 	"close_folder": "폴더 닫기",
 	"open_folder": "폴더 열기",
+	"name_conflict": "이 이름은 이 폴더에서 이미 사용 중입니다.",
 	"invalid_name_empty": "이름은 비워둘 수 없습니다.",
 	"invalid_name_dots": "이름은 \".\" 또는 \"..\"일 수 없습니다.",
 	"invalid_name_slash": "이름에 \"/\"을(를) 사용할 수 없습니다.",

@@ -27,6 +27,7 @@
 	"restore": "戻す",
 	"close_folder": "フォルダを閉じる",
 	"open_folder": "フォルダを開く",
+	"name_conflict": "この名前はこのフォルダ内で既に使用されています。",
 	"invalid_name_empty": "名前を空にすることはできません。",
 	"invalid_name_dots": "名前を「.」や「..」にすることはできません。",
 	"invalid_name_slash": "名前に「/」は使用できません。",

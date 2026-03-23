@@ -27,6 +27,7 @@
 	"restore": "Gendan",
 	"close_folder": "Luk mappen",
 	"open_folder": "Åbn mappe",
+	"name_conflict": "Dette navn bruges allerede i denne mappe.",
 	"invalid_name_empty": "Navnet kan ikke være tomt.",
 	"invalid_name_dots": "Navnet kan ikke være \".\" eller \"..\".",
 	"invalid_name_slash": "Tegnet \"/\" er ikke tilladt i navne.",

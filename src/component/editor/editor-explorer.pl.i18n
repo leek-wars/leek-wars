@@ -27,6 +27,7 @@
 	"restore": "Przywrócić",
 	"close_folder": "Zamknij folder",
 	"open_folder": "Otwórz folder",
+	"name_conflict": "Ta nazwa jest już używana w tym folderze.",
 	"invalid_name_empty": "Nazwa nie może być pusta.",
 	"invalid_name_dots": "Nazwa nie może być \".\" ani \"..\".",
 	"invalid_name_slash": "Znak \"/\" nie jest dozwolony w nazwach.",

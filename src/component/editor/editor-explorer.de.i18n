@@ -27,6 +27,7 @@
 	"restore": "Wiederherstellen",
 	"close_folder": "Ordner schließen",
 	"open_folder": "Ordner öffnen",
+	"name_conflict": "Dieser Name wird bereits in diesem Ordner verwendet.",
 	"invalid_name_empty": "Der Name darf nicht leer sein.",
 	"invalid_name_dots": "Der Name darf nicht \".\" oder \"..\" sein.",
 	"invalid_name_slash": "Das Zeichen \"/\" ist in Namen nicht erlaubt.",

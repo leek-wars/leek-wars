@@ -27,6 +27,7 @@
 	"restore": "Palauttaa",
 	"close_folder": "Sulje kansio",
 	"open_folder": "Avaa kansio",
+	"name_conflict": "Tämä nimi on jo käytössä tässä kansiossa.",
 	"invalid_name_empty": "Nimi ei voi olla tyhjä.",
 	"invalid_name_dots": "Nimi ei voi olla \".\" tai \"..\".",
 	"invalid_name_slash": "Merkki \"/\" ei ole sallittu nimissä.",

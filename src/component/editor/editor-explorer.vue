@@ -84,15 +84,15 @@
 		<popup v-model="renameDialog" :width="500" icon="mdi-pencil" :title="$t('rename')">
 			<div class="padding">
 				<v-text-field ref="nameInput" v-model="newName" variant="outlined" density="compact" autofocus
-					:error-messages="nameError(newName) ? [nameError(newName)!] : []"
-					:messages="!nameError(newName) && windowsWarning(newName) ? [isWindowsReservedName(newName) ? $t('windows_warning_reserved', [newName]) : $t('windows_warning_char', [windowsWarning(newName)])] : []"
-					:color="!nameError(newName) && windowsWarning(newName) ? 'warning' : undefined"
-					:class="{'text-field-warning': !nameError(newName) && windowsWarning(newName)}"
-					@keyup.stop @keyup.enter="!nameError(newName) && rename()" />
+					:error-messages="renameError ? [renameError] : []"
+					:messages="!renameError && windowsWarning(newName) ? [isWindowsReservedName(newName) ? $t('windows_warning_reserved', [newName]) : $t('windows_warning_char', [windowsWarning(newName)])] : []"
+					:color="!renameError && windowsWarning(newName) ? 'warning' : undefined"
+					:class="{'text-field-warning': !renameError && windowsWarning(newName)}"
+					@keyup.stop @keyup.enter="!renameError && rename()" />
 			</div>
 			<template #actions>
 				<div v-ripple @click="renameDialog = false">{{ $t('main.cancel') }}</div>
-				<div v-ripple :class="{green: !nameError(newName), disabled: !!nameError(newName)}" @click="!nameError(newName) && rename()">{{ $t('rename') }}</div>
+				<div v-ripple :class="{green: !renameError, disabled: !!renameError}" @click="!renameError && rename()">{{ $t('rename') }}</div>
 			</template>
 		</popup>
 
@@ -130,30 +130,30 @@
 		<popup v-model="newAIDialog" :width="500" icon="mdi-plus-circle-outline" :title="$t('new_desc')">
 			<div class="padding">
 				<v-text-field ref="newAIInput" v-model="newAIName" :placeholder="$t('ai_name')" variant="outlined" density="compact" autofocus
-					:error-messages="nameError(newAIName) ? [nameError(newAIName)!] : []"
-					:messages="!nameError(newAIName) && windowsWarning(newAIName) ? [isWindowsReservedName(newAIName) ? $t('windows_warning_reserved', [newAIName]) : $t('windows_warning_char', [windowsWarning(newAIName)])] : []"
-					:color="!nameError(newAIName) && windowsWarning(newAIName) ? 'warning' : undefined"
-					:class="{'text-field-warning': !nameError(newAIName) && windowsWarning(newAIName)}"
-					@keyup.stop @keyup.enter="!nameError(newAIName) && newAI(false, newAIName)" />
+					:error-messages="newAIError ? [newAIError] : []"
+					:messages="!newAIError && windowsWarning(newAIName) ? [isWindowsReservedName(newAIName) ? $t('windows_warning_reserved', [newAIName]) : $t('windows_warning_char', [windowsWarning(newAIName)])] : []"
+					:color="!newAIError && windowsWarning(newAIName) ? 'warning' : undefined"
+					:class="{'text-field-warning': !newAIError && windowsWarning(newAIName)}"
+					@keyup.stop @keyup.enter="!newAIError && newAI(false, newAIName)" />
 			</div>
 			<template #actions>
 				<div v-ripple @click="newAIDialog = false">{{ $t('main.cancel') }}</div>
-				<div v-ripple :class="{green: !nameError(newAIName), disabled: !!nameError(newAIName)}" @click="!nameError(newAIName) && newAI(false, newAIName)">{{ $t('main.create') }}</div>
+				<div v-ripple :class="{green: !newAIError, disabled: !!newAIError}" @click="!newAIError && newAI(false, newAIName)">{{ $t('main.create') }}</div>
 			</template>
 		</popup>
 
 		<popup v-model="newFolderDialog" :width="500" icon="mdi-folder-plus" :title="$t('new_folder')">
 			<div class="padding">
 				<v-text-field ref="newFolderInput" v-model="newFolderName" :placeholder="$t('folder_name')" variant="outlined" density="compact" autofocus
-					:error-messages="nameError(newFolderName) ? [nameError(newFolderName)!] : []"
-					:messages="!nameError(newFolderName) && windowsWarning(newFolderName) ? [isWindowsReservedName(newFolderName) ? $t('windows_warning_reserved', [newFolderName]) : $t('windows_warning_char', [windowsWarning(newFolderName)])] : []"
-					:color="!nameError(newFolderName) && windowsWarning(newFolderName) ? 'warning' : undefined"
-					:class="{'text-field-warning': !nameError(newFolderName) && windowsWarning(newFolderName)}"
-					@keyup.stop @keyup.enter="!nameError(newFolderName) && newFolder(newFolderName)" />
+					:error-messages="newFolderError ? [newFolderError] : []"
+					:messages="!newFolderError && windowsWarning(newFolderName) ? [isWindowsReservedName(newFolderName) ? $t('windows_warning_reserved', [newFolderName]) : $t('windows_warning_char', [windowsWarning(newFolderName)])] : []"
+					:color="!newFolderError && windowsWarning(newFolderName) ? 'warning' : undefined"
+					:class="{'text-field-warning': !newFolderError && windowsWarning(newFolderName)}"
+					@keyup.stop @keyup.enter="!newFolderError && newFolder(newFolderName)" />
 			</div>
 			<template #actions>
 				<div v-ripple @click="newFolderDialog = false">{{ $t('main.cancel') }}</div>
-				<div v-ripple :class="{green: !nameError(newFolderName), disabled: !!nameError(newFolderName)}" @click="!nameError(newFolderName) && newFolder(newFolderName)">{{ $t('main.create') }}</div>
+				<div v-ripple :class="{green: !newFolderError, disabled: !!newFolderError}" @click="!newFolderError && newFolder(newFolderName)">{{ $t('main.create') }}</div>
 			</template>
 		</popup>
 	</div>
@@ -243,11 +243,38 @@
 			return this.windowsReservedNames.includes(name.toUpperCase())
 		}
 
-		nameError(name: string): string | null {
+		nameError(name: string, parentFolderId?: number, excludeId?: number): string | null {
 			if (name === '') return this.$t('invalid_name_empty') as string
 			if (name === '.' || name === '..') return this.$t('invalid_name_dots') as string
 			if (name.includes('/')) return this.$t('invalid_name_slash') as string
+			if (parentFolderId !== undefined) {
+				const parent = fileSystem.folderById[parentFolderId] || fileSystem.rootFolder
+				if (parent) {
+					for (const item of parent.items) {
+						if (item.name === name && item.id !== excludeId) {
+							return this.$t('name_conflict') as string
+						}
+					}
+				}
+			}
 			return null
+		}
+
+		get renameError(): string | null {
+			if (!this.ai && !this.folder) return null
+			const parentId = this.ai ? this.ai.folder : this.folder!.folder
+			const excludeId = (this.ai || this.folder)!.id
+			return this.nameError(this.newName, parentId, excludeId)
+		}
+
+		get newAIError(): string | null {
+			if (!this.folder) return null
+			return this.nameError(this.newAIName, this.folder.id)
+		}
+
+		get newFolderError(): string | null {
+			if (!this.folder) return null
+			return this.nameError(this.newFolderName, this.folder.id)
 		}
 
 		renameStart() {

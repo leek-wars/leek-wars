@@ -27,6 +27,7 @@
 	"restore": "Ristabilire",
 	"close_folder": "Chiudere la cartella",
 	"open_folder": "Aprire la cartella",
+	"name_conflict": "Questo nome è già utilizzato in questa cartella.",
 	"invalid_name_empty": "Il nome non può essere vuoto.",
 	"invalid_name_dots": "Il nome non può essere \".\" o \"..\".",
 	"invalid_name_slash": "Il carattere \"/\" non è consentito nei nomi.",

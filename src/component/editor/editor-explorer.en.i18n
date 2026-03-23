@@ -27,6 +27,7 @@
 	"folder_name": "Folder name",
 	"close_folder": "Close folder",
 	"open_folder": "Open folder",
+	"name_conflict": "This name is already used in this folder.",
 	"invalid_name_empty": "The name cannot be empty.",
 	"invalid_name_dots": "The name cannot be \".\" or \"..\".",
 	"invalid_name_slash": "The character \"/\" is not allowed in names.",

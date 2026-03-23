@@ -27,6 +27,7 @@
 	"restore": "Återställ",
 	"close_folder": "Stäng mappen",
 	"open_folder": "Öppna mappen",
+	"name_conflict": "Detta namn används redan i denna mapp.",
 	"invalid_name_empty": "Namnet kan inte vara tomt.",
 	"invalid_name_dots": "Namnet kan inte vara \".\" eller \"..\".",
 	"invalid_name_slash": "Tecknet \"/\" är inte tillåtet i namn.",

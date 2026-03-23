@@ -27,6 +27,7 @@
 	"restore": "Herstellen",
 	"close_folder": "Map sluiten",
 	"open_folder": "Map openen",
+	"name_conflict": "Deze naam wordt al gebruikt in deze map.",
 	"invalid_name_empty": "De naam mag niet leeg zijn.",
 	"invalid_name_dots": "De naam mag niet \".\" of \"..\" zijn.",
 	"invalid_name_slash": "Het teken \"/\" is niet toegestaan in namen.",

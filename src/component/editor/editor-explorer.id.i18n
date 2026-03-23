@@ -27,6 +27,7 @@
 	"restore": "Memulihkan",
 	"close_folder": "Tutup folder",
 	"open_folder": "Buka folder",
+	"name_conflict": "Nama ini sudah digunakan di folder ini.",
 	"invalid_name_empty": "Nama tidak boleh kosong.",
 	"invalid_name_dots": "Nama tidak boleh \".\" atau \"..\".",
 	"invalid_name_slash": "Karakter \"/\" tidak diperbolehkan dalam nama.",
