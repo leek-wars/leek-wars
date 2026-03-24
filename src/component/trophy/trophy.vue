@@ -3,6 +3,9 @@
 		<div class="page-bar page-header">
 			<h1>{{ $t('trophy') }} « {{ $t('trophy.' + code) }} »</h1>
 		</div>
+		<panel v-if="!trophy" class="first">
+			<loader />
+		</panel>
 		<panel v-if="trophy" class="first">
 			<div class="flex">
 				<img class="image" :src="'/image/trophy/' + code + '.svg'" @click="trophy.code === 'joker' && LeekWars.lucky(true)" :class="{clickable: trophy.code === 'joker'}">
@@ -344,6 +347,7 @@
 		}
 		.avatar {
 			width: 30px;
+			height: 30px;
 			vertical-align: bottom;
 		}
 		.v-icon {
