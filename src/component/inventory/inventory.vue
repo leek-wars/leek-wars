@@ -89,7 +89,8 @@
 				<loader v-if="!$store.state.farmer" />
 				<div v-else class="inventory">
 					<template v-for="entry in display_inventory" :key="entry.key">
-						<div v-if="entry.separator" class="type-separator" :class="entry.rarity !== undefined ? 'rarity-' + entry.rarity : ''">
+						<div v-if="entry.separator" class="type-separator" :class="entry.rarity !== undefined ? 'rarity-' + entry.rarity : ''" @click="toggleGroup(entry.groupKey)">
+							<v-icon class="collapse-icon" :class="{ collapsed: entry.collapsed }">mdi-chevron-down</v-icon>
 							<v-icon v-if="entry.type !== undefined">{{ ITEM_TYPE_ICONS[entry.type] }}</v-icon>
 							<span v-if="entry.type !== undefined">{{ $t('main.' + ITEM_TYPE_NAME[entry.type]) }}</span>
 							<span v-else>{{ $t('main.difficulty_' + entry.rarity) }}</span>
@@ -174,6 +175,7 @@
 		sort: Sort = parseInt(localStorage.getItem('inventory/sort') || '0', 10) as Sort
 		filter: ItemType = parseInt(localStorage.getItem('inventory/filter') || '0', 10) as ItemType
 		group: Group = parseInt(localStorage.getItem('inventory/group') || '0', 10) as Group
+		collapsedGroups: Set<number> = new Set(JSON.parse(localStorage.getItem('inventory/collapsed') || '[]'))
 		actions: any
 		retrieveDialog: boolean = false
 		retrieveItems = [] as Item[]
@@ -310,22 +312,25 @@
 			for (const item of items) {
 				const groupKey = this.group === Group.TYPE ? item.type : LeekWars.items[item.template].rarity
 				if (groupKey !== lastGroup) {
-					if (lastGroup !== -1 && groupCount % cols !== 0) {
+					if (lastGroup !== -1 && !this.collapsedGroups.has(lastGroup) && groupCount % cols !== 0) {
 						const pad = cols - (groupCount % cols)
 						for (let i = 0; i < pad; i++) {
 							result.push({ placeholder: true, key: 'pad-' + lastGroup + '-' + i })
 						}
 					}
+					const collapsed = this.collapsedGroups.has(groupKey)
 					if (this.group === Group.TYPE) {
-						result.push({ separator: true, type: item.type, count: groupCounts[groupKey], key: 'sep-' + groupKey })
+						result.push({ separator: true, type: item.type, count: groupCounts[groupKey], key: 'sep-' + groupKey, collapsed, groupKey })
 					} else {
-						result.push({ separator: true, rarity: groupKey, count: groupCounts[groupKey], key: 'sep-' + groupKey })
+						result.push({ separator: true, rarity: groupKey, count: groupCounts[groupKey], key: 'sep-' + groupKey, collapsed, groupKey })
 					}
 					lastGroup = groupKey
 					groupCount = 0
 				}
-				result.push(entry(item))
-				groupCount++
+				if (!this.collapsedGroups.has(groupKey)) {
+					result.push(entry(item))
+					groupCount++
+				}
 			}
 			return result
 		}
@@ -395,6 +400,16 @@
 		@Watch('group')
 		updateGroup() {
 			localStorage.setItem('inventory/group', '' + this.group)
+		}
+
+		toggleGroup(groupKey: number) {
+			if (this.collapsedGroups.has(groupKey)) {
+				this.collapsedGroups.delete(groupKey)
+			} else {
+				this.collapsedGroups.add(groupKey)
+			}
+			this.collapsedGroups = new Set(this.collapsedGroups) // trigger reactivity
+			localStorage.setItem('inventory/collapsed', JSON.stringify([...this.collapsedGroups]))
 		}
 
 		retrieve(items: Item[]) {
@@ -579,8 +594,19 @@
 	font-size: 13px;
 	font-weight: 500;
 	color: var(--text-color-secondary);
+	cursor: pointer;
+	user-select: none;
+	&:hover {
+		background: var(--background-header);
+	}
 	.v-icon {
 		font-size: 18px;
+	}
+	.collapse-icon {
+		transition: transform 0.2s;
+		&.collapsed {
+			transform: rotate(-90deg);
+		}
 	}
 	.group-count {
 		opacity: 0.6;
