@@ -144,6 +144,7 @@ export default class ItemPreview extends Vue {
 	}
 
 	get scheme() {
+		if (this.item.type !== ItemType.SCHEME) return null
 		return LeekWars.schemes[this.item.params]
 	}
 	get schemeItem() {
