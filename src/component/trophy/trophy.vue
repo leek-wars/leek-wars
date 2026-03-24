@@ -171,7 +171,10 @@
 		@Watch('$route.params', { immediate: true })
 		update() {
 			this.code = this.$route.params.code
-			LeekWars.get('trophy-template/get/' + this.code + '/' + this.$i18n.locale).then(trophy => this.trophy = trophy)
+			LeekWars.get('trophy-template/get/' + this.code + '/' + this.$i18n.locale).then(trophy => {
+				this.trophy = trophy
+				LeekWars.setTitle(this.$t('trophy') + ' « ' + this.$t('trophy.' + this.code) + ' »')
+			})
 		}
 
 		confirmDelete(farmer: any) {
