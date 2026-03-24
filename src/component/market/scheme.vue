@@ -7,7 +7,7 @@
 					<div v-if="scheme.quantity > 1" class="quantity">{{ $filters.number(scheme.quantity) }}</div>
 				</div>
 			</rich-tooltip-item>
-			<div v-else class="item" :quantity="1" :class="{['rarity-border-' + result.rarity]: true, 'missing': !possible}" @mouseenter="$emit('show-tooltip', { item: result, quantity: 1, craftCost: ingredientCost, event: $event })" @mouseleave="$emit('hide-tooltip')">
+			<div v-else class="item" :quantity="1" :class="{['rarity-border-' + result.rarity]: true, 'missing': !possible}" @click.stop="possible && emitter.emit('craft', scheme)" @mouseenter="$emit('show-tooltip', { item: result, quantity: 1, craftCost: ingredientCost, event: $event })" @mouseleave="$emit('hide-tooltip')">
 				<img :src="'/image/' + ITEM_CATEGORY_NAME[result.type] + '/' + result.name.replace('hat_', '').replace('potion_', '') + '.png'" :type="result.type">
 				<div v-if="scheme.quantity > 1" class="quantity">{{ $filters.number(scheme.quantity) }}</div>
 			</div>
