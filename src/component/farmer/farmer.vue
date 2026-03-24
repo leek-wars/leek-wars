@@ -1388,6 +1388,7 @@ import { emitter } from '@/model/vue'
 		text-align: center;
 		display: block;
 		width: 100%;
+		aspect-ratio: 1;
 		vertical-align: bottom;
 	}
 	.trophy-date {

@@ -1,24 +1,34 @@
 <template lang="html">
 	<div class="scheme" :class="{ 'not-craftable': showResult && !possible }">
 		<div v-if="showResult" v-ripple class="group result" @click="possible && emitter.emit('craft', scheme)">
-			<rich-tooltip-item v-slot="{ props }" :item="result" :bottom="true" :inventory="true" :craft-cost="ingredientCost" @update:model-value="$emit('update:modelValue', $event)">
+			<rich-tooltip-item v-if="!sharedTooltip" v-slot="{ props }" :item="result" :bottom="true" :inventory="true" :craft-cost="ingredientCost" @update:model-value="$emit('update:modelValue', $event)">
 				<div class="item" v-bind="props" :quantity="1" :class="{['rarity-border-' + result.rarity]: true, 'missing': !possible}">
 					<img :src="'/image/' + ITEM_CATEGORY_NAME[result.type] + '/' + result.name.replace('hat_', '').replace('potion_', '') + '.png'" :type="result.type">
-					<!-- <div class="id">#{{ scheme.result }}</div> -->
 					<div v-if="scheme.quantity > 1" class="quantity">{{ $filters.number(scheme.quantity) }}</div>
 				</div>
 			</rich-tooltip-item>
+			<div v-else class="item" :quantity="1" :class="{['rarity-border-' + result.rarity]: true, 'missing': !possible}" @mouseenter="$emit('show-tooltip', { item: result, quantity: 1, craftCost: ingredientCost, event: $event })" @mouseleave="$emit('hide-tooltip')">
+				<img :src="'/image/' + ITEM_CATEGORY_NAME[result.type] + '/' + result.name.replace('hat_', '').replace('potion_', '') + '.png'" :type="result.type">
+				<div v-if="scheme.quantity > 1" class="quantity">{{ $filters.number(scheme.quantity) }}</div>
+			</div>
 		</div>
 		<div v-if="showResult" :key="'__'" class="symbol">{{ " = " }}</div>
 		<div class="items">
 			<template v-for="(ingredient, i) in items">
-				<rich-tooltip-item v-if="ingredient" :key="i" v-slot="{ props }" :item="ingredient.item" :bottom="true" :inventory="true" :quantity="ingredient.quantity" @update:model-value="$emit('update:modelValue', $event)">
-					<div class="item" v-bind="props" :class="{['rarity-border-' + ingredient.item.rarity]: true, [item_present[i]]: true, craftable: !!ingredientScheme(ingredient)}" @click.stop="craftIngredient(ingredient)">
+				<template v-if="ingredient">
+					<rich-tooltip-item v-if="!sharedTooltip" :key="i" v-slot="{ props }" :item="ingredient.item" :bottom="true" :inventory="true" :quantity="ingredient.quantity" @update:model-value="$emit('update:modelValue', $event)">
+						<div class="item" v-bind="props" :class="{['rarity-border-' + ingredient.item.rarity]: true, [item_present[i]]: true, craftable: !!ingredientScheme(ingredient)}" @click.stop="craftIngredient(ingredient)">
+							<img :src="'/image/' + ITEM_CATEGORY_NAME[ingredient.item.type] + '/' + ingredient.item.name.replace('hat_', '').replace('potion_', '').replace('chip_', '').replace('weapon_', '') + '.png'" :type="ingredient.item.type">
+							<div v-if="ingredient.quantity > 1" class="quantity">{{ $filters.number(ingredient.quantity) }}</div>
+							<v-icon v-if="ingredientScheme(ingredient)" class="craft-icon">mdi-hammer-wrench</v-icon>
+						</div>
+					</rich-tooltip-item>
+					<div v-else :key="'s' + i" class="item" :class="{['rarity-border-' + ingredient.item.rarity]: true, [item_present[i]]: true, craftable: !!ingredientScheme(ingredient)}" @click.stop="craftIngredient(ingredient)" @mouseenter="$emit('show-tooltip', { item: ingredient.item, quantity: ingredient.quantity, event: $event })" @mouseleave="$emit('hide-tooltip')">
 						<img :src="'/image/' + ITEM_CATEGORY_NAME[ingredient.item.type] + '/' + ingredient.item.name.replace('hat_', '').replace('potion_', '').replace('chip_', '').replace('weapon_', '') + '.png'" :type="ingredient.item.type">
 						<div v-if="ingredient.quantity > 1" class="quantity">{{ $filters.number(ingredient.quantity) }}</div>
 						<v-icon v-if="ingredientScheme(ingredient)" class="craft-icon">mdi-hammer-wrench</v-icon>
 					</div>
-				</rich-tooltip-item>
+				</template>
 				<div v-if="ingredient && i < items.length - 1" :key="'_' + i" class="symbol">{{ " + " }}</div>
 			</template>
 		</div>
@@ -41,11 +51,12 @@
 
 	@Options({ name: 'scheme', components: {
 		'rich-tooltip-item': RichTooltipItem,
-	} })
+	}, emits: ['show-tooltip', 'hide-tooltip', 'update:modelValue'] })
 	export default class SchemeView extends Vue {
 		@Prop({required: true}) scheme!: SchemeTemplate
 		@Prop({required: true}) showResult!: boolean
 		@Prop({required: true}) showPrice!: boolean
+		@Prop({ default: false }) sharedTooltip!: boolean
 		emitter = emitter
 
 		ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME

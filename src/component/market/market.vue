@@ -3,6 +3,9 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">
+				<div v-if="!LeekWars.mobile" class="tab action" @click="toggleExpanded">
+					<v-icon>{{ expanded ? 'mdi-arrow-collapse' : 'mdi-arrow-expand' }}</v-icon>
+				</div>
 				<a href="https://leek-wars.myspreadshop.fr" target="_blank" rel="noopener">
 					<div class="tab action" icon="cart-outline" link="https://leek-wars.myspreadshop.fr">
 						<v-icon>mdi-cart-outline</v-icon>
@@ -32,9 +35,6 @@
 						<span>{{ $t('main.workshop') }}</span>
 					</div>
 				</router-link> -->
-				<div v-if="!LeekWars.mobile" class="tab action" @click="toggleExpanded">
-					<v-icon>{{ expanded ? 'mdi-arrow-collapse' : 'mdi-arrow-expand' }}</v-icon>
-				</div>
 			</div>
 		</div>
 		<div class="container">

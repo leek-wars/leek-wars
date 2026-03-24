@@ -93,8 +93,13 @@
 						<div class="schemes-section">
 							<loader v-if="!$store.state.farmer" />
 							<div v-else class="schemes-list">
-								<scheme v-for="(scheme, s) in schemes" :key="s" class="scheme" :scheme="scheme" :show-result="true" :show-price="false"></scheme>
+								<scheme v-for="(scheme, s) in schemes" :key="s" class="scheme" :scheme="scheme" :show-result="true" :show-price="false" :shared-tooltip="true" @show-tooltip="showTooltip" @hide-tooltip="scheduleHideTooltip"></scheme>
 							</div>
+							<v-menu v-model="tooltipVisible" :activator="tooltipActivator" :close-on-content-click="false" :min-width="280" :open-delay="0" :close-delay="0" :bottom="true" offset-y :open-on-hover="false">
+								<div class="scheme-tooltip" @mouseenter="onTooltipEnter" @mouseleave="onTooltipLeave">
+									<item-preview v-if="tooltipItem" :item="tooltipItem" :quantity="tooltipQuantity" :inventory="true" :craft-cost="tooltipCraftCost" />
+								</div>
+							</v-menu>
 						</div>
 					</div>
 				</template>
@@ -105,11 +110,12 @@
 
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
-	import { ItemType, ITEM_TYPE_ICONS, ITEM_TYPE_NAME } from '@/model/item'
+	import { ItemTemplate, ItemType, ITEM_TYPE_ICONS, ITEM_TYPE_NAME } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import Inventory from '@/component/inventory/inventory.vue'
 	import SchemeView from '../market/scheme.vue'
+	import ItemPreview from '@/component/market/item-preview.vue'
 	import Forge from '../forge/forge.vue'
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
@@ -121,7 +127,8 @@
 	@Options({ name: 'inventory-page', i18n: {}, mixins: [...mixins], components: {
 		Inventory,
 		'scheme': SchemeView,
-		'forge': Forge
+		'forge': Forge,
+		ItemPreview,
 	} })
 	export default class InventoryPage extends Vue {
 
@@ -134,6 +141,55 @@
 		sort: Sort = Math.min(parseInt(localStorage.getItem('workshop/sort') || '0', 10), Sort.INGREDIENT_COUNT) as Sort
 		filter: number = parseInt(localStorage.getItem('workshop/filter') || '0', 10)
 		craftableOnly: boolean = localStorage.getItem('workshop/craftable') === 'true'
+
+		// Shared tooltip state
+		tooltipVisible: boolean = false
+		tooltipItem: ItemTemplate | null = null
+		tooltipQuantity: number = 0
+		tooltipCraftCost: number = 0
+		tooltipActivator: HTMLElement | undefined = undefined
+		private tooltipShowTimer: number = 0
+		private tooltipHideTimer: number = 0
+		private tooltipOnTooltip: boolean = false
+
+		showTooltip(data: { item: ItemTemplate, quantity: number, craftCost?: number, event: MouseEvent }) {
+			clearTimeout(this.tooltipHideTimer)
+			const target = data.event.currentTarget as HTMLElement
+			if (this.tooltipVisible) {
+				this.tooltipActivator = target
+				this.tooltipItem = data.item
+				this.tooltipQuantity = data.quantity
+				this.tooltipCraftCost = data.craftCost || 0
+			} else {
+				clearTimeout(this.tooltipShowTimer)
+				this.tooltipShowTimer = window.setTimeout(() => {
+					this.tooltipActivator = target
+					this.tooltipItem = data.item
+					this.tooltipQuantity = data.quantity
+					this.tooltipCraftCost = data.craftCost || 0
+					this.tooltipVisible = true
+				}, 500)
+			}
+		}
+
+		scheduleHideTooltip() {
+			clearTimeout(this.tooltipShowTimer)
+			this.tooltipHideTimer = window.setTimeout(() => {
+				if (!this.tooltipOnTooltip) {
+					this.tooltipVisible = false
+				}
+			}, 100)
+		}
+
+		onTooltipEnter() {
+			this.tooltipOnTooltip = true
+			clearTimeout(this.tooltipHideTimer)
+		}
+
+		onTooltipLeave() {
+			this.tooltipOnTooltip = false
+			this.tooltipVisible = false
+		}
 
 		isCraftable(scheme: any): boolean {
 			if (!store.state.farmer) return false
@@ -343,5 +399,9 @@
 	.v-icon {
 		margin: 6px;
 	}
+}
+.scheme-tooltip {
+	width: 280px;
+	background: none;
 }
 </style>
