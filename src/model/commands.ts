@@ -30,7 +30,7 @@ const COMMANDS = [
 		name: "br!",
 		description: "Inviter à rejoindre la Battle Royale, de manière appuyée",
 		regex: /(^| )\/br!(?::(\d+))?(?=$|\s)/gi,
-		replacement: (_: string, space: string, level: string) => space + '<span class="br-invite" data-level="' + (level || '') + '" data-label="LA BAGAAAARRE !"></span>'
+		replacement: (_: string, space: string, level: string) => space + '<span class="br-invite" data-level="' + (level || '') + '" data-label="LA BAGAAAAARRE !"></span>'
 	}, {
 		name: "doc",
 		description: "Lien vers la documentation",
