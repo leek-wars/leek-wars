@@ -21,6 +21,7 @@
 						<div v-for="(error, e) in errors" :key="e" class="error">
 							<div class="card">
 								<div class="header">
+									<v-icon color="error" @click="removeError(error.id)">mdi-delete</v-icon>
 									<div>Erreur #{{ error.id }} - <b>{{ LeekWars.formatDateTime(error.time) }}</b> - Type {{ error.type }} - Gravité {{ error.severity }}</div>
 									<span v-if="error.service" class="service" :class="error.service">{{ error.service }}</span>
 									<div class="spacer"></div>
@@ -39,7 +40,6 @@
 									<router-link :to="'/fight/' + error.fight"><v-btn v-if="error.fight" size="small">Combat {{ error.fight }}</v-btn></router-link>
 									<a v-if="error.issue" :href="'https://github.com/5pilow/leek-wars-server/issues/' + error.issue" target="_blank"><v-btn size="small" color="success">Issue #{{ error.issue }}</v-btn></a>
 									<v-btn v-else size="small" @click="createIssue(error)">Créer issue</v-btn>
-									<v-icon color="error" @click="removeError(error.id)">mdi-delete</v-icon>
 								</div>
 								<code>{{ error.trace.substring(0, 8000) }}</code>
 								<div v-if="error.file || error.line">Fichier <b>{{ error.file }}</b> <span v-if="error.line"> ligne <b>{{ error.line }}</b></span></div>
