@@ -90,6 +90,7 @@ class FileSystem {
 			binAIs.push(ai)
 			this.ais['' + ai.id] = ai
 			this.items[ai.name] = ai
+			ai.path = this.getAIFullPath(ai)
 		}
 		// Construire les dossiers supprimés dans la corbeille
 		if (farmer.bin_folders && farmer.bin_folders.length) {
@@ -251,9 +252,19 @@ class FileSystem {
 		delete this.aiByFullPath[ai.path]
 		store.commit('delete-ai', ai.id)
 		ai.folder = -1
+		ai.path = this.getAIFullPath(ai)
 		this.bin.items.push(...item)
 		this.sortFolder(this.bin)
-		LeekWars.delete('ai/delete', {ai_id: ai.id}).error(error => LeekWars.toast(error.error || error))
+		LeekWars.delete('ai/delete', {ai_id: ai.id}).then((data: any) => {
+			if (data.name && data.name !== ai.name) {
+				delete this.aiByFullPath[ai.path]
+				ai.name = data.name
+				item[0].name = data.name
+				ai.path = this.getAIFullPath(ai)
+				this.aiByFullPath[ai.path] = ai
+				this.sortFolder(this.bin)
+			}
+		}).error(error => LeekWars.toast(error.error || error))
 	}
 
 	public destroyAI(ai: AI) {
@@ -351,7 +362,12 @@ class FileSystem {
 		folder.parent = this.bin.id
 		this.bin.items.push(folder)
 		this.sortFolder(this.bin)
-		LeekWars.delete('ai-folder/delete', {folder_id: folder.id}).error(error => LeekWars.toast(error.error || error))
+		LeekWars.delete('ai-folder/delete', {folder_id: folder.id}).then((data: any) => {
+			if (data.name && data.name !== folder.name) {
+				folder.name = data.name
+				this.sortFolder(this.bin)
+			}
+		}).error(error => LeekWars.toast(error.error || error))
 	}
 
 	private cleanFolderRefs(folder: Folder) {
@@ -400,6 +416,9 @@ class FileSystem {
 	}
 
 	private getAIFullPath(ai: AI) {
+		if (this.isInBin(ai.folder)) {
+			return '.trash/' + ai.id + '/' + ai.name
+		}
 		if (ai.folder !== 0 && ai.folder in this.folderById) {
 			return this.getFolderPath(this.folderById[ai.folder]) + ai.name
 		}
