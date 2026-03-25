@@ -270,6 +270,39 @@ monaco.languages.registerDefinitionProvider("leekscript", {
 	},
 })
 
+monaco.languages.registerReferenceProvider("leekscript", {
+	provideReferences: async (model, position, context, token) => {
+		const ai = fileSystem.aiByFullPath[model.uri.path.substring(1)]
+		if (!ai) { return [] }
+
+		const locations = await analyzer.references(ai, position.lineNumber, position.column - 1)
+		if (!locations || !locations.length) { return [] }
+
+		// Load all referenced files in parallel
+		const uniqueAis = new Map<number, any>()
+		for (const loc of locations) {
+			const targetAi = fileSystem.ais[loc[0]]
+			if (targetAi && !uniqueAis.has(loc[0])) { uniqueAis.set(loc[0], targetAi) }
+		}
+		await Promise.all([...uniqueAis.values()].map((a: any) => fileSystem.load(a)))
+
+		const results: monaco.languages.Location[] = []
+		for (const loc of locations) {
+			const targetAi = fileSystem.ais[loc[0]]
+			if (!targetAi) { continue }
+			const uri = monaco.Uri.parse('file:///' + targetAi.path)
+			if (!monaco.editor.getModel(uri)) {
+				targetAi.model = monaco.editor.createModel(targetAi.code, 'leekscript', uri)
+			}
+			results.push({
+				uri,
+				range: new monaco.Range(loc[1], loc[2] + 1, loc[3], loc[4] + 2),
+			})
+		}
+		return results
+	},
+})
+
 monaco.languages.registerDocumentFormattingEditProvider("leekscript", {
 	async provideDocumentFormattingEdits(model) {
 		const formattedText = await formatLeekScript(model.getValue());
