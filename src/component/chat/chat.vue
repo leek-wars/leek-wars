@@ -310,7 +310,7 @@ import { emitter } from '@/model/vue'
 			if (message.startsWith('/ping')) {
 				this.$store.commit('last-ping', Date.now())
 			}
-			if (message.match(/(^|\s)\/br(\s|$)/)) {
+			if (message.match(/(^|\s)\/br!?(\s|$)/)) {
 				if (!LeekWars.battleRoyale.enabled) {
 					// Auto-inscription en BR avec le dernier poireau utilisé ou le premier disponible
 					const farmer = this.$store.state.farmer
@@ -325,7 +325,7 @@ import { emitter } from '@/model/vue'
 				const brLeekId = parseInt(localStorage.getItem('battle-royale-leek') || '', 10)
 				const brLeek = brLeekId ? this.$store.state.farmer?.leeks[brLeekId] : null
 				if (brLeek) {
-					message = message.replace(/(^|\s)\/br(\s|$)/, '$1/br:' + brLeek.level + '$2')
+					message = message.replace(/(^|\s)\/br(!?)(\s|$)/, '$1/br$2:' + brLeek.level + '$3')
 				}
 			}
 			if (this.chat === null) {

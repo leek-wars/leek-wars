@@ -1,6 +1,6 @@
 <template>
 	<span class="br-invite-card">
-		⚔️ BR
+		⚔️ {{ label || 'BR' }}
 		<span v-if="range" class="range">{{ range.min }}-{{ range.max }}</span>
 		<span v-if="rangeCount >= 0" class="progress">{{ rangeCount }}&nbsp;/&nbsp;10</span>
 		<span v-if="eligibleLeek && !inSameRange" class="btn" @click="joinBR">Rejoindre</span>
@@ -15,6 +15,7 @@
 	@Options({})
 	export default class BrInvite extends Vue {
 		@Prop() level!: number
+		@Prop() label!: string
 
 		get rangeIndex() {
 			return BattleRoyale.getRangeIndex(this.level)

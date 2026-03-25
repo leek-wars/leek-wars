@@ -52,7 +52,8 @@
 			})
 			this.$el.querySelectorAll('.br-invite').forEach((c) => {
 				const level = parseInt((c as HTMLElement).dataset.level || '', 10) || 0
-				const app = createApp(BrInvite, { level })
+				const label = (c as HTMLElement).dataset.label || undefined
+				const app = createApp(BrInvite, { level, label })
 				app.use(router)
 				app.use(vuetify)
 				app.use(i18n)
