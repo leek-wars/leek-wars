@@ -26,5 +26,11 @@
 	"restore": "Restore",
 	"folder_name": "Folder name",
 	"close_folder": "Close folder",
-	"open_folder": "Open folder"
+	"open_folder": "Open folder",
+	"name_conflict": "This name is already used in this folder.",
+	"invalid_name_empty": "The name cannot be empty.",
+	"invalid_name_reserved": "This name is reserved.",
+	"invalid_name_slash": "The character \"/\" is not allowed in names.",
+	"windows_warning_char": "The character \"{0}\" is not allowed on Windows, this name may cause issues with git.",
+	"windows_warning_reserved": "\"{0}\" is a reserved name on Windows, this name may cause issues with git."
 }

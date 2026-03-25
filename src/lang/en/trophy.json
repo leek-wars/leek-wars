@@ -596,5 +596,11 @@
 	"contest2": "Contest 2/3",
 	"funny": "Funny",
 	"hedgehog_f": "Herringbone",
-	"funny_f": "Funny"
+	"funny_f": "Funny",
+	"stargazer": "Stargazer",
+	"stargazer_f": "Stargazer",
+	"open_sourcerer": "Open Sourcerer",
+	"open_sourcerer_f": "Open Sourcerer",
+	"pillar": "Pillar",
+	"pillar_f": "Pillar"
 }

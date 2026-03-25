@@ -5,5 +5,7 @@
 	"name": "Nama",
 	"level": "Tingkat",
 	"date": "Tanggal",
-	"rarity": "Kelangkaan"
+	"rarity": "Kelangkaan",
+	"type": "Type",
+	"no_group": "Tanpa grup"
 }

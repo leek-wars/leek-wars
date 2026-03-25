@@ -75,6 +75,7 @@
 	import { FUNCTION_BY_ID } from '@/model/function_by_id'
 	import { CONSTANTS } from '@/model/constants'
 	import { CONSTANT_BY_ID } from '@/model/constant_by_id'
+	import { FUNCTION_CATEGORIES } from '@/model/function_categories'
 	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
@@ -92,7 +93,7 @@
 	})
 	export default class Documentation extends Vue {
 		@Prop({ required: true }) popup!: boolean
-		categories: any[] = []
+		categories = FUNCTION_CATEGORIES
 		items: (LSFunction | Constant)[] = []
 		query: string = ''
 		lazy_start: number = 0
@@ -155,76 +156,63 @@
 
 			LeekWars.loadEncyclopedia(locale)
 
-			const get_categories = (callback: any) => {
-				if (localStorage.getItem('data/function_categories_v4')) {
-					callback({categories: JSON.parse(localStorage.getItem('data/function_categories_v4') || '[]')})
-				} else {
-					LeekWars.get('function/get-categories').then(data => {
-						localStorage.setItem('data/function_categories_v4', JSON.stringify(data.categories))
-						callback(data)
-					})
+			for (const category in FUNCTION_CATEGORIES) {
+				this.categoryState[category] = localStorage.getItem('documentation/category-' + category) === 'true'
+			}
+			let id = 0
+			for (const item of FUNCTIONS) {
+				if (item.replacement) {
+					FUNCTION_BY_ID[item.replacement].replacer = item
 				}
 			}
-			get_categories((data: any) => {
-				this.categories = data.categories
-				for (const category in this.categories) {
-					this.categoryState[category] = localStorage.getItem('documentation/category-' + category) === 'true'
-				}
-				let id = 0
-				for (const item of FUNCTIONS) {
-					if (item.replacement) {
-						FUNCTION_BY_ID[item.replacement].replacer = item
-					}
-				}
-				for (const item of FUNCTIONS) {
-					this.items.push(item)
-					item.lower_name = item.name.toLowerCase()
-					item.id = id++
-					item.data = ''
+			for (const item of FUNCTIONS) {
+				this.items.push(item)
+				item.lower_name = item.name.toLowerCase()
+				item.id = id++
+				item.data = ''
 
-					LeekWars.documentation(locale).then(functions => {
-						if (item.name in functions) {
-							const fun = functions[item.name]
-							let new_data = fun.description
-							for (const section in fun.primary) {
-								new_data += fun.primary[section]
-							}
-							for (const section in fun.secondary) {
-								new_data += fun.secondary[section]
-							}
-							item.data = new_data.toLowerCase()
-						} else {
-							let item_data = (this.$t('doc.func_' + item.name) as any).toLowerCase()
-							for (const i in item.arguments_names) {
-								item_data += (this.$t('doc.func_' + item.name + '_arg_' + (parseInt(i, 10) + 1)) as any).toLowerCase()
-							}
-							item_data += (this.$t('doc.func_' + item.name + '_return') as any).toLowerCase()
-							item.data = item_data
+				LeekWars.documentation(locale).then(functions => {
+					if (item.name in functions) {
+						const fun = functions[item.name]
+						let new_data = fun.description
+						for (const section in fun.primary) {
+							new_data += fun.primary[section]
 						}
-						if (item.replacer) {
-							item.data += item.replacer.lower_name!
+						for (const section in fun.secondary) {
+							new_data += fun.secondary[section]
 						}
-					})
-				}
-				for (const item of CONSTANTS) {
-					if (item.replacement) {
-						CONSTANT_BY_ID[item.replacement].replacer = item
+						item.data = new_data.toLowerCase()
+					} else {
+						let item_data = (this.$t('doc.func_' + item.name) as any).toLowerCase()
+						for (const i in item.arguments_names) {
+							item_data += (this.$t('doc.func_' + item.name + '_arg_' + (parseInt(i, 10) + 1)) as any).toLowerCase()
+						}
+						item_data += (this.$t('doc.func_' + item.name + '_return') as any).toLowerCase()
+						item.data = item_data
 					}
-				}
-				for (const item of CONSTANTS) {
-					this.items.push(item)
-					item.lower_name = item.name.toLowerCase()
-					item.id = id++
-					item.data = (this.$t('doc.const_' + item.name) as string).toLowerCase() + item.value
 					if (item.replacer) {
 						item.data += item.replacer.lower_name!
 					}
+				})
+			}
+			for (const item of CONSTANTS) {
+				if (item.replacement) {
+					CONSTANT_BY_ID[item.replacement].replacer = item
 				}
-				if (!this.popup) {
-					LeekWars.setTitle(this.$i18n.t('title'))
+			}
+			for (const item of CONSTANTS) {
+				this.items.push(item)
+				item.lower_name = item.name.toLowerCase()
+				item.id = id++
+				item.data = (this.$t('doc.const_' + item.name) as string).toLowerCase() + item.value
+				if (item.replacer) {
+					item.data += item.replacer.lower_name!
 				}
-				this.update()
-			})
+			}
+			if (!this.popup) {
+				LeekWars.setTitle(this.$i18n.t('title'))
+			}
+			this.update()
 		}
 		mounted() {
 			if (!this.popup) {

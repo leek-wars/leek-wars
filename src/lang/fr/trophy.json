@@ -596,5 +596,11 @@
 	"contest1": "Concours 1/3",
 	"contest2": "Concours 2/3",
 	"funny": "Rigolo",
-	"funny_f": "Rigolote"
+	"funny_f": "Rigolote",
+	"stargazer": "Astronome",
+	"stargazer_f": "Astronome",
+	"open_sourcerer": "Open-sourcier",
+	"open_sourcerer_f": "Open-sourcière",
+	"pillar": "Pilier",
+	"pillar_f": "Pilier"
 }

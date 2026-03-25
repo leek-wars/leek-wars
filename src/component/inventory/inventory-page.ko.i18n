@@ -11,5 +11,10 @@
 	"potions": "물약",
 	"hats": "모자",
 	"pomps": "모양",
-	"resources": "리소스"
+	"resources": "리소스",
+	"no_group": "그룹 없음",
+	"type": "유형",
+	"rarity": "희귀도",
+	"craftable": "제작 가능",
+	"ingredient_count": "재료 수"
 }

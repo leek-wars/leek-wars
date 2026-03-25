@@ -25,7 +25,7 @@
 	"unlocked_the_x": "Débloqué le {date}",
 	"see_fight": "Voir le combat",
 	"progress": "Progression",
-	"n_pocessors": "{n} possesseurs",
+	"n_pocessors": "aucun possesseur | 1 possesseur | {0} possesseurs",
 	"first_farmers": "Premiers éleveurs",
 	"last_farmers": "Derniers éleveurs",
 	"fastest_farmers": "Éleveurs les plus rapides",

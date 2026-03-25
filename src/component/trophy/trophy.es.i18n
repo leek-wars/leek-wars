@@ -24,7 +24,7 @@
 	"unlocked_the_x": "Desbloqueado el {date}",
 	"see_fight": "Ver la pelea",
 	"progress": "Progreso",
-	"n_pocessors": "{n} poseedores",
+	"n_pocessors": "ningún poseedor | 1 poseedor | {0} poseedores",
 	"first_farmers": "Primeros criadores",
 	"last_farmers": "Últimos criadores",
 	"fastest_farmers": "Los reproductores más rápidos",

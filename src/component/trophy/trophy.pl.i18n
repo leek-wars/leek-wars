@@ -24,7 +24,7 @@
 	"unlocked_the_x": "Odblokowane {date}",
 	"see_fight": "Zobacz walkę",
 	"progress": "Postęp",
-	"n_pocessors": "{n} posiadaczy",
+	"n_pocessors": "brak posiadacza | 1 posiadacz | {0} posiadaczy",
 	"first_farmers": "Wcześni hodowcy",
 	"last_farmers": "Najnowsi hodowcy",
 	"fastest_farmers": "Najszybsi hodowcy",

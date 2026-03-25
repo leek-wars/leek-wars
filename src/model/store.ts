@@ -75,6 +75,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 								return resource.quantity >= item[1]
 							}
 						}
+						for (const resource of state.farmer.weapons) {
+							if (resource.template === item[0]) {
+								return resource.quantity >= item[1]
+							}
+						}
 					}
 				}
 				return false
@@ -94,7 +99,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				unread: number,
 				notifications: Notification[],
 				conversations: any[],
-				chats: {id: number, read: boolean}[],
+				chats: {id: number, read: boolean, notifications: boolean}[],
 				token: string
 			}) {
 			store.commit("reset")
@@ -120,6 +125,9 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 			for (const conversation of data.conversations) {
 				store.commit('new-conversation', conversation)
+			}
+			for (const chat of data.chats) {
+				store.commit('register-chat', chat)
 			}
 			fileSystem.init(data.farmer)
 			LeekWars.startIntervals()
@@ -194,7 +202,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				const groupChat = state.farmer && state.farmer.group ? state.farmer.group.chat : null
 				const type = LeekWars.isPublicChat(data.id) ? ChatType.GLOBAL : (data.id === teamChat ? ChatType.TEAM : (data.id === groupChat ? ChatType.GROUP : ChatType.PM))
 				const name = type === ChatType.GLOBAL ? LeekWars.publicChats[data.id].name : (type === ChatType.TEAM ? state.farmer!.team!.name : (type === ChatType.GROUP ? state.farmer!.group!.name : data.name))
-				const chat = new Chat(data.id, type, name, data.notifications)
+				const chat = new Chat(data.id, type, name, data.notifications !== undefined ? data.notifications : true)
 				state.chat[data.id] = chat
 			}
 		},
@@ -485,26 +493,32 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 
 		notification(state: LeekWarsState, data: { id: number, type: number, date: number, parameters: any[], new: boolean }) {
-
-			if (data.new) {
-				// Received a new trophy, invalidate farmer trophies, add to rewards
-				if (state.farmer && data.type === NotificationType.TROPHY_UNLOCKED) {
-					delete state.farmer.trophies_list
-					const trophy = parseInt(data.parameters[0], 10)
-					state.farmer!.rewards.push({
-						trophy,
-						habs: TROPHIES[trophy - 1].habs
-					})
+			try {
+				if (data.new) {
+					// Received a new trophy, invalidate farmer trophies, add to rewards
+					if (state.farmer && data.type === NotificationType.TROPHY_UNLOCKED) {
+						delete state.farmer.trophies_list
+						const trophy = parseInt(data.parameters[0], 10)
+						const trophyTemplate = TROPHIES[trophy - 1]
+						if (trophyTemplate) {
+							state.farmer!.rewards.push({
+								trophy,
+								habs: trophyTemplate.habs
+							})
+						}
+					}
 				}
-			}
 
-			const notification = NotificationBuilder.build(data)
-			state.notifications.unshift(notification)
+				const notification = NotificationBuilder.build(data)
+				state.notifications.unshift(notification)
 
-			if (data.new) {
-				state.unreadNotifications = state.notifications.reduce((sum, n) => sum + (n.read ? 0 : 1), 0)
-				updateTitle(state)
-				LeekWars.squares.addFromNotification(notification)
+				if (data.new) {
+					state.unreadNotifications = state.notifications.reduce((sum, n) => sum + (n.read ? 0 : 1), 0)
+					updateTitle(state)
+					LeekWars.squares.addFromNotification(notification)
+				}
+			} catch (e) {
+				console.warn("Failed to build notification", data, e)
 			}
 		},
 

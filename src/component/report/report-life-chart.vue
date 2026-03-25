@@ -142,7 +142,7 @@
 			}
 			this.chartData = {
 				datasets: series.map((s, i) => ({
-					data: s.slice(0, s.findIndex((p: any) => p.y === 0 || p.y === null) + 1 || s.length),
+					data: s.slice(0, (s.findLastIndex((p: any) => p.y !== null) + 1) || s.length),
 					tension: this.smooth ? 0.2 : 0,
 					borderColor: TEAM_COLORS[this.filtered_entities[i].leek.team - 1],
 					label: this.filtered_entities[i].leek.translatedName,

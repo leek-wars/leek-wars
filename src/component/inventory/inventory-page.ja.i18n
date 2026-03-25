@@ -11,5 +11,10 @@
 	"potions": "ポーション",
 	"hats": "帽子",
 	"pomps": "出演",
-	"resources": "リソース"
+	"resources": "リソース",
+	"no_group": "グループなし",
+	"type": "タイプ",
+	"rarity": "レア度",
+	"craftable": "製作可能",
+	"ingredient_count": "材料の数"
 }

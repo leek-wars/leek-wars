@@ -28,5 +28,21 @@
 	"status_not_planned": "Ei suunniteltu",
 	"status_obsolete": "Vanhentunut",
 	"status_not_reproduced": "Ei toistettu",
-	"status_resolved": "Ratkaistu"
+	"status_resolved": "Ratkaistu",
+	"filter": "Suodata",
+	"filter_all": "Kaikki",
+	"filter_status": "Tila",
+	"filter_acknowledged": "Huomioitu",
+	"filter_not_acknowledged": "Ei huomioitu",
+	"filter_locked": "Lukittu",
+	"filter_not_locked": "Ei lukittu",
+	"filter_priority": "Prioriteetti",
+	"status_open": "Avoin",
+	"filter_read": "Luettu / Lukematon",
+	"filter_read_yes": "Luettu",
+	"filter_read_no": "Lukematon",
+	"no_topics": "Ei aiheita näytettäväksi",
+	"no_topics_filters": "Kokeile muuttaa suodattimia nähdäksesi lisää tuloksia.",
+	"clear_filters": "Tyhjennä suodattimet",
+	"priority_none": "Ei prioriteettia"
 }

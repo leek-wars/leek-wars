@@ -28,5 +28,21 @@
 	"status_not_planned": "Nicht geplant",
 	"status_obsolete": "Veraltet",
 	"status_not_reproduced": "Nicht reproduziert",
-	"status_resolved": "Gelöst"
+	"status_resolved": "Gelöst",
+	"filter": "Filtern",
+	"filter_all": "Alle",
+	"filter_status": "Status",
+	"filter_acknowledged": "Bestätigt",
+	"filter_not_acknowledged": "Nicht bestätigt",
+	"filter_locked": "Gesperrt",
+	"filter_not_locked": "Nicht gesperrt",
+	"filter_priority": "Priorität",
+	"status_open": "Offen",
+	"filter_read": "Gelesen / Ungelesen",
+	"filter_read_yes": "Gelesen",
+	"filter_read_no": "Ungelesen",
+	"no_topics": "Keine Themen anzuzeigen",
+	"no_topics_filters": "Versuchen Sie, Ihre Filter anzupassen, um mehr Ergebnisse zu sehen.",
+	"clear_filters": "Filter zurücksetzen",
+	"priority_none": "Keine Priorität"
 }

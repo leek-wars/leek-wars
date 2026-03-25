@@ -11,5 +11,10 @@
 	"potions": "Mikstury",
 	"hats": "Czapki",
 	"pomps": "Występy",
-	"resources": "Zasoby"
+	"resources": "Zasoby",
+	"no_group": "Bez grupy",
+	"type": "Type",
+	"rarity": "Rzadkość",
+	"craftable": "Możliwe do wykonania",
+	"ingredient_count": "Liczba składników"
 }

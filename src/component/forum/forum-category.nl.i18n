@@ -28,5 +28,21 @@
 	"status_not_planned": "Niet gepland",
 	"status_obsolete": "Verouderd",
 	"status_not_reproduced": "Niet gereproduceerd",
-	"status_resolved": "Opgelost"
+	"status_resolved": "Opgelost",
+	"filter": "Filteren",
+	"filter_all": "Alle",
+	"filter_status": "Status",
+	"filter_acknowledged": "Erkend",
+	"filter_not_acknowledged": "Niet erkend",
+	"filter_locked": "Vergrendeld",
+	"filter_not_locked": "Niet vergrendeld",
+	"filter_priority": "Prioriteit",
+	"status_open": "Open",
+	"filter_read": "Gelezen / Ongelezen",
+	"filter_read_yes": "Gelezen",
+	"filter_read_no": "Ongelezen",
+	"no_topics": "Geen onderwerpen om weer te geven",
+	"no_topics_filters": "Probeer je filters aan te passen om meer resultaten te zien.",
+	"clear_filters": "Filters wissen",
+	"priority_none": "Geen prioriteit"
 }

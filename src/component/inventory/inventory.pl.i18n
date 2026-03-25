@@ -5,5 +5,7 @@
 	"name": "Nazwa",
 	"level": "Poziom",
 	"date": "Data",
-	"rarity": "Niedostatek"
+	"rarity": "Niedostatek",
+	"type": "Type",
+	"no_group": "Bez grupy"
 }

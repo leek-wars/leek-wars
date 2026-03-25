@@ -148,5 +148,6 @@
 	"enemies": "All enemies",
 	"state_11": "Static",
 	"n_uses": "<b>1</b> use | <b>{n}</b> uses",
-	"max_uses": "Maximum {uses} per round"
+	"max_uses": "Maximum {uses} per round",
+	"usage_stats": "~{0} uses/fight (one week)"
 }

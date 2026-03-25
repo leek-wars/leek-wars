@@ -596,5 +596,11 @@
 	"contest2": "Конкурс 2/3",
 	"funny": "Веселье",
 	"hedgehog_f": "Елочка",
-	"funny_f": "Смешные"
+	"funny_f": "Смешные",
+	"stargazer": "Звездочёт",
+	"stargazer_f": "Звездочёт",
+	"open_sourcerer": "Open Sourcerer",
+	"open_sourcerer_f": "Open Sourcerer",
+	"pillar": "Столп",
+	"pillar_f": "Столп"
 }

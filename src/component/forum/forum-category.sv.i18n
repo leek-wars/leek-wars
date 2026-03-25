@@ -28,5 +28,21 @@
 	"status_not_planned": "Ej planerad",
 	"status_obsolete": "Föråldrad",
 	"status_not_reproduced": "Ej reproducerad",
-	"status_resolved": "Löst"
+	"status_resolved": "Löst",
+	"filter": "Filtrera",
+	"filter_all": "Alla",
+	"filter_status": "Status",
+	"filter_acknowledged": "Bekräftad",
+	"filter_not_acknowledged": "Inte bekräftad",
+	"filter_locked": "Låst",
+	"filter_not_locked": "Inte låst",
+	"filter_priority": "Prioritet",
+	"status_open": "Öppen",
+	"filter_read": "Läst / Oläst",
+	"filter_read_yes": "Läst",
+	"filter_read_no": "Oläst",
+	"no_topics": "Inga ämnen att visa",
+	"no_topics_filters": "Försök att ändra dina filter för att se fler resultat.",
+	"clear_filters": "Rensa filter",
+	"priority_none": "Ingen prioritet"
 }

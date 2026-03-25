@@ -5,5 +5,7 @@
 	"name": "Navn",
 	"level": "Niveau",
 	"date": "Dato",
-	"rarity": "Mangel"
+	"rarity": "Mangel",
+	"type": "Type",
+	"no_group": "Ingen gruppe"
 }

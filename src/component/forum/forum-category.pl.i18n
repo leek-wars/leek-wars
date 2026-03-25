@@ -28,5 +28,21 @@
 	"status_not_planned": "Nie planowany",
 	"status_obsolete": "Przestarzałe",
 	"status_not_reproduced": "Nie odtworzony",
-	"status_resolved": "Rozwiązany"
+	"status_resolved": "Rozwiązany",
+	"filter": "Filtruj",
+	"filter_all": "Wszystkie",
+	"filter_status": "Status",
+	"filter_acknowledged": "Przyjęte",
+	"filter_not_acknowledged": "Nie przyjęte",
+	"filter_locked": "Zablokowane",
+	"filter_not_locked": "Nie zablokowane",
+	"filter_priority": "Priorytet",
+	"status_open": "Otwarty",
+	"filter_read": "Przeczytane / Nieprzeczytane",
+	"filter_read_yes": "Przeczytane",
+	"filter_read_no": "Nieprzeczytane",
+	"no_topics": "Brak tematów do wyświetlenia",
+	"no_topics_filters": "Spróbuj zmienić filtry, aby zobaczyć więcej wyników.",
+	"clear_filters": "Wyczyść filtry",
+	"priority_none": "Brak priorytetu"
 }

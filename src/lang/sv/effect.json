@@ -148,5 +148,6 @@
 	"enemies": "Alla fiender",
 	"state_11": "Statisk",
 	"n_uses": "<b>1</b> användning | <b>{n}</b> användning",
-	"max_uses": "maximalt {uses} per runda"
+	"max_uses": "maximalt {uses} per runda",
+	"usage_stats": "~{0} användningar/strid (en vecka)"
 }

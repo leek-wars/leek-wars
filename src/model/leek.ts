@@ -85,6 +85,9 @@ class Leek {
 	public ranking!: number
 	public components!: Component[]
 	public total_ram!: number
+	public itemUsageStats: { [itemId: number]: { uses: number, fights: number } } | null = null
+	public itemUsageTotalFights: number = 0
+	public itemUsageHistograms: { [itemId: number]: number[] } | null = null
 
 	constructor(data: any) {
 		Object.assign(this, data)

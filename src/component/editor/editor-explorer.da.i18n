@@ -26,5 +26,11 @@
 	"recycle_bin": "Kurv",
 	"restore": "Gendan",
 	"close_folder": "Luk mappen",
-	"open_folder": "Åbn mappe"
+	"open_folder": "Åbn mappe",
+	"name_conflict": "Dette navn bruges allerede i denne mappe.",
+	"invalid_name_empty": "Navnet kan ikke være tomt.",
+	"invalid_name_reserved": "Dette navn er reserveret.",
+	"invalid_name_slash": "Tegnet \"/\" er ikke tilladt i navne.",
+	"windows_warning_char": "Tegnet \"{0}\" er forbudt på Windows, dette navn kan give problemer med git.",
+	"windows_warning_reserved": "\"{0}\" er et reserveret navn på Windows, dette navn kan give problemer med git."
 }

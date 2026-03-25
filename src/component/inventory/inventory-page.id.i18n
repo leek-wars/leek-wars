@@ -11,5 +11,10 @@
 	"potions": "Ramuan",
 	"hats": "Topi",
 	"pomps": "Penampilan",
-	"resources": "Sumber daya"
+	"resources": "Sumber daya",
+	"no_group": "Tanpa grup",
+	"type": "Type",
+	"rarity": "Kelangkaan",
+	"craftable": "Dapat dibuat",
+	"ingredient_count": "Jumlah bahan"
 }

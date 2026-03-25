@@ -86,7 +86,7 @@
 			this.updateCommands()
 
 			if (e.which === 13) { // enter
-				if (this.commandsEnabled && (this.$refs.commands as ChatCommands).getSelected() !== null) {
+				if (this.commandsEnabled && (this.$refs.commands as ChatCommands).getSelected()) {
 					(this.$refs.commands as ChatCommands).selectFirst()
 					return
 				}

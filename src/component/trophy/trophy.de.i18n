@@ -24,7 +24,7 @@
 	"unlocked_the_x": "Entsperrt am {date}",
 	"see_fight": "Siehe den Kampf",
 	"progress": "Fortschritt",
-	"n_pocessors": "{n} Besitzer",
+	"n_pocessors": "kein Besitzer | 1 Besitzer | {0} Besitzer",
 	"first_farmers": "Frühe Züchter",
 	"last_farmers": "Neueste Züchter",
 	"fastest_farmers": "Schnellste Züchter",

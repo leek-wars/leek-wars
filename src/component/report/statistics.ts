@@ -454,6 +454,7 @@ class FightStatistics {
 					const killer = action.length > 2 ? entities[action[2]] : currentEntity
 					if (killer) { killer.kills++ }
 					entity.life = 0
+					this.updateLifes()
 					this.addTime()
 					break
 				}

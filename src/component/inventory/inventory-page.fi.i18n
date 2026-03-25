@@ -11,5 +11,10 @@
 	"potions": "Taikajuomat",
 	"hats": "Hatut",
 	"pomps": "Esiintymiset",
-	"resources": "Resurssit"
+	"resources": "Resurssit",
+	"no_group": "Ei ryhmää",
+	"type": "Type",
+	"rarity": "Harvinaisuus",
+	"craftable": "Valmistettavissa",
+	"ingredient_count": "Ainesosien määrä"
 }

@@ -26,5 +26,11 @@
 	"recycle_bin": "Corbeille",
 	"restore": "Restaurer",
 	"close_folder": "Fermer le dossier",
-	"open_folder": "Ouvrir le dossier"
+	"open_folder": "Ouvrir le dossier",
+	"name_conflict": "Ce nom est déjà utilisé dans ce dossier.",
+	"invalid_name_empty": "Le nom ne peut pas être vide.",
+	"invalid_name_reserved": "Ce nom est réservé.",
+	"invalid_name_slash": "Le caractère \"/\" est interdit dans les noms.",
+	"windows_warning_char": "Le caractère \"{0}\" est interdit sur Windows, ce nom pourrait poser problème avec git.",
+	"windows_warning_reserved": "\"{0}\" est un nom réservé sur Windows, ce nom pourrait poser problème avec git."
 }

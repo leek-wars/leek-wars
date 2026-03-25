@@ -11,5 +11,10 @@
 	"potions": "Pociones",
 	"hats": "Sombreros",
 	"pomps": "Comparecencias",
-	"resources": "Recursos"
+	"resources": "Recursos",
+	"no_group": "Sin grupo",
+	"type": "Type",
+	"rarity": "Rareza",
+	"craftable": "Fabricable",
+	"ingredient_count": "Cantidad de ingredientes"
 }

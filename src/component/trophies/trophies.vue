@@ -369,6 +369,7 @@ import { emitter } from '@/model/vue'
 			.avatar {
 				margin-right: 15px;
 				width: 100px;
+				height: 100px;
 			}
 			.header {
 				display: flex;

@@ -16,7 +16,8 @@
 						<div v-if="scheme.quantity > 1" class="quantity">{{ $filters.number(scheme.quantity) }}</div>
 					</div>
 				</rich-tooltip-item>
-				<v-icon v-if="result && !built && !building">mdi-hammer-wrench</v-icon>
+				<v-icon v-if="result && !building && !built">mdi-hammer-wrench</v-icon>
+				<v-icon v-if="result && built">mdi-refresh</v-icon>
 			</div>
 			<v-icon v-if="scheme" class="clear" @click="clear">mdi-refresh</v-icon>
 		</div>
@@ -80,7 +81,13 @@
 		}
 
 		craft() {
-			if (this.built || !this.scheme) { return }
+			if (!this.scheme) return
+			if (this.built) {
+				const scheme = this.scheme
+				this.clear()
+				emitter.emit('craft', scheme)
+				return
+			}
 			LeekWars.post('item/craft', { scheme_id: this.scheme.id }).then(item => {
 				const template = LeekWars.items[item.template]
 				store.commit('add-inventory', { type: template.type, id: item.id, template: item.template, time: item.time, quantity: this.scheme!.quantity })

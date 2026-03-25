@@ -8,9 +8,10 @@
 
 <script lang="ts">
 	import { SchemeTemplate } from '@/model/scheme'
+	import { defineAsyncComponent } from 'vue';
 	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import SchemeView from './scheme.vue';
 	import { emitter } from '@/model/vue';
+	const SchemeView = defineAsyncComponent(() => import('./scheme.vue'))
 
 	@Options({ components: { 'scheme': SchemeView } })
 	export default class SchemePreview extends Vue {

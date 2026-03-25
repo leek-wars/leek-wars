@@ -11,5 +11,10 @@
 	"potions": "Tränke",
 	"hats": "Hüte",
 	"pomps": "Apparate",
-	"resources": "Ressourcen"
+	"resources": "Ressourcen",
+	"no_group": "Keine Gruppe",
+	"type": "Type",
+	"rarity": "Seltenheit",
+	"craftable": "Herstellbar",
+	"ingredient_count": "Anzahl der Zutaten"
 }

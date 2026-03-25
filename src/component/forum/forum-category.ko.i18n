@@ -28,5 +28,21 @@
 	"status_not_planned": "계획 없음",
 	"status_obsolete": "폐기됨",
 	"status_not_reproduced": "재현 불가",
-	"status_resolved": "해결됨"
+	"status_resolved": "해결됨",
+	"filter": "필터",
+	"filter_all": "전체",
+	"filter_status": "상태",
+	"filter_acknowledged": "확인됨",
+	"filter_not_acknowledged": "확인되지 않음",
+	"filter_locked": "잠김",
+	"filter_not_locked": "잠기지 않음",
+	"filter_priority": "우선순위",
+	"status_open": "열림",
+	"filter_read": "읽음 / 안 읽음",
+	"filter_read_yes": "읽음",
+	"filter_read_no": "안 읽음",
+	"no_topics": "표시할 주제가 없습니다",
+	"no_topics_filters": "더 많은 결과를 보려면 필터를 조정해 보세요.",
+	"clear_filters": "필터 초기화",
+	"priority_none": "우선순위 없음"
 }

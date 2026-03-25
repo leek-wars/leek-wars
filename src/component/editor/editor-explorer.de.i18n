@@ -26,5 +26,11 @@
 	"recycle_bin": "Korb",
 	"restore": "Wiederherstellen",
 	"close_folder": "Ordner schließen",
-	"open_folder": "Ordner öffnen"
+	"open_folder": "Ordner öffnen",
+	"name_conflict": "Dieser Name wird bereits in diesem Ordner verwendet.",
+	"invalid_name_empty": "Der Name darf nicht leer sein.",
+	"invalid_name_reserved": "Dieser Name ist reserviert.",
+	"invalid_name_slash": "Das Zeichen \"/\" ist in Namen nicht erlaubt.",
+	"windows_warning_char": "Das Zeichen \"{0}\" ist unter Windows nicht erlaubt, dieser Name könnte Probleme mit git verursachen.",
+	"windows_warning_reserved": "\"{0}\" ist ein reservierter Name unter Windows, dieser Name könnte Probleme mit git verursachen."
 }

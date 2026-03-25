@@ -5,5 +5,7 @@
 	"name": "姓名",
 	"level": "等级",
 	"date": "日期",
-	"rarity": "缺乏"
+	"rarity": "缺乏",
+	"type": "类型",
+	"no_group": "不分组"
 }

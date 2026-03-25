@@ -335,8 +335,8 @@
 			<loader v-if="!farmer" />
 			<div v-else class="leeks">
 				<rich-tooltip-leek v-for="leek in farmer.leeks" :id="leek.id" :key="leek.id" v-slot="{ props }">
-					<router-link v-ripple :to="'/leek/' + leek.id" class="leek">
-						<div v-bind="props">
+					<router-link v-ripple :to="'/leek/' + leek.id" class="leek" v-bind="props">
+						<div>
 							<leek-image :leek="leek" :scale="0.9" />
 							<div class="name">{{ leek.name }}</div>
 							<lw-title v-if="leek.title.length" :title="leek.title" />
@@ -724,6 +724,7 @@ import { emitter } from '@/model/vue'
 					bonus.push(this.trophies[t])
 				}
 			}
+			bonus.sort((a: any, b: any) => a.id - b.id)
 			return bonus
 		}
 		get farmerTitleEnabled() {
@@ -1387,6 +1388,7 @@ import { emitter } from '@/model/vue'
 		text-align: center;
 		display: block;
 		width: 100%;
+		aspect-ratio: 1;
 		vertical-align: bottom;
 	}
 	.trophy-date {
@@ -1514,7 +1516,7 @@ import { emitter } from '@/model/vue'
 		}
 		.container {
 			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+			grid-template-columns: repeat(auto-fill, minmax(min(500px, 100%), 1fr));
 		}
 		.column {
 			flex: 1;

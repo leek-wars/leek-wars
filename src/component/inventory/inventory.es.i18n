@@ -5,5 +5,7 @@
 	"name": "Apellido",
 	"level": "Nivel",
 	"date": "Fecha",
-	"rarity": "Escasez"
+	"rarity": "Escasez",
+	"type": "Type",
+	"no_group": "Sin grupo"
 }

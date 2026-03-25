@@ -153,7 +153,7 @@
 									<span v-if="topic.release" class="action" @click="releaseInput = topic.release; releaseDialog = true">
 										<v-icon>mdi-tag</v-icon> {{ 'v' + String(topic.release).charAt(0) + '.' + String(topic.release).slice(1) }}
 									</span>
-									<v-select v-model="topic.priority" :items="priorityItems" hide-details dense variant="outlined" class="priority-select" @update:model-value="setPriority">
+									<v-select v-if="hasPriority" v-model="topic.priority" :items="priorityItems" hide-details dense variant="outlined" class="priority-select" @update:model-value="setPriority">
 										<template #selection="{ item }">
 											<v-icon :color="item.raw.color" size="small">{{ item.raw.icon }}</v-icon>&nbsp;{{ item.raw.title }}
 										</template>
@@ -166,7 +166,7 @@
 										</template>
 									</v-select>
 								</template>
-								<span v-if="message.id == -1 && topic.priority && !($store.state.farmer && $store.state.farmer.admin)" class="priority-label" :class="'priority-' + topic.priority">
+								<span v-if="message.id == -1 && hasPriority && topic.priority && !($store.state.farmer && $store.state.farmer.admin)" class="priority-label" :class="'priority-' + topic.priority">
 									<v-icon :color="topic.priority === 1 ? '#e53935' : topic.priority === 2 ? '#fb8c00' : '#757575'" size="small">mdi-flag</v-icon>
 									{{ topic.priority === 1 ? $t('priority_high') : topic.priority === 2 ? $t('priority_medium') : $t('priority_low') }}
 								</span>
@@ -365,6 +365,9 @@ import { emitter } from '@/model/vue'
 		moveCategories: {id: number, name: string}[] = []
 		releaseDialog: boolean = false
 		releaseInput: number | null = null
+		get hasPriority() {
+			return this.category && (this.category.name === 'bug_reports' || this.category.name === 'suggestions_ideas')
+		}
 		get priorityItems() {
 			return [
 				{ value: 0, title: this.$t('priority_none') as string, icon: 'mdi-flag-outline', color: '' },

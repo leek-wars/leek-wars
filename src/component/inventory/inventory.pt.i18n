@@ -5,5 +5,7 @@
 	"name": "Nome",
 	"level": "Nível",
 	"date": "Data",
-	"rarity": "Escassez"
+	"rarity": "Escassez",
+	"type": "Type",
+	"no_group": "Sem grupo"
 }

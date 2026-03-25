@@ -50,6 +50,9 @@
 			</panel>
 		</template>
 		<changelog-dialog v-model="changelogDialog" :changelog="changelogVersion" />
+
+		<!-- Social images generation -->
+		<changelog-social v-if="routeVersion && store.getters.admin" :version="routeVersion" :version-name="(route.params.version as string)" />
 	</div>
 </template>
 
@@ -65,6 +68,7 @@ import { emitter } from '@/model/vue'
 import Breadcrumb from '../forum/breadcrumb.vue'
 import ChangelogDialog from './changelog-dialog.vue'
 import ChangelogVersion from './changelog-version.vue'
+import ChangelogSocial from './changelog-social.vue'
 
 const { t } = useI18n()
 const route = useRoute()

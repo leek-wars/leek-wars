@@ -92,6 +92,8 @@
 		.image {
 			width: 50px;
 			height: 50px;
+			min-width: 50px;
+			min-height: 50px;
 			float: left;
 			margin-right: 7px;
 			margin-bottom: 2px;

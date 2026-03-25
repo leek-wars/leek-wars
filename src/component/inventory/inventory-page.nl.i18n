@@ -11,5 +11,10 @@
 	"potions": "Drankjes",
 	"hats": "Hoeden",
 	"pomps": "Verschijningen",
-	"resources": "Bronnen"
+	"resources": "Bronnen",
+	"no_group": "Geen groep",
+	"type": "Type",
+	"rarity": "Zeldzaamheid",
+	"craftable": "Maakbaar",
+	"ingredient_count": "Aantal ingrediënten"
 }

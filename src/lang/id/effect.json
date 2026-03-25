@@ -148,5 +148,6 @@
 	"enemies": "Semua musuh",
 	"state_11": "Statis",
 	"n_uses": "<b>1</b> menggunakan | <b>{n}</b> menggunakan",
-	"max_uses": "maksimum {uses} per putaran"
+	"max_uses": "maksimum {uses} per putaran",
+	"usage_stats": "~{0} penggunaan/pertarungan (satu minggu)"
 }

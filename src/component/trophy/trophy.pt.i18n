@@ -24,7 +24,7 @@
 	"unlocked_the_x": "Desbloqueado em {date}",
 	"see_fight": "Veja a luta",
 	"progress": "Progresso",
-	"n_pocessors": "{n} possuidores",
+	"n_pocessors": "nenhum possuidor | 1 possuidor | {0} possuidores",
 	"first_farmers": "Criadores precoces",
 	"last_farmers": "Últimos Criadores",
 	"fastest_farmers": "Reprodutores mais rápidos",
