@@ -7,5 +7,9 @@
 	"date": "Datum",
 	"rarity": "Brist",
 	"type": "Type",
-	"no_group": "Ingen grupp"
+	"no_group": "Ingen grupp",
+	"size": "Storlek",
+	"size_small": "Liten",
+	"size_normal": "Normal",
+	"size_large": "Stor"
 }

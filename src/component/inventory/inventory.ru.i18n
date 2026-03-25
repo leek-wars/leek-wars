@@ -7,5 +7,9 @@
 	"date": "Дата",
 	"rarity": "Дефицит",
 	"type": "Тип",
-	"no_group": "Без группы"
+	"no_group": "Без группы",
+	"size": "Размер",
+	"size_small": "Маленький",
+	"size_normal": "Обычный",
+	"size_large": "Большой"
 }

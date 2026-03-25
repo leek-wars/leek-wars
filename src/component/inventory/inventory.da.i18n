@@ -7,5 +7,9 @@
 	"date": "Dato",
 	"rarity": "Mangel",
 	"type": "Type",
-	"no_group": "Ingen gruppe"
+	"no_group": "Ingen gruppe",
+	"size": "Størrelse",
+	"size_small": "Lille",
+	"size_normal": "Normal",
+	"size_large": "Stor"
 }

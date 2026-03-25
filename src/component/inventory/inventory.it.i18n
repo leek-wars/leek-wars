@@ -7,5 +7,9 @@
 	"date": "Data",
 	"rarity": "Scarsità",
 	"type": "Type",
-	"no_group": "Nessun gruppo"
+	"no_group": "Nessun gruppo",
+	"size": "Dimensione",
+	"size_small": "Piccolo",
+	"size_normal": "Normale",
+	"size_large": "Grande"
 }

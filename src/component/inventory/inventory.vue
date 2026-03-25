@@ -65,7 +65,10 @@
 			<v-menu offset-y>
 				<template #activator="{ props }">
 					<div class="button flat" v-bind="props">
-						<v-icon>mdi-format-list-group</v-icon>
+						<v-badge v-if="group !== Group.NONE" content="1" color="#5fad1b" floating>
+							<v-icon>mdi-format-list-group</v-icon>
+						</v-badge>
+						<v-icon v-else>mdi-format-list-group</v-icon>
 					</div>
 				</template>
 				<v-list dense class="menu-actions">
@@ -83,11 +86,33 @@
 					</v-list-item>
 				</v-list>
 			</v-menu>
+			<v-menu offset-y>
+				<template #activator="{ props }">
+					<div class="button flat" v-bind="props">
+						<v-icon>mdi-cog-outline</v-icon>
+					</div>
+				</template>
+				<v-list dense class="menu-actions">
+					<v-list-item class="submenu-header">{{ $t('size') }}</v-list-item>
+					<v-list-item v-ripple @click="size = Size.SMALL">
+						<span>{{ $t('size_small') }}</span>
+						<v-icon v-if="size === Size.SMALL">mdi-check</v-icon>
+					</v-list-item>
+					<v-list-item v-ripple @click="size = Size.NORMAL">
+						<span>{{ $t('size_normal') }}</span>
+						<v-icon v-if="size === Size.NORMAL">mdi-check</v-icon>
+					</v-list-item>
+					<v-list-item v-ripple @click="size = Size.LARGE">
+						<span>{{ $t('size_large') }}</span>
+						<v-icon v-if="size === Size.LARGE">mdi-check</v-icon>
+					</v-list-item>
+				</v-list>
+			</v-menu>
 		</template>
 		<template #content>
 			<div ref="inventory" class="inventory-content">
 				<loader v-if="!$store.state.farmer" />
-				<div v-else class="inventory">
+				<div v-else class="inventory" :class="'size-' + size">
 					<template v-for="entry in display_inventory" :key="entry.key">
 						<div v-if="entry.separator" class="type-separator" :class="entry.rarity !== undefined ? 'rarity-' + entry.rarity : ''" @click="toggleGroup(entry.groupKey)">
 							<v-icon class="collapse-icon" :class="{ collapsed: entry.collapsed }">mdi-chevron-down</v-icon>
@@ -155,6 +180,9 @@
 	enum Group {
 		NONE, TYPE, RARITY
 	}
+	enum Size {
+		SMALL, NORMAL, LARGE
+	}
 
 	@Options({ name: 'inventory', i18n: {}, mixins: [...mixins], components: { ItemPreview, SchemeImage } })
 	export default class Inventory extends Vue {
@@ -166,6 +194,7 @@
 		ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
 		Sort = Sort
 		Group = Group
+		Size = Size
 		CATEGORY_ITEMS = 1
 		// CATEGORY_POTIONS = 2
 		CATEGORY_RESOURCES = 2
@@ -175,6 +204,7 @@
 		sort: Sort = parseInt(localStorage.getItem('inventory/sort') || '0', 10) as Sort
 		filter: ItemType = parseInt(localStorage.getItem('inventory/filter') || '0', 10) as ItemType
 		group: Group = parseInt(localStorage.getItem('inventory/group') || '0', 10) as Group
+		size: Size = parseInt(localStorage.getItem('inventory/size') || '1', 10) as Size
 		collapsedGroups: Set<number> = new Set(JSON.parse(localStorage.getItem('inventory/collapsed') || '[]'))
 		actions: any
 		retrieveDialog: boolean = false
@@ -342,10 +372,18 @@
 			return Math.floor(this.filtered_inventory.reduce((s, i) => s + LeekWars.items[i.template].price! * i.quantity, 0))
 		}
 
+		readonly SIZES = {
+			[Size.SMALL]:  { desktop: { w: 55, h: 58 }, mobile: { w: 45, h: 48 } },
+			[Size.NORMAL]: { desktop: { w: 73, h: 76 }, mobile: { w: 60, h: 63 } },
+			[Size.LARGE]:  { desktop: { w: 100, h: 103 }, mobile: { w: 80, h: 83 } },
+		}
+
 		@Watch('filtered_inventory')
+		@Watch('size')
 		resize() {
-			const W = LeekWars.mobile ? 60 : 73
-			const H = LeekWars.mobile ? 63 : 76
+			const s = this.SIZES[this.size] || this.SIZES[Size.NORMAL]
+			const W = LeekWars.mobile ? s.mobile.w : s.desktop.w
+			const H = LeekWars.mobile ? s.mobile.h : s.desktop.h
 			const inventory = this.$refs.inventory as HTMLElement
 			const margin = 5
 			this.columns = Math.floor((inventory.clientWidth - margin) / (W + margin))
@@ -400,6 +438,10 @@
 		@Watch('group')
 		updateGroup() {
 			localStorage.setItem('inventory/group', '' + this.group)
+		}
+		@Watch('size')
+		updateSize() {
+			localStorage.setItem('inventory/size', '' + this.size)
 		}
 
 		toggleGroup(groupKey: number) {
@@ -461,11 +503,27 @@
 	.item {
 		height: 76px;
 	}
+	&.size-0 {
+		grid-template-columns: repeat(auto-fill, minmax(55px, 1fr));
+		.item { height: 58px; }
+	}
+	&.size-2 {
+		grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+		.item { height: 103px; }
+	}
 }
 #app.app .inventory {
 	grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
 	.item {
-		height: 61px;
+		height: 63px;
+	}
+	&.size-0 {
+		grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+		.item { height: 48px; }
+	}
+	&.size-2 {
+		grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+		.item { height: 83px; }
 	}
 }
 .categories {
@@ -558,6 +616,10 @@
 		color: white;
 		font-weight: 500;
 	}
+	.size-0 &:after {
+		font-size: 11px;
+		padding: 1px 3px;
+	}
 	&[quantity="1"]:after {
 		display: none;
 	}
@@ -579,12 +641,15 @@
 }
 .placeholder {
 	border: 1px solid var(--border);
-	// background: linear-gradient(to bottom right, #f2f2f2, #e1e1e1);
 	height: 78px;
 }
+.size-0 .placeholder { height: 60px; }
+.size-2 .placeholder { height: 105px; }
 #app.app .placeholder {
-	height: 63px;
+	height: 65px;
 }
+#app.app .size-0 .placeholder { height: 50px; }
+#app.app .size-2 .placeholder { height: 85px; }
 .type-separator {
 	grid-column: 1 / -1;
 	display: flex;
@@ -615,6 +680,13 @@
 .menu-actions {
 	.v-icon {
 		margin: 6px;
+	}
+	.submenu-header {
+		font-size: 12px;
+		font-weight: 500;
+		color: var(--text-color-secondary);
+		min-height: 30px;
+		pointer-events: none;
 	}
 }
 .inventory-tooltip {

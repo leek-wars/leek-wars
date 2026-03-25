@@ -7,5 +7,9 @@
 	"date": "Fecha",
 	"rarity": "Escasez",
 	"type": "Type",
-	"no_group": "Sin grupo"
+	"no_group": "Sin grupo",
+	"size": "Tamaño",
+	"size_small": "Pequeño",
+	"size_normal": "Normal",
+	"size_large": "Grande"
 }

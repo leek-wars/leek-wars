@@ -7,5 +7,9 @@
 	"date": "Datum",
 	"rarity": "Knappheit",
 	"type": "Type",
-	"no_group": "Keine Gruppe"
+	"no_group": "Keine Gruppe",
+	"size": "Größe",
+	"size_small": "Klein",
+	"size_normal": "Normal",
+	"size_large": "Groß"
 }

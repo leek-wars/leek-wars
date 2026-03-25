@@ -7,5 +7,9 @@
 	"date": "Date",
 	"rarity": "Rarity",
 	"type": "Type",
-	"no_group": "No group"
+	"no_group": "No group",
+	"size": "Size",
+	"size_small": "Small",
+	"size_normal": "Normal",
+	"size_large": "Large"
 }

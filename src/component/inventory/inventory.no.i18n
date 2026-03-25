@@ -7,5 +7,9 @@
 	"date": "Dato",
 	"rarity": "Knapphet",
 	"type": "Type",
-	"no_group": "Ingen gruppe"
+	"no_group": "Ingen gruppe",
+	"size": "Størrelse",
+	"size_small": "Liten",
+	"size_normal": "Normal",
+	"size_large": "Stor"
 }

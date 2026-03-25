@@ -7,5 +7,9 @@
 	"date": "तारीख",
 	"rarity": "कमी",
 	"type": "प्रकार",
-	"no_group": "कोई समूह नहीं"
+	"no_group": "कोई समूह नहीं",
+	"size": "आकार",
+	"size_small": "छोटा",
+	"size_normal": "सामान्य",
+	"size_large": "बड़ा"
 }

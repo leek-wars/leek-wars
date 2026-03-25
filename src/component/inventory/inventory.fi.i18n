@@ -7,5 +7,9 @@
 	"date": "Päivämäärä",
 	"rarity": "Niukkuus",
 	"type": "Type",
-	"no_group": "Ei ryhmää"
+	"no_group": "Ei ryhmää",
+	"size": "Koko",
+	"size_small": "Pieni",
+	"size_normal": "Normaali",
+	"size_large": "Suuri"
 }
