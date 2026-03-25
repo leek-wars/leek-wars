@@ -18,6 +18,8 @@
 	"destroy": "Destroy permanently",
 	"destroy_ai": "Destroy the AI \"{0}\" permanently?",
 	"destroy_warning": "This action is irreversible.",
+	"destroy_folder": "Permanently destroy folder \"{0}\"?",
+	"destroy_folder_warning": "The folder and all its AIs will be permanently deleted. This action is irreversible.",
 	"destroy_validate": "Destroy permanently",
 	"new_ai": "New AI",
 	"new_desc": "Create a new AI",

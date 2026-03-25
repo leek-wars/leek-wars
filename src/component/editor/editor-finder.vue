@@ -43,14 +43,14 @@
 
 			if (this.query.length === 0) {
 				for (const ai of this.history) {
-					if (ai.folder === -1) { continue } // Exclude recycle bin AIs
+					if (fileSystem.isInBin(ai.folder)) { continue } // Exclude recycle bin AIs
 					if (this.isClosed(ai)) continue // Closed folder
 					result.push({ai, score: 0, name: [ai.name], type: 1})
 				}
 			} else {
 				for (const path in fileSystem.aiByFullPath) {
 					const ai = fileSystem.aiByFullPath[path]
-					if (ai.folder === -1) { continue } // Exclude recycle bin AIs
+					if (fileSystem.isInBin(ai.folder)) { continue } // Exclude recycle bin AIs
 					if (this.isClosed(ai)) continue // Closed folder
 					const s = this.score(path, ai.name, this.query, queryLower)
 					if (s.score < 9999) {

@@ -2,7 +2,7 @@
 	<div class="explorer">
 		<editor-folder :folder="fileSystem.rootFolder" :level="0" />
 
-		<editor-folder :folder="fileSystem.bin" :level="0" />
+		<editor-folder :folder="fileSystem.bin" :level="1" />
 
 		<v-menu :target="[x, y]" :model-value="aiMenu">
 			<v-list class="menu">
@@ -10,19 +10,19 @@
 				<v-list-item v-ripple @click="open()" prepend-icon="mdi-card-plus-outline">
 					<v-list-item-title>{{ $t('open') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-if="ai && ai.folder !== -1" v-ripple @click="$emit('test')" prepend-icon="mdi-play">
+				<v-list-item v-if="ai && !aiInBin" v-ripple @click="$emit('test')" prepend-icon="mdi-play">
 					<v-list-item-title>{{ $t('test') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-if="ai && ai.folder !== -1" v-ripple @click="renameStart" prepend-icon="mdi-pencil">
+				<v-list-item v-if="ai && !aiInBin" v-ripple @click="renameStart" prepend-icon="mdi-pencil">
 					<v-list-item-title>{{ $t('rename') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-if="ai && ai.folder !== -1" v-ripple @click="deleteDialog = true" prepend-icon="mdi-delete">
+				<v-list-item v-if="ai && !aiInBin" v-ripple @click="deleteDialog = true" prepend-icon="mdi-delete">
 					<v-list-item-title>{{ $t('delete') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-if="ai && ai.folder === -1" v-ripple @click="destroyDialog = true" prepend-icon="mdi-delete-forever">
+				<v-list-item v-if="ai && aiInBin && ai.folder === -1" v-ripple @click="destroyDialog = true" prepend-icon="mdi-delete-forever">
 					<v-list-item-title>{{ $t('destroy') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-if="ai && ai.folder === -1" v-ripple @click="restoreAI" prepend-icon="mdi-file-restore">
+				<v-list-item v-if="ai && aiInBin && ai.folder === -1" v-ripple @click="restoreAI" prepend-icon="mdi-file-restore">
 					<v-list-item-title>{{ $t('restore') }}</v-list-item-title>
 				</v-list-item>
 				<template v-if="ai && ai.includes && ai.includes.length">
@@ -80,6 +80,26 @@
 				</v-list-item>
 			</v-list>
 		</v-menu>
+
+		<v-menu :target="[x, y]" :model-value="binFolderMenu">
+			<v-list class="menu">
+				<v-list-subheader v-if="folder">{{ folder.name }}</v-list-subheader>
+				<v-list-item v-ripple @click="restoreFolder" prepend-icon="mdi-folder-refresh-outline">
+					<v-list-item-title>{{ $t('restore') }}</v-list-item-title>
+				</v-list-item>
+				<v-list-item v-ripple @click="destroyFolderDialog = true" prepend-icon="mdi-delete-forever">
+					<v-list-item-title>{{ $t('destroy') }}</v-list-item-title>
+				</v-list-item>
+			</v-list>
+		</v-menu>
+
+		<popup v-model="destroyFolderDialog" :width="500" icon="mdi-delete-forever" :title="$t('destroy_folder', [folder?.name])">
+			{{ $t('destroy_folder_warning') }}
+			<template #actions>
+				<div v-ripple @click="destroyFolderDialog = false">{{ $t('delete_cancel') }}</div>
+				<div v-ripple class="red" @click="destroyFolderConfirm">{{ $t('destroy_validate') }}</div>
+			</template>
+		</popup>
 
 		<popup v-model="renameDialog" :width="500" icon="mdi-pencil" :title="$t('rename')">
 			<div class="padding">
@@ -179,6 +199,8 @@
 		aiMenu: boolean = false
 		folderMenu: boolean = false
 		binMenu: boolean = false
+		binFolderMenu: boolean = false
+		destroyFolderDialog: boolean = false
 		x: number = 0
 		y: number = 0
 		ai: AI | null = null
@@ -211,7 +233,7 @@
 		openMenu(event: { item: AI | Folder, ai: boolean, e: any }) {
 			const { item, ai, e } = event
 			e.preventDefault()
-			this.aiMenu = this.folderMenu = this.binMenu = false
+			this.aiMenu = this.folderMenu = this.binMenu = this.binFolderMenu = false
 			this.x = e.clientX
 			this.y = e.clientY
 			if (ai) {
@@ -224,6 +246,8 @@
 				// console.log("folder", this.folder)
 				if (this.folder.id === -1) {
 					nextTick(() => this.binMenu = true)
+				} else if (this.isFolderInBin(this.folder)) {
+					nextTick(() => this.binFolderMenu = true)
 				} else {
 					nextTick(() => this.folderMenu = true)
 				}
@@ -346,6 +370,33 @@
 			}
 		}
 
+		restoreFolder() {
+			if (this.folder) {
+				fileSystem.restoreFolder(this.folder)
+			}
+		}
+
+		destroyFolderConfirm() {
+			if (this.folder) {
+				fileSystem.destroyFolder(this.folder)
+				this.destroyFolderDialog = false
+			}
+		}
+
+		get aiInBin(): boolean {
+			return this.ai !== null && fileSystem.isInBin(this.ai.folder)
+		}
+
+		isFolderInBin(folder: Folder): boolean {
+			let current = folder
+			while (current.parent !== 0) {
+				if (current.parent === -1) return true
+				current = fileSystem.folderById[current.parent]
+				if (!current) return false
+			}
+			return false
+		}
+
 		openNewAI(folder: Folder) {
 			this.folder = folder
 			this.newAIStart()
@@ -367,6 +418,8 @@
 				this.$router.push('/editor/' + ai.id)
 				this.newAIDialog = false
 				this.newAIName = ''
+			}).error(error => {
+				LeekWars.toast(error.error)
 			})
 		}
 		openNewFolder(folder: Folder) {

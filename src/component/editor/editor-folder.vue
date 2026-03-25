@@ -1,6 +1,6 @@
 <template lang="html">
 	<div :class="{root: folder.id === 0}" @click="click" @contextmenu.prevent.stop="emitter.emit('editor-menu', { item: folder, ai: false, e: $event })">
-		<div :class="{empty: !folder.items.length, 'dragover': dragOver > 0, expanded: folder.expanded, root: level === 0, selected: folder.selected}" :draggable="level > 0 && folder.id !== -1" class="item folder" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="drop" @dragstart="dragstart" @dragend="dragend">
+		<div :class="{empty: !folder.items.length, 'dragover': dragOver > 0, expanded: folder.expanded, root: level === 0, selected: folder.selected}" :draggable="level > 0 && folder.id !== -1 && !inBin" class="item folder" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="drop" @dragstart="dragstart" @dragend="dragend">
 			<div v-if="folder.id != 0" :style="{'padding-left': ((level - 1) * 15 + 10) + 'px'}" class="label" :class="{error: folder.errors, warning: folder.warnings, closed: folder.closed}" @click="toggle(folder)">
 				<div class="triangle"></div>
 				<!-- <v-icon v-if="folder.id === -1" class="icon">mdi-delete-outline</v-icon> -->
@@ -26,6 +26,7 @@
 
 <script lang="ts">
 	import { AI } from '@/model/ai'
+	import { fileSystem } from '@/model/filesystem'
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
@@ -42,13 +43,15 @@
 		dragging: boolean = false
 		emitter = emitter
 
+		get inBin() { return fileSystem.isInBin(this.folder.parent) }
+
 		toggle(folder: Folder) {
 			if (!folder.closed) {
 				explorer.setExpanded(folder, !folder.expanded)
 			}
 		}
 		drop(e: DragEvent) {
-			if (this.folder.id === -1) { return }
+			if (this.folder.id === -1 || this.inBin) { return }
 			emitter.emit('editor-drop', this.folder)
 			e.preventDefault()
 			e.stopPropagation()
@@ -57,7 +60,7 @@
 			return false
 		}
 		dragenter(e: DragEvent) {
-			if (this.folder.id === -1) { return }
+			if (this.folder.id === -1 || this.inBin) { return }
 			this.dragOver++
 			e.stopPropagation()
 		}
@@ -70,7 +73,7 @@
 			e.stopPropagation()
 		}
 		dragstart(e: DragEvent) {
-			if (this.folder.id === -1) { return }
+			if (this.folder.id === -1 || this.inBin) { return }
 			e.dataTransfer!.setData('text/plain', 'drag !!!')
 			this.dragging = true
 			emitter.emit('editor-drag', this.folder)

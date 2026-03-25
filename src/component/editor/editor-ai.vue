@@ -1,7 +1,7 @@
 <template lang="html">
 	<div>
 		<div ref="ai" :class="{modified: ai.modified, selected: ai.selected}" class="item ai" @click="click" @contextmenu.prevent.stop="emitter.emit('editor-menu', { item: ai, ai: true, e: $event })">
-			<div :style="{'padding-left': (level * 15 + 15) + 'px'}" class="label" :class="{error: ai.errors, warning: ai.warnings}" :draggable="ai.folder !== -1" @dragstart="dragstart">
+			<div :style="{'padding-left': (level * 15 + 15) + 'px'}" class="label" :class="{error: ai.errors, warning: ai.warnings}" :draggable="!inBin" @dragstart="dragstart">
 				<v-icon v-if="ai.errors" class="icon error">mdi-close-circle</v-icon>
 				<v-icon v-else-if="ai.warnings" class="icon warning">mdi-alert-circle</v-icon>
 				<v-icon v-else class="icon valid">mdi-check-bold</v-icon>
@@ -44,8 +44,10 @@
 				.map(entry => store.state.farmer!.leeks[parseInt(entry[0])].name)
 		}
 
+		get inBin() { return fileSystem.isInBin(this.ai.folder) }
+
 		dragstart(e: DragEvent) {
-			if (this.ai.folder === -1) { e.stopPropagation(); return }
+			if (this.inBin) { e.stopPropagation(); return }
 			e.dataTransfer!.setData('text/plain', 'drag !!!')
 			emitter.emit('editor-drag', this.item)
 			e.stopPropagation()

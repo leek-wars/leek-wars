@@ -420,6 +420,7 @@
 				parent.items.splice(parent.items.indexOf(this.dragging), 1)
 				folder.items.push(this.dragging)
 				this.dragging.parent = folder.id
+				fileSystem.sortFolder(folder)
 				folder.expanded = true
 				LeekWars.post(this.dragging.folder ? 'ai-folder/change-folder' : 'ai/change-folder', this.dragging.folder ? {folder_id: (this.dragging as Folder).id, dest_folder_id: folder.id} : {ai_id: (this.dragging as AIItem).ai.id, folder_id: folder.id})
 				this.dragging = null

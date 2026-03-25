@@ -51,6 +51,7 @@ class Farmer {
 	public total_level!: number
 	public ais!: AI[]
 	public bin!: AI[]
+	public bin_folders!: any[]
 	public language!: string
 	public title!: number[]
 	public show_ai_lines!: boolean
