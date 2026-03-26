@@ -106,31 +106,10 @@ monaco.editor.registerCommand('findReferencesAtPosition', (accessor, uri: monaco
 	}
 })
 
+const METHOD_REGEX = /^[ \t]+(?:(?:(?:public\s+)?(?:static\s+)?(?:[\w<>,?\[\]]+\s+)+(\w+))|(constructor))\s*\(/
+const NON_METHOD_KEYWORDS = new Set(['function', 'for', 'while', 'if', 'class', 'var', 'return', 'new', 'else', 'switch', 'catch'])
+const RESERVED_SYMBOLS = new Set(['true', 'false', 'null', 'this', 'super'])
 
-// monaco.languages.registerDocumentSymbolProvider("leekscript", {
-// 	provideDocumentSymbols: function (model, token) {
-// 		return [
-// 			{
-// 				range: {
-// 					startLineNumber: 1,
-// 					startColumn: 1,
-// 					endLineNumber: 2,
-// 					endColumn: 1,
-// 				},
-// 				name: "File",
-// 				kind: 0,
-// 				detail: "",
-// 				tags: [],
-// 				selectionRange: {
-// 					startLineNumber: 1,
-// 					startColumn: 1,
-// 					endLineNumber: 2,
-// 					endColumn: 1,
-// 				},
-// 			},
-// 		]
-// 	}
-// })
 
 monaco.editor.defineTheme("leek-wars", {
 	base: "vs", // can also be vs-dark or hc-black
@@ -368,12 +347,11 @@ monaco.languages.registerCodeLensProvider("leekscript", {
 			if (cls.line) addLens(cls.line, name, false)
 		}
 		// Scan methods directly from code (line-by-line to avoid multi-line regex issues in ai.ts)
-		const methodRegex = /^[ \t]+(?:(?:(?:public\s+)?(?:static\s+)?(?:[\w<>,?\[\]]+\s+)+(\w+))|(constructor))\s*\(/
 		for (let i = 0; i < model.getLineCount(); i++) {
-			const m = methodRegex.exec(model.getLineContent(i + 1))
+			const m = METHOD_REGEX.exec(model.getLineContent(i + 1))
 			if (!m) continue
 			const name = m[1] || m[2]
-			if (['function', 'for', 'while', 'if', 'class', 'var', 'return', 'new', 'else', 'switch', 'catch'].includes(name)) continue
+			if (NON_METHOD_KEYWORDS.has(name)) continue
 			if (name === 'constructor') {
 				const className = findEnclosingClassName(ai, i + 1)
 				if (className) {
@@ -433,6 +411,109 @@ monaco.languages.registerCodeLensProvider("leekscript", {
 		return codeLens
 	},
 })
+
+monaco.languages.registerDocumentSymbolProvider("leekscript", {
+	provideDocumentSymbols(model) {
+		const ai = fileSystem.aiByFullPath[model.uri.path.substring(1)]
+		if (!ai) { return [] }
+
+		const symbols: monaco.languages.DocumentSymbol[] = []
+
+		// Functions
+		for (const fun of ai.functions) {
+			if (!fun.line) continue
+			const endLine = findBlockEnd(model, fun.line)
+			symbols.push({
+				name: fun.label + '(' + (fun.arguments || []).join(', ') + ')',
+				detail: '',
+				kind: monaco.languages.SymbolKind.Function,
+				range: new monaco.Range(fun.line, 1, endLine, model.getLineContent(endLine).length + 1),
+				selectionRange: new monaco.Range(fun.line, 1, fun.line, model.getLineContent(fun.line).length + 1),
+				tags: [],
+			})
+		}
+
+		// Classes with their members
+		for (const name in ai.classes) {
+			const cls = ai.classes[name]
+			if (!cls.line) continue
+			const classEndLine = findBlockEnd(model, cls.line)
+			const children: monaco.languages.DocumentSymbol[] = []
+
+			// Methods (scan code like CodeLens does)
+			for (let i = cls.line; i <= classEndLine; i++) {
+				const m = METHOD_REGEX.exec(model.getLineContent(i))
+				if (!m) continue
+				const methodName = m[1] || m[2]
+				if (NON_METHOD_KEYWORDS.has(methodName)) continue
+				const methodEndLine = findBlockEnd(model, i)
+				children.push({
+					name: methodName,
+					detail: '',
+					kind: methodName === 'constructor' ? monaco.languages.SymbolKind.Constructor : monaco.languages.SymbolKind.Method,
+					range: new monaco.Range(i, 1, methodEndLine, model.getLineContent(methodEndLine).length + 1),
+					selectionRange: new monaco.Range(i, 1, i, model.getLineContent(i).length + 1),
+					tags: [],
+				})
+			}
+
+			// Fields
+			for (const field of [...cls.fields, ...cls.static_fields]) {
+				if (!field.line || field.line < cls.line || field.line > classEndLine) continue
+				if (!field.ai || RESERVED_SYMBOLS.has(field.label)) continue
+				children.push({
+					name: field.label,
+					detail: '',
+					kind: monaco.languages.SymbolKind.Field,
+					range: new monaco.Range(field.line, 1, field.line, model.getLineContent(field.line).length + 1),
+					selectionRange: new monaco.Range(field.line, 1, field.line, model.getLineContent(field.line).length + 1),
+					tags: [],
+				})
+			}
+
+			symbols.push({
+				name,
+				detail: '',
+				kind: monaco.languages.SymbolKind.Class,
+				range: new monaco.Range(cls.line, 1, classEndLine, model.getLineContent(classEndLine).length + 1),
+				selectionRange: new monaco.Range(cls.line, 1, cls.line, model.getLineContent(cls.line).length + 1),
+				tags: [],
+				children,
+			})
+		}
+
+		// Global variables
+		for (const name in ai.globals) {
+			if (RESERVED_SYMBOLS.has(name)) continue
+			const g = ai.globals[name]
+			if (!g.line) continue
+			symbols.push({
+				name,
+				detail: '',
+				kind: monaco.languages.SymbolKind.Variable,
+				range: new monaco.Range(g.line, 1, g.line, model.getLineContent(g.line).length + 1),
+				selectionRange: new monaco.Range(g.line, 1, g.line, model.getLineContent(g.line).length + 1),
+				tags: [],
+			})
+		}
+
+		return symbols
+	},
+})
+
+function findBlockEnd(model: monaco.editor.ITextModel, startLine: number): number {
+	let depth = 0
+	let found = false
+	for (let i = startLine; i <= model.getLineCount(); i++) {
+		const line = model.getLineContent(i)
+		for (const ch of line) {
+			if (ch === '{') { depth++; found = true }
+			else if (ch === '}') { depth-- }
+			if (found && depth === 0) return i
+		}
+	}
+	return startLine
+}
 
 monaco.languages.registerDocumentFormattingEditProvider("leekscript", {
 	async provideDocumentFormattingEdits(model) {
