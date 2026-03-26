@@ -183,5 +183,6 @@
 	"all_info_ls": "Kaikki tiedot {0}",
 	"size": "Koko",
 	"error_146": "\"case\" tai \"default\" odotettu.",
-	"error_147": "Kaksoispiste odotettu \"case\"-sanan jälkeen."
+	"error_147": "Kaksoispiste odotettu \"case\"-sanan jälkeen.",
+	"error_148": "Muuttujaa \"{0}\" ei käytetä."
 }

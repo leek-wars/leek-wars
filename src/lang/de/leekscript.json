@@ -183,5 +183,6 @@
 	"all_info_ls": "Alle Informationen über den {0}",
 	"size": "Größe",
 	"error_146": "\"case\" oder \"default\" erwartet.",
-	"error_147": "Doppelpunkt nach \"case\" erwartet."
+	"error_147": "Doppelpunkt nach \"case\" erwartet.",
+	"error_148": "Variable \"{0}\" wird nicht verwendet."
 }

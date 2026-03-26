@@ -183,5 +183,6 @@
 	"all_info_ls": "Tutte le informazioni su {0}",
 	"size": "Formato",
 	"error_146": "\"case\" o \"default\" atteso.",
-	"error_147": "Due punti attesi dopo \"case\"."
+	"error_147": "Due punti attesi dopo \"case\".",
+	"error_148": "La variabile \"{0}\" non è utilizzata."
 }

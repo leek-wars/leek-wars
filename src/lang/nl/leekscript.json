@@ -183,5 +183,6 @@
 	"all_info_ls": "Alle informatie over {0}",
 	"size": "Maat",
 	"error_146": "\"case\" of \"default\" verwacht.",
-	"error_147": "Dubbele punt verwacht na \"case\"."
+	"error_147": "Dubbele punt verwacht na \"case\".",
+	"error_148": "Variabele \"{0}\" wordt niet gebruikt."
 }

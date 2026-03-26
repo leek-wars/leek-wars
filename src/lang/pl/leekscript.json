@@ -183,5 +183,6 @@
 	"all_info_ls": "Wszystkie informacje na temat {0}",
 	"size": "Rozmiar",
 	"error_146": "Oczekiwano \"case\" lub \"default\".",
-	"error_147": "Oczekiwano dwukropka po \"case\"."
+	"error_147": "Oczekiwano dwukropka po \"case\".",
+	"error_148": "Zmienna \"{0}\" nie jest używana."
 }

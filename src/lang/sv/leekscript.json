@@ -183,5 +183,6 @@
 	"all_info_ls": "All information om {0}",
 	"size": "Storlek",
 	"error_146": "\"case\" eller \"default\" förväntades.",
-	"error_147": "Kolon förväntat efter \"case\"."
+	"error_147": "Kolon förväntat efter \"case\".",
+	"error_148": "Variabeln \"{0}\" används inte."
 }
