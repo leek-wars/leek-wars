@@ -215,6 +215,7 @@ export default class AIViewMonaco extends Vue {
 				const symbol = fileSystem.symbols[docs.innerText]
 				if (symbol) {
 					const doc = createApp(Javadoc, { javadoc: symbol.javadoc, keyword: symbol })
+						.use(i18n)
 						.directive('code', code)
 						.directive('dochash', dochash)
 						.mount(element)
@@ -278,6 +279,7 @@ export default class AIViewMonaco extends Vue {
 			if (symbol) {
 				firstRow.style.display = 'none'
 				const doc = createApp(Javadoc, { javadoc: symbol.javadoc, keyword: symbol })
+					.use(i18n)
 					.directive('code', code)
 					.directive('dochash', dochash)
 					.mount(element)
