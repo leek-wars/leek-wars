@@ -9,6 +9,8 @@ import { i18n } from '@/model/i18n'
 import * as monaco from 'monaco-editor'
 import { reactive } from 'vue'
 
+const ERROR_UNUSED_VARIABLE = 148
+
 export class AnalyzerPromise {
 	public then!: (data: any) => void
 	public abort!: () => void
@@ -254,14 +256,17 @@ class Analyzer {
 				markersByAI[ai_id] = []
 			}
 			problemsByAI[ai_id].push(new Problem(problem[2], problem[3], problem[4], problem[5], level, info))
-			markersByAI[ai_id].push({
+			const errorCode = problem[6]
+			const marker: monaco.editor.IMarkerData = {
 				message: info,
 				severity: level === 0 ? monaco.MarkerSeverity.Error : monaco.MarkerSeverity.Warning,
 				startLineNumber: problem[2],
 				startColumn: problem[3] + 1,
 				endLineNumber: problem[4],
 				endColumn: problem[5] + 2,
-			})
+				tags: errorCode === ERROR_UNUSED_VARIABLE ? [monaco.MarkerTag.Unnecessary] : [],
+			}
+			markersByAI[ai_id].push(marker)
 		}
 		for (const ai_id in problemsByAI) {
 			const ai = fileSystem.ais[ai_id]

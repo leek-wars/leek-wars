@@ -183,5 +183,6 @@
 	"all_info_ls": "All information on {0}",
 	"size": "Size",
 	"error_146": "\"case\" or \"default\" expected.",
-	"error_147": "Colon expected after \"case\"."
+	"error_147": "Colon expected after \"case\".",
+	"error_148": "Variable \"{0}\" is not used."
 }

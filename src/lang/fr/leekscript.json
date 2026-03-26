@@ -183,5 +183,6 @@
 	"error_1005": "Le bulbe invoqué n'a pas d'IA",
 	"size": "Taille",
 	"error_146": "« case » ou « default » attendu.",
-	"error_147": "Deux-points attendu après « case »."
+	"error_147": "Deux-points attendu après « case ».",
+	"error_148": "La variable « {0} » n'est pas utilisée."
 }
