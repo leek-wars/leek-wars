@@ -28,7 +28,7 @@ class Analyzer {
 	public hoverResolve!: (value: unknown) => any
 	public lastHover: any
 	public completeResolve: {[key: number]: (value: unknown) => any} = {}
-	public referencesResolve!: (value: unknown) => any
+	public referencesResolve: {[key: number]: (value: unknown) => any} = {}
 
 	private initialized: boolean = false
 	// private GeneratorAnalyze!: Function
@@ -151,17 +151,21 @@ class Analyzer {
 		return promise
 	}
 
-	public references(ai: AI, line: number, column: number) {
-		LeekWars.socket.send([SocketMessage.EDITOR_REFERENCES, ai.id, line, column])
+	public references(ai: AI, line: number, column: number, ctorParamCount: number = -1) {
+		const requestID = this.requestID++
+		const msg: any[] = [SocketMessage.EDITOR_REFERENCES, requestID, ai.id, line, column]
+		if (ctorParamCount >= 0) msg.push(ctorParamCount)
+		LeekWars.socket.send(msg)
 
 		return new Promise<any>((resolve, reject) => {
-			this.referencesResolve = resolve
+			this.referencesResolve[requestID] = resolve
 		})
 	}
 
-	public referencesResult(data: any[]) {
-		if (this.referencesResolve) {
-			this.referencesResolve(data)
+	public referencesResult(message: {id: number, data: any}) {
+		if (this.referencesResolve[message.id]) {
+			this.referencesResolve[message.id](message.data)
+			delete this.referencesResolve[message.id]
 		}
 	}
 

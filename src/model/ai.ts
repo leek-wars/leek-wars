@@ -355,7 +355,7 @@ class AI {
 		// console.time('methods')
 
 		// Search methods
-		const method_regex = /^\s*(?:public\s+)?(?:(static)\s+)?(.*\s+?)?(\w+)\s*\(([\w\s,<>]*)\)\s*{/gm
+		const method_regex = /^\s*(?:public\s+)?(?:(static)\s+)?(.*\s+?)?(\w+)\s*\(([\w\s,<>=?!'".\-\[\]|]*)\)\s*{/gm
 		while ((match = method_regex.exec(this.code)) != null) {
 
 			const name = match[3]

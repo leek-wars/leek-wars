@@ -95,9 +95,17 @@ monaco.editor.addKeybindingRules([
 ]);
 
 monaco.editor.registerCommand('jump', (accessor, args) => {
-	// console.log("Command jump", args)
 	emitter.emit('jump', { ai: fileSystem.aiByFullPath[args.ai], line: args.line, column: args.column })
 })
+
+monaco.editor.registerCommand('findReferencesAtPosition', (accessor, uri: monaco.Uri, position: monaco.IPosition) => {
+	const editor = monaco.editor.getEditors().find(e => e.getModel()?.uri.toString() === uri.toString())
+	if (editor) {
+		editor.setPosition(position)
+		editor.trigger('codelens', 'editor.action.referenceSearch.trigger', null)
+	}
+})
+
 
 // monaco.languages.registerDocumentSymbolProvider("leekscript", {
 // 	provideDocumentSymbols: function (model, token) {
@@ -270,12 +278,38 @@ monaco.languages.registerDefinitionProvider("leekscript", {
 	},
 })
 
+function findEnclosingClassName(ai: AI, line: number): string {
+	let className = ''
+	for (const cn in ai.classes) {
+		if (ai.classes[cn].line! <= line) className = cn
+	}
+	return className
+}
+
+function countConstructorParams(lineContent: string): number {
+	const m = lineContent.match(/\(([^)]*)\)/)
+	return m && m[1].trim() ? m[1].split(',').length : 0
+}
+
 monaco.languages.registerReferenceProvider("leekscript", {
 	provideReferences: async (model, position, context, token) => {
 		const ai = fileSystem.aiByFullPath[model.uri.path.substring(1)]
 		if (!ai) { return [] }
 
-		const locations = await analyzer.references(ai, position.lineNumber, position.column - 1)
+		const word = model.getWordAtPosition(position)
+		let locations: any[]
+		if (word && word.word === 'constructor') {
+			const className = findEnclosingClassName(ai, position.lineNumber)
+			if (!className) { return [] }
+			const cls = ai.classes[className]
+			const clsContent = model.getLineContent(cls.line!)
+			const clsCol = clsContent.indexOf(className)
+			if (clsCol < 0) { return [] }
+			const paramCount = countConstructorParams(model.getLineContent(position.lineNumber))
+			locations = await analyzer.references(ai, cls.line!, clsCol, paramCount)
+		} else {
+			locations = await analyzer.references(ai, position.lineNumber, position.column - 1)
+		}
 		if (!locations || !locations.length) { return [] }
 
 		// Load all referenced files in parallel
@@ -300,6 +334,103 @@ monaco.languages.registerReferenceProvider("leekscript", {
 			})
 		}
 		return results
+	},
+})
+
+monaco.languages.registerCodeLensProvider("leekscript", {
+	provideCodeLenses: (model, token) => {
+		const ai = fileSystem.aiByFullPath[model.uri.path.substring(1)]
+		if (!ai) { return { lenses: [], dispose: () => {} } }
+
+		const lenses: monaco.languages.CodeLens[] = []
+		const addLens = (lineHint: number, label: string, isMethod: boolean) => {
+			const pattern = isMethod ? label + '(' : label
+			for (let offset = 0; offset <= 3; offset++) {
+				for (const line of [lineHint + offset, lineHint - offset]) {
+					if (line < 1 || line > model.getLineCount()) continue
+					const content = model.getLineContent(line)
+					const col = content.indexOf(pattern)
+					if (col < 0) continue
+					const indent = content.search(/\S/) + 1
+					lenses.push({
+						range: new monaco.Range(line, indent, line, indent),
+						id: 'ref:' + line + ':' + col,
+					})
+					return
+				}
+			}
+		}
+		for (const fun of ai.functions) {
+			if (fun.line) addLens(fun.line, fun.label, true)
+		}
+		for (const name in ai.classes) {
+			const cls = ai.classes[name]
+			if (cls.line) addLens(cls.line, name, false)
+		}
+		// Scan methods directly from code (line-by-line to avoid multi-line regex issues in ai.ts)
+		const methodRegex = /^[ \t]+(?:(?:(?:public\s+)?(?:static\s+)?(?:[\w<>,?\[\]]+\s+)+(\w+))|(constructor))\s*\(/
+		for (let i = 0; i < model.getLineCount(); i++) {
+			const m = methodRegex.exec(model.getLineContent(i + 1))
+			if (!m) continue
+			const name = m[1] || m[2]
+			if (['function', 'for', 'while', 'if', 'class', 'var', 'return', 'new', 'else', 'switch', 'catch'].includes(name)) continue
+			if (name === 'constructor') {
+				const className = findEnclosingClassName(ai, i + 1)
+				if (className) {
+					const content = model.getLineContent(i + 1)
+					const indent = content.search(/\S/) + 1
+					lenses.push({
+						range: new monaco.Range(i + 1, indent, i + 1, indent),
+						id: 'ctor:' + className + ':' + countConstructorParams(content),
+					})
+				}
+				continue
+			}
+			addLens(i + 1, name, true)
+		}
+		return { lenses, dispose: () => {} }
+	},
+	resolveCodeLens: async (model, codeLens, token) => {
+		const ai = fileSystem.aiByFullPath[model.uri.path.substring(1)]
+		if (!ai || !codeLens.id) { return codeLens }
+
+		if (codeLens.id.startsWith('ctor:')) {
+			const parts = codeLens.id.split(':')
+			const className = parts[1]
+			const paramCount = parseInt(parts[2])
+			const cls = ai.classes[className]
+			if (!cls || !cls.line) { return codeLens }
+			const clsContent = model.getLineContent(cls.line)
+			const clsCol = clsContent.indexOf(className)
+			if (clsCol < 0) { return codeLens }
+
+			const locations = await analyzer.references(ai, cls.line, clsCol, paramCount)
+			const count = locations?.length || 0
+
+			const ctorLine = codeLens.range.startLineNumber
+			const ctorContent = model.getLineContent(ctorLine)
+			const ctorCol = ctorContent.indexOf('constructor') + 1
+			codeLens.command = {
+				id: 'findReferencesAtPosition',
+				title: count === 0 ? 'no usages' : count === 1 ? '1 usage' : count + ' usages',
+				arguments: [model.uri, new monaco.Position(ctorLine, ctorCol)],
+			}
+			return codeLens
+		}
+
+		const [, lineStr, colStr] = codeLens.id.split(':')
+		const line = parseInt(lineStr)
+		const column = parseInt(colStr)
+
+		const locations = await analyzer.references(ai, line, column)
+		const count = locations?.length || 0
+
+		codeLens.command = {
+			id: 'findReferencesAtPosition',
+			title: count === 0 ? 'no references' : count === 1 ? '1 reference' : count + ' references',
+			arguments: [model.uri, new monaco.Position(line, column + 1)],
+		}
+		return codeLens
 	},
 })
 

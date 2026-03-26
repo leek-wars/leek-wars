@@ -360,7 +360,7 @@ class Socket {
 					break
 				}
 				case SocketMessage.EDITOR_REFERENCES: {
-					getAnalyzer().then(a => a.referencesResult(data))
+					getAnalyzer().then(a => a.referencesResult({ id: request_id, data }))
 					break
 				}
 				case SocketMessage.CONNECTED_COUNT: {
