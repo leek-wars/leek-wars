@@ -274,12 +274,22 @@ class Analyzer {
 			// console.log("ai", ai.path, "problems", ai_problems)
 			analyzer.setProblems(entrypoint.id, ai, ai_problems)
 
-			monaco.editor.setModelMarkers(ai.model, "owner", markersByAI[ai_id])
+			const model = this.getOrCreateModel(ai)
+			monaco.editor.setModelMarkers(model, "owner", markersByAI[ai_id])
 		}
 		// No problems, clear markers
 		if (problems.length === 0) {
-			monaco.editor.setModelMarkers(entrypoint.model, "owner", [])
+			const model = this.getOrCreateModel(entrypoint)
+			monaco.editor.setModelMarkers(model, "owner", [])
 		}
+	}
+
+	private getOrCreateModel(ai: AI): monaco.editor.ITextModel {
+		if (ai.model) return ai.model
+		const uri = monaco.Uri.parse('file:///' + ai.path)
+		const model = monaco.editor.getModel(uri) || monaco.editor.createModel(ai.code, 'leekscript', uri)
+		ai.model = model
+		return model
 	}
 
 	public setProblems(entrypoint: number, ai: AI, problems: any) {
