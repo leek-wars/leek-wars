@@ -603,11 +603,13 @@
 							const diffTab = this.tabs1.find(t => t.type !== 'file' && (t as DiffTab).hash === routeHash)
 							if (diffTab) {
 								this.currentTab = diffTab
+								this.ensureDiffLoaded(diffTab as DiffTab)
 							}
 						} else {
 							const diffTab = this.tabs1.find(t => t.type !== 'file' && t.id === id)
 							if (diffTab) {
 								this.currentTab = diffTab
+								this.ensureDiffLoaded(diffTab as DiffTab)
 							}
 						}
 						LeekWars.splitShowContent()
@@ -791,6 +793,7 @@
 				this.currentTab = tab
 				this.open(ai.id, 1)
 			} else {
+				this.ensureDiffLoaded(tab as DiffTab)
 				// Si on switch entre deux diffs, démonter d'abord le composant git-diff
 				const wasDiff = this.currentTab && this.currentTab.type !== 'file'
 				if (wasDiff) {
@@ -881,7 +884,6 @@
 					} else {
 						const tab: DiffTab = { type: t.type || 'diff', id: t.id || 0, folder: t.folder, file: t.file, staged: t.staged, hash: t.hash, original: '', modified: '', ready: false }
 						this.tabs1.push(tab)
-						this.fetchDiffContent(tab)
 					}
 				}
 			} catch (e) {
@@ -889,7 +891,13 @@
 			}
 		}
 
-		async fetchDiffContent(tab: DiffTab) {
+		ensureDiffLoaded(tab: DiffTab) {
+		if (!tab.ready && !tab.original && !tab.modified) {
+			this.fetchDiffContent(tab)
+		}
+	}
+
+	async fetchDiffContent(tab: DiffTab) {
 			const safe = (url: string, params: any) => LeekWars.post(url, params).catch(() => ({ content: '' }))
 			let original = ''
 			let modified = ''
