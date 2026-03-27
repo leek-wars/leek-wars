@@ -103,7 +103,8 @@
 		}
 	}
 	.item .label {
-		padding: 7px 10px;
+		padding: 5px 10px;
+		font-size: 14px;
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
@@ -190,7 +191,7 @@
 		border-radius: 10px;
 		color: #333;
 		padding: 1px 4px;
-		font-size: 13px;
+		font-size: 12px;
 		margin-left: 6px;
 		font-weight: 500;
 		&.error {

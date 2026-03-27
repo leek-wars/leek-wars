@@ -1,7 +1,7 @@
 <template lang="html">
 	<div class="tabs-wrapper" :class="{active}">
 		<div ref="list" class="list" @wheel.prevent="mousewheel">
-			<div v-for="(ai, i) in tabs" ref="tabsEl" :key="ai" :class="{selected: ai === current, modified: fileSystem.ais[ai]?.modified}" :title="fileSystem.ais[ai]?.path" class="tab" @click="click($event, fileSystem.ais[ai])" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(ai)">
+			<div v-for="(ai, i) in tabs" ref="tabsEl" :key="ai" :class="{selected: ai === current && !diffActive, modified: fileSystem.ais[ai]?.modified}" :title="fileSystem.ais[ai]?.path" class="tab" @click="clickTab($event, ai)" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(ai)">
 				<div class="name">
 					<v-icon v-if="fileSystem.ais[ai]?.errors" class="icon error">mdi-close-circle</v-icon>
 					<v-icon v-else-if="fileSystem.ais[ai]?.warnings" class="icon warning">mdi-alert-circle</v-icon>
@@ -11,6 +11,15 @@
 				<span @click.stop="close(ai)">
 					<v-icon class="modified">mdi-record</v-icon>
 					<v-icon class="close" :class="{hidden: group === 'tabs' && tabs.length === 1}">mdi-close</v-icon>
+				</span>
+			</div>
+			<div v-if="diffTab" class="tab diff-tab" :class="{selected: diffActive}" :title="diffTab.file" @click="$emit('open-diff')">
+				<div class="name">
+					<v-icon class="icon diff">mdi-source-branch</v-icon>
+					{{ diffTab.file.split('/').pop() }}
+				</div>
+				<span @click.stop="$emit('close-diff')">
+					<v-icon class="close">mdi-close</v-icon>
 				</span>
 			</div>
 		</div>
@@ -42,7 +51,7 @@
 		public ai!: AI
 	}
 
-	@Options({ name: 'editor-tabs', i18n: {}, mixins: [...mixins] })
+	@Options({ name: 'editor-tabs', i18n: {}, mixins: [...mixins], emits: ['open', 'close', 'close-all', 'split', 'close-panel', 'close-diff', 'open-diff', 'hide-diff'] })
 	export default class EditorTabs extends Vue {
 
 		@Prop({required: true}) ais!: AI[]
@@ -51,6 +60,8 @@
 		@Prop({required: true}) current!: number
 		@Prop({required: true}) active!: boolean
 		@Prop({required: true}) splitted!: boolean
+		@Prop({default: null}) diffTab!: { folder: string, file: string } | null
+		@Prop({default: false}) diffActive!: boolean
 
 		fileSystem = fileSystem
 		loaded: boolean = false
@@ -104,8 +115,12 @@
 			this.save()
 		}
 
-		click(e: MouseEvent, ai: AI) {
+		clickTab(e: MouseEvent, aiId: number) {
+			const ai = fileSystem.ais[aiId]
 			if (!ai) return // AI was deleted
+			if (this.diffActive) {
+				this.$emit('hide-diff')
+			}
 			if (this.group === 'tabs') {
 				if (this.$route.path !== '/editor/' + ai.id) {
 					this.$router.push('/editor/' + ai.id)
@@ -287,6 +302,12 @@
 	}
 	.tab.modified:hover .close {
 		display: block;
+	}
+	.tab.diff-tab {
+		border-bottom: 2px solid #e8a838;
+		.icon.diff {
+			color: #e8a838;
+		}
 	}
 	.menu .v-icon {
 		margin-right: 8px;

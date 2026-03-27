@@ -22,6 +22,8 @@ class FileSystem {
 	private items: {[key: string]: AI | Folder} = {}
 	private promise: Promise<void> | null = null
 	public symbols: { [key: string]: Keyword } = {}
+	// Git: map de chemin relatif (ex: "Combat/main") -> statut git ('M', 'A', 'D', '?')
+	public gitStatus: {[path: string]: string} = {}
 	private botAIs = [
 		{id: -1, name: 'lambda', path: '/lambda', bot: true, valid: true, color: 'green', specs: [
 			"basic_items", "basic_strategy", "reachable_cells", "combos"
@@ -425,7 +427,7 @@ class FileSystem {
 		return ai.name
 	}
 
-	private getFolderPath(folder: Folder): string {
+	public getFolderPath(folder: Folder): string {
 		// TODO temporary fix
 		if (!folder) { return "##folder_error##" }
 		if (folder.parent !== 0) {

@@ -38,7 +38,7 @@
 				</div>
 			</div>
 
-			<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :ais="fileSystem.ais" :history2="history" :current="currentAI1" :active="currentSide === 1" :splitted="splitted" group="tabs" @close="close" @close-all="closeAll" @split="setSplitted(true, $event)" :style="{ 'width': (editor1Width * 80) + '%' }" @open="open($event, 1)" />
+			<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :ais="fileSystem.ais" :history2="history" :current="showDiffViewer ? -999 : currentAI1" :active="currentSide === 1" :splitted="splitted" group="tabs" :diff-tab="diffData" :diff-active="showDiffViewer" @close="close" @close-all="closeAll" @split="setSplitted(true, $event)" :style="{ 'width': (editor1Width * 80) + '%' }" @open="open($event, 1)" @close-diff="closeDiff" @open-diff="reopenDiff" @hide-diff="hideDiff" />
 
 			<editor-tabs v-if="splitted && !LeekWars.mobile" ref="tabs2" :ais="fileSystem.ais" :history2="history" :current="currentAI2" :active="currentSide === 2" :splitted="splitted" group="tabs2" @close="close" @close-all="closeAll" :style="{ 'width': (editor2Width * 100) + '%' }" @open="open($event, 2)" @close-panel="setSplitted(false)" />
 
@@ -50,16 +50,29 @@
 				<panel class="editor-left editor-panel first">
 					<template #content>
 						<div class="full">
-							<div v-if="fileSystem.rootFolder" v-autostopscroll class="ai-list">
-								<explorer ref="explorerEl" :current-ai="currentAI" :selected-folder="currentFolder" @test="startTest" @delete-ai="deleteAI" />
+							<div class="left-panel-tabs">
+								<div :class="{active: leftPanelTab === 'explorer'}" class="left-tab" @click="leftPanelTab = 'explorer'" :title="$t('title')">
+									<v-icon>mdi-file-tree</v-icon>
+								</div>
+								<div :class="{active: leftPanelTab === 'git'}" class="left-tab" @click="leftPanelTab = 'git'" title="Git">
+									<v-icon>mdi-source-branch</v-icon>
+								</div>
 							</div>
 
-							<div v-if="currentEditor && currentEditor.loaded && panelWidth" class="ai-stats">
-								<div class="line-count-wrapper">{{ $tc('main.n_lines', currentEditor.lines) }}</div>
-								<div class="char-count-wrapper">{{ $tc('main.n_characters', currentEditor.characters) }}</div>
-								<div v-if="currentAI.included_lines !== 0" class="line-count-wrapper">{{ $tc('main.n_total_lines', currentEditor.lines + currentAI.included_lines) }}</div>
-								<div v-if="currentAI.included_chars !== 0" class="char-count-wrapper">{{ $tc('main.n_total_chars', currentEditor.characters + currentAI.included_chars) }}</div>
-							</div>
+							<template v-if="leftPanelTab === 'explorer'">
+								<div v-if="fileSystem.rootFolder" v-autostopscroll class="ai-list">
+									<explorer ref="explorerEl" :current-ai="currentAI" :selected-folder="currentFolder" @test="startTest" @delete-ai="deleteAI" />
+								</div>
+
+								<div v-if="currentEditor && currentEditor.loaded && panelWidth" class="ai-stats">
+									<div class="line-count-wrapper">{{ $tc('main.n_lines', currentEditor.lines) }}</div>
+									<div class="char-count-wrapper">{{ $tc('main.n_characters', currentEditor.characters) }}</div>
+									<div v-if="currentAI.included_lines !== 0" class="line-count-wrapper">{{ $tc('main.n_total_lines', currentEditor.lines + currentAI.included_lines) }}</div>
+									<div v-if="currentAI.included_chars !== 0" class="char-count-wrapper">{{ $tc('main.n_total_chars', currentEditor.characters + currentAI.included_chars) }}</div>
+								</div>
+							</template>
+
+							<git-panel v-if="leftPanelTab === 'git'" @show-diff="openDiff" />
 						</div>
 					</template>
 				</panel>
@@ -74,13 +87,15 @@
 							</div>
 							<div :class="{tabs: $refs.tabs && $refs.tabs.tabs.length > 1}" class="editors" ref="editors">
 
-								<ai-view-monaco v-if="currentAI1" ref="editor1" :ai="fileSystem.ais[currentAI1]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" @jump="jump" @load="load" @focus="setSide(1)" :style="{ 'width': (editor1Width * 100) + '%' }" />
+								<ai-view-monaco v-if="currentAI1" v-show="!showDiffViewer" ref="editor1" :ai="fileSystem.ais[currentAI1]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" @jump="jump" @load="load" @focus="setSide(1)" :style="{ 'width': (editor1Width * 100) + '%' }" />
 
-								<div v-if="splitted" class="resizer editor-resizer" @dblclick="split50_50" @mousedown="resizerEditorMousedown">
+								<div v-if="splitted" v-show="!showDiffViewer" class="resizer editor-resizer" @dblclick="split50_50" @mousedown="resizerEditorMousedown">
 									<v-icon>mdi-drag-vertical-variant</v-icon>
 								</div>
 
-								<ai-view-monaco v-if="splitted && currentAI2" ref="editor2" :ai="fileSystem.ais[currentAI2]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" @jump="jump" @load="load" @focus="setSide(2)" :style="{ 'width': (editor2Width * 100) + '%' }" />
+								<ai-view-monaco v-if="splitted && currentAI2" v-show="!showDiffViewer" ref="editor2" :ai="fileSystem.ais[currentAI2]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" @jump="jump" @load="load" @focus="setSide(2)" :style="{ 'width': (editor2Width * 100) + '%' }" />
+
+								<git-diff v-if="diffData && diffReady" v-show="showDiffViewer" :original-content="diffOriginal" :modified-content="diffModified" :file="diffData.file" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :inline="diffInline" :collapse-unchanged="diffCollapseUnchanged" @close="closeDiff" />
 
 							</div>
 
@@ -168,6 +183,11 @@
 				<v-checkbox v-model="autocomplete" :label="$t('autocompletion')" hide-details />
 				<v-checkbox v-model="popups" :label="$t('popups')" hide-details />
 
+				<div class="title">{{ $t('settings_diff') }}</div>
+
+				<v-checkbox v-model="diffInline" :label="$t('diff_inline')" hide-details />
+				<v-checkbox v-model="diffCollapseUnchanged" :label="$t('diff_collapse_unchanged')" hide-details />
+
 				<div class="title">{{ $t('shortcuts') }}</div>
 
 				<ul class="shortcuts">
@@ -227,6 +247,8 @@
 	const EditorTabs = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-tabs.${locale}.i18n`))
 	const EditorTest = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-test.${locale}.i18n`))
 	const EditorProblems = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-problems.${locale}.i18n`))
+	const GitPanel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/git-panel.${locale}.i18n`))
+	import GitDiff from './git-diff.vue'
 	import './leekscript-monokai.scss'
 	import { SocketMessage } from '@/model/socket'
 	import { analyzer } from './analyzer'
@@ -248,6 +270,8 @@
 			'explorer': Explorer,
 			'editor-finder': EditorFinder,
 			'editor-problems': EditorProblems,
+			'git-panel': GitPanel,
+			'git-diff': GitDiff,
 			ai: AIElement,
 			LeekscriptVersions,
 		},
@@ -271,6 +295,8 @@
 		autocomplete: boolean = false
 		enableAnalyzer: boolean = false
 		popups: boolean = false
+		diffInline: boolean = false
+		diffCollapseUnchanged: boolean = true
 		hideHeader: boolean = false
 		fontSize: number = DEFAULT_FONT_SIZE
 		lineHeight: number = DEFAULT_LINE_HEIGHT
@@ -285,6 +311,12 @@
 		fileMenuActivator: any = null
 		history: AI[] = []
 		alreadyOpenedDialog: boolean = false
+		leftPanelTab: string = 'explorer'
+		showDiffViewer: boolean = false
+		diffData: { folder: string, file: string, staged?: boolean, hash?: string } | null = null
+		diffOriginal: string = ''
+		diffModified: string = ''
+		diffReady: boolean = false
 		broadcast: BroadcastChannel = new BroadcastChannel('channel')
 		get actions_list() {
 			return [
@@ -325,6 +357,8 @@
 			this.autoClosing = localStorage.getItem('editor/auto_closing') === 'true'
 			this.autocomplete = localStorage.getItem('editor/autocomplete') === 'true'
 			this.popups = localStorage.getItem('editor/popups') === 'true'
+			this.diffInline = localStorage.getItem('editor/diff_inline') === 'true'
+			this.diffCollapseUnchanged = localStorage.getItem('editor/diff_collapse_unchanged') !== 'false'
 			this.hideHeader = localStorage.getItem('editor/hideHeader') === 'true'
 			this.enableAnalyzer = false // localStorage.getItem('editor/analyzer') === 'true'
 			this.fontSize = parseInt(localStorage.getItem('editor/font_size') || '', 10) || DEFAULT_FONT_SIZE
@@ -335,6 +369,13 @@
 			this.editor1Width = parseFloat(localStorage.getItem('editor/editor1-width') || '') || (this.splitted ? 0.5 : 1)
 			this.editor2Width = parseFloat(localStorage.getItem('editor/editor2-width') || '') || 0.5
 			this.currentAI2 = parseInt(localStorage.getItem('editor/last-code-2') || '') || null
+
+			const savedDiff = localStorage.getItem('editor/diff-tab')
+			if (savedDiff) {
+				try {
+					this.openDiff(JSON.parse(savedDiff))
+				} catch (e) { /* ignore */ }
+			}
 
 			LeekWars.loadEncyclopedia(locale)
 
@@ -481,6 +522,8 @@
 
 		@Watch('$route.params.id')
 		update() {
+			// Ignorer si on est sur une route /diff
+			if (this.$route.path.endsWith('/diff')) return
 			if (this.$route.hash) {
 				if (this.$route.hash.startsWith('#leek-')) {
 					const id = parseInt(this.$route.hash.substring(6))
@@ -658,6 +701,7 @@
 				analyzer.updateTodos(aiEditor.ai)
 				analyzer.updateCount()
 				setTimeout(() => aiEditor.goods = [], 2000)
+				emitter.emit('git-file-changed')
 
 				// if (aiEditor.needTest) {
 				// 	aiEditor.needTest = false
@@ -676,6 +720,79 @@
 			// for (const aiEditor of (this.$refs.editors as AIView[])) {
 			// 	this.save(aiEditor)
 			// }
+		}
+
+		async openDiff(data: { folder: string, file: string, staged?: boolean, hash?: string }) {
+			this.diffData = data
+			localStorage.setItem('editor/diff-tab', JSON.stringify(data))
+			this.diffOriginal = ''
+			this.diffModified = ''
+			this.diffReady = false
+			this.showDiffViewer = true
+
+			// Mettre à jour l'URL
+			const aiId = this.currentAI1 || 0
+			if (this.$route.path !== '/editor/' + aiId + '/diff') {
+				this.$router.push('/editor/' + aiId + '/diff')
+			}
+
+			const safe = (url: string, params: any) => LeekWars.post(url, params).catch(() => ({ content: '' }))
+
+			try {
+				if (data.hash) {
+					const [parentData, commitData] = await Promise.all([
+						safe('git/show', { folder: data.folder, hash: data.hash + '^', file: data.file }),
+						safe('git/show', { folder: data.folder, hash: data.hash, file: data.file }),
+					])
+					this.diffOriginal = parentData.content || ''
+					this.diffModified = commitData.content || ''
+				} else if (data.staged) {
+					const [headData, indexData] = await Promise.all([
+						safe('git/show', { folder: data.folder, hash: 'HEAD', file: data.file }),
+						safe('git/show', { folder: data.folder, hash: ':', file: data.file }),
+					])
+					this.diffOriginal = headData.content || ''
+					this.diffModified = indexData.content || ''
+				} else {
+					const [headData, fileData] = await Promise.all([
+						safe('git/show', { folder: data.folder, hash: 'HEAD', file: data.file }),
+						safe('git/read-file', { folder: data.folder, file: data.file }),
+					])
+					this.diffOriginal = headData.content || ''
+					this.diffModified = fileData.content || ''
+				}
+			} catch (e) {
+				// Erreur de fetch
+			}
+			this.diffReady = true
+		}
+
+		closeDiff() {
+			this.showDiffViewer = false
+			this.diffReady = false
+			this.diffData = null
+			localStorage.removeItem('editor/diff-tab')
+
+			// Revenir à l'URL de l'éditeur
+			const aiId = this.currentAI1 || 0
+			if (this.$route.path !== '/editor/' + aiId) {
+				this.$router.push('/editor/' + aiId)
+			}
+		}
+		reopenDiff() {
+			this.showDiffViewer = true
+			const aiId = this.currentAI1 || 0
+			if (!this.$route.path.endsWith('/diff')) {
+				this.$router.push('/editor/' + aiId + '/diff')
+			}
+		}
+
+		hideDiff() {
+			this.showDiffViewer = false
+			const aiId = this.currentAI1 || 0
+			if (this.$route.path.endsWith('/diff')) {
+				this.$router.push('/editor/' + aiId)
+			}
 		}
 
 		startDelete() {
@@ -721,6 +838,12 @@
 		}
 		@Watch('popups') popupsChange() {
 			localStorage.setItem('editor/popups', '' + this.popups)
+		}
+		@Watch('diffInline') diffInlineChange() {
+			localStorage.setItem('editor/diff_inline', '' + this.diffInline)
+		}
+		@Watch('diffCollapseUnchanged') diffCollapseUnchangedChange() {
+			localStorage.setItem('editor/diff_collapse_unchanged', '' + this.diffCollapseUnchanged)
 		}
 		@Watch('hideHeader') hideHeaderChange() {
 			LeekWars.header = !this.hideHeader
@@ -943,6 +1066,9 @@
 		}
 
 		open(ai: number, side: number) {
+			if (this.showDiffViewer) {
+				this.showDiffViewer = false
+			}
 			this.setSide(side)
 			const aiObj = fileSystem.ais[ai]
 			if (aiObj) {
@@ -1026,6 +1152,28 @@
 	}
 	.resize-panel {
 		max-height: 100%;
+	}
+	.left-panel-tabs {
+		display: flex;
+		border-bottom: 1px solid var(--border);
+		flex-shrink: 0;
+	}
+	.left-tab {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 6px 0;
+		cursor: pointer;
+		opacity: 0.5;
+		border-bottom: 2px solid transparent;
+		transition: opacity 0.15s, border-color 0.15s;
+		.v-icon { font-size: 20px; }
+		&:hover { opacity: 0.8; }
+		&.active {
+			opacity: 1;
+			border-bottom-color: var(--text-color-secondary);
+		}
 	}
 	.ai-list {
 		overflow-y: auto;

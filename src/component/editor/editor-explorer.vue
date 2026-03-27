@@ -66,6 +66,9 @@
 				<v-list-item v-else v-ripple @click="closeFolder()" prepend-icon="mdi-folder-lock-outline">
 					<v-list-item-title>{{ $t('close_folder') }}</v-list-item-title>
 				</v-list-item>
+				<v-list-item v-if="folder && folder.id > 0 && !folder.closed" v-ripple @click="initGit()" prepend-icon="mdi-source-branch">
+					<v-list-item-title>{{ $t('init_git') }}</v-list-item-title>
+				</v-list-item>
 				<v-list-item v-ripple @click="deleteDialog = true" prepend-icon="mdi-delete">
 					<v-list-item-title>{{ $t('delete') }}</v-list-item-title>
 				</v-list-item>
@@ -333,6 +336,16 @@
 				}
 			}
 			this.renameDialog = false
+		}
+
+		initGit() {
+			if (!this.folder || this.folder.id <= 0) return
+			const folderPath = fileSystem.getFolderPath(this.folder).replace(/\/$/, '')
+			LeekWars.post('git/init', { folder: folderPath }).then(() => {
+				LeekWars.toast('Git initialized in ' + this.folder!.name)
+			}).error((error: any) => {
+				LeekWars.toast(error.error)
+			})
 		}
 
 		deleteItem() {

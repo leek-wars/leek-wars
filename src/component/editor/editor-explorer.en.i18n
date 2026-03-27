@@ -34,5 +34,6 @@
 	"invalid_name_reserved": "This name is reserved.",
 	"invalid_name_slash": "The character \"/\" is not allowed in names.",
 	"windows_warning_char": "The character \"{0}\" is not allowed on Windows, this name may cause issues with git.",
-	"windows_warning_reserved": "\"{0}\" is a reserved name on Windows, this name may cause issues with git."
+	"windows_warning_reserved": "\"{0}\" is a reserved name on Windows, this name may cause issues with git.",
+	"init_git": "Initialize Git repository"
 }

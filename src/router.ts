@@ -166,6 +166,7 @@ const routes = [
 	{ path: '/encyclopedia-search', component: EncyclopediaSearch },
 	{ path: '/editor', component: Editor, beforeEnter: connected },
 	{ path: '/editor/:id', component: Editor, beforeEnter: connected },
+	{ path: '/editor/:id/diff', component: Editor, beforeEnter: connected },
 	{ path: '/group/:id', component: Group, beforeEnter: connected },
 	{ path: '/groups', component: Groups },
 	{ path: '/error/:message', component: Error },

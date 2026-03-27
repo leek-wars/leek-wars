@@ -113,17 +113,19 @@ function request<T = any>(method: string, url: string, params?: any) {
 		}
 		attempt(0)
 	})
-	return {
-		abort: () => {
-			if (retryTimeout) clearTimeout(retryTimeout)
-			if (currentXhr) currentXhr.abort()
-		},
-		error: (e: (e: T) => void) => promise.catch(e),
-		then: (p: (p: T) => void) => {
-			promise.then(p)
-			return { error: (e: (e: T) => void) => promise.catch(e) }
-		}
+	const extended = promise as any
+	extended.abort = () => {
+		if (retryTimeout) clearTimeout(retryTimeout)
+		if (currentXhr) currentXhr.abort()
 	}
+	extended.error = (e: (e: T) => void) => promise.catch(e)
+	const originalThen = promise.then.bind(promise)
+	extended.then = (p: (p: T) => void, r?: (e: any) => void) => {
+		const chained = originalThen(p, r) as any
+		chained.error = (e: (e: T) => void) => chained.catch(e)
+		return chained
+	}
+	return extended
 }
 
 function post<T = any>(url: any, form: any = {}) {

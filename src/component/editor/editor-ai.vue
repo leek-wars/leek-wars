@@ -5,7 +5,7 @@
 				<v-icon v-if="ai.errors" class="icon error">mdi-close-circle</v-icon>
 				<v-icon v-else-if="ai.warnings" class="icon warning">mdi-alert-circle</v-icon>
 				<v-icon v-else class="icon valid">mdi-check-bold</v-icon>
-				<span class="text">{{ ai.name }}</span>
+				<span class="text" :class="gitStatusClass">{{ ai.name }}</span>
 				<span v-if="ai.errors" class="count error">{{ ai.errors }}</span>
 				<span v-if="ai.warnings" class="count warning">{{ ai.warnings }}</span>
 				<span v-if="ai.todos" class="count todo">{{ ai.todos }}</span>
@@ -46,6 +46,17 @@
 
 		get inBin() { return fileSystem.isInBin(this.ai.folder) }
 
+		get gitStatusClass(): string {
+			if (!this.ai.folderpath) return ''
+			const path = this.ai.folderpath + this.ai.name
+			const status = fileSystem.gitStatus[path]
+			if (!status) return ''
+			if (status === 'M') return 'git-modified'
+			if (status === 'A' || status === 'U') return 'git-added'
+			if (status === 'D') return 'git-deleted'
+			return 'git-modified'
+		}
+
 		dragstart(e: DragEvent) {
 			if (this.inBin) { e.stopPropagation(); return }
 			e.dataTransfer!.setData('text/plain', 'drag !!!')
@@ -67,7 +78,8 @@
 		opacity: 1;
 	}
 	.item .label {
-		padding: 7px 10px;
+		padding: 5px 10px;
+		font-size: 14px;
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
@@ -113,7 +125,7 @@
 	.count {
 		border-radius: 10px;
 		padding: 1px 6px;
-		font-size: 13px;
+		font-size: 12px;
 		margin-left: 6px;
 		font-weight: 500;
 		&.error {
@@ -137,5 +149,15 @@
 	}
 	.theme-monokai .count.leek img {
 		filter: invert(1);
+	}
+	.git-modified {
+		color: #e8a838 !important;
+	}
+	.git-added {
+		color: #73c991 !important;
+	}
+	.git-deleted {
+		color: #e06c75 !important;
+		text-decoration: line-through;
 	}
 </style>
