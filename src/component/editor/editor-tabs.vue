@@ -26,7 +26,7 @@
 				<v-list-item v-ripple @click="closeTab(menuTab)" prepend-icon="mdi-close-box-outline">
 					<v-list-item-title>{{ $t('close') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-if="menuTab && menuTab.type === 'file'" v-ripple @click="closeOthers(menuTab)" prepend-icon="mdi-close-box-multiple-outline">
+				<v-list-item v-if="menuTab" v-ripple @click="closeOthers(menuTab)" prepend-icon="mdi-close-box-multiple-outline">
 					<v-list-item-title>{{ $t('close_others') }}</v-list-item-title>
 				</v-list-item>
 				<v-list-item v-if="menuTab && menuTab.type !== 'file'" v-ripple @click="$emit('open-file', menuTab)" prepend-icon="mdi-file-outline">

@@ -1,9 +1,8 @@
 <template lang="html">
-	<v-theme-provider :theme="isDark ? 'dark' : 'light'" with-background>
-	<div class="git-panel">
+	<div class="git-panel" :class="isDark ? 'theme--dark' : 'theme--light'">
 		<!-- Sélecteur de repo + actions -->
 		<div class="git-toolbar">
-			<v-select v-model="selectedRepo" :items="repoItems" :placeholder="$t('select_repo')" density="compact" variant="solo-filled" flat hide-details class="repo-select" @update:model-value="refreshStatus">
+			<v-select v-model="selectedRepo" :items="repoItems" :placeholder="$t('select_repo')" density="compact" variant="solo-filled" flat hide-details class="repo-select" :theme="isDark ? 'dark' : 'light'" @update:model-value="refreshStatus">
 				<template #prepend-inner>
 					<v-icon size="small">mdi-source-branch</v-icon>
 				</template>
@@ -22,7 +21,7 @@
 		<template v-if="selectedRepo !== '' && !showHistory">
 			<!-- Zone de commit -->
 			<div class="commit-area">
-				<v-text-field v-model="commitMessage" :placeholder="$t('commit_message')" density="compact" variant="solo-filled" flat hide-details class="commit-input" @keyup.enter="commit" @keyup.stop />
+				<v-text-field v-model="commitMessage" :placeholder="$t('commit_message')" density="compact" variant="solo-filled" flat hide-details class="commit-input" :theme="isDark ? 'dark' : 'light'" @keyup.enter="commit" @keyup.stop />
 				<div class="commit-btn" :class="{disabled: !canCommit}" :title="$t('commit')" @click="commit">
 					<v-icon>mdi-check</v-icon>
 				</div>
@@ -100,7 +99,6 @@
 			<p>{{ $t('no_git_repo') }}</p>
 		</div>
 	</div>
-	</v-theme-provider>
 </template>
 
 <script lang="ts">
@@ -373,7 +371,7 @@
 	opacity: 0.6;
 	flex-shrink: 0;
 	&:hover { opacity: 1; background: rgba(128, 128, 128, 0.15); }
-	&.active { opacity: 1; }
+	&.active { opacity: 1; background: rgba(95, 173, 27, 0.2); color: #5fad1b; }
 	.v-icon { font-size: 22px; }
 }
 .commit-area {
@@ -431,8 +429,8 @@
 	margin-right: 4px;
 }
 .section-action {
-	font-size: 20px !important;
-	padding: 4px;
+	font-size: 18px !important;
+	padding: 9px;
 	margin-left: 2px;
 	opacity: 0.5;
 	border-radius: 4px;
@@ -445,7 +443,7 @@
 .file-item {
 	display: flex;
 	align-items: center;
-	padding: 4px 8px 4px 24px;
+	padding: 5px 10px 5px 24px;
 	cursor: pointer;
 	&:hover {
 		background: rgba(128, 128, 128, 0.1);
@@ -459,6 +457,8 @@
 	align-items: center;
 	justify-content: center;
 	font-size: 11px;
+	line-height: 16px;
+	padding-top: 4px;
 	font-weight: bold;
 	border-radius: 2px;
 	margin-right: 6px;
@@ -474,16 +474,19 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	font-size: 13px;
+	font-size: 14px;
 }
 .file-actions {
 	display: flex;
 	visibility: hidden;
 	gap: 2px;
 	.v-icon {
-		font-size: 20px;
-		padding: 2px;
-		border-radius: 3px;
+		font-size: 18px;
+		padding: 0 6px;
+		border-radius: 4px;
+		align-self: stretch;
+		display: inline-flex;
+		align-items: center;
 		opacity: 0.6;
 		&:hover { opacity: 1; background: rgba(128, 128, 128, 0.15); }
 	}

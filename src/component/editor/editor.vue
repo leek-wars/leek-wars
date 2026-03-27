@@ -51,10 +51,10 @@
 					<template #content>
 						<div class="full">
 							<div class="left-panel-tabs">
-								<div :class="{active: leftPanelTab === 'explorer'}" class="left-tab" @click="leftPanelTab = 'explorer'" :title="$t('title')">
+								<div :class="{active: leftPanelTab === 'explorer'}" class="left-tab" @click="setLeftPanelTab('explorer')" :title="$t('title')">
 									<v-icon>mdi-file-tree</v-icon>
 								</div>
-								<div v-if="Object.keys(fileSystem.gitRepos).length > 0" :class="{active: leftPanelTab === 'git'}" class="left-tab" @click="leftPanelTab = 'git'" title="Git">
+								<div v-if="Object.keys(fileSystem.gitRepos).length > 0" :class="{active: leftPanelTab === 'git'}" class="left-tab" @click="setLeftPanelTab('git')" title="Git">
 									<v-icon>mdi-source-branch</v-icon>
 								</div>
 							</div>
@@ -95,7 +95,8 @@
 
 								<ai-view-monaco v-if="splitted && currentAI2" v-show="!showDiffViewer" ref="editor2" :ai="fileSystem.ais[currentAI2]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" @jump="jump" @load="load" @focus="setSide(2)" :style="{ 'width': (editor2Width * 100) + '%' }" />
 
-								<git-diff v-if="diffMounted && activeDiff && activeDiff.ready" v-show="showDiffViewer" :original-content="activeDiff.original" :modified-content="activeDiff.modified" :file="activeDiff.file" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :inline="diffInline" :collapse-unchanged="diffCollapseUnchanged" @close="closeDiff" @open-file="openDiffFile" />
+								<div v-if="showDiffViewer && !isDiffReady" class="diff-loader"><loader :size="40" /></div>
+								<git-diff v-if="diffMounted && isDiffReady" v-show="showDiffViewer" :original-content="activeDiff.original" :modified-content="activeDiffModified" :file="activeDiff.file" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :inline="diffInline" :collapse-unchanged="diffCollapseUnchanged" @close="closeDiff" @open-file="openDiffFile" />
 
 							</div>
 
@@ -312,11 +313,12 @@
 		fileMenuActivator: any = null
 		history: AI[] = []
 		alreadyOpenedDialog: boolean = false
-		leftPanelTab: string = 'explorer'
+		leftPanelTab: string = localStorage.getItem('editor/left_panel_tab') || 'explorer'
 		tabs1: EditorTab[] = []
 		tabs1Loaded: boolean = false
 		currentTab: EditorTab | null = null
 		diffMounted: boolean = true
+		diffReady: number = 0
 		broadcast: BroadcastChannel = new BroadcastChannel('channel')
 		get actions_list() {
 			return [
@@ -350,6 +352,20 @@
 		get activeDiff(): DiffTab | null {
 			if (!this.currentTab || this.currentTab.type === 'file') return null
 			return this.currentTab as DiffTab
+		}
+		get isDiffReady(): boolean {
+			void this.diffReady
+			return this.activeDiff !== null && this.activeDiff.ready
+		}
+		get activeDiffModified(): string {
+			const diff = this.activeDiff
+			if (!diff) return ''
+			// Pour les diffs unstaged, utiliser le code live de l'éditeur
+			if (diff.type === 'diff' && !diff.staged && diff.id) {
+				const ai = fileSystem.ais[diff.id]
+				if (ai) return ai.code
+			}
+			return diff.modified
 		}
 		get diffTabs(): DiffTab[] {
 			return this.tabs1.filter((t): t is DiffTab => t.type !== 'file')
@@ -770,14 +786,12 @@
 			// Chercher si un onglet existe déjà
 			const existing = this.tabs1.find(t => t.type !== 'file' && this.diffKey(t as DiffTab) === this.diffKey(tab))
 			if (existing) {
-				this.currentTab = existing
+				this.selectTab(existing)
 			} else {
 				this.tabs1.push(tab)
-				this.currentTab = tab
 				this.fetchDiffContent(tab)
+				this.selectTab(tab)
 			}
-			this.updateUrl()
-			this.saveTabs()
 		}
 
 		closeDiff() {
@@ -917,12 +931,9 @@
 					original = headData.content || ''
 					modified = indexData.content || ''
 				} else {
-					const [headData, fileData] = await Promise.all([
-						safe('git/show', { folder: tab.folder, hash: 'HEAD', file: tab.file }),
-						safe('git/read-file', { folder: tab.folder, file: tab.file }),
-					])
+					// Unstaged : seul l'original (HEAD) est nécessaire, le modified vient du code live
+					const headData = await safe('git/show', { folder: tab.folder, hash: 'HEAD', file: tab.file })
 					original = headData.content || ''
-					modified = fileData.content || ''
 				}
 			} catch (e) {
 				// Erreur de fetch
@@ -930,6 +941,7 @@
 			tab.original = original
 			tab.modified = modified
 			tab.ready = true
+			this.diffReady++
 		}
 
 		tabUrl(tab: EditorTab | null): string {
@@ -1251,6 +1263,11 @@
 			this.currentSide = side
 			this.currentEditor = (this.currentSide === 1 ? this.$refs.editor1 : this.$refs.editor2) as AIViewMonaco
 		}
+
+		setLeftPanelTab(tab: string) {
+			this.leftPanelTab = tab
+			localStorage.setItem('editor/left_panel_tab', tab)
+		}
 	}
 </script>
 
@@ -1362,6 +1379,13 @@
 		display: flex;
 		position: relative;
 		z-index: 2;
+	}
+	.diff-loader {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		height: 100%;
 	}
 	.popup.input_popup input {
 		width: 90%;

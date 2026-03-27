@@ -20,10 +20,6 @@
 	"n_ahead": "{0} commit(s) ahead",
 	"n_behind": "{0} commit(s) behind",
 	"load_more": "Load more",
-	"just_now": "just now",
-	"n_minutes_ago": "{0} min ago",
-	"n_hours_ago": "{0}h ago",
-	"n_days_ago": "{0}d ago",
 	"init_git": "Initialize Git repository",
 	"init_git_confirm": "Initialize a Git repository in folder \"{0}\"?"
 }

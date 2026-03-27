@@ -20,10 +20,6 @@
 	"n_ahead": "{0} commit(s) en avance",
 	"n_behind": "{0} commit(s) en retard",
 	"load_more": "Charger plus",
-	"just_now": "à l'instant",
-	"n_minutes_ago": "il y a {0} min",
-	"n_hours_ago": "il y a {0}h",
-	"n_days_ago": "il y a {0}j",
 	"init_git": "Initialiser un dépôt Git",
 	"init_git_confirm": "Initialiser un dépôt Git dans le dossier \"{0}\" ?"
 }

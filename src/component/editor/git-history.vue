@@ -119,16 +119,7 @@
 		}
 
 		formatDate(timestamp: number): string {
-			const date = new Date(timestamp * 1000)
-			const now = new Date()
-			const diff = Math.floor((now.getTime() - date.getTime()) / 1000)
-
-			if (diff < 60) return this.$t('just_now')
-			if (diff < 3600) return this.$t('n_minutes_ago', [Math.floor(diff / 60)])
-			if (diff < 86400) return this.$t('n_hours_ago', [Math.floor(diff / 3600)])
-			if (diff < 2592000) return this.$t('n_days_ago', [Math.floor(diff / 86400)])
-
-			return date.toLocaleDateString()
+			return LeekWars.formatDateTime(timestamp) + ' (' + LeekWars.formatDuration(timestamp) + ')'
 		}
 	}
 </script>
@@ -137,6 +128,7 @@
 .git-history {
 	overflow-y: auto;
 	flex: 1;
+	min-height: 0;
 }
 .commit-item {
 	border-bottom: 1px solid var(--border);
@@ -145,10 +137,10 @@
 	&.expanded { background: var(--pure-white); }
 }
 .commit-header {
-	padding: 6px 8px;
+	padding: 5px 10px;
 }
 .commit-message {
-	font-size: 12px;
+	font-size: 14px;
 	font-weight: 500;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -157,7 +149,7 @@
 .commit-meta {
 	display: flex;
 	gap: 8px;
-	font-size: 11px;
+	font-size: 12px;
 	opacity: 0.6;
 	margin-top: 2px;
 }
@@ -165,23 +157,25 @@
 	font-family: monospace;
 }
 .commit-details {
-	padding: 0 8px 6px;
+	padding: 0 10px 6px;
 }
 .commit-file {
 	display: flex;
 	align-items: center;
-	padding: 2px 8px;
-	font-size: 12px;
+	padding: 5px 10px 5px 24px;
+	font-size: 14px;
 	border-radius: 3px;
 	&:hover { background: rgba(128, 128, 128, 0.1); }
 }
 .status {
-	width: 14px;
-	height: 14px;
+	width: 16px;
+	height: 16px;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	font-size: 10px;
+	font-size: 11px;
+	line-height: 16px;
+	padding-top: 4px;
 	font-weight: bold;
 	border-radius: 2px;
 	margin-right: 6px;

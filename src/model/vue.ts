@@ -89,6 +89,13 @@ window.addEventListener('load', () => {
 	sessionStorage.removeItem(PRELOAD_RELOAD_KEY)
 })
 
+// Suppress Monaco internal error when hovering markers on a disposed editor
+window.addEventListener('error', (event) => {
+	if (event.error?.message?.includes('InstantiationService has been disposed')) {
+		event.preventDefault()
+	}
+})
+
 let lastErrorSent = 0
 
 export function reportVueError(err: any, vm: any, info: any, origin: string = 'main') {
