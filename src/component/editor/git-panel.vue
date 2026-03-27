@@ -1,27 +1,30 @@
 <template lang="html">
+	<v-theme-provider :theme="isDark ? 'dark' : 'light'" with-background>
 	<div class="git-panel">
-		<!-- Sélecteur de repo -->
-		<div class="git-header">
-			<div class="git-repo-selector">
-				<v-icon class="git-icon">mdi-source-branch</v-icon>
-				<select v-model="selectedRepo" class="repo-select" @change="refreshStatus">
-					<option value="">{{ $t('select_repo') }}</option>
-					<option v-for="repo in repos" :key="repo.folder" :value="repo.folder">{{ repo.name || '/' }}</option>
-				</select>
-				<v-icon v-if="loading" class="spin">mdi-sync</v-icon>
+		<!-- Sélecteur de repo + actions -->
+		<div class="git-toolbar">
+			<v-select v-model="selectedRepo" :items="repoItems" :placeholder="$t('select_repo')" density="compact" variant="solo-filled" flat hide-details class="repo-select" @update:model-value="refreshStatus">
+				<template #prepend-inner>
+					<v-icon size="small">mdi-source-branch</v-icon>
+				</template>
+				<template #append-inner>
+					<v-icon v-if="loading" class="spin" size="small">mdi-sync</v-icon>
+				</template>
+			</v-select>
+			<div class="action-btn" :title="$t('refresh')" @click="refreshStatus">
+				<v-icon>mdi-refresh</v-icon>
 			</div>
-			<div class="git-actions">
-				<v-icon :title="$t('refresh')" @click="refreshStatus" class="action-btn">mdi-refresh</v-icon>
-				<v-icon :title="$t('history')" @click="showHistory = !showHistory" :class="{active: showHistory}" class="action-btn">mdi-history</v-icon>
+			<div class="action-btn" :title="$t('history')" :class="{active: showHistory}" @click="showHistory = !showHistory">
+				<v-icon>mdi-history</v-icon>
 			</div>
 		</div>
 
 		<template v-if="selectedRepo !== '' && !showHistory">
 			<!-- Zone de commit -->
 			<div class="commit-area">
-				<div class="commit-input-row">
-					<input v-model="commitMessage" :placeholder="$t('commit_message')" class="commit-input" @keyup.enter="commit" @keyup.stop>
-					<v-icon :title="$t('commit')" class="commit-btn" :class="{disabled: !canCommit}" @click="commit">mdi-check</v-icon>
+				<v-text-field v-model="commitMessage" :placeholder="$t('commit_message')" density="compact" variant="solo-filled" flat hide-details class="commit-input" @keyup.enter="commit" @keyup.stop />
+				<div class="commit-btn" :class="{disabled: !canCommit}" :title="$t('commit')" @click="commit">
+					<v-icon>mdi-check</v-icon>
 				</div>
 			</div>
 
@@ -97,13 +100,14 @@
 			<p>{{ $t('no_git_repo') }}</p>
 		</div>
 	</div>
+	</v-theme-provider>
 </template>
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { fileSystem } from '@/model/filesystem'
 	import { i18n, mixins } from '@/model/i18n'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
+	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import GitHistory from './git-history.vue'
 	import { emitter } from '@/model/vue'
 
@@ -122,6 +126,7 @@
 		emits: ['show-diff']
 	})
 	export default class GitPanel extends Vue {
+		@Prop({ default: 'leek-wars' }) theme!: string
 		repos: {folder: string, name: string}[] = []
 		selectedRepo: string = ''
 		changes: GitChange[] = []
@@ -135,6 +140,12 @@
 		behind: number = 0
 		branch: string = ''
 
+		get isDark(): boolean {
+			return ['monokai', 'vs-dark', 'hc-black'].includes(this.theme)
+		}
+		get repoItems() {
+			return this.repos.map(r => ({ title: r.name || '/', value: r.folder }))
+		}
 		get stagedChanges(): GitChange[] {
 			return this.changes.filter(c => c.staged)
 		}
@@ -174,6 +185,9 @@
 			try {
 				const data = await LeekWars.post('git/repos')
 				this.repos = data.repos
+				const repos: {[path: string]: boolean} = {}
+				for (const r of this.repos) { repos[r.folder] = true }
+				fileSystem.gitRepos = repos
 				// Restaurer la sélection
 				const saved = localStorage.getItem('editor/git-repo')
 				if (saved && this.repos.find(r => r.folder === saved)) {
@@ -232,12 +246,14 @@
 
 		async discard(change: GitChange) {
 			await LeekWars.post('git/discard', { folder: this.selectedRepo, files: JSON.stringify([change.file]) })
+			this.reloadFiles([change.file])
 			this.refreshStatus()
 		}
 
 		async discardAll() {
 			const files = this.unstagedChanges.map(c => c.file)
 			await LeekWars.post('git/discard', { folder: this.selectedRepo, files: JSON.stringify(files) })
+			this.reloadFiles(files)
 			this.refreshStatus()
 		}
 
@@ -279,6 +295,23 @@
 			}
 		}
 
+		reloadFiles(files: string[]) {
+			for (const file of files) {
+				const fullPath = (this.selectedRepo ? this.selectedRepo + '/' : '') + file
+				const ai = fileSystem.getAIByPath(fullPath)
+				if (ai) {
+					// Relire le fichier depuis le serveur
+					LeekWars.post('git/read-file', { folder: this.selectedRepo, file }).then((data: any) => {
+						ai.code = data.content || ''
+						if (ai.model) {
+							ai.model.setValue(ai.code)
+						}
+						ai.modified = false
+					})
+				}
+			}
+		}
+
 		updateGitStatusMap() {
 			const status: {[path: string]: string} = {}
 			const prefix = this.selectedRepo ? this.selectedRepo + '/' : ''
@@ -316,111 +349,95 @@
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
-	font-size: 13px;
+	font-size: 14px;
 }
-.git-header {
+.git-toolbar {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
-	padding: 4px 8px;
-	border-bottom: 1px solid var(--border);
+	gap: 2px;
+	padding: 4px;
 	flex-shrink: 0;
 }
-.git-repo-selector {
-	display: flex;
-	align-items: center;
-	gap: 4px;
-	flex: 1;
-}
-.git-icon {
-	font-size: 18px;
-	opacity: 0.7;
-}
 .repo-select {
-	background: transparent;
-	border: 1px solid var(--border);
-	border-radius: 3px;
-	color: inherit;
-	padding: 2px 4px;
-	font-size: 12px;
 	flex: 1;
 	min-width: 0;
 }
-.git-actions {
-	display: flex;
-	gap: 2px;
-}
 .action-btn {
-	font-size: 18px;
-	padding: 2px;
-	cursor: pointer;
-	border-radius: 3px;
-	opacity: 0.7;
-	&:hover { opacity: 1; background: var(--pure-white); }
-	&.active { opacity: 1; }
-}
-.commit-area {
-	padding: 6px 8px;
-	border-bottom: 1px solid var(--border);
-	flex-shrink: 0;
-}
-.commit-input-row {
 	display: flex;
 	align-items: center;
-	gap: 4px;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	cursor: pointer;
+	border-radius: 4px;
+	opacity: 0.6;
+	flex-shrink: 0;
+	&:hover { opacity: 1; background: rgba(128, 128, 128, 0.15); }
+	&.active { opacity: 1; }
+	.v-icon { font-size: 22px; }
+}
+.commit-area {
+	display: flex;
+	align-items: center;
+	gap: 2px;
+	padding: 0 4px 4px;
+	flex-shrink: 0;
 }
 .commit-input {
 	flex: 1;
-	background: var(--background);
-	border: 1px solid var(--border);
-	border-radius: 3px;
-	color: inherit;
-	padding: 4px 6px;
-	font-size: 12px;
-	&:focus { border-color: var(--text-color-secondary); outline: none; }
+	min-width: 0;
 }
 .commit-btn {
-	font-size: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
 	cursor: pointer;
+	border-radius: 4px;
+	flex-shrink: 0;
 	color: #4caf50;
 	&.disabled { opacity: 0.3; cursor: default; }
-	&:not(.disabled):hover { color: #66bb6a; }
+	&:not(.disabled):hover { background: rgba(76, 175, 80, 0.15); }
+	.v-icon { font-size: 24px; }
 }
 .changes-scroll {
 	flex: 1;
 	overflow-y: auto;
 	min-height: 0;
 }
-.changes-section {
-}
 .section-header {
 	display: flex;
 	align-items: center;
-	padding: 3px 8px;
+	padding: 5px 8px;
 	cursor: pointer;
 	font-weight: 500;
-	font-size: 11px;
+	font-size: 12px;
 	text-transform: uppercase;
 	letter-spacing: 0.3px;
-	&:hover { background: var(--pure-white); }
-	.v-icon { font-size: 16px; }
+	&:hover { background: rgba(128, 128, 128, 0.1); }
+	.v-icon { font-size: 18px; }
 }
 .section-title {
 	flex: 1;
 	margin-left: 2px;
 }
 .count {
-	background: var(--text-color-secondary);
-	color: white;
+	background: rgba(128, 128, 128, 0.3);
+	color: inherit;
 	border-radius: 8px;
-	padding: 0 5px;
-	font-size: 10px;
+	padding: 0 6px;
+	font-size: 11px;
 	margin-right: 4px;
 }
 .section-action {
-	font-size: 16px !important;
+	font-size: 20px !important;
+	padding: 4px;
+	margin-left: 2px;
 	opacity: 0.5;
-	&:hover { opacity: 1; }
+	border-radius: 4px;
+	cursor: pointer;
+	&:hover { opacity: 1; background: rgba(128, 128, 128, 0.2); }
 }
 .file-list {
 	overflow-y: auto;
@@ -428,20 +445,20 @@
 .file-item {
 	display: flex;
 	align-items: center;
-	padding: 2px 8px 2px 24px;
+	padding: 4px 8px 4px 24px;
 	cursor: pointer;
 	&:hover {
-		background: var(--pure-white);
+		background: rgba(128, 128, 128, 0.1);
 		.file-actions { visibility: visible; }
 	}
 }
 .status {
-	width: 14px;
-	height: 14px;
+	width: 16px;
+	height: 16px;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	font-size: 10px;
+	font-size: 11px;
 	font-weight: bold;
 	border-radius: 2px;
 	margin-right: 6px;
@@ -457,42 +474,44 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	font-size: 12px;
+	font-size: 13px;
 }
 .file-actions {
 	display: flex;
 	visibility: hidden;
 	gap: 2px;
 	.v-icon {
-		font-size: 16px;
-		opacity: 0.7;
-		&:hover { opacity: 1; }
+		font-size: 20px;
+		padding: 2px;
+		border-radius: 3px;
+		opacity: 0.6;
+		&:hover { opacity: 1; background: rgba(128, 128, 128, 0.15); }
 	}
 }
 .merge-banner {
-	padding: 6px 8px;
+	padding: 8px;
 	background: #e8a838;
 	color: white;
 	display: flex;
 	align-items: center;
 	gap: 4px;
-	font-size: 12px;
+	font-size: 13px;
 	flex-shrink: 0;
 }
 .sync-bar {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 4px 8px;
-	border-top: 1px solid var(--border);
+	padding: 6px 8px;
+	border-top: 1px solid rgba(128, 128, 128, 0.2);
 	flex-shrink: 0;
-	font-size: 12px;
+	font-size: 13px;
 }
 .branch-name {
 	display: flex;
 	align-items: center;
 	gap: 2px;
-	.v-icon { font-size: 14px; }
+	.v-icon { font-size: 16px; }
 }
 .sync-actions {
 	display: flex;
@@ -502,22 +521,22 @@
 .sync-count {
 	display: flex;
 	align-items: center;
-	font-size: 11px;
-	.v-icon { font-size: 12px; }
+	font-size: 12px;
+	.v-icon { font-size: 14px; }
 	&.ahead { color: #73c991; }
 	&.behind { color: #e8a838; }
 }
 .no-changes {
-	padding: 16px;
+	padding: 20px;
 	text-align: center;
 	opacity: 0.6;
-	.v-icon { font-size: 16px; color: #4caf50; }
+	.v-icon { font-size: 18px; color: #4caf50; }
 }
 .no-repo {
-	padding: 16px;
+	padding: 20px;
 	text-align: center;
 	opacity: 0.6;
-	font-size: 12px;
+	font-size: 13px;
 }
 .spin {
 	animation: spin 1s linear infinite;

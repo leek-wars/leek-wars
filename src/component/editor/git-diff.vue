@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="git-diff-viewer" ref="container"></div>
+	<div class="git-diff-viewer" :class="{ready: editorReady}" ref="container"></div>
 </template>
 
 <script lang="ts">
@@ -7,7 +7,7 @@
 	import * as monaco from 'monaco-editor'
 	import { markRaw } from 'vue'
 
-	@Options({ name: 'git-diff' })
+	@Options({ name: 'git-diff', emits: ['close', 'open-file'], i18n: {} })
 	export default class GitDiff extends Vue {
 		@Prop({ default: '' }) originalContent!: string
 		@Prop({ default: '' }) modifiedContent!: string
@@ -21,14 +21,10 @@
 		diffEditor: monaco.editor.IDiffEditor | null = null
 		originalModel: monaco.editor.ITextModel | null = null
 		modifiedModel: monaco.editor.ITextModel | null = null
+		editorReady: boolean = false
 
 		mounted() {
-			// Attendre que le conteneur soit layouté
-			requestAnimationFrame(() => {
-				requestAnimationFrame(() => {
-					this.createEditor()
-				})
-			})
+			this.createEditor()
 		}
 
 		beforeUnmount() {
@@ -69,12 +65,15 @@
 
 		@Watch('collapseUnchanged')
 		onCollapseUnchangedChange() {
-			this.diffEditor?.updateOptions({ hideUnchangedRegions: { enabled: this.collapseUnchanged } })
+			this.editorReady = false
+			this.dispose()
+			this.$nextTick(() => this.createEditor())
 		}
 
 		@Watch('originalContent')
 		@Watch('modifiedContent')
 		onContentChange() {
+			if (!this.diffEditor) return
 			if (this.originalModel) {
 				this.originalModel.setValue(this.normalize(this.originalContent))
 			}
@@ -116,6 +115,10 @@
 
 			// Layout initial
 			this.layout()
+
+			// Attendre que Monaco collapse les régions avant d'afficher
+			this.editorReady = false
+			setTimeout(() => { this.editorReady = true }, 100)
 		}
 
 		layout() {
@@ -136,5 +139,9 @@
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
+	opacity: 0;
+	&.ready {
+		opacity: 1;
+	}
 }
 </style>

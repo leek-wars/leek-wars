@@ -46,7 +46,7 @@
 		date: number
 	}
 
-	@Options({ name: 'git-history', i18n: {}, mixins: [...mixins] })
+	@Options({ name: 'git-history', i18n: {}, mixins: [...mixins], emits: ['show-diff'] })
 	export default class GitHistory extends Vue {
 		@Prop() folder!: string
 

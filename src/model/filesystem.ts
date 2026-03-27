@@ -24,6 +24,8 @@ class FileSystem {
 	public symbols: { [key: string]: Keyword } = {}
 	// Git: map de chemin relatif (ex: "Combat/main") -> statut git ('M', 'A', 'D', '?')
 	public gitStatus: {[path: string]: string} = {}
+	// Git: map des chemins de dossiers qui sont des repos git
+	public gitRepos: {[path: string]: boolean} = {}
 	private botAIs = [
 		{id: -1, name: 'lambda', path: '/lambda', bot: true, valid: true, color: 'green', specs: [
 			"basic_items", "basic_strategy", "reachable_cells", "combos"
@@ -211,7 +213,7 @@ class FileSystem {
 		if (path.includes(FileSystem.CONSOLE_MAGIC_KEY)) {
 			return this.consoleAI!
 		}
-		return this.aiByFullPath[path]
+		return this.aiByFullPath[path] || this.aiByFullPath['/' + path]
 	}
 
 	public find(path: string, folder: number): AI | null {

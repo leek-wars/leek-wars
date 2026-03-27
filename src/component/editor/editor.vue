@@ -38,9 +38,9 @@
 				</div>
 			</div>
 
-			<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :ais="fileSystem.ais" :history2="history" :current="showDiffViewer ? -999 : currentAI1" :active="currentSide === 1" :splitted="splitted" group="tabs" :diff-tab="diffData" :diff-active="showDiffViewer" @close="close" @close-all="closeAll" @split="setSplitted(true, $event)" :style="{ 'width': (editor1Width * 80) + '%' }" @open="open($event, 1)" @close-diff="closeDiff" @open-diff="reopenDiff" @hide-diff="hideDiff" />
+			<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :ais="fileSystem.ais" :history2="history" :current="currentTab" :active="currentSide === 1" :splitted="splitted" :theme="theme" group="tabs" :all-tabs="tabs1" @select="selectTab" @close-tab="closeTabEvent" @close-all="closeAllTabs" @split="setSplitted(true, $event)" :style="{ 'width': (editor1Width * 80) + '%' }" @open-file="openDiffFileFromMenu" />
 
-			<editor-tabs v-if="splitted && !LeekWars.mobile" ref="tabs2" :ais="fileSystem.ais" :history2="history" :current="currentAI2" :active="currentSide === 2" :splitted="splitted" group="tabs2" @close="close" @close-all="closeAll" :style="{ 'width': (editor2Width * 100) + '%' }" @open="open($event, 2)" @close-panel="setSplitted(false)" />
+			<editor-tabs v-if="splitted && !LeekWars.mobile" ref="tabs2" :ais="fileSystem.ais" :history2="history" :current="currentAI2" :active="currentSide === 2" :splitted="splitted" :theme="theme" group="tabs2" @close="close" @close-all="closeAll" :style="{ 'width': (editor2Width * 100) + '%' }" @open="open($event, 2)" @close-panel="setSplitted(false)" />
 
 			<editor-finder ref="finder" :active="activeAIs" :history="history" />
 		</div>
@@ -54,7 +54,7 @@
 								<div :class="{active: leftPanelTab === 'explorer'}" class="left-tab" @click="leftPanelTab = 'explorer'" :title="$t('title')">
 									<v-icon>mdi-file-tree</v-icon>
 								</div>
-								<div :class="{active: leftPanelTab === 'git'}" class="left-tab" @click="leftPanelTab = 'git'" title="Git">
+								<div v-if="Object.keys(fileSystem.gitRepos).length > 0" :class="{active: leftPanelTab === 'git'}" class="left-tab" @click="leftPanelTab = 'git'" title="Git">
 									<v-icon>mdi-source-branch</v-icon>
 								</div>
 							</div>
@@ -72,7 +72,7 @@
 								</div>
 							</template>
 
-							<git-panel v-if="leftPanelTab === 'git'" @show-diff="openDiff" />
+							<git-panel v-if="leftPanelTab === 'git'" :theme="theme" @show-diff="openDiff" />
 						</div>
 					</template>
 				</panel>
@@ -85,7 +85,7 @@
 							<div class="resizer explorer-resizer" @mousedown="resizerMousedown">
 								<v-icon>mdi-drag-vertical-variant</v-icon>
 							</div>
-							<div :class="{tabs: $refs.tabs && $refs.tabs.tabs.length > 1}" class="editors" ref="editors">
+							<div :class="{tabs: tabs1.length > 1}" class="editors" ref="editors">
 
 								<ai-view-monaco v-if="currentAI1" v-show="!showDiffViewer" ref="editor1" :ai="fileSystem.ais[currentAI1]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" @jump="jump" @load="load" @focus="setSide(1)" :style="{ 'width': (editor1Width * 100) + '%' }" />
 
@@ -95,7 +95,7 @@
 
 								<ai-view-monaco v-if="splitted && currentAI2" v-show="!showDiffViewer" ref="editor2" :ai="fileSystem.ais[currentAI2]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" @jump="jump" @load="load" @focus="setSide(2)" :style="{ 'width': (editor2Width * 100) + '%' }" />
 
-								<git-diff v-if="diffData && diffReady" v-show="showDiffViewer" :original-content="diffOriginal" :modified-content="diffModified" :file="diffData.file" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :inline="diffInline" :collapse-unchanged="diffCollapseUnchanged" @close="closeDiff" />
+								<git-diff v-if="diffMounted && activeDiff && activeDiff.ready" v-show="showDiffViewer" :original-content="activeDiff.original" :modified-content="activeDiff.modified" :file="activeDiff.file" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :inline="diffInline" :collapse-unchanged="diffCollapseUnchanged" @close="closeDiff" @open-file="openDiffFile" />
 
 							</div>
 
@@ -249,6 +249,7 @@
 	const EditorProblems = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-problems.${locale}.i18n`))
 	const GitPanel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/git-panel.${locale}.i18n`))
 	import GitDiff from './git-diff.vue'
+	import type { EditorTab, FileTab, DiffTab } from './editor-tabs.vue'
 	import './leekscript-monokai.scss'
 	import { SocketMessage } from '@/model/socket'
 	import { analyzer } from './analyzer'
@@ -312,11 +313,10 @@
 		history: AI[] = []
 		alreadyOpenedDialog: boolean = false
 		leftPanelTab: string = 'explorer'
-		showDiffViewer: boolean = false
-		diffData: { folder: string, file: string, staged?: boolean, hash?: string } | null = null
-		diffOriginal: string = ''
-		diffModified: string = ''
-		diffReady: boolean = false
+		tabs1: EditorTab[] = []
+		tabs1Loaded: boolean = false
+		currentTab: EditorTab | null = null
+		diffMounted: boolean = true
 		broadcast: BroadcastChannel = new BroadcastChannel('channel')
 		get actions_list() {
 			return [
@@ -344,6 +344,23 @@
 		get currentAI() {
 			return fileSystem.ais[this.currentSide === 1 ? this.currentAI1! : this.currentAI2!]
 		}
+		get showDiffViewer(): boolean {
+			return this.currentTab !== null && this.currentTab.type !== 'file'
+		}
+		get activeDiff(): DiffTab | null {
+			if (!this.currentTab || this.currentTab.type === 'file') return null
+			return this.currentTab as DiffTab
+		}
+		get diffTabs(): DiffTab[] {
+			return this.tabs1.filter((t): t is DiffTab => t.type !== 'file')
+		}
+		get activeDiffIndex(): number {
+			if (!this.currentTab || this.currentTab.type === 'file') return -1
+			return this.diffTabs.findIndex(d => this.diffKey(d) === this.diffKey(this.currentTab as DiffTab))
+		}
+		diffKey(tab: DiffTab): string {
+			return tab.folder + ':' + tab.file + ':' + (tab.hash || (tab.staged ? 's' : 'w'))
+		}
 
 		async created() {
 			LeekWars.footer = false
@@ -370,13 +387,6 @@
 			this.editor2Width = parseFloat(localStorage.getItem('editor/editor2-width') || '') || 0.5
 			this.currentAI2 = parseInt(localStorage.getItem('editor/last-code-2') || '') || null
 
-			const savedDiff = localStorage.getItem('editor/diff-tab')
-			if (savedDiff) {
-				try {
-					this.openDiff(JSON.parse(savedDiff))
-				} catch (e) { /* ignore */ }
-			}
-
 			LeekWars.loadEncyclopedia(locale)
 
 			const docMessages = await import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
@@ -392,7 +402,17 @@
 				}
 			}
 			LeekWars.setTitle(this.$t('title'), this.$t('n_ais', [fileSystem.aiCount]))
+			this.restoreTabs()
 			this.update()
+			this.loadGitRepos()
+		}
+
+		loadGitRepos() {
+			LeekWars.post('git/repos').then((data: any) => {
+				const repos: {[path: string]: boolean} = {}
+				for (const r of data.repos) { repos[r.folder] = true }
+				fileSystem.gitRepos = repos
+			})
 		}
 
 		mounted() {
@@ -522,8 +542,8 @@
 
 		@Watch('$route.params.id')
 		update() {
-			// Ignorer si on est sur une route /diff
-			if (this.$route.path.endsWith('/diff')) return
+			const routeHash = this.$route.params.hash as string | undefined
+			const isDiffRoute = routeHash || this.$route.path.endsWith('/diff')
 			if (this.$route.hash) {
 				if (this.$route.hash.startsWith('#leek-')) {
 					const id = parseInt(this.$route.hash.substring(6))
@@ -559,12 +579,13 @@
 						this.activeAIs[ai.id] = ai
 					}
 					explorer.selectAI(ai)
-					if (this.$refs.tabs) {
-						if (this.currentSide === 1) {
-							(this.$refs.tabs as any).add(id)
-						} else {
-							(this.$refs.tabs2 as any).add(id)
+					if (this.currentSide === 1 && !isDiffRoute) {
+						const fileTab: FileTab = { type: 'file', id }
+						if (!this.tabs1.find(t => t.type === 'file' && t.id === id)) {
+							this.tabs1.push(fileTab)
+							this.saveTabs()
 						}
+						this.currentTab = this.tabs1.find(t => t.type === 'file' && t.id === id) || fileTab
 					}
 					// Ajout dans l'historique
 					const i = this.history.indexOf(ai)
@@ -573,7 +594,25 @@
 
 					LeekWars.setTitle(ai.name)
 
-					if ('line' in this.$route.query) {
+					if (isDiffRoute) {
+						// Activer le diff viewer pour la route /diff ou /hash
+						// Ne pas écraser currentTab si c'est déjà un diff tab avec le bon id
+						if (this.currentTab && this.currentTab.type !== 'file' && this.currentTab.id === id) {
+							// Déjà sur le bon diff tab, ne rien faire
+						} else if (routeHash) {
+							const diffTab = this.tabs1.find(t => t.type !== 'file' && (t as DiffTab).hash === routeHash)
+							if (diffTab) {
+								this.currentTab = diffTab
+							}
+						} else {
+							const diffTab = this.tabs1.find(t => t.type !== 'file' && t.id === id)
+							if (diffTab) {
+								this.currentTab = diffTab
+							}
+						}
+						LeekWars.splitShowContent()
+						LeekWars.setActions(this.actions_content)
+					} else if ('line' in this.$route.query) {
 						this.jump(ai, parseInt(this.$route.query.line as string), 0)
 						this.$router.replace('/editor/' + id).then(() => {
 							LeekWars.splitShowContent()
@@ -722,76 +761,182 @@
 			// }
 		}
 
-		async openDiff(data: { folder: string, file: string, staged?: boolean, hash?: string }) {
-			this.diffData = data
-			localStorage.setItem('editor/diff-tab', JSON.stringify(data))
-			this.diffOriginal = ''
-			this.diffModified = ''
-			this.diffReady = false
-			this.showDiffViewer = true
-
-			// Mettre à jour l'URL
-			const aiId = this.currentAI1 || 0
-			if (this.$route.path !== '/editor/' + aiId + '/diff') {
-				this.$router.push('/editor/' + aiId + '/diff')
+		openDiff(data: { folder: string, file: string, staged?: boolean, hash?: string }) {
+			const fullPath = (data.folder ? data.folder + '/' : '') + data.file
+			const ai = fileSystem.getAIByPath(fullPath)
+			const tab: DiffTab = { type: data.hash ? 'commit' : 'diff', id: ai ? ai.id : 0, folder: data.folder, file: data.file, staged: data.staged, hash: data.hash, original: '', modified: '', ready: false }
+			// Chercher si un onglet existe déjà
+			const existing = this.tabs1.find(t => t.type !== 'file' && this.diffKey(t as DiffTab) === this.diffKey(tab))
+			if (existing) {
+				this.currentTab = existing
+			} else {
+				this.tabs1.push(tab)
+				this.currentTab = tab
+				this.fetchDiffContent(tab)
 			}
+			this.updateUrl()
+			this.saveTabs()
+		}
 
-			const safe = (url: string, params: any) => LeekWars.post(url, params).catch(() => ({ content: '' }))
+		closeDiff() {
+			if (this.currentTab && this.currentTab.type !== 'file') {
+				this.closeTabByRef(this.currentTab)
+			}
+		}
 
+		selectTab(tab: EditorTab) {
+			if (tab.type === 'file') {
+				const ai = fileSystem.ais[tab.id]
+				if (!ai) return
+				this.currentTab = tab
+				this.open(ai.id, 1)
+			} else {
+				// Si on switch entre deux diffs, démonter d'abord le composant git-diff
+				const wasDiff = this.currentTab && this.currentTab.type !== 'file'
+				if (wasDiff) {
+					this.diffMounted = false
+					this.currentTab = tab
+					this.updateUrl()
+					this.saveTabs()
+					nextTick(() => { this.diffMounted = true })
+				} else {
+					this.currentTab = tab
+					this.updateUrl()
+					this.saveTabs()
+				}
+			}
+		}
+
+		closeTabEvent(tab: EditorTab) {
+			this.closeTabByRef(tab)
+		}
+
+		closeTabByRef(tab: EditorTab) {
+			const i = this.tabs1.indexOf(tab)
+			if (i === -1) return
+			this.tabs1.splice(i, 1)
+			// Si c'est le tab actif, en sélectionner un autre
+			if (this.currentTab === tab) {
+				if (this.tabs1.length > 0) {
+					const newIndex = Math.min(i, this.tabs1.length - 1)
+					this.selectTab(this.tabs1[newIndex])
+				} else {
+					this.currentTab = null
+				}
+			}
+			this.updateUrl()
+			this.saveTabs()
+		}
+
+		closeAllTabs(keepTab: EditorTab) {
+			this.tabs1 = [keepTab]
+			this.currentTab = keepTab
+			this.selectTab(keepTab)
+			this.saveTabs()
+		}
+
+		openDiffFile() {
+			if (!this.currentTab || this.currentTab.type === 'file') return
+			this.openAIFromDiffTab(this.currentTab as DiffTab)
+		}
+
+		openDiffFileFromMenu(tab: EditorTab) {
+			if (tab.type === 'file') return
+			this.openAIFromDiffTab(tab as DiffTab)
+		}
+
+		private openAIFromDiffTab(diff: DiffTab) {
+			const fullPath = (diff.folder ? diff.folder + '/' : '') + diff.file
+			const ai = fileSystem.getAIByPath(fullPath)
+			if (ai) {
+				this.open(ai.id, 1)
+			}
+		}
+
+		saveTabs() {
+			const serialized = this.tabs1.map(t => {
+				if (t.type === 'file') return { type: 'file', id: t.id }
+				return { type: t.type, id: t.id, folder: t.folder, file: t.file, staged: t.staged, hash: t.hash }
+			})
+			localStorage.setItem('editor/tabs1', JSON.stringify(serialized))
+			if (this.currentTab) {
+				if (this.currentTab.type === 'file') {
+					localStorage.setItem('editor/current-tab', JSON.stringify({ type: 'file', id: this.currentTab.id }))
+				} else {
+					localStorage.setItem('editor/current-tab', JSON.stringify({ type: this.currentTab.type, key: this.diffKey(this.currentTab as DiffTab) }))
+				}
+			}
+		}
+
+		restoreTabs() {
+			if (this.tabs1Loaded) return
+			this.tabs1Loaded = true
 			try {
-				if (data.hash) {
+				const saved: any[] = JSON.parse(localStorage.getItem('editor/tabs1') || '[]')
+				for (const t of saved) {
+					if (t.type === 'file') {
+						if (t.id in fileSystem.ais) {
+							this.tabs1.push({ type: 'file', id: t.id })
+						}
+					} else {
+						const tab: DiffTab = { type: t.type || 'diff', id: t.id || 0, folder: t.folder, file: t.file, staged: t.staged, hash: t.hash, original: '', modified: '', ready: false }
+						this.tabs1.push(tab)
+						this.fetchDiffContent(tab)
+					}
+				}
+			} catch (e) {
+				// Données corrompues
+			}
+		}
+
+		async fetchDiffContent(tab: DiffTab) {
+			const safe = (url: string, params: any) => LeekWars.post(url, params).catch(() => ({ content: '' }))
+			let original = ''
+			let modified = ''
+			try {
+				if (tab.hash) {
 					const [parentData, commitData] = await Promise.all([
-						safe('git/show', { folder: data.folder, hash: data.hash + '^', file: data.file }),
-						safe('git/show', { folder: data.folder, hash: data.hash, file: data.file }),
+						safe('git/show', { folder: tab.folder, hash: tab.hash + '^', file: tab.file }),
+						safe('git/show', { folder: tab.folder, hash: tab.hash, file: tab.file }),
 					])
-					this.diffOriginal = parentData.content || ''
-					this.diffModified = commitData.content || ''
-				} else if (data.staged) {
+					original = parentData.content || ''
+					modified = commitData.content || ''
+				} else if (tab.staged) {
 					const [headData, indexData] = await Promise.all([
-						safe('git/show', { folder: data.folder, hash: 'HEAD', file: data.file }),
-						safe('git/show', { folder: data.folder, hash: ':', file: data.file }),
+						safe('git/show', { folder: tab.folder, hash: 'HEAD', file: tab.file }),
+						safe('git/show', { folder: tab.folder, hash: ':', file: tab.file }),
 					])
-					this.diffOriginal = headData.content || ''
-					this.diffModified = indexData.content || ''
+					original = headData.content || ''
+					modified = indexData.content || ''
 				} else {
 					const [headData, fileData] = await Promise.all([
-						safe('git/show', { folder: data.folder, hash: 'HEAD', file: data.file }),
-						safe('git/read-file', { folder: data.folder, file: data.file }),
+						safe('git/show', { folder: tab.folder, hash: 'HEAD', file: tab.file }),
+						safe('git/read-file', { folder: tab.folder, file: tab.file }),
 					])
-					this.diffOriginal = headData.content || ''
-					this.diffModified = fileData.content || ''
+					original = headData.content || ''
+					modified = fileData.content || ''
 				}
 			} catch (e) {
 				// Erreur de fetch
 			}
-			this.diffReady = true
+			tab.original = original
+			tab.modified = modified
+			tab.ready = true
 		}
 
-		closeDiff() {
-			this.showDiffViewer = false
-			this.diffReady = false
-			this.diffData = null
-			localStorage.removeItem('editor/diff-tab')
-
-			// Revenir à l'URL de l'éditeur
-			const aiId = this.currentAI1 || 0
-			if (this.$route.path !== '/editor/' + aiId) {
-				this.$router.push('/editor/' + aiId)
+		tabUrl(tab: EditorTab | null): string {
+			if (!tab) return '/editor/' + (this.currentAI1 || this.$route.params.id || 0)
+			if (tab.type === 'file') {
+				return '/editor/' + tab.id
 			}
-		}
-		reopenDiff() {
-			this.showDiffViewer = true
-			const aiId = this.currentAI1 || 0
-			if (!this.$route.path.endsWith('/diff')) {
-				this.$router.push('/editor/' + aiId + '/diff')
-			}
+			const diff = tab as DiffTab
+			return '/editor/' + diff.id + '/' + (diff.hash || 'diff')
 		}
 
-		hideDiff() {
-			this.showDiffViewer = false
-			const aiId = this.currentAI1 || 0
-			if (this.$route.path.endsWith('/diff')) {
-				this.$router.push('/editor/' + aiId)
+		updateUrl() {
+			const target = this.tabUrl(this.currentTab)
+			if (this.$route.path !== target) {
+				this.$router.push(target)
 			}
 		}
 
@@ -869,7 +1014,10 @@
 		}
 
 		jump(ai: AI, line: number, column: number) {
-			console.log("jump()", ai, line, column)
+			if (this.showDiffViewer) {
+				this.currentTab = this.tabs1.find(t => t.type === 'file') || null
+				this.updateUrl()
+			}
 			if (!this.currentAI || ai.id !== this.currentAI.id) {
 				this.$router.push('/editor/' + ai.id)
 			}
@@ -966,8 +1114,9 @@
 			// Remove from active AIs
 			delete this.activeAIs[ai.id]
 			// Remove from tabs
-			if (this.$refs.tabs) {
-				(this.$refs.tabs as any).close(ai.id, false)
+			const tab = this.tabs1.find(t => t.type === 'file' && t.id === ai.id)
+			if (tab) {
+				this.closeTabByRef(tab)
 			}
 			// Clear the AI from scenarios
 			(this.$refs.editorTest as any).onAIDeleted(ai.id)
@@ -1053,9 +1202,6 @@
 				})
 				this.setSide(2)
 				localStorage.setItem('editor/last-code-2', '' + ai!.id)
-				nextTick(() => {
-					;(this.$refs.tabs2 as any).add(ai!.id)
-				})
 			} else {
 				this.editor1Width = this.editorTotalWidth
 				this.setSide(1)
@@ -1066,8 +1212,14 @@
 		}
 
 		open(ai: number, side: number) {
-			if (this.showDiffViewer) {
-				this.showDiffViewer = false
+			// Ajouter un onglet fichier s'il n'existe pas
+			const fileTab: FileTab = { type: 'file', id: ai }
+			if (side === 1) {
+				if (!this.tabs1.find(t => t.type === 'file' && t.id === ai)) {
+					this.tabs1.push(fileTab)
+				}
+				this.currentTab = this.tabs1.find(t => t.type === 'file' && t.id === ai) || fileTab
+				this.saveTabs()
 			}
 			this.setSide(side)
 			const aiObj = fileSystem.ais[ai]
@@ -1076,8 +1228,7 @@
 					side === 1 ? this.currentAI1 = ai : this.currentAI2 = ai
 				})
 			}
-			const tabs = (side === 1 ? this.$refs.tabs : this.$refs.tabs2) as any
-			tabs.add(ai)
+			this.updateUrl()
 			localStorage.setItem('editor/last-code-' + side, '' + ai)
 		}
 

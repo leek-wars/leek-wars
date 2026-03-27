@@ -5,7 +5,8 @@
 				<div class="triangle"></div>
 				<!-- <v-icon v-if="folder.id === -1" class="icon">mdi-delete-outline</v-icon> -->
 				<v-icon class="icon" v-if="folder.closed">mdi-folder-lock-outline</v-icon>
-				<v-icon class="icon" v-else="folder.closed">mdi-folder-outline</v-icon>
+				<v-icon class="icon" v-else-if="isGitRepo">mdi-source-branch</v-icon>
+				<v-icon class="icon" v-else>mdi-folder-outline</v-icon>
 				<span v-if="folder.id === -1" ref="name" class="text">{{ $parent.$t(folder.name) }}
 					<span v-if="folder.id === -1">({{ folder.items.length }})</span>
 				</span>
@@ -44,6 +45,11 @@
 		emitter = emitter
 
 		get inBin() { return fileSystem.isInBin(this.folder.parent) }
+
+		get isGitRepo(): boolean {
+			const path = fileSystem.getFolderPath(this.folder).replace(/\/$/, '')
+			return !!fileSystem.gitRepos[path]
+		}
 
 		toggle(folder: Folder) {
 			if (!folder.closed) {

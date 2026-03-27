@@ -66,7 +66,7 @@
 				<v-list-item v-else v-ripple @click="closeFolder()" prepend-icon="mdi-folder-lock-outline">
 					<v-list-item-title>{{ $t('close_folder') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-if="folder && folder.id > 0 && !folder.closed" v-ripple @click="initGit()" prepend-icon="mdi-source-branch">
+				<v-list-item v-if="folder && folder.id > 0 && !folder.closed && !isFolderGitRepo" v-ripple @click="initGit()" prepend-icon="mdi-source-branch">
 					<v-list-item-title>{{ $t('init_git') }}</v-list-item-title>
 				</v-list-item>
 				<v-list-item v-ripple @click="deleteDialog = true" prepend-icon="mdi-delete">
@@ -336,6 +336,12 @@
 				}
 			}
 			this.renameDialog = false
+		}
+
+		get isFolderGitRepo(): boolean {
+			if (!this.folder || this.folder.id <= 0) return false
+			const path = fileSystem.getFolderPath(this.folder).replace(/\/$/, '')
+			return !!fileSystem.gitRepos[path]
 		}
 
 		initGit() {
