@@ -60,7 +60,7 @@ export default class AIViewMonaco extends Vue {
 	scrollListener!: monaco.IDisposable
 	private analyzerTimeout: any
 	private viewStateSaveTimeout: any
-	private currentAiId: number | null = null
+	private currentAiPath: string | null = null
 	public analyzing: boolean = false
 	public saving: boolean = false
 	public serverError: boolean = false
@@ -112,8 +112,8 @@ export default class AIViewMonaco extends Vue {
 		}))
 		this.scrollListener = this.editor.onDidScrollChange((e) => {
 			if (!this.ai) return
-			// console.log('scroll', this.ai.id, e.scrollTop, e.scrollHeight, e.scrollWidth)
-			localStorage.setItem('editor/scroll/' + this.ai.id, '' + e.scrollTop)
+			// console.log('scroll', this.ai.path, e.scrollTop, e.scrollHeight, e.scrollWidth)
+			localStorage.setItem('editor/scroll/' + this.ai.path, '' + e.scrollTop)
 			this.debouncedSaveViewState()
 		})
 		// Restore focus after mouse drag-select to prevent first keystroke
@@ -297,16 +297,16 @@ export default class AIViewMonaco extends Vue {
 		})
 	}
 
-	@Watch('ai.id', { immediate: true })
+	@Watch('ai.path', { immediate: true })
 	update() {
 		if (!this.ai) return
-		// console.log("update ai", this.ai.id)
+		// console.log("update ai", this.ai.path)
 
 		// Save view state for the previous AI before switching
-		if (this.currentAiId !== null && this.currentAiId !== this.ai.id) {
+		if (this.currentAiPath !== null && this.currentAiPath !== this.ai.path) {
 			this.saveViewState()
 		}
-		this.currentAiId = this.ai.id
+		this.currentAiPath = this.ai.path
 
 		const uri = monaco.Uri.parse('file:///' + this.ai.path)
 		const model = monaco.editor.getModel(uri) || monaco.editor.createModel(this.ai.code, 'leekscript', uri)
@@ -364,18 +364,16 @@ export default class AIViewMonaco extends Vue {
 				this.analyzing = false
 				if (!result) return
 
-				for (const entrypoint in result) {
-					const entrypoint_id = parseInt(entrypoint, 10)
-					const entrypointAi = fileSystem.ais[entrypoint_id]
+				for (const epPath in result) {
+					const entrypointAi = fileSystem.ais[epPath]
 					if (!entrypointAi) continue
 
-					// Valid?
 					let valid = true
-					for (const problem of result[entrypoint]) {
+					for (const problem of result[epPath]) {
 						if (problem[0] === 0) { valid = false; break }
 					}
 					entrypointAi.valid = valid
-					analyzer.handleProblems(entrypointAi, result[entrypoint])
+					analyzer.handleProblems(entrypointAi, result[epPath])
 				}
 				analyzer.updateTodos(ai)
 				analyzer.updateCount()
@@ -393,7 +391,7 @@ export default class AIViewMonaco extends Vue {
 	}
 
 	private saveViewState(aiId?: number) {
-		const id = aiId ?? this.currentAiId
+		const id = aiId ?? this.currentAiPath
 		if (!id) return
 		const viewState = this.editor.saveViewState()
 		if (viewState) {
@@ -402,7 +400,7 @@ export default class AIViewMonaco extends Vue {
 	}
 
 	private restoreViewState() {
-		const viewStateStr = localStorage.getItem('editor/viewstate/' + this.ai.id)
+		const viewStateStr = localStorage.getItem('editor/viewstate/' + this.ai.path)
 		if (viewStateStr) {
 			try {
 				const viewState = JSON.parse(viewStateStr)
@@ -413,7 +411,7 @@ export default class AIViewMonaco extends Vue {
 			}
 		}
 		// Fallback: restore scroll position only (backward compatibility)
-		const scrollPosition = parseInt(localStorage.getItem('editor/scroll/' + this.ai.id) || '0')
+		const scrollPosition = parseInt(localStorage.getItem('editor/scroll/' + this.ai.path) || '0')
 		this.editor.setScrollTop(scrollPosition)
 	}
 

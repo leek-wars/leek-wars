@@ -300,7 +300,7 @@
 		<popup v-model="aiDialog" :width="800" icon="mdi-code-braces" :title="$t('select_ai')">
 			<div v-if="aiDialogBot" class="title"><v-icon>mdi-file</v-icon> {{ $t('bot_ais') }}</div>
 			<div v-if="aiDialogBot" class="bot-ai">
-				<div v-for="ai in fileSystem.botAIs" :key="ai.id" v-ripple class="ai" @click="clickDialogAI(ai)">
+				<div v-for="ai in fileSystem.botAIs" :key="ai.path" v-ripple class="ai" @click="clickDialogAI(ai)">
 					<ai :ai="ai" :small="false" :library="false" />
 					<ul>
 						<li v-for="(spec, s) in ai.specs" :key="s">{{ $t(spec) }}</li>
@@ -589,7 +589,7 @@ import { defineAsyncComponent } from 'vue'
 			const team1 = [] as TestScenarioLeek[]
 			for (const leek in store.state.farmer.leeks) {
 				const ai = store.state.farmer.leeks[leek].ai
-				team1.push({ id: parseInt(leek, 10), ai: ai ? ai.id : null })
+				team1.push({ id: parseInt(leek, 10), ai: ai ? ai.path : null })
 			}
 			if (LeekWars.objectSize(store.state.farmer.leeks) > 1) {
 				templates.push({
@@ -916,19 +916,19 @@ import { defineAsyncComponent } from 'vue'
 			if (!this.currentScenario) { return }
 			if (this.turretTeam > 0) {
 				if (this.turretTeam === 1) {
-					this.currentScenario.turret_ai_team1 = ai.id
-					this.updateScenario(this.currentScenario, { turret_ai_team1: ai.id })
+					this.currentScenario.turret_ai_team1 = ai.path
+					this.updateScenario(this.currentScenario, { turret_ai_team1: ai.path })
 				} else {
-					this.currentScenario.turret_ai_team2 = ai.id
-					this.updateScenario(this.currentScenario, { turret_ai_team2: ai.id })
+					this.currentScenario.turret_ai_team2 = ai.path
+					this.updateScenario(this.currentScenario, { turret_ai_team2: ai.path })
 				}
 				this.turretTeam = 0
 				this.aiDialog = false
 				return
 			}
 			if (!this.aiLeek) { return }
-			this.aiLeek.ai = ai.id as any
-			LeekWars.post('test-scenario/add-leek', {scenario_id: this.currentScenario.id, leek: this.aiLeek.id, team: -1, ai: ai.id})
+			this.aiLeek.ai = ai.path as any
+			LeekWars.post('test-scenario/add-leek', {scenario_id: this.currentScenario.id, leek: this.aiLeek.id, team: -1, ai: ai.path})
 			this.aiDialog = false
 		}
 
@@ -1168,9 +1168,9 @@ import { defineAsyncComponent } from 'vue'
 		launchTest() {
 			if (!this.currentScenario || !this.currentAI) { return }
 			this.currentAI.scenario = this.currentScenario.id
-			LeekWars.post('ai/test-scenario', { scenario_id: this.currentScenario.id, ai_id: this.currentAI.id }).then(data => {
+			LeekWars.post('ai/test-scenario', { scenario_id: this.currentScenario.id, ai_id: this.currentAI.path }).then(data => {
 				localStorage.setItem('editor/last-scenario', '' + this.currentScenario!.id)
-				localStorage.setItem('editor/last-scenario-ai', '' + this.currentAI!.id)
+				localStorage.setItem('editor/last-scenario-ai', '' + this.currentAI!.path)
 				this.$router.push('/fight/' + data.fight)
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
@@ -1258,8 +1258,8 @@ import { defineAsyncComponent } from 'vue'
 					this.scenarios = data.scenarios
 					if (data.turret_ai) {
 						this.teamTurretAI = data.turret_ai
-						data.turret_ai.path = data.turret_ai.name
-						this.alliesAIs[data.turret_ai.id] = data.turret_ai
+						data.turret_ai.path = data.turret_ai.file_path || data.turret_ai.name
+						this.alliesAIs[data.turret_ai.path] = data.turret_ai
 					}
 					this.updateAI()
 
@@ -1301,15 +1301,16 @@ import { defineAsyncComponent } from 'vue'
 				for (const c in compositions) {
 					const compo = compositions[c]
 					for (const leek of compo.leeks) {
-						if (!(leek.ai.id in this.ais)) {
-							leek.ai.path = leek.ai.name
-							this.alliesAIs[leek.ai.id] = leek.ai
+						const aiPath = leek.ai.file_path || leek.ai.name
+						if (!(aiPath in this.ais)) {
+							leek.ai.path = aiPath
+							this.alliesAIs[aiPath] = leek.ai
 						}
 						if (!(leek.id in store.state.farmer!.leeks)) {
 							this.allies[leek.id] = leek
 							leek.ally = true
 						}
-						leek.ai = leek.ai ? leek.ai.id : null
+						leek.ai = leek.ai ? (leek.ai.path || leek.ai.file_path || leek.ai.name) : null
 					}
 				}
 			})

@@ -6,13 +6,13 @@ import { LeekWars } from './leekwars'
 import type * as monaco from 'monaco-editor'
 
 class AI {
-	public id!: number
 	public name!: string
 	public code!: string
 	public valid!: boolean
 	public version!: number
 	public strict!: boolean
 	public timestamp: number = 0
+	public mtime: number = 0
 	public modified: boolean = false
 	public dragging: boolean = false
 	public folder!: number
@@ -36,7 +36,7 @@ class AI {
 	public entrypoints: number[] = []
 	public comments: { [key: number]: string } = {}
 	public scenario!: number | null
-	public problems: { [key: number]: Problem[] } = {}
+	public problems: { [key: string]: Problem[] } = {}
 	public model!: monaco.editor.ITextModel
 
 	constructor(data: any) {
@@ -511,11 +511,11 @@ class AI {
 	public isClassDefined(clazz: string): boolean {
 		// console.log("isClassDefined", clazz, this)
 
-		const visited = new Set<number>()
+		const visited = new Set<string>()
 
 		const aux = (ai: AI): boolean => {
-			if (visited.has(ai.id)) { return false }
-			visited.add(ai.id)
+			if (visited.has(ai.path)) { return false }
+			visited.add(ai.path)
 			// console.log("aux", ai.path)
 
 			if (ai.classes[clazz]) return true
@@ -551,11 +551,11 @@ class AI {
 
 		// console.log("searchSymbolInAI", symbol)
 
-		const visited = new Set<number>()
+		const visited = new Set<string>()
 
 		const aux = (ai: AI): Keyword | null => {
-			if (visited.has(ai.id)) { return null }
-			visited.add(ai.id)
+			if (visited.has(ai.path)) { return null }
+			visited.add(ai.path)
 			// console.log("aux", ai.path)
 			if (ai.functions) {
 				for (const fun of ai.functions) {

@@ -49,11 +49,11 @@
 
 	export interface FileTab {
 		type: 'file'
-		id: number
+		id: string
 	}
 	export interface DiffTab {
 		type: 'diff' | 'commit'
-		id: number
+		id: string
 		folder: string
 		file: string
 		staged?: boolean

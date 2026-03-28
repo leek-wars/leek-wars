@@ -266,7 +266,7 @@
 		KeywordKind = KeywordKind
 
 		created() {
-			this.id = this.ai.id
+			this.id = this.ai.path
 			this.error = !this.ai.valid
 		}
 
@@ -403,7 +403,7 @@
 				})
 				this.editor.on('scroll', (e) => {
 					// console.log('scroll', e.getScrollInfo())
-					localStorage.setItem('editor/scroll/' + this.ai.id, e.getScrollInfo().top)
+					localStorage.setItem('editor/scroll/' + this.ai.path, e.getScrollInfo().top)
 					// Hide autocomplete
 					this.close()
 				})
@@ -424,7 +424,7 @@
 					this.jumpToLine = null
 				} else {
 					// Jump to the last line
-					const scrollPosition = parseInt(localStorage.getItem('editor/scroll/' + this.ai.id) || '0')
+					const scrollPosition = parseInt(localStorage.getItem('editor/scroll/' + this.ai.path) || '0')
 					this.editor.scrollTo(0, scrollPosition)
 				}
 
@@ -1313,9 +1313,9 @@
 		}
 
 		public addCompletionsFromAI(start: string, completions: any[], visited: Set<number>, ai: AI) {
-			if (visited.has(ai.id)) { return }
-			visited.add(ai.id)
-			// console.log("add completions from ai", ai.id)
+			if (visited.has(ai.path)) { return }
+			visited.add(ai.path)
+			// console.log("add completions from ai", ai.path)
 			// Globales
 			for (const variable in ai.globals) {
 				if (variable.toLowerCase().indexOf(start.toLowerCase()) === 0) {
@@ -1342,8 +1342,8 @@
 
 		public addDotCompletionsFromAI(tokenBeforeDot: CodeMirror.Token, start: string, completions: any[], visited: Set<number>, ai: AI) {
 
-			if (visited.has(ai.id)) { return }
-			visited.add(ai.id)
+			if (visited.has(ai.path)) { return }
+			visited.add(ai.path)
 
 			if (tokenBeforeDot.string in ai.classes) {
 				const clazz = ai.classes[tokenBeforeDot.string]

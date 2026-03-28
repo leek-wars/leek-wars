@@ -13,14 +13,14 @@
 		</div>
 		<div v-for="(ais, entrypoint) in analyzer.problems" :key="entrypoint">
 			<div v-for="(problems, ai) in ais" :key="ai">
-				<template v-if="filteredCount(problems) && fileSystem.aiByFullPath[ai]">
+				<template v-if="filteredCount(problems) && getAI(ai)">
 					<div class="file" @click="toggleProblemFile(entrypoint + ai)">
 						<v-icon>{{ problemsCollapsed[entrypoint + ai] ? 'mdi-chevron-right' : 'mdi-chevron-down' }}</v-icon>
-						<span v-if="fileSystem.aiByFullPath[ai].entrypoints.length > 1 && fileSystem.ais[entrypoint]">{{ fileSystem.ais[entrypoint].name }} {{ ' ➞ ' }}</span>
+						<span v-if="getAI(ai)!.entrypoints.length > 1 && fileSystem.ais[entrypoint]">{{ fileSystem.ais[entrypoint].name }} {{ ' ➞ ' }}</span>
 						{{ ai }}
-						<span v-if="filterErrors && fileSystem.aiByFullPath[ai].errors" class="count error">{{ fileSystem.aiByFullPath[ai].errors }}</span>
-						<span v-if="filterWarnings && fileSystem.aiByFullPath[ai].warnings" class="count warning">{{ fileSystem.aiByFullPath[ai].warnings }}</span>
-						<span v-if="filterTodos && fileSystem.aiByFullPath[ai].todos" class="count todo">{{ fileSystem.aiByFullPath[ai].todos }}</span>
+						<span v-if="filterErrors && getAI(ai)!.errors" class="count error">{{ getAI(ai)!.errors }}</span>
+						<span v-if="filterWarnings && getAI(ai)!.warnings" class="count warning">{{ getAI(ai)!.warnings }}</span>
+						<span v-if="filterTodos && getAI(ai)!.todos" class="count todo">{{ getAI(ai)!.todos }}</span>
 					</div>
 					<div v-if="!problemsCollapsed[entrypoint + ai]">
 						<div v-for="(problem, p) in filteredProblems(problems)" :key="p" class="problem" @click="jumpProblem(ai, problem)">
@@ -38,12 +38,13 @@
 </template>
 
 <script lang="ts">
+	import { AI } from '@/model/ai'
 	import { fileSystem } from '@/model/filesystem'
 	import { i18n, mixins } from '@/model/i18n'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import { analyzer } from './analyzer'
 
-	@Options({ name: 'editor-problems', i18n: {}, mixins: [...mixins] })
+	@Options({ name: 'editor-problems', i18n: {}, mixins: [...mixins], emits: ['jump'] })
 	export default class Explorer extends Vue {
 
 		analyzer = analyzer
@@ -82,9 +83,15 @@
 			return this.filteredProblems(problems).length
 		}
 
+		getAI(path: string): AI | undefined {
+			return fileSystem.ais[path]
+		}
+
 		jumpProblem(path: string, problem: any) {
-			const ai = fileSystem.aiByFullPath[path]
-			this.$emit('jump', ai, problem.start_line, problem.start_column)
+			const ai = this.getAI(path)
+			if (ai) {
+				this.$emit('jump', ai, problem.start_line, problem.start_column)
+			}
 		}
 	}
 </script>

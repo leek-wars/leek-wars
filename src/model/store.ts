@@ -152,7 +152,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			for (const chat of data.chats) {
 				store.commit('register-chat', chat)
 			}
-			fileSystem.init(data.farmer)
+			fileSystem.init(data.farmer.ai_tree)
 			LeekWars.startIntervals()
 			updateTitle(state)
 			emitter.emit('connected', state.farmer)
@@ -873,17 +873,6 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'add-ai'(state: LeekWarsState, ai: AI) {
-			if (state.farmer) {
-				state.farmer.ais.push(ai)
-			}
-		},
-
-		'delete-ai'(state: LeekWarsState, id: number) {
-			if (state.farmer) {
-				state.farmer.ais = state.farmer.ais.filter(ai => ai.id !== id)
-			}
-		},
 
 		'set-title'(state: LeekWarsState, title: number[]) {
 			if (state.farmer) {

@@ -39,8 +39,9 @@
 		get ai() { return this.item.ai }
 
 		get leeks() {
+			const aiKey = this.ai.path
 			return Object.entries(fileSystem.leekAIs)
-				.filter(entry => entry[1] === this.ai.id)
+				.filter(entry => entry[1] === aiKey)
 				.map(entry => store.state.farmer!.leeks[parseInt(entry[0])].name)
 		}
 
@@ -64,7 +65,7 @@
 			e.stopPropagation()
 		}
 		click(e: Event) {
-			this.$router.push('/editor/' + this.ai.id)
+			this.$router.push('/editor/' + this.ai.path)
 			e.stopPropagation()
 		}
 	}

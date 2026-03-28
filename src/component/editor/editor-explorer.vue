@@ -230,7 +230,7 @@
 		}
 
 		open() {
-			this.$router.push('/editor/' + this.ai!.id)
+			this.$router.push('/editor/' + this.ai!.path)
 		}
 
 		openMenu(event: { item: AI | Folder, ai: boolean, e: any }) {
@@ -318,19 +318,21 @@
 		rename() {
 			if (this.ai) {
 				if (this.newName !== this.ai.name) {
-					LeekWars.post('ai/rename', {ai_id: this.ai.id, new_name: this.newName}).then(data => {
+					LeekWars.post('ai/rename', {path: this.ai.path, new_name: this.newName}).then(() => {
 						LeekWars.toast(i18n.t('leekscript.ai_renamed', [this.newName]) as string)
 						fileSystem.renameAI(this.ai!, this.newName)
-					}).error(error => {
+						this.$router.replace('/editor/' + this.ai!.path)
+					}).error((error: {error: string}) => {
 						LeekWars.toast(error.error)
 					})
 				}
 			} else if (this.folder) {
 				if (this.newName !== this.folder.name) {
-					LeekWars.post('ai-folder/rename', {folder_id: this.folder.id, new_name: this.newName}).then(data => {
+					const folderPath = fileSystem.getFolderPath(this.folder).replace(/\/$/, '')
+					LeekWars.post('ai-folder/rename', {path: folderPath, new_name: this.newName}).then(() => {
 						LeekWars.toast(i18n.t('leekscript.folder_renamed', [this.newName]) as string)
 						this.folder!.name = this.newName
-					}).error(error => {
+					}).error((error: {error: string}) => {
 						LeekWars.toast(error.error)
 					})
 				}
@@ -426,18 +428,24 @@
 		}
 		newAI(v2: boolean, name: string) {
 			if (!this.folder) { return }
-			LeekWars.post('ai/new-name', {folder_id: this.folder.id, version: LeekWars.LATEST_LEEKSCRIPT_VERSION, name}).then(data => {
-				const ai = new AI(data.ai)
-				ai.valid = true
-				ai.version = LeekWars.LATEST_LEEKSCRIPT_VERSION
-				ai.total_chars = ai.code.length
-				ai.total_lines = ai.code.split("\n").length
+			const folderPath = this.folder.id === 0 ? '' : fileSystem.getFolderPath(this.folder).replace(/\/$/, '')
+			LeekWars.post('ai/create', {folder: folderPath, version: LeekWars.LATEST_LEEKSCRIPT_VERSION, name}).then((data: any) => {
+				const ai = new AI({
+					name,
+					path: data.path,
+					folder: this.folder!.id,
+					valid: true,
+					version: LeekWars.LATEST_LEEKSCRIPT_VERSION,
+					code: data.code,
+					total_chars: data.code.length,
+					total_lines: data.code.split("\n").length,
+				})
 				fileSystem.add_ai(ai, this.folder!)
 				this.folder!.expanded = true
-				this.$router.push('/editor/' + ai.id)
+				this.$router.push('/editor/' + ai.path)
 				this.newAIDialog = false
 				this.newAIName = ''
-			}).error(error => {
+			}).error((error: any) => {
 				LeekWars.toast(error.error)
 			})
 		}
@@ -462,13 +470,16 @@
 		}
 		newFolder(name: string) {
 			if (!this.folder) { return }
-			LeekWars.post('ai-folder/new-name', {folder_id: this.folder.id, name}).then(data => {
+			const parentPath = this.folder.id === 0 ? '' : fileSystem.getFolderPath(this.folder).replace(/\/$/, '')
+			const dirPath = parentPath ? parentPath + '/' + name : name
+			LeekWars.post('ai-folder/create', {path: dirPath}).then(() => {
 				if (this.folder) {
-					const folder = new Folder(data.id, name, this.folder.id)
+					let nextId = 1
+					for (const id in fileSystem.folderById) { if (parseInt(id) >= nextId) nextId = parseInt(id) + 1 }
+					const folder = new Folder(nextId, name, this.folder.id)
 					folder.items = []
 					fileSystem.add_folder(folder, this.folder)
 					this.folder!.expanded = true
-					this.$router.push('/editor/' + folder.id)
 					this.newFolderDialog = false
 					this.newFolderName = ''
 				}

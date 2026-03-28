@@ -38,7 +38,8 @@
 				<div class="content">
 				<breadcrumb v-if="LeekWars.mobile" :items="breadcrumb_items" />
 				<pagination v-if="topic" :current="page" :total="pages" :url="'/forum/category-' + category.id + '/topic-' + topic.id" />
-				<loader v-if="!topic || !topic.messages" />
+				<div v-if="notFound" class="not-found" v-html="$t('forum.topic_not_found', [$route.params.topic])"></div>
+			<loader v-else-if="!topic || !topic.messages" />
 				<div v-else>
 					<div v-for="message in topic.messages" :id="'message-' + message.id" :key="message.id" class="message-wrapper">
 						<div v-if="!message.writer.deleted" class="profile">
@@ -361,6 +362,7 @@ import { emitter } from '@/model/vue'
 		oldTopicDialog: boolean = false
 		creatingIssue: boolean = false
 		forumLanguages: string[] = []
+		notFound: boolean = false
 		reportDialog: boolean = false
 		reportFarmer: Farmer | null = null
 		reportContent: string = ''
@@ -415,6 +417,7 @@ import { emitter } from '@/model/vue'
 			this.page = page
 
 			if (this.topic) { this.topic.messages = null }
+			this.notFound = false
 			this.forumLanguages = (localStorage.getItem('forum/languages') as string || this.$i18n.locale).split(',')
 			LeekWars.get('forum/get-messages/' + topic + '/' + this.forumLanguages + '/' + this.page).then(data => {
 				this.topic = data.topic
@@ -438,6 +441,9 @@ import { emitter } from '@/model/vue'
 				if (this.canMoveTopic) {
 					this.loadMoveCategories()
 				}
+			}).error(() => {
+				this.notFound = true
+				emitter.emit('loaded')
 			})
 		}
 		createIssue() {
@@ -738,6 +744,12 @@ import { emitter } from '@/model/vue'
 </script>
 
 <style lang="scss" scoped>
+	.not-found {
+		padding: 40px;
+		text-align: center;
+		font-size: 18px;
+		color: #888;
+	}
 	.title-wrapper {
 		flex: 1;
 	}

@@ -11,6 +11,7 @@
 
 <script lang="ts">
 	import { AI } from '@/model/ai'
+	import { fileSystem } from '@/model/filesystem'
 	import { Options, Prop, Vue } from 'vue-property-decorator'
 
 	@Options({ name: "ai" })
@@ -21,7 +22,7 @@
 		@Prop() locked!: boolean
 
 		get my_ai() {
-			return this.$store.state.farmer && this.$store.state.farmer.ais.some((ai: AI) => ai.id === this.ai.id)
+			return this.ai.path && this.ai.path in fileSystem.ais
 		}
 
 		get displayName() {

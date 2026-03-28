@@ -244,7 +244,7 @@
 									<div v-else class="component" :key="c"></div>
 								</template>
 								<template v-if="leek.ai">
-									<router-link v-if="my_leek" :to="'/editor/' + leek.ai.id">
+									<router-link v-if="my_leek" :to="'/editor/' + (leek.ai.path || leek.ai.name)">
 										<ai :ai="leek.ai" :library="false" :small="false" />
 									</router-link>
 									<a v-else-if="$store.getters.admin" :href="LeekWars.API + 'ai/download/' + leek.ai.id" target="_blank">
@@ -672,7 +672,7 @@
 						</rich-tooltip-item>
 						<div v-else><v-icon>mdi-sd</v-icon></div>
 					</div>
-					<div :class="{dashed: draggedAI && (!leek.ai || draggedAI.id !== leek.ai.id)}" class="leek-ai" @dragover="dragOver" @drop="aiDrop('leek', $event)">
+					<div :class="{dashed: draggedAI && (!leek.ai || draggedAI.path !== leek.ai.path)}" class="leek-ai" @dragover="dragOver" @drop="aiDrop('leek', $event)">
 						<ai v-if="leek.ai" :ai="leek.ai" :library="true" :small="false" @click.native="removeAI()" @dragstart.native="aiDragStart(leek.ai, $event)" @dragend.native="aiDragEnd(leek.ai, $event)" />
 					</div>
 				</div>
@@ -979,10 +979,9 @@
 					if (this.leek.level_seen < this.leek.level) {
 						this.showLevelPopup()
 					}
-					if (this.$store.state.farmer) {
-						for (const ai of this.$store.state.farmer.ais) {
-							ai.dragging = false
-						}
+					for (const path in fileSystem.ais) {
+						const ai = fileSystem.ais[path]
+						if (ai.dragging) ai.dragging = false
 					}
 					if (this.my_leek) {
 						this.$store.commit('update-capital', {leek: this.leek.id, capital: this.leek.capital})
@@ -1177,7 +1176,7 @@
 		selectAI(ai: AI) {
 			if (!this.leek) { return }
 			this.leek.ai = ai
-			LeekWars.post('leek/set-ai', {leek_id: this.leek.id, ai_id: ai.id})
+			LeekWars.post('leek/set-ai', {leek_id: this.leek.id, ai_path: ai.path})
 			// this.aiDialog = false
 		}
 
@@ -1199,7 +1198,7 @@
 
 		aiDrop(area: string, e: DragEvent) {
 			if (!this.draggedAI || !this.leek) { return }
-			if (this.leek.ai && this.draggedAI.id === this.leek.ai.id && area === 'farmer') {
+			if (this.leek.ai && this.draggedAI.path === this.leek.ai.path && area === 'farmer') {
 				this.removeAI()
 			} else if (area === 'leek') {
 				this.selectAI(this.draggedAI)

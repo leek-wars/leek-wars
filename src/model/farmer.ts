@@ -1,5 +1,3 @@
-import { Folder } from '@/component/editor/editor-item'
-import { AI } from '@/model/ai'
 import { Chip } from '@/model/chip'
 import { Hat } from '@/model/hat'
 import { Leek } from '@/model/leek'
@@ -50,9 +48,7 @@ class Farmer {
 	public talent_history!: number[]
 	public team!: Team | null
 	public total_level!: number
-	public ais!: AI[]
-	public bin!: AI[]
-	public bin_folders!: any[]
+	public ai_tree?: { files: any[], folders: string[], bin: any[], leek_ais: {[key: string]: string} }
 	public language!: string
 	public title!: number[]
 	public show_ai_lines!: boolean
@@ -61,8 +57,6 @@ class Farmer {
 	public errors!: number
 	public contributor!: boolean
 	public rewards!: Reward[]
-	public folders!: Folder[]
-	public leek_ais!: {[key: number]: number}
 	public resources!: any[]
 	public components!: any[]
 	public schemes!: any[]

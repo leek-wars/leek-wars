@@ -2,7 +2,7 @@
 	<div v-if="value" class="finder" @click.stop>
 		<input v-if="search" ref="input" v-model="query" class="input" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" @keyup.stop @change="change" @keydown="keydown">
 		<div ref="list" class="results">
-			<div v-for="(result, r) of results" :key="result.ai.id" class="result active" :class="{selected: selected === r}" @click="go(result.ai)">
+			<div v-for="(result, r) of results" :key="result.ai.path" class="result active" :class="{selected: selected === r}" @click="go(result.ai)">
 				<v-icon v-if="result.ai.errors" class="icon error">mdi-close-circle</v-icon>
 				<v-icon v-else-if="result.ai.warnings" class="icon warning">mdi-alert-circle</v-icon>
 				<v-icon v-else class="icon valid">mdi-check-bold</v-icon>
@@ -54,7 +54,7 @@
 					if (this.isClosed(ai)) continue // Closed folder
 					const s = this.score(path, ai.name, this.query, queryLower)
 					if (s.score < 9999) {
-						if (ai.id in this.active) { s.score *= 0.25 }
+						if (ai.path in this.active) { s.score *= 0.25 }
 						result.push({ai, score: s.score, name: s.parts, type: s.type})
 					}
 				}
@@ -86,8 +86,8 @@
 		}
 
 		go(ai: AI) {
-			if (this.$route.path !== '/editor/' + ai.id) {
-				this.$router.push('/editor/' + ai.id)
+			if (this.$route.path !== '/editor/' + ai.path) {
+				this.$router.push('/editor/' + ai.path)
 			}
 			this.close()
 		}

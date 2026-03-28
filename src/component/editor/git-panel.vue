@@ -246,6 +246,7 @@
 			await LeekWars.post('git/discard', { folder: this.selectedRepo, files: JSON.stringify([change.file]) })
 			this.reloadFiles([change.file])
 			this.refreshStatus()
+			emitter.emit('reanalyze')
 		}
 
 		async discardAll() {
@@ -253,6 +254,7 @@
 			await LeekWars.post('git/discard', { folder: this.selectedRepo, files: JSON.stringify(files) })
 			this.reloadFiles(files)
 			this.refreshStatus()
+			emitter.emit('reanalyze')
 		}
 
 		async commit() {

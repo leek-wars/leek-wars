@@ -101,7 +101,7 @@ class Analyzer {
 
 		const version = ++this.analyzeVersion
 
-		LeekWars.socket.send([SocketMessage.EDITOR_ANALYZE, ai.id, code])
+		LeekWars.socket.send([SocketMessage.EDITOR_ANALYZE, ai.path, code])
 
 		return new Promise<any>((resolve, reject) => {
 			this.analyzeResolve = (data: any) => {
@@ -130,7 +130,7 @@ class Analyzer {
 	public hover(ai: AI, line: number, column: number) {
 		// console.log("🔥 Hover", ai.path, line, column)
 		// console.time('hover')
-		LeekWars.socket.send([SocketMessage.EDITOR_HOVER, ai.id, line, column])
+		LeekWars.socket.send([SocketMessage.EDITOR_HOVER, ai.path, line, column])
 
 		return new Promise<any>((resolve, reject) => {
 			this.hoverResolve = resolve
@@ -156,7 +156,7 @@ class Analyzer {
 
 		const requestID = this.requestID++
 		// console.log("Complete request", requestID)
-		LeekWars.socket.send([SocketMessage.EDITOR_COMPLETE, requestID, ai.id, code, line, column])
+		LeekWars.socket.send([SocketMessage.EDITOR_COMPLETE, requestID, ai.path, code, line, column])
 
 		const promise = new Promise<any>((resolve, reject) => {
 			this.completeResolve[requestID] = resolve
@@ -170,7 +170,7 @@ class Analyzer {
 
 	public references(ai: AI, line: number, column: number, ctorParamCount: number = -1) {
 		const requestID = this.requestID++
-		const msg: any[] = [SocketMessage.EDITOR_REFERENCES, requestID, ai.id, line, column]
+		const msg: any[] = [SocketMessage.EDITOR_REFERENCES, requestID, ai.path, line, column]
 		if (ctorParamCount >= 0) msg.push(ctorParamCount)
 		LeekWars.socket.send(msg)
 
@@ -253,26 +253,34 @@ class Analyzer {
 
 
 	handleProblems(entrypoint: AI, problems: any[][]) {
-		// console.log("handleProblems", entrypoint, problems)
 
 		analyzer.removeProblems(entrypoint)
 
-		// Group problems by ai
-		const problemsByAI = {} as {[key: number]: Problem[]}
-		const markersByAI = {} as {[key: number]: any}
+		// Résoudre les paths des fichiers dans les erreurs
+		// Le daemon peut retourner des noms courts (ex: "util.leek") au lieu de paths complets
+		const entrypointDir = entrypoint.path.includes('/') ? entrypoint.path.substring(0, entrypoint.path.lastIndexOf('/')) : ''
+
+		// Group problems by ai path
+		const problemsByAI = {} as {[key: string]: Problem[]}
+		const markersByAI = {} as {[key: string]: monaco.editor.IMarkerData[]}
 		for (const problem of problems) {
 			const level = problem[0]
-			const ai_id = problem[1]
+			let aiPath = problem[1]
+			// Si le path n'est pas trouvé directement, essayer avec le dossier de l'entrypoint
+			if (!fileSystem.ais[aiPath] && entrypointDir) {
+				const resolved = entrypointDir + '/' + aiPath
+				if (fileSystem.ais[resolved]) aiPath = resolved
+			}
 			const info = problem.length === 8
 				? i18n.t('leekscript.error_' + problem[6], problem[7]) as string
 				: i18n.t('leekscript.error_' + problem[6]) as string
-			if (!problemsByAI[ai_id]) {
-				problemsByAI[ai_id] = []
-				markersByAI[ai_id] = []
+			if (!problemsByAI[aiPath]) {
+				problemsByAI[aiPath] = []
+				markersByAI[aiPath] = []
 			}
-			problemsByAI[ai_id].push(new Problem(problem[2], problem[3], problem[4], problem[5], level, info))
+			problemsByAI[aiPath].push(new Problem(problem[2], problem[3], problem[4], problem[5], level, info))
 			const errorCode = problem[6]
-			const marker: monaco.editor.IMarkerData = {
+			markersByAI[aiPath].push({
 				message: info,
 				severity: level === 0 ? monaco.MarkerSeverity.Error : monaco.MarkerSeverity.Warning,
 				startLineNumber: problem[2],
@@ -280,34 +288,32 @@ class Analyzer {
 				endLineNumber: problem[4],
 				endColumn: problem[5] + 2,
 				tags: errorCode === ERROR_UNUSED_VARIABLE ? [monaco.MarkerTag.Unnecessary] : [],
-			}
-			markersByAI[ai_id].push(marker)
+			})
 		}
-		for (const ai_id in problemsByAI) {
-			const ai = fileSystem.ais[ai_id]
-			const ai_problems = problemsByAI[ai_id]
-			// console.log("ai", ai.path, "problems", ai_problems)
-			analyzer.setProblems(entrypoint.id, ai, ai_problems)
-
-			const model = this.getOrCreateModel(ai)
-			monaco.editor.setModelMarkers(model, "owner", markersByAI[ai_id])
+		for (const aiPath in problemsByAI) {
+			const ai = fileSystem.ais[aiPath]
+			if (!ai) continue
+			analyzer.setProblems(entrypoint.path, ai, problemsByAI[aiPath])
+			const model = this.getModelIfReady(ai)
+			if (model) monaco.editor.setModelMarkers(model, "owner", markersByAI[aiPath])
 		}
 		// No problems, clear markers
 		if (problems.length === 0) {
-			const model = this.getOrCreateModel(entrypoint)
-			monaco.editor.setModelMarkers(model, "owner", [])
+			const model = this.getModelIfReady(entrypoint)
+			if (model) monaco.editor.setModelMarkers(model, "owner", [])
 		}
 	}
 
-	private getOrCreateModel(ai: AI): monaco.editor.ITextModel {
+	private getModelIfReady(ai: AI): monaco.editor.ITextModel | null {
 		if (ai.model) return ai.model
+		if (ai.code === undefined) return null
 		const uri = monaco.Uri.parse('file:///' + ai.path)
 		const model = monaco.editor.getModel(uri) || monaco.editor.createModel(ai.code, 'leekscript', uri)
 		ai.model = model
 		return model
 	}
 
-	public setProblems(entrypoint: number, ai: AI, problems: any) {
+	public setProblems(entrypoint: string, ai: AI, problems: any) {
 		// console.log("[Analyzer] set ai problems", entrypoint, ai, problems)
 		if (!(entrypoint in this.problems)) {
 			this.problems[entrypoint] = {}
@@ -318,14 +324,14 @@ class Analyzer {
 	}
 
 	public removeProblems(entrypoint: AI) {
-		for (const ai_id in fileSystem.ais) {
-			const ai = fileSystem.ais[ai_id]
+		for (const aiPath in fileSystem.ais) {
+			const ai = fileSystem.ais[aiPath]
 			if (ai.problems && Object.values(ai.problems).length) {
-				delete ai.problems[entrypoint.id]
+				delete ai.problems[entrypoint.path]
 				this.updateAiErrors(ai)
 			}
 		}
-		delete this.problems[entrypoint.id]
+		delete this.problems[entrypoint.path]
 	}
 
 	public updateAiErrors(ai: AI) {
@@ -351,24 +357,32 @@ class Analyzer {
 		}
 	}
 
-	public updateTodos(ai: AI) {
-		// Collect full entrypoint tree
-		const ids = new Set<number>([ai.id])
-		for (const id of ai.includes_ids || []) ids.add(id)
-		for (const epId of ai.entrypoints || []) {
-			ids.add(epId)
-			for (const id of fileSystem.ais[epId]?.includes_ids || []) ids.add(id)
+	public async updateTodos(ai: AI) {
+		// Collect full include tree (recursive), en chargeant le code si nécessaire
+		const ais = new Set<AI>([ai])
+		const collectIncludes = async (a: AI) => {
+			if (a.code === undefined) {
+				await fileSystem.load(a)
+			}
+			if (!a.includes.length) a.updateIncludes()
+			for (const inc of a.includes) {
+				if (!ais.has(inc)) {
+					ais.add(inc)
+					await collectIncludes(inc)
+				}
+			}
 		}
+		await collectIncludes(ai)
 
 		// Scan all involved AIs for TODOs
-		const todos = Array.from(ids).flatMap(id => {
-			const a = fileSystem.ais[id]
-			return a?.code ? this.scanTodos(a, a.code) : []
+		const ids = new Set(Array.from(ais).map(a => a.path))
+		const todos = Array.from(ais).flatMap(a => {
+			return a.code ? this.scanTodos(a, a.code) : []
 		})
 
 		// Build problems + Monaco markers in one pass
-		const byAI: {[key: number]: Problem[]} = {}
-		const markers: {[key: number]: monaco.editor.IMarkerData[]} = {}
+		const byAI: {[key: string]: Problem[]} = {}
+		const markers: {[key: string]: monaco.editor.IMarkerData[]} = {}
 		for (const id of ids) markers[id] = []
 		for (const t of todos) {
 			if (!byAI[t[1]]) byAI[t[1]] = []
@@ -389,9 +403,9 @@ class Analyzer {
 			if (!a) continue
 
 			// Find a real entrypoint that already has problems for this AI
-			let ep = -1
+			let ep: string | null = null
 			for (const e in a.problems) {
-				if (parseInt(e) !== -1 && a.problems[e].length > 0) { ep = parseInt(e); break }
+				if (e !== '_todos' && a.problems[e].length > 0) { ep = e; break }
 			}
 
 			// Remove old TODOs from all entrypoints for this AI
@@ -407,12 +421,12 @@ class Analyzer {
 
 			// Append new TODOs
 			if (byAI[id]) {
-				if (ep !== -1 && a.problems[ep]) {
+				if (ep && a.problems[ep]) {
 					a.problems[ep].push(...byAI[id])
 					this.problems[ep][a.path] = a.problems[ep]
 				} else {
-					if (!this.problems[-1]) this.problems[-1] = {}
-					this.setProblems(-1, a, byAI[id])
+					if (!this.problems['_todos']) this.problems['_todos'] = {}
+					this.setProblems('_todos', a, byAI[id])
 				}
 			}
 			this.updateAiErrors(a)
@@ -482,7 +496,7 @@ class Analyzer {
 		if (after && /\w/.test(after)) return
 		const comment = text.trim()
 		const startCol = colOffset + text.length - text.trimStart().length
-		todos.push([2, ai.id, lineNum, startCol, lineNum, startCol + comment.length - 1, comment])
+		todos.push([2, ai.path, lineNum, startCol, lineNum, startCol + comment.length - 1, comment])
 	}
 
 	private loadJs(url: string) {

@@ -87,13 +87,13 @@
 							</div>
 							<div :class="{tabs: tabs1.length > 1}" class="editors" ref="editors">
 
-								<ai-view-monaco v-if="currentAI1" v-show="!showDiffViewer" ref="editor1" :ai="fileSystem.ais[currentAI1]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" @jump="jump" @load="load" @focus="setSide(1)" :style="{ 'width': (editor1Width * 100) + '%' }" />
+								<ai-view-monaco v-if="ai1Ready" v-show="!showDiffViewer" ref="editor1" :ai="fileSystem.ais[currentAI1]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" @jump="jump" @load="load" @focus="setSide(1)" :style="{ 'width': (editor1Width * 100) + '%' }" />
 
 								<div v-if="splitted" v-show="!showDiffViewer" class="resizer editor-resizer" @dblclick="split50_50" @mousedown="resizerEditorMousedown">
 									<v-icon>mdi-drag-vertical-variant</v-icon>
 								</div>
 
-								<ai-view-monaco v-if="splitted && currentAI2" v-show="!showDiffViewer" ref="editor2" :ai="fileSystem.ais[currentAI2]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" @jump="jump" @load="load" @focus="setSide(2)" :style="{ 'width': (editor2Width * 100) + '%' }" />
+								<ai-view-monaco v-if="splitted && ai2Ready" v-show="!showDiffViewer" ref="editor2" :ai="fileSystem.ais[currentAI2]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" @jump="jump" @load="load" @focus="setSide(2)" :style="{ 'width': (editor2Width * 100) + '%' }" />
 
 								<div v-if="showDiffViewer && !isDiffReady" class="diff-loader"><loader :size="40" /></div>
 								<git-diff v-if="diffMounted && isDiffReady" v-show="showDiffViewer" :original-content="activeDiff.original" :modified-content="activeDiffModified" :file="activeDiff.file" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :inline="diffInline" :collapse-unchanged="diffCollapseUnchanged" @close="closeDiff" @open-file="openDiffFile" />
@@ -282,9 +282,9 @@
 	export default class EditorPage extends Vue {
 
 		analyzer = analyzer
-		activeAIs: {[key: number]: AI} = {}
-		currentAI1: number | null = null
-		currentAI2: number | null = null
+		activeAIs: {[key: string]: AI} = {}
+		currentAI1: string | null = null
+		currentAI2: string | null = null
 		currentSide: number = 1
 		currentEditor: AIViewMonaco | null = null
 		currentType: string | null = null
@@ -338,13 +338,16 @@
 		editorTotalWidth: number = 800
 		splitted: boolean = true
 
-		get currentID() {
-			if (this.currentType === 'ai' && this.currentAI) { return this.currentAI.id }
-			if (this.currentFolder) { return this.currentFolder.id }
-			return 0
-		}
 		get currentAI() {
 			return fileSystem.ais[this.currentSide === 1 ? this.currentAI1! : this.currentAI2!]
+		}
+		get ai1Ready() {
+			const ai = this.currentAI1 ? fileSystem.ais[this.currentAI1] : null
+			return ai && ai.code !== undefined
+		}
+		get ai2Ready() {
+			const ai = this.currentAI2 ? fileSystem.ais[this.currentAI2] : null
+			return ai && ai.code !== undefined
 		}
 		get showDiffViewer(): boolean {
 			return this.currentTab !== null && this.currentTab.type !== 'file'
@@ -401,7 +404,7 @@
 			this.splitted = localStorage.getItem('editor/splitted') === 'true'
 			this.editor1Width = parseFloat(localStorage.getItem('editor/editor1-width') || '') || (this.splitted ? 0.5 : 1)
 			this.editor2Width = parseFloat(localStorage.getItem('editor/editor2-width') || '') || 0.5
-			this.currentAI2 = parseInt(localStorage.getItem('editor/last-code-2') || '') || null
+			this.currentAI2 = localStorage.getItem('editor/last-code-2') || null
 
 			LeekWars.loadEncyclopedia(locale)
 
@@ -494,16 +497,33 @@
 				const parent = fileSystem.folderById[this.dragging.parent]
 				if (parent === folder || this.dragging === folder) { return }
 				if (this.dragging instanceof Folder && this.isChild(folder, this.dragging)) { return }
+				const destPath = folder.id === 0 ? '' : fileSystem.getFolderPath(folder).replace(/\/$/, '')
+				if (this.dragging.folder) {
+					const srcPath = fileSystem.getFolderPath(this.dragging as Folder).replace(/\/$/, '')
+					LeekWars.post('ai/move', {path: srcPath, dest: destPath})
+				} else {
+					const ai = (this.dragging as AIItem).ai
+					const oldPath = ai.path
+					LeekWars.post('ai/move', {path: oldPath, dest: destPath})
+					delete fileSystem.ais[ai.path]
+					ai.folder = folder.id
+					ai.path = destPath ? destPath + '/' + ai.name : ai.name
+					ai.folderpath = fileSystem.getFolderPath(folder)
+					fileSystem.ais[ai.path] = ai
+				}
 				parent.items.splice(parent.items.indexOf(this.dragging), 1)
 				folder.items.push(this.dragging)
 				this.dragging.parent = folder.id
 				fileSystem.sortFolder(folder)
 				folder.expanded = true
-				LeekWars.post(this.dragging.folder ? 'ai-folder/change-folder' : 'ai/change-folder', this.dragging.folder ? {folder_id: (this.dragging as Folder).id, dest_folder_id: folder.id} : {ai_id: (this.dragging as AIItem).ai.id, folder_id: folder.id})
 				this.dragging = null
 			})
 			emitter.on('connected', this.connected)
 			emitter.on('jump', this.jumpEvent)
+			emitter.on('reanalyze', () => {
+				const aiEditor = this.$refs.editor1 as AIViewMonaco
+				if (aiEditor) { aiEditor.setAnalyzerTimeout() }
+			})
 
 			if (store.state.farmer) {
 				this.connected()
@@ -574,34 +594,34 @@
 				}
 			}
 			if (this.$route.params.id) {
-				const id = parseInt(this.$route.params.id, 10)
-				// console.log("fileSystem", Object.values(fileSystem.ais).length)
-				if (id > 0 && id in fileSystem.ais) {
-					const ai = fileSystem.ais[id]
+				const routeId = this.$route.params.id as string
+				const ai = fileSystem.getAIFromRoute(routeId)
+				if (ai) {
+					const key = ai.path
 					fileSystem.load(ai).then(() => {
 						if (this.currentSide === 1) {
-							this.currentAI1 = id
+							this.currentAI1 = key
 						} else {
-							this.currentAI2 = id
+							this.currentAI2 = key
 						}
 						nextTick(() => {
 							this.currentEditor = (this.currentSide === 1 ? this.$refs.editor1 : this.$refs.editor2) as AIViewMonaco
 						})
 					})
-					localStorage.setItem('editor/last-code-' + this.currentSide, '' + id)
+					localStorage.setItem('editor/last-code-' + this.currentSide, key)
 					this.currentType = 'ai'
 					this.currentFolder = fileSystem.folderById[ai.folder]
-					if (!(id in this.activeAIs)) {
-						this.activeAIs[ai.id] = ai
+					if (!(key in this.activeAIs)) {
+						this.activeAIs[key] = ai
 					}
 					explorer.selectAI(ai)
 					if (this.currentSide === 1 && !isDiffRoute) {
-						const fileTab: FileTab = { type: 'file', id }
-						if (!this.tabs1.find(t => t.type === 'file' && t.id === id)) {
+						const fileTab: FileTab = { type: 'file', id: key }
+						if (!this.tabs1.find(t => t.type === 'file' && t.id === key)) {
 							this.tabs1.push(fileTab)
 							this.saveTabs()
 						}
-						this.currentTab = this.tabs1.find(t => t.type === 'file' && t.id === id) || fileTab
+						this.currentTab = this.tabs1.find(t => t.type === 'file' && t.id === key) || fileTab
 					}
 					// Ajout dans l'historique
 					const i = this.history.indexOf(ai)
@@ -611,10 +631,8 @@
 					LeekWars.setTitle(ai.name)
 
 					if (isDiffRoute) {
-						// Activer le diff viewer pour la route /diff ou /hash
-						// Ne pas écraser currentTab si c'est déjà un diff tab avec le bon id
-						if (this.currentTab && this.currentTab.type !== 'file' && this.currentTab.id === id) {
-							// Déjà sur le bon diff tab, ne rien faire
+						if (this.currentTab && this.currentTab.type !== 'file' && this.currentTab.id === key) {
+							// Déjà sur le bon diff tab
 						} else if (routeHash) {
 							const diffTab = this.tabs1.find(t => t.type !== 'file' && (t as DiffTab).hash === routeHash)
 							if (diffTab) {
@@ -622,7 +640,7 @@
 								this.ensureDiffLoaded(diffTab as DiffTab)
 							}
 						} else {
-							const diffTab = this.tabs1.find(t => t.type !== 'file' && t.id === id)
+							const diffTab = this.tabs1.find(t => t.type !== 'file' && t.id === key)
 							if (diffTab) {
 								this.currentTab = diffTab
 								this.ensureDiffLoaded(diffTab as DiffTab)
@@ -632,7 +650,7 @@
 						LeekWars.setActions(this.actions_content)
 					} else if ('line' in this.$route.query) {
 						this.jump(ai, parseInt(this.$route.query.line as string), 0)
-						this.$router.replace('/editor/' + id).then(() => {
+						this.$router.replace('/editor/' + key).then(() => {
 							LeekWars.splitShowContent()
 							LeekWars.setActions(this.actions_content)
 						})
@@ -641,7 +659,7 @@
 						LeekWars.setActions(this.actions_content)
 					}
 				} else {
-					this.currentFolder = fileSystem.folderById[id]
+					this.currentFolder = fileSystem.folderById[parseInt(routeId)]
 					this.currentType = 'folder'
 					explorer.selectFolder(this.currentFolder)
 					LeekWars.setTitle(this.$t('title'), this.$t('n_ais', [fileSystem.aiCount]))
@@ -652,16 +670,17 @@
 			} else if (!LeekWars.mobile) {
 
 				const lastCode = localStorage.getItem('editor/last-code-1')
-				if (lastCode && parseInt(lastCode, 10) > 0 && lastCode in fileSystem.ais) {
-					this.$router.replace('/editor/' + localStorage.getItem('editor/last-code-1'))
+				if (lastCode && lastCode in fileSystem.ais) {
+					this.$router.replace('/editor/' + lastCode)
 				} else if (store.state.farmer) {
-					for (const ai in store.state.farmer.leek_ais) {
-						if (store.state.farmer.leek_ais[ai] in fileSystem.ais) {
-							this.$router.replace('/editor/' + store.state.farmer.leek_ais[ai])
+					for (const leekId in fileSystem.leekAIs) {
+						const aiKey = fileSystem.leekAIs[leekId]
+						if (aiKey in fileSystem.ais) {
+							this.$router.replace('/editor/' + aiKey)
 							return
 						}
 					}
-					this.$router.replace('/editor/0') // Go to root folder to be able to create a new AI
+					this.$router.replace('/editor/0')
 				}
 			} else {
 				this.currentFolder = fileSystem.rootFolder
@@ -687,6 +706,7 @@
 			emitter.off('back')
 			emitter.off('connected', this.connected)
 			emitter.off('jump', this.jumpEvent)
+			emitter.off('reanalyze')
 			LeekWars.large = false
 			LeekWars.header = true
 			LeekWars.footer = true
@@ -720,54 +740,41 @@
 			aiEditor.save()
 			aiEditor.serverError = false
 
-			const saveID = aiEditor.ai.id
 			const content = aiEditor.editor.getValue()
 			aiEditor.ai.code = content
 
 			LeekWars.track('save-ai')
 
-			LeekWars.post('ai/save', {ai_id: saveID, code: content}).then(data => {
-				if (aiEditor === null) { return }
+			LeekWars.post('ai/write', {path: aiEditor.ai.path, code: content}).then((data: any) => {
 				aiEditor.saving = false
-				if (!data.result || data.result.length === 0) {
-					aiEditor.serverError = true
-					return
+				aiEditor.ai.mtime = data.modified || Date.now()
+				localStorage.setItem('ai/mtime/' + aiEditor.ai.path, '' + aiEditor.ai.mtime)
+				localStorage.setItem('ai/code/' + aiEditor.ai.path, content)
+				aiEditor.ai.modified = false
+
+				// Traiter les résultats de compilation
+				if (data.result) {
+					aiEditor.goods = []
+					for (const epPath in data.result) {
+						const ai = fileSystem.ais[epPath]
+						if (!ai) continue
+						let valid = true
+						for (const problem of data.result[epPath]) {
+							if (problem[0] === 0) { valid = false; break }
+						}
+						if (valid && aiEditor.goods.length === 0) {
+							aiEditor.goods.push({ai})
+						}
+						ai.valid = valid
+						analyzer.handleProblems(ai, data.result[epPath])
+					}
+					analyzer.updateTodos(aiEditor.ai)
+					analyzer.updateCount()
+					setTimeout(() => aiEditor.goods = [], 2000)
 				}
 
-				aiEditor.ai.timestamp = data.modified
-				localStorage.setItem('ai/time/' + aiEditor.ai.id, '' + data.modified)
-				localStorage.setItem('ai/code/' + aiEditor.ai.id, content)
-
-				aiEditor.goods = []
-
-				for (const entrypoint in data.result) {
-					const entrypoint_id = parseInt(entrypoint, 10)
-					const ai = fileSystem.ais[entrypoint_id]
-
-					// Valid?
-					let valid = true
-					for (const problem of data.result[entrypoint]) {
-						if (problem[0] === 0) { valid = false; break }
-					}
-					if (valid && aiEditor.goods.length === 0) {
-						aiEditor.goods.push({ai})
-					}
-					ai['valid'] = valid
-					analyzer.handleProblems(ai, data.result[entrypoint])
-				}
-				analyzer.updateTodos(aiEditor.ai)
-				analyzer.updateCount()
-				setTimeout(() => aiEditor.goods = [], 2000)
 				emitter.emit('git-file-changed')
-
-				// if (aiEditor.needTest) {
-				// 	aiEditor.needTest = false
-				// 	if (aiEditor.ai.valid) {
-				// 		this.startTest()
-				// 	}
-				// }
 			}).error(() => {
-				if (aiEditor === null) { return }
 				aiEditor.serverError = true
 				aiEditor.saving = false
 			})
@@ -782,7 +789,7 @@
 		openDiff(data: { folder: string, file: string, staged?: boolean, hash?: string }) {
 			const fullPath = (data.folder ? data.folder + '/' : '') + data.file
 			const ai = fileSystem.getAIByPath(fullPath)
-			const tab: DiffTab = { type: data.hash ? 'commit' : 'diff', id: ai ? ai.id : 0, folder: data.folder, file: data.file, staged: data.staged, hash: data.hash, original: '', modified: '', ready: false }
+			const tab: DiffTab = { type: data.hash ? 'commit' : 'diff', id: ai ? ai.path : fullPath, folder: data.folder, file: data.file, staged: data.staged, hash: data.hash, original: '', modified: '', ready: false }
 			// Chercher si un onglet existe déjà
 			const existing = this.tabs1.find(t => t.type !== 'file' && this.diffKey(t as DiffTab) === this.diffKey(tab))
 			if (existing) {
@@ -805,7 +812,7 @@
 				const ai = fileSystem.ais[tab.id]
 				if (!ai) return
 				this.currentTab = tab
-				this.open(ai.id, 1)
+				this.open(ai.path, 1)
 			} else {
 				this.ensureDiffLoaded(tab as DiffTab)
 				// Si on switch entre deux diffs, démonter d'abord le composant git-diff
@@ -866,7 +873,7 @@
 			const fullPath = (diff.folder ? diff.folder + '/' : '') + diff.file
 			const ai = fileSystem.getAIByPath(fullPath)
 			if (ai) {
-				this.open(ai.id, 1)
+				this.open(ai.path, 1)
 			}
 		}
 
@@ -950,7 +957,7 @@
 				return '/editor/' + tab.id
 			}
 			const diff = tab as DiffTab
-			return '/editor/' + diff.id + '/' + (diff.hash || 'diff')
+			return '/editor/' + diff.id + (diff.hash ? '/h/' + diff.hash : '/diff')
 		}
 
 		updateUrl() {
@@ -1038,8 +1045,8 @@
 				this.currentTab = this.tabs1.find(t => t.type === 'file') || null
 				this.updateUrl()
 			}
-			if (!this.currentAI || ai.id !== this.currentAI.id) {
-				this.$router.push('/editor/' + ai.id)
+			if (!this.currentAI || ai.path !== this.currentAI.path) {
+				this.$router.push('/editor/' + ai.path)
 			}
 			nextTick(() => {
 				const editor = this.$refs.editor1 as AIViewMonaco
@@ -1048,8 +1055,8 @@
 		}
 
 		load(ai: AI) {
-			if (!(ai.id in this.activeAIs)) {
-				this.activeAIs[ai.id] = ai
+			if (!(ai.path in this.activeAIs)) {
+				this.activeAIs[ai.path] = ai
 			}
 		}
 
@@ -1132,27 +1139,25 @@
 
 		deleteAI(ai: AI) {
 			// Remove from active AIs
-			delete this.activeAIs[ai.id]
+			delete this.activeAIs[ai.path]
 			// Remove from tabs
-			const tab = this.tabs1.find(t => t.type === 'file' && t.id === ai.id)
+			const tab = this.tabs1.find(t => t.type === 'file' && t.id === ai.path)
 			if (tab) {
 				this.closeTabByRef(tab)
 			}
-			// Clear the AI from scenarios
-			(this.$refs.editorTest as any).onAIDeleted(ai.id)
 
 			// Open a new one
-			for (const fai in fileSystem.ais) {
-				if (parseInt(fai, 10) > 0) { // Not bot ai
-					this.$router.replace('/editor/' + fai)
+			for (const path in fileSystem.ais) {
+				if (!path.startsWith('.trash/') && !path.startsWith('/')) {
+					this.$router.replace('/editor/' + path)
 					return
 				}
 			}
 			this.$router.replace('/editor')
 		}
 
-		close(id: number) {
-			this.history = this.history.filter(a => a.id !== id)
+		close(id: string) {
+			this.history = this.history.filter(a => a.path !== id)
 		}
 
 		closeAll() {
@@ -1161,7 +1166,7 @@
 
 		@Watch('history')
 		updateHistory() {
-			localStorage.setItem('editor/history', JSON.stringify(this.history.map(ai => ai.id)))
+			localStorage.setItem('editor/history', JSON.stringify(this.history.map(ai => ai.path)))
 		}
 
 		updateVersion() {
@@ -1218,10 +1223,10 @@
 				this.editor1Width = 0.5
 				this.editor2Width = 0.5
 				fileSystem.load(ai!).then(() => {
-					this.currentAI2 = ai!.id
+					this.currentAI2 = ai!.path
 				})
 				this.setSide(2)
-				localStorage.setItem('editor/last-code-2', '' + ai!.id)
+				localStorage.setItem('editor/last-code-2', ai!.path)
 			} else {
 				this.editor1Width = this.editorTotalWidth
 				this.setSide(1)
@@ -1231,7 +1236,7 @@
 			localStorage.setItem('editor/splitted', '' + this.splitted)
 		}
 
-		open(ai: number, side: number) {
+		open(ai: string, side: number) {
 			// Ajouter un onglet fichier s'il n'existe pas
 			const fileTab: FileTab = { type: 'file', id: ai }
 			if (side === 1) {

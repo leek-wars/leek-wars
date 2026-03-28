@@ -1,9 +1,8 @@
 import { AIItem, Folder } from '@/component/editor/editor-item'
 import { AI } from '@/model/ai'
 import { LeekWars } from '@/model/leekwars'
-import { store } from '@/model/store'
+import { emitter } from '@/model/vue'
 
-import { Farmer } from './farmer'
 import { Keyword } from './keyword'
 import { reactive } from 'vue'
 
@@ -11,16 +10,14 @@ class FileSystem {
 
 	public static CONSOLE_MAGIC_KEY = '__console_CkG3VwGs3K__'
 
-	public ais: {[key: number]: AI} = {}
+	public ais: {[key: string]: AI} = {}
 	public folderById: {[key: number]: Folder} = {}
-	public aiByFullPath: {[key: string]: AI} = {}
+	public get aiByFullPath() { return this.ais } // alias pour compatibilité
 	public aiCount: number = 0
 	public rootFolder!: Folder
 	public bin!: Folder
-	private initialized: boolean = false
-	public leekAIs: {[key: number]: number} = {} // Used in test dialog
+	public leekAIs: {[key: number]: string} = {} // leek_id -> ai path
 	private items: {[key: string]: AI | Folder} = {}
-	private promise: Promise<void> | null = null
 	public symbols: { [key: string]: Keyword } = {}
 	// Git: map de chemin relatif (ex: "Combat/main") -> statut git ('M', 'A', 'D', '?')
 	public gitStatus: {[path: string]: string} = {}
@@ -42,152 +39,131 @@ class FileSystem {
 	]
 	public consoleAI: AI | null = null
 
-	public init(farmer: Farmer) {
-		const folders: {[key: number]: any} = {}
-		for (const folder of farmer.folders) {
-			folders[folder.id] = folder
-			this.items[folder.name] = folder
+	/**
+	 * Initialise le filesystem depuis le scan FS (format path-based).
+	 */
+	public init(data: { files: any[], folders: string[], bin: any[], leek_ais: {[key: string]: string} }) {
+		let nextId = 1
+
+		// Root folder
+		this.rootFolder = new Folder(0, '<root>', 0)
+		this.rootFolder.expanded = true
+		this.rootFolder.items = []
+		this.folderById[0] = this.rootFolder
+
+		// Map chemin -> Folder pour construire l'arborescence
+		const folderByPath: {[path: string]: Folder} = { '': this.rootFolder }
+
+		// Créer les dossiers (triés par profondeur pour que les parents existent d'abord)
+		const sortedFolders = [...data.folders].sort((a, b) => a.split('/').length - b.split('/').length)
+		for (const folderPath of sortedFolders) {
+			const id = nextId++
+			const name = folderPath.includes('/') ? folderPath.substring(folderPath.lastIndexOf('/') + 1) : folderPath
+			const parentPath = folderPath.includes('/') ? folderPath.substring(0, folderPath.lastIndexOf('/')) : ''
+			const parent = folderByPath[parentPath] || this.rootFolder
+
+			const folder = new Folder(id, name, parent.id)
+			folder.expanded = localStorage.getItem('editor/folder/' + folderPath) === 'true'
+			folder.closed = localStorage.getItem('editor/folder/closed/' + folderPath) === 'true'
+			folder.items = []
+			parent.items.push(folder)
+
+			this.folderById[id] = folder
+			folderByPath[folderPath] = folder
 		}
-		for (const id in farmer.ais) {
-			farmer.ais[id] = new AI(farmer.ais[id])
-		}
-		this.leekAIs = farmer.leek_ais
-		this.aiCount = farmer.ais.length
-		const buildFolder = (id: number, parent: number): Folder => {
-			const folder = new Folder(id, id in folders ? folders[id].name : '<root>', parent)
-			if (id === 0) {
-				folder.expanded = true
-			} else {
-				folder.expanded = localStorage.getItem('editor/folder/' + id) === 'true'
-			}
-			folder.closed = localStorage.getItem('editor/folder/closed/' + id) === 'true'
-			folder.items = farmer.folders
-				.filter((f: any) => f.folder === id)
-				.map((f: any) => buildFolder(f.id, folder.id))
-			folder.items.push(...(farmer.ais
-				.filter((ai: any) => ai.folder === id)
-				.map((ai: any) => new AIItem(ai, folder.id))
-			))
-			this.folderById[folder.id] = folder
-			return folder
-		}
-		this.rootFolder = buildFolder(0, 0)
-		for (const ai of farmer.ais) {
-			ai.path = this.getAIFullPath(ai)
-			ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
-			this.ais['' + ai.id] = ai
-			this.aiByFullPath[ai.path] = ai
+
+		// Créer les AIs depuis les fichiers
+		for (const file of data.files) {
+			const name = file.path.includes('/') ? file.path.substring(file.path.lastIndexOf('/') + 1) : file.path
+			const folderPath = file.path.includes('/') ? file.path.substring(0, file.path.lastIndexOf('/')) : ''
+			const folder = folderByPath[folderPath] || this.rootFolder
+
+			const ai = new AI({
+				name,
+				path: file.path,
+				folder: folder.id,
+				mtime: file.mtime || 0,
+				valid: file.valid,
+				version: file.version,
+				strict: file.strict,
+				entrypoint: file.entrypoint,
+				total_lines: file.total_lines,
+				total_chars: file.total_chars,
+				scenario: file.scenario,
+			})
+			ai.folderpath = this.getFolderPath(folder)
+
+			this.ais[ai.path] = ai
+
 			this.items[ai.name] = ai
+			folder.items.push(new AIItem(ai, folder.id))
 		}
-		// Add bot AIs
-		for (const ai of this.botAIs) {
-			this.ais['' + ai.id] = ai
+		this.aiCount = data.files.length
+
+		// Bot AIs
+		for (const botAi of this.botAIs) {
+			this.ais[botAi.path] = botAi as any
 		}
+
+		// Corbeille
 		this.bin = new Folder(-1, 'recycle_bin', 0)
 		this.bin.items = []
 		this.folderById[-1] = this.bin
-		// Convertir les AIs de la corbeille en objets AI
-		const binAIs: AI[] = []
-		for (const id in farmer.bin) {
-			farmer.bin[id] = new AI(farmer.bin[id])
-			const ai = farmer.bin[id]
-			binAIs.push(ai)
-			this.ais['' + ai.id] = ai
-			this.items[ai.name] = ai
-			ai.path = this.getAIFullPath(ai)
-		}
-		// Construire les dossiers supprimés dans la corbeille
-		if (farmer.bin_folders && farmer.bin_folders.length) {
-			const binFolderData: {[key: number]: any} = {}
-			for (const f of farmer.bin_folders) {
-				binFolderData[f.id] = f
-			}
-			const buildBinFolder = (id: number, parent: number): Folder => {
-				const folder = new Folder(id, binFolderData[id].name, parent)
-				folder.items = farmer.bin_folders
-					.filter((f: any) => f.folder === id)
-					.map((f: any) => buildBinFolder(f.id, folder.id))
-				folder.items.push(...binAIs
-					.filter((ai: AI) => ai.folder === id)
-					.map((ai: AI) => new AIItem(ai, folder.id))
-				)
-				this.folderById[folder.id] = folder
-				return folder
-			}
-			for (const f of farmer.bin_folders) {
-				if (f.folder === -1) {
-					this.bin.items.push(buildBinFolder(f.id, this.bin.id))
-				}
-			}
-		}
-		// AIs individuellement supprimées (folder === -1, pas dans un dossier)
-		for (const ai of binAIs) {
-			if (ai.folder === -1) {
-				this.bin.items.push(new AIItem(ai, this.bin.id))
-			}
-		}
-		this.folderById[-1] = this.bin
-		this.initialized = true
-	}
-
-	public load(ai: AI): Promise<AI> {
-
-		const dependencies_set = new Set<number>()
-		dependencies_set.add(ai.id)
-		if (ai.entrypoint) {
-			for (const id of ai.includes_ids) { dependencies_set.add(id) }
-		}
-		if (ai.entrypoints) {
-			for (const entrypoint of ai.entrypoints) {
-				dependencies_set.add(entrypoint)
-				if (fileSystem.ais[entrypoint]) {
-					for (const id of fileSystem.ais[entrypoint].includes_ids) { dependencies_set.add(id) }
-				}
-			}
-		}
-		const dependencies_timestamps = {} as {[key: number]: number}
-		const new_ais = new Set<AI>()
-		for (const id of dependencies_set) {
-			const ai = fileSystem.ais[id]
-			if (ai) {
-				const timestamp = parseInt(localStorage.getItem('ai/time/' + ai.id) || '0', 10)
-				if (ai.timestamp === 0 || ai.timestamp !== timestamp) {
-					ai.timestamp = timestamp
-					ai.code = localStorage.getItem('ai/code/' + ai.id)
-					dependencies_timestamps[id] = timestamp
-					new_ais.add(ai)
-				}
-			}
-		}
-		// console.log("timestamps", dependencies_timestamps)
-
-		if (Object.keys(dependencies_timestamps).length) {
-
-			return new Promise<AI>((resolve, reject) => {
-
-				LeekWars.post<{id: number, modified: number, code: string}[]>('ai/sync', {ais: JSON.stringify(dependencies_timestamps)}).then(result => {
-
-					for (const entry of result) { // Nouveaux timestamp, on met à jour
-						const ai = fileSystem.ais[entry.id]
-						if (ai) {
-							ai.code = entry.code
-							ai.timestamp = entry.modified
-							localStorage.setItem('ai/time/' + ai.id, '' + entry.modified)
-							localStorage.setItem('ai/code/' + ai.id, '' + entry.code)
-						}
-					}
-					// console.time('analyze')
-					for (const a of new_ais) {
-						a.analyze()
-					}
-					// console.timeEnd('analyze')
-					resolve(ai)
-
-				}).error(reject)
+		for (const binFile of data.bin) {
+			const ai = new AI({
+				name: binFile.path,
+				path: '.trash/' + binFile.path,
+				folder: -1,
+				valid: binFile.valid,
+				version: binFile.version,
 			})
-		} else {
+			this.ais[ai.path] = ai
+			this.bin.items.push(new AIItem(ai, -1))
+		}
+
+		// leek_ais : map leek_id -> file_path
+		this.leekAIs = {}
+		for (const leekId in data.leek_ais) {
+			this.leekAIs[parseInt(leekId)] = data.leek_ais[leekId]
+		}
+
+		// Trier tous les dossiers
+		this.sortFolder(this.rootFolder)
+
+			}
+
+	/**
+	 * Charge le code d'une AI depuis le filesystem.
+	 * Utilise le mtime du fichier pour éviter les re-fetch inutiles.
+	 */
+	public load(ai: AI): Promise<AI> {
+		const cachedMtime = parseInt(localStorage.getItem('ai/mtime/' + ai.path) || '0', 10)
+		const cached = localStorage.getItem('ai/code/' + ai.path)
+
+		// Cache hit : le mtime local correspond au mtime serveur
+		if (cached !== null && cachedMtime > 0 && cachedMtime >= ai.mtime) {
+			ai.code = cached
+			if (!ai.functions.length) { ai.analyze() }
 			return Promise.resolve(ai)
 		}
+
+		return new Promise<AI>((resolve, reject) => {
+			LeekWars.post('ai/read', { path: ai.path }).then((data: any) => {
+				ai.code = data.code
+				ai.mtime = data.mtime || Date.now()
+				localStorage.setItem('ai/code/' + ai.path, ai.code)
+				localStorage.setItem('ai/mtime/' + ai.path, '' + ai.mtime)
+				ai.analyze()
+				resolve(ai)
+			}).error(reject)
+		})
+	}
+
+	/**
+	 * Retrouve une AI depuis un paramètre de route.
+	 */
+	public getAIFromRoute(routeId: string): AI | undefined {
+		return this.ais[routeId]
 	}
 
 	/**
@@ -196,11 +172,10 @@ class FileSystem {
 	public add_ai(ai: AI, folder: Folder) {
 		ai.path = this.getAIFullPath(ai)
 		ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
-		this.ais[ai.id] = ai
-		this.aiByFullPath[ai.path] = ai
+		this.ais[ai.path] = ai
 		folder.items.push(new AIItem(ai, folder.id))
 		this.sortFolder(folder)
-		store.commit('add-ai', ai)
+
 	}
 
 	public add_folder(folder: Folder, parent: Folder) {
@@ -213,29 +188,27 @@ class FileSystem {
 		if (path.includes(FileSystem.CONSOLE_MAGIC_KEY)) {
 			return this.consoleAI!
 		}
-		return this.aiByFullPath[path] || this.aiByFullPath['/' + path]
+		return this.ais[path] || this.ais['/' + path]
 	}
 
 	public find(path: string, folder: number): AI | null {
-		// console.log("find", path, folder)
 		path = path.trim()
-		if (path[0] === '/') { // From root
+		if (path[0] === '/') {
 			const sub = path.substring(1)
 			return this.find(sub, this.rootFolder.id)
 		}
 		if (!(folder in this.folderById)) { return null }
 			const f = this.folderById[folder]
-			if (path.indexOf('/') === -1) { // Find an AI
+			if (path.indexOf('/') === -1) {
 			for (const item of f.items) {
 				if (!item.folder && item.name === path) {
 					return (item as AIItem).ai
 				}
 			}
-		} else { // Find another path
+		} else {
 			const i = path.indexOf('/')
 			const first = path.substring(0, i)
 			const rest = path.substring(i + 1)
-			// console.log("first", first, "rest", rest)
 			if (first === '..') {
 				return this.find(rest, f.parent)
 			} else if (first === '.') {
@@ -251,32 +224,32 @@ class FileSystem {
 	}
 
 	public deleteAI(ai: AI) {
+		const oldPath = ai.path
 		const folder = this.folderById[ai.folder]
 		const item = folder.items.splice(folder.items.findIndex((i) => !i.folder && (i as AIItem).ai === ai), 1)
-		delete this.aiByFullPath[ai.path]
-		store.commit('delete-ai', ai.id)
+		delete this.ais[oldPath]
 		ai.folder = -1
-		ai.path = this.getAIFullPath(ai)
+		ai.path = '.trash/' + ai.name
 		this.bin.items.push(...item)
 		this.sortFolder(this.bin)
-		LeekWars.delete('ai/delete', {ai_id: ai.id}).then((data: any) => {
-			if (data.name && data.name !== ai.name) {
-				delete this.aiByFullPath[ai.path]
-				ai.name = data.name
-				item[0].name = data.name
-				ai.path = this.getAIFullPath(ai)
-				this.aiByFullPath[ai.path] = ai
+		LeekWars.delete('ai/delete', {path: oldPath}).then((data: any) => {
+			if (data.trash_name && data.trash_name !== ai.name) {
+				delete this.ais[ai.path]
+				ai.name = data.trash_name
+				ai.path = '.trash/' + ai.name
+				this.ais[ai.path] = ai
+				item[0].name = ai.name
 				this.sortFolder(this.bin)
 			}
-		}).error(error => LeekWars.toast(error.error || error))
+		}).error((error: any) => LeekWars.toast(error.error || error))
+		emitter.emit('reanalyze')
 	}
 
 	public destroyAI(ai: AI) {
 		const folder = this.folderById[ai.folder]
 		folder.items.splice(folder.items.findIndex((i) => !i.folder && (i as AIItem).ai === ai), 1)
-		delete this.ais['' + ai.id]
-		delete this.aiByFullPath[ai.path]
-		LeekWars.delete('ai/destroy', {ai_id: ai.id}).error(error => LeekWars.toast(error))
+		delete this.ais[ai.path]
+		LeekWars.delete('ai/destroy', {trash_name: ai.name}).error(error => LeekWars.toast(error))
 	}
 
 	public emptyBin() {
@@ -291,60 +264,35 @@ class FileSystem {
 				this.cleanBinRefs(item as Folder)
 				delete this.folderById[(item as Folder).id]
 			} else {
-				delete this.ais['' + (item as AIItem).ai.id]
-				delete this.aiByFullPath[(item as AIItem).ai.path]
+				const ai = (item as AIItem).ai
+				delete this.ais[ai.path]
 			}
 		}
 	}
 
 	public restore(ai: AI) {
+		const trashName = ai.name
 		const item = this.bin.items.splice(this.bin.items.findIndex((i) => !i.folder && (i as AIItem).ai === ai), 1)
 		ai.folder = 0
-		ai.path = this.getAIFullPath(ai)
+		ai.path = ai.name
 		ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
-		this.ais['' + ai.id] = ai
-		this.aiByFullPath[ai.path] = ai
+		this.ais[ai.path] = ai
 		this.rootFolder.items.push(...item)
 		this.sortFolder(this.rootFolder)
-		LeekWars.post('ai/restore', {ai_id: ai.id}).error(error => LeekWars.toast(error.error || error))
+		LeekWars.post('ai/restore', {trash_name: trashName}).error((error: any) => LeekWars.toast(error.error || error))
 	}
 
 	public restoreFolder(folder: Folder) {
-		const parent = this.folderById[folder.parent]
-		if (!parent) return
-		const idx = parent.items.indexOf(folder)
-		if (idx === -1) return
-		parent.items.splice(idx, 1)
-		folder.parent = this.rootFolder.id
-		this.rootFolder.items.push(folder)
-		this.sortFolder(this.rootFolder)
-		this.registerFolderAIs(folder)
-		LeekWars.post('ai-folder/restore', {folder_id: folder.id}).error(error => LeekWars.toast(error.error || error))
-	}
-
-	private registerFolderAIs(folder: Folder) {
-		for (const item of folder.items) {
-			if (item.folder) {
-				this.registerFolderAIs(item as Folder)
-			} else {
-				const ai = (item as AIItem).ai
-				ai.path = this.getAIFullPath(ai)
-				ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
-				this.aiByFullPath[ai.path] = ai
-				store.commit('add-ai', ai)
-			}
-		}
+		LeekWars.post('ai-folder/restore', { trash_name: folder.name }).then(() => {
+			this.reload()
+		}).error((error: any) => LeekWars.toast(error.error || error))
 	}
 
 	public destroyFolder(folder: Folder) {
-		// Retirer le dossier de la corbeille
 		const parent = this.folderById[folder.parent]
 		parent.items.splice(parent.items.indexOf(folder), 1)
-		// Nettoyer les références
 		this.cleanBinRefs(folder)
 		delete this.folderById[folder.id]
-		// Pas d'endpoint dédié : les AIs individuelles seront détruites par emptyBin
-		// Pour l'instant, on vide le dossier et détruit les AIs une par une
 		this.destroyFolderContents(folder)
 	}
 
@@ -354,24 +302,21 @@ class FileSystem {
 				this.destroyFolderContents(item as Folder)
 			} else {
 				const ai = (item as AIItem).ai
-				LeekWars.delete('ai/destroy', {ai_id: ai.id}).error(error => LeekWars.toast(error))
+				LeekWars.delete('ai/destroy', {trash_name: ai.name}).error((error: any) => LeekWars.toast(error))
 			}
 		}
 	}
 
 	public deleteFolder(folder: Folder) {
+		const folderPath = this.getFolderPath(folder).replace(/\/$/, '')
 		const parent = this.folderById[folder.parent]
 		parent.items.splice(parent.items.indexOf(folder), 1)
 		this.cleanFolderRefs(folder)
 		folder.parent = this.bin.id
 		this.bin.items.push(folder)
 		this.sortFolder(this.bin)
-		LeekWars.delete('ai-folder/delete', {folder_id: folder.id}).then((data: any) => {
-			if (data.name && data.name !== folder.name) {
-				folder.name = data.name
-				this.sortFolder(this.bin)
-			}
-		}).error(error => LeekWars.toast(error.error || error))
+		LeekWars.delete('ai-folder/delete', {path: folderPath}).error((error: any) => LeekWars.toast(error.error || error))
+		emitter.emit('reanalyze')
 	}
 
 	private cleanFolderRefs(folder: Folder) {
@@ -380,8 +325,7 @@ class FileSystem {
 				this.cleanFolderRefs(item as Folder)
 			} else {
 				const ai = (item as AIItem).ai
-				delete this.aiByFullPath[ai.path]
-				store.commit('delete-ai', ai.id)
+				delete this.ais[ai.path]
 			}
 		}
 	}
@@ -402,26 +346,23 @@ class FileSystem {
 	}
 
 	public renameAI(ai: AI, name: string) {
+		delete this.ais[ai.path]
 		ai.name = name
-		delete this.aiByFullPath[ai.path]
 		ai.path = this.getAIFullPath(ai)
 		ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
-		this.aiByFullPath[ai.path] = ai
+		this.ais[ai.path] = ai
 	}
 
 	public clear() {
 		this.ais = {}
 		this.folderById = {}
-		this.aiByFullPath = {}
 		this.leekAIs = {}
 		this.items = {}
-		this.promise = null
-		this.initialized = false
-	}
+			}
 
 	private getAIFullPath(ai: AI) {
 		if (this.isInBin(ai.folder)) {
-			return '.trash/' + ai.id + '/' + ai.name
+			return '.trash/' + ai.name
 		}
 		if (ai.folder !== 0 && ai.folder in this.folderById) {
 			return this.getFolderPath(this.folderById[ai.folder]) + ai.name
@@ -429,8 +370,21 @@ class FileSystem {
 		return ai.name
 	}
 
+	/**
+	 * Recharge tout le filesystem depuis le serveur.
+	 * À utiliser après les opérations git lourdes (branch switch, pull, revert).
+	 */
+	public reload(): Promise<void> {
+		return new Promise((resolve) => {
+			LeekWars.get('ai/get-farmer-tree').then((data: any) => {
+				this.clear()
+				this.init(data)
+				resolve()
+			})
+		})
+	}
+
 	public getFolderPath(folder: Folder): string {
-		// TODO temporary fix
 		if (!folder) { return "##folder_error##" }
 		if (folder.parent !== 0) {
 			return this.getFolderPath(this.folderById[folder.parent]) + folder.name + '/'
