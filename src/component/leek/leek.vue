@@ -1517,7 +1517,8 @@
 					name: this.leek.name,
 					level: this.leek.level,
 					weapons: this.leek.weapons.map(w => w.template),
-					chips: this.leek.chips.map(c => c.template)
+					chips: this.leek.chips.map(c => c.template),
+					skin: this.leek.skin
 				})
 				for (const charac of LeekWars.characteristics) {
 					(newLeek as any)[charac] = (this.leek as any)['total_' + charac]
