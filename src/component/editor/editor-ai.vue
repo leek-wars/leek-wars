@@ -52,6 +52,7 @@
 			const path = this.ai.folderpath + this.ai.name
 			const status = fileSystem.gitStatus[path]
 			if (!status) return ''
+			if (status === 'C') return 'git-conflict'
 			if (status === 'M') return 'git-modified'
 			if (status === 'A' || status === 'U') return 'git-added'
 			if (status === 'D') return 'git-deleted'
@@ -160,5 +161,9 @@
 	.git-deleted {
 		color: #e06c75 !important;
 		text-decoration: line-through;
+	}
+	.git-conflict {
+		color: #e06c75 !important;
+		font-weight: bold;
 	}
 </style>

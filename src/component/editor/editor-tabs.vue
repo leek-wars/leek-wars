@@ -10,7 +10,7 @@
 						{{ fileSystem.ais[tab.id]?.name || tab.id }}
 					</template>
 					<template v-else>
-						<v-icon class="icon git">{{ tab.type === 'commit' ? 'mdi-source-commit' : 'mdi-source-branch' }}</v-icon>
+						<v-icon class="icon git" :class="{'merge-icon': tab.type === 'merge'}">{{ tab.type === 'commit' ? 'mdi-source-commit' : tab.type === 'merge' ? 'mdi-source-merge' : 'mdi-source-branch' }}</v-icon>
 						{{ tab.file.split('/').pop() }}
 						<span v-if="tab.hash" class="commit-hash">{{ tab.hash.substring(0, 7) }}</span>
 					</template>
@@ -52,7 +52,7 @@
 		id: string
 	}
 	export interface DiffTab {
-		type: 'diff' | 'commit'
+		type: 'diff' | 'commit' | 'merge'
 		id: string
 		folder: string
 		file: string
@@ -109,6 +109,7 @@
 
 		tabKey(tab: EditorTab): string {
 			if (tab.type === 'file') return 'f-' + tab.id
+			if (tab.type === 'merge') return 'm-' + tab.file
 			return 'd-' + tab.file + '-' + (tab.hash || (tab.staged ? 's' : 'w'))
 		}
 
@@ -117,7 +118,7 @@
 			if (tab.type === 'file') {
 				return { selected, modified: fileSystem.ais[tab.id]?.modified }
 			}
-			return { selected, 'diff-tab': true, 'commit-tab': tab.type === 'commit' }
+			return { selected, 'diff-tab': true, 'commit-tab': tab.type === 'commit', 'merge-tab': tab.type === 'merge' }
 		}
 
 		tabTitle(tab: EditorTab): string {
@@ -294,6 +295,12 @@
 		border-top-color: #7c8eda;
 		.name .v-icon.icon.git {
 			color: #7c8eda !important;
+		}
+	}
+	.tab.diff-tab.merge-tab {
+		border-top-color: #e06c75;
+		.name .v-icon.icon.git {
+			color: #e06c75 !important;
 		}
 	}
 	.menu .v-icon {

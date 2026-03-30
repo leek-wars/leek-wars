@@ -21,5 +21,7 @@
 	"n_behind": "{0} commit(s) behind",
 	"load_more": "Load more",
 	"init_git": "Initialize Git repository",
-	"init_git_confirm": "Initialize a Git repository in folder \"{0}\"?"
+	"init_git_confirm": "Initialize a Git repository in folder \"{0}\"?",
+	"conflicts": "Conflicts",
+	"merge_abort": "Abort merge"
 }

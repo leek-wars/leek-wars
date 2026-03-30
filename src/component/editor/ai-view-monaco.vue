@@ -39,6 +39,7 @@ import { FUNCTIONS } from '@/model/functions';
 import { markRaw, nextTick } from 'vue';
 import { create } from 'domain';
 import Code from '@/component/app/code.vue'
+import { parseConflicts, hasConflictMarkers, buildConflictDecorations, registerConflictCodeLens, type MergeConflict } from './merge-conflicts'
 
 @Options({ name: 'ai-view-monaco', emits: ['focus'], components: {
 
@@ -68,6 +69,9 @@ export default class AIViewMonaco extends Vue {
 	public position: monaco.Position = { lineNumber: 1, column: 1 } as monaco.Position
 	public selected: string = ''
 	public currentVersionId: number = 0
+	private conflictDecorations: monaco.editor.IEditorDecorationsCollection | null = null
+	private conflictLenses: monaco.IDisposable | null = null
+	private conflicts: MergeConflict[] = []
 
 	mounted() {
 		// https://microsoft.github.io/monaco-editor/docs.html#interfaces/editor.IEditorOptions.html
@@ -160,6 +164,7 @@ export default class AIViewMonaco extends Vue {
 				}
 			}
 		})
+
 		this.editor.onDidChangeCursorPosition((e) => {
 			this.position = this.editor.getPosition()!
 			this.selected = this.editor.getModel()!.getValueInRange(this.editor.getSelection()!)
@@ -167,6 +172,7 @@ export default class AIViewMonaco extends Vue {
 		this.editor.onDidChangeModelContent((e) => {
 			this.ai.modified = this.currentVersionId !== this.ai.model.getAlternativeVersionId()
 			this.setAnalyzerTimeout()
+			this.updateConflictDecorations()
 		})
 
 		const suggestionWidget = (this.editor.getContribution('editor.contrib.suggestController') as any).widget
@@ -281,6 +287,7 @@ export default class AIViewMonaco extends Vue {
 	beforeUnmount() {
 		this.saveViewState()
 		this.scrollListener.dispose()
+		this.conflictLenses?.dispose()
 		if (this.editor) {
 			this.editor.dispose()
 		}
@@ -309,13 +316,14 @@ export default class AIViewMonaco extends Vue {
 		this.currentAiPath = this.ai.path
 
 		const uri = monaco.Uri.parse('file:///' + this.ai.path)
-		const model = monaco.editor.getModel(uri) || monaco.editor.createModel(this.ai.code, 'leekscript', uri)
+		const model = monaco.editor.getModel(uri) || markRaw(monaco.editor.createModel(this.ai.code, 'leekscript', uri))
 		this.ai.model = model
 
 		if (!this.editor) return
 		this.editor.setModel(model)
 		this.currentVersionId = model.getAlternativeVersionId()
 
+		this.updateConflictDecorations()
 		this.setAnalyzerTimeout()
 		this.editor.focus()
 
@@ -381,6 +389,37 @@ export default class AIViewMonaco extends Vue {
 				this.analyzing = false
 			})
 		}, 500)
+	}
+
+	updateConflictDecorations() {
+		if (!this.editor) return
+		const model = this.editor.getModel()
+		if (!model) return
+
+		const content = model.getValue()
+
+		// Fast-path : pas de marqueurs → pas de parsing
+		if (!hasConflictMarkers(content)) {
+			this.conflicts = []
+			if (this.conflictDecorations) { this.conflictDecorations.set([]) }
+			this.conflictLenses?.dispose()
+			this.conflictLenses = null
+			return
+		}
+
+		this.conflicts = parseConflicts(content)
+
+		if (this.conflictDecorations) {
+			this.conflictDecorations.set(buildConflictDecorations(model, this.conflicts))
+		} else {
+			this.conflictDecorations = this.editor.createDecorationsCollection(buildConflictDecorations(model, this.conflicts))
+		}
+
+		this.conflictLenses?.dispose()
+		this.conflictLenses = registerConflictCodeLens(this.editor, model, this.conflicts, () => {
+			this.updateConflictDecorations()
+			this.setAnalyzerTimeout()
+		})
 	}
 
 	public save() {

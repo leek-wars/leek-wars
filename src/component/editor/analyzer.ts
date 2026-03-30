@@ -7,7 +7,7 @@ import { AIItem, Folder } from './editor-item'
 import { Problem } from './problem'
 import { i18n } from '@/model/i18n'
 import * as monaco from 'monaco-editor'
-import { reactive } from 'vue'
+import { markRaw, reactive } from 'vue'
 
 const ERROR_UNUSED_VARIABLE = 148
 
@@ -308,7 +308,7 @@ class Analyzer {
 		if (ai.model) return ai.model
 		if (ai.code === undefined) return null
 		const uri = monaco.Uri.parse('file:///' + ai.path)
-		const model = monaco.editor.getModel(uri) || monaco.editor.createModel(ai.code, 'leekscript', uri)
+		const model = monaco.editor.getModel(uri) || markRaw(monaco.editor.createModel(ai.code, 'leekscript', uri))
 		ai.model = model
 		return model
 	}

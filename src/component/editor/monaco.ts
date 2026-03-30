@@ -14,6 +14,7 @@ import { i18n } from '@/model/i18n';
 import { fileSystem } from '@/model/filesystem';
 import { analyzer } from './analyzer';
 import { emitter } from '@/model/vue';
+import { markRaw } from 'vue';
 import { AI } from '@/model/ai.js';
 import { LeekWars } from '@/model/leekwars';
 import { getKeywords } from './keywords';
@@ -164,7 +165,7 @@ monaco.editor.registerEditorOpener({
 		const ai = fileSystem.aiByFullPath[resource.path.substring(1)]
 		await fileSystem.load(ai)
 		const uri = monaco.Uri.parse('file:///' + ai.path)
-		const model = monaco.editor.getModel(resource) || monaco.editor.createModel(ai.code, 'leekscript', uri)
+		const model = monaco.editor.getModel(resource) || markRaw(monaco.editor.createModel(ai.code, 'leekscript', uri))
 		ai.model = model
 		const range = selectionOrPosition as monaco.IRange
 		emitter.emit('jump', { ai, line: range.startLineNumber, column: range.startColumn - 1 })
@@ -314,7 +315,7 @@ monaco.languages.registerReferenceProvider("leekscript", {
 			if (!targetAi) { continue }
 			const uri = monaco.Uri.parse('file:///' + targetAi.path)
 			if (!monaco.editor.getModel(uri) && targetAi.code !== undefined) {
-				targetAi.model = monaco.editor.createModel(targetAi.code, 'leekscript', uri)
+				targetAi.model = markRaw(monaco.editor.createModel(targetAi.code, 'leekscript', uri))
 			}
 			results.push({
 				uri,

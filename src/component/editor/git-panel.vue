@@ -28,6 +28,32 @@
 			</div>
 
 			<div class="changes-scroll">
+				<!-- Merge en cours -->
+				<div v-if="merging" class="merge-banner">
+					<v-icon>mdi-source-merge</v-icon> {{ $t('merge_in_progress') }}
+					<div class="merge-abort" @click="mergeAbort" :title="$t('merge_abort')">
+						<v-icon>mdi-close</v-icon>
+					</div>
+				</div>
+
+				<!-- Fichiers en conflit -->
+				<div v-if="conflictChanges.length" class="changes-section conflicts-section">
+					<div class="section-header conflict-header" @click="conflictsExpanded = !conflictsExpanded">
+						<v-icon>{{ conflictsExpanded ? 'mdi-chevron-down' : 'mdi-chevron-right' }}</v-icon>
+						<span class="section-title">{{ $t('conflicts') }}</span>
+						<span class="count conflict-count">{{ conflictChanges.length }}</span>
+					</div>
+					<div v-if="conflictsExpanded" class="file-list">
+						<div v-for="change in conflictChanges" :key="'c-' + change.file" class="file-item conflict-item" @click="openConflict(change)">
+							<span class="status status-conflict">!</span>
+							<span class="filename">{{ change.file }}</span>
+							<span class="file-actions">
+								<v-icon :title="$t('stage')" @click.stop="stage(change)">mdi-check</v-icon>
+							</span>
+						</div>
+					</div>
+				</div>
+
 				<!-- Fichiers staged -->
 				<div v-if="stagedChanges.length" class="changes-section">
 					<div class="section-header" @click="stagedExpanded = !stagedExpanded">
@@ -37,7 +63,7 @@
 						<v-icon :title="$t('unstage_all')" class="section-action" @click.stop="unstageAll">mdi-minus</v-icon>
 					</div>
 					<div v-if="stagedExpanded" class="file-list">
-						<div v-for="change in stagedChanges" :key="'s-' + change.file" class="file-item" @click="showDiff(change, true)">
+						<div v-for="change in stagedChanges" :key="'s-' + change.file" class="file-item" :class="{ active: isActiveDiff(change, true) }" @click="showDiff(change, true)">
 							<span :class="'status status-' + change.index.toLowerCase()">{{ change.index }}</span>
 							<span class="filename">{{ change.file }}</span>
 							<span class="file-actions">
@@ -57,7 +83,7 @@
 						<v-icon :title="$t('discard_all')" class="section-action" @click.stop="discardAll">mdi-undo</v-icon>
 					</div>
 					<div v-if="unstagedExpanded" class="file-list">
-						<div v-for="change in unstagedChanges" :key="'u-' + change.file" class="file-item" @click="showDiff(change, false)">
+						<div v-for="change in unstagedChanges" :key="'u-' + change.file" class="file-item" :class="{ active: isActiveDiff(change, false) }" @click="showDiff(change, false)">
 							<span :class="'status status-' + statusChar(change)">{{ statusLabel(change) }}</span>
 							<span class="filename">{{ change.file }}</span>
 							<span class="file-actions">
@@ -68,13 +94,8 @@
 					</div>
 				</div>
 
-				<!-- Merge en cours -->
-				<div v-if="merging" class="merge-banner">
-					<v-icon>mdi-source-merge</v-icon> {{ $t('merge_in_progress') }}
-				</div>
-
 				<!-- Pas de changements -->
-				<div v-if="!stagedChanges.length && !unstagedChanges.length && !loading" class="no-changes">
+				<div v-if="!stagedChanges.length && !unstagedChanges.length && !conflictChanges.length && !loading" class="no-changes">
 					<v-icon>mdi-check-circle</v-icon> {{ $t('no_changes') }}
 				</div>
 			</div>
@@ -108,12 +129,14 @@
 	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import GitHistory from './git-history.vue'
 	import { emitter } from '@/model/vue'
+	import type { DiffTab } from './editor-tabs.vue'
 
 	interface GitChange {
 		file: string
 		index: string
 		worktree: string
 		staged: boolean
+		conflict?: boolean
 	}
 
 	@Options({
@@ -121,10 +144,11 @@
 		i18n: {},
 		components: { GitHistory },
 		mixins: [...mixins],
-		emits: ['show-diff']
+		emits: ['show-diff', 'show-merge']
 	})
 	export default class GitPanel extends Vue {
 		@Prop({ default: 'leek-wars' }) theme!: string
+		@Prop({ default: null }) activeDiff!: DiffTab | null
 		repos: {folder: string, name: string}[] = []
 		selectedRepo: string = ''
 		changes: GitChange[] = []
@@ -134,6 +158,7 @@
 		stagedExpanded: boolean = true
 		unstagedExpanded: boolean = true
 		merging: boolean = false
+		conflictsExpanded: boolean = true
 		ahead: number = 0
 		behind: number = 0
 		branch: string = ''
@@ -144,11 +169,15 @@
 		get repoItems() {
 			return this.repos.map(r => ({ title: r.name || '/', value: r.folder }))
 		}
+		get conflictChanges(): GitChange[] {
+			return this.changes.filter(c => c.conflict)
+		}
 		get stagedChanges(): GitChange[] {
-			return this.changes.filter(c => c.staged)
+			return this.changes.filter(c => c.staged && !c.conflict)
 		}
 		get unstagedChanges(): GitChange[] {
-			return this.changes.filter(c => !c.staged || c.worktree !== ' ')
+			return this.changes.filter(c => !c.conflict)
+				.filter(c => !c.staged || c.worktree !== ' ')
 				.filter(c => c.worktree !== ' ' || c.index === '?')
 				.map(c => {
 					if (c.index === '?') return c // Untracked
@@ -244,24 +273,33 @@
 
 		async discard(change: GitChange) {
 			await LeekWars.post('git/discard', { folder: this.selectedRepo, files: JSON.stringify([change.file]) })
+			emitter.emit('close-diff', { folder: this.selectedRepo, file: change.file })
 			this.reloadFiles([change.file])
-			this.refreshStatus()
+			await this.refreshStatus()
 			emitter.emit('reanalyze')
 		}
 
 		async discardAll() {
 			const files = this.unstagedChanges.map(c => c.file)
 			await LeekWars.post('git/discard', { folder: this.selectedRepo, files: JSON.stringify(files) })
+			for (const file of files) {
+				emitter.emit('close-diff', { folder: this.selectedRepo, file })
+			}
 			this.reloadFiles(files)
-			this.refreshStatus()
+			await this.refreshStatus()
 			emitter.emit('reanalyze')
 		}
 
 		async commit() {
 			if (!this.canCommit) return
+			const wasMerging = this.merging
 			try {
 				await LeekWars.post('git/commit', { folder: this.selectedRepo, message: this.commitMessage })
 				this.commitMessage = ''
+				if (wasMerging) {
+					// Fermer les onglets merge après un commit de merge
+					emitter.emit('close-merge-tabs', { folder: this.selectedRepo })
+				}
 				this.refreshStatus()
 			} catch (e) {
 				// Erreur
@@ -284,15 +322,40 @@
 			this.loading = true
 			try {
 				const data = await LeekWars.post('git/pull', { folder: this.selectedRepo })
-				if (data.conflicts) {
-					// TODO: notification conflits
+				await this.refreshStatus()
+				if (data.conflicts && this.conflictChanges.length > 0) {
+					// Recharger les fichiers en conflit pour afficher les marqueurs
+					this.reloadFiles(this.conflictChanges.map(c => c.file))
+					// Ouvrir automatiquement le premier fichier en conflit
+					emitter.emit('open-merge', { folder: this.selectedRepo, file: this.conflictChanges[0].file })
 				}
-				this.refreshStatus()
 			} catch (e) {
 				// Erreur pull
 			} finally {
 				this.loading = false
 			}
+		}
+
+		async mergeAbort() {
+			this.loading = true
+			try {
+				await LeekWars.post('git/merge-abort', { folder: this.selectedRepo })
+				// Fermer tous les onglets merge
+				emitter.emit('close-merge-tabs', { folder: this.selectedRepo })
+				// Recharger tous les fichiers qui étaient en conflit
+				const conflictFiles = this.conflictChanges.map(c => c.file)
+				this.reloadFiles(conflictFiles)
+				await this.refreshStatus()
+				emitter.emit('reanalyze')
+			} catch (e) {
+				// Erreur abort
+			} finally {
+				this.loading = false
+			}
+		}
+
+		openConflict(change: GitChange) {
+			this.$emit('show-merge', { folder: this.selectedRepo, file: change.file })
 		}
 
 		reloadFiles(files: string[]) {
@@ -317,14 +380,20 @@
 			const prefix = this.selectedRepo ? this.selectedRepo + '/' : ''
 			for (const change of this.changes) {
 				const fullPath = prefix + change.file
-				// Priorité : worktree > index
-				if (change.worktree !== ' ') {
+				if (change.conflict) {
+					status[fullPath] = 'C'
+				} else if (change.worktree !== ' ') {
 					status[fullPath] = change.worktree === '?' ? 'U' : change.worktree
 				} else if (change.index !== ' ') {
 					status[fullPath] = change.index
 				}
 			}
 			fileSystem.gitStatus = status
+		}
+
+		isActiveDiff(change: GitChange, staged: boolean): boolean {
+			if (!this.activeDiff || this.activeDiff.type !== 'diff') return false
+			return this.activeDiff.file === change.file && this.activeDiff.staged === staged
 		}
 
 		showDiff(change: GitChange, staged: boolean) {
@@ -451,6 +520,10 @@
 		background: rgba(128, 128, 128, 0.1);
 		.file-actions { visibility: visible; }
 	}
+	&.active {
+		background: rgba(128, 128, 128, 0.15);
+		.file-actions { visibility: visible; }
+	}
 }
 .status {
 	width: 16px;
@@ -502,6 +575,27 @@
 	gap: 4px;
 	font-size: 13px;
 	flex-shrink: 0;
+}
+.merge-abort {
+	margin-left: auto;
+	cursor: pointer;
+	opacity: 0.8;
+	border-radius: 4px;
+	padding: 2px;
+	&:hover { opacity: 1; background: rgba(0, 0, 0, 0.2); }
+	.v-icon { font-size: 18px; }
+}
+.conflict-header {
+	color: #e06c75;
+}
+.conflict-count {
+	background: rgba(224, 108, 117, 0.3) !important;
+}
+.conflict-item {
+	.status-conflict {
+		color: #e06c75 !important;
+		font-weight: bold;
+	}
 }
 .sync-bar {
 	display: flex;

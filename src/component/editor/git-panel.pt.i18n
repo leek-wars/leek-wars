@@ -1,1 +1,4 @@
-{}
+{
+	"conflicts": "Conflicts",
+	"merge_abort": "Abort merge"
+}

@@ -72,7 +72,7 @@
 								</div>
 							</template>
 
-							<git-panel v-if="leftPanelTab === 'git'" :theme="theme" @show-diff="openDiff" />
+							<git-panel v-if="leftPanelTab === 'git'" :theme="theme" :active-diff="activeDiff" @show-diff="openDiff" @show-merge="openMerge" />
 						</div>
 					</template>
 				</panel>
@@ -96,7 +96,8 @@
 								<ai-view-monaco v-if="splitted && ai2Ready" v-show="!showDiffViewer" ref="editor2" :ai="fileSystem.ais[currentAI2]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" @jump="jump" @load="load" @focus="setSide(2)" :style="{ 'width': (editor2Width * 100) + '%' }" />
 
 								<div v-if="showDiffViewer && !isDiffReady" class="diff-loader"><loader :size="40" /></div>
-								<git-diff v-if="diffMounted && isDiffReady" v-show="showDiffViewer" :original-content="activeDiff.original" :modified-content="activeDiffModified" :file="activeDiff.file" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :inline="diffInline" :collapse-unchanged="diffCollapseUnchanged" @close="closeDiff" @open-file="openDiffFile" />
+								<git-diff v-if="diffMounted && isDiffReady && !showMergeViewer" v-show="showDiffViewer" :original-content="activeDiff.original" :modified-content="activeDiffModified" :file="activeDiff.file" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :inline="diffInline" :collapse-unchanged="diffCollapseUnchanged" @close="closeDiff" @open-file="openDiffFile" />
+								<git-merge v-if="showMergeViewer && activeMerge && activeMerge.ready" ref="mergeEditor" :content="activeMerge.modified" :file="activeMerge.file" :theme="theme" :font-size="fontSize" :line-height="lineHeight" @resolve="onMergeResolve" />
 
 							</div>
 
@@ -250,6 +251,7 @@
 	const EditorProblems = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-problems.${locale}.i18n`))
 	const GitPanel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/git-panel.${locale}.i18n`))
 	import GitDiff from './git-diff.vue'
+	import GitMerge from './git-merge.vue'
 	import type { EditorTab, FileTab, DiffTab } from './editor-tabs.vue'
 	import './leekscript-monokai.scss'
 	import { SocketMessage } from '@/model/socket'
@@ -274,6 +276,7 @@
 			'editor-problems': EditorProblems,
 			'git-panel': GitPanel,
 			'git-diff': GitDiff,
+			'git-merge': GitMerge,
 			ai: AIElement,
 			LeekscriptVersions,
 		},
@@ -352,8 +355,15 @@
 		get showDiffViewer(): boolean {
 			return this.currentTab !== null && this.currentTab.type !== 'file'
 		}
+		get showMergeViewer(): boolean {
+			return this.currentTab !== null && this.currentTab.type === 'merge'
+		}
 		get activeDiff(): DiffTab | null {
 			if (!this.currentTab || this.currentTab.type === 'file') return null
+			return this.currentTab as DiffTab
+		}
+		get activeMerge(): DiffTab | null {
+			if (!this.currentTab || this.currentTab.type !== 'merge') return null
 			return this.currentTab as DiffTab
 		}
 		get isDiffReady(): boolean {
@@ -378,6 +388,7 @@
 			return this.diffTabs.findIndex(d => this.diffKey(d) === this.diffKey(this.currentTab as DiffTab))
 		}
 		diffKey(tab: DiffTab): string {
+			if (tab.type === 'merge') return tab.folder + ':' + tab.file + ':merge'
 			return tab.folder + ':' + tab.file + ':' + (tab.hash || (tab.staged ? 's' : 'w'))
 		}
 
@@ -523,6 +534,20 @@
 			emitter.on('reanalyze', () => {
 				const aiEditor = this.$refs.editor1 as AIViewMonaco
 				if (aiEditor) { aiEditor.setAnalyzerTimeout() }
+			})
+
+			emitter.on('close-diff', ({ folder, file }) => {
+				const tab = this.tabs1.find(t => t.type === 'diff' && (t as DiffTab).folder === folder && (t as DiffTab).file === file)
+				if (tab) { this.closeTabByRef(tab) }
+			})
+
+			emitter.on('close-merge-tabs', ({ folder }) => {
+				const mergeTabs = this.tabs1.filter(t => t.type === 'merge' && (t as DiffTab).folder === folder)
+				for (const tab of mergeTabs) { this.closeTabByRef(tab) }
+			})
+
+			emitter.on('open-merge', ({ folder, file }) => {
+				this.openMerge({ folder, file })
 			})
 
 			if (store.state.farmer) {
@@ -692,6 +717,11 @@
 		}
 
 		beforeUnmount() {
+			// Restaurer le cache du daemon pour les fichiers modifiés non sauvegardés
+			// en renvoyant le code du disque (via localStorage) pour que le daemon
+			// n'ait pas en cache une version non écrite sur le FS.
+			this.restoreDaemonCache()
+
 			emitter.off('ctrlS')
 			emitter.off('ctrlShiftS')
 			emitter.off('ctrlQ')
@@ -707,6 +737,9 @@
 			emitter.off('connected', this.connected)
 			emitter.off('jump', this.jumpEvent)
 			emitter.off('reanalyze')
+			emitter.off('close-diff')
+			emitter.off('close-merge-tabs')
+			emitter.off('open-merge')
 			LeekWars.large = false
 			LeekWars.header = true
 			LeekWars.footer = true
@@ -716,6 +749,19 @@
 			}
 			if (LeekWars.didactitial_step === 4) {
 				LeekWars.didactitial_next()
+			}
+		}
+
+		restoreDaemonCache() {
+			for (const path in fileSystem.ais) {
+				const ai = fileSystem.ais[path]
+				if (!ai.modified) continue
+				// Récupérer le code sauvegardé sur le FS (depuis le cache localStorage)
+				const savedCode = localStorage.getItem('ai/code/' + ai.path)
+				if (savedCode !== null) {
+					// Renvoyer le code du disque au daemon pour restaurer son cache
+					LeekWars.socket.send([SocketMessage.EDITOR_ANALYZE, ai.path, savedCode])
+				}
 			}
 		}
 
@@ -804,6 +850,45 @@
 		closeDiff() {
 			if (this.currentTab && this.currentTab.type !== 'file') {
 				this.closeTabByRef(this.currentTab)
+			}
+		}
+
+		openMerge(data: { folder: string, file: string }) {
+			const fullPath = (data.folder ? data.folder + '/' : '') + data.file
+			const ai = fileSystem.getAIByPath(fullPath)
+			const tab: DiffTab = { type: 'merge', id: ai ? ai.path : fullPath, folder: data.folder, file: data.file, original: '', modified: '', ready: false }
+			// Chercher si un onglet merge existe déjà pour ce fichier
+			const existing = this.tabs1.find(t => t.type === 'merge' && (t as DiffTab).folder === data.folder && (t as DiffTab).file === data.file)
+			if (existing) {
+				this.selectTab(existing)
+			} else {
+				this.tabs1.push(tab)
+				this.fetchMergeContent(tab)
+				this.selectTab(tab)
+			}
+		}
+
+		async fetchMergeContent(tab: DiffTab) {
+			try {
+				const data = await LeekWars.post('git/read-file', { folder: tab.folder, file: tab.file })
+				tab.modified = data.content || ''
+				tab.ready = true
+				this.diffReady++
+			} catch (e) {
+				tab.modified = ''
+				tab.ready = true
+				this.diffReady++
+			}
+		}
+
+		onMergeResolve(content: string, _remainingConflicts: number) {
+			const merge = this.activeMerge
+			if (!merge) return
+			const fullPath = (merge.folder ? merge.folder + '/' : '') + merge.file
+			const ai = fileSystem.getAIByPath(fullPath)
+			if (ai) {
+				ai.code = content
+				ai.modified = true
 			}
 		}
 
@@ -914,7 +999,11 @@
 
 		ensureDiffLoaded(tab: DiffTab) {
 		if (!tab.ready && !tab.original && !tab.modified) {
-			this.fetchDiffContent(tab)
+			if (tab.type === 'merge') {
+				this.fetchMergeContent(tab)
+			} else {
+				this.fetchDiffContent(tab)
+			}
 		}
 	}
 

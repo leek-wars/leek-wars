@@ -21,5 +21,7 @@
 	"n_behind": "{0} commit(s) en retard",
 	"load_more": "Charger plus",
 	"init_git": "Initialiser un dépôt Git",
-	"init_git_confirm": "Initialiser un dépôt Git dans le dossier \"{0}\" ?"
+	"init_git_confirm": "Initialiser un dépôt Git dans le dossier \"{0}\" ?",
+	"conflicts": "Conflits",
+	"merge_abort": "Annuler la fusion"
 }

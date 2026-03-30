@@ -45,6 +45,10 @@ type Events = {
 	'editor-menu': any,
 	'br-started': number,
 	'reanalyze': void,
+	'git-file-changed': void,
+	'close-diff': { folder: string, file: string },
+	'close-merge-tabs': { folder: string },
+	'open-merge': { folder: string, file: string },
 }
 
 const emitter = mitt<Events>()
