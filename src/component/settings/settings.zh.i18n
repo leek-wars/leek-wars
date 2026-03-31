@@ -67,5 +67,7 @@
 	"light": "克莱尔",
 	"dark": "黑暗",
 	"auto": "汽车",
-	"theme": "主题"
+	"theme": "主题",
+	"modern_theme": "现代主题（测试版）",
+	"xp_theme": "XP 主题"
 }

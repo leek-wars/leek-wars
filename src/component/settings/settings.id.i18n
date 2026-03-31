@@ -67,5 +67,7 @@
 	"light": "Clair",
 	"dark": "Gelap",
 	"auto": "Otomatis",
-	"theme": "Tema"
+	"theme": "Tema",
+	"modern_theme": "Tema modern (beta)",
+	"xp_theme": "Tema XP"
 }

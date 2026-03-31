@@ -67,5 +67,7 @@
 	"light": "クレア",
 	"dark": "暗い",
 	"auto": "オート",
-	"theme": "テーマ"
+	"theme": "テーマ",
+	"modern_theme": "モダンテーマ（ベータ）",
+	"xp_theme": "XPテーマ"
 }

@@ -205,6 +205,7 @@
 				{ name: "npm", link: "https://www.npmjs.com/", image: "npm.svg" },
 				{ name: "Vuetify", link: "https://vuetifyjs.com/en/", image: "vuetify.png" },
 				{ name: "Markdown it", link: "https://markdown-it.github.io/", image: "markdown-it.svg" },
+			{ name: "XP.css", link: "https://botoxparty.github.io/XP.css/", image: "xp-css.png" },
 			]},
 			{ name: "server", items: [
 				{ name: "Debian", link: "https://www.debian.org/", image: "debian.svg" },

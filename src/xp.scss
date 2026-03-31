@@ -1,0 +1,1095 @@
+// Windows XP Theme for Leek Wars - April Fools
+// Styles based on XP.css library (https://botoxparty.github.io/XP.css/)
+
+@font-face {
+	font-family: 'Pixelated MS Sans Serif';
+	src: url('xp.css/dist/ms_sans_serif.woff2') format('woff2'),
+		url('xp.css/dist/ms_sans_serif.woff') format('woff');
+	font-weight: normal;
+}
+@font-face {
+	font-family: 'Pixelated MS Sans Serif';
+	src: url('xp.css/dist/ms_sans_serif_bold.woff2') format('woff2'),
+		url('xp.css/dist/ms_sans_serif_bold.woff') format('woff');
+	font-weight: bold;
+}
+@font-face {
+	font-family: 'Perfect DOS VGA 437 Win';
+	src: url('xp.css/dist/PerfectDOSVGA437Win.woff2') format('woff2'),
+		url('xp.css/dist/PerfectDOSVGA437Win.woff') format('woff');
+	font-weight: normal;
+}
+
+// XP.css exact variables
+$xp-surface: #ece9d8;
+$xp-button-face: #dfdfdf;
+$xp-button-highlight: #fff;
+$xp-button-shadow: #808080;
+$xp-window-frame: #0a0a0a;
+$xp-dialog-blue: #2267cb;
+$xp-selection: #316ac5;
+$xp-green: #5fad1b;
+
+// XP.css exact box-shadow values
+$xp-border-raised-outer: inset -1px -1px $xp-window-frame, inset 1px 1px $xp-button-highlight;
+$xp-border-raised-inner: inset -2px -2px $xp-button-shadow, inset 2px 2px $xp-button-face;
+$xp-border-sunken-outer: inset -1px -1px $xp-button-highlight, inset 1px 1px $xp-window-frame;
+$xp-border-sunken-inner: inset -2px -2px $xp-button-face, inset 2px 2px $xp-button-shadow;
+
+// XP.css exact title bar gradient
+$xp-title-bar-gradient: linear-gradient(
+	180deg,
+	rgba(9, 151, 255, 1) 0%,
+	rgba(0, 83, 238, 1) 8%,
+	rgba(0, 80, 238, 1) 40%,
+	rgba(0, 102, 255, 1) 88%,
+	rgba(0, 102, 255, 1) 93%,
+	rgba(0, 91, 255, 1) 95%,
+	rgba(0, 61, 215, 1) 96%,
+	rgba(0, 61, 215, 1) 100%
+);
+
+// XP.css exact button gradient
+$xp-button-gradient: linear-gradient(
+	180deg,
+	rgba(255, 255, 255, 1) 0%,
+	rgba(236, 235, 229, 1) 86%,
+	rgba(216, 208, 196, 1) 100%
+);
+
+$xp-button-active-gradient: linear-gradient(
+	180deg,
+	rgba(205, 202, 195, 1) 0%,
+	rgba(227, 227, 219, 1) 8%,
+	rgba(229, 229, 222, 1) 94%,
+	rgba(242, 242, 241, 1) 100%
+);
+
+// XP.css exact hover/focus shadows for buttons
+$xp-button-hover-shadow: inset -1px 1px #fff0cf, inset 1px 2px #fdd889, inset -2px 2px #fbc761, inset 2px -2px #e5a01a;
+$xp-button-focus-shadow: inset -1px 1px #cee7ff, inset 1px 2px #98b8ea, inset -2px 2px #bcd4f6, inset 1px -1px #89ade4, inset 2px -2px #89ade4;
+
+// XP.css exact window border shadow
+$xp-window-shadow: inset -1px -1px #00138c, inset 1px 1px #0831d9, inset -2px -2px #001ea0, inset 2px 2px #166aee, inset -3px -3px #003bda, inset 3px 3px #0855dd;
+$xp-window-border-outer: 0 0 0 1px #0855dd, 0 0 0 2px #166aee, 0 0 0 3px #0831d9;
+
+// XP taskbar colors
+$xp-taskbar: #2559c4;
+$xp-taskbar-gradient-start: #1f55c1;
+$xp-taskbar-gradient-end: #3c7ee6;
+
+// Mixins using exact XP.css values
+@mixin xp-raised {
+	box-shadow: $xp-border-raised-outer, $xp-border-raised-inner;
+}
+
+@mixin xp-sunken {
+	box-shadow: $xp-border-sunken-outer, $xp-border-sunken-inner;
+}
+
+@mixin xp-title-bar {
+	background: $xp-title-bar-gradient;
+	color: white;
+	font-family: "Liberation Serif", "Times New Roman", serif !important;
+	font-weight: bold;
+	text-shadow: 1px 1px #0f1089;
+}
+
+#app.xp {
+	font-family: 'Pixelated MS Sans Serif', "Trebuchet MS", Arial, sans-serif;
+	color: #222;
+	background: #3a6ea5 url('/image/xp_background.webp') center center / cover no-repeat fixed !important;
+	image-rendering: pixelated;
+	cursor: url('/image/cursor.png') 0 0, auto;
+
+	// Override CSS variables
+	--pure-white: #fff;
+	--pure-black: #000;
+	--background: #{$xp-surface};
+	--background-secondary: #d6d2c2;
+	--background-disabled: #bbb;
+	--background-header: #{$xp-surface};
+	--border: #{$xp-button-shadow};
+	--text-color: #222;
+	--text-color-secondary: #555;
+
+	// ====================================
+	// GLOBAL ELEMENTS
+	// ====================================
+
+	*:not(.mdi):not(.v-icon):not(.mdi-set),
+	*:not(.mdi):not(.v-icon):not(.mdi-set)::before,
+	*:not(.mdi):not(.v-icon):not(.mdi-set)::after {
+		// font-family: 'Pixelated MS Sans Serif', "Trebuchet MS", Arial, sans-serif;
+	}
+	// Monaco editor uses Perfect DOS VGA font, keep its own theme colors
+	.monaco-editor {
+		*:not(.mdi):not(.v-icon):not(.mdi-set),
+		*:not(.mdi):not(.v-icon):not(.mdi-set)::before,
+		*:not(.mdi):not(.v-icon):not(.mdi-set)::after {
+			font-family: 'Perfect DOS VGA 437 Win', monospace !important;
+		}
+	}
+	&.dark .monaco-editor,
+	&.dark .monaco-editor *,
+	&.dark .editor-panel,
+	&.dark .editor-panel * {
+		--pure-white: #000;
+		--pure-black: #fff;
+		--background: #1f1f1f;
+		--background-secondary: #171717;
+	}
+
+	::selection {
+		background: $xp-selection;
+		color: white;
+	}
+
+	a {
+		&:focus { outline: 1px dotted #00f; }
+	}
+
+	// ====================================
+	// PAGE BACKGROUND & WRAPPER
+	// ====================================
+
+	.page-wrapper {
+		background: none;
+		padding: 12px 0;
+	}
+
+	.app-center {
+		background: none;
+	}
+
+	.big-leeks {
+		display: none !important;
+	}
+
+	// ====================================
+	// HEADINGS
+	// ====================================
+
+	.page-bar h1 {
+		@include xp-title-bar;
+		border-top: 1px solid #0831d9;
+		border-left: 1px solid #0831d9;
+		border-right: 1px solid #001ea0;
+		border-top-left-radius: 8px;
+		border-top-right-radius: 7px;
+		&::after {
+			display: none;
+		}
+	}
+
+	h3 {
+		@include xp-title-bar;
+		margin-left: 0;
+		border-radius: 0;
+		&::before, &::after {
+			display: none;
+		}
+	}
+
+	h4 {
+		color: #003;
+		font-weight: bold;
+	}
+
+	// ====================================
+	// PANELS - XP Windows (using .window styles from XP.css)
+	// ====================================
+
+	.panel {
+		background: var(--background);
+		box-shadow: $xp-window-shadow;
+		border-top-left-radius: 8px;
+		border-top-right-radius: 8px;
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
+		padding: 0 0 3px 0;
+
+		& > .header {
+			@include xp-title-bar;
+			border-top: 1px solid #0831d9;
+			border-left: 1px solid #0831d9;
+			border-right: 1px solid #001ea0;
+			border-top-left-radius: 8px;
+			border-top-right-radius: 7px;
+			box-shadow: none;
+			padding-right: 4px;
+
+			h2 {
+				color: white;
+				font-family: "Liberation Serif", Arial, sans-serif !important;
+				font-weight: bold;
+				text-shadow: 1px 1px #0f1089;
+				letter-spacing: 0;
+
+				&::before {
+					display: none;
+				}
+			}
+		}
+
+		& > .header .right .button,
+		& > .header .actions .button {
+			color: white;
+			background: #0050ee;
+			border: 1px solid #fffd;
+			border-radius: 3px;
+			transition: background 100ms;
+			height: 26px;
+			padding: 3px;
+			margin: 5px 1px;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+
+			i {
+				color: white;
+				margin: 0;
+				padding: 0;
+				font-size: 18px;
+			}
+
+			&:hover {
+				background: #3370ee;
+			}
+		}
+
+	}
+
+	// ====================================
+	// PAGE BAR & TABS
+	// ====================================
+
+	.page-bar {
+		background: none;
+	}
+
+	.page-header.page-bar {
+		padding-right: 0;
+	}
+
+	.page-bar .tabs .tab {
+		background: $xp-button-gradient;
+		border: 1px solid #003c74;
+		border-radius: 3px;
+		box-shadow: none;
+		color: #222;
+		margin-left: 0;
+		margin-right: 4px;
+
+		&::before, &::after {
+			display: none;
+		}
+
+		&:not(.disabled):hover {
+			box-shadow: $xp-button-hover-shadow;
+		}
+
+		i {
+			color: #222;
+			font-size: 18px;
+		}
+
+		img {
+			filter: invert(1);
+		}
+
+		input[type="text"], input[type="number"] {
+			border: 1px solid #7f9db9;
+			background: white;
+			color: #222;
+			box-shadow: none;
+		}
+	}
+
+	.page-bar .tabs .tab.selected,
+	.page-bar .tabs .tab.active {
+		background: $xp-button-active-gradient;
+		color: #222;
+		box-shadow: none;
+		font-weight: bold;
+
+		&::before, &::after {
+			display: none;
+		}
+
+		i {
+			color: #222;
+		}
+	}
+
+	.page-bar .tabs .tab.green {
+		background: $xp-green;
+		color: white;
+		border-color: darken($xp-green, 15%);
+		&::before, &::after { display: none; }
+		&:not(.disabled):hover { background: darken($xp-green, 5%); }
+		img { filter: invert(0); }
+	}
+
+	// ====================================
+	// MENU - XP Start Menu / Taskbar style
+	// ====================================
+
+	.menu-wrapper {
+		background: $xp-surface !important;
+		box-shadow: $xp-window-shadow;
+		border-top-right-radius: 8px;
+		border-bottom-right-radius: 0;
+	}
+
+	.menu {
+		.section {
+			background: transparent;
+			color: #222;
+
+			&:hover {
+				background: $xp-selection !important;
+				color: white;
+				i { color: white; }
+			}
+
+			i {
+				color: #222;
+			}
+		}
+
+		.menu-top {
+			@include xp-title-bar;
+			border-top: 1px solid #0831d9;
+			border-left: 1px solid #0831d9;
+			border-right: 1px solid #001ea0;
+			border-top-right-radius: 7px;
+		}
+
+		.section[label]::after {
+			background: none;
+			color: #888;
+		}
+	}
+
+	.menu-center a.router-link-active {
+		background: $xp-selection;
+		color: white;
+		text-shadow: none;
+
+		i { color: white; }
+
+		&::before {
+			display: none;
+		}
+	}
+
+	.menu-button {
+		background: rgba(80, 80, 80, 0.6);
+
+		i {
+			color: white;
+		}
+	}
+
+	// ====================================
+	// HEADER BAR
+	// ====================================
+
+	.header .logo {
+		max-width: 400px;
+		max-height: 60px;
+		margin: 0;
+		margin-top: 15px;
+		margin-bottom: 0;
+	}
+
+	.header .header-button {
+		background: $xp-button-gradient;
+		border: 1px solid #003c74;
+		border-radius: 3px;
+		box-shadow: none;
+		color: #222;
+		margin-left: 4px;
+
+		&::before, &::after {
+			display: none;
+		}
+
+		&:hover {
+			box-shadow: $xp-button-hover-shadow;
+		}
+
+		i {
+			color: #222;
+			font-size: 18px;
+		}
+
+		&.fights-button img {
+			filter: invert(1);
+		}
+	}
+
+	.header .label {
+		background: $xp-taskbar;
+		color: white;
+		font-weight: bold;
+	}
+
+	// ====================================
+	// BUTTONS (XP.css exact styles)
+	// ====================================
+
+	.v-btn:not(.v-btn--variant-text):not(.v-btn--icon) {
+		background: $xp-button-gradient !important;
+		border: 1px solid #003c74 !important;
+		border-radius: 3px !important;
+		box-shadow: none !important;
+		color: #222 !important;
+		text-transform: none !important;
+		font-family: 'Pixelated MS Sans Serif', "Trebuchet MS", Arial, sans-serif !important;
+		letter-spacing: 0 !important;
+
+		&:not(:disabled):hover {
+			box-shadow: $xp-button-hover-shadow !important;
+		}
+
+		&:focus {
+			box-shadow: $xp-button-focus-shadow !important;
+		}
+
+		&:not(:disabled):active {
+			background: $xp-button-active-gradient !important;
+			box-shadow: none !important;
+		}
+
+		&.v-btn--variant-elevated,
+		&.v-btn--variant-flat {
+			background: $xp-button-gradient !important;
+			color: #222 !important;
+		}
+	}
+
+	// Primary buttons
+	.v-btn.bg-primary,
+	.v-btn[color="primary"] {
+		background: $xp-green !important;
+		color: white !important;
+	}
+
+	// Error/danger buttons
+	.v-btn.bg-error,
+	.v-btn.error {
+		background: #c00 !important;
+		color: white !important;
+	}
+
+	// ====================================
+	// INPUT FIELDS (XP.css exact styles)
+	// ====================================
+
+	input[type="text"],
+	input[type="password"],
+	input[type="email"],
+	input[type="number"] {
+		border: 1px solid #7f9db9;
+		background-color: #fff;
+		box-shadow: none;
+		border-radius: 0;
+
+		&:focus {
+			outline: none;
+		}
+	}
+
+	textarea {
+		border: 1px solid #7f9db9;
+		background-color: #fff;
+		box-shadow: none;
+		border-radius: 0;
+
+		&:focus {
+			outline: none;
+		}
+	}
+
+	select {
+		border: 1px solid #7f9db9;
+		background-color: #fff;
+		border-radius: 0;
+	}
+
+	// ====================================
+	// CARDS
+	// ====================================
+
+	.card {
+		@include xp-raised;
+		background: $xp-surface;
+		border-radius: 0;
+	}
+
+	// Blabla panel
+	.blabla-panel .content {
+		background: none;
+	}
+
+	// ====================================
+	// XP BAR (experience bar) - like XP.css progress bar
+	// ====================================
+
+	span.xp-bar {
+		border-radius: 2px !important;
+		background: repeating-linear-gradient(
+			to right,
+			#fff 0px, #fff 2px,
+			transparent 2px, transparent 10px
+		),
+		linear-gradient(
+			to bottom,
+			#acedad 0%, #7be47d 14%, #4cda50 28%, #2ed330 42%,
+			#42d845 57%, #76e275 71%, #8fe791 85%, #fff 100%
+		) !important;
+	}
+
+	// Report XP bars
+	.new_xp {
+		border-radius: 2px !important;
+		background: repeating-linear-gradient(
+			to right,
+			#fff 0px, #fff 2px,
+			transparent 2px, transparent 10px
+		),
+		linear-gradient(
+			to bottom,
+			#acedad 0%, #7be47d 14%, #4cda50 28%, #2ed330 42%,
+			#42d845 57%, #76e275 71%, #8fe791 85%, #fff 100%
+		) !important;
+	}
+
+	.new_xp.team {
+		border-radius: 2px !important;
+		background: repeating-linear-gradient(
+			to right,
+			#fff 0px, #fff 2px,
+			transparent 2px, transparent 10px
+		),
+		linear-gradient(
+			to bottom,
+			#ade8ed 0%, #7bcde4 14%, #4cb8da 28%, #2eaed3 42%,
+			#42b8d8 57%, #76cfe2 71%, #8fd8e7 85%, #fff 100%
+		) !important;
+	}
+
+	span.xp-bar.blue {
+		border-radius: 2px !important;
+		background: repeating-linear-gradient(
+			to right,
+			#fff 0px, #fff 2px,
+			transparent 2px, transparent 10px
+		),
+		linear-gradient(
+			to bottom,
+			#ade8ed 0%, #7bcde4 14%, #4cb8da 28%, #2eaed3 42%,
+			#42b8d8 57%, #76cfe2 71%, #8fd8e7 85%, #fff 100%
+		) !important;
+	}
+
+	// ====================================
+	// SOCIAL / CHAT WINDOWS
+	// ====================================
+
+	.window {
+		background: $xp-surface;
+		box-shadow: $xp-window-shadow;
+		border-top-left-radius: 8px;
+		border-top-right-radius: 8px;
+		padding: 0 0 3px 0;
+
+		.header {
+			@include xp-title-bar;
+			border-top: 1px solid #0831d9;
+			border-left: 1px solid #0831d9;
+			border-right: 1px solid #001ea0;
+			border-top-left-radius: 8px;
+			border-top-right-radius: 7px;
+			color: white;
+		}
+	}
+
+	// ====================================
+	// FOOTER - Taskbar style
+	// ====================================
+
+	footer.footer {
+		background: $xp-surface;
+		box-shadow: $xp-window-shadow;
+		border-top-left-radius: 8px;
+		border-top-right-radius: 8px;
+	}
+
+	// ====================================
+	// SCROLLBARS (XP.css exact styles)
+	// ====================================
+
+	::-webkit-scrollbar {
+		width: 16px;
+	}
+	::-webkit-scrollbar:horizontal {
+		height: 17px;
+	}
+	::-webkit-scrollbar-track {
+		background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='2' height='2' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M1 0H0v1h1v1h1V1H1V0z' fill='silver'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M2 0H1v1H0v1h1V1h1V0z' fill='%23fff'/%3E%3C/svg%3E");
+	}
+	::-webkit-scrollbar-thumb {
+		background-color: $xp-button-face;
+		box-shadow: $xp-border-raised-outer, $xp-border-raised-inner;
+	}
+	::-webkit-scrollbar-button:vertical:start:decrement,
+	::-webkit-scrollbar-button:vertical:end:increment,
+	::-webkit-scrollbar-button:horizontal:start:decrement,
+	::-webkit-scrollbar-button:horizontal:end:increment {
+		display: block;
+	}
+	::-webkit-scrollbar-button:vertical:start {
+		background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='16' height='17' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M15 0H0v16h1V1h14V0z' fill='%23DFDFDF'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M2 1H1v14h1V2h12V1H2z' fill='%23fff'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M16 17H0v-1h15V0h1v17z' fill='%23000'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M15 1h-1v14H1v1h14V1z' fill='gray'/%3E%3Cpath fill='silver' d='M2 2h12v13H2z'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M8 6H7v1H6v1H5v1H4v1h7V9h-1V8H9V7H8V6z' fill='%23000'/%3E%3C/svg%3E");
+	}
+	::-webkit-scrollbar-button:vertical:end {
+		background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='16' height='17' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M15 0H0v16h1V1h14V0z' fill='%23DFDFDF'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M2 1H1v14h1V2h12V1H2z' fill='%23fff'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M16 17H0v-1h15V0h1v17z' fill='%23000'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M15 1h-1v14H1v1h14V1z' fill='gray'/%3E%3Cpath fill='silver' d='M2 2h12v13H2z'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M11 6H4v1h1v1h1v1h1v1h1V9h1V8h1V7h1V6z' fill='%23000'/%3E%3C/svg%3E");
+	}
+	::-webkit-scrollbar-button:horizontal:start {
+		width: 16px;
+		background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='16' height='17' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M15 0H0v16h1V1h14V0z' fill='%23DFDFDF'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M2 1H1v14h1V2h12V1H2z' fill='%23fff'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M16 17H0v-1h15V0h1v17z' fill='%23000'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M15 1h-1v14H1v1h14V1z' fill='gray'/%3E%3Cpath fill='silver' d='M2 2h12v13H2z'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M9 4H8v1H7v1H6v1H5v1h1v1h1v1h1v1h1V4z' fill='%23000'/%3E%3C/svg%3E");
+	}
+	::-webkit-scrollbar-button:horizontal:end {
+		width: 16px;
+		background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='16' height='17' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M15 0H0v16h1V1h14V0z' fill='%23DFDFDF'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M2 1H1v14h1V2h12V1H2z' fill='%23fff'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M16 17H0v-1h15V0h1v17z' fill='%23000'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M15 1h-1v14H1v1h14V1z' fill='gray'/%3E%3Cpath fill='silver' d='M2 2h12v13H2z'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M7 4H6v7h1v-1h1V9h1V8h1V7H9V6H8V5H7V4z' fill='%23000'/%3E%3C/svg%3E");
+	}
+
+	// ====================================
+	// VUETIFY OVERRIDES
+	// ====================================
+
+	// Switch - XP checkbox style
+	.v-switch .v-switch__track {
+		background: $xp-button-shadow;
+		border-radius: 0;
+	}
+	.v-switch.v-input--is-dirty .v-switch__track,
+	.v-switch .v-selection-control--dirty .v-switch__track {
+		background: $xp-green;
+	}
+	.v-switch .v-switch__thumb {
+		border-radius: 0;
+	}
+
+	// Checkbox - XP style
+	.v-checkbox .v-selection-control__input > .v-icon {
+		color: $xp-dialog-blue;
+	}
+	.v-checkbox .v-selection-control__input {
+		color: $xp-dialog-blue;
+	}
+
+	// Radio - XP style
+	.v-radio .v-selection-control__input {
+		color: $xp-dialog-blue;
+	}
+
+	// ====================================
+	// STATUS BAR (XP.css exact styles)
+	// ====================================
+
+	.status-bar {
+		margin: 0 3px;
+		box-shadow: inset 0px 1px 2px $xp-button-shadow;
+		padding: 2px 1px;
+
+		.status-bar-field {
+			box-shadow: none;
+			padding: 1px 2px;
+			border-right: 1px solid rgba(208, 206, 191, 0.75);
+			border-left: 1px solid rgba(255, 255, 255, 0.75);
+		}
+	}
+
+	// ====================================
+	// PAGINATION
+	// ====================================
+
+	.pagination a {
+		background: $xp-button-gradient;
+		border: 1px solid #003c74;
+		border-radius: 3px;
+		box-shadow: none;
+		color: #222;
+
+		&:hover {
+			box-shadow: $xp-button-hover-shadow;
+		}
+
+		&.current {
+			background: $xp-selection;
+			color: white;
+			border-color: $xp-selection;
+		}
+	}
+
+	// ====================================
+	// NOTIFICATION BAR / TOAST
+	// ====================================
+
+	.toast {
+		@include xp-raised;
+		background: $xp-surface;
+		color: #222;
+		border-radius: 0;
+	}
+
+	// ====================================
+	// PROGRESS BARS
+	// ====================================
+
+	.global-bar .bar,
+	.category-bar .bar,
+	.trophy .trophy-bar .bar {
+		background: $xp-green;
+	}
+
+	// ====================================
+	// GRADES / ROLES
+	// ====================================
+
+
+	// ====================================
+	// MISC
+	// ====================================
+
+	.bubble {
+		@include xp-raised;
+		background: $xp-surface;
+	}
+
+	.dev-label {
+		background: red;
+		border-radius: 0;
+	}
+
+	.beta-label {
+		background: #b0b;
+		border-radius: 0;
+	}
+
+	.blabla-button, .menu-button {
+		i {
+			color: white;
+		}
+	}
+
+	.fight .center {
+		background: $xp-surface;
+	}
+
+	.notif-trophy {
+		background: #ffffe1;
+		border: 1px solid #000;
+	}
+
+	.list-item:hover {
+		background: $xp-selection;
+		color: white;
+	}
+
+	.history {
+		.win {
+			background: #d4edbc;
+		}
+		.defeat, .lose {
+			background: #f5c6c6;
+		}
+	}
+
+	.items .item::before, .items .item::after {
+		display: none;
+	}
+
+	// Item preview header - XP title bar style
+	.item-preview > .header {
+		@include xp-title-bar;
+		border-top: 1px solid #0831d9;
+		border-left: 1px solid #0831d9;
+		border-right: 1px solid #001ea0;
+		border-top-left-radius: 8px;
+		border-top-right-radius: 7px;
+
+		h2, .level {
+			color: white;
+			text-shadow: 1px 1px #0f1089;
+		}
+	}
+
+	// ====================================
+	// PIXELATED IMAGES
+	// ====================================
+
+	img, canvas {
+		image-rendering: pixelated;
+	}
+
+	// Avatars carrés
+	.avatar {
+		border-radius: 0 !important;
+	}
+
+	// ====================================
+	// FIGHT PROGRESS BAR - XP style
+	// ====================================
+
+	.progress-bar {
+		background: #fff !important;
+		border: 1px solid #686868;
+		border-radius: 4px;
+		box-shadow: inset 0 0 1px rgba(104, 104, 104, 1);
+
+		.bar {
+			border-radius: 2px;
+			background: repeating-linear-gradient(
+				to right,
+				#fff 0px, #fff 2px,
+				transparent 2px, transparent 10px
+			),
+			linear-gradient(
+				to bottom,
+				#acedad 0%, #7be47d 14%, #4cda50 28%, #2ed330 42%,
+				#42d845 57%, #76e275 71%, #8fe791 85%, #fff 100%
+			) !important;
+		}
+	}
+
+	// Loading bar (fight generation)
+	.loading-bar {
+		border: 1px solid #686868;
+		border-radius: 4px;
+		background: #fff;
+		box-shadow: inset 0 0 1px rgba(104, 104, 104, 1);
+
+		.bar {
+			border-radius: 2px;
+			background: repeating-linear-gradient(
+				to right,
+				#fff 0px, #fff 2px,
+				transparent 2px, transparent 10px
+			),
+			linear-gradient(
+				to bottom,
+				#acedad 0%, #7be47d 14%, #4cda50 28%, #2ed330 42%,
+				#42d845 57%, #76e275 71%, #8fe791 85%, #fff 100%
+			) !important;
+		}
+	}
+
+	// ====================================
+	// CURSOR override (XP hand cursor)
+	// ====================================
+
+
+	// ====================================
+	// TASKBAR (bottom bar on mobile)
+	// ====================================
+
+	.bar-wrapper {
+		background: linear-gradient(180deg, $xp-taskbar-gradient-end, $xp-taskbar-gradient-start);
+		border-top: 2px solid lighten($xp-taskbar, 20%);
+
+		.bar-button {
+			color: white;
+
+			img {
+				filter: invert(1);
+			}
+
+			&.router-link-active {
+				background: $xp-selection;
+				img { filter: invert(0); }
+			}
+		}
+	}
+}
+
+// ====================================
+// DIALOGS / POPUPS - outside #app because Vuetify teleports overlays
+// ====================================
+
+body:has(#app.xp) .v-overlay-container {
+	* {
+		font-family: 'Pixelated MS Sans Serif', "Trebuchet MS", Arial, sans-serif !important;
+	}
+
+	.avatar {
+		border-radius: 0 !important;
+	}
+	.title, .title * {
+		font-family: "Liberation Serif", "Times New Roman", serif !important;
+	}
+
+	img, canvas {
+		image-rendering: pixelated;
+	}
+
+	.v-dialog > .v-overlay__content,
+	.v-menu > .v-overlay__content {
+		box-shadow: $xp-window-shadow !important;
+		border-top-left-radius: 8px !important;
+		border-top-right-radius: 8px !important;
+		border-bottom-left-radius: 0 !important;
+		border-bottom-right-radius: 0 !important;
+		overflow: hidden;
+		background: $xp-surface;
+
+		> .card {
+			border-radius: 0 !important;
+			box-shadow: none !important;
+			background: $xp-surface;
+		}
+
+		> .v-list {
+			background: $xp-surface !important;
+			border-radius: 0 !important;
+			color: #222 !important;
+
+			* {
+				color: #222 !important;
+			}
+		}
+	}
+
+	// Popup title bar
+	.popup > .title,
+	.console-window > .title {
+		@include xp-title-bar;
+		border-top: 1px solid #0831d9;
+		border-left: 1px solid #0831d9;
+		border-right: 1px solid #001ea0;
+		border-top-left-radius: 8px;
+		border-top-right-radius: 7px;
+
+		.v-icon {
+			color: white;
+		}
+
+		// Title bar buttons
+		.options .option {
+			background: #0050ee !important;
+			border: 1px solid #fffd !important;
+			border-radius: 3px;
+			transition: background 100ms;
+			width: 28px !important;
+			height: 28px !important;
+			margin: 6px 3px;
+			display: inline-flex !important;
+			align-items: center;
+			justify-content: center;
+
+			i {
+				color: white;
+				font-size: 22px;
+				margin: 0 !important;
+				padding: 0 !important;
+				line-height: 1;
+			}
+
+			&:hover {
+				background: #3370ee !important;
+			}
+
+			// Close button (last) - red like XP
+			&:last-child {
+				background: #c75050 !important;
+				&:hover {
+					background: #e06050 !important;
+				}
+			}
+		}
+	}
+
+	// Popup content area
+	.content {
+		background: $xp-surface;
+	}
+
+	// Popup action buttons
+	.actions > div,
+	.actions > a {
+		background: $xp-button-gradient;
+		color: #222;
+		border: 1px solid #003c74;
+
+		&:hover {
+			box-shadow: $xp-button-hover-shadow;
+			background: $xp-button-gradient;
+		}
+
+		&.green {
+			background: $xp-green;
+			color: white;
+			border-color: darken($xp-green, 15%);
+		}
+
+		&.red {
+			background: #c00;
+			color: white;
+			border-color: #900;
+		}
+	}
+
+	// Item preview header in rich tooltips
+	.item-preview > .header {
+		@include xp-title-bar;
+		border-top: 1px solid #0831d9;
+		border-left: 1px solid #0831d9;
+		border-right: 1px solid #001ea0;
+		border-top-left-radius: 8px;
+		border-top-right-radius: 7px;
+
+		h2, .level {
+			color: white !important;
+			text-shadow: 1px 1px #0f1089;
+		}
+	}
+
+	// Console LeekScript - DOS style
+	.console-window {
+		.console {
+			code, .CodeMirror, .CodeMirror * {
+				font-family: 'Perfect DOS VGA 437 Win', monospace !important;
+			}
+		}
+	}
+
+	// Tooltip (XP balloon style)
+	.v-tooltip > .v-overlay__content {
+		background: #ffffe1 !important;
+		color: #222 !important;
+		border: 1px solid #000;
+		border-radius: 0;
+		padding: 2px 6px;
+		box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+		font-family: 'Pixelated MS Sans Serif', "Trebuchet MS", Arial, sans-serif !important;
+
+		* {
+			font-family: 'Pixelated MS Sans Serif', "Trebuchet MS", Arial, sans-serif !important;
+		}
+	}
+}
+
+// Dark mode + XP: keep XP colors, ignore dark mode
+#app.xp.dark {
+	--pure-white: #fff;
+	--pure-black: #000;
+	--background: #{$xp-surface};
+	--background-secondary: #d6d2c2;
+	--background-header: #{$xp-surface};
+	--border: #{$xp-button-shadow};
+	--text-color: #222;
+	--text-color-secondary: #555;
+}

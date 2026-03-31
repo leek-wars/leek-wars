@@ -302,5 +302,9 @@
 	"views": "Views",
 	"very_active": "Very active",
 	"active": "Active",
-	"low_activity": "Low activity"
+	"low_activity": "Low activity",
+	"april_fools_title": "New theme available!",
+	"april_fools_message": "The modern Leek Wars theme is finally available in beta! Would you like to try it?",
+	"april_fools_yes": "Try the modern theme",
+	"april_fools_no": "No thanks"
 }

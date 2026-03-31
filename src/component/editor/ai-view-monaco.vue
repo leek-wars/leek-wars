@@ -74,6 +74,7 @@ export default class AIViewMonaco extends Vue {
 			automaticLayout: true,
 			wordWrap: "on",
 			fontSize: this.fontSize,
+			fontFamily: LeekWars.xpTheme ? "'Perfect DOS VGA 437 Win', monospace" : undefined,
 			lineHeight: this.lineHeight,
 			theme: this.theme,
 			lineNumbers: this.lineNumbers ? 'on' : 'off',

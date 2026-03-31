@@ -3,7 +3,7 @@
 		<div class="header-left">
 			<router-link to="/">
 				<div class="logo-wrapper">
-					<img class="logo" src="/image/leekwars.svg">
+					<img class="logo" :src="LeekWars.xpTheme ? '/image/xp_logo.png' : '/image/leekwars.svg'">
 					<span v-if="LeekWars.LOCAL" class="local-label">local</span>
 					<span v-else-if="LeekWars.DEV" class="dev-label">dev</span>
 					<span v-if="env.BETA" class="beta-label">Bêta</span>

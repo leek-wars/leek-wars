@@ -67,5 +67,7 @@
 	"light": "Clair",
 	"dark": "Dark",
 	"auto": "자동",
-	"theme": "테마"
+	"theme": "테마",
+	"modern_theme": "모던 테마 (베타)",
+	"xp_theme": "XP 테마"
 }

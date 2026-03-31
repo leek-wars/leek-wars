@@ -146,6 +146,8 @@ const app = createApp({
 			}
 		});
 
+		LeekWars.xpCursorsInit()
+
 		const startIntervals = () => {
 			secondInterval = setInterval(() => {
 				LeekWars.timeSeconds = (Date.now() / 1000) | 0 - LeekWars.timeDelta

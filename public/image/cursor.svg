@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 425.19298 744.106"
+   version="1.1"
+   id="svg2"
+   sodipodi:docname="cursor.svg"
+   width="32"
+   height="56"
+   inkscape:version="1.4.3 (fcd0343856, 2026-01-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="namedview2"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="1.1050931"
+     inkscape:cx="336.62322"
+     inkscape:cy="501.76768"
+     inkscape:window-width="2494"
+     inkscape:window-height="1371"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <path
+     d="m 0,0.008 v 602.34 H 35.438 V 566.91 H 70.876 V 531.504 H 35.438 V 70.844 H 70.876 V 35.438 H 35.438 V 0 H 0 Z m 70.875,70.844 v 35.438 h 35.406 V 70.852 Z m 35.406,35.438 v 35.438 h 35.438 V 106.29 Z m 35.438,35.438 v 35.438 h 35.438 v -35.438 z m 35.438,35.438 v 35.438 h 35.438 v -35.438 z m 35.438,35.438 v 35.438 h 35.438 v -35.438 z m 35.438,35.438 v 35.438 h 35.438 v -35.438 z m 35.438,35.438 v 35.406 h 35.438 V 283.48 Z m 35.438,35.406 v 35.438 h 35.406 v -35.438 z m 35.406,35.438 v 35.438 h -106.28 v 106.31 h 35.438 v -70.875 h 141.72 v -35.438 h -35.438 v -35.438 h -35.438 z m -70.844,141.75 v 70.844 h 35.438 v -70.844 z m 35.438,70.844 v 70.875 h 35.406 v -70.875 z m 35.406,70.875 v 70.875 h 35.438 v -70.875 z m 0,70.875 h -70.844 v 35.438 h 70.844 z m -70.844,0 v -70.875 h -35.438 v 70.875 z m -35.438,-70.875 v -70.875 h -35.438 v 70.875 z m -35.438,-70.875 v -70.844 h -35.438 v 70.844 z m -35.438,-70.844 v -70.875 h -35.438 v 35.438 h -35.438 v 35.438 h 70.875 z m -70.875,0 H 70.876 v 35.438 h 35.406 z"
+     fill-rule="evenodd"
+     id="path1"
+     inkscape:export-filename="path1.svg"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96" />
+  <path
+     d="m 35.437,70.852 v 460.66 h 35.438 v -35.438 h 35.406 v -35.438 h 35.438 v -35.438 h 35.438 v 70.875 h 35.438 v 70.844 h 35.438 v 70.875 h 35.438 v 70.875 h 70.844 v -70.875 h -35.406 v -70.875 h -35.438 v -70.844 h -35.438 v -106.31 h 106.28 V 354.325 H 318.907 V 318.887 H 283.469 V 283.481 H 248.031 V 248.043 H 212.593 V 212.605 H 177.155 V 177.167 H 141.717 V 141.729 H 106.279 V 106.291 H 70.873 V 70.853 H 35.435 Z"
+     fill="#ffffff"
+     id="path2" />
+</svg>

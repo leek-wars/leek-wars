@@ -318,6 +318,18 @@ const LeekWars = reactive({
 	box: false,
 	nativeEmojis: detectNativeEmojis(),
 	leekTheme: localStorage.getItem('leek-theme') === 'true',
+	xpTheme: localStorage.getItem('theme') === 'xp',
+	xpCursorsInit() {
+		if (!LeekWars.xpTheme) { return }
+		document.addEventListener('mouseover', (e) => {
+			const el = e.target as HTMLElement
+			if (!el || !el.style) { return }
+			const cursor = getComputedStyle(el).cursor
+			if (cursor === 'pointer') {
+				el.style.cursor = "url('/image/pointer.png') 5 0, pointer"
+			}
+		})
+	},
 	keepConnected: null as any,
 	startIntervals: () => {
 		if (LeekWars.keepConnected || !store.state.connected) { return }
@@ -782,6 +794,7 @@ const LeekWars = reactive({
 		}
 	},
 	christmasPresents: DATE.getMonth() === 11 && DATE.getDate() >= 25 && DATE.getDate() <= 31,
+	aprilFools: DATE.getMonth() === 3 && DATE.getDate() === 1,
 	LATEST_LEEKSCRIPT_VERSION: 4,
 	logClass: (log: any[]) => {
 		if (log[1] === 2 || log[1] === 7 || log[1] === 11) { return "warning" }

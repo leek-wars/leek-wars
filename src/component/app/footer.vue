@@ -146,9 +146,20 @@
 			transition: color 0.15s ease;
 			.v-icon {
 				font-size: 16px;
-				// transition: none;
 				vertical-align: top;
 			}
+		}
+		#app.xp & {
+			color: #222;
+		}
+		#app.xp & a, #app.xp & .item, #app.xp & .v-icon {
+			color: #222;
+			&:hover {
+				color: #316ac5;
+			}
+		}
+		#app.xp & h4 {
+			color: #222;
 		}
 		h4.version {
 			color: #999;

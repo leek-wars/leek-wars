@@ -67,5 +67,7 @@
 	"light": "Clair",
 	"dark": "Ciemny",
 	"auto": "Auto",
-	"theme": "Temat"
+	"theme": "Temat",
+	"modern_theme": "Nowoczesny motyw (beta)",
+	"xp_theme": "Motyw XP"
 }

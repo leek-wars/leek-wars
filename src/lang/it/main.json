@@ -291,5 +291,9 @@
 	"views": "Visite",
 	"very_active": "Molto attiva",
 	"active": "Attiva",
-	"low_activity": "Poco attiva"
+	"low_activity": "Poco attiva",
+	"april_fools_title": "Nuovo tema disponibile!",
+	"april_fools_message": "Il tema moderno di Leek Wars è finalmente disponibile in beta! Vuoi provarlo?",
+	"april_fools_yes": "Prova il tema moderno",
+	"april_fools_no": "No grazie"
 }

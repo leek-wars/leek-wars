@@ -102,6 +102,7 @@
 								<v-radio :label="$t('auto')" value="auto"></v-radio>
 								<v-radio :label="$t('light')" value="light"></v-radio>
 								<v-radio :label="$t('dark')" value="dark"></v-radio>
+								<v-radio :label="LeekWars.aprilFools ? $t('modern_theme') : 'XP'" value="xp"></v-radio>
 							</v-radio-group>
 						</div>
 					</div>
@@ -387,7 +388,16 @@
 		@Watch('LeekWars.themeSetting')
 		updateTheme() {
 			localStorage.setItem('theme', '' + LeekWars.themeSetting)
-			LeekWars.darkMode = LeekWars.themeSetting !== 'auto' ? LeekWars.themeSetting === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
+			LeekWars.xpTheme = LeekWars.themeSetting === 'xp'
+			localStorage.setItem('xp-theme', '' + LeekWars.xpTheme)
+			if (LeekWars.themeSetting === 'xp') {
+				LeekWars.darkMode = false
+				if (LeekWars.aprilFools) {
+					LeekWars.post('trophy/unlock', {trophy_id: 280})
+				}
+			} else {
+				LeekWars.darkMode = LeekWars.themeSetting !== 'auto' ? LeekWars.themeSetting === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
+			}
 		}
 
 		@Watch('notifsPopups')
@@ -479,6 +489,7 @@
 		updateLeekTheme() {
 			localStorage.setItem('leek-theme', '' + LeekWars.leekTheme)
 		}
+
 
 		submit(e: Event) {
 			e.preventDefault()
