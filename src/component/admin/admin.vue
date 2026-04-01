@@ -272,32 +272,32 @@
 <style lang="scss" scoped>
 	.admin-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-		grid-gap: 10px;
+		grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+		grid-gap: 8px;
 		padding: 10px;
 	}
 	.section {
-		padding: 10px 5px;
+		padding: 8px 5px;
 		text-align: center;
 		height: 100%;
 		& > .v-icon {
-			font-size: 80px;
-			margin: 10px 0;
+			font-size: 50px;
+			margin: 6px 0;
 		}
 		h2 {
-			font-size: 16px;
+			font-size: 14px;
 			margin: 0;
 			display: flex;
 			justify-content: center;
 			align-items: flex-end;
 			i {
 				margin-left: 5px;
-				font-size: 20px;
+				font-size: 16px;
 			}
 		}
 	}
 	.section img {
-		margin: 10px 0;
-		max-height: 70px;
+		margin: 6px 0;
+		max-height: 45px;
 	}
 </style>
