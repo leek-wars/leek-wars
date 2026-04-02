@@ -142,7 +142,7 @@
 					<v-btn prepend-icon="mdi-bug" @click="sendError()">Send JS error</v-btn>
 					<v-btn prepend-icon="mdi-bell-ring" @click="testPush()">Test push notif</v-btn>
 					<v-btn prepend-icon="mdi-email-fast" @click="testMailSend()">Test email</v-btn>
-					<v-btn prepend-icon="mdi-sword-cross" @click="arenaRegisterRandom()">Inscrire random en Arène</v-btn>
+					<v-btn prepend-icon="mdi-sword-cross" @click="arenaRegisterRandom()">Random en Arène</v-btn>
 				</div>
 			</template>
 		</panel>
@@ -283,7 +283,7 @@
 <style lang="scss" scoped>
 	.admin-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
 		@media (max-width: 599px) {
 			grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
 		}
