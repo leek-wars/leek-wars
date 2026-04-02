@@ -142,12 +142,12 @@
 					<div class="text">{{ $t('main.admin') }}</div>
 				</router-link>
 
-				<div v-if="LeekWars.battleRoyale.enabled || LeekWars.bossSquads.squad" class="separator"></div>
+				<div v-if="LeekWars.arena.enabled || LeekWars.bossSquads.squad" class="separator"></div>
 
-				<span v-if="LeekWars.battleRoyale.enabled" v-ripple :label="LeekWars.battleRoyale.progress" class="section" @click="battleRoyaleDialog = !battleRoyaleDialog">
+				<span v-if="LeekWars.arena.enabled" v-ripple :label="LeekWars.arena.progress" class="section" @click="arenaDialog = !arenaDialog">
 					<v-icon>mdi-sword-cross</v-icon>
-					<div class="text">{{ $t('main.battle_royale') }}</div>
-					<div class="progress-bar" :style="{width: (LeekWars.battleRoyale.progress * 10) + '%'}"></div>
+					<div class="text">{{ $t('main.arena') }}</div>
+					<div class="progress-bar" :style="{width: (LeekWars.arena.progress / 20 * 100) + '%'}"></div>
 				</span>
 				<span v-if="LeekWars.bossSquads.squad" v-ripple :label="LeekWars.bossSquads.squad.engaged_count" class="section boss" @click="goToBoss">
 					<v-icon>mdi-crown</v-icon>
@@ -155,19 +155,22 @@
 					<div class="progress-bar" :style="{width: (100 * LeekWars.bossSquads.squad.engaged_count / 8) + '%'}"></div>
 				</span>
 
-				<popup v-model="battleRoyaleDialog" :width="600">
+				<popup v-model="arenaDialog" :width="600">
 					<template #icon>
 						<v-icon>mdi-sword-cross</v-icon>
 					</template>
-					<template #title>{{ $t('main.battle_royale') }}</template>
-					<loader v-if="LeekWars.battleRoyale.progress == 0" />
+					<template #title>{{ $t('main.arena') }}</template>
+					<loader v-if="LeekWars.arena.progress == 0" />
 					<div class="br-leeks">
-						<div v-for="leek in LeekWars.battleRoyale.leeks" :key="leek.id" class="leek">
+						<div v-for="leek in LeekWars.arena.leeks" :key="leek.id" class="leek">
 							<leek-image :leek="leek" :scale="0.4" /><br>
 							<div>{{ leek.name }}</div>
 							<talent :id="leek.id" :talent="leek.talent" category="leek" />
 							<div class="level">{{ $t('main.level_n', [leek.level]) }}</div>
 						</div>
+					</div>
+					<div v-if="LeekWars.arena.countdown >= 0" class="arena-countdown center">
+						{{ $t('main.arena_countdown', [LeekWars.arena.countdown]) }}
 					</div>
 					<br>
 					<div class="center">
@@ -220,7 +223,7 @@
 	})
 	export default class Menu extends Vue {
 
-		battleRoyaleDialog: boolean = false
+		arenaDialog: boolean = false
 		TROPHIES = TROPHIES
 		BOSSES = BOSSES
 
@@ -343,8 +346,8 @@
 		}
 
 		quit(e: Event) {
-			LeekWars.battleRoyale.leave()
-			this.battleRoyaleDialog = false
+			LeekWars.arena.leave()
+			this.arenaDialog = false
 			e.stopPropagation()
 		}
 

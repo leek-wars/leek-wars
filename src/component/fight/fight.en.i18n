@@ -1,5 +1,8 @@
 {
 	"battle_royale": "Battle royale",
+	"war": "War",
+	"chest_hunt": "Chest Hunt",
+	"colossus": "Colossus",
 	"date_format": "{0}",
 	"deleted_farmer": "farmer deleted",
 	"deleted_leek": "leek deleted",

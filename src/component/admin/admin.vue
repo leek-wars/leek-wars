@@ -142,6 +142,7 @@
 					<v-btn prepend-icon="mdi-bug" @click="sendError()">Send JS error</v-btn>
 					<v-btn prepend-icon="mdi-bell-ring" @click="testPush()">Test push notif</v-btn>
 					<v-btn prepend-icon="mdi-email-fast" @click="testMailSend()">Test email</v-btn>
+					<v-btn prepend-icon="mdi-sword-cross" @click="arenaRegisterRandom()">Inscrire random en Arène</v-btn>
 				</div>
 			</template>
 		</panel>
@@ -250,6 +251,16 @@
 		testMailSend() {
 			LeekWars.post('notification/test-mail-send').then((data: any) => {
 				LeekWars.toast("Email envoyé à " + data.email)
+			}).error((error: any) => {
+				LeekWars.toast("Erreur : " + error.error)
+			})
+		}
+
+		arenaRegisterRandom() {
+			LeekWars.post('admin/arena-register-random').then((data: any) => {
+				const modes = ['BR', 'Guerre', 'Chasse', 'Colosse']
+				const pref = data.preference === -1 ? 'Aucune' : modes[data.preference]
+				LeekWars.toast(`${data.farmer} / ${data.leek} inscrit (pref: ${pref})`)
 			}).error((error: any) => {
 				LeekWars.toast("Erreur : " + error.error)
 			})

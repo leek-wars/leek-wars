@@ -1727,6 +1727,21 @@ class Game {
 			case EffectType.ADD_STATE:
 				leek.addState(value)
 				break
+			case EffectType.MULTIPLY_STATS: {
+				const factor = value - 1
+				if (leek.strength) leek.buffStrength(leek.strength * factor, this.jumping)
+				if (leek.agility) leek.buffAgility(leek.agility * factor, this.jumping)
+				if (leek.resistance) leek.buffResistance(leek.resistance * factor, this.jumping)
+				if (leek.wisdom) leek.buffWisdom(leek.wisdom * factor, this.jumping)
+				if (leek.science) leek.buffScience(leek.science * factor, this.jumping)
+				if (leek.magic) leek.buffMagic(leek.magic * factor, this.jumping)
+				if (leek.tp) leek.buffTP(leek.tp * factor, this.jumping)
+				if (leek.mp) leek.buffMP(leek.mp * factor, this.jumping)
+				const ratio = leek.maxLife > 0 ? leek.life / leek.maxLife : 1
+				leek.winMaxLife(leek.maxLife * factor, this.jumping)
+				leek.life = Math.round(leek.maxLife * ratio)
+				break
+			}
 		}
 	}
 
@@ -1810,6 +1825,23 @@ class Game {
 		case EffectType.RAW_BUFF_POWER:
 			leek.power -= value
 			break
+		case EffectType.MULTIPLY_STATS: {
+			// Reverse: current = base * value, so base = current / value
+			leek.strength = Math.round(leek.strength / value)
+			leek.agility = Math.round(leek.agility / value)
+			leek.resistance = Math.round(leek.resistance / value)
+			leek.wisdom = Math.round(leek.wisdom / value)
+			leek.science = Math.round(leek.science / value)
+			leek.magic = Math.round(leek.magic / value)
+			leek.tp = Math.round(leek.tp / value)
+			leek.mp = Math.round(leek.mp / value)
+			const ratio = leek.maxLife > 0 ? leek.life / leek.maxLife : 1
+			leek.maxLife = Math.round(leek.maxLife / value)
+			leek.life = Math.round(leek.maxLife * ratio)
+			// Sync display life to avoid animation glitch during replace
+			leek.displayLife = leek.life
+			break
+		}
 		}
 		// Gestion des états du poireau
 		if (effect.item === 46) {

@@ -10,7 +10,7 @@
 	<div class="page" v-else>
 		<div class="page-header page-bar">
 			<div>
-				<h1>{{ $t('title') }}</h1>
+				<h1><breadcrumb v-if="fightTypeLabel" :items="[{name: fightTypeLabel, link: '/fight/' + fight.id}, {name: $t('title')}]" :raw="true" /><span v-else>{{ $t('title') }}</span></h1>
 				<div v-if="fight" class="info">{{ $filters.date(fight.date) }}</div>
 			</div>
 			<div class="tabs">
@@ -248,6 +248,7 @@
 </template>
 
 <script lang="ts">
+	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 	import Map from '@/component/app/map.vue'
 	import { locale } from '@/locale'
 	import { Action, ActionType } from '@/model/action'
@@ -284,6 +285,7 @@
 	}
 
 	@Options({ name: 'report', i18n: {}, mixins: [...mixins], components: {
+		Breadcrumb,
 		actions: ActionsElement,
 		ReportLeekRow,
 		ReportBlock,
@@ -306,6 +308,7 @@
 		FightType = FightType
 		FightContext = FightContext
 		loaded: boolean = false
+		fightTypeLabel: string | null = null
 		errors: any[] = []
 		warnings: any[] = []
 		hasErrWarn: boolean = false
@@ -484,12 +487,25 @@
 				LeekWars.setActions([{icon: 'mdi-undo', click: () => this.$router.push('/fight/' + id)}])
 				let title = this.$i18n.t('title') + " - "
 				if (this.fight.type === FightType.BATTLE_ROYALE) {
-					title += "Battle Royale"
+					title += this.$t('main.battle_royale') as string
+				} else if (this.fight.type === FightType.WAR) {
+					title += this.$t('main.war') as string
+				} else if (this.fight.type === FightType.CHEST_HUNT) {
+					title += this.$t('main.chest_hunt') as string
+				} else if (this.fight.type === FightType.COLOSSUS) {
+					title += this.$t('main.colossus') as string
 				} else if (this.fight.type === FightType.BOSS) {
 					title += this.$t('entity.' + this.fight.boss_name) as string
 				} else {
 					title += this.fight.team1_name + " vs " + this.fight.team2_name
 				}
+				const arenaTypes: Record<number, string> = {
+					[FightType.BATTLE_ROYALE]: this.$t('main.battle_royale') as string,
+					[FightType.WAR]: this.$t('main.war') as string,
+					[FightType.CHEST_HUNT]: this.$t('main.chest_hunt') as string,
+					[FightType.COLOSSUS]: this.$t('main.colossus') as string,
+				}
+				this.fightTypeLabel = arenaTypes[this.fight.type] || null
 				LeekWars.setTitle(title)
 				this.loaded = true
 				if (this.$store.state.farmer) {

@@ -10,6 +10,16 @@ enum FightType {
 	TEAM = 2,
 	BATTLE_ROYALE = 3,
 	BOSS = 4,
+	WAR = 5,
+	CHEST_HUNT = 6,
+	COLOSSUS = 7,
+}
+
+enum ArenaMode {
+	BATTLE_ROYALE = 0,
+	WAR = 1,
+	CHEST_HUNT = 2,
+	COLOSSUS = 3,
 }
 
 enum FightContext {
@@ -146,4 +156,4 @@ class FightData {
 	public ops!: any
 }
 
-export { Fight, FightType, FightContext, Report, ReportLeek, ReportFarmer, ReportTeam, FightLeek, FightMap, FightData }
+export { Fight, FightType, FightContext, ArenaMode, Report, ReportLeek, ReportFarmer, ReportTeam, FightLeek, FightMap, FightData }

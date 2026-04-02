@@ -23,5 +23,9 @@
 	"challenge": "Challenge",
 	"garden": "Garden",
 	"tournament": "Tournament",
-	"boss": "Boss"
+	"boss": "Boss",
+	"war": "War",
+	"chest_hunt": "Chest Hunt",
+	"n_chests": "{0} chests",
+	"colossus": "Colossus"
 }

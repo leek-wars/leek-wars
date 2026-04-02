@@ -16,7 +16,7 @@
 		<panel class="first">
 			<template #content>
 				<div class="fight">
-					<player v-if="fight_id" :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
+					<player ref="player" v-if="fight_id" :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
 				</div>
 			</template>
 		</panel>
@@ -37,7 +37,7 @@
 			</div>
 			<table v-else>
 				<tr>
-					<td>
+					<td :class="{'arena-many-players': fight.type === FightType.CHEST_HUNT || fight.type === FightType.COLOSSUS}">
 						<router-link v-for="farmer in fight.farmers1" :key="farmer.id" :disabled="farmer.id > 0" :to="'/farmer/' + farmer.id">
 							<rich-tooltip-farmer :id="farmer.id">
 								<div class="farmer">
@@ -112,6 +112,10 @@
 						<img src="/image/icon/flag.png">
 						<span class="report-button">{{ $t('warning.report') }}</span>
 					</div>
+					<div v-if="$store.getters.admin" class="tab" @click="toggleLoading">
+						<v-icon>mdi-loading</v-icon>
+						<span>Loading screen</span>
+					</div>
 				</template>
 			</div>
 		</div>
@@ -155,6 +159,13 @@
 		large: boolean = false
 		reportDialog: boolean = false
 		reasons = [Warning.RUDE_SAY, Warning.INCORRECT_LEEK_NAME, Warning.INCORRECT_FARMER_NAME, Warning.INCORRECT_AVATAR]
+
+		toggleLoading() {
+			const player = this.$refs.player as any
+			if (player) {
+				player.loaded = !player.loaded
+			}
+		}
 		trophyQueue: any[] = []
 		fightNotificationQueue: any[] = []
 
@@ -260,6 +271,12 @@
 			this.fight.title = this.fight.team1_name + ' vs ' + this.fight.team2_name
 			if (this.fight.type === FightType.BATTLE_ROYALE) {
 				this.fight.title = this.$t('battle_royale') as string
+			} else if (this.fight.type === FightType.WAR) {
+				this.fight.title = this.$t('war') as string
+			} else if (this.fight.type === FightType.CHEST_HUNT) {
+				this.fight.title = this.$t('chest_hunt') as string
+			} else if (this.fight.type === FightType.COLOSSUS) {
+				this.fight.title = this.$t('colossus') as string
 			} else if (this.fight.type === FightType.BOSS) {
 				this.fight.title = this.$t('entity.' + fight.boss_name) as string
 			}
@@ -377,6 +394,18 @@
 	.fight-info .farmer img {
 		width: 75px;
 		height: 75px;
+	}
+	.fight-info .arena-many-players {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		max-width: 250px;
+	}
+	.fight-info .arena-many-players .farmer {
+		display: inline-block;
+		width: 50px;
+		img { width: 32px; height: 32px; }
+		.name { font-size: 9px; }
 	}
 	.fight-info .br-versus {
 		line-height: 75px;

@@ -36,6 +36,7 @@
 	"n_vita": "{0} vitalità",
 	"n_wisdom": "{0} saggezza",
 	"n_vulnerability": "una vulnerabilità di {0}",
+	"n_multiply_stats": "x{0} stats",
 	"n_power": "{0} potere",
 	"n_poison": "un veleno di {0}",
 	"open_chest": "{entity} apri lo scrigno {chest} e ottieni: {resources}",

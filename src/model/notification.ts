@@ -44,6 +44,9 @@ enum NotificationType {
 	TEAM_INVITATION = 41, // Invitation à rejoindre une équipe
 	TEAM_INVITATION_ACCEPTED = 42, // Invitation acceptée par le joueur
 	BATTLE_ROYALE_REPORT = 43, // Rapport de Battle Royale (avec nom du poireau)
+	WAR_REPORT = 44, // Rapport de Guerre
+	CHEST_HUNT_REPORT = 45, // Rapport de Chasse aux coffres
+	COLOSSUS_REPORT = 46, // Rapport de Colosse
 }
 
 class Notification {

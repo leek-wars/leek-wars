@@ -22,13 +22,23 @@ class Command {
 
 const COMMANDS = [
 	{
+		name: "arena",
+		description: "Inviter à rejoindre l'arène",
+		regex: /(^| )\/arena(?=$|\s)/gi,
+		replacement: (_: string, space: string) => space + '<span class="br-invite"></span>'
+	}, {
+		name: "arena!",
+		description: "Inviter à rejoindre l'arène, de manière appuyée",
+		regex: /(^| )\/arena!(?=$|\s)/gi,
+		replacement: (_: string, space: string) => space + '<span class="br-invite" data-label="À L\'ARÈÈÈÈNE !"></span>'
+	}, {
 		name: "br",
-		description: "Inviter à rejoindre la Battle Royale",
+		description: "Inviter à rejoindre l'arène",
 		regex: /(^| )\/br(?::(\d+))?(?=$|\s)/gi,
 		replacement: (_: string, space: string, level: string) => space + '<span class="br-invite" data-level="' + (level || '') + '"></span>'
 	}, {
 		name: "br!",
-		description: "Inviter à rejoindre la Battle Royale, de manière appuyée",
+		description: "Inviter à rejoindre l'arène, de manière appuyée",
 		regex: /(^| )\/br!(?::(\d+))?(?=$|\s)/gi,
 		replacement: (_: string, space: string, level: string) => space + '<span class="br-invite" data-level="' + (level || '') + '" data-label="LA BAGAAAAARRE !"></span>'
 	}, {

@@ -1,7 +1,7 @@
 import packageJson from '@/../package.json'
 import { env } from '@/env'
 import { locale } from '@/locale'
-import { BattleRoyale } from '@/model/battle-royale'
+import { Arena } from '@/model/arena'
 import { CHIP_TEMPLATES, HAT_TEMPLATES, HATS, POMPS, POTIONS, SUMMON_TEMPLATES, TROPHY_CATEGORIES, COMPLEXITIES } from '@/model/data'
 import { Socket } from '@/model/socket'
 import { Squares } from '@/model/squares'
@@ -287,7 +287,7 @@ const LeekWars = reactive({
 	notifsPopups: localStorage.getItem('options/notifs-popups') !== 'false',
 	rankingInactive: localStorage.getItem('options/ranking-inactive') === 'true',
 	service_worker: null as ServiceWorkerRegistration | null,
-	battleRoyale: new BattleRoyale(),
+	arena: new Arena(),
 	bossSquads: new BossSquads(),
 	squares: new Squares(),
 	languages: LANGUAGES,
@@ -724,15 +724,16 @@ const LeekWars = reactive({
 	trophyCategories: Object.freeze(TROPHY_CATEGORIES),
 	trophyCategoriesById: Object.freeze([...TROPHY_CATEGORIES].sort((a, b) => a.id - b.id)),
 	trophyCategoriesIcons: Object.freeze([
-		'mdi-trophy-variant-outline',
-		'mdi-sword-cross',
-		'mdi-trophy-outline',
-		'mdi-emoticon-outline',
-		'mdi-chat-outline',
-		'mdi-star-outline',
-		'mdi-code-braces',
-		'mdi-basket-outline',
-		'mdi-crown-outline'
+		'mdi-trophy-variant-outline',  // 1: general
+		'mdi-sword-cross',             // 2: fight
+		'mdi-trophy-outline',          // 3: tournament
+		'mdi-emoticon-outline',        // 4: fun
+		'mdi-chat-outline',            // 5: social
+		'mdi-star-outline',            // 6: bonus
+		'mdi-code-braces',             // 7: code
+		'mdi-basket-outline',          // 8: shopping
+		'mdi-crown-outline',           // 9: boss
+		'mdi-stadium',               // 10: arena
 	]),
 	summonTemplates: Object.freeze(SUMMON_TEMPLATES),
 	potions: Object.freeze(POTIONS),

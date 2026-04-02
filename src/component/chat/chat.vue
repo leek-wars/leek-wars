@@ -310,22 +310,17 @@ import { emitter } from '@/model/vue'
 			if (message.startsWith('/ping')) {
 				this.$store.commit('last-ping', Date.now())
 			}
-			if (message.match(/(^|\s)\/br!?(\s|$)/)) {
-				if (!LeekWars.battleRoyale.enabled) {
-					// Auto-inscription en BR avec le dernier poireau utilisé ou le premier disponible
+			if (message.match(/(^|\s)\/(br|arena)!?(\s|$)/)) {
+				if (!LeekWars.arena.enabled) {
+					// Auto-inscription en arène avec le dernier poireau utilisé ou le premier disponible
 					const farmer = this.$store.state.farmer
 					if (farmer) {
 						const lastLeekId = parseInt(localStorage.getItem('garden/leek') || '', 10)
 						const leek = (lastLeekId && farmer.leeks[lastLeekId]) ? farmer.leeks[lastLeekId] : Object.values(farmer.leeks)[0] as any
 						if (leek) {
-							LeekWars.battleRoyale.register(leek.id)
+							LeekWars.arena.register(leek.id)
 						}
 					}
-				}
-				const brLeekId = parseInt(localStorage.getItem('battle-royale-leek') || '', 10)
-				const brLeek = brLeekId ? this.$store.state.farmer?.leeks[brLeekId] : null
-				if (brLeek) {
-					message = message.replace(/(^|\s)\/br(!?)(\s|$)/, '$1/br$2:' + brLeek.level + '$3')
 				}
 			}
 			if (this.chat === null) {
@@ -458,7 +453,7 @@ import { emitter } from '@/model/vue'
 			content = formatEmojis(content)
 			content = Commands.execute(content, message.farmer.name)
 			if (Date.now() / 1000 - message.date > 3600) {
-				content = content.replace(/<span class="br-invite"[^>]*><\/span>/g, '/br')
+				content = content.replace(/<span class="br-invite"[^>]*><\/span>/g, '/arena')
 			}
 			content = content.replace(/@(\w+)/g, (a, b) => {
 				const farmer = store.state.farmer_by_name[b]

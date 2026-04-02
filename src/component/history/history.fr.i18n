@@ -23,5 +23,9 @@
 	"challenge": "Défi",
 	"garden": "Potager",
 	"tournament": "Tournoi",
-	"boss": "Boss"
+	"boss": "Boss",
+	"war": "Guerre",
+	"chest_hunt": "Chasse aux coffres",
+	"n_chests": "{0} coffres",
+	"colossus": "Colosse"
 }

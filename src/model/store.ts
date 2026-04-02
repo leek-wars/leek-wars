@@ -35,7 +35,8 @@ class LeekWarsState {
 	public habs_timer: any = null
 	public crystals_timer: any = null
 	public farmer_by_name: {[key: string]: Farmer} = {}
-	public brCounts: number[] = [0, 0, 0, 0]
+	public arenaCount: number = 0
+	public arenaCountdown: number = -1
 }
 
 function updateTitle(state: LeekWarsState) {
@@ -148,7 +149,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				}
 			}
 			localStorage.removeItem('garden/category') // On revient à la catégorie potager par défaut
-			LeekWars.battleRoyale.leave()
+			LeekWars.arena.leave()
 			LeekWars.bossSquads.leaveSquad()
 			LeekWars.socket.disconnect()
 			console.clear()
@@ -990,12 +991,10 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'br-counts'(state: LeekWarsState, data: [number[], number]) {
-			const [counts, startedRange] = data
-			if (startedRange >= 0) {
-				emitter.emit('br-started', startedRange)
-			}
-			state.brCounts = counts
+		'arena-counts'(state: LeekWarsState, data: [number, number]) {
+			const [count, countdown] = data
+			state.arenaCount = count
+			state.arenaCountdown = countdown
 		},
 	},
 })

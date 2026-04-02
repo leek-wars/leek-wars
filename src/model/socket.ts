@@ -30,11 +30,11 @@ enum SocketMessage {
 	YOU_ARE_MUTED = 25,
 	LUCKY = 26,
 	GET_LUCKY = 27,
-	BATTLE_ROYALE_REGISTER = 28,
-	BATTLE_ROYALE_UPDATE = 29,
-	BATTLE_ROYALE_START = 30,
-	BATTLE_ROYALE_LEAVE = 31,
-	BATTLE_ROYALE_CHAT_NOTIF = 32,
+	ARENA_REGISTER = 28,
+	ARENA_UPDATE = 29,
+	ARENA_START = 30,
+	ARENA_LEAVE = 31,
+	ARENA_CHAT_NOTIF = 32,
 	PONG = 33,
 	CHAT_ENABLE = 34,
 	CHAT_RECEIVE_PACK = 35,
@@ -119,8 +119,8 @@ class Socket {
 				this.send(p)
 			}
 			this.queue = []
-			// Relaunch battle royale?
-			LeekWars.battleRoyale.init()
+			// Relaunch arena?
+			LeekWars.arena.init()
 			LeekWars.bossSquads.init()
 			this.schedulePing()
 		}
@@ -183,7 +183,7 @@ class Socket {
 
 					const message = { id: data[0], type: data[1], date: LeekWars.time, parameters: data[2], new: true }
 					
-					const spoilableTypes: number[] = [NotificationType.BATTLE_ROYALE_STARTED, NotificationType.FIGHT_REPORT, NotificationType.FARMER_FIGHT_REPORT, NotificationType.COMPOSITION_FIGHT_REPORT, NotificationType.CHALLENGE, NotificationType.FARMER_CHALLENGE, NotificationType.TOURNAMENT_WINNER, NotificationType.FARMER_TOURNAMENT_WIN, NotificationType.TEAM_TOURNAMENT_WIN]
+					const spoilableTypes: number[] = [NotificationType.BATTLE_ROYALE_STARTED, NotificationType.FIGHT_REPORT, NotificationType.FARMER_FIGHT_REPORT, NotificationType.COMPOSITION_FIGHT_REPORT, NotificationType.CHALLENGE, NotificationType.FARMER_CHALLENGE, NotificationType.TOURNAMENT_WINNER, NotificationType.FARMER_TOURNAMENT_WIN, NotificationType.TEAM_TOURNAMENT_WIN, NotificationType.WAR_REPORT, NotificationType.CHEST_HUNT_REPORT, NotificationType.COLOSSUS_REPORT]
 
 					// Envoie de la notif sur la page du combat pour la mettre en file d'attente
 					if (message.type === NotificationType.TROPHY_UNLOCKED && getRouter().currentRoute.value.path.startsWith('/fight/' + message.parameters[1])) {
@@ -191,7 +191,7 @@ class Socket {
 					} else if (
 						spoilableTypes.indexOf(message.type) !== -1
 						&& (
-							((message.type === NotificationType.BATTLE_ROYALE_STARTED || message.type === NotificationType.FARMER_CHALLENGE) && getRouter().currentRoute.value.path.startsWith('/fight/' + message.parameters[0]))
+							((message.type === NotificationType.BATTLE_ROYALE_STARTED || message.type === NotificationType.FARMER_CHALLENGE || message.type === NotificationType.WAR_REPORT || message.type === NotificationType.CHEST_HUNT_REPORT || message.type === NotificationType.COLOSSUS_REPORT) && getRouter().currentRoute.value.path.startsWith('/fight/' + message.parameters[0]))
 							|| ((message.type === NotificationType.FIGHT_REPORT || message.type === NotificationType.FARMER_FIGHT_REPORT || message.type === NotificationType.COMPOSITION_FIGHT_REPORT || message.type === NotificationType.CHALLENGE) && getRouter().currentRoute.value.path.startsWith('/fight/' + message.parameters[1]))
 							|| ((message.type === NotificationType.TOURNAMENT_WINNER || message.type === NotificationType.FARMER_TOURNAMENT_WIN || message.type === NotificationType.TEAM_TOURNAMENT_WIN) && getRouter().currentRoute.value.path.startsWith('/fight/' + message.parameters[2]))
 						)
@@ -234,20 +234,20 @@ class Socket {
 					LeekWars.lucky(true)
 					break
 				}
-				case SocketMessage.BATTLE_ROYALE_CHAT_NOTIF: {
-					store.commit('br-counts', data)
+				case SocketMessage.ARENA_CHAT_NOTIF: {
+					store.commit('arena-counts', data)
 					break
 				}
-				case SocketMessage.BATTLE_ROYALE_UPDATE: {
-					LeekWars.battleRoyale.update({type: id, data})
+				case SocketMessage.ARENA_UPDATE: {
+					LeekWars.arena.update({type: id, data})
 					break
 				}
-				case SocketMessage.BATTLE_ROYALE_START: {
-					LeekWars.battleRoyale.start(data)
+				case SocketMessage.ARENA_START: {
+					LeekWars.arena.start(data)
 					break
 				}
-				case SocketMessage.BATTLE_ROYALE_LEAVE: {
-					LeekWars.battleRoyale.leave()
+				case SocketMessage.ARENA_LEAVE: {
+					LeekWars.arena.leave()
 					break
 				}
 				case SocketMessage.GARDEN_QUEUE: {

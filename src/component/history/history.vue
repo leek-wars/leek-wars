@@ -73,6 +73,9 @@
 						<v-checkbox v-model="displayTypes.farmer" hide-details class="option-checkbox" :label="$t('farmer')" />
 						<v-checkbox v-model="displayTypes.team" hide-details class="option-checkbox" :label="$t('team')" />
 						<v-checkbox v-model="displayTypes.battleRoyale" hide-details class="option-checkbox" :label="$t('battle_royale')" />
+						<v-checkbox v-model="displayTypes.war" hide-details class="option-checkbox" :label="$t('war')" />
+						<v-checkbox v-model="displayTypes.chestHunt" hide-details class="option-checkbox" :label="$t('chest_hunt')" />
+						<v-checkbox v-model="displayTypes.colossus" hide-details class="option-checkbox" :label="$t('colossus')" />
 						<v-checkbox v-model="displayTypes.boss" hide-details class="option-checkbox" :label="$t('boss')" />
 					</div>
 					<div class="fight-loot">
@@ -106,7 +109,7 @@
 		period: string = 'today'
 		start_date: number = 0
 		displayContexts = { challenge: true, garden: true, tournament: true }
-		displayTypes = { solo: true, farmer: true, team: true, battleRoyale: true, boss: true }
+		displayTypes = { solo: true, farmer: true, team: true, battleRoyale: true, war: true, chestHunt: true, colossus: true, boss: true }
 		displayLoot = { chests: false, rareloot: false }
 		
 		get breadcrumb_items() {
@@ -129,6 +132,9 @@
 					(this.displayTypes.farmer && fight.type === FightType.FARMER) ||
 					(this.displayTypes.team && fight.type === FightType.TEAM) ||
 					(this.displayTypes.battleRoyale && fight.type === FightType.BATTLE_ROYALE) ||
+					(this.displayTypes.war && fight.type === FightType.WAR) ||
+					(this.displayTypes.chestHunt && fight.type === FightType.CHEST_HUNT) ||
+					(this.displayTypes.colossus && fight.type === FightType.COLOSSUS) ||
 					(this.displayTypes.boss && fight.type === FightType.BOSS) ||
 					this.type === 'team'
 				)

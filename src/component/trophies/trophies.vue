@@ -126,11 +126,11 @@
 				<template #title>{{ $t('trophy.category_' + category.name) }}</template>
 				<template #actions>
 					<div class="category-bar-wrapper">
-						<div v-if="category.id !== 6" class="stats">{{ $filters.number(points[category.id]) }} / {{ $filters.number(totalPoints[category.id]) }}</div>
+						<div v-if="category.id !== 6" class="stats">{{ $filters.number(points[category.id] || 0) }} / {{ $filters.number(totalPoints[category.id] || 0) }}</div>
 						<div class="category-bar">
-							<div :style="{width: (loaded ? Math.floor(100 * progressions[category.id] / totals[category.id]) : 0) + '%'}" class="bar striked"></div>
+							<div :style="{width: (loaded && totals[category.id] ? Math.floor(100 * progressions[category.id] / totals[category.id]) : 0) + '%'}" class="bar striked"></div>
 						</div>
-						<div class="stats">{{ loaded ? Math.floor(100 * progressions[category.id] / totals[category.id]) : 0 }}%</div>
+						<div class="stats">{{ loaded && totals[category.id] ? Math.floor(100 * progressions[category.id] / totals[category.id]) : 0 }}%</div>
 					</div>
 				</template>
 				<template #content>

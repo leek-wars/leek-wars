@@ -15,8 +15,8 @@
 					<br><br>
 				</div>
 				<div v-else class="table">
-					<div class="team">
-						<div v-for="leek in fight.leeks1" :key="leek.id" class="leek" :class="{quarter: fight.leeks1.length >= 7, third: (fight.leeks1.length < 7 && fight.leeks1.length >= 5) || fight.leeks1.length === 3, solo: fight.leeks1.length === 1, oneline: fight.leeks1.length <= 3}">
+					<div class="team" :style="teamGrid(fight.leeks1.length)">
+						<div v-for="leek in fight.leeks1" :key="leek.id" class="leek">
 							<leek-image :leek="leek" :scale="1" />
 							<div class="name">{{ leek.name }}</div>
 							<lw-title v-if="leek.title && leek.title.length" :title="leek.title" />
@@ -24,13 +24,19 @@
 						</div>
 					</div>
 					<img class="vs" src="/image/vs.png">
-					<div class="team" :class="{small: fight.type === FightType.BOSS && fight.leeks1.length >= 7}">
-						<div v-for="leek in fight.leeks2" :key="leek.id" class="leek" :class="{third: fight.leeks2.length >= 5 || fight.leeks2.length === 3, solo: fight.leeks2.length === 1, oneline: fight.leeks2.length <= 3}">
-							<leek-image :leek="leek" :scale="1" :invert="true" />
-							<div v-if="leek.boss" class="name">{{ $t('entity.' + leek.name) }}</div>
-							<div v-else class="name">{{ leek.name }}</div>
-							<lw-title v-if="leek.title && leek.title.length" :title="leek.title" />
-							<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>
+					<div class="team" :style="teamGrid(fight.leeks2.length)">
+						<div v-for="leek in fight.leeks2" :key="leek.id" class="leek">
+							<template v-if="leek.chest">
+								<img :src="'/image/chest/' + leek.name + '.png'" class="chest-img" />
+								<div class="name">{{ $t('entity.' + leek.name) }}</div>
+							</template>
+							<template v-else>
+								<leek-image :leek="leek" :scale="1" :invert="true" />
+								<div v-if="leek.boss" class="name">{{ $t('entity.' + leek.name) }}</div>
+								<div v-else class="name">{{ leek.name }}</div>
+								<lw-title v-if="leek.title && leek.title.length" :title="leek.title" />
+								<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>
+							</template>
 						</div>
 					</div>
 				</div>
@@ -276,6 +282,27 @@
 		@Prop() map!: FightMap
 
 		FightType = FightType
+
+		teamGrid(count: number) {
+			let cols
+			if (count <= 1) cols = 1
+			else if (count <= 2) cols = 2
+			else if (count <= 4) cols = 2
+			else if (count <= 6) cols = 3
+			else if (count <= 9) cols = 3
+			else if (count <= 12) cols = 4
+			else cols = 5
+			const rows = Math.ceil(count / cols)
+			return {
+				display: 'grid',
+				gridTemplateColumns: `repeat(${cols}, 1fr)`,
+				gridTemplateRows: `repeat(${rows}, 1fr)`,
+				justifyItems: 'center',
+				alignItems: 'center',
+				height: '100%',
+			}
+		}
+
 		fight: Fight | null = null
 		canvas: any
 		game: Game = new Game()
@@ -351,7 +378,7 @@
 				}
 			})
 		}
-			
+
 		gameLaunched() {
 			this.loaded = true
 			this.setOrigin()
@@ -803,23 +830,21 @@
 		display: flex;
 		align-items: center;
 		min-height: 0;
+		flex: 1;
 		justify-content: center;
 		&.br {
 			flex-wrap: wrap;
 			margin-bottom: 20px;
 			.vs {
-				width: 6%;
+				width: 5%;
+				max-width: 50px;
 			}
 		}
 		.team {
 			flex: 1;
 			height: 100%;
-			align-items: baseline;
 			padding: 15px;
-			// max-width: 700px;
-			&.small {
-				flex: 0.66;
-			}
+			min-height: 0;
 		}
 		.vs {
 			font-size: 25px;
@@ -831,30 +856,19 @@
 			max-width: 150px;
 		}
 		.leek {
-			width: 50%;
-			&.third {
-				width: 33%;
-			}
-			&.quarter {
-				width: 25%;
-			}
-			&.solo {
-				width: 100%;
-			}
 			&.br {
 				width: 10%;
 				height: auto;
 			}
-			height: 50%;
-			&.oneline {
-				height: 100%;
-			}
 			text-align: center;
-			display: inline-flex;
-			padding: 6px;
+			display: flex;
+			padding: 4px;
 			flex-direction: column;
 			align-items: center;
 			justify-content: center;
+			overflow: hidden;
+			min-height: 0;
+    		height: 100%;
 			.name {
 				padding-top: 5px;
 				font-size: 20px;
@@ -872,6 +886,11 @@
 			}
 			svg {
 				max-width: 100%;
+			}
+			.chest-img {
+				max-width: 80%;
+				max-height: 70%;
+				object-fit: contain;
 			}
 		}
 	}
@@ -1000,6 +1019,13 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+		padding: 10px;
+		h4 {
+			font-size: 13px;
+		}
+		img {
+			width: 80px;
+		}
 	}
 	.progress-bar-wrapper {
 		height: 20px;
@@ -1171,7 +1197,6 @@
 		text-align: left;
 		max-width: 700px;
 		margin: 10px auto;
-		margin-bottom: 6px;
 		.bar {
 			height: 12px;
 			width: 0;

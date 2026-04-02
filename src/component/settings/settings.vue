@@ -102,7 +102,6 @@
 								<v-radio :label="$t('auto')" value="auto"></v-radio>
 								<v-radio :label="$t('light')" value="light"></v-radio>
 								<v-radio :label="$t('dark')" value="dark"></v-radio>
-								<v-radio :label="LeekWars.aprilFools ? $t('modern_theme') : 'XP'" value="xp"></v-radio>
 							</v-radio-group>
 						</div>
 					</div>
@@ -125,6 +124,10 @@
 					<div class="setting" v-if="!LeekWars.mobile">
 						<div>{{ $t('leek_theme') }}</div>
 						<div><v-switch v-model="LeekWars.leekTheme" hide-details /></div>
+					</div>
+					<div class="setting">
+						<div>{{ $t('modern_theme') }}</div>
+						<div><v-switch v-model="modernTheme" hide-details /></div>
 					</div>
 				</div>
 			</panel>
@@ -288,6 +291,7 @@
 		notifsPopups: boolean = localStorage.getItem('options/notifs-popups') !== 'false'
 		notifsResults: boolean = localStorage.getItem('options/notifs-results') === 'true'
 		chatFirst: boolean = localStorage.getItem('options/chat-first') === 'true'
+		modernTheme: boolean = localStorage.getItem('theme') === 'xp'
 		pushNotifications: boolean = localStorage.getItem('options/push-notifs') === 'true'
 		deleteDialog: boolean = false
 		deleteConfirmDialog: boolean = false
@@ -389,6 +393,7 @@
 		updateTheme() {
 			localStorage.setItem('theme', '' + LeekWars.themeSetting)
 			LeekWars.xpTheme = LeekWars.themeSetting === 'xp'
+			this.modernTheme = LeekWars.themeSetting === 'xp'
 			localStorage.setItem('xp-theme', '' + LeekWars.xpTheme)
 			if (LeekWars.themeSetting === 'xp') {
 				LeekWars.darkMode = false
@@ -397,6 +402,15 @@
 				}
 			} else {
 				LeekWars.darkMode = LeekWars.themeSetting !== 'auto' ? LeekWars.themeSetting === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
+			}
+		}
+
+		@Watch('modernTheme')
+		updateModernTheme() {
+			if (this.modernTheme) {
+				LeekWars.themeSetting = 'xp'
+			} else {
+				LeekWars.themeSetting = 'auto'
 			}
 		}
 

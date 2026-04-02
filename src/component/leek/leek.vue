@@ -324,17 +324,13 @@
 				</template>
 				<v-tooltip v-if="leek && my_leek && leek.level >= 20 && $store.state.farmer?.br_enabled">
 					<template #activator="{ props }">
-						<div class="tab" @click="registerAutoBr" v-bind="props">
+						<div class="tab" @click="registerAutoArena" v-bind="props">
 							<v-icon>mdi-trophy</v-icon>
-							<span v-if="!leek.auto_br" class="register">{{ $t('register_to_br') }}</span>
+							<span v-if="!leek.auto_br" class="register">{{ $t('register_to_arena') }}</span>
 							<span v-else class="unregister">{{ $t('unregister') }}</span>
 						</div>
 					</template>
-					{{ $t('br_time') }}
-					<i18n-t v-if="brRange" tag="div" keypath="main.level_x_to_y">
-						<template #min><b>{{ brRange.min }}</b></template>
-						<template #max><b>{{ brRange.max }}</b></template>
-					</i18n-t>
+					{{ $t('arena_time') }}
 				</v-tooltip>
 				<template v-if="leek && leek.level > 1 && $store.state.connected">
 					<v-tooltip>
@@ -738,7 +734,7 @@
 <script lang="ts">
 	import { locale } from '@/locale'
 	import { AI } from '@/model/ai'
-	import { BattleRoyale } from '@/model/battle-royale'
+	import { Arena } from '@/model/arena'
 	import { Chip } from '@/model/chip'
 	import { Options } from '@/model/component'
 	import { Hat } from '@/model/hat'
@@ -831,9 +827,7 @@
 		skinPotionDialog: boolean = false
 		tournamentRangeLoading: boolean = false
 		tournamentRange: any = null
-		get brRange() {
-			return this.leek ? BattleRoyale.getRange(this.leek.level) : null
-		}
+		// brRange removed - arenas no longer have level ranges
 		request: any = null
 		MAX_COMPONENTS = 8
 
@@ -1066,7 +1060,7 @@
 			}
 		}
 
-		registerAutoBr() {
+		registerAutoArena() {
 			if (this.leek) {
 				if (this.leek.auto_br) {
 					this.leek.auto_br = false

@@ -209,7 +209,7 @@ class NotificationBuilder {
 			const teamID = params[0]
 			const farmerName = params[1]
 			return new Notification(data, "/team/" + teamID, "team_accepted.png", [farmerName])
-		} else if (type === NotificationType.BATTLE_ROYALE_REPORT) {
+		} else if (type === NotificationType.BATTLE_ROYALE_REPORT || type === NotificationType.WAR_REPORT || type === NotificationType.CHEST_HUNT_REPORT || type === NotificationType.COLOSSUS_REPORT) {
 			const fightID = params[0]
 			const result = params.length > 1 ? parseInt(params[1]) : 0
 			const leekName = params.length > 2 ? params[2] : ''

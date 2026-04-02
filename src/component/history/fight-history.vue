@@ -1,12 +1,12 @@
 <template lang="html">
 	<div :class="{generating: fight.status == 0, win: fight.result == 'win', defeat: fight.result == 'defeat', draw: fight.result == 'draw'}" class="fight">
-		<div v-if="fight.type == FightType.BATTLE_ROYALE" class="fighters">
-			<div class="fighter left"><div>Battle</div></div>
+		<div v-if="fight.type == FightType.BATTLE_ROYALE || fight.type == FightType.WAR || fight.type == FightType.CHEST_HUNT || fight.type == FightType.COLOSSUS" class="fighters">
+			<div class="fighter left"><div>{{ arenaLabel[0] }}</div></div>
 			<router-link :to="'/fight/' + fight.id" class="center">
 				<v-icon v-if="fight.status == 0" class="timersand">mdi-timer-sand-empty</v-icon>
 				<v-icon v-else>mdi-sword-cross</v-icon>
 			</router-link>
-			<div class="fighter right"><div>Royale</div></div>
+			<div class="fighter right"><div>{{ arenaLabel[1] }}</div></div>
 		</div>
 		<div v-else class="fighters">
 			<router-link v-if="fight.type == FightType.SOLO && fight.leeks1[0]" :to="'/leek/' + fight.leeks1[0].id" class="fighter">
@@ -76,6 +76,18 @@
 		@Prop() fight!: Fight
 		FightType = FightType
 		FightContext = FightContext
+
+		get arenaLabel(): [string, string] {
+			switch (this.fight.type) {
+				case FightType.WAR: return [this.$t('main.n_leeks', [this.fight.leeks1?.length || 0]) as string, this.$t('main.n_leeks', [this.fight.leeks2?.length || 0]) as string]
+				case FightType.CHEST_HUNT: return [this.$t('main.n_leeks', [this.fight.leeks1?.length || 0]) as string, this.$t('main.n_chests', [this.fight.leeks2?.length || 0]) as string]
+				case FightType.COLOSSUS: {
+					const colossusName = this.fight.leeks2?.[0]?.name || 'Colosse'
+					return [this.$t('main.n_leeks', [this.fight.leeks1?.length || 0]) as string, colossusName]
+				}
+				default: return ['Battle', 'Royale']
+			}
+		}
 	}
 </script>
 

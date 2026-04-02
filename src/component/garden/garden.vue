@@ -28,18 +28,6 @@
 								<img class="player" src="/image/player.png">
 							</router-link>
 
-							<v-tooltip v-if="$store.state.farmer?.br_enabled" :disabled="battleRoyaleEnabled">
-								<template #activator="{ props }">
-									<router-link v-ripple :class="{ enabled: battleRoyaleEnabled, 'router-link-active': category === 'battle-royale' }" :event="battleRoyaleEnabled ? 'click' : ''" to="/garden/battle-royale" class="tab">
-										<div v-bind="props">
-											<h2>{{ $t('category_battle_royale') }}</h2>
-											<span class="player-count">10</span>&nbsp;<img class="player" src="/image/player.png">
-										</div>
-									</router-link>
-								</template>
-								{{ $t('you_must_be_level_20') }}
-							</v-tooltip>
-
 							<v-tooltip :disabled="farmerEnabled">
 								<template #activator="{ props }">
 									<router-link v-ripple :class="{ enabled: farmerEnabled }" :event="farmerEnabled ? 'click' : ''" to="/garden/farmer" class="tab">
@@ -66,6 +54,17 @@
 									</router-link>
 								</template>
 								{{ $t('you_must_have_a_team') }}
+							</v-tooltip>
+							<v-tooltip v-if="$store.state.farmer?.br_enabled" :disabled="arenaEnabled">
+								<template #activator="{ props }">
+									<router-link v-ripple :class="{ enabled: arenaEnabled, 'router-link-active': category === 'arena' }" :event="arenaEnabled ? 'click' : ''" to="/garden/arena" class="tab">
+										<div v-bind="props">
+											<h2>{{ $t('category_arena') }}</h2>
+											<span class="player-count">10-20</span>&nbsp;<img class="player" src="/image/player.png">
+										</div>
+									</router-link>
+								</template>
+								{{ $t('you_must_be_level_20') }}
 							</v-tooltip>
 
 							<v-tooltip :disabled="bossEnabled">
@@ -265,29 +264,49 @@
 								</div>
 							</template>
 						</div>
-						<div v-else-if="category == 'battle-royale'">
-							<div v-if="!LeekWars.battleRoyale.enabled">
+						<div v-else-if="category == 'arena'">
+							<div v-if="!LeekWars.arena.enabled">
 								<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('select_leek') }}</div>
 								<div class="opponents">
-									<router-link v-for="leek in $store.state.farmer.leeks" :key="leek.id" v-ripple :to="'/garden/battle-royale/' + leek.id" :class="{disabled: leek.level < 20}" :event="leek.level < 20 ? null : 'click'" class="leek my-leek">
+									<router-link v-for="leek in $store.state.farmer.leeks" :key="leek.id" v-ripple :to="'/garden/arena/' + leek.id" :class="{disabled: leek.level < 20}" :event="leek.level < 20 ? null : 'click'" class="leek my-leek">
 										<garden-leek :leek="leek" />
 									</router-link>
 								</div>
-								<br><br>
-								<v-btn v-if="garden.fights" color="primary" @click="battleRoyaleRegister" :disabled="!battleRoyaleEnabled">{{ $t('main.select') }}</v-btn>
+								<br>
+								<div class="arena-preferences">
+									<h4>{{ $t('arena_preference') }}</h4>
+									<v-radio-group v-model="arenaPreference" inline hide-details>
+										<v-radio :label="$t('arena_no_preference')" :value="-1" />
+										<v-radio :label="$t('arena_mode_br')" :value="0" />
+										<v-radio :label="$t('arena_mode_war')" :value="1" />
+										<v-radio :label="$t('arena_mode_chest_hunt')" :value="2" />
+										<v-radio :label="$t('arena_mode_colossus')" :value="3" />
+									</v-radio-group>
+								</div>
+								<br>
+								<v-btn v-if="garden.fights" color="primary" @click="arenaRegister" :disabled="!arenaEnabled">{{ $t('main.select') }}</v-btn>
 								<garden-no-fights v-else :canbuy="true" />
 							</div>
 							<div v-else>
-								<loader v-if="LeekWars.battleRoyale.progress == 0" />
+								<loader v-if="LeekWars.arena.progress == 0" />
 								<div class="opponents">
-									<div v-for="leek in LeekWars.battleRoyale.leeks" :key="leek.id" class="leek disabled">
+									<div v-for="leek in LeekWars.arena.leeks" :key="leek.id" class="leek disabled arena-leek">
 										<garden-leek :leek="leek" />
+										<v-tooltip>
+											<template #activator="{ props }">
+												<v-icon v-bind="props" class="arena-pref" size="16">{{ modeIcon(leek.preference) }}</v-icon>
+											</template>
+											{{ modeLabel(leek.preference) }}
+										</v-tooltip>
 									</div>
 								</div>
 								<br>
-								<div class="leek-count">{{ LeekWars.battleRoyale.progress }} / 10</div>
+								<div class="leek-count">{{ LeekWars.arena.progress }} / {{ LeekWars.arena.constructor.MAX_PLAYERS }}</div>
+								<div v-if="LeekWars.arena.countdown >= 0" class="arena-countdown">
+									{{ $t('arena_countdown', [LeekWars.arena.countdown]) }}
+								</div>
 								<br>
-								<v-btn @click="battleRoyaleLeave"><v-icon>mdi-keyboard-backspace</v-icon>&nbsp;{{ $t('quit') }}</v-btn>
+								<v-btn @click="arenaLeave"><v-icon>mdi-keyboard-backspace</v-icon>&nbsp;{{ $t('quit') }}</v-btn>
 							</div>
 						</div>
 						<div v-else-if="category == 'boss'">
@@ -431,7 +450,10 @@ import { emitter } from '@/model/vue'
 
 		get farmerEnabled() { return this.garden && this.garden.farmer_enabled }
 		get teamEnabled() { return this.garden && this.garden.team_enabled }
-		get battleRoyaleEnabled() { return this.garden && this.garden.battle_royale_enabled && this.$store.state.farmer && this.$store.state.farmer.verified }
+		arenaPreference: number = parseInt(localStorage.getItem('arena/preference') || '-1', 10)
+		wantsColossus: boolean = false
+
+		get arenaEnabled() { return this.garden && this.garden.battle_royale_enabled && this.$store.state.farmer && this.$store.state.farmer.verified }
 		get bossEnabled() { return true }
 
 		mounted() {
@@ -492,13 +514,13 @@ import { emitter } from '@/model/vue'
 				if (savedCategory || !LeekWars.mobile) {
 					let defaultCategory = savedCategory || 'solo'
 					if (defaultCategory === 'challenge') { defaultCategory = 'solo' }
-					if (defaultCategory === 'battle-royale' && !this.$store.state.farmer.br_enabled) { defaultCategory = 'solo' }
+					if ((defaultCategory === 'battle-royale' || defaultCategory === 'arena') && !this.$store.state.farmer.br_enabled) { defaultCategory = 'solo' }
 					this.$router.replace('/garden/' + defaultCategory)
 					return
 				}
 			}
-			if ((this.category === 'solo' || this.category === 'battle-royale') && !params.item) {
-				const key = this.category === 'battle-royale' ? 'battle-royale-leek' : 'garden/leek'
+			if ((this.category === 'solo' || this.category === 'arena') && !params.item) {
+				const key = this.category === 'arena' ? 'arena-leek' : 'garden/leek'
 				let defaultLeek = parseInt(localStorage.getItem(key) || '0', 10)
 				if (!(defaultLeek in store.state.farmer!.leeks)) {
 					defaultLeek = LeekWars.first(store.state.farmer!.leeks)!.id
@@ -532,8 +554,8 @@ import { emitter } from '@/model/vue'
 					this.selectFarmer()
 				} else if (this.category === 'team') {
 					this.selectComposition(this.compositions_by_id[item])
-				} else if (this.category === 'battle-royale') {
-					this.selectBattleRoyale(store.state.farmer.leeks[item])
+				} else if (this.category === 'arena') {
+					this.selectArena(store.state.farmer.leeks[item])
 				} else if (this.category === 'challenge') {
 					this.selectChallenge()
 				} else if (this.category === 'boss') {
@@ -597,15 +619,24 @@ import { emitter } from '@/model/vue'
 				LeekWars.toast(error)
 			})
 		}
-		selectBattleRoyale(leek: Leek) {
+		readonly modeIcons = ['mdi-sword-cross', 'mdi-flag', 'mdi-treasure-chest', 'mdi-shield-account']
+		readonly modeLabels = ['arena_mode_br', 'arena_mode_war', 'arena_mode_chest_hunt', 'arena_mode_colossus']
+
+		modeIcon(preference: number): string {
+			return this.modeIcons[preference] || 'mdi-help-circle-outline'
+		}
+		modeLabel(preference: number): string {
+			return this.$t(this.modeLabels[preference] || 'arena_no_preference') as string
+		}
+		selectArena(leek: Leek) {
 			this.selectedLeek = leek
 		}
-		battleRoyaleRegister() {
+		arenaRegister() {
 			if (!this.selectedLeek) { return }
-			LeekWars.battleRoyale.register(this.selectedLeek.id)
+			LeekWars.arena.register(this.selectedLeek.id, this.arenaPreference, this.wantsColossus)
 		}
-		battleRoyaleLeave() {
-			LeekWars.battleRoyale.leave()
+		arenaLeave() {
+			LeekWars.arena.leave()
 		}
 		clickSoloOpponent(leek: Leek) {
 			if (this.selectedLeek) {
@@ -709,7 +740,7 @@ import { emitter } from '@/model/vue'
 		@Watch('selectedLeek')
 		updateLeek() {
 			if (this.selectedLeek) {
-				const key = this.category === 'battle-royale' ? 'battle-royale-leek' : 'garden/leek'
+				const key = this.category === 'arena' ? 'arena-leek' : 'garden/leek'
 				localStorage.setItem(key, '' + this.selectedLeek.id)
 			}
 		}
@@ -720,6 +751,10 @@ import { emitter } from '@/model/vue'
 			}
 		}
 
+		@Watch('arenaPreference')
+		updateArenaPreference() {
+			localStorage.setItem('arena/preference', '' + this.arenaPreference)
+		}
 		@Watch('advanced')
 		updateAdvanced() {
 			localStorage.setItem("editor/test/advanced", '' + this.advanced)
@@ -918,6 +953,15 @@ import { emitter } from '@/model/vue'
 	}
 	.leek-count {
 		font-size: 22px;
+	}
+	.arena-leek {
+		position: relative;
+	}
+	.arena-pref {
+		position: absolute;
+		top: 2px;
+		right: 2px;
+		font-size: 14px;
 	}
 	.queue {
 		padding: 15px 10px;

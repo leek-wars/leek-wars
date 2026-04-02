@@ -110,5 +110,11 @@
 	"title_42": "{0} a accepté votre invitation !",
 	"message_42": "Voir la page de l'équipe",
 	"title_43": "{0} a participé à une Battle Royale !",
-	"message_43": "Voir la Battle Royale"
+	"message_43": "Voir la Battle Royale",
+	"title_44": "{0} a participé à une Guerre !",
+	"message_44": "Voir la Guerre",
+	"title_45": "{0} a participé à une Chasse aux coffres !",
+	"message_45": "Voir la Chasse aux coffres",
+	"title_46": "{0} a participé à un combat Colosse !",
+	"message_46": "Voir le combat Colosse"
 }

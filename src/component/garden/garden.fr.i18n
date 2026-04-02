@@ -1,5 +1,6 @@
 {
 	"against": "contre",
+	"category_arena": "Arènes",
 	"category_battle_royale": "Battle Royale",
 	"category_farmer_fight": "Éleveur",
 	"category_solo_fight": "Solo",
@@ -38,5 +39,14 @@
 	"you_must_have_a_team": "Vous devez faire partie d'une équipe",
 	"quit": "Quitter",
 	"queue": "File d'attente",
-	"attack": "Attaquer"
+	"attack": "Attaquer",
+	"arena_preference": "Mode préféré",
+	"arena_no_preference": "Peu importe",
+	"arena_mode_br": "Battle Royale",
+	"arena_mode_war": "Guerre",
+	"arena_mode_chest_hunt": "Chasse aux coffres",
+	"arena_mode_colossus": "Colosse",
+	"arena_wants_colossus": "Je veux être le Colosse",
+	"arena_countdown": "Lancement dans {0}s...",
+	"garden_arena": "Potager Arènes"
 }

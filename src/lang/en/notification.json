@@ -110,5 +110,11 @@
 	"title_42": "{0} accepted your invitation!",
 	"message_42": "See the team page",
 	"title_43": "{0} participated in a Battle Royale!",
-	"message_43": "See the Battle Royale"
+	"message_43": "See the Battle Royale",
+	"title_44": "{0} participated in a War!",
+	"message_44": "See the War",
+	"title_45": "{0} participated in a Chest Hunt!",
+	"message_45": "See the Chest Hunt",
+	"title_46": "{0} participated in a Colossus fight!",
+	"message_46": "See the Colossus fight"
 }

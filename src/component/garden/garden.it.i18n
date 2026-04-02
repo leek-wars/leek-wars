@@ -1,5 +1,6 @@
 {
 	"against": "contro",
+	"category_arena": "Arene",
 	"category_battle_royale": "Battle Royale",
 	"category_farmer_fight": "Allevatore",
 	"category_solo_fight": "Assolo",
@@ -38,5 +39,14 @@
 	"category_boss_fight": "Capo",
 	"garden_boss": "Orto del capo",
 	"select_boss": "Selezionare un capo",
-	"attack": "Attacco"
+	"attack": "Attacco",
+	"arena_preference": "Modalità preferita",
+	"arena_no_preference": "Nessuna preferenza",
+	"arena_mode_br": "Battle Royale",
+	"arena_mode_war": "Guerra",
+	"arena_mode_chest_hunt": "Caccia ai forzieri",
+	"arena_mode_colossus": "Colosso",
+	"arena_wants_colossus": "Voglio essere il Colosso",
+	"arena_countdown": "Inizio tra {0}s...",
+	"garden_arena": "Orto Arena"
 }

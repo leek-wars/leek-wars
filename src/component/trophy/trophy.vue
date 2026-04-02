@@ -1,7 +1,9 @@
 <template>
 	<div class="page">
 		<div class="page-bar page-header">
-			<h1>{{ $t('trophy') }} « {{ $t('trophy.' + code) }} »</h1>
+			<h1>
+				<breadcrumb :items="[{name: $t('trophies'), link: '/trophies'}, {name: $t('trophy.' + code), link: ''}]" :raw="true" />
+			</h1>
 		</div>
 		<panel v-if="!trophy" class="first">
 			<loader />
@@ -157,9 +159,10 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
+	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 	import LWTitle from '@/component/title/title.vue'
 
-	@Options({ name: 'trophy', i18n: {}, mixins: [...mixins], components: { 'lw-title': LWTitle, RichTooltipItem } })
+	@Options({ name: 'trophy', i18n: {}, mixins: [...mixins], components: { 'lw-title': LWTitle, RichTooltipItem, Breadcrumb } })
 	export default class Trophy extends Vue {
 		code: any = null
 		trophy: any = null
@@ -201,6 +204,8 @@
 <style lang="scss" scoped>
 	.image {
 		width: 120px;
+		height: 120px;
+		object-fit: contain;
 		margin: 0 20px;
 		margin-right: 30px;
 		&.clickable {

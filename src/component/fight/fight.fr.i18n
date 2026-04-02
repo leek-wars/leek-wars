@@ -1,5 +1,8 @@
 {
 	"battle_royale": "Battle royale",
+	"war": "Guerre",
+	"chest_hunt": "Chasse aux coffres",
+	"colossus": "Colosse",
 	"date_format": "Le {0}",
 	"deleted_farmer": "éleveur supprimé",
 	"deleted_leek": "poireau supprimé",

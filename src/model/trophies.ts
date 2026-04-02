@@ -121,5 +121,40 @@ export const TROPHIES: readonly TrohyTemplate[] = Object.freeze([
   { id: 352, code: 'infernal', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 810000 },              { id: 353, code: 'perpetual', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 1960000 },           { id: 354, code: 'cucurbit', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 3240000 },
   { id: 355, code: 'crystalline', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 2250000 },          { id: 356, code: '10_years', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 0 },                  { id: 357, code: 'contest0', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 0 },
   { id: 358, code: 'contest1', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 0 },                   { id: 359, code: 'contest2', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 0 },                  { id: 360, code: 'funny', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 0 },
-  { id: 361, code: 'stargazer', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 0 },                  { id: 362, code: 'open_sourcerer', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 0 },            { id: 363, code: 'pillar', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 0 }
+  { id: 361, code: 'stargazer', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 0 },                  { id: 362, code: 'open_sourcerer', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 0 },            { id: 363, code: 'pillar', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 0 },
+  // Guerre (War)
+  { id: 364, code: 'soldier', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 5000 },
+  { id: 365, code: 'officer', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 20000 },
+  { id: 366, code: 'general', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 50000 },
+  { id: 367, code: 'marshal', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 100000 },
+  // Chasse aux coffres (Chest Hunt)
+  { id: 368, code: 'chest_hunter', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 5000 },
+  { id: 369, code: 'plunderer', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 20000 },
+  { id: 370, code: 'adventurer', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 50000 },
+  { id: 371, code: 'conqueror', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 100000 },
+  // Colosse (Colossus)
+  { id: 372, code: 'titan_slayer', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 5000 },
+  { id: 373, code: 'titan_hunter', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 20000 },
+  { id: 374, code: 'titan_bane', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 50000 },
+  { id: 375, code: 'victorious_colossus', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 40000 },
+  { id: 376, code: 'legendary_colossus', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 100000 },
+  // Nouveaux paliers arène
+  { id: 377, code: 'war_legend', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 200000 },
+  { id: 378, code: 'chest_hunt_legend', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 200000 },
+  { id: 379, code: 'titan_legend', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 100000 },
+  { id: 380, code: 'titan_exterminator', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 200000 },
+  { id: 381, code: 'colossus_champion', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 20000 },
+  { id: 382, code: 'colossus_dominator', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 100000 },
+  { id: 383, code: 'colossus_immortal', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 200000 },
+  // War exploit
+  { id: 386, code: 'blitzkrieg', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 50000 },
+  // Chest Hunt exploit
+  { id: 390, code: 'pillage', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 50000 },
+  // Colossus exploits
+  { id: 393, code: 'devastating', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 50000 },
+  { id: 394, code: 'cataclysmic', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 100000 },
+  { id: 395, code: 'tenacious', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 50000 },
+  { id: 396, code: 'eternal', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 100000 },
+  // War exploit
+  { id: 397, code: 'flawless', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 50000 }
 ])
