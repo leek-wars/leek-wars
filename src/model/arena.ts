@@ -40,7 +40,6 @@ class Arena {
 	leave() {
 		LeekWars.socket.send([SocketMessage.ARENA_LEAVE])
 		localStorage.removeItem('in-arena')
-		localStorage.removeItem('arena-leek')
 		localStorage.removeItem('arena-preference')
 		localStorage.removeItem('arena-colossus')
 		LeekWars.setTitleTag(null)
@@ -57,7 +56,6 @@ class Arena {
 			this.progress = 0
 			this.countdown = -1
 			localStorage.removeItem('in-arena')
-			localStorage.removeItem('arena-leek')
 			localStorage.removeItem('arena-preference')
 			localStorage.removeItem('arena-colossus')
 			store.commit('update-fights', -1)
