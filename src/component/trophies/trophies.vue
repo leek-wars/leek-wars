@@ -125,8 +125,8 @@
 			<panel v-for="category in categories" :key="category.id" :icon="LeekWars.trophyCategoriesIcons[category.id - 1]" :toggle="'trophies/toggle-' + category.id">
 				<template #title>{{ $t('trophy.category_' + category.name) }}</template>
 				<template #actions>
-					<div class="category-bar-wrapper">
-						<div v-if="category.id !== 6" class="stats">{{ $filters.number(points[category.id] || 0) }} / {{ $filters.number(totalPoints[category.id] || 0) }}</div>
+					<div v-if="category.id !== 6" class="category-bar-wrapper">
+						<div class="stats">{{ $filters.number(points[category.id] || 0) }} / {{ $filters.number(totalPoints[category.id] || 0) }}</div>
 						<div class="category-bar">
 							<div :style="{width: (loaded && totals[category.id] ? Math.floor(100 * progressions[category.id] / totals[category.id]) : 0) + '%'}" class="bar striked"></div>
 						</div>
