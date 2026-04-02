@@ -1,6 +1,6 @@
 import { TrohyTemplate } from '@/model/trophy'
 
-export const TROPHIES: readonly TrohyTemplate[] = Object.freeze([
+export const TROPHIES: readonly (TrohyTemplate | null)[] = Object.freeze([
   { id: 1, code: 'winner', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 100 },                     { id: 2, code: 'victor', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 2500 },                   { id: 3, code: 'victorious', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 10000 },
   { id: 4, code: 'champion', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 40000 },                 { id: 5, code: 'triumphant', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 1000000 },            { id: 6, code: 'fighter', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 2500 },
   { id: 7, code: 'combatant', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 10000 },                { id: 8, code: 'belligerent', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 250000 },            { id: 9, code: 'walker', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 100 },
@@ -146,10 +146,18 @@ export const TROPHIES: readonly TrohyTemplate[] = Object.freeze([
   { id: 381, code: 'colossus_champion', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 20000 },
   { id: 382, code: 'colossus_dominator', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 100000 },
   { id: 383, code: 'colossus_immortal', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 200000 },
+  // Fun
+  { id: 384, code: 'retro', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 0 },
+  null, // 385
   // War exploit
   { id: 386, code: 'blitzkrieg', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 50000 },
+  null, // 387
+  null, // 388
+  null, // 389
   // Chest Hunt exploit
   { id: 390, code: 'pillage', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 50000 },
+  null, // 391
+  null, // 392
   // Colossus exploits
   { id: 393, code: 'devastating', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 50000 },
   { id: 394, code: 'cataclysmic', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 100000 },
