@@ -1,8 +1,43 @@
-246:
+247:
   title: WIP
   added:
-    - "Ajout des BigInteger en LeekScript (merci à Batary)."
-    - "Fonctions setBit, testBit et bitLength pour les BigInteger (merci à Batary)."
+    - "#ai Ajout des BigInteger en LeekScript (merci à Batary)."
+    - "#ai Fonctions setBit, testBit et bitLength pour les BigInteger (merci à Batary)."
+
+246:
+  title: "3 modes Guerre, Chasse aux coffres et Colosse, améliorations de l'éditeur et du LeekScript."
+  added:
+    - "Nouveau mode Guerre : deux équipes de poireaux dans des combats XL. #img_246_war"
+    - "Nouveau mode Chasse aux coffres : tous les poireaux s'allient pour ouvrir des coffres. #img_246_chest_hunt"
+    - "Nouveau mode Colosse : un poireau surpuissant contre tous les autres. #img_246_colossus"
+    - "27 nouveaux trophées d'arène (Guerre, Chasse, Colosse). #img_246_trophies"
+    - "#ai Type narrowing en LeekScript : typage auto après les null checks. #img_246_narrowing"
+    - "#ai Navigation Ctrl+Shift+O pour les symboles dans l'éditeur. #img_246_symbols"
+    - "#ai Recherche de références dans l'éditeur. #img_246_references"
+    - "#ai Variables inutilisées grisées dans l'éditeur. #img_246_unused"
+    - "Affichage des TODOs dans l'éditeur. #img_246_todos"
+    - "Trophée contributeur automatique + 2 nouveaux trophées pour les contributeurs GitHub. #img_246_contributor_trophies"
+    - "Nouvelle catégorie de trophées « Arènes »."
+    - "Filtres de topics sur le forum : statut, reconnu, verrouillé, priorité, lu/non-lu. #img_246_forum_filters"
+    - "Trophée Stargazer : mettre une étoile sur le repo GitHub. #img_246_stargazer"
+  improved:
+    - "Possibilité de Battle Royale jusqu'à 20 poireaux."
+    - "Refonte de l'inventaire : tri, filtre, groupement, taille de grille. #img_246_inventory #img_246_schemes"
+    - "Re-craft et amélioration navigation de la forge en mobile. #img_246_recraft"
+    - "Stats d'utilisation des armes et puces dans les tooltips. #img_246_item_stats"
+    - "Survol des items non craftables dans les recettes."
+    - "Commande /br! dans le chat : « LA BAGAAAARRE ! »."
+    - "Auto-inscription en BR avec la commande /br dans le chat."
+    - "Corbeille et restauration de dossiers dans l'éditeur. #img_246_folder"
+    - "Validation des noms de fichiers dans l'éditeur. #img_246_name_validation"
+  fixed:
+    - "Crash du chat avec une commande inexistante."
+    - "Correction de l'affichage des morts sur le graphique de vie."
+    - "Affichage des valeurs négatives pour les effets d'entrave (merci à Casanova)."
+    - "Affichage de l'effet d'entrave de sagesse dans le player (merci à Casanova)."
+    - "Couleur noire (0) filtrée dans les logs de combat."
+    - "Email de changement d'adresse envoyé à la bonne adresse."
+    - "Déclenchement des effets passifs sur les dégâts de séquelle."
 
 245:
   title: "Plein de nouveautés pour les équipes, qualité de vie et switch en LeekScript"

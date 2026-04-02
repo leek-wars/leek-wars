@@ -57,5 +57,24 @@
 	"245_named_bulbs": { "emoji": "🏷️", "description": "Name your summons! Max 20 chars, shown above the bulb in combat" },
 	"245_turret_test_ai": { "emoji": "🤖", "description": "Override the default turret AI for testing" },
 	"245_max_turns": { "emoji": "⏱️", "description": "Great for testing early-game strategies" },
-	"245_next_player": { "emoji": "🔄", "description": "Get turn order relative to any entity, not just yours" }
+	"245_next_player": { "emoji": "🔄", "description": "Get turn order relative to any entity, not just yours" },
+
+	"246_war": { "emoji": "⚔️", "description": "Two teams clash in XL battles — launched from the Garden like BR" },
+	"246_chest_hunt": { "emoji": "🎁", "description": "All leeks cooperate to crack open as many chests as possible" },
+	"246_colossus": { "emoji": "🏋️", "description": "One leek gets a x5 stat boost (+1/turn) — can you take it down?" },
+	"246_trophies": { "emoji": "🏆", "description": "Daily trophies, exploits and a new Arenas category for all 3 modes" },
+	"246_narrowing": { "emoji": "🔬", "description": "After a null check, the compiler knows x is non-null — fewer casts needed" },
+	"246_symbols": { "emoji": "🧭", "description": "Jump to any function, class or global variable instantly" },
+	"246_references": { "emoji": "🔗", "description": "Find every usage of a variable or function across all your AIs" },
+	"246_unused": { "emoji": "👻", "description": "Spot dead code at a glance — unused vars are visually dimmed" },
+	"246_todos": { "emoji": "📝", "description": "Your // TODO comments show up in the problems panel with a blue underline" },
+	"246_contributor_trophies": { "emoji": "🤝", "description": "Automatic trophy for GitHub contributors, with 2 tiers for top contributors" },
+	"246_forum_filters": { "emoji": "🔍", "description": "Filter by status, priority, recognized, locked, read/unread — synced with URL" },
+	"246_stargazer": { "emoji": "⭐", "description": "Star the GitHub repo to unlock this trophy — checked every hour" },
+	"246_inventory": { "emoji": "🎒", "description": "Sort by type, rarity, price or quantity — group with collapsible separators" },
+	"246_schemes": { "emoji": "📋", "description": "Craftability indicator and cost shown directly on schematics" },
+	"246_recraft": { "emoji": "🔨", "description": "One-click re-craft after forging — mobile navigation improved too" },
+	"246_item_stats": { "emoji": "📊", "description": "Weekly usage sparkline: see how often each weapon/chip is used per fight" },
+	"246_name_validation": { "emoji": "✏️", "description": "No more duplicate names and warnings for Windows-incompatible characters" },
+	"246_folder": { "emoji": "🗑️", "description": "Deleted folders can now be restored from the trash" }
 }

@@ -1,8 +1,37 @@
 246:
-  title: WIP
+  title: "3 new modes: War, Chest Hunt and Colossus, editor and LeekScript improvements."
   added:
-    - "Added BigIntegers in LeekScript (thanks to Batary)."
-    - "Added setBit, testBit and bitLength functions for BigInteger (thanks to Batary)."
+    - "New War mode: two teams of leeks in XL fights. #img_246_war"
+    - "New Chest Hunt mode: all leeks team up to open chests. #img_246_chest_hunt"
+    - "New Colossus mode: one overpowered leek against everyone else. #img_246_colossus"
+    - "27 new arena trophies (War, Chest Hunt, Colossus). #img_246_trophies"
+    - "#ai Type narrowing in LeekScript: automatic typing after null checks. #img_246_narrowing"
+    - "#ai Ctrl+Shift+O symbol navigation in the editor. #img_246_symbols"
+    - "#ai Find references in the editor. #img_246_references"
+    - "#ai Unused variables greyed out in the editor. #img_246_unused"
+    - "TODO display in the editor. #img_246_todos"
+    - "Automatic contributor trophy + 2 new trophies for GitHub contributors. #img_246_contributor_trophies"
+    - "New 'Arenas' trophy category."
+    - "Forum topic filters: status, recognized, locked, priority, read/unread. #img_246_forum_filters"
+    - "Stargazer trophy: star the GitHub repository. #img_246_stargazer"
+  improved:
+    - "Battle Royale now supports up to 20 leeks."
+    - "Inventory overhaul: sort, filter, grouping, grid size. #img_246_inventory #img_246_schemes"
+    - "Re-craft and improved forge navigation on mobile. #img_246_recraft"
+    - "Weapon and chip usage stats in tooltips. #img_246_item_stats"
+    - "Hovering non-craftable items in recipes now shows tooltip."
+    - "/br! chat command: 'LET'S FIGHT!'."
+    - "Auto-register in BR with the /br chat command."
+    - "Folder trash and restore in the editor. #img_246_folder"
+    - "File name validation in the editor. #img_246_name_validation"
+  fixed:
+    - "Chat crash when entering an unknown command."
+    - "Fixed death display on the life graph."
+    - "Negative values displayed for shackle effects (thanks to Casanova)."
+    - "Wisdom shackle effect now displayed in the fight player (thanks to Casanova)."
+    - "Black color (0) filtered in fight logs."
+    - "Email address change confirmation sent to the correct address."
+    - "Passive effects triggering on aftereffect damage."
 
 245:
   title: "Lots of new team features, quality of life and switch in LeekScript"

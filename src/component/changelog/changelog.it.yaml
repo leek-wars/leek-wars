@@ -1,8 +1,37 @@
 246:
-  title: WIP
+  title: "3 nuove modalità: Guerra, Caccia ai forzieri e Colosso, miglioramenti dell'editor e del LeekScript."
   added:
-    - "Aggiunta dei BigInteger in LeekScript (grazie a Batary)."
-    - "Aggiunta delle funzioni setBit, testBit e bitLength per i BigInteger (grazie a Batary)."
+    - "Nuova modalità Guerra: due squadre di porri in combattimenti XL. #img_246_war"
+    - "Nuova modalità Caccia ai forzieri: tutti i porri si alleano per aprire i forzieri. #img_246_chest_hunt"
+    - "Nuova modalità Colosso: un porro potentissimo contro tutti gli altri. #img_246_colossus"
+    - "27 nuovi trofei arena (Guerra, Caccia, Colosso). #img_246_trophies"
+    - "#ai Type narrowing in LeekScript: tipizzazione automatica dopo i null check. #img_246_narrowing"
+    - "#ai Navigazione Ctrl+Shift+O per i simboli nell'editor. #img_246_symbols"
+    - "#ai Ricerca di riferimenti nell'editor. #img_246_references"
+    - "#ai Variabili inutilizzate grigie nell'editor. #img_246_unused"
+    - "Visualizzazione dei TODO nell'editor. #img_246_todos"
+    - "Trofeo contributore automatico + 2 nuovi trofei per i contributori GitHub. #img_246_contributor_trophies"
+    - "Nuova categoria di trofei « Arene »."
+    - "Filtri per i topic del forum: stato, riconosciuto, bloccato, priorità, letto/non letto. #img_246_forum_filters"
+    - "Trofeo Stargazer: metti una stella al repository GitHub. #img_246_stargazer"
+  improved:
+    - "Battle Royale fino a 20 porri."
+    - "Rinnovamento dell'inventario: ordina, filtra, raggruppa, dimensione griglia. #img_246_inventory #img_246_schemes"
+    - "Ri-creazione e navigazione migliorata della forgia su mobile. #img_246_recraft"
+    - "Statistiche di utilizzo di armi e chip nei tooltip. #img_246_item_stats"
+    - "Passaggio del mouse sugli elementi non craftabili nelle ricette."
+    - "Comando /br! nella chat: « LA BAGAAAARRE! »."
+    - "Auto-iscrizione in BR con il comando /br nella chat."
+    - "Cestino e ripristino di cartelle nell'editor. #img_246_folder"
+    - "Validazione dei nomi di file nell'editor. #img_246_name_validation"
+  fixed:
+    - "Crash della chat con un comando sconosciuto."
+    - "Correzione della visualizzazione delle morti nel grafico vita."
+    - "Valori negativi mostrati per gli effetti catena (grazie a Casanova)."
+    - "Effetto catena saggezza ora mostrato nel player (grazie a Casanova)."
+    - "Colore nero (0) filtrato nei log di combattimento."
+    - "Email di cambio indirizzo inviata all'indirizzo corretto."
+    - "Attivazione degli effetti passivi sui danni da séquelle."
 
 245:
   title: "Tante novità per le squadre, qualità della vita e switch in LeekScript"

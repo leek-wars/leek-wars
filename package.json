@@ -1,6 +1,6 @@
 {
 	"name": "leek-wars",
-	"version": "2.45.0",
+	"version": "2.46.0",
 	"scripts": {
 		"dev": "vite --mode dev",
 		"start": "vite --mode dev",
