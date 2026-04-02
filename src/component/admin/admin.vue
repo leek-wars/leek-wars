@@ -283,7 +283,10 @@
 <style lang="scss" scoped>
 	.admin-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+		@media (max-width: 599px) {
+			grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+		}
 		grid-gap: 8px;
 		padding: 10px;
 	}
