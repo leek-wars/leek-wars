@@ -195,7 +195,8 @@
 					<v-btn class="get-all notif-trophy" @click.stop="retrieveAll()"><span v-if="!LeekWars.mobile">{{ $t('main.retrieve_all') }}</span> <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
 				</div>
 				<div v-autostopscroll class="rewards">
-					<div v-for="reward in $store.state.farmer.rewards" :key="reward.trophy" class="reward">
+					<template v-for="reward in $store.state.farmer.rewards" :key="reward.trophy">
+					<div v-if="TROPHIES[reward.trophy - 1]" class="reward">
 						<router-link :to="'/trophy/' + TROPHIES[reward.trophy - 1].code">
 							<img :src="'/image/trophy/' + TROPHIES[reward.trophy - 1].code + '.svg'">
 							{{ $t('trophy.' + TROPHIES[reward.trophy - 1].code) }}
@@ -204,6 +205,7 @@
 						</router-link>
 						<v-btn class="get notif-trophy" @click.stop="retrieve(reward)"><img src="/image/icon/arrow-down-right-bold.svg"></v-btn>
 					</div>
+					</template>
 				</div>
 			</v-card>
 		</v-menu>
