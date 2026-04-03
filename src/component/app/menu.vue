@@ -19,7 +19,7 @@
 								<router-link to="/farmer" @click.native="clickItem">
 									<div v-if="$store.state.farmer" v-ripple class="text farmer-name">{{ $store.state.farmer.name }}</div>
 								</router-link>
-								<v-menu v-if="$store.state.accounts.length > 1" v-model="accountMenu" :width="300" :close-on-content-click="false" location="bottom start" scrim>
+								<v-menu v-model="accountMenu" :width="300" :close-on-content-click="false" location="bottom start" scrim>
 									<template #activator="{ props }">
 										<v-btn v-bind="props" icon size="x-small" variant="text" class="account-switcher-btn">
 											<v-icon size="18">mdi-chevron-down</v-icon>
