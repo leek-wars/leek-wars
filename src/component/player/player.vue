@@ -436,7 +436,9 @@
 		}
 		mousemove(e: MouseEvent) {
 			this.game.mousemove(e)
-			;(this.$refs.hud as Hud).hover_entity = this.game.mouseEntity
+			if (this.$refs.hud) {
+				;(this.$refs.hud as Hud).hover_entity = this.game.mouseEntity
+			}
 		}
 		mousedown(e: MouseEvent) {
 			this.game.mousedown(e)
