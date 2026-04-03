@@ -112,6 +112,8 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				token: string,
 				accounts?: AccountInfo[]
 			}) {
+			LeekWars.arena.leave()
+			LeekWars.bossSquads.leaveSquad()
 			store.commit("reset")
 			state.farmer = data.farmer
 			// Fusionner les comptes du serveur avec les comptes déconnectés en localStorage
