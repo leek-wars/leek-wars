@@ -14,7 +14,7 @@
 						<br><br>
 						<v-checkbox v-model="form.keep_connected" :label="$t('keep_connected')" hide-details />
 						<br><br>
-						<div class="center"><v-btn size="large" color="primary" type="submit">{{ $t('connection') }}</v-btn></div>
+						<div class="center"><v-btn size="large" color="primary" type="submit" :loading="loading">{{ $t('connection') }}</v-btn></div>
 						<br>
 						<div v-if="error" class="error">
 							<span v-if="error.error">{{ $t('error_' + error.error) }}</span>
@@ -43,6 +43,7 @@
 	@Options({ name: 'login', i18n: {}, mixins: [...mixins] })
 	export default class Login extends Vue {
 		error: any = null
+		loading: boolean = false
 		form = {
 			login: '',
 			password: '',
@@ -67,12 +68,15 @@
 		}
 
 		login() {
+			this.loading = true
+			this.error = null
 			const url = LeekWars.DEV ? 'farmer/login-token' : 'farmer/login'
 			LeekWars.post(url, this.form).then(data => {
 				const token = LeekWars.DEV ? data.token : '$'
 				this.$store.commit('connect', {...data, token})
 				this.$router.push(getRedirectAfterLogin())
 			}).error(error => {
+				this.loading = false
 				this.error = error
 			})
 		}
