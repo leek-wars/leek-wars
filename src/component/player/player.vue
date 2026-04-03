@@ -412,6 +412,7 @@
 
 		resize() {
 			nextTick(() => {
+				if (!this.canvas) { return }
 				const newWidth = this.getWidth()
 				const newHeight = this.getHeight()
 				if (newWidth === this.width && newHeight === this.height) { return }
