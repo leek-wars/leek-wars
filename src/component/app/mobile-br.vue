@@ -15,7 +15,7 @@
 		z-index: 100;
 		position: fixed;
 		top: 50%;
-		right: -25px;
+		right: -34px;
 		background: #2a2a2a;
 		color: white;
 		transform: rotate(-90deg);
