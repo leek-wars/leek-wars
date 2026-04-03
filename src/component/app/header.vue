@@ -164,6 +164,14 @@
 							<avatar :farmer="$store.state.farmer" />
 						</div>
 					</router-link>
+					<v-menu v-model="accountMenu" :width="300" :close-on-content-click="false" location="bottom end" scrim>
+						<template #activator="{ props }">
+							<div v-bind="props" class="header-button merge-left">
+								<v-icon>mdi-chevron-down</v-icon>
+							</div>
+						</template>
+						<account-switcher @close="accountMenu = false" />
+					</v-menu>
 				</div>
 			</div>
 		</div>
@@ -176,9 +184,11 @@
 	import { defineAsyncComponent } from 'vue'
 	import { Options, Vue } from 'vue-property-decorator'
 	const ConversationElement = defineAsyncComponent(() => import('@/component/messages/conversation.vue'))
+	const AccountSwitcher = defineAsyncComponent(() => import('@/component/app/account-switcher.vue'))
 
-	@Options({ name: 'lw-header', components: { 'conversation': ConversationElement } })
+	@Options({ name: 'lw-header', components: { 'conversation': ConversationElement, 'account-switcher': AccountSwitcher } })
 	export default class Header extends Vue {
+		accountMenu = false
 
 		readNotifications() {
 			if (this.$store.state.unreadNotifications) {
@@ -202,7 +212,7 @@
 		height: 42px;
 		width: 42px;
 		margin-left: 8px;
-		margin-right: -4px;
+		margin-right: 0;
 	}
 	.header {
 		display: flex;
@@ -235,6 +245,7 @@
 	}
 	.header .button-wrapper {
 		flex-grow: 1;
+		white-space: nowrap;
 	}
 	.header .header-signin {
 		padding-bottom: 5px;
@@ -261,10 +272,15 @@
 			color: #eee;
 			font-size: 26px;
 		}
+		&.merge-left {
+			margin-left: 0;
+			&:before {
+				display: none;
+			}
+		}
 	}
 	.header-button i {
 		vertical-align: text-bottom;
-		padding-right: 3px;
 	}
 	.header .button-wrapper:first-child .header-button {
 		margin-left: 0;
@@ -353,6 +369,8 @@
 	}
 	.dialog {
 		background: var(--background);
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+		border-radius: 4px;
 	}
 	.dialog-items {
 		width: 400px;

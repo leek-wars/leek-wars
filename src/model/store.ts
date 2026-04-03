@@ -17,10 +17,18 @@ import { SchemeTemplate } from './scheme'
 import { NotificationBuilder } from '@/model/notification-builder'
 import { TROPHIES } from './trophies'
 
+export interface AccountInfo {
+	id: number
+	name: string
+	avatar_changed: number
+	connected: boolean
+}
+
 class LeekWarsState {
 	public token: string | null = null
 	public connected: boolean = false
 	public farmer: Farmer | null = null
+	public accounts: AccountInfo[] = []
 	public chat: {[key: string]: Chat} = {}
 	public wsconnected: boolean = false
 	public wsdisconnected: boolean = false
@@ -101,10 +109,23 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				notifications: Notification[],
 				conversations: any[],
 				chats: {id: number, read: boolean, notifications: boolean}[],
-				token: string
+				token: string,
+				accounts?: AccountInfo[]
 			}) {
 			store.commit("reset")
 			state.farmer = data.farmer
+			// Fusionner les comptes du serveur avec les comptes déconnectés en localStorage
+			const serverAccounts: AccountInfo[] = data.accounts || []
+			let savedAccounts: AccountInfo[] = []
+			try { savedAccounts = JSON.parse(localStorage.getItem('accounts') || '[]') } catch { /* ignore corrupt localStorage */ }
+			const merged = [...serverAccounts]
+			for (const saved of savedAccounts) {
+				if (!merged.find(a => a.id === saved.id)) {
+					merged.push({ ...saved, connected: false })
+				}
+			}
+			state.accounts = merged
+			localStorage.setItem('accounts', JSON.stringify(merged))
 			for (const id in state.farmer.leeks) {
 				state.farmer.leeks[id].country = state.farmer.country
 			}
@@ -156,13 +177,20 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			displayWarningMessage()
 		},
 
+		"update-accounts"(state: LeekWarsState, accounts: AccountInfo[]) {
+			state.accounts = accounts
+			localStorage.setItem('accounts', JSON.stringify(accounts))
+		},
+
 		"reset"(state: LeekWarsState) {
 			state.connected = false
 			localStorage.removeItem('connected')
 			localStorage.removeItem('login-attempt')
 			localStorage.removeItem('token')
+			localStorage.removeItem('accounts')
 			state.token = null
 			state.farmer = null
+			state.accounts = []
 			window.__FARMER__ = null
 			LeekWars.setTitleCounter(0)
 			state.notifications = []
