@@ -15,9 +15,19 @@
 							<avatar :farmer="$store.state.farmer" class="farmer-avatar" />
 						</router-link>
 						<div class="right">
-							<router-link to="/farmer" @click.native="clickItem">
-								<div v-if="$store.state.farmer" v-ripple class="text farmer-name">{{ $store.state.farmer.name }}</div>
-							</router-link>
+							<div class="farmer-name-row">
+								<router-link to="/farmer" @click.native="clickItem">
+									<div v-if="$store.state.farmer" v-ripple class="text farmer-name">{{ $store.state.farmer.name }}</div>
+								</router-link>
+								<v-menu v-if="$store.state.accounts.length > 1" v-model="accountMenu" :width="300" :close-on-content-click="false" location="bottom start" scrim>
+									<template #activator="{ props }">
+										<v-btn v-bind="props" icon size="x-small" variant="text" class="account-switcher-btn">
+											<v-icon size="18">mdi-chevron-down</v-icon>
+										</v-btn>
+									</template>
+									<account-switcher @close="accountMenu = false" />
+								</v-menu>
+							</div>
 							<div class="moneys">
 								<router-link v-ripple to="/market" @click.native="clickItem">
 									<span class="hab text"></span><span v-if="$store.state.farmer" class="farmer-habs">{{ $filters.number($store.state.farmer.habs) }}</span>
@@ -219,13 +229,17 @@
 	import { TROPHIES } from '@/model/trophies'
 	import { BOSSES } from '@/model/boss'
 	import { emitter } from '@/model/vue'
+	import { defineAsyncComponent } from 'vue'
+	const AccountSwitcher = defineAsyncComponent(() => import('@/component/app/account-switcher.vue'))
 
 	@Options({
-		name: 'lw-menu'
+		name: 'lw-menu',
+		components: { 'account-switcher': AccountSwitcher }
 	})
 	export default class Menu extends Vue {
 
 		arenaDialog: boolean = false
+		accountMenu: boolean = false
 		TROPHIES = TROPHIES
 		BOSSES = BOSSES
 
@@ -572,6 +586,22 @@
 	.menu .menu-top .text.farmer-name {
 		padding-left: 5px;
 		line-height: 39px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		min-width: 0;
+	}
+	.menu .menu-top .farmer-name-row {
+		display: flex;
+		align-items: center;
+		min-width: 0;
+	}
+	.menu .menu-top .farmer-name-row > a {
+		min-width: 0;
+	}
+	.menu .menu-top .account-switcher-btn {
+		margin-left: 2px;
+		opacity: 0.7;
 	}
 	.menu .menu-top .right {
 		display: inline-block;
