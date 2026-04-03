@@ -208,10 +208,9 @@ import { emitter } from '@/model/vue'
 			emitter.on('chat', this.newMessage)
 			emitter.on('chat-history', this.chatHistory)
 			emitter.on('resize', this.updateScroll)
+			emitter.on('wsconnected', this.update)
 			if (store.state.wsconnected) {
 				this.update()
-			} else {
-				emitter.on('wsconnected', this.update)
 			}
 		}
 

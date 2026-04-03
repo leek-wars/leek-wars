@@ -53,6 +53,7 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
+	import router from '@/router'
 	import { AccountInfo } from '@/model/store'
 	import { Options, Vue } from 'vue-property-decorator'
 
@@ -96,7 +97,7 @@
 				this.$store.commit('connect', { ...data, token })
 				this.switchingId = null
 				this.$emit('close')
-				this.$router.push('/')
+				router.push('/')
 			}).error(() => {
 				this.switchingId = null
 				this.loginForm.login = account.name
@@ -138,12 +139,12 @@
 				if (data.switched) {
 					const token = LeekWars.DEV ? data.token : '$'
 					this.$store.commit('connect', { ...data, token })
-					this.$router.push('/')
+					router.push('/')
 				} else if (data.accounts) {
 					this.$store.commit('update-accounts', data.accounts)
 				} else {
 					this.$store.commit('disconnect')
-					this.$router.push('/login')
+					router.push('/login')
 				}
 			})
 		}
