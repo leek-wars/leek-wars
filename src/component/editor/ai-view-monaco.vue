@@ -374,16 +374,15 @@ export default class AIViewMonaco extends Vue {
 			// Scan TODOs immediately (client-side, no server needed)
 			analyzer.updateTodos(ai)
 
-			// DISABLE AUTO ANALYZE
-			// if (true) return;
-
 			analyzer.analyze(ai, ai.code).then((result) => {
 				// console.log("analyze", result)
 				this.analyzing = false
+				if (!result) return
 
 				for (const entrypoint in result) {
 					const entrypoint_id = parseInt(entrypoint, 10)
 					const entrypointAi = fileSystem.ais[entrypoint_id]
+					if (!entrypointAi) continue
 
 					// Valid?
 					let valid = true
@@ -395,8 +394,10 @@ export default class AIViewMonaco extends Vue {
 				}
 				analyzer.updateTodos(ai)
 				analyzer.updateCount()
+			}).catch(() => {
+				this.analyzing = false
 			})
-		}, 1000)
+		}, 500)
 	}
 
 	public save() {
