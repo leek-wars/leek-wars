@@ -34,9 +34,11 @@
 									<span class="ip" v-if="error.ip">{{ error.ip }}</span>
 								<span v-if="error.user_agent" class="user-agent" :title="error.user_agent">{{ formatUA(error.user_agent) }}</span>
 									<span class="ls" v-if="error.ai_version">LS {{ error.ai_version }}</span>
+									<span class="strict" v-if="error.ai_strict">Strict</span>
 									<span class="ls" v-if="error.ai">IA {{ error.ai }}</span>
 									<!-- <a :href="LeekWars.API + 'ai/download/' + error.ai" target="_blank"><v-btn v-if="error.ai" color="primary" small>IA {{ error.ai }}</v-btn></a> -->
-									<a :href="LeekWars.API + 'error/ai-code/' + error.id" target="_blank"><v-btn v-if="error.ai" color="primary" size="small">IA {{ error.ai }}</v-btn></a>
+									<a :href="LeekWars.API + 'error/ai-code/' + error.id" target="_blank"><v-btn v-if="error.ai" color="primary" size="small">LS {{ error.ai }}</v-btn></a>
+									<a :href="LeekWars.API + 'error/ai-java-code/' + error.id" target="_blank"><v-btn v-if="error.ai" color="secondary" size="small">Java {{ error.ai }}</v-btn></a>
 									<router-link :to="'/fight/' + error.fight"><v-btn v-if="error.fight" size="small">Combat {{ error.fight }}</v-btn></router-link>
 									<a v-if="error.issue" :href="'https://github.com/5pilow/leek-wars-server/issues/' + error.issue" target="_blank"><v-btn size="small" color="success">Issue #{{ error.issue }}</v-btn></a>
 									<v-btn v-else size="small" @click="createIssue(error)">Créer issue</v-btn>
@@ -147,6 +149,14 @@
 				width: 26px;
 				height: 26px;
 			}
+		}
+		.strict {
+			font-size: 11px;
+			font-weight: bold;
+			padding: 2px 6px;
+			border-radius: 3px;
+			background: #e57373;
+			color: white;
 		}
 		.ip {
 			font-family: monospace;
