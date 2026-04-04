@@ -3,6 +3,10 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">
+				<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="tab disabled search-box">
+					<img src="/image/search.png">
+					<input v-model="search" type="text" :placeholder="$t('main.search')" @keyup.stop>
+				</div>
 				<div v-if="!LeekWars.mobile" class="tab action" @click="toggleExpanded">
 					<v-icon>{{ expanded ? 'mdi-arrow-collapse' : 'mdi-arrow-expand' }}</v-icon>
 				</div>
@@ -39,22 +43,22 @@
 		</div>
 		<div class="container">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column8">
-				<panel v-if="$store.state.farmer?.buy_fights_enabled" :title="$t('fights')" icon="mdi-sword-cross">*
+				<panel v-if="$store.state.farmer?.buy_fights_enabled && filteredFightPacks.length" :title="$t('fights')" icon="mdi-sword-cross">
 					<template #content>
 						<loader v-if="!fight_packs.length" />
 						<div v-else class="items fights">
-							<router-link v-for="pack in fight_packs" :key="pack.id" v-ripple :to="'/market/' + pack.name" :farmer-count="0" :leek-count="0" class="item fight-pack">
+							<router-link v-for="pack in filteredFightPacks" :key="pack.id" v-ripple :to="'/market/' + pack.name" :farmer-count="0" :leek-count="0" class="item fight-pack">
 								<img :src="'/image/fight-pack/fight_pack_' + pack.fights + '.png'">
 								<div>{{ pack.title }}</div>
 							</router-link>
 						</div>
 					</template>
 				</panel>
-				<panel :title="$t('weapons') + ' [' + weapons.length + ']'" icon="mdi-pistol">
+				<panel v-if="filteredWeapons.length || !search" :title="$t('weapons') + ' [' + filteredWeapons.length + ']'" icon="mdi-pistol">
 					<template #content>
 						<loader v-if="!weapons.length" />
 						<div v-else class="items weapons">
-							<router-link v-for="weapon in weapons" :key="weapon.id" v-ripple :to="'/market/' + weapon.name.replace('weapon_', '')" class="item weapon" :class="{toohigh: weapon.level > max_level}">
+							<router-link v-for="weapon in filteredWeapons" :key="weapon.id" v-ripple :to="'/market/' + weapon.name.replace('weapon_', '')" class="item weapon" :class="{toohigh: weapon.level > max_level}">
 								<img :src="'/image/' + weapon.name.replace('_', '/') + '.png'">
 								<div v-if="items[weapon.id].leek_count || items[weapon.id].farmer_count" class="counts">
 									<span v-if="items[weapon.id].leek_count" class="leek-count">{{ items[weapon.id].leek_count }}</span>
@@ -64,7 +68,7 @@
 						</div>
 					</template>
 				</panel>
-				<panel :title="$t('chips') + ' [' + chips.length + ']'" icon="mdi-chip">
+				<panel v-if="filteredChips.length || !search" :title="$t('chips') + ' [' + filteredChips.length + ']'" icon="mdi-chip">
 					<template #actions>
 						<div class="button flat" @click="updateChipMode">
 							<v-icon v-if="chipMode === 'type'">mdi-sort-descending</v-icon>
@@ -73,8 +77,8 @@
 					</template>
 					<template #content>
 						<loader v-if="!chips.length" />
-						<div v-else-if="chipMode === 'level'" class="items chips">
-							<router-link v-for="chip in chips" :key="chip.id" v-ripple :to="'/market/' + chip.name" class="item chip" :class="{toohigh: chip.level > max_level}">
+						<div v-else-if="chipMode === 'level' || search" class="items chips">
+							<router-link v-for="chip in filteredChips" :key="chip.id" v-ripple :to="'/market/' + chip.name" class="item chip" :class="{toohigh: chip.level > max_level}">
 								<img :src="'/image/chip/' + chip.name + '.png'">
 								<div v-if="items[chip.id].leek_count || items[chip.id].farmer_count" class="counts">
 									<span v-if="items[chip.id].leek_count" class="leek-count">{{ items[chip.id].leek_count }}</span>
@@ -98,11 +102,11 @@
 						</div>
 					</template>
 				</panel>
-				<panel :title="$t('potions') + ' [' + potions.length + ']'" icon="mdi-bottle-tonic-plus-outline">
+				<panel v-if="filteredPotions.length || !search" :title="$t('potions') + ' [' + filteredPotions.length + ']'" icon="mdi-bottle-tonic-plus-outline">
 					<template #content>
 						<loader v-if="!potions.length" />
 						<div v-else class="items potions">
-							<router-link v-for="potion in potions" :key="potion.id" v-ripple :to="'/market/' + potion.name" class="item potion" :class="{toohigh: potion.level > max_level}">
+							<router-link v-for="potion in filteredPotions" :key="potion.id" v-ripple :to="'/market/' + potion.name" class="item potion" :class="{toohigh: potion.level > max_level}">
 								<img :src="'/image/potion/' + potion.name + '.png'">
 								<div v-if="items[potion.id].leek_count || items[potion.id].farmer_count" class="counts">
 									<span v-if="items[potion.id].leek_count" class="leek-count">{{ items[potion.id].leek_count }}</span>
@@ -112,11 +116,11 @@
 						</div>
 					</template>
 				</panel>
-				<panel :title="$t('hats') + ' [' + hats.length + ']'" icon="mdi-hat-fedora">
+				<panel v-if="filteredHats.length || !search" :title="$t('hats') + ' [' + filteredHats.length + ']'" icon="mdi-hat-fedora">
 					<template #content>
 						<loader v-if="!hats.length" />
 						<div v-else class="items hats">
-							<router-link v-for="hat in hats" :key="hat.id" v-ripple :to="'/market/' + hat.name" class="item hat" :class="{toohigh: hat.level > max_level}">
+							<router-link v-for="hat in filteredHats" :key="hat.id" v-ripple :to="'/market/' + hat.name" class="item hat" :class="{toohigh: hat.level > max_level}">
 								<img :src="'/image/hat/' + hat.name + '.png?2'">
 								<div v-if="items[hat.id].leek_count || items[hat.id].farmer_count" class="counts">
 									<span v-if="items[hat.id].leek_count" class="leek-count">{{ items[hat.id].leek_count }}</span>
@@ -126,11 +130,11 @@
 						</div>
 					</template>
 				</panel>
-				<panel :title="$t('pomps') + ' [' + pomps.length + ']'" icon="mdi-auto-fix">
+				<panel v-if="filteredPomps.length || !search" :title="$t('pomps') + ' [' + filteredPomps.length + ']'" icon="mdi-auto-fix">
 					<template #content>
 						<loader v-if="!pomps.length" />
 						<div v-else class="items pomps">
-							<router-link v-for="pomp in pomps" :key="pomp.id" :to="'/market/' + pomp.name" class="item pomp" :class="{toohigh: pomp.level > max_level}">
+							<router-link v-for="pomp in filteredPomps" :key="pomp.id" :to="'/market/' + pomp.name" class="item pomp" :class="{toohigh: pomp.level > max_level}">
 								<img :src="'/image/pomp/' + pomp.name + '.png'">
 								<div v-if="items[pomp.id].leek_count || items[pomp.id].farmer_count" class="counts">
 									<span v-if="items[pomp.id].leek_count" class="leek-count">{{ items[pomp.id].leek_count }}</span>
@@ -360,6 +364,7 @@
 		pomps: PompTemplate[] = []
 		request: any = null
 		onKeyDown: ((e: KeyboardEvent) => void) | null = null
+		search: string = ''
 
 		get max_level() {
 			if (store.state.farmer) {
@@ -368,24 +373,61 @@
 			return 0
 		}
 
+		matchesSearch(item: ItemTemplate): boolean {
+			if (!this.search) { return true }
+			const query = this.search.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+			const name = this.translateName(item).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+			const rawName = item.name.replace(/^(weapon|chip|potion|hat|pomp)_/, '').toLowerCase()
+			return name.includes(query) || rawName.includes(query)
+		}
+
+		get filteredFightPacks() {
+			return this.fight_packs.filter(p => this.matchesSearch(p))
+		}
+		get filteredWeapons() {
+			return this.weapons.filter(w => this.matchesSearch(this.items[w.id]))
+		}
+		get filteredChips() {
+			return this.chips.filter(c => this.matchesSearch(this.items[c.id]))
+		}
+		get filteredPotions() {
+			return this.potions.filter(p => this.matchesSearch(this.items[p.id]))
+		}
+		get filteredHats() {
+			return this.hats.filter(h => this.matchesSearch(this.items[h.id]))
+		}
+		get filteredPomps() {
+			return this.pomps.filter(p => this.matchesSearch(this.items[p.id]))
+		}
+
+		@Watch('search')
+		onSearchChange() {
+			if (!this.search) { return }
+			const first = this.filteredFightPacks[0] || this.filteredWeapons[0] || this.filteredChips[0] || this.filteredPotions[0] || this.filteredHats[0] || this.filteredPomps[0]
+			if (first) {
+				const name = first.name.replace('weapon_', '')
+				this.$router.replace('/market/' + name)
+			}
+		}
+
 		get orderedItemNames(): string[] {
 			const names: string[] = []
-			for (const pack of this.fight_packs) {
+			for (const pack of this.filteredFightPacks) {
 				names.push(pack.name)
 			}
-			for (const weapon of this.weapons) {
+			for (const weapon of this.filteredWeapons) {
 				names.push(weapon.name.replace('weapon_', ''))
 			}
-			for (const chip of this.chips) {
+			for (const chip of this.filteredChips) {
 				names.push(chip.name)
 			}
-			for (const potion of this.potions) {
+			for (const potion of this.filteredPotions) {
 				names.push(potion.name)
 			}
-			for (const hat of this.hats) {
+			for (const hat of this.filteredHats) {
 				names.push(hat.name)
 			}
-			for (const pomp of this.pomps) {
+			for (const pomp of this.filteredPomps) {
 				names.push(pomp.name)
 			}
 			return names
@@ -477,6 +519,7 @@
 				if (e.code !== 'ArrowLeft' && e.code !== 'ArrowRight' && e.code !== 'ArrowUp' && e.code !== 'ArrowDown') { return }
 				if (!this.selectedItem) { return }
 				if (this.buyDialog || this.buyCrystalsDialog || this.sellDialog || this.unseenItemDialog) { return }
+				if (document.activeElement instanceof HTMLInputElement) { return }
 				const names = this.orderedItemNames
 				if (!names.length) { return }
 				const currentName = this.$route.params.item as string
@@ -913,6 +956,16 @@
 				width: 75px;
 			}
 		}
+	}
+	.search-box img {
+		cursor: pointer;
+	}
+	#app.app .tabs {
+		width: 100%;
+	}
+	#app.app .search-box {
+		width: 100%;
+		input { flex: 1; }
 	}
 	.menu {
 		display: grid;
