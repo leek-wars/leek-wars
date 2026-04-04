@@ -108,6 +108,12 @@
 							<h2>Grafana <v-icon>mdi-open-in-new</v-icon></h2>
 						</div>
 					</a>
+					<a target="_blank" rel="noopener" href="https://umami.leekwars.com/websites/493ffc4a-c7bd-45b1-b2f2-d61af7310749">
+						<div v-ripple class="section card">
+							<v-icon>mdi-chart-bar</v-icon>
+							<h2>Umami <v-icon>mdi-open-in-new</v-icon></h2>
+						</div>
+					</a>
 					<a target="_blank" rel="noopener" href="https://www.paypal.com/webapps/business/">
 						<div v-ripple class="section card">
 							<v-icon>mdi-currency-eur</v-icon>
