@@ -1,6 +1,6 @@
 <template>
 	<div v-show="LeekWars.squares.squares.length" class="squares">
-		<router-link v-for="square in LeekWars.squares.squares" :key="square.id" v-ripple :to="square.link" class="square card" :class="{[square.clazz]: square.clazz}" @click.native="click(square)">
+		<component v-for="square in LeekWars.squares.squares" :is="square.link ? 'router-link' : 'div'" :key="square.id" v-ripple :to="square.link" class="square card" :class="{[square.clazz]: square.clazz}" @click.native="click(square)">
 			<v-icon v-if="square.icon" :class="{padding: square.padding}" class="image">{{ square.image }}</v-icon>
 			<img v-else :src="square.image" :class="{padding: square.padding}" class="image">
 			<div class="wrapper">
@@ -10,7 +10,7 @@
 			<span v-if="square.resultIcon && LeekWars.notifsResults" class="result">
 				<v-icon :class="square.resultIcon">{{ square.resultIcon }}</v-icon>
 			</span>
-		</router-link>
+		</component>
 	</div>
 </template>
 
