@@ -351,6 +351,10 @@ class Socket {
 					getAnalyzer().then(a => a.analyzeResult(data))
 					break
 				}
+				case SocketMessage.EDITOR_ANALYZE_ERROR: {
+					getAnalyzer().then(a => a.analyzeError())
+					break
+				}
 				case SocketMessage.EDITOR_HOVER: {
 					getAnalyzer().then(a => a.hoverResult(data))
 					break

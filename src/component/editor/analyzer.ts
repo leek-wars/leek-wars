@@ -26,7 +26,8 @@ class Analyzer {
 	public todo_count: number = 0
 	public promise!: Promise<any>
 	public requestID: number = 0
-	public analyzeResolve!: (value: unknown) => any
+	public analyzeResolve!: ((value: unknown) => any) | null
+	private analyzeVersion: number = 0
 	public hoverResolve!: (value: unknown) => any
 	public lastHover: any
 	public completeResolve: {[key: number]: (value: unknown) => any} = {}
@@ -98,10 +99,18 @@ class Analyzer {
 			return Promise.reject()
 		}
 
+		const version = ++this.analyzeVersion
+
 		LeekWars.socket.send([SocketMessage.EDITOR_ANALYZE, ai.id, code])
 
 		return new Promise<any>((resolve, reject) => {
-			this.analyzeResolve = resolve
+			this.analyzeResolve = (data: any) => {
+				if (version === this.analyzeVersion) {
+					resolve(data)
+				}
+				// Stale result: ignore but don't clear resolve,
+				// so the next (correct) result can still resolve.
+			}
 		})
 	}
 
@@ -109,6 +118,12 @@ class Analyzer {
 		if (this.analyzeResolve) {
 			// console.timeEnd('hover')
 			this.analyzeResolve(data)
+		}
+	}
+
+	public analyzeError() {
+		if (this.analyzeResolve) {
+			this.analyzeResolve(null)
 		}
 	}
 
