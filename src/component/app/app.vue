@@ -62,7 +62,7 @@
 
 			<visitor-banner v-if="!$store.state.connected" />
 
-				<img v-if="LeekWars.clover" :style="{top: LeekWars.cloverTop + 'px', left: LeekWars.cloverLeft + 'px'}" class="clover" src="/image/clover.png" @click="clickClover">
+				<img v-if="LeekWars.clover" :style="{top: LeekWars.cloverTop + 'px', left: LeekWars.cloverLeft + 'px'}" :class="{collected: cloverCollected}" class="clover" src="/image/clover.png" @click="clickClover" @animationend="cloverCollectedEnd">
 
 				<!-- <didactitiel v-if="didactitiel_enabled" v-model="didactitiel" /> -->
 
@@ -292,6 +292,7 @@
 	let mouseX = 0
 	let mouseY = 0
 	let cloverSpeed = 200
+	const cloverCollected = ref(false)
 	const verifyPopupDismissed = ref(false)
 	const verifyPopupForced = ref(false)
 	const checkEmailReminderDismissed = ref(false)
@@ -706,11 +707,18 @@
 			cloverSpeed = 5
 			updateClover()
 			updateCloverPosition()
-		} else {
+		} else if (!cloverCollected.value) {
 			LeekWars.track('clover')
 			LeekWars.socket.send([SocketMessage.GET_LUCKY])
-			LeekWars.clover = false
+			// Le trèfle disparaît à la fin de l'animation, pas au délai d'apparition.
+			if (LeekWars.cloverTimeout) { clearTimeout(LeekWars.cloverTimeout) }
+			cloverCollected.value = true
 		}
+	}
+
+	function cloverCollectedEnd() {
+		cloverCollected.value = false
+		LeekWars.clover = false
 	}
 
 	function updateClover() {
@@ -953,6 +961,14 @@
 		cursor: pointer;
 		width: 40px;
 		height: 40px;
+	}
+	.clover.collected {
+		pointer-events: none;
+		animation: clover-collect 1s ease forwards;
+	}
+	@keyframes clover-collect {
+		10% { transform: scale(1.5); }
+		100% { transform: rotate(950deg) scale(0.1); opacity: 0; }
 	}
 	.console .title .spacer {
 		flex: 1;
