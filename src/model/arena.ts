@@ -42,6 +42,9 @@ class Arena {
 		localStorage.removeItem('in-arena')
 		localStorage.removeItem('arena-preference')
 		localStorage.removeItem('arena-colossus')
+		this.reset()
+	}
+	reset() {
 		LeekWars.setTitleTag(null)
 		this.leeks = []
 		this.enabled = false

@@ -111,7 +111,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				token: string,
 				accounts?: AccountInfo[]
 			}) {
-			LeekWars.arena.leave()
+			LeekWars.arena.reset()
 			LeekWars.bossSquads.leaveSquad()
 			store.commit("reset")
 			state.farmer = data.farmer
@@ -171,7 +171,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				}
 			}
 			localStorage.removeItem('garden/category') // On revient à la catégorie potager par défaut
-			LeekWars.arena.leave()
+			LeekWars.arena.reset()
 			LeekWars.bossSquads.leaveSquad()
 			LeekWars.socket.disconnect()
 			console.clear()

@@ -49,7 +49,8 @@
 		joinArena() {
 			const leek = this.eligibleLeek
 			if (leek) {
-				LeekWars.arena.register(leek)
+				const preference = parseInt(localStorage.getItem('arena/preference') || '-1', 10)
+				LeekWars.arena.register(leek, preference)
 			}
 		}
 	}
