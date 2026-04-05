@@ -5,7 +5,7 @@
 			<div class="select-icon select">
 				<v-select v-model="icon" :items="icons" item-value="id" item-title="id" hide-details density="comfortable" variant="solo">
 					<template #selection>
-						<img v-if="icon" :src="'/image/trophy/' + TROPHIES[icon - 1].code + '.svg'">
+						<img v-if="icon" :src="'/image/trophy/' + LeekWars.trophies[icon - 1].code + '.svg'">
 					</template>
 					<template #item="{ props: itemProps, item }">
 						<v-list-item v-bind="itemProps">
@@ -39,7 +39,7 @@
 						</template>
 					</v-select>
 				</div>
-				<div v-if="$i18n.locale === 'fr' && (noun && TROPHIES[noun - 1].noun_translation === 3) || (adjective && TROPHIES[adjective - 1].adj_translation === 3)" class="select select-gender">
+				<div v-if="$i18n.locale === 'fr' && (noun && LeekWars.trophies[noun - 1].noun_translation === 3) || (adjective && LeekWars.trophies[adjective - 1].adj_translation === 3)" class="select select-gender">
 					<v-select v-model="gender" :items="genders" item-value="id" item-title="code" hide-details density="comfortable" variant="solo">
 						<template #selection>
 							<v-icon v-if="gender" :class="genders[gender - 1].code">mdi-gender-{{ genders[gender - 1].code }}</v-icon>
@@ -81,7 +81,6 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { TROPHIES } from '@/model/trophies'
 	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import LWTitle from '@/component/title/title.vue'
 
@@ -89,7 +88,7 @@
 	export default class TitlePicker extends Vue {
 
 		@Prop() title!: number[]
-		TROPHIES = TROPHIES
+		TROPHIES = LeekWars.trophies
 		icon: any = null
 		noun: number = 0
 		adjective: number = 0
@@ -106,7 +105,7 @@
 			return [{code: '', id: 0, t: '', rarity: 0}].concat(this.allNouns.filter((w: any) => {
 				return w.id !== this.adjective
 			}).map((w: any) => {
-				const trophy = TROPHIES[w.id - 1]
+				const trophy = LeekWars.trophies[w.id - 1]
 				const gender_code = this.gender === 2 && (trophy.noun_translation & 2) && ((trophy.noun_gender & 2) === 0) ? '_f' : ''
 				return {code: w.code, id: w.id, t: this.$t('trophy.' + w.code + gender_code) as string, rarity: w.rarity}
 			}).sort((a: any, b: any) => a.t.localeCompare(b.t)))
@@ -115,7 +114,7 @@
 			return [{code: '', id: 0, t: '', rarity: 0}].concat(this.allAdjectives.filter((w: any) => {
 				return w.id !== this.noun
 			}).map((w: any) => {
-				const trophy = TROPHIES[w.id - 1]
+				const trophy = LeekWars.trophies[w.id - 1]
 				const gender_code = this.gender === 2 && (trophy.adj_translation & 2) && ((trophy.adj_gender & 2) === 0) ? '_f' : ''
 				return {code: w.code, id: w.id, t: this.$t('trophy.' + w.code + gender_code) as string, rarity: w.rarity}
 			}).sort((a: any, b: any) => a.t.localeCompare(b.t)))
@@ -136,7 +135,7 @@
 
 		changeNoun() {
 			if (this.noun) {
-				const trophy = TROPHIES[this.noun - 1]
+				const trophy = LeekWars.trophies[this.noun - 1]
 				if (this.gender === 0) {
 					this.gender = (trophy.noun_translation & 1) ? 1 : 2
 				} else if ((trophy.noun_translation & this.gender) === 0) {

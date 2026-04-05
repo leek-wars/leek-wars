@@ -15,7 +15,6 @@ import { displayWarningMessage } from './emitter'
 import { Weapon } from './weapon'
 import { SchemeTemplate } from './scheme'
 import { NotificationBuilder } from '@/model/notification-builder'
-import { TROPHIES } from './trophies'
 
 export interface AccountInfo {
 	id: number
@@ -530,7 +529,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 					if (state.farmer && data.type === NotificationType.TROPHY_UNLOCKED) {
 						delete state.farmer.trophies_list
 						const trophy = parseInt(data.parameters[0], 10)
-						const trophyTemplate = TROPHIES[trophy - 1]
+						const trophyTemplate = LeekWars.trophies[trophy - 1]
 						if (trophyTemplate) {
 							state.farmer!.rewards.push({
 								trophy,

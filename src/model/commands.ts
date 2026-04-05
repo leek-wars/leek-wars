@@ -1,6 +1,5 @@
 import { LeekWars } from "@/model/leekwars"
 import { CHIPS } from "./chips"
-import { CONSTANTS } from "./constants"
 import { FUNCTIONS } from "./functions"
 
 // URLs for /encyclo and /doc
@@ -213,7 +212,7 @@ const Commands = {
 				doneFunc[name] = true
 			}
 		}
-		for (const constant of CONSTANTS) {
+		for (const constant of LeekWars.constants) {
 			docCommand.options.push({name: constant.name, nameLower: constant.name.toLowerCase(), description: "Ajoute un lien vers la constante \"" + constant.name + "\" de la documentation au message"})
 		}
 	},

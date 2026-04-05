@@ -183,12 +183,105 @@ function yamlPlugin(): Plugin {
 	}
 }
 
+// Plugin to inject __DATA__ in dev mode by fetching from the API
+// Uses a middleware to read cookies and diff like the PHP server does
+function gameDataPlugin(): Plugin {
+	let allData: Record<string, any> | null = null
+	let allHashes: Record<string, string> = {}
+	let masterVersion = ''
+	let allDataJson: Record<string, string> = {} // Pre-serialized per type
+	let lastInjection = 'null' // Shared between middleware and transformIndexHtml
+
+	const api = (process.env.LEEKWARS_LOCAL ? 'http://localhost:8500' : 'https://leekwars.com') + '/api/'
+
+	async function loadData() {
+		const response = await fetch(api + 'data/get-all')
+		const json = await response.json()
+		// Only update if master version changed
+		if (json.master_version !== masterVersion) {
+			allData = json.data
+			allHashes = json.hashes
+			masterVersion = json.master_version
+			allDataJson = {}
+			for (const type of Object.keys(allData!)) {
+				allDataJson[type] = JSON.stringify(allData![type])
+			}
+			console.log('[game-data] Loaded ' + Object.keys(allData!).length + ' types, master=' + masterVersion)
+		}
+	}
+
+	return {
+		name: 'game-data-inject',
+		apply: 'serve',
+
+		configureServer(server) {
+			// Middleware that intercepts HTML page requests and injects __DATA__
+			server.middlewares.use(async (req, res, next) => {
+				// Only intercept page navigations (not assets, HMR, etc.)
+				const accept = req.headers.accept || ''
+				if (!accept.includes('text/html')) return next()
+
+				try {
+					await loadData()
+				} catch (e) {
+					console.error('[game-data] Fetch failed:', e)
+					return next()
+				}
+
+				// Parse cookie
+				const cookies: Record<string, string> = {}
+				for (const part of (req.headers.cookie || '').split(';')) {
+					const [k, ...v] = part.trim().split('=')
+					if (k) cookies[k.trim()] = v.join('=')
+				}
+
+				// Compare per-type hashes from cookie (ignore master version for comparison)
+				const dataCookie = cookies['data_hashes'] || ''
+				let clientHashes: Record<string, string> = {}
+				if (dataCookie) {
+					const idx = dataCookie.indexOf(':')
+					if (idx > 0) {
+						for (const pair of dataCookie.substring(idx + 1).split(',')) {
+							const eq = pair.indexOf('=')
+							if (eq > 0) clientHashes[pair.substring(0, eq)] = pair.substring(eq + 1)
+						}
+					}
+				}
+
+				// Diff
+				const changedParts: string[] = []
+				for (const type of Object.keys(allHashes)) {
+					if (clientHashes[type] !== allHashes[type]) {
+						changedParts.push(JSON.stringify(type) + ':' + allDataJson[type])
+					}
+				}
+
+				if (changedParts.length === 0) {
+					lastInjection = 'null'
+					console.log('[game-data] Cookie matches, __DATA__=null')
+				} else {
+					const mv = JSON.stringify(masterVersion)
+					const hashes = JSON.stringify(allHashes)
+					lastInjection = `{"master_version":${mv},"hashes":${hashes},"data":{${changedParts.join(',')}}}`
+					console.log('[game-data] Injecting ' + changedParts.length + '/' + Object.keys(allHashes).length + ' changed types')
+				}
+				next()
+			})
+		},
+
+		transformIndexHtml(html) {
+			return html.replace('var __DATA__=null', 'var __DATA__=' + lastInjection)
+		}
+	}
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
 	plugins: [
 		multiLanguagePlugin(),
 		i18nPlugin(),
 		yamlPlugin(),
+		gameDataPlugin(),
 		vue(),
 		vuetify({
 			autoImport: true

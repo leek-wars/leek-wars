@@ -24,6 +24,7 @@ import { SCHEMES } from './schemes'
 import { COMPONENTS } from './components'
 import { WEAPONS } from './weapons'
 import { BossSquads } from './boss-squads'
+import { loadGameData as loadGameDataFromCache } from './gamedata'
 import { nextTick, reactive } from 'vue'
 
 const DEV = window.location.port === '8080'
@@ -714,13 +715,17 @@ const LeekWars = reactive({
 		nextTick(() => LeekWars.didactitial_visible = true)
 	},
 	socket: new Socket(),
-	hats: Object.freeze(HATS),
-	pomps: Object.freeze(POMPS),
-	schemes: Object.freeze(SCHEMES),
-	weapons: Object.freeze(WEAPONS),
-	weaponByName: Object.freeze(WEAPON_BY_NAME),
-	items: Object.freeze(ITEMS),
-	chipTemplates: Object.freeze(CHIP_TEMPLATES),
+	hats: HATS as any,
+	pomps: POMPS as any,
+	schemes: SCHEMES as any,
+	weapons: WEAPONS as any,
+	weaponByName: WEAPON_BY_NAME as any,
+	items: ITEMS as any,
+	chipTemplates: CHIP_TEMPLATES as any,
+	trophies: [] as any,
+	constants: [] as any,
+	functions: [] as any,
+	chips: {} as any,
 	trophyCategories: Object.freeze(TROPHY_CATEGORIES),
 	trophyCategoriesById: Object.freeze([...TROPHY_CATEGORIES].sort((a, b) => a.id - b.id)),
 	trophyCategoriesIcons: Object.freeze([
@@ -1206,4 +1211,52 @@ function goToRanking(type: string, order: string, id: number = 0) {
 	})
 }
 
-export { LeekWars, Language }
+/**
+ * Charge les données de jeu depuis __DATA__ (inline HTML) + IndexedDB, et met à jour l'objet LeekWars.
+ * À appeler au boot de l'app, juste après le mount.
+ */
+async function loadGameData() {
+	console.log('[GameData] Loading...')
+	const data = await loadGameDataFromCache()
+	if (!data || Object.keys(data).length === 0) {
+		console.log('[GameData] No data to apply, keeping bundled static data')
+		return
+	}
+
+	const applied: string[] = []
+
+	// Remplacer les données statiques par celles du cache/serveur
+	if (data.items) { LeekWars.items = Object.freeze(data.items); applied.push('items') }
+	if (data.weapons) {
+		LeekWars.weapons = Object.freeze(data.weapons)
+		LeekWars.weaponByName = Object.freeze(weaponByName(data.weapons))
+		applied.push('weapons')
+	}
+	if (data.hats) { LeekWars.hats = Object.freeze(data.hats); applied.push('hats') }
+	if (data.pomps) { LeekWars.pomps = Object.freeze(data.pomps); applied.push('pomps') }
+	if (data.potions) {
+		LeekWars.potions = Object.freeze(data.potions)
+		LeekWars.potionByName = Object.freeze(potionByName(data.potions))
+		LeekWars.potionsBySkin = Object.freeze(potionsBySkin(data.potions))
+		applied.push('potions')
+	}
+	if (data.schemes) { LeekWars.schemes = Object.freeze(data.schemes); applied.push('schemes') }
+	if (data.components) { LeekWars.components = Object.freeze(data.components); applied.push('components') }
+	if (data.hat_templates) { LeekWars.hatTemplates = Object.freeze(data.hat_templates); applied.push('hat_templates') }
+	if (data.chip_templates) { LeekWars.chipTemplates = Object.freeze(data.chip_templates); applied.push('chip_templates') }
+	if (data.summon_templates) { LeekWars.summonTemplates = Object.freeze(data.summon_templates); applied.push('summon_templates') }
+	if (data.trophy_categories) {
+		LeekWars.trophyCategories = Object.freeze(data.trophy_categories)
+		LeekWars.trophyCategoriesById = Object.freeze([...data.trophy_categories].sort((a: any, b: any) => a.id - b.id))
+		applied.push('trophy_categories')
+	}
+	if (data.complexities) { LeekWars.complexities = Object.freeze(data.complexities); applied.push('complexities') }
+	if (data.trophies) { LeekWars.trophies = Object.freeze(data.trophies); applied.push('trophies') }
+	if (data.constants) { LeekWars.constants = Object.freeze(data.constants); applied.push('constants') }
+	if (data.functions) { LeekWars.functions = Object.freeze(data.functions); applied.push('functions') }
+	if (data.chips) { LeekWars.chips = Object.freeze(data.chips); applied.push('chips') }
+
+	console.log(`[GameData] Applied ${applied.length} types:`, applied)
+}
+
+export { LeekWars, Language, loadGameData }

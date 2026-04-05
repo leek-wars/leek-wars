@@ -73,7 +73,6 @@
 	import { LSFunction } from '@/model/function'
 	import { FUNCTIONS } from '@/model/functions'
 	import { FUNCTION_BY_ID } from '@/model/function_by_id'
-	import { CONSTANTS } from '@/model/constants'
 	import { CONSTANT_BY_ID } from '@/model/constant_by_id'
 	import { FUNCTION_CATEGORIES } from '@/model/function_categories'
 	import { i18n, mixins } from '@/model/i18n'
@@ -195,12 +194,12 @@
 					}
 				})
 			}
-			for (const item of CONSTANTS) {
+			for (const item of LeekWars.constants) {
 				if (item.replacement) {
 					CONSTANT_BY_ID[item.replacement].replacer = item
 				}
 			}
-			for (const item of CONSTANTS) {
+			for (const item of LeekWars.constants) {
 				this.items.push(item)
 				item.lower_name = item.name.toLowerCase()
 				item.id = id++

@@ -3,7 +3,7 @@
 
 import CodeMirror from 'codemirror'
 import { FUNCTIONS } from '@/model/functions'
-import { CONSTANTS } from '@/model/constants'
+import { LeekWars } from '@/model/leekwars'
 
   CodeMirror.defineMode("leekscript", function(config, parserConfig) {
 
@@ -48,7 +48,7 @@ import { CONSTANTS } from '@/model/constants'
         // "int": X, "real": X, "bool": X, "string": X, "any": X, "array": X, "map": X, "number": X,
         // "synchronized": X, "throws": X, "transient": X, "void": X, "volatile": X, "yield": X
       };
-        for (const constant of CONSTANTS) {
+        for (const constant of LeekWars.constants) {
             k[constant.name] = {type: "variable", style: "lsconst"}
         }
         for (const fun of FUNCTIONS) {

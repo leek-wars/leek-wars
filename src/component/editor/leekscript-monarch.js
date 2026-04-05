@@ -1,5 +1,5 @@
 import { FUNCTIONS } from '@/model/functions'
-import { CONSTANTS } from '@/model/constants'
+import { LeekWars } from '@/model/leekwars'
 
 export default {
 
@@ -22,7 +22,7 @@ export default {
 		'true', 'false', 'null', 'NaN', 'Infinity'
 	],
 
-	lsConstants: CONSTANTS.map(c => c.name),
+	lsConstants: LeekWars.constants.map(c => c.name),
 	lsFunctions: FUNCTIONS.filter(f => !f.deprecated).map(f => f.name),
 	lsFunctionsDeprecated: FUNCTIONS.filter(f => f.deprecated).map(f => f.name),
 

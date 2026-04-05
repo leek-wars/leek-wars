@@ -226,7 +226,6 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
-	import { TROPHIES } from '@/model/trophies'
 	import { BOSSES } from '@/model/boss'
 	import { emitter } from '@/model/vue'
 	import { defineAsyncComponent } from 'vue'
@@ -240,7 +239,7 @@
 
 		arenaDialog: boolean = false
 		accountMenu: boolean = false
-		TROPHIES = TROPHIES
+		TROPHIES = LeekWars.trophies
 		BOSSES = BOSSES
 
 		get isHomePage() {

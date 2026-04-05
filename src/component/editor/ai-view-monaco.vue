@@ -31,7 +31,6 @@ import DocumentationConstant from '../documentation/documentation-constant.vue'
 import DocumentationFunction from '../documentation/documentation-function.vue'
 import Javadoc from './javadoc.vue'
 import { FUNCTIONS } from '@/model/functions';
-import { CONSTANTS } from '@/model/constants';
 import { createApp, markRaw, nextTick } from 'vue';
 import { create } from 'domain';
 import { i18n } from '@/model/i18n';
@@ -197,7 +196,7 @@ export default class AIViewMonaco extends Vue {
 						suggestionWidget.value._details._placeAtAnchor(suggestionWidget.value._details._anchorBox, { width: 500, height: doc.$el.clientHeight + 10 }, true)
 					})
 				}
-				const constant = CONSTANTS.find(c => c.name === docs.innerText)
+				const constant = LeekWars.constants.find(c => c.name === docs.innerText)
 				if (constant) {
 					const doc = createApp(DocumentationConstant, { constant })
 						.mixin({ data() { return { LeekWars } }})
@@ -260,7 +259,7 @@ export default class AIViewMonaco extends Vue {
 					hoverController._contentWidget.widget._resize({ width: 500, height: doc.$el.clientHeight + 40 })
 				})
 			}
-			const constant = CONSTANTS.find(c => c.name === firstRow.innerText)
+			const constant = LeekWars.constants.find(c => c.name === firstRow.innerText)
 			if (constant) {
 				firstRow.style.display = 'none'
 				const doc = createApp(DocumentationConstant, { constant })

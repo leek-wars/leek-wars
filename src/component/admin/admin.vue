@@ -24,6 +24,10 @@
 							<h2>Memcached <v-icon>mdi-open-in-new</v-icon></h2>
 						</div>
 					</a>
+					<div v-ripple class="section card" @click="refreshGameData">
+						<v-icon>mdi-database-refresh</v-icon>
+						<h2>Refresh game data</h2>
+					</div>
 					<router-link to="/admin/services">
 						<div v-ripple class="section card">
 							<v-icon>mdi-api</v-icon>
@@ -164,7 +168,6 @@
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { NotificationBuilder } from '@/model/notification-builder'
-	import { TROPHIES } from '@/model/trophies'
 	import { defineAsyncComponent, nextTick } from 'vue'
 	import { Options, Vue } from 'vue-property-decorator'
 	const Didactitiel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`))
@@ -183,6 +186,14 @@
 			LeekWars.setTitle('Admin')
 		}
 
+		refreshGameData() {
+			LeekWars.post('data/refresh').then(() => {
+				LeekWars.toast("Game data refreshed!")
+			}).error(() => {
+				LeekWars.toast("Failed to refresh game data")
+			})
+		}
+
 		square() {
 			const result = Math.random() < 0.33 ? 0 : (Math.random() < 0.5 ? 1 : -1)
 			const data = { id: 51568168, type: 2, parameters: ["192", "32139522", "Mimi25", '' + result], date: 1599731275 }
@@ -197,7 +208,7 @@
 		}
 
 		squareTrophy() {
-			const trophy = TROPHIES[Math.random() * TROPHIES.length | 0]
+			const trophy = LeekWars.trophies[Math.random() * LeekWars.trophies.length | 0]
 			const data = { date: 1482046364, id: 32098724, parameters: [trophy.id], read: true, type: 11 }
 			const notification = NotificationBuilder.build(data)
 			LeekWars.squares.addFromNotification(notification)

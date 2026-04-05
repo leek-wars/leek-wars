@@ -3,7 +3,6 @@ import { ItemType } from "./item"
 import { LeekWars } from "./leekwars"
 import { Notification, NotificationType } from "./notification"
 import { store } from "./store"
-import { TROPHIES } from "./trophies"
 
 class NotificationBuilder {
 
@@ -71,7 +70,7 @@ class NotificationBuilder {
 			return new Notification(data, "/farmer", "tournament_fail.png", [name])
 		} else if (type === NotificationType.TROPHY_UNLOCKED) {
 			const trophyID = parseInt(params[0], 10)
-			const trophy = TROPHIES[trophyID - 1]
+			const trophy = LeekWars.trophies[trophyID - 1]
 			if (!trophy) {
 				return new Notification(data, "/trophies", "mdi-trophy", ["#" + trophyID])
 			}

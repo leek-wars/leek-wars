@@ -616,7 +616,6 @@
 	import TournamentsHistory from '@/component/history/tournaments-history.vue'
 	import TitlePicker from '@/component/title/title-picker.vue'
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
-	import { TROPHIES } from '@/model/trophies'
 	import LWTitle from '@/component/title/title.vue'
 import { emitter } from '@/model/vue'
 	import { Line } from 'vue-chartjs'
@@ -652,13 +651,13 @@ import { emitter } from '@/model/vue'
 		giveTrophyID: number | null = null
 		giveTrophyFight: number | null = null
 		giveTrophies = [
-			TROPHIES[173 - 1],
-			TROPHIES[177 - 1],
-			TROPHIES[166 - 1],
-			TROPHIES[194 - 1],
-			TROPHIES[322 - 1],
-			TROPHIES[320 - 1],
-			TROPHIES[111 - 1],
+			LeekWars.trophies[173 - 1],
+			LeekWars.trophies[177 - 1],
+			LeekWars.trophies[166 - 1],
+			LeekWars.trophies[194 - 1],
+			LeekWars.trophies[322 - 1],
+			LeekWars.trophies[320 - 1],
+			LeekWars.trophies[111 - 1],
 		]
 		rewards = {
 			1: { trophy: 'godfather' },

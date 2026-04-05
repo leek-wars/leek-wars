@@ -15,7 +15,7 @@ import RankingBadge from '@/component/ranking-badge.vue'
 import Talent from '@/component/talent.vue'
 import { env } from '@/env'
 import { i18n, loadLanguageAsync } from '@/model/i18n'
-import { LeekWars, setRouter } from '@/model/leekwars'
+import { LeekWars, setRouter, loadGameData } from '@/model/leekwars'
 import '@/model/serviceworker'
 import { store } from "@/model/store"
 import router, { getRedirectAfterLogin } from '@/router'
@@ -427,6 +427,9 @@ const vm = app.mount('#app2') as ComponentPublicInstance & {
 	$emit: (event: string, ...args: any[]) => void
 }
 setVueMain(vm)
+
+// Charger les données de jeu depuis IndexedDB / serveur
+loadGameData().catch(e => console.warn('[GameData] Init failed, using bundled data:', e))
 
 // Restore saved locale in dev/local mode
 if (LeekWars.DEV || LeekWars.LOCAL) {

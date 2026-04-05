@@ -1,5 +1,4 @@
 import { CHIPS } from '@/model/chips'
-import { CONSTANTS } from '@/model/constants'
 import { FUNCTIONS } from '@/model/functions'
 import { Keyword, KeywordKind } from '@/model/keyword'
 import { LeekWars } from '@/model/leekwars'
@@ -71,7 +70,7 @@ const getChipByName = (name: string) => {
 	return null
 }
 
-for (const constant of CONSTANTS) {
+for (const constant of LeekWars.constants) {
 	let details: any = ""
 	if (constant.name.substring(0, 5) === 'CHIP_') {
 		details = {type: 'chip', chip: getChipByName(constant.name.substring(5).toLowerCase())}
