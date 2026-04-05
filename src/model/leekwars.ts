@@ -1225,32 +1225,32 @@ async function loadGameData() {
 
 	const t0 = performance.now()
 
-	if (data.items) LeekWars.items = data.items
+	if (data.items) LeekWars.items = Object.freeze(data.items)
 	if (data.weapons) {
-		LeekWars.weapons = data.weapons
-		LeekWars.weaponByName = weaponByName(data.weapons)
+		LeekWars.weapons = Object.freeze(data.weapons)
+		LeekWars.weaponByName = Object.freeze(weaponByName(data.weapons))
 	}
-	if (data.hats) LeekWars.hats = data.hats
-	if (data.pomps) LeekWars.pomps = data.pomps
+	if (data.hats) LeekWars.hats = Object.freeze(data.hats)
+	if (data.pomps) LeekWars.pomps = Object.freeze(data.pomps)
 	if (data.potions) {
-		LeekWars.potions = data.potions
-		LeekWars.potionByName = potionByName(data.potions)
-		LeekWars.potionsBySkin = potionsBySkin(data.potions)
+		LeekWars.potions = Object.freeze(data.potions)
+		LeekWars.potionByName = Object.freeze(potionByName(data.potions))
+		LeekWars.potionsBySkin = Object.freeze(potionsBySkin(data.potions))
 	}
-	if (data.schemes) LeekWars.schemes = data.schemes
-	if (data.components) LeekWars.components = data.components
-	if (data.hat_templates) LeekWars.hatTemplates = data.hat_templates
-	if (data.chip_templates) LeekWars.chipTemplates = data.chip_templates
-	if (data.summon_templates) LeekWars.summonTemplates = data.summon_templates
+	if (data.schemes) LeekWars.schemes = Object.freeze(data.schemes)
+	if (data.components) LeekWars.components = Object.freeze(data.components)
+	if (data.hat_templates) LeekWars.hatTemplates = Object.freeze(data.hat_templates)
+	if (data.chip_templates) LeekWars.chipTemplates = Object.freeze(data.chip_templates)
+	if (data.summon_templates) LeekWars.summonTemplates = Object.freeze(data.summon_templates)
 	if (data.trophy_categories) {
-		LeekWars.trophyCategories = data.trophy_categories
-		LeekWars.trophyCategoriesById = [...data.trophy_categories].sort((a: any, b: any) => a.id - b.id)
+		LeekWars.trophyCategories = Object.freeze(data.trophy_categories)
+		LeekWars.trophyCategoriesById = Object.freeze([...data.trophy_categories].sort((a: any, b: any) => a.id - b.id))
 	}
-	if (data.complexities) LeekWars.complexities = data.complexities
-	if (data.trophies) LeekWars.trophies = data.trophies
-	if (data.constants) LeekWars.constants = data.constants
-	if (data.functions) LeekWars.functions = data.functions
-	if (data.chips) LeekWars.chips = data.chips
+	if (data.complexities) LeekWars.complexities = Object.freeze(data.complexities)
+	if (data.trophies) LeekWars.trophies = Object.freeze(data.trophies)
+	if (data.constants) LeekWars.constants = Object.freeze(data.constants)
+	if (data.functions) LeekWars.functions = Object.freeze(data.functions)
+	if (data.chips) LeekWars.chips = Object.freeze(data.chips)
 
 	console.log(`[GameData] Applied in ${(performance.now() - t0).toFixed(1)}ms`)
 }
