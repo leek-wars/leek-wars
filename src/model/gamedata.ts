@@ -1,4 +1,4 @@
-import { get as idbGet, set as idbSet, createStore } from 'idb-keyval'
+import { getMany, setMany, createStore } from 'idb-keyval'
 
 const store = createStore('leek-wars-data', 'game-data')
 
@@ -29,58 +29,76 @@ function getApiUrl(): string {
 	return 'https://' + window.location.host + '/api/'
 }
 
-export async function loadGameData(): Promise<{ [key: string]: any }> {
+/**
+ * Charge les données de jeu. Sync si __DATA__ présent, async (IndexedDB) sinon.
+ * À appeler AVANT le mount Vue.
+ */
+export async function loadGameData(): Promise<{ [key: string]: any } | null> {
 	const inline: InlineData | null = (window as any).__DATA__
 
-	console.log('[GameData] __DATA__', inline === null ? 'null' : `present (${Object.keys(inline.data).length} types)`)
+	if (inline !== null) {
+		// Données inline (premier chargement ou données changées) → sync
+		const changedTypes = Object.keys(inline.data)
+		console.log(`[GameData] Inline: ${changedTypes.length} types changed`)
 
-	// Charger les métadonnées du cache
-	let meta: Meta | undefined
+		// Sauvegarder en IndexedDB en background (fire & forget)
+		saveToIdb(inline.master_version, inline.hashes, inline.data)
+		updateCookie(inline.master_version, inline.hashes)
+
+		// Charger les types non-changés depuis IndexedDB
+		if (changedTypes.length < DATA_TYPES.length) {
+			const cached = await loadFromIdb()
+			if (cached) {
+				// Merge : inline écrase le cache
+				for (const type of changedTypes) {
+					cached[type] = inline.data[type]
+				}
+				return cached
+			}
+		}
+		return inline.data
+	}
+
+	// __DATA__ null → tout est à jour, charger depuis IndexedDB
+	console.log('[GameData] __DATA__ null, loading from IndexedDB...')
+	const t0 = performance.now()
+	const cached = await loadFromIdb()
+	const dt = (performance.now() - t0).toFixed(1)
+
+	if (cached) {
+		console.log(`[GameData] Loaded from IndexedDB in ${dt}ms`)
+		return cached
+	}
+
+	// Pas de cache → fetch API (premier chargement dev mode)
+	console.log('[GameData] No cache → fetching from API...')
+	return await fetchAll()
+}
+
+async function loadFromIdb(): Promise<{ [key: string]: any } | null> {
 	try {
-		meta = await idbGet<Meta>('meta', store)
-		console.log('[GameData] IndexedDB:', meta ? `found (master=${meta.master_version})` : 'empty')
-	} catch (e) {
-		console.warn('[GameData] IndexedDB read failed:', e)
-	}
-
-	if (inline === null) {
-		if (meta) {
-			// Cache hit : charger chaque type depuis IndexedDB
-			console.log('[GameData] Cache hit, no changes')
-			return await loadAllFromIdb()
+		const keys = ['meta', ...DATA_TYPES.map(t => 'data:' + t)]
+		const values = await getMany(keys, store)
+		const meta = values[0] as Meta | undefined
+		if (!meta) return null
+		const result: { [key: string]: any } = {}
+		for (let i = 0; i < DATA_TYPES.length; i++) {
+			result[DATA_TYPES[i]] = values[i + 1]
 		}
-		console.log('[GameData] No cache, no inline → fetching from API...')
-		return await fetchAll()
+		return result
+	} catch {
+		return null
 	}
+}
 
-	// Données inline : merge avec le cache
-	const changedTypes = Object.keys(inline.data)
-	console.log(`[GameData] Changed:`, changedTypes)
-
-	// Sauvegarder les types changés dans IndexedDB
-	const savePromises: Promise<void>[] = []
-	for (const type of changedTypes) {
-		savePromises.push(idbSet('data:' + type, inline.data[type], store))
+function saveToIdb(masterVersion: string, hashes: { [key: string]: string }, data: { [key: string]: any }) {
+	const entries: [string, any][] = [['meta', { master_version: masterVersion, hashes } as Meta]]
+	for (const type of Object.keys(data)) {
+		entries.push(['data:' + type, data[type]])
 	}
-	savePromises.push(idbSet('meta', { master_version: inline.master_version, hashes: inline.hashes } as Meta, store))
-	Promise.all(savePromises)
-		.then(() => console.log(`[GameData] Saved ${changedTypes.length} types to IndexedDB`))
+	setMany(entries, store)
+		.then(() => console.log(`[GameData] Saved to IndexedDB`))
 		.catch(e => console.warn('[GameData] IndexedDB save failed:', e))
-
-	updateCookie(inline.master_version, inline.hashes)
-
-	// Charger tous les types (changés depuis inline, le reste depuis IndexedDB)
-	const result: { [key: string]: any } = {}
-	for (const type of DATA_TYPES) {
-		if (inline.data[type] !== undefined) {
-			result[type] = inline.data[type]
-		} else {
-			try {
-				result[type] = await idbGet('data:' + type, store)
-			} catch { /* type pas encore en cache */ }
-		}
-	}
-	return result
 }
 
 async function fetchAll(): Promise<{ [key: string]: any }> {
@@ -92,29 +110,10 @@ async function fetchAll(): Promise<{ [key: string]: any }> {
 	const data = json.data
 	console.log(`[GameData] Fetched ${Object.keys(data).length} types from API`)
 
-	// Sauvegarder chaque type séparément
-	const savePromises: Promise<void>[] = []
-	for (const type of Object.keys(data)) {
-		savePromises.push(idbSet('data:' + type, data[type], store))
-	}
-	savePromises.push(idbSet('meta', { master_version: json.master_version, hashes: json.hashes } as Meta, store))
-	Promise.all(savePromises)
-		.then(() => console.log('[GameData] Saved to IndexedDB'))
-		.catch(e => console.warn('[GameData] IndexedDB save failed:', e))
-
+	saveToIdb(json.master_version, json.hashes, data)
 	updateCookie(json.master_version, json.hashes)
 
 	return data
-}
-
-async function loadAllFromIdb(): Promise<{ [key: string]: any }> {
-	const result: { [key: string]: any } = {}
-	for (const type of DATA_TYPES) {
-		try {
-			result[type] = await idbGet('data:' + type, store)
-		} catch { /* pas en cache */ }
-	}
-	return result
 }
 
 function updateCookie(masterVersion: string, hashes: { [key: string]: string }) {
@@ -123,5 +122,4 @@ function updateCookie(masterVersion: string, hashes: { [key: string]: string }) 
 		.map(t => t + '=' + hashes[t])
 	const value = masterVersion + ':' + pairs.join(',')
 	document.cookie = 'data_hashes=' + value + ';path=/;max-age=31536000;samesite=lax'
-	console.log('[GameData] Cookie updated')
 }

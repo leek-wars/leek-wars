@@ -422,14 +422,14 @@ app.config.globalProperties.$filters = {
 	duration: LeekWars.formatDuration,
 }
 
+// Charger les données de jeu AVANT le mount Vue
+await loadGameData().catch(e => console.warn('[GameData] Init failed:', e))
+
 const vm = app.mount('#app2') as ComponentPublicInstance & {
 	$once: (event: string, callback: () => void) => void
 	$emit: (event: string, ...args: any[]) => void
 }
 setVueMain(vm)
-
-// Charger les données de jeu depuis IndexedDB / serveur
-loadGameData().catch(e => console.warn('[GameData] Init failed, using bundled data:', e))
 
 // Restore saved locale in dev/local mode
 if (LeekWars.DEV || LeekWars.LOCAL) {

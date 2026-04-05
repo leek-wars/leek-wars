@@ -1,7 +1,7 @@
 <template lang="html">
 	<span class="title">
 		<span class="quote">«</span>
-		<img v-if="icon" :src="'/image/trophy/' + TROPHIES[icon - 1].code + '.svg'" :class="{notext: !noun && !adjective}">
+		<img v-if="icon && TROPHIES[icon - 1]" :src="'/image/trophy/' + TROPHIES[icon - 1].code + '.svg'" :class="{notext: !noun && !adjective}">
 		<span v-if="$i18n.locale === 'fr'">{{ word1 }} {{ word2 }}</span>
 		<span v-else>{{ word2 }} {{ word1 }}</span>
 		<span class="quote">»</span>
@@ -35,6 +35,7 @@
 		get word1() {
 			if (!this.noun) { return '' }
 			const trophy = LeekWars.trophies[this.noun - 1]
+			if (!trophy) return ''
 			const gender_code = this.gender === 1 || ((trophy.noun_gender & 2) !== 0) ? '' : '_f'
 			let word = this.$t('trophy.' + trophy.code + gender_code) as string
 			if (i18n.locale === 'en' && this.adjective && word !== word.toUpperCase()) {

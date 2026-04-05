@@ -24,7 +24,7 @@ import { SCHEMES } from './schemes'
 import { COMPONENTS } from './components'
 import { WEAPONS } from './weapons'
 import { BossSquads } from './boss-squads'
-import { loadGameData as loadGameDataFromCache } from './gamedata'
+import { loadGameData as loadGameDataRaw } from './gamedata'
 import { nextTick, reactive } from 'vue'
 
 const DEV = window.location.port === '8080'
@@ -1217,46 +1217,42 @@ function goToRanking(type: string, order: string, id: number = 0) {
  */
 async function loadGameData() {
 	console.log('[GameData] Loading...')
-	const data = await loadGameDataFromCache()
+	const data = await loadGameDataRaw()
 	if (!data || Object.keys(data).length === 0) {
 		console.log('[GameData] No data to apply, keeping bundled static data')
 		return
 	}
 
-	const applied: string[] = []
+	const t0 = performance.now()
 
-	// Remplacer les données statiques par celles du cache/serveur
-	if (data.items) { LeekWars.items = Object.freeze(data.items); applied.push('items') }
+	if (data.items) LeekWars.items = data.items
 	if (data.weapons) {
-		LeekWars.weapons = Object.freeze(data.weapons)
-		LeekWars.weaponByName = Object.freeze(weaponByName(data.weapons))
-		applied.push('weapons')
+		LeekWars.weapons = data.weapons
+		LeekWars.weaponByName = weaponByName(data.weapons)
 	}
-	if (data.hats) { LeekWars.hats = Object.freeze(data.hats); applied.push('hats') }
-	if (data.pomps) { LeekWars.pomps = Object.freeze(data.pomps); applied.push('pomps') }
+	if (data.hats) LeekWars.hats = data.hats
+	if (data.pomps) LeekWars.pomps = data.pomps
 	if (data.potions) {
-		LeekWars.potions = Object.freeze(data.potions)
-		LeekWars.potionByName = Object.freeze(potionByName(data.potions))
-		LeekWars.potionsBySkin = Object.freeze(potionsBySkin(data.potions))
-		applied.push('potions')
+		LeekWars.potions = data.potions
+		LeekWars.potionByName = potionByName(data.potions)
+		LeekWars.potionsBySkin = potionsBySkin(data.potions)
 	}
-	if (data.schemes) { LeekWars.schemes = Object.freeze(data.schemes); applied.push('schemes') }
-	if (data.components) { LeekWars.components = Object.freeze(data.components); applied.push('components') }
-	if (data.hat_templates) { LeekWars.hatTemplates = Object.freeze(data.hat_templates); applied.push('hat_templates') }
-	if (data.chip_templates) { LeekWars.chipTemplates = Object.freeze(data.chip_templates); applied.push('chip_templates') }
-	if (data.summon_templates) { LeekWars.summonTemplates = Object.freeze(data.summon_templates); applied.push('summon_templates') }
+	if (data.schemes) LeekWars.schemes = data.schemes
+	if (data.components) LeekWars.components = data.components
+	if (data.hat_templates) LeekWars.hatTemplates = data.hat_templates
+	if (data.chip_templates) LeekWars.chipTemplates = data.chip_templates
+	if (data.summon_templates) LeekWars.summonTemplates = data.summon_templates
 	if (data.trophy_categories) {
-		LeekWars.trophyCategories = Object.freeze(data.trophy_categories)
-		LeekWars.trophyCategoriesById = Object.freeze([...data.trophy_categories].sort((a: any, b: any) => a.id - b.id))
-		applied.push('trophy_categories')
+		LeekWars.trophyCategories = data.trophy_categories
+		LeekWars.trophyCategoriesById = [...data.trophy_categories].sort((a: any, b: any) => a.id - b.id)
 	}
-	if (data.complexities) { LeekWars.complexities = Object.freeze(data.complexities); applied.push('complexities') }
-	if (data.trophies) { LeekWars.trophies = Object.freeze(data.trophies); applied.push('trophies') }
-	if (data.constants) { LeekWars.constants = Object.freeze(data.constants); applied.push('constants') }
-	if (data.functions) { LeekWars.functions = Object.freeze(data.functions); applied.push('functions') }
-	if (data.chips) { LeekWars.chips = Object.freeze(data.chips); applied.push('chips') }
+	if (data.complexities) LeekWars.complexities = data.complexities
+	if (data.trophies) LeekWars.trophies = data.trophies
+	if (data.constants) LeekWars.constants = data.constants
+	if (data.functions) LeekWars.functions = data.functions
+	if (data.chips) LeekWars.chips = data.chips
 
-	console.log(`[GameData] Applied ${applied.length} types:`, applied)
+	console.log(`[GameData] Applied in ${(performance.now() - t0).toFixed(1)}ms`)
 }
 
 export { LeekWars, Language, loadGameData }
