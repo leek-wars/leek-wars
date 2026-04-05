@@ -1044,6 +1044,14 @@ a.green-link {
 		border-top: none;
 	}
 }
+.clover:active {
+	animation: cloverCollect 1s ease infinite;
+}
+@keyframes cloverCollect {
+	10% { transform: scale(1.5); }
+	100% { transform: rotate(950deg) scale(0.1); }
+}
+
 .bouncing {
 	animation: hithere 1.5s ease infinite;
 }
