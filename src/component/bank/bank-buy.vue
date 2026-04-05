@@ -2,13 +2,12 @@
 	<div class="page">
 		<div class="page-header page-bar">
 			<h1>
-				<router-link to="/bank">{{ $t('title') }}</router-link> >
-				<span v-if="product" v-html="$t('purshase_title_simple', [product.crystals])"></span>
+				<breadcrumb :items="breadcrumb_items" :raw="true" />
 			</h1>
 		</div>
 		<panel class="first">
 
-			<v-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)" hide-details dense variant="solo">
+			<v-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)" hide-details density="compact" variant="solo">
 				<template #selection>
 					<flag :code="LeekWars.currencies[LeekWars.currency].flag" :clickable="false" />&nbsp;
 					{{ LeekWars.currency }} &nbsp; <span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>
@@ -26,7 +25,7 @@
 			</v-select>
 
 			<div class="container">
-				<bank-product v-if="product" :product="product" />
+				<bank-product v-if="product" :product="product" :index="pack" :preview="true" />
 
 				<!-- <div v-if="data.vendor === 'StarPass'">
 					<br>
@@ -43,6 +42,9 @@
 					<loader v-else />
 				</div>
 			</div>
+			<div class="back">
+				<v-btn variant="tonal" to="/bank"><v-icon>mdi-arrow-left</v-icon> {{ $t('back') }}</v-btn>
+			</div>
 		</panel>
 	</div>
 </template>
@@ -54,15 +56,26 @@
 	import { mixins } from '@/model/i18n'
 	import { locale } from '@/locale'
 	import BankProduct from './bank-product.vue'
+	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 	import { store } from '@/model/store'
 
-	@Options({ name: 'bank-buy', i18n: {}, mixins: [...mixins], components: { BankProduct } })
+	@Options({ name: 'bank-buy', i18n: {}, mixins: [...mixins], components: { BankProduct, Breadcrumb } })
 	export default class BankBuy extends Vue {
-		pack!: number
+		pack: number = 0
 		offer!: number
 		product: any = null
 		loading: boolean = false
 		starPassLoading: boolean = false
+
+		get breadcrumb_items() {
+			const items: {name: string, link: string}[] = [
+				{ name: this.$t('title'), link: '/bank' },
+			]
+			if (this.product) {
+				items.push({ name: this.$t('purshase_title_text_simple', [this.product.crystals]), link: '/bank/buy/' + this.pack })
+			}
+			return items
+		}
 
 		created() {
 			this.pack = parseInt(this.$route.params.pack, 10)
@@ -148,6 +161,7 @@
 .flag {
 	max-width: 28px;
 	max-height: 28px;
+	margin-right: 8px;
 }
 .first {
 	padding: 25px 0;
@@ -167,7 +181,17 @@
 .container > * {
 	flex: 1;
 }
+#app.app .container {
+	flex-direction: column;
+	> * {
+		width: 100%;
+	}
+}
 
+	.back {
+		padding: 10px;
+		text-align: center;
+	}
 	.paypal-button {
 		display: inline-flex;
 		align-items: center;

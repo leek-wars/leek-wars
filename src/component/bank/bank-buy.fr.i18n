@@ -1,4 +1,5 @@
 {
+	"back": "Retour à la banque",
 	"buy_with": "Acheter avec",
 	"paypal_message": "Cliquez sur un bouton pour commencer l'achat",
 	"purshase_title": "Achat de <b>{0}</b> cristaux avec <i>{1}</i>",

@@ -37,7 +37,7 @@
 		<panel class="first">
 			<div class="bank-description center" v-html="$t('description')"></div>
 
-			<v-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)" hide-details dense variant="solo">
+			<v-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)" hide-details density="compact" variant="solo">
 				<template #selection>
 					<flag :code="LeekWars.currencies[LeekWars.currency].flag" :clickable="false" />&nbsp;
 					{{ LeekWars.currency }} &nbsp; <span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>
@@ -56,11 +56,10 @@
 
 			<loader v-if="!packs" />
 			<div v-else class="packs">
-				<router-link v-for="(pack, p) in packs" :key="pack.crystals" :to="'/bank/buy/' + p" v-ripple>
-					<bank-product :product="pack" />
-				</router-link>
+				<bank-product v-for="(pack, p) in packs" :key="pack.crystals" :product="pack" :index="p" :best="pack.bonus === bestBonus" />
 			</div>
 		</panel>
+		<h1 v-if="items" class="items-title">{{ $t('items_title') }}</h1>
 		<div class="container grid">
 			<panel v-if="!items">
 				<loader />
@@ -97,6 +96,12 @@
 		packs: any = null
 		items: any = null
 
+		get bestBonus() {
+			if (!this.packs) return -1
+			const max = Math.max(...Object.values(this.packs).map((p) => (p as {bonus: number}).bonus))
+			return max > 0 ? max : -1
+		}
+
 		created() {
 			LeekWars.setActions([
 				{image: 'icon/market.png', click: () => this.$router.push('/market')},
@@ -131,6 +136,7 @@
 .flag {
 	max-width: 28px;
 	max-height: 28px;
+	margin-right: 8px;
 }
 .v-select {
 	margin-left: 10px;
@@ -147,19 +153,31 @@
 		padding: 20px;
 		font-size: 17px;
 		text-align: justify;
-		line-height: 26px;
+		line-height: 1.5;
 		:deep(.crystal) {
 			margin-bottom: -6px;
 		}
 	}
 	#app.app .bank-description {
 		padding: 5px 0;
+		font-size: 15px;
 	}
 	.packs {
 		display: grid;
 		grid-gap: 10px;
 		padding: 10px;
 		grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+	}
+	#app.app .packs {
+		padding: 5px 0;
+	}
+	.items-title {
+		background: #222;
+		color: white;
+		font-size: 17px;
+		&::after {
+			border-color: transparent transparent transparent #222;
+		}
 	}
 	.item-sample {
 		a {
