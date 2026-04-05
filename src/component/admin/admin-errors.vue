@@ -43,7 +43,15 @@
 									<a v-if="error.issue" :href="'https://github.com/5pilow/leek-wars-server/issues/' + error.issue" target="_blank"><v-btn size="small" color="success">Issue #{{ error.issue }}</v-btn></a>
 									<v-btn v-else size="small" @click="createIssue(error)">Créer issue</v-btn>
 								</div>
-								<code>{{ error.trace.substring(0, 8000) }}</code>
+								<div :ref="'trace-' + e" class="trace-container" :class="{ collapsed: traceOverflows[e] && !traceExpanded[e] }">
+									<code>{{ error.trace.substring(0, 8000) }}</code>
+									<div v-if="traceOverflows[e] && !traceExpanded[e]" class="trace-gradient" @click="toggleTrace(e, true)">
+										<v-icon>mdi-chevron-down</v-icon>
+									</div>
+								</div>
+								<div v-if="traceOverflows[e] && traceExpanded[e]" class="trace-collapse" @click="toggleTrace(e, false)">
+									<v-icon>mdi-chevron-up</v-icon>
+								</div>
 								<div v-if="error.file || error.line">Fichier <b>{{ error.file }}</b> <span v-if="error.line"> ligne <b>{{ error.line }}</b></span></div>
 							</div>
 						</div>
@@ -59,6 +67,7 @@
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
 	import { Options, Vue } from 'vue-property-decorator'
+	import { nextTick } from 'vue'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
 	@Options({ components: { Breadcrumb } })
@@ -66,6 +75,8 @@
 		errors: any[] | null = null
 		deleteQuery: string = ''
 		newErrors: number = 0
+		traceExpanded: Record<number, boolean> = {}
+		traceOverflows: Record<number, boolean> = {}
 
 		created() {
 			if (!this.$store.getters.admin) this.$router.replace('/')
@@ -83,9 +94,25 @@
 			}
 		}
 
+		toggleTrace(index: number, expanded: boolean) {
+			this.traceExpanded = { ...this.traceExpanded, [index]: expanded }
+		}
+
 		update() {
 			LeekWars.get('error/get-latest').then(data => {
 				this.errors = data.errors
+				this.traceExpanded = {}
+				this.traceOverflows = {}
+				nextTick(() => {
+					const overflows: Record<number, boolean> = {}
+					for (let i = 0; i < data.errors.length; i++) {
+						// eslint-disable-next-line @typescript-eslint/no-explicit-any
+						const refs = (this as any).$refs['trace-' + i]
+						const el = Array.isArray(refs) ? refs[0] : refs
+						overflows[i] = el ? el.scrollHeight > 300 : false
+					}
+					this.traceOverflows = overflows
+				})
 				this.$store.commit('error-count', data.count)
 				LeekWars.setTitle("Gestionnaire d'erreur (" + (store.state.farmer ? store.state.farmer!.errors : 0) + ")")
 			})
@@ -184,11 +211,43 @@
 			&.client { background: #4caf50; color: white; }
 		}
 	}
-	.error code {
-		margin: 8px 0;
-		display: block;
-		word-break: break-word;
-		font-size: 14px;
+	.trace-container {
+		position: relative;
+		&.collapsed {
+			max-height: 300px;
+			overflow: hidden;
+		}
+		code {
+			margin: 8px 0;
+			display: block;
+			word-break: break-word;
+			font-size: 14px;
+		}
+	}
+	.trace-gradient {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 80px;
+		background: linear-gradient(transparent, var(--pure-white));
+		display: flex;
+		align-items: flex-end;
+		justify-content: center;
+		cursor: pointer;
+		padding-bottom: 4px;
+		.v-icon {
+			padding: 2px;
+		}
+	}
+	.trace-collapse {
+		display: flex;
+		justify-content: center;
+		cursor: pointer;
+		margin-top: -4px;
+		margin-bottom: 4px;
+		opacity: 0.6;
+		&:hover { opacity: 1; }
 	}
 	.errors td a {
 		color: #0a0;
