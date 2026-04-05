@@ -100,8 +100,13 @@ function multiLanguagePlugin(): Plugin {
 
 				// Only include CSS from entry chunks and their static dependencies.
 				// Lazy-loaded route CSS will be injected by Vite's runtime on demand.
-				const criticalCss = collectCriticalCss(bundle)
-				const cssLinks = [...criticalCss].map(css => `<link rel="stylesheet" crossorigin href="/${css}">`).join('\n\t\t')
+				const criticalCss = [...collectCriticalCss(bundle)].sort((a, b) => {
+					// App main CSS last — ensures it overrides vendor/library styles
+					const aMain = a.includes('main-') ? 1 : 0
+					const bMain = b.includes('main-') ? 1 : 0
+					return aMain - bMain
+				})
+				const cssLinks = criticalCss.map(css => `<link rel="stylesheet" crossorigin href="/${css}">`).join('\n\t\t')
 				finalHtml = finalHtml.replace('</head>', `\t${cssLinks}\n\t</head>`)
 
 				this.emitFile({
