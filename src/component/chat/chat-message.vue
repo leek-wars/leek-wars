@@ -38,7 +38,7 @@
 			</div>
 		</div>
 
-		<div v-if="$store.state.farmer.verified" v-ripple class="add" @click="$emit('emoji', $event)">
+		<div v-if="$store.state.farmer?.verified" v-ripple class="add" @click="$emit('emoji', $event)">
 			<v-icon>mdi-emoticon-outline</v-icon> +
 		</div>
 	</div>
