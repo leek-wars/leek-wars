@@ -58,9 +58,10 @@ const mixins = [{
 	},
 	watch: {
 		'$i18n.locale'() {
-			const name = (this as any).$options.name!
+			let name = (this as any).$options.name!
 			// console.log("Reload translations of component", name)
 			const newLocale = i18n.global.locale
+			if (name.startsWith('bank-')) { name = 'bank' }
 			const folder = name.startsWith('signup-') ? 'signup' : name
 			const modulePath = `/src/component/${folder}/${name}.${newLocale}.i18n`
 			const loader = i18nModules[modulePath]
@@ -118,13 +119,13 @@ function loadInstanceTranslations(newLocale: string, instance: any) {
 	}
 	let name = instance.$options.name.toLowerCase().replace(/_/g, '-')
 	let folder = name
-	if (name.indexOf("bank-") === 0) { name = "bank" }
-	if (name.indexOf("editor-") === 0) { folder = "editor" }
-	if (name.indexOf("signup-") === 0) { folder = "signup" }
-	if (name.indexOf("encyclopedia-") === 0) { folder = "encyclopedia" }
-	if (name.indexOf("level-dialog") === 0) { folder = "leek" }
-	if (name.indexOf("forum-") === 0) { folder = "forum" }
-	if (name.indexOf("inventory-") === 0) { folder = "inventory" }
+	if (name.startsWith("bank-")) { name = "bank"; folder = "bank" }
+	if (name.startsWith("editor-")) { folder = "editor" }
+	if (name.startsWith("signup-")) { folder = "signup" }
+	if (name.startsWith("encyclopedia-")) { folder = "encyclopedia" }
+	if (name.startsWith("level-dialog")) { folder = "leek" }
+	if (name.startsWith("forum-")) { folder = "forum" }
+	if (name.startsWith("inventory-")) { folder = "inventory" }
 
 	const modulePath = `/src/component/${folder}/${name}.${newLocale}.i18n`
 	const loader = i18nModules[modulePath]
@@ -144,7 +145,7 @@ function loadComponentLanguage(newLocale: string, component: ComponentInstance<C
 	// console.log("loadComponentLanguage", newLocale, "component", component, "instance", instance)
 
 	let name = component.name?.toLowerCase().replace(/_/g, '-')
-	if (name === "bankbuy" || name === "bankvalidate") { name = "bank" }
+	if (name?.startsWith("bank-") || name === "bankbuy" || name === "bankvalidate") { name = "bank" }
 	if (name === "home" || !name) { name = "signup" }
 
 	if (instance && (instance as any).$i18n && (instance as any).$i18n.messages[newLocale]) {

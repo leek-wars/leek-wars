@@ -1,17 +1,17 @@
 <template lang="html">
 	<div class="pack card" :class="{ best: best }">
 		<span v-if="best" class="best-label notif-trophy">{{ $t('main.best_value') }}</span>
+		<span v-if="firstPurchase" class="x2-label">x2</span>
 		<img :src="'/image/bank/crystals_' + product.id + '.png'">
 		<div class="title-line">
 			<i18n-t tag="h2" keypath="main.pack_of_n_crystals">
 				<template #crystals>
-					<b>{{ product.crystals }}</b>
+					<b>{{ product.crystals }}</b><b v-if="firstPurchase" class="x2-crystals"> + {{ product.crystals }}</b>
 				</template>
 			</i18n-t>
-			<span v-if="product.bonus" class="bonus-badge">+{{ product.bonus }} <span class="crystal"></span> {{ $t('main.offered') }}</span>
+			<span v-if="product.bonus" class="bonus-badge">+{{ firstPurchase ? product.bonus * 2 : product.bonus }} <span class="crystal"></span> {{ $t('main.offered') }}</span>
 		</div>
-		<v-btn :variant="preview ? 'outlined' : 'flat'" color="#1976d2" class="buy-button" :to="preview ? undefined : '/bank/buy/' + index" :disabled="preview">
-			<v-icon>mdi-cart-outline</v-icon>
+		<v-btn :variant="preview ? 'outlined' : 'flat'" color="#1976d2" class="buy-button" :to="preview ? undefined : '/bank/buy/' + index" :disabled="preview" prepend-icon="mdi-cart-outline">
 			<span v-if="LeekWars.currencies[LeekWars.currency].prefix"><span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>{{ format(product.prices[LeekWars.currency]) }}</span>
 			<span v-else>{{ format(product.prices[LeekWars.currency]) }}&nbsp;<span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span></span>
 		</v-btn>
@@ -28,6 +28,7 @@
 		@Prop({ required: true }) index!: number
 		@Prop() best!: boolean
 		@Prop() preview!: boolean
+		@Prop() firstPurchase!: boolean
 
 		format(n: number) {
 			if (Math.floor(n) !== n) {
@@ -43,16 +44,17 @@
 	padding: 10px;
 	min-height: 90px;
 	text-align: left;
+	position: relative;
 	.title-line {
 		display: flex;
 		align-items: center;
 		gap: 10px;
 		justify-content: space-between;
-		margin: 8px 0;
+		margin: 10px 0;
 		flex-wrap: wrap;
 	}
 	h2 {
-		font-size: 20px;
+		font-size: 18px;
 	}
 	> img {
 		float: left;
@@ -74,15 +76,28 @@
 	}
 	.bonus-badge {
 		color: #4caf50;
-		border: 2px solid #4caf50;
+		border: 1px solid #4caf50;
 		font-weight: 600;
 		font-size: 14px;
 		padding: 2px 8px;
 		border-radius: 4px;
 	}
+	.x2-label {
+		position: absolute;
+		top: 8px;
+		left: 8px;
+		background: #7b1fa2;
+		color: white;
+		font-weight: 700;
+		font-size: 14px;
+		padding: 2px 8px;
+		border-radius: 4px;
+	}
+	.x2-crystals {
+		color: #7b1fa2;
+	}
 	&.best {
 		border: 2px solid #ffb430;
-		position: relative;
 	}
 	.best-label {
 		position: absolute;
@@ -94,5 +109,8 @@
 		padding: 2px 12px;
 		white-space: nowrap;
 	}
+}
+body.dark .x2-crystals {
+	color: #ab47bc;
 }
 </style>

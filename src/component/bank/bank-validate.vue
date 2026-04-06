@@ -48,7 +48,7 @@
 	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 
 	@Options({
-		name: 'bank-validate', i18n: {}
+		name: 'bank', i18n: {}
 	})
 	export default class BankValidate extends Vue {
 		@Prop() success!: boolean

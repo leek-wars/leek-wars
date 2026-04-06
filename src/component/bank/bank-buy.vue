@@ -24,8 +24,12 @@
 				</template>
 			</v-select>
 
+			<div v-if="firstPurchase" class="first-purchase-banner">
+				<v-icon>mdi-gift</v-icon> {{ $t('first_purchase_banner') }}
+			</div>
+
 			<div class="container">
-				<bank-product v-if="product" :product="product" :index="pack" :preview="true" />
+				<bank-product v-if="product" :product="product" :index="pack" :preview="true" :first-purchase="firstPurchase" />
 
 				<!-- <div v-if="data.vendor === 'StarPass'">
 					<br>
@@ -59,13 +63,14 @@
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 	import { store } from '@/model/store'
 
-	@Options({ name: 'bank-buy', i18n: {}, mixins: [...mixins], components: { BankProduct, Breadcrumb } })
+	@Options({ name: 'bank', i18n: {}, mixins: [...mixins], components: { BankProduct, Breadcrumb } })
 	export default class BankBuy extends Vue {
 		pack: number = 0
 		offer!: number
 		product: any = null
 		loading: boolean = false
 		starPassLoading: boolean = false
+		firstPurchase: boolean = false
 
 		get breadcrumb_items() {
 			const items: {name: string, link: string}[] = [
@@ -85,6 +90,7 @@
 				// const offer = pack.offers[this.offer]
 				// const vendor = offer.vendor
 				this.product = pack
+				this.firstPurchase = data.first_purchase
 				this.loadPayPal()
 
 				// if (vendor === 'StarPass') {
@@ -188,6 +194,18 @@
 	}
 }
 
+	.first-purchase-banner {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 12px 16px;
+		margin: 10px 0;
+		font-size: 16px;
+		font-weight: 600;
+		border-radius: 4px;
+		background: #7b1fa2;
+		color: white;
+	}
 	.back {
 		padding: 10px;
 		text-align: center;

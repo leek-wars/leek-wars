@@ -54,9 +54,13 @@
 				</template>
 			</v-select>
 
+			<div v-if="firstPurchase" class="first-purchase-banner">
+				<v-icon>mdi-gift</v-icon> {{ $t('first_purchase_banner') }}
+			</div>
+
 			<loader v-if="!packs" />
 			<div v-else class="packs">
-				<bank-product v-for="(pack, p) in packs" :key="pack.crystals" :product="pack" :index="p" :best="pack.bonus === bestBonus" />
+				<bank-product v-for="(pack, p) in packs" :key="pack.crystals" :product="pack" :index="p" :best="pack.bonus === bestBonus" :first-purchase="firstPurchase" />
 			</div>
 		</panel>
 		<h1 v-if="items" class="items-title">{{ $t('items_title') }}</h1>
@@ -95,10 +99,11 @@
 	export default class Bank extends Vue {
 		packs: any = null
 		items: any = null
+		firstPurchase: boolean = false
 
 		get bestBonus() {
 			if (!this.packs) return -1
-			const max = Math.max(...Object.values(this.packs).map((p) => (p as {bonus: number}).bonus))
+			const max = Object.values(this.packs).reduce((a: number, p) => Math.max(a, (p as {bonus: number}).bonus), 0)
 			return max > 0 ? max : -1
 		}
 
@@ -110,6 +115,7 @@
 			LeekWars.get('bank/get-packs').then(data => {
 				this.packs = data.packs
 				this.items = data.items
+				this.firstPurchase = data.first_purchase
 				LeekWars.setTitle(this.$i18n.t('title'))
 			})
 			this.updateSubtitle()
@@ -162,11 +168,26 @@
 		padding: 5px 0;
 		font-size: 15px;
 	}
+	.first-purchase-banner {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 12px 16px;
+		margin: 10px;
+		font-size: 16px;
+		font-weight: 600;
+		border-radius: 4px;
+		background: #7b1fa2;
+		color: white;
+	}
 	.packs {
 		display: grid;
 		grid-gap: 10px;
 		padding: 10px;
 		grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+	}
+	#app.app .first-purchase-banner {
+		margin: 10px 0;
 	}
 	#app.app .packs {
 		padding: 5px 0;
