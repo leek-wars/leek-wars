@@ -7,7 +7,7 @@
 	"download_simple": "File singolo",
 	"download_includes": "Unisci include",
 	"empty_bin": "Svuota il cestino",
-	"empty_warning": "Tutti i Trash AI verranno eliminati definitivamente.",
+	"empty_warning": "Tutte le IA nel cestino verranno eliminate definitivamente.",
 	"rename": "Rinominare",
 	"delete_ai": "Eliminare AI \"{0}\"?",
 	"delete_folder": "Eliminare la cartella \"{0}\"?",
@@ -24,7 +24,7 @@
 	"new_desc": "Crea una nuova IA",
 	"folder_name": "Nome della cartella",
 	"recycle_bin": "Cestino",
-	"restore": "Ristabilire",
+	"restore": "Ripristina",
 	"close_folder": "Chiudere la cartella",
 	"open_folder": "Aprire la cartella",
 	"name_conflict": "Questo nome è già utilizzato in questa cartella.",
@@ -32,5 +32,7 @@
 	"invalid_name_reserved": "Questo nome è riservato.",
 	"invalid_name_slash": "Il carattere \"/\" non è consentito nei nomi.",
 	"windows_warning_char": "Il carattere \"{0}\" non è consentito su Windows, questo nome potrebbe causare problemi con git.",
-	"windows_warning_reserved": "\"{0}\" è un nome riservato su Windows, questo nome potrebbe causare problemi con git."
+	"windows_warning_reserved": "\"{0}\" è un nome riservato su Windows, questo nome potrebbe causare problemi con git.",
+	"destroy_folder": "Distruggere la cartella \"{0}\" definitivamente?",
+	"destroy_folder_warning": "La cartella e tutte le IA che contiene verranno eliminate definitivamente. Questa azione è irreversibile."
 }

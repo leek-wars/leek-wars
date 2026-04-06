@@ -3,7 +3,7 @@
 	"author": "Autore",
 	"category": "Categoria",
 	"no_results_found": "Nessun risultato trovato...",
-	"not_enough_parameters": "Parametri insufficienti avviano una ricerca",
+	"not_enough_parameters": "Parametri insufficienti per avviare una ricerca",
 	"post_by_x_the_x_in_x": "Pubblicato da {farmer} il {date} in {topic}",
 	"query": "Ricerca",
 	"results": "Risultati di ricerca",

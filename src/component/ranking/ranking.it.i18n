@@ -22,7 +22,7 @@
 	"money": "Soldi",
 	"my_farmer": "Il mio allevatore",
 	"my_leek": "Il mio porro",
-	"my_team": "Il mio gruppo",
+	"my_team": "La mia squadra",
 	"place": "Posto",
 	"results": "Risultati",
 	"richest_title": "Soldi guadagnati",
@@ -53,5 +53,8 @@
 	"turrets_killed": "Torrette",
 	"turrets_killed_title": "Torrette distrutte",
 	"damage": "Danni",
-	"damage_title": "Danni inflitti"
+	"damage_title": "Danni inflitti",
+	"compositions": "Composizioni",
+	"composition": "Composizione",
+	"won": "Vittorie"
 }

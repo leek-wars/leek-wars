@@ -16,7 +16,7 @@
 	"setting_tournaments": "Abilita i tornei pubblici",
 	"setting_br": "Abilita Battle Royale",
 	"xp_blocked": "PE bloccati",
-	"equipment_blocked": "Funzionalità e attrezzature bloccate",
+	"equipment_blocked": "Caratteristiche e attrezzature bloccate",
 	"equipment": "Attrezzatura imposta",
 	"weapons_of": "Armi di {0}",
 	"chips_of": "{0} chips",
@@ -44,7 +44,7 @@
 	"new_leek": "Consentire la creazione di un altro porro",
 	"start_team_tournament": "Lanciare un torneo a squadre",
 	"give_item": "Dare un oggetto",
-	"confirm_give_item": "Confermate la donazione di questo oggetto al socio {member}?",
+	"confirm_give_item": "Confermate la donazione di questo oggetto al membro {member}?",
 	"give_money": "Dare soldi a {member}",
 	"everybody": "tutti"
 }

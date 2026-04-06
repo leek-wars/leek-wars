@@ -8,7 +8,7 @@
 	"incorrect_login": "Login o password non corretti.",
 	"keep_connected": "Rimani connesso",
 	"login": "Nome o e-mail dell'allevatore",
-	"password": "Parola d'ordine",
+	"password": "Password",
 	"success": "Sei connesso",
 	"title": "Login"
 }

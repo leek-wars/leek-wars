@@ -4,7 +4,7 @@
 	"paypal_description": "Acquisto di {0} cristalli per {1} €",
 	"first_purchase_banner": "Primo acquisto? Tutti i tuoi cristalli sono raddoppiati!",
 	"items_title": "Ti stanno aspettando",
-	"title": "Banca di cristallo",
+	"title": "Banca dei cristalli",
 	"back": "Torna alla banca",
 	"best_value": "Miglior offerta",
 	"offered": "offerti",
@@ -16,7 +16,7 @@
 	"purshase_title_text_simple": "Acquista {0} Cristalli",
 	"thank_you": "Grazie",
 	"for_your_support": "per il tuo supporto!",
-	"you_earn_n_crystals": "Hai {crystals}.",
+	"you_earn_n_crystals": "Hai ottenuto {crystals}.",
 	"back_to_bank": "Torniamo in banca",
 	"payment_fail": "Pagamento {0} non riuscito.",
 	"payment_fail_reason": "Pagamento non riuscito: {0}",
@@ -27,5 +27,5 @@
 	"failed_to_execute_payment": "il pagamento non ha funzionato o è stato annullato",
 	"payment_cancelled": "Hai annullato il pagamento",
 	"payment_no_code": "Nessun codice",
-	"payment_wrong_code": "Codice non VALIDO"
+	"payment_wrong_code": "Codice non valido"
 }

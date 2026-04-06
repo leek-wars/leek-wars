@@ -1,10 +1,10 @@
 {
 	"ai": "AI",
 	"ai_1": "L'Intelligenza Artificiale (o AI) è il programma che definisce il comportamento del tuo porro durante un combattimento.\nPotrai sviluppare l'intelligenza artificiale del tuo porro dalla pagina <a href='/editor' target='_blank' rel='noopener'>Editor</a>.",
-	"ai_2": "In Leek Wars, il linguaggio utilizzato per codificare la sua IA è <b>LeekScript</b>.",
+	"ai_2": "In Leek Wars, il linguaggio utilizzato per programmare la sua IA è <b>LeekScript</b>.",
 	"ai_3": "Se sei nuovo alla programmazione, ti consigliamo di iniziare leggendo il <a href='/help/tutorial' target='_blank' rel='noopener'>Tutorial</a>.",
 	"ai_4": "Quindi puoi consultare la <a href='/documentation' target='_blank' rel='noopener'>Documentazione</a> delle funzioni per perfezionare la tua IA.",
-	"dismiss": "Passaggio",
+	"dismiss": "Salta",
 	"end": "E ci sei!",
 	"end_1": "Ora conosci le basi di <b>Leek Wars</b> e ora puoi iniziare a sviluppare una potente IA e combattere gli altri porri nell'orto! Bel gioco !",
 	"end_2": "Se incontri un problema o se hai bisogno di aiuto, non esitare a consultare il <a href='/forum' target='_blank' rel='noopener'>Forum</a> dove la community sarà lì per risponderti .",
@@ -27,7 +27,7 @@
 	"teams": "Le squadre",
 	"teams_1": "Potrai anche creare o unirti a una squadra, per combattere in collaborazione con altri allevatori e i loro porri.",
 	"title": "Tutorial",
-	"weapons_chips": "Armi e proiettili",
+	"weapons_chips": "Armi e chip",
 	"weapons_chips_1": "Un porro può usare <b>armi</b> per sparare ad altri porri. Può equipaggiarne <b>2</b> contemporaneamente, fino a <b>4</b> man mano che sale di livello.",
 	"weapons_chips_2": "Ma può anche utilizzare <b>chips</b> (da <b>12</b> a <b>20</b> contemporaneamente), che gli permettono di compiere molte azioni in combattimento come attaccare, guarire, indossare uno scudo o addirittura teletrasportarsi...",
 	"welcome": "Benvenuti a Leek Wars!"

@@ -10,7 +10,7 @@
 	"shortcut_9": "<b>Alt + sinistra/destra</b>: passa tra i file aperti",
 	"shortcut_10": "<b>Ctrl + Spazio</b>: completamento automatico",
 	"shortcut_11": "<b>Ctrl + clic</b>: vai alla definizione del simbolo",
-	"shortcut_12": "<b>Ctrl + Maiusc + F</b>: formattazione e rientro automatici del codice",
+	"shortcut_12": "<b>Alt + Maiusc + F</b>: formattazione e rientro automatici del codice",
 	"shortcut_13": "<b>Ctrl + U</b>: chiude/estende il blocco di codice corrente",
 	"shortcut_14": "<b>Ctrl + J</b>: Comprimi tutti i blocchi di codice",
 	"shortcut_15": "<b>Ctrl + I</b>: espande tutti i blocchi di codice"
