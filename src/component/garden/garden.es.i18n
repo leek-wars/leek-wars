@@ -38,5 +38,15 @@
 	"category_boss_fight": "Jefe",
 	"garden_boss": "Huerto del jefe",
 	"select_boss": "Seleccione un jefe",
-	"attack": "Ataque"
+	"attack": "Ataque",
+	"category_arena": "Arenas",
+	"garden_arena": "Huerto Arenas",
+	"arena_preference": "Modo preferido",
+	"arena_no_preference": "Da igual",
+	"arena_mode_br": "Battle Royale",
+	"arena_mode_war": "Guerra",
+	"arena_mode_chest_hunt": "Caza de cofres",
+	"arena_mode_colossus": "Coloso",
+	"arena_wants_colossus": "Quiero ser el Coloso",
+	"arena_countdown": "Lanzamiento en {0}s..."
 }

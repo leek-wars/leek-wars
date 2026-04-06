@@ -1,11 +1,11 @@
 {
 	"cancel": "Anular",
-	"me": "A mí",
+	"me": "Yo",
 	"new_message": "Nuevo mensaje...",
 	"quit": "Abandonar",
 	"quit_confirm": "¿Quieres salir de la conversación? Ya no podrás ver los mensajes anteriores.",
 	"quit_conversation": "Deja la conversación",
-	"send": "Enviar a",
+	"send": "Enviar",
 	"title": "Chats",
 	"cat_team": "Equipo",
 	"cat_private": "Mensajes privados",

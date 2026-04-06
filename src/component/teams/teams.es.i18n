@@ -1,12 +1,12 @@
 {
 	"title": "Equipos que reclutan",
 	"banner_title": "¡Únete a un equipo!",
-	"banner_desc": "Lucha junto a otros granjeros, participa en torneos de equipo y sube de nivel más rápido. ¡Encuentra el equipo que te conviene!",
+	"banner_desc": "Lucha junto a otros criadores, participa en torneos de equipo y sube de nivel más rápido. ¡Encuentra el equipo que te conviene!",
 	"team_name": "Equipo",
 	"level": "Nivel",
 	"talent": "Talento",
 	"avg_leek_level": "Niv. medio",
-	"members": "Granjeros",
+	"members": "Criadores",
 	"leeks": "Puerros",
 	"activity": "Actividad",
 	"recruitment_message": "Reclutamiento",
@@ -23,5 +23,7 @@
 	"error_already_have_candidacy": "Ya tienes una candidatura en curso.",
 	"error_already_in_team": "Ya estás en un equipo.",
 	"error_team_full": "Este equipo está lleno.",
-	"error_too_many_candidacies": "Ya tienes 5 candidaturas en curso."
+	"error_too_many_candidacies": "Ya tienes 5 candidaturas en curso.",
+	"show_closed": "Ver las cerradas",
+	"closed": "Cerrada"
 }

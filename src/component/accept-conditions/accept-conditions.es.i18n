@@ -1,7 +1,7 @@
 {
-	"accept_1": "Se ha realizado una actualización de los términos de servicio o aún no ha aceptado ningún término\nde uso (participación en la beta).",
-	"accept_2": "Debes leer y aceptar las {cgu} (CGU) actuales\nantes de continuar jugando Leek Wars.",
-	"cgu": "términos de servicio",
-	"i_accept": "Acepto los T&C",
+	"accept_1": "Se ha realizado una actualización de las condiciones de uso o aún no has aceptado ninguna condición\nde uso (participación en la beta).",
+	"accept_2": "Debes leer y aceptar las {cgu} (CGU) actuales\nantes de continuar jugando a Leek Wars.",
+	"cgu": "condiciones generales de uso",
+	"i_accept": "Acepto las CGU",
 	"title": "Condiciones de uso"
 }

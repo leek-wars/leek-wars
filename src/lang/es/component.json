@@ -2,14 +2,14 @@
 	"core": "Corazón XN.a-56",
 	"core2": "X.v-57 núcleo informático",
 	"core2_desc": "Núcleo de procesamiento X.v-57: 10 teraflops de potencia de procesamiento bruta. Funciona a 2,4 GHz, 3,2 GHz en modo Turbo. 1000 MB de memoria caché.",
-	"core3": "X.v-57 núcleo informático",
-	"core3_desc": "Núcleo de procesamiento X.v-57: 10 teraflops de potencia de procesamiento bruta. Funciona a 2,4 GHz, 3,2 GHz en modo Turbo. 1000 MB de memoria caché.",
+	"core3": "Núcleo de cálculo Z.v-850",
+	"core3_desc": "Núcleo de cálculo Z.v-850: 100 teraflops de potencia de cálculo bruta. Funciona a 4,8 GHz, 5,6 GHz en modo Turbo. 10 GB de memoria caché.",
 	"battery": "Batería",
 	"nuclear_core": "Generador nuclear",
-	"iron_plate": "Plancha de hierro",
+	"iron_plate": "Placa de hierro",
 	"amazonite_plate": "Placa de amazonita",
 	"obsidian_plate": "Placa de obsidiana",
-	"spring": "Primavera",
+	"spring": "Resorte",
 	"copper_spring": "Muelle de cobre",
 	"elinvar_spring": "Muelle Elinvar",
 	"ssd": "SSD",
@@ -55,6 +55,6 @@
 	"recovery_ram": "Solución de problemas de RAM",
 	"recovery_core": "Solución de problemas del núcleo",
 	"core_desc": "Núcleo de cálculo XN.a-56: 1 teraflops de potencia de cálculo bruta. Frecuencia de reloj de 0,4 GHz. memoria caché de 100 MB.",
-	"recovery_ram_desc": "Componente de localización de averías. Elimina una ranura de componente.",
-	"recovery_core_desc": "Componente de localización de averías. Elimina una ranura de componente."
+	"recovery_ram_desc": "Componente de reparación. Elimina dos ranuras de componente.",
+	"recovery_core_desc": "Componente de reparación. Elimina dos ranuras de componente."
 }

@@ -31,17 +31,17 @@
 	"mail_tournament_farmer_round_finished_subject": "¡Tu partida de %s ha terminado!",
 	"mail_tournament_farmer_round_finished_text": "¡Tu partida de %s ha terminado!",
 	"mail_tournament_solo_round_finished_html": "¡<b>%s</b> ha terminado su combate de <b>%s</b>!",
-	"mail_tournament_solo_round_finished_subject": "¡%s ha terminado su lucha contra %s!",
-	"mail_tournament_solo_round_finished_text": "¡%s ha terminado su lucha contra %s!",
+	"mail_tournament_solo_round_finished_subject": "¡%s ha terminado su combate de %s!",
+	"mail_tournament_solo_round_finished_text": "¡%s ha terminado su combate de %s!",
 	"register_mail": "Felicidades %s, estás registrado en Leek Wars.\n\nPara validar su cuenta, vaya a esta página: %s\n",
 	"register_mail_html": "¡Felicidades <b>%s</b>, estás registrado en Leek Wars!<br/><br/>Para validar tu cuenta, <a href='%s'>Haz clic aquí</a>",
 	"register_mail_subject": "Leek Wars: registro",
-	"reset_mail": "¡Hola <b>%s</b>!\n\nSu solicitud de restablecimiento de contraseña se ha registrado correctamente.\n\nPara cambiar su contraseña, haga clic en este enlace: %s.",
+	"reset_mail": "¡Hola %s!\n\nSu solicitud de restablecimiento de contraseña se ha registrado correctamente.\n\nPara cambiar su contraseña, haga clic en este enlace: %s.",
 	"reset_mail_html": "¡Hola <b>%s</b>!\n<br><br>\nSu solicitud de restablecimiento de contraseña se ha registrado correctamente.\n<br><br>\nPara cambiar su contraseña, haga clic en <a href='%s'>este enlace</a>.\n<br><br>\n¡Nos vemos pronto en Leek Wars!",
 	"reset_mail_subject": "Leek Wars: restablecimiento de contraseña",
 	"see_the_fight": "Ver la pelea",
 	"see_the_message": "Ver publicacion",
 	"group_invite_subject": "%1$s te invita a jugar Leek Wars",
 	"group_invite_text": "%1$s te invita a jugar Leek Wars, haz clic en el enlace para conectarte: %2$s (enlace válido por 1 hora).",
-	"group_invite_html": "<b>%1$s</b> te invita a jugar Leek Wars, haz clic en el enlace para conectarte: <br><br> <a href=\"%2$s\">%2$s</ a> <br><br> Enlace valido por 1 hora, buen juego!"
+	"group_invite_html": "<b>%1$s</b> te invita a jugar Leek Wars, haz clic en el enlace para conectarte: <br><br> <a href=\"%2$s\">%2$s</a> <br><br> Enlace válido por 1 hora, ¡buen juego!"
 }

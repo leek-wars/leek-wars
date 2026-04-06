@@ -4,10 +4,10 @@
 	"few_seconds": "algunos segundos",
 	"next_round_in": "Próxima ronda en {0}",
 	"not_found": "ID de torneo {0} no encontrado :(",
-	"send": "Enviar a",
+	"send": "Enviar",
 	"solo": "Torneo en solitario del {0}",
 	"team": "Torneo por equipos del {0}",
 	"next_round_supervisor": "La próxima ronda será iniciada por el supervisor.",
 	"generate": "Generar la siguiente ronda",
-	"generating": "La generación actual..."
+	"generating": "Generando..."
 }

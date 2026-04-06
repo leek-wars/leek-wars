@@ -7,9 +7,9 @@
 	"1week": "1 semana",
 	"n_fights": "{0} peleas",
 	"victories": "victorias",
-	"draws": "corbatas",
+	"draws": "empates",
 	"defeats": "derrotas",
-	"ratio": "relación",
+	"ratio": "ratio",
 	"not_found_id": "Puerro de id {0} no encontrado",
 	"fight_type": "Tipos de lucha",
 	"fight_context": "Contextos de combate",
@@ -20,5 +20,12 @@
 	"challenge": "Desafío",
 	"garden": "Huerta",
 	"tournament": "Torneo",
-	"boss": "Jefe"
+	"boss": "Jefe",
+	"loot": "Botín de combate",
+	"chests": "Cofres",
+	"rare_loot": "Recursos raros",
+	"war": "Guerra",
+	"chest_hunt": "Caza de cofres",
+	"n_chests": "{0} cofres",
+	"colossus": "Coloso"
 }

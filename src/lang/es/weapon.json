@@ -1,5 +1,5 @@
 {
-	"axe": "Cortado",
+	"axe": "Hacha",
 	"b_laser": "B-láser",
 	"bazooka": "Bazuca",
 	"broadsword": "Gladius",
@@ -9,7 +9,7 @@
 	"electrisor": "Electrificador",
 	"enhanced_lightninger": "Bláster mejorado",
 	"explorer_rifle": "Rifle de explorador",
-	"flame_thrower": "Echador de llama",
+	"flame_thrower": "Lanzallamas",
 	"gazor": "Gasificador",
 	"grenade_launcher": "Lanzagranadas",
 	"heavy_sword": "Espada pesada",
@@ -18,9 +18,9 @@
 	"laser": "Láser",
 	"lightninger": "Blaster",
 	"machine_gun": "Ametralladora",
-	"magnum": "Botella doble",
+	"magnum": "Magnum",
 	"m_laser": "M-láser",
-	"neutrino": "Neutrinos",
+	"neutrino": "Neutrino",
 	"pistol": "Pistola",
 	"quantum_rifle": "Rifle cuántico",
 	"shotgun": "Escopeta",
@@ -29,11 +29,11 @@
 	"unbridled_gazor": "Gasificador desenfrenado",
 	"unstable_destroyer": "Destructor inestable",
 	"revoked_m_laser": "M-Laser revocado",
-	"rhino": "Rinoceronte",
-	"rifle": "Fusil",
+	"rhino": "Rhino",
+	"rifle": "Rifle",
 	"sword": "Espada",
-	"taser": "Tasers",
+	"taser": "Taser",
 	"odachi": "Odachi",
 	"excalibur": "Excalibur",
-	"scythe": "Falso"
+	"scythe": "Guadaña"
 }

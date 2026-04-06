@@ -13,9 +13,9 @@
 	"notifications_on": "Notificaciones habilitadas",
 	"notifications_off": "Notificaciones deshabilitadas",
 	"pin": "Colgar",
-	"pinned": "Sujeto colgante",
+	"pinned": "Tema fijado",
 	"resolved": "Tema resuelto",
-	"send": "Enviar a",
+	"send": "Enviar",
 	"solved": "Resuelto",
 	"status_open": "Abierto",
 	"status_resolved": "Resuelto",
@@ -40,5 +40,9 @@
 	"hide_topic": "Ocultar",
 	"show_topic": "Mostrar",
 	"set_release": "Release",
-	"release_hint": "Introduce 0 para quitar la release"
+	"release_hint": "Introduce 0 para quitar la release",
+	"old_topic_warning": "El último mensaje de este tema tiene más de un año.",
+	"old_topic_title": "Tema antiguo",
+	"old_topic_confirm": "El último mensaje de este tema tiene más de un año. ¿Seguro que quieres responder?",
+	"see_changelog": "Ver el changelog de la {0}"
 }

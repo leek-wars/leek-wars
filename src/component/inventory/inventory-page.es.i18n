@@ -1,5 +1,5 @@
 {
-	"price": "Precios",
+	"price": "Precio",
 	"price_lot": "Precio del lote",
 	"quantity": "Cantidad",
 	"name": "Nombre",
@@ -7,13 +7,13 @@
 	"date": "Fecha",
 	"all": "Todos",
 	"weapons": "Armas",
-	"chips": "Pulgas",
+	"chips": "Chips",
 	"potions": "Pociones",
 	"hats": "Sombreros",
-	"pomps": "Comparecencias",
+	"pomps": "Galas",
 	"resources": "Recursos",
 	"no_group": "Sin grupo",
-	"type": "Type",
+	"type": "Tipo",
 	"rarity": "Rareza",
 	"craftable": "Fabricable",
 	"ingredient_count": "Cantidad de ingredientes"

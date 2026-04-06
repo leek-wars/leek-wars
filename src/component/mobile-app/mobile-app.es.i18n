@@ -1,7 +1,7 @@
 {
 	"app_installation": "Instalación de la aplicación en el móvil",
 	"app_info": "Siguiendo estas instrucciones, podrá instalar la aplicación web Leek Wars (<a href='https://en.wikipedia.org/wiki/Progressive_web_app'>PWA</a>)\nen tu móvil\nEsta función se gestiona más o menos bien según el sistema operativo y los navegadores, y el modo de instalación puede variar de uno a otro.\nEl navegador utilizado en las instrucciones es <b>Chrome</b> en <b>Android</b>, que parece manejar mejor las aplicaciones web.",
-	"app_preview": "Descripción general de la aplicación",
+	"app_preview": "Vista previa de la aplicación",
 	"title": "Aplicación movil",
 	"step_n": "Etapa {0}",
 	"step1": "Ir a leekwars.com",
@@ -15,5 +15,5 @@
 	"preview5": "Pagina de trofeos",
 	"preview6": "Viendo una pelea",
 	"preview7": "Edición de una IA",
-	"preview8": "Notificación de inserción"
+	"preview8": "Notificación push"
 }
