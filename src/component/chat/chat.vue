@@ -314,7 +314,9 @@ import { emitter } from '@/model/vue'
 					// Auto-inscription en arène avec le dernier poireau utilisé ou le premier disponible
 					const farmer = this.$store.state.farmer
 					if (farmer) {
-						const lastLeekId = parseInt(localStorage.getItem('garden/leek') || '', 10)
+						const arenaLeekId = parseInt(localStorage.getItem('arena-leek') || '', 10)
+						const gardenLeekId = parseInt(localStorage.getItem('garden/leek') || '', 10)
+						const lastLeekId = (arenaLeekId && farmer.leeks[arenaLeekId]) ? arenaLeekId : gardenLeekId
 						const leek = (lastLeekId && farmer.leeks[lastLeekId]) ? farmer.leeks[lastLeekId] : Object.values(farmer.leeks)[0] as any
 						if (leek) {
 							LeekWars.arena.register(leek.id)
