@@ -47,7 +47,7 @@ export async function loadGameData(): Promise<{ [key: string]: any } | null> {
 
 		// Charger les types non-changés depuis IndexedDB
 		if (changedTypes.length < DATA_TYPES.length) {
-			const cached = await loadFromIdb()
+			const cached = await loadFromIdb(true)
 			if (cached) {
 				// Merge : inline écrase le cache
 				for (const type of changedTypes) {
@@ -75,14 +75,27 @@ export async function loadGameData(): Promise<{ [key: string]: any } | null> {
 	return await fetchAll()
 }
 
-async function loadFromIdb(): Promise<{ [key: string]: any } | null> {
+async function loadFromIdb(skipVersionCheck = false): Promise<{ [key: string]: any } | null> {
 	try {
 		const keys = ['meta', ...DATA_TYPES.map(t => 'data:' + t)]
 		const values = await getMany(keys, store)
 		const meta = values[0] as Meta | undefined
 		if (!meta) return null
+
+		if (!skipVersionCheck) {
+			const cookieVersion = getCookieMasterVersion()
+			if (cookieVersion && meta.master_version !== cookieVersion) {
+				console.warn(`[GameData] Version mismatch: IDB=${meta.master_version}, cookie=${cookieVersion} → invalidating cache`)
+				return null
+			}
+		}
+
 		const result: { [key: string]: any } = {}
 		for (let i = 0; i < DATA_TYPES.length; i++) {
+			if (values[i + 1] == null) {
+				console.warn(`[GameData] Missing type '${DATA_TYPES[i]}' in IndexedDB → invalidating cache`)
+				return null
+			}
 			result[DATA_TYPES[i]] = values[i + 1]
 		}
 		return result
@@ -114,6 +127,11 @@ async function fetchAll(): Promise<{ [key: string]: any }> {
 	updateCookie(json.master_version, json.hashes)
 
 	return data
+}
+
+function getCookieMasterVersion(): string | null {
+	const match = document.cookie.match(/(?:^|;\s*)data_hashes=([^:;]+)/)
+	return match ? match[1] : null
 }
 
 function updateCookie(masterVersion: string, hashes: { [key: string]: string }) {
