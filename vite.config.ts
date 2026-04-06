@@ -200,19 +200,24 @@ function gameDataPlugin(): Plugin {
 	const api = (process.env.LEEKWARS_LOCAL ? 'http://localhost:8500' : 'https://leekwars.com') + '/api/'
 
 	async function loadData() {
+		// Check léger : juste la master version
+		const versionResponse = await fetch(api + 'data/version')
+		const { master_version } = await versionResponse.json()
+
+		if (master_version === masterVersion) return // Rien n'a changé
+
+		// Master version différente → re-fetch tout
+		console.log('[game-data] Version changed: ' + masterVersion + ' → ' + master_version)
 		const response = await fetch(api + 'data/get-all')
 		const json = await response.json()
-		// Only update if master version changed
-		if (json.master_version !== masterVersion) {
-			allData = json.data
-			allHashes = json.hashes
-			masterVersion = json.master_version
-			allDataJson = {}
-			for (const type of Object.keys(allData!)) {
-				allDataJson[type] = JSON.stringify(allData![type])
-			}
-			console.log('[game-data] Loaded ' + Object.keys(allData!).length + ' types, master=' + masterVersion)
+		allData = json.data
+		allHashes = json.hashes
+		masterVersion = json.master_version
+		allDataJson = {}
+		for (const type of Object.keys(allData!)) {
+			allDataJson[type] = JSON.stringify(allData![type])
 		}
+		console.log('[game-data] Loaded ' + Object.keys(allData!).length + ' types, master=' + masterVersion)
 	}
 
 	return {
