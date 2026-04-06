@@ -25,5 +25,7 @@
 	"payment_wrong_code": "Codigo invalido",
 	"first_purchase_banner": "¿Primera compra? ¡Todos tus cristales se duplican!",
 	"items_title": "Te están esperando",
-	"back": "Volver al banco"
+	"back": "Volver al banco",
+	"best_value": "Mejor oferta",
+	"offered": "gratis"
 }

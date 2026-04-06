@@ -25,5 +25,7 @@
 	"payment_wrong_code": "Código inválido",
 	"first_purchase_banner": "Primeira compra? Todos os seus cristais são duplicados!",
 	"items_title": "Eles estão esperando por você",
-	"back": "Voltar ao banco"
+	"back": "Voltar ao banco",
+	"best_value": "Melhor oferta",
+	"offered": "grátis"
 }

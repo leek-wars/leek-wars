@@ -25,5 +25,7 @@
 	"payment_wrong_code": "Zły kod",
 	"first_purchase_banner": "Pierwszy zakup? Wszystkie Twoje kryształy zostaną podwojone!",
 	"items_title": "Czekają tylko na Ciebie",
-	"back": "Powrót do banku"
+	"back": "Powrót do banku",
+	"best_value": "Najlepsza oferta",
+	"offered": "gratis"
 }

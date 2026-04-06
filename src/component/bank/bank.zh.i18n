@@ -25,5 +25,7 @@
 	"payment_wrong_code": "无效的代码",
 	"first_purchase_banner": "首次购买？您的所有水晶都将翻倍！",
 	"items_title": "它们正等着您",
-	"back": "返回银行"
+	"back": "返回银行",
+	"best_value": "超值优惠",
+	"offered": "免费"
 }

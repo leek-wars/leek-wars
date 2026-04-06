@@ -6,6 +6,8 @@
 	"items_title": "Ils n'attendent que vous",
 	"title": "Banque des cristaux",
 	"back": "Retour à la banque",
+	"best_value": "Meilleure offre",
+	"offered": "offerts",
 	"buy_with": "Acheter avec",
 	"paypal_message": "Cliquez sur un bouton pour commencer l'achat",
 	"purshase_title": "Achat de <b>{0}</b> cristaux avec <i>{1}</i>",

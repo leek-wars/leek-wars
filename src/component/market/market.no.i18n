@@ -18,6 +18,7 @@
 	"error_already_bought_fights_with_habs": "Du kan bare kjøpe én kamppakke i Habs per dag",
 	"error_not_enough_habs": "Du har ikke nok Habs",
 	"error_not_enough_crystals": "Du har ikke nok krystaller",
+	"not_enough_crystals": "Noen få krystaller til, og den er din!",
 	"fights": "Kamper",
 	"fights_bought": "Kjøpte kamper!",
 	"habs_after_purchase": "Habs etter kjøp",

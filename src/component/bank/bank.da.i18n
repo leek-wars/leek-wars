@@ -25,5 +25,7 @@
 	"payment_wrong_code": "Ugyldig kode",
 	"first_purchase_banner": "Første køb? Alle dine krystaller bliver fordoblet!",
 	"items_title": "De venter kun på dig",
-	"back": "Tilbage til banken"
+	"back": "Tilbage til banken",
+	"best_value": "Bedste tilbud",
+	"offered": "gratis"
 }

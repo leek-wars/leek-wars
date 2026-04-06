@@ -25,5 +25,7 @@
 	"payment_wrong_code": "無効なコード",
 	"first_purchase_banner": "初めての購入ですか？すべてのクリスタルが2倍になります！",
 	"items_title": "あなたを待っています",
-	"back": "バンクに戻る"
+	"back": "バンクに戻る",
+	"best_value": "お得",
+	"offered": "無料"
 }

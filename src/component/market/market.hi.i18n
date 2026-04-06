@@ -18,6 +18,7 @@
 	"error_already_bought_fights_with_habs": "आप हब्स में प्रति दिन केवल एक युद्ध पैक खरीद सकते हैं",
 	"error_not_enough_habs": "आपके पास पर्याप्त हैब्स नहीं हैं",
 	"error_not_enough_crystals": "आपके पास पर्याप्त क्रिस्टल नहीं हैं",
+	"not_enough_crystals": "कुछ और क्रिस्टल और यह आपका है!",
 	"fights": "झगड़े",
 	"fights_bought": "झगड़े खरीदे!",
 	"habs_after_purchase": "खरीद के बाद हैब्स",

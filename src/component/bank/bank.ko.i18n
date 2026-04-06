@@ -25,5 +25,7 @@
 	"payment_wrong_code": "유효하지 않은 코드",
 	"first_purchase_banner": "첫 구매인가요? 모든 크리스탈이 두 배로 지급됩니다!",
 	"items_title": "당신을 기다리고 있어요",
-	"back": "은행으로 돌아가기"
+	"back": "은행으로 돌아가기",
+	"best_value": "최고 혜택",
+	"offered": "무료"
 }

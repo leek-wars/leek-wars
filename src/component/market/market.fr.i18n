@@ -18,6 +18,7 @@
 	"error_already_bought_fights_with_habs": "Vous ne pouvez acheter qu'un seul pack de combat en Habs par jour",
 	"error_not_enough_habs": "Vous n'avez pas assez d'Habs",
 	"error_not_enough_crystals": "Vous n'avez pas assez de cristaux",
+	"not_enough_crystals": "Quelques cristaux de plus et c'est à vous !",
 	"fights": "Combats",
 	"fights_bought": "Combats achetés !",
 	"habs_after_purchase": "Habs après achat",

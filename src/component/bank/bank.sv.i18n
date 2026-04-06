@@ -25,5 +25,7 @@
 	"payment_wrong_code": "Ogiltig kod",
 	"first_purchase_banner": "Första köpet? Alla dina kristaller fördubblas!",
 	"items_title": "De väntar bara på dig",
-	"back": "Tillbaka till banken"
+	"back": "Tillbaka till banken",
+	"best_value": "Bästa erbjudandet",
+	"offered": "gratis"
 }

@@ -175,6 +175,9 @@
 										<v-btn v-if="selectedItem.buyable" :disabled="($store.state.farmer && $store.state.farmer.habs < selectedItem.price * 10)" class="buy-button" @click="openBuyHabs(10)">{{ $filters.number(selectedItem.price * 10) }}<img src="/image/hab.png"></v-btn>
 										<v-btn v-if="selectedItem.buyable_crystals" :disabled="($store.state.farmer && $store.state.farmer.crystals < selectedItem.crystals * 10)" class="buy-crystals-button" @click="openBuyCrystals(10)">{{ $filters.number(selectedItem.crystals * 10) }}<img src="/image/crystal.png"></v-btn>
 									</div>
+									<v-btn v-if="selectedItem.buyable_crystals && $store.state.farmer && $store.state.farmer.crystals < selectedItem.crystals" class="not-enough-crystals" variant="text" color="#e91e9e" prepend-icon="mdi-cart-outline" to="/bank">
+										{{ $t('not_enough_crystals') }}
+									</v-btn>
 									<div v-if="selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0)" class="already-have">
 										{{ $t('already_have') }}
 									</div>
@@ -938,6 +941,10 @@
 			width: 20px;
 			margin-right: 4px;
 		}
+	}
+	.not-enough-crystals {
+		font-size: 13px;
+		margin-bottom: 8px;
 	}
 	.already-have {
 		font-style: italic;

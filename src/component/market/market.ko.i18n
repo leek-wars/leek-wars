@@ -18,6 +18,7 @@
 	"error_already_bought_fights_with_habs": "하루에 Habs에서 하나의 배틀 팩만 구입할 수 있습니다.",
 	"error_not_enough_habs": "Habs가 충분하지 않습니다.",
 	"error_not_enough_crystals": "크리스탈이 부족합니다.",
+	"not_enough_crystals": "크리스탈 몇 개만 더 있으면 당신의 것!",
 	"fights": "싸움",
 	"fights_bought": "싸움을 샀다!",
 	"habs_after_purchase": "구매 후 Habs",

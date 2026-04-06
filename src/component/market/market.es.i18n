@@ -18,6 +18,7 @@
 	"error_already_bought_fights_with_habs": "Solo puedes comprar un paquete de batalla en Habs por día",
 	"error_not_enough_habs": "No tienes suficientes Habs",
 	"error_not_enough_crystals": "No tienes suficientes cristales.",
+	"not_enough_crystals": "¡Unos cristales más y será tuyo!",
 	"fights": "Peleas",
 	"fights_bought": "¡Peleas compradas!",
 	"habs_after_purchase": "Habs después de la compra",

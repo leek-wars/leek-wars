@@ -25,5 +25,7 @@
 	"payment_wrong_code": "Virheellinen koodi",
 	"first_purchase_banner": "Ensimmäinen ostos? Kaikki kristallisi tuplataan!",
 	"items_title": "Ne odottavat vain sinua",
-	"back": "Takaisin pankkiin"
+	"back": "Takaisin pankkiin",
+	"best_value": "Paras tarjous",
+	"offered": "ilmaiseksi"
 }

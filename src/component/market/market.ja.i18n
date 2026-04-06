@@ -18,6 +18,7 @@
 	"error_already_bought_fights_with_habs": "Habs で購入できるバトル パックは 1 日 1 つだけです",
 	"error_not_enough_habs": "十分なハブがありません",
 	"error_not_enough_crystals": "クリスタルが足りない",
+	"not_enough_crystals": "あと少しのクリスタルであなたのものに！",
 	"fights": "戦う",
 	"fights_bought": "買った戦い！",
 	"habs_after_purchase": "購入後のハブ",

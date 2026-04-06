@@ -25,5 +25,7 @@
 	"payment_wrong_code": "Ungültiger Code",
 	"first_purchase_banner": "Erster Einkauf? Alle Ihre Kristalle werden verdoppelt!",
 	"items_title": "Sie warten nur auf Sie",
-	"back": "Zurück zur Bank"
+	"back": "Zurück zur Bank",
+	"best_value": "Bestes Angebot",
+	"offered": "gratis"
 }
