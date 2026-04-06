@@ -26,7 +26,7 @@
 					<template #activator="{ props }">
 						<div class="tab" @click="updateOpened" v-bind="props">
 							<span>{{ $t('opened') }}</span>
-							<v-switch v-model="team.opened" hide-details />
+							<v-switch :model-value="team.opened ?? false" hide-details @click.stop />
 						</div>
 					</template>
 					{{ $t('recrutment_mode') }}
