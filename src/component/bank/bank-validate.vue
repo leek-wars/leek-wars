@@ -3,8 +3,7 @@
 		<loader v-if="loading" />
 		<template v-else-if="success">
 			<div class="page-header page-bar">
-				<!-- <h1 v-html="$t('payment_success', [vendor])"></h1> -->
-				<h1 v-html="$t('payment_success_simple')"></h1>
+				<h1><breadcrumb :items="[{name: $t('title'), link: '/bank'}, {name: $t('payment_success_simple'), link: ''}]" :raw="true" /></h1>
 			</div>
 			<panel class="first center">
 				<br>
@@ -30,7 +29,7 @@
 		</template>
 		<div v-else-if="error">
 			<div class="page-header page-bar">
-				<h1 v-html="$t('payment_fail', [vendor])"></h1>
+				<h1><breadcrumb :items="[{name: $t('title'), link: '/bank'}, {name: $t('payment_fail', [vendor]), link: ''}]" :raw="true" /></h1>
 			</div>
 			<panel class="first center">
 				<br>
@@ -46,9 +45,11 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { mixins } from '@/model/i18n'
+	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
 	@Options({
-		name: 'bank', i18n: {}
+		name: 'bank', i18n: {}, mixins: [...mixins], components: { Breadcrumb }
 	})
 	export default class BankValidate extends Vue {
 		@Prop() success!: boolean
@@ -60,13 +61,15 @@
 		created() {
 			this.update()
 		}
+		mounted() {
+			setTimeout(() => LeekWars.setTitle(this.$t('title')), 100)
+		}
 		@Watch('$route')
 		update() {
 			this.loading = false
 			this.reason = 'reason' in this.$route.params ? this.$route.params.reason : ''
 			this.crystals = 'crystals' in this.$route.params ? parseInt(this.$route.params.crystals, 10) : 0
 			this.vendor = 'vendor' in this.$route.params ? this.$route.params.vendor : ''
-			LeekWars.setTitle(this.success ? this.$t('payment_success', [this.vendor]) : this.$t('payment_fail', [this.vendor]))
 			if (this.success !== undefined) {
 				this.error = true
 				return
