@@ -1,5 +1,5 @@
 {
-	"android_app": "Android App",
+	"android_app": "Android-App",
 	"conditions": "Indem Sie auf die Schaltfläche \u201ERegistrieren\u201C klicken, akzeptieren Sie den {link}.",
 	"conditions_name": "nutzungsbedingungen",
 	"confirm_password": "Bestätigung",
@@ -20,7 +20,7 @@
 	"error_not_same_password": "Die beiden eingegebenen Passwörter müssen identisch sein",
 	"error_password_length": "Das Passwort muss zwischen {0} und {1} Zeichen enthalten",
 	"godfather": "Sponsor (Optional)",
-	"help_tutorial_doc": "Hilfe, Anleitung, Dok",
+	"help_tutorial_doc": "Hilfe, Anleitung, Dokumentation",
 	"intro": "<b>Leek Wars</b> ist ein Programmierspiel, in dem du den mächtigsten Lauch erschaffen und deine Feinde vernichten musst!<br><br>\nEntwickeln Sie Ihre eigene künstliche Intelligenz dank <b>LeekScript</b>, einer leicht zu erlernenden Sprache,\nund werde der beste Züchter!",
 	"last_update": "Letztes Update",
 	"login": "Einloggen",

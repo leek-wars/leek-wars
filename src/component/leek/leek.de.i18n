@@ -16,7 +16,7 @@
 	"copy_as_test": "Kopieren Sie {0} als Test-Lauch mit denselben Werten und derselben Ausrüstung",
 	"customize": "Lauch anpassen",
 	"defeats": "niederlagen",
-	"draws": "attrappen",
+	"draws": "Unentschieden",
 	"edit": "Bearbeiten",
 	"equip_item": "Klicken oder ziehen und ablegen, um einen Gegenstand auszurüsten oder abzulegen",
 	"error_already_have_4_leeks": "Sie haben bereits 4 Lauch!",
@@ -89,7 +89,7 @@
 	"using_potion": "Mit dem Trank ...",
 	"validate": "Bestätigen",
 	"victories": "siege",
-	"weapon": "Bewaffnet",
+	"weapon": "Waffe",
 	"weapons": "Waffen",
 	"weapons_of": "Waffen von {0}",
 	"xp": "EP: {0}",
@@ -101,5 +101,7 @@
 	"start_a_fight": "Einen Kampf starten!",
 	"all_my_components": "Meine Komponenten",
 	"error_max_component": "{0} kann keine zusätzliche Komponente ausstatten.",
-	"ai_and_components": "KI und Komponenten"
+	"ai_and_components": "KI und Komponenten",
+	"arena_time": "Automatische Arenen alle zwei Stunden von 9:15 bis 23:15 Uhr",
+	"register_to_arena": "Für Arenen anmelden"
 }

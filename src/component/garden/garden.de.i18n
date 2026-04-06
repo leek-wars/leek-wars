@@ -38,5 +38,15 @@
 	"category_boss_fight": "Boss",
 	"garden_boss": "Gemüsegarten Boss",
 	"select_boss": "Wählen Sie einen Boss",
-	"attack": "Angriff"
+	"attack": "Angriff",
+	"category_arena": "Arenen",
+	"arena_preference": "Bevorzugter Modus",
+	"arena_no_preference": "Egal",
+	"arena_mode_br": "Battle Royale",
+	"arena_mode_war": "Krieg",
+	"arena_mode_chest_hunt": "Truhenjagd",
+	"arena_mode_colossus": "Koloss",
+	"arena_wants_colossus": "Ich will der Koloss sein",
+	"arena_countdown": "Start in {0}s...",
+	"garden_arena": "Gemüsegarten Arenen"
 }

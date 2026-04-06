@@ -19,7 +19,7 @@
 	"reason_5": "Falsche Teambeschreibung",
 	"reason_5_action": "Die Teambeschreibung wird gelöscht.",
 	"reason_6": "Falscher say()-Text im Kampf",
-	"reason_6_action": "Das say() aller Züchter Lauch in all ihren Kämpfen wird ausgeblendet.",
+	"reason_6_action": "Das say() aller Lauch des Züchters in all ihren Kämpfen wird ausgeblendet.",
 	"reason_7": "Falscher Inhalt im Forum",
 	"reason_7_action": "Der Forenbeitrag wird gelöscht",
 	"reason_8": "Falsche Chatwörter",
@@ -49,7 +49,7 @@
 	"report_farmer_for_reason": "{0} aus welchem Grund melden?",
 	"report_informations": "Zusätzliche Informationen (optional)",
 	"select_leek": "Wählen Sie einen Lauch aus",
-	"severity_s": "schwerkraft {0}",
+	"severity_s": "Schweregrad {0}",
 	"thank_you_for_reporting": "Danke für die Meldung",
 	"delete": "LÖSCHEN"
 }

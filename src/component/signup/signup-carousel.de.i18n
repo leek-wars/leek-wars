@@ -1,10 +1,10 @@
 {
-	"android_app": "Android App",
+	"android_app": "Android-App",
 	"editor": "Integrierter intelligenter KI-Editor",
 	"fight_beach": "Einzelkampf (1v1) am Strand",
-	"fight_desert": "Rancher kämpfen in der Wüste",
+	"fight_desert": "Züchter kämpfen in der Wüste",
 	"fight_factory": "Teamkampf (6v6) in der Fabrik",
-	"fight_forest": "Hirtenkampf (4v4) im Wald",
+	"fight_forest": "Züchter kämpfen (4v4) im Wald",
 	"fight_ice": "Battle Royale (10 Spieler) auf der Eisscholle",
 	"fight_test": "Bodenkampf testen",
 	"leek_page": "Seite Ihres Lauchs",

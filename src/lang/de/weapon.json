@@ -1,5 +1,5 @@
 {
-	"axe": "Gehackt",
+	"axe": "Axt",
 	"b_laser": "B-Laser",
 	"bazooka": "Bazooka",
 	"broadsword": "Schwert",
@@ -30,10 +30,10 @@
 	"unstable_destroyer": "Instabiler Zerstörer",
 	"revoked_m_laser": "M-Laser widerrufen",
 	"rhino": "Nashorn",
-	"rifle": "Pistole",
+	"rifle": "Gewehr",
 	"sword": "Schwert",
 	"taser": "Taser",
 	"odachi": "Odachi",
 	"excalibur": "Excalibur",
-	"scythe": "Falsche"
+	"scythe": "Sense"
 }

@@ -9,8 +9,8 @@
 	"frequency": "Frequenz",
 	"frequency_desc": "Hohe Frequenzen beginnen den Kampf zuerst",
 	"heal": "Pflege",
-	"invested_capital": "Das investierte Kapital",
-	"life": "Standpunkt",
+	"invested_capital": "Investiertes Kapital",
+	"life": "Lebenspunkte",
 	"life_desc": "Schaden, den eine Entität erleiden kann, bevor sie stirbt",
 	"life_steal": "Diebstahl des Lebens",
 	"magic": "Magie",
@@ -37,6 +37,6 @@
 	"operations": "Anzahl der Operationen",
 	"chips": "Maximale Anzahl an Chips",
 	"variables": "Variablen",
-	"base": "Investiert",
+	"base": "Basis",
 	"invested": "Investiert"
 }

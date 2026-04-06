@@ -107,5 +107,12 @@
 	"display_team": "besatzung",
 	"trophy_x": "Trophäe {0}",
 	"sponsorship": "Sponsoring",
-	"godsons_level": "Rekursive Gesamtebene der Verweise"
+	"godsons_level": "Rekursive Gesamtebene der Verweise",
+	"team_invitations": "Team-Einladungen",
+	"accept": "Annehmen",
+	"reject": "Ablehnen",
+	"invitation_accepted": "Einladung angenommen!",
+	"invitation_rejected": "Einladung abgelehnt",
+	"invite_to_team": "Ins Team einladen",
+	"invitation_sent": "Einladung gesendet!"
 }

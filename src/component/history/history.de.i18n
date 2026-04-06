@@ -20,5 +20,12 @@
 	"challenge": "Herausforderung",
 	"garden": "Gemüsegarten",
 	"tournament": "Turnier",
-	"boss": "Boss"
+	"boss": "Boss",
+	"war": "Krieg",
+	"chest_hunt": "Truhenjagd",
+	"loot": "Kampfbeute",
+	"chests": "Truhen",
+	"rare_loot": "Seltene Ressourcen",
+	"n_chests": "{0} Truhen",
+	"colossus": "Koloss"
 }
