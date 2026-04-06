@@ -205,10 +205,14 @@ const app = createApp({
 		})
 		
 		window.onbeforeunload = () => {
-			const component = router.currentRoute.matched[0].instances.default
-			const beforeRouteLeave = (component.$options as any).beforeRouteLeave
-			if (beforeRouteLeave) {
-				if (!beforeRouteLeave[0].bind(component)()) { return "Confirm" }
+			const matched = router.currentRoute.value?.matched[0]
+			if (matched) {
+				const component = matched.instances?.default
+				if (!component) return
+				const beforeRouteLeave = (component.$options as any).beforeRouteLeave
+				if (beforeRouteLeave) {
+					if (!beforeRouteLeave[0].bind(component)()) { return "Confirm" }
+				}
 			}
 			LeekWars.unload()
 		}
