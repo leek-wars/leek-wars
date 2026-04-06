@@ -52,5 +52,6 @@
 	"lama": "{leek} przywołuje moce 🦙 ({cost})",
 	"help_page": "Ucz się więcej:",
 	"leek_state_x_turns": "{leek} wchodzi w stan {state} ({turns} obraca się)",
-	"state_x": "Status {0}"
+	"state_x": "Status {0}",
+	"n_multiply_stats": "x{0} stats"
 }

@@ -149,5 +149,6 @@
 	"state_11": "Estático",
 	"n_uses": "<b>1</b> utilização | <b>{n}</b> utilizações",
 	"max_uses": "máximo de {uses} por ronda",
-	"usage_stats": "~{0} usos/combate (uma semana)"
+	"usage_stats": "~{0} usos/combate (uma semana)",
+	"type_61_fixed": "Cura pelo total do efeito anterior"
 }

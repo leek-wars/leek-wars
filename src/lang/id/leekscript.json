@@ -81,7 +81,7 @@
 	"error_65": "Interupsi AI: AI membutuhkan waktu lebih dari 10 detik untuk dieksekusi, dinonaktifkan selama sisa pertarungan",
 	"error_58": "Tidak dapat menjalankan \"{0}\"",
 	"error_59": "Tidak dapat menggunakan fungsi ini dengan argumen ({0}), argumen {1} yang diharapkan",
-	"error_66": "AI Anda tidak dapat dikompilasi dengan benar karena kode Anda terlalu besar.",
+	"error_66": "AI Anda tidak dapat dikompilasi dengan benar karena kode Anda terlalu besar. {0}",
 	"error_55": "Fungsi {0} akan dihapus, sekarang gunakan {1}",
 	"error_57": "Pembagian dengan nol",
 	"error_60": "Anda tidak memiliki AI",

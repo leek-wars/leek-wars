@@ -82,7 +82,7 @@
 	"error_65": "Interrupción de IA: IA tardó más de 10 segundos en ejecutarse, deshabilitada por el resto de la pelea",
 	"error_58": "No se puede ejecutar \"{0}\"",
 	"error_59": "No se puede usar esta función con argumentos ({0}), se esperaban {1} argumentos",
-	"error_66": "Su IA no se pudo compilar correctamente porque su código es demasiado grande.",
+	"error_66": "Su IA no se pudo compilar correctamente porque su código es demasiado grande. {0}",
 	"error_55": "Se eliminará la función {0}, ahora use {1}",
 	"error_57": "División por cero",
 	"error_60": "No tienes IA",

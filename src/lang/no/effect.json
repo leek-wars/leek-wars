@@ -149,5 +149,6 @@
 	"state_11": "Statisk",
 	"n_uses": "<b>1</b> bruk | <b>{n}</b> bruk",
 	"max_uses": "maksimalt {uses} per runde",
-	"usage_stats": "~{0} bruk/kamp (en uke)"
+	"usage_stats": "~{0} bruk/kamp (en uke)",
+	"type_61_fixed": "Helbreder for totalen av forrige effekt"
 }

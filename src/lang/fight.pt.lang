@@ -52,5 +52,6 @@
 	"lama": "{leek} invoca os poderes de 🦙 ({cost})",
 	"help_page": "Saber mais:",
 	"leek_state_x_turns": "{leek} entra no estado {state} ({turns} turns)",
-	"state_x": "Estado {0}"
+	"state_x": "Estado {0}",
+	"n_multiply_stats": "x{0} stats"
 }

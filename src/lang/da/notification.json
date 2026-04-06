@@ -106,5 +106,15 @@
 	"title_40": "{0} har stemt negativt på din besked i {1}",
 	"message_40": "Se beskeden",
 	"title_43": "{0} deltog i en Battle Royale!",
-	"message_43": "Se Battle Royale"
+	"message_43": "Se Battle Royale",
+	"title_41": "Holdet {0} har inviteret dig til at deltage!",
+	"message_41": "Se holdsiden",
+	"title_42": "{0} accepterede din invitation!",
+	"message_42": "Se holdsiden",
+	"title_44": "{0} deltog i en Krig!",
+	"message_44": "Se Krigen",
+	"title_45": "{0} deltog i en Skattejagt!",
+	"message_45": "Se Skattejagten",
+	"title_46": "{0} deltog i en Kolossus-kamp!",
+	"message_46": "Se Kolossus-kampen"
 }

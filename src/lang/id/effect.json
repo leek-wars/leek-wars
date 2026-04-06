@@ -123,6 +123,7 @@
 	"type_57_fixed": "Penyembuhan untuk <b>{0}</b>",
 	"type_58": "Memulihkan dari <b>{0}</b> hingga <b>{1}</b> untuk setiap serangan kritis yang dilakukan",
 	"type_59_fixed": "Tambahkan negara bagian <b>{0}</b>",
+	"type_61_fixed": "Menyembuhkan sejumlah total efek sebelumnya",
 	"effect_type_1": "Serangan",
 	"effect_type_2": "Peduli",
 	"effect_type_3": "Referensi",

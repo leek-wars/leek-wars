@@ -52,5 +52,6 @@
 	"lama": "{leek} は 🦙 ({cost}) の力を呼び起こします",
 	"help_page": "もっと詳しく知る：",
 	"leek_state_x_turns": "{leek}が{state}に入る（{turns}ターンする）",
-	"state_x": "ステータス {0}"
+	"state_x": "ステータス {0}",
+	"n_multiply_stats": "x{0} stats"
 }

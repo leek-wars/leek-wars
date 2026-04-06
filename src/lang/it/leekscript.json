@@ -81,7 +81,7 @@
 	"error_65": "Interruzione AI: l'IA ha impiegato più di 10 secondi per essere eseguita, disabilitata per il resto del combattimento",
 	"error_58": "Impossibile eseguire \"{0}\"",
 	"error_59": "Impossibile utilizzare questa funzione con argomenti ({0}), previsti {1} argomenti",
-	"error_66": "La tua intelligenza artificiale non può essere compilata correttamente perché il tuo codice è troppo grande.",
+	"error_66": "La tua intelligenza artificiale non può essere compilata correttamente perché il tuo codice è troppo grande. {0}",
 	"error_55": "La funzione {0} verrà rimossa, ora utilizza {1}",
 	"error_57": "Divisione per zero",
 	"error_60": "Non hai l'intelligenza artificiale",

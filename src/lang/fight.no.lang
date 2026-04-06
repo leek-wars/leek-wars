@@ -52,5 +52,6 @@
 	"lama": "{leek} påkaller kreftene til 🦙 ({cost})",
 	"help_page": "Lære mer:",
 	"leek_state_x_turns": "{leek} går inn i {state}-tilstanden ({turns} svinger)",
-	"state_x": "Status {0}"
+	"state_x": "Status {0}",
+	"n_multiply_stats": "x{0} stats"
 }

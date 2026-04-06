@@ -105,6 +105,16 @@
 	"message_39": "Se meldingen",
 	"title_40": "{0} stemte negativt på meldingen din i {1}",
 	"message_40": "Se meldingen",
+	"title_41": "Laget {0} har invitert deg til å bli med!",
+	"message_41": "Se lagsiden",
+	"title_42": "{0} aksepterte invitasjonen din!",
+	"message_42": "Se lagsiden",
 	"title_43": "{0} deltok i en Battle Royale!",
-	"message_43": "Se Battle Royale"
+	"message_43": "Se Battle Royale",
+	"title_44": "{0} deltok i en krig!",
+	"message_44": "Se krigen",
+	"title_45": "{0} deltok i en kistejakt!",
+	"message_45": "Se kistejakten",
+	"title_46": "{0} deltok i en kolosskamp!",
+	"message_46": "Se kolosskampen"
 }

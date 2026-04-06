@@ -106,5 +106,15 @@
 	"title_40": "{0} ha votado negativamente tu mensaje en {1}",
 	"message_40": "Ver el mensaje",
 	"title_43": "¡{0} ha participado en una Battle Royale!",
-	"message_43": "Ver la Battle Royale"
+	"message_43": "Ver la Battle Royale",
+	"title_41": "¡El equipo {0} te invita a unirte!",
+	"message_41": "Ver la página del equipo",
+	"title_42": "¡{0} aceptó tu invitación!",
+	"message_42": "Ver la página del equipo",
+	"title_44": "¡{0} ha participado en una Guerra!",
+	"message_44": "Ver la Guerra",
+	"title_45": "¡{0} ha participado en una Caza de cofres!",
+	"message_45": "Ver la Caza de cofres",
+	"title_46": "¡{0} ha participado en un combate Coloso!",
+	"message_46": "Ver el combate Coloso"
 }

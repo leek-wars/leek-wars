@@ -81,7 +81,7 @@
 	"error_65": "AI Interrupt: AI levou mais de 10 segundos para ser executado, desativado para o resto da luta",
 	"error_58": "Não foi possível executar \"{0}\"",
 	"error_59": "Não é possível usar esta função com argumentos ({0}), argumentos {1} esperados",
-	"error_66": "Sua IA não pôde ser compilada corretamente porque seu código é muito grande.",
+	"error_66": "Sua IA não pôde ser compilada corretamente porque seu código é muito grande. {0}",
 	"error_55": "A função {0} será removida, agora use {1}",
 	"error_57": "Divisão por zero",
 	"error_60": "Você não tem IA",

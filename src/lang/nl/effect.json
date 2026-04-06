@@ -149,5 +149,6 @@
 	"state_11": "Statisch",
 	"n_uses": "<b>1</b> gebruik | <b>{n}</b> gebruik",
 	"max_uses": "maximum {uses} per ronde",
-	"usage_stats": "~{0} gebruik/gevecht (een week)"
+	"usage_stats": "~{0} gebruik/gevecht (een week)",
+	"type_61_fixed": "Geneest voor het totaal van het vorige effect"
 }

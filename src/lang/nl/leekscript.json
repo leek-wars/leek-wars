@@ -81,7 +81,7 @@
 	"error_65": "AI-onderbreking: AI duurde langer dan 10 seconden om uit te voeren, uitgeschakeld voor de rest van het gevecht",
 	"error_58": "Kan \"{0}\" niet uitvoeren",
 	"error_59": "Kan deze functie niet gebruiken met argumenten ({0}), verwachte {1} argumenten",
-	"error_66": "Uw AI kan niet correct worden gecompileerd omdat uw code te groot is.",
+	"error_66": "Uw AI kan niet correct worden gecompileerd omdat uw code te groot is. {0}",
 	"error_55": "Functie {0} wordt verwijderd, gebruik nu {1}",
 	"error_57": "Deling door nul",
 	"error_60": "Je hebt geen AI",

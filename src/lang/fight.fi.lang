@@ -52,5 +52,6 @@
 	"lama": "{leek} käyttää 🦙:n voimia ({cost})",
 	"help_page": "Lisätietoja:",
 	"leek_state_x_turns": "{leek} siirtyy {state} tilaan ({turns} kääntyy)",
-	"state_x": "Tila {0}"
+	"state_x": "Tila {0}",
+	"n_multiply_stats": "x{0} stats"
 }

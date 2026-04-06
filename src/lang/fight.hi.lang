@@ -50,5 +50,8 @@
 	"turret": "बुर्ज",
 	"end_of_fight": "लड़ाई का अंत!",
 	"lama": "{leek} 🦙 ({cost}) की शक्तियों का आह्वान करता है",
-	"help_page": "और अधिक जानें:"
+	"help_page": "और अधिक जानें:",
+	"leek_state_x_turns": "{leek} enters {state} ({turns} state)",
+	"n_multiply_stats": "x{0} stats",
+	"state_x": "Status {0}"
 }

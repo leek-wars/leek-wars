@@ -149,5 +149,6 @@
 	"state_11": "Statisch",
 	"n_uses": "<b>1</b> Verwendung | <b>{n}</b> Verwendungen",
 	"max_uses": "{uses} Maximum pro Runde",
-	"usage_stats": "~{0} Einsätze/Kampf (eine Woche)"
+	"usage_stats": "~{0} Einsätze/Kampf (eine Woche)",
+	"type_61_fixed": "Heilt um den Gesamtwert des vorherigen Effekts"
 }

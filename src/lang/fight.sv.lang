@@ -52,5 +52,6 @@
 	"lama": "{leek} använder krafterna hos 🦙 ({cost})",
 	"help_page": "Läs mer:",
 	"leek_state_x_turns": "{leek} går in i {state} state ({turns} turns)",
-	"state_x": "Status {0}"
+	"state_x": "Status {0}",
+	"n_multiply_stats": "x{0} stats"
 }

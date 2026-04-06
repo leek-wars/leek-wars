@@ -52,5 +52,6 @@
 	"lama": "{leek}는 🦙({cost})의 힘을 사용합니다.",
 	"help_page": "더 알아보기:",
 	"leek_state_x_turns": "{leek}가 {state} 상태로 들어갑니다({turns} 회전)",
-	"state_x": "상태 {0}"
+	"state_x": "상태 {0}",
+	"n_multiply_stats": "x{0} stats"
 }

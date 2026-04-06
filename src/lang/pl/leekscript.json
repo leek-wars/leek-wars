@@ -81,7 +81,7 @@
 	"error_65": "Przerwanie AI: Wykonanie AI trwało dłużej niż 10 sekund, zostało wyłączone na resztę walki",
 	"error_58": "Nie można wykonać „{0}”",
 	"error_59": "Nie można użyć tej funkcji z argumentami ({0}), oczekiwano {1} argumentów",
-	"error_66": "Twoja sztuczna inteligencja nie mogła zostać poprawnie skompilowana, ponieważ kod jest za duży.",
+	"error_66": "Twoja sztuczna inteligencja nie mogła zostać poprawnie skompilowana, ponieważ kod jest za duży: {0}.",
 	"error_55": "Funkcja {0} zostanie usunięta, teraz użyj {1}",
 	"error_57": "Dzielenie przez zero",
 	"error_60": "Nie masz SI",

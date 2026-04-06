@@ -81,7 +81,7 @@
 	"error_65": "AI-avbrott: AI tog längre tid än 10 sekunder att köra, inaktiverad för resten av kampen",
 	"error_58": "Det gick inte att köra \"{0}\"",
 	"error_59": "Kan inte använda den här funktionen med argument ({0}), förväntade {1} argument",
-	"error_66": "Din AI kunde inte kompileras korrekt eftersom din kod är för stor.",
+	"error_66": "Din AI kunde inte kompileras korrekt eftersom din kod är för stor. {0}",
 	"error_55": "Funktionen {0} kommer att tas bort, använd nu {1}",
 	"error_57": "Dividera med noll",
 	"error_60": "Du har inte AI",

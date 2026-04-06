@@ -52,5 +52,6 @@
 	"lama": "{leek} memanggil kekuatan 🦙 ({cost})",
 	"help_page": "Belajarlah lagi:",
 	"leek_state_x_turns": "{leek} memasuki keadaan {state} ({turns} berputar)",
-	"state_x": "Status {0}"
+	"state_x": "Status {0}",
+	"n_multiply_stats": "x{0} stats"
 }

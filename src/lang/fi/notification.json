@@ -106,5 +106,15 @@
 	"title_40": "{0} äänesti viestiäsi alas aiheessa {1}",
 	"message_40": "Näytä viesti",
 	"title_43": "{0} osallistui Battle Royaleen!",
-	"message_43": "Katso Battle Royale"
+	"message_43": "Katso Battle Royale",
+	"title_41": "Joukkue {0} kutsui sinut liittymään!",
+	"message_41": "Katso joukkueen sivu",
+	"title_42": "{0} hyväksyi kutsusi!",
+	"message_42": "Katso joukkueen sivu",
+	"title_44": "{0} osallistui sotaan!",
+	"message_44": "Katso sota",
+	"title_45": "{0} osallistui aarrejahdin taisteluun!",
+	"message_45": "Katso aarrejahtaus",
+	"title_46": "{0} osallistui kolossitaisteluun!",
+	"message_46": "Katso kolossitaistelu"
 }

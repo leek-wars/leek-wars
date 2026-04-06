@@ -106,5 +106,15 @@
 	"title_40": "{0} hat deine Nachricht in {1} negativ bewertet",
 	"message_40": "Nachricht ansehen",
 	"title_43": "{0} hat an einer Battle Royale teilgenommen!",
-	"message_43": "Battle Royale ansehen"
+	"message_43": "Battle Royale ansehen",
+	"title_41": "Das Team {0} lädt Sie ein beizutreten!",
+	"message_41": "Teamseite ansehen",
+	"title_42": "{0} hat Ihre Einladung angenommen!",
+	"message_42": "Teamseite ansehen",
+	"title_44": "{0} hat an einem Krieg teilgenommen!",
+	"message_44": "Den Krieg ansehen",
+	"title_45": "{0} hat an einer Truhenjagd teilgenommen!",
+	"message_45": "Die Truhenjagd ansehen",
+	"title_46": "{0} hat an einem Kolosskampf teilgenommen!",
+	"message_46": "Den Kolosskampf ansehen"
 }

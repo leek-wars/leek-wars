@@ -52,5 +52,6 @@
 	"lama": "{leek} 召唤 🦙 的力量 ({cost})",
 	"help_page": "了解更多：",
 	"leek_state_x_turns": "{leek}进入{state}状态（{turns}转向）",
-	"state_x": "状态 {0}"
+	"state_x": "状态 {0}",
+	"n_multiply_stats": "x{0} stats"
 }

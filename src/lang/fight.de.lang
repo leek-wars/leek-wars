@@ -52,5 +52,6 @@
 	"lama": "{leek} beruft sich auf die Kräfte von 🦙 ({cost})",
 	"help_page": "Erfahren Sie mehr:",
 	"leek_state_x_turns": "{leek} tritt in den Zustand {state} ein ({turns} Runden)",
-	"state_x": "Staat {0}"
+	"state_x": "Staat {0}",
+	"n_multiply_stats": "x{0} stats"
 }

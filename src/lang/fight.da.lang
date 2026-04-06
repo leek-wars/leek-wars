@@ -52,5 +52,6 @@
 	"lama": "{leek} kalder på kræfterne fra 🦙 ({cost})",
 	"help_page": "Lær mere:",
 	"leek_state_x_turns": "{leek} går ind i {state} tilstanden ({turns} drejer)",
-	"state_x": "Status {0}"
+	"state_x": "Status {0}",
+	"n_multiply_stats": "x{0} stats"
 }
