@@ -2,7 +2,7 @@
 	"ai_name": "AI navn",
 	"open": "Åben",
 	"test": "Prøve",
-	"delete": "SLET",
+	"delete": "Slet",
 	"download": "Hent",
 	"download_simple": "Enkelt fil",
 	"download_includes": "Flet inkluderer",
@@ -13,7 +13,7 @@
 	"delete_folder": "Vil du slette mappen \"{0}\"?",
 	"delete_cancel": "Afbestille",
 	"delete_desc": "Slet AI eller nuværende mappe",
-	"delete_validate": "SLET",
+	"delete_validate": "Slet",
 	"delete_warning": "Elementer vil blive flyttet til papirkurven.",
 	"destroy": "Ødelægge permanent",
 	"destroy_ai": "Vil du ødelægge AI \"{0}\" permanent?",
@@ -32,5 +32,7 @@
 	"invalid_name_reserved": "Dette navn er reserveret.",
 	"invalid_name_slash": "Tegnet \"/\" er ikke tilladt i navne.",
 	"windows_warning_char": "Tegnet \"{0}\" er forbudt på Windows, dette navn kan give problemer med git.",
-	"windows_warning_reserved": "\"{0}\" er et reserveret navn på Windows, dette navn kan give problemer med git."
+	"windows_warning_reserved": "\"{0}\" er et reserveret navn på Windows, dette navn kan give problemer med git.",
+	"destroy_folder": "Vil du destruere mappen \"{0}\" permanent?",
+	"destroy_folder_warning": "Mappen og alle AI'er den indeholder vil blive slettet permanent. Denne handling er irreversibel."
 }

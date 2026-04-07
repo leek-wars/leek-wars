@@ -1,7 +1,7 @@
 {
 	"answer": "Svare",
 	"cancel": "Afbestille",
-	"delete": "SLET",
+	"delete": "Slet",
 	"deleted_message": "Indlæg slettet",
 	"do_you_want_to_delete_message": "Er du sikker på, at du vil slette denne besked?",
 	"do_you_want_to_delete_topic": "Er du sikker på, at du vil slette dette emne?",
@@ -40,5 +40,9 @@
 	"hide_topic": "Skjul",
 	"show_topic": "Vis",
 	"set_release": "Release",
-	"release_hint": "Indtast 0 for at fjerne releasen"
+	"release_hint": "Indtast 0 for at fjerne releasen",
+	"old_topic_warning": "Den sidste besked i dette emne er mere end et år gammel.",
+	"old_topic_title": "Gammelt emne",
+	"old_topic_confirm": "Den sidste besked i dette emne er mere end et år gammel. Vil du virkelig svare på det?",
+	"see_changelog": "Se changeloggen for {0}"
 }

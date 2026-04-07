@@ -8,7 +8,7 @@
 	"cannot_buy": "Denne vare kan ikke købes",
 	"chip": "Chip",
 	"chip_bought": "Chip købt!",
-	"chips": "Lopper",
+	"chips": "Chips",
 	"chip_selled": "Chip solgt!",
 	"confirm_purchase": "Bekræft køb",
 	"confirm_sell": "Bekræft salget",
@@ -31,7 +31,7 @@
 	"n_fights": "{0} kampe",
 	"new_item_unlocked": "Ny vare låst op!",
 	"not_sellable": "Varen kan ikke gensalgs",
-	"pomps": "Apparat",
+	"pomps": "Pynt",
 	"potion": "Potion",
 	"potion_bought": "Drik købt!",
 	"potions": "Potions",
@@ -43,9 +43,10 @@
 	"summon_characteristics": "Funktioner",
 	"title": "Marked",
 	"unlocked_with": "Låst op med {trophy}-trofæet",
-	"weapon": "Bevæbnet",
+	"weapon": "Våben",
 	"weapon_bought": "Våben købt!",
 	"weapons": "Våben",
 	"weapon_selled": "Våben solgt!",
-	"item_progress": "Varefremskridt"
+	"item_progress": "Varefremskridt",
+	"schemes": "Skemaer"
 }

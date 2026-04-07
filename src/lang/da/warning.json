@@ -26,7 +26,7 @@
 	"reason_8_action": "Chatbeskeder vil blive slettet",
 	"reason_9": "Forkert adfærd over for en moderator",
 	"reason_10": "Upassende adfærd over for en administrator",
-	"reason_11": "Snydt",
+	"reason_11": "Snyd",
 	"reason_12": "Oversvømmelse på forummet",
 	"reason_12_action": "Forumindlægget vil blive slettet",
 	"reason_13": "Oversvømmelse på chatten",
@@ -49,7 +49,7 @@
 	"report_farmer_for_reason": "Rapporter {0} af hvilken grund?",
 	"report_informations": "Yderligere oplysninger (valgfrit)",
 	"select_leek": "Vælg en porre",
-	"severity_s": "gravitation {0}",
+	"severity_s": "alvorlighed {0}",
 	"thank_you_for_reporting": "Tak for din indberetning",
-	"delete": "SLET"
+	"delete": "Slet"
 }

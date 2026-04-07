@@ -1,5 +1,5 @@
 {
-	"advanced": "Rykke",
+	"advanced": "Avanceret",
 	"advanced_items": "Avancerede varer",
 	"advanced_strategy": "Avanceret strategi",
 	"aoe": "AoE",
@@ -43,14 +43,17 @@
 	"type_farmer": "Opdrætter",
 	"type_free": "Gratis",
 	"type_solo": "Solo",
-	"type_team": "Mandskab",
+	"type_team": "Hold",
 	"test_validate": "Start testen",
 	"test_scenario": "Manuskript",
 	"test_map": "Kort",
 	"test_maps": "Kort",
-	"test_advanced": "Rykke",
+	"test_advanced": "Avanceret",
 	"templates": "Modeller",
 	"free": "Gratis",
-	"select_chips": "Valg af kugler",
-	"select_weapons": "Vælg våben"
+	"select_chips": "Vælg chips",
+	"select_weapons": "Vælg våben",
+	"max_turns": "Maksimale ture",
+	"max_turns_desc": "Maksimalt antal ture i kampen (standard 64)",
+	"max_turns_placeholder": "Heltal mellem 1 og 64. Standard = 64"
 }

@@ -23,7 +23,7 @@
 	"help_tutorial_doc": "Hjælp, tutorial, doc",
 	"intro": "<b>Leek Wars</b> er et programmeringsspil, hvor du skal skabe den mest kraftfulde porre og ødelægge dine fjender!<br><br>\nUdvikl din egen kunstige intelligens takket være <b>LeekScript</b>, et sprog, der er let at lære,\nog bliv den bedste opdrætter!",
 	"last_update": "Sidste ændring",
-	"login": "For at logge ind",
+	"login": "Log ind",
 	"n_leeks_already": "Allerede <b>{0}</b> porrer til kamp!",
 	"password": "Adgangskode",
 	"ranking": "Ranking",

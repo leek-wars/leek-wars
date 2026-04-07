@@ -3,7 +3,7 @@
 	"allies_killed_title": "Antal dræbte allierede",
 	"br": "Kongelige kampe",
 	"br_title": "Vandt Battle Royales",
-	"chips": "Lopper",
+	"chips": "Chips",
 	"chips_title": "Antal brugte chips",
 	"connection_title": "Forbundne dage",
 	"clovers": "Kløver",
@@ -22,7 +22,7 @@
 	"money": "Penge",
 	"my_farmer": "Min opdrætter",
 	"my_leek": "Min porre",
-	"my_team": "Mit mandskab",
+	"my_team": "Mit hold",
 	"place": "Placere",
 	"results": "Resultater",
 	"richest_title": "Tjente penge",
@@ -53,5 +53,8 @@
 	"turrets_killed": "Tårne",
 	"turrets_killed_title": "Tårne ødelagt",
 	"damage": "Skade",
-	"damage_title": "Skade påført"
+	"damage_title": "Skade påført",
+	"compositions": "Kompositioner",
+	"composition": "Komposition",
+	"won": "Sejre"
 }

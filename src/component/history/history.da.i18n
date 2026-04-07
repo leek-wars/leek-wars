@@ -7,7 +7,7 @@
 	"1week": "en uge",
 	"n_fights": "{0} kampe",
 	"victories": "sejre",
-	"draws": "bånd",
+	"draws": "Uafgjorte",
 	"defeats": "nederlag",
 	"ratio": "forhold",
 	"not_found_id": "Porre med id {0} blev ikke fundet",
@@ -20,5 +20,12 @@
 	"challenge": "Udfordring",
 	"garden": "Grøntsagshave",
 	"tournament": "Turnering",
-	"boss": "Chef"
+	"boss": "Boss",
+	"loot": "Kampbytte",
+	"chests": "Kister",
+	"rare_loot": "Sjældne ressourcer",
+	"war": "Krig",
+	"chest_hunt": "Kistejagt",
+	"n_chests": "{0} kister",
+	"colossus": "Koloss"
 }

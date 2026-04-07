@@ -1,6 +1,6 @@
 {
 	"connection": "Log på",
-	"error_banned": "Din konto er blevet forbudt",
+	"error_banned": "Din konto er blevet bandlyst",
 	"error_inactive": "Din konto er ikke blevet aktiveret, gå venligst til linket sendt via e-mail.",
 	"error_invalid": "Legitimationsoplysningerne er forkerte.",
 	"error_server": "Server Fejl. Prøv venligst igen om et par minutter",

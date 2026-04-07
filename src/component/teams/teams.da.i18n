@@ -23,5 +23,7 @@
 	"error_already_have_candidacy": "Du har allerede en afventende ansøgning.",
 	"error_already_in_team": "Du er allerede på et hold.",
 	"error_team_full": "Dette hold er fuldt.",
-	"error_too_many_candidacies": "Du har allerede 5 afventende ansøgninger."
+	"error_too_many_candidacies": "Du har allerede 5 afventende ansøgninger.",
+	"show_closed": "Vis lukkede",
+	"closed": "Lukket"
 }

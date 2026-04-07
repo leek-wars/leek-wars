@@ -8,5 +8,8 @@
 	"not_found": "Kamp ikke fundet :(",
 	"not_found_id": "Kamp-id <b>{0}</b> ikke fundet :(",
 	"pause_message": "Klik eller tryk på 'P' for at fortsætte",
-	"starter": "Fight Launcher"
+	"starter": "Fight Launcher",
+	"war": "Krig",
+	"chest_hunt": "Kistejagt",
+	"colossus": "Koloss"
 }

@@ -1,5 +1,5 @@
 {
-	"axe": "Hakket",
+	"axe": "Økse",
 	"b_laser": "B-laser",
 	"bazooka": "Bazooka",
 	"broadsword": "Sværd",
@@ -20,7 +20,7 @@
 	"machine_gun": "Maskinpistol",
 	"magnum": "Magnum",
 	"m_laser": "M-laser",
-	"neutrino": "Neutrinoer",
+	"neutrino": "Neutrino",
 	"pistol": "Pistol",
 	"quantum_rifle": "Kvanteriffel",
 	"shotgun": "Haglgevær",
@@ -28,12 +28,12 @@
 	"mysterious_electrisor": "Mystisk elektrificerer",
 	"unbridled_gazor": "Uhæmmet gasser",
 	"unstable_destroyer": "Ustabil Destroyer",
-	"revoked_m_laser": "M-Laser tilbagekaldt",
+	"revoked_m_laser": "Tilbagekaldt M-Laser",
 	"rhino": "Næsehorn",
-	"rifle": "Pistol",
+	"rifle": "Riffel",
 	"sword": "Sværd",
-	"taser": "Tasere",
+	"taser": "Taser",
 	"odachi": "Odachi",
 	"excalibur": "Excalibur",
-	"scythe": "Falsk"
+	"scythe": "Le"
 }

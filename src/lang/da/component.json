@@ -9,7 +9,7 @@
 	"iron_plate": "Jernplade",
 	"amazonite_plate": "Amazonit-plade",
 	"obsidian_plate": "Obsidian-plade",
-	"spring": "Forår",
+	"spring": "Fjeder",
 	"copper_spring": "Kobberfjeder",
 	"elinvar_spring": "Elinvar-fjeder",
 	"ssd": "SSD",
@@ -17,7 +17,7 @@
 	"sdcard": "SD-kort",
 	"cd": "CD",
 	"neural_core": "Neural hjerte",
-	"neural_core_pro": "Neural Heart Pro",
+	"neural_core_pro": "Neural kerne Pro",
 	"power_supply": "Strømforsyning",
 	"chiyembekezo": "Chiyembekezo",
 	"uzoma": "Uzoma",
@@ -55,6 +55,6 @@
 	"recovery_ram": "Fejlfinding af RAM",
 	"recovery_core": "Fejlfinding i kernen",
 	"core_desc": "XN.a-56 computerkerne: 1 Tera-flops rå computerkraft. Taktet ved 0,4 GHz. 100 MB cache-hukommelse.",
-	"recovery_ram_desc": "Fejlfinding af komponent. Fjerner en komponentplads.",
-	"recovery_core_desc": "Fejlfinding af komponent. Fjerner en komponentplads."
+	"recovery_ram_desc": "Fejlfinding af komponent. Fjerner to komponentpladser.",
+	"recovery_core_desc": "Fejlfinding af komponent. Fjerner to komponentpladser."
 }
