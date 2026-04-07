@@ -12,5 +12,7 @@
 	"end_edition": "Fine dell'editing",
 	"editing_by_x": "Attualmente in corso di modifica da parte di {0}",
 	"redirected_from": "Reindirizzato da {0}",
-	"aliases": "Conosciuto anche come: {0}"
+	"aliases": "Conosciuto anche come: {0}",
+	"history": "Cronologia",
+	"initial": "creazione"
 }

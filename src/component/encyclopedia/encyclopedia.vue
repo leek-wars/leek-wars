@@ -109,7 +109,7 @@
 									</template>
 								</i18n-t>
 								<div class="fill"></div>
-								<v-icon @click="statsExpanded = !statsExpanded">{{ statsExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+								<v-icon @click="toggleStats">{{ statsExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
 							</div>
 
 							<div v-if="statsExpanded" class="expanded-stats">
@@ -142,6 +142,35 @@
 									— {{ $tc('main.n_words', page.content.split(' ').length) }}
 									— {{ $tc('main.n_characters', page.content.length) }}
 								</div>
+							</div>
+
+							<div v-if="statsExpanded && history" class="history-panel">
+								<div class="history-list">
+									<h4>{{ $t('history') }}</h4>
+									<div v-for="(entry, i) in history" :key="entry.time" class="history-entry" :class="{active: selectedHistoryIndex === i}" @click="selectHistory(i)">
+										<div class="history-info">
+											<rich-tooltip-farmer :id="entry.author" v-slot="{ props }">
+												<router-link :to="'/farmer/' + entry.author" v-bind="props">
+													<avatar :farmer="{id: entry.author, avatar_changed: entry.avatar_changed}" />
+												</router-link>
+											</rich-tooltip-farmer>
+											<div>
+												<rich-tooltip-farmer :id="entry.author" v-slot="{ props }">
+													<router-link :to="'/farmer/' + entry.author" :class="entry.color"><span v-bind="props">{{ entry.author_name }}</span></router-link>
+												</rich-tooltip-farmer>
+												<span class="history-date">{{ $filters.datetime(entry.time) }}</span>
+											</div>
+										</div>
+										<div v-if="i < history.length - 1" class="history-diff-stats">
+											<span class="additions">+{{ entry.additions }}</span>
+											<span class="deletions">-{{ entry.deletions }}</span>
+										</div>
+										<div v-else class="history-diff-stats">
+											<span class="additions">{{ $t('initial') }}</span>
+										</div>
+									</div>
+								</div>
+								<div v-if="selectedHistoryIndex !== null" ref="diffContainer" class="diff-container"></div>
 							</div>
 						</div>
 					</div>
@@ -185,6 +214,9 @@
 		redirectedFrom: string | null = null
 		boundBeforeUnload!: () => void
 		actions: any[] = []
+		history: any[] | null = null
+		selectedHistoryIndex: number | null = null
+		diffEditor: Monaco.editor.IStandaloneDiffEditor | null = null
 
 		get language() {
 			return this.$route.params && this.$route.params.lang ? this.$route.params.lang : this.$i18n.locale
@@ -266,6 +298,7 @@
 			LeekWars.box = false
 			LeekWars.footer = true
 
+			this.destroyDiffEditor()
 			if (this.editor) {
 				this.editor.getModel()?.dispose()
 				this.editor.dispose()
@@ -314,6 +347,10 @@
 			}
 
 			this.redirectedFrom = this.$route.query.from as string || null
+			this.statsExpanded = false
+			this.history = null
+			this.selectedHistoryIndex = null
+			this.destroyDiffEditor()
 
 			LeekWars.get<any>('encyclopedia/get/' + this.language + '/' + this.code).then(page => {
 				// Redirection alias côté serveur (fallback)
@@ -441,7 +478,7 @@ ${ret}
 						const markdown = this.$refs.markdown as HTMLElement
 						markdown.scrollTop = (markdown.scrollHeight - markdown.clientHeight) * percent
 					})
-					
+
 					this.initialVersionId = this.editor.getModel()!.getAlternativeVersionId()
 					this.modified = false
 				})
@@ -528,6 +565,93 @@ ${ret}
 			this.page.last_edition_time = Date.now() / 1000
 			this.page.last_editor = store.state.farmer!.id
 			this.page.last_editor_name = store.state.farmer!.name
+		}
+
+		toggleStats() {
+			this.statsExpanded = !this.statsExpanded
+			if (this.statsExpanded && !this.history) {
+				this.loadHistory()
+			}
+		}
+
+		loadHistory() {
+			if (!this.page || this.page.id === 0) return
+			LeekWars.get('encyclopedia/get-history/' + this.page.id).then((history: { content: string, author: number, author_name: string, time: number, additions?: number, deletions?: number }[]) => {
+				for (let i = 0; i < history.length; i++) {
+					if (i < history.length - 1) {
+						const newLines = history[i].content.split('\n')
+						const oldLines = history[i + 1].content.split('\n')
+						let additions = 0
+						let deletions = 0
+						const maxLen = Math.max(newLines.length, oldLines.length)
+						for (let j = 0; j < maxLen; j++) {
+							if (j >= oldLines.length) { additions++; continue }
+							if (j >= newLines.length) { deletions++; continue }
+							if (newLines[j] !== oldLines[j]) { additions++; deletions++ }
+						}
+						history[i].additions = additions
+						history[i].deletions = deletions
+					}
+				}
+				this.history = history
+				if (history.length > 1) {
+					this.selectHistory(0)
+				}
+			})
+		}
+
+		selectHistory(index: number) {
+			if (this.selectedHistoryIndex === index) {
+				this.selectedHistoryIndex = null
+				this.destroyDiffEditor()
+				return
+			}
+			this.selectedHistoryIndex = index
+			nextTick(() => {
+				this.createDiffEditor(index)
+			})
+		}
+
+		createDiffEditor(index: number) {
+			if (!this.history) return
+			this.destroyDiffEditor()
+
+			const container = this.$refs.diffContainer as HTMLElement
+			if (!container) return
+
+			const newContent = this.history[index].content
+			const oldContent = index < this.history.length - 1 ? this.history[index + 1].content : ''
+
+			import(/* webpackChunkName: "monaco" */ 'monaco-editor').then((monaco) => {
+				this.diffEditor = markRaw(monaco.editor.createDiffEditor(container, {
+					automaticLayout: true,
+					readOnly: true,
+					renderSideBySide: false,
+					fontSize: 13,
+					lineHeight: 20,
+					minimap: { enabled: false },
+					scrollBeyondLastLine: false,
+					overviewRulerLanes: 0,
+					overviewRulerBorder: false,
+					renderOverviewRuler: false,
+					wordWrap: 'on',
+					hideUnchangedRegions: { enabled: true },
+				}))
+				this.diffEditor.setModel({
+					original: markRaw(monaco.editor.createModel(oldContent, 'markdown')),
+					modified: markRaw(monaco.editor.createModel(newContent, 'markdown')),
+				})
+			})
+		}
+
+		destroyDiffEditor() {
+			if (this.diffEditor) {
+				const model = this.diffEditor.getModel()
+				model?.original.dispose()
+				model?.modified.dispose()
+				this.diffEditor.dispose()
+				this.diffEditor = null
+			}
 		}
 
 		comment(comment: Comment) {
@@ -686,6 +810,73 @@ h1 {
 }
 .search-icon {
 	cursor: pointer;
+}
+.history-panel {
+	display: flex;
+	border-top: 1px solid var(--border);
+	height: 600px;
+	margin-top: 10px;
+}
+.history-list {
+	width: 300px;
+	min-width: 300px;
+	overflow-y: auto;
+	padding: 10px 0;
+	h4 {
+		margin-bottom: 8px;
+	}
+	.history-entry {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 6px 10px;
+		cursor: pointer;
+		&:hover {
+			background: var(--background);
+		}
+		&.active {
+			background: #5fad1b22;
+			border-left: 3px solid #5fad1b;
+			padding-left: 7px;
+		}
+		.history-info {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			.avatar {
+				width: 32px;
+				height: 32px;
+				flex-shrink: 0;
+			}
+			a {
+				font-weight: bold;
+				&.admin { color: #df1500; }
+				&.moderator { color: #ffa900; }
+				&.contributor { color: #009c1d; }
+			}
+			.history-date {
+				color: var(--text-color-secondary);
+				font-size: 12px;
+				display: block;
+			}
+		}
+		.history-diff-stats {
+			font-size: 13px;
+			display: flex;
+			gap: 8px;
+			.additions {
+				color: #4caf50;
+			}
+			.deletions {
+				color: #f44336;
+			}
+		}
+	}
+}
+.diff-container {
+	flex: 1;
+	min-width: 0;
+	border-left: 1px solid var(--border);
 }
 :deep(.md.main h1) {
 	display: none;

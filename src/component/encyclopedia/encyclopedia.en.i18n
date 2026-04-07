@@ -12,5 +12,7 @@
 	"end_edition": "End editing",
 	"editing_by_x": "Currently being edited by {0}",
 	"redirected_from": "Redirected from {0}",
-	"aliases": "Also known as: {0}"
+	"aliases": "Also known as: {0}",
+	"history": "History",
+	"initial": "initial"
 }

@@ -12,5 +12,7 @@
     "end_edition": "Terminer l'édition",
     "editing_by_x": "En cours d'édition par {0}",
     "redirected_from": "Redirigé depuis {0}",
-    "aliases": "Également connu sous : {0}"
+    "aliases": "Également connu sous : {0}",
+    "history": "Historique",
+    "initial": "création"
 }
