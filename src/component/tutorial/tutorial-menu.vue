@@ -91,7 +91,7 @@
 			}
 			.icon {
 				position: absolute;
-				font-size: 40px;
+				font-size: 36px;
 				background: white;
 				border-radius: 50%;
 				box-shadow: rgba(0, 0, 0, 0.3) 0px 5px 5px;
@@ -99,6 +99,8 @@
 				top: 9px;
 				padding: 7px;
 				color: #222;
+				width: 50px;
+				height: 50px;
 			}
 			.items {
 				font-size: 14px;
