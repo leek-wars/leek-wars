@@ -49,7 +49,7 @@
 	"report_farmer_for_reason": "Mistä syystä ilmoittaa henkilöstä {0}?",
 	"report_informations": "Lisätiedot (valinnainen)",
 	"select_leek": "Valitse purjo",
-	"severity_s": "painovoima {0}",
+	"severity_s": "vakavuus {0}",
 	"thank_you_for_reporting": "Kiitos raportoinnista",
-	"delete": "POISTAA"
+	"delete": "Poista"
 }

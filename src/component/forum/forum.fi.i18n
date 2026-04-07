@@ -19,11 +19,11 @@
 	"messages": "Viestit",
 	"n_topics": "{0} aihetta",
 	"n_messages": "{0} viestiä",
-	"send": "Lähettää",
+	"send": "Lähetä",
 	"team_forum_description": "Ryhmäsi yksityinen foorumi",
 	"title": "Foorumi",
 	"topic_not_found": "Aihetta tunnuksella <b>{0}</b> ei löydy :(",
 	"topics": "Aiheet",
 	"new_topic_notification": "Ilmoita meille uusista aiheista",
-	"resolved": "resolved"
+	"resolved": "Ratkaistut"
 }

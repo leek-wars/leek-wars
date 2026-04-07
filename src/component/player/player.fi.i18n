@@ -16,7 +16,7 @@
 	"error_not_found": "Tätä taistelua ei ole olemassa tai se on poistettu",
 	"admin_noticed": "Ylläpitäjälle on jo ilmoitettu",
 	"fullscreen": "Koko näyttö (F)",
-	"generating": "Nykyinen sukupolvi...",
+	"generating": "Generoidaan...",
 	"large_actions": "Hienoja tekoja",
 	"loading_fight": "Ladataan taistelua...",
 	"no_data_received": "Tietoja ei vastaanotettu",

@@ -1,5 +1,5 @@
 {
-	"about": "Mitä tulee",
+	"about": "Tietoja",
 	"client": "Asiakas",
 	"contact": "Ottaa yhteyttä",
 	"contact_text": "Voit ottaa meihin yhteyttä sähköpostitse osoitteessa {contact} tai yksityisviestillä pelissä, Facebookissa tai Twitterissä.",
@@ -20,14 +20,14 @@
 	"thanks": "Kiitos",
 	"thanks_about_articles": "Kiitämme kaikkia sivustoja ja blogeja, jotka ovat kirjoittaneet pienen artikkelin Leek Warsista :)",
 	"thanks_text": "Monet ihmiset osallistuivat <b>Leek Warsin</b> luomiseen, haluamme kiittää heitä:",
-	"title": "Mitä tulee",
+	"title": "Tietoja",
 	"tools": "Työkalut",
 	"tools_list": "Ei-tyhjentävä luettelo hankkeessa käytetyistä eri kielistä ja työkaluista:",
 	"version_n": "Julkaisu {0}",
 	"we_talk_about_leeks": "Puhuimmeko purjosta?",
 	"why": "Miksi?",
 	"why_1": "Projekti syntyi kahden opiskelijan yksinkertaisesta ajatuksesta yliopiston algebratunnilla. He halusivat luoda pelin, joka perustui täysin <b>ohjelmointiin</b>, joka ei tuolloin ollut kovin laajalle levinnyt käsite.",
-	"why_2": "<b>Leek Wars</b> pyrkii asettamaan <b>ohjelmoinnin</b> hauskan ja viihdyttävän videopelin ytimeen, täysin selainpohjainen, helppokäyttöinen, ilmainen ja ilman mainoksia, haluan tarjota <b >miellyttävä alusta</b> ohjelmoinnin käsitteiden esittelyyn <b>aloittelijoille</b> ja hyvän haasteen tarjoamiseen <b>kokeneille koodaajille</b>!",
+	"why_2": "<b>Leek Wars</b> pyrkii asettamaan <b>ohjelmoinnin</b> hauskan ja viihdyttävän videopelin ytimeen, täysin selainpohjainen, helppokäyttöinen, ilmainen ja ilman mainoksia, haluan tarjota <b>miellyttävä alusta</b> ohjelmoinnin käsitteiden esittelyyn <b>aloittelijoille</b> ja hyvän haasteen tarjoamiseen <b>kokeneille koodaajille</b>!",
 	"former_mod": "Entinen moderaattori",
 	"former_dev": "Entinen kehittäjä",
 	"contributors": "Osallistujat"

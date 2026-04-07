@@ -1,7 +1,7 @@
 {
 	"main_page": "Opastus",
 	"home": "Tervetuloa",
-	"editor": "Editoija",
+	"editor": "Editori",
 	"editor_items": "Johdanto",
 	"variables": "Muuttujat",
 	"variables_items": "Ensimmäinen AI",
@@ -15,7 +15,7 @@
 	"operators_items": "Monimutkaisemmat olosuhteet",
 	"strings": "Ketjut",
 	"strings_items": "Tervehdi vastustajaasi",
-	"loops": "Soljet",
+	"loops": "Silmukat",
 	"loops_items": "Käytä asetta useita kertoja",
 	"lists": "Luettelot",
 	"lists_items": "Laske aiheutunut vahinko",

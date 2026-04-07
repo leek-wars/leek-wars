@@ -9,5 +9,5 @@
 	"team": "{0} Joukkueturnaus",
 	"next_round_supervisor": "Seuraavan kierroksen aloittaa valvoja",
 	"generate": "Luo seuraava kierros",
-	"generating": "Nykyinen sukupolvi..."
+	"generating": "Generoidaan..."
 }

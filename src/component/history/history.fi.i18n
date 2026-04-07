@@ -10,7 +10,7 @@
 	"draws": "siteitä",
 	"defeats": "tappioita",
 	"ratio": "suhde",
-	"not_found_id": "Tunteen {0} purjoa ei löydy",
+	"not_found_id": "Tunnuksella {0} purjoa ei löydy",
 	"fight_type": "Taistelutyyppejä",
 	"fight_context": "Taistelun kontekstit",
 	"solo": "Yksin",
