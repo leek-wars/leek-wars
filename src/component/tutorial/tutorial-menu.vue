@@ -76,7 +76,9 @@
 						background: #5fad1b;
 						border-radius: 50%;
 						padding: 2px;
-						font-size: 15px;
+						font-size: 11px;
+						width: 15px;
+						height: 15px;
 					}
 				}
 			}
