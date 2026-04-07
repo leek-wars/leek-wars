@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // Windows XP Theme for Leek Wars - April Fools
 // Styles based on XP.css library (https://botoxparty.github.io/XP.css/)
 
@@ -325,9 +327,9 @@ $xp-taskbar-gradient-end: #3c7ee6;
 	.page-bar .tabs .tab.green {
 		background: $xp-green;
 		color: white;
-		border-color: darken($xp-green, 15%);
+		border-color: color.adjust($xp-green, $lightness: -15%);
 		&::before, &::after { display: none; }
-		&:not(.disabled):hover { background: darken($xp-green, 5%); }
+		&:not(.disabled):hover { background: color.adjust($xp-green, $lightness: -5%); }
 		img { filter: invert(0); }
 	}
 
@@ -899,7 +901,7 @@ $xp-taskbar-gradient-end: #3c7ee6;
 
 	.bar-wrapper {
 		background: linear-gradient(180deg, $xp-taskbar-gradient-end, $xp-taskbar-gradient-start);
-		border-top: 2px solid lighten($xp-taskbar, 20%);
+		border-top: 2px solid color.adjust($xp-taskbar, $lightness: 20%);
 
 		.bar-button {
 			color: white;
@@ -1032,7 +1034,7 @@ body:has(#app.xp) .v-overlay-container {
 		&.green {
 			background: $xp-green;
 			color: white;
-			border-color: darken($xp-green, 15%);
+			border-color: color.adjust($xp-green, $lightness: -15%);
 		}
 
 		&.red {
