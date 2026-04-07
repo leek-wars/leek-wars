@@ -103,7 +103,8 @@
 
 				const linkify = (a: HTMLAnchorElement) => {
 					a.onclick = (e: Event) => {
-						let link = a.getAttribute('href')!
+						let link = a.getAttribute('href')
+						if (!link) return
 						if (link.startsWith('/') || link.startsWith(document.location.origin) || link.startsWith('https://leekwars.com/')) {
 							if (link.startsWith('/encyclopedia/')) {
 								link = link.replace(/ /g, '_')

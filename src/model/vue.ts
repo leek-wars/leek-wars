@@ -372,7 +372,8 @@ app.directive('chat-code-latex', {
 			})
 		})
 		el.querySelectorAll('a').forEach(a => {
-			if (a.getAttribute('href')!.startsWith('/') ) {
+			const href = a.getAttribute('href')
+			if (href && href.startsWith('/') ) {
 				a.onclick = (e: Event) => {
 					e.stopPropagation()
 					e.preventDefault()
