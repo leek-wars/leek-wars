@@ -627,8 +627,10 @@ ${ret}
 
 			const newContent = this.history[index].content
 			const oldContent = index < this.history.length - 1 ? this.history[index + 1].content : ''
+			const expectedIndex = this.selectedHistoryIndex
 
 			import(/* webpackChunkName: "monaco" */ 'monaco-editor').then((monaco) => {
+				if (this.selectedHistoryIndex !== expectedIndex) return
 				this.diffEditor = markRaw(monaco.editor.createDiffEditor(container, {
 					automaticLayout: true,
 					readOnly: true,
@@ -653,9 +655,9 @@ ${ret}
 		destroyDiffEditor() {
 			if (this.diffEditor) {
 				const model = this.diffEditor.getModel()
+				this.diffEditor.dispose()
 				model?.original.dispose()
 				model?.modified.dispose()
-				this.diffEditor.dispose()
 				this.diffEditor = null
 			}
 		}
