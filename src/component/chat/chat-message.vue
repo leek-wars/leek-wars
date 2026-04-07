@@ -5,7 +5,9 @@
 				<avatar :farmer="message.farmer" />
 			</rich-tooltip-farmer>
 		</router-link>
-		<img v-else class="avatar" src="/image/favicon.png">
+		<div v-else class="avatar-wrapper">
+			<img class="avatar" src="/image/favicon.png">
+		</div>
 		<div class="bubble" :class="{large: large}">
 
 			<router-link v-if="message.farmer.id !== 0" :to="'/farmer/' + message.farmer.id" class="author">
