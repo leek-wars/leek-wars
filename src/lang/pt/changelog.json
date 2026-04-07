@@ -2,11 +2,11 @@
 	"forum_topic": "Tópico do fórum",
 	"popup_ok": "OK :)",
 	"see_all_changes": "Encontre a lista completa de alterações na página {changelog}.",
-	"title": "Alterar histórico",
+	"title": "Histórico de alterações",
 	"title_0": "🌟 Novidades",
 	"title_1": "⚒️ Melhorias",
 	"title_2": "🐞 Correções",
-	"version_n": "Lançamento {0}",
+	"version_n": "Versão {0}",
 	"version_online": "Versão {version} online!",
 	"need_ai_change": "Pode exigir mudanças na IA"
 }

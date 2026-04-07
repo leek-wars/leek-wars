@@ -23,5 +23,7 @@
 	"error_already_have_candidacy": "Já tens uma candidatura pendente.",
 	"error_already_in_team": "Já estás numa equipa.",
 	"error_team_full": "Esta equipa está cheia.",
-	"error_too_many_candidacies": "Já tens 5 candidaturas pendentes."
+	"error_too_many_candidacies": "Já tens 5 candidaturas pendentes.",
+	"show_closed": "Ver as fechadas",
+	"closed": "Fechada"
 }

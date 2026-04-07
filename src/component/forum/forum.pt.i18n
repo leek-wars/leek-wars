@@ -15,7 +15,7 @@
 	"error_topic_not_exists": "Este tópico não existe.",
 	"farmer_n_messages": "<b>{0}</b> postagens",
 	"farmer_n_trophies": "<b>{0}</b> troféus",
-	"legend": "Lenda",
+	"legend": "Legenda",
 	"messages": "Postagens",
 	"n_topics": "{0} tópicos",
 	"n_messages": "{0} postagens",
@@ -25,5 +25,5 @@
 	"topic_not_found": "Assunto com id <b>{0}</b> não encontrado :(",
 	"topics": "Tópicos",
 	"new_topic_notification": "Notificar-nos sobre novos temas",
-	"resolved": "resolved"
+	"resolved": "resolvidos"
 }

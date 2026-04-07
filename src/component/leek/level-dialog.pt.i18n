@@ -1,15 +1,15 @@
 {
 	"available_on_market": "(Disponível para compra no mercado)",
-	"new_chips": "Novas fichas",
+	"new_chips": "Novos chips",
 	"new_weapons": "Novas armas",
 	"no_news": "Nenhum novo item para este nível.",
-	"title": "<b>{0}</b> passar de nível <b>{1}</b>!",
+	"title": "<b>{0}</b> subiu para o nível <b>{1}</b>!",
 	"301_title": "Parabéns!",
 	"301_message": "Você alcançou o nível mais alto em Leek Wars, seu alho-poró atingiu o estágio final de sua evolução!<br> Você recebe uma <b>poção de ouro</b> e uma <b>coroa</b> como recompensa.",
 	"new_weapon": "Novo slot de arma",
-	"new_chip": "Novo slot para fichas",
+	"new_chip": "Novo slot para chip",
 	"total_weapons": "{0} total de armas",
-	"total_chips": "{0} fichas no total",
-	"br_desc": "Novo modo de jogo desbloqueado: Battle Royales! Uma batalha de 10 alhos franceses, cada um por si. Inscreve-te na horta ou na página dos alhos franceses.",
-	"newleek_desc": "Alho francês novo disponível para compra no menu."
+	"total_chips": "{0} chips no total",
+	"br_desc": "Novo modo de jogo desbloqueado: Battle Royales! Uma batalha de 10 alhos-porós, cada um por si. Inscreve-te na horta ou na página dos alhos-porós.",
+	"newleek_desc": "Alho-poró novo disponível para compra no menu."
 }
