@@ -1,13 +1,13 @@
 <template lang="html">
 	<div class="tutorial-menu">
-		<router-link v-for="(item, i) of items" :key="i" class="item" :style="{'background-image': 'url(' + item.image + ')'}" :to="'/encyclopedia/' + locale + '/' + $t(item.name).replace(/ /g, '_')">
+		<router-link v-for="(item, i) of items" :key="i" class="item" :style="{'background-image': 'url(' + item.image + ')'}" :to="'/encyclopedia/' + locale + '/' + $t(item.name, {}, { locale }).replace(/ /g, '_')">
 			<v-icon class="icon">mdi-{{ item.icon }}</v-icon>
 			<div class="bottom">
 				<div class="name">
-					<span>{{ i + 1 }} - {{ $t(item.name) }}</span>
+					<span>{{ i + 1 }} - {{ $t(item.name, {}, { locale }) }}</span>
 					<v-icon v-if="i < progress">mdi-check-bold</v-icon>
 				</div>
-				<ul class="items"><li>{{ $t(item.name + '_items') }}</li></ul>
+				<ul class="items"><li>{{ $t(item.name + '_items', {}, { locale }) }}</li></ul>
 			</div>
 		</router-link>
 	</div>
