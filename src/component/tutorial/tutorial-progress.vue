@@ -35,7 +35,7 @@
 		created() {
 			const locale = this.locale
 			import(/* webpackChunkName: "tutorial-[request]" */ `@/lang/${locale}/tutorial.json`).then(module => {
-				this.$i18n.mergeLocaleMessage(locale, module)
+				this.$i18n.mergeLocaleMessage(locale, module.default)
 			})
 		}
 
