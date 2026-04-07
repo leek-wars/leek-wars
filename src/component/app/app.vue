@@ -179,6 +179,7 @@
 	const Squares = defineAsyncComponent(() => import('@/component/app/squares.vue'))
 	const ChangelogVersion = defineAsyncComponent(() => import('@/component/changelog/changelog-version.vue'))
 	import { locale } from '@/locale'
+	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
@@ -283,6 +284,12 @@
 			// 	this.annonce = true
 			// 	localStorage.setItem('annonce/boss-poll', 'true')
 			// }
+
+			const toast = new URLSearchParams(window.location.search).get('toast')
+			if (toast) {
+				LeekWars.toast((i18n as any).t('main.account_' + toast))
+				history.replaceState(null, '', window.location.pathname)
+			}
 		}
 		changelogShow() {
 			LeekWars.get('changelog/get-last/' + this.$i18n.locale).then(data => {

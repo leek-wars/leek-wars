@@ -1,6 +1,7 @@
 {
 	"about": "När det gäller",
 	"account_active": "Aktivt konto",
+	"account_already_activated": "Ditt konto är redan aktiverat!",
 	"account_add": "Lägg till ett konto",
 	"account_connected": "Ansluten",
 	"account_disconnect": "Koppla från",

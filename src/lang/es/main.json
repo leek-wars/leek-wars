@@ -1,6 +1,7 @@
 {
 	"about": "Acerca de",
 	"account_active": "Cuenta activa",
+	"account_already_activated": "¡Tu cuenta ya está activada!",
 	"account_add": "Agregar una cuenta",
 	"account_connected": "Conectado",
 	"account_disconnect": "Desconectar",

@@ -1,6 +1,7 @@
 {
 	"about": "В отношении",
 	"account_active": "Активный аккаунт",
+	"account_already_activated": "Ваш аккаунт уже активирован!",
 	"account_add": "Добавить аккаунт",
 	"account_connected": "Подключён",
 	"account_disconnect": "Отключить",

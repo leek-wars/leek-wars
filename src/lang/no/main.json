@@ -1,6 +1,7 @@
 {
 	"about": "I forhold til",
 	"account_active": "Aktiv konto",
+	"account_already_activated": "Kontoen din er allerede aktivert!",
 	"account_add": "Legg til en konto",
 	"account_connected": "Tilkoblet",
 	"account_disconnect": "Koble fra",

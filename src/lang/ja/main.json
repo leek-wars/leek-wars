@@ -1,6 +1,7 @@
 {
 	"about": "に関してで",
 	"account_active": "アクティブなアカウント",
+	"account_already_activated": "アカウントはすでに有効化されています！",
 	"account_add": "アカウントを追加",
 	"account_connected": "接続中",
 	"account_disconnect": "切断する",

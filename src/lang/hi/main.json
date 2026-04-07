@@ -1,6 +1,7 @@
 {
 	"about": "के संबंध में",
 	"account_active": "सक्रिय खाता",
+	"account_already_activated": "आपका खाता पहले से सक्रिय है!",
 	"account_add": "खाता जोड़ें",
 	"account_connected": "जुड़ा हुआ",
 	"account_disconnect": "डिस्कनेक्ट करें",

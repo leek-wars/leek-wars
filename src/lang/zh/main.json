@@ -1,6 +1,7 @@
 {
 	"about": "关于",
 	"account_active": "当前账号",
+	"account_already_activated": "您的账号已经激活！",
 	"account_add": "添加账号",
 	"account_connected": "已连接",
 	"account_disconnect": "断开连接",

@@ -1,6 +1,7 @@
 {
 	"about": "Mitä tulee",
 	"account_active": "Aktiivinen tili",
+	"account_already_activated": "Tilisi on jo aktivoitu!",
 	"account_add": "Lisää tili",
 	"account_connected": "Yhdistetty",
 	"account_disconnect": "Katkaise yhteys",
