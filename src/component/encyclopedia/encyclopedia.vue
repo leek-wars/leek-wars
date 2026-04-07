@@ -558,7 +558,13 @@ ${ret}
 					this.page.new = false
 					this.page.id = result.id
 				}
-			}).error(error => LeekWars.toast("Sauvegarde échouée : " + error.error))
+			}).error(error => {
+				if (error.error === 'duplicate_reference') {
+					LeekWars.toast("Sauvegarde échouée : la référence est déjà utilisée par la page \"" + error.page + "\" (#" + error.page_id + ")")
+				} else {
+					LeekWars.toast("Sauvegarde échouée : " + error.error)
+				}
+			})
 
 			this.initialVersionId = this.editor!.getModel()!.getAlternativeVersionId()
 			this.modified = false
