@@ -681,6 +681,7 @@ ${ret}
 					renderOverviewRuler: false,
 					wordWrap: 'on',
 					hideUnchangedRegions: { enabled: true },
+					theme: LeekWars.darkMode ? 'vs-dark' : 'vs',
 				}))
 				this.diffEditor.setModel({
 					original: markRaw(monaco.editor.createModel(oldContent, 'markdown')),
