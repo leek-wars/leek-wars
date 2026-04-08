@@ -18,10 +18,13 @@
 	"dependencies": {
 		"@mdi/font": "^7.4.47",
 		"@paypal/paypal-js": "^5.1.4",
+		"@types/dagre": "^0.7.54",
 		"@types/dompurify": "^3.0.5",
 		"@vitejs/plugin-vue": "^6.0.3",
+		"@vue-flow/core": "^1.48.2",
 		"chart.js": "^4.5.1",
 		"codemirror": "^5.65.16",
+		"dagre": "^0.8.5",
 		"dompurify": "^3.3.2",
 		"dotenv": "^8.2.0",
 		"idb-keyval": "^6.2.2",

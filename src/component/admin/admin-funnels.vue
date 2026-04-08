@@ -4,8 +4,10 @@
 			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Funnels', link: '/admin/funnels'}]" :raw="true" /></h1>
 		</div>
 		<panel class="first">
+			<v-tabs v-model="selectedFunnel" @update:model-value="load">
+				<v-tab v-for="f in funnelItems" :key="f.key" :value="f.key">{{ f.label }}</v-tab>
+			</v-tabs>
 			<div class="controls">
-				<v-select v-model="selectedFunnel" :items="funnelItems" item-title="label" item-value="key" hide-details density="compact" variant="solo" @update:model-value="load" />
 				<input v-model="dateFrom" type="date">
 				<input v-model="dateTo" type="date">
 				<v-btn variant="tonal" @click="load">Charger</v-btn>
@@ -16,27 +18,31 @@
 			<div v-else-if="funnelData" class="funnel">
 				<div class="funnel-header">
 					<span class="funnel-label">{{ funnelData.label }}</span>
-					<span class="funnel-total">{{ rootSessions }} sessions</span>
 				</div>
-				<template v-for="node in flatNodes" :key="node.name">
-					<div class="funnel-node" :style="{ 'margin-left': node.depth * 24 + 'px' }">
-						<div class="step-info">
-							<span class="step-name">
-								<span class="tree-prefix">{{ node.depth > 0 ? (node.lastChild ? '└' : '├') : '' }}</span>
-								{{ node.name }}
-							</span>
-							<span class="step-count">{{ node.count }} events · {{ node.sessions }} sessions</span>
-						</div>
-						<div class="bar-row">
-							<div class="bar-container">
-								<div class="bar" :style="{ width: nodeBarWidth(node) }">
-									<span class="bar-label">{{ nodePercent(node) }}</span>
+				<div class="flow-container" :style="{ height: flowHeight }">
+					<VueFlow ref="flow" :nodes="flowNodes" :edges="flowEdges" :default-viewport="flowViewport" :min-zoom="0.3" :max-zoom="2" :auto-pan-on-node-drag="false" :zoom-on-scroll="false" @nodes-initialized="applyViewport">
+						<template #node-funnel="{ data }">
+							<Handle v-if="!data.isRoot" type="target" :position="data.tgtPos" />
+							<div class="flow-node" :class="{ root: data.isRoot }" :style="{ borderColor: data.color }">
+								<div class="node-top">
+									<svg v-if="data.percentNum !== null" class="node-ring" width="40" height="40" viewBox="0 0 40 40">
+										<circle cx="20" cy="20" r="16" fill="none" stroke="#eee" stroke-width="4" />
+										<circle cx="20" cy="20" r="16" fill="none" :stroke="data.color" stroke-width="4"
+											stroke-linecap="round" :stroke-dasharray="100.5" :stroke-dashoffset="100.5 - 100.5 * data.percentNum / 100"
+											transform="rotate(-90 20 20)" />
+										<text x="20" y="21" text-anchor="middle" dominant-baseline="central" font-size="9" font-weight="700" fill="currentColor">{{ Math.round(data.percentNum) }}%</text>
+									</svg>
+									<div class="node-info">
+										<div class="node-name">{{ data.label }}</div>
+										<div class="node-stats">{{ data.sessions }} sessions<br>{{ data.count }} events</div>
+										<div v-if="data.duration" class="node-duration"><v-icon size="12">mdi-clock-outline</v-icon> {{ data.duration }}</div>
+									</div>
 								</div>
 							</div>
-							<span class="percent-label">{{ nodePercent(node) }}</span>
-						</div>
-					</div>
-				</template>
+							<Handle v-if="data.hasChildren" type="source" :position="data.srcPos" />
+						</template>
+					</VueFlow>
+				</div>
 			</div>
 
 			<div v-else class="empty">Aucune donnée</div>
@@ -51,17 +57,17 @@
 					<v-btn value="hour" size="small">Heure</v-btn>
 				</v-btn-toggle>
 			</div>
-			<Line :data="chartData" :options="chartOptions" class="evolution-chart" />
+			<Line :key="chartKey" :data="chartData" :options="chartOptions" class="evolution-chart" />
 		</panel>
 
 		<!-- Metadata breakdown -->
 		<panel v-if="funnelData && Object.keys(metaBreakdown).length" class="last">
 			<h2 class="section-title">Détail metadata</h2>
-			<div v-for="node in flatNodes" :key="'meta-' + node.name">
-				<template v-if="metaBreakdown[node.name]">
-					<h3 class="meta-step-title">{{ node.name }}</h3>
+			<div v-for="name in funnelData.nodes" :key="'meta-' + name">
+				<template v-if="metaBreakdown[name]">
+					<h3 class="meta-step-title">{{ name }}</h3>
 					<div class="meta-grid">
-						<div v-for="(row, r) in parsedMeta(node.name)" :key="r" class="meta-row">
+						<div v-for="(row, r) in parsedMeta(name)" :key="r" class="meta-row">
 							<span class="meta-keys">
 								<span v-for="(val, key) in row.data" :key="key" class="meta-tag">{{ key }}: {{ val }}</span>
 							</span>
@@ -80,27 +86,35 @@
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 	import { Line } from 'vue-chartjs'
 	import { ChartData, ChartOptions } from 'chart.js'
+	import { VueFlow, Handle } from '@vue-flow/core'
+	import dagre from 'dagre'
+	import '@vue-flow/core/dist/style.css'
+	import '@vue-flow/core/dist/theme-default.css'
 
 	interface StepData { name: string, count: number, sessions: number }
 	interface DailyRow { step: string, period: string, count: number, sessions: number }
-	interface TreeDef { [key: string]: TreeDef }
-	interface FlatNode { name: string, depth: number, parentName: string | null, parentSessions: number, count: number, sessions: number, lastChild: boolean }
-	interface FunnelData { label: string, tree: TreeDef, dataMap: Record<string, StepData> }
+	interface FunnelData { label: string, nodes: string[], edges: [string, string][], ranks: string[][], dataMap: Record<string, StepData>, durations: Record<string, number> }
 
 	const STEP_COLORS = ['#4caf50', '#2196f3', '#ff9800', '#9c27b0', '#f44336', '#00bcd4', '#795548', '#e91e63', '#009688', '#ff5722']
 
-	@Options({ components: { Breadcrumb, Line } })
+	@Options({ components: { Breadcrumb, Line, VueFlow, Handle } })
 	export default class AdminFunnels extends Vue {
+		flowHeight = '300px'
 		funnelItems: { key: string, label: string }[] = []
 		selectedFunnel = ''
 		dateFrom = ''
 		dateTo = ''
 		loading = false
 		funnelData: FunnelData | null = null
-		flatNodes: FlatNode[] = []
+		flowNodes: any[] = []
+		flowEdges: any[] = []
+		flowViewport = { x: 5, y: 5, zoom: 1 }
+		graphWidth = 0
+		graphHeight = 0
 		dailyData: DailyRow[] = []
 		metaBreakdown: Record<string, { metadata: string, count: number }[]> = {}
 		granularity = 'day'
+		chartKey = 0
 		chartData: ChartData<'line'> | null = null
 		chartOptions: ChartOptions<'line'> = {
 			responsive: true,
@@ -125,38 +139,189 @@
 			}
 		}
 
-		get rootSessions(): number {
-			return this.flatNodes.length ? this.flatNodes[0].sessions : 0
+		formatDuration(seconds: number): string {
+			if (seconds < 60) return seconds + 's'
+			if (seconds < 3600) return Math.round(seconds / 60) + 'min'
+			if (seconds < 86400) return Math.round(seconds / 3600) + 'h'
+			return Math.round(seconds / 86400) + 'j'
 		}
 
-		flattenTree(tree: TreeDef, depth: number, parentName: string | null, parentSessions: number): FlatNode[] {
-			const entries = Object.entries(tree)
-			const result: FlatNode[] = []
-			entries.forEach(([name, children], i) => {
-				const data = this.funnelData?.dataMap[name]
+		applyViewport() {
+			const flow = this.$refs.flow as any
+			if (!flow?.$el || !flow.fitView) return
+			flow.fitView({ padding: 0.01, maxZoom: 1 })
+		}
+
+		buildFlow() {
+			if (!this.funnelData) return
+
+			const { nodes, edges, dataMap } = this.funnelData
+
+			// Find parents and children for each node
+			const parents: Record<string, string> = {}
+			const hasChildren = new Set<string>()
+			for (const [from, to] of edges) {
+				if (!parents[to]) parents[to] = from
+				hasChildren.add(from)
+			}
+
+			// Layout with dagre
+			const mobile = window.innerWidth < 600
+			const g = new dagre.graphlib.Graph()
+			g.setGraph({ rankdir: mobile ? 'TB' : 'LR', ranksep: mobile ? 60 : 30, nodesep: mobile ? 60 : 30, edgesep: 5 })
+			g.setDefaultEdgeLabel(() => ({}))
+
+			const nodeW = mobile ? 160 : 220
+			const nodeH = mobile ? 60 : 70
+			for (const name of nodes) {
+				g.setNode(name, { width: nodeW, height: nodeH })
+			}
+
+			// Build rank groups lookup
+			const rankOf: Record<string, string> = {}
+			for (const group of this.funnelData.ranks) {
+				for (const name of group) rankOf[name] = group[0]
+			}
+
+			// For dagre layout: replace edges involving ranked nodes so they get same rank
+			// Ranked nodes should have the same edges as their group leader
+			for (const [from, to] of edges) {
+				const layoutFrom = rankOf[from] || from
+				const layoutTo = rankOf[to] || to
+				if (layoutFrom !== layoutTo) {
+					g.setEdge(layoutFrom, layoutTo)
+				}
+			}
+
+			dagre.layout(g)
+
+			// Position ranked nodes relative to their group leader
+			const movedNodes = new Set<string>()
+			for (const group of this.funnelData.ranks) {
+				const ref = g.node(group[0])
+				for (let i = 1; i < group.length; i++) {
+					const node = g.node(group[i])
+					if (mobile) {
+						node.x = ref.x + (nodeW + 10) * i
+						node.y = ref.y
+					} else {
+						node.x = ref.x
+						node.y = ref.y + (nodeH + 10) * i
+					}
+					movedNodes.add(group[i])
+				}
+			}
+
+			// Propagate Y alignment: children of moved nodes with a single parent get aligned
+			const crossAxis = mobile ? 'x' : 'y'
+			const childrenOf: Record<string, string[]> = {}
+			const parentCount: Record<string, number> = {}
+			for (const [from, to] of edges) {
+				if (!childrenOf[from]) childrenOf[from] = []
+				childrenOf[from].push(to)
+				parentCount[to] = (parentCount[to] || 0) + 1
+			}
+			const propagate = (name: string) => {
+				for (const child of (childrenOf[name] || [])) {
+					if (parentCount[child] === 1) {
+						g.node(child)[crossAxis] = g.node(name)[crossAxis]
+						propagate(child)
+					}
+				}
+			}
+			for (const name of movedNodes) {
+				propagate(name)
+			}
+
+			// Uniformize rank spacing
+			const axis = mobile ? 'y' : 'x'
+			const spacing = mobile ? (nodeH + 60) : (nodeW + 50)
+
+			// Read final positions and group into ranks (nodes within nodeW/3 of each other = same rank)
+			const threshold = nodeW / 3
+			const sortedNodes = [...nodes].sort((a, b) => g.node(a)[axis] - g.node(b)[axis])
+			const ranks: string[][] = []
+			for (const name of sortedNodes) {
+				const pos = g.node(name)[axis]
+				if (ranks.length && Math.abs(pos - g.node(ranks[ranks.length - 1][0])[axis]) < threshold) {
+					ranks[ranks.length - 1].push(name)
+				} else {
+					ranks.push([name])
+				}
+			}
+
+			// Redistribute each rank evenly
+			for (let i = 0; i < ranks.length; i++) {
+				const newPos = i * spacing + spacing / 2
+				for (const name of ranks[i]) {
+					g.node(name)[axis] = newPos
+				}
+			}
+
+			// Normalize positions to start at 0 and compute container size
+			let minX = Infinity, minY = Infinity, maxX = 0, maxY = 0
+			for (const name of nodes) {
+				const n = g.node(name)
+				minX = Math.min(minX, n.x - nodeW / 2)
+				minY = Math.min(minY, n.y - nodeH / 2)
+			}
+			for (const name of nodes) {
+				const n = g.node(name)
+				n.x -= minX
+				n.y -= minY
+				maxX = Math.max(maxX, n.x + nodeW / 2)
+				maxY = Math.max(maxY, n.y + nodeH / 2)
+			}
+			this.graphWidth = maxX
+			this.graphHeight = maxY
+			const estimatedContainerW = window.innerWidth - 40
+			const zoom = Math.min(1, estimatedContainerW / maxX)
+			this.flowHeight = Math.ceil((maxY + 20) * zoom) + 'px'
+
+			const srcPos = mobile ? 'bottom' : 'right'
+			const tgtPos = mobile ? 'top' : 'left'
+
+			// Build Vue Flow nodes
+			this.flowNodes = nodes.map((name, i) => {
+				const pos = g.node(name)
+				const data = dataMap[name]
 				const sessions = data?.sessions || 0
-				const count = data?.count || 0
-				result.push({ name, depth, parentName, parentSessions, count, sessions, lastChild: i === entries.length - 1 })
-				result.push(...this.flattenTree(children, depth + 1, name, sessions))
+				const parentName = parents[name]
+				const parentSessions = parentName ? (dataMap[parentName]?.sessions || 0) : 0
+				const isRoot = !parentName
+				let percentNum: number
+				if (isRoot) {
+					percentNum = 100
+				} else if (parentSessions > 0) {
+					percentNum = (sessions / parentSessions) * 100
+				} else {
+					percentNum = 0
+				}
+				return {
+					id: name,
+					type: 'funnel',
+					position: { x: pos.x - nodeW / 2, y: pos.y - nodeH / 2 },
+					sourcePosition: srcPos,
+					targetPosition: tgtPos,
+					data: {
+						label: name, sessions, count: data?.count || 0, percentNum, isRoot,
+						hasChildren: hasChildren.has(name), color: STEP_COLORS[i % STEP_COLORS.length],
+						srcPos, tgtPos,
+						duration: this.funnelData!.durations[name] ? this.formatDuration(this.funnelData!.durations[name]) : null
+					},
+				}
 			})
-			return result
-		}
 
-		nodeBarWidth(node: FlatNode): string {
-			const ref = node.parentSessions || this.rootSessions
-			if (!ref) return '0%'
-			return Math.max(2, (node.sessions / ref) * 100) + '%'
-		}
-
-		nodePercent(node: FlatNode): string {
-			const ref = node.parentSessions || node.sessions
-			if (!ref) return '0%'
-			return ((node.sessions / ref) * 100).toFixed(1) + '%'
-		}
-
-		stepColor(name: string): string {
-			const i = this.flatNodes.findIndex(n => n.name === name)
-			return STEP_COLORS[(i >= 0 ? i : 0) % STEP_COLORS.length]
+			// Build Vue Flow edges
+			this.flowEdges = edges.map(([from, to]) => {
+				return {
+					id: from + '-' + to,
+					source: from,
+					target: to,
+					animated: true,
+					style: { stroke: '#999' },
+				}
+			})
 		}
 
 		buildChart() {
@@ -164,6 +329,8 @@
 				this.chartData = null
 				return
 			}
+			this.chartOptions = { ...this.chartOptions, aspectRatio: window.innerWidth < 600 ? 1.2 : 2.5 }
+			this.chartKey++
 			const periods = [...new Set(this.dailyData.map(r => r.period))].sort()
 			const lookup: Record<string, Record<string, number>> = {}
 			for (const row of this.dailyData) {
@@ -172,9 +339,9 @@
 			}
 			this.chartData = {
 				labels: periods.map(d => this.granularity === 'hour' ? d.slice(5) : d.slice(5, 10)),
-				datasets: this.flatNodes.map((node, i) => ({
-					label: node.name,
-					data: periods.map(d => lookup[node.name]?.[d] || 0),
+				datasets: this.funnelData.nodes.map((name, i) => ({
+					label: name,
+					data: periods.map(d => lookup[name]?.[d] || 0),
 					borderColor: STEP_COLORS[i % STEP_COLORS.length],
 					backgroundColor: STEP_COLORS[i % STEP_COLORS.length] + '20',
 					tension: 0.3,
@@ -195,12 +362,23 @@
 			}))
 		}
 
+		resizeHandler: (() => void) | null = null
+
 		created() {
 			LeekWars.setTitle("Funnels")
 			const now = new Date()
 			const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
 			this.dateTo = now.toISOString().slice(0, 10)
 			this.dateFrom = thirtyDaysAgo.toISOString().slice(0, 10)
+
+			let timeout: any
+			this.resizeHandler = () => {
+				clearTimeout(timeout)
+				timeout = setTimeout(() => {
+					if (this.funnelData) this.buildChart()
+				}, 300)
+			}
+			window.addEventListener('resize', this.resizeHandler)
 
 			if (this.$store.state.farmer) {
 				this.init()
@@ -209,6 +387,10 @@
 					if (farmer) { unwatch(); this.init() }
 				})
 			}
+		}
+
+		beforeUnmount() {
+			if (this.resizeHandler) window.removeEventListener('resize', this.resizeHandler)
 		}
 
 		init() {
@@ -238,17 +420,21 @@
 				}
 				this.funnelData = {
 					label: data.label,
-					tree: data.tree,
+					nodes: data.nodes,
+					edges: data.edges,
+					ranks: data.ranks || [],
+					durations: data.durations || {},
 					dataMap
 				}
-				this.flatNodes = this.flattenTree(data.tree, 0, null, 0)
+				this.buildFlow()
 				this.dailyData = data.daily || []
 				this.metaBreakdown = data.meta_breakdown || {}
 				this.buildChart()
 				this.loading = false
 			}).error(() => {
 				this.funnelData = null
-				this.flatNodes = []
+				this.flowNodes = []
+				this.flowEdges = []
 				this.dailyData = []
 				this.metaBreakdown = {}
 				this.chartData = null
@@ -281,83 +467,72 @@
 		padding: 10px 0;
 	}
 	.funnel {
-		padding: 15px 0;
+		padding: 5px 0;
 	}
 	.funnel-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 20px;
+		margin-bottom: 10px;
 		.funnel-label {
 			font-size: 18px;
 			font-weight: 600;
 		}
-		.funnel-total {
-			color: #888;
-		}
 	}
-	.funnel-node {
-		margin: 6px 0;
-		.step-info {
-			display: flex;
-			justify-content: space-between;
-			margin-bottom: 4px;
+	.flow-container {
+		border: 1px solid #eee;
+		border-radius: 8px;
+		overflow: hidden;
+	}
+	body.dark .flow-container {
+		border-color: #444;
+	}
+	.flow-node {
+		background: white;
+		border: 2px solid #4caf50;
+		border-radius: 8px;
+		padding: 8px 12px;
+		width: 220px;
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+		&.root {
+			border-color: #1976d2;
+			background: #e3f2fd;
 		}
-		.step-name {
-			font-weight: 500;
-			font-size: 14px;
+		.node-top {
 			display: flex;
 			align-items: center;
-			gap: 4px;
+			gap: 10px;
 		}
-		.tree-prefix {
-			color: #999;
-			font-family: monospace;
-			width: 12px;
-			display: inline-block;
+		.node-ring {
+			flex-shrink: 0;
 		}
-		.step-count {
-			color: #888;
+		.node-info {
+			text-align: left;
+		}
+		.node-name {
+			font-weight: 600;
 			font-size: 13px;
+			margin-bottom: 2px;
+		}
+		.node-stats {
+			font-size: 13px;
+			color: #666;
+			white-space: nowrap;
+		}
+		.node-duration {
+			font-size: 13px;
+			color: #666;
+			display: flex;
+			align-items: center;
+			gap: 2px;
+			margin-top: 2px;
 		}
 	}
-	.bar-row {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-	}
-	.bar-container {
-		background: #f0f0f0;
-		border-radius: 4px;
-		height: 28px;
-		overflow: hidden;
-		flex: 1;
-	}
-	body.dark .bar-container {
-		background: #333;
-	}
-	.bar {
-		height: 100%;
-		background: #4caf50;
-		border-radius: 4px;
-		display: flex;
-		align-items: center;
-		padding: 0 10px;
-		min-width: 40px;
-		transition: width 0.3s;
-	}
-	.bar-label {
-		color: white;
-		font-weight: 600;
-		font-size: 12px;
-		white-space: nowrap;
-	}
-	.percent-label {
-		font-size: 13px;
-		font-weight: 600;
-		color: #1976d2;
-		min-width: 50px;
-		text-align: right;
+	body.dark .flow-node {
+		background: #2a2a2a;
+		color: #eee;
+		&.root {
+			background: #1a3a5c;
+		}
+		.node-stats { color: #aaa; }
+		.node-ring circle:first-child { stroke: #444; }
 	}
 	.empty {
 		padding: 40px;
@@ -373,6 +548,11 @@
 	}
 	.evolution-chart {
 		padding: 10px 0;
+	}
+	@media (max-width: 599px) {
+		.evolution-chart {
+			min-height: 300px;
+		}
 	}
 
 	// Metadata breakdown
