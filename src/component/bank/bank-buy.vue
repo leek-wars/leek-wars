@@ -85,10 +85,8 @@
 		created() {
 			this.pack = parseInt(this.$route.params.pack, 10)
 			this.offer = parseInt(this.$route.params.offer, 10)
-			LeekWars.get('bank/get-packs').then(data => {
-				const pack = data.packs[this.pack]
-				// const offer = pack.offers[this.offer]
-				// const vendor = offer.vendor
+			LeekWars.get('bank/get-pack/' + this.pack).then(data => {
+				const pack = data.pack
 				this.product = pack
 				this.firstPurchase = data.first_purchase
 				this.loadPayPal()
@@ -112,7 +110,7 @@
 				currency: LeekWars.currency
 			}).then((paypal) => {
 				paypal!.Buttons!({
-					style: { layout: 'vertical', color: 'blue', shape: 'rect', label:  'paypal', tagline: false },
+					style: { layout: 'vertical', color: LeekWars.dark > 0 ? 'black' : 'blue', shape: 'rect', label:  'paypal', tagline: false },
 					// Order is created on the server and the order id is returned
 					createOrder: (data, actions) => {
 						return new Promise((resolve, reject) => {
@@ -235,5 +233,8 @@
 	.panel :deep(.sk-main-content h3:after),
 	.panel :deep(.sk-kit-header h1:after) {
 		border: none;
+	}
+	#app.dark #paypal-button-container {
+		color-scheme: none;
 	}
 </style>
