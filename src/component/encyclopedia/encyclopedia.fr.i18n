@@ -14,5 +14,10 @@
     "redirected_from": "Redirigé depuis {0}",
     "aliases": "Également connu sous : {0}",
     "history": "Historique",
-    "initial": "création"
+    "initial": "création",
+    "child_pages": "Pages enfants",
+    "referencing_translations": "Traductions liées",
+    "linked_from": "Pages contenant un lien",
+    "n_references": "référence | référence | références",
+    "views": "vues"
 }

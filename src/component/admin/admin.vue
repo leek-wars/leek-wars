@@ -34,6 +34,10 @@
 						<v-icon>mdi-database-refresh</v-icon>
 						<h2>Refresh game data</h2>
 					</div>
+					<div v-ripple class="section card" @click="refreshEncycloLinks">
+						<v-icon>{{ encycloLinksLoading ? 'mdi-loading mdi-spin' : 'mdi-book-sync' }}</v-icon>
+						<h2>Refresh encyclo links</h2>
+					</div>
 					<router-link to="/admin/services">
 						<div v-ripple class="section card">
 							<v-icon>mdi-api</v-icon>
@@ -186,6 +190,7 @@
 		leek: any = null
 		levelPopup: boolean = false
 		levelPopupData: any = null
+		encycloLinksLoading: boolean = false
 
 		created() {
 			if (!this.$store.getters.admin) this.$router.replace('/')
@@ -289,6 +294,18 @@
 			})
 		}
 
+		refreshEncycloLinks() {
+			if (this.encycloLinksLoading) return
+			this.encycloLinksLoading = true
+			LeekWars.post('encyclopedia/refresh-links').then((data: any) => {
+				this.encycloLinksLoading = false
+				LeekWars.toast("Links refreshed: " + data.updated + " pages updated")
+			}).error((error: any) => {
+				this.encycloLinksLoading = false
+				LeekWars.toast("Erreur : " + error.error)
+			})
+		}
+
 		sendError() {
 			const err = new Error()
 			const info = "test"
@@ -317,6 +334,7 @@
 		padding: 8px 5px;
 		text-align: center;
 		height: 100%;
+		cursor: pointer;
 		& > .v-icon {
 			font-size: 50px;
 			margin: 6px 0;

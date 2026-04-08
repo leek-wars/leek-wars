@@ -44,6 +44,10 @@
 					<v-icon>mdi-pencil-outline</v-icon>
 					{{ $t('main.edit') }}
 				</div>
+				<div v-if="$store.getters.admin && !edition && page.id" class="tab action" @click="deletePage">
+					<v-icon>mdi-delete</v-icon>
+					{{ $t('main.delete') }}
+				</div>
 				<v-menu v-if="page && Object.values(page.translations).length" offset-y>
 					<template #activator="{ props }">
 						<div class="tab" v-bind="props"><v-icon>mdi-translate</v-icon></div>
@@ -93,7 +97,7 @@
 
 						<div v-if="page.creator" class="stats">
 
-							<div class="contributors">
+							<div class="contributors" @click="toggleStats">
 								<v-icon>mdi-account-multiple</v-icon>
 								<div v-html="$tc('n_contributors', page.contributors.length)"></div>
 								<div class="avatars">
@@ -108,8 +112,11 @@
 										<b>{{ $filters.number(page.views) }}</b>
 									</template>
 								</i18n-t>
+								<div v-if="totalReferences > 0" class="references-count">
+									— <b>{{ totalReferences }}</b> {{ $tc('n_references', totalReferences) }}
+								</div>
 								<div class="fill"></div>
-								<v-icon @click="toggleStats">{{ statsExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+								<v-icon>{{ statsExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
 							</div>
 
 							<div v-if="statsExpanded" class="expanded-stats">
@@ -141,6 +148,29 @@
 									{{ $tc('main.n_lines', page.content.split('\n').length) }}
 									— {{ $tc('main.n_words', page.content.split(' ').length) }}
 									— {{ $tc('main.n_characters', page.content.length) }}
+								</div>
+							</div>
+
+							<div v-if="statsExpanded && referencedBy && totalReferences > 0" class="references-panel">
+								<div v-if="referencedBy.children.length" class="ref-section">
+									<v-icon>mdi-file-tree</v-icon>
+									<span class="ref-label">{{ $t('child_pages') }} :</span>
+									<template v-for="(child, i) in referencedBy.children" :key="child.id">
+										<router-link :to="'/encyclopedia/' + child.language + '/' + child.title.replace(/ /g, '_')">{{ child.title }}</router-link><span v-if="i < referencedBy.children.length - 1">, </span>
+									</template>
+								</div>
+								<div v-if="referencedBy.translations.length" class="ref-section">
+									<span class="ref-label">{{ $t('referencing_translations') }} :</span>
+									<template v-for="(t, i) in referencedBy.translations" :key="t.id">
+										<router-link :to="'/encyclopedia/' + t.language + '/' + t.title.replace(/ /g, '_')">{{ t.title }}</router-link><span v-if="i < referencedBy.translations.length - 1">, </span>
+									</template>
+								</div>
+								<div v-if="referencedBy.linked_from.length" class="ref-section">
+									<v-icon>mdi-link-variant</v-icon>
+									<span class="ref-label">{{ $t('linked_from') }} :</span>
+									<template v-for="(link, i) in referencedBy.linked_from" :key="link.id">
+										<router-link :to="'/encyclopedia/' + link.language + '/' + link.title.replace(/ /g, '_')">{{ link.title }}</router-link><span v-if="i < referencedBy.linked_from.length - 1">, </span>
+									</template>
 								</div>
 							</div>
 
@@ -217,6 +247,7 @@
 		history: any[] | null = null
 		selectedHistoryIndex: number | null = null
 		diffEditor: Monaco.editor.IStandaloneDiffEditor | null = null
+		referencedBy: { children: any[], translations: any[], linked_from: any[] } | null = null
 
 		get language() {
 			return this.$route.params && this.$route.params.lang ? this.$route.params.lang : this.$i18n.locale
@@ -282,6 +313,10 @@
 					return name
 				}
 			}
+		}
+		get totalReferences() {
+			if (!this.referencedBy) return 0
+			return this.referencedBy.children.length + this.referencedBy.translations.length + this.referencedBy.linked_from.length
 		}
 		get content() {
 			let content = this.page ? this.page.content : ''
@@ -350,6 +385,7 @@
 			this.statsExpanded = false
 			this.history = null
 			this.selectedHistoryIndex = null
+			this.referencedBy = null
 			this.destroyDiffEditor()
 
 			LeekWars.get<any>('encyclopedia/get/' + this.language + '/' + this.code).then(page => {
@@ -575,8 +611,9 @@ ${ret}
 
 		toggleStats() {
 			this.statsExpanded = !this.statsExpanded
-			if (this.statsExpanded && !this.history) {
-				this.loadHistory()
+			if (this.statsExpanded) {
+				if (!this.history) this.loadHistory()
+				if (!this.referencedBy) this.loadReferencedBy()
 			}
 		}
 
@@ -675,6 +712,45 @@ ${ret}
 			}
 		}
 
+		loadReferencedBy() {
+			if (!this.page || !this.page.id) return
+			LeekWars.get('encyclopedia/get-referenced-by/' + this.page.id).then((result: any) => {
+				this.referencedBy = result
+			})
+		}
+
+		deletePage() {
+			if (!this.page || !this.page.id) return
+
+			if (this.referencedBy && (this.referencedBy.children.length || this.referencedBy.linked_from.length)) {
+				const children = this.referencedBy.children.length
+				const linked = this.referencedBy.linked_from.length
+				let msg = 'Impossible de supprimer cette page :\n'
+				if (children) msg += `- ${children} page(s) enfant(s)\n`
+				if (linked) msg += `- ${linked} page(s) contenant un lien vers cette page\n`
+				msg += '\nSupprimez ou déplacez ces pages avant.'
+				alert(msg)
+				return
+			}
+
+			if (!window.confirm('Supprimer la page « ' + this.page.title + ' » (#' + this.page.id + ') ?\n\nCette action est irréversible.')) {
+				return
+			}
+
+			LeekWars.delete('encyclopedia/delete', { page_id: this.page.id }).then(() => {
+				LeekWars.toast('Page supprimée !')
+				this.$router.push('/encyclopedia')
+			}).error((error: any) => {
+				if (error.error === 'has_children') {
+					LeekWars.toast('Impossible : ' + error.count + ' page(s) enfant(s)')
+				} else if (error.error === 'has_links') {
+					LeekWars.toast('Impossible : ' + error.count + ' page(s) contenant un lien vers cette page')
+				} else {
+					LeekWars.toast('Erreur : ' + error.error)
+				}
+			})
+		}
+
 		updateOfficial() {
 			LeekWars.put('encyclopedia/official', {page_id: this.page.id, official: this.page.official}).then((result) => {
 
@@ -741,6 +817,9 @@ h1 {
 	padding: 15px;
 	border-top: 1px solid var(--border);
 	color: var(--text-color-secondary);
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
 	a {
 		color: #5fad1b;
 		font-weight: bold;
@@ -749,6 +828,7 @@ h1 {
 		display: flex;
 		align-items: center;
 		margin-bottom: 5px;
+		cursor: pointer;
 		& > * {
 			margin: 0 3px;
 		}
@@ -823,7 +903,6 @@ h1 {
 	display: flex;
 	border-top: 1px solid var(--border);
 	height: 600px;
-	margin-top: 10px;
 }
 .history-list {
 	width: 300px;
@@ -885,6 +964,35 @@ h1 {
 	flex: 1;
 	min-width: 0;
 	border-left: 1px solid var(--border);
+}
+.references-count {
+	margin-left: 10px;
+}
+.references-panel {
+	padding: 10px 0;
+	line-height: 1.6;
+	.ref-section {
+		margin-bottom: 4px;
+		&:last-child {
+			margin-bottom: 0;
+		}
+		.v-icon {
+			font-size: 16px;
+			vertical-align: middle;
+			margin-right: 2px;
+		}
+		.ref-label {
+			color: var(--text-color-secondary);
+			margin-right: 4px;
+		}
+		a {
+			color: #0645ad;
+			font-weight: 500;
+		}
+		:global(body.dark) & a {
+			color: #4bbaff;
+		}
+	}
 }
 :deep(.md.main h1) {
 	display: none;
