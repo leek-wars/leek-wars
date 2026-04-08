@@ -986,11 +986,8 @@ h1 {
 			margin-right: 4px;
 		}
 		a {
-			color: #0645ad;
+			color: var(--link-color);
 			font-weight: 500;
-		}
-		:global(body.dark) & a {
-			color: #4bbaff;
 		}
 	}
 }

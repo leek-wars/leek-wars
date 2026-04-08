@@ -214,6 +214,7 @@ body {
 	--text-color: #111;
 	--text-color-secondary: #777;
 	--type-color: #0000D0;
+	--link-color: #0645ad;
 	&.dark {
 		--pure-white: #000;
 		--pure-black: #fff;
@@ -225,6 +226,7 @@ body {
 		--text-color: #f7f7f7;
 		--text-color-secondary: #999;
 		--type-color: #0099d0;
+		--link-color: #4bbaff;
 	}
 }
 ::selection {

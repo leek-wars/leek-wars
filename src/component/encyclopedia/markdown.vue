@@ -531,11 +531,8 @@
 		max-width: 100%;
 	}
 	.md :deep(a) {
-		color: #0645ad;
+		color: var(--link-color);
 		font-weight: 500;
-	}
-	body.dark .md :deep(a) {
-		color: #4bbaff;
 	}
 	.md :deep(a.new) {
 		color: #ba0000;
