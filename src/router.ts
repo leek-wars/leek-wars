@@ -14,6 +14,7 @@ const AdminGroups = () => import(/* webpackChunkName: "admin" */ `@/component/ad
 const AdminSources = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-sources.vue`)
 const AdminSchemes = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-schemes.vue`)
 const AdminTournaments = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-tournaments.vue`)
+const AdminFunnels = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-funnels.vue`)
 const Admin = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin.vue`)
 const Api = () => import(/* webpackChunkName: "[request]" */ `@/component/api/api.${locale}.i18n`)
 import Error from '@/component/app/error.vue'
@@ -141,6 +142,8 @@ const routes = [
 	{ path: '/admin/schemes', component: AdminSchemes, beforeEnter: connected },
 	{ path: '/admin/components', component: AdminComponents, beforeEnter: connected },
 	{ path: '/admin/tournaments', component: AdminTournaments, beforeEnter: connected },
+	{ path: '/admin/funnels', component: AdminFunnels, beforeEnter: connected },
+	{ path: '/admin/funnels/:funnel', component: AdminFunnels, beforeEnter: connected },
 	{ path: '/about', component: About },
 	{ path: '/app', component: MobileApp },
 	{ path: '/conditions', component: Conditions },
