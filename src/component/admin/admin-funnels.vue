@@ -368,8 +368,9 @@
 			LeekWars.setTitle("Funnels")
 			const now = new Date()
 			const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
-			this.dateTo = now.toISOString().slice(0, 10)
-			this.dateFrom = thirtyDaysAgo.toISOString().slice(0, 10)
+			const pad = (n: number) => String(n).padStart(2, '0')
+			this.dateTo = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate())
+			this.dateFrom = thirtyDaysAgo.getFullYear() + '-' + pad(thirtyDaysAgo.getMonth() + 1) + '-' + pad(thirtyDaysAgo.getDate())
 
 			let timeout: any
 			this.resizeHandler = () => {
