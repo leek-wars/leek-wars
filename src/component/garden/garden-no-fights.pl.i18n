@@ -1,5 +1,9 @@
 {
 	"buy_fights": "Kup teraz walki w Habach {hab} lub Kryształach {crystal} na {market}.",
+	"buy_50_fights": "Kup 50 walk",
+	"buy_100_fights": "Kup 100 walk",
+	"fights_bought": "Kupiono {0} walk!",
 	"next_fight_in": "{fights} nowych walk za {time}",
-	"no_more_fights": "Więcej walk!"
+	"no_more_fights": "Więcej walk!",
+	"already_bought": "Już kupiono"
 }

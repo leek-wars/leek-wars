@@ -1,5 +1,9 @@
 {
 	"buy_fights": "Koop nu gevechten in Habs {hab} of Crystals {crystal} in de {market}.",
+	"buy_50_fights": "50 gevechten kopen",
+	"buy_100_fights": "100 gevechten kopen",
+	"fights_bought": "{0} gevechten gekocht!",
 	"next_fight_in": "{fights} nieuwe gevechten in {time}",
-	"no_more_fights": "Meer gevechten!"
+	"no_more_fights": "Meer gevechten!",
+	"already_bought": "Al gekocht"
 }

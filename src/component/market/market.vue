@@ -144,6 +144,18 @@
 						</div>
 					</template>
 				</panel>
+				<panel v-if="filteredSchemes.length || !search" :title="$t('schemes') + ' [' + filteredSchemes.length + ']'" icon="mdi-map-outline">
+					<template #content>
+						<div class="items schemes">
+							<router-link v-for="scheme in filteredSchemes" :key="scheme.id" v-ripple :to="'/market/' + scheme.name" class="item scheme">
+								<scheme-image v-if="LeekWars.items[scheme.id] && LeekWars.schemes[LeekWars.items[scheme.id].params]" :scheme="LeekWars.schemes[LeekWars.items[scheme.id].params]" />
+								<div v-if="items[scheme.id].farmer_count" class="counts">
+									<span class="farmer-count">{{ items[scheme.id].farmer_count }}</span>
+								</div>
+							</router-link>
+						</div>
+					</template>
+				</panel>
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column4">
 				<div class="column4-wrapper">
@@ -167,13 +179,13 @@
 									</div>
 									<div v-if="selectedItem.buyable || selectedItem.buyable_crystals" class="buy">
 										<h4 class="buy-label">{{ $t('buy') }}</h4>
-										<v-btn v-if="selectedItem.buyable" :disabled="($store.state.farmer && $store.state.farmer.habs < selectedItem.price) || (selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0))" class="buy-button" @click="openBuyHabs(1)">{{ $filters.number(selectedItem.price) }}<img src="/image/hab.png"></v-btn>
-										<v-btn v-if="selectedItem.buyable_crystals" :disabled="($store.state.farmer && $store.state.farmer.crystals < selectedItem.crystals) || (selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0))" class="buy-crystals-button" @click="openBuyCrystals(1)">{{ $filters.number(selectedItem.crystals) }}<img src="/image/crystal.png"></v-btn>
+										<v-btn v-if="selectedItem.buyable && !(selectedItem.type === ItemType.FIGHT_PACK && $store.state.farmer?.fights > 0)" :disabled="($store.state.farmer && $store.state.farmer.habs < selectedItem.price) || (selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0)) || (selectedItem.type === ItemType.FIGHT_PACK && $store.state.farmer?.habs_fights)" class="buy-button" @click="openBuyHabs(1)">{{ selectedItem.type === ItemType.FIGHT_PACK && $store.state.farmer?.habs_fights ? $t('already_bought') : $filters.number(selectedItem.price) }}<img v-if="!(selectedItem.type === ItemType.FIGHT_PACK && $store.state.farmer?.habs_fights)" src="/image/hab.png"></v-btn>
+										<v-btn v-if="selectedItem.buyable_crystals" :disabled="selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0)" class="buy-crystals-button" @click="openBuyCrystals(1)">{{ $filters.number(selectedItem.crystals) }}<img src="/image/crystal.png"></v-btn>
 									</div>
 									<div v-if="selectedItem.name === 'potion_restat'" class="buy">
 										<h4 class="buy-label">{{ $t('buy') }} x10</h4>
 										<v-btn v-if="selectedItem.buyable" :disabled="($store.state.farmer && $store.state.farmer.habs < selectedItem.price * 10)" class="buy-button" @click="openBuyHabs(10)">{{ $filters.number(selectedItem.price * 10) }}<img src="/image/hab.png"></v-btn>
-										<v-btn v-if="selectedItem.buyable_crystals" :disabled="($store.state.farmer && $store.state.farmer.crystals < selectedItem.crystals * 10)" class="buy-crystals-button" @click="openBuyCrystals(10)">{{ $filters.number(selectedItem.crystals * 10) }}<img src="/image/crystal.png"></v-btn>
+										<v-btn v-if="selectedItem.buyable_crystals" class="buy-crystals-button" @click="openBuyCrystals(10)">{{ $filters.number(selectedItem.crystals * 10) }}<img src="/image/crystal.png"></v-btn>
 									</div>
 									<v-btn v-if="selectedItem.buyable_crystals && $store.state.farmer && $store.state.farmer.crystals < selectedItem.crystals" class="not-enough-crystals" variant="text" color="#e91e9e" prepend-icon="mdi-cart-outline" to="/bank">
 										{{ $t('not_enough_crystals') }}
@@ -331,6 +343,7 @@
 	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import FightPackPreview from './fight-pack-preview.vue'
 	import ItemPreview from './item-preview.vue'
+	import SchemeImage from './scheme-image.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import { emitter } from '@/model/vue'
 
@@ -338,7 +351,8 @@
 		name: 'market', i18n: {}, mixins: [...mixins],
 		components: {
 			'item-preview': ItemPreview,
-			RichTooltipLeek
+			RichTooltipLeek,
+			SchemeImage
 		}
 	})
 	export default class Market extends Vue {
@@ -365,6 +379,7 @@
 		unseenItem: ItemTemplate | null = null
 		unseenItemDialog: boolean = false
 		pomps: PompTemplate[] = []
+		schemes: ItemTemplate[] = []
 		request: any = null
 		onKeyDown: ((e: KeyboardEvent) => void) | null = null
 		search: string = ''
@@ -402,11 +417,14 @@
 		get filteredPomps() {
 			return this.pomps.filter(p => this.matchesSearch(this.items[p.id]))
 		}
+		get filteredSchemes() {
+			return this.schemes.filter(s => this.matchesSearch(s))
+		}
 
 		@Watch('search')
 		onSearchChange() {
 			if (!this.search) { return }
-			const first = this.filteredFightPacks[0] || this.filteredWeapons[0] || this.filteredChips[0] || this.filteredPotions[0] || this.filteredHats[0] || this.filteredPomps[0]
+			const first = this.filteredFightPacks[0] || this.filteredWeapons[0] || this.filteredChips[0] || this.filteredPotions[0] || this.filteredHats[0] || this.filteredPomps[0] || this.filteredSchemes[0]
 			if (first) {
 				const name = first.name.replace('weapon_', '')
 				this.$router.replace('/market/' + name)
@@ -432,6 +450,9 @@
 			}
 			for (const pomp of this.filteredPomps) {
 				names.push(pomp.name)
+			}
+			for (const scheme of this.filteredSchemes) {
+				names.push(scheme.name)
 			}
 			return names
 		}
@@ -491,6 +512,9 @@
 					} else if (item.type === ItemType.POMP) {
 						this.pomps.push(LeekWars.pomps[item.id])
 						this.items_by_name[LeekWars.pomps[item.id].name] = item
+					} else if (item.type === ItemType.SCHEME) {
+						this.schemes.push(item)
+						this.items_by_name[item.name] = item
 					}
 					item.leek_objs = []
 					if (this.$store.state.farmer) {
@@ -597,10 +621,13 @@
 			}
 		}
 		openBuyCrystals(quantity: number) {
-			if (this.selectedItem && this.selectedItem.crystals! <= this.$store.state.farmer.crystals) {
-				this.buyCrystalsDialog = true
-				this.buyQuantity = quantity
+			if (!this.selectedItem) return
+			if (this.selectedItem.crystals! * quantity > this.$store.state.farmer.crystals) {
+				this.$router.push('/bank')
+				return
 			}
+			this.buyCrystalsDialog = true
+			this.buyQuantity = quantity
 		}
 		buy(currency: string) {
 			if (!this.selectedItem) { return }
@@ -803,6 +830,10 @@
 	}
 	.items.pomps {
 		grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+	}
+	.items.schemes {
+		grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+		.item { padding: 6px; }
 	}
 	.items .item {
 		border: 1px solid var(--border);

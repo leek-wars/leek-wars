@@ -1,5 +1,9 @@
 {
 	"buy_fights": "今すぐ Habs {hab} または {market} の Crystals {crystal} で戦いを購入してください。",
+	"buy_50_fights": "50戦を購入",
+	"buy_100_fights": "100戦を購入",
+	"fights_bought": "{0}戦を購入しました！",
 	"next_fight_in": "{time}で{fights}の新しい戦い",
-	"no_more_fights": "もっと戦います！"
+	"no_more_fights": "もっと戦います！",
+	"already_bought": "購入済み"
 }

@@ -1,4 +1,5 @@
 {
+	"already_bought": "Déjà acheté",
 	"already_have": "Vous possédez déjà cet objet",
 	"are_you_sure_you_want_to_buy": "Êtes-vous sûr de vouloir acheter l'objet {item} ?",
 	"are_you_sure_you_want_to_sell": "Êtes-vous sûr de vouloir vendre l'objet {item} ?",
@@ -33,6 +34,7 @@
 	"not_sellable": "Item non revendable",
 	"pomps": "Apparats",
 	"potion": "Potion",
+	"schemes": "Schémas",
 	"potion_bought": "Potion achetée !",
 	"potions": "Potions",
 	"potion_selled": "Potion revendue !",

@@ -1,5 +1,9 @@
 {
 	"buy_fights": "Kjøp kamper nå i Habs {hab} eller Krystaller {crystal} i {market}.",
+	"buy_50_fights": "Kjøp 50 kamper",
+	"buy_100_fights": "Kjøp 100 kamper",
+	"fights_bought": "{0} kamper kjøpt!",
 	"next_fight_in": "{fights} nye kamper om {time}",
-	"no_more_fights": "Flere kamper!"
+	"no_more_fights": "Flere kamper!",
+	"already_bought": "Allerede kjøpt"
 }

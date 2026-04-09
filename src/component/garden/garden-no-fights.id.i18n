@@ -1,5 +1,9 @@
 {
 	"buy_fights": "Beli pertarungan sekarang di Habs {hab} atau Crystal {crystal} di {market}.",
+	"buy_50_fights": "Beli 50 pertarungan",
+	"buy_100_fights": "Beli 100 pertarungan",
+	"fights_bought": "{0} pertarungan dibeli!",
 	"next_fight_in": "{fights} pertarungan baru dalam {time}",
-	"no_more_fights": "Perkelahian lagi!"
+	"no_more_fights": "Perkelahian lagi!",
+	"already_bought": "Sudah dibeli"
 }

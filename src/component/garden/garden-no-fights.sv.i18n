@@ -1,5 +1,9 @@
 {
 	"buy_fights": "Köp slagsmål nu i Habs {hab} eller Crystals {crystal} på {market}.",
+	"buy_50_fights": "Köp 50 slagsmål",
+	"buy_100_fights": "Köp 100 slagsmål",
+	"fights_bought": "{0} slagsmål köpta!",
 	"next_fight_in": "{fights} nya slagsmål om {time}",
-	"no_more_fights": "Fler slagsmål!"
+	"no_more_fights": "Fler slagsmål!",
+	"already_bought": "Redan köpt"
 }

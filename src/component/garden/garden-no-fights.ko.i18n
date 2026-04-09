@@ -1,5 +1,9 @@
 {
 	"buy_fights": "{market}의 Habs {hab} 또는 Crystals {crystal}에서 지금 전투를 구매하세요.",
+	"buy_50_fights": "전투 50회 구매",
+	"buy_100_fights": "전투 100회 구매",
+	"fights_bought": "{0}회 전투 구매 완료!",
 	"next_fight_in": "{time}의 {fights} 새로운 싸움",
-	"no_more_fights": "더 많은 싸움!"
+	"no_more_fights": "더 많은 싸움!",
+	"already_bought": "이미 구매함"
 }

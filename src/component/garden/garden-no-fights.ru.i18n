@@ -1,5 +1,9 @@
 {
 	"buy_fights": "Покупайте бои сейчас за жилые дома {hab} или за кристаллы {crystal} на {market}.",
+	"buy_50_fights": "Купить 50 боёв",
+	"buy_100_fights": "Купить 100 боёв",
+	"fights_bought": "{0} боёв куплено!",
 	"next_fight_in": "{fights} новых боев за {time}",
-	"no_more_fights": "Больше боев!"
+	"no_more_fights": "Больше боев!",
+	"already_bought": "Уже куплено"
 }

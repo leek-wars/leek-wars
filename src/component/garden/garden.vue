@@ -208,7 +208,7 @@
 									<h4>{{ $t(leekErrors[selectedLeek.id]) }}</h4>
 								</div>
 							</div>
-							<garden-no-fights v-else :canbuy="true" />
+							<garden-no-fights v-else :canbuy="true" @bought="reload" />
 						</div>
 						<div v-else-if="category == 'farmer'">
 							<div class="opponents">
@@ -230,7 +230,7 @@
 									<h4>{{ $t('no_opponent_of_your_size') }}</h4>
 								</div>
 							</div>
-							<garden-no-fights v-else :canbuy="true" />
+							<garden-no-fights v-else :canbuy="true" @bought="reload" />
 						</div>
 						<div v-else-if="category == 'team'">
 							<div v-if="garden.my_compositions.length === 0" class="no-opponent">
@@ -285,7 +285,7 @@
 								</div>
 								<br>
 								<v-btn v-if="garden.fights" color="primary" @click="arenaRegister" :disabled="!arenaEnabled">{{ $t('main.select') }}</v-btn>
-								<garden-no-fights v-else :canbuy="true" />
+								<garden-no-fights v-else :canbuy="true" @bought="reload" />
 							</div>
 							<div v-else>
 								<loader v-if="LeekWars.arena.progress == 0" />
@@ -330,7 +330,7 @@
 										</div>
 									</div>
 								</div>
-								<garden-no-fights v-if="!garden.fights" :canbuy="true" />
+								<garden-no-fights v-if="!garden.fights" :canbuy="true" @bought="reload" />
 							</div>
 							<div v-else>
 								<div :class="{disabled: selectedBoss.level < 20}" class="leek boss disabled">
@@ -495,6 +495,16 @@ import { emitter } from '@/model/vue'
 			}
 			localStorage.removeItem('garden/category')
 		}
+		reload() {
+			LeekWars.get('garden/get').then((r: any) => {
+				this.garden = r.garden
+				for (const composition of this.garden.my_compositions) {
+					this.compositions_by_id[composition.id] = composition
+				}
+				this.update()
+			})
+		}
+
 		beforeUnmount() {
 			emitter.off('back')
 			if (this.request) { this.request.abort() }

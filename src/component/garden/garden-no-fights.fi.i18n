@@ -1,5 +1,9 @@
 {
 	"buy_fights": "Osta taisteluita nyt Habsista {hab} tai Crystalsista {crystal} {market}.",
+	"buy_50_fights": "Osta 50 taistelua",
+	"buy_100_fights": "Osta 100 taistelua",
+	"fights_bought": "{0} taistelua ostettu!",
 	"next_fight_in": "{fights} uutta taistelua {time}",
-	"no_more_fights": "Lisää tappeluita!"
+	"no_more_fights": "Lisää tappeluita!",
+	"already_bought": "Jo ostettu"
 }
