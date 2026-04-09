@@ -640,6 +640,9 @@ import { emitter } from '@/model/vue'
 		}
 		selectArena(leek: Leek) {
 			this.selectedLeek = leek
+			if (this.garden.fights === 0 && LeekWars.arena.enabled) {
+				LeekWars.arena.leave()
+			}
 		}
 		arenaRegister() {
 			if (!this.selectedLeek) { return }
