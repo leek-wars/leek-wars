@@ -8,6 +8,10 @@
 				<v-tab v-for="f in funnelItems" :key="f.key" :value="f.key">{{ f.label }}</v-tab>
 			</v-tabs>
 			<div class="controls">
+				<v-btn size="small" variant="text" @click="setPeriod('today')">Today</v-btn>
+				<v-btn size="small" variant="text" @click="setPeriod('24h')">24h</v-btn>
+				<v-btn size="small" variant="text" @click="setPeriod('week')">1 week</v-btn>
+				<v-btn size="small" variant="text" @click="setPeriod('month')">1 month</v-btn>
 				<input v-model="dateFrom" type="date">
 				<input v-model="dateTo" type="date">
 				<v-btn variant="tonal" @click="load">Charger</v-btn>
@@ -20,10 +24,11 @@
 					<span class="funnel-label">{{ funnelData.label }}</span>
 				</div>
 				<div class="flow-container" :style="{ height: flowHeight }">
-					<VueFlow ref="flow" :nodes="flowNodes" :edges="flowEdges" :default-viewport="flowViewport" :min-zoom="0.3" :max-zoom="2" :auto-pan-on-node-drag="false" :zoom-on-scroll="false" @nodes-initialized="applyViewport">
+					<VueFlow ref="flow" :nodes="flowNodes" :edges="flowEdges" :default-viewport="flowViewport" :min-zoom="0.3" :max-zoom="2" :auto-pan-on-node-drag="false" :zoom-on-scroll="false" :nodes-draggable="!mobile" :pan-on-drag="!mobile" @nodes-initialized="applyViewport">
 						<template #node-funnel="{ data }">
 							<Handle v-if="!data.isRoot" type="target" :position="data.tgtPos" />
 							<div class="flow-node" :class="{ root: data.isRoot }" :style="{ borderColor: data.color }">
+								<div class="node-bar" :style="{ width: data.percentNum + '%', background: data.color }"></div>
 								<div class="node-top">
 									<svg v-if="data.percentNum !== null" class="node-ring" width="40" height="40" viewBox="0 0 40 40">
 										<circle cx="20" cy="20" r="16" fill="none" stroke="#eee" stroke-width="4" />
@@ -52,10 +57,10 @@
 		<panel v-if="chartData">
 			<div class="chart-header">
 				<h2 class="section-title">Evolution</h2>
-				<v-btn-toggle v-model="granularity" mandatory density="compact" @update:model-value="load">
-					<v-btn value="day" size="small">Jour</v-btn>
-					<v-btn value="hour" size="small">Heure</v-btn>
-				</v-btn-toggle>
+				<v-tabs v-model="granularity" @update:model-value="onGranularityChange">
+					<v-tab value="day">Jour</v-tab>
+					<v-tab value="hour">Heure</v-tab>
+				</v-tabs>
 			</div>
 			<Line :key="chartKey" :data="chartData" :options="chartOptions" class="evolution-chart" />
 		</panel>
@@ -99,6 +104,7 @@
 
 	@Options({ components: { Breadcrumb, Line, VueFlow, Handle } })
 	export default class AdminFunnels extends Vue {
+		mobile = window.innerWidth < 600
 		flowHeight = '300px'
 		funnelItems: { key: string, label: string }[] = []
 		selectedFunnel = ''
@@ -113,7 +119,7 @@
 		graphHeight = 0
 		dailyData: DailyRow[] = []
 		metaBreakdown: Record<string, { metadata: string, count: number }[]> = {}
-		granularity = 'day'
+		granularity = localStorage.getItem('funnel_granularity') || 'day'
 		chartKey = 0
 		chartData: ChartData<'line'> | null = null
 		chartOptions: ChartOptions<'line'> = {
@@ -137,6 +143,29 @@
 					grid: { color: 'rgba(128,128,128,0.15)' },
 				}
 			}
+		}
+
+		setPeriod(period: string) {
+			const pad = (n: number) => String(n).padStart(2, '0')
+			const now = new Date()
+			this.dateTo = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate())
+			let from: Date
+			if (period === 'today') {
+				from = new Date(now)
+			} else if (period === '24h') {
+				from = new Date(now.getTime() - 24 * 60 * 60 * 1000)
+			} else if (period === 'week') {
+				from = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+			} else {
+				from = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+			}
+			this.dateFrom = from.getFullYear() + '-' + pad(from.getMonth() + 1) + '-' + pad(from.getDate())
+			this.load()
+		}
+
+		onGranularityChange() {
+			localStorage.setItem('funnel_granularity', this.granularity)
+			this.load()
 		}
 
 		formatDuration(seconds: number): string {
@@ -312,14 +341,30 @@
 				}
 			})
 
+			// Count parents per node for edge labels
+			const parentCountMap: Record<string, number> = {}
+			for (const [, to] of edges) {
+				parentCountMap[to] = (parentCountMap[to] || 0) + 1
+			}
+
 			// Build Vue Flow edges
 			this.flowEdges = edges.map(([from, to]) => {
+				const fromSessions = dataMap[from]?.sessions || 0
+				const toSessions = dataMap[to]?.sessions || 0
+				const hasMultipleParents = (parentCountMap[to] || 0) > 1
+				const label = hasMultipleParents && fromSessions > 0
+					? ((toSessions / fromSessions) * 100).toFixed(0) + '%'
+					: undefined
 				return {
 					id: from + '-' + to,
 					source: from,
 					target: to,
+					label,
 					animated: true,
 					style: { stroke: '#999' },
+					labelStyle: { fontSize: '11px', fontWeight: '600', fill: '#1976d2' },
+					labelBgStyle: { fill: 'white', fillOpacity: 0.85 },
+					labelBgPadding: [4, 2] as [number, number],
 				}
 			})
 		}
@@ -331,7 +376,22 @@
 			}
 			this.chartOptions = { ...this.chartOptions, aspectRatio: window.innerWidth < 600 ? 1.2 : 2.5 }
 			this.chartKey++
-			const periods = [...new Set(this.dailyData.map(r => r.period))].sort()
+
+			// Generate all periods between dateFrom and dateTo (fill gaps)
+			const periods: string[] = []
+			const start = new Date(this.dateFrom)
+			const end = new Date(this.dateTo)
+			if (this.granularity === 'hour') {
+				for (const d = new Date(start); d <= end; d.setHours(d.getHours() + 1)) {
+					const pad = (n: number) => String(n).padStart(2, '0')
+					periods.push(d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':00')
+				}
+			} else {
+				for (const d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+					const pad = (n: number) => String(n).padStart(2, '0')
+					periods.push(d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()))
+				}
+			}
 			const lookup: Record<string, Record<string, number>> = {}
 			for (const row of this.dailyData) {
 				if (!lookup[row.step]) lookup[row.step] = {}
@@ -367,10 +427,10 @@
 		created() {
 			LeekWars.setTitle("Funnels")
 			const now = new Date()
-			const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+			const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000)
 			const pad = (n: number) => String(n).padStart(2, '0')
 			this.dateTo = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate())
-			this.dateFrom = thirtyDaysAgo.getFullYear() + '-' + pad(thirtyDaysAgo.getMonth() + 1) + '-' + pad(thirtyDaysAgo.getDate())
+			this.dateFrom = yesterday.getFullYear() + '-' + pad(yesterday.getMonth() + 1) + '-' + pad(yesterday.getDate())
 
 			let timeout: any
 			this.resizeHandler = () => {
@@ -492,6 +552,16 @@
 		padding: 8px 12px;
 		width: 220px;
 		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+		position: relative;
+		overflow: hidden;
+		.node-bar {
+			position: absolute;
+			top: 0;
+			left: 0;
+			height: 100%;
+			opacity: 0.4;
+			border-radius: 6px 0 0 6px;
+		}
 		&.root {
 			border-color: #1976d2;
 			background: #e3f2fd;
@@ -500,6 +570,7 @@
 			display: flex;
 			align-items: center;
 			gap: 10px;
+			position: relative;
 		}
 		.node-ring {
 			flex-shrink: 0;
