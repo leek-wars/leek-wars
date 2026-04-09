@@ -191,33 +191,44 @@ function yamlPlugin(): Plugin {
 // Plugin to inject __DATA__ in dev mode by fetching from the API
 // Uses a middleware to read cookies and diff like the PHP server does
 function gameDataPlugin(): Plugin {
-	let allData: Record<string, any> | null = null
-	let allHashes: Record<string, string> = {}
-	let masterVersion = ''
-	let allDataJson: Record<string, string> = {} // Pre-serialized per type
+	interface ApiCache {
+		allData: Record<string, any> | null
+		allHashes: Record<string, string>
+		masterVersion: string
+		allDataJson: Record<string, string>
+	}
+	const caches: Record<string, ApiCache> = {}
 	let lastInjection = 'null' // Shared between middleware and transformIndexHtml
 
-	const api = (process.env.LEEKWARS_LOCAL ? 'http://localhost:8500' : 'https://leekwars.com') + '/api/'
+	function getCache(api: string): ApiCache {
+		if (!caches[api]) {
+			caches[api] = { allData: null, allHashes: {}, masterVersion: '', allDataJson: {} }
+		}
+		return caches[api]
+	}
 
-	async function loadData() {
+	async function loadData(api: string) {
+		const cache = getCache(api)
+
 		// Check léger : juste la master version
 		const versionResponse = await fetch(api + 'data/version')
 		const { master_version } = await versionResponse.json()
 
-		if (master_version === masterVersion) return // Rien n'a changé
+		if (master_version === cache.masterVersion) return cache // Rien n'a changé
 
 		// Master version différente → re-fetch tout
-		console.log('[game-data] Version changed: ' + masterVersion + ' → ' + master_version)
+		console.log('[game-data] Version changed: ' + cache.masterVersion + ' → ' + master_version + ' (' + api + ')')
 		const response = await fetch(api + 'data/get-all')
 		const json = await response.json()
-		allData = json.data
-		allHashes = json.hashes
-		masterVersion = json.master_version
-		allDataJson = {}
-		for (const type of Object.keys(allData!)) {
-			allDataJson[type] = JSON.stringify(allData![type])
+		cache.allData = json.data
+		cache.allHashes = json.hashes
+		cache.masterVersion = json.master_version
+		cache.allDataJson = {}
+		for (const type of Object.keys(cache.allData!)) {
+			cache.allDataJson[type] = JSON.stringify(cache.allData![type])
 		}
-		console.log('[game-data] Loaded ' + Object.keys(allData!).length + ' types, master=' + masterVersion)
+		console.log('[game-data] Loaded ' + Object.keys(cache.allData!).length + ' types, master=' + cache.masterVersion)
+		return cache
 	}
 
 	return {
@@ -231,8 +242,17 @@ function gameDataPlugin(): Plugin {
 				const accept = req.headers.accept || ''
 				if (!accept.includes('text/html')) return next()
 
+				// Utiliser la même source API que le client selon le port d'accès
+				const host = req.headers['x-forwarded-host'] as string || req.headers.host || ''
+				const port = host.split(':')[1] || ''
+				console.log('[game-data] Request host=' + req.headers.host + ' x-forwarded-host=' + req.headers['x-forwarded-host'] + ' → port=' + port + ' → api=' + ((port === '8500' || port === '5100') ? 'local' : 'prod'))
+				const api = (port === '8500' || port === '5100')
+					? 'http://localhost:' + port + '/api/'
+					: 'https://leekwars.com/api/'
+
+				let cache: ApiCache
 				try {
-					await loadData()
+					cache = await loadData(api) || getCache(api)
 				} catch (e) {
 					console.error('[game-data] Fetch failed:', e)
 					return next()
@@ -260,9 +280,9 @@ function gameDataPlugin(): Plugin {
 
 				// Diff
 				const changedParts: string[] = []
-				for (const type of Object.keys(allHashes)) {
-					if (clientHashes[type] !== allHashes[type]) {
-						changedParts.push(JSON.stringify(type) + ':' + allDataJson[type])
+				for (const type of Object.keys(cache.allHashes)) {
+					if (clientHashes[type] !== cache.allHashes[type]) {
+						changedParts.push(JSON.stringify(type) + ':' + cache.allDataJson[type])
 					}
 				}
 
@@ -270,10 +290,10 @@ function gameDataPlugin(): Plugin {
 					lastInjection = 'null'
 					console.log('[game-data] Cookie matches, __DATA__=null')
 				} else {
-					const mv = JSON.stringify(masterVersion)
-					const hashes = JSON.stringify(allHashes)
+					const mv = JSON.stringify(cache.masterVersion)
+					const hashes = JSON.stringify(cache.allHashes)
 					lastInjection = `{"master_version":${mv},"hashes":${hashes},"data":{${changedParts.join(',')}}}`
-					console.log('[game-data] Injecting ' + changedParts.length + '/' + Object.keys(allHashes).length + ' changed types')
+					console.log('[game-data] Injecting ' + changedParts.length + '/' + Object.keys(cache.allHashes).length + ' changed types')
 				}
 				next()
 			})

@@ -138,7 +138,7 @@ export async function loadGameData(): Promise<{ [key: string]: any } | null> {
 
 	if (inline !== null) {
 		const changedTypes = Object.keys(inline.data)
-		console.log(`[GameData] Inline: ${changedTypes.length} types changed`)
+		console.log(`[GameData] Inline: ${changedTypes.length} types changed, master_version=${inline.master_version}`)
 
 		cacheSave(inline.master_version, inline.hashes, inline.data)
 		updateCookie(inline.master_version, inline.hashes)
@@ -174,7 +174,7 @@ export async function loadGameData(): Promise<{ [key: string]: any } | null> {
 	const dt = (performance.now() - t0).toFixed(1)
 
 	if (cached) {
-		console.log(`[GameData] Loaded from cache in ${dt}ms`)
+		console.log(`[GameData] Loaded from cache in ${dt}ms, master_version=${getCookieMasterVersion()}`)
 		return cached
 	}
 
@@ -189,7 +189,7 @@ async function fetchAll(): Promise<{ [key: string]: any }> {
 	const json = await response.json()
 
 	const data = json.data
-	console.log(`[GameData] Fetched ${Object.keys(data).length} types from API`)
+	console.log(`[GameData] Fetched ${Object.keys(data).length} types from API, master_version=${json.master_version}`)
 
 	cacheSave(json.master_version, json.hashes, data)
 	updateCookie(json.master_version, json.hashes)
