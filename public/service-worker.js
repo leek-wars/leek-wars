@@ -55,6 +55,8 @@ self.addEventListener('fetch', event => {
 	// Don't intercept cross-origin requests (imgur, ibb, etc.)
 	// to avoid CSP connect-src violations.
 	if (new URL(event.request.url).origin !== self.location.origin) return;
+	// Don't cache API requests (custom headers get stripped, stale/error responses get cached)
+	if (event.request.url.includes('/api/')) return;
 	// Prevent the default, and handle the request ourselves.
 	event.respondWith(async function() {
 		try {

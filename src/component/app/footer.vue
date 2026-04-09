@@ -9,7 +9,7 @@
 			<router-link to="/statistics" class="item">{{ $t('main.statistics') }}</router-link>
 			<router-link to="/app" class="item">{{ $t('main.app') }}</router-link>
 			<router-link to="/dev-blog" class="item">{{ $t('main.dev-blog') }}</router-link>
-			<router-link to="/bank" class="item">
+			<router-link to="/bank?ref=footer" class="item">
 				{{ $t('main.donation') }} <v-icon>mdi-currency-eur</v-icon>
 			</router-link>
 		</div>

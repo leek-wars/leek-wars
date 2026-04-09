@@ -74,7 +74,7 @@
 					</div>
 				</div> -->
 				<div v-if="env.BANK && $store.state.farmer.verified && $store.state.farmer.bank_enabled" class="button-wrapper">
-					<router-link to="/bank">
+					<router-link to="/bank?ref=header">
 						<div v-if="$store.state.farmer" class="header-button">
 							<span class="farmer-crystals text">{{ $filters.number(Math.round($store.state.farmer.animated_crystals)) }}</span>
 							<span class="crystal text"></span>

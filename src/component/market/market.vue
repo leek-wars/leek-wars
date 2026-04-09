@@ -17,7 +17,7 @@
 						<v-icon class="small">mdi-open-in-new</v-icon>
 					</div>
 				</a>
-				<router-link v-if="env.BANK && $store.state.farmer?.bank_enabled" to="/bank">
+				<router-link v-if="env.BANK && $store.state.farmer?.bank_enabled" to="/bank?ref=market_tab">
 					<div class="tab action" icon="account_balance" link="/bank">
 						<v-icon>mdi-bank</v-icon>
 						<span>{{ $t('main.bank') }}</span>
@@ -187,7 +187,7 @@
 										<v-btn v-if="selectedItem.buyable" :disabled="($store.state.farmer && $store.state.farmer.habs < selectedItem.price * 10)" class="buy-button" @click="openBuyHabs(10)">{{ $filters.number(selectedItem.price * 10) }}<img src="/image/hab.png"></v-btn>
 										<v-btn v-if="selectedItem.buyable_crystals" class="buy-crystals-button" @click="openBuyCrystals(10)">{{ $filters.number(selectedItem.crystals * 10) }}<img src="/image/crystal.png"></v-btn>
 									</div>
-									<v-btn v-if="selectedItem.buyable_crystals && $store.state.farmer && $store.state.farmer.crystals < selectedItem.crystals" class="not-enough-crystals" variant="text" color="#e91e9e" prepend-icon="mdi-cart-outline" to="/bank">
+									<v-btn v-if="selectedItem.buyable_crystals && $store.state.farmer && $store.state.farmer.crystals < selectedItem.crystals" class="not-enough-crystals" variant="text" color="#e91e9e" prepend-icon="mdi-cart-outline" :to="'/bank?ref=market_not_enough:' + selectedItem.name">
 										{{ $t('not_enough_crystals') }}
 									</v-btn>
 									<div v-if="selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0)" class="already-have">
@@ -463,7 +463,7 @@
 			}
 			this.actions = [
 				{icon: 'mdi-cart-outline', click: () => window.open('https://leek-wars.myspreadshop.fr', '_blank')!.focus() },
-				{icon: 'mdi-bank', click: () => this.$router.push('/bank')},
+				{icon: 'mdi-bank', click: () => this.$router.push('/bank?ref=market_action')},
 				{icon: 'mdi-treasure-chest', click: () => this.$router.push('/inventory')},
 			]
 			this.request = LeekWars.get('market/get-item-templates')
@@ -623,7 +623,7 @@
 		openBuyCrystals(quantity: number) {
 			if (!this.selectedItem) return
 			if (this.selectedItem.crystals! * quantity > this.$store.state.farmer.crystals) {
-				this.$router.push('/bank')
+				this.$router.push('/bank?ref=market_buy:' + this.selectedItem.name)
 				return
 			}
 			this.buyCrystalsDialog = true

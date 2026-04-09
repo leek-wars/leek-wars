@@ -81,7 +81,7 @@
 
 		buyCrystals() {
 			if (this.$store.state.farmer && this.$store.state.farmer.crystals < 100) {
-				this.$router.push('/bank')
+				this.$router.push('/bank?ref=garden_buy')
 				return
 			}
 			this.buyingCrystals = true

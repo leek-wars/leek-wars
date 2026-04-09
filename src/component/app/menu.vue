@@ -32,7 +32,7 @@
 								<router-link v-ripple to="/market" @click.native="clickItem">
 									<span class="hab text"></span><span v-if="$store.state.farmer" class="farmer-habs">{{ $filters.number($store.state.farmer.habs) }}</span>
 								</router-link>
-								<router-link v-ripple class="crystals" to="/bank" @click.native="clickItem">
+								<router-link v-ripple class="crystals" to="/bank?ref=menu" @click.native="clickItem">
 									<span class="crystal text"></span><span v-if="$store.state.farmer" class="farmer-crystals">{{ $filters.number($store.state.farmer.crystals) }}</span>
 								</router-link>
 							</div>

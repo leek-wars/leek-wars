@@ -10,7 +10,7 @@
 						<v-icon class="small">mdi-open-in-new</v-icon>
 					</div>
 				</a>
-				<router-link v-if="env.BANK && $store.state.farmer?.bank_enabled" to="/bank">
+				<router-link v-if="env.BANK && $store.state.farmer?.bank_enabled" to="/bank?ref=inventory_tab">
 					<div class="tab action" icon="account_balance" link="/bank">
 						<v-icon>mdi-bank</v-icon>
 						<span>{{ $t('main.bank') }}</span>

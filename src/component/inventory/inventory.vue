@@ -405,7 +405,7 @@
 		}
 		created() {
 			this.actions = [
-				{icon: 'mdi-bank', click: () => this.$router.push('/bank')},
+				{icon: 'mdi-bank', click: () => this.$router.push('/bank?ref=inventory_action')},
 				{image: 'icon/market.png', click: () => this.$router.push('/market')},
 			]
 			LeekWars.setActions(this.actions)
