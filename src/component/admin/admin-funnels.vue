@@ -380,7 +380,7 @@
 			// Generate all periods between dateFrom and dateTo (fill gaps)
 			const periods: string[] = []
 			const start = new Date(this.dateFrom)
-			const end = new Date(this.dateTo)
+			const end = new Date(this.dateTo + 'T23:59:59')
 			if (this.granularity === 'hour') {
 				for (const d = new Date(start); d <= end; d.setHours(d.getHours() + 1)) {
 					const pad = (n: number) => String(n).padStart(2, '0')

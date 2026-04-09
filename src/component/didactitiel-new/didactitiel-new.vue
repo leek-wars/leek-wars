@@ -75,7 +75,7 @@
 		}
 
 		complete() {
-			LeekWars.api('farmer/didactitiel-complete')
+			LeekWars.post('farmer/didactitiel-complete', {})
 			LeekWars.didactitial = false
 			LeekWars.didactitial_step = 0
 		}
