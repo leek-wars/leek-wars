@@ -1,6 +1,6 @@
 <template>
 	<div v-if="notification" v-ripple :notif="notification.id" :type="notification.type" :class="{unread: !notification.read, [notification.clazz]: notification.clazz }" class="notification" @click="click">
-		<router-link :to="link">
+		<component :is="link ? 'router-link' : 'div'" :to="link || undefined">
 			<v-icon v-if="notification.icon" class="image">{{ notification.image }}</v-icon>
 			<img v-else :src="'/image/' + notification.image" class="image">
 			<div class="content">
@@ -14,7 +14,7 @@
 			</span>
 			<v-icon v-if="notification.clazz === 'notif-bigwin'" class="large-icon">mdi-crown</v-icon>
 			<v-icon v-else-if="notification.clazz === 'notif-trophy'" class="large-icon">mdi-trophy</v-icon>
-		</router-link>
+		</component>
 		<v-btn v-if="!notification.read" class="read" size="small" color="primary" @click.stop="read"><v-icon>mdi-check</v-icon></v-btn>
 	</div>
 </template>

@@ -1,7 +1,7 @@
 <template lang="html">
 	<div :class="{raw: raw}" class="breadcrumb">
 		<template v-for="(item, i) in items" :key="item.name">
-			<router-link v-ripple :to="item.link" class="item">{{ item.name }}</router-link>
+			<component :is="item.link ? 'router-link' : 'span'" v-ripple :to="item.link || undefined" class="item">{{ item.name }}</component>
 			<v-icon v-if="i < items.length - 1" :key="i">mdi-chevron-right</v-icon>
 		</template>
 	</div>
