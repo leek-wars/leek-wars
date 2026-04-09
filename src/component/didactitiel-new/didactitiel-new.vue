@@ -41,10 +41,10 @@
 					<v-btn v-if="LeekWars.didactitial_step > 1" @click="back"><v-icon>mdi-arrow-left</v-icon></v-btn>
 					<div class="progress">{{ LeekWars.didactitial_step }} / 5</div>
 					<v-btn v-if="LeekWars.didactitial_step < 5" @click="LeekWars.didactitial_next">{{ $t('main.pass') }}&nbsp;<v-icon>mdi-arrow-right</v-icon></v-btn>
-					<v-btn v-else color="primary" @click="close">{{ $t('main.play') }}&nbsp;<v-icon>mdi-sword-cross</v-icon></v-btn>
+					<v-btn v-else color="primary" @click="complete">{{ $t('main.play') }}&nbsp;<v-icon>mdi-sword-cross</v-icon></v-btn>
 				</div>
 
-				<v-icon class="close" @click="close">mdi-close</v-icon>
+				<v-icon class="close" @click="closed">mdi-close</v-icon>
 
 				<svg class="arrow" width="70" height="41" viewBox="0 0 18.617 10.965"><path d="M45.666 57.347h9.04l9.577 10.965z" style="fill: var(--pure-white); stroke-width:.306566" transform="translate(-45.666 -57.347)"/></svg>
 			</div>
@@ -74,7 +74,13 @@
 			LeekWars.didactitial_step--
 		}
 
-		close() {
+		complete() {
+			LeekWars.api('farmer/didactitiel-complete')
+			LeekWars.didactitial = false
+			LeekWars.didactitial_step = 0
+		}
+
+		closed() {
 			LeekWars.didactitial = false
 			LeekWars.didactitial_step = 0
 		}
