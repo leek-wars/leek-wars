@@ -532,7 +532,7 @@ const LeekWars = reactive({
 		LeekWars.actions = actions
 	},
 	getAvatar(farmerID: number, avatarChanged: number) {
-		return avatarChanged === 0 ? '/image/no_avatar.png' : LeekWars.AVATAR + 'avatar/' + farmerID + '.png'
+		return avatarChanged === 0 ? '/image/no_avatar.png' : LeekWars.AVATAR + 'avatar/' + farmerID + '.png?' + avatarChanged
 	},
 	_documentation: {} as any,
 	_documentationPromises: {} as any,
