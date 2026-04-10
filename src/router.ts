@@ -288,6 +288,25 @@ const router = createRouter({
 	},
 })
 
+// Diagnose #11099185 — router.resolve(null) during arena notifications
+{
+	const orig = router.resolve.bind(router) as (...a: any[]) => any
+	;(router as any).resolve = (...args: any[]) => {
+		if (args[0] == null) {
+			let stack: string
+			try { throw new Error() } catch (e) { stack = (e as { stack?: string }).stack || '' }
+			LeekWars.post('error/report', {
+				error: 'TypeError: router.resolve(' + args[0] + ')',
+				stack,
+				file: document.location.href,
+				locale: 'fr',
+				user_agent: navigator.userAgent,
+			})
+		}
+		return orig(...args)
+	}
+}
+
 // Handle chunk loading errors (e.g., after deployment when old chunks no longer exist)
 router.onError((error, to) => {
 	if (
