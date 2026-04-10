@@ -144,7 +144,7 @@
 						</div>
 					</template>
 				</panel>
-				<panel v-if="filteredSchemes.length || !search" :title="$t('schemes') + ' [' + filteredSchemes.length + ']'" icon="mdi-map-outline">
+				<panel v-if="filteredSchemes.length" :title="$t('schemes') + ' [' + filteredSchemes.length + ']'" icon="mdi-map-outline">
 					<template #content>
 						<div class="items schemes">
 							<router-link v-for="scheme in filteredSchemes" :key="scheme.id" v-ripple :to="'/market/' + scheme.name" class="item scheme">
