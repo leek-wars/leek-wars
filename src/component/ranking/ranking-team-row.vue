@@ -27,3 +27,14 @@
 		@Prop({ required: true }) row!: RankingTeamRow
 	}
 </script>
+
+<style lang="scss" scoped>
+	tr.me td {
+		background: var(--background);
+		font-weight: bold;
+	}
+	tr.inactive td, tr.inactive a {
+		color: #777;
+		font-style: italic;
+	}
+</style>

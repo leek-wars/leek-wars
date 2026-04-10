@@ -32,3 +32,10 @@
 		@Prop({ required: true }) row!: RankingCompositionRow
 	}
 </script>
+
+<style lang="scss" scoped>
+	tr.me td {
+		background: var(--background);
+		font-weight: bold;
+	}
+</style>

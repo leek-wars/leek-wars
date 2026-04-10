@@ -1,5 +1,5 @@
 <template>
-	<tr>
+	<tr :class="{ mine: isMyLeek }">
 		<td class="name">
 			<span v-if="leek.dead" class="dead"></span>
 			<span v-else class="alive"></span>
@@ -66,7 +66,7 @@
 </template>
 
 <script lang="ts">
-	import { Fight, FightContext, ReportLeek } from '@/model/fight'
+	import { Fight, FightContext, FightType, ReportLeek } from '@/model/fight'
 	import { ItemTemplate, ItemType, ITEM_CATEGORY_NAME } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { Options, Prop, Vue } from 'vue-property-decorator'
@@ -94,6 +94,12 @@
 			return Math.floor(100 * newXPInCurrentLevel / totalXP)
 		}
 
+		get isMyLeek() {
+			if (!this.$store.state.farmer) { return false }
+			if (this.fight.type !== FightType.TEAM && this.fight.type !== FightType.BATTLE_ROYALE) { return false }
+			return this.leek.id in this.$store.state.farmer.leeks
+		}
+
 		get sorted_resources() {
 			if (this.leek.resources) {
 				return Object.entries(this.leek.resources)
@@ -106,6 +112,10 @@
 </script>
 
 <style lang="scss" scoped>
+	tr.mine td {
+		background: var(--background);
+		font-weight: bold;
+	}
 	td {
 		border: 1px solid var(--border);
 		text-align: center;
