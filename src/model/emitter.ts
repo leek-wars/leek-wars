@@ -53,6 +53,7 @@ type Events = {
 	'close-file-tab': string,
 	'close-merge-tabs': { folder: string },
 	'open-merge': { folder: string, file: string },
+	'clover-used': void,
 }
 
 const emitter = mitt<Events>()

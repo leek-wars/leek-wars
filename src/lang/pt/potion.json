@@ -107,5 +107,21 @@
 	"skin_diamond": "Poção de diamante",
 	"strength": "Poção de força",
 	"skin_bordeaux": "Poção bordô",
-	"skin_mafia": "Poção da máfia"
+	"skin_mafia": "Poção da máfia",
+	"effect_4": "Revela se o trevo de hoje já passou.",
+	"effect_5": "Revela a hora do trevo de hoje.",
+	"effect_6": "Revela o segundo exato do trevo de hoje.",
+	"clover_passed": "Poção do trevo (passou?)",
+	"clover_passed_desc": "O trevo já passou?",
+	"clover_hour": "Poção da hora do trevo",
+	"clover_hour_desc": "A que horas o trevo aparecerá?",
+	"clover_second": "Poção do segundo do trevo",
+	"clover_second_desc": "O momento exato do trevo, ao segundo.",
+	"clover_passed_yes": "O trevo de hoje já passou!",
+	"clover_passed_no": "O trevo de hoje ainda não passou!",
+	"clover_hour_passed": "O trevo passou às {0}h.",
+	"clover_hour_coming": "O trevo aparecerá às {0}h.",
+	"clover_second_passed": "O trevo passou às {0}.",
+	"clover_second_coming": "O trevo aparecerá às {0}.",
+	"clover_use": "Beber a poção suspeita"
 }

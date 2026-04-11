@@ -107,5 +107,21 @@
 	"skin_diamond": "钻石药水",
 	"strength": "力量药水",
 	"skin_bordeaux": "勃艮第药水",
-	"skin_mafia": "黑手党药水"
+	"skin_mafia": "黑手党药水",
+	"effect_4": "揭示今天的四叶草是否已经过去。",
+	"effect_5": "揭示今天四叶草的时间。",
+	"effect_6": "揭示今天四叶草的精确秒数。",
+	"clover_passed": "四叶草药水（过去了？）",
+	"clover_passed_desc": "四叶草已经过去了吗？",
+	"clover_hour": "四叶草时间药水",
+	"clover_hour_desc": "四叶草会在几点出现？",
+	"clover_second": "四叶草秒数药水",
+	"clover_second_desc": "四叶草的精确时刻，精确到秒。",
+	"clover_passed_yes": "今天的四叶草已经过去了！",
+	"clover_passed_no": "今天的四叶草还没有过去！",
+	"clover_hour_passed": "四叶草在{0}时过去了。",
+	"clover_hour_coming": "四叶草将在{0}时出现。",
+	"clover_second_passed": "四叶草在{0}时过去了。",
+	"clover_second_coming": "四叶草将在{0}时出现。",
+	"clover_use": "喝下可疑的药水"
 }

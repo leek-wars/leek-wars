@@ -60,9 +60,11 @@
 
 		mounted() {
 			emitter.on('craft', this.close)
+			emitter.on('clover-used', this.close)
 		}
 		beforeUnmount() {
 			emitter.off('craft', this.close)
+			emitter.off('clover-used', this.close)
 		}
 	}
 </script>

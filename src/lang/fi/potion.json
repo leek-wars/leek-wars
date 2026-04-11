@@ -107,5 +107,21 @@
 	"skin_diamond": "Timanttijuoma",
 	"strength": "Voimajuoma",
 	"skin_bordeaux": "Viininpunainen juoma",
-	"skin_mafia": "Mafiajuoma"
+	"skin_mafia": "Mafiajuoma",
+	"effect_4": "Paljastaa, onko tämän päivän apila jo ohittanut.",
+	"effect_5": "Paljastaa tämän päivän apilan tunnin.",
+	"effect_6": "Paljastaa tämän päivän apilan tarkan sekunnin.",
+	"clover_passed": "Apilajuoma (ohittanut?)",
+	"clover_passed_desc": "Onko apila jo ohittanut?",
+	"clover_hour": "Apila-tuntijuoma",
+	"clover_hour_desc": "Millä tunnilla apila ilmestyy?",
+	"clover_second": "Apila-sekuntijuoma",
+	"clover_second_desc": "Apilan täsmällinen hetki sekuntiin asti.",
+	"clover_passed_yes": "Tämän päivän apila on jo ohittanut!",
+	"clover_passed_no": "Tämän päivän apila ei ole vielä ohittanut!",
+	"clover_hour_passed": "Apila ohitti klo {0}.",
+	"clover_hour_coming": "Apila ilmestyy klo {0}.",
+	"clover_second_passed": "Apila ohitti klo {0}.",
+	"clover_second_coming": "Apila ilmestyy klo {0}.",
+	"clover_use": "Juoda epäilyttävä juoma"
 }

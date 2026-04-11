@@ -107,5 +107,21 @@
 	"skin_diamond": "Diamantdrikk",
 	"strength": "Styrkedrikk",
 	"skin_bordeaux": "Burgunder potion",
-	"skin_mafia": "Mafia potion"
+	"skin_mafia": "Mafia potion",
+	"effect_4": "Avslører om dagens firkløver allerede har passert.",
+	"effect_5": "Avslører timen for dagens firkløver.",
+	"effect_6": "Avslører det nøyaktige sekundet for dagens firkløver.",
+	"clover_passed": "Firkløverdrikk (passert?)",
+	"clover_passed_desc": "Har firkløveren allerede passert?",
+	"clover_hour": "Firkløver-timedrikk",
+	"clover_hour_desc": "Hvilken time vil firkløveren dukke opp?",
+	"clover_second": "Firkløver-sekunddrikk",
+	"clover_second_desc": "Det nøyaktige øyeblikket for firkløveren, til sekundet.",
+	"clover_passed_yes": "Dagens firkløver har allerede passert!",
+	"clover_passed_no": "Dagens firkløver har ikke passert ennå!",
+	"clover_hour_passed": "Firkløveren passerte kl. {0}.",
+	"clover_hour_coming": "Firkløveren dukker opp kl. {0}.",
+	"clover_second_passed": "Firkløveren passerte kl. {0}.",
+	"clover_second_coming": "Firkløveren dukker opp kl. {0}.",
+	"clover_use": "Drikke den mistenkelige bryggen"
 }

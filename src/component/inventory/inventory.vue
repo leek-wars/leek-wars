@@ -139,7 +139,7 @@
 
 				<v-menu v-model="tooltipVisible" :activator="tooltipActivator" :close-on-content-click="false" :min-width="280" :open-delay="0" :close-delay="0" :bottom="true" offset-y :open-on-hover="false">
 					<div class="inventory-tooltip" @mouseenter="onTooltipEnter" @mouseleave="onTooltipLeave">
-						<item-preview v-if="tooltipItem" :item="tooltipItem" :quantity="tooltipQuantity" :inventory="true" @retrieve="retrieve" />
+						<item-preview v-if="tooltipItem" :item="tooltipItem" :quantity="tooltipQuantity" :inventory="true" :show-use="true" @retrieve="retrieve" />
 					</div>
 				</v-menu>
 
@@ -402,6 +402,7 @@
 			this.resize()
 			emitter.on('resize', this.resize)
 			emitter.on('craft', this.hideTooltip)
+			emitter.on('clover-used', this.hideTooltip)
 		}
 		created() {
 			this.actions = [

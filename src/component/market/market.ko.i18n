@@ -47,5 +47,6 @@
 	"weapon_bought": "무기 구입!",
 	"weapons": "무기",
 	"weapon_selled": "무기 판매!",
-	"item_progress": "아이템 진행"
+	"item_progress": "아이템 진행",
+	"schemes": "설계도"
 }

@@ -107,5 +107,21 @@
 	"skin_diamond": "다이아몬드 물약",
 	"strength": "힘의 물약",
 	"skin_bordeaux": "부르고뉴 물약",
-	"skin_mafia": "마피아 물약"
+	"skin_mafia": "마피아 물약",
+	"effect_4": "오늘의 클로버가 이미 지났는지 알려줍니다.",
+	"effect_5": "오늘의 클로버 시간을 알려줍니다.",
+	"effect_6": "오늘의 클로버 정확한 초를 알려줍니다.",
+	"clover_passed": "클로버 물약 (지났나요?)",
+	"clover_passed_desc": "클로버가 이미 지났나요?",
+	"clover_hour": "클로버 시간 물약",
+	"clover_hour_desc": "클로버는 몇 시에 나타나나요?",
+	"clover_second": "클로버 초 물약",
+	"clover_second_desc": "클로버의 정확한 순간, 초 단위로.",
+	"clover_passed_yes": "오늘의 클로버는 이미 지났습니다!",
+	"clover_passed_no": "오늘의 클로버는 아직 지나지 않았습니다!",
+	"clover_hour_passed": "클로버가 {0}시에 지났습니다.",
+	"clover_hour_coming": "클로버가 {0}시에 나타납니다.",
+	"clover_second_passed": "클로버가 {0}에 지났습니다.",
+	"clover_second_coming": "클로버가 {0}에 나타납니다.",
+	"clover_use": "의심스러운 음료 마시기"
 }

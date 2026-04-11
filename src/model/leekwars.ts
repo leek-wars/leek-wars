@@ -816,6 +816,8 @@ const LeekWars = reactive({
 	message: null as string | null,
 	messagePopup: false,
 	logoutDialog: false,
+	cloverResult: null as string | null,
+	cloverPopup: false,
 	displayMessage: (message: string | null) => {
 		if (message) {
 			// console.log("Display message", message)
@@ -1317,5 +1319,7 @@ async function loadGameData() {
 
 	console.log(`[GameData] Applied in ${(performance.now() - t0).toFixed(1)}ms`)
 }
+
+if (DEV || LOCAL) { (window as any).LeekWars = LeekWars }
 
 export { LeekWars, Language, loadGameData }

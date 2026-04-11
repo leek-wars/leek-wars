@@ -47,5 +47,6 @@
 	"weapon_bought": "Våpen kjøpt!",
 	"weapons": "Våpen",
 	"weapon_selled": "Våpen solgt!",
-	"item_progress": "Varefremdrift"
+	"item_progress": "Varefremdrift",
+	"schemes": "Skjemaer"
 }

@@ -47,5 +47,6 @@
 	"weapon_bought": "Ase ostettu!",
 	"weapons": "Aseet",
 	"weapon_selled": "Ase myyty!",
-	"item_progress": "Kohteen edistyminen"
+	"item_progress": "Kohteen edistyminen",
+	"schemes": "Kaaviot"
 }

@@ -107,5 +107,21 @@
 	"skin_diamond": "Potion de diamant",
 	"strength": "Potion de force",
 	"skin_bordeaux": "Potion bordeaux",
-	"skin_mafia": "Potion mafieuse"
+	"skin_mafia": "Potion mafieuse",
+	"effect_4": "Révèle si le trèfle du jour est déjà passé.",
+	"effect_5": "Révèle l'heure du trèfle du jour.",
+	"effect_6": "Révèle la seconde exacte du trèfle du jour.",
+	"clover_passed": "Potion du trèfle (passé ?)",
+	"clover_passed_desc": "Le trèfle est-il déjà passé ?",
+	"clover_hour": "Potion de l'heure du trèfle",
+	"clover_hour_desc": "À quelle heure le trèfle apparaîtra-t-il ?",
+	"clover_second": "Potion de la seconde du trèfle",
+	"clover_second_desc": "Le moment exact du trèfle, à la seconde près.",
+	"clover_passed_yes": "Le trèfle du jour est déjà passé !",
+	"clover_passed_no": "Le trèfle du jour n'est pas encore passé !",
+	"clover_hour_passed": "Le trèfle est passé à {0}h.",
+	"clover_hour_coming": "Le trèfle passera à {0}h.",
+	"clover_second_passed": "Le trèfle est passé à {0}.",
+	"clover_second_coming": "Le trèfle passera à {0}.",
+	"clover_use": "Boire le breuvage suspect"
 }

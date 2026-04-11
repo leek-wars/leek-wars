@@ -107,5 +107,21 @@
 	"skin_diamond": "Diamant drik",
 	"strength": "Styrkedrik",
 	"skin_bordeaux": "Bordeaux drik",
-	"skin_mafia": "Mafia drik"
+	"skin_mafia": "Mafia drik",
+	"effect_4": "Afslører om dagens kløverblad allerede er passeret.",
+	"effect_5": "Afslører timen for dagens kløverblad.",
+	"effect_6": "Afslører det nøjagtige sekund for dagens kløverblad.",
+	"clover_passed": "Kløverbladsdrik (passeret?)",
+	"clover_passed_desc": "Er kløverbladet allerede passeret?",
+	"clover_hour": "Kløverblads-timedrik",
+	"clover_hour_desc": "Hvilken time vil kløverbladet dukke op?",
+	"clover_second": "Kløverblads-sekunddrik",
+	"clover_second_desc": "Det nøjagtige øjeblik for kløverbladet, til sekundet.",
+	"clover_passed_yes": "Dagens kløverblad er allerede passeret!",
+	"clover_passed_no": "Dagens kløverblad er endnu ikke passeret!",
+	"clover_hour_passed": "Kløverbladet passerede kl. {0}.",
+	"clover_hour_coming": "Kløverbladet dukker op kl. {0}.",
+	"clover_second_passed": "Kløverbladet passerede kl. {0}.",
+	"clover_second_coming": "Kløverbladet dukker op kl. {0}.",
+	"clover_use": "Drikke det mistænkelige bryg"
 }

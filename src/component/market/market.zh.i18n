@@ -47,5 +47,6 @@
 	"weapon_bought": "武器买了！",
 	"weapons": "武器",
 	"weapon_selled": "武器卖了！",
-	"item_progress": "项目进度"
+	"item_progress": "项目进度",
+	"schemes": "合成图纸"
 }

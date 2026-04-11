@@ -47,5 +47,6 @@
 	"weapon_bought": "Оружие куплено!",
 	"weapons": "Оружие",
 	"weapon_selled": "Оружие продано!",
-	"item_progress": "Прогресс предмета"
+	"item_progress": "Прогресс предмета",
+	"schemes": "Схемы"
 }

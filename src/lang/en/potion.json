@@ -107,5 +107,21 @@
 	"skin_42": "mafia",
 	"skin_43": "bordeaux",
 	"skin_bordeaux": "Burgundy potion",
-	"skin_mafia": "Mafia potion"
+	"skin_mafia": "Mafia potion",
+	"effect_4": "Reveals whether today's clover has already passed.",
+	"effect_5": "Reveals the hour of today's clover.",
+	"effect_6": "Reveals the exact second of today's clover.",
+	"clover_passed": "Clover potion (passed?)",
+	"clover_passed_desc": "Has the clover already passed?",
+	"clover_hour": "Clover hour potion",
+	"clover_hour_desc": "What hour will the clover appear?",
+	"clover_second": "Clover second potion",
+	"clover_second_desc": "The exact moment of the clover, to the second.",
+	"clover_passed_yes": "Today's clover has already passed!",
+	"clover_passed_no": "Today's clover has not passed yet!",
+	"clover_hour_passed": "The clover passed at {0}h.",
+	"clover_hour_coming": "The clover will appear at {0}h.",
+	"clover_second_passed": "The clover passed at {0}.",
+	"clover_second_coming": "The clover will appear at {0}.",
+	"clover_use": "Drink the suspicious brew"
 }

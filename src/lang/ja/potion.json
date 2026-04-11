@@ -107,5 +107,21 @@
 	"skin_diamond": "ダイヤモンドポーション",
 	"strength": "力のポーション",
 	"skin_bordeaux": "ブルゴーニュポーション",
-	"skin_mafia": "マフィアポーション"
+	"skin_mafia": "マフィアポーション",
+	"effect_4": "今日のクローバーがすでに過ぎたかどうかを明らかにします。",
+	"effect_5": "今日のクローバーの時間を明らかにします。",
+	"effect_6": "今日のクローバーの正確な秒を明らかにします。",
+	"clover_passed": "クローバーポーション（過ぎた？）",
+	"clover_passed_desc": "クローバーはもう過ぎましたか？",
+	"clover_hour": "クローバー時間ポーション",
+	"clover_hour_desc": "クローバーは何時に現れますか？",
+	"clover_second": "クローバー秒ポーション",
+	"clover_second_desc": "クローバーの正確な瞬間、秒単位で。",
+	"clover_passed_yes": "今日のクローバーはすでに過ぎました！",
+	"clover_passed_no": "今日のクローバーはまだ過ぎていません！",
+	"clover_hour_passed": "クローバーは{0}時に過ぎました。",
+	"clover_hour_coming": "クローバーは{0}時に現れます。",
+	"clover_second_passed": "クローバーは{0}に過ぎました。",
+	"clover_second_coming": "クローバーは{0}に現れます。",
+	"clover_use": "怪しい飲み物を飲む"
 }

@@ -47,5 +47,6 @@
 	"weapon_bought": "武器買った！",
 	"weapons": "兵器",
 	"weapon_selled": "武器売ります！",
-	"item_progress": "アイテムの進捗"
+	"item_progress": "アイテムの進捗",
+	"schemes": "スキーマ"
 }

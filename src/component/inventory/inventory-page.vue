@@ -97,7 +97,7 @@
 							</div>
 							<v-menu v-model="tooltipVisible" :activator="tooltipActivator" :close-on-content-click="false" :min-width="280" :open-delay="0" :close-delay="0" :bottom="true" offset-y :open-on-hover="false">
 								<div class="scheme-tooltip" @mouseenter="onTooltipEnter" @mouseleave="onTooltipLeave">
-									<item-preview v-if="tooltipItem" :item="tooltipItem" :quantity="tooltipQuantity" :inventory="true" :craft-cost="tooltipCraftCost" />
+									<item-preview v-if="tooltipItem" :item="tooltipItem" :quantity="tooltipQuantity" :inventory="true" :show-use="true" :craft-cost="tooltipCraftCost" />
 								</div>
 							</v-menu>
 						</div>
@@ -298,6 +298,7 @@
 			LeekWars.footer = false
 			LeekWars.box = true
 			emitter.on('craft', this.scrollToForge)
+			emitter.on('clover-used', () => { this.tooltipVisible = false })
 		}
 
 		beforeUnmount() {

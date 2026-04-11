@@ -107,5 +107,21 @@
 	"skin_diamond": "Eliksir diamentowy",
 	"strength": "Eliksir siły",
 	"skin_bordeaux": "Bordowy eliksir",
-	"skin_mafia": "Eliksir mafijny"
+	"skin_mafia": "Eliksir mafijny",
+	"effect_4": "Ujawnia, czy dzisiejsza koniczynka już minęła.",
+	"effect_5": "Ujawnia godzinę dzisiejszej koniczynki.",
+	"effect_6": "Ujawnia dokładną sekundę dzisiejszej koniczynki.",
+	"clover_passed": "Eliksir koniczynki (minęła?)",
+	"clover_passed_desc": "Czy koniczynka już minęła?",
+	"clover_hour": "Eliksir godziny koniczynki",
+	"clover_hour_desc": "O której godzinie pojawi się koniczynka?",
+	"clover_second": "Eliksir sekundy koniczynki",
+	"clover_second_desc": "Dokładny moment koniczynki, z dokładnością do sekundy.",
+	"clover_passed_yes": "Dzisiejsza koniczynka już minęła!",
+	"clover_passed_no": "Dzisiejsza koniczynka jeszcze nie minęła!",
+	"clover_hour_passed": "Koniczynka minęła o {0}h.",
+	"clover_hour_coming": "Koniczynka pojawi się o {0}h.",
+	"clover_second_passed": "Koniczynka minęła o {0}.",
+	"clover_second_coming": "Koniczynka pojawi się o {0}.",
+	"clover_use": "Wypić podejrzany eliksir"
 }

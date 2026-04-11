@@ -47,5 +47,6 @@
 	"weapon_bought": "Vapen köpt!",
 	"weapons": "Vapen",
 	"weapon_selled": "Vapnet sålt!",
-	"item_progress": "Objekts framsteg"
+	"item_progress": "Objekts framsteg",
+	"schemes": "Scheman"
 }

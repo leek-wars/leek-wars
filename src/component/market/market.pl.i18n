@@ -47,5 +47,6 @@
 	"weapon_bought": "Broń kupiona!",
 	"weapons": "Bronie",
 	"weapon_selled": "Broń sprzedana!",
-	"item_progress": "Postęp przedmiotu"
+	"item_progress": "Postęp przedmiotu",
+	"schemes": "Schematy"
 }

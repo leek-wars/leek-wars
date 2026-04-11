@@ -177,6 +177,16 @@
 			<v-dialog v-if="docEverywhere" v-model="docEverywhereModel" content-class="doc" :max-width="1400">
 					<documentation ref="doc" :popup="true" />
 				</v-dialog>
+
+				<v-snackbar v-model="LeekWars.cloverPopup" :timeout="-1" color="#222" location="top">
+					<div style="display: flex; align-items: center; gap: 10px">
+						<img src="/image/clover.png" style="width: 28px">
+						<span>{{ LeekWars.cloverResult }}</span>
+					</div>
+					<template #actions>
+						<v-btn variant="text" @click="LeekWars.cloverPopup = false">{{ $t('main.clover_dismiss') }}</v-btn>
+					</template>
+				</v-snackbar>
 			</div>
 </template>
 
