@@ -455,6 +455,9 @@ export default class AIViewMonaco extends Vue {
 	& :deep(.lw) {
 		padding: 4px 10px;
 	}
+	& :deep(.hover-row-contents .lw) {
+		padding: 0;
+	}
 	& :deep(.doc-constant.item) {
 		padding: 0;
 		width: 350px;
