@@ -14,6 +14,7 @@ import { emitter } from './emitter'
 import { displayWarningMessage } from './emitter'
 import { Weapon } from './weapon'
 import { SchemeTemplate } from './scheme'
+import { Loadout } from './loadout'
 import { NotificationBuilder } from '@/model/notification-builder'
 
 export interface AccountInfo {
@@ -661,7 +662,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 					weapon.quantity += quantity
 					weapon.time = data.time
 				} else {
-					state.farmer.weapons.push({id: data.id, template: data.template, quantity })
+					state.farmer.weapons.push({id: data.id, template: data.template, quantity, time: data.time })
 				}
 			} else if (data.type === ItemType.CHIP) {
 				const chip = LeekWars.selectWhere(state.farmer.chips, 'id', data.id)
@@ -669,7 +670,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 					chip.quantity += quantity
 					chip.time = data.time
 				} else {
-					state.farmer.chips.push({id: data.id, template: data.template, quantity })
+					state.farmer.chips.push({id: data.id, template: data.template, quantity, time: data.time })
 				}
 			} else if (data.type === ItemType.HAT) {
 				const hat = LeekWars.selectWhere(state.farmer.hats, 'id', data.id)
@@ -694,7 +695,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 					potion.quantity += quantity
 					potion.time = data.time
 				} else {
-					state.farmer.potions.push({id: data.id, template: data.template, quantity })
+					state.farmer.potions.push({id: data.id, template: data.template, quantity, time: data.time })
 				}
 			} else if (data.type === ItemType.POMP) {
 				const pomp = LeekWars.selectWhere(state.farmer.pomps, 'id', data.id)
@@ -817,6 +818,26 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 					return
 				}
 			}
+		},
+
+		'set-loadouts'(state: LeekWarsState, loadouts: Loadout[]) {
+			if (!state.farmer) { return }
+			state.farmer.loadouts = loadouts
+		},
+		'add-loadout'(state: LeekWarsState, loadout: Loadout) {
+			if (!state.farmer) { return }
+			if (!state.farmer.loadouts) { state.farmer.loadouts = [] }
+			state.farmer.loadouts.push(loadout)
+		},
+		'update-loadout'(state: LeekWarsState, loadout: Loadout) {
+			if (!state.farmer) { return }
+			const i = state.farmer.loadouts.findIndex(l => l.id === loadout.id)
+			if (i !== -1) { state.farmer.loadouts.splice(i, 1, loadout) }
+		},
+		'remove-loadout'(state: LeekWarsState, id: number) {
+			if (!state.farmer) { return }
+			const i = state.farmer.loadouts.findIndex(l => l.id === id)
+			if (i !== -1) { state.farmer.loadouts.splice(i, 1) }
 		},
 
 		'add-component'(state: LeekWarsState, component) {

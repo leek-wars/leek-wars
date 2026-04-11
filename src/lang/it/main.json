@@ -325,5 +325,16 @@
 	"n_chests": "{0} forzieri",
 	"n_compositions": "{0} composizioni",
 	"victories": "Vittorie",
-	"war": "Guerra"
+	"war": "Guerra",
+	"loadouts": "Loadout",
+	"no_loadouts": "Nessun loadout",
+	"loadout_create": "Crea loadout",
+	"loadout_edit": "Modifica loadout",
+	"loadout_name_placeholder": "Nome del loadout",
+	"loadout_apply": "Applica",
+	"loadout_apply_success": "Loadout applicato a {0}",
+	"loadout_skipped_n": "{0} oggetto/i non applicato/i",
+	"loadout_import_current": "Importa equipaggiamento attuale",
+	"loadout_none": "Nessuno",
+	"loadout_max_reached": "Limite di 30 loadout raggiunto"
 }

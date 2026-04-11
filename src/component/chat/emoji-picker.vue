@@ -54,12 +54,9 @@
 
 <style lang="scss" scoped>
 	.chat-input-emoji {
-		position: absolute;
 		width: 40px;
 		height: 40px;
 		padding: 8px;
-		right: 0;
-		top: 0;
 		cursor: pointer;
 		div {
 			font-size: 20px;
@@ -84,7 +81,7 @@
 		font-size: 20px;
 	}
 	.tabs :deep(.v-tab) {
-		min-width: 20px;
+		min-width: 20px !important;
 		width: 20px;
 	}
 	.content {

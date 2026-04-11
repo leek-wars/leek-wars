@@ -245,4 +245,9 @@
 		width: 32px;
 		height: 32px;
 	}
+	:deep(.chat-input-emoji) {
+		position: absolute;
+		right: 0;
+		top: 0;
+	}
 </style>

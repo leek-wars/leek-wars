@@ -1,6 +1,7 @@
 import { Chip } from '@/model/chip'
 import { Hat } from '@/model/hat'
 import { Leek } from '@/model/leek'
+import { Loadout } from '@/model/loadout'
 import { Potion } from '@/model/potion'
 import { Team } from '@/model/team'
 import { Weapon } from '@/model/weapon'
@@ -65,6 +66,7 @@ class Farmer {
 	public group!: Group
 	public public_chat_enabled!: boolean
 	public equipment_enabled!: boolean
+	public loadouts!: Loadout[]
 	public mail!: string
 	public can_create_leek!: boolean
 	public godsons_level!: number

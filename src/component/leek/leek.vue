@@ -144,8 +144,11 @@
 			</panel>
 
 			<panel :title="$t('characteristic.characteristics')">
-				<template v-if="leek && my_leek && leek.capital == 0 && $store.state.farmer.equipment_enabled" #actions>
-					<div class="button flat" @click="capitalDialog = true">
+				<template v-if="leek && my_leek && $store.state.farmer.equipment_enabled" #actions>
+					<div class="button flat" @click="loadoutDialog = true">
+						<v-icon>mdi-package-variant-closed</v-icon>
+					</div>
+					<div v-if="leek.capital == 0" class="button flat" @click="capitalDialog = true">
 						<v-icon>mdi-star-outline</v-icon>
 					</div>
 				</template>
@@ -258,6 +261,7 @@
 					</div>
 				</template>
 			</panel>
+
 		</div>
 
 		<div class="center" v-if="leek && my_leek && leek.fights && leek.fights.length === 0">
@@ -361,6 +365,14 @@
 			<template #title>
 				{{ $t('weapons_of', [leek.name]) }}
 				<span class="weapon-count">[{{ leek.weapons.length }}/{{ leek.max_weapons }}]</span>
+			</template>
+			<template v-if="my_leek && $store.state.farmer.equipment_enabled" #options>
+				<div class="option" @click="weaponsDialog = false; loadoutDialog = true">
+					<v-icon>mdi-package-variant-closed</v-icon>
+				</div>
+				<div class="option" @click="weaponsDialog = false">
+					<v-icon>mdi-close</v-icon>
+				</div>
 			</template>
 			<div class="weapons-popup">
 				<div :class="{dashed: draggedWeapon && draggedWeaponLocation === 'farmer'}" class="leek-weapons" @dragover="dragOver" @drop="weaponsDrop('leek', $event)">
@@ -662,6 +674,14 @@
 			<template #title>
 				{{ $t('ai_of', [leek.name]) }}
 			</template>
+			<template v-if="$store.state.farmer.equipment_enabled" #options>
+				<div class="option" @click="aiDialog = false; loadoutDialog = true">
+					<v-icon>mdi-package-variant-closed</v-icon>
+				</div>
+				<div class="option" @click="aiDialog = false">
+					<v-icon>mdi-close</v-icon>
+				</div>
+			</template>
 			<div class="ai-popup">
 				<div class="leek-ai-components components-grid">
 					<div v-for="(c, i) of 8" :key="i" class="component" :class="{dashed: draggedComponent, disabled: i >= max_components}" @dragover="dragOver" @drop="componentsDrop('leek', $event, i)">
@@ -702,6 +722,14 @@
 
 		<popup v-if="leek && my_leek" v-model="chipsDialog" :width="816" icon="mdi-chip">
 			<template #title>{{ $t('chips_of', [leek.name]) }} <span class="chip-count">[{{ leek.chips.length }}/{{ leek.total_ram }}]</span></template>
+			<template v-if="$store.state.farmer.equipment_enabled" #options>
+				<div class="option" @click="chipsDialog = false; loadoutDialog = true">
+					<v-icon>mdi-package-variant-closed</v-icon>
+				</div>
+				<div class="option" @click="chipsDialog = false">
+					<v-icon>mdi-close</v-icon>
+				</div>
+			</template>
 			<div class="chips-dialog">
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'farmer'}" class="leek-chips" @dragover="dragOver" @drop="chipsDrop('leek', $event)">
 					<rich-tooltip-item v-for="chip in orderedChips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[chip.template]" :bottom="true" :nodge="true" :leek="leek">
@@ -728,6 +756,7 @@
 		</popup>
 
 		<capital-dialog v-if="leek && my_leek" v-model="capitalDialog" :leek="leek" :total-capital="leek.capital" />
+		<loadout-dialog v-if="leek && my_leek" v-model="loadoutDialog" :leek="leek" @applied="refreshTotalCharacteristics" />
 	</div>
 </template>
 
@@ -761,6 +790,7 @@
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
 	import AIElement from '@/component/app/ai.vue'
 	import LWTitle from '@/component/title/title.vue'
+	import LoadoutDialog from './loadout-dialog.vue'
 	import { COMPONENTS } from '@/model/components'
 	import { CHIPS } from '@/model/chips'
 	import { ORDERED_CHIPS } from '@/model/sorted_chips'
@@ -786,6 +816,7 @@
 		ai: AIElement,
 		'lw-title': LWTitle,
 		LeekComponent,
+		LoadoutDialog,
 		Line,
 	} })
 	export default class LeekPage extends Vue {
@@ -821,6 +852,7 @@
 		draggedComponent: Component | null = null
 		draggedComponentLocation: string | null = null
 		capitalDialog: boolean = false
+		loadoutDialog: boolean = false
 		customizeDialog: boolean = false
 		skinWeaponDialog: boolean = false
 		titleDialog: boolean = false
