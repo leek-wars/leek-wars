@@ -91,6 +91,7 @@ export default class AIViewMonaco extends Vue {
 			minimap: {
 				enabled: this.lineNumbers,
 			},
+			fixedOverflowWidgets: true,
 			accessibilitySupport: 'off', // Workaround Firefox : sélection backward + remplacement (#2802)
 		}, {
 			storageService: {
@@ -457,9 +458,6 @@ export default class AIViewMonaco extends Vue {
 	}
 	& :deep(.hover-row-contents .lw) {
 		padding: 0;
-	}
-	& :deep(.monaco-hover) {
-		z-index: 10 !important;
 	}
 	& :deep(.doc-constant.item) {
 		padding: 0;

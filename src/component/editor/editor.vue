@@ -1018,7 +1018,8 @@
 		min-height: 0;
 		flex: 1;
 		display: flex;
-		isolation: isolate;
+		position: relative;
+		z-index: 2;
 	}
 	.popup.input_popup input {
 		width: 90%;
