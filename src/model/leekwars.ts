@@ -255,6 +255,7 @@ const invdate = new Date(LOCAL_DATE.toLocaleString('en-US', {
 }))
 const DATE = new Date(invdate.getTime())
 
+let xpCursorListenerRegistered = false
 const LeekWars = reactive({
 	version: packageJson.version,
 	normal_version: packageJson.version.replace(/\.\d+$/, ''),
@@ -321,13 +322,17 @@ const LeekWars = reactive({
 	leekTheme: localStorage.getItem('leek-theme') === 'true',
 	xpTheme: localStorage.getItem('theme') === 'xp',
 	xpCursorsInit() {
-		if (!LeekWars.xpTheme) { return }
+		if (xpCursorListenerRegistered) return
+		xpCursorListenerRegistered = true
 		document.addEventListener('mouseover', (e) => {
 			const el = e.target as HTMLElement
-			if (!el || !el.style) { return }
-			const cursor = getComputedStyle(el).cursor
-			if (cursor === 'pointer') {
-				el.style.cursor = "url('/image/pointer.png') 5 0, pointer"
+			if (!el || !el.style) return
+			if (LeekWars.xpTheme) {
+				if (getComputedStyle(el).cursor === 'pointer') {
+					el.style.cursor = "url('/image/pointer.png') 5 0, pointer"
+				}
+			} else if (el.style.cursor.includes('pointer.png')) {
+				el.style.cursor = ''
 			}
 		})
 	},

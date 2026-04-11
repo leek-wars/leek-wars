@@ -396,11 +396,14 @@
 			this.modernTheme = LeekWars.themeSetting === 'xp'
 			localStorage.setItem('xp-theme', '' + LeekWars.xpTheme)
 			if (LeekWars.themeSetting === 'xp') {
+				import('@/xp.scss')
+				LeekWars.xpCursorsInit()
 				LeekWars.darkMode = false
 				if (LeekWars.aprilFools) {
 					LeekWars.post('trophy/unlock', {trophy_id: 280})
 				}
 			} else {
+				document.querySelectorAll<HTMLElement>('[style*="pointer.png"]').forEach(el => { el.style.cursor = '' })
 				LeekWars.darkMode = LeekWars.themeSetting !== 'auto' ? LeekWars.themeSetting === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
 			}
 		}

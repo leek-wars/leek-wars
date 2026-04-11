@@ -922,7 +922,7 @@ $xp-taskbar-gradient-end: #3c7ee6;
 // DIALOGS / POPUPS - outside #app because Vuetify teleports overlays
 // ====================================
 
-body:has(#app.xp) .v-overlay-container {
+.v-overlay-container {
 	* {
 		font-family: 'Pixelated MS Sans Serif', "Trebuchet MS", Arial, sans-serif !important;
 	}
