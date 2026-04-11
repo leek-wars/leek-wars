@@ -1,7 +1,14 @@
 import * as monaco from 'monaco-editor'
+import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 
 // @ts-ignore
 import leekscript from './leekscript-monarch.js'
+
+self.MonacoEnvironment = {
+	getWorker(_: any, label: string) {
+		return new editorWorker()
+	}
+}
 
 import { i18n } from '@/model/i18n';
 import { fileSystem } from '@/model/filesystem';
@@ -44,7 +51,6 @@ monaco.languages.setLanguageConfiguration('leekscript', {
 	},
 })
 monaco.languages.setMonarchTokensProvider('leekscript', leekscript)
-monaco.languages.registerDocumentSemanticTokensProvider('leekscript', leekscript)
 
 monaco.editor.addKeybindingRules([
 	{
