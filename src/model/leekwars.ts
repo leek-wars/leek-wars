@@ -52,36 +52,72 @@ function ucfirst(str: any) {
 	return f + str.substr(1)
 }
 
+const RETRY_CONFIG = {
+	maxRetries: 3,
+	baseDelay: 1000,  // 1s, 2s, 4s
+	maxDelay: 10000,
+}
+function retryDelay(retry: number) {
+	return Math.min(RETRY_CONFIG.baseDelay * Math.pow(2, retry), RETRY_CONFIG.maxDelay)
+}
+
 function request<T = any>(method: string, url: string, params?: any) {
-	const xhr = new XMLHttpRequest()
+	let currentXhr: XMLHttpRequest | null = null
+	let retryTimeout: ReturnType<typeof setTimeout> | null = null
+
 	const promise = new Promise<T>((resolve, reject) => {
-		xhr.open(method, url)
-		xhr.responseType = 'json'
-		if (store.state.connected) {
-			xhr.setRequestHeader('Authorization', 'Bearer ' + store.state.token)
-		}
-		if (!(params instanceof FormData)) {
-			// xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
-			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
-		}
-		xhr.onload = (e: any) => {
-			if (e.target.status === 200) {
-				resolve(e.target.response)
-			} else {
-				if (store.getters.admin || LOCAL || DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
-					const message = "[" + e.target.status + "] " + method + " " + url
-					console.error(message)
-					// LeekWars.toast(message, 5000)
-				}
-				reject(e.target.response)
-			}
-		}
-		xhr.onerror = reject
-		xhr.send(params)
 		LeekWars.requests++
+		function attempt(retry: number) {
+			const xhr = new XMLHttpRequest()
+			currentXhr = xhr
+			xhr.open(method, url)
+			xhr.responseType = 'json'
+			if (store.state.connected) {
+				xhr.setRequestHeader('Authorization', 'Bearer ' + store.state.token)
+			}
+			if (!(params instanceof FormData)) {
+				// xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+				xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
+			}
+			xhr.onload = (e: any) => {
+				if (e.target.status === 200) {
+					resolve(e.target.response)
+				} else if (e.target.status === 429 && retry < RETRY_CONFIG.maxRetries) {
+					const delay = retryDelay(retry)
+					if (store.getters.admin || LOCAL || DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
+						console.warn("[429] " + method + " " + url + " — retry " + (retry + 1) + "/" + RETRY_CONFIG.maxRetries + " in " + delay + "ms")
+					}
+					retryTimeout = setTimeout(() => attempt(retry + 1), delay)
+				} else {
+					if (store.getters.admin || LOCAL || DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
+						const message = "[" + e.target.status + "] " + method + " " + url
+						console.error(message)
+						// LeekWars.toast(message, 5000)
+					}
+					reject(e.target.response)
+				}
+			}
+			xhr.onerror = () => {
+				// En dev (cross-origin), une 429 sur le preflight CORS se traduit par un onerror
+				if ((LOCAL || DEV) && retry < RETRY_CONFIG.maxRetries) {
+					const delay = retryDelay(retry)
+					console.warn("[CORS/429?] " + method + " " + url + " — retry " + (retry + 1) + "/" + RETRY_CONFIG.maxRetries + " in " + delay + "ms")
+					retryTimeout = setTimeout(() => attempt(retry + 1), delay)
+				} else {
+					console.error("[429] " + method + " " + url + " — all retries exhausted")
+					LeekWars.toast($t('main.too_many_requests'))
+					reject({ error: 'too_many_requests' })
+				}
+			}
+			xhr.send(params)
+		}
+		attempt(0)
 	})
 	return {
-		abort: () => xhr.abort(),
+		abort: () => {
+			if (retryTimeout) clearTimeout(retryTimeout)
+			if (currentXhr) currentXhr.abort()
+		},
 		error: (e: (e: T) => void) => promise.catch(e),
 		then: (p: (p: T) => void) => {
 			promise.then(p)
