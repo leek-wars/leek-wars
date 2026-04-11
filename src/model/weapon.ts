@@ -4,6 +4,7 @@ class Weapon {
 	public id!: number
 	public template!: number
 	public quantity!: number
+	public time!: number
 }
 
 class WeaponTemplate {

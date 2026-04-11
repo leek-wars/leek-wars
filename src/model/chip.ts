@@ -5,6 +5,7 @@ class Chip {
 	public id!: number
 	public template!: number
 	public quantity!: number
+	public time!: number
 }
 export { Chip }
 
