@@ -44,5 +44,6 @@
 	"no_topics": "कोई विषय प्रदर्शित करने के लिए नहीं",
 	"no_topics_filters": "अधिक परिणाम देखने के लिए अपने फ़िल्टर बदलने का प्रयास करें।",
 	"clear_filters": "Clear filters",
-	"priority_none": "No priority"
+	"priority_none": "No priority",
+	"bug_user_agent_notice": "आपका ब्राउज़र बग रिपोर्ट पर प्रदर्शित किया जाएगा:"
 }

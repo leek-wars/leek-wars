@@ -300,6 +300,11 @@
 					</template>
 				</div>
 				<formatting-rules />
+				<div v-if="isBugCategory" class="user-agent-notice">
+					<v-icon size="small">mdi-information-outline</v-icon>
+					{{ $t('bug_user_agent_notice') }}
+					<span class="user-agent-value">{{ LeekWars.parseUserAgent(userAgent) }}</span>
+				</div>
 			</div>
 			<template #actions>
 				<div v-ripple class="action" @click="createDialog = false">{{ $t('cancel') }}</div>
@@ -358,6 +363,7 @@ import { emitter } from '@/model/vue'
 		filterLocked: string = 'all'
 		filterPriority: number[] = []
 		filterRead: string = 'all'
+		userAgent: string = navigator.userAgent
 
 		get isBugCategory() {
 			return this.rawCategoryName === 'bug_reports'
@@ -897,6 +903,22 @@ body.dark .topic .seen img.seen {
 		gap: 20px;
 		align-items: center;
 		margin-bottom: 10px;
+	}
+}
+.create-popup .user-agent-notice {
+	font-size: 12px;
+	color: var(--text-color-secondary);
+	padding: 8px 10px;
+	background: var(--background-secondary);
+	border-radius: 4px;
+	margin-top: 10px;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	flex-wrap: wrap;
+	.user-agent-value {
+		font-family: monospace;
+		word-break: break-all;
 	}
 }
 .create-popup .topic-name {

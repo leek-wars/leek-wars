@@ -44,5 +44,6 @@
 	"filter_read_no": "Non lu",
 	"no_topics": "Aucun sujet à afficher",
 	"no_topics_filters": "Essayez de modifier vos filtres pour voir plus de résultats.",
-	"clear_filters": "Réinitialiser les filtres"
+	"clear_filters": "Réinitialiser les filtres",
+	"bug_user_agent_notice": "Votre navigateur sera affiché sur le rapport de bug :"
 }

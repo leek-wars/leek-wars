@@ -44,5 +44,6 @@
 	"no_topics": "Geen onderwerpen om weer te geven",
 	"no_topics_filters": "Probeer je filters aan te passen om meer resultaten te zien.",
 	"clear_filters": "Filters wissen",
-	"priority_none": "Geen prioriteit"
+	"priority_none": "Geen prioriteit",
+	"bug_user_agent_notice": "Uw browser wordt weergegeven in het bugrapport:"
 }

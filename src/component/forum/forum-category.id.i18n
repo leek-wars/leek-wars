@@ -44,5 +44,6 @@
 	"no_topics": "Tidak ada topik untuk ditampilkan",
 	"no_topics_filters": "Coba sesuaikan filter Anda untuk melihat lebih banyak hasil.",
 	"clear_filters": "Hapus filter",
-	"priority_none": "Tanpa prioritas"
+	"priority_none": "Tanpa prioritas",
+	"bug_user_agent_notice": "Browser Anda akan ditampilkan di laporan bug:"
 }

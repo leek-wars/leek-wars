@@ -44,5 +44,6 @@
 	"no_topics": "Inga ämnen att visa",
 	"no_topics_filters": "Försök att ändra dina filter för att se fler resultat.",
 	"clear_filters": "Rensa filter",
-	"priority_none": "Ingen prioritet"
+	"priority_none": "Ingen prioritet",
+	"bug_user_agent_notice": "Din webbläsare kommer att visas i felrapporten:"
 }

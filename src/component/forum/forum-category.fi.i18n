@@ -44,5 +44,6 @@
 	"no_topics": "Ei aiheita näytettäväksi",
 	"no_topics_filters": "Kokeile muuttaa suodattimia nähdäksesi lisää tuloksia.",
 	"clear_filters": "Tyhjennä suodattimet",
-	"priority_none": "Ei prioriteettia"
+	"priority_none": "Ei prioriteettia",
+	"bug_user_agent_notice": "Selaimesi näytetään virheraportin yhteydessä:"
 }

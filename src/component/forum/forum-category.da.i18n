@@ -44,5 +44,6 @@
 	"no_topics": "Ingen emner at vise",
 	"no_topics_filters": "Prøv at ændre dine filtre for at se flere resultater.",
 	"clear_filters": "Ryd filtre",
-	"priority_none": "Ingen prioritet"
+	"priority_none": "Ingen prioritet",
+	"bug_user_agent_notice": "Din browser vil blive vist på fejlrapporten:"
 }

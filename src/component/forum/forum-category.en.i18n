@@ -44,5 +44,6 @@
 	"filter_read_no": "Unread",
 	"no_topics": "No topics to display",
 	"no_topics_filters": "Try adjusting your filters to see more results.",
-	"clear_filters": "Clear filters"
+	"clear_filters": "Clear filters",
+	"bug_user_agent_notice": "Your browser will be displayed on the bug report:"
 }

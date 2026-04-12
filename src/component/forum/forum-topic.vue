@@ -97,6 +97,8 @@
 								</span>
 							</router-link>
 
+							<div v-if="message.id === -1 && topic.user_agent" class="user-agent" :title="topic.user_agent"><v-icon size="small">mdi-monitor</v-icon> {{ LeekWars.parseUserAgent(topic.user_agent) }}</div>
+
 							<div class="bottom">
 
 								<div v-if="!message.deleted" class="votes">
@@ -935,6 +937,18 @@ import { emitter } from '@/model/vue'
 		max-width: 100%;
 		min-height: 200px;
 		margin-bottom: 15px;
+	}
+	.message .user-agent {
+		font-size: 12px;
+		color: var(--text-color-secondary);
+		padding: 6px 10px;
+		background: var(--background-secondary);
+		border-radius: 4px;
+		margin-top: 10px;
+		word-break: break-all;
+		display: flex;
+		align-items: center;
+		gap: 6px;
 	}
 	.message .bottom {
 		display: flex;

@@ -698,6 +698,51 @@ const LeekWars = reactive({
 	clover: false, cloverTop: 0, cloverLeft: 0, cloverDX: 0, cloverDY: 0, cloverDDX: 0, cloverDDY: 0, cloverFake: false, cloverTimeout: null as any, lucky,
 	setFavicon,
 	linkify, toChatLink,
+	parseUserAgent(ua: string): string {
+		// OS
+		let os = ''
+		if (ua.includes('Android')) {
+			const m = ua.match(/Android ([\d.]+)/)
+			os = m ? 'Android ' + m[1] : 'Android'
+		} else if (ua.includes('iPhone') || ua.includes('iPad')) {
+			const m = ua.match(/OS ([\d_]+)/)
+			os = (ua.includes('iPad') ? 'iPadOS' : 'iOS') + (m ? ' ' + m[1].replace(/_/g, '.') : '')
+		} else if (ua.includes('Windows')) {
+			os = 'Windows'
+		} else if (ua.includes('Mac OS X')) {
+			os = 'macOS'
+		} else if (ua.includes('Linux')) {
+			os = 'Linux'
+		} else if (ua.includes('CrOS')) {
+			os = 'ChromeOS'
+		}
+		// Browser (order matters: most specific first)
+		let browser = ''
+		if (ua.includes('OPR/') || ua.includes('Opera/')) {
+			const m = ua.match(/OPR\/([\d.]+)/)
+			browser = 'Opera' + (m ? ' ' + m[1] : '')
+		} else if (ua.includes('Edg/')) {
+			const m = ua.match(/Edg\/([\d.]+)/)
+			browser = 'Edge' + (m ? ' ' + m[1] : '')
+		} else if (ua.includes('Vivaldi/')) {
+			const m = ua.match(/Vivaldi\/([\d.]+)/)
+			browser = 'Vivaldi' + (m ? ' ' + m[1] : '')
+		} else if (ua.includes('SamsungBrowser/')) {
+			const m = ua.match(/SamsungBrowser\/([\d.]+)/)
+			browser = 'Samsung Internet' + (m ? ' ' + m[1] : '')
+		} else if (ua.includes('Firefox/')) {
+			const m = ua.match(/Firefox\/([\d.]+)/)
+			browser = 'Firefox' + (m ? ' ' + m[1] : '')
+		} else if (ua.includes('Chrome/')) {
+			const m = ua.match(/Chrome\/([\d.]+)/)
+			browser = 'Chrome' + (m ? ' ' + m[1] : '')
+		} else if (ua.includes('Safari/') && !ua.includes('Chrome')) {
+			const m = ua.match(/Version\/([\d.]+)/)
+			browser = 'Safari' + (m ? ' ' + m[1] : '')
+		}
+		if (browser && os) return browser + ' — ' + os
+		return browser || os || ua
+	},
 	goToRanking,
 	track: (event: string) => {
 		if (typeof umami !== 'undefined') {

@@ -44,5 +44,6 @@
 	"no_topics": "表示するトピックがありません",
 	"no_topics_filters": "フィルターを調整して、より多くの結果を表示してみてください。",
 	"clear_filters": "フィルターをクリア",
-	"priority_none": "優先度なし"
+	"priority_none": "優先度なし",
+	"bug_user_agent_notice": "お使いのブラウザがバグレポートに表示されます："
 }

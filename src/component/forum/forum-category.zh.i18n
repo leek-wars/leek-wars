@@ -44,5 +44,6 @@
 	"no_topics": "没有主题可显示",
 	"no_topics_filters": "尝试调整您的过滤器以查看更多结果。",
 	"clear_filters": "清除筛选",
-	"priority_none": "无优先级"
+	"priority_none": "无优先级",
+	"bug_user_agent_notice": "您的浏览器将显示在错误报告中："
 }

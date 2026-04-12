@@ -44,5 +44,6 @@
 	"no_topics": "Nenhum tópico para exibir",
 	"no_topics_filters": "Tente ajustar seus filtros para ver mais resultados.",
 	"clear_filters": "Limpar filtros",
-	"priority_none": "Sem prioridade"
+	"priority_none": "Sem prioridade",
+	"bug_user_agent_notice": "Seu navegador será exibido no relatório de bug:"
 }
