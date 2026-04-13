@@ -8,7 +8,7 @@ import { Squares } from '@/model/squares'
 import { store } from '@/model/store'
 import { emitter, vueMain } from '@/model/emitter'
 import { WeaponTemplate } from '@/model/weapon'
-import * as UAParser from 'ua-parser-js'
+import { UAParser } from 'ua-parser-js'
 import type { Router } from 'vue-router'
 
 let _router: Router
