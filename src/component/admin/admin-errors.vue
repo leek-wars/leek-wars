@@ -136,12 +136,7 @@
 		}
 
 		formatUA(ua: string) {
-			// Extract browser and OS from user agent string
-			const match = ua.match(/(Chrome|Firefox|Safari|Edge|Opera|OPR|SamsungBrowser|UCBrowser)\/[\d.]+/)
-			if (match) {
-				return match[0].replace('OPR', 'Opera')
-			}
-			return ua.substring(0, 30)
+			return LeekWars.parseUserAgent(ua)
 		}
 
 		deleteErrors() {
