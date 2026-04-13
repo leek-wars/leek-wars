@@ -271,6 +271,7 @@
 
 		CONTROLS_HEIGHT = 36
 		BAR_HEIGHT = 6
+		destroyed = false
 
 		@Prop() fightId!: string
 		@Prop() requiredWidth: number | undefined
@@ -362,21 +363,25 @@
 			}
 			this.resize()
 			this.$emit('resize')
-			emitter.on('resize', () => {
-				this.resize()
-			})
+			emitter.on('resize', this.onResize)
 			emitter.on('keyup', this.keyup)
 			emitter.on('keydown', this.keydown)
+			emitter.on('fight-progress', this.onFightProgress)
+		}
 
-			emitter.on('fight-progress', (data: any) => {
-				if (this.fight && data[0] === this.fight.id) {
-					this.progress = data[1]
-					if (this.progress === 100 && this.request === null) {
-						if (this.timeout) { clearTimeout(this.timeout) }
-						this.getFight(false)
-					}
+		onResize() {
+			if (this.destroyed) { return }
+			this.resize()
+		}
+		onFightProgress(data: any) {
+			if (this.destroyed) { return }
+			if (this.fight && data[0] === this.fight.id) {
+				this.progress = data[1]
+				if (this.progress === 100 && this.request === null) {
+					if (this.timeout) { clearTimeout(this.timeout) }
+					this.getFight(false)
 				}
-			})
+			}
 		}
 
 		gameLaunched() {
@@ -412,7 +417,7 @@
 
 		resize() {
 			nextTick(() => {
-				if (!this.canvas) { return }
+				if (this.destroyed || !this.canvas) { return }
 				const newWidth = this.getWidth()
 				const newHeight = this.getHeight()
 				if (newWidth === this.width && newHeight === this.height) { return }
@@ -536,12 +541,13 @@
 		}
 
 		beforeUnmount() {
+			this.destroyed = true
 			this.game.pause()
 			this.game.cancelled = true
 			emitter.off('keyup', this.keyup)
 			emitter.off('keydown', this.keydown)
-			emitter.off('resize')
-			emitter.off('fight-progress')
+			emitter.off('resize', this.onResize)
+			emitter.off('fight-progress', this.onFightProgress)
 			if (this.timeout) { clearTimeout(this.timeout) }
 			if (this.request) { this.request.abort() }
 			if (this.fightId !== 'local') {
@@ -626,6 +632,7 @@
 			}
 			if (this.fightId === 'local') {
 				fetch(`/static/report.json`).then(response => response.json()).then(report => {
+					if (this.destroyed) { return }
 					const local_fight = {
 						title: 'Fight', context: 3,	date: 0,
 						farmers1: {1: {id: 1, name: 'Pilow'} as Farmer},
@@ -656,9 +663,11 @@
 				if (this.request === null) { // Déjà en train de charger
 					this.request = LeekWars.get('fight/get/' + this.fightId)
 					this.request.then((fight: any) => {
+						if (this.destroyed) { return }
 						this.request = null
 						fightLoaded(fight)
 					}).error((error: any) => {
+						if (this.destroyed) { return }
 						this.request = null
 						this.error = error
 					})
@@ -669,6 +678,7 @@
 			if (this.$store.state.farmer) {
 				this.game.numData++
 				LeekWars.get('fight/get-logs/' + this.fightId).then(logs => {
+					if (this.destroyed) { return }
 					this.game.setLogs(logs)
 				})
 			}
