@@ -89,6 +89,7 @@
 		}
 
 		up() {
+			if (this.history.length === 0) return
 			this.historyPos--
 			if (this.historyPos < 0) this.historyPos = 0
 			this.editor.editor.setValue(this.history[this.historyPos])
