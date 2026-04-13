@@ -254,10 +254,45 @@ const app = createApp({
 
 		const error = err.name + ": " + err.message
 		const file = document.location.href
-		const stack = err.stack + '\n' + info
 		const locale = i18n.global.locale
 		const user_agent = navigator.userAgent
 
+		let componentTrace = ''
+		try {
+			if (vm) {
+				const components: string[] = []
+				let instance = vm.$
+				while (instance && components.length < 100) {
+					const name = instance.type?.name || instance.type?.__name || 'Anonymous'
+					const propsDef = instance.type?.props
+					let propsStr = ''
+					if (propsDef && instance.props) {
+						const parts: string[] = []
+						const keys = Array.isArray(propsDef) ? propsDef : Object.keys(propsDef)
+						for (const key of keys) {
+							const val = instance.props[key]
+							if (val !== undefined && val !== null && val !== false) {
+								let s: string
+								if (typeof val === 'object') {
+									s = Array.isArray(val) ? '[Array(' + val.length + ')]' : '[Object]'
+								} else {
+									s = String(val).substring(0, 50)
+								}
+								parts.push(key + '=' + s)
+							}
+						}
+						if (parts.length) propsStr = ' ' + parts.join(' ')
+					}
+					components.push('<' + name + propsStr + '>')
+					instance = instance.parent
+				}
+				componentTrace = '\n\nComponent: ' + components[0] + '\nHierarchy: ' + components.join(' → ')
+			}
+		} catch (e) {
+			componentTrace = '\n\n[Component trace failed: ' + (e as Error).message + ']'
+		}
+
+		const stack = err.stack + '\n\nVue info: ' + info + componentTrace
 		LeekWars.post('error/report', { error, stack, file, locale, user_agent })
 	}
 })
