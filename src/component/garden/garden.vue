@@ -479,6 +479,8 @@ import { emitter } from '@/model/vue'
 					this.compositions_by_id[message.composition].talent += message.talent
 				}
 			})
+
+			window.addEventListener('pageshow', this.onPageShow)
 		}
 		created() {
 			if (store.state.wsconnected) {
@@ -505,12 +507,22 @@ import { emitter } from '@/model/vue'
 			})
 		}
 
+		onPageShow(event: PageTransitionEvent) {
+			if (event.persisted) {
+				this.leekOpponents = {}
+				this.farmerOpponents = null
+				this.teamOpponents = {}
+				this.reload()
+			}
+		}
+
 		beforeUnmount() {
 			emitter.off('back')
 			if (this.request) { this.request.abort() }
 			LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_UNREGISTER])
 			emitter.off('wsconnected', this.updateWS)
 			LeekWars.socket.send([SocketMessage.GARDEN_BOSS_UNLISTEN])
+			window.removeEventListener('pageshow', this.onPageShow)
 		}
 
 		@Watch('$route.params')
