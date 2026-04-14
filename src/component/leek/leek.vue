@@ -139,7 +139,7 @@
 				</v-tooltip>
 
 				<template v-if="leek && leek.level >= 100">
-					<Line :data="chartData" :options="chartOptions" ratio="ct-major-eleventh" class="talent-history" />
+					<Line v-if="chartData" :data="chartData" :options="chartOptions" ratio="ct-major-eleventh" class="talent-history" />
 				</template>
 			</panel>
 

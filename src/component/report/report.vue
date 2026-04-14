@@ -146,7 +146,7 @@
 			<comments :comments="fight.comments" @comment="comment" />
 		</panel>
 
-		<report-life-chart v-if="statistics" :fight="fight" :statistics="statistics" />
+		<report-life-chart v-if="fight && statistics" :fight="fight" :statistics="statistics" />
 
 		<panel :title="$t('damages_title')" toggle="report/damage" icon="mdi-chart-pie">
 			<loader v-if="!loaded" />
