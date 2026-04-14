@@ -35,5 +35,7 @@
 	"invalid_name_slash": "Le caractère \"/\" est interdit dans les noms.",
 	"windows_warning_char": "Le caractère \"{0}\" est interdit sur Windows, ce nom pourrait poser problème avec git.",
 	"windows_warning_reserved": "\"{0}\" est un nom réservé sur Windows, ce nom pourrait poser problème avec git.",
-	"init_git": "Initialiser un dépôt Git"
+	"init_git": "Initialiser un dépôt Git",
+	"deinit_git": "Supprimer le dépôt Git",
+	"deinit_git_confirm": "Supprimer le dépôt Git du dossier \"{0}\" ? L'historique des commits sera perdu."
 }

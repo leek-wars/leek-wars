@@ -69,6 +69,9 @@
 				<v-list-item v-if="folder && folder.id > 0 && !folder.closed && !isFolderGitRepo" v-ripple @click="initGit()" prepend-icon="mdi-source-branch">
 					<v-list-item-title>{{ $t('init_git') }}</v-list-item-title>
 				</v-list-item>
+				<v-list-item v-if="folder && folder.id > 0 && !folder.closed && isFolderGitRepo" v-ripple @click="deinitGit()" prepend-icon="mdi-source-branch-remove">
+					<v-list-item-title>{{ $t('deinit_git') }}</v-list-item-title>
+				</v-list-item>
 				<v-list-item v-ripple @click="deleteDialog = true" prepend-icon="mdi-delete">
 					<v-list-item-title>{{ $t('delete') }}</v-list-item-title>
 				</v-list-item>
@@ -350,7 +353,22 @@
 			if (!this.folder || this.folder.id <= 0) return
 			const folderPath = fileSystem.getFolderPath(this.folder).replace(/\/$/, '')
 			LeekWars.post('git/init', { folder: folderPath }).then(() => {
+				fileSystem.gitRepos[folderPath] = true
+				emitter.emit('git-repos-changed')
 				LeekWars.toast('Git initialized in ' + this.folder!.name)
+			}).error((error: any) => {
+				LeekWars.toast(error.error)
+			})
+		}
+
+		deinitGit() {
+			if (!this.folder || this.folder.id <= 0) return
+			if (!confirm(this.$t('deinit_git_confirm', [this.folder.name]) as string)) return
+			const folderPath = fileSystem.getFolderPath(this.folder).replace(/\/$/, '')
+			LeekWars.post('git/deinit', { folder: folderPath }).then(() => {
+				delete fileSystem.gitRepos[folderPath]
+				emitter.emit('git-repos-changed')
+				LeekWars.toast('Git removed from ' + this.folder!.name)
 			}).error((error: any) => {
 				LeekWars.toast(error.error)
 			})

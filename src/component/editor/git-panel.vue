@@ -193,10 +193,12 @@
 		mounted() {
 			this.loadRepos()
 			emitter.on('git-file-changed', this.debouncedRefresh)
+			emitter.on('git-repos-changed', this.loadRepos)
 		}
 
 		beforeUnmount() {
 			emitter.off('git-file-changed', this.debouncedRefresh)
+			emitter.off('git-repos-changed', this.loadRepos)
 			if (this.refreshDebounceTimer) clearTimeout(this.refreshDebounceTimer)
 		}
 
