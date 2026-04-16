@@ -79,5 +79,7 @@
 	"todo": "Todo | Todos",
 	"editor_already_opened": "The editor is already opened in another tab!",
 	"cancel": "Cancel",
-	"strict": "Strict"
+	"strict": "Strict",
+	"git_auth_success": "GitHub successfully connected.",
+	"git_auth_error": "Error connecting to GitHub."
 }

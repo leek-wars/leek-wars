@@ -106,11 +106,12 @@
 								<span class="arrow"></span>
 							</span>
 
-							<div v-if="showProblemsDetails && problemsHeight && (analyzer.error_count || analyzer.warning_count || analyzer.todo_count)" :style="{height: problemsHeight + 'px'}">
+							<div v-if="bottomPanel && problemsHeight" :style="{height: problemsHeight + 'px'}" class="bottom-panel">
 								<div class="resizer problems-resizer" @mousedown="problemsResizerMousedown">
 									<v-icon>mdi-drag-horizontal-variant</v-icon>
 								</div>
-								<editor-problems @jump="jump" />
+								<editor-problems v-if="bottomPanel === 'problems'" @jump="jump" />
+								<git-terminal v-else-if="bottomPanel === 'git'" :theme="theme" />
 							</div>
 							<div class="status">
 								<v-menu v-if="currentAI" top :offset-y="true" :nudge-top="1" :max-width="600" :close-on-content-click="false">
@@ -122,7 +123,7 @@
 									</template>
 									<leekscript-versions v-model:version="currentAI.version" v-model:strict="currentAI.strict" @update:version="updateVersion" @update:strict="updateStrictMode" />
 								</v-menu>
-								<div v-ripple class="problems" @click="toggleProblems">
+								<div v-ripple class="problems" :class="{active: bottomPanel === 'problems'}" @click="toggleBottomPanel('problems')">
 									<span v-if="!analyzer.error_count && !analyzer.warning_count" class="no-error">
 										<v-icon>mdi-check-circle</v-icon> <span v-if="!LeekWars.mobile">{{ $t('no_problem') }}</span>
 									</span>
@@ -135,6 +136,11 @@
 									<span v-if="analyzer.todo_count" class="todos">
 										<v-icon>mdi-format-list-checks</v-icon> {{ analyzer.todo_count }} {{ $tc('todo', analyzer.todo_count).toLowerCase() }}
 									</span>
+								</div>
+								<div v-ripple class="problems git-terminal-toggle" :class="{active: bottomPanel === 'git'}" @click="toggleBottomPanel('git')">
+									<v-icon>mdi-console</v-icon>
+									<span v-if="!LeekWars.mobile">Git</span>
+									<span v-if="gitLogCount" class="count">{{ gitLogCount }}</span>
 								</div>
 								<div class="filler"></div>
 								<div class="state">
@@ -252,6 +258,8 @@
 	const GitPanel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/git-panel.${locale}.i18n`))
 	import GitDiff from './git-diff.vue'
 	import GitMerge from './git-merge.vue'
+	import GitTerminal from './git-terminal.vue'
+	import { gitLog } from './git-log'
 	import type { EditorTab, FileTab, DiffTab } from './editor-tabs.vue'
 	import './leekscript-monokai.scss'
 	import { SocketMessage } from '@/model/socket'
@@ -274,6 +282,7 @@
 			'explorer': Explorer,
 			'editor-finder': EditorFinder,
 			'editor-problems': EditorProblems,
+			'git-terminal': GitTerminal,
 			'git-panel': GitPanel,
 			'git-diff': GitDiff,
 			'git-merge': GitMerge,
@@ -309,8 +318,9 @@
 		testDialog: boolean = false
 		panelWidth: number = 200
 		problemsHeight: number = 200
+		bottomPanel: 'problems' | 'git' | null = 'problems'
+		get gitLogCount() { return gitLog.entries.length }
 		newAIv2Dialog: boolean = false
-		showProblemsDetails: boolean = true
 		fileSystem = fileSystem
 		fileMenu: boolean = false
 		fileMenuActivator: any = null
@@ -423,7 +433,7 @@
 			i18n.global.mergeLocaleMessage(locale, { doc: docMessages.default })
 		}
 
-		connected() {
+		async connected() {
 			// Chargement de l'historique
 			const history = JSON.parse(localStorage.getItem('editor/history') || '[]')
 			for (const id of history) {
@@ -433,22 +443,35 @@
 			}
 			LeekWars.setTitle(this.$t('title'), this.$t('n_ais', [fileSystem.aiCount]))
 			this.restoreTabs()
+			await this.loadGitRepos()
 			this.update()
-			this.loadGitRepos()
 		}
 
-		loadGitRepos() {
-			LeekWars.post('git/repos').then((data: any) => {
+		async loadGitRepos() {
+			try {
+				const data = await LeekWars.post('git/repos')
 				const repos: {[path: string]: boolean} = {}
 				for (const r of data.repos) { repos[r.folder] = true }
 				fileSystem.gitRepos = repos
-			})
+			} catch (e) {
+				// Pas de repos git
+			}
 		}
 
 		mounted() {
 			LeekWars.large = this.enlargeWindow
 			LeekWars.footer = false
 			LeekWars.box = true
+
+			// Toast après retour d'installation GitHub App
+			const gitAuth = this.$route.query.git_auth as string | undefined
+			if (gitAuth === 'success') {
+				LeekWars.toast(this.$t('git_auth_success') as string)
+				this.$router.replace({ query: { ...this.$route.query, git_auth: undefined } })
+			} else if (gitAuth === 'error') {
+				LeekWars.toast(this.$t('git_auth_error') as string)
+				this.$router.replace({ query: { ...this.$route.query, git_auth: undefined } })
+			}
 
 			emitter.on('ctrlS', () => {
 				this.save()
@@ -538,6 +561,11 @@
 
 			emitter.on('close-diff', ({ folder, file }) => {
 				const tab = this.tabs1.find(t => t.type === 'diff' && (t as DiffTab).folder === folder && (t as DiffTab).file === file)
+				if (tab) { this.closeTabByRef(tab) }
+			})
+
+			emitter.on('close-file-tab', (aiPath: string) => {
+				const tab = this.tabs1.find(t => t.type === 'file' && t.id === aiPath)
 				if (tab) { this.closeTabByRef(tab) }
 			})
 
@@ -669,6 +697,12 @@
 							if (diffTab) {
 								this.currentTab = diffTab
 								this.ensureDiffLoaded(diffTab as DiffTab)
+							} else {
+								// Créer un onglet diff depuis l'URL
+								const { folder, file } = this.resolveGitPath(key)
+								if (folder !== null) {
+									this.openDiff({ folder, file })
+								}
 							}
 						}
 						LeekWars.splitShowContent()
@@ -738,6 +772,7 @@
 			emitter.off('jump', this.jumpEvent)
 			emitter.off('reanalyze')
 			emitter.off('close-diff')
+			emitter.off('close-file-tab')
 			emitter.off('close-merge-tabs')
 			emitter.off('open-merge')
 			LeekWars.large = false
@@ -997,6 +1032,20 @@
 			}
 		}
 
+		resolveGitPath(aiPath: string): { folder: string, file: string } | { folder: null, file: null } {
+			// Trouver le repo git qui est un préfixe du path
+			for (const repo of Object.keys(fileSystem.gitRepos)) {
+				if (repo && aiPath.startsWith(repo + '/')) {
+					return { folder: repo, file: aiPath.substring(repo.length + 1) }
+				}
+			}
+			// Repo à la racine
+			if ('' in fileSystem.gitRepos) {
+				return { folder: '', file: aiPath }
+			}
+			return { folder: null, file: null }
+		}
+
 		ensureDiffLoaded(tab: DiffTab) {
 		if (!tab.ready && !tab.original && !tab.modified) {
 			if (tab.type === 'merge') {
@@ -1210,11 +1259,19 @@
 			e.preventDefault()
 		}
 
-		toggleProblems() {
+		toggleBottomPanel(panel: 'problems' | 'git') {
+			// Si on clique sur 'problems' sans aucun problème : ferme le panel (ou rien si déjà fermé)
+			if (panel === 'problems' && !this.analyzer.error_count && !this.analyzer.warning_count && !this.analyzer.todo_count) {
+				this.bottomPanel = null
+				return
+			}
 			if (this.problemsHeight === 0) {
 				this.problemsHeight = 200
+				this.bottomPanel = panel
+			} else if (this.bottomPanel === panel) {
+				this.bottomPanel = null
 			} else {
-				this.showProblemsDetails = !this.showProblemsDetails
+				this.bottomPanel = panel
 			}
 		}
 
@@ -1645,6 +1702,22 @@
 			}
 			.todos {
 				color: #0099ff;
+			}
+		}
+		.git-terminal-toggle {
+			color: var(--text-color-secondary);
+			align-items: center;
+			line-height: 1;
+			.v-icon { color: var(--text-color-secondary); font-size: 16px; }
+			.count {
+				background: rgba(128, 128, 128, 0.25);
+				padding: 1px 6px;
+				border-radius: 8px;
+				font-size: 11px;
+				line-height: 14px;
+			}
+			&.active {
+				background: rgba(128, 128, 128, 0.15);
 			}
 		}
 		.filler {

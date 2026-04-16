@@ -31,6 +31,7 @@ class AI {
 	public errors: number = 0
 	public warnings: number = 0
 	public todos: number = 0
+	public hasConflict: boolean = false
 	public equipped: boolean = false
 	public entrypoint: boolean = false
 	public entrypoints: number[] = []

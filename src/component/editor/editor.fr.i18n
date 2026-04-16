@@ -80,5 +80,7 @@
 	"warning": "Avertissement | Avertissements",
 	"todo": "Todo | Todos",
 	"editor_already_opened": "L'éditeur est déjà ouvert dans un autre onglet !",
-	"strict": "Strict"
+	"strict": "Strict",
+	"git_auth_success": "GitHub connecté avec succès.",
+	"git_auth_error": "Erreur lors de la connexion à GitHub."
 }

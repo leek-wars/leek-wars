@@ -4,7 +4,8 @@
 			<div v-for="(tab, i) in allTabs" ref="tabsEl" :key="tabKey(tab)" class="tab" :class="tabClass(tab, i)" :title="tabTitle(tab)" @click="clickTab(tab)" @contextmenu.prevent="openMenu($event, tab, i)" @mouseup.middle="closeTab(tab)">
 				<div class="name">
 					<template v-if="tab.type === 'file'">
-						<v-icon v-if="fileSystem.ais[tab.id]?.errors" class="icon error">mdi-close-circle</v-icon>
+						<v-icon v-if="fileSystem.ais[tab.id]?.hasConflict" class="icon conflict">mdi-source-merge</v-icon>
+						<v-icon v-else-if="fileSystem.ais[tab.id]?.errors" class="icon error">mdi-close-circle</v-icon>
 						<v-icon v-else-if="fileSystem.ais[tab.id]?.warnings" class="icon warning">mdi-alert-circle</v-icon>
 						<v-icon v-else class="icon valid">mdi-check-bold</v-icon>
 						{{ fileSystem.ais[tab.id]?.name || tab.id }}
@@ -116,7 +117,7 @@
 		tabClass(tab: EditorTab, i: number): any {
 			const selected = this.current && this.tabsMatch(tab, this.current)
 			if (tab.type === 'file') {
-				return { selected, modified: fileSystem.ais[tab.id]?.modified }
+				return { selected, modified: fileSystem.ais[tab.id]?.modified, conflict: fileSystem.ais[tab.id]?.hasConflict }
 			}
 			return { selected, 'diff-tab': true, 'commit-tab': tab.type === 'commit', 'merge-tab': tab.type === 'merge' }
 		}
@@ -278,6 +279,12 @@
 	}
 	.tab.modified:hover .close {
 		display: block;
+	}
+	.tab.conflict {
+		border-top-color: #e53935;
+		.name .v-icon.icon.conflict {
+			color: #e53935 !important;
+		}
 	}
 	.tab.diff-tab {
 		border-top-color: #e8a838;

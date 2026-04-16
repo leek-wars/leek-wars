@@ -80,7 +80,7 @@ export default class AIViewMonaco extends Vue {
 			automaticLayout: true,
 			wordWrap: "on",
 			fontSize: this.fontSize,
-			fontFamily: LeekWars.xpTheme ? "'Perfect DOS VGA 437 Win', monospace" : "Menlo, Monaco, 'Courier New', monospace",
+			fontFamily: LeekWars.xpTheme ? "'Perfect DOS VGA 437 Win', monospace" : undefined,
 			lineHeight: this.lineHeight,
 			theme: this.theme,
 			lineNumbers: this.lineNumbers ? 'on' : 'off',
@@ -397,6 +397,7 @@ export default class AIViewMonaco extends Vue {
 		if (!model) return
 
 		const content = model.getValue()
+		const hadConflicts = this.conflicts.length > 0
 
 		// Fast-path : pas de marqueurs → pas de parsing
 		if (!hasConflictMarkers(content)) {
@@ -404,10 +405,12 @@ export default class AIViewMonaco extends Vue {
 			if (this.conflictDecorations) { this.conflictDecorations.set([]) }
 			this.conflictLenses?.dispose()
 			this.conflictLenses = null
+			if (this.ai) this.ai.hasConflict = false
 			return
 		}
 
 		this.conflicts = parseConflicts(content)
+		if (this.ai) this.ai.hasConflict = true
 
 		if (this.conflictDecorations) {
 			this.conflictDecorations.set(buildConflictDecorations(model, this.conflicts))
@@ -420,6 +423,11 @@ export default class AIViewMonaco extends Vue {
 			this.updateConflictDecorations()
 			this.setAnalyzerTimeout()
 		})
+
+		// Scroller au premier conflit uniquement sur la transition
+		if (!hadConflicts && this.conflicts.length > 0) {
+			this.editor.revealLineInCenter(this.conflicts[0].startLine + 1, monaco.editor.ScrollType.Smooth)
+		}
 	}
 
 	public save() {

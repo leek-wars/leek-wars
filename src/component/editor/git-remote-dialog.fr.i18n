@@ -1,0 +1,17 @@
+{
+	"title": "Paramètres du remote",
+	"remotes": "Remotes",
+	"no_remotes": "Aucun remote configuré.",
+	"remote_name": "Nom (ex: origin)",
+	"remote_url": "https://github.com/user/repo.git",
+	"select_repo": "Choisir un dépôt...",
+	"authentication": "Authentification",
+	"connected_as": "Connecté en tant que {0}",
+	"install_github_app": "Installer la GitHub App",
+	"install_hint": "Choisissez les dépôts auxquels donner accès lors de l'installation.",
+	"github_app": "GitHub App",
+	"or_pat": "Ou utiliser un Personal Access Token :",
+	"pat_placeholder": "ghp_... (un PAT fine-grained limité au repo est recommandé)",
+	"save": "Sauvegarder",
+	"invalid_token": "Token invalide ou expiré."
+}

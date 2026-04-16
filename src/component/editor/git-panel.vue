@@ -16,15 +16,41 @@
 			<div class="action-btn" :title="$t('history')" :class="{active: showHistory}" @click="showHistory = !showHistory">
 				<v-icon>mdi-history</v-icon>
 			</div>
+			<v-menu v-model="actionsMenuOpen" location="bottom end" offset="4">
+				<template #activator="{ props: p }">
+					<div v-bind="p" :title="$t('more_actions')" class="action-btn" :class="{active: actionsMenuOpen}">
+						<v-icon>mdi-dots-vertical</v-icon>
+					</div>
+				</template>
+				<v-list density="compact">
+					<v-list-item prepend-icon="mdi-undo-variant" @click="undoLastCommit">
+						<v-list-item-title>{{ $t('undo_last_commit') }}</v-list-item-title>
+					</v-list-item>
+				</v-list>
+			</v-menu>
 		</div>
 
 		<template v-if="selectedRepo !== '' && !showHistory">
-			<!-- Zone de commit -->
+			<!-- Zone de commit / continue rebase -->
 			<div class="commit-area">
-				<v-text-field v-model="commitMessage" :placeholder="$t('commit_message')" density="compact" variant="solo-filled" flat hide-details class="commit-input" :theme="isDark ? 'dark' : 'light'" @keyup.enter="commit" @keyup.stop />
-				<div class="commit-btn" :class="{disabled: !canCommit}" :title="$t('commit')" @click="commit">
-					<v-icon>mdi-check</v-icon>
-				</div>
+				<template v-if="rebasing">
+					<div class="commit-input rebase-label">
+						<v-icon class="rebase-label-icon">mdi-source-commit</v-icon>
+						{{ $t('rebase_in_progress_short') }}
+					</div>
+					<div class="commit-btn abort-btn" :title="$t('rebase_abort')" @click="rebaseAbort">
+						<v-icon>mdi-close</v-icon>
+					</div>
+					<div class="commit-btn" :class="{disabled: conflictChanges.length > 0}" :title="$t('rebase_continue')" @click="rebaseContinue">
+						<v-icon>mdi-play</v-icon>
+					</div>
+				</template>
+				<template v-else>
+					<v-text-field v-model="commitMessage" :placeholder="$t('commit_message')" density="compact" variant="solo-filled" flat hide-details class="commit-input" :theme="isDark ? 'dark' : 'light'" @keyup.enter="commit" @keyup.stop />
+					<div class="commit-btn" :class="{disabled: !canCommit}" :title="$t('commit')" @click="commit">
+						<v-icon>mdi-check</v-icon>
+					</div>
+				</template>
 			</div>
 
 			<div class="changes-scroll">
@@ -100,25 +126,112 @@
 				</div>
 			</div>
 
-			<!-- Push/Pull (sticky en bas) -->
-			<div v-if="branch" class="sync-bar">
-				<span class="branch-name"><v-icon>mdi-source-branch</v-icon> {{ branch }}</span>
-				<div class="sync-actions">
-					<span v-if="behind > 0" class="sync-count behind" :title="$t('n_behind', [behind])">{{ behind }} <v-icon>mdi-arrow-down</v-icon></span>
-					<span v-if="ahead > 0" class="sync-count ahead" :title="$t('n_ahead', [ahead])">{{ ahead }} <v-icon>mdi-arrow-up</v-icon></span>
-					<v-icon :title="$t('pull')" class="action-btn" @click="pull">mdi-arrow-down-bold</v-icon>
-					<v-icon :title="$t('push')" class="action-btn" @click="push">mdi-arrow-up-bold</v-icon>
-				</div>
-			</div>
 		</template>
 
 		<!-- Historique -->
 		<git-history v-if="showHistory && selectedRepo !== ''" :folder="selectedRepo" @show-diff="$emit('show-diff', $event)" />
 
+		<!-- Messages de sortie git (visibles même en mode historique) -->
+		<div v-if="syncError && selectedRepo !== ''" class="sync-error">
+			<span class="sync-error-text">{{ syncError }}</span>
+			<v-icon class="sync-error-close" @click="syncError = ''">mdi-close</v-icon>
+		</div>
+		<div v-if="syncInfo && selectedRepo !== ''" class="sync-info">
+			<span class="sync-info-text">{{ syncInfo }}</span>
+			<v-icon class="sync-info-close" @click="syncInfo = ''">mdi-close</v-icon>
+		</div>
+
+		<!-- Push/Pull (sticky en bas, visible même en mode historique) -->
+		<div v-if="branch && selectedRepo !== ''" class="sync-bar">
+			<v-menu v-model="branchMenuOpen" location="top start" offset="6">
+				<template #activator="{ props: activatorProps }">
+					<div v-bind="activatorProps" class="branch-picker">
+						<v-icon>mdi-source-branch</v-icon>
+						<span class="branch-name">{{ branch }}</span>
+						<v-icon class="branch-caret">mdi-menu-down</v-icon>
+					</div>
+				</template>
+				<v-list density="compact" class="branch-list">
+					<v-list-item v-for="b in branches" :key="'l-' + b" :active="b === branch" @click="checkoutBranch(b)">
+						<template #prepend>
+							<v-icon v-if="b === branch">mdi-check</v-icon>
+							<v-icon v-else>mdi-source-branch</v-icon>
+						</template>
+						<v-list-item-title>{{ b }}</v-list-item-title>
+					</v-list-item>
+					<template v-if="remoteBranches.length > 0">
+						<v-divider />
+						<v-list-subheader>{{ $t('remote_branches') }}</v-list-subheader>
+						<v-list-item v-for="b in remoteBranches" :key="'r-' + b" prepend-icon="mdi-cloud-download-outline" class="remote-branch" @click="checkoutBranch(b)">
+							<v-list-item-title>{{ b }}</v-list-item-title>
+						</v-list-item>
+					</template>
+					<v-divider />
+					<v-list-item prepend-icon="mdi-refresh" :disabled="fetching" @click.stop="fetchRemote">
+						<v-list-item-title>{{ fetching ? $t('fetching') : $t('fetch') }}</v-list-item-title>
+					</v-list-item>
+					<v-list-item prepend-icon="mdi-plus" class="create-branch" @click="promptCreateBranch">
+						<v-list-item-title>{{ $t('create_branch') }}</v-list-item-title>
+					</v-list-item>
+				</v-list>
+			</v-menu>
+			<div class="sync-actions">
+				<div class="pull-group" :class="{ disabled: behind === 0 }">
+					<div class="sync-btn pull-main" :title="behind > 0 ? $t('n_behind', [behind]) + ' (' + (pullRebase ? $t('rebase') : $t('merge')) + ')' : $t('pull')" @click="behind > 0 && pull()">
+						<v-icon>mdi-arrow-down-bold</v-icon>
+						<span v-if="behind > 0" class="count">{{ behind }}</span>
+					</div>
+					<v-menu v-model="pullStrategyOpen" location="top end" offset="6">
+						<template #activator="{ props: p }">
+							<div v-bind="p" class="pull-caret" :title="$t('pull_strategy')">
+								<v-icon>mdi-menu-down</v-icon>
+							</div>
+						</template>
+						<v-list density="compact">
+							<v-list-item :active="!pullRebase" @click="setPullStrategy(false)">
+								<template #prepend><v-icon>{{ !pullRebase ? 'mdi-check' : 'mdi-source-merge' }}</v-icon></template>
+								<v-list-item-title>{{ $t('merge') }}</v-list-item-title>
+							</v-list-item>
+							<v-list-item :active="pullRebase" @click="setPullStrategy(true)">
+								<template #prepend><v-icon>{{ pullRebase ? 'mdi-check' : 'mdi-source-commit' }}</v-icon></template>
+								<v-list-item-title>{{ $t('rebase') }}</v-list-item-title>
+							</v-list-item>
+						</v-list>
+					</v-menu>
+				</div>
+				<div class="pull-group" :class="{ disabled: ahead === 0 && (!pushForce || behind === 0) }">
+					<div class="sync-btn pull-main" :class="{ 'push-force': pushForce }" :title="ahead > 0 ? $t('n_ahead', [ahead]) + ' (' + (pushForce ? $t('push_force') : $t('push')) + ')' : (pushForce ? $t('push_force') : $t('push'))" @click="(ahead > 0 || (pushForce && behind > 0)) && push()">
+						<v-icon>{{ pushForce ? 'mdi-arrow-up-bold-hexagon-outline' : 'mdi-arrow-up-bold' }}</v-icon>
+						<span v-if="ahead > 0" class="count">{{ ahead }}</span>
+					</div>
+					<v-menu v-model="pushStrategyOpen" location="top end" offset="6">
+						<template #activator="{ props: p }">
+							<div v-bind="p" class="pull-caret" :title="$t('push_strategy')">
+								<v-icon>mdi-menu-down</v-icon>
+							</div>
+						</template>
+						<v-list density="compact">
+							<v-list-item :active="!pushForce" @click="setPushStrategy(false)">
+								<template #prepend><v-icon>{{ !pushForce ? 'mdi-check' : 'mdi-arrow-up-bold' }}</v-icon></template>
+								<v-list-item-title>{{ $t('push') }}</v-list-item-title>
+							</v-list-item>
+							<v-list-item :active="pushForce" @click="setPushStrategy(true)">
+								<template #prepend><v-icon>{{ pushForce ? 'mdi-check' : 'mdi-alert' }}</v-icon></template>
+								<v-list-item-title>{{ $t('push_force') }}</v-list-item-title>
+							</v-list-item>
+						</v-list>
+					</v-menu>
+				</div>
+				<v-icon :title="$t('remote_settings')" class="action-btn" @click="showRemoteDialog = true">mdi-cog</v-icon>
+			</div>
+		</div>
+
 		<!-- Pas de repo sélectionné -->
 		<div v-if="selectedRepo === '' && repos.length === 0 && !loading" class="no-repo">
 			<p>{{ $t('no_git_repo') }}</p>
 		</div>
+
+		<git-remote-dialog v-model="showRemoteDialog" :folder="selectedRepo" />
 	</div>
 </template>
 
@@ -128,6 +241,8 @@
 	import { i18n, mixins } from '@/model/i18n'
 	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import GitHistory from './git-history.vue'
+	import GitRemoteDialog from './git-remote-dialog.vue'
+	import { gitCall } from './git-log'
 	import { emitter } from '@/model/vue'
 	import type { DiffTab } from './editor-tabs.vue'
 
@@ -142,7 +257,7 @@
 	@Options({
 		name: 'git-panel',
 		i18n: {},
-		components: { GitHistory },
+		components: { GitHistory, GitRemoteDialog },
 		mixins: [...mixins],
 		emits: ['show-diff', 'show-merge']
 	})
@@ -158,10 +273,23 @@
 		stagedExpanded: boolean = true
 		unstagedExpanded: boolean = true
 		merging: boolean = false
+		rebasing: boolean = false
 		conflictsExpanded: boolean = true
 		ahead: number = 0
 		behind: number = 0
 		branch: string = ''
+		showRemoteDialog: boolean = false
+		syncError: string = ''
+		syncInfo: string = ''
+		branches: string[] = []
+		remoteBranches: string[] = []
+		branchMenuOpen: boolean = false
+		fetching: boolean = false
+		pullStrategyOpen: boolean = false
+		pullRebase: boolean = false
+		pushStrategyOpen: boolean = false
+		pushForce: boolean = false
+		actionsMenuOpen: boolean = false
 
 		get isDark(): boolean {
 			return ['monokai', 'vs-dark', 'hc-black'].includes(this.theme)
@@ -202,6 +330,87 @@
 			if (this.refreshDebounceTimer) clearTimeout(this.refreshDebounceTimer)
 		}
 
+		async undoLastCommit() {
+			this.actionsMenuOpen = false
+			const msg = this.ahead === 0
+				? this.$t('undo_last_commit_pushed_warn') as string
+				: this.$t('undo_last_commit_confirm') as string
+			if (!window.confirm(msg)) return
+			this.syncError = ''
+			this.syncInfo = ''
+			try {
+				await gitCall('git/undo-last-commit', { folder: this.selectedRepo })
+				this.syncInfo = this.$t('undo_last_commit_done') as string
+				await this.refreshStatus()
+				emitter.emit('git-history-refresh')
+				emitter.emit('reanalyze')
+			} catch (e: any) {
+				this.syncError = 'Undo: ' + (e.details || e.error || 'error')
+			}
+		}
+
+		setPullStrategy(rebase: boolean) {
+			this.pullRebase = rebase
+			this.pullStrategyOpen = false
+			if (this.selectedRepo !== '') {
+				localStorage.setItem('editor/git-pull-rebase-' + this.selectedRepo, rebase ? '1' : '0')
+			}
+		}
+
+		setPushStrategy(force: boolean) {
+			this.pushForce = force
+			this.pushStrategyOpen = false
+			if (this.selectedRepo !== '') {
+				localStorage.setItem('editor/git-push-force-' + this.selectedRepo, force ? '1' : '0')
+			}
+		}
+
+		@Watch('selectedRepo')
+		onSelectedRepoChange(repo: string) {
+			if (repo === '') {
+				this.changes = []
+				this.branch = ''
+				this.branches = []
+				this.remoteBranches = []
+				this.ahead = 0
+				this.behind = 0
+				this.merging = false
+				this.rebasing = false
+				fileSystem.gitStatus = {}
+				return
+			}
+			this.pullRebase = localStorage.getItem('editor/git-pull-rebase-' + repo) === '1'
+			this.pushForce = localStorage.getItem('editor/git-push-force-' + repo) === '1'
+		}
+
+		lastFetchAt: { [repo: string]: number } = {}
+
+		@Watch('branchMenuOpen')
+		async onBranchMenuToggle(open: boolean) {
+			if (!open) return
+			// Si un fetch récent (< 60s) a déjà été fait, ne recharge que les branches locales
+			const last = this.lastFetchAt[this.selectedRepo] || 0
+			if (Date.now() - last < 60_000) {
+				this.loadBranches()
+			} else {
+				this.fetchRemote()
+			}
+		}
+
+		async fetchRemote() {
+			if (this.fetching) return
+			this.fetching = true
+			try {
+				await gitCall('git/fetch', { folder: this.selectedRepo })
+				this.lastFetchAt[this.selectedRepo] = Date.now()
+				await this.loadBranches()
+			} catch (e) {
+				await this.loadBranches()
+			} finally {
+				this.fetching = false
+			}
+		}
+
 		debouncedRefresh() {
 			if (this.refreshDebounceTimer) clearTimeout(this.refreshDebounceTimer)
 			this.refreshDebounceTimer = setTimeout(() => {
@@ -212,12 +421,11 @@
 		async loadRepos() {
 			this.loading = true
 			try {
-				const data = await LeekWars.post('git/repos')
+				const data = await gitCall('git/repos')
 				this.repos = data.repos
 				const repos: {[path: string]: boolean} = {}
 				for (const r of this.repos) { repos[r.folder] = true }
 				fileSystem.gitRepos = repos
-				// Restaurer la sélection
 				const saved = localStorage.getItem('editor/git-repo')
 				if (saved && this.repos.find(r => r.folder === saved)) {
 					this.selectedRepo = saved
@@ -227,7 +435,6 @@
 					this.refreshStatus()
 				}
 			} catch (e) {
-				// Pas de repos
 			} finally {
 				this.loading = false
 			}
@@ -238,9 +445,10 @@
 			localStorage.setItem('editor/git-repo', this.selectedRepo)
 			this.loading = true
 			try {
-				const data = await LeekWars.post('git/status', { folder: this.selectedRepo })
+				const data = await gitCall('git/status', { folder: this.selectedRepo })
 				this.changes = data.changes
 				this.merging = data.merging
+				this.rebasing = !!data.rebasing
 				this.ahead = data.ahead
 				this.behind = data.behind
 				this.branch = data.branch
@@ -254,40 +462,54 @@
 		}
 
 		async stage(change: GitChange) {
-			await LeekWars.post('git/stage', { folder: this.selectedRepo, files: JSON.stringify([change.file]) })
+			await gitCall('git/stage', { folder: this.selectedRepo, files: JSON.stringify([change.file]) })
 			this.refreshStatus()
 		}
 
 		async unstage(change: GitChange) {
-			await LeekWars.post('git/unstage', { folder: this.selectedRepo, files: JSON.stringify([change.file]) })
+			await gitCall('git/unstage', { folder: this.selectedRepo, files: JSON.stringify([change.file]) })
 			this.refreshStatus()
 		}
 
 		async stageAll() {
-			await LeekWars.post('git/stage-all', { folder: this.selectedRepo })
+			await gitCall('git/stage-all', { folder: this.selectedRepo })
 			this.refreshStatus()
 		}
 
 		async unstageAll() {
-			await LeekWars.post('git/unstage-all', { folder: this.selectedRepo })
+			await gitCall('git/unstage-all', { folder: this.selectedRepo })
 			this.refreshStatus()
 		}
 
 		async discard(change: GitChange) {
-			await LeekWars.post('git/discard', { folder: this.selectedRepo, files: JSON.stringify([change.file]) })
+			if (change.index === '?') {
+				if (!confirm(this.$t('discard_untracked_confirm', [change.file]) as string)) return
+			}
+			await gitCall('git/discard', { folder: this.selectedRepo, files: JSON.stringify([change.file]) })
 			emitter.emit('close-diff', { folder: this.selectedRepo, file: change.file })
-			this.reloadFiles([change.file])
+			if (change.index === '?') {
+				this.removeDeletedFiles([change.file])
+			} else {
+				this.reloadFiles([change.file])
+			}
 			await this.refreshStatus()
 			emitter.emit('reanalyze')
 		}
 
 		async discardAll() {
+			const untracked = this.unstagedChanges.filter(c => c.index === '?')
+			if (untracked.length > 0) {
+				if (!confirm(this.$t('discard_untracked_all_confirm', [untracked.length]) as string)) return
+			}
 			const files = this.unstagedChanges.map(c => c.file)
-			await LeekWars.post('git/discard', { folder: this.selectedRepo, files: JSON.stringify(files) })
+			await gitCall('git/discard', { folder: this.selectedRepo, files: JSON.stringify(files) })
 			for (const file of files) {
 				emitter.emit('close-diff', { folder: this.selectedRepo, file })
 			}
-			this.reloadFiles(files)
+			const untrackedFiles = untracked.map(c => c.file)
+			const trackedFiles = files.filter(f => !untrackedFiles.includes(f))
+			if (untrackedFiles.length) this.removeDeletedFiles(untrackedFiles)
+			if (trackedFiles.length) this.reloadFiles(trackedFiles)
 			await this.refreshStatus()
 			emitter.emit('reanalyze')
 		}
@@ -296,7 +518,7 @@
 			if (!this.canCommit) return
 			const wasMerging = this.merging
 			try {
-				await LeekWars.post('git/commit', { folder: this.selectedRepo, message: this.commitMessage })
+				await gitCall('git/commit', { folder: this.selectedRepo, message: this.commitMessage })
 				this.commitMessage = ''
 				if (wasMerging) {
 					// Fermer les onglets merge après un commit de merge
@@ -304,17 +526,20 @@
 				}
 				this.refreshStatus()
 			} catch (e) {
-				// Erreur
 			}
 		}
 
 		async push() {
+			if (this.pushForce && !window.confirm(this.$t('push_force_confirm') as string)) return
 			this.loading = true
+			this.syncError = ''
+			this.syncInfo = ''
 			try {
-				await LeekWars.post('git/push', { folder: this.selectedRepo })
+				const data = await gitCall('git/push', { folder: this.selectedRepo, force: this.pushForce })
+				this.syncInfo = 'Push: ' + (data.message || 'OK')
 				this.refreshStatus()
-			} catch (e) {
-				// Erreur push
+			} catch (e: any) {
+				this.syncError = 'Push: ' + (e.details || e.error || 'error')
 			} finally {
 				this.loading = false
 			}
@@ -322,17 +547,69 @@
 
 		async pull() {
 			this.loading = true
+			this.syncError = ''
+			this.syncInfo = ''
 			try {
-				const data = await LeekWars.post('git/pull', { folder: this.selectedRepo })
-				await this.refreshStatus()
+				const data = await gitCall('git/pull', { folder: this.selectedRepo, rebase: this.pullRebase })
+				this.syncInfo = 'Pull: ' + (data.message || 'OK')
+				await Promise.all([fileSystem.reload(), this.refreshStatus()])
+				emitter.emit('reanalyze')
 				if (data.conflicts && this.conflictChanges.length > 0) {
-					// Recharger les fichiers en conflit pour afficher les marqueurs
 					this.reloadFiles(this.conflictChanges.map(c => c.file))
-					// Ouvrir automatiquement le premier fichier en conflit
 					emitter.emit('open-merge', { folder: this.selectedRepo, file: this.conflictChanges[0].file })
 				}
+			} catch (e: any) {
+				this.syncError = 'Pull: ' + (e.details || e.error || 'error')
+			} finally {
+				this.loading = false
+			}
+		}
+
+		async loadBranches() {
+			try {
+				const data = await gitCall('git/branches', { folder: this.selectedRepo })
+				this.branches = data.branches || []
+				this.remoteBranches = data.remote_branches || []
 			} catch (e) {
-				// Erreur pull
+				this.branches = []
+				this.remoteBranches = []
+			}
+		}
+
+		async checkoutBranch(branch: string) {
+			this.branchMenuOpen = false
+			if (branch === this.branch) return
+			this.syncError = ''
+			this.syncInfo = ''
+			this.loading = true
+			try {
+				await gitCall('git/checkout', { folder: this.selectedRepo, branch })
+				this.syncInfo = 'Checkout: ' + branch
+				Promise.all([fileSystem.reload(), this.refreshStatus()]).then(() => {
+					emitter.emit('reanalyze')
+				})
+			} catch (e: any) {
+				this.syncError = 'Checkout: ' + (e.details || e.error || 'error')
+			} finally {
+				this.loading = false
+			}
+		}
+
+		async promptCreateBranch() {
+			this.branchMenuOpen = false
+			const name = window.prompt(this.$t('new_branch_name') as string, '')
+			if (!name) return
+			const trimmed = name.trim()
+			if (!trimmed) return
+			this.syncError = ''
+			this.syncInfo = ''
+			this.loading = true
+			try {
+				await gitCall('git/create-branch', { folder: this.selectedRepo, branch: trimmed })
+				this.syncInfo = 'Branch created: ' + trimmed
+				await this.refreshStatus()
+			} catch (e: any) {
+				this.syncError = 'Create branch: ' + (e.details || e.error || 'error')
 			} finally {
 				this.loading = false
 			}
@@ -341,23 +618,58 @@
 		async mergeAbort() {
 			this.loading = true
 			try {
-				await LeekWars.post('git/merge-abort', { folder: this.selectedRepo })
-				// Fermer tous les onglets merge
+				await gitCall('git/merge-abort', { folder: this.selectedRepo })
 				emitter.emit('close-merge-tabs', { folder: this.selectedRepo })
-				// Recharger tous les fichiers qui étaient en conflit
 				const conflictFiles = this.conflictChanges.map(c => c.file)
 				this.reloadFiles(conflictFiles)
 				await this.refreshStatus()
 				emitter.emit('reanalyze')
 			} catch (e) {
-				// Erreur abort
+			} finally {
+				this.loading = false
+			}
+		}
+
+		async rebaseContinue() {
+			if (this.conflictChanges.length > 0) return
+			this.loading = true
+			this.syncError = ''
+			this.syncInfo = ''
+			try {
+				const data = await gitCall('git/rebase-continue', { folder: this.selectedRepo })
+				this.syncInfo = 'Rebase: ' + (data.message || 'OK')
+				await Promise.all([fileSystem.reload(), this.refreshStatus()])
+				emitter.emit('reanalyze')
+			} catch (e: any) {
+				this.syncError = 'Rebase continue: ' + (e.details || e.error || 'error')
+			} finally {
+				this.loading = false
+			}
+		}
+
+		async rebaseAbort() {
+			if (!window.confirm(this.$t('rebase_abort_confirm') as string)) return
+			this.loading = true
+			this.syncError = ''
+			this.syncInfo = ''
+			try {
+				await gitCall('git/rebase-abort', { folder: this.selectedRepo })
+				this.syncInfo = this.$t('rebase_aborted') as string
+				await Promise.all([fileSystem.reload(), this.refreshStatus()])
+				emitter.emit('reanalyze')
+			} catch (e: any) {
+				this.syncError = 'Rebase abort: ' + (e.details || e.error || 'error')
 			} finally {
 				this.loading = false
 			}
 		}
 
 		openConflict(change: GitChange) {
-			this.$emit('show-merge', { folder: this.selectedRepo, file: change.file })
+			const fullPath = (this.selectedRepo ? this.selectedRepo + '/' : '') + change.file
+			const ai = fileSystem.getAIByPath(fullPath)
+			if (ai) {
+				this.$router.push('/editor/' + ai.path)
+			}
 		}
 
 		reloadFiles(files: string[]) {
@@ -366,13 +678,29 @@
 				const ai = fileSystem.getAIByPath(fullPath)
 				if (ai) {
 					// Relire le fichier depuis le serveur
-					LeekWars.post('git/read-file', { folder: this.selectedRepo, file }).then((data: any) => {
+					gitCall('git/read-file', { folder: this.selectedRepo, file }).then((data: any) => {
 						ai.code = data.content || ''
 						if (ai.model) {
 							ai.model.setValue(ai.code)
 						}
 						ai.modified = false
 					})
+				}
+			}
+		}
+
+		removeDeletedFiles(files: string[]) {
+			for (const file of files) {
+				const fullPath = (this.selectedRepo ? this.selectedRepo + '/' : '') + file
+				const ai = fileSystem.getAIByPath(fullPath)
+				if (ai) {
+					emitter.emit('close-file-tab', ai.path)
+					const folder = fileSystem.folderById[ai.folder]
+					if (folder) {
+						const idx = folder.items.findIndex((i: any) => !i.folder && i.ai === ai)
+						if (idx !== -1) folder.items.splice(idx, 1)
+					}
+					delete fileSystem.ais[ai.path]
 				}
 			}
 		}
@@ -457,6 +785,21 @@
 .commit-input {
 	flex: 1;
 	min-width: 0;
+}
+.rebase-label {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 13px;
+	padding: 0 12px;
+	height: 40px;
+	background: rgba(124, 142, 218, 0.15);
+	border-radius: 4px;
+	color: #7c8eda;
+	.rebase-label-icon { font-size: 18px; }
+}
+.commit-btn.abort-btn {
+	color: #e53935;
 }
 .commit-btn {
 	display: flex;
@@ -587,6 +930,20 @@
 	&:hover { opacity: 1; background: rgba(0, 0, 0, 0.2); }
 	.v-icon { font-size: 18px; }
 }
+.rebase-banner {
+	background: #7c8eda;
+}
+.rebase-continue {
+	margin-left: auto;
+	cursor: pointer;
+	opacity: 0.9;
+	border-radius: 4px;
+	padding: 2px;
+	&:hover { opacity: 1; background: rgba(0, 0, 0, 0.2); }
+	&.disabled { opacity: 0.4; cursor: default; pointer-events: none; }
+	+ .merge-abort { margin-left: 0; }
+	.v-icon { font-size: 18px; }
+}
 .conflict-header {
 	color: #e06c75;
 }
@@ -608,24 +965,95 @@
 	flex-shrink: 0;
 	font-size: 13px;
 }
-.branch-name {
+.branch-picker {
 	display: flex;
 	align-items: center;
-	gap: 2px;
-	.v-icon { font-size: 16px; }
+	gap: 4px;
+	cursor: pointer;
+	padding: 2px 4px;
+	border-radius: 3px;
+	user-select: none;
+	&:hover { background: rgba(128, 128, 128, 0.15); }
+	> .v-icon { font-size: 16px; }
+	.branch-caret { font-size: 18px; opacity: 0.7; }
 }
+.branch-name {
+	font-weight: 500;
+}
+.branch-list .create-branch { color: #5fad1b; }
 .sync-actions {
 	display: flex;
 	align-items: center;
 	gap: 4px;
 }
-.sync-count {
+.sync-btn {
 	display: flex;
 	align-items: center;
+	gap: 3px;
+	padding: 4px 8px;
+	border-radius: 3px;
+	cursor: pointer;
 	font-size: 12px;
-	.v-icon { font-size: 14px; }
-	&.ahead { color: #73c991; }
-	&.behind { color: #e8a838; }
+	font-weight: bold;
+	user-select: none;
+	.v-icon { font-size: 18px; }
+	&:hover:not(.disabled) { background: rgba(128, 128, 128, 0.15); }
+	&.disabled {
+		opacity: 0.35;
+		cursor: default;
+	}
+}
+.pull-group {
+	display: flex;
+	align-items: center;
+	border-radius: 3px;
+	&:hover:not(.disabled) { background: rgba(128, 128, 128, 0.15); }
+	&.disabled .sync-btn {
+		opacity: 0.35;
+		cursor: default;
+		pointer-events: none;
+	}
+	.pull-main { padding-right: 4px; }
+	.pull-main.push-force { color: #e53935; }
+	.pull-main:hover { background: transparent; }
+	.pull-caret {
+		display: flex;
+		align-items: center;
+		cursor: pointer;
+		padding: 4px 2px;
+		.v-icon { font-size: 16px; opacity: 0.7; }
+	}
+}
+.sync-error, .sync-info {
+	padding: 6px 8px;
+	font-size: 12px;
+	border-top: 1px solid;
+	display: flex;
+	align-items: flex-start;
+	gap: 6px;
+	.sync-error-text, .sync-info-text {
+		flex: 1;
+		user-select: text;
+		white-space: pre-wrap;
+		word-break: break-word;
+	}
+	.sync-error-close, .sync-info-close {
+		font-size: 16px;
+		cursor: pointer;
+		flex-shrink: 0;
+	}
+}
+.sync-error {
+	color: #f44;
+	background: rgba(255, 0, 0, 0.08);
+	border-top-color: rgba(255, 0, 0, 0.15);
+	.sync-error-close { color: #f44; }
+}
+.sync-info {
+	color: #5fad1b;
+	background: rgba(95, 173, 27, 0.1);
+	border-top-color: rgba(95, 173, 27, 0.2);
+	.sync-info-close { color: #5fad1b; }
 }
 .no-changes {
 	padding: 20px;

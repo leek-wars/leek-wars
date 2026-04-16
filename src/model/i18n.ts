@@ -122,6 +122,7 @@ function loadInstanceTranslations(newLocale: string, instance: any) {
 	let folder = name
 	if (name.startsWith("bank-")) { name = "bank"; folder = "bank" }
 	if (name.startsWith("editor-")) { folder = "editor" }
+	if (name.startsWith("git-")) { folder = "editor" }
 	if (name.startsWith("signup-")) { folder = "signup" }
 	if (name.startsWith("encyclopedia-")) { folder = "encyclopedia" }
 	if (name.startsWith("level-dialog")) { folder = "leek" }

@@ -36,6 +36,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { i18n, mixins } from '@/model/i18n'
 	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { emitter } from '@/model/vue'
 
 	interface Commit {
 		hash: string
@@ -61,6 +62,19 @@
 		}
 
 		mounted() {
+			this.loadCommits()
+			emitter.on('git-history-refresh', this.refresh)
+		}
+
+		beforeUnmount() {
+			emitter.off('git-history-refresh', this.refresh)
+		}
+
+		refresh() {
+			this.commits = []
+			this.total = 0
+			this.expandedCommit = ''
+			this.commitFiles = {}
 			this.loadCommits()
 		}
 
