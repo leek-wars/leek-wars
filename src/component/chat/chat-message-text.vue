@@ -5,16 +5,13 @@
 
 <script lang="ts">
 	import { store } from '@/model/store'
-	import { vueMain, vuetify } from '@/model/vue'
-	import { i18n } from '@/model/i18n'
-	import { LeekWars } from '@/model/leekwars'
-	import router from '@/router'
+	import { createSubApp } from '@/model/vue'
 	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import Pseudo from '../app/pseudo.vue'
 	import 'katex/dist/katex.min.css'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import { ChatMessage } from '@/model/chat'
-	import { createApp, App } from 'vue'
+	import { App } from 'vue'
 	import Loader from '@/component/app/loader.vue'
 	import Avatar from '../avatar.vue'
 	import Flag from '../flag.vue'
@@ -35,11 +32,7 @@
 				const name = (c as HTMLElement).innerText
 				const farmer = store.state.farmer_by_name[name]
 				if (farmer) {
-					const app = createApp(Pseudo, { farmer })
-					app.use(router)
-					app.use(vuetify)
-					app.use(i18n)
-					app.use(store)
+					const app = createSubApp(Pseudo, { farmer }, 'chat-pseudo')
 					app.component('loader', Loader)
 					app.component('avatar', Avatar)
 					app.component('emblem', Emblem)
@@ -53,12 +46,7 @@
 			this.$el.querySelectorAll('.br-invite').forEach((c) => {
 				const level = parseInt((c as HTMLElement).dataset.level || '', 10) || 0
 				const label = (c as HTMLElement).dataset.label || undefined
-				const app = createApp(BrInvite, { level, label })
-				app.use(router)
-				app.use(vuetify)
-				app.use(i18n)
-				app.use(store)
-				app.mixin({ data() { return { LeekWars } } })
+				const app = createSubApp(BrInvite, { level, label }, 'chat-br-invite')
 				app.mount(c)
 				this.subApps.push(app)
 			})

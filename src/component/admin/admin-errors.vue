@@ -33,6 +33,11 @@
 									</router-link>
 									<span class="ip" v-if="error.ip">{{ error.ip }}</span>
 								<span v-if="error.user_agent" class="user-agent" :title="error.user_agent">{{ formatUA(error.user_agent) }}</span>
+									<span v-if="error.build_commit || error.build_date" class="build" :class="{stale: error.build.stale}" :title="error.build.title">
+										<v-icon size="14">mdi-package-variant</v-icon>
+										<span v-if="error.build_commit">{{ error.build_commit }}</span>
+										<span v-if="error.build.age" class="build-age">{{ error.build.age }}</span>
+									</span>
 									<span class="ls" v-if="error.ai_version">LS {{ error.ai_version }}</span>
 									<span class="strict" v-if="error.ai_strict">Strict</span>
 									<span class="ls" v-if="error.ai">IA {{ error.ai }}</span>
@@ -70,6 +75,25 @@
 	import { nextTick } from 'vue'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
+	const STALE_THRESHOLD_DAYS = 2
+
+	function computeBuildInfo(error: any) {
+		if (!error.build_date) return { staleDays: 0, stale: false, age: '', title: '' }
+		const buildMs = Date.parse(error.build_date)
+		if (isNaN(buildMs)) return { staleDays: 0, stale: false, age: '', title: '' }
+		const staleDays = Math.floor((error.time * 1000 - buildMs) / (1000 * 60 * 60 * 24))
+		const parts: string[] = []
+		if (error.build_commit) parts.push('commit ' + error.build_commit)
+		parts.push('built ' + error.build_date)
+		if (staleDays >= 1) parts.push('(' + staleDays + ' jour' + (staleDays > 1 ? 's' : '') + ' avant l\'erreur)')
+		return {
+			staleDays,
+			stale: staleDays >= STALE_THRESHOLD_DAYS,
+			age: staleDays > 0 ? staleDays + 'j' : '',
+			title: parts.join(' — ')
+		}
+	}
+
 	@Options({ components: { Breadcrumb } })
 	export default class AdminErrors extends Vue {
 		errors: any[] | null = null
@@ -100,6 +124,9 @@
 
 		update() {
 			LeekWars.get('error/get-latest').then(data => {
+				for (const error of data.errors) {
+					error.build = computeBuildInfo(error)
+				}
 				this.errors = data.errors
 				this.traceExpanded = {}
 				this.traceOverflows = {}
@@ -138,6 +165,7 @@
 		formatUA(ua: string) {
 			return LeekWars.parseUserAgent(ua)
 		}
+
 
 		deleteErrors() {
 			LeekWars.delete('error/delete-query', { query: this.deleteQuery }).then(() => {
@@ -204,6 +232,25 @@
 			&.api { background: #2196f3; color: white; }
 			&.cron { background: #607d8b; color: white; }
 			&.client { background: #4caf50; color: white; }
+		}
+		.build {
+			font-family: monospace;
+			font-size: 11px;
+			color: #666;
+			display: inline-flex;
+			align-items: center;
+			gap: 3px;
+			padding: 2px 6px;
+			border-radius: 3px;
+			background: #eee;
+			.build-age {
+				opacity: 0.7;
+			}
+			&.stale {
+				background: #ffb74d;
+				color: #6d3900;
+				font-weight: bold;
+			}
 		}
 	}
 	.trace-container {

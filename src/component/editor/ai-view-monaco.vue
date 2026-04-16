@@ -26,15 +26,13 @@ import { LeekWars } from '@/model/leekwars';
 import './monaco'
 import { AI } from '@/model/ai'
 import { analyzer, AnalyzerPromise } from './analyzer'
-import { code, dochash, vueMain, vuetify } from '@/model/vue'
+import { code, dochash, vueMain, createSubApp } from '@/model/vue'
 import DocumentationConstant from '../documentation/documentation-constant.vue'
 import DocumentationFunction from '../documentation/documentation-function.vue'
 import Javadoc from './javadoc.vue'
 import { FUNCTIONS } from '@/model/functions';
-import { createApp, markRaw, nextTick } from 'vue';
+import { markRaw, nextTick } from 'vue';
 import { create } from 'domain';
-import { i18n } from '@/model/i18n';
-import router from '@/router';
 import Code from '@/component/app/code.vue'
 
 @Options({ name: 'ai-view-monaco', emits: ['focus'], components: {
@@ -185,11 +183,7 @@ export default class AIViewMonaco extends Vue {
 				body.appendChild(element)
 				const fun = FUNCTIONS.find(f => f.name === docs.innerText)
 				if (fun) {
-					const doc = createApp(DocumentationFunction, { fun })
-						.mixin({ data() { return { LeekWars } }})
-						.use(i18n)
-						.use(vuetify)
-						.use(router)
+					const doc = createSubApp(DocumentationFunction, { fun }, 'suggest-function')
 						.directive('code', code)
 						.directive('dochash', dochash)
 						.mount(element)
@@ -199,11 +193,7 @@ export default class AIViewMonaco extends Vue {
 				}
 				const constant = LeekWars.constants.find(c => c.name === docs.innerText)
 				if (constant) {
-					const doc = createApp(DocumentationConstant, { constant })
-						.mixin({ data() { return { LeekWars } }})
-						.use(i18n)
-						.use(vuetify)
-						.use(router)
+					const doc = createSubApp(DocumentationConstant, { constant }, 'suggest-constant')
 						.component('lw-code', Code)
 						.directive('code', code)
 						.directive('dochash', dochash)
@@ -215,8 +205,7 @@ export default class AIViewMonaco extends Vue {
 				// console.log("suggestion", docs.innerText)
 				const symbol = fileSystem.symbols[docs.innerText]
 				if (symbol) {
-					const doc = createApp(Javadoc, { javadoc: symbol.javadoc, keyword: symbol })
-						.use(i18n)
+					const doc = createSubApp(Javadoc, { javadoc: symbol.javadoc, keyword: symbol }, 'suggest-javadoc')
 						.directive('code', code)
 						.directive('dochash', dochash)
 						.mount(element)
@@ -248,11 +237,7 @@ export default class AIViewMonaco extends Vue {
 			const fun = FUNCTIONS.find(f => f.name === firstRow.innerText)
 			if (fun) {
 				firstRow.style.display = 'none'
-				const doc = createApp(DocumentationFunction, { fun })
-					.mixin({ data() { return { LeekWars } }})
-					.use(i18n)
-					.use(vuetify)
-					.use(router)
+				const doc = createSubApp(DocumentationFunction, { fun }, 'hover-function')
 					.directive('code', code)
 					.directive('dochash', dochash)
 					.mount(element)
@@ -263,11 +248,7 @@ export default class AIViewMonaco extends Vue {
 			const constant = LeekWars.constants.find(c => c.name === firstRow.innerText)
 			if (constant) {
 				firstRow.style.display = 'none'
-				const doc = createApp(DocumentationConstant, { constant })
-					.mixin({ data() { return { LeekWars } }})
-					.use(i18n)
-					.use(vuetify)
-					.use(router)
+				const doc = createSubApp(DocumentationConstant, { constant }, 'hover-constant')
 					.component('lw-code', Code)
 					.directive('code', code)
 					.directive('dochash', dochash)
@@ -279,8 +260,7 @@ export default class AIViewMonaco extends Vue {
 			const symbol = fileSystem.symbols[firstRow.innerText]
 			if (symbol) {
 				firstRow.style.display = 'none'
-				const doc = createApp(Javadoc, { javadoc: symbol.javadoc, keyword: symbol })
-					.use(i18n)
+				const doc = createSubApp(Javadoc, { javadoc: symbol.javadoc, keyword: symbol }, 'hover-javadoc')
 					.directive('code', code)
 					.directive('dochash', dochash)
 					.mount(element)

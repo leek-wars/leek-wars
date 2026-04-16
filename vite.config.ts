@@ -6,6 +6,17 @@ import { visualizer } from 'rollup-plugin-visualizer'
 import path from 'path'
 import fs from 'fs'
 import yaml from 'js-yaml'
+import { execSync } from 'child_process'
+
+// Resolved once per Vite process — prevents spawning git on every HMR config reload.
+const BUILD_COMMIT = (() => {
+	try {
+		return execSync('git rev-parse --short HEAD', { cwd: __dirname }).toString().trim()
+	} catch {
+		return 'unknown'
+	}
+})()
+const BUILD_DATE = new Date().toISOString()
 
 // List of supported languages
 const languages = ['fr', 'en', 'de', 'es', 'it', 'pt', 'nl', 'pl', 'ru', 'ja', 'ko', 'zh', 'hi', 'id', 'da', 'fi', 'no', 'sv']
@@ -307,6 +318,10 @@ function gameDataPlugin(): Plugin {
 
 // https://vitejs.dev/config/
 export default defineConfig({
+	define: {
+		__BUILD_DATE__: JSON.stringify(BUILD_DATE),
+		__BUILD_COMMIT__: JSON.stringify(BUILD_COMMIT)
+	},
 	plugins: [
 		multiLanguagePlugin(),
 		i18nPlugin(),

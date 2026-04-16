@@ -5,7 +5,7 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { CHIP_BY_NAME } from '@/model/sorted_chips'
-	import { vuetify } from '@/model/vue'
+	import { createSubApp } from '@/model/vue'
 	import markdown from 'markdown-it'
 	import DOMPurify from 'dompurify'
 	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
@@ -19,9 +19,8 @@
 	import { store } from '@/model/store'
 	import { i18n } from '@/model/i18n'
 	import LeekImage from '../leek-image.vue'
-	import { createApp, nextTick, ref, h, defineComponent } from 'vue'
+	import { nextTick, ref, h, defineComponent } from 'vue'
 	import LWLoader from '../app/loader.vue'
-	import router from '@/router'
 
 	@Options({ name: 'markdown' })
 	export default class Markdown extends Vue {
@@ -123,8 +122,7 @@
 					const weapon = LeekWars.weaponByName[item.getAttribute('weapon')!]
 					const weaponItem = weapon ? LeekWars.items[weapon.item] : null
 					if (weaponItem) {
-						const app = createApp(ItemPreview, { item: weaponItem })
-						app.use(vuetify).use(i18n).use(store)
+						const app = createSubApp(ItemPreview, { item: weaponItem }, 'encyclopedia-weapon')
 						app.mount(item)
 						this.components.push({ $destroy: () => app.unmount() })
 					}
@@ -134,8 +132,7 @@
 					const chip = CHIP_BY_NAME[item.getAttribute('chip')!]
 					const chipItem = chip ? LeekWars.items[chip.id] : null
 					if (chipItem) {
-						const app = createApp(ItemPreview, { item: chipItem })
-						app.use(vuetify).use(i18n).use(store)
+						const app = createSubApp(ItemPreview, { item: chipItem }, 'encyclopedia-chip')
 						app.mount(item)
 						this.components.push({ $destroy: () => app.unmount() })
 					}
@@ -145,8 +142,7 @@
 					const potion = LeekWars.potionByName[item.getAttribute('potion')!]
 					const potionItem = potion ? LeekWars.items[potion.id] : null
 					if (potionItem) {
-						const app = createApp(ItemPreview, { item: potionItem })
-						app.use(vuetify).use(i18n).use(store)
+						const app = createSubApp(ItemPreview, { item: potionItem }, 'encyclopedia-potion')
 						app.mount(item)
 						this.components.push({ $destroy: () => app.unmount() })
 					}
@@ -174,26 +170,23 @@
 				})
 				// LoS
 				md.querySelectorAll('.encyclopedia-los').forEach((item) => {
-					const app = createApp(LineOfSight)
-					app.use(vuetify).use(i18n).use(store)
+					const app = createSubApp(LineOfSight, undefined, 'encyclopedia-los')
 					app.mount(item)
 					this.components.push({ $destroy: () => app.unmount() })
 				})
 				// Search bar
 				md.querySelectorAll('.encyclopedia-search-bar').forEach((item) => {
-					createApp(SearchBar).use(i18n).component('loader', LWLoader).use(router).mount(item)
+					createSubApp(SearchBar, undefined, 'encyclopedia-search-bar').component('loader', LWLoader).mount(item)
 				})
 				// Tutorial menu
 				md.querySelectorAll('.tutorial-menu').forEach((item) => {
-					const app = createApp(TutorialMenu, { locale: this.locale })
-					app.use(vuetify).use(i18n).use(store).use(router)
+					const app = createSubApp(TutorialMenu, { locale: this.locale }, 'tutorial-menu')
 					app.mount(item)
 					this.components.push({ $destroy: () => app.unmount() })
 				})
 				// Tutorial progress
 				md.querySelectorAll('.tutorial-progress').forEach((item) => {
-					const app = createApp(TutorialProgress, { locale: this.locale })
-					app.use(vuetify).use(i18n).use(store).use(router)
+					const app = createSubApp(TutorialProgress, { locale: this.locale }, 'tutorial-progress')
 					app.mount(item)
 					this.components.push({ $destroy: () => app.unmount() })
 				})
@@ -285,8 +278,7 @@
 							}, () => i18n.t('main.validate'))
 						}
 					})
-					const btnApp = createApp(BtnWrapper)
-					btnApp.use(vuetify)
+					const btnApp = createSubApp(BtnWrapper, undefined, 'tutorial-quiz-btn')
 					btnApp.mount(submitContainer)
 					this.components.push({ $destroy: () => btnApp.unmount() })
 
@@ -330,8 +322,7 @@
 								}
 							})
 
-							const checkboxApp = createApp(CheckboxWrapper)
-							checkboxApp.use(vuetify)
+							const checkboxApp = createSubApp(CheckboxWrapper, undefined, 'tutorial-quiz-checkbox')
 							checkboxApp.mount(checkboxContainer)
 							this.components.push({ $destroy: () => checkboxApp.unmount() })
 
@@ -360,15 +351,13 @@
 
 				// Leeky
 				md.querySelectorAll('.leeky').forEach((item) => {
-					const app = createApp(LeekImage, { leek: { level: 10, face: 1 }, scale: 0.55 })
-					app.use(vuetify).use(i18n).use(store)
+					const app = createSubApp(LeekImage, { leek: { level: 10, face: 1 }, scale: 0.55 }, 'md-leeky')
 					app.mount(item)
 					this.components.push({ $destroy: () => app.unmount() })
 				})
 				// Domingo
 				md.querySelectorAll('.domingo').forEach((item) => {
-					const app = createApp(LeekImage, { leek: { level: 301, face: 2, metal: true, skin: 9 }, scale: 0.45 })
-					app.use(vuetify).use(i18n).use(store)
+					const app = createSubApp(LeekImage, { leek: { level: 301, face: 2, metal: true, skin: 9 }, scale: 0.45 }, 'md-domingo')
 					app.mount(item)
 					this.components.push({ $destroy: () => app.unmount() })
 				})

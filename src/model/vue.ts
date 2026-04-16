@@ -20,7 +20,7 @@ import '@/model/serviceworker'
 import { store } from "@/model/store"
 import router, { getRedirectAfterLogin } from '@/router'
 import { createApp, defineAsyncComponent, h, nextTick } from 'vue'
-import type { ComponentPublicInstance } from 'vue'
+import type { App as VueApp, ComponentPublicInstance } from 'vue'
 import { Latex } from './latex'
 import { scroll_to_hash } from '@/router-functions'
 
@@ -90,6 +90,87 @@ window.addEventListener('load', () => {
 })
 
 let lastErrorSent = 0
+
+export function reportVueError(err: any, vm: any, info: any, origin: string = 'main') {
+
+	if (LeekWars.DEV) return
+
+	if (err?.message?.includes('Failed to fetch dynamically imported module') ||
+		err?.message?.includes('Loading chunk') ||
+		err?.message?.includes('Loading CSS chunk') ||
+		err?.message?.includes('Unable to preload CSS')) {
+		return
+	}
+
+	if (info?.includes?.('runtime-13')) {
+		if (!sessionStorage.getItem(PRELOAD_RELOAD_KEY)) {
+			sessionStorage.setItem(PRELOAD_RELOAD_KEY, '1')
+			window.location.reload()
+		}
+		return
+	}
+
+	if (Date.now() - lastErrorSent < 1000) return
+	lastErrorSent = Date.now()
+
+	const error = (err?.name || 'Error') + ": " + (err?.message || String(err))
+	const file = document.location.href
+	const locale = i18n.global.locale
+	const user_agent = navigator.userAgent
+
+	let componentTrace = ''
+	try {
+		if (vm) {
+			const components: string[] = []
+			// errorCaptured passes a public proxy (.$ → internal instance); app.config.errorHandler
+			// passes the internal instance directly. Handle both.
+			let instance = vm.$ || vm
+			while (instance && components.length < 100) {
+				const name = instance.type?.name || instance.type?.__name || 'Anonymous'
+				const propsDef = instance.type?.props
+				let propsStr = ''
+				if (propsDef && instance.props) {
+					const parts: string[] = []
+					const keys = Array.isArray(propsDef) ? propsDef : Object.keys(propsDef)
+					for (const key of keys) {
+						const val = instance.props[key]
+						if (val !== undefined && val !== null && val !== false) {
+							let s: string
+							if (typeof val === 'object') {
+								s = Array.isArray(val) ? '[Array(' + val.length + ')]' : '[Object]'
+							} else {
+								s = String(val).substring(0, 50)
+							}
+							parts.push(key + '=' + s)
+						}
+					}
+					if (parts.length) propsStr = ' ' + parts.join(' ')
+				}
+				components.push('<' + name + propsStr + '>')
+				instance = instance.parent
+			}
+			componentTrace = '\n\nComponent: ' + components[0] + '\nHierarchy: ' + components.join(' → ')
+		}
+	} catch (e) {
+		componentTrace = '\n\n[Component trace failed: ' + (e as Error).message + ']'
+	}
+
+	const stack = (err?.stack || '(no stack)') + '\n\nOrigin: ' + origin + '\nVue info: ' + info + componentTrace
+	const build_date = typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : null
+	const build_commit = typeof __BUILD_COMMIT__ !== 'undefined' ? __BUILD_COMMIT__ : null
+	LeekWars.post('error/report', { error, stack, file, locale, user_agent, build_date, build_commit })
+}
+
+export function createSubApp(component: any, props?: any, origin: string = 'sub-app'): VueApp {
+	const subApp = createApp(component, props)
+	subApp.config.errorHandler = (err, vm, info) => reportVueError(err, vm, info, origin)
+	subApp.use(vuetify)
+	subApp.use(i18n)
+	subApp.use(store)
+	subApp.use(router)
+	subApp.mixin({ data() { return { LeekWars } } })
+	return subApp
+}
 
 let secondInterval: any = null, minuteInterval: any = null
 
@@ -224,78 +305,10 @@ const app = createApp({
 		if (!LeekWars.LOCAL) {
 			displayWarningMessage()
 		}
-	},
-
-	errorCaptured(err: any, vm: any, info: any) {
-
-		if (LeekWars.DEV) return
-
-		// Ignore chunk loading errors (handled by router.onError / vite:preloadError with page reload)
-		if (err.message?.includes('Failed to fetch dynamically imported module') ||
-			err.message?.includes('Loading chunk') ||
-			err.message?.includes('Loading CSS chunk') ||
-			err.message?.includes('Unable to preload CSS')) {
-			return
-		}
-
-		// Ignore async component loader failures (Vue runtime-13) — same root cause as chunk
-		// loading errors (stale cache after deploy, network issues). Reload the page once to
-		// try loading fresh assets, like the vite:preloadError handler does.
-		if (info?.includes?.('runtime-13')) {
-			if (!sessionStorage.getItem(PRELOAD_RELOAD_KEY)) {
-				sessionStorage.setItem(PRELOAD_RELOAD_KEY, '1')
-				window.location.reload()
-			}
-			return
-		}
-
-		if (Date.now() - lastErrorSent < 1000) return
-		lastErrorSent = Date.now()
-
-		const error = err.name + ": " + err.message
-		const file = document.location.href
-		const locale = i18n.global.locale
-		const user_agent = navigator.userAgent
-
-		let componentTrace = ''
-		try {
-			if (vm) {
-				const components: string[] = []
-				let instance = vm.$
-				while (instance && components.length < 100) {
-					const name = instance.type?.name || instance.type?.__name || 'Anonymous'
-					const propsDef = instance.type?.props
-					let propsStr = ''
-					if (propsDef && instance.props) {
-						const parts: string[] = []
-						const keys = Array.isArray(propsDef) ? propsDef : Object.keys(propsDef)
-						for (const key of keys) {
-							const val = instance.props[key]
-							if (val !== undefined && val !== null && val !== false) {
-								let s: string
-								if (typeof val === 'object') {
-									s = Array.isArray(val) ? '[Array(' + val.length + ')]' : '[Object]'
-								} else {
-									s = String(val).substring(0, 50)
-								}
-								parts.push(key + '=' + s)
-							}
-						}
-						if (parts.length) propsStr = ' ' + parts.join(' ')
-					}
-					components.push('<' + name + propsStr + '>')
-					instance = instance.parent
-				}
-				componentTrace = '\n\nComponent: ' + components[0] + '\nHierarchy: ' + components.join(' → ')
-			}
-		} catch (e) {
-			componentTrace = '\n\n[Component trace failed: ' + (e as Error).message + ']'
-		}
-
-		const stack = err.stack + '\n\nVue info: ' + info + componentTrace
-		LeekWars.post('error/report', { error, stack, file, locale, user_agent })
 	}
 })
+
+app.config.errorHandler = (err, vm, info) => reportVueError(err, vm, info, 'main')
 
 setRouter(router)
 app.use(router)
@@ -340,11 +353,7 @@ app.directive('autostopscroll', {
 const code = {
 	mounted: (el) => {
 		el.querySelectorAll('code').forEach((c) => {
-			const codeApp = createApp(Code, { code: (c as HTMLElement).innerText })
-			codeApp.use(vuetify)
-			codeApp.use(i18n)
-			codeApp.use(store)
-			codeApp.mount(c)
+			createSubApp(Code, { code: (c as HTMLElement).innerText }, 'v-code').mount(c)
 		})
 	}
 }
@@ -354,11 +363,7 @@ app.directive('code', code)
 app.directive('single-code', {
 	mounted: (el) => {
 		el.querySelectorAll('code').forEach((c) => {
-			const codeApp = createApp(Code, { code: (c as HTMLElement).innerText, single: true, theme: 'auto' })
-			codeApp.use(vuetify)
-			codeApp.use(i18n)
-			codeApp.use(store)
-			codeApp.mount(c)
+			createSubApp(Code, { code: (c as HTMLElement).innerText, single: true, theme: 'auto' }, 'v-single-code').mount(c)
 		})
 	}
 })
@@ -394,11 +399,7 @@ app.directive('chat-code-latex', {
 			} else {
 				props = { code: c.textContent || '', single: true }
 			}
-			const codeApp = createApp(Code, props)
-			codeApp.use(vuetify)
-			codeApp.use(i18n)
-			codeApp.use(store)
-			const vm = codeApp.mount(c)
+			const vm = createSubApp(Code, props, 'v-chat-code-latex').mount(c)
 			c.replaceWith(vm.$el)
 		})
 		el.querySelectorAll('latex').forEach((c) => {
