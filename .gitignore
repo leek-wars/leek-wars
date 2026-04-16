@@ -7,3 +7,6 @@ public/analyzer.js
 public/analyzer.wasm
 public/analyzer.wasm.map
 static/report.json
+*.tsbuildinfo
+vite.config.d.ts
+vite.config.js
