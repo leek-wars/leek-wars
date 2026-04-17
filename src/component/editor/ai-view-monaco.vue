@@ -31,13 +31,12 @@ import { LeekWars } from '@/model/leekwars';
 import './monaco'
 import { AI } from '@/model/ai'
 import { analyzer, AnalyzerPromise } from './analyzer'
-import { code, dochash, vueMain, createSubApp } from '@/model/vue'
+import { code, dochash, vueMain, createSubApp, emitter } from '@/model/vue'
 import DocumentationConstant from '../documentation/documentation-constant.vue'
 import DocumentationFunction from '../documentation/documentation-function.vue'
 import Javadoc from './javadoc.vue'
 import { FUNCTIONS } from '@/model/functions';
 import { markRaw, nextTick } from 'vue';
-import { create } from 'domain';
 import Code from '@/component/app/code.vue'
 import { parseConflicts, hasConflictMarkers, buildConflictDecorations, registerConflictCodeLens, type MergeConflict } from './merge-conflicts'
 
@@ -282,9 +281,11 @@ export default class AIViewMonaco extends Vue {
 		})
 
 		this.update()
+		emitter.on('file-reloaded', this.onFileReloaded)
 	}
 
 	beforeUnmount() {
+		emitter.off('file-reloaded', this.onFileReloaded)
 		this.saveViewState()
 		this.scrollListener.dispose()
 		this.conflictLenses?.dispose()
@@ -307,14 +308,29 @@ export default class AIViewMonaco extends Vue {
 	@Watch('ai.path', { immediate: true })
 	update() {
 		if (!this.ai) return
-		// console.log("update ai", this.ai.path)
 
-		// Save view state for the previous AI before switching
 		if (this.currentAiPath !== null && this.currentAiPath !== this.ai.path) {
 			this.saveViewState()
 		}
 		this.currentAiPath = this.ai.path
 
+		this.syncModel()
+	}
+
+	onFileReloaded(path: string) {
+		if (!this.ai || this.ai.path !== path || !this.ai.model || !this.editor) return
+		if (this.ai.model.getValue() !== this.ai.code) {
+			this.editor.executeEdits('git', [{
+				range: this.ai.model.getFullModelRange(),
+				text: this.ai.code,
+			}])
+			this.currentVersionId = this.ai.model.getAlternativeVersionId()
+			this.ai.modified = false
+			this.updateConflictDecorations()
+		}
+	}
+
+	syncModel() {
 		const uri = monaco.Uri.parse('file:///' + this.ai.path)
 		const model = monaco.editor.getModel(uri) || markRaw(monaco.editor.createModel(this.ai.code, 'leekscript', uri))
 		this.ai.model = model

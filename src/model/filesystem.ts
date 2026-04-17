@@ -377,11 +377,46 @@ class FileSystem {
 	public reload(): Promise<void> {
 		return new Promise((resolve) => {
 			LeekWars.get('ai/get-farmer-tree').then((data: any) => {
+				// Préserver code + model des AI existantes pour éviter un flash vide
+				const preserved: {[path: string]: { code: string, model: any, modified: boolean }} = {}
+				for (const path in this.ais) {
+					const ai = this.ais[path]
+					if (ai.code !== undefined && ai.code !== null) {
+						preserved[path] = { code: ai.code, model: ai.model, modified: ai.modified }
+					}
+				}
 				this.clear()
 				this.init(data)
+				for (const path in preserved) {
+					if (path in this.ais) {
+						this.ais[path].code = preserved[path].code
+						this.ais[path].model = preserved[path].model
+						this.ais[path].modified = preserved[path].modified
+					}
+				}
 				resolve()
 			})
 		})
+	}
+
+	/**
+	 * Invalide le cache et recharge le code des fichiers modifiés par une opération git.
+	 * @param repoFolder Dossier du repo git (ex: "ia")
+	 * @param changedFiles Liste de fichiers relatifs au repo (ex: ["main.leek", "utils/move.leek"])
+	 */
+	public reloadChangedFiles(repoFolder: string, changedFiles: string[]): Promise<void[]> {
+		const promises: Promise<void>[] = []
+		for (const file of changedFiles) {
+			const fullPath = (repoFolder ? repoFolder + '/' : '') + file
+			const ai = this.getAIByPath(fullPath)
+			if (!ai) continue
+			localStorage.removeItem('ai/mtime/' + ai.path)
+			localStorage.removeItem('ai/code/' + ai.path)
+			promises.push(this.load(ai).then(() => {
+				emitter.emit('file-reloaded', ai.path)
+			}))
+		}
+		return Promise.all(promises)
 	}
 
 	public getFolderPath(folder: Folder): string {

@@ -158,6 +158,9 @@
 							<v-icon v-else>mdi-source-branch</v-icon>
 						</template>
 						<v-list-item-title>{{ b }}</v-list-item-title>
+						<template v-if="b !== branch" #append>
+							<v-icon class="branch-delete" @click.stop="deleteBranch(b)">mdi-delete-outline</v-icon>
+						</template>
 					</v-list-item>
 					<template v-if="remoteBranches.length > 0">
 						<v-divider />
@@ -553,6 +556,7 @@
 				const data = await gitCall('git/pull', { folder: this.selectedRepo, rebase: this.pullRebase })
 				this.syncInfo = 'Pull: ' + (data.message || 'OK')
 				await Promise.all([fileSystem.reload(), this.refreshStatus()])
+				if (data.changed_files) fileSystem.reloadChangedFiles(this.selectedRepo, data.changed_files)
 				emitter.emit('reanalyze')
 				if (data.conflicts && this.conflictChanges.length > 0) {
 					this.reloadFiles(this.conflictChanges.map(c => c.file))
@@ -583,11 +587,11 @@
 			this.syncInfo = ''
 			this.loading = true
 			try {
-				await gitCall('git/checkout', { folder: this.selectedRepo, branch })
+				const data = await gitCall('git/checkout', { folder: this.selectedRepo, branch })
 				this.syncInfo = 'Checkout: ' + branch
-				Promise.all([fileSystem.reload(), this.refreshStatus()]).then(() => {
-					emitter.emit('reanalyze')
-				})
+				await Promise.all([fileSystem.reload(), this.refreshStatus()])
+				if (data.changed_files) fileSystem.reloadChangedFiles(this.selectedRepo, data.changed_files)
+				emitter.emit('reanalyze')
 			} catch (e: any) {
 				this.syncError = 'Checkout: ' + (e.details || e.error || 'error')
 			} finally {
@@ -615,6 +619,31 @@
 			}
 		}
 
+		async deleteBranch(branch: string) {
+			this.branchMenuOpen = false
+			if (!window.confirm(this.$t('delete_branch_confirm', [branch]) as string)) return
+			this.syncError = ''
+			this.syncInfo = ''
+			try {
+				await gitCall('git/delete-branch', { folder: this.selectedRepo, branch, force: false })
+				this.syncInfo = this.$t('delete_branch_done', [branch]) as string
+			} catch (e: any) {
+				const details = e.details || e.error || 'error'
+				if (details.includes('not fully merged')) {
+					if (window.confirm(this.$t('delete_branch_force_confirm', [branch]) as string)) {
+						try {
+							await gitCall('git/delete-branch', { folder: this.selectedRepo, branch, force: true })
+							this.syncInfo = this.$t('delete_branch_done', [branch]) as string
+						} catch (e2: any) {
+							this.syncError = (e2.details || e2.error || 'error')
+						}
+					}
+				} else {
+					this.syncError = details
+				}
+			}
+		}
+
 		async mergeAbort() {
 			this.loading = true
 			try {
@@ -639,6 +668,7 @@
 				const data = await gitCall('git/rebase-continue', { folder: this.selectedRepo })
 				this.syncInfo = 'Rebase: ' + (data.message || 'OK')
 				await Promise.all([fileSystem.reload(), this.refreshStatus()])
+				if (data.changed_files) fileSystem.reloadChangedFiles(this.selectedRepo, data.changed_files)
 				emitter.emit('reanalyze')
 			} catch (e: any) {
 				this.syncError = 'Rebase continue: ' + (e.details || e.error || 'error')
@@ -653,9 +683,10 @@
 			this.syncError = ''
 			this.syncInfo = ''
 			try {
-				await gitCall('git/rebase-abort', { folder: this.selectedRepo })
+				const data = await gitCall('git/rebase-abort', { folder: this.selectedRepo })
 				this.syncInfo = this.$t('rebase_aborted') as string
 				await Promise.all([fileSystem.reload(), this.refreshStatus()])
+				if (data.changed_files) fileSystem.reloadChangedFiles(this.selectedRepo, data.changed_files)
 				emitter.emit('reanalyze')
 			} catch (e: any) {
 				this.syncError = 'Rebase abort: ' + (e.details || e.error || 'error')
@@ -677,13 +708,10 @@
 				const fullPath = (this.selectedRepo ? this.selectedRepo + '/' : '') + file
 				const ai = fileSystem.getAIByPath(fullPath)
 				if (ai) {
-					// Relire le fichier depuis le serveur
 					gitCall('git/read-file', { folder: this.selectedRepo, file }).then((data: any) => {
 						ai.code = data.content || ''
-						if (ai.model) {
-							ai.model.setValue(ai.code)
-						}
 						ai.modified = false
+						emitter.emit('file-reloaded', ai.path)
 					})
 				}
 			}
@@ -981,6 +1009,12 @@
 	font-weight: 500;
 }
 .branch-list .create-branch { color: #5fad1b; }
+.branch-delete {
+	font-size: 18px !important;
+	opacity: 0.4;
+	margin-left: 8px;
+	&:hover { opacity: 1; color: #e53935; }
+}
 .sync-actions {
 	display: flex;
 	align-items: center;

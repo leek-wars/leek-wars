@@ -48,6 +48,7 @@ type Events = {
 	'git-file-changed': void,
 	'git-repos-changed': void,
 	'git-history-refresh': void,
+	'file-reloaded': string,
 	'close-diff': { folder: string, file: string },
 	'close-file-tab': string,
 	'close-merge-tabs': { folder: string },
