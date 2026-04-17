@@ -264,7 +264,7 @@ import { emitter } from '@/model/vue'
 			} else {
 				this.userScroll = true
 			}
-			if (this.scrollTop()) {
+			if (this.scrollTop() && this.chat!.messages.length) {
 				this.scrollMessage = this.chat!.messages[0].id
 				store.commit('load-chat-history', this.id)
 			}
