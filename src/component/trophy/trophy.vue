@@ -1,5 +1,6 @@
 <template>
-	<div class="page">
+	<error v-if="error" :title="$t('trophy')" :message="$t('main.page_not_found')" />
+	<div v-else class="page">
 		<div class="page-bar page-header">
 			<h1>
 				<breadcrumb :items="[{name: $t('trophies'), link: '/trophies'}, {name: $t('trophy.' + code), link: ''}]" :raw="true" />
@@ -20,7 +21,7 @@
 					</div>
 					<div class="description">{{ trophy.description }}</div>
 					<div class="badges">
-						<div class="in-fight"><v-icon>{{ LeekWars.trophyCategoriesIcons[trophy.category - 1] }}</v-icon> {{ $t('trophy.category_' + LeekWars.trophyCategoriesById[trophy.category - 1].name) }}</div>
+						<div v-if="LeekWars.trophyCategoriesById[trophy.category - 1]" class="in-fight"><v-icon>{{ LeekWars.trophyCategoriesIcons[trophy.category - 1] }}</v-icon> {{ $t('trophy.category_' + LeekWars.trophyCategoriesById[trophy.category - 1].name) }}</div>
 						<div class="difficulty" :class="'difficulty-' + trophy.difficulty"><v-icon v-for="i in trophy.difficulty" :key="i">mdi-star-outline</v-icon> {{ $t('main.difficulty_' + trophy.difficulty) }}</div>
 						<div v-if="trophy.in_fight" class="in-fight"><v-icon>mdi-sword-cross</v-icon> {{ $t('trophy.unlockable_fight') }}</div>
 						<div v-if="trophy.secret" class="in-fight"><v-icon>mdi-eye-off-outline</v-icon> {{ $t('trophy.secret') }}</div>
@@ -166,6 +167,7 @@
 	export default class Trophy extends Vue {
 		code: any = null
 		trophy: any = null
+		error: boolean = false
 		ItemType = ItemType
 		deleteDialog: boolean = false
 		deleteFarmer: any = null
@@ -177,10 +179,14 @@
 		@Watch('$route.params', { immediate: true })
 		update() {
 			this.code = this.$route.params.code
-			LeekWars.get('trophy-template/get/' + this.code + '/' + this.$i18n.locale).then(trophy => {
-				this.trophy = trophy
-				LeekWars.setTitle(this.$t('trophy') + ' « ' + this.$t('trophy.' + this.code) + ' »')
-			})
+			this.error = false
+			this.trophy = null
+			LeekWars.get('trophy-template/get/' + this.code + '/' + this.$i18n.locale)
+				.then(trophy => {
+					this.trophy = trophy
+					LeekWars.setTitle(this.$t('trophy') + ' « ' + this.$t('trophy.' + this.code) + ' »')
+				})
+				.error(() => this.error = true)
 		}
 
 		confirmDelete(farmer: any) {
