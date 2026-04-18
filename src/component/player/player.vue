@@ -475,62 +475,62 @@
 		}
 
 		keyup(e: KeyboardEvent) {
-			if ((e.keyCode === 65) && !e.ctrlKey && !e.shiftKey && !e.altKey) { // A
+			if ((e.keyCode === 65) && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) { // A
 				this.game.showActions = !this.game.showActions
 				e.preventDefault()
-			} else if ((e.keyCode === 69) && !e.ctrlKey && !e.shiftKey && !e.altKey) { // E
+			} else if ((e.keyCode === 69) && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) { // E
 				this.game.showEffects = !this.game.showEffects
 				e.preventDefault()
-			} else if ((e.keyCode === 76) && !e.ctrlKey && !e.shiftKey && !e.altKey) { // L
+			} else if ((e.keyCode === 76) && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) { // L
 				this.game.showLifes = !this.game.showLifes
 				e.preventDefault()
-			} else if ((e.keyCode === 79) && !e.ctrlKey && !e.shiftKey && !e.altKey) { // O
+			} else if ((e.keyCode === 79) && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) { // O
 				this.game.shadows = !this.game.shadows
 				e.preventDefault()
-			} else if ((e.keyCode === 71) && !e.ctrlKey && !e.shiftKey && !e.altKey) { // G
+			} else if ((e.keyCode === 71) && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) { // G
 				this.game.largeActions = !this.game.largeActions
 				e.preventDefault()
-			} else if ((e.keyCode === 78) && !e.ctrlKey && !e.shiftKey && !e.altKey) { // N
+			} else if ((e.keyCode === 78) && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) { // N
 				this.game.dark = !this.game.dark
 				e.preventDefault()
-			} else if ((e.keyCode === 84) && !e.ctrlKey && !e.shiftKey && !e.altKey) { // T
+			} else if ((e.keyCode === 84) && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) { // T
 				this.game.tactic = !this.game.tactic
 				e.preventDefault()
-			} else if ((e.keyCode === 68) && !e.ctrlKey && !e.shiftKey && !e.altKey) { // D
+			} else if ((e.keyCode === 68) && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) { // D
 				this.game.displayDebugs = !this.game.displayDebugs
 				e.preventDefault()
-			} else if ((e.keyCode === 85) && !e.ctrlKey && !e.shiftKey && !e.altKey) { // U
+			} else if ((e.keyCode === 85) && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) { // U
 				this.game.plainBackground = !this.game.plainBackground
 				e.preventDefault()
-			} else if ((e.keyCode === 67) && !e.ctrlKey && !e.shiftKey && !e.altKey) { // C
+			} else if ((e.keyCode === 67) && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) { // C
 				this.game.showCells = !this.game.showCells
 				e.preventDefault()
-			} else if ((e.keyCode === 73) && !e.ctrlKey && !e.shiftKey && !e.altKey) { // I
+			} else if ((e.keyCode === 73) && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) { // I
 				this.game.showIDs = !this.game.showIDs
 				e.preventDefault()
-			} else if ((e.keyCode === 81) && !e.ctrlKey && !e.shiftKey && !e.altKey) { // Q
+			} else if ((e.keyCode === 81) && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) { // Q
 				if (this.fullscreen) {
 					this.toggleFullscreen()
 				}
 				this.game.showReport()
 				e.preventDefault()
-			} else if ((e.keyCode === 80) && !e.ctrlKey && !e.shiftKey && !e.altKey) { // P
+			} else if ((e.keyCode === 80) && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) { // P
 				if (this.game.paused) {
 					this.game.resume()
 				} else {
 					this.game.pause()
 				}
 				e.preventDefault()
-			} else if ((e.keyCode === 83) && !e.ctrlKey && !e.shiftKey && !e.altKey) { // S
+			} else if ((e.keyCode === 83) && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) { // S
 				this.game.speedUp()
 				e.preventDefault()
-			} else if ((e.keyCode === 70) && !e.ctrlKey && !e.shiftKey && !e.altKey) { // F
+			} else if ((e.keyCode === 70) && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) { // F
 				this.toggleFullscreen()
 				e.preventDefault()
-			} else if ((e.keyCode === 86) && !e.ctrlKey && !e.shiftKey && !e.altKey) { // V
+			} else if ((e.keyCode === 86) && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) { // V
 				this.game.sound = !this.game.sound
 				e.preventDefault()
-			} else if ((e.keyCode === 77) && !e.ctrlKey && !e.shiftKey && !e.altKey) { // M
+			} else if ((e.keyCode === 77) && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) { // M
 				this.game.clearMarks()
 				e.preventDefault()
 			} else if (e.keyCode === 88 && !this.game.creator) { // X
