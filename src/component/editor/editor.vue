@@ -873,15 +873,50 @@
 		}
 
 		updateVersion() {
+			if (!this.currentEditor) return
 			LeekWars.put('ai/version', {ai_id: this.currentAI.id, version: this.currentAI.version})
+			this.rewritePragma('version', this.currentAI.version)
 			this.save(this.currentEditor)
 			this.currentAI.analyze()
 		}
 
 		updateStrictMode() {
+			if (!this.currentEditor) return
 			LeekWars.put('ai/strict', {ai_id: this.currentAI.id, strict: this.currentAI.strict})
+			this.rewritePragma('strict', this.currentAI.strict)
 			this.save(this.currentEditor)
 			this.currentAI.analyze()
+		}
+
+		rewritePragma(name: 'version' | 'strict', value: number | boolean) {
+			if (!this.currentEditor) return
+			const editor = this.currentEditor.editor
+			const code = editor.getValue()
+			const pragmaRe = new RegExp(`^[ \\t]*//[ \\t]*@${name}(?:[ \\t]*:[ \\t]*\\S+)?[ \\t]*\\r?\\n?`, 'm')
+			const line = name === 'version' ? `// @version:${value}\n` : (value ? `// @strict\n` : '')
+			const match = pragmaRe.exec(code)
+			let newCode: string
+			if (match) {
+				newCode = code.substring(0, match.index) + line + code.substring(match.index + match[0].length)
+			} else if (line) {
+				if (name === 'strict') {
+					// Insert right after @version if present, otherwise at the top
+					const versionRe = /^[ \t]*\/\/[ \t]*@version(?:[ \t]*:[ \t]*\S+)?[ \t]*\r?\n?/m
+					const versionMatch = versionRe.exec(code)
+					if (versionMatch) {
+						const insertAt = versionMatch.index + versionMatch[0].length
+						newCode = code.substring(0, insertAt) + line + code.substring(insertAt)
+					} else {
+						newCode = line + code
+					}
+				} else {
+					newCode = line + code
+				}
+			} else {
+				return
+			}
+			if (newCode === code) return
+			editor.setValue(newCode)
 		}
 
 		setSplitted(splitted: boolean, ai: AI | null = null) {
