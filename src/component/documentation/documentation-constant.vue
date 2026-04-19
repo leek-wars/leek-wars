@@ -13,8 +13,7 @@
 			<v-icon class="book">mdi-book-open-page-variant</v-icon>
 		</router-link>
 
-		<item-preview v-if="is_chip" :item="LeekWars.items[constant.value]" />
-		<item-preview v-else-if="is_weapon" :item="LeekWars.items[constant.value]" />
+		<item-preview v-if="(is_chip || is_weapon) && LeekWars.items[constant.value]" :item="LeekWars.items[constant.value]" />
 
 		<div v-if="new_constant">
 			<markdown v-if="LeekWars.encyclopedia[$i18n.locale] && Object.keys(LeekWars.encyclopedia[$i18n.locale]).length" :content="new_constant.description" :pages="{}" mode="encyclopedia" />
