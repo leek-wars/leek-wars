@@ -50,11 +50,11 @@
 				<panel class="editor-left editor-panel first">
 					<template #content>
 						<div class="full">
-							<div class="left-panel-tabs">
+							<div v-if="Object.keys(fileSystem.gitRepos).length > 0" class="left-panel-tabs">
 								<div :class="{active: leftPanelTab === 'explorer'}" class="left-tab" @click="setLeftPanelTab('explorer')" :title="$t('title')">
 									<v-icon>mdi-file-tree</v-icon>
 								</div>
-								<div v-if="Object.keys(fileSystem.gitRepos).length > 0" :class="{active: leftPanelTab === 'git'}" class="left-tab" @click="setLeftPanelTab('git')" title="Git">
+								<div :class="{active: leftPanelTab === 'git'}" class="left-tab" @click="setLeftPanelTab('git')" title="Git">
 									<v-icon>mdi-source-branch</v-icon>
 								</div>
 							</div>
