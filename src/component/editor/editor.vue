@@ -137,10 +137,10 @@
 										<v-icon>mdi-format-list-checks</v-icon> {{ analyzer.todo_count }} {{ $tc('todo', analyzer.todo_count).toLowerCase() }}
 									</span>
 								</div>
-								<div v-ripple class="problems git-terminal-toggle" :class="{active: bottomPanel === 'git'}" @click="toggleBottomPanel('git')">
+								<div v-if="gitLogCount" v-ripple class="problems git-terminal-toggle" :class="{active: bottomPanel === 'git'}" @click="toggleBottomPanel('git')">
 									<v-icon>mdi-console</v-icon>
 									<span v-if="!LeekWars.mobile">Git</span>
-									<span v-if="gitLogCount" class="count">{{ gitLogCount }}</span>
+									<span class="count">{{ gitLogCount }}</span>
 								</div>
 								<div class="filler"></div>
 								<div class="state">
