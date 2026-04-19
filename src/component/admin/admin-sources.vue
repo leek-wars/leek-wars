@@ -43,7 +43,7 @@
 									<v-icon>mdi-cog-outline</v-icon> {{ farmer.test_fights }}
 									<v-icon>mdi-trophy-outline</v-icon> {{ farmer.trophies }}
 								</div>
-								<a class="source" :href="farmer.referer" target="_blank" :title="farmer.referer">
+								<a class="source" :href="LeekWars.safeUrl(farmer.referer) || '#'" target="_blank" :title="farmer.referer">
 									<img v-if="!farmer.pass && farmer.verified" src="/image/github_black.png"> {{ format(farmer.referer || '∅') }}
 								</a>
 							</div>
@@ -59,7 +59,7 @@
 
 					<div class="sources">
 						<div v-for="source of sources" :key="source.name" class="source card">
-							<a v-if="source.name" class="name" :href="source.name" target="_blank">{{ format(source.name) }}</a>
+							<a v-if="source.name" class="name" :href="LeekWars.safeUrl(source.name) || '#'" target="_blank">{{ format(source.name) }}</a>
 							<div v-else class="name">∅</div>
 							<div class="stats">
 								<div class="count">{{ $filters.number(source.count) }}</div>

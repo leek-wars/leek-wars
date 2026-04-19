@@ -504,6 +504,11 @@ const LeekWars = reactive({
 			.replace(/>/g, "&gt;").replace(/</g, "&lt;")
 			.replace(/"/g, "&quot;").replace(/'/g, "&#39;")
 	},
+	safeUrl(url: string | null | undefined): string | null {
+		if (!url) { return null }
+		const trimmed = url.trim()
+		return /^https?:\/\//i.test(trimmed) ? trimmed : null
+	},
 	decodehtmlentities(string: any) {
 		return ('' + string).replace(/&amp;/g, "&")
 			.replace(/&gt;/g, ">").replace(/&lt;/g, "<")

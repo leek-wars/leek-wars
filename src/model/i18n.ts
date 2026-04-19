@@ -20,6 +20,7 @@ const i18n = createI18n({
 	fallbackWarn: false,
 	warnHtmlMessage: false,
 	warnHtmlInMessage: 'off',
+	escapeParameter: true,
 })
 
 // Add backward compatibility helpers for Vue 2 -> Vue 3 migration

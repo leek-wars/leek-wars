@@ -377,8 +377,8 @@ class Socket {
 					LeekWars.squares.add({
 						image: 'mdi-alert',
 						icon: true,
-						title: 'Erreur serveur ' + source,
-						message: trace,
+						title: 'Erreur serveur ' + LeekWars.protect(source),
+						message: LeekWars.protect(trace),
 						link: '/admin/errors',
 						padding: true,
 						clazz: '',

@@ -150,21 +150,21 @@
 				// Locked pages
 				md.querySelectorAll('.encyclopedia-locked-pages').forEach((item) => {
 					LeekWars.get<any[]>('encyclopedia/get-locked-pages').then(pages => {
-						item.innerHTML = '<ul>' + pages.map(p => '<li><a href="/encyclopedia/' + this.language + '/' + p.title + '">' + p.title + '</a>, verrouillée par <b>' + p.name + '</b></li>').join('') + '</ul>'
+						item.innerHTML = '<ul>' + pages.map(p => '<li><a href="/encyclopedia/' + this.language + '/' + encodeURIComponent(p.title) + '">' + LeekWars.protect(p.title) + '</a>, verrouillée par <b>' + LeekWars.protect(p.name) + '</b></li>').join('') + '</ul>'
 						item.querySelectorAll('a').forEach(linkify)
 					})
 				})
 				// Last edited pages
 				md.querySelectorAll('.encyclopedia-last-modifications').forEach((item) => {
 					LeekWars.get<any[]>('encyclopedia/get-last-pages/' + this.language).then(pages => {
-						item.innerHTML = '<ul>' + pages.map(p => '<li><a href="/encyclopedia/' + this.language + '/' + p.title + '">' + p.title + '</a>, <b>' + p.name + '</b> ' + LeekWars.formatDuration(p.time) + '</li>').join('') + '</ul>'
+						item.innerHTML = '<ul>' + pages.map(p => '<li><a href="/encyclopedia/' + this.language + '/' + encodeURIComponent(p.title) + '">' + LeekWars.protect(p.title) + '</a>, <b>' + LeekWars.protect(p.name) + '</b> ' + LeekWars.formatDuration(p.time) + '</li>').join('') + '</ul>'
 						item.querySelectorAll('a').forEach(linkify)
 					})
 				})
 				// Most viewed pages
 				md.querySelectorAll('.encyclopedia-most-viewed').forEach((item) => {
 					LeekWars.get<any[]>('encyclopedia/get-most-viewed/' + this.language).then(pages => {
-						item.innerHTML = '<ol>' + pages.map(p => '<li><a href="/encyclopedia/' + this.language + '/' + p.title + '">' + p.title + '</a> — ' + LeekWars.formatNumber(p.views) + ' views</li>').join('') + '</ol>'
+						item.innerHTML = '<ol>' + pages.map(p => '<li><a href="/encyclopedia/' + this.language + '/' + encodeURIComponent(p.title) + '">' + LeekWars.protect(p.title) + '</a> — ' + LeekWars.formatNumber(p.views) + ' views</li>').join('') + '</ol>'
 						item.querySelectorAll('a').forEach(linkify)
 					})
 				})

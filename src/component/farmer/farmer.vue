@@ -113,8 +113,8 @@
 							<span v-if="!farmer.country" class="country no label">{{ $t('no_country') }}</span>
 							<span v-if="myFarmer" class="edit" @click="openCountryDialog()"></span>
 						</div>
-						<div v-if="farmer.website && !/^(https:\/\/leekwars.\w+)?\/api\//.test(farmer.website.trim())" class="info website">
-							<img src="/image/website.png"><a :href="farmer.website" target="_blank" rel="noopener"><span class="text label">{{ farmer.website }}</span></a>
+						<div v-if="safeWebsite" class="info website">
+							<img src="/image/website.png"><a :href="safeWebsite" target="_blank" rel="noopener"><span class="text label">{{ safeWebsite }}</span></a>
 							<span v-if="myFarmer" class="edit" @click="websiteDialog = true"></span>
 						</div>
 						<div v-else-if="myFarmer" class="add add-website" @click="websiteDialog = true">{{ $t('add_website') }}</div>
@@ -681,6 +681,13 @@ import { emitter } from '@/model/vue'
 		}
 		get myFarmer() {
 			return this.$store.state.farmer && this.id === this.$store.state.farmer.id
+		}
+		get safeWebsite() {
+			if (!this.farmer) { return null }
+			const url = LeekWars.safeUrl(this.farmer.website)
+			if (!url) { return null }
+			if (/^(https:\/\/leekwars.\w+)?\/api\//.test(url)) { return null }
+			return url
 		}
 		get canInvite() {
 			const me = this.$store.state.farmer
