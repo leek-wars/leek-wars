@@ -382,7 +382,17 @@
 			})
 		}
 
+		escapeHtml(input: string): string {
+			return input
+				.replace(/&/g, '&amp;')
+				.replace(/</g, '&lt;')
+				.replace(/>/g, '&gt;')
+				.replace(/"/g, '&quot;')
+				.replace(/'/g, '&#39;')
+		}
+
 		links(html: string) {
+			const esc = (s: string) => this.escapeHtml(s)
 			return html.replace(/\[\[(.*?)\]\]/g, (m, link) => {
 				link = link.trim()
 				const parts = link.split('|', 2)
@@ -390,8 +400,10 @@
 				const alias = parts.length === 2 ? parts[1] : link
 				const page = LeekWars.encyclopedia[this.language] ? LeekWars.encyclopedia[this.language][link.toLowerCase().replace(/_/g, ' ')] : null
 				const clazz = page ? "" : "new"
-				const text = link.replace(/_/g, ' ').replace(/'/g, '&apos;')
-				return "<a href='/encyclopedia/" + this.language + '/' + (page ? page.title.replace(/ /g, '_') : text) + "' class='" + clazz + "'>" + alias + "</a>"
+				const text = link.replace(/_/g, ' ')
+				const target = page ? page.title.replace(/ /g, '_') : text
+				const href = '/encyclopedia/' + this.language + '/' + target
+				return "<a href='" + esc(href) + "' class='" + clazz + "'>" + esc(alias) + "</a>"
 			}).replace(/{{(.*?)}}/g, (m, tag) => {
 				const originalTag = tag.trim()
 				tag = originalTag.toLowerCase()
@@ -403,19 +415,19 @@
 					const parts = tag.split(':')
 					if (parts.length > 1) {
 						const weapon = parts[1].trim().toLowerCase()
-						return "<div class='encyclopedia-weapon' weapon='" + weapon + "'></div>"
+						return "<div class='encyclopedia-weapon' weapon='" + esc(weapon) + "'></div>"
 					}
 				} else if (tag.startsWith('chip')) {
 					const parts = tag.split(':')
 					if (parts.length > 1) {
 						const chip = parts[1].trim().toLowerCase()
-						return "<div class='encyclopedia-chip' chip='" + chip + "'></div>"
+						return "<div class='encyclopedia-chip' chip='" + esc(chip) + "'></div>"
 					}
 				} else if (tag.startsWith('potion')) {
 					const parts = tag.split(':')
 					if (parts.length > 1) {
 						const potion = parts[1].trim().toLowerCase()
-						return "<div class='encyclopedia-potion' potion='" + potion + "'></div>"
+						return "<div class='encyclopedia-potion' potion='" + esc(potion) + "'></div>"
 					}
 				} else if (tag.startsWith('locked-pages')) {
 					return "<div class='encyclopedia-locked-pages'></div>"
@@ -436,18 +448,18 @@
 					if (parts.length > 1) {
 						const chapter = parseInt(parts[1])
 						const locked = (store.state.farmer ? store.state.farmer.tutorial_progress : 0) < chapter ? "locked": ""
-						return "<div class='lock " + locked + "'>" + this.$parent!.$parent!.$i18n.t('locked') + "</div>"
+						return "<div class='lock " + locked + "'>" + esc(this.$parent!.$parent!.$i18n.t('locked') as string) + "</div>"
 					}
 				} else if (tag.startsWith('alias')) {
 					const parts = originalTag.split(':')
 					if (parts.length > 1) {
 						const alias = parts[1].trim()
-						return "<span class='encyclopedia-alias' data-alias='" + alias.replace(/'/g, '&apos;') + "'></span>"
+						return "<span class='encyclopedia-alias' data-alias='" + esc(alias) + "'></span>"
 					}
 				} else if (tag.startsWith('leeky')) {
 					return "<div class='leeky'></div>"
 				}
-				return '{{ ' + tag + ' }}'
+				return '{{ ' + esc(tag) + ' }}'
 			})
 		}
 
