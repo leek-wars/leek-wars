@@ -310,7 +310,7 @@
 	"schemes": "योजनाएं",
 	"scheme_x": "योजना: {0}",
 	"teams": "टीमें",
-	"valid_ai": "<b>{0}</b> मान्य",
+	"valid_ai": "{name} मान्य",
 	"victories": "जीत",
 	"war": "युद्ध",
 	"workshop": "कार्यशाला",

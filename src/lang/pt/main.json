@@ -297,7 +297,7 @@
 	"n_second": "1 s | {n} s",
 	"saving": "Salvando...",
 	"server_error": "Erro do servidor",
-	"valid_ai": "<b>{0}</b> válido",
+	"valid_ai": "{name} válido",
 	"x_to_y": "{0} a {1}",
 	"n_views": "sem visualização | 1 visualização | {n} visualizações",
 	"views": "Visualizações",

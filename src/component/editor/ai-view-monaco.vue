@@ -6,7 +6,12 @@
 				<loader :size="15" /> {{ t('main.saving') }}
 			</div>
 			<div class="results">
-				<div v-for="(good, g) in goods" :key="g" class="good">✓ <template v-if="good.ai !== ai && ai">{{ ai.name }} ➞ </template>{{ t('main.valid_ai', [good.ai.name]) }}</div>
+				<div v-for="(good, g) in goods" :key="g" class="good">
+					✓ <template v-if="good.ai !== ai && ai">{{ ai.name }} ➞ </template>
+					<i18n-t keypath="main.valid_ai" tag="span">
+						<template #name><b>{{ good.ai.name }}</b></template>
+					</i18n-t>
+				</div>
 				<div v-if="serverError" class="error" @click="serverError = false">× <i>{{ t('main.server_error') }}</i></div>
 				<!-- <div v-for="(error, e) in errors" :key="e" class="error" @click="errors.splice(e, 1)">
 					× <span v-html="$t('ai_error', [error.ai, error.line])"></span> ▶ {{ error.message }}

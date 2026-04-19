@@ -296,7 +296,7 @@
 	"n_second": "1 s | {n} s",
 	"saving": "Backup...",
 	"server_error": "Fel på servern",
-	"valid_ai": "<b>{0}</b> giltig",
+	"valid_ai": "{name} giltig",
 	"x_to_y": "{0} till {1}",
 	"n_views": "ingen visning | 1 visning | {n} visningar",
 	"views": "Visningar",

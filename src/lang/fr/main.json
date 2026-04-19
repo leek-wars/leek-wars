@@ -315,7 +315,7 @@
 	"n_second": "1 s | {n} s",
 	"saving": "Sauvegarde...",
 	"server_error": "Erreur du serveur",
-	"valid_ai": "<b>{0}</b> valide",
+	"valid_ai": "{name} valide",
 	"x_to_y": "{0} à {1}",
 	"n_views": "pas de vue | 1 vue | {n} vues",
 	"views": "Vues",
