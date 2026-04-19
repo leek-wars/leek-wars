@@ -179,8 +179,8 @@
 				</v-list>
 			</v-menu>
 			<div class="sync-actions">
-				<div class="pull-group" :class="{ disabled: behind === 0 }">
-					<div class="sync-btn pull-main" :title="behind > 0 ? $t('n_behind', [behind]) + ' (' + (pullRebase ? $t('rebase') : $t('merge')) + ')' : $t('pull')" @click="behind > 0 && pull()">
+				<div class="pull-group" :class="{ disabled: !canPull }">
+					<div class="sync-btn pull-main" :title="behind > 0 ? $t('n_behind', [behind]) + ' (' + (pullRebase ? $t('rebase') : $t('merge')) + ')' : $t('pull')" @click="canPull && pull()">
 						<v-icon>mdi-arrow-down-bold</v-icon>
 						<span v-if="behind > 0" class="count">{{ behind }}</span>
 					</div>
@@ -202,8 +202,8 @@
 						</v-list>
 					</v-menu>
 				</div>
-				<div class="pull-group" :class="{ disabled: ahead === 0 && (!pushForce || behind === 0) }">
-					<div class="sync-btn pull-main" :class="{ 'push-force': pushForce }" :title="ahead > 0 ? $t('n_ahead', [ahead]) + ' (' + (pushForce ? $t('push_force') : $t('push')) + ')' : (pushForce ? $t('push_force') : $t('push'))" @click="(ahead > 0 || (pushForce && behind > 0)) && push()">
+				<div class="pull-group" :class="{ disabled: !canPush }">
+					<div class="sync-btn pull-main" :class="{ 'push-force': pushForce }" :title="ahead > 0 ? $t('n_ahead', [ahead]) + ' (' + (pushForce ? $t('push_force') : $t('push')) + ')' : (pushForce ? $t('push_force') : $t('push'))" @click="canPush && push()">
 						<v-icon>{{ pushForce ? 'mdi-arrow-up-bold-hexagon-outline' : 'mdi-arrow-up-bold' }}</v-icon>
 						<span v-if="ahead > 0" class="count">{{ ahead }}</span>
 					</div>
@@ -281,6 +281,8 @@
 		ahead: number = 0
 		behind: number = 0
 		branch: string = ''
+		hasRemote: boolean = false
+		hasUpstream: boolean = false
 		showRemoteDialog: boolean = false
 		syncError: string = ''
 		syncInfo: string = ''
@@ -302,6 +304,18 @@
 		}
 		get conflictChanges(): GitChange[] {
 			return this.changes.filter(c => c.conflict)
+		}
+		get canPull(): boolean {
+			if (!this.hasRemote) return false
+			// Sync initial (pas encore d'upstream set) : on laisse pull pour récupérer l'historique distant.
+			return this.behind > 0 || !this.hasUpstream
+		}
+		get canPush(): boolean {
+			if (!this.hasRemote) return false
+			if (this.ahead > 0) return true
+			if (this.pushForce && this.behind > 0) return true
+			// Sync initial : pas d'upstream, le push -u va créer la branche distante.
+			return !this.hasUpstream && this.branch !== ''
 		}
 		get stagedChanges(): GitChange[] {
 			return this.changes.filter(c => c.staged && !c.conflict)
@@ -377,6 +391,8 @@
 				this.remoteBranches = []
 				this.ahead = 0
 				this.behind = 0
+				this.hasRemote = false
+				this.hasUpstream = false
 				this.merging = false
 				this.rebasing = false
 				fileSystem.gitStatus = {}
@@ -455,6 +471,8 @@
 				this.ahead = data.ahead
 				this.behind = data.behind
 				this.branch = data.branch
+				this.hasRemote = !!data.has_remote
+				this.hasUpstream = !!data.has_upstream
 				// Mettre à jour le statut git global pour les indicateurs dans l'arbre
 				this.updateGitStatusMap()
 			} catch (e) {
