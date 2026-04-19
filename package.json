@@ -25,7 +25,7 @@
 		"chart.js": "^4.5.1",
 		"codemirror": "^5.65.16",
 		"dagre": "^0.8.5",
-		"dompurify": "^3.3.2",
+		"dompurify": "^3.4.0",
 		"dotenv": "^8.2.0",
 		"idb-keyval": "^6.2.2",
 		"js-beautify": "^1.13.0",
