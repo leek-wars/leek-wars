@@ -686,6 +686,8 @@ import { emitter } from '@/model/vue'
 			if (!this.farmer) { return null }
 			const url = LeekWars.safeUrl(this.farmer.website)
 			if (!url) { return null }
+			// Block links to our own API so a profile can't be used to trigger
+			// authenticated GET requests when a visitor clicks the website link.
 			if (/^(https:\/\/leekwars.\w+)?\/api\//.test(url)) { return null }
 			return url
 		}

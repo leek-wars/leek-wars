@@ -147,27 +147,21 @@
 						this.components.push({ $destroy: () => app.unmount() })
 					}
 				})
-				// Locked pages
-				md.querySelectorAll('.encyclopedia-locked-pages').forEach((item) => {
-					LeekWars.get<any[]>('encyclopedia/get-locked-pages').then(pages => {
-						item.innerHTML = '<ul>' + pages.map(p => '<li><a href="/encyclopedia/' + this.language + '/' + encodeURIComponent(p.title) + '">' + LeekWars.protect(p.title) + '</a>, verrouillée par <b>' + LeekWars.protect(p.name) + '</b></li>').join('') + '</ul>'
-						item.querySelectorAll('a').forEach(linkify)
+				const pageLink = (p: any) => '<a href="/encyclopedia/' + this.language + '/' + encodeURIComponent(p.title) + '">' + LeekWars.protect(p.title) + '</a>'
+				const renderPageList = (selector: string, endpoint: string, tag: 'ul' | 'ol', row: (p: any) => string) => {
+					md.querySelectorAll(selector).forEach((item) => {
+						LeekWars.get<any[]>(endpoint).then(pages => {
+							item.innerHTML = '<' + tag + '>' + pages.map(row).join('') + '</' + tag + '>'
+							item.querySelectorAll('a').forEach(linkify)
+						})
 					})
-				})
-				// Last edited pages
-				md.querySelectorAll('.encyclopedia-last-modifications').forEach((item) => {
-					LeekWars.get<any[]>('encyclopedia/get-last-pages/' + this.language).then(pages => {
-						item.innerHTML = '<ul>' + pages.map(p => '<li><a href="/encyclopedia/' + this.language + '/' + encodeURIComponent(p.title) + '">' + LeekWars.protect(p.title) + '</a>, <b>' + LeekWars.protect(p.name) + '</b> ' + LeekWars.formatDuration(p.time) + '</li>').join('') + '</ul>'
-						item.querySelectorAll('a').forEach(linkify)
-					})
-				})
-				// Most viewed pages
-				md.querySelectorAll('.encyclopedia-most-viewed').forEach((item) => {
-					LeekWars.get<any[]>('encyclopedia/get-most-viewed/' + this.language).then(pages => {
-						item.innerHTML = '<ol>' + pages.map(p => '<li><a href="/encyclopedia/' + this.language + '/' + encodeURIComponent(p.title) + '">' + LeekWars.protect(p.title) + '</a> — ' + LeekWars.formatNumber(p.views) + ' views</li>').join('') + '</ol>'
-						item.querySelectorAll('a').forEach(linkify)
-					})
-				})
+				}
+				renderPageList('.encyclopedia-locked-pages', 'encyclopedia/get-locked-pages', 'ul',
+					p => '<li>' + pageLink(p) + ', verrouillée par <b>' + LeekWars.protect(p.name) + '</b></li>')
+				renderPageList('.encyclopedia-last-modifications', 'encyclopedia/get-last-pages/' + this.language, 'ul',
+					p => '<li>' + pageLink(p) + ', <b>' + LeekWars.protect(p.name) + '</b> ' + LeekWars.formatDuration(p.time) + '</li>')
+				renderPageList('.encyclopedia-most-viewed', 'encyclopedia/get-most-viewed/' + this.language, 'ol',
+					p => '<li>' + pageLink(p) + ' — ' + LeekWars.formatNumber(p.views) + ' views</li>')
 				// LoS
 				md.querySelectorAll('.encyclopedia-los').forEach((item) => {
 					const app = createSubApp(LineOfSight, undefined, 'encyclopedia-los')
