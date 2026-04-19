@@ -123,6 +123,7 @@
 
 <script lang="ts">
 	import { ChatMessage, ChatType } from '@/model/chat'
+	import { formatChatMessage } from '@/model/chat-format'
 	import { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
@@ -134,8 +135,6 @@
 	import ChatMessageComponent from './chat-message.vue'
 	import EmojiPicker from './emoji-picker.vue'
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
-	import { Commands } from '@/model/commands'
-	import { formatEmojis } from '@/model/emojis'
 import { emitter } from '@/model/vue'
 
 	@Options({
@@ -449,22 +448,7 @@ import { emitter } from '@/model/vue'
 			}
 			if (message.formatted) return message
 
-			let content = LeekWars.protect(message.content)
-			content = LeekWars.linkify(content)
-			content = formatEmojis(content)
-			content = Commands.execute(content, message.farmer.name)
-			if (Date.now() / 1000 - message.date > 3600) {
-				content = content.replace(/<span class="br-invite"[^>]*><\/span>/g, '/arena')
-			}
-			content = content.replace(/@(\w+)/g, (a, b) => {
-				const farmer = store.state.farmer_by_name[b]
-				if (farmer) {
-					return "<span class='pseudo'>" + b + "</span>"
-				}
-				return a
-			})
-			content = content.replace(/\n/g, '<br>')
-			message.content = content
+			message.content = formatChatMessage(message.content, message.farmer.name, message.date, store.state.farmer_by_name)
 
 			const element = document.createElement('div')
 			element.innerHTML = message.content

@@ -7,7 +7,7 @@
 			<div class="name">{{ farmer ? farmer.name : '?' }}</div>
 			<div class="last-message">
 				<b v-if="chat.last_farmer && $store.state.farmer && chat.last_farmer.id === $store.state.farmer.id">{{ $t('main.me') }} ►</b>
-				<span v-html="chat.last_message"></span>
+				<span v-html="formattedLastMessage"></span>
 			</div>
 			<div class="date">{{ LeekWars.formatDuration(chat.last_date) }}</div>
 		</div>
@@ -16,6 +16,7 @@
 
 <script lang="ts">
 	import { Chat } from '@/model/chat'
+	import { formatChatPreview } from '@/model/chat-format'
 	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
@@ -31,6 +32,10 @@
 				}
 			}
 			return null
+		}
+
+		get formattedLastMessage() {
+			return formatChatPreview(this.chat.last_message || '', this.chat.last_farmer ? this.chat.last_farmer.name : '')
 		}
 	}
 </script>

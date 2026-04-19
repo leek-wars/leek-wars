@@ -1,5 +1,6 @@
 import { Notification } from '@/model/notification'
 import { ChatMessage } from './chat'
+import { formatChatPreview } from './chat-format'
 import { i18n } from './i18n'
 import { LeekWars } from './leekwars'
 
@@ -45,8 +46,8 @@ class Squares {
 		this.add({
 			image: LeekWars.getAvatar(message.farmer.id, message.farmer.avatar_changed),
 			icon: false,
-			title: message.farmer.name,
-			message: "► " + message.content,
+			title: LeekWars.protect(message.farmer.name),
+			message: "► " + formatChatPreview(message.content, message.farmer.name),
 			link: "/messages/conversation/" + message.chat,
 			padding: false,
 			clazz: '',
