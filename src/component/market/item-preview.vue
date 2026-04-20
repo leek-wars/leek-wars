@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="item-preview" :class="category">
+	<div v-if="item" class="item-preview" :class="category">
 		<div class="header">
 			<h2 v-if="item.type === ItemType.SCHEME" class="name">{{ $t('main.scheme_x', [$t(schemeCategory + '.' + schemeName)]) }} <!--(#{{ item.id }})--></h2>
 			<h2 v-else class="name">{{ $t(category + '.' + name_short) }} <!--(#{{ item.id }})--></h2>
