@@ -145,7 +145,7 @@
 
 			<panel :title="$t('characteristic.characteristics')">
 				<template v-if="leek && my_leek && $store.state.farmer.equipment_enabled" #actions>
-					<div class="button flat" @click="loadoutDialog = true">
+					<div v-if="$store.state.farmer.admin" class="button flat" @click="loadoutDialog = true">
 						<v-icon>mdi-package-variant-closed</v-icon>
 					</div>
 					<div v-if="leek.capital == 0" class="button flat" @click="capitalDialog = true">
@@ -366,7 +366,7 @@
 				{{ $t('weapons_of', [leek.name]) }}
 				<span class="weapon-count">[{{ leek.weapons.length }}/{{ leek.max_weapons }}]</span>
 			</template>
-			<template v-if="my_leek && $store.state.farmer.equipment_enabled" #options>
+			<template v-if="my_leek && $store.state.farmer.equipment_enabled && $store.state.farmer.admin" #options>
 				<div class="option" @click="weaponsDialog = false; loadoutDialog = true">
 					<v-icon>mdi-package-variant-closed</v-icon>
 				</div>
@@ -674,7 +674,7 @@
 			<template #title>
 				{{ $t('ai_of', [leek.name]) }}
 			</template>
-			<template v-if="$store.state.farmer.equipment_enabled" #options>
+			<template v-if="$store.state.farmer.equipment_enabled && $store.state.farmer.admin" #options>
 				<div class="option" @click="aiDialog = false; loadoutDialog = true">
 					<v-icon>mdi-package-variant-closed</v-icon>
 				</div>
@@ -722,7 +722,7 @@
 
 		<popup v-if="leek && my_leek" v-model="chipsDialog" :width="816" icon="mdi-chip">
 			<template #title>{{ $t('chips_of', [leek.name]) }} <span class="chip-count">[{{ leek.chips.length }}/{{ leek.total_ram }}]</span></template>
-			<template v-if="$store.state.farmer.equipment_enabled" #options>
+			<template v-if="$store.state.farmer.equipment_enabled && $store.state.farmer.admin" #options>
 				<div class="option" @click="chipsDialog = false; loadoutDialog = true">
 					<v-icon>mdi-package-variant-closed</v-icon>
 				</div>

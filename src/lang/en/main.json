@@ -325,5 +325,16 @@
 	"april_fools_title": "New theme available!",
 	"april_fools_message": "The modern Leek Wars theme is finally available in beta! Would you like to try it?",
 	"april_fools_yes": "Try the modern theme",
-	"april_fools_no": "No thanks"
+	"april_fools_no": "No thanks",
+	"loadouts": "Loadouts",
+	"no_loadouts": "No loadout",
+	"loadout_create": "Create a loadout",
+	"loadout_edit": "Edit loadout",
+	"loadout_name_placeholder": "Loadout name",
+	"loadout_apply": "Apply",
+	"loadout_apply_success": "Loadout applied to {0}",
+	"loadout_skipped_n": "{0} item(s) not applied",
+	"loadout_import_current": "Import current equipment",
+	"loadout_none": "None",
+	"loadout_max_reached": "30 loadouts limit reached"
 }

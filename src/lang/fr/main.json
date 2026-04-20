@@ -325,5 +325,16 @@
 	"april_fools_title": "Nouveau thème disponible !",
 	"april_fools_message": "Le thème moderne de Leek Wars est enfin disponible en bêta ! Voulez-vous l'essayer ?",
 	"april_fools_yes": "Essayer le thème moderne",
-	"april_fools_no": "Non merci"
+	"april_fools_no": "Non merci",
+	"loadouts": "Loadouts",
+	"no_loadouts": "Aucun loadout",
+	"loadout_create": "Créer un loadout",
+	"loadout_edit": "Modifier le loadout",
+	"loadout_name_placeholder": "Nom du loadout",
+	"loadout_apply": "Appliquer",
+	"loadout_apply_success": "Loadout appliqué sur {0}",
+	"loadout_skipped_n": "{0} item(s) non appliqué(s)",
+	"loadout_import_current": "Importer l'équipement actuel",
+	"loadout_none": "Aucun",
+	"loadout_max_reached": "Limite de 30 loadouts atteinte"
 }
