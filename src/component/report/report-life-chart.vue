@@ -31,7 +31,7 @@
 		<div class="chart-panel">
 			<div class="damage-options">
 				<div class="spacer"></div>
-				<v-switch v-model="chartDisplaySummons" :label="$t('display_summons')" :hide-details="true" />
+				<v-switch v-model="chartDisplaySummons" :label="$t('display_summons')" :hide-details="true" :ripple="false" />
 			</div>
 			<Line ref="lifeChart" :data="chartData" :options="chartOptions" class="chart" :class="{long: statistics && statistics.lives.length >= 30}" />
 		</div>

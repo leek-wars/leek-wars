@@ -153,17 +153,17 @@
 			<template v-else>
 				<div class="damage-options">
 					<v-radio-group v-model="damageChartType" :inline="true" :hide-details="true">
-						<v-radio :value="0" :label="$t('inflicted_damage')" />
-						<v-radio :value="1" :label="$t('received_damage')" />
-						<v-radio :value="2" :label="$t('heal')" />
-						<v-radio :value="3" label="Tank" />
+						<v-radio :value="0" :label="$t('inflicted_damage')" :ripple="false" />
+						<v-radio :value="1" :label="$t('received_damage')" :ripple="false" />
+						<v-radio :value="2" :label="$t('heal')" :ripple="false" />
+						<v-radio :value="3" label="Tank" :ripple="false" />
 					</v-radio-group>
 					<div class="spacer"></div>
 					<v-radio-group v-if="fight.type !== FightType.BATTLE_ROYALE && fight.type !== FightType.SOLO" v-model="damagesTeams" :inline="true" :hide-details="true">
-						<v-radio :value="0" label="Entités" />
-						<v-radio :value="1" label="Équipes" />
+						<v-radio :value="0" label="Entités" :ripple="false" />
+						<v-radio :value="1" label="Équipes" :ripple="false" />
 					</v-radio-group>
-					<v-switch v-model="damagesDisplaySummons" :disabled="damagesTeams === 1" :label="$t('display_summons')" :hide-details="true" />
+					<v-switch v-model="damagesDisplaySummons" :disabled="damagesTeams === 1" :label="$t('display_summons')" :hide-details="true" :ripple="false" />
 				</div>
 				<div class="damages">
 					<div class="damage-chart">
@@ -238,8 +238,8 @@
 		<panel class="last actions" title="Actions" toggle="report/actions" icon="mdi-format-list-bulleted">
 			<div v-if="hasPersonalLogs" class="actions-options">
 				<div class="spacer"></div>
-				<v-switch v-model="actionsDisplayLogs" :label="$t('display_logs')" :hide-details="true" />
-				<v-switch v-model="actionsDisplayAlliesLogs" :label="$t('display_allies_logs')" :hide-details="true" />
+				<v-switch v-model="actionsDisplayLogs" :label="$t('display_logs')" :hide-details="true" :ripple="false" />
+				<v-switch v-model="actionsDisplayAlliesLogs" :label="$t('display_allies_logs')" :hide-details="true" :ripple="false" />
 			</div>
 			<loader v-if="!loaded" />
 			<actions v-else :has-err-warn="hasErrWarn" :fight="fight" :report="report" :actions="actions" :leeks="leeks" :display-logs="actionsDisplayLogs" :display-allies-logs="actionsDisplayAlliesLogs" class="actions" />
