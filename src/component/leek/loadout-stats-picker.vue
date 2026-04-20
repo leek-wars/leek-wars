@@ -29,6 +29,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { COSTS } from '@/model/leek'
 	import { LoadoutStats } from '@/model/loadout'
+	import { capitalToStatBonus } from '@/model/capital'
 
 	export default defineComponent({
 		name: 'LoadoutStatsPicker',
@@ -46,7 +47,7 @@
 			bonuses(): { [stat: string]: number } {
 				const out: { [stat: string]: number } = {}
 				for (const c of LeekWars.characteristics) {
-					out[c] = this.capitalToBonus(c, this.modelValue[c] || 0)
+					out[c] = capitalToStatBonus(c, this.modelValue[c] || 0)
 				}
 				return out
 			},
@@ -55,21 +56,6 @@
 			modelValue: { handler() { this.refreshCosts() }, deep: true, immediate: true },
 		},
 		methods: {
-			capitalToBonus(charac: string, capital: number): number {
-				const steps = COSTS[charac]
-				if (!steps || capital <= 0) return 0
-				let bonus = 0
-				let remaining = capital
-				while (remaining > 0) {
-					let i = 0
-					for (; i < steps.length; i++) { if (steps[i].step > bonus) break }
-					i--
-					if (remaining < steps[i].capital) break
-					remaining -= steps[i].capital
-					bonus += steps[i].sup
-				}
-				return bonus
-			},
 			buttonCost(q: number, charac: string) {
 				let tmpBonus = this.bonuses[charac]
 				this.costs[charac + q] = { cost: 0, bonus: 0 }

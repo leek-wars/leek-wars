@@ -215,7 +215,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Leek } from '@/model/leek'
 	import { Loadout, LoadoutComponent, LoadoutStats } from '@/model/loadout'
-	import { COSTS } from '@/model/leek'
+	import { capitalToStatBonus, statBonusToCapital, baseStatFor, totalCapitalForLevel } from '@/model/capital'
 	import { store } from '@/model/store'
 	import EmojiPicker from '@/component/chat/emoji-picker.vue'
 	import Item from '@/component/item.vue'
@@ -234,48 +234,6 @@
 		stats: LoadoutStats
 	}
 
-	function capitalToStatBonus(charac: string, capital: number): number {
-		const steps = COSTS[charac]
-		if (!steps || capital <= 0) return 0
-		let bonus = 0
-		let remaining = capital
-		while (remaining > 0) {
-			let i = 0
-			for (; i < steps.length; i++) { if (steps[i].step > bonus) break }
-			i--
-			if (remaining < steps[i].capital) break
-			remaining -= steps[i].capital
-			bonus += steps[i].sup
-		}
-		return bonus
-	}
-
-	function statBonusToCapital(charac: string, bonus: number): number {
-		const steps = COSTS[charac]
-		if (!steps || bonus <= 0) return 0
-		let capital = 0
-		let total = 0
-		while (total < bonus) {
-			let i = 0
-			for (; i < steps.length; i++) { if (steps[i].step > total) break }
-			i--
-			capital += steps[i].capital
-			total += steps[i].sup
-		}
-		return capital
-	}
-
-	function baseStatFor(level: number, stat: string): number {
-		switch (stat) {
-			case 'life': return 100 + (level - 1) * 3
-			case 'frequency': return 100
-			case 'cores': return 1
-			case 'ram': return 6
-			case 'tp': return 10
-			case 'mp': return 3
-			default: return 0
-		}
-	}
 
 	export default defineComponent({
 		name: 'LoadoutDialog',
@@ -327,9 +285,7 @@
 				const leek = this.leek as any
 				const baseBonuses: { [k: string]: number } = {}
 				for (const s of CHARACTERISTICS) baseBonuses[s] = leek[s] - baseStatFor(leek.level, s)
-				// Total capital du leek à son niveau actuel (formule serveur)
-				let totalCapital = 6 + (level - 1) * 5 + Math.floor(level / 100) * 45
-				if (level === 301) totalCapital += 95
+				const totalCapital = totalCapitalForLevel(level)
 				for (const loadout of this.loadouts) {
 					const warnings: string[] = []
 					let ram = baseRam
