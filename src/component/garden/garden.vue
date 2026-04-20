@@ -541,7 +541,7 @@ import { emitter } from '@/model/vue'
 					return
 				}
 			}
-			if ((this.category === 'solo' || this.category === 'arena') && !params.item) {
+			if ((this.category === 'solo' || this.category === 'arena') && (!params.item || !(parseInt(params.item, 10) in store.state.farmer!.leeks))) {
 				const key = this.category === 'arena' ? 'arena-leek' : 'garden/leek'
 				let defaultLeek = parseInt(localStorage.getItem(key) || '0', 10)
 				if (!(defaultLeek in store.state.farmer!.leeks)) {
