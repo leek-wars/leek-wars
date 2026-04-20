@@ -483,6 +483,9 @@
 			const gitAuth = this.$route.query.git_auth as string | undefined
 			if (gitAuth === 'success') {
 				LeekWars.toast(this.$t('git_auth_success') as string)
+				// Rouvre le dialogue de conf pour ajouter un remote dans la foulée.
+				// setTimeout pour laisser git-panel finir son mounted() (listeners prêts).
+				setTimeout(() => emitter.emit('git-open-remote-dialog'), 0)
 				this.$router.replace({ query: { ...this.$route.query, git_auth: undefined } })
 			} else if (gitAuth === 'error') {
 				LeekWars.toast(this.$t('git_auth_error') as string)

@@ -225,7 +225,7 @@
 						</v-list>
 					</v-menu>
 				</div>
-				<v-icon :title="$t('remote_settings')" class="action-btn" @click="showRemoteDialog = true">mdi-cog</v-icon>
+				<v-icon :title="$t('remote_settings')" class="action-btn" @click="showRemoteDialog = true">mdi-cloud-cog</v-icon>
 			</div>
 		</div>
 
@@ -339,12 +339,18 @@
 			this.loadRepos()
 			emitter.on('git-file-changed', this.debouncedRefresh)
 			emitter.on('git-repos-changed', this.loadRepos)
+			emitter.on('git-open-remote-dialog', this.openRemoteDialog)
 		}
 
 		beforeUnmount() {
 			emitter.off('git-file-changed', this.debouncedRefresh)
 			emitter.off('git-repos-changed', this.loadRepos)
+			emitter.off('git-open-remote-dialog', this.openRemoteDialog)
 			if (this.refreshDebounceTimer) clearTimeout(this.refreshDebounceTimer)
+		}
+
+		openRemoteDialog() {
+			this.showRemoteDialog = true
 		}
 
 		async undoLastCommit() {

@@ -1,11 +1,12 @@
 <template>
-	<popup v-model="show" :width="550" icon="mdi-cog" :title="$t('title')">
+	<popup v-model="show" :width="550" icon="mdi-cloud-cog" :title="$t('title')">
 		<!-- Remotes -->
 		<div class="section-title">{{ $t('remotes') }}</div>
 		<div v-if="remotes.length === 0 && !remotesLoading" class="empty">{{ $t('no_remotes') }}</div>
-		<div v-for="remote in remotes" :key="remote.name" class="remote-item">
+		<div v-for="remote in remotes" :key="remote.name" class="remote-item" :class="providerFromUrl(remote.url)">
+			<v-icon class="remote-provider-icon">{{ providerIcon(providerFromUrl(remote.url)) }}</v-icon>
 			<span class="remote-name">{{ remote.name }}</span>
-			<span class="remote-url">{{ remote.url }}</span>
+			<span class="remote-url" :title="remote.url">{{ remote.url }}</span>
 			<v-icon class="remote-delete" @click="removeRemote(remote.name)">mdi-delete</v-icon>
 		</div>
 		<div class="add-remote">
@@ -15,19 +16,19 @@
 				<option v-for="r in availableRepos" :key="r.clone_url" :value="r.clone_url">{{ r.full_name }}{{ r.private ? ' 🔒' : '' }}</option>
 			</select>
 			<input v-else v-model="newRemoteUrl" :placeholder="$t('remote_url')" class="input url" />
-			<button type="button" class="add-btn" :disabled="!newRemoteName || !newRemoteUrl" @click="addRemote">
-				<v-icon>mdi-plus</v-icon>
-			</button>
+			<button type="button" class="add-btn" :disabled="!newRemoteName || !newRemoteUrl" @click="addRemote">{{ $t('add') }}</button>
 		</div>
 
 		<!-- Authentification -->
 		<div class="section-title auth-title">{{ $t('authentication') }}</div>
-		<div v-for="cred in credentials" :key="cred.provider + ':' + (cred.instance_url || '')" class="credential-info">
+		<div v-for="cred in credentials" :key="cred.provider + ':' + (cred.instance_url || '')" class="credential-info" :class="cred.provider">
 			<v-icon class="provider-icon">{{ providerIcon(cred.provider) }}</v-icon>
-			<span v-if="cred.username">{{ $t('connected_as', [cred.username]) }}</span>
-			<span v-else>{{ $t('connected_anonymous') }}</span>
-			<span v-if="cred.instance_url" class="instance">@ {{ cred.instance_url }}</span>
-			<span class="auth-type">({{ cred.auth_type === 'app' ? $t('github_app') : 'PAT' }})</span>
+			<span class="auth-type">{{ cred.auth_type === 'app' ? $t('github_app') : 'PAT' }}</span>
+			<span class="credential-user">
+				<span v-if="cred.username">{{ cred.username }}</span>
+				<span v-else class="anonymous">{{ $t('connected_anonymous') }}</span>
+				<span v-if="cred.instance_url" class="credential-instance">@ {{ cred.instance_url }}</span>
+			</span>
 			<v-icon class="credential-delete" @click="deleteCredential(cred)">mdi-delete</v-icon>
 		</div>
 		<div class="auth-section">
@@ -37,14 +38,13 @@
 			<div v-if="!hasCredential('github')" class="auth-hint">{{ $t('install_hint') }}</div>
 			<div class="pat-section">
 				<div class="pat-label">{{ $t('or_pat') }}</div>
-				<div class="pat-row">
-					<select v-model="patProvider" class="input provider-select">
-						<option value="github">GitHub</option>
-						<option value="gitlab">GitLab</option>
-						<option value="forgejo">Forgejo</option>
-					</select>
-					<input v-if="patProvider === 'forgejo'" v-model="patInstanceUrl" :placeholder="$t('instance_placeholder')" class="input instance-input" />
+				<div class="provider-tiles">
+					<div v-for="p in providers" :key="p.id" class="provider-tile" :class="[p.id, { active: patProvider === p.id }]" @click="patProvider = p.id">
+						<v-icon>{{ p.icon }}</v-icon>
+						<span>{{ p.label }}</span>
+					</div>
 				</div>
+				<input v-if="patProvider === 'forgejo'" v-model="patInstanceUrl" :placeholder="$t('instance_placeholder')" class="input instance-input" />
 				<div class="pat-input">
 					<input v-model="patToken" type="password" :placeholder="$t('pat_placeholder')" class="input" @keyup.enter="savePat" />
 					<div class="pat-save" :class="{ disabled: !canSavePat }" @click="savePat">{{ $t('save') }}</div>
@@ -75,10 +75,16 @@
 		remotesLoading: boolean = false
 		newRemoteName: string = 'origin'
 		newRemoteUrl: string = ''
-		patProvider: 'github' | 'gitlab' | 'forgejo' = 'github'
+		patProvider: 'github' | 'gitlab' | 'bitbucket' | 'forgejo' = 'github'
 		patInstanceUrl: string = ''
 		patToken: string = ''
 		error: string = ''
+		providers = [
+			{ id: 'github', label: 'GitHub', icon: 'mdi-github' },
+			{ id: 'gitlab', label: 'GitLab', icon: 'mdi-gitlab' },
+			{ id: 'bitbucket', label: 'Bitbucket', icon: 'mdi-bitbucket' },
+			{ id: 'forgejo', label: 'Forgejo', icon: 'mdi-git' }
+		]
 
 		get canSavePat(): boolean {
 			if (!this.patToken) return false
@@ -93,7 +99,16 @@
 		providerIcon(provider: string): string {
 			if (provider === 'github') return 'mdi-github'
 			if (provider === 'gitlab') return 'mdi-gitlab'
+			if (provider === 'bitbucket') return 'mdi-bitbucket'
 			return 'mdi-git'
+		}
+
+		providerFromUrl(url: string): string {
+			if (!url) return 'forgejo'
+			if (url.indexOf('github.com') !== -1) return 'github'
+			if (url.indexOf('gitlab.com') !== -1) return 'gitlab'
+			if (url.indexOf('bitbucket.org') !== -1) return 'bitbucket'
+			return 'forgejo'
 		}
 
 		get show() { return this.modelValue }
@@ -219,26 +234,60 @@
 .remote-item {
 	display: flex;
 	align-items: center;
-	gap: 8px;
-	padding: 4px 0;
+	gap: 10px;
+	padding: 8px 10px;
+	margin-bottom: 4px;
+	border: 1px solid rgba(0,0,0,0.08);
+	border-radius: 6px;
+	background: rgba(0,0,0,0.02);
 	font-size: 13px;
+	transition: background 0.15s ease, border-color 0.15s ease;
+	&:hover {
+		background: rgba(0,0,0,0.04);
+		border-color: rgba(0,0,0,0.15);
+		.remote-delete { opacity: 1; }
+	}
+	.remote-provider-icon { font-size: 22px; }
+	&.github .remote-provider-icon    { color: #24292e; }
+	&.gitlab .remote-provider-icon    { color: #fc6d26; }
+	&.bitbucket .remote-provider-icon { color: #2684ff; }
+	&.forgejo .remote-provider-icon   { color: #629324; }
 	.remote-name {
-		font-weight: bold;
-		min-width: 60px;
+		font-weight: 600;
+		padding: 2px 8px;
+		background: rgba(0,0,0,0.06);
+		border-radius: 4px;
+		font-size: 12px;
 	}
 	.remote-url {
 		flex: 1;
+		min-width: 0;
 		color: #888;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+		font-family: monospace;
+		font-size: 12px;
 	}
 	.remote-delete {
 		cursor: pointer;
 		font-size: 18px;
-		opacity: 0.5;
-		&:hover { opacity: 1; }
+		opacity: 0.4;
+		transition: opacity 0.15s ease, color 0.15s ease;
+		&:hover { opacity: 1; color: #c00; }
 	}
+}
+body.dark .remote-item {
+	border-color: rgba(255,255,255,0.1);
+	background: rgba(255,255,255,0.03);
+	&:hover {
+		background: rgba(255,255,255,0.06);
+		border-color: rgba(255,255,255,0.2);
+	}
+	.remote-name { background: rgba(255,255,255,0.1); }
+	&.github .remote-provider-icon    { color: #e6edf3; }
+	&.bitbucket .remote-provider-icon { color: #579dff; }
+	&.forgejo .remote-provider-icon   { color: #8ab84a; }
 }
 .add-remote {
 	display: flex;
@@ -257,15 +306,15 @@
 	}
 	.add-btn {
 		cursor: pointer;
-		font-size: 22px;
-		background: transparent;
+		padding: 4px 14px;
+		background: #5fad1b;
+		color: white;
 		border: none;
-		padding: 0;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: inherit;
-		&:disabled { opacity: 0.3; cursor: default; }
+		border-radius: 4px;
+		font-size: 13px;
+		font-weight: 500;
+		&:hover { background: #73d120; }
+		&:disabled { opacity: 0.3; cursor: default; background: #5fad1b; }
 	}
 }
 body.dark .add-remote .input {
@@ -275,19 +324,67 @@ body.dark .add-remote .input {
 .credential-info {
 	display: flex;
 	align-items: center;
-	gap: 6px;
+	gap: 10px;
+	padding: 8px 10px;
+	margin-bottom: 4px;
+	border: 1px solid rgba(0,0,0,0.08);
+	border-radius: 6px;
+	background: rgba(0,0,0,0.02);
 	font-size: 13px;
-	padding: 2px 0;
-	.provider-icon { font-size: 20px; }
-	.auth-type { color: #888; }
-	.instance { color: #888; font-size: 12px; }
+	transition: background 0.15s ease, border-color 0.15s ease;
+	&:hover {
+		background: rgba(0,0,0,0.04);
+		border-color: rgba(0,0,0,0.15);
+		.credential-delete { opacity: 1; }
+	}
+	.provider-icon { font-size: 22px; }
+	&.github .provider-icon    { color: #24292e; }
+	&.gitlab .provider-icon    { color: #fc6d26; }
+	&.bitbucket .provider-icon { color: #2684ff; }
+	&.forgejo .provider-icon   { color: #629324; }
+	.auth-type {
+		font-size: 12px;
+		font-weight: 600;
+		padding: 2px 8px;
+		background: rgba(0,0,0,0.06);
+		border-radius: 4px;
+		color: #666;
+	}
+	.credential-user {
+		flex: 1;
+		min-width: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		font-size: 13px;
+		.anonymous { color: #888; font-style: italic; }
+		.credential-instance {
+			color: #888;
+			font-size: 12px;
+			font-family: monospace;
+			margin-left: 4px;
+		}
+	}
 	.credential-delete {
 		cursor: pointer;
 		font-size: 18px;
-		opacity: 0.5;
-		margin-left: auto;
-		&:hover { opacity: 1; }
+		opacity: 0.4;
+		transition: opacity 0.15s ease, color 0.15s ease;
+		margin-left: 0;
+		&:hover { opacity: 1; color: #c00; }
 	}
+}
+body.dark .credential-info {
+	border-color: rgba(255,255,255,0.1);
+	background: rgba(255,255,255,0.03);
+	&:hover {
+		background: rgba(255,255,255,0.06);
+		border-color: rgba(255,255,255,0.2);
+	}
+	.auth-type { background: rgba(255,255,255,0.1); color: #ccc; }
+	&.github .provider-icon    { color: #e6edf3; }
+	&.bitbucket .provider-icon { color: #579dff; }
+	&.forgejo .provider-icon   { color: #8ab84a; }
 }
 .auth-hint {
 	font-size: 11px;
@@ -313,22 +410,67 @@ body.dark .add-remote .input {
 		.pat-label {
 			font-size: 12px;
 			color: #888;
-			margin-bottom: 4px;
-		}
-		.pat-row {
-			display: flex;
-			gap: 6px;
 			margin-bottom: 6px;
-			.input {
-				background: rgba(0,0,0,0.1);
-				border: 1px solid rgba(0,0,0,0.15);
-				border-radius: 4px;
-				padding: 4px 8px;
-				font-size: 13px;
-				color: inherit;
+		}
+		.provider-tiles {
+			display: flex;
+			gap: 8px;
+			margin-bottom: 8px;
+			.provider-tile {
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				gap: 4px;
+				padding: 10px 6px;
+				border: 1px solid rgba(0,0,0,0.12);
+				border-radius: 6px;
+				cursor: pointer;
+				font-size: 12px;
+				font-weight: 500;
+				color: #555;
+				background: rgba(0,0,0,0.02);
+				transition: all 0.15s ease;
+				.v-icon {
+					font-size: 28px;
+					color: #888;
+					transition: color 0.15s ease;
+				}
+				&:hover {
+					border-color: rgba(0,0,0,0.25);
+					background: rgba(0,0,0,0.05);
+					transform: translateY(-1px);
+					box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+				}
+				&.active {
+					color: white;
+					border-color: transparent;
+					transform: translateY(-1px);
+					box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+					.v-icon { color: white; }
+				}
+				&.github.active    { background: #24292e; &:hover { background: #3a3f44; } }
+				&.gitlab.active    { background: #fc6d26; &:hover { background: #e24329; } }
+				&.bitbucket.active { background: #2684ff; &:hover { background: #0052cc; } }
+				&.forgejo.active   { background: #629324; &:hover { background: #4d7a1c; } }
+				&.github:not(.active)    .v-icon { color: #24292e; }
+				&.gitlab:not(.active)    .v-icon { color: #fc6d26; }
+				&.bitbucket:not(.active) .v-icon { color: #2684ff; }
+				&.forgejo:not(.active)   .v-icon { color: #629324; }
 			}
-			.provider-select { min-width: 110px; }
-			.instance-input { flex: 1; }
+		}
+		.instance-input {
+			display: block;
+			width: 100%;
+			box-sizing: border-box;
+			background: rgba(0,0,0,0.1);
+			border: 1px solid rgba(0,0,0,0.15);
+			border-radius: 4px;
+			padding: 4px 8px;
+			font-size: 13px;
+			color: inherit;
+			margin-bottom: 6px;
 		}
 		.pat-input {
 			display: flex;
@@ -356,8 +498,22 @@ body.dark .add-remote .input {
 		}
 	}
 }
+body.dark .pat-section .provider-tile {
+	border-color: rgba(255,255,255,0.15);
+	background: rgba(255,255,255,0.04);
+	color: #bbb;
+	&:hover {
+		border-color: rgba(255,255,255,0.3);
+		background: rgba(255,255,255,0.08);
+	}
+	.v-icon { color: #aaa; }
+	&.github:not(.active)   .v-icon { color: #e6edf3; }
+	&.gitlab:not(.active)   .v-icon { color: #fc6d26; }
+	&.bitbucket:not(.active) .v-icon { color: #579dff; }
+	&.forgejo:not(.active)  .v-icon { color: #8ab84a; }
+}
 body.dark .pat-input .input,
-body.dark .pat-row .input {
+body.dark .pat-section .instance-input {
 	background: rgba(255,255,255,0.1);
 	border-color: rgba(255,255,255,0.15);
 }
