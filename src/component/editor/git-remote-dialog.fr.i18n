@@ -11,7 +11,8 @@
 	"install_hint": "Choisissez les dépôts auxquels donner accès lors de l'installation.",
 	"github_app": "GitHub App",
 	"or_pat": "Ou utiliser un Personal Access Token :",
-	"pat_placeholder": "ghp_... (un PAT fine-grained limité au repo est recommandé)",
+	"pat_placeholder": "Token (PAT fine-grained recommandé pour GitHub)",
+	"instance_placeholder": "https://codeberg.org",
 	"save": "Sauvegarder",
-	"invalid_token": "Token invalide ou expiré."
+	"invalid_token": "Token invalide ou instance inaccessible."
 }

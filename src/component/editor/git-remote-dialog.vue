@@ -22,22 +22,31 @@
 
 		<!-- Authentification -->
 		<div class="section-title auth-title">{{ $t('authentication') }}</div>
-		<div v-if="credential" class="credential-info">
-			<v-icon class="provider-icon">{{ credential.provider === 'github' ? 'mdi-github' : 'mdi-gitlab' }}</v-icon>
-			<span>{{ $t('connected_as', [credential.username]) }}</span>
-			<span class="auth-type">({{ credential.auth_type === 'app' ? $t('github_app') : 'PAT' }})</span>
-			<v-icon class="credential-delete" @click="deleteCredential">mdi-delete</v-icon>
+		<div v-for="cred in credentials" :key="cred.provider + ':' + (cred.instance_url || '')" class="credential-info">
+			<v-icon class="provider-icon">{{ providerIcon(cred.provider) }}</v-icon>
+			<span>{{ $t('connected_as', [cred.username]) }}</span>
+			<span v-if="cred.instance_url" class="instance">@ {{ cred.instance_url }}</span>
+			<span class="auth-type">({{ cred.auth_type === 'app' ? $t('github_app') : 'PAT' }})</span>
+			<v-icon class="credential-delete" @click="deleteCredential(cred)">mdi-delete</v-icon>
 		</div>
-		<div v-else class="auth-section">
-			<div class="oauth-btn github" @click="startInstall">
+		<div class="auth-section">
+			<div v-if="!hasCredential('github')" class="oauth-btn github" @click="startInstall">
 				<v-icon>mdi-github</v-icon> {{ $t('install_github_app') }}
 			</div>
-			<div class="auth-hint">{{ $t('install_hint') }}</div>
+			<div v-if="!hasCredential('github')" class="auth-hint">{{ $t('install_hint') }}</div>
 			<div class="pat-section">
 				<div class="pat-label">{{ $t('or_pat') }}</div>
+				<div class="pat-row">
+					<select v-model="patProvider" class="input provider-select">
+						<option value="github">GitHub</option>
+						<option value="gitlab">GitLab</option>
+						<option value="forgejo">Forgejo</option>
+					</select>
+					<input v-if="patProvider === 'forgejo'" v-model="patInstanceUrl" :placeholder="$t('instance_placeholder')" class="input instance-input" />
+				</div>
 				<div class="pat-input">
 					<input v-model="patToken" type="password" :placeholder="$t('pat_placeholder')" class="input" @keyup.enter="savePat" />
-					<div class="pat-save" :class="{ disabled: !patToken }" @click="savePat">{{ $t('save') }}</div>
+					<div class="pat-save" :class="{ disabled: !canSavePat }" @click="savePat">{{ $t('save') }}</div>
 				</div>
 			</div>
 		</div>
@@ -60,13 +69,31 @@
 		@Prop() folder!: string
 
 		remotes: { name: string, url: string }[] = []
-		credential: { provider: string, auth_type: string, username: string } | null = null
+		credentials: { provider: string, auth_type: string, username: string, instance_url: string | null }[] = []
 		availableRepos: { full_name: string, clone_url: string, private: boolean }[] = []
 		remotesLoading: boolean = false
 		newRemoteName: string = 'origin'
 		newRemoteUrl: string = ''
+		patProvider: 'github' | 'gitlab' | 'forgejo' = 'github'
+		patInstanceUrl: string = ''
 		patToken: string = ''
 		error: string = ''
+
+		get canSavePat(): boolean {
+			if (!this.patToken) return false
+			if (this.patProvider === 'forgejo' && !this.patInstanceUrl.trim()) return false
+			return true
+		}
+
+		hasCredential(provider: string): boolean {
+			return this.credentials.some(c => c.provider === provider)
+		}
+
+		providerIcon(provider: string): string {
+			if (provider === 'github') return 'mdi-github'
+			if (provider === 'gitlab') return 'mdi-gitlab'
+			return 'mdi-git'
+		}
 
 		get show() { return this.modelValue }
 		set show(v: boolean) { this.$emit('update:modelValue', v) }
@@ -96,15 +123,14 @@
 		async loadCredentials() {
 			try {
 				const data = await gitCall('git-credential/get')
-				const creds = data.credentials || []
-				this.credential = creds.length > 0 ? creds[0] : null
-				if (this.credential && this.credential.auth_type === 'app') {
+				this.credentials = data.credentials || []
+				if (this.credentials.some(c => c.provider === 'github' && c.auth_type === 'app')) {
 					this.loadAvailableRepos()
 				} else {
 					this.availableRepos = []
 				}
 			} catch (e) {
-				this.credential = null
+				this.credentials = []
 				this.availableRepos = []
 			}
 		}
@@ -146,23 +172,24 @@
 		}
 
 		async savePat() {
-			if (!this.patToken) return
+			if (!this.canSavePat) return
 			this.error = ''
+			const instance = this.patProvider === 'forgejo' ? this.patInstanceUrl.trim() : ''
 			try {
-				const data = await gitCall('git-credential/save-pat', { provider: 'github', token: this.patToken })
+				await gitCall('git-credential/save-pat', { provider: this.patProvider, token: this.patToken, instance_url: instance })
 				this.patToken = ''
-				this.credential = { provider: 'github', auth_type: 'pat', username: data.username }
-			} catch (e: any) {
+				this.patInstanceUrl = ''
+				this.loadCredentials()
+			} catch {
 				this.error = this.$t('invalid_token') as string
 			}
 		}
 
-		async deleteCredential() {
-			if (!this.credential) return
+		async deleteCredential(cred: { provider: string, instance_url: string | null }) {
 			this.error = ''
 			try {
-				await gitCall('git-credential/delete', { provider: this.credential.provider })
-				this.credential = null
+				await gitCall('git-credential/delete', { provider: cred.provider, instance_url: cred.instance_url || '' })
+				this.loadCredentials()
 			} catch (e: any) {
 				this.error = e.details || e.error || 'Error'
 			}
@@ -245,8 +272,10 @@ body.dark .add-remote .input {
 	align-items: center;
 	gap: 6px;
 	font-size: 13px;
+	padding: 2px 0;
 	.provider-icon { font-size: 20px; }
 	.auth-type { color: #888; }
+	.instance { color: #888; font-size: 12px; }
 	.credential-delete {
 		cursor: pointer;
 		font-size: 18px;
@@ -281,6 +310,21 @@ body.dark .add-remote .input {
 			color: #888;
 			margin-bottom: 4px;
 		}
+		.pat-row {
+			display: flex;
+			gap: 6px;
+			margin-bottom: 6px;
+			.input {
+				background: rgba(0,0,0,0.1);
+				border: 1px solid rgba(0,0,0,0.15);
+				border-radius: 4px;
+				padding: 4px 8px;
+				font-size: 13px;
+				color: inherit;
+			}
+			.provider-select { min-width: 110px; }
+			.instance-input { flex: 1; }
+		}
 		.pat-input {
 			display: flex;
 			gap: 6px;
@@ -307,7 +351,8 @@ body.dark .add-remote .input {
 		}
 	}
 }
-body.dark .pat-input .input {
+body.dark .pat-input .input,
+body.dark .pat-row .input {
 	background: rgba(255,255,255,0.1);
 	border-color: rgba(255,255,255,0.15);
 }
