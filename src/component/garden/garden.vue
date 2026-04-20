@@ -17,7 +17,7 @@
 						<template v-if="category === 'challenge'">
 							<div class="tab active enabled router-link-active">
 								<h2>{{ $t('challenge') }}</h2>
-								<span class="fights"><img src="/image/icon/grey/garden.png"> {{ challengeFights }}</span>
+								<span class="fights"><img class="sword" src="/image/icon/grey/garden.png"> {{ challengeFights }}</span>
 							</div>
 						</template>
 						<div v-else>
@@ -105,8 +105,10 @@
 							<div class="versus">VS</div>
 							<div v-if="challengeFights" class="enemies">
 								<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('click_opponent') }}</div>
-								<div class="leek" @click="startLeekChallenge">
-									<garden-leek :leek="challengeLeekTarget" />
+								<div class="opponents">
+									<div class="leek" @click="startLeekChallenge">
+										<garden-leek :leek="challengeLeekTarget" />
+									</div>
 								</div>
 							</div>
 							<garden-no-fights v-else :canbuy="false" />
@@ -843,6 +845,9 @@ import { emitter } from '@/model/vue'
 		margin: 0 10px;
 		vertical-align: middle;
 		margin-bottom: 6px;
+	}
+	.fights .sword {
+		margin: 0;
 	}
 	.player {
 		height: 20px;
