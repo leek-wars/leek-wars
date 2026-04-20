@@ -362,7 +362,7 @@
 				emitter.emit('git-history-refresh')
 				emitter.emit('reanalyze')
 			} catch (e: any) {
-				this.syncError = 'Undo: ' + (e.details || e.error || 'error')
+				this.syncError = 'Undo: ' + this.gitErrorMessage(e)
 			}
 		}
 
@@ -380,6 +380,14 @@
 			if (this.selectedRepo !== '') {
 				localStorage.setItem('editor/git-push-force-' + this.selectedRepo, force ? '1' : '0')
 			}
+		}
+
+		gitErrorMessage(e: any): string {
+			const code = e?.error
+			if (code === 'quota_size_exceeded') return this.$t('quota_size_exceeded') as string
+			if (code === 'quota_files_exceeded') return this.$t('quota_files_exceeded') as string
+			if (e?.quota_exceeded) return this.$t('quota_size_exceeded') as string
+			return e?.details || code || 'error'
 		}
 
 		@Watch('selectedRepo')
@@ -560,7 +568,7 @@
 				this.syncInfo = 'Push: ' + (data.message || 'OK')
 				this.refreshStatus()
 			} catch (e: any) {
-				this.syncError = 'Push: ' + (e.details || e.error || 'error')
+				this.syncError = 'Push: ' + this.gitErrorMessage(e)
 			} finally {
 				this.loading = false
 			}
@@ -581,7 +589,7 @@
 					emitter.emit('open-merge', { folder: this.selectedRepo, file: this.conflictChanges[0].file })
 				}
 			} catch (e: any) {
-				this.syncError = 'Pull: ' + (e.details || e.error || 'error')
+				this.syncError = 'Pull: ' + this.gitErrorMessage(e)
 			} finally {
 				this.loading = false
 			}
@@ -611,7 +619,7 @@
 				if (data.changed_files) fileSystem.reloadChangedFiles(this.selectedRepo, data.changed_files)
 				emitter.emit('reanalyze')
 			} catch (e: any) {
-				this.syncError = 'Checkout: ' + (e.details || e.error || 'error')
+				this.syncError = 'Checkout: ' + this.gitErrorMessage(e)
 			} finally {
 				this.loading = false
 			}
@@ -631,7 +639,7 @@
 				this.syncInfo = 'Branch created: ' + trimmed
 				await this.refreshStatus()
 			} catch (e: any) {
-				this.syncError = 'Create branch: ' + (e.details || e.error || 'error')
+				this.syncError = 'Create branch: ' + this.gitErrorMessage(e)
 			} finally {
 				this.loading = false
 			}
@@ -653,11 +661,11 @@
 							await gitCall('git/delete-branch', { folder: this.selectedRepo, branch, force: true })
 							this.syncInfo = this.$t('delete_branch_done', [branch]) as string
 						} catch (e2: any) {
-							this.syncError = (e2.details || e2.error || 'error')
+							this.syncError = this.gitErrorMessage(e2)
 						}
 					}
 				} else {
-					this.syncError = details
+					this.syncError = this.gitErrorMessage(e)
 				}
 			}
 		}
@@ -689,7 +697,7 @@
 				if (data.changed_files) fileSystem.reloadChangedFiles(this.selectedRepo, data.changed_files)
 				emitter.emit('reanalyze')
 			} catch (e: any) {
-				this.syncError = 'Rebase continue: ' + (e.details || e.error || 'error')
+				this.syncError = 'Rebase continue: ' + this.gitErrorMessage(e)
 			} finally {
 				this.loading = false
 			}
@@ -707,7 +715,7 @@
 				if (data.changed_files) fileSystem.reloadChangedFiles(this.selectedRepo, data.changed_files)
 				emitter.emit('reanalyze')
 			} catch (e: any) {
-				this.syncError = 'Rebase abort: ' + (e.details || e.error || 'error')
+				this.syncError = 'Rebase abort: ' + this.gitErrorMessage(e)
 			} finally {
 				this.loading = false
 			}

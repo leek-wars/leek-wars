@@ -51,5 +51,7 @@
 	"undo_last_commit": "Annuler le dernier commit",
 	"undo_last_commit_confirm": "Annuler le dernier commit ? Les changements resteront dans l'index.",
 	"undo_last_commit_pushed_warn": "⚠️ Ce commit a déjà été poussé. L'annuler localement créera une divergence avec le remote. Continuer ?",
-	"undo_last_commit_done": "Dernier commit annulé. Les changements sont indexés."
+	"undo_last_commit_done": "Dernier commit annulé. Les changements sont indexés.",
+	"quota_size_exceeded": "Quota d'espace dépassé. Supprimez des fichiers pour libérer de l'espace.",
+	"quota_files_exceeded": "Quota de fichiers dépassé. Supprimez des fichiers pour redescendre sous la limite."
 }

@@ -51,5 +51,7 @@
 	"undo_last_commit": "Undo last commit",
 	"undo_last_commit_confirm": "Undo the last commit? Changes will remain in the index.",
 	"undo_last_commit_pushed_warn": "⚠️ This commit has already been pushed. Undoing it locally will diverge from the remote. Continue?",
-	"undo_last_commit_done": "Last commit undone. Changes are staged."
+	"undo_last_commit_done": "Last commit undone. Changes are staged.",
+	"quota_size_exceeded": "Storage quota exceeded. Delete files to free up space.",
+	"quota_files_exceeded": "File count quota exceeded. Delete files to go below the limit."
 }
