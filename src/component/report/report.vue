@@ -388,6 +388,9 @@
 			this.fight = null
 			this.report = null
 			this.actions = null
+			this.myFight = false
+			this.iWin = false
+			this.enemy = null
 
 			if (localStorage.getItem('fight/turrets') === null) { localStorage.setItem('fight/turrets', 'true') }
 			if (localStorage.getItem('fight/logs') === null) { localStorage.setItem('fight/logs', 'true') }
@@ -586,12 +589,25 @@
 			this.hasErrWarn = this.errors.length > 0 || this.warnings.length > 0
 		}
 
+		searchMyLeek(myLeek: any, leeks: ReportLeek[]) {
+			for (const l in leeks) {
+				if (leeks[l].id === myLeek.id) { return true }
+			}
+		}
+
 		challenge() {
 			if (!this.$store.state.farmer || !this.fight) { return }
 			const myFarmerId = this.$store.state.farmer.id
-			const myLeeks = this.$store.state.farmer.leeks
-			const mySide = this.fight.report.leeks1.some(l => l.id in myLeeks) ? 1
-				: this.fight.report.leeks2.some(l => l.id in myLeeks) ? 2 : 0
+			let mySide = 0
+			for (const ml in this.$store.state.farmer.leeks) {
+				if (this.searchMyLeek(this.$store.state.farmer.leeks[ml], this.fight.report.leeks1)) {
+					mySide = 1
+					break
+				} else if (this.searchMyLeek(this.$store.state.farmer.leeks[ml], this.fight.report.leeks2)) {
+					mySide = 2
+					break
+				}
+			}
 			if (mySide === 0) { return }
 			this.myFight = true
 			this.iWin = this.fight.report.win === mySide
