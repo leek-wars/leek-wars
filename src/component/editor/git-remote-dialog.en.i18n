@@ -7,6 +7,7 @@
 	"select_repo": "Select a repository...",
 	"authentication": "Authentication",
 	"connected_as": "Connected as {0}",
+	"connected_anonymous": "Connected",
 	"install_github_app": "Install GitHub App",
 	"install_hint": "Choose which repositories to grant access to during installation.",
 	"github_app": "GitHub App",

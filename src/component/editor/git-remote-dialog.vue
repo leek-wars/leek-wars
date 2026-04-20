@@ -24,7 +24,8 @@
 		<div class="section-title auth-title">{{ $t('authentication') }}</div>
 		<div v-for="cred in credentials" :key="cred.provider + ':' + (cred.instance_url || '')" class="credential-info">
 			<v-icon class="provider-icon">{{ providerIcon(cred.provider) }}</v-icon>
-			<span>{{ $t('connected_as', [cred.username]) }}</span>
+			<span v-if="cred.username">{{ $t('connected_as', [cred.username]) }}</span>
+			<span v-else>{{ $t('connected_anonymous') }}</span>
 			<span v-if="cred.instance_url" class="instance">@ {{ cred.instance_url }}</span>
 			<span class="auth-type">({{ cred.auth_type === 'app' ? $t('github_app') : 'PAT' }})</span>
 			<v-icon class="credential-delete" @click="deleteCredential(cred)">mdi-delete</v-icon>

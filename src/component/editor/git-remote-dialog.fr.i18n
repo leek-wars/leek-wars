@@ -7,6 +7,7 @@
 	"select_repo": "Choisir un dépôt...",
 	"authentication": "Authentification",
 	"connected_as": "Connecté en tant que {0}",
+	"connected_anonymous": "Connecté",
 	"install_github_app": "Installer la GitHub App",
 	"install_hint": "Choisissez les dépôts auxquels donner accès lors de l'installation.",
 	"github_app": "GitHub App",
