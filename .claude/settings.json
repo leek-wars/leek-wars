@@ -1,35 +1,22 @@
 {
   "permissions": {
     "allow": [
+      "Bash(cd *)",
       "Bash(ls *)",
-      "Bash(cd * && ls *)",
       "Bash(grep *)",
-      "Bash(cd * && grep *)",
+      "Bash(wc *)",
       "Bash(gh issue view *)",
-      "Bash(cd * && gh issue view *)",
       "Bash(gh issue list *)",
-      "Bash(cd * && gh issue list *)",
       "Bash(gh pr view *)",
-      "Bash(cd * && gh pr view *)",
       "Bash(gh pr list *)",
-      "Bash(cd * && gh pr list *)",
       "Bash(gh run view *)",
-      "Bash(cd * && gh run view *)",
       "Bash(gh repo view *)",
-      "Bash(cd * && gh repo view *)",
       "WebFetch(domain:github.com)",
       "Bash(git log *)",
-      "Bash(cd * && git log *)",
       "Bash(git diff *)",
-      "Bash(cd * && git diff *)",
       "Bash(git show *)",
-      "Bash(cd * && git show *)",
-      "Bash(git status)",
-      "Bash(cd * && git status)",
-      "Bash(git blame *)",
-      "Bash(cd * && git blame *)",
-      "Bash(wc *)",
-      "Bash(cd * && wc *)"
+      "Bash(git status *)",
+      "Bash(git blame *)"
     ]
   }
 }
