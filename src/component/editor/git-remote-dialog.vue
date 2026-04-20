@@ -183,7 +183,10 @@
 				this.loadCredentials()
 			} catch (e: any) {
 				const key = e?.error === 'invalid_instance_url' ? 'invalid_instance_url' : 'invalid_token'
-				this.error = this.$t(key) as string
+				let msg = this.$t(key) as string
+				if (e?.error) msg += ` [${e.error}]`
+				if (e?.details) msg += ' ' + JSON.stringify(e.details)
+				this.error = msg
 			}
 		}
 
