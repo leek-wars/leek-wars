@@ -161,6 +161,18 @@
 
 		<popup v-model="settingsDialog" :width="620" icon="mdi-cogs" :title="$t('settings')">
 			<div class="settings-dialog">
+				<div class="title">{{ $t('storage') }}</div>
+				<div class="storage">
+					<div v-if="storageUsage" class="storage-label">
+						<span>{{ LeekWars.formatFileSize(storageUsage.size) }} / {{ LeekWars.formatFileSize(storageUsage.max_size) }}</span>
+						<span class="storage-percent">{{ Math.floor(100 * storageUsage.size / storageUsage.max_size) }}%</span>
+					</div>
+					<div v-else class="storage-label">…</div>
+					<div class="storage-bar">
+						<div :class="storageBarClass" :style="{width: storageBarWidth}" class="storage-bar-fill"></div>
+					</div>
+				</div>
+
 				<div class="title">{{ $t('display') }}</div>
 				<template v-if="!LeekWars.mobile">
 					<v-checkbox v-model="enlargeWindow" :label="$t('enlarge_window')" hide-details />
@@ -303,6 +315,7 @@
 		currentFolder: Folder | null = null
 		infoDialog: boolean = false
 		settingsDialog: boolean = false
+		storageUsage: { size: number, files: number, max_size: number, max_files: number } | null = null
 		enlargeWindow: boolean = false
 		theme: string = DEFAULT_THEME
 		autoClosing: boolean = false
@@ -1124,6 +1137,20 @@
 		}
 		settings() {
 			this.settingsDialog = true
+			LeekWars.get('ai/get-storage-usage').then((data: any) => {
+				this.storageUsage = data
+			})
+		}
+		get storageBarWidth(): string {
+			if (!this.storageUsage) return '0%'
+			return Math.min(100, Math.floor(100 * this.storageUsage.size / this.storageUsage.max_size)) + '%'
+		}
+		get storageBarClass(): string {
+			if (!this.storageUsage) return ''
+			const ratio = this.storageUsage.size / this.storageUsage.max_size
+			if (ratio >= 1) return 'storage-bar-full'
+			if (ratio >= 0.8) return 'storage-bar-warn'
+			return ''
 		}
 		add(event: any) {
 			this.fileMenuActivator = event.currentTarget
@@ -1597,6 +1624,34 @@
 		}
 		.title:first-child {
 			margin-top: 0;
+		}
+		.storage {
+			.storage-label {
+				display: flex;
+				justify-content: space-between;
+				margin-bottom: 6px;
+				color: var(--text-color-secondary);
+			}
+			.storage-percent {
+				font-weight: 500;
+			}
+			.storage-bar {
+				height: 8px;
+				border-radius: 4px;
+				background: var(--border);
+				overflow: hidden;
+			}
+			.storage-bar-fill {
+				height: 100%;
+				background: #5fad1b;
+				transition: width 0.3s ease;
+			}
+			.storage-bar-warn {
+				background: #f0a030;
+			}
+			.storage-bar-full {
+				background: #d03030;
+			}
 		}
 	}
 	.column3 {

@@ -519,6 +519,12 @@ const LeekWars = reactive({
 	formatNumber(n: number) {
 		return ("" + n).replace(/\B(?=(\d{3})+(?!\d))/g, " ")
 	},
+	formatFileSize(bytes: number) {
+		if (bytes < 1024) return bytes + ' B'
+		if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB'
+		if (bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + ' MB'
+		return (bytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB'
+	},
 	numberPrecision(number: number, precision: number) {
 		return number.toPrecision(precision)
 	},
