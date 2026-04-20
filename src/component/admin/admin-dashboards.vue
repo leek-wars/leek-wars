@@ -44,9 +44,9 @@
 									<template v-else-if="col.type === 'days_ago'">
 										{{ item[col.key] >= 0 ? item[col.key].toFixed(1) + 'j' : '-' }}
 									</template>
-									<!-- timestamp → date et heure -->
+									<!-- timestamp → date et heure (wrap autorisé uniquement entre date et heure) -->
 									<template v-else-if="col.type === 'datetime'">
-										{{ LeekWars.formatDateTime(item[col.key]) }}
+										<span class="nowrap">{{ LeekWars.formatDate(item[col.key]) }}</span> <span class="nowrap">{{ LeekWars.formatTime(item[col.key]) }}</span>
 									</template>
 									<!-- true/false → icône -->
 									<template v-else-if="col.type === 'boolean'">
@@ -95,8 +95,9 @@
 		LeekWars = LeekWars
 
 		created() {
-			if (!this.$store.getters.admin) this.$router.replace('/')
 			LeekWars.setTitle("Admin Dashboards")
+			LeekWars.large = true
+			this.checkAdmin()
 			LeekWars.get('dashboard/get-all').then((data: any) => {
 				this.dashboards = data
 				if (data.length) {
@@ -104,6 +105,23 @@
 					this.loadDashboard(data[0].id)
 				}
 			})
+		}
+
+		unmounted() {
+			LeekWars.large = false
+		}
+
+		// Sur refresh, state.farmer est null le temps de recharger la session.
+		// On ne redirige donc qu'une fois le farmer chargé.
+		checkAdmin() {
+			if (this.$store.state.farmer && !this.$store.state.farmer.admin) {
+				this.$router.replace('/')
+			}
+		}
+
+		@Watch('$store.state.farmer')
+		onFarmerLoaded() {
+			this.checkAdmin()
 		}
 
 		@Watch('selectedDashboard')
@@ -154,6 +172,21 @@
 		font-size: 15px;
 		color: var(--text-color-secondary);
 		border-bottom: 1px solid var(--border);
+	}
+	:deep(.v-data-table__td),
+	:deep(.v-data-table__th) {
+		padding: 0 8px !important;
+	}
+	:deep(.v-data-table__td:first-child),
+	:deep(.v-data-table__th:first-child) {
+		padding-left: 12px !important;
+	}
+	:deep(.v-data-table__td:last-child),
+	:deep(.v-data-table__th:last-child) {
+		padding-right: 12px !important;
+	}
+	.nowrap {
+		white-space: nowrap;
 	}
 	.size-cell {
 		position: relative;
