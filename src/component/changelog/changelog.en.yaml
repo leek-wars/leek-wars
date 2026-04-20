@@ -1,3 +1,8 @@
+247:
+  title: WIP
+  fixed:
+    - "Boss fight: farmers without engaged leeks are no longer redirected to the fight when it starts (thanks to fabou)."
+
 246:
   title: "3 new modes: War, Chest Hunt and Colossus, editor and LeekScript improvements."
   added:

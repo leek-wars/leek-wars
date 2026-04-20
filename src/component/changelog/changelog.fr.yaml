@@ -3,6 +3,8 @@
   added:
     - "#ai Ajout des BigInteger en LeekScript (merci à Batary)."
     - "#ai Fonctions setBit, testBit et bitLength pour les BigInteger (merci à Batary)."
+  fixed:
+    - "Combat de boss : les éleveurs sans poireau engagé ne sont plus redirigés vers le combat lors du lancement (merci à fabou)."
 
 246:
   title: "3 modes Guerre, Chasse aux coffres et Colosse, améliorations de l'éditeur et du LeekScript."

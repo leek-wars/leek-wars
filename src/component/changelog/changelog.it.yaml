@@ -1,3 +1,8 @@
+247:
+  title: WIP
+  fixed:
+    - "Combattimento boss: gli allevatori senza porri ingaggiati non vengono più reindirizzati al combattimento al lancio (grazie a fabou)."
+
 246:
   title: "3 nuove modalità: Guerra, Caccia ai forzieri e Colosso, miglioramenti dell'editor e del LeekScript."
   added:
