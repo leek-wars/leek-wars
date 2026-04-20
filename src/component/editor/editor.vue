@@ -1347,7 +1347,6 @@
 
 		updateVersion() {
 			if (!this.currentEditor) return
-			LeekWars.put('ai/version', {ai_id: this.currentAI.id, version: this.currentAI.version})
 			this.rewritePragma('version', this.currentAI.version)
 			this.save(this.currentEditor)
 			this.currentAI.analyze()
@@ -1355,7 +1354,6 @@
 
 		updateStrictMode() {
 			if (!this.currentEditor) return
-			LeekWars.put('ai/strict', {ai_id: this.currentAI.id, strict: this.currentAI.strict})
 			this.rewritePragma('strict', this.currentAI.strict)
 			this.save(this.currentEditor)
 			this.currentAI.analyze()
