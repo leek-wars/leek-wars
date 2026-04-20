@@ -336,5 +336,9 @@
 	"loadout_skipped_n": "{0} item(s) not applied",
 	"loadout_import_current": "Import current equipment",
 	"loadout_none": "None",
-	"loadout_max_reached": "30 loadouts limit reached"
+	"loadout_max_reached": "30 loadouts limit reached",
+	"loadout_warning_over_level": "{0} item(s) require a higher level for this leek",
+	"loadout_warning_too_many_weapons": "Too many weapons ({0}/{1})",
+	"loadout_warning_too_many_chips": "Too many chips for the available RAM ({0}/{1})",
+	"loadout_warning_two_forgotten": "Loadout contains two forgotten weapons"
 }

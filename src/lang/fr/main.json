@@ -336,5 +336,9 @@
 	"loadout_skipped_n": "{0} item(s) non appliqué(s)",
 	"loadout_import_current": "Importer l'équipement actuel",
 	"loadout_none": "Aucun",
-	"loadout_max_reached": "Limite de 30 loadouts atteinte"
+	"loadout_max_reached": "Limite de 30 loadouts atteinte",
+	"loadout_warning_over_level": "{0} objet(s) au niveau trop élevé pour ce poireau",
+	"loadout_warning_too_many_weapons": "Trop d'armes ({0}/{1})",
+	"loadout_warning_too_many_chips": "Trop de puces pour la RAM disponible ({0}/{1})",
+	"loadout_warning_two_forgotten": "Le loadout contient deux armes oubliées"
 }

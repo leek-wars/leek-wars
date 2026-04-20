@@ -16,7 +16,15 @@
 							<v-icon v-else size="28">mdi-package-variant-closed</v-icon>
 						</div>
 						<div class="loadout-info">
-							<div class="loadout-name">{{ loadout.name }}</div>
+							<div class="loadout-name">
+								{{ loadout.name }}
+								<v-tooltip v-if="warningsByLoadout[loadout.id] && warningsByLoadout[loadout.id].length > 0" location="bottom">
+									<template #activator="{ props }">
+										<v-icon v-bind="props" color="warning" size="18" class="loadout-warning-icon">mdi-alert</v-icon>
+									</template>
+									<div v-for="(w, i) in warningsByLoadout[loadout.id]" :key="i">{{ w }}</div>
+								</v-tooltip>
+							</div>
 							<div class="loadout-preview">
 								<div class="preview-col">
 									<template v-for="tpl in loadout.weapons" :key="'w' + tpl">
@@ -195,6 +203,37 @@
 			allWeapons() { return store.state.farmer?.weapons ?? [] },
 			allChips() { return store.state.farmer?.chips ?? [] },
 			allComponents() { return store.state.farmer?.components ?? [] },
+			warningsByLoadout(): { [id: number]: string[] } {
+				const result: { [id: number]: string[] } = {}
+				if (!this.leek) return result
+				const level = this.leek.level
+				const maxWeapons = this.leek.max_weapons
+				const baseRam = this.leek.ram
+				for (const loadout of this.loadouts) {
+					const warnings: string[] = []
+					let ram = baseRam
+					for (const c of loadout.components) {
+						const item = LeekWars.items[c.template]
+						const comp = item && LeekWars.components[item.params]
+						if (!comp) continue
+						for (const [stat, value] of comp.stats) {
+							if (stat === 'ram') ram += value
+						}
+					}
+					const overLevel = [...loadout.weapons, ...loadout.chips, ...loadout.components.map(c => c.template)]
+						.filter(tpl => LeekWars.items[tpl] && LeekWars.items[tpl].level > level)
+					if (overLevel.length > 0) warnings.push(this.$t('main.loadout_warning_over_level', [overLevel.length]) as string)
+					if (loadout.weapons.length > maxWeapons) warnings.push(this.$t('main.loadout_warning_too_many_weapons', [loadout.weapons.length, maxWeapons]) as string)
+					if (loadout.chips.length > ram) warnings.push(this.$t('main.loadout_warning_too_many_chips', [loadout.chips.length, ram]) as string)
+					const forgotten = loadout.weapons.filter(tpl => {
+						const item = LeekWars.items[tpl]
+						return item && LeekWars.weapons[item.params] && LeekWars.weapons[item.params].forgotten
+					})
+					if (forgotten.length > 1) warnings.push(this.$t('main.loadout_warning_two_forgotten') as string)
+					result[loadout.id] = warnings
+				}
+				return result
+			},
 		},
 		watch: {
 			modelValue(val: boolean) {
@@ -336,7 +375,8 @@
 }
 .emoji-icon { font-size: 24px; line-height: 1; }
 .loadout-info { flex: 1; min-width: 0; }
-.loadout-name { font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.loadout-name { font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
+.loadout-warning-icon { flex-shrink: 0; }
 .loadout-preview { display: flex; gap: 6px; margin-top: 4px; }
 .preview-col {
 	flex: 1; display: flex; flex-wrap: wrap; gap: 3px; align-content: flex-start;
