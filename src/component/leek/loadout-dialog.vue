@@ -73,6 +73,8 @@
 						<v-icon v-else size="32">mdi-emoticon-outline</v-icon>
 					</emoji-picker>
 					<input v-model="editing.name" class="name-input" :placeholder="$t('main.loadout_name_placeholder')" maxlength="60" type="text">
+					<v-btn @click="editing = null">{{ $t('main.cancel') }}</v-btn>
+					<v-btn color="primary" :disabled="!editing.name.trim()" :loading="saving" @click="save">{{ $t('main.save') }}</v-btn>
 				</div>
 
 				<div class="import-row">
@@ -82,7 +84,10 @@
 				<div class="items-grid">
 					<!-- Armes -->
 					<div class="section">
-						<h4>{{ $t('weapons') }}</h4>
+						<div class="section-header">
+							<h4>{{ $t('weapons') }}</h4>
+							<v-btn v-if="editing.weapons.length > 0" size="x-small" variant="text" icon @click="editing.weapons = []"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
+						</div>
 						<div class="selected-items">
 							<div v-for="tpl in editing.weapons" :key="tpl" class="item-slot selected" @click="toggleWeapon(tpl)">
 								<item v-if="LeekWars.items[tpl]" :item="LeekWars.items[tpl]" />
@@ -101,7 +106,10 @@
 
 					<!-- Puces -->
 					<div class="section">
-						<h4>{{ $t('main.chips') }}</h4>
+						<div class="section-header">
+							<h4>{{ $t('main.chips') }}</h4>
+							<v-btn v-if="editing.chips.length > 0" size="x-small" variant="text" icon @click="editing.chips = []"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
+						</div>
 						<div class="selected-items">
 							<div v-for="tpl in editing.chips" :key="tpl" class="item-slot selected" @click="toggleChip(tpl)">
 								<item v-if="LeekWars.items[tpl]" :item="LeekWars.items[tpl]" />
@@ -120,7 +128,10 @@
 
 					<!-- Composants -->
 					<div class="section">
-						<h4>{{ $t('main.components') }}</h4>
+						<div class="section-header">
+							<h4>{{ $t('main.components') }}</h4>
+							<v-btn v-if="editing.components.length > 0" size="x-small" variant="text" icon @click="editing.components = []"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
+						</div>
 						<div class="components-grid">
 							<div v-for="i in 8" :key="i" class="component-slot" @click="clearComponentSlot(i - 1)">
 								<template v-if="componentAtSlot(i - 1)">
@@ -144,10 +155,6 @@
 					</div>
 				</div>
 
-			</div>
-			<div class="form-footer">
-				<v-btn @click="editing = null">{{ $t('cancel') }}</v-btn>
-				<v-btn color="primary" :disabled="!editing.name.trim()" :loading="saving" @click="save">{{ $t('save') }}</v-btn>
 			</div>
 		</template>
 	</popup>
@@ -413,7 +420,8 @@
 	&:focus { border-color: #1976d2; }
 }
 .import-row { margin-top: -6px; }
-.section h4 { margin: 0 0 6px; font-size: 13px; text-transform: uppercase; color: #888; }
+.section h4 { margin: 0; font-size: 13px; text-transform: uppercase; color: #888; }
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; min-height: 24px; }
 .selected-items {
 	display: flex; flex-wrap: wrap; gap: 4px; min-height: 52px; margin-bottom: 6px;
 	.empty-hint { color: #bbb; font-size: 13px; align-self: center; }
