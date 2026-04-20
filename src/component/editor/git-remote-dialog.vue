@@ -180,8 +180,9 @@
 				this.patToken = ''
 				this.patInstanceUrl = ''
 				this.loadCredentials()
-			} catch {
-				this.error = this.$t('invalid_token') as string
+			} catch (e: any) {
+				const key = e?.error === 'invalid_instance_url' ? 'invalid_instance_url' : 'invalid_token'
+				this.error = this.$t(key) as string
 			}
 		}
 

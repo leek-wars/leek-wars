@@ -14,5 +14,6 @@
 	"pat_placeholder": "Token (fine-grained PAT recommended for GitHub)",
 	"instance_placeholder": "https://codeberg.org",
 	"save": "Save",
-	"invalid_token": "Invalid token or unreachable instance."
+	"invalid_token": "Token rejected by the provider.",
+	"invalid_instance_url": "Invalid instance URL or unreachable from the server."
 }
