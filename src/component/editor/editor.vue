@@ -469,6 +469,9 @@
 			} catch (e) {
 				// Pas de repos git
 			}
+			if (this.leftPanelTab === 'git' && Object.keys(fileSystem.gitRepos).length === 0) {
+				this.leftPanelTab = 'explorer'
+			}
 		}
 
 		mounted() {
