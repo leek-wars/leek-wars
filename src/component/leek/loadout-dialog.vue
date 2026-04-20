@@ -8,9 +8,10 @@
 			<div class="loadout-list">
 				<loader v-if="loading" />
 				<div v-else-if="loadouts.length === 0" class="empty">{{ $t('main.no_loadouts') }}</div>
-				<div v-else class="loadouts">
-					<div v-for="loadout in loadouts" :key="loadout.id" class="loadout-card">
+				<div v-else ref="loadoutsEl" class="loadouts">
+					<div v-for="loadout in loadouts" :key="loadout.id" :data-id="loadout.id" class="loadout-card">
 						<div class="loadout-header">
+							<v-icon class="drag-handle">mdi-drag-vertical</v-icon>
 							<div class="loadout-icon">
 								<img v-if="isCharac(loadout.icon)" :src="'/image/charac/' + loadout.icon + '.png'" width="24" height="24">
 								<span v-else-if="loadout.icon" v-emojis class="emoji-icon">{{ loadout.icon }}</span>
@@ -171,6 +172,23 @@
 		</template>
 	</popup>
 
+	<popup v-model="skippedDialogOpen" :width="520">
+		<template #icon><v-icon color="warning">mdi-alert</v-icon></template>
+		<template #title>{{ $t('main.loadout_skipped_title') }}</template>
+		<div class="skipped-list">
+			<div v-for="(s, i) in skippedItems" :key="i" class="skipped-item">
+				<item v-if="LeekWars.items[s.template]" :item="LeekWars.items[s.template]" />
+				<div class="skipped-info">
+					<div class="skipped-name">{{ LeekWars.items[s.template] ? $t(skippedItemTKey(s)) : '#' + s.template }}</div>
+					<div class="skipped-reason">{{ $t('main.loadout_skipped_reason_' + s.reason) }}</div>
+				</div>
+			</div>
+		</div>
+		<template #actions>
+			<div v-ripple class="action" @click="skippedDialogOpen = false">{{ $t('main.close') }}</div>
+		</template>
+	</popup>
+
 	<popup v-model="restatDialogOpen" :width="440">
 		<template #icon><v-icon>mdi-flask</v-icon></template>
 		<template #title>{{ $t('main.loadout_restat_title') }}</template>
@@ -202,6 +220,7 @@
 	import EmojiPicker from '@/component/chat/emoji-picker.vue'
 	import Item from '@/component/item.vue'
 	import LoadoutStatsPicker from '@/component/leek/loadout-stats-picker.vue'
+	import Sortable from 'sortablejs'
 
 	const CHARACTERISTICS = ['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'tp', 'mp', 'cores', 'ram']
 
@@ -276,6 +295,9 @@
 				editing: null as EditingLoadout | null,
 				restatDialogOpen: false,
 				pendingApply: null as Loadout | null,
+				sortable: null as Sortable | null,
+				skippedDialogOpen: false,
+				skippedItems: [] as any[],
 			}
 		},
 		computed: {
@@ -355,17 +377,61 @@
 				if (val) {
 					this.editing = null
 					if (!store.state.farmer?.loadouts) this.loadAll()
+					this.$nextTick(() => this.initSortable())
+				} else {
+					this.destroySortable()
 				}
 			},
+			editing() {
+				// Quand on sort du mode édition, on revient en liste → re-init
+				if (!this.editing) this.$nextTick(() => this.initSortable())
+				else this.destroySortable()
+			},
+			loadouts() {
+				this.$nextTick(() => this.initSortable())
+			},
+		},
+		beforeUnmount() {
+			this.destroySortable()
 		},
 		methods: {
 			isCharac(icon: string) { return CHARACTERISTICS.includes(icon) },
+			skippedItemTKey(s: any): string {
+				const item = LeekWars.items[s.template]
+				if (!item) return ''
+				if (s.type === 'weapon') return 'weapon.' + LeekWars.weapons[item.params].name
+				if (s.type === 'chip') return 'chip.' + LeekWars.chips[item.params].name
+				if (s.type === 'component') return 'component.' + LeekWars.components[item.params].name
+				return item.name
+			},
 			loadAll() {
 				this.loading = true
 				LeekWars.get('loadout/get-all').then((data: any) => {
 					store.commit('set-loadouts', data.loadouts)
 					this.loading = false
 				}).error(() => { this.loading = false })
+			},
+			initSortable() {
+				const el = this.$refs.loadoutsEl as HTMLElement | undefined
+				if (!el) return
+				this.destroySortable()
+				this.sortable = Sortable.create(el, {
+					handle: '.drag-handle',
+					animation: 150,
+					onEnd: (evt) => {
+						if (evt.oldIndex === undefined || evt.newIndex === undefined) return
+						if (evt.oldIndex === evt.newIndex) return
+						const current = [...this.loadouts]
+						const item = current.splice(evt.oldIndex, 1)[0]
+						current.splice(evt.newIndex, 0, item)
+						store.commit('set-loadouts', current)
+						LeekWars.post('loadout/reorder', { order: JSON.stringify(current.map(l => l.id)) })
+							.error((e: any) => LeekWars.toast(e))
+					},
+				})
+			},
+			destroySortable() {
+				if (this.sortable) { this.sortable.destroy(); this.sortable = null }
 			},
 			startCreate() {
 				this.editing = { id: null, name: '', icon: '', weapons: [], chips: [], components: [], stats: {} }
@@ -518,7 +584,8 @@
 					}
 					this.$emit('applied')
 					if (data.skipped && data.skipped.length > 0) {
-						LeekWars.toast(this.$t('main.loadout_skipped_n', [data.skipped.length]))
+						this.skippedItems = data.skipped
+						this.skippedDialogOpen = true
 					} else {
 						LeekWars.toast(this.$t('main.loadout_apply_success', [this.leek!.name]))
 					}
@@ -581,6 +648,10 @@
 	padding: 8px 10px; border-radius: 6px; background: #f5f5f5;
 }
 .loadout-header { display: flex; align-items: center; gap: 10px; }
+.drag-handle { cursor: grab; color: #999; flex-shrink: 0; }
+.drag-handle:active { cursor: grabbing; }
+.sortable-ghost { opacity: 0.4; }
+.sortable-chosen { background: #eaeaea; }
 .loadout-icon {
 	width: 28px; flex-shrink: 0;
 	display: flex; align-items: center; justify-content: center;
@@ -648,6 +719,12 @@ body.dark .stat-badge.frequency img { filter: invert(1); }
 .section h4 { margin: 0; font-size: 13px; text-transform: uppercase; color: #888; }
 .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; min-height: 24px; }
 .capital-used { font-weight: 400; color: #666; font-size: 12px; margin-left: 4px; }
+.skipped-list { display: flex; flex-direction: column; gap: 8px; padding: 8px 4px; max-height: 400px; overflow-y: auto; }
+.skipped-item { display: flex; align-items: center; gap: 10px; padding: 6px; border-radius: 4px; background: #f5f5f5; }
+.skipped-item :deep(.item) { flex-shrink: 0; }
+.skipped-info { flex: 1; min-width: 0; }
+.skipped-name { font-weight: 600; font-size: 14px; }
+.skipped-reason { font-size: 12px; color: #c0392b; }
 .restat-confirm { display: flex; gap: 16px; align-items: center; padding: 12px; }
 .restat-message { flex: 1; }
 .restat-message p { margin: 0 0 6px; }

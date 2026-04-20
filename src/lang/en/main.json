@@ -348,5 +348,11 @@
 	"loadout_restat_you_have": "You have {0}",
 	"loadout_restat_confirm": "Use the potion",
 	"loadout_no_restat_potion": "No restat potion available",
-	"loadout_not_enough_capital": "Not enough capital for this loadout"
+	"loadout_not_enough_capital": "Not enough capital for this loadout",
+	"loadout_skipped_title": "Items not applied",
+	"loadout_skipped_reason_not_owned": "Not owned",
+	"loadout_skipped_reason_too_high_level": "Level too high",
+	"loadout_skipped_reason_too_much_weapons": "Too many weapons equipped",
+	"loadout_skipped_reason_too_much_chips": "Too many chips equipped",
+	"loadout_skipped_reason_two_forgotten": "Two forgotten weapons are not allowed"
 }

@@ -348,5 +348,11 @@
 	"loadout_restat_you_have": "Vous en possédez {0}",
 	"loadout_restat_confirm": "Utiliser la potion",
 	"loadout_no_restat_potion": "Aucune potion de restat disponible",
-	"loadout_not_enough_capital": "Capital insuffisant pour cet équipement"
+	"loadout_not_enough_capital": "Capital insuffisant pour cet équipement",
+	"loadout_skipped_title": "Items non appliqués",
+	"loadout_skipped_reason_not_owned": "Non possédé",
+	"loadout_skipped_reason_too_high_level": "Niveau requis trop élevé",
+	"loadout_skipped_reason_too_much_weapons": "Trop d'armes équipées",
+	"loadout_skipped_reason_too_much_chips": "Trop de puces équipées",
+	"loadout_skipped_reason_two_forgotten": "Deux armes oubliées ne sont pas autorisées"
 }
