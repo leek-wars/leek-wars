@@ -586,37 +586,24 @@
 			this.hasErrWarn = this.errors.length > 0 || this.warnings.length > 0
 		}
 
-		searchMyLeek(myLeek: any, leeks: ReportLeek[]) {
-			for (const l in leeks) {
-				if (leeks[l].id === myLeek.id) { return true }
-			}
-		}
-
 		challenge() {
 			if (!this.$store.state.farmer || !this.fight) { return }
-			for (const ml in this.$store.state.farmer.leeks) {
-				if (this.searchMyLeek(this.$store.state.farmer.leeks[ml], this.fight.report.leeks1)) {
-					this.myFight = true
-					this.iWin = this.fight.report.win === 1
-					if (this.fight.type === FightType.SOLO) {
-						this.enemy = this.fight.report.leeks2[0].id
-					} else if (this.fight.type === FightType.FARMER) {
-						this.enemy = this.fight.farmer2
-					} else if (this.fight.type === FightType.TEAM && this.fight.team2) {
-						this.enemy = this.fight.team2.id
-					}
-				}
-				else if (this.searchMyLeek(this.$store.state.farmer.leeks[ml], this.fight.report.leeks2)) {
-					this.myFight = true
-					this.iWin = this.fight.report.win === 2
-					if (this.fight.type === FightType.SOLO) {
-						this.enemy = this.fight.report.leeks1.length ? this.fight.report.leeks1[0].id : -1
-					} else if (this.fight.type === FightType.FARMER) {
-						this.enemy = this.fight.farmer1
-					} else if (this.fight.type === FightType.TEAM && this.fight.team1) {
-						this.enemy = this.fight.team1.id
-					}
-				}
+			const myFarmerId = this.$store.state.farmer.id
+			const myLeeks = this.$store.state.farmer.leeks
+			const mySide = this.fight.report.leeks1.some(l => l.id in myLeeks) ? 1
+				: this.fight.report.leeks2.some(l => l.id in myLeeks) ? 2 : 0
+			if (mySide === 0) { return }
+			this.myFight = true
+			this.iWin = this.fight.report.win === mySide
+			if (this.fight.type === FightType.SOLO) {
+				this.enemy = mySide === 1
+					? this.fight.report.leeks2[0].id
+					: (this.fight.report.leeks1.length ? this.fight.report.leeks1[0].id : -1)
+			} else if (this.fight.type === FightType.FARMER) {
+				this.enemy = this.fight.farmer1 === myFarmerId ? this.fight.farmer2 : this.fight.farmer1
+			} else if (this.fight.type === FightType.TEAM && this.fight.team1 && this.fight.team2) {
+				const myTeamId = this.$store.state.farmer.team?.id ?? null
+				this.enemy = this.fight.team1.id === myTeamId ? this.fight.team2.id : this.fight.team1.id
 			}
 		}
 

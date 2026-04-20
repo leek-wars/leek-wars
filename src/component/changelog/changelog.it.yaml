@@ -2,6 +2,7 @@
   title: WIP
   fixed:
     - "Combattimento boss: gli allevatori senza porri ingaggiati non vengono più reindirizzati al combattimento al lancio (grazie a fabou)."
+    - "I pulsanti « Rigioca un combattimento » / « Prendi la rivincita » del rapporto di sfida che portavano a una sfida contro se stessi quando era stato scelto il lato destro (grazie a fabou)."
 
 246:
   title: "3 nuove modalità: Guerra, Caccia ai forzieri e Colosso, miglioramenti dell'editor e del LeekScript."
