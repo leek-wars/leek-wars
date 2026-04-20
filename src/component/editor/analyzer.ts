@@ -254,6 +254,8 @@ class Analyzer {
 
 	handleProblems(entrypoint: AI, problems: any[][]) {
 
+		const previousAIs = this.problems[entrypoint.path] ? Object.keys(this.problems[entrypoint.path]) : []
+
 		analyzer.removeProblems(entrypoint)
 
 		// Résoudre les paths des fichiers dans les erreurs
@@ -297,9 +299,12 @@ class Analyzer {
 			const model = this.getModelIfReady(ai)
 			if (model) monaco.editor.setModelMarkers(model, "owner", markersByAI[aiPath])
 		}
-		// No problems, clear markers
-		if (problems.length === 0) {
-			const model = this.getModelIfReady(entrypoint)
+		// Efface les marqueurs des fichiers (inclus ou entrypoint) qui n'ont plus de problèmes
+		for (const aiPath of previousAIs) {
+			if (markersByAI[aiPath]) continue
+			const ai = fileSystem.ais[aiPath]
+			if (!ai) continue
+			const model = this.getModelIfReady(ai)
 			if (model) monaco.editor.setModelMarkers(model, "owner", [])
 		}
 	}
