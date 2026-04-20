@@ -220,6 +220,14 @@
 				document.body.classList.remove('dark')
 		}
 
+		@Watch('LeekWars.xpTheme', {immediate: true})
+		updateXpTheme() {
+			if (LeekWars.xpTheme)
+				document.body.classList.add('xp')
+			else
+				document.body.classList.remove('xp')
+		}
+
 		created() {
 			emitter.on('connected', () => {
 				if (!this.$store.state.farmer.didactitiel_seen) {
