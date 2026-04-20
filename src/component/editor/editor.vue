@@ -29,7 +29,7 @@
 							</v-list-item>
 						</v-list>
 					</v-menu>
-					<div ref="settingsButton" class="tab action" icon="settings" @click="settingsDialog = true">
+					<div ref="settingsButton" class="tab action" icon="settings" @click="settings()">
 						<v-icon>mdi-cogs</v-icon>
 					</div>
 					<div :title="$t('test_desc')" class="action content tab" icon="play_arrow" @click="startTest()">
