@@ -340,5 +340,13 @@
 	"loadout_warning_over_level": "{0} objet(s) au niveau trop élevé pour ce poireau",
 	"loadout_warning_too_many_weapons": "Trop d'armes ({0}/{1})",
 	"loadout_warning_too_many_chips": "Trop de puces pour la RAM disponible ({0}/{1})",
-	"loadout_warning_two_forgotten": "L'équipement contient deux armes oubliées"
+	"loadout_warning_two_forgotten": "L'équipement contient deux armes oubliées",
+	"loadout_warning_not_enough_capital": "Capital requis {0}, disponible {1}",
+	"loadout_warning_restat_needed": "Potion de restat requise pour appliquer les caractéristiques",
+	"loadout_restat_title": "Potion de restat requise",
+	"loadout_restat_message": "Appliquer cet équipement change la répartition des caractéristiques du poireau. Une potion de restat sera consommée.",
+	"loadout_restat_you_have": "Vous en possédez {0}",
+	"loadout_restat_confirm": "Utiliser la potion",
+	"loadout_no_restat_potion": "Aucune potion de restat disponible",
+	"loadout_not_enough_capital": "Capital insuffisant pour cet équipement"
 }

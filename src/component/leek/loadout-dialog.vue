@@ -82,6 +82,15 @@
 				</div>
 
 				<div class="items-grid">
+					<!-- Caractéristiques -->
+					<div class="section">
+						<div class="section-header">
+							<h4>{{ $t('characteristic.characteristics') }} <span class="capital-used">({{ totalCapital() }})</span></h4>
+							<v-btn v-if="Object.keys(editing.stats).length > 0" size="x-small" variant="text" icon @click="editing.stats = {}"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
+						</div>
+						<loadout-stats-picker v-model="editing.stats" />
+					</div>
+
 					<!-- Armes -->
 					<div class="section">
 						<div class="section-header">
@@ -150,11 +159,28 @@
 						</div>
 					</div>
 
-					<!-- Caractéristiques (à venir) -->
-					<div class="section section-placeholder">
-					</div>
 				</div>
 
+			</div>
+		</template>
+	</popup>
+
+	<popup v-model="restatDialogOpen" :width="440">
+		<template #icon><v-icon>mdi-flask</v-icon></template>
+		<template #title>{{ $t('main.loadout_restat_title') }}</template>
+		<div class="restat-confirm">
+			<img src="/image/potion/restat.png" width="64" height="64">
+			<div class="restat-message">
+				<p>{{ $t('main.loadout_restat_message') }}</p>
+				<p v-if="restatPotionCount !== null" class="restat-count">{{ $t('main.loadout_restat_you_have', [restatPotionCount]) }}</p>
+				<p v-else-if="restatPotionCount === 0" class="restat-none">{{ $t('main.loadout_no_restat_potion') }}</p>
+			</div>
+		</div>
+		<template #actions>
+			<div v-ripple class="action" @click="cancelRestat">{{ $t('main.cancel') }}</div>
+			<div v-ripple class="action green" :class="{disabled: !restatPotionCount}" @click="restatPotionCount && confirmRestat()">
+				<v-icon>mdi-check</v-icon>
+				<span>{{ $t('main.loadout_restat_confirm') }}</span>
 			</div>
 		</template>
 	</popup>
@@ -164,10 +190,12 @@
 	import { defineComponent, PropType } from 'vue'
 	import { LeekWars } from '@/model/leekwars'
 	import { Leek } from '@/model/leek'
-	import { Loadout, LoadoutComponent } from '@/model/loadout'
+	import { Loadout, LoadoutComponent, LoadoutStats } from '@/model/loadout'
+	import { COSTS } from '@/model/leek'
 	import { store } from '@/model/store'
 	import EmojiPicker from '@/component/chat/emoji-picker.vue'
 	import Item from '@/component/item.vue'
+	import LoadoutStatsPicker from '@/component/leek/loadout-stats-picker.vue'
 
 	const CHARACTERISTICS = ['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'tp', 'mp', 'cores', 'ram']
 
@@ -178,11 +206,43 @@
 		weapons: number[]
 		chips: number[]
 		components: LoadoutComponent[]
+		stats: LoadoutStats
+	}
+
+	function capitalToStatBonus(charac: string, capital: number): number {
+		const steps = COSTS[charac]
+		if (!steps || capital <= 0) return 0
+		let bonus = 0
+		let remaining = capital
+		while (remaining > 0) {
+			let i = 0
+			for (; i < steps.length; i++) { if (steps[i].step > bonus) break }
+			i--
+			if (remaining < steps[i].capital) break
+			remaining -= steps[i].capital
+			bonus += steps[i].sup
+		}
+		return bonus
+	}
+
+	function statBonusToCapital(charac: string, bonus: number): number {
+		const steps = COSTS[charac]
+		if (!steps || bonus <= 0) return 0
+		let capital = 0
+		let total = 0
+		while (total < bonus) {
+			let i = 0
+			for (; i < steps.length; i++) { if (steps[i].step > total) break }
+			i--
+			capital += steps[i].capital
+			total += steps[i].sup
+		}
+		return capital
 	}
 
 	export default defineComponent({
 		name: 'LoadoutDialog',
-		components: { EmojiPicker, Item },
+		components: { EmojiPicker, Item, LoadoutStatsPicker },
 		props: {
 			modelValue: { type: Boolean, required: true },
 			leek: { type: Object as PropType<Leek | null>, default: null },
@@ -196,6 +256,8 @@
 				applying: null as number | null,
 				saving: false,
 				editing: null as EditingLoadout | null,
+				restatDialogOpen: false,
+				pendingApply: null as Loadout | null,
 			}
 		},
 		computed: {
@@ -207,6 +269,12 @@
 				},
 			},
 			loadouts(): Loadout[] { return store.state.farmer?.loadouts || [] },
+			restatPotionCount(): number {
+				const farmer = store.state.farmer as any
+				if (!farmer || !farmer.potions) return 0
+				const p = farmer.potions.find((p: any) => p.template === 49)
+				return p ? p.quantity : 0
+			},
 			allWeapons() { return store.state.farmer?.weapons ?? [] },
 			allChips() { return store.state.farmer?.chips ?? [] },
 			allComponents() { return store.state.farmer?.components ?? [] },
@@ -216,6 +284,17 @@
 				const level = this.leek.level
 				const maxWeapons = this.leek.max_weapons
 				const baseRam = this.leek.ram
+				const leek = this.leek as any
+				const baseBonuses: { [k: string]: number } = {
+					life: leek.life - 100 - (leek.level - 1) * 3,
+					strength: leek.strength, wisdom: leek.wisdom, agility: leek.agility,
+					resistance: leek.resistance, science: leek.science, magic: leek.magic,
+					frequency: leek.frequency - 1, cores: leek.cores - 1, ram: leek.ram - 1,
+					tp: leek.tp - 3, mp: leek.mp - 2,
+				}
+				// Total capital du leek à son niveau actuel (formule serveur)
+				let totalCapital = 6 + (level - 1) * 5 + Math.floor(level / 100) * 45
+				if (level === 301) totalCapital += 95
 				for (const loadout of this.loadouts) {
 					const warnings: string[] = []
 					let ram = baseRam
@@ -237,6 +316,22 @@
 						return item && LeekWars.weapons[item.params] && LeekWars.weapons[item.params].forgotten
 					})
 					if (forgotten.length > 1) warnings.push(this.$t('main.loadout_warning_two_forgotten') as string)
+
+					// Stats-related warnings
+					let statsDiffer = false
+					let requestedCapital = 0
+					for (const stat of CHARACTERISTICS) {
+						const target = (loadout.stats && loadout.stats[stat]) || 0
+						requestedCapital += target
+						const current = statBonusToCapital(stat, baseBonuses[stat] || 0)
+						if (target !== current) statsDiffer = true
+					}
+					if (requestedCapital > totalCapital) {
+						warnings.push(this.$t('main.loadout_warning_not_enough_capital', [requestedCapital, totalCapital]) as string)
+					}
+					if (statsDiffer) {
+						warnings.push(this.$t('main.loadout_warning_restat_needed') as string)
+					}
 					result[loadout.id] = warnings
 				}
 				return result
@@ -260,7 +355,7 @@
 				}).error(() => { this.loading = false })
 			},
 			startCreate() {
-				this.editing = { id: null, name: '', icon: '', weapons: [], chips: [], components: [] }
+				this.editing = { id: null, name: '', icon: '', weapons: [], chips: [], components: [], stats: {} }
 			},
 			startEdit(loadout: Loadout) {
 				this.editing = {
@@ -270,6 +365,7 @@
 					weapons: [...loadout.weapons],
 					chips: [...loadout.chips],
 					components: loadout.components.map(c => ({ ...c })),
+					stats: { ...(loadout.stats || {}) },
 				}
 			},
 			pickEmoji(emoji: string) {
@@ -282,6 +378,26 @@
 				this.editing.components = this.leek.components
 					.map((c: any, i: number) => c ? { index: i, template: c.template } : null)
 					.filter((c: any): c is LoadoutComponent => c !== null)
+				// Import des stats depuis l'allocation actuelle du leek
+				const stats: LoadoutStats = {}
+				const leek = this.leek as any
+				const base: { [k: string]: number } = {
+					life: leek.life - 100 - (leek.level - 1) * 3,
+					strength: leek.strength, wisdom: leek.wisdom, agility: leek.agility,
+					resistance: leek.resistance, science: leek.science, magic: leek.magic,
+					frequency: leek.frequency - 1, cores: leek.cores - 1, ram: leek.ram - 1,
+					tp: leek.tp - 3, mp: leek.mp - 2,
+				}
+				for (const stat of CHARACTERISTICS) {
+					const bonus = base[stat] || 0
+					const cap = statBonusToCapital(stat, bonus)
+					if (cap > 0) stats[stat] = cap
+				}
+				this.editing.stats = stats
+			},
+			totalCapital(): number {
+				if (!this.editing) return 0
+				return Object.values(this.editing.stats).reduce((a, b) => a + b, 0)
 			},
 			toggleWeapon(tpl: number) {
 				if (!this.editing) return
@@ -327,6 +443,7 @@
 					weapons: JSON.stringify(this.editing.weapons),
 					chips: JSON.stringify(this.editing.chips),
 					components: JSON.stringify(this.editing.components),
+					stats: JSON.stringify(this.editing.stats),
 				}
 				this.saving = true
 				if (this.editing.id) {
@@ -345,11 +462,36 @@
 			},
 			apply(loadout: Loadout) {
 				if (!this.leek) return
+				// Détection locale d'un changement de stats → confirmation potion de restat
+				if (this.statsDifferFromLeek(loadout)) {
+					this.pendingApply = loadout
+					this.restatDialogOpen = true
+					return
+				}
+				this.doApply(loadout, false)
+			},
+			confirmRestat() {
+				if (!this.pendingApply) return
+				this.restatDialogOpen = false
+				this.doApply(this.pendingApply, true)
+				this.pendingApply = null
+			},
+			cancelRestat() {
+				this.restatDialogOpen = false
+				this.pendingApply = null
+			},
+			doApply(loadout: Loadout, useRestat: boolean) {
+				if (!this.leek) return
 				this.applying = loadout.id
-				LeekWars.post('loadout/apply', { set_id: loadout.id, leek_id: this.leek.id }).then((data: any) => {
+				LeekWars.post('loadout/apply', { set_id: loadout.id, leek_id: this.leek.id, use_restat: useRestat }).then((data: any) => {
 					this.leek!.weapons = data.leek.weapons
 					this.leek!.chips = data.leek.chips
 					this.leek!.components = data.leek.components
+					if (data.stats_changed) {
+						// Mise à jour des stats du leek + décrément potion côté store
+						this.applyStatsLocally(loadout)
+						this.decrementRestatPotion()
+					}
 					this.$emit('applied')
 					if (data.skipped && data.skipped.length > 0) {
 						LeekWars.toast(this.$t('main.loadout_skipped_n', [data.skipped.length]))
@@ -357,7 +499,54 @@
 						LeekWars.toast(this.$t('main.loadout_apply_success', [this.leek!.name]))
 					}
 					this.applying = null
-				}).error((e: any) => { LeekWars.toast(e); this.applying = null })
+				}).error((e: any) => {
+					if (e && e.error === 'no_restat_potion') LeekWars.toast(this.$t('main.loadout_no_restat_potion'))
+					else if (e && e.error === 'not_enough_capital') LeekWars.toast(this.$t('main.loadout_not_enough_capital'))
+					else LeekWars.toast(e)
+					this.applying = null
+				})
+			},
+			statsDifferFromLeek(loadout: Loadout): boolean {
+				if (!this.leek) return false
+				const leek = this.leek as any
+				const baseBonuses: { [k: string]: number } = {
+					life: leek.life - 100 - (leek.level - 1) * 3,
+					strength: leek.strength, wisdom: leek.wisdom, agility: leek.agility,
+					resistance: leek.resistance, science: leek.science, magic: leek.magic,
+					frequency: leek.frequency - 1, cores: leek.cores - 1, ram: leek.ram - 1,
+					tp: leek.tp - 3, mp: leek.mp - 2,
+				}
+				for (const stat of CHARACTERISTICS) {
+					const target = (loadout.stats && loadout.stats[stat]) || 0
+					const current = statBonusToCapital(stat, baseBonuses[stat] || 0)
+					if (target !== current) return true
+				}
+				return false
+			},
+			applyStatsLocally(loadout: Loadout) {
+				if (!this.leek) return
+				const leek = this.leek as any
+				// Reset to base then add bonuses
+				leek.life = 100 + (leek.level - 1) * 3
+				leek.strength = 0; leek.wisdom = 0; leek.agility = 0
+				leek.resistance = 0; leek.science = 0; leek.magic = 0
+				leek.frequency = 1; leek.cores = 1; leek.ram = 1; leek.tp = 3; leek.mp = 2
+				for (const stat of CHARACTERISTICS) {
+					const cap = (loadout.stats && loadout.stats[stat]) || 0
+					if (cap > 0) leek[stat] += capitalToStatBonus(stat, cap)
+				}
+			},
+			decrementRestatPotion() {
+				const farmer = store.state.farmer as any
+				if (!farmer || !farmer.potions) return
+				const p = farmer.potions.find((p: any) => p.template === 49)
+				if (p) {
+					p.quantity = Math.max(0, p.quantity - 1)
+					if (p.quantity === 0) {
+						const i = farmer.potions.indexOf(p)
+						if (i !== -1) farmer.potions.splice(i, 1)
+					}
+				}
 			},
 			remove(loadout: Loadout) {
 				LeekWars.delete('loadout/delete', { set_id: loadout.id }).then(() => {
@@ -422,6 +611,13 @@
 .import-row { margin-top: -6px; }
 .section h4 { margin: 0; font-size: 13px; text-transform: uppercase; color: #888; }
 .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; min-height: 24px; }
+.capital-used { font-weight: 400; color: #666; font-size: 12px; margin-left: 4px; }
+.restat-confirm { display: flex; gap: 16px; align-items: center; padding: 12px; }
+.restat-message { flex: 1; }
+.restat-message p { margin: 0 0 6px; }
+.restat-count { color: #2d8a2d; font-weight: 600; }
+.restat-none { color: #c0392b; font-weight: 600; }
+.action.disabled { opacity: 0.4; pointer-events: none; }
 .selected-items {
 	display: flex; flex-wrap: wrap; gap: 4px; min-height: 52px; margin-bottom: 6px;
 	.empty-hint { color: #bbb; font-size: 13px; align-self: center; }
