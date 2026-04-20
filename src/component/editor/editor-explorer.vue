@@ -187,7 +187,7 @@
 
 <script lang="ts">
 	import { AI } from '@/model/ai'
-	import { fileSystem } from '@/model/filesystem'
+	import { fileSystem, translateFileSystemError } from '@/model/filesystem'
 	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
@@ -325,8 +325,8 @@
 						LeekWars.toast(i18n.t('leekscript.ai_renamed', [this.newName]) as string)
 						fileSystem.renameAI(this.ai!, this.newName)
 						this.$router.replace('/editor/' + this.ai!.path)
-					}).error((error: {error: string}) => {
-						LeekWars.toast(error.error)
+					}).error((error: any) => {
+						LeekWars.toast(translateFileSystemError(error))
 					})
 				}
 			} else if (this.folder) {
@@ -335,8 +335,8 @@
 					LeekWars.post('ai-folder/rename', {path: folderPath, new_name: this.newName}).then(() => {
 						LeekWars.toast(i18n.t('leekscript.folder_renamed', [this.newName]) as string)
 						this.folder!.name = this.newName
-					}).error((error: {error: string}) => {
-						LeekWars.toast(error.error)
+					}).error((error: any) => {
+						LeekWars.toast(translateFileSystemError(error))
 					})
 				}
 			}
@@ -464,7 +464,7 @@
 				this.newAIDialog = false
 				this.newAIName = ''
 			}).error((error: any) => {
-				LeekWars.toast(error.error)
+				LeekWars.toast(translateFileSystemError(error))
 			})
 		}
 		openNewFolder(folder: Folder) {

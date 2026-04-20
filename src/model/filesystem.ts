@@ -1,10 +1,28 @@
 import { AIItem, Folder } from '@/component/editor/editor-item'
 import { AI } from '@/model/ai'
+import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { emitter } from '@/model/vue'
 
 import { Keyword } from './keyword'
 import { reactive } from 'vue'
+
+const FS_ERROR_KEYS = new Set([
+	'quota_size_exceeded', 'quota_files_exceeded',
+	'path_traversal', 'symlink_forbidden',
+	'invalid_path', 'invalid_name', 'invalid_character',
+	'ai_too_long', 'mkdir_failed', 'file_not_found', 'name_conflict'
+])
+
+function translateFileSystemError(error: unknown): string {
+	const code = typeof error === 'string'
+		? error
+		: (error && typeof error === 'object' && 'error' in error ? String((error as {error: unknown}).error ?? '') : '')
+	if (FS_ERROR_KEYS.has(code)) {
+		return i18n.t('leekscript.fs_' + code) as string
+	}
+	return i18n.t('leekscript.fs_unknown_error', [code || 'unknown']) as string
+}
 
 class FileSystem {
 
@@ -241,7 +259,7 @@ class FileSystem {
 				item[0].name = ai.name
 				this.sortFolder(this.bin)
 			}
-		}).error((error: any) => LeekWars.toast(error.error || error))
+		}).error((error: any) => LeekWars.toast(translateFileSystemError(error)))
 		emitter.emit('reanalyze')
 	}
 
@@ -279,13 +297,13 @@ class FileSystem {
 		this.ais[ai.path] = ai
 		this.rootFolder.items.push(...item)
 		this.sortFolder(this.rootFolder)
-		LeekWars.post('ai/restore', {trash_name: trashName}).error((error: any) => LeekWars.toast(error.error || error))
+		LeekWars.post('ai/restore', {trash_name: trashName}).error((error: any) => LeekWars.toast(translateFileSystemError(error)))
 	}
 
 	public restoreFolder(folder: Folder) {
 		LeekWars.post('ai-folder/restore', { trash_name: folder.name }).then(() => {
 			this.reload()
-		}).error((error: any) => LeekWars.toast(error.error || error))
+		}).error((error: any) => LeekWars.toast(translateFileSystemError(error)))
 	}
 
 	public destroyFolder(folder: Folder) {
@@ -315,7 +333,7 @@ class FileSystem {
 		folder.parent = this.bin.id
 		this.bin.items.push(folder)
 		this.sortFolder(this.bin)
-		LeekWars.delete('ai-folder/delete', {path: folderPath}).error((error: any) => LeekWars.toast(error.error || error))
+		LeekWars.delete('ai-folder/delete', {path: folderPath}).error((error: any) => LeekWars.toast(translateFileSystemError(error)))
 		emitter.emit('reanalyze')
 	}
 
@@ -430,4 +448,4 @@ class FileSystem {
 
 const fileSystem = reactive(new FileSystem())
 
-export { fileSystem, FileSystem }
+export { fileSystem, FileSystem, translateFileSystemError }

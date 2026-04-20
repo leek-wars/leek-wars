@@ -254,7 +254,7 @@
 <script lang="ts">
 	import { locale } from '@/locale'
 	import { AI } from '@/model/ai'
-	import { fileSystem } from '@/model/filesystem'
+	import { fileSystem, translateFileSystemError } from '@/model/filesystem'
 	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
@@ -874,9 +874,10 @@
 				}
 
 				emitter.emit('git-file-changed')
-			}).error(() => {
+			}).error((error: any) => {
 				aiEditor.serverError = true
 				aiEditor.saving = false
+				LeekWars.toast(translateFileSystemError(error))
 			})
 		}
 
