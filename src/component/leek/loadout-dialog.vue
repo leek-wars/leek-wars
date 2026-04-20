@@ -10,12 +10,12 @@
 				<div v-else-if="loadouts.length === 0" class="empty">{{ $t('main.no_loadouts') }}</div>
 				<div v-else class="loadouts">
 					<div v-for="loadout in loadouts" :key="loadout.id" class="loadout-card">
-						<div class="loadout-icon">
-							<img v-if="isCharac(loadout.icon)" :src="'/image/charac/' + loadout.icon + '.png'" width="28" height="28">
-							<span v-else-if="loadout.icon" class="emoji-icon">{{ loadout.icon }}</span>
-							<v-icon v-else size="28">mdi-package-variant-closed</v-icon>
-						</div>
-						<div class="loadout-info">
+						<div class="loadout-header">
+							<div class="loadout-icon">
+								<img v-if="isCharac(loadout.icon)" :src="'/image/charac/' + loadout.icon + '.png'" width="24" height="24">
+								<span v-else-if="loadout.icon" v-emojis class="emoji-icon">{{ loadout.icon }}</span>
+								<v-icon v-else size="24">mdi-package-variant-closed</v-icon>
+							</div>
 							<div class="loadout-name">
 								{{ loadout.name }}
 								<v-tooltip v-if="warningsByLoadout[loadout.id] && warningsByLoadout[loadout.id].length > 0" location="bottom">
@@ -25,34 +25,40 @@
 									<div v-for="(w, i) in warningsByLoadout[loadout.id]" :key="i">{{ w }}</div>
 								</v-tooltip>
 							</div>
-							<div class="loadout-preview">
-								<div class="preview-col">
-									<template v-for="tpl in loadout.weapons" :key="'w' + tpl">
-										<div v-if="LeekWars.items[tpl]" class="preview-slot">
-											<item :item="LeekWars.items[tpl]" />
-										</div>
-									</template>
-								</div>
-								<div class="preview-col">
-									<template v-for="tpl in loadout.chips" :key="'c' + tpl">
-										<div v-if="LeekWars.items[tpl]" class="preview-slot">
-											<item :item="LeekWars.items[tpl]" />
-										</div>
-									</template>
-								</div>
-								<div class="preview-col">
-									<template v-for="c in loadout.components" :key="'comp' + c.index">
-										<div v-if="LeekWars.items[c.template]" class="preview-slot">
-											<item :item="LeekWars.items[c.template]" />
-										</div>
-									</template>
-								</div>
+							<div class="loadout-actions">
+								<v-btn size="small" color="primary" :loading="applying === loadout.id" @click="apply(loadout)">{{ $t('main.loadout_apply') }}</v-btn>
+								<v-btn size="x-small" variant="text" icon @click="startEdit(loadout)"><v-icon size="18">mdi-pencil</v-icon></v-btn>
+								<v-btn size="x-small" variant="text" icon @click="remove(loadout)"><v-icon size="18">mdi-delete</v-icon></v-btn>
 							</div>
 						</div>
-						<div class="loadout-actions">
-							<v-btn size="small" color="primary" :loading="applying === loadout.id" @click="apply(loadout)">{{ $t('main.loadout_apply') }}</v-btn>
-							<v-btn size="small" icon @click="startEdit(loadout)"><v-icon>mdi-pencil</v-icon></v-btn>
-							<v-btn size="small" icon @click="remove(loadout)"><v-icon>mdi-delete</v-icon></v-btn>
+						<div class="loadout-preview">
+							<div class="preview-col preview-col-stats">
+								<div v-for="c in CHARACTERISTICS" :key="c" class="stat-badge" :class="[c, { empty: !statBonusFor(loadout, c) }]">
+									<img :src="'/image/charac/' + c + '.png'" width="14" height="14">
+									<span :class="'color-' + c">{{ statTotalFor(loadout, c) }}</span>
+								</div>
+							</div>
+							<div class="preview-col preview-col-weapons">
+								<template v-for="tpl in loadout.weapons" :key="'w' + tpl">
+									<div v-if="LeekWars.items[tpl]" class="preview-slot">
+										<item :item="LeekWars.items[tpl]" />
+									</div>
+								</template>
+							</div>
+							<div class="preview-col preview-col-chips">
+								<template v-for="tpl in loadout.chips" :key="'c' + tpl">
+									<div v-if="LeekWars.items[tpl]" class="preview-slot">
+										<item :item="LeekWars.items[tpl]" />
+									</div>
+								</template>
+							</div>
+							<div class="preview-col preview-col-components">
+								<template v-for="c in loadout.components" :key="'comp' + c.index">
+								<div v-if="LeekWars.items[c.template]" class="preview-slot">
+										<item :item="LeekWars.items[c.template]" />
+									</div>
+								</template>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -240,6 +246,18 @@
 		return capital
 	}
 
+	function baseStatFor(level: number, stat: string): number {
+		switch (stat) {
+			case 'life': return 100 + (level - 1) * 3
+			case 'frequency': return 100
+			case 'cores': return 1
+			case 'ram': return 6
+			case 'tp': return 10
+			case 'mp': return 3
+			default: return 0
+		}
+	}
+
 	export default defineComponent({
 		name: 'LoadoutDialog',
 		components: { EmojiPicker, Item, LoadoutStatsPicker },
@@ -285,13 +303,8 @@
 				const maxWeapons = this.leek.max_weapons
 				const baseRam = this.leek.ram
 				const leek = this.leek as any
-				const baseBonuses: { [k: string]: number } = {
-					life: leek.life - 100 - (leek.level - 1) * 3,
-					strength: leek.strength, wisdom: leek.wisdom, agility: leek.agility,
-					resistance: leek.resistance, science: leek.science, magic: leek.magic,
-					frequency: leek.frequency - 1, cores: leek.cores - 1, ram: leek.ram - 1,
-					tp: leek.tp - 3, mp: leek.mp - 2,
-				}
+				const baseBonuses: { [k: string]: number } = {}
+				for (const s of CHARACTERISTICS) baseBonuses[s] = leek[s] - baseStatFor(leek.level, s)
 				// Total capital du leek à son niveau actuel (formule serveur)
 				let totalCapital = 6 + (level - 1) * 5 + Math.floor(level / 100) * 45
 				if (level === 301) totalCapital += 95
@@ -381,15 +394,8 @@
 				// Import des stats depuis l'allocation actuelle du leek
 				const stats: LoadoutStats = {}
 				const leek = this.leek as any
-				const base: { [k: string]: number } = {
-					life: leek.life - 100 - (leek.level - 1) * 3,
-					strength: leek.strength, wisdom: leek.wisdom, agility: leek.agility,
-					resistance: leek.resistance, science: leek.science, magic: leek.magic,
-					frequency: leek.frequency - 1, cores: leek.cores - 1, ram: leek.ram - 1,
-					tp: leek.tp - 3, mp: leek.mp - 2,
-				}
 				for (const stat of CHARACTERISTICS) {
-					const bonus = base[stat] || 0
+					const bonus = leek[stat] - baseStatFor(leek.level, stat)
 					const cap = statBonusToCapital(stat, bonus)
 					if (cap > 0) stats[stat] = cap
 				}
@@ -398,6 +404,24 @@
 			totalCapital(): number {
 				if (!this.editing) return 0
 				return Object.values(this.editing.stats).reduce((a, b) => a + b, 0)
+			},
+			statBonusFor(loadout: Loadout, stat: string): number {
+				if (!loadout.stats) return 0
+				const cap = loadout.stats[stat] || 0
+				return cap > 0 ? capitalToStatBonus(stat, cap) : 0
+			},
+			statTotalFor(loadout: Loadout, stat: string): number {
+				const level = this.leek?.level || 1
+				let total = baseStatFor(level, stat) + this.statBonusFor(loadout, stat)
+				for (const c of loadout.components || []) {
+					const item = LeekWars.items[c.template]
+					const comp = item && LeekWars.components[item.params]
+					if (!comp) continue
+					for (const [s, v] of comp.stats) {
+						if (s === stat) total += v
+					}
+				}
+				return total
 			},
 			toggleWeapon(tpl: number) {
 				if (!this.editing) return
@@ -509,13 +533,8 @@
 			statsDifferFromLeek(loadout: Loadout): boolean {
 				if (!this.leek) return false
 				const leek = this.leek as any
-				const baseBonuses: { [k: string]: number } = {
-					life: leek.life - 100 - (leek.level - 1) * 3,
-					strength: leek.strength, wisdom: leek.wisdom, agility: leek.agility,
-					resistance: leek.resistance, science: leek.science, magic: leek.magic,
-					frequency: leek.frequency - 1, cores: leek.cores - 1, ram: leek.ram - 1,
-					tp: leek.tp - 3, mp: leek.mp - 2,
-				}
+				const baseBonuses: { [k: string]: number } = {}
+				for (const s of CHARACTERISTICS) baseBonuses[s] = leek[s] - baseStatFor(leek.level, s)
 				for (const stat of CHARACTERISTICS) {
 					const target = (loadout.stats && loadout.stats[stat]) || 0
 					const current = statBonusToCapital(stat, baseBonuses[stat] || 0)
@@ -526,12 +545,8 @@
 			applyStatsLocally(loadout: Loadout) {
 				if (!this.leek) return
 				const leek = this.leek as any
-				// Reset to base then add bonuses
-				leek.life = 100 + (leek.level - 1) * 3
-				leek.strength = 0; leek.wisdom = 0; leek.agility = 0
-				leek.resistance = 0; leek.science = 0; leek.magic = 0
-				leek.frequency = 1; leek.cores = 1; leek.ram = 1; leek.tp = 3; leek.mp = 2
 				for (const stat of CHARACTERISTICS) {
+					leek[stat] = baseStatFor(leek.level, stat)
 					const cap = (loadout.stats && loadout.stats[stat]) || 0
 					if (cap > 0) leek[stat] += capitalToStatBonus(stat, cap)
 				}
@@ -562,28 +577,49 @@
 .loadout-list { padding: 4px 0; }
 .loadouts { display: flex; flex-direction: column; gap: 6px; }
 .loadout-card {
-	display: flex; align-items: center; gap: 10px;
-	padding: 6px 10px; border-radius: 6px; background: #f5f5f5;
+	display: flex; flex-direction: column; gap: 6px;
+	padding: 8px 10px; border-radius: 6px; background: #f5f5f5;
 }
+.loadout-header { display: flex; align-items: center; gap: 10px; }
 .loadout-icon {
-	width: 32px; flex-shrink: 0;
+	width: 28px; flex-shrink: 0;
 	display: flex; align-items: center; justify-content: center;
 }
-.emoji-icon { font-size: 24px; line-height: 1; }
-.loadout-info { flex: 1; min-width: 0; }
-.loadout-name { font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
-.loadout-warning-icon { flex-shrink: 0; }
-.loadout-preview { display: flex; gap: 6px; margin-top: 4px; }
-.preview-col {
-	flex: 1; display: flex; flex-wrap: wrap; gap: 3px; align-content: flex-start;
-	max-height: calc(2 * 30px + 3px); overflow: hidden;
+.emoji-icon { font-size: 22px; line-height: 1; }
+.emoji-icon :deep(img) { width: 24px; height: 24px; vertical-align: middle; }
+.loadout-name {
+	flex: 1; min-width: 0;
+	font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+	display: flex; align-items: center; gap: 6px;
 }
+.loadout-warning-icon { flex-shrink: 0; }
+.loadout-preview { display: flex; gap: 12px; align-items: flex-start; }
+.preview-col {
+	display: flex; flex-wrap: wrap; gap: 3px; align-content: flex-start;
+	min-width: 0;
+}
+.preview-col-stats {
+	flex: 3;
+	display: grid; grid-template-columns: repeat(4, minmax(44px, auto)); gap: 8px 12px;
+	font-size: 12px;
+	padding: 2px 0;
+}
+.preview-col-weapons { flex: 1; }
+.preview-col-chips { flex: 6; }
+.preview-col-components { flex: 2; }
+.stat-badge { display: flex; align-items: center; gap: 2px; font-weight: 500; min-width: 0; }
+.stat-badge img { flex-shrink: 0; }
+.stat-badge span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.stat-badge.empty { opacity: 0.35; }
+body.dark .stat-badge.frequency img { filter: invert(1); }
 .preview-slot {
 	width: 30px; height: 30px; flex-shrink: 0;
 	:deep(span) { display: block; }
 	:deep(.item) { width: 30px !important; height: 30px !important; box-sizing: border-box !important; }
 }
-.loadout-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.loadout-actions { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
+.loadout-actions .v-btn[variant="text"] { opacity: 0.55; }
+.loadout-actions .v-btn[variant="text"]:hover { opacity: 1; }
 .list-footer { margin-top: 12px; }
 
 // Formulaire
