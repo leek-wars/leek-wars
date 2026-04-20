@@ -124,10 +124,10 @@
 						<div v-else-if="entry.placeholder" class="placeholder"></div>
 						<div v-else class="cell active" :class="['rarity-border-' + LeekWars.items[entry.item.template].rarity, { 'not-craftable': !entry.craftable }]" @mouseenter="showTooltip(entry.item, $event)" @mouseleave="scheduleHideTooltip()">
 							<div class="item" :quantity="$filters.number(entry.item.quantity)" :type="LeekWars.items[entry.item.template].type">
-								<img v-if="entry.item.type === ItemType.RESOURCE" class="image" :src="'/image/resource/' + LeekWars.items[entry.item.template].name + '.png'">
+								<img v-if="entry.item.type === ItemType.RESOURCE" class="image" :src="'/image/resource/' + LeekWars.items[entry.item.template].name + '.png'" loading="lazy">
 								<scheme-image v-else-if="entry.item.type === ItemType.SCHEME" class="image" :scheme="LeekWars.schemes[LeekWars.items[entry.item.template].params]" />
-								<img v-else-if="entry.item.type === ItemType.COMPONENT" class="image" :src="'/image/component/' + LeekWars.items[entry.item.template].name + '.png'">
-								<img v-else class="image" :class="{small: entry.item.template === 37 || entry.item.template === 45 || entry.item.template === 153 || entry.item.template === 182}" :src="'/image/' + LeekWars.items[entry.item.template].name.replace('_', '/') + '.png'">
+								<img v-else-if="entry.item.type === ItemType.COMPONENT" class="image" :src="'/image/component/' + LeekWars.items[entry.item.template].name + '.png'" loading="lazy">
+								<img v-else class="image" :class="{small: entry.item.template === 37 || entry.item.template === 45 || entry.item.template === 153 || entry.item.template === 182}" :src="'/image/' + LeekWars.items[entry.item.template].name.replace('_', '/') + '.png'" loading="lazy">
 								<img v-if="LeekWars.items[entry.item.template].name.startsWith('box')" class="retrieve notif-trophy" src="/image/icon/black/arrow-down-right-bold.svg">
 								<img v-if="LeekWars.christmasPresents && LeekWars.items[entry.item.template].name.startsWith('present')" class="retrieve notif-trophy" src="/image/icon/black/arrow-down-right-bold.svg">
 								<div class="id">#{{ entry.item.template }}</div>

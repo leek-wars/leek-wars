@@ -59,7 +59,7 @@
 						<loader v-if="!weapons.length" />
 						<div v-else class="items weapons">
 							<router-link v-for="weapon in filteredWeapons" :key="weapon.id" v-ripple :to="'/market/' + weapon.name.replace('weapon_', '')" class="item weapon" :class="{toohigh: weapon.level > max_level}">
-								<img :src="'/image/' + weapon.name.replace('_', '/') + '.png'">
+								<img :src="'/image/' + weapon.name.replace('_', '/') + '.png'" loading="lazy">
 								<div v-if="items[weapon.id].leek_count || items[weapon.id].farmer_count" class="counts">
 									<span v-if="items[weapon.id].leek_count" class="leek-count">{{ items[weapon.id].leek_count }}</span>
 									<span v-if="items[weapon.id].farmer_count" class="farmer-count">{{ items[weapon.id].farmer_count }}</span>
@@ -79,7 +79,7 @@
 						<loader v-if="!chips.length" />
 						<div v-else-if="chipMode === 'level' || search" class="items chips">
 							<router-link v-for="chip in filteredChips" :key="chip.id" v-ripple :to="'/market/' + chip.name" class="item chip" :class="{toohigh: chip.level > max_level}">
-								<img :src="'/image/chip/' + chip.name + '.png'">
+								<img :src="'/image/chip/' + chip.name + '.png'" loading="lazy">
 								<div v-if="items[chip.id].leek_count || items[chip.id].farmer_count" class="counts">
 									<span v-if="items[chip.id].leek_count" class="leek-count">{{ items[chip.id].leek_count }}</span>
 									<span v-if="items[chip.id].farmer_count" class="farmer-count">{{ items[chip.id].farmer_count }}</span>
@@ -91,7 +91,7 @@
 								<h4 :class="{first: type === EffectTypeMarket.ATTACK}">{{ $t('effect.effect_type_' + type) }}</h4>
 								<div class="items chips">
 									<router-link v-for="chip in chipsByType[type]" :key="chip.id" v-ripple :to="'/market/' + chip.name" class="item chip" :class="{toohigh: chip.level > max_level}">
-										<img :src="'/image/chip/' + chip.name + '.png'">
+										<img :src="'/image/chip/' + chip.name + '.png'" loading="lazy">
 										<div v-if="items[chip.id].leek_count || items[chip.id].farmer_count" class="counts">
 											<span v-if="items[chip.id].leek_count" class="leek-count">{{ items[chip.id].leek_count }}</span>
 											<span v-if="items[chip.id].farmer_count" class="farmer-count">{{ items[chip.id].farmer_count }}</span>
@@ -107,7 +107,7 @@
 						<loader v-if="!potions.length" />
 						<div v-else class="items potions">
 							<router-link v-for="potion in filteredPotions" :key="potion.id" v-ripple :to="'/market/' + potion.name" class="item potion" :class="{toohigh: potion.level > max_level}">
-								<img :src="'/image/potion/' + potion.name + '.png'">
+								<img :src="'/image/potion/' + potion.name + '.png'" loading="lazy">
 								<div v-if="items[potion.id].leek_count || items[potion.id].farmer_count" class="counts">
 									<span v-if="items[potion.id].leek_count" class="leek-count">{{ items[potion.id].leek_count }}</span>
 									<span v-if="items[potion.id].farmer_count" class="farmer-count">{{ items[potion.id].farmer_count }}</span>
@@ -121,7 +121,7 @@
 						<loader v-if="!hats.length" />
 						<div v-else class="items hats">
 							<router-link v-for="hat in filteredHats" :key="hat.id" v-ripple :to="'/market/' + hat.name" class="item hat" :class="{toohigh: hat.level > max_level}">
-								<img :src="'/image/hat/' + hat.name + '.png?2'">
+								<img :src="'/image/hat/' + hat.name + '.png?2'" loading="lazy">
 								<div v-if="items[hat.id].leek_count || items[hat.id].farmer_count" class="counts">
 									<span v-if="items[hat.id].leek_count" class="leek-count">{{ items[hat.id].leek_count }}</span>
 									<span v-if="items[hat.id].farmer_count" class="farmer-count">{{ items[hat.id].farmer_count }}</span>
@@ -135,7 +135,7 @@
 						<loader v-if="!pomps.length" />
 						<div v-else class="items pomps">
 							<router-link v-for="pomp in filteredPomps" :key="pomp.id" :to="'/market/' + pomp.name" class="item pomp" :class="{toohigh: pomp.level > max_level}">
-								<img :src="'/image/pomp/' + pomp.name + '.png'">
+								<img :src="'/image/pomp/' + pomp.name + '.png'" loading="lazy">
 								<div v-if="items[pomp.id].leek_count || items[pomp.id].farmer_count" class="counts">
 									<span v-if="items[pomp.id].leek_count" class="leek-count">{{ items[pomp.id].leek_count }}</span>
 									<span v-if="items[pomp.id].farmer_count" class="farmer-count">{{ items[pomp.id].farmer_count }}</span>
