@@ -93,6 +93,7 @@
 	"locale_xx_XX": "fi_GB",
 	"login_gh": "Kirjaudu sisään GitHubin kautta",
 	"logout": "Kirjautua ulos",
+	"logout_confirm": "Haluatko varmasti kirjautua ulos?",
 	"market": "Kauppapaikka",
 	"me": "Minä",
 	"messages": "Yksityisviestit",

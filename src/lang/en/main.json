@@ -102,6 +102,7 @@
 	"locale_xx_XX": "en_US",
 	"login_gh": "Sign in via GitHub",
 	"logout": "Logout",
+	"logout_confirm": "Are you sure you want to log out?",
 	"market": "Market",
 	"me": "Me",
 	"messages": "Private messages",

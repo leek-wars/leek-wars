@@ -162,6 +162,18 @@
 				<div>{{ $t('main.logged_out_other_tab') }}</div>
 			</popup>
 
+				<popup v-model="LeekWars.logoutDialog" :width="500">
+					<template #title>
+						<v-icon>mdi-logout</v-icon>
+						{{ $t('main.logout') }}
+					</template>
+					<div>{{ $t('main.logout_confirm') }}</div>
+					<template #actions>
+						<div v-ripple class="action dismiss" @click="LeekWars.logoutDialog = false">{{ $t('main.cancel') }}</div>
+						<div v-ripple class="action red" @click="confirmLogout">{{ $t('main.logout') }}</div>
+					</template>
+				</popup>
+
 			<v-dialog v-if="docEverywhere" v-model="docEverywhereModel" content-class="doc" :max-width="1400">
 					<documentation ref="doc" :popup="true" />
 				</v-dialog>
@@ -313,6 +325,11 @@
 			localStorage.setItem('theme', 'xp')
 			LeekWars.xpTheme = true
 			LeekWars.darkMode = false
+		}
+		confirmLogout() {
+			LeekWars.logoutDialog = false
+			this.$store.commit('disconnect')
+			this.$router.push('/')
 		}
 		darkClick() {
 			LeekWars.menuExpanded = false

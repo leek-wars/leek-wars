@@ -786,8 +786,7 @@ import { emitter } from '@/model/vue'
 		}
 
 		logout() {
-			this.$store.commit('disconnect')
-			this.$router.push('/')
+			LeekWars.logoutDialog = true
 		}
 
 		showTrophyTooltip(trophy: any, event: MouseEvent) {

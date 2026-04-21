@@ -93,6 +93,7 @@
 	"locale_xx_XX": "da_DK",
 	"login_gh": "Log ind via GitHub",
 	"logout": "Log ud",
+	"logout_confirm": "Er du sikker på, at du vil logge ud?",
 	"market": "Marked",
 	"me": "Mig",
 	"messages": "Private beskeder",

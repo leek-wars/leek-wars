@@ -93,6 +93,7 @@
 	"locale_xx_XX": "ko_KR",
 	"login_gh": "GitHub를 통해 로그인",
 	"logout": "로그 아웃",
+	"logout_confirm": "정말로 로그아웃하시겠습니까?",
 	"market": "시장",
 	"me": "나",
 	"messages": "비공개 메시지",

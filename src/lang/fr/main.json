@@ -109,6 +109,7 @@
 	"locale_xx_XX": "fr_FR",
 	"login_gh": "Connexion via GitHub",
 	"logout": "Déconnexion",
+	"logout_confirm": "Voulez-vous vraiment vous déconnecter ?",
 	"market": "Marché",
 	"me": "Moi",
 	"messages": "Messages privés",

@@ -93,6 +93,7 @@
 	"locale_xx_XX": "en_GB",
 	"login_gh": "Masuk melalui GitHub",
 	"logout": "Keluar",
+	"logout_confirm": "Apakah Anda yakin ingin keluar?",
 	"market": "Pasar",
 	"me": "Aku",
 	"messages": "Pesan pribadi",

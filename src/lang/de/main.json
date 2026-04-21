@@ -93,6 +93,7 @@
 	"locale_xx_XX": "de_DE",
 	"login_gh": "Melden Sie sich über GitHub an",
 	"logout": "Ausloggen",
+	"logout_confirm": "Möchten Sie sich wirklich abmelden?",
 	"market": "Markt",
 	"me": "Mich",
 	"messages": "Private Nachrichten",

@@ -93,6 +93,7 @@
 	"locale_xx_XX": "en_GB",
 	"login_gh": "通过 GitHub 登录",
 	"logout": "登出",
+	"logout_confirm": "您确定要退出吗？",
 	"market": "市场",
 	"me": "我",
 	"messages": "私人信息",

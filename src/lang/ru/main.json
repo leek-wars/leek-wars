@@ -104,6 +104,7 @@
 	"locale_xx_XX": "en_GB",
 	"login_gh": "Войти через GitHub",
 	"logout": "Выйти",
+	"logout_confirm": "Вы уверены, что хотите выйти?",
 	"market": "Рынок",
 	"me": "Мне",
 	"messages": "Личные сообщения",

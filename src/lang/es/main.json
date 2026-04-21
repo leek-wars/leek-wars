@@ -91,6 +91,7 @@
 	"locale_xx_XX": "es_ES",
 	"login_gh": "Iniciar sesión a través de GitHub",
 	"logout": "Cerrar sesión",
+	"logout_confirm": "¿Está seguro de que desea cerrar sesión?",
 	"market": "Mercado",
 	"me": "Yo",
 	"messages": "Mensajes privados",

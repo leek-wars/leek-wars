@@ -815,6 +815,7 @@ const LeekWars = reactive({
 	effectRawOpened: false,
 	message: null as string | null,
 	messagePopup: false,
+	logoutDialog: false,
 	displayMessage: (message: string | null) => {
 		if (message) {
 			// console.log("Display message", message)

@@ -93,6 +93,7 @@
 	"locale_xx_XX": "en_GB",
 	"login_gh": "GitHub経由でログイン",
 	"logout": "ログアウト",
+	"logout_confirm": "ログアウトしてもよろしいですか？",
 	"market": "市場",
 	"me": "自分",
 	"messages": "プライベートメッセージ",

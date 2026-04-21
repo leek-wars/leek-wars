@@ -93,6 +93,7 @@
 	"locale_xx_XX": "nl_GB",
 	"login_gh": "Inloggen via GitHub",
 	"logout": "Uitloggen",
+	"logout_confirm": "Weet je zeker dat je wilt uitloggen?",
 	"market": "Markt",
 	"me": "Mij",
 	"messages": "Prive berichten",

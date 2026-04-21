@@ -370,8 +370,7 @@
 		}
 
 		logout() {
-			this.$store.commit('disconnect')
-			this.$router.push('/')
+			LeekWars.logoutDialog = true
 		}
 
 		clearLocalStorage() {

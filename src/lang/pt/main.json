@@ -93,6 +93,7 @@
 	"locale_xx_XX": "pt_BR",
 	"login_gh": "Entrar pelo GitHub",
 	"logout": "Sair",
+	"logout_confirm": "Tem certeza de que deseja sair?",
 	"market": "Mercado",
 	"me": "Eu",
 	"messages": "Mensagens privadas",
