@@ -248,6 +248,7 @@
 		selectedHistoryIndex: number | null = null
 		diffEditor: Monaco.editor.IStandaloneDiffEditor | null = null
 		referencedBy: { children: any[], translations: any[], linked_from: any[] } | null = null
+		destroyed: boolean = false
 
 		get language() {
 			return this.$route.params && this.$route.params.lang ? this.$route.params.lang : this.$i18n.locale
@@ -327,6 +328,7 @@
 		}
 
 		beforeUnmount() {
+			this.destroyed = true
 			emitter.off('ctrlS')
 			window.removeEventListener('beforeunload', this.boundBeforeUnload)
 			LeekWars.large = false
@@ -366,6 +368,7 @@
 		@Watch('lanuage_and_code', {immediate: true})
 		async update() {
 			await LeekWars.loadEncyclopedia(this.language)
+			if (this.destroyed) { return }
 
 			if (this.code === 'Page au hasard') {
 				const pages = Object.values(LeekWars.encyclopedia[this.$i18n.locale])
