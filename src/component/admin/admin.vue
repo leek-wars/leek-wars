@@ -134,6 +134,12 @@
 							<h2>Dashboards</h2>
 						</div>
 					</router-link>
+					<router-link to="/admin/matchmaking">
+						<div v-ripple class="section card">
+							<v-icon>mdi-target-account</v-icon>
+							<h2>Debug matchmaking</h2>
+						</div>
+					</router-link>
 					<a target="_blank" rel="noopener" href="https://umami.leekwars.com/websites/493ffc4a-c7bd-45b1-b2f2-d61af7310749">
 						<div v-ripple class="section card">
 							<v-icon>mdi-chart-bar</v-icon>
