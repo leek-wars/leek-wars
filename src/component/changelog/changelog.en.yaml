@@ -17,7 +17,7 @@
     - "#ai `// @version` and `// @strict` pragmas in AI files. #img_247_pragmas"
     - "#ai BigInteger added to LeekScript (thanks to Batary)."
     - "#ai setBit, testBit and bitLength functions for BigIntegers (thanks to Batary)."
-    - "#ai `EROSION_DAMAGE`, `EROSION_POISON` and `EROSION_CRITICAL_MODIFIER` constants for erosion rates (thanks to fujiwar)."
+    - "#ai `EROSION_DAMAGE`, `EROSION_POISON` and `EROSION_CRITICAL` constants for erosion rates (thanks to fujiwar)."
     - "Chat commands `/war`, `/chest`, `/coloss` to invite to a specific arena type (thanks to Kraspen)."
   improved:
     - "Confirmation popup before logout (thanks to FdHP)."

@@ -17,7 +17,7 @@
     - "#ai Pragma `// @version` e `// @strict` nei file di IA. #img_247_pragmas"
     - "#ai Aggiunta dei BigInteger in LeekScript (grazie a Batary)."
     - "#ai Funzioni setBit, testBit e bitLength per i BigInteger (grazie a Batary)."
-    - "#ai Costanti `EROSION_DAMAGE`, `EROSION_POISON` e `EROSION_CRITICAL_MODIFIER` per i tassi di erosione (grazie a fujiwar)."
+    - "#ai Costanti `EROSION_DAMAGE`, `EROSION_POISON` e `EROSION_CRITICAL` per i tassi di erosione (grazie a fujiwar)."
     - "Comandi chat `/war`, `/chest`, `/coloss` per invitare a un tipo specifico di arena (grazie a Kraspen)."
   improved:
     - "Popup di conferma prima della disconnessione (grazie a FdHP)."
