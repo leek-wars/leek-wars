@@ -15,6 +15,7 @@
 	export default class BrInvite extends Vue {
 		@Prop() level!: number
 		@Prop() label!: string
+		@Prop() mode!: number
 
 		get arenaCount() {
 			return this.$store.state.arenaCount || 0
@@ -49,7 +50,9 @@
 		joinArena() {
 			const leek = this.eligibleLeek
 			if (leek) {
-				const preference = parseInt(localStorage.getItem('arena/preference') || '-1', 10)
+				const preference = this.mode !== undefined
+					? this.mode
+					: parseInt(localStorage.getItem('arena/preference') || '-1', 10)
 				LeekWars.arena.register(leek, preference)
 			}
 		}

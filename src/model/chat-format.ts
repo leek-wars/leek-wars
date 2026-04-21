@@ -13,14 +13,10 @@ function format(content: string, authorName: string): string {
 export function formatChatMessage(
 	content: string,
 	authorName: string,
-	date: number,
 	farmerByName: {[name: string]: unknown}
 ): string {
 	if (!content) { return '' }
 	let result = format(content, authorName)
-	if (Date.now() / 1000 - date > 3600) {
-		result = result.replace(/<span class="br-invite"[^>]*><\/span>/g, '/arena')
-	}
 	result = result.replace(/@(\w+)/g, (a, b) => {
 		return farmerByName[b] ? "<span class='pseudo'>" + b + "</span>" : a
 	})

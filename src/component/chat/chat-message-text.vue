@@ -46,7 +46,9 @@
 			this.$el.querySelectorAll('.br-invite').forEach((c) => {
 				const level = parseInt((c as HTMLElement).dataset.level || '', 10) || 0
 				const label = (c as HTMLElement).dataset.label || undefined
-				const app = createSubApp(BrInvite, { level, label }, 'chat-br-invite')
+				const modeStr = (c as HTMLElement).dataset.mode
+				const mode = modeStr !== undefined ? parseInt(modeStr, 10) : undefined
+				const app = createSubApp(BrInvite, { level, label, mode }, 'chat-br-invite')
 				app.mount(c)
 				this.subApps.push(app)
 			})

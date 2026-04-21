@@ -448,7 +448,7 @@ import { emitter } from '@/model/vue'
 			}
 			if (message.formatted) return message
 
-			message.content = formatChatMessage(message.content, message.farmer.name, message.date, store.state.farmer_by_name)
+			message.content = formatChatMessage(message.content, message.farmer.name, store.state.farmer_by_name)
 
 			const element = document.createElement('div')
 			element.innerHTML = message.content

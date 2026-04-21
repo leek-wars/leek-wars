@@ -41,6 +41,36 @@ const COMMANDS = [
 		regex: /(^| )\/br!(?::(\d+))?(?=$|\s)/gi,
 		replacement: (_: string, space: string, level: string) => space + '<span class="br-invite" data-level="' + (level || '') + '" data-label="LA BAGAAAAARRE !"></span>'
 	}, {
+		name: "chest",
+		description: "Inviter à rejoindre une chasse aux coffres",
+		regex: /(^| )\/chest(?=$|\s)/gi,
+		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="2" data-label="Chasse aux coffres"></span>'
+	}, {
+		name: "chest!",
+		description: "Inviter à rejoindre une chasse aux coffres, de manière appuyée",
+		regex: /(^| )\/chest!(?=$|\s)/gi,
+		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="2" data-label="AUX COFFREEEES !"></span>'
+	}, {
+		name: "coloss",
+		description: "Inviter à rejoindre un combat contre un colosse",
+		regex: /(^| )\/coloss(?=$|\s)/gi,
+		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="3" data-label="Colosse"></span>'
+	}, {
+		name: "coloss!",
+		description: "Inviter à rejoindre un combat contre un colosse, de manière appuyée",
+		regex: /(^| )\/coloss!(?=$|\s)/gi,
+		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="3" data-label="LE COLOOOOSSE !"></span>'
+	}, {
+		name: "war",
+		description: "Inviter à rejoindre une guerre",
+		regex: /(^| )\/war(?=$|\s)/gi,
+		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="1" data-label="Guerre"></span>'
+	}, {
+		name: "war!",
+		description: "Inviter à rejoindre une guerre, de manière appuyée",
+		regex: /(^| )\/war!(?=$|\s)/gi,
+		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="1" data-label="À LA GUEEEEERRE !"></span>'
+	}, {
 		name: "doc",
 		description: "Lien vers la documentation",
 		regex: /(?:^|(\s))\/doc(?::([^\s#]+))?(?=\s|$)/gi,

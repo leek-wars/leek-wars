@@ -13,6 +13,7 @@
     - "Nuovo trofeo bonus « Retro » (Pesce d'aprile 2026)."
     - "#ai Valori di default per i parametri di funzione in LeekScript. #img_247_default_params"
     - "#ai Funzione `arrayFind(array, predicato)`: restituisce il primo elemento corrispondente."
+    - "#ai Funzione `getCompoName(entità)`: restituisce il nome della composizione del team di un'entità (grazie a KavaliovOcties)."
     - "#ai Pragma `// @version` e `// @strict` nei file di IA. #img_247_pragmas"
     - "#ai Aggiunta dei BigInteger in LeekScript (grazie a Batary)."
     - "#ai Funzioni setBit, testBit e bitLength per i BigInteger (grazie a Batary)."
