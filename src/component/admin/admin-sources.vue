@@ -99,6 +99,7 @@
 
 								<div class="register-type" :title="regLabel(farmer.reg_type)">
 									<v-icon v-if="farmer.reg_type === 'github'">mdi-github</v-icon>
+									<v-icon v-else-if="farmer.reg_type === 'google'">mdi-google</v-icon>
 									<v-icon v-else-if="farmer.reg_type === 'classic'">mdi-email-outline</v-icon>
 									<v-icon v-else>mdi-flash-outline</v-icon>
 									<v-icon v-if="farmer.verified" class="verified" title="Vérifié">mdi-check-decagram</v-icon>
@@ -106,9 +107,9 @@
 								</div>
 
 								<div class="tuto" :title="tutoTitle(farmer)">
-									<v-icon v-if="farmer.didactitiel_seen" class="done">mdi-school</v-icon>
-									<v-icon v-else class="pending">mdi-school-outline</v-icon>
-									<span v-if="farmer.tutorial_progress > 0">{{ farmer.tutorial_progress }}</span>
+									<v-icon v-if="farmer.didactitiel_seen" class="done" title="Didactitiel terminé">mdi-school</v-icon>
+									<v-icon v-else class="pending" title="Didactitiel non terminé">mdi-school-outline</v-icon>
+									<span v-if="farmer.tutorial_progress > 0" class="progress" :class="{complete: farmer.tutorial_progress >= 10}">{{ farmer.tutorial_progress }}/10</span>
 								</div>
 
 								<div class="last-connection" :title="'Dernière connexion: ' + $filters.date(farmer.last_time)">
@@ -116,17 +117,16 @@
 									{{ $filters.duration(farmer.last_time) }}
 								</div>
 
-								<div class="playtime" :title="farmer.playtime > 60 ? 'Temps total: ' + LeekWars.formatLongDuration(farmer.playtime) : ''">
-									<template v-if="farmer.playtime > 60">
+								<div class="playtime" :title="farmer.playtime > 0 ? 'Temps total : ' + LeekWars.formatLongDuration(farmer.playtime) : ''">
+									<template v-if="farmer.playtime > 0">
 										<v-icon>mdi-timer-sand</v-icon>
-										{{ shortDuration(farmer.playtime) }}
+										{{ LeekWars.formatLongDuration(farmer.playtime) }}
 									</template>
 								</div>
 
 								<div class="team-cell">
-									<router-link v-if="farmer.team_id" :to="'/team/' + farmer.team_id" class="team" :title="'Équipe: ' + farmer.team_name">
+									<router-link v-if="farmer.team_id" :to="'/team/' + farmer.team_id" class="team" :title="farmer.team_name">
 										<v-icon>mdi-shield-outline</v-icon>
-										<span>{{ farmer.team_name }}</span>
 									</router-link>
 								</div>
 
@@ -191,12 +191,13 @@
 	const REG_TYPES: Record<string, { label: string, title: string, color: string }> = {
 		classic: { label: 'Classique', title: 'Inscription classique', color: '#2196f3' },
 		github:  { label: 'GitHub',    title: 'Inscription GitHub',    color: '#424242' },
+		google:  { label: 'Google',    title: 'Inscription Google',    color: '#db4437' },
 		fast:    { label: 'Rapide',    title: 'Inscription rapide',    color: '#ff9800' },
 	}
 	const GRID = { color: 'rgba(128,128,128,0.15)' }
 	const makeChartOptions = (stacked: boolean): ChartOptions<any> => ({
 		responsive: true,
-		aspectRatio: 3,
+		maintainAspectRatio: false,
 		plugins: { legend: { position: 'bottom' } },
 		scales: {
 			y: { beginAtZero: true, stacked, grid: GRID },
@@ -261,7 +262,7 @@
 
 				this.last_farmers_by_day = {}
 				for (const farmer of this.last) {
-					farmer.reg_type = farmer.github ? 'github' : (farmer.pass ? 'classic' : 'fast')
+					farmer.reg_type = farmer.github ? 'github' : (farmer.google ? 'google' : (farmer.pass ? 'classic' : 'fast'))
 					const day = LeekWars.formatDate(farmer.register_time)
 					if (!this.last_farmers_by_day[day]) this.last_farmers_by_day[day] = []
 					this.last_farmers_by_day[day].push(farmer)
@@ -316,16 +317,9 @@
 		}
 
 		tutoTitle(farmer: any): string {
-			const state = farmer.didactitiel_seen ? 'terminé' : 'en cours'
-			return 'Didactitiel ' + state + ' (étape ' + farmer.tutorial_progress + ')'
-		}
-
-		shortDuration(seconds: number): string {
-			if (seconds < 3600) return Math.floor(seconds / 60) + 'm'
-			if (seconds < 86400) return Math.floor(seconds / 3600) + 'h'
-			if (seconds < 30 * 86400) return Math.floor(seconds / 86400) + 'j'
-			if (seconds < 365 * 86400) return Math.floor(seconds / (30 * 86400)) + 'mo'
-			return Math.floor(seconds / (365 * 86400)) + 'a'
+			const didactitiel = farmer.didactitiel_seen ? 'Didactitiel terminé' : 'Didactitiel non terminé'
+			const tuto = 'Tutoriel ' + farmer.tutorial_progress + '/10'
+			return didactitiel + ' · ' + tuto
 		}
 
 		formatPercent(v: number | null): string {
@@ -391,7 +385,8 @@
 		font-size: 15px;
 	}
 	.stats-chart {
-		max-height: 280px;
+		height: 300px;
+		max-height: 300px;
 	}
 }
 .countries {
@@ -481,18 +476,18 @@
 .farmer {
 	display: grid;
 	grid-template-columns:
-		/* date   */ 80px
-		/* name   */ minmax(180px, 1.5fr)
-		/* reg    */ 50px
-		/* tuto   */ 55px
-		/* last   */ 120px
-		/* play   */ 70px
-		/* team   */ 130px
-		/* ai     */ 45px
-		/* ip     */ 170px
-		/* stats  */ 140px
-		/* source */ minmax(120px, 1fr);
-	column-gap: 8px;
+		/* date   */ 70px
+		/* name   */ minmax(120px, 1.4fr)
+		/* reg    */ 46px
+		/* tuto   */ 70px
+		/* last   */ minmax(80px, 1fr)
+		/* play   */ minmax(90px, 1fr)
+		/* team   */ 28px
+		/* ai     */ 34px
+		/* ip     */ minmax(120px, 1.1fr)
+		/* stats  */ minmax(100px, 1fr)
+		/* source */ minmax(80px, 1.3fr);
+	column-gap: 6px;
 	padding: 4px 6px;
 	align-items: center;
 	overflow: hidden;
@@ -504,16 +499,28 @@
 		font-size: 13px;
 		display: flex;
 		align-items: center;
-		gap: 5px;
+		gap: 4px;
 		.v-icon {
 			font-size: 18px;
 		}
 	}
 	.name {
+		display: flex;
+		flex-wrap: nowrap;
+		align-items: center;
+		gap: 6px;
 		min-width: 0;
+		text-decoration: none;
+		color: inherit;
+		.avatar, .flag {
+			flex-shrink: 0;
+		}
 		> div {
+			flex: 1;
+			min-width: 0;
 			overflow: hidden;
 			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 	}
 	.flag {
@@ -523,6 +530,7 @@
 	}
 	.avatar {
 		height: 22px;
+		width: 22px;
 		flex-shrink: 0;
 	}
 	.status {
@@ -558,8 +566,13 @@
 		.pending {
 			color: #bbb;
 		}
-		span {
+		.progress {
 			font-weight: 600;
+			font-size: 11px;
+			color: #777;
+			&.complete {
+				color: #4caf50;
+			}
 		}
 	}
 	.last-connection, .playtime, .ai-count {
@@ -569,14 +582,6 @@
 		.team {
 			color: #555;
 			text-decoration: none;
-			overflow: hidden;
-			display: flex;
-			align-items: center;
-			gap: 5px;
-			span {
-				overflow: hidden;
-				text-overflow: ellipsis;
-			}
 			&:hover {
 				color: #000;
 			}
@@ -592,9 +597,15 @@
 		}
 	}
 }
+#app.app .last-farmers {
+	overflow-x: auto;
+	.farmer, .farmers > .date {
+		min-width: 1200px;
+	}
+}
 #app.app .farmer {
-	grid-template-columns: 70px minmax(140px, 1.5fr) 44px 50px 100px 60px 110px 40px 150px 120px minmax(100px, 1fr);
-	column-gap: 5px;
+	grid-template-columns: 60px minmax(100px, 1.3fr) 40px 60px minmax(70px, 1fr) minmax(80px, 1fr) 26px 30px minmax(110px, 1fr) minmax(90px, 1fr) minmax(70px, 1.1fr);
+	column-gap: 4px;
 	font-size: 12px;
 }
 </style>
