@@ -1,0 +1,19 @@
+{
+	"title": "상태",
+	"last_checked": "마지막 확인:",
+	"just_now": "방금 전",
+	"seconds_ago": "{s}초 전",
+	"overall_checking": "확인 중…",
+	"overall_ok": "모든 시스템 정상",
+	"overall_partial": "부분 장애",
+	"overall_down": "전체 장애",
+	"status_ok": "정상",
+	"status_error": "중단",
+	"service_api": "API",
+	"service_db": "데이터베이스",
+	"service_redis": "Redis",
+	"service_daemon": "Daemon",
+	"service_websocket": "WebSocket",
+	"service_git": "Git",
+	"service_static": "정적 서버"
+}

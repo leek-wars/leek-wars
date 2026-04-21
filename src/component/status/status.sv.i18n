@@ -1,0 +1,19 @@
+{
+	"title": "Status",
+	"last_checked": "Senast kontrollerad:",
+	"just_now": "just nu",
+	"seconds_ago": "för {s}s sedan",
+	"overall_checking": "Kontrollerar…",
+	"overall_ok": "Alla system fungerar",
+	"overall_partial": "Partiellt avbrott",
+	"overall_down": "Stort avbrott",
+	"status_ok": "Fungerar",
+	"status_error": "Nere",
+	"service_api": "API",
+	"service_db": "Databas",
+	"service_redis": "Redis",
+	"service_daemon": "Daemon",
+	"service_websocket": "WebSocket",
+	"service_git": "Git",
+	"service_static": "Statisk server"
+}

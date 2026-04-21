@@ -1,0 +1,19 @@
+{
+	"title": "Tila",
+	"last_checked": "Viimeksi tarkistettu:",
+	"just_now": "juuri nyt",
+	"seconds_ago": "{s}s sitten",
+	"overall_checking": "Tarkistetaan…",
+	"overall_ok": "Kaikki palvelut toiminnassa",
+	"overall_partial": "Osittainen häiriö",
+	"overall_down": "Vakava häiriö",
+	"status_ok": "Toiminnassa",
+	"status_error": "Ei käytettävissä",
+	"service_api": "API",
+	"service_db": "Tietokanta",
+	"service_redis": "Redis",
+	"service_daemon": "Daemon",
+	"service_websocket": "WebSocket",
+	"service_git": "Git",
+	"service_static": "Staattinen palvelin"
+}

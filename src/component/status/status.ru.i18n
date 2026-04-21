@@ -1,0 +1,19 @@
+{
+	"title": "Статус",
+	"last_checked": "Последняя проверка:",
+	"just_now": "только что",
+	"seconds_ago": "{s} с назад",
+	"overall_checking": "Проверка…",
+	"overall_ok": "Все сервисы работают",
+	"overall_partial": "Частичный сбой",
+	"overall_down": "Крупный сбой",
+	"status_ok": "Работает",
+	"status_error": "Недоступен",
+	"service_api": "API",
+	"service_db": "База данных",
+	"service_redis": "Redis",
+	"service_daemon": "Daemon",
+	"service_websocket": "WebSocket",
+	"service_git": "Git",
+	"service_static": "Статический сервер"
+}

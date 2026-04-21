@@ -1,0 +1,19 @@
+{
+	"title": "Status",
+	"last_checked": "Laatst gecontroleerd:",
+	"just_now": "zojuist",
+	"seconds_ago": "{s}s geleden",
+	"overall_checking": "Bezig met controleren…",
+	"overall_ok": "Alle systemen operationeel",
+	"overall_partial": "Gedeeltelijke storing",
+	"overall_down": "Grote storing",
+	"status_ok": "Operationeel",
+	"status_error": "Niet beschikbaar",
+	"service_api": "API",
+	"service_db": "Database",
+	"service_redis": "Redis",
+	"service_daemon": "Daemon",
+	"service_websocket": "WebSocket",
+	"service_git": "Git",
+	"service_static": "Statische server"
+}

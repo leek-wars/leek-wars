@@ -1,0 +1,19 @@
+{
+	"title": "Status",
+	"last_checked": "Sidst tjekket:",
+	"just_now": "lige nu",
+	"seconds_ago": "{s}s siden",
+	"overall_checking": "Tjekker…",
+	"overall_ok": "Alle systemer kører",
+	"overall_partial": "Delvis nedbrud",
+	"overall_down": "Større nedbrud",
+	"status_ok": "Kører",
+	"status_error": "Nede",
+	"service_api": "API",
+	"service_db": "Database",
+	"service_redis": "Redis",
+	"service_daemon": "Daemon",
+	"service_websocket": "WebSocket",
+	"service_git": "Git",
+	"service_static": "Statisk server"
+}

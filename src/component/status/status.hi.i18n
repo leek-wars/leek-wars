@@ -1,0 +1,19 @@
+{
+	"title": "स्थिति",
+	"last_checked": "पिछली जाँच:",
+	"just_now": "अभी",
+	"seconds_ago": "{s} सेकंड पहले",
+	"overall_checking": "जाँच हो रही है…",
+	"overall_ok": "सभी सेवाएँ चालू हैं",
+	"overall_partial": "आंशिक रुकावट",
+	"overall_down": "बड़ी रुकावट",
+	"status_ok": "चालू",
+	"status_error": "बंद",
+	"service_api": "API",
+	"service_db": "डेटाबेस",
+	"service_redis": "Redis",
+	"service_daemon": "Daemon",
+	"service_websocket": "WebSocket",
+	"service_git": "Git",
+	"service_static": "स्थैतिक सर्वर"
+}

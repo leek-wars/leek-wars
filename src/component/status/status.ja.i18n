@@ -1,0 +1,19 @@
+{
+	"title": "ステータス",
+	"last_checked": "最終確認:",
+	"just_now": "たった今",
+	"seconds_ago": "{s}秒前",
+	"overall_checking": "確認中…",
+	"overall_ok": "全サービス正常稼働中",
+	"overall_partial": "部分的な障害",
+	"overall_down": "重大な障害",
+	"status_ok": "稼働中",
+	"status_error": "停止",
+	"service_api": "API",
+	"service_db": "データベース",
+	"service_redis": "Redis",
+	"service_daemon": "Daemon",
+	"service_websocket": "WebSocket",
+	"service_git": "Git",
+	"service_static": "静的サーバー"
+}

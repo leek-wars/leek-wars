@@ -1,0 +1,19 @@
+{
+	"title": "状态",
+	"last_checked": "上次检查：",
+	"just_now": "刚刚",
+	"seconds_ago": "{s}秒前",
+	"overall_checking": "检查中…",
+	"overall_ok": "所有系统正常运行",
+	"overall_partial": "部分故障",
+	"overall_down": "重大故障",
+	"status_ok": "正常",
+	"status_error": "中断",
+	"service_api": "API",
+	"service_db": "数据库",
+	"service_redis": "Redis",
+	"service_daemon": "Daemon",
+	"service_websocket": "WebSocket",
+	"service_git": "Git",
+	"service_static": "静态服务器"
+}

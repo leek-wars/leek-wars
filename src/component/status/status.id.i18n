@@ -1,0 +1,19 @@
+{
+	"title": "Status",
+	"last_checked": "Terakhir diperiksa:",
+	"just_now": "baru saja",
+	"seconds_ago": "{s}d lalu",
+	"overall_checking": "Memeriksa…",
+	"overall_ok": "Semua sistem beroperasi",
+	"overall_partial": "Gangguan parsial",
+	"overall_down": "Gangguan besar",
+	"status_ok": "Beroperasi",
+	"status_error": "Mati",
+	"service_api": "API",
+	"service_db": "Basis data",
+	"service_redis": "Redis",
+	"service_daemon": "Daemon",
+	"service_websocket": "WebSocket",
+	"service_git": "Git",
+	"service_static": "Server statis"
+}

@@ -1,0 +1,19 @@
+{
+	"title": "Status",
+	"last_checked": "Ostatnio sprawdzone:",
+	"just_now": "przed chwilą",
+	"seconds_ago": "{s}s temu",
+	"overall_checking": "Sprawdzanie…",
+	"overall_ok": "Wszystkie systemy działają",
+	"overall_partial": "Częściowa awaria",
+	"overall_down": "Poważna awaria",
+	"status_ok": "Działa",
+	"status_error": "Awaria",
+	"service_api": "API",
+	"service_db": "Baza danych",
+	"service_redis": "Redis",
+	"service_daemon": "Daemon",
+	"service_websocket": "WebSocket",
+	"service_git": "Git",
+	"service_static": "Serwer statyczny"
+}
