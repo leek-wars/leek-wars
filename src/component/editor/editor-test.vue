@@ -9,14 +9,17 @@
 			<v-window-item class="tab-content" value="scenarios">
 				<div class="column lateral-column">
 					<h4>{{ $t('test_scenario') }}</h4>
-					<div class="items scenarios">
-						<div v-for="scenario of scenarioList" :key="scenario.id" :class="{selected: scenario === currentScenario}" class="item scenario" @click="selectScenario(scenario)">
-							<div class="name">{{ scenario.name }}</div>
-							<span v-if="scenario.default" class="base">{{ $t('default') }}</span>
-							<v-icon v-else class="delete" @click.stop="deleteScenario(scenario)">mdi-delete-outline</v-icon>
+					<loader v-if="!initialized" />
+					<template v-else>
+						<div class="items scenarios">
+							<div v-for="scenario of scenarioList" :key="scenario.id" :class="{selected: scenario === currentScenario}" class="item scenario" @click="selectScenario(scenario)">
+								<div class="name">{{ scenario.name }}</div>
+								<span v-if="scenario.default" class="base">{{ $t('default') }}</span>
+								<v-icon v-else class="delete" @click.stop="deleteScenario(scenario)">mdi-delete-outline</v-icon>
+							</div>
 						</div>
-					</div>
-					<div v-ripple class="item add" @click="newScenarioDialog = true">✚ {{ $t('main.add') }}</div>
+						<div v-ripple class="item add" @click="newScenarioDialog = true">✚ {{ $t('main.add') }}</div>
+					</template>
 				</div>
 				<div v-if="currentScenario" class="column column-scenario">
 					<div class="title flex-title">
@@ -115,21 +118,28 @@
 			<v-window-item class="tab-content" value="leeks">
 				<div class="column lateral-column">
 					<h4>{{ $t('test_leeks') }}</h4>
-					<div class="items leeks">
-						<div v-for="leek of leeks" :key="leek.id" :class="{selected: leek === currentLeek}" class="item leek" @click="selectLeek(leek)">
-							<div class="name">{{ leek.name }}</div>
-							<span v-if="leek.bot" class="bot">bot</span>
-							<v-icon v-if="!leek.bot" class="duplicate" @click.stop="duplicateTestLeek(leek)" :title="$t('duplicate')">mdi-content-copy</v-icon>
-							<v-icon v-if="!leek.bot" class="delete" @click.stop="deleteTestLeek(leek)">mdi-delete-outline</v-icon>
+					<loader v-if="!initialized" />
+					<template v-else>
+						<div class="items leeks">
+							<div v-for="leek of leeks" :key="leek.id" :class="{selected: leek === currentLeek}" class="item leek" @click="selectLeek(leek)">
+								<div class="name">{{ leek.name }}</div>
+								<span v-if="leek.bot" class="bot">bot</span>
+								<v-icon v-if="!leek.bot" class="duplicate" @click.stop="duplicateTestLeek(leek)" :title="$t('duplicate')">mdi-content-copy</v-icon>
+								<v-icon v-if="!leek.bot" class="delete" @click.stop="deleteTestLeek(leek)">mdi-delete-outline</v-icon>
+							</div>
 						</div>
-					</div>
-					<div v-ripple class="item add" @click="newLeekDialog = true">✚ {{ $t('main.add') }}</div>
+						<div v-ripple class="item add" @click="newLeekDialog = true">✚ {{ $t('main.add') }}</div>
+					</template>
 				</div>
 				<div v-if="currentLeek" class="column leek-column">
 					<div class="title name">{{ currentLeek.name }} <v-icon v-if="!currentLeek.bot" @click="changedLeekName = currentLeek.name; changeLeekNameDialog = true">mdi-pencil</v-icon>&nbsp;- {{ $t('main.level_n', [currentLeek.level]) }}</div>
 					<div class="flex">
 						<div class="image card">
 							<leek-image :leek="currentLeek" :scale="1" />
+							<div v-if="!currentLeek.bot" v-ripple class="skin-button" :title="$t('select_skin')" @click="skinPotionDialog = true">
+								<img v-if="currentLeek.skin && LeekWars.potionsBySkin[currentLeek.skin]" :src="'/image/potion/' + LeekWars.potionsBySkin[currentLeek.skin].name + '.png'">
+								<img v-else src="/image/potion/skin_green.png">
+							</div>
 						</div>
 						<div class="card characteristics">
 							<div v-for="c in LeekWars.characteristics_table" :key="c" class="characteristic" :class="c">
@@ -172,13 +182,16 @@
 			<v-window-item class="tab-content" value="maps">
 				<div class="column lateral-column">
 					<h4>{{ $t('test_maps') }}</h4>
-					<div class="items maps">
-						<div v-for="map of maps" :key="map.id" :class="{selected: currentMap === map}" class="item map" @click="selectMap(map)">
-							<div class="name">{{ map.name }}</div>
-							<v-icon class="delete" @click.stop="deleteMap(map)">mdi-delete-outline</v-icon>
+					<loader v-if="!initialized" />
+					<template v-else>
+						<div class="items maps">
+							<div v-for="map of maps" :key="map.id" :class="{selected: currentMap === map}" class="item map" @click="selectMap(map)">
+								<div class="name">{{ map.name }}</div>
+								<v-icon class="delete" @click.stop="deleteMap(map)">mdi-delete-outline</v-icon>
+							</div>
 						</div>
-					</div>
-					<div v-ripple class="item add" @click="newMapDialog = true">✚ {{ $t('main.add') }}</div>
+						<div v-ripple class="item add" @click="newMapDialog = true">✚ {{ $t('main.add') }}</div>
+					</template>
 				</div>
 				<div v-if="currentMap" class="column map-column">
 					<div class="title name"></div>
@@ -336,6 +349,27 @@
 				</rich-tooltip-item>
 			</div>
 		</popup>
+
+		<popup v-if="currentLeek" v-model="skinPotionDialog" :width="750">
+			<template #icon>
+				<img src="/image/icon/potion.png">
+			</template>
+			<template #title>
+				{{ $t("select_skin") }}
+			</template>
+			<div class="padding farmer-potions">
+				<div class="potions-grid">
+					<v-tooltip v-for="(potion, id) in skinPotions" :key="id">
+						<template #activator="{ props }">
+							<div class="potion" @click="changeSkin(potion)" v-bind="props">
+								<img :src="'/image/potion/' + LeekWars.potions[potion.template].name + '.png'">
+							</div>
+						</template>
+						<b>{{ $t('potion.' + LeekWars.potions[potion.template].name) }}</b>
+					</v-tooltip>
+				</div>
+			</div>
+		</popup>
 	</popup>
 </template>
 
@@ -349,6 +383,7 @@
 	import { mixins } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
+	import { Potion, PotionEffect } from '@/model/potion'
 	import { store } from '@/model/store'
 	import { WeaponTemplate, WeaponsData } from '@/model/weapon'
 	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
@@ -430,6 +465,7 @@ import { defineAsyncComponent } from 'vue'
 		turretTeam: number = 0
 		chipsDialog: boolean = false
 		weaponsDialog: boolean = false
+		skinPotionDialog: boolean = false
 		map: any = []
 		map_down = false
 		map_add = false
@@ -765,6 +801,20 @@ import { defineAsyncComponent } from 'vue'
 			if (!this.currentLeek) { return }
 			LeekWars.post('test-leek/update', {id: this.currentLeek.id, data: JSON.stringify(this.currentLeek)})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
+		}
+
+		get skinPotions() {
+			if (!store.state.farmer) { return [] }
+			return store.state.farmer.potions.filter(p => LeekWars.potions[p.template].effects.some(e => e.type === PotionEffect.CHANGE_SKIN))
+		}
+
+		changeSkin(potion: Potion) {
+			if (!this.currentLeek) { return }
+			const effect = LeekWars.potions[potion.template].effects.find(e => e.type === PotionEffect.CHANGE_SKIN)
+			if (!effect) { return }
+			this.currentLeek.skin = effect.params[0]
+			this.skinPotionDialog = false
+			this.saveLeek()
 		}
 
 		saveMap() {
@@ -1643,6 +1693,43 @@ import { defineAsyncComponent } from 'vue'
 		margin-left: 130px;
 		padding: 7px;
 		width: 190px;
+		position: relative;
+	}
+	.leek-column .image .skin-button {
+		position: absolute;
+		bottom: 8px;
+		left: 8px;
+		width: 40px;
+		height: 40px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: var(--background-secondary, #f5f5f5);
+		border: 1px solid var(--border);
+		border-radius: 50%;
+		cursor: pointer;
+		transition: transform 0.1s;
+	}
+	.leek-column .image .skin-button:hover {
+		transform: scale(1.1);
+	}
+	.leek-column .image .skin-button img {
+		width: 26px;
+		height: 26px;
+	}
+	.farmer-potions .potions-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+		grid-gap: 10px;
+	}
+	.farmer-potions .potion {
+		display: inline-block;
+		cursor: pointer;
+		border: 1px solid var(--border);
+		padding: 5px 0;
+	}
+	.farmer-potions .potion img {
+		width: 100%;
 	}
 	#app.app .leek-column .image {
 		margin: 0;
