@@ -391,7 +391,8 @@
 
 		@Watch('requiredWidth')
 		@Watch('requiredHeight')
-		requiredWidthChange() {
+		@Watch('fullscreen')
+		onLayoutChange() {
 			this.resize()
 		}
 

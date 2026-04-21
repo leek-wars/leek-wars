@@ -648,8 +648,8 @@ const LeekWars = reactive({
 	fullscreenEnter(element: HTMLElement, callback: (f: boolean) => void) {
 		const fullscreenCallback = () => {
 			LeekWars.fullscreen = !LeekWars.fullscreen
-			emitter.emit('resize')
 			callback(LeekWars.fullscreen)
+			emitter.emit('resize')
 		}
 		if (element.requestFullscreen) {
 			document.onfullscreenchange = fullscreenCallback

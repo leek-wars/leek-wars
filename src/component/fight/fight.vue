@@ -15,7 +15,7 @@
 
 		<panel class="first">
 			<template #content>
-				<div class="fight">
+				<div class="fight" :style="{minWidth: playerWidth + 'px', minHeight: playerHeight + 'px'}">
 					<player ref="player" v-if="fight_id" :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
 				</div>
 			</template>
@@ -188,11 +188,13 @@
 			return parseInt('' + this.$route.query.action, 10) || parseInt('' + this.$route.query.a, 10) || 0
 		}
 
-		mounted() {
+		created() {
 			LeekWars.flex = true
-			emitter.on('resize', this.resize)
-			setTimeout(() => this.resize(), 50)
+			this.resize()
+		}
 
+		mounted() {
+			emitter.on('resize', this.resize)
 			emitter.on('trophy', this.onTrophy)
 			emitter.on('fight_notification', this.onFightNotification)
 		}
@@ -212,41 +214,39 @@
 		resize() {
 			LeekWars.lightBar = window.innerWidth / window.innerHeight > 1
 
-			nextTick(() => {
-				const reference = document.querySelector('.app-center') as HTMLElement
-				const offset = 40 + 24
-				const controls = 36
-				const padding_bottom = LeekWars.mobile ? 5 : 105
-				if (reference) {
-					if (LeekWars.mobile) {
-						if (window.innerWidth > window.innerHeight) {
-							// Landscape
-							const height = Math.min(window.innerHeight, Math.round(reference.offsetWidth / 1.5))
-							const padding_top = (height - padding_bottom) * GROUND_PADDING_TOP
-							this.playerWidth = Math.min(window.innerWidth, Math.round((height - padding_bottom - padding_top) * 2)) + 2 * controls
-							this.playerHeight = height
-							this.playerHorizontal = true
-						} else {
-							// Portrait
-							const ratio = 1.3
-							const width = Math.min(reference.offsetWidth, Math.round((window.innerHeight - 56) * ratio))
-							this.playerWidth = width
-							this.playerHeight = Math.round(width / ratio)
-							this.playerHorizontal = false
-						}
-					} else {
-						// Desktop
-						const maxWidth = reference.offsetWidth - offset
-						const theoricalHeight1 = (maxWidth - GROUND_PADDING_RIGHT - GROUND_PADDING_LEFT) / 2
-						const padding_top = theoricalHeight1 / (1 - GROUND_PADDING_TOP) - theoricalHeight1
-						const theoricalHeight = Math.round(theoricalHeight1 + padding_bottom + padding_top + controls)
-						const height = Math.min(window.innerHeight - 128, theoricalHeight)
-						this.playerWidth = maxWidth
+			const reference = document.querySelector('.app-center') as HTMLElement
+			const offset = 40 + 24
+			const controls = 36
+			const padding_bottom = LeekWars.mobile ? 5 : 105
+			if (reference) {
+				if (LeekWars.mobile) {
+					if (window.innerWidth > window.innerHeight) {
+						// Landscape
+						const height = Math.min(window.innerHeight, Math.round(reference.offsetWidth / 1.5))
+						const padding_top = (height - padding_bottom) * GROUND_PADDING_TOP
+						this.playerWidth = Math.min(window.innerWidth, Math.round((height - padding_bottom - padding_top) * 2)) + 2 * controls
 						this.playerHeight = height
+						this.playerHorizontal = true
+					} else {
+						// Portrait
+						const ratio = 1.3
+						const width = Math.min(reference.offsetWidth, Math.round((window.innerHeight - 56) * ratio))
+						this.playerWidth = width
+						this.playerHeight = Math.round(width / ratio)
 						this.playerHorizontal = false
 					}
+				} else {
+					// Desktop
+					const maxWidth = reference.offsetWidth - offset
+					const theoricalHeight1 = (maxWidth - GROUND_PADDING_RIGHT - GROUND_PADDING_LEFT) / 2
+					const padding_top = theoricalHeight1 / (1 - GROUND_PADDING_TOP) - theoricalHeight1
+					const theoricalHeight = Math.round(theoricalHeight1 + padding_bottom + padding_top + controls)
+					const height = Math.min(window.innerHeight - 128, theoricalHeight)
+					this.playerWidth = maxWidth
+					this.playerHeight = height
+					this.playerHorizontal = false
 				}
-			})
+			}
 		}
 
 		unmounted() {
