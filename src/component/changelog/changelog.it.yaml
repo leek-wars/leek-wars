@@ -36,6 +36,7 @@
     - "Immagini degli oggetti caricate su richiesta nel mercato e nell'inventario."
     - "Tema XP caricato dinamicamente: avvio più rapido sul tema moderno."
     - "Pulsanti PayPal adattati al tema scuro."
+    - "Interfaccia di test adattata al mobile."
   fixed:
     - "Combattimento boss: allevatori senza porri ingaggiati non più reindirizzati (grazie a fabou)."
     - "Pulsanti « Rigioca » / « Rivincita » di una sfida miravano a se stessi (grazie a fabou)."

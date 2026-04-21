@@ -1418,7 +1418,7 @@ import { defineAsyncComponent } from 'vue'
 			min-height: 600px;
 		}
 	}
-	#app.app .tabs :deep(.tab-content) {
+	.popup.mobile .tab-content {
 		flex-direction: column;
 	}
 	.tabs .tab {
@@ -1459,7 +1459,7 @@ import { defineAsyncComponent } from 'vue'
 		overflow-y: auto;
 		overflow-x: hidden;
 	}
-	#app.app .tabs .column {
+	.popup.mobile .column {
 		max-height: none;
 	}
 	.lateral-column {
@@ -1536,6 +1536,9 @@ import { defineAsyncComponent } from 'vue'
 			flex: 1;
 		}
 	}
+	.popup.mobile .advanced-options {
+		flex-direction: column;
+	}
 	.desc {
 		padding-left: 6px;
 		color: #777;
@@ -1544,7 +1547,7 @@ import { defineAsyncComponent } from 'vue'
 		width: 810px;
 		text-align: center;
 	}
-	#app.app .tabs .column-scenario .team {
+	.popup.mobile .column-scenario .team {
 		width: auto;
 	}
 	.column-scenario .leeks {
@@ -1569,6 +1572,10 @@ import { defineAsyncComponent } from 'vue'
 		margin-top: 46px;
 		margin-left: 20px;
 		margin-right: 20px;
+	}
+	.popup.mobile .column-scenario .add {
+		margin-left: 10px;
+		margin-right: 10px;
 	}
 	.column-scenario .add:hover, .leek-column .add:hover {
 		background: var(--border);
@@ -1619,6 +1626,9 @@ import { defineAsyncComponent } from 'vue'
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
 	}
+	.popup.mobile .leek-dialog {
+		grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+	}
 	.leek-dialog .leek {
 		text-align: center;
 		padding: 8px;
@@ -1643,7 +1653,7 @@ import { defineAsyncComponent } from 'vue'
 		text-align: center;
 		width: 800px;
 	}
-	#app.app .tabs .column-scenario .map-container {
+	.popup.mobile .column-scenario .map-container {
 		width: auto;
 	}
 	.column-scenario .map-card, .map-dialog .map-card {
@@ -1676,14 +1686,14 @@ import { defineAsyncComponent } from 'vue'
 		right: 7px;
 		top: 8px;
 	}
-	#app.app .leek-column {
+	.popup.mobile .leek-column {
 		width: auto;
 	}
 	.flex {
 		align-items: center;
 		padding-bottom: 15px;
 	}
-	#app.app .leek-column .flex {
+	.popup.mobile .leek-column .flex {
 		flex-direction: column;
 		gap: 15px;
 	}
@@ -1731,7 +1741,7 @@ import { defineAsyncComponent } from 'vue'
 	.farmer-potions .potion img {
 		width: 100%;
 	}
-	#app.app .leek-column .image {
+	.popup.mobile .leek-column .image {
 		margin: 0;
 	}
 	.characteristics {
@@ -1770,9 +1780,15 @@ import { defineAsyncComponent } from 'vue'
 			background: var(--background-secondary);
 		}
 	}
-	#app.app .characteristics {
+	.popup.mobile .characteristics {
 		min-width: 0;
 		margin: 0;
+	}
+	.popup.mobile .characteristics .characteristic {
+		padding: 5px 8px;
+		.stat {
+			min-width: 0;
+		}
 	}
 	body.dark .characteristic.frequency {
 		img {
@@ -1816,6 +1832,9 @@ import { defineAsyncComponent } from 'vue'
 		margin-top: -300px;
 		margin-left: -110px;
 	}
+	.popup.mobile .map-column .map {
+		zoom: 0.45;
+	}
 	.map .line {
 		white-space: nowrap;
 	}
@@ -1858,6 +1877,9 @@ import { defineAsyncComponent } from 'vue'
 		padding-left: 20px;
 		margin-top: -20px;
 	}
+	.popup.mobile .map-column .instructions {
+		margin-top: 20px;
+	}
 	.v-dialog .content.padding {
 		padding: 15px;
 	}
@@ -1866,6 +1888,9 @@ import { defineAsyncComponent } from 'vue'
 		padding-top: 3px;
 		padding-bottom: 3px;
 		height: 34px;
+	}
+	.popup.mobile .templates {
+		grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
 	}
 	.templates {
 		display: grid;
@@ -1918,10 +1943,17 @@ import { defineAsyncComponent } from 'vue'
 			height: 30px;
 		}
 	}
+	.popup.mobile .flex-title .type-select {
+		flex: 0 1 170px;
+		min-width: 0;
+	}
 	input.seed {
 		margin-top: 4px;
 		padding: 0 6px;
 		font-size: 16px;
+	}
+	.popup.mobile .bot-ai {
+		flex-direction: column;
 	}
 	.bot-ai {
 		width: 100%;

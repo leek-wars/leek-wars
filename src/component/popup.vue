@@ -1,5 +1,5 @@
 <template lang="html">
-	<v-dialog :model-value="modelValue" :width="width" :persistent="persistent" content-class="popup" scroll-strategy="none" @update:model-value="$emit('update:modelValue', $event)">
+	<v-dialog :model-value="modelValue" :width="width" :persistent="persistent" :content-class="contentClass" scroll-strategy="none" @update:model-value="$emit('update:modelValue', $event)">
 		<template v-if="content_created">
 			<div class="title">
 				<slot name="icon">
@@ -27,6 +27,7 @@
 </template>
 
 <script lang="ts">
+	import { LeekWars } from '@/model/leekwars'
 	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	@Options({ name: "popup", emits: ['update:modelValue'] })
 	export default class Popup extends Vue {
@@ -37,6 +38,9 @@
 		@Prop() full!: boolean
 		@Prop() persistent!: Boolean
 		content_created: boolean = false
+		get contentClass() {
+			return LeekWars.mobile ? 'popup mobile' : 'popup'
+		}
 		created() {
 			if (this.modelValue) {
 				this.content_created = true // Content created direclty from creation

@@ -36,6 +36,7 @@
     - "Images d'items chargées à la demande dans le marché et l'inventaire."
     - "Thème XP chargé dynamiquement : démarrage plus rapide en thème moderne."
     - "Boutons PayPal adaptés au thème sombre."
+    - "Interface de test adaptée au mobile."
   fixed:
     - "Combat de boss : les éleveurs sans poireau engagé ne sont plus redirigés (merci à fabou)."
     - "Boutons « Refaire » / « Revanche » d'un rapport de défi ciblaient soi-même (merci à fabou)."

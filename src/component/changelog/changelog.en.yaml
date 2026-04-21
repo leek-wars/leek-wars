@@ -36,6 +36,7 @@
     - "Item images loaded on demand in the market and inventory."
     - "XP theme loaded dynamically: faster startup on the modern theme."
     - "PayPal buttons adapted to dark theme."
+    - "Test interface adapted for mobile."
   fixed:
     - "Boss fight: farmers without engaged leeks are no longer redirected (thanks to fabou)."
     - "Challenge \"Refight\" / \"Take revenge\" buttons targeted self (thanks to fabou)."
