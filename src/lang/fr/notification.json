@@ -116,5 +116,9 @@
 	"title_45": "{0} a participé à une Chasse aux coffres !",
 	"message_45": "Voir la Chasse aux coffres",
 	"title_46": "{0} a participé à un combat Colosse !",
-	"message_46": "Voir le combat Colosse"
+	"message_46": "Voir le combat Colosse",
+	"title_47": "{0} est sorti du potager",
+	"message_47": "Trop de défaites consécutives en défense",
+	"title_48": "Votre éleveur est sorti du potager",
+	"message_48": "Trop de défaites consécutives en défense"
 }

@@ -116,5 +116,9 @@
 	"title_45": "{0} participated in a Chest Hunt!",
 	"message_45": "See the Chest Hunt",
 	"title_46": "{0} participated in a Colossus fight!",
-	"message_46": "See the Colossus fight"
+	"message_46": "See the Colossus fight",
+	"title_47": "{0} left the garden",
+	"message_47": "Too many consecutive defeats on defense",
+	"title_48": "Your farmer left the garden",
+	"message_48": "Too many consecutive defeats on defense"
 }

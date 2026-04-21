@@ -116,5 +116,9 @@
 	"title_45": "{0} ha partecipato a una Caccia ai forzieri!",
 	"message_45": "Vedi la Caccia ai forzieri",
 	"title_46": "{0} ha partecipato a un combattimento Colosso!",
-	"message_46": "Vedi il combattimento Colosso"
+	"message_46": "Vedi il combattimento Colosso",
+	"title_47": "{0} è uscito dall'orto",
+	"message_47": "Troppe sconfitte consecutive in difesa",
+	"title_48": "Il tuo allevatore è uscito dall'orto",
+	"message_48": "Troppe sconfitte consecutive in difesa"
 }

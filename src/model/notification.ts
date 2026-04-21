@@ -47,6 +47,8 @@ enum NotificationType {
 	WAR_REPORT = 44, // Rapport de Guerre
 	CHEST_HUNT_REPORT = 45, // Rapport de Chasse aux coffres
 	COLOSSUS_REPORT = 46, // Rapport de Colosse
+	LEEK_AUTO_EXIT_ARENA = 47, // Poireau sorti auto du potager (20 défaites en défense)
+	FARMER_AUTO_EXIT_GARDEN = 48, // Éleveur sorti auto du potager (20 défaites en défense)
 }
 
 class Notification {
