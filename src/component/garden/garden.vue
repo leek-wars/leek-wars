@@ -210,7 +210,7 @@
 									<h4>{{ $t(leekErrors[selectedLeek.id]) }}</h4>
 								</div>
 							</div>
-							<garden-no-fights v-else :canbuy="true" @bought="reload" />
+							<garden-no-fights v-else-if="!garden.fights" :canbuy="true" @bought="reload" />
 						</div>
 						<div v-else-if="category == 'farmer'">
 							<div class="opponents">
