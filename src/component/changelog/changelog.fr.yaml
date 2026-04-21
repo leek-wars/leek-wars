@@ -17,8 +17,9 @@
     - "#ai Pragmas `// @version` et `// @strict` dans les fichiers d'IA. #img_247_pragmas"
     - "#ai Ajout des BigInteger en LeekScript (merci à Batary)."
     - "#ai Fonctions setBit, testBit et bitLength pour les BigInteger (merci à Batary)."
-    - "#ai Constantes `EROSION_DAMAGE`, `EROSION_POISON` et `EROSION_CRITICAL` pour les taux d'érosion (merci à fujiwar)."
+    - "#ai Constantes `EROSION_DAMAGE`, `EROSION_POISON` et `EROSION_CRITICAL_BONUS` pour les taux d'érosion (merci à fujiwar)."
     - "Commandes de chat `/war`, `/chest`, `/coloss` pour inviter sur un type d'arène précis (merci à Kraspen)."
+    - "Application des potions de couleur sur les poireaux de test (merci à Kraspen)."
   improved:
     - "Popup de confirmation avant la déconnexion (merci à FdHP)."
     - "Refonte de la banque de cristaux avec packs et bonus progressifs. #img_247_bank"
