@@ -13,7 +13,7 @@
     - "Nouveau trophée bonus « Rétro » (Poisson d'avril 2026)."
     - "#ai Valeurs par défaut pour les paramètres de fonction en LeekScript. #img_247_default_params"
     - "#ai Fonction `arrayFind(tableau, prédicat)` : retourne le premier élément correspondant."
-    - "#ai Fonction `getCompoName(entité)` : retourne le nom de la composition d'équipe d'une entité (merci à KavaliovOcties)."
+    - "#ai Fonction `getCompositionName(entité)` : retourne le nom de la composition d'équipe d'une entité (merci à KavaliovOcties)."
     - "#ai Pragmas `// @version` et `// @strict` dans les fichiers d'IA. #img_247_pragmas"
     - "#ai Ajout des BigInteger en LeekScript (merci à Batary)."
     - "#ai Fonctions setBit, testBit et bitLength pour les BigInteger (merci à Batary)."

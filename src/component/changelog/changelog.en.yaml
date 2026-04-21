@@ -13,7 +13,7 @@
     - "New bonus trophy \"Retro\" (April Fools 2026)."
     - "#ai Default values for function parameters in LeekScript. #img_247_default_params"
     - "#ai `arrayFind(array, predicate)` function: returns the first matching element."
-    - "#ai `getCompoName(entity)` function: returns the name of an entity's team composition (thanks to KavaliovOcties)."
+    - "#ai `getCompositionName(entity)` function: returns the name of an entity's team composition (thanks to KavaliovOcties)."
     - "#ai `// @version` and `// @strict` pragmas in AI files. #img_247_pragmas"
     - "#ai BigInteger added to LeekScript (thanks to Batary)."
     - "#ai setBit, testBit and bitLength functions for BigIntegers (thanks to Batary)."
