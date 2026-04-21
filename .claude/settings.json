@@ -16,6 +16,7 @@
       "Bash(git diff *)",
       "Bash(git show *)",
       "Bash(git status *)",
+      "Bash(git add *)",
       "Bash(git blame *)"
     ]
   }
