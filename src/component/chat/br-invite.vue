@@ -5,6 +5,7 @@
 		<span v-if="arenaCountdown >= 0" class="countdown">{{ arenaCountdown }}s</span>
 		<span v-if="eligibleLeek && !inArena" class="btn" @click="joinArena">Rejoindre</span>
 		<span v-else-if="needsModeChange" class="btn btn-change" @click="changeMode">Changer mode</span>
+		<span v-else-if="modeAlreadySelected" class="mode-selected">✓ Mode sélectionné</span>
 	</span>
 </template>
 
@@ -53,6 +54,11 @@
 			return this.$store.state.arenaPreference !== this.mode
 		}
 
+		get modeAlreadySelected() {
+			if (!this.inArena || this.mode === undefined) { return false }
+			return this.$store.state.arenaPreference === this.mode
+		}
+
 		joinArena() {
 			const leek = this.eligibleLeek
 			if (leek) {
@@ -87,6 +93,12 @@
 		.countdown {
 			color: #e67e22;
 			font-weight: 700;
+		}
+		.mode-selected {
+			color: #5fad1b;
+			font-weight: 600;
+			font-size: 12px;
+			padding: 1px 8px;
 		}
 		.btn {
 			background: #5fad1b;
