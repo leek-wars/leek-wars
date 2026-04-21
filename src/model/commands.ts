@@ -32,14 +32,14 @@ const COMMANDS = [
 		replacement: (_: string, space: string) => space + '<span class="br-invite" data-label="À L\'ARÈÈÈÈNE !"></span>'
 	}, {
 		name: "br",
-		description: "Inviter à rejoindre l'arène",
+		description: "Inviter à rejoindre un Battle Royale",
 		regex: /(^| )\/br(?::(\d+))?(?=$|\s)/gi,
-		replacement: (_: string, space: string, level: string) => space + '<span class="br-invite" data-level="' + (level || '') + '"></span>'
+		replacement: (_: string, space: string, level: string) => space + '<span class="br-invite" data-mode="0" data-level="' + (level || '') + '" data-label="Battle Royale"></span>'
 	}, {
 		name: "br!",
-		description: "Inviter à rejoindre l'arène, de manière appuyée",
+		description: "Inviter à rejoindre un Battle Royale, de manière appuyée",
 		regex: /(^| )\/br!(?::(\d+))?(?=$|\s)/gi,
-		replacement: (_: string, space: string, level: string) => space + '<span class="br-invite" data-level="' + (level || '') + '" data-label="LA BAGAAAAARRE !"></span>'
+		replacement: (_: string, space: string, level: string) => space + '<span class="br-invite" data-mode="0" data-level="' + (level || '') + '" data-label="LA BAGAAAAARRE !"></span>'
 	}, {
 		name: "chest",
 		description: "Inviter à rejoindre une chasse aux coffres",
@@ -61,16 +61,6 @@ const COMMANDS = [
 		regex: /(^| )\/coloss!(?=$|\s)/gi,
 		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="3" data-label="LE COLOOOOSSE !"></span>'
 	}, {
-		name: "war",
-		description: "Inviter à rejoindre une guerre",
-		regex: /(^| )\/war(?=$|\s)/gi,
-		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="1" data-label="Guerre"></span>'
-	}, {
-		name: "war!",
-		description: "Inviter à rejoindre une guerre, de manière appuyée",
-		regex: /(^| )\/war!(?=$|\s)/gi,
-		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="1" data-label="À LA GUEEEEERRE !"></span>'
-	}, {
 		name: "doc",
 		description: "Lien vers la documentation",
 		regex: /(?:^|(\s))\/doc(?::([^\s#]+))?(?=\s|$)/gi,
@@ -86,6 +76,21 @@ const COMMANDS = [
 		replacement: () => {
 			return " " + LeekWars.toChatLink(URL_DOC, "LA DOOOOOC", "target='_blank' rel='noopener'", "lw") + " "
 		}
+	}, {
+		name: "encyclo",
+		description: "Lien vers l'encyclopédie (avec une page et une ancre)",
+		regex: /(?:^|(\s))\/encyclo(?::([^\s#]+)(?:#([^\s]+))?)?(?=\s|$)/gi,
+		replacement: (a: any, b: any, page: string, anchor: string) => {
+			const name = page ? page + (anchor ? '#' + anchor : '') : "Encyclopédie"
+			const link = page ? URL_ENCYCLOPEDIA + '/' + page + (anchor ? '#' + anchor : '') : URL_ENCYCLOPEDIA
+			return  " <i class='v-icon notranslate book mdi mdi-book-open-page-variant theme--light'></i>" + LeekWars.toChatLink(link, name, "target='_blank' rel='noopener'", "lw") + " "
+		},
+		options: []
+	}, {
+		name: "encyclo!",
+		description: "Lien vers l'encyclopédie, de manière appuyée",
+		regex: /(?:^|(\s))\/encyclo!(?=\s|$)/gi,
+		replacement: () => " " + LeekWars.toChatLink(URL_ENCYCLOPEDIA, "L'ENCYCLOPÉDIIIIIIE", "target='_blank' rel='noopener'", "lw") + " "
 	}, {
 		name: "fliptable",
 		description: "(╯°□°）╯︵ ┻━┻",
@@ -188,20 +193,15 @@ const COMMANDS = [
 			return " " + LeekWars.toChatLink(URL_UPDATE + localStorage.getItem('changelog_forum_topic'), "LA MÀJJJJJ", "target='_blank' rel='noopener'", "lw") + " "
 		}
 	}, {
-		name: "encyclo",
-		description: "Lien vers l'encyclopédie (avec une page et une ancre)",
-		regex: /(?:^|(\s))\/encyclo(?::([^\s#]+)(?:#([^\s]+))?)?(?=\s|$)/gi,
-		replacement: (a: any, b: any, page: string, anchor: string) => {
-			const name = page ? page + (anchor ? '#' + anchor : '') : "Encyclopédie"
-			const link = page ? URL_ENCYCLOPEDIA + '/' + page + (anchor ? '#' + anchor : '') : URL_ENCYCLOPEDIA
-			return  " <i class='v-icon notranslate book mdi mdi-book-open-page-variant theme--light'></i>" + LeekWars.toChatLink(link, name, "target='_blank' rel='noopener'", "lw") + " "
-		},
-		options: []
+		name: "war",
+		description: "Inviter à rejoindre une guerre",
+		regex: /(^| )\/war(?=$|\s)/gi,
+		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="1" data-label="Guerre"></span>'
 	}, {
-		name: "encyclo!",
-		description: "Lien vers l'encyclopédie, de manière appuyée",
-		regex: /(?:^|(\s))\/encyclo!(?=\s|$)/gi,
-		replacement: () => " " + LeekWars.toChatLink(URL_ENCYCLOPEDIA, "L'ENCYCLOPÉDIIIIIIE", "target='_blank' rel='noopener'", "lw") + " "
+		name: "war!",
+		description: "Inviter à rejoindre une guerre, de manière appuyée",
+		regex: /(^| )\/war!(?=$|\s)/gi,
+		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="1" data-label="À LA GUEEEEERRE !"></span>'
 	}
 ] as Command[]
 

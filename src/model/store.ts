@@ -45,6 +45,8 @@ class LeekWarsState {
 	public farmer_by_name: {[key: string]: Farmer} = {}
 	public arenaCount: number = 0
 	public arenaCountdown: number = -1
+	public arenaEnabled: boolean = false
+	public arenaPreference: number = -1
 }
 
 function updateTitle(state: LeekWarsState) {
@@ -1034,6 +1036,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			const [count, countdown] = data
 			state.arenaCount = count
 			state.arenaCountdown = countdown
+		},
+
+		'arena-status'(state: LeekWarsState, data: {enabled: boolean, preference: number}) {
+			state.arenaEnabled = data.enabled
+			state.arenaPreference = data.preference
 		},
 	},
 })

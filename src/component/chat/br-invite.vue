@@ -4,6 +4,7 @@
 		<span v-if="arenaCount >= 0" class="progress">{{ arenaCount }}&nbsp;/&nbsp;20</span>
 		<span v-if="arenaCountdown >= 0" class="countdown">{{ arenaCountdown }}s</span>
 		<span v-if="eligibleLeek && !inArena" class="btn" @click="joinArena">Rejoindre</span>
+		<span v-else-if="needsModeChange" class="btn btn-change" @click="changeMode">Changer mode</span>
 	</span>
 </template>
 
@@ -26,7 +27,7 @@
 		}
 
 		get inArena() {
-			return LeekWars.arena.enabled
+			return this.$store.state.arenaEnabled
 		}
 
 		get eligibleLeek() {
@@ -47,6 +48,11 @@
 			return null
 		}
 
+		get needsModeChange() {
+			if (!this.inArena || this.mode === undefined) { return false }
+			return this.$store.state.arenaPreference !== this.mode
+		}
+
 		joinArena() {
 			const leek = this.eligibleLeek
 			if (leek) {
@@ -54,6 +60,14 @@
 					? this.mode
 					: parseInt(localStorage.getItem('arena/preference') || '-1', 10)
 				LeekWars.arena.register(leek, preference)
+			}
+		}
+
+		changeMode() {
+			const leek = parseInt(localStorage.getItem('arena-leek') || '', 10) || this.eligibleLeek
+			if (leek && this.mode !== undefined) {
+				const wantsColossus = localStorage.getItem('arena-colossus') === '1'
+				LeekWars.arena.register(leek, this.mode, wantsColossus)
 			}
 		}
 	}
@@ -83,6 +97,12 @@
 			font-size: 12px;
 			&:hover {
 				background: #4e9216;
+			}
+			&.btn-change {
+				background: #e67e22;
+				&:hover {
+					background: #c86a18;
+				}
 			}
 		}
 	}

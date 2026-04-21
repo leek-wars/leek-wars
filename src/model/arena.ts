@@ -13,6 +13,7 @@ class Arena {
 	progress: number = 0
 	enabled: boolean = false
 	countdown: number = -1
+	preference: number = -1
 
 	init() {
 		if (localStorage.getItem('in-arena')) {
@@ -29,12 +30,17 @@ class Arena {
 		localStorage.setItem('arena-colossus', wantsColossus ? '1' : '0')
 		localStorage.setItem('in-arena', '1')
 		this.enabled = true
+		this.preference = preference
+		store.commit('arena-status', {enabled: true, preference})
 	}
 	update(data: any) {
 		this.enabled = true
 		this.progress = data.data[0]
 		this.countdown = data.data[1]
 		this.leeks = data.data[2]
+		if (!store.state.arenaEnabled) {
+			store.commit('arena-status', {enabled: true, preference: this.preference})
+		}
 		LeekWars.setTitleTag('Arène ' + this.progress + '/' + Arena.MAX_PLAYERS)
 	}
 	leave() {
@@ -50,6 +56,8 @@ class Arena {
 		this.enabled = false
 		this.progress = 0
 		this.countdown = -1
+		this.preference = -1
+		store.commit('arena-status', {enabled: false, preference: -1})
 	}
 	start(data: any) {
 		if (data[1]) { // Garden arena (not automatic)
@@ -58,6 +66,8 @@ class Arena {
 			this.enabled = false
 			this.progress = 0
 			this.countdown = -1
+			this.preference = -1
+			store.commit('arena-status', {enabled: false, preference: -1})
 			localStorage.removeItem('in-arena')
 			localStorage.removeItem('arena-preference')
 			localStorage.removeItem('arena-colossus')
