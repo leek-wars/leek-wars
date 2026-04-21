@@ -48,7 +48,7 @@
 									<a v-if="error.issue" :href="'https://github.com/5pilow/leek-wars-server/issues/' + error.issue" target="_blank"><v-btn size="small" color="success">Issue #{{ error.issue }}</v-btn></a>
 									<v-btn v-else size="small" @click="createIssue(error)">Créer issue</v-btn>
 								</div>
-								<div :ref="'trace-' + e" class="trace-container" :class="{ collapsed: traceOverflows[e] && !traceExpanded[e] }">
+								<div :ref="'trace-' + e" class="trace-container" :class="{ collapsed: !traceExpanded[e] }">
 									<code>{{ error.trace.substring(0, 8000) }}</code>
 									<div v-if="traceOverflows[e] && !traceExpanded[e]" class="trace-gradient" @click="toggleTrace(e, true)">
 										<v-icon>mdi-chevron-down</v-icon>
@@ -101,6 +101,7 @@
 		newErrors: number = 0
 		traceExpanded: Record<number, boolean> = {}
 		traceOverflows: Record<number, boolean> = {}
+		resizeObserver: ResizeObserver | null = null
 
 		created() {
 			if (!this.$store.getters.admin) this.$router.replace('/')
@@ -110,6 +111,8 @@
 
 		beforeUnmount() {
 			emitter.off('wsmessage', this.onWsMessage)
+			this.resizeObserver?.disconnect()
+			this.resizeObserver = null
 		}
 
 		onWsMessage(e: any) {
@@ -130,19 +133,40 @@
 				this.errors = data.errors
 				this.traceExpanded = {}
 				this.traceOverflows = {}
-				nextTick(() => {
-					const overflows: Record<number, boolean> = {}
-					for (let i = 0; i < data.errors.length; i++) {
-						// eslint-disable-next-line @typescript-eslint/no-explicit-any
-						const refs = (this as any).$refs['trace-' + i]
-						const el = Array.isArray(refs) ? refs[0] : refs
-						overflows[i] = el ? el.scrollHeight > 300 : false
-					}
-					this.traceOverflows = overflows
-				})
+				nextTick(() => this.observeTraces())
 				this.$store.commit('error-count', data.count)
 				LeekWars.setTitle("Gestionnaire d'erreur (" + (store.state.farmer ? store.state.farmer!.errors : 0) + ")")
 			})
+		}
+
+		observeTraces() {
+			this.resizeObserver?.disconnect()
+			const indexByEl = new Map<Element, number>()
+			this.resizeObserver = new ResizeObserver(entries => {
+				const next = { ...this.traceOverflows }
+				let changed = false
+				for (const entry of entries) {
+					const i = indexByEl.get(entry.target)
+					if (i === undefined) continue
+					const el = entry.target as HTMLElement
+					const overflows = el.scrollHeight > el.clientHeight + 1
+					if (!!next[i] !== overflows) {
+						next[i] = overflows
+						changed = true
+					}
+				}
+				if (changed) this.traceOverflows = next
+			})
+			const count = this.errors ? this.errors.length : 0
+			for (let i = 0; i < count; i++) {
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				const refs = (this as any).$refs['trace-' + i]
+				const el = Array.isArray(refs) ? refs[0] : refs
+				if (el) {
+					indexByEl.set(el, i)
+					this.resizeObserver.observe(el)
+				}
+			}
 		}
 
 		refresh() {
