@@ -188,6 +188,9 @@ button {
     background-color: #ca0000 !important;
     border-color: #ca0000 !important;
 }
+body.dark .v-btn:not([class*="bg-"]) {
+	background-color: #000;
+}
 
 html {
 	box-sizing: border-box;

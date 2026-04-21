@@ -48,9 +48,10 @@
 						</tr>
 						<tr>
 							<td colspan="2">
-								<v-radio-group v-model="signupMethod" class="radio" :row="true" :dense="true" :hide-details="true">
+								<v-radio-group v-model="signupMethod" class="radio" :inline="true" :dense="true" :hide-details="true">
 									<v-radio label="Email / mot de passe" :value="1" />
 									<v-radio label="GitHub" :value="2" />
+									<v-radio label="Google" :value="3" />
 								</v-radio-group>
 							</td>
 						</tr>
@@ -71,13 +72,14 @@
 						<tr>
 							<td><div class="space"></div></td>
 						</tr>
-						<tr v-if="signupMethod === 2">
+						<tr v-if="signupMethod === 2 || signupMethod === 3">
 							<td><div class="space"></div></td>
 						</tr>
 					</table>
 					<div class="center">
 						<v-btn v-if="signupMethod === 1" size="large" color="primary" type="submit">{{ $t('verify') }}</v-btn>
-						<v-btn v-else color="black" type="submit" class="gh-button"> <img src="/image/github_black.png"> {{ $t('verify_gh') }}</v-btn>
+						<v-btn v-else-if="signupMethod === 2" color="black" type="submit" class="gh-button"> <img src="/image/github_white.png"> {{ $t('verify_gh') }}</v-btn>
+						<v-btn v-else type="submit" class="google-button"> <img src="/image/google.svg"> {{ $t('verify_google') }}</v-btn>
 					</div>
 				</form>
 			</div>
@@ -173,7 +175,8 @@
 					<br><br>
 				</div>
 
-				<v-switch v-if="$store.state.farmer?.verified" v-model="settings.github_login" :disabled="!$store.state.farmer.pass" :label="$t('allow_github')" @change="updateGithubLogin" />
+				<v-switch v-if="$store.state.farmer?.verified" v-model="settings.github_login" :disabled="!$store.state.farmer.pass && !settings.google_login" :label="$t('allow_github')" @change="updateGithubLogin" hide-details />
+				<v-switch v-if="$store.state.farmer?.verified" v-model="settings.google_login" :disabled="!$store.state.farmer.pass && !settings.github_login" :label="$t('allow_google')" @change="updateGoogleLogin" hide-details />
 			</panel>
 
 			<panel v-if="$store.state.farmer?.verified" :title="$t('main.notifications')" icon="mdi-bell-outline">
@@ -501,6 +504,10 @@
 			LeekWars.post("settings/update-setting", {setting: 'github_login', value: this.settings.github_login})
 		}
 
+		updateGoogleLogin() {
+			LeekWars.post("settings/update-setting", {setting: 'google_login', value: this.settings.google_login})
+		}
+
 		@Watch('LeekWars.leekTheme')
 		updateLeekTheme() {
 			localStorage.setItem('leek-theme', '' + LeekWars.leekTheme)
@@ -510,7 +517,8 @@
 		submit(e: Event) {
 			e.preventDefault()
 			this.errors = {}
-			const service = this.signupMethod === 1 ? 'farmer/verify' : 'farmer/verify-github'
+			const provider = this.signupMethod === 2 ? 'github' : this.signupMethod === 3 ? 'google' : null
+			const service = provider ? `farmer/verify-${provider}` : 'farmer/verify'
 			const args = {
 				login: this.login,
 				godfather: this.godfather,
@@ -520,12 +528,10 @@
 				args.email = this.email
 			}
 			LeekWars.post(service, args).then(data => {
-				console.log("post", data, this.signupMethod)
-				if (this.signupMethod === 1) {
-					this.$router.push('/signup/success/' + this.login)
+				if (provider) {
+					document.location.href = LeekWars.API + `farmer/start-${provider}-login`
 				} else {
-					const redirect_uri = document.location.origin + "/api/farmer/login-github"
-					document.location.href = "https://github.com/login/oauth/authorize?client_id=0253d6b35d4db2a77a3b&scope=user:email&redirect_uri=" + redirect_uri + "&state=" + data.state
+					this.$router.push('/signup/success/' + this.login)
 				}
 			}).error(errors => {
 				for (const error of errors) {
@@ -722,7 +728,7 @@
 	.account {
 		text-align: left;
 	}
-	.v-btn.gh-button {
+	.v-btn.gh-button, .v-btn.google-button {
 		height: 40px;
 		margin-right: 10px;
 		img {

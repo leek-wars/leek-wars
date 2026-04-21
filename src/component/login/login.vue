@@ -25,8 +25,9 @@
 					</form>
 				</div>
 				<div class="divider"></div>
-				<div class="column">
-					<v-btn class="gh-button" @click="githubStart()"> <img src="/image/github_black.png"> {{ $t('main.login_gh') }}</v-btn>
+				<div class="column oauth-buttons">
+					<v-btn class="gh-button" @click="oauthStart('github')"> <img src="/image/github_black.png"> {{ $t('main.login_gh') }}</v-btn>
+					<v-btn class="google-button" @click="oauthStart('google')"> <img src="/image/google.svg"> {{ $t('main.login_google') }}</v-btn>
 				</div>
 			</div>
 		</panel>
@@ -86,9 +87,9 @@
 			localStorage.setItem("keep_connected", this.form.keep_connected ? "true" : "false")
 		}
 
-		githubStart() {
+		oauthStart(provider: 'github' | 'google') {
 			localStorage.setItem('login-attempt', 'true')
-			document.location.href = LeekWars.API + "farmer/start-github-login"
+			document.location.href = LeekWars.API + `farmer/start-${provider}-login`
 		}
 	}
 </script>
@@ -128,7 +129,7 @@
 		}
 	}
 	.divider {
-		background: #bbb;
+		background: var(--border);
 		width: 1px;
 		height: 300px;
 	}
@@ -140,10 +141,21 @@
 			width: 300px;
 			height: 1px;
 		}
+		.oauth-buttons {
+			align-self: center;
+			margin-top: 0;
+		}
 	}
-	.v-btn.gh-button {
+	.oauth-buttons {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 20px;
+		align-self: flex-start;
+		margin-top: 60px;
+	}
+	.v-btn.gh-button, .v-btn.google-button {
 		height: 40px;
-		margin-right: 10px;
 		img {
 			height: 20px;
 			margin-right: 8px;

@@ -1,6 +1,7 @@
 247:
   title: WIP
   added:
+    - "Connexion et inscription via Google. #img_247_google_login"
     - "Équipements (loadouts) : ensembles nommés d'armes/puces/composants à appliquer en un clic. #img_247_loadouts"
     - "#ai Intégration Git dans l'éditeur (GitHub, GitLab, Bitbucket, Forgejo). #img_247_git"
     - "Gestion multi-comptes depuis le header : connexion, switch et déconnexion rapides. #img_247_accounts"
@@ -13,13 +14,13 @@
     - "Nouveau trophée bonus « Rétro » (Poisson d'avril 2026)."
     - "#ai Valeurs par défaut pour les paramètres de fonction en LeekScript. #img_247_default_params"
     - "#ai Fonction `arrayFind(tableau, prédicat)` : retourne le premier élément correspondant."
-    - "#ai Fonction `getCompositionName(entité)` : retourne le nom de la composition d'équipe d'une entité (merci à KavaliovOcties)."
+    - "#ai Fonction `getCompositionName(entité)` : nom de la composition d'équipe (merci à KavaliovOcties)."
     - "#ai Pragmas `// @version` et `// @strict` dans les fichiers d'IA. #img_247_pragmas"
     - "#ai Ajout des BigInteger en LeekScript (merci à Batary)."
     - "#ai Fonctions setBit, testBit et bitLength pour les BigInteger (merci à Batary)."
-    - "#ai Constantes `EROSION_DAMAGE`, `EROSION_POISON` et `EROSION_CRITICAL_BONUS` pour les taux d'érosion (merci à fujiwar)."
-    - "Commandes de chat `/war`, `/chest`, `/coloss` pour inviter sur un type d'arène précis (merci à Kraspen)."
-    - "Application des potions de couleur sur les poireaux de test (merci à Kraspen)."
+    - "#ai Constantes `EROSION_DAMAGE`, `EROSION_POISON`, `EROSION_CRITICAL_BONUS` (merci à fujiwar)."
+    - "Commandes chat `/war`, `/chest`, `/coloss` pour inviter sur une arène précise (merci à Kraspen)."
+    - "Application des potions de couleur sur les poireaux de test (merci à Kraspen). #img_247_bot_color"
   improved:
     - "Popup de confirmation avant la déconnexion (merci à FdHP)."
     - "Refonte de la banque de cristaux avec packs et bonus progressifs. #img_247_bank"
@@ -36,7 +37,7 @@
     - "Images d'items chargées à la demande dans le marché et l'inventaire."
     - "Thème XP chargé dynamiquement : démarrage plus rapide en thème moderne."
     - "Boutons PayPal adaptés au thème sombre."
-    - "Interface de test adaptée au mobile."
+    - "Interface de test adaptée au mobile. #img_247_editor_test_mobile"
   fixed:
     - "Combat de boss : les éleveurs sans poireau engagé ne sont plus redirigés (merci à fabou)."
     - "Boutons « Refaire » / « Revanche » d'un rapport de défi ciblaient soi-même (merci à fabou)."
@@ -52,8 +53,9 @@
     - "Page d'erreur sur activation d'un compte déjà activé, remplacée par une redirection."
     - "Arène réinscrite avec le poireau de l'ancien compte après un switch."
     - "Guards null sur le canvas et le HUD du player pour éviter des crashs Safari."
+    - "Player en plein écran affiché très petit tant que le combat n'était pas chargé."
     - "Correction des traductions du didacticiel."
-    - "#ai Stack traces des plantages d'IA affichées même après la limite de debug atteinte (merci à Kraspen)."
+    - "#ai Stack traces des plantages d'IA affichées après la limite de debug (merci à Kraspen)."
 
 246:
   title: "3 modes Guerre, Chasse aux coffres et Colosse, améliorations de l'éditeur et du LeekScript."

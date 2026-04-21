@@ -68,9 +68,10 @@
 							</tr>
 							<tr>
 								<td colspan="2">
-									<v-radio-group v-model="signupMethod" class="radio" :row="true" :dense="true" :hide-details="true">
+									<v-radio-group v-model="signupMethod" class="radio" :inline="true" :dense="true" :hide-details="true">
 										<v-radio :label="$t('email_password')" :value="1" />
 										<v-radio label="GitHub" :value="2" />
+										<v-radio label="Google" :value="3" />
 									</v-radio-group>
 								</td>
 							</tr>
@@ -91,7 +92,7 @@
 							<tr>
 								<td><div class="space"></div></td>
 							</tr>
-							<tr v-if="signupMethod === 2">
+							<tr v-if="signupMethod === 2 || signupMethod === 3">
 								<td><div class="space"></div></td>
 							</tr>
 						</tbody>
@@ -104,7 +105,8 @@
 					<div class="center">
 						<v-btn v-if="fastRegister" size="large" color="primary" type="submit">{{ $t('play_button') }}</v-btn>
 						<v-btn v-else-if="signupMethod === 1" size="large" color="primary" type="submit">{{ $t('signup') }}</v-btn>
-						<v-btn v-else color="black" type="submit" class="gh-button"> <img src="/image/github_black.png"> {{ $t('signup_gh') }}</v-btn>
+						<v-btn v-else-if="signupMethod === 2" color="black" type="submit" class="gh-button"> <img src="/image/github_white.png"> {{ $t('signup_gh') }}</v-btn>
+						<v-btn v-else type="submit" class="google-button"> <img src="/image/google.svg"> {{ $t('signup_google') }}</v-btn>
 					</div>
 				</form>
 			</panel>
@@ -467,7 +469,8 @@
 		submit(e: Event) {
 			e.preventDefault()
 			this.errors = {}
-			const service = this.fastRegister ? 'farmer/register-fast' : (this.signupMethod === 1 ? 'farmer/register' : 'farmer/register-github')
+			const provider = this.signupMethod === 2 ? 'github' : this.signupMethod === 3 ? 'google' : null
+			const service = this.fastRegister ? 'farmer/register-fast' : (provider ? `farmer/register-${provider}` : 'farmer/register')
 			const args = {
 				leek_name: this.leek,
 				hat: this.leekHat,
@@ -486,13 +489,12 @@
 					store.commit('connect', data)
 					store.commit('connected', '$')
 					this.$router.push(getRedirectAfterLogin())
-				} else if (this.signupMethod === 1) {
+				} else if (provider) {
 					localStorage.setItem('login-attempt', 'true')
-					this.$router.push('/signup/success/' + this.login)
+					document.location.href = LeekWars.API + `farmer/start-${provider}-login`
 				} else {
 					localStorage.setItem('login-attempt', 'true')
-					const redirect_uri = document.location.origin + "/api/farmer/login-github"
-					document.location.href = "https://github.com/login/oauth/authorize?client_id=0253d6b35d4db2a77a3b&scope=user:email&redirect_uri=" + redirect_uri + "&state=" + data.state
+					this.$router.push('/signup/success/' + this.login)
 				}
 			}).error(errors => {
 				for (const error of errors) {
@@ -744,7 +746,7 @@
 	.slide {
 		width: auto;
 	}
-	.v-btn.gh-button {
+	.v-btn.gh-button, .v-btn.google-button {
 		height: 40px;
 		margin-right: 10px;
 		img {

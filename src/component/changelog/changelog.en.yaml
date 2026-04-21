@@ -1,6 +1,7 @@
 247:
   title: WIP
   added:
+    - "Sign in and sign up with Google. #img_247_google_login"
     - "Loadouts: named sets of weapons/chips/components applied to a leek in one click. #img_247_loadouts"
     - "#ai Git integration in the editor (GitHub, GitLab, Bitbucket, Forgejo). #img_247_git"
     - "Multi-account management from the header: quick login, switch and logout. #img_247_accounts"
@@ -13,11 +14,11 @@
     - "New bonus trophy \"Retro\" (April Fools 2026)."
     - "#ai Default values for function parameters in LeekScript. #img_247_default_params"
     - "#ai `arrayFind(array, predicate)` function: returns the first matching element."
-    - "#ai `getCompositionName(entity)` function: returns the name of an entity's team composition (thanks to KavaliovOcties)."
+    - "#ai `getCompositionName(entity)`: team composition name of an entity (thanks to KavaliovOcties)."
     - "#ai `// @version` and `// @strict` pragmas in AI files. #img_247_pragmas"
     - "#ai BigInteger added to LeekScript (thanks to Batary)."
     - "#ai setBit, testBit and bitLength functions for BigIntegers (thanks to Batary)."
-    - "#ai `EROSION_DAMAGE`, `EROSION_POISON` and `EROSION_CRITICAL_BONUS` constants for erosion rates (thanks to fujiwar)."
+    - "#ai `EROSION_DAMAGE`, `EROSION_POISON`, `EROSION_CRITICAL_BONUS` constants (thanks to fujiwar)."
     - "Chat commands `/war`, `/chest`, `/coloss` to invite to a specific arena type (thanks to Kraspen)."
     - "Apply color potions on test leeks (thanks to Kraspen)."
   improved:
@@ -52,6 +53,7 @@
     - "Error page on already-activated account replaced with a redirect."
     - "Arena re-registered with the leek from the previous account after a switch."
     - "Null guards on player canvas and HUD to prevent Safari crashes."
+    - "Fullscreen player appeared very small while the fight was still loading."
     - "Fixed tutorial translations."
     - "#ai AI crash stack traces now shown even after the debug limit is reached (thanks to Kraspen)."
 

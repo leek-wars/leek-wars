@@ -1,6 +1,7 @@
 247:
   title: WIP
   added:
+    - "Accesso e registrazione tramite Google. #img_247_google_login"
     - "Equipaggiamenti (loadouts): insiemi nominati di armi/chip/componenti applicabili in un clic. #img_247_loadouts"
     - "#ai Integrazione Git nell'editor (GitHub, GitLab, Bitbucket, Forgejo). #img_247_git"
     - "Gestione multi-account dall'header: login, switch e disconnessione rapidi. #img_247_accounts"
@@ -13,12 +14,12 @@
     - "Nuovo trofeo bonus « Retro » (Pesce d'aprile 2026)."
     - "#ai Valori di default per i parametri di funzione in LeekScript. #img_247_default_params"
     - "#ai Funzione `arrayFind(array, predicato)`: restituisce il primo elemento corrispondente."
-    - "#ai Funzione `getCompositionName(entità)`: restituisce il nome della composizione del team di un'entità (grazie a KavaliovOcties)."
+    - "#ai `getCompositionName(entità)`: nome della composizione del team (grazie a KavaliovOcties)."
     - "#ai Pragma `// @version` e `// @strict` nei file di IA. #img_247_pragmas"
     - "#ai Aggiunta dei BigInteger in LeekScript (grazie a Batary)."
     - "#ai Funzioni setBit, testBit e bitLength per i BigInteger (grazie a Batary)."
-    - "#ai Costanti `EROSION_DAMAGE`, `EROSION_POISON` e `EROSION_CRITICAL_BONUS` per i tassi di erosione (grazie a fujiwar)."
-    - "Comandi chat `/war`, `/chest`, `/coloss` per invitare a un tipo specifico di arena (grazie a Kraspen)."
+    - "#ai Costanti `EROSION_DAMAGE`, `EROSION_POISON`, `EROSION_CRITICAL_BONUS` (grazie a fujiwar)."
+    - "Comandi chat `/war`, `/chest`, `/coloss` per invitare a un'arena specifica (grazie a Kraspen)."
     - "Applicazione di pozioni di colore sui porri di test (grazie a Kraspen)."
   improved:
     - "Popup di conferma prima della disconnessione (grazie a FdHP)."
@@ -52,8 +53,9 @@
     - "Pagina di errore su un account già attivato sostituita da un redirect."
     - "Arena re-iscritta con il porro dell'account precedente dopo uno switch."
     - "Guard null sul canvas e l'HUD del player per evitare crash Safari."
+    - "Player a schermo intero appariva molto piccolo finché il combattimento non era caricato."
     - "Correzione delle traduzioni del tutorial."
-    - "#ai Stack trace dei crash IA mostrati anche dopo il raggiungimento del limite di debug (grazie a Kraspen)."
+    - "#ai Stack trace dei crash IA mostrati dopo il limite di debug (grazie a Kraspen)."
 
 246:
   title: "3 nuove modalità: Guerra, Caccia ai forzieri e Colosso, miglioramenti dell'editor e del LeekScript."
