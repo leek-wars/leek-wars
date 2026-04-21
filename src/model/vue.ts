@@ -74,20 +74,22 @@ const vuetify = createVuetify({
 	},
 })
 
-// Handle Vite CSS/JS preload errors after deployment (stale hashed assets)
-// The guard flag prevents infinite reload loops if the error persists after reload.
-// It is cleared on successful page load so that future deploys can trigger a reload again.
-const PRELOAD_RELOAD_KEY = 'vite-preload-reload'
-window.addEventListener('vite:preloadError', () => {
-	if (!sessionStorage.getItem(PRELOAD_RELOAD_KEY)) {
-		sessionStorage.setItem(PRELOAD_RELOAD_KEY, '1')
-		window.location.reload()
-	}
-})
-// Clear the guard once the page has loaded successfully (assets are fresh)
-window.addEventListener('load', () => {
-	sessionStorage.removeItem(PRELOAD_RELOAD_KEY)
-})
+// Cache-busted reload on Vite asset errors, with a cooldown to break out of
+// refresh-on-every-click loops when the new bundle still errors.
+const PRELOAD_RELOAD_KEY = 'vite-preload-reload-at'
+const RELOAD_COOLDOWN = 60_000
+
+function reloadWithCacheBust() {
+	const now = Date.now()
+	const last = parseInt(sessionStorage.getItem(PRELOAD_RELOAD_KEY) || '0', 10)
+	if (now - last < RELOAD_COOLDOWN) return
+	sessionStorage.setItem(PRELOAD_RELOAD_KEY, now.toString())
+	const url = new URL(window.location.href)
+	url.searchParams.set('_r', now.toString())
+	window.location.replace(url.toString())
+}
+
+window.addEventListener('vite:preloadError', reloadWithCacheBust)
 
 // Suppress Monaco internal error when hovering markers on a disposed editor
 window.addEventListener('error', (event) => {
@@ -110,10 +112,7 @@ export function reportVueError(err: any, vm: any, info: any, origin: string = 'm
 	}
 
 	if (info?.includes?.('runtime-13')) {
-		if (!sessionStorage.getItem(PRELOAD_RELOAD_KEY)) {
-			sessionStorage.setItem(PRELOAD_RELOAD_KEY, '1')
-			window.location.reload()
-		}
+		reloadWithCacheBust()
 		return
 	}
 
