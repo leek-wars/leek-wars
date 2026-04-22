@@ -336,6 +336,8 @@
 	"loadout_edit": "Redigera utrustning",
 	"loadout_name_placeholder": "Namn på utrustning",
 	"loadout_apply": "Använd",
+	"loadout_apply_items_only": "Endast utrustning",
+	"loadout_already_applied": "Redan utrustad",
 	"loadout_apply_success": "Utrustning tillämpad på {0}",
 	"loadout_skipped_n": "{0} föremål tillämpades inte",
 	"loadout_import_current": "Importera nuvarande utrustning",

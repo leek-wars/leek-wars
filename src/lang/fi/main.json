@@ -336,6 +336,8 @@
 	"loadout_edit": "Muokkaa varustusta",
 	"loadout_name_placeholder": "Varustuksen nimi",
 	"loadout_apply": "Käytä",
+	"loadout_apply_items_only": "Vain varusteet",
+	"loadout_already_applied": "Jo varustettu",
 	"loadout_apply_success": "Varustus käytetty kohteeseen {0}",
 	"loadout_skipped_n": "{0} esinettä ei käytetty",
 	"loadout_import_current": "Tuo nykyinen varustus",

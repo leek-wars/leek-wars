@@ -336,6 +336,8 @@
 	"loadout_edit": "Ausrüstung bearbeiten",
 	"loadout_name_placeholder": "Name der Ausrüstung",
 	"loadout_apply": "Anwenden",
+	"loadout_apply_items_only": "Nur Ausrüstung",
+	"loadout_already_applied": "Bereits ausgerüstet",
 	"loadout_apply_success": "Ausrüstung auf {0} angewendet",
 	"loadout_skipped_n": "{0} Gegenstand/Gegenstände nicht angewendet",
 	"loadout_import_current": "Aktuelle Ausrüstung importieren",

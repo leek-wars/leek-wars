@@ -27,14 +27,18 @@
 								</v-tooltip>
 							</div>
 							<div class="loadout-actions">
-								<v-btn size="small" color="primary" :loading="applying === loadout.id" @click="apply(loadout)">{{ $t('main.loadout_apply') }}</v-btn>
+								<div v-if="loadoutStatus[loadout.id]?.fullyApplied" class="already-equipped">
+									<v-icon size="18" color="success">mdi-check-circle</v-icon>
+									<span>{{ $t('main.loadout_already_applied') }}</span>
+								</div>
+								<v-btn v-else size="small" color="primary" :loading="applying === loadout.id" @click="apply(loadout)">{{ $t('main.loadout_apply') }}</v-btn>
 								<v-btn size="x-small" variant="text" icon @click="startEdit(loadout)"><v-icon size="18">mdi-pencil</v-icon></v-btn>
 								<v-btn size="x-small" variant="text" icon @click="remove(loadout)"><v-icon size="18">mdi-delete</v-icon></v-btn>
 							</div>
 						</div>
 						<div class="loadout-preview">
 							<div class="preview-col preview-col-stats">
-								<div v-for="c in CHARACTERISTICS" :key="c" class="stat-badge" :class="[c, { empty: !statBonusFor(loadout, c) }]">
+								<div v-for="c in CHARACTERISTICS" :key="c" class="stat-badge" :class="c">
 									<img :src="'/image/charac/' + c + '.png'" width="14" height="14">
 									<span :class="'color-' + c">{{ statTotalFor(loadout, c) }}</span>
 								</div>
@@ -189,7 +193,7 @@
 		</template>
 	</popup>
 
-	<popup v-model="restatDialogOpen" :width="440">
+	<popup v-model="restatDialogOpen" :width="620" class="restat-popup">
 		<template #icon><v-icon>mdi-flask</v-icon></template>
 		<template #title>{{ $t('main.loadout_restat_title') }}</template>
 		<div class="restat-confirm">
@@ -201,8 +205,12 @@
 			</div>
 		</div>
 		<template #actions>
-			<div v-ripple class="action" @click="cancelRestat">{{ $t('main.cancel') }}</div>
-			<div v-ripple class="action green" :class="{disabled: !restatPotionCount}" @click="restatPotionCount && confirmRestat()">
+			<div v-ripple class="action compact" @click="cancelRestat">{{ $t('main.cancel') }}</div>
+			<div v-if="pendingApply && loadoutStatus[pendingApply.id]?.itemsDiffer" v-ripple class="action compact" @click="applyWithoutStats">
+				<v-icon>mdi-sword</v-icon>
+				<span>{{ $t('main.loadout_apply_items_only') }}</span>
+			</div>
+			<div v-ripple class="action compact green" :class="{disabled: !restatPotionCount}" @click="restatPotionCount && confirmRestat()">
 				<v-icon>mdi-check</v-icon>
 				<span>{{ $t('main.loadout_restat_confirm') }}</span>
 			</div>
@@ -249,6 +257,7 @@
 				CHARACTERISTICS,
 				loading: false,
 				applying: null as number | null,
+				applyingItemsOnly: null as number | null,
 				saving: false,
 				editing: null as EditingLoadout | null,
 				restatDialogOpen: false,
@@ -276,6 +285,38 @@
 			allWeapons() { return store.state.farmer?.weapons ?? [] },
 			allChips() { return store.state.farmer?.chips ?? [] },
 			allComponents() { return store.state.farmer?.components ?? [] },
+			loadoutStatus(): { [id: number]: { itemsDiffer: boolean, statsDiffer: boolean, fullyApplied: boolean } } {
+				const result: { [id: number]: { itemsDiffer: boolean, statsDiffer: boolean, fullyApplied: boolean } } = {}
+				if (!this.leek) return result
+				const leek = this.leek as any
+				const leekWeapons = (leek.weapons || []).map((w: any) => w.template).sort((a: number, b: number) => a - b)
+				const leekChips = (leek.chips || []).map((c: any) => c.template).sort((a: number, b: number) => a - b)
+				const leekComps: { [idx: number]: number } = {}
+				const lComps = leek.components || []
+				for (let i = 0; i < lComps.length; i++) if (lComps[i]) leekComps[i] = lComps[i].template
+				const leekCompKeys = Object.keys(leekComps)
+				for (const loadout of this.loadouts) {
+					const ldWeapons = [...loadout.weapons].sort((a, b) => a - b)
+					const ldChips = [...loadout.chips].sort((a, b) => a - b)
+					const ldComps: { [idx: number]: number } = {}
+					for (const c of loadout.components) ldComps[c.index] = c.template
+					let itemsDiffer = false
+					if (leekWeapons.length !== ldWeapons.length) itemsDiffer = true
+					else for (let i = 0; i < leekWeapons.length; i++) if (leekWeapons[i] !== ldWeapons[i]) { itemsDiffer = true; break }
+					if (!itemsDiffer) {
+						if (leekChips.length !== ldChips.length) itemsDiffer = true
+						else for (let i = 0; i < leekChips.length; i++) if (leekChips[i] !== ldChips[i]) { itemsDiffer = true; break }
+					}
+					if (!itemsDiffer) {
+						const ldCompKeys = Object.keys(ldComps)
+						if (leekCompKeys.length !== ldCompKeys.length) itemsDiffer = true
+						else for (const k of leekCompKeys) if (leekComps[+k] !== ldComps[+k]) { itemsDiffer = true; break }
+					}
+					const statsDiffer = this.statsDifferFromLeek(loadout)
+					result[loadout.id] = { itemsDiffer, statsDiffer, fullyApplied: !itemsDiffer && !statsDiffer }
+				}
+				return result
+			},
 			warningsByLoadout(): { [id: number]: string[] } {
 				const result: { [id: number]: string[] } = {}
 				if (!this.leek) return result
@@ -516,11 +557,38 @@
 				}
 				this.doApply(loadout, false)
 			},
+			applyItemsOnly(loadout: Loadout) {
+				if (!this.leek) return
+				this.applyingItemsOnly = loadout.id
+				LeekWars.post('loadout/apply', { set_id: loadout.id, leek_id: this.leek.id, use_restat: false }).then((data: any) => {
+					this.leek!.weapons = data.leek.weapons
+					this.leek!.chips = data.leek.chips
+					this.leek!.components = data.leek.components
+					this.$emit('applied')
+					if (data.skipped && data.skipped.length > 0) {
+						this.skippedItems = data.skipped
+						this.skippedDialogOpen = true
+					} else {
+						LeekWars.toast(this.$t('main.loadout_apply_success', [this.leek!.name]))
+					}
+					this.applyingItemsOnly = null
+				}).error((e: any) => {
+					LeekWars.toast(e)
+					this.applyingItemsOnly = null
+				})
+			},
 			confirmRestat() {
 				if (!this.pendingApply) return
 				this.restatDialogOpen = false
 				this.doApply(this.pendingApply, true)
 				this.pendingApply = null
+			},
+			applyWithoutStats() {
+				if (!this.pendingApply) return
+				const loadout = this.pendingApply
+				this.restatDialogOpen = false
+				this.pendingApply = null
+				this.applyItemsOnly(loadout)
 			},
 			cancelRestat() {
 				this.restatDialogOpen = false
@@ -603,11 +671,13 @@
 	display: flex; flex-direction: column; gap: 6px;
 	padding: 8px 10px; border-radius: 6px; background: #f5f5f5;
 }
+body.dark .loadout-card { background: #2a2a2a; }
 .loadout-header { display: flex; align-items: center; gap: 10px; }
 .drag-handle { cursor: grab; color: #999; flex-shrink: 0; }
 .drag-handle:active { cursor: grabbing; }
 .sortable-ghost { opacity: 0.4; }
 .sortable-chosen { background: #eaeaea; }
+body.dark .sortable-chosen { background: #333; }
 .loadout-icon {
 	width: 28px; flex-shrink: 0;
 	display: flex; align-items: center; justify-content: center;
@@ -637,7 +707,6 @@
 .stat-badge { display: flex; align-items: center; gap: 2px; font-weight: 500; min-width: 0; }
 .stat-badge img { flex-shrink: 0; }
 .stat-badge span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.stat-badge.empty { opacity: 0.35; }
 body.dark .stat-badge.frequency img { filter: invert(1); }
 .preview-slot {
 	width: 30px; height: 30px; flex-shrink: 0;
@@ -647,6 +716,10 @@ body.dark .stat-badge.frequency img { filter: invert(1); }
 .loadout-actions { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
 .loadout-actions .v-btn[variant="text"] { opacity: 0.55; }
 .loadout-actions .v-btn[variant="text"]:hover { opacity: 1; }
+.already-equipped {
+	display: inline-flex; align-items: center; gap: 4px;
+	padding: 0 8px; font-size: 13px; color: #2d8a2d; font-weight: 500;
+}
 .list-footer { margin-top: 12px; }
 
 // Formulaire
@@ -677,6 +750,7 @@ body.dark .stat-badge.frequency img { filter: invert(1); }
 .capital-used { font-weight: 400; color: #666; font-size: 12px; margin-left: 4px; }
 .skipped-list { display: flex; flex-direction: column; gap: 8px; padding: 8px 4px; max-height: 400px; overflow-y: auto; }
 .skipped-item { display: flex; align-items: center; gap: 10px; padding: 6px; border-radius: 4px; background: #f5f5f5; }
+body.dark .skipped-item { background: #2a2a2a; }
 .skipped-item :deep(.item) { flex-shrink: 0; }
 .skipped-info { flex: 1; min-width: 0; }
 .skipped-name { font-weight: 600; font-size: 14px; }
@@ -687,6 +761,8 @@ body.dark .stat-badge.frequency img { filter: invert(1); }
 .restat-count { color: #2d8a2d; font-weight: 600; }
 .restat-none { color: #c0392b; font-weight: 600; }
 .action.disabled { opacity: 0.4; pointer-events: none; }
+.action.compact { font-size: 15px !important; line-height: 1.2 !important; padding: 0 8px; }
+.action.compact :deep(.v-icon) { font-size: 18px; }
 .selected-items {
 	display: flex; flex-wrap: wrap; gap: 4px; min-height: 52px; margin-bottom: 6px;
 	.empty-hint { color: #bbb; font-size: 13px; align-self: center; }
@@ -722,4 +798,14 @@ body.dark .stat-badge.frequency img { filter: invert(1); }
 }
 .slot-empty { font-size: 12px; color: #ccc; }
 .form-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
+
+@media screen and (max-width: 599px) {
+	.loadout-header { flex-wrap: wrap; }
+	.loadout-actions { width: 100%; justify-content: flex-end; }
+	.loadout-preview { flex-direction: column; gap: 6px; }
+	.preview-col-stats { grid-template-columns: repeat(3, minmax(44px, 1fr)); gap: 4px 8px; }
+	.items-grid { grid-template-columns: 1fr; }
+	.row-name-icon { flex-wrap: wrap; }
+	.name-input { flex-basis: 100%; order: -1; }
+}
 </style>

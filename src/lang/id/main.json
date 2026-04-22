@@ -336,6 +336,8 @@
 	"loadout_edit": "Edit loadout",
 	"loadout_name_placeholder": "Nama loadout",
 	"loadout_apply": "Terapkan",
+	"loadout_apply_items_only": "Hanya perlengkapan",
+	"loadout_already_applied": "Sudah dipasang",
 	"loadout_apply_success": "Loadout diterapkan pada {0}",
 	"loadout_skipped_n": "{0} item tidak diterapkan",
 	"loadout_import_current": "Impor perlengkapan saat ini",

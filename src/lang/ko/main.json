@@ -336,6 +336,8 @@
 	"loadout_edit": "로드아웃 편집",
 	"loadout_name_placeholder": "로드아웃 이름",
 	"loadout_apply": "적용",
+	"loadout_apply_items_only": "장비만",
+	"loadout_already_applied": "이미 장착됨",
 	"loadout_apply_success": "{0}에 로드아웃이 적용되었습니다",
 	"loadout_skipped_n": "{0}개 아이템이 적용되지 않았습니다",
 	"loadout_import_current": "현재 장비 가져오기",

@@ -336,6 +336,8 @@
 	"loadout_edit": "Rediger utrustning",
 	"loadout_name_placeholder": "Utrustningsnavn",
 	"loadout_apply": "Bruk",
+	"loadout_apply_items_only": "Kun utstyr",
+	"loadout_already_applied": "Allerede utstyrt",
 	"loadout_apply_success": "Utrustning brukt på {0}",
 	"loadout_skipped_n": "{0} gjenstand(er) ikke brukt",
 	"loadout_import_current": "Importer gjeldende utstyr",

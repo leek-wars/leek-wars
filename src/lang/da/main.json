@@ -336,6 +336,8 @@
 	"loadout_edit": "Rediger loadout",
 	"loadout_name_placeholder": "Loadout-navn",
 	"loadout_apply": "Anvend",
+	"loadout_apply_items_only": "Kun udstyr",
+	"loadout_already_applied": "Allerede udstyret",
 	"loadout_apply_success": "Loadout anvendt på {0}",
 	"loadout_skipped_n": "{0} genstand(e) ikke anvendt",
 	"loadout_import_current": "Importer nuværende udstyr",

@@ -338,6 +338,8 @@
 	"loadout_edit": "लोडआउट संपादित करें",
 	"loadout_name_placeholder": "लोडआउट का नाम",
 	"loadout_apply": "लागू करें",
+	"loadout_apply_items_only": "केवल उपकरण",
+	"loadout_already_applied": "पहले से सुसज्जित",
 	"loadout_apply_success": "लोडआउट {0} पर लागू किया गया",
 	"loadout_skipped_n": "{0} वस्तु(एं) लागू नहीं की गईं",
 	"loadout_import_current": "वर्तमान उपकरण आयात करें",

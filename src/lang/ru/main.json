@@ -336,6 +336,8 @@
 	"loadout_edit": "Изменить снаряжение",
 	"loadout_name_placeholder": "Название снаряжения",
 	"loadout_apply": "Применить",
+	"loadout_apply_items_only": "Только снаряжение",
+	"loadout_already_applied": "Уже экипировано",
 	"loadout_apply_success": "Снаряжение применено к {0}",
 	"loadout_skipped_n": "{0} предмет(ов) не применено",
 	"loadout_import_current": "Импортировать текущее снаряжение",

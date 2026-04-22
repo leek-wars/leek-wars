@@ -336,6 +336,8 @@
 	"loadout_edit": "Edytuj wyposażenie",
 	"loadout_name_placeholder": "Nazwa wyposażenia",
 	"loadout_apply": "Zastosuj",
+	"loadout_apply_items_only": "Tylko wyposażenie",
+	"loadout_already_applied": "Już wyposażony",
 	"loadout_apply_success": "Wyposażenie zastosowane u {0}",
 	"loadout_skipped_n": "Nie zastosowano {0} przedmiotu/ów",
 	"loadout_import_current": "Importuj aktualne wyposażenie",

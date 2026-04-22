@@ -336,6 +336,8 @@
 	"loadout_edit": "Editar equipamento",
 	"loadout_name_placeholder": "Nome do equipamento",
 	"loadout_apply": "Aplicar",
+	"loadout_apply_items_only": "Apenas equipamento",
+	"loadout_already_applied": "Já equipado",
 	"loadout_apply_success": "Equipamento aplicado em {0}",
 	"loadout_skipped_n": "{0} item(ns) não aplicado(s)",
 	"loadout_import_current": "Importar equipamento atual",

@@ -336,6 +336,8 @@
 	"loadout_edit": "Modifica loadout",
 	"loadout_name_placeholder": "Nome del loadout",
 	"loadout_apply": "Applica",
+	"loadout_apply_items_only": "Solo oggetti",
+	"loadout_already_applied": "Già equipaggiato",
 	"loadout_apply_success": "Loadout applicato a {0}",
 	"loadout_skipped_n": "{0} oggetto/i non applicato/i",
 	"loadout_import_current": "Importa equipaggiamento attuale",

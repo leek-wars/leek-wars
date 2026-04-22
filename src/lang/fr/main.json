@@ -336,6 +336,8 @@
 	"loadout_edit": "Modifier l'équipement",
 	"loadout_name_placeholder": "Nom de l'équipement",
 	"loadout_apply": "Appliquer",
+	"loadout_apply_items_only": "Items uniquement",
+	"loadout_already_applied": "Déjà équipé",
 	"loadout_apply_success": "Équipement appliqué sur {0}",
 	"loadout_skipped_n": "{0} item(s) non appliqué(s)",
 	"loadout_import_current": "Importer l'équipement actuel",

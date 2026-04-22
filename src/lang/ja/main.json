@@ -336,6 +336,8 @@
 	"loadout_edit": "ロードアウトを編集",
 	"loadout_name_placeholder": "ロードアウト名",
 	"loadout_apply": "適用",
+	"loadout_apply_items_only": "装備のみ",
+	"loadout_already_applied": "既に装備済み",
 	"loadout_apply_success": "{0}にロードアウトを適用しました",
 	"loadout_skipped_n": "{0}個のアイテムが適用されませんでした",
 	"loadout_import_current": "現在の装備をインポート",

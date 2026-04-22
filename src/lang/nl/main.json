@@ -336,6 +336,8 @@
 	"loadout_edit": "Uitrusting bewerken",
 	"loadout_name_placeholder": "Naam van de uitrusting",
 	"loadout_apply": "Toepassen",
+	"loadout_apply_items_only": "Alleen uitrusting",
+	"loadout_already_applied": "Al uitgerust",
 	"loadout_apply_success": "Uitrusting toegepast op {0}",
 	"loadout_skipped_n": "{0} item(s) niet toegepast",
 	"loadout_import_current": "Huidige uitrusting importeren",

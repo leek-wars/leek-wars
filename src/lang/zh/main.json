@@ -336,6 +336,8 @@
 	"loadout_edit": "编辑装备配置",
 	"loadout_name_placeholder": "装备配置名称",
 	"loadout_apply": "应用",
+	"loadout_apply_items_only": "仅装备",
+	"loadout_already_applied": "已装备",
 	"loadout_apply_success": "装备配置已应用到 {0}",
 	"loadout_skipped_n": "{0} 件物品未应用",
 	"loadout_import_current": "导入当前装备",
