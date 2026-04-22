@@ -47,14 +47,15 @@
 									<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[scheme.items[i][0]].type] + '/' + LeekWars.items[scheme.items[i][0]].name.replace('hat_', '').replace('potion_', '').replace('chip_', '').replace('weapon_', '') + '.png'">
 								</div>
 							</rich-tooltip-item>
-							<input v-model="scheme.items[i][0]" @keyup="updateScheme(scheme)" class="item-id">
-							<input v-model="scheme.items[i][1]" @keyup="updateScheme(scheme)" class="quantity">
+							<input v-model="scheme.items[i][0]" class="item-id">
+							<input v-model="scheme.items[i][1]" class="quantity">
 						</div>
 						<div class="cell" :class="{cell8: true}">
 							<rich-tooltip-item :item="LeekWars.items[scheme.result]" :bottom="true" :inventory="true" :quantity="scheme.quantity">
 								<div class="item" :type="LeekWars.items[scheme.result].type">
 									<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[scheme.result].type] + '/' + LeekWars.items[scheme.result].name.replace('hat_', '').replace('potion_', '') + '.png'">
-									<input v-model="scheme.quantity" @keyup="updateScheme(scheme)" class="quantity">
+									<input v-model="scheme.result" class="item-id">
+									<input v-model="scheme.quantity" class="quantity">
 								</div>
 							</rich-tooltip-item>
 						</div>
@@ -63,6 +64,7 @@
 						<div>{{ $filters.number(scheme.quantity * LeekWars.items[scheme.result].price) }} <span class="hab"></span></div>
 						<div :class="{wrong: Math.abs((scheme.quantity * LeekWars.items[scheme.result].price) / scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0) - 1.1) > 0.03 }">{{ $filters.number(scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0)) }} ({{ ((scheme.quantity * LeekWars.items[scheme.result].price) / scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0)).toFixed(2) }}) <span class="hab"></span></div>
 					</div>
+					<button class="copy-code" @click="copyCode(scheme)">Copier le code PHP</button>
 				</div>
 			</div>
 		</panel>
@@ -110,9 +112,12 @@
 			LeekWars.large = false
 		}
 
-		updateScheme(scheme: SchemeTemplate) {
-			const items = scheme.items.map(i => i && i[0] ? i.map(j => parseInt(j as any)) : null)
-			LeekWars.put("scheme/set-ingredients", { scheme_id: scheme.id, ingredients: JSON.stringify(items) })
+		copyCode(scheme: SchemeTemplate) {
+			const slots = scheme.items.map(i => i && i[0] ? `[${parseInt(i[0] as any)}, ${parseInt(i[1] as any)}]` : 'null').join(', ')
+			const comment = (scheme as any).comment ?? ''
+			const snippet = `${scheme.id} => ['result' => ${scheme.result}, 'items' => [${slots}], 'comment' => '${comment}', 'quantity' => ${scheme.quantity}],`
+			navigator.clipboard.writeText(snippet)
+			LeekWars.toast("Snippet copié — à coller dans SchemeTemplateRegistry")
 		}
 	}
 </script>
@@ -219,17 +224,29 @@
 	font-weight: bold;
 }
 
+.copy-code {
+	margin-top: 4px;
+	padding: 4px 10px;
+	font-size: 13px;
+	background: var(--color-primary);
+	color: white;
+	border: none;
+	border-radius: 3px;
+	cursor: pointer;
+	&:hover {
+		opacity: 0.9;
+	}
+}
 .forge {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 5px;
 	width: 260px;
-	height: 305px;
 	flex-shrink: 0;
 	.grid {
-		width: 100%;
-		height: 100%;
+		width: 260px;
+		height: 260px;
 		position: relative;
 	}
 	.cell {
