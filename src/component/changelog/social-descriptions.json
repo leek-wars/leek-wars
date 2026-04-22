@@ -76,5 +76,25 @@
 	"246_recraft": { "emoji": "🔨", "description": "One-click re-craft after forging — mobile navigation improved too" },
 	"246_item_stats": { "emoji": "📊", "description": "Weekly usage sparkline: see how often each weapon/chip is used per fight" },
 	"246_name_validation": { "emoji": "✏️", "description": "No more duplicate names and warnings for Windows-incompatible characters" },
-	"246_folder": { "emoji": "🗑️", "description": "Deleted folders can now be restored from the trash" }
+	"246_folder": { "emoji": "🗑️", "description": "Deleted folders can now be restored from the trash" },
+
+	"247_google": { "emoji": "🔐", "description": "Sign in and register instantly with your Google account" },
+	"247_loadouts": { "emoji": "🎒", "description": "Save named equipment sets and apply them to any leek in one click" },
+	"247_git": { "emoji": "🔀", "description": "Version your AIs directly in the editor: commit, push, pull, branches and diffs" },
+	"247_git2": { "emoji": "☁️", "description": "Sync with GitHub, GitLab, Bitbucket or Forgejo — even self-hosted instances" },
+	"247_multiaccount": { "emoji": "👥", "description": "Switch between multiple accounts without ever logging out" },
+	"247_clover": { "emoji": "🍀", "description": "Reveal the day's four-leaf clover spawn time — 3 precision tiers unlocked by trophies" },
+	"247_double_crystals": { "emoji": "💎", "description": "Your very first crystal purchase is doubled — x2 bonus" },
+	"247_buy_fights": { "emoji": "⚔️", "description": "Buy more fights directly from the Garden and Market when you run out" },
+	"247_market_search": { "emoji": "🔍", "description": "Find any item in the market instantly by typing its name" },
+	"247_encyclopedia_diff": { "emoji": "📜", "description": "See exactly how each encyclopedia page has evolved over time" },
+	"247_highlight": { "emoji": "👀", "description": "Your own leeks are now highlighted in every report and ranking" },
+	"247_function_default": { "emoji": "🧰", "description": "Give your functions optional parameters with default values" },
+	"247_arrayFind": { "emoji": "🔎", "description": "Returns the first element matching a predicate — saves a manual loop" },
+	"247_getCompositionName": { "emoji": "🏷️", "description": "Get the name of an entity's team composition in one call" },
+	"247_pragma": { "emoji": "⚙️", "description": "Declare LeekScript version and strict mode right at the top of your AI" },
+	"247_bot_color": { "emoji": "🎨", "description": "Test your AI with leek color potions applied — see exactly how it will look" },
+	"247_bank": { "emoji": "💰", "description": "Progressive bonuses from +50 up to +2000 extra crystals per pack" },
+	"247_no_fights": { "emoji": "🚪", "description": "Automatically exit the arena after 20 consecutive defeats" },
+	"247_editor_test_mobile": { "emoji": "📱", "description": "The editor's test interface now works smoothly on mobile" }
 }
