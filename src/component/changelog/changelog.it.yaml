@@ -19,7 +19,7 @@
     - "Applicazione di pozioni di colore sui porri di test (grazie a Kraspen). #img_247_bot_color"
   improved:
     - "Popup di conferma prima della disconnessione (grazie a FdHP)."
-    - "Rinnovamento della banca di cristalli con pacchetti e bonus progressivi. #img_247_bank"
+    - "Rinnovamento della banca di cristalli con pacchetti e bonus progressivi."
     - "Modalità Colosso: moltiplicatore di statistiche aumentato da x2 a x3."
     - "#ai Narrowing esteso: assegnamenti, instanceof su proprietà, early-return nei metodi."
     - "Evidenziazione dei propri porri nei rapporti di combattimento. #img_247_report_my_leeks"

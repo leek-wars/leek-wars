@@ -19,7 +19,7 @@
     - "Apply color potions on test leeks (thanks to Kraspen). #img_247_bot_color"
   improved:
     - "Confirmation popup before logout (thanks to FdHP)."
-    - "Crystal bank overhaul with packs and progressive bonuses. #img_247_bank"
+    - "Crystal bank overhaul with packs and progressive bonuses."
     - "Colossus mode: stat multiplier increased from x2 to x3."
     - "#ai Extended narrowing: assignments, instanceof on properties, early-return in methods."
     - "Highlighting of your own leeks in fight reports. #img_247_report_my_leeks"

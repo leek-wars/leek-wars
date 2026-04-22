@@ -19,7 +19,7 @@
     - "Application des potions de couleur sur les poireaux de test (merci à Kraspen). #img_247_bot_color"
   improved:
     - "Popup de confirmation avant la déconnexion (merci à FdHP)."
-    - "Refonte de la banque de cristaux avec packs et bonus progressifs. #img_247_bank"
+    - "Refonte de la banque de cristaux avec packs et bonus progressifs."
     - "Mode Colosse : multiplicateur de stats augmenté de x2 à x3."
     - "#ai Narrowing étendu : assignments, instanceof sur propriétés, early-return en méthode."
     - "Surlignage de ses propres poireaux dans les rapports de combat. #img_247_report_my_leeks"
