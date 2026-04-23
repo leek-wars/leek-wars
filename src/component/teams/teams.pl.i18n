@@ -23,5 +23,7 @@
 	"error_already_have_candidacy": "Masz już oczekującą aplikację.",
 	"error_already_in_team": "Jesteś już w drużynie.",
 	"error_team_full": "Ta drużyna jest pełna.",
-	"error_too_many_candidacies": "Masz już 5 oczekujących aplikacji."
+	"error_too_many_candidacies": "Masz już 5 oczekujących aplikacji.",
+	"closed": "Zamknięte",
+	"show_closed": "Pokaż zamknięte"
 }

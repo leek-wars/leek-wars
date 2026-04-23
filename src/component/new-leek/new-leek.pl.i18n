@@ -1,6 +1,6 @@
 {
 	"4_leeks_only": "Masz już 4 pory!",
-	"create": "Tworzyć",
+	"create": "Utwórz",
 	"error_under_required_level_1": "Twój pierwszy por musi być co najmniej na poziomie {0}",
 	"error_under_required_level_2": "Twój drugi por musi być co najmniej na poziomie {0}",
 	"error_under_required_level_3": "Twój trzeci por musi być co najmniej na poziomie {0}",

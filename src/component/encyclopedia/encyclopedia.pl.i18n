@@ -12,5 +12,12 @@
 	"end_edition": "Koniec edycji",
 	"editing_by_x": "Obecnie edytowany przez {0}",
 	"redirected_from": "Przekierowano z {0}",
-	"aliases": "Znane również jako: {0}"
+	"aliases": "Znane również jako: {0}",
+	"child_pages": "Strony podrzędne",
+	"history": "Historia",
+	"initial": "utworzenie",
+	"linked_from": "Strony zawierające link",
+	"n_references": "odniesienie | odniesienia | odniesień",
+	"referencing_translations": "Powiązane tłumaczenia",
+	"views": "wyświetleń"
 }

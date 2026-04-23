@@ -1,5 +1,5 @@
 {
-	"cancel": "Anulować",
+	"cancel": "Anuluj",
 	"category": "Kategoria",
 	"category_not_found": "Nie znaleziono kategorii identyfikatora <b>{0}</b> :(",
 	"connected_farmers": "Połączeni hodowcy ({0})",
@@ -19,7 +19,7 @@
 	"messages": "Posty",
 	"n_topics": "{0} tematów",
 	"n_messages": "{0} postów",
-	"send": "Wysłać",
+	"send": "Wyślij",
 	"team_forum_description": "Prywatne forum Twojego zespołu",
 	"title": "Forum",
 	"topic_not_found": "Nie znaleziono podmiotu o identyfikatorze <b>{0}</b> :(",

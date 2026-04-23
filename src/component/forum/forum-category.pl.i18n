@@ -1,6 +1,6 @@
 {
 	"by_x_the_d": "Od {farmer} w dniu {date}",
-	"cancel": "Anulować",
+	"cancel": "Anuluj",
 	"create_new_topic": "Utwórz temat",
 	"create_topic": "Utwórz temat",
 	"error_invalid_title": "Tytuł tematu musi zawierać od {min} do {max} znaków",
@@ -37,7 +37,7 @@
 	"filter_locked": "Zablokowane",
 	"filter_not_locked": "Nie zablokowane",
 	"filter_priority": "Priorytet",
-	"status_open": "Otwarty",
+	"status_open": "Otwórz",
 	"filter_read": "Przeczytane / Nieprzeczytane",
 	"filter_read_yes": "Przeczytane",
 	"filter_read_no": "Nieprzeczytane",

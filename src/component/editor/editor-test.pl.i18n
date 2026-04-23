@@ -1,5 +1,5 @@
 {
-	"advanced": "Osiągnięcie",
+	"advanced": "Zaawansowane",
 	"advanced_items": "Zaawansowane elementy",
 	"advanced_strategy": "Zaawansowana strategia",
 	"aoe": "AoE",
@@ -44,14 +44,17 @@
 	"type_farmer": "Hodowca",
 	"type_free": "Bezpłatny",
 	"type_solo": "Solo",
-	"type_team": "Załoga",
+	"type_team": "Zespół",
 	"test_validate": "Rozpocznij test",
 	"test_scenario": "Scenariusz",
 	"test_map": "Mapa",
 	"test_maps": "Karty",
-	"test_advanced": "Osiągnięcie",
+	"test_advanced": "Zaawansowane",
 	"templates": "Modele",
 	"free": "Bezpłatny",
 	"select_chips": "Wybieranie pocisków",
-	"select_weapons": "Wybór broni"
+	"select_weapons": "Wybór broni",
+	"max_turns": "Maksymalna liczba tur",
+	"max_turns_desc": "Maksymalna liczba tur walki (domyślnie 64)",
+	"max_turns_placeholder": "Liczba całkowita od 1 do 64. Domyślnie = 64"
 }

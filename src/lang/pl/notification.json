@@ -21,7 +21,7 @@
 	"category_7": "Prywatny",
 	"category_7_title": "prywatny",
 	"category_7_desc": "Prywatne wiadomości",
-	"category_8": "Załoga",
+	"category_8": "Zespół",
 	"category_8_title": "zespół",
 	"category_8_desc": "Zgłoszenia, nowy członek, ban",
 	"category_9": "Umiar",
@@ -116,5 +116,9 @@
 	"title_45": "{0} wziął udział w Polowaniu na skrzynie!",
 	"message_45": "Zobacz Polowanie na skrzynie",
 	"title_46": "{0} wziął udział w walce z Kolosem!",
-	"message_46": "Zobacz walkę z Kolosem"
+	"message_46": "Zobacz walkę z Kolosem",
+	"title_47": "{0} opuścił ogród warzywny",
+	"message_47": "Zbyt wiele porażek z rzędu w obronie",
+	"title_48": "Twój hodowca opuścił ogród warzywny",
+	"message_48": "Zbyt wiele porażek z rzędu w obronie"
 }

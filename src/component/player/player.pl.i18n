@@ -22,7 +22,7 @@
 	"no_data_received": "Nie otrzymano danych",
 	"previous_action": "Poprzednia akcja",
 	"next_action": "Następna akcja",
-	"pause": "Przerwa",
+	"pause": "Pauza",
 	"plain_background": "Zwykłe tło",
 	"position_in_queue": "Pozycja w kolejce: {0} / {1}",
 	"quit": "Wyjdź (Q)",

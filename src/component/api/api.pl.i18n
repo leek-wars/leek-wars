@@ -17,7 +17,7 @@
 	"ai_restore": "Przywraca identyfikator AI **ai_id** i usuwa go z kosza.",
 	"ai_save": "Zapisuje **ai_id** AI i zwraca wszelkie błędy.",
 	"ai_strict": "Włącza lub wyłącza tryb ścisły na AI **ai_id**.",
-	"ai_sync": "Pobiera listę identyfikatorów AI **ais** w postaci `{ ai: timestamp }` i zwraca kody AI, które nie są już aktualne.",
+	"ai_sync": "Pobiera listę identyfikatorów AI **ais** w postaci `{'{'} ai: timestamp {'}'}` i zwraca kody AI, które nie są już aktualne.",
 	"ai_test-scenario": "Uruchamia scenariusz **scenario_id** lub domyślny scenariusz dla AI **ai_id**, jeśli **scenario_id** to `0`.",
 	"ai_version": "Zmienia wersję AI **ai_id** na **version**.",
 	"ai-folder_change-folder": "Przenosi folder **folder_id** do folderu **dest_folder_id**.",

@@ -6,6 +6,6 @@
 	"confirm": "Potwierdzenie",
 	"email_sent": "Wiadomość e-mail z potwierdzeniem została wysłana na adres {email}",
 	"email_changed_success": "Adres e-mail został pomyślnie zmieniony.",
-	"back_home": "Wrócić do domu",
+	"back_home": "Wróć do strony głównej",
 	"error_not_same_email": "Wpisane adresy nie są takie same"
 }

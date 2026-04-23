@@ -8,5 +8,8 @@
 	"not_found": "Nie znaleziono walki :(",
 	"not_found_id": "Nie znaleziono identyfikatora walki <b>{0}</b> :(",
 	"pause_message": "Kliknij lub naciśnij \u201EP\u201D, aby wznowić",
-	"starter": "Wyrzutnia walki"
+	"starter": "Wyrzutnia walki",
+	"chest_hunt": "Polowanie na skrzynie",
+	"colossus": "Kolos",
+	"war": "Wojna"
 }

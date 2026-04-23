@@ -1,0 +1,21 @@
+{
+	"title": "Ustawienia remote'a",
+	"remotes": "Remote'y",
+	"no_remotes": "Brak skonfigurowanego remote'a.",
+	"remote_name": "Nazwa (np. origin)",
+	"remote_url": "https://github.com/user/repo.git",
+	"select_repo": "Wybierz repozytorium...",
+	"authentication": "Uwierzytelnianie",
+	"connected_as": "Połączony jako {0}",
+	"connected_anonymous": "Połączony",
+	"install_github_app": "Zainstaluj GitHub App",
+	"install_hint": "Wybierz, do których repozytoriów udostępnić dostęp podczas instalacji.",
+	"github_app": "GitHub App",
+	"or_pat": "Albo użyj Personal Access Token:",
+	"pat_placeholder": "Token dostępu",
+	"instance_placeholder": "https://codeberg.org",
+	"save": "Zapisz",
+	"add": "Dodaj",
+	"invalid_token": "Token odrzucony przez dostawcę.",
+	"invalid_instance_url": "Nieprawidłowy URL instancji lub niedostępny z serwera."
+}

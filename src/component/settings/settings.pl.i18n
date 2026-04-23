@@ -1,7 +1,7 @@
 {
 	"account": "Konto",
 	"activate_discrete_mode": "Aktywuj tryb cichy",
-	"advanced": "Osiągnięcie",
+	"advanced": "Zaawansowane",
 	"change": "Zmienić",
 	"change_email": "Zmień adres e-mail",
 	"change_email_send": "Wyślij wiadomość e-mail z potwierdzeniem",
@@ -9,7 +9,7 @@
 	"change_password": "Zmień hasło",
 	"confirm_password": "Potwierdzenie",
 	"delete_account": "Usuń jego konto",
-	"delete_cancel": "Anulować",
+	"delete_cancel": "Anuluj",
 	"delete_confirm": "Usuń konto",
 	"delete_confirmation": "Potwierdzenie",
 	"delete_confirmation_password": "Ze względów bezpieczeństwa wprowadź hasło, aby zakończyć usuwanie konta",

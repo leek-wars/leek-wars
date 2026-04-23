@@ -2,13 +2,13 @@
 	"already_have": "Masz już ten przedmiot",
 	"are_you_sure_you_want_to_buy": "Czy na pewno chcesz kupić {item}?",
 	"are_you_sure_you_want_to_sell": "Czy na pewno chcesz sprzedać {item}?",
-	"buy": "Kupić",
+	"buy": "Kup",
 	"buying": "Zakup...",
-	"cancel": "Anulować",
+	"cancel": "Anuluj",
 	"cannot_buy": "Tego przedmiotu nie można kupić",
 	"chip": "Żeton",
 	"chip_bought": "Chip kupiony!",
-	"chips": "Pchły",
+	"chips": "Chipy",
 	"chip_selled": "Chip sprzedany!",
 	"confirm_purchase": "Potwierdź zakup",
 	"confirm_sell": "Potwierdź sprzedaż",
@@ -48,5 +48,6 @@
 	"weapons": "Bronie",
 	"weapon_selled": "Broń sprzedana!",
 	"item_progress": "Postęp przedmiotu",
-	"schemes": "Schematy"
+	"schemes": "Schematy",
+	"already_bought": "Już kupione"
 }
