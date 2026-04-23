@@ -40,6 +40,7 @@
 									<div v-if="item.type === ItemType.WEAPON" v-bind="props">{{ $t('weapon.' + LeekWars.weapons[item.params].name) }}</div>
 									<div v-else-if="item.type === ItemType.HAT" v-bind="props">{{ $t('hat.' + LeekWars.hats[item.params].name) }}</div>
 									<div v-else-if="item.type === ItemType.POTION" v-bind="props">{{ $t('potion.' + LeekWars.potions[item.id].name) }}</div>
+									<div v-else-if="item.type === ItemType.SCHEME" v-bind="props">{{ schemeLabel(item) }}</div>
 								</rich-tooltip-item>
 							</li>
 						</ul>
@@ -156,7 +157,7 @@
 
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
-	import { ItemType } from '@/model/item'
+	import { ItemType, ITEM_CATEGORY_NAME } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
@@ -174,6 +175,16 @@
 
 		get items() {
 			return this.trophy ? this.trophy.items.map((i: number) => LeekWars.items[i]) : []
+		}
+
+		schemeLabel(item: any) {
+			const scheme = LeekWars.schemes[item.params]
+			if (!scheme) return ''
+			const result = LeekWars.items[scheme.result]
+			if (!result) return ''
+			const category = ITEM_CATEGORY_NAME[result.type as ItemType]
+			const name = result.name.replace(category + '_', '')
+			return this.$t('main.scheme_x', [this.$t(category + '.' + name)])
 		}
 
 		@Watch('$route.params', { immediate: true })
