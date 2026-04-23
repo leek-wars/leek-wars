@@ -40,5 +40,9 @@
 	"hide_topic": "Verbergen",
 	"show_topic": "Tonen",
 	"set_release": "Release",
-	"release_hint": "Voer 0 in om de release te verwijderen"
+	"release_hint": "Voer 0 in om de release te verwijderen",
+	"old_topic_title": "Oud onderwerp",
+	"old_topic_warning": "Het laatste bericht in dit onderwerp is meer dan een jaar oud.",
+	"old_topic_confirm": "Het laatste bericht in dit onderwerp is meer dan een jaar oud. Weet je zeker dat je wilt antwoorden?",
+	"see_changelog": "Zie de changelog van {0}"
 }

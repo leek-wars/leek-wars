@@ -53,5 +53,8 @@
 	"templates": "Modellen",
 	"free": "Vrije",
 	"select_chips": "Kogels selecteren",
-	"select_weapons": "Selecteer wapens"
+	"select_weapons": "Selecteer wapens",
+	"max_turns": "Maximum aantal beurten",
+	"max_turns_desc": "Maximum aantal beurten van het gevecht (standaard 64)",
+	"max_turns_placeholder": "Geheel getal tussen 1 en 64. Standaard = 64"
 }

@@ -76,5 +76,11 @@
 	"warning": "Disclaimer | Waarschuwingen",
 	"todo": "Doe | Taken",
 	"editor_already_opened": "De editor is al geopend in een ander tabblad!",
-	"strict": "Strikt"
+	"strict": "Strikt",
+	"storage": "Opslag",
+	"settings_diff": "Diff",
+	"diff_inline": "Inline-diff",
+	"diff_collapse_unchanged": "Ongewijzigde regio's verbergen",
+	"git_auth_success": "GitHub succesvol verbonden.",
+	"git_auth_error": "Fout bij verbinden met GitHub."
 }

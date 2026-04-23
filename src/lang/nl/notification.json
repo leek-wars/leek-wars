@@ -116,5 +116,9 @@
 	"title_45": "{0} heeft deelgenomen aan een Schattenjacht!",
 	"message_45": "Bekijk de Schattenjacht",
 	"title_46": "{0} heeft deelgenomen aan een Kolosgevecht!",
-	"message_46": "Bekijk het Kolosgevecht"
+	"message_46": "Bekijk het Kolosgevecht",
+	"title_47": "{0} heeft de moestuin verlaten",
+	"message_47": "Te veel opeenvolgende nederlagen in verdediging",
+	"title_48": "Je fokker heeft de moestuin verlaten",
+	"message_48": "Te veel opeenvolgende nederlagen in verdediging"
 }

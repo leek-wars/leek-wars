@@ -20,5 +20,12 @@
 	"challenge": "Uitdaging",
 	"garden": "Moestuin",
 	"tournament": "Toernooi",
-	"boss": "Baas"
+	"boss": "Baas",
+	"war": "Oorlog",
+	"chest_hunt": "Schattenjacht",
+	"colossus": "Kolos",
+	"chests": "Kisten",
+	"n_chests": "{0} kisten",
+	"loot": "Gevechtsbuit",
+	"rare_loot": "Zeldzame grondstoffen"
 }

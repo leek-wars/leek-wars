@@ -348,6 +348,7 @@
 	"loadout_warning_too_many_chips": "Te veel chips voor beschikbaar RAM ({0}/{1})",
 	"loadout_warning_two_forgotten": "Uitrusting bevat twee vergeten wapens",
 	"loadout_warning_not_enough_capital": "Vereist kapitaal {0}, beschikbaar {1}",
+	"loadout_capital_exceeds_highest": "Besteed kapitaal ({0}) hoger dan het maximale kapitaal van je prei met het hoogste niveau ({1} op niveau {2})",
 	"loadout_warning_restat_needed": "Restat-drankje vereist om de kenmerken toe te passen",
 	"loadout_restat_title": "Restat-drankje vereist",
 	"loadout_restat_message": "Het toepassen van deze uitrusting verandert de verdeling van de kenmerken van de prei. Er wordt een restat-drankje verbruikt.",

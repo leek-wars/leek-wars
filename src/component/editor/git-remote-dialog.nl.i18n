@@ -1,0 +1,21 @@
+{
+	"title": "Remote-instellingen",
+	"remotes": "Remotes",
+	"no_remotes": "Geen remote geconfigureerd.",
+	"remote_name": "Naam (bijv. origin)",
+	"remote_url": "https://github.com/user/repo.git",
+	"select_repo": "Kies een repository...",
+	"authentication": "Authenticatie",
+	"connected_as": "Verbonden als {0}",
+	"connected_anonymous": "Verbonden",
+	"install_github_app": "GitHub App installeren",
+	"install_hint": "Kies tijdens de installatie welke repositories toegang krijgen.",
+	"github_app": "GitHub App",
+	"or_pat": "Of gebruik een Personal Access Token:",
+	"pat_placeholder": "Toegangstoken",
+	"instance_placeholder": "https://codeberg.org",
+	"save": "Opslaan",
+	"add": "Toevoegen",
+	"invalid_token": "Token geweigerd door de provider.",
+	"invalid_instance_url": "Ongeldige instance-URL of niet bereikbaar vanaf de server."
+}

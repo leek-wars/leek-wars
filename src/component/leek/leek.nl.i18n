@@ -101,5 +101,7 @@
 	"start_a_fight": "Begin een gevecht!",
 	"all_my_components": "Mijn onderdelen",
 	"error_max_component": "{0} kan geen extra component uitrusten.",
-	"ai_and_components": "AI en componenten"
+	"ai_and_components": "AI en componenten",
+	"arena_time": "Automatische arena's elke twee uur van 9.15 tot 23.15 uur",
+	"register_to_arena": "Inschrijven voor de arena's"
 }

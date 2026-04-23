@@ -32,5 +32,10 @@
 	"invalid_name_reserved": "Deze naam is gereserveerd.",
 	"invalid_name_slash": "Het teken \"/\" is niet toegestaan in namen.",
 	"windows_warning_char": "Het teken \"{0}\" is niet toegestaan op Windows, deze naam kan problemen veroorzaken met git.",
-	"windows_warning_reserved": "\"{0}\" is een gereserveerde naam op Windows, deze naam kan problemen veroorzaken met git."
+	"windows_warning_reserved": "\"{0}\" is een gereserveerde naam op Windows, deze naam kan problemen veroorzaken met git.",
+	"init_git": "Git-repository initialiseren",
+	"deinit_git": "Git-repository verwijderen",
+	"deinit_git_confirm": "Git-repository uit de map \"{0}\" verwijderen? De commit-geschiedenis gaat verloren.",
+	"destroy_folder": "Map \"{0}\" permanent vernietigen?",
+	"destroy_folder_warning": "De map en alle AI's die erin staan worden permanent verwijderd. Deze actie is onomkeerbaar."
 }

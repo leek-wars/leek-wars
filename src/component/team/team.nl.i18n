@@ -127,5 +127,20 @@
 	"error_rename_not_enough_crystals": "Je hebt niet genoeg kristallen.",
 	"error_name_already_used": "Deze teamnaam is al in gebruik",
 	"error_invalid_name": "De teamnaam moet tussen {0} en {1} tekens bevatten",
-	"error_rename_delay": "Je kunt het team slechts één keer per week hernoemen."
+	"error_rename_delay": "Je kunt het team slechts één keer per week hernoemen.",
+	"invitations": "Uitnodigingen",
+	"no_invitations": "Geen uitnodiging verzonden",
+	"invite_farmer": "Fokker uitnodigen",
+	"invite_farmer_desc": "Voer de naam in van de fokker die je in het team wilt uitnodigen.",
+	"invite_farmer_name": "Naam van de fokker",
+	"invite_send": "Uitnodigen",
+	"invitation_sent": "Uitnodiging verzonden!",
+	"invitation_cancelled": "Uitnodiging geannuleerd",
+	"cancel": "Annuleren",
+	"you_are_invited": "Je bent door {sender} uitgenodigd om lid te worden van dit team!",
+	"accept_invitation": "Accepteren",
+	"reject_invitation": "Weigeren",
+	"invitation_accepted": "Uitnodiging geaccepteerd!",
+	"invitation_rejected": "Uitnodiging geweigerd",
+	"team_language": "Teamtaal"
 }

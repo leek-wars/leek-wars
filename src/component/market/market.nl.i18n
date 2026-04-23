@@ -48,5 +48,6 @@
 	"weapons": "Wapens",
 	"weapon_selled": "Wapen verkocht!",
 	"item_progress": "Artikelvoortgang",
-	"schemes": "Schema's"
+	"schemes": "Schema's",
+	"already_bought": "Al gekocht"
 }

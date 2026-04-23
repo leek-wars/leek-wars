@@ -38,5 +38,15 @@
 	"category_boss_fight": "Baas",
 	"garden_boss": "Boss moestuin",
 	"select_boss": "Selecteer een baas",
-	"attack": "Aanval"
+	"attack": "Aanval",
+	"arena_preference": "Voorkeursmodus",
+	"arena_no_preference": "Maakt niet uit",
+	"arena_mode_br": "Battle Royale",
+	"arena_mode_war": "Oorlog",
+	"arena_mode_chest_hunt": "Schattenjacht",
+	"arena_mode_colossus": "Kolos",
+	"arena_wants_colossus": "Ik wil de Kolos zijn",
+	"arena_countdown": "Starten over {0}s...",
+	"category_arena": "Arena's",
+	"garden_arena": "Arena-moestuin"
 }

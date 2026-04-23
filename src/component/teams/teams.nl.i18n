@@ -23,5 +23,7 @@
 	"error_already_have_candidacy": "Je hebt al een lopende sollicitatie.",
 	"error_already_in_team": "Je zit al in een team.",
 	"error_team_full": "Dit team is vol.",
-	"error_too_many_candidacies": "Je hebt al 5 lopende sollicitaties."
+	"error_too_many_candidacies": "Je hebt al 5 lopende sollicitaties.",
+	"closed": "Gesloten",
+	"show_closed": "Toon gesloten"
 }

@@ -12,5 +12,12 @@
 	"end_edition": "Einde bewerking",
 	"editing_by_x": "Momenteel bewerkt door {0}",
 	"redirected_from": "Doorverwezen vanaf {0}",
-	"aliases": "Ook bekend als: {0}"
+	"aliases": "Ook bekend als: {0}",
+	"child_pages": "Subpagina's",
+	"linked_from": "Pagina's die hiernaar verwijzen",
+	"referencing_translations": "Gerelateerde vertalingen",
+	"n_references": "referentie | referentie | referenties",
+	"views": "weergaven",
+	"history": "Geschiedenis",
+	"initial": "aanmaak"
 }

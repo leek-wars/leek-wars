@@ -53,5 +53,8 @@
 	"turrets_killed": "Geschutstorens",
 	"turrets_killed_title": "Geschutstorens vernietigd",
 	"damage": "Schade",
-	"damage_title": "Toegebrachte schade"
+	"damage_title": "Toegebrachte schade",
+	"won": "Overwinningen",
+	"composition": "Compositie",
+	"compositions": "Composities"
 }

@@ -107,5 +107,12 @@
 	"display_team": "bemanning",
 	"trophy_x": "Trofee {0}",
 	"sponsorship": "Sponsoring",
-	"godsons_level": "Recursief totaal niveau van verwijzingen"
+	"godsons_level": "Recursief totaal niveau van verwijzingen",
+	"team_invitations": "Teamuitnodigingen",
+	"invite_to_team": "Uitnodigen voor het team",
+	"invitation_sent": "Uitnodiging verzonden!",
+	"invitation_accepted": "Uitnodiging geaccepteerd!",
+	"invitation_rejected": "Uitnodiging geweigerd",
+	"accept": "Accepteren",
+	"reject": "Weigeren"
 }
