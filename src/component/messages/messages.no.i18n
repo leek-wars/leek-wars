@@ -7,9 +7,9 @@
 	"quit_conversation": "Forlat samtalen",
 	"send": "Sende",
 	"title": "Katter",
-	"cat_team": "Mannskap",
+	"cat_team": "Lag",
 	"cat_private": "Private meldinger",
-	"team": "Mannskap",
+	"team": "Lag",
 	"enable_notifications": "Aktiver varsler",
 	"disable_notifications": "Deaktiver varslene",
 	"admin_warn": "For å komme med et forslag eller rapportere en ikke-kritisk feil, vennligst opprett et emne på {forum}."

@@ -1,6 +1,6 @@
 {
 	"4_leeks_only": "Du har allerede 4 purre!",
-	"create": "Skape",
+	"create": "Opprett",
 	"error_under_required_level_1": "Din første purre må være minst nivå {0}",
 	"error_under_required_level_2": "Den andre purren din må være minst nivå {0}",
 	"error_under_required_level_3": "Din tredje purre må være minst nivå {0}",
