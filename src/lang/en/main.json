@@ -348,6 +348,7 @@
 	"loadout_warning_too_many_chips": "Too many chips for the available RAM ({0}/{1})",
 	"loadout_warning_two_forgotten": "Loadout contains two forgotten weapons",
 	"loadout_warning_not_enough_capital": "Capital required {0}, available {1}",
+	"loadout_capital_exceeds_highest": "Spent capital ({0}) exceeds the maximum capital of your highest-level leek ({1} at level {2})",
 	"loadout_warning_restat_needed": "Restat potion required to apply the characteristics",
 	"loadout_restat_title": "Restat potion required",
 	"loadout_restat_message": "Applying this loadout changes the leek's characteristic allocation. A restat potion will be consumed.",

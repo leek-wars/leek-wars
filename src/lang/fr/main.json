@@ -348,6 +348,7 @@
 	"loadout_warning_too_many_chips": "Trop de puces pour la RAM disponible ({0}/{1})",
 	"loadout_warning_two_forgotten": "L'équipement contient deux armes oubliées",
 	"loadout_warning_not_enough_capital": "Capital requis {0}, disponible {1}",
+	"loadout_capital_exceeds_highest": "Capital dépensé ({0}) supérieur au capital maximum de votre poireau le plus haut niveau ({1} au niveau {2})",
 	"loadout_warning_restat_needed": "Potion de restat requise pour appliquer les caractéristiques",
 	"loadout_restat_title": "Potion de restat requise",
 	"loadout_restat_message": "Appliquer cet équipement change la répartition des caractéristiques du poireau. Une potion de restat sera consommée.",

@@ -96,17 +96,26 @@
 					<!-- Caractéristiques -->
 					<div class="section">
 						<div class="section-header">
-							<h4>{{ $t('characteristic.characteristics') }} <span class="capital-used">({{ totalCapital() }})</span></h4>
-							<v-btn v-if="Object.keys(editing.stats).length > 0" size="x-small" variant="text" icon @click="editing.stats = {}"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
+							<h4>
+								{{ $t('characteristic.characteristics') }}
+								<span class="capital-used" :class="{warning: totalCapital() > softMaxCapital}">({{ totalCapital() }} / {{ softMaxCapital }})</span>
+								<v-tooltip v-if="totalCapital() > softMaxCapital" location="bottom">
+									<template #activator="{ props }">
+										<v-icon v-bind="props" color="warning" size="18" class="capital-warning-icon">mdi-alert</v-icon>
+									</template>
+									<div>{{ $t('main.loadout_capital_exceeds_highest', [totalCapital(), softMaxCapital, highestLeekLevel]) }}</div>
+								</v-tooltip>
+							</h4>
+							<v-btn :class="{'invisible-btn': Object.keys(editing.stats).length === 0}" size="x-small" variant="text" icon @click="editing.stats = {}"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
 						</div>
-						<loadout-stats-picker v-model="editing.stats" />
+						<loadout-stats-picker v-model="editing.stats" :max="maxCapital" />
 					</div>
 
 					<!-- Armes -->
 					<div class="section">
 						<div class="section-header">
 							<h4>{{ $t('weapons') }}</h4>
-							<v-btn v-if="editing.weapons.length > 0" size="x-small" variant="text" icon @click="editing.weapons = []"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
+							<v-btn :class="{'invisible-btn': editing.weapons.length === 0}" size="x-small" variant="text" icon @click="editing.weapons = []"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
 						</div>
 						<div class="selected-items">
 							<div v-for="tpl in editing.weapons" :key="tpl" class="item-slot selected" @click="toggleWeapon(tpl)">
@@ -128,7 +137,7 @@
 					<div class="section">
 						<div class="section-header">
 							<h4>{{ $t('main.chips') }}</h4>
-							<v-btn v-if="editing.chips.length > 0" size="x-small" variant="text" icon @click="editing.chips = []"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
+							<v-btn :class="{'invisible-btn': editing.chips.length === 0}" size="x-small" variant="text" icon @click="editing.chips = []"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
 						</div>
 						<div class="selected-items">
 							<div v-for="tpl in editing.chips" :key="tpl" class="item-slot selected" @click="toggleChip(tpl)">
@@ -150,7 +159,7 @@
 					<div class="section">
 						<div class="section-header">
 							<h4>{{ $t('main.components') }}</h4>
-							<v-btn v-if="editing.components.length > 0" size="x-small" variant="text" icon @click="editing.components = []"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
+							<v-btn :class="{'invisible-btn': editing.components.length === 0}" size="x-small" variant="text" icon @click="editing.components = []"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
 						</div>
 						<div class="components-grid">
 							<div v-for="i in 8" :key="i" class="component-slot" @click="clearComponentSlot(i - 1)">
@@ -276,6 +285,15 @@
 				},
 			},
 			loadouts(): Loadout[] { return store.state.farmer?.loadouts || [] },
+			maxCapital(): number { return totalCapitalForLevel(301) },
+			highestLeekLevel(): number {
+				const leeks = store.state.farmer?.leeks
+				if (!leeks) return 1
+				let max = 1
+				for (const id in leeks) if (leeks[id].level > max) max = leeks[id].level
+				return max
+			},
+			softMaxCapital(): number { return totalCapitalForLevel(this.highestLeekLevel) },
 			restatPotionCount(): number {
 				const farmer = store.state.farmer as any
 				if (!farmer || !farmer.potions) return 0
@@ -748,6 +766,9 @@ body.dark .stat-badge.frequency img { filter: invert(1); }
 .section h4 { margin: 0; font-size: 13px; text-transform: uppercase; color: #888; }
 .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; min-height: 24px; }
 .capital-used { font-weight: 400; color: #666; font-size: 12px; margin-left: 4px; }
+.capital-used.warning { color: #e67e22; font-weight: 600; }
+.capital-warning-icon { vertical-align: middle; margin-left: 4px; }
+.invisible-btn { visibility: hidden; pointer-events: none; }
 .skipped-list { display: flex; flex-direction: column; gap: 8px; padding: 8px 4px; max-height: 400px; overflow-y: auto; }
 .skipped-item { display: flex; align-items: center; gap: 10px; padding: 6px; border-radius: 4px; background: #f5f5f5; }
 body.dark .skipped-item { background: #2a2a2a; }

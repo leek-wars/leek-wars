@@ -8,7 +8,7 @@
 				<div class="add-wrapper">
 					<v-tooltip v-for="q in [1, 10, 100]" :key="q">
 						<template #activator="{ props }">
-							<span :q="q" class="add" @click="add(c, q)" v-bind="props"></span>
+							<span :q="q" class="add" :class="{disabled: wouldExceedMax(c, q)}" @click="add(c, q)" v-bind="props"></span>
 						</template>
 						<div>{{ costs[c + q].cost + ' capital ⇔ ' + costs[c + q].bonus + ' ' + $t('characteristic.' + c) }}</div>
 					</v-tooltip>
@@ -35,6 +35,7 @@
 		name: 'LoadoutStatsPicker',
 		props: {
 			modelValue: { type: Object as PropType<LoadoutStats>, required: true },
+			max: { type: Number, default: Infinity },
 		},
 		emits: ['update:modelValue'],
 		data() {
@@ -79,9 +80,20 @@
 					for (const q of [1, 10, 100]) this.buttonCost(q, c)
 				}
 			},
+			totalCapital(): number {
+				let total = 0
+				for (const k in this.modelValue) total += this.modelValue[k] || 0
+				return total
+			},
+			wouldExceedMax(charac: string, q: number): boolean {
+				const cost = this.costs[charac + q]
+				if (!cost) return false
+				return this.totalCapital() + cost.cost > this.max
+			},
 			add(charac: string, q: number) {
 				const cost = this.costs[charac + q]
 				if (!cost) return
+				if (this.totalCapital() + cost.cost > this.max) return
 				const next = { ...this.modelValue }
 				next[charac] = (next[charac] || 0) + cost.cost
 				this.$emit('update:modelValue', next)
@@ -137,6 +149,7 @@ img {
 	background-image: url("../../../public/image/sub.png");
 }
 .add:hover { opacity: 1; }
+.add.disabled { opacity: 0.15; cursor: not-allowed; pointer-events: none; }
 .charac span {
 	font-size: 19px;
 	vertical-align: top;
