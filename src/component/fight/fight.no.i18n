@@ -1,5 +1,7 @@
 {
 	"battle_royale": "Battle royale",
+	"chest_hunt": "Skattejakt",
+	"colossus": "Koloss",
 	"date_format": "{0}",
 	"deleted_farmer": "oppdretter fjernet",
 	"deleted_leek": "purre fjernet",
@@ -8,5 +10,6 @@
 	"not_found": "Kampen ble ikke funnet :(",
 	"not_found_id": "Kamp-ID <b>{0}</b> ikke funnet :(",
 	"pause_message": "Klikk eller trykk 'P' for å fortsette",
-	"starter": "Fight Launcher"
+	"starter": "Fight Launcher",
+	"war": "Krig"
 }

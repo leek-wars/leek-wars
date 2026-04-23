@@ -1,0 +1,21 @@
+{
+	"title": "Remote-innstillinger",
+	"remotes": "Remotes",
+	"no_remotes": "Ingen remote konfigurert.",
+	"remote_name": "Navn (f.eks: origin)",
+	"remote_url": "https://github.com/user/repo.git",
+	"select_repo": "Velg et depot...",
+	"authentication": "Autentisering",
+	"connected_as": "Tilkoblet som {0}",
+	"connected_anonymous": "Tilkoblet",
+	"install_github_app": "Installer GitHub App",
+	"install_hint": "Velg hvilke depoter du vil gi tilgang til under installasjonen.",
+	"github_app": "GitHub App",
+	"or_pat": "Eller bruk et Personal Access Token:",
+	"pat_placeholder": "Access token",
+	"instance_placeholder": "https://codeberg.org",
+	"save": "Lagre",
+	"add": "Legg til",
+	"invalid_token": "Token avvist av leverandøren.",
+	"invalid_instance_url": "Ugyldig instans-URL eller utilgjengelig fra serveren."
+}

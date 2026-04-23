@@ -2,5 +2,6 @@
 	"close": "Lukk",
 	"close_others": "Lukk andre",
 	"confirm_close": "Du har ulagrede endringer i denne AI. Er du sikker på at du vil lukke fanen og forlate dem?",
+	"open_file": "Åpne filen",
 	"split": "Delt redaktør"
 }
