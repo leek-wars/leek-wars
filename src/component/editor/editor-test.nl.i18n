@@ -44,7 +44,7 @@
 	"type_farmer": "Fokker",
 	"type_free": "Vrije",
 	"type_solo": "Solo",
-	"type_team": "Bemanning",
+	"type_team": "Team",
 	"test_validate": "Start de proef",
 	"test_scenario": "Script",
 	"test_map": "Kaart",
