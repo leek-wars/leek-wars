@@ -364,6 +364,7 @@ import { emitter } from '@/model/vue'
 		filterPriority: number[] = []
 		filterRead: string = 'all'
 		userAgent: string = navigator.userAgent
+		lastCategoryKey: string | null = null
 
 		get isBugCategory() {
 			return this.rawCategoryName === 'bug_reports'
@@ -478,6 +479,11 @@ import { emitter } from '@/model/vue'
 		update() {
 			const category = this.$route.params.category
 			this.page = 'page' in this.$route.params ? parseInt(this.$route.params.page, 10) : 1
+			const newCategoryKey = this.categoryKey()
+			if (newCategoryKey !== this.lastCategoryKey) {
+				this.lastCategoryKey = newCategoryKey
+				this.loadOrder()
+			}
 			this.loadFilters()
 			this.syncUrlQuery()
 			LeekWars.setActions([
@@ -566,7 +572,7 @@ import { emitter } from '@/model/vue'
 
 		@Watch('order')
 		updateOrder() {
-			localStorage.setItem('forum/topic-order', '' + this.order)
+			localStorage.setItem(this.orderKey(), '' + this.order)
 		}
 
 		toggleStatusFilter(status: number) {
@@ -605,8 +611,26 @@ import { emitter } from '@/model/vue'
 			}
 		}
 
+		categoryKey(): string {
+			const ids = String(this.$route.params.category || '').split(',').map(Number).filter(n => !isNaN(n)).sort((a, b) => a - b)
+			return ids.join(',')
+		}
+
+		filterKey(): string {
+			return 'forum/filters/' + this.categoryKey()
+		}
+
+		orderKey(): string {
+			return 'forum/topic-order/' + this.categoryKey()
+		}
+
+		loadOrder() {
+			const value = localStorage.getItem(this.orderKey()) || localStorage.getItem('forum/topic-order') || 'date'
+			if (value !== this.order) { this.order = value }
+		}
+
 		saveFilters() {
-			localStorage.setItem('forum/filters', JSON.stringify({
+			localStorage.setItem(this.filterKey(), JSON.stringify({
 				status: this.filterStatus,
 				acknowledged: this.filterAcknowledged,
 				locked: this.filterLocked,
@@ -626,8 +650,9 @@ import { emitter } from '@/model/vue'
 				this.filterPriority = q.priority ? String(q.priority).split(',').map(Number) : []
 				this.filterRead = q.read === 'true' ? 'yes' : q.read === 'false' ? 'no' : 'all'
 			} else {
+				this.resetFilters()
 				try {
-					const saved = localStorage.getItem('forum/filters')
+					const saved = localStorage.getItem(this.filterKey())
 					if (saved) {
 						const f = JSON.parse(saved)
 						this.filterStatus = f.status || []
@@ -640,12 +665,16 @@ import { emitter } from '@/model/vue'
 			}
 		}
 
-		clearFilters() {
+		resetFilters() {
 			this.filterStatus = []
 			this.filterAcknowledged = 'all'
 			this.filterLocked = 'all'
 			this.filterPriority = []
 			this.filterRead = 'all'
+		}
+
+		clearFilters() {
+			this.resetFilters()
 			this.saveFilters()
 		}
 	}
