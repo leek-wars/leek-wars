@@ -17,7 +17,7 @@
 	"ai_restore": "Herstelt de AI **ai_id** en verwijdert deze uit de prullenbak.",
 	"ai_save": "Slaat de AI **ai_id** op en retourneert eventuele fouten.",
 	"ai_strict": "Schakelt strikte modus in of uit voor AI **ai_id**.",
-	"ai_sync": "Neemt een lijst met AI ids **ais** in de vorm `{ ai: timestamp }` en geeft de codes van AI's die niet langer up-to-date zijn.",
+	"ai_sync": "Neemt een lijst met AI ids **ais** in de vorm `{'{'} ai: timestamp {'}'}` en geeft de codes van AI's die niet langer up-to-date zijn.",
 	"ai_test-scenario": "Start het **scenario_id** scenario of het standaard scenario voor de AI **ai_id** als **scenario_id** `0` is.",
 	"ai_version": "Verandert de AI-versie **ai_id** in **version**.",
 	"ai-folder_change-folder": "Verplaatst de map **folder_id** naar **dest_folder_id**.",
