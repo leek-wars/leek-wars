@@ -1,5 +1,5 @@
 <template>
-	<div class="fight-actions" @mouseover="mouseover">
+	<div class="fight-actions" @click="onActionClick" @auxclick="onActionClick">
 		<template v-for="(action, a) in actions" :key="a">
 			<component :is="ActionComponents[action.type]" :action="action" :a="a" :leeks="leeks" :report="report" :hasErrWarn="hasErrWarn" @goToTurn="goToTurn" />
 			<template v-if="displayLogs && (displayAlliesLogs || action.me) && action.logs.length">
@@ -45,15 +45,8 @@
 		TEAM_COLORS = TEAM_COLORS
 		ActionComponents = Object.freeze(ActionComponents)
 		EffectComponents = Object.freeze(EffectComponents)
-		currentLink: Element | null = null
 		ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
 		fileSystem = fileSystem
-
-		goToTurn(turn: number) {
-			const element = document.getElementById('turn-' + turn)!
-			const sibling = element.parentElement!.nextElementSibling!
-			window.scrollTo(0, sibling.getBoundingClientRect().top + window.scrollY - 42)
-		}
 
 		findAction(e: MouseEvent) {
 			let current = e.target as Element | null
@@ -65,29 +58,26 @@
 			return null
 		}
 
-		mouseover(e: MouseEvent) {
+		onActionClick(e: MouseEvent) {
+			if (e.button !== 0 && e.button !== 1) return
+			const t = e.target as HTMLElement
+			if (t.closest('a, .ai, button, .pause')) return
 			const target = this.findAction(e)
-			if (target) {
-				if (this.currentLink && this.currentLink !== target) {
-					const l = this.currentLink.querySelector('a')
-					if (l) {
-						this.currentLink.removeChild(l)
-					}
-				}
-				this.currentLink = target
-				const link = target.querySelector('a')
-				if (!link) {
-					const action = target.getAttribute('a')
-					const l = document.createElement('a')
-					l.setAttribute('href', '/fight/' + this.fight.id + '?action=' + action)
-					l.innerText = '➡️'
-					l.onclick = (e) => {
-						this.$router.push(l.getAttribute('href')!)
-						e.preventDefault()
-					}
-					target.appendChild(l)
-				}
+			if (!target) return
+			const action = target.getAttribute('a')
+			const href = '/fight/' + this.fight.id + '?action=' + action
+			if (e.button === 1 || e.ctrlKey || e.metaKey) {
+				window.open(href, '_blank')
+			} else {
+				this.$router.push(href)
 			}
+			e.preventDefault()
+		}
+
+		goToTurn(turn: number) {
+			const element = document.getElementById('turn-' + turn)!
+			const sibling = element.parentElement!.nextElementSibling!
+			window.scrollTo(0, sibling.getBoundingClientRect().top + window.scrollY - 42)
 		}
 
 		goToAI(file: number, line: number) {
