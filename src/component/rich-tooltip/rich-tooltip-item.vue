@@ -1,11 +1,11 @@
 <template>
-	<v-menu v-model="value" :close-on-content-click="false" :min-width="280" offset-overflow :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'scale-transition'" :open-on-hover="!locked" :disabled="disabled" offset-y :nudge-right="nodge ? 20 : 0">
+	<v-menu v-model="value" :close-on-content-click="false" :min-width="280" :max-height="maxHeight" :location="openBottom ? 'bottom' : 'top'" :origin="openBottom ? 'top' : 'bottom'" :offset="nodge ? [0, 20] : 0" :open-delay="_open_delay" :close-delay="_close_delay" :transition="instant ? 'none' : 'scale-transition'" :open-on-hover="!locked" :disabled="disabled" :content-class="'rich-item-tooltip-menu'" :content-props="{ style: 'max-height:' + maxHeight + 'px' }" @update:model-value="onToggle">
 		<template #activator="{ props }">
-			<span v-bind="props">
+			<span v-bind="props" @pointerenter="onHover" @mouseenter="onHover" @focus="onHover">
 				<slot></slot>
 			</span>
 		</template>
-		<div class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
+		<div class="card" :style="{ maxHeight: maxHeight + 'px' }" @mouseenter="mouse = true" @mouseleave="mouse = false">
 			<item-preview :item="item" :quantity="quantity" :inventory="inventory" :leek="leek" :craft-cost="craftCost" @update:modelValue="setParent" @retrieve="$emit('retrieve', $event)" />
 		</div>
 	</v-menu>
@@ -35,12 +35,45 @@
 		mouse: boolean = false
 		value: boolean = false
 		disabled: boolean = false
+		maxHeight: number = 600
+		openBottom: boolean = true
+		activatorEl: HTMLElement | null = null
 
 		get _open_delay() {
 			return this.instant || LeekWars.mobile ? 1 : (this.openDelay || 500)
 		}
 		get _close_delay() {
 			return 1
+		}
+
+		onHover(e: Event) {
+			const el = e.currentTarget as HTMLElement | null
+			if (el) this.activatorEl = el
+			this.computeBounds()
+		}
+
+		computeBounds() {
+			const el = this.activatorEl
+			if (!el) return
+			const rect = el.getBoundingClientRect()
+			const vh = window.innerHeight
+			const padding = 16
+			const spaceBelow = vh - rect.bottom - padding
+			const spaceAbove = rect.top - padding
+			const preferBottom = this.bottom !== false
+			const prefSpace = preferBottom ? spaceBelow : spaceAbove
+			const altSpace = preferBottom ? spaceAbove : spaceBelow
+			if (prefSpace >= 300 || prefSpace >= altSpace) {
+				this.openBottom = preferBottom
+				this.maxHeight = Math.max(200, prefSpace)
+			} else {
+				this.openBottom = !preferBottom
+				this.maxHeight = Math.max(200, altSpace)
+			}
+		}
+
+		onToggle(opened: boolean) {
+			if (opened) this.computeBounds()
 		}
 
 		setParent(event: boolean) {
@@ -76,6 +109,8 @@
 .card {
 	width: 280px;
 	background: none;
+	overflow-y: auto;
+	overscroll-behavior: contain;
 }
 .stats {
 	text-align: center;
