@@ -1778,18 +1778,23 @@
 		}
 	}
 	.chips-dialog .chip {
-		display: inline-block;
-		margin: 5px;
+		width: 60px;
+		height: 60px;
 		cursor: move;
 	}
 	.chips-dialog .chip img {
 		width: 60px;
+		height: 60px;
 		vertical-align: bottom;
 	}
 	.chips-dialog .leek-chips, .chips-dialog .farmer-chips {
 		min-height: 80px;
 		border: 3px solid transparent;
 		padding: 5px;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+		gap: 6px;
+		justify-items: center;
 	}
 	.leek-ai-components {
 		flex: 1;
@@ -1867,10 +1872,17 @@
 			border: 3px solid transparent;
 			padding: 5px;
 			min-height: 160px;
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+			gap: 6px;
+			justify-items: center;
 			.component {
 				cursor: move;
+				width: 60px;
+				height: 60px;
 				img {
-					margin: 5px;
+					width: 60px;
+					height: 60px;
 				}
 			}
 		}
