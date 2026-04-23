@@ -334,7 +334,7 @@
 	import { Farmer } from '@/model/farmer'
 	import { HatTemplate } from '@/model/hat'
 	import { mixins } from '@/model/i18n'
-	import { ItemTemplate, ItemType } from '@/model/item'
+	import { ItemTemplate, ItemType, ITEM_CATEGORY_NAME } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { PompTemplate } from '@/model/pomp'
 	import { PotionTemplate } from '@/model/potion'
@@ -611,7 +611,15 @@
 			if (item.type === ItemType.FIGHT_PACK) {
 				return this.$t('n_fights', [item.id - 1000000])
 			}
-			const type = ['weapon', 'chip', 'potion', 'hat', 'pomp'][item.type - 1]
+			if (item.type === ItemType.SCHEME) {
+				const scheme = LeekWars.schemes[item.params]
+				const result = scheme ? LeekWars.items[scheme.result] : null
+				if (!result) return ''
+				const category = ITEM_CATEGORY_NAME[result.type as ItemType]
+				const name = result.name.replace(category + '_', '')
+				return this.$t('main.scheme_x', [this.$t(category + '.' + name)])
+			}
+			const type = ITEM_CATEGORY_NAME[item.type as ItemType]
 			return this.$t(type + '.' + item.name.replace(type + '_', ''))
 		}
 		openBuyHabs(quantity: number) {
