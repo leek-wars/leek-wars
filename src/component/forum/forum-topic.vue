@@ -466,7 +466,8 @@ import { emitter } from '@/model/vue'
 		}
 		get canDeleteTopic() {
 			if (!this.category || !this.$store.state.farmer) { return false }
-			return this.category.moderator
+			if (this.category.moderator) { return true }
+			return this.topic?.owner === this.$store.state.farmer.id && this.pages <= 1 && this.topic?.messages?.length === 1
 		}
 		get allStatuses(): {[key: number]: {title: string, value: ForumTopicStatus, icon: string, color: string}} {
 			return {
