@@ -39,7 +39,7 @@
 	"winners": "Vinnere",
 	"errors": "Feil",
 	"errors_warnings": "Feil og advarsler",
-	"n_errors": "{n} feil",
+	"n_errors": "{n} feil | {n} feil",
 	"n_warnings": "{n} advarsler",
 	"toggle_turrets": "Vis/skjul tårn",
 	"toggle_percent": "Livsprosent",
