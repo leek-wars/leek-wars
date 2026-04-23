@@ -1,5 +1,5 @@
 {
-	"about": "Met betrekking tot",
+	"about": "Over",
 	"client": "Klant",
 	"contact": "Contact",
 	"contact_text": "Je kunt contact met ons opnemen via e-mail op {contact}, of via een privébericht op het spel, Facebook of Twitter.",
@@ -20,7 +20,7 @@
 	"thanks": "Bedankt",
 	"thanks_about_articles": "We danken alle sites en blogs die een klein artikel over Leek Wars hebben geschreven :)",
 	"thanks_text": "Veel mensen hebben meegewerkt aan de totstandkoming van <b>Leek Wars</b>, we willen ze graag bedanken:",
-	"title": "Met betrekking tot",
+	"title": "Over",
 	"tools": "Hulpmiddelen",
 	"tools_list": "Een niet-uitputtende lijst van de verschillende talen en tools die voor het project worden gebruikt:",
 	"version_n": "Vrijgeven {0}",
