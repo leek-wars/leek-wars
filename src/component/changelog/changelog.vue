@@ -82,6 +82,7 @@ interface ChangelogEntry {
 	forum_topic?: number | null
 	forum_category?: number | null
 	active: boolean
+	image?: boolean
 }
 
 const changelog = ref<ChangelogEntry[] | null>(null)
