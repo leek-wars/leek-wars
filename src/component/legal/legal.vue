@@ -26,16 +26,15 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+import { LeekWars } from '@/model/leekwars'
+import { mixins } from '@/model/i18n'
 
-	@Options({ name: 'legal', i18n: {} })
-	export default class Legal extends Vue {
-		created() {
-			LeekWars.setTitle(this.$t('title'))
-		}
-	}
+defineOptions({ name: 'legal', i18n: {}, mixins: [...mixins] })
+
+const { t } = useI18n()
+LeekWars.setTitle(t('title'))
 </script>
 
 <style lang="scss" scoped>

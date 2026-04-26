@@ -63,48 +63,49 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
+import { LeekWars } from '@/model/leekwars'
+import { mixins } from '@/model/i18n'
 
-	@Options({ name: 'change_email', i18n: {} })
-	export default class ChangeEmail extends Vue {
-		state: number = 0
-		email: string = ''
-		email2: string = ''
-		error: string | null = null
+defineOptions({ name: 'change_email', i18n: {}, mixins: [...mixins] })
 
-		created() {
-			LeekWars.setTitle(this.$t('title'))
-			this.state = parseInt(this.$route.params.state, 10)
+const { t } = useI18n()
+const route = useRoute()
 
-			if (this.state === 2) {
-				LeekWars.post('farmer/change-email3', {token: this.$route.params.token}).then(data => {
-					LeekWars.toast(this.$i18n.t('email_changed'))
-					this.state = 4
-				}).error(error => {
-					this.error = error
-					LeekWars.toast(error)
-				})
-				return false
-			}
-		}
+const state = ref(parseInt(route.params.state as string, 10) || 0)
+const email = ref('')
+const email2 = ref('')
+const error = ref<string | null>(null)
 
-		submit() {
-			if (this.email !== this.email2) {
-				LeekWars.toast(this.$i18n.t('error_not_same_email'))
-				return false
-			}
-			LeekWars.post('farmer/change-email2', {email: this.email, token: this.$route.params.token}).then(data => {
-				LeekWars.toast(this.$i18n.t('email_sent', {email: this.email}))
-				this.state = 3
-			}).error(error => {
-				this.error = error
-				LeekWars.toast(error)
-			})
-			return false
-		}
+LeekWars.setTitle(t('title'))
+
+if (state.value === 2) {
+	LeekWars.post('farmer/change-email3', {token: route.params.token}).then(() => {
+		LeekWars.toast(t('email_changed'))
+		state.value = 4
+	}).catch((err: any) => {
+		error.value = err
+		LeekWars.toast(err)
+	})
+}
+
+function submit() {
+	if (email.value !== email2.value) {
+		LeekWars.toast(t('error_not_same_email'))
+		return false
 	}
+	LeekWars.post('farmer/change-email2', {email: email.value, token: route.params.token}).then(() => {
+		LeekWars.toast(t('email_sent', {email: email.value}))
+		state.value = 3
+	}).catch((err: any) => {
+		error.value = err
+		LeekWars.toast(err)
+	})
+	return false
+}
 </script>
 
 <style lang="scss" scoped>

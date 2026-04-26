@@ -42,30 +42,23 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { locale } from '@/locale'
-	import { Farmer } from '@/model/farmer'
-	import { ForumCategory, ForumMessage, ForumTopic } from '@/model/forum'
-	import { mixins } from '@/model/i18n'
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
-	import Breadcrumb from '../forum/breadcrumb.vue'
+<script setup lang="ts">
+import { ref } from 'vue'
+import { mixins } from '@/model/i18n'
+import { LeekWars } from '@/model/leekwars'
+import Breadcrumb from '../forum/breadcrumb.vue'
 
-	@Options({ name: 'dev-blog', i18n: {}, mixins: [...mixins], components: { Breadcrumb } })
-	export default class DevBlog extends Vue {
+defineOptions({ name: 'dev-blog', i18n: {}, mixins: [...mixins] })
 
-		articles = null
+const articles = ref<any[] | null>(null)
 
-		created() {
-			LeekWars.get('article/all').then(data => {
-				this.articles = data
-			})
-		}
+LeekWars.get('article/all').then(data => {
+	articles.value = data
+})
 
-		formatTitleURL(title: string) {
-			return title.toLocaleLowerCase().replace(/ /g, '-').replace(/[\[\]]/g, '').replace(/,/g, '').replace(/\//g, '')
-		}
-	}
+function formatTitleURL(title: string) {
+	return title.toLocaleLowerCase().replace(/ /g, '-').replace(/[\[\]]/g, '').replace(/,/g, '').replace(/\//g, '')
+}
 </script>
 
 <style lang="scss" scoped>

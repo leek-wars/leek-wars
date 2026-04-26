@@ -108,191 +108,179 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { mixins } from '@/model/i18n'
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
-	import Breadcrumb from '../forum/breadcrumb.vue'
-	import JsonViewer from 'vue-json-viewer'
-	import Markdown from '@/component/encyclopedia/markdown.vue'
-import { nextTick } from 'vue'
+<script setup lang="ts">
+import { ref, computed, watch, onMounted, onBeforeUnmount, useTemplateRef, nextTick } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRoute, useRouter } from 'vue-router'
+import { mixins } from '@/model/i18n'
+import { LeekWars } from '@/model/leekwars'
+import Breadcrumb from '../forum/breadcrumb.vue'
+// @ts-ignore - no types for vue-json-viewer
+import JsonViewer from 'vue-json-viewer'
+import Markdown from '@/component/encyclopedia/markdown.vue'
 import { emitter } from '@/model/vue'
 
-	@Options({ name: 'api', i18n: {}, mixins: [...mixins],
-		components: { Breadcrumb, JsonViewer, Markdown }
-	})
-	export default class Api extends Vue {
-		services: any[] = []
-		categories: any = {}
-		query: string = ''
-		categoryState: {[key: number]: boolean} = {}
-		icons = {
-			'ai': 'file-outline',
-			'ai-folder': 'folder-outline',
-			'article': 'newspaper',
-			'changelog': 'format-list-bulleted',
-			'chip': 'chip',
-			'complexity': 'timer-sand',
-			'constant': 'pi',
-			'country': 'earth',
-			'encyclopedia': 'book-open-page-variant',
-			'error': 'alert-circle-outline',
-			'farmer': 'account',
-			'fight': 'sword-cross',
-			'forum': 'forum-outline',
-			'function': 'function',
-			'garden': 'sword',
-			'groupe': 'account-group',
-			'hat': 'hat-fedora',
-			'history': 'history',
-			'item': 'treasure-chest',
-			'lang': 'translate',
-			'leek': 'leek',
-			'leek-wars': 'star-outline',
-			'market': 'shopping-outline',
-			'message': 'chat-outline',
-			'message-reaction': 'emoticon-outline',
-			'notification': 'bell-outline',
-			'pomp': 'auto-fix',
-			'potion': 'bottle-tonic-plus-outline',
-			'ranking': 'podium',
-			'service': 'api',
-			'source': 'merge',
-			'summon': 'leaf',
-			'talent': 'chart-line',
-			'team': 'account-multiple',
-			'team-composition': 'dice-6-outline',
-			'test-leek': 'robot',
-			'test-map': 'map-outline',
-			'test-scenario': 'script-text-outline',
-			'tournament': 'tournament',
-			'trophy': 'trophy',
-			'trophy-template': 'trophy-outline',
-			'tutorial': 'school',
-			'weapon': 'pistol'
-		}
+defineOptions({ name: 'api', i18n: {}, mixins: [...mixins], components: { JsonViewer } })
 
-		get breadcrumb_items() {
-			return [
-				{name: this.$t('main.help'), link: '/help'},
-				{name: this.$t('title'), link: '/help/api'}
-			]
-		}
+const { t } = useI18n()
+const route = useRoute()
+const router = useRouter()
 
-		get lower_query() {
-			return this.query.toLowerCase()
-		}
-		get filteredItems() {
-			if (this.lower_query.length) {
-				return this.services.filter(item => {
-					return item.function!.indexOf(this.lower_query) !== -1
-						|| item.module!.indexOf(this.lower_query) !== -1
-						|| (item.module + '/' + item.function).indexOf(this.lower_query) !== -1
-						|| item.returns.some((r: any) => r.indexOf(this.lower_query) !== -1)
-						|| item.parameters.some((r: any) => r.indexOf(this.lower_query) !== -1)
-				})
-			} else {
-				return this.services
-			}
-		}
-		get filteredCategories() {
-			const categories: {[key: number]: any} = {}
-			for (const item of this.filteredItems) {
-				if (item.deprecated) continue
-				if (!(item.module in categories)) categories[item.module] = []
-				categories[item.module].push(item)
-			}
-			return categories
-		}
+const services = ref<any[]>([])
+const categories = ref<any>({})
+const query = ref('')
+const categoryState = ref<{[key: string]: boolean}>({})
+const search = useTemplateRef<HTMLElement>('search')
+const elements = useTemplateRef<HTMLElement>('elements')
 
-		created() {
-			LeekWars.get('service/get-all').then(services => {
-				this.services = services
-				for (const service of services) {
-					if (service.example) {
-						service.example = JSON.parse(service.example)
-					}
-					if (!(service.module in this.categories)) {
-						this.categories[service.module] = []
-					}
-					this.categories[service.module].push(service)
-				}
-				for (const category in this.categories) {
-					this.categoryState[category] = localStorage.getItem('api-doc/category-' + category) === 'true'
-				}
-				LeekWars.setTitle('API')
-				this.update()
-			})
-		}
+const icons: Record<string, string> = {
+	'ai': 'file-outline',
+	'ai-folder': 'folder-outline',
+	'article': 'newspaper',
+	'changelog': 'format-list-bulleted',
+	'chip': 'chip',
+	'complexity': 'timer-sand',
+	'constant': 'pi',
+	'country': 'earth',
+	'encyclopedia': 'book-open-page-variant',
+	'error': 'alert-circle-outline',
+	'farmer': 'account',
+	'fight': 'sword-cross',
+	'forum': 'forum-outline',
+	'function': 'function',
+	'garden': 'sword',
+	'groupe': 'account-group',
+	'hat': 'hat-fedora',
+	'history': 'history',
+	'item': 'treasure-chest',
+	'lang': 'translate',
+	'leek': 'leek',
+	'leek-wars': 'star-outline',
+	'market': 'shopping-outline',
+	'message': 'chat-outline',
+	'message-reaction': 'emoticon-outline',
+	'notification': 'bell-outline',
+	'pomp': 'auto-fix',
+	'potion': 'bottle-tonic-plus-outline',
+	'ranking': 'podium',
+	'service': 'api',
+	'source': 'merge',
+	'summon': 'leaf',
+	'talent': 'chart-line',
+	'team': 'account-multiple',
+	'team-composition': 'dice-6-outline',
+	'test-leek': 'robot',
+	'test-map': 'map-outline',
+	'test-scenario': 'script-text-outline',
+	'tournament': 'tournament',
+	'trophy': 'trophy',
+	'trophy-template': 'trophy-outline',
+	'tutorial': 'school',
+	'weapon': 'pistol'
+}
 
-		@Watch('$route.params')
-		update() {
-			if (this.$route.params && 'module' in this.$route.params && 'function' in this.$route.params) {
-				LeekWars.splitShowContent()
-				this.selectItem(this.$route.params.module + '_' + this.$route.params.function)
-				LeekWars.setTitle(this.$route.params.module + '/' + this.$route.params.function)
-			} else {
-				LeekWars.splitShowList()
-				LeekWars.setTitle(this.$i18n.t('title'))
-			}
-		}
+const breadcrumb_items = computed(() => [
+	{ name: t('main.help'), link: '/help' },
+	{ name: t('title'), link: '/help/api' }
+])
 
-		selectItem(item: string) {
-			// console.log("selectItem", item)
-			if (!this.filteredItems.find((it) => it.name === item)) {
-				this.query = ''
-			}
-			nextTick(() => {
-				setTimeout(() => {
-					const element: any = document.querySelector('.items .service[item=' + item + ']')
-					const elements = this.$refs.elements as HTMLElement
-					if (element) {
-						const offset = LeekWars.mobile ? 100 : 140
-						elements.scrollTo(0, element.offsetTop - offset + 10)
-					}
-				}, 100)
-			})
-		}
+const lower_query = computed(() => query.value.toLowerCase())
 
-		toggleCategory(c: number) {
-			this.categoryState[c] = !this.categoryState[c]
-			localStorage.setItem('api-doc/category-' + c, '' + this.categoryState[c])
-		}
-
-		scroll() {
-
-		}
-
-		navigate(item: string) {
-			// console.log("navigate", item, this.popup)
-			const url = '/help/api/' + item
-			if (this.$route.path === url) {
-				this.update()
-			} else {
-				this.$router.push(url)
-			}
-		}
-
-		mounted() {
-			// LeekWars.large = localStorage.getItem('documentation/large') === 'true'
-			LeekWars.footer = false
-			LeekWars.box = true
-			;(this.$refs.search as HTMLElement).focus()
-			emitter.on('back', this.back)
-		}
-		focus() {
-			(this.$refs.search as HTMLElement).focus()
-		}
-		back() {
-			this.$router.push('/help/api')
-		}
-		beforeUnmount() {
-			LeekWars.large = false
-			LeekWars.footer = true
-			LeekWars.box = false
-			emitter.off('back', this.back)
-		}
+const filteredItems = computed(() => {
+	if (lower_query.value.length) {
+		return services.value.filter((item: any) =>
+			item.function!.indexOf(lower_query.value) !== -1
+			|| item.module!.indexOf(lower_query.value) !== -1
+			|| (item.module + '/' + item.function).indexOf(lower_query.value) !== -1
+			|| item.returns.some((r: any) => r.indexOf(lower_query.value) !== -1)
+			|| item.parameters.some((r: any) => r.indexOf(lower_query.value) !== -1)
+		)
 	}
+	return services.value
+})
+
+const filteredCategories = computed(() => {
+	const cats: {[key: string]: any} = {}
+	for (const item of filteredItems.value) {
+		if (item.deprecated) continue
+		if (!(item.module in cats)) cats[item.module] = []
+		cats[item.module].push(item)
+	}
+	return cats
+})
+
+LeekWars.get('service/get-all').then(servicesData => {
+	services.value = servicesData
+	for (const service of servicesData) {
+		if (service.example) service.example = JSON.parse(service.example)
+		if (!(service.module in categories.value)) categories.value[service.module] = []
+		categories.value[service.module].push(service)
+	}
+	for (const category in categories.value) {
+		categoryState.value[category] = localStorage.getItem('api-doc/category-' + category) === 'true'
+	}
+	LeekWars.setTitle('API')
+	update()
+})
+
+function update() {
+	if (route.params && 'module' in route.params && 'function' in route.params) {
+		LeekWars.splitShowContent()
+		selectItem(route.params.module + '_' + route.params.function)
+		LeekWars.setTitle(route.params.module + '/' + route.params.function)
+	} else {
+		LeekWars.splitShowList()
+		LeekWars.setTitle(t('title'))
+	}
+}
+
+watch(() => route.params, update)
+
+function selectItem(item: string) {
+	if (!filteredItems.value.find((it: any) => it.name === item)) {
+		query.value = ''
+	}
+	nextTick(() => {
+		setTimeout(() => {
+			const element: any = document.querySelector('.items .service[item=' + item + ']')
+			if (element && elements.value) {
+				const offset = LeekWars.mobile ? 100 : 140
+				elements.value.scrollTo(0, element.offsetTop - offset + 10)
+			}
+		}, 100)
+	})
+}
+
+function toggleCategory(c: string) {
+	categoryState.value[c] = !categoryState.value[c]
+	localStorage.setItem('api-doc/category-' + c, '' + categoryState.value[c])
+}
+
+function scroll() {}
+
+function navigate(item: string) {
+	const url = '/help/api/' + item
+	if (route.path === url) update()
+	else router.push(url)
+}
+
+function back() {
+	router.push('/help/api')
+}
+
+onMounted(() => {
+	LeekWars.footer = false
+	LeekWars.box = true
+	search.value?.focus()
+	emitter.on('back', back)
+})
+
+onBeforeUnmount(() => {
+	LeekWars.large = false
+	LeekWars.footer = true
+	LeekWars.box = false
+	emitter.off('back', back)
+})
 </script>
 
 <style lang="scss" scoped>

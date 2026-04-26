@@ -81,17 +81,19 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { mixins } from '@/model/i18n'
-	import { Options, Vue } from 'vue-property-decorator'
-	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
-	import { Language, LeekWars } from '@/model/leekwars'
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { mixins } from '@/model/i18n'
+import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+import { type Language, LeekWars } from '@/model/leekwars'
 
-	@Options({ name: 'press-kit', i18n: {}, mixins: [...mixins], components: { RichTooltipFarmer } })
-	export default class PressKit extends Vue {
+defineOptions({ name: 'press-kit', i18n: {}, mixins: [...mixins] })
 
-		language: Language | null = null
-		items = [
+const { locale } = useI18n()
+
+const language = ref<any>(null)
+const items: any[] = [
 			{ name: 'logos', icon: 'mdi-image', items: [
 				{ name: 'leekwars_logo_dark', formats: ['svg', 'png'], alpha: true, legends: {
 					fr: 'Logo Leek Wars sombre',
@@ -220,19 +222,16 @@
 				{ type: 'video', name: '9DXQfRH_2FM', legend: "As-tu toujours rêvé de créer un IA pour te battre avec un poireau?" },
 				{ type: 'video', name: 'EBI5IYuECvk', legend: "[Leek Wars] - Bataille de poireaux !" },
 				{ type: 'video', name: 'wmZB4fEhTBo', legend: "UN JEU DE PROGRAMMATION ?! - Leek Wars" },
-			]}
-		]
+		]}
+]
 
-		created() {
-			const lang = localStorage.getItem('forum/chat-language') || this.$i18n.locale
-			this.language = LeekWars.languages[lang]
-		}
+const lang = localStorage.getItem('forum/chat-language') || (locale.value as string)
+language.value = LeekWars.languages[lang]
 
-		setLanguage(language: Language) {
-			this.language = language
-			localStorage.setItem('forum/chat-language', language.code)
-		}
-	}
+function setLanguage(l: Language) {
+	language.value = l
+	localStorage.setItem('forum/chat-language', l.code)
+}
 </script>
 
 <style lang="scss" scoped>

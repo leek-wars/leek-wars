@@ -106,32 +106,34 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { locale } from '@/locale'
-	import { mixins } from '@/model/i18n'
-	import { LeekWars } from '@/model/leekwars'
-	import { defineAsyncComponent } from 'vue'
-	import { Options, Vue } from 'vue-property-decorator'
-	const Didactitiel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`))
+<script setup lang="ts">
+import { ref, defineAsyncComponent, nextTick } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
+import { locale } from '@/locale'
+import { mixins } from '@/model/i18n'
+import { LeekWars } from '@/model/leekwars'
 
-	@Options({ name: 'help', i18n: {}, mixins: [...mixins], components: { Didactitiel } })
-	export default class Help extends Vue {
-		advanced: boolean = false
-		didactitiel: boolean = false
-		didactitiel_enabled: boolean = false
+const Didactitiel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`))
 
-		created() {
-			LeekWars.setTitle(this.$t('title'))
-			LeekWars.setActions([{icon: 'mdi-information-variant', click: () => this.$router.push('/about')}])
-		}
+defineOptions({ name: 'help', i18n: {}, mixins: [...mixins], components: { Didactitiel } })
 
-		show_didactitiel() {
-			this.didactitiel_enabled = true
-			nextTick(() => {
-				this.didactitiel = true
-			})
-		}
-	}
+const { t } = useI18n()
+const router = useRouter()
+
+const advanced = ref(false)
+const didactitiel = ref(false)
+const didactitiel_enabled = ref(false)
+
+LeekWars.setTitle(t('title'))
+LeekWars.setActions([{icon: 'mdi-information-variant', click: () => router.push('/about')}])
+
+function show_didactitiel() {
+	didactitiel_enabled.value = true
+	nextTick(() => {
+		didactitiel.value = true
+	})
+}
 </script>
 
 <style lang="scss" scoped>

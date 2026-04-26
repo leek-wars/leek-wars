@@ -57,45 +57,52 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRoute, useRouter } from 'vue-router'
+import { LeekWars } from '@/model/leekwars'
+import { mixins } from '@/model/i18n'
 
-	@Options({ name: 'forgot_password', i18n: {} })
-	export default class ForgotPassword extends Vue {
-		@Prop() state!: string
-		email: string = ''
-		password: string = ''
-		password2: string = ''
+defineOptions({ name: 'forgot_password', i18n: {}, mixins: [...mixins] })
 
-		created() {
-			LeekWars.setTitle(this.$t('title'))
-		}
+defineProps<{
+	state?: string
+}>()
 
-		submitForm() {
-			LeekWars.post('farmer/forgot-password', {email: this.email}).then(data => {
-				LeekWars.toast(this.$i18n.t('mail_sent', {email: this.email}))
-				this.$router.push('/forgot-password/email-sent/' + this.email)
-			}).error(error => {
-				LeekWars.toast(this.$t(error.error, error.params))
-			})
-			return false
-		}
+const { t } = useI18n()
+const route = useRoute()
+const router = useRouter()
 
-		submitResetForm() {
-			if (this.password !== this.password2) {
-				LeekWars.toast(this.$t('error_not_same_password'))
-				return false
-			}
-			LeekWars.post('farmer/forgot-password-change', {farmer_id: this.$route.params.id, new_password: this.password, code: this.$route.params.code}).then(data => {
-				LeekWars.toast(this.$t('password_changed'))
-				this.$router.push('/login')
-			}).error(error => {
-				LeekWars.toast(this.$t('error_' + error.error, error.params))
-			})
-			return false
-		}
+const email = ref('')
+const password = ref('')
+const password2 = ref('')
+
+LeekWars.setTitle(t('title'))
+
+function submitForm() {
+	LeekWars.post('farmer/forgot-password', {email: email.value}).then(() => {
+		LeekWars.toast(t('mail_sent', {email: email.value}))
+		router.push('/forgot-password/email-sent/' + email.value)
+	}).catch((err: any) => {
+		LeekWars.toast(t(err.error, err.params))
+	})
+	return false
+}
+
+function submitResetForm() {
+	if (password.value !== password2.value) {
+		LeekWars.toast(t('error_not_same_password'))
+		return false
 	}
+	LeekWars.post('farmer/forgot-password-change', {farmer_id: route.params.id, new_password: password.value, code: route.params.code}).then(() => {
+		LeekWars.toast(t('password_changed'))
+		router.push('/login')
+	}).catch((err: any) => {
+		LeekWars.toast(t('error_' + err.error, err.params))
+	})
+	return false
+}
 </script>
 
 <style lang="scss" scoped>

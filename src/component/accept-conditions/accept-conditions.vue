@@ -16,18 +16,20 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { useRouter } from 'vue-router'
+import { LeekWars } from '@/model/leekwars'
+import { mixins } from '@/model/i18n'
 
-	@Options({ name: 'accept_conditions', i18n: {} })
-	export default class AcceptConditions extends Vue {
-		accept() {
-			LeekWars.post('farmer/accept-terms')
-				.then(() => this.$router.push('/'))
-				.error(error => LeekWars.toast("Error: " + error))
-		}
-	}
+defineOptions({ name: 'accept_conditions', i18n: {}, mixins: [...mixins] })
+
+const router = useRouter()
+
+function accept() {
+	LeekWars.post('farmer/accept-terms')
+		.then(() => { router.push('/') })
+		.catch((error: any) => LeekWars.toast('Error: ' + error))
+}
 </script>
 
 <style lang="scss" scoped>

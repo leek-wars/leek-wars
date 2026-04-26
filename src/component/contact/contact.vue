@@ -19,17 +19,15 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { mixins } from '@/model/i18n';
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+import { mixins } from '@/model/i18n'
+import { LeekWars } from '@/model/leekwars'
 
-	@Options({ name: 'contact', i18n: {}, mixins: [...mixins] })
-	export default class Contact extends Vue {
-		created() {
-			LeekWars.setTitle(this.$t('title'))
-		}
-	}
+defineOptions({ name: 'contact', i18n: {}, mixins: [...mixins] })
+
+const { t } = useI18n()
+LeekWars.setTitle(t('title'))
 </script>
 
 <style lang="scss" scoped>

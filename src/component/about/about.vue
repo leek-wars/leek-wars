@@ -172,107 +172,96 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { Farmer } from '@/model/farmer'
-	import { mixins } from '@/model/i18n'
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue } from 'vue-property-decorator'
-	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+<script setup lang="ts">
+import { ref, computed, onMounted, useTemplateRef } from 'vue'
+import { useI18n } from 'vue-i18n'
+import type { Farmer } from '@/model/farmer'
+import { mixins } from '@/model/i18n'
+import { LeekWars } from '@/model/leekwars'
+import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Options({ name: 'about', i18n: {}, mixins: [...mixins], components: { RichTooltipFarmer } })
-	export default class About extends Vue {
-		links = [
-			["Korben", "http://korben.info/leek-wars.html"],
-			["1001bricks", "http://blog.1001bricks.com/649-welcome-to-1001leeks"],
-			["Millenium", "https://www.millenium.org/news/164675.html"],
-			["Vidéo par BugQuest", "https://www.youtube.com/watch?v=UXhoZYZm2tk"],
-			["Game Side Story", "http://www.gamesidestory.com/2014/09/02/gametest-leekwars-navigateur/"],
-			['MacAttac', "http://www.macattac.fr/2014/09/28/test-du-jeu-leek-wars/"]
-		]
+defineOptions({ name: 'about', i18n: {}, mixins: [...mixins] })
 
-		technologies = [
-			{ name: "client", items: [
-				{ name: "HTML 5", link: "http://www.w3schools.com/html/html5_intro.asp", image: "html5.png" },
-				{ name: "CSS 3", link: "http://www.w3schools.com/css/css3_intro.asp", image: "css3.png" },
-				{ name: "Sass", link: "https://sass-lang.com/", image: "sass.svg" },
-				{ name: "JavaScript", link: "http://www.w3schools.com/js/DEFAULT.asp", image: "javascript.png" },
-				{ name: "TypeScript", link: "https://www.typescriptlang.org/", image: "typescript.svg" },
-				{ name: "CodeMirror", link: "https://codemirror.net/", image: "codemirror.svg" },
-				{ name: "Vue", link: "https://vuejs.org/", image: "vue.png" },
-				{ name: "Chart.js", link: "https://www.chartjs.org/", image: "chartjs.png" },
-				{ name: "KaTeX", link: "https://katex.org/", image: "katex.png" },
-				{ name: "webpack", link: "https://webpack.js.org/", image: "webpack.png" },
-				{ name: "npm", link: "https://www.npmjs.com/", image: "npm.svg" },
-				{ name: "Vuetify", link: "https://vuetifyjs.com/en/", image: "vuetify.png" },
-				{ name: "Markdown it", link: "https://markdown-it.github.io/", image: "markdown-it.svg" },
-			{ name: "XP.css", link: "https://botoxparty.github.io/XP.css/", image: "xp-css.png" },
-			]},
-			{ name: "server", items: [
-				{ name: "Debian", link: "https://www.debian.org/", image: "debian.svg" },
-				{ name: "NGINX", link: "https://www.nginx.com/", image: "nginx.svg" },
-				{ name: "PostgreSQL", link: "https://www.postgresql.org/", image: "postgresql.svg" },
-				{ name: "Java", link: "http://www.java.com/fr/about/", image: "java.png" },
-				{ name: "PHP", link: "http://www.php.net/", image: "php.png" },
-				{ name: "APCu", link: "https://www.php.net/manual/en/book.apcu.php", image: "apcu.svg" },
-				{ name: "Redis", link: "https://redis.io/", image: "redis.svg" },
-				{ name: "Python", link: "https://www.python.org/", image: "python.svg" },
-				{ name: "Docker", link: "https://www.docker.com/", image: "docker.webp" },
-				{ name: "Traefik", link: "https://traefik.io/traefik/", image: "traefik.svg" },
-			]},
-			// { name: "leekscript", items: [
-			// 	{ name: "C++", link: "https://fr.cppreference.com/w/", image: "cpp.png" },
-			// 	{ name: "LLVM", link: "https://llvm.org/", image: "llvm.png" },
-			// 	{ name: "GCC", link: "https://gcc.gnu.org/", image: "gcc.svg" },
-			// 	{ name: "GMP", link: "https://gmplib.org/", image: "gmp.png" },
-			// 	{ name: "Valgrind", link: "https://valgrind.org/", image: "valgrind.png" },
-			// 	{ name: "gcov", link: "https://gcc.gnu.org/onlinedocs/gcc/Gcov.html", image: "gcov.png" },
-			// ]},
-			{ name: "tools", items: [
-				{ name: "git", link: "http://git-scm.com/", image: "git.png" },
-				{ name: "GitHub", link: "https://github.com/", image: "github.svg" },
-				{ name: "VSCode", link: "https://code.visualstudio.com/", image: "vscode.svg" },
-				{ name: "GIMP", link: "https://www.gimp.org/fr/", image: "gimp.svg" },
-				{ name: "Inkscape", link: "https://inkscape.org/fr/", image: "inkscape.svg" },
-				{ name: "Blender", link: "https://www.blender.org/", image: "blender.svg" },
-				// { name: "Codacy", link: "https://www.codacy.com/", image: "codacy.svg" },
-				// { name: "FileZilla", link: "https://filezilla-project.org/", image: "filezilla.svg" },
-			]},
-		]
+const { t } = useI18n()
 
-		get team() {
-			return [[
-				{ name: 'Pilow', id: 1, grade: 'admin', role: this.$t('team_web_graphism') + '<br>' + this.$t('team_leekscript_fights') },
-				{ name: 'SilentHunter', id: 11, grade: 'admin', role: this.$t('team_admin_server') },
-				{ name: 'TheTintin', id: 38357, grade: 'moderator', role: this.$t('main.grade_moderator') },
-				{ name: 'Ref', id: 43276, grade: 'moderator', role: this.$t('main.grade_moderator') },
-			], [
-				{ name: 'Dawyde', id: 2, grade: 'former admin', role: this.$t('former_dev') },
-				{ name: 'mistigis', id: 100, grade: 'former moderator', role: this.$t('former_mod') },
-				{ name: 'McNalYoo', id: 273, grade: 'former moderator', role: this.$t('former_mod') },
-				{ name: 'jojo123', id: 8773, grade: 'former moderator', role: this.$t('former_mod') },
-				{ name: 'Silosis', id: 27228, grade: 'former moderator', role: this.$t('former_mod') },
-			]]
-		}
-		contributors = [] as Farmer[]
+const links = [
+	['Korben', 'http://korben.info/leek-wars.html'],
+	['1001bricks', 'http://blog.1001bricks.com/649-welcome-to-1001leeks'],
+	['Millenium', 'https://www.millenium.org/news/164675.html'],
+	['Vidéo par BugQuest', 'https://www.youtube.com/watch?v=UXhoZYZm2tk'],
+	['Game Side Story', 'http://www.gamesidestory.com/2014/09/02/gametest-leekwars-navigateur/'],
+	['MacAttac', 'http://www.macattac.fr/2014/09/28/test-du-jeu-leek-wars/'],
+]
 
-		created() {
-			LeekWars.setTitle(this.$i18n.t('title'))
-			LeekWars.setActions([{image: 'github_white.png', click: () => window.open('https://github.com/leek-wars/leek-wars', '_newtab')}])
-		}
+const technologies = [
+	{ name: 'client', items: [
+		{ name: 'HTML 5', link: 'http://www.w3schools.com/html/html5_intro.asp', image: 'html5.png' },
+		{ name: 'CSS 3', link: 'http://www.w3schools.com/css/css3_intro.asp', image: 'css3.png' },
+		{ name: 'Sass', link: 'https://sass-lang.com/', image: 'sass.svg' },
+		{ name: 'JavaScript', link: 'http://www.w3schools.com/js/DEFAULT.asp', image: 'javascript.png' },
+		{ name: 'TypeScript', link: 'https://www.typescriptlang.org/', image: 'typescript.svg' },
+		{ name: 'CodeMirror', link: 'https://codemirror.net/', image: 'codemirror.svg' },
+		{ name: 'Vue', link: 'https://vuejs.org/', image: 'vue.png' },
+		{ name: 'Chart.js', link: 'https://www.chartjs.org/', image: 'chartjs.png' },
+		{ name: 'KaTeX', link: 'https://katex.org/', image: 'katex.png' },
+		{ name: 'webpack', link: 'https://webpack.js.org/', image: 'webpack.png' },
+		{ name: 'npm', link: 'https://www.npmjs.com/', image: 'npm.svg' },
+		{ name: 'Vuetify', link: 'https://vuetifyjs.com/en/', image: 'vuetify.png' },
+		{ name: 'Markdown it', link: 'https://markdown-it.github.io/', image: 'markdown-it.svg' },
+		{ name: 'XP.css', link: 'https://botoxparty.github.io/XP.css/', image: 'xp-css.png' },
+	]},
+	{ name: 'server', items: [
+		{ name: 'Debian', link: 'https://www.debian.org/', image: 'debian.svg' },
+		{ name: 'NGINX', link: 'https://www.nginx.com/', image: 'nginx.svg' },
+		{ name: 'PostgreSQL', link: 'https://www.postgresql.org/', image: 'postgresql.svg' },
+		{ name: 'Java', link: 'http://www.java.com/fr/about/', image: 'java.png' },
+		{ name: 'PHP', link: 'http://www.php.net/', image: 'php.png' },
+		{ name: 'APCu', link: 'https://www.php.net/manual/en/book.apcu.php', image: 'apcu.svg' },
+		{ name: 'Redis', link: 'https://redis.io/', image: 'redis.svg' },
+		{ name: 'Python', link: 'https://www.python.org/', image: 'python.svg' },
+		{ name: 'Docker', link: 'https://www.docker.com/', image: 'docker.webp' },
+		{ name: 'Traefik', link: 'https://traefik.io/traefik/', image: 'traefik.svg' },
+	]},
+	{ name: 'tools', items: [
+		{ name: 'git', link: 'http://git-scm.com/', image: 'git.png' },
+		{ name: 'GitHub', link: 'https://github.com/', image: 'github.svg' },
+		{ name: 'VSCode', link: 'https://code.visualstudio.com/', image: 'vscode.svg' },
+		{ name: 'GIMP', link: 'https://www.gimp.org/fr/', image: 'gimp.svg' },
+		{ name: 'Inkscape', link: 'https://inkscape.org/fr/', image: 'inkscape.svg' },
+		{ name: 'Blender', link: 'https://www.blender.org/', image: 'blender.svg' },
+	]},
+]
 
-		mounted() {
-			const github = document.createElement('script')
-			github.src = 'https://buttons.github.io/buttons.js'
-			github.async = true
-			const block = this.$refs.github as HTMLElement
-			if (block) { block.appendChild(github) }
+const team = computed(() => [[
+	{ name: 'Pilow', id: 1, grade: 'admin', role: t('team_web_graphism') + '<br>' + t('team_leekscript_fights') },
+	{ name: 'SilentHunter', id: 11, grade: 'admin', role: t('team_admin_server') },
+	{ name: 'TheTintin', id: 38357, grade: 'moderator', role: t('main.grade_moderator') },
+	{ name: 'Ref', id: 43276, grade: 'moderator', role: t('main.grade_moderator') },
+], [
+	{ name: 'Dawyde', id: 2, grade: 'former admin', role: t('former_dev') },
+	{ name: 'mistigis', id: 100, grade: 'former moderator', role: t('former_mod') },
+	{ name: 'McNalYoo', id: 273, grade: 'former moderator', role: t('former_mod') },
+	{ name: 'jojo123', id: 8773, grade: 'former moderator', role: t('former_mod') },
+	{ name: 'Silosis', id: 27228, grade: 'former moderator', role: t('former_mod') },
+]])
 
-			LeekWars.get<Farmer[]>('farmer/contributors').then(contributors => {
-				this.contributors = contributors.filter(c => c.id !== 43276 && c.id !== 8773 && c.id !== 38357)
-				this.contributors.sort((a, b) => Math.random() - 0.5)
-			})
-		}
-	}
+const contributors = ref<Farmer[]>([])
+const github = useTemplateRef<HTMLElement>('github')
+
+LeekWars.setTitle(t('title'))
+LeekWars.setActions([{image: 'github_white.png', click: () => window.open('https://github.com/leek-wars/leek-wars', '_newtab')}])
+
+onMounted(() => {
+	const script = document.createElement('script')
+	script.src = 'https://buttons.github.io/buttons.js'
+	script.async = true
+	if (github.value) github.value.appendChild(script)
+
+	LeekWars.get<Farmer[]>('farmer/contributors').then(list => {
+		contributors.value = list.filter(c => c.id !== 43276 && c.id !== 8773 && c.id !== 38357)
+		contributors.value.sort(() => Math.random() - 0.5)
+	})
+})
 </script>
 
 <style lang="scss" scoped>

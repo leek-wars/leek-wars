@@ -26,16 +26,20 @@
 	</popup>
 </template>
 
-<script lang="ts">
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import ChangelogVersion from './changelog-version.vue'
+<script setup lang="ts">
+import { mixins } from '@/model/i18n'
+import ChangelogVersion from './changelog-version.vue'
 
-	@Options({ name: 'changelog-dialog', i18n: {}, emits: ['update:modelValue'], components: { ChangelogVersion } })
-	export default class ChangelogDialog extends Vue {
-		@Prop({required: true}) changelog!: any
-		@Prop() modelValue!: boolean
+defineOptions({ name: 'changelog-dialog', i18n: {}, mixins: [...mixins] })
 
-	}
+defineProps<{
+	changelog: any
+	modelValue?: boolean
+}>()
+
+defineEmits<{
+	'update:modelValue': [value: boolean]
+}>()
 </script>
 
 <style lang="scss" scoped>

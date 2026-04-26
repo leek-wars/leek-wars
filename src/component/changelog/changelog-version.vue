@@ -21,62 +21,54 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { mixins } from '@/model/i18n'
 
-	/**
-	 * mogrify -format webp -quality 90 *.jpg *.png
-	 */
-	@Options({ name: 'changelog-version', i18n: {} })
-	export default class ChangelogVersion extends Vue {
+defineOptions({ name: 'changelog-version', i18n: {}, mixins: [...mixins] })
 
-		@Prop({required: true}) version!: any
-		changelog: any = null
+const props = defineProps<{
+	version: any
+}>()
 
-		created() {
-			this.update()
-		}
+const { t, locale } = useI18n()
+const changelog = ref<any>(null)
 
-		@Watch('$i18n.locale')
-		update() {
-import(/* webpackChunkName: "changelog-[request]" */ `@/component/changelog/changelog.${this.$i18n.locale}.yaml`).then((module) => {
-				this.changelog = module.default
-			})
-		}
+function update() {
+	import(/* webpackChunkName: "changelog-[request]" */ `@/component/changelog/changelog.${locale.value}.yaml`).then((module) => {
+		changelog.value = module.default
+	})
+}
 
-		get changes() {
-			if (!this.version || !this.changelog) { return [] }
-			return this.changelog[this.version.version]
-		}
+watch(locale, update)
+update()
 
-		get title() {
-			return this.changes.title
-		}
+const changes = computed(() => {
+	if (!props.version || !changelog.value) return []
+	return changelog.value[props.version.version]
+})
 
-		get sections() {
-			if (!this.version) { return [] }
+const sections = computed(() => {
+	if (!props.version) return []
 
-			const changes = []
-			if (Array.isArray(this.changes)) {
-				changes.push(this.changes)
-			} else {
-				for (const key in this.changes) {
-					if (key === 'title') { continue }
-					changes.push(this.changes[key])
-				}
-			}
-			const regex = /#img_(\w+)/g
-			return changes.map((cat: any) => cat
-				.map((c: any) => {
-					return {
-						text: c.replace('# ', '').replace('#ai', '<span class="ai" title="' + this.$t('changelog.need_ai_change') + '">AI</span>').replace(regex, ''),
-						images: Array.from(c.matchAll(regex), (m: any) => m[1])
-					}
-				})
-			)
+	const collected = []
+	if (Array.isArray(changes.value)) {
+		collected.push(changes.value)
+	} else {
+		for (const key in changes.value) {
+			if (key === 'title') continue
+			collected.push(changes.value[key])
 		}
 	}
+	const regex = /#img_(\w+)/g
+	return collected.map((cat: any) => cat
+		.map((c: any) => ({
+			text: c.replace('# ', '').replace('#ai', '<span class="ai" title="' + t('changelog.need_ai_change') + '">AI</span>').replace(regex, ''),
+			images: Array.from(c.matchAll(regex), (m: any) => m[1])
+		}))
+	)
+})
 </script>
 
 <style lang="scss" scoped>

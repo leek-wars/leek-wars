@@ -37,15 +37,15 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue } from 'vue-property-decorator'
-	@Options({ name: "conditions", i18n: {} })
-	export default class Conditions extends Vue {
-		created() {
-			LeekWars.setTitle(this.$t('title'))
-		}
-	}
+<script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+import { LeekWars } from '@/model/leekwars'
+import { mixins } from '@/model/i18n'
+
+defineOptions({ name: 'conditions', i18n: {}, mixins: [...mixins] })
+
+const { t } = useI18n()
+LeekWars.setTitle(t('title'))
 </script>
 
 <style lang="scss" scoped>

@@ -63,7 +63,11 @@ function retryDelay(retry: number) {
 
 type ExtendedPromise<T> = Promise<T> & {
 	abort: () => void
-	error: (callback: (error: any) => void) => Promise<T>
+	error: (callback: (error: any) => void) => ExtendedPromise<T>
+	then<TResult1 = T, TResult2 = never>(
+		onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
+		onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
+	): ExtendedPromise<TResult1 | TResult2>
 }
 
 function request<T = any>(method: string, url: string, params?: any): ExtendedPromise<T> {
@@ -265,6 +269,7 @@ const WEAPON_BY_NAME = weaponByName(WEAPONS)
 class Language {
 	public code!: string
 	public name!: string
+	public country!: string
 	public flag!: string
 	public chat!: number
 	public encyclopedia!: string
