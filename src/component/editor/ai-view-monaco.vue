@@ -132,35 +132,28 @@ export default class AIViewMonaco extends Vue {
 		this.editor.onDidFocusEditorWidget(() => {
 			this.$emit('focus')
 		})
+		// e.code is empty on mobile virtual keyboards (notably Firefox Android),
+		// so we also check e.browserEvent.key as a fallback.
+		const isKey = (e: any, key: string) => e.code === key || e.browserEvent?.key === key
 		this.editor.onKeyDown((e) => {
-			if (e.code === 'Enter') {
-				if (this.console) {
-					e.preventDefault()
-				}
+			if (this.console && isKey(e, 'Enter')) {
+				e.preventDefault()
 			}
 		})
 		this.editor.onKeyUp((e) => {
-			// console.log("keyup", e)
 			if (e.code === 'Delete') {
 				e.stopPropagation()
 			}
-			if (e.code === 'Enter') {
-				if (this.console) {
-					this.$emit('enter')
-					e.preventDefault()
-				}
-			}
-			if (e.code === 'ArrowDown') {
-				if (this.console) {
-					this.$emit('down')
-					e.preventDefault()
-				}
-			}
-			if (e.code === 'ArrowUp') {
-				if (this.console) {
-					this.$emit('up')
-					e.preventDefault()
-				}
+			if (!this.console) return
+			if (isKey(e, 'Enter')) {
+				this.$emit('enter')
+				e.preventDefault()
+			} else if (isKey(e, 'ArrowDown')) {
+				this.$emit('down')
+				e.preventDefault()
+			} else if (isKey(e, 'ArrowUp')) {
+				this.$emit('up')
+				e.preventDefault()
 			}
 		})
 
