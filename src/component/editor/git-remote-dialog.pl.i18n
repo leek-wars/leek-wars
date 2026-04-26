@@ -14,6 +14,7 @@
 	"or_pat": "Albo użyj Personal Access Token:",
 	"pat_placeholder": "Token dostępu",
 	"instance_placeholder": "https://codeberg.org",
+	"self_hosted": "Instancja self-hosted",
 	"save": "Zapisz",
 	"add": "Dodaj",
 	"invalid_token": "Token odrzucony przez dostawcę.",

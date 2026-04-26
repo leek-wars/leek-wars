@@ -44,7 +44,11 @@
 						<span>{{ p.label }}</span>
 					</div>
 				</div>
-				<input v-if="patProvider === 'forgejo'" v-model="patInstanceUrl" :placeholder="$t('instance_placeholder')" class="input instance-input" />
+				<label v-if="patProvider !== 'forgejo'" class="self-hosted-toggle">
+					<input v-model="selfHosted" type="checkbox" />
+					<span>{{ $t('self_hosted') }}</span>
+				</label>
+				<input v-if="showInstanceField" v-model="patInstanceUrl" :placeholder="instancePlaceholder" class="input instance-input" />
 				<div class="pat-input">
 					<input v-model="patToken" type="password" :placeholder="$t('pat_placeholder')" class="input" @keyup.enter="savePat" />
 					<div class="pat-save" :class="{ disabled: !canSavePat }" @click="savePat">{{ $t('save') }}</div>
@@ -64,6 +68,11 @@
 	import Popup from '@/component/popup.vue'
 	import { gitCall } from './git-log'
 
+	function urlHost(url: string | null | undefined): string | null {
+		if (!url) return null
+		try { return new URL(url).hostname.toLowerCase() } catch { return null }
+	}
+
 	@Options({ name: 'git-remote-dialog', i18n: {}, components: { Popup }, mixins: [...mixins], emits: ['update:modelValue'] })
 	export default class GitRemoteDialog extends Vue {
 		@Prop() modelValue!: boolean
@@ -78,18 +87,34 @@
 		patProvider: 'github' | 'gitlab' | 'bitbucket' | 'forgejo' = 'github'
 		patInstanceUrl: string = ''
 		patToken: string = ''
+		selfHosted: boolean = false
 		error: string = ''
 		providers = [
-			{ id: 'github', label: 'GitHub', icon: 'mdi-github' },
-			{ id: 'gitlab', label: 'GitLab', icon: 'mdi-gitlab' },
-			{ id: 'bitbucket', label: 'Bitbucket', icon: 'mdi-bitbucket' },
-			{ id: 'forgejo', label: 'Forgejo', icon: 'mdi-git' }
+			{ id: 'github',    label: 'GitHub',    icon: 'mdi-github',    publicHost: 'github.com',    placeholder: 'https://github.example.com' },
+			{ id: 'gitlab',    label: 'GitLab',    icon: 'mdi-gitlab',    publicHost: 'gitlab.com',    placeholder: 'https://gitlab.example.com' },
+			{ id: 'bitbucket', label: 'Bitbucket', icon: 'mdi-bitbucket', publicHost: 'bitbucket.org', placeholder: 'https://bitbucket.example.com' },
+			{ id: 'forgejo',   label: 'Forgejo',   icon: 'mdi-git',       publicHost: null,            placeholder: '' },
 		]
+
+		get showInstanceField(): boolean {
+			return this.patProvider === 'forgejo' || this.selfHosted
+		}
+
+		get instancePlaceholder(): string {
+			const p = this.providers.find(p => p.id === this.patProvider)
+			return p?.placeholder || (this.$t('instance_placeholder') as string)
+		}
 
 		get canSavePat(): boolean {
 			if (!this.patToken) return false
-			if (this.patProvider === 'forgejo' && !this.patInstanceUrl.trim()) return false
+			if (this.showInstanceField && !this.patInstanceUrl.trim()) return false
 			return true
+		}
+
+		@Watch('patProvider')
+		onProviderChange() {
+			this.selfHosted = false
+			this.patInstanceUrl = ''
 		}
 
 		hasCredential(provider: string): boolean {
@@ -97,17 +122,17 @@
 		}
 
 		providerIcon(provider: string): string {
-			if (provider === 'github') return 'mdi-github'
-			if (provider === 'gitlab') return 'mdi-gitlab'
-			if (provider === 'bitbucket') return 'mdi-bitbucket'
-			return 'mdi-git'
+			return this.providers.find(p => p.id === provider)?.icon || 'mdi-git'
 		}
 
 		providerFromUrl(url: string): string {
-			if (!url) return 'forgejo'
-			if (url.indexOf('github.com') !== -1) return 'github'
-			if (url.indexOf('gitlab.com') !== -1) return 'gitlab'
-			if (url.indexOf('bitbucket.org') !== -1) return 'bitbucket'
+			const host = urlHost(url)
+			if (!host) return 'forgejo'
+			const pub = this.providers.find(p => p.publicHost === host)
+			if (pub) return pub.id
+			for (const cred of this.credentials) {
+				if (cred.instance_url && urlHost(cred.instance_url) === host) return cred.provider
+			}
 			return 'forgejo'
 		}
 
@@ -190,11 +215,12 @@
 		async savePat() {
 			if (!this.canSavePat) return
 			this.error = ''
-			const instance = this.patProvider === 'forgejo' ? this.patInstanceUrl.trim() : ''
+			const instance = this.showInstanceField ? this.patInstanceUrl.trim() : ''
 			try {
 				await gitCall('git-credential/save-pat', { provider: this.patProvider, token: this.patToken, instance_url: instance })
 				this.patToken = ''
 				this.patInstanceUrl = ''
+				this.selfHosted = false
 				this.loadCredentials()
 			} catch (e: any) {
 				const key = e?.error === 'invalid_instance_url' ? 'invalid_instance_url' : 'invalid_token'
@@ -459,6 +485,17 @@ body.dark .credential-info {
 				&.bitbucket:not(.active) .v-icon { color: #2684ff; }
 				&.forgejo:not(.active)   .v-icon { color: #629324; }
 			}
+		}
+		.self-hosted-toggle {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			margin-bottom: 6px;
+			font-size: 12px;
+			color: #888;
+			cursor: pointer;
+			user-select: none;
+			input { margin: 0; cursor: pointer; }
 		}
 		.instance-input {
 			display: block;
