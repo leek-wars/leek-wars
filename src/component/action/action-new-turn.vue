@@ -8,16 +8,18 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { Action } from '@/model/action'
-	import { Report } from '@/model/fight'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import type { Action } from '@/model/action'
+import type { Report } from '@/model/fight'
 
-	@Options({})
-	export default class ActionNewTurn extends Vue {
-		@Prop() action!: Action
-		@Prop() a!: number
-		@Prop() report!: Report
-		@Prop() hasErrWarn!: boolean
-	}
+defineProps<{
+	action: Action
+	a: number
+	report: Report
+	hasErrWarn: boolean
+}>()
+
+defineEmits<{
+	goToTurn: [turn: number]
+}>()
 </script>

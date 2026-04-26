@@ -15,5 +15,8 @@ declare module 'vue' {
 			time: (value: number) => string
 			duration: (value: number) => string
 		}
+		// Injecté par la mixin globale dans src/model/vue.ts
+		LeekWars: typeof import('@/model/leekwars').LeekWars
+		env: typeof import('@/env').env
 	}
 }

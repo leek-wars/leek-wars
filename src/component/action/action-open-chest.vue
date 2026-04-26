@@ -25,18 +25,16 @@
 	</i18n-t>
 </template>
 
-<script lang="ts">
-	import { Action } from '@/model/action'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import ActionLeekElement from '../report/action-leek.vue'
-	import { ITEM_CATEGORY_NAME } from '@/model/item'
-	import { Leek } from '@/model/leek'
+<script setup lang="ts">
+import type { Action } from '@/model/action'
+import Leek from '../report/action-leek.vue'
+import { ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED } from '@/model/item'
 
-	@Options({ components: { leek: ActionLeekElement } })
-	export default class ActionOpenChest extends Vue {
-		@Prop() action!: Action
-		@Prop() a!: number
-		@Prop() leeks!: {[key: number]: Leek}
-		ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
-	}
+const ITEM_CATEGORY_NAME: Record<number, string> = ITEM_CATEGORY_NAME_TYPED
+
+defineProps<{
+	action: Action
+	a: number
+	leeks: Record<number, any>
+}>()
 </script>

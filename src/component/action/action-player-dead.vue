@@ -7,20 +7,16 @@
 	</i18n-t>
 </template>
 
-<script lang="ts">
-	import { Action } from '@/model/action'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import ActionLeekElement from '../report/action-leek.vue'
-	import { Leek } from '@/model/leek'
-	import { TEAM_COLORS } from '@/model/team'
+<script setup lang="ts">
+import type { Action } from '@/model/action'
+import Leek from '../report/action-leek.vue'
+import { TEAM_COLORS } from '@/model/team'
 
-	@Options({ components: { leek: ActionLeekElement } })
-	export default class ActionPlayerDead extends Vue {
-		@Prop() action!: Action
-		@Prop() a!: number
-		@Prop() leeks!: {[key: number]: Leek}
-		TEAM_COLORS = TEAM_COLORS
-	}
+defineProps<{
+	action: Action
+	a: number
+	leeks: Record<number, any>
+}>()
 </script>
 
 <style lang="scss" scoped>

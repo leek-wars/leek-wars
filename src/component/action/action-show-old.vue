@@ -10,14 +10,13 @@
 	</i18n-t>
 </template>
 
-<script lang="ts">
-	import { Action } from '@/model/action'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import ActionLeekElement from '../report/action-leek.vue'
+<script setup lang="ts">
+import type { Action } from '@/model/action'
+import Leek from '../report/action-leek.vue'
 
-	@Options({ components: { leek: ActionLeekElement } })
-	export default class ActionShowOld extends Vue {
-		@Prop() action!: Action
-		@Prop() a!: number
-	}
+defineProps<{
+	action: Action
+	a: number
+	leeks: Record<number, any>
+}>()
 </script>

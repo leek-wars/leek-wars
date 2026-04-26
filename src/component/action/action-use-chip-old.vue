@@ -12,16 +12,16 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { Action } from '@/model/action'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import ActionLeekElement from '../report/action-leek.vue'
-import { Leek } from '@/model/leek'
+<script setup lang="ts">
+import type { Action } from '@/model/action'
+import Leek from '../report/action-leek.vue'
+import { CHIPS as CHIPS_TYPED } from '@/model/chips'
 
-	@Options({ components: { leek: ActionLeekElement } })
-	export default class ActionUseChipOld extends Vue {
-		@Prop() action!: Action
-		@Prop() a!: number
-		@Prop() leeks!: {[key: number]: Leek}
-	}
+const CHIPS: Record<number, any> = CHIPS_TYPED
+
+defineProps<{
+	action: Action
+	a: number
+	leeks: Record<number, any>
+}>()
 </script>
