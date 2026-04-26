@@ -17,7 +17,7 @@
 	"ai_restore": "Återställer AI **ai_id** och tar bort den från papperskorgen.",
 	"ai_save": "Sparar AI **ai_id** och returnerar eventuella fel.",
 	"ai_strict": "Aktiverar eller inaktiverar strikt läge för AI **ai_id**.",
-	"ai_sync": "Tar en lista med AI-id:n **ais** i formen `{ ai: timestamp }` och returnerar koderna för AI:er som inte längre är uppdaterade.",
+	"ai_sync": "Tar en lista med AI-id:n **ais** i formen `{'{'} ai: timestamp {'}'}` och returnerar koderna för AI:er som inte längre är uppdaterade.",
 	"ai_test-scenario": "Startar scenariot **scenario_id** eller standardscenariot för AI **ai_id** om **scenario_id** är `0`.",
 	"ai_version": "Ändrar AI-versionen **ai_id** till **version**.",
 	"ai-folder_change-folder": "Flyttar mappen **folder_id** till **dest_folder_id**.",

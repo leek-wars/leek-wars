@@ -9,13 +9,13 @@
 	"unmute": "Ge ordet",
 	"unmute_popup": "Är du säker på att du vill lämna tillbaka ordet till {farmer}?",
 	"reason_1": "Felaktigt uppfödarnamn",
-	"reason_1_action": "Bondens namn kommer att ersättas med 'Farmer@<id>' och det felande namnet kommer att läggas till i listan över förbjudna ord.",
+	"reason_1_action": "Uppfödarens namn kommer att ersättas med 'Farmer{'@'}<id>' och det felande namnet kommer att läggas till i listan över förbjudna ord.",
 	"reason_2": "Felaktigt purjolöknamn",
-	"reason_2_action": "Purjolökens namn kommer att ersättas med 'Leek@<id>' och det felande namnet kommer att läggas till i listan med dåliga ord.",
+	"reason_2_action": "Purjolökens namn kommer att ersättas med 'Leek{'@'}<id>' och det felande namnet kommer att läggas till i listan över förbjudna ord.",
 	"reason_3": "Felaktigt AI-namn",
-	"reason_3_action": "AI:s namn kommer att ersättas med 'AI@<id>' och det felande namnet kommer att läggas till i listan över dåliga ord.",
+	"reason_3_action": "AI:ns namn kommer att ersättas med 'AI{'@'}<id>' och det felande namnet kommer att läggas till i listan över förbjudna ord.",
 	"reason_4": "Felaktigt lagnamn",
-	"reason_4_action": "Lagnamnet kommer att ersättas med 'Team@<id>' och det felande namnet kommer att läggas till i listan över dåliga ord.",
+	"reason_4_action": "Lagnamnet kommer att ersättas med 'Team{'@'}<id>' och det felande namnet kommer att läggas till i listan över förbjudna ord.",
 	"reason_5": "Felaktig lagbeskrivning",
 	"reason_5_action": "Lagbeskrivningen kommer att raderas.",
 	"reason_6": "Felaktiga say()-texter i strid",
@@ -49,7 +49,7 @@
 	"report_farmer_for_reason": "Rapportera {0} av vilken anledning?",
 	"report_informations": "Ytterligare information (valfritt)",
 	"select_leek": "Välj en purjolök",
-	"severity_s": "gravitation {0}",
+	"severity_s": "allvarlighet {0}",
 	"thank_you_for_reporting": "Tack för att du rapporterade",
-	"delete": "RADERA"
+	"delete": "Radera"
 }

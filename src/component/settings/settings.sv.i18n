@@ -1,8 +1,8 @@
 {
 	"account": "Konto",
 	"activate_discrete_mode": "Aktivera tyst läge",
-	"advanced": "Förskott",
-	"change": "Att förändra",
+	"advanced": "Avancerat",
+	"change": "Ändra",
 	"change_email": "Byta e-mail",
 	"change_email_send": "Skicka bekräftelsemail",
 	"change_email_sent": "Bekräftelsemail skickas till den aktuella adressen",

@@ -23,5 +23,7 @@
 	"error_already_have_candidacy": "Du har redan en pågående ansökan.",
 	"error_already_in_team": "Du är redan i ett lag.",
 	"error_team_full": "Detta lag är fullt.",
-	"error_too_many_candidacies": "Du har redan 5 pågående ansökningar."
+	"error_too_many_candidacies": "Du har redan 5 pågående ansökningar.",
+	"show_closed": "Visa stängda",
+	"closed": "Stängt"
 }

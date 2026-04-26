@@ -1,10 +1,10 @@
 {
 	"allies_killed": "Allierade dödade",
 	"allies_killed_title": "Antal dödade allierade",
-	"br": "Kungliga strider",
+	"br": "Battle Royales",
 	"br_title": "Vann Battle Royales",
-	"chips": "Loppor",
-	"chips_title": "Antal använda marker",
+	"chips": "Chips",
+	"chips_title": "Antal använda chips",
 	"connection_title": "Sammankopplade dagar",
 	"clovers": "Klöver",
 	"clovers_title": "Klöver hittades",
@@ -12,7 +12,7 @@
 	"distance": "Distans",
 	"distance_title": "Totalt tillryggalagt sträcka",
 	"farmers": "Uppfödare",
-	"fights": "Slagsmål",
+	"fights": "Strider",
 	"fights_title": "Totalt antal slagsmål",
 	"fun": "Roligt",
 	"hide_inactives": "Göm inaktiva",
@@ -22,7 +22,7 @@
 	"money": "Pengar",
 	"my_farmer": "Min uppfödare",
 	"my_leek": "Min purjolök",
-	"my_team": "Mitt gäng",
+	"my_team": "Mitt lag",
 	"place": "Plats",
 	"results": "Resultat",
 	"richest_title": "Pengar tjänade",
@@ -53,5 +53,8 @@
 	"turrets_killed": "Torn",
 	"turrets_killed_title": "Torn förstörda",
 	"damage": "Skada",
-	"damage_title": "Skada orsakad"
+	"damage_title": "Skada orsakad",
+	"composition": "Komposition",
+	"compositions": "Kompositioner",
+	"won": "Segrar"
 }

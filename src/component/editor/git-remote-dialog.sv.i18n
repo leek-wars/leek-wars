@@ -1,0 +1,21 @@
+{
+	"title": "Inställningar för remote",
+	"remotes": "Remotes",
+	"no_remotes": "Ingen remote konfigurerad.",
+	"remote_name": "Namn (t.ex. origin)",
+	"remote_url": "https://github.com/user/repo.git",
+	"select_repo": "Välj ett arkiv...",
+	"authentication": "Autentisering",
+	"connected_as": "Ansluten som {0}",
+	"connected_anonymous": "Ansluten",
+	"install_github_app": "Installera GitHub App",
+	"install_hint": "Välj de arkiv som du vill ge åtkomst till vid installationen.",
+	"github_app": "GitHub App",
+	"or_pat": "Eller använd en Personal Access Token:",
+	"pat_placeholder": "Åtkomsttoken",
+	"instance_placeholder": "https://codeberg.org",
+	"save": "Spara",
+	"add": "Lägg till",
+	"invalid_token": "Token avvisad av providern.",
+	"invalid_instance_url": "Ogiltig instans-URL eller oåtkomlig från servern."
+}

@@ -12,5 +12,12 @@
 	"end_edition": "Avsluta redigering",
 	"editing_by_x": "Redigeras för närvarande av {0}",
 	"redirected_from": "Omdirigerad från {0}",
-	"aliases": "Även känd som: {0}"
+	"aliases": "Även känd som: {0}",
+	"history": "Historik",
+	"initial": "skapande",
+	"child_pages": "Undersidor",
+	"referencing_translations": "Länkade översättningar",
+	"linked_from": "Sidor som innehåller en länk",
+	"n_references": "referens | referens | referenser",
+	"views": "visningar"
 }

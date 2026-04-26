@@ -1,7 +1,7 @@
 {
 	"answer": "Svara",
 	"cancel": "Annullera",
-	"delete": "RADERA",
+	"delete": "Radera",
 	"deleted_message": "Inlägget raderat",
 	"do_you_want_to_delete_message": "Är du säker på att du vill ta bort det här meddelandet?",
 	"do_you_want_to_delete_topic": "Är du säker på att du vill ta bort det här ämnet?",
@@ -28,7 +28,7 @@
 	"undoable_action": "Denna åtgärd är oåterkallelig.",
 	"unsubscribe": "Avsluta prenumeration från ämnet",
 	"unlock": "Låsa upp",
-	"unpin": "Att ta ner",
+	"unpin": "Lossa",
 	"unsolved": "Olöst",
 	"create_issue": "Skapa issue",
 	"move": "Flytta",
@@ -40,5 +40,9 @@
 	"hide_topic": "Dölj",
 	"show_topic": "Visa",
 	"set_release": "Release",
-	"release_hint": "Ange 0 för att ta bort releasen"
+	"release_hint": "Ange 0 för att ta bort releasen",
+	"old_topic_warning": "Det senaste inlägget i detta ämne är mer än ett år gammalt.",
+	"old_topic_title": "Gammalt ämne",
+	"old_topic_confirm": "Det senaste inlägget i detta ämne är mer än ett år gammalt. Är du säker på att du vill svara?",
+	"see_changelog": "Se changelog för {0}"
 }
