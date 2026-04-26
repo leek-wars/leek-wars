@@ -62,7 +62,7 @@
 							<router-link :to="'/forum/category-' + result.cid + '/topic-' + result.tid" class="title">
 								<v-icon v-if="result.resolved" :title="$t('resolved')" class="attr resolved">mdi-check-circle</v-icon>
 								<v-icon v-if="result.closed" :title="$t('locked')" class="attr">mdi-lock</v-icon>
-								<span>{{ result.title }}</span>
+								<span v-html="result.title"></span>
 							</router-link>
 							<i18n-t tag="div" class="info" keypath="post_by_x_the_x_in_x">
 								<template #farmer>
@@ -81,7 +81,7 @@
 								</template>
 							</i18n-t>
 							<router-link :to="'/forum/category-' + result.cid + '/topic-' + result.tid + '/page-' + (floor(result.pos / 20) + 1) + (result.mid !== -1 ? '#message-' + result.mid : '')">
-								<div class="headline">{{ result.message }}</div>
+								<div class="headline" v-html="result.message"></div>
 							</router-link>
 							<div v-if="result.vu !== 0 || result.vd !== 0" class="votes">
 								<div :class="{zero: result.vu === 0}" class="vote up">
@@ -141,6 +141,10 @@
 		count: number = 0
 		floor = Math.floor
 
+		highlight(text: string) {
+			return LeekWars.protect(text).replace(/&lt;b&gt;/g, '<b>').replace(/&lt;\/b&gt;/g, '</b>')
+		}
+
 		get canSearch() {
 			return this.options.query || this.options.farmer || this.options.admin
 		}
@@ -172,6 +176,10 @@
 			// if (this.canSearch) {
 				this.searchStarted = true
 				LeekWars.get('forum/search2/' + (this.options.query.replace(/ /g, '+') || '-') + '/' + (this.options.farmer || '-') + '/' + this.options.category + '/' + this.options.page + '/' + (this.options.order || 'pertinence') + '/' + (this.options.admin || false) + '/' + (this.options.moderator || false) + '/' + this.options.resolved).then(data => {
+					for (const r of data.results) {
+						r.title = this.highlight(r.title)
+						r.message = this.highlight(r.message)
+					}
 					this.results = data.results
 					this.pages = data.pages
 					this.count = data.count
