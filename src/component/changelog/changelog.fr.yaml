@@ -49,6 +49,7 @@
     - "Player en plein écran affiché très petit tant que le combat n'était pas chargé."
     - "Correction des traductions du didacticiel."
     - "#ai Stack traces des plantages d'IA affichées après la limite de debug (merci à Kraspen)."
+    - "#ai Boutons Git (push, pull, remotes) cachés quand le panneau latéral de l'éditeur était trop étroit."
 
 246:
   title: "3 modes Guerre, Chasse aux coffres et Colosse, améliorations de l'éditeur et du LeekScript."

@@ -1023,6 +1023,8 @@
 	padding: 6px 8px;
 	border-top: 1px solid rgba(128, 128, 128, 0.2);
 	flex-shrink: 0;
+	flex-wrap: wrap;
+	gap: 4px;
 	font-size: 13px;
 }
 .branch-picker {
@@ -1033,12 +1035,18 @@
 	padding: 2px 4px;
 	border-radius: 3px;
 	user-select: none;
+	min-width: 0;
+	max-width: 100%;
 	&:hover { background: rgba(128, 128, 128, 0.15); }
-	> .v-icon { font-size: 16px; }
-	.branch-caret { font-size: 18px; opacity: 0.7; }
+	> .v-icon { font-size: 16px; flex-shrink: 0; }
+	.branch-caret { font-size: 18px; opacity: 0.7; flex-shrink: 0; }
 }
 .branch-name {
 	font-weight: 500;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	min-width: 0;
 }
 .branch-list .create-branch { color: #5fad1b; }
 .branch-delete {
@@ -1051,6 +1059,8 @@
 	display: flex;
 	align-items: center;
 	gap: 4px;
+	flex-shrink: 0;
+	margin-left: auto;
 }
 .sync-btn {
 	display: flex;

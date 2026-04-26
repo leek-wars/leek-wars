@@ -49,6 +49,7 @@
     - "Fullscreen player appeared very small while the fight was still loading."
     - "Fixed tutorial translations."
     - "#ai AI crash stack traces now shown even after the debug limit is reached (thanks to Kraspen)."
+    - "#ai Git buttons (push, pull, remotes) were hidden when the editor's side panel was too narrow."
 
 246:
   title: "3 new modes: War, Chest Hunt and Colossus, editor and LeekScript improvements."

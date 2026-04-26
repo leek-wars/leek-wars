@@ -49,6 +49,7 @@
     - "Player a schermo intero appariva molto piccolo finché il combattimento non era caricato."
     - "Correzione delle traduzioni del tutorial."
     - "#ai Stack trace dei crash IA mostrati dopo il limite di debug (grazie a Kraspen)."
+    - "#ai Pulsanti Git (push, pull, remotes) nascosti quando il pannello laterale dell'editor era troppo stretto."
 
 246:
   title: "3 nuove modalità: Guerra, Caccia ai forzieri e Colosso, miglioramenti dell'editor e del LeekScript."
