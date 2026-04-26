@@ -6,16 +6,15 @@
 	</rich-tooltip-farmer>
 </template>
 
-<script lang="ts">
-	import { Farmer } from '@/model/farmer'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+<script setup lang="ts">
+import type { Farmer } from '@/model/farmer'
+import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Options({ name: 'lw-pseudo', components: { RichTooltipFarmer } })
-	export default class Pseudo extends Vue {
+defineOptions({ name: 'lw-pseudo' })
 
-		@Prop({required: true}) farmer!: Farmer
-	}
+defineProps<{
+	farmer: Farmer
+}>()
 </script>
 
 <style lang="scss" scoped>

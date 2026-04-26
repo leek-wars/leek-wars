@@ -21,19 +21,19 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	@Options({ name: "signup-result" })
-	export default class SignupResult extends Vue {
-		@Prop() result!: string
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 
-		get success() {
-			return this.result === 'success'
-		}
-		get farmer() {
-			return this.$route.params.farmer
-		}
-	}
+defineOptions({ name: 'signup-result' })
+
+const props = defineProps<{
+	result?: string
+}>()
+
+const route = useRoute()
+const success = computed(() => props.result === 'success')
+const farmer = computed(() => route.params.farmer)
 </script>
 
 <style lang="scss" scoped>

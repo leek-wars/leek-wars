@@ -17,20 +17,29 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	@Options({ name: "error" })
-	export default class Error extends Vue {
-		@Prop() title!: string
-		@Prop() message!: string
-		get _title() {
-			const t = 'main.' + this.$route.params.title
-			if (this.$te(t)) { return this.$t(t) }
-			return this.title || this.$t('main.error')
-		}
-		get _message() {
-			if (this.$route.params.message) { return this.$t('main.' + this.$route.params.message) }
-			return this.message || this.$t('main.page_not_found')
-		}
-	}
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
+
+defineOptions({ name: 'error' })
+
+const props = defineProps<{
+	title?: string
+	message?: string
+}>()
+
+const { t, te } = useI18n()
+const route = useRoute()
+
+const _title = computed(() => {
+	const k = 'main.' + route.params.title
+	if (te(k)) return t(k)
+	return props.title || t('main.error')
+})
+
+const _message = computed(() => {
+	if (route.params.message) return t('main.' + route.params.message)
+	return props.message || t('main.page_not_found')
+})
 </script>

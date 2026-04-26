@@ -17,15 +17,13 @@
 	</tr>
 </template>
 
-<script lang="ts">
-	import { RankingTeamRow } from '@/model/ranking'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
+<script setup lang="ts">
+import type { RankingTeamRow } from '@/model/ranking'
+import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 
-	@Options({ components: { RichTooltipTeam } })
-	export default class RankingTeamRowElement extends Vue {
-		@Prop({ required: true }) row!: RankingTeamRow
-	}
+defineProps<{
+	row: RankingTeamRow
+}>()
 </script>
 
 <style lang="scss" scoped>

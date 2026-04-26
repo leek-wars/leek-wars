@@ -4,10 +4,7 @@
 	</router-link>
 </template>
 
-<script lang="ts">
-	import { Options, Vue } from 'vue-property-decorator'
-	@Options({})
-	export default class MobileBR extends Vue {}
+<script setup lang="ts">
 </script>
 
 <style lang="scss" scoped>

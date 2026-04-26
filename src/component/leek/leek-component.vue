@@ -1,22 +1,25 @@
 <template lang="html">
 	<rich-tooltip-item v-if="component" v-slot="{ props }" :item="LeekWars.items[component.template]" :bottom="true">
-		<div class="component" :class="{dragging: $parent.draggedComponent && $parent.draggedComponent.template === component.template && $parent.draggedComponentLocation === 'leek'}" draggable="true" v-bind="props" @dragstart="$emit('componentDragStart', 'leek', component, $event)" @dragend="$emit('componentDragEnd', component)">
+		<div class="component" :class="{dragging: ($parent as any)?.draggedComponent && ($parent as any).draggedComponent.template === component.template && ($parent as any).draggedComponentLocation === 'leek'}" draggable="true" v-bind="props" @dragstart="$emit('componentDragStart', 'leek', component, $event)" @dragend="$emit('componentDragEnd', component)">
 			<img :src="'/image/component/' + LeekWars.items[component.template].name + '.png'">
 		</div>
 	</rich-tooltip-item>
-	<div v-else class="component" :class="{dashed: $parent.draggedComponent && $parent.draggedComponentLocation === 'farmer'}" @dragover="$emit('dragOver')" @drop="$emit('componentsDrop', 'leek', $event, 1)"></div>
+	<div v-else class="component" :class="{dashed: ($parent as any)?.draggedComponent && ($parent as any).draggedComponentLocation === 'farmer'}" @dragover="$emit('dragOver')" @drop="$emit('componentsDrop', 'leek', $event, 1)"></div>
 </template>
 
-<script lang="ts">
-import { Options } from '@/model/component'
-import { Options as VueComponent, Prop, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
 import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 
-@VueComponent({ components: { RichTooltipItem } })
-export default class LeekComponent extends Vue {
-	@Prop({ required: true }) component!: Component
-}
+defineProps<{
+	component: any
+}>()
 
+defineEmits<{
+	componentDragStart: [where: string, component: any, event: DragEvent]
+	componentDragEnd: [component: any]
+	dragOver: []
+	componentsDrop: [where: string, event: DragEvent, qty: number]
+}>()
 </script>
 
 <style lang="scss" scoped>

@@ -4,16 +4,17 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { locale } from '@/locale'
-	import { Options, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
+import { locale } from '@/locale'
 
-	@Options({ name: 'tutorial', i18n: {} })
-	export default class Tutorial extends Vue {
-		created() {
-			this.$router.replace('/encyclopedia/' + locale + '/' + (this.$t('main.tutorial') as string).replace(/ /g, '_'))
-		}
-	}
+defineOptions({ name: 'tutorial' })
+
+const { t } = useI18n()
+const router = useRouter()
+
+router.replace('/encyclopedia/' + locale + '/' + (t('main.tutorial') as string).replace(/ /g, '_'))
 </script>
 
 <style lang="scss" scoped>

@@ -14,10 +14,7 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { Options, Vue } from 'vue-property-decorator'
-	@Options({})
-	export default class FormattingRules extends Vue {}
+<script setup lang="ts">
 </script>
 
 <style lang="scss" scoped>

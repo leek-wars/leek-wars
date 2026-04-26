@@ -23,12 +23,12 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { PompTemplate } from '@/model/pomp'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import type { PompTemplate } from '@/model/pomp'
 
-	@Options({ name: 'pomp-preview' })
-	export default class PompPreview extends Vue {
-		@Prop() pomp!: PompTemplate
-	}
+defineOptions({ name: 'pomp-preview' })
+
+defineProps<{
+	pomp: PompTemplate
+}>()
 </script>

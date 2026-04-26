@@ -6,13 +6,12 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { HatTemplate } from '@/model/hat'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	@Options({})
-	export default class HatPreview extends Vue {
-		@Prop() hat!: HatTemplate
-	}
+<script setup lang="ts">
+import type { HatTemplate } from '@/model/hat'
+
+defineProps<{
+	hat: HatTemplate
+}>()
 </script>
 
 <style scoped lang="scss">

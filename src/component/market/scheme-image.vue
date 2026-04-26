@@ -5,17 +5,15 @@
 	</svg>
 </template>
 
-<script lang="ts">
-	import { SchemeTemplate } from '@/model/scheme'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import { ITEM_CATEGORY_NAME } from '@/model/item';
+<script setup lang="ts">
+import type { SchemeTemplate } from '@/model/scheme'
+import { ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED } from '@/model/item'
 
-	@Options({})
-	export default class SchemePreview extends Vue {
-		@Prop() scheme!: SchemeTemplate
+const ITEM_CATEGORY_NAME: Record<number, string> = ITEM_CATEGORY_NAME_TYPED
 
-		ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
-	}
+defineProps<{
+	scheme: SchemeTemplate
+}>()
 </script>
 
 <style scoped lang="scss">

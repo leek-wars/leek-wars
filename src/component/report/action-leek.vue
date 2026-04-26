@@ -2,12 +2,10 @@
 	<span :class="'team' + leek.team">{{ leek.translatedName }}</span>
 </template>
 
-<script lang="ts">
-	import { FightLeek } from '@/model/fight'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import type { FightLeek } from '@/model/fight'
 
-	@Options({})
-	export default class ActionLeekElement extends Vue {
-		@Prop({required: true}) leek!: FightLeek
-	}
+defineProps<{
+	leek: FightLeek
+}>()
 </script>

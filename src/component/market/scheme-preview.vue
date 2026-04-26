@@ -6,20 +6,28 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { SchemeTemplate } from '@/model/scheme'
-	import { defineAsyncComponent } from 'vue';
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import { emitter } from '@/model/vue';
-	const SchemeView = defineAsyncComponent(() => import('./scheme.vue'))
+<script setup lang="ts">
+import { defineAsyncComponent } from 'vue'
+import type { SchemeTemplate } from '@/model/scheme'
+import { emitter } from '@/model/vue'
 
-	@Options({ components: { 'scheme': SchemeView } })
-	export default class SchemePreview extends Vue {
-		@Prop() scheme!: SchemeTemplate
-		@Prop({ default: true }) showCraft!: boolean
+const SchemeView = defineAsyncComponent(() => import('./scheme.vue'))
 
-		emitter = emitter
-	}
+defineOptions({ components: { 'scheme': SchemeView } })
+
+withDefaults(defineProps<{
+	scheme: SchemeTemplate
+	showCraft?: boolean
+}>(), {
+	showCraft: true,
+})
+
+defineEmits<{
+	'update:modelValue': [value: any]
+}>()
+
+const _emitter = emitter
+defineExpose({ emitter: _emitter })
 </script>
 
 <style scoped lang="scss">
