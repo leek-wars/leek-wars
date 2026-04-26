@@ -25,298 +25,269 @@
 	</svg>
 </template>
 
-<script lang="ts">
-	import { HatTemplate } from '@/model/hat'
-	import { Leek, LEEK_FACES } from '@/model/leek'
-	import { LeekWars } from '@/model/leekwars'
-	import { FishData, WeaponsData } from '@/model/weapon'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import type { HatTemplate } from '@/model/hat'
+import { Leek, LEEK_FACES } from '@/model/leek'
+import { LeekWars } from '@/model/leekwars'
+import { FishData, WeaponsData } from '@/model/weapon'
 
-	@Options({})
-	export default class LeekImage extends Vue {
+defineOptions({ name: 'leek-image' })
 
-		@Prop({required: true}) leek!: Leek
-		@Prop({required: true}) scale!: number
-		@Prop() invert!: boolean
-		@Prop() ai!: number
+const props = defineProps<{
+	leek: Leek
+	scale: number
+	invert?: boolean
+	ai?: number
+}>()
 
-		botHats = [ null, 8, 12, 13 ]
-		randomAngle: number = 0
+const botHats = [ null, 8, 12, 13 ]
+const randomAngle = ref(0)
 
-		HAT_SIZES: { [key: number]: {width: number, height: number} } = {
-			1: {width: 300, height: 264}, // christmas
-			2: {width: 300, height: 194}, // panama
-			3: {width: 300, height: 264}, // christmas
-			4: {width: 300, height: 264}, // christmas
-			5: {width: 300, height: 262}, // crown
-			6: {width: 140, height: 135}, // harlequin
-			7: {width: 130, height: 140}, // topper
-			8: {width: 300, height: 170}, // chinese
-			9: {width: 300, height: 286}, // wizard
-			10: {width: 300, height: 182}, // mugiwara
-			11: {width: 300, height: 264}, // christmas
-			12: {width: 300, height: 170}, // chinese
-			13: {width: 300, height: 170}, // chinese
-			14: {width: 140, height: 135}, // harlequin
-			15: {width: 140, height: 135}, // harlequin
-			16: {width: 300, height: 286}, // wizard
-			17: {width: 300, height: 286}, // wizard
-			18: {width: 300, height: 286}, // wizard
-			19: {width: 300, height: 286}, // wizard
-			20: {width: 300, height: 170}, // chinese
-			21: {width: 300, height: 199}, // crystal crown
-			22: {width: 300, height: 199}, // crystal crown
-			23: {width: 300, height: 199}, // crystal crown
-			24: {width: 320, height: 201}, // bicorn
-			25: {width: 302, height: 209}, // sombrero
-			26: {width: 300, height: 302}, // pirate hat
-			27: {width: 300, height: 206}, // laurel
-			28: {width: 330, height: 202}, // bicorn napoleon
-			29: {width: 300, height: 206}, // lareul
-			30: {width: 130, height: 140}, // topper
-			31: {width: 300, height: 188}, // motarboard
-			32: {width: 300, height: 302}, // saint patrick
-			33: {width: 302, height: 209}, // red sombrero
-			34: {width: 300, height: 165}, // space hat
-			35: {width: 300, height: 194}, // fedora
-			36: {width: 300, height: 194}, // fedora
-			37: {width: 300, height: 194}, // fedora
-			38: {width: 130, height: 140}, // topper
-			39: {width: 300, height: 262}, // crown
-			40: {width: 300, height: 205}, // cubic
-			41: {width: 300, height: 187}, // cap
-		}
+const HAT_SIZES: { [key: number]: {width: number, height: number} } = {
+	1: {width: 300, height: 264},
+	2: {width: 300, height: 194},
+	3: {width: 300, height: 264},
+	4: {width: 300, height: 264},
+	5: {width: 300, height: 262},
+	6: {width: 140, height: 135},
+	7: {width: 130, height: 140},
+	8: {width: 300, height: 170},
+	9: {width: 300, height: 286},
+	10: {width: 300, height: 182},
+	11: {width: 300, height: 264},
+	12: {width: 300, height: 170},
+	13: {width: 300, height: 170},
+	14: {width: 140, height: 135},
+	15: {width: 140, height: 135},
+	16: {width: 300, height: 286},
+	17: {width: 300, height: 286},
+	18: {width: 300, height: 286},
+	19: {width: 300, height: 286},
+	20: {width: 300, height: 170},
+	21: {width: 300, height: 199},
+	22: {width: 300, height: 199},
+	23: {width: 300, height: 199},
+	24: {width: 320, height: 201},
+	25: {width: 302, height: 209},
+	26: {width: 300, height: 302},
+	27: {width: 300, height: 206},
+	28: {width: 330, height: 202},
+	29: {width: 300, height: 206},
+	30: {width: 130, height: 140},
+	31: {width: 300, height: 188},
+	32: {width: 300, height: 302},
+	33: {width: 302, height: 209},
+	34: {width: 300, height: 165},
+	35: {width: 300, height: 194},
+	36: {width: 300, height: 194},
+	37: {width: 300, height: 194},
+	38: {width: 130, height: 140},
+	39: {width: 300, height: 262},
+	40: {width: 300, height: 205},
+	41: {width: 300, height: 187},
+}
 
-		created() {
-			// setInterval(() => this.randomAngle = Math.random() * Math.PI / 2 - Math.PI / 4, 500)
-		}
+const is_boss = computed(() => {
+	const n = (props.leek as any).name
+	return n === 'nasu_samurai' || n === 'fennel_king' || n === 'evil_pumpkin'
+})
 
-		get is_boss() {
-			return this.leek.name === 'nasu_samurai' || this.leek.name === 'fennel_king' || this.leek.name === 'evil_pumpkin'
-		}
-		get leekImage(): string {
-			if (this.is_boss) {
-				return '/image/mob/' + this.leek.name + '.png'
-			}
-			const face = !this.leek.face ? '' : LEEK_FACES[this.leek.face]
-			return LeekWars.SERVER + 'image/leek/svg/leek_' + this.appearance + '_' + (this.leek.back ? 'back' : 'front') + '_' + LeekWars.getLeekSkinName(this.leek.skin) + (this.leek.metal ? '_metal' : '') + face + '.svg'
-		}
+const appearance = computed(() => LeekWars.getLeekAppearance(props.leek.level))
+const leekSize = computed(() => LeekWars.leekSizes[appearance.value])
 
-		get hat() {
-			let hat = this.leek.hat
-			if (!hat && (!this.leek.real || this.leek.bot)) {
-				return this.botHats[-this.ai! as number - 1]
-			}
-			if (typeof(hat) === 'number') {
-				return hat
-			}
-			return LeekWars.items[hat!.template].params
-		}
-		get hatTemplate(): HatTemplate | null {
-			return this.hat ? LeekWars.hats[this.hat] : null
-		}
-		get hatImage(): string {
-			if (this.hatTemplate) {
-				return 'hat/' + this.hatTemplate.name + '.png?2'
-			}
-			return ''
-		}
-		get hatWidth() {
-			if (this.leek.name === 'nasu_samurai') return this.hatTemplate ? this.leekHeight * 0.65 * this.hatTemplate.width : 0
-			if (this.leek.name === 'fennel_king') return this.hatTemplate ? this.leekHeight * 0.7 * this.hatTemplate.width : 0
-			if (this.leek.name === 'evil_pumpkin') return this.hatTemplate ? this.leekHeight * 0.8 * this.hatTemplate.width : 0
+const hat = computed<any>(() => {
+	const l: any = props.leek
+	let h = l.hat
+	if (!h && (!l.real || l.bot)) {
+		return botHats[-(props.ai as any) as number - 1]
+	}
+	if (typeof h === 'number') {
+		return h
+	}
+	return LeekWars.items[h!.template].params
+})
 
-			return this.hatTemplate ? this.leekHeight * 0.8 * this.hatTemplate.width : 0
-		}
-		get hatHeight() {
-			return this.hatSize ? this.hatWidth * (this.hatSize.height / this.hatSize.width) : 0
-		}
-		get hatCrop() {
-			if (this.leek.name === 'nasu_samurai') {
-				return 0
-			}
-			return this.hatTemplate ? this.hatTemplate.crop : 0
-		}
-		get hasHat(): boolean { return this.hat !== null }
-		get leekWidth(): number {
-			if (this.leek.name === 'nasu_samurai') return 165
-			if (this.leek.name === 'fennel_king') return 180
-			if (this.leek.name === 'evil_pumpkin') return 292
-			return this.leekSize ? this.leekSize.width : 0
-		}
-		get leekHeight(): number {
-			if (this.leek.name === 'nasu_samurai') return 288
-			if (this.leek.name === 'fennel_king') return 237
-			if (this.leek.name === 'evil_pumpkin') return 237
-			return this.leekSize ? this.leekSize.height : 0
-		}
-		get weaponOffset(): number {
-			return this.weaponCX + (this.weaponData && this.weaponData.white ? (
-						this.weaponRight
-					) : (
-						(Math.cos(this.weaponRadianAngle) * (this.weaponX + this.weaponWidth)
-						+ Math.sin(this.weaponRadianAngle) * (-this.weaponY)
-						- Math.sin(this.weaponRadianAngle) * (this.weaponTop))
-					)) * this.weaponScale
-		}
-		get width(): number {
-			let width = this.leekWidth
-			if (this.hatWidth > this.leekWidth) {
-				width = this.hatWidth
-			}
-			if (this.weaponOffset > width / 2) {
-				width = this.leekWidth / 2 + this.weaponOffset
-			}
-			return width
-		}
-		get height(): number {
-			let height = this.leekHeight + this.offsetTop
-			if (this.hat != null && this.hatTemplate) {
-				height += Math.max(0, this.hatHeight - this.hatHeight * this.hatOffsetY)
-			}
-			if (this.weaponData && this.weaponData.white) {
-				height += this.weaponData.bottom
-			} else {
-				const weapon_offset = Math.sin(this.weaponRadianAngle) * (this.weaponWidth + this.weaponX)
-									+ Math.cos(this.weaponRadianAngle) * (this.weaponHeight + this.weaponY)
-									- Math.cos(this.weaponRadianAngle) * (this.weaponHeight - this.weaponBottom)
-				if (weapon_offset > this.weaponCY) {
-					height += weapon_offset - this.weaponCY
-				}
-			}
-			return height
-		}
-		get offsetTop() {
-			return this.weaponData && this.weaponData.white ? Math.max(0,
-				this.weaponData.top - this.leekHeight - (this.hat !== null && this.hatTemplate ? this.hatHeight - this.hatHeight * this.hatOffsetY : 0) + this.weaponData.centerZ +
-				Math.abs(Math.sin(this.weaponRadianAngle)) * (this.weaponData.width + this.weaponData.x)
-			 ) : 0
-		}
-		get leekX() { return Math.max(0, this.hatWidth / 2 - this.leekWidth / 2) }
-		get leekY() { return this.offsetTop + (this.hat !== null && this.hatTemplate ? this.hatHeight - this.hatHeight * this.hatOffsetY : 0) }
-		get hatX() { return this.hat !== null ? Math.max(0, this.leekWidth / 2 - this.hatWidth / 2) : 0 }
-		get hatY() { return this.offsetTop }
-		get hatOffsetY() {
-			if (this.leek.name === 'nasu_samurai') {
-				return 0.85
-			}
-			return this.hatTemplate ? this.hatTemplate.height : 0
-		}
+const hatTemplate = computed<HatTemplate | null>(() => hat.value ? LeekWars.hats[hat.value] : null)
+const hatImage = computed(() => hatTemplate.value ? 'hat/' + hatTemplate.value.name + '.png?2' : '')
 
-		get weapon() {
-			if (typeof this.leek.weapon === 'number') {
-				return this.leek.weapon
-			}
-			return this.leek.weapon ? ((this.leek.weapon as any).id as number) : 0
-		}
-		get weaponTemplate() { return this.weapon ? LeekWars.items[this.weapon].params : null }
-		get weaponScale() { return 1.0 }
-		get weaponData() {
-			if (this.leek.fish) {
-				return FishData
-			}
-			return this.weaponTemplate ? WeaponsData[this.weaponTemplate] : null
-		}
-		get weaponRadianAngle() {
-			if (this.leek.name === 'evil_pumpkin') {
-				return -Math.PI / 2
-			}
-			return (this.weaponData && this.weaponData.white) ? -Math.PI / 2.7 : Math.PI / 7 + this.randomAngle
-		}
-		get weaponAngle() { return this.weaponRadianAngle * (180 / Math.PI) }
-		get weaponImage() {
-			if (this.leek.fish) {
-				return '/image/weapon/fish.png'
-			}
-			return '/image/' + LeekWars.items[this.weapon].name.replace('_', '/') + '.png'
-		}
-		get weaponWidth() { return this.weaponData ? this.weaponData.width : 0 }
-		get weaponHeight() { return this.weaponData ? this.weaponData.height : 0 }
-		get weaponCX() {
-			if (this.leek.name === "evil_pumpkin") {
-				return this.weaponData ? this.leekX + this.weaponData.centerX - 100 : 0
-			}
-			return this.weaponData ? this.leekX + this.weaponData.centerX : 0
-		}
-		get weaponCY() {
-			return this.weaponData ? this.weaponData.centerZ : 0
-		}
-		get weaponX() { return this.weaponData ? this.weaponData.x : 0 }
-		get weaponY() { return this.weaponData ? this.weaponData.z : 0 }
-		get weaponBottom() { return this.weaponData ? this.weaponData.bottom : 0 }
-		get weaponTop() { return this.weaponData ? this.weaponData.top : 0 }
-		get weaponRight() { return this.weaponData && this.weaponData.right ? this.weaponData.right : 0 }
-		get hand1() {
-			if (this.leek.name === "evil_pumpkin") {
-				return null
-			}
-			return this.weaponData ? { x: this.weaponData.hand1x, y: this.weaponData.hand1z } : null
-		}
-		get hand2() {
-			return this.weaponData ? { x: this.weaponData.hand2x, y: this.weaponData.hand2z } : null
-		}
-		get handSize() { return 20 / this.weaponScale }
-		get appearance() { return LeekWars.getLeekAppearance(this.leek.level) }
-		get leekSize() { return LeekWars.leekSizes[this.appearance] }
-		get hatSize() { return this.hat ? this.HAT_SIZES[this.hat] : null }
-		get handImage() {
-			if (this.leek.name === "nasu_samurai") {
-				return "/image/fight/nasu_hand.png"
-			}
-			if (this.leek.name === "evil_pumpkin") {
-				return "/image/fight/pumpkin_hand.png"
-			}
-			return "/image/fight/leek_hand" + (this.leek.skin === 15 ? "_gold" : "") + ".png"
-		}
+const leekWidth = computed<number>(() => {
+	const n = (props.leek as any).name
+	if (n === 'nasu_samurai') return 165
+	if (n === 'fennel_king') return 180
+	if (n === 'evil_pumpkin') return 292
+	return leekSize.value ? leekSize.value.width : 0
+})
+const leekHeight = computed<number>(() => {
+	const n = (props.leek as any).name
+	if (n === 'nasu_samurai') return 288
+	if (n === 'fennel_king') return 237
+	if (n === 'evil_pumpkin') return 237
+	return leekSize.value ? leekSize.value.height : 0
+})
 
-		drawOnCanvas(): HTMLCanvasElement | null {
-			const SCALE = 4
-			const canvas = document.createElement('canvas')
-			canvas.width = this.width * SCALE
-			canvas.height = this.height * SCALE
-			const context = canvas.getContext('2d')
-			if (!context) { return null }
+const hatWidth = computed(() => {
+	const n = (props.leek as any).name
+	if (n === 'nasu_samurai') return hatTemplate.value ? leekHeight.value * 0.65 * hatTemplate.value.width : 0
+	if (n === 'fennel_king') return hatTemplate.value ? leekHeight.value * 0.7 * hatTemplate.value.width : 0
+	if (n === 'evil_pumpkin') return hatTemplate.value ? leekHeight.value * 0.8 * hatTemplate.value.width : 0
+	return hatTemplate.value ? leekHeight.value * 0.8 * hatTemplate.value.width : 0
+})
+const hatSize = computed(() => hat.value ? HAT_SIZES[hat.value] : null)
+const hatHeight = computed(() => hatSize.value ? hatWidth.value * (hatSize.value.height / hatSize.value.width) : 0)
+const hatCrop = computed(() => {
+	if ((props.leek as any).name === 'nasu_samurai') return 0
+	return hatTemplate.value ? hatTemplate.value.crop : 0
+})
+const hasHat = computed(() => hat.value !== null)
+const hatOffsetY = computed(() => {
+	if ((props.leek as any).name === 'nasu_samurai') return 0.85
+	return hatTemplate.value ? hatTemplate.value.height : 0
+})
 
-			const leekImage = new Image()
-			leekImage.src = this.leekImage
+const weapon = computed(() => {
+	const w: any = (props.leek as any).weapon
+	if (typeof w === 'number') return w
+	return w ? (w.id as number) : 0
+})
+const weaponTemplate = computed(() => weapon.value ? LeekWars.items[weapon.value].params : null)
+const weaponScale = computed(() => 1.0)
+const weaponData = computed(() => {
+	if ((props.leek as any).fish) return FishData
+	return weaponTemplate.value ? (WeaponsData as any)[weaponTemplate.value] : null
+})
+const weaponRadianAngle = computed(() => {
+	if ((props.leek as any).name === 'evil_pumpkin') return -Math.PI / 2
+	return (weaponData.value && weaponData.value.white) ? -Math.PI / 2.7 : Math.PI / 7 + randomAngle.value
+})
+const weaponAngle = computed(() => weaponRadianAngle.value * (180 / Math.PI))
+const weaponImage = computed(() => {
+	if ((props.leek as any).fish) return '/image/weapon/fish.png'
+	return '/image/' + LeekWars.items[weapon.value].name.replace('_', '/') + '.png'
+})
+const weaponWidth = computed(() => weaponData.value ? weaponData.value.width : 0)
+const weaponHeight = computed(() => weaponData.value ? weaponData.value.height : 0)
+const weaponCX = computed(() => {
+	if ((props.leek as any).name === 'evil_pumpkin') {
+		return weaponData.value ? leekX.value + weaponData.value.centerX - 100 : 0
+	}
+	return weaponData.value ? leekX.value + weaponData.value.centerX : 0
+})
+const weaponCY = computed(() => weaponData.value ? weaponData.value.centerZ : 0)
+const weaponX = computed(() => weaponData.value ? weaponData.value.x : 0)
+const weaponY = computed(() => weaponData.value ? weaponData.value.z : 0)
+const weaponBottom = computed(() => weaponData.value ? weaponData.value.bottom : 0)
+const weaponTop = computed(() => weaponData.value ? weaponData.value.top : 0)
+const weaponRight = computed(() => weaponData.value && weaponData.value.right ? weaponData.value.right : 0)
 
-			context.scale(SCALE, SCALE)
-			// <image v-if="leekImage" :x="leekX" :y="leekY" :width="leekWidth" :height="leekHeight" :xlink:href="leekImage" :clip-path="'url(#cut' + hat + ')'" />
-			context.drawImage(leekImage, 0, this.leekHeight * this.hatCrop, this.leekWidth, this.leekHeight * (1 - this.hatCrop), this.leekX, this.leekY + this.leekHeight * this.hatCrop, this.leekWidth, this.leekHeight * (1 - this.hatCrop))
-			// <image v-if="hasHat && hatImage" :x="hatX" :y="hatY" :width="hatWidth" :height="hatHeight" :xlink:href="'/image/' + hatImage" />
-			if (this.hasHat) {
-				const hatImage = new Image()
-				hatImage.src = '/image/' + this.hatImage
-				context.drawImage(hatImage, this.hatX, this.hatY, this.hatWidth, this.hatHeight)
-			}
-			// <g v-if="weapon || leek.fish" :transform="'translate(' + (leekWidth / 2 + weaponCX) + ',' + (leekY + leekHeight - weaponCY) + ')'">
-			if (this.weapon || this.leek.fish) {
-				const weaponImage = new Image()
-				weaponImage.src = this.weaponImage
-				const handImage = new Image()
-				handImage.src = this.handImage
-				context.translate(this.leekWidth / 2 + this.weaponCX, (this.leekY + this.leekHeight - this.weaponCY))
-				// <g :transform="'scale(' + weaponScale + ')'">
-				context.scale(this.weaponScale, this.weaponScale)
-				// <g :transform="'rotate(' + weaponAngle + ')'" transform-box="fill-box">
-				context.rotate(this.weaponRadianAngle)
-				// <g :transform="'translate(' + weaponX + ',' + weaponY + ')'">
-				context.translate(this.weaponX, this.weaponY)
-				// <image :xlink:href="weaponImage" :width="weaponWidth" :height="weaponHeight" />
-				context.drawImage(weaponImage, 0, 0, this.weaponWidth, this.weaponHeight)
-				// <image v-if="hand1" :xlink:href="handImage" :width="handSize" :height="handSize" :x="hand1.x - handSize / 2" :y="hand1.y - handSize / 2" />
-				if (this.hand1) {
-					context.drawImage(handImage, this.hand1.x - this.handSize / 2, this.hand1.y - this.handSize / 2, this.handSize, this.handSize)
-				}
-				// <image v-if="hand2" :xlink:href="handImage" :width="handSize" :height="handSize" :x="hand2.x - handSize / 2" :y="hand2.y - handSize / 2" />
-				if (this.hand2) {
-					context.drawImage(handImage, this.hand2.x - this.handSize / 2, this.hand2.y - this.handSize / 2, this.handSize, this.handSize)
-				}
-			}
+const weaponOffset = computed(() => {
+	return weaponCX.value + (weaponData.value && weaponData.value.white ? (
+				weaponRight.value
+			) : (
+				(Math.cos(weaponRadianAngle.value) * (weaponX.value + weaponWidth.value)
+				+ Math.sin(weaponRadianAngle.value) * (-weaponY.value)
+				- Math.sin(weaponRadianAngle.value) * (weaponTop.value))
+			)) * weaponScale.value
+})
 
-			return canvas;
+const offsetTop = computed(() => {
+	return weaponData.value && weaponData.value.white ? Math.max(0,
+		weaponData.value.top - leekHeight.value - (hat.value !== null && hatTemplate.value ? hatHeight.value - hatHeight.value * hatOffsetY.value : 0) + weaponData.value.centerZ +
+		Math.abs(Math.sin(weaponRadianAngle.value)) * (weaponData.value.width + weaponData.value.x)
+	 ) : 0
+})
+
+const width = computed(() => {
+	let w = leekWidth.value
+	if (hatWidth.value > leekWidth.value) w = hatWidth.value
+	if (weaponOffset.value > w / 2) w = leekWidth.value / 2 + weaponOffset.value
+	return w
+})
+
+const height = computed(() => {
+	let h = leekHeight.value + offsetTop.value
+	if (hat.value != null && hatTemplate.value) {
+		h += Math.max(0, hatHeight.value - hatHeight.value * hatOffsetY.value)
+	}
+	if (weaponData.value && weaponData.value.white) {
+		h += weaponData.value.bottom
+	} else {
+		const weapon_offset = Math.sin(weaponRadianAngle.value) * (weaponWidth.value + weaponX.value)
+							+ Math.cos(weaponRadianAngle.value) * (weaponHeight.value + weaponY.value)
+							- Math.cos(weaponRadianAngle.value) * (weaponHeight.value - weaponBottom.value)
+		if (weapon_offset > weaponCY.value) {
+			h += weapon_offset - weaponCY.value
 		}
 	}
+	return h
+})
+
+const leekX = computed(() => Math.max(0, hatWidth.value / 2 - leekWidth.value / 2))
+const leekY = computed(() => offsetTop.value + (hat.value !== null && hatTemplate.value ? hatHeight.value - hatHeight.value * hatOffsetY.value : 0))
+const hatX = computed(() => hat.value !== null ? Math.max(0, leekWidth.value / 2 - hatWidth.value / 2) : 0)
+const hatY = computed(() => offsetTop.value)
+
+const leekImage = computed<string>(() => {
+	if (is_boss.value) {
+		return '/image/mob/' + (props.leek as any).name + '.png'
+	}
+	const face = !props.leek.face ? '' : LEEK_FACES[props.leek.face]
+	return LeekWars.SERVER + 'image/leek/svg/leek_' + appearance.value + '_' + ((props.leek as any).back ? 'back' : 'front') + '_' + LeekWars.getLeekSkinName(props.leek.skin) + ((props.leek as any).metal ? '_metal' : '') + face + '.svg'
+})
+
+const hand1 = computed(() => {
+	if ((props.leek as any).name === 'evil_pumpkin') return null
+	return weaponData.value ? { x: weaponData.value.hand1x, y: weaponData.value.hand1z } : null
+})
+const hand2 = computed(() => weaponData.value ? { x: weaponData.value.hand2x, y: weaponData.value.hand2z } : null)
+const handSize = computed(() => 20 / weaponScale.value)
+const handImage = computed(() => {
+	const n = (props.leek as any).name
+	if (n === 'nasu_samurai') return '/image/fight/nasu_hand.png'
+	if (n === 'evil_pumpkin') return '/image/fight/pumpkin_hand.png'
+	return '/image/fight/leek_hand' + (props.leek.skin === 15 ? '_gold' : '') + '.png'
+})
+
+function drawOnCanvas(): HTMLCanvasElement | null {
+	const SCALE = 4
+	const canvas = document.createElement('canvas')
+	canvas.width = width.value * SCALE
+	canvas.height = height.value * SCALE
+	const context = canvas.getContext('2d')
+	if (!context) return null
+
+	const leekImg = new Image()
+	leekImg.src = leekImage.value
+
+	context.scale(SCALE, SCALE)
+	context.drawImage(leekImg, 0, leekHeight.value * hatCrop.value, leekWidth.value, leekHeight.value * (1 - hatCrop.value), leekX.value, leekY.value + leekHeight.value * hatCrop.value, leekWidth.value, leekHeight.value * (1 - hatCrop.value))
+	if (hasHat.value) {
+		const hatImg = new Image()
+		hatImg.src = '/image/' + hatImage.value
+		context.drawImage(hatImg, hatX.value, hatY.value, hatWidth.value, hatHeight.value)
+	}
+	if (weapon.value || (props.leek as any).fish) {
+		const weaponImg = new Image()
+		weaponImg.src = weaponImage.value
+		const handImg = new Image()
+		handImg.src = handImage.value
+		context.translate(leekWidth.value / 2 + weaponCX.value, (leekY.value + leekHeight.value - weaponCY.value))
+		context.scale(weaponScale.value, weaponScale.value)
+		context.rotate(weaponRadianAngle.value)
+		context.translate(weaponX.value, weaponY.value)
+		context.drawImage(weaponImg, 0, 0, weaponWidth.value, weaponHeight.value)
+		if (hand1.value) {
+			context.drawImage(handImg, hand1.value.x - handSize.value / 2, hand1.value.y - handSize.value / 2, handSize.value, handSize.value)
+		}
+		if (hand2.value) {
+			context.drawImage(handImg, hand2.value.x - handSize.value / 2, hand2.value.y - handSize.value / 2, handSize.value, handSize.value)
+		}
+	}
+
+	return canvas
+}
+
+defineExpose({ drawOnCanvas, width, height })
 </script>
 
 <style lang="scss" scoped>

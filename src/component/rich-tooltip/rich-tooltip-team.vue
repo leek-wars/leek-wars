@@ -1,8 +1,8 @@
 <template>
 	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :max-width="600" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'scale-transition'" :open-on-hover="!locked" offset-y @update:model-value="open($event)">
-		<template #activator="{ props }">
-			<span v-bind="props">
-				<slot></slot>
+		<template #activator="{ props: activatorProps }">
+			<span v-bind="activatorProps">
+				<slot :props="activatorProps"></slot>
 			</span>
 		</template>
 		<div class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
@@ -27,7 +27,7 @@
 				</div>
 				<div v-if="expand" class="farmers">
 					<template v-for="(farmer, f) in team.farmers" :key="farmer.id">
-						<template v-if="f > 0">, </template>
+						<template v-if="(f as number) > 0">, </template>
 						<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }" :bottom="true" @update:model-value="setParent">
 							<router-link :to="'/farmer/' + farmer.id">
 								<span :class="farmer.class" v-bind="props">{{ farmer.name }}</span>
@@ -40,64 +40,63 @@
 	</v-menu>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { Team } from '@/model/team'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
-	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+<script setup lang="ts">
+import { ref, computed, watch, useTemplateRef } from 'vue'
+import { LeekWars } from '@/model/leekwars'
+import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Options({ components: { RichTooltipFarmer }, emits: ['update:modelValue'] })
-	export default class RichTooltipTeam extends Vue {
-		@Prop({required: true}) id!: number
-		@Prop() disabled!: boolean
-		@Prop() bottom!: boolean
-		@Prop() instant!: boolean
-		content_created: boolean = false
-		team: Team | null = null
-		expand: boolean = false
-		sums: {[key: string]: number} = {}
-		locked: boolean = false
-		mouse: boolean = false
-		value: boolean = false
+const props = defineProps<{
+	id: number
+	disabled?: boolean
+	bottom?: boolean
+	instant?: boolean
+}>()
 
-		get _open_delay() {
-			return this.instant ? 1 : 500
-		}
-		get _close_delay() {
-			return this.instant ? 1 : 1
-		}
-		@Watch('id')
-		update() {
-			this.team = null
-			this.content_created = false
-		}
-		open(v: boolean) {
-			this.expand = localStorage.getItem('rich-tooltip-team/expanded') === 'true'
-			if (this.content_created) { return }
-			this.content_created = true
-			if (this.id > 0 && !this.team) {
-				LeekWars.get<Team>('team/rich-tooltip/' + this.id).then(team => {
-					this.team = team
-					if (this.expand) {
-						(this.$refs.menu as any)?.updateLocation?.()
-					}
-				})
+const emit = defineEmits<{
+	'update:modelValue': [value: boolean]
+}>()
+
+const menu = useTemplateRef<any>('menu')
+const content_created = ref(false)
+const team = ref<any>(null)
+const expand = ref(false)
+const locked = ref(false)
+const mouse = ref(false)
+const value = ref(false)
+
+const _open_delay = computed(() => props.instant ? 1 : 500)
+const _close_delay = computed(() => props.instant ? 1 : 1)
+
+watch(() => props.id, () => {
+	team.value = null
+	content_created.value = false
+})
+
+function open(_v: boolean) {
+	expand.value = localStorage.getItem('rich-tooltip-team/expanded') === 'true'
+	if (content_created.value) { return }
+	content_created.value = true
+	if (props.id > 0 && !team.value) {
+		LeekWars.get<any>('team/rich-tooltip/' + props.id).then(t => {
+			team.value = t
+			if (expand.value) {
+				menu.value?.updateLocation?.()
 			}
-		}
-		@Watch('expand')
-		updateExpand() {
-			localStorage.setItem('rich-tooltip-team/expanded', this.expand ? 'true' : 'false')
-		}
-
-		setParent(event: boolean) {
-			// console.log("lock team")
-			this.locked = event
-			if (!event && !this.mouse) {
-				this.value = false
-				this.$emit('update:modelValue', false)
-			}
-		}
+		})
 	}
+}
+
+watch(expand, () => {
+	localStorage.setItem('rich-tooltip-team/expanded', expand.value ? 'true' : 'false')
+})
+
+function setParent(event: boolean) {
+	locked.value = event
+	if (!event && !mouse.value) {
+		value.value = false
+		emit('update:modelValue', false)
+	}
+}
 </script>
 
 <style lang="scss" scoped>

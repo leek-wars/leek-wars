@@ -1,6 +1,6 @@
 <template>
 	<span v-if="type && type.name === 'function'" class="type">(<template v-for="(arg, a) of type.args" :key="a">
-		<span v-if="a > 0">, </span><lw-type :type="arg" />
+		<span v-if="(a as number) > 0">, </span><lw-type :type="arg" />
 	</template>)
 		→ <lw-type :type="type.return" />
 	</span>
@@ -11,19 +11,18 @@
 		</template>
 	</span>
 	<span v-else-if="type && type.name == 'array' && type.elements" class="type">array[<template v-for="(arg, a) of type.elements" :key="a">
-		<span v-if="a > 0">, </span><lw-type :type="arg" />
+		<span v-if="(a as number) > 0">, </span><lw-type :type="arg" />
 	</template>]</span>
 	<span v-else-if="(type instanceof Object)"><span class="type">{{ type.name }}</span><span v-if="type.element">&lt;<span v-if="type.key"><lw-type :type="type.key" /> : </span><lw-type :type="type.element" />&gt;</span></span>
 	<span v-else class="type">{{ type }}</span>
 </template>
 
-<script lang="ts">
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
+<script setup lang="ts">
+defineOptions({ name: 'lw-type' })
 
-	@Options({ name: 'lw-type' })
-	export default class Type extends Vue {
-		@Prop({required: true}) type!: any
-	}
+defineProps<{
+	type: any
+}>()
 </script>
 
 <style lang="scss" scoped>

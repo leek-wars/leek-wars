@@ -1,8 +1,8 @@
 <template>
 	<v-menu v-model="value" :close-on-content-click="false" :min-width="280" :max-height="maxHeight" :location="openBottom ? 'bottom' : 'top'" :origin="openBottom ? 'top' : 'bottom'" :offset="nodge ? [0, 20] : 0" :open-delay="_open_delay" :close-delay="_close_delay" :transition="instant ? 'none' : 'scale-transition'" :open-on-hover="!locked" :disabled="disabled" :content-class="'rich-item-tooltip-menu'" :content-props="{ style: 'max-height:' + maxHeight + 'px' }" @update:model-value="onToggle">
-		<template #activator="{ props }">
-			<span v-bind="props" @pointerenter="onHover" @mouseenter="onHover" @focus="onHover">
-				<slot></slot>
+		<template #activator="{ props: activatorProps }">
+			<span v-bind="activatorProps" @pointerenter="onHover" @mouseenter="onHover" @focus="onHover">
+				<slot :props="activatorProps"></slot>
 			</span>
 		</template>
 		<div class="card" :style="{ maxHeight: maxHeight + 'px' }" @mouseenter="mouse = true" @mouseleave="mouse = false">
@@ -11,95 +11,98 @@
 	</v-menu>
 </template>
 
-<script lang="ts">
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import ItemPreview from '@/component/market/item-preview.vue'
-	import { LeekWars } from '@/model/leekwars'
-	import { Leek } from '@/model/leek'
-	import { emitter } from '@/model/vue'
+<script setup lang="ts">
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import ItemPreview from '@/component/market/item-preview.vue'
+import { LeekWars } from '@/model/leekwars'
+import type { Leek } from '@/model/leek'
+import { emitter } from '@/model/vue'
 
-	@Options({ name: 'rich-tooltip-item', components: {
-		'item-preview': ItemPreview
-	}, emits: ['update:modelValue', 'retrieve'] })
-	export default class RichTooltipItem extends Vue {
-		@Prop() item!: any
-		@Prop() quantity!: number
-		@Prop() bottom!: boolean
-		@Prop() instant!: boolean
-		@Prop() nodge!: boolean
-		@Prop() inventory!: boolean
-		@Prop() openDelay!: number
-		@Prop() leek!: Leek
-		@Prop({ default: 0 }) craftCost!: number
-		locked: boolean = false
-		mouse: boolean = false
-		value: boolean = false
-		disabled: boolean = false
-		maxHeight: number = 600
-		openBottom: boolean = true
-		activatorEl: HTMLElement | null = null
+defineOptions({ name: 'rich-tooltip-item' })
 
-		get _open_delay() {
-			return this.instant || LeekWars.mobile ? 1 : (this.openDelay || 500)
-		}
-		get _close_delay() {
-			return 1
-		}
+const props = withDefaults(defineProps<{
+	item: any
+	quantity?: number
+	bottom?: boolean
+	instant?: boolean
+	nodge?: boolean
+	inventory?: boolean
+	openDelay?: number
+	leek?: Leek
+	craftCost?: number
+}>(), {
+	craftCost: 0,
+})
 
-		onHover(e: Event) {
-			const el = e.currentTarget as HTMLElement | null
-			if (el) this.activatorEl = el
-			this.computeBounds()
-		}
+const emit = defineEmits<{
+	'update:modelValue': [value: boolean]
+	'retrieve': [event: any]
+}>()
 
-		computeBounds() {
-			const el = this.activatorEl
-			if (!el) return
-			const rect = el.getBoundingClientRect()
-			const vh = window.innerHeight
-			const padding = 16
-			const spaceBelow = vh - rect.bottom - padding
-			const spaceAbove = rect.top - padding
-			const preferBottom = this.bottom !== false
-			const prefSpace = preferBottom ? spaceBelow : spaceAbove
-			const altSpace = preferBottom ? spaceAbove : spaceBelow
-			if (prefSpace >= 300 || prefSpace >= altSpace) {
-				this.openBottom = preferBottom
-				this.maxHeight = Math.max(200, prefSpace)
-			} else {
-				this.openBottom = !preferBottom
-				this.maxHeight = Math.max(200, altSpace)
-			}
-		}
+const locked = ref(false)
+const mouse = ref(false)
+const value = ref(false)
+const disabled = ref(false)
+const maxHeight = ref(600)
+const openBottom = ref(true)
+const activatorEl = ref<HTMLElement | null>(null)
 
-		onToggle(opened: boolean) {
-			if (opened) this.computeBounds()
-		}
+const _open_delay = computed(() => props.instant || LeekWars.mobile ? 1 : (props.openDelay || 500))
+const _close_delay = computed(() => 1)
 
-		setParent(event: boolean) {
-			this.locked = event
-			if (!event && !this.mouse) {
-				this.value = false
-				this.$emit('update:modelValue', false)
-			}
-		}
+function onHover(e: Event) {
+	const el = e.currentTarget as HTMLElement | null
+	if (el) activatorEl.value = el
+	computeBounds()
+}
 
-		close() {
-			this.value = false
-			this.locked = false
-			this.disabled = true
-			setTimeout(() => this.disabled = false, 500)
-		}
-
-		mounted() {
-			emitter.on('craft', this.close)
-			emitter.on('clover-used', this.close)
-		}
-		beforeUnmount() {
-			emitter.off('craft', this.close)
-			emitter.off('clover-used', this.close)
-		}
+function computeBounds() {
+	const el = activatorEl.value
+	if (!el) return
+	const rect = el.getBoundingClientRect()
+	const vh = window.innerHeight
+	const padding = 16
+	const spaceBelow = vh - rect.bottom - padding
+	const spaceAbove = rect.top - padding
+	const preferBottom = props.bottom !== false
+	const prefSpace = preferBottom ? spaceBelow : spaceAbove
+	const altSpace = preferBottom ? spaceAbove : spaceBelow
+	if (prefSpace >= 300 || prefSpace >= altSpace) {
+		openBottom.value = preferBottom
+		maxHeight.value = Math.max(200, prefSpace)
+	} else {
+		openBottom.value = !preferBottom
+		maxHeight.value = Math.max(200, altSpace)
 	}
+}
+
+function onToggle(opened: boolean) {
+	if (opened) computeBounds()
+}
+
+function setParent(event: boolean) {
+	locked.value = event
+	if (!event && !mouse.value) {
+		value.value = false
+		emit('update:modelValue', false)
+	}
+}
+
+function close() {
+	value.value = false
+	locked.value = false
+	disabled.value = true
+	setTimeout(() => disabled.value = false, 500)
+}
+
+onMounted(() => {
+	emitter.on('craft', close)
+	emitter.on('clover-used', close)
+})
+onBeforeUnmount(() => {
+	emitter.off('craft', close)
+	emitter.off('clover-used', close)
+})
 </script>
 
 <style lang="scss" scoped>

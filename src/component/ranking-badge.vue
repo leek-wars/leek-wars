@@ -5,15 +5,14 @@
 	</span>
 </template>
 
-<script lang="ts">
-	import { Options, Prop, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+defineOptions({ name: 'ranking-badge' })
 
-	@Options({ name: "ranking-badge" })
-	export default class RankingBadge extends Vue {
-		@Prop() ranking!: number
-		@Prop() id!: number
-		@Prop() category!: string
-	}
+defineProps<{
+	ranking: number
+	id: number
+	category: string
+}>()
 </script>
 
 <style lang="scss" scoped>

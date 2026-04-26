@@ -6,27 +6,23 @@
 	</rich-tooltip-item>
 </template>
 
-<script lang="ts">
-	import { ItemTemplate, ItemType, ITEM_CATEGORY_NAME } from '@/model/item'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import { defineAsyncComponent } from 'vue'
-	const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
+<script setup lang="ts">
+import { computed, defineAsyncComponent } from 'vue'
+import { ItemType, ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED, type ItemTemplate } from '@/model/item'
 
-	@Options({ name: "item", components: { RichTooltipItem } })
-	export default class ItemView extends Vue {
-		@Prop() item!: ItemTemplate
+const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
 
-		get image() {
-			return this.item.type === ItemType.COMPONENT ? this.item.name : this.item.name.substring(this.item.name.indexOf('_') + 1)
-		}
+defineOptions({ name: 'item', components: { RichTooltipItem } })
 
-		get url() {
-			return "/image/" + ITEM_CATEGORY_NAME[this.item.type] + "/" + this.image + ".png"
-		}
-		get is_weapon() {
-			return this.item.type === ItemType.WEAPON
-		}
-	}
+const ITEM_CATEGORY_NAME: Record<number, string> = ITEM_CATEGORY_NAME_TYPED
+
+const props = defineProps<{
+	item: ItemTemplate
+}>()
+
+const image = computed(() => props.item.type === ItemType.COMPONENT ? props.item.name : props.item.name.substring(props.item.name.indexOf('_') + 1))
+const url = computed(() => '/image/' + ITEM_CATEGORY_NAME[props.item.type] + '/' + image.value + '.png')
+const is_weapon = computed(() => props.item.type === ItemType.WEAPON)
 </script>
 
 <style lang="scss" scoped>

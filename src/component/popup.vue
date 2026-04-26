@@ -26,41 +26,38 @@
 	</v-dialog>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
-	@Options({ name: "popup", emits: ['update:modelValue'] })
-	export default class Popup extends Vue {
-		@Prop() modelValue!: boolean
-		@Prop() icon!: string
-		@Prop() title!: string
-		@Prop() width!: number
-		@Prop() full!: boolean
-		@Prop() persistent!: Boolean
-		content_created: boolean = false
-		get contentClass() {
-			return LeekWars.mobile ? 'popup mobile' : 'popup'
-		}
-		created() {
-			if (this.modelValue) {
-				this.content_created = true // Content created direclty from creation
-			}
-			this.$watch('modelValue', (new_value, old_value) => {
-				if (new_value === true) {
-					this.content_created = true
-				}
-			})
-		}
-		get hasActionsSlot() {
-			return !!this.$slots.actions
-		}
-		hasIcon() {
-			return !!this.$slots.icon
-		}
-		close() {
-			this.$emit('update:modelValue', false)
-		}
-	}
+<script setup lang="ts">
+import { ref, computed, watch, useSlots } from 'vue'
+import { LeekWars } from '@/model/leekwars'
+
+defineOptions({ name: 'popup' })
+
+const props = defineProps<{
+	modelValue?: boolean
+	icon?: string
+	title?: string
+	width?: number
+	full?: boolean
+	persistent?: boolean
+}>()
+
+const emit = defineEmits<{
+	'update:modelValue': [value: boolean]
+}>()
+
+const slots = useSlots()
+const content_created = ref(props.modelValue === true)
+
+const contentClass = computed(() => LeekWars.mobile ? 'popup mobile' : 'popup')
+const hasActionsSlot = computed(() => !!slots.actions)
+
+watch(() => props.modelValue, (v) => {
+	if (v === true) content_created.value = true
+})
+
+function close() {
+	emit('update:modelValue', false)
+}
 </script>
 
 <style lang="scss">

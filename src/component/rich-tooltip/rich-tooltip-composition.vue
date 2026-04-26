@@ -1,8 +1,8 @@
 <template>
 	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :nudge-width="expand_leeks ? 500 : 200" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'scale-transition'" :open-on-hover="!locked" offset-y @update:model-value="open($event)">
-		<template #activator="{ props }">
-			<span v-bind="props">
-				<slot></slot>
+		<template #activator="{ props: activatorProps }">
+			<span v-bind="activatorProps">
+				<slot :props="activatorProps"></slot>
 			</span>
 		</template>
 		<div class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
@@ -58,68 +58,67 @@
 	</v-menu>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { Composition } from '@/model/team'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
-	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+<script setup lang="ts">
+import { ref, computed, watch, useTemplateRef } from 'vue'
+import { LeekWars } from '@/model/leekwars'
+import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 
-	@Options({ components: { RichTooltipLeek }, emits: ['update:modelValue'] })
-	export default class RichTooltipComposition extends Vue {
-		@Prop({required: true}) id!: number
-		@Prop() disabled!: boolean
-		@Prop() bottom!: boolean
-		@Prop() instant!: boolean
+const props = defineProps<{
+	id: number
+	disabled?: boolean
+	bottom?: boolean
+	instant?: boolean
+}>()
 
-		LeekWars = LeekWars
-		content_created: boolean = false
-		composition: Composition | null = null
-		expand_leeks: boolean = false
-		sums: {[key: string]: number} = {}
-		locked: boolean = false
-		mouse: boolean = false
-		value: boolean = false
+const emit = defineEmits<{
+	'update:modelValue': [value: boolean]
+}>()
 
-		get _open_delay() {
-			return this.instant ? 1 : 500
-		}
-		get _close_delay() {
-			return this.instant ? 1 : 1
-		}
-		@Watch('id')
-		update() {
-			this.composition = null
-			this.content_created = false
-		}
-		open(v: boolean) {
-			this.expand_leeks = localStorage.getItem('rich-tooltip-composition/expanded') === 'true'
-			if (this.content_created) { return }
-			this.content_created = true
-			if (this.id > 0 && !this.composition) {
-				LeekWars.get<Composition>('team/composition-rich-tooltip/' + this.id).then(composition => {
-					this.composition = composition
-					for (const c of LeekWars.characteristics) {
-						this.sums[c] = Object.values(this.composition.leeks).reduce((sum: number, leek: any) => sum + leek[c], 0)
-					}
-					if (this.expand_leeks) {
-						(this.$refs.menu as any)?.updateLocation?.()
-					}
-				})
+const menu = useTemplateRef<any>('menu')
+const content_created = ref(false)
+const composition = ref<any>(null)
+const expand_leeks = ref(false)
+const sums = ref<{[key: string]: number}>({})
+const locked = ref(false)
+const mouse = ref(false)
+const value = ref(false)
+
+const _open_delay = computed(() => props.instant ? 1 : 500)
+const _close_delay = computed(() => props.instant ? 1 : 1)
+
+watch(() => props.id, () => {
+	composition.value = null
+	content_created.value = false
+})
+
+function open(_v: boolean) {
+	expand_leeks.value = localStorage.getItem('rich-tooltip-composition/expanded') === 'true'
+	if (content_created.value) { return }
+	content_created.value = true
+	if (props.id > 0 && !composition.value) {
+		LeekWars.get<any>('team/composition-rich-tooltip/' + props.id).then(c => {
+			composition.value = c
+			for (const ch of LeekWars.characteristics) {
+				sums.value[ch] = Object.values(c.leeks).reduce((sum: number, leek: any) => sum + leek[ch], 0)
 			}
-		}
-		@Watch('expand_leeks')
-		updateExpand() {
-			localStorage.setItem('rich-tooltip-composition/expanded', this.expand_leeks ? 'true' : 'false')
-		}
-
-		setParent(event: boolean) {
-			this.locked = event
-			if (!event && !this.mouse) {
-				this.value = false
-				this.$emit('update:modelValue', false)
+			if (expand_leeks.value) {
+				menu.value?.updateLocation?.()
 			}
-		}
+		})
 	}
+}
+
+watch(expand_leeks, () => {
+	localStorage.setItem('rich-tooltip-composition/expanded', expand_leeks.value ? 'true' : 'false')
+})
+
+function setParent(event: boolean) {
+	locked.value = event
+	if (!event && !mouse.value) {
+		value.value = false
+		emit('update:modelValue', false)
+	}
+}
 </script>
 
 <style lang="scss" scoped>

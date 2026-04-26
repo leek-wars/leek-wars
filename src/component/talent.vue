@@ -1,7 +1,7 @@
 <template lang="html">
 	<v-tooltip :disabled="!label && !max_talent">
 		<template #activator="{ props: tp }">
-			<span class="talent" v-bind="{ ...$props, ...tp }" @click.stop="LeekWars.goToRanking(category, 'talent', id)">
+			<span class="talent" v-bind="tp" @click.stop="LeekWars.goToRanking(category, 'talent', id)">
 				<div v-ripple class="icon">
 					<img src="/image/talent.png">
 				</div>
@@ -13,20 +13,17 @@
 	</v-tooltip>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	@Options({ name: "talent" })
-	export default class Talent extends Vue {
-		@Prop() talent!: number
-		@Prop() max_talent!: number
-		@Prop() label!: string
-		@Prop() id!: number
-		@Prop() category!: string
-		@Prop() on!: any
+<script setup lang="ts">
+defineOptions({ name: 'talent' })
 
-		LeekWars = LeekWars
-	}
+defineProps<{
+	talent: number
+	max_talent?: number
+	label?: string
+	id: number
+	category: string
+	on?: any
+}>()
 </script>
 
 <style lang="scss" scoped>

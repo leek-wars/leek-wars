@@ -2,27 +2,29 @@
 	<img :src="url" class="avatar" v-bind="$attrs">
 </template>
 
-<script lang="ts">
-	import { Farmer } from '@/model/farmer'
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { computed } from 'vue'
+import type { Farmer } from '@/model/farmer'
+import { LeekWars } from '@/model/leekwars'
 
-	@Options({ name: "avatar" })
-	export default class Avatar extends Vue {
-		@Prop() farmer!: Farmer
-		get url() {
-			if (this.farmer) {
-				if (this.farmer.id > 0) {
-					if (this.farmer.avatar_changed > 0) {
-						return LeekWars.AVATAR + 'avatar/' + this.farmer.id + '.png?' + this.farmer.avatar_changed
-					}
-				} else if (this.farmer.id === 0) {
-					return '/image/lw_avatar.png'
-				}
+defineOptions({ name: 'avatar' })
+
+const props = defineProps<{
+	farmer?: Farmer
+}>()
+
+const url = computed(() => {
+	if (props.farmer) {
+		if (props.farmer.id > 0) {
+			if (props.farmer.avatar_changed > 0) {
+				return LeekWars.AVATAR + 'avatar/' + props.farmer.id + '.png?' + props.farmer.avatar_changed
 			}
-			return '/image/no_avatar.png'
+		} else if (props.farmer.id === 0) {
+			return '/image/lw_avatar.png'
 		}
 	}
+	return '/image/no_avatar.png'
+})
 </script>
 
 <style lang="scss" scoped>

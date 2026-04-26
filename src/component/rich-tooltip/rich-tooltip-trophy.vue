@@ -1,8 +1,8 @@
 <template>
 	<v-menu v-model="value" :close-on-content-click="false" :width="280" offset-overflow :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" transition="none" :bottom="bottom" :open-on-hover="!locked" offset-y>
-		<template #activator="{ props }">
-			<span v-bind="props">
-				<slot></slot>
+		<template #activator="{ props: activatorProps }">
+			<span v-bind="activatorProps">
+				<slot :props="activatorProps"></slot>
 			</span>
 		</template>
 		<div class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
@@ -11,34 +11,34 @@
 	</v-menu>
 </template>
 
-<script lang="ts">
-	import Trophy from '@/component/trophies/trophy.vue'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import Trophy from '@/component/trophies/trophy.vue'
 
-	@Options({ components: { Trophy }, emits: ['update:modelValue'] })
-	export default class RichTooltipTrophy extends Vue {
-		@Prop({required: true}) trophy!: any
-		@Prop() bottom!: boolean
-		@Prop() instant!: boolean
-		locked: boolean = false
-		mouse: boolean = false
-		value: boolean = false
+const props = defineProps<{
+	trophy: any
+	bottom?: boolean
+	instant?: boolean
+}>()
 
-		get _open_delay() {
-			return this.instant ? 1 : 500
-		}
-		get _close_delay() {
-			return this.instant ? 1 : 1
-		}
+const emit = defineEmits<{
+	'update:modelValue': [value: boolean]
+}>()
 
-		setParent(event: boolean) {
-			this.locked = event
-			if (!event && !this.mouse) {
-				this.value = false
-				this.$emit('update:modelValue', false)
-			}
-		}
+const locked = ref(false)
+const mouse = ref(false)
+const value = ref(false)
+
+const _open_delay = computed(() => props.instant ? 1 : 500)
+const _close_delay = computed(() => props.instant ? 1 : 1)
+
+function setParent(event: boolean) {
+	locked.value = event
+	if (!event && !mouse.value) {
+		value.value = false
+		emit('update:modelValue', false)
 	}
+}
 </script>
 
 <style lang="scss" scoped>

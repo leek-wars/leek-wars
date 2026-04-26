@@ -4,40 +4,30 @@
 	</svg>
 </template>
 
-<script lang="ts">
-	import { TURRET_DATA, TURRET_PIECE_SIZE } from '@/model/turret-data'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { computed } from 'vue'
+import { TURRET_DATA, TURRET_PIECE_SIZE } from '@/model/turret-data'
 
-	@Options({})
-	export default class TurretImage extends Vue {
-		@Prop({required: true}) level!: number
-		@Prop({required: true}) skin!: number
-		@Prop({required: true}) scale!: number
-		get data_() {
-			return TURRET_DATA[Math.floor(this.level / 10)]
-		}
-		get pieces() {
-			let z = this.offset
-			return this.data_.map(piece => {
-				const p = {
-					t: piece.t,
-					w: TURRET_PIECE_SIZE[piece.t][0],
-					z: (z += piece.z) / 0.3
-				}
-				return p
-			})
-		}
-		get height() {
-			return (this.data_.reduce((s, p) => s + p.z, 0) + this.offset) / 0.3
-		}
-		get width() {
-			return this.pieces.reduce((w, p) => Math.max(w, p.w), 0)
-		}
-		get offset() {
-			return TURRET_PIECE_SIZE[this.data_[0].t][1] * 0.3 - this.data_[0].z
-		}
-		get skinName() {
-			return this.skin === 1 ? '_blue' : '_red'
-		}
-	}
+const props = defineProps<{
+	level: number
+	skin: number
+	scale: number
+}>()
+
+const data_ = computed(() => TURRET_DATA[Math.floor(props.level / 10)])
+
+const offset = computed(() => TURRET_PIECE_SIZE[data_.value[0].t][1] * 0.3 - data_.value[0].z)
+
+const pieces = computed(() => {
+	let z = offset.value
+	return data_.value.map(piece => ({
+		t: piece.t,
+		w: TURRET_PIECE_SIZE[piece.t][0],
+		z: (z += piece.z) / 0.3
+	}))
+})
+
+const height = computed(() => (data_.value.reduce((s, p) => s + p.z, 0) + offset.value) / 0.3)
+const width = computed(() => pieces.value.reduce((w, p) => Math.max(w, p.w), 0))
+const skinName = computed(() => props.skin === 1 ? '_blue' : '_red')
 </script>

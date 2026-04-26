@@ -10,22 +10,22 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { Options, Prop, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { computed } from 'vue'
 
-	@Options({})
-	export default class Pagination extends Vue {
-		@Prop({required: true}) current!: number
-		@Prop({required: true}) total!: number
-		@Prop({required: true}) url!: string
-		@Prop() urlQuery!: string
-		@Prop() query!: boolean
-		get url_end(): string { return this.urlQuery || '' }
-		get center(): number { return Math.max(5, Math.min(this.total - 4, this.current)) }
-		get start(): number { return this.center - 4 }
-		get end(): number { return Math.min(this.total, this.center + 4) }
-		get page(): string { return this.query ? '&page=' : '/page-' }
-	}
+const props = defineProps<{
+	current: number
+	total: number
+	url: string
+	urlQuery?: string
+	query?: boolean
+}>()
+
+const url_end = computed(() => props.urlQuery || '')
+const center = computed(() => Math.max(5, Math.min(props.total - 4, props.current)))
+const start = computed(() => center.value - 4)
+const end = computed(() => Math.min(props.total, center.value + 4))
+const page = computed(() => props.query ? '&page=' : '/page-')
 </script>
 
 <style lang="scss" scoped>

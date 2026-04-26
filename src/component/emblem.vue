@@ -2,21 +2,23 @@
 	<img :src="url" class="emblem">
 </template>
 
-<script lang="ts">
-	import { env } from '@/env'
-	import { LeekWars } from '@/model/leekwars'
-	import { Team } from '@/model/team'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	@Options({ name: "emblem" })
-	export default class Emblem extends Vue {
-		@Prop() team!: Team
-		get url() {
-			if (this.team.emblem_changed > 0) {
-				return LeekWars.AVATAR + 'emblem/' + this.team.id + '.png?' + this.team.emblem_changed
-			}
-			return '/image/no_emblem.png'
-		}
+<script setup lang="ts">
+import { computed } from 'vue'
+import { LeekWars } from '@/model/leekwars'
+import type { Team } from '@/model/team'
+
+defineOptions({ name: 'emblem' })
+
+const props = defineProps<{
+	team: Team
+}>()
+
+const url = computed(() => {
+	if (props.team.emblem_changed > 0) {
+		return LeekWars.AVATAR + 'emblem/' + props.team.id + '.png?' + props.team.emblem_changed
 	}
+	return '/image/no_emblem.png'
+})
 </script>
 
 <style lang="scss" scoped>
