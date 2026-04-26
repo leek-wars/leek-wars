@@ -61,7 +61,12 @@ function retryDelay(retry: number) {
 	return Math.min(RETRY_CONFIG.baseDelay * Math.pow(2, retry), RETRY_CONFIG.maxDelay)
 }
 
-function request<T = any>(method: string, url: string, params?: any) {
+type ExtendedPromise<T> = Promise<T> & {
+	abort: () => void
+	error: (callback: (error: any) => void) => Promise<T>
+}
+
+function request<T = any>(method: string, url: string, params?: any): ExtendedPromise<T> {
 	let currentXhr: XMLHttpRequest | null = null
 	let retryTimeout: ReturnType<typeof setTimeout> | null = null
 
@@ -118,14 +123,14 @@ function request<T = any>(method: string, url: string, params?: any) {
 		if (retryTimeout) clearTimeout(retryTimeout)
 		if (currentXhr) currentXhr.abort()
 	}
-	extended.error = (e: (e: T) => void) => promise.catch(e)
+	extended.error = (e: (e: any) => void) => promise.catch(e)
 	const originalThen = promise.then.bind(promise)
 	extended.then = (p: (p: T) => void, r?: (e: any) => void) => {
 		const chained = originalThen(p, r) as any
-		chained.error = (e: (e: T) => void) => chained.catch(e)
+		chained.error = (e: (e: any) => void) => chained.catch(e)
 		return chained
 	}
-	return extended
+	return extended as ExtendedPromise<T>
 }
 
 function post<T = any>(url: any, form: any = {}) {
