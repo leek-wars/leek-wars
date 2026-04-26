@@ -6,16 +6,16 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { Tournament } from '@/model/tournament'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import TournamentHistory from '@/component/history/tournament-history.vue'
+<script setup lang="ts">
+import type { Tournament } from '@/model/tournament'
+import TournamentHistory from '@/component/history/tournament-history.vue'
 
-	@Options({ name: 'tournaments-history', components: { TournamentHistory } })
-	export default class TournamentsHistory extends Vue {
-		@Prop() tournaments!: Tournament[]
-		@Prop() showTime!: boolean
-	}
+defineOptions({ name: 'tournaments-history' })
+
+defineProps<{
+	tournaments: Tournament[]
+	showTime?: boolean
+}>()
 </script>
 
 <style lang="scss" scoped>

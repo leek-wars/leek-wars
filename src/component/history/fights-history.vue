@@ -6,15 +6,15 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { Fight } from '@/model/fight'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import FightHistory from '@/component/history/fight-history.vue'
+<script setup lang="ts">
+import type { Fight } from '@/model/fight'
+import FightHistory from '@/component/history/fight-history.vue'
 
-	@Options({ name: 'fights-history', components: { FightHistory } })
-	export default class FightsHistory extends Vue {
-		@Prop() fights!: Fight[]
-	}
+defineOptions({ name: 'fights-history' })
+
+defineProps<{
+	fights: Fight[]
+}>()
 </script>
 
 <style lang="scss" scoped>

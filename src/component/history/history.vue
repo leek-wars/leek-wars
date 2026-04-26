@@ -91,119 +91,110 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { Farmer } from '@/model/farmer'
-	import { Fight, FightContext, FightType } from '@/model/fight'
-	import { mixins } from '@/model/i18n'
-	import { Leek } from '@/model/leek'
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
-	import Breadcrumb from '../forum/breadcrumb.vue'
-	import FightsHistory from '@/component/history/fights-history.vue'
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
+import type { Farmer } from '@/model/farmer'
+import { type Fight, FightContext, FightType } from '@/model/fight'
+import { mixins } from '@/model/i18n'
+import type { Leek } from '@/model/leek'
+import { LeekWars } from '@/model/leekwars'
+import Breadcrumb from '../forum/breadcrumb.vue'
+import FightsHistory from '@/component/history/fights-history.vue'
 
-	@Options({ name: 'history', i18n: {}, mixins: [...mixins], components: { Breadcrumb, FightsHistory } })
-	export default class History extends Vue {
-		@Prop({required: true}) type!: string
-		fights!: Fight[]
-		entity: Farmer | Leek | null = null
-		period: string = 'today'
-		start_date: number = 0
-		displayContexts = { challenge: true, garden: true, tournament: true }
-		displayTypes = { solo: true, farmer: true, team: true, battleRoyale: true, war: true, chestHunt: true, colossus: true, boss: true }
-		displayLoot = { chests: false, rareloot: false }
-		
-		get breadcrumb_items() {
-			return [
-				{name: (this.entity ? this.entity.name : '...'), link: '/' + this.type + '/' + (this.entity ? this.entity.id : '')},
-				{name: this.$t('title_html', [this.entity ? this.entity.name : '...']), link: '/' + this.type + '/' + (this.entity ? this.entity.id : '') + '/history'}
-			]
-		}
-		get filteredFights() {
-			return this.fights.filter((fight) => {
-				const contextFilter = fight.date >= this.start_date && (
-					(this.displayContexts.challenge && fight.context === FightContext.CHALLENGE) ||
-					(this.displayContexts.garden && fight.context === FightContext.GARDEN) ||
-					(this.displayContexts.tournament && fight.context === FightContext.TOURNAMENT) ||
-					(this.displayContexts.garden && this.displayTypes.battleRoyale && fight.context === FightContext.BATTLE_ROYALE)  // TODO temporary, BR context is removed
-				)
+defineOptions({ name: 'history', i18n: {}, mixins: [...mixins] })
 
-				const typeFilter = (
-					(this.displayTypes.solo && fight.type === FightType.SOLO) ||
-					(this.displayTypes.farmer && fight.type === FightType.FARMER) ||
-					(this.displayTypes.team && fight.type === FightType.TEAM) ||
-					(this.displayTypes.battleRoyale && fight.type === FightType.BATTLE_ROYALE) ||
-					(this.displayTypes.war && fight.type === FightType.WAR) ||
-					(this.displayTypes.chestHunt && fight.type === FightType.CHEST_HUNT) ||
-					(this.displayTypes.colossus && fight.type === FightType.COLOSSUS) ||
-					(this.displayTypes.boss && fight.type === FightType.BOSS) ||
-					this.type === 'team'
-				)
+const props = defineProps<{
+	type: string
+}>()
 
-				const lootFilter = !this.displayLoot.chests && !this.displayLoot.rareloot
-					|| (this.displayLoot.chests && fight.chests > 0)
-					|| (this.displayLoot.rareloot && fight.rareloot > 0)
+const { t } = useI18n()
+const route = useRoute()
 
-				return contextFilter && typeFilter && lootFilter
-			})
-		}
-		get victories() {
-			return this.filteredFights.filter(f => f.result === "win").length
-		}
-		get defeats() {
-			return this.filteredFights.filter(f => f.result === "defeat").length
-		}
-		get draws() {
-			return this.filteredFights.filter(f => f.result === "draw").length
-		}
-		get ratio() {
-			return this.defeats === 0 ? '∞' : LeekWars.numberPrecision(this.victories / this.defeats, 3)
-		}
+const fights = ref<Fight[]>([])
+const entity = ref<Farmer | Leek | null>(null)
+const period = ref<string>('today')
+const start_date = ref(0)
+const displayContexts = ref({ challenge: true, garden: true, tournament: true })
+const displayTypes = ref({ solo: true, farmer: true, team: true, battleRoyale: true, war: true, chestHunt: true, colossus: true, boss: true })
+const displayLoot = ref({ chests: false, rareloot: false })
 
-		created() {
-			const id = this.$route.params.id
-			const period = localStorage.getItem('options/history-period') || '1week'
-			this.displayContexts = JSON.parse(localStorage.getItem('options/history-contexts') || '{"challenge": true, "garden": true, "tournament": true }')
-			this.displayTypes = JSON.parse(localStorage.getItem('options/history-types') || '{"solo": true, "farmer": true, "team": true, "battleRoyale": true, "boss": true }')
-			this.displayLoot = JSON.parse(localStorage.getItem('options/history-loot') || '{"chests":false,"rareloot":false}')
-			this.select_period(period)
-			LeekWars.get('history/get-' + this.type + '-history/' + id).then(data => {
-				this.fights = data.fights
-				this.entity = data.entity
-				LeekWars.setTitle(this.$t('title', [data.entity.name]))
-				this.select_period(period)
-			})
-		}
+const breadcrumb_items = computed(() => [
+	{ name: entity.value ? entity.value.name : '...', link: '/' + props.type + '/' + (entity.value ? entity.value.id : '') },
+	{ name: t('title_html', [entity.value ? entity.value.name : '...']), link: '/' + props.type + '/' + (entity.value ? entity.value.id : '') + '/history' }
+])
 
-		select_period(period: string) {
-			this.period = period
-			const now = Date.now() / 1000
-			const midnignt = new Date()
-			midnignt.setHours(0, 0, 0, 0)
-			const day = 24 * 3600
-			this.start_date = (() => {
-				if (period === '24h') { return now - day }
-				if (period === 'today') { return midnignt.getTime() / 1000 }
-				if (period === '2days') { return now - 2 * day }
-				return now - 7 * day
-			})()
-			localStorage.setItem('options/history-period', period)
-		}
+const filteredFights = computed(() => fights.value.filter((fight) => {
+	const contextFilter = fight.date >= start_date.value && (
+		(displayContexts.value.challenge && fight.context === FightContext.CHALLENGE) ||
+		(displayContexts.value.garden && fight.context === FightContext.GARDEN) ||
+		(displayContexts.value.tournament && fight.context === FightContext.TOURNAMENT) ||
+		(displayContexts.value.garden && displayTypes.value.battleRoyale && fight.context === FightContext.BATTLE_ROYALE)
+	)
 
-		@Watch('displayContexts', { deep: true })
-		updateContexts() {
-			localStorage.setItem('options/history-contexts', JSON.stringify(this.displayContexts))
-		}
+	const typeFilter = (
+		(displayTypes.value.solo && fight.type === FightType.SOLO) ||
+		(displayTypes.value.farmer && fight.type === FightType.FARMER) ||
+		(displayTypes.value.team && fight.type === FightType.TEAM) ||
+		(displayTypes.value.battleRoyale && fight.type === FightType.BATTLE_ROYALE) ||
+		(displayTypes.value.war && fight.type === FightType.WAR) ||
+		(displayTypes.value.chestHunt && fight.type === FightType.CHEST_HUNT) ||
+		(displayTypes.value.colossus && fight.type === FightType.COLOSSUS) ||
+		(displayTypes.value.boss && fight.type === FightType.BOSS) ||
+		props.type === 'team'
+	)
 
-		@Watch('displayTypes', { deep: true })
-		updateTypes() {
-			localStorage.setItem('options/history-types', JSON.stringify(this.displayTypes))
-		}
+	const lootFilter = !displayLoot.value.chests && !displayLoot.value.rareloot
+		|| (displayLoot.value.chests && fight.chests > 0)
+		|| (displayLoot.value.rareloot && fight.rareloot > 0)
 
-		@Watch('displayLoot', { deep: true })
-		updateLoot() {
-			localStorage.setItem('options/history-loot', JSON.stringify(this.displayLoot))
-		}
-	}
+	return contextFilter && typeFilter && lootFilter
+}))
+
+const victories = computed(() => filteredFights.value.filter(f => f.result === 'win').length)
+const defeats = computed(() => filteredFights.value.filter(f => f.result === 'defeat').length)
+const draws = computed(() => filteredFights.value.filter(f => f.result === 'draw').length)
+const ratio = computed(() => defeats.value === 0 ? '∞' : LeekWars.numberPrecision(victories.value / defeats.value, 3))
+
+function select_period(p: string) {
+	period.value = p
+	const now = Date.now() / 1000
+	const midnight = new Date()
+	midnight.setHours(0, 0, 0, 0)
+	const day = 24 * 3600
+	start_date.value = (() => {
+		if (p === '24h') return now - day
+		if (p === 'today') return midnight.getTime() / 1000
+		if (p === '2days') return now - 2 * day
+		return now - 7 * day
+	})()
+	localStorage.setItem('options/history-period', p)
+}
+
+const id = route.params.id
+const initialPeriod = localStorage.getItem('options/history-period') || '1week'
+displayContexts.value = JSON.parse(localStorage.getItem('options/history-contexts') || '{"challenge": true, "garden": true, "tournament": true }')
+displayTypes.value = JSON.parse(localStorage.getItem('options/history-types') || '{"solo": true, "farmer": true, "team": true, "battleRoyale": true, "boss": true }')
+displayLoot.value = JSON.parse(localStorage.getItem('options/history-loot') || '{"chests":false,"rareloot":false}')
+select_period(initialPeriod)
+
+LeekWars.get('history/get-' + props.type + '-history/' + id).then(data => {
+	fights.value = data.fights
+	entity.value = data.entity
+	LeekWars.setTitle(t('title', [data.entity.name]))
+	select_period(initialPeriod)
+})
+
+watch(displayContexts, () => {
+	localStorage.setItem('options/history-contexts', JSON.stringify(displayContexts.value))
+}, { deep: true })
+watch(displayTypes, () => {
+	localStorage.setItem('options/history-types', JSON.stringify(displayTypes.value))
+}, { deep: true })
+watch(displayLoot, () => {
+	localStorage.setItem('options/history-loot', JSON.stringify(displayLoot.value))
+}, { deep: true })
 </script>
 
 <style lang="scss" scoped>

@@ -20,7 +20,7 @@
 				</rich-tooltip-farmer>
 			</router-link>
 			<router-link v-else-if="fight.type == FightType.TEAM" :to="'/team/' + fight.team1" class="fighter">
-				<rich-tooltip-composition :id="fight.composition1" v-slot="{ props }">
+				<rich-tooltip-composition :id="fight.composition1 || 0" v-slot="{ props }">
 					<div v-bind="props">[{{ fight.team1_name }}]</div>
 				</rich-tooltip-composition>
 			</router-link>
@@ -45,7 +45,7 @@
 				</rich-tooltip-farmer>
 			</router-link>
 			<router-link v-else-if="fight.type == FightType.TEAM" :to="'/team/' + fight.team2" class="fighter">
-				<rich-tooltip-composition :id="fight.composition2" v-slot="{ props }">
+				<rich-tooltip-composition :id="fight.composition2 || 0" v-slot="{ props }">
 					<div v-bind="props">[{{ fight.team2_name }}]</div>
 				</rich-tooltip-composition>
 			</router-link>
@@ -64,31 +64,33 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { Fight, FightContext, FightType } from '@/model/fight'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
-	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
-	import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { type Fight, FightContext, FightType } from '@/model/fight'
+import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
 
-	@Options({ name: 'fight-history', components: { RichTooltipFarmer, RichTooltipLeek, RichTooltipComposition } })
-	export default class FightHistory extends Vue {
-		@Prop() fight!: Fight
-		FightType = FightType
-		FightContext = FightContext
+defineOptions({ name: 'fight-history' })
 
-		get arenaLabel(): [string, string] {
-			switch (this.fight.type) {
-				case FightType.WAR: return [this.$t('main.n_leeks', [this.fight.leeks1?.length || 0]) as string, this.$t('main.n_leeks', [this.fight.leeks2?.length || 0]) as string]
-				case FightType.CHEST_HUNT: return [this.$t('main.n_leeks', [this.fight.leeks1?.length || 0]) as string, this.$t('main.n_chests', [this.fight.leeks2?.length || 0]) as string]
-				case FightType.COLOSSUS: {
-					const colossusName = this.fight.leeks2?.[0]?.name || 'Colosse'
-					return [this.$t('main.n_leeks', [this.fight.leeks1?.length || 0]) as string, colossusName]
-				}
-				default: return ['Battle', 'Royale']
-			}
+const props = defineProps<{
+	fight: Fight
+}>()
+
+const { t } = useI18n()
+
+const arenaLabel = computed<[string, string]>(() => {
+	switch (props.fight.type) {
+		case FightType.WAR: return [t('main.n_leeks', [props.fight.leeks1?.length || 0]) as string, t('main.n_leeks', [props.fight.leeks2?.length || 0]) as string]
+		case FightType.CHEST_HUNT: return [t('main.n_leeks', [props.fight.leeks1?.length || 0]) as string, t('main.n_chests', [props.fight.leeks2?.length || 0]) as string]
+		case FightType.COLOSSUS: {
+			const colossusName = props.fight.leeks2?.[0]?.name || 'Colosse'
+			return [t('main.n_leeks', [props.fight.leeks1?.length || 0]) as string, colossusName]
 		}
+		default: return ['Battle', 'Royale']
 	}
+})
 </script>
 
 <style lang="scss" scoped>

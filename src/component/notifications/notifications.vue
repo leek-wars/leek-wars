@@ -14,32 +14,29 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import NotificationElement from '@/component/notifications/notification.vue'
-	import { mixins } from '@/model/i18n'
-	import { LeekWars } from '@/model/leekwars'
-	import { NotificationBuilder } from '@/model/notification-builder'
-	import { Options, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { mixins } from '@/model/i18n'
+import { LeekWars } from '@/model/leekwars'
+import { NotificationBuilder } from '@/model/notification-builder'
+import { store } from '@/model/store'
 
-	@Options({
-		name: 'notifications', i18n: {}, mixins: [...mixins],
-		components: { notification: NotificationElement }
-	})
-	export default class Notifications extends Vue {
-		notifications: any = null
-		created() {
-			LeekWars.get('notification/get-latest/500').then(data => {
-				this.notifications = []
-				for (const notification of data.notifications) {
-					const notif = NotificationBuilder.build(notification)
-					notif.read = true
-					this.notifications.push(notif)
-				}
-				LeekWars.setTitle(this.$t('title'))
-				this.$store.commit('read-notifications')
-			})
-		}
+defineOptions({ name: 'notifications', i18n: {}, mixins: [...mixins] })
+
+const { t } = useI18n()
+const notifications = ref<any>(null)
+
+LeekWars.get('notification/get-latest/500').then(data => {
+	notifications.value = []
+	for (const notification of data.notifications) {
+		const notif = NotificationBuilder.build(notification)
+		notif.read = true
+		notifications.value.push(notif)
 	}
+	LeekWars.setTitle(t('title'))
+	store.commit('read-notifications')
+})
 </script>
 
 <style lang="scss" scoped>

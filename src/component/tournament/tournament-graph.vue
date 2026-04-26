@@ -351,30 +351,29 @@
 	</svg>
 </template>
 
-<script lang="ts">
-	import TournamentBlock from '@/component/tournament/tournament-block.vue'
-	import TournamentFight from '@/component/tournament/tournament-fight.vue'
-	import { Tournament } from '@/model/tournament'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { computed } from 'vue'
+import TournamentBlock from '@/component/tournament/tournament-block.vue'
+import TournamentFight from '@/component/tournament/tournament-fight.vue'
+import type { Tournament } from '@/model/tournament'
 
-	@Options({ name: 'tournament-graph', components: {
-		'tournament-block': TournamentBlock,
-		'tournament-fight': TournamentFight
-	} })
-	export default class TournamentGraph extends Vue {
-		@Prop({ required: true }) tournament!: Tournament
+defineOptions({ name: 'tournament-graph', components: {
+	'tournament-block': TournamentBlock,
+	'tournament-fight': TournamentFight
+} })
 
-		get viewBox() {
-			return this.tournament.size === 64 ? "-617 -400 1234 805" : "-477 -400 954 805"
-		}
+const props = defineProps<{
+	tournament: Tournament
+}>()
 
-		get thirtyseconds() { return this.tournament.rounds.thirtyseconds }
-		get sixteenths() { return this.tournament.rounds.sixteenths }
-		get eighths() { return this.tournament.rounds.eighths }
-		get quarters() { return this.tournament.rounds.quarters }
-		get semifinals() { return this.tournament.rounds.semifinals }
-		get finals() { return this.tournament.rounds.finals }
-	}
+const viewBox = computed(() => props.tournament.size === 64 ? '-617 -400 1234 805' : '-477 -400 954 805')
+
+const thirtyseconds = computed(() => props.tournament.rounds.thirtyseconds)
+const sixteenths = computed(() => props.tournament.rounds.sixteenths)
+const eighths = computed(() => props.tournament.rounds.eighths)
+const quarters = computed(() => props.tournament.rounds.quarters)
+const semifinals = computed(() => props.tournament.rounds.semifinals)
+const finals = computed(() => props.tournament.rounds.finals)
 </script>
 
 <style lang="scss" scoped>

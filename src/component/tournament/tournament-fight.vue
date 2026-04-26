@@ -5,23 +5,26 @@
 	</a>
 </template>
 
-<script lang="ts">
-	import { Options, Prop, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 
-	@Options({ name: 'tournament-fight' })
-	export default class TournamentFight extends Vue {
-		@Prop({ required: true }) fight: any
-		@Prop({ required: true }) x!: number
-		@Prop({ required: true }) y!: number
-		get link() { return this.fight ? this.fight : null }
+defineOptions({ name: 'tournament-fight' })
 
-		click(e: Event) {
-			if (this.fight && this.fight) {
-				this.$router.push(this.fight)
-			}
-			e.preventDefault()
-		}
-	}
+const props = defineProps<{
+	fight: any
+	x: number
+	y: number
+}>()
+
+const router = useRouter()
+
+const link = computed(() => props.fight ? props.fight : null)
+
+function click(e: Event) {
+	if (props.fight) router.push(props.fight)
+	e.preventDefault()
+}
 </script>
 
 <style lang="scss" scoped>

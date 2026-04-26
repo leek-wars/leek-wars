@@ -81,6 +81,10 @@ class Fight {
 	public leeks2!: Leek[]
 	public farmer1!: number
 	public farmer2!: number
+	public farmer1_name?: string
+	public farmer2_name?: string
+	public composition1?: number
+	public composition2?: number
 	public team1!: Team | null
 	public team2!: Team | null
 	public title!: string

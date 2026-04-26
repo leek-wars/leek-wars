@@ -10,6 +10,9 @@ class Tournament {
 	next_round!: number
 	group!: number | null
 	size!: number
+	winner?: any
+	min_power?: number
+	max_power?: number
 }
 
 export { Tournament }

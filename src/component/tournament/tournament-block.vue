@@ -25,75 +25,73 @@
 	</a>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { emitter } from '@/model/vue'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
-	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
-	import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
-	import { ref } from 'vue'
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { LeekWars } from '@/model/leekwars'
+import { emitter } from '@/model/vue'
+import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
 
-	// Shared across all tournament-block instances: only one tooltip at a time
-	const activeBlock = ref('')
+defineOptions({ name: 'tournament-block' })
 
-	@Options({ name: 'tournament-block', components: { RichTooltipLeek, RichTooltipFarmer, RichTooltipComposition } })
-	export default class TournamentBlock extends Vue {
-		@Prop({ required: true }) item: any
-		@Prop({ required: true }) x!: number
-		@Prop({ required: true }) y!: number
-		@Prop({ required: true }) size!: number
-		@Prop() invert!: boolean
-		get link() { return this.item && this.item.link ? this.item.link : undefined }
-		get image() { return (this.item && this.item.image) ? (this.item.image.indexOf('/') === 0 ? 'https://leekwars.com' + this.item.image : this.item.image) : '' }
-		get avatarSize() { return Math.round(this.size * 0.4) }
-		get farmerAvatar() {
-			if (this.item && this.item.farmer_avatar_changed > 0) {
-				return LeekWars.AVATAR + 'avatar/' + this.item.farmer_id + '.png?' + this.item.farmer_avatar_changed
-			}
-			return '/image/no_avatar.png'
-		}
-		get avatarCx() { return this.invert ? this.x + this.size - this.avatarSize / 3 : this.x + this.avatarSize / 3 }
-		get clipId() { return 'avatar-clip-' + this.x + '-' + this.y }
-		get blockKey() { return this.x + ',' + this.y }
-		get isActive() { return activeBlock.value === this.blockKey }
-		get entityType() {
-			if (!this.item?.link) return null
-			const match = this.item.link.match(/^\/(leek|farmer|team)\/(\d+)$/)
-			return match ? match[1] : null
-		}
-		get entityId() {
-			if (!this.item?.link) return 0
-			const match = this.item.link.match(/^\/(leek|farmer|team)\/(\d+)$/)
-			return match ? parseInt(match[2]) : 0
-		}
+// Shared across all tournament-block instances: only one tooltip at a time
+const activeBlock = ref('')
 
-		activate() {
-			activeBlock.value = this.blockKey
-		}
-		click(e: Event) {
-			if (this.item) {
-				this.$router.push(this.item.link)
-			}
-			e.preventDefault()
-		}
-		clickFarmer(e: Event) {
-			if (this.item) {
-				this.$router.push('/farmer/' + this.item.farmer_id)
-			}
-			e.preventDefault()
-		}
-		mouseenter() {
-			if (this.item) {
-				emitter.emit('tooltip', { x: this.x + this.size / 2, y: this.y + this.size, content: this.item.name })
-			}
-		}
-		mouseleave() {
-			if (this.item) {
-				emitter.emit('tooltip-close')
-			}
-		}
+const props = defineProps<{
+	item: any
+	x: number
+	y: number
+	size: number
+	invert?: boolean
+}>()
+
+const router = useRouter()
+
+const link = computed(() => props.item && props.item.link ? props.item.link : undefined)
+const image = computed(() => (props.item && props.item.image) ? (props.item.image.indexOf('/') === 0 ? 'https://leekwars.com' + props.item.image : props.item.image) : '')
+const avatarSize = computed(() => Math.round(props.size * 0.4))
+const farmerAvatar = computed(() => {
+	if (props.item && props.item.farmer_avatar_changed > 0) {
+		return LeekWars.AVATAR + 'avatar/' + props.item.farmer_id + '.png?' + props.item.farmer_avatar_changed
 	}
+	return '/image/no_avatar.png'
+})
+const avatarCx = computed(() => props.invert ? props.x + props.size - avatarSize.value / 3 : props.x + avatarSize.value / 3)
+const clipId = computed(() => 'avatar-clip-' + props.x + '-' + props.y)
+const blockKey = computed(() => props.x + ',' + props.y)
+const isActive = computed(() => activeBlock.value === blockKey.value)
+const entityType = computed(() => {
+	if (!props.item?.link) return null
+	const match = props.item.link.match(/^\/(leek|farmer|team)\/(\d+)$/)
+	return match ? match[1] : null
+})
+const entityId = computed(() => {
+	if (!props.item?.link) return 0
+	const match = props.item.link.match(/^\/(leek|farmer|team)\/(\d+)$/)
+	return match ? parseInt(match[2]) : 0
+})
+
+function activate() {
+	activeBlock.value = blockKey.value
+}
+function click(e: Event) {
+	if (props.item) router.push(props.item.link)
+	e.preventDefault()
+}
+function clickFarmer(e: Event) {
+	if (props.item) router.push('/farmer/' + props.item.farmer_id)
+	e.preventDefault()
+}
+function mouseenter() {
+	if (props.item) {
+		emitter.emit('tooltip', { x: props.x + props.size / 2, y: props.y + props.size, content: props.item.name })
+	}
+}
+function mouseleave() {
+	if (props.item) emitter.emit('tooltip-close')
+}
 </script>
 
 <style lang="scss" scoped>

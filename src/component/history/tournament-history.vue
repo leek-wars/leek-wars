@@ -12,14 +12,15 @@
 	</router-link>
 </template>
 
-<script lang="ts">
-	import { Tournament } from '@/model/tournament'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	@Options({ name: 'tournament-history' })
-	export default class TournamentHistory extends Vue {
-		@Prop() tournament!: Tournament
-		@Prop() showTime!: boolean
-	}
+<script setup lang="ts">
+import type { Tournament } from '@/model/tournament'
+
+defineOptions({ name: 'tournament-history' })
+
+defineProps<{
+	tournament: Tournament
+	showTime?: boolean
+}>()
 </script>
 
 <style lang="scss" scoped>

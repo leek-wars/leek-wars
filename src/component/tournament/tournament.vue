@@ -16,8 +16,8 @@
 					<tournament-graph v-else :tournament="tournament" :class="{zoomed: zoomed}" :style="{maxHeight: zoomed ? height : 'auto', minWidth: zoomed && LeekWars.mobile ? '950px' : ''}" />
 
 					<pre class="info" v-if="$store.getters.admin && tournament">
-Min power: {{ $filters.number(tournament.min_power) }}
-Max power: {{ $filters.number(tournament.max_power) }}</pre>
+Min power: {{ $filters.number(tournament.min_power || 0) }}
+Max power: {{ $filters.number(tournament.max_power || 0) }}</pre>
 				</div>
 			</template>
 		</panel>
@@ -31,157 +31,156 @@ Max power: {{ $filters.number(tournament.max_power) }}</pre>
 	</div>
 </template>
 
-<script lang="ts">
-	import TournamentBlock from '@/component/tournament/tournament-block.vue'
-	import TournamentFight from '@/component/tournament/tournament-fight.vue'
-	import { Comment } from '@/model/comment'
-	import { LeekWars } from '@/model/leekwars'
-	import { Tournament } from '@/model/tournament'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
-	import Comments from '@/component/comment/comments.vue'
-	import { SocketMessage } from '@/model/socket'
-	import { mixins } from '@/model/i18n'
-	import TournamentGraph from './tournament-graph.vue'
-	import { emitter } from '@/model/vue'
+<script setup lang="ts">
+import { ref, watch, useTemplateRef, onBeforeUnmount } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
+import TournamentBlock from '@/component/tournament/tournament-block.vue'
+import TournamentFight from '@/component/tournament/tournament-fight.vue'
+import type { Comment } from '@/model/comment'
+import { LeekWars } from '@/model/leekwars'
+import type { Tournament } from '@/model/tournament'
+import Comments from '@/component/comment/comments.vue'
+import { SocketMessage } from '@/model/socket'
+import { mixins } from '@/model/i18n'
+import TournamentGraph from './tournament-graph.vue'
+import { emitter } from '@/model/vue'
 
-	@Options({ name: 'tournament', i18n: {}, mixins: [...mixins], components: {
-		'tournament-block': TournamentBlock,
-		'tournament-fight': TournamentFight,
-		TournamentGraph,
-		Comments
-	} })
-	export default class TournamentPage extends Vue {
-		tournament: Tournament | null = null
-		sixteenths: any = null
-		eighths: any = null
-		quarters: any = null
-		semifinals: any = null
-		finals: any = null
-		title: string = ''
-		tooltip: boolean = false
-		tooltipX: number = 0
-		tooltipY: number = 0
-		tooltipText: string = ''
-		zoomed: boolean = false
-		height: number = 0
-		timerText: string = ''
-		timer: any
-		actions: any[] = []
-		generating: boolean = false
+defineOptions({ name: 'tournament', i18n: {}, mixins: [...mixins], components: {
+	'tournament-block': TournamentBlock,
+	'tournament-fight': TournamentFight,
+} })
 
-		created() {
-			this.actions = [{icon: 'mdi-magnify-plus-outline', click: () => this.zoom()}]
-			emitter.on('tournament-update', (data: any) => {
-				if (this.tournament && data[0] === this.tournament.id) {
-					LeekWars.get<Tournament>('tournament/get/' + this.$route.params.id).then(tournament => {
-						this.tournament = tournament
-						this.generating = false
-					})
-				}
-			})
+const { t } = useI18n()
+const route = useRoute()
+
+const tournament = ref<Tournament | null>(null)
+const sixteenths = ref<any>(null)
+const eighths = ref<any>(null)
+const quarters = ref<any>(null)
+const semifinals = ref<any>(null)
+const finals = ref<any>(null)
+const title = ref('')
+const tooltip = ref(false)
+const tooltipX = ref(0)
+const tooltipY = ref(0)
+const tooltipText = ref('')
+const zoomed = ref(false)
+const height = ref(0)
+const timerText = ref('')
+let timer: any
+const generating = ref(false)
+const sizer = useTemplateRef<HTMLElement>('sizer')
+
+const actions: any[] = [{ icon: 'mdi-magnify-plus-outline', click: () => zoom() }]
+
+emitter.on('tournament-update', (data: any) => {
+	if (tournament.value && data[0] === tournament.value.id) {
+		LeekWars.get<Tournament>('tournament/get/' + route.params.id).then(t => {
+			tournament.value = t
+			generating.value = false
+		})
+	}
+})
+
+function update() {
+	tournament.value = null
+	LeekWars.get<Tournament>('tournament/get/' + route.params.id).then(tour => {
+		tournament.value = tour
+		if (!tournament.value) return
+
+		sixteenths.value = tournament.value.rounds.sixteenths
+		eighths.value = tournament.value.rounds.eighths
+		quarters.value = tournament.value.rounds.quarters
+		semifinals.value = tournament.value.rounds.semifinals
+		finals.value = tournament.value.rounds.finals
+
+		title.value = t('' + tournament.value.type, [LeekWars.formatDateTime(tournament.value.date)]) as string
+		LeekWars.large = tour.size === 64
+		LeekWars.setTitle(title.value)
+		LeekWars.setActions(actions)
+		if (tournament.value.group) {
+			timerText.value = t('next_round_supervisor') as string
+		} else {
+			setupTimer()
 		}
+		LeekWars.socket.send([SocketMessage.TOURNAMENT_LISTEN, tournament.value.id])
+		emitter.emit('loaded')
+	})
+}
 
-		@Watch('$route.params', {immediate: true})
-		update() {
-			this.tournament = null
-			LeekWars.get<Tournament>('tournament/get/' + this.$route.params.id).then(tournament => {
-				this.tournament = tournament
-				if (!this.tournament) { return }
+watch(() => route.params, update, { immediate: true })
 
-				this.sixteenths = this.tournament.rounds.sixteenths
-				this.eighths = this.tournament.rounds.eighths
-				this.quarters = this.tournament.rounds.quarters
-				this.semifinals = this.tournament.rounds.semifinals
-				this.finals = this.tournament.rounds.finals
+emitter.on('tooltip', tooltipOpen)
+emitter.on('tooltip-close', tooltipClose)
 
-				this.title = this.$t('' + this.tournament.type, [LeekWars.formatDateTime(this.tournament.date)]) as string
-				LeekWars.large = tournament.size === 64
-				LeekWars.setTitle(this.title)
-				LeekWars.setActions(this.actions)
-				if (this.tournament.group) {
-					this.timerText = this.$t('next_round_supervisor') as string
-				} else {
-					this.setupTimer()
-				}
-				LeekWars.socket.send([SocketMessage.TOURNAMENT_LISTEN, this.tournament.id])
-				emitter.emit('loaded')
-			})
-			emitter.on('tooltip', this.tooltipOpen)
-			emitter.on('tooltip-close', this.tooltipClose)
-		}
+onBeforeUnmount(() => {
+	clearTimeout(timer)
+	LeekWars.large = false
+	emitter.off('tooltip', tooltipOpen)
+	emitter.off('tooltip-close', tooltipClose)
+	if (tournament.value) {
+		LeekWars.socket.send([SocketMessage.TOURNAMENT_UNLISTEN, tournament.value.id])
+	}
+})
 
-		beforeUnmount() {
-			clearTimeout(this.timer)
-			LeekWars.large = false
-			emitter.off('tooltip', this.tooltipOpen)
-			emitter.off('tooltip-close', this.tooltipClose)
-			if (this.tournament) {
-				LeekWars.socket.send([SocketMessage.TOURNAMENT_UNLISTEN, this.tournament.id])
-			}
-		}
+function tooltipOpen(data: { x: number, y: number, content: string }) {
+	if (!tournament.value || !sizer.value) return
+	tooltip.value = true
+	const width = sizer.value.offsetWidth - 30
+	const tournamentWidth = tournament.value.size === 64 ? 1224 : 944
+	const ratio = width / tournamentWidth
+	tooltipX.value = 15 + (tournamentWidth / 2 + data.x) * ratio
+	tooltipY.value = 60 + (400 + data.y) * ratio
+	tooltipText.value = data.content
+}
 
-		tooltipOpen(data: { x: number, y: number, content: string }) {
-			if (!this.tournament || !this.$refs.sizer) { return }
-			this.tooltip = true
-			const width = (this.$refs.sizer as any).offsetWidth - 30
-			const tournamentWidth = this.tournament!.size === 64 ? 1224 : 944
-			const ratio = width / tournamentWidth
-			this.tooltipX = 15 + (tournamentWidth / 2 + data.x) * ratio
-			this.tooltipY = 60 + (400 + data.y) * ratio
-			this.tooltipText = data.content
-		}
+function tooltipClose() {
+	tooltip.value = false
+}
 
-		tooltipClose() {
-			this.tooltip = false
-		}
+function comment(c: Comment) {
+	if (!tournament.value) return
+	LeekWars.post('tournament/comment', { tournament_id: tournament.value.id, comment: c.comment }).then(() => {
+		if (tournament.value) tournament.value.comments.push(c)
+	})
+}
 
-		comment(comment: Comment) {
-			if (!this.tournament) { return }
-			LeekWars.post('tournament/comment', {tournament_id: this.tournament.id, comment: comment.comment}).then(data => {
-				if (this.tournament) {
-					this.tournament.comments.push(comment)
-				}
-			})
-		}
+function zoom() {
+	if (zoomed.value) {
+		zoomed.value = false
+		actions[0].icon = 'mdi-magnify-plus-outline'
+	} else {
+		zoomed.value = true
+		height.value = window.innerHeight - 86
+		actions[0].icon = 'mdi-magnify-minus-outline'
+	}
+}
 
-		zoom() {
-			if (this.zoomed) {
-				this.zoomed = false
-				this.actions[0].icon = 'mdi-magnify-plus-outline'
-			} else {
-				this.zoomed = true
-				this.height = window.innerHeight - 86
-				this.actions[0].icon = 'mdi-magnify-minus-outline'
-			}
-		}
-
-		setupTimer() {
-			if (!this.tournament) { return }
-			const update = () => {
-				if (!this.tournament) { return }
-				const time = this.tournament.next_round - LeekWars.timeSeconds
-				if (time < 0) {
-					this.timerText = this.$t('next_round_in', [this.$t('few_seconds')]) as string
-					LeekWars.setSubTitle(this.timerText)
-				} else {
-					this.timerText = this.$t('next_round_in', [LeekWars.formatTimeSeconds(time)]) as string
-					LeekWars.setSubTitle(this.timerText)
-					this.timer = setTimeout(update, 1000)
-				}
-			}
-			if (!this.tournament.finished && this.tournament.next_round > 0) {
-				update()
-			}
-		}
-
-		generateTournament() {
-			if (!this.tournament) { return }
-			this.generating = true
-			LeekWars.post('tournament/generate', { tournament_id: this.tournament.id }).then(() => {
-
-			}).error(error => LeekWars.toast(this.$t(error.error, error.params)))
+function setupTimer() {
+	if (!tournament.value) return
+	const updateTimer = () => {
+		if (!tournament.value) return
+		const time = tournament.value.next_round - LeekWars.timeSeconds
+		if (time < 0) {
+			timerText.value = t('next_round_in', [t('few_seconds')]) as string
+			LeekWars.setSubTitle(timerText.value)
+		} else {
+			timerText.value = t('next_round_in', [LeekWars.formatTimeSeconds(time)]) as string
+			LeekWars.setSubTitle(timerText.value)
+			timer = setTimeout(updateTimer, 1000)
 		}
 	}
+	if (!tournament.value.finished && tournament.value.next_round > 0) {
+		updateTimer()
+	}
+}
+
+function generateTournament() {
+	if (!tournament.value) return
+	generating.value = true
+	LeekWars.post('tournament/generate', { tournament_id: tournament.value.id }).then(() => {}).catch((err: any) => LeekWars.toast(t(err.error, err.params)))
+}
 </script>
 
 <style lang="scss" scoped>

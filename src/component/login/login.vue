@@ -35,63 +35,65 @@
 
 </template>
 
-<script lang="ts">
-	import { mixins } from '@/model/i18n'
-	import { LeekWars } from '@/model/leekwars'
-	import { getRedirectAfterLogin } from '@/router'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
+<script setup lang="ts">
+import { ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRoute, useRouter } from 'vue-router'
+import { mixins } from '@/model/i18n'
+import { LeekWars } from '@/model/leekwars'
+import { store } from '@/model/store'
+import { getRedirectAfterLogin } from '@/router'
 
-	@Options({ name: 'login', i18n: {}, mixins: [...mixins] })
-	export default class Login extends Vue {
-		error: any = null
-		loading: boolean = false
-		form = {
-			login: '',
-			password: '',
-			keep_connected: false
-		}
+defineOptions({ name: 'login', i18n: {}, mixins: [...mixins] })
 
-		created() {
-			LeekWars.setTitle(this.$t('title'))
-			this.form.keep_connected = localStorage.getItem("keep_connected") === 'true'
+const { t } = useI18n()
+const route = useRoute()
+const router = useRouter()
 
-			const token = this.$route.params.token
-			if (token) {
-				LeekWars.post('farmer/login-comeback', { token }).then(data => {
-					const token = LeekWars.DEV ? data.token : '$'
-					this.$store.commit('connect', {...data, token})
-					this.$router.push(getRedirectAfterLogin())
-				}).error(error => {
-					LeekWars.toast(error.error)
-					this.$router.push('/')
-				})
-			}
-		}
+const error = ref<any>(null)
+const loading = ref(false)
+const form = ref({
+	login: '',
+	password: '',
+	keep_connected: localStorage.getItem('keep_connected') === 'true'
+})
 
-		login() {
-			this.loading = true
-			this.error = null
-			const url = LeekWars.DEV ? 'farmer/login-token' : 'farmer/login'
-			LeekWars.post(url, this.form).then(data => {
-				const token = LeekWars.DEV ? data.token : '$'
-				this.$store.commit('connect', {...data, token})
-				this.$router.push(getRedirectAfterLogin())
-			}).error(error => {
-				this.loading = false
-				this.error = error
-			})
-		}
+LeekWars.setTitle(t('title'))
 
-		@Watch('form.keep_connected')
-		changeKeepConnected() {
-			localStorage.setItem("keep_connected", this.form.keep_connected ? "true" : "false")
-		}
+const tokenParam = route.params.token
+if (tokenParam) {
+	LeekWars.post('farmer/login-comeback', { token: tokenParam }).then(data => {
+		const token = LeekWars.DEV ? data.token : '$'
+		store.commit('connect', { ...data, token })
+		router.push(getRedirectAfterLogin())
+	}).catch((err: any) => {
+		LeekWars.toast(err.error)
+		router.push('/')
+	})
+}
 
-		oauthStart(provider: 'github' | 'google') {
-			localStorage.setItem('login-attempt', 'true')
-			document.location.href = LeekWars.API + `farmer/start-${provider}-login`
-		}
-	}
+function login() {
+	loading.value = true
+	error.value = null
+	const url = LeekWars.DEV ? 'farmer/login-token' : 'farmer/login'
+	LeekWars.post(url, form.value).then(data => {
+		const token = LeekWars.DEV ? data.token : '$'
+		store.commit('connect', { ...data, token })
+		router.push(getRedirectAfterLogin())
+	}).catch((err: any) => {
+		loading.value = false
+		error.value = err
+	})
+}
+
+watch(() => form.value.keep_connected, () => {
+	localStorage.setItem('keep_connected', form.value.keep_connected ? 'true' : 'false')
+})
+
+function oauthStart(provider: 'github' | 'google') {
+	localStorage.setItem('login-attempt', 'true')
+	document.location.href = LeekWars.API + `farmer/start-${provider}-login`
+}
 </script>
 
 <style lang="scss" scoped>
