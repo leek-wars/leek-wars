@@ -18,6 +18,12 @@
 							<h2 v-if="$store.state.farmer">Erreurs ({{ $store.state.farmer.errors }})</h2>
 						</div>
 					</router-link>
+					<router-link to="/admin/security">
+						<div v-ripple class="section card">
+							<v-icon>mdi-shield-alert</v-icon>
+							<h2>Sécurité</h2>
+						</div>
+					</router-link>
 					<a href="/apcu.php" target="_blank" rel="noopener">
 						<div v-ripple class="section card">
 							<v-icon>mdi-memory</v-icon>

@@ -13,6 +13,7 @@ const AdminTrophies = () => import(/* webpackChunkName: "admin" */ `@/component/
 const AdminGroups = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-groups.vue`)
 const AdminSources = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-sources.vue`)
 const AdminSchemes = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-schemes.vue`)
+const AdminSecurity = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-security.vue`)
 const AdminTournaments = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-tournaments.vue`)
 const AdminFunnels = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-funnels.vue`)
 const AdminDashboards = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-dashboards.vue`)
@@ -143,6 +144,7 @@ const routes = [
 	{ path: '/admin/groups', component: AdminGroups, beforeEnter: connected },
 	{ path: '/admin/sources', component: AdminSources, beforeEnter: connected },
 	{ path: '/admin/schemes', component: AdminSchemes, beforeEnter: connected },
+	{ path: '/admin/security', component: AdminSecurity, beforeEnter: connected },
 	{ path: '/admin/components', component: AdminComponents, beforeEnter: connected },
 	{ path: '/admin/tournaments', component: AdminTournaments, beforeEnter: connected },
 	{ path: '/admin/funnels', component: AdminFunnels, beforeEnter: connected },
