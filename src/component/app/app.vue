@@ -351,7 +351,7 @@
 			this.consoleValue = true
 		}
 
-		clickClover() {
+		async clickClover() {
 			if (LeekWars.cloverFake) {
 				this.mouseX = LeekWars.cloverLeft
 				this.mouseY = LeekWars.cloverTop
@@ -361,7 +361,7 @@
 			} else {
 				LeekWars.track('clover')
 				LeekWars.socket.send([SocketMessage.GET_LUCKY])
-				LeekWars.clover = false
+				setTimeout(() => LeekWars.clover = false, 1000);
 			}
 		}
 
@@ -607,6 +607,13 @@
 		cursor: pointer;
 		width: 40px;
 		height: 40px;
+	}
+	.clover:active {
+		animation: cloverCollect 1s ease infinite;
+	}
+	@keyframes cloverCollect {
+		10% { transform: scale(1.5); }
+		100% { transform: rotate(950deg) scale(0.1); }
 	}
 	.console .title .spacer {
 		flex: 1;
