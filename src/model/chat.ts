@@ -7,6 +7,7 @@ class ChatMessage {
 	chat!: number
 	farmer!: Farmer
 	content!: string
+	raw_content?: string
 	contents: string[] = []
 	date!: number
 	day!: number

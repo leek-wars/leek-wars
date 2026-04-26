@@ -44,6 +44,10 @@
 					<v-icon>mdi-delete</v-icon>
 					<span>{{ $t('warning.delete') }}</span>
 				</v-list-item>
+				<v-list-item v-if="$store.getters.admin && menuMessage.farmer.id !== 0" v-ripple @click="createIssue(menuMessage)">
+					<v-icon>mdi-github</v-icon>
+					<span>Créer une issue</span>
+				</v-list-item>
 			</v-list>
 		</v-menu>
 
@@ -94,6 +98,23 @@
 			<template #actions>
 				<div v-ripple @click="deleteDialog = false">{{ $t('main.cancel') }}</div>
 				<div v-ripple class="mute red" @click="deleteConfirm"><v-icon>mdi-delete</v-icon> Supprimer</div>
+			</template>
+		</popup>
+
+		<popup v-model="issueDialog" :width="600" icon="mdi-github" title="Créer une issue">
+			<div v-if="issueMessage" class="issue">
+				<div class="flex">
+					<avatar :farmer="issueMessage.farmer" />
+					<div class="bubble card">{{ issueMessage.raw_content }}</div>
+				</div>
+				<label>Titre</label>
+				<input v-model="issueTitle" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+				<label>Description (optionnel)</label>
+				<textarea v-model="issueDescription" rows="4" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+			</div>
+			<template #actions>
+				<div v-ripple @click="issueDialog = false">{{ $t('main.cancel') }}</div>
+				<div v-ripple class="green" @click="createIssueConfirm"><v-icon>mdi-github</v-icon> Créer</div>
 			</template>
 		</popup>
 
@@ -172,6 +193,11 @@ import { emitter } from '@/model/vue'
 		deleteDialog: boolean = false
 		deletedMessage: ChatMessage | null = null
 		deletedMessages: {[key: number]: boolean} = {}
+
+		issueDialog: boolean = false
+		issueMessage: ChatMessage | null = null
+		issueTitle: string = ''
+		issueDescription: string = ''
 
 		reportDialog: boolean = false
 		reportFarmer: Farmer | null = null
@@ -385,6 +411,24 @@ import { emitter } from '@/model/vue'
 			this.muteFarmer = farmer
 		}
 
+		createIssue(message: ChatMessage) {
+			this.issueDialog = true
+			this.issueMessage = message
+			this.issueTitle = (message.raw_content || '').replace(/\s+/g, ' ').trim().substring(0, 80)
+			this.issueDescription = ''
+		}
+
+		createIssueConfirm() {
+			if (!this.issueMessage) return
+			const id = this.issueMessage.id
+			this.issueDialog = false
+			LeekWars.post('message/create-issue', { message_id: id, title: this.issueTitle, description: this.issueDescription }).then(data => {
+				LeekWars.toast('Issue #' + data.issue + ' créée')
+			}).error(data => {
+				LeekWars.toast(this.$t('main.error_' + data.error))
+			})
+		}
+
 		censorConfirm() {
 			this.censorDialog = false
 			if (this.censorMessage) {
@@ -448,6 +492,7 @@ import { emitter } from '@/model/vue'
 			}
 			if (message.formatted) return message
 
+			message.raw_content = message.content
 			message.content = formatChatMessage(message.content, message.farmer.name, store.state.farmer_by_name)
 
 			const element = document.createElement('div')
@@ -555,6 +600,37 @@ import { emitter } from '@/model/vue'
 	.censor .flex {
 		gap: 8px;
 		margin: 10px 0;
+	}
+	.issue {
+		.flex {
+			gap: 8px;
+			margin: 0 0 12px 0;
+			align-items: flex-start;
+		}
+		.bubble {
+			flex: 1;
+			padding: 8px;
+			word-break: break-word;
+			white-space: pre-wrap;
+		}
+		label {
+			display: block;
+			margin-bottom: 4px;
+			color: var(--text-color-secondary);
+			font-size: 14px;
+		}
+		input[type="text"], textarea {
+			width: 100%;
+			box-sizing: border-box;
+			padding: 6px 8px;
+			margin-bottom: 12px;
+			border: 1px solid var(--border);
+			border-radius: 4px;
+			background: var(--pure-white);
+			font-family: inherit;
+			font-size: 14px;
+			resize: vertical;
+		}
 	}
 	.avatar {
 		width: 42px;
