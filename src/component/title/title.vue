@@ -8,53 +8,49 @@
 	</span>
 </template>
 
-<script lang="ts">
-	import { i18n } from '@/model/i18n'
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { i18n } from '@/model/i18n'
+import { LeekWars } from '@/model/leekwars'
 
-	@Options({ name: "lw-title" })
-	export default class LWTitle extends Vue {
+defineOptions({ name: 'lw-title' })
 
-		TROPHIES = LeekWars.trophies
-		@Prop() title!: any
+const TROPHIES = LeekWars.trophies
 
-		get icon() {
-			return this.title[0]
-		}
-		get noun() {
-			return this.title[1]
-		}
-		get gender() {
-			return this.title[2]
-		}
-		get adjective() {
-			return this.title[3]
-		}
+const props = defineProps<{
+	title: any
+}>()
 
-		get word1() {
-			if (!this.noun) { return '' }
-			const trophy = LeekWars.trophies[this.noun - 1]
-			if (!trophy) return ''
-			const gender_code = this.gender === 1 || ((trophy.noun_gender & 2) !== 0) ? '' : '_f'
-			let word = this.$t('trophy.' + trophy.code + gender_code) as string
-			if (i18n.locale === 'en' && this.adjective && word !== word.toUpperCase()) {
-				word = word.toLowerCase()
-			}
-			return word
-		}
+const { t } = useI18n()
 
-		get word2() {
-			if (!this.adjective) { return '' }
-			const trophy = LeekWars.trophies[this.adjective - 1]
-			const gender_code = this.gender === 1 || ((trophy.adj_gender & 2) !== 0) ? '' : '_f'
-			let word = this.$t('trophy.' + trophy.code + gender_code) as string
-			if (i18n.locale === 'fr' && this.noun && word !== word.toUpperCase()) {
-				word = word.toLowerCase()
-			}
-			return word
-		}
+const icon = computed(() => props.title[0])
+const noun = computed(() => props.title[1])
+const gender = computed(() => props.title[2])
+const adjective = computed(() => props.title[3])
+
+const word1 = computed(() => {
+	if (!noun.value) return ''
+	const trophy = LeekWars.trophies[noun.value - 1]
+	if (!trophy) return ''
+	const gender_code = gender.value === 1 || ((trophy.noun_gender & 2) !== 0) ? '' : '_f'
+	let word = t('trophy.' + trophy.code + gender_code) as string
+	if (i18n.global.locale === 'en' && adjective.value && word !== word.toUpperCase()) {
+		word = word.toLowerCase()
 	}
+	return word
+})
+
+const word2 = computed(() => {
+	if (!adjective.value) return ''
+	const trophy = LeekWars.trophies[adjective.value - 1]
+	const gender_code = gender.value === 1 || ((trophy.adj_gender & 2) !== 0) ? '' : '_f'
+	let word = t('trophy.' + trophy.code + gender_code) as string
+	if (i18n.global.locale === 'fr' && noun.value && word !== word.toUpperCase()) {
+		word = word.toLowerCase()
+	}
+	return word
+})
 </script>
 
 <style lang="scss" scoped>

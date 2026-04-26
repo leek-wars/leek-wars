@@ -155,67 +155,71 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { mixins } from '@/model/i18n'
-	import { ItemType, ITEM_CATEGORY_NAME } from '@/model/item'
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
-	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
-	import Breadcrumb from '@/component/forum/breadcrumb.vue'
-	import LWTitle from '@/component/title/title.vue'
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
+import { mixins } from '@/model/i18n'
+import { ItemType, ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED } from '@/model/item'
+import { LeekWars } from '@/model/leekwars'
+import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
+import Breadcrumb from '@/component/forum/breadcrumb.vue'
+import LWTitle from '@/component/title/title.vue'
 
-	@Options({ name: 'trophy', i18n: {}, mixins: [...mixins], components: { 'lw-title': LWTitle, RichTooltipItem, Breadcrumb } })
-	export default class Trophy extends Vue {
-		code: any = null
-		trophy: any = null
-		error: boolean = false
-		ItemType = ItemType
-		deleteDialog: boolean = false
-		deleteFarmer: any = null
+defineOptions({ name: 'trophy', i18n: {}, mixins: [...mixins], components: { 'lw-title': LWTitle } })
 
-		get items() {
-			return this.trophy ? this.trophy.items.map((i: number) => LeekWars.items[i]) : []
-		}
+const { t, locale } = useI18n()
+const route = useRoute()
 
-		schemeLabel(item: any) {
-			const scheme = LeekWars.schemes[item.params]
-			if (!scheme) return ''
-			const result = LeekWars.items[scheme.result]
-			if (!result) return ''
-			const category = ITEM_CATEGORY_NAME[result.type as ItemType]
-			const name = result.name.replace(category + '_', '')
-			return this.$t('main.scheme_x', [this.$t(category + '.' + name)])
-		}
+const ITEM_CATEGORY_NAME: Record<number, string> = ITEM_CATEGORY_NAME_TYPED
 
-		@Watch('$route.params', { immediate: true })
-		update() {
-			this.code = this.$route.params.code
-			this.error = false
-			this.trophy = null
-			LeekWars.get('trophy-template/get/' + this.code + '/' + this.$i18n.locale)
-				.then(trophy => {
-					this.trophy = trophy
-					LeekWars.setTitle(this.$t('trophy') + ' « ' + this.$t('trophy.' + this.code) + ' »')
-				})
-				.error(() => this.error = true)
-		}
+const code = ref<any>(null)
+const trophy = ref<any>(null)
+const error = ref(false)
+const deleteDialog = ref(false)
+const deleteFarmer = ref<any>(null)
 
-		confirmDelete(farmer: any) {
-			this.deleteFarmer = farmer
-			this.deleteDialog = true
-		}
+const items = computed(() => trophy.value ? trophy.value.items.map((i: number) => LeekWars.items[i]) : [])
 
-		deleteTrophy() {
-			if (!this.deleteFarmer) return
-			LeekWars.post('trophy/delete', { trophy_id: this.trophy.id, farmer_id: this.deleteFarmer.id })
-				.then(() => {
-					this.deleteDialog = false
-					LeekWars.toast("Trophée supprimé !")
-					this.update()
-				})
-				.error((error: any) => LeekWars.toast(this.$t('error_' + error.error, error.params) as string))
-		}
-	}
+function schemeLabel(item: any) {
+	const scheme = LeekWars.schemes[item.params]
+	if (!scheme) return ''
+	const result = LeekWars.items[scheme.result]
+	if (!result) return ''
+	const category = ITEM_CATEGORY_NAME[result.type as ItemType]
+	const name = result.name.replace(category + '_', '')
+	return t('main.scheme_x', [t(category + '.' + name)])
+}
+
+function update() {
+	code.value = route.params.code
+	error.value = false
+	trophy.value = null
+	LeekWars.get('trophy-template/get/' + code.value + '/' + locale.value)
+		.then(tr => {
+			trophy.value = tr
+			LeekWars.setTitle(t('trophy') + ' « ' + t('trophy.' + code.value) + ' »')
+		})
+		.catch(() => { error.value = true })
+}
+
+watch(() => route.params, update, { immediate: true })
+
+function confirmDelete(f: any) {
+	deleteFarmer.value = f
+	deleteDialog.value = true
+}
+
+function deleteTrophy() {
+	if (!deleteFarmer.value) return
+	LeekWars.post('trophy/delete', { trophy_id: trophy.value.id, farmer_id: deleteFarmer.value.id })
+		.then(() => {
+			deleteDialog.value = false
+			LeekWars.toast('Trophée supprimé !')
+			update()
+		})
+		.catch((err: any) => LeekWars.toast(t('error_' + err.error, err.params) as string))
+}
 </script>
 
 <style lang="scss" scoped>

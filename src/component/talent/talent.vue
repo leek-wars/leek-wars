@@ -25,116 +25,108 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue } from 'vue-property-decorator'
-	import { Line } from 'vue-chartjs'
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { LeekWars } from '@/model/leekwars'
+import { Line } from 'vue-chartjs'
+import { mixins } from '@/model/i18n'
 
-	@Options({ name: 'talent', i18n: {}, components: { Line } })
-	export default class TalentPage extends Vue {
+defineOptions({ name: 'talent', i18n: {}, mixins: [...mixins] })
 
-		leekData: any = null
-		leekOptions: any = null
-		leekMax: number = 0
-		farmerData: any = null
-		farmerOptions: any = null
-		farmerMax: number = 0
+const { t } = useI18n()
 
-		created() {
-			LeekWars.setTitle("Talent")
+const leekData = ref<any>(null)
+const leekOptions = ref<any>(null)
+const leekMax = ref(0)
+const farmerData = ref<any>(null)
+const farmerOptions = ref<any>(null)
+const farmerMax = ref(0)
 
-			LeekWars.get("talent/farmer").then(talents => {
-				this.farmerMax = talents[talents.length - 1]
-				this.farmerData = {
-					labels: [...Array(talents.length)].map((_, i) => 50 + i),
-					datasets: [{
-						data: talents,
-						tension: 0.2,
-						borderColor: '#5fad1b',
-						borderWidth: 2,
-						pointRadius: 0,
-						pointHitRadius: 5,
-						fill: {
-							target: 'origin',
-							above: '#5fad1b30',
-						},
-					}]
-				}
-				this.farmerOptions = {
-					aspectRatio: 2.5,
-					plugins: {
-						legend: { display: false },
-						tooltip: {
-							callbacks: {
-								title: (items: any) => this.$t('main.level_n', [items[0].label]),
-							}
-						}
-					},
-					scales: {
-						x: {
-							ticks: {
-								callback: (value: any, index: any) => index % 25 === 0 ? 50 + index : null,
-								maxRotation: 0,
-							},
-							grid: { color: 'rgba(128,128,128,0.15)' },
-						},
-						y: {
-							min: 50,
-							grid: { color: 'rgba(128,128,128,0.15)' },
-						}
-					},
-				}
-			})
-			LeekWars.get("talent/leek").then(talents => {
-				this.leekMax = talents[talents.length - 1]
-				this.leekData = {
-					labels: [...Array(talents.length)].map((_, i) => i + 1),
-					datasets: [{
-						data: talents,
-						tension: 0.2,
-						borderColor: '#5fad1b',
-						borderWidth: 2,
-						pointRadius: 0,
-						pointHitRadius: 5,
-						fill: {
-							target: 'origin',
-							above: '#5fad1b30',
-						},
-					}]
-				}
-				this.leekOptions = {
-					aspectRatio: 2.5,
-					plugins: {
-						legend: { display: false },
-						tooltip: {
-							callbacks: {
-								title: (items: any) => this.$t('main.level_n', [items[0].label]),
-							}
-						}
-					},
-					scales: {
-						x: {
-							ticks: {
-								callback: (value: any, index: any) => index === 0 ? 1 : (index % 10 === 0 ? index + 1 : null),
-								maxRotation: 0,
-							},
-							grid: { color: 'rgba(128,128,128,0.15)' },
-						},
-						y: {
-							min: 0,
-							grid: { color: 'rgba(128,128,128,0.15)' },
-						}
-					},
-				}
-			})
-		}
-		mounted() {
-			LeekWars.large = true
-		}
-		beforeUnmount() {
-			LeekWars.large = false
-		}
+LeekWars.setTitle('Talent')
+
+LeekWars.get('talent/farmer').then(talents => {
+	farmerMax.value = talents[talents.length - 1]
+	farmerData.value = {
+		labels: [...Array(talents.length)].map((_, i) => 50 + i),
+		datasets: [{
+			data: talents,
+			tension: 0.2,
+			borderColor: '#5fad1b',
+			borderWidth: 2,
+			pointRadius: 0,
+			pointHitRadius: 5,
+			fill: { target: 'origin', above: '#5fad1b30' },
+		}]
 	}
+	farmerOptions.value = {
+		aspectRatio: 2.5,
+		plugins: {
+			legend: { display: false },
+			tooltip: {
+				callbacks: {
+					title: (items: any) => t('main.level_n', [items[0].label]),
+				}
+			}
+		},
+		scales: {
+			x: {
+				ticks: {
+					callback: (_value: any, index: any) => index % 25 === 0 ? 50 + index : null,
+					maxRotation: 0,
+				},
+				grid: { color: 'rgba(128,128,128,0.15)' },
+			},
+			y: {
+				min: 50,
+				grid: { color: 'rgba(128,128,128,0.15)' },
+			}
+		},
+	}
+})
+
+LeekWars.get('talent/leek').then(talents => {
+	leekMax.value = talents[talents.length - 1]
+	leekData.value = {
+		labels: [...Array(talents.length)].map((_, i) => i + 1),
+		datasets: [{
+			data: talents,
+			tension: 0.2,
+			borderColor: '#5fad1b',
+			borderWidth: 2,
+			pointRadius: 0,
+			pointHitRadius: 5,
+			fill: { target: 'origin', above: '#5fad1b30' },
+		}]
+	}
+	leekOptions.value = {
+		aspectRatio: 2.5,
+		plugins: {
+			legend: { display: false },
+			tooltip: {
+				callbacks: {
+					title: (items: any) => t('main.level_n', [items[0].label]),
+				}
+			}
+		},
+		scales: {
+			x: {
+				ticks: {
+					callback: (_value: any, index: any) => index === 0 ? 1 : (index % 10 === 0 ? index + 1 : null),
+					maxRotation: 0,
+				},
+				grid: { color: 'rgba(128,128,128,0.15)' },
+			},
+			y: {
+				min: 0,
+				grid: { color: 'rgba(128,128,128,0.15)' },
+			}
+		},
+	}
+})
+
+onMounted(() => { LeekWars.large = true })
+onBeforeUnmount(() => { LeekWars.large = false })
 </script>
 
 <style lang="scss" scoped>
