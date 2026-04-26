@@ -346,7 +346,7 @@
 			this.game.showActions = localStorage.getItem('fight/actions') === 'true'
 			this.game.largeActions = localStorage.getItem('fight/large-actions') === 'true'
 			this.game.actionsWidth = parseInt(localStorage.getItem('fight/actions-width') || '395', 10)
-			this.game.sound = localStorage.getItem('fight/sound') === 'true';
+			this.game.sound = !LeekWars.sfw && localStorage.getItem('fight/sound') === 'true';
 			this.game.volume = parseFloat(localStorage.getItem('fight/volume') || "0.5");
 			this.game.autoDark = localStorage.getItem('fight/auto-dark') === 'true'
 			this.game.dark = localStorage.getItem('fight/dark') === 'true'
@@ -734,7 +734,9 @@
 			this.game.changeVolume();
 		}
 		@Watch("game.sound") toggleSound() {
-			localStorage.setItem('fight/sound', '' + this.game.sound)
+			if (!LeekWars.sfw) {
+				localStorage.setItem('fight/sound', '' + this.game.sound)
+			}
 			this.game.toggleSound()
 		}
 		@Watch("game.shadows") toggleShadows() {
