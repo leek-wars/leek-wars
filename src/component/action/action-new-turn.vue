@@ -14,9 +14,9 @@ import type { Report } from '@/model/fight'
 
 defineProps<{
 	action: Action
-	a: number
-	report: Report
-	hasErrWarn: boolean
+	a?: number
+	report?: Report
+	hasErrWarn?: boolean
 }>()
 
 defineEmits<{

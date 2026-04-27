@@ -21,7 +21,7 @@ const CHIPS: Record<number, any> = CHIPS_TYPED
 
 defineProps<{
 	action: Action
-	a: number
-	leeks: Record<number, any>
+	a?: number
+	leeks?: Record<number, any>
 }>()
 </script>

@@ -21,7 +21,7 @@ import { store } from '@/model/store'
 
 const props = defineProps<{
 	action: Action
-	a: number
+	a?: number
 }>()
 
 const GLAGOLITIC_NUMERALS: Record<string, number> = {

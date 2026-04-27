@@ -18,6 +18,6 @@ import Leek from '../report/action-leek.vue'
 
 defineProps<{
 	action: Action
-	a: number
+	a?: number
 }>()
 </script>

@@ -14,8 +14,8 @@ import { TEAM_COLORS } from '@/model/team'
 
 defineProps<{
 	action: Action
-	a: number
-	leeks: Record<number, any>
+	a?: number
+	leeks?: Record<number, any>
 }>()
 </script>
 

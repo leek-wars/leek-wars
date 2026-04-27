@@ -11,7 +11,7 @@ const EffectComponents: Record<number, any> = EffectComponentsTyped
 
 defineProps<{
 	action: Action
-	a: number
-	leeks: Record<number, any>
+	a?: number
+	leeks?: Record<number, any>
 }>()
 </script>

@@ -4,6 +4,6 @@
 
 <script setup lang="ts">
 defineProps<{
-	a: number
+	a?: number
 }>()
 </script>
