@@ -789,7 +789,7 @@
 	import TitlePicker from '@/component/title/title-picker.vue'
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
 	import AIElement from '@/component/app/ai.vue'
-	import LWTitle from '@/component/title/title.vue'
+	import LwTitle from '@/component/title/title.vue'
 	import LoadoutDialog from './loadout-dialog.vue'
 	import { COMPONENTS } from '@/model/components'
 	import { CHIPS } from '@/model/chips'
@@ -814,7 +814,7 @@
 		TitlePicker,
 		ReportDialog,
 		ai: AIElement,
-		'lw-title': LWTitle,
+		'lw-title': LwTitle,
 		LeekComponent,
 		LoadoutDialog,
 		Line,

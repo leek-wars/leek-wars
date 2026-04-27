@@ -339,11 +339,11 @@
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
 	import Pagination from '@/component/pagination.vue'
-	import LWTitle from '@/component/title/title.vue'
+	import LwTitle from '@/component/title/title.vue'
 import { defineAsyncComponent } from 'vue'
 import { emitter } from '@/model/vue'
 
-	@Options({ name: 'forum_topic', i18n: {}, mixins: [...mixins], components: { Breadcrumb, EmojiPicker, Markdown, FormattingRules, RichTooltipFarmer, ReportDialog, Pagination, 'lw-title': LWTitle } })
+	@Options({ name: 'forum_topic', i18n: {}, mixins: [...mixins], components: { Breadcrumb, EmojiPicker, Markdown, FormattingRules, RichTooltipFarmer, ReportDialog, Pagination, 'lw-title': LwTitle } })
 	export default class ForumTopicPage extends Vue {
 		ForumTopicStatus = ForumTopicStatus
 		topic: ForumTopic | null = null

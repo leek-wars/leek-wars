@@ -75,9 +75,7 @@ import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 
-const LWTitle = defineAsyncComponent(() => import('@/component/title/title.vue'))
-
-defineOptions({})
+const LwTitle = defineAsyncComponent(() => import('@/component/title/title.vue'))
 
 const props = defineProps<{
 	id: number

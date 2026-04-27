@@ -83,9 +83,9 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { LeekWars } from '@/model/leekwars'
-import LWTitle from '@/component/title/title.vue'
+import LwTitle from '@/component/title/title.vue'
 
-defineOptions({ name: 'title-picker', components: { 'lw-title': LWTitle } })
+defineOptions({ name: 'title-picker' })
 
 const props = defineProps<{
 	title: number[]

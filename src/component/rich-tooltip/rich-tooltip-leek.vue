@@ -80,9 +80,7 @@ import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 import LeekImage from '@/component/leek-image.vue'
 import { CHIPS as CHIPS_TYPED } from '@/model/chips'
 
-const LWTitle = defineAsyncComponent(() => import('@/component/title/title.vue'))
-
-defineOptions({})
+const LwTitle = defineAsyncComponent(() => import('@/component/title/title.vue'))
 
 const CHIPS: Record<number, any> = CHIPS_TYPED
 

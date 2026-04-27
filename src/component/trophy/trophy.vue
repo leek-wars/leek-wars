@@ -164,9 +164,9 @@ import { ItemType, ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED } from '@/mode
 import { LeekWars } from '@/model/leekwars'
 import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 import Breadcrumb from '@/component/forum/breadcrumb.vue'
-import LWTitle from '@/component/title/title.vue'
+import LwTitle from '@/component/title/title.vue'
 
-defineOptions({ name: 'trophy', i18n: {}, mixins: [...mixins], components: { 'lw-title': LWTitle } })
+defineOptions({ name: 'trophy', i18n: {}, mixins: [...mixins], components: { 'lw-title': LwTitle } })
 
 const { t, locale } = useI18n()
 const route = useRoute()

@@ -616,13 +616,13 @@
 	import TournamentsHistory from '@/component/history/tournaments-history.vue'
 	import TitlePicker from '@/component/title/title-picker.vue'
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
-	import LWTitle from '@/component/title/title.vue'
+	import LwTitle from '@/component/title/title.vue'
 import { emitter } from '@/model/vue'
 	import { Line } from 'vue-chartjs'
 	import { ChartData, ChartOptions } from 'chart.js'
 
 	@Options({ name: "farmer", i18n: {}, mixins: [...mixins], components: {
-		RichTooltipFarmer, RichTooltipTeam, RichTooltipLeek, FightsHistory, TournamentsHistory, TitlePicker, ReportDialog, 'lw-title': LWTitle, 'rich-tooltip-item': RichTooltipItem, Line,
+		RichTooltipFarmer, RichTooltipTeam, RichTooltipLeek, FightsHistory, TournamentsHistory, TitlePicker, ReportDialog, 'lw-title': LwTitle, 'rich-tooltip-item': RichTooltipItem, Line,
 	} })
 	export default class FarmerPage extends Vue {
 		farmer: Farmer | null = null
