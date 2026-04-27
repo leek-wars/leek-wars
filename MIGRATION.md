@@ -538,6 +538,28 @@ Légende : `[ ]` à faire · `[x]` migré · `[~]` partiel/bloqué
 
 > Cette section est mise à jour quand on rencontre un cas non documenté.
 
+### ⚠️ `defineOptions({ components })` ne peut pas référencer un `defineAsyncComponent` local
+
+Erreur du compilateur Vue : `defineOptions() in <script setup> cannot reference locally declared variables because it will be hoisted outside of the setup() function`.
+
+Les imports statiques (`import X from '...'`) sont hoistés et peuvent rester dans `defineOptions({ components })`. Mais `const X = defineAsyncComponent(() => import(...))` est une const locale — interdite.
+
+**Solutions** :
+- **Si le nom auto-résolu (PascalCase ↔ kebab-case) correspond au tag template** : retirer simplement le mapping de `defineOptions`. Le `<script setup>` auto-enregistre l'import. Exemples : `Didactitiel` → `<didactitiel>` ✓ ; `RichTooltipItem` → `<rich-tooltip-item>` ✓ ; `LWTitle` → `<lw-title>` ✓ ; `AIViewMonaco` → `<ai-view-monaco>` ✓.
+- **Si l'alias diffère du nom auto-résolu** (ex. `chat: ChatElement` → template `<chat>` mais kebab de `ChatElement` est `<chat-element>`) : renommer l'import (`ChatElement` → `Chat`) **ou** utiliser un bloc `<script>` séparé non-setup pour déclarer les composants :
+```vue
+<script lang="ts">
+import { defineAsyncComponent } from 'vue'
+const Scheme = defineAsyncComponent(() => import('./scheme.vue'))
+export default {
+    components: { scheme: Scheme }
+}
+</script>
+<script setup lang="ts">
+// reste du script setup
+</script>
+```
+
 ### `LeekWars` / `env` accessibles globalement dans le template
 
 `LeekWars` et `env` sont injectés via une mixin globale dans [src/model/vue.ts](src/model/vue.ts). En Options API, ils sont accessibles depuis le template via l'instance proxy. En `<script setup>`, vue-tsc ne les voit pas par défaut.
