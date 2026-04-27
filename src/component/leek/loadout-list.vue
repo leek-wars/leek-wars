@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { CHIPS } from '@/model/chips'
+import { CHIPS as CHIPSImport } from '@/model/chips'
 import { Leek } from '@/model/leek'
 import { LeekWars } from '@/model/leekwars'
 import { Loadout } from '@/model/loadout'
@@ -36,6 +36,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const CHARACTERISTICS = ['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'tp', 'mp', 'cores', 'ram']
+const CHIPS: Record<number, any> = CHIPSImport
 
 defineOptions({ name: 'LoadoutList' })
 

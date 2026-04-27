@@ -2,135 +2,143 @@
 	<div class="git-diff-viewer" :class="{ready: editorReady}" ref="container"></div>
 </template>
 
-<script lang="ts">
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
-	import * as monaco from 'monaco-editor'
-	import { markRaw } from 'vue'
+<script setup lang="ts">
+import * as monaco from 'monaco-editor'
+import { markRaw, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 
-	@Options({ name: 'git-diff', emits: ['close', 'open-file'], i18n: {} })
-	export default class GitDiff extends Vue {
-		@Prop({ default: '' }) originalContent!: string
-		@Prop({ default: '' }) modifiedContent!: string
-		@Prop() file!: string
-		@Prop({ default: 'leek-wars' }) theme!: string
-		@Prop({ default: 13 }) fontSize!: number
-		@Prop({ default: 20 }) lineHeight!: number
-		@Prop({ default: false }) inline!: boolean
-		@Prop({ default: true }) collapseUnchanged!: boolean
+defineOptions({ name: 'git-diff', i18n: {} })
 
-		diffEditor: monaco.editor.IDiffEditor | null = null
-		originalModel: monaco.editor.ITextModel | null = null
-		modifiedModel: monaco.editor.ITextModel | null = null
-		editorReady: boolean = false
+const props = withDefaults(defineProps<{
+	originalContent?: string
+	modifiedContent?: string
+	file?: string
+	theme?: string
+	fontSize?: number
+	lineHeight?: number
+	inline?: boolean
+	collapseUnchanged?: boolean
+}>(), {
+	originalContent: '',
+	modifiedContent: '',
+	theme: 'leek-wars',
+	fontSize: 13,
+	lineHeight: 20,
+	inline: false,
+	collapseUnchanged: true,
+})
 
-		mounted() {
-			this.createEditor()
-		}
+defineEmits<{
+	'close': []
+	'open-file': [file: string]
+}>()
 
-		beforeUnmount() {
-			this.dispose()
-		}
+const containerRef = useTemplateRef<HTMLElement>('container')
 
-		dispose() {
-			if (this.diffEditor) {
-				this.diffEditor.setModel(null as any)
-				this.diffEditor.dispose()
-				this.diffEditor = null
-			}
-			this.originalModel?.dispose()
-			this.modifiedModel?.dispose()
-			this.originalModel = null
-			this.modifiedModel = null
-		}
+let diffEditor: monaco.editor.IDiffEditor | null = null
+let originalModel: monaco.editor.ITextModel | null = null
+let modifiedModel: monaco.editor.ITextModel | null = null
+const editorReady = ref(false)
 
-		@Watch('theme')
-		onThemeChange() {
-			monaco.editor.setTheme(this.theme)
-		}
+onMounted(() => {
+	createEditor()
+})
 
-		@Watch('fontSize')
-		onFontSizeChange() {
-			this.diffEditor?.updateOptions({ fontSize: this.fontSize })
-		}
+onBeforeUnmount(() => {
+	dispose()
+})
 
-		@Watch('lineHeight')
-		onLineHeightChange() {
-			this.diffEditor?.updateOptions({ lineHeight: this.lineHeight })
-		}
-
-		@Watch('inline')
-		onInlineChange() {
-			this.diffEditor?.updateOptions({ renderSideBySide: !this.inline })
-		}
-
-		@Watch('collapseUnchanged')
-		onCollapseUnchangedChange() {
-			this.editorReady = false
-			this.dispose()
-			this.$nextTick(() => this.createEditor())
-		}
-
-		@Watch('originalContent')
-		@Watch('modifiedContent')
-		onContentChange() {
-			if (!this.diffEditor) return
-			if (this.originalModel) {
-				this.originalModel.setValue(this.normalize(this.originalContent))
-			}
-			if (this.modifiedModel) {
-				this.modifiedModel.setValue(this.normalize(this.modifiedContent))
-			}
-		}
-
-		normalize(content: string): string {
-			return (content || '').replace(/[\r\n]+$/, '')
-		}
-
-		createEditor() {
-			const container = this.$refs.container as HTMLElement
-			if (!container) return
-			this.originalModel = markRaw(monaco.editor.createModel(this.normalize(this.originalContent), 'leekscript'))
-			this.modifiedModel = markRaw(monaco.editor.createModel(this.normalize(this.modifiedContent), 'leekscript'))
-
-			this.diffEditor = markRaw(monaco.editor.createDiffEditor(container, {
-				readOnly: true,
-				renderSideBySide: !this.inline,
-				automaticLayout: true,
-				minimap: { enabled: false },
-				scrollBeyondLastLine: false,
-				theme: this.theme,
-				fontSize: this.fontSize,
-				lineHeight: this.lineHeight,
-				folding: false,
-				glyphMargin: false,
-				lineNumbersMinChars: 3,
-				hideUnchangedRegions: { enabled: this.collapseUnchanged },
-				wordWrap: "on",
-			}))
-
-			this.diffEditor.setModel({
-				original: this.originalModel,
-				modified: this.modifiedModel,
-			})
-
-			// Layout initial
-			this.layout()
-
-			// Attendre que Monaco collapse les régions avant d'afficher
-			this.editorReady = false
-			setTimeout(() => { this.editorReady = true }, 100)
-		}
-
-		layout() {
-			if (!this.diffEditor) return
-			const container = this.$refs.container as HTMLElement
-			if (!container) return
-			const { width, height } = container.getBoundingClientRect()
-			if (width > 0 && height > 0) {
-				this.diffEditor.layout({ width, height })
-			}
-		}
+function dispose() {
+	if (diffEditor) {
+		diffEditor.setModel(null as any)
+		diffEditor.dispose()
+		diffEditor = null
 	}
+	originalModel?.dispose()
+	modifiedModel?.dispose()
+	originalModel = null
+	modifiedModel = null
+}
+
+watch(() => props.theme, () => {
+	monaco.editor.setTheme(props.theme)
+})
+
+watch(() => props.fontSize, () => {
+	diffEditor?.updateOptions({ fontSize: props.fontSize })
+})
+
+watch(() => props.lineHeight, () => {
+	diffEditor?.updateOptions({ lineHeight: props.lineHeight })
+})
+
+watch(() => props.inline, () => {
+	diffEditor?.updateOptions({ renderSideBySide: !props.inline })
+})
+
+watch(() => props.collapseUnchanged, () => {
+	editorReady.value = false
+	dispose()
+	nextTick(() => createEditor())
+})
+
+watch(() => [props.originalContent, props.modifiedContent], () => {
+	if (!diffEditor) return
+	if (originalModel) {
+		originalModel.setValue(normalize(props.originalContent))
+	}
+	if (modifiedModel) {
+		modifiedModel.setValue(normalize(props.modifiedContent))
+	}
+})
+
+function normalize(content: string): string {
+	return (content || '').replace(/[\r\n]+$/, '')
+}
+
+function createEditor() {
+	const container = containerRef.value
+	if (!container) return
+	originalModel = markRaw(monaco.editor.createModel(normalize(props.originalContent), 'leekscript'))
+	modifiedModel = markRaw(monaco.editor.createModel(normalize(props.modifiedContent), 'leekscript'))
+
+	diffEditor = markRaw(monaco.editor.createDiffEditor(container, {
+		readOnly: true,
+		renderSideBySide: !props.inline,
+		automaticLayout: true,
+		minimap: { enabled: false },
+		scrollBeyondLastLine: false,
+		theme: props.theme,
+		fontSize: props.fontSize,
+		lineHeight: props.lineHeight,
+		folding: false,
+		glyphMargin: false,
+		lineNumbersMinChars: 3,
+		hideUnchangedRegions: { enabled: props.collapseUnchanged },
+		wordWrap: "on",
+	}))
+
+	diffEditor.setModel({
+		original: originalModel,
+		modified: modifiedModel,
+	})
+
+	layout()
+
+	editorReady.value = false
+	setTimeout(() => { editorReady.value = true }, 100)
+}
+
+function layout() {
+	if (!diffEditor) return
+	const container = containerRef.value
+	if (!container) return
+	const { width, height } = container.getBoundingClientRect()
+	if (width > 0 && height > 0) {
+		diffEditor.layout({ width, height })
+	}
+}
+
+defineExpose({ layout })
 </script>
 
 <style lang="scss" scoped>

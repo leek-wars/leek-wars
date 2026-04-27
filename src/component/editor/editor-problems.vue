@@ -37,63 +37,63 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { AI } from '@/model/ai'
-	import { fileSystem } from '@/model/filesystem'
-	import { i18n, mixins } from '@/model/i18n'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
-	import { analyzer } from './analyzer'
+<script setup lang="ts">
+import { AI } from '@/model/ai'
+import { fileSystem } from '@/model/filesystem'
+import { mixins } from '@/model/i18n'
+import { reactive, ref } from 'vue'
+import { analyzer } from './analyzer'
 
-	@Options({ name: 'editor-problems', i18n: {}, mixins: [...mixins], emits: ['jump'] })
-	export default class Explorer extends Vue {
+defineOptions({ name: 'editor-problems', i18n: {}, mixins: [...mixins] })
 
-		analyzer = analyzer
-		problemsCollapsed: {[key: string]: boolean} = {}
-		fileSystem = fileSystem
-		filterErrors: boolean = localStorage.getItem('editor/filter-errors') !== 'false'
-		filterWarnings: boolean = localStorage.getItem('editor/filter-warnings') !== 'false'
-		filterTodos: boolean = localStorage.getItem('editor/filter-todos') !== 'false'
+const emit = defineEmits<{
+	'jump': [ai: AI, line: number, column: number]
+}>()
 
-		toggleProblemFile(ai: string) {
-			this.problemsCollapsed[ai] = !this.problemsCollapsed[ai]
-		}
+const problemsCollapsed = reactive<{[key: string]: boolean}>({})
+const filterErrors = ref(localStorage.getItem('editor/filter-errors') !== 'false')
+const filterWarnings = ref(localStorage.getItem('editor/filter-warnings') !== 'false')
+const filterTodos = ref(localStorage.getItem('editor/filter-todos') !== 'false')
 
-		toggleFilter(level: number) {
-			if (level === 0) {
-				this.filterErrors = !this.filterErrors
-				localStorage.setItem('editor/filter-errors', '' + this.filterErrors)
-			} else if (level === 1) {
-				this.filterWarnings = !this.filterWarnings
-				localStorage.setItem('editor/filter-warnings', '' + this.filterWarnings)
-			} else {
-				this.filterTodos = !this.filterTodos
-				localStorage.setItem('editor/filter-todos', '' + this.filterTodos)
-			}
-		}
+function toggleProblemFile(ai: string) {
+	problemsCollapsed[ai] = !problemsCollapsed[ai]
+}
 
-		filteredProblems(problems: any[]) {
-			return problems.filter(p =>
-				(p.level === 0 && this.filterErrors) ||
-				(p.level === 1 && this.filterWarnings) ||
-				(p.level === 2 && this.filterTodos)
-			)
-		}
-
-		filteredCount(problems: any[]) {
-			return this.filteredProblems(problems).length
-		}
-
-		getAI(path: string): AI | undefined {
-			return fileSystem.ais[path]
-		}
-
-		jumpProblem(path: string, problem: any) {
-			const ai = this.getAI(path)
-			if (ai) {
-				this.$emit('jump', ai, problem.start_line, problem.start_column)
-			}
-		}
+function toggleFilter(level: number) {
+	if (level === 0) {
+		filterErrors.value = !filterErrors.value
+		localStorage.setItem('editor/filter-errors', '' + filterErrors.value)
+	} else if (level === 1) {
+		filterWarnings.value = !filterWarnings.value
+		localStorage.setItem('editor/filter-warnings', '' + filterWarnings.value)
+	} else {
+		filterTodos.value = !filterTodos.value
+		localStorage.setItem('editor/filter-todos', '' + filterTodos.value)
 	}
+}
+
+function filteredProblems(problems: any[]) {
+	return problems.filter(p =>
+		(p.level === 0 && filterErrors.value) ||
+		(p.level === 1 && filterWarnings.value) ||
+		(p.level === 2 && filterTodos.value)
+	)
+}
+
+function filteredCount(problems: any[]) {
+	return filteredProblems(problems).length
+}
+
+function getAI(path: string): AI | undefined {
+	return fileSystem.ais[path]
+}
+
+function jumpProblem(path: string, problem: any) {
+	const ai = getAI(path)
+	if (ai) {
+		emit('jump', ai, problem.start_line, problem.start_column)
+	}
+}
 </script>
 
 <style lang="scss" scoped>

@@ -69,42 +69,43 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { LeekWars } from '@/model/leekwars'
+import { ref } from 'vue'
 
-	@Options({ name: 'two-factor' })
-	export default class TwoFactor extends Vue {
-		twoFactorConfirmDialog: boolean = false
-		step: number = 0
-		code: string = ''
-		QRCode: string = ''
-		secret: string = ''
-		validating: boolean = false
+defineOptions({ name: 'two-factor' })
 
-		nextStep() {
-			this.step++
-			if (this.step === 1) {
-				LeekWars.post('farmer/enable-two-factor-authentication', {}).then(data => {
-					this.QRCode = data.qrcode
-					this.secret = data.secret
-				})
-			}
-		}
-		previousStep() {
-			this.step--
-		}
-		validateCode() {
-			this.validating = true
-			LeekWars.post('farmer/confirm-enable-two-factor-authentication', {code: this.code}).then(data => {
-				this.validating = false
-				this.nextStep()
-			}).error(error => {
-				this.validating = false
-				LeekWars.toast('Wrong code!')
-			})
-		}
+const twoFactorConfirmDialog = ref(false)
+const step = ref(0)
+const code = ref('')
+const QRCode = ref('')
+const secret = ref('')
+const validating = ref(false)
+
+function nextStep() {
+	step.value++
+	if (step.value === 1) {
+		LeekWars.post('farmer/enable-two-factor-authentication', {}).then(data => {
+			QRCode.value = data.qrcode
+			secret.value = data.secret
+		})
 	}
+}
+
+function previousStep() {
+	step.value--
+}
+
+function validateCode() {
+	validating.value = true
+	;(LeekWars.post('farmer/confirm-enable-two-factor-authentication', {code: code.value}).then(_data => {
+		validating.value = false
+		nextStep()
+	}) as any).error((_error: any) => {
+		validating.value = false
+		LeekWars.toast('Wrong code!')
+	})
+}
 </script>
 
 <style lang="scss" scoped>

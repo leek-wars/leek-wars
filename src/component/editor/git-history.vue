@@ -32,110 +32,112 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { i18n, mixins } from '@/model/i18n'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
-	import { emitter } from '@/model/vue'
+<script setup lang="ts">
+import { mixins } from '@/model/i18n'
+import { LeekWars } from '@/model/leekwars'
+import { emitter } from '@/model/vue'
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 
-	interface Commit {
-		hash: string
-		short_hash: string
-		message: string
-		author: string
-		email: string
-		date: number
+interface Commit {
+	hash: string
+	short_hash: string
+	message: string
+	author: string
+	email: string
+	date: number
+}
+
+defineOptions({ name: 'git-history', i18n: {}, mixins: [...mixins] })
+
+const props = defineProps<{
+	folder?: string
+}>()
+
+const emit = defineEmits<{
+	'show-diff': [event: { folder: string | undefined, hash: string, file: string }]
+}>()
+
+const commits = ref<Commit[]>([])
+const total = ref(0)
+const loading = ref(false)
+const expandedCommit = ref('')
+const commitFiles = reactive<{[hash: string]: {status: string, file: string}[]}>({})
+
+const hasMore = computed<boolean>(() => commits.value.length < total.value)
+
+onMounted(() => {
+	loadCommits()
+	emitter.on('git-history-refresh', refresh)
+})
+
+onBeforeUnmount(() => {
+	emitter.off('git-history-refresh', refresh)
+})
+
+function refresh() {
+	commits.value = []
+	total.value = 0
+	expandedCommit.value = ''
+	for (const k in commitFiles) delete commitFiles[k]
+	loadCommits()
+}
+
+watch(() => props.folder, () => {
+	commits.value = []
+	total.value = 0
+	expandedCommit.value = ''
+	for (const k in commitFiles) delete commitFiles[k]
+	loadCommits()
+})
+
+async function loadCommits() {
+	loading.value = true
+	try {
+		const data = await LeekWars.post('git/log', { folder: props.folder, count: 50, offset: 0 })
+		commits.value = data.commits
+		total.value = data.total
+	} catch (e) {
+		// Pas de commits
+	} finally {
+		loading.value = false
 	}
+}
 
-	@Options({ name: 'git-history', i18n: {}, mixins: [...mixins], emits: ['show-diff'] })
-	export default class GitHistory extends Vue {
-		@Prop() folder!: string
+async function loadMore() {
+	loading.value = true
+	try {
+		const data = await LeekWars.post('git/log', { folder: props.folder, count: 50, offset: commits.value.length })
+		commits.value.push(...data.commits)
+	} catch (e) {
+		// Erreur
+	} finally {
+		loading.value = false
+	}
+}
 
-		commits: Commit[] = []
-		total: number = 0
-		loading: boolean = false
-		expandedCommit: string = ''
-		commitFiles: {[hash: string]: {status: string, file: string}[]} = {}
-
-		get hasMore(): boolean {
-			return this.commits.length < this.total
-		}
-
-		mounted() {
-			this.loadCommits()
-			emitter.on('git-history-refresh', this.refresh)
-		}
-
-		beforeUnmount() {
-			emitter.off('git-history-refresh', this.refresh)
-		}
-
-		refresh() {
-			this.commits = []
-			this.total = 0
-			this.expandedCommit = ''
-			this.commitFiles = {}
-			this.loadCommits()
-		}
-
-		@Watch('folder')
-		onFolderChange() {
-			this.commits = []
-			this.total = 0
-			this.expandedCommit = ''
-			this.commitFiles = {}
-			this.loadCommits()
-		}
-
-		async loadCommits() {
-			this.loading = true
-			try {
-				const data = await LeekWars.post('git/log', { folder: this.folder, count: 50, offset: 0 })
-				this.commits = data.commits
-				this.total = data.total
-			} catch (e) {
-				// Pas de commits
-			} finally {
-				this.loading = false
-			}
-		}
-
-		async loadMore() {
-			this.loading = true
-			try {
-				const data = await LeekWars.post('git/log', { folder: this.folder, count: 50, offset: this.commits.length })
-				this.commits.push(...data.commits)
-			} catch (e) {
-				// Erreur
-			} finally {
-				this.loading = false
-			}
-		}
-
-		async toggleCommit(commit: Commit) {
-			if (this.expandedCommit === commit.hash) {
-				this.expandedCommit = ''
-				return
-			}
-			this.expandedCommit = commit.hash
-			if (!this.commitFiles[commit.hash]) {
-				try {
-					const data = await LeekWars.post('git/commit-files', { folder: this.folder, hash: commit.hash })
-					this.commitFiles[commit.hash] = data.files
-				} catch (e) {
-					this.commitFiles[commit.hash] = []
-				}
-			}
-		}
-
-		showCommitDiff(commit: Commit, file: {status: string, file: string}) {
-			this.$emit('show-diff', { folder: this.folder, hash: commit.hash, file: file.file })
-		}
-
-		formatDate(timestamp: number): string {
-			return LeekWars.formatDateTime(timestamp) + ' (' + LeekWars.formatDuration(timestamp) + ')'
+async function toggleCommit(commit: Commit) {
+	if (expandedCommit.value === commit.hash) {
+		expandedCommit.value = ''
+		return
+	}
+	expandedCommit.value = commit.hash
+	if (!commitFiles[commit.hash]) {
+		try {
+			const data = await LeekWars.post('git/commit-files', { folder: props.folder, hash: commit.hash })
+			commitFiles[commit.hash] = data.files
+		} catch (e) {
+			commitFiles[commit.hash] = []
 		}
 	}
+}
+
+function showCommitDiff(commit: Commit, file: {status: string, file: string}) {
+	emit('show-diff', { folder: props.folder, hash: commit.hash, file: file.file })
+}
+
+function formatDate(timestamp: number): string {
+	return LeekWars.formatDateTime(timestamp) + ' (' + LeekWars.formatDuration(timestamp) + ')'
+}
 </script>
 
 <style lang="scss" scoped>

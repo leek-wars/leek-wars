@@ -23,53 +23,57 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { fileSystem } from '@/model/filesystem'
-	import { store } from '@/model/store'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import { AIItem } from './editor-item'
-	import { emitter } from '@/model/vue'
+<script setup lang="ts">
+import { fileSystem } from '@/model/filesystem'
+import { store } from '@/model/store'
+import { emitter } from '@/model/vue'
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { AIItem } from './editor-item'
 
-	@Options({ name: 'editor-ai' })
-	export default class EditorAI extends Vue {
-		@Prop({required: true}) item!: AIItem
-		@Prop({required: true}) level!: number
-		emitter = emitter
+defineOptions({ name: 'editor-ai' })
 
-		get ai() { return this.item.ai }
+const props = defineProps<{
+	item: AIItem
+	level: number
+}>()
 
-		get leeks() {
-			const aiKey = this.ai.path
-			return Object.entries(fileSystem.leekAIs)
-				.filter(entry => entry[1] === aiKey)
-				.map(entry => store.state.farmer!.leeks[parseInt(entry[0])].name)
-		}
+const router = useRouter()
 
-		get inBin() { return fileSystem.isInBin(this.ai.folder) }
+const ai = computed(() => props.item.ai)
 
-		get gitStatusClass(): string {
-			if (!this.ai.folderpath) return ''
-			const path = this.ai.folderpath + this.ai.name
-			const status = fileSystem.gitStatus[path]
-			if (!status) return ''
-			if (status === 'C') return 'git-conflict'
-			if (status === 'M') return 'git-modified'
-			if (status === 'A' || status === 'U') return 'git-added'
-			if (status === 'D') return 'git-deleted'
-			return 'git-modified'
-		}
+const leeks = computed(() => {
+	const aiKey = ai.value.path
+	return Object.entries(fileSystem.leekAIs)
+		.filter(entry => entry[1] === aiKey)
+		.map(entry => store.state.farmer!.leeks[parseInt(entry[0])].name)
+})
 
-		dragstart(e: DragEvent) {
-			if (this.inBin) { e.stopPropagation(); return }
-			e.dataTransfer!.setData('text/plain', 'drag !!!')
-			emitter.emit('editor-drag', this.item)
-			e.stopPropagation()
-		}
-		click(e: Event) {
-			this.$router.push('/editor/' + this.ai.path)
-			e.stopPropagation()
-		}
-	}
+const inBin = computed(() => fileSystem.isInBin(ai.value.folder))
+
+const gitStatusClass = computed<string>(() => {
+	if (!ai.value.folderpath) return ''
+	const path = ai.value.folderpath + ai.value.name
+	const status = fileSystem.gitStatus[path]
+	if (!status) return ''
+	if (status === 'C') return 'git-conflict'
+	if (status === 'M') return 'git-modified'
+	if (status === 'A' || status === 'U') return 'git-added'
+	if (status === 'D') return 'git-deleted'
+	return 'git-modified'
+})
+
+function dragstart(e: DragEvent) {
+	if (inBin.value) { e.stopPropagation(); return }
+	e.dataTransfer!.setData('text/plain', 'drag !!!')
+	emitter.emit('editor-drag', props.item)
+	e.stopPropagation()
+}
+
+function click(e: Event) {
+	router.push('/editor/' + ai.value.path)
+	e.stopPropagation()
+}
 </script>
 
 <style lang="scss" scoped>

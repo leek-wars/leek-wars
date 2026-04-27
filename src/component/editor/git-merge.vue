@@ -2,119 +2,128 @@
 	<div class="git-merge-viewer" :class="{ready: editorReady}" ref="container"></div>
 </template>
 
-<script lang="ts">
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
-	import * as monaco from 'monaco-editor'
-	import { markRaw } from 'vue'
-	import { parseConflicts, buildConflictDecorations, registerConflictCodeLens, applyConflictResolution, type MergeConflict } from './merge-conflicts'
+<script setup lang="ts">
+import * as monaco from 'monaco-editor'
+import { markRaw, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
+import { buildConflictDecorations, parseConflicts, registerConflictCodeLens, type MergeConflict } from './merge-conflicts'
 
-	@Options({ name: 'git-merge', emits: ['resolve'], i18n: {} })
-	export default class GitMerge extends Vue {
-		@Prop({ default: '' }) content!: string
-		@Prop({ default: '' }) file!: string
-		@Prop({ default: 'leek-wars' }) theme!: string
-		@Prop({ default: 13 }) fontSize!: number
-		@Prop({ default: 20 }) lineHeight!: number
+defineOptions({ name: 'git-merge', i18n: {} })
 
-		editor: monaco.editor.IStandaloneCodeEditor | null = null
-		model: monaco.editor.ITextModel | null = null
-		editorReady: boolean = false
-		conflicts: MergeConflict[] = []
-		decorations: monaco.editor.IEditorDecorationsCollection | null = null
-		lenses: monaco.IDisposable | null = null
+const props = withDefaults(defineProps<{
+	content?: string
+	file?: string
+	theme?: string
+	fontSize?: number
+	lineHeight?: number
+}>(), {
+	content: '',
+	file: '',
+	theme: 'leek-wars',
+	fontSize: 13,
+	lineHeight: 20,
+})
 
-		mounted() {
-			this.createEditor()
-		}
+const emit = defineEmits<{
+	'resolve': [content: string, count: number]
+}>()
 
-		beforeUnmount() {
-			this.dispose()
-		}
+const containerRef = useTemplateRef<HTMLElement>('container')
 
-		dispose() {
-			this.lenses?.dispose()
-			this.lenses = null
-			this.decorations = null
-			if (this.editor) {
-				this.editor.dispose()
-				this.editor = null
-			}
-			this.model?.dispose()
-			this.model = null
-		}
+let editor: monaco.editor.IStandaloneCodeEditor | null = null
+let model: monaco.editor.ITextModel | null = null
+const editorReady = ref(false)
+let conflicts: MergeConflict[] = []
+let decorations: monaco.editor.IEditorDecorationsCollection | null = null
+let lenses: monaco.IDisposable | null = null
 
-		@Watch('theme')
-		onThemeChange() {
-			monaco.editor.setTheme(this.theme)
-		}
+onMounted(() => {
+	createEditor()
+})
 
-		@Watch('fontSize')
-		onFontSizeChange() {
-			this.editor?.updateOptions({ fontSize: this.fontSize })
-		}
+onBeforeUnmount(() => {
+	dispose()
+})
 
-		@Watch('lineHeight')
-		onLineHeightChange() {
-			this.editor?.updateOptions({ lineHeight: this.lineHeight })
-		}
-
-		@Watch('content')
-		onContentChange() {
-			if (this.model && this.content !== this.model.getValue()) {
-				this.model.setValue(this.content)
-				this.parseAndDecorate()
-			}
-		}
-
-		createEditor() {
-			const container = this.$refs.container as HTMLElement
-			if (!container) return
-
-			this.model = markRaw(monaco.editor.createModel(this.content || '', 'leekscript'))
-
-			this.editor = markRaw(monaco.editor.create(container, {
-				model: this.model,
-				automaticLayout: true,
-				minimap: { enabled: false },
-				scrollBeyondLastLine: false,
-				theme: this.theme,
-				fontSize: this.fontSize,
-				lineHeight: this.lineHeight,
-				folding: false,
-				glyphMargin: true,
-				lineNumbersMinChars: 3,
-				wordWrap: 'on',
-			}))
-
-			this.parseAndDecorate()
-			this.editorReady = true
-		}
-
-		/** Parse les marqueurs de conflit et crée les décorations */
-		parseAndDecorate() {
-			if (!this.model || !this.editor) return
-			this.conflicts = parseConflicts(this.model.getValue())
-
-			if (this.decorations) {
-				this.decorations.set(buildConflictDecorations(this.model, this.conflicts))
-			} else {
-				this.decorations = this.editor.createDecorationsCollection(buildConflictDecorations(this.model, this.conflicts))
-			}
-
-			this.lenses?.dispose()
-			this.lenses = registerConflictCodeLens(this.editor, this.model, this.conflicts, () => {
-				this.parseAndDecorate()
-				this.$emit('resolve', this.model?.getValue() || '', this.conflicts.length)
-			})
-		}
-
-		goToConflict(index: number) {
-			if (!this.editor || index >= this.conflicts.length) return
-			const line = this.conflicts[index].startLine + 1
-			this.editor.revealLineInCenter(line)
-			this.editor.setPosition({ lineNumber: line, column: 1 })
-		}
+function dispose() {
+	lenses?.dispose()
+	lenses = null
+	decorations = null
+	if (editor) {
+		editor.dispose()
+		editor = null
 	}
+	model?.dispose()
+	model = null
+}
+
+watch(() => props.theme, () => {
+	monaco.editor.setTheme(props.theme)
+})
+
+watch(() => props.fontSize, () => {
+	editor?.updateOptions({ fontSize: props.fontSize })
+})
+
+watch(() => props.lineHeight, () => {
+	editor?.updateOptions({ lineHeight: props.lineHeight })
+})
+
+watch(() => props.content, () => {
+	if (model && props.content !== model.getValue()) {
+		model.setValue(props.content)
+		parseAndDecorate()
+	}
+})
+
+function createEditor() {
+	const container = containerRef.value
+	if (!container) return
+
+	model = markRaw(monaco.editor.createModel(props.content || '', 'leekscript'))
+
+	editor = markRaw(monaco.editor.create(container, {
+		model,
+		automaticLayout: true,
+		minimap: { enabled: false },
+		scrollBeyondLastLine: false,
+		theme: props.theme,
+		fontSize: props.fontSize,
+		lineHeight: props.lineHeight,
+		folding: false,
+		glyphMargin: true,
+		lineNumbersMinChars: 3,
+		wordWrap: 'on',
+	}))
+
+	parseAndDecorate()
+	editorReady.value = true
+}
+
+function parseAndDecorate() {
+	if (!model || !editor) return
+	conflicts = parseConflicts(model.getValue())
+
+	if (decorations) {
+		decorations.set(buildConflictDecorations(model, conflicts))
+	} else {
+		decorations = editor.createDecorationsCollection(buildConflictDecorations(model, conflicts))
+	}
+
+	lenses?.dispose()
+	lenses = registerConflictCodeLens(editor, model, conflicts, () => {
+		parseAndDecorate()
+		emit('resolve', model?.getValue() || '', conflicts.length)
+	})
+}
+
+function goToConflict(index: number) {
+	if (!editor || index >= conflicts.length) return
+	const line = conflicts[index].startLine + 1
+	editor.revealLineInCenter(line)
+	editor.setPosition({ lineNumber: line, column: 1 })
+}
+
+defineExpose({ goToConflict })
 </script>
 
 <style lang="scss" scoped>

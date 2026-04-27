@@ -25,76 +25,84 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { AI } from '@/model/ai'
-	import { fileSystem } from '@/model/filesystem'
-	import { i18n } from '@/model/i18n'
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
-	import EditorAI from './editor-ai.vue'
-	import { AIItem, Folder } from './editor-item'
-	import { explorer } from './explorer'
-	import { emitter } from '@/model/vue'
+<script setup lang="ts">
+import { fileSystem } from '@/model/filesystem'
+import { emitter } from '@/model/vue'
+import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import EditorAI from './editor-ai.vue'
+import { Folder } from './editor-item'
+import { explorer } from './explorer'
 
-	@Options({ name: 'editor-folder', components: { 'editor-ai': EditorAI } })
-	export default class EditorFolder extends Vue {
-		@Prop() folder!: Folder
-		@Prop() level!: number
-		dragOver: number = 0
-		dragging: boolean = false
-		emitter = emitter
+defineOptions({ name: 'editor-folder', components: { 'editor-ai': EditorAI } })
 
-		get inBin() { return fileSystem.isInBin(this.folder.parent) }
+const props = defineProps<{
+	folder: Folder
+	level: number
+}>()
 
-		get isGitRepo(): boolean {
-			const path = fileSystem.getFolderPath(this.folder).replace(/\/$/, '')
-			return !!fileSystem.gitRepos[path]
-		}
+const router = useRouter()
 
-		toggle(folder: Folder) {
-			if (!folder.closed) {
-				explorer.setExpanded(folder, !folder.expanded)
-			}
-		}
-		drop(e: DragEvent) {
-			if (this.folder.id === -1 || this.inBin) { return }
-			emitter.emit('editor-drop', this.folder)
-			e.preventDefault()
-			e.stopPropagation()
-			this.dragOver = 0
-			this.dragging = false
-			return false
-		}
-		dragenter(e: DragEvent) {
-			if (this.folder.id === -1 || this.inBin) { return }
-			this.dragOver++
-			e.stopPropagation()
-		}
-		dragleave(e: DragEvent) {
-			this.dragOver--
-			e.stopPropagation()
-		}
-		dragover(e: DragEvent) {
-			e.preventDefault()
-			e.stopPropagation()
-		}
-		dragstart(e: DragEvent) {
-			if (this.folder.id === -1 || this.inBin) { return }
-			e.dataTransfer!.setData('text/plain', 'drag !!!')
-			this.dragging = true
-			emitter.emit('editor-drag', this.folder)
-			e.stopPropagation()
-		}
-		dragend() {
-			this.dragging = false
-		}
-		click(e: Event) {
-			if (this.$router.currentRoute.path !== '/editor/' + this.folder.id) {
-				this.$router.push('/editor/' + this.folder.id)
-			}
-			e.stopPropagation()
-		}
+const dragOver = ref(0)
+const dragging = ref(false)
+
+const inBin = computed(() => fileSystem.isInBin(props.folder.parent))
+
+const isGitRepo = computed<boolean>(() => {
+	const path = fileSystem.getFolderPath(props.folder).replace(/\/$/, '')
+	return !!fileSystem.gitRepos[path]
+})
+
+function toggle(folder: Folder) {
+	if (!folder.closed) {
+		explorer.setExpanded(folder, !folder.expanded)
 	}
+}
+
+function drop(e: DragEvent) {
+	if (props.folder.id === -1 || inBin.value) { return }
+	emitter.emit('editor-drop', props.folder)
+	e.preventDefault()
+	e.stopPropagation()
+	dragOver.value = 0
+	dragging.value = false
+	return false
+}
+
+function dragenter(e: DragEvent) {
+	if (props.folder.id === -1 || inBin.value) { return }
+	dragOver.value++
+	e.stopPropagation()
+}
+
+function dragleave(e: DragEvent) {
+	dragOver.value--
+	e.stopPropagation()
+}
+
+function dragover(e: DragEvent) {
+	e.preventDefault()
+	e.stopPropagation()
+}
+
+function dragstart(e: DragEvent) {
+	if (props.folder.id === -1 || inBin.value) { return }
+	e.dataTransfer!.setData('text/plain', 'drag !!!')
+	dragging.value = true
+	emitter.emit('editor-drag', props.folder)
+	e.stopPropagation()
+}
+
+function dragend() {
+	dragging.value = false
+}
+
+function click(e: Event) {
+	if (router.currentRoute.value.path !== '/editor/' + props.folder.id) {
+		router.push('/editor/' + props.folder.id)
+	}
+	e.stopPropagation()
+}
 </script>
 
 <style lang="scss" scoped>

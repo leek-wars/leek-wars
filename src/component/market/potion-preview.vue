@@ -46,7 +46,7 @@ import { LeekWars } from '@/model/leekwars'
 import { PotionEffect, PotionTemplate } from '@/model/potion'
 import { store } from '@/model/store'
 import { emitter } from '@/model/vue'
-import { computed, withDefaults } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 defineOptions({

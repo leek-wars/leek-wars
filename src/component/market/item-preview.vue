@@ -76,7 +76,7 @@ import { Leek } from '@/model/leek'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { WeaponsData as WeaponsDataImport } from '@/model/weapon'
-import { computed, onMounted, withDefaults } from 'vue'
+import { computed, onMounted } from 'vue'
 import SchemeImage from './scheme-image.vue'
 import SchemePreview from './scheme-preview.vue'
 

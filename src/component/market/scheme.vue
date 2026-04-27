@@ -47,7 +47,7 @@ import { LeekWars } from '@/model/leekwars'
 import { SchemeTemplate } from '@/model/scheme'
 import { store } from '@/model/store'
 import { emitter } from '@/model/vue'
-import { computed, withDefaults } from 'vue'
+import { computed } from 'vue'
 
 defineOptions({ name: 'scheme', components: {
 	'rich-tooltip-item': RichTooltipItem,

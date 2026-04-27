@@ -16,41 +16,45 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
-	import { mixins } from '@/model/i18n'
-	import { gitLog, clearLog } from './git-log'
-	import { nextTick } from 'vue'
+<script setup lang="ts">
+import { mixins } from '@/model/i18n'
+import { computed, nextTick, onMounted, useTemplateRef, watch } from 'vue'
+import { clearLog, gitLog } from './git-log'
 
-	@Options({ name: 'git-terminal', i18n: {}, mixins: [...mixins] })
-	export default class GitTerminal extends Vue {
+defineOptions({ name: 'git-terminal', i18n: {}, mixins: [...mixins] })
 
-		@Prop({ default: 'leek-wars' }) theme!: string
+const props = withDefaults(defineProps<{
+	theme?: string
+}>(), {
+	theme: 'leek-wars',
+})
 
-		get entries() { return gitLog.entries }
-		get isDark(): boolean {
-			return ['monokai', 'vs-dark', 'hc-black'].includes(this.theme)
-		}
+const logEl = useTemplateRef<HTMLElement>('logEl')
 
-		clear() { clearLog() }
+const entries = computed(() => gitLog.entries)
+const isDark = computed<boolean>(() => ['monokai', 'vs-dark', 'hc-black'].includes(props.theme))
 
-		formatTime(ts: number): string {
-			const d = new Date(ts)
-			return d.toTimeString().slice(0, 8)
-		}
+function clear() { clearLog() }
 
-		@Watch('entries.length')
-		scrollToBottom() {
-			nextTick(() => {
-				const el = this.$refs.logEl as HTMLElement | undefined
-				if (el) el.scrollTop = el.scrollHeight
-			})
-		}
+function formatTime(ts: number): string {
+	const d = new Date(ts)
+	return d.toTimeString().slice(0, 8)
+}
 
-		mounted() {
-			this.scrollToBottom()
-		}
-	}
+function scrollToBottom() {
+	nextTick(() => {
+		const el = logEl.value
+		if (el) el.scrollTop = el.scrollHeight
+	})
+}
+
+watch(() => entries.value.length, () => {
+	scrollToBottom()
+})
+
+onMounted(() => {
+	scrollToBottom()
+})
 </script>
 
 <style lang="scss" scoped>

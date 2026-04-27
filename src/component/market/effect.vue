@@ -104,11 +104,12 @@ import { computed } from 'vue'
 
 defineOptions({ name: 'effect-view', components: { 'lw-code': Code } })
 
-const props = defineProps<{
+interface EffectViewProps {
 	effect: Effect
 	passive?: boolean
 	leek?: Leek
-}>()
+}
+const props = defineProps<EffectViewProps>()
 
 const value1 = computed(() => {
 	if (props.effect.id === EffectType.ADD_STATE) {
