@@ -414,9 +414,16 @@
 			skippedItemTKey(s: any): string {
 				const item = LeekWars.items[s.template]
 				if (!item) return ''
-				if (s.type === 'weapon') return 'weapon.' + LeekWars.weapons[item.params].name
-				if (s.type === 'chip') return 'chip.' + LeekWars.chips[item.params].name
-				if (s.type === 'component') return 'component.' + LeekWars.components[item.params].name
+				if (s.type === 'weapon') {
+					const w = LeekWars.weapons[item.params]
+					if (w) return 'weapon.' + w.name
+				} else if (s.type === 'chip') {
+					const c = LeekWars.chips[item.params]
+					if (c) return 'chip.' + c.name
+				} else if (s.type === 'component') {
+					const c = LeekWars.components[item.params]
+					if (c) return 'component.' + c.name
+				}
 				return item.name
 			},
 			loadAll() {
