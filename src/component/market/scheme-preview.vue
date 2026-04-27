@@ -6,14 +6,17 @@
 	</div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
 import { defineAsyncComponent } from 'vue'
+const Scheme = defineAsyncComponent(() => import('./scheme.vue'))
+export default {
+	components: { scheme: Scheme }
+}
+</script>
+
+<script setup lang="ts">
 import type { SchemeTemplate } from '@/model/scheme'
 import { emitter } from '@/model/vue'
-
-const SchemeView = defineAsyncComponent(() => import('./scheme.vue'))
-
-defineOptions({ components: { 'scheme': SchemeView } })
 
 withDefaults(defineProps<{
 	scheme: SchemeTemplate

@@ -116,7 +116,7 @@ import { LeekWars } from '@/model/leekwars'
 
 const Didactitiel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`))
 
-defineOptions({ name: 'help', i18n: {}, mixins: [...mixins], components: { Didactitiel } })
+defineOptions({ name: 'help', i18n: {}, mixins: [...mixins] })
 
 const { t } = useI18n()
 const router = useRouter()

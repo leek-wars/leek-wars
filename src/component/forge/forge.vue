@@ -34,7 +34,7 @@
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
 
-	defineOptions({ name: 'forge', components: { Breadcrumb, 'rich-tooltip-item': RichTooltipItem } })
+	defineOptions({ name: 'forge' })
 
 	const ITEM_CATEGORY_NAME: Record<number, any> = ITEM_CATEGORY_NAME_TYPED
 

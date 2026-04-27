@@ -77,7 +77,7 @@ import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 
 const LWTitle = defineAsyncComponent(() => import('@/component/title/title.vue'))
 
-defineOptions({ components: { 'lw-title': LWTitle } })
+defineOptions({})
 
 const props = defineProps<{
 	id: number

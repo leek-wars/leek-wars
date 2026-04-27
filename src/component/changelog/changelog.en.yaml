@@ -1,3 +1,9 @@
+248:
+  title: "WIP"
+  added:
+    - "#ai `beforeFight()` and `afterFight()` hooks: optional functions in your AI, called before turn 1 and after the fight ends."
+    - "#ai `setLoadout(name)` function: applies a loadout for this fight only, to be used inside `beforeFight()`. The loadout's weapons/chips/stats are reverted at the end of the fight."
+    - "#ai `getWinner()` function: retrieves the winning team side from `afterFight()`."
 247:
   title: "Git integration, loadouts, multi-account management and clover potions."
   added:

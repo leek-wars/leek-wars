@@ -54,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import ConversationElement from '@/component/messages/conversation.vue'
+import Conversation from '@/component/messages/conversation.vue'
 import { LeekWars } from '@/model/leekwars'
 import { Notification } from '@/model/notification'
 import { store } from '@/model/store'
@@ -63,7 +63,7 @@ import { defineAsyncComponent, nextTick, ref } from 'vue'
 
 const ChatPanel = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat-panel.vue`))
 
-defineOptions({ name: 'lw-social', components: { ChatPanel, 'conversation': ConversationElement } })
+defineOptions({ name: 'lw-social' })
 
 const panelWidth = ref(400)
 const socialEverOpened = ref(false)

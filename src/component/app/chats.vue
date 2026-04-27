@@ -24,7 +24,7 @@ import { defineAsyncComponent, ref, watch } from 'vue'
 
 const Chat = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
 
-defineOptions({ name: 'chats', components: { chat: Chat } })
+defineOptions({ name: 'chats' })
 
 const chats = ref<any[]>([])
 

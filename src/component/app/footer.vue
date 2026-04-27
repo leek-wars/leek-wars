@@ -96,7 +96,7 @@ import { LeekWars } from '@/model/leekwars'
 
 const Didactitiel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`))
 
-defineOptions({ name: 'lw-footer', components: { Didactitiel } })
+defineOptions({ name: 'lw-footer' })
 
 const didactitiel = ref(false)
 const didactitiel_enabled = ref(false)

@@ -1,3 +1,9 @@
+248:
+  title: "WIP"
+  added:
+    - "#ai Hooks `beforeFight()` et `afterFight()` : fonctions optionnelles dans l'IA, appelées avant le tour 1 et après la fin du combat."
+    - "#ai Fonction `setLoadout(name)` : applique un loadout pour ce combat uniquement, à utiliser dans `beforeFight()`. Les armes/puces/stats du loadout sont restaurés à la fin du combat."
+    - "#ai Fonction `getWinner()` : récupère le côté de l'équipe gagnante depuis `afterFight()`."
 247:
   title: "Intégration Git, équipements, gestion multi-comptes et potions de trèfle."
   added:

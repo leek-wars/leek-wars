@@ -46,9 +46,9 @@ import { store } from '@/model/store'
 import { defineAsyncComponent, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-const ChatElement = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
+const Chat = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
 
-defineOptions({ name: 'chat-panel', components: { chat: ChatElement } })
+defineOptions({ name: 'chat-panel' })
 
 const props = defineProps<{
 	toggle: string

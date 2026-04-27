@@ -39,10 +39,7 @@ import CharacteristicTooltip from '../leek/characteristic-tooltip.vue'
 
 const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
 
-defineOptions({ name: 'summon-view', components: {
-	'characteristic-tooltip': CharacteristicTooltip,
-	'rich-tooltip-item': RichTooltipItem
-}})
+defineOptions({ name: 'summon-view' })
 
 defineProps<{
 	summon: any

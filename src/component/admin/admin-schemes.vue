@@ -83,7 +83,7 @@
 
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
-	defineOptions({ components: { RichTooltipFarmer, RichTooltipItem, Breadcrumb } })
+	defineOptions({})
 
 	const ITEM_CATEGORY_NAME: Record<number, any> = ITEM_CATEGORY_NAME_TYPED
 

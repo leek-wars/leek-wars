@@ -82,7 +82,7 @@ import { CHIPS as CHIPS_TYPED } from '@/model/chips'
 
 const LWTitle = defineAsyncComponent(() => import('@/component/title/title.vue'))
 
-defineOptions({ components: { 'lw-title': LWTitle } })
+defineOptions({})
 
 const CHIPS: Record<number, any> = CHIPS_TYPED
 
