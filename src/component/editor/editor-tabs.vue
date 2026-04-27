@@ -68,7 +68,7 @@
 	defineOptions({ name: 'editor-tabs', i18n: {}, mixins: [...mixins] })
 
 	const props = withDefaults(defineProps<{
-		ais: AI[]
+		ais: {[key: string]: AI}
 		history2: AI[]
 		group: string
 		current: EditorTab | null
