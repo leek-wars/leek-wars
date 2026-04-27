@@ -10,7 +10,7 @@
 	<div class="page" v-else>
 		<div class="page-header page-bar">
 			<div>
-				<h1><breadcrumb v-if="fightTypeLabel" :items="[{name: fightTypeLabel, link: '/fight/' + fight.id}, {name: $t('title'), link: ''}]" :raw="true" /><span v-else>{{ $t('title') }}</span></h1>
+				<h1><breadcrumb v-if="fight && fightTypeLabel" :items="[{name: fightTypeLabel, link: '/fight/' + fight.id}, {name: $t('title'), link: ''}]" :raw="true" /><span v-else>{{ $t('title') }}</span></h1>
 				<div v-if="fight" class="info">{{ $filters.date(fight.date) }}</div>
 			</div>
 			<div class="tabs">
@@ -388,6 +388,7 @@
 			this.fight = null
 			this.report = null
 			this.actions = null
+			this.fightTypeLabel = null
 			this.myFight = false
 			this.iWin = false
 			this.enemy = null
