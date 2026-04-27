@@ -18,26 +18,23 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import { mixins } from '@/model/i18n'
+<script setup lang="ts">
+import { mixins } from '@/model/i18n'
 
-	@Options({ name: 'bank-product', i18n: {}, mixins: [...mixins] })
-	export default class BankProduct extends Vue {
+defineOptions({ name: 'bank-product', i18n: {}, mixins: [...mixins] })
 
-		@Prop({ required: true }) product!: any
-		@Prop({ required: true }) index!: number
-		@Prop() best!: boolean
-		@Prop() preview!: boolean
-		@Prop() firstPurchase!: boolean
+defineProps<{
+	product: any
+	index: number
+	best?: boolean
+	preview?: boolean
+	firstPurchase?: boolean
+}>()
 
-		format(n: number) {
-			if (Math.floor(n) !== n) {
-				return n.toFixed(2)
-			}
-			return n
-		}
-	}
+function format(n: number) {
+	if (Math.floor(n) !== n) return n.toFixed(2)
+	return n
+}
 </script>
 
 <style lang="scss" scoped>

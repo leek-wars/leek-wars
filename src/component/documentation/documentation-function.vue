@@ -50,7 +50,7 @@
 			<template v-if="fun.arguments_names.length > 0">
 				<h4>{{ $t('doc.parameters') }}</h4>
 				<ul>
-					<li v-for="(arg, i) in fun.arguments_names" :key="i">{{ arg }} <span v-if="fun.optional[i]">({{ $t('doc.optional') }})</span> : <span v-dochash v-code v-html="$t('doc.func_' + fun.name + '_arg_' + (parseInt(i) + 1))"></span></li>
+					<li v-for="(arg, i) in fun.arguments_names" :key="i">{{ arg }} <span v-if="fun.optional[i]">({{ $t('doc.optional') }})</span> : <span v-dochash v-code v-html="$t('doc.func_' + fun.name + '_arg_' + (i + 1))"></span></li>
 				</ul>
 			</template>
 
@@ -77,41 +77,39 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import Markdown from '@/component/encyclopedia/markdown.vue'
-	import { FUNCTION_BY_ID } from '@/model/function_by_id'
-	import { locale } from '@/locale'
-	import { LSFunction } from '@/model/function'
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue'
+import Markdown from '@/component/encyclopedia/markdown.vue'
+import { FUNCTION_BY_ID } from '@/model/function_by_id'
+import { locale } from '@/locale'
+import type { LSFunction } from '@/model/function'
+import { LeekWars } from '@/model/leekwars'
 
-	@Options({ name: 'documentation-function', components: { Markdown } })
-	export default class DocumentationFunction extends Vue {
+defineOptions({ name: 'documentation-function' })
 
-		@Prop() fun!: LSFunction
+const props = defineProps<{
+	fun: LSFunction
+}>()
 
-		FUNCTION_BY_ID = FUNCTION_BY_ID
-		expanded: boolean = false
-		new_fun: any = null
+const expanded = ref(false)
+const new_fun = ref<any>(null)
 
-		@Watch('fun', {immediate: true})
-		updateFun() {
-			LeekWars.documentation(locale).then((functions) => {
-				this.new_fun = functions[this.fun.name]
-			})
-		}
+watch(() => props.fun, () => {
+	LeekWars.documentation(locale).then((functions) => {
+		new_fun.value = functions[props.fun.name]
+	})
+}, { immediate: true })
 
-		get new_arguments() {
-			if (this.new_fun) {
-				const args = (this.new_fun.primary.Paramètres || '').split('\n')
-				return args.filter((a: string) => {
-					const name = a.match(/\*\*(\w+)\*\*/i)
-					return name && this.fun.arguments_names.includes(name[1])
-				}).join('\n')
-			}
-			return ''
-		}
+const new_arguments = computed(() => {
+	if (new_fun.value) {
+		const args = (new_fun.value.primary.Paramètres || '').split('\n')
+		return args.filter((a: string) => {
+			const name = a.match(/\*\*(\w+)\*\*/i)
+			return name && props.fun.arguments_names.includes(name[1])
+		}).join('\n')
 	}
+	return ''
+})
 </script>
 
 <style lang="scss" scoped>

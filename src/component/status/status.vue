@@ -30,89 +30,93 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { mixins } from '@/model/i18n'
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { ref, computed, onBeforeUnmount } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { mixins } from '@/model/i18n'
+import { LeekWars } from '@/model/leekwars'
 
-	const SERVICE_ORDER = ['api', 'db', 'redis', 'daemon', 'websocket', 'git', 'static']
-	const SERVICE_ICONS: {[k: string]: string} = {
-		api: 'mdi-api',
-		db: 'mdi-database',
-		redis: 'mdi-memory',
-		daemon: 'mdi-sword-cross',
-		websocket: 'mdi-lan-connect',
-		git: 'mdi-source-branch',
-		static: 'mdi-image-multiple',
-	}
+defineOptions({ name: 'status', i18n: {}, mixins: [...mixins] })
 
-	@Options({ name: 'status', i18n: {}, mixins: [...mixins] })
-	export default class Status extends Vue {
-		services: {[k: string]: string} = {}
-		healthy = true
-		loaded = false
-		lastChecked: Date | null = null
-		now = Date.now()
-		timer: number | null = null
-		nowTimer: number | null = null
+const { t } = useI18n()
 
-		created() {
-			LeekWars.setTitle(this.$t('title'))
-			this.refresh()
-			this.timer = window.setInterval(() => this.refresh(), 10000)
-			this.nowTimer = window.setInterval(() => {
-				if (!document.hidden) this.now = Date.now()
-			}, 1000)
-		}
-		beforeUnmount() {
-			if (this.timer) window.clearInterval(this.timer)
-			if (this.nowTimer) window.clearInterval(this.nowTimer)
-		}
-		async refresh() {
-			try {
-				const data = await LeekWars.get('health/check')
-				this.applyResponse(data)
-			} catch (e: any) {
-				// Non-2xx responses (e.g. 503 when a service is down) still carry the body
-				if (e && typeof e === 'object' && 'services' in e) {
-					this.applyResponse(e)
-				} else {
-					this.services = { api: 'error' }
-					this.healthy = false
-				}
-			}
-			this.lastChecked = new Date()
-			this.loaded = true
-		}
-		applyResponse(data: {services?: {[k: string]: string}, healthy?: boolean}) {
-			this.services = data.services || {}
-			this.healthy = !!data.healthy
-		}
-		serviceIcon(name: string) {
-			return SERVICE_ICONS[name] || 'mdi-help-circle'
-		}
-		get serviceList() {
-			const extras = Object.keys(this.services).filter(n => !SERVICE_ORDER.includes(n))
-			return [...SERVICE_ORDER.filter(n => n in this.services), ...extras]
-				.map(n => ({ name: n, status: this.services[n] }))
-		}
-		get errorCount() {
-			return Object.values(this.services).filter(v => v === 'error').length
-		}
-		get overallState(): 'ok' | 'partial' | 'down' {
-			if (this.healthy || this.errorCount === 0) return 'ok'
-			return this.errorCount === Object.keys(this.services).length ? 'down' : 'partial'
-		}
-		get overallIcon() {
-			return { ok: 'mdi-check-circle', partial: 'mdi-alert', down: 'mdi-close-circle' }[this.overallState]
-		}
-		get lastCheckedLabel() {
-			if (!this.lastChecked) return ''
-			const s = Math.max(0, Math.floor((this.now - this.lastChecked.getTime()) / 1000))
-			if (s < 5) return this.$t('just_now')
-			return this.$t('seconds_ago', { s })
+const SERVICE_ORDER = ['api', 'db', 'redis', 'daemon', 'websocket', 'git', 'static']
+const SERVICE_ICONS: {[k: string]: string} = {
+	api: 'mdi-api',
+	db: 'mdi-database',
+	redis: 'mdi-memory',
+	daemon: 'mdi-sword-cross',
+	websocket: 'mdi-lan-connect',
+	git: 'mdi-source-branch',
+	static: 'mdi-image-multiple',
+}
+
+const services = ref<{[k: string]: string}>({})
+const healthy = ref(true)
+const loaded = ref(false)
+const lastChecked = ref<Date | null>(null)
+const now = ref(Date.now())
+let timer: number | null = null
+let nowTimer: number | null = null
+
+function applyResponse(data: { services?: {[k: string]: string}, healthy?: boolean }) {
+	services.value = data.services || {}
+	healthy.value = !!data.healthy
+}
+
+async function refresh() {
+	try {
+		const data = await LeekWars.get('health/check')
+		applyResponse(data)
+	} catch (e: any) {
+		if (e && typeof e === 'object' && 'services' in e) {
+			applyResponse(e)
+		} else {
+			services.value = { api: 'error' }
+			healthy.value = false
 		}
 	}
+	lastChecked.value = new Date()
+	loaded.value = true
+}
+
+LeekWars.setTitle(t('title'))
+refresh()
+timer = window.setInterval(() => refresh(), 10000)
+nowTimer = window.setInterval(() => {
+	if (!document.hidden) now.value = Date.now()
+}, 1000)
+
+onBeforeUnmount(() => {
+	if (timer) window.clearInterval(timer)
+	if (nowTimer) window.clearInterval(nowTimer)
+})
+
+function serviceIcon(name: string) {
+	return SERVICE_ICONS[name] || 'mdi-help-circle'
+}
+
+const serviceList = computed(() => {
+	const extras = Object.keys(services.value).filter(n => !SERVICE_ORDER.includes(n))
+	return [...SERVICE_ORDER.filter(n => n in services.value), ...extras]
+		.map(n => ({ name: n, status: services.value[n] }))
+})
+
+const errorCount = computed(() => Object.values(services.value).filter(v => v === 'error').length)
+
+const overallState = computed<'ok' | 'partial' | 'down'>(() => {
+	if (healthy.value || errorCount.value === 0) return 'ok'
+	return errorCount.value === Object.keys(services.value).length ? 'down' : 'partial'
+})
+
+const overallIcon = computed(() => ({ ok: 'mdi-check-circle', partial: 'mdi-alert', down: 'mdi-close-circle' })[overallState.value])
+
+const lastCheckedLabel = computed(() => {
+	if (!lastChecked.value) return ''
+	const s = Math.max(0, Math.floor((now.value - lastChecked.value.getTime()) / 1000))
+	if (s < 5) return t('just_now')
+	return t('seconds_ago', { s })
+})
 </script>
 
 <style lang="scss" scoped>

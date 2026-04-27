@@ -9,35 +9,32 @@
 				<b v-if="chat.last_farmer && $store.state.farmer && chat.last_farmer.id === $store.state.farmer.id">{{ $t('main.me') }} ►</b>
 				<span v-html="formattedLastMessage"></span>
 			</div>
-			<div class="date">{{ LeekWars.formatDuration(chat.last_date) }}</div>
+			<div class="date">{{ LeekWars.formatDuration(chat.last_date || 0) }}</div>
 		</div>
 	</div>
 </template>
 
-<script lang="ts">
-	import { Chat } from '@/model/chat'
-	import { formatChatPreview } from '@/model/chat-format'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+<script setup lang="ts">
+import { computed } from 'vue'
+import type { Chat } from '@/model/chat'
+import { formatChatPreview } from '@/model/chat-format'
+import { store } from '@/model/store'
+import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Options({ name: 'conversation', components: { RichTooltipFarmer } })
-	export default class ConversationElement extends Vue {
+defineOptions({ name: 'conversation' })
 
-		@Prop({required: true}) chat!: Chat
+const props = defineProps<{
+	chat: Chat
+}>()
 
-		get farmer() {
-			for (const farmer of this.chat.farmers) {
-				if (!this.$store.state.farmer || farmer.id !== this.$store.state.farmer.id) {
-					return farmer
-				}
-			}
-			return null
-		}
-
-		get formattedLastMessage() {
-			return formatChatPreview(this.chat.last_message || '', this.chat.last_farmer ? this.chat.last_farmer.name : '')
-		}
+const farmer = computed(() => {
+	for (const f of props.chat.farmers) {
+		if (!store.state.farmer || f.id !== store.state.farmer.id) return f
 	}
+	return null
+})
+
+const formattedLastMessage = computed(() => formatChatPreview(props.chat.last_message || '', props.chat.last_farmer ? props.chat.last_farmer.name : ''))
 </script>
 
 <style lang="scss" scoped>

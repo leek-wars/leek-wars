@@ -60,7 +60,7 @@
 
 			<loader v-if="!packs" />
 			<div v-else class="packs">
-				<bank-product v-for="(pack, p) in packs" :key="pack.crystals" :product="pack" :index="p" :best="pack.bonus === bestBonus" :first-purchase="firstPurchase" />
+				<bank-product v-for="(pack, p) in packs" :key="pack.crystals" :product="pack" :index="Number(p)" :best="pack.bonus === bestBonus" :first-purchase="firstPurchase" />
 			</div>
 		</panel>
 		<h1 v-if="items" class="items-title">{{ $t('items_title') }}</h1>
@@ -87,51 +87,49 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { mixins } from '@/model/i18n'
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
-	import Item from '@/component/item.vue'
-	import { locale } from '@/locale'
-	import BankProduct from './bank-product.vue'
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
+import { mixins } from '@/model/i18n'
+import { LeekWars } from '@/model/leekwars'
+import { store } from '@/model/store'
+import Item from '@/component/item.vue'
+import BankProduct from './bank-product.vue'
 
-	@Options({ name: 'bank', i18n: {}, mixins: [...mixins], components: { Item, BankProduct } })
-	export default class Bank extends Vue {
-		packs: any = null
-		items: any = null
-		firstPurchase: boolean = false
+defineOptions({ name: 'bank', i18n: {}, mixins: [...mixins] })
 
-		get bestBonus() {
-			if (!this.packs) return -1
-			const max = Object.values(this.packs).reduce((a: number, p) => Math.max(a, (p as {bonus: number}).bonus), 0)
-			return max > 0 ? max : -1
-		}
+const { t } = useI18n()
+const router = useRouter()
 
-		created() {
-			LeekWars.setActions([
-				{image: 'icon/market.png', click: () => this.$router.push('/market')},
-				{icon: 'mdi-treasure-chest', click: () => this.$router.push('/inventory')},
-			])
-			LeekWars.get('bank/get-packs').then(data => {
-				this.packs = data.packs
-				this.items = data.items
-				this.firstPurchase = data.first_purchase
-				LeekWars.setTitle(this.$i18n.t('title'))
-			})
-			this.updateSubtitle()
-		}
+const packs = ref<any>(null)
+const items = ref<any>(null)
+const firstPurchase = ref(false)
 
-		updateSubtitle() {
-			if (this.$store.state.farmer) {
-				LeekWars.setSubTitle(this.$t('main.x_habs', [LeekWars.formatNumber(this.$store.state.farmer.habs)]) + " • " + this.$t('main.x_crystals', [LeekWars.formatNumber(this.$store.state.farmer.crystals)]))
-			}
-		}
+const bestBonus = computed(() => {
+	if (!packs.value) return -1
+	const max = Object.values(packs.value).reduce((a: number, p: any) => Math.max(a, p.bonus), 0)
+	return max > 0 ? max : -1
+})
 
-		@Watch('LeekWars.currency')
-		updateCurrency() {
-			localStorage.setItem('currency', LeekWars.currency)
-		}
-	}
+LeekWars.setActions([
+	{ image: 'icon/market.png', click: () => router.push('/market') },
+	{ icon: 'mdi-treasure-chest', click: () => router.push('/inventory') },
+])
+LeekWars.get('bank/get-packs').then(data => {
+	packs.value = data.packs
+	items.value = data.items
+	firstPurchase.value = data.first_purchase
+	LeekWars.setTitle(t('title'))
+})
+
+if (store.state.farmer) {
+	LeekWars.setSubTitle(t('main.x_habs', [LeekWars.formatNumber(store.state.farmer.habs)]) + ' • ' + t('main.x_crystals', [LeekWars.formatNumber(store.state.farmer.crystals)]))
+}
+
+watch(() => LeekWars.currency, () => {
+	localStorage.setItem('currency', LeekWars.currency)
+})
 </script>
 
 <style lang="scss" scoped>

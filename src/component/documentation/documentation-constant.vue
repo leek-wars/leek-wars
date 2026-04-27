@@ -52,100 +52,90 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import ItemPreview from '@/component/market/item-preview.vue'
-	import { Constant } from '@/model/constant'
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
-	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
-	import { CHIPS } from '@/model/chips'
-	import { CONSTANT_BY_ID } from '@/model/constant_by_id'
-	import { locale } from '@/locale'
-	import Markdown from '../encyclopedia/markdown.vue'
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue'
+import ItemPreview from '@/component/market/item-preview.vue'
+import type { Constant } from '@/model/constant'
+import { LeekWars } from '@/model/leekwars'
+import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
+import { CHIPS as CHIPS_TYPED } from '@/model/chips'
+import { CONSTANT_BY_ID } from '@/model/constant_by_id'
+import { locale } from '@/locale'
+import Markdown from '../encyclopedia/markdown.vue'
 
-	@Options({ name: 'documentation-constant', components: { ItemPreview, RichTooltipItem, Markdown }})
-	export default class DocumentationConstant extends Vue {
-		@Prop() constant!: Constant
-		CONSTANT_BY_ID = CONSTANT_BY_ID
-		expanded: boolean = false
-		new_constant: any = null
+defineOptions({ name: 'documentation-constant', components: { ItemPreview } })
 
-		@Watch('constant', {immediate: true})
-		updateFun() {
-			LeekWars.documentation(locale).then((functions) => {
-				this.new_constant = functions[this.constant.name]
-			})
-		}
+const CHIPS: Record<number, any> = CHIPS_TYPED
 
-		get value_int() {
-			return parseInt(this.constant.value, 10)
+const props = defineProps<{
+	constant: Constant
+}>()
+
+defineEmits<{
+	'update:modelValue': [value: any]
+}>()
+
+const expanded = ref(false)
+const new_constant = ref<any>(null)
+
+watch(() => props.constant, () => {
+	LeekWars.documentation(locale).then((functions) => {
+		new_constant.value = functions[props.constant.name]
+	})
+}, { immediate: true })
+
+const value_int = computed(() => parseInt(props.constant.value, 10))
+const is_weapon = computed(() => props.constant.name.startsWith('WEAPON_'))
+const is_chip = computed(() => props.constant.name.startsWith('CHIP_'))
+
+const chips = computed(() => {
+	const items: any[] = []
+	if (props.constant.deprecated) return items
+	if (props.constant.name.startsWith('EFFECT_MODIFIER_')) {
+		for (const i in CHIPS) {
+			if (CHIPS[i].effects.some((e: any) => e.modifiers & value_int.value)) items.push(CHIPS[i])
 		}
-		get is_weapon() {
-			return this.constant.name.startsWith('WEAPON_')
+	} else if (props.constant.name.startsWith('EFFECT_') && !props.constant.name.startsWith('EFFECT_TARGET_')) {
+		for (const i in CHIPS) {
+			if (CHIPS[i].effects.some((e: any) => e.id === value_int.value)) items.push(CHIPS[i])
 		}
-		get is_chip() {
-			return this.constant.name.startsWith('CHIP_')
+	} else if (props.constant.name.startsWith('AREA_')) {
+		for (const i in CHIPS) {
+			if (CHIPS[i].area === value_int.value) items.push(CHIPS[i])
 		}
-		get chips() {
-			const items = [] as any
-			if (this.constant.deprecated) { return items }
-			if (this.constant.name.startsWith("EFFECT_MODIFIER_")) {
-				for (const i in CHIPS) {
-					if (CHIPS[i].effects.some((e) => e.modifiers & this.value_int)) {
-						items.push(CHIPS[i])
-					}
-				}
-			} else if (this.constant.name.startsWith("EFFECT_") && !this.constant.name.startsWith("EFFECT_TARGET_")) {
-				for (const i in CHIPS) {
-					if (CHIPS[i].effects.some((e) => e.id === this.value_int)) {
-						items.push(CHIPS[i])
-					}
-				}
-			} else if (this.constant.name.startsWith("AREA_")) {
-				for (const i in CHIPS) {
-					if (CHIPS[i].area === this.value_int) {
-						items.push(CHIPS[i])
-					}
-				}
-			} else if (this.constant.name.startsWith("LAUNCH_TYPE_")) {
-				for (const i in CHIPS) {
-					if (CHIPS[i].launch_type === this.value_int) {
-						items.push(CHIPS[i])
-					}
-				}
-			}
-			return items
-		}
-		get weapons() {
-			const items = [] as any
-			if (this.constant.name.startsWith("EFFECT_MODIFIER_")) {
-				for (const i in LeekWars.weapons) {
-					if (LeekWars.weapons[i].effects.some((e) => e.modifiers & this.value_int) || LeekWars.weapons[i].passive_effects.some((e) => e.modifiers & this.value_int)) {
-						items.push(LeekWars.weapons[i])
-					}
-				}
-			} else if (this.constant.name.startsWith("EFFECT_") && !this.constant.name.startsWith("EFFECT_TARGET_")) {
-				for (const i in LeekWars.weapons) {
-					if (LeekWars.weapons[i].effects.some((e) => e.id === this.value_int) || LeekWars.weapons[i].passive_effects.some((e) => e.id === this.value_int)) {
-						items.push(LeekWars.weapons[i])
-					}
-				}
-			} else if (this.constant.name.startsWith("AREA_")) {
-				for (const i in LeekWars.weapons) {
-					if (LeekWars.weapons[i].area === this.value_int) {
-						items.push(LeekWars.weapons[i])
-					}
-				}
-			} else if (this.constant.name.startsWith("LAUNCH_TYPE_")) {
-				for (const i in LeekWars.weapons) {
-					if (LeekWars.weapons[i].launch_type === this.value_int) {
-						items.push(LeekWars.weapons[i])
-					}
-				}
-			}
-			return items
+	} else if (props.constant.name.startsWith('LAUNCH_TYPE_')) {
+		for (const i in CHIPS) {
+			if (CHIPS[i].launch_type === value_int.value) items.push(CHIPS[i])
 		}
 	}
+	return items
+})
+
+const weapons = computed(() => {
+	const items: any[] = []
+	if (props.constant.name.startsWith('EFFECT_MODIFIER_')) {
+		for (const i in LeekWars.weapons) {
+			if (LeekWars.weapons[i].effects.some((e: any) => e.modifiers & value_int.value) || LeekWars.weapons[i].passive_effects.some((e: any) => e.modifiers & value_int.value)) {
+				items.push(LeekWars.weapons[i])
+			}
+		}
+	} else if (props.constant.name.startsWith('EFFECT_') && !props.constant.name.startsWith('EFFECT_TARGET_')) {
+		for (const i in LeekWars.weapons) {
+			if (LeekWars.weapons[i].effects.some((e: any) => e.id === value_int.value) || LeekWars.weapons[i].passive_effects.some((e: any) => e.id === value_int.value)) {
+				items.push(LeekWars.weapons[i])
+			}
+		}
+	} else if (props.constant.name.startsWith('AREA_')) {
+		for (const i in LeekWars.weapons) {
+			if (LeekWars.weapons[i].area === value_int.value) items.push(LeekWars.weapons[i])
+		}
+	} else if (props.constant.name.startsWith('LAUNCH_TYPE_')) {
+		for (const i in LeekWars.weapons) {
+			if (LeekWars.weapons[i].launch_type === value_int.value) items.push(LeekWars.weapons[i])
+		}
+	}
+	return items
+})
 </script>
 
 <style lang="scss" scoped>

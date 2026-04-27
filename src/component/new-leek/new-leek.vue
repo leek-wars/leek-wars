@@ -9,10 +9,10 @@
 			<br>
 			<loader v-if="loading" />
 			<template v-else>
-				<template v-if="leekCount < 4">
+				<template v-if="(leekCount || 0) < 4">
 					{{ $t('name') }} <input v-model="leekName" type="text">
 					<br><br>
-					{{ $t('price') }} : {{ LeekWars.formatNumber(price) }} <span class="hab"></span>
+					{{ $t('price') }} : {{ LeekWars.formatNumber(price || 0) }} <span class="hab"></span>
 					<br>
 					<br v-if="error">
 					<div v-if="error" class="error">{{ error }}</div>
@@ -27,35 +27,40 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { store } from '@/model/store'
-	import { Options, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
+import { LeekWars } from '@/model/leekwars'
+import { store } from '@/model/store'
+import { mixins } from '@/model/i18n'
 
-	@Options({ name: 'new_leek', i18n: {} })
-	export default class NewLeek extends Vue {
-		price: number | null = null
-		leekCount: number | null = null
-		leekName: string = ''
-		error: string | null = null
-		loading: boolean = true
-		created() {
-			LeekWars.get('leek/get-next-price').then(data => {
-				this.price = data.price
-				this.leekCount = LeekWars.objectSize(this.$store.state.farmer.leeks)
-				LeekWars.setTitle(this.$t('title'))
-				this.loading = false
-			})
-		}
-		createLeek() {
-			LeekWars.post('leek/create', {name: this.leekName}).then(leek => {
-				store.commit('new-leek', leek)
-				this.$router.push('/leek/' + leek.id)
-			}).error(error => {
-				this.error = this.$t('error_' + error.error, error.params) as string
-			})
-		}
-	}
+defineOptions({ name: 'new_leek', i18n: {}, mixins: [...mixins] })
+
+const { t } = useI18n()
+const router = useRouter()
+
+const price = ref<number | null>(null)
+const leekCount = ref<number | null>(null)
+const leekName = ref('')
+const error = ref<string | null>(null)
+const loading = ref(true)
+
+LeekWars.get('leek/get-next-price').then(data => {
+	price.value = data.price
+	leekCount.value = LeekWars.objectSize(store.state.farmer!.leeks)
+	LeekWars.setTitle(t('title'))
+	loading.value = false
+})
+
+function createLeek() {
+	LeekWars.post('leek/create', { name: leekName.value }).then(leek => {
+		store.commit('new-leek', leek)
+		router.push('/leek/' + leek.id)
+	}).catch((err: any) => {
+		error.value = t('error_' + err.error, err.params) as string
+	})
+}
 </script>
 
 <style lang="scss" scoped>

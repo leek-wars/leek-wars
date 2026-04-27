@@ -53,108 +53,74 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
-	import { loadScript } from "@paypal/paypal-js"
-	import { mixins } from '@/model/i18n'
-	import { locale } from '@/locale'
-	import BankProduct from './bank-product.vue'
-	import Breadcrumb from '@/component/forum/breadcrumb.vue'
-	import { store } from '@/model/store'
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRoute, useRouter } from 'vue-router'
+import { LeekWars } from '@/model/leekwars'
+import { loadScript } from '@paypal/paypal-js'
+import { mixins } from '@/model/i18n'
+import BankProduct from './bank-product.vue'
+import Breadcrumb from '@/component/forum/breadcrumb.vue'
+import { store } from '@/model/store'
 
-	@Options({ name: 'bank', i18n: {}, mixins: [...mixins], components: { BankProduct, Breadcrumb } })
-	export default class BankBuy extends Vue {
-		pack: number = 0
-		offer!: number
-		product: any = null
-		loading: boolean = false
-		starPassLoading: boolean = false
-		firstPurchase: boolean = false
+defineOptions({ name: 'bank', i18n: {}, mixins: [...mixins] })
 
-		get breadcrumb_items() {
-			const items: {name: string, link: string}[] = [
-				{ name: this.$t('title'), link: '/bank' },
-			]
-			if (this.product) {
-				items.push({ name: this.$t('purshase_title_text_simple', [this.product.crystals]), link: '/bank/buy/' + this.pack })
-			}
-			return items
-		}
+const { t } = useI18n()
+const route = useRoute()
+const router = useRouter()
 
-		created() {
-			this.pack = parseInt(this.$route.params.pack, 10)
-			this.offer = parseInt(this.$route.params.offer, 10)
-			LeekWars.get('bank/get-pack/' + this.pack).then(data => {
-				const pack = data.pack
-				this.product = pack
-				this.firstPurchase = data.first_purchase
-				this.loadPayPal()
+const pack = ref(0)
+const offer = ref(0)
+const product = ref<any>(null)
+const loading = ref(false)
+const firstPurchase = ref(false)
 
-				// if (vendor === 'StarPass') {
-				// 	obj.id = LeekWars.LOCAL ? offer.id[1] : offer.id[0]
-				// 	LeekWars.post('bank/begin-starpass-payment', {pack_id: this.pack, offer_id: this.offer}).then(() => {
-				// 		this.data = obj
-				// 		setTimeout(() => this.createStarPass())
-				// 	}).error(error => {
-				// 		LeekWars.toast(error)
-				// 	})
-				// }
-				LeekWars.setTitle(this.$t('title'), this.$t('purshase_title_text_simple', [pack.crystals]))
-			})
-		}
-
-		loadPayPal() {
-			loadScript({
-				"client-id": (LeekWars.LOCAL || store.state.farmer?.id === 1) ? "Acg3b4FoxUp3vXX-G4aQ01vc5rkev2DIio8e2_ApB7OVIVHocmuXu7RJcN5zZTHGCOpqf-a-ukdIELDy" : "AesWr04mqzJrZlvdiR99GWBSnvWya49kuhJm84d3bgg7Afq-Ekh7PbunWFL6UOFXdQFw0TGmwr_vzS74",
-				currency: LeekWars.currency
-			}).then((paypal) => {
-				paypal!.Buttons!({
-					style: { layout: 'vertical', color: LeekWars.dark > 0 ? 'black' : 'blue', shape: 'rect', label:  'paypal', tagline: false },
-					// Order is created on the server and the order id is returned
-					createOrder: (data, actions) => {
-						return new Promise((resolve, reject) => {
-							return LeekWars.post('bank/begin-paypal-payment', {pack_id: this.pack, offer_id: 1, currency: LeekWars.currency}).then(resolve)
-						})
-					},
-					// Finalize the transaction on the server after payer approval
-					onApprove: (data, actions) => {
-						return LeekWars.post('bank/execute-paypal-payment', {order_id: data.orderID}).then(data => {
-							this.$store.commit('update-crystals', data.crystals)
-							this.$router.replace('/bank/validate/success/' + data.crystals)
-						}).error(error => {
-							this.$router.replace('/bank/validate/failed/' + error.error)
-						})
-					}
-				}).render('#paypal-button-container')
-			})
-			.catch((err) => {
-				console.error("failed to load the PayPal JS SDK script", err)
-			})
-		}
-
-		createStarPass() {
-			const starpass = document.createElement('script')
-			starpass.src = 'https://script.starpass.fr/script.php?idd=' + this.product.id + '&verif_en_php=1&datas='
-			starpass.async = true
-			const block = this.$refs.starpass as HTMLElement
-			if (block) {
-				block.appendChild(starpass)
-			}
-			this.starPassLoading = true
-		}
-		clickPayPal() {
-			this.loading = true
-			LeekWars.post('bank/begin-paypal-payment', {pack_id: this.pack, offer_id: this.offer}).then(data => {
-				window.location.href = data.url
-			})
-		}
-		@Watch('LeekWars.currency')
-		updateCurrency() {
-			localStorage.setItem('currency', LeekWars.currency)
-			this.loadPayPal()
-		}
+const breadcrumb_items = computed(() => {
+	const items: { name: string, link: string }[] = [{ name: t('title'), link: '/bank' }]
+	if (product.value) {
+		items.push({ name: t('purshase_title_text_simple', [product.value.crystals]), link: '/bank/buy/' + pack.value })
 	}
+	return items
+})
+
+function loadPayPal() {
+	loadScript({
+		'client-id': (LeekWars.LOCAL || store.state.farmer?.id === 1) ? 'Acg3b4FoxUp3vXX-G4aQ01vc5rkev2DIio8e2_ApB7OVIVHocmuXu7RJcN5zZTHGCOpqf-a-ukdIELDy' : 'AesWr04mqzJrZlvdiR99GWBSnvWya49kuhJm84d3bgg7Afq-Ekh7PbunWFL6UOFXdQFw0TGmwr_vzS74',
+		currency: LeekWars.currency
+	}).then((paypal) => {
+		paypal!.Buttons!({
+			style: { layout: 'vertical', color: LeekWars.dark > 0 ? 'black' : 'blue', shape: 'rect', label: 'paypal', tagline: false },
+			createOrder: (_data, _actions) => new Promise((resolve) => {
+				return LeekWars.post('bank/begin-paypal-payment', { pack_id: pack.value, offer_id: 1, currency: LeekWars.currency }).then(resolve)
+			}),
+			onApprove: (data, _actions) => {
+				return LeekWars.post('bank/execute-paypal-payment', { order_id: data.orderID }).then(d => {
+					store.commit('update-crystals', d.crystals)
+					router.replace('/bank/validate/success/' + d.crystals)
+				}).catch((err: any) => {
+					router.replace('/bank/validate/failed/' + err.error)
+				})
+			}
+		}).render('#paypal-button-container')
+	}).catch((err) => {
+		console.error('failed to load the PayPal JS SDK script', err)
+	})
+}
+
+pack.value = parseInt(route.params.pack as string, 10)
+offer.value = parseInt(route.params.offer as string, 10)
+LeekWars.get('bank/get-pack/' + pack.value).then(data => {
+	product.value = data.pack
+	firstPurchase.value = data.first_purchase
+	loadPayPal()
+	LeekWars.setTitle(t('title'), t('purshase_title_text_simple', [data.pack.crystals]))
+})
+
+watch(() => LeekWars.currency, () => {
+	localStorage.setItem('currency', LeekWars.currency)
+	loadPayPal()
+})
 </script>
 
 <style lang="scss" scoped>

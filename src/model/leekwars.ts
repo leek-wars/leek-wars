@@ -357,7 +357,7 @@ const LeekWars = reactive({
 		SEK: {symbol: 'kr', flag: 'se'},
 		SGD: {symbol: 'S$', flag: 'sg', prefix: true},
 		USD: {symbol: '$', flag: 'us', prefix: true},
-	}),
+	}) as Record<string, { symbol: string, flag: string, prefix?: boolean }>,
 	currency: localStorage.getItem('currency') || LANGUAGES[locale].currency,
 	timeDelta: 0, // (Date.now() / 1000 | 0) - __SERVER_TIME,
 	time: (Date.now() / 1000) | 0,

@@ -29,65 +29,59 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { ItemTemplate, ItemType } from '@/model/item'
-	import { LeekWars } from '@/model/leekwars'
-	import { store } from '@/model/store'
-	import { Options, Vue } from 'vue-property-decorator'
-	import Breadcrumb from '../forum/breadcrumb.vue'
-	import Item from '@/component/item.vue'
+<script setup lang="ts">
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { type ItemTemplate, ItemType } from '@/model/item'
+import { LeekWars } from '@/model/leekwars'
+import { store } from '@/model/store'
+import { mixins } from '@/model/i18n'
+import Breadcrumb from '../forum/breadcrumb.vue'
+import Item from '@/component/item.vue'
 
-	@Options({ name: 'items', i18n: {}, components: { Breadcrumb, Item } })
-	export default class Items extends Vue {
+defineOptions({ name: 'items', i18n: {}, mixins: [...mixins] })
 
-		trophies: any = {}
-		ignoredItems = new Set([406, 407, 408, 409, 410, 425, 419, 418, 417, 416, 415, 414, 413, 412, 411])
+const { t, locale } = useI18n()
 
-		created() {
-			LeekWars.setTitle("Items")
-		}
-		mounted() {
-			LeekWars.large = true
-			if (store.state.connected) {
-				LeekWars.get('trophy/my-trophies/' + this.$i18n.locale).then(data => {
-					for (const trophy of data.trophies) {
-						this.trophies[trophy.id] = trophy
-					}
-				})
-			}
-		}
-		beforeUnmount() {
-			LeekWars.large = false
-		}
-		get breadcrumb_items() {
-			return [
-				{name: this.$t('main.help'), link: '/help'},
-				{name: "Items", link: '/help/items'}
-			]
-		}
+const trophies = ref<any>({})
+const ignoredItems = new Set([406, 407, 408, 409, 410, 425, 419, 418, 417, 416, 415, 414, 413, 412, 411])
 
-		get levels() {
-			const weaponsAdded = new Set<number>()
-			const l = [] as ItemTemplate[][]
-			for (let level = 1; level <= 301; ++level) {
-				l[level - 1] = []
-			}
-			for (const item of this.items) {
-				if (item.type === ItemType.WEAPON) {
-					if (weaponsAdded.has(item.params)) { continue }
-					weaponsAdded.add(item.params)
-				}
-				l[item.level - 1].push(item)
-			}
-			return l
-		}
+LeekWars.setTitle('Items')
 
-		get items() {
-			return Object.values(LeekWars.items)
-				.filter(i => !this.ignoredItems.has(i.id) && (i.type === ItemType.WEAPON || i.type === ItemType.CHIP || i.type === ItemType.COMPONENT))
-				.sort((a, b) => a.level - b.level)
+const breadcrumb_items = computed(() => [
+	{ name: t('main.help'), link: '/help' },
+	{ name: 'Items', link: '/help/items' }
+])
+
+const items = computed<ItemTemplate[]>(() => (Object.values(LeekWars.items) as ItemTemplate[])
+	.filter((i) => !ignoredItems.has(i.id) && (i.type === ItemType.WEAPON || i.type === ItemType.CHIP || i.type === ItemType.COMPONENT))
+	.sort((a, b) => a.level - b.level))
+
+const levels = computed(() => {
+	const weaponsAdded = new Set<number>()
+	const l = [] as ItemTemplate[][]
+	for (let level = 1; level <= 301; ++level) l[level - 1] = []
+	for (const item of items.value) {
+		if (item.type === ItemType.WEAPON) {
+			if (weaponsAdded.has(item.params)) continue
+			weaponsAdded.add(item.params)
 		}
+		l[item.level - 1].push(item)
 	}
+	return l
+})
+
+onMounted(() => {
+	LeekWars.large = true
+	if (store.state.connected) {
+		LeekWars.get('trophy/my-trophies/' + locale.value).then(data => {
+			for (const trophy of data.trophies) {
+				trophies.value[trophy.id] = trophy
+			}
+		})
+	}
+})
+onBeforeUnmount(() => { LeekWars.large = false })
 </script>
 
 <style lang="scss" scoped>

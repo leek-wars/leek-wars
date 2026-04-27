@@ -122,63 +122,71 @@
 	</popup>
 </template>
 
-<script lang="ts">
-	import { mixins } from '@/model/i18n'
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
+<script setup lang="ts">
+import { ref, computed, useTemplateRef } from 'vue'
+import { mixins } from '@/model/i18n'
+import { LeekWars } from '@/model/leekwars'
+import { store } from '@/model/store'
 
-	@Options({ name: 'didactitiel', i18n: {}, mixins: [...mixins] })
-	export default class Didactitiel extends Vue {
-		@Prop() modelValue!: boolean
-		page: number = 1
-		height: number = 280
+defineOptions({ name: 'didactitiel', i18n: {}, mixins: [...mixins] })
 
-		get farmerName() {
-			return this.$store.state.farmer ? this.$store.state.farmer.name : ''
-		}
-		get farmerFirstLeek() {
-			return this.$store.state.farmer ? LeekWars.first(this.$store.state.farmer.leeks).name : ''
-		}
+defineProps<{
+	modelValue?: boolean
+}>()
 
-		input(event: any) {
-			this.$emit('update:modelValue', event)
-			this.updateHeight()
-		}
-		created() {
-			this.updateHeight()
-		}
+const emit = defineEmits<{
+	'update:modelValue': [value: boolean]
+}>()
 
-		next() {
-			if (this.page < 8) {
-				this.page++
-				this.updateHeight()
-			} else {
-				this.close()
-			}
-		}
-		previous() {
-			if (this.page > 1) {
-				this.page--
-				this.updateHeight()
-			} else {
-				this.close()
-			}
-		}
-		updateHeight() {
-			setTimeout(() => {
-				this.height = (this.$refs.content as any).querySelector('.page.active').offsetHeight + 30
-			}, 50)
-		}
-		getClass(page: number) {
-			if (page === this.page) { return 'active' }
-			else if (page > this.page) { return 'next' }
-			return ''
-		}
-		close() {
-			this.$emit('update:modelValue', false)
-			this.page = 1
-		}
+const page = ref(1)
+const height = ref(280)
+const content = useTemplateRef<HTMLElement>('content')
+
+const farmerName = computed(() => store.state.farmer ? store.state.farmer.name : '')
+const farmerFirstLeek = computed(() => store.state.farmer ? LeekWars.first(store.state.farmer.leeks).name : '')
+
+function updateHeight() {
+	setTimeout(() => {
+		const active = content.value?.querySelector('.page.active') as HTMLElement | null
+		if (active) height.value = active.offsetHeight + 30
+	}, 50)
+}
+
+function input(event: any) {
+	emit('update:modelValue', event)
+	updateHeight()
+}
+
+function close() {
+	emit('update:modelValue', false)
+	page.value = 1
+}
+
+function next() {
+	if (page.value < 8) {
+		page.value++
+		updateHeight()
+	} else {
+		close()
 	}
+}
+
+function previous() {
+	if (page.value > 1) {
+		page.value--
+		updateHeight()
+	} else {
+		close()
+	}
+}
+
+function getClass(p: number) {
+	if (p === page.value) return 'active'
+	if (p > page.value) return 'next'
+	return ''
+}
+
+updateHeight()
 </script>
 
 <style lang="scss" scoped>

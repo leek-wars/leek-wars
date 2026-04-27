@@ -34,7 +34,7 @@
 			<panel class="first center">
 				<br>
 				<img src="/image/notgood.png"><br><br>
-				<h4>{{ $t('payment_fail_reason', [$t(reason)]) }}</h4>
+				<h4>{{ $t('payment_fail_reason', [$t(reason || '')]) }}</h4>
 				<br>
 				<router-link to="/bank"><v-btn>{{ $t('back_to_bank') }}</v-btn></router-link>
 			</panel>
@@ -42,65 +42,45 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
-	import { mixins } from '@/model/i18n'
-	import Breadcrumb from '@/component/forum/breadcrumb.vue'
+<script setup lang="ts">
+import { ref, watch, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
+import { LeekWars } from '@/model/leekwars'
+import { mixins } from '@/model/i18n'
+import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
-	@Options({
-		name: 'bank', i18n: {}, mixins: [...mixins], components: { Breadcrumb }
-	})
-	export default class BankValidate extends Vue {
-		@Prop() success!: boolean
-		loading: boolean = false
-		error: boolean = false
-		reason: string | null = null
-		crystals: number = 0
-		vendor: string | null = null
-		created() {
-			this.update()
-		}
-		mounted() {
-			setTimeout(() => LeekWars.setTitle(this.$t('title')), 100)
-		}
-		@Watch('$route')
-		update() {
-			this.loading = false
-			this.reason = 'reason' in this.$route.params ? this.$route.params.reason : ''
-			this.crystals = 'crystals' in this.$route.params ? parseInt(this.$route.params.crystals, 10) : 0
-			this.vendor = 'vendor' in this.$route.params ? this.$route.params.vendor : ''
-			if (this.success !== undefined) {
-				this.error = true
-				return
-			}
-			/*
-			const url = document.location!.search
-			if (LeekWars.objectSize(this.$route.query)) { // PayPal return url: /\?paymentId=(.*?)&token=(.*?)&PayerID=(.*?)$/
-				const payment_id = this.$route.query.paymentId
-				const token = this.$route.query.token
-				const payer_id = this.$route.query.PayerID
-				this.loading = true
-				LeekWars.post('bank/execute-paypal-payment', {payment_id, paypal_token: token, payer_id}).then(data => {
-					this.$store.commit('update-crystals', data.crystals)
-					this.$router.replace('/bank/validate/success/' + data.crystals + '/PayPal')
-				}).error(error => {
-					this.$router.replace('/bank/validate/failed/PayPal/' + error.error)
-					this.error = true
-				})
-			} else {
-				this.loading = true
-				LeekWars.post('bank/execute-starpass-payment', {code: window.__STARPASS_CODE__}).then(data => {
-					this.$store.commit('update-crystals', data.crystals)
-					this.$router.replace('/bank/validate/success/' + data.crystals + '/StarPass')
-				}).error(error => {
-					this.$router.replace('/bank/validate/failed/StarPass/' + error.error)
-					this.error = true
-				})
-			}
-			*/
-		}
+defineOptions({ name: 'bank', i18n: {}, mixins: [...mixins] })
+
+const props = defineProps<{
+	success?: boolean
+}>()
+
+const { t } = useI18n()
+const route = useRoute()
+
+const loading = ref(false)
+const error = ref(false)
+const reason = ref<string | null>(null)
+const crystals = ref(0)
+const vendor = ref<string | null>(null)
+
+function update() {
+	loading.value = false
+	reason.value = 'reason' in route.params ? (route.params.reason as string) : ''
+	crystals.value = 'crystals' in route.params ? parseInt(route.params.crystals as string, 10) : 0
+	vendor.value = 'vendor' in route.params ? (route.params.vendor as string) : ''
+	if (props.success !== undefined) {
+		error.value = true
 	}
+}
+update()
+
+watch(() => route.fullPath, update)
+
+onMounted(() => {
+	setTimeout(() => LeekWars.setTitle(t('title')), 100)
+})
 </script>
 
 <style lang="scss" scoped>

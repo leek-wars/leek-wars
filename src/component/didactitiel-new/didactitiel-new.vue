@@ -55,36 +55,31 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { mixins } from '@/model/i18n'
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
+<script setup lang="ts">
+import { computed } from 'vue'
+import { mixins } from '@/model/i18n'
+import { LeekWars } from '@/model/leekwars'
+import { store } from '@/model/store'
 
-	@Options({ name: 'didactitiel', i18n: {}, mixins: [...mixins] })
-	export default class Didactitiel extends Vue {
+defineOptions({ name: 'didactitiel', i18n: {}, mixins: [...mixins] })
 
-		get farmerName() {
-			return this.$store.state.farmer ? this.$store.state.farmer.name : ''
-		}
-		get farmerFirstLeek() {
-			return this.$store.state.farmer ? LeekWars.first(this.$store.state.farmer.leeks).name : ''
-		}
+const farmerName = computed(() => store.state.farmer ? store.state.farmer.name : '')
+const farmerFirstLeek = computed(() => store.state.farmer ? LeekWars.first(store.state.farmer.leeks).name : '')
 
-		back() {
-			LeekWars.didactitial_step--
-		}
+function back() {
+	LeekWars.didactitial_step--
+}
 
-		complete() {
-			LeekWars.post('farmer/didactitiel-complete', {})
-			LeekWars.didactitial = false
-			LeekWars.didactitial_step = 0
-		}
+function complete() {
+	LeekWars.post('farmer/didactitiel-complete', {})
+	LeekWars.didactitial = false
+	LeekWars.didactitial_step = 0
+}
 
-		closed() {
-			LeekWars.didactitial = false
-			LeekWars.didactitial_step = 0
-		}
-	}
+function closed() {
+	LeekWars.didactitial = false
+	LeekWars.didactitial_step = 0
+}
 </script>
 
 <style lang="scss" scoped>

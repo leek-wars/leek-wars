@@ -23,33 +23,35 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import ChatInput from '@/component/chat/chat-input.vue'
-	import { Comment } from '@/model/comment'
-	import { Farmer } from '@/model/farmer'
-	import { LeekWars } from '@/model/leekwars'
-	import { store } from '@/model/store'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
-	import '@/model/emojis'
+<script setup lang="ts">
+import ChatInput from '@/component/chat/chat-input.vue'
+import { Comment } from '@/model/comment'
+import type { Farmer } from '@/model/farmer'
+import { LeekWars } from '@/model/leekwars'
+import { store } from '@/model/store'
+import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+import '@/model/emojis'
 
-	@Options({
-		name: 'comments',
-		components: { 'chat-input': ChatInput, RichTooltipFarmer }
-	})
-	export default class Comments extends Vue {
-		@Prop({required: true}) comments!: Comment[]
-		send(message: string) {
-			const farmer = store.state.farmer
-			if (farmer) {
-				const comment = new Comment
-				comment.comment = message
-				comment.farmer = {id: farmer.id, name: farmer.name, avatar_changed: farmer.avatar_changed} as Farmer
-				comment.date = LeekWars.time
-				this.$emit('comment', comment)
-			}
-		}
+defineOptions({ name: 'comments', components: { 'chat-input': ChatInput } })
+
+defineProps<{
+	comments: Comment[]
+}>()
+
+const emit = defineEmits<{
+	comment: [comment: Comment]
+}>()
+
+function send(message: string) {
+	const farmer = store.state.farmer
+	if (farmer) {
+		const comment = new Comment
+		comment.comment = message
+		comment.farmer = { id: farmer.id, name: farmer.name, avatar_changed: farmer.avatar_changed } as Farmer
+		comment.date = LeekWars.time
+		emit('comment', comment)
 	}
+}
 </script>
 
 <style lang="scss" scoped>
