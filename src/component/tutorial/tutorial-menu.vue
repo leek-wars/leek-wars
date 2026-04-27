@@ -13,27 +13,27 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { store } from '@/model/store'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import { tutorial_items } from './tutorial-items'
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { store } from '@/model/store'
+import { mixins } from '@/model/i18n'
+import { tutorial_items } from './tutorial-items'
 
-	@Options({ name: 'tutorial-menu', i18n: {} })
-	export default class TutorialMenu extends Vue {
-		@Prop() locale!: string
-		items = tutorial_items
+defineOptions({ name: 'tutorial-menu', i18n: {}, mixins: [...mixins] })
 
-		created() {
-			const locale = this.locale
-			import(/* webpackChunkName: "tutorial-[request]" */ `@/lang/${locale}/tutorial.json`).then(module => {
-				this.$i18n.mergeLocaleMessage(locale, module.default)
-			})
-		}
+const props = defineProps<{
+	locale: string
+}>()
 
-		get progress() {
-			return store.state.farmer ? store.state.farmer.tutorial_progress : 0
-		}
-	}
+const { mergeLocaleMessage } = useI18n()
+const items = tutorial_items
+
+import(/* webpackChunkName: "tutorial-[request]" */ `@/lang/${props.locale}/tutorial.json`).then(module => {
+	mergeLocaleMessage(props.locale, module.default)
+})
+
+const progress = computed(() => store.state.farmer ? store.state.farmer.tutorial_progress : 0)
 </script>
 
 <style lang="scss" scoped>

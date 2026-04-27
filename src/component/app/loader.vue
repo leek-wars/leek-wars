@@ -7,16 +7,17 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import { LeekWars } from '@/model/leekwars'
-	@Options({ name: "loader" })
-	export default class LWLoader extends Vue {
-		@Prop() size!: number
-		LeekWars = LeekWars
-		get s() { return this.size || 60 }
-		get w() { return Math.max(3, this.s / 14) }
-	}
+<script setup lang="ts">
+import { computed } from 'vue'
+
+defineOptions({ name: 'loader' })
+
+const props = defineProps<{
+	size?: number
+}>()
+
+const s = computed(() => props.size || 60)
+const w = computed(() => Math.max(3, s.value / 14))
 </script>
 
 <style lang="scss" scoped>

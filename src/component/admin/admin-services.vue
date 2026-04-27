@@ -25,22 +25,22 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue } from 'vue-property-decorator'
-	import Breadcrumb from '@/component/forum/breadcrumb.vue'
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { LeekWars } from '@/model/leekwars'
+import { store } from '@/model/store'
+import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
-	@Options({ components: { Breadcrumb } })
-	export default class AdminServices extends Vue {
-		services: any = null
-		created() {
-			if (!this.$store.getters.admin) this.$router.replace('/')
-			LeekWars.setTitle("Services")
-			LeekWars.get('service/get-all-admin').then(data => {
-				this.services = data.services
-			})
-		}
-	}
+const router = useRouter()
+if (!store.getters.admin) router.replace('/')
+
+const services = ref<any>(null)
+
+LeekWars.setTitle('Services')
+LeekWars.get('service/get-all-admin').then(data => {
+	services.value = data.services
+})
 </script>
 
 <style lang="scss" scoped>

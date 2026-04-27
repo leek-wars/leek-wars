@@ -12,30 +12,24 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { store } from '@/model/store'
-	import { Options, Vue } from 'vue-property-decorator'
-	import Breadcrumb from '@/component/forum/breadcrumb.vue'
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { LeekWars } from '@/model/leekwars'
+import { store } from '@/model/store'
+import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
-	@Options({ components: { Breadcrumb } })
-	export default class AdminHats extends Vue {
+const router = useRouter()
+if (!store.getters.admin) router.replace('/')
 
-		created() {
-			if (!this.$store.getters.admin) this.$router.replace('/')
-			// console.log("created", LeekWars.weapons, LeekWars.weapons[1 + Math.random() * 20 | 0].item)
-		}
+const all_weapons = computed<any[]>(() => Object.values(LeekWars.weapons))
 
-		get all_weapons() {
-			return Object.values(LeekWars.weapons)
-		}
-		random_weapon() {
-			return this.all_weapons[Math.random() * this.all_weapons.length | 0].item
-		}
-		random_skin() {
-			return 1 + Math.random() * Object.values(LeekWars.skins).length | 0
-		}
-	}
+function random_weapon() {
+	return all_weapons.value[Math.random() * all_weapons.value.length | 0].item
+}
+function random_skin() {
+	return 1 + Math.random() * Object.values(LeekWars.skins).length | 0
+}
 </script>
 
 <style lang="scss" scoped>

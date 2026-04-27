@@ -89,43 +89,32 @@
 	</footer>
 </template>
 
-<script lang="ts">
-	import { locale } from '@/locale'
-	import { LeekWars } from '@/model/leekwars'
-	import { defineAsyncComponent } from 'vue'
-	import { Options, Vue } from 'vue-property-decorator'
-	const Didactitiel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`))
+<script setup lang="ts">
+import { ref, defineAsyncComponent } from 'vue'
+import { locale } from '@/locale'
+import { LeekWars } from '@/model/leekwars'
 
-	@Options({ name: 'lw-footer', components: { Didactitiel } })
-	export default class Footer extends Vue {
+const Didactitiel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`))
 
-		didactitiel: boolean = false
-		didactitiel_enabled: boolean = false
-		didactitiel_new_enabled: boolean = false
-		cookies: any[] = []
+defineOptions({ name: 'lw-footer', components: { Didactitiel } })
 
-		created() {
-			// this.throwCookies()
-			// LeekWars.didactitial = true
-		}
+const didactitiel = ref(false)
+const didactitiel_enabled = ref(false)
+const didactitiel_new_enabled = ref(false)
+const cookies = ref<any[]>([])
 
-		toggleTheme() {
-			if (LeekWars.darkMode) {
-				LeekWars.themeSetting = 'light'
-			} else {
-				LeekWars.themeSetting = 'dark'
-			}
-			localStorage.setItem('theme', LeekWars.themeSetting)
-			LeekWars.darkMode = LeekWars.themeSetting === 'dark'
-		}
+function toggleTheme() {
+	LeekWars.themeSetting = LeekWars.darkMode ? 'light' : 'dark'
+	localStorage.setItem('theme', LeekWars.themeSetting)
+	LeekWars.darkMode = LeekWars.themeSetting === 'dark'
+}
 
-		throwCookies() {
-			for (let i = 0; i < 10; ++i) {
-				this.cookies.push([-50 + Math.random() * (window.innerWidth + 100), -100 - Math.random() * 100, 20 + Math.random() * 60, Math.random() * 360])
-			}
-			setTimeout(() => document.querySelectorAll(".cookies .cookie").forEach(e => e.classList.add("fall")), 100)
-		}
+function throwCookies() {
+	for (let i = 0; i < 10; ++i) {
+		cookies.value.push([-50 + Math.random() * (window.innerWidth + 100), -100 - Math.random() * 100, 20 + Math.random() * 60, Math.random() * 360])
 	}
+	setTimeout(() => document.querySelectorAll('.cookies .cookie').forEach(e => e.classList.add('fall')), 100)
+}
 </script>
 
 <style lang="scss" scoped>

@@ -9,41 +9,32 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
+<script setup lang="ts">
+import { ref, computed, watch, nextTick, useTemplateRef } from 'vue'
+import { LeekWars } from '@/model/leekwars'
 
-	@Options({ name: 'lw-code' })
-	export default class Code extends Vue {
+defineOptions({ name: 'lw-code' })
 
-		@Prop({required: true}) code!: string
-		@Prop() single!: boolean
-		@Prop() expandable!: boolean
-		@Prop() theme!: string
-		expanded: boolean = true
+const props = defineProps<{
+	code: string
+	single?: boolean
+	expandable?: boolean
+	theme?: string
+}>()
 
-		get finalTheme() {
-			return this.theme ? this.theme : (LeekWars.darkMode ? 'theme-monokai' : '')
-		}
-		get lines() {
-			return this.code.split('\n').length
-		}
+const expanded = ref(true)
+const code = useTemplateRef<HTMLElement>('code')
 
-		@Watch('code', {immediate: true})
-		@Watch('single', {immediate: true})
-		update() {
-			this.$nextTick(() => {
-				// if (this.expandable && this.lines >= 5) {
-				// 	this.expanded = false
-				// }
-				if (this.single) {
-					LeekWars.createCodeAreaSimple(this.code, this.$refs.code as HTMLElement)
-				} else {
-					LeekWars.createCodeArea(this.code, this.$refs.code as HTMLElement)
-				}
-			})
-		}
-	}
+const finalTheme = computed(() => props.theme ? props.theme : (LeekWars.darkMode ? 'theme-monokai' : ''))
+const lines = computed(() => props.code.split('\n').length)
+
+watch([() => props.code, () => props.single], () => {
+	nextTick(() => {
+		if (!code.value) return
+		if (props.single) LeekWars.createCodeAreaSimple(props.code, code.value)
+		else LeekWars.createCodeArea(props.code, code.value)
+	})
+}, { immediate: true })
 </script>
 
 
