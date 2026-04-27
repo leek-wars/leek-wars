@@ -59,7 +59,7 @@ defineOptions({ name: 'ChatMessage', components: { RichTooltipFarmer, ChatMessag
 
 const props = defineProps<{
 	message: ChatMessage
-	chat?: Chat
+	chat: Chat
 	large?: boolean
 }>()
 

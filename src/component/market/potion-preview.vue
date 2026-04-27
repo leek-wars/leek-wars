@@ -37,70 +37,75 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import AreaView from '@/component/market/area-view.vue'
-	import EffectView from '@/component/market/effect.vue'
-	import RangeView from '@/component/market/range-view.vue'
-	import { PotionEffect, PotionTemplate } from '@/model/potion'
-	import { emitter } from '@/model/vue'
-	import { LeekWars } from '@/model/leekwars'
-	import { ItemType } from '@/model/item'
-	import { store } from '@/model/store'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import AreaView from '@/component/market/area-view.vue'
+import EffectView from '@/component/market/effect.vue'
+import RangeView from '@/component/market/range-view.vue'
+import { ItemType } from '@/model/item'
+import { LeekWars } from '@/model/leekwars'
+import { PotionEffect, PotionTemplate } from '@/model/potion'
+import { store } from '@/model/store'
+import { emitter } from '@/model/vue'
+import { computed, withDefaults } from 'vue'
+import { useI18n } from 'vue-i18n'
 
-	@Options({
-		name: 'potion-preview',
-		components: { 'range-view': RangeView, 'effect-view': EffectView, 'area-view': AreaView }
+defineOptions({
+	name: 'potion-preview',
+	components: { 'range-view': RangeView, 'effect-view': EffectView, 'area-view': AreaView }
+})
+
+const props = withDefaults(defineProps<{
+	potion: PotionTemplate
+	inventory?: boolean
+	showUse?: boolean
+	itemTemplateId?: number
+}>(), {
+	inventory: false,
+	showUse: false,
+})
+
+const { t } = useI18n()
+
+const isClover = computed(() => props.potion?.effects?.some((e: any) => e.type >= PotionEffect.CLOVER_PASSED && e.type <= PotionEffect.CLOVER_SECOND))
+
+const inventoryItem = computed(() => {
+	if (!store.state.farmer) return null
+	return store.state.farmer.potions.find((p: any) => p.template === props.itemTemplateId)
+})
+
+function useCloverPotion() {
+	const item = inventoryItem.value
+	if (!item) return
+	LeekWars.post('potion/use', { item_id: item.id }).then((data: any) => {
+		if (props.potion.consumable) {
+			store.commit('remove-inventory', { type: ItemType.POTION, item_template: props.itemTemplateId })
+		}
+		if (data.clover) {
+			LeekWars.cloverResult = formatCloverInfo(data.clover)
+			LeekWars.cloverPopup = true
+		}
+		emitter.emit('clover-used')
 	})
-	export default class PotionPreview extends Vue {
-		@Prop() potion!: PotionTemplate
-		@Prop({ default: false }) inventory!: boolean
-		@Prop({ default: false }) showUse!: boolean
-		@Prop() itemTemplateId!: number
-		PotionEffect = PotionEffect
+}
 
-		get isClover() {
-			return this.potion?.effects?.some((e: any) => e.type >= PotionEffect.CLOVER_PASSED && e.type <= PotionEffect.CLOVER_SECOND)
-		}
-
-		get inventoryItem() {
-			if (!store.state.farmer) return null
-			return store.state.farmer.potions.find((p: any) => p.template === this.itemTemplateId)
-		}
-
-		useCloverPotion() {
-			const item = this.inventoryItem
-			if (!item) return
-			LeekWars.post('potion/use', { item_id: item.id }).then((data: any) => {
-				if (this.potion.consumable) {
-					store.commit('remove-inventory', { type: ItemType.POTION, item_template: this.itemTemplateId })
-				}
-				if (data.clover) {
-					LeekWars.cloverResult = this.formatCloverInfo(data.clover)
-					LeekWars.cloverPopup = true
-				}
-				emitter.emit('clover-used')
-			})
-		}
-
-		formatCloverInfo(clover: any): string {
-			if (clover.type === 'passed') {
-				return clover.passed
-					? this.$t('potion.clover_passed_yes') as string
-					: this.$t('potion.clover_passed_no') as string
-			} else if (clover.type === 'hour') {
-				return clover.passed
-					? this.$t('potion.clover_hour_passed', [clover.hour]) as string
-					: this.$t('potion.clover_hour_coming', [clover.hour]) as string
-			} else if (clover.type === 'second') {
-				const time = clover.hour + 'h' + String(clover.minute).padStart(2, '0') + 'm' + String(clover.second).padStart(2, '0') + 's'
-				return clover.passed
-					? this.$t('potion.clover_second_passed', [time]) as string
-					: this.$t('potion.clover_second_coming', [time]) as string
-			}
-			return ''
-		}
+function formatCloverInfo(clover: any): string {
+	if (clover.type === 'passed') {
+		return clover.passed
+			? t('potion.clover_passed_yes') as string
+			: t('potion.clover_passed_no') as string
+	} else if (clover.type === 'hour') {
+		return clover.passed
+			? t('potion.clover_hour_passed', [clover.hour]) as string
+			: t('potion.clover_hour_coming', [clover.hour]) as string
+	} else if (clover.type === 'second') {
+		const time = clover.hour + 'h' + String(clover.minute).padStart(2, '0') + 'm' + String(clover.second).padStart(2, '0') + 's'
+		return clover.passed
+			? t('potion.clover_second_passed', [time]) as string
+			: t('potion.clover_second_coming', [time]) as string
 	}
+	return ''
+}
+
 </script>
 
 <style src='./item-preview.scss' lang='scss'></style>

@@ -93,89 +93,82 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { Effect, EffectModifier, EffectType, State } from '@/model/effect'
-	import { i18n } from '@/model/i18n'
-	import { Leek } from '@/model/leek'
-	import { LeekWars } from '@/model/leekwars'
-	import { store } from '@/model/store'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import Code from '@/component/app/code.vue'
+<script setup lang="ts">
+import Code from '@/component/app/code.vue'
+import { Effect, EffectModifier, EffectType } from '@/model/effect'
+import { i18n } from '@/model/i18n'
+import { Leek } from '@/model/leek'
+import { LeekWars } from '@/model/leekwars'
+import { store } from '@/model/store'
+import { computed } from 'vue'
 
-	@Options({ name: 'effect-view', components: { 'lw-code': Code } })
-	export default class EffectView extends Vue {
+defineOptions({ name: 'effect-view', components: { 'lw-code': Code } })
 
-		@Prop() effect!: Effect
-		@Prop() passive!: boolean
-		@Prop() leek!: Leek
+const props = defineProps<{
+	effect: Effect
+	passive?: boolean
+	leek?: Leek
+}>()
 
-		EffectModifier = EffectModifier
-		EffectType = EffectType
-		LeekWars = LeekWars
-		raw_opened: boolean = false
+const value1 = computed(() => {
+	if (props.effect.id === EffectType.ADD_STATE) {
+		return i18n.global.t('effect.state_' + props.effect.value1)
+	}
+	return format(props.effect.value1)
+})
 
-		get value1() {
-			if (this.effect.id === EffectType.ADD_STATE) {
-				// return State[this.effect.value1]
-				return i18n.t('effect.state_' + this.effect.value1)
+const enemies = computed(() => props.effect.targets & 1)
+const allies = computed<boolean>(() => (props.effect.targets & (1 << 1)) !== 0)
+const caster = computed<boolean>(() => (props.effect.targets & (1 << 2)) !== 0)
+const nonSummons = computed<boolean>(() => (props.effect.targets & (1 << 3)) !== 0)
+const summons = computed<boolean>(() => (props.effect.targets & (1 << 4)) !== 0)
+const effectThe = computed<boolean>(() => props.effect.id === EffectType.HEAL || props.effect.id === EffectType.RAW_HEAL || props.effect.id === EffectType.STEAL_LIFE)
+
+function format(n: number) {
+	if (Math.floor(n) !== n) {
+		return n.toFixed(2)
+	}
+	return n
+}
+
+const icon = computed(() => {
+	if ([EffectType.DAMAGE].includes(props.effect.id)) { return 'strength' }
+	if ([EffectType.LIFE_DAMAGE].includes(props.effect.id)) { return 'life' }
+	if ([EffectType.HEAL, EffectType.BOOST_MAX_LIFE].includes(props.effect.id)) { return 'wisdom' }
+	if ([EffectType.ABSOLUTE_SHIELD, EffectType.RELATIVE_SHIELD].includes(props.effect.id)) { return 'resistance' }
+	if ([EffectType.DAMAGE_RETURN].includes(props.effect.id)) { return 'agility' }
+	if ([EffectType.BUFF_STRENGTH, EffectType.BUFF_RESISTANCE, EffectType.BUFF_WISDOM, EffectType.BUFF_AGILITY, EffectType.BUFF_MP, EffectType.BUFF_TP, EffectType.AFTEREFFECT, EffectType.NOVA_DAMAGE, EffectType.NOVA_VITALITY].includes(props.effect.id)) { return 'science' }
+	if ([EffectType.POISON, EffectType.SHACKLE_MP, EffectType.SHACKLE_TP, EffectType.SHACKLE_STRENGTH, EffectType.SHACKLE_MAGIC, EffectType.SHACKLE_AGILITY, EffectType.SHACKLE_WISDOM].includes(props.effect.id)) { return 'magic' }
+})
+
+const charac = computed(() => {
+	if (icon.value) {
+		if (props.leek) {
+			return (props.leek as any)['total_' + icon.value]
+		}
+		if (store.state.farmer) {
+			let max = 0
+			for (const l in store.state.farmer!.leeks) {
+				max = Math.max(max, (store.state.farmer!.leeks[l] as any)['total_' + icon.value])
 			}
-			return this.format(this.effect.value1)
-		}
-		get enemies() { return this.effect.targets & 1 }
-		get allies(): boolean { return (this.effect.targets & (1 << 1)) !== 0 }
-		get caster(): boolean { return (this.effect.targets & (1 << 2)) !== 0 }
-		get nonSummons(): boolean { return (this.effect.targets & (1 << 3)) !== 0 }
-		get summons(): boolean { return (this.effect.targets & (1 << 4)) !== 0 }
-		get effectThe(): boolean {
-			return this.effect.id === EffectType.HEAL || this.effect.id === EffectType.RAW_HEAL || this.effect.id === EffectType.STEAL_LIFE
-		}
-		format(n: number) {
-			if (Math.floor(n) !== n) {
-				return n.toFixed(2)
-			}
-			return n
-		}
-		get icon() {
-			if ([EffectType.DAMAGE].includes(this.effect.id)) { return 'strength' }
-			if ([EffectType.LIFE_DAMAGE].includes(this.effect.id)) { return 'life' }
-			if ([EffectType.HEAL, EffectType.BOOST_MAX_LIFE].includes(this.effect.id)) { return 'wisdom' }
-			if ([EffectType.ABSOLUTE_SHIELD, EffectType.RELATIVE_SHIELD].includes(this.effect.id)) { return 'resistance' }
-			if ([EffectType.DAMAGE_RETURN].includes(this.effect.id)) { return 'agility' }
-			if ([EffectType.BUFF_STRENGTH, EffectType.BUFF_RESISTANCE, EffectType.BUFF_WISDOM, EffectType.BUFF_AGILITY, EffectType.BUFF_MP, EffectType.BUFF_TP, EffectType.AFTEREFFECT, EffectType.NOVA_DAMAGE, EffectType.NOVA_VITALITY].includes(this.effect.id)) { return 'science' }
-			if ([EffectType.POISON, EffectType.SHACKLE_MP, EffectType.SHACKLE_TP, EffectType.SHACKLE_STRENGTH, EffectType.SHACKLE_MAGIC, EffectType.SHACKLE_AGILITY, EffectType.SHACKLE_WISDOM].includes(this.effect.id)) { return 'magic' }
-		}
-
-		get my_leek() {
-			return this.leek ? this.leek : (store.state.farmer ? LeekWars.first(store.state.farmer!.leeks) : null)
-		}
-		get charac() {
-			if (this.icon) {
-				if (this.leek) {
-					return (this.leek as any)['total_' + this.icon]
-				}
-				if (store.state.farmer) {
-					let max = 0
-					for (const l in store.state.farmer!.leeks) {
-						max = Math.max(max, (store.state.farmer!.leeks[l] as any)['total_' + this.icon])
-					}
-					return max
-				}
-			}
-			return 0
-		}
-		get tooltipEffectId() {
-			// After applying the life boost, the value is already in damage units, not a percentage
-			if (this.effect.id === EffectType.LIFE_DAMAGE) return EffectType.DAMAGE
-			return this.effect.id
-		}
-		get boost() {
-			if (this.icon === 'life') {
-				return this.charac / 100
-			} else {
-				return 1 + this.charac / 100
-			}
+			return max
 		}
 	}
+	return 0
+})
+
+const tooltipEffectId = computed(() => {
+	if (props.effect.id === EffectType.LIFE_DAMAGE) return EffectType.DAMAGE
+	return props.effect.id
+})
+
+const boost = computed(() => {
+	if (icon.value === 'life') {
+		return charac.value / 100
+	} else {
+		return 1 + charac.value / 100
+	}
+})
 </script>
 
 <style lang="scss" scoped>

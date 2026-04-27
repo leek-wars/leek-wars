@@ -31,26 +31,26 @@
 	</div>
 </template>
 
-<script lang="ts">
-
-import { CHIPS } from '@/model/chips'
+<script setup lang="ts">
+import { CHIPS as CHIPSImport } from '@/model/chips'
 import { LeekWars } from '@/model/leekwars'
-import { Options, Prop, Vue } from 'vue-property-decorator'
-import CharacteristicTooltip from '../leek/characteristic-tooltip.vue'
 import { defineAsyncComponent } from 'vue'
+import CharacteristicTooltip from '../leek/characteristic-tooltip.vue'
+
 const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
 
-@Options({ name: 'summon-view', components: {
+defineOptions({ name: 'summon-view', components: {
 	'characteristic-tooltip': CharacteristicTooltip,
 	'rich-tooltip-item': RichTooltipItem
 }})
-export default class SummonView extends Vue {
-	@Prop() summon!: any
 
-	CHIPS = CHIPS
-	LeekWars = LeekWars
-}
+defineProps<{
+	summon: any
+}>()
 
+defineEmits(['update:modelValue'])
+
+const CHIPS: Record<number, any> = CHIPSImport
 </script>
 
 <style lang="scss" scoped>

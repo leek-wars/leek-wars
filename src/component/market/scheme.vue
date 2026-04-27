@@ -40,93 +40,90 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { ITEM_CATEGORY_NAME } from '@/model/item';
-	import { LeekWars } from '@/model/leekwars';
-	import { SchemeTemplate } from '@/model/scheme';
-	import { store } from '@/model/store';
-	import { emitter } from '@/model/vue';
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
+<script setup lang="ts">
+import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
+import { ITEM_CATEGORY_NAME } from '@/model/item'
+import { LeekWars } from '@/model/leekwars'
+import { SchemeTemplate } from '@/model/scheme'
+import { store } from '@/model/store'
+import { emitter } from '@/model/vue'
+import { computed, withDefaults } from 'vue'
 
-	@Options({ name: 'scheme', components: {
-		'rich-tooltip-item': RichTooltipItem,
-	}, emits: ['show-tooltip', 'hide-tooltip', 'update:modelValue'] })
-	export default class SchemeView extends Vue {
-		@Prop({required: true}) scheme!: SchemeTemplate
-		@Prop({required: true}) showResult!: boolean
-		@Prop({required: true}) showPrice!: boolean
-		@Prop({ default: false }) sharedTooltip!: boolean
-		emitter = emitter
+defineOptions({ name: 'scheme', components: {
+	'rich-tooltip-item': RichTooltipItem,
+} })
 
-		ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
+const props = withDefaults(defineProps<{
+	scheme: SchemeTemplate
+	showResult: boolean
+	showPrice: boolean
+	sharedTooltip?: boolean
+}>(), {
+	sharedTooltip: false,
+})
 
-		get result() {
-			return LeekWars.items[this.scheme.result]
-		}
-		get items() {
-			return this.scheme.items.filter(i => !!i).map(item => { return { item: LeekWars.items[item![0]], quantity: item![1] } })
-		}
+defineEmits<{
+	'show-tooltip': [event: any]
+	'hide-tooltip': []
+	'update:modelValue': [value: any]
+}>()
 
-		get ingredientCost() {
-			return this.scheme.items.reduce((s, i) => s + (i ? i[1] * LeekWars.items[i[0]].price! : 0), 0)
-		}
+const result = computed(() => LeekWars.items[props.scheme.result])
 
-		get possible() {
-			return this.item_present.every(p => p === 'present')
-		}
+const items = computed(() => props.scheme.items.filter(i => !!i).map(item => ({ item: LeekWars.items[item![0]], quantity: item![1] })))
 
-		ingredientScheme(ingredient: any): SchemeTemplate | null {
-			if (!ingredient || !store.state.farmer) return null
-			const scheme = Object.values(LeekWars.schemes).find(s => s.result === ingredient.item.id)
-			if (!scheme) return null
-			if (!store.state.farmer.schemes.find((s: any) => LeekWars.items[s.template].params == scheme.id)) return null
-			return store.getters.scheme_possible(scheme) ? scheme : null
-		}
+const ingredientCost = computed(() => props.scheme.items.reduce((s, i) => s + (i ? i[1] * LeekWars.items[i[0]].price! : 0), 0))
 
-		craftIngredient(ingredient: any) {
-			const scheme = this.ingredientScheme(ingredient)
-			if (scheme) emitter.emit('craft', scheme)
-		}
+const possible = computed(() => item_present.value.every(p => p === 'present'))
 
-		get item_present() {
-			return this.items.map(item => {
-				if (item === null) return 'present'
-				if (store.state.farmer) {
-					if (item.item.id === 148) {
-						return store.state.farmer.habs >= item.quantity ? 'present' : 'partial'
-					} else {
-						for (const resource of store.state.farmer!.resources) {
-							if (item.item && resource.template === item.item.id) {
-								return resource.quantity >= item.quantity ? 'present' : 'partial'
-							}
-						}
-						for (const resource of store.state.farmer!.components) {
-							if (item.item && resource.template === item.item.id) {
-								return resource.quantity >= item.quantity ? 'present' : 'partial'
-							}
-						}
-						for (const resource of store.state.farmer!.potions) {
-							if (item.item && resource.template === item.item.id) {
-								return resource.quantity >= item.quantity ? 'present' : 'partial'
-							}
-						}
-						for (const resource of store.state.farmer!.weapons) {
-							if (item.item && resource.template === item.item.id) {
-								return resource.quantity >= item.quantity ? 'present' : 'partial'
-							}
-						}
-						for (const resource of store.state.farmer!.chips) {
-							if (item.item && resource.template === item.item.id) {
-								return resource.quantity >= item.quantity ? 'present' : 'partial'
-							}
-						}
-					}
+function ingredientScheme(ingredient: any): SchemeTemplate | null {
+	if (!ingredient || !store.state.farmer) return null
+	const scheme = Object.values(LeekWars.schemes).find(s => s.result === ingredient.item.id)
+	if (!scheme) return null
+	if (!store.state.farmer.schemes.find((s: any) => LeekWars.items[s.template].params == scheme.id)) return null
+	return store.getters.scheme_possible(scheme) ? scheme : null
+}
+
+function craftIngredient(ingredient: any) {
+	const scheme = ingredientScheme(ingredient)
+	if (scheme) emitter.emit('craft', scheme)
+}
+
+const item_present = computed(() => items.value.map(item => {
+	if (item === null) return 'present'
+	if (store.state.farmer) {
+		if (item.item.id === 148) {
+			return store.state.farmer.habs >= item.quantity ? 'present' : 'partial'
+		} else {
+			for (const resource of store.state.farmer!.resources) {
+				if (item.item && resource.template === item.item.id) {
+					return resource.quantity >= item.quantity ? 'present' : 'partial'
 				}
-				return 'missing'
-			})
+			}
+			for (const resource of store.state.farmer!.components) {
+				if (item.item && resource.template === item.item.id) {
+					return resource.quantity >= item.quantity ? 'present' : 'partial'
+				}
+			}
+			for (const resource of store.state.farmer!.potions) {
+				if (item.item && resource.template === item.item.id) {
+					return resource.quantity >= item.quantity ? 'present' : 'partial'
+				}
+			}
+			for (const resource of store.state.farmer!.weapons) {
+				if (item.item && resource.template === item.item.id) {
+					return resource.quantity >= item.quantity ? 'present' : 'partial'
+				}
+			}
+			for (const resource of store.state.farmer!.chips) {
+				if (item.item && resource.template === item.item.id) {
+					return resource.quantity >= item.quantity ? 'present' : 'partial'
+				}
+			}
 		}
 	}
+	return 'missing'
+}))
 </script>
 
 <style lang="scss" scoped>

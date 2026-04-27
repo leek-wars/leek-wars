@@ -26,76 +26,77 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { defineComponent, PropType } from 'vue'
-	import { LeekWars } from '@/model/leekwars'
-	import { Leek } from '@/model/leek'
-	import { Loadout } from '@/model/loadout'
-	import { CHIPS } from '@/model/chips'
+<script setup lang="ts">
+import { CHIPS } from '@/model/chips'
+import { Leek } from '@/model/leek'
+import { LeekWars } from '@/model/leekwars'
+import { Loadout } from '@/model/loadout'
+import { store } from '@/model/store'
+import { computed, onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
-	const CHARACTERISTICS = ['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'tp', 'mp', 'cores', 'ram']
+const CHARACTERISTICS = ['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'tp', 'mp', 'cores', 'ram']
 
-	export default defineComponent({
-		name: 'LoadoutList',
-		props: {
-			leek: { type: Object as PropType<Leek>, required: true },
-		},
-		emits: ['edit', 'applied'],
-		data() {
-			return {
-				LeekWars,
-				CHIPS,
-				loading: false,
-				applying: null as number | null,
-			}
-		},
-		computed: {
-			loadouts(): Loadout[] {
-				return this.$store.state.farmer?.loadouts || []
-			},
-		},
-		mounted() {
-			if (!this.$store.state.farmer?.loadouts) {
-				this.loading = true
-				LeekWars.get('loadout/get-all').then((data: any) => {
-					this.$store.commit('set-loadouts', data.loadouts)
-					this.loading = false
-				}).error(() => {
-					this.loading = false
-				})
-			}
-		},
-		methods: {
-			isCharac(icon: string) {
-				return CHARACTERISTICS.includes(icon)
-			},
-			apply(loadout: Loadout) {
-				this.applying = loadout.id
-				LeekWars.post('loadout/apply', { set_id: loadout.id, leek_id: this.leek.id }).then((data: any) => {
-					this.leek.weapons = data.leek.weapons
-					this.leek.chips = data.leek.chips
-					this.leek.components = data.leek.components
-					this.$emit('applied')
-					if (data.skipped && data.skipped.length > 0) {
-						LeekWars.toast(this.$t('main.loadout_skipped_n', [data.skipped.length]))
-					} else {
-						LeekWars.toast(this.$t('main.loadout_apply_success', [this.leek.name]))
-					}
-					this.applying = null
-				}).error((e: any) => {
-					LeekWars.toast(e)
-					this.applying = null
-				})
-			},
-			remove(loadout: Loadout) {
-				LeekWars.delete('loadout/delete', { set_id: loadout.id }).then(() => {
-					this.$store.commit('remove-loadout', loadout.id)
-				}).error((e: any) => {
-					LeekWars.toast(e)
-				})
-			},
-		},
+defineOptions({ name: 'LoadoutList' })
+
+const props = defineProps<{
+	leek: Leek
+}>()
+
+const emit = defineEmits<{
+	'edit': [loadout: Loadout]
+	'applied': []
+}>()
+
+const { t } = useI18n()
+
+const loading = ref(false)
+const applying = ref<number | null>(null)
+
+const loadouts = computed<Loadout[]>(() => store.state.farmer?.loadouts || [])
+
+onMounted(() => {
+	if (!store.state.farmer?.loadouts) {
+		loading.value = true
+		;(LeekWars.get('loadout/get-all').then((data: any) => {
+			store.commit('set-loadouts', data.loadouts)
+			loading.value = false
+		}) as any).error(() => {
+			loading.value = false
+		})
+	}
+})
+
+function isCharac(icon: string) {
+	return CHARACTERISTICS.includes(icon)
+}
+
+function apply(loadout: Loadout) {
+	applying.value = loadout.id
+	;(LeekWars.post('loadout/apply', { set_id: loadout.id, leek_id: props.leek.id }).then((data: any) => {
+		props.leek.weapons = data.leek.weapons
+		props.leek.chips = data.leek.chips
+		props.leek.components = data.leek.components
+		emit('applied')
+		if (data.skipped && data.skipped.length > 0) {
+			LeekWars.toast(t('main.loadout_skipped_n', [data.skipped.length]))
+		} else {
+			LeekWars.toast(t('main.loadout_apply_success', [props.leek.name]))
+		}
+		applying.value = null
+	}) as any).error((e: any) => {
+		LeekWars.toast(e)
+		applying.value = null
 	})
+}
+
+function remove(loadout: Loadout) {
+	;(LeekWars.delete('loadout/delete', { set_id: loadout.id }).then(() => {
+		store.commit('remove-loadout', loadout.id)
+	}) as any).error((e: any) => {
+		LeekWars.toast(e)
+	})
+}
 </script>
 
 <style lang="scss" scoped>

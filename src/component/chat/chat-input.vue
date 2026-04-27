@@ -23,9 +23,7 @@ defineProps<{
 	chat: number
 }>()
 
-const emit = defineEmits<{
-	'message': [text: string]
-}>()
+const emit = defineEmits(['message'])
 
 const inputRef = useTemplateRef<HTMLElement>('input')
 const commandsRef = useTemplateRef<any>('commands')

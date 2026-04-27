@@ -52,57 +52,55 @@
 	</v-tooltip>
 </template>
 
-<script lang="ts">
-	import { COSTS } from '@/model/leek'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { COSTS } from '@/model/leek'
+import { computed } from 'vue'
 
-	@Options({ name: "characteristic-tooltip" })
-	export default class CharacteristicTooltip extends Vue {
-		@Prop({ required: true }) characteristic!: string
-		@Prop({ required: true }) value!: number
-		@Prop({ required: true }) total!: number
-		@Prop({ required: true }) leek!: any
-		@Prop({ required: true }) test!: boolean
+defineOptions({ name: "characteristic-tooltip" })
 
-		get base() {
-			const base = {
-				life: 100 + (this.leek.level - 1) * 3,
-				strength: 0,
-				wisdom: 0,
-				agility: 0,
-				resistance: 0,
-				science: 0,
-				magic: 0,
-				frequency: 100,
-				cores: 1,
-				ram: 6,
-				tp: 10,
-				mp: 3,
-			} as any
-			return base[this.characteristic]
+const props = defineProps<{
+	characteristic: string
+	value: number
+	total: number
+	leek: any
+	test: boolean
+}>()
+
+const base = computed(() => {
+	const base = {
+		life: 100 + (props.leek.level - 1) * 3,
+		strength: 0,
+		wisdom: 0,
+		agility: 0,
+		resistance: 0,
+		science: 0,
+		magic: 0,
+		frequency: 100,
+		cores: 1,
+		ram: 6,
+		tp: 10,
+		mp: 3,
+	} as any
+	return base[props.characteristic]
+})
+
+const invested = computed(() => props.value - base.value)
+
+const capitalSpent = computed(() => {
+	let characLeft = invested.value
+	let characAdded = 0
+	let step = 0
+	let usedCapital = 0
+	while (characAdded < characLeft) {
+		if (step < (COSTS as any)[props.characteristic].length - 1 && characAdded >= (COSTS as any)[props.characteristic][step + 1].step) {
+			step++
 		}
-
-		get invested() {
-			return this.value - this.base
-		}
-
-		get capitalSpent() {
-			
-			let characLeft = this.invested
-			let characAdded = 0
-			let step = 0
-			let usedCapital = 0
-			while (characAdded < characLeft) {
-				if (step < COSTS[this.characteristic].length - 1 && characAdded >= COSTS[this.characteristic][step + 1].step) {
-					step++
-				}
-				const cost = COSTS[this.characteristic][step]
-				characAdded += cost.sup
-				usedCapital += cost.capital
-			}
-			return usedCapital
-		}
+		const cost = (COSTS as any)[props.characteristic][step]
+		characAdded += cost.sup
+		usedCapital += cost.capital
 	}
+	return usedCapital
+})
 </script>
 
 <style lang="scss" scoped>

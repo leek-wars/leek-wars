@@ -92,21 +92,21 @@
 	</popup>
 </template>
 
-<script lang="ts">
-	import { mixins } from '@/model/i18n'
-	import { Leek } from '@/model/leek'
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
+<script setup lang="ts">
+import { mixins } from '@/model/i18n'
+import { Leek } from '@/model/leek'
+import { LeekWars } from '@/model/leekwars'
 
-	@Options({ name: 'level-dialog', i18n: {}, mixins: [...mixins] })
-	export default class LevelDialog extends Vue {
-		@Prop({required: true}) leek!: Leek
-		@Prop({required: true}) levelData!: any
+defineOptions({ name: 'level-dialog', i18n: {}, mixins: [...mixins] })
 
-		close() {
-			LeekWars.post('leek/set-popup-level-seen', {leek_id: this.leek.id})
-		}
-	}
+const props = defineProps<{
+	leek: Leek
+	levelData: any
+}>()
+
+function close() {
+	LeekWars.post('leek/set-popup-level-seen', {leek_id: props.leek.id})
+}
 </script>
 
 <style lang="scss" scoped>

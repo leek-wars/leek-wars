@@ -61,26 +61,26 @@
 	</div>
 </template>
 
-<script lang="ts">
-import { ItemTemplate, ItemType, ITEM_CATEGORY_NAME } from '@/model/item'
-import { Options, Prop, Vue } from 'vue-property-decorator'
-import WeaponPreview from '@/component/market/weapon-preview.vue'
+<script setup lang="ts">
 import ChipPreview from '@/component/market/chip-preview.vue'
-import PotionPreview from '@/component/market/potion-preview.vue'
+import ComponentPreview from '@/component/market/component-preview.vue'
+import FightPackPreview from '@/component/market/fight-pack-preview.vue'
 import HatPreview from '@/component/market/hat-preview.vue'
 import PompPreview from '@/component/market/pomp-preview.vue'
+import PotionPreview from '@/component/market/potion-preview.vue'
 import ResourcePreview from '@/component/market/resource-preview.vue'
-import FightPackPreview from '@/component/market/fight-pack-preview.vue'
-import ComponentPreview from '@/component/market/component-preview.vue'
+import WeaponPreview from '@/component/market/weapon-preview.vue'
+import { CHIPS as CHIPSImport } from '@/model/chips'
+import { ITEM_CATEGORY_NAME, ItemTemplate, ItemType } from '@/model/item'
+import { Leek } from '@/model/leek'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
-import { CHIPS } from '@/model/chips'
-import { WeaponsData } from '@/model/weapon'
-import SchemePreview from './scheme-preview.vue'
+import { WeaponsData as WeaponsDataImport } from '@/model/weapon'
+import { computed, onMounted, withDefaults } from 'vue'
 import SchemeImage from './scheme-image.vue'
-import { Leek } from '@/model/leek'
+import SchemePreview from './scheme-preview.vue'
 
-@Options({ name: 'item-preview', components: {
+defineOptions({ name: 'item-preview', components: {
 	'weapon-preview': WeaponPreview,
 	'chip-preview': ChipPreview,
 	'potion-preview': PotionPreview,
@@ -92,96 +92,91 @@ import { Leek } from '@/model/leek'
 	'scheme-preview': SchemePreview,
 	'scheme-image': SchemeImage
 }})
-export default class ItemPreview extends Vue {
-	@Prop() item!: ItemTemplate
-	@Prop() quantity!: number
-	@Prop() inventory!: boolean
-	@Prop({ default: false }) showUse!: boolean
-	@Prop() leek!: Leek
-	@Prop({ default: 0 }) craftCost!: number
 
-	ItemType = ItemType
-	CHIPS = CHIPS
-	WeaponsData = WeaponsData
-	LeekWars = LeekWars
+const props = withDefaults(defineProps<{
+	item: ItemTemplate
+	quantity?: number
+	inventory?: boolean
+	showUse?: boolean
+	leek?: Leek
+	craftCost?: number
+}>(), {
+	showUse: false,
+	craftCost: 0,
+})
 
-	mounted() {
-		if (this.leek && this.myLeek && (this.item.type === ItemType.WEAPON || this.item.type === ItemType.CHIP) && this.leek.itemUsageStats === null) {
-			LeekWars.get<{ stats: { [key: number]: { uses: number, fights: number } }, total_fights: number, histograms: { [key: number]: number[] } }>('item-usage/get-by-leek/' + this.leek.id).then(data => {
-				this.leek.itemUsageStats = data.stats
-				this.leek.itemUsageTotalFights = data.total_fights
-				this.leek.itemUsageHistograms = data.histograms
-			})
-		}
-	}
+const emit = defineEmits<{
+	'update:modelValue': [value: any]
+	'retrieve': [items: any[]]
+}>()
 
-	get myLeek(): boolean {
-		const farmer = store.state.farmer
-		return farmer && this.leek.id in farmer.leeks
-	}
+const CHIPS: Record<number, any> = CHIPSImport
+const WeaponsData: Record<number, any> = WeaponsDataImport
 
-	get itemStats(): { uses: number, fights: number, avg: string } | null {
-		if (!this.leek?.itemUsageStats || (this.item.type !== ItemType.WEAPON && this.item.type !== ItemType.CHIP)) return null
-		const totalFights = this.leek.itemUsageTotalFights
-		const stats = this.leek.itemUsageStats[this.item.id]
-		if (!stats) return { uses: 0, fights: totalFights, avg: '0' }
-		const avg = totalFights > 0 ? (stats.uses / totalFights).toFixed(1) : '0'
-		return { uses: stats.uses, fights: totalFights, avg }
-	}
-
-	get itemHistogram(): number[] | null {
-		if (!this.leek?.itemUsageHistograms || (this.item.type !== ItemType.WEAPON && this.item.type !== ItemType.CHIP)) return null
-		const data = this.leek.itemUsageHistograms[this.item.id] || new Array(84).fill(0)
-		const max = Math.max(...data, 1)
-		return data.map(v => (v / max) * 18 + (v > 0 ? 2 : 1))
-	}
-
-	get category() {
-		return ITEM_CATEGORY_NAME[this.item.type]
-	}
-
-	get name_short() {
-		return this.item.name.replace(this.category + '_', '')
-	}
-
-	get scheme() {
-		if (this.item.type !== ItemType.SCHEME) return null
-		return LeekWars.schemes[this.item.params]
-	}
-	get schemeItem() {
-		return this.scheme ? LeekWars.items[this.scheme.result] : null
-	}
-	get schemeCategory() {
-		return this.schemeItem ? ITEM_CATEGORY_NAME[this.schemeItem.type] : null
-	}
-	get schemeName() {
-		return this.schemeItem ? this.schemeItem.name.replace(this.schemeCategory + '_', ''): null
-	}
-
-	get schemeCraftCost() {
-		if (!this.scheme) return 0
-		return this.scheme.items.reduce((s: number, i: any) => s + (i ? i[1] * LeekWars.items[i[0]].price! : 0), 0)
-	}
-
-	get displayCraftCost() {
-		return this.craftCost || this.schemeCraftCost
-	}
-
-	retrieveN(n: number) {
-		LeekWars.post<{habs: number, items: {[key: number]: any}}>('item/retrieve', { template: this.item.id, quantity: n }).then((data) => {
-			// console.log(data)
-			if (data.habs) {
-				store.commit('update-habs', data.habs)
-			}
-			for (const item of Object.values(data.items)) {
-				store.commit('add-inventory', {...item, type: LeekWars.items[item.template].type, time: Date.now() / 1000 })
-			}
-			this.$emit('retrieve', Object.values(data.items))
-			store.commit('remove-inventory', { type: ItemType.RESOURCE, item_template: this.item.id, quantity: n })
+onMounted(() => {
+	if (props.leek && myLeek.value && (props.item.type === ItemType.WEAPON || props.item.type === ItemType.CHIP) && props.leek.itemUsageStats === null) {
+		LeekWars.get<{ stats: { [key: number]: { uses: number, fights: number } }, total_fights: number, histograms: { [key: number]: number[] } }>('item-usage/get-by-leek/' + props.leek.id).then(data => {
+			props.leek!.itemUsageStats = data.stats
+			props.leek!.itemUsageTotalFights = data.total_fights
+			props.leek!.itemUsageHistograms = data.histograms
 		})
 	}
+})
 
-	weaponSound(id: number) {
+const myLeek = computed<boolean>(() => {
+	const farmer = store.state.farmer
+	return !!(farmer && props.leek && props.leek.id in farmer.leeks)
+})
+
+const itemStats = computed<{ uses: number, fights: number, avg: string } | null>(() => {
+	if (!props.leek?.itemUsageStats || (props.item.type !== ItemType.WEAPON && props.item.type !== ItemType.CHIP)) return null
+	const totalFights = props.leek.itemUsageTotalFights
+	const stats = props.leek.itemUsageStats[props.item.id]
+	if (!stats) return { uses: 0, fights: totalFights, avg: '0' }
+	const avg = totalFights > 0 ? (stats.uses / totalFights).toFixed(1) : '0'
+	return { uses: stats.uses, fights: totalFights, avg }
+})
+
+const itemHistogram = computed<number[] | null>(() => {
+	if (!props.leek?.itemUsageHistograms || (props.item.type !== ItemType.WEAPON && props.item.type !== ItemType.CHIP)) return null
+	const data = props.leek.itemUsageHistograms[props.item.id] || new Array(84).fill(0)
+	const max = Math.max(...data, 1)
+	return data.map((v: number) => (v / max) * 18 + (v > 0 ? 2 : 1))
+})
+
+const category = computed(() => ITEM_CATEGORY_NAME[props.item.type])
+
+const name_short = computed(() => props.item.name.replace(category.value + '_', ''))
+
+const scheme = computed(() => {
+	if (props.item.type !== ItemType.SCHEME) return null
+	return LeekWars.schemes[props.item.params]
+})
+const schemeItem = computed(() => scheme.value ? LeekWars.items[scheme.value.result] : null)
+const schemeCategory = computed(() => schemeItem.value ? ITEM_CATEGORY_NAME[schemeItem.value.type] : null)
+const schemeName = computed(() => schemeItem.value ? schemeItem.value.name.replace(schemeCategory.value + '_', '') : null)
+
+const schemeCraftCost = computed(() => {
+	if (!scheme.value) return 0
+	return scheme.value.items.reduce((s: number, i: any) => s + (i ? i[1] * LeekWars.items[i[0]].price! : 0), 0)
+})
+
+const displayCraftCost = computed(() => props.craftCost || schemeCraftCost.value)
+
+function retrieveN(n: number) {
+	LeekWars.post<{habs: number, items: {[key: number]: any}}>('item/retrieve', { template: props.item.id, quantity: n }).then((data) => {
+		if (data.habs) {
+			store.commit('update-habs', data.habs)
+		}
+		for (const item of Object.values(data.items)) {
+			store.commit('add-inventory', {...item, type: LeekWars.items[item.template].type, time: Date.now() / 1000 })
+		}
+		emit('retrieve', Object.values(data.items))
+		store.commit('remove-inventory', { type: ItemType.RESOURCE, item_template: props.item.id, quantity: n })
+	})
+}
+
+function weaponSound(id: number) {
 		return ({
 			1: ['double_gun'], 2: ['machine_gun'], 3: ['double_gun'], 4: ['shotgun'],
 			5: ['double_gun'], 6: ['laser'], 7: ['grenade_shoot', 0.7, 'explosion.wav'],
@@ -210,7 +205,7 @@ export default class ItemPreview extends Vue {
 		} as {[key: number]: any})[id]
 	}
 
-	chipSound(id: number) {
+function chipSound(id: number) {
 		return ({
 			1: ['heal'], 2: ['heal'], 3: ['heal'], 4: ['heal'], 5: ['heal'], 6: ['lightning'],
 			7: ['lightning'], 8: ['lightning'], 9: ['fire'], 10: ['fire'],
@@ -235,7 +230,7 @@ export default class ItemPreview extends Vue {
 		} as {[key: number]: any})[id]
 	}
 
-	playSound(item: any, type: string) {
+function playSound(item: any, type: string) {
 		if (type !== 'chip' && type !== 'weapon') { return }
 		const play = (sounds: any) => {
 			if (sounds.length === 0) { return }
@@ -250,10 +245,9 @@ export default class ItemPreview extends Vue {
 				}, parseFloat(sounds[1]) * 1000)
 			}
 		}
-		play((type === 'weapon') ? this.weaponSound(item.params) : this.chipSound(item.params))
+		play((type === 'weapon') ? weaponSound(item.params) : chipSound(item.params))
 		LeekWars.post('market/sound-played')
 	}
-}
 </script>
 
 <style lang="scss" scoped>
