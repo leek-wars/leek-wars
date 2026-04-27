@@ -23,15 +23,13 @@
 	</rich-tooltip-composition>
 </template>
 
-<script lang="ts">
-	import { Composition } from '@/model/team'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
+<script setup lang="ts">
+import type { Composition } from '@/model/team'
+import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
 
-	@Options({ components: { RichTooltipComposition } })
-	export default class GardenCompo extends Vue {
-		@Prop() compo!: Composition
-	}
+defineProps<{
+	compo: Composition
+}>()
 </script>
 
 <style lang="scss" scoped>

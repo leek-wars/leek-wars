@@ -14,15 +14,15 @@
 	</rich-tooltip-leek>
 </template>
 
-<script lang="ts">
-	import { Leek } from '@/model/leek'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+<script setup lang="ts">
+import type { Leek } from '@/model/leek'
+import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 
-	@Options({ name: 'garden-leek', components: { RichTooltipLeek } })
-	export default class GardenLeek extends Vue {
-		@Prop() leek!: Leek
-	}
+defineOptions({ name: 'garden-leek' })
+
+defineProps<{
+	leek: Leek
+}>()
 </script>
 
 <style lang="scss" scoped>

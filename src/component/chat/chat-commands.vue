@@ -13,74 +13,79 @@
 	</v-list>
 </template>
 
-<script lang="ts">
-	import { Command, Commands } from '@/model/commands'
-	import { nextTick } from 'vue'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
+<script setup lang="ts">
+import { ref, watch, nextTick, onMounted, getCurrentInstance } from 'vue'
+import { type Command, Commands } from '@/model/commands'
 
-	@Options({ name: 'chat-commands', emits: ['command'] })
-	export default class ChatCommands extends Vue {
+defineOptions({ name: 'chat-commands' })
 
-		@Prop() filter!: string
-		commands = Commands.commands
-		options: any[] = []
-		filterOptions: string | null = null
-		index: number = 0
+const props = defineProps<{
+	filter?: string
+}>()
 
-		mounted() {
-			Commands.init()
-		}
+const emit = defineEmits<{
+	command: [name: string]
+}>()
 
-		@Watch('filter', {immediate: true})
-		update() {
-			const parts = this.filter.toLowerCase().split(':')
-			const filterCommand = parts[0]
-			this.filterOptions = parts.length > 1 ? parts[1] : null
-			this.options = []
-			this.commands = Commands.commands.filter(command =>
-				(parts.length === 1 && command.name.indexOf(filterCommand) === 0) || command.name === filterCommand
-			)
-			if (this.commands.length === 1) {
-				const command = this.commands[0]
-				if (command.options) {
-					if (this.filterOptions === null) {
-						this.options = command.options
-					} else {
-						this.options = command.options.filter(option => option.nameLower.indexOf(this.filterOptions || '') === 0)
-					}
-				}
+const commands = ref(Commands.commands)
+const options = ref<any[]>([])
+const filterOptions = ref<string | null>(null)
+const index = ref(0)
+const instance = getCurrentInstance()
+
+onMounted(() => {
+	Commands.init()
+})
+
+watch(() => props.filter, () => {
+	const parts = (props.filter || '').toLowerCase().split(':')
+	const filterCommand = parts[0]
+	filterOptions.value = parts.length > 1 ? parts[1] : null
+	options.value = []
+	commands.value = Commands.commands.filter(command =>
+		(parts.length === 1 && command.name.indexOf(filterCommand) === 0) || command.name === filterCommand
+	)
+	if (commands.value.length === 1) {
+		const command = commands.value[0]
+		if (command.options) {
+			if (filterOptions.value === null) {
+				options.value = command.options
+			} else {
+				options.value = command.options.filter(option => option.nameLower.indexOf(filterOptions.value || '') === 0)
 			}
-		}
-		getSelected(): Command {
-			return this.commands[this.index]
-		}
-		getSelectedOption() {
-			return this.commands[this.index].options ? this.options[this.index] : null
-		}
-		selectFirst() {
-			if (!this.commands[this.index]) return
-			let command = this.commands[this.index].name
-			if (this.options.length) {
-				command += ':' + this.options[0].name
-			}
-			this.$emit('command', command)
-		}
-		up() {
-			this.index--
-			if (this.index < 0) this.index = this.commands.length - 1
-			this.scrollToSelected()
-		}
-		down() {
-			this.index = (this.index + 1) % this.commands.length
-			this.scrollToSelected()
-		}
-		scrollToSelected() {
-			nextTick(() => {
-				const items = (this as any).$el?.parentElement?.querySelectorAll('.command')
-				if (items) (items[this.index] as HTMLElement)?.scrollIntoView({ block: 'nearest' })
-			})
 		}
 	}
+}, { immediate: true })
+
+function getSelected(): Command {
+	return commands.value[index.value]
+}
+function getSelectedOption() {
+	return commands.value[index.value]?.options ? options.value[index.value] : null
+}
+function selectFirst() {
+	if (!commands.value[index.value]) return
+	let command = commands.value[index.value].name
+	if (options.value.length) command += ':' + options.value[0].name
+	emit('command', command)
+}
+function scrollToSelected() {
+	nextTick(() => {
+		const items = (instance?.proxy as any)?.$el?.parentElement?.querySelectorAll('.command')
+		if (items) (items[index.value] as HTMLElement)?.scrollIntoView({ block: 'nearest' })
+	})
+}
+function up() {
+	index.value--
+	if (index.value < 0) index.value = commands.value.length - 1
+	scrollToSelected()
+}
+function down() {
+	index.value = (index.value + 1) % commands.value.length
+	scrollToSelected()
+}
+
+defineExpose({ getSelected, getSelectedOption, selectFirst, up, down })
 </script>
 
 <style lang="scss" scoped>

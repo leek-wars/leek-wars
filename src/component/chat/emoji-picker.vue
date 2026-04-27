@@ -27,29 +27,29 @@
 	</v-menu>
 </template>
 
-<script lang="ts">
-	import { Emojis } from '@/model/emojis'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Emojis } from '@/model/emojis'
 
-	@Options({ emits: ['pick'] })
-	export default class EmojiPicker extends Vue {
-		width: number = 352
-		categories = Emojis.categories
-		Emojis = Emojis
+const props = withDefaults(defineProps<{
+	closeOnSelected?: boolean
+	classic?: boolean
+	left?: boolean
+}>(), { left: true })
 
-		@Prop() closeOnSelected!: boolean
-		@Prop() classic!: boolean
-		@Prop({ default: true }) left!: boolean
-		shown: boolean = false
-		activeTab: string = 'tab-0'
+const emit = defineEmits<{
+	pick: [emoji: string]
+}>()
 
-		pick(emoji: string) {
-			this.$emit('pick', emoji.replace('&lt;', '<'))
-			if (this.closeOnSelected) {
-				this.shown = false
-			}
-		}
-	}
+const width = 352
+const categories = Emojis.categories
+const shown = ref(false)
+const activeTab = ref('tab-0')
+
+function pick(emoji: string) {
+	emit('pick', emoji.replace('&lt;', '<'))
+	if (props.closeOnSelected) shown.value = false
+}
 </script>
 
 <style lang="scss" scoped>

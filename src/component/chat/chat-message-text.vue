@@ -3,63 +3,62 @@
 	<div v-else v-chat-code-latex class="text" :class="{'leek-wars': message.farmer.id === 0, 'large-emojis': message.only_emojis}" v-html="message.content"></div>
 </template>
 
-<script lang="ts">
-	import { store } from '@/model/store'
-	import { createSubApp } from '@/model/vue'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import Pseudo from '../app/pseudo.vue'
-	import 'katex/dist/katex.min.css'
-	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
-	import { ChatMessage } from '@/model/chat'
-	import { App } from 'vue'
-	import Loader from '@/component/app/loader.vue'
-	import Avatar from '../avatar.vue'
-	import Flag from '../flag.vue'
-	import Emblem from '../emblem.vue'
-	import Talent from '../talent.vue'
-	import RankingBadge from '../ranking-badge.vue'
-	import BrInvite from './br-invite.vue'
+<<script setup lang="ts">
+import { onMounted, onBeforeUnmount, getCurrentInstance, type App } from 'vue'
+import { store } from '@/model/store'
+import { createSubApp } from '@/model/vue'
+import Pseudo from '../app/pseudo.vue'
+import 'katex/dist/katex.min.css'
+import type { ChatMessage } from '@/model/chat'
+import Loader from '@/component/app/loader.vue'
+import Avatar from '../avatar.vue'
+import Flag from '../flag.vue'
+import Emblem from '../emblem.vue'
+import Talent from '../talent.vue'
+import RankingBadge from '../ranking-badge.vue'
+import BrInvite from './br-invite.vue'
 
-	@Options({ name: 'ChatMessageText', components: { RichTooltipFarmer } })
-	export default class ChatMessageText extends Vue {
+defineOptions({ name: 'ChatMessageText' })
 
-		@Prop({ required: true }) message!: ChatMessage
+defineProps<{
+	message: ChatMessage
+}>()
 
-		subApps: App[] = []
+const subApps: App[] = []
+const instance = getCurrentInstance()
 
-		mounted() {
-			this.$el.querySelectorAll('.pseudo').forEach((c) => {
-				const name = (c as HTMLElement).innerText
-				const farmer = store.state.farmer_by_name[name]
-				if (farmer) {
-					const app = createSubApp(Pseudo, { farmer }, 'chat-pseudo')
-					app.component('loader', Loader)
-					app.component('avatar', Avatar)
-					app.component('emblem', Emblem)
-					app.component('flag', Flag)
-					app.component('talent', Talent)
-					app.component('ranking-badge', RankingBadge)
-					app.mount(c)
-					this.subApps.push(app)
-				}
-			})
-			this.$el.querySelectorAll('.br-invite').forEach((c) => {
-				const level = parseInt((c as HTMLElement).dataset.level || '', 10) || 0
-				const label = (c as HTMLElement).dataset.label || undefined
-				const modeStr = (c as HTMLElement).dataset.mode
-				const mode = modeStr !== undefined ? parseInt(modeStr, 10) : undefined
-				const app = createSubApp(BrInvite, { level, label, mode }, 'chat-br-invite')
-				app.mount(c)
-				this.subApps.push(app)
-			})
+onMounted(() => {
+	const el = (instance?.proxy as any)?.$el
+	if (!el) return
+	el.querySelectorAll('.pseudo').forEach((c: HTMLElement) => {
+		const name = c.innerText
+		const farmer = store.state.farmer_by_name[name]
+		if (farmer) {
+			const app = createSubApp(Pseudo, { farmer }, 'chat-pseudo')
+			app.component('loader', Loader)
+			app.component('avatar', Avatar)
+			app.component('emblem', Emblem)
+			app.component('flag', Flag)
+			app.component('talent', Talent)
+			app.component('ranking-badge', RankingBadge)
+			app.mount(c)
+			subApps.push(app)
 		}
+	})
+	el.querySelectorAll('.br-invite').forEach((c: HTMLElement) => {
+		const level = parseInt(c.dataset.level || '', 10) || 0
+		const label = c.dataset.label || undefined
+		const modeStr = c.dataset.mode
+		const mode = modeStr !== undefined ? parseInt(modeStr, 10) : undefined
+		const app = createSubApp(BrInvite, { level, label, mode }, 'chat-br-invite')
+		app.mount(c)
+		subApps.push(app)
+	})
+})
 
-		beforeUnmount() {
-			for (const app of this.subApps) {
-				app.unmount()
-			}
-		}
-	}
+onBeforeUnmount(() => {
+	for (const app of subApps) app.unmount()
+})
 </script>
 
 <style lang="scss" scoped>

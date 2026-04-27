@@ -14,17 +14,12 @@
 	</rich-tooltip-farmer>
 </template>
 
-<script lang="ts">
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import Avatar from '../avatar.vue'
-	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+<script setup lang="ts">
+import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Options({
-		components: { avatar: Avatar, RichTooltipFarmer }
-	})
-	export default class GardenFarmer extends Vue {
-		@Prop() farmer!: any
-	}
+defineProps<{
+	farmer: any
+}>()
 </script>
 
 <style lang="scss" scoped>

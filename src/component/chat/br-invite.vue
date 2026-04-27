@@ -9,74 +9,61 @@
 	</span>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { computed } from 'vue'
+import { LeekWars } from '@/model/leekwars'
+import { store } from '@/model/store'
 
-	@Options({})
-	export default class BrInvite extends Vue {
-		@Prop() level!: number
-		@Prop() label!: string
-		@Prop() mode!: number
+const props = defineProps<{
+	level?: number
+	label?: string
+	mode?: number
+}>()
 
-		get arenaCount() {
-			return this.$store.state.arenaCount || 0
-		}
+const arenaCount = computed(() => store.state.arenaCount || 0)
+const arenaCountdown = computed(() => store.state.arenaCountdown)
+const inArena = computed(() => store.state.arenaEnabled)
 
-		get arenaCountdown() {
-			return this.$store.state.arenaCountdown
-		}
-
-		get inArena() {
-			return this.$store.state.arenaEnabled
-		}
-
-		get eligibleLeek() {
-			const farmer = this.$store.state.farmer
-			if (!farmer) { return null }
-			// Priorité : leek arène actuel > dernier leek potager > premier éligible (level >= 20)
-			for (const key of ['arena-leek', 'garden/leek']) {
-				const id = parseInt(localStorage.getItem(key) || '', 10)
-				if (id && farmer.leeks[id] && farmer.leeks[id].level >= 20) {
-					return id
-				}
-			}
-			for (const id in farmer.leeks) {
-				if (farmer.leeks[id].level >= 20) {
-					return farmer.leeks[id].id
-				}
-			}
-			return null
-		}
-
-		get needsModeChange() {
-			if (!this.inArena || this.mode === undefined) { return false }
-			return this.$store.state.arenaPreference !== this.mode
-		}
-
-		get modeAlreadySelected() {
-			if (!this.inArena || this.mode === undefined) { return false }
-			return this.$store.state.arenaPreference === this.mode
-		}
-
-		joinArena() {
-			const leek = this.eligibleLeek
-			if (leek) {
-				const preference = this.mode !== undefined
-					? this.mode
-					: parseInt(localStorage.getItem('arena/preference') || '-1', 10)
-				LeekWars.arena.register(leek, preference)
-			}
-		}
-
-		changeMode() {
-			const leek = parseInt(localStorage.getItem('arena-leek') || '', 10) || this.eligibleLeek
-			if (leek && this.mode !== undefined) {
-				const wantsColossus = localStorage.getItem('arena-colossus') === '1'
-				LeekWars.arena.register(leek, this.mode, wantsColossus)
-			}
-		}
+const eligibleLeek = computed<number | null>(() => {
+	const farmer = store.state.farmer
+	if (!farmer) return null
+	for (const key of ['arena-leek', 'garden/leek']) {
+		const id = parseInt(localStorage.getItem(key) || '', 10)
+		if (id && farmer.leeks[id] && farmer.leeks[id].level >= 20) return id
 	}
+	for (const id in farmer.leeks) {
+		if (farmer.leeks[id].level >= 20) return farmer.leeks[id].id
+	}
+	return null
+})
+
+const needsModeChange = computed(() => {
+	if (!inArena.value || props.mode === undefined) return false
+	return store.state.arenaPreference !== props.mode
+})
+
+const modeAlreadySelected = computed(() => {
+	if (!inArena.value || props.mode === undefined) return false
+	return store.state.arenaPreference === props.mode
+})
+
+function joinArena() {
+	const leek = eligibleLeek.value
+	if (leek) {
+		const preference = props.mode !== undefined
+			? props.mode
+			: parseInt(localStorage.getItem('arena/preference') || '-1', 10)
+		LeekWars.arena.register(leek, preference)
+	}
+}
+
+function changeMode() {
+	const leek = parseInt(localStorage.getItem('arena-leek') || '', 10) || eligibleLeek.value
+	if (leek && props.mode !== undefined) {
+		const wantsColossus = localStorage.getItem('arena-colossus') === '1'
+		LeekWars.arena.register(leek, props.mode, wantsColossus)
+	}
+}
 </script>
 
 <style lang="scss" scoped>
