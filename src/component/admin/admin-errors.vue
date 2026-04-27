@@ -67,12 +67,12 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
-	import { Options, Vue } from 'vue-property-decorator'
-	import { nextTick } from 'vue'
+	import { getCurrentInstance, nextTick, onBeforeUnmount, ref } from 'vue'
+	import { useRouter } from 'vue-router'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
 	const STALE_THRESHOLD_DAYS = 2
@@ -94,109 +94,108 @@
 		}
 	}
 
-	@Options({ components: { Breadcrumb } })
-	export default class AdminErrors extends Vue {
-		errors: any[] | null = null
-		deleteQuery: string = ''
-		newErrors: number = 0
-		traceExpanded: Record<number, boolean> = {}
-		traceOverflows: Record<number, boolean> = {}
-		resizeObserver: ResizeObserver | null = null
+	const router = useRouter()
+	const instance = getCurrentInstance()
 
-		created() {
-			if (!this.$store.getters.admin) this.$router.replace('/')
-			this.update()
-			emitter.on('wsmessage', this.onWsMessage)
+	const errors = ref<any[] | null>(null)
+	const deleteQuery = ref('')
+	const newErrors = ref(0)
+	const traceExpanded = ref<Record<number, boolean>>({})
+	const traceOverflows = ref<Record<number, boolean>>({})
+	let resizeObserver: ResizeObserver | null = null
+
+	if (!store.getters.admin) router.replace('/')
+	update()
+	emitter.on('wsmessage', onWsMessage)
+
+	onBeforeUnmount(() => {
+		emitter.off('wsmessage', onWsMessage)
+		resizeObserver?.disconnect()
+		resizeObserver = null
+	})
+
+	function onWsMessage(e: any) {
+		if (e.type === 89) {
+			newErrors.value++
 		}
+	}
 
-		beforeUnmount() {
-			emitter.off('wsmessage', this.onWsMessage)
-			this.resizeObserver?.disconnect()
-			this.resizeObserver = null
-		}
+	function toggleTrace(index: number, expanded: boolean) {
+		traceExpanded.value = { ...traceExpanded.value, [index]: expanded }
+	}
 
-		onWsMessage(e: any) {
-			if (e.type === 89) {
-				this.newErrors++
+	function update() {
+		LeekWars.get('error/get-latest').then(data => {
+			for (const error of data.errors) {
+				error.build = computeBuildInfo(error)
 			}
-		}
+			errors.value = data.errors
+			traceExpanded.value = {}
+			traceOverflows.value = {}
+			nextTick(() => observeTraces())
+			store.commit('error-count', data.count)
+			LeekWars.setTitle("Gestionnaire d'erreur (" + (store.state.farmer ? store.state.farmer!.errors : 0) + ")")
+		})
+	}
 
-		toggleTrace(index: number, expanded: boolean) {
-			this.traceExpanded = { ...this.traceExpanded, [index]: expanded }
-		}
-
-		update() {
-			LeekWars.get('error/get-latest').then(data => {
-				for (const error of data.errors) {
-					error.build = computeBuildInfo(error)
-				}
-				this.errors = data.errors
-				this.traceExpanded = {}
-				this.traceOverflows = {}
-				nextTick(() => this.observeTraces())
-				this.$store.commit('error-count', data.count)
-				LeekWars.setTitle("Gestionnaire d'erreur (" + (store.state.farmer ? store.state.farmer!.errors : 0) + ")")
-			})
-		}
-
-		observeTraces() {
-			this.resizeObserver?.disconnect()
-			const indexByEl = new Map<Element, number>()
-			this.resizeObserver = new ResizeObserver(entries => {
-				const next = { ...this.traceOverflows }
-				let changed = false
-				for (const entry of entries) {
-					const i = indexByEl.get(entry.target)
-					if (i === undefined) continue
-					const el = entry.target as HTMLElement
-					const overflows = el.scrollHeight > el.clientHeight + 1
-					if (!!next[i] !== overflows) {
-						next[i] = overflows
-						changed = true
-					}
-				}
-				if (changed) this.traceOverflows = next
-			})
-			const count = this.errors ? this.errors.length : 0
-			for (let i = 0; i < count; i++) {
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				const refs = (this as any).$refs['trace-' + i]
-				const el = Array.isArray(refs) ? refs[0] : refs
-				if (el) {
-					indexByEl.set(el, i)
-					this.resizeObserver.observe(el)
+	function observeTraces() {
+		resizeObserver?.disconnect()
+		const indexByEl = new Map<Element, number>()
+		resizeObserver = new ResizeObserver(entries => {
+			const next = { ...traceOverflows.value }
+			let changed = false
+			for (const entry of entries) {
+				const i = indexByEl.get(entry.target)
+				if (i === undefined) continue
+				const el = entry.target as HTMLElement
+				const overflows = el.scrollHeight > el.clientHeight + 1
+				if (!!next[i] !== overflows) {
+					next[i] = overflows
+					changed = true
 				}
 			}
+			if (changed) traceOverflows.value = next
+		})
+		const count = errors.value ? errors.value.length : 0
+		const refs = (instance?.proxy as any)?.$refs ?? {}
+		for (let i = 0; i < count; i++) {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			const r = refs['trace-' + i]
+			const el = Array.isArray(r) ? r[0] : r
+			if (el) {
+				indexByEl.set(el, i)
+				resizeObserver.observe(el)
+			}
 		}
+	}
 
-		refresh() {
-			this.newErrors = 0
-			this.update()
-		}
+	function refresh() {
+		newErrors.value = 0
+		update()
+	}
 
-		removeError(id: number) {
-			LeekWars.delete('error/delete', { id })
-			this.errors = this.errors!.filter(e => e.id !== id)
-			this.$store.commit('remove-error')
-		}
+	function removeError(id: number) {
+		LeekWars.delete('error/delete', { id })
+		errors.value = errors.value!.filter(e => e.id !== id)
+		store.commit('remove-error')
+	}
 
-		createIssue(error: any) {
-			LeekWars.post('error/create-issue', { id: error.id }).then((data: any) => {
-				error.issue = data.issue
-			})
-		}
+	function createIssue(error: any) {
+		LeekWars.post('error/create-issue', { id: error.id }).then((data: any) => {
+			error.issue = data.issue
+		})
+	}
 
-		formatUA(ua: string) {
-			return LeekWars.parseUserAgent(ua)
-		}
+	function formatUA(ua: string) {
+		return LeekWars.parseUserAgent(ua)
+	}
 
 
-		deleteErrors() {
-			LeekWars.delete('error/delete-query', { query: this.deleteQuery }).then(() => {
-				this.deleteQuery = ''
-				this.update()
-			})
-		}
+	function deleteErrors() {
+		LeekWars.delete('error/delete-query', { query: deleteQuery.value }).then(() => {
+			deleteQuery.value = ''
+			update()
+		})
 	}
 </script>
 

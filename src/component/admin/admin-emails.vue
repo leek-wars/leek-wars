@@ -47,72 +47,70 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue } from 'vue-property-decorator'
+	import { store } from '@/model/store'
+	import { ref } from 'vue'
+	import { useRouter } from 'vue-router'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
-	@Options({ components: { Breadcrumb } })
-	export default class AdminEmails extends Vue {
-		farmers: any = null
-		email: string = ''
-		deleteEmail: string = ''
-		deleteTarget: any = null
-		deleteConfirm: string = ''
-		deleteError: string = ''
-		deleteSuccess: string = ''
+	const router = useRouter()
+	const farmers = ref<any>(null)
+	const email = ref('')
+	const deleteEmail = ref('')
+	const deleteTarget = ref<any>(null)
+	const deleteConfirm = ref('')
+	const deleteError = ref('')
+	const deleteSuccess = ref('')
 
-		created() {
-			if (!this.$store.getters.admin) this.$router.replace('/')
-			LeekWars.get('farmer/get-waiting-farmers').then(data => this.farmers = data.farmers)
-			LeekWars.setTitle("Admin activation mails")
-		}
+	if (!store.getters.admin) router.replace('/')
+	LeekWars.get('farmer/get-waiting-farmers').then(data => farmers.value = data.farmers)
+	LeekWars.setTitle("Admin activation mails")
 
-		send(farmer: any) {
-			if (!farmer.disabled) {
-				LeekWars.post('farmer/resend-activation-mail', {farmer_id: farmer.id})
-				farmer.disabled = true
-			}
+	function send(farmer: any) {
+		if (!farmer.disabled) {
+			LeekWars.post('farmer/resend-activation-mail', {farmer_id: farmer.id})
+			farmer.disabled = true
 		}
+	}
 
-		searchAccount() {
-			this.deleteTarget = null
-			this.deleteConfirm = ''
-			this.deleteError = ''
-			this.deleteSuccess = ''
-			LeekWars.get('admin/search-by-email/' + encodeURIComponent(this.deleteEmail))
-				.then(data => {
-					this.deleteTarget = data.farmer
-				})
-				.error((error) => {
-					this.deleteError = 'Compte non trouvé'
-				})
-		}
+	function searchAccount() {
+		deleteTarget.value = null
+		deleteConfirm.value = ''
+		deleteError.value = ''
+		deleteSuccess.value = ''
+		LeekWars.get('admin/search-by-email/' + encodeURIComponent(deleteEmail.value))
+			.then(data => {
+				deleteTarget.value = data.farmer
+			})
+			.error((error) => {
+				deleteError.value = 'Compte non trouvé'
+			})
+	}
 
-		deleteAccount() {
-			if (!this.deleteTarget || this.deleteConfirm !== this.deleteTarget.name) return
-			const name = this.deleteTarget.name
-			LeekWars.delete('admin/delete-by-email', { email: this.deleteEmail })
-				.then(() => {
-					this.deleteSuccess = 'Le compte « ' + name + ' » a été supprimé avec succès.'
-					this.deleteTarget = null
-					this.deleteConfirm = ''
-					this.deleteEmail = ''
-					this.deleteError = ''
-				})
-				.error((error) => {
-					this.deleteError = 'Erreur : ' + error.error
-				})
-		}
+	function deleteAccount() {
+		if (!deleteTarget.value || deleteConfirm.value !== deleteTarget.value.name) return
+		const name = deleteTarget.value.name
+		LeekWars.delete('admin/delete-by-email', { email: deleteEmail.value })
+			.then(() => {
+				deleteSuccess.value = 'Le compte « ' + name + ' » a été supprimé avec succès.'
+				deleteTarget.value = null
+				deleteConfirm.value = ''
+				deleteEmail.value = ''
+				deleteError.value = ''
+			})
+			.error((error) => {
+				deleteError.value = 'Erreur : ' + error.error
+			})
+	}
 
-		unsubscribe() {
-			LeekWars.post('farmer/unregister-email', { email: this.email })
-				.then(() => {
-					LeekWars.toast('Désinscription réussie')
-					this.email = ''
-				})
-				.error((error) => LeekWars.toast('Erreur : ' + error.error))
-		}
+	function unsubscribe() {
+		LeekWars.post('farmer/unregister-email', { email: email.value })
+			.then(() => {
+				LeekWars.toast('Désinscription réussie')
+				email.value = ''
+			})
+			.error((error) => LeekWars.toast('Erreur : ' + error.error))
 	}
 </script>
 

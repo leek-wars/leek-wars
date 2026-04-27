@@ -118,9 +118,11 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue } from 'vue-property-decorator'
+	import { store } from '@/model/store'
+	import { ref } from 'vue'
+	import { useRoute, useRouter } from 'vue-router'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
 	interface Opponent { id: number; name: string; level: number; talent: number; skin: number; hat: number; weapon: number; }
@@ -136,45 +138,45 @@
 		opponents: Opponent[];
 	}
 
-	@Options({ components: { Breadcrumb } })
-	export default class AdminMatchmaking extends Vue {
-		leekId: string = ''
-		loading: boolean = false
-		data: DebugData | null = null
-		error: string | null = null
+	const route = useRoute()
+	const router = useRouter()
 
-		created() {
-			if (!this.$store.getters.admin) this.$router.replace('/')
-			LeekWars.setTitle('Debug matchmaking')
-			const q = this.$route.query.leek
-			if (q) {
-				this.leekId = '' + q
-				this.run()
+	const leekId = ref('')
+	const loading = ref(false)
+	const data = ref<DebugData | null>(null)
+	const error = ref<string | null>(null)
+
+	if (!store.getters.admin) router.replace('/')
+	LeekWars.setTitle('Debug matchmaking')
+	{
+		const q = route.query.leek
+		if (q) {
+			leekId.value = '' + q
+			run()
+		}
+	}
+
+	function run() {
+		const id = parseInt(leekId.value, 10)
+		if (!id) return
+		loading.value = true
+		error.value = null
+		data.value = null
+		LeekWars.get('admin/matchmaking-debug/' + id).then((res: any) => {
+			loading.value = false
+			data.value = res as DebugData
+			if (route.query.leek !== '' + id) {
+				router.replace({ query: { leek: '' + id } })
 			}
-		}
+		}).error((err: any) => {
+			loading.value = false
+			error.value = err?.error || 'Erreur'
+		})
+	}
 
-		run() {
-			const id = parseInt(this.leekId, 10)
-			if (!id) return
-			this.loading = true
-			this.error = null
-			this.data = null
-			LeekWars.get('admin/matchmaking-debug/' + id).then((res: any) => {
-				this.loading = false
-				this.data = res as DebugData
-				if (this.$route.query.leek !== '' + id) {
-					this.$router.replace({ query: { leek: '' + id } })
-				}
-			}).error((err: any) => {
-				this.loading = false
-				this.error = err?.error || 'Erreur'
-			})
-		}
-
-		previousCount(i: number): number {
-			if (!this.data) return 0
-			return i === 0 ? this.data.baseline : this.data.funnel[i - 1].count
-		}
+	function previousCount(i: number): number {
+		if (!data.value) return 0
+		return i === 0 ? data.value.baseline : data.value.funnel[i - 1].count
 	}
 </script>
 

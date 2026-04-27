@@ -81,88 +81,83 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
+	import { store } from '@/model/store'
+	import { onUnmounted, reactive, ref, watch } from 'vue'
+	import { useRouter } from 'vue-router'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Options({ components: { Breadcrumb, RichTooltipFarmer } })
-	export default class AdminDashboards extends Vue {
-		dashboards: any[] | null = null
-		selectedDashboard: string = ''
-		data: { [key: string]: any } = {}
-		LeekWars = LeekWars
+	const router = useRouter()
+	const dashboards = ref<any[] | null>(null)
+	const selectedDashboard = ref('')
+	const data = reactive<{ [key: string]: any }>({})
 
-		created() {
-			LeekWars.setTitle("Admin Dashboards")
-			LeekWars.large = true
-			this.checkAdmin()
-			LeekWars.get('dashboard/get-all').then((data: any) => {
-				this.dashboards = data
-				if (data.length) {
-					this.selectedDashboard = data[0].id
-					this.loadDashboard(data[0].id)
-				}
-			})
+	LeekWars.setTitle("Admin Dashboards")
+	LeekWars.large = true
+	checkAdmin()
+	LeekWars.get('dashboard/get-all').then((res: any) => {
+		dashboards.value = res
+		if (res.length) {
+			selectedDashboard.value = res[0].id
+			loadDashboard(res[0].id)
 		}
+	})
 
-		unmounted() {
-			LeekWars.large = false
+	onUnmounted(() => {
+		LeekWars.large = false
+	})
+
+	// Sur refresh, state.farmer est null le temps de recharger la session.
+	// On ne redirige donc qu'une fois le farmer chargé.
+	function checkAdmin() {
+		if (store.state.farmer && !store.state.farmer.admin) {
+			router.replace('/')
 		}
+	}
 
-		// Sur refresh, state.farmer est null le temps de recharger la session.
-		// On ne redirige donc qu'une fois le farmer chargé.
-		checkAdmin() {
-			if (this.$store.state.farmer && !this.$store.state.farmer.admin) {
-				this.$router.replace('/')
+	watch(() => store.state.farmer, () => {
+		checkAdmin()
+	})
+
+	watch(selectedDashboard, (id: string) => {
+		loadDashboard(id)
+	})
+
+	function loadDashboard(id: string) {
+		if (!id || data[id]) return
+		LeekWars.get('dashboard/get-data/' + id).then((result: any) => {
+			data[id] = result
+		})
+	}
+
+	function getHeaders(id: string) {
+		const d = data[id]
+		if (!d) return []
+		return d.columns.map((col: any) => {
+			const header: any = { title: col.title, value: col.key, sortable: true }
+			if (col.sort_key) {
+				header.sort = (a: any, b: any, itemA: any, itemB: any) => itemA[col.sort_key] - itemB[col.sort_key]
 			}
-		}
+			return header
+		})
+	}
 
-		@Watch('$store.state.farmer')
-		onFarmerLoaded() {
-			this.checkAdmin()
-		}
+	function cellSlot(key: string) {
+		return 'item.' + key
+	}
 
-		@Watch('selectedDashboard')
-		onDashboardChange(id: string) {
-			this.loadDashboard(id)
-		}
+	function daysSince(timestamp: number) {
+		return Math.floor((LeekWars.time - timestamp) / 86400)
+	}
 
-		loadDashboard(id: string) {
-			if (!id || this.data[id]) return
-			LeekWars.get('dashboard/get-data/' + id).then((result: any) => {
-				this.data[id] = result
-			})
-		}
-
-		getHeaders(id: string) {
-			const d = this.data[id]
-			if (!d) return []
-			return d.columns.map((col: any) => {
-				const header: any = { title: col.title, value: col.key, sortable: true }
-				if (col.sort_key) {
-					header.sort = (a: any, b: any, itemA: any, itemB: any) => itemA[col.sort_key] - itemB[col.sort_key]
-				}
-				return header
-			})
-		}
-
-		cellSlot(key: string) {
-			return 'item.' + key
-		}
-
-		daysSince(timestamp: number) {
-			return Math.floor((LeekWars.time - timestamp) / 86400)
-		}
-
-		sizePercent(dashboardId: string, item: any, col: any) {
-			if (!col.sort_key) return 0
-			const rows = this.data[dashboardId]?.rows
-			if (!rows || !rows.length) return 0
-			const max = rows[0][col.sort_key] || 1
-			return Math.max(1, (item[col.sort_key] / max) * 100)
-		}
+	function sizePercent(dashboardId: string, item: any, col: any) {
+		if (!col.sort_key) return 0
+		const rows = data[dashboardId]?.rows
+		if (!rows || !rows.length) return 0
+		const max = rows[0][col.sort_key] || 1
+		return Math.max(1, (item[col.sort_key] / max) * 100)
 	}
 </script>
 

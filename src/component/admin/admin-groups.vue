@@ -47,42 +47,39 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue } from 'vue-property-decorator'
+	import { store } from '@/model/store'
+	import { ref } from 'vue'
+	import { useRouter } from 'vue-router'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
-	@Options({ components: { RichTooltipFarmer, Breadcrumb } })
-	export default class AdminTrophies extends Vue {
-		groups: any = null
-		headers = [
-          { title: 'ID', value: 'id' },
-          { title: 'Nom', value: 'name' },
-          { title: 'Supervisor', value: 'supervisor' },
-          { title: 'Membres', value: 'members' },
-          { title: 'Date de création', value: 'creation_date' },
-          { title: 'Archivé', value: 'archived' },
-        //   { text: 'Combats restants', value: 'day_fight' },
-        //   { text: 'Combats', value: 'fights' },
-        //   { text: 'Victoires', value: 'wins' },
-        //   { text: 'Nuls', value: 'draws' },
-        //   { text: 'Défaites', value: 'defeats' },
-        //   { text: 'Ratio', value: 'ratio' },
-        //   { text: 'Combats de test', value: 'test_fights' },
-        //   { text: 'Trophées', value: 'trophies' },
-        ]
+	const router = useRouter()
+	const groups = ref<any>(null)
+	const headers = [
+		{ title: 'ID', value: 'id' },
+		{ title: 'Nom', value: 'name' },
+		{ title: 'Supervisor', value: 'supervisor' },
+		{ title: 'Membres', value: 'members' },
+		{ title: 'Date de création', value: 'creation_date' },
+		{ title: 'Archivé', value: 'archived' },
+	//   { text: 'Combats restants', value: 'day_fight' },
+	//   { text: 'Combats', value: 'fights' },
+	//   { text: 'Victoires', value: 'wins' },
+	//   { text: 'Nuls', value: 'draws' },
+	//   { text: 'Défaites', value: 'defeats' },
+	//   { text: 'Ratio', value: 'ratio' },
+	//   { text: 'Combats de test', value: 'test_fights' },
+	//   { text: 'Trophées', value: 'trophies' },
+	]
 
-		created() {
-			if (!this.$store.getters.admin) this.$router.replace('/')
-			LeekWars.setTitle("Admin Groupes")
-			LeekWars.get('groupe/get-all').then(groups => {
-				this.groups = groups
-			})
-		}
-
-	}
+	if (!store.getters.admin) router.replace('/')
+	LeekWars.setTitle("Admin Groupes")
+	LeekWars.get('groupe/get-all').then(g => {
+		groups.value = g
+	})
 </script>
 
 <style lang="scss" scoped>

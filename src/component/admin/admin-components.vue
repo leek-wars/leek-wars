@@ -31,55 +31,51 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 
-import { ITEM_CATEGORY_NAME } from '@/model/item'
+import { ComponentTemplate } from '@/model/component'
 import { LeekWars } from '@/model/leekwars'
-import { Options, Vue, Watch } from 'vue-property-decorator'
+import { store } from '@/model/store'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import ItemView from '../item.vue'
 
 import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
-@Options({ components: { item: ItemView, Breadcrumb } })
-export default class AdminComponents extends Vue {
-	ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
-	data: any = null
-	sources: any = null
-	last: any = null
-	loading: boolean = false
-	components: ComponentTemplate[] | null = null
+defineOptions({ components: { item: ItemView, Breadcrumb } })
 
-	created() {
-		if (!this.$store.getters.admin) this.$router.replace('/')
-		LeekWars.setTitle("Admin Composants")
+const router = useRouter()
+const components = ref<ComponentTemplate[] | null>(null)
 
-		LeekWars.get<{[key: number]: ComponentTemplate}>("component/get-all/dfgdfgzegktyrtytm").then(components => {
-			this.components = Object.values(components)
-				.sort((a, b) => LeekWars.items[a.template].level - LeekWars.items[b.template].level)
-			this.components.forEach(component => component.stats = component.stats.map(stat => {
-				return stat instanceof Object ? Object.values(stat) : stat
-			}) as any)
-		})
-	}
-	mounted() {
-		LeekWars.large = true
-	}
-	beforeUnmount() {
-		LeekWars.large = false
-	}
+if (!store.getters.admin) router.replace('/')
+LeekWars.setTitle("Admin Composants")
 
-	up(component: ComponentTemplate, i: number) {
-		// [component.stats[i], component.stats[i - 1]] = [component.stats[i - 1], component.stats[i]] marche pas :(
-		const stat = component.stats[i]
-		component.stats.splice(i, 1, component.stats[i - 1])
-		component.stats[i - 1] = stat
-		this.updateComponent(component)
-	}
+LeekWars.get<{[key: number]: ComponentTemplate}>("component/get-all/dfgdfgzegktyrtytm").then(comps => {
+	components.value = Object.values(comps)
+		.sort((a, b) => LeekWars.items[a.template].level - LeekWars.items[b.template].level)
+	components.value.forEach(component => component.stats = component.stats.map(stat => {
+		return stat instanceof Object ? Object.values(stat) : stat
+	}) as any)
+})
 
-	updateComponent(component: ComponentTemplate) {
-		const stats = component.stats.map((stat: any) => [stat[0] as any, parseInt(stat[1] as any)])
-		LeekWars.put("component/set-stats", { component_id: component.id, stats: JSON.stringify(stats) })
-	}
+onMounted(() => {
+	LeekWars.large = true
+})
+onBeforeUnmount(() => {
+	LeekWars.large = false
+})
+
+function up(component: ComponentTemplate, i: number) {
+	// [component.stats[i], component.stats[i - 1]] = [component.stats[i - 1], component.stats[i]] marche pas :(
+	const stat = component.stats[i]
+	component.stats.splice(i, 1, component.stats[i - 1])
+	component.stats[i - 1] = stat
+	updateComponent(component)
+}
+
+function updateComponent(component: ComponentTemplate) {
+	const stats = component.stats.map((stat: any) => [stat[0] as any, parseInt(stat[1] as any)])
+	LeekWars.put("component/set-stats", { component_id: component.id, stats: JSON.stringify(stats) })
 }
 </script>
 

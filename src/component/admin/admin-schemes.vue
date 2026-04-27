@@ -71,54 +71,51 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { ITEM_CATEGORY_NAME } from '@/model/item'
+<script setup lang="ts">
+	import { ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
-	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import { SchemeTemplate } from '@/model/scheme'
-	import { defineAsyncComponent } from 'vue'
+	import { store } from '@/model/store'
+	import { defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue'
+	import { useRouter } from 'vue-router'
+	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
 
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
-	@Options({ components: { RichTooltipFarmer, RichTooltipItem, Breadcrumb } })
-	export default class AdminSchemes extends Vue {
-		ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
-		data: any = null
-		sources: any = null
-		last: any = null
-		loading: boolean = false
-		schemes: SchemeTemplate[] | null = null
+	defineOptions({ components: { RichTooltipFarmer, RichTooltipItem, Breadcrumb } })
 
-		created() {
-			if (!this.$store.getters.admin) this.$router.replace('/')
-			LeekWars.setTitle("Admin Schémas")
+	const ITEM_CATEGORY_NAME: Record<number, any> = ITEM_CATEGORY_NAME_TYPED
 
-			LeekWars.get<{[key: number]: SchemeTemplate}>("scheme/get-all").then(schemes => {
-				this.schemes = Object.values(schemes)
-					.sort((a, b) => LeekWars.items[a.result].price! - LeekWars.items[b.result].price!)
-					.map(s => {
-						const items = [...s.items] as any
-						for (let i = 0; i < 9; ++i) { if (!items[i]) items[i] = ['', ''] }
-						return { ...s, items }
-					})
+	const router = useRouter()
+	const schemes = ref<SchemeTemplate[] | null>(null)
+
+	if (!store.getters.admin) router.replace('/')
+	LeekWars.setTitle("Admin Schémas")
+
+	LeekWars.get<{[key: number]: SchemeTemplate}>("scheme/get-all").then(s => {
+		schemes.value = Object.values(s)
+			.sort((a, b) => LeekWars.items[a.result].price! - LeekWars.items[b.result].price!)
+			.map(sc => {
+				const items = [...sc.items] as any
+				for (let i = 0; i < 9; ++i) { if (!items[i]) items[i] = ['', ''] }
+				return { ...sc, items }
 			})
-		}
-		mounted() {
-			LeekWars.large = true
-		}
-		beforeUnmount() {
-			LeekWars.large = false
-		}
+	})
 
-		copyCode(scheme: SchemeTemplate) {
-			const slots = scheme.items.map(i => i && i[0] ? `[${parseInt(i[0] as any)}, ${parseInt(i[1] as any)}]` : 'null').join(', ')
-			const comment = (scheme as any).comment ?? ''
-			const snippet = `${scheme.id} => ['result' => ${scheme.result}, 'items' => [${slots}], 'comment' => '${comment}', 'quantity' => ${scheme.quantity}],`
-			navigator.clipboard.writeText(snippet)
-			LeekWars.toast("Snippet copié — à coller dans SchemeTemplateRegistry")
-		}
+	onMounted(() => {
+		LeekWars.large = true
+	})
+	onBeforeUnmount(() => {
+		LeekWars.large = false
+	})
+
+	function copyCode(scheme: SchemeTemplate) {
+		const slots = scheme.items.map(i => i && i[0] ? `[${parseInt(i[0] as any)}, ${parseInt(i[1] as any)}]` : 'null').join(', ')
+		const comment = (scheme as any).comment ?? ''
+		const snippet = `${scheme.id} => ['result' => ${scheme.result}, 'items' => [${slots}], 'comment' => '${comment}', 'quantity' => ${scheme.quantity}],`
+		navigator.clipboard.writeText(snippet)
+		LeekWars.toast("Snippet copié — à coller dans SchemeTemplateRegistry")
 	}
 </script>
 

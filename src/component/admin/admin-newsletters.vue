@@ -39,77 +39,76 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue } from 'vue-property-decorator'
+	import { store } from '@/model/store'
+	import { ref, useTemplateRef } from 'vue'
+	import { useRouter } from 'vue-router'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
-	@Options({ components: { Breadcrumb } })
-	export default class AdminNewsletters extends Vue {
+	const router = useRouter()
+	const newsletters = ref<any>([])
+	const count = ref<any>(0)
+	const progress = ref<any>([])
+	const progressEl = useTemplateRef<HTMLElement>('progress')
 
-		newsletters: any = []
-		count: any = 0
-		progress: any = []
+	if (!store.getters.admin) router.replace('/')
+	LeekWars.setTitle("Admin Newsletters")
 
-		created() {
-			if (!this.$store.getters.admin) this.$router.replace('/')
-			LeekWars.setTitle("Admin Newsletters")
+	LeekWars.get('newsletter/all').then(ns => {
+		for (const n of ns) n.testTarget = 73156
+		newsletters.value = ns
+	})
+	LeekWars.get('newsletter/count').then(c => {
+		count.value = c
+		LeekWars.setSubTitle(c + " inscrits")
+	})
 
-			LeekWars.get('newsletter/all').then(newsletters => {
-				for (const n of newsletters) n.testTarget = 73156
-				this.newsletters = newsletters
-			})
-			LeekWars.get('newsletter/count').then(count => {
-				this.count = count
-				LeekWars.setSubTitle(count + " inscrits")
-			})
-		}
-
-		html(html: string) {
-			return html.replace("\n", "")
-		}
-
-		test(newsletter: any, target: any) {
-			LeekWars.post('newsletter/test', {id: newsletter.id, target: target}).then(x => LeekWars.toast("Envoyé !"))
-		}
-
-		send(newsletter: any) {
-
-			const es = new EventSource(LeekWars.API + 'newsletter/send/' + newsletter.id)
-			es.onmessage = (e) => {
-				if (e.data === 'CLOSE') {
-					es.close()
-					LeekWars.toast("Envoyé !")
-				} else {
-					const data = JSON.parse(e.data)
-					this.progress.push(data)
-					;(this.$refs.progress as HTMLElement).scrollTo(0, 9999999)
-				}
-			}
-
-			// const xhr = new XMLHttpRequest()
-			// new Promise<any>((resolve, reject) => {
-			// 	xhr.open('POST', LeekWars.API + 'newsletter/send')
-			// 	xhr.responseType = 'json'
-			// 	xhr.setRequestHeader('Authorization', 'Bearer ' + store.state.token)
-			// 	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
-			// 	xhr.addEventListener('message', (e) => {
-			// 		console.log(e)
-			// 	})
-			// 	xhr.onload = (e: any) => {
-			// 		if (e.target.status === 200) {
-			// 			resolve(e.target.response)
-			// 		} else {
-			// 			reject(e.target.response)
-			// 		}
-			// 	}
-			// 	xhr.onerror = reject
-			// 	xhr.send("id=" + newsletter.id)
-			// }).then(() => {
-			// 	LeekWars.toast("Envoyé !")
-			// })
-		}
+	function html(html: string) {
+		return html.replace("\n", "")
 	}
+
+	function test(newsletter: any, target: any) {
+		LeekWars.post('newsletter/test', {id: newsletter.id, target: target}).then(x => LeekWars.toast("Envoyé !"))
+	}
+
+	function send(newsletter: any) {
+
+		const es = new EventSource(LeekWars.API + 'newsletter/send/' + newsletter.id)
+		es.onmessage = (e) => {
+			if (e.data === 'CLOSE') {
+				es.close()
+				LeekWars.toast("Envoyé !")
+			} else {
+				const data = JSON.parse(e.data)
+				progress.value.push(data)
+				progressEl.value?.scrollTo(0, 9999999)
+			}
+		}
+
+		// const xhr = new XMLHttpRequest()
+		// new Promise<any>((resolve, reject) => {
+		// 	xhr.open('POST', LeekWars.API + 'newsletter/send')
+		// 	xhr.responseType = 'json'
+		// 	xhr.setRequestHeader('Authorization', 'Bearer ' + store.state.token)
+		// 	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+		// 	xhr.addEventListener('message', (e) => {
+		// 		console.log(e)
+		// 	})
+		// 	xhr.onload = (e: any) => {
+		// 		if (e.target.status === 200) {
+		// 			resolve(e.target.response)
+		// 		} else {
+		// 			reject(e.target.response)
+		// 		}
+		// 	}
+		// 	xhr.onerror = reject
+		// 	xhr.send("id=" + newsletter.id)
+		// }).then(() => {
+		// 	LeekWars.toast("Envoyé !")
+		// })
+	}
+	void send
 </script>
 
 <style lang="scss" scoped>

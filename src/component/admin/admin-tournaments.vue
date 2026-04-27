@@ -110,48 +110,45 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue } from 'vue-property-decorator'
+	import { store } from '@/model/store'
+	import { ref } from 'vue'
+	import { useRouter } from 'vue-router'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 	import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
 
-	@Options({ components: { Breadcrumb, RichTooltipFarmer, RichTooltipTeam, RichTooltipComposition } })
-	export default class AdminTournaments extends Vue {
-		data: any = null
-		tab: string = 'leeks'
-		LeekWars = LeekWars
+	const router = useRouter()
+	const data = ref<any>(null)
+	const tab = ref('leeks')
 
-		leekHeaders = [
-			{ title: 'Poireau', value: 'name', sortable: true },
-			{ title: 'Niveau', value: 'level', sortable: true },
-			{ title: 'Talent', value: 'talent', sortable: true },
-			{ title: 'Éleveur', value: 'farmer_name', sortable: true },
-			{ title: 'Inscrit le', value: 'time', sortable: true },
-		]
-		farmerHeaders = [
-			{ title: 'Éleveur', value: 'name', sortable: true },
-			{ title: 'Poireaux', value: 'leek_count', sortable: true },
-			{ title: 'Niveau total', value: 'level', sortable: true },
-			{ title: 'Talent', value: 'talent', sortable: true },
-			{ title: 'Inscrit le', value: 'time', sortable: true },
-		]
-		compoHeaders = [
-			{ title: 'Équipe', value: 'team_name', sortable: true },
-			{ title: 'Composition', value: 'composition_name', sortable: true },
-			{ title: 'Niveau total', value: 'level', sortable: true },
-			{ title: 'Talent', value: 'talent', sortable: true },
-			{ title: 'Inscrit le', value: 'time', sortable: true },
-		]
+	const leekHeaders = [
+		{ title: 'Poireau', value: 'name', sortable: true },
+		{ title: 'Niveau', value: 'level', sortable: true },
+		{ title: 'Talent', value: 'talent', sortable: true },
+		{ title: 'Éleveur', value: 'farmer_name', sortable: true },
+		{ title: 'Inscrit le', value: 'time', sortable: true },
+	]
+	const farmerHeaders = [
+		{ title: 'Éleveur', value: 'name', sortable: true },
+		{ title: 'Poireaux', value: 'leek_count', sortable: true },
+		{ title: 'Niveau total', value: 'level', sortable: true },
+		{ title: 'Talent', value: 'talent', sortable: true },
+		{ title: 'Inscrit le', value: 'time', sortable: true },
+	]
+	const compoHeaders = [
+		{ title: 'Équipe', value: 'team_name', sortable: true },
+		{ title: 'Composition', value: 'composition_name', sortable: true },
+		{ title: 'Niveau total', value: 'level', sortable: true },
+		{ title: 'Talent', value: 'talent', sortable: true },
+		{ title: 'Inscrit le', value: 'time', sortable: true },
+	]
 
-		created() {
-			if (!this.$store.getters.admin) this.$router.replace('/')
-			LeekWars.setTitle("Admin Tournois & BR")
-			LeekWars.get('tournament/get-registered').then(data => this.data = data)
-		}
-	}
+	if (!store.getters.admin) router.replace('/')
+	LeekWars.setTitle("Admin Tournois & BR")
+	LeekWars.get('tournament/get-registered').then(d => data.value = d)
 </script>
 
 <style lang="scss" scoped>
