@@ -113,7 +113,7 @@ const props = defineProps<EffectViewProps>()
 
 const value1 = computed(() => {
 	if (props.effect.id === EffectType.ADD_STATE) {
-		return i18n.global.t('effect.state_' + props.effect.value1)
+		return (i18n.global.t as any)('effect.state_' + props.effect.value1)
 	}
 	return format(props.effect.value1)
 })

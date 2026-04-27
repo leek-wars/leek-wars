@@ -78,7 +78,7 @@ const possible = computed(() => item_present.value.every(p => p === 'present'))
 
 function ingredientScheme(ingredient: any): SchemeTemplate | null {
 	if (!ingredient || !store.state.farmer) return null
-	const scheme = Object.values(LeekWars.schemes).find(s => s.result === ingredient.item.id)
+	const scheme = Object.values(LeekWars.schemes).find((s: any) => s.result === ingredient.item.id) as SchemeTemplate | undefined
 	if (!scheme) return null
 	if (!store.state.farmer.schemes.find((s: any) => LeekWars.items[s.template].params == scheme.id)) return null
 	return store.getters.scheme_possible(scheme) ? scheme : null
