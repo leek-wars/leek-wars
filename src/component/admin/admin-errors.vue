@@ -47,6 +47,7 @@
 									<router-link :to="'/fight/' + error.fight"><v-btn v-if="error.fight" size="small">Combat {{ error.fight }}</v-btn></router-link>
 									<a v-if="error.issue" :href="'https://github.com/5pilow/leek-wars-server/issues/' + error.issue" target="_blank"><v-btn size="small" color="success">Issue #{{ error.issue }}</v-btn></a>
 									<v-btn v-else size="small" @click="createIssue(error)">Créer issue</v-btn>
+									<v-btn size="small" color="info" @click="openPrompt(error.id)" prepend-icon="mdi-robot">Prompt</v-btn>
 								</div>
 								<div :ref="'trace-' + e" class="trace-container" :class="{ collapsed: !traceExpanded[e] }">
 									<code>{{ error.trace.substring(0, 8000) }}</code>
@@ -64,6 +65,22 @@
 				</div>
 			</div>
 		</panel>
+
+		<v-dialog v-model="promptDialogOpen" max-width="1100" scrollable>
+			<div class="prompt-dialog">
+				<div class="prompt-dialog-header">
+					<h2>Prompt Claude - Erreur #{{ promptDialogId }}</h2>
+					<div class="spacer"></div>
+					<v-btn size="small" :disabled="promptDialogLoading || !promptDialogContent" @click="copyPrompt" prepend-icon="mdi-content-copy">Copier</v-btn>
+					<v-btn icon @click="promptDialogOpen = false"><v-icon>mdi-close</v-icon></v-btn>
+				</div>
+				<div class="prompt-dialog-body">
+					<loader v-if="promptDialogLoading" />
+					<pre v-else-if="promptDialogContent" class="prompt-content">{{ promptDialogContent }}</pre>
+					<div v-else class="prompt-error">Erreur lors du chargement du prompt.</div>
+				</div>
+			</div>
+		</v-dialog>
 	</div>
 </template>
 
@@ -103,6 +120,10 @@
 	const traceExpanded = ref<Record<number, boolean>>({})
 	const traceOverflows = ref<Record<number, boolean>>({})
 	let resizeObserver: ResizeObserver | null = null
+	const promptDialogOpen = ref(false)
+	const promptDialogLoading = ref(false)
+	const promptDialogId = ref<number | null>(null)
+	const promptDialogContent = ref<string>('')
 
 	if (!store.getters.admin) router.replace('/')
 	update()
@@ -196,6 +217,35 @@
 			deleteQuery.value = ''
 			update()
 		})
+	}
+
+	function copyPromptToClipboard(text: string) {
+		navigator.clipboard.writeText(text).then(() => {
+			LeekWars.toast("Prompt copié dans le presse-papier")
+		}).catch(() => {})
+	}
+
+	function openPrompt(id: number) {
+		promptDialogId.value = id
+		promptDialogContent.value = ''
+		promptDialogLoading.value = true
+		promptDialogOpen.value = true
+		LeekWars.get('error/get-prompt/' + id).then((data: any) => {
+			if (promptDialogId.value !== id) return
+			promptDialogContent.value = data.prompt || ''
+			promptDialogLoading.value = false
+			if (promptDialogContent.value) {
+				copyPromptToClipboard(promptDialogContent.value)
+			}
+		}).catch(() => {
+			if (promptDialogId.value !== id) return
+			promptDialogLoading.value = false
+		})
+	}
+
+	function copyPrompt() {
+		if (!promptDialogContent.value) return
+		copyPromptToClipboard(promptDialogContent.value)
 	}
 </script>
 
@@ -364,5 +414,41 @@
 	}
 	.new-errors:hover {
 		background: #4a9010;
+	}
+	.prompt-dialog {
+		background: var(--pure-white);
+		display: flex;
+		flex-direction: column;
+		max-height: 90vh;
+	}
+	.prompt-dialog-header {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 10px 15px;
+		border-bottom: 1px solid #ddd;
+		h2 {
+			margin: 0;
+			font-size: 18px;
+		}
+		.spacer {
+			flex: 1;
+		}
+	}
+	.prompt-dialog-body {
+		padding: 10px 15px;
+		overflow: auto;
+	}
+	.prompt-content {
+		font-family: monospace;
+		font-size: 12px;
+		white-space: pre-wrap;
+		word-break: break-word;
+		margin: 0;
+	}
+	.prompt-error {
+		color: #c00;
+		padding: 20px;
+		text-align: center;
 	}
 </style>
