@@ -538,6 +538,20 @@ Légende : `[ ]` à faire · `[x]` migré · `[~]` partiel/bloqué
 
 > Cette section est mise à jour quand on rencontre un cas non documenté.
 
+### ⚠️ `import { X }` (sans `type`) éclipse les composants globaux
+
+En `<script setup>`, **tous les imports top-level deviennent des bindings disponibles dans le template**, y compris les classes de modèles. Si on importe par exemple `Notification` (la classe) du model, le tag template `<notification>` sera résolu vers cette classe (qui n'est pas un composant Vue) au lieu du composant globalement enregistré dans [src/model/vue.ts](src/model/vue.ts) (ex. `app.component('notification', NotificationElement)`).
+
+Symptôme : `<notification>`, `<chat>`, `<panel>`, `<loader>`, etc. ne s'affichent plus correctement, ou affichent un composant vide.
+
+**Solution** : utiliser `import type` pour que l'import soit erasé du JS compilé :
+```ts
+import type { Notification } from '@/model/notification'  // ✅ ne shadow plus
+import { Notification } from '@/model/notification'       // ❌ shadow le composant global
+```
+
+Composants globaux enregistrés dans vue.ts (à ne pas shadower) : `leek-image`, `avatar`, `emblem`, `talent`, `ranking-badge`, `notification`, `lw-code`, `error`, `panel`, `popup`, `loader`, `flag`.
+
 ### ⚠️ `defineOptions({ components })` ne peut pas référencer un `defineAsyncComponent` local
 
 Erreur du compilateur Vue : `defineOptions() in <script setup> cannot reference locally declared variables because it will be hoisted outside of the setup() function`.
