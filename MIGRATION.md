@@ -559,7 +559,8 @@ Erreur du compilateur Vue : `defineOptions() in <script setup> cannot reference 
 Les imports statiques (`import X from '...'`) sont hoistés et peuvent rester dans `defineOptions({ components })`. Mais `const X = defineAsyncComponent(() => import(...))` est une const locale — interdite.
 
 **Solutions** :
-- **Si le nom auto-résolu (PascalCase ↔ kebab-case) correspond au tag template** : retirer simplement le mapping de `defineOptions`. Le `<script setup>` auto-enregistre l'import. Exemples : `Didactitiel` → `<didactitiel>` ✓ ; `RichTooltipItem` → `<rich-tooltip-item>` ✓ ; `LWTitle` → `<lw-title>` ✓ ; `AIViewMonaco` → `<ai-view-monaco>` ✓.
+- **Si le nom auto-résolu (PascalCase ↔ kebab-case) correspond au tag template** : retirer simplement le mapping de `defineOptions`. Le `<script setup>` auto-enregistre l'import. Exemples : `Didactitiel` → `<didactitiel>` ✓ ; `RichTooltipItem` → `<rich-tooltip-item>` ✓ ; `LwTitle` → `<lw-title>` ✓.
+- ⚠️ **Attention à la conversion** : Vue insère un tiret avant CHAQUE majuscule successive. Donc `LWTitle` → `<l-w-title>` (PAS `<lw-title>`) ; `AIViewMonaco` → `<a-i-view-monaco>` (PAS `<ai-view-monaco>`). Renommer en `LwTitle`, `AiViewMonaco` pour matcher le tag template souhaité.
 - **Si l'alias diffère du nom auto-résolu** (ex. `chat: ChatElement` → template `<chat>` mais kebab de `ChatElement` est `<chat-element>`) : renommer l'import (`ChatElement` → `Chat`) **ou** utiliser un bloc `<script>` séparé non-setup pour déclarer les composants :
 ```vue
 <script lang="ts">
