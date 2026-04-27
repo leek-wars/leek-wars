@@ -160,6 +160,8 @@
 	"error_1003": "Quest'arma {0} non esiste. Usa le costanti WEAPON_* per recuperare un'arma valida.",
 	"error_1004": "Quest'arma {1} (id {0}) non è equipaggiata. Devi prima equipaggiarlo sulla tua pagina dei porri.",
 	"error_1005": "Il bulbo evocato non ha IA",
+	"error_1006": "Loadout \"{0}\" non trovato. Il nome deve corrispondere esattamente a un loadout esistente del contadino (sensibile alle maiuscole).",
+	"error_1007": "setLoadout() può essere chiamata solo all'interno della funzione beforeFight().",
 	"error_119": "Impossibile assegnare il valore \"{0}\" di tipo \"{1}\" alla variabile \"{2}\" di tipo \"{3}\".",
 	"error_120": "Previsto chevron di chiusura.",
 	"error_121": "Tipo previsto.",

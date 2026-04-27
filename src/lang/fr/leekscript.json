@@ -193,6 +193,8 @@
 	"error_1003": "Cette arme {0} n'existe pas. Utilisez les constantes WEAPON_* pour récupérer une arme valide.",
 	"error_1004": "Cette arme {1} (id {0}) n'est pas équipée. Vous devez d'abord l'équiper sur la page de votre poireau.",
 	"error_1005": "Le bulbe invoqué n'a pas d'IA",
+	"error_1006": "Loadout « {0} » introuvable. Le nom doit correspondre exactement à un loadout existant chez l'éleveur (sensible à la casse).",
+	"error_1007": "setLoadout() ne peut être appelée qu'à l'intérieur de la fonction beforeFight().",
 	"size": "Taille",
 	"error_146": "« case » ou « default » attendu.",
 	"error_147": "Deux-points attendu après « case ».",
