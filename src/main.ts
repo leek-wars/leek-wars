@@ -1,4 +1,3 @@
-import './polyfills'
 import './class-component-hooks'
 import '@/model/vue'
 import './global.scss'
