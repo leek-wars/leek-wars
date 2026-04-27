@@ -162,9 +162,11 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue } from 'vue-property-decorator'
+	import { store } from '@/model/store'
+	import { computed, ref } from 'vue'
+	import { useRouter } from 'vue-router'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
 	interface Filters {
@@ -181,132 +183,127 @@
 		return { ip: '', error_code: '', module: '', function: '', farmer_id: '', http_status: '', query: '' }
 	}
 
-	@Options({ components: { Breadcrumb } })
-	export default class AdminSecurity extends Vue {
-		periodHours: number = 24
-		aggregates: any = null
-		aggLoading: boolean = false
+	const router = useRouter()
 
-		filters: Filters = emptyFilters()
-		logs: any[] | null = null
-		total: number = 0
-		page: number = 1
-		pageSize: number = 50
-		logsLoading: boolean = false
-		expanded: Record<number, boolean> = {}
+	const periodHours = ref(24)
+	const aggregates = ref<any>(null)
+	const aggLoading = ref(false)
 
-		ipDialogOpen: boolean = false
-		ipDialogIp: string = ''
-		ipDialogData: any = null
-		ipDialogLoading: boolean = false
+	const filters = ref<Filters>(emptyFilters())
+	const logs = ref<any[] | null>(null)
+	const total = ref(0)
+	const page = ref(1)
+	const pageSize = ref(50)
+	const logsLoading = ref(false)
+	const expanded = ref<Record<number, boolean>>({})
 
-		created() {
-			if (!this.$store.getters.admin) this.$router.replace('/')
-			LeekWars.setTitle('Sécurité')
-			this.loadAggregates()
-			this.searchLogs()
-		}
+	const ipDialogOpen = ref(false)
+	const ipDialogIp = ref('')
+	const ipDialogData = ref<any>(null)
+	const ipDialogLoading = ref(false)
 
-		get totalPages() {
-			return Math.max(1, Math.ceil(this.total / this.pageSize))
-		}
+	if (!store.getters.admin) router.replace('/')
+	LeekWars.setTitle('Sécurité')
+	loadAggregates()
+	searchLogs()
 
-		loadAggregates() {
-			this.aggLoading = true
-			LeekWars.post('admin/security-log-aggregates', { period_hours: this.periodHours }).then((data: any) => {
-				this.aggregates = data
-				this.aggLoading = false
-			}).error(() => {
-				this.aggLoading = false
-			})
-		}
+	const totalPages = computed(() => Math.max(1, Math.ceil(total.value / pageSize.value)))
 
-		searchLogs() {
-			this.logsLoading = true
-			const filters: any = {}
-			for (const key of Object.keys(this.filters) as (keyof Filters)[]) {
-				const v = this.filters[key]
-				if (v !== '' && v !== null && v !== undefined) {
-					filters[key] = (key === 'farmer_id' || key === 'http_status') ? parseInt(v, 10) : v
-				}
+	function loadAggregates() {
+		aggLoading.value = true
+		LeekWars.post('admin/security-log-aggregates', { period_hours: periodHours.value }).then((data: any) => {
+			aggregates.value = data
+			aggLoading.value = false
+		}).catch(() => {
+			aggLoading.value = false
+		})
+	}
+
+	function searchLogs() {
+		logsLoading.value = true
+		const f: any = {}
+		for (const key of Object.keys(filters.value) as (keyof Filters)[]) {
+			const v = filters.value[key]
+			if (v !== '' && v !== null && v !== undefined) {
+				f[key] = (key === 'farmer_id' || key === 'http_status') ? parseInt(v, 10) : v
 			}
-			LeekWars.post('admin/security-log', { filters, page: this.page, page_size: this.pageSize }).then((data: any) => {
-				this.logs = data.logs
-				this.total = data.total
-				this.logsLoading = false
-			}).error(() => {
-				this.logsLoading = false
-			})
 		}
+		LeekWars.post('admin/security-log', { filters: f, page: page.value, page_size: pageSize.value }).then((data: any) => {
+			logs.value = data.logs
+			total.value = data.total
+			logsLoading.value = false
+		}).catch(() => {
+			logsLoading.value = false
+		})
+	}
 
-		goToPage(p: number) {
-			this.page = p
-			this.searchLogs()
-		}
+	function goToPage(p: number) {
+		page.value = p
+		searchLogs()
+	}
 
-		resetFilters() {
-			this.filters = emptyFilters()
-			this.page = 1
-			this.searchLogs()
-		}
+	function resetFilters() {
+		filters.value = emptyFilters()
+		page.value = 1
+		searchLogs()
+	}
 
-		filterByErrorCode(code: string) {
-			this.filters = { ...emptyFilters(), error_code: code }
-			this.page = 1
-			this.searchLogs()
-		}
+	function filterByErrorCode(code: string) {
+		filters.value = { ...emptyFilters(), error_code: code }
+		page.value = 1
+		searchLogs()
+	}
 
-		filterByEndpoint(module: string, fn: string) {
-			this.filters = { ...emptyFilters(), module, function: fn }
-			this.page = 1
-			this.searchLogs()
-		}
+	function filterByEndpoint(module: string, fn: string) {
+		filters.value = { ...emptyFilters(), module, function: fn }
+		page.value = 1
+		searchLogs()
+	}
 
-		filterByQuery(q: string) {
-			this.filters = { ...emptyFilters(), query: q }
-			this.page = 1
-			this.searchLogs()
-		}
+	function filterByQuery(q: string) {
+		filters.value = { ...emptyFilters(), query: q }
+		page.value = 1
+		searchLogs()
+	}
 
-		toggleExpand(id: number) {
-			this.expanded = { ...this.expanded, [id]: !this.expanded[id] }
-		}
+	function toggleExpand(id: number) {
+		expanded.value = { ...expanded.value, [id]: !expanded.value[id] }
+	}
 
-		openIpDetail(ip: string) {
-			this.ipDialogIp = ip
-			this.ipDialogOpen = true
-			this.ipDialogLoading = true
-			this.ipDialogData = null
-			LeekWars.get('admin/security-log-ip/' + encodeURIComponent(ip)).then((data: any) => {
-				this.ipDialogData = data
-				this.ipDialogLoading = false
-			}).error(() => {
-				this.ipDialogLoading = false
-			})
-		}
+	function openIpDetail(ip: string) {
+		ipDialogIp.value = ip
+		ipDialogOpen.value = true
+		ipDialogLoading.value = true
+		ipDialogData.value = null
+		LeekWars.get('admin/security-log-ip/' + encodeURIComponent(ip)).then((data: any) => {
+			ipDialogData.value = data
+			ipDialogLoading.value = false
+		}).catch(() => {
+			ipDialogLoading.value = false
+		})
+	}
 
-		formatDate(ms: number): string {
-			return LeekWars.formatDateTime(Math.floor(ms / 1000))
-		}
+	function formatDate(ms: number): string {
+		return LeekWars.formatDateTime(Math.floor(ms / 1000))
+	}
 
-		formatUA(ua: string): string {
-			return LeekWars.parseUserAgent(ua)
-		}
+	function formatUA(ua: string): string {
+		return LeekWars.parseUserAgent(ua)
+	}
 
-		httpClass(status: number): string {
-			if (status >= 500) return 'http-5xx'
-			if (status === 429) return 'http-429'
-			if (status >= 400) return 'http-4xx'
-			return 'http-ok'
-		}
+	function httpClass(status: number): string {
+		if (status >= 500) return 'http-5xx'
+		if (status === 429) return 'http-429'
+		if (status >= 400) return 'http-4xx'
+		return 'http-ok'
+	}
 
-		codeSeverity(code: string): string {
-			if (!code) return 'sev-low'
-			if (code.includes('admin') || code.includes('moderator')) return 'sev-high'
-			if (code === 'rate_limit' || code === 'wrong_token_invalid') return 'sev-mid'
-			if (code === 'no_such_service') return 'sev-mid'
-			return 'sev-low'
-		}
+	function codeSeverity(code: string): string {
+		if (!code) return 'sev-low'
+		if (code.includes('admin') || code.includes('moderator')) return 'sev-high'
+		if (code === 'rate_limit' || code === 'wrong_token_invalid') return 'sev-mid'
+		if (code === 'no_such_service') return 'sev-mid'
+		return 'sev-low'
 	}
 </script>
 

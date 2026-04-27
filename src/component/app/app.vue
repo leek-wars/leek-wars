@@ -56,9 +56,9 @@
 				<popup v-model="LeekWars.messagePopup" :width="500">
 					<template #title>
 						<v-icon>mdi-information-outline</v-icon>
-						{{ LeekWars.message ? $i18n.t(LeekWars.message.title) : '...' }}
+						{{ LeekWars.message ? $t((LeekWars.message as any).title) : '...' }}
 					</template>
-					<div v-if="LeekWars.message" v-html="$i18n.t(LeekWars.message.message, LeekWars.message.arguments)"></div>
+					<div v-if="LeekWars.message" v-html="$t((LeekWars.message as any).message, (LeekWars.message as any).arguments)"></div>
 				</popup>
 
 				<!-- <popup v-model="annonce" :width="800">
@@ -190,252 +190,243 @@
 			</div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
+	import { defineAsyncComponent } from 'vue'
+	import { locale } from '@/locale'
 	import Bar from '@/component/app/bar.vue'
+	import Header from '@/component/app/header.vue'
 	const Chats = defineAsyncComponent(() => import('@/component/app/chats.vue'))
 	const Footer = defineAsyncComponent(() => import('@/component/app/footer.vue'))
-	import Header from '@/component/app/header.vue'
 	const Menu = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/app/menu.vue`))
 	const MobileBR = defineAsyncComponent(() => import('@/component/app/mobile-br.vue'))
 	const Social = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/app/social.vue`))
 	const Squares = defineAsyncComponent(() => import('@/component/app/squares.vue'))
 	const ChangelogVersion = defineAsyncComponent(() => import('@/component/changelog/changelog-version.vue'))
-	import { locale } from '@/locale'
-	import { i18n } from '@/model/i18n'
-	import { LeekWars } from '@/model/leekwars'
-	import { SocketMessage } from '@/model/socket'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
 	const ConsoleWindow = defineAsyncComponent(() => import('./console-window.vue'))
-	import { defineAsyncComponent, nextTick } from 'vue'
-	import { emitter } from '@/model/vue'
 	const ChangelogDialog = defineAsyncComponent(() => import('../changelog/changelog-dialog.vue'))
 	const Didactitiel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`))
 	const Documentation = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`))
 	const DidactitielNew = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel-new/didactitiel-new.${locale}.i18n`))
-
-	@Options({
+	export default {
 		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Squares, Didactitiel, Chats, 'mobile-br': MobileBR, ChangelogVersion, ChangelogDialog, Documentation, DidactitielNew, ConsoleWindow }
+	}
+</script>
+<script lang="ts" setup>
+	import { i18n } from '@/model/i18n'
+	import { LeekWars } from '@/model/leekwars'
+	import { SocketMessage } from '@/model/socket'
+	import { store } from '@/model/store'
+	import { nextTick, ref, useTemplateRef, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
+	import { useRouter } from 'vue-router'
+	import { useTheme } from 'vuetify'
+	import { emitter } from '@/model/vue'
+
+	const { locale: i18nLocale } = useI18n()
+	const router = useRouter()
+	const theme = useTheme()
+
+	const showConsole = ref(false)
+	const consoleValue = ref(false)
+	const changelog = ref<any>(null)
+	const changelogDialog = ref(false)
+	let konami = ''
+	const annonce = ref(false)
+	const docEverywhere = ref(false)
+	const docEverywhereModel = ref(false)
+	const didactitiel_new_enabled = ref(true)
+	let mouseX = 0
+	let mouseY = 0
+	let cloverSpeed = 200
+	const verifyMessage = ref(true)
+	const loggedOutOtherTab = ref(false)
+	const aprilFoolsDialog = ref(false)
+	const doc = useTemplateRef<any>('doc')
+
+	watch(() => LeekWars.darkMode, () => {
+		theme.change(LeekWars.darkMode ? 'dark' : 'light')
+		if (LeekWars.darkMode)
+			document.body.classList.add('dark')
+		else
+			document.body.classList.remove('dark')
+	}, { immediate: true })
+
+	watch(() => LeekWars.xpTheme, () => {
+		if (LeekWars.xpTheme)
+			document.body.classList.add('xp')
+		else
+			document.body.classList.remove('xp')
+	}, { immediate: true })
+
+	emitter.on('connected', () => {
+		if (!store.state.farmer!.didactitiel_seen) {
+			LeekWars.show_didactitiel()
+			nextTick(() => {
+				store.commit('didactitiel-seen')
+			})
+		}
+		if (localStorage.getItem('changelog_version') !== LeekWars.normal_version) {
+			changelogShow()
+		}
+		if (LeekWars.aprilFools && !localStorage.getItem('april-fools-2026')) {
+			localStorage.setItem('april-fools-2026', 'true')
+			aprilFoolsDialog.value = true
+		}
 	})
-	export default class App extends Vue {
-		showConsole: boolean = false
-		consoleValue: boolean = false
-		changelog: any = null
-		changelogDialog: boolean = false
-		konami: string = ''
-		annonce: boolean = false
-		docEverywhere: boolean = false
-		docEverywhereModel: boolean = false
-		didactitiel_new_enabled: boolean = true
-		mouseX = 0
-		mouseY = 0
-		cloverSpeed = 200
-		verifyMessage = true
-		loggedOutOtherTab = false
-		aprilFoolsDialog = false
-
-		@Watch('LeekWars.darkMode', {immediate: true})
-		updateDarkMode() {
-			this.$vuetify.theme.change(LeekWars.darkMode ? 'dark' : 'light')
-			if (LeekWars.darkMode)
-				document.body.classList.add('dark')
-			else
-				document.body.classList.remove('dark')
-		}
-
-		@Watch('LeekWars.xpTheme', {immediate: true})
-		updateXpTheme() {
-			if (LeekWars.xpTheme)
-				document.body.classList.add('xp')
-			else
-				document.body.classList.remove('xp')
-		}
-
-		created() {
-			emitter.on('connected', () => {
-				if (!this.$store.state.farmer.didactitiel_seen) {
-					LeekWars.show_didactitiel()
-					nextTick(() => {
-						this.$store.commit('didactitiel-seen')
-					})
-				}
-				if (localStorage.getItem('changelog_version') !== LeekWars.normal_version) {
-					this.changelogShow()
-				}
-				if (LeekWars.aprilFools && !localStorage.getItem('april-fools-2026')) {
-					localStorage.setItem('april-fools-2026', 'true')
-					this.aprilFoolsDialog = true
-				}
-			})
-			emitter.on('keyup', (event: KeyboardEvent) => {
-				if (event.keyCode === 72 && event.altKey && event.ctrlKey) {
-					this.docEverywhere = true
-					nextTick(() => {
-						this.docEverywhereModel = true
-						nextTick(() => {
-							if (this.$refs.doc) {
-								(this.$refs.doc as any).focus()
-							}
-						})
-					})
-				}
-				// Konami code
-				if (event.keyCode === 37) { this.konami += "l" }
-				else if (event.keyCode === 38) { this.konami += "u" }
-				else if (event.keyCode === 39) { this.konami += "r" }
-				else if (event.keyCode === 40) { this.konami += "d" }
-				else if (event.keyCode === 65) { this.konami += "a" }
-				else if (event.keyCode === 66) { this.konami += "b" }
-				if (/uuddlrlrba$/.test(this.konami)) {
-					LeekWars.post('trophy/unlock', {trophy_id: 113})
-					this.konami = ""
-				}
-				if (this.konami.length > 12) { this.konami = this.konami.substring(1) }
-			})
-			emitter.on('keydown', (event: KeyboardEvent) => this.redirectToLocalhost(event))
-			emitter.on('navigate', () => {
-				this.docEverywhereModel = false
-			})
-
-			window.addEventListener('storage', (e: StorageEvent) => {
-				if (e.key === 'logout' && e.newValue !== null && this.$store.state.connected) {
-					this.$store.commit('reset')
-					LeekWars.socket.disconnect()
-					this.$router.push('/')
-					nextTick(() => {
-						this.loggedOutOtherTab = true
-					})
-				}
-				if (e.key === 'connected' && e.newValue === 'true' && !this.$store.state.connected) {
-					window.location.reload()
-				}
-			})
-
-			// if (this.$store.state.connected && !localStorage.getItem('annonce/boss-poll')) {
-			// 	this.annonce = true
-			// 	localStorage.setItem('annonce/boss-poll', 'true')
-			// }
-
-			const toast = new URLSearchParams(window.location.search).get('toast')
-			if (toast) {
-				LeekWars.toast((i18n as any).t('main.account_' + toast))
-				history.replaceState(null, '', window.location.pathname)
-			}
-		}
-		changelogShow() {
-			LeekWars.get('changelog/get-last/' + this.$i18n.locale).then(data => {
-				this.changelog = data.changelog
-				this.changelogDialog = true
-				localStorage.setItem('changelog_version', LeekWars.normal_version)
-				localStorage.setItem('changelog_forum_topic', data.changelog.forum_topic)
-			})
-		}
-		aprilFoolsAccept() {
-			this.aprilFoolsDialog = false
-			LeekWars.themeSetting = 'xp'
-			localStorage.setItem('theme', 'xp')
-			LeekWars.xpTheme = true
-			LeekWars.darkMode = false
-		}
-		confirmLogout() {
-			LeekWars.logoutDialog = false
-			this.$store.commit('disconnect')
-			this.$router.push('/')
-		}
-		darkClick() {
-			LeekWars.menuExpanded = false
-			LeekWars.dark = 0
-		}
-
-		leekscriptConsole() {
-			this.showConsole = true
-			this.consoleValue = true
-		}
-
-		clickClover() {
-			if (LeekWars.cloverFake) {
-				this.mouseX = LeekWars.cloverLeft
-				this.mouseY = LeekWars.cloverTop
-				this.cloverSpeed = 5
-				this.updateClover()
-				this.updateCloverPosition()
-			} else {
-				LeekWars.track('clover')
-				LeekWars.socket.send([SocketMessage.GET_LUCKY])
-				LeekWars.clover = false
-			}
-		}
-
-		updateClover() {
-
-			const mx = this.mouseX
-			const my = this.mouseY
-			const cx = LeekWars.cloverLeft
-			const cy = LeekWars.cloverTop
-			const d = 300
-			const td = 400
-			if (Math.sqrt(Math.pow(mx - cx, 2) + Math.pow(my - cy, 2)) < d) {
-
-				// Find best position to go
-				var best = -Infinity
-				var best_angle = 0
-				const start_angle = Math.random() * 360
-				for (var i = 0; i < 360; i += 10) {
-					var angle = (((start_angle + i) % 360) / 360) * Math.PI * 2
-					var dx = mx + Math.cos(angle) * td
-					var dy = my + Math.sin(angle) * td
-					// sortie ?
-					if (dx > window.innerWidth - 100 || dx < 50 || dy > window.innerHeight - 100 || dy < 50) {
-						continue
+	emitter.on('keyup', (event: KeyboardEvent) => {
+		if (event.keyCode === 72 && event.altKey && event.ctrlKey) {
+			docEverywhere.value = true
+			nextTick(() => {
+				docEverywhereModel.value = true
+				nextTick(() => {
+					if (doc.value) {
+						doc.value.focus()
 					}
-					var dist = Math.random() * 100 + Math.sqrt(Math.pow(mx - dx, 2) + Math.pow(my - dy, 2)) - Math.sqrt(Math.pow(cx - dx, 2) + Math.pow(cy - dy, 2))
-					if (dist > best) {
-						best = dist
-						best_angle = angle
-					}
+				})
+			})
+		}
+		// Konami code
+		if (event.keyCode === 37) { konami += "l" }
+		else if (event.keyCode === 38) { konami += "u" }
+		else if (event.keyCode === 39) { konami += "r" }
+		else if (event.keyCode === 40) { konami += "d" }
+		else if (event.keyCode === 65) { konami += "a" }
+		else if (event.keyCode === 66) { konami += "b" }
+		if (/uuddlrlrba$/.test(konami)) {
+			LeekWars.post('trophy/unlock', {trophy_id: 113})
+			konami = ""
+		}
+		if (konami.length > 12) { konami = konami.substring(1) }
+	})
+	emitter.on('keydown', (event: KeyboardEvent) => redirectToLocalhost(event))
+	emitter.on('navigate', () => {
+		docEverywhereModel.value = false
+	})
+
+	window.addEventListener('storage', (e: StorageEvent) => {
+		if (e.key === 'logout' && e.newValue !== null && store.state.connected) {
+			store.commit('reset')
+			LeekWars.socket.disconnect()
+			router.push('/')
+			nextTick(() => {
+				loggedOutOtherTab.value = true
+			})
+		}
+		if (e.key === 'connected' && e.newValue === 'true' && !store.state.connected) {
+			window.location.reload()
+		}
+	})
+
+	const toast = new URLSearchParams(window.location.search).get('toast')
+	if (toast) {
+		LeekWars.toast(i18n.global.t('main.account_' + toast) as string)
+		history.replaceState(null, '', window.location.pathname)
+	}
+
+	function changelogShow() {
+		LeekWars.get('changelog/get-last/' + i18nLocale.value).then(data => {
+			changelog.value = data.changelog
+			changelogDialog.value = true
+			localStorage.setItem('changelog_version', LeekWars.normal_version)
+			localStorage.setItem('changelog_forum_topic', data.changelog.forum_topic)
+		})
+	}
+	function aprilFoolsAccept() {
+		aprilFoolsDialog.value = false
+		LeekWars.themeSetting = 'xp'
+		localStorage.setItem('theme', 'xp')
+		LeekWars.xpTheme = true
+		LeekWars.darkMode = false
+	}
+	function confirmLogout() {
+		LeekWars.logoutDialog = false
+		store.commit('disconnect')
+		router.push('/')
+	}
+	function darkClick() {
+		LeekWars.menuExpanded = false
+		LeekWars.dark = 0
+	}
+
+	function leekscriptConsole() {
+		showConsole.value = true
+		consoleValue.value = true
+	}
+
+	function clickClover() {
+		if (LeekWars.cloverFake) {
+			mouseX = LeekWars.cloverLeft
+			mouseY = LeekWars.cloverTop
+			cloverSpeed = 5
+			updateClover()
+			updateCloverPosition()
+		} else {
+			LeekWars.track('clover')
+			LeekWars.socket.send([SocketMessage.GET_LUCKY])
+			LeekWars.clover = false
+		}
+	}
+
+	function updateClover() {
+		const mx = mouseX
+		const my = mouseY
+		const cx = LeekWars.cloverLeft
+		const cy = LeekWars.cloverTop
+		const d = 300
+		const td = 400
+		if (Math.sqrt(Math.pow(mx - cx, 2) + Math.pow(my - cy, 2)) < d) {
+			var best = -Infinity
+			var best_angle = 0
+			const start_angle = Math.random() * 360
+			for (var i = 0; i < 360; i += 10) {
+				var angle = (((start_angle + i) % 360) / 360) * Math.PI * 2
+				var dx = mx + Math.cos(angle) * td
+				var dy = my + Math.sin(angle) * td
+				if (dx > window.innerWidth - 100 || dx < 50 || dy > window.innerHeight - 100 || dy < 50) {
+					continue
 				}
-				LeekWars.cloverDDX = mx + Math.cos(best_angle) * td
-				LeekWars.cloverDDY = my + Math.sin(best_angle) * td
-			}
-		}
-
-		updateCloverPosition() {
-
-			if (Math.abs(LeekWars.cloverLeft - LeekWars.cloverDDX) > 1 || Math.abs(LeekWars.cloverTop - LeekWars.cloverDDY) > 1) {
-
-				LeekWars.cloverDX -= (LeekWars.cloverDX - LeekWars.cloverDDX) / 80
-				LeekWars.cloverDY -= (LeekWars.cloverDY - LeekWars.cloverDDY) / 80
-
-				LeekWars.cloverLeft -= (LeekWars.cloverLeft - LeekWars.cloverDX) / this.cloverSpeed
-				LeekWars.cloverTop -= (LeekWars.cloverTop - LeekWars.cloverDY) / this.cloverSpeed
-
-				requestAnimationFrame(this.updateCloverPosition)
-			}
-		}
-
-		mousemove(e: MouseEvent) {
-			if (LeekWars.cloverFake) {
-				this.mouseX = e.clientX
-				this.mouseY = e.clientY
-				this.cloverSpeed = 200
-				this.updateClover()
-				this.updateCloverPosition()
-			}
-		}
-
-		redirectToLocalhost(event: KeyboardEvent) {
-			// Check for Ctrl + Alt + L
-			if (event.ctrlKey && event.altKey && event.key === "l") {
-				event.preventDefault()
-				const local = 'http://localhost:8080'
-				const prod = 'https://leekwars.com'
-				if (window.location.origin === local) {
-					window.location.href = `${prod}${window.location.pathname}${window.location.search}${window.location.hash}`;
-				} else if (window.location.origin === prod) {
-					window.location.href = `${local}${window.location.pathname}${window.location.search}${window.location.hash}`;
+				var dist = Math.random() * 100 + Math.sqrt(Math.pow(mx - dx, 2) + Math.pow(my - dy, 2)) - Math.sqrt(Math.pow(cx - dx, 2) + Math.pow(cy - dy, 2))
+				if (dist > best) {
+					best = dist
+					best_angle = angle
 				}
 			}
+			LeekWars.cloverDDX = mx + Math.cos(best_angle) * td
+			LeekWars.cloverDDY = my + Math.sin(best_angle) * td
 		}
+	}
 
+	function updateCloverPosition() {
+		if (Math.abs(LeekWars.cloverLeft - LeekWars.cloverDDX) > 1 || Math.abs(LeekWars.cloverTop - LeekWars.cloverDDY) > 1) {
+			LeekWars.cloverDX -= (LeekWars.cloverDX - LeekWars.cloverDDX) / 80
+			LeekWars.cloverDY -= (LeekWars.cloverDY - LeekWars.cloverDDY) / 80
+			LeekWars.cloverLeft -= (LeekWars.cloverLeft - LeekWars.cloverDX) / cloverSpeed
+			LeekWars.cloverTop -= (LeekWars.cloverTop - LeekWars.cloverDY) / cloverSpeed
+			requestAnimationFrame(updateCloverPosition)
+		}
+	}
+
+	function mousemove(e: MouseEvent) {
+		if (LeekWars.cloverFake) {
+			mouseX = e.clientX
+			mouseY = e.clientY
+			cloverSpeed = 200
+			updateClover()
+			updateCloverPosition()
+		}
+	}
+
+	function redirectToLocalhost(event: KeyboardEvent) {
+		if (event.ctrlKey && event.altKey && event.key === "l") {
+			event.preventDefault()
+			const local = 'http://localhost:8080'
+			const prod = 'https://leekwars.com'
+			if (window.location.origin === local) {
+				window.location.href = `${prod}${window.location.pathname}${window.location.search}${window.location.hash}`;
+			} else if (window.location.origin === prod) {
+				window.location.href = `${local}${window.location.pathname}${window.location.search}${window.location.hash}`;
+			}
+		}
 	}
 </script>
 

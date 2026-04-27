@@ -179,22 +179,25 @@
 </template>
 
 <script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { Notification } from '@/model/notification'
 	import { defineAsyncComponent } from 'vue'
-	import { Options, Vue } from 'vue-property-decorator'
-	const ConversationElement = defineAsyncComponent(() => import('@/component/messages/conversation.vue'))
+	const Conversation = defineAsyncComponent(() => import('@/component/messages/conversation.vue'))
 	const AccountSwitcher = defineAsyncComponent(() => import('@/component/app/account-switcher.vue'))
+	export default {
+		name: 'lw-header',
+		components: { 'conversation': Conversation, 'account-switcher': AccountSwitcher }
+	}
+</script>
+<script lang="ts" setup>
+	import { LeekWars } from '@/model/leekwars'
+	import { store } from '@/model/store'
+	import { ref } from 'vue'
 
-	@Options({ name: 'lw-header', components: { 'conversation': ConversationElement, 'account-switcher': AccountSwitcher } })
-	export default class Header extends Vue {
-		accountMenu = false
+	const accountMenu = ref(false)
 
-		readNotifications() {
-			if (this.$store.state.unreadNotifications) {
-				LeekWars.post('notification/read-all')
-				this.$store.commit('read-notifications')
-			}
+	function readNotifications() {
+		if (store.state.unreadNotifications) {
+			LeekWars.post('notification/read-all')
+			store.commit('read-notifications')
 		}
 	}
 </script>
