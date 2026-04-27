@@ -2,10 +2,16 @@
 
 Migration de **~263 composants** de l'API Options (avec `vue-property-decorator`) vers `<script setup>` (Composition API).
 
+**Progression** : ~134 / 271 composants migrés (≈ 49 %).
+
 Exemples de référence déjà migrés :
 - [src/component/groups/groups.vue](src/component/groups/groups.vue) — page simple
 - [src/component/changelog/changelog.vue](src/component/changelog/changelog.vue) — page avec route, computed, lifecycle
 - [src/component/changelog/changelog-social.vue](src/component/changelog/changelog-social.vue)
+- [src/component/about/about.vue](src/component/about/about.vue) — page complexe avec tableaux de données et template ref
+- [src/component/trophies/trophies.vue](src/component/trophies/trophies.vue) — page volumineuse avec watch + computed + localStorage
+- [src/component/tournament/tournament.vue](src/component/tournament/tournament.vue) — page avec timer, emitter, route watch
+- [src/component/leek-image.vue](src/component/leek-image.vue) — composant avec ~30 computed et méthode `defineExpose`
 
 ---
 
@@ -498,6 +504,35 @@ Légende : `[ ]` à faire · `[x]` migré · `[~]` partiel/bloqué
 - [ ] (autres)
 
 ---
+
+## État de la migration (résumé)
+
+**Dossiers entièrement migrés :**
+- `effect/` (23 composants)
+- `action/` (30 composants)
+- `rich-tooltip/` (6 composants)
+- `changelog/` (4 composants)
+- `accept-conditions/`, `conditions/`, `legal/`, `contact/`, `dev-blog/`, `general-help/`, `mobile-app/`, `press-kit/`, `help/`, `api/`, `change-email/`, `forgot-password/`, `about/`, `tutorial/`, `line-of-sight/`, `talent/`, `title/`, `trophy/`, `trophies/`, `notifications/`, `login/`, `tournament/`, `history/`, `explorer/`
+- Composants racine du dossier `component/` (avatar, emblem, flag, item, leek-image, pagination, popup, ranking-badge, talent, turret-image, type)
+
+**Dossiers partiellement migrés :**
+- `ranking/` : rows et search-result migrés ; ranking.vue (≈500 lignes) reste en Options
+- `signup/` : signup-result migré ; signup.vue (≈1000 lignes) reste
+- `forum/` : breadcrumb, forum-formatting-rules migrés ; forum-topic, forum-category, forum-search restent
+- `report/` : action-leek, report-log, report-statistics-entity migrés ; reste 6 fichiers
+- `app/` : error, mobile-br, pseudo migrés ; reste 17 fichiers (app.vue, menu.vue, etc.)
+- `market/` : 6 previews migrées ; reste 11 fichiers (item-preview.vue, scheme.vue, market.vue, etc.)
+- `tutorial/` : tutorial.vue, screen.vue migrés
+- `leek/` : leek-component migré ; reste 7 fichiers (leek.vue 2100 lignes, etc.)
+
+**Dossiers restants intégralement à migrer :**
+- `admin/` (18 fichiers)
+- `editor/` (17 fichiers, dont les plus gros : editor.vue, ai-view.vue, etc.)
+- `chat/` (9 fichiers)
+- `garden/` (5 fichiers)
+- `moderation/` (5 fichiers)
+- `bank/` (4), `encyclopedia/` (4)
+- `comment/`, `console/`, `creator/`, `didactitiel/`, `didactitiel-new/`, `documentation/` (3), `farmer/`, `fight/`, `forge/`, `group/`, `inventory/` (2), `items/`, `messages/` (2), `new-leek/`, `player/` (3), `settings/` (2), `statistics/`, `status/`, `team/`, `teams/`, `workshop/`
 
 ## Notes au fur et à mesure
 
