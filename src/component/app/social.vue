@@ -56,7 +56,7 @@
 <script setup lang="ts">
 import Conversation from '@/component/messages/conversation.vue'
 import { LeekWars } from '@/model/leekwars'
-import { Notification } from '@/model/notification'
+import type { Notification } from '@/model/notification'
 import { store } from '@/model/store'
 import { emitter } from '@/model/vue'
 import { defineAsyncComponent, nextTick, ref } from 'vue'
