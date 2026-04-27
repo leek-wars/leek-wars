@@ -47,8 +47,8 @@
 									<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[scheme.items[i][0]].type] + '/' + LeekWars.items[scheme.items[i][0]].name.replace('hat_', '').replace('potion_', '').replace('chip_', '').replace('weapon_', '') + '.png'">
 								</div>
 							</rich-tooltip-item>
-							<input v-model="scheme.items[i][0]" class="item-id">
-							<input v-model="scheme.items[i][1]" class="quantity">
+							<input v-if="scheme.items[i]" v-model="scheme.items[i]![0]" class="item-id">
+							<input v-if="scheme.items[i]" v-model="scheme.items[i]![1]" class="quantity">
 						</div>
 						<div class="cell" :class="{cell8: true}">
 							<rich-tooltip-item :item="LeekWars.items[scheme.result]" :bottom="true" :inventory="true" :quantity="scheme.quantity">

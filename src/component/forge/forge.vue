@@ -10,7 +10,7 @@
 				</rich-tooltip-item>
 			</div>
 			<div class="cell" :class="{cell8: true, active: !!result && !built, built}" @click="craft">
-				<rich-tooltip-item v-if="result" v-slot="{ props }" :item="LeekWars.items[result]" :inventory="true" :quantity="scheme.quantity" :open-delay="built ? 500 : 1000">
+				<rich-tooltip-item v-if="result && scheme" v-slot="{ props }" :item="LeekWars.items[result]" :inventory="true" :quantity="scheme.quantity" :open-delay="built ? 500 : 1000">
 					<div v-bind="props" v-ripple class="item" :class="{building}" :type="LeekWars.items[result].type">
 						<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[result].type] + '/' + LeekWars.items[result].name.replace('hat_', '').replace('potion_', '') + '.png'">
 						<div v-if="scheme.quantity > 1" class="quantity">{{ $filters.number(scheme.quantity) }}</div>
