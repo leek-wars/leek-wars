@@ -85,12 +85,14 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue } from 'vue-property-decorator'
+	import { store } from '@/model/store'
+	import { onBeforeUnmount, ref } from 'vue'
+	import { useRoute, useRouter } from 'vue-router'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 	import { Line } from 'vue-chartjs'
-	import { ChartData, ChartOptions } from 'chart.js'
+	import type { ChartData, ChartOptions } from 'chart.js'
 	import { VueFlow, Handle } from '@vue-flow/core'
 	import dagre from 'dagre'
 	import '@vue-flow/core/dist/style.css'
@@ -102,406 +104,410 @@
 
 	const STEP_COLORS = ['#4caf50', '#2196f3', '#ff9800', '#9c27b0', '#f44336', '#00bcd4', '#795548', '#e91e63', '#009688', '#ff5722']
 
-	@Options({ components: { Breadcrumb, Line, VueFlow, Handle } })
-	export default class AdminFunnels extends Vue {
-		mobile = window.innerWidth < 600
-		flowHeight = '300px'
-		funnelItems: { key: string, label: string }[] = []
-		selectedFunnel = ''
-		dateFrom = ''
-		dateTo = ''
-		loading = false
-		funnelData: FunnelData | null = null
-		flowNodes: any[] = []
-		flowEdges: any[] = []
-		flowViewport = { x: 5, y: 5, zoom: 1 }
-		graphWidth = 0
-		graphHeight = 0
-		dailyData: DailyRow[] = []
-		metaBreakdown: Record<string, { metadata: string, count: number }[]> = {}
-		granularity = localStorage.getItem('funnel_granularity') || 'day'
-		chartKey = 0
-		chartData: ChartData<'line'> | null = null
-		chartOptions: ChartOptions<'line'> = {
-			responsive: true,
-			aspectRatio: 2.5,
-			plugins: {
-				legend: { position: 'bottom' },
-				tooltip: {
-					callbacks: {
-						label: (ctx) => ctx.dataset.label + ': ' + ctx.parsed.y + ' sessions'
-					}
+	const route = useRoute()
+	const router = useRouter()
+
+	const mobile = ref(window.innerWidth < 600)
+	const flowHeight = ref('300px')
+	const funnelItems = ref<{ key: string, label: string }[]>([])
+	const selectedFunnel = ref('')
+	const dateFrom = ref('')
+	const dateTo = ref('')
+	const loading = ref(false)
+	const funnelData = ref<FunnelData | null>(null)
+	const flowNodes = ref<any[]>([])
+	const flowEdges = ref<any[]>([])
+	const flowViewport = ref({ x: 5, y: 5, zoom: 1 })
+	const graphWidth = ref(0)
+	const graphHeight = ref(0)
+	const dailyData = ref<DailyRow[]>([])
+	const metaBreakdown = ref<Record<string, { metadata: string, count: number }[]>>({})
+	const granularity = ref(localStorage.getItem('funnel_granularity') || 'day')
+	const chartKey = ref(0)
+	const chartData = ref<ChartData<'line'> | null>(null)
+	const flow = ref<any>(null)
+
+	const chartOptions = ref<ChartOptions<'line'>>({
+		responsive: true,
+		aspectRatio: 2.5,
+		plugins: {
+			legend: { position: 'bottom' },
+			tooltip: {
+				callbacks: {
+					label: (ctx) => ctx.dataset.label + ': ' + ctx.parsed.y + ' sessions'
 				}
+			}
+		},
+		scales: {
+			y: {
+				beginAtZero: true,
+				grid: { color: 'rgba(128,128,128,0.15)' },
 			},
-			scales: {
-				y: {
-					beginAtZero: true,
-					grid: { color: 'rgba(128,128,128,0.15)' },
+			x: {
+				ticks: { maxRotation: 45 },
+				grid: { color: 'rgba(128,128,128,0.15)' },
+			}
+		}
+	})
+
+	function setPeriod(period: string) {
+		const pad = (n: number) => String(n).padStart(2, '0')
+		const now = new Date()
+		dateTo.value = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate())
+		let from: Date
+		if (period === 'today') {
+			from = new Date(now)
+		} else if (period === '24h') {
+			from = new Date(now.getTime() - 24 * 60 * 60 * 1000)
+		} else if (period === 'week') {
+			from = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+		} else {
+			from = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+		}
+		dateFrom.value = from.getFullYear() + '-' + pad(from.getMonth() + 1) + '-' + pad(from.getDate())
+		load()
+	}
+
+	function onGranularityChange() {
+		localStorage.setItem('funnel_granularity', granularity.value)
+		load()
+	}
+
+	function formatDuration(seconds: number): string {
+		if (seconds < 60) return seconds + 's'
+		if (seconds < 3600) return Math.round(seconds / 60) + 'min'
+		if (seconds < 86400) return Math.round(seconds / 3600) + 'h'
+		return Math.round(seconds / 86400) + 'j'
+	}
+
+	function applyViewport() {
+		const f = flow.value as any
+		if (!f?.$el || !f.fitView) return
+		f.fitView({ padding: 0.01, maxZoom: 1 })
+	}
+
+	function buildFlow() {
+		if (!funnelData.value) return
+
+		const { nodes, edges, dataMap } = funnelData.value
+
+		// Find parents and children for each node
+		const parents: Record<string, string> = {}
+		const hasChildren = new Set<string>()
+		for (const [from, to] of edges) {
+			if (!parents[to]) parents[to] = from
+			hasChildren.add(from)
+		}
+
+		// Layout with dagre
+		const isMobile = window.innerWidth < 600
+		const g = new dagre.graphlib.Graph()
+		g.setGraph({ rankdir: isMobile ? 'TB' : 'LR', ranksep: isMobile ? 60 : 30, nodesep: isMobile ? 60 : 30, edgesep: 5 })
+		g.setDefaultEdgeLabel(() => ({}))
+
+		const nodeW = isMobile ? 160 : 220
+		const nodeH = isMobile ? 60 : 70
+		for (const name of nodes) {
+			g.setNode(name, { width: nodeW, height: nodeH })
+		}
+
+		// Build rank groups lookup
+		const rankOf: Record<string, string> = {}
+		for (const group of funnelData.value.ranks) {
+			for (const name of group) rankOf[name] = group[0]
+		}
+
+		// For dagre layout: replace edges involving ranked nodes so they get same rank
+		// Ranked nodes should have the same edges as their group leader
+		for (const [from, to] of edges) {
+			const layoutFrom = rankOf[from] || from
+			const layoutTo = rankOf[to] || to
+			if (layoutFrom !== layoutTo) {
+				g.setEdge(layoutFrom, layoutTo)
+			}
+		}
+
+		dagre.layout(g)
+
+		// Position ranked nodes relative to their group leader
+		const movedNodes = new Set<string>()
+		for (const group of funnelData.value.ranks) {
+			const ref = g.node(group[0])
+			for (let i = 1; i < group.length; i++) {
+				const node = g.node(group[i])
+				if (isMobile) {
+					node.x = ref.x + (nodeW + 10) * i
+					node.y = ref.y
+				} else {
+					node.x = ref.x
+					node.y = ref.y + (nodeH + 10) * i
+				}
+				movedNodes.add(group[i])
+			}
+		}
+
+		// Propagate Y alignment: children of moved nodes with a single parent get aligned
+		const crossAxis = isMobile ? 'x' : 'y'
+		const childrenOf: Record<string, string[]> = {}
+		const parentCount: Record<string, number> = {}
+		for (const [from, to] of edges) {
+			if (!childrenOf[from]) childrenOf[from] = []
+			childrenOf[from].push(to)
+			parentCount[to] = (parentCount[to] || 0) + 1
+		}
+		const propagate = (name: string) => {
+			for (const child of (childrenOf[name] || [])) {
+				if (parentCount[child] === 1) {
+					(g.node(child) as any)[crossAxis] = (g.node(name) as any)[crossAxis]
+					propagate(child)
+				}
+			}
+		}
+		for (const name of movedNodes) {
+			propagate(name)
+		}
+
+		// Uniformize rank spacing
+		const axis = isMobile ? 'y' : 'x'
+		const spacing = isMobile ? (nodeH + 60) : (nodeW + 50)
+
+		// Read final positions and group into ranks (nodes within nodeW/3 of each other = same rank)
+		const threshold = nodeW / 3
+		const sortedNodes = [...nodes].sort((a, b) => (g.node(a) as any)[axis] - (g.node(b) as any)[axis])
+		const ranks: string[][] = []
+		for (const name of sortedNodes) {
+			const pos = (g.node(name) as any)[axis]
+			if (ranks.length && Math.abs(pos - (g.node(ranks[ranks.length - 1][0]) as any)[axis]) < threshold) {
+				ranks[ranks.length - 1].push(name)
+			} else {
+				ranks.push([name])
+			}
+		}
+
+		// Redistribute each rank evenly
+		for (let i = 0; i < ranks.length; i++) {
+			const newPos = i * spacing + spacing / 2
+			for (const name of ranks[i]) {
+				(g.node(name) as any)[axis] = newPos
+			}
+		}
+
+		// Normalize positions to start at 0 and compute container size
+		let minX = Infinity, minY = Infinity, maxX = 0, maxY = 0
+		for (const name of nodes) {
+			const n = g.node(name)
+			minX = Math.min(minX, n.x - nodeW / 2)
+			minY = Math.min(minY, n.y - nodeH / 2)
+		}
+		for (const name of nodes) {
+			const n = g.node(name)
+			n.x -= minX
+			n.y -= minY
+			maxX = Math.max(maxX, n.x + nodeW / 2)
+			maxY = Math.max(maxY, n.y + nodeH / 2)
+		}
+		graphWidth.value = maxX
+		graphHeight.value = maxY
+		const estimatedContainerW = window.innerWidth - 40
+		const zoom = Math.min(1, estimatedContainerW / maxX)
+		flowHeight.value = Math.ceil((maxY + 20) * zoom) + 'px'
+
+		const srcPos = isMobile ? 'bottom' : 'right'
+		const tgtPos = isMobile ? 'top' : 'left'
+
+		// Build Vue Flow nodes
+		flowNodes.value = nodes.map((name, i) => {
+			const pos = g.node(name)
+			const data = dataMap[name]
+			const sessions = data?.sessions || 0
+			const parentName = parents[name]
+			const parentSessions = parentName ? (dataMap[parentName]?.sessions || 0) : 0
+			const isRoot = !parentName
+			let percentNum: number
+			if (isRoot) {
+				percentNum = 100
+			} else if (parentSessions > 0) {
+				percentNum = (sessions / parentSessions) * 100
+			} else {
+				percentNum = 0
+			}
+			return {
+				id: name,
+				type: 'funnel',
+				position: { x: pos.x - nodeW / 2, y: pos.y - nodeH / 2 },
+				sourcePosition: srcPos,
+				targetPosition: tgtPos,
+				data: {
+					label: name, sessions, count: data?.count || 0, percentNum, isRoot,
+					hasChildren: hasChildren.has(name), color: STEP_COLORS[i % STEP_COLORS.length],
+					srcPos, tgtPos,
+					duration: funnelData.value!.durations[name] ? formatDuration(funnelData.value!.durations[name]) : null
 				},
-				x: {
-					ticks: { maxRotation: 45 },
-					grid: { color: 'rgba(128,128,128,0.15)' },
-				}
 			}
+		})
+
+		// Count parents per node for edge labels
+		const parentCountMap: Record<string, number> = {}
+		for (const [, to] of edges) {
+			parentCountMap[to] = (parentCountMap[to] || 0) + 1
 		}
 
-		setPeriod(period: string) {
-			const pad = (n: number) => String(n).padStart(2, '0')
-			const now = new Date()
-			this.dateTo = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate())
-			let from: Date
-			if (period === 'today') {
-				from = new Date(now)
-			} else if (period === '24h') {
-				from = new Date(now.getTime() - 24 * 60 * 60 * 1000)
-			} else if (period === 'week') {
-				from = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
-			} else {
-				from = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+		// Build Vue Flow edges
+		flowEdges.value = edges.map(([from, to]) => {
+			const fromSessions = dataMap[from]?.sessions || 0
+			const toSessions = dataMap[to]?.sessions || 0
+			const hasMultipleParents = (parentCountMap[to] || 0) > 1
+			const label = hasMultipleParents && fromSessions > 0
+				? ((toSessions / fromSessions) * 100).toFixed(0) + '%'
+				: undefined
+			return {
+				id: from + '-' + to,
+				source: from,
+				target: to,
+				label,
+				animated: true,
+				style: { stroke: '#999' },
+				labelStyle: { fontSize: '11px', fontWeight: '600', fill: '#1976d2' },
+				labelBgStyle: { fill: 'white', fillOpacity: 0.85 },
+				labelBgPadding: [4, 2] as [number, number],
 			}
-			this.dateFrom = from.getFullYear() + '-' + pad(from.getMonth() + 1) + '-' + pad(from.getDate())
-			this.load()
+		})
+	}
+
+	function buildChart() {
+		if (!funnelData.value || !dailyData.value.length) {
+			chartData.value = null
+			return
 		}
+		chartOptions.value = { ...chartOptions.value, aspectRatio: window.innerWidth < 600 ? 1.2 : 2.5 }
+		chartKey.value++
 
-		onGranularityChange() {
-			localStorage.setItem('funnel_granularity', this.granularity)
-			this.load()
-		}
-
-		formatDuration(seconds: number): string {
-			if (seconds < 60) return seconds + 's'
-			if (seconds < 3600) return Math.round(seconds / 60) + 'min'
-			if (seconds < 86400) return Math.round(seconds / 3600) + 'h'
-			return Math.round(seconds / 86400) + 'j'
-		}
-
-		applyViewport() {
-			const flow = this.$refs.flow as any
-			if (!flow?.$el || !flow.fitView) return
-			flow.fitView({ padding: 0.01, maxZoom: 1 })
-		}
-
-		buildFlow() {
-			if (!this.funnelData) return
-
-			const { nodes, edges, dataMap } = this.funnelData
-
-			// Find parents and children for each node
-			const parents: Record<string, string> = {}
-			const hasChildren = new Set<string>()
-			for (const [from, to] of edges) {
-				if (!parents[to]) parents[to] = from
-				hasChildren.add(from)
+		// Generate all periods between dateFrom and dateTo (fill gaps)
+		const periods: string[] = []
+		const start = new Date(dateFrom.value)
+		const end = new Date(dateTo.value + 'T23:59:59')
+		if (granularity.value === 'hour') {
+			for (const d = new Date(start); d <= end; d.setHours(d.getHours() + 1)) {
+				const pad = (n: number) => String(n).padStart(2, '0')
+				periods.push(d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':00')
 			}
-
-			// Layout with dagre
-			const mobile = window.innerWidth < 600
-			const g = new dagre.graphlib.Graph()
-			g.setGraph({ rankdir: mobile ? 'TB' : 'LR', ranksep: mobile ? 60 : 30, nodesep: mobile ? 60 : 30, edgesep: 5 })
-			g.setDefaultEdgeLabel(() => ({}))
-
-			const nodeW = mobile ? 160 : 220
-			const nodeH = mobile ? 60 : 70
-			for (const name of nodes) {
-				g.setNode(name, { width: nodeW, height: nodeH })
-			}
-
-			// Build rank groups lookup
-			const rankOf: Record<string, string> = {}
-			for (const group of this.funnelData.ranks) {
-				for (const name of group) rankOf[name] = group[0]
-			}
-
-			// For dagre layout: replace edges involving ranked nodes so they get same rank
-			// Ranked nodes should have the same edges as their group leader
-			for (const [from, to] of edges) {
-				const layoutFrom = rankOf[from] || from
-				const layoutTo = rankOf[to] || to
-				if (layoutFrom !== layoutTo) {
-					g.setEdge(layoutFrom, layoutTo)
-				}
-			}
-
-			dagre.layout(g)
-
-			// Position ranked nodes relative to their group leader
-			const movedNodes = new Set<string>()
-			for (const group of this.funnelData.ranks) {
-				const ref = g.node(group[0])
-				for (let i = 1; i < group.length; i++) {
-					const node = g.node(group[i])
-					if (mobile) {
-						node.x = ref.x + (nodeW + 10) * i
-						node.y = ref.y
-					} else {
-						node.x = ref.x
-						node.y = ref.y + (nodeH + 10) * i
-					}
-					movedNodes.add(group[i])
-				}
-			}
-
-			// Propagate Y alignment: children of moved nodes with a single parent get aligned
-			const crossAxis = mobile ? 'x' : 'y'
-			const childrenOf: Record<string, string[]> = {}
-			const parentCount: Record<string, number> = {}
-			for (const [from, to] of edges) {
-				if (!childrenOf[from]) childrenOf[from] = []
-				childrenOf[from].push(to)
-				parentCount[to] = (parentCount[to] || 0) + 1
-			}
-			const propagate = (name: string) => {
-				for (const child of (childrenOf[name] || [])) {
-					if (parentCount[child] === 1) {
-						g.node(child)[crossAxis] = g.node(name)[crossAxis]
-						propagate(child)
-					}
-				}
-			}
-			for (const name of movedNodes) {
-				propagate(name)
-			}
-
-			// Uniformize rank spacing
-			const axis = mobile ? 'y' : 'x'
-			const spacing = mobile ? (nodeH + 60) : (nodeW + 50)
-
-			// Read final positions and group into ranks (nodes within nodeW/3 of each other = same rank)
-			const threshold = nodeW / 3
-			const sortedNodes = [...nodes].sort((a, b) => g.node(a)[axis] - g.node(b)[axis])
-			const ranks: string[][] = []
-			for (const name of sortedNodes) {
-				const pos = g.node(name)[axis]
-				if (ranks.length && Math.abs(pos - g.node(ranks[ranks.length - 1][0])[axis]) < threshold) {
-					ranks[ranks.length - 1].push(name)
-				} else {
-					ranks.push([name])
-				}
-			}
-
-			// Redistribute each rank evenly
-			for (let i = 0; i < ranks.length; i++) {
-				const newPos = i * spacing + spacing / 2
-				for (const name of ranks[i]) {
-					g.node(name)[axis] = newPos
-				}
-			}
-
-			// Normalize positions to start at 0 and compute container size
-			let minX = Infinity, minY = Infinity, maxX = 0, maxY = 0
-			for (const name of nodes) {
-				const n = g.node(name)
-				minX = Math.min(minX, n.x - nodeW / 2)
-				minY = Math.min(minY, n.y - nodeH / 2)
-			}
-			for (const name of nodes) {
-				const n = g.node(name)
-				n.x -= minX
-				n.y -= minY
-				maxX = Math.max(maxX, n.x + nodeW / 2)
-				maxY = Math.max(maxY, n.y + nodeH / 2)
-			}
-			this.graphWidth = maxX
-			this.graphHeight = maxY
-			const estimatedContainerW = window.innerWidth - 40
-			const zoom = Math.min(1, estimatedContainerW / maxX)
-			this.flowHeight = Math.ceil((maxY + 20) * zoom) + 'px'
-
-			const srcPos = mobile ? 'bottom' : 'right'
-			const tgtPos = mobile ? 'top' : 'left'
-
-			// Build Vue Flow nodes
-			this.flowNodes = nodes.map((name, i) => {
-				const pos = g.node(name)
-				const data = dataMap[name]
-				const sessions = data?.sessions || 0
-				const parentName = parents[name]
-				const parentSessions = parentName ? (dataMap[parentName]?.sessions || 0) : 0
-				const isRoot = !parentName
-				let percentNum: number
-				if (isRoot) {
-					percentNum = 100
-				} else if (parentSessions > 0) {
-					percentNum = (sessions / parentSessions) * 100
-				} else {
-					percentNum = 0
-				}
-				return {
-					id: name,
-					type: 'funnel',
-					position: { x: pos.x - nodeW / 2, y: pos.y - nodeH / 2 },
-					sourcePosition: srcPos,
-					targetPosition: tgtPos,
-					data: {
-						label: name, sessions, count: data?.count || 0, percentNum, isRoot,
-						hasChildren: hasChildren.has(name), color: STEP_COLORS[i % STEP_COLORS.length],
-						srcPos, tgtPos,
-						duration: this.funnelData!.durations[name] ? this.formatDuration(this.funnelData!.durations[name]) : null
-					},
-				}
-			})
-
-			// Count parents per node for edge labels
-			const parentCountMap: Record<string, number> = {}
-			for (const [, to] of edges) {
-				parentCountMap[to] = (parentCountMap[to] || 0) + 1
-			}
-
-			// Build Vue Flow edges
-			this.flowEdges = edges.map(([from, to]) => {
-				const fromSessions = dataMap[from]?.sessions || 0
-				const toSessions = dataMap[to]?.sessions || 0
-				const hasMultipleParents = (parentCountMap[to] || 0) > 1
-				const label = hasMultipleParents && fromSessions > 0
-					? ((toSessions / fromSessions) * 100).toFixed(0) + '%'
-					: undefined
-				return {
-					id: from + '-' + to,
-					source: from,
-					target: to,
-					label,
-					animated: true,
-					style: { stroke: '#999' },
-					labelStyle: { fontSize: '11px', fontWeight: '600', fill: '#1976d2' },
-					labelBgStyle: { fill: 'white', fillOpacity: 0.85 },
-					labelBgPadding: [4, 2] as [number, number],
-				}
-			})
-		}
-
-		buildChart() {
-			if (!this.funnelData || !this.dailyData.length) {
-				this.chartData = null
-				return
-			}
-			this.chartOptions = { ...this.chartOptions, aspectRatio: window.innerWidth < 600 ? 1.2 : 2.5 }
-			this.chartKey++
-
-			// Generate all periods between dateFrom and dateTo (fill gaps)
-			const periods: string[] = []
-			const start = new Date(this.dateFrom)
-			const end = new Date(this.dateTo + 'T23:59:59')
-			if (this.granularity === 'hour') {
-				for (const d = new Date(start); d <= end; d.setHours(d.getHours() + 1)) {
-					const pad = (n: number) => String(n).padStart(2, '0')
-					periods.push(d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':00')
-				}
-			} else {
-				for (const d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-					const pad = (n: number) => String(n).padStart(2, '0')
-					periods.push(d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()))
-				}
-			}
-			const lookup: Record<string, Record<string, number>> = {}
-			for (const row of this.dailyData) {
-				if (!lookup[row.step]) lookup[row.step] = {}
-				lookup[row.step][row.period] = Number(row.sessions)
-			}
-			this.chartData = {
-				labels: periods.map(d => this.granularity === 'hour' ? d.slice(5) : d.slice(5, 10)),
-				datasets: this.funnelData.nodes.map((name, i) => ({
-					label: name,
-					data: periods.map(d => lookup[name]?.[d] || 0),
-					borderColor: STEP_COLORS[i % STEP_COLORS.length],
-					backgroundColor: STEP_COLORS[i % STEP_COLORS.length] + '20',
-					tension: 0.3,
-					borderWidth: 2,
-					pointRadius: 2,
-					pointHitRadius: 8,
-					fill: false,
-				}))
+		} else {
+			for (const d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+				const pad = (n: number) => String(n).padStart(2, '0')
+				periods.push(d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()))
 			}
 		}
-
-		parsedMeta(step: string): { data: Record<string, string>, count: number }[] {
-			const rows = this.metaBreakdown[step]
-			if (!rows) return []
-			return rows.map(r => ({
-				data: typeof r.metadata === 'string' ? JSON.parse(r.metadata) : r.metadata,
-				count: r.count
+		const lookup: Record<string, Record<string, number>> = {}
+		for (const row of dailyData.value) {
+			if (!lookup[row.step]) lookup[row.step] = {}
+			lookup[row.step][row.period] = Number(row.sessions)
+		}
+		chartData.value = {
+			labels: periods.map(d => granularity.value === 'hour' ? d.slice(5) : d.slice(5, 10)),
+			datasets: funnelData.value.nodes.map((name, i) => ({
+				label: name,
+				data: periods.map(d => lookup[name]?.[d] || 0),
+				borderColor: STEP_COLORS[i % STEP_COLORS.length],
+				backgroundColor: STEP_COLORS[i % STEP_COLORS.length] + '20',
+				tension: 0.3,
+				borderWidth: 2,
+				pointRadius: 2,
+				pointHitRadius: 8,
+				fill: false,
 			}))
 		}
+	}
 
-		resizeHandler: (() => void) | null = null
+	function parsedMeta(step: string): { data: Record<string, string>, count: number }[] {
+		const rows = metaBreakdown.value[step]
+		if (!rows) return []
+		return rows.map(r => ({
+			data: typeof r.metadata === 'string' ? JSON.parse(r.metadata) : r.metadata,
+			count: r.count
+		}))
+	}
 
-		created() {
-			LeekWars.setTitle("Funnels")
-			const now = new Date()
-			const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000)
-			const pad = (n: number) => String(n).padStart(2, '0')
-			this.dateTo = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate())
-			this.dateFrom = yesterday.getFullYear() + '-' + pad(yesterday.getMonth() + 1) + '-' + pad(yesterday.getDate())
+	let resizeHandler: (() => void) | null = null
 
-			let timeout: any
-			this.resizeHandler = () => {
-				clearTimeout(timeout)
-				timeout = setTimeout(() => {
-					if (this.funnelData) this.buildChart()
-				}, 300)
+	LeekWars.setTitle("Funnels")
+	{
+		const now = new Date()
+		const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000)
+		const pad = (n: number) => String(n).padStart(2, '0')
+		dateTo.value = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate())
+		dateFrom.value = yesterday.getFullYear() + '-' + pad(yesterday.getMonth() + 1) + '-' + pad(yesterday.getDate())
+	}
+
+	{
+		let timeout: any
+		resizeHandler = () => {
+			clearTimeout(timeout)
+			timeout = setTimeout(() => {
+				if (funnelData.value) buildChart()
+			}, 300)
+		}
+		window.addEventListener('resize', resizeHandler)
+	}
+
+	if (store.state.farmer) {
+		init()
+	} else {
+		const unwatch = store.watch((s: any) => s.farmer, (farmer: any) => {
+			if (farmer) { unwatch(); init() }
+		})
+	}
+
+	onBeforeUnmount(() => {
+		if (resizeHandler) window.removeEventListener('resize', resizeHandler)
+	})
+
+	function init() {
+		if (!store.getters.admin) { router.replace('/'); return }
+		LeekWars.get('funnel/get-funnels').then(data => {
+			funnelItems.value = data.funnels
+			if (funnelItems.value.length) {
+				const fromUrl = route.params.funnel as string
+				selectedFunnel.value = (fromUrl && funnelItems.value.find(f => f.key === fromUrl)) ? fromUrl : funnelItems.value[0].key
+				load()
 			}
-			window.addEventListener('resize', this.resizeHandler)
+		})
+	}
 
-			if (this.$store.state.farmer) {
-				this.init()
-			} else {
-				const unwatch = this.$store.watch((s: any) => s.farmer, (farmer: any) => {
-					if (farmer) { unwatch(); this.init() }
-				})
+	function load() {
+		if (!selectedFunnel.value) return
+		if (route.params.funnel !== selectedFunnel.value) {
+			router.replace('/admin/funnels/' + selectedFunnel.value)
+		}
+		loading.value = true
+		const from = Math.floor(new Date(dateFrom.value).getTime() / 1000)
+		const to = Math.floor(new Date(dateTo.value + 'T23:59:59').getTime() / 1000)
+		LeekWars.get('funnel/get-data/' + selectedFunnel.value + '/' + from + '/' + to + '/' + granularity.value).then(data => {
+			const dataMap: Record<string, StepData> = {}
+			for (const row of data.data) {
+				dataMap[row.step] = { name: row.step, count: parseInt(row.count), sessions: parseInt(row.sessions) }
 			}
-		}
-
-		beforeUnmount() {
-			if (this.resizeHandler) window.removeEventListener('resize', this.resizeHandler)
-		}
-
-		init() {
-			if (!this.$store.getters.admin) { this.$router.replace('/'); return }
-			LeekWars.get('funnel/get-funnels').then(data => {
-				this.funnelItems = data.funnels
-				if (this.funnelItems.length) {
-					const fromUrl = this.$route.params.funnel as string
-					this.selectedFunnel = (fromUrl && this.funnelItems.find(f => f.key === fromUrl)) ? fromUrl : this.funnelItems[0].key
-					this.load()
-				}
-			})
-		}
-
-		load() {
-			if (!this.selectedFunnel) return
-			if (this.$route.params.funnel !== this.selectedFunnel) {
-				this.$router.replace('/admin/funnels/' + this.selectedFunnel)
+			funnelData.value = {
+				label: data.label,
+				nodes: data.nodes,
+				edges: data.edges,
+				ranks: data.ranks || [],
+				durations: data.durations || {},
+				dataMap
 			}
-			this.loading = true
-			const from = Math.floor(new Date(this.dateFrom).getTime() / 1000)
-			const to = Math.floor(new Date(this.dateTo + 'T23:59:59').getTime() / 1000)
-			LeekWars.get('funnel/get-data/' + this.selectedFunnel + '/' + from + '/' + to + '/' + this.granularity).then(data => {
-				const dataMap: Record<string, StepData> = {}
-				for (const row of data.data) {
-					dataMap[row.step] = { name: row.step, count: parseInt(row.count), sessions: parseInt(row.sessions) }
-				}
-				this.funnelData = {
-					label: data.label,
-					nodes: data.nodes,
-					edges: data.edges,
-					ranks: data.ranks || [],
-					durations: data.durations || {},
-					dataMap
-				}
-				this.buildFlow()
-				this.dailyData = data.daily || []
-				this.metaBreakdown = data.meta_breakdown || {}
-				this.buildChart()
-				this.loading = false
-			}).error(() => {
-				this.funnelData = null
-				this.flowNodes = []
-				this.flowEdges = []
-				this.dailyData = []
-				this.metaBreakdown = {}
-				this.chartData = null
-				this.loading = false
-			})
-		}
+			buildFlow()
+			dailyData.value = data.daily || []
+			metaBreakdown.value = data.meta_breakdown || {}
+			buildChart()
+			loading.value = false
+		}).catch(() => {
+			funnelData.value = null
+			flowNodes.value = []
+			flowEdges.value = []
+			dailyData.value = []
+			metaBreakdown.value = {}
+			chartData.value = null
+			loading.value = false
+		})
 	}
 </script>
 

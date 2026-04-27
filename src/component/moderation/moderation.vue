@@ -91,7 +91,7 @@
 								<v-list-item v-bind="props" class="select-item">
 									<template #title>
 										<div class="name">{{ $t('warning.reason_' + item.value) }}</div>
-										<div v-if="$root.$te('warning.reason_' + item.value + '_action', 'fr')" class="desc">{{ $t('warning.reason_' + item.value + '_action') }}</div>
+										<div v-if="$te('warning.reason_' + item.value + '_action', 'fr')" class="desc">{{ $t('warning.reason_' + item.value + '_action') }}</div>
 									</template>
 								</v-list-item>
 							</template>
@@ -131,7 +131,7 @@
 								</div>
 							</div>
 						</div>
-						<div v-if="$root.$te('warning.reason_' + finalReason + '_action')" class="warn-action">Action prise : <span class="text">{{ $t('warning.reason_' + finalReason + '_action') }}</span></div>
+						<div v-if="$te('warning.reason_' + finalReason + '_action')" class="warn-action">Action prise : <span class="text">{{ $t('warning.reason_' + finalReason + '_action') }}</span></div>
 					</div>
 					<div class="card warning">
 						<div class="title">Gravité</div>
@@ -160,7 +160,7 @@
 			Motif : <b>{{ $t('warning.reason_' + finalReason) }}</b> <br>
 			Gravité : <b>{{ severity }}</b> <br>
 			<span v-if="message">Message : "{{ message }}"</span>
-			<div v-if="$root.$te('warning.reason_' + finalReason + '_action')" class="warn-action">Action prise : <span class="text">{{ $t('warning.reason_' + finalReason + '_action') }}</span></div>
+			<div v-if="$te('warning.reason_' + finalReason + '_action')" class="warn-action">Action prise : <span class="text">{{ $t('warning.reason_' + finalReason + '_action') }}</span></div>
 			<template #actions>
 				<div v-ripple class="dismiss" @click="warningConfirmDialog = false">Annuler</div>
 				<div v-ripple class="red" @click="sendWarning"><v-icon>mdi-gavel</v-icon> Sanctionner</div>
@@ -169,129 +169,120 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 	import Markdown from '@/component/encyclopedia/markdown.vue'
-	import { Farmer } from '@/model/farmer'
+	import type { Farmer } from '@/model/farmer'
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Fault, Warning } from '@/model/moderation'
+	import { Warning } from '@/model/moderation'
+	type Fault = any
 	import router from '@/router'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
+	import { computed, reactive, ref, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
+	import { useRoute, useRouter } from 'vue-router'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import { emitter } from '@/model/vue'
 
-	class ModerationRequest {
-		faults!: Fault[]
-		thugs!: Farmer[]
+	defineOptions({ name: "moderation", i18n: {} })
+
+	type ModerationRequest = { faults: any[], thugs: Farmer[] }
+
+	const { t } = useI18n()
+	const route = useRoute()
+	const localRouter = useRouter()
+
+	const faults = ref<Fault[] | null>(null)
+	const faultsById = reactive<{[key: number]: Fault}>({})
+	const thugs = ref<any>(null)
+	const selectedFault = ref<Fault | null>(null)
+	const warningConfirmDialog = ref(false)
+	const message = ref('')
+	const severity = ref(0)
+	const finalReason = ref(0)
+	const actions = [{icon: 'mdi-emoticon-devil-outline', click: () => router.push("/moderation/thugs")}]
+
+	const reasons = computed(() => {
+		const reasons = [
+			Warning.INCORRECT_FARMER_NAME,
+			Warning.INCORRECT_WEBSITE,
+			Warning.RUDE_SAY,
+			Warning.RUDE_FORUM,
+			Warning.RUDE_CHAT,
+			Warning.INSULT_MODERATOR,
+			Warning.INSULT_ADMIN,
+			Warning.CHEAT,
+			Warning.FLOOD_FORUM,
+			Warning.FLOOD_CHAT,
+			Warning.PROMO_CHAT,
+			Warning.PROMO_FORUM,
+			Warning.INCORRECT_AVATAR,
+			Warning.REPORTING_ABUSE,
+			Warning.SERVER_ATTACK,
+			Warning.BUG_EXPLOITATION,
+			Warning.BOT_OR_SCRIPT_USE
+		]
+		if (selectedFault.value && reasons.indexOf(selectedFault.value.reason) === -1) {
+			reasons.unshift(selectedFault.value.reason)
+		}
+		return reasons
+	})
+
+	LeekWars.setActions(actions)
+	LeekWars.get<ModerationRequest>('moderation/get-reportings').then(data => {
+		faults.value = data.faults
+		thugs.value = data.thugs
+		for (const fault of faults.value) {
+			faultsById[fault.id] = fault
+		}
+		LeekWars.setTitle(t('title') as string, data.faults.length + ' signalements')
+		update()
+	})
+	emitter.on('back', () => {
+		localRouter.push('/moderation')
+	})
+
+	function update() {
+		const faultID = parseInt(route.params.id as string, 10)
+		if (faultID in faultsById) {
+			selectedFault.value = faultsById[faultID]
+			finalReason.value = selectedFault.value.reason
+			message.value = ''
+			severity.value = 1
+			LeekWars.splitShowContent()
+		} else if (!LeekWars.mobile && faults.value && faults.value.length) {
+			localRouter.push('/moderation/fault/' + faults.value[0].id)
+		} else {
+			selectedFault.value = null
+			LeekWars.splitShowList()
+		}
 	}
+	watch(() => route.params, update)
 
-	@Options({ name: "moderation", i18n: {}, components: { Markdown, RichTooltipFarmer, RichTooltipLeek } })
-	export default class Moderation extends Vue {
-		faults: Fault[] | null = null
-		faultsById: {[key: number]: Fault} = {}
-		thugs: any = null
-		selectedFault: Fault | null = null
-		warningConfirmDialog: boolean = false
-		Warning = Warning
-		message: string = ''
-		severity: number = 0
-		finalReason: number = 0
-		actions = [{icon: 'mdi-emoticon-devil-outline', click: () => router.push("/moderation/thugs")}]
-
-		get reasons() {
-			const reasons = [
-				Warning.INCORRECT_FARMER_NAME,
-				Warning.INCORRECT_WEBSITE,
-				Warning.RUDE_SAY,
-				Warning.RUDE_FORUM,
-				Warning.RUDE_CHAT,
-				Warning.INSULT_MODERATOR,
-				Warning.INSULT_ADMIN,
-				Warning.CHEAT,
-				Warning.FLOOD_FORUM,
-				Warning.FLOOD_CHAT,
-				Warning.PROMO_CHAT,
-				Warning.PROMO_FORUM,
-				Warning.INCORRECT_AVATAR,
-				Warning.REPORTING_ABUSE,
-				Warning.SERVER_ATTACK,
-				Warning.BUG_EXPLOITATION,
-				Warning.BOT_OR_SCRIPT_USE
-			]
-			if (this.selectedFault && reasons.indexOf(this.selectedFault.reason) === -1) {
-				reasons.unshift(this.selectedFault.reason)
-			}
-			return reasons
-		}
-
-		created() {
-			LeekWars.setActions(this.actions)
-			LeekWars.get<ModerationRequest>('moderation/get-reportings').then(data => {
-				this.faults = data.faults
-				this.thugs = data.thugs
-				for (const fault of this.faults) {
-					this.faultsById[fault.id] = fault
-				}
-				LeekWars.setTitle(this.$t('title'), data.faults.length + ' signalements')
-				this.update()
-			})
-			emitter.on('back', () => {
-				this.$router.push('/moderation')
-			})
-		}
-
-		@Watch('$route.params')
-		update() {
-			const faultID = parseInt(this.$route.params.id, 10)
-			if (faultID in this.faultsById) {
-				this.selectedFault = this.faultsById[faultID]
-				this.finalReason = this.selectedFault.reason
-				this.message = ''
-				this.severity = 1
-				LeekWars.splitShowContent()
-			} else if (!LeekWars.mobile && this.faults && this.faults.length) {
-				this.$router.push('/moderation/fault/' + this.faults[0].id)
-			} else {
-				this.selectedFault = null
-				LeekWars.splitShowList()
-			}
-		}
-		ban(farmer: Farmer) {
-			LeekWars.post('moderation/ban', {target: farmer.id}).then(data => {
-				LeekWars.toast("Éleveur banni")
-			}).error(error => {
-				LeekWars.toast(error)
-			})
-		}
-		giveWarning() {
-			this.warningConfirmDialog = true
-		}
-		archiveReporting() {
-			if (!this.selectedFault) { return }
-			const fault = this.selectedFault
-			LeekWars.post('moderation/archive', {target_id: fault.target.id, reason: fault.reason, parameter: fault.parameter}).then(data => {
-				LeekWars.toast(this.$t('reporting_deleted') as string)
-				this.faults!.splice(this.faults!.indexOf(fault), 1)
-				delete this.faultsById['' + fault.id]
-				this.$router.push('/moderation')
-			}).error(error => {
-				LeekWars.toast(error)
-			})
-		}
-		sendWarning() {
-			if (!this.selectedFault) { return }
-			const fault = this.selectedFault
-			LeekWars.post('moderation/warn', {target_id: fault.target.id, reason: fault.reason, new_reason: this.finalReason, message: this.message, severity: this.severity, parameter: this.selectedFault.parameter}).then(data => {
-				LeekWars.toast(i18n.t('moderation.warning_sent') as string)
-				this.faults!.splice(this.faults!.indexOf(fault), 1)
-				delete this.faultsById['' + fault.id]
-				this.warningConfirmDialog = false
-				this.$router.push('/moderation')
-			}).error(error => {
-				LeekWars.toast(error)
-			})
-		}
+	function archiveReporting() {
+		if (!selectedFault.value) { return }
+		const fault = selectedFault.value
+		LeekWars.post('moderation/archive', {target_id: fault.target.id, reason: fault.reason, parameter: fault.parameter}).then(() => {
+			LeekWars.toast(t('reporting_deleted') as string)
+			faults.value!.splice(faults.value!.indexOf(fault), 1)
+			delete faultsById[fault.id]
+			localRouter.push('/moderation')
+		}).catch(error => {
+			LeekWars.toast(error)
+		})
+	}
+	function sendWarning() {
+		if (!selectedFault.value) { return }
+		const fault = selectedFault.value
+		LeekWars.post('moderation/warn', {target_id: fault.target.id, reason: fault.reason, new_reason: finalReason.value, message: message.value, severity: severity.value, parameter: selectedFault.value.parameter}).then(() => {
+			LeekWars.toast(i18n.global.t('moderation.warning_sent') as string)
+			faults.value!.splice(faults.value!.indexOf(fault), 1)
+			delete faultsById[fault.id]
+			warningConfirmDialog.value = false
+			localRouter.push('/moderation')
+		}).catch(error => {
+			LeekWars.toast(error)
+		})
 	}
 </script>
 

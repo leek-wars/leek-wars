@@ -179,13 +179,15 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue } from 'vue-property-decorator'
+	import { store } from '@/model/store'
+	import { onBeforeUnmount, onMounted, ref } from 'vue'
+	import { useRouter } from 'vue-router'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 	import { Line, Bar } from 'vue-chartjs'
-	import { ChartData, ChartOptions } from 'chart.js'
+	import type { ChartData, ChartOptions } from 'chart.js'
 
 	const STORAGE_KEY_DAYS = 'admin_sources_days'
 	const REG_TYPES: Record<string, { label: string, title: string, color: string }> = {
@@ -205,133 +207,130 @@
 		}
 	})
 
-	@Options({ components: { RichTooltipFarmer, Breadcrumb, Line, Bar } })
-	export default class AdminSources extends Vue {
-		data: any = null
-		sources: any = null
-		last: any = null
-		loading: boolean = false
-		timer: any = null
-		last_farmers_by_day: any = {}
+	const router = useRouter()
 
-		days: number = parseInt(localStorage.getItem(STORAGE_KEY_DAYS) || '30')
-		stats_loading: boolean = false
-		countries: any[] = []
-		country_available: boolean = true
-		retention: any = null
-		chartKey: number = 0
-		registrationsChart: ChartData<'bar'> | null = null
-		tutoChart: ChartData<'line'> | null = null
-		trophiesChart: ChartData<'line'> | null = null
+	const data = ref<any>(null)
+	const sources = ref<any>(null)
+	const last = ref<any>(null)
+	const loading = ref(false)
+	let timer: any = null
+	const last_farmers_by_day = ref<any>({})
 
-		barChartOptions = makeChartOptions(true) as ChartOptions<'bar'>
-		lineChartOptions = makeChartOptions(false) as ChartOptions<'line'>
+	const days = ref(parseInt(localStorage.getItem(STORAGE_KEY_DAYS) || '30'))
+	const stats_loading = ref(false)
+	const countries = ref<any[]>([])
+	const country_available = ref(true)
+	const retention = ref<any>(null)
+	const chartKey = ref(0)
+	const registrationsChart = ref<ChartData<'bar'> | null>(null)
+	const tutoChart = ref<ChartData<'line'> | null>(null)
+	const trophiesChart = ref<ChartData<'line'> | null>(null)
 
-		created() {
-			if (!this.$store.getters.admin) this.$router.replace('/')
-			LeekWars.setTitle("Admin Sources")
-			this.refresh()
-			this.loadStats()
-			this.timer = setInterval(this.refresh, 5_000)
+	const barChartOptions = makeChartOptions(true) as ChartOptions<'bar'>
+	const lineChartOptions = makeChartOptions(false) as ChartOptions<'line'>
+
+	if (!store.getters.admin) router.replace('/')
+	LeekWars.setTitle("Admin Sources")
+	refresh()
+	loadStats()
+	timer = setInterval(refresh, 5_000)
+
+	onMounted(() => {
+		LeekWars.large = true
+	})
+
+	onBeforeUnmount(() => {
+		LeekWars.large = false
+		if (timer) {
+			clearInterval(timer)
 		}
+	})
 
-		mounted() {
-			LeekWars.large = true
-		}
+	function setDays(d: number) {
+		days.value = d
+		localStorage.setItem(STORAGE_KEY_DAYS, String(d))
+		loadStats()
+	}
 
-		beforeUnmount() {
-			LeekWars.large = false
-			if (this.timer) {
-				clearInterval(this.timer)
+	function refresh() {
+		loading.value = true
+		LeekWars.get('source/all').then(d => {
+			loading.value = false
+			data.value = d
+			sources.value = d.all
+			last.value = d.last
+
+			last_farmers_by_day.value = {}
+			for (const farmer of last.value) {
+				farmer.reg_type = farmer.github ? 'github' : (farmer.google ? 'google' : (farmer.pass ? 'classic' : 'fast'))
+				const day = LeekWars.formatDate(farmer.register_time)
+				if (!last_farmers_by_day.value[day]) last_farmers_by_day.value[day] = []
+				last_farmers_by_day.value[day].push(farmer)
 			}
+		})
+	}
+
+	function loadStats() {
+		stats_loading.value = true
+		LeekWars.get('source/stats/' + days.value).then(data => {
+			stats_loading.value = false
+			retention.value = data.retention || null
+			countries.value = data.countries || []
+			country_available.value = data.country_available !== false
+			buildCharts(data.registrations || [], data.trophies || [])
+		})
+	}
+
+	function buildCharts(registrations: any[], trophies: any[]) {
+		const labels = registrations.map(r => r.day)
+
+		registrationsChart.value = {
+			labels,
+			datasets: [
+				{ label: REG_TYPES.classic.label, data: registrations.map(r => +r.classic), backgroundColor: REG_TYPES.classic.color, stack: 'reg' },
+				{ label: REG_TYPES.github.label, data: registrations.map(r => +r.github), backgroundColor: REG_TYPES.github.color, stack: 'reg' },
+				{ label: REG_TYPES.fast.label, data: registrations.map(r => +r.fast), backgroundColor: REG_TYPES.fast.color, stack: 'reg' },
+			]
 		}
 
-		setDays(d: number) {
-			this.days = d
-			localStorage.setItem(STORAGE_KEY_DAYS, String(d))
-			this.loadStats()
+		tutoChart.value = {
+			labels,
+			datasets: [
+				{ label: 'Didactitiel terminé', data: registrations.map(r => +r.tuto_done), borderColor: '#4caf50', backgroundColor: 'rgba(76,175,80,0.2)', fill: false, tension: 0.2 },
+				{ label: 'Étape moyenne', data: registrations.map(r => +r.avg_tuto_step), borderColor: '#9c27b0', backgroundColor: 'rgba(156,39,176,0.2)', fill: false, tension: 0.2 },
+				{ label: 'Vérifiés', data: registrations.map(r => +r.verified), borderColor: '#00bcd4', backgroundColor: 'rgba(0,188,212,0.2)', fill: false, tension: 0.2 },
+			]
 		}
 
-		refresh() {
-			this.loading = true
-			LeekWars.get('source/all').then(data => {
-				this.loading = false
-				this.data = data
-				this.sources = data.all
-				this.last = data.last
-
-				this.last_farmers_by_day = {}
-				for (const farmer of this.last) {
-					farmer.reg_type = farmer.github ? 'github' : (farmer.google ? 'google' : (farmer.pass ? 'classic' : 'fast'))
-					const day = LeekWars.formatDate(farmer.register_time)
-					if (!this.last_farmers_by_day[day]) this.last_farmers_by_day[day] = []
-					this.last_farmers_by_day[day].push(farmer)
-				}
-			})
+		trophiesChart.value = {
+			labels: trophies.map(r => r.day),
+			datasets: [
+				{ label: 'Trophées moyens', data: trophies.map(r => +r.avg_trophies), borderColor: '#ff9800', backgroundColor: 'rgba(255,152,0,0.2)', fill: true, tension: 0.2 },
+			]
 		}
 
-		loadStats() {
-			this.stats_loading = true
-			LeekWars.get('source/stats/' + this.days).then(data => {
-				this.stats_loading = false
-				this.retention = data.retention || null
-				this.countries = data.countries || []
-				this.country_available = data.country_available !== false
-				this.buildCharts(data.registrations || [], data.trophies || [])
-			})
-		}
+		chartKey.value++
+	}
 
-		buildCharts(registrations: any[], trophies: any[]) {
-			const labels = registrations.map(r => r.day)
+	function regLabel(type: string): string {
+		return REG_TYPES[type]?.title ?? ''
+	}
 
-			this.registrationsChart = {
-				labels,
-				datasets: [
-					{ label: REG_TYPES.classic.label, data: registrations.map(r => +r.classic), backgroundColor: REG_TYPES.classic.color, stack: 'reg' },
-					{ label: REG_TYPES.github.label, data: registrations.map(r => +r.github), backgroundColor: REG_TYPES.github.color, stack: 'reg' },
-					{ label: REG_TYPES.fast.label, data: registrations.map(r => +r.fast), backgroundColor: REG_TYPES.fast.color, stack: 'reg' },
-				]
-			}
+	function tutoTitle(farmer: any): string {
+		const didactitiel = farmer.didactitiel_seen ? 'Didactitiel terminé' : 'Didactitiel non terminé'
+		const tuto = 'Tutoriel ' + farmer.tutorial_progress + '/10'
+		return didactitiel + ' · ' + tuto
+	}
 
-			this.tutoChart = {
-				labels,
-				datasets: [
-					{ label: 'Didactitiel terminé', data: registrations.map(r => +r.tuto_done), borderColor: '#4caf50', backgroundColor: 'rgba(76,175,80,0.2)', fill: false, tension: 0.2 },
-					{ label: 'Étape moyenne', data: registrations.map(r => +r.avg_tuto_step), borderColor: '#9c27b0', backgroundColor: 'rgba(156,39,176,0.2)', fill: false, tension: 0.2 },
-					{ label: 'Vérifiés', data: registrations.map(r => +r.verified), borderColor: '#00bcd4', backgroundColor: 'rgba(0,188,212,0.2)', fill: false, tension: 0.2 },
-				]
-			}
+	function formatPercent(v: number | null): string {
+		if (v == null) return '—'
+		return (v * 100).toFixed(1) + '%'
+	}
 
-			this.trophiesChart = {
-				labels: trophies.map(r => r.day),
-				datasets: [
-					{ label: 'Trophées moyens', data: trophies.map(r => +r.avg_trophies), borderColor: '#ff9800', backgroundColor: 'rgba(255,152,0,0.2)', fill: true, tension: 0.2 },
-				]
-			}
-
-			this.chartKey++
-		}
-
-		regLabel(type: string): string {
-			return REG_TYPES[type]?.title ?? ''
-		}
-
-		tutoTitle(farmer: any): string {
-			const didactitiel = farmer.didactitiel_seen ? 'Didactitiel terminé' : 'Didactitiel non terminé'
-			const tuto = 'Tutoriel ' + farmer.tutorial_progress + '/10'
-			return didactitiel + ' · ' + tuto
-		}
-
-		formatPercent(v: number | null): string {
-			if (v == null) return '—'
-			return (v * 100).toFixed(1) + '%'
-		}
-
-		format(name: string) {
-			name = name.replace('https://', '')
-			if (name.endsWith('/')) name = name.substring(0, name.length - 1)
-			return name
-		}
+	function format(name: string) {
+		name = name.replace('https://', '')
+		if (name.endsWith('/')) name = name.substring(0, name.length - 1)
+		return name
 	}
 </script>
 

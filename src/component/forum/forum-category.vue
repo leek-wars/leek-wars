@@ -325,358 +325,368 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 	import { locale } from '@/locale'
-	import { ForumCategory, ForumTopic, ForumTopicStatus } from '@/model/forum'
+	import type { ForumCategory } from '@/model/forum'
+	import { ForumTopicStatus } from '@/model/forum'
 	import { mixins } from '@/model/i18n'
-	import { Language, LeekWars } from '@/model/leekwars'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
+	import { type Language, LeekWars } from '@/model/leekwars'
+	import { defineAsyncComponent, reactive, ref, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
+	import { useRoute, useRouter } from 'vue-router'
 	import Breadcrumb from './breadcrumb.vue'
 	const FormattingRules = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum-formatting-rules.${locale}.i18n`))
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import Pagination from '@/component/pagination.vue'
-import { defineAsyncComponent } from 'vue'
-import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/vue'
 
-	@Options({ name: 'forum_category', i18n: {}, mixins: [...mixins], components: { Breadcrumb, FormattingRules, RichTooltipFarmer, Pagination } })
-	export default class ForumCategoryPage extends Vue {
-		ForumTopicStatus = ForumTopicStatus
-		categories: ForumCategory[] | null = null
-		rawCategoryName: string = ''
-		loading: boolean = false
-		topics: ForumTopic[] | null = null
-		page: number = 0
-		pages: number = 0
-		createDialog: boolean = false
-		createTitle: string = ''
-		createMessage: string = ''
-		query: string = ''
-		createMessageLang: string = 'fr'
-		markAsReadDialog: boolean = false
-		createRelease: number | null = null
-		createHidden: boolean = false
-		forumLanguages: {[key: string]: boolean} = {}
-		translations: any[] = []
-		order: string = localStorage.getItem('forum/topic-order') || 'date'
-		filterStatus: number[] = []
-		filterAcknowledged: string = 'all'
-		filterLocked: string = 'all'
-		filterPriority: number[] = []
-		filterRead: string = 'all'
-		userAgent: string = navigator.userAgent
-		lastCategoryKey: string | null = null
+	defineOptions({ name: 'forum_category', i18n: {}, mixins: [...mixins], components: { FormattingRules } })
 
-		get isBugCategory() {
-			return this.rawCategoryName === 'bug_reports'
+	const { t, locale: i18nLocale } = useI18n()
+	const route = useRoute()
+	const router = useRouter()
+
+	const categories = ref<ForumCategory[] | null>(null)
+	const rawCategoryName = ref('')
+	const loading = ref(false)
+	const topics = ref<any[] | null>(null)
+	const page = ref(0)
+	const pages = ref(0)
+	const createDialog = ref(false)
+	const createTitle = ref('')
+	const createMessage = ref('')
+	const query = ref('')
+	const createMessageLang = ref('fr')
+	const markAsReadDialog = ref(false)
+	const createRelease = ref<number | null>(null)
+	const createHidden = ref(false)
+	const forumLanguages = reactive<{[key: string]: boolean}>({})
+	const translations = ref<any[]>([])
+	const order = ref(localStorage.getItem('forum/topic-order') || 'date')
+	const filterStatus = ref<number[]>([])
+	const filterAcknowledged = ref('all')
+	const filterLocked = ref('all')
+	const filterPriority = ref<number[]>([])
+	const filterRead = ref('all')
+	const userAgent = ref(navigator.userAgent)
+	let lastCategoryKey: string | null = null
+
+	const isBugCategory = ref(false)
+	const isSuggestionCategory = ref(false)
+	watch(rawCategoryName, () => {
+		isBugCategory.value = rawCategoryName.value === 'bug_reports'
+		isSuggestionCategory.value = rawCategoryName.value === 'suggestions_ideas'
+	})
+
+	const statusFilterItems = ref<{ value: number, title: string, icon?: string, iconClass?: string }[]>([])
+	function refreshStatusFilterItems() {
+		const items: { value: number, title: string, icon?: string, iconClass?: string }[] = [
+			{ value: ForumTopicStatus.OPEN, title: t('status_open') as string },
+			{ value: ForumTopicStatus.RESOLVED, title: t('status_resolved') as string, icon: 'mdi-check-circle', iconClass: 'resolved' },
+		]
+		if (isBugCategory.value) {
+			items.push({ value: ForumTopicStatus.NOT_REPRODUCED, title: t('status_not_reproduced') as string, icon: 'mdi-help-circle', iconClass: 'not-reproduced' })
+			items.push({ value: ForumTopicStatus.NOT_A_BUG, title: t('status_not_a_bug') as string, icon: 'mdi-close-circle', iconClass: 'not-a-bug' })
 		}
-
-		get isSuggestionCategory() {
-			return this.rawCategoryName === 'suggestions_ideas'
+		if (isSuggestionCategory.value) {
+			items.push({ value: ForumTopicStatus.NOT_PLANNED, title: t('status_not_planned') as string, icon: 'mdi-minus-circle', iconClass: 'not-planned' })
+			items.push({ value: ForumTopicStatus.OBSOLETE, title: t('status_obsolete') as string, icon: 'mdi-archive', iconClass: 'obsolete' })
 		}
+		statusFilterItems.value = items
+	}
+	watch([isBugCategory, isSuggestionCategory, i18nLocale], refreshStatusFilterItems, { immediate: true })
 
-		get statusFilterItems() {
-			const items: { value: number, title: string, icon?: string, iconClass?: string }[] = [
-				{ value: ForumTopicStatus.OPEN, title: this.$t('status_open') as string },
-				{ value: ForumTopicStatus.RESOLVED, title: this.$t('status_resolved') as string, icon: 'mdi-check-circle', iconClass: 'resolved' },
-			]
-			if (this.isBugCategory) {
-				items.push({ value: ForumTopicStatus.NOT_REPRODUCED, title: this.$t('status_not_reproduced') as string, icon: 'mdi-help-circle', iconClass: 'not-reproduced' })
-				items.push({ value: ForumTopicStatus.NOT_A_BUG, title: this.$t('status_not_a_bug') as string, icon: 'mdi-close-circle', iconClass: 'not-a-bug' })
+	const acknowledgedFilterItems = ref<{value: string, title: string}[]>([])
+	const lockedFilterItems = ref<{value: string, title: string}[]>([])
+	const readFilterItems = ref<{value: string, title: string}[]>([])
+	const priorityFilterItems = ref<{value: number, title: string, icon?: string, iconClass?: string}[]>([])
+	const orderItems = ref<{value: string, title: string, icon: string}[]>([])
+
+	function refreshLocalizedItems() {
+		acknowledgedFilterItems.value = [
+			{ value: 'all', title: t('filter_all') as string },
+			{ value: 'yes', title: t('filter_acknowledged') as string },
+			{ value: 'no', title: t('filter_not_acknowledged') as string },
+		]
+		lockedFilterItems.value = [
+			{ value: 'all', title: t('filter_all') as string },
+			{ value: 'yes', title: t('filter_locked') as string },
+			{ value: 'no', title: t('filter_not_locked') as string },
+		]
+		readFilterItems.value = [
+			{ value: 'all', title: t('filter_all') as string },
+			{ value: 'yes', title: t('filter_read_yes') as string },
+			{ value: 'no', title: t('filter_read_no') as string },
+		]
+		priorityFilterItems.value = [
+			{ value: 0, title: t('priority_none') as string },
+			{ value: 1, title: t('priority_high') as string, icon: 'mdi-flag', iconClass: 'priority-high' },
+			{ value: 2, title: t('priority_medium') as string, icon: 'mdi-flag', iconClass: 'priority-medium' },
+			{ value: 3, title: t('priority_low') as string, icon: 'mdi-flag', iconClass: 'priority-low' },
+		]
+		orderItems.value = [
+			{ value: 'date', title: 'Date', icon: 'mdi-clock-outline' },
+			{ value: 'votes', title: 'Votes', icon: 'mdi-thumb-up-outline' },
+			{ value: 'views', title: t('main.views') as string, icon: 'mdi-eye-outline' },
+			{ value: 'messages', title: 'Messages', icon: 'mdi-message-outline' },
+			{ value: 'priority', title: t('priority') as string, icon: 'mdi-flag-outline' },
+		]
+	}
+	watch(i18nLocale, refreshLocalizedItems, { immediate: true })
+
+	const activeFilterCount = ref(0)
+	function refreshActiveFilterCount() {
+		let count = 0
+		if (filterStatus.value.length) { count++ }
+		if (filterAcknowledged.value !== 'all') { count++ }
+		if (filterLocked.value !== 'all') { count++ }
+		if (filterPriority.value.length) { count++ }
+		if (filterRead.value !== 'all') { count++ }
+		activeFilterCount.value = count
+	}
+	watch([filterStatus, filterAcknowledged, filterLocked, filterPriority, filterRead], refreshActiveFilterCount, { deep: true, immediate: true })
+
+	function getFiltersQuery() {
+		const params: string[] = []
+		if (filterStatus.value.length) { params.push('status=' + filterStatus.value.join(',')) }
+		if (filterAcknowledged.value === 'yes') { params.push('acknowledged=true') }
+		if (filterAcknowledged.value === 'no') { params.push('acknowledged=false') }
+		if (filterLocked.value === 'yes') { params.push('locked=true') }
+		if (filterLocked.value === 'no') { params.push('locked=false') }
+		if (filterPriority.value.length) { params.push('priority=' + filterPriority.value.join(',')) }
+		if (filterRead.value === 'yes') { params.push('read=true') }
+		if (filterRead.value === 'no') { params.push('read=false') }
+		return params.length ? '?' + params.join('&') : ''
+	}
+
+	const languages = ref<Language[]>([])
+	function refreshLanguages() {
+		languages.value = Object.values(LeekWars.languages).filter(l => l.forum)
+	}
+	refreshLanguages()
+
+	const activeLanguages = ref<string[]>([])
+	function refreshActiveLanguages() {
+		activeLanguages.value = Object.entries(forumLanguages).filter(e => e[1]).map(e => e[0])
+	}
+	watch(forumLanguages, refreshActiveLanguages, { deep: true, immediate: true })
+
+	const breadcrumb_items = ref<{name: string, link: string}[]>([])
+	const category_ids = ref('')
+	function refreshBreadcrumb() {
+		category_ids.value = categories.value ? categories.value.map(c => c.id).join(',') : ''
+		breadcrumb_items.value = [
+			{name: t('main.forum') as string, link: '/forum'},
+			{name: categories.value ? categories.value[0].name : '...', link: '/forum/category-' + (categories.value ? category_ids.value : 0)}
+		]
+	}
+	watch([categories, i18nLocale], refreshBreadcrumb, { immediate: true })
+
+	function update() {
+		const category = route.params.category
+		page.value = 'page' in route.params ? parseInt(route.params.page as string, 10) : 1
+		const newCategoryKey = categoryKey()
+		if (newCategoryKey !== lastCategoryKey) {
+			lastCategoryKey = newCategoryKey
+			loadOrder()
+		}
+		loadFilters()
+		syncUrlQuery()
+		LeekWars.setActions([
+			{icon: 'mdi-pencil', click: () => createDialog.value = true},
+			{icon: 'mdi-magnify', click: () => router.push('/search?category=' + category) }
+		])
+		loading.value = true
+		LeekWars.get('forum/get-topics/' + category + '/' + page.value + '/true/' + order.value + getFiltersQuery()).then(data => {
+			loading.value = false
+			categories.value = data.categories
+			if (categories.value) {
+				rawCategoryName.value = categories.value[0].name
+				categories.value[0].name = categories.value[0].team > 0 ? categories.value[0].name : t('forum-category.' + categories.value[0].name) as string
+				topics.value = data.topics
+				pages.value = data.pages
+				translations.value = data.translations
+
+				LeekWars.setTitle(categories.value[0].name, t('n_topic_n_messages', [data.total_topics, data.total_messages]) as string)
+				emitter.emit('loaded')
 			}
-			if (this.isSuggestionCategory) {
-				items.push({ value: ForumTopicStatus.NOT_PLANNED, title: this.$t('status_not_planned') as string, icon: 'mdi-minus-circle', iconClass: 'not-planned' })
-				items.push({ value: ForumTopicStatus.OBSOLETE, title: this.$t('status_obsolete') as string, icon: 'mdi-archive', iconClass: 'obsolete' })
+		})
+		const langs = (localStorage.getItem('forum/languages') as string || i18nLocale.value).split(',')
+		for (const l in LeekWars.languages) {
+			if (LeekWars.languages[l].forum) {
+				forumLanguages[l] = false
 			}
-			return items
 		}
+		for (const l of langs) {
+			forumLanguages[l] = true
+		}
+		createMessage.value = localStorage.getItem('forum/draft') as string
+		createTitle.value = localStorage.getItem('forum/draft-title') as string
+	}
 
-		get acknowledgedFilterItems() {
-			return [
-				{ value: 'all', title: this.$t('filter_all') as string },
-				{ value: 'yes', title: this.$t('filter_acknowledged') as string },
-				{ value: 'no', title: this.$t('filter_not_acknowledged') as string },
-			]
-		}
+	watch(() => route.params, update, { immediate: true })
+	watch(() => route.query, update)
+	watch(order, () => {
+		localStorage.setItem(orderKey(), '' + order.value)
+		update()
+	})
 
-		get lockedFilterItems() {
-			return [
-				{ value: 'all', title: this.$t('filter_all') as string },
-				{ value: 'yes', title: this.$t('filter_locked') as string },
-				{ value: 'no', title: this.$t('filter_not_locked') as string },
-			]
-		}
-
-		get readFilterItems() {
-			return [
-				{ value: 'all', title: this.$t('filter_all') as string },
-				{ value: 'yes', title: this.$t('filter_read_yes') as string },
-				{ value: 'no', title: this.$t('filter_read_no') as string },
-			]
-		}
-
-		get priorityFilterItems() {
-			return [
-				{ value: 0, title: this.$t('priority_none') as string },
-				{ value: 1, title: this.$t('priority_high') as string, icon: 'mdi-flag', iconClass: 'priority-high' },
-				{ value: 2, title: this.$t('priority_medium') as string, icon: 'mdi-flag', iconClass: 'priority-medium' },
-				{ value: 3, title: this.$t('priority_low') as string, icon: 'mdi-flag', iconClass: 'priority-low' },
-			]
-		}
-
-		get activeFilterCount() {
-			let count = 0
-			if (this.filterStatus.length) { count++ }
-			if (this.filterAcknowledged !== 'all') { count++ }
-			if (this.filterLocked !== 'all') { count++ }
-			if (this.filterPriority.length) { count++ }
-			if (this.filterRead !== 'all') { count++ }
-			return count
-		}
-
-		get filtersQuery() {
-			const params: string[] = []
-			if (this.filterStatus.length) { params.push('status=' + this.filterStatus.join(',')) }
-			if (this.filterAcknowledged === 'yes') { params.push('acknowledged=true') }
-			if (this.filterAcknowledged === 'no') { params.push('acknowledged=false') }
-			if (this.filterLocked === 'yes') { params.push('locked=true') }
-			if (this.filterLocked === 'no') { params.push('locked=false') }
-			if (this.filterPriority.length) { params.push('priority=' + this.filterPriority.join(',')) }
-			if (this.filterRead === 'yes') { params.push('read=true') }
-			if (this.filterRead === 'no') { params.push('read=false') }
-			return params.length ? '?' + params.join('&') : ''
-		}
-
-		get orderItems() {
-			return [
-				{ value: 'date', title: 'Date', icon: 'mdi-clock-outline' },
-				{ value: 'votes', title: 'Votes', icon: 'mdi-thumb-up-outline' },
-				{ value: 'views', title: this.$t('main.views') as string, icon: 'mdi-eye-outline' },
-				{ value: 'messages', title: 'Messages', icon: 'mdi-message-outline' },
-				{ value: 'priority', title: this.$t('priority') as string, icon: 'mdi-flag-outline' },
-			]
-		}
-
-		get languages() {
-			return Object.values(LeekWars.languages).filter(l => l.forum)
-		}
-
-		get activeLanguages() {
-			return Object.entries(this.forumLanguages).filter(e => e[1]).map(e => e[0])
-		}
-		get breadcrumb_items() {
-			return [
-				{name: this.$t('main.forum'), link: '/forum'},
-				{name: this.categories ? this.categories[0].name : '...', link: '/forum/category-' + (this.categories ? this.category_ids : 0)}
-			]
-		}
-		get category_ids() {
-			return this.categories ? this.categories.map(c => c.id).join(',') : ''
-		}
-
-		@Watch("$route.params", {immediate: true})
-		@Watch("$route.query")
-		@Watch('order')
-		update() {
-			const category = this.$route.params.category
-			this.page = 'page' in this.$route.params ? parseInt(this.$route.params.page, 10) : 1
-			const newCategoryKey = this.categoryKey()
-			if (newCategoryKey !== this.lastCategoryKey) {
-				this.lastCategoryKey = newCategoryKey
-				this.loadOrder()
+	function create() {
+		if (!categories.value) { return }
+		const params: any = {category_id: categories.value[0].id, title: createTitle.value, message: createMessage.value, issue: 0, lang: createMessageLang.value}
+		params.release = createRelease.value || 0
+		params.hidden = createHidden.value
+		LeekWars.post('forum/create-topic', params).then(data => {
+			createDialog.value = false
+			localStorage.setItem('forum/draft', '')
+			localStorage.setItem('forum/draft-title', '')
+			createRelease.value = null
+			createHidden.value = false
+			if (categories.value) {
+				router.push("/forum/category-" + category_ids.value + "/topic-" + data.topic_id)
 			}
-			this.loadFilters()
-			this.syncUrlQuery()
-			LeekWars.setActions([
-				{icon: 'mdi-pencil', click: () => this.createDialog = true},
-				{icon: 'mdi-magnify', click: () => this.$router.push('/search?category=' + category) }
-			])
-			this.loading = true
-			LeekWars.get('forum/get-topics/' + category + '/' + this.page + '/true/' + this.order + this.filtersQuery).then(data => {
-				this.loading = false
-				this.categories = data.categories
-				if (this.categories) {
-					this.rawCategoryName = this.categories[0].name
-					this.categories[0].name = this.categories[0].team > 0 ? this.categories[0].name : this.$t('forum-category.' + this.categories[0].name) as string
-					this.topics = data.topics
-					this.pages = data.pages
-					this.translations = data.translations
+		}).catch(error => {
+			LeekWars.toast(t('error_' + error.error, error.params) as string)
+		})
+	}
 
-					LeekWars.setTitle(this.categories[0].name, this.$t('n_topic_n_messages', [data.total_topics, data.total_messages]))
-					emitter.emit('loaded')
+	function search() {
+		if (!categories.value) { return }
+		const options = []
+		if (query.value) { options.push('query=' + query.value.replace(' ', '+')) }
+		options.push('category=' + category_ids.value)
+		router.push('/search?' + options.join('&'))
+	}
+
+	function markAsRead() {
+		LeekWars.post('forum/mark-as-read').then(() => {
+			markAsReadDialog.value = false
+			update()
+		}).catch(error => {
+			LeekWars.toast(t('error_' + error.error, error.params) as string)
+		})
+	}
+
+	function setForumLanguage(language: Language) {
+		for (const k of Object.keys(forumLanguages)) {
+			delete forumLanguages[k]
+		}
+		forumLanguages[language.code] = true
+		updateCategories()
+	}
+
+	function updateCategories() {
+		localStorage.setItem('forum/languages', activeLanguages.value.join(','))
+		router.replace('/forum/category-' + translations.value.filter(t => forumLanguages[t.lang]).map(t => t.id).join(','))
+	}
+	function updateDraft() {
+		localStorage.setItem('forum/draft', createMessage.value)
+	}
+	function updateDraftTitle() {
+		localStorage.setItem('forum/draft-title', createTitle.value)
+	}
+
+	function toggleStatusFilter(status: number) {
+		const index = filterStatus.value.indexOf(status)
+		if (index >= 0) { filterStatus.value.splice(index, 1) }
+		else { filterStatus.value.push(status) }
+		saveFilters()
+	}
+
+	function togglePriorityFilter(priority: number) {
+		const index = filterPriority.value.indexOf(priority)
+		if (index >= 0) { filterPriority.value.splice(index, 1) }
+		else { filterPriority.value.push(priority) }
+		saveFilters()
+	}
+
+	function buildQuery(): Record<string, string> {
+		const query: Record<string, string> = {}
+		if (filterStatus.value.length) { query.status = filterStatus.value.join(',') }
+		if (filterAcknowledged.value === 'yes') { query.acknowledged = 'true' }
+		if (filterAcknowledged.value === 'no') { query.acknowledged = 'false' }
+		if (filterLocked.value === 'yes') { query.locked = 'true' }
+		if (filterLocked.value === 'no') { query.locked = 'false' }
+		if (filterPriority.value.length) { query.priority = filterPriority.value.join(',') }
+		if (filterRead.value === 'yes') { query.read = 'true' }
+		if (filterRead.value === 'no') { query.read = 'false' }
+		return query
+	}
+
+	function syncUrlQuery() {
+		const query = buildQuery()
+		const current = route.query
+		const same = Object.keys(query).length === Object.keys(current).length && Object.keys(query).every(k => current[k] === query[k])
+		if (!same) {
+			router.replace({ query })
+		}
+	}
+
+	function categoryKey(): string {
+		const ids = String(route.params.category || '').split(',').map(Number).filter(n => !isNaN(n)).sort((a, b) => a - b)
+		return ids.join(',')
+	}
+
+	function filterKey(): string {
+		return 'forum/filters/' + categoryKey()
+	}
+
+	function orderKey(): string {
+		return 'forum/topic-order/' + categoryKey()
+	}
+
+	function loadOrder() {
+		const value = localStorage.getItem(orderKey()) || localStorage.getItem('forum/topic-order') || 'date'
+		if (value !== order.value) { order.value = value }
+	}
+
+	function saveFilters() {
+		localStorage.setItem(filterKey(), JSON.stringify({
+			status: filterStatus.value,
+			acknowledged: filterAcknowledged.value,
+			locked: filterLocked.value,
+			priority: filterPriority.value,
+			read: filterRead.value,
+		}))
+		router.replace({ query: buildQuery() })
+	}
+
+	function loadFilters() {
+		const q = route.query
+		const hasQueryFilters = q.status || q.acknowledged || q.locked || q.priority || q.read
+		if (hasQueryFilters) {
+			filterStatus.value = q.status ? String(q.status).split(',').map(Number) : []
+			filterAcknowledged.value = q.acknowledged === 'true' ? 'yes' : q.acknowledged === 'false' ? 'no' : 'all'
+			filterLocked.value = q.locked === 'true' ? 'yes' : q.locked === 'false' ? 'no' : 'all'
+			filterPriority.value = q.priority ? String(q.priority).split(',').map(Number) : []
+			filterRead.value = q.read === 'true' ? 'yes' : q.read === 'false' ? 'no' : 'all'
+		} else {
+			resetFilters()
+			try {
+				const saved = localStorage.getItem(filterKey())
+				if (saved) {
+					const f = JSON.parse(saved)
+					filterStatus.value = f.status || []
+					filterAcknowledged.value = f.acknowledged || 'all'
+					filterLocked.value = f.locked || 'all'
+					filterPriority.value = f.priority || []
+					filterRead.value = f.read || 'all'
 				}
-			})
-			const languages = (localStorage.getItem('forum/languages') as string || this.$i18n.locale).split(',')
-			for (const l in LeekWars.languages) {
-				if (LeekWars.languages[l].forum) {
-					this.forumLanguages[l] = false
-				}
-			}
-			for (const l of languages) {
-				this.forumLanguages[l] = true
-			}
-			this.createMessage = localStorage.getItem('forum/draft') as string
-			this.createTitle = localStorage.getItem('forum/draft-title') as string
-			// this.forumLanguages = (localStorage.getItem('forum/languages') as string || this.$i18n.locale).split(',')
+			} catch { /* ignore */ }
 		}
-		create() {
-			if (!this.categories) { return }
-			const params: any = {category_id: this.categories[0].id, title: this.createTitle, message: this.createMessage, issue: 0, lang: this.createMessageLang}
-			params.release = this.createRelease || 0
-			params.hidden = this.createHidden
-			LeekWars.post('forum/create-topic', params).then(data => {
-				this.createDialog = false
-				localStorage.setItem('forum/draft', '')
-				localStorage.setItem('forum/draft-title', '')
-				this.createRelease = null
-				this.createHidden = false
-				if (this.categories) {
-					this.$router.push("/forum/category-" + this.category_ids + "/topic-" + data.topic_id)
-				}
-			}).error(error => {
-				LeekWars.toast(this.$i18n.t('error_' + error.error, error.params))
-			})
-		}
+	}
 
-		search() {
-			if (!this.categories) { return }
-			const options = []
-			if (this.query) { options.push('query=' + this.query.replace(' ', '+')) }
-			options.push('category=' + this.category_ids)
-			this.$router.push('/search?' + options.join('&'))
-		}
+	function resetFilters() {
+		filterStatus.value = []
+		filterAcknowledged.value = 'all'
+		filterLocked.value = 'all'
+		filterPriority.value = []
+		filterRead.value = 'all'
+	}
 
-		markAsRead() {
-			LeekWars.post('forum/mark-as-read').then(data => {
-				this.markAsReadDialog = false
-				this.update()
-			}).error(error => {
-				LeekWars.toast(this.$i18n.t('error_' + error.error, error.params))
-			})
-		}
-
-		setForumLanguage(language: Language) {
-			this.forumLanguages = {[language.code]: true}
-			this.updateCategories()
-		}
-
-		updateCategories() {
-			localStorage.setItem('forum/languages', this.activeLanguages.join(','))
-			this.$router.replace('/forum/category-' + this.translations.filter(t => this.forumLanguages[t.lang]).map(t => t.id).join(','))
-		}
-		updateDraft() {
-			localStorage.setItem('forum/draft', this.createMessage)
-		}
-		updateDraftTitle() {
-			localStorage.setItem('forum/draft-title', this.createTitle)
-		}
-
-		@Watch('order')
-		updateOrder() {
-			localStorage.setItem(this.orderKey(), '' + this.order)
-		}
-
-		toggleStatusFilter(status: number) {
-			const index = this.filterStatus.indexOf(status)
-			if (index >= 0) { this.filterStatus.splice(index, 1) }
-			else { this.filterStatus.push(status) }
-			this.saveFilters()
-		}
-
-		togglePriorityFilter(priority: number) {
-			const index = this.filterPriority.indexOf(priority)
-			if (index >= 0) { this.filterPriority.splice(index, 1) }
-			else { this.filterPriority.push(priority) }
-			this.saveFilters()
-		}
-
-		buildQuery(): Record<string, string> {
-			const query: Record<string, string> = {}
-			if (this.filterStatus.length) { query.status = this.filterStatus.join(',') }
-			if (this.filterAcknowledged === 'yes') { query.acknowledged = 'true' }
-			if (this.filterAcknowledged === 'no') { query.acknowledged = 'false' }
-			if (this.filterLocked === 'yes') { query.locked = 'true' }
-			if (this.filterLocked === 'no') { query.locked = 'false' }
-			if (this.filterPriority.length) { query.priority = this.filterPriority.join(',') }
-			if (this.filterRead === 'yes') { query.read = 'true' }
-			if (this.filterRead === 'no') { query.read = 'false' }
-			return query
-		}
-
-		syncUrlQuery() {
-			const query = this.buildQuery()
-			const current = this.$route.query
-			const same = Object.keys(query).length === Object.keys(current).length && Object.keys(query).every(k => current[k] === query[k])
-			if (!same) {
-				this.$router.replace({ query })
-			}
-		}
-
-		categoryKey(): string {
-			const ids = String(this.$route.params.category || '').split(',').map(Number).filter(n => !isNaN(n)).sort((a, b) => a - b)
-			return ids.join(',')
-		}
-
-		filterKey(): string {
-			return 'forum/filters/' + this.categoryKey()
-		}
-
-		orderKey(): string {
-			return 'forum/topic-order/' + this.categoryKey()
-		}
-
-		loadOrder() {
-			const value = localStorage.getItem(this.orderKey()) || localStorage.getItem('forum/topic-order') || 'date'
-			if (value !== this.order) { this.order = value }
-		}
-
-		saveFilters() {
-			localStorage.setItem(this.filterKey(), JSON.stringify({
-				status: this.filterStatus,
-				acknowledged: this.filterAcknowledged,
-				locked: this.filterLocked,
-				priority: this.filterPriority,
-				read: this.filterRead,
-			}))
-			this.$router.replace({ query: this.buildQuery() })
-		}
-
-		loadFilters() {
-			const q = this.$route.query
-			const hasQueryFilters = q.status || q.acknowledged || q.locked || q.priority || q.read
-			if (hasQueryFilters) {
-				this.filterStatus = q.status ? String(q.status).split(',').map(Number) : []
-				this.filterAcknowledged = q.acknowledged === 'true' ? 'yes' : q.acknowledged === 'false' ? 'no' : 'all'
-				this.filterLocked = q.locked === 'true' ? 'yes' : q.locked === 'false' ? 'no' : 'all'
-				this.filterPriority = q.priority ? String(q.priority).split(',').map(Number) : []
-				this.filterRead = q.read === 'true' ? 'yes' : q.read === 'false' ? 'no' : 'all'
-			} else {
-				this.resetFilters()
-				try {
-					const saved = localStorage.getItem(this.filterKey())
-					if (saved) {
-						const f = JSON.parse(saved)
-						this.filterStatus = f.status || []
-						this.filterAcknowledged = f.acknowledged || 'all'
-						this.filterLocked = f.locked || 'all'
-						this.filterPriority = f.priority || []
-						this.filterRead = f.read || 'all'
-					}
-				} catch { /* ignore */ }
-			}
-		}
-
-		resetFilters() {
-			this.filterStatus = []
-			this.filterAcknowledged = 'all'
-			this.filterLocked = 'all'
-			this.filterPriority = []
-			this.filterRead = 'all'
-		}
-
-		clearFilters() {
-			this.resetFilters()
-			this.saveFilters()
-		}
+	function clearFilters() {
+		resetFilters()
+		saveFilters()
 	}
 </script>
 

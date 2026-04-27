@@ -6,7 +6,7 @@
 		<panel class="first last">
 			<loader v-if="loading" />
 			<div v-else>
-				<div v-if="LeekWars.objectSize(nodes) === 0" class="empty">Aucun serveur</div>
+				<div v-if="nodes.length === 0" class="empty">Aucun serveur</div>
 				<div class="servers">
 					<div v-for="(node, n) in nodes" :key="n" class="server card">
 						<div class="load">
@@ -91,10 +91,13 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 	import { LeekWars } from '@/model/leekwars'
-import { emitter } from '@/model/vue'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
+	import { store } from '@/model/store'
+	import { emitter } from '@/model/vue'
+	import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue'
+	import { useRouter } from 'vue-router'
+	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
 	const REMOVE_RUNNER = 14
 	const LISTEN_DATA = 15
@@ -129,136 +132,128 @@ import { emitter } from '@/model/vue'
 		public task!: any
 	}
 
+	const router = useRouter()
 
-	import Breadcrumb from '@/component/forum/breadcrumb.vue'
+	const runners = reactive<{[key: number]: Runner}>({})
+	const nodeMetrics = reactive<{[key: string]: NodeMetrics}>({})
+	const queue = ref<any>([])
+	const loading = ref(true)
+	const colors: {[key: string]: string} = {}
+	const show_ids = ref(localStorage.getItem('admin/queue-ids') === 'true')
 
-	@Options({ components: { Breadcrumb } })
-	export default class AdminServers extends Vue {
-
-		runners: {[key: number]: Runner} = {}
-		nodeMetrics: {[key: string]: NodeMetrics} = {}
-		queue: any = []
-		loading: boolean = true
-		colors: {[key: string]: string} = {}
-		show_ids: boolean = localStorage.getItem('admin/queue-ids') === 'true'
-
-		get nodes() {
-			const nodes: {[key: string]: Node} = {}
-			for (const runner of Object.values(this.runners)) {
-				if (!(runner.node in nodes)) {
-					nodes[runner.node] = { name: runner.node, generated: 0, runners: [], load: 0 } as Node
-				}
-				const node = nodes[runner.node]
-				node.generated += runner.generated
-				node.runners.push(runner)
-				node.load = ((node.runners.length - 1) * node.load + (runner.task ? 1 : 0)) / node.runners.length
-				// Attach metrics if available
-				if (runner.node in this.nodeMetrics) {
-					node.metrics = this.nodeMetrics[runner.node]
-				}
+	const nodes = computed(() => {
+		const nodes: {[key: string]: Node} = {}
+		for (const runner of Object.values(runners)) {
+			if (!(runner.node in nodes)) {
+				nodes[runner.node] = { name: runner.node, generated: 0, runners: [], load: 0 } as Node
 			}
-			return Object.values(nodes).sort((a, b) => a.name.localeCompare(b.name))
+			const node = nodes[runner.node]
+			node.generated += runner.generated
+			node.runners.push(runner)
+			node.load = ((node.runners.length - 1) * node.load + (runner.task ? 1 : 0)) / node.runners.length
+			// Attach metrics if available
+			if (runner.node in nodeMetrics) {
+				node.metrics = nodeMetrics[runner.node]
+			}
 		}
+		return Object.values(nodes).sort((a, b) => a.name.localeCompare(b.name))
+	})
 
-		created() {
-			if (!this.$store.getters.admin) this.$router.replace('/')
-			LeekWars.socket.send([LISTEN_DATA])
-			LeekWars.setTitle("Admin serveurs")
-			emitter.on('wsmessage', this.update)
+	if (!store.getters.admin) router.replace('/')
+	LeekWars.socket.send([LISTEN_DATA])
+	LeekWars.setTitle("Admin serveurs")
+	emitter.on('wsmessage', update)
+
+	onBeforeUnmount(() => {
+		emitter.off('wsmessage', update)
+	})
+
+	function update(message: any) {
+		const type = message.type
+		const data = message.data
+		if (type === UPDATE_RUNNER) {
+			loading.value = false
+			for (const th of data) {
+				updateRunner(th.node, th.id, th.name, th.connected, th.task, th.task_start, th.generated, th.errors)
+			}
 		}
-
-		beforeUnmount() {
-			emitter.off('wsmessage', this.update)
+		if (type === REMOVE_RUNNER) {
+			for (const th of data) {
+				removeRunner(th.id)
+			}
 		}
-
-		update(message: any) {
-			const type = message.type
-			const data = message.data
-			if (type === UPDATE_RUNNER) {
-				this.loading = false
-				for (const th of data) {
-					this.updateRunner(th.node, th.id, th.name, th.connected, th.task, th.task_start, th.generated, th.errors)
-				}
-			}
-			if (type === REMOVE_RUNNER) {
-				for (const th of data) {
-					this.removeRunner(th.id)
-				}
-			}
-			if (type === ADMIN_QUEUE) {
-				this.queue = data
-			}
-			if (type === UPDATE_NODE_METRICS) {
-				for (const m of data) {
-					this.nodeMetrics[m.node] = {
-						usedRAM: m.usedRAM,
-						maxRAM: m.maxRAM,
-						cacheSize: m.cacheSize,
-						compressedClassSpaceUsed: m.compressedClassSpaceUsed,
-						compressedClassSpaceMax: m.compressedClassSpaceMax,
-						bootTime: m.bootTime,
-						lastUpdate: m.lastUpdate
-					}
+		if (type === ADMIN_QUEUE) {
+			queue.value = data
+		}
+		if (type === UPDATE_NODE_METRICS) {
+			for (const m of data) {
+				nodeMetrics[m.node] = {
+					usedRAM: m.usedRAM,
+					maxRAM: m.maxRAM,
+					cacheSize: m.cacheSize,
+					compressedClassSpaceUsed: m.compressedClassSpaceUsed,
+					compressedClassSpaceMax: m.compressedClassSpaceMax,
+					bootTime: m.bootTime,
+					lastUpdate: m.lastUpdate
 				}
 			}
 		}
+	}
 
-		updateRunner(nodeName: string, runnerID: any, runnerName: string, connected: any, task: any, task_start: any, generated: number, errors: number) {
-			const runner = this.runners[runnerID]
-			if (!runner) {
-				const runner = { id: runnerID, name: runnerName, node: nodeName, generated, errors, task } as Runner
-				this.runners[runnerID] = runner
-			} else {
-				runner.name = runnerName
-				runner.node = nodeName
-				runner.generated = generated
-				runner.errors = errors
-				runner.task = task
-			}
+	function updateRunner(nodeName: string, runnerID: any, runnerName: string, connected: any, task: any, task_start: any, generated: number, errors: number) {
+		const runner = runners[runnerID]
+		if (!runner) {
+			const runner = { id: runnerID, name: runnerName, node: nodeName, generated, errors, task } as Runner
+			runners[runnerID] = runner
+		} else {
+			runner.name = runnerName
+			runner.node = nodeName
+			runner.generated = generated
+			runner.errors = errors
+			runner.task = task
 		}
+	}
 
-		removeRunner(id: number) {
-			if (id in this.runners) {
-				delete this.runners[id]
-			}
+	function removeRunner(id: number) {
+		if (id in runners) {
+			delete runners[id]
 		}
+	}
 
-		colorFromID(id: string) {
-			if (this.colors[id]) return this.colors[id]
+	function colorFromID(id: string) {
+		if (colors[id]) return colors[id]
 
-			let h = 0
-			for (var i = 0; i < id.length; i++) {
-				h = id.charCodeAt(i) + ((h << 5) - h)
-			}
-			if (h < 0) h = -h
-
-			return this.colors[id] = `hsl(${h % 360}deg, 80%, ${LeekWars.darkMode ? 10 : 90}%)`
+		let h = 0
+		for (var i = 0; i < id.length; i++) {
+			h = id.charCodeAt(i) + ((h << 5) - h)
 		}
+		if (h < 0) h = -h
 
-		@Watch('show_ids')
-		updateQueueID() {
-			localStorage.setItem('admin/queue-ids', '' + this.show_ids)
-		}
+		return colors[id] = `hsl(${h % 360}deg, 80%, ${LeekWars.darkMode ? 10 : 90}%)`
+	}
 
-		formatRAM(bytes: number): string {
-			const gb = bytes / (1024 * 1024 * 1024)
-			return gb.toFixed(2) + ' GB'
-		}
+	watch(show_ids, () => {
+		localStorage.setItem('admin/queue-ids', '' + show_ids.value)
+	})
 
-		ramPercent(metrics: NodeMetrics): number {
-			return Math.round((metrics.usedRAM / metrics.maxRAM) * 100)
-		}
+	function formatRAM(bytes: number): string {
+		const gb = bytes / (1024 * 1024 * 1024)
+		return gb.toFixed(2) + ' GB'
+	}
 
-		classSpacePercent(metrics: NodeMetrics): number {
-			if (!metrics.compressedClassSpaceMax) return 0
-			return Math.round((metrics.compressedClassSpaceUsed / metrics.compressedClassSpaceMax) * 100)
-		}
+	function ramPercent(metrics: NodeMetrics): number {
+		return Math.round((metrics.usedRAM / metrics.maxRAM) * 100)
+	}
 
-		formatUptime(bootTime: number): string {
-			if (!bootTime) return '-'
-			const uptimeSeconds = Math.floor((Date.now() - bootTime) / 1000)
-			return LeekWars.formatLongDuration(uptimeSeconds)
-		}
+	function classSpacePercent(metrics: NodeMetrics): number {
+		if (!metrics.compressedClassSpaceMax) return 0
+		return Math.round((metrics.compressedClassSpaceUsed / metrics.compressedClassSpaceMax) * 100)
+	}
+
+	function formatUptime(bootTime: number): string {
+		if (!bootTime) return '-'
+		const uptimeSeconds = Math.floor((Date.now() - bootTime) / 1000)
+		return LeekWars.formatLongDuration(uptimeSeconds)
 	}
 </script>
 
