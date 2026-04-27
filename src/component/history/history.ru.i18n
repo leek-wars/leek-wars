@@ -15,10 +15,17 @@
 	"fight_context": "Контексты боя",
 	"solo": "Соло",
 	"farmer": "Заводчик",
-	"team": "Экипаж",
+	"team": "Команда",
 	"battle_royale": "Королевская битва",
 	"challenge": "Испытание",
 	"garden": "Огород",
 	"tournament": "Турнир",
-	"boss": "Boss"
+	"boss": "Boss",
+	"loot": "Боевые трофеи",
+	"chests": "Сундуки",
+	"rare_loot": "Редкие ресурсы",
+	"war": "Война",
+	"chest_hunt": "Охота за сундуками",
+	"n_chests": "{0} сундуков",
+	"colossus": "Колосс"
 }

@@ -3,7 +3,7 @@
 	"category_battle_royale": "Королевская битва",
 	"category_farmer_fight": "Заводчик",
 	"category_solo_fight": "Соло",
-	"category_team_fight": "Экипаж",
+	"category_team_fight": "Команда",
 	"challenge": "Испытание",
 	"click_opponent": "Нажмите на противника, чтобы начать бой",
 	"error_fight_not_enough_leeks": "Не хватает лука-порея в команде",
@@ -38,5 +38,15 @@
 	"category_boss_fight": "Boss",
 	"garden_boss": "Огород Босса",
 	"select_boss": "Выберите начальника",
-	"attack": "Атака"
+	"attack": "Атака",
+	"category_arena": "Арены",
+	"arena_preference": "Предпочитаемый режим",
+	"arena_no_preference": "Без разницы",
+	"arena_mode_br": "Королевская битва",
+	"arena_mode_war": "Война",
+	"arena_mode_chest_hunt": "Охота за сундуками",
+	"arena_mode_colossus": "Колосс",
+	"arena_wants_colossus": "Я хочу быть Колоссом",
+	"arena_countdown": "Запуск через {0} с...",
+	"garden_arena": "Огород Арен"
 }

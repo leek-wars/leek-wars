@@ -8,7 +8,7 @@
 	"cannot_buy": "Этот товар нельзя купить",
 	"chip": "Чип",
 	"chip_bought": "Чип куплен!",
-	"chips": "Блохи",
+	"chips": "Чипы",
 	"chip_selled": "Чип продан!",
 	"confirm_purchase": "Подтвердите покупку",
 	"confirm_sell": "Подтвердить продажу",
@@ -48,5 +48,6 @@
 	"weapons": "Оружие",
 	"weapon_selled": "Оружие продано!",
 	"item_progress": "Прогресс предмета",
-	"schemes": "Схемы"
+	"schemes": "Схемы",
+	"already_bought": "Уже куплено"
 }

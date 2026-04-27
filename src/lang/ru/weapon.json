@@ -1,5 +1,5 @@
 {
-	"axe": "Рубленый",
+	"axe": "Топор",
 	"b_laser": "B-лазер",
 	"bazooka": "Базука",
 	"broadsword": "Меч",
@@ -30,10 +30,10 @@
 	"unstable_destroyer": "Нестабильный разрушитель",
 	"revoked_m_laser": "М-лазер отозван",
 	"rhino": "Носорог",
-	"rifle": "Пистолет",
+	"rifle": "Винтовка",
 	"sword": "Меч",
 	"taser": "Тазеры",
 	"odachi": "Одачи",
 	"excalibur": "Экскалибур",
-	"scythe": "Подделка"
+	"scythe": "Коса"
 }

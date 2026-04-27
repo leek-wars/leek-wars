@@ -3,7 +3,7 @@
 	"allies_killed_title": "Количество убитых союзников",
 	"br": "Королевские битвы",
 	"br_title": "Выиграл Королевскую битву",
-	"chips": "Блохи",
+	"chips": "Чипы",
 	"chips_title": "Количество используемых чипов",
 	"connection_title": "Подключенные дни",
 	"clovers": "Клевер",
@@ -53,5 +53,8 @@
 	"turrets_killed": "Турели",
 	"turrets_killed_title": "Турелей уничтожено",
 	"damage": "Урон",
-	"damage_title": "Нанесённый урон"
+	"damage_title": "Нанесённый урон",
+	"compositions": "Композиции",
+	"composition": "Композиция",
+	"won": "Победы"
 }

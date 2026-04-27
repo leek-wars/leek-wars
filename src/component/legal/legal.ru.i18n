@@ -1,7 +1,7 @@
 {
-	"contact": "Почта для {email}",
+	"contact": "Контакт: {email}",
 	"editor": "Редактор",
-	"editor_message": "Веб-сайт Leek Wars (leekwars.com) редактируется <b>Pilow</b> и <b>SilentHunter</b>.",
-	"host": "Хозяин",
-	"title": "Официальное уведомление"
+	"editor_message": "Веб-сайт Leek Wars (leekwars.com) издаётся <b>Pilow</b> и <b>SilentHunter</b>.",
+	"host": "Хостинг",
+	"title": "Юридическая информация"
 }

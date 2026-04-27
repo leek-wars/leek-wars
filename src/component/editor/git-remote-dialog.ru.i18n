@@ -1,0 +1,22 @@
+{
+	"title": "Параметры удалённого репозитория",
+	"remotes": "Удалённые репозитории",
+	"no_remotes": "Удалённые репозитории не настроены.",
+	"remote_name": "Имя (напр.: origin)",
+	"remote_url": "https://github.com/user/repo.git",
+	"select_repo": "Выбрать репозиторий...",
+	"authentication": "Аутентификация",
+	"connected_as": "Подключено как {0}",
+	"connected_anonymous": "Подключено",
+	"install_github_app": "Установить GitHub App",
+	"install_hint": "Выберите репозитории, к которым предоставить доступ при установке.",
+	"github_app": "GitHub App",
+	"or_pat": "Или использовать Personal Access Token:",
+	"pat_placeholder": "Токен доступа",
+	"instance_placeholder": "https://codeberg.org",
+	"self_hosted": "Самостоятельно размещённый экземпляр",
+	"save": "Сохранить",
+	"add": "Добавить",
+	"invalid_token": "Токен отклонён провайдером.",
+	"invalid_instance_url": "Неверный URL экземпляра или недоступен с сервера."
+}

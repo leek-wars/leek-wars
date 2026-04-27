@@ -1,7 +1,7 @@
 {
 	"category_bonus": "Бонусы",
 	"category_code": "Закодировано",
-	"category_fight": "Драться",
+	"category_fight": "Бой",
 	"category_fun": "Веселье",
 	"category_general": "Общий",
 	"category_shopping": "Покупки",
@@ -11,7 +11,7 @@
 	"group_by_categories": "Категории",
 	"sort_index": "по умолчанию",
 	"sort_points": "точки",
-	"sort_rarity": "дефицит",
+	"sort_rarity": "редкость",
 	"stats": "Статистика",
 	"title": "{0} Трофеи",
 	"title_me": "Мои трофеи",
@@ -27,8 +27,8 @@
 	"n_pocessors": "нет владельцев | 1 владелец | {0} владельцев",
 	"first_farmers": "Ранние заводчики",
 	"last_farmers": "Последние заводчики",
-	"fastest_farmers": "Самые быстрые размноженцы",
-	"slowest_farmers": "Самые медленные селекционеры",
+	"fastest_farmers": "Самые быстрые заводчики",
+	"slowest_farmers": "Самые медленные заводчики",
 	"title_farmers": "Заводчики, в названии которых есть это слово",
 	"created_the": "Добавлено на {0}"
 }
