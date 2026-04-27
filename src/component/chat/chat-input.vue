@@ -91,12 +91,12 @@ function keyUp(e: KeyboardEvent) {
 	updateCommands()
 
 	if (e.which === 13) { // enter
-		if (commandsEnabled.value && commandsRef.value!.getSelected()) {
-			commandsRef.value!.selectFirst()
+		if (commandsEnabled.value && commandsRef.value?.getSelected()) {
+			commandsRef.value.selectFirst()
 			return
 		}
-		if (pseudosEnabled.value && pseudosRef.value!.getSelected() !== null) {
-			pseudosRef.value!.selectFirst()
+		if (pseudosEnabled.value && pseudosRef.value && pseudosRef.value.getSelected() !== null) {
+			pseudosRef.value.selectFirst()
 			return
 		}
 	}
