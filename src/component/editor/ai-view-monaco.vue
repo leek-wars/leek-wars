@@ -207,7 +207,7 @@ export default class AIViewMonaco extends Vue {
 				}
 				// console.log("suggestion", docs.innerText)
 				const symbol = fileSystem.symbols[docs.innerText]
-				if (symbol) {
+				if (symbol && symbol.javadoc) {
 					const doc = createSubApp(Javadoc, { javadoc: symbol.javadoc, keyword: symbol }, 'suggest-javadoc')
 						.directive('code', code)
 						.directive('dochash', dochash)
@@ -261,7 +261,7 @@ export default class AIViewMonaco extends Vue {
 				})
 			}
 			const symbol = fileSystem.symbols[firstRow.innerText]
-			if (symbol) {
+			if (symbol && symbol.javadoc) {
 				firstRow.style.display = 'none'
 				const doc = createSubApp(Javadoc, { javadoc: symbol.javadoc, keyword: symbol }, 'hover-javadoc')
 					.directive('code', code)
