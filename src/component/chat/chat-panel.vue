@@ -39,38 +39,40 @@
 	</panel>
 </template>
 
-<script lang="ts">
-const ChatElement = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
-import { Options, Prop, Vue } from 'vue-property-decorator'
-import { Language, LeekWars } from '@/model/leekwars'
+<script setup lang="ts">
 import { ChatType } from '@/model/chat'
+import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
-import { defineAsyncComponent } from 'vue'
+import { defineAsyncComponent, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
-@Options({ components: { chat: ChatElement, components: { ChatElement } } })
-export default class ChatPanel extends Vue {
+const ChatElement = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
 
-	@Prop({ required: true }) toggle!: string
-	@Prop({ required: true }) chat!: string
-	@Prop({ required: true }) height!: number
+defineOptions({ name: 'chat-panel', components: { chat: ChatElement } })
 
-	ChatType = ChatType
-	chatID: number | null = null
+const props = defineProps<{
+	toggle: string
+	chat: string
+	height: number
+}>()
 
-	created() {
-		if (this.$store.state.farmer?.group && this.$store.state.farmer?.group.chat && !this.$store.state.farmer?.public_chat_enabled) {
-			this.chatID = this.$store.state.farmer.group.chat
-		} else if (this.$store.state.farmer?.public_chat_enabled) {
-			this.chatID = parseInt(localStorage.getItem('chat-panel/' + this.chat) || '0') || LeekWars.languages[this.$i18n.locale].chat
-		}
-	}
+const { locale } = useI18n()
 
-	setChatLanguage(chat: number) {
-		this.chatID = chat
-		localStorage.setItem('chat-panel/' + this.chat, '' + chat)
-	}
+const chatID = ref<number | null>(null)
+
+if (store.state.farmer?.group && store.state.farmer?.group.chat && !store.state.farmer?.public_chat_enabled) {
+	chatID.value = store.state.farmer.group.chat
+} else if (store.state.farmer?.public_chat_enabled) {
+	chatID.value = parseInt(localStorage.getItem('chat-panel/' + props.chat) || '0') || (LeekWars.languages as any)[locale.value].chat
 }
 
+function setChatLanguage(chat: number) {
+	chatID.value = chat
+	localStorage.setItem('chat-panel/' + props.chat, '' + chat)
+}
+
+// Make ChatType available in template
+const _ChatType = ChatType
 </script>
 
 <style lang="scss" scoped>

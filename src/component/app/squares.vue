@@ -14,23 +14,19 @@
 	</div>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
 import '@/model/emojis'
-import { Notification } from '@/model/notification'
 import { LeekWars } from '@/model/leekwars'
+import { store } from '@/model/store'
 import { Square } from '@/model/squares'
 
-@Options({})
-export default class Squares extends Vue {
+defineOptions({ name: 'squares' })
 
-	click(square: Square) {
-		if (square.notification) {
-			LeekWars.post('notification/read', { notification_id: square.notification.id })
-			this.$store.commit('read-notification', square.notification.id)
-		}
+function click(square: Square) {
+	if (square.notification) {
+		LeekWars.post('notification/read', { notification_id: square.notification.id })
+		store.commit('read-notification', square.notification.id)
 	}
-
 }
 </script>
 

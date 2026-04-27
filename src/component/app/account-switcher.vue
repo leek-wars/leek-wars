@@ -51,104 +51,110 @@
 	</v-list>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import router from '@/router'
-	import { AccountInfo } from '@/model/store'
-	import { Options, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { LeekWars } from '@/model/leekwars'
+import { AccountInfo, store } from '@/model/store'
+import router from '@/router'
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
-	@Options({ name: 'account-switcher' })
-	export default class AccountSwitcher extends Vue {
-		loginLoading = false
-		loginError = ''
-		loginForm = { login: '', password: '' }
-		loginMenuId: number | null = null
-		addMenuOpen = false
-		switchingId: number | null = null
-		loadingId: number | null = null
-		loadingAction: string | null = null
+defineOptions({ name: 'account-switcher' })
 
-		isActive(account: AccountInfo) {
-			return account.id === this.$store.state.farmer?.id
-		}
+const emit = defineEmits<{
+	'close': []
+}>()
 
-		avatarUrl(account: AccountInfo) {
-			if (account.avatar_changed > 0) {
-				return LeekWars.AVATAR + 'avatar/' + account.id + '.png?' + account.avatar_changed
-			}
-			return '/image/no_avatar.png'
-		}
+const { t } = useI18n()
 
-		switchAccount(account: AccountInfo) {
-			if (account.id === this.$store.state.farmer?.id) {
-				this.$emit('close')
-				return
-			}
-			if (!account.connected) {
-				this.loginForm.login = account.name
-				this.loginForm.password = ''
-				this.loginError = ''
-				return
-			}
+const loginLoading = ref(false)
+const loginError = ref('')
+const loginForm = ref({ login: '', password: '' })
+const loginMenuId = ref<number | null>(null)
+const addMenuOpen = ref(false)
+const switchingId = ref<number | null>(null)
+const loadingId = ref<number | null>(null)
+const loadingAction = ref<string | null>(null)
 
-			this.switchingId = account.id
-			LeekWars.post('farmer/switch', { farmer_id: account.id }).then((data: any) => {
-				const token = LeekWars.DEV ? data.token : '$'
-				this.$store.commit('connect', { ...data, token })
-				this.switchingId = null
-				this.$emit('close')
-				router.push('/')
-			}).error(() => {
-				this.switchingId = null
-				this.loginForm.login = account.name
-			})
-		}
+function isActive(account: AccountInfo) {
+	return account.id === store.state.farmer?.id
+}
 
-		loginNewAccount() {
-			this.loginLoading = true
-			this.loginError = ''
-			const url = LeekWars.DEV ? 'farmer/login-token' : 'farmer/login'
-			LeekWars.post(url, { ...this.loginForm, keep_connected: true }).then((data: any) => {
-				const token = LeekWars.DEV ? data.token : '$'
-				this.$store.commit('connect', { ...data, token })
-				this.loginForm = { login: '', password: '' }
-				this.loginLoading = false
-				this.loginMenuId = null
-				this.addMenuOpen = false
-			}).error((error: any) => {
-				const code = error?.error || 'server'
-				this.loginError = this.$t('main.account_error_' + code) as string
-				this.loginLoading = false
-			})
-		}
-
-		disconnectAccount(account: AccountInfo) {
-			this.accountAction(account, 'disconnect', 'farmer/disconnect-account')
-		}
-
-		removeAccount(account: AccountInfo) {
-			this.accountAction(account, 'remove', 'farmer/remove-account')
-		}
-
-		private accountAction(account: AccountInfo, action: string, endpoint: string) {
-			this.loadingId = account.id
-			this.loadingAction = action
-			LeekWars.post(endpoint, { farmer_id: account.id }).then((data: any) => {
-				this.loadingId = null
-				this.loadingAction = null
-				if (data.switched) {
-					const token = LeekWars.DEV ? data.token : '$'
-					this.$store.commit('connect', { ...data, token })
-					router.push('/')
-				} else if (data.accounts) {
-					this.$store.commit('update-accounts', data.accounts)
-				} else {
-					this.$store.commit('disconnect')
-					router.push('/login')
-				}
-			})
-		}
+function avatarUrl(account: AccountInfo) {
+	if (account.avatar_changed > 0) {
+		return LeekWars.AVATAR + 'avatar/' + account.id + '.png?' + account.avatar_changed
 	}
+	return '/image/no_avatar.png'
+}
+
+function switchAccount(account: AccountInfo) {
+	if (account.id === store.state.farmer?.id) {
+		emit('close')
+		return
+	}
+	if (!account.connected) {
+		loginForm.value.login = account.name
+		loginForm.value.password = ''
+		loginError.value = ''
+		return
+	}
+
+	switchingId.value = account.id
+	;(LeekWars.post('farmer/switch', { farmer_id: account.id }).then((data: any) => {
+		const token = LeekWars.DEV ? data.token : '$'
+		store.commit('connect', { ...data, token })
+		switchingId.value = null
+		emit('close')
+		router.push('/')
+	}) as any).error(() => {
+		switchingId.value = null
+		loginForm.value.login = account.name
+	})
+}
+
+function loginNewAccount() {
+	loginLoading.value = true
+	loginError.value = ''
+	const url = LeekWars.DEV ? 'farmer/login-token' : 'farmer/login'
+	;(LeekWars.post(url, { ...loginForm.value, keep_connected: true }).then((data: any) => {
+		const token = LeekWars.DEV ? data.token : '$'
+		store.commit('connect', { ...data, token })
+		loginForm.value = { login: '', password: '' }
+		loginLoading.value = false
+		loginMenuId.value = null
+		addMenuOpen.value = false
+	}) as any).error((error: any) => {
+		const code = error?.error || 'server'
+		loginError.value = t('main.account_error_' + code) as string
+		loginLoading.value = false
+	})
+}
+
+function disconnectAccount(account: AccountInfo) {
+	accountAction(account, 'disconnect', 'farmer/disconnect-account')
+}
+
+function removeAccount(account: AccountInfo) {
+	accountAction(account, 'remove', 'farmer/remove-account')
+}
+
+function accountAction(account: AccountInfo, action: string, endpoint: string) {
+	loadingId.value = account.id
+	loadingAction.value = action
+	LeekWars.post(endpoint, { farmer_id: account.id }).then((data: any) => {
+		loadingId.value = null
+		loadingAction.value = null
+		if (data.switched) {
+			const token = LeekWars.DEV ? data.token : '$'
+			store.commit('connect', { ...data, token })
+			router.push('/')
+		} else if (data.accounts) {
+			store.commit('update-accounts', data.accounts)
+		} else {
+			store.commit('disconnect')
+			router.push('/login')
+		}
+	})
+}
 </script>
 
 <style lang="scss" scoped>

@@ -9,42 +9,43 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { AI } from '@/model/ai'
-	import { fileSystem } from '@/model/filesystem'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { AI } from '@/model/ai'
+import { fileSystem } from '@/model/filesystem'
+import { store } from '@/model/store'
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
-	@Options({ name: "ai" })
-	export default class AIElement extends Vue {
-		@Prop({required: true}) ai!: AI
-		@Prop({required: true}) library!: boolean
-		@Prop({required: true}) small!: boolean
-		@Prop() locked!: boolean
+defineOptions({ name: "ai" })
 
-		get my_ai() {
-			return this.ai.path && this.ai.path in fileSystem.ais
-		}
+const props = defineProps<{
+	ai: AI
+	library: boolean
+	small: boolean
+	locked?: boolean
+}>()
 
-		get displayName() {
-			return this.ai.bot ? this.$t('leekscript.' + this.ai.name) as string : this.ai.name
-		}
+const { t } = useI18n()
 
-		get nameSize() {
-			const base = this.small ? 12 : 16
-			const length = this.displayName.length
-			if (length <= 16) return base
-			return Math.max(base * 0.75, base * 16 / length)
-		}
+const my_ai = computed(() => props.ai.path && props.ai.path in fileSystem.ais)
 
-		get show_lines() {
-			if (this.small) { return false }
-			if (this.library) { return true }
-			if (this.my_ai) {
-				return this.$store.state.farmer.show_ai_lines
-			}
-			return this.ai.total_lines !== undefined
-		}
+const displayName = computed(() => props.ai.bot ? t('leekscript.' + props.ai.name) as string : props.ai.name)
+
+const nameSize = computed(() => {
+	const base = props.small ? 12 : 16
+	const length = displayName.value.length
+	if (length <= 16) return base
+	return Math.max(base * 0.75, base * 16 / length)
+})
+
+const show_lines = computed(() => {
+	if (props.small) { return false }
+	if (props.library) { return true }
+	if (my_ai.value) {
+		return store.state.farmer!.show_ai_lines
 	}
+	return props.ai.total_lines !== undefined
+})
 </script>
 
 <style lang="scss" scoped>

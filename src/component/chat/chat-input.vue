@@ -8,201 +8,208 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { Commands } from '@/model/commands'
-	import { i18n } from '@/model/i18n'
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import ChatCommands from './chat-commands.vue'
-	import ChatPseudos from './chat-pseudos.vue'
-	import EmojiPicker from './emoji-picker.vue'
+<script setup lang="ts">
+import { Commands } from '@/model/commands'
+import { i18n } from '@/model/i18n'
+import { LeekWars } from '@/model/leekwars'
+import { onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
+import ChatCommands from './chat-commands.vue'
+import ChatPseudos from './chat-pseudos.vue'
+import EmojiPicker from './emoji-picker.vue'
 
-	@Options({ components: { 'emoji-picker': EmojiPicker, ChatCommands, ChatPseudos }, emits: ['message'] })
-	export default class ChatInput extends Vue {
+defineOptions({ name: 'chat-input', components: { 'emoji-picker': EmojiPicker, ChatCommands, ChatPseudos } })
 
-		@Prop({ required: true }) chat!: number
+defineProps<{
+	chat: number
+}>()
 
-		message: string = ''
-		emojis: boolean = false
-		cursor: number = 0
-		commandsEnabled: boolean = false
-		commandFilter: string = ''
-		commandsX: number = 0
-		commandsY: number = 0
-		commandsHeight: number = 0
+const emit = defineEmits<{
+	'message': [text: string]
+}>()
 
-		pseudosEnabled: boolean = false
-		pseudosFilter: string = ''
-		rootEl!: HTMLElement
+const inputRef = useTemplateRef<HTMLElement>('input')
+const commandsRef = useTemplateRef<any>('commands')
+const pseudosRef = useTemplateRef<any>('pseudos')
 
-		mounted() {
-			LeekWars.contenteditable_paste_protect(this.$refs.input as HTMLElement)
-			this.rootEl = (this.$refs.input as HTMLElement).parentElement as HTMLElement
-			document.addEventListener('mousedown', this.onClickOutside)
+const message = ref('')
+const cursor = ref(0)
+const commandsEnabled = ref(false)
+const commandFilter = ref('')
+const pseudosEnabled = ref(false)
+const pseudosFilter = ref('')
+let rootEl: HTMLElement
+
+onMounted(() => {
+	LeekWars.contenteditable_paste_protect(inputRef.value!)
+	rootEl = inputRef.value!.parentElement as HTMLElement
+	document.addEventListener('mousedown', onClickOutside)
+})
+
+onBeforeUnmount(() => {
+	document.removeEventListener('mousedown', onClickOutside)
+})
+
+function onClickOutside(e: MouseEvent) {
+	if (!rootEl.contains(e.target as Node)) {
+		pseudosEnabled.value = false
+		commandsEnabled.value = false
+	}
+}
+
+function updateCursor() {
+	const input = inputRef.value!
+	cursor.value = LeekWars.get_cursor_position(input)
+}
+
+function keyDown(e: KeyboardEvent) {
+	if (e.which === 9) { // tab
+		if (commandsEnabled.value) {
+			const selectedCommand = commandsRef.value!.getSelected()
+			const selectedOption = commandsRef.value!.getSelectedOption()
+			const filterOptions = commandsRef.value!.filterOptions || ''
+			const isSimple = !selectedCommand.options
+			selectCommand(selectedCommand.name + (isSimple ? '' : ':') + (selectedOption ? selectedOption.name : filterOptions), isSimple || !!selectedOption)
+			e.preventDefault()
+		} else if (pseudosEnabled.value) {
+			const selectedPseudo = pseudosRef.value!.getSelected()
+			selectPseudo(selectedPseudo)
+			e.preventDefault()
 		}
-		beforeUnmount() {
-			document.removeEventListener('mousedown', this.onClickOutside)
-		}
-		onClickOutside(e: MouseEvent) {
-			if (!this.rootEl.contains(e.target as Node)) {
-				this.pseudosEnabled = false
-				this.commandsEnabled = false
-			}
-		}
-		updateCursor() {
-			const input = this.$refs.input as HTMLElement
-			this.cursor = LeekWars.get_cursor_position(input)
-		}
-
-		keyDown(e: KeyboardEvent) {
-			if (e.which === 9) { // tab
-				if (this.commandsEnabled) {
-					const selectedCommand = (this.$refs.commands as ChatCommands).getSelected()
-					const selectedOption = (this.$refs.commands as ChatCommands).getSelectedOption()
-					const filterOptions = (this.$refs.commands as ChatCommands).filterOptions || ''
-					const isSimple = !selectedCommand.options
-					this.selectCommand(selectedCommand.name + (isSimple ? '' : ':') + (selectedOption ? selectedOption.name : filterOptions), isSimple || !!selectedOption)
-					e.preventDefault()
-				} else if (this.pseudosEnabled) {
-					const selectedPseudo = (this.$refs.pseudos as ChatPseudos).getSelected()
-					this.selectPseudo(selectedPseudo)
-					e.preventDefault()
-				}
-			} else if (e.which === 13 && !e.shiftKey) { // enter
-				e.preventDefault()
-			}
-			if (e.code === 'ArrowDown' || e.code === 'ArrowUp') {
-				if (this.commandsEnabled || this.pseudosEnabled) {
-					e.preventDefault()
-				}
-			}
-			e.stopPropagation()
-		}
-
-		keyUp(e: KeyboardEvent) {
-			this.updateCursor()
-			const input = this.$refs.input as HTMLElement
-			this.message = input.innerText
-			this.updateCommands()
-
-			if (e.which === 13) { // enter
-				if (this.commandsEnabled && (this.$refs.commands as ChatCommands).getSelected()) {
-					(this.$refs.commands as ChatCommands).selectFirst()
-					return
-				}
-				if (this.pseudosEnabled && (this.$refs.pseudos as ChatPseudos).getSelected() !== null) {
-					(this.$refs.pseudos as ChatPseudos).selectFirst()
-					return
-				}
-			}
-			if (e.which === 13 && !e.shiftKey) { // enter
-				if (this.message.length === 0) {
-					return
-				}
-				if (this.message.length > 2000) {
-					LeekWars.toast(i18n.t('main.chat_too_long') as string)
-					return
-				}
-				if (this.message === '/ping') {
-					// LW.chat.last_ping = Date.now()
-				}
-				this.$emit('message', this.message.trim())
-				input.textContent = ''
-				this.cursor = 0
-				this.commandsEnabled = false
-			}
-			if (e.code === 'ArrowDown') {
-				if (this.commandsEnabled) {
-					(this.$refs.commands as ChatCommands).down()
-					e.stopPropagation()
-					e.preventDefault()
-					return
-				}
-				if (this.pseudosEnabled) {
-					(this.$refs.pseudos as ChatPseudos).down()
-					e.stopPropagation()
-					e.preventDefault()
-					return
-				}
-			} else if (e.code === 'ArrowUp') {
-				if (this.commandsEnabled) {
-					(this.$refs.commands as ChatCommands).up()
-					e.stopPropagation()
-					e.preventDefault()
-					return
-				}
-				if (this.pseudosEnabled) {
-					(this.$refs.pseudos as ChatPseudos).up()
-					e.stopPropagation()
-					e.preventDefault()
-					return
-				}
-			}
-			e.stopPropagation()
-		}
-
-		addEmoji(emoji: string) {
-			const input = this.$refs.input as HTMLElement
-			let cursor_position = this.cursor
-			const text = input.innerText
-			input.textContent = text.substring(0, cursor_position) + emoji + text.substring(cursor_position)
-			input.focus()
-			cursor_position += emoji.length
-			LeekWars.set_cursor_position(input, cursor_position)
-			this.cursor = cursor_position
-		}
-
-		updateCommands() {
-			const result = Commands.isCommand(this.message)
-			if (result === false) {
-				this.commandsEnabled = false
-				this.commandFilter = ''
-			} else {
-				this.commandsEnabled = true
-				this.commandFilter = result
-			}
-			const match = /@(\w*)$/gi.exec(this.message)
-			if (match) {
-				this.pseudosEnabled = true
-				this.pseudosFilter = match[1].toLowerCase()
-			} else {
-				this.pseudosEnabled = false
-			}
-		}
-		selectCommand(command: string, finished: boolean = true) {
-			const input = this.$refs.input as HTMLElement
-			let text = input.innerText
-			const regex = /\/(\w*(!|(:\w*))?)$/gi
-			const match = regex.exec(text)
-			text = text.replace(regex, "/" + command + (finished ? " " : ""))
-			input.textContent = text
-			input.focus()
-			if (match) {
-				LeekWars.set_cursor_position(input, match.index + command.length + (finished ? 2 : 1))
-			}
-			if (finished) {
-				this.commandsEnabled = false
-				this.commandFilter = ''
-			}
-		}
-
-		selectPseudo(pseudo: string | null) {
-			if (pseudo) {
-				const input = this.$refs.input as HTMLElement
-				let text = input.innerText
-				const regex = /@\w*$/gi
-				const match = regex.exec(text)
-				text = text.replace(regex, "@" + pseudo + " ")
-				input.textContent = text
-				input.focus()
-				if (match) {
-					LeekWars.set_cursor_position(input, match.index + pseudo.length + 2)
-				}
-			}
-			this.pseudosEnabled = false
-			this.pseudosFilter = ''
+	} else if (e.which === 13 && !e.shiftKey) { // enter
+		e.preventDefault()
+	}
+	if (e.code === 'ArrowDown' || e.code === 'ArrowUp') {
+		if (commandsEnabled.value || pseudosEnabled.value) {
+			e.preventDefault()
 		}
 	}
+	e.stopPropagation()
+}
+
+function keyUp(e: KeyboardEvent) {
+	updateCursor()
+	const input = inputRef.value!
+	message.value = input.innerText
+	updateCommands()
+
+	if (e.which === 13) { // enter
+		if (commandsEnabled.value && commandsRef.value!.getSelected()) {
+			commandsRef.value!.selectFirst()
+			return
+		}
+		if (pseudosEnabled.value && pseudosRef.value!.getSelected() !== null) {
+			pseudosRef.value!.selectFirst()
+			return
+		}
+	}
+	if (e.which === 13 && !e.shiftKey) { // enter
+		if (message.value.length === 0) {
+			return
+		}
+		if (message.value.length > 2000) {
+			LeekWars.toast(i18n.global.t('main.chat_too_long') as string)
+			return
+		}
+		if (message.value === '/ping') {
+			// LW.chat.last_ping = Date.now()
+		}
+		emit('message', message.value.trim())
+		input.textContent = ''
+		cursor.value = 0
+		commandsEnabled.value = false
+	}
+	if (e.code === 'ArrowDown') {
+		if (commandsEnabled.value) {
+			commandsRef.value!.down()
+			e.stopPropagation()
+			e.preventDefault()
+			return
+		}
+		if (pseudosEnabled.value) {
+			pseudosRef.value!.down()
+			e.stopPropagation()
+			e.preventDefault()
+			return
+		}
+	} else if (e.code === 'ArrowUp') {
+		if (commandsEnabled.value) {
+			commandsRef.value!.up()
+			e.stopPropagation()
+			e.preventDefault()
+			return
+		}
+		if (pseudosEnabled.value) {
+			pseudosRef.value!.up()
+			e.stopPropagation()
+			e.preventDefault()
+			return
+		}
+	}
+	e.stopPropagation()
+}
+
+function addEmoji(emoji: string) {
+	const input = inputRef.value!
+	let cursor_position = cursor.value
+	const text = input.innerText
+	input.textContent = text.substring(0, cursor_position) + emoji + text.substring(cursor_position)
+	input.focus()
+	cursor_position += emoji.length
+	LeekWars.set_cursor_position(input, cursor_position)
+	cursor.value = cursor_position
+}
+
+function updateCommands() {
+	const result = Commands.isCommand(message.value)
+	if (result === false) {
+		commandsEnabled.value = false
+		commandFilter.value = ''
+	} else {
+		commandsEnabled.value = true
+		commandFilter.value = result
+	}
+	const match = /@(\w*)$/gi.exec(message.value)
+	if (match) {
+		pseudosEnabled.value = true
+		pseudosFilter.value = match[1].toLowerCase()
+	} else {
+		pseudosEnabled.value = false
+	}
+}
+
+function selectCommand(command: string, finished: boolean = true) {
+	const input = inputRef.value!
+	let text = input.innerText
+	const regex = /\/(\w*(!|(:\w*))?)$/gi
+	const match = regex.exec(text)
+	text = text.replace(regex, "/" + command + (finished ? " " : ""))
+	input.textContent = text
+	input.focus()
+	if (match) {
+		LeekWars.set_cursor_position(input, match.index + command.length + (finished ? 2 : 1))
+	}
+	if (finished) {
+		commandsEnabled.value = false
+		commandFilter.value = ''
+	}
+}
+
+function selectPseudo(pseudo: string | null) {
+	if (pseudo) {
+		const input = inputRef.value!
+		let text = input.innerText
+		const regex = /@\w*$/gi
+		const match = regex.exec(text)
+		text = text.replace(regex, "@" + pseudo + " ")
+		input.textContent = text
+		input.focus()
+		if (match) {
+			LeekWars.set_cursor_position(input, match.index + pseudo.length + 2)
+		}
+	}
+	pseudosEnabled.value = false
+	pseudosFilter.value = ''
+}
 </script>
 
 <style lang="scss" scoped>

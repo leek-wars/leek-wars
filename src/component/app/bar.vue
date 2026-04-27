@@ -48,36 +48,37 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { emitter } from '@/model/vue'
-	import { Options, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { LeekWars } from '@/model/leekwars'
+import { store } from '@/model/store'
+import { emitter } from '@/model/vue'
+import { ref } from 'vue'
 
-	@Options({ name: 'lw-bar' })
-	export default class Bar extends Vue {
-		dark: boolean = false
-		mainButton() {
-			if (LeekWars.menuExpanded || !LeekWars.splitBack) {
-				LeekWars.toggleMenu()
-			} else {
-				emitter.emit('back')
-			}
-		}
-		closeMenu() {
-			LeekWars.menuExpanded = false
-			LeekWars.dark = 0
-		}
-		readNotifications(e: any) {
-			if (e === false && this.$store.state.unreadNotifications) {
-				LeekWars.post('notification/read-all')
-				this.$store.commit('read-notifications')
-			}
-			this.dark = e
-		}
-		readNotification(notification: any) {
-			LeekWars.post('notification/read', {notification_id: notification.id})
-		}
+defineOptions({ name: 'lw-bar' })
+
+const dark = ref(false)
+
+function mainButton() {
+	if (LeekWars.menuExpanded || !LeekWars.splitBack) {
+		LeekWars.toggleMenu()
+	} else {
+		emitter.emit('back')
 	}
+}
+function closeMenu() {
+	LeekWars.menuExpanded = false
+	LeekWars.dark = 0
+}
+function readNotifications(e: any) {
+	if (e === false && store.state.unreadNotifications) {
+		LeekWars.post('notification/read-all')
+		store.commit('read-notifications')
+	}
+	dark.value = e
+}
+function readNotification(notification: any) {
+	LeekWars.post('notification/read', {notification_id: notification.id})
+}
 </script>
 
 <style lang="scss" scoped>

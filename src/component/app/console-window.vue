@@ -3,13 +3,13 @@
 		<template #title>
 			<div @mousedown="consoleMouseDown">
 				{{ $t('main.console') }}
-				<v-menu v-if="$refs.console" offset-y :close-on-content-click="false">
+				<v-menu v-if="consoleRef" offset-y :close-on-content-click="false">
 					<template #activator="{ props }">
-						<v-chip v-bind="props" size="small">LS {{ $refs.console.leekscript.version }} {{ $refs.console.leekscript.strict ? 'strict' : '' }} <v-icon>mdi-chevron-down</v-icon></v-chip>
+						<v-chip v-bind="props" size="small">LS {{ consoleRef.leekscript.version }} {{ consoleRef.leekscript.strict ? 'strict' : '' }} <v-icon>mdi-chevron-down</v-icon></v-chip>
 					</template>
-					<leekscript-versions v-model:version="$refs.console.leekscript.version" v-model:strict="$refs.console.leekscript.strict" />
+					<leekscript-versions v-model:version="consoleRef.leekscript.version" v-model:strict="consoleRef.leekscript.strict" />
 				</v-menu>
-				<v-chip v-if="$refs.console && !$refs.console.isEmpty()" @click="$refs.console.clear()" size="small"><v-icon>mdi-cancel</v-icon></v-chip>
+				<v-chip v-if="consoleRef && !consoleRef.isEmpty()" @click="consoleRef.clear()" size="small"><v-icon>mdi-cancel</v-icon></v-chip>
 			</div>
 		</template>
 		<template #options>
@@ -18,7 +18,7 @@
 					<div class="option" v-bind="props"><v-icon>mdi-weather-night</v-icon></div>
 				</template>
 				<div class="theme-menu">
-					<div v-for="t in themes" :key="t.value" class="theme-item" :class="{ active: $refs.console && $refs.console.theme === t.value }" @click="setTheme(t.value)">{{ t.label }}</div>
+					<div v-for="t in themes" :key="t.value" class="theme-item" :class="{ active: consoleRef && consoleRef.theme === t.value }" @click="setTheme(t.value)">{{ t.label }}</div>
 				</div>
 			</v-menu>
 			<!-- <div class="option" @click="consoleRandom"><img src="/image/icon/dice.png"></div> -->
@@ -29,87 +29,92 @@
 	</popup>
 </template>
 
-<script lang="ts">
-
+<script setup lang="ts">
 import { LeekWars } from '@/model/leekwars'
-import { Options, Prop, Vue } from 'vue-property-decorator'
+import { emitter } from '@/model/vue'
+import { onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 import Console from './console.vue'
 import LeekscriptVersions from './leekscript-versions.vue'
-import { emitter } from '@/model/vue'
 
-@Options({ components: { 'console': Console, LeekscriptVersions } })
-export default class ConsoleWindow extends Vue {
+defineOptions({ name: 'console-window', components: { 'console': Console, LeekscriptVersions } })
 
-	@Prop({ required: true}) modelValue!: boolean
+defineProps<{
+	modelValue: boolean
+}>()
 
-	consoleX: number = 0
-	consoleY: number = 0
-	consoleDown: boolean = false
-	consoleStartx: number = 0
-	consoleStarty: number = 0
-	consoleDragx: number = 0
-	consoleDragy: number = 0
-	themes = [
-		{ value: 'leek-wars', label: 'Leek Wars' },
-		{ value: 'monokai', label: 'Monokai' },
-		{ value: 'vs', label: 'VS Code clair' },
-		{ value: 'vs-dark', label: 'VS Code sombre' },
-		{ value: 'hc-light', label: 'High Contrast clair' },
-		{ value: 'hc-black', label: 'High Contrast sombre' },
-	]
+const emit = defineEmits<{
+	'update:modelValue': [value: boolean]
+	'close': []
+}>()
 
-	mounted() {
-		this.consoleX = window.innerWidth / 2 - 300
-		this.consoleY = window.innerHeight / 2 - 200
-		setTimeout(() => {
-			(this.$refs.console as Console).focus()
-		}, 100)
+const consoleRef = useTemplateRef<any>('console')
+const consoleX = ref(0)
+const consoleY = ref(0)
+const consoleDown = ref(false)
+const consoleStartx = ref(0)
+const consoleStarty = ref(0)
+const consoleDragx = ref(0)
+const consoleDragy = ref(0)
+const themes = [
+	{ value: 'leek-wars', label: 'Leek Wars' },
+	{ value: 'monokai', label: 'Monokai' },
+	{ value: 'vs', label: 'VS Code clair' },
+	{ value: 'vs-dark', label: 'VS Code sombre' },
+	{ value: 'hc-light', label: 'High Contrast clair' },
+	{ value: 'hc-black', label: 'High Contrast sombre' },
+]
 
-		emitter.on('mousemove', this.consoleMouseMove)
-		emitter.on('mouseup', this.consoleMouseUp)
-	}
+onMounted(() => {
+	consoleX.value = window.innerWidth / 2 - 300
+	consoleY.value = window.innerHeight / 2 - 200
+	setTimeout(() => {
+		consoleRef.value?.focus()
+	}, 100)
 
-	beforeUnmount() {
-		emitter.off('mousemove', this.consoleMouseMove)
-		emitter.off('mouseup', this.consoleMouseUp)
-	}
+	emitter.on('mousemove', consoleMouseMove)
+	emitter.on('mouseup', consoleMouseUp)
+})
 
-	consoleMouseDown(e: MouseEvent) {
+onBeforeUnmount(() => {
+	emitter.off('mousemove', consoleMouseMove)
+	emitter.off('mouseup', consoleMouseUp)
+})
 
-		if (e.button === 2) { return false }
-		this.consoleDragx = e.pageX
-		this.consoleDragy = e.pageY
-		this.consoleStartx = this.consoleX
-		this.consoleStarty = this.consoleY
-		this.consoleDown = true
-		e.preventDefault()
-		return false
-	}
+function consoleMouseDown(e: MouseEvent) {
+	if (e.button === 2) { return false }
+	consoleDragx.value = e.pageX
+	consoleDragy.value = e.pageY
+	consoleStartx.value = consoleX.value
+	consoleStarty.value = consoleY.value
+	consoleDown.value = true
+	e.preventDefault()
+	return false
+}
 
-	consoleMouseMove(e: MouseEvent) {
-		if (!this.consoleDown) { return null }
-		this.consoleX = this.consoleStartx + (e.pageX - this.consoleDragx)
-		if (this.consoleX < -15) { this.consoleX = -15 }
-		this.consoleY = this.consoleStarty + (e.pageY - this.consoleDragy)
-		if (this.consoleY < -15) { this.consoleY = -15 }
-	}
+function consoleMouseMove(e: MouseEvent) {
+	if (!consoleDown.value) { return null }
+	consoleX.value = consoleStartx.value + (e.pageX - consoleDragx.value)
+	if (consoleX.value < -15) { consoleX.value = -15 }
+	consoleY.value = consoleStarty.value + (e.pageY - consoleDragy.value)
+	if (consoleY.value < -15) { consoleY.value = -15 }
+}
 
-	consoleMouseUp(e: MouseEvent) {
-		this.consoleDown = false
-	}
+function consoleMouseUp(_e: MouseEvent) {
+	consoleDown.value = false
+}
 
-	setTheme(theme: string) {
-		const console = this.$refs.console as Console
+function setTheme(theme: string) {
+	const console = consoleRef.value
+	if (console) {
 		console.theme = theme
 		console.saveTheme()
 	}
-
-	consolePopup() {
-		LeekWars.popupWindow("/full-console", "title", 600, 320)
-		this.$emit('close')
-	}
 }
 
+function consolePopup() {
+	LeekWars.popupWindow("/full-console", "title", 600, 320)
+	emit('close')
+}
 </script>
 
 <style lang="scss">

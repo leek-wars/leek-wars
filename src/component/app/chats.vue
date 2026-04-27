@@ -16,43 +16,39 @@
 	</div>
 </template>
 
-<script lang="ts">
-	const ChatElement = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
-	import { ChatType, ChatWindow } from '@/model/chat'
-	import { LeekWars } from '@/model/leekwars'
-	import { store } from '@/model/store'
-	import { defineAsyncComponent } from 'vue'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
+<script setup lang="ts">
+import { ChatType, ChatWindow } from '@/model/chat'
+import { LeekWars } from '@/model/leekwars'
+import { store } from '@/model/store'
+import { defineAsyncComponent, ref, watch } from 'vue'
 
-	@Options({
-		components: { chat: ChatElement }
-	})
-	export default class Chats extends Vue {
-		ChatType = ChatType
+const Chat = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
 
-		@Watch('LeekWars.chatWindows', {deep: true})
-		update() {
-			localStorage.setItem('chats', JSON.stringify(LeekWars.chatWindows))
-		}
+defineOptions({ name: 'chats', components: { chat: Chat } })
 
-		toggleExpanded(window: ChatWindow, index: number) {
-			window.expanded = !window.expanded
-			setTimeout(() => ((this.$refs.chats as Vue[])[index] as any).updateScroll())
-		}
+const chats = ref<any[]>([])
 
-		getFarmer(window: ChatWindow) {
-			const chat = store.state.chat[window.id]
-			if (chat) {
-				const f = chat.farmers.find(f => f.id !== store.state.farmer!.id)
-				if (f) { return f }
-			}
-			return {id: -1}
-		}
+watch(() => LeekWars.chatWindows, () => {
+	localStorage.setItem('chats', JSON.stringify(LeekWars.chatWindows))
+}, { deep: true })
 
-		sendMessage(message: string, id: number) {
-			LeekWars.post('message/send-message', {conversation_id: id, message})
-		}
+function toggleExpanded(window: ChatWindow, index: number) {
+	window.expanded = !window.expanded
+	setTimeout(() => (chats.value[index] as any).updateScroll())
+}
+
+function getFarmer(window: ChatWindow) {
+	const chat = store.state.chat[window.id]
+	if (chat) {
+		const f = chat.farmers.find(f => f.id !== store.state.farmer!.id)
+		if (f) { return f }
 	}
+	return {id: -1}
+}
+
+function sendMessage(message: string, id: number) {
+	LeekWars.post('message/send-message', {conversation_id: id, message})
+}
 </script>
 
 <style lang="scss" scoped>
