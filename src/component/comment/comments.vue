@@ -35,7 +35,7 @@ import '@/model/emojis'
 defineOptions({ name: 'comments', components: { 'chat-input': ChatInput } })
 
 defineProps<{
-	comments: Comment[]
+	comments: Comment[] | null
 }>()
 
 const emit = defineEmits<{
