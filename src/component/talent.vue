@@ -17,7 +17,7 @@
 defineOptions({ name: 'talent' })
 
 defineProps<{
-	talent: number
+	talent: number | string
 	max_talent?: number
 	label?: string
 	id: number
