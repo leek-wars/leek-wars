@@ -233,7 +233,7 @@ function chipSound(id: number) {
 function playSound(item: any, type: string) {
 		if (type !== 'chip' && type !== 'weapon') { return }
 		const play = (sounds: any) => {
-			if (sounds.length === 0) { return }
+			if (!sounds || sounds.length === 0) { return }
 			const sound = sounds[0]
 			const sound_ext = sound.includes('.') ? sound : sound + '.mp3'
 			const audio = new Audio('/sound/' + sound_ext)
