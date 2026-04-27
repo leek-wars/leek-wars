@@ -15,58 +15,57 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
+	import { onMounted, ref } from 'vue'
 	import { Swiper } from 'swiper'
 	import { Navigation, Pagination, Autoplay } from 'swiper/modules'
 	import 'swiper/css'
 
-	@Options({ name: 'signup-carousel', i18n: {}, mixins: [...mixins] })
-	export default class SignupCarousel extends Vue {
+	defineOptions({ name: 'signup-carousel', i18n: {}, mixins: [...mixins] })
 
-		bigImage: string | null = null
-		bigImageLegend: string = ''
-		images = [
-			{id: 1, image: "signup/factory_fight_small.webp", legend: "fight_factory", legend_tr: ''},
-			{id: 2, image: "signup/leek_small.webp", legend: "leek_page", legend_tr: ''},
-			{id: 3, image: "signup/br_small.webp", legend: "fight_ice", legend_tr: ''},
-			{id: 4, image: "signup/editor_small.webp", legend: "editor", legend_tr: ''},
-			{id: 5, image: "signup/forest_fight_small.webp", legend: "fight_forest", legend_tr: ''},
-			{id: 6, image: "signup/market_small.webp", legend: "market", legend_tr: ''},
-			{id: 7, image: "signup/fight_desert_small.webp", legend: "fight_desert", legend_tr: ''},
-			{id: 8, image: "signup/ranking_small.webp", legend: "ranking", legend_tr: ''},
-			{id: 9, image: "signup/trophies_small.webp", legend: "trophies", legend_tr: ''},
-			{id: 10, image: "signup/tournament_small.webp", legend: "tournament", legend_tr: ''},
-			{id: 11, image: "app/preview1_small.webp", legend: "android_app", legend_tr: ''},
-			{id: 12, image: "app/preview3_small.webp", legend: "android_app", legend_tr: ''},
-			{id: 13, image: "app/preview5_small.webp", legend: "android_app", legend_tr: ''},
-			{id: 14, image: "app/preview6_small.webp", legend: "android_app", legend_tr: ''},
-			{id: 15, image: "app/preview7_small.webp", legend: "android_app", legend_tr: ''},
-			{id: 16, image: "signup/mona_small.webp", legend: "pixel_art", legend_tr: ''},
-		]
+	const bigImage = ref<string | null>(null)
+	const bigImageLegend = ref('')
+	const images = [
+		{id: 1, image: "signup/factory_fight_small.webp", legend: "fight_factory", legend_tr: ''},
+		{id: 2, image: "signup/leek_small.webp", legend: "leek_page", legend_tr: ''},
+		{id: 3, image: "signup/br_small.webp", legend: "fight_ice", legend_tr: ''},
+		{id: 4, image: "signup/editor_small.webp", legend: "editor", legend_tr: ''},
+		{id: 5, image: "signup/forest_fight_small.webp", legend: "fight_forest", legend_tr: ''},
+		{id: 6, image: "signup/market_small.webp", legend: "market", legend_tr: ''},
+		{id: 7, image: "signup/fight_desert_small.webp", legend: "fight_desert", legend_tr: ''},
+		{id: 8, image: "signup/ranking_small.webp", legend: "ranking", legend_tr: ''},
+		{id: 9, image: "signup/trophies_small.webp", legend: "trophies", legend_tr: ''},
+		{id: 10, image: "signup/tournament_small.webp", legend: "tournament", legend_tr: ''},
+		{id: 11, image: "app/preview1_small.webp", legend: "android_app", legend_tr: ''},
+		{id: 12, image: "app/preview3_small.webp", legend: "android_app", legend_tr: ''},
+		{id: 13, image: "app/preview5_small.webp", legend: "android_app", legend_tr: ''},
+		{id: 14, image: "app/preview6_small.webp", legend: "android_app", legend_tr: ''},
+		{id: 15, image: "app/preview7_small.webp", legend: "android_app", legend_tr: ''},
+		{id: 16, image: "signup/mona_small.webp", legend: "pixel_art", legend_tr: ''},
+	]
 
-		mounted() {
-			const swiper = new Swiper('.swiper', {
-				modules: [Navigation, Pagination, Autoplay],
-				slidesPerView: 'auto',
-				spaceBetween: 15,
-				freeMode: true,
-				loop: true,
-				autoplay: {
-					delay: 2000,
-					disableOnInteraction: true
-				}
-			})
-		}
+	onMounted(() => {
+		const swiper = new Swiper('.swiper', {
+			modules: [Navigation, Pagination, Autoplay],
+			slidesPerView: 'auto',
+			spaceBetween: 15,
+			freeMode: true,
+			loop: true,
+			autoplay: {
+				delay: 2000,
+				disableOnInteraction: true
+			}
+		})
+		void swiper
+	})
 
-		handleClickSlide(i: number) {
-			if (LeekWars.mobile) { return }
-			const image = this.images[i]
-			this.bigImage = image.image.replace('_small', '')
-			this.bigImageLegend = image.legend
-		}
+	function handleClickSlide(i: number) {
+		if (LeekWars.mobile) { return }
+		const image = images[i]
+		bigImage.value = image.image.replace('_small', '')
+		bigImageLegend.value = image.legend
 	}
 </script>
 

@@ -56,45 +56,42 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue } from 'vue-property-decorator'
+	import { computed, ref } from 'vue'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Options({ name: "moderation-history", i18n: {}, components: { Breadcrumb, RichTooltipFarmer } })
-	export default class ModerationHistory extends Vue {
-		history: any[] = []
-		total: number = 0
-		loading: boolean = true
-		LeekWars = LeekWars
-		headers = [
-			{ title: 'Modérateur', value: 'author', sortable: false },
-			{ title: 'Cible', value: 'target', sortable: false },
-			{ title: 'Motif', value: 'reason', sortable: false },
-			{ title: 'Gravité', value: 'severity', sortable: false },
-			{ title: 'Message', value: 'message', sortable: false },
-			{ title: 'Date', value: 'date', sortable: false },
-		]
+	defineOptions({ name: "moderation-history", i18n: {}, mixins: [...mixins] })
 
-		get breadcrumb_items() {
-			return [
-				{name: "Modération", link: '/moderation'},
-				{name: "Historique", link: '/moderation/history'},
-			]
-		}
+	const history = ref<any[]>([])
+	const total = ref(0)
+	const loading = ref(true)
+	const headers = [
+		{ title: 'Modérateur', value: 'author', sortable: false },
+		{ title: 'Cible', value: 'target', sortable: false },
+		{ title: 'Motif', value: 'reason', sortable: false },
+		{ title: 'Gravité', value: 'severity', sortable: false },
+		{ title: 'Message', value: 'message', sortable: false },
+		{ title: 'Date', value: 'date', sortable: false },
+	]
 
-		updateOptions(options: any) {
-			this.loading = true
-			const page = options.page - 1
-			const count = options.itemsPerPage
-			LeekWars.get('moderation/get-history/' + page + '/' + count).then((data: any) => {
-				this.history = data.history
-				this.total = data.total
-				this.loading = false
-				LeekWars.setTitle("Historique des jugements")
-			})
-		}
+	const breadcrumb_items = computed(() => [
+		{name: "Modération", link: '/moderation'},
+		{name: "Historique", link: '/moderation/history'},
+	])
+
+	function updateOptions(options: any) {
+		loading.value = true
+		const page = options.page - 1
+		const count = options.itemsPerPage
+		LeekWars.get('moderation/get-history/' + page + '/' + count).then((data: any) => {
+			history.value = data.history
+			total.value = data.total
+			loading.value = false
+			LeekWars.setTitle("Historique des jugements")
+		})
 	}
 </script>
 

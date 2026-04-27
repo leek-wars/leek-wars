@@ -33,70 +33,79 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
+	import { computed, ref } from 'vue'
+	import { useI18n } from 'vue-i18n'
+	import { useRouter } from 'vue-router'
 
-	@Options({ i18n: {}, mixins: [...mixins] })
-	export default class GardenNoFights extends Vue {
+	defineOptions({ i18n: {}, mixins: [...mixins] })
 
-		@Prop() canbuy!: boolean
-		buyingHabs: boolean = false
-		buyingCrystals: boolean = false
+	defineProps<{
+		canbuy?: boolean
+	}>()
+	const emit = defineEmits<{
+		'bought': []
+	}>()
 
-		get remainingTime() {
-			const midnignt = new Date(LeekWars.timeSeconds * 1000)
-			midnignt.setUTCHours(24 + this.getFranceOffset(), 0, 0, 0)
-			return Math.round(midnignt.getTime() / 1000 - LeekWars.timeSeconds)
+	const { t } = useI18n()
+	const router = useRouter()
+
+	const buyingHabs = ref(false)
+	const buyingCrystals = ref(false)
+
+	const remainingTime = computed(() => {
+		const midnignt = new Date(LeekWars.timeSeconds * 1000)
+		midnignt.setUTCHours(24 + getFranceOffset(), 0, 0, 0)
+		return Math.round(midnignt.getTime() / 1000 - LeekWars.timeSeconds)
+	})
+
+	const habsPrice = computed(() => {
+		const x = store.state.farmer!.total_level
+		return Math.round(10_000 + Math.pow((x - 1) / 1203, 1.5) * (5_000_000 - 10_000))
+	})
+
+	function getFranceOffset() {
+		const t1 = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Paris' }))
+		const t2 = new Date(new Date().toLocaleString('en-US', { timeZone: 'GMT' }))
+		return (t2.getTime() - t1.getTime()) / 1000 / 3600
+	}
+
+	function buyHabs() {
+		buyingHabs.value = true
+		LeekWars.post('market/buy-habs-quantity', { item_id: '50fights', quantity: 1 }).then(data => {
+			store.commit('update-habs', -habsPrice.value)
+			store.commit('update-fights', data.fights)
+			store.commit('update-bought-fights', data.fights)
+			if (store.state.farmer) store.state.farmer.habs_fights = true
+			LeekWars.toast(t('fights_bought', [data.fights]))
+			emit('bought')
+		}).error(error => {
+			LeekWars.toast(t('market.error_' + error.error) || error.error)
+		}).finally(() => {
+			buyingHabs.value = false
+		})
+	}
+
+	function buyCrystals() {
+		if (store.state.farmer && store.state.farmer.crystals < 100) {
+			router.push('/bank?ref=garden_buy')
+			return
 		}
-
-		get habsPrice() {
-			const x = store.state.farmer!.total_level
-			return Math.round(10_000 + Math.pow((x - 1) / 1203, 1.5) * (5_000_000 - 10_000))
-		}
-
-		getFranceOffset() {
-			const t1 = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Paris' }))
-			const t2 = new Date(new Date().toLocaleString('en-US', { timeZone: 'GMT' }))
-			return (t2.getTime() - t1.getTime()) / 1000 / 3600
-		}
-
-		buyHabs() {
-			this.buyingHabs = true
-			LeekWars.post('market/buy-habs-quantity', { item_id: '50fights', quantity: 1 }).then(data => {
-				store.commit('update-habs', -this.habsPrice)
-				store.commit('update-fights', data.fights)
-				store.commit('update-bought-fights', data.fights)
-				if (store.state.farmer) store.state.farmer.habs_fights = true
-				LeekWars.toast(this.$t('fights_bought', [data.fights]))
-				this.$emit('bought')
-			}).error(error => {
-				LeekWars.toast(this.$t('market.error_' + error.error) || error.error)
-			}).finally(() => {
-				this.buyingHabs = false
-			})
-		}
-
-		buyCrystals() {
-			if (this.$store.state.farmer && this.$store.state.farmer.crystals < 100) {
-				this.$router.push('/bank?ref=garden_buy')
-				return
-			}
-			this.buyingCrystals = true
-			LeekWars.post('market/buy-crystals-quantity', { item_id: '100fights', quantity: 1 }).then(data => {
-				store.commit('update-crystals', -100)
-				store.commit('update-fights', data.fights)
-				store.commit('update-bought-fights', data.fights)
-				LeekWars.toast(this.$t('fights_bought', [data.fights]))
-				this.$emit('bought')
-			}).error(error => {
-				LeekWars.toast(this.$t('market.error_' + error.error) || error.error)
-			}).finally(() => {
-				this.buyingCrystals = false
-			})
-		}
+		buyingCrystals.value = true
+		LeekWars.post('market/buy-crystals-quantity', { item_id: '100fights', quantity: 1 }).then(data => {
+			store.commit('update-crystals', -100)
+			store.commit('update-fights', data.fights)
+			store.commit('update-bought-fights', data.fights)
+			LeekWars.toast(t('fights_bought', [data.fights]))
+			emit('bought')
+		}).error(error => {
+			LeekWars.toast(t('market.error_' + error.error) || error.error)
+		}).finally(() => {
+			buyingCrystals.value = false
+		})
 	}
 </script>
 

@@ -85,139 +85,131 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { mixins } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
-import { Component, Vue, Watch } from 'vue-facing-decorator'
-import { mixins } from '@/model/i18n'
+import { computed, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-@Component({ name: 'teams', i18n: {}, components: { RichTooltipTeam, RichTooltipFarmer }, mixins: [...mixins] })
-export default class Teams extends Vue {
+defineOptions({ name: 'teams', i18n: {}, components: { RichTooltipTeam, RichTooltipFarmer }, mixins: [...mixins] })
 
-	teams: any[] | null = null
-	hasMatch: boolean = false
-	search: string = ''
-	activityFilter: string = 'all'
-	sizeFilter: string = 'all'
-	showClosed: boolean = localStorage.getItem('teams/show-closed') === 'true'
-	candidacyTeams: number[] = []
+const { t } = useI18n()
 
-	get activityOptions() {
-		return [
-			{ title: this.$t('all'), value: 'all' },
-			{ title: this.$t('main.very_active'), value: 'very_active' },
-			{ title: this.$t('main.active'), value: 'active' },
-		]
+const teams = ref<any[] | null>(null)
+const hasMatch = ref(false)
+const search = ref('')
+const activityFilter = ref('all')
+const sizeFilter = ref('all')
+const showClosed = ref(localStorage.getItem('teams/show-closed') === 'true')
+const candidacyTeams = ref<number[]>([])
+
+const activityOptions = computed(() => [
+	{ title: t('all'), value: 'all' },
+	{ title: t('main.very_active'), value: 'very_active' },
+	{ title: t('main.active'), value: 'active' },
+])
+
+const sizeOptions = computed(() => [
+	{ title: t('all'), value: 'all' },
+	{ title: '1-5', value: 'small' },
+	{ title: '6-15', value: 'medium' },
+	{ title: '16+', value: 'large' },
+])
+
+const canApply = computed<boolean>(() => !!(store.state.farmer && store.state.farmer.team === null))
+
+const headers = computed(() => {
+	const h: any[] = [
+		{ title: t('team_name'), key: 'name', sortable: true },
+		{ title: t('level'), key: 'level', sortable: true, align: 'end' },
+		{ title: t('talent'), key: 'talent', sortable: true, align: 'end' },
+		{ title: t('avg_leek_level'), key: 'avg_leek_level', sortable: true, align: 'end' },
+		{ title: t('members'), key: 'member_count', sortable: true, align: 'end' },
+		{ title: t('activity'), key: 'activity_score', sortable: true, align: 'end' },
+	]
+	if (hasMatch.value) {
+		h.push({ title: t('match'), key: 'match_score', sortable: true, align: 'end' })
 	}
-
-	get sizeOptions() {
-		return [
-			{ title: this.$t('all'), value: 'all' },
-			{ title: '1-5', value: 'small' },
-			{ title: '6-15', value: 'medium' },
-			{ title: '16+', value: 'large' },
-		]
+	if (canApply.value) {
+		h.push({ title: '', key: 'apply', sortable: false, align: 'center', width: '120px' })
 	}
+	return h
+})
 
-	get headers() {
-		const h: any[] = [
-			{ title: this.$t('team_name'), key: 'name', sortable: true },
-			{ title: this.$t('level'), key: 'level', sortable: true, align: 'end' },
-			{ title: this.$t('talent'), key: 'talent', sortable: true, align: 'end' },
-			{ title: this.$t('avg_leek_level'), key: 'avg_leek_level', sortable: true, align: 'end' },
-			{ title: this.$t('members'), key: 'member_count', sortable: true, align: 'end' },
-			{ title: this.$t('activity'), key: 'activity_score', sortable: true, align: 'end' },
-		]
-		if (this.hasMatch) {
-			h.push({ title: this.$t('match'), key: 'match_score', sortable: true, align: 'end' })
-		}
-		if (this.canApply) {
-			h.push({ title: '', key: 'apply', sortable: false, align: 'center', width: '120px' })
-		}
-		return h
+const filteredTeams = computed(() => {
+	if (!teams.value) return []
+	let result = teams.value
+	if (activityFilter.value === 'very_active') {
+		result = result.filter(t => t.activity_score >= 200)
+	} else if (activityFilter.value === 'active') {
+		result = result.filter(t => t.activity_score >= 100)
 	}
+	if (sizeFilter.value === 'small') {
+		result = result.filter(t => t.member_count >= 1 && t.member_count <= 5)
+	} else if (sizeFilter.value === 'medium') {
+		result = result.filter(t => t.member_count >= 6 && t.member_count <= 15)
+	} else if (sizeFilter.value === 'large') {
+		result = result.filter(t => t.member_count >= 16)
+	}
+	return result
+})
 
-	get filteredTeams() {
-		if (!this.teams) return []
-		let result = this.teams
-		if (this.activityFilter === 'very_active') {
-			result = result.filter(t => t.activity_score >= 200)
-		} else if (this.activityFilter === 'active') {
-			result = result.filter(t => t.activity_score >= 100)
-		}
-		if (this.sizeFilter === 'small') {
-			result = result.filter(t => t.member_count >= 1 && t.member_count <= 5)
-		} else if (this.sizeFilter === 'medium') {
-			result = result.filter(t => t.member_count >= 6 && t.member_count <= 15)
-		} else if (this.sizeFilter === 'large') {
-			result = result.filter(t => t.member_count >= 16)
-		}
-		return result
-	}
-
-	activityLabel(score: number) {
-		if (score >= 250) return '🔥🔥🔥'
-		if (score >= 100) return '🔥🔥'
-		if (score >= 10) return '🔥'
-		return ''
-	}
-
-	activityTooltip(score: number) {
-		if (score >= 250) return this.$t('main.very_active')
-		if (score >= 100) return this.$t('main.active')
-		return this.$t('main.low_activity')
-	}
-
-	get canApply(): boolean {
-		return store.state.farmer && store.state.farmer.team === null
-	}
-
-	sendCandidacy(team: { id: number }) {
-		LeekWars.post('team/send-candidacy', { team_id: team.id }).then(() => {
-			this.candidacyTeams.push(team.id)
-			LeekWars.toast(this.$t('candidacy_sent'))
-		}).error((error: { error: string, params: string[] }) => LeekWars.toast(this.$t('error_' + error.error, error.params)))
-	}
-
-	cancelCandidacy(team: { id: number }) {
-		LeekWars.post('team/cancel-candidacy-for-team', { team_id: team.id }).then(() => {
-			this.candidacyTeams = this.candidacyTeams.filter(id => id !== team.id)
-			LeekWars.toast(this.$t('candidacy_cancelled'))
-		}).error((error: { error: string, params: string[] }) => LeekWars.toast(this.$t('error_' + error.error, error.params)))
-	}
-
-	matchColor(score: number) {
-		// Linear interpolation from red (0%) to green (100%) via HSL hue
-		const hue = score * 120 // 0 = red, 120 = green
-		return `hsl(${hue}, 70%, 40%)`
-	}
-
-	rowProps({ item }: { item: any }) {
-		return item.opened === false ? { class: 'closed-row' } : {}
-	}
-
-	@Watch('showClosed')
-	onShowClosedChanged() {
-		localStorage.setItem('teams/show-closed', '' + this.showClosed)
-		this.loadTeams()
-	}
-
-	loadTeams() {
-		this.teams = null
-		LeekWars.get('team/get-recruiting?include_closed=' + this.showClosed).then((data: any) => {
-			this.teams = data.teams
-			this.hasMatch = this.teams !== null && this.teams.length > 0 && this.teams[0].match_score !== undefined
-			this.candidacyTeams = data.candidacy_teams || []
-		})
-	}
-
-	created() {
-		LeekWars.setTitle(this.$t('title'))
-		this.loadTeams()
-	}
+function activityLabel(score: number) {
+	if (score >= 250) return '🔥🔥🔥'
+	if (score >= 100) return '🔥🔥'
+	if (score >= 10) return '🔥'
+	return ''
 }
+
+function activityTooltip(score: number) {
+	if (score >= 250) return t('main.very_active')
+	if (score >= 100) return t('main.active')
+	return t('main.low_activity')
+}
+
+function sendCandidacy(team: { id: number }) {
+	LeekWars.post('team/send-candidacy', { team_id: team.id }).then(() => {
+		candidacyTeams.value.push(team.id)
+		LeekWars.toast(t('candidacy_sent'))
+	}).error((error: { error: string, params: string[] }) => LeekWars.toast(t('error_' + error.error, error.params)))
+}
+
+function cancelCandidacy(team: { id: number }) {
+	LeekWars.post('team/cancel-candidacy-for-team', { team_id: team.id }).then(() => {
+		candidacyTeams.value = candidacyTeams.value.filter(id => id !== team.id)
+		LeekWars.toast(t('candidacy_cancelled'))
+	}).error((error: { error: string, params: string[] }) => LeekWars.toast(t('error_' + error.error, error.params)))
+}
+
+function matchColor(score: number) {
+	// Linear interpolation from red (0%) to green (100%) via HSL hue
+	const hue = score * 120 // 0 = red, 120 = green
+	return `hsl(${hue}, 70%, 40%)`
+}
+
+function rowProps({ item }: { item: any }) {
+	return item.opened === false ? { class: 'closed-row' } : {}
+}
+
+watch(showClosed, () => {
+	localStorage.setItem('teams/show-closed', '' + showClosed.value)
+	loadTeams()
+})
+
+function loadTeams() {
+	teams.value = null
+	LeekWars.get('team/get-recruiting?include_closed=' + showClosed.value).then((data: any) => {
+		teams.value = data.teams
+		hasMatch.value = teams.value !== null && teams.value.length > 0 && teams.value[0].match_score !== undefined
+		candidacyTeams.value = data.candidacy_teams || []
+	})
+}
+
+LeekWars.setTitle(t('title'))
+loadTeams()
 </script>
 
 <style lang="scss" scoped>

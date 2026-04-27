@@ -30,44 +30,41 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { Farmer } from '@/model/farmer'
-	import { i18n } from '@/model/i18n'
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Fault, Warning } from '@/model/moderation'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
+	import { Fault } from '@/model/moderation'
+	import { computed, ref } from 'vue'
+	import { useI18n } from 'vue-i18n'
 	import Breadcrumb from '../forum/breadcrumb.vue'
+
+	defineOptions({ name: "moderation-thugs", i18n: {}, mixins: [...mixins] })
 
 	class ModerationRequest {
 		faults!: Fault[]
 		thugs!: Farmer[]
 	}
 
-	@Options({ name: "moderation-thugs", i18n: {}, components: { Breadcrumb } })
-	export default class ModerationThugs extends Vue {
-		thugs: any = null
+	const { t } = useI18n()
+	const thugs = ref<any>(null)
 
-		get breadcrumb_items() {
-			return [
-				{name: "Modération", link: '/moderation'},
-				{name: "Voyous", link: '/moderation/thugs'},
-			]
-		}
+	const breadcrumb_items = computed(() => [
+		{name: "Modération", link: '/moderation'},
+		{name: "Voyous", link: '/moderation/thugs'},
+	])
 
-		created() {
-			LeekWars.get<ModerationRequest>('moderation/get-reportings').then(data => {
-				this.thugs = data.thugs
-				LeekWars.setTitle(this.$t('title'))
-			})
-		}
+	LeekWars.get<ModerationRequest>('moderation/get-reportings').then(data => {
+		thugs.value = data.thugs
+		LeekWars.setTitle(t('title'))
+	})
 
-		ban(farmer: Farmer) {
-			LeekWars.post('moderation/ban', {target: farmer.id}).then(data => {
-				LeekWars.toast("Éleveur banni")
-			}).error(error => {
-				LeekWars.toast(error)
-			})
-		}
+	function ban(farmer: Farmer) {
+		LeekWars.post('moderation/ban', {target: farmer.id}).then(data => {
+			LeekWars.toast("Éleveur banni")
+		}).error(error => {
+			LeekWars.toast(error)
+		})
 	}
 </script>
 

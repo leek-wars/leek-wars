@@ -39,83 +39,77 @@
 	</popup>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { Farmer } from '@/model/farmer'
-	import { i18n } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { Team } from '@/model/team'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { computed, ref, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
 
-	@Options({})
-	export default class ReportDialog extends Vue {
+	const props = defineProps<{
+		reasons?: Warning[]
+		target?: Farmer | null
+		team?: Team | null
+		modelValue?: boolean
+		parameter?: any
+		leeks?: Leek[] | null
+		fight?: number
+		leek?: Leek | null
+	}>()
+	const emit = defineEmits<{
+		'update:modelValue': [value: boolean]
+	}>()
 
-		@Prop() reasons!: Warning[]
-		@Prop() target!: Farmer | null
-		@Prop() team!: Team | null
-		@Prop() modelValue!: boolean
-		@Prop() parameter!: any
-		@Prop() leeks!: Leek[] | null
-		@Prop() fight!: number
-		@Prop() leek!: Leek | null
+	const { t } = useI18n()
 
-		additionalMessage: string = ''
-		selectedReason: Warning | null = null
-		selectedTarget: Farmer | null = null
-		selectedLeek: Leek | null = null
+	const additionalMessage = ref('')
+	const selectedReason = ref<Warning | null>(null)
+	const selectedTarget = ref<Farmer | null>(null)
+	const selectedLeek = ref<Leek | null>(null)
 
-		get title() {
-			return this.$t('warning.report')
+	const name = computed(() => selectedTarget.value ? selectedTarget.value.name : (props.team ? props.team.name : '?'))
+	const title = computed(() => t('warning.report'))
+	const subtitle = computed(() => !selectedTarget.value && props.leeks ? t('warning.select_leek') : name.value)
+	const message = computed(() => t('warning.report_farmer_for_reason', [name.value]))
+	const selectedFarmer = computed(() => props.target || selectedTarget.value)
+	void selectedFarmer
+
+	watch(() => props.target, () => {
+		selectedTarget.value = props.target ?? null
+	}, { immediate: true })
+	watch(() => props.leek, () => {
+		selectedLeek.value = props.leek ?? null
+	}, { immediate: true })
+
+	function report() {
+		if (!selectedReason.value) {
+			LeekWars.toast(t('warning.you_must_choose_reason') as string)
+			return
 		}
-		get subtitle() {
-			return !this.selectedTarget && this.leeks ? this.$t('warning.select_leek') : this.name
+		const target = selectedTarget.value?.id || 0
+		let parameter = props.parameter || ''
+		if (selectedReason.value === Warning.INCORRECT_LEEK_NAME) {
+			parameter = selectedLeek.value!.id
 		}
-		get message() {
-			return this.$t('warning.report_farmer_for_reason', [this.name])
-		}
-		get name() {
-			return this.selectedTarget ? this.selectedTarget.name : (this.team ? this.team.name : '?')
-		}
-		get selectedFarmer() {
-			return this.target || this.selectedTarget
-		}
-		@Watch('target', {immediate: true})
-		updateTarget() {
-			this.selectedTarget = this.target
-		}
-		@Watch('leek', {immediate: true})
-		updateLeek() {
-			this.selectedLeek = this.leek
-		}
-		report() {
-			if (!this.selectedReason) {
-				LeekWars.toast(i18n.t('warning.you_must_choose_reason') as string)
-				return
-			}
-			const target = this.selectedTarget?.id || 0
-			let parameter = this.parameter || ''
-			if (this.selectedReason === Warning.INCORRECT_LEEK_NAME) {
-				parameter = this.selectedLeek!.id
-			}
-			const fight = this.fight ? this.fight : 0
-			LeekWars.post('moderation/report', {target_id: target, reason: this.selectedReason, message: this.additionalMessage, parameter, fight}).then(data => {
-				LeekWars.toast(i18n.t('warning.thank_you_for_reporting') as string)
-				this.close()
-			}).error(error => {
-				LeekWars.toast(error)
-			})
-		}
-		close() {
-			this.$emit('update:modelValue', false)
-		}
-		selectLeek(leek: Leek) {
-			this.selectedTarget = leek.farmer
-			this.selectedLeek = leek
-		}
-		back() {
-			this.selectedTarget = null
-		}
+		const fight = props.fight ? props.fight : 0
+		LeekWars.post('moderation/report', {target_id: target, reason: selectedReason.value, message: additionalMessage.value, parameter, fight}).then(data => {
+			LeekWars.toast(t('warning.thank_you_for_reporting') as string)
+			close()
+		}).error(error => {
+			LeekWars.toast(error)
+		})
+	}
+	function close() {
+		emit('update:modelValue', false)
+	}
+	function selectLeek(leek: Leek) {
+		selectedTarget.value = leek.farmer
+		selectedLeek.value = leek
+	}
+	function back() {
+		selectedTarget.value = null
 	}
 </script>
 

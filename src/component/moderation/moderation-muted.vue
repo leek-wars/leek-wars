@@ -45,42 +45,38 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue } from 'vue-property-decorator'
+	import { computed, ref } from 'vue'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 
-	@Options({ name: "moderation-muted", i18n: {}, components: { Breadcrumb } })
-	export default class ModerationMuted extends Vue {
-		muted: any[] | null = null
-		now: number = Math.floor(Date.now() / 1000)
+	defineOptions({ name: "moderation-muted", i18n: {}, mixins: [...mixins] })
 
-		get breadcrumb_items() {
-			return [
-				{name: "Modération", link: '/moderation'},
-				{name: "Mutés", link: '/moderation/muted'},
-			]
-		}
+	const muted = ref<any[] | null>(null)
+	const now = Math.floor(Date.now() / 1000)
 
-		created() {
-			LeekWars.get('moderation/get-muted').then((data: any) => {
-				this.muted = data.muted
-				LeekWars.setTitle("Mutés")
-			})
-		}
+	const breadcrumb_items = computed(() => [
+		{name: "Modération", link: '/moderation'},
+		{name: "Mutés", link: '/moderation/muted'},
+	])
 
-		formatExpiry(timestamp: number) {
-			return LeekWars.formatDuration(timestamp)
-		}
+	LeekWars.get('moderation/get-muted').then((data: any) => {
+		muted.value = data.muted
+		LeekWars.setTitle("Mutés")
+	})
 
-		unmute(farmer: any) {
-			LeekWars.post('moderation/unmute', {target_id: farmer.id, type: 'all'}).then(() => {
-				LeekWars.toast("Joueur démuté")
-				this.muted = this.muted!.filter(f => f.id !== farmer.id)
-			}).error((error: any) => {
-				LeekWars.toast(error)
-			})
-		}
+	function formatExpiry(timestamp: number) {
+		return LeekWars.formatDuration(timestamp)
+	}
+
+	function unmute(farmer: any) {
+		LeekWars.post('moderation/unmute', {target_id: farmer.id, type: 'all'}).then(() => {
+			LeekWars.toast("Joueur démuté")
+			muted.value = muted.value!.filter(f => f.id !== farmer.id)
+		}).error((error: any) => {
+			LeekWars.toast(error)
+		})
 	}
 </script>
 

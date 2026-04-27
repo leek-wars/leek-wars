@@ -24,91 +24,84 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { locale } from '@/locale'
-	import { Farmer } from '@/model/farmer'
-	import { ForumCategory, ForumMessage, ForumTopic } from '@/model/forum'
-	import { mixins } from '@/model/i18n'
+<script setup lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
-	import Breadcrumb from '../forum/breadcrumb.vue'
+	import { ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED } from '@/model/item'
 	import { SchemeTemplate } from '@/model/scheme'
-	import { ItemTypes, ITEM_CATEGORY_NAME } from '@/model/item'
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
-	import { defineAsyncComponent } from 'vue'
+	import { defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue'
+	import Breadcrumb from '../forum/breadcrumb.vue'
 	const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
 
-	@Options({ name: 'forge', components: { Breadcrumb, 'rich-tooltip-item': RichTooltipItem } })
-	export default class Forge extends Vue {
+	defineOptions({ name: 'forge', components: { Breadcrumb, 'rich-tooltip-item': RichTooltipItem } })
 
-		ItemTypes = ItemTypes
-		ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
-		forge: any[] = [null, null, null, null, null, null, null, null]
-		scheme: SchemeTemplate | null = null
-		result: any = null
-		building: boolean = false
-		built: boolean = false
+	const ITEM_CATEGORY_NAME: Record<number, any> = ITEM_CATEGORY_NAME_TYPED
 
-		mounted() {
-			LeekWars.footer = false
-			LeekWars.box = true
-			emitter.on('craft', (scheme: SchemeTemplate) => {
-				this.clear()
-				this.scheme = scheme
-				for (let i = 0; i < scheme.items.length; ++i) {
-					this.forge[i] = scheme.items[i]
-				}
-				this.result = scheme.result
-			})
-		}
+	const forge = ref<any[]>([null, null, null, null, null, null, null, null])
+	const scheme = ref<SchemeTemplate | null>(null)
+	const result = ref<any>(null)
+	const building = ref(false)
+	const built = ref(false)
 
-		clearIngredients() {
-			for (let i = 0; i < 8; ++i) {
-				this.forge[i] = null
+	onMounted(() => {
+		LeekWars.footer = false
+		LeekWars.box = true
+		emitter.on('craft', (s: SchemeTemplate) => {
+			clear()
+			scheme.value = s
+			for (let i = 0; i < s.items.length; ++i) {
+				forge.value[i] = s.items[i]
 			}
-		}
-		clear() {
-			this.clearIngredients()
-			this.result = null
-			this.scheme = null
-			this.building = false
-			this.built = false
-		}
+			result.value = s.result
+		})
+	})
 
-		beforeUnmount() {
-			emitter.off('craft')
+	function clearIngredients() {
+		for (let i = 0; i < 8; ++i) {
+			forge.value[i] = null
 		}
+	}
+	function clear() {
+		clearIngredients()
+		result.value = null
+		scheme.value = null
+		building.value = false
+		built.value = false
+	}
 
-		craft() {
-			if (!this.scheme) return
-			if (this.built) {
-				const scheme = this.scheme
-				this.clear()
-				emitter.emit('craft', scheme)
-				return
-			}
-			LeekWars.post('item/craft', { scheme_id: this.scheme.id }).then(item => {
-				const template = LeekWars.items[item.template]
-				store.commit('add-inventory', { type: template.type, id: item.id, template: item.template, time: item.time, quantity: this.scheme!.quantity })
-				for (const ingredient of this.scheme!.items) {
-					if (ingredient === null) continue;
-					if (ingredient[0] === 148) { // hab
-						store.commit('update-habs', -ingredient[1])
-					} else {
-						const it = LeekWars.items[ingredient[0]]
-						store.commit('remove-inventory', { type: it.type, item_template: ingredient[0], quantity: ingredient[1] })
-					}
+	onBeforeUnmount(() => {
+		emitter.off('craft')
+	})
+
+	function craft() {
+		if (!scheme.value) return
+		if (built.value) {
+			const s = scheme.value
+			clear()
+			emitter.emit('craft', s)
+			return
+		}
+		LeekWars.post('item/craft', { scheme_id: scheme.value.id }).then(item => {
+			const template = LeekWars.items[item.template]
+			store.commit('add-inventory', { type: template.type, id: item.id, template: item.template, time: item.time, quantity: scheme.value!.quantity })
+			for (const ingredient of scheme.value!.items) {
+				if (ingredient === null) continue;
+				if (ingredient[0] === 148) { // hab
+					store.commit('update-habs', -ingredient[1])
+				} else {
+					const it = LeekWars.items[ingredient[0]]
+					store.commit('remove-inventory', { type: it.type, item_template: ingredient[0], quantity: ingredient[1] })
 				}
-			})
+			}
+		})
 
-			this.building = true
-			setTimeout(() => {
-				this.building = false
-				this.clearIngredients()
-				this.built = true
-			}, 500)
-		}
+		building.value = true
+		setTimeout(() => {
+			building.value = false
+			clearIngredients()
+			built.value = true
+		}, 500)
 	}
 </script>
 
