@@ -38,39 +38,38 @@
 	</table>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { TEAM_COLORS } from '@/model/team'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import ReportStatisticsEntity from './report-statistics-entity.vue'
 	import { FightStatistics } from './statistics'
+	import { computed } from 'vue'
 
-	@Options({ components: { ReportStatisticsEntity } })
-	export default class ReportStatistics extends Vue {
-		@Prop({required: true}) fight!: any
-		@Prop({required: true}) statistics!: FightStatistics
-		stats = ['dmg_out', 'dmg_in', 'heal_out', 'heal_in', 'kills', 'ops_format', 'ops_per_turn_format', 'usedPT', 'usedPTperTurn', 'usedPM', 'roundsPlayed', 'actionsWeapon', 'actionsChip', 'invocation', 'resurrection', 'critical', 'crashes']
-		TEAM_COLORS = TEAM_COLORS
+	const props = defineProps<{
+		fight: any
+		statistics: FightStatistics
+	}>()
 
-		get best() {
-			const result: any = {}
-			for (const stat of this.stats) {
-				let best = 0
-				let bestEntities:number[] = []
-				const real_stat = stat === 'ops_format' ? 'operations' : (stat === 'ops_per_turn_format' ? 'operations_per_turn' : stat)
-				for (const e in this.statistics.entities) {
-					if ((this.statistics.entities[e] as any)[real_stat] > best) {
-						best = (this.statistics.entities[e] as any)[real_stat]
-						bestEntities = [this.statistics.entities[e].leek.id]
-					} else if ((this.statistics.entities[e] as any)[real_stat] === best && best !== 0) {
-						bestEntities.push(this.statistics.entities[e].leek.id)
-					}
+	const stats = ['dmg_out', 'dmg_in', 'heal_out', 'heal_in', 'kills', 'ops_format', 'ops_per_turn_format', 'usedPT', 'usedPTperTurn', 'usedPM', 'roundsPlayed', 'actionsWeapon', 'actionsChip', 'invocation', 'resurrection', 'critical', 'crashes']
+
+	const best = computed(() => {
+		const result: any = {}
+		for (const stat of stats) {
+			let best = 0
+			let bestEntities:number[] = []
+			const real_stat = stat === 'ops_format' ? 'operations' : (stat === 'ops_per_turn_format' ? 'operations_per_turn' : stat)
+			for (const e in props.statistics.entities) {
+				if ((props.statistics.entities[e] as any)[real_stat] > best) {
+					best = (props.statistics.entities[e] as any)[real_stat]
+					bestEntities = [props.statistics.entities[e].leek.id]
+				} else if ((props.statistics.entities[e] as any)[real_stat] === best && best !== 0) {
+					bestEntities.push(props.statistics.entities[e].leek.id)
 				}
-				
-				result[stat] = bestEntities
 			}
-			return result
+
+			result[stat] = bestEntities
 		}
-	}
+		return result
+	})
 </script>
 
 <style lang="scss" scoped>

@@ -108,205 +108,192 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { ItemTemplate, ItemType, ITEM_TYPE_ICONS, ITEM_TYPE_NAME } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import Inventory from '@/component/inventory/inventory.vue'
-	import SchemeView from '../market/scheme.vue'
+	import Scheme from '../market/scheme.vue'
 	import ItemPreview from '@/component/market/item-preview.vue'
 	import Forge from '../forge/forge.vue'
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
+	import { computed, getCurrentInstance, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 	enum Sort {
 		PRICE, LEVEL, RARITY, INGREDIENT_COUNT
 	}
 
-	@Options({ name: 'inventory-page', i18n: {}, mixins: [...mixins], components: {
-		Inventory,
-		'scheme': SchemeView,
-		'forge': Forge,
-		ItemPreview,
-	} })
-	export default class InventoryPage extends Vue {
+	defineOptions({ name: 'inventory-page', i18n: {}, mixins: [...mixins] })
 
-		Sort = Sort
-		ItemType = ItemType
-		ITEM_TYPE_ICONS = ITEM_TYPE_ICONS
-		ITEM_TYPE_NAME = ITEM_TYPE_NAME
-		bottomHeight: number = Math.max(300, parseInt(localStorage.getItem('inventory/bottom-height') || '350', 10))
-		bottomExpanded: boolean = localStorage.getItem('inventory/workshop') !== 'false'
-		sort: Sort = Math.min(parseInt(localStorage.getItem('workshop/sort') || '0', 10), Sort.INGREDIENT_COUNT) as Sort
-		filter: number = parseInt(localStorage.getItem('workshop/filter') || '0', 10)
-		craftableOnly: boolean = localStorage.getItem('workshop/craftable') === 'true'
+	const bottomHeight = ref(Math.max(300, parseInt(localStorage.getItem('inventory/bottom-height') || '350', 10)))
+	const bottomExpanded = ref(localStorage.getItem('inventory/workshop') !== 'false')
+	const sort = ref<Sort>(Math.min(parseInt(localStorage.getItem('workshop/sort') || '0', 10), Sort.INGREDIENT_COUNT) as Sort)
+	const filter = ref<number>(parseInt(localStorage.getItem('workshop/filter') || '0', 10))
+	const craftableOnly = ref(localStorage.getItem('workshop/craftable') === 'true')
 
-		// Shared tooltip state
-		tooltipVisible: boolean = false
-		tooltipItem: ItemTemplate | null = null
-		tooltipQuantity: number = 0
-		tooltipCraftCost: number = 0
-		tooltipActivator: HTMLElement | undefined = undefined
-		private tooltipShowTimer: number = 0
-		private tooltipHideTimer: number = 0
-		private tooltipOnTooltip: boolean = false
+	const tooltipVisible = ref(false)
+	const tooltipItem = ref<ItemTemplate | null>(null)
+	const tooltipQuantity = ref(0)
+	const tooltipCraftCost = ref(0)
+	const tooltipActivator = ref<HTMLElement | undefined>(undefined)
+	let tooltipShowTimer: number = 0
+	let tooltipHideTimer: number = 0
+	let tooltipOnTooltip: boolean = false
 
-		showTooltip(data: { item: ItemTemplate, quantity: number, craftCost?: number, event: MouseEvent }) {
-			clearTimeout(this.tooltipHideTimer)
-			const target = data.event.currentTarget as HTMLElement
-			if (this.tooltipVisible) {
-				this.tooltipActivator = target
-				this.tooltipItem = data.item
-				this.tooltipQuantity = data.quantity
-				this.tooltipCraftCost = data.craftCost || 0
-			} else {
-				clearTimeout(this.tooltipShowTimer)
-				this.tooltipShowTimer = window.setTimeout(() => {
-					this.tooltipActivator = target
-					this.tooltipItem = data.item
-					this.tooltipQuantity = data.quantity
-					this.tooltipCraftCost = data.craftCost || 0
-					this.tooltipVisible = true
-				}, 500)
-			}
-		}
+	const bottomPanel = ref<any>(null)
+	const bottomContent = ref<HTMLElement | null>(null)
 
-		scheduleHideTooltip() {
-			clearTimeout(this.tooltipShowTimer)
-			this.tooltipHideTimer = window.setTimeout(() => {
-				if (!this.tooltipOnTooltip) {
-					this.tooltipVisible = false
-				}
-			}, 100)
-		}
-
-		onTooltipEnter() {
-			this.tooltipOnTooltip = true
-			clearTimeout(this.tooltipHideTimer)
-		}
-
-		onTooltipLeave() {
-			this.tooltipOnTooltip = false
-			this.tooltipVisible = false
-		}
-
-		isCraftable(scheme: any): boolean {
-			if (!store.state.farmer) return false
-			const farmer = store.state.farmer
-			for (const ingredient of scheme.items) {
-				if (!ingredient) continue
-				const [itemId, quantity] = ingredient
-				if (itemId === 148) {
-					if (farmer.habs < quantity) return false
-				} else {
-					const found = farmer.resources.find((i: any) => i.template === itemId)
-						|| farmer.components.find((i: any) => i.template === itemId)
-						|| farmer.potions.find((i: any) => i.template === itemId)
-						|| farmer.weapons.find((i: any) => i.template === itemId)
-						|| farmer.chips.find((i: any) => i.template === itemId)
-					if (!found || found.quantity < quantity) return false
-				}
-			}
-			return true
-		}
-
-		get all_schemes() {
-			if (!store.state.farmer) return []
-			return Object.values(LeekWars.schemes)
-				.filter(scheme => store.state.farmer?.schemes.find(s => LeekWars.items[s.template].params == scheme.id))
-		}
-
-		get schemeFilterTypes() {
-			const types = new Set(this.all_schemes.map(s => LeekWars.items[s.result].type))
-			return [ItemType.ALL, ...Array.from(types).sort()]
-		}
-
-		get schemes() {
-			let schemes = this.all_schemes
-			if (this.filter !== 0) {
-				schemes = schemes.filter(s => LeekWars.items[s.result].type === this.filter)
-			}
-			if (this.craftableOnly) {
-				schemes = schemes.filter(s => this.isCraftable(s))
-			}
-			return [...schemes].sort((a, b) => {
-				if (this.sort === Sort.LEVEL) return LeekWars.items[b.result].level - LeekWars.items[a.result].level
-				if (this.sort === Sort.RARITY) return LeekWars.items[b.result].rarity - LeekWars.items[a.result].rarity
-				if (this.sort === Sort.INGREDIENT_COUNT) return b.items.filter(i => i !== null).length - a.items.filter(i => i !== null).length
-				/* Sort.PRICE */ return LeekWars.items[b.result].price! - LeekWars.items[a.result].price!
-			})
-		}
-
-		@Watch('sort')
-		updateSort() {
-			localStorage.setItem('workshop/sort', '' + this.sort)
-		}
-		@Watch('filter')
-		updateFilter() {
-			localStorage.setItem('workshop/filter', '' + this.filter)
-		}
-		@Watch('craftableOnly')
-		updateCraftable() {
-			localStorage.setItem('workshop/craftable', '' + this.craftableOnly)
-		}
-
-		get bottomPanelStyle() {
-			if (!this.bottomExpanded) return { flex: '0 0 auto' }
-			return { flex: '0 0 ' + this.bottomHeight + 'px' }
-		}
-
-		resizerMousedown(e: MouseEvent) {
-			const panel = this.$refs.bottomPanel as any
-			const column = (this.$el as HTMLElement).querySelector('.column') as HTMLElement
-			const startY = e.clientY
-			const startHeight = panel.expanded ? this.bottomHeight : 0
-			const maxHeight = column.clientHeight - 200
-			const mousemove = (ev: MouseEvent) => {
-				let height = Math.max(0, Math.min(maxHeight, startHeight - (ev.clientY - startY)))
-				if (height < 200) {
-					height = 0
-					if (panel.expanded) panel.expanded = false
-				} else {
-					if (!panel.expanded) panel.expanded = true
-					height = Math.max(300, height)
-				}
-				this.bottomHeight = height || 300
-				localStorage.setItem('inventory/bottom-height', '' + this.bottomHeight)
-			}
-			const mouseup = () => {
-				document.documentElement.removeEventListener('mousemove', mousemove)
-				document.documentElement.removeEventListener('mouseup', mouseup)
-				document.body.style.cursor = ''
-				document.body.style.userSelect = ''
-			}
-			document.documentElement.addEventListener('mousemove', mousemove, false)
-			document.documentElement.addEventListener('mouseup', mouseup, false)
-			document.body.style.cursor = 'ns-resize'
-			document.body.style.userSelect = 'none'
-			e.preventDefault()
-		}
-
-		scrollToForge() {
-			const el = this.$refs.bottomContent as HTMLElement
-			if (el && LeekWars.mobile) {
-				el.scrollTo({ top: 0, behavior: 'smooth' })
-			}
-		}
-
-		mounted() {
-			LeekWars.footer = false
-			LeekWars.box = true
-			emitter.on('craft', this.scrollToForge)
-			emitter.on('clover-used', () => { this.tooltipVisible = false })
-		}
-
-		beforeUnmount() {
-			LeekWars.footer = true
-			LeekWars.box = false
-			emitter.off('craft', this.scrollToForge)
+	function showTooltip(data: { item: ItemTemplate, quantity: number, craftCost?: number, event: MouseEvent }) {
+		clearTimeout(tooltipHideTimer)
+		const target = data.event.currentTarget as HTMLElement
+		if (tooltipVisible.value) {
+			tooltipActivator.value = target
+			tooltipItem.value = data.item
+			tooltipQuantity.value = data.quantity
+			tooltipCraftCost.value = data.craftCost || 0
+		} else {
+			clearTimeout(tooltipShowTimer)
+			tooltipShowTimer = window.setTimeout(() => {
+				tooltipActivator.value = target
+				tooltipItem.value = data.item
+				tooltipQuantity.value = data.quantity
+				tooltipCraftCost.value = data.craftCost || 0
+				tooltipVisible.value = true
+			}, 500)
 		}
 	}
+
+	function scheduleHideTooltip() {
+		clearTimeout(tooltipShowTimer)
+		tooltipHideTimer = window.setTimeout(() => {
+			if (!tooltipOnTooltip) {
+				tooltipVisible.value = false
+			}
+		}, 100)
+	}
+
+	function onTooltipEnter() {
+		tooltipOnTooltip = true
+		clearTimeout(tooltipHideTimer)
+	}
+
+	function onTooltipLeave() {
+		tooltipOnTooltip = false
+		tooltipVisible.value = false
+	}
+
+	function isCraftable(scheme: any): boolean {
+		if (!store.state.farmer) return false
+		const farmer = store.state.farmer
+		for (const ingredient of scheme.items) {
+			if (!ingredient) continue
+			const [itemId, quantity] = ingredient
+			if (itemId === 148) {
+				if (farmer.habs < quantity) return false
+			} else {
+				const found = farmer.resources.find((i: any) => i.template === itemId)
+					|| farmer.components.find((i: any) => i.template === itemId)
+					|| farmer.potions.find((i: any) => i.template === itemId)
+					|| farmer.weapons.find((i: any) => i.template === itemId)
+					|| farmer.chips.find((i: any) => i.template === itemId)
+				if (!found || found.quantity < quantity) return false
+			}
+		}
+		return true
+	}
+
+	const all_schemes = computed(() => {
+		if (!store.state.farmer) return []
+		return Object.values(LeekWars.schemes)
+			.filter(scheme => store.state.farmer?.schemes.find(s => LeekWars.items[s.template].params == scheme.id))
+	})
+
+	const schemeFilterTypes = computed(() => {
+		const types = new Set(all_schemes.value.map(s => LeekWars.items[s.result].type))
+		return [ItemType.ALL, ...Array.from(types).sort()]
+	})
+
+	const schemes = computed(() => {
+		let schemes = all_schemes.value
+		if (filter.value !== 0) {
+			schemes = schemes.filter(s => LeekWars.items[s.result].type === filter.value)
+		}
+		if (craftableOnly.value) {
+			schemes = schemes.filter(s => isCraftable(s))
+		}
+		return [...schemes].sort((a, b) => {
+			if (sort.value === Sort.LEVEL) return LeekWars.items[b.result].level - LeekWars.items[a.result].level
+			if (sort.value === Sort.RARITY) return LeekWars.items[b.result].rarity - LeekWars.items[a.result].rarity
+			if (sort.value === Sort.INGREDIENT_COUNT) return b.items.filter(i => i !== null).length - a.items.filter(i => i !== null).length
+			return LeekWars.items[b.result].price! - LeekWars.items[a.result].price!
+		})
+	})
+
+	watch(sort, () => localStorage.setItem('workshop/sort', '' + sort.value))
+	watch(filter, () => localStorage.setItem('workshop/filter', '' + filter.value))
+	watch(craftableOnly, () => localStorage.setItem('workshop/craftable', '' + craftableOnly.value))
+
+	const bottomPanelStyle = computed(() => {
+		if (!bottomExpanded.value) return { flex: '0 0 auto' }
+		return { flex: '0 0 ' + bottomHeight.value + 'px' }
+	})
+
+	const instance = getCurrentInstance()
+
+	function resizerMousedown(e: MouseEvent) {
+		const panel = bottomPanel.value as any
+		const column = (instance!.proxy!.$el as HTMLElement).querySelector('.column') as HTMLElement
+		const startY = e.clientY
+		const startHeight = panel.expanded ? bottomHeight.value : 0
+		const maxHeight = column.clientHeight - 200
+		const mousemove = (ev: MouseEvent) => {
+			let height = Math.max(0, Math.min(maxHeight, startHeight - (ev.clientY - startY)))
+			if (height < 200) {
+				height = 0
+				if (panel.expanded) panel.expanded = false
+			} else {
+				if (!panel.expanded) panel.expanded = true
+				height = Math.max(300, height)
+			}
+			bottomHeight.value = height || 300
+			localStorage.setItem('inventory/bottom-height', '' + bottomHeight.value)
+		}
+		const mouseup = () => {
+			document.documentElement.removeEventListener('mousemove', mousemove)
+			document.documentElement.removeEventListener('mouseup', mouseup)
+			document.body.style.cursor = ''
+			document.body.style.userSelect = ''
+		}
+		document.documentElement.addEventListener('mousemove', mousemove, false)
+		document.documentElement.addEventListener('mouseup', mouseup, false)
+		document.body.style.cursor = 'ns-resize'
+		document.body.style.userSelect = 'none'
+		e.preventDefault()
+	}
+
+	function scrollToForge() {
+		const el = bottomContent.value as HTMLElement
+		if (el && LeekWars.mobile) {
+			el.scrollTo({ top: 0, behavior: 'smooth' })
+		}
+	}
+
+	const onCloverUsed = () => { tooltipVisible.value = false }
+
+	onMounted(() => {
+		LeekWars.footer = false
+		LeekWars.box = true
+		emitter.on('craft', scrollToForge)
+		emitter.on('clover-used', onCloverUsed)
+	})
+
+	onBeforeUnmount(() => {
+		LeekWars.footer = true
+		LeekWars.box = false
+		emitter.off('craft', scrollToForge)
+		emitter.off('clover-used', onCloverUsed)
+	})
 </script>
 
 <style lang="scss" scoped>

@@ -65,50 +65,48 @@
 	</tr>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { Fight, FightContext, FightType, ReportLeek } from '@/model/fight'
-	import { ItemTemplate, ItemType, ITEM_CATEGORY_NAME } from '@/model/item'
+	import { ItemType, ITEM_CATEGORY_NAME } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import SchemeImage from '../market/scheme-image.vue'
+	import { computed } from 'vue'
+	import { store } from '@/model/store'
 
-	@Options({ components: { RichTooltipLeek, SchemeImage } })
-	export default class ReportLeekRow extends Vue {
-		@Prop({required: true}) leek!: ReportLeek
-		@Prop({required: true}) fight!: Fight
-		FightContext = FightContext
-		ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
-		ItemType = ItemType
+	const props = defineProps<{
+		leek: ReportLeek
+		fight: Fight
+	}>()
 
-		get currentBar() {
-			const totalXP = this.leek.next_xp - this.leek.prev_xp
-			const newLevel = this.leek.cur_xp - this.leek.xp < this.leek.prev_xp
-			const oldXP = newLevel ? 0 : this.leek.cur_xp - (this.leek.xp || 0) - this.leek.prev_xp
-			return Math.floor(100 * oldXP / totalXP)
-		}
-		get newBar() {
-			const totalXP = this.leek.next_xp - this.leek.prev_xp
-			const newLevel = this.leek.cur_xp - this.leek.xp < this.leek.prev_xp
-			const newXPInCurrentLevel = newLevel ? this.leek.cur_xp - this.leek.prev_xp : this.leek.xp
-			return Math.floor(100 * newXPInCurrentLevel / totalXP)
-		}
+	const currentBar = computed(() => {
+		const totalXP = props.leek.next_xp - props.leek.prev_xp
+		const newLevel = props.leek.cur_xp - props.leek.xp < props.leek.prev_xp
+		const oldXP = newLevel ? 0 : props.leek.cur_xp - (props.leek.xp || 0) - props.leek.prev_xp
+		return Math.floor(100 * oldXP / totalXP)
+	})
 
-		get isMyLeek() {
-			if (!this.$store.state.farmer) { return false }
-			if (this.fight.type !== FightType.TEAM && this.fight.type !== FightType.BATTLE_ROYALE) { return false }
-			return this.leek.id in this.$store.state.farmer.leeks
-		}
+	const newBar = computed(() => {
+		const totalXP = props.leek.next_xp - props.leek.prev_xp
+		const newLevel = props.leek.cur_xp - props.leek.xp < props.leek.prev_xp
+		const newXPInCurrentLevel = newLevel ? props.leek.cur_xp - props.leek.prev_xp : props.leek.xp
+		return Math.floor(100 * newXPInCurrentLevel / totalXP)
+	})
 
-		get sorted_resources() {
-			if (this.leek.resources) {
-				return Object.entries(this.leek.resources)
-					.filter(r => !!LeekWars.items[r[0]])
-					.sort((a, b) => LeekWars.items[b[0]].price! - LeekWars.items[a[0]].price!)
-			}
-			return {}
+	const isMyLeek = computed(() => {
+		if (!store.state.farmer) { return false }
+		if (props.fight.type !== FightType.TEAM && props.fight.type !== FightType.BATTLE_ROYALE) { return false }
+		return props.leek.id in store.state.farmer.leeks
+	})
+
+	const sorted_resources = computed(() => {
+		if (props.leek.resources) {
+			return Object.entries(props.leek.resources)
+				.filter(r => !!LeekWars.items[r[0]])
+				.sort((a, b) => LeekWars.items[b[0]].price! - LeekWars.items[a[0]].price!)
 		}
-	}
+		return {}
+	})
 </script>
 
 <style lang="scss" scoped>

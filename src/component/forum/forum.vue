@@ -147,94 +147,93 @@
 	</div>
 </template>
 
-<script lang="ts">
-	const ChatPanel = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat-panel.vue`))
+<script setup lang="ts">
 	import { Farmer } from '@/model/farmer'
 	import { Language, LeekWars } from '@/model/leekwars'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
-	import { mixins } from '@/model/i18n'
+	import { i18n, mixins } from '@/model/i18n'
 	import { store } from '@/model/store'
-	import { defineAsyncComponent } from 'vue'
-import { emitter } from '@/model/vue'
+	import { computed, defineAsyncComponent, reactive, ref, watch } from 'vue'
+	import { emitter } from '@/model/vue'
+	import { useRouter } from 'vue-router'
 
-	@Options({ name: 'forum', i18n: {}, mixins: [...mixins], components: { ChatPanel, RichTooltipFarmer } })
-	export default class Forum extends Vue {
+	const ChatPanel = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat-panel.vue`))
 
-		categories: any = null
-		connected_farmers: Farmer[] = []
-		connected_languages: any = {}
-		forumLanguages: {[key: string]: boolean} = {}
-		expandFarmers: boolean = true
-		searchQuery: string = ''
-		notifyNewTopics: boolean = false
+	defineOptions({ name: 'forum', i18n: {}, mixins: [...mixins] })
 
-		get languages() {
-			return Object.values(LeekWars.languages).filter(l => l.forum)
-		}
+	const router = useRouter()
 
-		created() {
-			const languages = (localStorage.getItem('forum/languages') as string || this.$i18n.locale).split(',')
-			for (const l in LeekWars.languages) {
-				this.forumLanguages[l] = false
-			}
-			for (const l of languages) {
-				this.forumLanguages[l] = true
-			}
-			LeekWars.get('forum/get-categories/' + this.activeLanguages).then(data => {
-				this.categories = data.categories
-				emitter.emit('loaded')
-				this.connected_farmers = data.farmers
-				store.commit('connected-count', data.farmers.length)
-				this.connected_languages = data.languages
-				this.notifyNewTopics = data.notif_topics
-				LeekWars.setSubTitle(this.$t('connected_farmers_subtitle', [data.farmers.length]))
-			})
-			LeekWars.setTitle(this.$t('title'))
-			LeekWars.setActions([
-				{icon: 'mdi-chat-outline', click: () => this.$router.push('/chat')},
-				{icon: 'mdi-magnify', click: () => this.$router.push('/search')}
-			])
-		}
-		setForumLanguage(language: Language) {
-			this.forumLanguages = {[language.code]: true}
-			localStorage.setItem('forum/languages', language.code)
-			LeekWars.get('forum/get-categories/' + language.code).then(data => {
-				this.categories = data.categories
-			})
-		}
-		pickForumLanguage(language: Language) {
-			this.forumLanguages[language.code] = !this.forumLanguages[language.code]
-			localStorage.setItem('forum/languages', this.activeLanguages.join(','))
-			LeekWars.get('forum/get-categories/' + this.activeLanguages).then(data => {
-				this.categories = data.categories
-			})
-		}
-		search() {
-			const query = this.searchQuery.replace(/ /g, '+')
-			if (query) {
-				this.$router.push('/search?query=' + query)
-			} else {
-				this.$router.push('/search')
-			}
-		}
-		get activeLanguages() {
-			return Object.entries(this.forumLanguages).filter(e => e[1]).map(e => e[0])
-		}
-		resolvedColor(category: { resolved_count: number, total_count: number }) {
-			const ratio = category.resolved_count / category.total_count
-			return ratio >= 0.8 ? '#4caf50' : ratio >= 0.5 ? '#2196f3' : '#ff9800'
-		}
-		resolvedClass(category: { resolved_count: number, total_count: number }) {
-			const ratio = category.resolved_count / category.total_count
-			return ratio >= 0.8 ? 'high' : ratio >= 0.5 ? 'mid' : 'low'
-		}
+	const categories = ref<any>(null)
+	const connected_farmers = ref<Farmer[]>([])
+	const connected_languages = ref<any>({})
+	const forumLanguages = reactive<{[key: string]: boolean}>({})
+	const expandFarmers = ref(true)
+	const searchQuery = ref('')
+	const notifyNewTopics = ref(false)
 
-		@Watch('notifyNewTopics')
-		updateNotifyNewTopics() {
-			LeekWars.post('settings/update-setting', { setting: 'notif_topics', value: this.notifyNewTopics })
+	const languages = computed(() => Object.values(LeekWars.languages).filter(l => l.forum))
+
+	const activeLanguages = computed(() => Object.entries(forumLanguages).filter(e => e[1]).map(e => e[0]))
+
+	{
+		const langs = (localStorage.getItem('forum/languages') as string || i18n.global.locale).split(',')
+		for (const l in LeekWars.languages) {
+			forumLanguages[l] = false
+		}
+		for (const l of langs) {
+			forumLanguages[l] = true
+		}
+		LeekWars.get('forum/get-categories/' + activeLanguages.value).then(data => {
+			categories.value = data.categories
+			emitter.emit('loaded')
+			connected_farmers.value = data.farmers
+			store.commit('connected-count', data.farmers.length)
+			connected_languages.value = data.languages
+			notifyNewTopics.value = data.notif_topics
+			LeekWars.setSubTitle(i18n.global.t('connected_farmers_subtitle', [data.farmers.length]))
+		})
+		LeekWars.setTitle(i18n.global.t('title'))
+		LeekWars.setActions([
+			{icon: 'mdi-chat-outline', click: () => router.push('/chat')},
+			{icon: 'mdi-magnify', click: () => router.push('/search')}
+		])
+	}
+
+	function setForumLanguage(language: Language) {
+		for (const k in forumLanguages) forumLanguages[k] = false
+		forumLanguages[language.code] = true
+		localStorage.setItem('forum/languages', language.code)
+		LeekWars.get('forum/get-categories/' + language.code).then(data => {
+			categories.value = data.categories
+		})
+	}
+	function pickForumLanguage(language: Language) {
+		forumLanguages[language.code] = !forumLanguages[language.code]
+		localStorage.setItem('forum/languages', activeLanguages.value.join(','))
+		LeekWars.get('forum/get-categories/' + activeLanguages.value).then(data => {
+			categories.value = data.categories
+		})
+	}
+	function search() {
+		const query = searchQuery.value.replace(/ /g, '+')
+		if (query) {
+			router.push('/search?query=' + query)
+		} else {
+			router.push('/search')
 		}
 	}
+	function resolvedColor(category: { resolved_count: number, total_count: number }) {
+		const ratio = category.resolved_count / category.total_count
+		return ratio >= 0.8 ? '#4caf50' : ratio >= 0.5 ? '#2196f3' : '#ff9800'
+	}
+	function resolvedClass(category: { resolved_count: number, total_count: number }) {
+		const ratio = category.resolved_count / category.total_count
+		return ratio >= 0.8 ? 'high' : ratio >= 0.5 ? 'mid' : 'low'
+	}
+
+	watch(notifyNewTopics, () => {
+		LeekWars.post('settings/update-setting', { setting: 'notif_topics', value: notifyNewTopics.value })
+	})
 </script>
 
 <style lang="scss" scoped>

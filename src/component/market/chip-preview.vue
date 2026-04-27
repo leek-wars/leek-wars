@@ -38,7 +38,7 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import AreaView from '@/component/market/area-view.vue'
 	import EffectView from '@/component/market/effect.vue'
 	import RangeView from '@/component/market/range-view.vue'
@@ -48,30 +48,23 @@
 	import { EffectType } from '@/model/effect'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
+	import { computed } from 'vue'
 
-	@Options({
-		name: 'chip-preview',
-		components: {
-			'range-view': RangeView,
-			'effect-view': EffectView,
-			'area-view': AreaView,
-			'summon-view': SummonView
-		}
-	})
-	export default class ChipPreview extends Vue {
-		@Prop() chip!: ChipTemplate
-		@Prop() leek!: Leek
-		Area = Area
-		get summon() {
-			for (const effect of this.chip.effects) {
-				if (effect.id === EffectType.SUMMON) {
-					return LeekWars.summonTemplates[effect.value1]
-				}
+	defineOptions({ name: 'chip-preview' })
+
+	const props = defineProps<{
+		chip: ChipTemplate
+		leek: Leek
+	}>()
+
+	const summon = computed(() => {
+		for (const effect of props.chip.effects) {
+			if (effect.id === EffectType.SUMMON) {
+				return LeekWars.summonTemplates[effect.value1]
 			}
-			return null
 		}
-	}
+		return null
+	})
 </script>
 
 <style src='./item-preview.scss' lang='scss'></style>

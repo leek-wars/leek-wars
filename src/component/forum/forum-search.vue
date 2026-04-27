@@ -106,108 +106,104 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import Pagination from '@/component/pagination.vue'
+	import { computed, reactive, ref, watch } from 'vue'
+	import { useRoute, useRouter } from 'vue-router'
 
-	@Options({ name: 'search', i18n: {}, mixins: [...mixins], components: { Pagination } })
-	export default class Search extends Vue {
-		options = {
-			query: '',
-			farmer: '',
-			page: 1,
-			category: -1,
-			admin: false,
-			moderator: false,
-			order: 'pertinence',
-			resolved: 'all',
-		} as {[key: string]: any}
-		defaultOptions = {
-			query: '',
-			farmer: '',
-			page: 1,
-			category: -1,
-			admin: false,
-			moderator: false,
-			order: 'pertinence'
-		} as {[key: string]: any}
-		queryLower: string = ''
-		pages: number = 0
-		results: any[] | null = null
-		categories: any[] = []
-		searchStarted: boolean = false
-		count: number = 0
-		floor = Math.floor
+	defineOptions({ name: 'search', i18n: {}, mixins: [...mixins] })
 
-		highlight(text: string) {
-			return LeekWars.protect(text).replace(/&lt;b&gt;/g, '<b>').replace(/&lt;\/b&gt;/g, '</b>')
-		}
+	const route = useRoute()
+	const router = useRouter()
 
-		get canSearch() {
-			return this.options.query || this.options.farmer || this.options.admin
-		}
-		created() {
-			const languages = (localStorage.getItem('forum/languages') as string || this.$i18n.locale).split(',')
-			LeekWars.get('forum/get-categories/' + languages).then(data => {
-				this.categories = data.categories
-			})
-			LeekWars.setTitle(this.$i18n.t('title'))
-		}
+	const options = reactive({
+		query: '',
+		farmer: '',
+		page: 1,
+		category: -1,
+		admin: false,
+		moderator: false,
+		order: 'pertinence',
+		resolved: 'all',
+	} as {[key: string]: any})
+	const defaultOptions = {
+		query: '',
+		farmer: '',
+		page: 1,
+		category: -1,
+		admin: false,
+		moderator: false,
+		order: 'pertinence'
+	} as {[key: string]: any}
+	const queryLower = ref('')
+	const pages = ref(0)
+	const results = ref<any[] | null>(null)
+	const categories = ref<any[]>([])
+	const searchStarted = ref(false)
+	const count = ref(0)
+	const floor = Math.floor
 
-		@Watch('$route.query', {immediate: true})
-		update() {
-			this.options.query = (this.$route.query.query as string || '').replace(/\+/g, ' ')
-			this.queryLower = this.options.query.toLowerCase()
-			if (this.options.query === '-') { this.options.query = '' }
-			this.options.farmer = this.$route.query.farmer || ''
-			if (this.options.farmer === '-') { this.options.farmer = '' }
-			this.options.page = parseInt(this.$route.query.page as string, 10) || 1
-			const category = this.$route.query.category as string
-			this.options.category = (category === '-' || !category) ? -1 : category
-			this.options.order = this.$route.query.order || 'pertinence'
-			this.options.admin = this.$route.query.admin || false
-			this.options.moderator = this.$route.query.moderator || false
-			this.options.resolved = this.$route.query.resolved || 'all'
+	function highlight(text: string) {
+		return LeekWars.protect(text).replace(/&lt;b&gt;/g, '<b>').replace(/&lt;\/b&gt;/g, '</b>')
+	}
 
-			this.searchStarted = false
-			this.results = null
-			// if (this.canSearch) {
-				this.searchStarted = true
-				LeekWars.get('forum/search2/' + (this.options.query.replace(/ /g, '+') || '-') + '/' + (this.options.farmer || '-') + '/' + this.options.category + '/' + this.options.page + '/' + (this.options.order || 'pertinence') + '/' + (this.options.admin || false) + '/' + (this.options.moderator || false) + '/' + this.options.resolved).then(data => {
-					for (const r of data.results) {
-						r.title = this.highlight(r.title)
-						r.message = this.highlight(r.message)
-					}
-					this.results = data.results
-					this.pages = data.pages
-					this.count = data.count
-				}).error(error => {
-					this.results = []
-					this.count = 0
-					LeekWars.toast(error.error)
-				})
-			// }
-		}
-		get urlPagination() {
-			const url = "/search"
-			const options = Object.keys(this.options)
-				.filter(option => this.options[option] !== null && this.options[option] !== this.defaultOptions[option] && option !== 'page')
-				.map(option => option + '=' + this.options[option])
-				.join('&')
-			return url + '?' + options
-		}
-		search() {
-			this.$router.push(this.urlPagination)
-		}
-		searchButton() {
-			// if (!this.canSearch) {
-			// 	LeekWars.toast(this.$t('not_enough_parameters'))
-			// } else {
-				this.search()
-			// }
-		}
+	const canSearch = computed(() => options.query || options.farmer || options.admin)
+
+	const languages = (localStorage.getItem('forum/languages') as string || i18n.global.locale).split(',')
+	LeekWars.get('forum/get-categories/' + languages).then(data => {
+		categories.value = data.categories
+	})
+	LeekWars.setTitle(i18n.global.t('title'))
+
+	function update() {
+		options.query = (route.query.query as string || '').replace(/\+/g, ' ')
+		queryLower.value = options.query.toLowerCase()
+		if (options.query === '-') { options.query = '' }
+		options.farmer = route.query.farmer || ''
+		if (options.farmer === '-') { options.farmer = '' }
+		options.page = parseInt(route.query.page as string, 10) || 1
+		const category = route.query.category as string
+		options.category = (category === '-' || !category) ? -1 : category
+		options.order = route.query.order || 'pertinence'
+		options.admin = route.query.admin || false
+		options.moderator = route.query.moderator || false
+		options.resolved = route.query.resolved || 'all'
+
+		searchStarted.value = false
+		results.value = null
+		searchStarted.value = true
+		LeekWars.get('forum/search2/' + (options.query.replace(/ /g, '+') || '-') + '/' + (options.farmer || '-') + '/' + options.category + '/' + options.page + '/' + (options.order || 'pertinence') + '/' + (options.admin || false) + '/' + (options.moderator || false) + '/' + options.resolved).then(data => {
+			for (const r of data.results) {
+				r.title = highlight(r.title)
+				r.message = highlight(r.message)
+			}
+			results.value = data.results
+			pages.value = data.pages
+			count.value = data.count
+		}).error(error => {
+			results.value = []
+			count.value = 0
+			LeekWars.toast(error.error)
+		})
+	}
+	watch(() => route.query, update, { immediate: true })
+
+	const urlPagination = computed(() => {
+		const url = "/search"
+		const opts = Object.keys(options)
+			.filter(option => options[option] !== null && options[option] !== defaultOptions[option] && option !== 'page')
+			.map(option => option + '=' + options[option])
+			.join('&')
+		return url + '?' + opts
+	})
+
+	function search() {
+		router.push(urlPagination.value)
+	}
+	function searchButton() {
+		search()
 	}
 </script>
 

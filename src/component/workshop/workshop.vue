@@ -99,185 +99,136 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { mixins } from '@/model/i18n'
-	import { ITEM_TYPE_NAME, ITEM_CATEGORY_NAME, ITEM_TYPE_ICONS, ItemTemplate, ItemType, ItemTypes } from '@/model/item'
+	import { ITEM_TYPE_NAME, ITEM_CATEGORY_NAME, ITEM_TYPE_ICONS, ItemType, ItemTypes } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { SchemeTemplate } from '@/model/scheme'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
-	const Inventory = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/inventory/inventory.${locale}.i18n`))
 	import RichTooltipItem from '../rich-tooltip/rich-tooltip-item.vue'
-	import SchemeView from '../market/scheme.vue'
-	import { defineAsyncComponent } from 'vue'
+	import Scheme from '../market/scheme.vue'
+	import { computed, defineAsyncComponent, onMounted, onUnmounted, ref, watch } from 'vue'
 	import { locale } from '@/locale'
+
+	const Inventory = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/inventory/inventory.${locale}.i18n`))
 
 	enum Sort {
 		DATE, PRICE, PRICE_LOT, QUANTITY, /*NAME, */ LEVEL, RARITY, INGREDIENT_COUNT
 	}
 
-	@Options({ name: 'workshop', i18n: {}, mixins: [...mixins], components: {
-		Inventory, 'rich-tooltip-item': RichTooltipItem, 'scheme': SchemeView
-	}})
-	export default class Workshop extends Vue {
-		schemes: SchemeTemplate[] = []
-		scheme: any = null
-		forge: any[] = [null, null, null, null, null, null, null, null, null]
-		ITEM_TYPE_NAME = ITEM_TYPE_NAME
-		ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
-		sort: Sort = parseInt(localStorage.getItem('workshop/sort') || '0', 10) as Sort
-		filter: ItemType = parseInt(localStorage.getItem('workshop/filter') || '0', 10) as ItemType
-		Sort = Sort
-		ItemType = ItemType
-		ItemTypes = ItemTypes
-		ITEM_TYPE_ICONS = ITEM_TYPE_ICONS
+	defineOptions({ name: 'workshop', i18n: {}, mixins: [...mixins] })
 
-		get filtered_schemes() {
-			// if (this.filter === ItemType.ALL) return this.schemes
-			// return this.schemes.filter(scheme => LeekWars.items[scheme.result].type === this.filter)
-			return this.schemes
-		}
+	const schemes = ref<SchemeTemplate[]>([])
+	const scheme = ref<any>(null)
+	const forge = ref<any[]>([null, null, null, null, null, null, null, null, null])
+	const sort = ref<Sort>(parseInt(localStorage.getItem('workshop/sort') || '0', 10) as Sort)
+	const filter = ref<ItemType>(parseInt(localStorage.getItem('workshop/filter') || '0', 10) as ItemType)
 
-		get sorted_schemes() {
-			if (this.sort === Sort.DATE) return this.filtered_schemes
-			return [...this.filtered_schemes].sort((a, b) => {
-				if (this.sort === Sort.PRICE) return LeekWars.items[b.result].price! - LeekWars.items[a.result].price!
-				if (this.sort === Sort.RARITY) return LeekWars.items[b.result].rarity - LeekWars.items[a.result].rarity
-				if (this.sort === Sort.INGREDIENT_COUNT) return b.items.length - a.items.length
-				/*if (this.sort === Sort.LEVEL) */ return LeekWars.items[b.result].level - LeekWars.items[a.result].level
-			})
-		}
+	const filtered_schemes = computed(() => schemes.value)
 
-		created() {
-			console.log("LeekWars.schemes", LeekWars.schemes)
-			this.schemes = Object.values(LeekWars.schemes)
-			// LeekWars.get('scheme/get-all').then(schemes => {
-				// this.schemes = schemes
-				// this.schemes.sort((a: any, b: any) => b.result.level - a.result.level)
-				console.log("Schemes", this.schemes)
-			// })
-		}
-		mounted() {
-			LeekWars.footer = false
-			LeekWars.box = true
-		}
-		unmounted() {
-			LeekWars.footer = true
-			LeekWars.box = false
-		}
+	const sorted_schemes = computed(() => {
+		if (sort.value === Sort.DATE) return filtered_schemes.value
+		return [...filtered_schemes.value].sort((a, b) => {
+			if (sort.value === Sort.PRICE) return LeekWars.items[b.result].price! - LeekWars.items[a.result].price!
+			if (sort.value === Sort.RARITY) return LeekWars.items[b.result].rarity - LeekWars.items[a.result].rarity
+			if (sort.value === Sort.INGREDIENT_COUNT) return b.items.length - a.items.length
+			return LeekWars.items[b.result].level - LeekWars.items[a.result].level
+		})
+	})
 
-		use(scheme: any) {
-			this.scheme = scheme
-			for (let i = 0; i < 9; ++i) {
-				this.forge[i] = null
-			}
-			for (let i = 0; i < scheme.items.length; ++i) {
-				this.forge[i] = {template: scheme.items[i][0][0], quantity: scheme.items[i][0][1]}
+	console.log("LeekWars.schemes", LeekWars.schemes)
+	schemes.value = Object.values(LeekWars.schemes)
+	console.log("Schemes", schemes.value)
+
+	onMounted(() => {
+		LeekWars.footer = false
+		LeekWars.box = true
+	})
+	onUnmounted(() => {
+		LeekWars.footer = true
+		LeekWars.box = false
+	})
+
+	function use(s: any) {
+		scheme.value = s
+		for (let i = 0; i < 9; ++i) {
+			forge.value[i] = null
+		}
+		for (let i = 0; i < s.items.length; ++i) {
+			forge.value[i] = {template: s.items[i][0][0], quantity: s.items[i][0][1]}
+		}
+	}
+
+	function pick(item: any, position: number, event: MouseEvent) {
+		const all = event.ctrlKey
+		const added_quantity = all ? item.quantity : 1
+		let forgePosition = -1
+		let quantity = added_quantity
+		for (let i = 0; i < 9; ++i) {
+			if (forge.value[i] && forge.value[i].template === item.template) {
+				forgePosition = i
+				quantity += forge.value[i].quantity
+				break
 			}
 		}
-
-		/**
-		 * Sélection d'un item de l'inventaire vers la forge
-		 */
-		pick(item: any, position: number, event: MouseEvent) {
-			const all = event.ctrlKey
-			const added_quantity = all ? item.quantity : 1
-			let forgePosition = -1
-			let quantity = added_quantity
-			// Existe déjà ?
+		if (forgePosition === -1) {
 			for (let i = 0; i < 9; ++i) {
-				if (this.forge[i] && this.forge[i].template === item.template) {
+				if (forge.value[i] == null) {
 					forgePosition = i
-					quantity += this.forge[i].quantity
 					break
 				}
 			}
-			if (forgePosition === -1) {
-				for (let i = 0; i < 9; ++i) {
-					if (this.forge[i] == null) {
-						forgePosition = i
-						break
-					}
-				}
-			}
-			// Ajout à la première place dispo
-			this.forge[forgePosition] = {template: item.template, quantity}
-			this.removeInventory(position, added_quantity)
 		}
+		forge.value[forgePosition] = {template: item.template, quantity}
+		removeInventory(position, added_quantity)
+	}
 
-		removeInventory(position: number, quantity: number) {
-			// this.inventory[position].quantity -= quantity
-			// if (this.inventory[position].quantity === 0) {
-			// 	this.inventory.splice(position, 1)
-			// }
-		}
+	function removeInventory(position: number, quantity: number) {
+		// noop
+	}
 
-		/**
-		 * Supprime un item de la forge
-		 */
-		remove(i: number, event: MouseEvent) {
-			const all = event.ctrlKey
-			if (this.forge[i].quantity === 1 || all) {
-				this.addInventory(this.forge[i].template, this.forge[i].quantity)
-				this.forge[i] = null
-			} else {
-				const quantity = all ? this.forge[i].quantity : 1
-				this.addInventory(this.forge[i].template, quantity)
-				this.forge[i] = {template: this.forge[i].template, quantity: this.forge[i].quantity - quantity}
-			}
-		}
-
-		addInventory(template: number, quantity: number) {
-			// for (let i = 0; i < this.inventory.length; ++i) {
-			// 	if (this.inventory[i].template === template) {
-			// 		this.inventory[i].quantity += quantity
-			// 		return
-			// 	}
-			// }
-			// this.inventory.push({template, quantity})
-		}
-
-		@Watch('forge')
-		resolveScheme() {
-			console.log("forge updated")
-			this.scheme = null
-			for (const scheme of this.schemes) {
-				if (this.match(scheme)) {
-					this.scheme = scheme
-				}
-			}
-		}
-
-		match(scheme: any) {
-			const items = this.forge
-
-			let forge_items = 0
-			for (const item of this.forge) {
-				if (item) { forge_items++ }
-			}
-			if (forge_items !== scheme.items.length) { return false }
-
-			for (let i = 0; i < this.forge.length; ++i) {
-				if (!this.forge[i]) continue
-				// console.log("find item", this.forge[i].template)
-				const forge_template = this.forge[i].template
-				if (i >= scheme.items.length) { return false }
-				const group = scheme.items[i]
-				// if (!group.find(item => item.item === forge_template)) {
-				// 	return false
-				// }
-			}
-			return true
-		}
-
-		@Watch('sort')
-		updateSort() {
-			localStorage.setItem('workshop/sort', '' + this.sort)
-		}
-		@Watch('filter')
-		updateFilter() {
-			localStorage.setItem('workshop/filter', '' + this.filter)
+	function remove(i: number, event: MouseEvent) {
+		const all = event.ctrlKey
+		if (forge.value[i].quantity === 1 || all) {
+			addInventory(forge.value[i].template, forge.value[i].quantity)
+			forge.value[i] = null
+		} else {
+			const quantity = all ? forge.value[i].quantity : 1
+			addInventory(forge.value[i].template, quantity)
+			forge.value[i] = {template: forge.value[i].template, quantity: forge.value[i].quantity - quantity}
 		}
 	}
+
+	function addInventory(template: number, quantity: number) {
+		// noop
+	}
+
+	function resolveScheme() {
+		console.log("forge updated")
+		scheme.value = null
+		for (const s of schemes.value) {
+			if (match(s)) {
+				scheme.value = s
+			}
+		}
+	}
+
+	function match(scheme: any) {
+		let forge_items = 0
+		for (const item of forge.value) {
+			if (item) { forge_items++ }
+		}
+		if (forge_items !== scheme.items.length) { return false }
+
+		for (let i = 0; i < forge.value.length; ++i) {
+			if (!forge.value[i]) continue
+			if (i >= scheme.items.length) { return false }
+		}
+		return true
+	}
+
+	watch(forge, resolveScheme)
+	watch(sort, () => localStorage.setItem('workshop/sort', '' + sort.value))
+	watch(filter, () => localStorage.setItem('workshop/filter', '' + filter.value))
 </script>
 
 <style lang="scss" scoped>

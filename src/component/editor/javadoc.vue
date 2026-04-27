@@ -30,32 +30,27 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { Options, Prop, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
 	import Type from '../type.vue'
 	import { KeywordKind } from '@/model/keyword'
+	import { computed } from 'vue'
 
-	@Options({ name: "javadoc", components: { Type } })
-	export default class Javadoc extends Vue {
-		
-		KeywordKind = KeywordKind
+	defineOptions({ name: "javadoc" })
 
-		@Prop() javadoc!: any
-		@Prop() keyword!: any
+	const props = defineProps<{
+		javadoc: any
+		keyword: any
+	}>()
 
+	const args = computed<any[]>(() => props.javadoc.items.filter((i: any) => i.type === 'param'))
 
-		get args() {
-			return this.javadoc.items.filter((i: any) => i.type === 'param')
-		}
-		get return_() {
-			const ret = this.javadoc.items.filter((i: any) => i.type === 'return')
-			if (ret.length) { return ret[0] }
-			return null
-		}
-		get other() {
-			return this.javadoc.items.filter((i: any) => i.type !== 'param' && i.type !== 'return')
-		}
-	}
+	const return_ = computed(() => {
+		const ret = props.javadoc.items.filter((i: any) => i.type === 'return')
+		if (ret.length) { return ret[0] }
+		return null
+	})
+
+	const other = computed(() => props.javadoc.items.filter((i: any) => i.type !== 'param' && i.type !== 'return'))
 </script>
 
 <style lang="scss" scoped>

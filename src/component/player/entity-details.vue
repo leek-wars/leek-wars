@@ -161,9 +161,8 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { Effect, EffectModifier, EffectType } from '@/model/effect'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
+<script setup lang="ts">
+	import { EffectModifier, EffectType } from '@/model/effect'
 	import { Chest } from './game/chest'
 	import { FightEntity } from './game/entity'
 	import { Game } from './game/game'
@@ -171,29 +170,24 @@
 	import TurretImage from '@/component/turret-image.vue'
 	import { Mob } from './game/mob'
 
-	@Options({ name: 'entity-details', components: { TurretImage } })
-	export default class EntityDetails extends Vue {
-		@Prop({required: true}) entity!: FightEntity
-		@Prop({required: true}) game!: Game
-		@Prop({required: true}) dark!: boolean
-		Turret = Turret
-		EffectType = EffectType
-		Chest = Chest
-		Mob = Mob
-		FightEntity = FightEntity
-		EffectModifier = EffectModifier
+	defineOptions({ name: 'entity-details' })
 
-		effectText(effect: any) {
-			if (effect.type === EffectType.ADD_STATE) return ''
-			let r = '' + effect.value
-			if (effect.type === EffectType.SHACKLE_MAGIC || effect.type === EffectType.SHACKLE_MP || effect.type === EffectType.SHACKLE_TP || effect.type === EffectType.SHACKLE_STRENGTH || effect.type === EffectType.VULNERABILITY || effect.type === EffectType.ABSOLUTE_VULNERABILITY) {
-				r = '-' + r
-			}
-			if (effect.type === EffectType.RAW_RELATIVE_SHIELD || effect.type === EffectType.RELATIVE_SHIELD || effect.type === EffectType.DAMAGE_RETURN || effect.type === EffectType.VULNERABILITY) {
-				r += '%'
-			}
-			return r
+	defineProps<{
+		entity: FightEntity
+		game: Game
+		dark: boolean
+	}>()
+
+	function effectText(effect: any) {
+		if (effect.type === EffectType.ADD_STATE) return ''
+		let r = '' + effect.value
+		if (effect.type === EffectType.SHACKLE_MAGIC || effect.type === EffectType.SHACKLE_MP || effect.type === EffectType.SHACKLE_TP || effect.type === EffectType.SHACKLE_STRENGTH || effect.type === EffectType.VULNERABILITY || effect.type === EffectType.ABSOLUTE_VULNERABILITY) {
+			r = '-' + r
 		}
+		if (effect.type === EffectType.RAW_RELATIVE_SHIELD || effect.type === EffectType.RELATIVE_SHIELD || effect.type === EffectType.DAMAGE_RETURN || effect.type === EffectType.VULNERABILITY) {
+			r += '%'
+		}
+		return r
 	}
 </script>
 

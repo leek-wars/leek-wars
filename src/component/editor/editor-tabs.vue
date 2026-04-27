@@ -24,7 +24,7 @@
 		</div>
 		<v-menu v-model="menuOpened" :target="menuTarget" :theme="isDark ? 'dark' : 'light'" @update:model-value="menuChange">
 			<v-list class="menu" :dense="true">
-				<v-list-item v-ripple @click="closeTab(menuTab)" prepend-icon="mdi-close-box-outline">
+				<v-list-item v-if="menuTab" v-ripple @click="closeTab(menuTab)" prepend-icon="mdi-close-box-outline">
 					<v-list-item-title>{{ $t('close') }}</v-list-item-title>
 				</v-list-item>
 				<v-list-item v-if="menuTab" v-ripple @click="closeOthers(menuTab)" prepend-icon="mdi-close-box-multiple-outline">
@@ -41,12 +41,12 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { AI } from '@/model/ai'
 	import { mixins } from '@/model/i18n'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { fileSystem } from '@/model/filesystem'
-	import { nextTick } from 'vue'
+	import { computed, nextTick, ref, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
 
 	export interface FileTab {
 		type: 'file'
@@ -65,114 +65,126 @@
 	}
 	export type EditorTab = FileTab | DiffTab
 
-	@Options({ name: 'editor-tabs', i18n: {}, mixins: [...mixins], emits: ['select', 'close-tab', 'close-all', 'split', 'close-panel', 'open-file'] })
-	export default class EditorTabs extends Vue {
+	defineOptions({ name: 'editor-tabs', i18n: {}, mixins: [...mixins] })
 
-		@Prop({required: true}) ais!: AI[]
-		@Prop({required: true}) history2!: AI[]
-		@Prop({required: true}) group!: string
-		@Prop({required: true}) current!: EditorTab | null
-		@Prop({required: true}) active!: boolean
-		@Prop({required: true}) splitted!: boolean
-		@Prop({default: () => []}) allTabs!: EditorTab[]
-		@Prop({default: 'leek-wars'}) theme!: string
+	const props = withDefaults(defineProps<{
+		ais: AI[]
+		history2: AI[]
+		group: string
+		current: EditorTab | null
+		active: boolean
+		splitted: boolean
+		allTabs?: EditorTab[]
+		theme?: string
+	}>(), {
+		allTabs: () => [],
+		theme: 'leek-wars',
+	})
 
-		get isDark(): boolean {
-			return ['monokai', 'vs-dark', 'hc-black'].includes(this.theme)
+	const emit = defineEmits<{
+		'select': [tab: EditorTab]
+		'close-tab': [tab: EditorTab]
+		'close-all': [tab: EditorTab]
+		'split': [tab: EditorTab | null]
+		'close-panel': []
+		'open-file': [tab: EditorTab]
+	}>()
+
+	const { t } = useI18n()
+
+	const isDark = computed(() => ['monokai', 'vs-dark', 'hc-black'].includes(props.theme))
+
+	const menuOpened = ref(false)
+	const menuTarget = ref<[number, number]>([0, 0])
+	const menuTab = ref<EditorTab | null>(null)
+	const list = ref<HTMLElement | null>(null)
+	const tabsEl = ref<HTMLElement[] | null>(null)
+
+	watch(() => props.current, () => {
+		nextTick(() => {
+			if (!props.current) return
+			const i = props.allTabs.findIndex(t => tabsMatch(t, props.current!))
+			if (i !== -1) {
+				const tab = (tabsEl.value as HTMLElement[])?.[i]
+				tab?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+			}
+		})
+	})
+
+	function mousewheel(event: WheelEvent) {
+		const target = list.value as HTMLElement
+		const delta = event.deltaY || event.deltaX
+		const toLeft  = delta < 0 && target.scrollLeft > 0
+		const toRight = delta > 0 && target.scrollLeft < target.scrollWidth - target.clientWidth
+		if (toLeft || toRight) {
+			target.scrollLeft += delta
 		}
+	}
 
-		fileSystem = fileSystem
-		menuOpened: boolean = false
-		menuTarget: [number, number] = [0, 0]
-		menuTab: EditorTab | null = null
+	function tabKey(tab: EditorTab): string {
+		if (tab.type === 'file') return 'f-' + tab.id
+		if (tab.type === 'merge') return 'm-' + tab.file
+		return 'd-' + tab.file + '-' + (tab.hash || (tab.staged ? 's' : 'w'))
+	}
 
-		@Watch('current')
-		scrollToCurrent() {
-			nextTick(() => {
-				if (!this.current) return
-				const i = this.allTabs.findIndex(t => this.tabsMatch(t, this.current!))
-				if (i !== -1) {
-					const tab = (this.$refs.tabsEl as HTMLElement[])?.[i]
-					tab?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
-				}
-			})
+	function tabClass(tab: EditorTab, i: number): any {
+		const selected = props.current && tabsMatch(tab, props.current)
+		if (tab.type === 'file') {
+			return { selected, modified: fileSystem.ais[tab.id]?.modified, conflict: fileSystem.ais[tab.id]?.hasConflict }
 		}
+		return { selected, 'diff-tab': true, 'commit-tab': tab.type === 'commit', 'merge-tab': tab.type === 'merge' }
+	}
 
-		mousewheel(event: WheelEvent) {
-			const target = this.$refs.list as HTMLElement
-			const delta = event.deltaY || event.deltaX
-			const toLeft  = delta < 0 && target.scrollLeft > 0
-			const toRight = delta > 0 && target.scrollLeft < target.scrollWidth - target.clientWidth
-			if (toLeft || toRight) {
-				target.scrollLeft += delta
+	function tabTitle(tab: EditorTab): string {
+		if (tab.type === 'file') return fileSystem.ais[tab.id]?.path || ''
+		if (tab.hash) return tab.file + ' @ ' + tab.hash.substring(0, 7)
+		return tab.file
+	}
+
+	function tabsMatch(a: EditorTab, b: EditorTab): boolean {
+		if (a.type === 'file' && b.type === 'file') return a.id === b.id
+		if (a.type !== 'file' && b.type !== 'file') {
+			return a.file === b.file && a.folder === b.folder && a.staged === b.staged && a.hash === b.hash
+		}
+		return false
+	}
+
+	function clickTab(tab: EditorTab) {
+		emit('select', tab)
+	}
+
+	function openMenu(event: MouseEvent, tab: EditorTab, i: number) {
+		menuTab.value = tab
+		menuTarget.value = [event.clientX, event.clientY]
+		nextTick(() => {
+			menuOpened.value = true
+		})
+	}
+
+	function menuChange() {
+		menuTab.value = null
+		menuOpened.value = false
+	}
+
+	function closeTab(tab: EditorTab) {
+		if (tab.type === 'file' && props.group === 'tabs') {
+			const fileTabs = props.allTabs.filter(t => t.type === 'file')
+			if (fileTabs.length === 1) return
+		}
+		if (tab.type === 'file' && fileSystem.ais[tab.id]?.modified) {
+			if (!window.confirm(t('confirm_close', [1]) as string)) {
+				return
 			}
 		}
+		emit('close-tab', tab)
+	}
 
-		tabKey(tab: EditorTab): string {
-			if (tab.type === 'file') return 'f-' + tab.id
-			if (tab.type === 'merge') return 'm-' + tab.file
-			return 'd-' + tab.file + '-' + (tab.hash || (tab.staged ? 's' : 'w'))
-		}
+	function closeOthers(tab: EditorTab) {
+		emit('close-all', tab)
+	}
 
-		tabClass(tab: EditorTab, i: number): any {
-			const selected = this.current && this.tabsMatch(tab, this.current)
-			if (tab.type === 'file') {
-				return { selected, modified: fileSystem.ais[tab.id]?.modified, conflict: fileSystem.ais[tab.id]?.hasConflict }
-			}
-			return { selected, 'diff-tab': true, 'commit-tab': tab.type === 'commit', 'merge-tab': tab.type === 'merge' }
-		}
-
-		tabTitle(tab: EditorTab): string {
-			if (tab.type === 'file') return fileSystem.ais[tab.id]?.path || ''
-			if (tab.hash) return tab.file + ' @ ' + tab.hash.substring(0, 7)
-			return tab.file
-		}
-
-		tabsMatch(a: EditorTab, b: EditorTab): boolean {
-			if (a.type === 'file' && b.type === 'file') return a.id === b.id
-			if (a.type !== 'file' && b.type !== 'file') {
-				return a.file === b.file && a.folder === b.folder && a.staged === b.staged && a.hash === b.hash
-			}
-			return false
-		}
-
-		clickTab(tab: EditorTab) {
-			this.$emit('select', tab)
-		}
-
-		openMenu(event: MouseEvent, tab: EditorTab, i: number) {
-			this.menuTab = tab
-			this.menuTarget = [event.clientX, event.clientY]
-			nextTick(() => {
-				this.menuOpened = true
-			})
-		}
-
-		menuChange() {
-			this.menuTab = null
-			this.menuOpened = false
-		}
-
-		closeTab(tab: EditorTab) {
-			if (tab.type === 'file' && this.group === 'tabs') {
-				const fileTabs = this.allTabs.filter(t => t.type === 'file')
-				if (fileTabs.length === 1) return
-			}
-			if (tab.type === 'file' && fileSystem.ais[tab.id]?.modified) {
-				if (!window.confirm(this.$i18n.t('confirm_close', [1]) as string)) {
-					return
-				}
-			}
-			this.$emit('close-tab', tab)
-		}
-
-		closeOthers(tab: EditorTab) {
-			this.$emit('close-all', tab)
-		}
-
-		split() {
-			this.$emit('split', this.menuTab)
-		}
+	function split() {
+		emit('split', menuTab.value)
 	}
 </script>
 

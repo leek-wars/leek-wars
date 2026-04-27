@@ -62,104 +62,82 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import EntityDetails from '@/component/player/entity-details.vue'
-	import ActionLeekElement from '@/component/report/action-leek.vue'
-	import { ActionComponents, EffectComponents } from '@/model/action-components'
+	import ActionLeek from '@/component/report/action-leek.vue'
+	import { ActionComponents as ActionComponentsTyped } from '@/model/action-components'
 	import { LeekWars } from '@/model/leekwars'
-	import { TEAM_COLORS } from '@/model/team'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { Chest } from './game/chest'
 	import { Mob } from './game/mob'
 	import { Game } from './game/game'
 	import { Turret } from './game/turret'
 	import TurretImage from '@/component/turret-image.vue'
-	import { CHIPS } from '@/model/chips'
 	import ActionLog from '../report/report-log.vue'
-	import { ITEM_CATEGORY_NAME } from '@/model/item'
-	import { fileSystem } from '@/model/filesystem'
 	import router from '@/router'
+	import { computed, ref } from 'vue'
 
-	@Options({ name: 'hud', components: { EntityDetails, leek: ActionLeekElement, TurretImage, 'action-log': ActionLog } })
-	export default class Hud extends Vue {
-		@Prop({required: true}) game!: Game
-		@Prop() creator!: boolean
-		debug: boolean = false
-		hover_entity: any | null = null
-		Turret = Turret
-		Chest = Chest
-		Mob = Mob
-		actionsWidth: number = 395
-		ActionComponents = Object.freeze(ActionComponents)
-		EffectComponents = Object.freeze(EffectComponents)
-		TEAM_COLORS = TEAM_COLORS
-		CHIPS = CHIPS
-		ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
-		fileSystem = fileSystem
+	defineOptions({ name: 'hud', components: { leek: ActionLeek } })
 
-		get barWidth() {
-			return LeekWars.mobile ? 300 : 500
-		}
-		get totalLife() {
-			return this.game.leeks.reduce((total, e) => total + (!e.summon ? e.displayLife : 0), 0)
-		}
-		get darkEnabledtest() {
-			return this.game.dark
-		}
-		get dark() {
-			return this.game.autoDark ? (this.game.map && this.game.map.options.dark) : this.game.dark
-		}
-		get leeks() {
-			return this.game.leeks
-		}
+	const props = defineProps<{
+		game: Game
+		creator?: boolean
+	}>()
 
-		created() {
-			this.actionsWidth = this.game.actionsWidth
-		}
+	const ActionComponents: Record<number, any> = ActionComponentsTyped
 
-		entity_enter(entity: any) {
-			this.game.hoverEntity = entity
-			this.game.hoverEntity!.updateReachableCells()
-		}
-		entity_leave(entity: any) {
-			this.game.hoverEntity = null
-		}
-		entity_click(entity: any) {
-			this.game.selectEntity(entity)
-		}
+	const debug = ref(false)
+	const actionsWidth = ref(395)
 
-		formatTurns(turns: number) {
-			return turns === -1 ? '∞' : turns
-		}
+	const barWidth = computed(() => LeekWars.mobile ? 300 : 500)
+	const totalLife = computed(() => props.game.leeks.reduce((total, e) => total + (!e.summon ? e.displayLife : 0), 0))
+	const darkEnabledtest = computed(() => props.game.dark)
+	const dark = computed(() => props.game.autoDark ? (props.game.map && props.game.map.options.dark) : props.game.dark)
+	const leeks = computed(() => props.game.leeks)
 
-		resizerMousedown(e: MouseEvent) {
-			const startWidth = this.actionsWidth
-			const startX = e.clientX
-			const visible = this.actionsWidth > 0
-			const mousemove: any = (ev: MouseEvent) => {
-				let panelWidth = Math.max(0, Math.min(1000, startWidth + ev.clientX - startX))
-				if (visible && panelWidth < 60) {
-					panelWidth = 0
-				}
-				this.actionsWidth = panelWidth
+	actionsWidth.value = props.game.actionsWidth
+
+	function entity_enter(entity: any) {
+		props.game.hoverEntity = entity
+		props.game.hoverEntity!.updateReachableCells()
+	}
+	function entity_leave(entity: any) {
+		props.game.hoverEntity = null
+	}
+	function entity_click(entity: any) {
+		props.game.selectEntity(entity)
+	}
+
+	function formatTurns(turns: number) {
+		return turns === -1 ? '∞' : turns
+	}
+
+	function resizerMousedown(e: MouseEvent) {
+		const startWidth = actionsWidth.value
+		const startX = e.clientX
+		const visible = actionsWidth.value > 0
+		const mousemove: any = (ev: MouseEvent) => {
+			let panelWidth = Math.max(0, Math.min(1000, startWidth + ev.clientX - startX))
+			if (visible && panelWidth < 60) {
+				panelWidth = 0
 			}
-			const mouseup: any = (ev: MouseEvent) => {
-				document.documentElement!.removeEventListener('mousemove', mousemove)
-				document.documentElement!.removeEventListener('mouseup', mouseup)
-				this.game.actionsWidth = this.actionsWidth
-				if (this.game.actionsWidth === 0) {
-					this.game.largeActions = false
-					this.actionsWidth = 395
-				}
+			actionsWidth.value = panelWidth
+		}
+		const mouseup: any = (ev: MouseEvent) => {
+			document.documentElement!.removeEventListener('mousemove', mousemove)
+			document.documentElement!.removeEventListener('mouseup', mouseup)
+			props.game.actionsWidth = actionsWidth.value
+			if (props.game.actionsWidth === 0) {
+				props.game.largeActions = false
+				actionsWidth.value = 395
 			}
-			document.documentElement!.addEventListener('mousemove', mousemove, false)
-			document.documentElement!.addEventListener('mouseup', mouseup, false)
-			e.preventDefault()
 		}
+		document.documentElement!.addEventListener('mousemove', mousemove, false)
+		document.documentElement!.addEventListener('mouseup', mouseup, false)
+		e.preventDefault()
+	}
 
-		goToAI(file: number, line: number, log: any) {
-			router.push('/editor/' + file + '?line=' + line)
-		}
+	function goToAI(file: number, line: number, log: any) {
+		router.push('/editor/' + file + '?line=' + line)
 	}
 </script>
 

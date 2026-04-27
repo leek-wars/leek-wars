@@ -8,50 +8,54 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { TEAM_COLORS } from '@/model/team'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { ref, watch } from 'vue'
 
-	@Options({ name: "lw-map" })
-	export default class Map extends Vue {
-		@Prop() obstacles!: any
-		@Prop() teams!: {[key: number]: Set<number>}
-		map: any = []
+	defineOptions({ name: "lw-map" })
 
-		@Watch('obstacles', {immediate: true})
-		@Watch('teams')
-		update() {
-			const size = 34
-			this.map = []
-			for (let i = 0; i <= size; ++i) {
-				const line = []
-				for (let j = 0; j <= size; ++j) {
-					const y = i - Math.floor(size / 2)
-					const x = j - Math.floor(size / 2)
-					const enabled = Math.abs(x) + Math.abs(y) <= size / 2
-					const cell = 306 + 18 * y - 17 * x
-					let obstacle = false
-					const teams = {} as any
-					let color = ""
-					let obstacleSize = 1
-					if (enabled) {
-						if (cell in this.obstacles) {
-							obstacle = true
-							obstacleSize = this.obstacles[cell]
-						}
-						for (const team in this.teams) {
-							if (this.teams[team].has(cell)) {
-								teams['t' + team] = true
-								color = TEAM_COLORS[parseInt(team, 10) - 1]
-							}
+	const props = defineProps<{
+		obstacles: any
+		teams: {[key: number]: Set<number>}
+	}>()
+
+	const map = ref<any>([])
+
+	function update() {
+		const size = 34
+		const m: any = []
+		for (let i = 0; i <= size; ++i) {
+			const line = []
+			for (let j = 0; j <= size; ++j) {
+				const y = i - Math.floor(size / 2)
+				const x = j - Math.floor(size / 2)
+				const enabled = Math.abs(x) + Math.abs(y) <= size / 2
+				const cell = 306 + 18 * y - 17 * x
+				let obstacle = false
+				const teams = {} as any
+				let color = ""
+				let obstacleSize = 1
+				if (enabled) {
+					if (cell in props.obstacles) {
+						obstacle = true
+						obstacleSize = props.obstacles[cell]
+					}
+					for (const team in props.teams) {
+						if (props.teams[team].has(cell)) {
+							teams['t' + team] = true
+							color = TEAM_COLORS[parseInt(team, 10) - 1]
 						}
 					}
-					line.push({enabled, cell, teams, obstacle, color, big: obstacleSize === 2})
 				}
-				this.map.push(line)
+				line.push({enabled, cell, teams, obstacle, color, big: obstacleSize === 2})
 			}
+			m.push(line)
 		}
+		map.value = m
 	}
+
+	watch(() => props.obstacles, update, { immediate: true })
+	watch(() => props.teams, update)
 </script>
 
 <style lang="scss" scoped>
