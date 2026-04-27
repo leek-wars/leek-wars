@@ -5,15 +5,17 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	@Options({ name: 'screen' })
-	export default class Screen extends Vue {
-		@Prop({required: true}) src!: string
-		@Prop({required: true}) legend!: string
-		extended: boolean = false
-	}
+<script setup lang="ts">
+import { ref } from 'vue'
+
+defineOptions({ name: 'screen' })
+
+defineProps<{
+	src: string
+	legend: string
+}>()
+
+const extended = ref(false)
 </script>
 
 <style lang="scss" scoped>

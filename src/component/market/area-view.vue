@@ -59,21 +59,21 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import RangeView from '@/component/market/range-view.vue'
-	import { Area } from '@/model/area'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	@Options({
-		name: 'area-view',
-		components: { 'range-view': RangeView }
-	})
-	export default class AreaView extends Vue {
-		@Prop() area!: Area
-		Area = Area
-		get width() {
-			if (this.area === Area.CIRCLE1 || this.area === Area.SQUARE_1 || this.area === Area.X_1) { return 1 }
-			if (this.area === Area.CIRCLE2 || this.area === Area.X_2 || this.area === Area.PLUS_2 || this.area === Area.SQUARE_2) { return 2 }
-			if (this.area === Area.CIRCLE3 || this.area === Area.X_3 || this.area === Area.PLUS_3) { return 3 }
-		}
-	}
+<script setup lang="ts">
+import { computed } from 'vue'
+import RangeView from '@/component/market/range-view.vue'
+import { Area } from '@/model/area'
+
+defineOptions({ name: 'area-view', components: { 'range-view': RangeView } })
+
+const props = defineProps<{
+	area: Area
+}>()
+
+const width = computed(() => {
+	if (props.area === Area.CIRCLE1 || props.area === Area.SQUARE_1 || props.area === Area.X_1) return 1
+	if (props.area === Area.CIRCLE2 || props.area === Area.X_2 || props.area === Area.PLUS_2 || props.area === Area.SQUARE_2) return 2
+	if (props.area === Area.CIRCLE3 || props.area === Area.X_3 || props.area === Area.PLUS_3) return 3
+	return 0
+})
 </script>

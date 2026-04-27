@@ -24,26 +24,27 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { i18n } from '@/model/i18n'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
-	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
-	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
+<script setup lang="ts">
+import { computed } from 'vue'
+import { i18n } from '@/model/i18n'
+import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 
-	@Options({ components: { RichTooltipFarmer, RichTooltipLeek, RichTooltipTeam } })
-	export default class RankingSearchResult extends Vue {
-		@Prop({ required: true }) result!: any
-		get description() {
-			if (this.result.type === 'leek') {
-				return i18n.t('main.leek_level', [this.result.level])
-			} else if (this.result.type === 'farmer') {
-				return i18n.t('main.farmer')
-			} else if (this.result.type === 'team') {
-				return i18n.t('main.team_level', [this.result.level])
-			}
-		}
-	}
+const props = defineProps<{
+	result: any
+}>()
+
+defineEmits<{
+	gotoresult: [result: any]
+}>()
+
+const description = computed(() => {
+	if (props.result.type === 'leek') return i18n.global.t('main.leek_level', [props.result.level])
+	if (props.result.type === 'farmer') return i18n.global.t('main.farmer')
+	if (props.result.type === 'team') return i18n.global.t('main.team_level', [props.result.level])
+	return ''
+})
 </script>
 
 <style lang="scss" scoped>

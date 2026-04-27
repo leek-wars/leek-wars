@@ -8,17 +8,16 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { fileSystem } from '@/model/filesystem'
-	import { LeekWars } from '@/model/leekwars'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import { Folder } from '../editor/editor-item'
+<script setup lang="ts">
+import { fileSystem } from '@/model/filesystem'
+import type { Folder } from '../editor/editor-item'
+import { mixins } from '@/model/i18n'
 
-	@Options({ name: 'explorer-folder', i18n: {} })
-	export default class ExplorerFolder extends Vue {
-		@Prop() folder!: Folder
-		fileSystem = fileSystem
-	}
+defineOptions({ name: 'explorer-folder', i18n: {}, mixins: [...mixins] })
+
+defineProps<{
+	folder: Folder
+}>()
 </script>
 
 <style lang="scss" scoped>

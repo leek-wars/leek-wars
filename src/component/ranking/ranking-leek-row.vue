@@ -24,8 +24,8 @@
 			</div>
 		</td>
 		<td>
-			<router-link v-if="row.team" :to="'/team/' + row.team_id">
-				<rich-tooltip-team :id="row.team_id" v-slot="{ props }" :bottom="true">
+			<router-link v-if="row.team" :to="'/team/' + (row.team_id || 0)">
+				<rich-tooltip-team :id="row.team_id || 0" v-slot="{ props }" :bottom="true">
 					<span v-bind="props">{{ row.team }}</span>
 				</rich-tooltip-team>
 			</router-link>
@@ -33,17 +33,15 @@
 	</tr>
 </template>
 
-<script lang="ts">
-	import { RankingLeekRow } from '@/model/ranking'
-	import { Options, Prop, Vue } from 'vue-property-decorator'
-	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
-	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
-	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
+<script setup lang="ts">
+import type { RankingLeekRow } from '@/model/ranking'
+import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 
-	@Options({ components: { RichTooltipFarmer, RichTooltipLeek, RichTooltipTeam } })
-	export default class RankingLeekRowElement extends Vue {
-		@Prop({ required: true }) row!: RankingLeekRow
-	}
+defineProps<{
+	row: RankingLeekRow
+}>()
 </script>
 
 <style lang="scss" scoped>
