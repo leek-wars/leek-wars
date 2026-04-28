@@ -1,7 +1,7 @@
 {
 	"category_bonus": "बोनस",
 	"category_code": "कोडित",
-	"category_fight": "झगड़ा करना",
+	"category_fight": "लड़ाई",
 	"category_fun": "आनंद",
 	"category_general": "आम",
 	"category_shopping": "खरीद",
@@ -25,6 +25,10 @@
 	"see_fight": "लड़ाई देखें",
 	"progress": "प्रगति",
 	"n_pocessors": "कोई रखने वाला नहीं | 1 रखने वाला | {0} रखने वाले",
-	"first_farmers": "प्रारंभिक प्रजनकों",
-	"last_farmers": "नवीनतम ब्रीडर्स"
+	"first_farmers": "प्रारंभिक एलेवरों",
+	"last_farmers": "नवीनतम एलेवर्स",
+	"created_the": "{0} को जोड़ा गया",
+	"fastest_farmers": "सबसे तेज़ एलेवर",
+	"slowest_farmers": "सबसे धीमे एलेवर",
+	"title_farmers": "वे एलेवर जिनके पास यह उनके शीर्षक में है"
 }

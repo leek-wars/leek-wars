@@ -14,10 +14,18 @@
 	"fight_type": "लड़ाई के प्रकार",
 	"fight_context": "युद्ध के प्रसंग",
 	"solo": "एकल",
-	"farmer": "ब्रीडर",
-	"team": "कर्मी दल",
+	"farmer": "एलेवर",
+	"team": "टीम",
 	"battle_royale": "लड़ाई रोयाले",
 	"challenge": "चुनौती",
-	"garden": "वनस्पति उद्यान",
-	"tournament": "टूर्नामेंट"
+	"garden": "पोटाजर",
+	"tournament": "टूर्नामेंट",
+	"war": "वॉर",
+	"chest_hunt": "खजाने की खोज",
+	"colossus": "कोलोसस",
+	"boss": "बॉस",
+	"chests": "खजाने",
+	"n_chests": "{0} खजाने",
+	"loot": "लड़ाई की लूट",
+	"rare_loot": "दुर्लभ संसाधन"
 }

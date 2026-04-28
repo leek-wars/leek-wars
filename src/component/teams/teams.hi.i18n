@@ -23,5 +23,7 @@
 	"error_already_have_candidacy": "आपका पहले से एक आवेदन लंबित है।",
 	"error_already_in_team": "आप पहले से एक टीम में हैं।",
 	"error_team_full": "यह टीम भरी हुई है।",
-	"error_too_many_candidacies": "आपके पहले से 5 लंबित आवेदन हैं।"
+	"error_too_many_candidacies": "आपके पहले से 5 लंबित आवेदन हैं।",
+	"closed": "बंद",
+	"show_closed": "बंद टीमें देखें"
 }

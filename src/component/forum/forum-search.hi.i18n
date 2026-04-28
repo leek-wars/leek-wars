@@ -5,14 +5,19 @@
 	"no_results_found": "कोई परिणाम नहीं मिला...",
 	"not_enough_parameters": "काफ़ी पैरामीटर नहीं होने पर खोज शुरू होती है",
 	"post_by_x_the_x_in_x": "{farmer} द्वारा {date} को {topic} में पोस्ट किया गया",
-	"query": "शोध करना",
+	"query": "खोज",
 	"results": "खोज के परिणाम",
-	"search": "अनुसंधान करना",
+	"search": "खोजें",
 	"sort_by": "इसके अनुसार क्रमबद्ध करें",
 	"sort_pertinence": "प्रासंगिकता",
 	"sort_date": "तारीख",
 	"sort_votes": "मतदान",
 	"title": "फोरम खोज",
 	"too_few_params": "पर्याप्त पैरामीटर नहीं...",
-	"too_short": "बहुत छोटा खोजें..."
+	"too_short": "बहुत छोटा खोजें...",
+	"locked": "लॉक किया गया",
+	"resolved": "हल किया गया",
+	"resolved_all": "सभी",
+	"resolved_yes": "हाँ",
+	"resolved_no": "नहीं"
 }

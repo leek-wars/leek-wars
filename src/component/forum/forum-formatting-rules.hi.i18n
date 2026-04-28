@@ -7,13 +7,15 @@
 	"sub_title_ex": "उपशीर्षक",
 	"sub_sub_title": "उप-उपशीर्षक",
 	"sub_sub_title_ex": "उप-उपशीर्षक",
-	"bold": "निडर",
-	"bold_ex": "निडर",
+	"bold": "बोल्ड",
+	"bold_ex": "बोल्ड",
 	"italic": "तिर्छा",
 	"italic_ex": "तिर्छा",
 	"underlined": "रेखांकन",
 	"underlined_ex": "रेखांकन",
-	"striked": "छड़",
-	"striked_ex": "छड़",
-	"basic_html": "मूल HTML की अनुमति है"
+	"striked": "स्ट्राइकथ्रू",
+	"striked_ex": "स्ट्राइकथ्रू",
+	"basic_html": "मूल HTML की अनुमति है",
+	"image": "छवि",
+	"image_ex": "url"
 }

@@ -9,7 +9,7 @@
 	"member_options": "सदस्य विकल्प",
 	"setting_trophies": "ट्राफियां सक्षम करें",
 	"setting_public_chat": "सार्वजनिक चैट सक्षम करें",
-	"setting_buy_fights": "झगड़े की खरीद सक्षम करें",
+	"setting_buy_fights": "लड़ाइयाँ की खरीद सक्षम करें",
 	"setting_bank": "क्रिस्टल बैंक को सक्रिय करें",
 	"setting_chat": "समूह चैट सक्षम करें",
 	"main_options": "मुख्य विकल्प",
@@ -41,5 +41,10 @@
 	"error_name_length": "नाम में {0} और {1} वर्णों के बीच होना चाहिए",
 	"invite_sent": "निमंत्रण भेजा गया",
 	"error_invalid_email": "ईमेल पता मान्य होना चाहिए",
-	"new_leek": "एक और प्याज़ के निर्माण की अनुमति दें"
+	"new_leek": "एक और प्याज़ के निर्माण की अनुमति दें",
+	"give_money": "{member} को पैसा दें",
+	"give_item": "एक आइटम दें",
+	"confirm_give_item": "क्या आप सदस्य {member} को यह आइटम देने की पुष्टि करते हैं?",
+	"start_team_tournament": "एक टीम टूर्नामेंट शुरू करें",
+	"everybody": "सभी"
 }

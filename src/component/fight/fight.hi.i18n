@@ -1,12 +1,15 @@
 {
 	"battle_royale": "लड़ाई रोयाले",
 	"date_format": "{0}",
-	"deleted_farmer": "ब्रीडर हटा दिया",
+	"deleted_farmer": "एलेवर हटा दिया",
 	"deleted_leek": "लीक हटा दिया",
 	"deleted_team": "हटाई गई टीम",
 	"n_views": "कोई दृश्य नहीं | 1 दृश्य | {n} दृश्य",
 	"not_found": "लड़ाई नहीं मिली :(",
 	"not_found_id": "लड़ाई आईडी <b>{0}</b> नहीं मिला :(",
 	"pause_message": "फिर से शुरू करने के लिए 'पी' पर क्लिक करें या दबाएं",
-	"starter": "लॉन्चर लड़ो"
+	"starter": "लॉन्चर लड़ो",
+	"war": "वॉर",
+	"chest_hunt": "खजाने की खोज",
+	"colossus": "कोलोसस"
 }

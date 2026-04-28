@@ -1,0 +1,22 @@
+{
+	"title": "रिमोट सेटिंग्स",
+	"remotes": "रिमोट",
+	"no_remotes": "कोई रिमोट कॉन्फ़िगर नहीं किया गया है।",
+	"remote_name": "नाम (उदा: origin)",
+	"remote_url": "https://github.com/user/repo.git",
+	"select_repo": "एक रिपॉजिटरी चुनें...",
+	"authentication": "प्रमाणीकरण",
+	"connected_as": "{0} के रूप में कनेक्ट किए गए",
+	"connected_anonymous": "कनेक्ट किए गए",
+	"install_github_app": "GitHub App इंस्टॉल करें",
+	"install_hint": "इंस्टॉल करते समय जिन रिपॉजिटरी को एक्सेस देना है उन्हें चुनें।",
+	"github_app": "GitHub App",
+	"or_pat": "या एक Personal Access Token का उपयोग करें:",
+	"pat_placeholder": "एक्सेस टोकन",
+	"instance_placeholder": "https://codeberg.org",
+	"self_hosted": "स्व-होस्टेड इंस्टेंस",
+	"save": "सहेजें",
+	"add": "जोड़ें",
+	"invalid_token": "प्रोवाइडर द्वारा टोकन अस्वीकार कर दिया गया।",
+	"invalid_instance_url": "इंस्टेंस URL अमान्य है या सर्वर से पहुँच योग्य नहीं है।"
+}

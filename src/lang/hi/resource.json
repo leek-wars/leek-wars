@@ -1,9 +1,9 @@
 {
-	"acorn": "मुंड",
-	"amazonite": "Amazonite",
-	"box_10k_habs": "10,000 निवासियों का टोकरा",
-	"box_100k_habs": "100,000 निवासियों का टोकरा",
-	"box_1m_habs": "एक लाख लोगों का टोकरा",
+	"acorn": "बलूत",
+	"amazonite": "अमेज़ोनाइट",
+	"box_10k_habs": "10,000 Habs का बक्सा",
+	"box_100k_habs": "100,000 Habs का बक्सा",
+	"box_1m_habs": "1,000,000 Habs का बक्सा",
 	"cornaline": "कारेलियन",
 	"topaze": "टोपाज़",
 	"leek_juice": "लीक का रस",
@@ -33,7 +33,7 @@
 	"present_mythical_desc": "25 से 31 दिसंबर के बीच खुला",
 	"obsidian": "ओब्सीडियन",
 	"copper": "ताँबा",
-	"wrench": "12 की कुंजी",
+	"wrench": "रिंच",
 	"carrot": "गाजर",
 	"gold_nugget": "सोने का डला",
 	"raw_ruby": "कच्चा माणिक",
@@ -42,7 +42,7 @@
 	"iron_chest": "लोहे की छाती",
 	"diamond_chest": "डायमंड चेस्ट",
 	"flower": "फूल",
-	"leaf": "चादर",
+	"leaf": "पत्ता",
 	"metal_plate": "धातु की पट्टी",
 	"sand": "रेत",
 	"salt": "नमक",
@@ -63,5 +63,5 @@
 	"lantern": "लालटेन",
 	"pumpkin_seeds": "कद्दू के बीज",
 	"feather": "पंख",
-	"hab": "हब"
+	"hab": "Hab"
 }

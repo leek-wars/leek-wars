@@ -2,8 +2,8 @@
 	"cancel": "रद्द करना",
 	"category": "वर्ग",
 	"category_not_found": "आईडी श्रेणी <b>{0}</b> नहीं मिली :(",
-	"connected_farmers": "जुड़े प्रजनक ({0})",
-	"connected_farmers_subtitle": "{0} प्रजनक जुड़े हुए हैं",
+	"connected_farmers": "जुड़े एलेवर ({0})",
+	"connected_farmers_subtitle": "{0} एलेवर जुड़े हुए हैं",
 	"error_cant_access": "इस श्रेणी तक पहुँचने में असमर्थ।",
 	"error_cant_do": "आप यह क्रिया नहीं कर सकते।",
 	"error_cant_title": "शीर्षक में 6 से 30 वर्ण होने चाहिए।",
@@ -24,5 +24,6 @@
 	"title": "मंच",
 	"topic_not_found": "आईडी <b>{0}</b> वाला विषय नहीं मिला :(",
 	"topics": "विषय",
-	"resolved": "resolved"
+	"resolved": "हल किया गया",
+	"new_topic_notification": "नए विषयों के बारे में सूचित करें"
 }

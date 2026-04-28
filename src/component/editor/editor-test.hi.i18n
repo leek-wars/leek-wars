@@ -41,15 +41,20 @@
 	"scenarios": "परिदृश्यों",
 	"teleportation": "टेलीपोर्टेशन",
 	"test_leeks": "लीक",
-	"type_farmer": "ब्रीडर",
+	"type_farmer": "एलेवर",
 	"type_free": "मुक्त",
 	"type_solo": "एकल",
-	"type_team": "कर्मी दल",
+	"type_team": "टीम",
 	"test_validate": "परीक्षण प्रारंभ करें",
 	"test_scenario": "लिखी हुई कहानी",
 	"test_map": "नक्शा",
 	"test_maps": "पत्ते",
 	"test_advanced": "अग्रिम",
 	"templates": "मॉडल",
-	"free": "मुक्त"
+	"free": "मुक्त",
+	"select_weapons": "हथियारों का चयन करें",
+	"select_chips": "चिप का चयन करें",
+	"max_turns": "अधिकतम टर्न",
+	"max_turns_desc": "लड़ाई के अधिकतम टर्न (डिफ़ॉल्ट 64)",
+	"max_turns_placeholder": "1 और 64 के बीच पूर्णांक। डिफ़ॉल्ट = 64"
 }
