@@ -8,10 +8,10 @@
 				</div>
 			</div>
 			<div class="tabs">
-				<div v-if="chat" class="tab action content" icon="delete" @click="LeekWars.addChat(chat)">
+				<div v-if="currentChat" class="tab action content" icon="delete" @click="LeekWars.addChat(currentChat)">
 					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 				</div>
-				<div v-if="chat && chat.type === ChatType.PM" class="tab action content" icon="delete" @click="quitDialog = true">
+				<div v-if="currentChat && currentChat.type === ChatType.PM" class="tab action content" icon="delete" @click="quitDialog = true">
 					<v-icon>mdi-exit-to-app</v-icon>
 					<span>{{ $t('quit') }}</span>
 				</div>
@@ -207,11 +207,11 @@
 
 	const id = computed(() => 'id' in route.params ? parseInt(route.params.id as string, 10) : null)
 
-	const chat = computed(() => id.value ? store.state.chat[id.value] : null)
+	const currentChat = computed(() => id.value ? store.state.chat[id.value] : null)
 
-	const chat_name = computed(() => chat.value ? chat.value.name : '')
+	const chat_name = computed(() => currentChat.value ? currentChat.value.name : '')
 
-	const isPrivate = computed(() => chat.value && chat.value.type === ChatType.PM)
+	const isPrivate = computed(() => currentChat.value && currentChat.value.type === ChatType.PM)
 
 	const isPublicChat = computed(() => currentID.value !== null && LeekWars.isPublicChat(currentID.value))
 
@@ -239,7 +239,7 @@
 	function selectConversation(theId: number) {
 		currentID.value = theId
 		LeekWars.splitShowContent()
-		if (chat.value && chat.value.type === ChatType.PM) {
+		if (currentChat.value && currentChat.value.type === ChatType.PM) {
 			LeekWars.setActions(actions.value)
 		} else if (LeekWars.isPublicChat(theId)) {
 			LeekWars.setActions([{icon: 'mdi-translate', click: (e: Event) => showLanguageDialog(e)}])
@@ -254,8 +254,8 @@
 	}
 
 	function getConversationName() {
-		if (!chat.value) { return }
-		for (const farmer of chat.value.farmers) {
+		if (!currentChat.value) { return }
+		for (const farmer of currentChat.value.farmers) {
 			if (!store.state.farmer || farmer.id !== store.state.farmer.id) {
 				return farmer.name
 			}
@@ -263,8 +263,8 @@
 	}
 
 	function getConversationFarmerId() {
-		if (chat.value && chat.value.type === ChatType.PM) {
-			for (const farmer of chat.value.farmers) {
+		if (currentChat.value && currentChat.value.type === ChatType.PM) {
+			for (const farmer of currentChat.value.farmers) {
 				if (!store.state.farmer || farmer.id !== store.state.farmer.id) {
 					return farmer.id
 				}
