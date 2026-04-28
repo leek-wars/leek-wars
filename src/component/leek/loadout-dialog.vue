@@ -229,7 +229,7 @@
 	</popup>
 
 	<popup v-model="confirmCloseDialogOpen" :width="480" persistent>
-		<template #icon><v-icon color="warning">mdi-content-save-alert-outline</v-icon></template>
+		<template #icon><v-icon>mdi-content-save-alert-outline</v-icon></template>
 		<template #title>{{ $t('main.loadout_unsaved_changes_title') }}</template>
 		<div class="unsaved-message">{{ $t('main.loadout_unsaved_changes_message') }}</div>
 		<template #actions>
