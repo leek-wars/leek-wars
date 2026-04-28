@@ -7,7 +7,7 @@
 				<v-icon class="icon" v-if="folder.closed">mdi-folder-lock-outline</v-icon>
 				<v-icon class="icon" v-else-if="isGitRepo">mdi-source-branch</v-icon>
 				<v-icon class="icon" v-else>mdi-folder-outline</v-icon>
-				<span v-if="folder.id === -1" ref="name" class="text">{{ $parent.$t(folder.name) }}
+				<span v-if="folder.id === -1" ref="name" class="text">{{ $t(folder.name) }}
 					<span v-if="folder.id === -1">({{ folder.items.length }})</span>
 				</span>
 				<span v-else ref="name" class="text">{{ folder.name }}</span>
