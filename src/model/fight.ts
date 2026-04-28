@@ -105,6 +105,8 @@ class Fight {
 	public generation_time!: number
 	public levelups!: number
 	public rareloot!: number
+	public starter?: number
+	public views?: number
 }
 
 class FightMap {
