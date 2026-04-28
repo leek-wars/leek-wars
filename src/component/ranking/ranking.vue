@@ -72,7 +72,7 @@
 							<th>{{ $t(funRanking.value) }}</th>
 						</tr>
 						<tr v-for="(farmer, i) in funRanking.ranking.ranking" :key="i" :class="farmer.me">
-							<td>{{ parseInt(i) + 1 }}</td>
+							<td>{{ Number(i) + 1 }}</td>
 							<td :class="farmer.style">
 								<router-link :to="'/farmer/' + farmer.id">
 									<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }">
@@ -278,7 +278,7 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import RankingFarmerRowElement from '@/component/ranking/ranking-farmer-row.vue'
 	import RankingLeekRowElement from '@/component/ranking/ranking-leek-row.vue'
 	import RankingSearchResult from '@/component/ranking/ranking-search-result.vue'
@@ -287,221 +287,211 @@
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Ranking, RankingRow } from '@/model/ranking'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import Pagination from '@/component/pagination.vue'
-import { emitter } from '@/model/vue'
-import { nextTick } from 'vue'
+	import { store } from '@/model/store'
+	import { emitter } from '@/model/vue'
+	import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
+	import { useRoute, useRouter } from 'vue-router'
 
-	@Options({
+	defineOptions({
 		name: 'ranking', i18n: {}, mixins: [...mixins],
 		components: { 'ranking-leek-row': RankingLeekRowElement, 'ranking-farmer-row': RankingFarmerRowElement, 'ranking-team-row': RankingTeamRowElement, 'ranking-composition-row': RankingCompositionRowElement, 'ranking-search-result': RankingSearchResult, RichTooltipFarmer, Pagination }
 	})
-	export default class RankingPage extends Vue {
-		fun: boolean = false
-		rankings: any = null
-		page: number = 0
-		pages: number = 0
-		category: string = ''
-		ranking: Ranking | null = null
-		order: string = ''
-		searchDialog: boolean = false
-		searchLeeks: boolean = true
-		searchFarmers: boolean = true
-		searchTeams: boolean = true
-		searchQuery: string = ''
-		searchResults: any[] | null = null
-		activeSwitch: boolean = false
-		compositionMode: boolean = localStorage.getItem('ranking/team-mode') === 'composition'
-		countryList: boolean = false
-		displayCategory: string = ''
 
-		get teamMode(): string {
-			return this.compositionMode ? 'composition' : 'team'
-		}
+	const { t } = useI18n()
+	const route = useRoute()
+	const router = useRouter()
+	const searchInput = useTemplateRef<HTMLElement>('search')
 
-		get url() {
-			return this.getURLBase(this.category, this.order)
-		}
-		get urlQuery() {
-			return this.getURLQuery(this.country, LeekWars.rankingInactive)
-		}
-		get searchResult() {
-			return parseInt(this.$route.hash.replace('#rank-', ''), 10)
-		}
-		get rankingLevel(): number {
-			return this.category && this.category.startsWith('level-') ? parseInt(this.category.substring(6)) : parseInt(localStorage.getItem('ranking/level') || '50')
-		}
-		get country(): string | null {
-			if (!this.$route.query.country) { return null }
-			return '' + this.$route.query.country // || localStorage.getItem('ranking/country') || this.$store.state.farmer?.country || 'fr'
-		}
-		get inactive(): boolean {
-			if (this.$route.query.inactive !== undefined) { return true }
-			return LeekWars.rankingInactive
-		}
+	const fun = ref(false)
+	const rankings = ref<any>(null)
+	const page = ref(0)
+	const pages = ref(0)
+	const category = ref('')
+	const ranking = ref<Ranking | null>(null)
+	const order = ref('')
+	const searchDialog = ref(false)
+	const searchLeeks = ref(true)
+	const searchFarmers = ref(true)
+	const searchTeams = ref(true)
+	const searchQuery = ref('')
+	const searchResults = ref<any[] | null>(null)
+	const activeSwitch = ref(false)
+	const compositionMode = ref(localStorage.getItem('ranking/team-mode') === 'composition')
+	const countryList = ref(false)
+	const displayCategory = ref('')
 
-		@Watch('$route.params', {immediate: true})
-		update() {
-			this.category = 'category' in this.$route.params ? this.$route.params.category : 'leek'
-			this.displayCategory = this.category
-			if (this.category.startsWith('level-')) {
-				this.displayCategory = 'leek'
-				localStorage.setItem('ranking/level', '' + this.rankingLevel)
-			}
-			if (this.category === 'team' || this.category === 'composition') {
-				this.compositionMode = this.category === 'composition'
-			}
+	const teamMode = computed(() => compositionMode.value ? 'composition' : 'team')
 
-			// localStorage.setItem('ranking/country', this.$route.params.country)
+	const url = computed(() => getURLBase(category.value, order.value))
+	const urlQuery = computed(() => getURLQuery(country.value, LeekWars.rankingInactive))
+	const searchResult = computed(() => parseInt(route.hash.replace('#rank-', ''), 10))
+	const rankingLevel = computed(() => category.value && category.value.startsWith('level-') ? parseInt(category.value.substring(6)) : parseInt(localStorage.getItem('ranking/level') || '50'))
+	const country = computed<string | null>(() => {
+		if (!route.query.country) { return null }
+		return '' + route.query.country
+	})
+	const inactive = computed(() => {
+		if (route.query.inactive !== undefined) { return true }
+		return LeekWars.rankingInactive
+	})
 
-			this.activeSwitch = !this.inactive
-			if (this.category !== 'fun') {
-				this.order = 'order' in this.$route.params ? this.$route.params.order : 'talent'
-				this.page = 'page' in this.$route.params ? parseInt(this.$route.params.page, 10) : 1
-			}
+	watch(() => route.params, () => {
+		category.value = 'category' in route.params ? route.params.category as string : 'leek'
+		displayCategory.value = category.value
+		if (category.value.startsWith('level-')) {
+			displayCategory.value = 'leek'
+			localStorage.setItem('ranking/level', '' + rankingLevel.value)
+		}
+		if (category.value === 'team' || category.value === 'composition') {
+			compositionMode.value = category.value === 'composition'
 		}
 
-		get key() {
-			if (this.category === 'fun') return 'fun'
-			return this.inactive + '/' + this.category + '/' + this.order + '/' + this.page + '/' + this.country
+		activeSwitch.value = !inactive.value
+		if (category.value !== 'fun') {
+			order.value = 'order' in route.params ? route.params.order as string : 'talent'
+			page.value = 'page' in route.params ? parseInt(route.params.page as string, 10) : 1
 		}
+	}, { immediate: true })
 
-		@Watch('key', { immediate: true })
-		updateRanking() {
-			// console.log("update", { active: this.active, category: this.category, order: this.order, page: this.page })
-			if (this.category === 'fun') {
-				this.rankings = null
-				LeekWars.get('ranking/fun').then(data => {
-					for (const row of data.rankings) {
-						row.ranking.ranking[0].style = 'first'
-						row.ranking.ranking[1].style = 'second'
-						row.ranking.ranking[2].style = 'third'
-					}
-					if (this.$store.state.farmer) {
-						for (const category of data.rankings) {
-							for (const row of category.ranking.ranking as Ranking) {
-								if (row.id === this.$store.state.farmer.id) {
-									row.me = 'me'
-								}
+	const key = computed(() => {
+		if (category.value === 'fun') return 'fun'
+		return inactive.value + '/' + category.value + '/' + order.value + '/' + page.value + '/' + country.value
+	})
+
+	watch(key, () => {
+		if (category.value === 'fun') {
+			rankings.value = null
+			LeekWars.get('ranking/fun').then(data => {
+				for (const row of data.rankings) {
+					row.ranking.ranking[0].style = 'first'
+					row.ranking.ranking[1].style = 'second'
+					row.ranking.ranking[2].style = 'third'
+				}
+				if (store.state.farmer) {
+					for (const cat of data.rankings) {
+						for (const row of cat.ranking.ranking as Ranking) {
+							if (row.id === store.state.farmer.id) {
+								row.me = 'me'
 							}
 						}
 					}
-					this.fun = true
-					this.rankings = data.rankings
-					this.ranking = []
-					LeekWars.setTitle(this.$t('title'), this.$t('fun'))
-					emitter.emit('loaded')
-				})
-			} else {
-				this.ranking = null
-				const service = this.inactive ? 'get' : 'get-active'
-				LeekWars.get('ranking/' + service + '/' + this.category + '/' + this.order + '/' + this.page + '/' + this.country).then(data => {
-					const ranking = data.ranking as Ranking
-					if (this.page === 1) {
-						if (ranking.length > 0) {
-							ranking[0].style = 'first'
-						}
-						if (ranking.length > 1) {
-							ranking[1].style = 'second'
-						}
-						if (ranking.length > 2) {
-							ranking[2].style = 'third'
-						}
+				}
+				fun.value = true
+				rankings.value = data.rankings
+				ranking.value = []
+				LeekWars.setTitle(t('title'), t('fun'))
+				emitter.emit('loaded')
+			})
+		} else {
+			ranking.value = null
+			const service = inactive.value ? 'get' : 'get-active'
+			LeekWars.get('ranking/' + service + '/' + category.value + '/' + order.value + '/' + page.value + '/' + country.value).then(data => {
+				const r = data.ranking as Ranking
+				if (page.value === 1) {
+					if (r.length > 0) {
+						r[0].style = 'first'
 					}
-					if (this.$store.state.farmer) {
-						for (const row of ranking) {
-							if (this.category === 'leek' || this.category.includes('level-')) {
-								if (this.$store.state.farmer && row.id in this.$store.state.farmer.leeks) {
-									row.me = 'me'
-								}
-							} else if (this.category === 'farmer') {
-								if (row.id === this.$store.state.farmer.id) {
-									row.me = 'me'
-								}
-							} else if (this.category === 'team') {
-								if (this.$store.state.farmer.team && row.id === this.$store.state.farmer.team.id) {
-									row.me = 'me'
-								}
-							} else if (this.category === 'composition') {
-								if (this.$store.state.farmer.team && (row as RankingRow & {team_id: number}).team_id === this.$store.state.farmer.team.id) {
-									row.me = 'me'
-								}
+					if (r.length > 1) {
+						r[1].style = 'second'
+					}
+					if (r.length > 2) {
+						r[2].style = 'third'
+					}
+				}
+				if (store.state.farmer) {
+					for (const row of r) {
+						if (category.value === 'leek' || category.value.includes('level-')) {
+							if (store.state.farmer && row.id in store.state.farmer.leeks) {
+								row.me = 'me'
+							}
+						} else if (category.value === 'farmer') {
+							if (row.id === store.state.farmer.id) {
+								row.me = 'me'
+							}
+						} else if (category.value === 'team') {
+							if (store.state.farmer.team && row.id === store.state.farmer.team.id) {
+								row.me = 'me'
+							}
+						} else if (category.value === 'composition') {
+							if (store.state.farmer.team && (row as RankingRow & {team_id: number}).team_id === store.state.farmer.team.id) {
+								row.me = 'me'
 							}
 						}
 					}
-					this.fun = false
-					this.pages = data.pages
-					this.ranking = ranking
-					LeekWars.setActions([{icon: 'mdi-magnify', click: () => this.openSearch()}])
-					const subtitle = this.category.includes('level') ? this.$t('main.level_n', [this.rankingLevel]) : this.$t('main.n_' + this.category + 's', [data.total])
-					LeekWars.setTitle(this.$t('title'), subtitle)
-					emitter.emit('loaded')
-					if (this.searchResult) {
-						nextTick(() => {
-							const row = document.querySelector('tr.highlight')
-							if (row) { row.scrollIntoView({ behavior: 'smooth', block: 'center' }) }
-						})
-					}
-				})
-			}
+				}
+				fun.value = false
+				pages.value = data.pages
+				ranking.value = r
+				LeekWars.setActions([{icon: 'mdi-magnify', click: () => openSearch()}])
+				const subtitle = category.value.includes('level') ? t('main.level_n', [rankingLevel.value]) : t('main.n_' + category.value + 's', [data.total])
+				LeekWars.setTitle(t('title'), subtitle)
+				emitter.emit('loaded')
+				if (searchResult.value) {
+					nextTick(() => {
+						const row = document.querySelector('tr.highlight')
+						if (row) { row.scrollIntoView({ behavior: 'smooth', block: 'center' }) }
+					})
+				}
+			})
 		}
+	}, { immediate: true })
 
-		goToResult(event: any) {
-			this.searchDialog = false
-			LeekWars.goToRanking(event.type, 'talent', event.id)
-		}
+	function goToResult(event: any) {
+		searchDialog.value = false
+		LeekWars.goToRanking(event.type, 'talent', event.id)
+	}
 
-		openSearch() {
-			this.searchDialog = true
-			this.searchQuery = ''
-			setTimeout(() => (this.$refs.search as HTMLElement).focus())
-		}
-		@Watch('searchQuery') @Watch('searchLeeks') @Watch('searchFarmers') @Watch('searchTeams')
-		searchUpdate() {
-			this.searchResults = null
-			if (!this.searchQuery.length) {
-				this.searchResults = []
-			} else {
-				LeekWars.post('ranking/search', {query: this.searchQuery.trim(), search_leeks: this.searchLeeks, search_farmers: this.searchFarmers, search_teams: this.searchTeams}).then(data => {
-					this.searchResults = data.results
-				})
-			}
-		}
+	function openSearch() {
+		searchDialog.value = true
+		searchQuery.value = ''
+		setTimeout(() => searchInput.value?.focus())
+	}
 
-		toggleInactives() {
-			LeekWars.rankingInactive = !this.activeSwitch
-			localStorage.setItem('options/ranking-inactive', '' + LeekWars.rankingInactive)
-			this.$router.push(this.url + this.urlQuery)
+	watch([searchQuery, searchLeeks, searchFarmers, searchTeams], () => {
+		searchResults.value = null
+		if (!searchQuery.value.length) {
+			searchResults.value = []
+		} else {
+			LeekWars.post('ranking/search', {query: searchQuery.value.trim(), search_leeks: searchLeeks.value, search_farmers: searchFarmers.value, search_teams: searchTeams.value}).then(data => {
+				searchResults.value = data.results
+			})
 		}
+	})
 
-		toggleCompositionMode() {
-			const mode = this.compositionMode ? 'composition' : 'team'
-			localStorage.setItem('ranking/team-mode', mode)
-			this.$router.push(this.getURL(mode, 'talent', this.country, this.inactive))
-		}
+	function toggleInactives() {
+		LeekWars.rankingInactive = !activeSwitch.value
+		localStorage.setItem('options/ranking-inactive', '' + LeekWars.rankingInactive)
+		router.push(url.value + urlQuery.value)
+	}
 
-		@Watch('countryList')
-		updateCountryList() {
-			if (this.countryList) {
-				LeekWars.loadCountries()
-			}
-		}
+	function toggleCompositionMode() {
+		const mode = compositionMode.value ? 'composition' : 'team'
+		localStorage.setItem('ranking/team-mode', mode)
+		router.push(getURL(mode, 'talent', country.value, inactive.value))
+	}
 
-		getURL(category: string, order: string, country: string | null, inactive: boolean) {
-			return this.getURLBase(category, order) + this.getURLQuery(country, inactive)
+	watch(countryList, () => {
+		if (countryList.value) {
+			LeekWars.loadCountries()
 		}
+	})
 
-		getURLBase(category: string, order: string) {
-			return '/ranking' + (category !== 'leek' || order !== 'talent' ? '/' + category : '') + (order !== 'talent' ? '/' + order : '')
-		}
+	function getURL(cat: string, ord: string, c: string | null, i: boolean) {
+		return getURLBase(cat, ord) + getURLQuery(c, i)
+	}
 
-		getURLQuery(country: string | null, inactive: boolean) {
-			const query = []
-			if (country) query.push('country=' + country)
-			if (inactive) query.push('inactive')
-			return (query.length ? '?' + query.join('&') : '')
-		}
+	function getURLBase(cat: string, ord: string) {
+		return '/ranking' + (cat !== 'leek' || ord !== 'talent' ? '/' + cat : '') + (ord !== 'talent' ? '/' + ord : '')
+	}
+
+	function getURLQuery(c: string | null, i: boolean) {
+		const query = []
+		if (c) query.push('country=' + c)
+		if (i) query.push('inactive')
+		return (query.length ? '?' + query.join('&') : '')
 	}
 </script>
 
