@@ -168,6 +168,12 @@
 						{{ $t('main.logout') }}
 					</template>
 					<div>{{ $t('main.logout_confirm') }}</div>
+					<div v-if="logoutAccounts.length > 1" class="logout-accounts">
+						<div v-for="account in logoutAccounts" :key="account.id" class="logout-account">
+							<img :src="LeekWars.getAvatar(account.id, account.avatar_changed)" class="logout-account-avatar">
+							<span class="logout-account-name">{{ account.name }}</span>
+						</div>
+					</div>
 					<template #actions>
 						<div v-ripple class="action dismiss" @click="LeekWars.logoutDialog = false">{{ $t('main.cancel') }}</div>
 						<div v-ripple class="action red" @click="confirmLogout">{{ $t('main.logout') }}</div>
@@ -215,8 +221,8 @@
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
-	import { store } from '@/model/store'
-	import { nextTick, ref, useTemplateRef, watch } from 'vue'
+	import { AccountInfo, store } from '@/model/store'
+	import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRouter } from 'vue-router'
 	import { useTheme } from 'vuetify'
@@ -242,6 +248,11 @@
 	const loggedOutOtherTab = ref(false)
 	const aprilFoolsDialog = ref(false)
 	const doc = useTemplateRef<any>('doc')
+
+	const logoutAccounts = computed(() => {
+		const farmerId = store.state.farmer?.id
+		return store.state.accounts.filter((a: AccountInfo) => a.connected || a.id === farmerId)
+	})
 
 	watch(() => LeekWars.darkMode, () => {
 		theme.change(LeekWars.darkMode ? 'dark' : 'light')
@@ -708,5 +719,29 @@
 				font-size: 18px;
 			}
 		}
+	}
+	.logout-accounts {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		margin-top: 12px;
+		padding: 8px 10px;
+		background: var(--background-secondary);
+		border-radius: 4px;
+	}
+	.logout-account {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+	.logout-account-avatar {
+		width: 28px;
+		height: 28px;
+		border-radius: 50%;
+		object-fit: cover;
+		background: var(--pure-white);
+	}
+	.logout-account-name {
+		font-weight: 500;
 	}
 </style>
