@@ -7,7 +7,7 @@
 			<template #content>
 				<div class="content">
 					<div class="player-wrapper">
-						<player v-if="map" ref="player" class="player" :map="map" :horizontal="false" :creator="true" @fight="playerLoaded" @resize="resize" @edited="edited" />
+						<player v-if="map" ref="playerRef" class="player" :map="map" :horizontal="false" :creator="true" @fight="playerLoaded" @resize="resize" @edited="edited" />
 					</div>
 					<div class="tools">
 
@@ -194,7 +194,7 @@ const decorations = [
 
 const game = ref<any>(null)
 let saveTimeout: any = null
-const player = useTemplateRef<any>('player')
+const playerRef = useTemplateRef<any>('playerRef')
 
 const id = computed(() => route.params.id)
 
@@ -218,7 +218,7 @@ function resize() { /* */ }
 
 function playerLoaded() {
 	nextTick(() => {
-		game.value = player.value.game as Game
+		game.value = playerRef.value.game as Game
 		for (const ground of GROUNDS) {
 			ground.texture.load(game.value)
 		}
@@ -232,12 +232,12 @@ function playerLoaded() {
 }
 
 function selectGround(ground: GroundTexture) {
-	const g = player.value.game as Game
+	const g = playerRef.value.game as Game
 	g.groundPaint = ground
 }
 
 function obstacleDragStart(obstacle: ObstacleInfo) {
-	const g = player.value.game as Game
+	const g = playerRef.value.game as Game
 	const info = OBSTACLES[obstacle.id]
 	const o = new Obstacle(g, obstacle.geometry, g.ground.field.cells[570], info)
 	o.resize()
@@ -297,7 +297,7 @@ function edited(_info: any) {
 		console.log("save...")
 		if (!map.value) return
 
-		const g = player.value.game as Game
+		const g = playerRef.value.game as Game
 		const obstacles = {} as {[key: number]: number}
 		for (const obstacle of g.ground.obstacles) {
 			obstacles[obstacle.cell.id] = obstacle.info.id
