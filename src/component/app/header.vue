@@ -178,19 +178,15 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { defineAsyncComponent } from 'vue'
-	const Conversation = defineAsyncComponent(() => import('@/component/messages/conversation.vue'))
-	const AccountSwitcher = defineAsyncComponent(() => import('@/component/app/account-switcher.vue'))
-	export default {
-		name: 'lw-header',
-		components: { 'conversation': Conversation, 'account-switcher': AccountSwitcher }
-	}
-</script>
 <script lang="ts" setup>
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { ref } from 'vue'
+	import { defineAsyncComponent, ref } from 'vue'
+
+	defineOptions({ name: 'lw-header' })
+
+	const Conversation = defineAsyncComponent(() => import('@/component/messages/conversation.vue'))
+	const AccountSwitcher = defineAsyncComponent(() => import('@/component/app/account-switcher.vue'))
 
 	const accountMenu = ref(false)
 

@@ -164,12 +164,14 @@
 	</panel>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 	import { mixins } from '@/model/i18n'
-	import { Item, ItemTemplate, ItemType, ItemTypes, ITEM_TYPE_ICONS, ITEM_TYPE_NAME, ITEM_CATEGORY_NAME } from '@/model/item'
+	import { type Item, type ItemTemplate, ItemType, ItemTypes, ITEM_TYPE_ICONS, ITEM_TYPE_NAME, ITEM_CATEGORY_NAME } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
+	import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
+	import { useRouter } from 'vue-router'
 	import ItemPreview from '@/component/market/item-preview.vue'
 	import SchemeImage from '../market/scheme-image.vue'
 	import { emitter } from '@/model/vue'
@@ -184,280 +186,255 @@
 		SMALL, NORMAL, LARGE
 	}
 
-	@Options({ name: 'inventory', i18n: {}, mixins: [...mixins], components: { ItemPreview, SchemeImage } })
-	export default class Inventory extends Vue {
+	defineOptions({ name: 'inventory', i18n: {}, mixins: [...mixins] })
 
-		ItemType = ItemType
-		ItemTypes = ItemTypes
-		ITEM_TYPE_ICONS = ITEM_TYPE_ICONS
-		ITEM_TYPE_NAME = ITEM_TYPE_NAME
-		ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
-		Sort = Sort
-		Group = Group
-		Size = Size
-		CATEGORY_ITEMS = 1
-		// CATEGORY_POTIONS = 2
-		CATEGORY_RESOURCES = 2
-		category = 3
-		placeholder_count: number = 0
-		columns: number = 0
-		sort: Sort = parseInt(localStorage.getItem('inventory/sort') || '0', 10) as Sort
-		filter: ItemType = parseInt(localStorage.getItem('inventory/filter') || '0', 10) as ItemType
-		group: Group = parseInt(localStorage.getItem('inventory/group') || '0', 10) as Group
-		size: Size = parseInt(localStorage.getItem('inventory/size') || '1', 10) as Size
-		collapsedGroups: Set<number> = new Set(JSON.parse(localStorage.getItem('inventory/collapsed') || '[]'))
-		actions: any
-		retrieveDialog: boolean = false
-		retrieveItems = [] as Item[]
+	const { t } = useI18n()
+	const router = useRouter()
+	const inventoryRef = useTemplateRef<HTMLElement>('inventory')
 
-		isSchemeCraftable(item: any): boolean {
-			if (item.type !== ItemType.SCHEME || !store.state.farmer) return true
-			const scheme = LeekWars.schemes[LeekWars.items[item.template].params]
-			if (!scheme) return true
-			const farmer = store.state.farmer
-			for (const ingredient of scheme.items) {
-				if (!ingredient) continue
-				const [itemId, quantity] = ingredient
-				if (itemId === 148) {
-					if (farmer.habs < quantity) return false
+	const CATEGORY_ITEMS = 1
+	const CATEGORY_RESOURCES = 2
+	const category = ref(3)
+	const placeholder_count = ref(0)
+	const columns = ref(0)
+	const sort = ref<Sort>(parseInt(localStorage.getItem('inventory/sort') || '0', 10) as Sort)
+	const filter = ref<ItemType>(parseInt(localStorage.getItem('inventory/filter') || '0', 10) as ItemType)
+	const group = ref<Group>(parseInt(localStorage.getItem('inventory/group') || '0', 10) as Group)
+	const size = ref<Size>(parseInt(localStorage.getItem('inventory/size') || '1', 10) as Size)
+	const collapsedGroups = ref<Set<number>>(new Set(JSON.parse(localStorage.getItem('inventory/collapsed') || '[]')))
+	const retrieveDialog = ref(false)
+	const retrieveItems = ref<Item[]>([])
+
+	function isSchemeCraftable(item: any): boolean {
+		if (item.type !== ItemType.SCHEME || !store.state.farmer) return true
+		const scheme = LeekWars.schemes[LeekWars.items[item.template].params]
+		if (!scheme) return true
+		const farmer = store.state.farmer
+		for (const ingredient of scheme.items) {
+			if (!ingredient) continue
+			const [itemId, quantity] = ingredient
+			if (itemId === 148) {
+				if (farmer.habs < quantity) return false
+			} else {
+				const found = farmer.resources.find((i: any) => i.template === itemId)
+					|| farmer.components.find((i: any) => i.template === itemId)
+					|| farmer.potions.find((i: any) => i.template === itemId)
+					|| farmer.weapons.find((i: any) => i.template === itemId)
+					|| farmer.chips.find((i: any) => i.template === itemId)
+				if (!found || found.quantity < quantity) return false
+			}
+		}
+		return true
+	}
+
+	const tooltipVisible = ref(false)
+	const tooltipItem = ref<ItemTemplate | null>(null)
+	const tooltipQuantity = ref(0)
+	const tooltipActivator = ref<HTMLElement | undefined>(undefined)
+	let tooltipShowTimer = 0
+	let tooltipHideTimer = 0
+	let tooltipOnTooltip = false
+
+	function showTooltip(item: any, event: MouseEvent) {
+		clearTimeout(tooltipHideTimer)
+		const target = event.currentTarget as HTMLElement
+		if (tooltipVisible.value) {
+			tooltipActivator.value = target
+			tooltipItem.value = LeekWars.items[item.template]
+			tooltipQuantity.value = item.quantity
+		} else {
+			clearTimeout(tooltipShowTimer)
+			tooltipShowTimer = window.setTimeout(() => {
+				tooltipActivator.value = target
+				tooltipItem.value = LeekWars.items[item.template]
+				tooltipQuantity.value = item.quantity
+				tooltipVisible.value = true
+			}, 500)
+		}
+	}
+
+	function scheduleHideTooltip() {
+		clearTimeout(tooltipShowTimer)
+		tooltipHideTimer = window.setTimeout(() => {
+			if (!tooltipOnTooltip) {
+				tooltipVisible.value = false
+			}
+		}, 100)
+	}
+
+	function onTooltipEnter() {
+		tooltipOnTooltip = true
+		clearTimeout(tooltipHideTimer)
+	}
+
+	function onTooltipLeave() {
+		tooltipOnTooltip = false
+		tooltipVisible.value = false
+	}
+
+	const inventory = computed(() => {
+		const inventory = []
+		if (store.state.farmer) {
+			for (const weapon of store.state.farmer.weapons) {
+				inventory.push({type: ItemType.WEAPON, ...weapon})
+			}
+			inventory.push(...store.state.farmer.chips.map(chip => ({type: ItemType.CHIP, ...chip})))
+			inventory.push(...store.state.farmer.potions.map(potion => ({type: ItemType.POTION, ...potion})))
+			inventory.push(...store.state.farmer.hats.map(hat => ({type: ItemType.HAT, ...hat})))
+			inventory.push(...store.state.farmer.pomps.map(pomp => ({type: ItemType.POMP, ...pomp})))
+			inventory.push(...store.state.farmer.resources.map(resource => ({type: ItemType.RESOURCE, ...resource})))
+			inventory.push(...store.state.farmer.components.map(p => ({type: ItemType.COMPONENT, ...p})))
+			inventory.push(...store.state.farmer.schemes.map(p => ({type: ItemType.SCHEME, ...p})))
+		}
+		return inventory
+	})
+
+	const filtered_inventory = computed(() => {
+		if (filter.value === ItemType.ALL) return inventory.value
+		return inventory.value.filter(item => item.type == filter.value)
+	})
+
+	function sortCompare(a: any, b: any) {
+		if (sort.value === Sort.DATE) {
+			if (b.time === a.time) return a.id - b.id
+			return b.time - a.time
+		}
+		if (sort.value === Sort.PRICE) return LeekWars.items[b.template].price! - LeekWars.items[a.template].price!
+		if (sort.value === Sort.PRICE_LOT) return LeekWars.items[b.template].price! * b.quantity - LeekWars.items[a.template].price! * a.quantity
+		if (sort.value === Sort.QUANTITY) return b.quantity - a.quantity
+		if (sort.value === Sort.RARITY) return LeekWars.items[b.template].rarity - LeekWars.items[a.template].rarity
+		return LeekWars.items[b.template].level - LeekWars.items[a.template].level
+	}
+
+	const sorted_inventory = computed(() => {
+		return [...filtered_inventory.value].sort((a: any, b: any) => {
+			if (group.value === Group.TYPE && a.type !== b.type) return a.type - b.type
+			if (group.value === Group.RARITY) {
+				const ra = LeekWars.items[a.template].rarity
+				const rb = LeekWars.items[b.template].rarity
+				if (ra !== rb) return rb - ra
+			}
+			return sortCompare(a, b)
+		})
+	})
+
+	const display_inventory = computed<any[]>(() => {
+		const items = sorted_inventory.value
+		const entry = (item: any) => ({ item, key: item.id, craftable: isSchemeCraftable(item) })
+		if (group.value === Group.NONE) return items.map(entry)
+		const groupCounts: Record<number, number> = {}
+		for (const item of items) {
+			const gk = group.value === Group.TYPE ? item.type : LeekWars.items[item.template].rarity
+			groupCounts[gk] = (groupCounts[gk] || 0) + 1
+		}
+		const cols = columns.value || 1
+		const result: any[] = []
+		let lastGroup = -1
+		let groupCount = 0
+		for (const item of items) {
+			const groupKey = group.value === Group.TYPE ? item.type : LeekWars.items[item.template].rarity
+			if (groupKey !== lastGroup) {
+				if (lastGroup !== -1 && !collapsedGroups.value.has(lastGroup) && groupCount % cols !== 0) {
+					const pad = cols - (groupCount % cols)
+					for (let i = 0; i < pad; i++) {
+						result.push({ placeholder: true, key: 'pad-' + lastGroup + '-' + i })
+					}
+				}
+				const collapsed = collapsedGroups.value.has(groupKey)
+				if (group.value === Group.TYPE) {
+					result.push({ separator: true, type: item.type, count: groupCounts[groupKey], key: 'sep-' + groupKey, collapsed, groupKey })
 				} else {
-					const found = farmer.resources.find((i: any) => i.template === itemId)
-						|| farmer.components.find((i: any) => i.template === itemId)
-						|| farmer.potions.find((i: any) => i.template === itemId)
-						|| farmer.weapons.find((i: any) => i.template === itemId)
-						|| farmer.chips.find((i: any) => i.template === itemId)
-					if (!found || found.quantity < quantity) return false
+					result.push({ separator: true, rarity: groupKey, count: groupCounts[groupKey], key: 'sep-' + groupKey, collapsed, groupKey })
 				}
+				lastGroup = groupKey
+				groupCount = 0
 			}
-			return true
-		}
-
-		// Shared tooltip state
-		tooltipVisible: boolean = false
-		tooltipItem: ItemTemplate | null = null
-		tooltipQuantity: number = 0
-		tooltipActivator: HTMLElement | undefined = undefined
-		private tooltipShowTimer: number = 0
-		private tooltipHideTimer: number = 0
-		private tooltipOnTooltip: boolean = false
-
-		showTooltip(item: any, event: MouseEvent) {
-			clearTimeout(this.tooltipHideTimer)
-			const target = event.currentTarget as HTMLElement
-			if (this.tooltipVisible) {
-				// Already open: switch to new item instantly
-				this.tooltipActivator = target
-				this.tooltipItem = LeekWars.items[item.template]
-				this.tooltipQuantity = item.quantity
-			} else {
-				clearTimeout(this.tooltipShowTimer)
-				this.tooltipShowTimer = window.setTimeout(() => {
-					this.tooltipActivator = target
-					this.tooltipItem = LeekWars.items[item.template]
-					this.tooltipQuantity = item.quantity
-					this.tooltipVisible = true
-				}, 500)
+			if (!collapsedGroups.value.has(groupKey)) {
+				result.push(entry(item))
+				groupCount++
 			}
 		}
+		return result
+	})
 
-		scheduleHideTooltip() {
-			clearTimeout(this.tooltipShowTimer)
-			this.tooltipHideTimer = window.setTimeout(() => {
-				if (!this.tooltipOnTooltip) {
-					this.tooltipVisible = false
-				}
-			}, 100)
-		}
+	const total_estimated = computed(() => Math.floor(filtered_inventory.value.reduce((s: number, i: any) => s + (LeekWars.items[i.template]?.price ?? 0) * i.quantity, 0)))
 
-		onTooltipEnter() {
-			this.tooltipOnTooltip = true
-			clearTimeout(this.tooltipHideTimer)
-		}
+	const SIZES = {
+		[Size.SMALL]:  { desktop: { w: 55, h: 58 }, mobile: { w: 45, h: 48 } },
+		[Size.NORMAL]: { desktop: { w: 73, h: 76 }, mobile: { w: 60, h: 63 } },
+		[Size.LARGE]:  { desktop: { w: 100, h: 103 }, mobile: { w: 80, h: 83 } },
+	}
 
-		onTooltipLeave() {
-			this.tooltipOnTooltip = false
-			this.tooltipVisible = false
-		}
+	function resize() {
+		const s = SIZES[size.value] || SIZES[Size.NORMAL]
+		const W = LeekWars.mobile ? s.mobile.w : s.desktop.w
+		const H = LeekWars.mobile ? s.mobile.h : s.desktop.h
+		const el = inventoryRef.value
+		if (!el) return
+		const margin = 5
+		columns.value = Math.floor((el.clientWidth - margin) / (W + margin))
+		const last_columns = filtered_inventory.value.length % columns.value
+		const column = last_columns === 0 ? 0 : columns.value - last_columns
+		const rows = Math.floor((el.clientHeight - margin) / (H + margin))
+		placeholder_count.value = Math.max(column, columns.value * rows - filtered_inventory.value.length)
+	}
 
-		get inventory() {
-			const inventory = []
-			if (store.state.farmer) {
-				for (const weapon of store.state.farmer.weapons) {
-					inventory.push({type: ItemType.WEAPON, ...weapon})
-				}
-				inventory.push(...store.state.farmer.chips.map(chip => {return {type: ItemType.CHIP, ...chip}}))
-				inventory.push(...store.state.farmer.potions.map(potion => {return {type: ItemType.POTION, ...potion}}))
-				inventory.push(...store.state.farmer.hats.map(hat => {return {type: ItemType.HAT, ...hat}}))
-				inventory.push(...store.state.farmer.pomps.map(pomp => {return {type: ItemType.POMP, ...pomp}}))
-				inventory.push(...store.state.farmer.resources.map(resource => {return {type: ItemType.RESOURCE, ...resource}}))
-				inventory.push(...store.state.farmer.components.map(p => {return {type: ItemType.COMPONENT, ...p}}))
-				inventory.push(...store.state.farmer.schemes.map(p => {return {type: ItemType.SCHEME, ...p}}))
-			}
-			return inventory
-		}
+	watch([filtered_inventory, size], resize)
 
-		get filtered_inventory() {
-			if (this.filter === ItemType.ALL) return this.inventory
-			return this.inventory.filter(item => item.type == this.filter)
-		}
+	function hideTooltip() {
+		tooltipVisible.value = false
+		clearTimeout(tooltipShowTimer)
+	}
 
-		sortCompare(a: any, b: any) {
-			if (this.sort === Sort.DATE) {
-				if (b.time === a.time) return a.id - b.id
-				return b.time - a.time
-			}
-			if (this.sort === Sort.PRICE) return LeekWars.items[b.template].price! - LeekWars.items[a.template].price!
-			if (this.sort === Sort.PRICE_LOT) return LeekWars.items[b.template].price! * b.quantity - LeekWars.items[a.template].price! * a.quantity
-			if (this.sort === Sort.QUANTITY) return b.quantity - a.quantity
-			if (this.sort === Sort.RARITY) return LeekWars.items[b.template].rarity - LeekWars.items[a.template].rarity
-			/*if (this.sort === Sort.LEVEL) */ return LeekWars.items[b.template].level - LeekWars.items[a.template].level
-		}
+	const actions = [
+		{icon: 'mdi-bank', click: () => router.push('/bank?ref=inventory_action')},
+		{image: 'icon/market.png', click: () => router.push('/market')},
+	]
+	LeekWars.setActions(actions)
+	LeekWars.setTitle(t('main.inventory') as string)
+	updateSubtitle()
 
-		get sorted_inventory() {
-			return [...this.filtered_inventory].sort((a: any, b: any) => {
-				if (this.group === Group.TYPE && a.type !== b.type) return a.type - b.type
-				if (this.group === Group.RARITY) {
-					const ra = LeekWars.items[a.template].rarity
-					const rb = LeekWars.items[b.template].rarity
-					if (ra !== rb) return rb - ra
-				}
-				return this.sortCompare(a, b)
-			})
+	function updateSubtitle() {
+		if (store.state.farmer) {
+			LeekWars.setSubTitle(t('main.x_habs', [LeekWars.formatNumber(store.state.farmer.habs)]) as string + " • " + t('main.x_crystals', [LeekWars.formatNumber(store.state.farmer.crystals)]))
 		}
+	}
 
-		get display_inventory(): any[] {
-			const items = this.sorted_inventory
-			const entry = (item: any) => ({ item, key: item.id, craftable: this.isSchemeCraftable(item) })
-			if (this.group === Group.NONE) return items.map(entry)
-			// Pre-compute group counts
-			const groupCounts: Record<number, number> = {}
-			for (const item of items) {
-				const gk = this.group === Group.TYPE ? item.type : LeekWars.items[item.template].rarity
-				groupCounts[gk] = (groupCounts[gk] || 0) + 1
-			}
-			const cols = this.columns || 1
-			const result: any[] = []
-			let lastGroup = -1
-			let groupCount = 0
-			for (const item of items) {
-				const groupKey = this.group === Group.TYPE ? item.type : LeekWars.items[item.template].rarity
-				if (groupKey !== lastGroup) {
-					if (lastGroup !== -1 && !this.collapsedGroups.has(lastGroup) && groupCount % cols !== 0) {
-						const pad = cols - (groupCount % cols)
-						for (let i = 0; i < pad; i++) {
-							result.push({ placeholder: true, key: 'pad-' + lastGroup + '-' + i })
-						}
-					}
-					const collapsed = this.collapsedGroups.has(groupKey)
-					if (this.group === Group.TYPE) {
-						result.push({ separator: true, type: item.type, count: groupCounts[groupKey], key: 'sep-' + groupKey, collapsed, groupKey })
-					} else {
-						result.push({ separator: true, rarity: groupKey, count: groupCounts[groupKey], key: 'sep-' + groupKey, collapsed, groupKey })
-					}
-					lastGroup = groupKey
-					groupCount = 0
-				}
-				if (!this.collapsedGroups.has(groupKey)) {
-					result.push(entry(item))
-					groupCount++
-				}
-			}
-			return result
-		}
+	onMounted(() => {
+		LeekWars.footer = false
+		LeekWars.box = true
+		resize()
+		emitter.on('resize', resize)
+		emitter.on('craft', hideTooltip)
+		emitter.on('clover-used', hideTooltip)
+	})
 
-		get total_estimated() {
-			return Math.floor(this.filtered_inventory.reduce((s, i) => s + (LeekWars.items[i.template]?.price ?? 0) * i.quantity, 0))
-		}
+	onBeforeUnmount(() => {
+		emitter.off('resize', resize)
+		emitter.off('craft', hideTooltip)
+		clearTimeout(tooltipShowTimer)
+		clearTimeout(tooltipHideTimer)
+	})
 
-		readonly SIZES = {
-			[Size.SMALL]:  { desktop: { w: 55, h: 58 }, mobile: { w: 45, h: 48 } },
-			[Size.NORMAL]: { desktop: { w: 73, h: 76 }, mobile: { w: 60, h: 63 } },
-			[Size.LARGE]:  { desktop: { w: 100, h: 103 }, mobile: { w: 80, h: 83 } },
-		}
+	watch(sort, () => localStorage.setItem('inventory/sort', '' + sort.value))
+	watch(filter, () => localStorage.setItem('inventory/filter', '' + filter.value))
+	watch(group, () => localStorage.setItem('inventory/group', '' + group.value))
+	watch(size, () => localStorage.setItem('inventory/size', '' + size.value))
 
-		@Watch('filtered_inventory')
-		@Watch('size')
-		resize() {
-			const s = this.SIZES[this.size] || this.SIZES[Size.NORMAL]
-			const W = LeekWars.mobile ? s.mobile.w : s.desktop.w
-			const H = LeekWars.mobile ? s.mobile.h : s.desktop.h
-			const inventory = this.$refs.inventory as HTMLElement
-			const margin = 5
-			this.columns = Math.floor((inventory.clientWidth - margin) / (W + margin))
-			const last_columns = this.filtered_inventory.length % this.columns
-			const column = last_columns === 0 ? 0 : this.columns - last_columns
-			const rows = Math.floor((inventory.clientHeight - margin) / (H + margin))
-			this.placeholder_count = Math.max(column, this.columns * rows - this.filtered_inventory.length)
+	function toggleGroup(groupKey: number) {
+		if (collapsedGroups.value.has(groupKey)) {
+			collapsedGroups.value.delete(groupKey)
+		} else {
+			collapsedGroups.value.add(groupKey)
 		}
+		collapsedGroups.value = new Set(collapsedGroups.value)
+		localStorage.setItem('inventory/collapsed', JSON.stringify([...collapsedGroups.value]))
+	}
 
-		hideTooltip() {
-			this.tooltipVisible = false
-			clearTimeout(this.tooltipShowTimer)
-		}
-
-		mounted() {
-			LeekWars.footer = false
-			LeekWars.box = true
-
-			this.resize()
-			emitter.on('resize', this.resize)
-			emitter.on('craft', this.hideTooltip)
-			emitter.on('clover-used', this.hideTooltip)
-		}
-		created() {
-			this.actions = [
-				{icon: 'mdi-bank', click: () => this.$router.push('/bank?ref=inventory_action')},
-				{image: 'icon/market.png', click: () => this.$router.push('/market')},
-			]
-			LeekWars.setActions(this.actions)
-			LeekWars.setTitle(this.$i18n.t('main.inventory'))
-			this.updateSubtitle()
-		}
-		updateSubtitle() {
-			if (this.$store.state.farmer) {
-				LeekWars.setSubTitle(this.$t('main.x_habs', [LeekWars.formatNumber(this.$store.state.farmer.habs)]) + " • " + this.$t('main.x_crystals', [LeekWars.formatNumber(this.$store.state.farmer.crystals)]))
-			}
-		}
-		beforeUnmount() {
-			emitter.off('resize', this.resize)
-			emitter.off('craft', this.hideTooltip)
-			clearTimeout(this.tooltipShowTimer)
-			clearTimeout(this.tooltipHideTimer)
-		}
-
-		@Watch('sort')
-		updateSort() {
-			localStorage.setItem('inventory/sort', '' + this.sort)
-		}
-		@Watch('filter')
-		updateFilter() {
-			localStorage.setItem('inventory/filter', '' + this.filter)
-		}
-		@Watch('group')
-		updateGroup() {
-			localStorage.setItem('inventory/group', '' + this.group)
-		}
-		@Watch('size')
-		updateSize() {
-			localStorage.setItem('inventory/size', '' + this.size)
-		}
-
-		toggleGroup(groupKey: number) {
-			if (this.collapsedGroups.has(groupKey)) {
-				this.collapsedGroups.delete(groupKey)
-			} else {
-				this.collapsedGroups.add(groupKey)
-			}
-			this.collapsedGroups = new Set(this.collapsedGroups) // trigger reactivity
-			localStorage.setItem('inventory/collapsed', JSON.stringify([...this.collapsedGroups]))
-		}
-
-		retrieve(items: Item[]) {
-			// console.log("retrieve", items)
-			if (items.length) {
-				this.retrieveDialog = true
-				this.retrieveItems = items
-			}
+	function retrieve(items: Item[]) {
+		if (items.length) {
+			retrieveDialog.value = true
+			retrieveItems.value = items
 		}
 	}
 </script>
