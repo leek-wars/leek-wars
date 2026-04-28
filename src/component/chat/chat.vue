@@ -24,7 +24,7 @@
 			<v-icon>mdi-chevron-down</v-icon>
 		</div>
 
-		<report-dialog v-if="reportFarmer" v-model="reportDialog" :target="reportFarmer" :reasons="reasons" :parameter="reportContent" class="report-dialog" />
+		<report-dialog v-if="reportFarmer" v-model="showReport" :target="reportFarmer" :reasons="reasons" :parameter="reportContent" class="report-dialog" />
 
 		<v-menu v-if="menuMessage && !privateMessages && (menuMessage.farmer.color !== 'admin' || $store.getters.admin) && menuMessage.farmer.id !== 0" v-model="menu" :activator="menuActivator" offset-y>
 			<v-list dense class="message-actions">
@@ -204,7 +204,7 @@
 	const issueTitle = ref('')
 	const issueDescription = ref('')
 
-	const reportDialog = ref(false)
+	const showReport = ref(false)
 	const reportFarmer = ref<Farmer | null>(null)
 	const reportContent = ref('')
 	const reasons = [
@@ -358,7 +358,7 @@
 	}
 
 	function report(message: ChatMessage) {
-		reportDialog.value = true
+		showReport.value = true
 		reportFarmer.value = message.farmer
 		reportContent.value = [message.id, ...message.subMessages.map(s => s.id)].join(',')
 	}

@@ -646,3 +646,32 @@ import { store } from '@/model/store'
 ```vue
 <template v-if="store.state.farmer?.admin">
 ```
+
+### ⚠️ Collision tag custom ↔ ref camelCase (PIÈGE MAJEUR)
+
+Le compilateur `<script setup>` résout `<some-component>` en cherchant les bindings setup dans cet ordre :
+1. `SomeComponent` (PascalCase)
+2. `someComponent` (camelCase)
+3. `_resolveComponent('some-component')` → fallback vers `components: {}`
+
+**Problème** : si un ref booléen (typique pour un `v-model` de dialog) porte le même nom camelCase que le tag, il est utilisé **à la place** du composant, et le tag rend `_createVNode(false, ...)` à chaque render → warning `Invalid vnode type when creating vnode: false. at <App>`.
+
+**Exemple cassé** :
+```vue
+<changelog-dialog v-model="changelogDialog" :changelog="changelog" />
+```
+```ts
+const changelogDialog = ref(false)  // ← collision avec <changelog-dialog>
+```
+
+**Fix** : renommer le ref pour qu'il ne corresponde pas au camelCase du tag.
+```ts
+const showChangelog = ref(false)  // ✓
+```
+```vue
+<changelog-dialog v-model="showChangelog" :changelog="changelog" />
+```
+
+Patterns à éviter : `reportDialog` / `<report-dialog>`, `levelDialog` / `<level-dialog>`, `loginDialog` / `<login-dialog>`, etc.
+
+Le warning ne déclenche que sur **re-render** (pas au premier render), donc se manifeste après une mutation du store ou du state.

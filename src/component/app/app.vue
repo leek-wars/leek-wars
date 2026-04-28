@@ -51,7 +51,7 @@
 
 				<didactitiel-new v-if="LeekWars.didactitial" />
 
-				<changelog-dialog v-model="changelogDialog" :changelog="changelog" />
+				<changelog-dialog v-model="showChangelog" :changelog="changelog" />
 
 				<popup v-model="LeekWars.messagePopup" :width="500">
 					<template #title>
@@ -229,7 +229,7 @@
 	const showConsole = ref(false)
 	const consoleValue = ref(false)
 	const changelog = ref<any>(null)
-	const changelogDialog = ref(false)
+	const showChangelog = ref(false)
 	let konami = ''
 	const annonce = ref(false)
 	const docEverywhere = ref(false)
@@ -326,7 +326,7 @@
 	function changelogShow() {
 		LeekWars.get('changelog/get-last/' + i18nLocale.value).then(data => {
 			changelog.value = data.changelog
-			changelogDialog.value = true
+			showChangelog.value = true
 			localStorage.setItem('changelog_version', LeekWars.normal_version)
 			localStorage.setItem('changelog_forum_topic', data.changelog.forum_topic)
 		})

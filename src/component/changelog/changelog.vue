@@ -49,7 +49,7 @@
 				</template>
 			</panel>
 		</template>
-		<changelog-dialog v-model="changelogDialog" :changelog="changelogVersion" />
+		<changelog-dialog v-model="showChangelog" :changelog="changelogVersion" />
 
 		<!-- Social images generation -->
 		<changelog-social v-if="routeVersion && store.getters.admin" :version="routeVersion" :version-name="(route.params.version as string)" />
@@ -86,7 +86,7 @@ interface ChangelogEntry {
 }
 
 const changelog = ref<ChangelogEntry[] | null>(null)
-const changelogDialog = ref(false)
+const showChangelog = ref(false)
 const changelogVersion = ref<ChangelogEntry | null>(null)
 const translations = ref<Record<number, { title?: string }>>({})
 const lazy_end = ref(2)
@@ -106,7 +106,7 @@ const lazy_changelog = computed(() => {
 
 function showChangelogDialog(version: ChangelogEntry) {
 	changelogVersion.value = version
-	changelogDialog.value = true
+	showChangelog.value = true
 }
 
 function scroll() {
