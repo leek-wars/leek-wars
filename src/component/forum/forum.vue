@@ -148,12 +148,13 @@
 </template>
 
 <script setup lang="ts">
-	import { Farmer } from '@/model/farmer'
+	import type { Farmer } from '@/model/farmer'
 	import { Language, LeekWars } from '@/model/leekwars'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import { i18n, mixins } from '@/model/i18n'
 	import { store } from '@/model/store'
 	import { computed, defineAsyncComponent, reactive, ref, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
 	import { emitter } from '@/model/vue'
 	import { useRouter } from 'vue-router'
 
@@ -161,6 +162,7 @@
 
 	defineOptions({ name: 'forum', i18n: {}, mixins: [...mixins] })
 
+	const { t } = useI18n()
 	const router = useRouter()
 
 	const categories = ref<any>(null)
@@ -190,9 +192,9 @@
 			store.commit('connected-count', data.farmers.length)
 			connected_languages.value = data.languages
 			notifyNewTopics.value = data.notif_topics
-			LeekWars.setSubTitle(i18n.global.t('connected_farmers_subtitle', [data.farmers.length]))
+			LeekWars.setSubTitle(t('connected_farmers_subtitle', [data.farmers.length]))
 		})
-		LeekWars.setTitle(i18n.global.t('title'))
+		LeekWars.setTitle(t('title'))
 		LeekWars.setActions([
 			{icon: 'mdi-chat-outline', click: () => router.push('/chat')},
 			{icon: 'mdi-magnify', click: () => router.push('/search')}

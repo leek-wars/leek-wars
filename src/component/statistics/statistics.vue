@@ -86,6 +86,9 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Doughnut } from 'vue-chartjs'
 	import { computed, onBeforeUnmount, ref, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
+
+	const { t, te } = useI18n()
 
 	const GENERAL_CATEGORY = 1
 	const FIGHT_CATEGORY = 2
@@ -127,7 +130,7 @@
 		const filtered_values = values.filter(s => stats[s].value / total > 0.01)
 		filtered_values.sort((a, b) => stats[b].value - stats[a].value)
 		return {
-			labels: filtered_values.map(s => i18n.global.te(s + '_chart') ? i18n.global.t(s + '_chart') : i18n.global.t(s)),
+			labels: filtered_values.map(s => te(s + '_chart') ? t(s + '_chart') : t(s)),
 			datasets: [{
 				data: filtered_values.map(s => stats[s].value),
 				backgroundColor: CHART_COLORS.slice(0, filtered_values.length),
@@ -187,7 +190,7 @@
 	}
 
 	LeekWars.get('statistic/get-all').then(data => {
-		LeekWars.setTitle(i18n.global.t('title'))
+		LeekWars.setTitle(t('title'))
 		LeekWars.setActions(actions.value)
 
 		statistics.value = data.statistics

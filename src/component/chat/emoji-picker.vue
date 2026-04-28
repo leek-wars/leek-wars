@@ -14,11 +14,9 @@
 			<v-tabs-window v-model="activeTab">
 				<v-tabs-window-item v-for="(category, c) in categories" :key="c" v-autostopscroll :value="'tab-' + c" class="content">
 					<div class="grid">
-						<template v-for="(emoji, e) in category.emojis">
-							<template v-if="c == 0 && e < 30">
-								<img v-if="classic !== false" :key="e" :src="'/image/emoji/' + Emojis.custom[emoji] + '.png'" :title="emoji" class="emoji classic" @click="pick(emoji)">
-							</template>
-							<div v-else :key="e" :class="{'emoji-font': !LeekWars.nativeEmojis}" class="emoji" @click="pick(emoji)">{{ emoji }}</div>
+						<template v-for="(emoji, e) in category.emojis" :key="e">
+							<img v-if="c == 0 && e < 30 && classic !== false" :src="'/image/emoji/' + Emojis.custom[emoji] + '.png'" :title="emoji" class="emoji classic" @click="pick(emoji)">
+							<div v-else :class="{'emoji-font': !LeekWars.nativeEmojis}" class="emoji" @click="pick(emoji)">{{ emoji }}</div>
 						</template>
 					</div>
 				</v-tabs-window-item>
