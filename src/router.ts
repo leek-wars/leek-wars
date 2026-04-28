@@ -319,12 +319,13 @@ const router = createRouter({
 
 // Handle chunk loading errors (e.g., after deployment when old chunks no longer exist)
 router.onError((error, to) => {
+	const msg = error?.message || ''
 	if (
-		error.message.includes('Failed to fetch dynamically imported module') ||
-		error.message.includes('Loading chunk') ||
-		error.message.includes('Loading CSS chunk') ||
-		error.message.includes('Unable to preload CSS') ||
-		error.name === 'ChunkLoadError'
+		msg.includes('Failed to fetch dynamically imported module') ||
+		msg.includes('Loading chunk') ||
+		msg.includes('Loading CSS chunk') ||
+		msg.includes('Unable to preload CSS') ||
+		error?.name === 'ChunkLoadError'
 	) {
 		// Prevent infinite reload loop
 		const reloadKey = 'chunk-reload-' + to.fullPath
