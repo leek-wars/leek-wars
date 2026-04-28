@@ -61,13 +61,16 @@ function retryDelay(retry: number) {
 	return Math.min(RETRY_CONFIG.baseDelay * Math.pow(2, retry), RETRY_CONFIG.maxDelay)
 }
 
-type ExtendedPromise<T> = Promise<T> & {
+interface ExtendedPromise<T> extends Promise<T> {
 	abort: () => void
 	error: (callback: (error: any) => void) => ExtendedPromise<T>
 	then<TResult1 = T, TResult2 = never>(
 		onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
 		onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
 	): ExtendedPromise<TResult1 | TResult2>
+	catch<TResult = never>(
+		onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null
+	): ExtendedPromise<T | TResult>
 }
 
 function request<T = any>(method: string, url: string, params?: any): ExtendedPromise<T> {

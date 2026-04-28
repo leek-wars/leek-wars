@@ -185,375 +185,387 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { AI } from '@/model/ai'
 	import { fileSystem, translateFileSystemError } from '@/model/filesystem'
 	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import EditorFolder from './editor-folder.vue'
 	import { Folder } from './editor-item'
 	import { explorer } from './explorer'
 	import { emitter } from '@/model/vue'
-	import { nextTick } from 'vue'
+	import { computed, nextTick, onMounted, onUnmounted, ref, useTemplateRef } from 'vue'
+	import { useI18n } from 'vue-i18n'
+	import { useRouter } from 'vue-router'
 
-	@Options({ name: 'editor-explorer', i18n: {}, mixins: [...mixins], components: { 'editor-folder': EditorFolder } })
-	export default class EditorExplorer extends Vue {
-		@Prop({required: true}) currentAi!: AI
-		@Prop({required: true}) selectedFolder!: Folder
-		fileSystem = fileSystem
-		aiMenu: boolean = false
-		folderMenu: boolean = false
-		binMenu: boolean = false
-		binFolderMenu: boolean = false
-		destroyFolderDialog: boolean = false
-		x: number = 0
-		y: number = 0
-		ai: AI | null = null
-		folder: Folder | null = null
-		renameDialog: boolean = false
-		newName: string = ''
-		deleteDialog: boolean = false
-		destroyDialog: boolean = false
-		emptyDialog: boolean = false
-		newAIName: string = ''
-		newAIDialog: boolean = false
-		newFolderDialog: boolean = false
-		newFolderName: string = ''
-		windowsForbiddenChars = ['\\', ':', '*', '?', '"', '<', '>', '|']
-		windowsReservedNames = ['CON', 'PRN', 'AUX', 'NUL', 'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9', 'LPT1', 'LPT2', 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9']
+	defineOptions({ name: 'editor-explorer', i18n: {}, mixins: [...mixins], components: { 'editor-folder': EditorFolder } })
 
-		created() {
-			emitter.on('editor-menu', this.openMenu)
-			emitter.on('keyup', this.keyup)
-		}
-		unmounted() {
-			emitter.off('editor-menu', this.openMenu)
-			emitter.off('keyup', this.keyup)
-		}
+	const props = defineProps<{
+		currentAi: AI
+		selectedFolder: Folder
+	}>()
 
-		open() {
-			this.$router.push('/editor/' + this.ai!.path)
-		}
+	const emit = defineEmits<{
+		test: []
+		'delete-ai': [ai: AI]
+		'delete-folder': [folder: Folder]
+	}>()
 
-		openMenu(event: { item: AI | Folder, ai: boolean, e: any }) {
-			const { item, ai, e } = event
-			e.preventDefault()
-			this.aiMenu = this.folderMenu = this.binMenu = this.binFolderMenu = false
-			this.x = e.clientX
-			this.y = e.clientY
-			if (ai) {
-				this.ai = item as AI
-				this.folder = null
-				nextTick(() => this.aiMenu = true)
+	const { t } = useI18n()
+	const router = useRouter()
+	const nameInput = useTemplateRef<HTMLElement>('nameInput')
+	const newAIInput = useTemplateRef<HTMLElement>('newAIInput')
+	const newFolderInput = useTemplateRef<HTMLElement>('newFolderInput')
+
+	const aiMenu = ref(false)
+	const folderMenu = ref(false)
+	const binMenu = ref(false)
+	const binFolderMenu = ref(false)
+	const destroyFolderDialog = ref(false)
+	const x = ref(0)
+	const y = ref(0)
+	const ai = ref<AI | null>(null)
+	const folder = ref<Folder | null>(null)
+	const renameDialog = ref(false)
+	const newName = ref('')
+	const deleteDialog = ref(false)
+	const destroyDialog = ref(false)
+	const emptyDialog = ref(false)
+	const newAIName = ref('')
+	const newAIDialog = ref(false)
+	const newFolderDialog = ref(false)
+	const newFolderName = ref('')
+	const windowsForbiddenChars = ['\\', ':', '*', '?', '"', '<', '>', '|']
+	const windowsReservedNames = ['CON', 'PRN', 'AUX', 'NUL', 'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9', 'LPT1', 'LPT2', 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9']
+
+	onMounted(() => {
+		emitter.on('editor-menu', openMenu)
+		emitter.on('keyup', keyup)
+	})
+	onUnmounted(() => {
+		emitter.off('editor-menu', openMenu)
+		emitter.off('keyup', keyup)
+	})
+
+	function open() {
+		router.push('/editor/' + ai.value!.path)
+	}
+
+	function openMenu(event: { item: AI | Folder, ai: boolean, e: any }) {
+		const { item, ai: isAi, e } = event
+		e.preventDefault()
+		aiMenu.value = folderMenu.value = binMenu.value = binFolderMenu.value = false
+		x.value = e.clientX
+		y.value = e.clientY
+		if (isAi) {
+			ai.value = item as AI
+			folder.value = null
+			nextTick(() => aiMenu.value = true)
+		} else {
+			folder.value = item as Folder
+			ai.value = null
+			if (folder.value.id === -1) {
+				nextTick(() => binMenu.value = true)
+			} else if (isFolderInBin(folder.value)) {
+				nextTick(() => binFolderMenu.value = true)
 			} else {
-				this.folder = item as Folder
-				this.ai = null
-				// console.log("folder", this.folder)
-				if (this.folder.id === -1) {
-					nextTick(() => this.binMenu = true)
-				} else if (this.isFolderInBin(this.folder)) {
-					nextTick(() => this.binFolderMenu = true)
-				} else {
-					nextTick(() => this.folderMenu = true)
+				nextTick(() => folderMenu.value = true)
+			}
+		}
+		console.log("openMenu", event, x.value, y.value)
+	}
+
+	function windowsWarning(name: string): string | null {
+		for (const char of windowsForbiddenChars) {
+			if (name.includes(char)) return char
+		}
+		if (windowsReservedNames.includes(name.toUpperCase())) return name
+		return null
+	}
+
+	function isWindowsReservedName(name: string): boolean {
+		return windowsReservedNames.includes(name.toUpperCase())
+	}
+
+	function nameError(name: string, parentFolder?: Folder, excludeName?: string): string | null {
+		if (name === '') return t('invalid_name_empty') as string
+		if (name === '.' || name === '..' || name === '.trash') return t('invalid_name_reserved') as string
+		if (name.includes('/')) return t('invalid_name_slash') as string
+		if (parentFolder && name !== excludeName) {
+			for (const item of parentFolder.items) {
+				if (item.name === name) {
+					return t('name_conflict') as string
 				}
 			}
-			console.log("openMenu", event, this.x, this.y)
 		}
+		return null
+	}
 
-		windowsWarning(name: string): string | null {
-			for (const char of this.windowsForbiddenChars) {
-				if (name.includes(char)) return char
-			}
-			if (this.windowsReservedNames.includes(name.toUpperCase())) return name
-			return null
+	const renameError = computed(() => {
+		if (ai.value) {
+			const parent = fileSystem.folderById[ai.value.folder] || fileSystem.rootFolder
+			return nameError(newName.value, parent, ai.value.name)
+		} else if (folder.value) {
+			const parent = fileSystem.folderById[folder.value.parent] || fileSystem.rootFolder
+			return nameError(newName.value, parent, folder.value.name)
 		}
+		return null
+	})
 
-		isWindowsReservedName(name: string): boolean {
-			return this.windowsReservedNames.includes(name.toUpperCase())
-		}
+	const newAIError = computed(() => {
+		if (!folder.value) return null
+		return nameError(newAIName.value, folder.value)
+	})
 
-		nameError(name: string, parentFolder?: Folder, excludeName?: string): string | null {
-			if (name === '') return this.$t('invalid_name_empty') as string
-			if (name === '.' || name === '..' || name === '.trash') return this.$t('invalid_name_reserved') as string
-			if (name.includes('/')) return this.$t('invalid_name_slash') as string
-			if (parentFolder && name !== excludeName) {
-				for (const item of parentFolder.items) {
-					if (item.name === name) {
-						return this.$t('name_conflict') as string
-					}
-				}
-			}
-			return null
-		}
+	const newFolderError = computed(() => {
+		if (!folder.value) return null
+		return nameError(newFolderName.value, folder.value)
+	})
 
-		get renameError(): string | null {
-			if (this.ai) {
-				const parent = fileSystem.folderById[this.ai.folder] || fileSystem.rootFolder
-				return this.nameError(this.newName, parent, this.ai.name)
-			} else if (this.folder) {
-				const parent = fileSystem.folderById[this.folder.parent] || fileSystem.rootFolder
-				return this.nameError(this.newName, parent, this.folder.name)
-			}
-			return null
+	function renameStart() {
+		if (ai.value) {
+			newName.value = ai.value.name
+		} else {
+			newName.value = folder.value!.name
 		}
+		renameDialog.value = true
+		setTimeout(() => nameInput.value?.focus(), 50)
+	}
 
-		get newAIError(): string | null {
-			if (!this.folder) return null
-			return this.nameError(this.newAIName, this.folder)
-		}
-
-		get newFolderError(): string | null {
-			if (!this.folder) return null
-			return this.nameError(this.newFolderName, this.folder)
-		}
-
-		renameStart() {
-			if (this.ai) {
-				this.newName = this.ai!.name
-			} else {
-				this.newName = this.folder!.name
-			}
-			this.renameDialog = true
-			setTimeout(() => (this.$refs.nameInput as HTMLElement).focus(), 50)
-		}
-
-		rename() {
-			if (this.ai) {
-				if (this.newName !== this.ai.name) {
-					LeekWars.post('ai/rename', {path: this.ai.path, new_name: this.newName}).then(() => {
-						LeekWars.toast(i18n.t('leekscript.ai_renamed', [this.newName]) as string)
-						fileSystem.renameAI(this.ai!, this.newName)
-						this.$router.replace('/editor/' + this.ai!.path)
-					}).error((error: any) => {
-						LeekWars.toast(translateFileSystemError(error))
-					})
-				}
-			} else if (this.folder) {
-				if (this.newName !== this.folder.name) {
-					const folderPath = fileSystem.getFolderPath(this.folder).replace(/\/$/, '')
-					LeekWars.post('ai-folder/rename', {path: folderPath, new_name: this.newName}).then(() => {
-						LeekWars.toast(i18n.t('leekscript.folder_renamed', [this.newName]) as string)
-						this.folder!.name = this.newName
-					}).error((error: any) => {
-						LeekWars.toast(translateFileSystemError(error))
-					})
-				}
-			}
-			this.renameDialog = false
-		}
-
-		get isFolderGitRepo(): boolean {
-			if (!this.folder || this.folder.id <= 0) return false
-			const path = fileSystem.getFolderPath(this.folder).replace(/\/$/, '')
-			return !!fileSystem.gitRepos[path]
-		}
-
-		initGit() {
-			if (!this.folder || this.folder.id <= 0) return
-			const folderPath = fileSystem.getFolderPath(this.folder).replace(/\/$/, '')
-			LeekWars.post('git/init', { folder: folderPath }).then(() => {
-				fileSystem.gitRepos[folderPath] = true
-				emitter.emit('git-repos-changed')
-				LeekWars.toast('Git initialized in ' + this.folder!.name)
-			}).error((error: any) => {
-				LeekWars.toast(error.error)
-			})
-		}
-
-		deinitGit() {
-			if (!this.folder || this.folder.id <= 0) return
-			if (!confirm(this.$t('deinit_git_confirm', [this.folder.name]) as string)) return
-			const folderPath = fileSystem.getFolderPath(this.folder).replace(/\/$/, '')
-			LeekWars.post('git/deinit', { folder: folderPath }).then(() => {
-				delete fileSystem.gitRepos[folderPath]
-				emitter.emit('git-repos-changed')
-				LeekWars.toast('Git removed from ' + this.folder!.name)
-			}).error((error: any) => {
-				LeekWars.toast(error.error)
-			})
-		}
-
-		deleteItem() {
-			if (this.ai) {
-				fileSystem.deleteAI(this.ai)
-				this.$emit('delete-ai', this.ai)
-				this.deleteDialog = false
-			} else if (this.folder) {
-				fileSystem.deleteFolder(this.folder)
-				this.$emit('delete-folder', this.folder)
-				this.deleteDialog = false
-			}
-		}
-		deleteAI(ai: AI) {
-			this.ai = ai
-			this.deleteDialog = true
-		}
-
-		destroyAI() {
-			if (this.ai) {
-				fileSystem.destroyAI(this.ai)
-				// this.$emit('delete-ai', this.ai)
-				this.destroyDialog = false
-			}
-		}
-
-		emptyBin() {
-			fileSystem.emptyBin()
-			this.emptyDialog = false
-		}
-
-		restoreAI() {
-			if (this.ai) {
-				fileSystem.restore(this.ai)
-			}
-		}
-
-		restoreFolder() {
-			if (this.folder) {
-				fileSystem.restoreFolder(this.folder)
-			}
-		}
-
-		destroyFolderConfirm() {
-			if (this.folder) {
-				fileSystem.destroyFolder(this.folder)
-				this.destroyFolderDialog = false
-			}
-		}
-
-		get aiInBin(): boolean {
-			return this.ai !== null && fileSystem.isInBin(this.ai.folder)
-		}
-
-		isFolderInBin(folder: Folder): boolean {
-			let current = folder
-			while (current.parent !== 0) {
-				if (current.parent === -1) return true
-				current = fileSystem.folderById[current.parent]
-				if (!current) return false
-			}
-			return false
-		}
-
-		openNewAI(folder: Folder) {
-			this.folder = folder
-			this.newAIStart()
-		}
-		newAIStart() {
-			this.newAIDialog = true
-			setTimeout(() => (this.$refs.newAIInput as HTMLElement).focus(), 50)
-		}
-		newAI(v2: boolean, name: string) {
-			if (!this.folder) { return }
-			const folderPath = this.folder.id === 0 ? '' : fileSystem.getFolderPath(this.folder).replace(/\/$/, '')
-			LeekWars.post('ai/create', {folder: folderPath, version: LeekWars.LATEST_LEEKSCRIPT_VERSION, name}).then((data: any) => {
-				const ai = new AI({
-					name,
-					path: data.path,
-					folder: this.folder!.id,
-					valid: true,
-					version: LeekWars.LATEST_LEEKSCRIPT_VERSION,
-					code: data.code,
-					total_chars: data.code.length,
-					total_lines: data.code.split("\n").length,
+	function rename() {
+		if (ai.value) {
+			if (newName.value !== ai.value.name) {
+				LeekWars.post('ai/rename', {path: ai.value.path, new_name: newName.value}).then(() => {
+					LeekWars.toast(i18n.global.t('leekscript.ai_renamed', [newName.value]) as string)
+					fileSystem.renameAI(ai.value!, newName.value)
+					router.replace('/editor/' + ai.value!.path)
+				}).error((error: any) => {
+					LeekWars.toast(translateFileSystemError(error))
 				})
-				fileSystem.add_ai(ai, this.folder!)
-				this.folder!.expanded = true
-				this.$router.push('/editor/' + ai.path)
-				this.newAIDialog = false
-				this.newAIName = ''
-			}).error((error: any) => {
-				LeekWars.toast(translateFileSystemError(error))
-			})
-		}
-		openNewFolder(folder: Folder) {
-			this.folder = folder
-			this.newFolderStart()
-		}
-		newFolderStart() {
-			this.newFolderDialog = true
-			setTimeout(() => (this.$refs.newFolderInput as HTMLElement).focus(), 50)
-		}
-		closeFolder() {
-			if (this.folder) {
-				explorer.setClosed(this.folder, true)
-				explorer.setExpanded(this.folder, false)
+			}
+		} else if (folder.value) {
+			if (newName.value !== folder.value.name) {
+				const folderPath = fileSystem.getFolderPath(folder.value).replace(/\/$/, '')
+				LeekWars.post('ai-folder/rename', {path: folderPath, new_name: newName.value}).then(() => {
+					LeekWars.toast(i18n.global.t('leekscript.folder_renamed', [newName.value]) as string)
+					folder.value!.name = newName.value
+				}).error((error: any) => {
+					LeekWars.toast(translateFileSystemError(error))
+				})
 			}
 		}
-		openFolder() {
-			if (this.folder) {
-				explorer.setClosed(this.folder, false)
-			}
-		}
-		newFolder(name: string) {
-			if (!this.folder) { return }
-			const parentPath = this.folder.id === 0 ? '' : fileSystem.getFolderPath(this.folder).replace(/\/$/, '')
-			const dirPath = parentPath ? parentPath + '/' + name : name
-			LeekWars.post('ai-folder/create', {path: dirPath}).then(() => {
-				if (this.folder) {
-					let nextId = 1
-					for (const id in fileSystem.folderById) { if (parseInt(id) >= nextId) nextId = parseInt(id) + 1 }
-					const folder = new Folder(nextId, name, this.folder.id)
-					folder.items = []
-					fileSystem.add_folder(folder, this.folder)
-					this.folder!.expanded = true
-					this.newFolderDialog = false
-					this.newFolderName = ''
-				}
-			})
-		}
+		renameDialog.value = false
+	}
 
-		keyup(e: KeyboardEvent) {
-			if (e.which === 46) { // Suppr
-				if (this.currentAi) {
-					this.ai = this.currentAi
-					this.deleteDialog = true
-				} else if (this.selectedFolder) {
-					this.folder = this.selectedFolder
-					this.deleteDialog = true
-				}
-			}
-		}
+	const isFolderGitRepo = computed(() => {
+		if (!folder.value || folder.value.id <= 0) return false
+		const path = fileSystem.getFolderPath(folder.value).replace(/\/$/, '')
+		return !!fileSystem.gitRepos[path]
+	})
 
-		downloadSimple() {
-			this.download(this.ai!.name, "/** " + this.ai!.path + " **/\n\n" + this.ai!.code)
-		}
+	function initGit() {
+		if (!folder.value || folder.value.id <= 0) return
+		const folderPath = fileSystem.getFolderPath(folder.value).replace(/\/$/, '')
+		LeekWars.post('git/init', { folder: folderPath }).then(() => {
+			fileSystem.gitRepos[folderPath] = true
+			emitter.emit('git-repos-changed')
+			LeekWars.toast('Git initialized in ' + folder.value!.name)
+		}).error((error: any) => {
+			LeekWars.toast(error.error)
+		})
+	}
 
-		downloadIncludes() {
-			if (!this.ai) { return }
+	function deinitGit() {
+		if (!folder.value || folder.value.id <= 0) return
+		if (!confirm(t('deinit_git_confirm', [folder.value.name]) as string)) return
+		const folderPath = fileSystem.getFolderPath(folder.value).replace(/\/$/, '')
+		LeekWars.post('git/deinit', { folder: folderPath }).then(() => {
+			delete fileSystem.gitRepos[folderPath]
+			emitter.emit('git-repos-changed')
+			LeekWars.toast('Git removed from ' + folder.value!.name)
+		}).error((error: any) => {
+			LeekWars.toast(error.error)
+		})
+	}
 
-			const regex = /^[ \t]*include\s*\(\s*["'](.*?)["']\s*\)[ \t]*;?.*$/gm
-
-			const included_ais = new Set<AI>()
-			const fun = (ai: AI): string => "/** " + ai.path + " **/\n\n" + (ai.code ? ai.code.replace(regex, (a, path) => {
-				const included = fileSystem.find(path, ai.folder)
-				if (included && !included_ais.has(included)) {
-					included_ais.add(included)
-					return fun(included)
-				} else {
-					return ""
-				}
-			}) : '')
-			const code = fun(this.ai!)
-
-			this.download(this.ai!.name, code)
-		}
-
-		download(filename: string, text: string) {
-			const data = "/** Exporté le " + new Date().toLocaleString() + " **/\n\n" + text
-			if (!filename.endsWith(".leek")) {
-				filename += ".leek"
-			}
-			const element = document.createElement('a')
-			element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data))
-			element.setAttribute('download', filename)
-			element.style.display = 'none'
-			document.body.appendChild(element)
-			element.click()
-			document.body.removeChild(element)
+	function deleteItem() {
+		if (ai.value) {
+			fileSystem.deleteAI(ai.value)
+			emit('delete-ai', ai.value)
+			deleteDialog.value = false
+		} else if (folder.value) {
+			fileSystem.deleteFolder(folder.value)
+			emit('delete-folder', folder.value)
+			deleteDialog.value = false
 		}
 	}
+	function deleteAI(target: AI) {
+		ai.value = target
+		deleteDialog.value = true
+	}
+
+	function destroyAI() {
+		if (ai.value) {
+			fileSystem.destroyAI(ai.value)
+			destroyDialog.value = false
+		}
+	}
+
+	function emptyBin() {
+		fileSystem.emptyBin()
+		emptyDialog.value = false
+	}
+
+	function restoreAI() {
+		if (ai.value) {
+			fileSystem.restore(ai.value)
+		}
+	}
+
+	function restoreFolder() {
+		if (folder.value) {
+			fileSystem.restoreFolder(folder.value)
+		}
+	}
+
+	function destroyFolderConfirm() {
+		if (folder.value) {
+			fileSystem.destroyFolder(folder.value)
+			destroyFolderDialog.value = false
+		}
+	}
+
+	const aiInBin = computed(() => ai.value !== null && fileSystem.isInBin(ai.value.folder))
+
+	function isFolderInBin(target: Folder): boolean {
+		let current = target
+		while (current.parent !== 0) {
+			if (current.parent === -1) return true
+			current = fileSystem.folderById[current.parent]
+			if (!current) return false
+		}
+		return false
+	}
+
+	function openNewAI(target: Folder) {
+		folder.value = target
+		newAIStart()
+	}
+	function newAIStart() {
+		newAIDialog.value = true
+		setTimeout(() => newAIInput.value?.focus(), 50)
+	}
+	function newAI(v2: boolean, name: string) {
+		if (!folder.value) { return }
+		const folderPath = folder.value.id === 0 ? '' : fileSystem.getFolderPath(folder.value).replace(/\/$/, '')
+		LeekWars.post('ai/create', {folder: folderPath, version: LeekWars.LATEST_LEEKSCRIPT_VERSION, name}).then((data: any) => {
+			const newAi = new AI({
+				name,
+				path: data.path,
+				folder: folder.value!.id,
+				valid: true,
+				version: LeekWars.LATEST_LEEKSCRIPT_VERSION,
+				code: data.code,
+				total_chars: data.code.length,
+				total_lines: data.code.split("\n").length,
+			})
+			fileSystem.add_ai(newAi, folder.value!)
+			folder.value!.expanded = true
+			router.push('/editor/' + newAi.path)
+			newAIDialog.value = false
+			newAIName.value = ''
+		}).error((error: any) => {
+			LeekWars.toast(translateFileSystemError(error))
+		})
+	}
+	function openNewFolder(target: Folder) {
+		folder.value = target
+		newFolderStart()
+	}
+	function newFolderStart() {
+		newFolderDialog.value = true
+		setTimeout(() => newFolderInput.value?.focus(), 50)
+	}
+	function closeFolder() {
+		if (folder.value) {
+			explorer.setClosed(folder.value, true)
+			explorer.setExpanded(folder.value, false)
+		}
+	}
+	function openFolder() {
+		if (folder.value) {
+			explorer.setClosed(folder.value, false)
+		}
+	}
+	function newFolder(name: string) {
+		if (!folder.value) { return }
+		const parentPath = folder.value.id === 0 ? '' : fileSystem.getFolderPath(folder.value).replace(/\/$/, '')
+		const dirPath = parentPath ? parentPath + '/' + name : name
+		LeekWars.post('ai-folder/create', {path: dirPath}).then(() => {
+			if (folder.value) {
+				let nextId = 1
+				for (const id in fileSystem.folderById) { if (parseInt(id) >= nextId) nextId = parseInt(id) + 1 }
+				const newF = new Folder(nextId, name, folder.value.id)
+				newF.items = []
+				fileSystem.add_folder(newF, folder.value)
+				folder.value!.expanded = true
+				newFolderDialog.value = false
+				newFolderName.value = ''
+			}
+		})
+	}
+
+	function keyup(e: KeyboardEvent) {
+		if (e.which === 46) { // Suppr
+			if (props.currentAi) {
+				ai.value = props.currentAi
+				deleteDialog.value = true
+			} else if (props.selectedFolder) {
+				folder.value = props.selectedFolder
+				deleteDialog.value = true
+			}
+		}
+	}
+
+	function downloadSimple() {
+		download(ai.value!.name, "/** " + ai.value!.path + " **/\n\n" + ai.value!.code)
+	}
+
+	function downloadIncludes() {
+		if (!ai.value) { return }
+
+		const regex = /^[ \t]*include\s*\(\s*["'](.*?)["']\s*\)[ \t]*;?.*$/gm
+
+		const included_ais = new Set<AI>()
+		const fun = (target: AI): string => "/** " + target.path + " **/\n\n" + (target.code ? target.code.replace(regex, (a, path) => {
+			const included = fileSystem.find(path, target.folder)
+			if (included && !included_ais.has(included)) {
+				included_ais.add(included)
+				return fun(included)
+			} else {
+				return ""
+			}
+		}) : '')
+		const code = fun(ai.value!)
+
+		download(ai.value!.name, code)
+	}
+
+	function download(filename: string, text: string) {
+		const data = "/** Exporté le " + new Date().toLocaleString() + " **/\n\n" + text
+		if (!filename.endsWith(".leek")) {
+			filename += ".leek"
+		}
+		const element = document.createElement('a')
+		element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data))
+		element.setAttribute('download', filename)
+		element.style.display = 'none'
+		document.body.appendChild(element)
+		element.click()
+		document.body.removeChild(element)
+	}
+
+	defineExpose({ openNewAI, openNewFolder, deleteAI })
 </script>
 
 <style lang="scss" scoped>
