@@ -1,5 +1,5 @@
 {
-	"cancel": "Membatalkan",
+	"cancel": "Batal",
 	"category": "Kategori",
 	"category_not_found": "Kategori id <b>{0}</b> tidak ditemukan :(",
 	"connected_farmers": "Peternak terhubung ({0})",
@@ -16,14 +16,14 @@
 	"farmer_n_messages": "<b>{0}</b> postingan",
 	"farmer_n_trophies": "<b>{0}</b> trofi",
 	"legend": "Legenda",
-	"messages": "Posting",
+	"messages": "Pesan",
 	"n_topics": "{0} topik",
-	"n_messages": "{0} pos",
-	"send": "Mengirim",
+	"n_messages": "{0} pesan",
+	"send": "Kirim",
 	"team_forum_description": "Forum pribadi tim Anda",
 	"title": "Forum",
 	"topic_not_found": "Subjek dengan id <b>{0}</b> tidak ditemukan :(",
 	"topics": "Topik",
 	"new_topic_notification": "Beri tahu kami tentang topik baru",
-	"resolved": "resolved"
+	"resolved": "terselesaikan"
 }

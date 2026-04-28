@@ -9,13 +9,13 @@
 	"unmute": "Berikan lantai",
 	"unmute_popup": "Anda yakin ingin mengembalikan lantai ke {farmer}?",
 	"reason_1": "Nama peternak salah",
-	"reason_1_action": "Nama petani akan diganti dengan 'Petani@<id>' dan nama yang melanggar akan ditambahkan ke daftar kata yang dilarang.",
+	"reason_1_action": "Nama peternak akan diganti dengan 'Farmer{'@'}<id>' dan nama yang melanggar akan ditambahkan ke daftar kata terlarang.",
 	"reason_2": "Nama daun bawang salah",
-	"reason_2_action": "Nama daun bawang akan diganti dengan 'Leek@<id>' dan nama yang menyinggung akan ditambahkan ke daftar kata-kata buruk.",
+	"reason_2_action": "Nama daun bawang akan diganti dengan 'Leek{'@'}<id>' dan nama yang melanggar akan ditambahkan ke daftar kata terlarang.",
 	"reason_3": "Nama AI salah",
-	"reason_3_action": "Nama AI akan diganti dengan 'AI@<id>' dan nama yang menyinggung akan ditambahkan ke daftar kata-kata buruk.",
+	"reason_3_action": "Nama AI akan diganti dengan 'AI{'@'}<id>' dan nama yang melanggar akan ditambahkan ke daftar kata terlarang.",
 	"reason_4": "Nama tim salah",
-	"reason_4_action": "Nama tim akan diganti dengan 'Team@<id>' dan nama yang menyinggung akan ditambahkan ke daftar kata-kata buruk.",
+	"reason_4_action": "Nama tim akan diganti dengan 'Team{'@'}<id>' dan nama yang melanggar akan ditambahkan ke daftar kata terlarang.",
 	"reason_5": "Deskripsi tim salah",
 	"reason_5_action": "Deskripsi tim akan dihapus.",
 	"reason_6": "Lirik say() yang salah dalam pertempuran",
@@ -51,5 +51,5 @@
 	"select_leek": "Pilih daun bawang",
 	"severity_s": "gravitasi {0}",
 	"thank_you_for_reporting": "Terima kasih telah melaporkan",
-	"delete": "MENGHAPUS"
+	"delete": "Hapus"
 }

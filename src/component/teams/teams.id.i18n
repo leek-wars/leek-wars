@@ -6,7 +6,7 @@
 	"level": "Level",
 	"talent": "Bakat",
 	"avg_leek_level": "Level rata-rata",
-	"members": "Petani",
+	"members": "Peternak",
 	"leeks": "Daun bawang",
 	"activity": "Aktivitas",
 	"recruitment_message": "Perekrutan",
@@ -23,5 +23,7 @@
 	"error_already_have_candidacy": "Kamu sudah memiliki lamaran yang tertunda.",
 	"error_already_in_team": "Kamu sudah berada di sebuah tim.",
 	"error_team_full": "Tim ini sudah penuh.",
-	"error_too_many_candidacies": "Kamu sudah memiliki 5 lamaran tertunda."
+	"error_too_many_candidacies": "Kamu sudah memiliki 5 lamaran tertunda.",
+	"closed": "Tertutup",
+	"show_closed": "Tampilkan yang tertutup"
 }

@@ -1,0 +1,22 @@
+{
+	"title": "Pengaturan remote",
+	"remotes": "Remote",
+	"no_remotes": "Tidak ada remote yang dikonfigurasi.",
+	"remote_name": "Nama (contoh: origin)",
+	"remote_url": "https://github.com/user/repo.git",
+	"select_repo": "Pilih repositori...",
+	"authentication": "Autentikasi",
+	"connected_as": "Terhubung sebagai {0}",
+	"connected_anonymous": "Terhubung",
+	"install_github_app": "Pasang GitHub App",
+	"install_hint": "Pilih repositori mana yang akan diberi akses saat pemasangan.",
+	"github_app": "GitHub App",
+	"or_pat": "Atau gunakan Personal Access Token:",
+	"pat_placeholder": "Token akses",
+	"instance_placeholder": "https://codeberg.org",
+	"self_hosted": "Instance hosting sendiri",
+	"save": "Simpan",
+	"add": "Tambah",
+	"invalid_token": "Token ditolak oleh provider.",
+	"invalid_instance_url": "URL instance tidak valid atau tidak dapat diakses dari server."
+}

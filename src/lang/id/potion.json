@@ -1,7 +1,7 @@
 {
 	"effect_1": "Atur Ulang Poin Modal Leek",
 	"effect_2": "Warnai daun bawang di <b>{0}</b>",
-	"effect_3": "<b>+{0} {1}</b> untuk <b>{2}</b> perkelahian",
+	"effect_3": "<b>+{0} {1}</b> untuk <b>{2}</b> pertarungan",
 	"restat": "Mengatur ulang ramuan",
 	"restat_admin": "Mengatur ulang ramuan",
 	"restat_admin_desc": "Sebuah hidup baru ! Dipersembahkan oleh admin favorit Anda!",
@@ -9,7 +9,7 @@
 	"reusable": "Ramuan <b>Dapat digunakan kembali</b>",
 	"skin_1": "hijau (warna asli)",
 	"skin_2": "biru",
-	"skin_3": "kUNING",
+	"skin_3": "kuning",
 	"skin_4": "merah",
 	"skin_5": "oranye",
 	"skin_6": "magenta",

@@ -7,7 +7,7 @@
 	"1week": "1 minggu",
 	"n_fights": "{0} pertarungan",
 	"victories": "kemenangan",
-	"draws": "dasi",
+	"draws": "seri",
 	"defeats": "kekalahan",
 	"ratio": "perbandingan",
 	"not_found_id": "Leek dari id {0} tidak ditemukan",
@@ -15,10 +15,17 @@
 	"fight_context": "Konteks pertempuran",
 	"solo": "Solo",
 	"farmer": "Peternak",
-	"team": "Awak kapal",
+	"team": "Tim",
 	"battle_royale": "Battle Royale",
 	"challenge": "Tantangan",
 	"garden": "Kebun sayur",
 	"tournament": "Turnamen",
-	"boss": "Boss"
+	"boss": "Boss",
+	"chest_hunt": "Perburuan peti",
+	"chests": "Peti",
+	"colossus": "Kolosus",
+	"loot": "Rampasan pertarungan",
+	"n_chests": "{0} peti",
+	"rare_loot": "Sumber daya langka",
+	"war": "Perang"
 }

@@ -6,16 +6,16 @@
 	"damage_received": "Kerusakan yang diterima",
 	"heal_casted": "Penyembuhan dimulai",
 	"heal_received": "Perawatan diterima",
-	"kills": "Membunuh",
-	"mp_used": "PM digunakan",
-	"nova_received": "Nova menerima",
+	"kills": "Pembunuhan",
+	"mp_used": "MP digunakan",
+	"nova_received": "Nova diterima",
 	"operations": "Operasi",
-	"operations_per_turn": "Op/putar",
-	"resurrections": "Hidup kembali",
+	"operations_per_turn": "Op/giliran",
+	"resurrections": "Kebangkitan",
 	"shootings": "Tembakan",
-	"summons": "Memanggil",
+	"summons": "Panggilan",
 	"team_n": "Tim {0}",
 	"tp_per_turn": "PT/giliran digunakan",
 	"tp_used": "PT yang digunakan",
-	"turns_played": "Putaran dimainkan"
+	"turns_played": "Giliran dimainkan"
 }

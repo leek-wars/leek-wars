@@ -1,12 +1,12 @@
 {
 	"forum_topic": "Topik forum",
-	"popup_ok": "OKE :)",
+	"popup_ok": "OK :)",
 	"see_all_changes": "Temukan daftar lengkap perubahan di halaman {changelog}.",
-	"title": "Ubah Sejarah",
+	"title": "Riwayat perubahan",
 	"title_0": "🌟 Pendatang baru",
 	"title_1": "⚒️ Peningkatan",
 	"title_2": "🐞 Perbaikan",
-	"version_n": "Lepaskan {0}",
+	"version_n": "Versi {0}",
 	"version_online": "Versi {version} online!\n",
 	"need_ai_change": "Mungkin memerlukan perubahan dalam AI"
 }

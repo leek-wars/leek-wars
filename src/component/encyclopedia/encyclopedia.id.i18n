@@ -9,8 +9,15 @@
 	"available_in": "Halaman ini tersedia dalam:",
 	"contributor_create": "Anda adalah kontributor 😎 Klik Edit untuk mulai mengedit halaman ini",
 	"locked": "Selesaikan bab ini untuk membuka AI lengkap",
-	"end_edition": "Mengakhiri pengeditan",
+	"end_edition": "Selesai edit",
 	"editing_by_x": "Saat ini sedang diedit oleh {0}",
 	"redirected_from": "Dialihkan dari {0}",
-	"aliases": "Juga dikenal sebagai: {0}"
+	"aliases": "Juga dikenal sebagai: {0}",
+	"child_pages": "Halaman anak",
+	"history": "Riwayat",
+	"initial": "pembuatan",
+	"linked_from": "Halaman yang berisi tautan",
+	"n_references": "referensi | referensi | referensi",
+	"referencing_translations": "Terjemahan terkait",
+	"views": "dilihat"
 }

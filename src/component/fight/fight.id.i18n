@@ -8,5 +8,8 @@
 	"not_found": "Pertarungan tidak ditemukan :(",
 	"not_found_id": "Fight id <b>{0}</b> tidak ditemukan :(",
 	"pause_message": "Klik atau tekan 'P' untuk melanjutkan",
-	"starter": "Melawan Peluncur"
+	"starter": "Pertarungan peluncuran",
+	"chest_hunt": "Perburuan peti",
+	"colossus": "Kolosus",
+	"war": "Perang"
 }

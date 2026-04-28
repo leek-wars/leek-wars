@@ -1,7 +1,7 @@
 {
 	"category_bonus": "Bonus",
-	"category_code": "Berkode",
-	"category_fight": "Bertarung",
+	"category_code": "Kode",
+	"category_fight": "Pertarungan",
 	"category_fun": "Seru",
 	"category_general": "Umum",
 	"category_shopping": "Pembelian",
@@ -18,7 +18,7 @@
 	"trophies": "Piala",
 	"unique": "Unik",
 	"trophy": "Piala",
-	"n_points": "{p} titik",
+	"n_points": "{p} poin",
 	"rewards": "Penghargaan",
 	"not_unlocked": "Belum dibuka kuncinya",
 	"unlocked_the_x": "Dibuka pada {date}",

@@ -17,7 +17,7 @@
 	"ai_restore": "Memulihkan AI **ai_id** dan menghapusnya dari tempat sampah.",
 	"ai_save": "Menyimpan AI **ai_id** dan mengembalikan kesalahan apa pun.",
 	"ai_strict": "Mengaktifkan atau menonaktifkan mode ketat pada AI **ai_id**.",
-	"ai_sync": "Mengambil daftar id AI **ais** dalam bentuk `{ ai: timestamp }` dan mengembalikan kode AI yang sudah tidak diperbarui.",
+	"ai_sync": "Mengambil daftar id AI **ais** dalam bentuk `{'{'} ai: timestamp {'}'}` dan mengembalikan kode AI yang sudah tidak diperbarui.",
 	"ai_test-scenario": "Memulai skenario **scenario_id** atau skenario default untuk AI **ai_id** jika **scenario_id** adalah `0`.",
 	"ai_version": "Mengubah versi AI **ai_id** menjadi **versi**.",
 	"ai-folder_change-folder": "Memindahkan folder **folder_id** ke **dest_folder_id**.",
