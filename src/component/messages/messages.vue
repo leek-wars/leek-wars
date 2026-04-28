@@ -157,13 +157,6 @@
 		return chats
 	})
 
-	actions.value = [{icon: 'mdi-delete', click: () => showQuitDialog()}]
-	if (!env.SOCIAL) {
-		router.push('/')
-	}
-	LeekWars.setTitle(t('title') as string)
-	update()
-
 	onMounted(() => {
 		LeekWars.footer = false
 		LeekWars.box = true
@@ -235,6 +228,13 @@
 		}
 	}
 	watch(() => route.params, update)
+
+	actions.value = [{icon: 'mdi-delete', click: () => showQuitDialog()}]
+	if (!env.SOCIAL) {
+		router.push('/')
+	}
+	LeekWars.setTitle(t('title') as string)
+	update()
 
 	function selectConversation(theId: number) {
 		currentID.value = theId
