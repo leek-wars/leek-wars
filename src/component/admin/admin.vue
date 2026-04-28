@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<h1>Administration</h1>
 		</div>
-		<panel class="first">
+		<panel class="first" icon="mdi-chart-line" title="Statistiques & monitoring">
 			<template #content>
 				<div class="admin-grid">
 					<router-link to="/admin/servers">
@@ -18,6 +18,12 @@
 							<h2 v-if="$store.state.farmer">Erreurs ({{ $store.state.farmer.errors }})</h2>
 						</div>
 					</router-link>
+					<router-link to="/admin/sources">
+						<div v-ripple class="section card">
+							<v-icon>mdi-merge</v-icon>
+							<h2>Sources</h2>
+						</div>
+					</router-link>
 					<router-link to="/admin/security">
 						<div v-ripple class="section card">
 							<v-icon>mdi-shield-alert</v-icon>
@@ -30,42 +36,22 @@
 							<h2>Stats API</h2>
 						</div>
 					</router-link>
-					<a href="/apcu.php" target="_blank" rel="noopener">
+					<router-link to="/admin/funnels">
 						<div v-ripple class="section card">
-							<v-icon>mdi-memory</v-icon>
-							<h2>APCu <v-icon>mdi-open-in-new</v-icon></h2>
-						</div>
-					</a>
-					<a href="https://rediscommander.leekwars.com" target="_blank" rel="noopener">
-						<div v-ripple class="section card">
-							<v-icon>mdi-memory</v-icon>
-							<h2>Redis <v-icon>mdi-open-in-new</v-icon></h2>
-						</div>
-					</a>
-					<div v-ripple class="section card" @click="refreshGameData">
-						<v-icon>mdi-database-refresh</v-icon>
-						<h2>Refresh game data</h2>
-					</div>
-					<div v-ripple class="section card" @click="refreshEncycloLinks">
-						<v-icon>{{ encycloLinksLoading ? 'mdi-loading mdi-spin' : 'mdi-book-sync' }}</v-icon>
-						<h2>Refresh encyclo links</h2>
-					</div>
-					<router-link to="/admin/services">
-						<div v-ripple class="section card">
-							<v-icon>mdi-api</v-icon>
-							<h2>Services</h2>
+							<v-icon>mdi-filter-variant</v-icon>
+							<h2>Funnels</h2>
 						</div>
 					</router-link>
-					<router-link to="/admin/emails">
+					<router-link to="/admin/dashboards">
 						<div v-ripple class="section card">
-							<v-icon>mdi-email-multiple-outline</v-icon>
-							<h2>Gestion emails</h2>
+							<v-icon>mdi-view-dashboard</v-icon>
+							<h2>Dashboards</h2>
 						</div>
 					</router-link>
-					<router-link to="/admin/trophies">
+					<router-link to="/admin/tournaments">
 						<div v-ripple class="section card">
-							<v-icon>mdi-trophy-outline</v-icon>
-							<h2>Trophées</h2>
+							<v-icon>mdi-sword-cross</v-icon>
+							<h2>Tournois & BR</h2>
 						</div>
 					</router-link>
 					<router-link to="/admin/groups">
@@ -74,10 +60,28 @@
 							<h2>Groupes</h2>
 						</div>
 					</router-link>
-					<router-link to="/admin/sources">
+					<a target="_blank" rel="noopener" href="https://grafana.leekwars.com/d/JfN9Xkh4z/leek-wars?orgId=1&amp;from=now-24h&amp;to=now&amp;timezone=browser&amp;refresh=5s">
 						<div v-ripple class="section card">
-							<v-icon>mdi-merge</v-icon>
-							<h2>Sources</h2>
+							<v-icon>mdi-chart-line</v-icon>
+							<h2>Grafana <v-icon>mdi-open-in-new</v-icon></h2>
+						</div>
+					</a>
+					<a target="_blank" rel="noopener" href="https://umami.leekwars.com/websites/493ffc4a-c7bd-45b1-b2f2-d61af7310749">
+						<div v-ripple class="section card">
+							<v-icon>mdi-chart-bar</v-icon>
+							<h2>Umami <v-icon>mdi-open-in-new</v-icon></h2>
+						</div>
+					</a>
+				</div>
+			</template>
+		</panel>
+		<panel icon="mdi-puzzle" title="Contenu du jeu">
+			<template #content>
+				<div class="admin-grid">
+					<router-link to="/admin/trophies">
+						<div v-ripple class="section card">
+							<v-icon>mdi-trophy-outline</v-icon>
+							<h2>Trophées</h2>
 						</div>
 					</router-link>
 					<router-link to="/admin/hats">
@@ -110,10 +114,22 @@
 							<h2>Schémas</h2>
 						</div>
 					</router-link>
-					<router-link to="/admin/tournaments">
+					<router-link to="/admin/services">
 						<div v-ripple class="section card">
-							<v-icon>mdi-sword-cross</v-icon>
-							<h2>Tournois & BR</h2>
+							<v-icon>mdi-api</v-icon>
+							<h2>Services</h2>
+						</div>
+					</router-link>
+				</div>
+			</template>
+		</panel>
+		<panel icon="mdi-email-multiple-outline" title="Communauté & communication">
+			<template #content>
+				<div class="admin-grid">
+					<router-link to="/admin/emails">
+						<div v-ripple class="section card">
+							<v-icon>mdi-email-multiple-outline</v-icon>
+							<h2>Gestion emails</h2>
 						</div>
 					</router-link>
 					<router-link to="/admin/newsletters">
@@ -128,52 +144,48 @@
 							<h2>Webmail <v-icon>mdi-open-in-new</v-icon></h2>
 						</div>
 					</a>
-					<a target="_blank" rel="noopener" href="https://grafana.leekwars.com/d/JfN9Xkh4z/leek-wars?orgId=1&amp;from=now-24h&amp;to=now&amp;timezone=browser&amp;refresh=5s">
-						<div v-ripple class="section card">
-							<v-icon>mdi-chart-line</v-icon>
-							<h2>Grafana <v-icon>mdi-open-in-new</v-icon></h2>
-						</div>
-					</a>
-					<router-link to="/admin/funnels">
-						<div v-ripple class="section card">
-							<v-icon>mdi-filter-variant</v-icon>
-							<h2>Funnels</h2>
-						</div>
-					</router-link>
-					<router-link to="/admin/dashboards">
-						<div v-ripple class="section card">
-							<v-icon>mdi-view-dashboard</v-icon>
-							<h2>Dashboards</h2>
-						</div>
-					</router-link>
+				</div>
+			</template>
+		</panel>
+		<panel icon="mdi-cog" title="Système & infrastructure">
+			<template #content>
+				<div class="admin-grid">
 					<router-link to="/admin/matchmaking">
 						<div v-ripple class="section card">
 							<v-icon>mdi-target-account</v-icon>
 							<h2>Debug matchmaking</h2>
 						</div>
 					</router-link>
-					<a target="_blank" rel="noopener" href="https://umami.leekwars.com/websites/493ffc4a-c7bd-45b1-b2f2-d61af7310749">
+					<a href="/apcu.php" target="_blank" rel="noopener">
 						<div v-ripple class="section card">
-							<v-icon>mdi-chart-bar</v-icon>
-							<h2>Umami <v-icon>mdi-open-in-new</v-icon></h2>
+							<v-icon>mdi-memory</v-icon>
+							<h2>APCu <v-icon>mdi-open-in-new</v-icon></h2>
 						</div>
 					</a>
+					<a href="https://rediscommander.leekwars.com" target="_blank" rel="noopener">
+						<div v-ripple class="section card">
+							<v-icon>mdi-memory</v-icon>
+							<h2>Redis <v-icon>mdi-open-in-new</v-icon></h2>
+						</div>
+					</a>
+					<div v-ripple class="section card" @click="refreshGameData">
+						<v-icon>mdi-database-refresh</v-icon>
+						<h2>Refresh game data</h2>
+					</div>
+					<div v-ripple class="section card" @click="refreshEncycloLinks">
+						<v-icon>{{ encycloLinksLoading ? 'mdi-loading mdi-spin' : 'mdi-book-sync' }}</v-icon>
+						<h2>Refresh encyclo links</h2>
+					</div>
 					<a target="_blank" rel="noopener" href="https://www.paypal.com/webapps/business/">
 						<div v-ripple class="section card">
 							<v-icon>mdi-currency-eur</v-icon>
 							<h2>PayPal <v-icon>mdi-open-in-new</v-icon></h2>
 						</div>
 					</a>
-					<a target="_blank" rel="noopener" href="https://membres.starpass.fr/">
-						<div v-ripple class="section card">
-							<v-icon>mdi-message-text-outline</v-icon>
-							<h2>StarPass <v-icon>mdi-open-in-new</v-icon></h2>
-						</div>
-					</a>
 				</div>
 			</template>
 		</panel>
-		<panel class="last">
+		<panel class="last" icon="mdi-flask-outline" title="Outils de test">
 			<template #content>
 				<div class="admin-grid">
 					<v-btn prepend-icon="mdi-image" @click="square">Square notif image</v-btn>
