@@ -136,7 +136,7 @@
 			<v-card class="emojis">
 				<span v-for="(emoji, e) in emojis" :key="e" class="emoji" :class="{selected: emoji === menuMessage.my_reaction}" @click="toggleReaction(emoji)">{{ emoji }}</span>
 				<span v-if="menuMessage.my_reaction && !emojis.includes(menuMessage.my_reaction)" class="emoji selected" @click="toggleReaction(menuMessage.my_reaction)">{{ menuMessage.my_reaction }}</span>
-				<emoji-picker @pick="toggleReaction" :close-on-selected="true" :classic="false"><v-icon class="more">mdi-dots-horizontal</v-icon></emoji-picker>
+				<emoji-picker @pick="toggleReaction" :close-on-selected="true"><v-icon class="more">mdi-dots-horizontal</v-icon></emoji-picker>
 			</v-card>
 		</v-menu>
 	</div>

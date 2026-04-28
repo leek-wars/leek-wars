@@ -15,7 +15,7 @@
 				<v-tabs-window-item v-for="(category, c) in categories" :key="c" v-autostopscroll :value="'tab-' + c" class="content">
 					<div class="grid">
 						<template v-for="(emoji, e) in category.emojis" :key="e">
-							<img v-if="c == 0 && e < 30" :src="'/image/emoji/' + Emojis.custom[emoji] + '.png'" :title="emoji" class="emoji" :class="{classic}" @click="pick(emoji)">
+							<img v-if="c == 0 && e < 30" :src="'/image/emoji/' + Emojis.custom[emoji] + '.png'" :title="emoji" class="emoji classic" @click="pick(emoji)">
 							<div v-else :class="{'emoji-font': !LeekWars.nativeEmojis}" class="emoji" @click="pick(emoji)">{{ emoji }}</div>
 						</template>
 					</div>
@@ -29,11 +29,9 @@
 import { ref } from 'vue'
 import { Emojis } from '@/model/emojis'
 
-const props = withDefaults(defineProps<{
+const props = defineProps<{
 	closeOnSelected?: boolean
-	classic?: boolean
-	left?: boolean
-}>(), { left: true, classic: true })
+}>()
 
 const emit = defineEmits<{
 	pick: [emoji: string]
@@ -104,11 +102,6 @@ function pick(emoji: string) {
 		font-size: 22px;
 		line-height: 28px;
 		text-align: center;
-	}
-	img.emoji {
-		width: 32px;
-		height: 32px;
-		padding: 0;
 	}
 	.emoji.classic {
 		width: 32px;
