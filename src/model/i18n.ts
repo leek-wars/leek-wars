@@ -52,7 +52,7 @@ const mixins = [{
 	beforeCreate() {
 		// Reload translations because in case of hot reloading, they are lost
 		// Missing messages or messages for the current locale
-		if (!(this as any).$options.i18n.messages || !(this as any).$options.i18n.messages[i18n.global.locale]) {
+		if (!(this as any).$options.i18n?.messages?.[i18n.global.locale]) {
 			// console.log("reload translations...")
 			loadInstanceTranslations(i18n.global.locale, this)
 		}
