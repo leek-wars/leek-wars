@@ -333,6 +333,7 @@
 		problemsHeight: number = 200
 		bottomPanel: 'problems' | 'git' | null = 'problems'
 		get gitLogCount() { return gitLog.entries.length }
+		get problemsCount() { return analyzer.error_count + analyzer.warning_count + analyzer.todo_count }
 		newAIv2Dialog: boolean = false
 		fileSystem = fileSystem
 		fileMenu: boolean = false
@@ -1192,6 +1193,11 @@
 		@Watch('hideHeader') hideHeaderChange() {
 			LeekWars.header = !this.hideHeader
 			localStorage.setItem('editor/hideHeader', '' + this.hideHeader)
+		}
+		@Watch('problemsCount') problemsCountChange(count: number, prev: number) {
+			if (count === 0 && prev > 0 && this.bottomPanel === 'problems') {
+				this.bottomPanel = null
+			}
 		}
 		@Watch('enableAnalyzer') analyzerChange() {
 			if (this.enableAnalyzer) {
