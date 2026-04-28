@@ -144,7 +144,7 @@ import { emitter } from '@/model/vue'
 
 const Player = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/player/player.${locale}.i18n`))
 
-defineOptions({ name: 'fight', i18n: {}, mixins: [...mixins], components: { 'player': Player, 'report-dialog': ReportDialog } })
+defineOptions({ name: 'fight', i18n: {}, mixins: [...mixins] })
 
 const { t } = useI18n()
 const route = useRoute()

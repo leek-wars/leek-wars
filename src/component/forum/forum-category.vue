@@ -340,7 +340,7 @@
 	import Pagination from '@/component/pagination.vue'
 	import { emitter } from '@/model/vue'
 
-	defineOptions({ name: 'forum_category', i18n: {}, mixins: [...mixins], components: { FormattingRules } })
+	defineOptions({ name: 'forum_category', i18n: {}, mixins: [...mixins] })
 
 	const { t, locale: i18nLocale } = useI18n()
 	const route = useRoute()
