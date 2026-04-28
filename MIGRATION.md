@@ -675,3 +675,16 @@ const showChangelog = ref(false)  // ✓
 Patterns à éviter : `reportDialog` / `<report-dialog>`, `levelDialog` / `<level-dialog>`, `loginDialog` / `<login-dialog>`, etc.
 
 Le warning ne déclenche que sur **re-render** (pas au premier render), donc se manifeste après une mutation du store ou du state.
+
+#### Variante : collision avec `useTemplateRef`
+
+Même piège avec une template ref qui porte le nom du composant cible :
+```ts
+const player = useTemplateRef<any>('player')
+```
+```vue
+<player ref="player" :fight-id="..." />
+```
+Le tag `<player>` est résolu via le binding `player` (un ref qui vaut `null` puis l'instance), pas via le composant `Player`. Symptôme : `Maximum recursive updates exceeded in component <panel>` parce que le vnode rendu pointe vers une cible instable.
+
+Fix : nommer la ref différemment du tag (ex. `playerRef`).

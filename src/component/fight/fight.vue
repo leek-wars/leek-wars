@@ -16,7 +16,7 @@
 		<panel class="first">
 			<template #content>
 				<div class="fight" :style="{minWidth: playerWidth + 'px', minHeight: playerHeight + 'px'}">
-					<player ref="player" v-if="fight_id" :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
+					<player ref="playerRef" v-if="fight_id" :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
 				</div>
 			</template>
 		</panel>
@@ -152,7 +152,7 @@
 
 	const { t } = useI18n()
 	const route = useRoute()
-	const player = useTemplateRef<any>('player')
+	const playerRef = useTemplateRef<any>('playerRef')
 
 	const fight_id = ref<string | null>(null)
 	const fight = ref<Fight | null>(null)
@@ -165,8 +165,8 @@
 	const fightNotificationQueue: any[] = []
 
 	function toggleLoading() {
-		if (player.value) {
-			player.value.loaded = !player.value.loaded
+		if (playerRef.value) {
+			playerRef.value.loaded = !playerRef.value.loaded
 		}
 	}
 
