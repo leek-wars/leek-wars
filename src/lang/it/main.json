@@ -363,5 +363,8 @@
 	"loadout_skipped_reason_two_forgotten": "Due armi dimenticate non sono consentite",
 	"loadout_skipped_reason_no_forgotten_available": "Nessuna arma dimenticata disponibile tra le candidate",
 	"loadout_forgotten_preferred": "Armi dimenticate preferite",
-	"loadout_forgotten_preferred_hint": "Lista ordinata di candidate: viene equipaggiata la prima di cui il contadino possiede un esemplare libero. Trascina per riordinare."
+	"loadout_forgotten_preferred_hint": "Lista ordinata di candidate: viene equipaggiata la prima di cui il contadino possiede un esemplare libero. Trascina per riordinare.",
+	"loadout_unsaved_changes_title": "Modifiche non salvate",
+	"loadout_unsaved_changes_message": "Hai modifiche non salvate su questo loadout. Cosa vuoi fare?",
+	"loadout_discard_changes": "Scarta"
 }

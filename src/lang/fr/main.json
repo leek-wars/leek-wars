@@ -364,5 +364,8 @@
 	"loadout_skipped_reason_two_forgotten": "Deux armes oubliées ne sont pas autorisées",
 	"loadout_skipped_reason_no_forgotten_available": "Aucune arme oubliée disponible parmi les candidates",
 	"loadout_forgotten_preferred": "Armes oubliées préférées",
-	"loadout_forgotten_preferred_hint": "Liste ordonnée de candidates : la première dont l'éleveur possède un exemplaire libre est équipée. Glisser-déposer pour réordonner."
+	"loadout_forgotten_preferred_hint": "Liste ordonnée de candidates : la première dont l'éleveur possède un exemplaire libre est équipée. Glisser-déposer pour réordonner.",
+	"loadout_unsaved_changes_title": "Modifications non sauvegardées",
+	"loadout_unsaved_changes_message": "Vous avez des modifications non sauvegardées sur cet équipement. Que voulez-vous faire ?",
+	"loadout_discard_changes": "Abandonner"
 }

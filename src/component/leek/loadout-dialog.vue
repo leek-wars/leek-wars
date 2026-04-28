@@ -89,8 +89,8 @@
 						<v-icon v-else size="32">mdi-emoticon-outline</v-icon>
 					</emoji-picker>
 					<input v-model="editing.name" class="name-input" :placeholder="$t('main.loadout_name_placeholder')" maxlength="60" type="text">
-					<v-btn @click="editing = null">{{ $t('main.cancel') }}</v-btn>
-					<v-btn color="primary" :disabled="!editing.name.trim()" :loading="saving" @click="save">{{ $t('main.save') }}</v-btn>
+					<v-btn @click="requestExitEditing">{{ $t('main.cancel') }}</v-btn>
+					<v-btn color="primary" :disabled="!editing.name.trim()" :loading="saving" @click="save()">{{ $t('main.save') }}</v-btn>
 				</div>
 
 				<div class="import-row">
@@ -228,6 +228,23 @@
 		</template>
 	</popup>
 
+	<popup v-model="confirmCloseDialogOpen" :width="480" persistent>
+		<template #icon><v-icon color="warning">mdi-content-save-alert-outline</v-icon></template>
+		<template #title>{{ $t('main.loadout_unsaved_changes_title') }}</template>
+		<div class="unsaved-message">{{ $t('main.loadout_unsaved_changes_message') }}</div>
+		<template #actions>
+			<div v-ripple class="action compact" @click="cancelExitEditing">{{ $t('main.cancel') }}</div>
+			<div v-ripple class="action compact" @click="discardAndExit">
+				<v-icon>mdi-delete-outline</v-icon>
+				<span>{{ $t('main.loadout_discard_changes') }}</span>
+			</div>
+			<div v-ripple class="action compact green" :class="{disabled: !canSaveEditing}" @click="canSaveEditing && saveAndExit()">
+				<v-icon>mdi-content-save</v-icon>
+				<span>{{ $t('main.save') }}</span>
+			</div>
+		</template>
+	</popup>
+
 	<popup v-model="restatDialogOpen" :width="620" class="restat-popup">
 		<template #icon><v-icon>mdi-flask</v-icon></template>
 		<template #title>{{ $t('main.loadout_restat_title') }}</template>
@@ -303,15 +320,24 @@
 				skippedDialogOpen: false,
 				skippedItems: [] as any[],
 				ownedWeaponTemplates: [] as number[],
+				originalEditingSnapshot: '',
+				confirmCloseDialogOpen: false,
 			}
 		},
 		computed: {
 			shown: {
 				get() { return this.modelValue },
 				set(v: boolean) {
-					if (!v && this.editing) { this.editing = null }
+					if (!v && this.editing) { this.requestExitEditing() }
 					else { this.$emit('update:modelValue', v) }
 				},
+			},
+			hasUnsavedChanges(): boolean {
+				if (!this.editing) return false
+				return JSON.stringify(this.editing) !== this.originalEditingSnapshot
+			},
+			canSaveEditing(): boolean {
+				return !!(this.editing && this.editing.name.trim())
 			},
 			loadouts(): Loadout[] { return store.state.farmer?.loadouts || [] },
 			maxCapital(): number { return totalCapitalForLevel(301) },
@@ -566,6 +592,7 @@
 			},
 			startCreate() {
 				this.editing = { id: null, name: '', icon: '', weapons: [], forgottenWeapons: [], chips: [], components: [], stats: {} }
+				this.originalEditingSnapshot = JSON.stringify(this.editing)
 			},
 			startEdit(loadout: Loadout) {
 				this.editing = {
@@ -578,6 +605,30 @@
 					components: loadout.components.map(c => ({ ...c })),
 					stats: { ...(loadout.stats || {}) },
 				}
+				this.originalEditingSnapshot = JSON.stringify(this.editing)
+			},
+			requestExitEditing() {
+				if (this.hasUnsavedChanges) {
+					this.confirmCloseDialogOpen = true
+				} else {
+					this.exitEditing()
+				}
+			},
+			exitEditing() {
+				this.editing = null
+				this.originalEditingSnapshot = ''
+			},
+			cancelExitEditing() {
+				this.confirmCloseDialogOpen = false
+			},
+			discardAndExit() {
+				this.confirmCloseDialogOpen = false
+				this.exitEditing()
+			},
+			saveAndExit() {
+				if (!this.canSaveEditing) return
+				this.confirmCloseDialogOpen = false
+				this.save()
 			},
 			pickEmoji(emoji: string) {
 				if (this.editing) this.editing.icon = emoji
@@ -689,12 +740,14 @@
 					LeekWars.put('loadout/update', { set_id: this.editing.id, ...payload }).then((data: any) => {
 						store.commit('update-loadout', data.set)
 						this.editing = null
+						this.originalEditingSnapshot = ''
 						this.saving = false
 					}).error((e: any) => { LeekWars.toast(e); this.saving = false })
 				} else {
 					LeekWars.post('loadout/create', payload).then((data: any) => {
 						store.commit('add-loadout', data.set)
 						this.editing = null
+						this.originalEditingSnapshot = ''
 						this.saving = false
 					}).error((e: any) => { LeekWars.toast(e); this.saving = false })
 				}
@@ -918,6 +971,7 @@ body.dark .skipped-item { background: #2a2a2a; }
 .action.disabled { opacity: 0.4; pointer-events: none; }
 .action.compact { font-size: 15px !important; line-height: 1.2 !important; padding: 0 8px; }
 .action.compact :deep(.v-icon) { font-size: 18px; }
+.unsaved-message { padding: 12px; }
 .selected-items {
 	display: flex; flex-wrap: wrap; gap: 4px; min-height: 52px; margin-bottom: 6px;
 	.empty-hint { color: #bbb; font-size: 13px; align-self: center; }
