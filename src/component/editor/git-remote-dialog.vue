@@ -61,184 +61,191 @@
 	</popup>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { mixins } from '@/model/i18n'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import Popup from '@/component/popup.vue'
 	import { gitCall } from './git-log'
+	import { computed, ref, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
+
+	defineOptions({ name: 'git-remote-dialog', i18n: {}, mixins: [...mixins], components: { Popup } })
+
+	const props = defineProps<{
+		modelValue: boolean
+		folder: string
+	}>()
+
+	const emit = defineEmits<{
+		'update:modelValue': [value: boolean]
+	}>()
+
+	const { t } = useI18n()
 
 	function urlHost(url: string | null | undefined): string | null {
 		if (!url) return null
 		try { return new URL(url).hostname.toLowerCase() } catch { return null }
 	}
 
-	@Options({ name: 'git-remote-dialog', i18n: {}, components: { Popup }, mixins: [...mixins], emits: ['update:modelValue'] })
-	export default class GitRemoteDialog extends Vue {
-		@Prop() modelValue!: boolean
-		@Prop() folder!: string
+	const remotes = ref<{ name: string, url: string }[]>([])
+	const credentials = ref<{ provider: string, auth_type: string, username: string, instance_url: string | null }[]>([])
+	const availableRepos = ref<{ full_name: string, clone_url: string, private: boolean }[]>([])
+	const remotesLoading = ref(false)
+	const newRemoteName = ref('origin')
+	const newRemoteUrl = ref('')
+	type Provider = 'github' | 'gitlab' | 'bitbucket' | 'forgejo'
+	const patProvider = ref<Provider>('github')
+	const patInstanceUrl = ref('')
+	const patToken = ref('')
+	const selfHosted = ref(false)
+	const error = ref('')
+	const providers: { id: Provider, label: string, icon: string, publicHost: string | null, placeholder: string }[] = [
+		{ id: 'github',    label: 'GitHub',    icon: 'mdi-github',    publicHost: 'github.com',    placeholder: 'https://github.example.com' },
+		{ id: 'gitlab',    label: 'GitLab',    icon: 'mdi-gitlab',    publicHost: 'gitlab.com',    placeholder: 'https://gitlab.example.com' },
+		{ id: 'bitbucket', label: 'Bitbucket', icon: 'mdi-bitbucket', publicHost: 'bitbucket.org', placeholder: 'https://bitbucket.example.com' },
+		{ id: 'forgejo',   label: 'Forgejo',   icon: 'mdi-git',       publicHost: null,            placeholder: '' },
+	]
 
-		remotes: { name: string, url: string }[] = []
-		credentials: { provider: string, auth_type: string, username: string, instance_url: string | null }[] = []
-		availableRepos: { full_name: string, clone_url: string, private: boolean }[] = []
-		remotesLoading: boolean = false
-		newRemoteName: string = 'origin'
-		newRemoteUrl: string = ''
-		patProvider: 'github' | 'gitlab' | 'bitbucket' | 'forgejo' = 'github'
-		patInstanceUrl: string = ''
-		patToken: string = ''
-		selfHosted: boolean = false
-		error: string = ''
-		providers = [
-			{ id: 'github',    label: 'GitHub',    icon: 'mdi-github',    publicHost: 'github.com',    placeholder: 'https://github.example.com' },
-			{ id: 'gitlab',    label: 'GitLab',    icon: 'mdi-gitlab',    publicHost: 'gitlab.com',    placeholder: 'https://gitlab.example.com' },
-			{ id: 'bitbucket', label: 'Bitbucket', icon: 'mdi-bitbucket', publicHost: 'bitbucket.org', placeholder: 'https://bitbucket.example.com' },
-			{ id: 'forgejo',   label: 'Forgejo',   icon: 'mdi-git',       publicHost: null,            placeholder: '' },
-		]
+	const showInstanceField = computed(() => patProvider.value === 'forgejo' || selfHosted.value)
 
-		get showInstanceField(): boolean {
-			return this.patProvider === 'forgejo' || this.selfHosted
+	const instancePlaceholder = computed(() => {
+		const p = providers.find(p => p.id === patProvider.value)
+		return p?.placeholder || (t('instance_placeholder') as string)
+	})
+
+	const canSavePat = computed(() => {
+		if (!patToken.value) return false
+		if (showInstanceField.value && !patInstanceUrl.value.trim()) return false
+		return true
+	})
+
+	watch(patProvider, () => {
+		selfHosted.value = false
+		patInstanceUrl.value = ''
+	})
+
+	function hasCredential(provider: string): boolean {
+		return credentials.value.some(c => c.provider === provider)
+	}
+
+	function providerIcon(provider: string): string {
+		return providers.find(p => p.id === provider)?.icon || 'mdi-git'
+	}
+
+	function providerFromUrl(url: string): string {
+		const host = urlHost(url)
+		if (!host) return 'forgejo'
+		const pub = providers.find(p => p.publicHost === host)
+		if (pub) return pub.id
+		for (const cred of credentials.value) {
+			if (cred.instance_url && urlHost(cred.instance_url) === host) return cred.provider
 		}
+		return 'forgejo'
+	}
 
-		get instancePlaceholder(): string {
-			const p = this.providers.find(p => p.id === this.patProvider)
-			return p?.placeholder || (this.$t('instance_placeholder') as string)
+	const show = computed({
+		get: () => props.modelValue,
+		set: (v: boolean) => emit('update:modelValue', v),
+	})
+
+	watch(() => props.modelValue, (val) => {
+		if (val) {
+			error.value = ''
+			loadRemotes()
+			loadCredentials()
 		}
+	})
 
-		get canSavePat(): boolean {
-			if (!this.patToken) return false
-			if (this.showInstanceField && !this.patInstanceUrl.trim()) return false
-			return true
+	async function loadRemotes() {
+		if (!props.folder) return
+		remotesLoading.value = true
+		try {
+			const data = await gitCall('git/remotes', { folder: props.folder })
+			remotes.value = data.remotes || []
+		} catch (e) {
+			remotes.value = []
+		} finally {
+			remotesLoading.value = false
 		}
+	}
 
-		@Watch('patProvider')
-		onProviderChange() {
-			this.selfHosted = false
-			this.patInstanceUrl = ''
-		}
-
-		hasCredential(provider: string): boolean {
-			return this.credentials.some(c => c.provider === provider)
-		}
-
-		providerIcon(provider: string): string {
-			return this.providers.find(p => p.id === provider)?.icon || 'mdi-git'
-		}
-
-		providerFromUrl(url: string): string {
-			const host = urlHost(url)
-			if (!host) return 'forgejo'
-			const pub = this.providers.find(p => p.publicHost === host)
-			if (pub) return pub.id
-			for (const cred of this.credentials) {
-				if (cred.instance_url && urlHost(cred.instance_url) === host) return cred.provider
+	async function loadCredentials() {
+		try {
+			const data = await gitCall('git-credential/get')
+			credentials.value = data.credentials || []
+			if (credentials.value.some(c => c.provider === 'github' && c.auth_type === 'app')) {
+				loadAvailableRepos()
+			} else {
+				availableRepos.value = []
 			}
-			return 'forgejo'
+		} catch (e) {
+			credentials.value = []
+			availableRepos.value = []
 		}
+	}
 
-		get show() { return this.modelValue }
-		set show(v: boolean) { this.$emit('update:modelValue', v) }
-
-		@Watch('modelValue')
-		onOpen(val: boolean) {
-			if (val) {
-				this.error = ''
-				this.loadRemotes()
-				this.loadCredentials()
-			}
+	async function loadAvailableRepos() {
+		try {
+			const data = await gitCall('git-credential/repos')
+			availableRepos.value = data.repos || []
+		} catch (e) {
+			availableRepos.value = []
 		}
+	}
 
-		async loadRemotes() {
-			if (!this.folder) return
-			this.remotesLoading = true
-			try {
-				const data = await gitCall('git/remotes', { folder: this.folder })
-				this.remotes = data.remotes || []
-			} catch (e) {
-				this.remotes = []
-			} finally {
-				this.remotesLoading = false
-			}
+	async function addRemote() {
+		if (!newRemoteName.value || !newRemoteUrl.value) return
+		error.value = ''
+		try {
+			await gitCall('git/remote-add', { folder: props.folder, name: newRemoteName.value, url: newRemoteUrl.value })
+			newRemoteName.value = 'origin'
+			newRemoteUrl.value = ''
+			loadRemotes()
+		} catch (e: any) {
+			error.value = e.details || e.error || 'Error'
 		}
+	}
 
-		async loadCredentials() {
-			try {
-				const data = await gitCall('git-credential/get')
-				this.credentials = data.credentials || []
-				if (this.credentials.some(c => c.provider === 'github' && c.auth_type === 'app')) {
-					this.loadAvailableRepos()
-				} else {
-					this.availableRepos = []
-				}
-			} catch (e) {
-				this.credentials = []
-				this.availableRepos = []
-			}
+	async function removeRemote(name: string) {
+		error.value = ''
+		try {
+			await gitCall('git/remote-remove', { folder: props.folder, name })
+			loadRemotes()
+		} catch (e: any) {
+			error.value = e.details || e.error || 'Error'
 		}
+	}
 
-		async loadAvailableRepos() {
-			try {
-				const data = await gitCall('git-credential/repos')
-				this.availableRepos = data.repos || []
-			} catch (e) {
-				this.availableRepos = []
-			}
+	function startInstall() {
+		window.location.href = LeekWars.API + 'git-credential/start-install'
+	}
+
+	async function savePat() {
+		if (!canSavePat.value) return
+		error.value = ''
+		const instance = showInstanceField.value ? patInstanceUrl.value.trim() : ''
+		try {
+			await gitCall('git-credential/save-pat', { provider: patProvider.value, token: patToken.value, instance_url: instance })
+			patToken.value = ''
+			patInstanceUrl.value = ''
+			selfHosted.value = false
+			loadCredentials()
+		} catch (e: any) {
+			const key = e?.error === 'invalid_instance_url' ? 'invalid_instance_url' : 'invalid_token'
+			let msg = t(key) as string
+			if (e?.details?.http_code) msg += ` (HTTP ${e.details.http_code})`
+			if (e?.details?.curl_error) msg += `: ${e.details.curl_error}`
+			error.value = msg
 		}
+	}
 
-		async addRemote() {
-			if (!this.newRemoteName || !this.newRemoteUrl) return
-			this.error = ''
-			try {
-				await gitCall('git/remote-add', { folder: this.folder, name: this.newRemoteName, url: this.newRemoteUrl })
-				this.newRemoteName = 'origin'
-				this.newRemoteUrl = ''
-				this.loadRemotes()
-			} catch (e: any) {
-				this.error = e.details || e.error || 'Error'
-			}
-		}
-
-		async removeRemote(name: string) {
-			this.error = ''
-			try {
-				await gitCall('git/remote-remove', { folder: this.folder, name })
-				this.loadRemotes()
-			} catch (e: any) {
-				this.error = e.details || e.error || 'Error'
-			}
-		}
-
-		startInstall() {
-			window.location.href = LeekWars.API + 'git-credential/start-install'
-		}
-
-		async savePat() {
-			if (!this.canSavePat) return
-			this.error = ''
-			const instance = this.showInstanceField ? this.patInstanceUrl.trim() : ''
-			try {
-				await gitCall('git-credential/save-pat', { provider: this.patProvider, token: this.patToken, instance_url: instance })
-				this.patToken = ''
-				this.patInstanceUrl = ''
-				this.selfHosted = false
-				this.loadCredentials()
-			} catch (e: any) {
-				const key = e?.error === 'invalid_instance_url' ? 'invalid_instance_url' : 'invalid_token'
-				let msg = this.$t(key) as string
-				if (e?.details?.http_code) msg += ` (HTTP ${e.details.http_code})`
-				if (e?.details?.curl_error) msg += `: ${e.details.curl_error}`
-				this.error = msg
-			}
-		}
-
-		async deleteCredential(cred: { provider: string, instance_url: string | null }) {
-			this.error = ''
-			try {
-				await gitCall('git-credential/delete', { provider: cred.provider, instance_url: cred.instance_url || '' })
-				this.loadCredentials()
-			} catch (e: any) {
-				this.error = e.details || e.error || 'Error'
-			}
+	async function deleteCredential(cred: { provider: string, instance_url: string | null }) {
+		error.value = ''
+		try {
+			await gitCall('git-credential/delete', { provider: cred.provider, instance_url: cred.instance_url || '' })
+			loadCredentials()
+		} catch (e: any) {
+			error.value = e.details || e.error || 'Error'
 		}
 	}
 </script>
