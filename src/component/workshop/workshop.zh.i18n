@@ -5,5 +5,5 @@
 	"name": "名称",
 	"level": "级别",
 	"date": "日期",
-	"rarity": "稀有性"
+	"rarity": "稀有度"
 }
