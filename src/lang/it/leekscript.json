@@ -198,5 +198,6 @@
 	"size": "Dimensione",
 	"error_146": "\"case\" o \"default\" atteso.",
 	"error_147": "Due punti attesi dopo \"case\".",
-	"error_148": "La variabile \"{0}\" non è utilizzata."
+	"error_148": "La variabile \"{0}\" non è utilizzata.",
+	"error_152": "La funzione \"{0}\" non è utilizzata."
 }

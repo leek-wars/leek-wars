@@ -196,5 +196,6 @@
 	"size": "Storlek",
 	"error_146": "\"case\" eller \"default\" förväntades.",
 	"error_147": "Kolon förväntat efter \"case\".",
-	"error_148": "Variabeln \"{0}\" används inte."
+	"error_148": "Variabeln \"{0}\" används inte.",
+	"error_152": "Funktionen \"{0}\" används inte."
 }

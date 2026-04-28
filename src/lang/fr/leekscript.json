@@ -198,5 +198,6 @@
 	"size": "Taille",
 	"error_146": "« case » ou « default » attendu.",
 	"error_147": "Deux-points attendu après « case ».",
-	"error_148": "La variable « {0} » n'est pas utilisée."
+	"error_148": "La variable « {0} » n'est pas utilisée.",
+	"error_152": "La fonction « {0} » n'est pas utilisée."
 }

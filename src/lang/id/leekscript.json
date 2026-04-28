@@ -196,5 +196,6 @@
 	"size": "Ukuran",
 	"error_146": "\"case\" atau \"default\" diharapkan.",
 	"error_147": "Titik dua diharapkan setelah \"case\".",
-	"error_148": "Variabel \"{0}\" tidak digunakan."
+	"error_148": "Variabel \"{0}\" tidak digunakan.",
+	"error_152": "Fungsi \"{0}\" tidak digunakan."
 }

@@ -196,5 +196,6 @@
 	"size": "Koko",
 	"error_146": "\"case\" tai \"default\" odotettu.",
 	"error_147": "Kaksoispiste odotettu \"case\"-sanan jälkeen.",
-	"error_148": "Muuttujaa \"{0}\" ei käytetä."
+	"error_148": "Muuttujaa \"{0}\" ei käytetä.",
+	"error_152": "Funktiota \"{0}\" ei käytetä."
 }

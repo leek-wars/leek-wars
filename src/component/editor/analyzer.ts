@@ -10,6 +10,7 @@ import * as monaco from 'monaco-editor'
 import { markRaw, reactive } from 'vue'
 
 const ERROR_UNUSED_VARIABLE = 148
+const ERROR_UNUSED_FUNCTION = 152
 
 export class AnalyzerPromise {
 	public then!: (data: any) => void
@@ -289,7 +290,7 @@ class Analyzer {
 				startColumn: problem[3] + 1,
 				endLineNumber: problem[4],
 				endColumn: problem[5] + 2,
-				tags: errorCode === ERROR_UNUSED_VARIABLE ? [monaco.MarkerTag.Unnecessary] : [],
+				tags: errorCode === ERROR_UNUSED_VARIABLE || errorCode === ERROR_UNUSED_FUNCTION ? [monaco.MarkerTag.Unnecessary] : [],
 			})
 		}
 		for (const aiPath in problemsByAI) {

@@ -190,6 +190,7 @@
 	"error_146": "Se esperaba \"case\" o \"default\".",
 	"error_147": "Se esperaban dos puntos después de \"case\".",
 	"error_148": "La variable \"{0}\" no se usa.",
+	"error_152": "La función \"{0}\" no se usa.",
 	"error_1000": "Sin arma equipada. Primero debes equipar un arma con setWeapon(WEAPON_*).",
 	"error_1001": "Este chip {1} (id {0}) no está equipado. Primero debes equiparlo en la página de tu puerro.",
 	"error_1002": "Este chip {0} no existe. Usa las constantes CHIP_* para obtener un chip válido.",
