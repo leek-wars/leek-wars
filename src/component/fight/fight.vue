@@ -123,12 +123,23 @@
 	</div>
 </template>
 
-<script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted, useTemplateRef, defineAsyncComponent, nextTick } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router'
+<script lang="ts">
+import { defineAsyncComponent } from 'vue'
 import { locale } from '@/locale'
 import { mixins } from '@/model/i18n'
+const Player = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/player/player.${locale}.i18n`))
+export default {
+	name: 'fight',
+	i18n: {},
+	mixins: [...mixins],
+	components: { 'player': Player }
+}
+</script>
+
+<script setup lang="ts">
+import { ref, computed, watch, onMounted, onUnmounted, useTemplateRef, nextTick } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 import type { Comment } from '@/model/comment'
 import { type Fight, FightType } from '@/model/fight'
 import type { Leek } from '@/model/leek'
@@ -141,10 +152,6 @@ import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 import ReportDialog from '@/component/moderation/report-dialog.vue'
 import { emitter } from '@/model/vue'
-
-const Player = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/player/player.${locale}.i18n`))
-
-defineOptions({ name: 'fight', i18n: {}, mixins: [...mixins] })
 
 const { t } = useI18n()
 const route = useRoute()
