@@ -360,5 +360,8 @@
 	"loadout_skipped_reason_too_high_level": "Livello troppo alto",
 	"loadout_skipped_reason_too_much_weapons": "Troppe armi equipaggiate",
 	"loadout_skipped_reason_too_much_chips": "Troppe chip equipaggiate",
-	"loadout_skipped_reason_two_forgotten": "Due armi dimenticate non sono consentite"
+	"loadout_skipped_reason_two_forgotten": "Due armi dimenticate non sono consentite",
+	"loadout_skipped_reason_no_forgotten_available": "Nessuna arma dimenticata disponibile tra le candidate",
+	"loadout_forgotten_preferred": "Armi dimenticate preferite",
+	"loadout_forgotten_preferred_hint": "Lista ordinata di candidate: viene equipaggiata la prima di cui il contadino possiede un esemplare libero. Trascina per riordinare."
 }

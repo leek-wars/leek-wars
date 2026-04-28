@@ -361,5 +361,8 @@
 	"loadout_skipped_reason_too_much_weapons": "装备武器过多",
 	"loadout_skipped_reason_too_much_chips": "装备芯片过多",
 	"loadout_skipped_reason_two_forgotten": "不允许两个已遗忘的武器",
+	"loadout_skipped_reason_no_forgotten_available": "候选中没有可用的被遗忘武器",
+	"loadout_forgotten_preferred": "首选被遗忘武器",
+	"loadout_forgotten_preferred_hint": "候选的有序列表：装备饲养员拥有空闲实例的第一个武器。拖放以重新排序。",
 	"loadout_capital_exceeds_highest": "已花费的资本（{0}）超过了您最高级韭菜的最大资本（{1}，等级 {2}）"
 }

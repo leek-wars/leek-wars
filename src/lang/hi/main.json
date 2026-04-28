@@ -362,5 +362,8 @@
 	"loadout_skipped_reason_too_much_weapons": "बहुत अधिक हथियार लगाए गए",
 	"loadout_skipped_reason_too_much_chips": "बहुत अधिक चिप्स लगाए गए",
 	"loadout_skipped_reason_two_forgotten": "दो भूले हुए हथियार अनुमत नहीं हैं",
+	"loadout_skipped_reason_no_forgotten_available": "उम्मीदवारों में कोई भूला हुआ हथियार उपलब्ध नहीं",
+	"loadout_forgotten_preferred": "पसंदीदा भूले हुए हथियार",
+	"loadout_forgotten_preferred_hint": "उम्मीदवारों की क्रमबद्ध सूची : जिस पहले हथियार का एक मुक्त नमूना एलेवर के पास है, वह लगा दिया जाता है। क्रम बदलने के लिए खींचें और छोड़ें।",
 	"loadout_capital_exceeds_highest": "खर्च की गई पूँजी ({0}) आपके सबसे उच्च स्तर के लीक की अधिकतम पूँजी ({1} स्तर {2} पर) से अधिक है"
 }

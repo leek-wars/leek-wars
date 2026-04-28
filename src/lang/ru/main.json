@@ -361,5 +361,8 @@
 	"loadout_skipped_reason_too_high_level": "Уровень слишком высокий",
 	"loadout_skipped_reason_too_much_weapons": "Слишком много экипированного оружия",
 	"loadout_skipped_reason_too_much_chips": "Слишком много экипированных чипов",
-	"loadout_skipped_reason_two_forgotten": "Два забытых оружия не допускаются"
+	"loadout_skipped_reason_two_forgotten": "Два забытых оружия не допускаются",
+	"loadout_skipped_reason_no_forgotten_available": "Среди кандидатов нет доступного забытого оружия",
+	"loadout_forgotten_preferred": "Предпочтительные забытые оружия",
+	"loadout_forgotten_preferred_hint": "Упорядоченный список кандидатов: экипируется первый, у которого заводчик владеет свободным экземпляром. Перетащите, чтобы изменить порядок."
 }

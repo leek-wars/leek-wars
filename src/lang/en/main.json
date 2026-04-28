@@ -361,5 +361,8 @@
 	"loadout_skipped_reason_too_high_level": "Level too high",
 	"loadout_skipped_reason_too_much_weapons": "Too many weapons equipped",
 	"loadout_skipped_reason_too_much_chips": "Too many chips equipped",
-	"loadout_skipped_reason_two_forgotten": "Two forgotten weapons are not allowed"
+	"loadout_skipped_reason_two_forgotten": "Two forgotten weapons are not allowed",
+	"loadout_skipped_reason_no_forgotten_available": "No forgotten weapon available among the candidates",
+	"loadout_forgotten_preferred": "Preferred forgotten weapons",
+	"loadout_forgotten_preferred_hint": "Ordered list of candidates: the first one the farmer owns a free copy of is equipped. Drag and drop to reorder."
 }

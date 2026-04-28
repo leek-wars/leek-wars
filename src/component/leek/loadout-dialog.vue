@@ -49,6 +49,11 @@
 										<item :item="LeekWars.items[tpl]" />
 									</div>
 								</template>
+								<template v-for="tpl in loadout.forgotten_weapons" :key="'fw' + tpl">
+									<div v-if="LeekWars.items[tpl]" class="preview-slot preview-slot-forgotten">
+										<item :item="LeekWars.items[tpl]" />
+									</div>
+								</template>
 							</div>
 							<div class="preview-col preview-col-chips">
 								<template v-for="tpl in loadout.chips" :key="'c' + tpl">
@@ -115,18 +120,39 @@
 					<div class="section">
 						<div class="section-header">
 							<h4>{{ $t('weapons') }}</h4>
-							<v-btn :class="{'invisible-btn': editing.weapons.length === 0}" size="x-small" variant="text" icon @click="editing.weapons = []"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
+							<v-btn :class="{'invisible-btn': editing.weapons.length === 0 && editing.forgottenWeapons.length === 0}" size="x-small" variant="text" icon @click="editing.weapons = []; editing.forgottenWeapons = []"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
 						</div>
 						<div class="selected-items">
-							<div v-for="tpl in editing.weapons" :key="tpl" class="item-slot selected" @click="toggleWeapon(tpl)">
+							<div v-for="tpl in editing.weapons" :key="'fw' + tpl" class="item-slot selected" @click="toggleWeapon(tpl)">
 								<item v-if="LeekWars.items[tpl]" :item="LeekWars.items[tpl]" />
 								<v-icon class="remove-icon" size="12">mdi-close</v-icon>
 							</div>
-							<span v-if="editing.weapons.length === 0" class="empty-hint">{{ $t('main.loadout_none') }}</span>
+							<span v-if="editing.weapons.length === 0 && editing.forgottenWeapons.length === 0" class="empty-hint">{{ $t('main.loadout_none') }}</span>
 						</div>
+
+						<!-- Armes oubliées préférées : liste ordonnée, première dispo gagne -->
+						<template v-if="editing.forgottenWeapons.length > 0 || hasAnyForgotten">
+							<div class="forgotten-header">
+								<span class="forgotten-label">{{ $t('main.loadout_forgotten_preferred') }}</span>
+								<v-tooltip location="bottom">
+									<template #activator="{ props }">
+										<v-icon v-bind="props" size="14" color="var(--text-color-secondary)">mdi-information-outline</v-icon>
+									</template>
+									<div>{{ $t('main.loadout_forgotten_preferred_hint') }}</div>
+								</v-tooltip>
+							</div>
+							<div ref="forgottenSelectedEl" class="selected-items forgotten-selected">
+								<div v-for="tpl in editing.forgottenWeapons" :key="'fgw' + tpl" :data-tpl="tpl" class="item-slot selected forgotten-slot" @click="toggleWeapon(tpl)">
+									<item v-if="LeekWars.items[tpl]" :item="LeekWars.items[tpl]" />
+									<v-icon class="remove-icon" size="12">mdi-close</v-icon>
+								</div>
+								<span v-if="editing.forgottenWeapons.length === 0" class="empty-hint">{{ $t('main.loadout_none') }}</span>
+							</div>
+						</template>
+
 						<div class="available-items">
 							<div v-for="w in allWeapons" :key="w.template" class="item-slot"
-								:class="{selected: editing.weapons.includes(w.template)}"
+								:class="{selected: editing.weapons.includes(w.template) || editing.forgottenWeapons.includes(w.template), 'forgotten-available': isForgottenTemplate(w.template)}"
 								@click="toggleWeapon(w.template)">
 								<item v-if="LeekWars.items[w.template]" :item="LeekWars.items[w.template]" />
 							</div>
@@ -245,7 +271,8 @@
 		id: number | null
 		name: string
 		icon: string
-		weapons: number[]
+		weapons: number[]                // armes fixes (non-oubliées)
+		forgottenWeapons: number[]       // candidates ordonnées
 		chips: number[]
 		components: LoadoutComponent[]
 		stats: LoadoutStats
@@ -272,8 +299,10 @@
 				restatDialogOpen: false,
 				pendingApply: null as Loadout | null,
 				sortable: null as Sortable | null,
+				forgottenSortable: null as Sortable | null,
 				skippedDialogOpen: false,
 				skippedItems: [] as any[],
+				ownedWeaponTemplates: [] as number[],
 			}
 		},
 		computed: {
@@ -300,9 +329,40 @@
 				const p = farmer.potions.find((p: any) => p.template === 49)
 				return p ? p.quantity : 0
 			},
-			allWeapons() { return store.state.farmer?.weapons ?? [] },
+			allWeapons() {
+				// Source de vérité : la liste `owned_weapons` retournée par
+				// `loadout/get-all` (DISTINCT item.template côté serveur, équipées ou non).
+				// On enrichit avec `farmer.weapons` pour les méta-données dispo, mais
+				// l'union finale couvre tout ce que l'éleveur possède — y compris les
+				// oubliées actuellement équipées sur d'autres poireaux.
+				const farmer = store.state.farmer
+				const inventoryByTpl: { [k: number]: any } = {}
+				if (farmer) {
+					for (const w of farmer.weapons) inventoryByTpl[w.template] = w
+				}
+				const seen = new Set<number>()
+				const result: any[] = []
+				for (const tpl of this.ownedWeaponTemplates) {
+					if (seen.has(tpl)) continue
+					seen.add(tpl)
+					result.push(inventoryByTpl[tpl] ?? { id: 0, template: tpl, quantity: 1 })
+				}
+				// Fallback : si `owned_weapons` n'a pas encore été chargé (premier
+				// affichage avant la réponse), montrer au moins l'inventaire libre.
+				if (result.length === 0 && farmer) {
+					for (const w of farmer.weapons) {
+						if (seen.has(w.template)) continue
+						seen.add(w.template)
+						result.push(w)
+					}
+				}
+				return result
+			},
 			allChips() { return store.state.farmer?.chips ?? [] },
 			allComponents() { return store.state.farmer?.components ?? [] },
+			hasAnyForgotten(): boolean {
+				return this.allWeapons.some((w: any) => this.isForgottenTemplate(w.template))
+			},
 			loadoutStatus(): { [id: number]: { itemsDiffer: boolean, statsDiffer: boolean, fullyApplied: boolean } } {
 				const result: { [id: number]: { itemsDiffer: boolean, statsDiffer: boolean, fullyApplied: boolean } } = {}
 				if (!this.leek) return result
@@ -314,13 +374,25 @@
 				for (let i = 0; i < lComps.length; i++) if (lComps[i]) leekComps[i] = lComps[i].template
 				const leekCompKeys = Object.keys(leekComps)
 				for (const loadout of this.loadouts) {
+					// Pour les armes : on sépare oubliée (sticky : OK si l'oubliée actuelle ∈ alternatives,
+					// ou pas d'oubliée actuelle ET liste d'alternatives vide) et armes fixes (égalité stricte).
+					const leekFixedWeapons = leekWeapons.filter((tpl: number) => !this.isForgottenTemplate(tpl))
+					const leekForgottenWeapons = leekWeapons.filter((tpl: number) => this.isForgottenTemplate(tpl))
 					const ldWeapons = [...loadout.weapons].sort((a, b) => a - b)
+					const ldForgotten = [...(loadout.forgotten_weapons || [])]
 					const ldChips = [...loadout.chips].sort((a, b) => a - b)
 					const ldComps: { [idx: number]: number } = {}
 					for (const c of loadout.components) ldComps[c.index] = c.template
 					let itemsDiffer = false
-					if (leekWeapons.length !== ldWeapons.length) itemsDiffer = true
-					else for (let i = 0; i < leekWeapons.length; i++) if (leekWeapons[i] !== ldWeapons[i]) { itemsDiffer = true; break }
+					if (leekFixedWeapons.length !== ldWeapons.length) itemsDiffer = true
+					else for (let i = 0; i < leekFixedWeapons.length; i++) if (leekFixedWeapons[i] !== ldWeapons[i]) { itemsDiffer = true; break }
+					if (!itemsDiffer) {
+						// Forgotten state matches if: no forgotten equipped & no candidates listed,
+						// or current forgotten ∈ candidates list.
+						const currentForgotten = leekForgottenWeapons[0] ?? null
+						if (currentForgotten === null && ldForgotten.length > 0) itemsDiffer = true
+						else if (currentForgotten !== null && !ldForgotten.includes(currentForgotten)) itemsDiffer = true
+					}
 					if (!itemsDiffer) {
 						if (leekChips.length !== ldChips.length) itemsDiffer = true
 						else for (let i = 0; i < leekChips.length; i++) if (leekChips[i] !== ldChips[i]) { itemsDiffer = true; break }
@@ -356,16 +428,14 @@
 							if (stat === 'ram') ram += value
 						}
 					}
-					const overLevel = [...loadout.weapons, ...loadout.chips, ...loadout.components.map(c => c.template)]
+					const forgottenList = loadout.forgotten_weapons || []
+					const overLevel = [...loadout.weapons, ...forgottenList, ...loadout.chips, ...loadout.components.map(c => c.template)]
 						.filter(tpl => LeekWars.items[tpl] && LeekWars.items[tpl].level > level)
 					if (overLevel.length > 0) warnings.push(this.$t('main.loadout_warning_over_level', [overLevel.length]) as string)
-					if (loadout.weapons.length > maxWeapons) warnings.push(this.$t('main.loadout_warning_too_many_weapons', [loadout.weapons.length, maxWeapons]) as string)
+					// Une seule oubliée sera équipée parmi les alternatives, donc on compte +1 max.
+					const totalWeaponSlots = loadout.weapons.length + (forgottenList.length > 0 ? 1 : 0)
+					if (totalWeaponSlots > maxWeapons) warnings.push(this.$t('main.loadout_warning_too_many_weapons', [totalWeaponSlots, maxWeapons]) as string)
 					if (loadout.chips.length > ram) warnings.push(this.$t('main.loadout_warning_too_many_chips', [loadout.chips.length, ram]) as string)
-					const forgotten = loadout.weapons.filter(tpl => {
-						const item = LeekWars.items[tpl]
-						return item && LeekWars.weapons[item.params] && LeekWars.weapons[item.params].forgotten
-					})
-					if (forgotten.length > 1) warnings.push(this.$t('main.loadout_warning_two_forgotten') as string)
 
 					// Stats-related warnings
 					let statsDiffer = false
@@ -391,23 +461,40 @@
 			modelValue(val: boolean) {
 				if (val) {
 					this.editing = null
-					if (!store.state.farmer?.loadouts) this.loadAll()
+					// Toujours refetch à l'ouverture : les loadouts peuvent être cachés
+					// dans le store, mais `owned_weapons` n'est pas persistant et on
+					// veut un état frais (l'éleveur a pu acheter/vendre).
+					this.loadAll()
 					this.$nextTick(() => this.initSortable())
 				} else {
 					this.destroySortable()
+					this.destroyForgottenSortable()
 				}
 			},
 			editing() {
 				// Quand on sort du mode édition, on revient en liste → re-init
-				if (!this.editing) this.$nextTick(() => this.initSortable())
-				else this.destroySortable()
+				if (!this.editing) {
+					this.destroyForgottenSortable()
+					this.$nextTick(() => this.initSortable())
+				} else {
+					this.destroySortable()
+					this.$nextTick(() => this.initForgottenSortable())
+				}
 			},
 			loadouts() {
 				this.$nextTick(() => this.initSortable())
 			},
+			'editing.forgottenWeapons'(newVal: number[] | undefined, oldVal: number[] | undefined) {
+				// Re-init sortable when the list appears for the first time (v-if toggle).
+				const had = (oldVal?.length ?? 0) > 0
+				const has = (newVal?.length ?? 0) > 0
+				if (!had && has) this.$nextTick(() => this.initForgottenSortable())
+				if (had && !has) this.destroyForgottenSortable()
+			},
 		},
 		beforeUnmount() {
 			this.destroySortable()
+			this.destroyForgottenSortable()
 		},
 		methods: {
 			isCharac(icon: string) { return CHARACTERISTICS.includes(icon) },
@@ -430,6 +517,7 @@
 				this.loading = true
 				LeekWars.get('loadout/get-all').then((data: any) => {
 					store.commit('set-loadouts', data.loadouts)
+					this.ownedWeaponTemplates = Array.isArray(data.owned_weapons) ? data.owned_weapons : []
 					this.loading = false
 				}).error(() => { this.loading = false })
 			},
@@ -455,8 +543,29 @@
 			destroySortable() {
 				if (this.sortable) { this.sortable.destroy(); this.sortable = null }
 			},
+			initForgottenSortable() {
+				const el = this.$refs.forgottenSelectedEl as HTMLElement | undefined
+				if (!el || !this.editing) return
+				this.destroyForgottenSortable()
+				this.forgottenSortable = Sortable.create(el, {
+					animation: 150,
+					draggable: '.forgotten-slot',
+					onEnd: (evt) => {
+						if (evt.oldIndex === undefined || evt.newIndex === undefined) return
+						if (evt.oldIndex === evt.newIndex) return
+						if (!this.editing) return
+						const arr = [...this.editing.forgottenWeapons]
+						const moved = arr.splice(evt.oldIndex, 1)[0]
+						arr.splice(evt.newIndex, 0, moved)
+						this.editing.forgottenWeapons = arr
+					},
+				})
+			},
+			destroyForgottenSortable() {
+				if (this.forgottenSortable) { this.forgottenSortable.destroy(); this.forgottenSortable = null }
+			},
 			startCreate() {
-				this.editing = { id: null, name: '', icon: '', weapons: [], chips: [], components: [], stats: {} }
+				this.editing = { id: null, name: '', icon: '', weapons: [], forgottenWeapons: [], chips: [], components: [], stats: {} }
 			},
 			startEdit(loadout: Loadout) {
 				this.editing = {
@@ -464,6 +573,7 @@
 					name: loadout.name,
 					icon: loadout.icon,
 					weapons: [...loadout.weapons],
+					forgottenWeapons: [...(loadout.forgotten_weapons || [])],
 					chips: [...loadout.chips],
 					components: loadout.components.map(c => ({ ...c })),
 					stats: { ...(loadout.stats || {}) },
@@ -474,7 +584,9 @@
 			},
 			importCurrent() {
 				if (!this.leek || !this.editing) return
-				this.editing.weapons = this.leek.weapons.map((w: any) => w.template)
+				const allWeapons = this.leek.weapons.map((w: any) => w.template)
+				this.editing.weapons = allWeapons.filter((tpl: number) => !this.isForgottenTemplate(tpl))
+				this.editing.forgottenWeapons = allWeapons.filter((tpl: number) => this.isForgottenTemplate(tpl))
 				this.editing.chips = this.leek.chips.map((c: any) => c.template)
 				this.editing.components = this.leek.components
 					.map((c: any, i: number) => c ? { index: i, template: c.template } : null)
@@ -511,11 +623,21 @@
 				}
 				return total
 			},
+			isForgottenTemplate(tpl: number): boolean {
+				const item = LeekWars.items[tpl]
+				return !!(item && LeekWars.weapons[item.params] && LeekWars.weapons[item.params].forgotten)
+			},
 			toggleWeapon(tpl: number) {
 				if (!this.editing) return
-				const i = this.editing.weapons.indexOf(tpl)
-				if (i === -1) this.editing.weapons.push(tpl)
-				else this.editing.weapons.splice(i, 1)
+				if (this.isForgottenTemplate(tpl)) {
+					const i = this.editing.forgottenWeapons.indexOf(tpl)
+					if (i === -1) this.editing.forgottenWeapons.push(tpl)
+					else this.editing.forgottenWeapons.splice(i, 1)
+				} else {
+					const i = this.editing.weapons.indexOf(tpl)
+					if (i === -1) this.editing.weapons.push(tpl)
+					else this.editing.weapons.splice(i, 1)
+				}
 			},
 			toggleChip(tpl: number) {
 				if (!this.editing) return
@@ -549,10 +671,15 @@
 			},
 			save() {
 				if (!this.editing) return
+				// Le serveur normalise et split entre weapons/forgotten_weapons : on envoie
+				// les deux concaténées dans `weapons` pour rester compat, le split silencieux
+				// côté PHP fait le bon travail. L'ordre des oubliées (priorité) est préservé
+				// par la concat (fixed d'abord, puis forgotten).
+				const allWeapons = [...this.editing.weapons, ...this.editing.forgottenWeapons]
 				const payload = {
 					name: this.editing.name.trim(),
 					icon: this.editing.icon,
-					weapons: JSON.stringify(this.editing.weapons),
+					weapons: JSON.stringify(allWeapons),
 					chips: JSON.stringify(this.editing.chips),
 					components: JSON.stringify(this.editing.components),
 					stats: JSON.stringify(this.editing.stats),
@@ -811,6 +938,20 @@ body.dark .skipped-item { background: #2a2a2a; }
 .selected-items .item-slot { border-color: #1976d2; }
 .available-items .item-slot.selected { opacity: 0.3; }
 .available-items .item-slot.selected:hover { opacity: 0.6; }
+.forgotten-header {
+	display: flex; align-items: center; gap: 6px;
+	margin-top: 4px; margin-bottom: 4px;
+	font-size: 12px; color: var(--text-color-secondary);
+	.forgotten-label { font-weight: 600; }
+}
+.forgotten-selected .forgotten-slot { cursor: grab; }
+.forgotten-selected .forgotten-slot:active { cursor: grabbing; }
+.selected-items .item-slot.forgotten-slot { border-color: #d4a73d; }
+.available-items .item-slot.forgotten-available { box-shadow: inset 0 0 0 1px rgba(212, 167, 61, 0.5); }
+.preview-slot.preview-slot-forgotten {
+	box-shadow: inset 0 0 0 1px #d4a73d;
+	border-radius: 4px;
+}
 .components-grid { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
 .component-slot {
 	width: 48px; height: 48px; border: 2px dashed #ccc; border-radius: 6px;
