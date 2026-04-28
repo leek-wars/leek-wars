@@ -38,6 +38,20 @@ Les changelogs sont dans `src/component/changelog/` au format YAML.
 - **Séquelle** (pas "rémanent" ni "poison") : type de dégâts "aftereffect" en anglais. Utiliser les noms des fichiers de traduction (`src/lang/*/effect.json`).
 - **Noms d'armes/puces** : toujours utiliser les noms officiels des fichiers de traduction (`src/lang/*/weapon.json`, `src/lang/*/chip.json`), pas d'approximation.
 
+## Styles et thèmes
+
+Le site supporte un mode sombre (`body.dark`). **Ne pas hardcoder de couleurs neutres** dans les composants : utiliser les variables CSS définies dans `src/global.scss` pour qu'elles s'adaptent automatiquement.
+
+### Variables principales (light + dark)
+- `--background`, `--background-secondary`, `--background-header`, `--background-disabled`
+- `--border`
+- `--text-color`, `--text-color-secondary`
+- `--pure-white`, `--pure-black` (s'inversent en dark)
+- `--primary`, `--type-color`, `--link-color`
+
+### Couleurs sémantiques (success/warning/error)
+Pas de variables existantes. Choisir des teintes claires en light, puis ajouter un override `body.dark .ma-classe { ... }` avec des teintes plus sombres pour conserver la lisibilité sans flasher.
+
 ## Éditeur Monaco
 
 Le code de l'éditeur est dans `src/component/editor/` :

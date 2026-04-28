@@ -23,7 +23,7 @@
 
 					<div v-if="aggregates" class="agg-grid">
 						<div class="agg-card">
-							<h3>Top IPs</h3>
+							<h4>Top IPs</h4>
 							<table>
 								<thead><tr><th>IP</th><th>Hits</th><th>Codes</th><th>👤</th></tr></thead>
 								<tbody>
@@ -38,7 +38,7 @@
 						</div>
 
 						<div class="agg-card">
-							<h3>Top endpoints</h3>
+							<h4>Top endpoints</h4>
 							<table>
 								<thead><tr><th>Endpoint</th><th>Erreur</th><th>Hits</th></tr></thead>
 								<tbody>
@@ -52,7 +52,7 @@
 						</div>
 
 						<div class="agg-card">
-							<h3>Top User-Agents</h3>
+							<h4>Top User-Agents</h4>
 							<table>
 								<thead><tr><th>UA</th><th>Hits</th><th>IPs</th></tr></thead>
 								<tbody>
@@ -66,7 +66,7 @@
 						</div>
 
 						<div class="agg-card">
-							<h3>Top codes d'erreur</h3>
+							<h4>Top codes d'erreur</h4>
 							<table>
 								<thead><tr><th>Code</th><th>HTTP</th><th>Hits</th></tr></thead>
 								<tbody>
@@ -321,7 +321,7 @@
 		margin-bottom: 12px;
 		.total {
 			font-weight: bold;
-			color: #555;
+			color: var(--text-color-secondary);
 		}
 	}
 	.agg-grid {
@@ -330,14 +330,14 @@
 		gap: 10px;
 	}
 	.agg-card {
-		background: var(--pure-white, white);
-		border: 1px solid #eee;
+		background: var(--pure-white);
+		border: 1px solid var(--border);
 		border-radius: 4px;
 		padding: 8px;
-		h3 {
+		h4 {
 			margin: 0 0 6px;
 			font-size: 14px;
-			color: #555;
+			color: var(--text-color-secondary);
 		}
 		table {
 			width: 100%;
@@ -347,17 +347,17 @@
 		th, td {
 			padding: 3px 4px;
 			text-align: left;
-			border-bottom: 1px solid #f0f0f0;
+			border-bottom: 1px solid var(--border);
 		}
 		th {
-			color: #888;
+			color: var(--text-color-secondary);
 			font-weight: normal;
 		}
 		.num { text-align: right; font-variant-numeric: tabular-nums; }
 		.mono { font-family: monospace; }
 		.ua { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 		.clickable { cursor: pointer; }
-		.clickable:hover { background: #f5f9ff; }
+		.clickable:hover { background: var(--background-secondary); }
 	}
 
 	.filters {
@@ -365,16 +365,18 @@
 		flex-wrap: wrap;
 		gap: 6px;
 		padding: 10px;
-		background: #fafafa;
-		border-bottom: 1px solid #eee;
+		background: var(--background-header);
+		border-bottom: 1px solid var(--border);
 	}
 	.filter-input {
 		padding: 4px 8px;
-		border: 1px solid #ccc;
+		border: 1px solid var(--border);
 		border-radius: 3px;
 		font-size: 13px;
 		flex: 0 0 auto;
 		width: 130px;
+		background: var(--pure-white);
+		color: var(--text-color);
 		&.small { width: 70px; }
 		&.grow { flex: 1 1 200px; min-width: 180px; }
 	}
@@ -382,23 +384,23 @@
 	.empty {
 		padding: 30px;
 		text-align: center;
-		color: #888;
+		color: var(--text-color-secondary);
 	}
 	.log-list {
 		padding: 8px 10px;
 	}
 	.log-summary {
 		font-size: 12px;
-		color: #888;
+		color: var(--text-color-secondary);
 		margin-bottom: 6px;
 	}
 	.log-row {
-		border-bottom: 1px solid #f0f0f0;
+		border-bottom: 1px solid var(--border);
 		padding: 6px 4px;
 		cursor: pointer;
 		font-size: 13px;
-		&:hover { background: #fafafa; }
-		&.expanded { background: #f5f9ff; }
+		&:hover { background: var(--background-secondary); }
+		&.expanded { background: var(--background-secondary); }
 		&.compact {
 			cursor: default;
 			&:hover { background: transparent; }
@@ -433,7 +435,7 @@
 	.method {
 		font-family: monospace;
 		font-size: 11px;
-		color: #666;
+		color: var(--text-color-secondary);
 		min-width: 40px;
 	}
 	.uri {
@@ -457,7 +459,7 @@
 	.ua-short {
 		font-family: monospace;
 		font-size: 11px;
-		color: #888;
+		color: var(--text-color-secondary);
 		max-width: 160px;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -466,24 +468,24 @@
 	.ip {
 		font-family: monospace;
 		font-size: 12px;
-		color: #555;
+		color: var(--text-color-secondary);
 		cursor: pointer;
 		&:hover { text-decoration: underline; }
 	}
 	.date {
 		font-size: 11px;
-		color: #888;
+		color: var(--text-color-secondary);
 		font-variant-numeric: tabular-nums;
 	}
 	.log-detail {
 		padding: 8px 10px;
-		background: white;
+		background: var(--pure-white);
 		border-left: 3px solid #2196f3;
 		margin-top: 4px;
 		font-size: 12px;
 		div { margin-bottom: 4px; }
 		pre {
-			background: #f5f5f5;
+			background: var(--background-secondary);
 			padding: 6px;
 			border-radius: 3px;
 			max-height: 300px;
@@ -501,7 +503,8 @@
 		padding: 12px;
 	}
 	.ip-dialog {
-		background: white;
+		background: var(--pure-white);
+		color: var(--text-color);
 		padding: 16px;
 		border-radius: 6px;
 	}
@@ -515,7 +518,7 @@
 	.ip-stats {
 		margin-bottom: 12px;
 		padding: 8px;
-		background: #f5f5f5;
+		background: var(--background-secondary);
 		border-radius: 4px;
 		display: flex;
 		gap: 20px;
@@ -526,6 +529,7 @@
 		margin: 0 4px;
 		padding: 2px 6px;
 		background: #e3f2fd;
+		color: #0277bd;
 		border-radius: 3px;
 		text-decoration: none;
 		font-weight: bold;
@@ -533,5 +537,31 @@
 	.ip-logs {
 		max-height: 60vh;
 		overflow-y: auto;
+	}
+
+	body.dark {
+		.status {
+			&.http-ok { background: #1b3a1f; color: #81c784; }
+			&.http-4xx { background: #4a2e0f; color: #ffb74d; }
+			&.http-429 { background: #5a2e0a; color: #ffa726; }
+			&.http-5xx { background: #4a1717; color: #ef9a9a; }
+		}
+		.code-badge {
+			&.sev-low { background: #2a2f33; color: #b0bec5; }
+			&.sev-mid { background: #4a2e0f; color: #ffb74d; }
+			&.sev-high { background: #4a1717; color: #ef9a9a; }
+		}
+		.farmer-badge {
+			background: #0d2a3d;
+			color: #4fc3f7;
+			&:hover { background: #143a52; }
+		}
+		.farmer-link {
+			background: #0d2a3d;
+			color: #4fc3f7;
+		}
+		.log-detail {
+			border-left-color: #4fc3f7;
+		}
 	}
 </style>
