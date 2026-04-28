@@ -7,7 +7,7 @@
 	"variables_items": "第一人工智能",
 	"standard_functions": "标准功能",
 	"standard_functions_items": "使用增强药水",
-	"conditions": "状况",
+	"conditions": "条件",
 	"conditions_items": "受伤时治愈",
 	"boolean_null": "布尔值和 null",
 	"boolean_null_items": "一件武器只能装备一次",
@@ -17,7 +17,7 @@
 	"strings_items": "向对手敬礼",
 	"loops": "循环",
 	"loops_items": "多次使用你的武器",
-	"lists": "清单",
+	"lists": "列表",
 	"lists_items": "计算造成的伤害",
 	"functions": "创建您的函数",
 	"functions_items": "GetClosestCellToUse 函数"

@@ -7,7 +7,7 @@
 	"ban_confirm": "您确定要禁止 {0} 吗？",
 	"ban_confirm_title": "禁止{0}？",
 	"cancel_candidacy": "取消请求",
-	"candidacies": "应用",
+	"candidacies": "申请",
 	"candidacies_closed": "不",
 	"candidacies_opened": "是的",
 	"candidacy_accept": "是的",
