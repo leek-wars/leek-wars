@@ -16,7 +16,7 @@
 							<v-btn :value="720" size="small">30j</v-btn>
 						</v-btn-toggle>
 						<span v-if="aggregates" class="total">{{ aggregates.total.toLocaleString() }} événements</span>
-						<v-btn size="small" @click="loadAggregates" :loading="aggLoading"><v-icon>mdi-refresh</v-icon></v-btn>
+						<v-btn size="small" :loading="aggLoading" @click="loadAggregates"><v-icon>mdi-refresh</v-icon></v-btn>
 					</div>
 
 					<loader v-if="aggLoading && !aggregates" />
@@ -86,14 +86,14 @@
 		<panel class="last">
 			<template #content>
 				<div class="filters">
-					<input v-model="filters.ip" placeholder="IP" @keyup.enter="searchLogs" class="filter-input" />
-					<input v-model="filters.error_code" placeholder="error_code" @keyup.enter="searchLogs" class="filter-input" />
-					<input v-model="filters.module" placeholder="module" @keyup.enter="searchLogs" class="filter-input" />
-					<input v-model="filters.function" placeholder="function" @keyup.enter="searchLogs" class="filter-input" />
-					<input v-model="filters.farmer_id" placeholder="farmer_id" @keyup.enter="searchLogs" type="number" class="filter-input" />
-					<input v-model="filters.http_status" placeholder="HTTP" @keyup.enter="searchLogs" type="number" class="filter-input small" />
-					<input v-model="filters.query" placeholder="cherche dans URI / UA" @keyup.enter="searchLogs" class="filter-input grow" />
-					<v-btn size="small" color="primary" @click="searchLogs" :loading="logsLoading">Filtrer</v-btn>
+					<input v-model="filters.ip" placeholder="IP" class="filter-input" @keyup.enter="searchLogs" />
+					<input v-model="filters.error_code" placeholder="error_code" class="filter-input" @keyup.enter="searchLogs" />
+					<input v-model="filters.module" placeholder="module" class="filter-input" @keyup.enter="searchLogs" />
+					<input v-model="filters.function" placeholder="function" class="filter-input" @keyup.enter="searchLogs" />
+					<input v-model="filters.farmer_id" placeholder="farmer_id" type="number" class="filter-input" @keyup.enter="searchLogs" />
+					<input v-model="filters.http_status" placeholder="HTTP" type="number" class="filter-input small" @keyup.enter="searchLogs" />
+					<input v-model="filters.query" placeholder="cherche dans URI / UA" class="filter-input grow" @keyup.enter="searchLogs" />
+					<v-btn size="small" color="primary" :loading="logsLoading" @click="searchLogs">Filtrer</v-btn>
 					<v-btn size="small" @click="resetFilters">Reset</v-btn>
 				</div>
 
@@ -101,7 +101,7 @@
 				<div v-else-if="logs && logs.length === 0" class="empty">Aucun événement.</div>
 				<div v-else-if="logs" class="log-list">
 					<div class="log-summary">{{ total.toLocaleString() }} résultat(s) — page {{ page }} / {{ totalPages }}</div>
-					<div v-for="row in logs" :key="row.id" class="log-row" @click="toggleExpand(row.id)" :class="{ expanded: expanded[row.id] }">
+					<div v-for="row in logs" :key="row.id" class="log-row" :class="{ expanded: expanded[row.id] }" @click="toggleExpand(row.id)">
 						<div class="log-line">
 							<span class="status" :class="httpClass(row.http_status)">{{ row.http_status }}</span>
 							<span class="code-badge" :class="codeSeverity(row.error_code)">{{ row.error_code }}</span>
@@ -123,7 +123,7 @@
 						</div>
 					</div>
 
-					<div class="pagination" v-if="totalPages > 1">
+					<div v-if="totalPages > 1" class="pagination">
 						<v-btn size="small" :disabled="page <= 1" @click="goToPage(page - 1)">Précédent</v-btn>
 						<span>Page {{ page }} / {{ totalPages }}</span>
 						<v-btn size="small" :disabled="page >= totalPages" @click="goToPage(page + 1)">Suivant</v-btn>
@@ -166,7 +166,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { computed, ref } from 'vue'
-	import { useRouter } from 'vue-router'
+	import { useRoute, useRouter } from 'vue-router'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
 	interface Filters {
@@ -184,6 +184,7 @@
 	}
 
 	const router = useRouter()
+	const route = useRoute()
 
 	const periodHours = ref(24)
 	const aggregates = ref<any>(null)
@@ -204,6 +205,8 @@
 
 	if (!store.getters.admin) router.replace('/')
 	LeekWars.setTitle('Sécurité')
+	if (route.query.module) filters.value.module = String(route.query.module)
+	if (route.query.function) filters.value.function = String(route.query.function)
 	loadAggregates()
 	searchLogs()
 

@@ -6,18 +6,42 @@
 
 		<panel class="first">
 			<template #content>
-				<div class="aggregates">
+				<div class="padded">
 					<div class="period-bar">
 						<span>Fenêtre :</span>
-						<v-btn-toggle v-model="periodHours" mandatory density="compact" @update:modelValue="loadAggregates">
+						<v-btn-toggle v-model="periodHours" mandatory density="compact" :disabled="useCustomRange" @update:modelValue="onPeriodChange">
 							<v-btn :value="1" size="small">1h</v-btn>
 							<v-btn :value="24" size="small">24h</v-btn>
 							<v-btn :value="168" size="small">7j</v-btn>
 							<v-btn :value="720" size="small">30j</v-btn>
 						</v-btn-toggle>
-						<span v-if="aggregates" class="total">{{ aggregates.total.toLocaleString() }} requêtes</span>
-						<span v-if="aggregates" class="total">moy. {{ aggregates.avg_ms }} ms</span>
-						<v-btn size="small" :loading="aggLoading" @click="loadAggregates"><v-icon>mdi-refresh</v-icon></v-btn>
+						<v-btn size="small" :variant="useCustomRange ? 'flat' : 'outlined'" @click="toggleCustomRange">
+							<v-icon size="small">mdi-calendar-range</v-icon>
+							Custom
+						</v-btn>
+						<template v-if="useCustomRange">
+							<input v-model="dateFrom" type="datetime-local" class="date-input" />
+							<span>→</span>
+							<input v-model="dateTo" type="datetime-local" class="date-input" />
+							<v-btn size="small" color="primary" @click="loadAll">Appliquer</v-btn>
+						</template>
+						<v-checkbox v-model="compare" density="compact" hide-details label="Comparer" @update:modelValue="loadAggregates" />
+						<v-checkbox v-model="autoRefresh" density="compact" hide-details label="Auto-refresh" @update:modelValue="onAutoRefreshChange" />
+						<select v-if="autoRefresh" v-model.number="refreshInterval" class="interval-select" @change="onAutoRefreshChange">
+							<option :value="10">10s</option>
+							<option :value="30">30s</option>
+							<option :value="60">1min</option>
+							<option :value="300">5min</option>
+						</select>
+						<span class="spacer"></span>
+						<v-btn size="small" :loading="aggLoading" @click="loadAll"><v-icon>mdi-refresh</v-icon></v-btn>
+					</div>
+
+					<div v-if="aggregates" class="summary-bar">
+						<KpiCard label="Requêtes" :value="aggregates.total.toLocaleString()" :delta="deltas.total" />
+						<KpiCard label="Latence moy." :value="aggregates.avg_ms + ' ms'" :delta="deltas.avg_ms" lower-is-better />
+						<KpiCard label="p95" :value="aggregates.p95_ms + ' ms'" :delta="deltas.p95_ms" lower-is-better />
+						<KpiCard label="Farmers uniques" :value="aggregates.farmers.toLocaleString()" :delta="deltas.farmers" />
 					</div>
 
 					<loader v-if="aggLoading && !aggregates" />
@@ -28,9 +52,9 @@
 
 					<div v-if="aggregates" class="agg-grid">
 						<div class="agg-card wide">
-							<h3>Top endpoints</h3>
+							<h4>Top endpoints</h4>
 							<table>
-								<thead><tr><th>Endpoint</th><th>Hits</th><th>Moy.</th><th>p95</th><th>Max</th></tr></thead>
+								<thead><tr><th>Endpoint</th><th>Hits</th><th>Moy.</th><th>p95</th><th>Max</th><th></th></tr></thead>
 								<tbody>
 									<tr v-for="(row, i) in aggregates.top_endpoints" :key="i" class="clickable" @click="filterByEndpoint(row.module, row.function)">
 										<td class="mono">{{ row.module }}/{{ row.function }}</td>
@@ -38,13 +62,33 @@
 										<td class="num">{{ formatMs(row.avg_ms) }}</td>
 										<td class="num" :class="latencyClass(row.p95_ms)">{{ formatMs(row.p95_ms) }}</td>
 										<td class="num" :class="latencyClass(row.max_ms)">{{ formatMs(row.max_ms) }}</td>
+										<td class="actions">
+											<router-link :to="endpointDetailLink(row.module, row.function)" class="action-icon" title="Détail" @click.stop>
+												<v-icon size="14">mdi-chart-line</v-icon>
+											</router-link>
+											<router-link v-if="row.security_count > 0" :to="securityLink(row.module, row.function)" class="action-icon sec" :title="row.security_count + ' alertes sécurité'" @click.stop>
+												<v-icon size="14">mdi-shield-alert</v-icon>
+												<span class="sec-count">{{ row.security_count }}</span>
+											</router-link>
+										</td>
 									</tr>
 								</tbody>
 							</table>
 						</div>
 
 						<div class="agg-card">
-							<h3>Top farmers actifs</h3>
+							<div class="card-header">
+								<h4>Top farmers actifs</h4>
+								<label class="inline-toggle">
+									<input v-model="newFarmersOnly" type="checkbox" @change="loadAggregates" />
+									Nouveaux
+								</label>
+								<select v-if="newFarmersOnly" v-model.number="newFarmerDays" class="interval-select" @change="loadAggregates">
+									<option :value="1">1j</option>
+									<option :value="7">7j</option>
+									<option :value="30">30j</option>
+								</select>
+							</div>
 							<table>
 								<thead><tr><th>Farmer</th><th>Hits</th><th>Endpoints</th></tr></thead>
 								<tbody>
@@ -53,16 +97,18 @@
 											<router-link :to="'/farmer/' + row.farmer_id" class="farmer-link" @click.stop>
 												{{ row.farmer_name || ('#' + row.farmer_id) }}
 											</router-link>
+											<span v-if="row.register_time" class="register-age" :title="'Inscrit ' + formatDate(row.register_time * 1000)">{{ daysAgo(row.register_time) }}</span>
 										</td>
 										<td class="num">{{ row.count.toLocaleString() }}</td>
 										<td class="num">{{ row.endpoints }}</td>
 									</tr>
 								</tbody>
 							</table>
+							<div v-if="aggregates.top_farmers.length === 0" class="empty small">Aucun.</div>
 						</div>
 
 						<div class="agg-card">
-							<h3>Codes HTTP</h3>
+							<h4>Codes HTTP</h4>
 							<table>
 								<thead><tr><th>Status</th><th>Hits</th></tr></thead>
 								<tbody>
@@ -75,7 +121,7 @@
 						</div>
 
 						<div class="agg-card wide">
-							<h3>Top requêtes lentes</h3>
+							<h4>Top requêtes lentes</h4>
 							<table>
 								<thead><tr><th>Endpoint</th><th>Durée</th><th>Status</th><th>Farmer</th><th>Date</th></tr></thead>
 								<tbody>
@@ -94,6 +140,39 @@
 							</table>
 						</div>
 					</div>
+				</div>
+			</template>
+		</panel>
+
+		<panel>
+			<template #title>
+				Heatmap endpoint × temps
+				<select v-model="heatmapMetric" class="interval-select header-select" @change="loadHeatmap">
+					<option value="count">Volume</option>
+					<option value="errors">Erreurs</option>
+					<option value="avg_ms">Latence moy.</option>
+				</select>
+			</template>
+			<template #content>
+				<loader v-if="heatmapLoading && !heatmap" />
+				<div v-else-if="heatmap && heatmap.matrix.length === 0" class="empty">Pas de données.</div>
+				<div v-else-if="heatmap" class="heatmap-wrap">
+					<table class="heatmap">
+						<thead>
+							<tr>
+								<th class="endpoint-col"></th>
+								<th v-for="(b, i) in heatmap.buckets" :key="b" class="bucket-col">{{ bucketLabel(i, b) }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="row in heatmap.matrix" :key="row.module + '/' + row.function">
+								<td class="endpoint-col mono clickable" @click="filterByEndpoint(row.module, row.function)">
+									{{ row.module }}/{{ row.function }}
+								</td>
+								<td v-for="(cell, j) in row.cells" :key="j" class="cell" :style="cellStyle(cell)" :title="cellTitle(row, cell, heatmap.buckets[j])"></td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</template>
 		</panel>
@@ -144,6 +223,9 @@
 					<input v-model.number="filters.min_duration_ms" placeholder="min ms" type="number" class="filter-input small" @keyup.enter="searchLogs" />
 					<v-btn size="small" color="primary" :loading="logsLoading" @click="searchLogs">Filtrer</v-btn>
 					<v-btn size="small" @click="resetFilters">Reset</v-btn>
+					<span v-if="filters.from || filters.to" class="range-info">
+						{{ filters.from ? formatDate(filters.from) : '…' }} → {{ filters.to ? formatDate(filters.to) : '…' }}
+					</span>
 				</div>
 
 				<loader v-if="logsLoading && !logs" />
@@ -179,9 +261,11 @@
 <script lang="ts" setup>
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { computed, ref, watch } from 'vue'
+	import { computed, onUnmounted, ref, watch } from 'vue'
 	import { useRouter } from 'vue-router'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
+	import KpiCard from '@/component/admin/kpi-card.vue'
+	import { formatBucket, formatDateMs as formatDate, formatMs, httpClass, latencyClass } from '@/component/admin/api-stats-utils'
 	import { Line } from 'vue-chartjs'
 	import type { ChartData, ChartOptions } from 'chart.js'
 
@@ -193,19 +277,35 @@
 		method: string
 		http_status: number | null
 		min_duration_ms: number | null
+		from: number | null
+		to: number | null
 	}
 
 	function emptyFilters(): Filters {
-		return { module: '', function: '', farmer_id: null, ip: '', method: '', http_status: null, min_duration_ms: null }
+		return { module: '', function: '', farmer_id: null, ip: '', method: '', http_status: null, min_duration_ms: null, from: null, to: null }
 	}
 
 	const router = useRouter()
 	const logsPanel = ref<HTMLElement | null>(null)
 
 	const periodHours = ref(24)
+	const useCustomRange = ref(false)
+	const dateFrom = ref('')
+	const dateTo = ref('')
+	const compare = ref(false)
+	const newFarmersOnly = ref(false)
+	const newFarmerDays = ref(7)
+	const autoRefresh = ref(false)
+	const refreshInterval = ref(30)
+	let refreshTimer: number | null = null
+
 	const aggregates = ref<any>(null)
 	const aggLoading = ref(false)
 	const chartData = ref<ChartData<'line'> | null>(null)
+
+	const heatmap = ref<any>(null)
+	const heatmapLoading = ref(false)
+	const heatmapMetric = ref<'count' | 'errors' | 'avg_ms'>('count')
 
 	const filters = ref<Filters>(emptyFilters())
 	const logs = ref<any[] | null>(null)
@@ -219,7 +319,7 @@
 
 	const chartOptions: ChartOptions<'line'> = {
 		responsive: true,
-		aspectRatio: 4,
+		maintainAspectRatio: false,
 		interaction: { intersect: false, mode: 'index' },
 		plugins: {
 			legend: { position: 'bottom' },
@@ -229,17 +329,36 @@
 			y1: { beginAtZero: true, position: 'right', title: { display: true, text: 'ms' }, grid: { drawOnChartArea: false } },
 			x: { ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 10 } },
 		},
+		onClick: (_event, elements) => {
+			if (!elements.length || !aggregates.value) return
+			const i = elements[0].index
+			const point = aggregates.value.timeline[i]
+			if (!point) return
+			drillDown(point.bucket, point.bucket + aggregates.value.bucket_ms)
+		},
 	}
 
 	if (!store.getters.admin) router.replace('/')
 	LeekWars.setTitle('Stats API')
-	loadAggregates()
-	searchLogs()
+	loadAll()
+
+	onUnmounted(() => {
+		if (refreshTimer !== null) clearInterval(refreshTimer)
+	})
 
 	const totalPages = computed(() => Math.max(1, Math.ceil(total.value / pageSize.value)))
 
-	// Annote chaque row du parcours avec l'écart par rapport à la requête
-	// suivante (= la précédente dans le temps, vu que les rows sont en DESC).
+	const bucketLabelStep = computed(() => {
+		if (!heatmap.value) return 1
+		return Math.max(1, Math.ceil(heatmap.value.buckets.length / 12))
+	})
+
+	function bucketLabel(i: number | string, bucket: number): string {
+		if (!heatmap.value) return ''
+		const idx = typeof i === 'number' ? i : parseInt(i, 10)
+		return idx % bucketLabelStep.value === 0 ? formatBucket(bucket, heatmap.value.bucket_ms) : ''
+	}
+
 	const journeyRows = computed(() => {
 		const rows = journeyData.value?.logs ?? []
 		return rows.map((row: any, i: number) => {
@@ -249,14 +368,39 @@
 		})
 	})
 
+	function windowPayload() {
+		if (useCustomRange.value && dateFrom.value && dateTo.value) {
+			return { from: new Date(dateFrom.value).getTime(), to: new Date(dateTo.value).getTime(), period_hours: 0 }
+		}
+		return { from: 0, to: 0, period_hours: periodHours.value }
+	}
+
+	function loadAll() {
+		loadAggregates()
+		loadHeatmap()
+		searchLogs()
+	}
+
 	function loadAggregates() {
 		aggLoading.value = true
-		LeekWars.post('admin/api-log-aggregates', { period_hours: periodHours.value }).then((data: any) => {
+		const payload = { ...windowPayload(), compare: compare.value, new_farmer_days: newFarmersOnly.value ? newFarmerDays.value : 0 }
+		LeekWars.post('admin/api-log-aggregates', payload).then((data: any) => {
 			aggregates.value = data
 			chartData.value = buildChartData(data)
 			aggLoading.value = false
 		}).catch(() => {
 			aggLoading.value = false
+		})
+	}
+
+	function loadHeatmap() {
+		heatmapLoading.value = true
+		const payload = { ...windowPayload(), metric: heatmapMetric.value }
+		LeekWars.post('admin/api-log-heatmap', payload).then((data: any) => {
+			heatmap.value = data
+			heatmapLoading.value = false
+		}).catch(() => {
+			heatmapLoading.value = false
 		})
 	}
 
@@ -284,20 +428,17 @@
 					tension: 0.25,
 					pointRadius: 0,
 				},
+				{
+					label: 'Erreurs',
+					data: data.timeline.map((p: any) => p.errors ?? 0),
+					borderColor: '#e53935',
+					backgroundColor: 'rgba(229,57,53,0.1)',
+					yAxisID: 'y',
+					tension: 0.25,
+					pointRadius: 0,
+				},
 			],
 		}
-	}
-
-	function formatBucket(bucketMs: number, sizeMs: number): string {
-		const d = new Date(bucketMs)
-		const pad = (n: number) => String(n).padStart(2, '0')
-		if (sizeMs >= 24 * 3600 * 1000) {
-			return pad(d.getDate()) + '/' + pad(d.getMonth() + 1)
-		}
-		if (sizeMs >= 3600 * 1000) {
-			return pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + ' ' + pad(d.getHours()) + 'h'
-		}
-		return pad(d.getHours()) + ':' + pad(d.getMinutes())
 	}
 
 	function searchLogs() {
@@ -333,9 +474,16 @@
 		logsPanel.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 	}
 
+	function drillDown(from: number, to: number) {
+		filters.value = { ...emptyFilters(), from, to }
+		page.value = 1
+		searchLogs()
+		logsPanel.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+	}
+
 	function loadFarmerJourney(farmerId: number) {
 		journeyLoading.value = true
-		LeekWars.get('admin/api-log-farmer/' + farmerId + '/' + periodHours.value).then((data: any) => {
+		LeekWars.get('admin/api-log-farmer/' + farmerId + '/' + (periodHours.value || 24)).then((data: any) => {
 			journeyData.value = data
 			journeyLoading.value = false
 		}).catch(() => {
@@ -343,20 +491,66 @@
 		})
 	}
 
+	function onPeriodChange() {
+		loadAll()
+	}
+
+	function toggleCustomRange() {
+		useCustomRange.value = !useCustomRange.value
+		if (useCustomRange.value && !dateFrom.value) {
+			const now = new Date()
+			const yesterday = new Date(now.getTime() - 24 * 3600 * 1000)
+			dateTo.value = toLocalIso(now)
+			dateFrom.value = toLocalIso(yesterday)
+		}
+	}
+
+	function toLocalIso(d: Date): string {
+		const pad = (n: number) => String(n).padStart(2, '0')
+		return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes())
+	}
+
+	function onAutoRefreshChange() {
+		if (refreshTimer !== null) {
+			clearInterval(refreshTimer)
+			refreshTimer = null
+		}
+		if (autoRefresh.value) {
+			refreshTimer = window.setInterval(() => {
+				// Skip si une requête précédente n'a pas fini : évite l'empilement sous DB lente.
+				if (aggLoading.value || heatmapLoading.value) return
+				loadAggregates()
+				loadHeatmap()
+			}, refreshInterval.value * 1000)
+		}
+	}
+
 	watch(periodHours, () => {
 		if (journeyData.value) loadFarmerJourney(journeyData.value.farmer_id)
 	})
 
-	function formatDate(ms: number): string {
-		return LeekWars.formatDateTime(Math.floor(ms / 1000))
+	function endpointDetailLink(module: string, fn: string): string {
+		return '/admin/api-stats/' + encodeURIComponent(module) + '/' + encodeURIComponent(fn)
 	}
 
-	function formatMs(ms: number): string {
-		if (ms === null || ms === undefined) return '—'
-		const v = Math.round(ms)
-		if (v >= 1000) return (v / 1000).toFixed(2) + ' s'
-		return v + ' ms'
+	function securityLink(module: string, fn: string): string {
+		return '/admin/security?module=' + encodeURIComponent(module) + '&function=' + encodeURIComponent(fn)
 	}
+
+	const deltas = computed(() => {
+		const prev = aggregates.value?.previous
+		const cur = aggregates.value
+		const compute = (key: string): number | null => {
+			if (!prev || !cur || !prev[key]) return null
+			return ((cur[key] - prev[key]) / prev[key]) * 100
+		}
+		return {
+			total: compute('total'),
+			avg_ms: compute('avg_ms'),
+			p95_ms: compute('p95_ms'),
+			farmers: compute('farmers'),
+		}
+	})
 
 	function formatGap(gapMs: number): string {
 		if (gapMs < 1000) return ''
@@ -365,39 +559,83 @@
 		return '+' + Math.round(gapMs / 3600000) + 'h'
 	}
 
-	function httpClass(status: number | null): string {
-		if (status === null || status === undefined) return 'http-unknown'
-		if (status >= 500) return 'http-5xx'
-		if (status === 429) return 'http-429'
-		if (status >= 400) return 'http-4xx'
-		return 'http-ok'
+	function daysAgo(epochSec: number): string {
+		const days = Math.floor((Date.now() / 1000 - epochSec) / 86400)
+		if (days <= 0) return 'aujourd’hui'
+		if (days === 1) return '1j'
+		return days + 'j'
 	}
 
-	function latencyClass(ms: number): string {
-		if (ms === null || ms === undefined) return ''
-		if (ms >= 2000) return 'lat-bad'
-		if (ms >= 500) return 'lat-warn'
-		if (ms >= 100) return 'lat-mid'
-		return 'lat-ok'
+	const HEATMAP_COLORS: Record<'count' | 'errors' | 'avg_ms', string> = {
+		count: '33,150,243',
+		errors: '229,57,53',
+		avg_ms: '255,152,0',
+	}
+
+	const cellMaxValue = computed(() => {
+		if (!heatmap.value) return 1
+		let max = 0
+		for (const row of heatmap.value.matrix) {
+			for (const cell of row.cells) {
+				if (!cell) continue
+				const v = cell[heatmapMetric.value]
+				if (v > max) max = v
+			}
+		}
+		return max || 1
+	})
+
+	function cellStyle(cell: any): Record<string, string> {
+		if (!cell) return { background: 'transparent' }
+		const v = cell[heatmapMetric.value]
+		if (!v) return { background: 'transparent' }
+		const intensity = 0.15 + 0.75 * Math.min(1, v / cellMaxValue.value)
+		return { background: `rgba(${HEATMAP_COLORS[heatmapMetric.value]},${intensity})` }
+	}
+
+	function cellTitle(row: any, cell: any, bucket: number): string {
+		const ts = formatBucket(bucket, heatmap.value.bucket_ms)
+		if (!cell) return `${row.module}/${row.function} @ ${ts}\nAucune requête`
+		return `${row.module}/${row.function} @ ${ts}\n${cell.count} req · ${cell.errors} err · ${cell.avg_ms}ms moy.`
 	}
 </script>
 
 <style lang="scss" scoped>
-	.aggregates { padding: 10px; }
+	.padded { padding: 10px; }
 	.period-bar {
 		display: flex;
 		align-items: center;
 		gap: 10px;
 		margin-bottom: 12px;
 		flex-wrap: wrap;
-		.total { font-weight: bold; color: #555; }
 	}
+	.spacer { flex: 1; }
+	.date-input, .interval-select {
+		padding: 4px 6px;
+		border: 1px solid var(--border);
+		border-radius: 3px;
+		background: var(--pure-white);
+		color: var(--text-color);
+		font-size: 13px;
+	}
+	.header-select {
+		margin-left: 10px;
+	}
+
+	.summary-bar {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+		gap: 8px;
+		margin-bottom: 12px;
+	}
+
 	.chart-wrap {
-		background: var(--pure-white, white);
-		border: 1px solid #eee;
+		background: var(--pure-white);
+		border: 1px solid var(--border);
 		border-radius: 4px;
 		padding: 8px;
 		margin-bottom: 10px;
+		height: 400px;
 	}
 	.agg-grid {
 		display: grid;
@@ -405,69 +643,157 @@
 		gap: 10px;
 	}
 	.agg-card {
-		background: var(--pure-white, white);
-		border: 1px solid #eee;
+		background: var(--pure-white);
+		border: 1px solid var(--border);
 		border-radius: 4px;
 		padding: 8px;
 		&.wide { grid-column: span 2; }
 		@media (max-width: 800px) { &.wide { grid-column: auto; } }
-		h3 { margin: 0 0 6px; font-size: 14px; color: #555; }
+		h4 { margin: 0 0 6px; font-size: 14px; color: var(--text-color-secondary); }
+		.card-header {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin-bottom: 6px;
+			h4 { margin: 0; flex: 1; }
+		}
 		table { width: 100%; border-collapse: collapse; font-size: 12px; }
-		th, td { padding: 3px 4px; text-align: left; border-bottom: 1px solid #f0f0f0; }
-		th { color: #888; font-weight: normal; }
+		th, td { padding: 3px 4px; text-align: left; border-bottom: 1px solid var(--border); }
+		th { color: var(--text-color-secondary); font-weight: normal; }
 		.num { text-align: right; font-variant-numeric: tabular-nums; }
 		.mono { font-family: monospace; }
 		.clickable { cursor: pointer; }
-		.clickable:hover { background: #f5f9ff; }
-		.date { font-size: 11px; color: #888; font-variant-numeric: tabular-nums; }
+		.clickable:hover { background: var(--background-secondary); }
+		.date { font-size: 11px; color: var(--text-color-secondary); font-variant-numeric: tabular-nums; }
+		.actions {
+			display: flex;
+			gap: 4px;
+			justify-content: flex-end;
+		}
+		.action-icon {
+			color: var(--text-color-secondary);
+			text-decoration: none;
+			padding: 2px 4px;
+			border-radius: 3px;
+			display: inline-flex;
+			align-items: center;
+			gap: 2px;
+			&:hover { background: var(--background-secondary); color: var(--link-color); }
+			&.sec { color: #c62828; }
+			.sec-count { font-size: 10px; font-weight: bold; }
+		}
+		.empty.small { padding: 12px; font-size: 12px; }
+	}
+	.inline-toggle {
+		font-size: 12px;
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		cursor: pointer;
+		input { margin: 0; }
+	}
+	.register-age {
+		display: inline-block;
+		margin-left: 4px;
+		padding: 0 4px;
+		background: var(--background-header);
+		color: var(--text-color-secondary);
+		font-size: 10px;
+		border-radius: 2px;
 	}
 	.farmer-link {
 		display: inline-block;
 		padding: 1px 6px;
-		background: #e3f2fd;
-		color: #0277bd;
+		background: var(--background-header);
+		color: var(--link-color);
 		border-radius: 3px;
 		text-decoration: none;
 		font-weight: bold;
 		font-size: 11px;
-		&:hover { background: #bbdefb; }
+		&:hover { background: var(--background-secondary); }
 	}
-	.muted { color: #888; font-weight: normal; font-size: 13px; margin-left: 6px; }
+	.muted { color: var(--text-color-secondary); font-weight: normal; font-size: 13px; margin-left: 6px; }
 	.close-btn { float: right; }
 	.journey { padding: 4px 10px; }
+
+	.heatmap-wrap {
+		padding: 8px;
+		overflow-x: auto;
+	}
+	.heatmap {
+		border-collapse: collapse;
+		font-size: 11px;
+		width: 100%;
+		min-width: 600px;
+		.endpoint-col {
+			padding: 2px 6px;
+			border-right: 1px solid var(--border);
+			min-width: 200px;
+			max-width: 280px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			background: var(--pure-white);
+			position: sticky;
+			left: 0;
+			z-index: 1;
+		}
+		.endpoint-col.clickable { cursor: pointer; }
+		.endpoint-col.clickable:hover { background: var(--background-secondary); }
+		.bucket-col {
+			padding: 2px 0;
+			text-align: center;
+			color: var(--text-color-secondary);
+			font-weight: normal;
+			min-width: 12px;
+			font-size: 10px;
+		}
+		.cell {
+			height: 20px;
+			min-width: 12px;
+			border: 1px solid var(--border);
+		}
+	}
 
 	.filters {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 6px;
 		padding: 10px;
-		background: #fafafa;
-		border-bottom: 1px solid #eee;
+		background: var(--background-secondary);
+		border-bottom: 1px solid var(--border);
+		align-items: center;
 	}
 	.filter-input {
 		padding: 4px 8px;
-		border: 1px solid #ccc;
+		border: 1px solid var(--border);
 		border-radius: 3px;
+		background: var(--pure-white);
+		color: var(--text-color);
 		font-size: 13px;
 		width: 130px;
 		&.small { width: 80px; }
 	}
-	.empty { padding: 30px; text-align: center; color: #888; }
+	.range-info {
+		font-size: 11px;
+		color: var(--text-color-secondary);
+		font-variant-numeric: tabular-nums;
+	}
+	.empty { padding: 30px; text-align: center; color: var(--text-color-secondary); }
 
 	.log-list { padding: 8px 10px; }
-	.log-summary { font-size: 12px; color: #888; margin-bottom: 6px; }
+	.log-summary { font-size: 12px; color: var(--text-color-secondary); margin-bottom: 6px; }
 	.log-row {
-		border-bottom: 1px solid #f0f0f0;
+		border-bottom: 1px solid var(--border);
 		padding: 4px;
 		font-size: 13px;
-		&:hover { background: #fafafa; }
+		&:hover { background: var(--background-secondary); }
 	}
 	.log-line {
 		display: flex;
 		align-items: center;
 		gap: 8px;
 	}
-	.spacer { flex: 1; }
 	.status {
 		font-family: monospace;
 		font-weight: bold;
@@ -480,12 +806,12 @@
 		&.http-4xx { background: #ffe0b2; color: #e65100; }
 		&.http-429 { background: #ffcc80; color: #c2410c; }
 		&.http-5xx { background: #ffcdd2; color: #b71c1c; }
-		&.http-unknown { background: #eceff1; color: #555; }
+		&.http-unknown { background: var(--background-header); color: var(--text-color-secondary); }
 	}
 	.method {
 		font-family: monospace;
 		font-size: 11px;
-		color: #666;
+		color: var(--text-color-secondary);
 		min-width: 40px;
 	}
 	.endpoint {
@@ -504,35 +830,35 @@
 		text-align: right;
 	}
 	.lat-ok { color: #2e7d32; }
-	.lat-mid { color: #455a64; }
+	.lat-mid { color: var(--text-color-secondary); }
 	.lat-warn { color: #e65100; font-weight: bold; }
 	.lat-bad { color: #b71c1c; font-weight: bold; }
 	.duration.lat-bad { background: #ffcdd2; padding: 1px 6px; border-radius: 3px; }
 	.gap {
 		font-family: monospace;
 		font-size: 11px;
-		color: #999;
+		color: var(--text-color-secondary);
 		min-width: 50px;
 		text-align: right;
 	}
 	.farmer-badge {
-		background: #e3f2fd;
-		color: #0277bd;
+		background: var(--background-header);
+		color: var(--link-color);
 		padding: 1px 6px;
 		border-radius: 3px;
 		font-size: 11px;
 		font-weight: bold;
 		text-decoration: none;
-		&:hover { background: #bbdefb; }
+		&:hover { background: var(--background-secondary); }
 	}
 	.ip {
 		font-family: monospace;
 		font-size: 12px;
-		color: #555;
+		color: var(--text-color-secondary);
 	}
 	.date {
 		font-size: 11px;
-		color: #888;
+		color: var(--text-color-secondary);
 		font-variant-numeric: tabular-nums;
 	}
 	.pagination {
@@ -541,5 +867,19 @@
 		align-items: center;
 		gap: 12px;
 		padding: 12px;
+	}
+
+	body.dark {
+		.status {
+			&.http-ok { background: #1b3a1f; color: #81c784; }
+			&.http-4xx { background: #4a2e0f; color: #ffb74d; }
+			&.http-429 { background: #5a2e0a; color: #ffa726; }
+			&.http-5xx { background: #4a1717; color: #ef9a9a; }
+		}
+		.lat-ok { color: #81c784; }
+		.lat-warn { color: #ffb74d; }
+		.lat-bad { color: #ef9a9a; }
+		.duration.lat-bad { background: #4a1717; }
+		.action-icon.sec { color: #ef9a9a; }
 	}
 </style>
