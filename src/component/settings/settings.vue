@@ -268,297 +268,285 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import TwoFactor from '@/component/settings/two-factor.vue'
-	import { mixins } from '@/model/i18n'
+	import { mixins, i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
+	import { store } from '@/model/store'
+	import { ref, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
+	import { useRouter } from 'vue-router'
 
-	@Options({ name: 'settings', i18n: {}, mixins: [...mixins], components: {TwoFactor} })
-	export default class Settings extends Vue {
-		vapid_key = new Uint8Array([4, 92, 237, 40, 114, 162, 99, 215, 179, 242, 70, 151, 236, 60, 216, 10, 167, 186, 77, 27, 233, 193, 117, 111, 78, 20, 121, 201, 142, 186, 91, 13, 111, 26, 241, 126, 12, 216, 94, 160, 38, 110, 214, 161, 249, 147, 233, 133, 128, 210, 170, 161, 158, 57, 24, 54, 194, 103, 195, 94, 49, 182, 20, 62, 184])
-		mails = [
-			{ id: 1, icon: 'mdi-star', name: 'general' },
-			{ id: 2, icon: 'mdi-gamepad-square', name: 'game' },
-			{ id: 3, icon: 'mdi-sword-cross', name: 'fight' },
-			{ id: 4, icon: 'mdi-flag', name: 'challenge' },
-			{ id: 5, icon: 'mdi-trophy', name: 'tournament' },
-			{ id: 6, icon: 'mdi-chat', name: 'social' },
-			{ id: 7, icon: 'mdi-message-text-outline', name: 'private' },
-			{ id: 8, icon: 'mdi-account-multiple', name: 'team' },
-			{ id: 9, icon: 'mdi-gavel', name: 'moderation' }
-		]
+	defineOptions({ name: 'settings', i18n: {}, mixins: [...mixins], components: { TwoFactor } })
 
-		settings: any = null
-		sfwMode: boolean = localStorage.getItem('sfw') === 'true'
-		notifsPopups: boolean = localStorage.getItem('options/notifs-popups') !== 'false'
-		notifsResults: boolean = localStorage.getItem('options/notifs-results') === 'true'
-		chatFirst: boolean = localStorage.getItem('options/chat-first') === 'true'
-		modernTheme: boolean = localStorage.getItem('theme') === 'xp'
-		pushNotifications: boolean = localStorage.getItem('options/push-notifs') === 'true'
-		deleteDialog: boolean = false
-		deleteConfirmDialog: boolean = false
-		deleteConfirmPassword: string = ''
-		deleteSuccessDialog: boolean = false
-		deleteFailedDialog: boolean = false
-		deleteFailedError: any = null
-		deleteForumMessages: boolean = false
-		advanced: boolean = false
-		password: string = ''
-		newPassword1: string = ''
-		newPassword2: string = ''
-		viewChangePassword: boolean = false
-		viewChangeEmail: boolean = false
-		viewDeleteAccount: boolean = false
-		view2FA: boolean = false
-		changeEmailSent: boolean = false
-		errors: {[key: string]: string[]} = {}
-		login: string = ''
-		godfather: string = ''
-		signupMethod: number = 1
-		email: string = ''
-		password1: string = ''
+	const { t } = useI18n()
+	const router = useRouter()
 
-		created() {
-			this.settings = {}
-			for (const category in this.mails) {
-				this.settings['push_' + category] = false
-			}
-			if (this.$store.state.farmer && this.$store.state.farmer.verified) {
-				LeekWars.setActions([
-					{icon: 'mdi-power', click: () => this.logout()}
-				])
-			}
+	const vapid_key = new Uint8Array([4, 92, 237, 40, 114, 162, 99, 215, 179, 242, 70, 151, 236, 60, 216, 10, 167, 186, 77, 27, 233, 193, 117, 111, 78, 20, 121, 201, 142, 186, 91, 13, 111, 26, 241, 126, 12, 216, 94, 160, 38, 110, 214, 161, 249, 147, 233, 133, 128, 210, 170, 161, 158, 57, 24, 54, 194, 103, 195, 94, 49, 182, 20, 62, 184])
+	const mails = [
+		{ id: 1, icon: 'mdi-star', name: 'general' },
+		{ id: 2, icon: 'mdi-gamepad-square', name: 'game' },
+		{ id: 3, icon: 'mdi-sword-cross', name: 'fight' },
+		{ id: 4, icon: 'mdi-flag', name: 'challenge' },
+		{ id: 5, icon: 'mdi-trophy', name: 'tournament' },
+		{ id: 6, icon: 'mdi-chat', name: 'social' },
+		{ id: 7, icon: 'mdi-message-text-outline', name: 'private' },
+		{ id: 8, icon: 'mdi-account-multiple', name: 'team' },
+		{ id: 9, icon: 'mdi-gavel', name: 'moderation' }
+	]
 
-			LeekWars.get('settings/get-settings').then(data => {
+	const settings = ref<any>(null)
+	const sfwMode = ref(localStorage.getItem('sfw') === 'true')
+	const notifsPopups = ref(localStorage.getItem('options/notifs-popups') !== 'false')
+	const notifsResults = ref(localStorage.getItem('options/notifs-results') === 'true')
+	const chatFirst = ref(localStorage.getItem('options/chat-first') === 'true')
+	const modernTheme = ref(localStorage.getItem('theme') === 'xp')
+	const pushNotifications = ref(localStorage.getItem('options/push-notifs') === 'true')
+	const deleteDialog = ref(false)
+	const deleteConfirmDialog = ref(false)
+	const deleteConfirmPassword = ref('')
+	const deleteSuccessDialog = ref(false)
+	const deleteFailedDialog = ref(false)
+	const deleteFailedError = ref<any>(null)
+	const deleteForumMessages = ref(false)
+	const advanced = ref(false)
+	const password = ref('')
+	const newPassword1 = ref('')
+	const newPassword2 = ref('')
+	const viewChangePassword = ref(false)
+	const viewChangeEmail = ref(false)
+	const viewDeleteAccount = ref(false)
+	const view2FA = ref(false)
+	const changeEmailSent = ref(false)
+	const errors = ref<{[key: string]: string[]}>({})
+	const login = ref('')
+	const godfather = ref('')
+	const signupMethod = ref(1)
+	const email = ref('')
+	const password1 = ref('')
 
-				this.settings = data.settings
+	settings.value = {}
+	for (const category in mails) {
+		settings.value['push_' + category] = false
+	}
+	if (store.state.farmer && store.state.farmer.verified) {
+		LeekWars.setActions([
+			{icon: 'mdi-power', click: () => logout()}
+		])
+	}
 
-				if (this.$store.state.farmer) {
-					LeekWars.setTitle(this.$t('title'), this.$store.state.farmer.name)
-				}
-
-				if (LeekWars.service_worker) {
-					// Check the push notifs switch if we have a valid subscription
-					LeekWars.service_worker.pushManager.getSubscription().then((subscription: PushSubscription | null) => {
-						if (subscription) {
-							for (const endpoint of data.push_endpoints) {
-								if (subscription.endpoint === endpoint) {
-									this.pushNotifications = true
-									break
-								}
-							}
+	LeekWars.get('settings/get-settings').then(data => {
+		settings.value = data.settings
+		if (store.state.farmer) {
+			LeekWars.setTitle(t('title'), store.state.farmer.name)
+		}
+		if (LeekWars.service_worker) {
+			LeekWars.service_worker.pushManager.getSubscription().then((subscription: PushSubscription | null) => {
+				if (subscription) {
+					for (const endpoint of data.push_endpoints) {
+						if (subscription.endpoint === endpoint) {
+							pushNotifications.value = true
+							break
 						}
-					})
-				}
-			})
-		}
-		updatePushNotifications(e: Event) {
-			if (!LeekWars.service_worker) { return }
-			if (this.pushNotifications) {
-				LeekWars.service_worker.pushManager.getSubscription().then((subscription: PushSubscription | null) => {
-					if (subscription) {
-						subscription.unsubscribe()
 					}
-				})
-			} else {
-				LeekWars.service_worker.pushManager.subscribe({
-					applicationServerKey: this.vapid_key,
-					userVisibleOnly: true
-				}).then((subscription: PushSubscription) => {
-					LeekWars.post('push-endpoint/register', {subscription: JSON.stringify(subscription)})
-				})
-			}
-			this.pushNotifications = !this.pushNotifications
-		}
-
-		logout() {
-			LeekWars.logoutDialog = true
-		}
-
-		clearLocalStorage() {
-			localStorage.clear()
-			LeekWars.toast("localstorage cleared!")
-			setTimeout(() => location.reload(), 800)
-		}
-
-		@Watch('sfwMode')
-		updateSfwMode() {
-			localStorage.setItem('sfw', '' + this.sfwMode)
-			this.sfwMode ? LeekWars.sfwOn() : LeekWars.sfwOff()
-			if (this.sfwMode) {
-				LeekWars.post('trophy/unlock', {trophy_id: 234}) // Trophée On me voit on me voit plus
-			}
-		}
-
-		@Watch('LeekWars.themeSetting')
-		updateTheme() {
-			localStorage.setItem('theme', '' + LeekWars.themeSetting)
-			LeekWars.xpTheme = LeekWars.themeSetting === 'xp'
-			this.modernTheme = LeekWars.themeSetting === 'xp'
-			localStorage.setItem('xp-theme', '' + LeekWars.xpTheme)
-			if (LeekWars.themeSetting === 'xp') {
-				import('@/xp.scss')
-				LeekWars.xpCursorsInit()
-				LeekWars.darkMode = false
-				if (LeekWars.aprilFools) {
-					LeekWars.post('trophy/unlock', {trophy_id: 280})
 				}
-			} else {
-				document.querySelectorAll<HTMLElement>('[style*="pointer.png"]').forEach(el => { el.style.cursor = '' })
-				LeekWars.darkMode = LeekWars.themeSetting !== 'auto' ? LeekWars.themeSetting === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
-			}
-		}
-
-		@Watch('modernTheme')
-		updateModernTheme() {
-			if (this.modernTheme) {
-				LeekWars.themeSetting = 'xp'
-			} else {
-				LeekWars.themeSetting = 'auto'
-			}
-		}
-
-		@Watch('notifsPopups')
-		updateNotifsPopups() {
-			localStorage.setItem('options/notifs-popups', '' + this.notifsPopups)
-			LeekWars.notifsPopups = this.notifsPopups
-		}
-
-		@Watch('notifsResults')
-		updateNotifsResults() {
-			localStorage.setItem('options/notifs-results', '' + this.notifsResults)
-			LeekWars.notifsResults = this.notifsResults
-		}
-
-		@Watch('chatFirst')
-		updateChatFirst() {
-			localStorage.setItem('options/chat-first', '' + this.chatFirst)
-		}
-
-		updateNotif(setting: string, value: boolean) {
-			LeekWars.post('settings/update-setting', {setting, value})
-		}
-
-		changePassword(e: Event) {
-			e.preventDefault()
-			if (this.newPassword1 !== this.newPassword2) {
-				LeekWars.toast(this.$t('error_not_same_password'))
-				return false
-			}
-			LeekWars.post('farmer/change-password', {password: this.password, new_password: this.newPassword1}).then(data => {
-				this.$store.commit('disconnect')
-				LeekWars.toast(this.$i18n.t('settings.password_changed'))
-				this.$router.push('/login')
-			}).error(error => {
-				LeekWars.toast(this.$t('error_' + error.error, error.params))
 			})
+		}
+	})
+
+	function updatePushNotifications(_e: Event) {
+		if (!LeekWars.service_worker) { return }
+		if (pushNotifications.value) {
+			LeekWars.service_worker.pushManager.getSubscription().then((subscription: PushSubscription | null) => {
+				if (subscription) {
+					subscription.unsubscribe()
+				}
+			})
+		} else {
+			LeekWars.service_worker.pushManager.subscribe({
+				applicationServerKey: vapid_key,
+				userVisibleOnly: true
+			}).then((subscription: PushSubscription) => {
+				LeekWars.post('push-endpoint/register', {subscription: JSON.stringify(subscription)})
+			})
+		}
+		pushNotifications.value = !pushNotifications.value
+	}
+
+	function logout() {
+		LeekWars.logoutDialog = true
+	}
+
+	function clearLocalStorage() {
+		localStorage.clear()
+		LeekWars.toast("localstorage cleared!")
+		setTimeout(() => location.reload(), 800)
+	}
+
+	watch(sfwMode, () => {
+		localStorage.setItem('sfw', '' + sfwMode.value)
+		sfwMode.value ? LeekWars.sfwOn() : LeekWars.sfwOff()
+		if (sfwMode.value) {
+			LeekWars.post('trophy/unlock', {trophy_id: 234})
+		}
+	})
+
+	watch(() => LeekWars.themeSetting, () => {
+		localStorage.setItem('theme', '' + LeekWars.themeSetting)
+		LeekWars.xpTheme = LeekWars.themeSetting === 'xp'
+		modernTheme.value = LeekWars.themeSetting === 'xp'
+		localStorage.setItem('xp-theme', '' + LeekWars.xpTheme)
+		if (LeekWars.themeSetting === 'xp') {
+			import('@/xp.scss')
+			LeekWars.xpCursorsInit()
+			LeekWars.darkMode = false
+			if (LeekWars.aprilFools) {
+				LeekWars.post('trophy/unlock', {trophy_id: 280})
+			}
+		} else {
+			document.querySelectorAll<HTMLElement>('[style*="pointer.png"]').forEach(el => { el.style.cursor = '' })
+			LeekWars.darkMode = LeekWars.themeSetting !== 'auto' ? LeekWars.themeSetting === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
+		}
+	})
+
+	watch(modernTheme, () => {
+		LeekWars.themeSetting = modernTheme.value ? 'xp' : 'auto'
+	})
+
+	watch(notifsPopups, () => {
+		localStorage.setItem('options/notifs-popups', '' + notifsPopups.value)
+		LeekWars.notifsPopups = notifsPopups.value
+	})
+
+	watch(notifsResults, () => {
+		localStorage.setItem('options/notifs-results', '' + notifsResults.value)
+		LeekWars.notifsResults = notifsResults.value
+	})
+
+	watch(chatFirst, () => {
+		localStorage.setItem('options/chat-first', '' + chatFirst.value)
+	})
+
+	function updateNotif(setting: string, value: boolean) {
+		LeekWars.post('settings/update-setting', {setting, value})
+	}
+
+	function changePassword(e: Event) {
+		e.preventDefault()
+		if (newPassword1.value !== newPassword2.value) {
+			LeekWars.toast(t('error_not_same_password'))
 			return false
 		}
+		LeekWars.post('farmer/change-password', {password: password.value, new_password: newPassword1.value}).then(() => {
+			store.commit('disconnect')
+			LeekWars.toast(i18n.global.t('settings.password_changed'))
+			router.push('/login')
+		}).error(error => {
+			LeekWars.toast(t('error_' + error.error, error.params))
+		})
+		return false
+	}
 
-		deleteAccountConfirm() {
-			if (this.$store.state.farmer.verified) {
-				this.deleteDialog = false
-				this.deleteConfirmDialog = true
-			} else {
-				LeekWars.post('farmer/unregister-fast').then(data => {
-					this.deleteDialog = false
-					this.deleteSuccessDialog = true
-					setTimeout(() => {
-						this.$store.commit('disconnect')
-						this.deleteSuccessDialog = false
-						this.$router.push('/')
-					}, 3000)
-				}).error(error => {
-					this.deleteDialog = false
-					this.deleteFailedDialog = true
-					this.deleteFailedError = error.error
-				})
-			}
-		}
-
-		deleteAccountFinal() {
-			LeekWars.post('farmer/unregister', {password: this.deleteConfirmPassword, delete_forum_messages: this.deleteForumMessages}).then(data => {
-				this.deleteConfirmDialog = false
-				this.deleteSuccessDialog = true
+	function deleteAccountConfirm() {
+		if (store.state.farmer!.verified) {
+			deleteDialog.value = false
+			deleteConfirmDialog.value = true
+		} else {
+			LeekWars.post('farmer/unregister-fast').then(() => {
+				deleteDialog.value = false
+				deleteSuccessDialog.value = true
 				setTimeout(() => {
-					this.$store.commit('disconnect')
-					this.deleteSuccessDialog = false
-					this.$router.push('/')
+					store.commit('disconnect')
+					deleteSuccessDialog.value = false
+					router.push('/')
 				}, 3000)
 			}).error(error => {
-				this.deleteConfirmDialog = false
-				this.deleteFailedDialog = true
-				this.deleteFailedError = error.error
+				deleteDialog.value = false
+				deleteFailedDialog.value = true
+				deleteFailedError.value = error.error
 			})
 		}
+	}
 
-		sendChangeEmail() {
-			LeekWars.post('farmer/change-email1').then(data => {
-				LeekWars.toast(this.$i18n.t('change_email_sent'))
-			})
-			this.changeEmailSent = true
+	function deleteAccountFinal() {
+		LeekWars.post('farmer/unregister', {password: deleteConfirmPassword.value, delete_forum_messages: deleteForumMessages.value}).then(() => {
+			deleteConfirmDialog.value = false
+			deleteSuccessDialog.value = true
+			setTimeout(() => {
+				store.commit('disconnect')
+				deleteSuccessDialog.value = false
+				router.push('/')
+			}, 3000)
+		}).error(error => {
+			deleteConfirmDialog.value = false
+			deleteFailedDialog.value = true
+			deleteFailedError.value = error.error
+		})
+	}
+
+	function sendChangeEmail() {
+		LeekWars.post('farmer/change-email1').then(() => {
+			LeekWars.toast(i18n.global.t('change_email_sent'))
+		})
+		changeEmailSent.value = true
+	}
+
+	function updateGithubLogin() {
+		LeekWars.post("settings/update-setting", {setting: 'github_login', value: settings.value.github_login})
+	}
+
+	function updateGoogleLogin() {
+		LeekWars.post("settings/update-setting", {setting: 'google_login', value: settings.value.google_login})
+	}
+
+	watch(() => LeekWars.leekTheme, () => {
+		localStorage.setItem('leek-theme', '' + LeekWars.leekTheme)
+	})
+
+	function submit(e: Event) {
+		e.preventDefault()
+		errors.value = {}
+		const provider = signupMethod.value === 2 ? 'github' : signupMethod.value === 3 ? 'google' : null
+		const service = provider ? `farmer/verify-${provider}` : 'farmer/verify'
+		const args = {
+			login: login.value,
+			godfather: godfather.value,
+		} as any
+		if (signupMethod.value === 1) {
+			args.password = password1.value
+			args.email = email.value
 		}
-
-		updateGithubLogin() {
-			LeekWars.post("settings/update-setting", {setting: 'github_login', value: this.settings.github_login})
-		}
-
-		updateGoogleLogin() {
-			LeekWars.post("settings/update-setting", {setting: 'google_login', value: this.settings.google_login})
-		}
-
-		@Watch('LeekWars.leekTheme')
-		updateLeekTheme() {
-			localStorage.setItem('leek-theme', '' + LeekWars.leekTheme)
-		}
-
-
-		submit(e: Event) {
-			e.preventDefault()
-			this.errors = {}
-			const provider = this.signupMethod === 2 ? 'github' : this.signupMethod === 3 ? 'google' : null
-			const service = provider ? `farmer/verify-${provider}` : 'farmer/verify'
-			const args = {
-				login: this.login,
-				godfather: this.godfather,
-			} as any
-			if (this.signupMethod === 1) {
-				args.password = this.password1
-				args.email = this.email
-			}
-			LeekWars.post(service, args).then(data => {
-				if (provider) {
-					document.location.href = LeekWars.API + `farmer/start-${provider}-login`
-				} else {
-					this.$router.push('/signup/success/' + this.login)
-				}
-			}).error(errors => {
-				for (const error of errors) {
-					const form = ['login', 'leek', 'email', 'password1', 'password2', 'godfather'][error[0]]
-					this.addError(form, this.$t('error_' + error[1], error[2]) as string)
-				}
-			})
-			return false
-		}
-
-		addError(form: string, error: string) {
-			if (!(form in this.errors)) {
-				this.errors[form] = []
-			}
-			this.errors[form].push(error)
-		}
-
-		status(form: string) {
-			if (form in this.errors) {
-				if (Object.keys(this.errors[form]).length > 0) {
-					return 'error'
-				} else {
-					return 'valid'
-				}
+		LeekWars.post(service, args).then(() => {
+			if (provider) {
+				document.location.href = LeekWars.API + `farmer/start-${provider}-login`
 			} else {
-				return null
+				router.push('/signup/success/' + login.value)
 			}
+		}).error(errs => {
+			for (const error of errs) {
+				const form = ['login', 'leek', 'email', 'password1', 'password2', 'godfather'][error[0]]
+				addError(form, t('error_' + error[1], error[2]) as string)
+			}
+		})
+		return false
+	}
+
+	function addError(form: string, error: string) {
+		if (!(form in errors.value)) {
+			errors.value[form] = []
+		}
+		errors.value[form].push(error)
+	}
+
+	function status(form: string) {
+		if (form in errors.value) {
+			if (Object.keys(errors.value[form]).length > 0) {
+				return 'error'
+			} else {
+				return 'valid'
+			}
+		} else {
+			return null
 		}
 	}
 </script>
