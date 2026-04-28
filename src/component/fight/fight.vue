@@ -100,7 +100,7 @@
 
 		<panel v-if="fight" :title="$t('main.comments') + ' (' + fight.comments.length + ')'" icon="mdi-comment-multiple-outline">
 			<template #actions>
-				<span class="views-counter">{{ $tc('n_views', fight.views) }}</span>
+				<span class="views-counter">{{ $tc('n_views', fight.views || 0) }}</span>
 			</template>
 			<comments :comments="fight.comments" @comment="comment" />
 		</panel>
@@ -108,7 +108,7 @@
 		<div class="page-footer page-bar">
 			<div class="tabs">
 				<template v-if="$store.state.connected">
-					<div class="tab" @click="reportDialog = true">
+					<div class="tab" @click="showReport = true">
 						<img src="/image/icon/flag.png">
 						<span class="report-button">{{ $t('warning.report') }}</span>
 					</div>
@@ -119,225 +119,201 @@
 				</template>
 			</div>
 		</div>
-		<report-dialog v-if="fight" v-model="reportDialog" :leeks="reportLeeks" :reasons="reasons" :fight="fight.id" />
+		<report-dialog v-if="fight" v-model="showReport" :leeks="reportLeeks" :reasons="reasons" :fight="fight.id" />
 	</div>
 </template>
 
 <script lang="ts">
 	import { locale } from '@/locale'
+	import { defineAsyncComponent } from 'vue'
+	const Player = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/player/player.${locale}.i18n`))
+	export default { components: { 'player': Player } }
+</script>
+
+<script lang="ts" setup>
 	import { mixins } from '@/model/i18n'
 	import { Comment } from '@/model/comment'
-	import { Farmer } from '@/model/farmer'
-	import { Fight, FightType, Report } from '@/model/fight'
+	import { Fight, FightType } from '@/model/fight'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import { GROUND_PADDING_LEFT, GROUND_PADDING_RIGHT, GROUND_PADDING_TOP } from '../player/game/ground'
-	const Player = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/player/player.${locale}.i18n`))
 	import Comments from '@/component/comment/comments.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
-	import { BOSSES } from '@/model/boss'
-	import { defineAsyncComponent, nextTick } from 'vue'
+	import { computed, nextTick, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
+	import { useRoute } from 'vue-router'
 	import { emitter } from '@/model/vue'
 
-	@Options({ name: "fight", components: { 'player': Player, Comments, RichTooltipFarmer, RichTooltipTeam, 'report-dialog': ReportDialog }, i18n: {}, mixins: [...mixins] })
-	export default class FightPage extends Vue {
-		fight_id: string | null = null
-		fight: Fight | null = null
-		loaded: boolean = false
-		first_farmer!: number
-		getDelay: any
-		error: any
-		playerWidth: number = 0
-		playerHeight: number = 0
-		playerHorizontal: boolean = false
-		FightType = FightType
-		large: boolean = false
-		reportDialog: boolean = false
-		reasons = [Warning.RUDE_SAY, Warning.INCORRECT_LEEK_NAME, Warning.INCORRECT_FARMER_NAME, Warning.INCORRECT_AVATAR]
+	defineOptions({ name: 'fight', i18n: {}, mixins: [...mixins], components: { Comments, RichTooltipFarmer, RichTooltipTeam, 'report-dialog': ReportDialog } })
 
-		toggleLoading() {
-			const player = this.$refs.player as any
-			if (player) {
-				player.loaded = !player.loaded
-			}
+	const { t } = useI18n()
+	const route = useRoute()
+	const player = useTemplateRef<any>('player')
+
+	const fight_id = ref<string | null>(null)
+	const fight = ref<Fight | null>(null)
+	const playerWidth = ref(0)
+	const playerHeight = ref(0)
+	const playerHorizontal = ref(false)
+	const showReport = ref(false)
+	const reasons = [Warning.RUDE_SAY, Warning.INCORRECT_LEEK_NAME, Warning.INCORRECT_FARMER_NAME, Warning.INCORRECT_AVATAR]
+	const trophyQueue: any[] = []
+	const fightNotificationQueue: any[] = []
+
+	function toggleLoading() {
+		if (player.value) {
+			player.value.loaded = !player.value.loaded
 		}
-		trophyQueue: any[] = []
-		fightNotificationQueue: any[] = []
+	}
 
-		get reportLeeks() {
-			if (!this.fight) { return [] }
-			const leeks = []
-			for (const leek of this.fight.leeks1) {
-				leeks.push({...leek, farmer: this.fight.farmers1[leek.farmer]})
-			}
-			for (const leek of this.fight.leeks2) {
-				leeks.push({...leek, farmer: this.fight.farmers2[leek.farmer]})
-			}
-			return leeks
+	const reportLeeks = computed(() => {
+		if (!fight.value) { return [] }
+		const leeks = []
+		for (const leek of fight.value.leeks1) {
+			leeks.push({...leek, farmer: fight.value.farmers1[leek.farmer]})
 		}
-
-		get startTurn() {
-			return parseInt('' + this.$route.query.turn, 10) || parseInt('' + this.$route.query.t, 10) || 1
+		for (const leek of fight.value.leeks2) {
+			leeks.push({...leek, farmer: fight.value.farmers2[leek.farmer]})
 		}
-		get startAction() {
-			return parseInt('' + this.$route.query.action, 10) || parseInt('' + this.$route.query.a, 10) || 0
-		}
+		return leeks
+	})
 
-		created() {
-			LeekWars.flex = true
-			this.resize()
-		}
+	const startTurn = computed(() => parseInt('' + route.query.turn, 10) || parseInt('' + route.query.t, 10) || 1)
+	const startAction = computed(() => parseInt('' + route.query.action, 10) || parseInt('' + route.query.a, 10) || 0)
 
-		mounted() {
-			emitter.on('resize', this.resize)
-			emitter.on('trophy', this.onTrophy)
-			emitter.on('fight_notification', this.onFightNotification)
-		}
+	LeekWars.flex = true
+	resize()
 
-		@Watch('$route.params.id', {immediate: true})
-		update() {
-			this.fight_id = this.$route.params.id
-		}
+	watch(() => route.params.id, (id) => {
+		fight_id.value = id as string
+	}, { immediate: true })
 
-		reload() {
-			this.fight_id = null
-			nextTick(() => {
-				this.fight_id = this.$route.params.id
-			})
-		}
+	function reload() {
+		fight_id.value = null
+		nextTick(() => {
+			fight_id.value = route.params.id as string
+		})
+	}
 
-		resize() {
-			LeekWars.lightBar = window.innerWidth / window.innerHeight > 1
+	function resize() {
+		LeekWars.lightBar = window.innerWidth / window.innerHeight > 1
 
-			const reference = document.querySelector('.app-center') as HTMLElement
-			const offset = 40 + 24
-			const controls = 36
-			const padding_bottom = LeekWars.mobile ? 5 : 105
-			if (reference) {
-				if (LeekWars.mobile) {
-					if (window.innerWidth > window.innerHeight) {
-						// Landscape
-						const height = Math.min(window.innerHeight, Math.round(reference.offsetWidth / 1.5))
-						const padding_top = (height - padding_bottom) * GROUND_PADDING_TOP
-						this.playerWidth = Math.min(window.innerWidth, Math.round((height - padding_bottom - padding_top) * 2)) + 2 * controls
-						this.playerHeight = height
-						this.playerHorizontal = true
-					} else {
-						// Portrait
-						const ratio = 1.3
-						const width = Math.min(reference.offsetWidth, Math.round((window.innerHeight - 56) * ratio))
-						this.playerWidth = width
-						this.playerHeight = Math.round(width / ratio)
-						this.playerHorizontal = false
-					}
+		const reference = document.querySelector('.app-center') as HTMLElement
+		const offset = 40 + 24
+		const controls = 36
+		const padding_bottom = LeekWars.mobile ? 5 : 105
+		if (reference) {
+			if (LeekWars.mobile) {
+				if (window.innerWidth > window.innerHeight) {
+					// Landscape
+					const height = Math.min(window.innerHeight, Math.round(reference.offsetWidth / 1.5))
+					const padding_top = (height - padding_bottom) * GROUND_PADDING_TOP
+					playerWidth.value = Math.min(window.innerWidth, Math.round((height - padding_bottom - padding_top) * 2)) + 2 * controls
+					playerHeight.value = height
+					playerHorizontal.value = true
 				} else {
-					// Desktop
-					const maxWidth = reference.offsetWidth - offset
-					const theoricalHeight1 = (maxWidth - GROUND_PADDING_RIGHT - GROUND_PADDING_LEFT) / 2
-					const padding_top = theoricalHeight1 / (1 - GROUND_PADDING_TOP) - theoricalHeight1
-					const theoricalHeight = Math.round(theoricalHeight1 + padding_bottom + padding_top + controls)
-					const height = Math.min(window.innerHeight - 128, theoricalHeight)
-					this.playerWidth = maxWidth
-					this.playerHeight = height
-					this.playerHorizontal = false
+					// Portrait
+					const ratio = 1.3
+					const width = Math.min(reference.offsetWidth, Math.round((window.innerHeight - 56) * ratio))
+					playerWidth.value = width
+					playerHeight.value = Math.round(width / ratio)
+					playerHorizontal.value = false
 				}
+			} else {
+				// Desktop
+				const maxWidth = reference.offsetWidth - offset
+				const theoricalHeight1 = (maxWidth - GROUND_PADDING_RIGHT - GROUND_PADDING_LEFT) / 2
+				const padding_top = theoricalHeight1 / (1 - GROUND_PADDING_TOP) - theoricalHeight1
+				const theoricalHeight = Math.round(theoricalHeight1 + padding_bottom + padding_top + controls)
+				const height = Math.min(window.innerHeight - 128, theoricalHeight)
+				playerWidth.value = maxWidth
+				playerHeight.value = height
+				playerHorizontal.value = false
 			}
 		}
+	}
 
-		unmounted() {
-			LeekWars.flex = false
-			LeekWars.lightBar = false
-			emitter.off('resize', this.resize)
-			emitter.off('trophy', this.onTrophy)
-			emitter.off('fight_notification', this.onFightNotification)
+	onMounted(() => {
+		emitter.on('resize', resize)
+		emitter.on('trophy', onTrophy)
+		emitter.on('fight_notification', onFightNotification)
+	})
 
-			// Notifications de trophées restants
-			for (const message of this.trophyQueue) {
+	onUnmounted(() => {
+		LeekWars.flex = false
+		LeekWars.lightBar = false
+		emitter.off('resize', resize)
+		emitter.off('trophy', onTrophy)
+		emitter.off('fight_notification', onFightNotification)
+
+		// Notifications de trophées restants
+		for (const message of trophyQueue) {
+			store.commit('notification', message)
+		}
+		for (const message of fightNotificationQueue) {
+			store.commit('notification', message)
+		}
+	})
+
+	function fightLoaded(loadedFight: Fight) {
+		fight.value = loadedFight
+
+		loadedFight.title = loadedFight.team1_name + ' vs ' + loadedFight.team2_name
+		if (loadedFight.type === FightType.BATTLE_ROYALE) {
+			loadedFight.title = t('battle_royale') as string
+		} else if (loadedFight.type === FightType.WAR) {
+			loadedFight.title = t('war') as string
+		} else if (loadedFight.type === FightType.CHEST_HUNT) {
+			loadedFight.title = t('chest_hunt') as string
+		} else if (loadedFight.type === FightType.COLOSSUS) {
+			loadedFight.title = t('colossus') as string
+		} else if (loadedFight.type === FightType.BOSS) {
+			loadedFight.title = t('entity.' + loadedFight.boss_name) as string
+		}
+		LeekWars.setTitle(loadedFight.title, LeekWars.formatDate(loadedFight.date))
+
+		const leeks: {[key: number]: Leek} = {}
+		for (const leek of loadedFight.leeks1) {
+			leeks[leek.id] = leek
+		}
+		for (const leek of loadedFight.leeks2) {
+			leeks[leek.id] = leek
+		}
+	}
+
+	// Réception des notifications de trophées pour les mettre en attente
+	function onTrophy(trophy: any) {
+		trophyQueue.push(trophy)
+	}
+
+	// Réception des notifications pour les mettre en attente
+	function onFightNotification(message: any) {
+		fightNotificationQueue.push(message)
+	}
+
+	// Le player a joué un trophée, on peut l'afficher
+	function unlockTrophy(trophy: number) {
+		for (let m = 0; m < trophyQueue.length; ++m) {
+			const message = trophyQueue[m]
+			if (parseInt(message.parameters[0], 10) === trophy) {
 				store.commit('notification', message)
-			}
-			for (const message of this.fightNotificationQueue) {
-				store.commit('notification', message)
-			}
-		}
-
-		fightLoaded(fight: Fight) {
-			this.fight = fight
-
-			this.fight.title = this.fight.team1_name + ' vs ' + this.fight.team2_name
-			if (this.fight.type === FightType.BATTLE_ROYALE) {
-				this.fight.title = this.$t('battle_royale') as string
-			} else if (this.fight.type === FightType.WAR) {
-				this.fight.title = this.$t('war') as string
-			} else if (this.fight.type === FightType.CHEST_HUNT) {
-				this.fight.title = this.$t('chest_hunt') as string
-			} else if (this.fight.type === FightType.COLOSSUS) {
-				this.fight.title = this.$t('colossus') as string
-			} else if (this.fight.type === FightType.BOSS) {
-				this.fight.title = this.$t('entity.' + fight.boss_name) as string
-			}
-			LeekWars.setTitle(this.fight.title, LeekWars.formatDate(this.fight.date))
-
-			const leeks: {[key: number]: Leek} = {}
-			for (const leek of this.fight.leeks1) {
-				leeks[leek.id] = leek
-			}
-			for (const leek of this.fight.leeks2) {
-				leeks[leek.id] = leek
+				trophyQueue.splice(m, 1)
+				m--
 			}
 		}
+	}
 
-		// Réception des notifications de trophées pour les mettre en attente
-		onTrophy(trophy: any) {
-			this.trophyQueue.push(trophy)
-		}
-
-		// Réception des notifications pour les mettre en attente
-		onFightNotification(message: any) {
-			this.fightNotificationQueue.push(message)
-		}
-
-		// Le player a joué un trophée, on peut l'afficher
-		unlockTrophy(trophy: number) {
-			for (let m = 0; m < this.trophyQueue.length; ++m) {
-				const message = this.trophyQueue[m]
-				if (parseInt(message.parameters[0], 10) === trophy) {
-					store.commit('notification', message)
-					this.trophyQueue.splice(m, 1)
-					m--
+	function comment(comment: Comment) {
+		if (fight.value) {
+			LeekWars.post('fight/comment', {fight_id: fight.value.id, comment: comment.comment}).then(() => {
+				if (fight.value) {
+					fight.value.comments.push(comment)
 				}
-			}
-		}
-
-		comment(comment: Comment) {
-			if (this.fight) {
-				LeekWars.post('fight/comment', {fight_id: this.fight.id, comment: comment.comment}).then(data => {
-					if (this.fight) {
-						this.fight.comments.push(comment)
-					}
-				})
-			}
-		}
-		fileInput() {
-			// $('#file-input').on('change', function() {
-			// 	var file = this.files[0]
-			// 	if (file) {
-			// 		var reader = new FileReader()
-			// 		reader.readAsText(file, "UTF-8")
-			// 		reader.onload = function (evt) {
-			// 			var json = evt.target.result
-			// 			_.log(json)
-			// 			game.init({data: JSON.parse(json)})
-			// 		}
-			// 		reader.onerror = function (evt) {
-			// 			_.log("error reading file")
-			// 		}
-			// 	}
-			// })
+			})
 		}
 	}
 </script>
