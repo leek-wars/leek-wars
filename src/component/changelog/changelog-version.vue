@@ -62,9 +62,10 @@ const sections = computed(() => {
 		}
 	}
 	const regex = /#img_(\w+)/g
+	const codeRegex = /`([^`]+)`/g
 	return collected.map((cat: any) => cat
 		.map((c: any) => ({
-			text: c.replace('# ', '').replace('#ai', '<span class="ai" title="' + t('changelog.need_ai_change') + '">AI</span>').replace(regex, ''),
+			text: c.replace('# ', '').replace('#ai', '<span class="ai" title="' + t('changelog.need_ai_change') + '">AI</span>').replace(regex, '').replace(codeRegex, '<code>$1</code>'),
 			images: Array.from(c.matchAll(regex), (m: any) => m[1])
 		}))
 	)
@@ -78,12 +79,23 @@ const sections = computed(() => {
 	.change {
 		padding: 0 10px;
 		line-height: 20px;
+		font-size: 15px;
 		:deep(.ai) {
 			background: #00a3cc;
 			padding: 0 4px;
 			color: white;
 			border-radius: 4px;
 			cursor: help;
+		}
+		:deep(code) {
+			display: inline;
+			background: var(--background-secondary);
+			border: 1px solid var(--border);
+			padding: 0 5px;
+			border-radius: 3px;
+			font-family: monospace;
+			font-size: 0.9em;
+			color: var(--text-color);
 		}
 		.screenshot {
 			color: #5fad1b;
