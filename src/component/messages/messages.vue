@@ -70,7 +70,7 @@
 						</i18n-t>
 					</div>
 					<chat v-if="newConversation" :new-farmer="newFarmer" :large="true" :new-conversation="newConversation" />
-					<chat v-else :id="currentID" :large="true" />
+					<chat v-else :id="currentID ?? undefined" :large="true" />
 				</template>
 			</panel>
 			<!-- <div v-show="!LeekWars.mobile" class="right-column">
@@ -107,23 +107,20 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { defineAsyncComponent } from 'vue'
-	const ChatElement = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
-	import ConversationElement from '@/component/messages/conversation.vue'
-	export default { components: { chat: ChatElement, conversation: ConversationElement } }
-</script>
 <script lang="ts" setup>
-	import { Chat, ChatType } from '@/model/chat'
+	import { Chat as ChatModel, ChatType } from '@/model/chat'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { store } from '@/model/store'
-	import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+	import { computed, defineAsyncComponent, onMounted, onUnmounted, ref, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 	import { emitter } from '@/model/vue'
 	import { env } from '@/env'
+	import Conversation from '@/component/messages/conversation.vue'
+
+	const Chat = defineAsyncComponent(() => import(`@/component/chat/chat.vue`))
 
 	defineOptions({ name: 'messages', i18n: {}, mixins: [...mixins] })
 
@@ -179,9 +176,9 @@
 
 	const currentConversation = computed(() => (currentID.value === 0) ? newConversation.value : (currentID.value ? store.state.chat[currentID.value] : null))
 
-	const newConversation = computed<Chat | null>(() => {
+	const newConversation = computed<ChatModel | null>(() => {
 		if ('name' in route.params) {
-			const chat = new Chat(0, ChatType.PM, route.params.name as string, true)
+			const chat = new ChatModel(0, ChatType.PM, route.params.name as string, true)
 			chat.last_message = t('new_message') as string
 			chat.farmers = [store.state.farmer!, newFarmer.value]
 			return chat
