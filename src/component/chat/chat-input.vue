@@ -180,7 +180,7 @@ function selectCommand(command: string, finished: boolean = true) {
 	let text = input.innerText
 	const regex = /\/(\w*(!|(:\w*))?)$/gi
 	const match = regex.exec(text)
-	text = text.replace(regex, "/" + command + (finished ? " " : ""))
+	text = text.replace(regex, "/" + command + (finished ? " " : ""))
 	input.textContent = text
 	input.focus()
 	if (match) {
@@ -198,7 +198,7 @@ function selectPseudo(pseudo: string | null) {
 		let text = input.innerText
 		const regex = /@\w*$/gi
 		const match = regex.exec(text)
-		text = text.replace(regex, "@" + pseudo + " ")
+		text = text.replace(regex, "@" + pseudo + " ")
 		input.textContent = text
 		input.focus()
 		if (match) {
@@ -223,6 +223,7 @@ function selectPseudo(pseudo: string | null) {
 		padding-right: 36px;
 		cursor: text;
 		word-wrap: break-word;
+		white-space: pre-wrap;
 	}
 	.chat-input .chat-input-content:empty:before {
 		content: attr(placeholder);
