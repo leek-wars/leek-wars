@@ -54,7 +54,7 @@
 
 	const props = defineProps<{
 		chip: ChipTemplate
-		leek: Leek
+		leek?: Leek
 	}>()
 
 	const summon = computed(() => {
