@@ -39,7 +39,7 @@
 								<div class="title">Caractéristiques</div>
 								<div class="characteristics">
 									<div v-for="c in LeekWars.characteristics_table" :key="c" class="characteristic" :class="c">
-										<characteristic-tooltip v-slot="{ props }" :characteristic="c" :value="game.selectedEntity[c]" :total="game.selectedEntity[c]" :leek="game.selectedEntity" :test="true">
+										<characteristic-tooltip v-slot="{ props }: any" :characteristic="c" :value="game.selectedEntity[c]" :total="game.selectedEntity[c]" :leek="game.selectedEntity" :test="true">
 											<img v-bind="props" :src="'/image/charac/' + c + '.png'">
 										</characteristic-tooltip>
 										<input class="stat" :class="'color-' + c" v-model.number="game.selectedEntity[c]" @keyup="edited('charac')" type="number">
@@ -148,288 +148,273 @@
 </template>
 
 <script lang="ts">
+import { defineAsyncComponent } from 'vue'
 import { locale } from '@/locale'
-import { FightMap } from '@/model/fight'
+const Player = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/player/player.${locale}.i18n`))
+export default { components: { Player } }
+</script>
+<script lang="ts" setup>
+import type { FightMap } from '@/model/fight'
 import { mixins } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
-import { Options, Vue } from 'vue-property-decorator'
-const Player = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/player/player.${locale}.i18n`))
 import { Game, WEAPONS } from '@/component/player/game/game'
 import { Obstacle } from '@/component/player/game/obstacle'
-import { GROUNDS, GroundTexture, OBSTACLES, ObstacleInfo } from '@/component/player/game/ground'
-import { T, Texture } from '../player/game/texture'
-import { MOBS, Mob, MobTemplate } from '../player/game/mob'
+import { GROUNDS, type GroundTexture, OBSTACLES, type ObstacleInfo } from '@/component/player/game/ground'
+import { MOBS, Mob } from '../player/game/mob'
 import { EntityDirection } from '../player/game/entity'
 import CharacteristicTooltip from '@/component/leek/characteristic-tooltip.vue'
 import { CHIPS } from '@/model/chips'
 import { ORDERED_CHIPS } from '@/model/sorted_chips'
 import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 import { WeaponsData } from '@/model/weapon'
-import { defineAsyncComponent, nextTick } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, useTemplateRef } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 
-@Options({ name: 'creator', i18n: {}, mixins: [...mixins], components: {
-	Player,
-	CharacteristicTooltip,
-	RichTooltipItem
-} })
-export default class Creator extends Vue {
+defineOptions({ name: 'creator', i18n: {}, mixins: [...mixins] })
 
-	map: FightMap | null = null
+const { t } = useI18n()
+const route = useRoute()
 
-	EntityDirection = EntityDirection
-	GROUNDS = GROUNDS
-	OBSTACLES = OBSTACLES
-	MOBS = MOBS
-	chipsDialog: boolean = false
-	weaponsDialog: boolean = false
-	WeaponsData = WeaponsData
+const map = ref<FightMap | null>(null)
 
-	decorations = [
-		{ id: 1, texture: "arrows.png" },
-		{ id: 2, texture: "branch.png" },
-		{ id: 3, texture: "cracks.png" },
-		{ id: 4, texture: "factory_bolt.png" },
-		{ id: 5, texture: "snowflake.png" },
-		{ id: 6, texture: "starfish.png" },
-		{ id: 7, texture: "wrench.png" },
-		{ id: 8, texture: "skull.png" },
-	]
+const chipsDialog = ref(false)
+const weaponsDialog = ref(false)
 
-	game: Game | null = null
-	saveTimeout: any = null
+const decorations = [
+	{ id: 1, texture: "arrows.png" },
+	{ id: 2, texture: "branch.png" },
+	{ id: 3, texture: "cracks.png" },
+	{ id: 4, texture: "factory_bolt.png" },
+	{ id: 5, texture: "snowflake.png" },
+	{ id: 6, texture: "starfish.png" },
+	{ id: 7, texture: "wrench.png" },
+	{ id: 8, texture: "skull.png" },
+]
 
-	get id() {
-		return this.$route.params.id
+const game = ref<any>(null)
+let saveTimeout: any = null
+const player = useTemplateRef<any>('player')
+
+const id = computed(() => route.params.id)
+
+LeekWars.setTitle(t('title') as string)
+
+LeekWars.get("map/get/" + id.value).then(m => {
+	map.value = m
+})
+
+onMounted(() => {
+	LeekWars.large = true
+	LeekWars.footer = false
+})
+
+onUnmounted(() => {
+	LeekWars.large = false
+	LeekWars.footer = true
+})
+
+function resize() { /* */ }
+
+function playerLoaded() {
+	nextTick(() => {
+		game.value = player.value.game as Game
+		for (const ground of GROUNDS) {
+			ground.texture.load(game.value)
+		}
+		for (const obstacle in OBSTACLES) {
+			OBSTACLES[obstacle].texture.load(game.value)
+		}
+		for (const entity of map.value!.players) {
+			addEntity(entity)
+		}
+	})
+}
+
+function selectGround(ground: GroundTexture) {
+	const g = player.value.game as Game
+	g.groundPaint = ground
+}
+
+function obstacleDragStart(obstacle: ObstacleInfo) {
+	const g = player.value.game as Game
+	const info = OBSTACLES[obstacle.id]
+	const o = new Obstacle(g, obstacle.geometry, g.ground.field.cells[570], info)
+	o.resize()
+	g.addObstacle(o)
+	g.draggedObstacle = o
+	g.groundPaint = null
+}
+
+function mobDragStart(mob: any) {
+	if (game.value) {
+		const entity = addEntity(mob)
+		game.value.draggedEntity = entity
+		game.value.groundPaint = null
 	}
+}
 
-	created() {
-		LeekWars.setTitle(this.$t('title'))
-
-		LeekWars.get("map/get/" + this.id).then(map => {
-			this.map = map
-		})
-	}
-
-	mounted() {
-		LeekWars.large = true
-		LeekWars.footer = false
-	}
-
-	unmounted() {
-		LeekWars.large = false
-		LeekWars.footer = true
-	}
-
-	resize() {
-		// console.log("resize")
-	}
-
-	playerLoaded() {
-		// console.log("loaded")
-		nextTick(() => {
-			this.game = (this.$refs.player as any).game as Game
-			for (const ground of GROUNDS) {
-				ground.texture.load(this.game)
+function addEntity(mob: any) {
+	const entity = new Mob(game.value!, mob.name === 'leek' ? 1 : 2, 100, mob.name)
+	entity.setHat(mob.hat)
+	if (mob.weapon) {
+		const template = WEAPONS[parseInt(LeekWars.items[mob.weapon].params) - 1]
+		if (template) {
+			for (const texture of template.textures) {
+				texture.load(game.value!)
 			}
-			for (const obstacle in OBSTACLES) {
-				OBSTACLES[obstacle].texture.load(this.game)
-			}
-			for (const entity of this.map!.players) {
-				this.addEntity(entity)
-			}
-		})
-	}
-
-	selectGround(ground: GroundTexture) {
-		// console.log("select ground", ground)
-		const game = (this.$refs.player as any).game as Game
-		game.groundPaint = ground
-	}
-
-	obstacleDragStart(obstacle: ObstacleInfo) {
-		// console.log("obstacleDragStart")
-		const game = (this.$refs.player as any).game as Game
-		const info = OBSTACLES[obstacle.id]
-		const o = new Obstacle(game, obstacle.geometry, game.ground.field.cells[570], info)
-		o.resize()
-		game.addObstacle(o)
-		game.draggedObstacle = o
-		game.groundPaint = null
-	}
-
-	mobDragStart(mob: any) {
-		if (this.game) {
-			const entity = this.addEntity(mob)
-			this.game.draggedEntity = entity
-			this.game.groundPaint = null
+			entity.setWeapon(new template(game.value!))
 		}
 	}
+	entity.setCell(game.value!.ground.field.cells[mob.cell || 570])
+	entity.setOrientation(mob.orientation)
+	entity.ai = mob.ai
+	entity.level = mob.level
+	entity.life = mob.life
+	entity.initially_dead = mob.dead
+	entity.maxLife = mob.life
+	entity.initialMaxLife = mob.life
+	entity.strength = mob.strength
+	entity.wisdom = mob.wisdom
+	entity.agility = mob.agility
+	entity.resistance = mob.resistance
+	entity.science = mob.science
+	entity.magic = mob.magic
+	entity.frequency = mob.frequency
+	entity.cores = mob.cores
+	entity.ram = mob.ram
+	entity.mp = mob.mp
+	entity.tp = mob.tp
+	entity.weapons = mob.weapons || []
+	entity.chips = mob.chips || []
+	game.value!.addEntity(entity)
+	return entity
+}
 
-	addEntity(mob: any) {
-		const entity = new Mob(this.game!, mob.name === 'leek' ? 1 : 2, 100, mob.name)
-		entity.setHat(mob.hat)
-		if (mob.weapon) {
-			const template = WEAPONS[parseInt(LeekWars.items[mob.weapon].params) - 1]
-			if (template) {
-				for (const texture of template.textures) {
-					texture.load(this.game!)
-				}
-				entity.setWeapon(new template(this.game!))
-			}
+function edited(_info: any) {
+	if (saveTimeout) clearTimeout(saveTimeout)
+	saveTimeout = setTimeout(() => {
+		console.log("save...")
+		if (!map.value) return
+
+		const g = player.value.game as Game
+		const obstacles = {} as {[key: number]: number}
+		for (const obstacle of g.ground.obstacles) {
+			obstacles[obstacle.cell.id] = obstacle.info.id
 		}
-		entity.setCell(this.game!.ground.field.cells[mob.cell || 570])
-		entity.setOrientation(mob.orientation)
-		entity.ai = mob.ai
-		entity.level = mob.level
-		entity.life = mob.life
-		entity.initially_dead = mob.dead
-		entity.maxLife = mob.life
-		entity.initialMaxLife = mob.life
-		entity.strength = mob.strength
-		entity.wisdom = mob.wisdom
-		entity.agility = mob.agility
-		entity.resistance = mob.resistance
-		entity.science = mob.science
-		entity.magic = mob.magic
-		entity.frequency = mob.frequency
-		entity.cores = mob.cores
-		entity.ram = mob.ram
-		entity.mp = mob.mp
-		entity.tp = mob.tp
-		entity.weapons = mob.weapons || []
-		entity.chips = mob.chips || []
-		this.game!.addEntity(entity)
-		return entity
-	}
-
-	edited(info: any) {
-		// console.log("edited", info)
-		if (this.saveTimeout) clearTimeout(this.saveTimeout)
-		this.saveTimeout = setTimeout(() => {
-			console.log("save...")
-			if (!this.map) return
-
-			const game = (this.$refs.player as any).game as Game
-			const obstacles = {} as {[key: number]: number}
-			for (const obstacle of game.ground.obstacles) {
-				obstacles[obstacle.cell.id] = obstacle.info.id
-			}
-			const pattern = []
-			for (const cell of game.ground.field.cells) {
-				pattern.push(cell.color)
-			}
-			const entities = []
-			for (const entity of game.leeks) {
-				entities.push({
-					name: entity.name,
-					cell: entity.cell!.id,
-					level: entity.level,
-					ai: entity.ai,
-					dead: entity.initially_dead,
-					orientation: entity.orientation,
-					weapon: entity.weapon ? entity.weapon.id : null,
-					hat: entity.hat,
-					life: entity.life,
-					strength: entity.strength,
-					wisdom: entity.wisdom,
-					agility: entity.agility,
-					resistance: entity.resistance,
-					science: entity.science,
-					magic: entity.magic,
-					frequency: entity.frequency,
-					cores: entity.cores,
-					ram: entity.ram,
-					mp: entity.mp,
-					tp: entity.tp,
-					weapons: entity.weapons,
-					chips: entity.chips,
-				})
-			}
-
-			LeekWars.put("map/save", {
-				map_id: this.map.id,
-				obstacles: obstacles,
-				players: entities,
-				pattern: pattern,
+		const pattern = []
+		for (const cell of g.ground.field.cells) {
+			pattern.push(cell.color)
+		}
+		const entities = []
+		for (const entity of g.leeks) {
+			entities.push({
+				name: entity.name,
+				cell: entity.cell!.id,
+				level: entity.level,
+				ai: entity.ai,
+				dead: entity.initially_dead,
+				orientation: entity.orientation,
+				weapon: entity.weapon ? entity.weapon.id : null,
+				hat: entity.hat,
+				life: entity.life,
+				strength: entity.strength,
+				wisdom: entity.wisdom,
+				agility: entity.agility,
+				resistance: entity.resistance,
+				science: entity.science,
+				magic: entity.magic,
+				frequency: entity.frequency,
+				cores: entity.cores,
+				ram: entity.ram,
+				mp: entity.mp,
+				tp: entity.tp,
+				weapons: entity.weapons,
+				chips: entity.chips,
 			})
-		}, 500)
-	}
-
-	setOrientation(orientation: EntityDirection) {
-		if (this.game && this.game.selectedEntity) {
-			this.game.selectedEntity.setOrientation(orientation)
-			this.game.draw()
 		}
-		this.edited('orient')
-	}
 
-	get availableWeapons() {
-		if (!this.game || !this.game.selectedEntity) { return [] }
-		return Object.values(LeekWars.weapons)
-	}
-	get availableChips() {
-		if (!this.game || !this.game.selectedEntity) { return [] }
-		return Object.values(CHIPS)
-			.sort((chipA, chipB) => {
-				return ORDERED_CHIPS[chipA.id] - ORDERED_CHIPS[chipB.id]
-			})
-	}
+		LeekWars.put("map/save", {
+			map_id: map.value.id,
+			obstacles: obstacles,
+			players: entities,
+			pattern: pattern,
+		})
+	}, 500)
+}
 
-	hasChipEquipped(chip: any) {
-		if (!this.game || !this.game.selectedEntity) { return false }
-		return (this.game.selectedEntity.chips as any).indexOf(chip) !== -1
+function setOrientation(orientation: EntityDirection) {
+	if (game.value && game.value.selectedEntity) {
+		game.value.selectedEntity.setOrientation(orientation)
+		game.value.draw()
 	}
+	edited('orient')
+}
 
-	hasWeaponEquipped(weapon: any) {
-		if (!this.game || !this.game.selectedEntity) { return false }
-		return (this.game.selectedEntity.weapons as any).indexOf(weapon) !== -1
-	}
-	removeLeekChip(chip: any) {
-		if (!this.game || !this.game.selectedEntity) { return }
-		this.game.selectedEntity.chips.splice(this.game.selectedEntity.chips.indexOf(chip), 1)
-		this.edited('chip')
-	}
-	removeLeekWeapon(weapon: any) {
-		if (!this.game || !this.game.selectedEntity) { return }
-		this.game.selectedEntity.weapons.splice(this.game.selectedEntity.weapons.indexOf(weapon), 1)
-		this.edited('weapon')
-	}
-	addLeekChip(chip: any) {
-		if (!this.game || !this.game.selectedEntity) { return }
-		this.game.selectedEntity.chips.push(chip)
-		if (this.game.selectedEntity.chips.length === this.game.selectedEntity.ram) {
-			this.chipsDialog = false
-		}
-		this.edited('chip')
-	}
-	addLeekWeapon(weapon: any) {
-		if (!this.game || !this.game.selectedEntity) { return }
-		this.game.selectedEntity.weapons.push(weapon)
-		if (this.game.selectedEntity.weapons.length === 4) {
-			this.weaponsDialog = false
-		}
-		this.edited('weapon')
-	}
-	addOrRemoveLeekChip(chip: any) {
-		if (!this.game || !this.game.selectedEntity) { return }
-		if (!this.hasChipEquipped(chip)) {
-			if (this.game.selectedEntity!.chips.length < this.game.selectedEntity.ram) {
-				this.addLeekChip(chip)
-			}
-		} else {
-			this.removeLeekChip(chip)
-		}
-	}
+const availableWeapons = computed<any[]>(() => {
+	if (!game.value || !game.value.selectedEntity) { return [] }
+	return Object.values(LeekWars.weapons) as any[]
+})
+const availableChips = computed<any[]>(() => {
+	if (!game.value || !game.value.selectedEntity) { return [] }
+	return (Object.values(CHIPS) as any[])
+		.sort((chipA: any, chipB: any) => ORDERED_CHIPS[chipA.id] - ORDERED_CHIPS[chipB.id])
+})
 
-	addOrRemoveLeekWeapon(weapon: any) {
-		if (!this.game || !this.game.selectedEntity) { return }
-		if (!this.hasWeaponEquipped(weapon)) {
-			if (this.game.selectedEntity!.weapons.length < 4) {
-				this.addLeekWeapon(weapon)
-			}
-		} else {
-			this.removeLeekWeapon(weapon)
+function hasChipEquipped(chip: any) {
+	if (!game.value || !game.value.selectedEntity) { return false }
+	return (game.value.selectedEntity.chips as any).indexOf(chip) !== -1
+}
+
+function hasWeaponEquipped(weapon: any) {
+	if (!game.value || !game.value.selectedEntity) { return false }
+	return (game.value.selectedEntity.weapons as any).indexOf(weapon) !== -1
+}
+function removeLeekChip(chip: any) {
+	if (!game.value || !game.value.selectedEntity) { return }
+	game.value.selectedEntity.chips.splice(game.value.selectedEntity.chips.indexOf(chip), 1)
+	edited('chip')
+}
+function removeLeekWeapon(weapon: any) {
+	if (!game.value || !game.value.selectedEntity) { return }
+	game.value.selectedEntity.weapons.splice(game.value.selectedEntity.weapons.indexOf(weapon), 1)
+	edited('weapon')
+}
+function addLeekChip(chip: any) {
+	if (!game.value || !game.value.selectedEntity) { return }
+	game.value.selectedEntity.chips.push(chip)
+	if (game.value.selectedEntity.chips.length === game.value.selectedEntity.ram) {
+		chipsDialog.value = false
+	}
+	edited('chip')
+}
+function addLeekWeapon(weapon: any) {
+	if (!game.value || !game.value.selectedEntity) { return }
+	game.value.selectedEntity.weapons.push(weapon)
+	if (game.value.selectedEntity.weapons.length === 4) {
+		weaponsDialog.value = false
+	}
+	edited('weapon')
+}
+function addOrRemoveLeekChip(chip: any) {
+	if (!game.value || !game.value.selectedEntity) { return }
+	if (!hasChipEquipped(chip)) {
+		if (game.value.selectedEntity!.chips.length < game.value.selectedEntity.ram) {
+			addLeekChip(chip)
 		}
+	} else {
+		removeLeekChip(chip)
+	}
+}
+
+function addOrRemoveLeekWeapon(weapon: any) {
+	if (!game.value || !game.value.selectedEntity) { return }
+	if (!hasWeaponEquipped(weapon)) {
+		if (game.value.selectedEntity!.weapons.length < 4) {
+			addLeekWeapon(weapon)
+		}
+	} else {
+		removeLeekWeapon(weapon)
 	}
 }
 </script>

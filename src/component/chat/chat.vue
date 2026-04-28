@@ -18,7 +18,7 @@
 		<div v-if="$store.state.farmer && !$store.state.farmer.verified" class="verify">
 			<router-link class="green-link" to="/settings">{{ $t('main.verify_chat') }}</router-link>
 		</div>
-		<chat-input v-else :chat="id" @message="sendMessage" />
+		<chat-input v-else :chat="id || 0" @message="sendMessage" />
 
 		<div v-show="!isScrollBottom" class="card scroll-down" v-ripple @click="scrollToBottom">
 			<v-icon>mdi-chevron-down</v-icon>
@@ -61,7 +61,7 @@
 				<div class="flex">
 					<avatar :farmer="muteFarmer" />
 					<div class="messages card">
-						<div v-for="message in censorMessages" :key="message.id">
+						<div v-for="message in censorMessagesList" :key="message.id">
 							<v-checkbox v-if="message.censored === 0" v-model="censoredMessages[message.id]" :hide-details="true">
 								<template #label>
 									<span v-html="message.content"></span>
@@ -84,7 +84,7 @@
 				<div class="flex">
 					<avatar :farmer="muteFarmer" />
 					<div class="messages card">
-						<div v-for="message in deleteMessages" :key="message.id">
+						<div v-for="message in deleteMessagesList" :key="message.id">
 							<v-checkbox v-model="deletedMessages[message.id]" :hide-details="true">
 								<template #label>
 									<span v-html="message.content"></span>
@@ -142,370 +142,353 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { ChatMessage, ChatType } from '@/model/chat'
+<script lang="ts" setup>
+	import type { ChatMessage } from '@/model/chat'
+	import { ChatType } from '@/model/chat'
 	import { formatChatMessage } from '@/model/chat-format'
-	import { Farmer } from '@/model/farmer'
+	import type { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
 	import { TeamMemberLevel } from '@/model/team'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
-	import { nextTick } from 'vue'
+	import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, onUpdated, ref, useTemplateRef, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
+	import { useRouter } from 'vue-router'
 	import ChatInput from './chat-input.vue'
 	import ChatMessageComponent from './chat-message.vue'
 	import EmojiPicker from './emoji-picker.vue'
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
-import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/vue'
 
-	@Options({
-		name: "chat",
-		components: { 'chat-input': ChatInput, 'chat-message': ChatMessageComponent, 'emoji-picker': EmojiPicker, ReportDialog }
+	defineOptions({ name: "chat", components: { 'chat-message': ChatMessageComponent } })
+
+	const props = defineProps<{
+		id?: number
+		newFarmer?: any
+		newConversation?: any
+		large?: boolean
+	}>()
+
+	const { t } = useI18n()
+	const router = useRouter()
+	const messages = useTemplateRef<HTMLElement>('messages')
+	const instance = getCurrentInstance()
+
+	const emojis = ['❤️', '👍', '👋', '😂', '👏', '😢', '😮', '😱']
+
+	const isScrollBottom = ref(true)
+	let userScroll = false
+	const unread = ref(false)
+
+	const menuMessage = ref<ChatMessage | null>(null)
+	let scrollMessage = 0
+	const menuActivator = ref<any>(null)
+	const menuEmojiActivator = ref<any>(null)
+	const menu = ref(false)
+	const menuEmoji = ref(false)
+
+	const muteDialog = ref(false)
+	const muteFarmer = ref<Farmer | null>(null)
+
+	const censorDialog = ref(false)
+	const censorMessage = ref<ChatMessage | null>(null)
+	const censoredMessages = ref<{[key: number]: boolean}>({})
+	const censorMute = ref(false)
+
+	const deleteDialog = ref(false)
+	const deletedMessage = ref<ChatMessage | null>(null)
+	const deletedMessages = ref<{[key: number]: boolean}>({})
+
+	const issueDialog = ref(false)
+	const issueMessage = ref<ChatMessage | null>(null)
+	const issueTitle = ref('')
+	const issueDescription = ref('')
+
+	const reportDialog = ref(false)
+	const reportFarmer = ref<Farmer | null>(null)
+	const reportContent = ref('')
+	const reasons = [
+		Warning.RUDE_CHAT,
+		Warning.FLOOD_CHAT,
+		Warning.PROMO_CHAT,
+		Warning.INCORRECT_FARMER_NAME,
+		Warning.INCORRECT_AVATAR,
+	]
+
+	const loading = computed(() => !!props.id && (!store.state.chat[props.id] || !store.state.chat[props.id].loaded))
+	const chat = computed(() => props.id ? store.state.chat[props.id] : null)
+	const privateMessages = computed(() => chat.value && chat.value.type === ChatType.PM)
+	const isModerator = computed(() => store.getters.moderator || (chat.value && chat.value.type === ChatType.TEAM && store.state.farmer!.team.member_level >= TeamMemberLevel.CAPTAIN))
+	const censorMessagesList = computed(() => chat.value && muteFarmer.value ? chat.value.messages.filter((m: any) => m.censored === 0 && m.farmer.id === muteFarmer.value!.id) : [])
+	const deleteMessagesList = computed(() => chat.value && muteFarmer.value ? chat.value.messages.filter((m: any) => m.farmer.id === muteFarmer.value!.id) : [])
+
+	emitter.on('chat', newMessage)
+	emitter.on('chat-history', chatHistory)
+	emitter.on('resize', updateScroll as any)
+	emitter.on('wsconnected', update)
+	if (store.state.wsconnected) {
+		update()
+	}
+
+	onMounted(() => {
+		updateScroll()
 	})
-	export default class ChatElement extends Vue {
-		ChatType = ChatType
-		@Prop() id!: number
-		@Prop() newFarmer!: any
-		@Prop() newConversation!: any
-		@Prop() large!: boolean
 
-		emojis = ['❤️', '👍', '👋', '😂', '👏', '😢', '😮', '😱']
+	onUpdated(() => {
+		updateScroll()
+	})
 
-		isScrollBottom: boolean = true
-		userScroll: boolean = false
-		unread: boolean = false
+	onBeforeUnmount(() => {
+		emitter.off('chat', newMessage)
+		emitter.off('chat-history', chatHistory)
+		emitter.off('resize', updateScroll as any)
+		emitter.off('wsconnected', update)
+	})
 
-		menuMessage: ChatMessage | null = null
-		scrollMessage: number = 0
-		menuActivator: any = null
-		menuEmojiActivator: any = null
-		menu: boolean = false
-		menuEmoji: boolean = false
-
-		muteDialog: boolean = false
-		muteFarmer: Farmer | null = null
-
-		censorDialog: boolean = false
-		censorMessage: ChatMessage | null = null
-		censoredMessages: {[key: number]: boolean} = {}
-		censorMute: boolean = false
-
-		deleteDialog: boolean = false
-		deletedMessage: ChatMessage | null = null
-		deletedMessages: {[key: number]: boolean} = {}
-
-		issueDialog: boolean = false
-		issueMessage: ChatMessage | null = null
-		issueTitle: string = ''
-		issueDescription: string = ''
-
-		reportDialog: boolean = false
-		reportFarmer: Farmer | null = null
-		reportContent: string = ''
-		reasons = [
-			Warning.RUDE_CHAT,
-			Warning.FLOOD_CHAT,
-			Warning.PROMO_CHAT,
-			Warning.INCORRECT_FARMER_NAME,
-			Warning.INCORRECT_AVATAR,
-		]
-
-		get loading() {
-			return !!this.id && (!store.state.chat[this.id] || !store.state.chat[this.id].loaded)
+	function newMessage(e: any) {
+		if (e[0] === props.id) {
+			updateScroll()
+			if (!isScrollBottom.value) { unread.value = true }
+			read()
 		}
-		get chat() {
-			return this.id ? store.state.chat[this.id] : null
-		}
-		get privateMessages() {
-			return this.chat && this.chat.type === ChatType.PM
-		}
-		get isModerator() {
-			return this.$store.getters.moderator || (this.chat && this.chat.type === ChatType.TEAM && this.$store.state.farmer.team.member_level >= TeamMemberLevel.CAPTAIN)
-		}
-		get censorMessages() {
-			return this.chat && this.muteFarmer ? this.chat.messages.filter(m => m.censored === 0 && m.farmer.id === this.muteFarmer!.id) : []
-		}
-		get deleteMessages() {
-			return this.chat && this.muteFarmer ? this.chat.messages.filter(m => m.farmer.id === this.muteFarmer!.id) : []
-		}
+	}
 
-		created() {
-			emitter.on('chat', this.newMessage)
-			emitter.on('chat-history', this.chatHistory)
-			emitter.on('resize', this.updateScroll)
-			emitter.on('wsconnected', this.update)
-			if (store.state.wsconnected) {
-				this.update()
-			}
-		}
-
-		mounted() {
-			this.updateScroll()
-		}
-
-		beforeUnmount() {
-			emitter.off('chat', this.newMessage)
-			emitter.off('chat-history', this.chatHistory)
-			emitter.off('resize', this.updateScroll)
-			emitter.off('wsconnected', this.update)
-		}
-
-		newMessage(e: any) {
-			if (e[0] === this.id) {
-				this.updateScroll()
-				if (!this.isScrollBottom) { this.unread = true }
-
-				// On reçoit un message sur un chat de conversation privée, il est lu tout de suite
-				this.read()
-			}
-		}
-
-		chatHistory(e: any) {
-			if (e === this.id && this.scrollMessage) {
-				nextTick(() => {
-					const element = this.$el.querySelector('.m-' + this.scrollMessage) as HTMLElement
-					if (element) {
-						(this.$refs.messages as HTMLElement).scrollTop = element.offsetTop
-					}
-					this.scrollMessage = 0
-				})
-			}
-		}
-
-		scrollTop() {
-			const messages = this.$refs.messages as HTMLElement
-			if (!messages) { return true }
-			return messages.scrollTop < 150
-		}
-
-		scroll() {
-			const messages = this.$refs.messages as HTMLElement
-			if (messages) {
-				this.isScrollBottom = messages.offsetHeight > messages.scrollHeight || Math.abs((messages.scrollTop + messages.offsetHeight) - messages.scrollHeight) < 3
-			}
-			if (this.isScrollBottom) {
-				this.userScroll = false
-				this.unread = false
-			} else {
-				this.userScroll = true
-			}
-			if (this.scrollTop() && this.chat!.messages.length) {
-				this.scrollMessage = this.chat!.messages[0].id
-				store.commit('load-chat-history', this.id)
-			}
-		}
-
-		updated() {
-			this.updateScroll()
-		}
-
-		updateScroll(force: boolean = false) {
-			if (!this.userScroll || force) {
-				const messages = this.$refs.messages as HTMLElement
-				if (messages) {
-					this.scrollToBottom()
-					this.unread = false
-				}
-			}
-		}
-
-		scrollToBottom() {
-			const messages = this.$refs.messages as HTMLElement
-			if (messages) {
-				messages.scrollTop = messages.scrollHeight + 1000
-				setTimeout(() => {
-					if (messages) {
-						messages.scrollTop = messages.scrollHeight + 1000
-					}
-				}, 100)
-			}
-		}
-
-		@Watch('id')
-		update() {
-			if (!this.id) { return }
-			store.commit('register-chat', {id: this.id})
-			store.commit('load-chat', this.chat)
-			this.read()
-		}
-
-		sendMessage(message: any) {
-			LeekWars.track('chat-message')
-			if (message.startsWith('/ping')) {
-				this.$store.commit('last-ping', Date.now())
-			}
-			if (message.match(/(^|\s)\/(br|arena)!?(\s|$)/)) {
-				if (!LeekWars.arena.enabled) {
-					// Auto-inscription en arène avec le dernier poireau utilisé ou le premier disponible
-					const farmer = this.$store.state.farmer
-					if (farmer) {
-						const arenaLeekId = parseInt(localStorage.getItem('arena-leek') || '', 10)
-						const gardenLeekId = parseInt(localStorage.getItem('garden/leek') || '', 10)
-						const lastLeekId = (arenaLeekId && farmer.leeks[arenaLeekId]) ? arenaLeekId : gardenLeekId
-						const leek = (lastLeekId && farmer.leeks[lastLeekId]) ? farmer.leeks[lastLeekId] : Object.values(farmer.leeks)[0] as any
-						if (leek) {
-							LeekWars.arena.register(leek.id)
-						}
-					}
-				}
-			}
-			if (this.chat === null) {
-				LeekWars.post('message/create-conversation', {farmer_id: this.newFarmer.id, message}).then(data => {
-					this.newConversation.id = data.conversation_id
-					this.$store.commit('new-conversation', this.newConversation)
-					this.$router.replace('/messages/conversation/' + data.conversation_id)
-				})
-			} else {
-				LeekWars.post('message/send-message', {conversation_id: this.chat.id, message}).then(() => { /**/ }).error(data => {
-					LeekWars.toast(this.$t('main.error_' + data.error, data.params))
-				})
-			}
-		}
-
-		read() {
-			if (!this.chat) { return }
+	function chatHistory(e: any) {
+		if (e === props.id && scrollMessage) {
 			nextTick(() => {
-				if (!this.chat!.read) {
-					LeekWars.post('message/read', { conversation_id: this.chat!.id })
+				const element = (instance?.proxy?.$el as HTMLElement)?.querySelector('.m-' + scrollMessage) as HTMLElement
+				if (element && messages.value) {
+					messages.value.scrollTop = element.offsetTop
 				}
-				store.commit('chat-set-read', { chat: this.chat!.id, read: true })
+				scrollMessage = 0
 			})
 		}
+	}
 
-		report(message: ChatMessage) {
-			this.reportDialog = true
-			this.reportFarmer = message.farmer
-			this.reportContent = [message.id, ...message.subMessages.map(s => s.id)].join(',')
+	function scrollTop() {
+		if (!messages.value) { return true }
+		return messages.value.scrollTop < 150
+	}
+
+	function scroll() {
+		if (messages.value) {
+			isScrollBottom.value = messages.value.offsetHeight > messages.value.scrollHeight || Math.abs((messages.value.scrollTop + messages.value.offsetHeight) - messages.value.scrollHeight) < 3
 		}
+		if (isScrollBottom.value) {
+			userScroll = false
+			unread.value = false
+		} else {
+			userScroll = true
+		}
+		if (scrollTop() && chat.value!.messages.length) {
+			scrollMessage = chat.value!.messages[0].id
+			store.commit('load-chat-history', props.id)
+		}
+	}
 
-		censor(message: ChatMessage) {
-			this.censorDialog = true
-			this.censorMessage = message
-			this.muteFarmer = message.farmer
-			this.censoredMessages = {}
-			if (message.censored === 0) {
-				this.censoredMessages[message.id] = true
+	function updateScroll(force: boolean = false) {
+		if (!userScroll || force) {
+			if (messages.value) {
+				scrollToBottom()
+				unread.value = false
 			}
+		}
+	}
+
+	function scrollToBottom() {
+		if (messages.value) {
+			messages.value.scrollTop = messages.value.scrollHeight + 1000
+			setTimeout(() => {
+				if (messages.value) {
+					messages.value.scrollTop = messages.value.scrollHeight + 1000
+				}
+			}, 100)
+		}
+	}
+
+	watch(() => props.id, update)
+
+	function update() {
+		if (!props.id) { return }
+		store.commit('register-chat', {id: props.id})
+		store.commit('load-chat', chat.value)
+		read()
+	}
+
+	function sendMessage(message: any) {
+		LeekWars.track('chat-message')
+		if (message.startsWith('/ping')) {
+			store.commit('last-ping', Date.now())
+		}
+		if (message.match(/(^|\s)\/(br|arena)!?(\s|$)/)) {
+			if (!LeekWars.arena.enabled) {
+				const farmer = store.state.farmer
+				if (farmer) {
+					const arenaLeekId = parseInt(localStorage.getItem('arena-leek') || '', 10)
+					const gardenLeekId = parseInt(localStorage.getItem('garden/leek') || '', 10)
+					const lastLeekId = (arenaLeekId && farmer.leeks[arenaLeekId]) ? arenaLeekId : gardenLeekId
+					const leek = (lastLeekId && farmer.leeks[lastLeekId]) ? farmer.leeks[lastLeekId] : Object.values(farmer.leeks)[0] as any
+					if (leek) {
+						LeekWars.arena.register(leek.id)
+					}
+				}
+			}
+		}
+		if (chat.value === null) {
+			LeekWars.post('message/create-conversation', {farmer_id: props.newFarmer.id, message}).then(data => {
+				props.newConversation.id = data.conversation_id
+				store.commit('new-conversation', props.newConversation)
+				router.replace('/messages/conversation/' + data.conversation_id)
+			})
+		} else {
+			LeekWars.post('message/send-message', {conversation_id: chat.value.id, message}).then(() => { /**/ }).catch(data => {
+				LeekWars.toast(t('main.error_' + data.error, data.params) as string)
+			})
+		}
+	}
+
+	function read() {
+		if (!chat.value) { return }
+		nextTick(() => {
+			if (!chat.value!.read) {
+				LeekWars.post('message/read', { conversation_id: chat.value!.id })
+			}
+			store.commit('chat-set-read', { chat: chat.value!.id, read: true })
+		})
+	}
+
+	function report(message: ChatMessage) {
+		reportDialog.value = true
+		reportFarmer.value = message.farmer
+		reportContent.value = [message.id, ...message.subMessages.map(s => s.id)].join(',')
+	}
+
+	function censor(message: ChatMessage) {
+		censorDialog.value = true
+		censorMessage.value = message
+		muteFarmer.value = message.farmer
+		censoredMessages.value = {}
+		if (message.censored === 0) {
+			censoredMessages.value[message.id] = true
+		}
+		for (const sub of message.subMessages) {
+			if (sub.censored === 0) {
+				censoredMessages.value[sub.id] = true
+			}
+		}
+	}
+
+	function deleteMessage(message: ChatMessage) {
+		deleteDialog.value = true
+		deletedMessage.value = message
+		muteFarmer.value = message.farmer
+		deletedMessages.value = {}
+		deletedMessages.value[message.id] = true
+		if (message.subMessages) {
 			for (const sub of message.subMessages) {
-				if (sub.censored === 0) {
-					this.censoredMessages[sub.id] = true
-				}
+				deletedMessages.value[sub.id] = true
 			}
 		}
+	}
 
-		deleteMessage(message: ChatMessage) {
-			this.deleteDialog = true
-			this.deletedMessage = message
-			this.muteFarmer = message.farmer
-			this.deletedMessages = {}
-			this.deletedMessages[message.id] = true
-			if (message.subMessages) {
-				for (const sub of message.subMessages) {
-					this.deletedMessages[sub.id] = true
-				}
+	function mute(farmer: Farmer) {
+		muteDialog.value = true
+		muteFarmer.value = farmer
+	}
+
+	function createIssue(message: ChatMessage) {
+		issueDialog.value = true
+		issueMessage.value = message
+		issueTitle.value = (message.raw_content || '').replace(/\s+/g, ' ').trim().substring(0, 80)
+		issueDescription.value = ''
+	}
+
+	function createIssueConfirm() {
+		if (!issueMessage.value) return
+		const id = issueMessage.value.id
+		issueDialog.value = false
+		LeekWars.post('message/create-issue', { message_id: id, title: issueTitle.value, description: issueDescription.value }).then(data => {
+			LeekWars.toast('Issue #' + data.issue + ' créée')
+		}).catch(data => {
+			LeekWars.toast(t('main.error_' + data.error) as string)
+		})
+	}
+
+	function censorConfirm() {
+		censorDialog.value = false
+		if (censorMessage.value) {
+			const ids = Object.entries(censoredMessages.value).filter(e => e[1]).map(e => e[0]).join(',')
+			LeekWars.post('message/censor', { messages: ids, mute: censorMute.value })
+		}
+	}
+
+	function deleteConfirm() {
+		deleteDialog.value = false
+		if (deletedMessage.value) {
+			const ids = Object.entries(deletedMessages.value).filter(e => e[1]).map(e => e[0]).join(',')
+			LeekWars.delete('message/delete', { messages: ids, mute: censorMute.value })
+		}
+	}
+
+	function muteConfirm() {
+		if (!muteFarmer.value || !chat.value) { return }
+		LeekWars.post('message/mute', { target_id: muteFarmer.value.id, chat: chat.value.id, duration: 3600 })
+		muteFarmer.value.muted = true
+		muteDialog.value = false
+	}
+
+	function openMenu(activator: any, message: ChatMessage) {
+		menuMessage.value = message
+		menuActivator.value = activator.target
+		menuEmoji.value = false
+		nextTick(() => {
+			menu.value = true
+		})
+	}
+
+	function openEmojis(activator: any, message: ChatMessage) {
+		menuMessage.value = message
+		menuEmojiActivator.value = activator.target
+		menu.value = false
+		nextTick(() => {
+			menuEmoji.value = true
+		})
+	}
+
+	function toggleReaction(emoji: string) {
+		menuEmoji.value = false
+		if (!menuMessage.value) return
+		LeekWars.track('chat-reaction')
+		if (menuMessage.value.my_reaction === emoji) {
+			LeekWars.delete('message-reaction/delete', { message_id: menuMessage.value.id })
+			menuMessage.value.my_reaction = null
+		} else {
+			LeekWars.post('message-reaction/add', { reaction: emoji, message_id: menuMessage.value.id })
+			menuMessage.value.my_reaction = emoji
+		}
+	}
+
+	function formatMessage(message: any) {
+		if (message.subMessages) {
+			for (const sub of message.subMessages) {
+				formatMessage(sub)
 			}
 		}
+		if (message.formatted) return message
 
-		mute(farmer: Farmer) {
-			this.muteDialog = true
-			this.muteFarmer = farmer
+		message.raw_content = message.content
+		message.content = formatChatMessage(message.content, message.farmer.name, store.state.farmer_by_name)
+
+		const element = document.createElement('div')
+		element.innerHTML = message.content
+		const innerText = element.innerText.trim()
+		message.only_emojis = !element.querySelector('.br-invite') && (innerText.length === 0 || /^[\s\p{Emoji_Presentation}]+$/gmu.test(innerText))
+		if (!('censored' in message)) {
+			message.censored = 0
 		}
-
-		createIssue(message: ChatMessage) {
-			this.issueDialog = true
-			this.issueMessage = message
-			this.issueTitle = (message.raw_content || '').replace(/\s+/g, ' ').trim().substring(0, 80)
-			this.issueDescription = ''
-		}
-
-		createIssueConfirm() {
-			if (!this.issueMessage) return
-			const id = this.issueMessage.id
-			this.issueDialog = false
-			LeekWars.post('message/create-issue', { message_id: id, title: this.issueTitle, description: this.issueDescription }).then(data => {
-				LeekWars.toast('Issue #' + data.issue + ' créée')
-			}).error(data => {
-				LeekWars.toast(this.$t('main.error_' + data.error))
-			})
-		}
-
-		censorConfirm() {
-			this.censorDialog = false
-			if (this.censorMessage) {
-				const ids = Object.entries(this.censoredMessages).filter(e => e[1]).map(e => e[0]).join(',')
-				LeekWars.post('message/censor', { messages: ids, mute: this.censorMute })
-			}
-		}
-
-		deleteConfirm() {
-			this.deleteDialog = false
-			if (this.deletedMessage) {
-				const ids = Object.entries(this.deletedMessages).filter(e => e[1]).map(e => e[0]).join(',')
-				LeekWars.delete('message/delete', { messages: ids, mute: this.censorMute })
-			}
-		}
-
-		muteConfirm() {
-			if (!this.muteFarmer || !this.chat) { return }
-			LeekWars.post('message/mute', { target_id: this.muteFarmer.id, chat: this.chat.id, duration: 3600 })
-			this.muteFarmer.muted = true
-			this.muteDialog = false
-		}
-
-		openMenu(activator: any, message: ChatMessage) {
-			this.menuMessage = message
-			this.menuActivator = activator.target
-			this.menuEmoji = false
-			nextTick(() => {
-				this.menu = true
-			})
-		}
-
-		openEmojis(activator: any, message: ChatMessage) {
-			this.menuMessage = message
-			this.menuEmojiActivator = activator.target
-			this.menu = false
-			nextTick(() => {
-				this.menuEmoji = true
-			})
-		}
-
-		toggleReaction(emoji: string) {
-			this.menuEmoji = false
-			if (!this.menuMessage) return
-			LeekWars.track('chat-reaction')
-			if (this.menuMessage.my_reaction === emoji) { // Remove current reaction
-				LeekWars.delete('message-reaction/delete', { message_id: this.menuMessage.id })
-				this.menuMessage.my_reaction = null
-			} else {
-				LeekWars.post('message-reaction/add', { reaction: emoji, message_id: this.menuMessage.id })
-				this.menuMessage.my_reaction = emoji
-			}
-		}
-
-		formatMessage(message: ChatMessage) {
-
-			if (message.subMessages) {
-				for (const sub of message.subMessages) {
-					this.formatMessage(sub)
-				}
-			}
-			if (message.formatted) return message
-
-			message.raw_content = message.content
-			message.content = formatChatMessage(message.content, message.farmer.name, store.state.farmer_by_name)
-
-			const element = document.createElement('div')
-			element.innerHTML = message.content
-			const innerText = element.innerText.trim()
-			message.only_emojis = !element.querySelector('.br-invite') && (innerText.length === 0 || /^[\s\p{Emoji_Presentation}]+$/gmu.test(innerText))
-			if (!('censored' in message)) {
-				message.censored = 0
-			}
-			message.reactionDialog = false
-			message.formatted = true
-			return message
-		}
+		message.reactionDialog = false
+		message.formatted = true
+		return message
 	}
 </script>
 

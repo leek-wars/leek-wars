@@ -2,13 +2,12 @@
 	<div ref="md" class="md" v-html="html"></div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 	import { LeekWars } from '@/model/leekwars'
 	import { CHIP_BY_NAME } from '@/model/sorted_chips'
 	import { createSubApp } from '@/model/vue'
 	import markdown from 'markdown-it'
 	import DOMPurify from 'dompurify'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import LineOfSight from '../line-of-sight/line-of-sight.vue'
 	import ItemPreview from '../market/item-preview.vue'
 	import SearchBar from './search-bar.vue'
@@ -19,34 +18,38 @@
 	import { store } from '@/model/store'
 	import { i18n } from '@/model/i18n'
 	import LeekImage from '../leek-image.vue'
-	import { nextTick, ref, h, defineComponent } from 'vue'
+	import { computed, defineComponent, h, nextTick, onBeforeUpdate, ref, useTemplateRef, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
+	import { useRouter } from 'vue-router'
 	import LWLoader from '../app/loader.vue'
 
-	@Options({ name: 'markdown' })
-	export default class Markdown extends Vue {
+	defineOptions({ name: 'markdown' })
 
-		@Prop({required: true}) content!: string
-		@Prop({required: true}) mode!: string
-		@Prop() locale!: string
+	const props = defineProps<{
+		content: string
+		mode: string
+		locale?: string
+	}>()
 
-		markdown: any = new markdown({
-			html: true,
-			breaks: true,
-			linkify: true,
-		})
-		html: string = ''
-		summary: any = {}
-		components: any[] = []
+	const { locale: i18nLocale } = useI18n()
+	const router = useRouter()
+	const md = useTemplateRef<HTMLElement>('md')
 
-		encodeURL = (s: string) => s.trim().replace(/\s+/g, '_')
-		encodeID = (s: string) => s.trim().replace(/\s+/g, '_').replace(/'/g, '~')
+	const markdownInstance: any = new markdown({
+		html: true,
+		breaks: true,
+		linkify: true,
+	})
+	const html = ref('')
+	let summary: any = {}
+	let components: any[] = []
 
-		get language() {
-			return this.locale || this.$i18n.locale
-		}
+	const encodeURL = (s: string) => s.trim().replace(/\s+/g, '_')
+	const encodeID = (s: string) => s.trim().replace(/\s+/g, '_').replace(/'/g, '~')
 
-		@Watch('content', {immediate: true})
-		update() {
+	const language = computed(() => props.locale || i18nLocale.value)
+
+	function update() {
 
 			const re = /^((https:\/\/leekwars\.com)?\/image\/|https:\/\/(i\.)?imgur\.com\/|https:\/\/(i\.)?ibb\.co\/)/
 
@@ -59,7 +62,7 @@
 				}
 			})
 
-			const sanitized = DOMPurify.sanitize(this.markdown.render(this.content), {
+			const sanitized = DOMPurify.sanitize(markdownInstance.render(props.content), {
 				ADD_TAGS: ['img', 'center'],
 				ADD_ATTR: ['style', 'class', 'width', 'height', 'href', 'src', 'colspan', 'rowspan', 'alt', 'correct'],
 				ALLOW_UNKNOWN_PROTOCOLS: false,
@@ -67,34 +70,34 @@
 
 			DOMPurify.removeHook('uponSanitizeElement')
 
-			this.html = this.links(sanitized)
+			html.value = links(sanitized)
 
-			this.summary = {children: []}
-			const stack = [this.summary] as any[]
+			summary = {children: []}
+			const stack = [summary] as any[]
 
 			nextTick(() => {
-				const md = this.$refs.md as HTMLElement
-				md.querySelectorAll('h1, h2, h3, h4, h5').forEach((item: any) => {
+				const mdEl = md.value!
+				mdEl.querySelectorAll('h1, h2, h3, h4, h5').forEach((item: any) => {
 					const level = parseInt(item.tagName.substring(1), 10)
 					if (level >= 2) {
 						const node = {level, title: item.innerText, children: []}
-						const parent = stack[level - 2] || this.summary
+						const parent = stack[level - 2] || summary
 						stack[level - 1] = node
 						parent.children.push(node)
 					}
-					item.id = this.encodeID(item.innerText)
+					item.id = encodeID(item.innerText)
 				})
-				md.querySelectorAll('.encyclopedia-summary').forEach((item) => {
+				mdEl.querySelectorAll('.encyclopedia-summary').forEach((item) => {
 					const depth = parseInt(item.getAttribute('depth') || '3', 10)
-					item.innerHTML = this.generateSummary(depth)
+					item.innerHTML = generateSummary(depth)
 				})
-				md.querySelectorAll('pre code').forEach((item) => {
+				mdEl.querySelectorAll('pre code').forEach((item) => {
 					const content = ('' + item.textContent).trim()
 					item.classList.add('multi')
 					if (LeekWars.darkMode) item.classList.add('theme-monokai')
 					LeekWars.createCodeArea(content, item as HTMLElement)
 				})
-				md.querySelectorAll('code:not(.multi)').forEach((item) => {
+				mdEl.querySelectorAll('code:not(.multi)').forEach((item) => {
 					const content = ('' + item.textContent).trim()
 					if (LeekWars.darkMode) item.classList.add('theme-monokai')
 					LeekWars.createCodeAreaSimple(content, item as HTMLElement)
@@ -108,48 +111,48 @@
 							if (link.startsWith('/encyclopedia/')) {
 								link = link.replace(/ /g, '_')
 							}
-							this.$router.push(link.replace(document.location.origin, '').replace('https://leekwars.com/', ''))
+							router.push(link.replace(document.location.origin, '').replace('https://leekwars.com/', ''))
 							e.stopPropagation()
 							e.preventDefault()
 							return false
 						}
 					}
 				}
-				md.querySelectorAll('a').forEach(linkify)
+				mdEl.querySelectorAll('a').forEach(linkify)
 
 				// Armes
-				md.querySelectorAll('.encyclopedia-weapon').forEach((item) => {
+				mdEl.querySelectorAll('.encyclopedia-weapon').forEach((item) => {
 					const weapon = LeekWars.weaponByName[item.getAttribute('weapon')!]
 					const weaponItem = weapon ? LeekWars.items[weapon.item] : null
 					if (weaponItem) {
 						const app = createSubApp(ItemPreview, { item: weaponItem }, 'encyclopedia-weapon')
 						app.mount(item)
-						this.components.push({ $destroy: () => app.unmount() })
+						components.push({ $destroy: () => app.unmount() })
 					}
 				})
 				// Puces
-				md.querySelectorAll('.encyclopedia-chip').forEach((item) => {
+				mdEl.querySelectorAll('.encyclopedia-chip').forEach((item) => {
 					const chip = CHIP_BY_NAME[item.getAttribute('chip')!]
 					const chipItem = chip ? LeekWars.items[chip.id] : null
 					if (chipItem) {
 						const app = createSubApp(ItemPreview, { item: chipItem }, 'encyclopedia-chip')
 						app.mount(item)
-						this.components.push({ $destroy: () => app.unmount() })
+						components.push({ $destroy: () => app.unmount() })
 					}
 				})
 				// Potions
-				md.querySelectorAll('.encyclopedia-potion').forEach((item) => {
+				mdEl.querySelectorAll('.encyclopedia-potion').forEach((item) => {
 					const potion = LeekWars.potionByName[item.getAttribute('potion')!]
 					const potionItem = potion ? LeekWars.items[potion.id] : null
 					if (potionItem) {
 						const app = createSubApp(ItemPreview, { item: potionItem }, 'encyclopedia-potion')
 						app.mount(item)
-						this.components.push({ $destroy: () => app.unmount() })
+						components.push({ $destroy: () => app.unmount() })
 					}
 				})
-				const pageLink = (p: any) => '<a href="/encyclopedia/' + this.language + '/' + encodeURIComponent(p.title) + '">' + LeekWars.protect(p.title) + '</a>'
+				const pageLink = (p: any) => '<a href="/encyclopedia/' + language.value + '/' + encodeURIComponent(p.title) + '">' + LeekWars.protect(p.title) + '</a>'
 				const renderPageList = (selector: string, endpoint: string, tag: 'ul' | 'ol', row: (p: any) => string) => {
-					md.querySelectorAll(selector).forEach((item) => {
+					mdEl.querySelectorAll(selector).forEach((item) => {
 						LeekWars.get<any[]>(endpoint).then(pages => {
 							item.innerHTML = '<' + tag + '>' + pages.map(row).join('') + '</' + tag + '>'
 							item.querySelectorAll('a').forEach(linkify)
@@ -158,34 +161,34 @@
 				}
 				renderPageList('.encyclopedia-locked-pages', 'encyclopedia/get-locked-pages', 'ul',
 					p => '<li>' + pageLink(p) + ', verrouillée par <b>' + LeekWars.protect(p.name) + '</b></li>')
-				renderPageList('.encyclopedia-last-modifications', 'encyclopedia/get-last-pages/' + this.language, 'ul',
+				renderPageList('.encyclopedia-last-modifications', 'encyclopedia/get-last-pages/' + language.value, 'ul',
 					p => '<li>' + pageLink(p) + ', <b>' + LeekWars.protect(p.name) + '</b> ' + LeekWars.formatDuration(p.time) + '</li>')
-				renderPageList('.encyclopedia-most-viewed', 'encyclopedia/get-most-viewed/' + this.language, 'ol',
+				renderPageList('.encyclopedia-most-viewed', 'encyclopedia/get-most-viewed/' + language.value, 'ol',
 					p => '<li>' + pageLink(p) + ' — ' + LeekWars.formatNumber(p.views) + ' views</li>')
 				// LoS
-				md.querySelectorAll('.encyclopedia-los').forEach((item) => {
+				mdEl.querySelectorAll('.encyclopedia-los').forEach((item) => {
 					const app = createSubApp(LineOfSight, undefined, 'encyclopedia-los')
 					app.mount(item)
-					this.components.push({ $destroy: () => app.unmount() })
+					components.push({ $destroy: () => app.unmount() })
 				})
 				// Search bar
-				md.querySelectorAll('.encyclopedia-search-bar').forEach((item) => {
+				mdEl.querySelectorAll('.encyclopedia-search-bar').forEach((item) => {
 					createSubApp(SearchBar, undefined, 'encyclopedia-search-bar').component('loader', LWLoader).mount(item)
 				})
 				// Tutorial menu
-				md.querySelectorAll('.tutorial-menu').forEach((item) => {
-					const app = createSubApp(TutorialMenu, { locale: this.locale }, 'tutorial-menu')
+				mdEl.querySelectorAll('.tutorial-menu').forEach((item) => {
+					const app = createSubApp(TutorialMenu, { locale: props.locale }, 'tutorial-menu')
 					app.mount(item)
-					this.components.push({ $destroy: () => app.unmount() })
+					components.push({ $destroy: () => app.unmount() })
 				})
 				// Tutorial progress
-				md.querySelectorAll('.tutorial-progress').forEach((item) => {
-					const app = createSubApp(TutorialProgress, { locale: this.locale }, 'tutorial-progress')
+				mdEl.querySelectorAll('.tutorial-progress').forEach((item) => {
+					const app = createSubApp(TutorialProgress, { locale: props.locale }, 'tutorial-progress')
 					app.mount(item)
-					this.components.push({ $destroy: () => app.unmount() })
+					components.push({ $destroy: () => app.unmount() })
 				})
 				// Tutorial quizz
-				md.querySelectorAll('.quizz').forEach((item) => {
+				mdEl.querySelectorAll('.quizz').forEach((item) => {
 					let chapter = 0
 					item.classList.forEach(c => {
 						if (c.startsWith('chapter-')) {
@@ -195,7 +198,7 @@
 
 					// Désactivé si pas le chapitre N + 1
 					if (store.state.farmer && chapter !== store.state.farmer.tutorial_progress + 1) {
-						item.querySelectorAll('ul').forEach((answers, q) => {
+						item.querySelectorAll('ul').forEach((answers) => {
 							[...answers.children].forEach(child => child.classList.add('disabled'))
 						})
 					}
@@ -204,10 +207,10 @@
 					let submitContainer: HTMLElement | null = null
 					const set_finished = () => {
 						if (submitContainer) submitContainer.style.display = 'none'
-						item.querySelectorAll('ul').forEach((answers, q) => {
+						item.querySelectorAll('ul').forEach((answers) => {
 							[...answers.children].forEach(child => child.classList.add('disabled'))
 						})
-						const lock = md.querySelector('.lock')
+						const lock = mdEl.querySelector('.lock')
 						if (lock) {
 							lock.classList.remove('locked')
 						}
@@ -269,12 +272,12 @@
 								color: 'primary',
 								disabled: btnDisabled.value,
 								onClick: handleSubmit
-							}, () => i18n.t('main.validate'))
+							}, () => i18n.global.t('main.validate'))
 						}
 					})
 					const btnApp = createSubApp(BtnWrapper, undefined, 'tutorial-quiz-btn')
 					btnApp.mount(submitContainer)
-					this.components.push({ $destroy: () => btnApp.unmount() })
+					components.push({ $destroy: () => btnApp.unmount() })
 
 					item.querySelectorAll('ul').forEach(answers => {
 						;[...answers.children].forEach((child, index) => {
@@ -318,7 +321,7 @@
 
 							const checkboxApp = createSubApp(CheckboxWrapper, undefined, 'tutorial-quiz-checkbox')
 							checkboxApp.mount(checkboxContainer)
-							this.components.push({ $destroy: () => checkboxApp.unmount() })
+							components.push({ $destroy: () => checkboxApp.unmount() })
 
 							checkboxContainer.addEventListener('click', (e: Event) => {
 								e.stopPropagation()
@@ -333,7 +336,7 @@
 					// Déjà réussi ?
 					if (store.state.farmer && store.state.farmer.tutorial_progress >= chapter) {
 						set_finished()
-						item.querySelectorAll('ul').forEach((answers, q) => {
+						item.querySelectorAll('ul').forEach((answers) => {
 							[...answers.children].forEach(child => {
 								if (child.hasAttribute('correct')) {
 									child.classList.add('correct')
@@ -344,39 +347,40 @@
 				})
 
 				// Leeky
-				md.querySelectorAll('.leeky').forEach((item) => {
+				mdEl.querySelectorAll('.leeky').forEach((item) => {
 					const app = createSubApp(LeekImage, { leek: { level: 10, face: 1 }, scale: 0.55 }, 'md-leeky')
 					app.mount(item)
-					this.components.push({ $destroy: () => app.unmount() })
+					components.push({ $destroy: () => app.unmount() })
 				})
 				// Domingo
-				md.querySelectorAll('.domingo').forEach((item) => {
+				mdEl.querySelectorAll('.domingo').forEach((item) => {
 					const app = createSubApp(LeekImage, { leek: { level: 301, face: 2, metal: true, skin: 9 }, scale: 0.45 }, 'md-domingo')
 					app.mount(item)
-					this.components.push({ $destroy: () => app.unmount() })
+					components.push({ $destroy: () => app.unmount() })
 				})
 				// Aliases - affichage discret
-				md.querySelectorAll('.aliases-display').forEach(el => el.remove())
-				const aliasElements = md.querySelectorAll('.encyclopedia-alias')
+				mdEl.querySelectorAll('.aliases-display').forEach(el => el.remove())
+				const aliasElements = mdEl.querySelectorAll('.encyclopedia-alias')
 				if (aliasElements.length > 0) {
 					const aliases = Array.from(aliasElements).map(el => el.getAttribute('data-alias')!).filter(Boolean)
 					if (aliases.length > 0) {
 						const container = document.createElement('div')
 						container.className = 'aliases-display'
-						container.textContent = this.$parent!.$parent!.$i18n.t('aliases', [aliases.join(', ')]) as string
-						// Insérer après le premier h1
-						const h1 = md.querySelector('h1')
+						container.textContent = i18n.global.t('encyclopedia.aliases', [aliases.join(', ')]) as string
+						const h1 = mdEl.querySelector('h1')
 						if (h1 && h1.nextSibling) {
 							h1.parentNode!.insertBefore(container, h1.nextSibling)
 						} else {
-							md.prepend(container)
+							mdEl.prepend(container)
 						}
 					}
 				}
 			})
 		}
 
-		links(html: string) {
+	watch(() => props.content, update, { immediate: true })
+
+	function links(html: string) {
 			// links() runs on HTML already cleaned by DOMPurify and its output goes
 			// straight to v-html, so every user-controlled substring injected here
 			// must be HTML-escaped (for text nodes) or strictly validated
@@ -387,10 +391,10 @@
 				const parts = link.split('|', 2)
 				link = parts[0]
 				const alias = parts.length === 2 ? parts[1] : link
-				const page = LeekWars.encyclopedia[this.language] ? LeekWars.encyclopedia[this.language][link.toLowerCase().replace(/_/g, ' ')] : null
+				const page = LeekWars.encyclopedia[language.value] ? LeekWars.encyclopedia[language.value][link.toLowerCase().replace(/_/g, ' ')] : null
 				const clazz = page ? "" : "new"
 				const target = page ? page.title.replace(/ /g, '_') : link.replace(/_/g, ' ')
-				const href = '/encyclopedia/' + this.language + '/' + encodeURIComponent(target)
+				const href = '/encyclopedia/' + language.value + '/' + encodeURIComponent(target)
 				return "<a href='" + href + "' class='" + clazz + "'>" + LeekWars.protect(alias) + "</a>"
 			}).replace(/{{(.*?)}}/g, (m, tag) => {
 				const originalTag = tag.trim()
@@ -439,7 +443,7 @@
 					if (parts.length > 1) {
 						const chapter = parseInt(parts[1])
 						const locked = (store.state.farmer ? store.state.farmer.tutorial_progress : 0) < chapter ? "locked": ""
-						return "<div class='lock " + locked + "'>" + this.$parent!.$parent!.$i18n.t('locked') + "</div>"
+						return "<div class='lock " + locked + "'>" + i18n.global.t('encyclopedia.locked') + "</div>"
 					}
 				} else if (tag.startsWith('alias')) {
 					const parts = originalTag.split(':')
@@ -454,26 +458,25 @@
 			})
 		}
 
-		generateSummary(depth: number) {
-			const aux = (node: any, d: number) => {
-				let r = '<li><a href="#' + encodeURIComponent(this.encodeURL(node.title)) + '">' + LeekWars.protect(node.title) + '</a></li>'
-				if (d > 0 && node.children.length) {
-					r += '<ul>' + node.children.map((n: any) => aux(n, d - 1)).join('') + '</ul>'
-				}
-				return r
+	function generateSummary(depth: number) {
+		const aux = (node: any, d: number) => {
+			let r = '<li><a href="#' + encodeURIComponent(encodeURL(node.title)) + '">' + LeekWars.protect(node.title) + '</a></li>'
+			if (d > 0 && node.children.length) {
+				r += '<ul>' + node.children.map((n: any) => aux(n, d - 1)).join('') + '</ul>'
 			}
-			return '<ul class="summary">'
-				+ this.summary.children.map((n: any) => aux(n, depth - 2)).join('')
-				+ '</ul>'
+			return r
 		}
-
-		beforeUpdate() {
-			for (const component of this.components) {
-				component.$destroy()
-			}
-			this.components = []
-		}
+		return '<ul class="summary">'
+			+ summary.children.map((n: any) => aux(n, depth - 2)).join('')
+			+ '</ul>'
 	}
+
+	onBeforeUpdate(() => {
+		for (const component of components) {
+			component.$destroy()
+		}
+		components = []
+	})
 </script>
 
 <style lang="scss" scoped>
