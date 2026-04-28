@@ -1,13 +1,13 @@
 {
 	"bicorn": "三角帽",
 	"black_chinese_hat": "黑色斗笠",
-	"black_harlequin": "黑丑角",
+	"black_harlequin": "黑色丑角帽",
 	"blue_wizard_hat": "蓝色巫师帽",
 	"caesar_laurel_wreath": "凯撒的桂冠",
 	"chinese_hat": "斗笠",
 	"christmas_hat": "圣诞帽",
 	"christmas_hat_desc": "谁没有梦想过看到戴着圣诞帽的韭菜？",
-	"christmas_hat_black": "Bogeyman 毛线帽",
+	"christmas_hat_black": "克朗普斯帽",
 	"crown": "王冠",
 	"crystal_crown": "水晶之冠",
 	"crystal_crown_green": "绿色水晶皇冠",
@@ -20,7 +20,7 @@
 	"laurel_wreath": "桂冠",
 	"mugiwara": "草帽",
 	"napoleon_bicorn": "拿破仑的三角帽",
-	"panama": "巴拿马",
+	"panama": "巴拿马帽",
 	"pirate_hat": "海盗帽",
 	"red_chinese_hat": "红色斗笠",
 	"red_wizard_hat": "红色巫师帽",
@@ -31,7 +31,7 @@
 	"white_harlequin": "白丑角",
 	"white_wizard_hat": "白巫师帽",
 	"space_hat": "太空帽",
-	"red_sombrero": "红草帽",
+	"red_sombrero": "红色宽边帽",
 	"mortarboard": "学士帽",
 	"saint_patrick": "圣帕特里克的帽子",
 	"black_fedora": "黑色软呢帽",
@@ -40,5 +40,5 @@
 	"white_topper": "白色礼帽",
 	"silver_crown": "银冠",
 	"cubic_hat": "立方帽",
-	"cap": "帽"
+	"cap": "鸭舌帽"
 }

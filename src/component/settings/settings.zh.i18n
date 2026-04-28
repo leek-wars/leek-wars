@@ -28,7 +28,7 @@
 	"error_password_length": "密码必须包含 {0} 到 {1} 个字符",
 	"error_wrong_password": "密码不正确",
 	"error_forbidden_name": "这个名字被禁止",
-	"error_invalid_godfather": "该播放器不存在",
+	"error_invalid_godfather": "该玩家不存在",
 	"error_invalid_length": "密码必须包含 {0} 到 {1} 个字符",
 	"error_invalid_mail": "电子邮件地址必须有效",
 	"error_login_already_used": "用户名已存在",

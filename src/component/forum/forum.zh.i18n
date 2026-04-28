@@ -2,8 +2,8 @@
 	"cancel": "取消",
 	"category": "类别",
 	"category_not_found": "未找到 ID 类别 <b>{0}</b> :(",
-	"connected_farmers": "已连接的育种者 ({0})",
-	"connected_farmers_subtitle": "{0} 个育种者已连接",
+	"connected_farmers": "已连接的饲养员 ({0})",
+	"connected_farmers_subtitle": "{0} 名饲养员已连接",
 	"error_cant_access": "无法访问此类别。",
 	"error_cant_do": "您不能执行此操作。",
 	"error_cant_title": "标题必须包含 6 到 30 个字符。",
@@ -25,5 +25,5 @@
 	"topic_not_found": "未找到 ID 为 <b>{0}</b> 的主题:(",
 	"topics": "主题",
 	"new_topic_notification": "通知我们新的主题",
-	"resolved": "resolved"
+	"resolved": "已解决"
 }

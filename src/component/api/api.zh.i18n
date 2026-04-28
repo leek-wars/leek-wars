@@ -5,7 +5,7 @@
 	"no_desc": "尚无说明 😥",
 	"leek_get": "检索韭菜的公共信息。",
 	"farmer_get": "检索育种者的公共信息。",
-	"team_get": "检索球队的公共信息。",
+	"team_get": "检索团队的公共信息。",
 	"ai_bin": "清空您的回收站并永久销毁其中的人工智能。",
 	"ai_change-folder": "将AI id **ai_id**移动到id文件夹<b>folder_id</b>。",
 	"ai_delete": "将id AI <b>ai_id</b>放入回收站。",
