@@ -123,18 +123,11 @@
 	</div>
 </template>
 
-<script lang="ts">
-	import { locale } from '@/locale'
-	import { defineAsyncComponent } from 'vue'
-	const Player = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/player/player.${locale}.i18n`))
-	export default { components: { 'player': Player } }
-</script>
-
 <script lang="ts" setup>
+	import { locale } from '@/locale'
 	import { mixins } from '@/model/i18n'
 	import { Comment } from '@/model/comment'
 	import { Fight, FightType } from '@/model/fight'
-	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
@@ -143,10 +136,12 @@
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
-	import { computed, nextTick, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue'
+	import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute } from 'vue-router'
 	import { emitter } from '@/model/vue'
+
+	const Player = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/player/player.${locale}.i18n`))
 
 	defineOptions({ name: 'fight', i18n: {}, mixins: [...mixins], components: { Comments, RichTooltipFarmer, RichTooltipTeam, 'report-dialog': ReportDialog } })
 
@@ -275,27 +270,16 @@
 			loadedFight.title = t('entity.' + loadedFight.boss_name) as string
 		}
 		LeekWars.setTitle(loadedFight.title, LeekWars.formatDate(loadedFight.date))
-
-		const leeks: {[key: number]: Leek} = {}
-		for (const leek of loadedFight.leeks1) {
-			leeks[leek.id] = leek
-		}
-		for (const leek of loadedFight.leeks2) {
-			leeks[leek.id] = leek
-		}
 	}
 
-	// Réception des notifications de trophées pour les mettre en attente
 	function onTrophy(trophy: any) {
 		trophyQueue.push(trophy)
 	}
 
-	// Réception des notifications pour les mettre en attente
 	function onFightNotification(message: any) {
 		fightNotificationQueue.push(message)
 	}
 
-	// Le player a joué un trophée, on peut l'afficher
 	function unlockTrophy(trophy: number) {
 		for (let m = 0; m < trophyQueue.length; ++m) {
 			const message = trophyQueue[m]

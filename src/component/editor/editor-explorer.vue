@@ -188,7 +188,7 @@
 <script setup lang="ts">
 	import { AI } from '@/model/ai'
 	import { fileSystem, translateFileSystemError } from '@/model/filesystem'
-	import { i18n, mixins } from '@/model/i18n'
+	import { mixins, t as gt } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import EditorFolder from './editor-folder.vue'
 	import { Folder } from './editor-item'
@@ -272,7 +272,6 @@
 				nextTick(() => folderMenu.value = true)
 			}
 		}
-		console.log("openMenu", event, x.value, y.value)
 	}
 
 	function windowsWarning(name: string): string | null {
@@ -336,7 +335,7 @@
 		if (ai.value) {
 			if (newName.value !== ai.value.name) {
 				LeekWars.post('ai/rename', {path: ai.value.path, new_name: newName.value}).then(() => {
-					LeekWars.toast(i18n.global.t('leekscript.ai_renamed', [newName.value]) as string)
+					LeekWars.toast(gt('leekscript.ai_renamed', [newName.value]))
 					fileSystem.renameAI(ai.value!, newName.value)
 					router.replace('/editor/' + ai.value!.path)
 				}).error((error: any) => {
@@ -347,7 +346,7 @@
 			if (newName.value !== folder.value.name) {
 				const folderPath = fileSystem.getFolderPath(folder.value).replace(/\/$/, '')
 				LeekWars.post('ai-folder/rename', {path: folderPath, new_name: newName.value}).then(() => {
-					LeekWars.toast(i18n.global.t('leekscript.folder_renamed', [newName.value]) as string)
+					LeekWars.toast(gt('leekscript.folder_renamed', [newName.value]))
 					folder.value!.name = newName.value
 				}).error((error: any) => {
 					LeekWars.toast(translateFileSystemError(error))

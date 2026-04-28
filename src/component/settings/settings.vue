@@ -270,7 +270,7 @@
 
 <script setup lang="ts">
 	import TwoFactor from '@/component/settings/two-factor.vue'
-	import { mixins, i18n } from '@/model/i18n'
+	import { mixins, t as gt } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { ref, watch } from 'vue'
@@ -439,7 +439,7 @@
 		}
 		LeekWars.post('farmer/change-password', {password: password.value, new_password: newPassword1.value}).then(() => {
 			store.commit('disconnect')
-			LeekWars.toast(i18n.global.t('settings.password_changed'))
+			LeekWars.toast(gt('settings.password_changed'))
 			router.push('/login')
 		}).error(error => {
 			LeekWars.toast(t('error_' + error.error, error.params))
@@ -486,7 +486,7 @@
 
 	function sendChangeEmail() {
 		LeekWars.post('farmer/change-email1').then(() => {
-			LeekWars.toast(i18n.global.t('change_email_sent'))
+			LeekWars.toast(gt('change_email_sent'))
 		})
 		changeEmailSent.value = true
 	}
