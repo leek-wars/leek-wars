@@ -184,6 +184,7 @@
 	"error_1005": "The invoked bulb has no AI",
 	"error_1006": "Loadout \"{0}\" not found. The name must match an existing farmer loadout exactly (case-sensitive).",
 	"error_1007": "setLoadout() can only be called inside the beforeFight() function.",
+	"error_1009": "Loadout \"{0}\": no forgotten weapon available — all candidates are already equipped on other leeks of the farmer.",
 	"error_15": "The name of an AI is expected here",
 	"error_141": "The {0} operator is incompatible with \"{1}\" of type \"{2}\"",
 	"error_142": "The infinite \"{0}\" boundary cannot be closed.",

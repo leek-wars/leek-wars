@@ -195,6 +195,7 @@
 	"error_1005": "Le bulbe invoqué n'a pas d'IA",
 	"error_1006": "Loadout « {0} » introuvable. Le nom doit correspondre exactement à un loadout existant chez l'éleveur (sensible à la casse).",
 	"error_1007": "setLoadout() ne peut être appelée qu'à l'intérieur de la fonction beforeFight().",
+	"error_1009": "Loadout « {0} » : aucune arme oubliée disponible — toutes les candidates sont déjà équipées sur d'autres poireaux de l'éleveur.",
 	"size": "Taille",
 	"error_146": "« case » ou « default » attendu.",
 	"error_147": "Deux-points attendu après « case ».",
