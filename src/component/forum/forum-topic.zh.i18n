@@ -40,5 +40,9 @@
 	"hide_topic": "隐藏",
 	"show_topic": "显示",
 	"set_release": "版本",
-	"release_hint": "输入0以移除版本"
+	"release_hint": "输入0以移除版本",
+	"old_topic_confirm": "此主题的最后一条消息已超过一年。您确定要回复吗？",
+	"old_topic_title": "旧主题",
+	"old_topic_warning": "此主题的最后一条消息已超过一年。",
+	"see_changelog": "查看 {0} 的更新日志"
 }

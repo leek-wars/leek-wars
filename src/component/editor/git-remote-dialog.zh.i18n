@@ -1,0 +1,22 @@
+{
+	"title": "远程设置",
+	"remotes": "远程仓库",
+	"no_remotes": "没有配置任何远程仓库。",
+	"remote_name": "名称（例如：origin）",
+	"remote_url": "https://github.com/user/repo.git",
+	"select_repo": "选择仓库...",
+	"authentication": "身份验证",
+	"connected_as": "已以 {0} 身份连接",
+	"connected_anonymous": "已连接",
+	"install_github_app": "安装 GitHub App",
+	"install_hint": "在安装时选择要授权访问的仓库。",
+	"github_app": "GitHub App",
+	"or_pat": "或使用个人访问令牌（PAT）：",
+	"pat_placeholder": "访问令牌",
+	"instance_placeholder": "https://codeberg.org",
+	"self_hosted": "自托管实例",
+	"save": "保存",
+	"add": "添加",
+	"invalid_token": "令牌被提供方拒绝。",
+	"invalid_instance_url": "实例 URL 无效或服务器无法访问。"
+}

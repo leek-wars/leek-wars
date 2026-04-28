@@ -17,7 +17,7 @@
 	"ai_restore": "恢复人工智能**ai_id**并将其从回收站中删除。",
 	"ai_save": "保存人工智能**ai_id**并返回错误信息。",
 	"ai_strict": "启用或禁用AI **ai_id**的严格模式。",
-	"ai_sync": "以`{ ai: timestamp }`形式获取人工智能id列表**ais**，并返回不再是最新的人工智能的代码。",
+	"ai_sync": "以`{'{'} ai: timestamp {'}'}`形式获取人工智能id列表**ais**，并返回不再是最新的人工智能的代码。",
 	"ai_test-scenario": "启动**scenario_id**场景，如果**scenario_id**为 \"0\"，则启动人工智能**ai_id**的默认场景。",
 	"ai_version": "将人工智能版本**ai_id**更改为**version**。",
 	"ai-folder_change-folder": "将**folder_id**文件夹移动到**dest_folder_id**。",

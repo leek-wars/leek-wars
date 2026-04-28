@@ -15,10 +15,17 @@
 	"fight_context": "战斗背景",
 	"solo": "独奏",
 	"farmer": "饲养员",
-	"team": "全体人员",
+	"team": "团队",
 	"battle_royale": "大逃杀",
 	"challenge": "挑战",
 	"garden": "菜园",
 	"tournament": "比赛",
-	"boss": "老板"
+	"boss": "老板",
+	"chest_hunt": "宝箱狩猎",
+	"chests": "宝箱",
+	"colossus": "巨像",
+	"loot": "战利品",
+	"n_chests": "{0} 个宝箱",
+	"rare_loot": "稀有资源",
+	"war": "战争"
 }

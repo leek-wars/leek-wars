@@ -32,5 +32,10 @@
 	"invalid_name_reserved": "此名称已被保留。",
 	"invalid_name_slash": "名称中不允许使用「/」字符。",
 	"windows_warning_char": "字符「{0}」在Windows上不允许使用，此名称可能导致git出现问题。",
-	"windows_warning_reserved": "「{0}」是Windows上的保留名称，此名称可能导致git出现问题。"
+	"windows_warning_reserved": "「{0}」是Windows上的保留名称，此名称可能导致git出现问题。",
+	"destroy_folder": "永久销毁文件夹「{0}」？",
+	"destroy_folder_warning": "文件夹及其包含的所有 AI 将被永久删除。此操作不可逆。",
+	"init_git": "初始化 Git 仓库",
+	"deinit_git": "移除 Git 仓库",
+	"deinit_git_confirm": "移除文件夹「{0}」中的 Git 仓库？提交历史将会丢失。"
 }

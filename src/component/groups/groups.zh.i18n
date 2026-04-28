@@ -7,7 +7,7 @@
 	"enterprise": "公司",
 	"enterprise_desc": "一个合作者之间活动的公司。",
 	"players": "玩家",
-	"players_desc": "一组球员为一个有私人比赛的活动。",
+	"players_desc": "一群玩家组成的群组，可举办带有私人锦标赛的活动",
 	"features": "特点",
 	"private_page": "私人团体页面",
 	"create_members": "创建和管理参与者",

@@ -1,5 +1,5 @@
 {
-	"advanced": "进步",
+	"advanced": "高级",
 	"advanced_items": "进阶项目",
 	"advanced_strategy": "进阶攻略",
 	"aoe": "范围",
@@ -44,14 +44,17 @@
 	"type_farmer": "饲养员",
 	"type_free": "自由的",
 	"type_solo": "独奏",
-	"type_team": "全体人员",
+	"type_team": "团队",
 	"test_validate": "开始测试",
 	"test_scenario": "脚本",
 	"test_map": "地图",
-	"test_maps": "牌",
-	"test_advanced": "进步",
+	"test_maps": "地图",
+	"test_advanced": "高级",
 	"templates": "楷模",
 	"free": "自由的",
-	"select_chips": "选择子弹",
-	"select_weapons": "选择武器"
+	"select_chips": "选择芯片",
+	"select_weapons": "选择武器",
+	"max_turns": "最大回合数",
+	"max_turns_desc": "战斗的最大回合数（默认 64）",
+	"max_turns_placeholder": "1 到 64 之间的整数。默认 = 64"
 }

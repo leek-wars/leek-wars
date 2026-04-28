@@ -6,7 +6,7 @@
 	"level": "等级",
 	"talent": "天赋",
 	"avg_leek_level": "平均等级",
-	"members": "农夫",
+	"members": "饲养员",
 	"leeks": "韭菜",
 	"activity": "活跃度",
 	"recruitment_message": "招募",
@@ -23,5 +23,7 @@
 	"error_already_have_candidacy": "你已有一个待处理的申请。",
 	"error_already_in_team": "你已经在一个队伍中。",
 	"error_team_full": "这个队伍已满。",
-	"error_too_many_candidacies": "你已有5个待处理的申请。"
+	"error_too_many_candidacies": "你已有5个待处理的申请。",
+	"closed": "已关闭",
+	"show_closed": "查看已关闭的"
 }

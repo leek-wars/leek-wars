@@ -12,5 +12,12 @@
 	"end_edition": "结束编辑",
 	"editing_by_x": "目前由 {0} 编辑",
 	"redirected_from": "从 {0} 重定向",
-	"aliases": "也称为: {0}"
+	"aliases": "也称为: {0}",
+	"child_pages": "子页面",
+	"history": "历史",
+	"initial": "创建",
+	"linked_from": "包含链接的页面",
+	"n_references": "引用 | 引用 | 引用",
+	"referencing_translations": "相关翻译",
+	"views": "次观看"
 }

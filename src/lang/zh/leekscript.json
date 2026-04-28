@@ -16,7 +16,7 @@
 	"expert": "专家",
 	"normal": "普通的",
 	"lambda": "拉姆达",
-	"leekscript": "韭菜",
+	"leekscript": "LeekScript",
 	"ls_function_definitions": "函数“{0}”提供了 {1} 定义。",
 	"ls_function_information": "有关函数“{0}”的信息。",
 	"ls_return_nothing": "什么都不返回",
@@ -196,5 +196,7 @@
 	"size": "尺寸",
 	"error_146": "期望 \"case\" 或 \"default\"。",
 	"error_147": "\"case\" 后面期望冒号。",
-	"error_148": "变量\u201c{0}\u201d未使用。"
+	"error_148": "变量“{0}”未使用。",
+	"error_1006": "未找到装备「{0}」。名称必须与现有装备完全匹配（区分大小写）。",
+	"error_1007": "setLoadout() 只能在 beforeFight() 函数内部调用。"
 }

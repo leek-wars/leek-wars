@@ -1,7 +1,7 @@
 {
 	"category_bonus": "奖金",
 	"category_code": "编码",
-	"category_fight": "斗争",
+	"category_fight": "战斗",
 	"category_fun": "乐趣",
 	"category_general": "一般的",
 	"category_shopping": "采购",
@@ -11,7 +11,7 @@
 	"group_by_categories": "类别",
 	"sort_index": "默认",
 	"sort_points": "积分",
-	"sort_rarity": "缺乏",
+	"sort_rarity": "稀有度",
 	"stats": "统计数据",
 	"title": "{0} 个奖杯",
 	"title_me": "我的奖杯",
