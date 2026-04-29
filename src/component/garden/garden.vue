@@ -530,6 +530,7 @@ import { emitter } from '@/model/vue'
 		@Watch('$route.params')
 		@Watch('$store.state.farmer')
 		update() {
+			if (!store.state.farmer) { return }
 			const params = this.$route.params
 			// console.log("update", params)
 			this.category = params.category
