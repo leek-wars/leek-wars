@@ -242,645 +242,551 @@
 				<v-switch v-model="actionsDisplayAlliesLogs" :label="$t('display_allies_logs')" :hide-details="true" :ripple="false" />
 			</div>
 			<loader v-if="!loaded" />
-			<actions v-else :has-err-warn="hasErrWarn" :fight="fight" :report="report" :actions="actions" :leeks="leeks" :display-logs="actionsDisplayLogs" :display-allies-logs="actionsDisplayAlliesLogs" class="actions" />
+			<actions v-else :has-err-warn="hasErrWarn" :fight="fight" :report="report" :actions="fightActions" :leeks="leeks" :display-logs="actionsDisplayLogs" :display-allies-logs="actionsDisplayAlliesLogs" class="actions" />
 		</panel>
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 	import Map from '@/component/app/map.vue'
 	import { locale } from '@/locale'
 	import { Action, ActionType } from '@/model/action'
 	import { Comment } from '@/model/comment'
-	import { Fight, FightContext, FightLeek, FightType, Report, ReportFarmer, ReportLeek } from '@/model/fight'
+	import { Fight, FightContext, FightType, ReportLeek } from '@/model/fight'
 	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { TEAM_COLORS } from '@/model/team'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import ActionsElement from './report-actions.vue'
 	import ReportBlock from './report-block.vue'
 	import ReportLeekRow from './report-leek-row.vue'
-	const ReportStatistics = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/report/report-statistics.${locale}.i18n`))
 	import { FightStatistics } from './statistics'
 	import Comments from '@/component/comment/comments.vue'
 	import { CHIPS } from '@/model/chips'
 	import { fileSystem } from '@/model/filesystem'
 	import router from '@/router'
 	import { emitter } from '@/model/vue'
-	import { defineAsyncComponent, nextTick } from 'vue'
+	import { computed, defineAsyncComponent, getCurrentInstance, nextTick, onBeforeUnmount, ref, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
+	import { useRoute } from 'vue-router'
 	import { Bar, Doughnut } from 'vue-chartjs'
 	import { Tooltip } from 'chart.js'
 	import ReportLifeChart from './report-life-chart.vue'
 
-	// Custom tooltip positioner: center on the full stacked bar
+	const ReportStatistics = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/report/report-statistics.${locale}.i18n`))
+
 	;(Tooltip.positioners as any).stackCenter = function(items: any[]) {
 		if (!items.length) return false
 		const first = items[0].element
-		// For horizontal bars (indexAxis: 'y'), x is the bar end, base is the bar start
 		const xStart = Math.min(first.base, first.x)
 		const xEnd = Math.max(...items.map((i: any) => Math.max(i.element.x, i.element.base)))
 		return { x: (xStart + xEnd) / 2, y: first.y }
 	}
 
-	@Options({ name: 'report', i18n: {}, mixins: [...mixins], components: {
-		Breadcrumb,
-		actions: ActionsElement,
-		ReportLeekRow,
-		ReportBlock,
-		ReportStatistics,
-		'lw-map': Map,
-		Comments,
-		Doughnut,
-		Bar,
-		ReportLifeChart,
-	} })
-	export default class ReportPage extends Vue {
-		TEAM_COLORS = TEAM_COLORS
-		fileSystem = fileSystem
-		fight: Fight | null = null
-		report: Report | null = null
-		actions: readonly Action[] | null = null
-		leeks: {[key: number]: ReportLeek} = {}
-		farmers: {[key: number]: any} = {}
-		logs: {[key: number]: any[][]} = {}
-		FightType = FightType
-		FightContext = FightContext
-		loaded: boolean = false
-		fightTypeLabel: string | null = null
-		errors: any[] = []
-		warnings: any[] = []
-		hasErrWarn: boolean = false
-		myFight: boolean = false
-		iWin: boolean = false
-		enemy: any = null
-		statistics: FightStatistics | null = null
-		actionsDisplayAlliesLogs: boolean = true
-		actionsDisplayLogs: boolean = true
-		generating: boolean = false
-		error: boolean = false
-		damageEntities: any = null
-		damageChartType: number = 0
-		damageChartDamage: any = {}
-		damageChartOptions = {
-			donut: true,
-			cutout: '70%',
-			rotation: 90,
-			showLabel: false,
-			plugins: { legend: { display: false } },
-		}
-		damagesBarsData: any = {}
-		damagesBarsOptions: any = null
-		damagesBarsTotal = {
-			id: 'stackTotal',
-			afterDatasetsDraw(chart: any) {
-				const ctx = chart.ctx
-				const meta = chart.getDatasetMeta(chart.data.datasets.length - 1)
-				ctx.save()
-				ctx.font = 'bold 13px sans-serif'
-				ctx.fillStyle = getComputedStyle(chart.canvas).getPropertyValue('--text-color-secondary') || '#888'
-				ctx.textBaseline = 'middle'
-				meta.data.forEach((bar: any, i: number) => {
-					const total = chart.data.datasets.reduce((sum: number, ds: any) => sum + (ds.data[i] || 0), 0)
-					if (total > 0) {
-						const lastMeta = chart.getDatasetMeta(chart.data.datasets.length - 1)
-						const x = lastMeta.data[i].x
-						ctx.fillText(total.toLocaleString(), x + 6, bar.y)
-					}
-				})
-				ctx.restore()
-			}
-		}
-		damagesTeams: number = 0
-		damagesBarsHeight: number = 0
-		damagesDisplaySummons: boolean = false
-		map_obstacles: any
-		map_teams: any = null
-		legends: any
-		currentLink: Element | null = null
+	defineOptions({ name: 'report', i18n: {}, mixins: [...mixins], components: { actions: ActionsElement, 'lw-map': Map } })
 
-		get id() {
-			return this.$route.params.id
-		}
-		get team1Title() {
-			if (!this.fight) { return '' }
-			return this.fight.report.win === 0 ? this.$i18n.t('team1') : this.$i18n.t('winners')
-		}
-		get team2Title() {
-			if (!this.fight) { return '' }
-			return this.fight.report.win === 0 ? this.$i18n.t('team2') : this.$i18n.t('loosers')
-		}
-		get team1Icon() {
-			if (!this.fight) { return '' }
-			return this.fight.report.win === 0 ? '' : 'mdi-trophy-outline'
-		}
-		get team2Icon() {
-			if (!this.fight) { return '' }
-			return this.fight.report.win === 0 ? '' : 'mdi-skull-outline'
-		}
+	const { t, te } = useI18n()
+	const route = useRoute()
+	const instance = getCurrentInstance()
 
-		@Watch('id', {immediate: true})
-		update() {
-			this.generating = false
-			this.error = false
-			this.loaded = false
-			this.fight = null
-			this.report = null
-			this.actions = null
-			this.fightTypeLabel = null
-			this.myFight = false
-			this.iWin = false
-			this.enemy = null
-
-			if (localStorage.getItem('fight/turrets') === null) { localStorage.setItem('fight/turrets', 'true') }
-			if (localStorage.getItem('fight/logs') === null) { localStorage.setItem('fight/logs', 'true') }
-			if (localStorage.getItem('fight/turrets') === null) { localStorage.setItem('fight/turrets', 'true') }
-			if (localStorage.getItem('fight/allies-logs') === null) { localStorage.setItem('fight/allies-logs', 'true') }
-			this.actionsDisplayLogs = localStorage.getItem('report/logs') !== 'false'
-			this.actionsDisplayAlliesLogs = localStorage.getItem('report/allies-logs') === 'true'
-
-			const id = this.$route.params.id
-			const url = this.$store.getters.admin ? 'fight/get-private/' + id : 'fight/get/' + id
-			LeekWars.get<Fight>(url).then(data => {
-				if (data.status === 0) {
-					this.generating = true
-					return
-				}
-				Object.freeze(data.data)
-				this.fight = data
-				this.report = this.fight.report
-
-				for (const fid in this.fight.farmers1) {
-					this.farmers[fid] = this.fight.farmers1[fid]
-				}
-				for (const fid in this.fight.farmers2) {
-					this.farmers[fid] = this.fight.farmers2[fid]
-				}
-
-				for (const leek of this.fight.data.leeks) {
-					this.leeks[leek.id] = leek as any
-					leek.translatedName = leek.name
-					if (leek.type !== 0) {
-						leek.translatedName = this.$i18n.te('entity.' + leek.name) ? this.$i18n.t('entity.' + leek.name) as string : leek.name
-					}
-					leek.farmer = this.farmers[leek.farmer]
-				}
-
-				let currentPlayer: ReportLeek | null = null
-				const effects = {} as any
-				this.actions = this.fight.data.actions.map((a: any) => {
-					const action = new Action(a)
-					if (a[0] === ActionType.LEEK_TURN) {
-						currentPlayer = this.leeks[a[1]]
-					} else if (a[0] === ActionType.SET_WEAPON_OLD) {
-						this.leeks[a[1]].weapon = LeekWars.weapons[a[2]]
-					} else if (a[0] === ActionType.SET_WEAPON) {
-						currentPlayer!.weapon = LeekWars.weapons[a[1]]
-					} else if (a[0] === ActionType.USE_WEAPON || a[0] === ActionType.USE_WEAPON_OLD) {
-						action.item = currentPlayer!.weapon
-					} else if (a[0] === ActionType.USE_CHIP) {
-						action.item = CHIPS[LeekWars.chipTemplates[a[1]].item]
-					} else if (a[0] === ActionType.ADD_CHIP_EFFECT || a[0] === ActionType.ADD_WEAPON_EFFECT) {
-						effects[a[2]] = { turns: a[7], value: a[6], type: a[5], target: a[4] }
-					} else if (a[0] === ActionType.STACK_EFFECT) {
-						action.item = effects[a[1]]
-					}
-					action.entity = currentPlayer
-					return action
-				})
-				// console.log(this.actions)
-
-				if (store.state.farmer && store.state.farmer.admin) {
-					const s = (n: any): number => {
-						if (typeof n === 'number') return (1 + Math.log10(n)) | 0
-						if (typeof n === 'object' && !Array.isArray(n)) return 2 + Object.values(n).reduce((x: number, y: any) => x + s(y), 0) + Object.keys(n).reduce((x: number, y: any) => x + s(y), 0) + Object.values(n).length * 2
-						return 2 + n.length
-					}
-					let sizes = {} as {[key: string]: number}
-					let count = {} as {[key: string]: number}
-					let total = 0
-					for (const action of this.actions!) {
-						const size = 2 + action.params.reduce((t, p) => t + s(p), 0) + action.params.length
-						if (!(action.type in sizes)) count[action.type] = sizes[action.type] = 0
-						sizes[action.type] += size
-						count[action.type]++
-						total += size
-					}
-					let result = Object.entries(sizes).map((v) => [
-						ActionType[parseInt(v[0])],
-						v[1],
-						count[v[0]],
-						Math.round(v[1] / count[v[0]]) + '/u',
-						Math.round(100 * v[1] / total) + '%'
-					])
-					result.sort((a, b) => b[1] as number - (a[1] as number))
-					// console.log(result, total)
-				}
-
-				this.statistics = new FightStatistics()
-				this.statistics.generate(this.fight)
-				// console.log(this.statistics)
-
-				this.getChartDamage()
-				this.updateMap()
-				this.walkedCells(999)
-				if (this.fight.context === FightContext.CHALLENGE) {
-					this.challenge()
-				}
-				LeekWars.setActions([{icon: 'mdi-undo', click: () => this.$router.push('/fight/' + id)}])
-				let title = this.$i18n.t('title') + " - "
-				if (this.fight.type === FightType.BATTLE_ROYALE) {
-					title += this.$t('main.battle_royale') as string
-				} else if (this.fight.type === FightType.WAR) {
-					title += this.$t('main.war') as string
-				} else if (this.fight.type === FightType.CHEST_HUNT) {
-					title += this.$t('main.chest_hunt') as string
-				} else if (this.fight.type === FightType.COLOSSUS) {
-					title += this.$t('main.colossus') as string
-				} else if (this.fight.type === FightType.BOSS) {
-					title += this.$t('entity.' + this.fight.boss_name) as string
-				} else {
-					title += this.fight.team1_name + " vs " + this.fight.team2_name
-				}
-				const arenaTypes: Record<number, string> = {
-					[FightType.BATTLE_ROYALE]: this.$t('main.battle_royale') as string,
-					[FightType.WAR]: this.$t('main.war') as string,
-					[FightType.CHEST_HUNT]: this.$t('main.chest_hunt') as string,
-					[FightType.COLOSSUS]: this.$t('main.colossus') as string,
-				}
-				this.fightTypeLabel = arenaTypes[this.fight.type] || null
-				LeekWars.setTitle(title)
-				this.loaded = true
-				if (this.$store.state.farmer) {
-					LeekWars.get('fight/get-logs/' + id).then(d => {
-						this.logs = Object.freeze(d)
-						this.processLogs()
-						this.warningsErrors()
-						setTimeout(() => emitter.emit('loaded'), 100)
-					})
-				} else {
-					nextTick(() => emitter.emit('loaded'))
+	const fight = ref<Fight | null>(null)
+	const report = ref<any>(null)
+	const fightActions = ref<Action[] | null>(null)
+	const leeks = ref<{[key: number]: ReportLeek}>({})
+	const farmers = ref<{[key: number]: any}>({})
+	const logs = ref<{[key: number]: any[][]}>({})
+	const loaded = ref(false)
+	const fightTypeLabel = ref<string | null>(null)
+	const errors = ref<any[]>([])
+	const warnings = ref<any[]>([])
+	const hasErrWarn = ref(false)
+	const myFight = ref(false)
+	const iWin = ref(false)
+	const enemy = ref<any>(null)
+	const statistics = ref<FightStatistics | null>(null)
+	const actionsDisplayAlliesLogs = ref(true)
+	const actionsDisplayLogs = ref(true)
+	const generating = ref(false)
+	const error = ref(false)
+	const damageEntities = ref<any>(null)
+	const damageChartType = ref(0)
+	const damageChartDamage = ref<any>({})
+	const damageChartOptions = {
+		donut: true, cutout: '70%', rotation: 90, showLabel: false,
+		plugins: { legend: { display: false } },
+	}
+	const damagesBarsData = ref<any>({})
+	const damagesBarsOptions = ref<any>(null)
+	const damagesBarsTotal = {
+		id: 'stackTotal',
+		afterDatasetsDraw(chart: any) {
+			const ctx = chart.ctx
+			const meta = chart.getDatasetMeta(chart.data.datasets.length - 1)
+			ctx.save()
+			ctx.font = 'bold 13px sans-serif'
+			ctx.fillStyle = getComputedStyle(chart.canvas).getPropertyValue('--text-color-secondary') || '#888'
+			ctx.textBaseline = 'middle'
+			meta.data.forEach((bar: any, i: number) => {
+				const total = chart.data.datasets.reduce((sum: number, ds: any) => sum + (ds.data[i] || 0), 0)
+				if (total > 0) {
+					const lastMeta = chart.getDatasetMeta(chart.data.datasets.length - 1)
+					const x = lastMeta.data[i].x
+					ctx.fillText(total.toLocaleString(), x + 6, bar.y)
 				}
 			})
-			.error(error => this.error = true)
+			ctx.restore()
 		}
+	}
+	const damagesTeams = ref(0)
+	const damagesBarsHeight = ref(0)
+	const damagesDisplaySummons = ref(false)
+	const map_obstacles = ref<any>(null)
+	const map_teams = ref<any>(null)
+	const legends = ref<any>(null)
+	let currentLink: Element | null = null
 
-		async created() {
-			emitter.on('keyup', this.keyup)
+	const id = computed(() => route.params.id)
+	const team1Title = computed(() => {
+		if (!fight.value) { return '' }
+		return fight.value.report.win === 0 ? t('team1') : t('winners')
+	})
+	const team2Title = computed(() => {
+		if (!fight.value) { return '' }
+		return fight.value.report.win === 0 ? t('team2') : t('loosers')
+	})
+	const team1Icon = computed(() => {
+		if (!fight.value) { return '' }
+		return fight.value.report.win === 0 ? '' : 'mdi-trophy-outline'
+	})
+	const team2Icon = computed(() => {
+		if (!fight.value) { return '' }
+		return fight.value.report.win === 0 ? '' : 'mdi-skull-outline'
+	})
 
-			const fightMessages = await import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
-			i18n.global.mergeLocaleMessage(locale, { fight: fightMessages.default })
-		}
-
-		keyup(e: KeyboardEvent) {
-			if (e.key === 'r') {
-				this.refight()
-				e.preventDefault()
+	const hasPersonalLogs = computed(() => {
+		if (logs.value) {
+			for (const farmer in logs.value) {
+				for (const _ in logs.value[farmer]) { return true }
 			}
 		}
+		return false
+	})
 
-		beforeUnmount() {
-			emitter.off('keyup', this.keyup)
-		}
+	watch(id, () => update(), { immediate: true })
 
-		processLogs() {
-			if (!this.actions || !this.logs) { return }
-			for (const a in this.actions) {
-				const i = parseInt(a, 10)
-				for (const farmer in this.logs) {
-					const farmerLogs = this.logs[farmer]
-					if (i in farmerLogs) {
-						this.actions[a].me = parseInt(farmer, 10) === store.state.farmer!.id
-						this.actions[a].logs.push(...farmerLogs[i].filter(l => l[1] !== 4 && l[1] !== 9 && l[1] !== 10))
-					}
+	function update() {
+		generating.value = false
+		error.value = false
+		loaded.value = false
+		fight.value = null
+		report.value = null
+		fightActions.value = null
+		fightTypeLabel.value = null
+		myFight.value = false
+		iWin.value = false
+		enemy.value = null
+
+		if (localStorage.getItem('fight/turrets') === null) { localStorage.setItem('fight/turrets', 'true') }
+		if (localStorage.getItem('fight/logs') === null) { localStorage.setItem('fight/logs', 'true') }
+		if (localStorage.getItem('fight/allies-logs') === null) { localStorage.setItem('fight/allies-logs', 'true') }
+		actionsDisplayLogs.value = localStorage.getItem('report/logs') !== 'false'
+		actionsDisplayAlliesLogs.value = localStorage.getItem('report/allies-logs') === 'true'
+
+		const fightId = route.params.id
+		const url = store.getters.admin ? 'fight/get-private/' + fightId : 'fight/get/' + fightId
+		LeekWars.get<Fight>(url).then(data => {
+			if (data.status === 0) {
+				generating.value = true
+				return
+			}
+			Object.freeze(data.data)
+			fight.value = data
+			report.value = fight.value.report
+
+			for (const fid in fight.value.farmers1) {
+				farmers.value[fid] = fight.value.farmers1[fid]
+			}
+			for (const fid in fight.value.farmers2) {
+				farmers.value[fid] = fight.value.farmers2[fid]
+			}
+
+			for (const leek of fight.value.data.leeks) {
+				leeks.value[leek.id] = leek as any
+				;(leek as any).translatedName = leek.name
+				if (leek.type !== 0) {
+					;(leek as any).translatedName = te('entity.' + leek.name) ? t('entity.' + leek.name) as string : leek.name
 				}
+				;(leek as any).farmer = farmers.value[leek.farmer]
 			}
-		}
-		get hasPersonalLogs() {
-			if (this.logs) {
-				for (const farmer in this.logs) {
-					for (const _ in this.logs[farmer]) { return true }
-				}
-			}
-			return false
-		}
-		warningsErrors() {
-			this.errors = []
-			this.warnings = []
-			for (const farmer in this.logs) {
-				if (parseInt(farmer, 10) !== this.$store.state.farmer.id) { continue }
-				const farmerLogs = this.logs[farmer]
-				for (const a in farmerLogs) {
-					const action = farmerLogs[a]
-					let i = 0
-					for (const log of action) {
-						const leek = log[0]
-						const type = log[1]
-						const message = (type >= 6 && type <= 8) ? i18n.t('leekscript.error_' + log[3], log[4]) + "\n" + log[2] : log[2]
-						if (type === 2 || type === 7) {
-							this.warnings.push({entity: this.leeks[leek].name, data: message, action: a, index: i, ai: log[4], line: log[5]})
-						} else if (type === 3 || type === 8) {
-							this.errors.push({entity: this.leeks[leek].name, data: message, action: a, index: i, ai: log[4], line: log[5]})
-						}
-						i++
-					}
-				}
-			}
-			this.hasErrWarn = this.errors.length > 0 || this.warnings.length > 0
-		}
 
-		searchMyLeek(myLeek: any, leeks: ReportLeek[]) {
-			for (const l in leeks) {
-				if (leeks[l].id === myLeek.id) { return true }
-			}
-		}
-
-		challenge() {
-			if (!this.$store.state.farmer || !this.fight) { return }
-			const myFarmerId = this.$store.state.farmer.id
-			let mySide = 0
-			for (const ml in this.$store.state.farmer.leeks) {
-				if (this.searchMyLeek(this.$store.state.farmer.leeks[ml], this.fight.report.leeks1)) {
-					mySide = 1
-					break
-				} else if (this.searchMyLeek(this.$store.state.farmer.leeks[ml], this.fight.report.leeks2)) {
-					mySide = 2
-					break
+			let currentPlayer: ReportLeek | null = null
+			const effects = {} as any
+			fightActions.value = fight.value.data.actions.map((a: any) => {
+				const action = new Action(a)
+				if (a[0] === ActionType.LEEK_TURN) {
+					currentPlayer = leeks.value[a[1]]
+				} else if (a[0] === ActionType.SET_WEAPON_OLD) {
+					leeks.value[a[1]].weapon = LeekWars.weapons[a[2]]
+				} else if (a[0] === ActionType.SET_WEAPON) {
+					currentPlayer!.weapon = LeekWars.weapons[a[1]]
+				} else if (a[0] === ActionType.USE_WEAPON || a[0] === ActionType.USE_WEAPON_OLD) {
+					action.item = currentPlayer!.weapon
+				} else if (a[0] === ActionType.USE_CHIP) {
+					action.item = CHIPS[LeekWars.chipTemplates[a[1]].item]
+				} else if (a[0] === ActionType.ADD_CHIP_EFFECT || a[0] === ActionType.ADD_WEAPON_EFFECT) {
+					effects[a[2]] = { turns: a[7], value: a[6], type: a[5], target: a[4] }
+				} else if (a[0] === ActionType.STACK_EFFECT) {
+					action.item = effects[a[1]]
 				}
-			}
-			if (mySide === 0) { return }
-			this.myFight = true
-			this.iWin = this.fight.report.win === mySide
-			if (this.fight.type === FightType.SOLO) {
-				this.enemy = mySide === 1
-					? this.fight.report.leeks2[0].id
-					: (this.fight.report.leeks1.length ? this.fight.report.leeks1[0].id : -1)
-			} else if (this.fight.type === FightType.FARMER) {
-				this.enemy = this.fight.farmer1 === myFarmerId ? this.fight.farmer2 : this.fight.farmer1
-			} else if (this.fight.type === FightType.TEAM && this.fight.team1 && this.fight.team2) {
-				const myTeamId = this.$store.state.farmer.team?.id ?? null
-				this.enemy = this.fight.team1.id === myTeamId ? this.fight.team2.id : this.fight.team1.id
-			}
-		}
-
-		refight() {
-			if (this.fight && this.fight.context === FightContext.TEST) {
-				const last = localStorage.getItem('editor/last-scenario')
-				const last_ai = localStorage.getItem('editor/last-scenario-ai')
-				LeekWars.post('ai/test-scenario', {scenario_id: last, ai_id: last_ai}).then(data => {
-					this.$router.push('/fight/' + data.fight)
-				}).error(error => {
-					LeekWars.toast("Erreur : " + error)
-				})
-			}
-		}
-
-		comment(comment: Comment) {
-			if (this.fight) {
-				LeekWars.post('fight/comment', {fight_id: this.fight.id, comment: comment.comment}).then(data => {
-					if (this.fight) {
-						this.fight.comments.push(comment)
-					}
-				})
-			}
-		}
-
-		@Watch('damageChartType')
-		@Watch('damagesDisplaySummons')
-		@Watch('damagesTeams')
-		@Watch('LeekWars.darkMode')
-		getChartDamage() {
-			const entities: any[][] = [] // Entities or teams
-
-			for (const e in this.statistics!.entities) {
-				const entity = this.statistics!.entities[e]
-				let total = 0
-				let stats: any[] = []
-				const name = entity.translatedName
-				if (this.damageChartType === 0) {
-					total = entity.dmg_out
-					stats = [name, entity.leek.id, entity.leek.team, total, entity.direct_dmg_out, entity.poison_out, entity.return_out, entity.nova_out, entity.life_dmg_out]
-				} else if (this.damageChartType === 1) {
-					total = entity.dmg_in
-					stats = [name, entity.leek.id, entity.leek.team, total, entity.direct_dmg_in, entity.poison_in, entity.return_in, entity.nova_in, entity.life_dmg_in]
-				} else if (this.damageChartType === 2) {
-					total = entity.heal_out + entity.life_steal_out + entity.max_life_out
-					stats = [name, entity.leek.id, entity.leek.team, total, entity.heal_out, entity.life_steal_out, entity.max_life_out]
-				} else {
-					total = entity.tank
-					stats = [name, entity.leek.id, entity.leek.team, total, entity.tank]
-				}
-				if (this.damagesTeams === 1) {
-					const team = entities.find(ee => ee[2] === entity.leek.team)
-					if (team) {
-						team[3] += total
-						for (let v = 4; v < stats.length; ++v) {
-							team[v] += stats[v]
-						}
-					} else {
-						stats[0] = this.$t('team' + (stats[2]))
-						entities.push(stats)
-					}
-				} else if (entity.leek.summon && !this.damagesDisplaySummons) {
-					const summoner = entities.find(ee => ee[1] === entity.leek.owner)!
-					summoner[3] += total
-					for (let v = 4; v < stats.length; ++v) {
-						summoner[v] += stats[v]
-					}
-				} else {
-					entities.push(stats)
-				}
-			}
-			entities.sort((a: any, b: any) => {
-				const team1 = this.statistics!.entities[a[1]].leek.team
-				const team2 = this.statistics!.entities[b[1]].leek.team
-				if (this.fight!.type !== FightType.BATTLE_ROYALE && team1 !== team2) {
-					return team2 - team1
-				}
-				return a[3] - b[3]
+				;(action as any).entity = currentPlayer
+				return action
 			})
-			const series = []
-			for (let v = 4; v < entities[0].length; ++v) {
-				series.push(entities.map(e => e[v]))
-			}
-			this.damageEntities = entities
 
-			// Damage type labels and colors
-			let labelKeys: string[] = []
-			let colors: string[] = []
-			if (this.damageChartType === 0 || this.damageChartType === 1) {
-				labelKeys = ['direct', 'poison', 'return', 'nova', 'life']
-				colors = ['#e22424', '#a017d6', '#41d3ff', '#38e9ae', '#f28dff']
-				this.legends = ['#e22424', '#a017d6', '#32b2da', '#2bc491', '#f28dff']
-			} else if (this.damageChartType === 2) {
-				labelKeys = ['direct', 'steal', 'max_life']
-				colors = ['#5fad1b', '#e22424', '#38e9ae']
-				this.legends = ['#5fad1b', '#e22424', '#38e9ae']
+			statistics.value = new FightStatistics()
+			statistics.value.generate(fight.value)
+
+			getChartDamage()
+			updateMap()
+			walkedCells(999)
+			if (fight.value.context === FightContext.CHALLENGE) {
+				challenge()
+			}
+			LeekWars.setActions([{icon: 'mdi-undo', click: () => router.push('/fight/' + fightId)}])
+			let title = t('title') + " - "
+			if (fight.value.type === FightType.BATTLE_ROYALE) {
+				title += t('main.battle_royale') as string
+			} else if (fight.value.type === FightType.WAR) {
+				title += t('main.war') as string
+			} else if (fight.value.type === FightType.CHEST_HUNT) {
+				title += t('main.chest_hunt') as string
+			} else if (fight.value.type === FightType.COLOSSUS) {
+				title += t('main.colossus') as string
+			} else if (fight.value.type === FightType.BOSS) {
+				title += t('entity.' + fight.value.boss_name) as string
 			} else {
-				labelKeys = ['direct']
-				colors = ['orange']
-				this.legends = ['orange']
+				title += fight.value.team1_name + " vs " + fight.value.team2_name
 			}
-			const labels = labelKeys.map(k => this.$t('stat_' + k) as string)
-
-			// Bar chart
-			this.damagesBarsData = {
-				labels: entities.map(e => e[0]),
-				datasets: series.map((s, i) => ({ label: labels[i], data: s, stack: 'total', backgroundColor: colors[i] }) )
+			const arenaTypes: Record<number, string> = {
+				[FightType.BATTLE_ROYALE]: t('main.battle_royale') as string,
+				[FightType.WAR]: t('main.war') as string,
+				[FightType.CHEST_HUNT]: t('main.chest_hunt') as string,
+				[FightType.COLOSSUS]: t('main.colossus') as string,
 			}
-			this.damagesBarsHeight = Math.max(370, entities.length * 25)
-			const style = getComputedStyle(this.$el)
-			const textColor = style.getPropertyValue('--text-color-secondary').trim() || '#888'
-			this.damagesBarsOptions = {
-				maintainAspectRatio: false,
-				barThickness: 15,
-				layout: { padding: { right: 45 } },
-				plugins: {
-					legend: { display: false },
-					tooltip: {
-						mode: 'index' as any,
-						intersect: true,
-						position: 'stackCenter' as any,
-						yAlign: 'top',
-						callbacks: {
-							title: (items: any[]) => items[0]?.label || '',
-							label: (context: any) => context.raw ? `${context.dataset.label} : ${context.raw.toLocaleString()}` : null,
-						}
-					}
-				},
-				indexAxis: 'y',
-				scales: {
-					x: { stacked: true, grid: { color: 'rgba(128,128,128,0.15)' }, ticks: { color: textColor } },
-					y: { stacked: true, reverse: true, grid: { display: false }, ticks: { color: textColor } },
-				}
-			}
-
-			// Doughnut chart
-			const chartSeries = []
-			for (let v = 4; v < entities[0].length; ++v) {
-				chartSeries.push(entities.reduce((sum, e) => sum + e[v], 0))
-			}
-			this.damageChartDamage = {
-				labels,
-				datasets: [{
-					data: chartSeries,
-					backgroundColor: colors
-				}]
-			}
-			// setTimeout(() => {
-			// 	this.$el.querySelectorAll('.damage-chart').forEach((chart, i) => {
-			// 		chart.querySelectorAll('.ct-series path').forEach((e) => (e as HTMLElement).style.strokeWidth = '')
-			// 		chart.querySelectorAll('.ct-series').forEach((e, j) => {
-			// 			e.addEventListener('mouseenter', () => {
-			// 				e.classList.add('selected')
-			// 			})
-			// 			e.addEventListener('mouseleave', () => {
-			// 				e.classList.remove('selected')
-			// 			})
-			// 		})
-			// 	})
-			// }, 500)
-		}
-
-		@Watch("actionsDisplayLogs")
-		toggleLogs() {
-			localStorage.setItem('report/logs', '' + this.actionsDisplayLogs)
-		}
-		@Watch("actionsDisplayAlliesLogs")
-		toggleAlliesLogs() {
-			localStorage.setItem('report/allies-logs', '' + this.actionsDisplayAlliesLogs)
-		}
-
-		updateMap() {
-			this.map_obstacles = this.fight!.data.map.obstacles
-		}
-
-		walkedCells(fid: number) {
-			if (fid === 999) {
-				this.map_teams = this.statistics!.teams
-			} else if (fid < 0) {
-				this.map_teams = {[-fid]: this.statistics!.teams[-fid]}
+			fightTypeLabel.value = arenaTypes[fight.value.type] || null
+			LeekWars.setTitle(title)
+			loaded.value = true
+			if (store.state.farmer) {
+				LeekWars.get('fight/get-logs/' + fightId).then(d => {
+					logs.value = Object.freeze(d) as any
+					processLogs()
+					warningsErrors()
+					setTimeout(() => emitter.emit('loaded'), 100)
+				})
 			} else {
-				this.map_teams = {[this.statistics!.entities[fid].team]: this.statistics!.entities[fid].walkedCells}
+				nextTick(() => emitter.emit('loaded'))
 			}
+		})
+		.error(() => error.value = true)
+	}
+
+	;(async () => {
+		emitter.on('keyup', keyup)
+		const fightMessages = await import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
+		i18n.global.mergeLocaleMessage(locale, { fight: fightMessages.default })
+	})()
+
+	function keyup(e: KeyboardEvent) {
+		if (e.key === 'r') {
+			refight()
+			e.preventDefault()
 		}
+	}
 
-		goToAI(file: number, line: number) {
-			router.push('/editor/' + file + '?line=' + line)
-		}
+	onBeforeUnmount(() => {
+		emitter.off('keyup', keyup)
+	})
 
-		goToTurn(turn: number) {
-			const element = document.getElementById('turn-' + turn)
-			if (element) {
-				const sibling = element.parentElement!.nextElementSibling!
-				window.scrollTo(0, sibling.getBoundingClientRect().top + window.scrollY - 48)
-			}
-		}
-
-		// walkedCells(fid: number) {
-		// 	console.log("fid", fid)
-		// 	const farmer = this.fight.data.leeks.find(l => l.id === fid).farmer.id
-		// 	console.log("farmer", farmer)
-		// 	const walked = this.statistics.entities[fid].
-		// 	const parts = walked.split(',')
-		// 	const data = parts[0]
-		// 	const start = parseInt(parts[1], 10)
-		// 	let array = this.convertStringToUTF8ByteArray(atob(data))
-		// 	console.log(array)
-		// 	let bits = new Uint8Array(613)
-		// 	let cells = new Set<number>()
-		// 	let b = start
-		// 	for (let i = 0; i < array.length; i++) {
-		// 		for (let j = 0; j < 8; ++j) {
-		// 			const on = (array[i] & (1 << j)) != 0
-		// 			if (on) { cells.add(b) }
-		// 			bits[b] = on ? 1 : 0
-		// 			b++
-		// 		}
-		// 	}
-		// 	console.log("bits = " + bits)
-		// 	console.log("cells = ", cells)
-		// 	this.cells = cells
-		// }
-
-		// convertStringToUTF8ByteArray(str: string) {
-		// 	let binaryArray = new Uint8Array(str.length)
-		// 	Array.prototype.forEach.call(binaryArray, function (el, idx, arr) { arr[idx] = str.charCodeAt(idx) })
-		// 	return binaryArray
-		// }
-
-		mouseover(e: MouseEvent) {
-			// console.log("mouseover", e)
-			let target = (e.target as Element)
-			if (target.tagName === 'PRE') target = target.parentElement as Element
-			else if (target.tagName === 'A') target = target.parentElement as Element
-			else if (target.tagName === 'SPAN') target = target.closest('.log') as Element || target
-			if (this.currentLink && this.currentLink !== target) {
-				const l = this.currentLink.querySelector('a')
-				if (l) {
-					this.currentLink.removeChild(l)
+	function processLogs() {
+		if (!fightActions.value || !logs.value) { return }
+		for (const a in fightActions.value) {
+			const i = parseInt(a, 10)
+			for (const farmer in logs.value) {
+				const farmerLogs = logs.value[farmer]
+				if (i in farmerLogs) {
+					;(fightActions.value[+a] as any).me = parseInt(farmer, 10) === store.state.farmer!.id
+					fightActions.value[+a].logs.push(...farmerLogs[i].filter(l => l[1] !== 4 && l[1] !== 9 && l[1] !== 10))
 				}
-			}
-			this.currentLink = target
-			const link = target.querySelector('a')
-			if (!link) {
-				const action = target.getAttribute('a')
-				const index = target.getAttribute('i')
-				const l = document.createElement('a')
-				l.innerText = '➡️'
-				l.onclick = (e) => {
-					const error = document.querySelector('.fight-actions [l="' + action + '"][i="' + index + '"') as HTMLElement
-					if (error) {
-						window.scrollTo(0, error.offsetTop - 100)
-					}
-					e.preventDefault()
-				}
-				target.appendChild(l)
 			}
 		}
 	}
+
+	function warningsErrors() {
+		errors.value = []
+		warnings.value = []
+		for (const farmer in logs.value) {
+			if (parseInt(farmer, 10) !== store.state.farmer!.id) { continue }
+			const farmerLogs = logs.value[farmer]
+			for (const a in farmerLogs) {
+				const action = farmerLogs[a]
+				let i = 0
+				for (const log of action) {
+					const leek = log[0]
+					const type = log[1]
+					const message = (type >= 6 && type <= 8) ? i18n.global.t('leekscript.error_' + log[3], log[4]) + "\n" + log[2] : log[2]
+					if (type === 2 || type === 7) {
+						warnings.value.push({entity: leeks.value[leek].name, data: message, action: a, index: i, ai: log[4], line: log[5]})
+					} else if (type === 3 || type === 8) {
+						errors.value.push({entity: leeks.value[leek].name, data: message, action: a, index: i, ai: log[4], line: log[5]})
+					}
+					i++
+				}
+			}
+		}
+		hasErrWarn.value = errors.value.length > 0 || warnings.value.length > 0
+	}
+
+	function searchMyLeek(myLeek: any, leeks: ReportLeek[]) {
+		for (const l in leeks) {
+			if (leeks[l].id === myLeek.id) { return true }
+		}
+	}
+
+	function challenge() {
+		if (!store.state.farmer || !fight.value) { return }
+		const myFarmerId = store.state.farmer.id
+		let mySide = 0
+		for (const ml in store.state.farmer.leeks) {
+			if (searchMyLeek(store.state.farmer.leeks[ml], fight.value.report.leeks1)) {
+				mySide = 1
+				break
+			} else if (searchMyLeek(store.state.farmer.leeks[ml], fight.value.report.leeks2)) {
+				mySide = 2
+				break
+			}
+		}
+		if (mySide === 0) { return }
+		myFight.value = true
+		iWin.value = fight.value.report.win === mySide
+		if (fight.value.type === FightType.SOLO) {
+			enemy.value = mySide === 1
+				? fight.value.report.leeks2[0].id
+				: (fight.value.report.leeks1.length ? fight.value.report.leeks1[0].id : -1)
+		} else if (fight.value.type === FightType.FARMER) {
+			enemy.value = fight.value.farmer1 === myFarmerId ? fight.value.farmer2 : fight.value.farmer1
+		} else if (fight.value.type === FightType.TEAM && fight.value.team1 && fight.value.team2) {
+			const myTeamId = store.state.farmer.team?.id ?? null
+			enemy.value = fight.value.team1.id === myTeamId ? fight.value.team2.id : fight.value.team1.id
+		}
+	}
+
+	function refight() {
+		if (fight.value && fight.value.context === FightContext.TEST) {
+			const last = localStorage.getItem('editor/last-scenario')
+			const last_ai = localStorage.getItem('editor/last-scenario-ai')
+			LeekWars.post('ai/test-scenario', {scenario_id: last, ai_id: last_ai}).then(data => {
+				router.push('/fight/' + data.fight)
+			}).error(error => {
+				LeekWars.toast("Erreur : " + error)
+			})
+		}
+	}
+
+	function comment(comment: Comment) {
+		if (fight.value) {
+			LeekWars.post('fight/comment', {fight_id: fight.value.id, comment: comment.comment}).then(() => {
+				if (fight.value) {
+					fight.value.comments.push(comment)
+				}
+			})
+		}
+	}
+
+	watch([damageChartType, damagesDisplaySummons, damagesTeams, () => LeekWars.darkMode], () => getChartDamage())
+
+	function getChartDamage() {
+		if (!statistics.value || !fight.value) return
+		const entities: any[][] = []
+
+		for (const e in statistics.value.entities) {
+			const entity = statistics.value.entities[e]
+			let total = 0
+			let stats: any[] = []
+			const name = entity.translatedName
+			if (damageChartType.value === 0) {
+				total = entity.dmg_out
+				stats = [name, entity.leek.id, entity.leek.team, total, entity.direct_dmg_out, entity.poison_out, entity.return_out, entity.nova_out, entity.life_dmg_out]
+			} else if (damageChartType.value === 1) {
+				total = entity.dmg_in
+				stats = [name, entity.leek.id, entity.leek.team, total, entity.direct_dmg_in, entity.poison_in, entity.return_in, entity.nova_in, entity.life_dmg_in]
+			} else if (damageChartType.value === 2) {
+				total = entity.heal_out + entity.life_steal_out + entity.max_life_out
+				stats = [name, entity.leek.id, entity.leek.team, total, entity.heal_out, entity.life_steal_out, entity.max_life_out]
+			} else {
+				total = entity.tank
+				stats = [name, entity.leek.id, entity.leek.team, total, entity.tank]
+			}
+			if (damagesTeams.value === 1) {
+				const team = entities.find(ee => ee[2] === entity.leek.team)
+				if (team) {
+					team[3] += total
+					for (let v = 4; v < stats.length; ++v) {
+						team[v] += stats[v]
+					}
+				} else {
+					stats[0] = t('team' + (stats[2]))
+					entities.push(stats)
+				}
+			} else if (entity.leek.summon && !damagesDisplaySummons.value) {
+				const summoner = entities.find(ee => ee[1] === entity.leek.owner)!
+				summoner[3] += total
+				for (let v = 4; v < stats.length; ++v) {
+					summoner[v] += stats[v]
+				}
+			} else {
+				entities.push(stats)
+			}
+		}
+		entities.sort((a, b) => {
+			const team1 = statistics.value!.entities[a[1]].leek.team
+			const team2 = statistics.value!.entities[b[1]].leek.team
+			if (fight.value!.type !== FightType.BATTLE_ROYALE && team1 !== team2) {
+				return team2 - team1
+			}
+			return a[3] - b[3]
+		})
+		const series = []
+		for (let v = 4; v < entities[0].length; ++v) {
+			series.push(entities.map(e => e[v]))
+		}
+		damageEntities.value = entities
+
+		let labelKeys: string[] = []
+		let colors: string[] = []
+		if (damageChartType.value === 0 || damageChartType.value === 1) {
+			labelKeys = ['direct', 'poison', 'return', 'nova', 'life']
+			colors = ['#e22424', '#a017d6', '#41d3ff', '#38e9ae', '#f28dff']
+			legends.value = ['#e22424', '#a017d6', '#32b2da', '#2bc491', '#f28dff']
+		} else if (damageChartType.value === 2) {
+			labelKeys = ['direct', 'steal', 'max_life']
+			colors = ['#5fad1b', '#e22424', '#38e9ae']
+			legends.value = ['#5fad1b', '#e22424', '#38e9ae']
+		} else {
+			labelKeys = ['direct']
+			colors = ['orange']
+			legends.value = ['orange']
+		}
+		const labels = labelKeys.map(k => t('stat_' + k) as string)
+
+		damagesBarsData.value = {
+			labels: entities.map(e => e[0]),
+			datasets: series.map((s, i) => ({ label: labels[i], data: s, stack: 'total', backgroundColor: colors[i] }) )
+		}
+		damagesBarsHeight.value = Math.max(370, entities.length * 25)
+		const el = instance?.proxy?.$el as HTMLElement
+		const style = el ? getComputedStyle(el) : null
+		const textColor = style?.getPropertyValue('--text-color-secondary').trim() || '#888'
+		damagesBarsOptions.value = {
+			maintainAspectRatio: false,
+			barThickness: 15,
+			layout: { padding: { right: 45 } },
+			plugins: {
+				legend: { display: false },
+				tooltip: {
+					mode: 'index' as any,
+					intersect: true,
+					position: 'stackCenter' as any,
+					yAlign: 'top',
+					callbacks: {
+						title: (items: any[]) => items[0]?.label || '',
+						label: (context: any) => context.raw ? `${context.dataset.label} : ${context.raw.toLocaleString()}` : null,
+					}
+				}
+			},
+			indexAxis: 'y',
+			scales: {
+				x: { stacked: true, grid: { color: 'rgba(128,128,128,0.15)' }, ticks: { color: textColor } },
+				y: { stacked: true, reverse: true, grid: { display: false }, ticks: { color: textColor } },
+			}
+		}
+
+		const chartSeries = []
+		for (let v = 4; v < entities[0].length; ++v) {
+			chartSeries.push(entities.reduce((sum, e) => sum + e[v], 0))
+		}
+		damageChartDamage.value = {
+			labels,
+			datasets: [{
+				data: chartSeries,
+				backgroundColor: colors
+			}]
+		}
+	}
+
+	watch(actionsDisplayLogs, () => {
+		localStorage.setItem('report/logs', '' + actionsDisplayLogs.value)
+	})
+	watch(actionsDisplayAlliesLogs, () => {
+		localStorage.setItem('report/allies-logs', '' + actionsDisplayAlliesLogs.value)
+	})
+
+	function updateMap() {
+		map_obstacles.value = fight.value!.data.map.obstacles
+	}
+
+	function walkedCells(fid: number) {
+		if (!statistics.value) return
+		if (fid === 999) {
+			map_teams.value = statistics.value.teams
+		} else if (fid < 0) {
+			map_teams.value = {[-fid]: statistics.value.teams[-fid]}
+		} else {
+			map_teams.value = {[statistics.value.entities[fid].team]: statistics.value.entities[fid].walkedCells}
+		}
+	}
+
+	function goToAI(file: number, line: number) {
+		router.push('/editor/' + file + '?line=' + line)
+	}
+
+	function goToTurn(turn: number) {
+		const element = document.getElementById('turn-' + turn)
+		if (element) {
+			const sibling = element.parentElement!.nextElementSibling!
+			window.scrollTo(0, sibling.getBoundingClientRect().top + window.scrollY - 48)
+		}
+	}
+
+	function mouseover(e: MouseEvent) {
+		let target = (e.target as Element)
+		if (target.tagName === 'PRE') target = target.parentElement as Element
+		else if (target.tagName === 'A') target = target.parentElement as Element
+		else if (target.tagName === 'SPAN') target = target.closest('.log') as Element || target
+		if (currentLink && currentLink !== target) {
+			const l = currentLink.querySelector('a')
+			if (l) {
+				currentLink.removeChild(l)
+			}
+		}
+		currentLink = target
+		const link = target.querySelector('a')
+		if (!link) {
+			const action = target.getAttribute('a')
+			const index = target.getAttribute('i')
+			const l = document.createElement('a')
+			l.innerText = '➡️'
+			l.onclick = (e) => {
+				const error = document.querySelector('.fight-actions [l="' + action + '"][i="' + index + '"') as HTMLElement
+				if (error) {
+					window.scrollTo(0, error.offsetTop - 100)
+				}
+				e.preventDefault()
+			}
+			target.appendChild(l)
+		}
+	}
 </script>
+
 
 <style lang="scss" scoped>
 	.tab .v-icon {
