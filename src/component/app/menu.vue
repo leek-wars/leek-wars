@@ -159,10 +159,10 @@
 					<div class="text">{{ $t('main.arena') }}</div>
 					<div class="progress-bar" :style="{width: (LeekWars.arena.progress / 20 * 100) + '%'}"></div>
 				</span>
-				<span v-if="LeekWars.bossSquads.squad" v-ripple :label="LeekWars.bossSquads.squad.engaged_count" class="section boss" @click="goToBoss">
+				<span v-if="LeekWars.bossSquads.squad" v-ripple :label="LeekWars.bossSquads.squad.engaged_leeks.length" class="section boss" @click="goToBoss">
 					<v-icon>mdi-crown</v-icon>
 					<div class="text">{{ $t('entity.' + BOSSES[LeekWars.bossSquads.squad.boss].name) }}</div>
-					<div class="progress-bar" :style="{width: (100 * LeekWars.bossSquads.squad.engaged_count / 8) + '%'}"></div>
+					<div class="progress-bar" :style="{width: (100 * LeekWars.bossSquads.squad.engaged_leeks.length / 8) + '%'}"></div>
 				</span>
 
 				<popup v-model="arenaDialog" :width="600">
@@ -200,7 +200,7 @@
 				<div class="title">
 					<div>
 						<h4>{{ $t('main.rewards') }} ({{ $store.state.farmer.rewards.length }})</h4>
-						<div>{{ $filters.number($store.state.farmer.rewards.reduce((s, r) => s + r.habs, 0)) }} <span class="hab"></span></div>
+						<div>{{ $filters.number($store.state.farmer.rewards.reduce((s: number, r: any) => s + r.habs, 0)) }} <span class="hab"></span></div>
 					</div>
 					<v-btn class="get-all notif-trophy" @click.stop="retrieveAll()"><span v-if="!LeekWars.mobile">{{ $t('main.retrieve_all') }}</span> <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
 				</div>
@@ -222,169 +222,161 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import { BOSSES } from '@/model/boss'
 	import { emitter } from '@/model/vue'
-	import { defineAsyncComponent } from 'vue'
+	import { computed, defineAsyncComponent, onMounted, ref, watch } from 'vue'
+	import { useRoute, useRouter } from 'vue-router'
+
 	const AccountSwitcher = defineAsyncComponent(() => import('@/component/app/account-switcher.vue'))
 
-	@Options({
-		name: 'lw-menu',
-		components: { 'account-switcher': AccountSwitcher }
+	defineOptions({ name: 'lw-menu', components: { AccountSwitcher } })
+
+	const route = useRoute()
+	const router = useRouter()
+
+	const arenaDialog = ref(false)
+	const accountMenu = ref(false)
+	const TROPHIES = LeekWars.trophies
+
+	const isHomePage = computed(() => route.path === '/')
+	const rankingURL = computed(() => '/ranking' + (LeekWars.rankingInactive ? '?inactive' : ''))
+	const new_leek_condition = computed(() => {
+		if (!store.state.farmer!.can_create_leek) {
+			return false
+		}
+		const leeks = store.state.farmer!.leeks
+		if (Object.keys(leeks).length === 4) { return false }
+		return LeekWars.first(leeks)!.level >= 50
 	})
-	export default class Menu extends Vue {
 
-		arenaDialog: boolean = false
-		accountMenu: boolean = false
-		TROPHIES = LeekWars.trophies
-		BOSSES = BOSSES
+	onMounted(() => {
+		LeekWars.menuCollapsed = localStorage.getItem('main/menu-collapsed') === 'true'
 
-		get isHomePage() {
-			return this.$route.path === '/'
-		}
-		get rankingURL() {
-			return '/ranking' + (LeekWars.rankingInactive ? '?inactive' : '')
-		}
-		get new_leek_condition() {
-			if (!store.state.farmer!.can_create_leek) {
-				return false
-			}
-			const leeks = store.state.farmer!.leeks
-			if (Object.keys(leeks).length === 4) { return false }
-			return LeekWars.first(leeks)!.level >= 50
-		}
+		const W = 250
+		let down = false
+		let downX = 0, downY = 0
+		let menu_visible = false
+		let enabled = false
+		let aborted = false
+		const menu_element = document.querySelector('.menu') as HTMLElement
+		const center_element = document.querySelector('.app-center') as HTMLElement
+		const dark_element = document.querySelector('#app .dark-shadow') as HTMLElement
+		let d = 0
+		let lastT = 0
 
-		mounted() {
-			LeekWars.menuCollapsed = localStorage.getItem('main/menu-collapsed') === 'true'
-
-			const W = 250
-			let down = false
-			let downX = 0, downY = 0
-			let menu_visible = false
-			let enabled = false
-			let aborted = false
-			const menu_element = document.querySelector('.menu') as HTMLElement
-			const center_element = document.querySelector('.app-center') as HTMLElement
-			const dark_element = document.querySelector('#app .dark-shadow') as HTMLElement
-			let d = 0
-			let lastT = 0
-
-			window.addEventListener('pointerdown', (e) => {
-				downX = e.clientX
-				downY = e.clientY
-				if (LeekWars.menuExpanded || downX < window.innerWidth / 3) {
-					// Don't trigger menu open if the target has horizontal scroll
-					if (!LeekWars.menuExpanded) {
-						let el = e.target as HTMLElement | null
-						while (el && el !== document.body) {
-							const overflowX = getComputedStyle(el).overflowX
-							if (el.scrollWidth > el.clientWidth + 1 && el.scrollLeft > 0 && (overflowX === 'auto' || overflowX === 'scroll')) {
-								return
-							}
-							el = el.parentElement
+		window.addEventListener('pointerdown', (e) => {
+			downX = e.clientX
+			downY = e.clientY
+			if (LeekWars.menuExpanded || downX < window.innerWidth / 3) {
+				if (!LeekWars.menuExpanded) {
+					let el = e.target as HTMLElement | null
+					while (el && el !== document.body) {
+						const overflowX = getComputedStyle(el).overflowX
+						if (el.scrollWidth > el.clientWidth + 1 && el.scrollLeft > 0 && (overflowX === 'auto' || overflowX === 'scroll')) {
+							return
 						}
-					}
-					down = true
-					aborted = false
-					menu_visible = LeekWars.menuExpanded
-				}
-			})
-
-			window.addEventListener('touchmove', (e) => {
-				if (!down || aborted) { return }
-				const x = e.touches[0].clientX
-				const y = e.touches[0].clientY
-				if (!enabled && Math.abs(downY - y) > Math.abs(downX - x)) {
-					aborted = true
-				}
-				if (!enabled && Math.abs(downX - x) > 10 && menu_visible === x < downX) {
-					menu_element.style.transition = 'transform ease 50ms'
-					center_element.style.transition = 'transform ease 50ms'
-					LeekWars.dark = LeekWars.menuExpanded ? 0.6 : 0.001
-					enabled = true
-				}
-				if (Date.now() - lastT < 25) { return }
-				lastT = Date.now()
-				if (enabled && !aborted) {
-					if (menu_visible) {
-						d = W - Math.max(0, Math.min(W, downX - x))
-					} else {
-						d = Math.max(0, Math.min(W, x))
-					}
-					menu_element.style.transform = 'translateX(' + (-W + d) + 'px)'
-					center_element.style.transform = 'translateX(' + d + 'px)'
-					dark_element.style.opacity = '' + (0.6 * (d / W))
-				}
-			}, {passive: true})
-
-			document.addEventListener('touchend', (e) => {
-				if (!down || !enabled || aborted) {
-					down = false
-					return
-				}
-				const transition = 'transform ease 200ms'
-				menu_element.style.transition = transition
-				menu_element.style.transform = ''
-				center_element.style.transition = transition
-				center_element.style.transform = ''
-				if (menu_visible) {
-					if (d < W / 3) {
-						LeekWars.menuExpanded = false
-						LeekWars.dark = 0
-					}
-				} else {
-					if (d > W / 3) {
-						LeekWars.menuExpanded = true
-						LeekWars.dark = 0.6
-					} else {
-						LeekWars.dark = 0
+						el = el.parentElement
 					}
 				}
-				down = false
-				enabled = false
+				down = true
 				aborted = false
-			}, {passive: true})
-		}
+				menu_visible = LeekWars.menuExpanded
+			}
+		})
 
-		clickItem() {
-			LeekWars.menuExpanded = false
-			LeekWars.dark = 0
-		}
-
-		@Watch('LeekWars.menuCollapsed')
-		update() {
-			localStorage.setItem('main/menu-collapsed', '' + LeekWars.menuCollapsed)
-			emitter.emit('resize')
-		}
-
-		quit(e: Event) {
-			LeekWars.arena.leave()
-			this.arenaDialog = false
-			e.stopPropagation()
-		}
-
-		retrieve(reward: any) {
-			LeekWars.post('trophy/retrieve-reward', { trophy_id: reward.trophy })
-			store.commit('remove-reward', reward.trophy)
-			store.commit('update-habs', reward.habs)
-		}
-
-		retrieveAll() {
-			LeekWars.post('trophy/retrieve-all-rewards')
-			const total = store.state.farmer!.rewards.reduce((s, r) => s + r.habs, 0)
-			store.commit('remove-all-rewards')
-			store.commit('update-habs', total)
-		}
-
-		goToBoss() {
-			if (LeekWars.bossSquads.squad) {
-				const route = '/garden/boss/' + BOSSES[LeekWars.bossSquads.squad.boss].name + '/' + LeekWars.bossSquads.squad.id
-				if (this.$router.currentRoute.path !== route) {
-					this.$router.push(route)
+		window.addEventListener('touchmove', (e) => {
+			if (!down || aborted) { return }
+			const x = e.touches[0].clientX
+			const y = e.touches[0].clientY
+			if (!enabled && Math.abs(downY - y) > Math.abs(downX - x)) {
+				aborted = true
+			}
+			if (!enabled && Math.abs(downX - x) > 10 && menu_visible === x < downX) {
+				menu_element.style.transition = 'transform ease 50ms'
+				center_element.style.transition = 'transform ease 50ms'
+				LeekWars.dark = LeekWars.menuExpanded ? 0.6 : 0.001
+				enabled = true
+			}
+			if (Date.now() - lastT < 25) { return }
+			lastT = Date.now()
+			if (enabled && !aborted) {
+				if (menu_visible) {
+					d = W - Math.max(0, Math.min(W, downX - x))
+				} else {
+					d = Math.max(0, Math.min(W, x))
 				}
+				menu_element.style.transform = 'translateX(' + (-W + d) + 'px)'
+				center_element.style.transform = 'translateX(' + d + 'px)'
+				dark_element.style.opacity = '' + (0.6 * (d / W))
+			}
+		}, {passive: true})
+
+		document.addEventListener('touchend', () => {
+			if (!down || !enabled || aborted) {
+				down = false
+				return
+			}
+			const transition = 'transform ease 200ms'
+			menu_element.style.transition = transition
+			menu_element.style.transform = ''
+			center_element.style.transition = transition
+			center_element.style.transform = ''
+			if (menu_visible) {
+				if (d < W / 3) {
+					LeekWars.menuExpanded = false
+					LeekWars.dark = 0
+				}
+			} else {
+				if (d > W / 3) {
+					LeekWars.menuExpanded = true
+					LeekWars.dark = 0.6
+				} else {
+					LeekWars.dark = 0
+				}
+			}
+			down = false
+			enabled = false
+			aborted = false
+		}, {passive: true})
+	})
+
+	function clickItem() {
+		LeekWars.menuExpanded = false
+		LeekWars.dark = 0
+	}
+
+	watch(() => LeekWars.menuCollapsed, () => {
+		localStorage.setItem('main/menu-collapsed', '' + LeekWars.menuCollapsed)
+		emitter.emit('resize')
+	})
+
+	function quit(e: Event) {
+		LeekWars.arena.leave()
+		arenaDialog.value = false
+		e.stopPropagation()
+	}
+
+	function retrieve(reward: any) {
+		LeekWars.post('trophy/retrieve-reward', { trophy_id: reward.trophy })
+		store.commit('remove-reward', reward.trophy)
+		store.commit('update-habs', reward.habs)
+	}
+
+	function retrieveAll() {
+		LeekWars.post('trophy/retrieve-all-rewards')
+		const total = store.state.farmer!.rewards.reduce((s: number, r: any) => s + r.habs, 0)
+		store.commit('remove-all-rewards')
+		store.commit('update-habs', total)
+	}
+
+	function goToBoss() {
+		if (LeekWars.bossSquads.squad) {
+			const path = '/garden/boss/' + BOSSES[LeekWars.bossSquads.squad.boss].name + '/' + LeekWars.bossSquads.squad.id
+			if (router.currentRoute.value.path !== path) {
+				router.push(path)
 			}
 		}
 	}
