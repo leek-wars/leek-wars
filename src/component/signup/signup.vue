@@ -193,7 +193,7 @@
 						</thead>
 						<tbody>
 							<tr v-for="(leek, i) in leek_ranking" :key="i" :class="leek.style">
-								<td>{{ i + 1 }}</td>
+								<td>{{ Number(i) + 1 }}</td>
 								<td :class="leek.class">
 									<rich-tooltip-leek :id="leek.id" v-slot="{ props }">
 										<router-link :to="'/leek/' + leek.id">
@@ -221,7 +221,7 @@
 						</thead>
 						<tbody>
 							<tr v-for="(farmer, i) in farmer_ranking" :key="i" :class="farmer.style">
-								<td>{{ i + 1 }}</td>
+								<td>{{ Number(i) + 1 }}</td>
 								<td :class="farmer.class">
 									<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }">
 										<router-link :to="'/farmer/' + farmer.id">
@@ -251,7 +251,7 @@
 						</thead>
 						<tbody>
 							<tr v-for="(team, i) in team_ranking" :key="i" :class="team.style">
-								<td>{{ i + 1 }}</td>
+								<td>{{ Number(i) + 1 }}</td>
 								<td :class="team.class">
 									<rich-tooltip-team :id="team.id" v-slot="{ props }">
 										<router-link :to="'/team/' + team.id">
@@ -346,7 +346,7 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 
 	/**
 	 * mogrify -format webp -quality 50 *.png
@@ -359,180 +359,177 @@
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
 	import { getRedirectAfterLogin } from '@/router'
-	import { defineAsyncComponent } from 'vue'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
+	import { defineAsyncComponent, ref } from 'vue'
+	import { useI18n } from 'vue-i18n'
+	import { useRoute, useRouter } from 'vue-router'
+
 	const SignupCarousel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup-carousel.${locale}.i18n`))
 	const RichTooltipLeek = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-leek.vue'))
 	const RichTooltipFarmer = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-farmer.vue'))
 	const RichTooltipTeam = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-team.vue'))
 
-	@Options({ name: 'signup', i18n: {}, mixins: [...mixins], components: {
+	defineOptions({ name: 'signup', i18n: {}, mixins: [...mixins], components: {
 		ChangelogVersion, SignupCarousel,
 		RichTooltipLeek, RichTooltipFarmer, RichTooltipTeam
 	} })
-	export default class Signup extends Vue {
-		godfather: string = ''
-		leek_count: number = 85290
-		farmer_ranking: any = []
-		leek_ranking: any = []
-		team_ranking: any = []
-		login: string = ''
-		leek: string = ''
-		email: string = ''
-		password1: string = ''
-		errors: {[key: string]: string[]} = {}
-		bigImage: string | null = null
-		bigImageLegend: string = ''
-		signupMethod: number = 1
-		last_version: any = null
-		translations: any = {}
-		leekSkin: number = 1
-		leekHat: number = 0
-		fastRegister: boolean = true
 
-		features = [
-			{
-				icon: 'mdi-code-braces',
-				title: 'ai_title',
-				images: ['documentation', 'debug_mark', 'editor_test', 'editor_black', 'editor'],
-				texts: ["ai_text1", "ai_text2"]
-			},
-			{
-				icon: 'mdi-wrench-outline',
-				title: 'build_title',
-				images: ['characteristics', 'leek_chips', 'leek_weapons', 'leek_page'],
-				texts: ["build_text1", "build_text2"]
-			},
-			{
-				icon: 'mdi-sword-cross',
-				title: 'fight_title',
-				images: ['fight_forest', 'fight_glacier', 'garden', 'fight_desert'],
-				texts: ["fight_text1", "fight_text2"]
-			},
-			// {
-			// 	icon: 'mdi-memory',
-			// 	title: 'items_title',
-			// 	images: ['chip_grapple', 'chip_arsenic', 'chip_fortress', 'chip_remission', 'weapon_m_laser', 'chip_meteorite'],
-			// 	texts: ["items_text1", "items_text2"]
-			// },
-			{
-				icon: 'mdi-trophy-outline',
-				title: "tournament_title",
-				images: ['ranking', 'fight_battle_royale', 'fight_tournament', 'tournament'],
-				texts: ["tournament_text1", "tournament_text2"]
-			},
-			{
-				icon: 'mdi-trophy-outline',
-				title: "trophies_title",
-				images: ['trophies_notif', 'trophies', 'trophies_2'],
-				texts: ["trophies_text1"]
-			},
-			{
-				icon: 'mdi-auto-fix',
-				title: 'customization_title',
-				images: ['pomp', 'potions', 'hats', 'leek_style'],
-				texts: ["customization_text1"]
-			},
-			{
-				icon: 'mdi-trophy-outline',
-				title: "community_title",
-				images: ['encyclopedia', 'forum_topic', 'forum', 'comments'],
-				texts: ["community_text1"]
-			},
-		]
+	const { t, locale: i18nLocale } = useI18n()
+	const route = useRoute()
+	const router = useRouter()
 
-		created() {
-			LeekWars.setTitle("Leek Wars: online leek programming game")
-			this.godfather = 'godfather' in this.$route.params ? this.$route.params.godfather : ''
-			LeekWars.get('leek/get-count').then(data => {
-				this.leek_count = data.leeks
-			})
-			LeekWars.get('ranking/get-home-ranking').then(data => {
-				data.leeks[0].style = data.farmers[0].style = data.teams[0].style = 'first'
-				data.leeks[1].style = data.farmers[1].style = data.teams[1].style = 'second'
-				data.leeks[2].style = data.farmers[2].style = data.teams[2].style = 'third'
+	const godfather = ref('')
+	const leek_count = ref(85290)
+	const farmer_ranking = ref<any>([])
+	const leek_ranking = ref<any>([])
+	const team_ranking = ref<any>([])
+	const login = ref('')
+	const leek = ref('')
+	const email = ref('')
+	const password1 = ref('')
+	const errors = ref<{[key: string]: string[]}>({})
+	const bigImage = ref<string | null>(null)
+	const bigImageLegend = ref('')
+	const signupMethod = ref(1)
+	const last_version = ref<any>(null)
+	const translations = ref<any>({})
+	const leekSkin = ref(1)
+	const leekHat = ref(0)
+	const fastRegister = ref(true)
 
-				this.farmer_ranking = data.farmers
-				this.leek_ranking = data.leeks
-				this.team_ranking = data.teams
-			})
-			import(/* webpackChunkName: "changelog-[request]" */ `@/component/changelog/changelog.${this.$i18n.locale}.yaml`).then((module) => {
-				this.translations = module.default
-			})
-			LeekWars.get('changelog/get/' + this.$i18n.locale).then(data => {
-				this.last_version = data.changelog[0]
-			})
+	const features = [
+		{
+			icon: 'mdi-code-braces',
+			title: 'ai_title',
+			images: ['documentation', 'debug_mark', 'editor_test', 'editor_black', 'editor'],
+			texts: ["ai_text1", "ai_text2"]
+		},
+		{
+			icon: 'mdi-wrench-outline',
+			title: 'build_title',
+			images: ['characteristics', 'leek_chips', 'leek_weapons', 'leek_page'],
+			texts: ["build_text1", "build_text2"]
+		},
+		{
+			icon: 'mdi-sword-cross',
+			title: 'fight_title',
+			images: ['fight_forest', 'fight_glacier', 'garden', 'fight_desert'],
+			texts: ["fight_text1", "fight_text2"]
+		},
+		{
+			icon: 'mdi-trophy-outline',
+			title: "tournament_title",
+			images: ['ranking', 'fight_battle_royale', 'fight_tournament', 'tournament'],
+			texts: ["tournament_text1", "tournament_text2"]
+		},
+		{
+			icon: 'mdi-trophy-outline',
+			title: "trophies_title",
+			images: ['trophies_notif', 'trophies', 'trophies_2'],
+			texts: ["trophies_text1"]
+		},
+		{
+			icon: 'mdi-auto-fix',
+			title: 'customization_title',
+			images: ['pomp', 'potions', 'hats', 'leek_style'],
+			texts: ["customization_text1"]
+		},
+		{
+			icon: 'mdi-trophy-outline',
+			title: "community_title",
+			images: ['encyclopedia', 'forum_topic', 'forum', 'comments'],
+			texts: ["community_text1"]
+		},
+	]
 
-			emitter.emit('loaded')
+	LeekWars.setTitle("Leek Wars: online leek programming game")
+	godfather.value = 'godfather' in route.params ? route.params.godfather as string : ''
+	LeekWars.get('leek/get-count').then(data => {
+		leek_count.value = data.leeks
+	})
+	LeekWars.get('ranking/get-home-ranking').then(data => {
+		data.leeks[0].style = data.farmers[0].style = data.teams[0].style = 'first'
+		data.leeks[1].style = data.farmers[1].style = data.teams[1].style = 'second'
+		data.leeks[2].style = data.farmers[2].style = data.teams[2].style = 'third'
+
+		farmer_ranking.value = data.farmers
+		leek_ranking.value = data.leeks
+		team_ranking.value = data.teams
+	})
+	import(/* webpackChunkName: "changelog-[request]" */ `@/component/changelog/changelog.${i18nLocale.value}.yaml`).then((module) => {
+		translations.value = module.default
+	})
+	LeekWars.get('changelog/get/' + i18nLocale.value).then(data => {
+		last_version.value = data.changelog[0]
+	})
+
+	emitter.emit('loaded')
+
+	function submit(e: Event) {
+		e.preventDefault()
+		errors.value = {}
+		const provider = signupMethod.value === 2 ? 'github' : signupMethod.value === 3 ? 'google' : null
+		const service = fastRegister.value ? 'farmer/register-fast' : (provider ? `farmer/register-${provider}` : 'farmer/register')
+		const args = {
+			leek_name: leek.value,
+			hat: leekHat.value,
+			skin: leekSkin.value
+		} as any
+		if (!fastRegister.value) {
+			args.login = login.value
+			args.godfather = godfather.value
 		}
-
-		submit(e: Event) {
-			e.preventDefault()
-			this.errors = {}
-			const provider = this.signupMethod === 2 ? 'github' : this.signupMethod === 3 ? 'google' : null
-			const service = this.fastRegister ? 'farmer/register-fast' : (provider ? `farmer/register-${provider}` : 'farmer/register')
-			const args = {
-				leek_name: this.leek,
-				hat: this.leekHat,
-				skin: this.leekSkin
-			} as any
-			if (!this.fastRegister) {
-				args.login = this.login
-				args.godfather = this.godfather
-			}
-			if (this.signupMethod === 1) {
-				args.password = this.password1
-				args.email = this.email
-			}
-			LeekWars.post(service, args).then(data => {
-				if (this.fastRegister) {
-					store.commit('connect', data)
-					store.commit('connected', '$')
-					this.$router.push(getRedirectAfterLogin())
-				} else if (provider) {
-					localStorage.setItem('login-attempt', 'true')
-					document.location.href = LeekWars.API + `farmer/start-${provider}-login`
-				} else {
-					localStorage.setItem('login-attempt', 'true')
-					this.$router.push('/signup/success/' + this.login)
-				}
-			}).error(errors => {
-				for (const error of errors) {
-					const form = ['login', 'leek', 'email', 'password1', 'password2', 'godfather'][error[0]]
-					this.addError(form, this.$t('error_' + error[1], error[2]) as string)
-				}
-			})
-			return false
+		if (signupMethod.value === 1) {
+			args.password = password1.value
+			args.email = email.value
 		}
-		successConfirm() {
-			this.$router.push('/login')
-		}
-		addError(form: string, error: string) {
-			if (!(form in this.errors)) {
-				this.errors[form] = []
-			}
-			this.errors[form].push(error)
-		}
-		status(form: string) {
-			if (form in this.errors) {
-				if (Object.keys(this.errors[form]).length > 0) {
-					return 'error'
-				} else {
-					return 'valid'
-				}
+		LeekWars.post(service, args).then(data => {
+			if (fastRegister.value) {
+				store.commit('connect', data)
+				store.commit('connected', '$')
+				router.push(getRedirectAfterLogin())
+			} else if (provider) {
+				localStorage.setItem('login-attempt', 'true')
+				document.location.href = LeekWars.API + `farmer/start-${provider}-login`
 			} else {
-				return null
+				localStorage.setItem('login-attempt', 'true')
+				router.push('/signup/success/' + login.value)
 			}
+		}).error(errs => {
+			for (const error of errs) {
+				const form = ['login', 'leek', 'email', 'password1', 'password2', 'godfather'][error[0]]
+				addError(form, t('error_' + error[1], error[2]) as string)
+			}
+		})
+		return false
+	}
+	function successConfirm() {
+		router.push('/login')
+	}
+	function addError(form: string, error: string) {
+		if (!(form in errors.value)) {
+			errors.value[form] = []
 		}
-		enlarge(image: any) {
-			if (LeekWars.mobile) { return }
-			this.bigImage = image[0].replace('_small', '')
-			this.bigImageLegend = image[1]
+		errors.value[form].push(error)
+	}
+	function status(form: string) {
+		if (form in errors.value) {
+			if (Object.keys(errors.value[form]).length > 0) {
+				return 'error'
+			} else {
+				return 'valid'
+			}
+		} else {
+			return null
 		}
+	}
+	function enlarge(image: any) {
+		if (LeekWars.mobile) { return }
+		bigImage.value = image[0].replace('_small', '')
+		bigImageLegend.value = image[1]
+	}
 
-		zoom(e: Event) {
-			this.bigImage = (e.target as HTMLElement).getAttribute('src')!.replace("small_", "")
-		}
+	function zoom(e: Event) {
+		bigImage.value = (e.target as HTMLElement).getAttribute('src')!.replace("small_", "")
 	}
 </script>
 
