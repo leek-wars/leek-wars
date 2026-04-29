@@ -368,10 +368,7 @@
 	const RichTooltipFarmer = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-farmer.vue'))
 	const RichTooltipTeam = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-team.vue'))
 
-	defineOptions({ name: 'signup', i18n: {}, mixins: [...mixins], components: {
-		ChangelogVersion, SignupCarousel,
-		RichTooltipLeek, RichTooltipFarmer, RichTooltipTeam
-	} })
+	defineOptions({ name: 'signup', i18n: {}, mixins: [...mixins] })
 
 	const { t, locale: i18nLocale } = useI18n()
 	const route = useRoute()

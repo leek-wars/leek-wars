@@ -394,7 +394,7 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { locale } from '@/locale'
 	import { Farmer } from '@/model/farmer'
 	import { mixins } from '@/model/i18n'
@@ -403,406 +403,410 @@
 	import { SocketMessage } from '@/model/socket'
 	import { store } from '@/model/store'
 	import { Composition } from '@/model/team'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
 	import GardenCompo from './garden-compo.vue'
 	import GardenFarmer from './garden-farmer.vue'
 	import GardenLeek from './garden-leek.vue'
-	import { BOSSES, Boss } from '@/model/boss'
-	const GardenNoFights = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/garden/garden-no-fights.${locale}.i18n`))
+	import { BOSSES } from '@/model/boss'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
-	import { defineAsyncComponent } from 'vue'
-import { emitter } from '@/model/vue'
+	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
+	import { useRoute, useRouter } from 'vue-router'
+	import { emitter } from '@/model/vue'
 
-	@Options({
-		name: 'garden', i18n: {}, mixins: [...mixins],
-		components: {
-			RichTooltipLeek,
-			RichTooltipFarmer,
-			'garden-leek': GardenLeek,
-			'garden-farmer': GardenFarmer,
-			'garden-compo': GardenCompo,
-			'garden-no-fights': GardenNoFights
-		}
+	const GardenNoFights = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/garden/garden-no-fights.${locale}.i18n`))
+
+	defineOptions({ name: 'garden', i18n: {}, mixins: [...mixins] })
+
+	const { t, tc } = useI18n()
+	const route = useRoute()
+	const router = useRouter()
+
+	const garden = ref<any>(null)
+	const category = ref('solo')
+	const selectedLeek = ref<Leek | null>(null)
+	const selectedComposition = ref<any>(null)
+	const leekOpponents = reactive<{[key: number]: Leek[]}>({})
+	const leekErrors = reactive<{[key: number]: string}>({})
+	const farmerOpponents = ref<Farmer[] | null>(null)
+	const teamOpponents = reactive<{[key: number]: Composition[]}>({})
+	const compositions_by_id = reactive<{[key: number]: Composition}>({})
+	const challengeFights = ref(0)
+	const challengeType = ref('')
+	const challengeTarget = ref(0)
+	const challengeLeekTarget = ref<Leek | null>(null)
+	const challengeFarmerTarget = ref<Farmer | null>(null)
+	const challengeTeamTargets = ref<Composition[]>([])
+	const queue = ref(0)
+	const advanced = ref(false)
+	const seed = ref<any | null>(null)
+	const side = ref('left')
+	let request: any = null
+	const selectedBoss = ref<any | null>(null)
+	const squad = ref<string | null>(null)
+	const arenaPreference = ref(parseInt(localStorage.getItem('arena/preference') || '-1', 10))
+	const wantsColossus = ref(false)
+
+	const farmerEnabled = computed(() => garden.value && garden.value.farmer_enabled)
+	const teamEnabled = computed(() => garden.value && garden.value.team_enabled)
+	const arenaEnabled = computed(() => garden.value && garden.value.battle_royale_enabled && store.state.farmer && store.state.farmer.verified)
+	const bossEnabled = computed(() => true)
+
+	const modeIcons = ['mdi-sword-cross', 'mdi-flag', 'mdi-treasure-chest', 'mdi-shield-account']
+	const modeLabels = ['arena_mode_br', 'arena_mode_war', 'arena_mode_chest_hunt', 'arena_mode_colossus']
+
+	function modeIcon(preference: number): string {
+		return modeIcons[preference] || 'mdi-help-circle-outline'
+	}
+	function modeLabel(preference: number): string {
+		return t(modeLabels[preference] || 'arena_no_preference') as string
+	}
+
+	if (store.state.wsconnected) {
+		updateWS()
+	} else {
+		emitter.on('wsconnected', updateWS)
+	}
+
+	onMounted(() => {
+		LeekWars.setTitle(t('title'))
+
+		advanced.value = localStorage.getItem("editor/test/advanced") === 'true'
+
+		request = LeekWars.get('garden/get')
+		request.then((r: any) => {
+			garden.value = r.garden
+			for (const composition of garden.value.my_compositions) {
+				compositions_by_id[composition.id] = composition
+			}
+			update()
+		})
+
+		emitter.on('back', back)
+		LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_REGISTER])
+		emitter.on('garden-queue', (data: number) => queue.value = data)
+
+		emitter.on('update-team-talent', (message: any) => {
+			if (message.composition in compositions_by_id) {
+				compositions_by_id[message.composition].talent += message.talent
+			}
+		})
+
+		window.addEventListener('pageshow', onPageShow)
 	})
-	export default class Garden extends Vue {
-		garden: any = null
-		category: string = 'solo'
-		selectedLeek: Leek | null = null
-		selectedComposition: any = null
-		leekOpponents: {[key: number]: Leek[]} = {}
-		leekErrors: {[key: number]: string} = {}
-		farmerOpponents: Farmer[] | null = null
-		teamOpponents: {[key: number]: Composition[]} = {}
-		compositions_by_id: {[key: number]: Composition} = {}
-		challengeFights: number = 0
-		challengeType: string = ''
-		challengeTarget: number = 0
-		challengeLeekTarget: Leek | null = null
-		challengeFarmerTarget: Farmer | null = null
-		challengeTeamTargets: Composition[] = []
-		queue: number = 0
-		advanced: boolean = false
-		seed: any | null = null
-		side: string = 'left'
-		request: any = null
-		selectedBoss: any | null = null
-		BOSSES = BOSSES
-		squad: string | null = null
 
-		get farmerEnabled() { return this.garden && this.garden.farmer_enabled }
-		get teamEnabled() { return this.garden && this.garden.team_enabled }
-		arenaPreference: number = parseInt(localStorage.getItem('arena/preference') || '-1', 10)
-		wantsColossus: boolean = false
-
-		get arenaEnabled() { return this.garden && this.garden.battle_royale_enabled && this.$store.state.farmer && this.$store.state.farmer.verified }
-		get bossEnabled() { return true }
-
-		mounted() {
-			LeekWars.setTitle(this.$t('title'))
-
-			this.advanced = localStorage.getItem("editor/test/advanced") === 'true'
-
-			this.request = LeekWars.get('garden/get')
-			this.request.then((r: any) => {
-				this.garden = r.garden
-				for (const composition of this.garden.my_compositions) {
-					this.compositions_by_id[composition.id] = composition
-				}
-				this.update()
-			})
-
-			emitter.on('back', this.back)
-			LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_REGISTER])
-			emitter.on('garden-queue', (data: number) => this.queue = data)
-
-			emitter.on('update-team-talent', (message: any) => {
-				if (message.composition in this.compositions_by_id) {
-					this.compositions_by_id[message.composition].talent += message.talent
-				}
-			})
-
-			window.addEventListener('pageshow', this.onPageShow)
+	function back() {
+		if (category.value === 'challenge') {
+			router.back()
+		} else {
+			router.push('/garden')
 		}
-		created() {
-			if (store.state.wsconnected) {
-				this.updateWS()
-			} else {
-				emitter.on('wsconnected', this.updateWS)
+		localStorage.removeItem('garden/category')
+	}
+
+	function reload() {
+		LeekWars.get('garden/get').then((r: any) => {
+			garden.value = r.garden
+			for (const composition of garden.value.my_compositions) {
+				compositions_by_id[composition.id] = composition
 			}
-		}
-		back() {
-			if (this.category === 'challenge') {
-				this.$router.back()
-			} else {
-				this.$router.push('/garden')
-			}
-			localStorage.removeItem('garden/category')
-		}
-		reload() {
-			LeekWars.get('garden/get').then((r: any) => {
-				this.garden = r.garden
-				for (const composition of this.garden.my_compositions) {
-					this.compositions_by_id[composition.id] = composition
-				}
-				this.update()
-			})
-		}
+			update()
+		})
+	}
 
-		onPageShow(event: PageTransitionEvent) {
-			if (event.persisted) {
-				this.leekOpponents = {}
-				this.farmerOpponents = null
-				this.teamOpponents = {}
-				this.reload()
-			}
+	function onPageShow(event: PageTransitionEvent) {
+		if (event.persisted) {
+			for (const k of Object.keys(leekOpponents)) delete leekOpponents[+k]
+			farmerOpponents.value = null
+			for (const k of Object.keys(teamOpponents)) delete teamOpponents[+k]
+			reload()
 		}
+	}
 
-		beforeUnmount() {
-			emitter.off('back')
-			if (this.request) { this.request.abort() }
-			LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_UNREGISTER])
-			emitter.off('wsconnected', this.updateWS)
-			LeekWars.socket.send([SocketMessage.GARDEN_BOSS_UNLISTEN])
-			window.removeEventListener('pageshow', this.onPageShow)
-		}
+	onBeforeUnmount(() => {
+		emitter.off('back')
+		if (request) { request.abort() }
+		LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_UNREGISTER])
+		emitter.off('wsconnected', updateWS)
+		LeekWars.socket.send([SocketMessage.GARDEN_BOSS_UNLISTEN])
+		window.removeEventListener('pageshow', onPageShow)
+	})
 
-		@Watch('$route.params')
-		@Watch('$store.state.farmer')
-		update() {
-			if (!store.state.farmer) { return }
-			const params = this.$route.params
-			// console.log("update", params)
-			this.category = params.category
-			if (!this.category) {
-				const savedCategory = localStorage.getItem('garden/category')
-				if (savedCategory || !LeekWars.mobile) {
-					let defaultCategory = savedCategory || 'solo'
-					if (defaultCategory === 'challenge') { defaultCategory = 'solo' }
-					if ((defaultCategory === 'battle-royale' || defaultCategory === 'arena') && !this.$store.state.farmer.br_enabled) { defaultCategory = 'solo' }
-					this.$router.replace('/garden/' + defaultCategory)
-					return
-				}
-			}
-			if ((this.category === 'solo' || this.category === 'arena') && (!params.item || !(parseInt(params.item, 10) in store.state.farmer!.leeks))) {
-				const key = this.category === 'arena' ? 'arena-leek' : 'garden/leek'
-				let defaultLeek = parseInt(localStorage.getItem(key) || '0', 10)
-				if (!(defaultLeek in store.state.farmer!.leeks)) {
-					defaultLeek = LeekWars.first(store.state.farmer!.leeks)!.id
-				}
-				this.$router.replace('/garden/' + this.category + '/' + defaultLeek)
+	watch([() => route.params, () => store.state.farmer], () => update())
+
+	function update() {
+		if (!store.state.farmer) { return }
+		const params = route.params
+		category.value = params.category as string
+		if (!category.value) {
+			const savedCategory = localStorage.getItem('garden/category')
+			if (savedCategory || !LeekWars.mobile) {
+				let defaultCategory = savedCategory || 'solo'
+				if (defaultCategory === 'challenge') { defaultCategory = 'solo' }
+				if ((defaultCategory === 'battle-royale' || defaultCategory === 'arena') && !store.state.farmer.br_enabled) { defaultCategory = 'solo' }
+				router.replace('/garden/' + defaultCategory)
 				return
 			}
-			if (this.category === 'team' && !params.item && this.garden) {
-				if (this.garden.my_compositions.length > 0) {
-					let defaultComposition = parseInt(localStorage.getItem('garden/compo') || '0', 10)
-					if (!(defaultComposition in this.compositions_by_id)) {
-						defaultComposition = this.garden.my_compositions[0].id
-					}
-					this.$router.replace('/garden/team/' + defaultComposition)
-					return
-				}
+		}
+		if ((category.value === 'solo' || category.value === 'arena') && (!params.item || !(parseInt(params.item as string, 10) in store.state.farmer!.leeks))) {
+			const key = category.value === 'arena' ? 'arena-leek' : 'garden/leek'
+			let defaultLeek = parseInt(localStorage.getItem(key) || '0', 10)
+			if (!(defaultLeek in store.state.farmer!.leeks)) {
+				defaultLeek = LeekWars.first(store.state.farmer!.leeks)!.id
 			}
-			const item = parseInt(params.item, 10)
-
-			if (!this.garden || !store.state.farmer) {
+			router.replace('/garden/' + category.value + '/' + defaultLeek)
+			return
+		}
+		if (category.value === 'team' && !params.item && garden.value) {
+			if (garden.value.my_compositions.length > 0) {
+				let defaultComposition = parseInt(localStorage.getItem('garden/compo') || '0', 10)
+				if (!(defaultComposition in compositions_by_id)) {
+					defaultComposition = garden.value.my_compositions[0].id
+				}
+				router.replace('/garden/team/' + defaultComposition)
 				return
 			}
-			if (this.category) {
-				const category_underscore = this.category.replace('-', '_')
-				LeekWars.setTitle(this.$t('garden_' + category_underscore), this.$tc('n_fights', store.state.farmer.fights) + (store.state.farmer.team_fights ? ' + ' + this.$tc('n_fights', store.state.farmer.team_fights) : ''))
-				LeekWars.splitShowContent()
-
-				if (this.category === 'solo') {
-					this.loadLeek(store.state.farmer.leeks[item])
-				} else if (this.category === 'farmer') {
-					this.selectFarmer()
-				} else if (this.category === 'team') {
-					this.selectComposition(this.compositions_by_id[item])
-				} else if (this.category === 'arena') {
-					this.selectArena(store.state.farmer.leeks[item])
-				} else if (this.category === 'challenge') {
-					this.selectChallenge()
-				} else if (this.category === 'boss') {
-					this.squad = this.$route.params.target
-					if (this.squad) {
-						this.selectedBoss = Object.values(BOSSES).find(b => b.name === this.$route.params.type)
-						LeekWars.bossSquads.join(this.squad)
-					} else {
-						this.selectedBoss = null
-						LeekWars.bossSquads.listen()
-					}
-				}
-			} else {
-				localStorage.removeItem("garden/category")
-				LeekWars.setTitle(this.$t('title'))
-				LeekWars.splitShowList()
-			}
 		}
+		const item = parseInt(params.item as string, 10)
 
-		updateWS() {
-			if (this.category === 'boss') {
-				this.squad = this.$route.params.target
-				if (this.squad) {
-					LeekWars.bossSquads.join(this.squad)
+		if (!garden.value || !store.state.farmer) {
+			return
+		}
+		if (category.value) {
+			const category_underscore = category.value.replace('-', '_')
+			LeekWars.setTitle(t('garden_' + category_underscore), tc('n_fights', store.state.farmer.fights) + (store.state.farmer.team_fights ? ' + ' + tc('n_fights', store.state.farmer.team_fights) : ''))
+			LeekWars.splitShowContent()
+
+			if (category.value === 'solo') {
+				loadLeek(store.state.farmer.leeks[item])
+			} else if (category.value === 'farmer') {
+				selectFarmer()
+			} else if (category.value === 'team') {
+				selectComposition(compositions_by_id[item])
+			} else if (category.value === 'arena') {
+				selectArena(store.state.farmer.leeks[item])
+			} else if (category.value === 'challenge') {
+				selectChallenge()
+			} else if (category.value === 'boss') {
+				squad.value = route.params.target as string
+				if (squad.value) {
+					selectedBoss.value = Object.values(BOSSES).find(b => b.name === route.params.type)
+					LeekWars.bossSquads.join(squad.value)
 				} else {
+					selectedBoss.value = null
 					LeekWars.bossSquads.listen()
 				}
 			}
+		} else {
+			localStorage.removeItem("garden/category")
+			LeekWars.setTitle(t('title'))
+			LeekWars.splitShowList()
 		}
+	}
 
-		loadLeek(leek: Leek) {
-			this.selectedLeek = leek
-			if (this.garden.fights === 0 || this.leekOpponents[leek.id]) {
-				return
+	function updateWS() {
+		if (category.value === 'boss') {
+			squad.value = route.params.target as string
+			if (squad.value) {
+				LeekWars.bossSquads.join(squad.value)
+			} else {
+				LeekWars.bossSquads.listen()
 			}
-			LeekWars.get('garden/get-leek-opponents/' + leek.id).then(data => {
-				this.leekOpponents[leek.id] = data.opponents
-			}).error(error => {
-				this.leekErrors[leek.id] = error.error
-			})
 		}
-		selectFarmer() {
-			if (this.garden.fights === 0 || this.farmerOpponents) {
-				return
-			}
-			LeekWars.get('garden/get-farmer-opponents').then(data => {
-				this.farmerOpponents = data.opponents
-			}).error(error => {
-				LeekWars.toast(error.error)
-			})
-		}
-		selectComposition(composition: Composition) {
-			if (!composition) { return }
-			this.selectedComposition = composition
-			if (composition.fights === 0 || this.teamOpponents[composition.id]) {
-				return
-			}
-			LeekWars.get('garden/get-composition-opponents/' + composition.id).then(data => {
-				this.teamOpponents[composition.id] = data.opponents
-			}).error(error => {
-				LeekWars.toast(error)
-			})
-		}
-		readonly modeIcons = ['mdi-sword-cross', 'mdi-flag', 'mdi-treasure-chest', 'mdi-shield-account']
-		readonly modeLabels = ['arena_mode_br', 'arena_mode_war', 'arena_mode_chest_hunt', 'arena_mode_colossus']
+	}
 
-		modeIcon(preference: number): string {
-			return this.modeIcons[preference] || 'mdi-help-circle-outline'
+	function loadLeek(leek: Leek) {
+		selectedLeek.value = leek
+		if (garden.value.fights === 0 || leekOpponents[leek.id]) {
+			return
 		}
-		modeLabel(preference: number): string {
-			return this.$t(this.modeLabels[preference] || 'arena_no_preference') as string
+		LeekWars.get('garden/get-leek-opponents/' + leek.id).then(data => {
+			leekOpponents[leek.id] = data.opponents
+		}).error(error => {
+			leekErrors[leek.id] = error.error
+		})
+	}
+
+	function selectFarmer() {
+		if (garden.value.fights === 0 || farmerOpponents.value) {
+			return
 		}
-		selectArena(leek: Leek) {
-			this.selectedLeek = leek
-			if (this.garden.fights === 0 && LeekWars.arena.enabled) {
-				LeekWars.arena.leave()
-			}
+		LeekWars.get('garden/get-farmer-opponents').then(data => {
+			farmerOpponents.value = data.opponents
+		}).error(error => {
+			LeekWars.toast(error.error)
+		})
+	}
+
+	function selectComposition(composition: Composition) {
+		if (!composition) { return }
+		selectedComposition.value = composition
+		if (composition.fights === 0 || teamOpponents[composition.id]) {
+			return
 		}
-		arenaRegister() {
-			if (!this.selectedLeek) { return }
-			LeekWars.arena.register(this.selectedLeek.id, this.arenaPreference, this.wantsColossus)
-		}
-		arenaLeave() {
+		LeekWars.get('garden/get-composition-opponents/' + composition.id).then(data => {
+			teamOpponents[composition.id] = data.opponents
+		}).error(error => {
+			LeekWars.toast(error)
+		})
+	}
+
+	function selectArena(leek: Leek) {
+		selectedLeek.value = leek
+		if (garden.value.fights === 0 && LeekWars.arena.enabled) {
 			LeekWars.arena.leave()
 		}
-		clickSoloOpponent(leek: Leek) {
-			if (this.selectedLeek) {
-				LeekWars.track('start-fight')
-				if (LeekWars.didactitial_step === 2) {
-					LeekWars.didactitial_next()
-				}
-				LeekWars.post('garden/start-solo-fight', {leek_id: this.selectedLeek.id, target_id: leek.id}).then(data => {
-					this.$router.push('/fight/' + data.fight)
-					store.commit('update-fights', -1)
-				}).error(error => LeekWars.toast(this.$t(error)))
-			}
-		}
-		clickFarmerOpponent(farmer: Farmer) {
+	}
+
+	function arenaRegister() {
+		if (!selectedLeek.value) { return }
+		LeekWars.arena.register(selectedLeek.value.id, arenaPreference.value, wantsColossus.value)
+	}
+
+	function arenaLeave() {
+		LeekWars.arena.leave()
+	}
+
+	function clickSoloOpponent(leek: Leek) {
+		if (selectedLeek.value) {
 			LeekWars.track('start-fight')
-			LeekWars.post('garden/start-farmer-fight', {target_id: farmer.id}).then(data => {
-				this.$router.push('/fight/' + data.fight)
+			if (LeekWars.didactitial_step === 2) {
+				LeekWars.didactitial_next()
+			}
+			LeekWars.post('garden/start-solo-fight', {leek_id: selectedLeek.value.id, target_id: leek.id}).then(data => {
+				router.push('/fight/' + data.fight)
 				store.commit('update-fights', -1)
-			}).error(error => LeekWars.toast(this.$t(error)))
+			}).error(error => LeekWars.toast(t(error)))
 		}
-		clickCompositionOpponent(composition: Composition) {
-			if (this.selectedComposition) {
-				LeekWars.track('start-fight')
-				LeekWars.post('garden/start-team-fight', {composition_id: this.selectedComposition.id, target_id: composition.id}).then(data => {
-					this.$router.push('/fight/' + data.fight)
-					store.commit('update-team-fights', -1)
-				}).error(error => LeekWars.toast(this.$t(error)))
-			}
-		}
-		selectChallenge() {
-			this.challengeTarget = parseInt(this.$route.params.target, 10)
-			this.challengeType = this.$route.params.type
+	}
 
-			if (this.challengeType === 'leek') {
-				if (!this.$route.params.item) {
-					this.$router.replace('/garden/challenge/' + this.challengeType + '/' + this.challengeTarget + '/' + LeekWars.first(store.state.farmer!.leeks)!.id)
-					return
-				}
-				this.selectedLeek = store.state.farmer!.leeks[parseInt(this.$route.params.item, 10)]!
-				LeekWars.get('garden/get-solo-challenge/' + this.challengeTarget).then(data => {
-					if (data.challenges) {
-						this.challengeFights = data.challenges
-						this.challengeLeekTarget = data.leek
-					}
-				})
-			} else if (this.challengeType === 'farmer') {
-				LeekWars.get('garden/get-farmer-challenge/' + this.challengeTarget).then(data => {
-					if (data.challenges) {
-						this.challengeFights = data.challenges
-						this.challengeFarmerTarget = data.farmer
-					}
-				})
-			} else if (this.challengeType === 'team') {
-				if (!this.$route.params.item) {
-					this.$router.replace('/garden/challenge/' + this.challengeType + '/' + this.challengeTarget + '/' + this.garden.my_compositions[0].id)
-					return
-				}
-				for (const composition of this.garden.my_compositions) {
-					if (composition.id == this.$route.params.item) {
-						this.selectedComposition = composition
-						break
-					}
-				}
-				LeekWars.get('garden/get-team-challenge/' + this.challengeTarget).then(data => {
-					if (data.challenges) {
-						this.challengeFights = data.challenges
-						this.challengeTeamTargets = data.compositions
-					}
-				})
-			}
-		}
-		startFarmerChallenge() {
-			if (!this.challengeFarmerTarget) { return }
+	function clickFarmerOpponent(farmer: Farmer) {
+		LeekWars.track('start-fight')
+		LeekWars.post('garden/start-farmer-fight', {target_id: farmer.id}).then(data => {
+			router.push('/fight/' + data.fight)
+			store.commit('update-fights', -1)
+		}).error(error => LeekWars.toast(t(error)))
+	}
+
+	function clickCompositionOpponent(composition: Composition) {
+		if (selectedComposition.value) {
 			LeekWars.track('start-fight')
-			LeekWars.post('garden/start-farmer-challenge', {target_id: this.challengeFarmerTarget.id, seed: this.seed || 0, side: this.side}).then(data => {
-				this.$router.push('/fight/' + data.fight)
-			}).error(error => LeekWars.toast(this.$t(error)))
+			LeekWars.post('garden/start-team-fight', {composition_id: selectedComposition.value.id, target_id: composition.id}).then(data => {
+				router.push('/fight/' + data.fight)
+				store.commit('update-team-fights', -1)
+			}).error(error => LeekWars.toast(t(error)))
 		}
+	}
 
-		startLeekChallenge() {
-			if (!this.challengeLeekTarget || !this.selectedLeek) { return }
-			LeekWars.track('start-fight')
-			LeekWars.post('garden/start-solo-challenge', {leek_id: this.selectedLeek.id, target_id: this.challengeLeekTarget.id, seed: this.seed || 0, side: this.side}).then(data => {
-				this.$router.push('/fight/' + data.fight)
-			}).error(error => LeekWars.toast(this.$t(error)))
-		}
+	function selectChallenge() {
+		challengeTarget.value = parseInt(route.params.target as string, 10)
+		challengeType.value = route.params.type as string
 
-		startTeamChallenge(composition: Composition) {
-			LeekWars.track('start-fight')
-			LeekWars.post('garden/start-team-challenge', { composition_id: this.selectedComposition.id, target_id: composition.id, seed: this.seed || 0, side: this.side}).then(data => {
-				this.$router.push('/fight/' + data.fight)
-			}).error(error => LeekWars.toast(this.$t(error)))
-		}
-
-		@Watch('category')
-		updateCategory() {
-			if (this.category && this.category !== 'challenge') {
-				localStorage.setItem('garden/category', this.category)
+		if (challengeType.value === 'leek') {
+			if (!route.params.item) {
+				router.replace('/garden/challenge/' + challengeType.value + '/' + challengeTarget.value + '/' + LeekWars.first(store.state.farmer!.leeks)!.id)
+				return
 			}
-		}
-		@Watch('selectedLeek')
-		updateLeek() {
-			if (this.selectedLeek) {
-				const key = this.category === 'arena' ? 'arena-leek' : 'garden/leek'
-				localStorage.setItem(key, '' + this.selectedLeek.id)
-			}
-		}
-		@Watch('selectedComposition')
-		updateComposition() {
-			if (this.selectedComposition) {
-				localStorage.setItem('garden/compo', '' + this.selectedComposition.id)
-			}
-		}
-
-		@Watch('arenaPreference')
-		updateArenaPreference() {
-			localStorage.setItem('arena/preference', '' + this.arenaPreference)
-		}
-		@Watch('advanced')
-		updateAdvanced() {
-			localStorage.setItem("editor/test/advanced", '' + this.advanced)
-		}
-		updateSeed(event: InputEvent) {
-			if (event.data === '') {
-				this.seed = null
-			} else if (this.seed) {
-				this.seed = parseInt(this.seed)
-				if (this.seed > 2147483647) {
-					this.seed = 2147483647
-				} else if (this.seed < 1) {
-					this.seed = 1
-				} else if (isNaN(this.seed)) {
-					this.seed = null
+			selectedLeek.value = store.state.farmer!.leeks[parseInt(route.params.item as string, 10)]!
+			LeekWars.get('garden/get-solo-challenge/' + challengeTarget.value).then(data => {
+				if (data.challenges) {
+					challengeFights.value = data.challenges
+					challengeLeekTarget.value = data.leek
 				}
+			})
+		} else if (challengeType.value === 'farmer') {
+			LeekWars.get('garden/get-farmer-challenge/' + challengeTarget.value).then(data => {
+				if (data.challenges) {
+					challengeFights.value = data.challenges
+					challengeFarmerTarget.value = data.farmer
+				}
+			})
+		} else if (challengeType.value === 'team') {
+			if (!route.params.item) {
+				router.replace('/garden/challenge/' + challengeType.value + '/' + challengeTarget.value + '/' + garden.value.my_compositions[0].id)
+				return
+			}
+			for (const composition of garden.value.my_compositions) {
+				if (composition.id == route.params.item) {
+					selectedComposition.value = composition
+					break
+				}
+			}
+			LeekWars.get('garden/get-team-challenge/' + challengeTarget.value).then(data => {
+				if (data.challenges) {
+					challengeFights.value = data.challenges
+					challengeTeamTargets.value = data.compositions
+				}
+			})
+		}
+	}
+
+	function startFarmerChallenge() {
+		if (!challengeFarmerTarget.value) { return }
+		LeekWars.track('start-fight')
+		LeekWars.post('garden/start-farmer-challenge', {target_id: challengeFarmerTarget.value.id, seed: seed.value || 0, side: side.value}).then(data => {
+			router.push('/fight/' + data.fight)
+		}).error(error => LeekWars.toast(t(error)))
+	}
+
+	function startLeekChallenge() {
+		if (!challengeLeekTarget.value || !selectedLeek.value) { return }
+		LeekWars.track('start-fight')
+		LeekWars.post('garden/start-solo-challenge', {leek_id: selectedLeek.value.id, target_id: challengeLeekTarget.value.id, seed: seed.value || 0, side: side.value}).then(data => {
+			router.push('/fight/' + data.fight)
+		}).error(error => LeekWars.toast(t(error)))
+	}
+
+	function startTeamChallenge(composition: Composition) {
+		LeekWars.track('start-fight')
+		LeekWars.post('garden/start-team-challenge', { composition_id: selectedComposition.value.id, target_id: composition.id, seed: seed.value || 0, side: side.value}).then(data => {
+			router.push('/fight/' + data.fight)
+		}).error(error => LeekWars.toast(t(error)))
+	}
+
+	watch(category, () => {
+		if (category.value && category.value !== 'challenge') {
+			localStorage.setItem('garden/category', category.value)
+		}
+	})
+
+	watch(selectedLeek, () => {
+		if (selectedLeek.value) {
+			const key = category.value === 'arena' ? 'arena-leek' : 'garden/leek'
+			localStorage.setItem(key, '' + selectedLeek.value.id)
+		}
+	})
+
+	watch(selectedComposition, () => {
+		if (selectedComposition.value) {
+			localStorage.setItem('garden/compo', '' + selectedComposition.value.id)
+		}
+	})
+
+	watch(arenaPreference, () => {
+		localStorage.setItem('arena/preference', '' + arenaPreference.value)
+	})
+
+	watch(advanced, () => {
+		localStorage.setItem("editor/test/advanced", '' + advanced.value)
+	})
+
+	function updateSeed(event: InputEvent) {
+		if (event.data === '') {
+			seed.value = null
+		} else if (seed.value) {
+			seed.value = parseInt(seed.value)
+			if (seed.value > 2147483647) {
+				seed.value = 2147483647
+			} else if (seed.value < 1) {
+				seed.value = 1
+			} else if (isNaN(seed.value)) {
+				seed.value = null
 			}
 		}
 	}
 </script>
+
 
 <style lang="scss" scoped>
 	.column3 {
