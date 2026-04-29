@@ -69,7 +69,7 @@
 			<template #content>
 				<div class="table">
 					<div v-if="edition" ref="monacoContainer" class="monaco-container"></div>
-					<div v-if="LeekWars.encyclopedia[this.language] && Object.keys(LeekWars.encyclopedia[this.language]).length" ref="markdown" class="markdown" @scroll="markdownScroll">
+					<div v-if="LeekWars.encyclopedia[language] && Object.keys(LeekWars.encyclopedia[language]).length" ref="markdown" class="markdown" @scroll="markdownScroll">
 						<!-- {{ parents }} -->
 
 						<div v-if="redirectedFrom" class="redirected-from">
@@ -214,225 +214,211 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import type * as Monaco from 'monaco-editor'
 	import Markdown from '@/component/encyclopedia/markdown.vue'
 	import { locale } from '@/locale'
 	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
-	import { Route } from 'vue-router'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import { FUNCTIONS } from '@/model/functions'
-	import { markRaw, nextTick } from 'vue'
+	import { computed, markRaw, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
+	import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
 	import { emitter } from '@/model/vue'
 
-	@Options({ name: 'encyclopedia', i18n: {}, mixins: [...mixins], components: { Markdown, Breadcrumb, RichTooltipFarmer } })
-	export default class Encyclopedia extends Vue {
-		english: string = ''
-		page: any = null
-		edition: boolean = false
-		editor: Monaco.editor.IStandaloneCodeEditor | null = null
-		scrolling: boolean = false
-		pages: any = {}
-		modified: boolean = false
-		initialVersionId: number = 0
-		statsExpanded: boolean = false
-		searchQuery: string = ''
-		redirectedFrom: string | null = null
-		boundBeforeUnload!: () => void
-		actions: any[] = []
-		history: any[] | null = null
-		selectedHistoryIndex: number | null = null
-		diffEditor: Monaco.editor.IStandaloneDiffEditor | null = null
-		referencedBy: { children: any[], translations: any[], linked_from: any[] } | null = null
-		destroyed: boolean = false
+	defineOptions({ name: 'encyclopedia', i18n: {}, mixins: [...mixins], components: { Markdown, Breadcrumb, RichTooltipFarmer } })
 
-		get language() {
-			return this.$route.params && this.$route.params.lang ? this.$route.params.lang : this.$i18n.locale
-		}
-		get code() {
-			return 'page' in this.$route.params ? this.$route.params.page.replace(/_/g, ' ') : this.main_title
-		}
-		get lanuage_and_code() {
-			return this.language + '/' + this.code
-		}
-		get title() {
-			return this.page ? this.page.title : 'Encyclopedia'
-		}
-		get main_title() {
-			return LeekWars.languages[this.language].encyclopedia
-		}
-		get breadcrumb_items() {
-			if (this.page && !this.page.new) {
-				return this.parents.map(p => {
-					return {name: p.title, link: p.title === this.main_title ? (this.language === this.$i18n.locale ? '/encyclopedia' : '/encyclopedia/' + this.language + '/' + this.main_title) : '/encyclopedia/' + this.language + '/' + p.title.replace(/ /g, '_')}
-				})
-			} else {
-				const parts = [
-					{name: this.main_title, link: this.language === this.$i18n.locale ? '/encyclopedia' : '/encyclopedia/' + this.language + '/' + this.main_title }
-				]
-				if (this.code !== this.main_title) {
-					parts.push({name: this.code, link: '/encyclopedia/' + this.language + '/' + this.code.replace(/ /g, '_')})
-				}
-				return parts
-			}
-		}
-		get contributor() {
-			return store.state.farmer ? store.state.farmer.contributor || store.state.farmer.moderator : false
-		}
-		get parents() {
-			const parents = []
-			const visited = new Set<number>()
-			for (let current = this.page; current; current = LeekWars.encyclopediaById[this.language] ? LeekWars.encyclopediaById[this.language][current.parent] : null) {
-				if (visited.has(current.id)) { break }
-				visited.add(current.id)
-				parents.push(current)
-			}
-			return parents.reverse()
-		}
-		get function_args() {
-			for (const fun of FUNCTIONS) {
-				if (fun.name === this.code) {
-					let name = "("
-					let i = 0
-					for (const a in fun.arguments_names) {
-						if (fun.optional[a]) name += "["
-						name += '<span class="lstype">' + LeekWars.protect(this.$t("doc.arg_type_" + fun.arguments_types[a])) + '</span> '
-						name += fun.arguments_names[a]
-						if (fun.optional[a]) name += "]"
-						if (i++ < fun.arguments_names.length - 1) {
-							name += ", "
-						}
-					}
-					name += ')'
-					if (fun.return_type !== 0) {
-						name += " → " + '<span class="lstype">' + LeekWars.protect(this.$t("doc.arg_type_" + fun.return_type)) + '</span> ' + fun.return_name
-					}
-					return name
-				}
-			}
-		}
-		get totalReferences() {
-			if (!this.referencedBy) return 0
-			return this.referencedBy.children.length + this.referencedBy.translations.length + this.referencedBy.linked_from.length
-		}
-		get content() {
-			let content = this.page ? this.page.content : ''
-			if (this.function_args) {
-				content = content.replace("# " + this.code, "# " + this.code + '<span>' + this.function_args + '</span>')
-			}
-			return content
-		}
+	const { t, locale: i18nLocale } = useI18n()
+	const route = useRoute()
+	const router = useRouter()
+	const monacoContainer = useTemplateRef<HTMLElement>('monacoContainer')
+	const markdownRef = useTemplateRef<HTMLElement>('markdown')
+	const diffContainer = useTemplateRef<HTMLElement>('diffContainer')
 
-		beforeUnmount() {
-			this.destroyed = true
-			emitter.off('ctrlS')
-			window.removeEventListener('beforeunload', this.boundBeforeUnload)
-			LeekWars.large = false
-			LeekWars.box = false
-			LeekWars.footer = true
+	const english = ref('')
+	const page = ref<any>(null)
+	const edition = ref(false)
+	const editor = ref<Monaco.editor.IStandaloneCodeEditor | null>(null)
+	let scrolling = false
+	const pages = ref<any>({})
+	const modified = ref(false)
+	let initialVersionId = 0
+	const statsExpanded = ref(false)
+	const searchQuery = ref('')
+	const redirectedFrom = ref<string | null>(null)
+	let boundBeforeUnload: () => void
+	const actions = ref<any[]>([])
+	const history = ref<any[] | null>(null)
+	const selectedHistoryIndex = ref<number | null>(null)
+	const diffEditor = ref<Monaco.editor.IStandaloneDiffEditor | null>(null)
+	const referencedBy = ref<{ children: any[], translations: any[], linked_from: any[] } | null>(null)
+	let destroyed = false
 
-			this.destroyDiffEditor()
-			if (this.editor) {
-				this.editor.getModel()?.dispose()
-				this.editor.dispose()
-				this.editor = null
-			}
-			if (this.edition) {
-				this.editEnd()
-			}
-		}
-
-		async mounted() {
-			// this.editStart()
-
-			emitter.on('ctrlS', () => {
-				this.save()
+	const language = computed(() => route.params && route.params.lang ? route.params.lang as string : i18nLocale.value as string)
+	const main_title = computed(() => LeekWars.languages[language.value].encyclopedia)
+	const code = computed(() => 'page' in route.params ? (route.params.page as string).replace(/_/g, ' ') : main_title.value)
+	const lanuage_and_code = computed(() => language.value + '/' + code.value)
+	const title = computed(() => page.value ? page.value.title : 'Encyclopedia')
+	const breadcrumb_items = computed(() => {
+		if (page.value && !page.value.new) {
+			return parents.value.map(p => {
+				return {name: p.title, link: p.title === main_title.value ? (language.value === i18nLocale.value ? '/encyclopedia' : '/encyclopedia/' + language.value + '/' + main_title.value) : '/encyclopedia/' + language.value + '/' + p.title.replace(/ /g, '_')}
 			})
-			this.actions = [
-				{icon: 'mdi-information-variant', click: () => this.$router.push('/about')},
-				{icon: 'mdi-pencil', click: () => this.editStart()},
+		} else {
+			const parts = [
+				{name: main_title.value, link: language.value === i18nLocale.value ? '/encyclopedia' : '/encyclopedia/' + language.value + '/' + main_title.value }
 			]
-			LeekWars.setActions(this.actions)
-
-			this.boundBeforeUnload = this.onBeforeUnload.bind(this)
-			window.addEventListener('beforeunload', this.boundBeforeUnload)
-
-			const docMessages = await import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
-			i18n.global.mergeLocaleMessage(locale, { doc: docMessages.default })
+			if (code.value !== main_title.value) {
+				parts.push({name: code.value, link: '/encyclopedia/' + language.value + '/' + code.value.replace(/ /g, '_')})
+			}
+			return parts
 		}
-
-		@Watch('lanuage_and_code', {immediate: true})
-		async update() {
-			await LeekWars.loadEncyclopedia(this.language)
-			if (this.destroyed) { return }
-
-			if (this.code === 'Page au hasard') {
-				const pages = Object.values(LeekWars.encyclopedia[this.$i18n.locale])
-				this.$router.replace('/encyclopedia/' + this.$i18n.locale + '/' + pages[Math.random() * pages.length | 0].title)
-				return
-			}
-
-			// Vérifier si c'est un alias
-			const key = this.code.toLowerCase().replace(/_/g, ' ')
-			const entry = LeekWars.encyclopedia[this.language]?.[key]
-			if (entry?.alias) {
-				this.$router.replace('/encyclopedia/' + this.language + '/' + entry.title.replace(/ /g, '_') + '?from=' + encodeURIComponent(this.code))
-				return
-			}
-
-			this.redirectedFrom = this.$route.query.from as string || null
-			this.statsExpanded = false
-			this.history = null
-			this.selectedHistoryIndex = null
-			this.referencedBy = null
-			this.destroyDiffEditor()
-
-			LeekWars.get<any>('encyclopedia/get/' + this.language + '/' + this.code).then(page => {
-				// Redirection alias côté serveur (fallback)
-				if (page.redirect) {
-					this.$router.replace('/encyclopedia/' + this.language + '/' + page.redirect.replace(/ /g, '_') + '?from=' + encodeURIComponent(this.code))
-					return
-				}
-				if (this.edition) {
-					// Previous page was in edition
-					this.releasePage()
-				}
-				this.page = page
-				if (this.edition) {
-					this.editStart()
-					this.setEditorContent()
-				}
-				LeekWars.setTitle(this.title)
-				emitter.emit('loaded')
-			})
-			.error((result: any) => {
-				// Pas de page
-				let fun = null as any
-				let args = ''
-				let ret = ''
-				let description = ''
-				for (const funct of FUNCTIONS) {
-					if (funct.name === this.code) {
-						fun = funct
-						description = this.$t('doc.func_' + fun.name) as string
-						args = funct.arguments_names.map((a, i) => '- **' + a + '** : ' + (this.$t('doc.func_' + fun.name + '_arg_' + (i + 1)))).join('\n')
-						if (fun.return_name) {
-							ret = '#### Retour\n\n- **' + fun.return_name + '** : ' + (this.$t('doc.func_' + fun.name + '_return'))
-						}
-						break
+	})
+	const contributor = computed(() => store.state.farmer ? store.state.farmer.contributor || store.state.farmer.moderator : false)
+	const parents = computed(() => {
+		const list = []
+		const visited = new Set<number>()
+		for (let current = page.value; current; current = LeekWars.encyclopediaById[language.value] ? LeekWars.encyclopediaById[language.value][current.parent] : null) {
+			if (visited.has(current.id)) { break }
+			visited.add(current.id)
+			list.push(current)
+		}
+		return list.reverse()
+	})
+	const function_args = computed(() => {
+		for (const fun of FUNCTIONS as any[]) {
+			if (fun.name === code.value) {
+				let name = "("
+				let i = 0
+				for (const a in fun.arguments_names) {
+					if (fun.optional[a]) name += "["
+					name += '<span class="lstype">' + LeekWars.protect(t("doc.arg_type_" + fun.arguments_types[a])) + '</span> '
+					name += fun.arguments_names[a]
+					if (fun.optional[a]) name += "]"
+					if (i++ < fun.arguments_names.length - 1) {
+						name += ", "
 					}
 				}
-				this.page = {
-					new: true,
-					id: 0,
-					title: this.code,
-					language: this.language,
-					translations: result && result.translations ? result.translations : {},
-					content: fun ?  `# ${this.code}
+				name += ')'
+				if (fun.return_type !== 0) {
+					name += " → " + '<span class="lstype">' + LeekWars.protect(t("doc.arg_type_" + fun.return_type)) + '</span> ' + fun.return_name
+				}
+				return name
+			}
+		}
+	})
+	const totalReferences = computed(() => {
+		if (!referencedBy.value) return 0
+		return referencedBy.value.children.length + referencedBy.value.translations.length + referencedBy.value.linked_from.length
+	})
+	const content = computed(() => {
+		let c = page.value ? page.value.content : ''
+		if (function_args.value) {
+			c = c.replace("# " + code.value, "# " + code.value + '<span>' + function_args.value + '</span>')
+		}
+		return c
+	})
+
+	onBeforeUnmount(() => {
+		destroyed = true
+		emitter.off('ctrlS')
+		window.removeEventListener('beforeunload', boundBeforeUnload)
+		LeekWars.large = false
+		LeekWars.box = false
+		LeekWars.footer = true
+
+		destroyDiffEditor()
+		if (editor.value) {
+			editor.value.getModel()?.dispose()
+			editor.value.dispose()
+			editor.value = null
+		}
+		if (edition.value) {
+			editEnd()
+		}
+	})
+
+	onMounted(async () => {
+		emitter.on('ctrlS', () => save())
+		actions.value = [
+			{icon: 'mdi-information-variant', click: () => router.push('/about')},
+			{icon: 'mdi-pencil', click: () => editStart()},
+		]
+		LeekWars.setActions(actions.value)
+
+		boundBeforeUnload = onBeforeUnload
+		window.addEventListener('beforeunload', boundBeforeUnload)
+
+		const docMessages = await import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
+		i18n.global.mergeLocaleMessage(locale, { doc: docMessages.default })
+	})
+
+	watch(lanuage_and_code, async () => {
+		await LeekWars.loadEncyclopedia(language.value)
+		if (destroyed) { return }
+
+		if (code.value === 'Page au hasard') {
+			const ps = Object.values(LeekWars.encyclopedia[i18nLocale.value])
+			router.replace('/encyclopedia/' + i18nLocale.value + '/' + (ps[Math.random() * ps.length | 0] as any).title)
+			return
+		}
+
+		const key = code.value.toLowerCase().replace(/_/g, ' ')
+		const entry = LeekWars.encyclopedia[language.value]?.[key]
+		if (entry?.alias) {
+			router.replace('/encyclopedia/' + language.value + '/' + entry.title.replace(/ /g, '_') + '?from=' + encodeURIComponent(code.value))
+			return
+		}
+
+		redirectedFrom.value = route.query.from as string || null
+		statsExpanded.value = false
+		history.value = null
+		selectedHistoryIndex.value = null
+		referencedBy.value = null
+		destroyDiffEditor()
+
+		LeekWars.get<any>('encyclopedia/get/' + language.value + '/' + code.value).then(p => {
+			if (p.redirect) {
+				router.replace('/encyclopedia/' + language.value + '/' + p.redirect.replace(/ /g, '_') + '?from=' + encodeURIComponent(code.value))
+				return
+			}
+			if (edition.value) {
+				releasePage()
+			}
+			page.value = p
+			if (edition.value) {
+				editStart()
+				setEditorContent()
+			}
+			LeekWars.setTitle(title.value)
+			emitter.emit('loaded')
+		})
+		.error((result: any) => {
+			let fun = null as any
+			let args = ''
+			let ret = ''
+			let description = ''
+			for (const funct of FUNCTIONS as any[]) {
+				if (funct.name === code.value) {
+					fun = funct
+					description = t('doc.func_' + fun.name) as string
+					args = funct.arguments_names.map((a: string, i: number) => '- **' + a + '** : ' + (t('doc.func_' + fun.name + '_arg_' + (i + 1)))).join('\n')
+					if (fun.return_name) {
+						ret = '#### Retour\n\n- **' + fun.return_name + '** : ' + (t('doc.func_' + fun.name + '_return'))
+					}
+					break
+				}
+			}
+			page.value = {
+				new: true,
+				id: 0,
+				title: code.value,
+				language: language.value,
+				translations: result && result.translations ? result.translations : {},
+				content: fun ?  `# ${code.value}
 > Fonctions
 
 ${description}
@@ -444,324 +430,322 @@ ${args}
 ${ret}
 
 
-` : '# ' + this.code + '\n\n'
-				}
-				this.setEditorContent()
-			})
-		}
-
-		editStart() {
-			if (!this.page) { return }
-			if (this.page.id === 0) { // Nouvelle page pas besoin de prendre un lock
-				this.edition = true
-				LeekWars.large = true
-				LeekWars.box = true
-				LeekWars.footer = false
-				this.prepareEditor()
-				return
+` : '# ' + code.value + '\n\n'
 			}
-			LeekWars.post('encyclopedia/start-edition', {page_id: this.page.id}).then(() => {
-				this.edition = true
-				LeekWars.large = true
-				LeekWars.box = true
-				LeekWars.footer = false
-				this.prepareEditor()
-			}).error((result) => {
-				LeekWars.toast("Verrouillé par " + result.locker)
-			})
+			setEditorContent()
+		})
+	}, { immediate: true })
+
+	function editStart() {
+		if (!page.value) { return }
+		if (page.value.id === 0) {
+			edition.value = true
+			LeekWars.large = true
+			LeekWars.box = true
+			LeekWars.footer = false
+			prepareEditor()
+			return
 		}
+		LeekWars.post('encyclopedia/start-edition', {page_id: page.value.id}).then(() => {
+			edition.value = true
+			LeekWars.large = true
+			LeekWars.box = true
+			LeekWars.footer = false
+			prepareEditor()
+		}).error((result) => {
+			LeekWars.toast("Verrouillé par " + result.locker)
+		})
+	}
 
-		prepareEditor() {
-			if (this.editor) {
-				// Éditeur déjà prêt
-				this.setEditorContent()
-				return
-			}
-			nextTick(() => {
-				import(/* webpackChunkName: "monaco" */ 'monaco-editor').then((monaco) => {
-					const container = this.$refs.monacoContainer as HTMLElement
-					if (!container) { return }
-					this.editor = markRaw(monaco.editor.create(container, {
-						value: this.page ? this.page.content : "",
-						language: "markdown",
-						automaticLayout: true,
-						wordWrap: "on",
-						fontSize: 14,
-						lineHeight: 22,
-						theme: "vs",
-						tabSize: 4,
-						insertSpaces: false,
-						lineNumbers: "on",
-						folding: true,
-						minimap: { enabled: false },
-						scrollBeyondLastLine: false,
-						overviewRulerLanes: 0,
-						overviewRulerBorder: false,
-						renderLineHighlight: "line",
-					}))
-
-					this.editor.onDidChangeModelContent(() => {
-						this.modified = true
-						this.page.content = this.editor!.getValue()
-					})
-
-					this.editor.onDidScrollChange((e) => {
-						if (this.scrolling) { this.scrolling = false; return }
-						const scrollTop = e.scrollTop
-						const scrollHeight = e.scrollHeight
-						const editorHeight = this.editor!.getLayoutInfo().height
-						if (scrollHeight <= editorHeight) { return }
-						const percent = scrollTop / (scrollHeight - editorHeight)
-
-						this.scrolling = true
-						const markdown = this.$refs.markdown as HTMLElement
-						markdown.scrollTop = (markdown.scrollHeight - markdown.clientHeight) * percent
-					})
-
-					this.initialVersionId = this.editor.getModel()!.getAlternativeVersionId()
-					this.modified = false
-				})
-			})
+	function prepareEditor() {
+		if (editor.value) {
+			setEditorContent()
+			return
 		}
-
-		setEditorContent() {
-			if (!this.page || !this.editor) { return }
-			this.editor.setValue(this.page.content)
-			this.initialVersionId = this.editor.getModel()!.getAlternativeVersionId()
-			this.modified = false
-		}
-
-		editEnd() {
-			this.edition = false
-			LeekWars.large = false
-			LeekWars.box = false
-			LeekWars.footer = true
-			if (this.editor) {
-				this.editor.getModel()?.dispose()
-				this.editor.dispose()
-				this.editor = null
-			}
-			this.page.locker = null
-			this.releasePage()
-		}
-
-		setPageLanguage(language: string) {
-			this.page.language = language
-			LeekWars.post('encyclopedia/set-language', {page_id: this.page.id, language })
-		}
-
-		releasePage() {
-			LeekWars.post('encyclopedia/end-edition', {page_id: this.page.id})
-		}
-
-		onBeforeUnload() {
-			if (this.edition && this.page && this.page.id !== 0) {
-				const data = JSON.stringify({page_id: this.page.id})
-				navigator.sendBeacon(LeekWars.API + 'encyclopedia/end-edition', new Blob([data], {type: 'application/json'}))
-			}
-		}
-
-		markdownScroll(e: Event) {
-			if (this.scrolling) { this.scrolling = false; return }
-			const markdown = (this.$refs.markdown as HTMLElement)
-			const percent = markdown.scrollTop / (markdown.scrollHeight - markdown.clientHeight)
-
-			this.scrolling = true
-			if (this.editor) {
-				const scrollHeight = this.editor.getScrollHeight()
-				const editorHeight = this.editor.getLayoutInfo().height
-				this.editor.setScrollTop(Math.ceil((scrollHeight - editorHeight) * percent))
-			}
-		}
-
-		beforeRouteUpdate(to: Route, from: Route, next: Function) {
-			if (this.modified && !window.confirm('Page non sauvegardée, voulez-vous abandonner les modifications ?')) {
-				next(false)
-			} else {
-				next()
-			}
-		}
-		beforeRouteLeave(to: Route, from: Route, next: Function) {
-			if (!next) { return !this.modified }
-			if (this.modified && !window.confirm('Page non sauvegardée, voulez-vous abandonner les modifications ?')) {
-				next(false)
-			} else {
-				next()
-			}
-		}
-
-		save() {
-			LeekWars.put('encyclopedia/update', {page_id: this.page.id, language: this.page.language, title: this.page.title, content: this.page.content, parent: this.page.parent || 1, reference: this.page.reference || 0}).then((result) => {
-				LeekWars.toast("Sauvegardé !")
-				if (this.page.id === 0) {
-					this.page.new = false
-					this.page.id = result.id
-				}
-			}).error(error => {
-				if (error.error === 'duplicate_reference') {
-					LeekWars.toast("Sauvegarde échouée : la référence est déjà utilisée par la page \"" + error.page + "\" (#" + error.page_id + ")")
-				} else {
-					LeekWars.toast("Sauvegarde échouée : " + error.error)
-				}
-			})
-
-			this.initialVersionId = this.editor!.getModel()!.getAlternativeVersionId()
-			this.modified = false
-			this.page.last_edition_time = Date.now() / 1000
-			this.page.last_editor = store.state.farmer!.id
-			this.page.last_editor_name = store.state.farmer!.name
-		}
-
-		toggleStats() {
-			this.statsExpanded = !this.statsExpanded
-			if (this.statsExpanded) {
-				if (!this.history) this.loadHistory()
-				if (!this.referencedBy) this.loadReferencedBy()
-			}
-		}
-
-		loadHistory() {
-			if (!this.page || this.page.id === 0) return
-			LeekWars.get('encyclopedia/get-history/' + this.page.id).then((history: { content: string, author: number, author_name: string, time: number, additions?: number, deletions?: number }[]) => {
-				for (let i = 0; i < history.length; i++) {
-					if (i < history.length - 1) {
-						const newLines = history[i].content.split('\n')
-						const oldLines = history[i + 1].content.split('\n')
-						let additions = 0
-						let deletions = 0
-						const maxLen = Math.max(newLines.length, oldLines.length)
-						for (let j = 0; j < maxLen; j++) {
-							if (j >= oldLines.length) { additions++; continue }
-							if (j >= newLines.length) { deletions++; continue }
-							if (newLines[j] !== oldLines[j]) { additions++; deletions++ }
-						}
-						history[i].additions = additions
-						history[i].deletions = deletions
-					}
-				}
-				this.history = history
-				if (history.length > 1) {
-					this.selectHistory(0)
-				}
-			})
-		}
-
-		selectHistory(index: number) {
-			if (this.selectedHistoryIndex === index) {
-				this.selectedHistoryIndex = null
-				this.destroyDiffEditor()
-				return
-			}
-			this.selectedHistoryIndex = index
-			nextTick(() => {
-				this.createDiffEditor(index)
-			})
-		}
-
-		createDiffEditor(index: number) {
-			if (!this.history) return
-			this.destroyDiffEditor()
-
-			const container = this.$refs.diffContainer as HTMLElement
-			if (!container) return
-
-			const newContent = this.history[index].content
-			const oldContent = index < this.history.length - 1 ? this.history[index + 1].content : ''
-			const expectedIndex = this.selectedHistoryIndex
-
+		nextTick(() => {
 			import(/* webpackChunkName: "monaco" */ 'monaco-editor').then((monaco) => {
-				if (this.selectedHistoryIndex !== expectedIndex) return
-				this.diffEditor = markRaw(monaco.editor.createDiffEditor(container, {
+				const container = monacoContainer.value
+				if (!container) { return }
+				editor.value = markRaw(monaco.editor.create(container, {
+					value: page.value ? page.value.content : "",
+					language: "markdown",
 					automaticLayout: true,
-					readOnly: true,
-					renderSideBySide: false,
-					fontSize: 13,
-					lineHeight: 20,
+					wordWrap: "on",
+					fontSize: 14,
+					lineHeight: 22,
+					theme: "vs",
+					tabSize: 4,
+					insertSpaces: false,
+					lineNumbers: "on",
+					folding: true,
 					minimap: { enabled: false },
 					scrollBeyondLastLine: false,
 					overviewRulerLanes: 0,
 					overviewRulerBorder: false,
-					renderOverviewRuler: false,
-					wordWrap: 'on',
-					hideUnchangedRegions: { enabled: true },
-					theme: LeekWars.darkMode ? 'vs-dark' : 'vs',
+					renderLineHighlight: "line",
 				}))
-				this.diffEditor.setModel({
-					original: markRaw(monaco.editor.createModel(oldContent, 'markdown')),
-					modified: markRaw(monaco.editor.createModel(newContent, 'markdown')),
+
+				editor.value.onDidChangeModelContent(() => {
+					modified.value = true
+					page.value.content = editor.value!.getValue()
 				})
+
+				editor.value.onDidScrollChange((e) => {
+					if (scrolling) { scrolling = false; return }
+					const scrollTop = e.scrollTop
+					const scrollHeight = e.scrollHeight
+					const editorHeight = editor.value!.getLayoutInfo().height
+					if (scrollHeight <= editorHeight) { return }
+					const percent = scrollTop / (scrollHeight - editorHeight)
+
+					scrolling = true
+					const md = markdownRef.value
+					if (md) md.scrollTop = (md.scrollHeight - md.clientHeight) * percent
+				})
+
+				initialVersionId = editor.value.getModel()!.getAlternativeVersionId()
+				modified.value = false
 			})
+		})
+	}
+
+	function setEditorContent() {
+		if (!page.value || !editor.value) { return }
+		editor.value.setValue(page.value.content)
+		initialVersionId = editor.value.getModel()!.getAlternativeVersionId()
+		modified.value = false
+	}
+
+	function editEnd() {
+		edition.value = false
+		LeekWars.large = false
+		LeekWars.box = false
+		LeekWars.footer = true
+		if (editor.value) {
+			editor.value.getModel()?.dispose()
+			editor.value.dispose()
+			editor.value = null
 		}
+		page.value.locker = null
+		releasePage()
+	}
 
-		destroyDiffEditor() {
-			if (this.diffEditor) {
-				const model = this.diffEditor.getModel()
-				this.diffEditor.dispose()
-				model?.original.dispose()
-				model?.modified.dispose()
-				this.diffEditor = null
-			}
-		}
+	function setPageLanguage(lang: string) {
+		page.value.language = lang
+		LeekWars.post('encyclopedia/set-language', {page_id: page.value.id, language: lang })
+	}
 
-		comment(comment: Comment) {
-			this.page.comments.push(comment)
-		}
+	function releasePage() {
+		LeekWars.post('encyclopedia/end-edition', {page_id: page.value.id})
+	}
 
-		search() {
-			const query = this.searchQuery.replace(/ /g, '+')
-			if (query) {
-				this.$router.push('/encyclopedia-search?query=' + query)
-			} else {
-				this.$router.push('/encyclopedia-search')
-			}
-		}
-
-		loadReferencedBy() {
-			if (!this.page || !this.page.id) return
-			LeekWars.get('encyclopedia/get-referenced-by/' + this.page.id).then((result: any) => {
-				this.referencedBy = result
-			})
-		}
-
-		deletePage() {
-			if (!this.page || !this.page.id) return
-
-			if (this.referencedBy && (this.referencedBy.children.length || this.referencedBy.linked_from.length)) {
-				const children = this.referencedBy.children.length
-				const linked = this.referencedBy.linked_from.length
-				let msg = 'Impossible de supprimer cette page :\n'
-				if (children) msg += `- ${children} page(s) enfant(s)\n`
-				if (linked) msg += `- ${linked} page(s) contenant un lien vers cette page\n`
-				msg += '\nSupprimez ou déplacez ces pages avant.'
-				alert(msg)
-				return
-			}
-
-			if (!window.confirm('Supprimer la page « ' + this.page.title + ' » (#' + this.page.id + ') ?\n\nCette action est irréversible.')) {
-				return
-			}
-
-			LeekWars.delete('encyclopedia/delete', { page_id: this.page.id }).then(() => {
-				LeekWars.toast('Page supprimée !')
-				this.$router.push('/encyclopedia')
-			}).error((error: any) => {
-				if (error.error === 'has_children') {
-					LeekWars.toast('Impossible : ' + error.count + ' page(s) enfant(s)')
-				} else if (error.error === 'has_links') {
-					LeekWars.toast('Impossible : ' + error.count + ' page(s) contenant un lien vers cette page')
-				} else {
-					LeekWars.toast('Erreur : ' + error.error)
-				}
-			})
-		}
-
-		updateOfficial() {
-			LeekWars.put('encyclopedia/official', {page_id: this.page.id, official: this.page.official}).then((result) => {
-
-			}).error(error => LeekWars.toast("Sauvegarde échouée : " + error.error))
+	function onBeforeUnload() {
+		if (edition.value && page.value && page.value.id !== 0) {
+			const data = JSON.stringify({page_id: page.value.id})
+			navigator.sendBeacon(LeekWars.API + 'encyclopedia/end-edition', new Blob([data], {type: 'application/json'}))
 		}
 	}
+
+	function markdownScroll() {
+		if (scrolling) { scrolling = false; return }
+		const md = markdownRef.value
+		if (!md) return
+		const percent = md.scrollTop / (md.scrollHeight - md.clientHeight)
+
+		scrolling = true
+		if (editor.value) {
+			const scrollHeight = editor.value.getScrollHeight()
+			const editorHeight = editor.value.getLayoutInfo().height
+			editor.value.setScrollTop(Math.ceil((scrollHeight - editorHeight) * percent))
+		}
+	}
+
+	onBeforeRouteUpdate((to, from, next) => {
+		if (modified.value && !window.confirm('Page non sauvegardée, voulez-vous abandonner les modifications ?')) {
+			next(false)
+		} else {
+			next()
+		}
+	})
+	onBeforeRouteLeave((to, from, next) => {
+		if (modified.value && !window.confirm('Page non sauvegardée, voulez-vous abandonner les modifications ?')) {
+			next(false)
+		} else {
+			next()
+		}
+	})
+
+	function save() {
+		LeekWars.put('encyclopedia/update', {page_id: page.value.id, language: page.value.language, title: page.value.title, content: page.value.content, parent: page.value.parent || 1, reference: page.value.reference || 0}).then((result) => {
+			LeekWars.toast("Sauvegardé !")
+			if (page.value.id === 0) {
+				page.value.new = false
+				page.value.id = result.id
+			}
+		}).error(error => {
+			if (error.error === 'duplicate_reference') {
+				LeekWars.toast("Sauvegarde échouée : la référence est déjà utilisée par la page \"" + error.page + "\" (#" + error.page_id + ")")
+			} else {
+				LeekWars.toast("Sauvegarde échouée : " + error.error)
+			}
+		})
+
+		initialVersionId = editor.value!.getModel()!.getAlternativeVersionId()
+		modified.value = false
+		page.value.last_edition_time = Date.now() / 1000
+		page.value.last_editor = store.state.farmer!.id
+		page.value.last_editor_name = store.state.farmer!.name
+	}
+
+	function toggleStats() {
+		statsExpanded.value = !statsExpanded.value
+		if (statsExpanded.value) {
+			if (!history.value) loadHistory()
+			if (!referencedBy.value) loadReferencedBy()
+		}
+	}
+
+	function loadHistory() {
+		if (!page.value || page.value.id === 0) return
+		LeekWars.get('encyclopedia/get-history/' + page.value.id).then((h: { content: string, author: number, author_name: string, time: number, additions?: number, deletions?: number }[]) => {
+			for (let i = 0; i < h.length; i++) {
+				if (i < h.length - 1) {
+					const newLines = h[i].content.split('\n')
+					const oldLines = h[i + 1].content.split('\n')
+					let additions = 0
+					let deletions = 0
+					const maxLen = Math.max(newLines.length, oldLines.length)
+					for (let j = 0; j < maxLen; j++) {
+						if (j >= oldLines.length) { additions++; continue }
+						if (j >= newLines.length) { deletions++; continue }
+						if (newLines[j] !== oldLines[j]) { additions++; deletions++ }
+					}
+					h[i].additions = additions
+					h[i].deletions = deletions
+				}
+			}
+			history.value = h
+			if (h.length > 1) {
+				selectHistory(0)
+			}
+		})
+	}
+
+	function selectHistory(index: number) {
+		if (selectedHistoryIndex.value === index) {
+			selectedHistoryIndex.value = null
+			destroyDiffEditor()
+			return
+		}
+		selectedHistoryIndex.value = index
+		nextTick(() => {
+			createDiffEditor(index)
+		})
+	}
+
+	function createDiffEditor(index: number) {
+		if (!history.value) return
+		destroyDiffEditor()
+
+		const container = diffContainer.value
+		if (!container) return
+
+		const newContent = history.value[index].content
+		const oldContent = index < history.value.length - 1 ? history.value[index + 1].content : ''
+		const expectedIndex = selectedHistoryIndex.value
+
+		import(/* webpackChunkName: "monaco" */ 'monaco-editor').then((monaco) => {
+			if (selectedHistoryIndex.value !== expectedIndex) return
+			diffEditor.value = markRaw(monaco.editor.createDiffEditor(container, {
+				automaticLayout: true,
+				readOnly: true,
+				renderSideBySide: false,
+				fontSize: 13,
+				lineHeight: 20,
+				minimap: { enabled: false },
+				scrollBeyondLastLine: false,
+				overviewRulerLanes: 0,
+				overviewRulerBorder: false,
+				renderOverviewRuler: false,
+				wordWrap: 'on',
+				hideUnchangedRegions: { enabled: true },
+				theme: LeekWars.darkMode ? 'vs-dark' : 'vs',
+			}))
+			diffEditor.value.setModel({
+				original: markRaw(monaco.editor.createModel(oldContent, 'markdown')),
+				modified: markRaw(monaco.editor.createModel(newContent, 'markdown')),
+			})
+		})
+	}
+
+	function destroyDiffEditor() {
+		if (diffEditor.value) {
+			const model = diffEditor.value.getModel()
+			diffEditor.value.dispose()
+			model?.original.dispose()
+			model?.modified.dispose()
+			diffEditor.value = null
+		}
+	}
+
+	function comment(c: any) {
+		page.value.comments.push(c)
+	}
+
+	function search() {
+		const query = searchQuery.value.replace(/ /g, '+')
+		if (query) {
+			router.push('/encyclopedia-search?query=' + query)
+		} else {
+			router.push('/encyclopedia-search')
+		}
+	}
+
+	function loadReferencedBy() {
+		if (!page.value || !page.value.id) return
+		LeekWars.get('encyclopedia/get-referenced-by/' + page.value.id).then((result: any) => {
+			referencedBy.value = result
+		})
+	}
+
+	function deletePage() {
+		if (!page.value || !page.value.id) return
+
+		if (referencedBy.value && (referencedBy.value.children.length || referencedBy.value.linked_from.length)) {
+			const children = referencedBy.value.children.length
+			const linked = referencedBy.value.linked_from.length
+			let msg = 'Impossible de supprimer cette page :\n'
+			if (children) msg += `- ${children} page(s) enfant(s)\n`
+			if (linked) msg += `- ${linked} page(s) contenant un lien vers cette page\n`
+			msg += '\nSupprimez ou déplacez ces pages avant.'
+			alert(msg)
+			return
+		}
+
+		if (!window.confirm('Supprimer la page « ' + page.value.title + ' » (#' + page.value.id + ') ?\n\nCette action est irréversible.')) {
+			return
+		}
+
+		LeekWars.delete('encyclopedia/delete', { page_id: page.value.id }).then(() => {
+			LeekWars.toast('Page supprimée !')
+			router.push('/encyclopedia')
+		}).error((error: any) => {
+			if (error.error === 'has_children') {
+				LeekWars.toast('Impossible : ' + error.count + ' page(s) enfant(s)')
+			} else if (error.error === 'has_links') {
+				LeekWars.toast('Impossible : ' + error.count + ' page(s) contenant un lien vers cette page')
+			} else {
+				LeekWars.toast('Erreur : ' + error.error)
+			}
+		})
+	}
+
+	function updateOfficial() {
+		LeekWars.put('encyclopedia/official', {page_id: page.value.id, official: page.value.official}).then(() => {
+		}).error(error => LeekWars.toast("Sauvegarde échouée : " + error.error))
+	}
 </script>
+
 
 <style lang="scss" scoped>
 .page-bar {
