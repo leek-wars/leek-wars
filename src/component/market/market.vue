@@ -327,7 +327,7 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { ChipTemplate } from '@/model/chip'
 	import { CHIPS } from '@/model/chips'
 	import { EffectTypeMarket } from '@/model/effect'
@@ -339,449 +339,423 @@
 	import { PompTemplate } from '@/model/pomp'
 	import { PotionTemplate } from '@/model/potion'
 	import { store } from '@/model/store'
-	import { WeaponTemplate } from '@/model/weapon'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
-	import FightPackPreview from './fight-pack-preview.vue'
 	import ItemPreview from './item-preview.vue'
 	import SchemeImage from './scheme-image.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import { emitter } from '@/model/vue'
+	import { computed, onBeforeUnmount, onUnmounted, reactive, ref, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
+	import { useRoute, useRouter } from 'vue-router'
 
-	@Options({
+	defineOptions({
 		name: 'market', i18n: {}, mixins: [...mixins],
-		components: {
-			'item-preview': ItemPreview,
-			RichTooltipLeek,
-			SchemeImage
+		components: { 'item-preview': ItemPreview, RichTooltipLeek, SchemeImage }
+	})
+
+	const { t } = useI18n()
+	const route = useRoute()
+	const router = useRouter()
+
+	const selectedItem = ref<ItemTemplate | null>(null)
+	const items = reactive<{[key: string]: ItemTemplate}>({})
+	const weapons = ref<ItemTemplate[]>([])
+	const chips = ref<ChipTemplate[]>([])
+	const chipsByType = ref<ChipTemplate[][]>([])
+	const potions = ref<PotionTemplate[]>([])
+	const hats = ref<HatTemplate[]>([])
+	const items_by_name = reactive<{[key: string]: ItemTemplate}>({})
+	const fight_packs = ref<any[]>([])
+	const buyDialog = ref(false)
+	const buyCrystalsDialog = ref(false)
+	const buyQuantity = ref(1)
+	const sellDialog = ref(false)
+	const chipMode = ref(localStorage.getItem('market/sort_mode') === 'type' ? 'type' : 'level')
+	const expanded = ref(localStorage.getItem('market/expanded') === 'true')
+	const unseen_items = ref<ItemTemplate[]>([])
+	const unseenItem = ref<ItemTemplate | null>(null)
+	const unseenItemDialog = ref(false)
+	const pomps = ref<PompTemplate[]>([])
+	const schemes = ref<ItemTemplate[]>([])
+	let request: any = null
+	let onKeyDown: ((e: KeyboardEvent) => void) | null = null
+	const search = ref('')
+
+	const max_level = computed(() => {
+		if (store.state.farmer) {
+			return Math.max(...Object.values(store.state.farmer.leeks).map((l: any) => l.level))
+		}
+		return 0
+	})
+
+	function matchesSearch(item: ItemTemplate): boolean {
+		if (!search.value) { return true }
+		const query = search.value.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+		const name = translateName(item).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+		const rawName = item.name.replace(/^(weapon|chip|potion|hat|pomp)_/, '').toLowerCase()
+		return name.includes(query) || rawName.includes(query)
+	}
+
+	const filteredFightPacks = computed(() => fight_packs.value.filter(p => matchesSearch(p)))
+	const filteredWeapons = computed(() => weapons.value.filter(w => matchesSearch(items[w.id])))
+	const filteredChips = computed(() => chips.value.filter(c => matchesSearch(items[c.id])))
+	const filteredPotions = computed(() => potions.value.filter(p => matchesSearch(items[p.id])))
+	const filteredHats = computed(() => hats.value.filter(h => matchesSearch(items[h.id])))
+	const filteredPomps = computed(() => pomps.value.filter(p => matchesSearch(items[p.id])))
+	const filteredSchemes = computed(() => schemes.value.filter(s => matchesSearch(s)))
+
+	watch(search, () => {
+		if (!search.value) { return }
+		const first = filteredFightPacks.value[0] || filteredWeapons.value[0] || filteredChips.value[0] || filteredPotions.value[0] || filteredHats.value[0] || filteredPomps.value[0] || filteredSchemes.value[0]
+		if (first) {
+			const name = first.name.replace('weapon_', '')
+			router.replace('/market/' + name)
 		}
 	})
-	export default class Market extends Vue {
-		CHIPS = CHIPS
-		selectedItem: ItemTemplate | null = null
-		items: {[key: string]: ItemTemplate} = {}
-		weapons: ItemTemplate[] = []
-		chips: ChipTemplate[] = []
-		chipsByType: ChipTemplate[][] = []
-		potions: PotionTemplate[] = []
-		hats: HatTemplate[] = []
-		items_by_name: {[key: string]: ItemTemplate} = {}
-		fight_packs: any[] = []
-		ItemType = ItemType
-		buyDialog: boolean = false
-		buyCrystalsDialog: boolean = false
-		buyQuantity: number = 1
-		sellDialog: boolean = false
-		chipMode: string = localStorage.getItem('market/sort_mode') === 'type' ? 'type' : 'level'
-		expanded: boolean = localStorage.getItem('market/expanded') === 'true'
-		EffectTypeMarket = EffectTypeMarket
-		actions: any
-		unseen_items: ItemTemplate[] = []
-		unseenItem: ItemTemplate | null = null
-		unseenItemDialog: boolean = false
-		pomps: PompTemplate[] = []
-		schemes: ItemTemplate[] = []
-		request: any = null
-		onKeyDown: ((e: KeyboardEvent) => void) | null = null
-		search: string = ''
 
-		get max_level() {
+	const orderedItemNames = computed(() => {
+		const names: string[] = []
+		for (const pack of filteredFightPacks.value) names.push(pack.name)
+		for (const weapon of filteredWeapons.value) names.push(weapon.name.replace('weapon_', ''))
+		for (const chip of filteredChips.value) names.push(chip.name)
+		for (const potion of filteredPotions.value) names.push(potion.name)
+		for (const hat of filteredHats.value) names.push(hat.name)
+		for (const pomp of filteredPomps.value) names.push(pomp.name)
+		for (const scheme of filteredSchemes.value) names.push(scheme.name)
+		return names
+	})
+
+	if (expanded.value) {
+		LeekWars.large = true
+	}
+	const actions = [
+		{icon: 'mdi-cart-outline', click: () => window.open('https://leek-wars.myspreadshop.fr', '_blank')!.focus() },
+		{icon: 'mdi-bank', click: () => router.push('/bank?ref=market_action')},
+		{icon: 'mdi-treasure-chest', click: () => router.push('/inventory')},
+	]
+	request = LeekWars.get('market/get-item-templates')
+	request.then((res: any) => {
+		const list = res.items as ItemTemplate[]
+
+		for (const i in list) {
+			const item = list[i]
+			items[item.id] = item
+			if (item.type === ItemType.WEAPON) {
+				const w = LeekWars.items[item.id]
+				weapons.value.push(w)
+				items_by_name[w.name.replace('weapon_', '')] = item
+			} else if (item.type === ItemType.CHIP) {
+				const chip = CHIPS[item.id]
+				chips.value.push(chip)
+				items_by_name[CHIPS[item.id].name] = item
+				for (const effect of chip.effects) {
+					if (chipsByType.value[effect.type] === undefined) {
+						chipsByType.value[effect.type] = []
+					}
+					chipsByType.value[effect.type].push(chip)
+					break
+				}
+			} else if (item.type === ItemType.POTION) {
+				const potion = LeekWars.potions[item.id]
+				if (potion) {
+					potions.value.push(potion)
+					items_by_name[LeekWars.potions[item.id].name] = item
+				} else {
+					const fakePotion = {...item, name: item.name.replace(/^potion_/, ''), level: 1, consumable: false, effects: [], template: item.id, duration: 0} as any
+					potions.value.push(fakePotion)
+					items_by_name[fakePotion.name] = fakePotion
+				}
+			} else if (item.type === ItemType.HAT) {
+				const hat = LeekWars.hats[item.id]
+				if (hat) {
+					hats.value.push(hat)
+					items_by_name[hat.name] = item
+				} else {
+					const fakeHat = {...item, name: item.name.replace(/^hat_/, ''), level: 1, width: 0, height: 0, crop: 0, template: item.id, item: 0} as any
+					hats.value.push(fakeHat)
+					items_by_name[fakeHat.name] = fakeHat
+				}
+			} else if (item.type === ItemType.POMP) {
+				pomps.value.push(LeekWars.pomps[item.id])
+				items_by_name[LeekWars.pomps[item.id].name] = item
+			} else if (item.type === ItemType.SCHEME) {
+				schemes.value.push(item)
+				items_by_name[item.name] = item
+			}
+			item.leek_objs = []
 			if (store.state.farmer) {
-				return Math.max(...Object.values(store.state.farmer.leeks).map((l: any) => l.level))
-			}
-			return 0
-		}
-
-		matchesSearch(item: ItemTemplate): boolean {
-			if (!this.search) { return true }
-			const query = this.search.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-			const name = this.translateName(item).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-			const rawName = item.name.replace(/^(weapon|chip|potion|hat|pomp)_/, '').toLowerCase()
-			return name.includes(query) || rawName.includes(query)
-		}
-
-		get filteredFightPacks() {
-			return this.fight_packs.filter(p => this.matchesSearch(p))
-		}
-		get filteredWeapons() {
-			return this.weapons.filter(w => this.matchesSearch(this.items[w.id]))
-		}
-		get filteredChips() {
-			return this.chips.filter(c => this.matchesSearch(this.items[c.id]))
-		}
-		get filteredPotions() {
-			return this.potions.filter(p => this.matchesSearch(this.items[p.id]))
-		}
-		get filteredHats() {
-			return this.hats.filter(h => this.matchesSearch(this.items[h.id]))
-		}
-		get filteredPomps() {
-			return this.pomps.filter(p => this.matchesSearch(this.items[p.id]))
-		}
-		get filteredSchemes() {
-			return this.schemes.filter(s => this.matchesSearch(s))
-		}
-
-		@Watch('search')
-		onSearchChange() {
-			if (!this.search) { return }
-			const first = this.filteredFightPacks[0] || this.filteredWeapons[0] || this.filteredChips[0] || this.filteredPotions[0] || this.filteredHats[0] || this.filteredPomps[0] || this.filteredSchemes[0]
-			if (first) {
-				const name = first.name.replace('weapon_', '')
-				this.$router.replace('/market/' + name)
-			}
-		}
-
-		get orderedItemNames(): string[] {
-			const names: string[] = []
-			for (const pack of this.filteredFightPacks) {
-				names.push(pack.name)
-			}
-			for (const weapon of this.filteredWeapons) {
-				names.push(weapon.name.replace('weapon_', ''))
-			}
-			for (const chip of this.filteredChips) {
-				names.push(chip.name)
-			}
-			for (const potion of this.filteredPotions) {
-				names.push(potion.name)
-			}
-			for (const hat of this.filteredHats) {
-				names.push(hat.name)
-			}
-			for (const pomp of this.filteredPomps) {
-				names.push(pomp.name)
-			}
-			for (const scheme of this.filteredSchemes) {
-				names.push(scheme.name)
-			}
-			return names
-		}
-
-		created() {
-			if (this.expanded) {
-				LeekWars.large = true
-			}
-			this.actions = [
-				{icon: 'mdi-cart-outline', click: () => window.open('https://leek-wars.myspreadshop.fr', '_blank')!.focus() },
-				{icon: 'mdi-bank', click: () => this.$router.push('/bank?ref=market_action')},
-				{icon: 'mdi-treasure-chest', click: () => this.$router.push('/inventory')},
-			]
-			this.request = LeekWars.get('market/get-item-templates')
-			this.request.then((res: any) => {
-				const items = res.items as ItemTemplate[]
-
-				for (const i in items) {
-					const item = items[i]
-					this.items[item.id] = item
-					if (item.type === ItemType.WEAPON) {
-						const w = LeekWars.items[item.id]
-						this.weapons.push(w)
-						this.items_by_name[w.name.replace('weapon_', '')] = item
-					} else if (item.type === ItemType.CHIP) {
-						const chip = CHIPS[item.id]
-						this.chips.push(chip)
-						this.items_by_name[CHIPS[item.id].name] = item
-						// Place the chip in the categories which correspond to its effects
-						for (const effect of chip.effects) {
-							if (this.chipsByType[effect.type] === undefined) {
-								this.chipsByType[effect.type] = []
-							}
-							this.chipsByType[effect.type].push(chip)
-							break
-						}
-					} else if (item.type === ItemType.POTION) {
-						const potion = LeekWars.potions[item.id]
-						if (potion) {
-							this.potions.push(potion)
-							this.items_by_name[LeekWars.potions[item.id].name] = item
-						} else {
-							const fakePotion = {...item, name: item.name.replace(/^potion_/, ''), level: 1, consumable: false, effects: [], template: item.id, duration: 0}
-							this.potions.push(fakePotion)
-							this.items_by_name[fakePotion.name] = fakePotion
-						}
-					} else if (item.type === ItemType.HAT) {
-						const hat = LeekWars.hats[item.id]
-						if (hat) {
-							this.hats.push(hat)
-							this.items_by_name[hat.name] = item
-						} else {
-							const fakeHat = {...item, name: item.name.replace(/^hat_/, ''), level: 1, width: 0, height: 0, crop: 0, template: item.id, item: 0}
-							this.hats.push(fakeHat)
-							this.items_by_name[fakeHat.name] = fakeHat
-						}
-					} else if (item.type === ItemType.POMP) {
-						this.pomps.push(LeekWars.pomps[item.id])
-						this.items_by_name[LeekWars.pomps[item.id].name] = item
-					} else if (item.type === ItemType.SCHEME) {
-						this.schemes.push(item)
-						this.items_by_name[item.name] = item
-					}
-					item.leek_objs = []
-					if (this.$store.state.farmer) {
-						for (const leek of item.leeks!) {
-							if (leek in this.$store.state.farmer.leeks) {
-								item.leek_objs.push(this.$store.state.farmer.leeks[leek])
-							}
-						}
-					}
-					if (!item.seen) {
-						this.unseen_items.push(item)
-					}
-				}
-				this.createFightPacks()
-				if (store.state.farmer) { this.setFightPackPrice(store.state.farmer) }
-				else { emitter.on('connected', (farmer: Farmer) => this.setFightPackPrice(farmer)) }
-
-				if (this.unseen_items.length) {
-					this.unseenItem = this.unseen_items[0]
-					this.unseenItemDialog = true
-				}
-
-				this.update()
-			})
-			emitter.on('back', this.back)
-			LeekWars.setActions(this.actions)
-
-			this.onKeyDown = (e: KeyboardEvent) => {
-				if (e.code !== 'ArrowLeft' && e.code !== 'ArrowRight' && e.code !== 'ArrowUp' && e.code !== 'ArrowDown') { return }
-				if (!this.selectedItem) { return }
-				if (this.buyDialog || this.buyCrystalsDialog || this.sellDialog || this.unseenItemDialog) { return }
-				if (document.activeElement instanceof HTMLInputElement) { return }
-				const names = this.orderedItemNames
-				if (!names.length) { return }
-				const currentName = this.$route.params.item as string
-				const index = names.indexOf(currentName)
-				if (index === -1) { return }
-
-				if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') {
-					const newIndex = e.code === 'ArrowLeft'
-						? (index - 1 + names.length) % names.length
-						: (index + 1) % names.length
-					e.preventDefault()
-					this.$router.replace('/market/' + names[newIndex])
-				} else {
-					const target = this.findVerticalItem(e.code === 'ArrowUp' ? 'up' : 'down')
-					if (target) {
-						e.preventDefault()
-						this.$router.replace(target)
+				for (const leek of item.leeks!) {
+					if (leek in store.state.farmer.leeks) {
+						item.leek_objs.push(store.state.farmer.leeks[leek])
 					}
 				}
 			}
-			document.addEventListener('keydown', this.onKeyDown)
-		}
-		back() {
-			this.$router.back()
-		}
-		beforeUnmount() {
-			if (this.request) { this.request.abort() }
-			LeekWars.large = false
-		}
-		unmounted() {
-			if (this.onKeyDown) {
-				document.removeEventListener('keydown', this.onKeyDown)
+			if (!item.seen) {
+				unseen_items.value.push(item)
 			}
-			emitter.off('back', this.back)
+		}
+		createFightPacks()
+		if (store.state.farmer) { setFightPackPrice(store.state.farmer) }
+		else { emitter.on('connected', (farmer: Farmer) => setFightPackPrice(farmer)) }
+
+		if (unseen_items.value.length) {
+			unseenItem.value = unseen_items.value[0]
+			unseenItemDialog.value = true
 		}
 
-		@Watch('$route.params.item')
-		update() {
-			const item = this.$route.params.item
-			if (item) {
-				this.selectedItem = this.items_by_name[item]
-				LeekWars.setTitle(this.translateName(this.selectedItem))
-				LeekWars.splitShowContent()
-				emitter.emit('loaded')
-			} else if (!LeekWars.mobile) {
-				this.$router.replace('/market/pistol')
-			} else {
-				this.selectedItem = null
-				LeekWars.setTitle(this.$t('title'))
-				LeekWars.splitShowList()
-				emitter.emit('loaded')
-			}
-			this.updateSubtitle()
-			LeekWars.setActions(this.actions)
-		}
-		updateSubtitle() {
-			if (this.$store.state.farmer) {
-				LeekWars.setSubTitle(this.$t('main.x_habs', [LeekWars.formatNumber(this.$store.state.farmer.habs)]) + " • " + this.$t('main.x_crystals', [LeekWars.formatNumber(this.$store.state.farmer.crystals)]))
-			}
-		}
-		translateName(item: ItemTemplate) {
-			if (item.type === ItemType.FIGHT_PACK) {
-				return this.$t('n_fights', [item.id - 1000000])
-			}
-			if (item.type === ItemType.SCHEME) {
-				const scheme = LeekWars.schemes[item.params]
-				const result = scheme ? LeekWars.items[scheme.result] : null
-				if (!result) return ''
-				const category = ITEM_CATEGORY_NAME[result.type as ItemType]
-				const name = result.name.replace(category + '_', '')
-				return this.$t('main.scheme_x', [this.$t(category + '.' + name)])
-			}
-			const type = ITEM_CATEGORY_NAME[item.type as ItemType]
-			return this.$t(type + '.' + item.name.replace(type + '_', ''))
-		}
-		openBuyHabs(quantity: number) {
-			if (this.selectedItem && this.selectedItem.price! <= this.$store.state.farmer.habs) {
-				this.buyDialog = true
-				this.buyQuantity = quantity
-			}
-		}
-		openBuyCrystals(quantity: number) {
-			if (!this.selectedItem) return
-			if (this.selectedItem.crystals! * quantity > this.$store.state.farmer.crystals) {
-				this.$router.push('/bank?ref=market_buy:' + this.selectedItem.name)
-				return
-			}
-			this.buyCrystalsDialog = true
-			this.buyQuantity = quantity
-		}
-		buy(currency: string) {
-			if (!this.selectedItem) { return }
-			const item = this.selectedItem
-			const method = currency === 'habs' ? 'market/buy-habs-quantity' : 'market/buy-crystals-quantity'
-			const id = item.type === ItemType.FIGHT_PACK ? (item.id - 1000000) + 'fights' : item.id
-			LeekWars.post(method, { item_id: id, quantity: this.buyQuantity }).then(data => {
-				if (item.type !== ItemType.FIGHT_PACK) {
-					this.items[item.id].farmer_count! += this.buyQuantity
-				}
-				if (currency === 'habs') {
-					this.$store.commit('update-habs', -item.price! * this.buyQuantity)
-				} else {
-					this.$store.commit('update-crystals', -item.crystals! * this.buyQuantity)
-				}
-				if (item.type === ItemType.FIGHT_PACK) {
-					this.$store.commit('update-fights', data.fights)
-					this.$store.commit('update-bought-fights', data.fights)
-				}
-				this.$store.commit('add-inventory', { type: item.type, id: data.item, template: id, quantity: this.buyQuantity, time: Date.now() / 1000 })
-				this.updateSubtitle()
-			})
-			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
-			this.buyDialog = false
-			this.buyCrystalsDialog = false
-		}
-		sell() {
-			if (!this.selectedItem) { return }
-			const item = this.selectedItem
-			LeekWars.post('market/sell-habs', {item_id: item.id}).then(data => {
-				item.farmer_count!--
-				this.$store.commit('update-habs', item.sell_price)
-				this.$store.commit('remove-inventory', {type: item.type, item_template: item.id})
-				this.updateSubtitle()
-			})
-			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
-			this.sellDialog = false
-		}
+		update()
+	})
+	emitter.on('back', back)
+	LeekWars.setActions(actions)
 
-		toggleExpanded() {
-			this.expanded = !this.expanded
-			LeekWars.large = this.expanded
-			localStorage.setItem('market/expanded', '' + this.expanded)
-		}
+	onKeyDown = (e: KeyboardEvent) => {
+		if (e.code !== 'ArrowLeft' && e.code !== 'ArrowRight' && e.code !== 'ArrowUp' && e.code !== 'ArrowDown') { return }
+		if (!selectedItem.value) { return }
+		if (buyDialog.value || buyCrystalsDialog.value || sellDialog.value || unseenItemDialog.value) { return }
+		if (document.activeElement instanceof HTMLInputElement) { return }
+		const names = orderedItemNames.value
+		if (!names.length) { return }
+		const currentName = route.params.item as string
+		const index = names.indexOf(currentName)
+		if (index === -1) { return }
 
-		updateChipMode() {
-			this.chipMode = this.chipMode === 'level' ? 'type' : 'level'
-			localStorage.setItem('market/sort_mode', this.chipMode)
-		}
-
-		createFightPacks() {
-			const fights = [50, 100, 200, 500]
-			const costs = [50, 100, 200, 500]
-			for (const p in fights) {
-				const count = fights[p]
-				const pack: ItemTemplate = {
-					id: 1000000 + fights[p],
-					name: 'fight_pack_' + count,
-					title: this.$t('n_fights', [count]),
-					price: p === '0' ? 100000 : 0,
-					crystals: costs[p],
-					buyable: p === '0',
-					buyable_crystals: true,
-					sellable: false,
-					type: ItemType.FIGHT_PACK,
-					leeks: [],
-					leek_objs: [],
-					leek_count: 0,
-					farmer_count: 0,
-					sell_price: 0,
-					fights: count,
-					seen: true,
-					singleton: false,
-					trophy: null,
-					market: true,
-					level: 1,
-					params: null,
-					public: true,
-					rarity: 0,
-				} as ItemTemplate
-				this.fight_packs.push(pack)
-				this.items[pack.id] = pack
-				this.items_by_name[pack.name] = pack
-			}
-		}
-		setFightPackPrice(farmer: Farmer) {
-			const x = store.state.farmer!.total_level
-			const priceHabs = Math.round(10_000 + Math.pow((x - 1) / 1203, 1.5) * (5_000_000 - 10_000))
-			this.items_by_name['fight_pack_50'].price! = priceHabs
-		}
-
-		@Watch('unseenItemDialog')
-		updateUnseenDialog() {
-			if (!this.unseenItemDialog) {
-				LeekWars.post('market/item-seen', {item: this.unseenItem!.id})
-				setTimeout(() => {
-					this.unseen_items.shift()
-					if (this.unseen_items.length) {
-						this.unseenItem = this.unseen_items[0]
-						this.unseenItemDialog = true
-					}
-				}, 200)
-			}
-		}
-
-		findVerticalItem(direction: 'up' | 'down'): string | null {
-			const active = document.querySelector('.column8 .item.router-link-active') as HTMLElement
-			if (!active) { return null }
-			const activeRect = active.getBoundingClientRect()
-			const activeCenterX = activeRect.left + activeRect.width / 2
-			const allItems = Array.from(document.querySelectorAll('.column8 .items .item')) as HTMLElement[]
-			const candidates = allItems.filter(el => {
-				const rect = el.getBoundingClientRect()
-				return direction === 'down'
-					? rect.top > activeRect.bottom - 5
-					: rect.bottom < activeRect.top + 5
-			})
-			if (!candidates.length) { return null }
-			candidates.sort((a, b) => direction === 'down'
-				? a.getBoundingClientRect().top - b.getBoundingClientRect().top
-				: b.getBoundingClientRect().bottom - a.getBoundingClientRect().bottom
-			)
-			const targetTop = candidates[0].getBoundingClientRect().top
-			const rowItems = candidates.filter(el => Math.abs(el.getBoundingClientRect().top - targetTop) < 5)
-			let closest = rowItems[0]
-			let closestDist = Infinity
-			for (const el of rowItems) {
-				const rect = el.getBoundingClientRect()
-				const dist = Math.abs(rect.left + rect.width / 2 - activeCenterX)
-				if (dist < closestDist) {
-					closestDist = dist
-					closest = el
-				}
-			}
-			return closest.getAttribute('href')
-		}
-
-		scroll(index: number) {
-			const title = document.querySelectorAll('.column8 h2')[index]
-			if (title) {
-				const position = title.getBoundingClientRect().top + window.scrollY
-				window.scrollTo(0, position)
+		if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') {
+			const newIndex = e.code === 'ArrowLeft'
+				? (index - 1 + names.length) % names.length
+				: (index + 1) % names.length
+			e.preventDefault()
+			router.replace('/market/' + names[newIndex])
+		} else {
+			const target = findVerticalItem(e.code === 'ArrowUp' ? 'up' : 'down')
+			if (target) {
+				e.preventDefault()
+				router.replace(target)
 			}
 		}
 	}
+	document.addEventListener('keydown', onKeyDown)
+
+	function back() {
+		router.back()
+	}
+
+	onBeforeUnmount(() => {
+		if (request) { request.abort() }
+		LeekWars.large = false
+	})
+
+	onUnmounted(() => {
+		if (onKeyDown) {
+			document.removeEventListener('keydown', onKeyDown)
+		}
+		emitter.off('back', back)
+	})
+
+	watch(() => route.params.item, () => update())
+
+	function update() {
+		const item = route.params.item as string
+		if (item) {
+			selectedItem.value = items_by_name[item]
+			LeekWars.setTitle(translateName(selectedItem.value))
+			LeekWars.splitShowContent()
+			emitter.emit('loaded')
+		} else if (!LeekWars.mobile) {
+			router.replace('/market/pistol')
+		} else {
+			selectedItem.value = null
+			LeekWars.setTitle(t('title'))
+			LeekWars.splitShowList()
+			emitter.emit('loaded')
+		}
+		updateSubtitle()
+		LeekWars.setActions(actions)
+	}
+
+	function updateSubtitle() {
+		if (store.state.farmer) {
+			LeekWars.setSubTitle(t('main.x_habs', [LeekWars.formatNumber(store.state.farmer.habs)]) + " • " + t('main.x_crystals', [LeekWars.formatNumber(store.state.farmer.crystals)]))
+		}
+	}
+
+	function translateName(item: ItemTemplate) {
+		if (item.type === ItemType.FIGHT_PACK) {
+			return t('n_fights', [item.id - 1000000])
+		}
+		if (item.type === ItemType.SCHEME) {
+			const scheme = LeekWars.schemes[item.params]
+			const result = scheme ? LeekWars.items[scheme.result] : null
+			if (!result) return ''
+			const category = ITEM_CATEGORY_NAME[result.type as ItemType]
+			const name = result.name.replace(category + '_', '')
+			return t('main.scheme_x', [t(category + '.' + name)])
+		}
+		const type = ITEM_CATEGORY_NAME[item.type as ItemType]
+		return t(type + '.' + item.name.replace(type + '_', ''))
+	}
+
+	function openBuyHabs(quantity: number) {
+		if (selectedItem.value && selectedItem.value.price! <= store.state.farmer!.habs) {
+			buyDialog.value = true
+			buyQuantity.value = quantity
+		}
+	}
+
+	function openBuyCrystals(quantity: number) {
+		if (!selectedItem.value) return
+		if (selectedItem.value.crystals! * quantity > store.state.farmer!.crystals) {
+			router.push('/bank?ref=market_buy:' + selectedItem.value.name)
+			return
+		}
+		buyCrystalsDialog.value = true
+		buyQuantity.value = quantity
+	}
+
+	function buy(currency: string) {
+		if (!selectedItem.value) { return }
+		const item = selectedItem.value
+		const method = currency === 'habs' ? 'market/buy-habs-quantity' : 'market/buy-crystals-quantity'
+		const id = item.type === ItemType.FIGHT_PACK ? (item.id - 1000000) + 'fights' : item.id
+		LeekWars.post(method, { item_id: id, quantity: buyQuantity.value }).then(data => {
+			if (item.type !== ItemType.FIGHT_PACK) {
+				items[item.id].farmer_count! += buyQuantity.value
+			}
+			if (currency === 'habs') {
+				store.commit('update-habs', -item.price! * buyQuantity.value)
+			} else {
+				store.commit('update-crystals', -item.crystals! * buyQuantity.value)
+			}
+			if (item.type === ItemType.FIGHT_PACK) {
+				store.commit('update-fights', data.fights)
+				store.commit('update-bought-fights', data.fights)
+			}
+			store.commit('add-inventory', { type: item.type, id: data.item, template: id, quantity: buyQuantity.value, time: Date.now() / 1000 })
+			updateSubtitle()
+		})
+		.error(error => LeekWars.toast(t('error_' + error.error, error.params)))
+		buyDialog.value = false
+		buyCrystalsDialog.value = false
+	}
+
+	function sell() {
+		if (!selectedItem.value) { return }
+		const item = selectedItem.value
+		LeekWars.post('market/sell-habs', {item_id: item.id}).then(() => {
+			item.farmer_count!--
+			store.commit('update-habs', item.sell_price)
+			store.commit('remove-inventory', {type: item.type, item_template: item.id})
+			updateSubtitle()
+		})
+		.error(error => LeekWars.toast(t('error_' + error.error, error.params)))
+		sellDialog.value = false
+	}
+
+	function toggleExpanded() {
+		expanded.value = !expanded.value
+		LeekWars.large = expanded.value
+		localStorage.setItem('market/expanded', '' + expanded.value)
+	}
+
+	function updateChipMode() {
+		chipMode.value = chipMode.value === 'level' ? 'type' : 'level'
+		localStorage.setItem('market/sort_mode', chipMode.value)
+	}
+
+	function createFightPacks() {
+		const fights = [50, 100, 200, 500]
+		const costs = [50, 100, 200, 500]
+		for (const p in fights) {
+			const count = fights[p]
+			const pack: ItemTemplate = {
+				id: 1000000 + fights[p],
+				name: 'fight_pack_' + count,
+				title: t('n_fights', [count]),
+				price: p === '0' ? 100000 : 0,
+				crystals: costs[p],
+				buyable: p === '0',
+				buyable_crystals: true,
+				sellable: false,
+				type: ItemType.FIGHT_PACK,
+				leeks: [],
+				leek_objs: [],
+				leek_count: 0,
+				farmer_count: 0,
+				sell_price: 0,
+				fights: count,
+				seen: true,
+				singleton: false,
+				trophy: null,
+				market: true,
+				level: 1,
+				params: null,
+				public: true,
+				rarity: 0,
+			} as ItemTemplate
+			fight_packs.value.push(pack)
+			items[pack.id] = pack
+			items_by_name[pack.name] = pack
+		}
+	}
+
+	function setFightPackPrice(_farmer: Farmer) {
+		const x = store.state.farmer!.total_level
+		const priceHabs = Math.round(10_000 + Math.pow((x - 1) / 1203, 1.5) * (5_000_000 - 10_000))
+		items_by_name['fight_pack_50'].price! = priceHabs
+	}
+
+	watch(unseenItemDialog, () => {
+		if (!unseenItemDialog.value) {
+			LeekWars.post('market/item-seen', {item: unseenItem.value!.id})
+			setTimeout(() => {
+				unseen_items.value.shift()
+				if (unseen_items.value.length) {
+					unseenItem.value = unseen_items.value[0]
+					unseenItemDialog.value = true
+				}
+			}, 200)
+		}
+	})
+
+	function findVerticalItem(direction: 'up' | 'down'): string | null {
+		const active = document.querySelector('.column8 .item.router-link-active') as HTMLElement
+		if (!active) { return null }
+		const activeRect = active.getBoundingClientRect()
+		const activeCenterX = activeRect.left + activeRect.width / 2
+		const allItems = Array.from(document.querySelectorAll('.column8 .items .item')) as HTMLElement[]
+		const candidates = allItems.filter(el => {
+			const rect = el.getBoundingClientRect()
+			return direction === 'down'
+				? rect.top > activeRect.bottom - 5
+				: rect.bottom < activeRect.top + 5
+		})
+		if (!candidates.length) { return null }
+		candidates.sort((a, b) => direction === 'down'
+			? a.getBoundingClientRect().top - b.getBoundingClientRect().top
+			: b.getBoundingClientRect().bottom - a.getBoundingClientRect().bottom
+		)
+		const targetTop = candidates[0].getBoundingClientRect().top
+		const rowItems = candidates.filter(el => Math.abs(el.getBoundingClientRect().top - targetTop) < 5)
+		let closest = rowItems[0]
+		let closestDist = Infinity
+		for (const el of rowItems) {
+			const rect = el.getBoundingClientRect()
+			const dist = Math.abs(rect.left + rect.width / 2 - activeCenterX)
+			if (dist < closestDist) {
+				closestDist = dist
+				closest = el
+			}
+		}
+		return closest.getAttribute('href')
+	}
+
+	function scroll(index: number) {
+		const title = document.querySelectorAll('.column8 h2')[index]
+		if (title) {
+			const position = title.getBoundingClientRect().top + window.scrollY
+			window.scrollTo(0, position)
+		}
+	}
 </script>
+
 
 <style lang="scss" scoped>
 	.preview-panel .loader {
