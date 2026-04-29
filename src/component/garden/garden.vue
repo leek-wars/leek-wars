@@ -397,7 +397,7 @@
 <script setup lang="ts">
 	import { locale } from '@/locale'
 	import { Farmer } from '@/model/farmer'
-	import { mixins } from '@/model/i18n'
+	import { mixins, i18n } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
@@ -418,7 +418,8 @@
 
 	defineOptions({ name: 'garden', i18n: {}, mixins: [...mixins] })
 
-	const { t, tc } = useI18n()
+	const { t } = useI18n()
+	const tc = (key: string, count: number): string => (i18n.global as any).tc(key, count)
 	const route = useRoute()
 	const router = useRouter()
 
