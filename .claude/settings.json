@@ -17,7 +17,9 @@
       "Bash(git show *)",
       "Bash(git status *)",
       "Bash(git add *)",
-      "Bash(git blame *)"
+      "Bash(git blame *)",
+      "Bash(npx vue-tsc *)",
+      "Bash(npx eslint *)"
     ]
   }
 }
