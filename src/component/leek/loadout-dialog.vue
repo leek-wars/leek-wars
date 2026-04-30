@@ -1,5 +1,5 @@
 <template>
-	<popup v-model="shown" :width="editing ? 1300 : 900">
+	<popup v-model="shown" :width="editing ? 1300 : 950">
 		<template #icon><v-icon>mdi-package-variant-closed</v-icon></template>
 		<template #title>{{ editing ? (editing.id ? $t('main.loadout_edit') : $t('main.loadout_create')) : $t('main.loadouts') }}</template>
 
@@ -19,6 +19,12 @@
 							</div>
 							<div class="loadout-name">
 								{{ loadout.name }}
+								<v-tooltip v-if="loadoutStatus[loadout.id]?.statsDiffer" location="bottom">
+									<template #activator="{ props }">
+										<img v-bind="props" src="/image/potion/restat.png" width="18" height="18" class="loadout-restat-icon">
+									</template>
+									<div>{{ $t('main.loadout_warning_restat_needed') }}</div>
+								</v-tooltip>
 								<v-tooltip v-if="warningsByLoadout[loadout.id] && warningsByLoadout[loadout.id].length > 0" location="bottom">
 									<template #activator="{ props }">
 										<v-icon v-bind="props" color="warning" size="18" class="loadout-warning-icon">mdi-alert</v-icon>
@@ -119,7 +125,10 @@
 					<!-- Armes -->
 					<div class="section">
 						<div class="section-header">
-							<h4>{{ $t('weapons') }}</h4>
+							<h4>
+								{{ $t('weapons') }}
+								<span v-if="leek" class="capital-used" :class="{warning: currentWeaponsCount > leek.max_weapons}">({{ currentWeaponsCount }} / {{ leek.max_weapons }})</span>
+							</h4>
 							<v-btn :class="{'invisible-btn': editing.weapons.length === 0 && editing.forgottenWeapons.length === 0}" size="x-small" variant="text" icon @click="editing.weapons = []; editing.forgottenWeapons = []"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
 						</div>
 						<div class="selected-items">
@@ -162,7 +171,10 @@
 					<!-- Puces -->
 					<div class="section">
 						<div class="section-header">
-							<h4>{{ $t('main.chips') }}</h4>
+							<h4>
+								{{ $t('main.chips') }}
+								<span v-if="leek" class="capital-used" :class="{warning: editing.chips.length > maxChipsCount}">({{ editing.chips.length }} / {{ maxChipsCount }})</span>
+							</h4>
 							<v-btn :class="{'invisible-btn': editing.chips.length === 0}" size="x-small" variant="text" icon @click="editing.chips = []"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
 						</div>
 						<div class="selected-items">
@@ -184,11 +196,14 @@
 					<!-- Composants -->
 					<div class="section">
 						<div class="section-header">
-							<h4>{{ $t('main.components') }}</h4>
+							<h4>
+								{{ $t('main.components') }}
+								<span class="capital-used">({{ editing.components.length }} / {{ MAX_COMPONENTS }})</span>
+							</h4>
 							<v-btn :class="{'invisible-btn': editing.components.length === 0}" size="x-small" variant="text" icon @click="editing.components = []"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
 						</div>
 						<div class="components-grid">
-							<div v-for="i in 8" :key="i" class="component-slot" @click="clearComponentSlot(i - 1)">
+							<div v-for="i in MAX_COMPONENTS" :key="i" class="component-slot" @click="clearComponentSlot(i - 1)">
 								<template v-if="componentAtSlot(i - 1)">
 									<item v-if="LeekWars.items[componentAtSlot(i - 1)!]" :item="LeekWars.items[componentAtSlot(i - 1)!]" />
 									<v-icon class="remove-icon" size="12">mdi-close</v-icon>
@@ -273,7 +288,7 @@
 <script lang="ts">
 	import { defineComponent, PropType } from 'vue'
 	import { LeekWars } from '@/model/leekwars'
-	import { Leek } from '@/model/leek'
+	import { Leek, MAX_COMPONENTS } from '@/model/leek'
 	import { Loadout, LoadoutComponent, LoadoutStats } from '@/model/loadout'
 	import { capitalToStatBonus, statBonusToCapital, baseStatFor, totalCapitalForLevel } from '@/model/capital'
 	import { store } from '@/model/store'
@@ -283,6 +298,25 @@
 	import Sortable from 'sortablejs'
 
 	const CHARACTERISTICS = ['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'tp', 'mp', 'cores', 'ram']
+
+	// +1 pour une oubliée parmi les alternatives, mais seulement s'il reste un slot
+	// libre après les armes fixes (sinon le serveur skippe l'oubliée à l'apply).
+	function weaponSlotsUsed(weapons: number[], forgotten: number[], max: number): number {
+		return weapons.length + (forgotten.length > 0 && weapons.length < max ? 1 : 0)
+	}
+
+	function ramFor(level: number, ramCapital: number, components: LoadoutComponent[]): number {
+		let ram = baseStatFor(level, 'ram') + capitalToStatBonus('ram', ramCapital)
+		for (const c of components) {
+			const item = LeekWars.items[c.template]
+			const comp = item && LeekWars.components[item.params]
+			if (!comp) continue
+			for (const [stat, value] of comp.stats) {
+				if (stat === 'ram') ram += value
+			}
+		}
+		return ram
+	}
 
 	interface EditingLoadout {
 		id: number | null
@@ -308,6 +342,7 @@
 			return {
 				LeekWars,
 				CHARACTERISTICS,
+				MAX_COMPONENTS,
 				loading: false,
 				applying: null as number | null,
 				applyingItemsOnly: null as number | null,
@@ -349,6 +384,14 @@
 				return max
 			},
 			softMaxCapital(): number { return totalCapitalForLevel(this.highestLeekLevel) },
+			currentWeaponsCount(): number {
+				if (!this.editing || !this.leek) return 0
+				return weaponSlotsUsed(this.editing.weapons, this.editing.forgottenWeapons, this.leek.max_weapons)
+			},
+			maxChipsCount(): number {
+				if (!this.leek || !this.editing) return 0
+				return ramFor(this.leek.level, this.editing.stats.ram || 0, this.editing.components)
+			},
 			restatPotionCount(): number {
 				const farmer = store.state.farmer as any
 				if (!farmer || !farmer.potions) return 0
@@ -438,45 +481,24 @@
 				if (!this.leek) return result
 				const level = this.leek.level
 				const maxWeapons = this.leek.max_weapons
-				const baseRam = this.leek.ram
-				const leek = this.leek as any
-				const baseBonuses: { [k: string]: number } = {}
-				for (const s of CHARACTERISTICS) baseBonuses[s] = leek[s] - baseStatFor(leek.level, s)
 				const totalCapital = totalCapitalForLevel(level)
 				for (const loadout of this.loadouts) {
 					const warnings: string[] = []
-					let ram = baseRam
-					for (const c of loadout.components) {
-						const item = LeekWars.items[c.template]
-						const comp = item && LeekWars.components[item.params]
-						if (!comp) continue
-						for (const [stat, value] of comp.stats) {
-							if (stat === 'ram') ram += value
-						}
-					}
+					const ram = ramFor(level, loadout.stats?.ram || 0, loadout.components)
 					const forgottenList = loadout.forgotten_weapons || []
 					const overLevel = [...loadout.weapons, ...forgottenList, ...loadout.chips, ...loadout.components.map(c => c.template)]
 						.filter(tpl => LeekWars.items[tpl] && LeekWars.items[tpl].level > level)
 					if (overLevel.length > 0) warnings.push(this.$t('main.loadout_warning_over_level', [overLevel.length]) as string)
-					// Une seule oubliée sera équipée parmi les alternatives, donc on compte +1 max.
-					const totalWeaponSlots = loadout.weapons.length + (forgottenList.length > 0 ? 1 : 0)
+					const totalWeaponSlots = weaponSlotsUsed(loadout.weapons, forgottenList, maxWeapons)
 					if (totalWeaponSlots > maxWeapons) warnings.push(this.$t('main.loadout_warning_too_many_weapons', [totalWeaponSlots, maxWeapons]) as string)
 					if (loadout.chips.length > ram) warnings.push(this.$t('main.loadout_warning_too_many_chips', [loadout.chips.length, ram]) as string)
 
-					// Stats-related warnings
-					let statsDiffer = false
 					let requestedCapital = 0
 					for (const stat of CHARACTERISTICS) {
-						const target = (loadout.stats && loadout.stats[stat]) || 0
-						requestedCapital += target
-						const current = statBonusToCapital(stat, baseBonuses[stat] || 0)
-						if (target !== current) statsDiffer = true
+						requestedCapital += (loadout.stats && loadout.stats[stat]) || 0
 					}
 					if (requestedCapital > totalCapital) {
 						warnings.push(this.$t('main.loadout_warning_not_enough_capital', [requestedCapital, totalCapital]) as string)
-					}
-					if (statsDiffer) {
-						warnings.push(this.$t('main.loadout_warning_restat_needed') as string)
 					}
 					result[loadout.id] = warnings
 				}
@@ -708,7 +730,7 @@
 				if (!this.editing) return
 				const existing = this.editing.components.findIndex(c => c.template === tpl)
 				if (existing !== -1) { this.editing.components.splice(existing, 1); return }
-				for (let i = 0; i < 8; i++) {
+				for (let i = 0; i < MAX_COMPONENTS; i++) {
 					if (!this.editing.components.some(c => c.index === i)) {
 						this.editing.components.push({ index: i, template: tpl })
 						return
@@ -895,6 +917,7 @@ body.dark .sortable-chosen { background: #333; }
 	display: flex; align-items: center; gap: 6px;
 }
 .loadout-warning-icon { flex-shrink: 0; }
+.loadout-restat-icon { flex-shrink: 0; vertical-align: middle; }
 .loadout-preview { display: flex; gap: 12px; align-items: flex-start; }
 .preview-col {
 	display: flex; flex-wrap: wrap; gap: 3px; align-content: flex-start;
@@ -902,11 +925,11 @@ body.dark .sortable-chosen { background: #333; }
 }
 .preview-col-stats {
 	flex: 3;
-	display: grid; grid-template-columns: repeat(4, minmax(44px, auto)); gap: 8px 12px;
+	display: grid; grid-template-columns: repeat(4, minmax(44px, auto)); gap: 8px 10px;
 	font-size: 12px;
 	padding: 2px 0;
 }
-.preview-col-weapons { flex: 1; }
+.preview-col-weapons { flex: 2; }
 .preview-col-chips { flex: 6; }
 .preview-col-components { flex: 2; }
 .stat-badge { display: flex; align-items: center; gap: 2px; font-weight: 500; min-width: 0; }
@@ -959,7 +982,7 @@ body.dark .stat-badge.frequency img { filter: invert(1); }
 .skipped-list { display: flex; flex-direction: column; gap: 8px; padding: 8px 4px; max-height: 400px; overflow-y: auto; }
 .skipped-item { display: flex; align-items: center; gap: 10px; padding: 6px; border-radius: 4px; background: #f5f5f5; }
 body.dark .skipped-item { background: #2a2a2a; }
-.skipped-item :deep(.item) { flex-shrink: 0; }
+.skipped-item :deep(.item) { flex-shrink: 0; width: 48px !important; height: 48px !important; box-sizing: border-box !important; }
 .skipped-info { flex: 1; min-width: 0; }
 .skipped-name { font-weight: 600; font-size: 14px; }
 .skipped-reason { font-size: 12px; color: #c0392b; }

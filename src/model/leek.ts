@@ -103,6 +103,8 @@ class Leek {
 	}
 }
 
+export const MAX_COMPONENTS = 8
+
 export const COSTS: {[key: string]: any} = {
 	life : [
 		{step : 0, capital : 1, sup : 4},
