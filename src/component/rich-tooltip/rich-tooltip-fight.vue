@@ -358,11 +358,13 @@ const metaItems = computed(() => {
 		flex: 1;
 		min-width: 0;
 		padding: 2px 4px;
+		text-align: center;
 		&.winner .name { font-weight: 500; }
 	}
 	.team-line {
 		display: flex;
 		align-items: center;
+		justify-content: center;
 		gap: 6px;
 		margin-bottom: 4px;
 		.emblem {
@@ -376,6 +378,7 @@ const metaItems = computed(() => {
 	.fighter {
 		display: flex;
 		align-items: baseline;
+		justify-content: center;
 		gap: 6px;
 		font-size: 15px;
 		overflow: hidden;
@@ -394,6 +397,7 @@ const metaItems = computed(() => {
 		font-size: 13px;
 		color: var(--text-color-secondary);
 		margin-top: 2px;
+		text-align: center;
 	}
 	.gain {
 		font-size: 12px;
