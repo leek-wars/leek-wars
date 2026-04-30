@@ -34,7 +34,7 @@
 								<span class="team-name">{{ data.team1.name }}</span>
 							</div>
 						</template>
-						<template v-if="!expand && isMulti(1)">
+						<template v-if="isMulti(1)">
 							<div class="fighter summary"><span class="name">{{ $t('main.n_leeks', [data.leeks1.length]) }}</span></div>
 						</template>
 						<template v-else>
@@ -61,7 +61,7 @@
 									<span class="team-name">{{ data.team2.name }}</span>
 								</div>
 							</template>
-							<template v-if="!expand && isMulti(2)">
+							<template v-if="isMulti(2)">
 								<div class="fighter summary"><span class="name">{{ $t('main.n_leeks', [data.leeks2.length]) }}</span></div>
 							</template>
 							<template v-else>
@@ -78,6 +78,29 @@
 						</template>
 					</div>
 				</div>
+
+				<table v-if="expand && (isMulti(1) || isMulti(2))" class="participants">
+					<thead>
+						<tr>
+							<th>{{ $t('main.name') }}</th>
+							<th>{{ $t('main.level') }}</th>
+							<th><img src="/image/talent.png"></th>
+							<th><v-icon>mdi-arrow-up-down</v-icon></th>
+						</tr>
+					</thead>
+					<tbody>
+						<template v-for="side in [1, 2] as const" :key="side">
+							<tr v-for="leek in (side === 1 ? data.leeks1 : data.leeks2)" :key="leek.id" :class="'team-' + side">
+								<td class="leek-name">{{ leek.name }}</td>
+								<td class="num">{{ leek.level }}</td>
+								<td class="num">{{ leek.talent ?? '' }}</td>
+								<td class="num gain" :class="{up: (leekGain(leek.id, side) ?? 0) > 0, down: (leekGain(leek.id, side) ?? 0) < 0}">
+									<template v-if="leekGain(leek.id, side) !== null">{{ formatGain(leekGain(leek.id, side)!) }}</template>
+								</td>
+							</tr>
+						</template>
+					</tbody>
+				</table>
 
 				<div v-if="metaItems.length" class="meta">
 					<span v-for="item in metaItems" :key="item.icon" class="meta-item">
@@ -163,12 +186,16 @@ const typeLabel = computed(() => {
 	const d = data.value
 	if (!d) return ''
 	if (d.type === FightType.BOSS && d.boss_name) return t('entity.' + d.boss_name)
-	if (d.context === FightContext.TOURNAMENT) return t('main.tournament')
 	if (d.type === FightType.BATTLE_ROYALE) return t('main.battle_royale')
 	if (d.type === FightType.WAR) return t('main.war')
 	if (d.type === FightType.CHEST_HUNT) return t('main.chest_hunt')
 	if (d.type === FightType.COLOSSUS) return t('main.colossus')
-	return t('main.fight')
+	const typeKey = d.type === FightType.FARMER ? 'main.farmer' : d.type === FightType.TEAM ? 'main.team' : 'main.fight_solo'
+	const ctxKey = d.context === FightContext.CHALLENGE ? 'main.fight_challenge'
+		: d.context === FightContext.TOURNAMENT ? 'main.tournament'
+		: d.context === FightContext.TEST ? 'main.fight_test'
+		: 'main.garden'
+	return t(typeKey) + ' • ' + t(ctxKey)
 })
 
 const resultClass = computed(() => {
@@ -328,6 +355,51 @@ const metaItems = computed(() => {
 		color: var(--text-color-secondary);
 		.v-icon { font-size: 18px; }
 	}
+
+	.participants {
+		width: calc(100% + 16px);
+		margin: 6px -8px;
+		text-align: left;
+		border-top: 1px solid var(--border);
+		border-collapse: collapse;
+		tr {
+			border-bottom: 1px solid var(--border);
+		}
+		tr:last-child {
+			border-bottom: none;
+		}
+		th, td {
+			padding: 3px 8px;
+			font-size: 13px;
+		}
+		th {
+			background: var(--background);
+			font-weight: 500;
+			color: var(--text-color-secondary);
+			img {
+				width: 16px;
+				vertical-align: middle;
+			}
+			.v-icon {
+				font-size: 16px;
+			}
+		}
+		.leek-name {
+			max-width: 180px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+		.num {
+			text-align: right;
+			width: 40px;
+			font-variant-numeric: tabular-nums;
+		}
+		tr.team-1 td:first-child { box-shadow: inset 3px 0 0 #4caf50; }
+		tr.team-2 td:first-child { box-shadow: inset 3px 0 0 #e53935; }
+	}
+	body.dark .participants tr.team-1 td:first-child { box-shadow: inset 3px 0 0 #7ddc7d; }
+	body.dark .participants tr.team-2 td:first-child { box-shadow: inset 3px 0 0 #ff7068; }
 
 	.meta {
 		display: flex;
