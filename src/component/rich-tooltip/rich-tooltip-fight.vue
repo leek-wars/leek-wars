@@ -1,9 +1,9 @@
 <template>
-	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :open-delay="_open_delay" :close-delay="_close_delay" :location="bottom ? 'bottom' : 'top'" :transition="instant ? 'none' : 'scale-transition'" :open-on-hover="!locked" offset-y @update:model-value="open($event)">
+	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :nudge-width="expand ? 500 : 200" :open-delay="_open_delay" :close-delay="_close_delay" :location="bottom ? 'bottom' : 'top'" :transition="instant ? 'none' : 'scale-transition'" :open-on-hover="!locked" offset-y @update:model-value="open($event)">
 		<template #activator="{ props: activatorProps }">
 			<slot :props="activatorProps"></slot>
 		</template>
-		<div class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
+		<div class="card" :class="{expanded: expand}" @mouseenter="mouse = true" @mouseleave="mouse = false">
 			<loader v-if="!data" :size="30" />
 			<template v-else>
 				<div class="header">
@@ -23,6 +23,7 @@
 						<v-icon v-else-if="resultClass === 'defeat'">mdi-skull-outline</v-icon>
 						<v-icon v-else-if="resultClass === 'draw'">mdi-equal</v-icon>
 					</div>
+					<v-btn class="expand" variant="text" size="x-small" :icon="expand ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="expand = !expand" />
 				</div>
 
 				<div class="sides">
@@ -36,11 +37,11 @@
 						<div v-for="leek in data.leeks1" :key="leek.id" class="fighter">
 							<span class="name">{{ leek.name }}</span>
 							<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>
-							<span v-if="leekGain(leek.id, 1) !== null" class="gain" :class="{up: leekGain(leek.id, 1)! > 0, down: leekGain(leek.id, 1)! < 0}">{{ formatGain(leekGain(leek.id, 1)!) }}</span>
+							<span v-if="expand && leekGain(leek.id, 1) !== null" class="gain" :class="{up: leekGain(leek.id, 1)! > 0, down: leekGain(leek.id, 1)! < 0}">{{ formatGain(leekGain(leek.id, 1)!) }}</span>
 						</div>
 						<div v-if="data.type == FightType.FARMER && data.farmer1_name" class="farmer-name">
 							({{ data.farmer1_name }})
-							<span v-if="data.report?.farmer1?.talent_gain" class="gain" :class="{up: data.report.farmer1.talent_gain > 0, down: data.report.farmer1.talent_gain < 0}">{{ formatGain(data.report.farmer1.talent_gain) }}</span>
+							<span v-if="expand && data.report?.farmer1?.talent_gain" class="gain" :class="{up: data.report.farmer1.talent_gain > 0, down: data.report.farmer1.talent_gain < 0}">{{ formatGain(data.report.farmer1.talent_gain) }}</span>
 						</div>
 					</div>
 					<div class="vs"><v-icon>mdi-sword-cross</v-icon></div>
@@ -58,17 +59,17 @@
 							<div v-for="leek in data.leeks2" :key="leek.id" class="fighter">
 								<span class="name">{{ leek.name }}</span>
 								<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>
-								<span v-if="leekGain(leek.id, 2) !== null" class="gain" :class="{up: leekGain(leek.id, 2)! > 0, down: leekGain(leek.id, 2)! < 0}">{{ formatGain(leekGain(leek.id, 2)!) }}</span>
+								<span v-if="expand && leekGain(leek.id, 2) !== null" class="gain" :class="{up: leekGain(leek.id, 2)! > 0, down: leekGain(leek.id, 2)! < 0}">{{ formatGain(leekGain(leek.id, 2)!) }}</span>
 							</div>
 							<div v-if="data.type == FightType.FARMER && data.farmer2_name" class="farmer-name">
 								({{ data.farmer2_name }})
-								<span v-if="data.report?.farmer2?.talent_gain" class="gain" :class="{up: data.report.farmer2.talent_gain > 0, down: data.report.farmer2.talent_gain < 0}">{{ formatGain(data.report.farmer2.talent_gain) }}</span>
+								<span v-if="expand && data.report?.farmer2?.talent_gain" class="gain" :class="{up: data.report.farmer2.talent_gain > 0, down: data.report.farmer2.talent_gain < 0}">{{ formatGain(data.report.farmer2.talent_gain) }}</span>
 							</div>
 						</template>
 					</div>
 				</div>
 
-				<div v-if="metaItems.length" class="meta">
+				<div v-if="expand && metaItems.length" class="meta">
 					<span v-for="item in metaItems" :key="item.icon" class="meta-item">
 						<v-icon>{{ item.icon }}</v-icon>
 						<span v-if="item.html" v-html="item.html"></span>
@@ -76,7 +77,7 @@
 					</span>
 				</div>
 
-				<div v-if="data.trophies && data.trophies.length" class="trophies">
+				<div v-if="expand && data.trophies && data.trophies.length" class="trophies">
 					<img v-for="t in data.trophies" :key="t.trophy" :src="'/image/trophy/' + t.name + '.svg'" :title="$te('trophy.' + t.name) ? ($t('trophy.' + t.name) as string) : t.name">
 				</div>
 
@@ -114,6 +115,7 @@ const tc = (key: string, count: number): string => (i18n.global as any).tc(key, 
 
 const content_created = ref(false)
 const data = ref<any>(null)
+const expand = ref(false)
 const locked = ref(false)
 const mouse = ref(false)
 const value = ref(false)
@@ -128,6 +130,7 @@ watch(() => props.id, () => {
 
 function open(v: boolean) {
 	emit('update:modelValue', v)
+	expand.value = localStorage.getItem('richtooltipfight/expanded') === 'true'
 	if (content_created.value) return
 	content_created.value = true
 	if (props.id > 0 && !data.value) {
@@ -136,6 +139,10 @@ function open(v: boolean) {
 		})
 	}
 }
+
+watch(expand, () => {
+	localStorage.setItem('richtooltipfight/expanded', expand.value ? 'true' : 'false')
+})
 
 const isArena = computed(() => {
 	const t = data.value?.type
@@ -197,8 +204,6 @@ const metaItems = computed(() => {
 <style lang="scss" scoped>
 	.card {
 		padding: 8px;
-		min-width: 280px;
-		max-width: 380px;
 		background: var(--pure-white);
 	}
 
@@ -231,6 +236,9 @@ const metaItems = computed(() => {
 		color: var(--text-color-secondary);
 	}
 	.spacer { flex: 1; }
+	.expand {
+		margin-left: 4px;
+	}
 	.result-badge {
 		display: inline-flex;
 		align-items: center;
