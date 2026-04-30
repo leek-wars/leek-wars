@@ -1,5 +1,5 @@
 <template>
-	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :min-width="expand ? 600 : 400" :open-delay="_open_delay" :close-delay="_close_delay" :location="bottom ? 'bottom' : 'top'" :transition="instant ? 'none' : 'scale-transition'" :open-on-hover="!locked" offset-y @update:model-value="open($event)">
+	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :open-delay="_open_delay" :close-delay="_close_delay" :location="bottom ? 'bottom' : 'top'" :transition="instant ? 'none' : 'scale-transition'" :open-on-hover="!locked" offset-y @update:model-value="open($event)">
 		<template #activator="{ props: activatorProps }">
 			<slot :props="activatorProps"></slot>
 		</template>
@@ -299,6 +299,10 @@ const metaItems = computed(() => {
 	.card {
 		padding: 8px;
 		background: var(--pure-white);
+		width: 400px;
+	}
+	.card.expanded {
+		width: 600px;
 	}
 
 	.header {
