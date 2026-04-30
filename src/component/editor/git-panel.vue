@@ -436,9 +436,9 @@
 			try {
 				await gitCall('git/fetch', { folder: this.selectedRepo })
 				this.lastFetchAt[this.selectedRepo] = Date.now()
-				await this.loadBranches()
+				await Promise.all([this.loadBranches(), this.refreshStatus()])
 			} catch (e) {
-				await this.loadBranches()
+				await Promise.all([this.loadBranches(), this.refreshStatus()])
 			} finally {
 				this.fetching = false
 			}
