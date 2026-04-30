@@ -3,7 +3,7 @@
 		<template #activator="{ props: activatorProps }">
 			<slot :props="activatorProps"></slot>
 		</template>
-		<div class="card" :class="resultClass" @mouseenter="mouse = true" @mouseleave="mouse = false">
+		<div class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
 			<loader v-if="!data" :size="30" />
 			<template v-else>
 				<div class="header">
@@ -196,33 +196,25 @@ const metaItems = computed(() => {
 
 <style lang="scss" scoped>
 	.card {
-		padding: 10px 12px;
+		padding: 8px;
 		min-width: 280px;
 		max-width: 380px;
-		background: var(--background-secondary);
-		&.win { border-left: 4px solid #b6f182; }
-		&.defeat { border-left: 4px solid #ffb3ae; }
-		&.draw { border-left: 4px solid #cfcfcf; }
+		background: var(--pure-white);
 	}
-	body.dark .card.win { border-left-color: #3c651b; }
-	body.dark .card.defeat { border-left-color: #76342f; }
-	body.dark .card.draw { border-left-color: #555; }
 
 	.header {
 		display: flex;
 		align-items: center;
 		gap: 8px;
-		padding-bottom: 8px;
-		border-bottom: 1px solid var(--border);
 	}
 	.type-icon {
-		font-size: 24px;
+		font-size: 26px;
 		color: var(--text-color);
 		&.timersand { animation: rotate 2s linear infinite; }
 	}
 	.type-icon-img {
-		width: 22px;
-		height: 22px;
+		width: 24px;
+		height: 24px;
 		opacity: 0.85;
 	}
 	.type-info {
@@ -231,7 +223,7 @@ const metaItems = computed(() => {
 		line-height: 1.2;
 	}
 	.type-label {
-		font-size: 15px;
+		font-size: 16px;
 		font-weight: 500;
 	}
 	.date {
@@ -242,29 +234,25 @@ const metaItems = computed(() => {
 	.result-badge {
 		display: inline-flex;
 		align-items: center;
-		padding: 2px 6px;
-		border-radius: 10px;
-		.v-icon { font-size: 18px; }
-		&.win { background: #b6f182; color: #2c4d10; }
-		&.defeat { background: #ffb3ae; color: #6b2520; }
-		&.draw { background: #dcdcdc; color: #444; }
+		.v-icon { font-size: 22px; }
+		&.win .v-icon { color: #4caf50; }
+		&.defeat .v-icon { color: #e53935; }
+		&.draw .v-icon { color: var(--text-color-secondary); }
 	}
-	body.dark .result-badge.win { background: #3c651b; color: #d6f5b0; }
-	body.dark .result-badge.defeat { background: #76342f; color: #ffd6d2; }
-	body.dark .result-badge.draw { background: #555; color: #ddd; }
+	body.dark .result-badge.win .v-icon { color: #7ddc7d; }
+	body.dark .result-badge.defeat .v-icon { color: #ff7068; }
 
 	.sides {
 		display: flex;
 		align-items: stretch;
 		gap: 8px;
-		padding: 10px 0;
+		padding: 8px 0 6px;
 	}
 	.side {
 		flex: 1;
 		min-width: 0;
-		padding: 4px 6px;
-		border-radius: 4px;
-		&.winner { font-weight: 500; }
+		padding: 2px 4px;
+		&.winner .name { font-weight: 500; }
 	}
 	.team-line {
 		display: flex;
@@ -277,13 +265,13 @@ const metaItems = computed(() => {
 		}
 	}
 	.team-name {
-		font-size: 14px;
+		font-size: 15px;
 	}
 	.fighter {
 		display: flex;
 		align-items: baseline;
 		gap: 6px;
-		font-size: 14px;
+		font-size: 15px;
 		overflow: hidden;
 		.name {
 			overflow: hidden;
@@ -293,7 +281,7 @@ const metaItems = computed(() => {
 		.level {
 			color: var(--text-color-secondary);
 			font-weight: normal;
-			font-size: 12px;
+			font-size: 13px;
 		}
 	}
 	.farmer-name {
@@ -322,7 +310,7 @@ const metaItems = computed(() => {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 10px;
-		padding-top: 8px;
+		padding-top: 6px;
 		border-top: 1px solid var(--border);
 		font-size: 13px;
 		color: var(--text-color-secondary);
@@ -330,24 +318,28 @@ const metaItems = computed(() => {
 	.meta-item {
 		display: inline-flex;
 		align-items: center;
-		gap: 4px;
-		.v-icon { font-size: 16px; }
+		gap: 3px;
+		.v-icon {
+			font-size: 16px;
+			opacity: 0.7;
+		}
 	}
 
 	.trophies {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 6px;
-		padding-top: 8px;
+		gap: 4px;
+		padding-top: 6px;
+		margin-top: 6px;
 		border-top: 1px solid var(--border);
 		img {
-			width: 26px;
-			height: 26px;
+			width: 28px;
+			height: 28px;
 		}
 	}
 
 	.footer {
-		padding-top: 8px;
+		padding-top: 6px;
 		margin-top: 6px;
 		border-top: 1px solid var(--border);
 	}
