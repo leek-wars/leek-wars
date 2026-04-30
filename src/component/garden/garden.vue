@@ -382,6 +382,7 @@
 												<avatar :farmer="farmer" :class="{master: LeekWars.bossSquads.squad.master === farmer.id}" />
 											</rich-tooltip-farmer>
 										</div>
+										<v-btn v-if="$store.getters.admin" color="primary" :loading="batchLoading" :disabled="LeekWars.bossSquads.squad.engaged_leeks.length === 0 || LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="batchAttack()"><v-icon>mdi-sword-cross</v-icon>&nbsp;x10</v-btn>
 										<v-btn color="primary" :disabled="LeekWars.bossSquads.squad.engaged_leeks.length === 0 || LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="LeekWars.bossSquads.attack()"><v-icon>mdi-sword-cross</v-icon>&nbsp;{{ $t('attack') }}</v-btn>
 									</div>
 								</div>
@@ -447,6 +448,7 @@
 	const squad = ref<string | null>(null)
 	const arenaPreference = ref(parseInt(localStorage.getItem('arena/preference') || '-1', 10))
 	const wantsColossus = ref(false)
+	const batchLoading = ref(false)
 
 	const farmerEnabled = computed(() => garden.value && garden.value.farmer_enabled)
 	const teamEnabled = computed(() => garden.value && garden.value.team_enabled)
@@ -458,6 +460,22 @@
 
 	function modeIcon(preference: number): string {
 		return modeIcons[preference] || 'mdi-help-circle-outline'
+	}
+	function batchAttack() {
+		const currentSquad = LeekWars.bossSquads.squad
+		if (!currentSquad || !selectedBoss.value) return
+		const participants = currentSquad.engaged_leeks
+			.filter((l: Leek) => l.farmer === store.state.farmer!.id)
+			.map((l: Leek) => l.id)
+		if (participants.length === 0) return
+		batchLoading.value = true
+		LeekWars.post('garden/start-boss-fight-batch', {boss_id: selectedBoss.value.id, participants}).then(data => {
+			store.commit('update-fights', -data.fights.length)
+			LeekWars.bossSquads.leaveSquad()
+			router.push('/fight/' + data.fights[0])
+		}).error((error: string) => LeekWars.toast(t(error))).finally(() => {
+			batchLoading.value = false
+		})
 	}
 	function modeLabel(preference: number): string {
 		return t(modeLabels[preference] || 'arena_no_preference') as string
