@@ -382,8 +382,10 @@
 												<avatar :farmer="farmer" :class="{master: LeekWars.bossSquads.squad.master === farmer.id}" />
 											</rich-tooltip-farmer>
 										</div>
-										<v-btn v-if="$store.getters.admin" color="primary" :loading="batchLoading" :disabled="LeekWars.bossSquads.squad.engaged_leeks.length === 0 || LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="batchAttack()"><v-icon>mdi-sword-cross</v-icon>&nbsp;x10</v-btn>
-										<v-btn color="primary" :disabled="LeekWars.bossSquads.squad.engaged_leeks.length === 0 || LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="LeekWars.bossSquads.attack()"><v-icon>mdi-sword-cross</v-icon>&nbsp;{{ $t('attack') }}</v-btn>
+										<div class="attack-buttons">
+											<v-btn color="primary" :disabled="LeekWars.bossSquads.squad.engaged_leeks.length === 0 || LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="LeekWars.bossSquads.attack()"><v-icon>mdi-sword-cross</v-icon>&nbsp;{{ $t('attack') }}</v-btn>
+											<v-btn v-if="$store.getters.admin" color="primary" :loading="batchLoading" :disabled="LeekWars.bossSquads.squad.engaged_leeks.length === 0 || LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="batchAttack()"><v-icon>mdi-sword-cross</v-icon>&nbsp;x10</v-btn>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -1119,6 +1121,19 @@
 	justify-content: space-between;
 	margin-top: 20px;
 	align-items: center;
+}
+.attack-buttons {
+	display: flex;
+	gap: 0;
+	:deep(.v-btn:not(:last-child)) {
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+	:deep(.v-btn:not(:first-child)) {
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
+		border-left: 1px solid rgba(0, 0, 0, 0.2);
+	}
 }
 h4 {
 	text-align: left;
