@@ -79,28 +79,50 @@
 					</div>
 				</div>
 
-				<table v-if="expand && (isMulti(1) || isMulti(2))" class="participants">
-					<thead>
-						<tr>
-							<th>{{ $t('main.name') }}</th>
-							<th>{{ $t('main.level') }}</th>
-							<th><img src="/image/talent.png"></th>
-							<th><v-icon>mdi-arrow-up-down</v-icon></th>
-						</tr>
-					</thead>
-					<tbody>
-						<template v-for="side in [1, 2] as const" :key="side">
-							<tr v-for="leek in (side === 1 ? data.leeks1 : data.leeks2)" :key="leek.id" :class="'team-' + side">
-								<td class="leek-name">{{ leek.name }}</td>
-								<td class="num">{{ leek.level }}</td>
-								<td class="num">{{ leek.talent ?? '' }}</td>
-								<td class="num gain" :class="{up: (leekGain(leek.id, side) ?? 0) > 0, down: (leekGain(leek.id, side) ?? 0) < 0}">
-									<template v-if="leekGain(leek.id, side) !== null">{{ formatGain(leekGain(leek.id, side)!) }}</template>
+				<template v-if="expand">
+					<table v-if="isBR" class="participants">
+						<thead>
+							<tr>
+								<th>{{ $t('main.name') }}</th>
+								<th>{{ $t('main.level') }}</th>
+								<th><img src="/image/talent.png"></th>
+								<th><v-icon>mdi-arrow-up-down</v-icon></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="row in brParticipants" :key="row.side + '-' + row.leek.id">
+								<td class="leek-name">{{ row.leek.name }}</td>
+								<td class="num">{{ row.leek.level }}</td>
+								<td class="num">{{ row.leek.talent ?? '' }}</td>
+								<td class="num gain" :class="{up: (leekGain(row.leek.id, row.side) ?? 0) > 0, down: (leekGain(row.leek.id, row.side) ?? 0) < 0}">
+									<template v-if="leekGain(row.leek.id, row.side) !== null">{{ formatGain(leekGain(row.leek.id, row.side)!) }}</template>
 								</td>
 							</tr>
-						</template>
-					</tbody>
-				</table>
+						</tbody>
+					</table>
+					<template v-else>
+						<table v-for="side in tableSides" :key="side" class="participants" :class="'team-' + side">
+							<thead>
+								<tr>
+									<th class="leek-name">{{ sideName(side) }}</th>
+									<th>{{ $t('main.level') }}</th>
+									<th><img src="/image/talent.png"></th>
+									<th><v-icon>mdi-arrow-up-down</v-icon></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-for="leek in (side === 1 ? data.leeks1 : data.leeks2)" :key="leek.id">
+									<td class="leek-name">{{ leek.name }}</td>
+									<td class="num">{{ leek.level }}</td>
+									<td class="num">{{ leek.talent ?? '' }}</td>
+									<td class="num gain" :class="{up: (leekGain(leek.id, side) ?? 0) > 0, down: (leekGain(leek.id, side) ?? 0) < 0}">
+										<template v-if="leekGain(leek.id, side) !== null">{{ formatGain(leekGain(leek.id, side)!) }}</template>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</template>
+				</template>
 
 				<div v-if="metaItems.length" class="meta">
 					<span v-for="item in metaItems" :key="item.icon" class="meta-item">
@@ -154,7 +176,7 @@ const mouse = ref(false)
 const value = ref(false)
 
 const _open_delay = computed(() => props.instant ? 1 : 500)
-const _close_delay = computed(() => props.instant ? 1 : 1)
+const _close_delay = computed(() => props.instant ? 1 : 200)
 
 watch(() => props.id, () => {
 	data.value = null
@@ -210,6 +232,40 @@ const resultClass = computed(() => {
 function isMulti(side: 1 | 2): boolean {
 	const arr = side === 1 ? data.value?.leeks1 : data.value?.leeks2
 	return Array.isArray(arr) && arr.length > 1
+}
+
+function isRealLeek(leek: any): boolean {
+	return leek && !leek.boss && !leek.chest
+}
+
+const isBR = computed(() => data.value?.type === FightType.BATTLE_ROYALE)
+
+const tableSides = computed<(1 | 2)[]>(() => {
+	const d = data.value
+	if (!d) return []
+	const sides: (1 | 2)[] = []
+	if (Array.isArray(d.leeks1) && d.leeks1.filter(isRealLeek).length > 1) sides.push(1)
+	if (Array.isArray(d.leeks2) && d.leeks2.filter(isRealLeek).length > 1) sides.push(2)
+	return sides
+})
+
+const brParticipants = computed<{ leek: any, side: 1 | 2 }[]>(() => {
+	const d = data.value
+	if (!d) return []
+	const rows: { leek: any, side: 1 | 2 }[] = []
+	for (const l of d.leeks1 || []) if (isRealLeek(l)) rows.push({ leek: l, side: 1 })
+	for (const l of d.leeks2 || []) if (isRealLeek(l)) rows.push({ leek: l, side: 2 })
+	return rows
+})
+
+function sideName(side: 1 | 2): string {
+	const d = data.value
+	if (!d) return ''
+	if (d.type === FightType.TEAM) {
+		const team = side === 1 ? d.team1 : d.team2
+		if (team?.name) return team.name
+	}
+	return t('main.team') + ' ' + side
 }
 
 function leekGain(leekId: number, side: 1 | 2): number | null {
@@ -358,10 +414,14 @@ const metaItems = computed(() => {
 
 	.participants {
 		width: calc(100% + 16px);
-		margin: 6px -8px;
+		margin: 6px -8px 0;
 		text-align: left;
 		border-top: 1px solid var(--border);
 		border-collapse: collapse;
+		& + .participants {
+			margin-top: 0;
+			border-top: none;
+		}
 		tr {
 			border-bottom: 1px solid var(--border);
 		}
@@ -384,6 +444,10 @@ const metaItems = computed(() => {
 				font-size: 16px;
 			}
 		}
+		th.leek-name {
+			color: var(--text-color);
+			font-weight: 600;
+		}
 		.leek-name {
 			max-width: 180px;
 			overflow: hidden;
@@ -395,11 +459,11 @@ const metaItems = computed(() => {
 			width: 40px;
 			font-variant-numeric: tabular-nums;
 		}
-		tr.team-1 td:first-child { box-shadow: inset 3px 0 0 #4caf50; }
-		tr.team-2 td:first-child { box-shadow: inset 3px 0 0 #e53935; }
+		&.team-1 th.leek-name { box-shadow: inset 3px 0 0 #4caf50; }
+		&.team-2 th.leek-name { box-shadow: inset 3px 0 0 #e53935; }
 	}
-	body.dark .participants tr.team-1 td:first-child { box-shadow: inset 3px 0 0 #7ddc7d; }
-	body.dark .participants tr.team-2 td:first-child { box-shadow: inset 3px 0 0 #ff7068; }
+	body.dark .participants.team-1 th.leek-name { box-shadow: inset 3px 0 0 #7ddc7d; }
+	body.dark .participants.team-2 th.leek-name { box-shadow: inset 3px 0 0 #ff7068; }
 
 	.meta {
 		display: flex;
