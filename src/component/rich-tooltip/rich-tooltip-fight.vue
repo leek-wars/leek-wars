@@ -34,11 +34,16 @@
 								<span class="team-name">{{ data.team1.name }}</span>
 							</div>
 						</template>
-						<div v-for="leek in data.leeks1" :key="leek.id" class="fighter">
-							<span class="name">{{ leek.name }}</span>
-							<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>
-							<span v-if="expand && leekGain(leek.id, 1) !== null" class="gain" :class="{up: leekGain(leek.id, 1)! > 0, down: leekGain(leek.id, 1)! < 0}">{{ formatGain(leekGain(leek.id, 1)!) }}</span>
-						</div>
+						<template v-if="!expand && isMulti(1)">
+							<div class="fighter summary"><span class="name">{{ $t('main.n_leeks', [data.leeks1.length]) }}</span></div>
+						</template>
+						<template v-else>
+							<div v-for="leek in data.leeks1" :key="leek.id" class="fighter">
+								<span class="name">{{ leek.name }}</span>
+								<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>
+								<span v-if="expand && leekGain(leek.id, 1) !== null" class="gain" :class="{up: leekGain(leek.id, 1)! > 0, down: leekGain(leek.id, 1)! < 0}">{{ formatGain(leekGain(leek.id, 1)!) }}</span>
+							</div>
+						</template>
 						<div v-if="data.type == FightType.FARMER && data.farmer1_name" class="farmer-name">
 							({{ data.farmer1_name }})
 							<span v-if="expand && data.report?.farmer1?.talent_gain" class="gain" :class="{up: data.report.farmer1.talent_gain > 0, down: data.report.farmer1.talent_gain < 0}">{{ formatGain(data.report.farmer1.talent_gain) }}</span>
@@ -56,11 +61,16 @@
 									<span class="team-name">{{ data.team2.name }}</span>
 								</div>
 							</template>
-							<div v-for="leek in data.leeks2" :key="leek.id" class="fighter">
-								<span class="name">{{ leek.name }}</span>
-								<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>
-								<span v-if="expand && leekGain(leek.id, 2) !== null" class="gain" :class="{up: leekGain(leek.id, 2)! > 0, down: leekGain(leek.id, 2)! < 0}">{{ formatGain(leekGain(leek.id, 2)!) }}</span>
-							</div>
+							<template v-if="!expand && isMulti(2)">
+								<div class="fighter summary"><span class="name">{{ $t('main.n_leeks', [data.leeks2.length]) }}</span></div>
+							</template>
+							<template v-else>
+								<div v-for="leek in data.leeks2" :key="leek.id" class="fighter">
+									<span class="name">{{ leek.name }}</span>
+									<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>
+									<span v-if="expand && leekGain(leek.id, 2) !== null" class="gain" :class="{up: leekGain(leek.id, 2)! > 0, down: leekGain(leek.id, 2)! < 0}">{{ formatGain(leekGain(leek.id, 2)!) }}</span>
+								</div>
+							</template>
 							<div v-if="data.type == FightType.FARMER && data.farmer2_name" class="farmer-name">
 								({{ data.farmer2_name }})
 								<span v-if="expand && data.report?.farmer2?.talent_gain" class="gain" :class="{up: data.report.farmer2.talent_gain > 0, down: data.report.farmer2.talent_gain < 0}">{{ formatGain(data.report.farmer2.talent_gain) }}</span>
@@ -69,7 +79,7 @@
 					</div>
 				</div>
 
-				<div v-if="expand && metaItems.length" class="meta">
+				<div v-if="metaItems.length" class="meta">
 					<span v-for="item in metaItems" :key="item.icon" class="meta-item">
 						<v-icon>{{ item.icon }}</v-icon>
 						<span v-if="item.html" v-html="item.html"></span>
@@ -169,6 +179,11 @@ const resultClass = computed(() => {
 	if (d.report.win === 2) return 'defeat'
 	return ''
 })
+
+function isMulti(side: 1 | 2): boolean {
+	const arr = side === 1 ? data.value?.leeks1 : data.value?.leeks2
+	return Array.isArray(arr) && arr.length > 1
+}
 
 function leekGain(leekId: number, side: 1 | 2): number | null {
 	const arr = side === 1 ? data.value?.report?.leeks1 : data.value?.report?.leeks2
