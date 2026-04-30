@@ -4,6 +4,7 @@ import { LeekWars } from '@/model/leekwars'
 import { SocketMessage } from '@/model/socket'
 
 import { AIItem, Folder } from './editor-item'
+import { getLanguageForPath, isLeekScript } from './file-types'
 import { Problem } from './problem'
 import { i18n } from '@/model/i18n'
 import * as monaco from 'monaco-editor'
@@ -96,6 +97,9 @@ class Analyzer {
 		// console.log("🔥 Analyze", ai.path)
 		// console.time('hover')
 
+		if (!isLeekScript(ai.path)) {
+			return Promise.resolve(null)
+		}
 		if (code.length > 60_000) {
 			return Promise.reject()
 		}
@@ -314,7 +318,7 @@ class Analyzer {
 		if (ai.model) return ai.model
 		if (ai.code === undefined) return null
 		const uri = monaco.Uri.parse('file:///' + ai.path)
-		const model = monaco.editor.getModel(uri) || markRaw(monaco.editor.createModel(ai.code, 'leekscript', uri))
+		const model = monaco.editor.getModel(uri) || markRaw(monaco.editor.createModel(ai.code, getLanguageForPath(ai.path), uri))
 		ai.model = model
 		return model
 	}
@@ -364,6 +368,7 @@ class Analyzer {
 	}
 
 	public async updateTodos(ai: AI) {
+		if (!isLeekScript(ai.path)) return
 		// Collect full include tree (recursive), en chargeant le code si nécessaire
 		const ais = new Set<AI>([ai])
 		const collectIncludes = async (a: AI) => {

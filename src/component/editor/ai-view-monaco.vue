@@ -31,6 +31,7 @@ import { LeekWars } from '@/model/leekwars';
 import './monaco'
 import { AI } from '@/model/ai'
 import { analyzer, AnalyzerPromise } from './analyzer'
+import { getLanguageForPath } from './file-types'
 import { code, dochash, vueMain, createSubApp, emitter } from '@/model/vue'
 import DocumentationConstant from '../documentation/documentation-constant.vue'
 import DocumentationFunction from '../documentation/documentation-function.vue'
@@ -325,7 +326,7 @@ export default class AIViewMonaco extends Vue {
 
 	syncModel() {
 		const uri = monaco.Uri.parse('file:///' + this.ai.path)
-		const model = monaco.editor.getModel(uri) || markRaw(monaco.editor.createModel(this.ai.code, 'leekscript', uri))
+		const model = monaco.editor.getModel(uri) || markRaw(monaco.editor.createModel(this.ai.code, getLanguageForPath(this.ai.path), uri))
 		this.ai.model = model
 
 		if (!this.editor) return

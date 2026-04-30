@@ -276,6 +276,7 @@
 	import './leekscript-monokai.scss'
 	import { SocketMessage } from '@/model/socket'
 	import { analyzer } from './analyzer'
+	import { isLeekScript } from './file-types'
 	import AIElement from '@/component/app/ai.vue'
 	import { defineAsyncComponent, nextTick } from 'vue'
 	import { emitter } from '@/model/vue'
@@ -811,6 +812,7 @@
 			for (const path in fileSystem.ais) {
 				const ai = fileSystem.ais[path]
 				if (!ai.modified) continue
+				if (!isLeekScript(ai.path)) continue
 				// Récupérer le code sauvegardé sur le FS (depuis le cache localStorage)
 				const savedCode = localStorage.getItem('ai/code/' + ai.path)
 				if (savedCode !== null) {

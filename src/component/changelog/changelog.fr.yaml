@@ -4,8 +4,10 @@
     - "#ai Hooks `beforeFight()` et `afterFight()` : fonctions optionnelles dans l'IA, appelées avant le tour 1 et après la fin du combat."
     - "#ai Fonction `setLoadout(name)` : applique un loadout pour ce combat uniquement, à utiliser dans `beforeFight()`. Les armes/puces/stats du loadout sont restaurés à la fin du combat."
     - "#ai Fonction `getWinner()` : récupère le côté de l'équipe gagnante depuis `afterFight()`."
+    - "#ai Support des fichiers `.md`, `.txt`, `.json`, `.yaml` et `.gitignore` dans l'éditeur, avec coloration syntaxique adaptée."
   improved:
     - "#ai Avertissement sur les fonctions et variables globales jamais utilisées dans l'IA (mode strict)."
+    - "#ai Nouveau fichier vide par défaut (au lieu du code d'exemple LeekScript) sauf pour le tout premier fichier d'un compte."
 247:
   title: "Intégration Git, équipements, gestion multi-comptes et potions de trèfle."
   added:

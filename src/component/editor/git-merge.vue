@@ -5,6 +5,7 @@
 <script setup lang="ts">
 import * as monaco from 'monaco-editor'
 import { markRaw, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
+import { getLanguageForPath } from './file-types'
 import { buildConflictDecorations, parseConflicts, registerConflictCodeLens, type MergeConflict } from './merge-conflicts'
 
 defineOptions({ name: 'git-merge', i18n: {} })
@@ -79,7 +80,7 @@ function createEditor() {
 	const container = containerRef.value
 	if (!container) return
 
-	model = markRaw(monaco.editor.createModel(props.content || '', 'leekscript'))
+	model = markRaw(monaco.editor.createModel(props.content || '', getLanguageForPath(props.file || '')))
 
 	editor = markRaw(monaco.editor.create(container, {
 		model,

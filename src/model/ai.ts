@@ -1,3 +1,4 @@
+import { isLeekScript } from '@/component/editor/file-types'
 import { Problem } from '@/component/editor/problem'
 import { fileSystem } from './filesystem'
 import { i18n } from './i18n'
@@ -45,6 +46,8 @@ class AI {
 	}
 
 	public analyze() {
+
+		if (!isLeekScript(this.path)) return
 
 		// console.log("analyze", this.path)
 

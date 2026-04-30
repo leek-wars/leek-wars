@@ -5,6 +5,7 @@
 <script setup lang="ts">
 import * as monaco from 'monaco-editor'
 import { markRaw, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
+import { getLanguageForPath } from './file-types'
 
 defineOptions({ name: 'git-diff', i18n: {} })
 
@@ -98,8 +99,9 @@ function normalize(content: string): string {
 function createEditor() {
 	const container = containerRef.value
 	if (!container) return
-	originalModel = markRaw(monaco.editor.createModel(normalize(props.originalContent), 'leekscript'))
-	modifiedModel = markRaw(monaco.editor.createModel(normalize(props.modifiedContent), 'leekscript'))
+	const language = getLanguageForPath(props.file || '')
+	originalModel = markRaw(monaco.editor.createModel(normalize(props.originalContent), language))
+	modifiedModel = markRaw(monaco.editor.createModel(normalize(props.modifiedContent), language))
 
 	diffEditor = markRaw(monaco.editor.createDiffEditor(container, {
 		readOnly: true,

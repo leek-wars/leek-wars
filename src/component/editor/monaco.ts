@@ -19,6 +19,7 @@ import { AI } from '@/model/ai.js';
 import { LeekWars } from '@/model/leekwars';
 import { getKeywords } from './keywords';
 import { Keyword, KeywordKind } from '@/model/keyword';
+import { getLanguageForPath } from './file-types';
 
 monaco.languages.register({ id: 'leekscript' })
 monaco.languages.setLanguageConfiguration('leekscript', {
@@ -165,7 +166,7 @@ monaco.editor.registerEditorOpener({
 		const ai = fileSystem.aiByFullPath[resource.path.substring(1)]
 		await fileSystem.load(ai)
 		const uri = monaco.Uri.parse('file:///' + ai.path)
-		const model = monaco.editor.getModel(resource) || markRaw(monaco.editor.createModel(ai.code, 'leekscript', uri))
+		const model = monaco.editor.getModel(resource) || markRaw(monaco.editor.createModel(ai.code, getLanguageForPath(ai.path), uri))
 		ai.model = model
 		const range = selectionOrPosition as monaco.IRange
 		emitter.emit('jump', { ai, line: range.startLineNumber, column: range.startColumn - 1 })
@@ -315,7 +316,7 @@ monaco.languages.registerReferenceProvider("leekscript", {
 			if (!targetAi) { continue }
 			const uri = monaco.Uri.parse('file:///' + targetAi.path)
 			if (!monaco.editor.getModel(uri) && targetAi.code !== undefined) {
-				targetAi.model = markRaw(monaco.editor.createModel(targetAi.code, 'leekscript', uri))
+				targetAi.model = markRaw(monaco.editor.createModel(targetAi.code, getLanguageForPath(targetAi.path), uri))
 			}
 			results.push({
 				uri,
