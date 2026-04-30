@@ -1,5 +1,5 @@
 <template>
-	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :nudge-width="expand ? 500 : 200" :open-delay="_open_delay" :close-delay="_close_delay" :location="bottom ? 'bottom' : 'top'" :transition="instant ? 'none' : 'scale-transition'" :open-on-hover="!locked" offset-y @update:model-value="open($event)">
+	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :nudge-width="expand ? 600 : 320" :open-delay="_open_delay" :close-delay="_close_delay" :location="bottom ? 'bottom' : 'top'" :transition="instant ? 'none' : 'scale-transition'" :open-on-hover="!locked" offset-y @update:model-value="open($event)">
 		<template #activator="{ props: activatorProps }">
 			<slot :props="activatorProps"></slot>
 		</template>
@@ -86,7 +86,7 @@
 								<th>{{ $t('main.name') }}</th>
 								<th>{{ $t('main.level') }}</th>
 								<th><img src="/image/talent.png"></th>
-								<th><v-icon>mdi-arrow-up-down</v-icon></th>
+								<th>±</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -107,7 +107,7 @@
 									<th class="leek-name">{{ sideName(side) }}</th>
 									<th>{{ $t('main.level') }}</th>
 									<th><img src="/image/talent.png"></th>
-									<th><v-icon>mdi-arrow-up-down</v-icon></th>
+									<th>±</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -221,12 +221,8 @@ const typeLabel = computed(() => {
 })
 
 const resultClass = computed(() => {
-	const d = data.value
-	if (!d || !d.report) return ''
-	if (d.report.win === 0) return 'draw'
-	if (d.report.win === 1) return 'win'
-	if (d.report.win === 2) return 'defeat'
-	return ''
+	const r = data.value?.result
+	return r === 'win' || r === 'defeat' || r === 'draw' ? r : ''
 })
 
 function isMulti(side: 1 | 2): boolean {
