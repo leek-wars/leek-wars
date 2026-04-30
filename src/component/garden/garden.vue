@@ -209,6 +209,9 @@
 									<img src="/image/notgood.png">
 									<h4>{{ $t(leekErrors[selectedLeek.id]) }}</h4>
 								</div>
+								<div v-if="$store.getters.admin && leekOpponents[selectedLeek.id] && leekOpponents[selectedLeek.id].length" class="solo-batch">
+									<v-btn color="primary" :loading="batchLoading" @click="batchSoloAttack()"><v-icon>mdi-sword-cross</v-icon>&nbsp;x10</v-btn>
+								</div>
 							</div>
 							<garden-no-fights v-else-if="!garden.fights" :canbuy="true" @bought="reload" />
 						</div>
@@ -463,6 +466,20 @@
 	function modeIcon(preference: number): string {
 		return modeIcons[preference] || 'mdi-help-circle-outline'
 	}
+	function batchErrorToast(error: any) {
+		const key = typeof error === 'string' ? error : (error && error.error) || 'unknown_error'
+		LeekWars.toast(t(key))
+	}
+	function batchSoloAttack() {
+		if (!selectedLeek.value) return
+		batchLoading.value = true
+		LeekWars.post('garden/start-solo-fight-batch', {leek_id: selectedLeek.value.id}).then(data => {
+			store.commit('update-fights', -data.fights.length)
+			router.push('/fight/' + data.fights[0])
+		}).error(batchErrorToast).finally(() => {
+			batchLoading.value = false
+		})
+	}
 	function batchAttack() {
 		const currentSquad = LeekWars.bossSquads.squad
 		if (!currentSquad || !selectedBoss.value) return
@@ -475,7 +492,7 @@
 			store.commit('update-fights', -data.fights.length)
 			LeekWars.bossSquads.leaveSquad()
 			router.push('/fight/' + data.fights[0])
-		}).error((error: string) => LeekWars.toast(t(error))).finally(() => {
+		}).error(batchErrorToast).finally(() => {
 			batchLoading.value = false
 		})
 	}
@@ -1121,6 +1138,11 @@
 	justify-content: space-between;
 	margin-top: 20px;
 	align-items: center;
+}
+.solo-batch {
+	display: flex;
+	justify-content: center;
+	margin-top: 16px;
 }
 .attack-buttons {
 	display: flex;
