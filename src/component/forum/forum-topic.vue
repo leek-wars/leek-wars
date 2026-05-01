@@ -346,7 +346,7 @@
 
 	const FormattingRules = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum-formatting-rules.${locale}.i18n`))
 
-	defineOptions({ name: 'forum_topic', i18n: {}, mixins: [...mixins], components: { Markdown, FormattingRules, ReportDialog, Pagination, 'lw-title': LwTitle, EmojiPicker, RichTooltipFarmer, Breadcrumb } })
+	defineOptions({ name: 'forum_topic', i18n: {}, mixins: [...mixins] })
 
 	const { t, locale: i18nLocale } = useI18n()
 	const route = useRoute()
