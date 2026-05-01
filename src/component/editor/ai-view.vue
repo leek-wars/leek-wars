@@ -594,21 +594,9 @@
 				// if (true) return;
 
 				analyzer.analyze(this.ai, this.ai.code).then((result) => {
-					// console.log("analyze", result)
 					this.analyzing = false
-
-					for (const entrypoint in result) {
-						const entrypoint_id = parseInt(entrypoint, 10)
-						const ai = fileSystem.ais[entrypoint_id]
-
-						// Valid?
-						let valid = true
-						for (const problem of result[entrypoint]) {
-							if (problem[0] === 0) { valid = false; break }
-						}
-						ai.valid = valid
-						analyzer.handleProblems(ai, result[entrypoint])
-					}
+					if (!result) return
+					analyzer.applyAnalyzeResult(result)
 					analyzer.updateCount()
 				})
 			}, 1000)

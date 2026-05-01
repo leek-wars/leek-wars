@@ -378,21 +378,9 @@ export default class AIViewMonaco extends Vue {
 			analyzer.updateTodos(ai)
 
 			analyzer.analyze(ai, ai.code).then((result) => {
-				// console.log("analyze", result)
 				this.analyzing = false
 				if (!result) return
-
-				for (const epPath in result) {
-					const entrypointAi = fileSystem.ais[epPath]
-					if (!entrypointAi) continue
-
-					let valid = true
-					for (const problem of result[epPath]) {
-						if (problem[0] === 0) { valid = false; break }
-					}
-					entrypointAi.valid = valid
-					analyzer.handleProblems(entrypointAi, result[epPath])
-				}
+				analyzer.applyAnalyzeResult(result)
 				analyzer.updateTodos(ai)
 				analyzer.updateCount()
 			}).catch(() => {

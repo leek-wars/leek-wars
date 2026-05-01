@@ -855,22 +855,11 @@
 				localStorage.setItem('ai/code/' + aiEditor.ai.path, content)
 				aiEditor.ai.modified = false
 
-				// Traiter les résultats de compilation
 				if (data.result) {
 					aiEditor.goods = []
-					for (const epPath in data.result) {
-						const ai = fileSystem.ais[epPath]
-						if (!ai) continue
-						let valid = true
-						for (const problem of data.result[epPath]) {
-							if (problem[0] === 0) { valid = false; break }
-						}
-						if (valid && aiEditor.goods.length === 0) {
-							aiEditor.goods.push({ai})
-						}
-						ai.valid = valid
-						analyzer.handleProblems(ai, data.result[epPath])
-					}
+					analyzer.applyAnalyzeResult(data.result, (ai) => {
+						if (aiEditor.goods.length === 0) aiEditor.goods.push({ai})
+					})
 					analyzer.updateTodos(aiEditor.ai)
 					analyzer.updateCount()
 					setTimeout(() => aiEditor.goods = [], 2000)

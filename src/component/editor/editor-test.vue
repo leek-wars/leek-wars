@@ -399,7 +399,7 @@ import { defineAsyncComponent } from 'vue'
 
 	class TestScenarioLeek {
 		id!: number
-		ai!: number | null
+		ai!: string | null
 		hat?: number
 		skin?: number
 		metal?: boolean
@@ -434,8 +434,8 @@ import { defineAsyncComponent } from 'vue'
 	@Options({ components: { CharacteristicTooltip, 'explorer': Explorer, RichTooltipItem, ai: AIElement, Map, TurretImage }, name: 'editor-test', i18n: {}, mixins: [...mixins] })
 	export default class EditorTest extends Vue {
 		@Prop() modelValue!: boolean
-		@Prop() ais!: {[key: number]: AI}
-		@Prop() leekAis!: {[key: number]: number}
+		@Prop() ais!: {[key: string]: AI}
+		@Prop() leekAis!: {[key: number]: string}
 		@Prop({ required: true }) currentAI!: AI | null
 
 		FightType = FightType
@@ -610,13 +610,13 @@ import { defineAsyncComponent } from 'vue'
 				templates.push({
 					id: 0, base: false, default: false, ai: null,
 					name: "Solo " + leek.name, category: "solo", map: null, type: 0,
-					team1: [{id: leek.id, ai}], team2: [{id: -1, ai: -2}], seed: null
+					team1: [{id: leek.id, ai}], team2: [{id: -1, ai: '/normal'}], seed: null
 				})
 			}
-			const generate_bots = (count: number) => {
-				const result = []
+			const generate_bots = (count: number): TestScenarioLeek[] => {
+				const result: TestScenarioLeek[] = []
 				for (let i = 0; i < count; ++i) {
-					result.push({id: -i - 1, ai: -1})
+					result.push({id: -i - 1, ai: '/lambda'})
 				}
 				return result
 			}
@@ -664,7 +664,7 @@ import { defineAsyncComponent } from 'vue'
 		}
 
 		get allAis() {
-			const ais = {...this.ais}
+			const ais = {...this.ais} as {[key: string]: AI}
 			for (const ai in this.alliesAIs) {
 				ais[ai] = this.alliesAIs[ai]
 			}
@@ -747,7 +747,7 @@ import { defineAsyncComponent } from 'vue'
 					this.scenarios[0] = {
 						id: 0, base: false, default: true, ai: this.currentAI,
 						name: this.currentAI.name, category: "free", map: null, type: 0,
-						team1: [{id: LeekWars.first(store.state.farmer!.leeks)!.id, ai: this.currentAI.id}], team2: [{id: -1, ai: -2}], seed: null
+						team1: [{id: LeekWars.first(store.state.farmer!.leeks)!.id, ai: this.currentAI.path}], team2: [{id: -1, ai: '/lambda'}], seed: null
 					} as TestScenario
 					this.selectScenario(this.scenarios[0])
 				}
@@ -1226,13 +1226,13 @@ import { defineAsyncComponent } from 'vue'
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 
-		onAIDeleted(id: number) {
+		onAIDeleted(path: string) {
 			for (const s in this.scenarios) {
 				for (const leek of this.scenarios[s].team1) {
-					if (leek.ai === id) { leek.ai = null }
+					if (leek.ai === path) { leek.ai = null }
 				}
 				for (const leek of this.scenarios[s].team2) {
-					if (leek.ai === id) { leek.ai = null }
+					if (leek.ai === path) { leek.ai = null }
 				}
 			}
 		}

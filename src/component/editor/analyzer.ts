@@ -132,6 +132,24 @@ class Analyzer {
 		}
 	}
 
+	public applyAnalyzeResult(
+		result: {[path: string]: {problems?: any[], total_lines?: number, total_chars?: number}},
+		onValid?: (ai: AI) => void
+	) {
+		for (const epPath in result) {
+			const ai = fileSystem.ais[epPath]
+			if (!ai) continue
+			const entry = result[epPath]
+			const problems = entry.problems ?? []
+			const valid = !problems.some(p => p[0] === 0)
+			ai.valid = valid
+			if (typeof entry.total_lines === 'number') ai.total_lines = entry.total_lines
+			if (typeof entry.total_chars === 'number') ai.total_chars = entry.total_chars
+			if (valid && onValid) onValid(ai)
+			this.handleProblems(ai, problems)
+		}
+	}
+
 	public hover(ai: AI, line: number, column: number) {
 		// console.log("🔥 Hover", ai.path, line, column)
 		// console.time('hover')

@@ -41,7 +41,7 @@ class FileSystem {
 	public gitStatus: {[path: string]: string} = {}
 	// Git: map des chemins de dossiers qui sont des repos git
 	public gitRepos: {[path: string]: boolean} = {}
-	private botAIs = [
+	public botAIs = [
 		{id: -1, name: 'lambda', path: '/lambda', bot: true, valid: true, color: 'green', specs: [
 			"basic_items", "basic_strategy", "reachable_cells", "combos"
 		]},
