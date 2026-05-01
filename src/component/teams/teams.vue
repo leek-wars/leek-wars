@@ -324,6 +324,8 @@ loadTeams()
 	color: var(--text-color-secondary);
 	font-size: 13px;
 	max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 :deep(.v-data-table td), :deep(.v-data-table th) {
 	padding: 6px !important;
