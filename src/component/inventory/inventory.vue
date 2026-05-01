@@ -391,8 +391,6 @@
 		{image: 'icon/market.png', click: () => router.push('/market')},
 	]
 	LeekWars.setActions(actions)
-	LeekWars.setTitle(t('main.inventory') as string)
-	updateSubtitle()
 
 	function updateSubtitle() {
 		if (store.state.farmer) {
@@ -401,6 +399,8 @@
 	}
 
 	onMounted(() => {
+		LeekWars.setTitle(t('main.inventory') as string)
+		updateSubtitle()
 		LeekWars.footer = false
 		LeekWars.box = true
 		resize()
