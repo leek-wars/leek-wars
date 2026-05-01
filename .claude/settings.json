@@ -23,7 +23,8 @@
       "Bash(php -l *)",
       "Bash(npx vue-tsc *)",
       "Bash(npx eslint *)",
-      "Bash(head *)"
+      "Bash(head *)",
+      "Bash(sed -n:*)"
     ]
   }
 }
