@@ -1,5 +1,5 @@
 <template>
-	<div class="ai" ref="editor">
+	<div class="ai" ref="editorEl">
 		<!-- Editeur -->
 		<div class="compilation">
 			<div v-if="saving" class="compiling">
@@ -57,7 +57,7 @@ const emit = defineEmits<{
 	down: []
 }>()
 
-const editorEl = useTemplateRef<HTMLElement>('editor')
+const editorEl = useTemplateRef<HTMLElement>('editorEl')
 
 let editor: monaco.editor.IStandaloneCodeEditor
 let jumpToLine: number | null = 0
