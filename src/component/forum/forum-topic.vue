@@ -320,428 +320,467 @@
 			</template>
 		</popup>
 
-		<report-dialog v-if="reportFarmer" v-model="reportDialog" :target="reportFarmer" :reasons="reasons" :parameter="reportContent" class="report-dialog" />
+		<report-dialog v-if="reportFarmer" v-model="showReport" :target="reportFarmer" :reasons="reasons" :parameter="reportContent" class="report-dialog" />
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import Markdown from '@/component/encyclopedia/markdown.vue'
 	import { locale } from '@/locale'
 	import { Farmer } from '@/model/farmer'
 	import { ForumCategory, ForumMessage, ForumTopic, ForumTopicStatus } from '@/model/forum'
-	import { mixins } from '@/model/i18n'
+	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import EmojiPicker from '../chat/emoji-picker.vue'
 	import Breadcrumb from './breadcrumb.vue'
-	const FormattingRules = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum-formatting-rules.${locale}.i18n`))
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
 	import Pagination from '@/component/pagination.vue'
 	import LwTitle from '@/component/title/title.vue'
-import { defineAsyncComponent } from 'vue'
-import { emitter } from '@/model/vue'
+	import { computed, defineAsyncComponent, nextTick, onMounted, reactive, ref, useTemplateRef, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
+	import { useRoute, useRouter } from 'vue-router'
+	import { store } from '@/model/store'
+	import { emitter } from '@/model/vue'
 
-	@Options({ name: 'forum_topic', i18n: {}, mixins: [...mixins], components: { Breadcrumb, EmojiPicker, Markdown, FormattingRules, RichTooltipFarmer, ReportDialog, Pagination, 'lw-title': LwTitle } })
-	export default class ForumTopicPage extends Vue {
-		ForumTopicStatus = ForumTopicStatus
-		topic: ForumTopic | null = null
-		category: ForumCategory | null = null
-		page: number = 0
-		pages: number = 0
-		votes_up_names: {[key: number]: string[]} = {}
-		votes_down_names: {[key: number]: string[]} = {}
-		deleteTopicDialog: boolean = false
-		deleteMessageDialog: boolean = false
-		toDeleteMessage: ForumMessage | null = null
-		newMessage: string = ''
-		topicEditing: boolean = false
-		action = {icon: 'mdi-newspaper-plus', click: () => this.toggleSubscribe()}
-		sendingMessage: boolean = false
-		oldTopicDialog: boolean = false
-		creatingIssue: boolean = false
-		forumLanguages: string[] = []
-		notFound: boolean = false
-		reportDialog: boolean = false
-		reportFarmer: Farmer | null = null
-		reportContent: string = ''
-		moveCategories: {id: number, name: string}[] = []
-		releaseDialog: boolean = false
-		releaseInput: number | null = null
-		get hasPriority() {
-			return this.category && (this.category.name === 'bug_reports' || this.category.name === 'suggestions_ideas')
-		}
-		get priorityItems() {
-			return [
-				{ value: 0, title: this.$t('priority_none') as string, icon: 'mdi-flag-outline', color: '' },
-				{ value: 1, title: this.$t('priority_high') as string, icon: 'mdi-flag', color: '#e53935' },
-				{ value: 2, title: this.$t('priority_medium') as string, icon: 'mdi-flag', color: '#fb8c00' },
-				{ value: 3, title: this.$t('priority_low') as string, icon: 'mdi-flag', color: '#757575' },
-			]
-		}
-		reasons = [
-			Warning.RUDE_FORUM,
-			Warning.FLOOD_FORUM,
-			Warning.PROMO_FORUM,
-			Warning.INCORRECT_FARMER_NAME,
-			Warning.INCORRECT_AVATAR,
-		]
+	const FormattingRules = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum-formatting-rules.${locale}.i18n`))
 
-		get releaseVersion() {
-			if (!this.topic || !this.topic.release) { return '' }
-			return 'v' + String(this.topic.release).charAt(0) + '.' + String(this.topic.release).slice(1)
-		}
-		get categoryName() {
-			return this.category ? this.category.team > 0 ? this.category.name : this.$t('forum-category.' + this.category.name) : ''
-		}
-		get breadcrumb_items() {
-			return [
-				{name: this.$t('main.forum'), link: '/forum'},
-				{name: this.categoryName, link: '/forum/category-' + (this.category ? this.category.id : 0)},
-				{name: this.topic ? this.topic.name : '...', link: '/forum-category-' + (this.category ? this.category.id : 0) + '/topic-' + (this.topic ? this.topic.id : 0)}
-			]
-		}
+	defineOptions({ name: 'forum_topic', i18n: {}, mixins: [...mixins], components: { Markdown, FormattingRules, ReportDialog, Pagination, 'lw-title': LwTitle, EmojiPicker, RichTooltipFarmer, Breadcrumb } })
 
-		mounted() {
-			LeekWars.contenteditable_paste_protect(this.$refs.topicTitle as HTMLElement)
-		}
-		@Watch("$route.params", {immediate: true})
-		update(force: boolean = false) {
-			const topic = parseInt(this.$route.params.topic, 10)
-			const page = 'page' in this.$route.params ? parseInt(this.$route.params.page, 10) : 1
-			if (!force && this.topic && this.topic.id === topic && this.page === page) {
-				emitter.emit('loaded')
-				return
-			}
-			this.page = page
+	const { t, locale: i18nLocale } = useI18n()
+	const route = useRoute()
+	const router = useRouter()
+	const topicTitle = useTemplateRef<HTMLElement>('topicTitle')
+	const responseTextarea = useTemplateRef<HTMLTextAreaElement>('responseTextarea')
 
-			if (this.topic) { this.topic.messages = null }
-			this.notFound = false
-			this.forumLanguages = (localStorage.getItem('forum/languages') as string || this.$i18n.locale).split(',')
-			LeekWars.get('forum/get-messages/' + topic + '/' + this.forumLanguages + '/' + this.page).then(data => {
-				this.topic = data.topic
-				if (!this.topic) { return }
-				this.category = data.category
-				if (this.topic) {
-					this.topic.messages = data.messages
-					if (this.topic.messages) {
-						for (const message of this.topic.messages) {
-							message.editing = false
-							message.height = 100
-						}
+	const topic = ref<ForumTopic | null>(null)
+	const category = ref<ForumCategory | null>(null)
+	const page = ref(0)
+	const pages = ref(0)
+	const votes_up_names = reactive<{[key: number]: string[] | null}>({})
+	const votes_down_names = reactive<{[key: number]: string[] | null}>({})
+	const deleteTopicDialog = ref(false)
+	const deleteMessageDialog = ref(false)
+	const toDeleteMessage = ref<ForumMessage | null>(null)
+	const newMessage = ref('')
+	const topicEditing = ref(false)
+	const action = { icon: 'mdi-newspaper-plus', click: () => toggleSubscribe() }
+	const sendingMessage = ref(false)
+	const oldTopicDialog = ref(false)
+	const creatingIssue = ref(false)
+	const forumLanguages = ref<string[]>([])
+	const notFound = ref(false)
+	const showReport = ref(false)
+	const reportFarmer = ref<Farmer | null>(null)
+	const reportContent = ref('')
+	const moveCategories = ref<{id: number, name: string}[]>([])
+	const releaseDialog = ref(false)
+	const releaseInput = ref<number | null>(null)
+
+	const hasPriority = computed(() => category.value && (category.value.name === 'bug_reports' || category.value.name === 'suggestions_ideas'))
+	const priorityItems = computed(() => [
+		{ value: 0, title: t('priority_none') as string, icon: 'mdi-flag-outline', color: '' },
+		{ value: 1, title: t('priority_high') as string, icon: 'mdi-flag', color: '#e53935' },
+		{ value: 2, title: t('priority_medium') as string, icon: 'mdi-flag', color: '#fb8c00' },
+		{ value: 3, title: t('priority_low') as string, icon: 'mdi-flag', color: '#757575' },
+	])
+
+	const reasons = [
+		Warning.RUDE_FORUM,
+		Warning.FLOOD_FORUM,
+		Warning.PROMO_FORUM,
+		Warning.INCORRECT_FARMER_NAME,
+		Warning.INCORRECT_AVATAR,
+	]
+
+	const releaseVersion = computed(() => {
+		if (!topic.value || !topic.value.release) { return '' }
+		return 'v' + String(topic.value.release).charAt(0) + '.' + String(topic.value.release).slice(1)
+	})
+
+	const categoryName = computed(() => category.value ? (category.value.team > 0 ? category.value.name : t('forum-category.' + category.value.name)) : '')
+
+	const breadcrumb_items = computed(() => [
+		{name: t('main.forum'), link: '/forum'},
+		{name: categoryName.value, link: '/forum/category-' + (category.value ? category.value.id : 0)},
+		{name: topic.value ? topic.value.name : '...', link: '/forum-category-' + (category.value ? category.value.id : 0) + '/topic-' + (topic.value ? topic.value.id : 0)}
+	])
+
+	onMounted(() => {
+		if (topicTitle.value) {
+			LeekWars.contenteditable_paste_protect(topicTitle.value)
+		}
+	})
+
+	watch(() => route.params, () => update(), { immediate: true })
+
+	function update(force: boolean = false) {
+		const t_id = parseInt(route.params.topic as string, 10)
+		const p = 'page' in route.params ? parseInt(route.params.page as string, 10) : 1
+		if (!force && topic.value && topic.value.id === t_id && page.value === p) {
+			emitter.emit('loaded')
+			return
+		}
+		page.value = p
+
+		if (topic.value) { topic.value.messages = null as any }
+		notFound.value = false
+		forumLanguages.value = (localStorage.getItem('forum/languages') as string || i18nLocale.value).split(',')
+		LeekWars.get('forum/get-messages/' + t_id + '/' + forumLanguages.value + '/' + page.value).then(data => {
+			topic.value = data.topic
+			if (!topic.value) { return }
+			category.value = data.category
+			if (topic.value) {
+				topic.value.messages = data.messages
+				if (topic.value.messages) {
+					for (const message of topic.value.messages) {
+						;(message as any).editing = false
+						;(message as any).height = 100
 					}
 				}
-				this.pages = data.pages
-				LeekWars.setTitle(this.topic.name, this.$t('n_messages', [data.total]))
-				LeekWars.setActions([this.action])
-				if (this.topic.subscribed) { this.action.icon = 'mdi-newspaper-minus' }
-				emitter.emit('loaded')
-				this.newMessage = localStorage.getItem('forum/draft-' + this.topic.id) as string
-				if (this.canMoveTopic) {
-					this.loadMoveCategories()
-				}
-			}).error(() => {
-				this.notFound = true
-				emitter.emit('loaded')
-			})
-		}
-		createIssue() {
-			if (!this.topic || this.creatingIssue) { return }
-			this.creatingIssue = true
-			LeekWars.post('forum/create-issue', {topic_id: this.topic.id}).then((data: any) => {
-				if (this.topic) {
-					this.topic.private_issue = data.private_issue
-				}
-				this.creatingIssue = false
-			})
-		}
-		get canMoveTopic() {
-			if (!this.category || !this.$store.state.farmer) { return false }
-			if (this.category.team !== -1 || this.category.name === 'admin' || this.category.name === 'moderation') { return false }
-			return this.category.moderator || this.topic?.owner === this.$store.state.farmer.id
-		}
-		get canEditStatus() {
-			return this.$store.state.connected && ((this.$store.state.farmer && this.topic?.owner === this.$store.state.farmer.id) || this.category?.moderator)
-		}
-		get canDeleteTopic() {
-			if (!this.category || !this.$store.state.farmer) { return false }
-			if (this.category.moderator) { return true }
-			return this.topic?.owner === this.$store.state.farmer.id && this.pages <= 1 && this.topic?.messages?.length === 1
-		}
-		get allStatuses(): {[key: number]: {title: string, value: ForumTopicStatus, icon: string, color: string}} {
-			return {
-				[ForumTopicStatus.OPEN]: { title: this.$t('status_open') as string, value: ForumTopicStatus.OPEN, icon: 'mdi-circle-outline', color: 'grey' },
-				[ForumTopicStatus.RESOLVED]: { title: this.$t('status_resolved') as string, value: ForumTopicStatus.RESOLVED, icon: 'mdi-check-circle', color: 'green' },
-				[ForumTopicStatus.NOT_REPRODUCED]: { title: this.$t('status_not_reproduced') as string, value: ForumTopicStatus.NOT_REPRODUCED, icon: 'mdi-help-circle', color: 'orange' },
-				[ForumTopicStatus.NOT_PLANNED]: { title: this.$t('status_not_planned') as string, value: ForumTopicStatus.NOT_PLANNED, icon: 'mdi-minus-circle', color: 'grey' },
-				[ForumTopicStatus.NOT_A_BUG]: { title: this.$t('status_not_a_bug') as string, value: ForumTopicStatus.NOT_A_BUG, icon: 'mdi-close-circle', color: 'grey' },
-				[ForumTopicStatus.OBSOLETE]: { title: this.$t('status_obsolete') as string, value: ForumTopicStatus.OBSOLETE, icon: 'mdi-archive', color: 'grey' },
 			}
-		}
-		get currentStatusInfo() {
-			return this.topic ? this.allStatuses[this.topic.status] : null
-		}
-		get statusItems() {
-			const items = [this.allStatuses[ForumTopicStatus.OPEN], this.allStatuses[ForumTopicStatus.RESOLVED]]
-			if (this.category?.moderator) {
-				const isBug = this.category?.name === 'bug_reports'
-				const isSuggestion = this.category?.name === 'suggestions_ideas'
-				if (isBug) {
-					items.push(this.allStatuses[ForumTopicStatus.NOT_REPRODUCED])
-					items.push(this.allStatuses[ForumTopicStatus.NOT_A_BUG])
-				}
-				if (isSuggestion) {
-					items.push(this.allStatuses[ForumTopicStatus.NOT_PLANNED])
-					items.push(this.allStatuses[ForumTopicStatus.OBSOLETE])
-				}
+			pages.value = data.pages
+			LeekWars.setTitle(topic.value.name, t('n_messages', [data.total]))
+			LeekWars.setActions([action])
+			if (topic.value.subscribed) { action.icon = 'mdi-newspaper-minus' }
+			emitter.emit('loaded')
+			newMessage.value = localStorage.getItem('forum/draft-' + topic.value.id) as string
+			if (canMoveTopic.value) {
+				loadMoveCategories()
 			}
-			return items
-		}
-		setStatus(status: ForumTopicStatus) {
-			if (!this.topic) { return }
-			LeekWars.post('forum/set-topic-status', {topic_id: this.topic.id, status})
-			this.topic.status = status
-		}
-		lock() {
-			if (!this.topic) { return }
-			const service = this.topic.locked ? 'forum/unlock-topic' : 'forum/lock-topic'
-			LeekWars.post(service, {topic_id: this.topic.id})
-			this.topic.locked = !this.topic.locked
-		}
-		pin() {
-			if (!this.topic) { return }
-			const service = this.topic.pinned ? 'forum/unpin-topic' : 'forum/pin-topic'
-			LeekWars.post(service, {topic_id: this.topic.id})
-			this.topic.pinned = !this.topic.pinned
-		}
-		vote(message: ForumMessage, vote: number) {
-			if (!this.topic) { return }
-			const method = ['vote-message-down', 'remove-message-vote', 'vote-message-up'][vote + 1]
-			LeekWars.post('forum/' + method, {topic_id: this.topic.id, message_id: message.id})
-		}
-		voteUp(message: ForumMessage) {
-			if (message.my_vote === 1) {
-				this.vote(message, 0)
-				message.votes_up--
-				message.my_vote = 0
-			} else {
-				this.vote(message, 1)
-				message.votes_up++
-				if (message.my_vote === -1) {
-					message.votes_down--
-				}
-				message.my_vote = 1
-			}
-			delete this.votes_up_names[message.id]
-			delete this.votes_down_names[message.id]
-		}
-		voteDown(message: ForumMessage) {
-			if (message.my_vote === -1) {
-				this.vote(message, 0)
-				message.votes_down--
-				message.my_vote = 0
-			} else {
-				this.vote(message, -1)
-				message.votes_down++
-				if (message.my_vote === 1) {
-					message.votes_up--
-				}
-				message.my_vote = -1
-			}
-			delete this.votes_up_names[message.id]
-			delete this.votes_down_names[message.id]
-		}
-		loadVotesUp(message: ForumMessage) {
-			if (!this.topic || this.votes_up_names[message.id] !== undefined) { return }
-			this.votes_up_names[message.id] = null
-			LeekWars.post('forum/get-message-up-votes-names', {topic_id: this.topic.id, message_id: message.id}).then(data => {
-				this.votes_up_names[message.id] = data.farmers.map((f: any) => f[1])
-			})
-		}
-		loadVotesDown(message: ForumMessage) {
-			if (!this.topic || this.votes_down_names[message.id] !== undefined) { return }
-			this.votes_down_names[message.id] = null
-			LeekWars.post('forum/get-message-down-votes-names', {topic_id: this.topic.id, message_id: message.id}).then(data => {
-				this.votes_down_names[message.id] = data.farmers.map((f: any) => f[1])
-			})
-		}
-		deleteGeneric(message: ForumMessage) {
-			if (message.id === -1) {
-				this.deleteTopicDialog = true
-			} else {
-				this.toDeleteMessage = message
-				this.deleteMessageDialog = true
-			}
-		}
-		deleteMessage() {
-			if (!this.toDeleteMessage) { return }
-			LeekWars.delete("forum/delete-message", {message_id: this.toDeleteMessage.id}).then(data => {
-				if (this.toDeleteMessage) {
-					this.toDeleteMessage = null
-					this.deleteMessageDialog = false
-					this.update(true)
-				}
-			})
-		}
-		deleteTopic() {
-			if (!this.topic) { return }
-			LeekWars.delete("forum/delete-topic", {topic_id: this.topic.id}).then(data => {
-				if (this.category) {
-					this.deleteTopicDialog = false
-					this.$router.push("/forum/category-" + this.category.id)
-				}
-			})
-		}
-		loadMoveCategories() {
-			if (!this.category) { return }
-			const languages = this.forumLanguages.join(',')
-			LeekWars.get('forum/get-categories/' + languages).then((data: any) => {
-				this.moveCategories = data.categories
-					.filter((c: any) => c.id !== this.category!.id && c.type !== 'team' && c.name !== 'admin' && c.name !== 'moderation')
-					.map((c: any) => ({
-						id: c.id,
-						name: this.$t('forum-category.' + c.name) as string
-					}))
-			})
-		}
-		moveTopic(categoryId: number) {
-			if (!this.topic) { return }
-			LeekWars.post('forum/move-topic', {topic_id: this.topic.id, category_id: categoryId}).then(() => {
-				this.$router.push('/forum/category-' + categoryId + '/topic-' + this.topic!.id)
-				this.category!.id = categoryId
-			})
-		}
-		updateDraft() {
-			localStorage.setItem('forum/draft-' + this.topic!.id, this.newMessage)
-		}
-		send() {
-			if (!this.topic || this.sendingMessage) { return }
-			if (this.isOldTopic && !this.oldTopicDialog) {
-				this.oldTopicDialog = true
-				return
-			}
-			this.oldTopicDialog = false
-			this.sendingMessage = true
-			LeekWars.post("forum/post-message", {topic_id: this.topic.id, message: this.newMessage}).then(data => {
-				localStorage.removeItem('forum/draft-' + this.topic!.id)
-				this.newMessage = ''
-				this.update(true)
-				this.sendingMessage = false
-			})
-		}
-		toggleSubscribe() {
-			if (!this.topic) { return }
-			this.topic.subscribed ? this.unsubscribe() : this.subscribe()
-		}
-		subscribe() {
-			if (!this.topic) { return }
-			LeekWars.post('forum/subscribe-topic', {topic_id: this.topic.id})
-			this.topic.subscribed = true
-			this.action.icon = 'mdi-newspaper-minus'
-			LeekWars.toast(this.$i18n.t('notifications_on') as string)
-		}
-		unsubscribe() {
-			if (!this.topic) { return }
-			LeekWars.post('forum/unsubscribe-topic', {topic_id: this.topic.id})
-			this.topic.subscribed = false
-			this.action.icon = 'mdi-newspaper-plus'
-			LeekWars.toast(this.$i18n.t('notifications_off') as string)
-		}
-		edit(message: ForumMessage) {
-			const textElement = document.querySelector('#message-' + message.id + ' .text, #message-' + message.id + ' .md') as HTMLElement
-			if (textElement) {
-				message.height = textElement.offsetHeight - 14
-			}
-			message.editing = true
-			if (message.id === -1) {
-				this.topicEditing = true
-			}
-		}
-		autoResize(message: ForumMessage, e: Event) {
-			const textarea = e.target as HTMLTextAreaElement
-			if (textarea.scrollHeight > message.height) {
-				message.height = textarea.scrollHeight
-			}
-		}
-		endEdit(message: ForumMessage) {
-			message.editing = false
-			if (message.id === -1) {
-				this.topicEditing = false
-			}
-		}
-		confirmEdit(message: ForumMessage) {
-			if (!this.topic) { return }
-			const callback = (data: any) => {
-				message.html = null
-				message.editing = false
-				message.edition_date = LeekWars.time
-				if (message.id === -1) {
-					this.topicEditing = false
-				}
-			}
-			if (message.id !== -1) {
-				LeekWars.post("forum/edit-message", {message_id: message.id, new_message: message.message}).then(callback)
-			} else {
-				const input = this.$refs.topicTitle as HTMLElement
-				const title = input.innerText
-				LeekWars.post("forum/edit-topic", {
-					topic_id: this.topic.id,
-					title,
-					message: message.message,
-					issue: this.topic.issue || 0,
-					release: this.topic.release || 0,
-				}).then(callback)
-			}
-		}
-		addEmoji(message: ForumMessage, emoji: string, textarea: any) {
-			const index = textarea.selectionStart
-			message.message = message.message.slice(0, index) + emoji + message.message.slice(index, message.message.length)
-		}
-		addEmojiNewMessage(emoji: string) {
-			const textarea = this.$refs.responseTextarea as HTMLTextAreaElement
-			const index = textarea.selectionStart
-			const text = this.newMessage || ''
-			this.newMessage = text.slice(0, index) + emoji + text.slice(index)
-			this.$nextTick(() => {
-				textarea.focus()
-				textarea.selectionStart = textarea.selectionEnd = index + emoji.length
-			})
-		}
+		}).error(() => {
+			notFound.value = true
+			emitter.emit('loaded')
+		})
+	}
 
-		toggleHidden() {
-			if (!this.topic) { return }
-			LeekWars.post('forum/toggle-hidden', {topic_id: this.topic.id}).then((data: any) => {
-				if (this.topic) {
-					this.topic.hidden = data.hidden
-				}
-			})
+	function createIssue() {
+		if (!topic.value || creatingIssue.value) { return }
+		creatingIssue.value = true
+		LeekWars.post('forum/create-issue', {topic_id: topic.value.id}).then((data: any) => {
+			if (topic.value) {
+				topic.value.private_issue = data.private_issue
+			}
+			creatingIssue.value = false
+		})
+	}
+
+	const canMoveTopic = computed(() => {
+		if (!category.value || !store.state.farmer) { return false }
+		if (category.value.team !== -1 || category.value.name === 'admin' || category.value.name === 'moderation') { return false }
+		return category.value.moderator || topic.value?.owner === store.state.farmer.id
+	})
+
+	const canEditStatus = computed(() => store.state.connected && ((store.state.farmer && topic.value?.owner === store.state.farmer.id) || category.value?.moderator))
+
+	const canDeleteTopic = computed(() => {
+		if (!category.value || !store.state.farmer) { return false }
+		if (category.value.moderator) { return true }
+		return topic.value?.owner === store.state.farmer.id && pages.value <= 1 && topic.value?.messages?.length === 1
+	})
+
+	const allStatuses = computed<{[key: number]: {title: string, value: ForumTopicStatus, icon: string, color: string}}>(() => ({
+		[ForumTopicStatus.OPEN]: { title: t('status_open') as string, value: ForumTopicStatus.OPEN, icon: 'mdi-circle-outline', color: 'grey' },
+		[ForumTopicStatus.RESOLVED]: { title: t('status_resolved') as string, value: ForumTopicStatus.RESOLVED, icon: 'mdi-check-circle', color: 'green' },
+		[ForumTopicStatus.NOT_REPRODUCED]: { title: t('status_not_reproduced') as string, value: ForumTopicStatus.NOT_REPRODUCED, icon: 'mdi-help-circle', color: 'orange' },
+		[ForumTopicStatus.NOT_PLANNED]: { title: t('status_not_planned') as string, value: ForumTopicStatus.NOT_PLANNED, icon: 'mdi-minus-circle', color: 'grey' },
+		[ForumTopicStatus.NOT_A_BUG]: { title: t('status_not_a_bug') as string, value: ForumTopicStatus.NOT_A_BUG, icon: 'mdi-close-circle', color: 'grey' },
+		[ForumTopicStatus.OBSOLETE]: { title: t('status_obsolete') as string, value: ForumTopicStatus.OBSOLETE, icon: 'mdi-archive', color: 'grey' },
+	}))
+
+	const currentStatusInfo = computed(() => topic.value ? allStatuses.value[topic.value.status] : null)
+
+	const statusItems = computed(() => {
+		const items = [allStatuses.value[ForumTopicStatus.OPEN], allStatuses.value[ForumTopicStatus.RESOLVED]]
+		if (category.value?.moderator) {
+			const isBug = category.value?.name === 'bug_reports'
+			const isSuggestion = category.value?.name === 'suggestions_ideas'
+			if (isBug) {
+				items.push(allStatuses.value[ForumTopicStatus.NOT_REPRODUCED])
+				items.push(allStatuses.value[ForumTopicStatus.NOT_A_BUG])
+			}
+			if (isSuggestion) {
+				items.push(allStatuses.value[ForumTopicStatus.NOT_PLANNED])
+				items.push(allStatuses.value[ForumTopicStatus.OBSOLETE])
+			}
 		}
-		setRelease() {
-			if (!this.topic) { return }
-			LeekWars.post('forum/set-release', {topic_id: this.topic.id, release: this.releaseInput || 0}).then(() => {
-				if (this.topic) {
-					this.topic.release = this.releaseInput || null
-					this.releaseDialog = false
-				}
-			})
+		return items
+	})
+
+	function setStatus(status: ForumTopicStatus) {
+		if (!topic.value) { return }
+		LeekWars.post('forum/set-topic-status', {topic_id: topic.value.id, status})
+		topic.value.status = status
+	}
+
+	function lock() {
+		if (!topic.value) { return }
+		const service = topic.value.locked ? 'forum/unlock-topic' : 'forum/lock-topic'
+		LeekWars.post(service, {topic_id: topic.value.id})
+		topic.value.locked = !topic.value.locked
+	}
+
+	function pin() {
+		if (!topic.value) { return }
+		const service = topic.value.pinned ? 'forum/unpin-topic' : 'forum/pin-topic'
+		LeekWars.post(service, {topic_id: topic.value.id})
+		topic.value.pinned = !topic.value.pinned
+	}
+
+	function vote(message: ForumMessage, v: number) {
+		if (!topic.value) { return }
+		const method = ['vote-message-down', 'remove-message-vote', 'vote-message-up'][v + 1]
+		LeekWars.post('forum/' + method, {topic_id: topic.value.id, message_id: message.id})
+	}
+
+	function voteUp(message: ForumMessage) {
+		if (message.my_vote === 1) {
+			vote(message, 0)
+			message.votes_up--
+			message.my_vote = 0
+		} else {
+			vote(message, 1)
+			message.votes_up++
+			if (message.my_vote === -1) {
+				message.votes_down--
+			}
+			message.my_vote = 1
 		}
-		setPriority(priority: number) {
-			if (!this.topic) { return }
-			LeekWars.post('forum/set-topic-priority', {topic_id: this.topic.id, priority})
+		delete votes_up_names[message.id]
+		delete votes_down_names[message.id]
+	}
+
+	function voteDown(message: ForumMessage) {
+		if (message.my_vote === -1) {
+			vote(message, 0)
+			message.votes_down--
+			message.my_vote = 0
+		} else {
+			vote(message, -1)
+			message.votes_down++
+			if (message.my_vote === 1) {
+				message.votes_up--
+			}
+			message.my_vote = -1
 		}
-		get isOldTopic(): boolean {
-			if (!this.topic || !this.topic.last_message_date) { return false }
-			const oneYearAgo = (Date.now() / 1000) - 365 * 24 * 3600
-			return this.topic.last_message_date < oneYearAgo
-		}
-		report(message: ForumMessage) {
-			this.reportFarmer = message.writer
-			this.reportContent = message.id === -1 ? 't' + this.topic!.id : 'm' + message.id
-			this.reportDialog = true
+		delete votes_up_names[message.id]
+		delete votes_down_names[message.id]
+	}
+
+	function loadVotesUp(message: ForumMessage) {
+		if (!topic.value || votes_up_names[message.id] !== undefined) { return }
+		votes_up_names[message.id] = null
+		LeekWars.post('forum/get-message-up-votes-names', {topic_id: topic.value.id, message_id: message.id}).then(data => {
+			votes_up_names[message.id] = data.farmers.map((f: any) => f[1])
+		})
+	}
+
+	function loadVotesDown(message: ForumMessage) {
+		if (!topic.value || votes_down_names[message.id] !== undefined) { return }
+		votes_down_names[message.id] = null
+		LeekWars.post('forum/get-message-down-votes-names', {topic_id: topic.value.id, message_id: message.id}).then(data => {
+			votes_down_names[message.id] = data.farmers.map((f: any) => f[1])
+		})
+	}
+
+	function deleteGeneric(message: ForumMessage) {
+		if (message.id === -1) {
+			deleteTopicDialog.value = true
+		} else {
+			toDeleteMessage.value = message
+			deleteMessageDialog.value = true
 		}
 	}
+
+	function deleteMessage() {
+		if (!toDeleteMessage.value) { return }
+		LeekWars.delete("forum/delete-message", {message_id: toDeleteMessage.value.id}).then(() => {
+			if (toDeleteMessage.value) {
+				toDeleteMessage.value = null
+				deleteMessageDialog.value = false
+				update(true)
+			}
+		})
+	}
+
+	function deleteTopic() {
+		if (!topic.value) { return }
+		LeekWars.delete("forum/delete-topic", {topic_id: topic.value.id}).then(() => {
+			if (category.value) {
+				deleteTopicDialog.value = false
+				router.push("/forum/category-" + category.value.id)
+			}
+		})
+	}
+
+	function loadMoveCategories() {
+		if (!category.value) { return }
+		const languages = forumLanguages.value.join(',')
+		LeekWars.get('forum/get-categories/' + languages).then((data: any) => {
+			moveCategories.value = data.categories
+				.filter((c: any) => c.id !== category.value!.id && c.type !== 'team' && c.name !== 'admin' && c.name !== 'moderation')
+				.map((c: any) => ({
+					id: c.id,
+					name: t('forum-category.' + c.name) as string
+				}))
+		})
+	}
+
+	function moveTopic(categoryId: number) {
+		if (!topic.value) { return }
+		LeekWars.post('forum/move-topic', {topic_id: topic.value.id, category_id: categoryId}).then(() => {
+			router.push('/forum/category-' + categoryId + '/topic-' + topic.value!.id)
+			category.value!.id = categoryId
+		})
+	}
+
+	function updateDraft() {
+		localStorage.setItem('forum/draft-' + topic.value!.id, newMessage.value)
+	}
+
+	function send() {
+		if (!topic.value || sendingMessage.value) { return }
+		if (isOldTopic.value && !oldTopicDialog.value) {
+			oldTopicDialog.value = true
+			return
+		}
+		oldTopicDialog.value = false
+		sendingMessage.value = true
+		LeekWars.post("forum/post-message", {topic_id: topic.value.id, message: newMessage.value}).then(() => {
+			localStorage.removeItem('forum/draft-' + topic.value!.id)
+			newMessage.value = ''
+			update(true)
+			sendingMessage.value = false
+		})
+	}
+
+	function toggleSubscribe() {
+		if (!topic.value) { return }
+		topic.value.subscribed ? unsubscribe() : subscribe()
+	}
+
+	function subscribe() {
+		if (!topic.value) { return }
+		LeekWars.post('forum/subscribe-topic', {topic_id: topic.value.id})
+		topic.value.subscribed = true
+		action.icon = 'mdi-newspaper-minus'
+		LeekWars.toast(i18n.global.t('notifications_on') as string)
+	}
+
+	function unsubscribe() {
+		if (!topic.value) { return }
+		LeekWars.post('forum/unsubscribe-topic', {topic_id: topic.value.id})
+		topic.value.subscribed = false
+		action.icon = 'mdi-newspaper-plus'
+		LeekWars.toast(i18n.global.t('notifications_off') as string)
+	}
+
+	function edit(message: ForumMessage) {
+		const textElement = document.querySelector('#message-' + message.id + ' .text, #message-' + message.id + ' .md') as HTMLElement
+		if (textElement) {
+			;(message as any).height = textElement.offsetHeight - 14
+		}
+		;(message as any).editing = true
+		if (message.id === -1) {
+			topicEditing.value = true
+		}
+	}
+
+	function autoResize(message: ForumMessage, e: Event) {
+		const textarea = e.target as HTMLTextAreaElement
+		if (textarea.scrollHeight > (message as any).height) {
+			;(message as any).height = textarea.scrollHeight
+		}
+	}
+
+	function endEdit(message: ForumMessage) {
+		;(message as any).editing = false
+		if (message.id === -1) {
+			topicEditing.value = false
+		}
+	}
+
+	function confirmEdit(message: ForumMessage) {
+		if (!topic.value) { return }
+		const callback = () => {
+			;(message as any).html = null
+			;(message as any).editing = false
+			;(message as any).edition_date = LeekWars.time
+			if (message.id === -1) {
+				topicEditing.value = false
+			}
+		}
+		if (message.id !== -1) {
+			LeekWars.post("forum/edit-message", {message_id: message.id, new_message: message.message}).then(callback)
+		} else {
+			const input = topicTitle.value
+			if (!input) return
+			const title = input.innerText
+			LeekWars.post("forum/edit-topic", {
+				topic_id: topic.value.id,
+				title,
+				message: message.message,
+				issue: topic.value.issue || 0,
+				release: topic.value.release || 0,
+			}).then(callback)
+		}
+	}
+
+	function addEmoji(message: ForumMessage, emoji: string, textarea: any) {
+		const index = textarea.selectionStart
+		message.message = message.message.slice(0, index) + emoji + message.message.slice(index, message.message.length)
+	}
+
+	function addEmojiNewMessage(emoji: string) {
+		const textarea = responseTextarea.value
+		if (!textarea) return
+		const index = textarea.selectionStart
+		const text = newMessage.value || ''
+		newMessage.value = text.slice(0, index) + emoji + text.slice(index)
+		nextTick(() => {
+			textarea.focus()
+			textarea.selectionStart = textarea.selectionEnd = index + emoji.length
+		})
+	}
+
+	function toggleHidden() {
+		if (!topic.value) { return }
+		LeekWars.post('forum/toggle-hidden', {topic_id: topic.value.id}).then((data: any) => {
+			if (topic.value) {
+				topic.value.hidden = data.hidden
+			}
+		})
+	}
+
+	function setRelease() {
+		if (!topic.value) { return }
+		LeekWars.post('forum/set-release', {topic_id: topic.value.id, release: releaseInput.value || 0}).then(() => {
+			if (topic.value) {
+				topic.value.release = releaseInput.value || null
+				releaseDialog.value = false
+			}
+		})
+	}
+
+	function setPriority(priority: number) {
+		if (!topic.value) { return }
+		LeekWars.post('forum/set-topic-priority', {topic_id: topic.value.id, priority})
+	}
+
+	const isOldTopic = computed(() => {
+		if (!topic.value || !topic.value.last_message_date) { return false }
+		const oneYearAgo = (Date.now() / 1000) - 365 * 24 * 3600
+		return topic.value.last_message_date < oneYearAgo
+	})
+
+	function report(message: ForumMessage) {
+		reportFarmer.value = message.writer
+		reportContent.value = message.id === -1 ? 't' + topic.value!.id : 'm' + message.id
+		showReport.value = true
+	}
 </script>
+
 
 <style lang="scss" scoped>
 	.not-found {
