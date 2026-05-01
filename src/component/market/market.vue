@@ -347,10 +347,7 @@
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 
-	defineOptions({
-		name: 'market', i18n: {}, mixins: [...mixins],
-		components: { 'item-preview': ItemPreview, RichTooltipLeek, SchemeImage }
-	})
+	defineOptions({ name: 'market', i18n: {}, mixins: [...mixins] })
 
 	const { t } = useI18n()
 	const route = useRoute()
