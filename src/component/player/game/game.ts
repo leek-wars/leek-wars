@@ -1737,9 +1737,14 @@ class Game {
 				if (leek.magic) leek.buffMagic(leek.magic * factor, this.jumping)
 				if (leek.tp) leek.buffTP(leek.tp * factor, this.jumping)
 				if (leek.mp) leek.buffMP(leek.mp * factor, this.jumping)
+				// Mirror server EffectMultiplyStats.apply: additive on maxLife so erosion is preserved.
+				// First apply adds (factor-1)*lifeBase; replacement adds 1*lifeBase.
+				const lifeBase = leek.initialMaxLife
+				const lifeDelta = leek.maxLife <= lifeBase ? lifeBase * factor : lifeBase
 				const ratio = leek.maxLife > 0 ? leek.life / leek.maxLife : 1
-				leek.winMaxLife(leek.maxLife * factor, this.jumping)
-				leek.life = Math.round(leek.maxLife * ratio)
+				leek.winMaxLife(lifeDelta, this.jumping)
+				const healAmount = Math.round(leek.maxLife * ratio) - leek.life
+				if (healAmount > 0) leek.life = Math.min(leek.life + healAmount, leek.maxLife)
 				break
 			}
 		}
@@ -1826,7 +1831,8 @@ class Game {
 			leek.power -= value
 			break
 		case EffectType.MULTIPLY_STATS: {
-			// Reverse: current = base * value, so base = current / value
+			// Reverse stat buffs only. Life bonus stays in maxLife to mirror server:
+			// removeEffect doesn't undo addTotalLife, the next replacement adds 1*lifeBase on top.
 			leek.strength = Math.round(leek.strength / value)
 			leek.agility = Math.round(leek.agility / value)
 			leek.resistance = Math.round(leek.resistance / value)
@@ -1835,11 +1841,6 @@ class Game {
 			leek.magic = Math.round(leek.magic / value)
 			leek.tp = Math.round(leek.tp / value)
 			leek.mp = Math.round(leek.mp / value)
-			const ratio = leek.maxLife > 0 ? leek.life / leek.maxLife : 1
-			leek.maxLife = Math.round(leek.maxLife / value)
-			leek.life = Math.round(leek.maxLife * ratio)
-			// Sync display life to avoid animation glitch during replace
-			leek.displayLife = leek.life
 			break
 		}
 		}
