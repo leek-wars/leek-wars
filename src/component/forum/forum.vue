@@ -192,9 +192,8 @@
 			store.commit('connected-count', data.farmers.length)
 			connected_languages.value = data.languages
 			notifyNewTopics.value = data.notif_topics
-			LeekWars.setSubTitle(t('connected_farmers_subtitle', [data.farmers.length]))
+			LeekWars.setTitle(t('title'), t('connected_farmers_subtitle', [data.farmers.length]) as string)
 		})
-		LeekWars.setTitle(t('title'))
 		LeekWars.setActions([
 			{icon: 'mdi-chat-outline', click: () => router.push('/chat')},
 			{icon: 'mdi-magnify', click: () => router.push('/search')}

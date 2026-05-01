@@ -331,7 +331,7 @@
 	import { ForumTopicStatus } from '@/model/forum'
 	import { mixins } from '@/model/i18n'
 	import { type Language, LeekWars } from '@/model/leekwars'
-	import { defineAsyncComponent, reactive, ref, watch } from 'vue'
+	import { computed, defineAsyncComponent, reactive, ref, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 	import Breadcrumb from './breadcrumb.vue'
@@ -378,8 +378,7 @@
 		isSuggestionCategory.value = rawCategoryName.value === 'suggestions_ideas'
 	})
 
-	const statusFilterItems = ref<{ value: number, title: string, icon?: string, iconClass?: string }[]>([])
-	function refreshStatusFilterItems() {
+	const statusFilterItems = computed<{ value: number, title: string, icon?: string, iconClass?: string }[]>(() => {
 		const items: { value: number, title: string, icon?: string, iconClass?: string }[] = [
 			{ value: ForumTopicStatus.OPEN, title: t('status_open') as string },
 			{ value: ForumTopicStatus.RESOLVED, title: t('status_resolved') as string, icon: 'mdi-check-circle', iconClass: 'resolved' },
@@ -392,47 +391,37 @@
 			items.push({ value: ForumTopicStatus.NOT_PLANNED, title: t('status_not_planned') as string, icon: 'mdi-minus-circle', iconClass: 'not-planned' })
 			items.push({ value: ForumTopicStatus.OBSOLETE, title: t('status_obsolete') as string, icon: 'mdi-archive', iconClass: 'obsolete' })
 		}
-		statusFilterItems.value = items
-	}
-	watch([isBugCategory, isSuggestionCategory, i18nLocale], refreshStatusFilterItems, { immediate: true })
+		return items
+	})
 
-	const acknowledgedFilterItems = ref<{value: string, title: string}[]>([])
-	const lockedFilterItems = ref<{value: string, title: string}[]>([])
-	const readFilterItems = ref<{value: string, title: string}[]>([])
-	const priorityFilterItems = ref<{value: number, title: string, icon?: string, iconClass?: string}[]>([])
-	const orderItems = ref<{value: string, title: string, icon: string}[]>([])
-
-	function refreshLocalizedItems() {
-		acknowledgedFilterItems.value = [
-			{ value: 'all', title: t('filter_all') as string },
-			{ value: 'yes', title: t('filter_acknowledged') as string },
-			{ value: 'no', title: t('filter_not_acknowledged') as string },
-		]
-		lockedFilterItems.value = [
-			{ value: 'all', title: t('filter_all') as string },
-			{ value: 'yes', title: t('filter_locked') as string },
-			{ value: 'no', title: t('filter_not_locked') as string },
-		]
-		readFilterItems.value = [
-			{ value: 'all', title: t('filter_all') as string },
-			{ value: 'yes', title: t('filter_read_yes') as string },
-			{ value: 'no', title: t('filter_read_no') as string },
-		]
-		priorityFilterItems.value = [
-			{ value: 0, title: t('priority_none') as string },
-			{ value: 1, title: t('priority_high') as string, icon: 'mdi-flag', iconClass: 'priority-high' },
-			{ value: 2, title: t('priority_medium') as string, icon: 'mdi-flag', iconClass: 'priority-medium' },
-			{ value: 3, title: t('priority_low') as string, icon: 'mdi-flag', iconClass: 'priority-low' },
-		]
-		orderItems.value = [
-			{ value: 'date', title: 'Date', icon: 'mdi-clock-outline' },
-			{ value: 'votes', title: 'Votes', icon: 'mdi-thumb-up-outline' },
-			{ value: 'views', title: t('main.views') as string, icon: 'mdi-eye-outline' },
-			{ value: 'messages', title: 'Messages', icon: 'mdi-message-outline' },
-			{ value: 'priority', title: t('priority') as string, icon: 'mdi-flag-outline' },
-		]
-	}
-	watch(i18nLocale, refreshLocalizedItems, { immediate: true })
+	const acknowledgedFilterItems = computed<{value: string, title: string}[]>(() => [
+		{ value: 'all', title: t('filter_all') as string },
+		{ value: 'yes', title: t('filter_acknowledged') as string },
+		{ value: 'no', title: t('filter_not_acknowledged') as string },
+	])
+	const lockedFilterItems = computed<{value: string, title: string}[]>(() => [
+		{ value: 'all', title: t('filter_all') as string },
+		{ value: 'yes', title: t('filter_locked') as string },
+		{ value: 'no', title: t('filter_not_locked') as string },
+	])
+	const readFilterItems = computed<{value: string, title: string}[]>(() => [
+		{ value: 'all', title: t('filter_all') as string },
+		{ value: 'yes', title: t('filter_read_yes') as string },
+		{ value: 'no', title: t('filter_read_no') as string },
+	])
+	const priorityFilterItems = computed<{value: number, title: string, icon?: string, iconClass?: string}[]>(() => [
+		{ value: 0, title: t('priority_none') as string },
+		{ value: 1, title: t('priority_high') as string, icon: 'mdi-flag', iconClass: 'priority-high' },
+		{ value: 2, title: t('priority_medium') as string, icon: 'mdi-flag', iconClass: 'priority-medium' },
+		{ value: 3, title: t('priority_low') as string, icon: 'mdi-flag', iconClass: 'priority-low' },
+	])
+	const orderItems = computed<{value: string, title: string, icon: string}[]>(() => [
+		{ value: 'date', title: 'Date', icon: 'mdi-clock-outline' },
+		{ value: 'votes', title: 'Votes', icon: 'mdi-thumb-up-outline' },
+		{ value: 'views', title: t('main.views') as string, icon: 'mdi-eye-outline' },
+		{ value: 'messages', title: 'Messages', icon: 'mdi-message-outline' },
+		{ value: 'priority', title: t('priority') as string, icon: 'mdi-flag-outline' },
+	])
 
 	const activeFilterCount = ref(0)
 	function refreshActiveFilterCount() {
