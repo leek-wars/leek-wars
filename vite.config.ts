@@ -384,7 +384,7 @@ export default defineConfig({
 			output: {
 				manualChunks: {
 					// Vue ecosystem
-					'vue-vendor': ['vue', 'vue-router', 'pinia', 'vuex', 'vue-i18n'],
+					'vue-vendor': ['vue', 'vue-router', 'vuex', 'vue-i18n'],
 					// Vuetify (large UI framework)
 					'vuetify': ['vuetify'],
 					// Utilities
@@ -394,7 +394,7 @@ export default defineConfig({
 		}
 	},
 	optimizeDeps: {
-		include: ['vue', 'vue-router', 'pinia', 'vuetify'],
+		include: ['vue', 'vue-router', 'vuetify'],
 		// Exclude from pre-bundling to avoid circular dependency with our shim
 		exclude: ['vue-property-decorator', 'vue-class-component', 'vue-facing-decorator']
 	}

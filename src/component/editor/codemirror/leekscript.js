@@ -86,18 +86,18 @@ import { LeekWars } from '@/model/leekwars'
       if (ch == '"' || ch == "'") {
         state.tokenize = tokenString(ch);
         return state.tokenize(stream, state);
-      } else if (ch == "." && stream.match(/^\d[\d_]*(?:[eE][+\-]?[\d_]+)?/)) {
+      } else if (ch == "." && stream.match(/^\d[\d_]*(?:[eE][+-]?[\d_]+)?/)) {
         return ret("number", "number");
       } else if (ch == "." && stream.match("..")) {
         return ret("spread", "meta");
-      } else if (/[\[\]{}\(\),;\:\.]/.test(ch)) {
+      } else if (/[[\]{}(),;:.]/.test(ch)) {
         return ret(ch);
       } else if ((ch == "=" || ch == "-") && stream.eat(">")) {
         return ret("=>", "operator");
-      } else if (ch == "0" && stream.match(/^(?:x[\dA-Fa-f_\.p]+|o[0-7_]+|b[01_]+)n?/)) {
+      } else if (ch == "0" && stream.match(/^(?:x[\dA-Fa-f_.p]+|o[0-7_]+|b[01_]+)n?/)) {
         return ret("number", "number");
       } else if (/\d/.test(ch)) {
-        stream.match(/^[\d_]*(?:n|(?:\.[\d_]*)?(?:[eE][+\-]?[\d_]+)?)?/);
+        stream.match(/^[\d_]*(?:n|(?:\.[\d_]*)?(?:[eE][+-]?[\d_]+)?)?/);
         return ret("number", "number");
       } else if (ch == "/") {
         if (stream.eat("*")) {
@@ -145,7 +145,7 @@ import { LeekWars } from '@/model/leekwars'
             var kw = keywords[word]
             return ret(kw.type, kw.style, word)
           }
-          if (word == "async" && stream.match(/^(\s|\/\*([^*]|\*(?!\/))*?\*\/)*[\[\(\w]/, false))
+          if (word == "async" && stream.match(/^(\s|\/\*([^*]|\*(?!\/))*?\*\/)*[[(\w]/, false))
             return ret("async", "keyword", word)
         }
         return ret("variable", "variable", word)
@@ -221,7 +221,7 @@ import { LeekWars } from '@/model/leekwars'
           ++depth;
         } else if (wordRE.test(ch)) {
           sawSomething = true;
-        } else if (/["'\/`]/.test(ch)) {
+        } else if (/["'/`]/.test(ch)) {
           for (;; --pos) {
             if (pos == 0) return
             var next = stream.string.charAt(pos - 1)
@@ -470,7 +470,7 @@ import { LeekWars } from '@/model/leekwars'
       return cont();
     }
     function maybeexpression(type) {
-      if (type.match(/[;\}\)\],]/)) return pass();
+      if (type.match(/[;})\],]/)) return pass();
       return pass(expression);
     }
 
@@ -655,7 +655,7 @@ import { LeekWars } from '@/model/leekwars'
       if (type == "=>") return cont(typeexpr)
     }
     function typeprops(type) {
-      if (type.match(/[\}\)\]]/)) return cont()
+      if (type.match(/[})\]]/)) return cont()
       if (type == "," || type == ";") return cont(typeprops)
       return pass(typeprop, typeprops)
     }
@@ -671,7 +671,7 @@ import { LeekWars } from '@/model/leekwars'
         return cont(expect("variable"), maybetypeOrIn, expect("]"), typeprop)
       } else if (type == "(") {
         return pass(functiondecl, typeprop)
-      } else if (!type.match(/[;\}\)\],]/)) {
+      } else if (!type.match(/[;})\],]/)) {
         return cont()
       }
     }
@@ -819,7 +819,7 @@ import { LeekWars } from '@/model/leekwars'
         cx.marked = "keyword";
         return cont(classBody);
       }
-      if (isLeekScriptTypeDef(value) && cx.stream.match(/^[\s<,>\?=]/, false)) {
+      if (isLeekScriptTypeDef(value) && cx.stream.match(/^[\s<,>?=]/, false)) {
         cx.marked = "type";
         return cont(classBody);
       }
@@ -901,7 +901,7 @@ import { LeekWars } from '@/model/leekwars'
 
     function expressionAllowed(stream, state, backUp) {
       return state.tokenize == tokenBase &&
-        /^(?:operator|sof|keyword [bcd]|case|new|export|default|spread|[\[{}\(,;:]|=>)$/.test(state.lastType) ||
+        /^(?:operator|sof|keyword [bcd]|case|new|export|default|spread|[[{}(,;:]|=>)$/.test(state.lastType) ||
         (state.lastType == "quasi" && /\{\s*$/.test(stream.string.slice(0, stream.pos - (backUp || 0))))
     }
 
@@ -950,7 +950,7 @@ import { LeekWars } from '@/model/leekwars'
         while ((lexical.type == "stat" || lexical.type == "form") &&
                (firstChar == "}" || ((top = state.cc[state.cc.length - 1]) &&
                                      (top == maybeoperatorComma || top == maybeoperatorNoComma) &&
-                                     !/^[,\.=+\-*:?[\(]/.test(textAfter))))
+                                     !/^[,.=+\-*:?[(]/.test(textAfter))))
           lexical = lexical.prev;
         if (statementIndent && lexical.type == ")" && lexical.prev.type == "stat")
           lexical = lexical.prev;

@@ -57,7 +57,7 @@ LeekWars.get('article/all').then(data => {
 })
 
 function formatTitleURL(title: string) {
-	return title.toLocaleLowerCase().replace(/ /g, '-').replace(/[\[\]]/g, '').replace(/,/g, '').replace(/\//g, '')
+	return title.toLocaleLowerCase().replace(/ /g, '-').replace(/[[\]]/g, '').replace(/,/g, '').replace(/\//g, '')
 }
 </script>
 

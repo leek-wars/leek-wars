@@ -1,6 +1,6 @@
 module.exports = function(source) {
 
-	const match = this.resource.match(/([\w\-]+)\.(\w+)\.lang/)
+	const match = this.resource.match(/([\w-]+)\.(\w+)\.lang/)
 	const name = match[1]
 	const locale = match[2]
 

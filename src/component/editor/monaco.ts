@@ -114,7 +114,7 @@ monaco.editor.registerCommand('findReferencesAtPosition', (accessor, uri: monaco
 	}
 })
 
-const METHOD_REGEX = /^[ \t]+(?:(?:(?:public\s+)?(?:static\s+)?(?:[\w<>,?\[\]]+\s+)+(\w+))|(constructor))\s*\(/
+const METHOD_REGEX = /^[ \t]+(?:(?:(?:public\s+)?(?:static\s+)?(?:[\w<>,?[\]]+\s+)+(\w+))|(constructor))\s*\(/
 const NON_METHOD_KEYWORDS = new Set(['function', 'for', 'while', 'if', 'class', 'var', 'return', 'new', 'else', 'switch', 'catch'])
 const RESERVED_SYMBOLS = new Set(['true', 'false', 'null', 'this', 'super'])
 

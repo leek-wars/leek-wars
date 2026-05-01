@@ -625,7 +625,7 @@
 					forgottenWeapons: [...(loadout.forgotten_weapons || [])],
 					chips: [...loadout.chips],
 					components: loadout.components.map(c => ({ ...c })),
-					stats: { ...(loadout.stats || {}) },
+					stats: { ...loadout.stats },
 				}
 				this.originalEditingSnapshot = JSON.stringify(this.editing)
 			},

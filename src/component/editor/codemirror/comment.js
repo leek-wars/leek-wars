@@ -39,7 +39,7 @@ CodeMirror.defineExtension("toggleComment", function (options) {
 
 // Rough heuristic to try and detect lines that are part of multi-line string
 function probablyInsideString(cm, pos, line) {
-	return /\bstring\b/.test(cm.getTokenTypeAt(Pos(pos.line, 0))) && !/^[\'\"\`]/.test(line)
+	return /\bstring\b/.test(cm.getTokenTypeAt(Pos(pos.line, 0))) && !/^['"`]/.test(line)
 }
 
 function getMode(cm, pos) {

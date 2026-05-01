@@ -303,7 +303,7 @@
 		else if (event.keyCode === 40) { konami += "d" }
 		else if (event.keyCode === 65) { konami += "a" }
 		else if (event.keyCode === 66) { konami += "b" }
-		if (/uuddlrlrba$/.test(konami)) {
+		if (konami.endsWith('uuddlrlrba')) {
 			LeekWars.post('trophy/unlock', {trophy_id: 113})
 			konami = ""
 		}
