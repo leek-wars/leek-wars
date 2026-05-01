@@ -129,7 +129,7 @@
 		</template>
 
 		<!-- Historique -->
-		<git-history v-if="showHistory && selectedRepo !== ''" :folder="selectedRepo" @show-diff="$emit('show-diff', $event)" />
+		<git-history v-if="showHistory && selectedRepo !== ''" :folder="selectedRepo" @show-diff="(e: any) => emit('show-diff', e)" />
 
 		<!-- Messages de sortie git (visibles même en mode historique) -->
 		<div v-if="syncError && selectedRepo !== ''" class="sync-error">
@@ -238,16 +238,18 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { fileSystem } from '@/model/filesystem'
-	import { i18n, mixins } from '@/model/i18n'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { mixins } from '@/model/i18n'
 	import GitHistory from './git-history.vue'
 	import GitRemoteDialog from './git-remote-dialog.vue'
 	import { gitCall } from './git-log'
 	import { emitter } from '@/model/vue'
 	import type { DiffTab } from './editor-tabs.vue'
+	import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
+	import { useRouter } from 'vue-router'
 
 	interface GitChange {
 		file: string
@@ -257,550 +259,534 @@
 		conflict?: boolean
 	}
 
-	@Options({
-		name: 'git-panel',
-		i18n: {},
-		components: { GitHistory, GitRemoteDialog },
-		mixins: [...mixins],
-		emits: ['show-diff', 'show-merge']
+	defineOptions({ name: 'git-panel', i18n: {}, mixins: [...mixins], components: { GitHistory, GitRemoteDialog } })
+
+	const props = withDefaults(defineProps<{
+		theme?: string
+		activeDiff?: DiffTab | null
+	}>(), { theme: 'leek-wars', activeDiff: null })
+
+	const emit = defineEmits<{
+		'show-diff': [payload: { folder: string, file: string, staged: boolean }]
+		'show-merge': [payload: any]
+	}>()
+
+	const { t } = useI18n()
+	const router = useRouter()
+
+	const repos = ref<{folder: string, name: string}[]>([])
+	const selectedRepo = ref('')
+	const changes = ref<GitChange[]>([])
+	const commitMessage = ref('')
+	const loading = ref(false)
+	const showHistory = ref(false)
+	const stagedExpanded = ref(true)
+	const unstagedExpanded = ref(true)
+	const merging = ref(false)
+	const rebasing = ref(false)
+	const conflictsExpanded = ref(true)
+	const ahead = ref(0)
+	const behind = ref(0)
+	const branch = ref('')
+	const hasRemote = ref(false)
+	const hasUpstream = ref(false)
+	const showRemoteDialog = ref(false)
+	const syncError = ref('')
+	const syncInfo = ref('')
+	const branches = ref<string[]>([])
+	const remoteBranches = ref<string[]>([])
+	const branchMenuOpen = ref(false)
+	const fetching = ref(false)
+	const pullStrategyOpen = ref(false)
+	const pullRebase = ref(false)
+	const pushStrategyOpen = ref(false)
+	const pushForce = ref(false)
+	const actionsMenuOpen = ref(false)
+	let refreshDebounceTimer: ReturnType<typeof setTimeout> | null = null
+	const lastFetchAt: { [repo: string]: number } = {}
+
+	const isDark = computed(() => ['monokai', 'vs-dark', 'hc-black'].includes(props.theme))
+	const repoItems = computed(() => repos.value.map(r => ({ title: r.name || '/', value: r.folder })))
+	const conflictChanges = computed<GitChange[]>(() => changes.value.filter(c => c.conflict))
+	const canPull = computed(() => {
+		if (!hasRemote.value) return false
+		return behind.value > 0 || !hasUpstream.value
 	})
-	export default class GitPanel extends Vue {
-		@Prop({ default: 'leek-wars' }) theme!: string
-		@Prop({ default: null }) activeDiff!: DiffTab | null
-		repos: {folder: string, name: string}[] = []
-		selectedRepo: string = ''
-		changes: GitChange[] = []
-		commitMessage: string = ''
-		loading: boolean = false
-		showHistory: boolean = false
-		stagedExpanded: boolean = true
-		unstagedExpanded: boolean = true
-		merging: boolean = false
-		rebasing: boolean = false
-		conflictsExpanded: boolean = true
-		ahead: number = 0
-		behind: number = 0
-		branch: string = ''
-		hasRemote: boolean = false
-		hasUpstream: boolean = false
-		showRemoteDialog: boolean = false
-		syncError: string = ''
-		syncInfo: string = ''
-		branches: string[] = []
-		remoteBranches: string[] = []
-		branchMenuOpen: boolean = false
-		fetching: boolean = false
-		pullStrategyOpen: boolean = false
-		pullRebase: boolean = false
-		pushStrategyOpen: boolean = false
-		pushForce: boolean = false
-		actionsMenuOpen: boolean = false
+	const canPush = computed(() => {
+		if (!hasRemote.value) return false
+		if (ahead.value > 0) return true
+		if (pushForce.value && behind.value > 0) return true
+		return !hasUpstream.value && branch.value !== ''
+	})
+	const stagedChanges = computed<GitChange[]>(() => changes.value.filter(c => c.staged && !c.conflict))
+	const unstagedChanges = computed<GitChange[]>(() => changes.value.filter(c => !c.conflict)
+		.filter(c => !c.staged || c.worktree !== ' ')
+		.filter(c => c.worktree !== ' ' || c.index === '?')
+		.map(c => {
+			if (c.index === '?') return c
+			return { ...c, staged: false }
+		}))
+	const canCommit = computed(() => stagedChanges.value.length > 0 && commitMessage.value.trim() !== '')
 
-		get isDark(): boolean {
-			return ['monokai', 'vs-dark', 'hc-black'].includes(this.theme)
-		}
-		get repoItems() {
-			return this.repos.map(r => ({ title: r.name || '/', value: r.folder }))
-		}
-		get conflictChanges(): GitChange[] {
-			return this.changes.filter(c => c.conflict)
-		}
-		get canPull(): boolean {
-			if (!this.hasRemote) return false
-			// Sync initial (pas encore d'upstream set) : on laisse pull pour récupérer l'historique distant.
-			return this.behind > 0 || !this.hasUpstream
-		}
-		get canPush(): boolean {
-			if (!this.hasRemote) return false
-			if (this.ahead > 0) return true
-			if (this.pushForce && this.behind > 0) return true
-			// Sync initial : pas d'upstream, le push -u va créer la branche distante.
-			return !this.hasUpstream && this.branch !== ''
-		}
-		get stagedChanges(): GitChange[] {
-			return this.changes.filter(c => c.staged && !c.conflict)
-		}
-		get unstagedChanges(): GitChange[] {
-			return this.changes.filter(c => !c.conflict)
-				.filter(c => !c.staged || c.worktree !== ' ')
-				.filter(c => c.worktree !== ' ' || c.index === '?')
-				.map(c => {
-					if (c.index === '?') return c // Untracked
-					return { ...c, staged: false }
-				})
-		}
-		get canCommit(): boolean {
-			return this.stagedChanges.length > 0 && this.commitMessage.trim() !== ''
-		}
+	onMounted(() => {
+		loadRepos()
+		emitter.on('git-file-changed', debouncedRefresh)
+		emitter.on('git-repos-changed', loadRepos)
+		;(emitter as any).on('git-open-remote-dialog', openRemoteDialog)
+	})
 
-		refreshDebounceTimer: ReturnType<typeof setTimeout> | null = null
+	onBeforeUnmount(() => {
+		emitter.off('git-file-changed', debouncedRefresh)
+		emitter.off('git-repos-changed', loadRepos)
+		;(emitter as any).off('git-open-remote-dialog', openRemoteDialog)
+		if (refreshDebounceTimer) clearTimeout(refreshDebounceTimer)
+	})
 
-		mounted() {
-			this.loadRepos()
-			emitter.on('git-file-changed', this.debouncedRefresh)
-			emitter.on('git-repos-changed', this.loadRepos)
-			emitter.on('git-open-remote-dialog', this.openRemoteDialog)
-		}
+	function openRemoteDialog() {
+		showRemoteDialog.value = true
+	}
 
-		beforeUnmount() {
-			emitter.off('git-file-changed', this.debouncedRefresh)
-			emitter.off('git-repos-changed', this.loadRepos)
-			emitter.off('git-open-remote-dialog', this.openRemoteDialog)
-			if (this.refreshDebounceTimer) clearTimeout(this.refreshDebounceTimer)
-		}
-
-		openRemoteDialog() {
-			this.showRemoteDialog = true
-		}
-
-		async undoLastCommit() {
-			this.actionsMenuOpen = false
-			const msg = this.ahead === 0
-				? this.$t('undo_last_commit_pushed_warn') as string
-				: this.$t('undo_last_commit_confirm') as string
-			if (!window.confirm(msg)) return
-			this.syncError = ''
-			this.syncInfo = ''
-			try {
-				await gitCall('git/undo-last-commit', { folder: this.selectedRepo })
-				this.syncInfo = this.$t('undo_last_commit_done') as string
-				await this.refreshStatus()
-				emitter.emit('git-history-refresh')
-				emitter.emit('reanalyze')
-			} catch (e: any) {
-				this.syncError = 'Undo: ' + this.gitErrorMessage(e)
-			}
-		}
-
-		setPullStrategy(rebase: boolean) {
-			this.pullRebase = rebase
-			this.pullStrategyOpen = false
-			if (this.selectedRepo !== '') {
-				localStorage.setItem('editor/git-pull-rebase-' + this.selectedRepo, rebase ? '1' : '0')
-			}
-		}
-
-		setPushStrategy(force: boolean) {
-			this.pushForce = force
-			this.pushStrategyOpen = false
-			if (this.selectedRepo !== '') {
-				localStorage.setItem('editor/git-push-force-' + this.selectedRepo, force ? '1' : '0')
-			}
-		}
-
-		gitErrorMessage(e: any): string {
-			const code = e?.error
-			if (code === 'quota_size_exceeded') return this.$t('quota_size_exceeded') as string
-			if (code === 'quota_files_exceeded') return this.$t('quota_files_exceeded') as string
-			if (e?.quota_exceeded) return this.$t('quota_size_exceeded') as string
-			return e?.details || code || 'error'
-		}
-
-		@Watch('selectedRepo')
-		onSelectedRepoChange(repo: string) {
-			if (repo === '') {
-				this.changes = []
-				this.branch = ''
-				this.branches = []
-				this.remoteBranches = []
-				this.ahead = 0
-				this.behind = 0
-				this.hasRemote = false
-				this.hasUpstream = false
-				this.merging = false
-				this.rebasing = false
-				fileSystem.gitStatus = {}
-				return
-			}
-			this.pullRebase = localStorage.getItem('editor/git-pull-rebase-' + repo) === '1'
-			this.pushForce = localStorage.getItem('editor/git-push-force-' + repo) === '1'
-		}
-
-		lastFetchAt: { [repo: string]: number } = {}
-
-		@Watch('branchMenuOpen')
-		async onBranchMenuToggle(open: boolean) {
-			if (!open) return
-			// Si un fetch récent (< 60s) a déjà été fait, ne recharge que les branches locales
-			const last = this.lastFetchAt[this.selectedRepo] || 0
-			if (Date.now() - last < 60_000) {
-				this.loadBranches()
-			} else {
-				this.fetchRemote()
-			}
-		}
-
-		async fetchRemote() {
-			if (this.fetching) return
-			this.fetching = true
-			try {
-				await gitCall('git/fetch', { folder: this.selectedRepo })
-				this.lastFetchAt[this.selectedRepo] = Date.now()
-				await Promise.all([this.loadBranches(), this.refreshStatus()])
-			} catch (e) {
-				await Promise.all([this.loadBranches(), this.refreshStatus()])
-			} finally {
-				this.fetching = false
-			}
-		}
-
-		debouncedRefresh() {
-			if (this.refreshDebounceTimer) clearTimeout(this.refreshDebounceTimer)
-			this.refreshDebounceTimer = setTimeout(() => {
-				this.refreshStatus()
-			}, 1000)
-		}
-
-		async loadRepos() {
-			this.loading = true
-			try {
-				const data = await gitCall('git/repos')
-				this.repos = data.repos
-				const repos: {[path: string]: boolean} = {}
-				for (const r of this.repos) { repos[r.folder] = true }
-				fileSystem.gitRepos = repos
-				const saved = localStorage.getItem('editor/git-repo')
-				if (saved && this.repos.find(r => r.folder === saved)) {
-					this.selectedRepo = saved
-					this.refreshStatus()
-				} else if (this.repos.length === 1) {
-					this.selectedRepo = this.repos[0].folder
-					this.refreshStatus()
-				}
-			} catch (e) {
-			} finally {
-				this.loading = false
-			}
-		}
-
-		async refreshStatus() {
-			if (this.selectedRepo === '') return
-			localStorage.setItem('editor/git-repo', this.selectedRepo)
-			this.loading = true
-			try {
-				const data = await gitCall('git/status', { folder: this.selectedRepo })
-				this.changes = data.changes
-				this.merging = data.merging
-				this.rebasing = !!data.rebasing
-				this.ahead = data.ahead
-				this.behind = data.behind
-				this.branch = data.branch
-				this.hasRemote = !!data.has_remote
-				this.hasUpstream = !!data.has_upstream
-				// Mettre à jour le statut git global pour les indicateurs dans l'arbre
-				this.updateGitStatusMap()
-			} catch (e) {
-				this.changes = []
-			} finally {
-				this.loading = false
-			}
-		}
-
-		async stage(change: GitChange) {
-			await gitCall('git/stage', { folder: this.selectedRepo, files: JSON.stringify([change.file]) })
-			this.refreshStatus()
-		}
-
-		async unstage(change: GitChange) {
-			await gitCall('git/unstage', { folder: this.selectedRepo, files: JSON.stringify([change.file]) })
-			this.refreshStatus()
-		}
-
-		async stageAll() {
-			await gitCall('git/stage-all', { folder: this.selectedRepo })
-			this.refreshStatus()
-		}
-
-		async unstageAll() {
-			await gitCall('git/unstage-all', { folder: this.selectedRepo })
-			this.refreshStatus()
-		}
-
-		async discard(change: GitChange) {
-			if (change.index === '?') {
-				if (!confirm(this.$t('discard_untracked_confirm', [change.file]) as string)) return
-			}
-			await gitCall('git/discard', { folder: this.selectedRepo, files: JSON.stringify([change.file]) })
-			emitter.emit('close-diff', { folder: this.selectedRepo, file: change.file })
-			if (change.index === '?') {
-				this.removeDeletedFiles([change.file])
-			} else {
-				this.reloadFiles([change.file])
-			}
-			await this.refreshStatus()
+	async function undoLastCommit() {
+		actionsMenuOpen.value = false
+		const msg = ahead.value === 0
+			? t('undo_last_commit_pushed_warn') as string
+			: t('undo_last_commit_confirm') as string
+		if (!window.confirm(msg)) return
+		syncError.value = ''
+		syncInfo.value = ''
+		try {
+			await gitCall('git/undo-last-commit', { folder: selectedRepo.value })
+			syncInfo.value = t('undo_last_commit_done') as string
+			await refreshStatus()
+			emitter.emit('git-history-refresh')
 			emitter.emit('reanalyze')
-		}
-
-		async discardAll() {
-			const untracked = this.unstagedChanges.filter(c => c.index === '?')
-			if (untracked.length > 0) {
-				if (!confirm(this.$t('discard_untracked_all_confirm', [untracked.length]) as string)) return
-			}
-			const files = this.unstagedChanges.map(c => c.file)
-			await gitCall('git/discard', { folder: this.selectedRepo, files: JSON.stringify(files) })
-			for (const file of files) {
-				emitter.emit('close-diff', { folder: this.selectedRepo, file })
-			}
-			const untrackedFiles = untracked.map(c => c.file)
-			const trackedFiles = files.filter(f => !untrackedFiles.includes(f))
-			if (untrackedFiles.length) this.removeDeletedFiles(untrackedFiles)
-			if (trackedFiles.length) this.reloadFiles(trackedFiles)
-			await this.refreshStatus()
-			emitter.emit('reanalyze')
-		}
-
-		async commit() {
-			if (!this.canCommit) return
-			const wasMerging = this.merging
-			try {
-				await gitCall('git/commit', { folder: this.selectedRepo, message: this.commitMessage })
-				this.commitMessage = ''
-				if (wasMerging) {
-					// Fermer les onglets merge après un commit de merge
-					emitter.emit('close-merge-tabs', { folder: this.selectedRepo })
-				}
-				this.refreshStatus()
-			} catch (e) {
-			}
-		}
-
-		async push() {
-			if (this.pushForce && !window.confirm(this.$t('push_force_confirm') as string)) return
-			this.loading = true
-			this.syncError = ''
-			this.syncInfo = ''
-			try {
-				const data = await gitCall('git/push', { folder: this.selectedRepo, force: this.pushForce })
-				this.syncInfo = 'Push: ' + (data.message || 'OK')
-				this.refreshStatus()
-			} catch (e: any) {
-				this.syncError = 'Push: ' + this.gitErrorMessage(e)
-			} finally {
-				this.loading = false
-			}
-		}
-
-		async pull() {
-			this.loading = true
-			this.syncError = ''
-			this.syncInfo = ''
-			try {
-				const data = await gitCall('git/pull', { folder: this.selectedRepo, rebase: this.pullRebase })
-				this.syncInfo = 'Pull: ' + (data.message || 'OK')
-				await Promise.all([fileSystem.reload(), this.refreshStatus()])
-				if (data.changed_files) fileSystem.reloadChangedFiles(this.selectedRepo, data.changed_files)
-				emitter.emit('reanalyze')
-				if (data.conflicts && this.conflictChanges.length > 0) {
-					this.reloadFiles(this.conflictChanges.map(c => c.file))
-					emitter.emit('open-merge', { folder: this.selectedRepo, file: this.conflictChanges[0].file })
-				}
-			} catch (e: any) {
-				this.syncError = 'Pull: ' + this.gitErrorMessage(e)
-			} finally {
-				this.loading = false
-			}
-		}
-
-		async loadBranches() {
-			try {
-				const data = await gitCall('git/branches', { folder: this.selectedRepo })
-				this.branches = data.branches || []
-				this.remoteBranches = data.remote_branches || []
-			} catch (e) {
-				this.branches = []
-				this.remoteBranches = []
-			}
-		}
-
-		async checkoutBranch(branch: string) {
-			this.branchMenuOpen = false
-			if (branch === this.branch) return
-			this.syncError = ''
-			this.syncInfo = ''
-			this.loading = true
-			try {
-				const data = await gitCall('git/checkout', { folder: this.selectedRepo, branch })
-				this.syncInfo = 'Checkout: ' + branch
-				await Promise.all([fileSystem.reload(), this.refreshStatus()])
-				if (data.changed_files) fileSystem.reloadChangedFiles(this.selectedRepo, data.changed_files)
-				emitter.emit('reanalyze')
-			} catch (e: any) {
-				this.syncError = 'Checkout: ' + this.gitErrorMessage(e)
-			} finally {
-				this.loading = false
-			}
-		}
-
-		async promptCreateBranch() {
-			this.branchMenuOpen = false
-			const name = window.prompt(this.$t('new_branch_name') as string, '')
-			if (!name) return
-			const trimmed = name.trim()
-			if (!trimmed) return
-			this.syncError = ''
-			this.syncInfo = ''
-			this.loading = true
-			try {
-				await gitCall('git/create-branch', { folder: this.selectedRepo, branch: trimmed })
-				this.syncInfo = 'Branch created: ' + trimmed
-				await this.refreshStatus()
-			} catch (e: any) {
-				this.syncError = 'Create branch: ' + this.gitErrorMessage(e)
-			} finally {
-				this.loading = false
-			}
-		}
-
-		async deleteBranch(branch: string) {
-			this.branchMenuOpen = false
-			if (!window.confirm(this.$t('delete_branch_confirm', [branch]) as string)) return
-			this.syncError = ''
-			this.syncInfo = ''
-			try {
-				await gitCall('git/delete-branch', { folder: this.selectedRepo, branch, force: false })
-				this.syncInfo = this.$t('delete_branch_done', [branch]) as string
-			} catch (e: any) {
-				const details = e.details || e.error || 'error'
-				if (details.includes('not fully merged')) {
-					if (window.confirm(this.$t('delete_branch_force_confirm', [branch]) as string)) {
-						try {
-							await gitCall('git/delete-branch', { folder: this.selectedRepo, branch, force: true })
-							this.syncInfo = this.$t('delete_branch_done', [branch]) as string
-						} catch (e2: any) {
-							this.syncError = this.gitErrorMessage(e2)
-						}
-					}
-				} else {
-					this.syncError = this.gitErrorMessage(e)
-				}
-			}
-		}
-
-		async mergeAbort() {
-			this.loading = true
-			try {
-				await gitCall('git/merge-abort', { folder: this.selectedRepo })
-				emitter.emit('close-merge-tabs', { folder: this.selectedRepo })
-				const conflictFiles = this.conflictChanges.map(c => c.file)
-				this.reloadFiles(conflictFiles)
-				await this.refreshStatus()
-				emitter.emit('reanalyze')
-			} catch (e) {
-			} finally {
-				this.loading = false
-			}
-		}
-
-		async rebaseContinue() {
-			if (this.conflictChanges.length > 0) return
-			this.loading = true
-			this.syncError = ''
-			this.syncInfo = ''
-			try {
-				const data = await gitCall('git/rebase-continue', { folder: this.selectedRepo })
-				this.syncInfo = 'Rebase: ' + (data.message || 'OK')
-				await Promise.all([fileSystem.reload(), this.refreshStatus()])
-				if (data.changed_files) fileSystem.reloadChangedFiles(this.selectedRepo, data.changed_files)
-				emitter.emit('reanalyze')
-			} catch (e: any) {
-				this.syncError = 'Rebase continue: ' + this.gitErrorMessage(e)
-			} finally {
-				this.loading = false
-			}
-		}
-
-		async rebaseAbort() {
-			if (!window.confirm(this.$t('rebase_abort_confirm') as string)) return
-			this.loading = true
-			this.syncError = ''
-			this.syncInfo = ''
-			try {
-				const data = await gitCall('git/rebase-abort', { folder: this.selectedRepo })
-				this.syncInfo = this.$t('rebase_aborted') as string
-				await Promise.all([fileSystem.reload(), this.refreshStatus()])
-				if (data.changed_files) fileSystem.reloadChangedFiles(this.selectedRepo, data.changed_files)
-				emitter.emit('reanalyze')
-			} catch (e: any) {
-				this.syncError = 'Rebase abort: ' + this.gitErrorMessage(e)
-			} finally {
-				this.loading = false
-			}
-		}
-
-		openConflict(change: GitChange) {
-			const fullPath = (this.selectedRepo ? this.selectedRepo + '/' : '') + change.file
-			const ai = fileSystem.getAIByPath(fullPath)
-			if (ai) {
-				this.$router.push('/editor/' + ai.path)
-			}
-		}
-
-		reloadFiles(files: string[]) {
-			for (const file of files) {
-				const fullPath = (this.selectedRepo ? this.selectedRepo + '/' : '') + file
-				const ai = fileSystem.getAIByPath(fullPath)
-				if (ai) {
-					gitCall('git/read-file', { folder: this.selectedRepo, file }).then((data: any) => {
-						ai.code = data.content || ''
-						ai.modified = false
-						emitter.emit('file-reloaded', ai.path)
-					})
-				}
-			}
-		}
-
-		removeDeletedFiles(files: string[]) {
-			for (const file of files) {
-				const fullPath = (this.selectedRepo ? this.selectedRepo + '/' : '') + file
-				const ai = fileSystem.getAIByPath(fullPath)
-				if (ai) {
-					emitter.emit('close-file-tab', ai.path)
-					const folder = fileSystem.folderById[ai.folder]
-					if (folder) {
-						const idx = folder.items.findIndex((i: any) => !i.folder && i.ai === ai)
-						if (idx !== -1) folder.items.splice(idx, 1)
-					}
-					delete fileSystem.ais[ai.path]
-				}
-			}
-		}
-
-		updateGitStatusMap() {
-			const status: {[path: string]: string} = {}
-			const prefix = this.selectedRepo ? this.selectedRepo + '/' : ''
-			for (const change of this.changes) {
-				const fullPath = prefix + change.file
-				if (change.conflict) {
-					status[fullPath] = 'C'
-				} else if (change.worktree !== ' ') {
-					status[fullPath] = change.worktree === '?' ? 'U' : change.worktree
-				} else if (change.index !== ' ') {
-					status[fullPath] = change.index
-				}
-			}
-			fileSystem.gitStatus = status
-		}
-
-		isActiveDiff(change: GitChange, staged: boolean): boolean {
-			if (!this.activeDiff || this.activeDiff.type !== 'diff') return false
-			return this.activeDiff.file === change.file && this.activeDiff.staged === staged
-		}
-
-		showDiff(change: GitChange, staged: boolean) {
-			this.$emit('show-diff', { folder: this.selectedRepo, file: change.file, staged })
-		}
-
-		statusChar(change: GitChange): string {
-			if (change.index === '?') return '?'
-			return change.worktree.toLowerCase()
-		}
-
-		statusLabel(change: GitChange): string {
-			if (change.index === '?') return '?'
-			return change.worktree
+		} catch (e: any) {
+			syncError.value = 'Undo: ' + gitErrorMessage(e)
 		}
 	}
+
+	function setPullStrategy(rebase: boolean) {
+		pullRebase.value = rebase
+		pullStrategyOpen.value = false
+		if (selectedRepo.value !== '') {
+			localStorage.setItem('editor/git-pull-rebase-' + selectedRepo.value, rebase ? '1' : '0')
+		}
+	}
+
+	function setPushStrategy(force: boolean) {
+		pushForce.value = force
+		pushStrategyOpen.value = false
+		if (selectedRepo.value !== '') {
+			localStorage.setItem('editor/git-push-force-' + selectedRepo.value, force ? '1' : '0')
+		}
+	}
+
+	function gitErrorMessage(e: any): string {
+		const code = e?.error
+		if (code === 'quota_size_exceeded') return t('quota_size_exceeded') as string
+		if (code === 'quota_files_exceeded') return t('quota_files_exceeded') as string
+		if (e?.quota_exceeded) return t('quota_size_exceeded') as string
+		return e?.details || code || 'error'
+	}
+
+	watch(selectedRepo, (repo) => {
+		if (repo === '') {
+			changes.value = []
+			branch.value = ''
+			branches.value = []
+			remoteBranches.value = []
+			ahead.value = 0
+			behind.value = 0
+			hasRemote.value = false
+			hasUpstream.value = false
+			merging.value = false
+			rebasing.value = false
+			fileSystem.gitStatus = {}
+			return
+		}
+		pullRebase.value = localStorage.getItem('editor/git-pull-rebase-' + repo) === '1'
+		pushForce.value = localStorage.getItem('editor/git-push-force-' + repo) === '1'
+	})
+
+	watch(branchMenuOpen, async (open) => {
+		if (!open) return
+		const last = lastFetchAt[selectedRepo.value] || 0
+		if (Date.now() - last < 60_000) {
+			loadBranches()
+		} else {
+			fetchRemote()
+		}
+	})
+
+	async function fetchRemote() {
+		if (fetching.value) return
+		fetching.value = true
+		try {
+			await gitCall('git/fetch', { folder: selectedRepo.value })
+			lastFetchAt[selectedRepo.value] = Date.now()
+			await Promise.all([loadBranches(), refreshStatus()])
+		} catch (e) {
+			await Promise.all([loadBranches(), refreshStatus()])
+		} finally {
+			fetching.value = false
+		}
+	}
+
+	function debouncedRefresh() {
+		if (refreshDebounceTimer) clearTimeout(refreshDebounceTimer)
+		refreshDebounceTimer = setTimeout(() => {
+			refreshStatus()
+		}, 1000)
+	}
+
+	async function loadRepos() {
+		loading.value = true
+		try {
+			const data = await gitCall('git/repos')
+			repos.value = data.repos
+			const reposMap: {[path: string]: boolean} = {}
+			for (const r of repos.value) { reposMap[r.folder] = true }
+			fileSystem.gitRepos = reposMap
+			const saved = localStorage.getItem('editor/git-repo')
+			if (saved && repos.value.find(r => r.folder === saved)) {
+				selectedRepo.value = saved
+				refreshStatus()
+			} else if (repos.value.length === 1) {
+				selectedRepo.value = repos.value[0].folder
+				refreshStatus()
+			}
+		} catch (e) {
+		} finally {
+			loading.value = false
+		}
+	}
+
+	async function refreshStatus() {
+		if (selectedRepo.value === '') return
+		localStorage.setItem('editor/git-repo', selectedRepo.value)
+		loading.value = true
+		try {
+			const data = await gitCall('git/status', { folder: selectedRepo.value })
+			changes.value = data.changes
+			merging.value = data.merging
+			rebasing.value = !!data.rebasing
+			ahead.value = data.ahead
+			behind.value = data.behind
+			branch.value = data.branch
+			hasRemote.value = !!data.has_remote
+			hasUpstream.value = !!data.has_upstream
+			updateGitStatusMap()
+		} catch (e) {
+			changes.value = []
+		} finally {
+			loading.value = false
+		}
+	}
+
+	async function stage(change: GitChange) {
+		await gitCall('git/stage', { folder: selectedRepo.value, files: JSON.stringify([change.file]) })
+		refreshStatus()
+	}
+
+	async function unstage(change: GitChange) {
+		await gitCall('git/unstage', { folder: selectedRepo.value, files: JSON.stringify([change.file]) })
+		refreshStatus()
+	}
+
+	async function stageAll() {
+		await gitCall('git/stage-all', { folder: selectedRepo.value })
+		refreshStatus()
+	}
+
+	async function unstageAll() {
+		await gitCall('git/unstage-all', { folder: selectedRepo.value })
+		refreshStatus()
+	}
+
+	async function discard(change: GitChange) {
+		if (change.index === '?') {
+			if (!confirm(t('discard_untracked_confirm', [change.file]) as string)) return
+		}
+		await gitCall('git/discard', { folder: selectedRepo.value, files: JSON.stringify([change.file]) })
+		emitter.emit('close-diff', { folder: selectedRepo.value, file: change.file })
+		if (change.index === '?') {
+			removeDeletedFiles([change.file])
+		} else {
+			reloadFiles([change.file])
+		}
+		await refreshStatus()
+		emitter.emit('reanalyze')
+	}
+
+	async function discardAll() {
+		const untracked = unstagedChanges.value.filter(c => c.index === '?')
+		if (untracked.length > 0) {
+			if (!confirm(t('discard_untracked_all_confirm', [untracked.length]) as string)) return
+		}
+		const files = unstagedChanges.value.map(c => c.file)
+		await gitCall('git/discard', { folder: selectedRepo.value, files: JSON.stringify(files) })
+		for (const file of files) {
+			emitter.emit('close-diff', { folder: selectedRepo.value, file })
+		}
+		const untrackedFiles = untracked.map(c => c.file)
+		const trackedFiles = files.filter(f => !untrackedFiles.includes(f))
+		if (untrackedFiles.length) removeDeletedFiles(untrackedFiles)
+		if (trackedFiles.length) reloadFiles(trackedFiles)
+		await refreshStatus()
+		emitter.emit('reanalyze')
+	}
+
+	async function commit() {
+		if (!canCommit.value) return
+		const wasMerging = merging.value
+		try {
+			await gitCall('git/commit', { folder: selectedRepo.value, message: commitMessage.value })
+			commitMessage.value = ''
+			if (wasMerging) {
+				emitter.emit('close-merge-tabs', { folder: selectedRepo.value })
+			}
+			refreshStatus()
+		} catch (e) {
+		}
+	}
+
+	async function push() {
+		if (pushForce.value && !window.confirm(t('push_force_confirm') as string)) return
+		loading.value = true
+		syncError.value = ''
+		syncInfo.value = ''
+		try {
+			const data = await gitCall('git/push', { folder: selectedRepo.value, force: pushForce.value })
+			syncInfo.value = 'Push: ' + (data.message || 'OK')
+			refreshStatus()
+		} catch (e: any) {
+			syncError.value = 'Push: ' + gitErrorMessage(e)
+		} finally {
+			loading.value = false
+		}
+	}
+
+	async function pull() {
+		loading.value = true
+		syncError.value = ''
+		syncInfo.value = ''
+		try {
+			const data = await gitCall('git/pull', { folder: selectedRepo.value, rebase: pullRebase.value })
+			syncInfo.value = 'Pull: ' + (data.message || 'OK')
+			await Promise.all([fileSystem.reload(), refreshStatus()])
+			if (data.changed_files) fileSystem.reloadChangedFiles(selectedRepo.value, data.changed_files)
+			emitter.emit('reanalyze')
+			if (data.conflicts && conflictChanges.value.length > 0) {
+				reloadFiles(conflictChanges.value.map(c => c.file))
+				emitter.emit('open-merge', { folder: selectedRepo.value, file: conflictChanges.value[0].file })
+			}
+		} catch (e: any) {
+			syncError.value = 'Pull: ' + gitErrorMessage(e)
+		} finally {
+			loading.value = false
+		}
+	}
+
+	async function loadBranches() {
+		try {
+			const data = await gitCall('git/branches', { folder: selectedRepo.value })
+			branches.value = data.branches || []
+			remoteBranches.value = data.remote_branches || []
+		} catch (e) {
+			branches.value = []
+			remoteBranches.value = []
+		}
+	}
+
+	async function checkoutBranch(b: string) {
+		branchMenuOpen.value = false
+		if (b === branch.value) return
+		syncError.value = ''
+		syncInfo.value = ''
+		loading.value = true
+		try {
+			const data = await gitCall('git/checkout', { folder: selectedRepo.value, branch: b })
+			syncInfo.value = 'Checkout: ' + b
+			await Promise.all([fileSystem.reload(), refreshStatus()])
+			if (data.changed_files) fileSystem.reloadChangedFiles(selectedRepo.value, data.changed_files)
+			emitter.emit('reanalyze')
+		} catch (e: any) {
+			syncError.value = 'Checkout: ' + gitErrorMessage(e)
+		} finally {
+			loading.value = false
+		}
+	}
+
+	async function promptCreateBranch() {
+		branchMenuOpen.value = false
+		const name = window.prompt(t('new_branch_name') as string, '')
+		if (!name) return
+		const trimmed = name.trim()
+		if (!trimmed) return
+		syncError.value = ''
+		syncInfo.value = ''
+		loading.value = true
+		try {
+			await gitCall('git/create-branch', { folder: selectedRepo.value, branch: trimmed })
+			syncInfo.value = 'Branch created: ' + trimmed
+			await refreshStatus()
+		} catch (e: any) {
+			syncError.value = 'Create branch: ' + gitErrorMessage(e)
+		} finally {
+			loading.value = false
+		}
+	}
+
+	async function deleteBranch(b: string) {
+		branchMenuOpen.value = false
+		if (!window.confirm(t('delete_branch_confirm', [b]) as string)) return
+		syncError.value = ''
+		syncInfo.value = ''
+		try {
+			await gitCall('git/delete-branch', { folder: selectedRepo.value, branch: b, force: false })
+			syncInfo.value = t('delete_branch_done', [b]) as string
+		} catch (e: any) {
+			const details = e.details || e.error || 'error'
+			if (details.includes('not fully merged')) {
+				if (window.confirm(t('delete_branch_force_confirm', [b]) as string)) {
+					try {
+						await gitCall('git/delete-branch', { folder: selectedRepo.value, branch: b, force: true })
+						syncInfo.value = t('delete_branch_done', [b]) as string
+					} catch (e2: any) {
+						syncError.value = gitErrorMessage(e2)
+					}
+				}
+			} else {
+				syncError.value = gitErrorMessage(e)
+			}
+		}
+	}
+
+	async function mergeAbort() {
+		loading.value = true
+		try {
+			await gitCall('git/merge-abort', { folder: selectedRepo.value })
+			emitter.emit('close-merge-tabs', { folder: selectedRepo.value })
+			const conflictFiles = conflictChanges.value.map(c => c.file)
+			reloadFiles(conflictFiles)
+			await refreshStatus()
+			emitter.emit('reanalyze')
+		} catch (e) {
+		} finally {
+			loading.value = false
+		}
+	}
+
+	async function rebaseContinue() {
+		if (conflictChanges.value.length > 0) return
+		loading.value = true
+		syncError.value = ''
+		syncInfo.value = ''
+		try {
+			const data = await gitCall('git/rebase-continue', { folder: selectedRepo.value })
+			syncInfo.value = 'Rebase: ' + (data.message || 'OK')
+			await Promise.all([fileSystem.reload(), refreshStatus()])
+			if (data.changed_files) fileSystem.reloadChangedFiles(selectedRepo.value, data.changed_files)
+			emitter.emit('reanalyze')
+		} catch (e: any) {
+			syncError.value = 'Rebase continue: ' + gitErrorMessage(e)
+		} finally {
+			loading.value = false
+		}
+	}
+
+	async function rebaseAbort() {
+		if (!window.confirm(t('rebase_abort_confirm') as string)) return
+		loading.value = true
+		syncError.value = ''
+		syncInfo.value = ''
+		try {
+			const data = await gitCall('git/rebase-abort', { folder: selectedRepo.value })
+			syncInfo.value = t('rebase_aborted') as string
+			await Promise.all([fileSystem.reload(), refreshStatus()])
+			if (data.changed_files) fileSystem.reloadChangedFiles(selectedRepo.value, data.changed_files)
+			emitter.emit('reanalyze')
+		} catch (e: any) {
+			syncError.value = 'Rebase abort: ' + gitErrorMessage(e)
+		} finally {
+			loading.value = false
+		}
+	}
+
+	function openConflict(change: GitChange) {
+		const fullPath = (selectedRepo.value ? selectedRepo.value + '/' : '') + change.file
+		const ai = fileSystem.getAIByPath(fullPath)
+		if (ai) {
+			router.push('/editor/' + ai.path)
+		}
+	}
+
+	function reloadFiles(files: string[]) {
+		for (const file of files) {
+			const fullPath = (selectedRepo.value ? selectedRepo.value + '/' : '') + file
+			const ai = fileSystem.getAIByPath(fullPath)
+			if (ai) {
+				gitCall('git/read-file', { folder: selectedRepo.value, file }).then((data: any) => {
+					ai.code = data.content || ''
+					ai.modified = false
+					emitter.emit('file-reloaded', ai.path)
+				})
+			}
+		}
+	}
+
+	function removeDeletedFiles(files: string[]) {
+		for (const file of files) {
+			const fullPath = (selectedRepo.value ? selectedRepo.value + '/' : '') + file
+			const ai = fileSystem.getAIByPath(fullPath)
+			if (ai) {
+				emitter.emit('close-file-tab', ai.path)
+				const folder = fileSystem.folderById[ai.folder]
+				if (folder) {
+					const idx = folder.items.findIndex((i: any) => !i.folder && i.ai === ai)
+					if (idx !== -1) folder.items.splice(idx, 1)
+				}
+				delete fileSystem.ais[ai.path]
+			}
+		}
+	}
+
+	function updateGitStatusMap() {
+		const status: {[path: string]: string} = {}
+		const prefix = selectedRepo.value ? selectedRepo.value + '/' : ''
+		for (const change of changes.value) {
+			const fullPath = prefix + change.file
+			if (change.conflict) {
+				status[fullPath] = 'C'
+			} else if (change.worktree !== ' ') {
+				status[fullPath] = change.worktree === '?' ? 'U' : change.worktree
+			} else if (change.index !== ' ') {
+				status[fullPath] = change.index
+			}
+		}
+		fileSystem.gitStatus = status
+	}
+
+	function isActiveDiff(change: GitChange, staged: boolean): boolean {
+		if (!props.activeDiff || props.activeDiff.type !== 'diff') return false
+		return props.activeDiff.file === change.file && props.activeDiff.staged === staged
+	}
+
+	function showDiff(change: GitChange, staged: boolean) {
+		emit('show-diff', { folder: selectedRepo.value, file: change.file, staged })
+	}
+
+	function statusChar(change: GitChange): string {
+		if (change.index === '?') return '?'
+		return change.worktree.toLowerCase()
+	}
+
+	function statusLabel(change: GitChange): string {
+		if (change.index === '?') return '?'
+		return change.worktree
+	}
 </script>
+
 
 <style lang="scss" scoped>
 .git-panel {
