@@ -257,7 +257,10 @@
 	const referencedBy = ref<{ children: any[], translations: any[], linked_from: any[] } | null>(null)
 	let destroyed = false
 
-	const language = computed(() => route.params && route.params.lang ? route.params.lang as string : i18nLocale.value as string)
+	const language = computed(() => {
+		const lang = route.params && route.params.lang ? route.params.lang as string : i18nLocale.value as string
+		return lang in LeekWars.languages ? lang : i18nLocale.value as string
+	})
 	const main_title = computed(() => LeekWars.languages[language.value].encyclopedia)
 	const code = computed(() => 'page' in route.params ? (route.params.page as string).replace(/_/g, ' ') : main_title.value)
 	const lanuage_and_code = computed(() => language.value + '/' + code.value)
