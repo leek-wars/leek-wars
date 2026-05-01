@@ -14,12 +14,16 @@
       "WebFetch(domain:github.com)",
       "Bash(git log *)",
       "Bash(git diff *)",
+      "Bash(git diff-tree *)",
       "Bash(git show *)",
       "Bash(git status *)",
       "Bash(git add *)",
       "Bash(git blame *)",
+      "Bash(git -C *)",
+      "Bash(php -l *)",
       "Bash(npx vue-tsc *)",
-      "Bash(npx eslint *)"
+      "Bash(npx eslint *)",
+      "Bash(head *)"
     ]
   }
 }
