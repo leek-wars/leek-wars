@@ -545,14 +545,12 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
+	import { Member } from '@/model/farmer'
 	import { Group } from '@/model/group'
-	import { Farmer, Member } from '@/model/farmer'
 	import { store } from '@/model/store'
-	const ChatElement = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
 	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import CharacteristicTooltip from '@/component/leek/characteristic-tooltip.vue'
@@ -564,526 +562,474 @@
 	import FightsHistory from '@/component/history/fights-history.vue'
 	import TournamentsHistory from '@/component/history/tournaments-history.vue'
 	import Item from '@/component/item.vue'
-	import { defineAsyncComponent } from 'vue'
+	import { computed, defineAsyncComponent, reactive, ref } from 'vue'
+	import { useI18n } from 'vue-i18n'
+	import { useRoute, useRouter } from 'vue-router'
 	import { emitter } from '@/model/vue'
 
-	@Options({ name: 'group', i18n: {}, mixins: [...mixins], components: {
-		chat: ChatElement, RichTooltipTeam, RichTooltipFarmer, CharacteristicTooltip, RichTooltipItem, CapitalDialog, FightsHistory, TournamentsHistory, Item
-	}})
-	export default class GroupPage extends Vue {
+	const Chat = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
 
-		group: Group | null = null
-		settingsDialog: boolean = false
-		renameGroupName: string = ''
-		equipmentEditing: boolean = false
-		weaponsDialog: boolean = false
-		draggedWeapon: number | null = null
-		draggedWeaponLocation: string | null = null
-		chipsDialog: boolean = false
-		draggedChip: number | null = null
-		draggedChipLocation: string | null = null
-		CHIPS = CHIPS
-		capitalDialogOpened: boolean = false
-		applyingEquipment: boolean = false
-		membersDialog: boolean = false
-		characteristics: {[key: string]: number} = {}
-		deleteMemberDialog: boolean = false
-		memberToDelete: Member | null = null
-		WeaponsData = WeaponsData
-		giveItemDialog: boolean = false
-		giveItemTab: string = 'tab-0'
-		giveItemConfirmDialog: boolean = false
-		itemToGive: any = null
-		giveItemTarget: Member | null = null
-		giveMoneyDialog: boolean = false
-		giveMoneyTarget: Member | null = null
-		giveMoneyAmount: number = 0
-		giveFightsAmount: number = 0
+	defineOptions({ name: 'group', i18n: {}, mixins: [...mixins], components: { RichTooltipTeam, RichTooltipFarmer, CharacteristicTooltip, RichTooltipItem, CapitalDialog, FightsHistory, TournamentsHistory, Item } })
 
-		headers = [
-			{ title: 'Membre', value: 'name' },
-			{ title: 'Équipe', value: 'team' },
-			{ title: 'Niveau', value: 'total_level' },
-			{ title: 'Combats', value: 'fights' },
-			{ title: 'Restants', value: 'day_fight' },
-			{ title: 'Victoires', value: 'wins' },
-			{ title: 'Nuls', value: 'draws' },
-			{ title: 'Défaites', value: 'defeats' },
-			{ title: 'Talent', value: 'talent' },
-			{ title: 'Combats test', value: 'test_fights' },
-			{ title: 'Trophées', value: 'trophies' },
-        ]
-		headersSupervisor = [
-			{ title: 'Membre', value: 'name' },
-			{ title: 'Équipe', value: 'team' },
-			{ title: 'Niveau', value: 'total_level' },
-			{ title: 'Combats', value: 'fights' },
-			{ title: 'Restants', value: 'day_fight' },
-			{ title: 'Victoires', value: 'wins' },
-			{ title: 'Nuls', value: 'draws' },
-			{ title: 'Défaites', value: 'defeats' },
-			{ title: 'Talent', value: 'talent' },
-			{ title: 'Tests', value: 'test_fights' },
-			{ title: 'Trophées', value: 'trophies' },
-			{ title: 'Actions', value: 'give' },
-        ]
+	const { t } = useI18n()
+	const route = useRoute()
+	const router = useRouter()
 
-		headersDialog: any = []
-		headersDialogEmails = [
-          { text: 'Membre', value: 'name' },
-          { text: 'Poireau', value: 'leek' },
-        //   { text: 'Équipe', value: 'team' },
-		  { text: 'Email', value: 'mail' },
-		  { text: 'Actions', value: 'actions', sortable: false },
-        ]
+	const group = ref<Group | null>(null)
+	const settingsDialog = ref(false)
+	const renameGroupName = ref('')
+	const equipmentEditing = ref(false)
+	const weaponsDialog = ref(false)
+	const draggedWeapon = ref<number | null>(null)
+	const draggedWeaponLocation = ref<string | null>(null)
+	const chipsDialog = ref(false)
+	const draggedChip = ref<number | null>(null)
+	const draggedChipLocation = ref<string | null>(null)
+	const capitalDialogOpened = ref(false)
+	const applyingEquipment = ref(false)
+	const membersDialog = ref(false)
+	const characteristics = reactive<{[key: string]: number}>({})
+	const deleteMemberDialog = ref(false)
+	const memberToDelete = ref<Member | null>(null)
+	const giveItemDialog = ref(false)
+	const giveItemTab = ref('tab-0')
+	const giveItemConfirmDialog = ref(false)
+	const itemToGive = ref<any>(null)
+	const giveItemTarget = ref<Member | null>(null)
+	const giveMoneyDialog = ref(false)
+	const giveMoneyTarget = ref<Member | null>(null)
+	const giveMoneyAmount = ref(0)
+	const giveFightsAmount = ref(0)
 
-		headersDialogPassword = [
-          { text: 'Membre', value: 'name' },
-          { text: 'Poireau', value: 'leek' },
-        //   { text: 'Équipe', value: 'team' },
-		  { text: 'Mot de passe', value: 'password' },
-		  { text: 'Actions', value: 'actions', sortable: false },
-        ]
+	const headers = [
+		{ title: 'Membre', value: 'name' },
+		{ title: 'Équipe', value: 'team' },
+		{ title: 'Niveau', value: 'total_level' },
+		{ title: 'Combats', value: 'fights' },
+		{ title: 'Restants', value: 'day_fight' },
+		{ title: 'Victoires', value: 'wins' },
+		{ title: 'Nuls', value: 'draws' },
+		{ title: 'Défaites', value: 'defeats' },
+		{ title: 'Talent', value: 'talent' },
+		{ title: 'Combats test', value: 'test_fights' },
+		{ title: 'Trophées', value: 'trophies' },
+	]
+	const headersSupervisor = [
+		{ title: 'Membre', value: 'name' },
+		{ title: 'Équipe', value: 'team' },
+		{ title: 'Niveau', value: 'total_level' },
+		{ title: 'Combats', value: 'fights' },
+		{ title: 'Restants', value: 'day_fight' },
+		{ title: 'Victoires', value: 'wins' },
+		{ title: 'Nuls', value: 'draws' },
+		{ title: 'Défaites', value: 'defeats' },
+		{ title: 'Talent', value: 'talent' },
+		{ title: 'Tests', value: 'test_fights' },
+		{ title: 'Trophées', value: 'trophies' },
+		{ title: 'Actions', value: 'give' },
+	]
 
-		itemCategories = [
-			{name: 'weapons', icon: 'mdi-pistol'},
-			{name: 'chips', icon: 'mdi-chip'},
-			// {name: 'hats', icon: 'mdi-hat-fedora'}
-		]
+	const headersDialog = ref<any[]>([])
+	const headersDialogEmails = [
+		{ text: 'Membre', value: 'name' },
+		{ text: 'Poireau', value: 'leek' },
+		{ text: 'Email', value: 'mail' },
+		{ text: 'Actions', value: 'actions', sortable: false },
+	]
 
-		get group_id() {
-			return this.$route.params.id
+	const headersDialogPassword = [
+		{ text: 'Membre', value: 'name' },
+		{ text: 'Poireau', value: 'leek' },
+		{ text: 'Mot de passe', value: 'password' },
+		{ text: 'Actions', value: 'actions', sortable: false },
+	]
+
+	const itemCategories = [
+		{name: 'weapons', icon: 'mdi-pistol'},
+		{name: 'chips', icon: 'mdi-chip'},
+	]
+
+	const group_id = computed(() => route.params.id)
+	const availableWeapons = computed(() => Object.values(LeekWars.weapons).filter(w => LeekWars.items[w.item].market))
+	const availableChips = computed(() => Object.values(CHIPS).sort((a, b) => a.level - b.level).filter(w => LeekWars.items[w.id].market))
+
+	LeekWars.get('groupe/get/' + group_id.value).then(g => {
+		group.value = g
+		headersDialog.value = g.use_passwords ? headersDialogPassword : headersDialogEmails
+		characteristics['level'] = g.level
+		characteristics['baseLife'] = 100 + (g.level - 1) * 3
+		for (const charac of LeekWars.characteristics) {
+			characteristics[charac] = g[charac]
 		}
-		get availableWeapons() {
-			return Object.values(LeekWars.weapons).filter(w => LeekWars.items[w.item].market)
+		for (const member of g.members) {
+			member.give = {}
 		}
-		get availableChips() {
-			return Object.values(CHIPS).sort((a, b) => a.level - b.level).filter(w => LeekWars.items[w.id].market)
+		renameGroupName.value = g.name
+		LeekWars.setTitle(g.name)
+		emitter.emit('loaded')
+	})
+
+	function sendMessage(farmer: Member) {
+		LeekWars.get('message/find-conversation/' + farmer.id).then(conversation => {
+			store.commit('new-conversation', conversation)
+			router.push('/chat/' + conversation.id)
+		}).error(() => {
+			router.push('/chat/new/' + farmer.id + '/' + farmer.name + '/' + farmer.avatar_changed)
+		})
+	}
+
+	function renameGroup() {}
+
+	function startBattleRoyale() {
+		if (!group.value) { return }
+		LeekWars.post('groupe/start-battle-royale', { group_id: group.value.id }).then(data => {
+			router.push('/fight/' + data.fight)
+		}).error(error => LeekWars.toast(t(error.error)))
+	}
+
+	function startTournament() {
+		if (!group.value) { return }
+		LeekWars.post('groupe/start-solo-tournament', { group_id: group.value.id }).then(data => {
+			router.push('/tournament/' + data.tournament)
+		}).error(error => LeekWars.toast(t(error.error)))
+	}
+
+	function startTeamTournament() {
+		if (!group.value) { return }
+		LeekWars.post('groupe/start-team-tournament', { group_id: group.value.id }).then(data => {
+			router.push('/tournament/' + data.tournament)
+		}).error(error => LeekWars.toast(t(error.error)))
+	}
+
+	function settingPut(setting: string, enabled: boolean) {
+		if (!group.value) return
+		LeekWars.put('groupe/setting-' + setting, { group_id: group.value.id, enabled })
+	}
+
+	function updateSettingChat() { settingPut('chat', group.value!.setting_chat) }
+	function updateSettingBank() { settingPut('bank', group.value!.setting_bank) }
+	function updateSettingPublicChat() { settingPut('public-chat', group.value!.setting_public_chat) }
+	function updateSettingBuyFights() { settingPut('buy-fights', group.value!.setting_buy_fights) }
+	function updateSettingTournaments() { settingPut('tournaments', group.value!.setting_tournaments) }
+	function updateSettingBr() { settingPut('br', group.value!.setting_br) }
+	function updateXpBlocked() { settingPut('xp-blocked', group.value!.setting_xp_blocked) }
+	function updateEquipmentBlocked() { settingPut('equipment-blocked', group.value!.setting_equipment_blocked) }
+	function updateNewLeek() { settingPut('new-leek', group.value!.setting_new_leek) }
+
+	function dragOver(e: DragEvent) {
+		e.preventDefault()
+	}
+
+	const orderedWeapons = computed(() => {
+		if (!group.value) return []
+		return [...group.value.weapons].sort((weaponA, weaponB) => {
+			return LeekWars.items[weaponA].level - LeekWars.items[weaponB].level
+		})
+	})
+
+	const farmer_weapons = computed(() => {
+		return Object.values(LeekWars.weapons).sort((weaponA, weaponB) => {
+			return LeekWars.items[weaponA.item].level - LeekWars.items[weaponB.item].level
+		}).map(weapon => weapon.item)
+	})
+
+	const hasForgottenWeapon = computed(() => {
+		if (!group.value) { return false }
+		for (const weapon of group.value.weapons) {
+			if (LeekWars.weapons[LeekWars.items[weapon].params].forgotten) { return true }
 		}
+		return false
+	})
 
-		created() {
-			LeekWars.get('groupe/get/' + this.group_id).then(group => {
-				this.group = group
-				this.headersDialog = group.use_passwords ? this.headersDialogPassword : this.headersDialogEmails
-				this.characteristics['level'] = group.level
-				this.characteristics['baseLife'] = 100 + (group.level - 1) * 3
-				for (const charac of LeekWars.characteristics) {
-					this.characteristics[charac] = group[charac]
-				}
-				for (const member of group.members) {
-					member.give = {}
-				}
-				this.renameGroupName = group.name
-				LeekWars.setTitle(group.name)
-				emitter.emit('loaded')
-			})
+	function weaponDragStart(location: string, weapon: number, _e: DragEvent) {
+		if (group.value && LeekWars.items[weapon].level > group.value.level) { return }
+		const forgotten = LeekWars.weapons[LeekWars.items[weapon].params].forgotten
+		if (location === 'farmer' && hasForgottenWeapon.value && forgotten) { return }
+		draggedWeapon.value = weapon
+		draggedWeaponLocation.value = location
+	}
+
+	function weaponDragEnd(_weapon: Weapon) {
+		draggedWeapon.value = null
+	}
+
+	function addWeapon(weapon: number) {
+		if (!group.value) { return }
+		const template = LeekWars.items[weapon]
+		if (group.value.weapons.length >= max_weapons.value) {
+			return LeekWars.toast(t('error_max_weapon', [group.value.name]))
 		}
-
-		sendMessage(farmer: Member) {
-			LeekWars.get('message/find-conversation/' + farmer.id).then(conversation => {
-				store.commit('new-conversation', conversation)
-				this.$router.push('/chat/' + conversation.id)
-			}).error(() => {
-				this.$router.push('/chat/new/' + farmer.id + '/' + farmer.name + '/' + farmer.avatar_changed)
-			})
+		if (template.level > group.value.level) {
+			return LeekWars.toast(t('error_under_required_level_weapon', [group.value.name]))
 		}
-
-		renameGroup() {
-
+		if (group.value.weapons.some((w) => w === template.id)) {
+			return LeekWars.toast(t('error_weapon_already_equipped', [group.value.name]))
 		}
-
-		startBattleRoyale() {
-			if (!this.group) { return }
-			LeekWars.post('groupe/start-battle-royale', { group_id: this.group.id }).then(data => {
-				this.$router.push('/fight/' + data.fight)
-			}).error(error => LeekWars.toast(this.$t(error.error)))
+		if (hasForgottenWeapon.value && LeekWars.weapons[LeekWars.items[weapon].params].forgotten) {
+			return LeekWars.toast(t('error_weapon_two_forgotten', [group.value.name]))
 		}
+		group.value.weapons.push(weapon)
+	}
 
-		startTournament() {
-			if (!this.group) { return }
-			LeekWars.post('groupe/start-solo-tournament', { group_id: this.group.id }).then(data => {
-				this.$router.push('/tournament/' + data.tournament)
-			}).error(error => LeekWars.toast(this.$t(error.error)))
+	function removeWeapon(weapon: number) {
+		if (!group.value) { return }
+		group.value.weapons.splice(group.value.weapons.indexOf(weapon), 1)
+	}
+
+	function weaponsDrop(location: string, e: DragEvent) {
+		if (!draggedWeapon.value) { return }
+		if (location === 'farmer' && draggedWeaponLocation.value === 'leek') {
+			removeWeapon(draggedWeapon.value)
+		} else if (location === 'leek' && draggedWeaponLocation.value === 'farmer') {
+			addWeapon(draggedWeapon.value)
 		}
+		draggedWeapon.value = null
+		e.preventDefault()
+		return false
+	}
 
-		startTeamTournament() {
-			if (!this.group) { return }
-			LeekWars.post('groupe/start-team-tournament', { group_id: this.group.id }).then(data => {
-				this.$router.push('/tournament/' + data.tournament)
-			}).error(error => LeekWars.toast(this.$t(error.error)))
+	const farmer_chips = computed(() => {
+		return Object.values(LeekWars.chipTemplates).sort((a, b) => {
+			return LeekWars.items[a.item].level - LeekWars.items[b.item].level
+		}).map(chip => chip.item)
+	})
+
+	const orderedChips = computed(() => {
+		if (!group.value) return []
+		return [...group.value.chips].sort((chipA, chipB) => {
+			return ORDERED_CHIPS[chipA] - ORDERED_CHIPS[chipB]
+		})
+	})
+
+	function chipDragStart(location: string, chip: number, _e: DragEvent) {
+		if (group.value && CHIPS[chip].level > group.value.level) { return }
+		draggedChip.value = chip
+		draggedChipLocation.value = location
+	}
+
+	function chipDragEnd(_chip: number) {
+		draggedChip.value = null
+	}
+
+	function addChip(chip: number) {
+		if (!group.value) { return }
+		const template = CHIPS[chip]
+		if (group.value.chips.length >= group.value.ram) {
+			return LeekWars.toast(t('error_max_chip', [group.value.name]))
 		}
+		if (template.level > group.value.level) {
+			return LeekWars.toast(t('error_under_required_level_chip', [group.value.name]))
+		}
+		if (group.value.chips.some((c) => c === template.id)) {
+			return LeekWars.toast(t('error_chip_already_equipped', [group.value.name]))
+		}
+		group.value.chips.push(chip)
+	}
 
-		updateSettingChat() {
-			if (this.group) {
-				LeekWars.put('groupe/setting-chat', { group_id: this.group.id, enabled: this.group.setting_chat })
+	function removeChip(chip: number) {
+		if (!group.value) { return }
+		group.value.chips.splice(group.value.chips.indexOf(chip), 1)
+	}
+
+	function chipsDrop(location: string, e: DragEvent) {
+		if (!draggedChip.value) { return }
+		if (location === 'farmer' && draggedChipLocation.value === 'leek') {
+			removeChip(draggedChip.value)
+		} else if (location === 'leek' && draggedChipLocation.value === 'farmer') {
+			addChip(draggedChip.value)
+		}
+		draggedChip.value = null
+		e.preventDefault()
+		return false
+	}
+
+	const totalCapital = computed(() => group.value ? 50 + (group.value.level - 1) * 5 + Math.floor(group.value.level / 100) * 45 + (group.value.level === 301 ? 95 : 0) : 0)
+
+	function changeLevel(e: any) {
+		if (group.value) {
+			group.value.level = parseInt(e.target!.value)
+			if (group.value.level < 1) group.value.level = 1
+			if (group.value.level > 301) group.value.level = 301
+			characteristics['level'] = group.value.level
+			characteristics['baseLife'] = 100 + (group.value.level - 1) * 3
+			if (characteristics.life < characteristics.baseLife) {
+				characteristics['life'] = characteristics.baseLife
 			}
-		}
-
-		updateSettingBank() {
-			if (this.group) {
-				LeekWars.put('groupe/setting-bank', { group_id: this.group.id, enabled: this.group.setting_bank })
-			}
-		}
-
-		updateSettingPublicChat() {
-			if (this.group) {
-				LeekWars.put('groupe/setting-public-chat', { group_id: this.group.id, enabled: this.group.setting_public_chat })
-			}
-		}
-
-		updateSettingBuyFights() {
-			if (this.group) {
-				LeekWars.put('groupe/setting-buy-fights', { group_id: this.group.id, enabled: this.group.setting_buy_fights })
-			}
-		}
-
-		updateSettingTournaments() {
-			if (this.group) {
-				LeekWars.put('groupe/setting-tournaments', { group_id: this.group.id, enabled: this.group.setting_tournaments })
-			}
-		}
-
-		updateSettingBr() {
-			if (this.group) {
-				LeekWars.put('groupe/setting-br', { group_id: this.group.id, enabled: this.group.setting_br })
-			}
-		}
-
-		updateXpBlocked() {
-			if (this.group) {
-				LeekWars.put('groupe/setting-xp-blocked', { group_id: this.group.id, enabled: this.group.setting_xp_blocked })
-			}
-		}
-
-		updateEquipmentBlocked() {
-			if (this.group) {
-				LeekWars.put('groupe/setting-equipment-blocked', { group_id: this.group.id, enabled: this.group.setting_equipment_blocked })
-			}
-		}
-
-		updateNewLeek() {
-			if (this.group) {
-				LeekWars.put('groupe/setting-new-leek', { group_id: this.group.id, enabled: this.group.setting_new_leek })
-			}
-		}
-
-		dragOver(e: DragEvent) {
-			e.preventDefault()
-		}
-
-		get orderedWeapons() {
-			if (!this.group) return []
-			return [...this.group.weapons].sort((weaponA, weaponB) => {
-				return LeekWars.items[weaponA].level - LeekWars.items[weaponB].level
-			})
-		}
-
-		get farmer_weapons() {
-			return Object.values(LeekWars.weapons).sort((weaponA, weaponB) => {
-				return LeekWars.items[weaponA.item].level - LeekWars.items[weaponB.item].level
-			}).map(weapon => weapon.item)
-		}
-
-		get hasForgottenWeapon() {
-			if (!this.group) { return false }
-			for (const weapon of this.group.weapons) {
-				if (LeekWars.weapons[LeekWars.items[weapon].params].forgotten) { return true }
-			}
-			return false
-		}
-
-		weaponDragStart(location: string, weapon: number, e: DragEvent) {
-			if (this.group && LeekWars.items[weapon].level > this.group.level) { return }
-			const forgotten = LeekWars.weapons[LeekWars.items[weapon].params].forgotten
-			if (location === 'farmer' && this.hasForgottenWeapon && forgotten) { return }
-			this.draggedWeapon = weapon
-			this.draggedWeaponLocation = location
-		}
-
-		weaponDragEnd(weapon: Weapon) {
-			this.draggedWeapon = null
-		}
-
-		addWeapon(weapon: number) {
-			if (!this.group) { return }
-			const template = LeekWars.items[weapon]
-			if (this.group.weapons.length >= this.max_weapons) {
-				return LeekWars.toast(this.$i18n.t('error_max_weapon', [this.group.name]))
-			}
-			if (template.level > this.group.level) {
-				return LeekWars.toast(this.$i18n.t('error_under_required_level_weapon', [this.group.name]))
-			}
-			if (this.group.weapons.some((w) => w === template.id)) {
-				return LeekWars.toast(this.$i18n.t('error_weapon_already_equipped', [this.group.name]))
-			}
-			if (this.hasForgottenWeapon && LeekWars.weapons[LeekWars.items[weapon].params].forgotten) {
-				return LeekWars.toast(this.$i18n.t('error_weapon_two_forgotten', [this.group.name]))
-			}
-			this.group.weapons.push(weapon)
-		}
-
-		removeWeapon(weapon: number) {
-			if (!this.group) { return }
-			this.group.weapons.splice(this.group.weapons.indexOf(weapon), 1)
-		}
-
-		weaponsDrop(location: string, e: DragEvent) {
-			if (!this.draggedWeapon) { return }
-			if (location === 'farmer' && this.draggedWeaponLocation === 'leek') {
-				this.removeWeapon(this.draggedWeapon)
-			} else if (location === 'leek' && this.draggedWeaponLocation === 'farmer') {
-				this.addWeapon(this.draggedWeapon)
-			}
-			this.draggedWeapon = null
-			e.preventDefault()
-			return false
-		}
-
-		get farmer_chips() {
-			return Object.values(LeekWars.chipTemplates).sort((a, b) => {
-				return LeekWars.items[a.item].level - LeekWars.items[b.item].level
-			}).map(chip => chip.item)
-		}
-
-		get orderedChips() {
-			if (!this.group) return []
-			return [...this.group.chips].sort((chipA, chipB) => {
-				return ORDERED_CHIPS[chipA] - ORDERED_CHIPS[chipB]
-			})
-		}
-
-		chipDragStart(location: string, chip: number, e: DragEvent) {
-			if (this.group && CHIPS[chip].level > this.group.level) { return }
-			this.draggedChip = chip
-			this.draggedChipLocation = location
-		}
-
-		chipDragEnd(chip: number) {
-			this.draggedChip = null
-		}
-
-		addChip(chip: number) {
-			if (!this.group) { return }
-			const template = CHIPS[chip]
-			if (this.group.chips.length >= this.group.ram) {
-				return LeekWars.toast(this.$i18n.t('error_max_chip', [this.group.name]))
-			}
-			if (template.level > this.group.level) {
-				return LeekWars.toast(this.$i18n.t('error_under_required_level_chip', [this.group.name]))
-			}
-			if (this.group.chips.some((c) => c === template.id)) {
-				return LeekWars.toast(this.$i18n.t('error_chip_already_equipped', [this.group.name]))
-			}
-			this.group.chips.push(chip)
-		}
-
-		removeChip(chip: number) {
-			if (!this.group) { return }
-			this.group.chips.splice(this.group.chips.indexOf(chip), 1)
-		}
-
-		chipsDrop(location: string, e: DragEvent) {
-			if (!this.draggedChip) { return }
-			if (location === 'farmer' && this.draggedChipLocation === 'leek') {
-				this.removeChip(this.draggedChip)
-			} else if (location === 'leek' && this.draggedChipLocation === 'farmer') {
-				this.addChip(this.draggedChip)
-			}
-			this.draggedChip = null
-			e.preventDefault()
-			return false
-		}
-
-		get totalCapital() {
-			return this.group ? 50 + (this.group.level - 1) * 5 + Math.floor(this.group.level / 100) * 45 + (this.group.level === 301 ? 95 : 0) : 0
-		}
-
-		changeLevel(e: any) {
-			if (this.group) {
-				this.group.level = parseInt(e.target!.value)
-				if (this.group.level < 1) this.group.level = 1
-				if (this.group.level > 301) this.group.level = 301
-				this.characteristics['level'] = this.group.level
-				this.characteristics['baseLife'] = 100 + (this.group.level - 1) * 3
-				if (this.characteristics.life < this.characteristics.baseLife) {
-					this.characteristics['life'] = this.characteristics.baseLife
-				}
-			}
-		}
-
-		saveEquipment() {
-			if (this.group) {
-				LeekWars.put('groupe/equipment', {
-					group_id: this.group.id,
-					level: this.group.level,
-					characteristics: JSON.stringify(this.characteristics),
-					weapons: JSON.stringify(this.group.weapons),
-					chips: JSON.stringify(this.group.chips)
-				}).then(d => {
-					this.equipmentEditing = false
-					LeekWars.toast(this.$t('saved'))
-				}).error(error => {
-					LeekWars.toast(this.$t(error.error, error.params))
-				})
-			}
-		}
-
-		get max_weapons() {
-			if (!this.group) { return 1 }
-			if (this.group.level < 100) return 2;
-			if (this.group.level < 200) return 3;
-			return 4;
-		}
-
-		applyEquipment() {
-			if (this.group && !this.applyingEquipment) {
-				this.applyingEquipment = true
-				LeekWars.post('groupe/apply-equipment', { group_id: this.group.id }).then(d => {
-					this.applyingEquipment = false
-					LeekWars.toast(this.$t('applied'))
-				}).error(error => {
-					this.applyingEquipment = false
-					LeekWars.toast(this.$t(error.error))
-				})
-			}
-		}
-
-		addMember() {
-			if (!this.group) { return }
-			LeekWars.post('groupe/create-member', { group_id: this.group.id }).then(member => {
-				if (this.group) {
-					this.group.members.push(member)
-				}
-			}).error(error => {
-				LeekWars.toast(this.$t(error.error))
-			})
-		}
-
-		removeMember() {
-			if (!this.group || !this.memberToDelete) { return }
-			LeekWars.delete('groupe/remove-member', { group_id: this.group.id, member_id: this.memberToDelete.id }).then(member => {
-				if (this.group && this.memberToDelete) {
-					this.group.members.splice(this.group.members.indexOf(this.memberToDelete), 1)
-					this.deleteMemberDialog = false
-				}
-			}).error(error => {
-				LeekWars.toast(this.$t(error.error))
-			})
-		}
-
-		sendInvite(member: Member) {
-			if (!this.group) { return }
-			LeekWars.post('groupe/send-invite', { group_id: this.group.id, member_id: member.id }).then(member => {
-				LeekWars.toast(this.$t('invite_sent'))
-			}).error(error => {
-				LeekWars.toast(this.$t(error.error))
-			})
-		}
-
-		updateMemberName(member: Member) {
-			if (!this.group) { return }
-			LeekWars.put('groupe/member-name', {
-				group_id: this.group.id,
-				member_id: member.id,
-				name: member.name,
-			}).then(result => {
-				delete member['name_error']
-			}).error(error => {
-				delete member['name_error']
-				member['name_error'] = error
-			})
-		}
-
-		updateMemberLeekName(member: Member) {
-			if (!this.group) { return }
-			LeekWars.put('groupe/member-leek-name', {
-				group_id: this.group.id,
-				member_id: member.id,
-				leek_name: member.leek,
-			}).then(result => {
-				delete member['leek_error']
-			}).error(error => {
-				delete member['leek_error']
-				member['leek_error'] = error
-			})
-		}
-
-		updateMemberEmail(member: Member) {
-			if (!this.group || !member.mail) { return }
-			LeekWars.put('groupe/member-email', {
-				group_id: this.group.id,
-				member_id: member.id,
-				email: member.mail
-			}).then(result => {
-				delete member['mail_error']
-			}).error(error => {
-				delete member['mail_error']
-				member['mail_error'] = error
-			})
-		}
-
-		updateMemberPassword(member: Member) {
-			if (!this.group || !member.password) { return }
-			LeekWars.put('groupe/member-password', {
-				group_id: this.group.id,
-				member_id: member.id,
-				password: member.password
-			}).then(result => {
-				delete member['password_error']
-			}).error(error => {
-				delete member['password_error']
-				member['password_error'] = error
-			})
-		}
-
-		giveItem(member: Member) {
-			this.giveItemDialog = true
-			this.giveItemTarget = member
-		}
-
-		giveItemConfirm(itemID: number) {
-			// console.log("give", itemID, LeekWars.items[itemID])
-			this.itemToGive = LeekWars.items[itemID]
-			this.giveItemConfirmDialog = true
-		}
-
-		giveItemFinal() {
-			if (!this.group || !this.giveItemTarget) { return }
-			LeekWars.post('groupe/give-item', {
-				group_id: this.group.id,
-				member_id: this.giveItemTarget.id,
-				item_id: this.itemToGive.id
-			})
-			this.giveItemConfirmDialog = false
-			this.giveItemDialog = false
-		}
-
-		giveMoney(member: Member) {
-			this.giveMoneyDialog = true
-			this.giveMoneyTarget = member
-		}
-
-		giveMoneyConfirm() {
-			if (!this.group) { return }
-			if (this.giveMoneyTarget) {
-				LeekWars.post('groupe/give-money-fights', {
-					group_id: this.group.id,
-					member_id: this.giveMoneyTarget!.id,
-					amount: this.giveMoneyAmount,
-					fights: this.giveFightsAmount,
-				})
-			} else {
-				LeekWars.post('groupe/give-money-fights-all', {
-					group_id: this.group.id,
-					amount: this.giveMoneyAmount,
-					fights: this.giveFightsAmount,
-				})
-			}
-			this.giveMoneyDialog = false
-			this.giveMoneyTarget = null
 		}
 	}
+
+	function saveEquipment() {
+		if (group.value) {
+			LeekWars.put('groupe/equipment', {
+				group_id: group.value.id,
+				level: group.value.level,
+				characteristics: JSON.stringify(characteristics),
+				weapons: JSON.stringify(group.value.weapons),
+				chips: JSON.stringify(group.value.chips)
+			}).then(() => {
+				equipmentEditing.value = false
+				LeekWars.toast(t('saved'))
+			}).error(error => {
+				LeekWars.toast(t(error.error, error.params))
+			})
+		}
+	}
+
+	const max_weapons = computed(() => {
+		if (!group.value) { return 1 }
+		if (group.value.level < 100) return 2
+		if (group.value.level < 200) return 3
+		return 4
+	})
+
+	function applyEquipment() {
+		if (group.value && !applyingEquipment.value) {
+			applyingEquipment.value = true
+			LeekWars.post('groupe/apply-equipment', { group_id: group.value.id }).then(() => {
+				applyingEquipment.value = false
+				LeekWars.toast(t('applied'))
+			}).error(error => {
+				applyingEquipment.value = false
+				LeekWars.toast(t(error.error))
+			})
+		}
+	}
+
+	function addMember() {
+		if (!group.value) { return }
+		LeekWars.post('groupe/create-member', { group_id: group.value.id }).then(member => {
+			if (group.value) {
+				group.value.members.push(member)
+			}
+		}).error(error => {
+			LeekWars.toast(t(error.error))
+		})
+	}
+
+	function removeMember() {
+		if (!group.value || !memberToDelete.value) { return }
+		LeekWars.delete('groupe/remove-member', { group_id: group.value.id, member_id: memberToDelete.value.id }).then(() => {
+			if (group.value && memberToDelete.value) {
+				group.value.members.splice(group.value.members.indexOf(memberToDelete.value), 1)
+				deleteMemberDialog.value = false
+			}
+		}).error(error => {
+			LeekWars.toast(t(error.error))
+		})
+	}
+
+	function sendInvite(member: Member) {
+		if (!group.value) { return }
+		LeekWars.post('groupe/send-invite', { group_id: group.value.id, member_id: member.id }).then(() => {
+			LeekWars.toast(t('invite_sent'))
+		}).error(error => {
+			LeekWars.toast(t(error.error))
+		})
+	}
+
+	function updateMemberName(member: Member) {
+		if (!group.value) { return }
+		LeekWars.put('groupe/member-name', {
+			group_id: group.value.id,
+			member_id: member.id,
+			name: member.name,
+		}).then(() => {
+			delete (member as any).name_error
+		}).error(error => {
+			delete (member as any).name_error
+			;(member as any).name_error = error
+		})
+	}
+
+	function updateMemberLeekName(member: Member) {
+		if (!group.value) { return }
+		LeekWars.put('groupe/member-leek-name', {
+			group_id: group.value.id,
+			member_id: member.id,
+			leek_name: (member as any).leek,
+		}).then(() => {
+			delete (member as any).leek_error
+		}).error(error => {
+			delete (member as any).leek_error
+			;(member as any).leek_error = error
+		})
+	}
+
+	function updateMemberEmail(member: Member) {
+		if (!group.value || !member.mail) { return }
+		LeekWars.put('groupe/member-email', {
+			group_id: group.value.id,
+			member_id: member.id,
+			email: member.mail
+		}).then(() => {
+			delete (member as any).mail_error
+		}).error(error => {
+			delete (member as any).mail_error
+			;(member as any).mail_error = error
+		})
+	}
+
+	function updateMemberPassword(member: Member) {
+		if (!group.value || !(member as any).password) { return }
+		LeekWars.put('groupe/member-password', {
+			group_id: group.value.id,
+			member_id: member.id,
+			password: (member as any).password
+		}).then(() => {
+			delete (member as any).password_error
+		}).error(error => {
+			delete (member as any).password_error
+			;(member as any).password_error = error
+		})
+	}
+
+	function giveItem(member: Member) {
+		giveItemDialog.value = true
+		giveItemTarget.value = member
+	}
+
+	function giveItemConfirm(itemID: number) {
+		itemToGive.value = LeekWars.items[itemID]
+		giveItemConfirmDialog.value = true
+	}
+
+	function giveItemFinal() {
+		if (!group.value || !giveItemTarget.value) { return }
+		LeekWars.post('groupe/give-item', {
+			group_id: group.value.id,
+			member_id: giveItemTarget.value.id,
+			item_id: itemToGive.value.id
+		})
+		giveItemConfirmDialog.value = false
+		giveItemDialog.value = false
+	}
+
+	function giveMoney(member: Member) {
+		giveMoneyDialog.value = true
+		giveMoneyTarget.value = member
+	}
+
+	function giveMoneyConfirm() {
+		if (!group.value) { return }
+		if (giveMoneyTarget.value) {
+			LeekWars.post('groupe/give-money-fights', {
+				group_id: group.value.id,
+				member_id: giveMoneyTarget.value!.id,
+				amount: giveMoneyAmount.value,
+				fights: giveFightsAmount.value,
+			})
+		} else {
+			LeekWars.post('groupe/give-money-fights-all', {
+				group_id: group.value.id,
+				amount: giveMoneyAmount.value,
+				fights: giveFightsAmount.value,
+			})
+		}
+		giveMoneyDialog.value = false
+		giveMoneyTarget.value = null
+	}
 </script>
+
 
 <style lang="scss" scoped>
 h4 {
