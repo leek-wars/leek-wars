@@ -410,6 +410,7 @@ function save() {
 }
 
 function saveViewState(aiId?: number) {
+	if (!editor) return
 	const id = aiId ?? currentAiPath
 	if (!id) return
 	const viewState = editor.saveViewState()
