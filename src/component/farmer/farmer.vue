@@ -606,7 +606,7 @@
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
 	import { Team, TeamMemberLevel } from '@/model/team'
-	import { mixins, i18n } from '@/model/i18n'
+	import { mixins } from '@/model/i18n'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
@@ -627,7 +627,7 @@
 		RichTooltipFarmer, RichTooltipTeam, RichTooltipLeek, FightsHistory, TournamentsHistory, TitlePicker, ReportDialog, 'lw-title': LwTitle, 'rich-tooltip-item': RichTooltipItem, Line,
 	} })
 
-	const { t } = useI18n()
+	const { t, locale: i18nLocale } = useI18n()
 	const route = useRoute()
 	const router = useRouter()
 	const avatar = useTemplateRef<any>('avatar')
@@ -680,17 +680,18 @@
 		10000: { hat: 'gold_fedora', item: 280 },
 	}
 	const invitationSent = ref(false)
-	const xp_bar = ref(0)
 	const chartData = ref<ChartData | null>(null)
 	const chartOptions = ref<ChartOptions | null>(null)
 
-	const id = computed<any>(() => route.params.id ? parseInt(route.params.id as string, 10) : (store.state.farmer ? store.state.farmer.id : null))
+	const id = computed<number | null>(() => route.params.id ? parseInt(route.params.id as string, 10) : (store.state.farmer ? store.state.farmer.id : null))
 	const myFarmer = computed(() => store.state.farmer && id.value === store.state.farmer.id)
 
 	const safeWebsite = computed(() => {
 		if (!farmer.value) return null
 		const url = LeekWars.safeUrl(farmer.value.website)
 		if (!url) return null
+		// Block links to our own API so a profile can't be used to trigger
+		// authenticated GET requests when a visitor clicks the website link.
 		if (/^(https:\/\/leekwars.\w+)?\/api\//.test(url)) return null
 		return url
 	})
@@ -856,7 +857,7 @@
 		if (farmer.value.trophies_list) {
 			trophies.value = farmer.value.trophies_list
 		} else {
-			LeekWars.get('trophy/get-farmer-trophies/' + farmer.value.id + '/' + i18n.global.locale).then(data => {
+			LeekWars.get('trophy/get-farmer-trophies/' + farmer.value.id + '/' + i18nLocale.value).then(data => {
 				trophies.value = data.trophies
 				if (myFarmer.value) {
 					store.commit('set-trophies', data.trophies)
@@ -947,7 +948,7 @@
 
 	function createTeam() {
 		LeekWars.post('team/create', {team_name: createTeamName.value}).then(data => {
-			LeekWars.toast(i18n.global.t('team_created'))
+			LeekWars.toast(t('team_created'))
 			createTeamDialog.value = false
 			const team = new Team()
 			team.id = data.id
@@ -957,7 +958,7 @@
 			team.opened = true
 			store.commit('create-team', team)
 		}).error(error => {
-			LeekWars.toast(i18n.global.t(error.error))
+			LeekWars.toast(t(error.error))
 		})
 	}
 
@@ -970,36 +971,36 @@
 				if (!me.team.sent_invitations) me.team.sent_invitations = []
 				me.team.sent_invitations.push(farmer.value!.id)
 			}
-			LeekWars.toast(i18n.global.t('invitation_sent'))
+			LeekWars.toast(t('invitation_sent'))
 		}).error(error => {
-			LeekWars.toast(i18n.global.t(error.error))
+			LeekWars.toast(t(error.error))
 		})
 	}
 
 	function acceptInvitation(invitation: any) {
 		LeekWars.post('team/accept-invitation', {invitation_id: invitation.id}).then(() => {
-			LeekWars.toast(i18n.global.t('invitation_accepted'))
+			LeekWars.toast(t('invitation_accepted'))
 			router.push('/team/' + invitation.team_id)
 		}).error(error => {
-			LeekWars.toast(i18n.global.t(error.error))
+			LeekWars.toast(t(error.error))
 		})
 	}
 
 	function rejectInvitation(invitation: any) {
 		LeekWars.post('team/reject-invitation', {invitation_id: invitation.id}).then(() => {
 			if (farmer.value) {
-				LeekWars.toast(i18n.global.t('invitation_rejected'))
+				LeekWars.toast(t('invitation_rejected'))
 				farmer.value.team_invitations.splice(farmer.value.team_invitations.indexOf(invitation), 1)
 			}
 		}).error(error => {
-			LeekWars.toast(i18n.global.t(error.error))
+			LeekWars.toast(t(error.error))
 		})
 	}
 
 	function cancelCandidacy(candidacy: { team_id: number }) {
 		LeekWars.post('team/cancel-candidacy-for-team', { team_id: candidacy.team_id }).then(() => {
 			if (farmer.value) {
-				LeekWars.toast(i18n.global.t('candidacy_canceled'))
+				LeekWars.toast(t('candidacy_canceled'))
 				farmer.value.candidacies = farmer.value.candidacies.filter((c: any) => c.team_id !== candidacy.team_id)
 			}
 		}).error(error => {
@@ -1100,8 +1101,8 @@
 	}
 
 	const xp_bar_width = computed(() => {
-		if (!farmer.value) return xp_bar.value
-		return xp_bar.value = farmer.value.godsons_level >= 10_000 ? 100 : Math.min(100, farmer.value.godsons_level / 10_000 * 100)
+		if (!farmer.value) return 0
+		return farmer.value.godsons_level >= 10_000 ? 100 : Math.min(100, farmer.value.godsons_level / 10_000 * 100)
 	})
 </script>
 

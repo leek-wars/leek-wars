@@ -765,7 +765,7 @@
 	import { AI } from '@/model/ai'
 	import { Chip } from '@/model/chip'
 	import { Hat } from '@/model/hat'
-	import { mixins, i18n } from '@/model/i18n'
+	import { mixins } from '@/model/i18n'
 	import { ItemType } from '@/model/item'
 	import { Leek, Register } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
@@ -808,15 +808,14 @@
 	const { t } = useI18n()
 	const route = useRoute()
 	const router = useRouter()
-	const componentTooltipsRef = useTemplateRef<any[]>('componentTooltips')
-	const leekImage = useTemplateRef<any>('leekImage')
+	const componentTooltipsRef = useTemplateRef<InstanceType<typeof RichTooltipItem>[]>('componentTooltips')
+	const leekImage = useTemplateRef<InstanceType<typeof LeekImage>>('leekImage')
 
 	const leek = ref<Leek | null>(null)
 	const error = ref(false)
 	const weaponsDialog = ref(false)
 	const draggedWeapon = ref<Weapon | null>(null)
 	const draggedWeaponLocation = ref<string | null>(null)
-	const xp_bar = ref(0)
 	const renameDialog = ref(false)
 	const rename_price_habs = 10000000
 	const rename_price_crystals = 200
@@ -849,6 +848,7 @@
 	const tournamentRange = ref<any>(null)
 	let request: any = null
 	const MAX_COMPONENTS = 8
+	type DragArea = 'farmer' | 'leek'
 
 	const id = computed<number>(() => parseInt(route.params.id as string, 10) || (store.state.farmer ? LeekWars.first(store.state.farmer.leeks)!.id : 0))
 
@@ -863,8 +863,8 @@
 	})
 
 	const xp_bar_width = computed(() => {
-		if (!leek.value) return xp_bar.value
-		return xp_bar.value = leek.value.level === 301 ? 100 : Math.min(100, Math.floor(100 * (leek.value.xp - leek.value.down_xp) / (leek.value.up_xp - leek.value.down_xp)))
+		if (!leek.value) return 0
+		return leek.value.level === 301 ? 100 : Math.min(100, Math.floor(100 * (leek.value.xp - leek.value.down_xp) / (leek.value.up_xp - leek.value.down_xp)))
 	})
 
 	const blue_xp_bar = computed(() => leek.value ? leek.value.level === 301 : false)
@@ -1019,9 +1019,9 @@
 		if (leek.value) {
 			let up = false
 			for (const effect of template.effects) {
-				if (effect.type === 1) {
+				if (effect.type === PotionEffect.RESTAT) {
 					up = true
-				} else if (effect.type === 2) {
+				} else if (effect.type === PotionEffect.CHANGE_SKIN) {
 					const skin = effect.params[0]
 					leek.value.skin = skin
 					store.commit('change-skin', {leek: leek.value.id, skin})
@@ -1184,7 +1184,7 @@
 		if (reg.value !== value) {
 			reg.value = value
 			LeekWars.post('leek/set-register', {leek_id: leek.value.id, key: reg.key, value}).then(() => {
-				LeekWars.toast(i18n.global.t('register_saved'))
+				LeekWars.toast(t('register_saved'))
 			})
 		}
 	}
@@ -1193,11 +1193,11 @@
 		if (!leek.value) return
 		leek.value.registers.splice(leek.value.registers.indexOf(reg), 1)
 		LeekWars.delete('leek/delete-register', {leek_id: leek.value.id, key: reg.key}).then(() => {
-			LeekWars.toast(i18n.global.t('register_deleted'))
+			LeekWars.toast(t('register_deleted'))
 		})
 	}
 
-	function weaponDragStart(location: string, w: Weapon, _e: DragEvent) {
+	function weaponDragStart(location: DragArea, w: Weapon, _e: DragEvent) {
 		if (leek.value && LeekWars.items[w.template].level > leek.value.level) return
 		const forgotten = LeekWars.weapons[LeekWars.items[w.template].params].forgotten
 		if (location === 'farmer' && hasForgottenWeapon.value && forgotten) return
@@ -1211,16 +1211,16 @@
 		if (!leek.value) return
 		const template = LeekWars.items[w.template]
 		if (leek.value.weapons.length >= leek.value.max_weapons) {
-			return LeekWars.toast(i18n.global.t('error_max_weapon', [leek.value.name]))
+			return LeekWars.toast(t('error_max_weapon', [leek.value.name]))
 		}
 		if (template.level > leek.value.level) {
-			return LeekWars.toast(i18n.global.t('error_under_required_level_weapon', [leek.value.name]))
+			return LeekWars.toast(t('error_under_required_level_weapon', [leek.value.name]))
 		}
 		if (leek.value.weapons.some(x => x.template === template.id)) {
-			return LeekWars.toast(i18n.global.t('error_weapon_already_equipped', [leek.value.name]))
+			return LeekWars.toast(t('error_weapon_already_equipped', [leek.value.name]))
 		}
 		if (hasForgottenWeapon.value && LeekWars.weapons[LeekWars.items[w.template].params].forgotten) {
-			return LeekWars.toast(i18n.global.t('error_weapon_two_forgotten', [leek.value.name]))
+			return LeekWars.toast(t('error_weapon_two_forgotten', [leek.value.name]))
 		}
 		LeekWars.post('leek/add-weapon', {leek_id: leek.value.id, weapon_id: w.id}).then(data => {
 			if (leek.value) {
@@ -1237,7 +1237,7 @@
 		LeekWars.delete('leek/remove-weapon', {weapon_id: w.id}).error(err => LeekWars.toast(err))
 	}
 
-	function weaponsDrop(location: string, e: DragEvent) {
+	function weaponsDrop(location: DragArea, e: DragEvent) {
 		if (!draggedWeapon.value) return
 		if (location === 'farmer' && draggedWeaponLocation.value === 'leek') {
 			removeWeapon(draggedWeapon.value)
@@ -1249,7 +1249,7 @@
 		return false
 	}
 
-	function chipDragStart(location: string, c: Chip, _e: DragEvent) {
+	function chipDragStart(location: DragArea, c: Chip, _e: DragEvent) {
 		if (leek.value && CHIPS[c.template].level > leek.value.level) return
 		draggedChip.value = c
 		draggedChipLocation.value = location
@@ -1261,13 +1261,13 @@
 		if (!leek.value) return
 		const template = CHIPS[c.template]
 		if (leek.value.chips.length >= leek.value.total_ram) {
-			return LeekWars.toast(i18n.global.t('error_max_chip', [leek.value.name]))
+			return LeekWars.toast(t('error_max_chip', [leek.value.name]))
 		}
 		if (template.level > leek.value.level) {
-			return LeekWars.toast(i18n.global.t('error_under_required_level_chip', [leek.value.name]))
+			return LeekWars.toast(t('error_under_required_level_chip', [leek.value.name]))
 		}
 		if (leek.value.chips.some(x => x.template === template.id)) {
-			return LeekWars.toast(i18n.global.t('error_chip_already_equipped', [leek.value.name]))
+			return LeekWars.toast(t('error_chip_already_equipped', [leek.value.name]))
 		}
 		LeekWars.post('leek/add-chip', {leek_id: leek.value.id, chip_id: c.id}).then(data => {
 			if (leek.value) {
@@ -1284,7 +1284,7 @@
 		LeekWars.delete('leek/remove-chip', {chip_id: c.id}).error(err => LeekWars.toast(err))
 	}
 
-	function chipsDrop(location: string, e: DragEvent) {
+	function chipsDrop(location: DragArea, e: DragEvent) {
 		if (!draggedChip.value) return
 		if (location === 'farmer' && draggedChipLocation.value === 'leek') {
 			removeChip(draggedChip.value)
@@ -1296,7 +1296,7 @@
 		return false
 	}
 
-	function componentDragStart(location: string, c: any, _e: DragEvent) {
+	function componentDragStart(location: DragArea, c: any, _e: DragEvent) {
 		if (leek.value && LeekWars.items[c.template].level > leek.value.level) return
 		draggedComponent.value = c
 		draggedComponentLocation.value = location
@@ -1318,16 +1318,16 @@
 		if (!leek.value) return
 		const template = LeekWars.items[c.template]
 		if (template.level > leek.value.level) {
-			return LeekWars.toast(i18n.global.t('error_under_required_level_component', [leek.value.name]))
+			return LeekWars.toast(t('error_under_required_level_component', [leek.value.name]))
 		}
 		if (leek.value.components.some(x => x && x.template === template.id)) {
-			return LeekWars.toast(i18n.global.t('error_component_already_equipped', [leek.value.name]))
+			return LeekWars.toast(t('error_component_already_equipped', [leek.value.name]))
 		}
 		if (index === -1) {
 			for (let i = 0; i < 8; i++) { if (leek.value.components[i] === null) { index = i; break } }
 		}
 		if (index === -1) {
-			return LeekWars.toast(i18n.global.t('error_max_component', [leek.value.name]))
+			return LeekWars.toast(t('error_max_component', [leek.value.name]))
 		}
 
 		LeekWars.post('leek/add-component', { leek_id: leek.value.id, component_id: c.id, index }).then(data => {
@@ -1360,7 +1360,7 @@
 		refreshTotalCharacteristics()
 	}
 
-	function componentsDrop(location: string, e: DragEvent, index: number) {
+	function componentsDrop(location: DragArea, e: DragEvent, index: number) {
 		if (!draggedComponent.value) return
 		if (location === 'farmer' && draggedComponentLocation.value === 'leek') {
 			removeComponent(draggedComponent.value)
