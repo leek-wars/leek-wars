@@ -281,6 +281,7 @@
 
 	const { t } = useI18n()
 	const router = useRouter()
+	const document = window.document
 	const playerEl = useTemplateRef<HTMLElement>('player')
 	const hudRef = useTemplateRef<any>('hud')
 	const progressBar = useTemplateRef<HTMLElement>('progressBar')
