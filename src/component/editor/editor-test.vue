@@ -1311,7 +1311,6 @@ import { defineAsyncComponent } from 'vue'
 						data.turret_ai.path = data.turret_ai.file_path || data.turret_ai.name
 						this.alliesAIs[data.turret_ai.path] = data.turret_ai
 					}
-					this.updateAI()
 
 					for (const leek of data.leeks) {
 						this.leeks.push(leek)
@@ -1321,6 +1320,8 @@ import { defineAsyncComponent } from 'vue'
 						}
 					}
 					this.generateBots()
+					this.updateAI()
+
 					for (const l in this.leeks) {
 						const leek = this.leeks[l]
 						if (!leek.chips) { leek.chips = [] }

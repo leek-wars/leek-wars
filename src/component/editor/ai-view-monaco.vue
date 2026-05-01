@@ -438,7 +438,19 @@ function debouncedSaveViewState() {
 	}, 1000)
 }
 
-defineExpose({ scrollToLine, save, get editor() { return editor }, get analyzing() { return analyzing.value }, get position() { return position.value }, get selected() { return selected.value } })
+defineExpose({
+	scrollToLine,
+	save,
+	setAnalyzerTimeout,
+	get editor() { return editor },
+	get ai() { return props.ai },
+	get analyzing() { return analyzing.value },
+	get saving() { return saving.value }, set saving(v: boolean) { saving.value = v },
+	get serverError() { return serverError.value }, set serverError(v: boolean) { serverError.value = v },
+	get goods() { return goods.value }, set goods(v: any[]) { goods.value = v },
+	get position() { return position.value },
+	get selected() { return selected.value },
+})
 </script>
 
 <style lang="scss" scoped>
