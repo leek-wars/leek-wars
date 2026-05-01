@@ -1,0 +1,23 @@
+{
+	"type": "Type",
+	"result": "Result",
+	"match": "Opponent",
+	"date": "Date",
+	"duration": "Duration",
+	"levelups": "Level ups",
+	"trophies": "Trophies",
+	"chests": "Chests",
+	"rare_loot": "Rare loot",
+	"comments": "Comments",
+	"win": "Win",
+	"defeat": "Defeat",
+	"draw": "Draw",
+	"challenge": "Challenge",
+	"garden": "Garden",
+	"tournament": "Tournament",
+	"battle_royale": "Battle Royale",
+	"war": "War",
+	"chest_hunt": "Chest Hunt",
+	"colossus": "Colossus",
+	"boss": "Boss"
+}

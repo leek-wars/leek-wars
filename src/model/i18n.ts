@@ -128,6 +128,7 @@ function loadInstanceTranslations(newLocale: string, instance: any) {
 	if (name.startsWith("level-dialog")) { folder = "leek" }
 	if (name.startsWith("forum-")) { folder = "forum" }
 	if (name.startsWith("inventory-")) { folder = "inventory" }
+	if (name === "fights-history-table") { folder = "history" }
 
 	const modulePath = `/src/component/${folder}/${name}.${newLocale}.i18n`
 	const loader = i18nModules[modulePath]

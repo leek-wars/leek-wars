@@ -27,5 +27,7 @@
 	"war": "Guerre",
 	"chest_hunt": "Chasse aux coffres",
 	"n_chests": "{0} coffres",
-	"colossus": "Colosse"
+	"colossus": "Colosse",
+	"view_grid": "Vue grille",
+	"view_table": "Vue tableau"
 }

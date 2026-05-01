@@ -1,0 +1,23 @@
+{
+	"type": "Type",
+	"result": "Résultat",
+	"match": "Adversaire",
+	"date": "Date",
+	"duration": "Durée",
+	"levelups": "Niveaux gagnés",
+	"trophies": "Trophées",
+	"chests": "Coffres",
+	"rare_loot": "Ressources rares",
+	"comments": "Commentaires",
+	"win": "Victoire",
+	"defeat": "Défaite",
+	"draw": "Égalité",
+	"challenge": "Défi",
+	"garden": "Potager",
+	"tournament": "Tournoi",
+	"battle_royale": "Battle Royale",
+	"war": "Guerre",
+	"chest_hunt": "Chasse aux coffres",
+	"colossus": "Colosse",
+	"boss": "Boss"
+}

@@ -54,7 +54,17 @@
 					</div>
 				</div>
 				<br>
-				<div class="n-fights">{{ $t('n_fights', [filteredFights.length]) }}</div>
+				<div class="header-row">
+					<div class="n-fights">{{ $t('n_fights', [filteredFights.length]) }}</div>
+					<v-btn-toggle v-model="viewMode" mandatory density="compact" class="view-toggle">
+						<v-btn value="grid" size="small" :title="$t('view_grid')">
+							<v-icon>mdi-view-grid</v-icon>
+						</v-btn>
+						<v-btn value="table" size="small" :title="$t('view_table')">
+							<v-icon>mdi-table</v-icon>
+						</v-btn>
+					</v-btn-toggle>
+				</div>
 
 				<div class="history-options">
 					<div class="fight-context">
@@ -85,7 +95,8 @@
 					</div>
 				</div>
 
-				<fights-history :fights="filteredFights" />
+				<fights-history-table v-if="viewMode === 'table'" :fights="filteredFights" />
+				<fights-history v-else :fights="filteredFights" />
 			</div>
 		</panel>
 	</div>
@@ -102,6 +113,7 @@ import type { Leek } from '@/model/leek'
 import { LeekWars } from '@/model/leekwars'
 import Breadcrumb from '../forum/breadcrumb.vue'
 import FightsHistory from '@/component/history/fights-history.vue'
+import FightsHistoryTable from '@/component/history/fights-history-table.vue'
 
 defineOptions({ name: 'history', i18n: {}, mixins: [...mixins] })
 
@@ -119,6 +131,7 @@ const start_date = ref(0)
 const displayContexts = ref({ challenge: true, garden: true, tournament: true })
 const displayTypes = ref({ solo: true, farmer: true, team: true, battleRoyale: true, war: true, chestHunt: true, colossus: true, boss: true })
 const displayLoot = ref({ chests: false, rareloot: false })
+const viewMode = ref<'grid' | 'table'>((localStorage.getItem('options/history-view') as 'grid' | 'table') || 'grid')
 
 const breadcrumb_items = computed(() => [
 	{ name: entity.value ? entity.value.name : '...', link: '/' + props.type + '/' + (entity.value ? entity.value.id : '') },
@@ -195,6 +208,9 @@ watch(displayTypes, () => {
 watch(displayLoot, () => {
 	localStorage.setItem('options/history-loot', JSON.stringify(displayLoot.value))
 }, { deep: true })
+watch(viewMode, () => {
+	localStorage.setItem('options/history-view', viewMode.value)
+})
 </script>
 
 <style lang="scss" scoped>
@@ -226,11 +242,19 @@ watch(displayLoot, () => {
 		background: var(--background-header);
 		font-weight: bold;
 	}
+	.header-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0 10px;
+	}
 	.n-fights {
-		padding-left: 10px;
 		font-size: 18px;
 		font-weight: bold;
 		color: var(--text-color-secondary);
+	}
+	.view-toggle {
+		flex: none;
 	}
 	.stats {
 		display: inline-block;
