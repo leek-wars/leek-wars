@@ -172,7 +172,7 @@
 <script lang="ts" setup>
 	import Markdown from '@/component/encyclopedia/markdown.vue'
 	import type { Farmer } from '@/model/farmer'
-	import { i18n } from '@/model/i18n'
+	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	type Fault = any
@@ -184,7 +184,7 @@
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import { emitter } from '@/model/vue'
 
-	defineOptions({ name: "moderation", i18n: {} })
+	defineOptions({ name: "moderation", i18n: {}, mixins: [...mixins] })
 
 	type ModerationRequest = { faults: any[], thugs: Farmer[] }
 

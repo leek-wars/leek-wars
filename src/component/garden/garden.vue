@@ -403,7 +403,7 @@
 <script setup lang="ts">
 	import { locale } from '@/locale'
 	import { Farmer } from '@/model/farmer'
-	import { mixins, i18n } from '@/model/i18n'
+	import { mixins } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
@@ -425,7 +425,6 @@
 	defineOptions({ name: 'garden', i18n: {}, mixins: [...mixins] })
 
 	const { t } = useI18n()
-	const tc = (key: string, count: number): string => (i18n.global as any).tc(key, count)
 	const route = useRoute()
 	const router = useRouter()
 
@@ -612,7 +611,7 @@
 		}
 		if (category.value) {
 			const category_underscore = category.value.replace('-', '_')
-			LeekWars.setTitle(t('garden_' + category_underscore), tc('n_fights', store.state.farmer.fights) + (store.state.farmer.team_fights ? ' + ' + tc('n_fights', store.state.farmer.team_fights) : ''))
+			LeekWars.setTitle(t('garden_' + category_underscore), t('n_fights', store.state.farmer.fights) + (store.state.farmer.team_fights ? ' + ' + t('n_fights', store.state.farmer.team_fights) : ''))
 			LeekWars.splitShowContent()
 
 			if (category.value === 'solo') {

@@ -39,10 +39,13 @@
 </template>
 
 <script setup lang="ts">
+	import { mixins } from '@/model/i18n'
 	import { TEAM_COLORS } from '@/model/team'
 	import ReportStatisticsEntity from './report-statistics-entity.vue'
 	import { FightStatistics } from './statistics'
 	import { computed } from 'vue'
+
+	defineOptions({ name: 'report-statistics', i18n: {}, mixins: [...mixins] })
 
 	const props = defineProps<{
 		fight: any
