@@ -13,6 +13,7 @@
 		"lint": "eslint src",
 		"test": "bundlesize",
 		"typecheck": "vue-tsc --noEmit",
+		"typecheck:fast": "tsgo --noEmit -p tsconfig.tsgo.json",
 		"stats": "xdg-open dist/stats.html"
 	},
 	"dependencies": {
@@ -54,6 +55,7 @@
 		"@types/google.analytics": "0.0.40",
 		"@types/node": "^20.0.0",
 		"@types/sortablejs": "^1.15.9",
+		"@typescript/native-preview": "^7.0.0-dev.20260501.1",
 		"autoprefixer": "^10.4.23",
 		"eslint": "^10.0.1",
 		"eslint-config-prettier": "^10.1.8",
