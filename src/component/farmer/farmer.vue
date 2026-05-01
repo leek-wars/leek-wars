@@ -464,7 +464,7 @@
 
 		<div class="page-footer page-bar">
 			<div class="tabs">
-				<div v-if="farmer && $store.state.connected && !myFarmer && !farmer.admin" class="report-button tab" @click="reportDialog = true">
+				<div v-if="farmer && $store.state.connected && !myFarmer && !farmer.admin" class="report-button tab" @click="showReport = true">
 					<img src="/image/icon/flag.png">
 					<span>{{ $t('report') }}</span>
 				</div>
@@ -513,7 +513,7 @@
 			</div>
 		</popup>
 
-		<report-dialog v-if="farmer" v-model="reportDialog" :target="farmer" :reasons="reasons" />
+		<report-dialog v-if="farmer" v-model="showReport" :target="farmer" :reasons="reasons" />
 
 		<popup v-if="farmer" v-model="websiteDialog" :width="500" icon="mdi-web" :title="$t('add_website')">
 			<div class="website-dialog">
@@ -600,14 +600,13 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
 	import { Team, TeamMemberLevel } from '@/model/team'
-	import { mixins } from '@/model/i18n'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
+	import { mixins, i18n } from '@/model/i18n'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
@@ -617,497 +616,495 @@
 	import TitlePicker from '@/component/title/title-picker.vue'
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
 	import LwTitle from '@/component/title/title.vue'
-import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/vue'
 	import { Line } from 'vue-chartjs'
 	import { ChartData, ChartOptions } from 'chart.js'
+	import { computed, ref, useTemplateRef, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
+	import { useRoute, useRouter } from 'vue-router'
 
-	@Options({ name: "farmer", i18n: {}, mixins: [...mixins], components: {
+	defineOptions({ name: 'farmer', i18n: {}, mixins: [...mixins], components: {
 		RichTooltipFarmer, RichTooltipTeam, RichTooltipLeek, FightsHistory, TournamentsHistory, TitlePicker, ReportDialog, 'lw-title': LwTitle, 'rich-tooltip-item': RichTooltipItem, Line,
 	} })
-	export default class FarmerPage extends Vue {
-		farmer: Farmer | null = null
-		trophies: any = null
-		trophiesMode: string = 'list'
-		trophyTooltip: { show: boolean, trophy: any, x: number, y: number } = { show: false, trophy: null, x: 0, y: 0 }
-		godfatherDialog: boolean = false
-		countryDialog: boolean = false
-		createTeamDialog: boolean = false
-		createTeamName: string = ''
-		reportDialog: boolean = false
-		reasons = [Warning.INCORRECT_FARMER_NAME, Warning.INCORRECT_AVATAR, Warning.INCORRECT_WEBSITE]
-		websiteDialog: boolean = false
-		newWebsite: string = ''
-		githubDialog: boolean = false
-		newGitHub: string = ''
-		notfound: boolean = false
-		titleDialog: boolean = false
-		renameDialog: boolean = false
-		renameName: string = ''
-		rename_price_habs: number = 10000000
-		rename_price_crystals: number = 200
-		tournamentRangeLoading: boolean = false
-		tournamentRange: any = null
-		trophyDialog: boolean = false
-		giveTrophyID: number | null = null
-		giveTrophyFight: number | null = null
-		giveTrophies = [
-			LeekWars.trophies[173 - 1],
-			LeekWars.trophies[177 - 1],
-			LeekWars.trophies[166 - 1],
-			LeekWars.trophies[194 - 1],
-			LeekWars.trophies[322 - 1],
-			LeekWars.trophies[320 - 1],
-			LeekWars.trophies[111 - 1],
-		]
-		rewards = {
-			1: { trophy: 'godfather' },
-			20: { fight_pack: 'fight_pack_100' },
-			50: { potion: 'bordeaux', item: 281 },
-			100: { resource: 'box_100k_habs', item: 183 },
-			200: { trophy: 'guru' },
-			500: { hat: 'black_fedora', item: 279 },
-			1000: { resource: 'box_1m_habs', item: 185 },
-			2000: { trophy: 'master' },
-			5000: { potion: 'mafia', item: 282 },
-			10000: { hat: 'gold_fedora', item: 280 },
-		}
-		invitationSent: boolean = false
-		xp_bar: number = 0
-		chartData: ChartData | null = null
-		chartOptions: ChartOptions | null = null
 
-		get id(): any {
-			return this.$route.params.id ? parseInt(this.$route.params.id, 10) : (this.$store.state.farmer ? this.$store.state.farmer.id : null)
-		}
-		get myFarmer() {
-			return this.$store.state.farmer && this.id === this.$store.state.farmer.id
-		}
-		get safeWebsite() {
-			if (!this.farmer) { return null }
-			const url = LeekWars.safeUrl(this.farmer.website)
-			if (!url) { return null }
-			// Block links to our own API so a profile can't be used to trigger
-			// authenticated GET requests when a visitor clicks the website link.
-			if (/^(https:\/\/leekwars.\w+)?\/api\//.test(url)) { return null }
-			return url
-		}
-		get canInvite() {
-			const me = this.$store.state.farmer
-			return this.farmer && !this.myFarmer && !this.farmer.team && me && me.team && me.team.member_level >= TeamMemberLevel.CAPTAIN
-		}
-		get alreadyInvited() {
-			if (this.invitationSent) { return true }
-			const me = this.$store.state.farmer
-			if (me && me.team && me.team.sent_invitations && this.farmer) {
-				return me.team.sent_invitations.includes(this.farmer.id)
-			}
-			return false
-		}
-		get talent_gains() {
-			return this.farmer ? Math.round(this.farmer.talent_more / 3) : 0
-		}
-		get trophies_list() {
-			const list: any[] = []
-			for (const t in this.trophies) {
-				if (this.trophies[t].unlocked && this.trophies[t].category !== 6) {
-					list.push(this.trophies[t])
-				}
-			}
-			list.sort((t1, t2) => t1.date - t2.date)
-			return list
-		}
-		get trophies_grid() {
-			const grid: {[key: string]: any} = {}
-			for (const t in this.trophies) {
-				if (this.trophies[t].category !== 6) {
-					grid[t] = this.trophies[t].unlocked ? this.trophies[t] : null
-				}
-			}
-			return grid
-		}
-		get bonus_trophies() {
-			const bonus: any[] = []
-			for (const t in this.trophies) {
-				if (this.trophies[t].unlocked && this.trophies[t].category === 6) {
-					bonus.push(this.trophies[t])
-				}
-			}
-			bonus.sort((a: any, b: any) => a.id - b.id)
-			return bonus
-		}
-		get farmerTitleEnabled() {
-			return LeekWars.selectWhere(this.$store.state.farmer.pomps, 'template', 126)
-		}
+	const { t } = useI18n()
+	const route = useRoute()
+	const router = useRouter()
+	const avatar = useTemplateRef<any>('avatar')
+	const godfatherLink = useTemplateRef<any>('godfatherLink')
 
-		@Watch('id', {immediate: true})
-		update() {
-			this.farmer = null
-			this.trophies = null
-			this.notfound = false
-			this.invitationSent = false
-			this.tournamentRangeLoading = false
-			if (this.id === null) { return }
-			if (this.myFarmer) {
-				setTimeout(() => {
-					this.init(store.state.farmer!)
-				}, 10)
-			} else {
-				LeekWars.get('farmer/get/' + this.id).then(data => {
-					this.init(data.farmer)
-				}).error(error => {
-					this.notfound = true
-				})
-			}
-		}
+	const farmer = ref<Farmer | null>(null)
+	const trophies = ref<any>(null)
+	const trophiesMode = ref('list')
+	const trophyTooltip = ref<{ show: boolean, trophy: any, x: number, y: number }>({ show: false, trophy: null, x: 0, y: 0 })
+	const godfatherDialog = ref(false)
+	const countryDialog = ref(false)
+	const createTeamDialog = ref(false)
+	const createTeamName = ref('')
+	const showReport = ref(false)
+	const reasons = [Warning.INCORRECT_FARMER_NAME, Warning.INCORRECT_AVATAR, Warning.INCORRECT_WEBSITE]
+	const websiteDialog = ref(false)
+	const newWebsite = ref('')
+	const githubDialog = ref(false)
+	const newGitHub = ref('')
+	const notfound = ref(false)
+	const titleDialog = ref(false)
+	const renameDialog = ref(false)
+	const renameName = ref('')
+	const rename_price_habs = 10000000
+	const rename_price_crystals = 200
+	const tournamentRangeLoading = ref(false)
+	const tournamentRange = ref<any>(null)
+	const trophyDialog = ref(false)
+	const giveTrophyID = ref<number | null>(null)
+	const giveTrophyFight = ref<number | null>(null)
+	const giveTrophies = [
+		LeekWars.trophies[173 - 1],
+		LeekWars.trophies[177 - 1],
+		LeekWars.trophies[166 - 1],
+		LeekWars.trophies[194 - 1],
+		LeekWars.trophies[322 - 1],
+		LeekWars.trophies[320 - 1],
+		LeekWars.trophies[111 - 1],
+	]
+	const rewards = {
+		1: { trophy: 'godfather' },
+		20: { fight_pack: 'fight_pack_100' },
+		50: { potion: 'bordeaux', item: 281 },
+		100: { resource: 'box_100k_habs', item: 183 },
+		200: { trophy: 'guru' },
+		500: { hat: 'black_fedora', item: 279 },
+		1000: { resource: 'box_1m_habs', item: 185 },
+		2000: { trophy: 'master' },
+		5000: { potion: 'mafia', item: 282 },
+		10000: { hat: 'gold_fedora', item: 280 },
+	}
+	const invitationSent = ref(false)
+	const xp_bar = ref(0)
+	const chartData = ref<ChartData | null>(null)
+	const chartOptions = ref<ChartOptions | null>(null)
 
-		init(farmer: Farmer) {
-			this.farmer = farmer
-			this.renameName = this.farmer.name
-			if (this.farmer.banned || this.farmer.deleted) {
-				return
-			}
-			LeekWars.setTitle(farmer.name, this.$t('n_trophies', [farmer.trophies]) as string)
-			if (this.myFarmer) {
-				LeekWars.setActions([
-					{icon: 'mdi-power', click: () => this.logout()}
-				])
-			} else {
-				LeekWars.setActions([
-					{image: 'icon/garden.png', click: () => this.$router.push('/garden/challenge/farmer/' + farmer.id)},
-					{icon: 'mdi-email-outline', click: () => this.$router.push('/chat/new/' + farmer.id + '/' + farmer.name + '/'+ farmer.avatar_changed)}
-				])
-			}
-			this.chart()
-			this.getTrophies()
-			this.warnings()
-			this.newWebsite = this.farmer.website
-			this.newGitHub = this.farmer.github
-			emitter.emit('loaded')
-		}
+	const id = computed<any>(() => route.params.id ? parseInt(route.params.id as string, 10) : (store.state.farmer ? store.state.farmer.id : null))
+	const myFarmer = computed(() => store.state.farmer && id.value === store.state.farmer.id)
 
-		logout() {
-			LeekWars.logoutDialog = true
-		}
+	const safeWebsite = computed(() => {
+		if (!farmer.value) return null
+		const url = LeekWars.safeUrl(farmer.value.website)
+		if (!url) return null
+		if (/^(https:\/\/leekwars.\w+)?\/api\//.test(url)) return null
+		return url
+	})
 
-		showTrophyTooltip(trophy: any, event: MouseEvent) {
-			const rect = (event.currentTarget as HTMLElement).getBoundingClientRect()
-			this.trophyTooltip = {
-				show: true,
-				trophy,
-				x: rect.left + rect.width / 2,
-				y: rect.bottom,
-			}
-		}
-		hideTrophyTooltip() {
-			this.trophyTooltip.show = false
-		}
+	const canInvite = computed(() => {
+		const me = store.state.farmer
+		return farmer.value && !myFarmer.value && !farmer.value.team && me && me.team && me.team.member_level >= TeamMemberLevel.CAPTAIN
+	})
 
-		trophiesModeButton() {
-			if (this.trophiesMode === 'list') {
-				this.trophiesMode = 'grid'
-				localStorage.setItem('farmer/trophies-mode', 'grid')
-			} else {
-				this.trophiesMode = 'list'
-				localStorage.setItem('farmer/trophies-mode', 'list')
+	const alreadyInvited = computed(() => {
+		if (invitationSent.value) return true
+		const me = store.state.farmer
+		if (me && me.team && me.team.sent_invitations && farmer.value) {
+			return me.team.sent_invitations.includes(farmer.value.id)
+		}
+		return false
+	})
+
+	const talent_gains = computed(() => farmer.value ? Math.round(farmer.value.talent_more / 3) : 0)
+
+	const trophies_list = computed(() => {
+		const list: any[] = []
+		for (const tr in trophies.value) {
+			if (trophies.value[tr].unlocked && trophies.value[tr].category !== 6) {
+				list.push(trophies.value[tr])
 			}
 		}
+		list.sort((t1, t2) => t1.date - t2.date)
+		return list
+	})
 
-		chart() {
-			if (!this.farmer || !this.farmer.talent_history || this.farmer.talent_history.length === 0) { return }
-			const labels = []
-			const time = LeekWars.time
-			for (let i = 1; i <= 7; ++i) {
-				labels.push(LeekWars.formatDayMonthShort(time - i * 24 * 3600))
-			}
-			this.chartData = {
-				labels: labels.reverse(),
-				datasets: [
-					{
-						tension: 0.2,
-						data: this.farmer.talent_history,
-						borderColor: '#5fad1b',
-						pointBackgroundColor: '#5fad1b',
-						borderWidth: 2,
-						fill: {
-							target: 'origin',
-							above: '#5fad1b30',
-						},
-					}
-				]
-			}
-			this.chartOptions = {
-				aspectRatio: 2.5,
-				plugins: { legend: { display: false } },
-				elements: {
-					point: {
-						radius: 4,
-						hoverRadius: 6,
-					}
-				},
+	const trophies_grid = computed(() => {
+		const grid: {[key: string]: any} = {}
+		for (const tr in trophies.value) {
+			if (trophies.value[tr].category !== 6) {
+				grid[tr] = trophies.value[tr].unlocked ? trophies.value[tr] : null
 			}
 		}
+		return grid
+	})
 
-		getTrophies() {
-			if (!this.farmer) {	return }
-			if (!('farmer/trophies-mode' in localStorage)) {
-				localStorage.setItem('farmer/trophies-mode', 'list')
-			}
-			this.trophiesMode = localStorage.getItem('farmer/trophies-mode') || 'list'
-			if (this.farmer.trophies_list) {
-				this.trophies = this.farmer.trophies_list
-			} else {
-				LeekWars.get('trophy/get-farmer-trophies/' + this.farmer.id + '/' + this.$i18n.locale).then(data => {
-					this.trophies = data.trophies
-					if (this.myFarmer) {
-						store.commit('set-trophies', data.trophies)
-					}
-				})
+	const bonus_trophies = computed(() => {
+		const bonus: any[] = []
+		for (const tr in trophies.value) {
+			if (trophies.value[tr].unlocked && trophies.value[tr].category === 6) {
+				bonus.push(trophies.value[tr])
 			}
 		}
+		bonus.sort((a, b) => a.id - b.id)
+		return bonus
+	})
 
-		registerTournament() {
-			if (this.farmer) {
-				if (this.farmer.tournament.registered) {
-					this.farmer.tournament.registered = false
-					LeekWars.post('farmer/unregister-tournament')
-				} else {
-					this.farmer.tournament.registered = true
-					LeekWars.post('farmer/register-tournament')
-				}
-			}
-		}
+	const farmerTitleEnabled = computed(() => LeekWars.selectWhere(store.state.farmer!.pomps, 'template', 126))
 
-		updateGarden() {
-			if (this.farmer) {
-				this.farmer.in_garden = !this.farmer.in_garden
-				LeekWars.post('farmer/set-in-garden', {in_garden: this.farmer.in_garden})
-			}
-		}
+	watch(id, () => update(), { immediate: true })
 
-		openGodfatherDialog() {
-			this.godfatherDialog = true
+	function update() {
+		farmer.value = null
+		trophies.value = null
+		notfound.value = false
+		invitationSent.value = false
+		tournamentRangeLoading.value = false
+		if (id.value === null) return
+		if (myFarmer.value) {
 			setTimeout(() => {
-				LeekWars.selectText(this.$refs.godfatherLink)
-			}, 100)
-		}
-
-		selectCountry(code: string) {
-			if (this.farmer) {
-				this.farmer.country = code === 'null' ? null : code
-				this.countryDialog = false
-				LeekWars.post('farmer/change-country', {country_code: code})
-			}
-		}
-
-		changeAvatar(e: Event) {
-			if (!e || !e.target) { return }
-			const input = e.target as HTMLInputElement
-			if (!input || !input.files) {
-				LeekWars.toast("No input file")
-				return
-			}
-			const file = input.files[0]
-
-			if (!LeekWars.uploadCheck(file)) {
-				LeekWars.toast("Invalid image (wrong format or > 10 Mo)")
-				return
-			}
-
-			LeekWars.fileToImage(file, (this.$refs.avatar as Vue).$el as Element)
-
-			const formdata = new FormData()
-			formdata.append('avatar', file)
-			input.value = ''
-
-			LeekWars.toast(this.$t('uploading_avatar') as string)
-
-			LeekWars.post('farmer/set-avatar', formdata).then(data => {
-				if (this.farmer) {
-					LeekWars.toast(this.$t('upload_success') as string)
-					this.farmer.avatar_changed = data.avatar_changed
-				}
-			}).error(error => {
-				LeekWars.toast(this.$t('upload_failed', [error.error]) as string)
-				if (this.farmer) {
-					this.farmer.avatar_changed = LeekWars.time
-				}
-			})
-		}
-
-		warnings() {
-			if (!this.farmer) { return }
-				if (this.$store.getters.moderator || this.myFarmer) {
-				LeekWars.get('moderation/get-warnings/' + this.farmer.id).then(data => {
-					if (this.farmer) {
-						this.farmer.warnings = data.warnings
-					}
-				})
-			}
-		}
-
-		createTeam() {
-			LeekWars.post('team/create', {team_name: this.createTeamName}).then(data => {
-				LeekWars.toast(this.$i18n.t('team_created'))
-				this.createTeamDialog = false
-				const team = new Team()
-				team.id = data.id
-				team.name = this.createTeamName
-				team.level = 1
-				team.talent = 1000
-				team.opened = true
-				store.commit('create-team', team)
-			}).error(error => {
-				LeekWars.toast(this.$i18n.t(error.error))
-			})
-		}
-
-		inviteToTeam() {
-			if (!this.farmer) { return }
-			LeekWars.post('team/send-invitation', {farmer_name: this.farmer.name}).then(data => {
-				this.invitationSent = true
-				const me = this.$store.state.farmer
-				if (me && me.team) {
-					if (!me.team.sent_invitations) { me.team.sent_invitations = [] }
-					me.team.sent_invitations.push(this.farmer!.id)
-				}
-				LeekWars.toast(this.$i18n.t('invitation_sent'))
-			}).error(error => {
-				LeekWars.toast(this.$i18n.t(error.error))
-			})
-		}
-
-		acceptInvitation(invitation: any) {
-			LeekWars.post('team/accept-invitation', {invitation_id: invitation.id}).then(data => {
-				LeekWars.toast(this.$i18n.t('invitation_accepted'))
-				this.$router.push('/team/' + invitation.team_id)
-			}).error(error => {
-				LeekWars.toast(this.$i18n.t(error.error))
-			})
-		}
-
-		rejectInvitation(invitation: any) {
-			LeekWars.post('team/reject-invitation', {invitation_id: invitation.id}).then(data => {
-				if (this.farmer) {
-					LeekWars.toast(this.$i18n.t('invitation_rejected'))
-					this.farmer.team_invitations.splice(this.farmer.team_invitations.indexOf(invitation), 1)
-				}
-			}).error(error => {
-				LeekWars.toast(this.$i18n.t(error.error))
-			})
-		}
-
-		cancelCandidacy(candidacy: { team_id: number }) {
-			LeekWars.post('team/cancel-candidacy-for-team', { team_id: candidacy.team_id }).then(() => {
-				if (this.farmer) {
-					LeekWars.toast(this.$i18n.t('candidacy_canceled'))
-					this.farmer.candidacies = this.farmer.candidacies.filter((c: any) => c.team_id !== candidacy.team_id)
-				}
-			}).error(error => {
-				LeekWars.toast(error)
-			})
-		}
-
-		changeWebsite() {
-			if (!this.farmer) { return }
-			this.farmer.website = this.newWebsite
-			LeekWars.post('farmer/set-website', {website: this.newWebsite})
-			this.websiteDialog = false
-		}
-
-		changeGithub() {
-			if (!this.farmer) { return }
-			/* If the user enter his GitHub's URL like `github.com/username` or `https://github.com/username`, it will only keep `username` */
-			this.farmer.github = this.newGitHub.substring(this.newGitHub.lastIndexOf('/') + 1)
-			LeekWars.post('farmer/set-github', {github: this.farmer.github})
-			this.githubDialog = false
-		}
-
-		sendMessage() {
-			if (!this.farmer) { return }
-			LeekWars.get('message/find-conversation/' + this.farmer.id).then(conversation => {
-				store.commit('new-conversation', conversation)
-				this.$router.push('/chat/' + conversation.id)
+				init(store.state.farmer!)
+			}, 10)
+		} else {
+			LeekWars.get('farmer/get/' + id.value).then(data => {
+				init(data.farmer)
 			}).error(() => {
-				if (!this.farmer) { return }
-				this.$router.push('/chat/new/' + this.farmer.id + '/' + this.farmer.name + '/' + this.farmer.avatar_changed)
+				notfound.value = true
 			})
-		}
-
-		pickTitle(title: number[]) {
-			this.farmer!.title = title
-			this.titleDialog = false
-			LeekWars.put('farmer/set-title', {icon: title[0] || 0, noun: title[1] || 0, gender: title[2] || 0, adjective: title[3] || 0})
-			this.$store.commit('set-title', title)
-		}
-
-		rename(currency: string) {
-			if (!this.farmer) { return }
-			const method = currency === 'habs' ? 'farmer/rename-habs' : 'farmer/rename-crystals'
-			LeekWars.post(method, {name: this.renameName}).then(data => {
-				if (this.farmer) {
-					this.farmer.name = this.renameName
-					store.commit('rename-farmer', {name: this.renameName})
-					if (currency === 'habs') {
-						store.commit('update-habs', -this.rename_price_habs)
-					} else {
-						store.commit('update-crystals', -this.rename_price_crystals)
-					}
-					this.renameDialog = false
-					LeekWars.toast(this.$t('rename_done'))
-				}
-			})
-			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
-		}
-
-		loadTournamentRange() {
-			if (!this.farmer || this.tournamentRange || this.tournamentRangeLoading) { return }
-			this.tournamentRangeLoading = true
-			const power = Math.round(Object.values(this.farmer.leeks).reduce((p, l) => p + l.level ** LeekWars.POWER_FACTOR, 0))
-			LeekWars.get('tournament/range-farmer/' + power).then(d => this.tournamentRange = d)
-		}
-
-		giveTrophy() {
-			if (this.giveTrophyID) {
-				LeekWars.post('trophy/give', { trophy: this.giveTrophyID, farmer_id: this.farmer!.id, fight_id: this.giveTrophyFight || 0 })
-				.then(() => {
-					this.trophyDialog = false
-					LeekWars.toast("Trophée donné !")
-				})
-				.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
-			}
-		}
-
-		toggleLike() {
-			if (!this.farmer) { return }
-			const liked = this.farmer.liked
-			this.farmer.liked = !liked
-			this.farmer.likes += liked ? -1 : 1
-			const endpoint = liked ? 'farmer/unlike' : 'farmer/like'
-			LeekWars.post(endpoint, {target_id: this.farmer.id}).then(data => {
-				if (this.farmer) {
-					this.farmer.likes = data.likes
-				}
-			}).error(() => {
-				if (this.farmer) {
-					this.farmer.liked = liked
-					this.farmer.likes += liked ? 1 : -1
-				}
-			})
-		}
-
-		openCountryDialog() {
-			this.countryDialog = true
-			LeekWars.loadCountries()
-		}
-
-		get xp_bar_width() {
-			if (!this.farmer) {
-				return this.xp_bar
-			}
-			return this.xp_bar = this.farmer.godsons_level >= 10_000 ? 100 : Math.min(100, this.farmer.godsons_level / 10_000 * 100)
 		}
 	}
+
+	function init(f: Farmer) {
+		farmer.value = f
+		renameName.value = f.name
+		if (f.banned || f.deleted) {
+			return
+		}
+		LeekWars.setTitle(f.name, t('n_trophies', [f.trophies]) as string)
+		if (myFarmer.value) {
+			LeekWars.setActions([
+				{icon: 'mdi-power', click: () => logout()}
+			])
+		} else {
+			LeekWars.setActions([
+				{image: 'icon/garden.png', click: () => router.push('/garden/challenge/farmer/' + f.id)},
+				{icon: 'mdi-email-outline', click: () => router.push('/chat/new/' + f.id + '/' + f.name + '/' + f.avatar_changed)}
+			])
+		}
+		chart()
+		getTrophies()
+		warnings()
+		newWebsite.value = f.website
+		newGitHub.value = f.github
+		emitter.emit('loaded')
+	}
+
+	function logout() {
+		LeekWars.logoutDialog = true
+	}
+
+	function showTrophyTooltip(trophy: any, event: MouseEvent) {
+		const rect = (event.currentTarget as HTMLElement).getBoundingClientRect()
+		trophyTooltip.value = {
+			show: true,
+			trophy,
+			x: rect.left + rect.width / 2,
+			y: rect.bottom,
+		}
+	}
+
+	function hideTrophyTooltip() {
+		trophyTooltip.value.show = false
+	}
+
+	function trophiesModeButton() {
+		if (trophiesMode.value === 'list') {
+			trophiesMode.value = 'grid'
+			localStorage.setItem('farmer/trophies-mode', 'grid')
+		} else {
+			trophiesMode.value = 'list'
+			localStorage.setItem('farmer/trophies-mode', 'list')
+		}
+	}
+
+	function chart() {
+		if (!farmer.value || !farmer.value.talent_history || farmer.value.talent_history.length === 0) return
+		const labels = []
+		const time = LeekWars.time
+		for (let i = 1; i <= 7; ++i) {
+			labels.push(LeekWars.formatDayMonthShort(time - i * 24 * 3600))
+		}
+		chartData.value = {
+			labels: labels.reverse(),
+			datasets: [
+				{
+					tension: 0.2,
+					data: farmer.value.talent_history,
+					borderColor: '#5fad1b',
+					pointBackgroundColor: '#5fad1b',
+					borderWidth: 2,
+					fill: { target: 'origin', above: '#5fad1b30' },
+				}
+			]
+		} as any
+		chartOptions.value = {
+			aspectRatio: 2.5,
+			plugins: { legend: { display: false } },
+			elements: { point: { radius: 4, hoverRadius: 6 } },
+		}
+	}
+
+	function getTrophies() {
+		if (!farmer.value) return
+		if (!('farmer/trophies-mode' in localStorage)) {
+			localStorage.setItem('farmer/trophies-mode', 'list')
+		}
+		trophiesMode.value = localStorage.getItem('farmer/trophies-mode') || 'list'
+		if (farmer.value.trophies_list) {
+			trophies.value = farmer.value.trophies_list
+		} else {
+			LeekWars.get('trophy/get-farmer-trophies/' + farmer.value.id + '/' + i18n.global.locale).then(data => {
+				trophies.value = data.trophies
+				if (myFarmer.value) {
+					store.commit('set-trophies', data.trophies)
+				}
+			})
+		}
+	}
+
+	function registerTournament() {
+		if (farmer.value) {
+			if (farmer.value.tournament.registered) {
+				farmer.value.tournament.registered = false
+				LeekWars.post('farmer/unregister-tournament')
+			} else {
+				farmer.value.tournament.registered = true
+				LeekWars.post('farmer/register-tournament')
+			}
+		}
+	}
+
+	function updateGarden() {
+		if (farmer.value) {
+			farmer.value.in_garden = !farmer.value.in_garden
+			LeekWars.post('farmer/set-in-garden', {in_garden: farmer.value.in_garden})
+		}
+	}
+
+	function openGodfatherDialog() {
+		godfatherDialog.value = true
+		setTimeout(() => {
+			LeekWars.selectText(godfatherLink.value)
+		}, 100)
+	}
+
+	function selectCountry(code: string) {
+		if (farmer.value) {
+			farmer.value.country = code === 'null' ? null : code
+			countryDialog.value = false
+			LeekWars.post('farmer/change-country', {country_code: code})
+		}
+	}
+
+	function changeAvatar(e: Event) {
+		if (!e || !e.target) return
+		const input = e.target as HTMLInputElement
+		if (!input || !input.files) {
+			LeekWars.toast("No input file")
+			return
+		}
+		const file = input.files[0]
+
+		if (!LeekWars.uploadCheck(file)) {
+			LeekWars.toast("Invalid image (wrong format or > 10 Mo)")
+			return
+		}
+
+		LeekWars.fileToImage(file, (avatar.value as any)?.$el as Element)
+
+		const formdata = new FormData()
+		formdata.append('avatar', file)
+		input.value = ''
+
+		LeekWars.toast(t('uploading_avatar') as string)
+
+		LeekWars.post('farmer/set-avatar', formdata).then(data => {
+			if (farmer.value) {
+				LeekWars.toast(t('upload_success') as string)
+				farmer.value.avatar_changed = data.avatar_changed
+			}
+		}).error(error => {
+			LeekWars.toast(t('upload_failed', [error.error]) as string)
+			if (farmer.value) {
+				farmer.value.avatar_changed = LeekWars.time
+			}
+		})
+	}
+
+	function warnings() {
+		if (!farmer.value) return
+		if (store.getters.moderator || myFarmer.value) {
+			LeekWars.get('moderation/get-warnings/' + farmer.value.id).then(data => {
+				if (farmer.value) {
+					farmer.value.warnings = data.warnings
+				}
+			})
+		}
+	}
+
+	function createTeam() {
+		LeekWars.post('team/create', {team_name: createTeamName.value}).then(data => {
+			LeekWars.toast(i18n.global.t('team_created'))
+			createTeamDialog.value = false
+			const team = new Team()
+			team.id = data.id
+			team.name = createTeamName.value
+			team.level = 1
+			team.talent = 1000
+			team.opened = true
+			store.commit('create-team', team)
+		}).error(error => {
+			LeekWars.toast(i18n.global.t(error.error))
+		})
+	}
+
+	function inviteToTeam() {
+		if (!farmer.value) return
+		LeekWars.post('team/send-invitation', {farmer_name: farmer.value.name}).then(() => {
+			invitationSent.value = true
+			const me = store.state.farmer
+			if (me && me.team) {
+				if (!me.team.sent_invitations) me.team.sent_invitations = []
+				me.team.sent_invitations.push(farmer.value!.id)
+			}
+			LeekWars.toast(i18n.global.t('invitation_sent'))
+		}).error(error => {
+			LeekWars.toast(i18n.global.t(error.error))
+		})
+	}
+
+	function acceptInvitation(invitation: any) {
+		LeekWars.post('team/accept-invitation', {invitation_id: invitation.id}).then(() => {
+			LeekWars.toast(i18n.global.t('invitation_accepted'))
+			router.push('/team/' + invitation.team_id)
+		}).error(error => {
+			LeekWars.toast(i18n.global.t(error.error))
+		})
+	}
+
+	function rejectInvitation(invitation: any) {
+		LeekWars.post('team/reject-invitation', {invitation_id: invitation.id}).then(() => {
+			if (farmer.value) {
+				LeekWars.toast(i18n.global.t('invitation_rejected'))
+				farmer.value.team_invitations.splice(farmer.value.team_invitations.indexOf(invitation), 1)
+			}
+		}).error(error => {
+			LeekWars.toast(i18n.global.t(error.error))
+		})
+	}
+
+	function cancelCandidacy(candidacy: { team_id: number }) {
+		LeekWars.post('team/cancel-candidacy-for-team', { team_id: candidacy.team_id }).then(() => {
+			if (farmer.value) {
+				LeekWars.toast(i18n.global.t('candidacy_canceled'))
+				farmer.value.candidacies = farmer.value.candidacies.filter((c: any) => c.team_id !== candidacy.team_id)
+			}
+		}).error(error => {
+			LeekWars.toast(error)
+		})
+	}
+
+	function changeWebsite() {
+		if (!farmer.value) return
+		farmer.value.website = newWebsite.value
+		LeekWars.post('farmer/set-website', {website: newWebsite.value})
+		websiteDialog.value = false
+	}
+
+	function changeGithub() {
+		if (!farmer.value) return
+		farmer.value.github = newGitHub.value.substring(newGitHub.value.lastIndexOf('/') + 1)
+		LeekWars.post('farmer/set-github', {github: farmer.value.github})
+		githubDialog.value = false
+	}
+
+	function sendMessage() {
+		if (!farmer.value) return
+		LeekWars.get('message/find-conversation/' + farmer.value.id).then(conversation => {
+			store.commit('new-conversation', conversation)
+			router.push('/chat/' + conversation.id)
+		}).error(() => {
+			if (!farmer.value) return
+			router.push('/chat/new/' + farmer.value.id + '/' + farmer.value.name + '/' + farmer.value.avatar_changed)
+		})
+	}
+
+	function pickTitle(title: number[]) {
+		farmer.value!.title = title
+		titleDialog.value = false
+		LeekWars.put('farmer/set-title', {icon: title[0] || 0, noun: title[1] || 0, gender: title[2] || 0, adjective: title[3] || 0})
+		store.commit('set-title', title)
+	}
+
+	function rename(currency: string) {
+		if (!farmer.value) return
+		const method = currency === 'habs' ? 'farmer/rename-habs' : 'farmer/rename-crystals'
+		LeekWars.post(method, {name: renameName.value}).then(() => {
+			if (farmer.value) {
+				farmer.value.name = renameName.value
+				store.commit('rename-farmer', {name: renameName.value})
+				if (currency === 'habs') {
+					store.commit('update-habs', -rename_price_habs)
+				} else {
+					store.commit('update-crystals', -rename_price_crystals)
+				}
+				renameDialog.value = false
+				LeekWars.toast(t('rename_done'))
+			}
+		})
+		.error(error => LeekWars.toast(t('error_' + error.error, error.params)))
+	}
+
+	function loadTournamentRange() {
+		if (!farmer.value || tournamentRange.value || tournamentRangeLoading.value) return
+		tournamentRangeLoading.value = true
+		const power = Math.round(Object.values(farmer.value.leeks).reduce((p, l) => p + l.level ** LeekWars.POWER_FACTOR, 0))
+		LeekWars.get('tournament/range-farmer/' + power).then(d => tournamentRange.value = d)
+	}
+
+	function giveTrophy() {
+		if (giveTrophyID.value) {
+			LeekWars.post('trophy/give', { trophy: giveTrophyID.value, farmer_id: farmer.value!.id, fight_id: giveTrophyFight.value || 0 })
+				.then(() => {
+					trophyDialog.value = false
+					LeekWars.toast("Trophée donné !")
+				})
+				.error(error => LeekWars.toast(t('error_' + error.error, error.params)))
+		}
+	}
+
+	function toggleLike() {
+		if (!farmer.value) return
+		const liked = farmer.value.liked
+		farmer.value.liked = !liked
+		farmer.value.likes += liked ? -1 : 1
+		const endpoint = liked ? 'farmer/unlike' : 'farmer/like'
+		LeekWars.post(endpoint, {target_id: farmer.value.id}).then(data => {
+			if (farmer.value) {
+				farmer.value.likes = data.likes
+			}
+		}).error(() => {
+			if (farmer.value) {
+				farmer.value.liked = liked
+				farmer.value.likes += liked ? 1 : -1
+			}
+		})
+	}
+
+	function openCountryDialog() {
+		countryDialog.value = true
+		LeekWars.loadCountries()
+	}
+
+	const xp_bar_width = computed(() => {
+		if (!farmer.value) return xp_bar.value
+		return xp_bar.value = farmer.value.godsons_level >= 10_000 ? 100 : Math.min(100, farmer.value.godsons_level / 10_000 * 100)
+	})
 </script>
+
 
 <style lang="scss" scoped>
 	.state img {
