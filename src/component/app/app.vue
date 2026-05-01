@@ -222,7 +222,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { AccountInfo, store } from '@/model/store'
-	import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
+	import { computed, nextTick, onBeforeUnmount, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRouter } from 'vue-router'
 	import { useTheme } from 'vuetify'
@@ -314,7 +314,7 @@
 		docEverywhereModel.value = false
 	})
 
-	window.addEventListener('storage', (e: StorageEvent) => {
+	function onStorage(e: StorageEvent) {
 		if (e.key === 'logout' && e.newValue !== null && store.state.connected) {
 			store.commit('reset')
 			LeekWars.socket.disconnect()
@@ -326,7 +326,9 @@
 		if (e.key === 'connected' && e.newValue === 'true' && !store.state.connected) {
 			window.location.reload()
 		}
-	})
+	}
+	window.addEventListener('storage', onStorage)
+	onBeforeUnmount(() => window.removeEventListener('storage', onStorage))
 
 	const toast = new URLSearchParams(window.location.search).get('toast')
 	if (toast) {

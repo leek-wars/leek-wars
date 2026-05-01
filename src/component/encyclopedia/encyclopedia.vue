@@ -325,9 +325,11 @@
 		return c
 	})
 
+	const onCtrlS = () => save()
+
 	onBeforeUnmount(() => {
 		destroyed = true
-		emitter.off('ctrlS')
+		emitter.off('ctrlS', onCtrlS)
 		window.removeEventListener('beforeunload', boundBeforeUnload)
 		LeekWars.large = false
 		LeekWars.box = false
@@ -345,7 +347,7 @@
 	})
 
 	onMounted(async () => {
-		emitter.on('ctrlS', () => save())
+		emitter.on('ctrlS', onCtrlS)
 		actions.value = [
 			{icon: 'mdi-information-variant', click: () => router.push('/about')},
 			{icon: 'mdi-pencil', click: () => editStart()},

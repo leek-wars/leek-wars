@@ -561,7 +561,7 @@
 	}
 
 	onBeforeUnmount(() => {
-		emitter.off('back')
+		emitter.off('back', back)
 		if (request) { request.abort() }
 		LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_UNREGISTER])
 		emitter.off('wsconnected', updateWS)
