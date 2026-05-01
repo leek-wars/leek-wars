@@ -100,6 +100,32 @@ window.addEventListener('error', (event) => {
 
 let lastErrorSent = 0
 
+interface NavSnapshot {
+	fullPath: string
+	name: string | null
+	at: number
+}
+let previousNav: NavSnapshot | null = null
+let currentNav: NavSnapshot | null = null
+
+function describeRouteSubtree(instance: any): string | null {
+	try {
+		let node = instance?.subTree
+		let depth = 0
+		while (node && depth < 20) {
+			const child = node.component
+			if (child) {
+				const t = child.type
+				const name = t?.name || t?.__name || t?.__file || 'Anonymous'
+				return name
+			}
+			node = node.children?.[0]
+			depth++
+		}
+	} catch {}
+	return null
+}
+
 export function reportVueError(err: any, vm: any, info: any, origin: string = 'main') {
 
 	if (LeekWars.DEV) return
@@ -125,12 +151,14 @@ export function reportVueError(err: any, vm: any, info: any, origin: string = 'm
 	const user_agent = navigator.userAgent
 
 	let componentTrace = ''
+	let routeSubtree: string | null = null
 	try {
 		if (vm) {
 			const components: string[] = []
 			// errorCaptured passes a public proxy (.$ → internal instance); app.config.errorHandler
 			// passes the internal instance directly. Handle both.
 			let instance = vm.$ || vm
+			const leafInstance = instance
 			while (instance && components.length < 100) {
 				const name = instance.type?.name || instance.type?.__name || 'Anonymous'
 				const propsDef = instance.type?.props
@@ -156,12 +184,27 @@ export function reportVueError(err: any, vm: any, info: any, origin: string = 'm
 				instance = instance.parent
 			}
 			componentTrace = '\n\nComponent: ' + components[0] + '\nHierarchy: ' + components.join(' → ')
+			// For RouterView/Anonymous-rooted errors, expose the actual route component being patched.
+			const leafName = leafInstance?.type?.name || leafInstance?.type?.__name
+			if (leafName === 'RouterView' || !leafName) {
+				routeSubtree = describeRouteSubtree(leafInstance)
+			}
 		}
 	} catch (e) {
 		componentTrace = '\n\n[Component trace failed: ' + (e as Error).message + ']'
 	}
 
-	const stack = (err?.stack || '(no stack)') + '\n\nOrigin: ' + origin + '\nVue info: ' + info + componentTrace
+	let navTrace = ''
+	try {
+		const lines: string[] = []
+		if (currentNav) lines.push('Route: ' + currentNav.fullPath + (currentNav.name ? ' [' + currentNav.name + ']' : ''))
+		if (previousNav) lines.push('Previous route: ' + previousNav.fullPath + (previousNav.name ? ' [' + previousNav.name + ']' : ''))
+		if (currentNav) lines.push('Since last navigation: ' + (Date.now() - currentNav.at) + 'ms')
+		if (routeSubtree) lines.push('Route subtree: <' + routeSubtree + '>')
+		if (lines.length) navTrace = '\n\n' + lines.join('\n')
+	} catch {}
+
+	const stack = (err?.stack || '(no stack)') + '\n\nOrigin: ' + origin + '\nVue info: ' + info + componentTrace + navTrace
 	const build_date = typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : null
 	const build_commit = typeof __BUILD_COMMIT__ !== 'undefined' ? __BUILD_COMMIT__ : null
 	LeekWars.post('error/report', { error, stack, file, locale, user_agent, build_date, build_commit })
@@ -487,6 +530,13 @@ if (LeekWars.DEV || LeekWars.LOCAL) {
 }
 
 router.afterEach((to: any) => {
+	previousNav = currentNav
+	currentNav = {
+		fullPath: to.fullPath,
+		name: typeof to.name === 'string' ? to.name : (to.name ? String(to.name) : null),
+		at: Date.now(),
+	}
+
 	if (to.hash) {
 		setTimeout(() => {
 			scroll_to_hash(to.hash, to)
