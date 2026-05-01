@@ -12,6 +12,7 @@
 		"preview": "vite preview",
 		"lint": "eslint src",
 		"lint:fast": "oxlint src",
+		"knip": "knip",
 		"test": "bundlesize",
 		"typecheck": "vue-tsc --noEmit",
 		"typecheck:fast": "tsgo --noEmit -p tsconfig.tsgo.json",
