@@ -222,7 +222,12 @@
 		return {chars, lower_chars, pos}
 	}
 
-	defineExpose({ open, close, previous, next })
+	defineExpose({
+		open, close, previous, next, go,
+		get value() { return value.value },
+		get search() { return search.value }, set search(v: boolean) { search.value = v },
+		get selected() { return selected.value },
+	})
 </script>
 
 <style lang="scss" scoped>

@@ -29,7 +29,7 @@
 							</v-list-item>
 						</v-list>
 					</v-menu>
-					<div ref="settingsButton" class="tab action" icon="settings" @click="settings()">
+					<div class="tab action" icon="settings" @click="settings()">
 						<v-icon>mdi-cogs</v-icon>
 					</div>
 					<div :title="$t('test_desc')" class="action content tab" icon="play_arrow" @click="startTest()">
@@ -38,9 +38,9 @@
 				</div>
 			</div>
 
-			<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :ais="fileSystem.ais" :history2="history" :current="currentTab" :active="currentSide === 1" :splitted="splitted" :theme="theme" group="tabs" :all-tabs="tabs1" @select="selectTab" @close-tab="closeTabEvent" @close-all="closeAllTabs" @split="setSplitted(true, $event)" :style="{ 'width': (editor1Width * 80) + '%' }" @open-file="openDiffFileFromMenu" />
+			<editor-tabs v-if="!LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentTab" :active="currentSide === 1" :splitted="splitted" :theme="theme" group="tabs" :all-tabs="tabs1" @select="selectTab" @close-tab="closeTabEvent" @close-all="closeAllTabs" @split="setSplitted(true, $event)" :style="{ 'width': (editor1Width * 80) + '%' }" @open-file="openDiffFileFromMenu" />
 
-			<editor-tabs v-if="splitted && !LeekWars.mobile" ref="tabs2" :ais="fileSystem.ais" :history2="history" :current="currentAI2" :active="currentSide === 2" :splitted="splitted" :theme="theme" group="tabs2" @close="close" @close-all="closeAll" :style="{ 'width': (editor2Width * 100) + '%' }" @open="open($event, 2)" @close-panel="setSplitted(false)" />
+			<editor-tabs v-if="splitted && !LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentAI2" :active="currentSide === 2" :splitted="splitted" :theme="theme" group="tabs2" @close="close" @close-all="closeAll" :style="{ 'width': (editor2Width * 100) + '%' }" @open="open($event, 2)" @close-panel="setSplitted(false)" />
 
 			<editor-finder ref="finder" :active="activeAIs" :history="history" />
 		</div>
@@ -97,7 +97,7 @@
 
 								<div v-if="showDiffViewer && !isDiffReady" class="diff-loader"><loader :size="40" /></div>
 								<git-diff v-if="diffMounted && isDiffReady && !showMergeViewer && activeDiff" v-show="showDiffViewer" :original-content="activeDiff.original" :modified-content="activeDiffModified" :file="activeDiff.file" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :inline="diffInline" :collapse-unchanged="diffCollapseUnchanged" @close="closeDiff" @open-file="openDiffFile" />
-								<git-merge v-if="showMergeViewer && activeMerge && activeMerge.ready" ref="mergeEditor" :content="activeMerge.modified" :file="activeMerge.file" :theme="theme" :font-size="fontSize" :line-height="lineHeight" @resolve="onMergeResolve" />
+								<git-merge v-if="showMergeViewer && activeMerge && activeMerge.ready" :content="activeMerge.modified" :file="activeMerge.file" :theme="theme" :font-size="fontSize" :line-height="lineHeight" @resolve="onMergeResolve" />
 
 							</div>
 
@@ -272,7 +272,7 @@
 	import { analyzer } from './analyzer'
 	import { isLeekScript } from './file-types'
 	import AIElement from '@/component/app/ai.vue'
-	import { computed, defineAsyncComponent, markRaw, nextTick, onBeforeUnmount, onMounted, reactive, ref, shallowRef, useTemplateRef, watch } from 'vue'
+	import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, reactive, ref, shallowRef, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 	import { emitter } from '@/model/vue'
@@ -399,12 +399,6 @@
 		}
 		return diff.modified
 	})
-	const diffTabs = computed<DiffTab[]>(() => tabs1.value.filter((t): t is DiffTab => t.type !== 'file'))
-	const activeDiffIndex = computed(() => {
-		if (!currentTab.value || currentTab.value.type === 'file') return -1
-		return diffTabs.value.findIndex(d => diffKey(d) === diffKey(currentTab.value as DiffTab))
-	})
-
 	function diffKey(tab: DiffTab): string {
 		if (tab.type === 'merge') return tab.folder + ':' + tab.file + ':merge'
 		return tab.folder + ':' + tab.file + ':' + (tab.hash || (tab.staged ? 's' : 'w'))
@@ -504,16 +498,15 @@
 
 	function keydown(e: KeyboardEvent) {
 		// Up and down arrows while Alt + Left/right
-		if (e.altKey && finder.value && (finder.value as any).value) {
-			if (e.which === 40) { (finder.value as any).previous() }
-			else if (e.which === 38) { (finder.value as any).next() }
+		if (e.altKey && finder.value?.value) {
+			if (e.which === 40) { finder.value.previous() }
+			else if (e.which === 38) { finder.value.next() }
 		}
 	}
 
 	function keyup(e: KeyboardEvent) {
 		if (e.which === 18 && finder.value) {
-			const f = finder.value as any
-			f.go(history.value[f.selected])
+			finder.value.go(history.value[finder.value.selected])
 		}
 	}
 
@@ -1012,7 +1005,7 @@
 			router.push('/editor/' + ai.path)
 		}
 		nextTick(() => {
-			if (editor1.value) { (editor1.value as any).scrollToLine(ai, line, column) }
+			editor1.value?.scrollToLine(ai, line, column)
 		})
 	}
 
@@ -1262,33 +1255,30 @@
 		})
 		emitter.on('ctrlP', (event: Event) => {
 			if (!finder.value) return
-			const f = finder.value as any
-			f.search = true
-			f.open()
+			finder.value.search = true
+			finder.value.open()
 			event.preventDefault()
 		})
 		emitter.on('escape', () => {
-			if (finder.value) (finder.value as any).close()
+			finder.value?.close()
 		})
 		emitter.on('htmlclick', () => {
-			if (finder.value) (finder.value as any).close()
+			finder.value?.close()
 		})
 		emitter.on('keydown', keydown)
 		emitter.on('keyup', keyup)
 		emitter.on('previous', (event: Event) => {
 			if (!finder.value) return
-			const f = finder.value as any
-			f.search = false
-			f.open()
-			f.previous()
+			finder.value.search = false
+			finder.value.open()
+			finder.value.previous()
 			event.preventDefault()
 		})
 		emitter.on('next', (event: Event) => {
 			if (!finder.value) return
-			const f = finder.value as any
-			f.search = false
-			f.open()
-			f.next()
+			finder.value.search = false
+			finder.value.open()
+			finder.value.next()
 			event.preventDefault()
 		})
 		emitter.on('back', () => {
@@ -1326,7 +1316,7 @@
 		emitter.on('connected', connected)
 		emitter.on('jump', jumpEvent)
 		emitter.on('reanalyze', () => {
-			if (editor1.value) { (editor1.value as any).setAnalyzerTimeout() }
+			editor1.value?.setAnalyzerTimeout()
 		})
 
 		emitter.on('close-diff', ({ folder, file }: any) => {
@@ -1373,7 +1363,6 @@
 		emitter.off('ctrlS')
 		emitter.off('ctrlShiftS')
 		emitter.off('ctrlQ')
-		emitter.off('ctrlF')
 		emitter.off('ctrlP')
 		emitter.off('escape')
 		emitter.off('htmlclick')
@@ -1382,6 +1371,8 @@
 		emitter.off('previous')
 		emitter.off('next')
 		emitter.off('back')
+		emitter.off('editor-drag')
+		emitter.off('editor-drop')
 		emitter.off('connected', connected)
 		emitter.off('jump', jumpEvent)
 		emitter.off('reanalyze')

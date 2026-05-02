@@ -345,8 +345,6 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			'@': path.resolve(__dirname, 'src'),
-			// Shim for vue-property-decorator to export Component as alias for Options
-			'vue-property-decorator': path.resolve(__dirname, 'src/vue-property-decorator.ts')
 		}
 	},
 	css: {
@@ -395,7 +393,5 @@ export default defineConfig({
 	},
 	optimizeDeps: {
 		include: ['vue', 'vue-router', 'vuetify'],
-		// Exclude from pre-bundling to avoid circular dependency with our shim
-		exclude: ['vue-property-decorator', 'vue-class-component', 'vue-facing-decorator']
 	}
 })
