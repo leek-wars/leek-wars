@@ -52,14 +52,16 @@ const mixins = [{
 	beforeCreate() {
 		// Reload translations because in case of hot reloading, they are lost
 		// Missing messages or messages for the current locale
-		if (!(this as any).$options.i18n?.messages?.[i18n.global.locale]) {
+		const opts = (this as any).$options
+		if (!opts?.i18n?.messages?.[i18n.global.locale]) {
 			// console.log("reload translations...")
 			loadInstanceTranslations(i18n.global.locale, this)
 		}
 	},
 	watch: {
 		'$i18n.locale'() {
-			let name = (this as any).$options.name!
+			let name = (this as any).$options?.name
+			if (!name) return
 			// console.log("Reload translations of component", name)
 			const newLocale = i18n.global.locale
 			if (name.startsWith('bank-')) { name = 'bank' }
@@ -112,7 +114,7 @@ function loadLanguageAsync(vue: any, newLocale: string) {
 
 function loadInstanceTranslations(newLocale: string, instance: any) {
 	// console.log("load instance translations", "instance", instance, newLocale)
-	if (!instance.$options.name) {
+	if (!instance.$options?.name) {
 		return
 	}
 	if (!instance.$options.i18n) {
