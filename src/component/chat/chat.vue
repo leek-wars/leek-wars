@@ -367,6 +367,7 @@
 	}
 
 	function censor(message: ChatMessage) {
+		if (!message) return
 		censorDialog.value = true
 		censorMessage.value = message
 		muteFarmer.value = message.farmer
@@ -374,14 +375,17 @@
 		if (message.censored === 0) {
 			censoredMessages.value[message.id] = true
 		}
-		for (const sub of message.subMessages) {
-			if (sub.censored === 0) {
-				censoredMessages.value[sub.id] = true
+		if (message.subMessages) {
+			for (const sub of message.subMessages) {
+				if (sub.censored === 0) {
+					censoredMessages.value[sub.id] = true
+				}
 			}
 		}
 	}
 
 	function deleteMessage(message: ChatMessage) {
+		if (!message) return
 		deleteDialog.value = true
 		deletedMessage.value = message
 		muteFarmer.value = message.farmer
