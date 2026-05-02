@@ -29,7 +29,15 @@ function post(url, args) {
 // Force le nouveau service worker à prendre le contrôle immédiatement
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', event => {
-	event.waitUntil(self.clients.claim());
+	event.waitUntil((async () => {
+		// Active NavigationPreload : la requête HTML part en parallèle du boot du SW.
+		// Sans ça, sur cold navigation Chrome doit attendre que le SW soit "started"
+		// avant d'envoyer le fetch, ce qui ajoute 50-100ms de TTFB perçu.
+		if (self.registration.navigationPreload) {
+			await self.registration.navigationPreload.enable();
+		}
+		await self.clients.claim();
+	})());
 });
 
 const broadcast = new BroadcastChannel('channel')
@@ -69,8 +77,10 @@ self.addEventListener('fetch', event => {
 				event.waitUntil(cache.add(new Request(event.request.url, {credentials: 'same-origin'})).catch(() => {}));
 				return cachedResponse;
 			}
-			// If we didn't find a match in the cache, use the network.
-			return await fetch(event.request);
+			// Cache miss: prefer the preloadResponse (started in parallel to SW boot).
+			// Only relevant for navigation requests; undefined for asset fetches.
+			const preload = await event.preloadResponse;
+			return preload || await fetch(event.request);
 		} catch (e) {
 			// Network error - return a basic error response
 			return new Response('Network error', { status: 503, statusText: 'Service Unavailable' });
