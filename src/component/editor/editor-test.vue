@@ -390,6 +390,7 @@
 	import { CHIPS } from '@/model/chips'
 	import { ORDERED_CHIPS } from '@/model/sorted_chips'
 	import TurretImage from '@/component/turret-image.vue'
+	import Map from '@/component/app/map.vue'
 	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRouter } from 'vue-router'
