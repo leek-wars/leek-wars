@@ -23,7 +23,7 @@
 							<div :class="{bad: !data.leek.in_arena}"><b>in_arena</b> {{ data.leek.in_arena }}</div>
 							<div :class="{bad: !data.leek.valid}"><b>valid</b> {{ data.leek.valid }}</div>
 							<div><b>attacked</b> {{ data.leek.attacked }}</div>
-							<div :class="{bad: !data.leek.ai || data.leek.ai === -1}"><b>ai</b> {{ data.leek.ai }}</div>
+							<div :class="{bad: !data.leek.ai_path}"><b>ai_path</b> {{ data.leek.ai_path || '∅' }}</div>
 						</div>
 					</section>
 
