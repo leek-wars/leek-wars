@@ -148,12 +148,12 @@ watch(expanded, () => {
 			opacity: 0.9;
 			vertical-align: top;
 		}
-		i {
-			padding: 6px 0;
-			opacity: 0.9;
-			font-size: 24px;
-		}
 		.v-icon {
+			width: 24px;
+			height: 24px;
+			padding: 6px 0;
+			box-sizing: content-box;
+			opacity: 0.9;
 			color: white;
 		}
 	}

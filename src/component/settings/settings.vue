@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">
-				<div v-if="$store.state.farmer && $store.state.farmer.verified" class="tab action" icon="mdi-power-settings-new" @click="logout">
+				<div v-if="$store.state.farmer && $store.state.farmer.verified" class="tab action" icon="mdi-power" @click="logout">
 					<v-icon>mdi-power</v-icon>
 					<span>{{ $t('logout') }}</span>
 				</div>

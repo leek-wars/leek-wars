@@ -1,4 +1,5 @@
 import { LeekWars } from "@/model/leekwars"
+import { mdiBookOpenPageVariant } from "@mdi/js"
 import { CHIPS } from "./chips"
 import { FUNCTIONS } from "./functions"
 
@@ -10,6 +11,9 @@ const URL_TUTO = "/help/tutorial"
 const URL_UPDATE = "/forum/category-6/topic-"
 const URL_PR = "https://github.com/leek-wars/leek-wars/pulls"
 const URL_ISSUE = "https://github.com/leek-wars/leek-wars/issues/new"
+
+const mdiInlineSvg = (path: string, cls = '') =>
+	`<i class="v-icon notranslate theme--light ${cls}"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="${path}"/></svg></i>`
 
 class Command {
 	name!: string
@@ -83,7 +87,7 @@ const COMMANDS = [
 		replacement: (a: any, b: any, page: string, anchor: string) => {
 			const name = page ? page + (anchor ? '#' + anchor : '') : "Encyclopédie"
 			const link = page ? URL_ENCYCLOPEDIA + '/' + page + (anchor ? '#' + anchor : '') : URL_ENCYCLOPEDIA
-			return  " <i class='v-icon notranslate book mdi mdi-book-open-page-variant theme--light'></i>" + LeekWars.toChatLink(link, name, "target='_blank' rel='noopener'", "lw") + " "
+			return  " " + mdiInlineSvg(mdiBookOpenPageVariant, 'book') + LeekWars.toChatLink(link, name, "target='_blank' rel='noopener'", "lw") + " "
 		},
 		options: []
 	}, {

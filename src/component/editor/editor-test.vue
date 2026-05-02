@@ -301,7 +301,7 @@
 			</div>
 		</popup>
 
-		<popup v-model="leekDialog" :width="700" icon="mdi-person" :title="$t('select_leek')">
+		<popup v-model="leekDialog" :width="700" icon="mdi-account" :title="$t('select_leek')">
 			<div class="leek-dialog padding">
 				<div v-for="leek of availableLeeks" :key="leek.id" v-ripple class="leek card" @click="addScenarioLeek(leek)">
 					<leek-image :leek="leek" :scale="0.5" />

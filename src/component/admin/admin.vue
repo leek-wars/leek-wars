@@ -173,7 +173,7 @@
 						<h2>Refresh game data</h2>
 					</div>
 					<div v-ripple class="section card" @click="refreshEncycloLinks">
-						<v-icon>{{ encycloLinksLoading ? 'mdi-loading mdi-spin' : 'mdi-book-sync' }}</v-icon>
+						<v-icon :class="{ 'mdi-spin': encycloLinksLoading }">{{ encycloLinksLoading ? 'mdi-loading' : 'mdi-book-sync' }}</v-icon>
 						<h2>Refresh encyclo links</h2>
 					</div>
 					<a target="_blank" rel="noopener" href="https://www.paypal.com/webapps/business/">

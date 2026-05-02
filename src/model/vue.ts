@@ -26,7 +26,8 @@ import { scroll_to_hash } from '@/router-functions'
 
 import { createVuetify } from 'vuetify'
 import 'vuetify/styles'
-import '@mdi/font/css/materialdesignicons.css'
+import { aliases as mdiSvgAliases } from 'vuetify/iconsets/mdi-svg'
+import { mdiIconSet } from './icon-set'
 import { formatEmojis } from './emojis'
 import { displayWarningMessage, emitter, setVueMain } from './emitter'
 import '@/chart'
@@ -34,6 +35,11 @@ import '@/chart'
 const Console = defineAsyncComponent(() => import('@/component/app/console.vue'))
 
 const vuetify = createVuetify({
+	icons: {
+		defaultSet: 'mdi',
+		aliases: mdiSvgAliases,
+		sets: { mdi: mdiIconSet },
+	},
 	theme: {
 		themes: {
 			dark: {

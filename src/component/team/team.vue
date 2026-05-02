@@ -675,7 +675,7 @@
 			</template>
 		</popup>
 
-		<popup v-if="team" v-model="quitTeamDialog" :width="500" icon="mdi-exit" :title="$t('quit_team_confirm_title', [team.name])">
+		<popup v-if="team" v-model="quitTeamDialog" :width="500" icon="mdi-exit-to-app" :title="$t('quit_team_confirm_title', [team.name])">
 			{{ $t('quit_team_confirm') }}
 			<template #actions>
 				<div v-ripple @click="quitTeamDialog = false">{{ $t('quit_cancel') }}</div>

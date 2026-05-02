@@ -19,7 +19,7 @@
 		"stats": "xdg-open dist/stats.html"
 	},
 	"dependencies": {
-		"@mdi/font": "^7.4.47",
+		"@mdi/js": "^7.4.47",
 		"@paypal/paypal-js": "^5.1.4",
 		"@types/dagre": "^0.7.54",
 		"@types/dompurify": "^3.0.5",

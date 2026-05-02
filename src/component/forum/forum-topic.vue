@@ -181,7 +181,7 @@
 									<a v-if="topic.private_issue && $store.state.farmer && $store.state.farmer.admin" :href="'https://github.com/5pilow/leek-wars/issues/' + topic.private_issue" class="issue-badge private-issue" target="_blank" rel="noopener">
 										<img src="/image/github_white.png"><span>#{{ topic.private_issue }}</span>
 									</a>
-									<span v-if="$store.state.farmer && $store.state.farmer.admin && !topic.private_issue && topic.status === ForumTopicStatus.OPEN" class="action create-issue" @click="createIssue"><v-icon>{{ creatingIssue ? 'mdi-loading mdi-spin' : 'mdi-source-branch' }}</v-icon> {{ $t('create_issue') }}</span>
+									<span v-if="$store.state.farmer && $store.state.farmer.admin && !topic.private_issue && topic.status === ForumTopicStatus.OPEN" class="action create-issue" @click="createIssue"><v-icon :class="{ 'mdi-spin': creatingIssue }">{{ creatingIssue ? 'mdi-loading' : 'mdi-source-branch' }}</v-icon> {{ $t('create_issue') }}</span>
 								</template>
 
 								<v-spacer />
