@@ -95,7 +95,6 @@
 
 	const isMyLeek = computed(() => {
 		if (!store.state.farmer) { return false }
-		if (props.fight.type !== FightType.TEAM && props.fight.type !== FightType.BATTLE_ROYALE) { return false }
 		return props.leek.id in store.state.farmer.leeks
 	})
 
