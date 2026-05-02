@@ -4,7 +4,7 @@
 		<div v-if="!loading && (!chat || !chat.messages.length)" v-autostopscroll class="messages">
 			<div class="no-messages">{{ $t('main.no_messages_yet') }}</div>
 		</div>
-		<div v-else-if="chat && chat.messages.length" ref="messages" v-autostopscroll class="messages" @scroll="scroll" @wheel="scroll">
+		<div v-else-if="chat && chat.messages.length" ref="messages" v-autostopscroll class="messages" @scroll="scroll">
 			<div v-for="(messages, day) in chat.days" :key="day">
 				<div v-if="messages[0]" class="separator">
 					{{ $filters.date(messages[0].date) }}
