@@ -631,7 +631,7 @@
 	const { t, locale: i18nLocale } = useI18n()
 	const route = useRoute()
 	const router = useRouter()
-	const avatar = useTemplateRef<any>('avatar')
+	const avatarRef = useTemplateRef<any>('avatar')
 	const godfatherLink = useTemplateRef<any>('godfatherLink')
 
 	const farmer = ref<Farmer | null>(null)
@@ -915,7 +915,7 @@
 			return
 		}
 
-		LeekWars.fileToImage(file, (avatar.value as any)?.$el as Element)
+		LeekWars.fileToImage(file, (avatarRef.value as any)?.$el as Element)
 
 		const formdata = new FormData()
 		formdata.append('avatar', file)

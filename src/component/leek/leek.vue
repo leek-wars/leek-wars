@@ -809,7 +809,7 @@
 	const route = useRoute()
 	const router = useRouter()
 	const componentTooltipsRef = useTemplateRef<any[]>('componentTooltips')
-	const leekImage = useTemplateRef<any>('leekImage')
+	const leekImageRef = useTemplateRef<any>('leekImage')
 
 	const leek = ref<Leek | null>(null)
 	const error = ref(false)
@@ -1466,7 +1466,7 @@
 	}
 
 	function downloadLeekImage() {
-		const li = leekImage.value
+		const li = leekImageRef.value
 		if (!li) return
 		const canvas = li.drawOnCanvas()
 		if (canvas) {
