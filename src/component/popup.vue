@@ -180,6 +180,11 @@ body.dark .content {
 		&.green:hover {
 			background: #73d120;
 		}
+		&.disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+			pointer-events: none;
+		}
 	}
 }
 

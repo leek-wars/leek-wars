@@ -230,7 +230,7 @@
 							</div>
 
 							<div v-if="message.editing" class="edit-buttons">
-								<v-btn color="primary" class="confirm-edit send" @click="confirmEdit(message)"><v-icon>mdi-send-outline</v-icon> {{ $t('main.send') }}</v-btn>
+								<v-btn color="primary" class="confirm-edit send" :disabled="!message.message || !message.message.trim()" @click="confirmEdit(message)"><v-icon>mdi-send-outline</v-icon> {{ $t('main.send') }}</v-btn>
 								<v-btn class="cancel-edit" @click="endEdit(message)">{{ $t('main.cancel') }}</v-btn>
 								<span v-if="message.id == -1">
 									GitHub Issue <input v-model.number="topic.issue" type="number">
@@ -253,7 +253,7 @@
 					<div class="center">
 						<div v-if="page != pages" class="warning"><v-icon>mdi-alert</v-icon> {{ $t('not_last_page') }}</div>
 						<div v-if="isOldTopic" class="warning"><v-icon>mdi-alert</v-icon> {{ $t('old_topic_warning') }}</div>
-						<v-btn color="primary" class="send" @click="send"><v-icon>mdi-send-outline</v-icon> {{ $t('send') }}</v-btn>
+						<v-btn color="primary" class="send" :disabled="!newMessage || !newMessage.trim()" @click="send"><v-icon>mdi-send-outline</v-icon> {{ $t('send') }}</v-btn>
 					</div>
 					<formatting-rules />
 					<br>
@@ -641,6 +641,7 @@
 
 	function send() {
 		if (!topic.value || sendingMessage.value) { return }
+		if (!newMessage.value || !newMessage.value.trim()) { return }
 		if (isOldTopic.value && !oldTopicDialog.value) {
 			oldTopicDialog.value = true
 			return
@@ -703,6 +704,7 @@
 
 	function confirmEdit(message: ForumMessage) {
 		if (!topic.value) { return }
+		if (!message.message || !message.message.trim()) { return }
 		const callback = () => {
 			;(message as any).html = null
 			;(message as any).editing = false

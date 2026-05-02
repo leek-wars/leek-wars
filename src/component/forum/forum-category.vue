@@ -308,7 +308,7 @@
 			</div>
 			<template #actions>
 				<div v-ripple class="action" @click="createDialog = false">{{ $t('cancel') }}</div>
-				<div v-ripple class="action green" @click="create">{{ $t('create_topic') }}</div>
+				<div v-ripple class="action green" :class="{disabled: !createTitle || !createTitle.trim() || !createMessage || !createMessage.trim()}" @click="create">{{ $t('create_topic') }}</div>
 			</template>
 		</popup>
 
@@ -522,6 +522,8 @@
 
 	function create() {
 		if (!categories.value) { return }
+		if (!createTitle.value || !createTitle.value.trim()) { return }
+		if (!createMessage.value || !createMessage.value.trim()) { return }
 		const params: any = {category_id: categories.value[0].id, title: createTitle.value, message: createMessage.value, issue: 0, lang: createMessageLang.value}
 		params.release = createRelease.value || 0
 		params.hidden = createHidden.value
