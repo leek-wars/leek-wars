@@ -23,5 +23,5 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H leekwars.com >> ~/.ssh/known_hosts
-          tar cz dist/ | ssh -T deploy@leekwars.com
+          ssh-keyscan -H -p 58117 leekwars.com >> ~/.ssh/known_hosts
+          tar cz dist/ | ssh -T -p 58117 deploy@leekwars.com
