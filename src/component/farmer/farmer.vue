@@ -611,20 +611,21 @@
 	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
-	import FightsHistory from '@/component/history/fights-history.vue'
-	import TournamentsHistory from '@/component/history/tournaments-history.vue'
-	import TitlePicker from '@/component/title/title-picker.vue'
-	import ReportDialog from '@/component/moderation/report-dialog.vue'
 	import LwTitle from '@/component/title/title.vue'
 	import { emitter } from '@/model/vue'
 	import { Line } from 'vue-chartjs'
 	import type { ChartData, ChartOptions } from 'chart.js'
-	import { computed, ref, useTemplateRef, watch } from 'vue'
+	import { computed, defineAsyncComponent, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 
+	const FightsHistory = defineAsyncComponent(() => import('@/component/history/fights-history.vue'))
+	const TournamentsHistory = defineAsyncComponent(() => import('@/component/history/tournaments-history.vue'))
+	const TitlePicker = defineAsyncComponent(() => import('@/component/title/title-picker.vue'))
+	const ReportDialog = defineAsyncComponent(() => import('@/component/moderation/report-dialog.vue'))
+
 	defineOptions({ name: 'farmer', i18n: {}, mixins: [...mixins], components: {
-		RichTooltipFarmer, RichTooltipTeam, RichTooltipLeek, FightsHistory, TournamentsHistory, TitlePicker, ReportDialog, 'lw-title': LwTitle, 'rich-tooltip-item': RichTooltipItem, Line,
+		RichTooltipFarmer, RichTooltipTeam, RichTooltipLeek, 'lw-title': LwTitle, 'rich-tooltip-item': RichTooltipItem, Line,
 	} })
 
 	const { t, locale: i18nLocale } = useI18n()

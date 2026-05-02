@@ -151,14 +151,15 @@
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
 	import { TeamMemberLevel } from '@/model/team'
-	import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, onUpdated, ref, useTemplateRef, watch } from 'vue'
+	import { computed, defineAsyncComponent, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, onUpdated, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRouter } from 'vue-router'
 	import ChatInput from './chat-input.vue'
 	import ChatMessageComponent from './chat-message.vue'
 	import EmojiPicker from './emoji-picker.vue'
-	import ReportDialog from '@/component/moderation/report-dialog.vue'
 	import { emitter } from '@/model/vue'
+
+	const ReportDialog = defineAsyncComponent(() => import('@/component/moderation/report-dialog.vue'))
 
 	defineOptions({ name: "chat", components: { 'chat-message': ChatMessageComponent } })
 

@@ -335,7 +335,6 @@
 	import EmojiPicker from '../chat/emoji-picker.vue'
 	import Breadcrumb from './breadcrumb.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
-	import ReportDialog from '@/component/moderation/report-dialog.vue'
 	import Pagination from '@/component/pagination.vue'
 	import LwTitle from '@/component/title/title.vue'
 	import { computed, defineAsyncComponent, nextTick, onMounted, reactive, ref, useTemplateRef, watch } from 'vue'
@@ -344,6 +343,7 @@
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
 
+	const ReportDialog = defineAsyncComponent(() => import('@/component/moderation/report-dialog.vue'))
 	const FormattingRules = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum-formatting-rules.${locale}.i18n`))
 
 	defineOptions({ name: 'forum_topic', i18n: {}, mixins: [...mixins] })

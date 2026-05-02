@@ -773,19 +773,13 @@
 	import { Potion, PotionEffect } from '@/model/potion'
 	import { store } from '@/model/store'
 	import { Weapon, WeaponsData } from '@/model/weapon'
-	import CapitalDialog from './capital-dialog.vue'
 	import CharacteristicTooltip from './characteristic-tooltip.vue'
 	import { fileSystem } from '@/model/filesystem'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
-	import FightsHistory from '@/component/history/fights-history.vue'
-	import TournamentsHistory from '@/component/history/tournaments-history.vue'
-	import TitlePicker from '@/component/title/title-picker.vue'
-	import ReportDialog from '@/component/moderation/report-dialog.vue'
 	import AIElement from '@/component/app/ai.vue'
 	import LwTitle from '@/component/title/title.vue'
-	import LoadoutDialog from './loadout-dialog.vue'
 	import { COMPONENTS } from '@/model/components'
 	import { CHIPS } from '@/model/chips'
 	import { ORDERED_CHIPS } from '@/model/sorted_chips'
@@ -798,11 +792,17 @@
 	import { Line } from 'vue-chartjs'
 	import type { ChartData, ChartOptions } from 'chart.js'
 
+	const CapitalDialog = defineAsyncComponent(() => import('./capital-dialog.vue'))
+	const LoadoutDialog = defineAsyncComponent(() => import('./loadout-dialog.vue'))
+	const ReportDialog = defineAsyncComponent(() => import('@/component/moderation/report-dialog.vue'))
+	const TitlePicker = defineAsyncComponent(() => import('@/component/title/title-picker.vue'))
+	const FightsHistory = defineAsyncComponent(() => import('@/component/history/fights-history.vue'))
+	const TournamentsHistory = defineAsyncComponent(() => import('@/component/history/tournaments-history.vue'))
 	const LevelDialog = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/leek/level-dialog.${locale}.i18n`))
 	const Explorer = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`))
 
 	defineOptions({ name: 'leek', i18n: {}, mixins: [...mixins], components: {
-		CapitalDialog, CharacteristicTooltip, RichTooltipItem, RichTooltipFarmer, RichTooltipLeek, FightsHistory, TournamentsHistory, TitlePicker, ReportDialog, ai: AIElement, 'lw-title': LwTitle, LeekComponent, LoadoutDialog, Line,
+		CharacteristicTooltip, RichTooltipItem, RichTooltipFarmer, RichTooltipLeek, ai: AIElement, 'lw-title': LwTitle, LeekComponent, Line,
 	} })
 
 	const { t } = useI18n()

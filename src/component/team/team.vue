@@ -813,9 +813,7 @@
 </template>
 
 <script lang="ts">
-	const ChatElement = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
 	import { locale } from '@/locale'
-	const Explorer = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`))
 	import CharacteristicTooltip from '@/component/leek/characteristic-tooltip.vue'
 	import { ChatType } from '@/model/chat'
 	import { Farmer } from '@/model/farmer'
@@ -831,9 +829,6 @@
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
 	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
-	import FightsHistory from '@/component/history/fights-history.vue'
-	import TournamentsHistory from '@/component/history/tournaments-history.vue'
-	import ReportDialog from '@/component/moderation/report-dialog.vue'
 	import TurretImage from '@/component/turret-image.vue'
 	import AIElement from '@/component/app/ai.vue'
 	import { CHIPS } from '@/model/chips'
@@ -842,6 +837,12 @@
 	import { Line } from 'vue-chartjs'
 	import { ChartData, ChartOptions } from 'chart.js'
 	import Sortable from 'sortablejs'
+
+	const ChatElement = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
+	const Explorer = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`))
+	const FightsHistory = defineAsyncComponent(() => import('@/component/history/fights-history.vue'))
+	const TournamentsHistory = defineAsyncComponent(() => import('@/component/history/tournaments-history.vue'))
+	const ReportDialog = defineAsyncComponent(() => import('@/component/moderation/report-dialog.vue'))
 
 	interface ColumnDef {
 		key: string

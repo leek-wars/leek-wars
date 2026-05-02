@@ -1,5 +1,5 @@
 <template lang="html">
-	<img :src="url" class="avatar" v-bind="$attrs">
+	<img :src="url" class="avatar" loading="lazy" v-bind="$attrs">
 </template>
 
 <script setup lang="ts">
