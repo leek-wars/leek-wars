@@ -230,13 +230,15 @@
 		<template #icon><v-icon color="warning">mdi-alert</v-icon></template>
 		<template #title>{{ $t('main.loadout_skipped_title') }}</template>
 		<div class="skipped-list">
-			<div v-for="(s, i) in skippedItems" :key="i" class="skipped-item">
-				<item v-if="LeekWars.items[s.template]" :item="LeekWars.items[s.template]" />
-				<div class="skipped-info">
-					<div class="skipped-name">{{ LeekWars.items[s.template] ? $t(skippedItemTKey(s)) : '#' + s.template }}</div>
-					<div class="skipped-reason">{{ $t('main.loadout_skipped_reason_' + s.reason) }}</div>
+			<template v-for="(s, i) in skippedItems" :key="i">
+				<div v-if="s" class="skipped-item">
+					<item v-if="LeekWars.items[s.template]" :item="LeekWars.items[s.template]" />
+					<div class="skipped-info">
+						<div class="skipped-name">{{ LeekWars.items[s.template] ? $t(skippedItemTKey(s)) : '#' + s.template }}</div>
+						<div class="skipped-reason">{{ $t('main.loadout_skipped_reason_' + s.reason) }}</div>
+					</div>
 				</div>
-			</div>
+			</template>
 		</div>
 		<template #actions>
 			<div v-ripple class="action" @click="skippedDialogOpen = false">{{ $t('main.close') }}</div>
@@ -547,19 +549,20 @@
 		methods: {
 			isCharac(icon: string) { return CHARACTERISTICS.includes(icon) },
 			skippedItemTKey(s: any): string {
+				if (!s) return ''
 				const item = LeekWars.items[s.template]
 				if (!item) return ''
 				if (s.type === 'weapon') {
 					const w = LeekWars.weapons[item.params]
-					if (w) return 'weapon.' + w.name
+					if (w?.name) return 'weapon.' + w.name
 				} else if (s.type === 'chip') {
 					const c = LeekWars.chips[item.params]
-					if (c) return 'chip.' + c.name
+					if (c?.name) return 'chip.' + c.name
 				} else if (s.type === 'component') {
 					const c = LeekWars.components[item.params]
-					if (c) return 'component.' + c.name
+					if (c?.name) return 'component.' + c.name
 				}
-				return item.name
+				return item.name || ''
 			},
 			loadAll() {
 				this.loading = true
