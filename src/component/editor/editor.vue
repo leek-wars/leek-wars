@@ -121,7 +121,7 @@
 											<v-icon>mdi-chevron-down</v-icon>
 										</div>
 									</template>
-									<leekscript-versions v-model:version="currentAI.version" v-model:strict="currentAI.strict" @update:version="updateVersion" @update:strict="updateStrictMode" />
+									<leekscript-versions :version="currentAI.version" :strict="currentAI.strict" @update:version="onVersionUpdate" @update:strict="onStrictUpdate" />
 								</v-menu>
 								<div v-ripple class="problems" :class="{active: bottomPanel === 'problems'}" @click="toggleBottomPanel('problems')">
 									<span v-if="!analyzer.error_count && !analyzer.warning_count" class="no-error">
@@ -323,7 +323,7 @@
 	const hideHeader = ref(false)
 	const fontSize = ref(DEFAULT_FONT_SIZE)
 	const lineHeight = ref(DEFAULT_LINE_HEIGHT)
-	const dragging = ref<Item | null>(null)
+	const dragging = shallowRef<Item | null>(null)
 	const testDialog = ref(false)
 	const panelWidth = ref(200)
 	const problemsHeight = ref(200)
@@ -995,9 +995,9 @@
 		LeekWars.large = enlargeWindow.value
 		localStorage.setItem('editor/large', '' + enlargeWindow.value)
 	})
-	watch(history, () => {
+	watch(() => history.value.map(ai => ai.path).join('|'), () => {
 		localStorage.setItem('editor/history', JSON.stringify(history.value.map(ai => ai.path)))
-	}, { deep: true })
+	})
 
 	function jumpEvent(event: any) {
 		jump(event.ai, event.line, event.column)
@@ -1126,16 +1126,20 @@
 		history.value = []
 	}
 
-	function updateVersion() {
+	function onVersionUpdate(version: number) {
+		if (!currentAI.value) return
+		currentAI.value.version = version
 		if (!currentEditor.value) return
-		rewritePragma('version', currentAI.value.version)
+		rewritePragma('version', version)
 		save(currentEditor.value)
 		currentAI.value.analyze()
 	}
 
-	function updateStrictMode() {
+	function onStrictUpdate(strict: boolean) {
+		if (!currentAI.value) return
+		currentAI.value.strict = strict
 		if (!currentEditor.value) return
-		rewritePragma('strict', currentAI.value.strict)
+		rewritePragma('strict', strict)
 		save(currentEditor.value)
 		currentAI.value.analyze()
 	}
