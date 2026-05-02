@@ -601,7 +601,9 @@
 			const key = category.value === 'arena' ? 'arena-leek' : 'garden/leek'
 			let defaultLeek = parseInt(localStorage.getItem(key) || '0', 10)
 			if (!(defaultLeek in store.state.farmer!.leeks)) {
-				defaultLeek = LeekWars.first(store.state.farmer!.leeks)!.id
+				const first = LeekWars.first(store.state.farmer!.leeks)
+				if (!first) { return }
+				defaultLeek = first.id
 			}
 			router.replace('/garden/' + category.value + '/' + defaultLeek)
 			return
@@ -665,8 +667,9 @@
 	}
 
 	function loadLeek(leek: Leek) {
+		if (!leek) { return }
 		selectedLeek.value = leek
-		if (garden.value.fights === 0 || leekOpponents[leek.id]) {
+		if (!garden.value || garden.value.fights === 0 || leekOpponents[leek.id]) {
 			return
 		}
 		LeekWars.get('garden/get-leek-opponents/' + leek.id).then(data => {
