@@ -283,8 +283,8 @@
 		} else {
 			userScroll = true
 		}
-		if (sTop < 150 && chat.value!.messages.length) {
-			scrollMessage = chat.value!.messages[0].id
+		if (sTop < 150 && chat.value && chat.value.messages.length && chat.value.messages[0]) {
+			scrollMessage = chat.value.messages[0].id
 			store.commit('load-chat-history', props.id)
 		}
 	}
