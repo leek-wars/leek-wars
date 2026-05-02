@@ -432,7 +432,9 @@ app.directive('latex', {
 
 app.directive('chat-code-latex', {
 	mounted: (el) => {
-		el.innerHTML = el.innerHTML.replace(/\$(.*?)\$/g, (str: string) => {
+		el.innerHTML = el.innerHTML.replace(/\$(.*?)\$/g, (str: string, content: string) => {
+			// Skip if the captured content already contains HTML tags (e.g. linkified URL)
+			if (/<\w/.test(content)) return str
 			return "<latex>" + str.replace(/`/g, "") + "</latex>"
 		})
 		el.innerHTML = el.innerHTML.replace(/```(.*?)```/g, (str: string, code: string) => {
