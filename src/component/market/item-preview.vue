@@ -144,9 +144,9 @@ const itemHistogram = computed<number[] | null>(() => {
 	return data.map((v: number) => (v / max) * 18 + (v > 0 ? 2 : 1))
 })
 
-const category = computed(() => ITEM_CATEGORY_NAME[props.item.type])
+const category = computed(() => props.item ? ITEM_CATEGORY_NAME[props.item.type] : '')
 
-const name_short = computed(() => props.item.name.replace(category.value + '_', ''))
+const name_short = computed(() => props.item ? props.item.name.replace(category.value + '_', '') : '')
 
 const scheme = computed(() => {
 	if (props.item.type !== ItemType.SCHEME) return null
