@@ -2954,7 +2954,11 @@ class Game {
 
 	public previousEntity() {
 		this.stopAllSounds()
-		let i = this.currentAction - 1
+		// Si on est déjà sur (ou juste après) un LEEK_TURN, on remonte à celui d'avant.
+		// Sinon, on remonte au LEEK_TURN courant (début du tour de l'entité en cours).
+		let i = this.currentAction
+		if (i >= this.actions.length) i = this.actions.length - 1
+		if (i >= 0 && this.actions[i].type === ActionType.LEEK_TURN) i--
 		for (; i >= 0; i--) {
 			if (this.actions[i].type === ActionType.LEEK_TURN) break
 		}
