@@ -2952,6 +2952,27 @@ class Game {
 		}
 	}
 
+	public previousEntity() {
+		this.stopAllSounds()
+		let i = this.currentAction - 1
+		for (; i >= 0; i--) {
+			if (this.actions[i].type === ActionType.LEEK_TURN) break
+		}
+		if (i < 0) i = 0
+		this.requestJump(i)
+	}
+
+	public nextEntity() {
+		this.stopAllSounds()
+		let i = this.currentAction + 1
+		for (; i < this.actions.length; i++) {
+			if (this.actions[i].type === ActionType.LEEK_TURN) break
+		}
+		if (i < this.actions.length) {
+			this.requestJump(i)
+		}
+	}
+
 	public resourceLoaded(res: string) { // variable "res" utile pour débug
 		this.loadedData++
 		if (this.cancelled) { return }
