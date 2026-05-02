@@ -534,6 +534,7 @@
 		if (!ai.value) { return }
 
 		const regex = /^[ \t]*include\s*\(\s*["'](.*?)["']\s*\)[ \t]*;?.*$/gm
+		const pragmaRegex = /^[ \t]*\/\/[ \t]*@[A-Za-z_][A-Za-z0-9_]*(?:[ \t]*:[ \t]*\S+)?[ \t]*\r?$/gm
 
 		const included_ais = new Set<AI>()
 
@@ -542,29 +543,36 @@
 				await fileSystem.load(target)
 			}
 			if (!target.code) return
-			const matches = [...target.code.matchAll(regex)]
-			for (const match of matches) {
+			const children: AI[] = []
+			for (const match of target.code.matchAll(regex)) {
 				const included = fileSystem.find(match[1], target.folder)
 				if (included && !included_ais.has(included)) {
 					included_ais.add(included)
-					await ensureLoaded(included)
+					children.push(included)
 				}
 			}
+			await Promise.all(children.map(ensureLoaded))
 		}
 
 		await ensureLoaded(ai.value)
 		included_ais.clear()
 
-		const fun = (target: AI): string => "/** " + target.path + " **/\n\n" + (target.code ? target.code.replace(regex, (a, path) => {
-			const included = fileSystem.find(path, target.folder)
-			if (included && !included_ais.has(included)) {
-				included_ais.add(included)
-				return fun(included)
-			} else {
-				return ""
+		const fun = (target: AI, isRoot: boolean): string => {
+			let code = target.code ?? ''
+			if (!isRoot) {
+				code = code.replace(pragmaRegex, '')
 			}
-		}) : '')
-		const code = fun(ai.value!)
+			return "/** " + target.path + " **/\n\n" + code.replace(regex, (a, path) => {
+				const included = fileSystem.find(path, target.folder)
+				if (included && !included_ais.has(included)) {
+					included_ais.add(included)
+					return fun(included, false)
+				} else {
+					return ""
+				}
+			})
+		}
+		const code = fun(ai.value!, true)
 
 		download(ai.value!.name, code)
 	}

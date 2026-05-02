@@ -20,7 +20,8 @@
 	import LeekImage from '../leek-image.vue'
 	import { computed, defineComponent, h, nextTick, onBeforeUpdate, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
-	import { useRouter } from 'vue-router'
+	import { useRoute, useRouter } from 'vue-router'
+	import { scroll_to_hash } from '@/router-functions'
 	import LWLoader from '../app/loader.vue'
 
 	defineOptions({ name: 'markdown' })
@@ -31,7 +32,8 @@
 		locale?: string
 	}>()
 
-	const { locale: i18nLocale } = useI18n()
+	const { t, locale: i18nLocale } = useI18n()
+	const route = useRoute()
 	const router = useRouter()
 	const md = useTemplateRef<HTMLElement>('md')
 
@@ -90,15 +92,16 @@
 						const anchor = document.createElement('a')
 						anchor.className = 'heading-anchor'
 						anchor.href = '#' + item.id
-						anchor.setAttribute('aria-label', 'Lien vers cette section')
-						anchor.title = 'Copier le lien vers cette section'
+						const label = t('main.copy_section_link') as string
+						anchor.setAttribute('aria-label', label)
+						anchor.title = label
 						anchor.textContent = '#'
 						anchor.addEventListener('click', (e: MouseEvent) => {
 							e.preventDefault()
-							const url = window.location.origin + window.location.pathname + '#' + item.id
 							history.replaceState(null, '', '#' + item.id)
-							item.scrollIntoView({ behavior: 'smooth', block: 'start' })
+							scroll_to_hash('#' + item.id, route)
 							if (navigator.clipboard) {
+								const url = window.location.origin + window.location.pathname + '#' + item.id
 								navigator.clipboard.writeText(url).catch(() => {})
 							}
 						})

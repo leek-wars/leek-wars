@@ -2952,15 +2952,12 @@ class Game {
 		}
 	}
 
+	// jump(N) exécute les actions 1..N-1 et termine avec currentAction = N-1.
+	// Pour s'arrêter "après" un LEEK_TURN (currentPlayer défini), on jump à index+1.
 	public previousEntity() {
 		this.stopAllSounds()
-		// jump(N) exécute les actions 1..N-1 et termine avec currentAction = N-1, donc
-		// l'état visuel est "après action N-1, prochaine = N". Pour se trouver "après
-		// avoir exécuté un LEEK_TURN" (currentPlayer fraîchement défini), il faut
-		// jump(LEEK_TURN_index + 1).
 		let i = this.currentAction
 		if (i >= this.actions.length) i = this.actions.length - 1
-		// Si on est déjà sur un LEEK_TURN, on cherche le précédent.
 		if (i >= 0 && this.actions[i].type === ActionType.LEEK_TURN) i--
 		for (; i >= 0; i--) {
 			if (this.actions[i].type === ActionType.LEEK_TURN) break
@@ -2971,7 +2968,6 @@ class Game {
 
 	public nextEntity() {
 		this.stopAllSounds()
-		// Cf previousEntity : pour s'arrêter sur un LEEK_TURN, jump à index + 1.
 		let i = this.currentAction + 1
 		for (; i < this.actions.length; i++) {
 			if (this.actions[i].type === ActionType.LEEK_TURN) break

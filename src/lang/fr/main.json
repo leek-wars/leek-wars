@@ -46,6 +46,7 @@
 	"components": "Composants",
 	"conditions": "Conditions d'utilisation",
 	"connection": "Connexion",
+	"copy_section_link": "Copier le lien vers cette section",
 	"connect_message": "<a href='{0}'><b>Connexion</b></a> ou <a href='{0}'><b>Inscription</b></a> à Leek Wars",
 	"connected": "Connecté",
 	"console": "Console LeekScript",

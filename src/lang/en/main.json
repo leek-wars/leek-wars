@@ -44,6 +44,7 @@
 	"comments": "Comments",
 	"conditions": "Terms of use",
 	"connection": "Log in",
+	"copy_section_link": "Copy link to this section",
 	"connect_message": "<a href='{0}'><b>Log in</b></a> or <a href='{0}'><b>Sign up</b></a> to Leek Wars",
 	"console_alert_1": "Warning! If someone asks you to enter a program here,",
 	"console_alert_2": "it is an attempt to hack your account on Leek Wars.",
