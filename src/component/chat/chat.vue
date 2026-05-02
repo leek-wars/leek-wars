@@ -577,6 +577,9 @@
 		.messages {
 			flex: 1;
 			padding: 10px;
+			:deep(a) {
+				pointer-events: none;
+			}
 		}
 		.bubble {
 			margin-bottom: 10px;
