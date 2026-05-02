@@ -8,7 +8,7 @@
 
 				<v-icon class="console-button" @click="leekscriptConsole">mdi-console</v-icon>
 
-				<console-window v-if="showConsole" v-model="consoleValue" ref="consoleWindow" @close="consoleValue = false" />
+				<console-window v-if="showConsole" v-model="consoleValue" @close="consoleValue = false" />
 
 				<lw-bar v-if="LeekWars.mobile" />
 
