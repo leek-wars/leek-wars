@@ -445,8 +445,20 @@
 	const challengeTeamTargets = ref<Composition[]>([])
 	const queue = ref(0)
 	const advanced = ref(false)
-	const seed = ref<any | null>(null)
-	const side = ref('left')
+	const storedSeed = parseInt(localStorage.getItem('garden/challenge/seed') || '', 10)
+	const seed = ref<any | null>(isNaN(storedSeed) || storedSeed < 1 ? null : storedSeed)
+	const side = ref(localStorage.getItem('garden/challenge/side') || 'left')
+
+	watch(seed, () => {
+		if (seed.value) {
+			localStorage.setItem('garden/challenge/seed', String(seed.value))
+		} else {
+			localStorage.removeItem('garden/challenge/seed')
+		}
+	})
+	watch(side, () => {
+		localStorage.setItem('garden/challenge/side', side.value)
+	})
 	let request: any = null
 	const selectedBoss = ref<any | null>(null)
 	const squad = ref<string | null>(null)
