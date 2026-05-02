@@ -373,29 +373,41 @@
 	</popup>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { locale } from '@/locale'
-	const Explorer = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`))
 	import CharacteristicTooltip from '@/component/leek/characteristic-tooltip.vue'
 	import { AI } from '@/model/ai'
-	import { ChipTemplate } from '@/model/chip'
 	import { FightType } from '@/model/fight'
 	import { mixins } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { Potion, PotionEffect } from '@/model/potion'
 	import { store } from '@/model/store'
-	import { WeaponTemplate, WeaponsData } from '@/model/weapon'
-	import { Options, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { WeaponsData } from '@/model/weapon'
 	import { fileSystem } from '@/model/filesystem'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 	import AIElement from '@/component/app/ai.vue'
 	import { CHIPS } from '@/model/chips'
-	import { ORDERED_CHIPS } from "@/model/sorted_chips"
-	import Map from "@/component/app/map.vue"
-	import TurretImage from "@/component/turret-image.vue"
-import { emitter } from '@/model/vue'
-import { defineAsyncComponent } from 'vue'
+	import { ORDERED_CHIPS } from '@/model/sorted_chips'
+	import TurretImage from '@/component/turret-image.vue'
+	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
+	import { useRouter } from 'vue-router'
+	import { emitter } from '@/model/vue'
+
+	const Explorer = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`))
+
+	defineOptions({ name: 'editor-test', i18n: {}, mixins: [...mixins], components: { CharacteristicTooltip, RichTooltipItem, ai: AIElement, TurretImage } })
+
+	const props = defineProps<{
+		modelValue?: boolean
+		ais?: {[key: string]: AI}
+		leekAis?: {[key: number]: string}
+		currentAI: AI | null
+	}>()
+
+	const { t } = useI18n()
+	const router = useRouter()
 
 	class TestScenarioLeek {
 		id!: number
@@ -418,7 +430,7 @@ import { defineAsyncComponent } from 'vue'
 		seed!: any
 		max_turns?: any
 		default!: boolean
-		ai!: AI | null // AI for default scenario
+		ai!: AI | null
 		turret_ai_team1?: number | null
 		turret_ai_team2?: number | null
 	}
@@ -431,980 +443,858 @@ import { defineAsyncComponent } from 'vue'
 		team!: number
 	}
 
-	@Options({ components: { CharacteristicTooltip, 'explorer': Explorer, RichTooltipItem, ai: AIElement, Map, TurretImage }, name: 'editor-test', i18n: {}, mixins: [...mixins] })
-	export default class EditorTest extends Vue {
-		@Prop() modelValue!: boolean
-		@Prop() ais!: {[key: string]: AI}
-		@Prop() leekAis!: {[key: number]: string}
-		@Prop({ required: true }) currentAI!: AI | null
+	const initialized = ref(false)
+	const scenarios = reactive<{[key: string]: TestScenario}>({})
+	const leeks = ref<Leek[]>([])
+	const maps = reactive<{[key: number]: TestMap}>({})
+	const currentScenario = ref<TestScenario | null>(null)
+	const currentLeek = ref<Leek | null>(null)
+	const currentMap = ref<TestMap | null>(null)
+	const newScenarioDialog = ref(false)
+	const newScenarioName = ref('')
+	const newLeekDialog = ref(false)
+	const changeLeekNameDialog = ref(false)
+	const newLeekName = ref('')
+	const changedLeekName = ref('')
+	const newMapDialog = ref(false)
+	const newMapName = ref('')
+	const mapDialog = ref(false)
+	const leekDialog = ref(false)
+	const addLeekTeam = ref<any>(null)
+	const aiDialog = ref(false)
+	const aiDialogBot = ref(false)
+	const aiLeek = ref<Leek | null>(null)
+	const turretTeam = ref(0)
+	const chipsDialog = ref(false)
+	const weaponsDialog = ref(false)
+	const skinPotionDialog = ref(false)
+	const map = reactive<any[]>([])
+	let map_down = false
+	let map_add = false
+	let timeout: number | null = null
+	const currentTab = ref('scenarios')
+	const MAX_WEAPONS = 4
 
-		FightType = FightType
-		CHIPS = CHIPS
-		WeaponsData = WeaponsData
-		initialized: boolean = false
-		scenarios: {[key: string]: TestScenario} = {}
-		leeks: Leek[] = []
-		maps: {[key: number]: TestMap} = {}
-		currentScenario: TestScenario | null = null
-		currentLeek: Leek | null = null
-		currentMap: TestMap | null = null
-		newScenarioDialog: boolean = false
-		newScenarioName: string = ''
-		newLeekDialog: boolean = false
-		changeLeekNameDialog: boolean = false
-		newLeekName: string = ''
-		changedLeekName: string = ''
-		newMapDialog: boolean = false
-		newMapName: string = ''
-		mapDialog: boolean = false
-		leekDialog: boolean = false
-		addLeekTeam: any = null
-		aiDialog: boolean = false
-		aiDialogBot: boolean = false
-		aiLeek: Leek | null = null
-		turretTeam: number = 0
-		chipsDialog: boolean = false
-		weaponsDialog: boolean = false
-		skinPotionDialog: boolean = false
-		map: any = []
-		map_down = false
-		map_add = false
-		timeout: number | null = null
-		fileSystem = fileSystem
-		currentTab: string = 'scenarios'
-		MAX_WEAPONS: number = 4
+	const domingo = { id: -1, name: "Domingo", ai: -1, bot: true, level: 150, skin: 1, hat: null, tp: "10 → 21", mp: "3 → 8", frequency: 100, life: "100 → 2500", strength: "0 → 600", wisdom: "0 → 300", agility: "0 → 200", resistance: "0 → 300", science: 0, magic: 0, cores: 20, ram: 20 }
+	const betalpha = { id: -2, name: "Betalpha", ai: -1, bot: true, level: 150, skin: 8, hat: null, tp: "10 → 21", mp: "3 → 8", frequency: 100, life: "100 → 2500", strength: 0, wisdom: "0 → 300", agility: "0 → 200", resistance: "0 → 300", science: 0, magic: "0 → 600", cores: 20, ram: 20 }
+	const tisma = { id: -3, name: "Tisma", ai: -1, bot: true, level: 150, skin: 14, hat: null, tp: "10 → 21", mp: "3 → 8", frequency: 100, life: "100 → 2500", strength: 0, wisdom: "0 → 600", agility: "0 → 200", resistance: "0 → 300", science: "0 → 300", magic: 0, cores: 20, ram: 20 }
+	const guj = { id: -4, name: "Guj", ai: -1, bot: true, level: 150, skin: 4, hat: null, tp: "10 → 21", mp: "3 → 8", frequency: 100, life: "100 → 5000", strength: 0, wisdom: "0 → 300", agility: "0 → 200", resistance: "0 → 300", science: 0, magic: 0, cores: 20, ram: 20 }
+	const hachess = { id: -5, name: "Hachess", ai: -1, bot: true, level: 150, skin: 5, hat: null, tp: "10 → 21", mp: "3 → 8", frequency: 100, life: "100 → 2500", strength: 0, wisdom: "0 → 300", agility: "0 → 200", resistance: "0 → 600", science: 0, magic: 0, cores: 20, ram: 20 }
+	const rex = { id: -6, name: "Rex", ai: -1, bot: true, level: 150, skin: 2, hat: null, tp: "10 → 21", mp: "3 → 8", frequency: 100, life: "100 → 2500", strength: 0, wisdom: "0 → 300", agility: "0 → 200", resistance: "0 → 300", science: "0 → 600", magic: 0, cores: 20, ram: 20 }
 
-		domingo = {
-			id: -1, name: "Domingo", ai: -1, bot: true, level: 150, skin: 1, hat: null,
-			tp: "10 → 21",
-			mp: "3 → 8",
-			frequency: 100,
-			life: "100 → 2500",
-			strength: "0 → 600",
-			wisdom: "0 → 300",
-			agility: "0 → 200",
-			resistance: "0 → 300",
-			science: 0,
-			magic: 0,
-			cores: 20,
-			ram: 20,
-		}
-		betalpha = {
-			id: -2, name: "Betalpha", ai: -1, bot: true, level: 150, skin: 8, hat: null,
-			tp: "10 → 21",
-			mp: "3 → 8",
-			frequency: 100,
-			life: "100 → 2500",
-			strength: 0,
-			wisdom: "0 → 300",
-			agility: "0 → 200",
-			resistance: "0 → 300",
-			science: 0,
-			magic: "0 → 600",
-			cores: 20,
-			ram: 20,
-		}
-		tisma = {
-			id: -3, name: "Tisma", ai: -1, bot: true, level: 150, skin: 14, hat: null,
-			tp: "10 → 21",
-			mp: "3 → 8",
-			frequency: 100,
-			life: "100 → 2500",
-			strength: 0,
-			wisdom: "0 → 600",
-			agility: "0 → 200",
-			resistance: "0 → 300",
-			science: "0 → 300",
-			magic: 0,
-			cores: 20,
-			ram: 20,
-		}
-		guj = {
-			id: -4, name: "Guj", ai: -1, bot: true, level: 150, skin: 4, hat: null,
-			tp: "10 → 21",
-			mp: "3 → 8",
-			frequency: 100,
-			life: "100 → 5000",
-			strength: 0,
-			wisdom: "0 → 300",
-			agility: "0 → 200",
-			resistance: "0 → 300",
-			science: 0,
-			magic: 0,
-			cores: 20,
-			ram: 20,
-		}
-		hachess = {
-			id: -5, name: "Hachess", ai: -1, bot: true, level: 150, skin: 5, hat: null,
-			tp: "10 → 21",
-			mp: "3 → 8",
-			frequency: 100,
-			life: "100 → 2500",
-			strength: 0,
-			wisdom: "0 → 300",
-			agility: "0 → 200",
-			resistance: "0 → 600",
-			science: 0,
-			magic: 0,
-			cores: 20,
-			ram: 20,
-		}
-		rex = {
-			id: -6, name: "Rex", ai: -1, bot: true, level: 150, skin: 2, hat: null,
-			tp: "10 → 21",
-			mp: "3 → 8",
-			frequency: 100,
-			life: "100 → 2500",
-			strength: 0,
-			wisdom: "0 → 300",
-			agility: "0 → 200",
-			resistance: "0 → 300",
-			science: "0 → 600",
-			magic: 0,
-			cores: 20,
-			ram: 20,
-		}
+	const bots = [domingo, betalpha, tisma, guj, hachess, rex]
 
-		bots = [
-			this.domingo,
-			this.betalpha,
-			this.tisma,
-			this.guj,
-			this.hachess,
-			this.rex,
-		]
+	const characsLimits: {[key: string]: any} = {
+		life: {min: 1, max: 100000},
+		strength: {min: 0, max: 9999},
+		wisdom: {min: 0, max: 9999},
+		agility: {min: 0, max: 9999},
+		resistance: {min: 0, max: 9999},
+		science: {min: 0, max: 9999},
+		magic: {min: 0, max: 9999},
+		frequency: {min: 100, max: 9999},
+		tp: {min: 0, max: 1000},
+		mp: {min: 0, max: 100},
+		cores: {min: 1, max: 30},
+		ram: {min: 1, max: 40},
+	}
 
-		characsLimits: {[key: string]: any} = {
-			life: {min: 1, max: 100000},
-			strength: {min: 0, max: 9999},
-			wisdom: {min: 0, max: 9999},
-			agility: {min: 0, max: 9999},
-			resistance: {min: 0, max: 9999},
-			science: {min: 0, max: 9999},
-			magic: {min: 0, max: 9999},
-			frequency: {min: 100, max: 9999},
-			tp: {min: 0, max: 1000},
-			mp: {min: 0, max: 100},
-			cores: {min: 1, max: 30},
-			ram: {min: 1, max: 40},
+	const selectedTemplate = ref(0)
+	const compositionTemplates = ref<any[]>([])
+	const allies = reactive<{[key: number]: Leek}>({})
+	const alliesAIs = reactive<{[key: number]: AI}>({})
+	const teamTurretAI = ref<AI | null>(null)
+	const advanced = ref(false)
+
+	const templates = computed<TestScenario[]>(() => {
+		const tmpl = [
+			{id: 0, base: false, name: t('free'), category: "free", team1: [] as TestScenarioLeek[], team2: [] as TestScenarioLeek[], map: null, type: -1}
+		] as TestScenario[]
+		if (!store.state.farmer) return tmpl
+
+		for (const l in store.state.farmer.leeks) {
+			const leek = store.state.farmer.leeks[l] as Leek
+			if (!props.leekAis || !(leek.id in props.leekAis)) continue
+			const ai = props.leekAis[leek.id]
+			if (!ai) continue
+			tmpl.push({
+				id: 0, base: false, default: false, ai: null,
+				name: "Solo " + leek.name, category: "solo", map: null, type: 0,
+				team1: [{id: leek.id, ai}], team2: [{id: -1, ai: '/normal'}], seed: null
+			} as TestScenario)
 		}
-		selectedTemplate: number = 0
-		compositionTemplates: any[] = []
-		allies: {[key: number]: Leek} = {}
-		alliesAIs: {[key: number]: AI} = {}
-		teamTurretAI: AI | null = null
-		advanced: boolean = false
-
-		get templates(): TestScenario[] {
-			const templates = [
-				{id: 0, base: false, name: this.$t('free'), category: "free", team1: [] as TestScenarioLeek[], team2: [] as TestScenarioLeek[], map: null, type: -1}
-			] as TestScenario[]
-			if (!store.state.farmer) { return templates }
-
-			// Scénarios solo
-			for (const l in this.$store.state.farmer.leeks) {
-				const leek = this.$store.state.farmer.leeks[l] as Leek
-				if (!(leek.id in this.leekAis)) { continue }
-				const ai = this.leekAis[leek.id]
-				if (!ai) { continue }
-				templates.push({
-					id: 0, base: false, default: false, ai: null,
-					name: "Solo " + leek.name, category: "solo", map: null, type: 0,
-					team1: [{id: leek.id, ai}], team2: [{id: -1, ai: '/normal'}], seed: null
-				})
+		const generate_bots = (count: number): TestScenarioLeek[] => {
+			const result: TestScenarioLeek[] = []
+			for (let i = 0; i < count; ++i) {
+				result.push({id: -i - 1, ai: '/lambda'})
 			}
-			const generate_bots = (count: number): TestScenarioLeek[] => {
-				const result: TestScenarioLeek[] = []
-				for (let i = 0; i < count; ++i) {
-					result.push({id: -i - 1, ai: '/lambda'})
-				}
-				return result
-			}
-			const leek_count = LeekWars.objectSize(this.$store.state.farmer.leeks)
-			const team2 = generate_bots(leek_count)
-			const team1 = [] as TestScenarioLeek[]
-			for (const leek in store.state.farmer.leeks) {
-				team1.push({ id: parseInt(leek, 10), ai: store.state.farmer.leeks[leek].ai_path || null })
-			}
-			if (LeekWars.objectSize(store.state.farmer.leeks) > 1) {
-				templates.push({
-					id: 0, base: false, seed: null, default: false, ai: null,
-					name: this.$t('main.farmer') as string, category: "farmer", map: null, team1, team2, type: 1
-				})
-			}
-			templates.push({
+			return result
+		}
+		const leek_count = LeekWars.objectSize(store.state.farmer.leeks)
+		const team2 = generate_bots(leek_count)
+		const team1 = [] as TestScenarioLeek[]
+		for (const leek in store.state.farmer.leeks) {
+			team1.push({ id: parseInt(leek, 10), ai: store.state.farmer.leeks[leek].ai_path || null })
+		}
+		if (LeekWars.objectSize(store.state.farmer.leeks) > 1) {
+			tmpl.push({
 				id: 0, base: false, seed: null, default: false, ai: null,
-				name: "Battle Royale", category: "br", map: null, team1, team2: [], type: 3
-			})
-			for (const c in this.compositionTemplates) {
-				const compo = this.compositionTemplates[c]
-				templates.push({
-					id: 0, base: false, seed: null, default: false, ai: null,
-					name: compo.name, category: "team", map: null, team1: compo.leeks, team2: generate_bots(compo.leeks.length), type: 2
-				})
-			}
-			return templates
+				name: t('main.farmer') as string, category: "farmer", map: null, team1, team2, type: 1
+			} as TestScenario)
 		}
+		tmpl.push({
+			id: 0, base: false, seed: null, default: false, ai: null,
+			name: "Battle Royale", category: "br", map: null, team1, team2: [], type: 3
+		} as TestScenario)
+		for (const c in compositionTemplates.value) {
+			const compo = compositionTemplates.value[c]
+			tmpl.push({
+				id: 0, base: false, seed: null, default: false, ai: null,
+				name: compo.name, category: "team", map: null, team1: compo.leeks, team2: generate_bots(compo.leeks.length), type: 2
+			} as TestScenario)
+		}
+		return tmpl
+	})
 
-		get allLeeks() {
-			const leeks: {[key: number]: Leek} = {}
-			for (const leek of this.leeks) {
-				leeks[leek.id] = leek
-			}
-			if (store.state.farmer) {
-				for (const l in store.state.farmer.leeks) {
-					leeks[l] = store.state.farmer.leeks[l]
-				}
-			}
-			for (const l in this.allies) {
-				leeks[l] = this.allies[l]
-			}
-			return leeks
+	const allLeeks = computed(() => {
+		const all: {[key: number]: Leek} = {}
+		for (const leek of leeks.value) {
+			all[leek.id] = leek
 		}
-
-		get allAis() {
-			const ais = {...this.ais} as {[key: string]: AI}
-			for (const ai in this.alliesAIs) {
-				ais[ai] = this.alliesAIs[ai]
-			}
-			return ais
-		}
-		get turretAI1(): AI | null {
-			if (this.currentScenario?.turret_ai_team1 && this.currentScenario.turret_ai_team1 in this.allAis) {
-				return this.allAis[this.currentScenario.turret_ai_team1]
-			}
-			return this.teamTurretAI
-		}
-		get turretAI2(): AI | null {
-			if (this.currentScenario?.turret_ai_team2 && this.currentScenario.turret_ai_team2 in this.allAis) {
-				return this.allAis[this.currentScenario.turret_ai_team2]
-			}
-			return this.teamTurretAI
-		}
-		get availableWeapons() {
-			if (!this.currentLeek) { return [] }
-			return Object.values(LeekWars.weapons)
-		}
-		get availableChips() {
-			if (!this.currentLeek) { return [] }
-			return Object.values(CHIPS)
-				.sort((chipA, chipB) => {
-					return ORDERED_CHIPS[chipA.id] - ORDERED_CHIPS[chipB.id]
-				})
-		}
-
-		get scenarioList() {
-			return Object.values(this.scenarios).sort((a, b) => a.name.localeCompare(b.name))
-		}
-
-		created() {
-			if (this.initialized) { return }
-
-			this.advanced = localStorage.getItem("editor/test/advanced") === 'true'
-		}
-
-		mounted() {
-			this.initMap()
-			emitter.on('keyup', this.keyup)
-		}
-
-		beforeUnmount() {
-			emitter.off('keyup', this.keyup)
-		}
-
-		keyup(e: KeyboardEvent) {
-			if (this.modelValue && e.key === 'Enter') {
-				this.launchTest()
+		if (store.state.farmer) {
+			for (const l in store.state.farmer.leeks) {
+				all[+l] = store.state.farmer.leeks[+l]
 			}
 		}
-
-		@Watch('modelValue', {immediate: true})
-		update() {
-			if (this.modelValue) {
-				this.load()
-				this.loadCompositions()
-				this.updateAI()
-			}
+		for (const l in allies) {
+			all[+l] = allies[+l]
 		}
+		return all
+	})
 
-		@Watch('currentAI')
-		updateAI() {
-			if (this.currentAI) {
-				let scenario = this.currentAI.scenario
-				if (!scenario) {
-					for (const entrypoint of this.currentAI.entrypoints) {
-						if (entrypoint in this.ais && this.ais[entrypoint].scenario) {
-							scenario = this.ais[entrypoint].scenario
-							break
-						}
+	const allAis = computed(() => {
+		const result = {...(props.ais || {})} as {[key: string]: AI}
+		for (const ai in alliesAIs) {
+			result[ai] = alliesAIs[+ai]
+		}
+		return result
+	})
+
+	const turretAI1 = computed<AI | null>(() => {
+		if (currentScenario.value?.turret_ai_team1 && currentScenario.value.turret_ai_team1 in allAis.value) {
+			return allAis.value[currentScenario.value.turret_ai_team1]
+		}
+		return teamTurretAI.value
+	})
+
+	const turretAI2 = computed<AI | null>(() => {
+		if (currentScenario.value?.turret_ai_team2 && currentScenario.value.turret_ai_team2 in allAis.value) {
+			return allAis.value[currentScenario.value.turret_ai_team2]
+		}
+		return teamTurretAI.value
+	})
+
+	const availableWeapons = computed(() => {
+		if (!currentLeek.value) return []
+		return Object.values(LeekWars.weapons)
+	})
+
+	const availableChips = computed(() => {
+		if (!currentLeek.value) return []
+		return Object.values(CHIPS).sort((a, b) => ORDERED_CHIPS[a.id] - ORDERED_CHIPS[b.id])
+	})
+
+	const scenarioList = computed(() => Object.values(scenarios).sort((a, b) => a.name.localeCompare(b.name)))
+
+	if (!initialized.value) {
+		advanced.value = localStorage.getItem("editor/test/advanced") === 'true'
+	}
+
+	onMounted(() => {
+		initMap()
+		emitter.on('keyup', keyup)
+	})
+
+	onBeforeUnmount(() => {
+		emitter.off('keyup', keyup)
+	})
+
+	function keyup(e: KeyboardEvent) {
+		if (props.modelValue && e.key === 'Enter') {
+			launchTest()
+		}
+	}
+
+	watch(() => props.modelValue, () => {
+		if (props.modelValue) {
+			load()
+			loadCompositions()
+			updateAI()
+		}
+	}, { immediate: true })
+
+	watch(() => props.currentAI, () => updateAI())
+
+	function updateAI() {
+		if (props.currentAI) {
+			let scenario = props.currentAI.scenario
+			if (!scenario) {
+				for (const entrypoint of props.currentAI.entrypoints) {
+					if (props.ais && entrypoint in props.ais && props.ais[entrypoint].scenario) {
+						scenario = props.ais[entrypoint].scenario
+						break
 					}
 				}
-				if (scenario && scenario in this.scenarios) {
-					this.selectScenario(this.scenarios[scenario])
-				} else {
-					// Create a default scenario
-					this.scenarios[0] = {
-						id: 0, base: false, default: true, ai: this.currentAI,
-						name: this.currentAI.name, category: "free", map: null, type: 0,
-						team1: [{id: LeekWars.first(store.state.farmer!.leeks)!.id, ai: this.currentAI.path}], team2: [{id: -1, ai: '/lambda'}], seed: null
-					} as TestScenario
-					this.selectScenario(this.scenarios[0])
-				}
 			}
-		}
-
-		generateBots() {
-			for (const bot of this.bots) {
-				this.leeks.push(bot as any)
-			}
-		}
-
-		selectScenario(scenario: TestScenario) {
-			this.currentScenario = scenario
-			this.updateScenarioBotsLevels()
-		}
-
-		selectLeek(leek: any) {
-			this.currentLeek = leek
-			localStorage.setItem('editor/leek', '' + leek.id)
-		}
-
-		deleteLeek(leek: TestScenarioLeek, teamID: number) {
-			if (!this.currentScenario) { return }
-			const team = teamID === 0 ? this.currentScenario.team1 : this.currentScenario.team2
-			team.splice(team.findIndex(l => l.id === leek.id), 1)
-			const scenario = this.currentScenario
-			if (scenario.id === 0) {
-				LeekWars.post('test-scenario/new', { name: scenario.ai!.name }).then(r => {
-					delete this.scenarios[0]
-					scenario.id = r.id
-					this.scenarios[r.id] = scenario
-					scenario.default = false
-					scenario!.ai!.scenario = r.id
-					const json = { type: 0, ai: scenario.ai!.id }
-					LeekWars.post('test-scenario/update', { id: r.id, data: JSON.stringify(json) })
-					for (const leek of scenario.team1) {
-						LeekWars.post('test-scenario/add-leek', {scenario_id: r.id, leek: leek.id, team: 0, ai: leek.ai ? leek.ai : null})
-					}
-					for (const leek of scenario.team2) {
-						LeekWars.post('test-scenario/add-leek', {scenario_id: r.id, leek: leek.id, team: 1, ai: leek.ai ? leek.ai : null})
-					}
-				})
+			if (scenario && scenario in scenarios) {
+				selectScenario(scenarios[scenario])
 			} else {
-				LeekWars.delete('test-scenario/delete-leek', {scenario_id: this.currentScenario.id, leek: leek.id})
-			}
-			this.updateScenarioBotsLevels()
-		}
-
-		saveLeek() {
-			if (!this.currentLeek) { return }
-			LeekWars.post('test-leek/update', {id: this.currentLeek.id, data: JSON.stringify(this.currentLeek)})
-			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
-		}
-
-		get skinPotions() {
-			if (!store.state.farmer) { return [] }
-			return store.state.farmer.potions.filter(p => LeekWars.potions[p.template].effects.some(e => e.type === PotionEffect.CHANGE_SKIN))
-		}
-
-		changeSkin(potion: Potion) {
-			if (!this.currentLeek) { return }
-			const effect = LeekWars.potions[potion.template].effects.find(e => e.type === PotionEffect.CHANGE_SKIN)
-			if (!effect) { return }
-			this.currentLeek.skin = effect.params[0]
-			this.skinPotionDialog = false
-			this.saveLeek()
-		}
-
-		saveMap() {
-			if (!this.currentMap) { return }
-			LeekWars.post('test-map/update', {id: this.currentMap.id, data: JSON.stringify(this.currentMap.data)})
-			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
-		}
-
-		selectMap(map: TestMap) {
-			if (this.currentMap && this.timeout) {
-				if (this.timeout) {
-					window.clearTimeout(this.timeout)
-					this.timeout = null
-				}
-				this.saveMap()
-			}
-			this.currentMap = map
-		}
-
-		initMap() {
-			const size = 34
-			for (let i = 0; i <= size; ++i) {
-				const line = []
-				for (let j = 0; j <= size; ++j) {
-					const y = i - Math.floor(size / 2)
-					const x = j - Math.floor(size / 2)
-					const enabled = Math.abs(x) + Math.abs(y) <= size / 2
-					const team = j < (size * (5 / 6) - i) ? 1 : (j > (size * (7 / 6) - i) ? 2 : 0)
-					const cell = 306 + 18 * y - 17 * x
-					line.push({enabled, cell, team})
-				}
-				this.map.push(line)
-			}
-		}
-
-		cellRightClick(e: Event, cell: TestMapCell) {
-			if (cell.team !== 0 && this.currentMap) {
-				const team_array = cell.team === 1 ? this.currentMap.data.team1 : this.currentMap.data.team2
-				const index = team_array.indexOf(cell.cell)
-				if (index !== -1) {
-					team_array.splice(index, 1)
-				} else {
-					team_array.push(cell.cell)
-				}
-				this.resetSaveTimeout()
-			}
-			e.preventDefault()
-		}
-
-		cellMouseDown(e: MouseEvent, cell: TestMapCell) {
-			if (e.button === 0 && this.currentMap) {
-				this.map_down = true
-				this.map_add = !(cell.cell in this.currentMap.data.obstacles)
-				if (this.map_add) {
-					this.currentMap.data.obstacles[cell.cell] = true
-				} else {
-					delete this.currentMap.data.obstacles[cell.cell]
-				}
-				this.resetSaveTimeout()
-			} else if (e.button === 2) {
-				this.cellRightClick(e, cell)
-			}
-		}
-
-		cellMouseEnter(e: Event, cell: TestMapCell) {
-			if (this.map_down && this.currentMap) {
-				const has_class = cell.cell in this.currentMap.data.obstacles
-				if (has_class !== this.map_add) {
-					if (this.map_add) {
-						this.currentMap.data.obstacles[cell.cell] = true
-					} else {
-						delete this.currentMap.data.obstacles[cell.cell]
-					}
-					this.resetSaveTimeout()
-				}
-			}
-		}
-
-		cellMouseUp() {
-			this.map_down = false
-		}
-
-		cellDragStart(e: Event) {
-			e.preventDefault()
-			return false
-		}
-
-		resetSaveTimeout() {
-			if (this.timeout) {
-				window.clearTimeout(this.timeout)
-			}
-			this.timeout = window.setTimeout(() => {
-				this.timeout = null
-				this.saveMap()
-			}, 2000)
-		}
-
-		deleteMap(map: TestMap) {
-			LeekWars.delete('test-map/delete', {id: map.id})
-				.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
-
-			delete this.maps[map.id]
-			// Delete from scenarios
-			for (const s in this.scenarios) {
-				if (this.scenarios[s].map === map.id) { this.scenarios[s].map = null }
-			}
-			if (!LeekWars.isEmptyObj(this.maps)) {
-				this.selectMap(LeekWars.first(this.maps)!)
-			}
-		}
-
-		clearMap() {
-			if (!this.currentMap) { return }
-			this.currentMap.data.obstacles = {}
-			this.resetSaveTimeout()
-		}
-
-		randomMap() {
-			if (!this.currentMap) { return }
-			this.currentMap.data.obstacles = {}
-			for (let cell = 0; cell < 612; ++cell) {
-				if (Math.random() > 0.8) {
-					this.currentMap.data.obstacles[cell] = true
-				}
-			}
-			this.resetSaveTimeout()
-		}
-
-		get sortedAis() {
-			return Object.values(this.ais).sort((a, b) => a.path.toLowerCase().localeCompare(b.path.toLowerCase()))
-		}
-
-		clickLeekAI(leek: any) {
-			if (this.allLeeks[leek.id] && this.allLeeks[leek.id].ally) { return }
-			this.turretTeam = 0
-			this.aiDialog = true
-			this.aiDialogBot = leek.id < 0
-			this.aiLeek = leek
-		}
-
-		clickTurretAI(team: number) {
-			this.turretTeam = team
-			this.aiLeek = null
-			this.aiDialog = true
-			this.aiDialogBot = false
-		}
-
-		clickDialogAI(ai: AI) {
-			if (!this.currentScenario) { return }
-			if (this.turretTeam > 0) {
-				if (this.turretTeam === 1) {
-					this.currentScenario.turret_ai_team1 = ai.path
-					this.updateScenario(this.currentScenario, { turret_ai_team1: ai.path })
-				} else {
-					this.currentScenario.turret_ai_team2 = ai.path
-					this.updateScenario(this.currentScenario, { turret_ai_team2: ai.path })
-				}
-				this.turretTeam = 0
-				this.aiDialog = false
-				return
-			}
-			if (!this.aiLeek) { return }
-			this.aiLeek.ai = ai.path as any
-			LeekWars.post('test-scenario/add-leek', {scenario_id: this.currentScenario.id, leek: this.aiLeek.id, team: -1, ai: ai.path})
-			this.aiDialog = false
-		}
-
-		deleteScenario(scenario: TestScenario) {
-			if (scenario.base) { return }
-			LeekWars.delete('test-scenario/delete', {id: scenario.id})
-				.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
-
-			delete this.scenarios[scenario.id]
-			if (!LeekWars.isEmptyObj(this.scenarios)) {
-				this.selectScenario(LeekWars.first(this.scenarios)!)
-			} else {
-				this.currentScenario = null
-			}
-		}
-
-		createScenario() {
-			LeekWars.post('test-scenario/new', {name: this.newScenarioName}).then(data => {
-				const template = LeekWars.clone(this.templates[this.selectedTemplate]) as TestScenario
-				const team1 = template.team1
-				const team2 = template.team2
-				this.scenarios[data.id] = {
-					name: this.newScenarioName,
-					id: data.id,
-					team1,
-					team2,
-					map: null,
-					type: template.type
-				}
-				const scenario = this.scenarios[data.id]
-				this.updateScenario(scenario, { type: template.type })
-				for (const leek of team1) {
-					LeekWars.post('test-scenario/add-leek', {scenario_id: data.id, leek: leek.id, team: 0, ai: leek.ai ? leek.ai : null})
-				}
-				for (const leek of team2) {
-					LeekWars.post('test-scenario/add-leek', {scenario_id: data.id, leek: leek.id, team: 1, ai: leek.ai ? leek.ai : null})
-				}
-				this.newScenarioName = ''
-				this.newScenarioDialog = false
-				this.selectScenario(scenario)
-			})
-			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
-		}
-
-		addScenarioLeek(leek: Leek) {
-			if (!this.currentScenario || !this.addLeekTeam) { return }
-			this.addLeekTeam.push({id: leek.id, ai: leek.ai})
-			const teamID = this.addLeekTeam === this.currentScenario.team1 ? 0 : 1
-			LeekWars.post('test-scenario/add-leek', {scenario_id: this.currentScenario.id, leek: leek.id, team: teamID, ai: leek.ai ? leek.ai : null})
-			this.leekDialog = false
-			this.updateScenarioBotsLevels()
-		}
-
-		updateScenarioBotsLevels() {
-			if (!this.currentScenario) { return }
-			let total_level = 0
-			let count = 0
-			const all_leeks = this.currentScenario!.team1.concat(this.currentScenario!.team2)
-			for (const entity of all_leeks) {
-				if (entity.id > 0 || entity.id < -6) {
-					if (!(entity.id in this.allLeeks)) { continue }
-					total_level += this.allLeeks[entity.id].level
-					count++
-				}
-			}
-			const average_level = count === 0 ? 1 : Math.round(total_level / count)
-			for (const entity of all_leeks) {
-				if (entity.id < 0 && entity.id >= -6) {
-					if (!(entity.id in this.allLeeks)) { continue }
-					this.allLeeks[entity.id].level = average_level
-				}
-			}
-		}
-
-		get availableLeeks() {
-			if (!this.currentScenario) { return {} }
-			const available_leeks: {[key: string]: Leek} = {}
-			for (const l in this.allLeeks) {
-				const li = parseInt(l, 10)
-				if (this.currentScenario.team1.find(le => le.id === li) || this.currentScenario.team2.find(le => le.id === li)) { continue }
-				available_leeks[l] = this.allLeeks[l]
-			}
-			return available_leeks
-		}
-
-		selectScenarioMap(map: TestMap) {
-			if (!this.currentScenario) { return }
-			this.currentScenario.map = map ? map.id : null
-			this.updateScenario(this.currentScenario, { map: this.currentScenario.map })
-			this.mapDialog = false
-		}
-
-		updateLeekLevel(leek: any) {
-			leek.level = Math.max(
-				leek.weapons.reduce((m: number, e: any) => Math.max(m, LeekWars.items[e].level), 1),
-				leek.chips.reduce((m: number, e: any) => Math.max(m, LeekWars.items[e].level), 1)
-			)
-		}
-
-		removeLeekChip(chip: any) {
-			if (!this.currentLeek) { return }
-			this.currentLeek.chips.splice(this.currentLeek.chips.indexOf(chip), 1)
-			this.updateLeekLevel(this.currentLeek)
-			this.saveLeek()
-		}
-
-		removeLeekWeapon(weapon: any) {
-			if (!this.currentLeek) { return }
-			this.currentLeek.weapons.splice(this.currentLeek.weapons.indexOf(weapon), 1)
-			this.updateLeekLevel(this.currentLeek)
-			this.saveLeek()
-		}
-
-		addLeekChip(chip: any) {
-			if (!this.currentLeek) { return }
-			this.currentLeek.chips.push(chip)
-			if (this.currentLeek.chips.length === this.currentLeek.ram) {
-				this.chipsDialog = false
-			}
-			this.updateLeekLevel(this.currentLeek)
-			this.saveLeek()
-		}
-
-		addLeekWeapon(weapon: any) {
-			if (!this.currentLeek) { return }
-			this.currentLeek.weapons.push(weapon)
-			if (this.currentLeek.weapons.length === this.MAX_WEAPONS) {
-				this.weaponsDialog = false
-			}
-			this.updateLeekLevel(this.currentLeek)
-			this.saveLeek()
-		}
-
-		addOrRemoveLeekChip(chip: any) {
-			if (!this.currentLeek) { return }
-			if (!this.hasChipEquipped(chip)) {
-				if (this.currentLeek!.chips.length < this.currentLeek.ram) {
-					this.addLeekChip(chip)
-				}
-			} else {
-				this.removeLeekChip(chip)
-			}
-		}
-
-		addOrRemoveLeekWeapon(weapon: any) {
-			if (!this.currentLeek) { return }
-			if (!this.hasWeaponEquipped(weapon)) {
-				if (this.currentLeek!.weapons.length < this.MAX_WEAPONS) {
-					this.addLeekWeapon(weapon)
-				}
-			} else {
-				this.removeLeekWeapon(weapon)
-			}
-		}
-
-		hasChipEquipped(chip: any) {
-			if (!this.currentLeek) { return false }
-			return (this.currentLeek!.chips as any).indexOf(chip) !== -1
-		}
-
-		hasWeaponEquipped(weapon: any) {
-			if (!this.currentLeek) { return false }
-			return (this.currentLeek!.weapons as any).indexOf(weapon) !== -1
-		}
-
-		changeLeekName() {
-			if (!this.currentLeek) { return }
-			this.currentLeek.name = this.changedLeekName
-			this.saveLeek()
-			this.changeLeekNameDialog = false
-		}
-
-		createLeek() {
-			LeekWars.post('test-leek/new', {name: this.newLeekName}).then(data => {
-				const leek = {name: this.newLeekName, id: data.id, ai: -1}
-				this.leeks.push(leek as any)
-				for (const k in data.data) {
-					leek[k] = data.data[k]
-				}
-				this.newLeekDialog = false
-				this.newLeekName = ''
-				this.currentLeek = leek as any
-			})
-			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
-		}
-
-		createMap() {
-			LeekWars.post('test-map/new', {name: this.newMapName}).then(data => {
-				this.maps[data.id] = {name: this.newMapName, id: data.id, data: {obstacles: {}, team1: [], team2: []}}
-				this.newMapDialog = false
-				this.newMapName = ''
-				this.selectMap(this.maps[data.id])
-			})
-			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
-		}
-
-		characteristicFocusout(characteristic: string, event: FocusEvent) {
-			if (!this.currentLeek || this.currentLeek.bot || !event.target) { return }
-			const target = event.target as HTMLElement
-			let value = parseInt(target.textContent as string, 10)
-			if (isNaN(value)) {
-				value = this.characsLimits[characteristic].min
-			}
-			value = Math.max(value, this.characsLimits[characteristic].min)
-			value = Math.min(value, this.characsLimits[characteristic].max)
-			// target.innerText
-			this.currentLeek[characteristic] = value
-			this.saveLeek()
-		}
-
-		duplicateTestLeek(leek: Leek) {
-			LeekWars.post('test-leek/new', {name: leek.name}).then(data => {
-				const newLeek = new Leek({
-					...JSON.parse(JSON.stringify(leek)),
-					id: data.id
-				})
-				this.leeks.push(newLeek as any)
-				this.currentLeek = newLeek as any
-				this.saveLeek()
-			})
-			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
-		}
-
-		deleteTestLeek(leek: Leek) {
-			LeekWars.delete('test-leek/delete', {id: leek.id})
-			this.leeks.splice(this.leeks.findIndex(l => l.id === leek.id), 1)
-			// Delete in scenarios
-			for (const s in this.scenarios) {
-				this.scenarios[s].team1 = this.scenarios[s].team1.filter(l => l.id !== leek.id)
-				this.scenarios[s].team2 = this.scenarios[s].team2.filter(l => l.id !== leek.id)
-			}
-			if (this.leeks.length) {
-				this.selectLeek(this.leeks[0])
-			}
-		}
-
-		launchTest() {
-			if (!this.currentScenario || !this.currentAI) { return }
-			this.currentAI.scenario = this.currentScenario.id
-			LeekWars.post('ai/test-scenario', { scenario_id: this.currentScenario.id, ai_id: this.currentAI.path }).then(data => {
-				localStorage.setItem('editor/last-scenario', '' + this.currentScenario!.id)
-				localStorage.setItem('editor/last-scenario-ai', '' + this.currentAI!.path)
-				this.$router.push('/fight/' + data.fight)
-			})
-			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
-		}
-
-		onAIDeleted(path: string) {
-			for (const s in this.scenarios) {
-				for (const leek of this.scenarios[s].team1) {
-					if (leek.ai === path) { leek.ai = null }
-				}
-				for (const leek of this.scenarios[s].team2) {
-					if (leek.ai === path) { leek.ai = null }
-				}
-			}
-		}
-
-		changeType() {
-			if (!this.currentScenario) { return }
-			if (this.currentScenario.type === FightType.FREE || this.currentScenario.type === FightType.SOLO || this.currentScenario.type === FightType.FARMER || this.currentScenario.type === FightType.TEAM) {
-				const limit = this.getLimit(this.currentScenario.type)
-				if (this.currentScenario.team1.length > limit) {
-					for (let i = limit; i < this.currentScenario.team1.length; ++i) {
-						LeekWars.delete('test-scenario/delete-leek', {scenario_id: this.currentScenario.id, leek: this.currentScenario.team1[i].id})
-					}
-					this.currentScenario.team1.length = limit
-				}
-				if (this.currentScenario.team2.length > limit) {
-					for (let i = limit; i < this.currentScenario.team2.length; ++i) {
-						LeekWars.delete('test-scenario/delete-leek', {scenario_id: this.currentScenario.id, leek: this.currentScenario.team2[i].id})
-					}
-					this.currentScenario.team2.length = limit
-				}
-			} else {
-				// BR, clear team2
-				for (const leek of this.currentScenario.team2) {
-					LeekWars.delete('test-scenario/delete-leek', {scenario_id: this.currentScenario.id, leek: leek.id})
-				}
-				this.currentScenario.team2.length = 0
-			}
-			if (this.currentScenario.type === FightType.TEAM && this.teamTurretAI) {
-				if (!this.currentScenario.turret_ai_team1) {
-					this.currentScenario.turret_ai_team1 = this.teamTurretAI.id
-					this.updateScenario(this.currentScenario, { type: this.currentScenario.type, turret_ai_team1: this.teamTurretAI.id })
-					return
-				}
-			}
-			this.updateScenario(this.currentScenario, { type: this.currentScenario.type })
-		}
-
-		updateScenario(scenario: TestScenario, data: any) {
-			if (scenario.id === 0) {
-				LeekWars.post('test-scenario/new', { name: scenario.ai!.name }).then(r => {
-					delete this.scenarios[0]
-					scenario.id = r.id
-					this.scenarios[r.id] = scenario
-					scenario.default = false
-					scenario!.ai!.scenario = r.id
-					const json = { ...data, type: 0, ai: scenario.ai!.id }
-					LeekWars.post('test-scenario/update', { id: r.id, data: JSON.stringify(json) })
-					for (const leek of scenario.team1) {
-						LeekWars.post('test-scenario/add-leek', {scenario_id: r.id, leek: leek.id, team: 0, ai: leek.ai ? leek.ai : null})
-					}
-					for (const leek of scenario.team2) {
-						LeekWars.post('test-scenario/add-leek', {scenario_id: r.id, leek: leek.id, team: 1, ai: leek.ai ? leek.ai : null})
-					}
-				})
-			} else {
-				LeekWars.post('test-scenario/update', { id: scenario.id, data: JSON.stringify(data) })
-			}
-		}
-
-		getLimit(type: FightType) {
-			if (type === FightType.FREE) { return 8 }
-			else if (type === FightType.SOLO) { return 1 }
-			else if (type === FightType.FARMER) { return 4 }
-			else if (type === FightType.TEAM) { return 6 }
-			else if (type === FightType.BATTLE_ROYALE) { return 10 }
-			return 6
-		}
-
-		load() {
-			if (!this.initialized) {
-				LeekWars.get('test-scenario/get-all').then(data => {
-					this.initialized = true
-					this.scenarios = data.scenarios
-					if (data.turret_ai) {
-						this.teamTurretAI = data.turret_ai
-						data.turret_ai.path = data.turret_ai.file_path || data.turret_ai.name
-						this.alliesAIs[data.turret_ai.path] = data.turret_ai
-					}
-
-					for (const leek of data.leeks) {
-						this.leeks.push(leek)
-						if (!leek.cores) {
-							leek.cores = 20
-							leek.ram = 20
-						}
-					}
-					this.generateBots()
-					this.updateAI()
-
-					for (const l in this.leeks) {
-						const leek = this.leeks[l]
-						if (!leek.chips) { leek.chips = [] }
-						if (!leek.weapons) { leek.weapons = [] }
-						leek.real = false
-						leek.ai = -1 as any
-					}
-					const startLeekID = parseInt(localStorage.getItem('editor/leek') || '', 10)
-					if (startLeekID && startLeekID in this.leeks) {
-						this.selectLeek(this.leeks.find(l => l.id === startLeekID))
-					} else if (this.leeks.length) {
-						this.selectLeek(this.leeks[0])
-					}
-
-					this.maps = data.maps
-					if (!LeekWars.isEmptyObj(this.maps)) {
-						this.currentMap = LeekWars.first(this.maps)
-					}
-				})
-				.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
-			}
-		}
-
-		loadCompositions() {
-			if (Object.values(this.compositionTemplates).length) { return }
-			LeekWars.get('team-composition/get-farmer-compositions').then(compositions => {
-				this.compositionTemplates = compositions
-				for (const c in compositions) {
-					const compo = compositions[c]
-					for (const leek of compo.leeks) {
-						const aiPath = leek.ai.file_path || leek.ai.name
-						if (!(aiPath in this.ais)) {
-							leek.ai.path = aiPath
-							this.alliesAIs[aiPath] = leek.ai
-						}
-						if (!(leek.id in store.state.farmer!.leeks)) {
-							this.allies[leek.id] = leek
-							leek.ally = true
-						}
-						leek.ai = leek.ai ? (leek.ai.path || leek.ai.file_path || leek.ai.name) : null
-					}
-				}
-			})
-			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
-		}
-
-		@Watch('advanced')
-		updateAdvanced() {
-			localStorage.setItem("editor/test/advanced", '' + this.advanced)
-		}
-
-		updateSeed(event: InputEvent) {
-			if (this.currentScenario) {
-				if (this.currentScenario.seed) {
-					this.currentScenario.seed = parseInt(this.currentScenario.seed)
-					if (this.currentScenario.seed > 2147483647) {
-						this.currentScenario.seed = 2147483647
-					} else if (this.currentScenario.seed < 1) {
-						this.currentScenario.seed = 1
-					} else if (isNaN(this.currentScenario.seed)) {
-						this.currentScenario.seed = null
-					}
-				}
-				this.updateScenario(this.currentScenario, { seed: this.currentScenario.seed || 0 })
-			}
-		}
-
-		updateMaxTurns(event: InputEvent) {
-			if (this.currentScenario) {
-				if (this.currentScenario.max_turns) {
-					this.currentScenario.max_turns = parseInt(this.currentScenario.max_turns)
-					if (this.currentScenario.max_turns > 64) {
-						this.currentScenario.max_turns = 64
-					} else if (this.currentScenario.max_turns < 1) {
-						this.currentScenario.max_turns = 1
-					} else if (isNaN(this.currentScenario.max_turns)) {
-						this.currentScenario.max_turns = null
-					}
-				}
-				this.updateScenario(this.currentScenario, { max_turns: this.currentScenario.max_turns || 0 })
+				scenarios[0] = {
+					id: 0, base: false, default: true, ai: props.currentAI,
+					name: props.currentAI.name, category: "free", map: null, type: 0,
+					team1: [{id: LeekWars.first(store.state.farmer!.leeks)!.id, ai: props.currentAI.path}], team2: [{id: -1, ai: '/lambda'}], seed: null
+				} as TestScenario
+				selectScenario(scenarios[0])
 			}
 		}
 	}
+
+	function generateBots() {
+		for (const bot of bots) {
+			leeks.value.push(bot as any)
+		}
+	}
+
+	function selectScenario(scenario: TestScenario) {
+		currentScenario.value = scenario
+		updateScenarioBotsLevels()
+	}
+
+	function selectLeek(leek: any) {
+		currentLeek.value = leek
+		localStorage.setItem('editor/leek', '' + leek.id)
+	}
+
+	function deleteLeek(leek: TestScenarioLeek, teamID: number) {
+		if (!currentScenario.value) return
+		const team = teamID === 0 ? currentScenario.value.team1 : currentScenario.value.team2
+		team.splice(team.findIndex(l => l.id === leek.id), 1)
+		const scenario = currentScenario.value
+		if (scenario.id === 0) {
+			LeekWars.post('test-scenario/new', { name: scenario.ai!.name }).then(r => {
+				delete scenarios[0]
+				scenario.id = r.id
+				scenarios[r.id] = scenario
+				scenario.default = false
+				scenario.ai!.scenario = r.id
+				const json = { type: 0, ai: scenario.ai!.id }
+				LeekWars.post('test-scenario/update', { id: r.id, data: JSON.stringify(json) })
+				for (const l of scenario.team1) {
+					LeekWars.post('test-scenario/add-leek', {scenario_id: r.id, leek: l.id, team: 0, ai: l.ai ? l.ai : null})
+				}
+				for (const l of scenario.team2) {
+					LeekWars.post('test-scenario/add-leek', {scenario_id: r.id, leek: l.id, team: 1, ai: l.ai ? l.ai : null})
+				}
+			})
+		} else {
+			LeekWars.delete('test-scenario/delete-leek', {scenario_id: currentScenario.value.id, leek: leek.id})
+		}
+		updateScenarioBotsLevels()
+	}
+
+	function saveLeek() {
+		if (!currentLeek.value) return
+		LeekWars.post('test-leek/update', {id: currentLeek.value.id, data: JSON.stringify(currentLeek.value)})
+			.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
+	}
+
+	const skinPotions = computed(() => {
+		if (!store.state.farmer) return []
+		return store.state.farmer.potions.filter(p => LeekWars.potions[p.template].effects.some((e: any) => e.type === PotionEffect.CHANGE_SKIN))
+	})
+
+	function changeSkin(potion: Potion) {
+		if (!currentLeek.value) return
+		const effect = LeekWars.potions[potion.template].effects.find((e: any) => e.type === PotionEffect.CHANGE_SKIN)
+		if (!effect) return
+		currentLeek.value.skin = effect.params[0]
+		skinPotionDialog.value = false
+		saveLeek()
+	}
+
+	function saveMap() {
+		if (!currentMap.value) return
+		LeekWars.post('test-map/update', {id: currentMap.value.id, data: JSON.stringify(currentMap.value.data)})
+			.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
+	}
+
+	function selectMap(m: TestMap) {
+		if (currentMap.value && timeout) {
+			window.clearTimeout(timeout)
+			timeout = null
+			saveMap()
+		}
+		currentMap.value = m
+	}
+
+	function initMap() {
+		const size = 34
+		for (let i = 0; i <= size; ++i) {
+			const line = []
+			for (let j = 0; j <= size; ++j) {
+				const y = i - Math.floor(size / 2)
+				const x = j - Math.floor(size / 2)
+				const enabled = Math.abs(x) + Math.abs(y) <= size / 2
+				const team = j < (size * (5 / 6) - i) ? 1 : (j > (size * (7 / 6) - i) ? 2 : 0)
+				const cell = 306 + 18 * y - 17 * x
+				line.push({enabled, cell, team})
+			}
+			map.push(line)
+		}
+	}
+
+	function cellRightClick(e: Event, cell: TestMapCell) {
+		if (cell.team !== 0 && currentMap.value) {
+			const team_array = cell.team === 1 ? currentMap.value.data.team1 : currentMap.value.data.team2
+			const index = team_array.indexOf(cell.cell)
+			if (index !== -1) {
+				team_array.splice(index, 1)
+			} else {
+				team_array.push(cell.cell)
+			}
+			resetSaveTimeout()
+		}
+		e.preventDefault()
+	}
+
+	function cellMouseDown(e: MouseEvent, cell: TestMapCell) {
+		if (e.button === 0 && currentMap.value) {
+			map_down = true
+			map_add = !(cell.cell in currentMap.value.data.obstacles)
+			if (map_add) {
+				currentMap.value.data.obstacles[cell.cell] = true
+			} else {
+				delete currentMap.value.data.obstacles[cell.cell]
+			}
+			resetSaveTimeout()
+		} else if (e.button === 2) {
+			cellRightClick(e, cell)
+		}
+	}
+
+	function cellMouseEnter(_e: Event, cell: TestMapCell) {
+		if (map_down && currentMap.value) {
+			const has_class = cell.cell in currentMap.value.data.obstacles
+			if (has_class !== map_add) {
+				if (map_add) {
+					currentMap.value.data.obstacles[cell.cell] = true
+				} else {
+					delete currentMap.value.data.obstacles[cell.cell]
+				}
+				resetSaveTimeout()
+			}
+		}
+	}
+
+	function cellMouseUp() {
+		map_down = false
+	}
+
+	function cellDragStart(e: Event) {
+		e.preventDefault()
+		return false
+	}
+
+	function resetSaveTimeout() {
+		if (timeout) window.clearTimeout(timeout)
+		timeout = window.setTimeout(() => {
+			timeout = null
+			saveMap()
+		}, 2000)
+	}
+
+	function deleteMap(m: TestMap) {
+		LeekWars.delete('test-map/delete', {id: m.id})
+			.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
+
+		delete maps[m.id]
+		for (const s in scenarios) {
+			if (scenarios[s].map === m.id) scenarios[s].map = null
+		}
+		if (!LeekWars.isEmptyObj(maps)) {
+			selectMap(LeekWars.first(maps)!)
+		}
+	}
+
+	function clearMap() {
+		if (!currentMap.value) return
+		currentMap.value.data.obstacles = {}
+		resetSaveTimeout()
+	}
+
+	function randomMap() {
+		if (!currentMap.value) return
+		currentMap.value.data.obstacles = {}
+		for (let cell = 0; cell < 612; ++cell) {
+			if (Math.random() > 0.8) {
+				currentMap.value.data.obstacles[cell] = true
+			}
+		}
+		resetSaveTimeout()
+	}
+
+	const sortedAis = computed(() => {
+		if (!props.ais) return []
+		return Object.values(props.ais).sort((a, b) => a.path.toLowerCase().localeCompare(b.path.toLowerCase()))
+	})
+
+	function clickLeekAI(leek: any) {
+		if (allLeeks.value[leek.id] && (allLeeks.value[leek.id] as any).ally) return
+		turretTeam.value = 0
+		aiDialog.value = true
+		aiDialogBot.value = leek.id < 0
+		aiLeek.value = leek
+	}
+
+	function clickTurretAI(team: number) {
+		turretTeam.value = team
+		aiLeek.value = null
+		aiDialog.value = true
+		aiDialogBot.value = false
+	}
+
+	function clickDialogAI(ai: AI) {
+		if (!currentScenario.value) return
+		if (turretTeam.value > 0) {
+			if (turretTeam.value === 1) {
+				currentScenario.value.turret_ai_team1 = ai.path as any
+				updateScenario(currentScenario.value, { turret_ai_team1: ai.path })
+			} else {
+				currentScenario.value.turret_ai_team2 = ai.path as any
+				updateScenario(currentScenario.value, { turret_ai_team2: ai.path })
+			}
+			turretTeam.value = 0
+			aiDialog.value = false
+			return
+		}
+		if (!aiLeek.value) return
+		;(aiLeek.value as any).ai = ai.path as any
+		LeekWars.post('test-scenario/add-leek', {scenario_id: currentScenario.value.id, leek: aiLeek.value.id, team: -1, ai: ai.path})
+		aiDialog.value = false
+	}
+
+	function deleteScenario(scenario: TestScenario) {
+		if (scenario.base) return
+		LeekWars.delete('test-scenario/delete', {id: scenario.id})
+			.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
+
+		delete scenarios[scenario.id]
+		if (!LeekWars.isEmptyObj(scenarios)) {
+			selectScenario(LeekWars.first(scenarios)!)
+		} else {
+			currentScenario.value = null
+		}
+	}
+
+	function createScenario() {
+		LeekWars.post('test-scenario/new', {name: newScenarioName.value}).then(data => {
+			const template = LeekWars.clone(templates.value[selectedTemplate.value]) as TestScenario
+			const team1 = template.team1
+			const team2 = template.team2
+			scenarios[data.id] = {
+				name: newScenarioName.value,
+				id: data.id,
+				team1, team2,
+				map: null,
+				type: template.type
+			} as TestScenario
+			const scenario = scenarios[data.id]
+			updateScenario(scenario, { type: template.type })
+			for (const leek of team1) {
+				LeekWars.post('test-scenario/add-leek', {scenario_id: data.id, leek: leek.id, team: 0, ai: leek.ai ? leek.ai : null})
+			}
+			for (const leek of team2) {
+				LeekWars.post('test-scenario/add-leek', {scenario_id: data.id, leek: leek.id, team: 1, ai: leek.ai ? leek.ai : null})
+			}
+			newScenarioName.value = ''
+			newScenarioDialog.value = false
+			selectScenario(scenario)
+		})
+		.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
+	}
+
+	function addScenarioLeek(leek: Leek) {
+		if (!currentScenario.value || !addLeekTeam.value) return
+		addLeekTeam.value.push({id: leek.id, ai: leek.ai})
+		const teamID = addLeekTeam.value === currentScenario.value.team1 ? 0 : 1
+		LeekWars.post('test-scenario/add-leek', {scenario_id: currentScenario.value.id, leek: leek.id, team: teamID, ai: leek.ai ? leek.ai : null})
+		leekDialog.value = false
+		updateScenarioBotsLevels()
+	}
+
+	function updateScenarioBotsLevels() {
+		if (!currentScenario.value) return
+		let total_level = 0
+		let count = 0
+		const all_leeks = currentScenario.value.team1.concat(currentScenario.value.team2)
+		for (const entity of all_leeks) {
+			if (entity.id > 0 || entity.id < -6) {
+				if (!(entity.id in allLeeks.value)) continue
+				total_level += allLeeks.value[entity.id].level
+				count++
+			}
+		}
+		const average_level = count === 0 ? 1 : Math.round(total_level / count)
+		for (const entity of all_leeks) {
+			if (entity.id < 0 && entity.id >= -6) {
+				if (!(entity.id in allLeeks.value)) continue
+				allLeeks.value[entity.id].level = average_level
+			}
+		}
+	}
+
+	const availableLeeks = computed(() => {
+		if (!currentScenario.value) return {}
+		const al: {[key: string]: Leek} = {}
+		for (const l in allLeeks.value) {
+			const li = parseInt(l, 10)
+			if (currentScenario.value.team1.find(le => le.id === li) || currentScenario.value.team2.find(le => le.id === li)) continue
+			al[l] = allLeeks.value[+l]
+		}
+		return al
+	})
+
+	function selectScenarioMap(m: TestMap) {
+		if (!currentScenario.value) return
+		currentScenario.value.map = m ? m.id : null
+		updateScenario(currentScenario.value, { map: currentScenario.value.map })
+		mapDialog.value = false
+	}
+
+	function updateLeekLevel(leek: any) {
+		leek.level = Math.max(
+			leek.weapons.reduce((m: number, e: any) => Math.max(m, LeekWars.items[e].level), 1),
+			leek.chips.reduce((m: number, e: any) => Math.max(m, LeekWars.items[e].level), 1)
+		)
+	}
+
+	function removeLeekChip(chip: any) {
+		if (!currentLeek.value) return
+		currentLeek.value.chips.splice(currentLeek.value.chips.indexOf(chip), 1)
+		updateLeekLevel(currentLeek.value)
+		saveLeek()
+	}
+
+	function removeLeekWeapon(weapon: any) {
+		if (!currentLeek.value) return
+		currentLeek.value.weapons.splice(currentLeek.value.weapons.indexOf(weapon), 1)
+		updateLeekLevel(currentLeek.value)
+		saveLeek()
+	}
+
+	function addLeekChip(chip: any) {
+		if (!currentLeek.value) return
+		currentLeek.value.chips.push(chip)
+		if (currentLeek.value.chips.length === currentLeek.value.ram) chipsDialog.value = false
+		updateLeekLevel(currentLeek.value)
+		saveLeek()
+	}
+
+	function addLeekWeapon(weapon: any) {
+		if (!currentLeek.value) return
+		currentLeek.value.weapons.push(weapon)
+		if (currentLeek.value.weapons.length === MAX_WEAPONS) weaponsDialog.value = false
+		updateLeekLevel(currentLeek.value)
+		saveLeek()
+	}
+
+	function addOrRemoveLeekChip(chip: any) {
+		if (!currentLeek.value) return
+		if (!hasChipEquipped(chip)) {
+			if (currentLeek.value.chips.length < currentLeek.value.ram) addLeekChip(chip)
+		} else {
+			removeLeekChip(chip)
+		}
+	}
+
+	function addOrRemoveLeekWeapon(weapon: any) {
+		if (!currentLeek.value) return
+		if (!hasWeaponEquipped(weapon)) {
+			if (currentLeek.value.weapons.length < MAX_WEAPONS) addLeekWeapon(weapon)
+		} else {
+			removeLeekWeapon(weapon)
+		}
+	}
+
+	function hasChipEquipped(chip: any) {
+		if (!currentLeek.value) return false
+		return (currentLeek.value.chips as any).indexOf(chip) !== -1
+	}
+
+	function hasWeaponEquipped(weapon: any) {
+		if (!currentLeek.value) return false
+		return (currentLeek.value.weapons as any).indexOf(weapon) !== -1
+	}
+
+	function changeLeekName() {
+		if (!currentLeek.value) return
+		currentLeek.value.name = changedLeekName.value
+		saveLeek()
+		changeLeekNameDialog.value = false
+	}
+
+	function createLeek() {
+		LeekWars.post('test-leek/new', {name: newLeekName.value}).then(data => {
+			const leek: any = {name: newLeekName.value, id: data.id, ai: -1}
+			leeks.value.push(leek)
+			for (const k in data.data) {
+				leek[k] = data.data[k]
+			}
+			newLeekDialog.value = false
+			newLeekName.value = ''
+			currentLeek.value = leek
+		})
+		.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
+	}
+
+	function createMap() {
+		LeekWars.post('test-map/new', {name: newMapName.value}).then(data => {
+			maps[data.id] = {name: newMapName.value, id: data.id, data: {obstacles: {}, team1: [], team2: []}} as any
+			newMapDialog.value = false
+			newMapName.value = ''
+			selectMap(maps[data.id])
+		})
+		.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
+	}
+
+	function characteristicFocusout(characteristic: string, event: FocusEvent) {
+		if (!currentLeek.value || (currentLeek.value as any).bot || !event.target) return
+		const target = event.target as HTMLElement
+		let value = parseInt(target.textContent as string, 10)
+		if (isNaN(value)) value = characsLimits[characteristic].min
+		value = Math.max(value, characsLimits[characteristic].min)
+		value = Math.min(value, characsLimits[characteristic].max)
+		;(currentLeek.value as any)[characteristic] = value
+		saveLeek()
+	}
+
+	function duplicateTestLeek(leek: Leek) {
+		LeekWars.post('test-leek/new', {name: leek.name}).then(data => {
+			const newLeek = new Leek({
+				...JSON.parse(JSON.stringify(leek)),
+				id: data.id
+			})
+			leeks.value.push(newLeek as any)
+			currentLeek.value = newLeek as any
+			saveLeek()
+		})
+		.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
+	}
+
+	function deleteTestLeek(leek: Leek) {
+		LeekWars.delete('test-leek/delete', {id: leek.id})
+		leeks.value.splice(leeks.value.findIndex(l => l.id === leek.id), 1)
+		for (const s in scenarios) {
+			scenarios[s].team1 = scenarios[s].team1.filter(l => l.id !== leek.id)
+			scenarios[s].team2 = scenarios[s].team2.filter(l => l.id !== leek.id)
+		}
+		if (leeks.value.length) {
+			selectLeek(leeks.value[0])
+		}
+	}
+
+	function launchTest() {
+		if (!currentScenario.value || !props.currentAI) return
+		props.currentAI.scenario = currentScenario.value.id
+		LeekWars.post('ai/test-scenario', { scenario_id: currentScenario.value.id, ai_id: props.currentAI.path }).then(data => {
+			localStorage.setItem('editor/last-scenario', '' + currentScenario.value!.id)
+			localStorage.setItem('editor/last-scenario-ai', '' + props.currentAI!.path)
+			router.push('/fight/' + data.fight)
+		})
+		.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
+	}
+
+	function onAIDeleted(path: string) {
+		for (const s in scenarios) {
+			for (const leek of scenarios[s].team1) {
+				if (leek.ai === path) leek.ai = null
+			}
+			for (const leek of scenarios[s].team2) {
+				if (leek.ai === path) leek.ai = null
+			}
+		}
+	}
+
+	function changeType() {
+		if (!currentScenario.value) return
+		if (currentScenario.value.type === FightType.FREE || currentScenario.value.type === FightType.SOLO || currentScenario.value.type === FightType.FARMER || currentScenario.value.type === FightType.TEAM) {
+			const limit = getLimit(currentScenario.value.type)
+			if (currentScenario.value.team1.length > limit) {
+				for (let i = limit; i < currentScenario.value.team1.length; ++i) {
+					LeekWars.delete('test-scenario/delete-leek', {scenario_id: currentScenario.value.id, leek: currentScenario.value.team1[i].id})
+				}
+				currentScenario.value.team1.length = limit
+			}
+			if (currentScenario.value.team2.length > limit) {
+				for (let i = limit; i < currentScenario.value.team2.length; ++i) {
+					LeekWars.delete('test-scenario/delete-leek', {scenario_id: currentScenario.value.id, leek: currentScenario.value.team2[i].id})
+				}
+				currentScenario.value.team2.length = limit
+			}
+		} else {
+			for (const leek of currentScenario.value.team2) {
+				LeekWars.delete('test-scenario/delete-leek', {scenario_id: currentScenario.value.id, leek: leek.id})
+			}
+			currentScenario.value.team2.length = 0
+		}
+		if (currentScenario.value.type === FightType.TEAM && teamTurretAI.value) {
+			if (!currentScenario.value.turret_ai_team1) {
+				currentScenario.value.turret_ai_team1 = teamTurretAI.value.id
+				updateScenario(currentScenario.value, { type: currentScenario.value.type, turret_ai_team1: teamTurretAI.value.id })
+				return
+			}
+		}
+		updateScenario(currentScenario.value, { type: currentScenario.value.type })
+	}
+
+	function updateScenario(scenario: TestScenario, data: any) {
+		if (scenario.id === 0) {
+			LeekWars.post('test-scenario/new', { name: scenario.ai!.name }).then(r => {
+				delete scenarios[0]
+				scenario.id = r.id
+				scenarios[r.id] = scenario
+				scenario.default = false
+				scenario.ai!.scenario = r.id
+				const json = { ...data, type: 0, ai: scenario.ai!.id }
+				LeekWars.post('test-scenario/update', { id: r.id, data: JSON.stringify(json) })
+				for (const leek of scenario.team1) {
+					LeekWars.post('test-scenario/add-leek', {scenario_id: r.id, leek: leek.id, team: 0, ai: leek.ai ? leek.ai : null})
+				}
+				for (const leek of scenario.team2) {
+					LeekWars.post('test-scenario/add-leek', {scenario_id: r.id, leek: leek.id, team: 1, ai: leek.ai ? leek.ai : null})
+				}
+			})
+		} else {
+			LeekWars.post('test-scenario/update', { id: scenario.id, data: JSON.stringify(data) })
+		}
+	}
+
+	function getLimit(type: FightType) {
+		if (type === FightType.FREE) return 8
+		if (type === FightType.SOLO) return 1
+		if (type === FightType.FARMER) return 4
+		if (type === FightType.TEAM) return 6
+		if (type === FightType.BATTLE_ROYALE) return 10
+		return 6
+	}
+
+	function load() {
+		if (!initialized.value) {
+			LeekWars.get('test-scenario/get-all').then(data => {
+				initialized.value = true
+				Object.assign(scenarios, data.scenarios)
+				if (data.turret_ai) {
+					teamTurretAI.value = data.turret_ai
+					data.turret_ai.path = data.turret_ai.file_path || data.turret_ai.name
+					alliesAIs[data.turret_ai.path] = data.turret_ai
+				}
+
+				for (const leek of data.leeks) {
+					leeks.value.push(leek)
+					if (!leek.cores) {
+						leek.cores = 20
+						leek.ram = 20
+					}
+				}
+				generateBots()
+				updateAI()
+
+				for (const l in leeks.value) {
+					const leek = leeks.value[l]
+					if (!leek.chips) leek.chips = []
+					if (!leek.weapons) leek.weapons = []
+					;(leek as any).real = false
+					;(leek as any).ai = -1
+				}
+				const startLeekID = parseInt(localStorage.getItem('editor/leek') || '', 10)
+				if (startLeekID && startLeekID in leeks.value) {
+					const found = leeks.value.find(l => l.id === startLeekID)
+					if (found) selectLeek(found)
+				} else if (leeks.value.length) {
+					selectLeek(leeks.value[0])
+				}
+
+				Object.assign(maps, data.maps)
+				if (!LeekWars.isEmptyObj(maps)) {
+					currentMap.value = LeekWars.first(maps) as TestMap
+				}
+			})
+			.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
+		}
+	}
+
+	function loadCompositions() {
+		if (Object.values(compositionTemplates.value).length) return
+		LeekWars.get('team-composition/get-farmer-compositions').then(compositions => {
+			compositionTemplates.value = compositions
+			for (const c in compositions) {
+				const compo = compositions[c]
+				for (const leek of compo.leeks) {
+					const aiPath = leek.ai.file_path || leek.ai.name
+					if (!props.ais || !(aiPath in props.ais)) {
+						leek.ai.path = aiPath
+						alliesAIs[aiPath] = leek.ai
+					}
+					if (!(leek.id in store.state.farmer!.leeks)) {
+						allies[leek.id] = leek
+						leek.ally = true
+					}
+					leek.ai = leek.ai ? (leek.ai.path || leek.ai.file_path || leek.ai.name) : null
+				}
+			}
+		})
+		.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
+	}
+
+	watch(advanced, () => {
+		localStorage.setItem("editor/test/advanced", '' + advanced.value)
+	})
+
+	function updateSeed(_event: InputEvent) {
+		if (currentScenario.value) {
+			if (currentScenario.value.seed) {
+				currentScenario.value.seed = parseInt(currentScenario.value.seed)
+				if (currentScenario.value.seed > 2147483647) {
+					currentScenario.value.seed = 2147483647
+				} else if (currentScenario.value.seed < 1) {
+					currentScenario.value.seed = 1
+				} else if (isNaN(currentScenario.value.seed)) {
+					currentScenario.value.seed = null
+				}
+			}
+			updateScenario(currentScenario.value, { seed: currentScenario.value.seed || 0 })
+		}
+	}
+
+	function updateMaxTurns(_event: InputEvent) {
+		if (currentScenario.value) {
+			if (currentScenario.value.max_turns) {
+				currentScenario.value.max_turns = parseInt(currentScenario.value.max_turns)
+				if (currentScenario.value.max_turns > 64) {
+					currentScenario.value.max_turns = 64
+				} else if (currentScenario.value.max_turns < 1) {
+					currentScenario.value.max_turns = 1
+				} else if (isNaN(currentScenario.value.max_turns)) {
+					currentScenario.value.max_turns = null
+				}
+			}
+			updateScenario(currentScenario.value, { max_turns: currentScenario.value.max_turns || 0 })
+		}
+	}
+
+	defineExpose({ onAIDeleted })
 </script>
+
 
 <style lang="scss" scoped>
 	h4 {
