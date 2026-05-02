@@ -148,7 +148,7 @@
 					<div class="button flat" @click="showLoadout = true">
 						<v-icon>mdi-package-variant-closed</v-icon>
 					</div>
-					<div v-if="leek.capital == 0" class="button flat" @click="capitalDialog = true">
+					<div v-if="leek.capital == 0" class="button flat" @click="showCapital = true">
 						<v-icon>mdi-star-outline</v-icon>
 					</div>
 				</template>
@@ -162,7 +162,7 @@
 						</characteristic-tooltip>
 						<div class="center" v-if="leek && my_leek">
 							<span class="dida-element">
-								<v-btn v-if="(leek.capital > 0 || LeekWars.didactitial_step === 1) && $store.state.farmer.equipment_enabled" color="primary" @click="capitalDialog = true" :class="{bouncing: !capitalDialog && LeekWars.didactitial_step === 1}">{{ $t('main.n_capital', [leek.capital]) }}</v-btn>
+								<v-btn v-if="(leek.capital > 0 || LeekWars.didactitial_step === 1) && $store.state.farmer.equipment_enabled" color="primary" @click="showCapital = true" :class="{bouncing: !showCapital && LeekWars.didactitial_step === 1}">{{ $t('main.n_capital', [leek.capital]) }}</v-btn>
 								<span v-if="LeekWars.didactitial_step === 1" class="dida-hint">
 									<i18n-t v-if="LeekWars.didactitial_step === 1" tag="div" class="bubble" keypath="main.dida_2">
 										<template #life><img height=18 src="/image/charac/life.png"></template>
@@ -755,7 +755,7 @@
 			</div>
 		</popup>
 
-		<capital-dialog v-if="leek && my_leek" v-model="capitalDialog" :leek="leek" :total-capital="leek.capital" />
+		<capital-dialog v-if="leek && my_leek" v-model="showCapital" :leek="leek" :total-capital="leek.capital" />
 		<loadout-dialog v-if="leek && my_leek" v-model="showLoadout" :leek="leek" @applied="refreshTotalCharacteristics" />
 	</div>
 </template>
@@ -838,7 +838,7 @@
 	const draggedChipLocation = ref<string | null>(null)
 	const draggedComponent = ref<any>(null)
 	const draggedComponentLocation = ref<string | null>(null)
-	const capitalDialog = ref(false)
+	const showCapital = ref(false)
 	const showLoadout = ref(false)
 	const customizeDialog = ref(false)
 	const skinWeaponDialog = ref(false)
@@ -850,7 +850,13 @@
 	const MAX_COMPONENTS = 8
 	type DragArea = 'farmer' | 'leek'
 
-	const id = computed<number>(() => parseInt(route.params.id as string, 10) || (store.state.farmer ? LeekWars.first(store.state.farmer.leeks)!.id : 0))
+	const id = computed<number>(() => {
+		const routeId = parseInt(route.params.id as string, 10)
+		if (routeId) return routeId
+		if (!store.state.farmer) return 0
+		const first = LeekWars.first(store.state.farmer.leeks)
+		return first ? first.id : 0
+	})
 
 	const my_leek = computed(() => {
 		if (!route.params.id) return true
