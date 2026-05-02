@@ -25,7 +25,7 @@
 				<div v-if="!LeekWars.mobile" class="big-leeks" :class="{flex: LeekWars.flex || LeekWars.large, hidden: LeekWars.didactitial}">
 					<div class="wrapper">
 						<img class="big-leek-1" width="252" height="372" :src="LeekWars.leekTheme ? '/image/big_leek_1_white.webp' : '/image/big_leek_1.webp'">
-						<img class="big-leek-2" width="398" height="508" :src="LeekWars.leekTheme ? '/image/big_leek_2_white.webp' : '/image/big_leek_2.webp'">
+						<img class="big-leek-2" width="398" height="508" fetchpriority="high" :src="LeekWars.leekTheme ? '/image/big_leek_2_white.webp' : '/image/big_leek_2.webp'">
 					</div>
 				</div>
 
