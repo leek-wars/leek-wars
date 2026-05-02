@@ -1,110 +1,128 @@
-// Workbox precaching disabled for Vite development
-// TODO: Re-enable with vite-plugin-pwa for production
-// import {precacheAndRoute} from 'workbox-precaching';
-// precacheAndRoute(self.__WB_MANIFEST);
+// Service Worker for leekwars.com
+// - Navigation requests: Network-First with NavigationPreload + cache fallback (offline)
+// - Same-origin GET assets (non-/api/): Stale-while-revalidate with throttled background refresh
+// - Push notifications + click handling
 
-/*
-function post(url, args) {
-	const f = []
-	for (const k in args) { f.push(k + '=' + encodeURIComponent(args[k])) }
-	form = f.join('&')
+const CACHE_VERSION = 'v2';
+const NAV_CACHE = 'nav-' + CACHE_VERSION;
+const ASSET_CACHE = 'assets-' + CACHE_VERSION;
+const ALL_CACHES = [NAV_CACHE, ASSET_CACHE];
 
-	fetch(url, {
-		method: 'post',
-		headers: {
-		  "Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-		  "Authorization": "Bearer $"
-		},
-		body: form
-	  })
-	//   .then(function (data) {
-	// 	console.log('Request succeeded with JSON response', data);
-	//   })
-	//   .catch(function (error) {
-	// 	console.log('Request failed', error);
-	//   });
-}
-*/
+// Throttle background SWR refreshes to avoid hammering the network when the user
+// triggers many cache-eligible fetches in quick succession.
+const BG_REFRESH_TTL = 30_000;
+const lastRefreshed = new Map();
 
-// Force le nouveau service worker à prendre le contrôle immédiatement
 self.addEventListener('install', () => self.skipWaiting());
+
 self.addEventListener('activate', event => {
 	event.waitUntil((async () => {
-		// Active NavigationPreload : la requête HTML part en parallèle du boot du SW.
-		// Sans ça, sur cold navigation Chrome doit attendre que le SW soit "started"
-		// avant d'envoyer le fetch, ce qui ajoute 50-100ms de TTFB perçu.
+		// NavigationPreload: HTML fetch starts in parallel with SW boot.
 		if (self.registration.navigationPreload) {
 			await self.registration.navigationPreload.enable();
 		}
+		// Purge caches from previous SW versions to avoid unbounded storage growth.
+		const keys = await caches.keys();
+		await Promise.all(
+			keys.filter(key => !ALL_CACHES.includes(key)).map(key => caches.delete(key))
+		);
 		await self.clients.claim();
 	})());
 });
 
-const broadcast = new BroadcastChannel('channel')
-broadcast.onmessage = (event) => {
-	if (event.data && event.data.type === 'editor-opened') {
-		self.clients.matchAll({
-			type: 'window',
-		}).then((clients) => {
-			const opened = clients.filter(client => client.url.includes('/editor/')).length >= 2
-			// const urls = clients.map(client => client.url)
-			broadcast.postMessage({ opened })
-		})
+self.addEventListener('fetch', event => {
+	const req = event.request;
+
+	if (req.method !== 'GET') return;
+
+	const url = new URL(req.url);
+	// Same-origin only: avoid CSP issues and the responsibility of cross-origin caching.
+	if (url.origin !== self.location.origin) return;
+	// API requests bypass: custom headers get stripped on cache replay, error responses get cached.
+	if (url.pathname.startsWith('/api/')) return;
+	// Devtools "only-if-cached" oddity for non-same-origin (defensive).
+	if (req.cache === 'only-if-cached' && req.mode !== 'same-origin') return;
+
+	if (req.mode === 'navigate') {
+		event.respondWith(handleNavigation(event));
+		return;
+	}
+	event.respondWith(handleAsset(event));
+});
+
+async function handleNavigation(event) {
+	const cache = await caches.open(NAV_CACHE);
+	try {
+		// Prefer the preloaded response (already in flight since SW boot).
+		const preload = await event.preloadResponse;
+		const response = preload || await fetch(event.request);
+		if (response && response.ok) {
+			event.waitUntil(cache.put(event.request, response.clone()).catch(() => {}));
+		}
+		return response;
+	} catch (e) {
+		// Offline: serve last cached HTML if any.
+		const cached = await cache.match(event.request);
+		if (cached) return cached;
+		return new Response('Offline', { status: 503, statusText: 'Service Unavailable' });
 	}
 }
 
-self.addEventListener('fetch', event => {
-	// Let the browser do its default thing
-	// for non-GET requests.
-	if (event.request.method != 'GET') return;
-	if (event.request.cache === 'only-if-cached' && event.request.mode !== 'same-origin') {
-		return;
-	}
-	// Don't intercept cross-origin requests (imgur, ibb, etc.)
-	// to avoid CSP connect-src violations.
-	if (new URL(event.request.url).origin !== self.location.origin) return;
-	// Don't cache API requests (custom headers get stripped, stale/error responses get cached)
-	if (event.request.url.includes('/api/')) return;
-	// Don't intercept navigation requests: SW startup adds 50-100ms TTFB perçu pour
-	// zéro gain (HTML contient des données user-spécifiques, cache stale-while-revalidate
-	// est de toute façon écrasé par le SPA qui re-fetch via API au mount).
-	if (event.request.mode === 'navigate') return;
-	// Prevent the default, and handle the request ourselves.
-	event.respondWith(async function() {
-		try {
-			// Try to get the response from a cache.
-			const cache = await caches.open('dynamic-v1');
-			const cachedResponse = await cache.match(event.request);
-			if (cachedResponse) {
-				// If we found a match in the cache, return it, but also
-				// update the entry in the cache in the background.
-				event.waitUntil(cache.add(new Request(event.request.url, {credentials: 'same-origin'})).catch(() => {}));
-				return cachedResponse;
+async function handleAsset(event) {
+	const cache = await caches.open(ASSET_CACHE);
+	try {
+		const cached = await cache.match(event.request);
+		if (cached) {
+			// Stale-while-revalidate, throttled per-URL.
+			const url = event.request.url;
+			const now = Date.now();
+			if (now - (lastRefreshed.get(url) || 0) > BG_REFRESH_TTL) {
+				lastRefreshed.set(url, now);
+				event.waitUntil(refreshCache(cache, url).catch(() => {}));
 			}
-			// Cache miss: prefer the preloadResponse (started in parallel to SW boot).
-			// Only relevant for navigation requests; undefined for asset fetches.
-			const preload = await event.preloadResponse;
-			return preload || await fetch(event.request);
-		} catch (e) {
-			// Network error - return a basic error response
-			return new Response('Network error', { status: 503, statusText: 'Service Unavailable' });
+			return cached;
 		}
-	}())
-})
+		const response = await fetch(event.request);
+		if (response && response.ok) {
+			event.waitUntil(cache.put(event.request, response.clone()).catch(() => {}));
+		}
+		return response;
+	} catch (e) {
+		return new Response('Network error', { status: 503, statusText: 'Service Unavailable' });
+	}
+}
+
+async function refreshCache(cache, url) {
+	const fresh = await fetch(new Request(url, { credentials: 'same-origin' }));
+	if (fresh && fresh.ok) {
+		await cache.put(url, fresh);
+	}
+}
+
+// Inter-window communication used by the editor to detect duplicate tabs.
+const broadcast = new BroadcastChannel('channel');
+broadcast.onmessage = (event) => {
+	if (event.data && event.data.type === 'editor-opened') {
+		self.clients.matchAll({ type: 'window' }).then(clients => {
+			const opened = clients.filter(c => c.url.includes('/editor/')).length >= 2;
+			broadcast.postMessage({ opened });
+		});
+	}
+};
 
 self.addEventListener('push', event => {
-	var icon = null
-	var title = "Notification de Leek Wars"
-	var message = "Cliquer pour voir la notification"
-	var data = null
+	let icon = '/image/icon192.png';
+	let title = 'Notification de Leek Wars';
+	let message = 'Cliquer pour voir la notification';
+	let data = null;
 	if (event.data) {
 		try {
-			var data = event.data.json()
-			icon = data.image
-			title = data.title
-			message = data.message
-			data = data
-		} catch (e) {}
+			const payload = event.data.json();
+			icon = payload.image || icon;
+			title = payload.title || title;
+			message = payload.message || message;
+			data = payload;
+		} catch (e) { /* malformed payload, fall back to defaults */ }
 	}
 	event.waitUntil(
 		self.registration.showNotification(title, {
@@ -113,34 +131,20 @@ self.addEventListener('push', event => {
 			tag: 'request',
 			data: data
 		})
-	)
-})
+	);
+});
 
-self.addEventListener('notificationclick', function(event) {
-    event.notification.close()
-	var url = 'https://leekwars.com'
-	// var id = 0
-	if (event.notification.data) {
-		url = event.notification.data.url
-		// id = event.notification.data.id
+self.addEventListener('notificationclick', event => {
+	event.notification.close();
+	let url = self.location.origin;
+	if (event.notification.data && event.notification.data.url) {
+		url = event.notification.data.url;
 	}
-	// try {
-	// 	post("/api/notification/read", {id})
-	// } catch (e) {}
-	event.waitUntil(
-        clients.matchAll({
-            type: 'window'
-        })
-        .then(function(windowClients) {
-            for (var i = 0; i < windowClients.length; i++) {
-                var client = windowClients[i]
-                if (client.url === url && 'focus' in client) {
-                    return client.focus()
-                }
-            }
-            if (clients.openWindow) {
-                return clients.openWindow(url)
-            }
-        })
-    )
-})
+	event.waitUntil((async () => {
+		const windowClients = await clients.matchAll({ type: 'window' });
+		for (const client of windowClients) {
+			if (client.url === url && 'focus' in client) return client.focus();
+		}
+		if (clients.openWindow) return clients.openWindow(url);
+	})());
+});
