@@ -272,7 +272,7 @@
 	import { analyzer } from './analyzer'
 	import { isLeekScript } from './file-types'
 	import AIElement from '@/component/app/ai.vue'
-	import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, reactive, ref, useTemplateRef, watch } from 'vue'
+	import { computed, defineAsyncComponent, markRaw, nextTick, onBeforeUnmount, onMounted, reactive, ref, shallowRef, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 	import { emitter } from '@/model/vue'
@@ -306,7 +306,7 @@
 	const currentAI1 = ref<string | null>(null)
 	const currentAI2 = ref<string | null>(null)
 	const currentSide = ref(1)
-	const currentEditor = ref<any | null>(null)
+	const currentEditor = shallowRef<any | null>(null)
 	const currentType = ref<string | null>(null)
 	const currentFolder = ref<Folder | null>(null)
 	const infoDialog = ref(false)
