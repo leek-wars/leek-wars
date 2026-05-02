@@ -778,6 +778,7 @@
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+	import TitlePicker from '@/component/title/title-picker.vue'
 	import AIElement from '@/component/app/ai.vue'
 	import LwTitle from '@/component/title/title.vue'
 	import { COMPONENTS } from '@/model/components'
@@ -795,14 +796,13 @@
 	const CapitalDialog = defineAsyncComponent(() => import('./capital-dialog.vue'))
 	const LoadoutDialog = defineAsyncComponent(() => import('./loadout-dialog.vue'))
 	const ReportDialog = defineAsyncComponent(() => import('@/component/moderation/report-dialog.vue'))
-	const TitlePicker = defineAsyncComponent(() => import('@/component/title/title-picker.vue'))
 	const FightsHistory = defineAsyncComponent(() => import('@/component/history/fights-history.vue'))
 	const TournamentsHistory = defineAsyncComponent(() => import('@/component/history/tournaments-history.vue'))
 	const LevelDialog = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/leek/level-dialog.${locale}.i18n`))
 	const Explorer = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`))
 
 	defineOptions({ name: 'leek', i18n: {}, mixins: [...mixins], components: {
-		CharacteristicTooltip, RichTooltipItem, RichTooltipFarmer, RichTooltipLeek, ai: AIElement, 'lw-title': LwTitle, LeekComponent, Line,
+		CharacteristicTooltip, RichTooltipItem, RichTooltipFarmer, RichTooltipLeek, TitlePicker, ai: AIElement, 'lw-title': LwTitle, LeekComponent, Line,
 	} })
 
 	const { t } = useI18n()

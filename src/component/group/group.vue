@@ -559,17 +559,17 @@
 	import { ORDERED_CHIPS } from '@/model/sorted_chips'
 	import { CHIPS } from '@/model/chips'
 	import Item from '@/component/item.vue'
+	import CapitalDialog from '../leek/capital-dialog.vue'
 	import { computed, defineAsyncComponent, reactive, ref } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 	import { emitter } from '@/model/vue'
 
-	const CapitalDialog = defineAsyncComponent(() => import('../leek/capital-dialog.vue'))
 	const FightsHistory = defineAsyncComponent(() => import('@/component/history/fights-history.vue'))
 	const TournamentsHistory = defineAsyncComponent(() => import('@/component/history/tournaments-history.vue'))
 	const Chat = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
 
-	defineOptions({ name: 'group', i18n: {}, mixins: [...mixins], components: { RichTooltipTeam, RichTooltipFarmer, CharacteristicTooltip, RichTooltipItem, Item } })
+	defineOptions({ name: 'group', i18n: {}, mixins: [...mixins], components: { RichTooltipTeam, RichTooltipFarmer, CharacteristicTooltip, RichTooltipItem, CapitalDialog, Item } })
 
 	const { t } = useI18n()
 	const route = useRoute()
