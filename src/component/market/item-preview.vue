@@ -233,16 +233,18 @@ function chipSound(id: number) {
 function playSound(item: any, type: string) {
 		if (type !== 'chip' && type !== 'weapon') { return }
 		const play = (sounds: any) => {
-			if (!sounds || sounds.length === 0) { return }
+			if (!Array.isArray(sounds) || sounds.length === 0) { return }
 			const sound = sounds[0]
+			if (typeof sound !== 'string') { return }
 			const sound_ext = sound.includes('.') ? sound : sound + '.mp3'
 			const audio = new Audio('/sound/' + sound_ext)
 			audio.volume = 0.5
 			audio.play()
-			if (sounds.length > 1) {
+			if (sounds.length > 2) {
+				const delay = parseFloat(sounds[1])
 				setTimeout(() => {
 					play(sounds.slice(2))
-				}, parseFloat(sounds[1]) * 1000)
+				}, isNaN(delay) ? 0 : delay * 1000)
 			}
 		}
 		play((type === 'weapon') ? weaponSound(item.params) : chipSound(item.params))
