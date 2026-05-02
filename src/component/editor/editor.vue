@@ -7,15 +7,15 @@
 					<div ref="fileButton" class="tab first action" icon="settings">
 						<v-icon>mdi-file-outline</v-icon> {{ $t('file') }}
 					</div>
-					<v-menu v-model="fileMenu" :activator="LeekWars.mobile ? undefined : $refs.fileButton" :target="LeekWars.mobile ? fileMenuActivator : undefined" offset-y>
+					<v-menu v-model="fileMenu" :activator="LeekWars.mobile ? undefined : (fileButton as any)" :target="LeekWars.mobile ? fileMenuActivator : undefined" offset-y>
 						<v-list>
 							<v-list-subheader v-if="currentFolder && currentFolder.id > 0" class="menu-title">
 								<v-icon>mdi-folder-outline</v-icon> {{ currentFolder.name }}
 							</v-list-subheader>
-							<v-list-item v-if="currentFolder && currentFolder.id !== -1" v-ripple prepend-icon="mdi-file-plus-outline" @click="$refs.explorerEl.openNewAI(currentFolder)">
+							<v-list-item v-if="currentFolder && currentFolder.id !== -1" v-ripple prepend-icon="mdi-file-plus-outline" @click="explorerEl.openNewAI(currentFolder)">
 								<v-list-item-title>{{ $t('new_ai') }}</v-list-item-title>
 							</v-list-item>
-							<v-list-item v-if="currentFolder && currentFolder.id !== -1" v-ripple prepend-icon="mdi-folder-plus-outline" @click="$refs.explorerEl.openNewFolder(currentFolder)">
+							<v-list-item v-if="currentFolder && currentFolder.id !== -1" v-ripple prepend-icon="mdi-folder-plus-outline" @click="explorerEl.openNewFolder(currentFolder)">
 								<v-list-item-title>{{ $t('new_folder') }}</v-list-item-title>
 							</v-list-item>
 							<v-list-subheader v-if="currentAI" class="menu-title">
@@ -24,7 +24,7 @@
 							<v-list-item v-if="currentAI" v-ripple prepend-icon="mdi-content-save" @click="save()">
 								<v-list-item-title>{{ $t('save') }} <span class="shortcut">Ctrl + S</span></v-list-item-title>
 							</v-list-item>
-							<v-list-item v-if="currentAI" v-ripple prepend-icon="mdi-delete" @click="$refs.explorerEl.deleteAI(currentAI)">
+							<v-list-item v-if="currentAI" v-ripple prepend-icon="mdi-delete" @click="explorerEl.deleteAI(currentAI)">
 								<v-list-item-title>{{ $t('delete') }}</v-list-item-title>
 							</v-list-item>
 						</v-list>
@@ -61,7 +61,7 @@
 
 							<template v-if="leftPanelTab === 'explorer'">
 								<div v-if="fileSystem.rootFolder" v-autostopscroll class="ai-list">
-									<explorer ref="explorerEl" :current-ai="currentAI" :selected-folder="currentFolder" @test="startTest" @delete-ai="deleteAI" />
+									<Explorer ref="explorerEl" :current-ai="currentAI" :selected-folder="currentFolder" @test="startTest" @delete-ai="deleteAI" />
 								</div>
 
 								<div v-if="currentEditor && currentEditor.loaded && panelWidth" class="ai-stats">
@@ -87,16 +87,16 @@
 							</div>
 							<div :class="{tabs: tabs1.length > 1}" class="editors" ref="editors">
 
-								<ai-view-monaco v-if="ai1Ready" v-show="!showDiffViewer" ref="editor1" :ai="fileSystem.ais[currentAI1]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" @jump="jump" @load="load" @focus="setSide(1)" :style="{ 'width': (editor1Width * 100) + '%' }" />
+								<ai-view-monaco v-if="ai1Ready" v-show="!showDiffViewer" ref="editor1" :ai="fileSystem.ais[currentAI1!]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" @jump="jump" @load="load" @focus="setSide(1)" :style="{ 'width': (editor1Width * 100) + '%' }" />
 
 								<div v-if="splitted" v-show="!showDiffViewer" class="resizer editor-resizer" @dblclick="split50_50" @mousedown="resizerEditorMousedown">
 									<v-icon>mdi-drag-vertical-variant</v-icon>
 								</div>
 
-								<ai-view-monaco v-if="splitted && ai2Ready" v-show="!showDiffViewer" ref="editor2" :ai="fileSystem.ais[currentAI2]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" @jump="jump" @load="load" @focus="setSide(2)" :style="{ 'width': (editor2Width * 100) + '%' }" />
+								<ai-view-monaco v-if="splitted && ai2Ready" v-show="!showDiffViewer" ref="editor2" :ai="fileSystem.ais[currentAI2!]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" @jump="jump" @load="load" @focus="setSide(2)" :style="{ 'width': (editor2Width * 100) + '%' }" />
 
 								<div v-if="showDiffViewer && !isDiffReady" class="diff-loader"><loader :size="40" /></div>
-								<git-diff v-if="diffMounted && isDiffReady && !showMergeViewer" v-show="showDiffViewer" :original-content="activeDiff.original" :modified-content="activeDiffModified" :file="activeDiff.file" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :inline="diffInline" :collapse-unchanged="diffCollapseUnchanged" @close="closeDiff" @open-file="openDiffFile" />
+								<git-diff v-if="diffMounted && isDiffReady && !showMergeViewer && activeDiff" v-show="showDiffViewer" :original-content="activeDiff.original" :modified-content="activeDiffModified" :file="activeDiff.file" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :inline="diffInline" :collapse-unchanged="diffCollapseUnchanged" @close="closeDiff" @open-file="openDiffFile" />
 								<git-merge v-if="showMergeViewer && activeMerge && activeMerge.ready" ref="mergeEditor" :content="activeMerge.modified" :file="activeMerge.file" :theme="theme" :font-size="fontSize" :line-height="lineHeight" @resolve="onMergeResolve" />
 
 							</div>
@@ -234,7 +234,7 @@
 			{{ $t('editor_already_opened') }}
 		</popup>
 
-		<editor-test ref="editorTest" v-model="testDialog" :ais="fileSystem.ais" :leek-ais="fileSystem.leekAIs" :currentAI="currentAI" />
+		<editor-test ref="editorTestRef" v-model="testDialog" :ais="fileSystem.ais" :leek-ais="fileSystem.leekAIs" :currentAI="currentAI" />
 
 		<!--
 		<popup v-model="newAIv2Dialog" :width="500">
@@ -251,23 +251,17 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 	import { locale } from '@/locale'
 	import { AI } from '@/model/ai'
 	import { fileSystem, translateFileSystemError } from '@/model/filesystem'
 	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Options, Vue, Watch } from 'vue-property-decorator'
 	import AIViewMonaco from './ai-view-monaco.vue'
 	import EditorFinder from './editor-finder.vue'
 	import { AIItem, Folder, Item } from './editor-item'
 	import { explorer } from './explorer'
-	const Explorer = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-explorer.${locale}.i18n`))
-	const EditorTabs = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-tabs.${locale}.i18n`))
-	const EditorTest = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-test.${locale}.i18n`))
-	const EditorProblems = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-problems.${locale}.i18n`))
-	const GitPanel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/git-panel.${locale}.i18n`))
 	import GitDiff from './git-diff.vue'
 	import GitMerge from './git-merge.vue'
 	import GitTerminal from './git-terminal.vue'
@@ -278,1174 +272,1130 @@
 	import { analyzer } from './analyzer'
 	import { isLeekScript } from './file-types'
 	import AIElement from '@/component/app/ai.vue'
-	import { defineAsyncComponent, nextTick } from 'vue'
+	import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, reactive, ref, useTemplateRef, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
+	import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 	import { emitter } from '@/model/vue'
 	import LeekscriptVersions from '../app/leekscript-versions.vue'
+
+	const Explorer = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-explorer.${locale}.i18n`))
+	const EditorTabs = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-tabs.${locale}.i18n`))
+	const EditorTest = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-test.${locale}.i18n`))
+	const EditorProblems = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-problems.${locale}.i18n`))
+	const GitPanel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/git-panel.${locale}.i18n`))
 
 	const DEFAULT_FONT_SIZE = 16
 	const DEFAULT_LINE_HEIGHT = 24
 	const DEFAULT_THEME = () => LeekWars.darkMode ? "monokai" : "leek-wars"
 
-	@Options({
-		name: 'editor', i18n: {},
+	defineOptions({
+		name: 'editor',
+		i18n: {},
+		mixins: [...mixins],
 		components: {
 			'ai-view-monaco': AIViewMonaco,
-			'editor-test': EditorTest,
-			'editor-tabs': EditorTabs,
-			'explorer': Explorer,
-			'editor-finder': EditorFinder,
-			'editor-problems': EditorProblems,
-			'git-terminal': GitTerminal,
-			'git-panel': GitPanel,
-			'git-diff': GitDiff,
-			'git-merge': GitMerge,
 			ai: AIElement,
-			LeekscriptVersions,
 		},
-		mixins: [...mixins]
 	})
-	export default class EditorPage extends Vue {
 
-		analyzer = analyzer
-		activeAIs: {[key: string]: AI} = {}
-		currentAI1: string | null = null
-		currentAI2: string | null = null
-		currentSide: number = 1
-		currentEditor: AIViewMonaco | null = null
-		currentType: string | null = null
-		currentFolder: Folder | null = null
-		infoDialog: boolean = false
-		settingsDialog: boolean = false
-		storageUsage: { size: number, files: number, max_size: number, max_files: number } | null = null
-		enlargeWindow: boolean = false
-		theme: string = DEFAULT_THEME
-		autoClosing: boolean = false
-		autocomplete: boolean = false
-		enableAnalyzer: boolean = false
-		popups: boolean = false
-		diffInline: boolean = false
-		diffCollapseUnchanged: boolean = true
-		hideHeader: boolean = false
-		fontSize: number = DEFAULT_FONT_SIZE
-		lineHeight: number = DEFAULT_LINE_HEIGHT
-		dragging: Item | null = null
-		testDialog: boolean = false
-		panelWidth: number = 200
-		problemsHeight: number = 200
-		bottomPanel: 'problems' | 'git' | null = 'problems'
-		get gitLogCount() { return gitLog.entries.length }
-		get problemsCount() { return analyzer.error_count + analyzer.warning_count + analyzer.todo_count }
-		newAIv2Dialog: boolean = false
-		fileSystem = fileSystem
-		fileMenu: boolean = false
-		fileMenuActivator: any = null
-		history: AI[] = []
-		alreadyOpenedDialog: boolean = false
-		leftPanelTab: string = localStorage.getItem('editor/left_panel_tab') || 'explorer'
-		tabs1: EditorTab[] = []
-		tabs1Loaded: boolean = false
-		currentTab: EditorTab | null = null
-		diffMounted: boolean = true
-		diffReady: number = 0
-		broadcast: BroadcastChannel = new BroadcastChannel('channel')
-		get actions_list() {
-			return [
-				{icon: 'mdi-plus', click: (e: any) => this.add(e)},
-				{icon: 'mdi-cogs', click: () => this.settings() }
-			]
-		}
-		get actions_content() {
-			return [
-				{icon: 'mdi-content-save', click: () => this.save()},
-				{icon: 'mdi-delete', click: () => this.startDelete()},
-				{icon: 'mdi-play', click: () => this.startTest()},
-			]
-		}
-		editor1Width: number = 0.5
-		editor2Width: number = 0.5
-		editorTotalWidth: number = 800
-		splitted: boolean = true
+	const { t } = useI18n()
+	const route = useRoute()
+	const router = useRouter()
 
-		get currentAI() {
-			return fileSystem.ais[this.currentSide === 1 ? this.currentAI1! : this.currentAI2!]
-		}
-		get ai1Ready() {
-			const ai = this.currentAI1 ? fileSystem.ais[this.currentAI1] : null
-			return ai && ai.code !== undefined
-		}
-		get ai2Ready() {
-			const ai = this.currentAI2 ? fileSystem.ais[this.currentAI2] : null
-			return ai && ai.code !== undefined
-		}
-		get showDiffViewer(): boolean {
-			return this.currentTab !== null && this.currentTab.type !== 'file'
-		}
-		get showMergeViewer(): boolean {
-			return this.currentTab !== null && this.currentTab.type === 'merge'
-		}
-		get activeDiff(): DiffTab | null {
-			if (!this.currentTab || this.currentTab.type === 'file') return null
-			return this.currentTab as DiffTab
-		}
-		get activeMerge(): DiffTab | null {
-			if (!this.currentTab || this.currentTab.type !== 'merge') return null
-			return this.currentTab as DiffTab
-		}
-		get isDiffReady(): boolean {
-			void this.diffReady
-			return this.activeDiff !== null && this.activeDiff.ready
-		}
-		get activeDiffModified(): string {
-			const diff = this.activeDiff
-			if (!diff) return ''
-			// Pour les diffs unstaged, utiliser le code live de l'éditeur
-			if (diff.type === 'diff' && !diff.staged && diff.id) {
-				const ai = fileSystem.ais[diff.id]
-				if (ai) return ai.code
-			}
-			return diff.modified
-		}
-		get diffTabs(): DiffTab[] {
-			return this.tabs1.filter((t): t is DiffTab => t.type !== 'file')
-		}
-		get activeDiffIndex(): number {
-			if (!this.currentTab || this.currentTab.type === 'file') return -1
-			return this.diffTabs.findIndex(d => this.diffKey(d) === this.diffKey(this.currentTab as DiffTab))
-		}
-		diffKey(tab: DiffTab): string {
-			if (tab.type === 'merge') return tab.folder + ':' + tab.file + ':merge'
-			return tab.folder + ':' + tab.file + ':' + (tab.hash || (tab.staged ? 's' : 'w'))
-		}
+	const activeAIs = reactive<{[key: string]: AI}>({})
+	const currentAI1 = ref<string | null>(null)
+	const currentAI2 = ref<string | null>(null)
+	const currentSide = ref(1)
+	const currentEditor = ref<any | null>(null)
+	const currentType = ref<string | null>(null)
+	const currentFolder = ref<Folder | null>(null)
+	const infoDialog = ref(false)
+	const settingsDialog = ref(false)
+	const storageUsage = ref<{ size: number, files: number, max_size: number, max_files: number } | null>(null)
+	const enlargeWindow = ref(false)
+	const theme = ref<string>(DEFAULT_THEME())
+	const autoClosing = ref(false)
+	const autocomplete = ref(false)
+	const enableAnalyzer = ref(false)
+	const popups = ref(false)
+	const diffInline = ref(false)
+	const diffCollapseUnchanged = ref(true)
+	const hideHeader = ref(false)
+	const fontSize = ref(DEFAULT_FONT_SIZE)
+	const lineHeight = ref(DEFAULT_LINE_HEIGHT)
+	const dragging = ref<Item | null>(null)
+	const testDialog = ref(false)
+	const panelWidth = ref(200)
+	const problemsHeight = ref(200)
+	const bottomPanel = ref<'problems' | 'git' | null>('problems')
+	const newAIv2Dialog = ref(false)
+	const fileMenu = ref(false)
+	const fileMenuActivator = ref<any>(null)
+	const history = ref<AI[]>([])
+	const alreadyOpenedDialog = ref(false)
+	const leftPanelTab = ref<string>(localStorage.getItem('editor/left_panel_tab') || 'explorer')
+	const tabs1 = ref<EditorTab[]>([])
+	let tabs1Loaded = false
+	const currentTab = ref<EditorTab | null>(null)
+	const diffMounted = ref(true)
+	const diffReady = ref(0)
+	const editor1Width = ref(0.5)
+	const editor2Width = ref(0.5)
+	let editorTotalWidth = 800
+	const splitted = ref(true)
+	let broadcast: BroadcastChannel | null = null
 
-		async created() {
-			LeekWars.footer = false
-			LeekWars.box = true
-			if (localStorage.getItem('editor/autocomplete') === null) { localStorage.setItem('editor/autocomplete', 'true') }
-			if (localStorage.getItem('editor/auto_closing') === null) { localStorage.setItem('editor/auto_closing', 'true') }
-			if (localStorage.getItem('editor/popups') === null) { localStorage.setItem('editor/popups', 'true') }
-			if (localStorage.getItem('editor/analyzer') === null) { localStorage.setItem('editor/analyzer', 'false') }
-			LeekWars.large = this.enlargeWindow = localStorage.getItem('editor/large') === 'true'
-			this.theme = localStorage.getItem('editor/theme') || DEFAULT_THEME()
-			this.autoClosing = localStorage.getItem('editor/auto_closing') === 'true'
-			this.autocomplete = localStorage.getItem('editor/autocomplete') === 'true'
-			this.popups = localStorage.getItem('editor/popups') === 'true'
-			this.diffInline = localStorage.getItem('editor/diff_inline') === 'true'
-			this.diffCollapseUnchanged = localStorage.getItem('editor/diff_collapse_unchanged') !== 'false'
-			this.hideHeader = localStorage.getItem('editor/hideHeader') === 'true'
-			this.enableAnalyzer = false // localStorage.getItem('editor/analyzer') === 'true'
-			this.fontSize = parseInt(localStorage.getItem('editor/font_size') || '', 10) || DEFAULT_FONT_SIZE
-			this.lineHeight = parseInt(localStorage.getItem('editor/line_height') || '', 10) || DEFAULT_LINE_HEIGHT
-			this.problemsHeight = parseInt(localStorage.getItem('editor/problems-height') || '', 10) || 200
-			this.panelWidth = parseInt(localStorage.getItem('editor/panel-width') || '', 10) || 200
-			this.splitted = localStorage.getItem('editor/splitted') === 'true'
-			this.editor1Width = parseFloat(localStorage.getItem('editor/editor1-width') || '') || (this.splitted ? 0.5 : 1)
-			this.editor2Width = parseFloat(localStorage.getItem('editor/editor2-width') || '') || 0.5
-			this.currentAI2 = localStorage.getItem('editor/last-code-2') || null
+	const fileButton = useTemplateRef<HTMLElement>('fileButton')
+	const editor1 = useTemplateRef<InstanceType<typeof AIViewMonaco>>('editor1')
+	const editor2 = useTemplateRef<InstanceType<typeof AIViewMonaco>>('editor2')
+	const finder = useTemplateRef<InstanceType<typeof EditorFinder>>('finder')
+	const editors = useTemplateRef<HTMLElement>('editors')
+	const explorerEl = useTemplateRef<any>('explorerEl')
+	const editorTestRef = useTemplateRef<any>('editorTestRef')
 
-			LeekWars.loadEncyclopedia(locale)
+	const gitLogCount = computed(() => gitLog.entries.length)
+	const problemsCount = computed(() => analyzer.error_count + analyzer.warning_count + analyzer.todo_count)
 
-			const docMessages = await import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
-			i18n.global.mergeLocaleMessage(locale, { doc: docMessages.default })
+	const actions_list = computed(() => [
+		{icon: 'mdi-plus', click: (e: any) => add(e)},
+		{icon: 'mdi-cogs', click: () => settings() }
+	])
+	const actions_content = computed(() => [
+		{icon: 'mdi-content-save', click: () => save()},
+		{icon: 'mdi-delete', click: () => startDelete()},
+		{icon: 'mdi-play', click: () => startTest()},
+	])
+
+	const currentAI = computed(() => fileSystem.ais[currentSide.value === 1 ? currentAI1.value! : currentAI2.value!])
+	const ai1Ready = computed(() => {
+		const ai = currentAI1.value ? fileSystem.ais[currentAI1.value] : null
+		return ai && ai.code !== undefined
+	})
+	const ai2Ready = computed(() => {
+		const ai = currentAI2.value ? fileSystem.ais[currentAI2.value] : null
+		return ai && ai.code !== undefined
+	})
+	const showDiffViewer = computed(() => currentTab.value !== null && currentTab.value.type !== 'file')
+	const showMergeViewer = computed(() => currentTab.value !== null && currentTab.value.type === 'merge')
+	const activeDiff = computed<DiffTab | null>(() => {
+		if (!currentTab.value || currentTab.value.type === 'file') return null
+		return currentTab.value as DiffTab
+	})
+	const activeMerge = computed<DiffTab | null>(() => {
+		if (!currentTab.value || currentTab.value.type !== 'merge') return null
+		return currentTab.value as DiffTab
+	})
+	const isDiffReady = computed(() => {
+		void diffReady.value
+		return activeDiff.value !== null && activeDiff.value.ready
+	})
+	const activeDiffModified = computed(() => {
+		const diff = activeDiff.value
+		if (!diff) return ''
+		// Pour les diffs unstaged, utiliser le code live de l'éditeur
+		if (diff.type === 'diff' && !diff.staged && diff.id) {
+			const ai = fileSystem.ais[diff.id]
+			if (ai) return ai.code
 		}
+		return diff.modified
+	})
+	const diffTabs = computed<DiffTab[]>(() => tabs1.value.filter((t): t is DiffTab => t.type !== 'file'))
+	const activeDiffIndex = computed(() => {
+		if (!currentTab.value || currentTab.value.type === 'file') return -1
+		return diffTabs.value.findIndex(d => diffKey(d) === diffKey(currentTab.value as DiffTab))
+	})
 
-		async connected() {
-			// Chargement de l'historique
-			const history = JSON.parse(localStorage.getItem('editor/history') || '[]')
-			for (const id of history) {
-				if (id in fileSystem.ais) {
-					this.history.push(fileSystem.ais[id])
-				}
-			}
-			LeekWars.setTitle(this.$t('title'), this.$t('n_ais', [fileSystem.aiCount]))
-			this.restoreTabs()
-			await this.loadGitRepos()
-			this.update()
-		}
+	function diffKey(tab: DiffTab): string {
+		if (tab.type === 'merge') return tab.folder + ':' + tab.file + ':merge'
+		return tab.folder + ':' + tab.file + ':' + (tab.hash || (tab.staged ? 's' : 'w'))
+	}
 
-		async loadGitRepos() {
-			try {
-				const data = await LeekWars.post('git/repos')
-				const repos: {[path: string]: boolean} = {}
-				for (const r of data.repos) { repos[r.folder] = true }
-				fileSystem.gitRepos = repos
-			} catch (e) {
-				// Pas de repos git
-			}
-			if (this.leftPanelTab === 'git' && Object.keys(fileSystem.gitRepos).length === 0) {
-				this.leftPanelTab = 'explorer'
+	const storageBarWidth = computed(() => {
+		if (!storageUsage.value) return '0%'
+		return Math.min(100, Math.floor(100 * storageUsage.value.size / storageUsage.value.max_size)) + '%'
+	})
+	const storageBarClass = computed(() => {
+		if (!storageUsage.value) return ''
+		const ratio = storageUsage.value.size / storageUsage.value.max_size
+		if (ratio >= 1) return 'storage-bar-full'
+		if (ratio >= 0.8) return 'storage-bar-warn'
+		return ''
+	})
+
+	async function init() {
+		LeekWars.footer = false
+		LeekWars.box = true
+		if (localStorage.getItem('editor/autocomplete') === null) { localStorage.setItem('editor/autocomplete', 'true') }
+		if (localStorage.getItem('editor/auto_closing') === null) { localStorage.setItem('editor/auto_closing', 'true') }
+		if (localStorage.getItem('editor/popups') === null) { localStorage.setItem('editor/popups', 'true') }
+		if (localStorage.getItem('editor/analyzer') === null) { localStorage.setItem('editor/analyzer', 'false') }
+		LeekWars.large = enlargeWindow.value = localStorage.getItem('editor/large') === 'true'
+		theme.value = localStorage.getItem('editor/theme') || DEFAULT_THEME()
+		autoClosing.value = localStorage.getItem('editor/auto_closing') === 'true'
+		autocomplete.value = localStorage.getItem('editor/autocomplete') === 'true'
+		popups.value = localStorage.getItem('editor/popups') === 'true'
+		diffInline.value = localStorage.getItem('editor/diff_inline') === 'true'
+		diffCollapseUnchanged.value = localStorage.getItem('editor/diff_collapse_unchanged') !== 'false'
+		hideHeader.value = localStorage.getItem('editor/hideHeader') === 'true'
+		enableAnalyzer.value = false // localStorage.getItem('editor/analyzer') === 'true'
+		fontSize.value = parseInt(localStorage.getItem('editor/font_size') || '', 10) || DEFAULT_FONT_SIZE
+		lineHeight.value = parseInt(localStorage.getItem('editor/line_height') || '', 10) || DEFAULT_LINE_HEIGHT
+		problemsHeight.value = parseInt(localStorage.getItem('editor/problems-height') || '', 10) || 200
+		panelWidth.value = parseInt(localStorage.getItem('editor/panel-width') || '', 10) || 200
+		splitted.value = localStorage.getItem('editor/splitted') === 'true'
+		editor1Width.value = parseFloat(localStorage.getItem('editor/editor1-width') || '') || (splitted.value ? 0.5 : 1)
+		editor2Width.value = parseFloat(localStorage.getItem('editor/editor2-width') || '') || 0.5
+		currentAI2.value = localStorage.getItem('editor/last-code-2') || null
+
+		LeekWars.loadEncyclopedia(locale)
+
+		const docMessages = await import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
+		i18n.global.mergeLocaleMessage(locale, { doc: docMessages.default })
+	}
+	init()
+
+	async function connected() {
+		// Chargement de l'historique
+		const histIds = JSON.parse(localStorage.getItem('editor/history') || '[]')
+		for (const id of histIds) {
+			if (id in fileSystem.ais) {
+				history.value.push(fileSystem.ais[id])
 			}
 		}
+		LeekWars.setTitle(t('title'), t('n_ais', [fileSystem.aiCount]))
+		restoreTabs()
+		await loadGitRepos()
+		update()
+	}
 
-		mounted() {
-			LeekWars.large = this.enlargeWindow
-			LeekWars.footer = false
-			LeekWars.box = true
-
-			// Toast après retour d'installation GitHub App
-			const gitAuth = this.$route.query.git_auth as string | undefined
-			if (gitAuth === 'success') {
-				LeekWars.toast(this.$t('git_auth_success') as string)
-				// Rouvre le dialogue de conf pour ajouter un remote dans la foulée.
-				// setTimeout pour laisser git-panel finir son mounted() (listeners prêts).
-				setTimeout(() => emitter.emit('git-open-remote-dialog'), 0)
-				this.$router.replace({ query: { ...this.$route.query, git_auth: undefined } })
-			} else if (gitAuth === 'error') {
-				LeekWars.toast(this.$t('git_auth_error') as string)
-				this.$router.replace({ query: { ...this.$route.query, git_auth: undefined } })
-			}
-
-			emitter.on('ctrlS', () => {
-				this.save()
-			})
-			emitter.on('ctrlShiftS', () => {
-				// TODO save all but analyze only entrypoints
-				// this.saveAll()
-			})
-			emitter.on('ctrlQ', () => {
-				this.testDialog = true
-			})
-			// emitter.on('ctrlF', (event: Event) => {
-			// 	if (this.currentEditor) {
-			// 		this.currentEditor.search()
-			// 		event.preventDefault()
-			// 	}
-			// })
-			emitter.on('ctrlP', (event: Event) => {
-				const finder = this.$refs.finder as EditorFinder
-				finder.search = true
-				finder.open()
-				event.preventDefault()
-				// for (const editor of (this.$refs.editors as AIView[])) {
-				// 	editor.ctrlUp()
-				// }
-			})
-			emitter.on('escape', () => {
-				(this.$refs.finder as EditorFinder).close()
-			})
-			emitter.on('htmlclick', () => {
-				(this.$refs.finder as EditorFinder).close()
-			})
-			emitter.on('keydown', this.keydown)
-			emitter.on('keyup', this.keyup)
-			emitter.on('previous', (event: Event) => {
-				const finder = this.$refs.finder as EditorFinder
-				finder.search = false
-				finder.open()
-				finder.previous()
-				event.preventDefault()
-			})
-			emitter.on('next', (event: Event) => {
-				const finder = this.$refs.finder as EditorFinder
-				finder.search = false
-				finder.open()
-				finder.next()
-				event.preventDefault()
-			})
-			emitter.on('back', () => {
-				this.$router.push('/editor')
-			})
-			emitter.on('editor-drag', (item: any) => {
-				this.dragging = item
-			})
-			emitter.on('editor-drop', (folder: Folder) => {
-				if (!this.dragging) { return }
-				const parent = fileSystem.folderById[this.dragging.parent]
-				if (parent === folder || this.dragging === folder) { return }
-				if (this.dragging instanceof Folder && this.isChild(folder, this.dragging)) { return }
-				const destPath = folder.id === 0 ? '' : fileSystem.getFolderPath(folder).replace(/\/$/, '')
-				if (this.dragging.folder) {
-					const srcPath = fileSystem.getFolderPath(this.dragging as Folder).replace(/\/$/, '')
-					LeekWars.post('ai/move', {path: srcPath, dest: destPath})
-				} else {
-					const ai = (this.dragging as AIItem).ai
-					const oldPath = ai.path
-					LeekWars.post('ai/move', {path: oldPath, dest: destPath})
-					delete fileSystem.ais[ai.path]
-					ai.folder = folder.id
-					ai.path = destPath ? destPath + '/' + ai.name : ai.name
-					ai.folderpath = fileSystem.getFolderPath(folder)
-					fileSystem.ais[ai.path] = ai
-				}
-				parent.items.splice(parent.items.indexOf(this.dragging), 1)
-				folder.items.push(this.dragging)
-				this.dragging.parent = folder.id
-				fileSystem.sortFolder(folder)
-				folder.expanded = true
-				this.dragging = null
-			})
-			emitter.on('connected', this.connected)
-			emitter.on('jump', this.jumpEvent)
-			emitter.on('reanalyze', () => {
-				const aiEditor = this.$refs.editor1 as AIViewMonaco
-				if (aiEditor) { aiEditor.setAnalyzerTimeout() }
-			})
-
-			emitter.on('close-diff', ({ folder, file }) => {
-				const tab = this.tabs1.find(t => t.type === 'diff' && (t as DiffTab).folder === folder && (t as DiffTab).file === file)
-				if (tab) { this.closeTabByRef(tab) }
-			})
-
-			emitter.on('close-file-tab', (aiPath: string) => {
-				const tab = this.tabs1.find(t => t.type === 'file' && t.id === aiPath)
-				if (tab) { this.closeTabByRef(tab) }
-			})
-
-			emitter.on('close-merge-tabs', ({ folder }) => {
-				const mergeTabs = this.tabs1.filter(t => t.type === 'merge' && (t as DiffTab).folder === folder)
-				for (const tab of mergeTabs) { this.closeTabByRef(tab) }
-			})
-
-			emitter.on('open-merge', ({ folder, file }) => {
-				this.openMerge({ folder, file })
-			})
-
-			if (store.state.farmer) {
-				this.connected()
-			}
-
-			this.broadcast.onmessage = (event) => {
-				if (event.data.type == 'editor-opened-ping') {
-					this.broadcast.postMessage({ type: 'editor-opened-pong' })
-				}
-				if (event.data.type == 'editor-opened-pong') {
-					this.alreadyOpenedDialog = true
-				}
-			}
-			this.broadcast.postMessage({ type: 'editor-opened-ping' })
+	async function loadGitRepos() {
+		try {
+			const data = await LeekWars.post('git/repos')
+			const repos: {[path: string]: boolean} = {}
+			for (const r of data.repos) { repos[r.folder] = true }
+			fileSystem.gitRepos = repos
+		} catch (e) {
+			// Pas de repos git
 		}
-
-		isChild(folder: Folder, parent: Folder): boolean {
-			let current = folder
-			while (current.id !== 0) {
-				if (current.id === parent.id) { return true }
-				current = fileSystem.folderById[current.parent]
-			}
-			return false
+		if (leftPanelTab.value === 'git' && Object.keys(fileSystem.gitRepos).length === 0) {
+			leftPanelTab.value = 'explorer'
 		}
+	}
 
-		toggleFileMenu(event?: Event) {
-			if (LeekWars.mobile && event) {
-				this.fileMenuActivator = event.target
-			} else {
-				this.fileMenuActivator = this.$refs.fileButton as HTMLElement
-			}
-			nextTick(() => {
-				this.fileMenu = !this.fileMenu
-			})
+	function isChild(folder: Folder, parent: Folder): boolean {
+		let current = folder
+		while (current.id !== 0) {
+			if (current.id === parent.id) { return true }
+			current = fileSystem.folderById[current.parent]
 		}
+		return false
+	}
 
-		keydown(e: KeyboardEvent) {
-			// Up and down arrows while Alt + Left/right
-			const finder = this.$refs.finder as EditorFinder
-			if (e.altKey && finder.value) {
-				if (e.which === 40) { finder.previous() }
-				else if (e.which === 38) { finder.next() }
-			}
+	function toggleFileMenu(event?: Event) {
+		if (LeekWars.mobile && event) {
+			fileMenuActivator.value = event.target
+		} else {
+			fileMenuActivator.value = fileButton.value
 		}
+		nextTick(() => {
+			fileMenu.value = !fileMenu.value
+		})
+	}
 
-		keyup(e: KeyboardEvent) {
-			if (e.which === 18) {
-				const finder = this.$refs.finder as EditorFinder
-				finder.go(this.history[finder.selected])
-			}
+	function keydown(e: KeyboardEvent) {
+		// Up and down arrows while Alt + Left/right
+		if (e.altKey && finder.value && (finder.value as any).value) {
+			if (e.which === 40) { (finder.value as any).previous() }
+			else if (e.which === 38) { (finder.value as any).next() }
 		}
+	}
 
-		@Watch('$route.params.id')
-		update() {
-			const routeHash = this.$route.params.hash as string | undefined
-			const isDiffRoute = routeHash || this.$route.path.endsWith('/diff')
-			if (this.$route.hash) {
-				if (this.$route.hash.startsWith('#leek-')) {
-					const id = parseInt(this.$route.hash.substring(6))
-					this.testDialog = true
-					setTimeout(() => {
-						const test = this.$refs.editorTest as any
-						test.currentTab = 1
-						if (test.allLeeks[id]) {
-							test.selectLeek(test.allLeeks[id])
-						}
-					}, 200)
-				}
-			}
-			if (this.$route.params.id) {
-				const routeId = this.$route.params.id as string
-				const ai = fileSystem.getAIFromRoute(routeId)
-				if (ai) {
-					const key = ai.path
-					fileSystem.load(ai).then(() => {
-						if (this.currentSide === 1) {
-							this.currentAI1 = key
-						} else {
-							this.currentAI2 = key
-						}
-						nextTick(() => {
-							this.currentEditor = (this.currentSide === 1 ? this.$refs.editor1 : this.$refs.editor2) as AIViewMonaco
-						})
-					})
-					localStorage.setItem('editor/last-code-' + this.currentSide, key)
-					this.currentType = 'ai'
-					this.currentFolder = fileSystem.folderById[ai.folder]
-					if (!(key in this.activeAIs)) {
-						this.activeAIs[key] = ai
+	function keyup(e: KeyboardEvent) {
+		if (e.which === 18 && finder.value) {
+			const f = finder.value as any
+			f.go(history.value[f.selected])
+		}
+	}
+
+	function update() {
+		const routeHash = route.params.hash as string | undefined
+		const isDiffRoute = routeHash || route.path.endsWith('/diff')
+		if (route.hash) {
+			if (route.hash.startsWith('#leek-')) {
+				const id = parseInt(route.hash.substring(6))
+				testDialog.value = true
+				setTimeout(() => {
+					const test = editorTestRef.value as any
+					if (!test) return
+					test.currentTab = 1
+					if (test.allLeeks[id]) {
+						test.selectLeek(test.allLeeks[id])
 					}
-					explorer.selectAI(ai)
-					if (this.currentSide === 1 && !isDiffRoute) {
-						const fileTab: FileTab = { type: 'file', id: key }
-						if (!this.tabs1.find(t => t.type === 'file' && t.id === key)) {
-							this.tabs1.push(fileTab)
-							this.saveTabs()
-						}
-						this.currentTab = this.tabs1.find(t => t.type === 'file' && t.id === key) || fileTab
-					}
-					// Ajout dans l'historique
-					const i = this.history.indexOf(ai)
-					if (i !== -1) { this.history.splice(i, 1) }
-					this.history.unshift(ai)
-
-					LeekWars.setTitle(ai.name)
-
-					if (isDiffRoute) {
-						if (this.currentTab && this.currentTab.type !== 'file' && this.currentTab.id === key) {
-							// Déjà sur le bon diff tab
-						} else if (routeHash) {
-							const diffTab = this.tabs1.find(t => t.type !== 'file' && (t as DiffTab).hash === routeHash)
-							if (diffTab) {
-								this.currentTab = diffTab
-								this.ensureDiffLoaded(diffTab as DiffTab)
-							}
-						} else {
-							const diffTab = this.tabs1.find(t => t.type !== 'file' && t.id === key)
-							if (diffTab) {
-								this.currentTab = diffTab
-								this.ensureDiffLoaded(diffTab as DiffTab)
-							} else {
-								// Créer un onglet diff depuis l'URL
-								const { folder, file } = this.resolveGitPath(key)
-								if (folder !== null) {
-									this.openDiff({ folder, file })
-								}
-							}
-						}
-						LeekWars.splitShowContent()
-						LeekWars.setActions(this.actions_content)
-					} else if ('line' in this.$route.query) {
-						this.jump(ai, parseInt(this.$route.query.line as string), 0)
-						this.$router.replace('/editor/' + key).then(() => {
-							LeekWars.splitShowContent()
-							LeekWars.setActions(this.actions_content)
-						})
+				}, 200)
+			}
+		}
+		if (route.params.id) {
+			const routeId = route.params.id as string
+			const ai = fileSystem.getAIFromRoute(routeId)
+			if (ai) {
+				const key = ai.path
+				fileSystem.load(ai).then(() => {
+					if (currentSide.value === 1) {
+						currentAI1.value = key
 					} else {
-						LeekWars.splitShowContent()
-						LeekWars.setActions(this.actions_content)
+						currentAI2.value = key
 					}
-				} else {
-					this.currentFolder = fileSystem.folderById[parseInt(routeId)]
-					this.currentType = 'folder'
-					explorer.selectFolder(this.currentFolder)
-					LeekWars.setTitle(this.$t('title'), this.$t('n_ais', [fileSystem.aiCount]))
-					LeekWars.splitShowList()
-					LeekWars.setActions(this.actions_list)
+					nextTick(() => {
+						currentEditor.value = (currentSide.value === 1 ? editor1.value : editor2.value) as InstanceType<typeof AIViewMonaco>
+					})
+				})
+				localStorage.setItem('editor/last-code-' + currentSide.value, key)
+				currentType.value = 'ai'
+				currentFolder.value = fileSystem.folderById[ai.folder]
+				if (!(key in activeAIs)) {
+					activeAIs[key] = ai
 				}
+				explorer.selectAI(ai)
+				if (currentSide.value === 1 && !isDiffRoute) {
+					const fileTab: FileTab = { type: 'file', id: key }
+					if (!tabs1.value.find(tt => tt.type === 'file' && tt.id === key)) {
+						tabs1.value.push(fileTab)
+						saveTabs()
+					}
+					currentTab.value = tabs1.value.find(tt => tt.type === 'file' && tt.id === key) || fileTab
+				}
+				// Ajout dans l'historique
+				const i = history.value.indexOf(ai)
+				if (i !== -1) { history.value.splice(i, 1) }
+				history.value.unshift(ai)
 
-			} else if (!LeekWars.mobile) {
+				LeekWars.setTitle(ai.name)
 
-				const lastCode = localStorage.getItem('editor/last-code-1')
-				if (lastCode && lastCode in fileSystem.ais) {
-					this.$router.replace('/editor/' + lastCode)
-				} else if (store.state.farmer) {
-					for (const leekId in fileSystem.leekAIs) {
-						const aiKey = fileSystem.leekAIs[leekId]
-						if (aiKey in fileSystem.ais) {
-							this.$router.replace('/editor/' + aiKey)
-							return
+				if (isDiffRoute) {
+					if (currentTab.value && currentTab.value.type !== 'file' && currentTab.value.id === key) {
+						// Déjà sur le bon diff tab
+					} else if (routeHash) {
+						const diffTab = tabs1.value.find(tt => tt.type !== 'file' && (tt as DiffTab).hash === routeHash)
+						if (diffTab) {
+							currentTab.value = diffTab
+							ensureDiffLoaded(diffTab as DiffTab)
+						}
+					} else {
+						const diffTab = tabs1.value.find(tt => tt.type !== 'file' && tt.id === key)
+						if (diffTab) {
+							currentTab.value = diffTab
+							ensureDiffLoaded(diffTab as DiffTab)
+						} else {
+							// Créer un onglet diff depuis l'URL
+							const { folder, file } = resolveGitPath(key)
+							if (folder !== null) {
+								openDiff({ folder, file: file as string })
+							}
 						}
 					}
-					this.$router.replace('/editor/0')
+					LeekWars.splitShowContent()
+					LeekWars.setActions(actions_content.value)
+				} else if ('line' in route.query) {
+					jump(ai, parseInt(route.query.line as string), 0)
+					router.replace('/editor/' + key).then(() => {
+						LeekWars.splitShowContent()
+						LeekWars.setActions(actions_content.value)
+					})
+				} else {
+					LeekWars.splitShowContent()
+					LeekWars.setActions(actions_content.value)
 				}
 			} else {
-				this.currentFolder = fileSystem.rootFolder
-				this.currentType = 'folder'
-				LeekWars.setTitle(this.$t('title'), this.$t('n_ais', [fileSystem.aiCount]))
+				currentFolder.value = fileSystem.folderById[parseInt(routeId)]
+				currentType.value = 'folder'
+				explorer.selectFolder(currentFolder.value)
+				LeekWars.setTitle(t('title'), t('n_ais', [fileSystem.aiCount]))
 				LeekWars.splitShowList()
-				LeekWars.setActions(this.actions_list)
+				LeekWars.setActions(actions_list.value)
 			}
-		}
 
-		beforeUnmount() {
-			// Restaurer le cache du daemon pour les fichiers modifiés non sauvegardés
-			// en renvoyant le code du disque (via localStorage) pour que le daemon
-			// n'ait pas en cache une version non écrite sur le FS.
-			this.restoreDaemonCache()
+		} else if (!LeekWars.mobile) {
 
-			emitter.off('ctrlS')
-			emitter.off('ctrlShiftS')
-			emitter.off('ctrlQ')
-			emitter.off('ctrlF')
-			emitter.off('ctrlP')
-			emitter.off('escape')
-			emitter.off('htmlclick')
-			emitter.off('keydown', this.keydown)
-			emitter.off('keyup', this.keyup)
-			emitter.off('previous')
-			emitter.off('next')
-			emitter.off('back')
-			emitter.off('connected', this.connected)
-			emitter.off('jump', this.jumpEvent)
-			emitter.off('reanalyze')
-			emitter.off('close-diff')
-			emitter.off('close-file-tab')
-			emitter.off('close-merge-tabs')
-			emitter.off('open-merge')
-			LeekWars.large = false
-			LeekWars.header = true
-			LeekWars.footer = true
-			LeekWars.box = false
-			if (this.broadcast) {
-				this.broadcast.close()
-			}
-			if (LeekWars.didactitial_step === 4) {
-				LeekWars.didactitial_next()
-			}
-		}
-
-		restoreDaemonCache() {
-			for (const path in fileSystem.ais) {
-				const ai = fileSystem.ais[path]
-				if (!ai.modified) continue
-				if (!isLeekScript(ai.path)) continue
-				// Récupérer le code sauvegardé sur le FS (depuis le cache localStorage)
-				const savedCode = localStorage.getItem('ai/code/' + ai.path)
-				if (savedCode !== null) {
-					// Renvoyer le code du disque au daemon pour restaurer son cache
-					LeekWars.socket.send([SocketMessage.EDITOR_ANALYZE, ai.path, savedCode])
-				}
-			}
-		}
-
-		beforeRouteLeave(to: Route, from: Route, next: Function) {
-			let num = 0
-			for (const i in fileSystem.ais) {
-				if (fileSystem.ais[i].modified) { num++ }
-			}
-			if (!next) { return num === 0 }
-			if (num > 0 && !window.confirm(this.$i18n.t('n_ais_unsaved', [num]) as string)) {
-				next(false)
-			} else {
-				next()
-			}
-		}
-
-		save(aiEditor: AIViewMonaco | null = this.currentEditor) {
-			// console.log("save", aiEditor, this.currentEditor)
-			if (!aiEditor) { return }
-			if (aiEditor.saving) { return }
-			aiEditor.saving = true
-			aiEditor.save()
-			aiEditor.serverError = false
-
-			const content = aiEditor.editor.getValue()
-			aiEditor.ai.code = content
-
-			LeekWars.track('save-ai')
-
-			LeekWars.post('ai/write', {path: aiEditor.ai.path, code: content}).then((data: any) => {
-				aiEditor.saving = false
-				aiEditor.ai.mtime = data.modified || Date.now()
-				localStorage.setItem('ai/mtime/' + aiEditor.ai.path, '' + aiEditor.ai.mtime)
-				localStorage.setItem('ai/code/' + aiEditor.ai.path, content)
-				aiEditor.ai.modified = false
-
-				if (data.result) {
-					aiEditor.goods = []
-					analyzer.applyAnalyzeResult(data.result, (ai) => {
-						if (aiEditor.goods.length === 0) aiEditor.goods.push({ai})
-					})
-					analyzer.updateTodos(aiEditor.ai)
-					analyzer.updateCount()
-					setTimeout(() => aiEditor.goods = [], 2000)
-				}
-
-				emitter.emit('git-file-changed')
-			}).error((error: any) => {
-				aiEditor.serverError = true
-				aiEditor.saving = false
-				LeekWars.toast(translateFileSystemError(error))
-			})
-		}
-
-		saveAll() {
-			// for (const aiEditor of (this.$refs.editors as AIView[])) {
-			// 	this.save(aiEditor)
-			// }
-		}
-
-		openDiff(data: { folder: string, file: string, staged?: boolean, hash?: string }) {
-			const fullPath = (data.folder ? data.folder + '/' : '') + data.file
-			const ai = fileSystem.getAIByPath(fullPath)
-			const tab: DiffTab = { type: data.hash ? 'commit' : 'diff', id: ai ? ai.path : fullPath, folder: data.folder, file: data.file, staged: data.staged, hash: data.hash, original: '', modified: '', ready: false }
-			// Chercher si un onglet existe déjà
-			const existing = this.tabs1.find(t => t.type !== 'file' && this.diffKey(t as DiffTab) === this.diffKey(tab))
-			if (existing) {
-				this.selectTab(existing)
-			} else {
-				this.tabs1.push(tab)
-				this.fetchDiffContent(tab)
-				this.selectTab(tab)
-			}
-		}
-
-		closeDiff() {
-			if (this.currentTab && this.currentTab.type !== 'file') {
-				this.closeTabByRef(this.currentTab)
-			}
-		}
-
-		openMerge(data: { folder: string, file: string }) {
-			const fullPath = (data.folder ? data.folder + '/' : '') + data.file
-			const ai = fileSystem.getAIByPath(fullPath)
-			const tab: DiffTab = { type: 'merge', id: ai ? ai.path : fullPath, folder: data.folder, file: data.file, original: '', modified: '', ready: false }
-			// Chercher si un onglet merge existe déjà pour ce fichier
-			const existing = this.tabs1.find(t => t.type === 'merge' && (t as DiffTab).folder === data.folder && (t as DiffTab).file === data.file)
-			if (existing) {
-				this.selectTab(existing)
-			} else {
-				this.tabs1.push(tab)
-				this.fetchMergeContent(tab)
-				this.selectTab(tab)
-			}
-		}
-
-		async fetchMergeContent(tab: DiffTab) {
-			try {
-				const data = await LeekWars.post('git/read-file', { folder: tab.folder, file: tab.file })
-				tab.modified = data.content || ''
-				tab.ready = true
-				this.diffReady++
-			} catch (e) {
-				tab.modified = ''
-				tab.ready = true
-				this.diffReady++
-			}
-		}
-
-		onMergeResolve(content: string, _remainingConflicts: number) {
-			const merge = this.activeMerge
-			if (!merge) return
-			const fullPath = (merge.folder ? merge.folder + '/' : '') + merge.file
-			const ai = fileSystem.getAIByPath(fullPath)
-			if (ai) {
-				ai.code = content
-				ai.modified = true
-			}
-		}
-
-		selectTab(tab: EditorTab) {
-			if (tab.type === 'file') {
-				const ai = fileSystem.ais[tab.id]
-				if (!ai) return
-				this.currentTab = tab
-				this.open(ai.path, 1)
-			} else {
-				this.ensureDiffLoaded(tab as DiffTab)
-				// Si on switch entre deux diffs, démonter d'abord le composant git-diff
-				const wasDiff = this.currentTab && this.currentTab.type !== 'file'
-				if (wasDiff) {
-					this.diffMounted = false
-					this.currentTab = tab
-					this.updateUrl()
-					this.saveTabs()
-					nextTick(() => { this.diffMounted = true })
-				} else {
-					this.currentTab = tab
-					this.updateUrl()
-					this.saveTabs()
-				}
-			}
-		}
-
-		closeTabEvent(tab: EditorTab) {
-			this.closeTabByRef(tab)
-		}
-
-		closeTabByRef(tab: EditorTab) {
-			const i = this.tabs1.indexOf(tab)
-			if (i === -1) return
-			this.tabs1.splice(i, 1)
-			// Si c'est le tab actif, en sélectionner un autre
-			if (this.currentTab === tab) {
-				if (this.tabs1.length > 0) {
-					const newIndex = Math.min(i, this.tabs1.length - 1)
-					this.selectTab(this.tabs1[newIndex])
-				} else {
-					this.currentTab = null
-				}
-			}
-			this.updateUrl()
-			this.saveTabs()
-		}
-
-		closeAllTabs(keepTab: EditorTab) {
-			this.tabs1 = [keepTab]
-			this.currentTab = keepTab
-			this.selectTab(keepTab)
-			this.saveTabs()
-		}
-
-		openDiffFile() {
-			if (!this.currentTab || this.currentTab.type === 'file') return
-			this.openAIFromDiffTab(this.currentTab as DiffTab)
-		}
-
-		openDiffFileFromMenu(tab: EditorTab) {
-			if (tab.type === 'file') return
-			this.openAIFromDiffTab(tab as DiffTab)
-		}
-
-		private openAIFromDiffTab(diff: DiffTab) {
-			const fullPath = (diff.folder ? diff.folder + '/' : '') + diff.file
-			const ai = fileSystem.getAIByPath(fullPath)
-			if (ai) {
-				this.open(ai.path, 1)
-			}
-		}
-
-		saveTabs() {
-			const serialized = this.tabs1.map(t => {
-				if (t.type === 'file') return { type: 'file', id: t.id }
-				return { type: t.type, id: t.id, folder: t.folder, file: t.file, staged: t.staged, hash: t.hash }
-			})
-			localStorage.setItem('editor/tabs1', JSON.stringify(serialized))
-			if (this.currentTab) {
-				if (this.currentTab.type === 'file') {
-					localStorage.setItem('editor/current-tab', JSON.stringify({ type: 'file', id: this.currentTab.id }))
-				} else {
-					localStorage.setItem('editor/current-tab', JSON.stringify({ type: this.currentTab.type, key: this.diffKey(this.currentTab as DiffTab) }))
-				}
-			}
-		}
-
-		restoreTabs() {
-			if (this.tabs1Loaded) return
-			this.tabs1Loaded = true
-			try {
-				const saved: any[] = JSON.parse(localStorage.getItem('editor/tabs1') || '[]')
-				for (const t of saved) {
-					if (t.type === 'file') {
-						if (t.id in fileSystem.ais) {
-							this.tabs1.push({ type: 'file', id: t.id })
-						}
-					} else {
-						const tab: DiffTab = { type: t.type || 'diff', id: t.id || 0, folder: t.folder, file: t.file, staged: t.staged, hash: t.hash, original: '', modified: '', ready: false }
-						this.tabs1.push(tab)
+			const lastCode = localStorage.getItem('editor/last-code-1')
+			if (lastCode && lastCode in fileSystem.ais) {
+				router.replace('/editor/' + lastCode)
+			} else if (store.state.farmer) {
+				for (const leekId in fileSystem.leekAIs) {
+					const aiKey = fileSystem.leekAIs[leekId]
+					if (aiKey in fileSystem.ais) {
+						router.replace('/editor/' + aiKey)
+						return
 					}
 				}
-			} catch (e) {
-				// Données corrompues
+				router.replace('/editor/0')
 			}
+		} else {
+			currentFolder.value = fileSystem.rootFolder
+			currentType.value = 'folder'
+			LeekWars.setTitle(t('title'), t('n_ais', [fileSystem.aiCount]))
+			LeekWars.splitShowList()
+			LeekWars.setActions(actions_list.value)
 		}
+	}
+	watch(() => route.params.id, update)
 
-		resolveGitPath(aiPath: string): { folder: string, file: string } | { folder: null, file: null } {
-			// Trouver le repo git qui est un préfixe du path
-			for (const repo of Object.keys(fileSystem.gitRepos)) {
-				if (repo && aiPath.startsWith(repo + '/')) {
-					return { folder: repo, file: aiPath.substring(repo.length + 1) }
-				}
-			}
-			// Repo à la racine
-			if ('' in fileSystem.gitRepos) {
-				return { folder: '', file: aiPath }
-			}
-			return { folder: null, file: null }
-		}
-
-		ensureDiffLoaded(tab: DiffTab) {
-		if (!tab.ready && !tab.original && !tab.modified) {
-			if (tab.type === 'merge') {
-				this.fetchMergeContent(tab)
-			} else {
-				this.fetchDiffContent(tab)
+	function restoreDaemonCache() {
+		for (const path in fileSystem.ais) {
+			const ai = fileSystem.ais[path]
+			if (!ai.modified) continue
+			if (!isLeekScript(ai.path)) continue
+			// Récupérer le code sauvegardé sur le FS (depuis le cache localStorage)
+			const savedCode = localStorage.getItem('ai/code/' + ai.path)
+			if (savedCode !== null) {
+				// Renvoyer le code du disque au daemon pour restaurer son cache
+				LeekWars.socket.send([SocketMessage.EDITOR_ANALYZE, ai.path, savedCode])
 			}
 		}
 	}
 
-	async fetchDiffContent(tab: DiffTab) {
-			const safe = (url: string, params: any) => LeekWars.post(url, params).catch(() => ({ content: '' }))
-			let original = ''
-			let modified = ''
-			try {
-				if (tab.hash) {
-					const [parentData, commitData] = await Promise.all([
-						safe('git/show', { folder: tab.folder, hash: tab.hash + '^', file: tab.file }),
-						safe('git/show', { folder: tab.folder, hash: tab.hash, file: tab.file }),
-					])
-					original = parentData.content || ''
-					modified = commitData.content || ''
-				} else if (tab.staged) {
-					const [headData, indexData] = await Promise.all([
-						safe('git/show', { folder: tab.folder, hash: 'HEAD', file: tab.file }),
-						safe('git/show', { folder: tab.folder, hash: ':', file: tab.file }),
-					])
-					original = headData.content || ''
-					modified = indexData.content || ''
-				} else {
-					// Unstaged : seul l'original (HEAD) est nécessaire, le modified vient du code live
-					const headData = await safe('git/show', { folder: tab.folder, hash: 'HEAD', file: tab.file })
-					original = headData.content || ''
-				}
-			} catch (e) {
-				// Erreur de fetch
+	onBeforeRouteLeave((_to, _from, next) => {
+		let num = 0
+		for (const i in fileSystem.ais) {
+			if (fileSystem.ais[i].modified) { num++ }
+		}
+		if (num > 0 && !window.confirm(t('n_ais_unsaved', [num]) as string)) {
+			next(false)
+		} else {
+			next()
+		}
+	})
+
+	function save(aiEditor: InstanceType<typeof AIViewMonaco> | null = currentEditor.value) {
+		if (!aiEditor) { return }
+		if (aiEditor.saving) { return }
+		aiEditor.saving = true
+		aiEditor.save()
+		aiEditor.serverError = false
+
+		const content = aiEditor.editor.getValue()
+		aiEditor.ai.code = content
+
+		LeekWars.track('save-ai')
+
+		LeekWars.post('ai/write', {path: aiEditor.ai.path, code: content}).then((data: any) => {
+			aiEditor.saving = false
+			aiEditor.ai.mtime = data.modified || Date.now()
+			localStorage.setItem('ai/mtime/' + aiEditor.ai.path, '' + aiEditor.ai.mtime)
+			localStorage.setItem('ai/code/' + aiEditor.ai.path, content)
+			aiEditor.ai.modified = false
+
+			if (data.result) {
+				aiEditor.goods = []
+				analyzer.applyAnalyzeResult(data.result, (ai) => {
+					if (aiEditor.goods.length === 0) aiEditor.goods.push({ai})
+				})
+				analyzer.updateTodos(aiEditor.ai)
+				analyzer.updateCount()
+				setTimeout(() => aiEditor.goods = [], 2000)
 			}
-			tab.original = original
-			tab.modified = modified
+
+			emitter.emit('git-file-changed')
+		}).error((error: any) => {
+			aiEditor.serverError = true
+			aiEditor.saving = false
+			LeekWars.toast(translateFileSystemError(error))
+		})
+	}
+
+	function openDiff(data: { folder: string, file: string, staged?: boolean, hash?: string }) {
+		const fullPath = (data.folder ? data.folder + '/' : '') + data.file
+		const ai = fileSystem.getAIByPath(fullPath)
+		const tab: DiffTab = { type: data.hash ? 'commit' : 'diff', id: ai ? ai.path : fullPath, folder: data.folder, file: data.file, staged: data.staged, hash: data.hash, original: '', modified: '', ready: false }
+		// Chercher si un onglet existe déjà
+		const existing = tabs1.value.find(t => t.type !== 'file' && diffKey(t as DiffTab) === diffKey(tab))
+		if (existing) {
+			selectTab(existing)
+		} else {
+			tabs1.value.push(tab)
+			fetchDiffContent(tab)
+			selectTab(tab)
+		}
+	}
+
+	function closeDiff() {
+		if (currentTab.value && currentTab.value.type !== 'file') {
+			closeTabByRef(currentTab.value)
+		}
+	}
+
+	function openMerge(data: { folder: string, file: string }) {
+		const fullPath = (data.folder ? data.folder + '/' : '') + data.file
+		const ai = fileSystem.getAIByPath(fullPath)
+		const tab: DiffTab = { type: 'merge', id: ai ? ai.path : fullPath, folder: data.folder, file: data.file, original: '', modified: '', ready: false }
+		// Chercher si un onglet merge existe déjà pour ce fichier
+		const existing = tabs1.value.find(t => t.type === 'merge' && (t as DiffTab).folder === data.folder && (t as DiffTab).file === data.file)
+		if (existing) {
+			selectTab(existing)
+		} else {
+			tabs1.value.push(tab)
+			fetchMergeContent(tab)
+			selectTab(tab)
+		}
+	}
+
+	async function fetchMergeContent(tab: DiffTab) {
+		try {
+			const data = await LeekWars.post('git/read-file', { folder: tab.folder, file: tab.file })
+			tab.modified = data.content || ''
 			tab.ready = true
-			this.diffReady++
+			diffReady.value++
+		} catch (e) {
+			tab.modified = ''
+			tab.ready = true
+			diffReady.value++
 		}
+	}
 
-		tabUrl(tab: EditorTab | null): string {
-			if (!tab) return '/editor/' + (this.currentAI1 || this.$route.params.id || 0)
-			if (tab.type === 'file') {
-				return '/editor/' + tab.id
-			}
-			const diff = tab as DiffTab
-			return '/editor/' + diff.id + (diff.hash ? '/h/' + diff.hash : '/diff')
+	function onMergeResolve(content: string, _remainingConflicts: number) {
+		const merge = activeMerge.value
+		if (!merge) return
+		const fullPath = (merge.folder ? merge.folder + '/' : '') + merge.file
+		const ai = fileSystem.getAIByPath(fullPath)
+		if (ai) {
+			ai.code = content
+			ai.modified = true
 		}
+	}
 
-		updateUrl() {
-			const target = this.tabUrl(this.currentTab)
-			if (this.$route.path !== target) {
-				this.$router.push(target)
-			}
-		}
-
-		startDelete() {
-			const explorer = this.$refs.explorerEl as any
-			if (!explorer) return
-			explorer.deleteDialog = true
-		}
-		startTest(editor = this.currentEditor) {
-			if (!editor || !editor.ai) { return }
-			if (editor.ai.modified) {
-				// editor.needTest = true
-				this.save(editor)
-				return
-			}
-			this.testDialog = true
-		}
-		help() {
-			this.infoDialog = true
-		}
-		settings() {
-			this.settingsDialog = true
-			LeekWars.get('ai/get-storage-usage').then((data: any) => {
-				this.storageUsage = data
-			})
-		}
-		get storageBarWidth(): string {
-			if (!this.storageUsage) return '0%'
-			return Math.min(100, Math.floor(100 * this.storageUsage.size / this.storageUsage.max_size)) + '%'
-		}
-		get storageBarClass(): string {
-			if (!this.storageUsage) return ''
-			const ratio = this.storageUsage.size / this.storageUsage.max_size
-			if (ratio >= 1) return 'storage-bar-full'
-			if (ratio >= 0.8) return 'storage-bar-warn'
-			return ''
-		}
-		add(event: any) {
-			this.fileMenuActivator = event.currentTarget
-			nextTick(() => {
-				this.fileMenu = true
-			})
-		}
-		@Watch('theme') themeChange() {
-			localStorage.setItem('editor/theme', this.theme)
-		}
-		@Watch('autocomplete') autocompleteChange() {
-			localStorage.setItem('editor/autocomplete', '' + this.autocomplete)
-		}
-		@Watch('autoClosing') autoClosingChange() {
-			localStorage.setItem('editor/auto_closing', '' + this.autoClosing)
-		}
-		@Watch('fontSize') fontSizeChange() {
-			localStorage.setItem('editor/font_size', '' + this.fontSize)
-		}
-		@Watch('lineHeight') lineHeightChange() {
-			localStorage.setItem('editor/line_height', '' + this.lineHeight)
-		}
-		@Watch('popups') popupsChange() {
-			localStorage.setItem('editor/popups', '' + this.popups)
-		}
-		@Watch('diffInline') diffInlineChange() {
-			localStorage.setItem('editor/diff_inline', '' + this.diffInline)
-		}
-		@Watch('diffCollapseUnchanged') diffCollapseUnchangedChange() {
-			localStorage.setItem('editor/diff_collapse_unchanged', '' + this.diffCollapseUnchanged)
-		}
-		@Watch('hideHeader') hideHeaderChange() {
-			LeekWars.header = !this.hideHeader
-			localStorage.setItem('editor/hideHeader', '' + this.hideHeader)
-		}
-		@Watch('problemsCount') problemsCountChange(count: number, prev: number) {
-			if (count === 0 && prev > 0 && this.bottomPanel === 'problems') {
-				this.bottomPanel = null
-			}
-		}
-		@Watch('enableAnalyzer') analyzerChange() {
-			if (this.enableAnalyzer) {
-				analyzer.init()
-			}
-			localStorage.setItem('editor/analyzer', '' + this.enableAnalyzer)
-		}
-		@Watch('enlargeWindow') enlargeWindowChange() {
-			LeekWars.large = this.enlargeWindow
-			localStorage.setItem('editor/large', '' + this.enlargeWindow)
-		}
-
-
-		jumpEvent(event) {
-			this.jump(event.ai, event.line, event.column)
-		}
-
-		jump(ai: AI, line: number, column: number) {
-			if (this.showDiffViewer) {
-				this.currentTab = this.tabs1.find(t => t.type === 'file') || null
-				this.updateUrl()
-			}
-			if (!this.currentAI || ai.path !== this.currentAI.path) {
-				this.$router.push('/editor/' + ai.path)
-			}
-			nextTick(() => {
-				const editor = this.$refs.editor1 as AIViewMonaco
-				if (editor) { editor.scrollToLine(ai, line, column) }
-			})
-		}
-
-		load(ai: AI) {
-			if (!(ai.path in this.activeAIs)) {
-				this.activeAIs[ai.path] = ai
-			}
-		}
-
-		resizerMousedown(e: MouseEvent) {
-			const startWidth = this.panelWidth
-			const startX = e.clientX
-			const mousemove: any = (ev: MouseEvent) => {
-				let panelWidth = Math.max(0, Math.min(400, startWidth + ev.clientX - startX))
-				if (panelWidth < 120) {
-					panelWidth = 0
-				}
-				this.panelWidth = panelWidth
-				this.editorTotalWidth = (this.$refs.editors! as HTMLElement).clientWidth
-				localStorage.setItem('editor/panel-width', '' + this.panelWidth)
-			}
-			const mouseup: any = (ev: MouseEvent) => {
-				document.documentElement!.removeEventListener('mousemove', mousemove)
-				document.documentElement!.removeEventListener('mouseup', mouseup)
-			}
-			document.documentElement!.addEventListener('mousemove', mousemove, false)
-			document.documentElement!.addEventListener('mouseup', mouseup, false)
-			e.preventDefault()
-		}
-
-		resizerEditorMousedown(e: MouseEvent) {
-			const startX = e.clientX
-			this.editorTotalWidth = (this.$refs.editors! as HTMLElement).clientWidth
-			const startWidth = this.editor1Width * this.editorTotalWidth
-			const mousemove: any = (ev: MouseEvent) => {
-				let panelWidth = Math.max(300, Math.min(this.editorTotalWidth - 300, startWidth + ev.clientX - startX))
-				this.editor1Width = panelWidth / this.editorTotalWidth
-				this.editor2Width = 1 - this.editor1Width
-				localStorage.setItem('editor/editor1-width', '' + this.editor1Width)
-				localStorage.setItem('editor/editor2-width', '' + this.editor2Width)
-			}
-			const mouseup: any = (ev: MouseEvent) => {
-				document.documentElement!.removeEventListener('mousemove', mousemove)
-				document.documentElement!.removeEventListener('mouseup', mouseup)
-			}
-			document.documentElement!.addEventListener('mousemove', mousemove, false)
-			document.documentElement!.addEventListener('mouseup', mouseup, false)
-			e.preventDefault()
-		}
-
-		problemsResizerMousedown(e: MouseEvent) {
-			const startHeight = this.problemsHeight
-			const startY = e.clientY
-			const mousemove: any = (ev: MouseEvent) => {
-				let problemsHeight = Math.max(0, startHeight + startY - ev.clientY)
-				if (problemsHeight < 50) {
-					problemsHeight = 0
-				}
-				this.problemsHeight = problemsHeight
-				localStorage.setItem('editor/problems-height', '' + this.problemsHeight)
-			}
-			const mouseup: any = (ev: MouseEvent) => {
-				document.documentElement!.removeEventListener('mousemove', mousemove)
-				document.documentElement!.removeEventListener('mouseup', mouseup)
-			}
-			document.documentElement!.addEventListener('mousemove', mousemove, false)
-			document.documentElement!.addEventListener('mouseup', mouseup, false)
-			e.preventDefault()
-		}
-
-		toggleBottomPanel(panel: 'problems' | 'git') {
-			// Si on clique sur 'problems' sans aucun problème : ferme le panel (ou rien si déjà fermé)
-			if (panel === 'problems' && !this.analyzer.error_count && !this.analyzer.warning_count && !this.analyzer.todo_count) {
-				this.bottomPanel = null
-				return
-			}
-			if (this.problemsHeight === 0) {
-				this.problemsHeight = 200
-				this.bottomPanel = panel
-			} else if (this.bottomPanel === panel) {
-				this.bottomPanel = null
+	function selectTab(tab: EditorTab) {
+		if (tab.type === 'file') {
+			const ai = fileSystem.ais[tab.id]
+			if (!ai) return
+			currentTab.value = tab
+			open(ai.path, 1)
+		} else {
+			ensureDiffLoaded(tab as DiffTab)
+			// Si on switch entre deux diffs, démonter d'abord le composant git-diff
+			const wasDiff = currentTab.value && currentTab.value.type !== 'file'
+			if (wasDiff) {
+				diffMounted.value = false
+				currentTab.value = tab
+				updateUrl()
+				saveTabs()
+				nextTick(() => { diffMounted.value = true })
 			} else {
-				this.bottomPanel = panel
+				currentTab.value = tab
+				updateUrl()
+				saveTabs()
 			}
 		}
+	}
 
-		// problems(entrypoint: number, ai: AI, problems: Problem[]) {
+	function closeTabEvent(tab: EditorTab) {
+		closeTabByRef(tab)
+	}
 
-		// 	const editor = this.getAiView(ai)
-		// 	if (!editor) { return }
-
-		// 	editor.addErrorOverlay(entrypoint, problems)
-		// }
-
-		deleteAI(ai: AI) {
-			// Remove from active AIs
-			delete this.activeAIs[ai.path]
-			// Remove from tabs
-			const tab = this.tabs1.find(t => t.type === 'file' && t.id === ai.path)
-			if (tab) {
-				this.closeTabByRef(tab)
+	function closeTabByRef(tab: EditorTab) {
+		const i = tabs1.value.indexOf(tab)
+		if (i === -1) return
+		tabs1.value.splice(i, 1)
+		// Si c'est le tab actif, en sélectionner un autre
+		if (currentTab.value === tab) {
+			if (tabs1.value.length > 0) {
+				const newIndex = Math.min(i, tabs1.value.length - 1)
+				selectTab(tabs1.value[newIndex])
+			} else {
+				currentTab.value = null
 			}
+		}
+		updateUrl()
+		saveTabs()
+	}
 
-			// Open a new one
-			for (const path in fileSystem.ais) {
-				if (!path.startsWith('.trash/') && !path.startsWith('/')) {
-					this.$router.replace('/editor/' + path)
-					return
+	function closeAllTabs(keepTab: EditorTab) {
+		tabs1.value = [keepTab]
+		currentTab.value = keepTab
+		selectTab(keepTab)
+		saveTabs()
+	}
+
+	function openDiffFile() {
+		if (!currentTab.value || currentTab.value.type === 'file') return
+		openAIFromDiffTab(currentTab.value as DiffTab)
+	}
+
+	function openDiffFileFromMenu(tab: EditorTab) {
+		if (tab.type === 'file') return
+		openAIFromDiffTab(tab as DiffTab)
+	}
+
+	function openAIFromDiffTab(diff: DiffTab) {
+		const fullPath = (diff.folder ? diff.folder + '/' : '') + diff.file
+		const ai = fileSystem.getAIByPath(fullPath)
+		if (ai) {
+			open(ai.path, 1)
+		}
+	}
+
+	function saveTabs() {
+		const serialized = tabs1.value.map(t => {
+			if (t.type === 'file') return { type: 'file', id: t.id }
+			return { type: t.type, id: t.id, folder: t.folder, file: t.file, staged: t.staged, hash: t.hash }
+		})
+		localStorage.setItem('editor/tabs1', JSON.stringify(serialized))
+		if (currentTab.value) {
+			if (currentTab.value.type === 'file') {
+				localStorage.setItem('editor/current-tab', JSON.stringify({ type: 'file', id: currentTab.value.id }))
+			} else {
+				localStorage.setItem('editor/current-tab', JSON.stringify({ type: currentTab.value.type, key: diffKey(currentTab.value as DiffTab) }))
+			}
+		}
+	}
+
+	function restoreTabs() {
+		if (tabs1Loaded) return
+		tabs1Loaded = true
+		try {
+			const saved: any[] = JSON.parse(localStorage.getItem('editor/tabs1') || '[]')
+			for (const tt of saved) {
+				if (tt.type === 'file') {
+					if (tt.id in fileSystem.ais) {
+						tabs1.value.push({ type: 'file', id: tt.id })
+					}
+				} else {
+					const tab: DiffTab = { type: tt.type || 'diff', id: tt.id || 0, folder: tt.folder, file: tt.file, staged: tt.staged, hash: tt.hash, original: '', modified: '', ready: false }
+					tabs1.value.push(tab)
 				}
 			}
-			this.$router.replace('/editor')
+		} catch (e) {
+			// Données corrompues
+		}
+	}
+
+	function resolveGitPath(aiPath: string): { folder: string, file: string } | { folder: null, file: null } {
+		// Trouver le repo git qui est un préfixe du path
+		for (const repo of Object.keys(fileSystem.gitRepos)) {
+			if (repo && aiPath.startsWith(repo + '/')) {
+				return { folder: repo, file: aiPath.substring(repo.length + 1) }
+			}
+		}
+		// Repo à la racine
+		if ('' in fileSystem.gitRepos) {
+			return { folder: '', file: aiPath }
+		}
+		return { folder: null, file: null }
+	}
+
+	function ensureDiffLoaded(tab: DiffTab) {
+		if (!tab.ready && !tab.original && !tab.modified) {
+			if (tab.type === 'merge') {
+				fetchMergeContent(tab)
+			} else {
+				fetchDiffContent(tab)
+			}
+		}
+	}
+
+	async function fetchDiffContent(tab: DiffTab) {
+		const safe = (url: string, params: any) => LeekWars.post(url, params).catch(() => ({ content: '' }))
+		let original = ''
+		let modified = ''
+		try {
+			if (tab.hash) {
+				const [parentData, commitData] = await Promise.all([
+					safe('git/show', { folder: tab.folder, hash: tab.hash + '^', file: tab.file }),
+					safe('git/show', { folder: tab.folder, hash: tab.hash, file: tab.file }),
+				])
+				original = parentData.content || ''
+				modified = commitData.content || ''
+			} else if (tab.staged) {
+				const [headData, indexData] = await Promise.all([
+					safe('git/show', { folder: tab.folder, hash: 'HEAD', file: tab.file }),
+					safe('git/show', { folder: tab.folder, hash: ':', file: tab.file }),
+				])
+				original = headData.content || ''
+				modified = indexData.content || ''
+			} else {
+				// Unstaged : seul l'original (HEAD) est nécessaire, le modified vient du code live
+				const headData = await safe('git/show', { folder: tab.folder, hash: 'HEAD', file: tab.file })
+				original = headData.content || ''
+			}
+		} catch (e) {
+			// Erreur de fetch
+		}
+		tab.original = original
+		tab.modified = modified
+		tab.ready = true
+		diffReady.value++
+	}
+
+	function tabUrl(tab: EditorTab | null): string {
+		if (!tab) return '/editor/' + (currentAI1.value || route.params.id || 0)
+		if (tab.type === 'file') {
+			return '/editor/' + tab.id
+		}
+		const diff = tab as DiffTab
+		return '/editor/' + diff.id + (diff.hash ? '/h/' + diff.hash : '/diff')
+	}
+
+	function updateUrl() {
+		const target = tabUrl(currentTab.value)
+		if (route.path !== target) {
+			router.push(target)
+		}
+	}
+
+	function startDelete() {
+		if (!explorerEl.value) return
+		explorerEl.value.deleteDialog = true
+	}
+	function startTest(editor = currentEditor.value) {
+		if (!editor || !editor.ai) { return }
+		if (editor.ai.modified) {
+			save(editor)
+			return
+		}
+		testDialog.value = true
+	}
+	function help() {
+		infoDialog.value = true
+	}
+	function settings() {
+		settingsDialog.value = true
+		LeekWars.get('ai/get-storage-usage').then((data: any) => {
+			storageUsage.value = data
+		})
+	}
+	function add(event: any) {
+		fileMenuActivator.value = event.currentTarget
+		nextTick(() => {
+			fileMenu.value = true
+		})
+	}
+
+	watch(theme, () => localStorage.setItem('editor/theme', theme.value))
+	watch(autocomplete, () => localStorage.setItem('editor/autocomplete', '' + autocomplete.value))
+	watch(autoClosing, () => localStorage.setItem('editor/auto_closing', '' + autoClosing.value))
+	watch(fontSize, () => localStorage.setItem('editor/font_size', '' + fontSize.value))
+	watch(lineHeight, () => localStorage.setItem('editor/line_height', '' + lineHeight.value))
+	watch(popups, () => localStorage.setItem('editor/popups', '' + popups.value))
+	watch(diffInline, () => localStorage.setItem('editor/diff_inline', '' + diffInline.value))
+	watch(diffCollapseUnchanged, () => localStorage.setItem('editor/diff_collapse_unchanged', '' + diffCollapseUnchanged.value))
+	watch(hideHeader, () => {
+		LeekWars.header = !hideHeader.value
+		localStorage.setItem('editor/hideHeader', '' + hideHeader.value)
+	})
+	watch(problemsCount, (count, prev) => {
+		if (count === 0 && prev > 0 && bottomPanel.value === 'problems') {
+			bottomPanel.value = null
+		}
+	})
+	watch(enableAnalyzer, () => {
+		if (enableAnalyzer.value) {
+			analyzer.init()
+		}
+		localStorage.setItem('editor/analyzer', '' + enableAnalyzer.value)
+	})
+	watch(enlargeWindow, () => {
+		LeekWars.large = enlargeWindow.value
+		localStorage.setItem('editor/large', '' + enlargeWindow.value)
+	})
+	watch(history, () => {
+		localStorage.setItem('editor/history', JSON.stringify(history.value.map(ai => ai.path)))
+	}, { deep: true })
+
+	function jumpEvent(event: any) {
+		jump(event.ai, event.line, event.column)
+	}
+
+	function jump(ai: AI, line: number, column: number) {
+		if (showDiffViewer.value) {
+			currentTab.value = tabs1.value.find(t => t.type === 'file') || null
+			updateUrl()
+		}
+		if (!currentAI.value || ai.path !== currentAI.value.path) {
+			router.push('/editor/' + ai.path)
+		}
+		nextTick(() => {
+			if (editor1.value) { (editor1.value as any).scrollToLine(ai, line, column) }
+		})
+	}
+
+	function load(ai: AI) {
+		if (!(ai.path in activeAIs)) {
+			activeAIs[ai.path] = ai
+		}
+	}
+
+	function resizerMousedown(e: MouseEvent) {
+		const startWidth = panelWidth.value
+		const startX = e.clientX
+		const mousemove: any = (ev: MouseEvent) => {
+			let pw = Math.max(0, Math.min(400, startWidth + ev.clientX - startX))
+			if (pw < 120) {
+				pw = 0
+			}
+			panelWidth.value = pw
+			editorTotalWidth = (editors.value as HTMLElement).clientWidth
+			localStorage.setItem('editor/panel-width', '' + panelWidth.value)
+		}
+		const mouseup: any = (_ev: MouseEvent) => {
+			document.documentElement!.removeEventListener('mousemove', mousemove)
+			document.documentElement!.removeEventListener('mouseup', mouseup)
+		}
+		document.documentElement!.addEventListener('mousemove', mousemove, false)
+		document.documentElement!.addEventListener('mouseup', mouseup, false)
+		e.preventDefault()
+	}
+
+	function resizerEditorMousedown(e: MouseEvent) {
+		const startX = e.clientX
+		editorTotalWidth = (editors.value as HTMLElement).clientWidth
+		const startWidth = editor1Width.value * editorTotalWidth
+		const mousemove: any = (ev: MouseEvent) => {
+			let pw = Math.max(300, Math.min(editorTotalWidth - 300, startWidth + ev.clientX - startX))
+			editor1Width.value = pw / editorTotalWidth
+			editor2Width.value = 1 - editor1Width.value
+			localStorage.setItem('editor/editor1-width', '' + editor1Width.value)
+			localStorage.setItem('editor/editor2-width', '' + editor2Width.value)
+		}
+		const mouseup: any = (_ev: MouseEvent) => {
+			document.documentElement!.removeEventListener('mousemove', mousemove)
+			document.documentElement!.removeEventListener('mouseup', mouseup)
+		}
+		document.documentElement!.addEventListener('mousemove', mousemove, false)
+		document.documentElement!.addEventListener('mouseup', mouseup, false)
+		e.preventDefault()
+	}
+
+	function problemsResizerMousedown(e: MouseEvent) {
+		const startHeight = problemsHeight.value
+		const startY = e.clientY
+		const mousemove: any = (ev: MouseEvent) => {
+			let ph = Math.max(0, startHeight + startY - ev.clientY)
+			if (ph < 50) {
+				ph = 0
+			}
+			problemsHeight.value = ph
+			localStorage.setItem('editor/problems-height', '' + problemsHeight.value)
+		}
+		const mouseup: any = (_ev: MouseEvent) => {
+			document.documentElement!.removeEventListener('mousemove', mousemove)
+			document.documentElement!.removeEventListener('mouseup', mouseup)
+		}
+		document.documentElement!.addEventListener('mousemove', mousemove, false)
+		document.documentElement!.addEventListener('mouseup', mouseup, false)
+		e.preventDefault()
+	}
+
+	function toggleBottomPanel(panel: 'problems' | 'git') {
+		// Si on clique sur 'problems' sans aucun problème : ferme le panel (ou rien si déjà fermé)
+		if (panel === 'problems' && !analyzer.error_count && !analyzer.warning_count && !analyzer.todo_count) {
+			bottomPanel.value = null
+			return
+		}
+		if (problemsHeight.value === 0) {
+			problemsHeight.value = 200
+			bottomPanel.value = panel
+		} else if (bottomPanel.value === panel) {
+			bottomPanel.value = null
+		} else {
+			bottomPanel.value = panel
+		}
+	}
+
+	function deleteAI(ai: AI) {
+		// Remove from active AIs
+		delete activeAIs[ai.path]
+		// Remove from tabs
+		const tab = tabs1.value.find(t => t.type === 'file' && t.id === ai.path)
+		if (tab) {
+			closeTabByRef(tab)
 		}
 
-		close(id: string) {
-			this.history = this.history.filter(a => a.path !== id)
+		// Open a new one
+		for (const path in fileSystem.ais) {
+			if (!path.startsWith('.trash/') && !path.startsWith('/')) {
+				router.replace('/editor/' + path)
+				return
+			}
 		}
+		router.replace('/editor')
+	}
 
-		closeAll() {
-			this.history = []
-		}
+	function close(id: string) {
+		history.value = history.value.filter(a => a.path !== id)
+	}
 
-		@Watch('history')
-		updateHistory() {
-			localStorage.setItem('editor/history', JSON.stringify(this.history.map(ai => ai.path)))
-		}
+	function closeAll() {
+		history.value = []
+	}
 
-		updateVersion() {
-			if (!this.currentEditor) return
-			this.rewritePragma('version', this.currentAI.version)
-			this.save(this.currentEditor)
-			this.currentAI.analyze()
-		}
+	function updateVersion() {
+		if (!currentEditor.value) return
+		rewritePragma('version', currentAI.value.version)
+		save(currentEditor.value)
+		currentAI.value.analyze()
+	}
 
-		updateStrictMode() {
-			if (!this.currentEditor) return
-			this.rewritePragma('strict', this.currentAI.strict)
-			this.save(this.currentEditor)
-			this.currentAI.analyze()
-		}
+	function updateStrictMode() {
+		if (!currentEditor.value) return
+		rewritePragma('strict', currentAI.value.strict)
+		save(currentEditor.value)
+		currentAI.value.analyze()
+	}
 
-		rewritePragma(name: 'version' | 'strict', value: number | boolean) {
-			if (!this.currentEditor) return
-			const editor = this.currentEditor.editor
-			const code = editor.getValue()
-			const pragmaRe = new RegExp(`^[ \\t]*//[ \\t]*@${name}(?:[ \\t]*:[ \\t]*\\S+)?[ \\t]*\\r?\\n?`, 'm')
-			const line = name === 'version' ? `// @version:${value}\n` : (value ? `// @strict\n` : '')
-			const match = pragmaRe.exec(code)
-			let newCode: string
-			if (match) {
-				newCode = code.substring(0, match.index) + line + code.substring(match.index + match[0].length)
-			} else if (line) {
-				if (name === 'strict') {
-					// Insert right after @version if present, otherwise at the top
-					const versionRe = /^[ \t]*\/\/[ \t]*@version(?:[ \t]*:[ \t]*\S+)?[ \t]*\r?\n?/m
-					const versionMatch = versionRe.exec(code)
-					if (versionMatch) {
-						const insertAt = versionMatch.index + versionMatch[0].length
-						newCode = code.substring(0, insertAt) + line + code.substring(insertAt)
-					} else {
-						newCode = line + code
-					}
+	function rewritePragma(name: 'version' | 'strict', value: number | boolean) {
+		if (!currentEditor.value) return
+		const editor = currentEditor.value.editor
+		const code = editor.getValue()
+		const pragmaRe = new RegExp(`^[ \\t]*//[ \\t]*@${name}(?:[ \\t]*:[ \\t]*\\S+)?[ \\t]*\\r?\\n?`, 'm')
+		const line = name === 'version' ? `// @version:${value}\n` : (value ? `// @strict\n` : '')
+		const match = pragmaRe.exec(code)
+		let newCode: string
+		if (match) {
+			newCode = code.substring(0, match.index) + line + code.substring(match.index + match[0].length)
+		} else if (line) {
+			if (name === 'strict') {
+				// Insert right after @version if present, otherwise at the top
+				const versionRe = /^[ \t]*\/\/[ \t]*@version(?:[ \t]*:[ \t]*\S+)?[ \t]*\r?\n?/m
+				const versionMatch = versionRe.exec(code)
+				if (versionMatch) {
+					const insertAt = versionMatch.index + versionMatch[0].length
+					newCode = code.substring(0, insertAt) + line + code.substring(insertAt)
 				} else {
 					newCode = line + code
 				}
 			} else {
-				return
+				newCode = line + code
 			}
-			if (newCode === code) return
-			editor.setValue(newCode)
+		} else {
+			return
 		}
-
-		setSplitted(splitted: boolean, ai: AI | null = null) {
-			this.splitted = splitted
-			this.editorTotalWidth = (this.$refs.editors! as HTMLElement).clientWidth
-			if (this.splitted) {
-				this.editor1Width = 0.5
-				this.editor2Width = 0.5
-				fileSystem.load(ai!).then(() => {
-					this.currentAI2 = ai!.path
-				})
-				this.setSide(2)
-				localStorage.setItem('editor/last-code-2', ai!.path)
-			} else {
-				this.editor1Width = this.editorTotalWidth
-				this.setSide(1)
-			}
-			localStorage.setItem('editor/editor1-width', '' + this.editor1Width)
-			localStorage.setItem('editor/editor2-width', '' + this.editor2Width)
-			localStorage.setItem('editor/splitted', '' + this.splitted)
-		}
-
-		open(ai: string, side: number) {
-			// Ajouter un onglet fichier s'il n'existe pas
-			const fileTab: FileTab = { type: 'file', id: ai }
-			if (side === 1) {
-				if (!this.tabs1.find(t => t.type === 'file' && t.id === ai)) {
-					this.tabs1.push(fileTab)
-				}
-				this.currentTab = this.tabs1.find(t => t.type === 'file' && t.id === ai) || fileTab
-				this.saveTabs()
-			}
-			this.setSide(side)
-			const aiObj = fileSystem.ais[ai]
-			if (aiObj) {
-				fileSystem.load(aiObj).then(() => {
-					side === 1 ? this.currentAI1 = ai : this.currentAI2 = ai
-				})
-			}
-			this.updateUrl()
-			localStorage.setItem('editor/last-code-' + side, '' + ai)
-		}
-
-		split50_50() {
-			this.editor1Width = 0.5
-			this.editor2Width = 0.5
-			localStorage.setItem('editor/editor1-width', '' + this.editor1Width)
-			localStorage.setItem('editor/editor2-width', '' + this.editor2Width)
-		}
-
-		setSide(side: number) {
-			this.currentSide = side
-			this.currentEditor = (this.currentSide === 1 ? this.$refs.editor1 : this.$refs.editor2) as AIViewMonaco
-		}
-
-		setLeftPanelTab(tab: string) {
-			this.leftPanelTab = tab
-			localStorage.setItem('editor/left_panel_tab', tab)
-		}
+		if (newCode === code) return
+		editor.setValue(newCode)
 	}
+
+	function setSplitted(splittedValue: boolean, ai: AI | null = null) {
+		splitted.value = splittedValue
+		editorTotalWidth = (editors.value as HTMLElement).clientWidth
+		if (splitted.value) {
+			editor1Width.value = 0.5
+			editor2Width.value = 0.5
+			fileSystem.load(ai!).then(() => {
+				currentAI2.value = ai!.path
+			})
+			setSide(2)
+			localStorage.setItem('editor/last-code-2', ai!.path)
+		} else {
+			editor1Width.value = editorTotalWidth
+			setSide(1)
+		}
+		localStorage.setItem('editor/editor1-width', '' + editor1Width.value)
+		localStorage.setItem('editor/editor2-width', '' + editor2Width.value)
+		localStorage.setItem('editor/splitted', '' + splitted.value)
+	}
+
+	function open(ai: string, side: number) {
+		// Ajouter un onglet fichier s'il n'existe pas
+		const fileTab: FileTab = { type: 'file', id: ai }
+		if (side === 1) {
+			if (!tabs1.value.find(t => t.type === 'file' && t.id === ai)) {
+				tabs1.value.push(fileTab)
+			}
+			currentTab.value = tabs1.value.find(t => t.type === 'file' && t.id === ai) || fileTab
+			saveTabs()
+		}
+		setSide(side)
+		const aiObj = fileSystem.ais[ai]
+		if (aiObj) {
+			fileSystem.load(aiObj).then(() => {
+				side === 1 ? currentAI1.value = ai : currentAI2.value = ai
+			})
+		}
+		updateUrl()
+		localStorage.setItem('editor/last-code-' + side, '' + ai)
+	}
+
+	function split50_50() {
+		editor1Width.value = 0.5
+		editor2Width.value = 0.5
+		localStorage.setItem('editor/editor1-width', '' + editor1Width.value)
+		localStorage.setItem('editor/editor2-width', '' + editor2Width.value)
+	}
+
+	function setSide(side: number) {
+		currentSide.value = side
+		currentEditor.value = (currentSide.value === 1 ? editor1.value : editor2.value) as InstanceType<typeof AIViewMonaco>
+	}
+
+	function setLeftPanelTab(tab: string) {
+		leftPanelTab.value = tab
+		localStorage.setItem('editor/left_panel_tab', tab)
+	}
+
+	onMounted(() => {
+		LeekWars.large = enlargeWindow.value
+		LeekWars.footer = false
+		LeekWars.box = true
+
+		// Toast après retour d'installation GitHub App
+		const gitAuth = route.query.git_auth as string | undefined
+		if (gitAuth === 'success') {
+			LeekWars.toast(t('git_auth_success') as string)
+			// Rouvre le dialogue de conf pour ajouter un remote dans la foulée.
+			// setTimeout pour laisser git-panel finir son mounted() (listeners prêts).
+			setTimeout(() => emitter.emit('git-open-remote-dialog'), 0)
+			router.replace({ query: { ...route.query, git_auth: undefined } })
+		} else if (gitAuth === 'error') {
+			LeekWars.toast(t('git_auth_error') as string)
+			router.replace({ query: { ...route.query, git_auth: undefined } })
+		}
+
+		emitter.on('ctrlS', () => {
+			save()
+		})
+		emitter.on('ctrlShiftS', () => {
+			// TODO save all but analyze only entrypoints
+		})
+		emitter.on('ctrlQ', () => {
+			testDialog.value = true
+		})
+		emitter.on('ctrlP', (event: Event) => {
+			if (!finder.value) return
+			const f = finder.value as any
+			f.search = true
+			f.open()
+			event.preventDefault()
+		})
+		emitter.on('escape', () => {
+			if (finder.value) (finder.value as any).close()
+		})
+		emitter.on('htmlclick', () => {
+			if (finder.value) (finder.value as any).close()
+		})
+		emitter.on('keydown', keydown)
+		emitter.on('keyup', keyup)
+		emitter.on('previous', (event: Event) => {
+			if (!finder.value) return
+			const f = finder.value as any
+			f.search = false
+			f.open()
+			f.previous()
+			event.preventDefault()
+		})
+		emitter.on('next', (event: Event) => {
+			if (!finder.value) return
+			const f = finder.value as any
+			f.search = false
+			f.open()
+			f.next()
+			event.preventDefault()
+		})
+		emitter.on('back', () => {
+			router.push('/editor')
+		})
+		emitter.on('editor-drag', (item: any) => {
+			dragging.value = item
+		})
+		emitter.on('editor-drop', (folder: Folder) => {
+			if (!dragging.value) { return }
+			const parent = fileSystem.folderById[dragging.value.parent]
+			if (parent === folder || dragging.value === folder) { return }
+			if (dragging.value instanceof Folder && isChild(folder, dragging.value)) { return }
+			const destPath = folder.id === 0 ? '' : fileSystem.getFolderPath(folder).replace(/\/$/, '')
+			if (dragging.value.folder) {
+				const srcPath = fileSystem.getFolderPath(dragging.value as Folder).replace(/\/$/, '')
+				LeekWars.post('ai/move', {path: srcPath, dest: destPath})
+			} else {
+				const ai = (dragging.value as AIItem).ai
+				const oldPath = ai.path
+				LeekWars.post('ai/move', {path: oldPath, dest: destPath})
+				delete fileSystem.ais[ai.path]
+				ai.folder = folder.id
+				ai.path = destPath ? destPath + '/' + ai.name : ai.name
+				ai.folderpath = fileSystem.getFolderPath(folder)
+				fileSystem.ais[ai.path] = ai
+			}
+			parent.items.splice(parent.items.indexOf(dragging.value), 1)
+			folder.items.push(dragging.value)
+			dragging.value.parent = folder.id
+			fileSystem.sortFolder(folder)
+			folder.expanded = true
+			dragging.value = null
+		})
+		emitter.on('connected', connected)
+		emitter.on('jump', jumpEvent)
+		emitter.on('reanalyze', () => {
+			if (editor1.value) { (editor1.value as any).setAnalyzerTimeout() }
+		})
+
+		emitter.on('close-diff', ({ folder, file }: any) => {
+			const tab = tabs1.value.find(t => t.type === 'diff' && (t as DiffTab).folder === folder && (t as DiffTab).file === file)
+			if (tab) { closeTabByRef(tab) }
+		})
+
+		emitter.on('close-file-tab', (aiPath: any) => {
+			const tab = tabs1.value.find(t => t.type === 'file' && t.id === aiPath)
+			if (tab) { closeTabByRef(tab) }
+		})
+
+		emitter.on('close-merge-tabs', ({ folder }: any) => {
+			const mergeTabs = tabs1.value.filter(t => t.type === 'merge' && (t as DiffTab).folder === folder)
+			for (const tab of mergeTabs) { closeTabByRef(tab) }
+		})
+
+		emitter.on('open-merge', ({ folder, file }: any) => {
+			openMerge({ folder, file })
+		})
+
+		if (store.state.farmer) {
+			connected()
+		}
+
+		broadcast = new BroadcastChannel('channel')
+		broadcast.onmessage = (event) => {
+			if (event.data.type == 'editor-opened-ping') {
+				broadcast?.postMessage({ type: 'editor-opened-pong' })
+			}
+			if (event.data.type == 'editor-opened-pong') {
+				alreadyOpenedDialog.value = true
+			}
+		}
+		broadcast.postMessage({ type: 'editor-opened-ping' })
+	})
+
+	onBeforeUnmount(() => {
+		// Restaurer le cache du daemon pour les fichiers modifiés non sauvegardés
+		// en renvoyant le code du disque (via localStorage) pour que le daemon
+		// n'ait pas en cache une version non écrite sur le FS.
+		restoreDaemonCache()
+
+		emitter.off('ctrlS')
+		emitter.off('ctrlShiftS')
+		emitter.off('ctrlQ')
+		emitter.off('ctrlF')
+		emitter.off('ctrlP')
+		emitter.off('escape')
+		emitter.off('htmlclick')
+		emitter.off('keydown', keydown)
+		emitter.off('keyup', keyup)
+		emitter.off('previous')
+		emitter.off('next')
+		emitter.off('back')
+		emitter.off('connected', connected)
+		emitter.off('jump', jumpEvent)
+		emitter.off('reanalyze')
+		emitter.off('close-diff')
+		emitter.off('close-file-tab')
+		emitter.off('close-merge-tabs')
+		emitter.off('open-merge')
+		LeekWars.large = false
+		LeekWars.header = true
+		LeekWars.footer = true
+		LeekWars.box = false
+		if (broadcast) {
+			broadcast.close()
+		}
+		if (LeekWars.didactitial_step === 4) {
+			LeekWars.didactitial_next()
+		}
+	})
 </script>
 
 <style lang="scss" scoped>

@@ -25,6 +25,8 @@ type Events = {
 	tooltip: { x: number, y: number, content: string }
 	'tooltip-close': void
 	'editor-drag': any
+	'editor-drop': any
+	'git-open-remote-dialog': void
 	'tournament-update': any
 	trophy: any
 	fight_notification: any
