@@ -65,6 +65,10 @@ self.addEventListener('fetch', event => {
 	if (new URL(event.request.url).origin !== self.location.origin) return;
 	// Don't cache API requests (custom headers get stripped, stale/error responses get cached)
 	if (event.request.url.includes('/api/')) return;
+	// Don't intercept navigation requests: SW startup adds 50-100ms TTFB perçu pour
+	// zéro gain (HTML contient des données user-spécifiques, cache stale-while-revalidate
+	// est de toute façon écrasé par le SPA qui re-fetch via API au mount).
+	if (event.request.mode === 'navigate') return;
 	// Prevent the default, and handle the request ourselves.
 	event.respondWith(async function() {
 		try {
