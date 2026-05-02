@@ -464,11 +464,19 @@
 			e.preventDefault()
 			return false
 		} else if (e.keyCode === 37) {
-			if (e.ctrlKey) game.value.previousEntity()
-			else game.value.previousAction()
+			if (e.ctrlKey) {
+				game.value.previousEntity()
+				e.preventDefault()
+			} else {
+				game.value.previousAction()
+			}
 		} else if (e.keyCode === 39) {
-			if (e.ctrlKey) game.value.nextEntity()
-			else game.value.nextAction()
+			if (e.ctrlKey) {
+				game.value.nextEntity()
+				e.preventDefault()
+			} else {
+				game.value.nextAction()
+			}
 		}
 	}
 
