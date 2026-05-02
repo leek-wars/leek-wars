@@ -45,6 +45,9 @@
 	img:not(.clover), svg {
 		opacity: 0.08;
 	}
+	h1 .v-icon, h2 .v-icon, h3 .v-icon, h4 .v-icon {
+		opacity: 0.2;
+	}
 	.smiley, .hab, .crystal {
 		opacity: 0.2;
 	}
