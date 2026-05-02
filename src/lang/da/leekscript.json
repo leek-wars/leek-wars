@@ -197,5 +197,8 @@
 	"error_146": "\"case\" eller \"default\" forventet.",
 	"error_147": "Kolon forventet efter \"case\".",
 	"error_148": "Variablen \"{0}\" bruges ikke.",
+	"error_149": "Pragmaet \"{0}\" er allerede deklareret.",
+	"error_150": "Ukendt pragma \"{0}\".",
+	"error_151": "Ugyldig værdi \"{1}\" for pragma \"{0}\".",
 	"error_152": "Funktionen \"{0}\" bruges ikke."
 }

@@ -200,5 +200,8 @@
 	"error_146": "« case » ou « default » attendu.",
 	"error_147": "Deux-points attendu après « case ».",
 	"error_148": "La variable « {0} » n'est pas utilisée.",
+	"error_149": "Le pragma « {0} » est déjà déclaré.",
+	"error_150": "Pragma « {0} » inconnu.",
+	"error_151": "Valeur « {1} » invalide pour le pragma « {0} ».",
 	"error_152": "La fonction « {0} » n'est pas utilisée."
 }

@@ -197,5 +197,8 @@
 	"error_146": "\"case\" tai \"default\" odotettu.",
 	"error_147": "Kaksoispiste odotettu \"case\"-sanan jälkeen.",
 	"error_148": "Muuttujaa \"{0}\" ei käytetä.",
+	"error_149": "Pragma \"{0}\" on jo määritelty.",
+	"error_150": "Tuntematon pragma \"{0}\".",
+	"error_151": "Virheellinen arvo \"{1}\" pragmalle \"{0}\".",
 	"error_152": "Funktiota \"{0}\" ei käytetä."
 }

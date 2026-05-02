@@ -197,5 +197,8 @@
 	"error_146": "\"case\" of \"default\" verwacht.",
 	"error_147": "Dubbele punt verwacht na \"case\".",
 	"error_148": "Variabele \"{0}\" wordt niet gebruikt.",
+	"error_149": "Pragma \"{0}\" is al gedeclareerd.",
+	"error_150": "Onbekende pragma \"{0}\".",
+	"error_151": "Ongeldige waarde \"{1}\" voor pragma \"{0}\".",
 	"error_152": "Functie \"{0}\" wordt niet gebruikt."
 }

@@ -200,5 +200,8 @@
 	"error_146": "\"case\" o \"default\" atteso.",
 	"error_147": "Due punti attesi dopo \"case\".",
 	"error_148": "La variabile \"{0}\" non è utilizzata.",
+	"error_149": "Il pragma \"{0}\" è già dichiarato.",
+	"error_150": "Pragma \"{0}\" sconosciuto.",
+	"error_151": "Valore \"{1}\" non valido per il pragma \"{0}\".",
 	"error_152": "La funzione \"{0}\" non è utilizzata."
 }

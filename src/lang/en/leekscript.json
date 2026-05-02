@@ -200,5 +200,8 @@
 	"error_146": "\"case\" or \"default\" expected.",
 	"error_147": "Colon expected after \"case\".",
 	"error_148": "Variable \"{0}\" is not used.",
+	"error_149": "Pragma \"{0}\" is already declared.",
+	"error_150": "Unknown pragma \"{0}\".",
+	"error_151": "Invalid value \"{1}\" for pragma \"{0}\".",
 	"error_152": "Function \"{0}\" is not used."
 }
