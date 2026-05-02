@@ -10,7 +10,7 @@
 	<div class="page" v-else>
 		<div class="page-header page-bar">
 			<div>
-				<h1><breadcrumb v-if="fight && fightTypeLabel" :items="[{name: fightTypeLabel, link: '/fight/' + fight.id}, {name: $t('title'), link: ''}]" :raw="true" /><span v-else>{{ $t('title') }}</span></h1>
+				<h1><breadcrumb v-if="fight && fightTypeLabel" :items="breadcrumbItems" :raw="true" /><span v-else>{{ $t('title') }}</span></h1>
 				<div v-if="fight" class="info">{{ $filters.date(fight.date) }}</div>
 			</div>
 			<div class="tabs">
@@ -298,6 +298,11 @@
 	const logs = ref<{[key: number]: any[][]}>({})
 	const loaded = ref(false)
 	const fightTypeLabel = ref<string | null>(null)
+
+	const breadcrumbItems = computed(() => {
+		if (!fight.value || !fightTypeLabel.value) return []
+		return [{ name: fightTypeLabel.value, link: '/fight/' + fight.value.id }, { name: t('title') as string, link: '' }]
+	})
 	const errors = ref<any[]>([])
 	const warnings = ref<any[]>([])
 	const hasErrWarn = ref(false)
