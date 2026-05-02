@@ -266,22 +266,24 @@
 		}
 	}
 
-	function scrollTop() {
-		if (!messages.value) { return true }
-		return messages.value.scrollTop < 150
-	}
-
 	function scroll() {
-		if (messages.value) {
-			isScrollBottom.value = messages.value.offsetHeight > messages.value.scrollHeight || Math.abs((messages.value.scrollTop + messages.value.offsetHeight) - messages.value.scrollHeight) < 3
-		}
-		if (isScrollBottom.value) {
+		const m = messages.value
+		if (!m) { return }
+		// Batch layout reads up-front: writing to reactive state below schedules a re-render that
+		// could invalidate layout. Reading scrollTop a second time afterward would force reflow.
+		const sTop = m.scrollTop
+		const sHeight = m.scrollHeight
+		const oHeight = m.offsetHeight
+
+		const atBottom = oHeight > sHeight || Math.abs((sTop + oHeight) - sHeight) < 3
+		isScrollBottom.value = atBottom
+		if (atBottom) {
 			userScroll = false
 			unread.value = false
 		} else {
 			userScroll = true
 		}
-		if (scrollTop() && chat.value!.messages.length) {
+		if (sTop < 150 && chat.value!.messages.length) {
 			scrollMessage = chat.value!.messages[0].id
 			store.commit('load-chat-history', props.id)
 		}
