@@ -367,7 +367,7 @@
 				<span class="weapon-count">[{{ leek.weapons.length }}/{{ leek.max_weapons }}]</span>
 			</template>
 			<template v-if="my_leek && $store.state.farmer.equipment_enabled" #options>
-				<div class="option" @click="weaponsDialog = false; loadoutDialog = true">
+				<div class="option" @click="weaponsDialog = false; showLoadout = true">
 					<v-icon>mdi-package-variant-closed</v-icon>
 				</div>
 				<div class="option" @click="weaponsDialog = false">
@@ -675,7 +675,7 @@
 				{{ $t('ai_of', [leek.name]) }}
 			</template>
 			<template v-if="$store.state.farmer.equipment_enabled" #options>
-				<div class="option" @click="aiDialog = false; loadoutDialog = true">
+				<div class="option" @click="aiDialog = false; showLoadout = true">
 					<v-icon>mdi-package-variant-closed</v-icon>
 				</div>
 				<div class="option" @click="aiDialog = false">
@@ -723,7 +723,7 @@
 		<popup v-if="leek && my_leek" v-model="chipsDialog" :width="816" icon="mdi-chip">
 			<template #title>{{ $t('chips_of', [leek.name]) }} <span class="chip-count">[{{ leek.chips.length }}/{{ leek.total_ram }}]</span></template>
 			<template v-if="$store.state.farmer.equipment_enabled" #options>
-				<div class="option" @click="chipsDialog = false; loadoutDialog = true">
+				<div class="option" @click="chipsDialog = false; showLoadout = true">
 					<v-icon>mdi-package-variant-closed</v-icon>
 				</div>
 				<div class="option" @click="chipsDialog = false">
@@ -796,7 +796,7 @@
 	import { useRoute, useRouter } from 'vue-router'
 	import { emitter } from '@/model/vue'
 	import { Line } from 'vue-chartjs'
-	import { ChartData, ChartOptions } from 'chart.js'
+	import type { ChartData, ChartOptions } from 'chart.js'
 
 	const LevelDialog = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/leek/level-dialog.${locale}.i18n`))
 	const Explorer = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`))
@@ -808,8 +808,8 @@
 	const { t } = useI18n()
 	const route = useRoute()
 	const router = useRouter()
-	const componentTooltipsRef = useTemplateRef<InstanceType<typeof RichTooltipItem>[]>('componentTooltips')
-	const leekImage = useTemplateRef<InstanceType<typeof LeekImage>>('leekImage')
+	const componentTooltipsRef = useTemplateRef<any[]>('componentTooltips')
+	const leekImage = useTemplateRef<any>('leekImage')
 
 	const leek = ref<Leek | null>(null)
 	const error = ref(false)
