@@ -371,7 +371,15 @@ const LeekWars = reactive({
 	footer: true,
 	box: false,
 	nativeEmojis: detectNativeEmojis(),
-	leekTheme: localStorage.getItem('leek-theme') === 'true',
+	leekTheme: (() => {
+		const stored = localStorage.getItem('leek-theme') === 'true'
+		// Sync cookie miroir au boot pour que le serveur puisse injecter le bon preload
+		// dès la prochaine navigation (migration des users qui n'avaient que localStorage).
+		if (typeof document !== 'undefined' && !document.cookie.includes('leek_theme=')) {
+			document.cookie = 'leek_theme=' + (stored ? '1' : '0') + '; path=/; max-age=31536000; SameSite=Lax'
+		}
+		return stored
+	})(),
 	xpTheme: localStorage.getItem('theme') === 'xp',
 	xpCursorsInit() {
 		if (xpCursorListenerRegistered) return

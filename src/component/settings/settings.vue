@@ -501,6 +501,8 @@
 
 	watch(() => LeekWars.leekTheme, () => {
 		localStorage.setItem('leek-theme', '' + LeekWars.leekTheme)
+		// Cookie miroir pour que le serveur puisse injecter le bon preload du big-leek dans le HTML.
+		document.cookie = 'leek_theme=' + (LeekWars.leekTheme ? '1' : '0') + '; path=/; max-age=31536000; SameSite=Lax'
 	})
 
 	function submit(e: Event) {
