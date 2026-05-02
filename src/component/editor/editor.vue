@@ -1201,9 +1201,6 @@
 			localStorage.setItem('editor/large', '' + this.enlargeWindow)
 		}
 
-		getAiView(ai: AI) {
-			return (this.$refs.editors as AIView[]).find(e => e.ai === ai)
-		}
 
 		jumpEvent(event) {
 			this.jump(event.ai, event.line, event.column)
