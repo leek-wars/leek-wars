@@ -3,7 +3,7 @@
 	<div v-else v-chat-code-latex class="text" :class="{'leek-wars': message.farmer.id === 0, 'large-emojis': message.only_emojis}" v-html="message.content"></div>
 </template>
 
-<<script setup lang="ts">
+<script setup lang="ts">
 import { onMounted, onBeforeUnmount, getCurrentInstance, type App } from 'vue'
 import { store } from '@/model/store'
 import { createSubApp } from '@/model/vue'
