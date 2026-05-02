@@ -722,7 +722,7 @@
 		LeekWars.post('garden/start-farmer-fight', {target_id: farmer.id}).then(data => {
 			router.push('/fight/' + data.fight)
 			store.commit('update-fights', -1)
-		}).error(error => LeekWars.toast(t(error)))
+		}).error(error => LeekWars.toast(t('error_' + (error?.error || 'unknown_error'), error?.params || [])))
 	}
 
 	function clickCompositionOpponent(composition: Composition) {
