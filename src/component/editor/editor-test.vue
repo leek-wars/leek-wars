@@ -624,8 +624,7 @@ import { defineAsyncComponent } from 'vue'
 			const team2 = generate_bots(leek_count)
 			const team1 = [] as TestScenarioLeek[]
 			for (const leek in store.state.farmer.leeks) {
-				const ai = store.state.farmer.leeks[leek].ai
-				team1.push({ id: parseInt(leek, 10), ai: ai ? ai.path : null })
+				team1.push({ id: parseInt(leek, 10), ai: store.state.farmer.leeks[leek].ai_path || null })
 			}
 			if (LeekWars.objectSize(store.state.farmer.leeks) > 1) {
 				templates.push({

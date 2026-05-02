@@ -49,6 +49,7 @@ class Leek {
 	public dragging!: boolean
 	public level_seen!: number
 	public ai!: AI | null
+	public ai_path!: string | null
 	public talent_more!: number
 	public registers!: Register[]
 	public max_weapons!: number
