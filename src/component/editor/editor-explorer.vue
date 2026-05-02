@@ -530,12 +530,31 @@
 		download(ai.value!.name, "/** " + ai.value!.path + " **/\n\n" + ai.value!.code)
 	}
 
-	function downloadIncludes() {
+	async function downloadIncludes() {
 		if (!ai.value) { return }
 
 		const regex = /^[ \t]*include\s*\(\s*["'](.*?)["']\s*\)[ \t]*;?.*$/gm
 
 		const included_ais = new Set<AI>()
+
+		async function ensureLoaded(target: AI): Promise<void> {
+			if (target.code === undefined || target.code === null) {
+				await fileSystem.load(target)
+			}
+			if (!target.code) return
+			const matches = [...target.code.matchAll(regex)]
+			for (const match of matches) {
+				const included = fileSystem.find(match[1], target.folder)
+				if (included && !included_ais.has(included)) {
+					included_ais.add(included)
+					await ensureLoaded(included)
+				}
+			}
+		}
+
+		await ensureLoaded(ai.value)
+		included_ais.clear()
+
 		const fun = (target: AI): string => "/** " + target.path + " **/\n\n" + (target.code ? target.code.replace(regex, (a, path) => {
 			const included = fileSystem.find(path, target.folder)
 			if (included && !included_ais.has(included)) {
