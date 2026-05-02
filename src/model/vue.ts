@@ -444,7 +444,8 @@ app.directive('chat-code-latex', {
 		el.querySelectorAll('code').forEach((c) => {
 			let props
 			if (c.innerHTML.indexOf("<br>") !== -1) {
-				props = { code: LeekWars.decodehtmlentities(c.innerHTML).replace(/<br>/gi, "\n").trim(), expandable: true }
+				const code = LeekWars.decodehtmlentities(c.innerHTML).replace(/<br>/gi, "\n").replace(/^\n+|\n+$/g, '')
+				props = { code, expandable: true }
 			} else {
 				props = { code: c.textContent || '', single: true }
 			}
