@@ -86,6 +86,24 @@
 						parent.children.push(node)
 					}
 					item.id = encodeID(item.innerText)
+					if (level >= 2 && !item.querySelector('.heading-anchor')) {
+						const anchor = document.createElement('a')
+						anchor.className = 'heading-anchor'
+						anchor.href = '#' + item.id
+						anchor.setAttribute('aria-label', 'Lien vers cette section')
+						anchor.title = 'Copier le lien vers cette section'
+						anchor.textContent = '#'
+						anchor.addEventListener('click', (e: MouseEvent) => {
+							e.preventDefault()
+							const url = window.location.origin + window.location.pathname + '#' + item.id
+							history.replaceState(null, '', '#' + item.id)
+							item.scrollIntoView({ behavior: 'smooth', block: 'start' })
+							if (navigator.clipboard) {
+								navigator.clipboard.writeText(url).catch(() => {})
+							}
+						})
+						item.appendChild(anchor)
+					}
 				})
 				mdEl.querySelectorAll('.encyclopedia-summary').forEach((item) => {
 					const depth = parseInt(item.getAttribute('depth') || '3', 10)
@@ -724,6 +742,26 @@
 	}
 	.md :deep(.encyclopedia-alias) {
 		display: none;
+	}
+	.md :deep(h1), .md :deep(h2), .md :deep(h3), .md :deep(h4), .md :deep(h5) {
+		.heading-anchor {
+			display: inline-block;
+			margin-left: 6px;
+			color: var(--text-color-secondary);
+			font-weight: normal;
+			opacity: 0;
+			transition: opacity 0.15s;
+			text-decoration: none;
+			cursor: pointer;
+		}
+		&:hover .heading-anchor {
+			opacity: 0.6;
+		}
+		.heading-anchor:hover {
+			opacity: 1;
+			text-decoration: none;
+			color: var(--link-color);
+		}
 	}
 	.md :deep(.aliases-display) {
 		font-size: 13px;
