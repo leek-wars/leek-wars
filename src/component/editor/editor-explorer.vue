@@ -201,8 +201,8 @@
 	defineOptions({ name: 'editor-explorer', i18n: {}, mixins: [...mixins], components: { 'editor-folder': EditorFolder } })
 
 	const props = defineProps<{
-		currentAi: AI
-		selectedFolder: Folder
+		currentAi: AI | undefined
+		selectedFolder: Folder | null
 	}>()
 
 	const emit = defineEmits<{
