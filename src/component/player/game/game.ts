@@ -1976,7 +1976,10 @@ class Game {
 		for (let t = 0; t < this.trophies.length; ++t) {
 			const trophy = this.trophies[t]
 			if (this.currentAction === trophy.action) {
-				this.addConsoleLine({id: 't' + t, trophy})
+				const id = 't' + t
+				if (!this.consoleLines.some(l => l.id === id)) {
+					this.addConsoleLine({id, trophy})
+				}
 			}
 		}
 	}

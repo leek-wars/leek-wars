@@ -37,6 +37,7 @@
 					</div>
 				</template>
 				<span v-if="entity instanceof Mob">{{ $t('entity.' + entity.name) }}</span>
+				<span v-else-if="entity.summon">{{ entity.translatedName }}</span>
 				<span v-else>{{ entity.name }}</span>
 			</v-tooltip>
 		</div>

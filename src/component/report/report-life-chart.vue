@@ -130,16 +130,17 @@
 
 	function updateChart() {
 		if (!props.fight || !props.statistics) { return }
-		let series = log.value ? props.statistics.lives_percent : props.statistics.lives
-		filtered_entities = Object.values(props.statistics!.entities)
+		const allSeries = log.value ? props.statistics.lives_percent : props.statistics.lives
+		const entityList = Object.values(props.statistics!.entities)
+		let pairs = entityList.map((e, i) => ({ e, s: allSeries[i] }))
 		if (!chartDisplaySummons.value) {
-			filtered_entities = filtered_entities.filter(e => !e.leek.summon)
-			series = series.filter((value, index) => !props.statistics!.entities[index].leek.summon)
+			pairs = pairs.filter(({e}) => !e.leek.summon)
 		}
 		if (!turrets.value) {
-			filtered_entities = filtered_entities.filter(e => e.leek.type !== 2)
-			series = series.filter((value, index) => props.statistics!.entities[index].leek.type !== 2)
+			pairs = pairs.filter(({e}) => e.leek.type !== 2)
 		}
+		filtered_entities = pairs.map(({e}) => e)
+		let series = pairs.map(({s}) => s)
 		chartData.value = {
 			datasets: series.map((s, i) => ({
 				data: s.slice(0, (s.findLastIndex((p: any) => p.y !== null) + 1) || s.length),
