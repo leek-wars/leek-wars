@@ -44,10 +44,9 @@
 
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { LeekWars } from '@/model/leekwars'
-import { mixins } from '@/model/i18n'
+import { mixins, useNamespacedT } from '@/model/i18n'
 import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
 defineOptions({ name: 'bank', i18n: {}, mixins: [...mixins] })
@@ -56,7 +55,7 @@ const props = defineProps<{
 	success?: boolean
 }>()
 
-const { t } = useI18n()
+const t = useNamespacedT('bank')
 const route = useRoute()
 
 const loading = ref(false)

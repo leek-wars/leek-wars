@@ -55,18 +55,17 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { LeekWars } from '@/model/leekwars'
 import { loadScript } from '@paypal/paypal-js'
-import { mixins } from '@/model/i18n'
+import { mixins, useNamespacedT } from '@/model/i18n'
 import BankProduct from './bank-product.vue'
 import Breadcrumb from '@/component/forum/breadcrumb.vue'
 import { store } from '@/model/store'
 
 defineOptions({ name: 'bank', i18n: {}, mixins: [...mixins] })
 
-const { t } = useI18n()
+const t = useNamespacedT('bank')
 const route = useRoute()
 const router = useRouter()
 

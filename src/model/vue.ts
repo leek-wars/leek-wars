@@ -418,24 +418,27 @@ props.$tc = function(this: unknown, key: string, choice?: number, values?: unkno
 }
 
 // <i18n-t> de vue-i18n appelle directement le composer global (bypass notre $t).
-// Wrapper qui résout le namespace du composant parent une fois en setup.
+// Wrapper qui tente chaque ancêtre nommé jusqu'à trouver la clé (évite les faux
+// positifs quand un composant layout comme <panel> est entre <i18n-t> et la page).
 const I18nTWrapper = defineComponent({
 	name: 'i18n-t',
 	inheritAttrs: false,
 	setup(_props, { attrs, slots }) {
+		const namespaces: string[] = []
 		let cur = getCurrentInstance()?.parent
-		let ns: string | null = null
 		while (cur) {
 			const rawName = (cur.type as { name?: string } | undefined)?.name
-			if (rawName) { ns = normalizeComponentName(rawName); break }
+			if (rawName) namespaces.push(normalizeComponentName(rawName))
 			cur = cur.parent
 		}
 		return () => {
 			const keypath = attrs.keypath as string | undefined
 			let finalAttrs = attrs
-			if (keypath && ns) {
-				const namespaced = ns + '.' + keypath
-				if (teFn(namespaced)) finalAttrs = { ...attrs, keypath: namespaced }
+			if (keypath) {
+				for (const ns of namespaces) {
+					const namespaced = ns + '.' + keypath
+					if (teFn(namespaced)) { finalAttrs = { ...attrs, keypath: namespaced }; break }
+				}
 			}
 			return h(Translation as unknown as Component, { scope: 'global', ...finalAttrs }, slots)
 		}

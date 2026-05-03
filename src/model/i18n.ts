@@ -198,4 +198,16 @@ function t(key: string, ...args: unknown[]): string {
 }
 const locale = currentLocale()
 
-export { i18n, mixins, loadComponentLanguage, loadLanguageAsync, loadInstanceTranslations, t, locale, currentLocale, normalizeComponentName }
+// For sub-pages sharing a parent's .i18n without their own component-local i18n scope.
+function useNamespacedT(name: string) {
+	const prefix = normalizeComponentName(name) + '.'
+	return (key: string, ...args: unknown[]): string => {
+		const namespaced = prefix + key
+		if ((i18n.global.te as (key: string) => boolean)(namespaced)) {
+			return String((i18n.global.t as (...a: unknown[]) => unknown)(namespaced, ...args))
+		}
+		return String((i18n.global.t as (...a: unknown[]) => unknown)(key, ...args))
+	}
+}
+
+export { i18n, mixins, loadComponentLanguage, loadLanguageAsync, loadInstanceTranslations, t, locale, currentLocale, normalizeComponentName, useNamespacedT }
