@@ -689,7 +689,7 @@
 				scenarios[r.id] = scenario
 				scenario.default = false
 				scenario.ai!.scenario = r.id
-				const json = { type: 0, ai: scenario.ai!.path }
+				const json = { type: scenario.type, ai: scenario.ai!.path }
 				LeekWars.post('test-scenario/update', { id: r.id, data: JSON.stringify(json) })
 				for (const l of scenario.team1) {
 					LeekWars.post('test-scenario/add-leek', {scenario_id: r.id, leek: l.id, team: 0, ai: l.ai ? l.ai : null})
@@ -1148,7 +1148,7 @@
 				scenarios[r.id] = scenario
 				scenario.default = false
 				scenario.ai!.scenario = r.id
-				const json = { ...data, type: 0, ai: scenario.ai!.path }
+				const json = { ...data, ai: scenario.ai!.path }
 				LeekWars.post('test-scenario/update', { id: r.id, data: JSON.stringify(json) })
 				for (const leek of scenario.team1) {
 					LeekWars.post('test-scenario/add-leek', {scenario_id: r.id, leek: leek.id, team: 0, ai: leek.ai ? leek.ai : null})
