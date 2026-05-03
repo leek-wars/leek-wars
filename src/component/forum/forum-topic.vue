@@ -5,7 +5,7 @@
 				<h1>
 					<router-link to="/forum">{{ $t('main.forum') }}</router-link>
 					<v-icon>mdi-chevron-right</v-icon>
-					<router-link v-if="topic" :to="'/forum/category-' + category.id">{{ categoryName }}</router-link>
+					<router-link v-if="topic && category" :to="'/forum/category-' + category.id">{{ categoryName }}</router-link>
 					<v-icon>mdi-chevron-right</v-icon>
 					<flag v-if="category && forumLanguages.length >= 2 && category.lang" :code="LeekWars.languages[category.lang].country" />
 					<span ref="topicTitle" :contenteditable="topicEditing" class="topic-title">{{ topic ? topic.name : '...' }}</span>
@@ -37,7 +37,7 @@
 			<template #content>
 				<div class="content">
 				<breadcrumb v-if="LeekWars.mobile" :items="breadcrumb_items" />
-				<pagination v-if="topic" :current="page" :total="pages" :url="'/forum/category-' + category.id + '/topic-' + topic.id" />
+				<pagination v-if="topic && category" :current="page" :total="pages" :url="'/forum/category-' + category.id + '/topic-' + topic.id" />
 				<div v-if="notFound" class="not-found" v-html="$t('forum.topic_not_found', [$route.params.topic])"></div>
 			<loader v-else-if="!topic || !topic.messages" />
 				<div v-else>
@@ -131,7 +131,7 @@
 
 								<span v-if="message.id == -1" class="views-counter"><v-icon>mdi-eye</v-icon> {{ $tc('main.n_views', topic.views) }}</span>
 
-								<template v-if="message.id == -1 && $store.state.connected && category.moderator">
+								<template v-if="message.id == -1 && $store.state.connected && category && category.moderator">
 									<span class="action lock" @click="lock"><v-icon>mdi-lock</v-icon> {{ topic.locked ? $t('unlock') : $t('lock') }}</span>
 									<span class="action pin" @click="pin"><v-icon>mdi-pin</v-icon> {{ topic.pinned ? $t('unpin') : $t('pin') }}</span>
 								</template>
@@ -193,18 +193,18 @@
 									</div>
 								</div>
 
-								<v-menu v-if="$store.state.farmer && !message.deleted && !message.editing && ((message.writer.id === $store.state.farmer.id || category.moderator) || (category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'))" offset-y>
+								<v-menu v-if="$store.state.farmer && category && !message.deleted && !message.editing && ((message.writer.id === $store.state.farmer.id || category.moderator) || (category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'))" offset-y>
 									<template #activator="{ props }">
 										<v-btn variant="text" density="compact" icon="mdi-dots-vertical" color="grey" v-bind="props" />
 									</template>
 									<v-list dense class="message-actions">
-										<v-list-item v-if="$store.state.farmer && (message.writer.id === $store.state.farmer.id || category.moderator)" v-ripple @click="edit(message)" prepend-icon="mdi-pencil">
+										<v-list-item v-if="$store.state.farmer && category && (message.writer.id === $store.state.farmer.id || category.moderator)" v-ripple @click="edit(message)" prepend-icon="mdi-pencil">
 											<span>{{ $t('edit') }}</span>
 										</v-list-item>
-										<v-list-item v-if="$store.state.farmer && (message.id !== -1 ? (message.writer.id === $store.state.farmer.id || category.moderator) : canDeleteTopic)" v-ripple @click="deleteGeneric(message)" prepend-icon="mdi-delete">
+										<v-list-item v-if="$store.state.farmer && category && (message.id !== -1 ? (message.writer.id === $store.state.farmer.id || category.moderator) : canDeleteTopic)" v-ripple @click="deleteGeneric(message)" prepend-icon="mdi-delete">
 											<span>{{ $t('delete') }}</span>
 										</v-list-item>
-										<v-list-item v-if="category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'" v-ripple @click="report(message)" prepend-icon="mdi-flag">
+										<v-list-item v-if="category && $store.state.farmer && category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'" v-ripple @click="report(message)" prepend-icon="mdi-flag">
 											<span>{{ $t('warning.report') }}</span>
 										</v-list-item>
 										<v-menu v-if="message.id === -1 && canMoveTopic" submenu open-on-hover>
@@ -242,7 +242,7 @@
 					</div>
 				</div>
 
-				<pagination v-if="topic" :current="page" :total="pages" :url="'/forum/category-' + category.id + '/topic-' + topic.id" />
+				<pagination v-if="topic && category" :current="page" :total="pages" :url="'/forum/category-' + category.id + '/topic-' + topic.id" />
 
 				<div v-if="topic && !topic.locked && $store.state.farmer && $store.state.farmer.verified" class="editor">
 					<h4>{{ $t('answer') }}</h4>
@@ -666,7 +666,7 @@
 		LeekWars.post('forum/subscribe-topic', {topic_id: topic.value.id})
 		topic.value.subscribed = true
 		action.icon = 'mdi-newspaper-minus'
-		LeekWars.toast(i18n.global.t('notifications_on') as string)
+		LeekWars.toast(i18n.t('notifications_on') as string)
 	}
 
 	function unsubscribe() {
@@ -674,7 +674,7 @@
 		LeekWars.post('forum/unsubscribe-topic', {topic_id: topic.value.id})
 		topic.value.subscribed = false
 		action.icon = 'mdi-newspaper-plus'
-		LeekWars.toast(i18n.global.t('notifications_off') as string)
+		LeekWars.toast(i18n.t('notifications_off') as string)
 	}
 
 	function edit(message: ForumMessage) {

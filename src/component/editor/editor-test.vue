@@ -432,8 +432,8 @@
 		max_turns?: any
 		default!: boolean
 		ai!: AI | null
-		turret_ai_team1?: number | null
-		turret_ai_team2?: number | null
+		turret_ai_team1?: string | null
+		turret_ai_team2?: string | null
 	}
 	class TestMap {
 		id!: number
@@ -595,7 +595,7 @@
 		return teamTurretAI.value
 	})
 
-	const availableWeapons = computed(() => {
+	const availableWeapons = computed<any[]>(() => {
 		if (!currentLeek.value) return []
 		return Object.values(LeekWars.weapons)
 	})
@@ -688,7 +688,7 @@
 				scenarios[r.id] = scenario
 				scenario.default = false
 				scenario.ai!.scenario = r.id
-				const json = { type: 0, ai: scenario.ai!.id }
+				const json = { type: 0, ai: scenario.ai!.path }
 				LeekWars.post('test-scenario/update', { id: r.id, data: JSON.stringify(json) })
 				for (const l of scenario.team1) {
 					LeekWars.post('test-scenario/add-leek', {scenario_id: r.id, leek: l.id, team: 0, ai: l.ai ? l.ai : null})
@@ -1150,8 +1150,8 @@
 		}
 		if (currentScenario.value.type === FightType.TEAM && teamTurretAI.value) {
 			if (!currentScenario.value.turret_ai_team1) {
-				currentScenario.value.turret_ai_team1 = teamTurretAI.value.id
-				updateScenario(currentScenario.value, { type: currentScenario.value.type, turret_ai_team1: teamTurretAI.value.id })
+				currentScenario.value.turret_ai_team1 = teamTurretAI.value.path
+				updateScenario(currentScenario.value, { type: currentScenario.value.type, turret_ai_team1: teamTurretAI.value.path })
 				return
 			}
 		}
@@ -1166,7 +1166,7 @@
 				scenarios[r.id] = scenario
 				scenario.default = false
 				scenario.ai!.scenario = r.id
-				const json = { ...data, type: 0, ai: scenario.ai!.id }
+				const json = { ...data, type: 0, ai: scenario.ai!.path }
 				LeekWars.post('test-scenario/update', { id: r.id, data: JSON.stringify(json) })
 				for (const leek of scenario.team1) {
 					LeekWars.post('test-scenario/add-leek', {scenario_id: r.id, leek: leek.id, team: 0, ai: leek.ai ? leek.ai : null})

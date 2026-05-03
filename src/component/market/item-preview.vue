@@ -103,6 +103,7 @@ const props = withDefaults(defineProps<{
 }>(), {
 	showUse: false,
 	craftCost: 0,
+	quantity: 0,
 })
 
 const emit = defineEmits<{

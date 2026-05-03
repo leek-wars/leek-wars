@@ -35,6 +35,6 @@ const ITEM_CATEGORY_NAME: Record<number, string> = ITEM_CATEGORY_NAME_TYPED
 defineProps<{
 	action: Action
 	a?: number
-	leeks?: Record<number, any>
+	leeks: Record<number, any>
 }>()
 </script>

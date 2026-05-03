@@ -277,6 +277,8 @@
 	const emit = defineEmits<{
 		resize: []
 		fight: [fight: Fight]
+		'unlock-trophy': [trophy: any]
+		edited: [data?: any]
 	}>()
 
 	const { t } = useI18n()

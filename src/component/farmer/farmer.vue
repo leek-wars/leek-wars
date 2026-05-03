@@ -668,7 +668,7 @@
 		LeekWars.trophies[320 - 1],
 		LeekWars.trophies[111 - 1],
 	]
-	const rewards = {
+	const rewards: { [key: number]: { trophy?: string, fight_pack?: string, potion?: string, resource?: string, hat?: string, item?: number } } = {
 		1: { trophy: 'godfather' },
 		20: { fight_pack: 'fight_pack_100' },
 		50: { potion: 'bordeaux', item: 281 },

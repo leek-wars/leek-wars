@@ -2,7 +2,7 @@ import { AI } from '@/model/ai'
 import { Chip } from '@/model/chip'
 import { Weapon } from '@/model/weapon'
 import { Hat } from './hat'
-import { Options } from './component'
+import { Component } from './component'
 
 enum Characteristic {
 	LIFE = 0,
@@ -89,6 +89,9 @@ class Leek {
 	public itemUsageStats: { [itemId: number]: { uses: number, fights: number } } | null = null
 	public itemUsageTotalFights: number = 0
 	public itemUsageHistograms: { [itemId: number]: number[] } | null = null
+	public country: string | null = null
+	public team_fights!: number
+	[key: string]: any
 
 	constructor(data: any) {
 		Object.assign(this, data)

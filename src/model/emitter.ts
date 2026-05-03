@@ -67,11 +67,11 @@ export function setVueMain(vm: any) { vueMain = vm }
 export function displayWarningMessage() {
 	const style = "color: black; font-size: 13px; font-weight: bold;"
 	const styleRed = "color: red; font-size: 14px; font-weight: bold;"
-	console.log("%c" + i18n.global.t('main.console_alert_1'), style)
-	console.log("%c" + i18n.global.t('main.console_alert_2'), styleRed)
-	console.log("%c" + i18n.global.t('main.console_alert_3'), style)
+	console.log("%c" + i18n.t('main.console_alert_1'), style)
+	console.log("%c" + i18n.t('main.console_alert_2'), styleRed)
+	console.log("%c" + i18n.t('main.console_alert_3'), style)
 	console.log("")
-	console.log("%c✔️ " + i18n.global.t('main.console_github'), style)
+	console.log("%c✔️ " + i18n.t('main.console_github'), style)
 	console.log("")
 }
 

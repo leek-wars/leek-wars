@@ -351,7 +351,7 @@ class Game {
 	public mouseOriginY: number = 0
 	public launched: boolean = false
 	public cancelled: boolean = false
-	public player!: Player
+	public player!: InstanceType<typeof Player>
 	public halloween: boolean = false
 	public textRatio: number = 1
 	public trophies: any[] = []

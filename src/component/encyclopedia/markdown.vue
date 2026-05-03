@@ -293,7 +293,7 @@
 								color: 'primary',
 								disabled: btnDisabled.value,
 								onClick: handleSubmit
-							}, () => i18n.global.t('main.validate'))
+							}, () => i18n.t('main.validate'))
 						}
 					})
 					const btnApp = createSubApp(BtnWrapper, undefined, 'tutorial-quiz-btn')
@@ -387,7 +387,7 @@
 					if (aliases.length > 0) {
 						const container = document.createElement('div')
 						container.className = 'aliases-display'
-						container.textContent = i18n.global.t('encyclopedia.aliases', [aliases.join(', ')]) as string
+						container.textContent = i18n.t('encyclopedia.aliases', [aliases.join(', ')]) as string
 						const h1 = mdEl.querySelector('h1')
 						if (h1 && h1.nextSibling) {
 							h1.parentNode!.insertBefore(container, h1.nextSibling)
@@ -464,7 +464,7 @@
 					if (parts.length > 1) {
 						const chapter = parseInt(parts[1])
 						const locked = (store.state.farmer ? store.state.farmer.tutorial_progress : 0) < chapter ? "locked": ""
-						return "<div class='lock " + locked + "'>" + i18n.global.t('encyclopedia.locked') + "</div>"
+						return "<div class='lock " + locked + "'>" + i18n.t('encyclopedia.locked') + "</div>"
 					}
 				} else if (tag.startsWith('alias')) {
 					const parts = originalTag.split(':')

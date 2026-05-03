@@ -275,6 +275,7 @@ class Language {
 	public country!: string
 	public flag!: string
 	public chat!: number
+	public chats?: number[] | null
 	public encyclopedia!: string
 	public currency!: string
 	public forum!: boolean
@@ -329,7 +330,7 @@ const LeekWars = reactive({
 	menuCollapsed: false,
 	menuExpanded: false,
 	splitBack: false,
-	actions: [],
+	actions: [] as any[],
 	lightBar: false,
 	dark: 0,
 	title: '',
@@ -448,7 +449,7 @@ const LeekWars = reactive({
 		16: { id: 16, name: 'General', language: 'sv', icon: 'mdi-chat-outline' },
 		17: { id: 17, name: 'General', language: 'sv', icon: 'mdi-chat-outline' },
 		18: { id: 18, name: 'General', language: 'sv', icon: 'mdi-chat-outline' },
-	} as {[key: number]: { name: string, language: string }},
+	} as {[key: number]: { id: number, name: string, language: string, icon: string }},
 	getLeekSkinName: (skin: number) => {
 		if (!(skin in SKINS)) { return SKINS[1] }
 		return SKINS[skin]

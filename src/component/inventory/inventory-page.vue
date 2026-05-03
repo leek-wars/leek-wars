@@ -203,15 +203,15 @@
 		return true
 	}
 
-	const all_schemes = computed(() => {
+	const all_schemes = computed<any[]>(() => {
 		if (!store.state.farmer) return []
 		return Object.values(LeekWars.schemes)
-			.filter(scheme => store.state.farmer?.schemes.find(s => LeekWars.items[s.template].params == scheme.id))
+			.filter((scheme: any) => store.state.farmer?.schemes.find(s => LeekWars.items[s.template].params == scheme.id))
 	})
 
-	const schemeFilterTypes = computed(() => {
+	const schemeFilterTypes = computed<ItemType[]>(() => {
 		const types = new Set(all_schemes.value.map(s => LeekWars.items[s.result].type))
-		return [ItemType.ALL, ...Array.from(types).sort()]
+		return [ItemType.ALL, ...(Array.from(types) as ItemType[]).sort()]
 	})
 
 	const schemes = computed(() => {
@@ -225,7 +225,7 @@
 		return [...schemes].sort((a, b) => {
 			if (sort.value === Sort.LEVEL) return LeekWars.items[b.result].level - LeekWars.items[a.result].level
 			if (sort.value === Sort.RARITY) return LeekWars.items[b.result].rarity - LeekWars.items[a.result].rarity
-			if (sort.value === Sort.INGREDIENT_COUNT) return b.items.filter(i => i !== null).length - a.items.filter(i => i !== null).length
+			if (sort.value === Sort.INGREDIENT_COUNT) return b.items.filter((i: any) => i !== null).length - a.items.filter((i: any) => i !== null).length
 			return LeekWars.items[b.result].price! - LeekWars.items[a.result].price!
 		})
 	})

@@ -320,7 +320,7 @@
 						</template>
 						<template v-if="owner && editMembers">
 							<i v-if="member.grade == 'owner'" class="grade">{{ $t('owner') }}</i>
-							<select v-else v-model="member.grade" class="level" @change="changeLevel(member, $event)">
+							<select v-else v-model="member.grade" class="level" @change="changeLevel(member)">
 								<option value="captain">{{ $t('captain') }}</option>
 								<option value="member">{{ $t('member') }}</option>
 							</select>
@@ -750,7 +750,7 @@
 			</div>
 			<template #actions>
 				<div v-ripple @click="changeOwnerDialog = false">{{ $t('change_owner_cancel') }}</div>
-				<div v-ripple class="green" @click="changeOwnerSelect(changeOwnerSelected)">{{ $t('change_owner_change') }}</div>
+				<div v-ripple class="green" @click="changeOwnerSelect()">{{ $t('change_owner_change') }}</div>
 			</template>
 		</popup>
 

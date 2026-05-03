@@ -40,9 +40,9 @@ defineEmits<{
 }>()
 
 const description = computed(() => {
-	if (props.result.type === 'leek') return i18n.global.t('main.leek_level', [props.result.level])
-	if (props.result.type === 'farmer') return i18n.global.t('main.farmer')
-	if (props.result.type === 'team') return i18n.global.t('main.team_level', [props.result.level])
+	if (props.result.type === 'leek') return i18n.t('main.leek_level', [props.result.level])
+	if (props.result.type === 'farmer') return i18n.t('main.farmer')
+	if (props.result.type === 'team') return i18n.t('main.team_level', [props.result.level])
 	return ''
 })
 </script>

@@ -35,7 +35,7 @@ class ItemTemplate {
 	public buyable!: boolean
 	public public!: boolean
 	public singleton!: boolean
-	public trophy!: number | null
+	public trophy!: any
 	public market!: boolean
 	public buyable_crystals!: boolean
 	public rarity!: number
@@ -46,9 +46,10 @@ class ItemTemplate {
 	public farmer_count?: number
 	public sell_price?: number
 	public seen?: boolean
+	[key: string]: any
 }
 
-const ITEM_CATEGORY_NAME = {
+const ITEM_CATEGORY_NAME: { [key: number]: string } = {
 	[ItemType.ALL]: 'all',
 	[ItemType.WEAPON]: 'weapon',
 	[ItemType.CHIP]: 'chip',
@@ -61,7 +62,7 @@ const ITEM_CATEGORY_NAME = {
 	[ItemType.SCHEME]: 'scheme',
 }
 
-const ITEM_TYPE_NAME = {
+const ITEM_TYPE_NAME: { [key: number]: string } = {
 	[ItemType.ALL]: 'all',
 	[ItemType.WEAPON]: 'weapons',
 	[ItemType.CHIP]: 'chips',
@@ -74,7 +75,7 @@ const ITEM_TYPE_NAME = {
 	[ItemType.SCHEME]: 'schemes',
 }
 
-const ITEM_TYPE_ICONS = {
+const ITEM_TYPE_ICONS: { [key: number]: string } = {
 	[ItemType.ALL]: 'mdi-all-inclusive',
 	[ItemType.WEAPON]: 'mdi-pistol',
 	[ItemType.CHIP]: 'mdi-chip',

@@ -12,6 +12,11 @@ export class BossSquad {
 	public boss!: number
 	public farmers!: Farmer[]
 	public engaged_leeks!: Leek[]
+	public locked?: boolean
+	public engaged_count?: number
+	public available_leeks?: Leek[]
+	public master?: number | Farmer
+	[key: string]: any
 }
 
 export class BossSquads {

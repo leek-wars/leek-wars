@@ -1,6 +1,6 @@
 <template>
 	<div v-if="$store.state.farmer" class="chats">
-		<div v-for="(window, i) in LeekWars.chatWindows" :key="window.name" :class="{expanded: window.expanded, unread: $refs.chats && $refs.chats[i] && !$refs.chats[i].read}" class="window">
+		<div v-for="(window, i) in LeekWars.chatWindows" :key="window.id" :class="{expanded: window.expanded, unread: ($refs.chats as any) && ($refs.chats as any)[i] && !($refs.chats as any)[i].read}" class="window">
 			<div class="header">
 				<router-link v-if="window.type === ChatType.PM" v-ripple :to="'/farmer/' + getFarmer(window).id">
 					<avatar :farmer="getFarmer(window)" class="image" />
@@ -11,7 +11,7 @@
 				<div v-ripple class="title" @click="toggleExpanded(window, i)">{{ window.title }}</div>
 				<v-icon class="close" @click="LeekWars.removeChat(i)">mdi-close</v-icon>
 			</div>
-			<chat :id="window.id" ref="chats" class="chat" @send="sendMessage($event, window.name)" />
+			<chat :id="window.id" ref="chats" class="chat" @send="sendMessage($event, window.id)" />
 		</div>
 	</div>
 </template>

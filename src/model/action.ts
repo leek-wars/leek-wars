@@ -61,4 +61,5 @@ class Action {
 	}
 }
 
-export { Action, ActionLog, ActionType }
+export { Action, ActionType }
+export type { ActionLog }

@@ -65,6 +65,17 @@ class Team {
 	public likes!: number
 	public liked!: boolean
 	public language!: string
+	public activity!: any
+	public defeats!: number
+	public draws!: number
+	public victories!: number
+	public ratio!: number
+	public fights!: number
+	public member_count!: number
+	public remaining_xp!: number
+	public total_level!: number
+	public sent_invitations!: any[]
+	[key: string]: any
 }
 
 class TeamMember extends Farmer {
@@ -89,6 +100,8 @@ class Composition {
 	public tournamentRangeLoading!: any
 	public talent!: number
 	public max_talent!: number
+	public total_level?: number
+	[key: string]: any
 }
 
 export { Composition, Team, TeamMember, TeamMemberLevel, TEAM_COLORS }

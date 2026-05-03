@@ -22,7 +22,7 @@ class Analyzer {
 
 	public enabled: boolean = false
 	public running: number = 0
-	public problems: {[key: number]: {[key: string]: Problem[]}} = {}
+	public problems: {[key: string]: {[key: string]: Problem[]}} = {}
 	public error_count: number = 0
 	public warning_count: number = 0
 	public todo_count: number = 0
@@ -467,7 +467,7 @@ class Analyzer {
 	}
 
 	private scanTodos(ai: AI, code: string) {
-		const todos: [number, number, number, number, number, number, string][] = []
+		const todos: [number, string, number, number, number, number, string][] = []
 		const lines = code.split('\n')
 		let inBlockComment = false
 
@@ -515,7 +515,7 @@ class Analyzer {
 		return todos
 	}
 
-	private findTodoInText(ai: AI, todos: [number, number, number, number, number, number, string][], lineNum: number, colOffset: number, text: string) {
+	private findTodoInText(ai: AI, todos: [number, string, number, number, number, number, string][], lineNum: number, colOffset: number, text: string) {
 		const upperText = text.toUpperCase()
 		const todoIdx = upperText.indexOf('TODO')
 		if (todoIdx === -1) return

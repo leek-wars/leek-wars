@@ -27,6 +27,11 @@ class Group {
 	public capital!: number
 	public members!: Farmer[]
 	public use_passwords!: boolean
+	public fights!: any[]
+	public is_supervisor!: boolean
+	public tournament!: any
+	public tournaments!: any[]
+	[key: string]: any
 }
 
 export { Group }

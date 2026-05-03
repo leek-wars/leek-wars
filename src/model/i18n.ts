@@ -9,6 +9,12 @@ const i18nModules = import.meta.glob('/src/component/**/*.i18n', {
 	import: 'default',
 }) as Record<string, () => Promise<string>>
 
+type I18nWithCompat = ReturnType<typeof createI18n> & {
+	t: (key: string, ...args: any[]) => string
+	tc: (key: string, choice?: number, ...args: any[]) => string
+	locale: string
+}
+
 const i18n = createI18n({
 	legacy: true, // Use legacy mode for compatibility
 	allowComposition: true, // Allow useI18n() in <script setup>
@@ -21,7 +27,7 @@ const i18n = createI18n({
 	warnHtmlMessage: false,
 	warnHtmlInMessage: 'off',
 	escapeParameter: true,
-})
+}) as I18nWithCompat
 
 // Add backward compatibility helpers for Vue 2 -> Vue 3 migration
 // This allows code to use i18n.t() instead of i18n.global.t()
@@ -53,9 +59,10 @@ const mixins = [{
 		// Reload translations because in case of hot reloading, they are lost
 		// Missing messages or messages for the current locale
 		const opts = (this as any).$options
-		if (!opts?.i18n?.messages?.[i18n.global.locale]) {
+		const locale = i18n.global.locale as string
+		if (!opts?.i18n?.messages?.[locale]) {
 			// console.log("reload translations...")
-			loadInstanceTranslations(i18n.global.locale, this)
+			loadInstanceTranslations(locale, this)
 		}
 	},
 	watch: {
@@ -63,7 +70,7 @@ const mixins = [{
 			let name = (this as any).$options?.name
 			if (!name) return
 			// console.log("Reload translations of component", name)
-			const newLocale = i18n.global.locale
+			const newLocale = i18n.global.locale as string
 			if (name.startsWith('bank-')) { name = 'bank' }
 			const folder = name.startsWith('signup-') ? 'signup' : name
 			const modulePath = `/src/component/${folder}/${name}.${newLocale}.i18n`
@@ -188,7 +195,7 @@ function loadComponentLanguage(newLocale: string, component: ComponentInstance<C
 
 // Helpers for <script setup> components (avoids i18n.global boilerplate)
 function t(key: string, ...args: unknown[]): string {
-	return String((i18n.global as Record<string, Function>).t(key, ...args))
+	return String((i18n.global as unknown as Record<string, Function>).t(key, ...args))
 }
 const locale = i18n.global.locale as string
 

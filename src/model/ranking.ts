@@ -37,4 +37,5 @@ class RankingCompositionRow extends RankingRow {
 
 type Ranking = RankingRow[]
 
-export { Ranking, RankingRow, RankingLeekRow, RankingFarmerRow, RankingTeamRow, RankingCompositionRow }
+export { RankingRow, RankingLeekRow, RankingFarmerRow, RankingTeamRow, RankingCompositionRow }
+export type { Ranking }

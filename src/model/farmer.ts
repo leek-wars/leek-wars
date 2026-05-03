@@ -76,10 +76,39 @@ class Farmer {
 	public color!: string
 	public points!: number
 	public forum_messages!: number
+	public tournaments_enabled!: boolean
+	public likes!: number
+	public liked!: boolean
+	public register_date!: number
+	public ranking!: number
+	public victories!: number
+	public draws!: number
+	public defeats!: number
+	public ratio!: number
+	public won_solo_tournaments!: number
+	public won_farmer_tournaments!: number
+	public won_team_tournaments!: number
+	public won_battle_royale!: number
+	public fight_history!: any[]
+	public fight_pack!: any
+	public godfather!: any
+	public godsons!: any[]
+	public hat!: any
+	public item!: any
+	public login!: string
+	public potion!: any
+	public resource!: any
+	public trophy!: any
+	public leek_error!: { error: string, params?: any } | null
+	public mail_error!: { error: string, params?: any } | null
+	public name_error!: { error: string, params?: any } | null
+	public password_error!: { error: string, params?: any } | null
+	public candidacies!: any[]
+	[key: string]: any
 }
 
 class Member extends Farmer {
-	public leek!: string
+	public leek?: string
 }
 
 class Reward {

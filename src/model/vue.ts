@@ -326,7 +326,7 @@ const app = createApp({
 			nextTick(() => {
 				// console.log("loaded", this.$data.savedPosition)
 				if (router.currentRoute?.value.hash) {
-					scroll_to_hash(router.currentRoute?.value.hash, router.currentRoute)
+					scroll_to_hash(router.currentRoute?.value.hash, router.currentRoute.value)
 				} else if (this.$data.savedPosition > 0) {
 					// window.scrollTo(0, this.$data.savedPosition)
 					setTimeout(() => {
@@ -406,8 +406,8 @@ app.directive('autostopscroll', {
 })
 
 const code = {
-	mounted: (el) => {
-		el.querySelectorAll('code').forEach((c) => {
+	mounted: (el: HTMLElement) => {
+		el.querySelectorAll('code').forEach((c: Element) => {
 			createSubApp(Code, { code: (c as HTMLElement).innerText }, 'v-code').mount(c)
 		})
 	}
@@ -416,19 +416,19 @@ const code = {
 app.directive('code', code)
 
 app.directive('single-code', {
-	mounted: (el) => {
-		el.querySelectorAll('code').forEach((c) => {
+	mounted: (el: HTMLElement) => {
+		el.querySelectorAll('code').forEach((c: Element) => {
 			createSubApp(Code, { code: (c as HTMLElement).innerText, single: true, theme: 'auto' }, 'v-single-code').mount(c)
 		})
 	}
 })
 
 app.directive('latex', {
-	mounted: (el) => {
+	mounted: (el: HTMLElement) => {
 		el.innerHTML = el.innerHTML.replace(/\$(.*?)\$/, (str: string) => {
 			return "<latex>" + str + "</latex>"
 		})
-		el.querySelectorAll('latex').forEach((c) => {
+		el.querySelectorAll('latex').forEach((c: Element) => {
 			Latex.latexify(c.innerHTML).then(result => {
 				c.innerHTML = result
 			})
@@ -437,7 +437,7 @@ app.directive('latex', {
 })
 
 app.directive('chat-code-latex', {
-	mounted: (el) => {
+	mounted: (el: HTMLElement) => {
 		el.innerHTML = el.innerHTML.replace(/\$(.*?)\$/g, (str: string, content: string) => {
 			// Skip if the captured content already contains HTML tags (e.g. linkified URL)
 			if (/<\w/.test(content)) return str
@@ -449,7 +449,7 @@ app.directive('chat-code-latex', {
 		el.innerHTML = el.innerHTML.replace(/`(.*?)`/g, (str: string, code: string) => {
 			return "<code>" + code + "</code>"
 		})
-		el.querySelectorAll('code').forEach((c) => {
+		el.querySelectorAll('code').forEach((c: Element) => {
 			let props
 			if (c.innerHTML.indexOf("<br>") !== -1) {
 				const code = LeekWars.decodehtmlentities(c.innerHTML).replace(/<br>/gi, "\n").replace(/^\n+|\n+$/g, '')
@@ -460,12 +460,12 @@ app.directive('chat-code-latex', {
 			const vm = createSubApp(Code, props, 'v-chat-code-latex').mount(c)
 			c.replaceWith(vm.$el)
 		})
-		el.querySelectorAll('latex').forEach((c) => {
+		el.querySelectorAll('latex').forEach((c: Element) => {
 			Latex.latexify(c.innerHTML).then(result => {
 				c.innerHTML = result
 			})
 		})
-		el.querySelectorAll('a').forEach(a => {
+		el.querySelectorAll('a').forEach((a: HTMLAnchorElement) => {
 			const href = a.getAttribute('href')
 			if (href && href.startsWith('/') ) {
 				a.onclick = (e: Event) => {
@@ -484,11 +484,11 @@ app.directive('chat-code-latex', {
 })
 
 const dochash = {
-	mounted: (el) => {
-		el.innerHTML = el.innerHTML.replace(/#(\w+)/g, (a, b) => {
+	mounted: (el: HTMLElement) => {
+		el.innerHTML = el.innerHTML.replace(/#(\w+)/g, (a: string, b: string) => {
 			return "<a href='/help/documentation/" + b + "'>" + b + "</a>"
 		})
-		el.querySelectorAll('a').forEach(a => {
+		el.querySelectorAll('a').forEach((a: HTMLAnchorElement) => {
 			a.onclick = (e: Event) => {
 				e.stopPropagation()
 				e.preventDefault()
@@ -501,8 +501,8 @@ const dochash = {
 
 app.directive('dochash', dochash)
 
-app.directive('emojis', (el) => {
-	el.childNodes.forEach((child) => {
+app.directive('emojis', (el: HTMLElement) => {
+	el.childNodes.forEach((child: ChildNode) => {
 		if (child.nodeType === Node.TEXT_NODE) {
 			const html = formatEmojis(LeekWars.protect((child as Text).wholeText))
 			const template = document.createElement('span')

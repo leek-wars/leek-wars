@@ -250,7 +250,7 @@
 									<router-link v-if="my_leek" :to="'/editor/' + (leek.ai.path || leek.ai.name)">
 										<ai :ai="leek.ai" :library="false" :small="false" />
 									</router-link>
-									<a v-else-if="$store.getters.admin" :href="LeekWars.API + 'ai/download/' + leek.ai.id" target="_blank">
+									<a v-else-if="$store.getters.admin" :href="LeekWars.API + 'ai/download/' + leek.ai.path" target="_blank">
 										<ai :ai="leek.ai" :library="false" :small="false" />
 									</a>
 									<ai v-else :ai="leek.ai" :library="false" :small="false" />
@@ -910,13 +910,13 @@
 		return false
 	})
 
-	const holdWeaponEnabled = computed(() => store.state.farmer && LeekWars.selectWhere(store.state.farmer.pomps, 'template', 123) !== null)
-	const leekTitleEnabled = computed(() => store.state.farmer && LeekWars.selectWhere(store.state.farmer.pomps, 'template', 125) !== null)
-	const showAiLinesEnabled = computed(() => store.state.farmer && LeekWars.selectWhere(store.state.farmer.pomps, 'template', 124) !== null)
-	const metalEnabled = computed(() => store.state.farmer && LeekWars.selectWhere(store.state.farmer.pomps, 'template', 242) !== null)
+	const holdWeaponEnabled = computed(() => !!(store.state.farmer && LeekWars.selectWhere(store.state.farmer.pomps, 'template', 123) !== null))
+	const leekTitleEnabled = computed(() => !!(store.state.farmer && LeekWars.selectWhere(store.state.farmer.pomps, 'template', 125) !== null))
+	const showAiLinesEnabled = computed(() => !!(store.state.farmer && LeekWars.selectWhere(store.state.farmer.pomps, 'template', 124) !== null))
+	const metalEnabled = computed(() => !!(store.state.farmer && LeekWars.selectWhere(store.state.farmer.pomps, 'template', 242) !== null))
 	const skinPotions = computed(() => store.state.farmer!.potions.filter(p => LeekWars.potions[p.template].effects.some((e: PotionEffect) => e.type === PotionEffect.CHANGE_SKIN)))
-	const angryEnabled = computed(() => store.state.farmer && LeekWars.selectWhere(store.state.farmer.pomps, 'template', 240) !== null)
-	const happyEnabled = computed(() => store.state.farmer && LeekWars.selectWhere(store.state.farmer.pomps, 'template', 241) !== null)
+	const angryEnabled = computed(() => !!(store.state.farmer && LeekWars.selectWhere(store.state.farmer.pomps, 'template', 240) !== null))
+	const happyEnabled = computed(() => !!(store.state.farmer && LeekWars.selectWhere(store.state.farmer.pomps, 'template', 241) !== null))
 
 	const max_components = computed(() => {
 		let n = 8
@@ -1109,7 +1109,7 @@
 
 	function hat() { hatDialog.value = true }
 
-	function selectHat(h: Hat) {
+	function selectHat(h: Hat | null) {
 		if (!leek.value) return
 		hatDialog.value = false
 		if (h === null) {
@@ -1366,7 +1366,7 @@
 		refreshTotalCharacteristics()
 	}
 
-	function componentsDrop(location: DragArea, e: DragEvent, index: number) {
+	function componentsDrop(location: DragArea, e: DragEvent, index?: number) {
 		if (!draggedComponent.value) return
 		if (location === 'farmer' && draggedComponentLocation.value === 'leek') {
 			removeComponent(draggedComponent.value)
@@ -1435,7 +1435,8 @@
 		}
 	}
 
-	function changeFace(face: number) {
+	function changeFace(face: number | null) {
+		if (face === null) return
 		if (leek.value) {
 			leek.value.face = face
 			store.commit('set-face', {leek: leek.value.id, face})

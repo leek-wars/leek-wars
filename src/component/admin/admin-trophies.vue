@@ -41,40 +41,40 @@
 					<td :contenteditable="trophy.category != 6" @focusout="pointsFocusout(trophy, $event)">{{ trophy.category == 6 ? '' : trophy.points }}</td>
 					<td><span v-if="trophy.points">{{ $filters.number(100 * Math.pow(trophy.points, 2)) }} <span class="hab"></span></span></td>
 					<td>
-						<input type="checkbox" :checked="trophy.title & 1" @change="updateTitle(trophy, 1, $event)"> N
-						<input type="checkbox" :checked="trophy.title & 2" @change="updateTitle(trophy, 2, $event)"> A
+						<input type="checkbox" :checked="!!(trophy.title & 1)" @change="updateTitle(trophy, 1, $event)"> N
+						<input type="checkbox" :checked="!!(trophy.title & 2)" @change="updateTitle(trophy, 2, $event)"> A
 					</td>
 					<td contenteditable @focusout="nameFocusout(trophy, 'fr', $event)"><div>{{ trophy.name_fr }}</div></td>
 					<td contenteditable @focusout="nameFocusout(trophy, 'en', $event)"><div>{{ trophy.name_en }}</div></td>
 					<td>
 						<span v-if="trophy.title & 1">
-							<input type="checkbox" :checked="trophy.noun_gender & 1" @change="updateNounGender(trophy, 1, $event)"> M
-							<input type="checkbox" :checked="trophy.noun_gender & 2" @change="updateNounGender(trophy, 2, $event)"> F
+							<input type="checkbox" :checked="!!(trophy.noun_gender & 1)" @change="updateNounGender(trophy, 1, $event)"> M
+							<input type="checkbox" :checked="!!(trophy.noun_gender & 2)" @change="updateNounGender(trophy, 2, $event)"> F
 						</span>
 					</td>
 					<td>
 						<span v-if="trophy.title & 1">
 							<span v-if="!(trophy.noun_gender & 1)">
-								<input type="checkbox" :checked="trophy.noun_translation & 1" @change="updateNounTranslation(trophy, 1, $event)"> M
+								<input type="checkbox" :checked="!!(trophy.noun_translation & 1)" @change="updateNounTranslation(trophy, 1, $event)"> M
 							</span>
 							<span v-if="!(trophy.noun_gender & 2)">
-								<input type="checkbox" :checked="trophy.noun_translation & 2" @change="updateNounTranslation(trophy, 2, $event)"> F
+								<input type="checkbox" :checked="!!(trophy.noun_translation & 2)" @change="updateNounTranslation(trophy, 2, $event)"> F
 							</span>
 						</span>
 					</td>
 					<td>
 						<span v-if="trophy.title & 2">
-							<input v-if="trophy.title & 2" type="checkbox" :checked="trophy.adj_gender & 1" @change="updateAdjectiveGender(trophy, 1, $event)"> M
-							<input v-if="trophy.title & 2" type="checkbox" :checked="trophy.adj_gender & 2" @change="updateAdjectiveGender(trophy, 2, $event)"> F
+							<input v-if="trophy.title & 2" type="checkbox" :checked="!!(trophy.adj_gender & 1)" @change="updateAdjectiveGender(trophy, 1, $event)"> M
+							<input v-if="trophy.title & 2" type="checkbox" :checked="!!(trophy.adj_gender & 2)" @change="updateAdjectiveGender(trophy, 2, $event)"> F
 						</span>
 					</td>
 					<td>
 						<span v-if="trophy.title & 2">
 							<span v-if="!(trophy.adj_gender & 1)">
-								<input type="checkbox" :checked="trophy.adj_translation & 1" @change="updateAdjectiveTranslation(trophy, 1, $event)"> M
+								<input type="checkbox" :checked="!!(trophy.adj_translation & 1)" @change="updateAdjectiveTranslation(trophy, 1, $event)"> M
 							</span>
 							<span v-if="!(trophy.adj_gender & 2)">
-								<input type="checkbox" :checked="trophy.adj_translation & 2" @change="updateAdjectiveTranslation(trophy, 2, $event)"> F
+								<input type="checkbox" :checked="!!(trophy.adj_translation & 2)" @change="updateAdjectiveTranslation(trophy, 2, $event)"> F
 							</span>
 						</span>
 					</td>

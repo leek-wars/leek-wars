@@ -332,7 +332,7 @@
 
 	const toast = new URLSearchParams(window.location.search).get('toast')
 	if (toast) {
-		LeekWars.toast(i18n.global.t('main.account_' + toast) as string)
+		LeekWars.toast(i18n.t('main.account_' + toast) as string)
 		history.replaceState(null, '', window.location.pathname)
 	}
 

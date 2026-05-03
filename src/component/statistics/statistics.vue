@@ -56,7 +56,7 @@
 					<div class="title">{{ $t('chart_chests') }}</div>
 				</div>
 				<template v-for="(statistic, name) in category">
-					<div v-if="statistic.visible" :key="name" :class="{private: statistic.private, show_today: statistic.show_today, color: selectedStatistic === name && !!selectedStatisticColor}" class="statistic card" :style="{background: selectedStatistic === name ? selectedStatisticColor : null}" @click="statistic.today_state = statistic.show_today && !statistic.today_state" @mouseenter="hoverStat(name)" @mouseleave="hoverLeave">
+					<div v-if="statistic.visible" :key="name" :class="{private: statistic.private, show_today: statistic.show_today, color: selectedStatistic === name && !!selectedStatisticColor}" class="statistic card" :style="{background: selectedStatistic === name ? selectedStatisticColor : ''}" @click="statistic.today_state = statistic.show_today && !statistic.today_state" @mouseenter="hoverStat(name)" @mouseleave="hoverLeave">
 						<div class="label"><v-icon v-if="statistic.icon">{{ 'mdi-' + statistic.icon }}</v-icon> {{ $t(name) }}</div>
 						<div v-if="!statistic.today_state" class="value total">{{ Math.floor(statistic.value).toLocaleString('fr-FR') }}</div>
 						<div v-else class="value today">{{ Math.floor(statistic.today).toLocaleString('fr-FR') }}</div>
@@ -107,6 +107,8 @@
 		interpolate!: boolean
 		show_today!: boolean
 		today_state!: boolean
+		private?: boolean
+		icon?: string
 	}
 
 	defineOptions({ name: 'statistics', i18n: {}, mixins: [...mixins] })

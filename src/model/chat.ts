@@ -27,6 +27,7 @@ class ChatWindow {
 	id!: number
 	type!: ChatType
 	title!: string
+	name?: string
 	expanded: boolean = true
 }
 

@@ -22,7 +22,7 @@
 					<div class="label">{{ $t('category') }}</div>
 					<select v-model="options.category" class="search-category" @change="search">
 						<option value="-1">{{ $t('all_categories') }}</option>
-						<option v-for="c in categories" :key="c.id" :value="c.id">{{ c.type == 'team' ? c.name : $i18n.t('forum-category.' + c.name) }}</option>
+						<option v-for="c in categories" :key="c.id" :value="c.id">{{ c.type == 'team' ? c.name : $t('forum-category.' + c.name) }}</option>
 					</select>
 				</div>
 				<div>
@@ -76,7 +76,7 @@
 								</template>
 								<template #topic>
 									<router-link :to="'/forum/category-' + result.cid">
-										{{ $i18n.te('forum-category.' + result.cname) ? $i18n.t('forum-category.' + result.cname) : result.cname }}
+										{{ $te('forum-category.' + result.cname) ? $t('forum-category.' + result.cname) : result.cname }}
 									</router-link>
 								</template>
 							</i18n-t>
@@ -153,7 +153,7 @@
 
 	const canSearch = computed(() => options.query || options.farmer || options.admin)
 
-	const languages = (localStorage.getItem('forum/languages') as string || i18n.global.locale).split(',')
+	const languages = (localStorage.getItem('forum/languages') as string || (i18n.global.locale as unknown as string)).split(',')
 	LeekWars.get('forum/get-categories/' + languages).then(data => {
 		categories.value = data.categories
 	})

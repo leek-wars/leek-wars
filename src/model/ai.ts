@@ -10,6 +10,8 @@ class AI {
 	public name!: string
 	public code!: string
 	public valid!: boolean
+	public color?: string
+	public bot?: boolean
 	public version!: number
 	public strict!: boolean
 	public timestamp: number = 0
@@ -526,7 +528,7 @@ class AI {
 
 			if (ai.includes) {
 				for (const include of ai.includes) {
-					if (visited.has(include.id)) { continue }
+					if (visited.has(include.path)) { continue }
 					const found = aux(include)
 					if (found) {
 						return found
@@ -595,7 +597,7 @@ class AI {
 			}
 			if (ai.includes) {
 				for (const include of ai.includes) {
-					if (visited.has(include.id)) { continue }
+					if (visited.has(include.path)) { continue }
 					const found = aux(include)
 					if (found) {
 						return found

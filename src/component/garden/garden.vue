@@ -106,7 +106,7 @@
 							<div v-if="challengeFights" class="enemies">
 								<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('click_opponent') }}</div>
 								<div class="opponents">
-									<div class="leek" @click="startLeekChallenge">
+									<div v-if="challengeLeekTarget" class="leek" @click="startLeekChallenge">
 										<garden-leek :leek="challengeLeekTarget" />
 									</div>
 								</div>
@@ -306,7 +306,7 @@
 									</div>
 								</div>
 								<br>
-								<div class="leek-count">{{ LeekWars.arena.progress }} / {{ LeekWars.arena.constructor.MAX_PLAYERS }}</div>
+								<div class="leek-count">{{ LeekWars.arena.progress }} / {{ (LeekWars.arena.constructor as any).MAX_PLAYERS }}</div>
 								<div v-if="LeekWars.arena.countdown >= 0" class="arena-countdown">
 									{{ $t('arena_countdown', [LeekWars.arena.countdown]) }}
 								</div>
@@ -363,7 +363,7 @@
 										</rich-tooltip-leek>
 										<div v-for="(leek, p) of 8 - LeekWars.bossSquads.squad.engaged_leeks.length" :key="'e_' + p" class="participant"></div>
 									</div>
-									<h4 v-if="LeekWars.bossSquads.squad.available_leeks.length">Poireaux disponibles</h4>
+									<h4 v-if="LeekWars.bossSquads.squad.available_leeks?.length">Poireaux disponibles</h4>
 									<div class="participants">
 										<rich-tooltip-leek v-for="leek of LeekWars.bossSquads.squad.available_leeks" :key="leek.id" :id="leek.id" v-slot="{ props }">
 											<div v-bind="props" class="participant" :class="{active: true}" @click="LeekWars.bossSquads.addLeek(leek)">

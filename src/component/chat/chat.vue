@@ -26,21 +26,21 @@
 
 		<report-dialog v-if="reportFarmer" v-model="showReport" :target="reportFarmer" :reasons="reasons" :parameter="reportContent" class="report-dialog" />
 
-		<v-menu v-if="menuMessage && !privateMessages && (menuMessage.farmer.color !== 'admin' || $store.getters.admin) && menuMessage.farmer.id !== 0" v-model="menu" :activator="menuActivator" offset-y>
+		<v-menu v-if="chat && $store.state.farmer && menuMessage && !privateMessages && (menuMessage.farmer.color !== 'admin' || $store.getters.admin) && menuMessage.farmer.id !== 0" v-model="menu" :activator="menuActivator" offset-y>
 			<v-list dense class="message-actions">
-				<v-list-item v-if="chat.type === ChatType.GLOBAL && menuMessage.farmer.id !== $store.state.farmer.id && menuMessage.farmer.color !== 'admin'" v-ripple @click="report(menuMessage)">
+				<v-list-item v-if="chat && chat.type === ChatType.GLOBAL && $store.state.farmer && menuMessage.farmer.id !== $store.state.farmer.id && menuMessage.farmer.color !== 'admin'" v-ripple @click="report(menuMessage)">
 					<v-icon>mdi-flag</v-icon>
 					<span>{{ $t('warning.report') }}</span>
 				</v-list-item>
-				<v-list-item v-if="isModerator && chat.type !== ChatType.PM && menuMessage.farmer.color !== 'admin'" v-ripple @click="mute(menuMessage.farmer)">
+				<v-list-item v-if="chat && isModerator && chat.type !== ChatType.PM && menuMessage.farmer.color !== 'admin'" v-ripple @click="mute(menuMessage.farmer)">
 					<v-icon>mdi-volume-off</v-icon>
 					<span>Mute</span>
 				</v-list-item>
-				<v-list-item v-if="isModerator && chat.type !== ChatType.PM && menuMessage.farmer.color !== 'admin'" v-ripple @click="censor(menuMessage)">
+				<v-list-item v-if="chat && isModerator && chat.type !== ChatType.PM && menuMessage.farmer.color !== 'admin'" v-ripple @click="censor(menuMessage)">
 					<v-icon>mdi-gavel</v-icon>
 					<span>{{ $t('warning.censor') }}</span>
 				</v-list-item>
-				<v-list-item v-if="chat.type !== ChatType.PM && (menuMessage.farmer.id === $store.state.farmer.id || $store.getters.admin)" v-ripple @click="deleteMessage(menuMessage)">
+				<v-list-item v-if="chat && $store.state.farmer && chat.type !== ChatType.PM && (menuMessage.farmer.id === $store.state.farmer.id || $store.getters.admin)" v-ripple @click="deleteMessage(menuMessage)">
 					<v-icon>mdi-delete</v-icon>
 					<span>{{ $t('warning.delete') }}</span>
 				</v-list-item>
@@ -219,7 +219,7 @@
 	const loading = computed(() => !!props.id && (!store.state.chat[props.id] || !store.state.chat[props.id].loaded))
 	const chat = computed(() => props.id ? store.state.chat[props.id] : null)
 	const privateMessages = computed(() => chat.value && chat.value.type === ChatType.PM)
-	const isModerator = computed(() => store.getters.moderator || (chat.value && chat.value.type === ChatType.TEAM && store.state.farmer!.team.member_level >= TeamMemberLevel.CAPTAIN))
+	const isModerator = computed(() => store.getters.moderator || (chat.value && chat.value.type === ChatType.TEAM && store.state.farmer!.team!.member_level >= TeamMemberLevel.CAPTAIN))
 	const censorMessagesList = computed(() => chat.value && muteFarmer.value ? chat.value.messages.filter((m: any) => m.censored === 0 && m.farmer.id === muteFarmer.value!.id) : [])
 	const deleteMessagesList = computed(() => chat.value && muteFarmer.value ? chat.value.messages.filter((m: any) => m.farmer.id === muteFarmer.value!.id) : [])
 

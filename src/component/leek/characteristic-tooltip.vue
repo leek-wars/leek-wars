@@ -1,9 +1,7 @@
 <template lang="html">
 	<v-tooltip bottom>
 		<template #activator="{ props }">
-			<span v-bind="props">
-				<slot></slot>
-			</span>
+			<slot :props="props"></slot>
 		</template>
 		<div class="tooltip">
 			<b>{{ $t('characteristic.' + characteristic) }}</b>

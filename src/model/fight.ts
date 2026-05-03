@@ -43,6 +43,12 @@ class ReportLeek {
 	resources!: {[key: number]: number}
 	mob!: boolean
 	xp_locked!: boolean
+	dead?: boolean
+	level?: number
+	money?: number
+	talent?: number
+	talent_gain?: number
+	[key: string]: any
 }
 
 class ReportFarmer {
@@ -107,6 +113,10 @@ class Fight {
 	public rareloot!: number
 	public starter?: number
 	public views?: number
+	public too_long?: boolean
+	public tournament?: any
+	public seed?: number
+	[key: string]: any
 }
 
 class FightMap {

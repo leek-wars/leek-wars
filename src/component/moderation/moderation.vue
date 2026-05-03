@@ -275,7 +275,7 @@
 		if (!selectedFault.value) { return }
 		const fault = selectedFault.value
 		LeekWars.post('moderation/warn', {target_id: fault.target.id, reason: fault.reason, new_reason: finalReason.value, message: message.value, severity: severity.value, parameter: selectedFault.value.parameter}).then(() => {
-			LeekWars.toast(i18n.global.t('moderation.warning_sent') as string)
+			LeekWars.toast(i18n.t('moderation.warning_sent') as string)
 			faults.value!.splice(faults.value!.indexOf(fault), 1)
 			delete faultsById[fault.id]
 			warningConfirmDialog.value = false

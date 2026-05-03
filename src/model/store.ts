@@ -13,6 +13,7 @@ import { Leek } from './leek'
 import { emitter } from './emitter'
 import { displayWarningMessage } from './emitter'
 import { Weapon } from './weapon'
+import { Chip } from './chip'
 import { SchemeTemplate } from './scheme'
 import { Loadout } from './loadout'
 import { NotificationBuilder } from '@/model/notification-builder'
@@ -155,7 +156,9 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			for (const chat of data.chats) {
 				store.commit('register-chat', chat)
 			}
-			fileSystem.init(data.farmer.ai_tree)
+			if (data.farmer.ai_tree) {
+				fileSystem.init(data.farmer.ai_tree)
+			}
 			LeekWars.startIntervals()
 			updateTitle(state)
 			emitter.emit('connected', state.farmer)
@@ -743,7 +746,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'remove-inventory'(state: LeekWarsState, data) {
+		'remove-inventory'(state: LeekWarsState, data: any) {
 			if (!state.farmer) { return }
 			// console.log("remove-inventory", data)
 			const quantity = data.quantity || 1
@@ -772,7 +775,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (state.farmer) { state.farmer.didactitiel_seen = true }
 		},
 
-		'add-weapon'(state: LeekWarsState, weapon) {
+		'add-weapon'(state: LeekWarsState, weapon: any) {
 			if (!state.farmer) { return }
 			for (const w of state.farmer.weapons) {
 				if (w.template === weapon.template) {
@@ -780,7 +783,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 					return
 				}
 			}
-			state.farmer.weapons.push({id: weapon.id, quantity: 1, template: weapon.template})
+			state.farmer.weapons.push({id: weapon.id, quantity: 1, template: weapon.template} as Weapon)
 		},
 
 		'remove-weapon'(state: LeekWarsState, weapon: Weapon) {
@@ -797,7 +800,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'add-chip'(state: LeekWarsState, chip) {
+		'add-chip'(state: LeekWarsState, chip: any) {
 			if (!state.farmer) { return }
 			for (const c of state.farmer.chips) {
 				if (c.template === chip.template) {
@@ -805,10 +808,10 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 					return
 				}
 			}
-			state.farmer.chips.push({id: chip.id, quantity: 1, template: chip.template})
+			state.farmer.chips.push({id: chip.id, quantity: 1, template: chip.template} as Chip)
 		},
 
-		'remove-chip'(state: LeekWarsState, chip) {
+		'remove-chip'(state: LeekWarsState, chip: any) {
 			if (!state.farmer) { return }
 			for (let w = 0; w < store.state.farmer!.chips.length; ++w) {
 				const f_chip = store.state.farmer!.chips[w]
@@ -842,7 +845,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (i !== -1) { state.farmer.loadouts.splice(i, 1) }
 		},
 
-		'add-component'(state: LeekWarsState, component) {
+		'add-component'(state: LeekWarsState, component: any) {
 			if (!state.farmer) { return }
 			for (const w of state.farmer.components) {
 				if (w.template === component.template) {
@@ -935,13 +938,13 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'set-trophies'(state: LeekWarsState, trophies) {
+		'set-trophies'(state: LeekWarsState, trophies: any) {
 			if (state.farmer) {
 				state.farmer.trophies_list = trophies
 			}
 		},
 
-		'connected-count'(state: LeekWarsState, farmers) {
+		'connected-count'(state: LeekWarsState, farmers: any) {
 			state.connected_farmers = farmers
 		},
 

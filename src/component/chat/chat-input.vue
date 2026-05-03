@@ -105,7 +105,7 @@ function keyUp(e: KeyboardEvent) {
 			return
 		}
 		if (message.value.length > 2000) {
-			LeekWars.toast(i18n.global.t('main.chat_too_long') as string)
+			LeekWars.toast(i18n.t('main.chat_too_long') as string)
 			return
 		}
 		if (message.value === '/ping') {

@@ -52,6 +52,7 @@ abstract class FightEntity extends Entity {
 	public type: EntityType
 	public summon = false
 	public summoner!: Entity
+	public bulbName?: string
 	public active = false
 	public initially_dead!: boolean
 	// Caractéristiques

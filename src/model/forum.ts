@@ -5,6 +5,9 @@ class ForumCategory {
 	public name!: string
 	public team!: number
 	public topics!: ForumTopic[] | null
+	public lang!: string
+	public moderator!: boolean
+	[key: string]: any
 }
 
 enum ForumTopicStatus {
@@ -32,6 +35,8 @@ class ForumTopic {
 	public priority!: number
 	public views!: number
 	public last_message_date!: number
+	public owner!: number | null
+	[key: string]: any
 }
 
 class ForumMessage {
@@ -46,6 +51,9 @@ class ForumMessage {
 	public height!: number
 	public edition_date!: number
 	public writer!: Farmer
+	public deleted!: boolean
+	public user_agent!: string | null
+	[key: string]: any
 }
 
 export { ForumCategory, ForumTopic, ForumMessage, ForumTopicStatus }

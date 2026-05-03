@@ -3,12 +3,38 @@ declare module '*.wiki' {
 	export default content
 }
 
+declare global {
+	interface Window {
+		__FARMER__?: any
+		Module?: any
+	}
+
+	interface Document {
+		onwebkitfullscreenchange: ((this: Document, ev: Event) => any) | null
+		onmozfullscreenchange: ((this: Document, ev: Event) => any) | null
+		MSFullscreenChange: ((this: Document, ev: Event) => any) | null
+		webkitExitFullscreen?: () => Promise<void>
+		mozCancelFullScreen?: () => Promise<void>
+		msExitFullscreen?: () => Promise<void>
+	}
+
+	interface HTMLElement {
+		webkitRequestFullscreen?: () => Promise<void>
+		mozRequestFullScreen?: () => Promise<void>
+		msRequestFullscreen?: () => Promise<void>
+	}
+
+	const umami: {
+		track: (event: string, data?: any) => void
+	} | undefined
+}
+
 export {}
 
 declare module 'vue' {
 	interface ComponentCustomProperties {
 		$filters: {
-			number: (value: number) => string
+			number: (value: number, decimals?: number) => string
 			date: (value: number) => string
 			datetime: (value: number) => string
 			timeseconds: (value: number) => string
