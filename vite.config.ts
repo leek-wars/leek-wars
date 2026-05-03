@@ -320,8 +320,7 @@ export default defineConfig({
 	define: {
 		__BUILD_DATE__: JSON.stringify(BUILD_DATE),
 		__BUILD_COMMIT__: JSON.stringify(BUILD_COMMIT),
-		// Enable tree-shaking of JIT message compilation path in vue-i18n.
-		// All messages are pre-compiled at build time so no runtime compiler is needed.
+		// Tree-shake vue-i18n JIT compiler — messages pre-compiled, no new Function() needed.
 		__INTLIFY_JIT_COMPILATION__: 'false',
 		__INTLIFY_DROP_MESSAGE_COMPILER__: 'true',
 	},
