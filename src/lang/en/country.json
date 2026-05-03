@@ -56,6 +56,7 @@
 	"et": "Ethiopia",
 	"fi": "Finland",
 	"fj": "Fiji",
+	"fm": "Micronesia",
 	"fr": "France",
 	"ga": "Gabon",
 	"gb": "United Kingdom",
@@ -110,6 +111,7 @@
 	"md": "Moldova",
 	"me": "Montenegro",
 	"mg": "Madagascar",
+	"mh": "Marshall Islands",
 	"mk": "Macedonia",
 	"ml": "Mali",
 	"mm": "Myanmar",
@@ -140,6 +142,7 @@
 	"pl": "Poland",
 	"ps": "Palestine",
 	"pt": "Portugal",
+	"pw": "Palau",
 	"py": "Paraguay",
 	"qa": "Qatar",
 	"ro": "Romania",
@@ -159,6 +162,7 @@
 	"sn": "Senegal",
 	"so": "Somalia",
 	"sr": "Suriname",
+	"ss": "South Sudan",
 	"st": "Sao Tome and Principe",
 	"sv": "El Salvador",
 	"sy": "Syria",
@@ -190,9 +194,5 @@
 	"ye": "Yemen",
 	"za": "South Africa",
 	"zm": "Zambia",
-	"zw": "Zimbabwe",
-	"fm": "Micronesia",
-	"mh": "Marshall Islands",
-	"pw": "Palau",
-	"ss": "South Sudan"
+	"zw": "Zimbabwe"
 }

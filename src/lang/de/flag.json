@@ -1,5 +1,7 @@
 {
 	"flag_1": "Statisch",
+	"flag_10": "Schweizer Messer",
+	"flag_11": "Unantastbar",
 	"flag_2": "Perfekt",
 	"flag_3": "Eilen",
 	"flag_4": "Geduldig",
@@ -7,7 +9,5 @@
 	"flag_6": "Jäger",
 	"flag_7": "Pazifist",
 	"flag_8": "Schwertkämpfer",
-	"flag_9": "Ausweichend",
-	"flag_10": "Schweizer Messer",
-	"flag_11": "Unantastbar"
+	"flag_9": "Ausweichend"
 }

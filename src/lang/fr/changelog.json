@@ -1,12 +1,12 @@
 {
 	"forum_topic": "Sujet forum",
+	"need_ai_change": "Peut nécessiter des changements dans l'IA",
 	"popup_ok": "OK :)",
 	"see_all_changes": "Retrouvez la liste complète des changements sur la page {changelog}.",
 	"title": "Historique des modifications",
-	"title_0" : "🌟 Nouveautés",
-	"title_1" : "⚒️ Améliorations",
-	"title_2" : "🐞 Corrections",
+	"title_0": "🌟 Nouveautés",
+	"title_1": "⚒️ Améliorations",
+	"title_2": "🐞 Corrections",
 	"version_n": "Version {0}",
-	"version_online": "Version {version} en ligne !\n",
-	"need_ai_change": "Peut nécessiter des changements dans l'IA"
+	"version_online": "Version {version} en ligne !\n"
 }

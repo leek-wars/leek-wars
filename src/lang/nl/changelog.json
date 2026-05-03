@@ -1,5 +1,6 @@
 {
 	"forum_topic": "Forumonderwerp",
+	"need_ai_change": "Mogelijk zijn er wijzigingen in de AI nodig",
 	"popup_ok": "OK :)",
 	"see_all_changes": "Vind de volledige lijst met wijzigingen op de pagina {changelog}.",
 	"title": "Wijzigingsgeschiedenis",
@@ -7,6 +8,5 @@
 	"title_1": "⚒️ Verbeteringen",
 	"title_2": "🐞 Oplossingen",
 	"version_n": "Vrijgeven {0}",
-	"version_online": "Versie {version} online!",
-	"need_ai_change": "Mogelijk zijn er wijzigingen in de AI nodig"
+	"version_online": "Versie {version} online!"
 }

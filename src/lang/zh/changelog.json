@@ -1,5 +1,6 @@
 {
 	"forum_topic": "论坛话题",
+	"need_ai_change": "可能需要改变 AI",
 	"popup_ok": "好的 ：）",
 	"see_all_changes": "在 {changelog} 页面上找到完整的更改列表。",
 	"title": "改变历史",
@@ -7,6 +8,5 @@
 	"title_1": "⚒️ 改进",
 	"title_2": "🐞 修复",
 	"version_n": "发布 {0}",
-	"version_online": "版本 {version} 上线！\n",
-	"need_ai_change": "可能需要改变 AI"
+	"version_online": "版本 {version} 上线！\n"
 }

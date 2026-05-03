@@ -1,5 +1,6 @@
 {
 	"forum_topic": "Topik forum",
+	"need_ai_change": "Mungkin memerlukan perubahan dalam AI",
 	"popup_ok": "OK :)",
 	"see_all_changes": "Temukan daftar lengkap perubahan di halaman {changelog}.",
 	"title": "Riwayat perubahan",
@@ -7,6 +8,5 @@
 	"title_1": "⚒️ Peningkatan",
 	"title_2": "🐞 Perbaikan",
 	"version_n": "Versi {0}",
-	"version_online": "Versi {version} online!\n",
-	"need_ai_change": "Mungkin memerlukan perubahan dalam AI"
+	"version_online": "Versi {version} online!\n"
 }

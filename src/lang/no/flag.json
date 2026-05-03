@@ -1,5 +1,7 @@
 {
 	"flag_1": "Statisk",
+	"flag_10": "Sveitsisk kniv",
+	"flag_11": "Urørlig",
 	"flag_2": "Perfekt",
 	"flag_3": "Skynde",
 	"flag_4": "Pasient",
@@ -7,7 +9,5 @@
 	"flag_6": "Jeger",
 	"flag_7": "Pasifist",
 	"flag_8": "Swordsman",
-	"flag_9": "Unnvikende",
-	"flag_10": "Sveitsisk kniv",
-	"flag_11": "Urørlig"
+	"flag_9": "Unnvikende"
 }

@@ -1,16 +1,16 @@
 {
 	"ai_lines": "Display the number of AI's lines",
 	"ai_lines_desc": "This pomp allows you to display the number of lines of your AI on the page of your leeks.",
+	"angry": "Angry face",
+	"angry_desc": "Change the expression of your leek: it will look pissed off",
+	"farmer_title": "Farmer title",
+	"farmer_title_desc": "This pomp allows you to give yourself a title, which will be displayed on your page and other places in the game like the forum, advanced tooltips etc.",
+	"happy": "Smiling face",
+	"happy_desc": "Change the expression of your leek: it will be smiling",
 	"hold_weapon": "Hold a weapon",
 	"hold_weapon_desc": "This pomp allows your leek to hold a weapon in his hands, visible on his page and everywhere his visual appears in the game.",
 	"leek_title": "Leek title",
 	"leek_title_desc": "This pomp allows you to give a title to your leeks, which will be displayed on their page and other places in the game.",
-	"farmer_title": "Farmer title",
-	"farmer_title_desc": "This pomp allows you to give yourself a title, which will be displayed on your page and other places in the game like the forum, advanced tooltips etc.",
 	"metal": "Metal plates",
-	"metal_desc": "Add metal plates on your leek image",
-	"angry": "Angry face",
-	"angry_desc": "Change the expression of your leek: it will look pissed off",
-	"happy": "Smiling face",
-	"happy_desc": "Change the expression of your leek: it will be smiling"
+	"metal_desc": "Add metal plates on your leek image"
 }

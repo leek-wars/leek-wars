@@ -1,5 +1,6 @@
 {
 	"forum_topic": "Forum emne",
+	"need_ai_change": "Kan kræve ændringer i AI",
 	"popup_ok": "OKAY :)",
 	"see_all_changes": "Find den fulde liste over ændringer på siden {changelog}.",
 	"title": "Skift historik",
@@ -7,6 +8,5 @@
 	"title_1": "⚒️ Forbedringer",
 	"title_2": "🐞 Rettelser",
 	"version_n": "Version {0}",
-	"version_online": "Version {version} online!\n",
-	"need_ai_change": "Kan kræve ændringer i AI"
+	"version_online": "Version {version} online!\n"
 }

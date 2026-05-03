@@ -1,10 +1,10 @@
 {
-	"fight_pack_50": "Paquete de 50 combates",
 	"fight_pack_100": "Paquete de 100 combates",
-	"fight_pack_200": "Paquete de 200 combates",
-	"fight_pack_500": "Paquete de 500 combates",
-	"fight_pack_50_desc": "Paquete de 50 combates para usar de inmediato",
 	"fight_pack_100_desc": "Paquete de 100 combates para usar de inmediato",
+	"fight_pack_200": "Paquete de 200 combates",
 	"fight_pack_200_desc": "Paquete de 200 combates para usar de inmediato",
-	"fight_pack_500_desc": "Paquete de 500 combates para usar de inmediato"
+	"fight_pack_50": "Paquete de 50 combates",
+	"fight_pack_500": "Paquete de 500 combates",
+	"fight_pack_500_desc": "Paquete de 500 combates para usar de inmediato",
+	"fight_pack_50_desc": "Paquete de 50 combates para usar de inmediato"
 }

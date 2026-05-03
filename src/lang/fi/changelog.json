@@ -1,5 +1,6 @@
 {
 	"forum_topic": "Foorumin aihe",
+	"need_ai_change": "Saattaa vaatia muutoksia tekoälyyn",
 	"popup_ok": "OK :)",
 	"see_all_changes": "Löydä täydellinen luettelo muutoksista {changelog}-sivulta.",
 	"title": "Muutoshistoria",
@@ -7,6 +8,5 @@
 	"title_1": "⚒️ Parannuksia",
 	"title_2": "🐞 Korjauksia",
 	"version_n": "Julkaisu {0}",
-	"version_online": "Versio {version} verkossa!\n",
-	"need_ai_change": "Saattaa vaatia muutoksia tekoälyyn"
+	"version_online": "Versio {version} verkossa!\n"
 }

@@ -1,5 +1,6 @@
 {
 	"forum_topic": "Tópico do fórum",
+	"need_ai_change": "Pode exigir mudanças na IA",
 	"popup_ok": "OK :)",
 	"see_all_changes": "Encontre a lista completa de alterações na página {changelog}.",
 	"title": "Histórico de alterações",
@@ -7,6 +8,5 @@
 	"title_1": "⚒️ Melhorias",
 	"title_2": "🐞 Correções",
 	"version_n": "Versão {0}",
-	"version_online": "Versão {version} online!",
-	"need_ai_change": "Pode exigir mudanças na IA"
+	"version_online": "Versão {version} online!"
 }

@@ -1,5 +1,7 @@
 {
 	"flag_1": "Estático",
+	"flag_10": "Cuchillo suizo",
+	"flag_11": "Intocable",
 	"flag_2": "Perfecto",
 	"flag_3": "Embestida",
 	"flag_4": "Paciente",
@@ -7,7 +9,5 @@
 	"flag_6": "Cazador",
 	"flag_7": "Pacifista",
 	"flag_8": "Espadachín",
-	"flag_9": "Evasivo",
-	"flag_10": "Cuchillo suizo",
-	"flag_11": "Intocable"
+	"flag_9": "Evasivo"
 }

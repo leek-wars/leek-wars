@@ -1,5 +1,6 @@
 {
 	"forum_topic": "Forum Thema",
+	"need_ai_change": "Kann Änderungen in der KI erfordern",
 	"popup_ok": "OK :)",
 	"see_all_changes": "Die vollständige Liste der Änderungen finden Sie auf der Seite {changelog}.",
 	"title": "Geschichte verändern",
@@ -7,6 +8,5 @@
 	"title_1": "⚒️ Verbesserungen",
 	"title_2": "🐞 Korrekturen",
 	"version_n": "{0} freigeben",
-	"version_online": "Version {version} online!",
-	"need_ai_change": "Kann Änderungen in der KI erfordern"
+	"version_online": "Version {version} online!"
 }

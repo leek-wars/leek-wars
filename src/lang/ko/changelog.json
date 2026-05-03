@@ -1,5 +1,6 @@
 {
 	"forum_topic": "포럼 주제",
+	"need_ai_change": "AI의 변경이 필요할 수 있음",
 	"popup_ok": "좋아요 :)",
 	"see_all_changes": "{changelog} 페이지에서 전체 변경 목록을 찾으십시오.",
 	"title": "변경 내역",
@@ -7,6 +8,5 @@
 	"title_1": "⚒️ 개선",
 	"title_2": "🐞 수정",
 	"version_n": "릴리스 {0}",
-	"version_online": "버전 {version} 온라인!\n",
-	"need_ai_change": "AI의 변경이 필요할 수 있음"
+	"version_online": "버전 {version} 온라인!\n"
 }

@@ -1,5 +1,7 @@
 {
 	"flag_1": "Statyczny",
+	"flag_10": "Szwajcarski nóż",
+	"flag_11": "Nietykalny",
 	"flag_2": "Doskonały",
 	"flag_3": "Pośpiech",
 	"flag_4": "Pacjent",
@@ -7,7 +9,5 @@
 	"flag_6": "Myśliwy",
 	"flag_7": "Pacyfista",
 	"flag_8": "Szermierz",
-	"flag_9": "Wykrętny",
-	"flag_10": "Szwajcarski nóż",
-	"flag_11": "Nietykalny"
+	"flag_9": "Wykrętny"
 }

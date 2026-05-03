@@ -1,5 +1,7 @@
 {
 	"flag_1": "Staattinen",
+	"flag_10": "Sveitsiläinen veitsi",
+	"flag_11": "Koskematon",
 	"flag_2": "Täydellinen",
 	"flag_3": "Kiire",
 	"flag_4": "Kärsivällinen",
@@ -7,7 +9,5 @@
 	"flag_6": "Metsästäjä",
 	"flag_7": "Pasifisti",
 	"flag_8": "Miekkamies",
-	"flag_9": "Välttelevä",
-	"flag_10": "Sveitsiläinen veitsi",
-	"flag_11": "Koskematon"
+	"flag_9": "Välttelevä"
 }

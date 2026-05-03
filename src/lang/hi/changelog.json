@@ -1,5 +1,6 @@
 {
 	"forum_topic": "मंच विषय",
+	"need_ai_change": "एआई में बदलाव की आवश्यकता हो सकती है",
 	"popup_ok": "ठीक :)",
 	"see_all_changes": "{changelog} पृष्ठ पर परिवर्तनों की पूरी सूची प्राप्त करें।",
 	"title": "इतिहास बदलें",
@@ -7,6 +8,5 @@
 	"title_1": "⚒️ सुधार",
 	"title_2": "🐞 ठीक करता है",
 	"version_n": "रिलीज़ {0}",
-	"version_online": "संस्करण {version} ऑनलाइन!",
-	"need_ai_change": "एआई में बदलाव की आवश्यकता हो सकती है"
+	"version_online": "संस्करण {version} ऑनलाइन!"
 }

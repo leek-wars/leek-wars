@@ -1,5 +1,6 @@
 {
 	"forum_topic": "Forum topic",
+	"need_ai_change": "May require changes in AI",
 	"popup_ok": "OK :)",
 	"see_all_changes": "See all changes at {changelog}.",
 	"title": "Changelog",
@@ -7,6 +8,5 @@
 	"title_1": "⚒️ Improved",
 	"title_2": "🐞 Fixed",
 	"version_n": "Version {0}",
-	"version_online": "Version {version} available!",
-	"need_ai_change": "May require changes in AI"
+	"version_online": "Version {version} available!"
 }

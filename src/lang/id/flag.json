@@ -1,5 +1,7 @@
 {
 	"flag_1": "Statis",
+	"flag_10": "Pisau Swiss",
+	"flag_11": "Paria",
 	"flag_2": "Sempurna",
 	"flag_3": "Bergegas",
 	"flag_4": "Sabar",
@@ -7,7 +9,5 @@
 	"flag_6": "Pemburu",
 	"flag_7": "Pasifis",
 	"flag_8": "Pendekar",
-	"flag_9": "Mengelak",
-	"flag_10": "Pisau Swiss",
-	"flag_11": "Paria"
+	"flag_9": "Mengelak"
 }

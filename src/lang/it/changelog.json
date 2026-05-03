@@ -1,5 +1,6 @@
 {
 	"forum_topic": "Argomento del forum",
+	"need_ai_change": "Potrebbero essere necessarie modifiche all'IA",
 	"popup_ok": "OK :)",
 	"see_all_changes": "Trova l'elenco completo delle modifiche nella pagina {changelog}.",
 	"title": "Cronologia delle modifiche",
@@ -7,6 +8,5 @@
 	"title_1": "⚒️ Miglioramenti",
 	"title_2": "🐞 Correzioni",
 	"version_n": "Versione {0}",
-	"version_online": "Versione {version} online!",
-	"need_ai_change": "Potrebbero essere necessarie modifiche all'IA"
+	"version_online": "Versione {version} online!"
 }

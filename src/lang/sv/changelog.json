@@ -1,5 +1,6 @@
 {
 	"forum_topic": "Forum ämne",
+	"need_ai_change": "Kan kräva ändringar i AI",
 	"popup_ok": "OK :)",
 	"see_all_changes": "Hitta hela listan över ändringar på sidan {changelog}.",
 	"title": "Ändringslogg",
@@ -7,6 +8,5 @@
 	"title_1": "⚒️ Förbättringar",
 	"title_2": "🐞 Fixar",
 	"version_n": "Släpp {0}",
-	"version_online": "Version {version} online!\n",
-	"need_ai_change": "Kan kräva ändringar i AI"
+	"version_online": "Version {version} online!\n"
 }
