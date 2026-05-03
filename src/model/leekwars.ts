@@ -41,7 +41,7 @@ const $t = (key: string, args?: any): string => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const $tc = (key: string, choice: number): string => {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const tc = (i18n.global as any).tc
+	const tc = (i18n as any).tc
 	return tc(key, choice)
 }
 const $locale = (): string => i18n.locale
