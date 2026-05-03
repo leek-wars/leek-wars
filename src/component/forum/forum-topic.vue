@@ -329,7 +329,7 @@
 	import { locale } from '@/locale'
 	import { Farmer } from '@/model/farmer'
 	import { ForumCategory, ForumMessage, ForumTopic, ForumTopicStatus } from '@/model/forum'
-	import { i18n, mixins } from '@/model/i18n'
+	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import EmojiPicker from '../chat/emoji-picker.vue'
@@ -348,7 +348,8 @@
 
 	defineOptions({ name: 'forum_topic', i18n: {}, mixins: [...mixins] })
 
-	const { t, locale: i18nLocale } = useI18n()
+	const { locale: i18nLocale } = useI18n()
+	const t = useNamespacedT('forum_topic')
 	const route = useRoute()
 	const router = useRouter()
 	const topicTitle = useTemplateRef<HTMLElement>('topicTitle')
