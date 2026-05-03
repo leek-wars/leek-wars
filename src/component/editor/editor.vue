@@ -65,10 +65,10 @@
 								</div>
 
 								<div v-if="currentEditor && currentEditor.loaded && panelWidth" class="ai-stats">
-									<div class="line-count-wrapper">{{ $tc('main.n_lines', currentEditor.lines) }}</div>
-									<div class="char-count-wrapper">{{ $tc('main.n_characters', currentEditor.characters) }}</div>
-									<div v-if="currentAI.included_lines !== 0" class="line-count-wrapper">{{ $tc('main.n_total_lines', currentEditor.lines + currentAI.included_lines) }}</div>
-									<div v-if="currentAI.included_chars !== 0" class="char-count-wrapper">{{ $tc('main.n_total_chars', currentEditor.characters + currentAI.included_chars) }}</div>
+									<div class="line-count-wrapper">{{ $t('main.n_lines', currentEditor.lines) }}</div>
+									<div class="char-count-wrapper">{{ $t('main.n_characters', currentEditor.characters) }}</div>
+									<div v-if="currentAI.included_lines !== 0" class="line-count-wrapper">{{ $t('main.n_total_lines', currentEditor.lines + currentAI.included_lines) }}</div>
+									<div v-if="currentAI.included_chars !== 0" class="char-count-wrapper">{{ $t('main.n_total_chars', currentEditor.characters + currentAI.included_chars) }}</div>
 								</div>
 							</template>
 
@@ -128,13 +128,13 @@
 										<v-icon>mdi-check-circle</v-icon> <span v-if="!LeekWars.mobile">{{ $t('no_problem') }}</span>
 									</span>
 									<span v-if="analyzer.error_count" class="errors">
-										<v-icon>mdi-close-circle</v-icon> {{ analyzer.error_count }} {{ $tc('error', analyzer.error_count).toLowerCase() }}
+										<v-icon>mdi-close-circle</v-icon> {{ analyzer.error_count }} {{ $t('error', analyzer.error_count).toLowerCase() }}
 									</span>
 									<span v-if="analyzer.warning_count" class="warnings">
-										<v-icon>mdi-alert-circle</v-icon> {{ analyzer.warning_count }} {{ $tc('warning', analyzer.warning_count).toLowerCase() }}
+										<v-icon>mdi-alert-circle</v-icon> {{ analyzer.warning_count }} {{ $t('warning', analyzer.warning_count).toLowerCase() }}
 									</span>
 									<span v-if="analyzer.todo_count" class="todos">
-										<v-icon>mdi-format-list-checks</v-icon> {{ analyzer.todo_count }} {{ $tc('todo', analyzer.todo_count).toLowerCase() }}
+										<v-icon>mdi-format-list-checks</v-icon> {{ analyzer.todo_count }} {{ $t('todo', analyzer.todo_count).toLowerCase() }}
 									</span>
 								</div>
 								<div v-if="gitLogCount" v-ripple class="problems git-terminal-toggle" :class="{active: bottomPanel === 'git'}" @click="toggleBottomPanel('git')">

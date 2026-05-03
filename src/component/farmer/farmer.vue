@@ -448,8 +448,8 @@
 
 		<panel v-if="farmer && farmer.warnings && farmer.warnings.length" :title="$t('warnings')">
 			<template #content><div class="content warnings">
-				<h4 v-if="myFarmer" class="warning-title">{{ $tc('you_have_n_warnings', farmer.warnings.length, [farmer.warnings.length]) }}</h4>
-				<h4 v-else class="warning-title">{{ $tc('farmer_have_n_warnings', farmer.warnings.length, [farmer.warnings.length]) }}</h4>
+				<h4 v-if="myFarmer" class="warning-title">{{ $t('you_have_n_warnings', farmer.warnings.length) }}</h4>
+				<h4 v-else class="warning-title">{{ $t('farmer_have_n_warnings', farmer.warnings.length) }}</h4>
 				<div v-for="(warning, w) in farmer.warnings" :key="w" class="warning card">
 					<div class="reason">{{ $t('warning.reason_' + warning.reason) }} ({{ $t('warning.severity_s', [ warning.severity]) }})</div>
 					<div class="message"><i>{{ warning.message }}</i></div>

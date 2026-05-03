@@ -129,7 +129,7 @@
 									</v-tooltip>
 								</div>
 
-								<span v-if="message.id == -1" class="views-counter"><v-icon>mdi-eye</v-icon> {{ $tc('main.n_views', topic.views) }}</span>
+								<span v-if="message.id == -1" class="views-counter"><v-icon>mdi-eye</v-icon> {{ $t('main.n_views', topic.views) }}</span>
 
 								<template v-if="message.id == -1 && $store.state.connected && category && category.moderator">
 									<span class="action lock" @click="lock"><v-icon>mdi-lock</v-icon> {{ topic.locked ? $t('unlock') : $t('lock') }}</span>

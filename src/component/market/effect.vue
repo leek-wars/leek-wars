@@ -33,7 +33,7 @@
 		<b v-if="effect.turns === -1">{{ $t('effect.infinite') }}</b>
 		<i18n-t v-else-if="effect.turns > 0" keypath="effect.on_n_turns">
 			<template #turns>
-				<span v-html="$tc('effect.n_turns', effect.turns)"></span>
+				<span v-html="$t('effect.n_turns', effect.turns)"></span>
 			</template>
 		</i18n-t>
 		<span v-if="effect.modifiers & EffectModifier.STACKABLE">

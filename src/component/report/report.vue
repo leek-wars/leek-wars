@@ -214,7 +214,7 @@
 						<v-icon v-if="report" @click="goToTurn(1)">mdi-chevron-right</v-icon>
 					</div>
 				</div>
-				<div v-if="errors.length" class="title">{{ $tc('n_errors', errors.length) }}</div>
+				<div v-if="errors.length" class="title">{{ $t('n_errors', errors.length) }}</div>
 				<div class="errors" @mouseover="mouseover">
 					<div v-for="(e, i) in errors" :key="i" class="log error" :a="e.action" :i="e.index">
 						<pre>[{{ e.entity }}] {{ e.data }} <span v-if="e.ai && fileSystem.ais[e.ai]" class="ai" @click="goToAI(e.ai, e.line)">[{{ fileSystem.ais[e.ai].path }}:{{ e.line }}]</span></pre>

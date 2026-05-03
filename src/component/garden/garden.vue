@@ -83,7 +83,7 @@
 
 							<div v-if="queue > 0" class="queue">
 								<div class="title">{{ $t('queue') }}</div>
-								<div class="count">{{ $tc('n_fights', queue) }}</div>
+								<div class="count">{{ $t('n_fights', queue) }}</div>
 							</div>
 						</div>
 					</template>

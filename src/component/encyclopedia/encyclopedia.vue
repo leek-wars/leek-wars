@@ -99,7 +99,7 @@
 
 							<div class="contributors" @click="toggleStats">
 								<v-icon>mdi-account-multiple</v-icon>
-								<div v-html="$tc('n_contributors', page.contributors.length)"></div>
+								<div v-html="$t('n_contributors', page.contributors.length)"></div>
 								<div class="avatars">
 									<rich-tooltip-farmer v-for="contributor in page.contributors" :id="contributor.id" :key="contributor.id">
 										<router-link :to="'/farmer/' + contributor.id">
@@ -113,7 +113,7 @@
 									</template>
 								</i18n-t>
 								<div v-if="totalReferences > 0" class="references-count">
-									— <b>{{ totalReferences }}</b> {{ $tc('n_references', totalReferences) }}
+									— <b>{{ totalReferences }}</b> {{ $t('n_references', totalReferences) }}
 								</div>
 								<div class="fill"></div>
 								<v-icon>{{ statsExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
@@ -145,9 +145,9 @@
 											<b>{{ $filters.number(page.contributions) }}</b>
 										</template>
 									</i18n-t>
-									{{ $tc('main.n_lines', page.content.split('\n').length) }}
-									— {{ $tc('main.n_words', page.content.split(' ').length) }}
-									— {{ $tc('main.n_characters', page.content.length) }}
+									{{ $t('main.n_lines', page.content.split('\n').length) }}
+									— {{ $t('main.n_words', page.content.split(' ').length) }}
+									— {{ $t('main.n_characters', page.content.length) }}
 								</div>
 							</div>
 

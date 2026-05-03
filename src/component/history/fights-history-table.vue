@@ -116,7 +116,7 @@
 			</template>
 
 			<template #item.duration="{ item }">
-				<span v-if="item.duration" v-html="$tc('effect.n_turns', item.duration)"></span>
+				<span v-if="item.duration" v-html="$t('effect.n_turns', item.duration)"></span>
 			</template>
 
 			<template #item.levelups="{ item }">

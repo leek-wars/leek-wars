@@ -4,7 +4,7 @@
 			{{ ai.bot ? $t('leekscript.' + ai.name) : ai.name }}
 			<v-icon v-if="!ai.valid">mdi-close-circle</v-icon>
 		</div>
-		<div v-if="show_lines" class="lines">{{ $tc('main.n_lines', ai.total_lines) }}</div>
+		<div v-if="show_lines" class="lines">{{ $t('main.n_lines', ai.total_lines) }}</div>
 		<div v-if="ai.version" class="version">LS {{ ai.version }}</div>
 	</div>
 </template>
