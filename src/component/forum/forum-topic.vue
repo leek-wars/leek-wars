@@ -595,15 +595,11 @@
 
 	function deleteMessage() {
 		if (!toDeleteMessage.value) { return }
-		LeekWars.delete("forum/delete-message", {message_id: toDeleteMessage.value.id}).then((data: any) => {
+		LeekWars.delete("forum/delete-message", {message_id: toDeleteMessage.value.id}).then(() => {
 			if (toDeleteMessage.value) {
 				toDeleteMessage.value = null
 				deleteMessageDialog.value = false
-				if (data.topic_deleted && category.value) {
-					router.push("/forum/category-" + category.value.id)
-				} else {
-					update(true)
-				}
+				update(true)
 			}
 		})
 	}
