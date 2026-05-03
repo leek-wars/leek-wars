@@ -236,13 +236,15 @@ const sort_icon = computed(() => ({
 } as {[key: string]: string})[sort_by.value])
 
 function update() {
+	const requestedId = id.value
 	loaded.value = false
 	count.value = 0
 	total.value = 0
 	point.value = 0
 	totalPoint.value = 0
 	title.value = null
-	if (!id.value) return
+	all_trophies.value = []
+	if (!requestedId) return
 	LeekWars.trophyCategories.forEach((c: any) => {
 		raw_trophies.value[c.id] = []
 		progressions.value[c.id] = 0
@@ -250,7 +252,8 @@ function update() {
 		totals.value[c.id] = 0
 		totalPoints.value[c.id] = 0
 	})
-	LeekWars.get('trophy/get-farmer-trophies/' + id.value + '/' + locale.value).then(data => {
+	LeekWars.get('trophy/get-farmer-trophies/' + requestedId + '/' + locale.value).then(data => {
+		if (requestedId !== id.value) return
 		for (const tk in data.trophies) {
 			farmer.value = data.farmer
 			variables.value = data.variables
