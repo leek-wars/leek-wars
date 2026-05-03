@@ -24,12 +24,8 @@ const BUILD_DATE = new Date().toISOString()
 // so the runtime-only vue-i18n build needs no JIT compiler (no new Function()).
 function compileMessageObject(obj: unknown): string {
 	if (typeof obj === 'string') {
-		try {
-			const { code } = baseCompile(obj, { sourceMap: false })
-			return code
-		} catch {
-			return JSON.stringify(obj)
-		}
+		const { code } = baseCompile(obj, { sourceMap: false })
+		return code
 	}
 	if (Array.isArray(obj)) {
 		return `[${(obj as unknown[]).map(compileMessageObject).join(', ')}]`
@@ -40,6 +36,11 @@ function compileMessageObject(obj: unknown): string {
 		return `{\n${entries.join(',\n')}\n}`
 	}
 	return JSON.stringify(obj)
+}
+
+function compileJsonFile(filePath: string): string {
+	const messages = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
+	return `export default ${compileMessageObject(messages)}`
 }
 
 // List of supported languages
@@ -173,11 +174,7 @@ function i18nPlugin(): Plugin {
 		name: 'i18n-json',
 		enforce: 'pre',
 		load(id) {
-			if (id.endsWith('.i18n')) {
-				const content = fs.readFileSync(id, 'utf-8')
-				const messages = JSON.parse(content)
-				return `export default ${compileMessageObject(messages)}`
-			}
+			if (id.endsWith('.i18n')) return compileJsonFile(id)
 			if (id.endsWith('.lang')) {
 				const content = fs.readFileSync(id, 'utf-8')
 				return `export default ${content}`
@@ -192,10 +189,7 @@ function i18nJsonPlugin(): Plugin {
 		name: 'i18n-json-compiler',
 		enforce: 'pre',
 		load(id) {
-			if (!id.match(/\/src\/lang\/[a-z-]+\/[a-z-]+\.json$/)) return
-			const content = fs.readFileSync(id, 'utf-8')
-			const messages = JSON.parse(content)
-			return `export default ${compileMessageObject(messages)}`
+			if (id.match(/\/src\/lang\/[a-z-]+\/[a-z-]+\.json$/)) return compileJsonFile(id)
 		}
 	}
 }
@@ -349,9 +343,6 @@ export default defineConfig({
 		yamlPlugin(),
 		gameDataPlugin(),
 		vue(),
-		// vue-i18n: runtime-only + composition-only build, message compiler dropped.
-		// All messages (.i18n files and lang/locale/*.json) are pre-compiled to
-		// functions by i18nPlugin/i18nJsonPlugin, so no JIT (new Function()) is needed.
 		vueI18n({
 			runtimeOnly: true,
 			compositionOnly: true,
