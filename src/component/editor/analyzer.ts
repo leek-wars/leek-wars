@@ -335,7 +335,7 @@ class Analyzer {
 	private getModelIfReady(ai: AI): monaco.editor.ITextModel | null {
 		if (ai.model) return ai.model
 		if (ai.code === undefined) return null
-		const uri = monaco.Uri.parse('file:///' + ai.path)
+		const uri = monaco.Uri.file(ai.path)
 		const model = monaco.editor.getModel(uri) || markRaw(monaco.editor.createModel(ai.code, getLanguageForPath(ai.path), uri))
 		ai.model = model
 		return model

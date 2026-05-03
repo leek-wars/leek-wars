@@ -308,7 +308,7 @@ function onFileReloaded(path: string) {
 }
 
 function syncModel() {
-	const uri = monaco.Uri.parse('file:///' + props.ai.path)
+	const uri = monaco.Uri.file(props.ai.path)
 	const model = monaco.editor.getModel(uri) || markRaw(monaco.editor.createModel(props.ai.code, getLanguageForPath(props.ai.path), uri))
 	props.ai.model = model
 

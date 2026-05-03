@@ -165,7 +165,7 @@ monaco.editor.registerEditorOpener({
 	openCodeEditor: async (source, resource, selectionOrPosition) => {
 		const ai = fileSystem.aiByFullPath[resource.path.substring(1)]
 		await fileSystem.load(ai)
-		const uri = monaco.Uri.parse('file:///' + ai.path)
+		const uri = monaco.Uri.file(ai.path)
 		const model = monaco.editor.getModel(resource) || markRaw(monaco.editor.createModel(ai.code, getLanguageForPath(ai.path), uri))
 		ai.model = model
 		const range = selectionOrPosition as monaco.IRange
@@ -250,7 +250,7 @@ monaco.languages.registerDefinitionProvider("leekscript", {
 			)
 			const targetAi = fileSystem.ais[hover.defined[0]]
 			if (!targetAi) return null
-			const uri = monaco.Uri.parse('file:///' + targetAi.path)
+			const uri = monaco.Uri.file(targetAi.path)
 			return {
 				range,
 				uri
@@ -314,7 +314,7 @@ monaco.languages.registerReferenceProvider("leekscript", {
 		for (const loc of locations) {
 			const targetAi = fileSystem.ais[loc[0]]
 			if (!targetAi) { continue }
-			const uri = monaco.Uri.parse('file:///' + targetAi.path)
+			const uri = monaco.Uri.file(targetAi.path)
 			if (!monaco.editor.getModel(uri) && targetAi.code !== undefined) {
 				targetAi.model = markRaw(monaco.editor.createModel(targetAi.code, getLanguageForPath(targetAi.path), uri))
 			}
