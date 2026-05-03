@@ -183,6 +183,23 @@ function i18nPlugin(): Plugin {
 	}
 }
 
+// Plugin to pre-compile JSON locale files under src/lang/.
+// Runs enforce:'post' so it executes AFTER @intlify/unplugin-vue-i18n (which
+// produces named string exports). We overwrite with compiled functions,
+// avoiding the conflict where the previous approach used load() and the
+// downstream transform tried to JSON.parse our compiled JS.
+function i18nJsonPlugin(): Plugin {
+	return {
+		name: 'i18n-json-compiler',
+		enforce: 'post',
+		transform(_code, id) {
+			const cleanId = id.split('?')[0]
+			if (!cleanId.match(/\/src\/lang\/[a-z-]+\/[a-z-]+\.json$/)) return
+			return { code: compileJsonFile(cleanId), map: null }
+		}
+	}
+}
+
 // Plugin to handle YAML files (for changelog)
 function yamlPlugin(): Plugin {
 	return {
@@ -327,6 +344,7 @@ export default defineConfig({
 	plugins: [
 		multiLanguagePlugin(),
 		i18nPlugin(),
+		i18nJsonPlugin(),
 		yamlPlugin(),
 		gameDataPlugin(),
 		vue(),
