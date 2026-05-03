@@ -999,9 +999,9 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 
 		'invalidate-chats'(state: LeekWarsState) {
-			// console.log("invalidate chats")
 			for (const chat of Object.values(state.chat)) {
 				chat.loaded = false
+				chat.loading = false
 			}
 		},
 
