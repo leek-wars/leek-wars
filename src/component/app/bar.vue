@@ -176,11 +176,10 @@ function readNotification(notification: any) {
 		vertical-align: top;
 		position: relative;
 	}
-	.action i {
-		font-size: 26px;
+	.action .v-icon {
 		width: 56px;
 		height: 56px;
-		padding: 12px;
+		padding: 15px;
 		color: white;
 	}
 	.action img {
