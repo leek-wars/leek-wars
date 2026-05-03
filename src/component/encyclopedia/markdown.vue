@@ -5,6 +5,7 @@
 <script lang="ts" setup>
 	import { LeekWars } from '@/model/leekwars'
 	import { CHIP_BY_NAME } from '@/model/sorted_chips'
+	import { mdiIcons } from '@/model/mdi-icons'
 	import { createSubApp } from '@/model/vue'
 	import markdown from 'markdown-it'
 	import DOMPurify from 'dompurify'
@@ -111,6 +112,23 @@
 				mdEl.querySelectorAll('.encyclopedia-summary').forEach((item) => {
 					const depth = parseInt(item.getAttribute('depth') || '3', 10)
 					item.innerHTML = generateSummary(depth)
+				})
+				// Convertir les balises font MDI héritées (ancienne syntaxe) en SVG
+				mdEl.querySelectorAll('i.mdi').forEach((item: Element) => {
+					const iconClass = Array.from(item.classList).find(c => c !== 'mdi' && c.startsWith('mdi-'))
+					if (!iconClass) return
+					const path = mdiIcons[iconClass]
+					if (!path) return
+					const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+					svg.setAttribute('class', 'md-mdi-icon')
+					svg.setAttribute('viewBox', '0 0 24 24')
+					svg.setAttribute('aria-hidden', 'true')
+					const style = (item as HTMLElement).getAttribute('style')
+					if (style) svg.setAttribute('style', style)
+					const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+					pathEl.setAttribute('d', path)
+					svg.appendChild(pathEl)
+					item.replaceWith(svg)
 				})
 				mdEl.querySelectorAll('pre code').forEach((item) => {
 					const content = ('' + item.textContent).trim()
@@ -503,6 +521,12 @@
 <style lang="scss" scoped>
 	.md {
 		padding: 15px;
+	}
+	.md :deep(.md-mdi-icon) {
+		width: 1em;
+		height: 1em;
+		fill: currentColor;
+		vertical-align: middle;
 	}
 	.md :deep(p), .md :deep(ul) {
 		line-height: 1.6;

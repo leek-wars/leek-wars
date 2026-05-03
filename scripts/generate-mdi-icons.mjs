@@ -23,6 +23,8 @@ const SKIP = new Set([
 	'mdi-set', // CSS selector :not(.mdi-set) in xp.scss
 	'mdi-spin', // CSS animation utility, not an icon glyph
 	'mdi-gender', // truncated from `mdi-gender-{{ code }}` template expression
+	'mdi-icons', // import path fragment (@/model/mdi-icons)
+	'mdi-icon', // CSS class md-mdi-icon contains this substring
 ])
 const found = new Set()
 for (const file of walk(SRC)) {
@@ -63,6 +65,8 @@ const DYNAMIC = [
 	'format-text', 'restore', 'code-brackets', 'function-variant',
 	// title-picker.vue genders
 	'gender-male', 'gender-female',
+	// encyclopedia content (font-class icons stored in PostgreSQL)
+	'map-legend',
 ].map(n => 'mdi-' + n)
 
 for (const n of DYNAMIC) found.add(n)
