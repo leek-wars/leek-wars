@@ -216,6 +216,26 @@ function i18nJsonPlugin(): Plugin {
 	}
 }
 
+// Monaco 0.55 doesn't read MonacoEnvironment.nonce for <style> elements (only for workers),
+// so we patch createStyleSheet at build time to inject it.
+function monacoNoncePlugin(): Plugin {
+	return {
+		name: 'monaco-csp-nonce',
+		transform(code, id) {
+			if (!id.endsWith('domStylesheets.js') || !id.includes('monaco-editor')) return
+			const patched = code.replace(
+				"const style = document.createElement('style');",
+				"const style = document.createElement('style');\n    const __nonce = self.MonacoEnvironment?.nonce;\n    if (__nonce) style.nonce = __nonce;"
+			)
+			if (patched === code) {
+				console.warn('[monaco-csp-nonce] Pattern not found in domStylesheets.js — nonce patch skipped')
+				return null
+			}
+			return { code: patched, map: null }
+		}
+	}
+}
+
 // Plugin to handle YAML files (for changelog)
 function yamlPlugin(): Plugin {
 	return {
@@ -362,6 +382,7 @@ export default defineConfig({
 		i18nPlugin(),
 		i18nJsonPlugin(),
 		yamlPlugin(),
+		monacoNoncePlugin(),
 		gameDataPlugin(),
 		vue(),
 		vueI18n({
