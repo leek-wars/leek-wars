@@ -35,7 +35,7 @@ const word1 = computed(() => {
 	if (!trophy) return ''
 	const gender_code = gender.value === 1 || ((trophy.noun_gender & 2) !== 0) ? '' : '_f'
 	let word = t('trophy.' + trophy.code + gender_code) as string
-	if (i18n.global.locale === 'en' && adjective.value && word !== word.toUpperCase()) {
+	if (i18n.locale === 'en' && adjective.value && word !== word.toUpperCase()) {
 		word = word.toLowerCase()
 	}
 	return word
@@ -46,7 +46,7 @@ const word2 = computed(() => {
 	const trophy = LeekWars.trophies[adjective.value - 1]
 	const gender_code = gender.value === 1 || ((trophy.adj_gender & 2) !== 0) ? '' : '_f'
 	let word = t('trophy.' + trophy.code + gender_code) as string
-	if (i18n.global.locale === 'fr' && noun.value && word !== word.toUpperCase()) {
+	if (i18n.locale === 'fr' && noun.value && word !== word.toUpperCase()) {
 		word = word.toLowerCase()
 	}
 	return word

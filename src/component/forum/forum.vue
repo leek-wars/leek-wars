@@ -178,7 +178,7 @@
 	const activeLanguages = computed(() => Object.entries(forumLanguages).filter(e => e[1]).map(e => e[0]))
 
 	{
-		const langs = (localStorage.getItem('forum/languages') as string || i18n.global.locale).split(',')
+		const langs = (localStorage.getItem('forum/languages') as string || i18n.locale).split(',')
 		for (const l in LeekWars.languages) {
 			forumLanguages[l] = false
 		}

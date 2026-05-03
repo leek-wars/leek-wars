@@ -153,7 +153,7 @@ export function reportVueError(err: any, vm: any, info: any, origin: string = 'm
 
 	const error = (err?.name || 'Error') + ": " + (err?.message || String(err))
 	const file = document.location.href
-	const locale = i18n.global.locale
+	const locale = i18n.locale
 	const user_agent = navigator.userAgent
 
 	let componentTrace = ''
@@ -371,6 +371,16 @@ app.use(i18n)
 app.use(store)
 app.use(vuetify)
 
+// Compat $tc pour les templates legacy (non injecté en mode composition).
+// vue-i18n 9 composition: t(key, plural) gère la pluralisation.
+// Legacy tc signature: tc(key, choice, list?)
+;(app.config.globalProperties as any).$tc = function(key: string, choice?: number, values?: unknown): string {
+	const t = i18n.global.t as unknown as (...a: unknown[]) => string
+	if (choice === undefined) return t.call(i18n.global, key)
+	if (values === undefined) return t.call(i18n.global, key, choice)
+	return t.call(i18n.global, key, values as Record<string, unknown>, choice)
+}
+
 app.mixin({
 	data() {
 		return { LeekWars }
@@ -533,7 +543,7 @@ setVueMain(vm)
 // Restore saved locale in dev/local mode
 if (LeekWars.DEV || LeekWars.LOCAL) {
 	const savedLocale = localStorage.getItem('locale')
-	if (savedLocale && savedLocale !== i18n.global.locale) {
+	if (savedLocale && savedLocale !== i18n.locale) {
 		loadLanguageAsync(vm, savedLocale)
 	}
 }

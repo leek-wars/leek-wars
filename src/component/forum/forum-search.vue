@@ -153,7 +153,7 @@
 
 	const canSearch = computed(() => options.query || options.farmer || options.admin)
 
-	const languages = (localStorage.getItem('forum/languages') as string || (i18n.global.locale as unknown as string)).split(',')
+	const languages = (localStorage.getItem('forum/languages') as string || i18n.locale).split(',')
 	LeekWars.get('forum/get-categories/' + languages).then(data => {
 		categories.value = data.categories
 	})

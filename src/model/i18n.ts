@@ -16,8 +16,8 @@ type I18nWithCompat = ReturnType<typeof createI18n> & {
 }
 
 const i18n = createI18n({
-	legacy: true, // Use legacy mode for compatibility
-	allowComposition: true, // Allow useI18n() in <script setup>
+	legacy: false,
+	globalInjection: true, // expose $t, $tc, $te, $i18n on all components
 	locale: initialLocale,
 	messages: {[initialLocale]: messages},
 	silentTranslationWarn: true,
@@ -27,39 +27,50 @@ const i18n = createI18n({
 	warnHtmlMessage: false,
 	warnHtmlInMessage: 'off',
 	escapeParameter: true,
-}) as I18nWithCompat
+}) as unknown as I18nWithCompat
 
-// Add backward compatibility helpers for Vue 2 -> Vue 3 migration
-// This allows code to use i18n.t() instead of i18n.global.t()
+// Compat wrappers: en mode composition, i18n.global.locale est un WritableComputedRef
+// et t/tc nécessitent un binding correct. On garde i18n.t() / i18n.tc() / i18n.locale
+// pour le code historique (pages chargées hors composant Vue, services, etc.)
 Object.defineProperty(i18n, 't', {
 	get() {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		return (i18n.global as any).t
+		return (i18n.global.t as any).bind(i18n.global)
 	}
 })
 Object.defineProperty(i18n, 'tc', {
 	get() {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		return (i18n.global as any).tc
+		return (i18n.global as any).rt
+			? (i18n.global.t as any).bind(i18n.global)
+			: ((i18n.global as any).tc as Function).bind(i18n.global)
 	}
 })
 Object.defineProperty(i18n, 'locale', {
 	get() {
-		return i18n.global.locale
+		return (i18n.global.locale as any).value ?? i18n.global.locale
 	},
 	set(value: string) {
-		i18n.global.locale = value
+		const loc = i18n.global.locale as any
+		if (loc && typeof loc === 'object' && 'value' in loc) {
+			loc.value = value
+		} else {
+			(i18n.global as any).locale = value
+		}
 	}
 })
 
 const loadedLanguages: string[] = [initialLocale]
+
+function currentLocale(): string {
+	const loc = i18n.global.locale as unknown as { value?: string } | string
+	return typeof loc === 'object' && loc !== null && 'value' in loc ? (loc.value as string) : (loc as string)
+}
 
 const mixins = [{
 	beforeCreate() {
 		// Reload translations because in case of hot reloading, they are lost
 		// Missing messages or messages for the current locale
 		const opts = (this as any).$options
-		const locale = i18n.global.locale as string
+		const locale = currentLocale()
 		if (!opts?.i18n?.messages?.[locale]) {
 			// console.log("reload translations...")
 			loadInstanceTranslations(locale, this)
@@ -70,7 +81,7 @@ const mixins = [{
 			let name = (this as any).$options?.name
 			if (!name) return
 			// console.log("Reload translations of component", name)
-			const newLocale = i18n.global.locale as string
+			const newLocale = currentLocale()
 			if (name.startsWith('bank-')) { name = 'bank' }
 			const folder = name.startsWith('signup-') ? 'signup' : name
 			const modulePath = `/src/component/${folder}/${name}.${newLocale}.i18n`
@@ -88,7 +99,12 @@ const mixins = [{
 }]
 
 function setI18nLanguage(lang: string) {
-	i18n.global.locale = lang
+	const loc = i18n.global.locale as unknown as { value?: string } | string
+	if (typeof loc === 'object' && loc !== null && 'value' in loc) {
+		(loc as { value: string }).value = lang
+	} else {
+		(i18n.global as { locale: string }).locale = lang
+	}
 	const html = document.querySelector('html')
 	if (html) {
 		html.setAttribute('lang', lang)
@@ -195,8 +211,8 @@ function loadComponentLanguage(newLocale: string, component: ComponentInstance<C
 
 // Helpers for <script setup> components (avoids i18n.global boilerplate)
 function t(key: string, ...args: unknown[]): string {
-	return String((i18n.global as unknown as Record<string, Function>).t(key, ...args))
+	return String((i18n.global.t as (...a: unknown[]) => unknown).call(i18n.global, key, ...args))
 }
-const locale = i18n.global.locale as string
+const locale = currentLocale()
 
-export { i18n, mixins, loadComponentLanguage, loadLanguageAsync, loadInstanceTranslations, t, locale }
+export { i18n, mixins, loadComponentLanguage, loadLanguageAsync, loadInstanceTranslations, t, locale, currentLocale }

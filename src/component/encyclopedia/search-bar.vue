@@ -51,7 +51,7 @@ watch(query, () => {
 	if (timer) clearTimeout(timer)
 	loading.value = true
 	timer = setTimeout(() => {
-		LeekWars.get('encyclopedia/search/' + i18n.global.locale + '/' + query.value.replace(/ /g, '+') + '/1').then(data => {
+		LeekWars.get('encyclopedia/search/' + i18n.locale + '/' + query.value.replace(/ /g, '+') + '/1').then(data => {
 			results.value = data.results
 			loading.value = false
 		}).catch((err: any) => {

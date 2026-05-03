@@ -354,7 +354,7 @@
 		const error = err.name + ": " + err.message
 		const file = document.location.href
 		const stack = err.stack + '\n' + info
-		const errLocale = i18n.global.locale
+		const errLocale = i18n.locale
 
 		LeekWars.post('error/report', { error, stack, file, locale: errLocale })
 	}

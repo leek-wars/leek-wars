@@ -92,7 +92,7 @@ function doSearch() {
 	results.value = null
 	if (canSearch.value) {
 		searchStarted.value = true
-		LeekWars.get('encyclopedia/search/' + i18n.global.locale + '/' + options.value.query.replace(/ /g, '+') + '/' + options.value.page).then(data => {
+		LeekWars.get('encyclopedia/search/' + i18n.locale + '/' + options.value.query.replace(/ /g, '+') + '/' + options.value.page).then(data => {
 			results.value = data.results
 			pages.value = data.pages
 			count.value = data.count

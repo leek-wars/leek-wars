@@ -44,7 +44,7 @@ const $tc = (key: string, choice: number): string => {
 	const tc = (i18n.global as any).tc
 	return tc(key, choice)
 }
-const $locale = (): string => i18n.global.locale as string
+const $locale = (): string => i18n.locale
 
 function ucfirst(str: any) {
 	str += ''
