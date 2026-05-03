@@ -79,13 +79,17 @@ function isEmpty() {
 	return lines.value.length === 0
 }
 
+function setEditorValue(v: string) {
+	if (editorRef.value?.editor?.getModel()) {
+		editorRef.value.editor.setValue(v)
+	}
+}
+
 function clear() {
 	lines.value = []
 	history.value = []
 	historyPos.value = 0
-	if (editorRef.value) {
-		editorRef.value.editor.setValue('')
-	}
+	setEditorValue('')
 	LeekWars.socket.send([SocketMessage.CONSOLE_NEW, leekscript.version, leekscript.strict])
 }
 
@@ -93,16 +97,16 @@ function up() {
 	if (history.value.length === 0) return
 	historyPos.value--
 	if (historyPos.value < 0) historyPos.value = 0
-	editorRef.value!.editor.setValue(history.value[historyPos.value])
+	setEditorValue(history.value[historyPos.value])
 }
 
 function down() {
 	historyPos.value++
 	if (historyPos.value >= history.value.length) {
 		historyPos.value = history.value.length
-		editorRef.value!.editor.setValue('')
+		setEditorValue('')
 	} else {
-		editorRef.value!.editor.setValue(history.value[historyPos.value])
+		setEditorValue(history.value[historyPos.value])
 	}
 }
 
@@ -140,13 +144,14 @@ onBeforeUnmount(() => {
 })
 
 function enter() {
-	const code = editorRef.value!.editor.getValue()
+	if (!editorRef.value?.editor?.getModel()) return
+	const code = editorRef.value.editor.getValue()
 	history.value.push(code)
 	historyPos.value = history.value.length
 	lines.value.push({ type: 'code', code })
 	LeekWars.socket.send([SocketMessage.CONSOLE_EXECUTE, code])
 	scrollDown()
-	editorRef.value!.editor.setValue('')
+	setEditorValue('')
 }
 
 function scrollDown() {

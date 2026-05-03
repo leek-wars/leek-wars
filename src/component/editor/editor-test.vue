@@ -50,8 +50,8 @@
 									<leek-image :leek="allLeeks[leek.id]" :ai="leek.ai" :scale="0.4" />
 									<div>{{ allLeeks[leek.id].name }}</div>
 								</div>
-								<ai v-if="leek.id in allLeeks && leek.ai && leek.ai in allAis && (leek.id < 0 || leek.ai !== -1)" v-ripple="!allLeeks[leek.id].ally" :ai="allAis[leek.ai]" :small="true" :library="false" :locked="allLeeks[leek.id].ally" @click.native="clickLeekAI(leek)" />
-								<div v-else v-ripple class="ai-placeholder" @click="clickLeekAI(leek)"></div>
+								<ai v-if="leek.id in allLeeks && leek.ai && leek.ai in allAis && (leek.id < 0 || leek.ai !== -1)" v-ripple="!allLeeks[leek.id].ally" :ai="allAis[leek.ai]" :small="true" :library="false" :locked="allLeeks[leek.id].ally" @click.native="clickLeekAI(leek, 0)" />
+								<div v-else v-ripple class="ai-placeholder" @click="clickLeekAI(leek, 0)"></div>
 							</div>
 							<div v-if="!currentScenario.base && LeekWars.objectSize(currentScenario.team1) < getLimit(currentScenario.type)" class="add" @click="addLeekTeam = currentScenario.team1; leekDialog = true">+</div>
 						</div>
@@ -73,8 +73,8 @@
 									<leek-image :leek="allLeeks[leek.id]" :ai="leek.ai" :scale="0.4" />
 									<div>{{ allLeeks[leek.id].name }}</div>
 								</div>
-								<ai v-if="leek.id in allLeeks && leek.ai && leek.ai in allAis && (leek.id < 0 || leek.ai !== -1)" v-ripple="!allLeeks[leek.id].ally" :ai="allAis[leek.ai]" :small="true" :library="false" :locked="allLeeks[leek.id].ally" @click.native="clickLeekAI(leek)" />
-								<div v-else v-ripple class="ai-placeholder" @click="clickLeekAI(leek)"></div>
+								<ai v-if="leek.id in allLeeks && leek.ai && leek.ai in allAis && (leek.id < 0 || leek.ai !== -1)" v-ripple="!allLeeks[leek.id].ally" :ai="allAis[leek.ai]" :small="true" :library="false" :locked="allLeeks[leek.id].ally" @click.native="clickLeekAI(leek, 1)" />
+								<div v-else v-ripple class="ai-placeholder" @click="clickLeekAI(leek, 1)"></div>
 							</div>
 							<div v-if="!currentScenario.base && LeekWars.objectSize(currentScenario.team2) < getLimit(currentScenario.type)" class="add" @click="addLeekTeam = currentScenario.team2; leekDialog = true">+</div>
 						</div>
@@ -465,6 +465,7 @@
 	const aiDialog = ref(false)
 	const aiDialogBot = ref(false)
 	const aiLeek = ref<Leek | null>(null)
+	const aiLeekTeam = ref(0)
 	const turretTeam = ref(0)
 	const chipsDialog = ref(false)
 	const weaponsDialog = ref(false)
@@ -849,12 +850,13 @@
 		return Object.values(props.ais).sort((a, b) => a.path.toLowerCase().localeCompare(b.path.toLowerCase()))
 	})
 
-	function clickLeekAI(leek: any) {
+	function clickLeekAI(leek: any, team: number) {
 		if (allLeeks.value[leek.id] && (allLeeks.value[leek.id] as any).ally) return
 		turretTeam.value = 0
 		aiDialog.value = true
 		aiDialogBot.value = leek.id < 0
 		aiLeek.value = leek
+		aiLeekTeam.value = team
 	}
 
 	function clickTurretAI(team: number) {
@@ -880,7 +882,7 @@
 		}
 		if (!aiLeek.value) return
 		;(aiLeek.value as any).ai = ai.path as any
-		LeekWars.post('test-scenario/add-leek', {scenario_id: currentScenario.value.id, leek: aiLeek.value.id, team: -1, ai: ai.path})
+		LeekWars.post('test-scenario/add-leek', {scenario_id: currentScenario.value.id, leek: aiLeek.value.id, team: aiLeekTeam.value, ai: ai.path})
 		aiDialog.value = false
 	}
 
@@ -1332,6 +1334,9 @@
 	}
 	.popup.mobile .column {
 		max-height: none;
+	}
+	.popup.mobile .lateral-column {
+		max-height: 240px;
 	}
 	.lateral-column {
 		flex: 220px 0 0;
