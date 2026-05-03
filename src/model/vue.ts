@@ -14,13 +14,14 @@ import Popup from '@/component/popup.vue'
 import RankingBadge from '@/component/ranking-badge.vue'
 import Talent from '@/component/talent.vue'
 import { env } from '@/env'
-import { i18n, loadLanguageAsync } from '@/model/i18n'
+import { i18n, loadLanguageAsync, normalizeComponentName } from '@/model/i18n'
 import { LeekWars, setRouter, loadGameData } from '@/model/leekwars'
 import '@/model/serviceworker'
 import { store } from "@/model/store"
 import router, { getRedirectAfterLogin } from '@/router'
-import { createApp, defineAsyncComponent, h, nextTick } from 'vue'
-import type { App as VueApp, ComponentPublicInstance } from 'vue'
+import { createApp, defineAsyncComponent, defineComponent, getCurrentInstance, h, nextTick } from 'vue'
+import type { App as VueApp, Component, ComponentPublicInstance } from 'vue'
+import { Translation } from 'vue-i18n'
 import { Latex } from './latex'
 import { scroll_to_hash } from '@/router-functions'
 
@@ -371,15 +372,73 @@ app.use(i18n)
 app.use(store)
 app.use(vuetify)
 
-// Compat $tc pour les templates legacy (non injecté en mode composition).
-// vue-i18n 9 composition: t(key, plural) gère la pluralisation.
-// Legacy tc signature: tc(key, choice, list?)
-;(app.config.globalProperties as any).$tc = function(key: string, choice?: number, values?: unknown): string {
-	const t = i18n.global.t as unknown as (...a: unknown[]) => string
-	if (choice === undefined) return t.call(i18n.global, key)
-	if (values === undefined) return t.call(i18n.global, key, choice)
-	return t.call(i18n.global, key, values as Record<string, unknown>, choice)
+// vue-i18n composition mode: $t injecté via globalInjection est lié au composer
+// global. Les messages des composants sont mergés dans le global de deux façons:
+// (a) un-namespaced — fait fonctionner $t / <i18n-t> tels quels mais collisions
+//     possibles entre composants (ex: 40 composants ont une clé `title`)
+// (b) sous {namespace} — résolu par les wrappers ci-dessous, qui privilégient
+//     toujours la version du composant courant pour éviter les collisions.
+const composer = i18n.global as unknown as {
+	t: (...args: unknown[]) => string
+	te: (key: string, locale?: string) => boolean
 }
+const tFn = composer.t.bind(composer)
+const teFn = composer.te.bind(composer)
+
+function namespaceFor(rawName: string | undefined): string | null {
+	return rawName ? normalizeComponentName(rawName) : null
+}
+
+function resolveKey(vm: unknown, key: string): string {
+	const ns = namespaceFor((vm as { $options?: { name?: string } } | undefined)?.$options?.name)
+	if (ns) {
+		const namespaced = ns + '.' + key
+		if (teFn(namespaced)) return namespaced
+	}
+	return key
+}
+
+const props = app.config.globalProperties as Record<string, unknown>
+props.$t = function(this: unknown, key: string, ...args: unknown[]): string {
+	return tFn(resolveKey(this, key), ...args)
+}
+props.$te = function(this: unknown, key: string): boolean {
+	const ns = namespaceFor((this as { $options?: { name?: string } } | undefined)?.$options?.name)
+	if (ns && teFn(ns + '.' + key)) return true
+	return teFn(key)
+}
+props.$tc = function(this: unknown, key: string, choice?: number, values?: unknown): string {
+	const resolved = resolveKey(this, key)
+	if (choice === undefined) return tFn(resolved)
+	if (values === undefined) return tFn(resolved, choice)
+	return tFn(resolved, values, choice)
+}
+
+// <i18n-t> de vue-i18n appelle directement le composer global (bypass notre $t).
+// Wrapper qui résout le namespace du composant parent une fois en setup.
+const I18nTWrapper = defineComponent({
+	name: 'i18n-t',
+	inheritAttrs: false,
+	setup(_props, { attrs, slots }) {
+		let cur = getCurrentInstance()?.parent
+		let ns: string | null = null
+		while (cur) {
+			const rawName = (cur.type as { name?: string } | undefined)?.name
+			if (rawName) { ns = normalizeComponentName(rawName); break }
+			cur = cur.parent
+		}
+		return () => {
+			const keypath = attrs.keypath as string | undefined
+			let finalAttrs = attrs
+			if (keypath && ns) {
+				const namespaced = ns + '.' + keypath
+				if (teFn(namespaced)) finalAttrs = { ...attrs, keypath: namespaced }
+			}
+			return h(Translation as unknown as Component, finalAttrs, slots)
+		}
+	}
+})
+app.component('i18n-t', I18nTWrapper)
 
 app.mixin({
 	data() {

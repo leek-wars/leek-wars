@@ -65,6 +65,24 @@ function currentLocale(): string {
 	return typeof loc === 'object' && loc !== null && 'value' in loc ? (loc.value as string) : (loc as string)
 }
 
+// Normalise un nom de composant en clé i18n: lowercase, underscores → dashes,
+// bank-* → bank (toutes les pages bank partagent le même fichier .i18n).
+function normalizeComponentName(rawName: string): string {
+	const name = rawName.toLowerCase().replace(/_/g, '-')
+	if (name.startsWith('bank-') || name === 'bankbuy' || name === 'bankvalidate') return 'bank'
+	return name
+}
+
+// En mode composition, les messages d'un composant sont mergés dans le global:
+// - sous {namespace} pour le wrapper $t (vue.ts) qui résout par composant
+// - un-namespaced pour <i18n-t> et useI18n() qui ciblent directement le global
+function mergeNamespaced(locale: string, name: string, messages: unknown) {
+	i18n.global.mergeLocaleMessage(locale, { [name]: messages as Record<string, unknown> })
+	i18n.global.mergeLocaleMessage(locale, messages as Record<string, unknown>)
+}
+
+const MERGED_FLAG = '__i18nMerged'
+
 const mixins = [{
 	beforeCreate() {
 		// Reload translations because in case of hot reloading, they are lost
@@ -72,25 +90,27 @@ const mixins = [{
 		const opts = (this as any).$options
 		const locale = currentLocale()
 		if (!opts?.i18n?.messages?.[locale]) {
-			// console.log("reload translations...")
 			loadInstanceTranslations(locale, this)
+		} else if (opts.name && opts[MERGED_FLAG] !== locale) {
+			// Messages déjà attachés à Component.i18n par le i18nPlugin Vite mais
+			// pas encore mergés dans le composer global pour cette locale.
+			mergeNamespaced(locale, normalizeComponentName(opts.name), opts.i18n.messages[locale])
+			opts[MERGED_FLAG] = locale
 		}
 	},
 	watch: {
 		'$i18n.locale'() {
-			let name = (this as any).$options?.name
-			if (!name) return
-			// console.log("Reload translations of component", name)
+			const rawName = (this as any).$options?.name
+			if (!rawName) return
 			const newLocale = currentLocale()
-			if (name.startsWith('bank-')) { name = 'bank' }
+			const name = normalizeComponentName(rawName)
 			const folder = name.startsWith('signup-') ? 'signup' : name
 			const modulePath = `/src/component/${folder}/${name}.${newLocale}.i18n`
 			const loader = i18nModules[modulePath]
 			if (!loader) return
 			return loader().then((raw) => {
 				const messages = JSON.parse(raw)
-				i18n.global.mergeLocaleMessage(newLocale, { [name]: messages })
-				// console.log("i18n watch set instance messages", newLocale, messages, module)
+				mergeNamespaced(newLocale, name, messages)
 				const instanceI18n = (this as any).$i18n
 				instanceI18n.setLocaleMessage(newLocale, messages)
 			})
@@ -136,16 +156,14 @@ function loadLanguageAsync(vue: any, newLocale: string) {
 }
 
 function loadInstanceTranslations(newLocale: string, instance: any) {
-	// console.log("load instance translations", "instance", instance, newLocale)
 	if (!instance.$options?.name) {
 		return
 	}
 	if (!instance.$options.i18n) {
 		instance.$options.i18n = {}
 	}
-	let name = instance.$options.name.toLowerCase().replace(/_/g, '-')
+	const name = normalizeComponentName(instance.$options.name)
 	let folder = name
-	if (name.startsWith("bank-")) { name = "bank"; folder = "bank" }
 	if (name.startsWith("editor-")) { folder = "editor" }
 	if (name.startsWith("git-")) { folder = "editor" }
 	if (name.startsWith("signup-")) { folder = "signup" }
@@ -160,8 +178,9 @@ function loadInstanceTranslations(newLocale: string, instance: any) {
 	if (!loader) return
 	return loader().then((raw) => {
 		const messages = JSON.parse(raw)
+		mergeNamespaced(newLocale, name, messages)
+		instance.$options[MERGED_FLAG] = newLocale
 		const instanceI18n = (instance as any).$i18n
-		// console.log("instance i18n", instanceI18n, instance, "messages", messages)
 		if (instanceI18n) {
 			instanceI18n.setLocaleMessage(newLocale, messages)
 		}
@@ -169,43 +188,27 @@ function loadInstanceTranslations(newLocale: string, instance: any) {
 }
 
 function loadComponentLanguage(newLocale: string, component: ComponentInstance<Component>, instance: Component | undefined) {
-
-	// console.log("loadComponentLanguage", newLocale, "component", component, "instance", instance)
-
-	let name = component.name?.toLowerCase().replace(/_/g, '-')
-	if (name?.startsWith("bank-") || name === "bankbuy" || name === "bankvalidate") { name = "bank" }
+	let name = component.name ? normalizeComponentName(component.name) : undefined
 	if (name === "home" || !name) { name = "signup" }
 
 	if (instance && (instance as any).$i18n && (instance as any).$i18n.messages[newLocale]) {
-		// console.log("i18n already loaded on instance!")
 		return
 	}
 	if (component && component.i18n && component.i18n.messages && component.i18n.messages[newLocale]) {
-		// console.log("i18n already set on component!")
 		return
 	}
 	const modulePath = `/src/component/${name}/${name}.${newLocale}.i18n`
 	const loader = i18nModules[modulePath]
-	// console.log("loader", loader, modulePath, i18nModules)
 	if (!loader) return
 	return loader().then((raw) => {
 		const messages = JSON.parse(raw)
-		// if (!(name in module.translations)) {
-			// console.log("No messages for '" + name + "' in '" + locale + "'!")
-			// return
-		// }
-		// console.log("messages", messages)
-		i18n.global.mergeLocaleMessage(newLocale, { [name]: messages })
+		mergeNamespaced(newLocale, name!, messages)
 		if (instance && (instance as any).$i18n) {
 			const instanceI18n = (instance as any).$i18n
 			instanceI18n.setLocaleMessage(newLocale, messages)
-			// console.log("installed '" + newLocale + "' messages on instance '" + name + "'")
-		} else {
-			if (component.i18n) {
-				(component as any).i18n = {messages: {[newLocale]: messages}}
-			}
-			// console.log("set '" + newLocale + "' messages on component '" + name + "'")
-		}	
+		} else if (component.i18n) {
+			(component as any).i18n = {messages: {[newLocale]: messages}}
+		}
 	})
 }
 
@@ -215,4 +218,4 @@ function t(key: string, ...args: unknown[]): string {
 }
 const locale = currentLocale()
 
-export { i18n, mixins, loadComponentLanguage, loadLanguageAsync, loadInstanceTranslations, t, locale, currentLocale }
+export { i18n, mixins, loadComponentLanguage, loadLanguageAsync, loadInstanceTranslations, t, locale, currentLocale, normalizeComponentName }
