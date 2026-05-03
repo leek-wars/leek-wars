@@ -286,6 +286,7 @@ const capital = computed(() => props.totalCapital - usedCapital.value)
 		margin-right: 10px;
 	}
 	.add {
+		display: inline-block;
 		vertical-align: top;
 		width: 20px;
 		height: 27px;
