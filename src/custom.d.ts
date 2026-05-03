@@ -3,6 +3,10 @@ declare module '*.wiki' {
 	export default content
 }
 
+declare module 'vuetify/styles' {
+	// side-effect import for Vuetify CSS
+}
+
 declare global {
 	interface Window {
 		__FARMER__?: any

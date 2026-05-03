@@ -8,7 +8,7 @@ class Bulb extends FightEntity {
 	public static SCALE: number = 0.30
 
 	public skin!: number
-	public bulbName!: string
+	declare public bulbName: string
 	public heightAnim!: number
 
 	constructor(game: Game, team: number, level: number, name: string) {

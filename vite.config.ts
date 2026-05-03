@@ -374,9 +374,8 @@ export default defineConfig({
 	css: {
 		preprocessorOptions: {
 			scss: {
-				// Vuetify 3 SCSS compatibility
 				api: 'modern-compiler'
-			}
+			} as object
 		}
 	},
 	server: {
