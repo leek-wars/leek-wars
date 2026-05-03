@@ -224,8 +224,12 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 
 		"wsclose"(state: LeekWarsState) {
-			for (const chat in state.chat) {
-				state.chat[chat].invalidated = true
+			for (const chat of Object.values(state.chat)) {
+				chat.invalidated = true
+				if (chat.opened) {
+					chat.loaded = false
+					chat.loading = false
+				}
 			}
 			state.wsconnected = false
 			state.wsdisconnected = true
