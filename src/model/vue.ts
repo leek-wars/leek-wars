@@ -35,6 +35,8 @@ import '@/chart'
 
 const Console = defineAsyncComponent(() => import('@/component/app/console.vue'))
 
+const cspNonce = (document.querySelector('meta[name="csp-nonce"]') as HTMLMetaElement | null)?.content || undefined
+
 const vuetify = createVuetify({
 	icons: {
 		defaultSet: 'mdi',
@@ -42,6 +44,7 @@ const vuetify = createVuetify({
 		sets: { mdi: mdiIconSet },
 	},
 	theme: {
+		cspNonce,
 		themes: {
 			dark: {
 				colors: {
