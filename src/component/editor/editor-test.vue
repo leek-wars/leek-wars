@@ -44,7 +44,7 @@
 								<ai v-if="turretAI1" v-ripple :ai="turretAI1" :small="true" :library="false" @click="clickTurretAI(1)" />
 								<div v-else v-ripple class="ai-placeholder" @click="clickTurretAI(1)"></div>
 							</div>
-							<div v-for="leek of currentScenario.team1.slice(0, getLimit(currentScenario.type))" :key="leek.id" class="leek">
+							<div v-for="leek of currentScenario.team1" :key="leek.id" class="leek">
 								<div v-if="!currentScenario.base" v-ripple class="delete" @click="deleteLeek(leek, 0)">×</div>
 								<div v-if="leek.id in allLeeks" class="card">
 									<leek-image :leek="allLeeks[leek.id]" :ai="leek.ai" :scale="0.4" />
@@ -67,7 +67,7 @@
 								<ai v-if="turretAI2" v-ripple :ai="turretAI2" :small="true" :library="false" @click="clickTurretAI(2)" />
 								<div v-else v-ripple class="ai-placeholder" @click="clickTurretAI(2)"></div>
 							</div>
-							<div v-for="leek of currentScenario.team2.slice(0, getLimit(currentScenario.type))" :key="leek.id" class="leek">
+							<div v-for="leek of currentScenario.team2" :key="leek.id" class="leek">
 								<div v-if="!currentScenario.base" v-ripple class="delete" @click="deleteLeek(leek, 1)">×</div>
 								<div v-if="leek.id in allLeeks" class="card">
 									<leek-image :leek="allLeeks[leek.id]" :ai="leek.ai" :scale="0.4" />
@@ -1130,6 +1130,26 @@
 
 	function changeType() {
 		if (!currentScenario.value) return
+		if (currentScenario.value.type === FightType.BATTLE_ROYALE) {
+			for (const leek of currentScenario.value.team2) {
+				LeekWars.delete('test-scenario/delete-leek', {scenario_id: currentScenario.value.id, leek: leek.id})
+			}
+			currentScenario.value.team2.length = 0
+		} else {
+			const limit = getLimit(currentScenario.value.type)
+			if (currentScenario.value.team1.length > limit) {
+				for (let i = limit; i < currentScenario.value.team1.length; ++i) {
+					LeekWars.delete('test-scenario/delete-leek', {scenario_id: currentScenario.value.id, leek: currentScenario.value.team1[i].id})
+				}
+				currentScenario.value.team1.length = limit
+			}
+			if (currentScenario.value.team2.length > limit) {
+				for (let i = limit; i < currentScenario.value.team2.length; ++i) {
+					LeekWars.delete('test-scenario/delete-leek', {scenario_id: currentScenario.value.id, leek: currentScenario.value.team2[i].id})
+				}
+				currentScenario.value.team2.length = limit
+			}
+		}
 		if (currentScenario.value.type === FightType.TEAM && teamTurretAI.value) {
 			if (!currentScenario.value.turret_ai_team1) {
 				currentScenario.value.turret_ai_team1 = teamTurretAI.value.path
