@@ -24,7 +24,8 @@
       "Bash(npx vue-tsc *)",
       "Bash(npx eslint *)",
       "Bash(head *)",
-      "Bash(sed -n:*)"
+      "Bash(sed -n:*)",
+      "mcp__chrome-devtools__take_screenshot"
     ]
   }
 }
