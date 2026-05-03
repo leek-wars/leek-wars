@@ -503,7 +503,7 @@
 	const selectedTemplate = ref(0)
 	const compositionTemplates = ref<any[]>([])
 	const allies = reactive<{[key: number]: Leek}>({})
-	const alliesAIs = reactive<{[key: number]: AI}>({})
+	const alliesAIs = reactive<{[key: string]: AI}>({})
 	const teamTurretAI = ref<AI | null>(null)
 	const advanced = ref(false)
 
@@ -576,7 +576,7 @@
 	const allAis = computed(() => {
 		const result = {...(props.ais || {})} as {[key: string]: AI}
 		for (const ai in alliesAIs) {
-			result[ai] = alliesAIs[+ai]
+			result[ai] = alliesAIs[ai]
 		}
 		return result
 	})
