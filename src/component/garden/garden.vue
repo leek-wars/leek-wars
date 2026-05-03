@@ -597,10 +597,10 @@
 				return
 			}
 		}
-		if ((category.value === 'solo' || category.value === 'arena') && (!params.item || !(parseInt(params.item as string, 10) in store.state.farmer!.leeks))) {
+		if ((category.value === 'solo' || category.value === 'arena') && (!params.item || !store.state.farmer?.leeks || !(parseInt(params.item as string, 10) in store.state.farmer.leeks))) {
 			const key = category.value === 'arena' ? 'arena-leek' : 'garden/leek'
 			let defaultLeek = parseInt(localStorage.getItem(key) || '0', 10)
-			if (!(defaultLeek in store.state.farmer!.leeks)) {
+			if (!store.state.farmer?.leeks || !(defaultLeek in store.state.farmer.leeks)) {
 				const first = LeekWars.first(store.state.farmer!.leeks)
 				if (!first) { return }
 				defaultLeek = first.id
