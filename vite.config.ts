@@ -174,22 +174,11 @@ function i18nPlugin(): Plugin {
 		name: 'i18n-json',
 		enforce: 'pre',
 		load(id) {
-			if (id.endsWith('.i18n')) return compileJsonFile(id)
-			if (id.endsWith('.lang')) {
-				const content = fs.readFileSync(id, 'utf-8')
-				return `export default ${content}`
+			const cleanId = id.split('?')[0]
+			if (cleanId.endsWith('.i18n')) return compileJsonFile(cleanId)
+			if (cleanId.endsWith('.lang')) {
+				return `export default ${fs.readFileSync(cleanId, 'utf-8')}`
 			}
-		}
-	}
-}
-
-// Plugin to pre-compile JSON locale files under src/lang/ at build time
-function i18nJsonPlugin(): Plugin {
-	return {
-		name: 'i18n-json-compiler',
-		enforce: 'pre',
-		load(id) {
-			if (id.match(/\/src\/lang\/[a-z-]+\/[a-z-]+\.json$/)) return compileJsonFile(id)
 		}
 	}
 }
@@ -339,7 +328,6 @@ export default defineConfig({
 	plugins: [
 		multiLanguagePlugin(),
 		i18nPlugin(),
-		i18nJsonPlugin(),
 		yamlPlugin(),
 		gameDataPlugin(),
 		vue(),
