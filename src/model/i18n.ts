@@ -5,9 +5,8 @@ import { createI18n } from 'vue-i18n'
 // Pre-declare dynamic imports for Vite to bundle them
 const localeModules = import.meta.glob('/src/lang/locale/*.ts') as Record<string, () => Promise<{ translations: Record<string, unknown> }>>
 const i18nModules = import.meta.glob('/src/component/**/*.i18n', {
-	query: '?raw',
 	import: 'default',
-}) as Record<string, () => Promise<string>>
+}) as Record<string, () => Promise<Record<string, unknown>>>
 
 type I18nWithCompat = ReturnType<typeof createI18n> & {
 	t: (key: string, ...args: any[]) => string
@@ -108,8 +107,7 @@ const mixins = [{
 			const modulePath = `/src/component/${folder}/${name}.${newLocale}.i18n`
 			const loader = i18nModules[modulePath]
 			if (!loader) return
-			return loader().then((raw) => {
-				const messages = JSON.parse(raw)
+			return loader().then((messages) => {
 				mergeNamespaced(newLocale, name, messages)
 				const instanceI18n = (this as any).$i18n
 				instanceI18n.setLocaleMessage(newLocale, messages)
@@ -176,8 +174,7 @@ function loadInstanceTranslations(newLocale: string, instance: any) {
 	const modulePath = `/src/component/${folder}/${name}.${newLocale}.i18n`
 	const loader = i18nModules[modulePath]
 	if (!loader) return
-	return loader().then((raw) => {
-		const messages = JSON.parse(raw)
+	return loader().then((messages) => {
 		mergeNamespaced(newLocale, name, messages)
 		instance.$options[MERGED_FLAG] = newLocale
 		const instanceI18n = (instance as any).$i18n
@@ -200,8 +197,7 @@ function loadComponentLanguage(newLocale: string, component: ComponentInstance<C
 	const modulePath = `/src/component/${name}/${name}.${newLocale}.i18n`
 	const loader = i18nModules[modulePath]
 	if (!loader) return
-	return loader().then((raw) => {
-		const messages = JSON.parse(raw)
+	return loader().then((messages) => {
 		mergeNamespaced(newLocale, name!, messages)
 		if (instance && (instance as any).$i18n) {
 			const instanceI18n = (instance as any).$i18n

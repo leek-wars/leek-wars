@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import vuetify from 'vite-plugin-vuetify'
 import monacoEditorPlugin from 'vite-plugin-monaco-editor'
 import vueI18n from '@intlify/unplugin-vue-i18n/vite'
+import { baseCompile } from '@intlify/message-compiler'
 import { visualizer } from 'rollup-plugin-visualizer'
 import path from 'path'
 import fs from 'fs'
@@ -18,6 +19,28 @@ const BUILD_COMMIT = (() => {
 	}
 })()
 const BUILD_DATE = new Date().toISOString()
+
+// Recursively compile a message object: leaf strings → pre-compiled functions
+// so the runtime-only vue-i18n build needs no JIT compiler (no new Function()).
+function compileMessageObject(obj: unknown): string {
+	if (typeof obj === 'string') {
+		try {
+			const { code } = baseCompile(obj, { sourceMap: false })
+			return code
+		} catch {
+			return JSON.stringify(obj)
+		}
+	}
+	if (Array.isArray(obj)) {
+		return `[${(obj as unknown[]).map(compileMessageObject).join(', ')}]`
+	}
+	if (obj !== null && typeof obj === 'object') {
+		const entries = Object.entries(obj as Record<string, unknown>)
+			.map(([k, v]) => `${JSON.stringify(k)}: ${compileMessageObject(v)}`)
+		return `{\n${entries.join(',\n')}\n}`
+	}
+	return JSON.stringify(obj)
+}
 
 // List of supported languages
 const languages = ['fr', 'en', 'de', 'es', 'it', 'pt', 'nl', 'pl', 'ru', 'ja', 'ko', 'zh', 'hi', 'id', 'da', 'fi', 'no', 'sv']
@@ -144,43 +167,35 @@ function multiLanguagePlugin(): Plugin {
 }
 
 // Plugin to handle .i18n and .lang files
-// .i18n files load the corresponding .vue component and inject i18n translations
+// .i18n files export pre-compiled message functions (no runtime JIT needed)
 function i18nPlugin(): Plugin {
 	return {
 		name: 'i18n-json',
 		enforce: 'pre',
 		load(id) {
 			if (id.endsWith('.i18n')) {
-				// Extract the base path and locale (e.g., /path/to/signup.fr.i18n -> signup, fr)
-				const basePath = id.replace(/\.\w+\.i18n$/, '')
-				const vuePath = basePath + '.vue'
-
-				// Extract locale from filename (e.g., signup.fr.i18n -> fr)
-				const localeMatch = id.match(/\.(\w+)\.i18n$/)
-				const locale = localeMatch ? localeMatch[1] : 'fr'
-
-				// Read the i18n JSON content
-				const i18nContent = fs.readFileSync(id, 'utf-8')
-
-				// Generate code that imports the Vue component and adds i18n with proper structure
-				// vue-i18n expects: { messages: { [locale]: {...translations...} } }
-				return `
-					import ComponentModule from '${vuePath}'
-					const Component = ComponentModule.default || ComponentModule
-					if (Component && typeof Component === 'object') {
-						Component.i18n = {
-							messages: {
-								'${locale}': ${i18nContent}
-							}
-						}
-					}
-					export default Component
-				`
+				const content = fs.readFileSync(id, 'utf-8')
+				const messages = JSON.parse(content)
+				return `export default ${compileMessageObject(messages)}`
 			}
 			if (id.endsWith('.lang')) {
 				const content = fs.readFileSync(id, 'utf-8')
 				return `export default ${content}`
 			}
+		}
+	}
+}
+
+// Plugin to pre-compile JSON locale files under src/lang/ at build time
+function i18nJsonPlugin(): Plugin {
+	return {
+		name: 'i18n-json-compiler',
+		enforce: 'pre',
+		load(id) {
+			if (!id.match(/\/src\/lang\/[a-z-]+\/[a-z-]+\.json$/)) return
+			const content = fs.readFileSync(id, 'utf-8')
+			const messages = JSON.parse(content)
+			return `export default ${compileMessageObject(messages)}`
 		}
 	}
 }
@@ -322,22 +337,25 @@ export default defineConfig({
 	define: {
 		__BUILD_DATE__: JSON.stringify(BUILD_DATE),
 		__BUILD_COMMIT__: JSON.stringify(BUILD_COMMIT),
+		// Enable tree-shaking of JIT message compilation path in vue-i18n.
+		// All messages are pre-compiled at build time so no runtime compiler is needed.
+		__INTLIFY_JIT_COMPILATION__: 'false',
+		__INTLIFY_DROP_MESSAGE_COMPILER__: 'true',
 	},
 	plugins: [
 		multiLanguagePlugin(),
 		i18nPlugin(),
+		i18nJsonPlugin(),
 		yamlPlugin(),
 		gameDataPlugin(),
 		vue(),
-		// vue-i18n: aligne le build avec le mode composition (legacy: false dans
-		// src/model/i18n.ts) pour réduire le bundle. Le message compiler reste
-		// inclus pour l'instant : les messages chargés à runtime depuis les .ts
-		// et .i18n contiennent des placeholders {0}, {name} qui ne sont pas
-		// pré-compilés. Pour activer un CSP strict (sans unsafe-eval), il faudra
-		// pré-compiler tous les messages au build (chantier séparé).
+		// vue-i18n: runtime-only + composition-only build, message compiler dropped.
+		// All messages (.i18n files and lang/locale/*.json) are pre-compiled to
+		// functions by i18nPlugin/i18nJsonPlugin, so no JIT (new Function()) is needed.
 		vueI18n({
 			runtimeOnly: true,
 			compositionOnly: true,
+			dropMessageCompiler: true,
 		}),
 		vuetify({
 			autoImport: true
