@@ -1976,10 +1976,7 @@ class Game {
 		for (let t = 0; t < this.trophies.length; ++t) {
 			const trophy = this.trophies[t]
 			if (this.currentAction === trophy.action) {
-				const id = 't' + t
-				if (!this.consoleLines.some(l => l.id === id)) {
-					this.addConsoleLine({id, trophy})
-				}
+				this.addConsoleLine({id: 't' + t, trophy})
 			}
 		}
 	}
@@ -1994,6 +1991,7 @@ class Game {
 		}
 	}
 	public addConsoleLine(line: any) {
+		if (line.id && this.consoleLines.some(l => l.id === line.id)) return
 		this.consoleLines.push(line)
 		if (this.consoleLines.length > 80) {
 			this.consoleLines.shift()
