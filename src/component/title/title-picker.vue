@@ -39,7 +39,7 @@
 						</template>
 					</v-select>
 				</div>
-				<div v-if="$i18n.locale === 'fr' && (noun && LeekWars.trophies[noun - 1].noun_translation === 3) || (adjective && LeekWars.trophies[adjective - 1].adj_translation === 3)" class="select select-gender">
+				<div v-if="$i18n.locale === 'fr' && ((noun && LeekWars.trophies[noun - 1].noun_translation === 3) || (adjective && (LeekWars.trophies[adjective - 1].adj_translation & 2)))" class="select select-gender">
 					<v-select v-model="gender" :items="genders" item-value="id" item-title="code" hide-details density="comfortable" variant="solo">
 						<template #selection>
 							<v-icon v-if="gender" :class="genders[gender - 1].code">mdi-gender-{{ genders[gender - 1].code }}</v-icon>
@@ -131,6 +131,11 @@ function changeNoun() {
 			gender.value = (trophy.noun_translation & 1) ? 1 : 2
 		} else if ((trophy.noun_translation & gender.value) === 0) {
 			gender.value = trophy.noun_translation
+		}
+	} else {
+		const adjTrophy = adjective.value ? LeekWars.trophies[adjective.value - 1] : null
+		if (!adjTrophy || !(adjTrophy.adj_translation & 2)) {
+			gender.value = 1
 		}
 	}
 }
