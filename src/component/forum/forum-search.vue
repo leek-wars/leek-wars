@@ -192,7 +192,23 @@
 	}
 	watch(() => route.query, update, { immediate: true })
 
+	// URL pour les liens de pagination — basé sur route.query (recherche committée),
+	// pas sur options, pour éviter que les liens changent pendant la saisie.
 	const urlPagination = computed(() => {
+		const q = route.query
+		const parts: string[] = []
+		if (q.query && q.query !== '' && q.query !== '-') parts.push('query=' + q.query)
+		if (q.farmer && q.farmer !== '' && q.farmer !== '-') parts.push('farmer=' + q.farmer)
+		if (q.category && q.category !== '-1' && q.category !== '-') parts.push('category=' + q.category)
+		if (q.order && q.order !== 'pertinence') parts.push('order=' + q.order)
+		if (q.admin) parts.push('admin=' + q.admin)
+		if (q.moderator) parts.push('moderator=' + q.moderator)
+		if (q.resolved && q.resolved !== 'all') parts.push('resolved=' + q.resolved)
+		return '/search?' + parts.join('&')
+	})
+
+	// URL pour la navigation au clic sur Rechercher — basé sur options (état courant des inputs).
+	const searchUrl = computed(() => {
 		const url = "/search"
 		const opts = Object.keys(options)
 			.filter(option => options[option] !== null && options[option] !== defaultOptions[option] && option !== 'page')
@@ -202,7 +218,7 @@
 	})
 
 	function search() {
-		router.push(urlPagination.value)
+		router.push(searchUrl.value)
 	}
 	function searchButton() {
 		search()
