@@ -514,11 +514,11 @@
 		] as TestScenario[]
 		if (!store.state.farmer) return tmpl
 
+		const currentAIPath = props.currentAI?.path || null
+		const leekAI = (leek: Leek) => (props.leekAis && leek.id in props.leekAis ? props.leekAis[leek.id] : null) || currentAIPath
 		for (const l in store.state.farmer.leeks) {
 			const leek = store.state.farmer.leeks[l] as Leek
-			if (!props.leekAis || !(leek.id in props.leekAis)) continue
-			const ai = props.leekAis[leek.id]
-			if (!ai) continue
+			const ai = leekAI(leek)
 			tmpl.push({
 				id: 0, base: false, default: false, ai: null,
 				name: "Solo " + leek.name, category: "solo", map: null, type: 0,
@@ -536,7 +536,7 @@
 		const team2 = generate_bots(leek_count)
 		const team1 = [] as TestScenarioLeek[]
 		for (const leek in store.state.farmer.leeks) {
-			team1.push({ id: parseInt(leek, 10), ai: store.state.farmer.leeks[leek].ai_path || null })
+			team1.push({ id: parseInt(leek, 10), ai: store.state.farmer.leeks[leek].ai_path || currentAIPath })
 		}
 		if (LeekWars.objectSize(store.state.farmer.leeks) > 1) {
 			tmpl.push({
