@@ -437,10 +437,13 @@ const I18nTWrapper = defineComponent({
 				const namespaced = ns + '.' + keypath
 				if (teFn(namespaced)) finalAttrs = { ...attrs, keypath: namespaced }
 			}
-			return h(Translation as unknown as Component, finalAttrs, slots)
+			return h(Translation as unknown as Component, { scope: 'global', ...finalAttrs }, slots)
 		}
 	}
 })
+// Override vue-i18n's built-in i18n-t with our namespace-aware wrapper.
+// Delete first to avoid Vue's "already registered" dev warning.
+delete (app as any)._context.components['i18n-t']
 app.component('i18n-t', I18nTWrapper)
 
 app.mixin({

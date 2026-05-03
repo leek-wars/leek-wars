@@ -5,7 +5,7 @@ import { createI18n } from 'vue-i18n'
 // Pre-declare dynamic imports for Vite to bundle them
 const localeModules = import.meta.glob('/src/lang/locale/*.ts') as Record<string, () => Promise<{ translations: Record<string, unknown> }>>
 const i18nModules = import.meta.glob('/src/component/**/*.i18n', {
-	import: 'default',
+	import: 'messages',
 }) as Record<string, () => Promise<Record<string, unknown>>>
 
 type I18nWithCompat = ReturnType<typeof createI18n> & {
@@ -25,7 +25,7 @@ const i18n = createI18n({
 	fallbackWarn: false,
 	warnHtmlMessage: false,
 	warnHtmlInMessage: 'off',
-	escapeParameter: true,
+	escapeParameter: false,
 }) as unknown as I18nWithCompat
 
 // Compat wrappers: en mode composition, i18n.global.locale est un WritableComputedRef
@@ -72,12 +72,8 @@ function normalizeComponentName(rawName: string): string {
 	return name
 }
 
-// En mode composition, les messages d'un composant sont mergés dans le global:
-// - sous {namespace} pour le wrapper $t (vue.ts) qui résout par composant
-// - un-namespaced pour <i18n-t> et useI18n() qui ciblent directement le global
 function mergeNamespaced(locale: string, name: string, messages: unknown) {
 	i18n.global.mergeLocaleMessage(locale, { [name]: messages as Record<string, unknown> })
-	i18n.global.mergeLocaleMessage(locale, messages as Record<string, unknown>)
 }
 
 const MERGED_FLAG = '__i18nMerged'
@@ -109,8 +105,6 @@ const mixins = [{
 			if (!loader) return
 			return loader().then((messages) => {
 				mergeNamespaced(newLocale, name, messages)
-				const instanceI18n = (this as any).$i18n
-				instanceI18n.setLocaleMessage(newLocale, messages)
 			})
 		}
 	}
@@ -177,10 +171,6 @@ function loadInstanceTranslations(newLocale: string, instance: any) {
 	return loader().then((messages) => {
 		mergeNamespaced(newLocale, name, messages)
 		instance.$options[MERGED_FLAG] = newLocale
-		const instanceI18n = (instance as any).$i18n
-		if (instanceI18n) {
-			instanceI18n.setLocaleMessage(newLocale, messages)
-		}
 	})
 }
 
@@ -199,12 +189,6 @@ function loadComponentLanguage(newLocale: string, component: ComponentInstance<C
 	if (!loader) return
 	return loader().then((messages) => {
 		mergeNamespaced(newLocale, name!, messages)
-		if (instance && (instance as any).$i18n) {
-			const instanceI18n = (instance as any).$i18n
-			instanceI18n.setLocaleMessage(newLocale, messages)
-		} else if (component.i18n) {
-			(component as any).i18n = {messages: {[newLocale]: messages}}
-		}
 	})
 }
 

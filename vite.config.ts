@@ -169,17 +169,34 @@ function multiLanguagePlugin(): Plugin {
 	}
 }
 
-// Plugin to handle .i18n and .lang files
-// .i18n files export pre-compiled message functions (no runtime JIT needed)
+// Plugin to handle .i18n and .lang files.
+// .i18n files serve two purposes:
+//   - default export = Vue component (for lazy router imports)
+//   - messages named export = pre-compiled message functions (for import.meta.glob in i18n.ts)
 function i18nPlugin(): Plugin {
 	return {
 		name: 'i18n-json',
 		enforce: 'pre',
 		load(id) {
 			const cleanId = stripQuery(id)
-			if (cleanId.endsWith('.i18n')) return compileJsonFile(cleanId)
+			if (cleanId.endsWith('.i18n')) {
+				const basePath = cleanId.replace(/\.\w+\.i18n$/, '')
+				const vuePath = basePath + '.vue'
+				const localeMatch = cleanId.match(/\.(\w+)\.i18n$/)
+				const locale = localeMatch ? localeMatch[1] : 'fr'
+				const messagesCode = compileMessageObject(JSON.parse(fs.readFileSync(cleanId, 'utf-8')))
+				return `
+import ComponentModule from '${vuePath}'
+const Component = ComponentModule.default || ComponentModule
+export const messages = ${messagesCode}
+if (Component && typeof Component === 'object') {
+  Component.i18n = { messages: { '${locale}': messages } }
+}
+export default Component
+`
+			}
 			if (cleanId.endsWith('.lang')) {
-				return `export default ${fs.readFileSync(cleanId, 'utf-8')}`
+				return compileJsonFile(cleanId)
 			}
 		}
 	}
