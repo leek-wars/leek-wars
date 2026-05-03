@@ -1232,8 +1232,9 @@ function linkify(html: string) {
 		}
 		const clazz = lw_index.index === 0 ? 'lw' : ''
 
-		html = html.substring(0, match.index) + toChatLink(real_url, url, blank, clazz) + html.substring(i)
-		url_regex.lastIndex += real_url.length + blank.length + '<a href=""  ></a>'.length
+		const link = toChatLink(real_url, url, blank, clazz)
+		html = html.substring(0, match.index) + link + html.substring(i)
+		url_regex.lastIndex = match.index + link.length
 	}
 	return html.replace(email_pattern, '<a target="_blank" rel="noopener" href="mailto:$&">$&</a>')
 }
