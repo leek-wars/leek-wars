@@ -5,6 +5,7 @@ import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 import leekscript from './leekscript-monarch.js'
 
 self.MonacoEnvironment = {
+	nonce: (document.querySelector('meta[name="csp-nonce"]') as HTMLMetaElement | null)?.content || undefined,
 	getWorker(_: any, label: string) {
 		return new editorWorker()
 	}
