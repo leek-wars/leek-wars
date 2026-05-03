@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, useSlots } from 'vue'
+import { ref, computed, watch, useSlots, onBeforeUnmount } from 'vue'
 import { LeekWars } from '@/model/leekwars'
 
 defineOptions({ name: 'popup' })
@@ -54,6 +54,10 @@ const hasActionsSlot = computed(() => !!slots.actions)
 watch(() => props.modelValue, (v) => {
 	if (v === true) content_created.value = true
 })
+
+// Démonte le v-dialog avant que le parent soit démonté pour éviter que Vuetify
+// laisse des nœuds Teleport orphelins qui font planter le patch Vue Router.
+onBeforeUnmount(() => { content_created.value = false })
 
 function close() {
 	emit('update:modelValue', false)
