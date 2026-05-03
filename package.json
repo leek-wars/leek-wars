@@ -50,6 +50,7 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
+		"@intlify/unplugin-vue-i18n": "^11.1.2",
 		"@types/codemirror": "0.0.96",
 		"@types/google.analytics": "0.0.40",
 		"@types/node": "^20.0.0",

@@ -2,6 +2,7 @@ import { defineConfig, Plugin, Rollup } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vuetify from 'vite-plugin-vuetify'
 import monacoEditorPlugin from 'vite-plugin-monaco-editor'
+import vueI18n from '@intlify/unplugin-vue-i18n/vite'
 import { visualizer } from 'rollup-plugin-visualizer'
 import path from 'path'
 import fs from 'fs'
@@ -320,7 +321,7 @@ function gameDataPlugin(): Plugin {
 export default defineConfig({
 	define: {
 		__BUILD_DATE__: JSON.stringify(BUILD_DATE),
-		__BUILD_COMMIT__: JSON.stringify(BUILD_COMMIT)
+		__BUILD_COMMIT__: JSON.stringify(BUILD_COMMIT),
 	},
 	plugins: [
 		multiLanguagePlugin(),
@@ -328,6 +329,16 @@ export default defineConfig({
 		yamlPlugin(),
 		gameDataPlugin(),
 		vue(),
+		// vue-i18n: aligne le build avec le mode composition (legacy: false dans
+		// src/model/i18n.ts) pour réduire le bundle. Le message compiler reste
+		// inclus pour l'instant : les messages chargés à runtime depuis les .ts
+		// et .i18n contiennent des placeholders {0}, {name} qui ne sont pas
+		// pré-compilés. Pour activer un CSP strict (sans unsafe-eval), il faudra
+		// pré-compiler tous les messages au build (chantier séparé).
+		vueI18n({
+			runtimeOnly: true,
+			compositionOnly: true,
+		}),
 		vuetify({
 			autoImport: true
 		}),
