@@ -262,7 +262,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				for (const farmer of data.mentions) {
 					state.farmer_by_name[farmer.name] = farmer
 				}
-				for (const message of [...data.messages].reverse()) {
+				for (const message of data.messages) {
 					store.commit('chat-receive', { chat: chat.id, type: data.type, message, new: false })
 				}
 				for (const farmer of data.farmers) {
