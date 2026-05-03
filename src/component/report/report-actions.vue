@@ -17,6 +17,7 @@
 	import ActionLog from './report-log.vue'
 	import router from '@/router'
 	import { useRouter } from 'vue-router'
+	import { fileSystem } from '@/model/filesystem'
 
 	defineOptions({ name: "actions" })
 
@@ -66,7 +67,10 @@
 		window.scrollTo(0, sibling.getBoundingClientRect().top + window.scrollY - 42)
 	}
 
-	function goToAI(file: number, line: number) {
-		router.push('/editor/' + file + '?line=' + line)
+	function goToAI(file: any, line: number) {
+		const ai = fileSystem.getAIByLogId(file)
+		if (ai) {
+			router.push('/editor/' + ai.path + '?line=' + line)
+		}
 	}
 </script>

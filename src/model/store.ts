@@ -158,6 +158,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 			if (data.farmer.ai_tree) {
 				fileSystem.init(data.farmer.ai_tree)
+				fileSystem.buildHashLookup(data.farmer.id)
 			}
 			LeekWars.startIntervals()
 			updateTitle(state)

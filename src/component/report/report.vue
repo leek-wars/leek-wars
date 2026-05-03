@@ -217,7 +217,7 @@
 				<div v-if="errors.length" class="title">{{ $t('n_errors', errors.length) }}</div>
 				<div class="errors" @mouseover="mouseover">
 					<div v-for="(e, i) in errors" :key="i" class="log error" :a="e.action" :i="e.index">
-						<pre>[{{ e.entity }}] {{ e.data }} <span v-if="e.ai && fileSystem.ais[e.ai]" class="ai" @click="goToAI(e.ai, e.line)">[{{ fileSystem.ais[e.ai].path }}:{{ e.line }}]</span></pre>
+						<pre>[{{ e.entity }}] {{ e.data }} <span v-if="e.resolvedAI" class="ai" @click="goToAI(e.resolvedAI, e.line)">[{{ e.resolvedAI.path }}:{{ e.line }}]</span></pre>
 					</div>
 				</div>
 				<div v-if="warnings.length" class="title">
@@ -229,7 +229,7 @@
 				</div>
 				<div class="errors" @mouseover="mouseover">
 					<div v-for="(w, i) in warnings" :key="i" class="log warning" :a="w.action" :i="w.index">
-						<pre>[{{ w.entity }}] {{ w.data }} <span v-if="w.ai && fileSystem.ais[w.ai]" class="ai" @click="goToAI(w.ai, w.line)">[{{ fileSystem.ais[w.ai].path }}:{{ w.line }}]</span></pre>
+						<pre>[{{ w.entity }}] {{ w.data }} <span v-if="w.resolvedAI" class="ai" @click="goToAI(w.resolvedAI, w.line)">[{{ w.resolvedAI.path }}:{{ w.line }}]</span></pre>
 					</div>
 				</div>
 			</div>
@@ -265,6 +265,7 @@
 	import Comments from '@/component/comment/comments.vue'
 	import { CHIPS } from '@/model/chips'
 	import { fileSystem } from '@/model/filesystem'
+	import { AI } from '@/model/ai'
 	import router from '@/router'
 	import { emitter } from '@/model/vue'
 	import { computed, defineAsyncComponent, getCurrentInstance, nextTick, onBeforeUnmount, ref, watch } from 'vue'
@@ -540,9 +541,9 @@
 					const type = log[1]
 					const message = (type >= 6 && type <= 8) ? i18n.t('leekscript.error_' + log[3], log[4]) + "\n" + log[2] : log[2]
 					if (type === 2 || type === 7) {
-						warnings.value.push({entity: leeks.value[leek].name, data: message, action: a, index: i, ai: log[4], line: log[5]})
+						warnings.value.push({entity: leeks.value[leek].name, data: message, action: a, index: i, ai: log[4], line: log[5], resolvedAI: fileSystem.getAIByLogId(log[4])})
 					} else if (type === 3 || type === 8) {
-						errors.value.push({entity: leeks.value[leek].name, data: message, action: a, index: i, ai: log[4], line: log[5]})
+						errors.value.push({entity: leeks.value[leek].name, data: message, action: a, index: i, ai: log[4], line: log[5], resolvedAI: fileSystem.getAIByLogId(log[4])})
 					}
 					i++
 				}
@@ -750,8 +751,8 @@
 		}
 	}
 
-	function goToAI(file: number, line: number) {
-		router.push('/editor/' + file + '?line=' + line)
+	function goToAI(ai: AI, line: number) {
+		router.push('/editor/' + ai.path + '?line=' + line)
 	}
 
 	function goToTurn(turn: number) {
