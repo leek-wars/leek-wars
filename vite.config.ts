@@ -43,6 +43,8 @@ function compileJsonFile(filePath: string): string {
 	return `export default ${compileMessageObject(messages)}`
 }
 
+const stripQuery = (id: string) => id.split('?')[0]
+
 // List of supported languages
 const languages = ['fr', 'en', 'de', 'es', 'it', 'pt', 'nl', 'pl', 'ru', 'ja', 'ko', 'zh', 'hi', 'id', 'da', 'fi', 'no', 'sv']
 
@@ -174,7 +176,7 @@ function i18nPlugin(): Plugin {
 		name: 'i18n-json',
 		enforce: 'pre',
 		load(id) {
-			const cleanId = id.split('?')[0]
+			const cleanId = stripQuery(id)
 			if (cleanId.endsWith('.i18n')) return compileJsonFile(cleanId)
 			if (cleanId.endsWith('.lang')) {
 				return `export default ${fs.readFileSync(cleanId, 'utf-8')}`
@@ -183,18 +185,15 @@ function i18nPlugin(): Plugin {
 	}
 }
 
-// Plugin to pre-compile JSON locale files under src/lang/.
-// Runs enforce:'post' so it executes AFTER @intlify/unplugin-vue-i18n (which
-// produces named string exports). We overwrite with compiled functions,
-// avoiding the conflict where the previous approach used load() and the
-// downstream transform tried to JSON.parse our compiled JS.
+// enforce:'post' runs after @intlify/unplugin-vue-i18n, overwriting its named
+// string exports with pre-compiled functions (avoids JSON.parse conflict).
 function i18nJsonPlugin(): Plugin {
 	return {
 		name: 'i18n-json-compiler',
 		enforce: 'post',
 		transform(_code, id) {
-			const cleanId = id.split('?')[0]
-			if (!cleanId.match(/\/src\/lang\/[a-z-]+\/[a-z-]+\.json$/)) return
+			const cleanId = stripQuery(id)
+			if (!cleanId.match(/\/src\/lang\/[a-z-]+\/[a-z0-9-]+\.json$/)) return
 			return { code: compileJsonFile(cleanId), map: null }
 		}
 	}
