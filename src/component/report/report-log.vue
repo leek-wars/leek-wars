@@ -19,5 +19,5 @@ defineEmits<{
 	goToAI: [ai: any, line: any, log: any]
 }>()
 
-const logAI = computed(() => props.log[4] != null ? fileSystem.getAIByLogId(props.log[4]) : undefined)
+const logAI = computed(() => fileSystem.ais[props.log[4]])
 </script>

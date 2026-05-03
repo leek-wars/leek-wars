@@ -75,7 +75,6 @@
 	import TurretImage from '@/component/turret-image.vue'
 	import ActionLog from '../report/report-log.vue'
 	import router from '@/router'
-	import { fileSystem } from '@/model/filesystem'
 	import { computed, ref } from 'vue'
 
 	defineOptions({ name: 'hud', components: { leek: ActionLeek } })
@@ -138,11 +137,8 @@
 		e.preventDefault()
 	}
 
-	function goToAI(file: any, line: number) {
-		const ai = fileSystem.getAIByLogId(file)
-		if (ai) {
-			router.push('/editor/' + ai.path + '?line=' + line)
-		}
+	function goToAI(file: string, line: number) {
+		router.push('/editor/' + file + '?line=' + line)
 	}
 </script>
 

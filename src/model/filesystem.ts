@@ -29,8 +29,6 @@ class FileSystem {
 	public static CONSOLE_MAGIC_KEY = '__console_CkG3VwGs3K__'
 
 	public ais: {[key: string]: AI} = {}
-	private aisById: {[key: number]: AI} = {}
-	private farmerId = 0
 	public folderById: {[key: number]: Folder} = {}
 	public get aiByFullPath() { return this.ais } // alias pour compatibilité
 	public aiCount: number = 0
@@ -193,7 +191,6 @@ class FileSystem {
 		ai.path = this.getAIFullPath(ai)
 		ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
 		this.ais[ai.path] = ai
-		this.aisById[FileSystem.javaObjectsHash(this.farmerId, ai.path)] = ai
 		folder.items.push(new AIItem(ai, folder.id))
 		this.sortFolder(folder)
 	}
@@ -211,30 +208,6 @@ class FileSystem {
 		return this.ais[path] || this.ais['/' + path]
 	}
 
-	public getAIByLogId(id: string | number): AI | undefined {
-		return this.ais[id] ?? this.aisById[id as number]
-	}
-
-	public buildHashLookup(farmerId: number) {
-		this.farmerId = farmerId
-		this.aisById = {}
-		for (const path in this.ais) {
-			this.aisById[FileSystem.javaObjectsHash(farmerId, path)] = this.ais[path]
-		}
-	}
-
-	private static javaStringHash(s: string): number {
-		let h = 0
-		for (let i = 0; i < s.length; i++) {
-			h = (Math.imul(31, h) + s.charCodeAt(i)) | 0
-		}
-		return h
-	}
-
-	// Simule Java Objects.hash(int, String) = Arrays.hashCode([n, s]) & 0xfffffff
-	private static javaObjectsHash(n: number, s: string): number {
-		return (Math.imul(31, (31 + n) | 0) + FileSystem.javaStringHash(s)) & 0xfffffff
-	}
 
 	public find(path: string, folder: number): AI | null {
 		path = path.trim()
@@ -322,7 +295,6 @@ class FileSystem {
 		ai.path = ai.name
 		ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
 		this.ais[ai.path] = ai
-		this.aisById[FileSystem.javaObjectsHash(this.farmerId, ai.path)] = ai
 		this.rootFolder.items.push(...item)
 		this.sortFolder(this.rootFolder)
 		LeekWars.post('ai/restore', {trash_name: trashName}).error((error: any) => LeekWars.toast(translateFileSystemError(error)))
@@ -392,18 +364,15 @@ class FileSystem {
 	}
 
 	public renameAI(ai: AI, name: string) {
-		delete this.aisById[FileSystem.javaObjectsHash(this.farmerId, ai.path)]
 		delete this.ais[ai.path]
 		ai.name = name
 		ai.path = this.getAIFullPath(ai)
 		ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
 		this.ais[ai.path] = ai
-		this.aisById[FileSystem.javaObjectsHash(this.farmerId, ai.path)] = ai
 	}
 
 	public clear() {
 		this.ais = {}
-		this.aisById = {}
 		this.folderById = {}
 		this.leekAIs = {}
 		this.items = {}
@@ -436,7 +405,6 @@ class FileSystem {
 				}
 				this.clear()
 				this.init(data)
-				this.buildHashLookup(this.farmerId)
 				for (const path in preserved) {
 					if (path in this.ais) {
 						this.ais[path].code = preserved[path].code

@@ -265,7 +265,6 @@
 	import Comments from '@/component/comment/comments.vue'
 	import { CHIPS } from '@/model/chips'
 	import { fileSystem } from '@/model/filesystem'
-	import { AI } from '@/model/ai'
 	import router from '@/router'
 	import { emitter } from '@/model/vue'
 	import { computed, defineAsyncComponent, getCurrentInstance, nextTick, onBeforeUnmount, ref, watch } from 'vue'
@@ -541,9 +540,9 @@
 					const type = log[1]
 					const message = (type >= 6 && type <= 8) ? i18n.t('leekscript.error_' + log[3], log[4]) + "\n" + log[2] : log[2]
 					if (type === 2 || type === 7) {
-						warnings.value.push({entity: leeks.value[leek].name, data: message, action: a, index: i, ai: log[4], line: log[5], resolvedAI: fileSystem.getAIByLogId(log[4])})
+						warnings.value.push({entity: leeks.value[leek].name, data: message, action: a, index: i, ai: log[4], line: log[5], resolvedAI: fileSystem.ais[log[4]]})
 					} else if (type === 3 || type === 8) {
-						errors.value.push({entity: leeks.value[leek].name, data: message, action: a, index: i, ai: log[4], line: log[5], resolvedAI: fileSystem.getAIByLogId(log[4])})
+						errors.value.push({entity: leeks.value[leek].name, data: message, action: a, index: i, ai: log[4], line: log[5], resolvedAI: fileSystem.ais[log[4]]})
 					}
 					i++
 				}
@@ -751,7 +750,7 @@
 		}
 	}
 
-	function goToAI(ai: AI, line: number) {
+	function goToAI(ai: { path: string }, line: number) {
 		router.push('/editor/' + ai.path + '?line=' + line)
 	}
 
