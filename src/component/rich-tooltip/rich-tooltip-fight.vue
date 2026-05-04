@@ -166,7 +166,7 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
-const tc = (key: string, count: number): string => (i18n.global as any).tc(key, count)
+const tc = (key: string, count: number): string => (i18n as any).tc(key, count)
 
 const content_created = ref(false)
 const data = ref<any>(null)
