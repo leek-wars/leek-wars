@@ -32,13 +32,12 @@
 
 <script setup lang="ts">
 import { ref, computed, onBeforeUnmount } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { mixins } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 
 defineOptions({ name: 'status', i18n: {}, mixins: [...mixins] })
 
-const { t } = useI18n()
+const t = useNamespacedT('status')
 
 const SERVICE_ORDER = ['api', 'db', 'redis', 'daemon', 'websocket', 'git', 'static']
 const SERVICE_ICONS: {[k: string]: string} = {

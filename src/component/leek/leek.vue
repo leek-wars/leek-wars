@@ -787,7 +787,6 @@
 	import LeekImage from '../leek-image.vue'
 	import LeekComponent from './leek-component.vue'
 	import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
-	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 	import { emitter } from '@/model/vue'
 	import { Line } from 'vue-chartjs'
@@ -805,7 +804,7 @@
 		CharacteristicTooltip, RichTooltipItem, RichTooltipFarmer, RichTooltipLeek, TitlePicker, ai: AIElement, 'lw-title': LwTitle, LeekComponent, Line,
 	} })
 
-	const { t } = useI18n()
+	const t = useNamespacedT('leek')
 	const route = useRoute()
 	const router = useRouter()
 	const componentTooltipsRef = useTemplateRef<any[]>('componentTooltips')

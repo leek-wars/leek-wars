@@ -37,7 +37,6 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { mixins } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
@@ -46,7 +45,7 @@ import { getRedirectAfterLogin } from '@/router'
 
 defineOptions({ name: 'login', i18n: {}, mixins: [...mixins] })
 
-const { t } = useI18n()
+const t = useNamespacedT('login')
 const route = useRoute()
 const router = useRouter()
 

@@ -125,7 +125,7 @@
 
 <script lang="ts" setup>
 	import { locale } from '@/locale'
-	import { mixins } from '@/model/i18n'
+	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { Comment } from '@/model/comment'
 	import { Fight, FightType } from '@/model/fight'
 	import { LeekWars } from '@/model/leekwars'
@@ -136,7 +136,6 @@
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 	import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue'
-	import { useI18n } from 'vue-i18n'
 	import { useRoute } from 'vue-router'
 	import { emitter } from '@/model/vue'
 
@@ -145,7 +144,7 @@
 
 	defineOptions({ name: 'fight', i18n: {}, mixins: [...mixins] })
 
-	const { t } = useI18n()
+	const t = useNamespacedT('fight')
 	const route = useRoute()
 	const playerRef = useTemplateRef<any>('playerRef')
 

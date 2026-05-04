@@ -110,7 +110,6 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onBeforeUnmount, useTemplateRef, nextTick } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { mixins } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
@@ -122,7 +121,7 @@ import { emitter } from '@/model/vue'
 
 defineOptions({ name: 'api', i18n: {}, mixins: [...mixins], components: { JsonViewer } })
 
-const { t } = useI18n()
+const t = useNamespacedT('api')
 const route = useRoute()
 const router = useRouter()
 

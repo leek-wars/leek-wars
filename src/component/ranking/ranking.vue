@@ -292,7 +292,6 @@
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
 	import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
-	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 
 	defineOptions({
@@ -300,7 +299,7 @@
 		components: { 'ranking-leek-row': RankingLeekRowElement, 'ranking-farmer-row': RankingFarmerRowElement, 'ranking-team-row': RankingTeamRowElement, 'ranking-composition-row': RankingCompositionRowElement, 'ranking-search-result': RankingSearchResult, RichTooltipFarmer, Pagination }
 	})
 
-	const { t } = useI18n()
+	const t = useNamespacedT('ranking')
 	const route = useRoute()
 	const router = useRouter()
 	const searchInput = useTemplateRef<HTMLElement>('search')

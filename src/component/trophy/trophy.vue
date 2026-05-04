@@ -168,7 +168,8 @@ import LwTitle from '@/component/title/title.vue'
 
 defineOptions({ name: 'trophy', i18n: {}, mixins: [...mixins], components: { 'lw-title': LwTitle } })
 
-const { t, locale } = useI18n()
+const { locale } = useI18n()
+	const t = useNamespacedT('trophy')
 const route = useRoute()
 
 const ITEM_CATEGORY_NAME: Record<number, string> = ITEM_CATEGORY_NAME_TYPED

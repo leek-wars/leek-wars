@@ -104,7 +104,6 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import type { Farmer } from '@/model/farmer'
 import { type Fight, FightContext, FightType } from '@/model/fight'
@@ -121,7 +120,7 @@ const props = defineProps<{
 	type: string
 }>()
 
-const { t } = useI18n()
+const t = useNamespacedT('history')
 const route = useRoute()
 
 const fights = ref<Fight[]>([])

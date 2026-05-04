@@ -344,12 +344,11 @@
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import { emitter } from '@/model/vue'
 	import { computed, onBeforeUnmount, onUnmounted, reactive, ref, watch } from 'vue'
-	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 
 	defineOptions({ name: 'market', i18n: {}, mixins: [...mixins] })
 
-	const { t } = useI18n()
+	const t = useNamespacedT('market')
 	const route = useRoute()
 	const router = useRouter()
 

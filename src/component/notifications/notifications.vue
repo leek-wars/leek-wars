@@ -16,7 +16,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { mixins } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { NotificationBuilder } from '@/model/notification-builder'
@@ -24,7 +23,7 @@ import { store } from '@/model/store'
 
 defineOptions({ name: 'notifications', i18n: {}, mixins: [...mixins] })
 
-const { t } = useI18n()
+const t = useNamespacedT('notifications')
 const notifications = ref<any>(null)
 
 LeekWars.get('notification/get-latest/500').then(data => {

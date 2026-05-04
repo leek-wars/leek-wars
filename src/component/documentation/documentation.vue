@@ -88,7 +88,8 @@
 	defineOptions({ name: 'documentation', i18n: {}, mixins: [...mixins] })
 
 	const props = defineProps<{ popup?: boolean }>()
-	const { t, locale: i18nLocale } = useI18n()
+	const { locale: i18nLocale } = useI18n()
+	const t = useNamespacedT('documentation')
 	const route = useRoute()
 	const router = useRouter()
 

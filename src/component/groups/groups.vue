@@ -203,12 +203,11 @@
 import { computed } from 'vue'
 import { LeekWars } from '@/model/leekwars'
 import { mixins } from '@/model/i18n'
-import { useI18n } from 'vue-i18n'
 import Breadcrumb from '../forum/breadcrumb.vue'
 
 defineOptions({ name: 'Groups', i18n: {}, mixins: [...mixins] })
 
-const { t } = useI18n()
+const t = useNamespacedT('groups')
 
 const breadcrumb_items = computed(() => [
 	{ name: 'Leek Wars', link: '/' },

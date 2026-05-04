@@ -403,7 +403,7 @@
 <script setup lang="ts">
 	import { locale } from '@/locale'
 	import { Farmer } from '@/model/farmer'
-	import { mixins } from '@/model/i18n'
+	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
@@ -416,7 +416,7 @@
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
-	import { useI18n } from 'vue-i18n'
+
 	import { useRoute, useRouter } from 'vue-router'
 	import { emitter } from '@/model/vue'
 
@@ -424,7 +424,7 @@
 
 	defineOptions({ name: 'garden', i18n: {}, mixins: [...mixins] })
 
-	const { t } = useI18n()
+	const t = useNamespacedT('garden')
 	const route = useRoute()
 	const router = useRouter()
 

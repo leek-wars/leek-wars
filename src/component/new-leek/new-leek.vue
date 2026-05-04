@@ -29,7 +29,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
@@ -37,7 +36,7 @@ import { mixins } from '@/model/i18n'
 
 defineOptions({ name: 'new_leek', i18n: {}, mixins: [...mixins] })
 
-const { t } = useI18n()
+const t = useNamespacedT('new_leek')
 const router = useRouter()
 
 const price = ref<number | null>(null)

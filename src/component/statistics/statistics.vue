@@ -82,13 +82,12 @@
 </template>
 
 <script setup lang="ts">
-	import { i18n, mixins } from '@/model/i18n'
+	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Doughnut } from 'vue-chartjs'
 	import { computed, onBeforeUnmount, ref, watch } from 'vue'
-	import { useI18n } from 'vue-i18n'
-
-	const { t, te } = useI18n()
+	const t = useNamespacedT('statistics')
+	const te = (key: string) => (i18n.global.te as (k: string) => boolean)('statistics.' + key)
 
 	const GENERAL_CATEGORY = 1
 	const FIGHT_CATEGORY = 2

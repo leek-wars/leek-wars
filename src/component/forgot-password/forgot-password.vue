@@ -59,7 +59,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { LeekWars } from '@/model/leekwars'
 import { mixins } from '@/model/i18n'
@@ -70,7 +69,7 @@ defineProps<{
 	state?: string
 }>()
 
-const { t } = useI18n()
+const t = useNamespacedT('forgot_password')
 const route = useRoute()
 const router = useRouter()
 

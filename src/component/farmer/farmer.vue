@@ -628,7 +628,8 @@
 		RichTooltipFarmer, RichTooltipTeam, RichTooltipLeek, TitlePicker, 'lw-title': LwTitle, 'rich-tooltip-item': RichTooltipItem, Line,
 	} })
 
-	const { t, locale: i18nLocale } = useI18n()
+	const { locale: i18nLocale } = useI18n()
+	const t = useNamespacedT('farmer')
 	const route = useRoute()
 	const router = useRouter()
 	const avatarRef = useTemplateRef<any>('avatar')

@@ -49,7 +49,6 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import Markdown from '@/component/encyclopedia/markdown.vue'
 import { i18n, mixins } from '@/model/i18n'
@@ -59,7 +58,7 @@ import Pagination from '@/component/pagination.vue'
 
 defineOptions({ name: 'encyclopedia-search', i18n: {}, mixins: [...mixins] })
 
-const { t } = useI18n()
+const t = useNamespacedT('encyclopedia-search')
 const route = useRoute()
 const router = useRouter()
 

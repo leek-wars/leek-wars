@@ -90,13 +90,12 @@ import { mixins } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { computed, ref, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
 import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
 defineOptions({ name: 'teams', i18n: {}, components: { RichTooltipTeam, RichTooltipFarmer }, mixins: [...mixins] })
 
-const { t } = useI18n()
+const t = useNamespacedT('teams')
 
 const teams = ref<any[] | null>(null)
 const hasMatch = ref(false)
