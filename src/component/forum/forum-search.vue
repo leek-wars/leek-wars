@@ -107,7 +107,7 @@
 </template>
 
 <script setup lang="ts">
-	import { i18n, mixins } from '@/model/i18n'
+	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import Pagination from '@/component/pagination.vue'
 	import { computed, reactive, ref, watch } from 'vue'
@@ -116,7 +116,8 @@
 
 	defineOptions({ name: 'search', i18n: {}, mixins: [...mixins] })
 
-	const { t } = useI18n()
+	useI18n() // initialize local scope for <i18n-t>
+	const t = useNamespacedT('search')
 	const route = useRoute()
 	const router = useRouter()
 

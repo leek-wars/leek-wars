@@ -254,7 +254,7 @@
 	import { Action, ActionType } from '@/model/action'
 	import { Comment } from '@/model/comment'
 	import { Fight, FightContext, FightType, ReportLeek } from '@/model/fight'
-	import { i18n, mixins } from '@/model/i18n'
+	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { TEAM_COLORS } from '@/model/team'

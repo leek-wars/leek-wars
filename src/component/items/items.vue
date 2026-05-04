@@ -35,13 +35,14 @@ import { useI18n } from 'vue-i18n'
 import { type ItemTemplate, ItemType } from '@/model/item'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
-import { mixins } from '@/model/i18n'
+import { mixins, useNamespacedT } from '@/model/i18n'
 import Breadcrumb from '../forum/breadcrumb.vue'
 import Item from '@/component/item.vue'
 
 defineOptions({ name: 'items', i18n: {}, mixins: [...mixins] })
 
-const { t, locale } = useI18n()
+const { locale } = useI18n()
+	const t = useNamespacedT('items')
 
 const trophies = ref<any>({})
 const ignoredItems = new Set([406, 407, 408, 409, 410, 425, 419, 418, 417, 416, 415, 414, 413, 412, 411])

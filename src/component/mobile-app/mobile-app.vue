@@ -49,14 +49,13 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n'
 import { locale } from '@/locale'
 import { LeekWars } from '@/model/leekwars'
-import { mixins } from '@/model/i18n'
+import { mixins, useNamespacedT } from '@/model/i18n'
 
 defineOptions({ name: 'mobile_app', i18n: {}, mixins: [...mixins] })
 
-const { t } = useI18n()
+const t = useNamespacedT('mobile_app')
 LeekWars.setTitle(t('title'))
 
 // Expose locale for template

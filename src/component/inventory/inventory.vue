@@ -165,12 +165,11 @@
 </template>
 
 <script lang="ts" setup>
-	import { mixins } from '@/model/i18n'
+	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { type Item, type ItemTemplate, ItemType, ItemTypes, ITEM_TYPE_ICONS, ITEM_TYPE_NAME, ITEM_CATEGORY_NAME } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
-	import { useI18n } from 'vue-i18n'
 	import { useRouter } from 'vue-router'
 	import ItemPreview from '@/component/market/item-preview.vue'
 	import SchemeImage from '../market/scheme-image.vue'
@@ -188,7 +187,7 @@
 
 	defineOptions({ name: 'inventory', i18n: {}, mixins: [...mixins] })
 
-	const { t } = useI18n()
+	const t = useNamespacedT('inventory')
 	const router = useRouter()
 	const inventoryRef = useTemplateRef<HTMLElement>('inventory')
 

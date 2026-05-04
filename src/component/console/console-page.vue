@@ -28,14 +28,13 @@
 
 <script setup lang="ts">
 import { ref, useTemplateRef, nextTick } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { mixins } from '@/model/i18n'
+import { mixins, useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import Console from '../app/console.vue'
 
 defineOptions({ name: 'console-page', components: { Console }, mixins: [...mixins] })
 
-const { t } = useI18n()
+const t = useNamespacedT('console-page')
 
 const themeMenu = ref(false)
 const themeMenuTarget = ref<any>(undefined)

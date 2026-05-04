@@ -255,7 +255,7 @@
 	import { locale } from '@/locale'
 	import { AI } from '@/model/ai'
 	import { fileSystem, translateFileSystemError } from '@/model/filesystem'
-	import { i18n, mixins } from '@/model/i18n'
+	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import AIViewMonaco from './ai-view-monaco.vue'
@@ -273,7 +273,6 @@
 	import { isLeekScript } from './file-types'
 	import AIElement from '@/component/app/ai.vue'
 	import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, reactive, ref, shallowRef, useTemplateRef, watch } from 'vue'
-	import { useI18n } from 'vue-i18n'
 	import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 	import { emitter } from '@/model/vue'
 	import LeekscriptVersions from '../app/leekscript-versions.vue'
@@ -298,7 +297,7 @@
 		},
 	})
 
-	const { t } = useI18n()
+	const t = useNamespacedT('editor')
 	const route = useRoute()
 	const router = useRouter()
 

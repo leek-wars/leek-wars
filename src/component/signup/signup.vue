@@ -354,7 +354,7 @@
 	 */
 	import ChangelogVersion from '@/component/changelog/changelog-version.vue'
 	import { locale } from '@/locale'
-	import { mixins } from '@/model/i18n'
+	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
@@ -370,7 +370,8 @@
 
 	defineOptions({ name: 'signup', i18n: {}, mixins: [...mixins] })
 
-	const { t, locale: i18nLocale } = useI18n()
+	const { locale: i18nLocale } = useI18n()
+	const t = useNamespacedT('signup')
 	const route = useRoute()
 	const router = useRouter()
 

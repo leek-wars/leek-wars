@@ -108,17 +108,16 @@
 
 <script setup lang="ts">
 import { ref, defineAsyncComponent, nextTick } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { locale } from '@/locale'
-import { mixins } from '@/model/i18n'
+import { mixins, useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 
 const Didactitiel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`))
 
 defineOptions({ name: 'help', i18n: {}, mixins: [...mixins] })
 
-const { t } = useI18n()
+const t = useNamespacedT('help')
 const router = useRouter()
 
 const advanced = ref(false)

@@ -29,11 +29,12 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { LeekWars } from '@/model/leekwars'
-import { mixins } from '@/model/i18n'
+import { mixins, useNamespacedT } from '@/model/i18n'
 
 defineOptions({ name: 'legal', i18n: {}, mixins: [...mixins] })
 
-const { t } = useI18n()
+useI18n() // initialize local scope for <i18n-t>
+	const t = useNamespacedT('legal')
 LeekWars.setTitle(t('title'))
 </script>
 

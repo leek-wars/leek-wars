@@ -172,13 +172,12 @@
 <script lang="ts" setup>
 	import Markdown from '@/component/encyclopedia/markdown.vue'
 	import type { Farmer } from '@/model/farmer'
-	import { i18n, mixins } from '@/model/i18n'
+	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	type Fault = any
 	import router from '@/router'
 	import { computed, reactive, ref, watch } from 'vue'
-	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
@@ -188,7 +187,7 @@
 
 	type ModerationRequest = { faults: any[], thugs: Farmer[] }
 
-	const { t } = useI18n()
+	const t = useNamespacedT('moderation')
 	const route = useRoute()
 	const localRouter = useRouter()
 

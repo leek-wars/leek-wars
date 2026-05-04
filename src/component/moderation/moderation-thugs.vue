@@ -32,11 +32,10 @@
 
 <script setup lang="ts">
 	import { Farmer } from '@/model/farmer'
-	import { mixins } from '@/model/i18n'
+	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Fault } from '@/model/moderation'
 	import { computed, ref } from 'vue'
-	import { useI18n } from 'vue-i18n'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 
 	defineOptions({ name: "moderation-thugs", i18n: {}, mixins: [...mixins] })
@@ -46,7 +45,7 @@
 		thugs!: Farmer[]
 	}
 
-	const { t } = useI18n()
+	const t = useNamespacedT('moderation-thugs')
 	const thugs = ref<any>(null)
 
 	const breadcrumb_items = computed(() => [

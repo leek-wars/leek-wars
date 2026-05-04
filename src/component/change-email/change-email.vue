@@ -68,11 +68,12 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { LeekWars } from '@/model/leekwars'
-import { mixins } from '@/model/i18n'
+import { mixins, useNamespacedT } from '@/model/i18n'
 
 defineOptions({ name: 'change_email', i18n: {}, mixins: [...mixins] })
 
-const { t } = useI18n()
+useI18n() // initialize local scope for <i18n-t>
+	const t = useNamespacedT('change_email')
 const route = useRoute()
 
 const state = ref(parseInt(route.params.state as string, 10) || 0)

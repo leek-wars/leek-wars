@@ -155,7 +155,7 @@ export default { components: { Player } }
 </script>
 <script lang="ts" setup>
 import type { FightMap } from '@/model/fight'
-import { mixins } from '@/model/i18n'
+import { mixins, useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { Game, WEAPONS } from '@/component/player/game/game'
 import { Obstacle } from '@/component/player/game/obstacle'
@@ -168,12 +168,11 @@ import { ORDERED_CHIPS } from '@/model/sorted_chips'
 import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 import { WeaponsData } from '@/model/weapon'
 import { computed, nextTick, onMounted, onUnmounted, ref, useTemplateRef } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
 defineOptions({ name: 'creator', i18n: {}, mixins: [...mixins] })
 
-const { t } = useI18n()
+const t = useNamespacedT('creator')
 const route = useRoute()
 
 const map = ref<FightMap | null>(null)

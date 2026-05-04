@@ -817,7 +817,7 @@
 	import CharacteristicTooltip from '@/component/leek/characteristic-tooltip.vue'
 	import { ChatType } from '@/model/chat'
 	import { Farmer } from '@/model/farmer'
-	import { mixins, t as gt } from '@/model/i18n'
+	import { mixins, t as gt, useNamespacedT } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
@@ -883,7 +883,8 @@
 	const DEFAULT_MEMBER_COLUMNS = ['name', 'grade', 'country', 'talent', 'ranking', 'total_level', 'points', 'fights', 'last_connection', 'join_date']
 	const DEFAULT_MEMBER_SORT = { key: 'last_connection', order: 'desc' }
 
-	const { t } = useI18n()
+	useI18n() // initialize local scope for <i18n-t>
+	const t = useNamespacedT('team')
 	const route = useRoute()
 	const router = useRouter()
 	const emblemRef = useTemplateRef<any>('emblem')

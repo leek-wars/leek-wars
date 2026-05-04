@@ -27,14 +27,13 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { LeekWars } from '@/model/leekwars'
 import { Line } from 'vue-chartjs'
-import { mixins } from '@/model/i18n'
+import { mixins, useNamespacedT } from '@/model/i18n'
 
 defineOptions({ name: 'talent', i18n: {}, mixins: [...mixins] })
 
-const { t } = useI18n()
+const t = useNamespacedT('talent')
 
 const leekData = ref<any>(null)
 const leekOptions = ref<any>(null)

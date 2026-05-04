@@ -329,7 +329,7 @@
 	import { locale } from '@/locale'
 	import type { ForumCategory } from '@/model/forum'
 	import { ForumTopicStatus } from '@/model/forum'
-	import { mixins } from '@/model/i18n'
+	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { type Language, LeekWars } from '@/model/leekwars'
 	import { computed, defineAsyncComponent, reactive, ref, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
@@ -342,7 +342,8 @@
 
 	defineOptions({ name: 'forum_category', i18n: {}, mixins: [...mixins] })
 
-	const { t, locale: i18nLocale } = useI18n()
+	const { locale: i18nLocale } = useI18n()
+	const t = useNamespacedT('forum_category')
 	const route = useRoute()
 	const router = useRouter()
 

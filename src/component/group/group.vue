@@ -546,7 +546,7 @@
 </template>
 
 <script setup lang="ts">
-	import { mixins } from '@/model/i18n'
+	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Member } from '@/model/farmer'
 	import { Group } from '@/model/group'
@@ -571,7 +571,8 @@
 
 	defineOptions({ name: 'group', i18n: {}, mixins: [...mixins], components: { RichTooltipTeam, RichTooltipFarmer, CharacteristicTooltip, RichTooltipItem, CapitalDialog, Item } })
 
-	const { t } = useI18n()
+	useI18n() // initialize local scope for <i18n-t>
+	const t = useNamespacedT('group')
 	const route = useRoute()
 	const router = useRouter()
 

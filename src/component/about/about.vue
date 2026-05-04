@@ -176,13 +176,14 @@
 import { ref, computed, onMounted, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { Farmer } from '@/model/farmer'
-import { mixins } from '@/model/i18n'
+import { mixins, useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
 defineOptions({ name: 'about', i18n: {}, mixins: [...mixins] })
 
-const { t } = useI18n()
+useI18n() // initialize local scope for <i18n-t>
+	const t = useNamespacedT('about')
 
 const links = [
 	['Korben', 'http://korben.info/leek-wars.html'],

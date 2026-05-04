@@ -218,7 +218,7 @@
 	import type * as Monaco from 'monaco-editor'
 	import Markdown from '@/component/encyclopedia/markdown.vue'
 	import { locale } from '@/locale'
-	import { i18n, mixins } from '@/model/i18n'
+	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import Breadcrumb from '../forum/breadcrumb.vue'
@@ -231,7 +231,8 @@
 
 	defineOptions({ name: 'encyclopedia', i18n: {}, mixins: [...mixins], components: { Markdown, Breadcrumb, RichTooltipFarmer } })
 
-	const { t, locale: i18nLocale } = useI18n()
+	const { locale: i18nLocale } = useI18n()
+	const t = useNamespacedT('encyclopedia')
 	const route = useRoute()
 	const router = useRouter()
 	const monacoContainer = useTemplateRef<HTMLElement>('monacoContainer')
