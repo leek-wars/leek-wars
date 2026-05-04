@@ -1021,9 +1021,36 @@
 		})
 	}
 
+	function formatCloverInfo(clover: any): string {
+		if (clover.type === 'passed') {
+			return clover.passed ? t('potion.clover_passed_yes') as string : t('potion.clover_passed_no') as string
+		} else if (clover.type === 'hour') {
+			return clover.passed ? t('potion.clover_hour_passed', [clover.hour]) as string : t('potion.clover_hour_coming', [clover.hour]) as string
+		} else if (clover.type === 'second') {
+			const time = clover.hour + 'h' + String(clover.minute).padStart(2, '0') + 'm' + String(clover.second).padStart(2, '0') + 's'
+			return clover.passed ? t('potion.clover_second_passed', [time]) as string : t('potion.clover_second_coming', [time]) as string
+		}
+		return ''
+	}
+
 	function usePotion(p: Potion) {
 		const template = LeekWars.potions[p.template]
 		if (leek.value) {
+			potionDialog.value = false
+			skinPotionDialog.value = false
+			const isClover = template.effects.some((e: any) => e.type >= PotionEffect.CLOVER_PASSED && e.type <= PotionEffect.CLOVER_SECOND)
+			if (isClover) {
+				LeekWars.post('potion/use', {item_id: p.id}).then((data: any) => {
+					if (template.consumable) {
+						store.commit('remove-inventory', {type: ItemType.POTION, item_template: p.template})
+					}
+					if (data.clover) {
+						LeekWars.cloverResult = formatCloverInfo(data.clover)
+						LeekWars.cloverPopup = true
+					}
+				})
+				return
+			}
 			let up = false
 			for (const effect of template.effects) {
 				if (effect.type === PotionEffect.RESTAT) {
@@ -1034,8 +1061,6 @@
 					store.commit('change-skin', {leek: leek.value.id, skin})
 				}
 			}
-			potionDialog.value = false
-			skinPotionDialog.value = false
 			LeekWars.post('leek/use-potion', {leek_id: leek.value.id, potion_id: p.id}).then(() => {
 				if (template.consumable && template.id !== 176) {
 					store.commit('remove-inventory', {type: ItemType.POTION, item_template: p.template})
