@@ -111,7 +111,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onBeforeUnmount, useTemplateRef, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { mixins } from '@/model/i18n'
+import { mixins , useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import Breadcrumb from '../forum/breadcrumb.vue'
 // @ts-ignore - no types for vue-json-viewer

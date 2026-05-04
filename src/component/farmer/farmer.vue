@@ -606,7 +606,7 @@
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
 	import { Team, TeamMemberLevel } from '@/model/team'
-	import { mixins } from '@/model/i18n'
+	import { mixins , useNamespacedT } from '@/model/i18n'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'

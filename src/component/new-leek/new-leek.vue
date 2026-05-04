@@ -32,7 +32,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
-import { mixins } from '@/model/i18n'
+import { mixins , useNamespacedT } from '@/model/i18n'
 
 defineOptions({ name: 'new_leek', i18n: {}, mixins: [...mixins] })
 

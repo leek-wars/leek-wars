@@ -86,7 +86,7 @@
 </template>
 
 <script setup lang="ts">
-import { mixins } from '@/model/i18n'
+import { mixins , useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { computed, ref, watch } from 'vue'

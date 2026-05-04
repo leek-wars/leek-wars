@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { mixins } from '@/model/i18n'
+import { mixins , useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { getRedirectAfterLogin } from '@/router'

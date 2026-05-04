@@ -75,7 +75,7 @@
 	import { FUNCTION_BY_ID } from '@/model/function_by_id'
 	import { CONSTANT_BY_ID } from '@/model/constant_by_id'
 	import { FUNCTION_CATEGORIES } from '@/model/function_categories'
-	import { i18n, mixins } from '@/model/i18n'
+	import { i18n, mixins , useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'

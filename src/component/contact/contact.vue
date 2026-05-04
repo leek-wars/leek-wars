@@ -20,11 +20,13 @@
 </template>
 
 <script setup lang="ts">
-import { mixins } from '@/model/i18n'
+import { mixins, useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
+import { useI18n } from 'vue-i18n'
 
 defineOptions({ name: 'contact', i18n: {}, mixins: [...mixins] })
 
+useI18n()
 const t = useNamespacedT('contact')
 LeekWars.setTitle(t('title'))
 </script>

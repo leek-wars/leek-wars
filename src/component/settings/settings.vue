@@ -270,7 +270,7 @@
 
 <script setup lang="ts">
 	import TwoFactor from '@/component/settings/two-factor.vue'
-	import { mixins, t as gt } from '@/model/i18n'
+	import { mixins, t as gt , useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { ref, watch } from 'vue'

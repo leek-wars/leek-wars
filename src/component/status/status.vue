@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onBeforeUnmount } from 'vue'
-import { mixins } from '@/model/i18n'
+import { mixins , useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 
 defineOptions({ name: 'status', i18n: {}, mixins: [...mixins] })

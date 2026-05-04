@@ -39,7 +39,7 @@
 
 <script setup lang="ts">
 import { LeekWars } from '@/model/leekwars'
-import { mixins } from '@/model/i18n'
+import { mixins , useNamespacedT } from '@/model/i18n'
 
 defineOptions({ name: 'conditions', i18n: {}, mixins: [...mixins] })
 

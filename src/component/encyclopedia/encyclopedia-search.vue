@@ -51,7 +51,7 @@
 import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Markdown from '@/component/encyclopedia/markdown.vue'
-import { i18n, mixins } from '@/model/i18n'
+import { i18n, mixins , useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import Breadcrumb from '../forum/breadcrumb.vue'
 import Pagination from '@/component/pagination.vue'

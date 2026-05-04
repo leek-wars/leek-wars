@@ -202,7 +202,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { LeekWars } from '@/model/leekwars'
-import { mixins } from '@/model/i18n'
+import { mixins , useNamespacedT } from '@/model/i18n'
 import Breadcrumb from '../forum/breadcrumb.vue'
 
 defineOptions({ name: 'Groups', i18n: {}, mixins: [...mixins] })

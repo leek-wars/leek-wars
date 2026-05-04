@@ -61,7 +61,7 @@
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { LeekWars } from '@/model/leekwars'
-import { mixins } from '@/model/i18n'
+import { mixins , useNamespacedT } from '@/model/i18n'
 
 defineOptions({ name: 'forgot_password', i18n: {}, mixins: [...mixins] })
 
@@ -69,6 +69,7 @@ defineProps<{
 	state?: string
 }>()
 
+useI18n() // initialize local scope for <i18n-t>
 const t = useNamespacedT('forgot_password')
 const route = useRoute()
 const router = useRouter()

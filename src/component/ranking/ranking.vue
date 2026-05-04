@@ -284,7 +284,7 @@
 	import RankingSearchResult from '@/component/ranking/ranking-search-result.vue'
 	import RankingTeamRowElement from '@/component/ranking/ranking-team-row.vue'
 	import RankingCompositionRowElement from '@/component/ranking/ranking-composition-row.vue'
-	import { mixins } from '@/model/i18n'
+	import { mixins , useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Ranking, RankingRow } from '@/model/ranking'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'

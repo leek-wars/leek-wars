@@ -333,7 +333,7 @@
 	import { EffectTypeMarket } from '@/model/effect'
 	import { Farmer } from '@/model/farmer'
 	import { HatTemplate } from '@/model/hat'
-	import { mixins } from '@/model/i18n'
+	import { mixins , useNamespacedT } from '@/model/i18n'
 	import { ItemTemplate, ItemType, ITEM_CATEGORY_NAME } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { PompTemplate } from '@/model/pomp'
@@ -348,7 +348,8 @@
 
 	defineOptions({ name: 'market', i18n: {}, mixins: [...mixins] })
 
-	const t = useNamespacedT('market')
+	useI18n() // initialize local scope for <i18n-t>
+const t = useNamespacedT('market')
 	const route = useRoute()
 	const router = useRouter()
 

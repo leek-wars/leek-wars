@@ -109,7 +109,7 @@
 
 <script lang="ts" setup>
 	import { Chat as ChatModel, ChatType } from '@/model/chat'
-	import { mixins } from '@/model/i18n'
+	import { mixins , useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { store } from '@/model/store'

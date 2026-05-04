@@ -765,7 +765,7 @@
 	import { AI } from '@/model/ai'
 	import { Chip } from '@/model/chip'
 	import { Hat } from '@/model/hat'
-	import { mixins } from '@/model/i18n'
+	import { mixins , useNamespacedT } from '@/model/i18n'
 	import { ItemType } from '@/model/item'
 	import { Leek, Register } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
@@ -787,6 +787,7 @@
 	import LeekImage from '../leek-image.vue'
 	import LeekComponent from './leek-component.vue'
 	import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 	import { emitter } from '@/model/vue'
 	import { Line } from 'vue-chartjs'
@@ -804,6 +805,7 @@
 		CharacteristicTooltip, RichTooltipItem, RichTooltipFarmer, RichTooltipLeek, TitlePicker, ai: AIElement, 'lw-title': LwTitle, LeekComponent, Line,
 	} })
 
+	useI18n() // initialize local scope for <i18n-t>
 	const t = useNamespacedT('leek')
 	const route = useRoute()
 	const router = useRouter()
