@@ -151,10 +151,9 @@
 	import type { Farmer } from '@/model/farmer'
 	import { Language, LeekWars } from '@/model/leekwars'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
-	import { i18n, mixins } from '@/model/i18n'
+	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { store } from '@/model/store'
 	import { computed, defineAsyncComponent, reactive, ref, watch } from 'vue'
-	import { useI18n } from 'vue-i18n'
 	import { emitter } from '@/model/vue'
 	import { useRouter } from 'vue-router'
 
@@ -162,7 +161,7 @@
 
 	defineOptions({ name: 'forum', i18n: {}, mixins: [...mixins] })
 
-	const { t } = useI18n()
+	const t = useNamespacedT('forum')
 	const router = useRouter()
 
 	const categories = ref<any>(null)

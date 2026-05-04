@@ -33,7 +33,6 @@ Max power: {{ $filters.number(tournament.max_power || 0) }}</pre>
 
 <script setup lang="ts">
 import { ref, watch, useTemplateRef, onBeforeUnmount } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import TournamentBlock from '@/component/tournament/tournament-block.vue'
 import TournamentFight from '@/component/tournament/tournament-fight.vue'
@@ -42,7 +41,7 @@ import { LeekWars } from '@/model/leekwars'
 import type { Tournament } from '@/model/tournament'
 import Comments from '@/component/comment/comments.vue'
 import { SocketMessage } from '@/model/socket'
-import { mixins } from '@/model/i18n'
+import { mixins, useNamespacedT } from '@/model/i18n'
 import TournamentGraph from './tournament-graph.vue'
 import { emitter } from '@/model/vue'
 
@@ -51,7 +50,7 @@ defineOptions({ name: 'tournament', i18n: {}, mixins: [...mixins], components: {
 	'tournament-fight': TournamentFight,
 } })
 
-const { t } = useI18n()
+const t = useNamespacedT('tournament')
 const route = useRoute()
 
 const tournament = ref<Tournament | null>(null)
