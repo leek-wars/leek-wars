@@ -21,14 +21,14 @@
 					<div class="add-wrapper">
 						<v-tooltip v-for="cost in [1, 10, 100]" :key="cost">
 							<template #activator="{ props }">
-								<span :q="cost" :class="{locked: costs[c + cost].cost > capital}" class="add" @click="add(c, cost)" v-bind="props"></span>
+								<span :q="cost" :class="{locked: costs[c + cost].cost > capital}" class="add" v-bind="props" @click="add(c, cost)"></span>
 							</template>
 							<div>{{ costs[c + cost].cost + ' capital ⇔ ' + costs[c + cost].bonus + ' ' + $t('characteristic.' + c) }}</div>
 							<b v-if="useful_level[c] > leek.level">{{ $t('characteristic.too_high', [useful_level[c]]) }}</b>
 						</v-tooltip>
 						<v-tooltip v-if="bonuses[c]">
 							<template #activator="{ props }">
-								<span q="0" class="add" @click="clear(c)" v-bind="props"></span>
+								<span q="0" class="add" v-bind="props" @click="clear(c)"></span>
 							</template>
 							{{ $t('main.clear') }}
 						</v-tooltip>
@@ -56,7 +56,7 @@ import { store } from '@/model/store'
 import { computed, reactive, ref, watch } from 'vue'
 import CharacteristicTooltip from './characteristic-tooltip.vue'
 
-defineOptions({ name: 'capital-dialog', components: { "characteristic-tooltip": CharacteristicTooltip } })
+defineOptions({ name: 'CapitalDialog', components: { "characteristic-tooltip": CharacteristicTooltip } })
 
 const props = defineProps<{
 	leek: Leek

@@ -126,7 +126,7 @@
 			<div v-for="(feature, f) in features" :key="f" class="feature">
 				<div class="images">
 					<div v-for="(image, i) in feature.images" :key="i" class="image-wrapper">
-						<img height="300" :src="'/image/feature/small_' + image + '.webp'" @click="zoom" loading="lazy">
+						<img height="300" :src="'/image/feature/small_' + image + '.webp'" loading="lazy" @click="zoom">
 					</div>
 				</div>
 				<div class="description">
@@ -375,7 +375,7 @@
 	const RichTooltipFarmer = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-farmer.vue'))
 	const RichTooltipTeam = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-team.vue'))
 
-	defineOptions({ name: 'signup', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'Signup', i18n: {}, mixins: [...mixins] })
 
 	const { locale: i18nLocale } = useI18n()
 	const t = useNamespacedT('signup')

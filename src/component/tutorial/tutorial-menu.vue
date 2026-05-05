@@ -20,7 +20,7 @@ import { store } from '@/model/store'
 import { mixins } from '@/model/i18n'
 import { tutorial_items } from './tutorial-items'
 
-defineOptions({ name: 'tutorial-menu', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'TutorialMenu', i18n: {}, mixins: [...mixins] })
 
 const props = defineProps<{
 	locale: string

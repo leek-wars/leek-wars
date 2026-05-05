@@ -29,7 +29,7 @@
 									{{ category.name }}
 								</div>
 								<div v-for="chat in category.chats" :key="chat.id" class="conversation chat-preview" :class="{unread: $store.state.chat[chat.id] && !$store.state.chat[chat.id].read, notifications: $store.state.chat[chat.id] && $store.state.chat[chat.id].notifications}">
-									<router-link class="wrapper" :to="'/chat/' + chat.id" v-ripple>
+									<router-link v-ripple class="wrapper" :to="'/chat/' + chat.id">
 										<v-icon>{{ chat.icon }}</v-icon>
 										{{ $t(chat.name) }}
 										<div class="unread"></div>
@@ -61,7 +61,7 @@
 			</div>
 			<panel v-show="!LeekWars.mobile || LeekWars.splitBack" class="main-column">
 				<template #content>
-					<div class="admin-warn" v-if="isAdmin">
+					<div v-if="isAdmin" class="admin-warn">
 						<v-icon>mdi-alert-outline</v-icon>
 						<i18n-t keypath="admin_warn" tag="div">
 							<template #forum>
@@ -87,7 +87,7 @@
 					<v-list-item v-for="(chatId, i) in data.chats" :key="i" class="language" @click="$router.push('/chat/' + chatId)">
 						<v-icon>{{ LeekWars.publicChats[chatId].icon }}</v-icon>
 						<span class="name">{{ LeekWars.publicChats[chatId].name }}</span>
-						<span class="unread-circle" v-if="$store.state.chat[chatId] && !$store.state.chat[chatId].read"></span>
+						<span v-if="$store.state.chat[chatId] && !$store.state.chat[chatId].read" class="unread-circle"></span>
 					</v-list-item>
 				</div>
 			</v-list>
@@ -123,7 +123,7 @@
 
 	const Chat = defineAsyncComponent(() => import(`@/component/chat/chat.vue`))
 
-	defineOptions({ name: 'messages', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'Messages', i18n: {}, mixins: [...mixins] })
 
 	const { locale: i18nLocale } = useI18n()
 	const t = useNamespacedT('messages')

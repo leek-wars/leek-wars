@@ -17,7 +17,7 @@
 import { ref, watch, nextTick, onMounted, getCurrentInstance } from 'vue'
 import { type Command, Commands } from '@/model/commands'
 
-defineOptions({ name: 'chat-commands' })
+defineOptions({ name: 'ChatCommands' })
 
 const props = defineProps<{
 	filter?: string

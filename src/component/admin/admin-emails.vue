@@ -8,20 +8,20 @@
 			<div v-else>
 				<h4>Supprimer un compte par email</h4>
 				<div class="delete-account">
-					<input type="email" placeholder="Email du compte à supprimer" v-model="deleteEmail">
-					<v-btn @click="searchAccount" :disabled="!deleteEmail">Rechercher</v-btn>
+					<input v-model="deleteEmail" type="email" placeholder="Email du compte à supprimer">
+					<v-btn :disabled="!deleteEmail" @click="searchAccount">Rechercher</v-btn>
 				</div>
 				<div v-if="deleteTarget" class="delete-confirm">
 					<p>Compte trouvé : <b>{{ deleteTarget.name }}</b> (id: {{ deleteTarget.id }})</p>
 					<p>Pour confirmer la suppression, tapez le nom du joueur :</p>
-					<input type="text" v-model="deleteConfirm" :placeholder="deleteTarget.name">
-					<v-btn color="red" @click="deleteAccount" :disabled="deleteConfirm !== deleteTarget.name">Supprimer définitivement</v-btn>
+					<input v-model="deleteConfirm" type="text" :placeholder="deleteTarget.name">
+					<v-btn color="red" :disabled="deleteConfirm !== deleteTarget.name" @click="deleteAccount">Supprimer définitivement</v-btn>
 				</div>
 				<div v-if="deleteSuccess" class="delete-success">{{ deleteSuccess }}</div>
 				<div v-if="deleteError" class="delete-error">{{ deleteError }}</div>
 				<br>
 				<h4>Désinscrire totalement une email</h4>
-				<input type="email" placeholder="Désinscrire totalement une email" v-model="email"> <v-btn @click="unsubscribe">Désinscrire</v-btn>
+				<input v-model="email" type="email" placeholder="Désinscrire totalement une email"> <v-btn @click="unsubscribe">Désinscrire</v-btn>
 				<br><br>
 				<h4>Mails d'activation</h4>
 				<table>

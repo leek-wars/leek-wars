@@ -5,7 +5,7 @@
 				<template #activator="{ props }">
 					<div :value="effectText(effect)" :turns="effect.turns === -1 ? '∞' : effect.turns" class="effect" :class="{irreductible: effect.modifiers & EffectModifier.IRREDUCTIBLE}" v-bind="props">
 						<img class="image" :src="effect.texture.src">
-						<img class="state" v-if="effect.type === EffectType.ADD_STATE" :src="LeekWars.STATIC + 'image/state/' + effect.value + '.svg'" :style="{ background: FightEntity.stateColors[effect.value] }">
+						<img v-if="effect.type === EffectType.ADD_STATE" class="state" :src="LeekWars.STATIC + 'image/state/' + effect.value + '.svg'" :style="{ background: FightEntity.stateColors[effect.value] }">
 					</div>
 				</template>
 				<div v-if="effect.item"><b>{{ $t(LeekWars.items[effect.item].name.replace('_', '.')) }}</b></div>
@@ -176,7 +176,7 @@
 	import TurretImage from '@/component/turret-image.vue'
 	import { Mob } from './game/mob'
 
-	defineOptions({ name: 'entity-details' })
+	defineOptions({ name: 'EntityDetails' })
 
 	defineProps<{
 		entity: FightEntity

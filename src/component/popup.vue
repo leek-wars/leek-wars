@@ -30,7 +30,7 @@
 import { ref, computed, watch, useSlots, onBeforeUnmount } from 'vue'
 import { LeekWars } from '@/model/leekwars'
 
-defineOptions({ name: 'popup' })
+defineOptions({ name: 'Popup' })
 
 const props = defineProps<{
 	modelValue?: boolean

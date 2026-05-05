@@ -107,7 +107,7 @@
 								<div v-if="!message.deleted" class="votes">
 									<v-tooltip :key="votes_up_names[message.id] ? message.id * 101 + votes_up_names[message.id]!.length : message.id * 101" :open-delay="0" :close-delay="0" :disabled="message.votes_up === 0" bottom @update:model-value="loadVotesUp(message)">
 										<template #activator="{ props }">
-											<div :class="{active: message.my_vote == 1, zero: message.votes_up === 0}" class="vote up" @click="voteUp(message)" v-bind="props">
+											<div :class="{active: message.my_vote == 1, zero: message.votes_up === 0}" class="vote up" v-bind="props" @click="voteUp(message)">
 												<v-icon>mdi-thumb-up</v-icon>
 												<span class="counter">{{ message.votes_up }}</span>
 											</div>
@@ -119,7 +119,7 @@
 									</v-tooltip>
 									<v-tooltip :key="votes_down_names[message.id] ? message.id * 100 + votes_down_names[message.id]!.length : message.id" :open-delay="0" :close-delay="0" :disabled="message.votes_down === 0" bottom @update:model-value="loadVotesDown(message)">
 										<template #activator="{ props }">
-											<div :class="{active: message.my_vote == -1, zero: !message.votes_down}" class="vote down" @click="voteDown(message)" v-bind="props">
+											<div :class="{active: message.my_vote == -1, zero: !message.votes_down}" class="vote down" v-bind="props" @click="voteDown(message)">
 												<v-icon>mdi-thumb-down</v-icon>
 												<span class="counter">{{ message.votes_down }}</span>
 											</div>
@@ -200,18 +200,18 @@
 										<v-btn variant="text" density="compact" icon="mdi-dots-vertical" color="grey" v-bind="props" />
 									</template>
 									<v-list dense class="message-actions">
-										<v-list-item v-if="$store.state.farmer && category && (message.writer.id === $store.state.farmer.id || category.moderator)" v-ripple @click="edit(message)" prepend-icon="mdi-pencil">
+										<v-list-item v-if="$store.state.farmer && category && (message.writer.id === $store.state.farmer.id || category.moderator)" v-ripple prepend-icon="mdi-pencil" @click="edit(message)">
 											<span>{{ $t('edit') }}</span>
 										</v-list-item>
-										<v-list-item v-if="$store.state.farmer && category && (message.id !== -1 ? (message.writer.id === $store.state.farmer.id || category.moderator) : canDeleteTopic)" v-ripple @click="deleteGeneric(message)" prepend-icon="mdi-delete">
+										<v-list-item v-if="$store.state.farmer && category && (message.id !== -1 ? (message.writer.id === $store.state.farmer.id || category.moderator) : canDeleteTopic)" v-ripple prepend-icon="mdi-delete" @click="deleteGeneric(message)">
 											<span>{{ $t('delete') }}</span>
 										</v-list-item>
-										<v-list-item v-if="category && $store.state.farmer && category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'" v-ripple @click="report(message)" prepend-icon="mdi-flag">
+										<v-list-item v-if="category && $store.state.farmer && category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'" v-ripple prepend-icon="mdi-flag" @click="report(message)">
 											<span>{{ $t('warning.report') }}</span>
 										</v-list-item>
 										<v-menu v-if="message.id === -1 && canMoveTopic" submenu open-on-hover>
 											<template #activator="{ props }">
-												<v-list-item v-bind="props" v-ripple prepend-icon="mdi-folder-move" append-icon="mdi-chevron-right" @click.stop>
+												<v-list-item v-ripple v-bind="props" prepend-icon="mdi-folder-move" append-icon="mdi-chevron-right" @click.stop>
 													<span>{{ $t('move') }}</span>
 												</v-list-item>
 											</template>
@@ -221,7 +221,7 @@
 												</v-list-item>
 											</v-list>
 										</v-menu>
-										<v-list-item v-if="message.id === -1 && $store.state.farmer && $store.state.farmer.admin" v-ripple @click="toggleHidden" :prepend-icon="topic.hidden ? 'mdi-eye' : 'mdi-eye-off'">
+										<v-list-item v-if="message.id === -1 && $store.state.farmer && $store.state.farmer.admin" v-ripple :prepend-icon="topic.hidden ? 'mdi-eye' : 'mdi-eye-off'" @click="toggleHidden">
 											<span>{{ topic.hidden ? $t('show_topic') : $t('hide_topic') }}</span>
 										</v-list-item>
 										<v-list-item v-if="message.id === -1 && $store.state.farmer && $store.state.farmer.admin && !topic.release" v-ripple prepend-icon="mdi-tag" @click="releaseInput = topic.release; releaseDialog = true">
@@ -348,7 +348,7 @@
 	const ReportDialog = defineAsyncComponent(() => import('@/component/moderation/report-dialog.vue'))
 	const FormattingRules = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum-formatting-rules.${locale}.i18n`))
 
-	defineOptions({ name: 'forum_topic', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'ForumTopic', i18n: {}, mixins: [...mixins] })
 
 	const { locale: i18nLocale } = useI18n()
 	const t = useNamespacedT('forum_topic')

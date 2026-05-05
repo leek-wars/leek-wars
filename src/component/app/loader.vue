@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-defineOptions({ name: 'loader' })
+defineOptions({ name: 'Loader' })
 
 const props = defineProps<{
 	size?: number

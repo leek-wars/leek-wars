@@ -19,7 +19,7 @@ import { LeekWars } from '@/model/leekwars'
 import type { Leek } from '@/model/leek'
 import { emitter } from '@/model/vue'
 
-defineOptions({ name: 'rich-tooltip-item' })
+defineOptions({ name: 'RichTooltipItem' })
 
 const props = withDefaults(defineProps<{
 	item: ItemTemplate

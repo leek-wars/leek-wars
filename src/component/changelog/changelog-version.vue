@@ -31,7 +31,7 @@ interface ChangelogVersion {
 	[key: string]: unknown
 }
 
-defineOptions({ name: 'changelog-version', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'ChangelogVersion', i18n: {}, mixins: [...mixins] })
 
 const props = defineProps<{
 	version: ChangelogVersion | null

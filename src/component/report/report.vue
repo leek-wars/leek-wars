@@ -7,7 +7,7 @@
 		</v-btn>
 		</template>
 	</error>
-	<div class="page" v-else>
+	<div v-else class="page">
 		<div class="page-header page-bar">
 			<div>
 				<h1><breadcrumb v-if="fight && fightTypeLabel" :items="breadcrumbItems" :raw="true" /><span v-else>{{ $t('title') }}</span></h1>
@@ -288,7 +288,7 @@
 		return { x: (xStart + xEnd) / 2, y: (first as unknown as { y: number }).y }
 	}
 
-	defineOptions({ name: 'report', i18n: {}, mixins: [...mixins], components: { actions: ActionsElement, 'lw-map': Map } })
+	defineOptions({ name: 'Report', i18n: {}, mixins: [...mixins], components: { actions: ActionsElement, 'lw-map': Map } })
 
 	const { te } = useI18n()
 	const t = useNamespacedT('report')

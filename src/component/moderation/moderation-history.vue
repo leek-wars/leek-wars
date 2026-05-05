@@ -63,7 +63,7 @@
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	defineOptions({ name: "moderation-history", i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: "ModerationHistory", i18n: {}, mixins: [...mixins] })
 
 	const history = ref<Record<string, unknown>[]>([])
 	const total = ref(0)

@@ -35,7 +35,7 @@
 	import { KeywordKind } from '@/model/keyword'
 	import { computed } from 'vue'
 
-	defineOptions({ name: "javadoc" })
+	defineOptions({ name: "Javadoc" })
 
 	interface JavadocItem {
 		type: string

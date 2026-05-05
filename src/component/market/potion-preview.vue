@@ -49,7 +49,7 @@ import { emitter } from '@/model/vue'
 import { computed } from 'vue'
 
 defineOptions({
-	name: 'potion-preview',
+	name: 'PotionPreview',
 	components: { 'range-view': RangeView, 'effect-view': EffectView, 'area-view': AreaView }
 })
 

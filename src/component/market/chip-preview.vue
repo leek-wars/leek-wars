@@ -56,7 +56,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { computed } from 'vue'
 
-	defineOptions({ name: 'chip-preview' })
+	defineOptions({ name: 'ChipPreview' })
 
 	const props = defineProps<{
 		chip: ChipTemplate

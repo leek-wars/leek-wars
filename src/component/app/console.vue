@@ -1,6 +1,6 @@
 <template lang="html">
 	<div class="console" :class="'theme-' + cssTheme">
-		<div ref="scroll" class="scroll" v-autostopscroll >
+		<div ref="scroll" v-autostopscroll class="scroll" >
 			<div class="lines">
 				<div v-for="(line, l) in lines" :key="l" class="line">
 					<template v-if="line.type === 'code'">
@@ -31,7 +31,7 @@
 			</div>
 			<div class="input" @click="focus()">
 				<v-icon class="arrow">mdi-chevron-right</v-icon>
-				<ai-view-monaco class="editor" ref="editor" :ai="ai" :ais="{}" :visible="true" :line-numbers="false" :font-size="17" :line-height="20" @enter="enter" :autocomplete-option="true" :popups="true" :console="true" :theme="theme" @down="down" @up="up" />
+				<ai-view-monaco ref="editor" class="editor" :ai="ai" :ais="{}" :visible="true" :line-numbers="false" :font-size="17" :line-height="20" :autocomplete-option="true" :popups="true" :console="true" :theme="theme" @enter="enter" @down="down" @up="up" />
 			</div>
 		</div>
 	</div>
@@ -48,7 +48,7 @@ import { emitter } from '@/model/vue'
 import { computed, onBeforeUnmount, onMounted, reactive, ref, useTemplateRef, watch } from 'vue'
 import AIViewMonaco from '../editor/ai-view-monaco.vue'
 
-defineOptions({ name: 'console', components: { 'ai-view-monaco': AIViewMonaco } })
+defineOptions({ name: 'Console', components: { 'ai-view-monaco': AIViewMonaco } })
 
 interface EditorRef {
 	editor: {

@@ -186,7 +186,7 @@
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import { emitter } from '@/model/vue'
 
-	defineOptions({ name: "moderation", i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: "Moderation", i18n: {}, mixins: [...mixins] })
 
 	type ModerationRequest = { faults: Fault[], thugs: Farmer[] }
 

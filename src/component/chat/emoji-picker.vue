@@ -6,7 +6,7 @@
 			</div>
 		</template>
 		<v-card>
-			<v-tabs v-model="activeTab" :key="categories.length" class="tabs" grow :show-arrows="false">
+			<v-tabs :key="categories.length" v-model="activeTab" class="tabs" grow :show-arrows="false">
 				<v-tab v-for="(category, c) in categories" :key="c" :value="'tab-' + c" class="tab">
 					<span v-emojis>{{ category.icon }}</span>
 				</v-tab>

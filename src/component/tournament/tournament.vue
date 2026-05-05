@@ -15,7 +15,7 @@
 					<loader v-if="!tournament" />
 					<tournament-graph v-else :tournament="tournament" :class="{zoomed: zoomed}" :style="{maxHeight: zoomed ? height : 'auto', minWidth: zoomed && LeekWars.mobile ? '950px' : ''}" />
 
-					<pre class="info" v-if="$store.getters.admin && tournament">
+					<pre v-if="$store.getters.admin && tournament" class="info">
 Min power: {{ $filters.number(tournament.min_power || 0) }}
 Max power: {{ $filters.number(tournament.max_power || 0) }}</pre>
 				</div>
@@ -45,7 +45,7 @@ import { mixins, useNamespacedT } from '@/model/i18n'
 import TournamentGraph from './tournament-graph.vue'
 import { emitter } from '@/model/vue'
 
-defineOptions({ name: 'tournament', i18n: {}, mixins: [...mixins], components: {
+defineOptions({ name: 'Tournament', i18n: {}, mixins: [...mixins], components: {
 	'tournament-block': TournamentBlock,
 	'tournament-fight': TournamentFight,
 } })

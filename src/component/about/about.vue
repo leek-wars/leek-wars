@@ -58,7 +58,7 @@
 
 		<panel :title="$t('team')">
 			<div v-for="(part, p) of team" :key="p" class="devs">
-				<rich-tooltip-farmer v-for="member of part" :key="member.id" :id="member.id">
+				<rich-tooltip-farmer v-for="member of part" :id="member.id" :key="member.id">
 					<router-link :key="member.id" :to="'/farmer/' + member.id">
 						<div class="dev" :class="member.grade">
 							<avatar :farmer="{id: member.id, avatar_changed: member.id === 11 ? 0 : 1}" />
@@ -70,7 +70,7 @@
 			</div>
 			<h4>{{ $t('contributors') }}</h4>
 			<div class="devs contributors">
-				<rich-tooltip-farmer v-for="member of contributors" :key="member.id" :id="member.id">
+				<rich-tooltip-farmer v-for="member of contributors" :id="member.id" :key="member.id">
 					<router-link :key="member.id" :to="'/farmer/' + member.id">
 						<div class="contributor" :class="member.grade">
 							<avatar :farmer="{id: member.id, avatar_changed: member.avatar_changed}" />
@@ -180,7 +180,7 @@ import { mixins, useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-defineOptions({ name: 'about', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'About', i18n: {}, mixins: [...mixins] })
 
 useI18n() // initialize local scope for <i18n-t>
 	const t = useNamespacedT('about')

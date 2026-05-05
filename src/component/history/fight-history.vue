@@ -77,7 +77,7 @@ import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
 import RichTooltipFight from '@/component/rich-tooltip/rich-tooltip-fight.vue'
 
-defineOptions({ name: 'fight-history' })
+defineOptions({ name: 'FightHistory' })
 
 const props = defineProps<{
 	fight: Fight

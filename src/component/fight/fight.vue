@@ -16,13 +16,13 @@
 		<panel class="first">
 			<template #content>
 				<div class="fight" :style="{minWidth: playerWidth + 'px', minHeight: playerHeight + 'px'}">
-					<player ref="playerRef" v-if="fight_id" :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
+					<player v-if="fight_id" ref="playerRef" :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
 				</div>
 			</template>
 		</panel>
 
 		<div v-if="fight" class="fight-info">
-			<div class="center" v-if="fight.type === FightType.BATTLE_ROYALE">
+			<div v-if="fight.type === FightType.BATTLE_ROYALE" class="center">
 				<span v-for="(farmer, f, i) in fight.farmers1" :key="f">
 					<span v-if="i !== 0" class="br-versus">VS</span>
 					<router-link :to="'/farmer/' + farmer.id">
@@ -142,7 +142,7 @@
 	const ReportDialog = defineAsyncComponent(() => import('@/component/moderation/report-dialog.vue'))
 	const Player = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/player/player.${locale}.i18n`))
 
-	defineOptions({ name: 'fight', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'Fight', i18n: {}, mixins: [...mixins] })
 
 	const t = useNamespacedT('fight')
 	const route = useRoute()

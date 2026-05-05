@@ -10,7 +10,7 @@
 import type { Fight } from '@/model/fight'
 import FightHistory from '@/component/history/fight-history.vue'
 
-defineOptions({ name: 'fights-history' })
+defineOptions({ name: 'FightsHistory' })
 
 defineProps<{
 	fights: Fight[]

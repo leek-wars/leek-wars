@@ -14,7 +14,7 @@ import { ref, watch, nextTick, getCurrentInstance } from 'vue'
 import type { Farmer } from '@/model/farmer'
 import { LeekWars } from '@/model/leekwars'
 
-defineOptions({ name: 'chat-pseudos' })
+defineOptions({ name: 'ChatPseudos' })
 
 const props = defineProps<{
 	chat: number

@@ -13,7 +13,7 @@
 						</div>
 					</template>
 					<v-list>
-						<v-list-item v-for="(language, i) in languages" :key="i" class="language" @click="setForumLanguage(language)" :disabled="forumLanguages[language.code] && activeLanguages.length === 1">
+						<v-list-item v-for="(language, i) in languages" :key="i" class="language" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click="setForumLanguage(language)">
 							<template #prepend>
 								<v-list-item-action start>
 									<v-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" hide-details @click.stop @update:model-value="updateCategories" />
@@ -284,9 +284,9 @@
 			</template>
 			<div class="create-popup">
 				<h3>{{ $t('new_topic_title') }}</h3>
-				<input v-model="createTitle" @keyup="updateDraftTitle" class="topic-name card" type="text">
+				<input v-model="createTitle" class="topic-name card" type="text" @keyup="updateDraftTitle">
 				<h3>{{ $t('new_topic_message') }}</h3>
-				<textarea v-model="createMessage" @keyup="updateDraft" class="topic-message card"></textarea>
+				<textarea v-model="createMessage" class="topic-message card" @keyup="updateDraft"></textarea>
 
 				<div class="grid">
 					<v-radio-group v-if="Object.values(forumLanguages).length > 1" v-model="createMessageLang" hide-details>
@@ -340,7 +340,7 @@
 	import Pagination from '@/component/pagination.vue'
 	import { emitter } from '@/model/vue'
 
-	defineOptions({ name: 'forum_category', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'ForumCategory', i18n: {}, mixins: [...mixins] })
 
 	const { locale: i18nLocale } = useI18n()
 	const t = useNamespacedT('forum_category')

@@ -21,7 +21,7 @@ import { formatChatPreview } from '@/model/chat-format'
 import { store } from '@/model/store'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-defineOptions({ name: 'conversation' })
+defineOptions({ name: 'Conversation' })
 
 const props = defineProps<{
 	chat: Chat

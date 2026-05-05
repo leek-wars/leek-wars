@@ -31,7 +31,7 @@ import { useI18n } from 'vue-i18n'
 import { LeekWars } from '@/model/leekwars'
 import { mixins, useNamespacedT } from '@/model/i18n'
 
-defineOptions({ name: 'legal', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'Legal', i18n: {}, mixins: [...mixins] })
 
 useI18n() // initialize local scope for <i18n-t>
 	const t = useNamespacedT('legal')

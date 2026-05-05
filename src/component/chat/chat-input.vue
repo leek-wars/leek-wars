@@ -17,7 +17,7 @@ import ChatCommands from './chat-commands.vue'
 import ChatPseudos from './chat-pseudos.vue'
 import EmojiPicker from './emoji-picker.vue'
 
-defineOptions({ name: 'chat-input', components: { 'emoji-picker': EmojiPicker, ChatCommands, ChatPseudos } })
+defineOptions({ name: 'ChatInput', components: { 'emoji-picker': EmojiPicker, ChatCommands, ChatPseudos } })
 
 defineProps<{
 	chat: number

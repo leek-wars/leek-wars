@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 	import { mixins } from '@/model/i18n'
-	defineOptions({ name: 'forum-formatting-rules', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'ForumFormattingRules', i18n: {}, mixins: [...mixins] })
 </script>
 
 <style lang="scss" scoped>

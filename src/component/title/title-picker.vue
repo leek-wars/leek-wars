@@ -13,7 +13,7 @@
 								<img class="icon" :src="'/image/trophy/' + item.raw.code + '.svg'">
 							</template>
 							<template v-else #title>{{ $t('main.none') }}</template>
-							<template #append v-if="item.raw.id">
+							<template v-if="item.raw.id" #append>
 								<div class="rarity">{{ formatRarity(item.raw.rarity) }}%</div>
 							</template>
 						</v-list-item>
@@ -31,10 +31,10 @@
 								<template v-if="item.value" #prepend>
 									<img class="icon" :src="'/image/trophy/' + item.raw.code + '.svg'">
 								</template>
-								<template #append v-if="item.value" class="word">
+								<template v-if="item.value" #append class="word">
 									<div class="rarity">{{ formatRarity(item.raw.rarity) }}%</div>
 								</template>
-								<template #title v-else>{{ $t('main.none') }}</template>
+								<template v-else #title>{{ $t('main.none') }}</template>
 							</v-list-item>
 						</template>
 					</v-select>
@@ -63,10 +63,10 @@
 								<template v-if="item.value" #prepend>
 									<img class="icon" :src="'/image/trophy/' + item.raw.code + '.svg'">
 								</template>
-								<template #append v-if="item.value" class="word">
+								<template v-if="item.value" #append class="word">
 									<div class="rarity">{{ formatRarity(item.raw.rarity) }}%</div>
 								</template>
-								<template #title v-else>{{ $t('main.none') }}</template>
+								<template v-else #title>{{ $t('main.none') }}</template>
 							</v-list-item>
 						</template>
 					</v-select>
@@ -85,7 +85,7 @@ import { useI18n } from 'vue-i18n'
 import { LeekWars } from '@/model/leekwars'
 import LwTitle from '@/component/title/title.vue'
 
-defineOptions({ name: 'title-picker' })
+defineOptions({ name: 'TitlePicker' })
 
 const props = defineProps<{
 	title: number[]

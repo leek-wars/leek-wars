@@ -7,7 +7,7 @@ import { computed } from 'vue'
 import type { Farmer } from '@/model/farmer'
 import { LeekWars } from '@/model/leekwars'
 
-defineOptions({ name: 'avatar' })
+defineOptions({ name: 'Avatar' })
 
 const props = defineProps<{
 	farmer?: Farmer

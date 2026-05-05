@@ -49,7 +49,7 @@ import { store } from '@/model/store'
 import { emitter } from '@/model/vue'
 import { computed } from 'vue'
 
-defineOptions({ name: 'scheme', components: {
+defineOptions({ name: 'Scheme', components: {
 	'rich-tooltip-item': RichTooltipItem,
 } })
 

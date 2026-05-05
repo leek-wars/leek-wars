@@ -66,7 +66,7 @@ import { ChipTemplate } from '@/model/chip'
 import { WeaponTemplate } from '@/model/weapon'
 import { Effect } from '@/model/effect'
 
-defineOptions({ name: 'documentation-constant', components: { ItemPreview } })
+defineOptions({ name: 'DocumentationConstant', components: { ItemPreview } })
 
 const CHIPS = CHIPS_TYPED
 

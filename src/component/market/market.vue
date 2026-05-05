@@ -347,7 +347,7 @@
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 
-	defineOptions({ name: 'market', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'Market', i18n: {}, mixins: [...mixins] })
 
 	useI18n() // initialize local scope for <i18n-t>
 const t = useNamespacedT('market')

@@ -7,7 +7,7 @@ import { computed } from 'vue'
 import { LeekWars } from '@/model/leekwars'
 import type { Team } from '@/model/team'
 
-defineOptions({ name: 'emblem' })
+defineOptions({ name: 'Emblem' })
 
 const props = defineProps<{
 	team: Team

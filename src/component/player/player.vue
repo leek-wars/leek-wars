@@ -99,7 +99,7 @@
 			<div v-if="!creator" class="controls controls-a">
 				<v-tooltip :open-delay="0" :close-delay="0" location="top" :attach="playerAttach">
 					<template #activator="{ props }">
-						<v-icon v-ripple class="control" @click="pause" v-bind="props">{{ game.paused ? 'mdi-play' : 'mdi-pause' }}</v-icon>
+						<v-icon v-ripple class="control" v-bind="props" @click="pause">{{ game.paused ? 'mdi-play' : 'mdi-pause' }}</v-icon>
 					</template>
 					{{ $t('pause') }} (P)
 				</v-tooltip>
@@ -129,7 +129,7 @@
 				</v-tooltip>
 				<v-tooltip v-if="game.sound && !LeekWars.mobile" :open-delay="0" :close-delay="0" location="top" :attach="playerAttach">
 					<template #activator="{ props }">
-						<input type="range" min="0" max="1" step="0.01" style="width: 100px; padding: 0" v-model="game.volume">
+						<input v-model="game.volume" type="range" min="0" max="1" step="0.01" style="width: 100px; padding: 0">
 					</template>
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" location="top" :attach="playerAttach">
@@ -187,19 +187,19 @@
 							</template>
 							<v-list density="compact" class="settings-menu">
 								<div class="section">INTERFACE</div>
-								<v-list-item v-ripple @click="game.showLifes = !game.showLifes" prepend-icon="mdi-heart-half-full">
+								<v-list-item v-ripple prepend-icon="mdi-heart-half-full" @click="game.showLifes = !game.showLifes">
 									<v-switch :model-value="game.showLifes" :label="$t('display_life_bars') + ' (L)'" hide-details />
 								</v-list-item>
-								<v-list-item :ripple="game.showLifes" :class="{disabled: !game.showLifes}" @click="game.showLifes ? (game.showEffects = !game.showEffects) : null" prepend-icon="mdi-flare">
+								<v-list-item :ripple="game.showLifes" :class="{disabled: !game.showLifes}" prepend-icon="mdi-flare" @click="game.showLifes ? (game.showEffects = !game.showEffects) : null">
 									<v-switch :model-value="game.showEffects" :disabled="!game.showLifes" :label="$t('display_effects') + ' (E)'" hide-details />
 								</v-list-item>
-								<v-list-item v-if="!LeekWars.mobile" v-ripple @click="game.showActions = !game.showActions" prepend-icon="mdi-format-list-bulleted">
+								<v-list-item v-if="!LeekWars.mobile" v-ripple prepend-icon="mdi-format-list-bulleted" @click="game.showActions = !game.showActions">
 									<v-switch :model-value="game.showActions" :label="$t('show_actions') + ' (A)'" hide-details />
 								</v-list-item>
-								<v-list-item v-if="!LeekWars.mobile" :ripple="game.showActions" :class="{disabled: !game.showActions}" @click="game.showActions ? (game.largeActions = !game.largeActions) : null" prepend-icon="mdi-view-split-vertical">
+								<v-list-item v-if="!LeekWars.mobile" :ripple="game.showActions" :class="{disabled: !game.showActions}" prepend-icon="mdi-view-split-vertical" @click="game.showActions ? (game.largeActions = !game.largeActions) : null">
 									<v-switch :model-value="game.largeActions" :disabled="!game.showActions" :label="$t('large_actions') + ' (G)'" hide-details />
 								</v-list-item>
-								<v-list-item v-if="!LeekWars.mobile" :ripple="game.displayDebugs" :class="{disabled: !game.showActions}" @click="game.showActions ? (game.displayDebugs = !game.displayDebugs) : null" prepend-icon="mdi-math-log">
+								<v-list-item v-if="!LeekWars.mobile" :ripple="game.displayDebugs" :class="{disabled: !game.showActions}" prepend-icon="mdi-math-log" @click="game.showActions ? (game.displayDebugs = !game.displayDebugs) : null">
 									<v-switch :model-value="game.displayDebugs" :disabled="!game.showActions" :label="$t('display_logs') + ' (D)'" hide-details />
 									<template #append>
 										<v-checkbox v-model="game.displayAILines" :disabled="!game.showActions || !game.displayDebugs" :class="{disabled: !game.showActions || !game.displayDebugs}" label="Lignes" hide-details class="ally-debug" @click.stop />
@@ -207,7 +207,7 @@
 									</template>
 								</v-list-item>
 								<div class="section">GRAPHISMES</div>
-								<v-list-item v-ripple @click="game.shadows = !game.shadows" prepend-icon="mdi-box-shadow">
+								<v-list-item v-ripple prepend-icon="mdi-box-shadow" @click="game.shadows = !game.shadows">
 									<v-switch :model-value="game.shadows" :label="$t('display_shadows') + ' (O)'" hide-details />
 								</v-list-item>
 								<v-list-item prepend-icon="mdi-weather-night">
@@ -217,16 +217,16 @@
 									</template>
 								</v-list-item>
 								<div class="section">DEVELOPEMENT</div>
-								<v-list-item v-ripple @click="game.tactic = !game.tactic" prepend-icon="mdi-view-comfy">
+								<v-list-item v-ripple prepend-icon="mdi-view-comfy" @click="game.tactic = !game.tactic">
 									<v-switch :model-value="game.tactic" :label="$t('tactic_mode') + ' (T)'" hide-details />
 								</v-list-item>
-								<v-list-item v-ripple @click="game.plainBackground = !game.plainBackground" prepend-icon="mdi-format-color-fill">
+								<v-list-item v-ripple prepend-icon="mdi-format-color-fill" @click="game.plainBackground = !game.plainBackground">
 									<v-switch :model-value="game.plainBackground" :label="$t('plain_background') + ' (U)'" hide-details />
 								</v-list-item>
-								<v-list-item v-ripple @click="game.showCells = !game.showCells" prepend-icon="mdi-numeric-1-box">
+								<v-list-item v-ripple prepend-icon="mdi-numeric-1-box" @click="game.showCells = !game.showCells">
 									<v-switch :model-value="game.showCells" :label="$t('display_cell_numbers') + ' (C)'" hide-details />
 								</v-list-item>
-								<v-list-item v-if="!LeekWars.mobile" :ripple="game.showLifes" :class="{disabled: !game.showLifes}" @click="game.showLifes ? (game.showIDs = !game.showIDs) : null" prepend-icon="mdi-key">
+								<v-list-item v-if="!LeekWars.mobile" :ripple="game.showLifes" :class="{disabled: !game.showLifes}" prepend-icon="mdi-key" @click="game.showLifes ? (game.showIDs = !game.showIDs) : null">
 									<v-switch :model-value="game.showIDs" :disabled="!game.showLifes" :label="$t('show_ids') + ' (I)'" hide-details />
 								</v-list-item>
 							</v-list>
@@ -261,7 +261,7 @@
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
 
-	defineOptions({ name: 'player', i18n: {}, mixins: [...mixins], components: { Hud, 'lw-title': LwTitle } })
+	defineOptions({ name: 'Player', i18n: {}, mixins: [...mixins], components: { Hud, 'lw-title': LwTitle } })
 
 	const props = defineProps<{
 		fightId?: string

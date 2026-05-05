@@ -1,6 +1,6 @@
 <template>
 	<div class="search-bar">
-		<input class="card" v-model="query" type="text" :placeholder="$t('main.search_bar')">
+		<input v-model="query" class="card" type="text" :placeholder="$t('main.search_bar')">
 
 		<loader v-if="loading" />
 		<div v-else-if="results && results.length" class="results">
@@ -20,7 +20,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 
-defineOptions({ name: 'search-bar' })
+defineOptions({ name: 'SearchBar' })
 
 const route = useRoute()
 const router = useRouter()

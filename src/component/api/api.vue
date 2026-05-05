@@ -21,7 +21,7 @@
 				</router-link> -->
 				<div class="tab disabled search" icon="search" link="/search">
 					<img class="search-icon" src="/image/search.png">
-					<input v-model="query" ref="search" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+					<input ref="search" v-model="query" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
 				</div>
 				<!-- <div class="tab action" icon="search" link="/search" @click="toggleLarge">
 					<v-icon v-if="LeekWars.large">mdi-fullscreen-exit</v-icon>
@@ -45,7 +45,7 @@
 									<v-icon v-else>mdi-chevron-down</v-icon>
 								</h2>
 								<div v-if="query.length || categoryState[c]">
-									<div v-for="(item, i) in category" :key="i" @click="navigate(item.module + '/' + item.function)" :item="item.name" class="item">
+									<div v-for="(item, i) in category" :key="i" :item="item.name" class="item" @click="navigate(item.module + '/' + item.function)">
 										<span class="method chip" :class="item.method">{{ item.method }}</span>
 										{{ item.function }}
 									</div>
@@ -119,7 +119,7 @@ import JsonViewer from 'vue-json-viewer'
 import Markdown from '@/component/encyclopedia/markdown.vue'
 import { emitter } from '@/model/vue'
 
-defineOptions({ name: 'api', i18n: {}, mixins: [...mixins], components: { JsonViewer } })
+defineOptions({ name: 'Api', i18n: {}, mixins: [...mixins], components: { JsonViewer } })
 
 const t = useNamespacedT('api')
 const route = useRoute()

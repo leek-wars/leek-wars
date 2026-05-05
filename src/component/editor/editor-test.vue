@@ -1,5 +1,5 @@
 <template>
-	<popup :modelValue="modelValue" :width="1060" :full="true" icon="mdi-play" :title="$t('run_test')" @update:modelValue="$emit('update:modelValue', $event)">
+	<popup :model-value="modelValue" :width="1060" :full="true" icon="mdi-play" :title="$t('run_test')" @update:modelValue="$emit('update:modelValue', $event)">
 		<v-tabs :key="String(modelValue)" v-model="currentTab" class="tabs" grow>
 			<v-tab class="tab" value="scenarios">{{ $t('scenarios') }} ({{ LeekWars.objectSize(scenarios) }})</v-tab>
 			<v-tab class="tab" value="leeks">{{ $t('test_leeks') }} ({{ LeekWars.objectSize(leeks) }})</v-tab>
@@ -124,7 +124,7 @@
 							<div v-for="leek of leeks" :key="leek.id" :class="{selected: leek === currentLeek}" class="item leek" @click="selectLeek(leek)">
 								<div class="name">{{ leek.name }}</div>
 								<span v-if="leek.bot" class="bot">bot</span>
-								<v-icon v-if="!leek.bot" class="duplicate" @click.stop="duplicateTestLeek(leek)" :title="$t('duplicate')">mdi-content-copy</v-icon>
+								<v-icon v-if="!leek.bot" class="duplicate" :title="$t('duplicate')" @click.stop="duplicateTestLeek(leek)">mdi-content-copy</v-icon>
 								<v-icon v-if="!leek.bot" class="delete" @click.stop="deleteTestLeek(leek)">mdi-delete-outline</v-icon>
 							</div>
 						</div>
@@ -161,7 +161,7 @@
 						<div class="weapons">
 							<div class="container">
 								<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ props }" :item="LeekWars.items[weapon.item]" :bottom="true" :nodge="true" :leek="currentLeek">
-									<img :src="'/image/' + LeekWars.items[weapon.item].name.replace('_', '/') + '.png'" :class="{hidden: !hasWeaponEquipped(weapon.item)}" class="weapon" v-bind="props" @click="removeLeekWeapon(weapon.item)" :width="WeaponsData[LeekWars.items[weapon.item].params].width">
+									<img :src="'/image/' + LeekWars.items[weapon.item].name.replace('_', '/') + '.png'" :class="{hidden: !hasWeaponEquipped(weapon.item)}" class="weapon" v-bind="props" :width="WeaponsData[LeekWars.items[weapon.item].params].width" @click="removeLeekWeapon(weapon.item)">
 								</rich-tooltip-item>
 								<div v-if="currentLeek.weapons.length < MAX_WEAPONS" class="add" @click="weaponsDialog = true">+</div>
 							</div>
@@ -324,7 +324,7 @@
 		</popup>
 
 		<popup v-model="chipsDialog" :width="767" icon="mdi-chip">
-			<template #title v-if="currentLeek">{{ $t('select_chips') }} [{{ currentLeek.chips.length }}/{{ currentLeek.ram }}]</template>
+			<template v-if="currentLeek" #title>{{ $t('select_chips') }} [{{ currentLeek.chips.length }}/{{ currentLeek.ram }}]</template>
 			<div v-if="currentLeek" class="padding chips-dialog">
 				<rich-tooltip-item v-for="chip of availableChips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[LeekWars.chipTemplates[chip.template].item]" :bottom="true" :nodge="true" :leek="currentLeek">
 					<span :class="{disabled: hasChipEquipped(chip.id)}" v-bind="props">
@@ -344,7 +344,7 @@
 			<div v-if="currentLeek" class="padding weapons-dialog">
 				<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ props }" :item="LeekWars.items[weapon.item]" :bottom="true" :nodge="true" :leek="currentLeek">
 					<span :class="{disabled: hasWeaponEquipped(weapon.item)}" v-bind="props">
-						<img :src="'/image/weapon/' + weapon.name + '.png'" class="weapon" v-bind="props" @click="addOrRemoveLeekWeapon(weapon.item)" :width="WeaponsData[LeekWars.items[weapon.item].params].width">
+						<img :src="'/image/weapon/' + weapon.name + '.png'" class="weapon" v-bind="props" :width="WeaponsData[LeekWars.items[weapon.item].params].width" @click="addOrRemoveLeekWeapon(weapon.item)">
 					</span>
 				</rich-tooltip-item>
 			</div>
@@ -361,7 +361,7 @@
 				<div class="potions-grid">
 					<v-tooltip v-for="(potion, id) in skinPotions" :key="id">
 						<template #activator="{ props }">
-							<div class="potion" @click="changeSkin(potion)" v-bind="props">
+							<div class="potion" v-bind="props" @click="changeSkin(potion)">
 								<img :src="'/image/potion/' + LeekWars.potions[potion.template].name + '.png'">
 							</div>
 						</template>
@@ -399,7 +399,7 @@
 
 	const Explorer = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`))
 
-	defineOptions({ name: 'editor-test', i18n: {}, mixins: [...mixins], components: { CharacteristicTooltip, RichTooltipItem, ai: AIElement, TurretImage } })
+	defineOptions({ name: 'EditorTest', i18n: {}, mixins: [...mixins], components: { CharacteristicTooltip, RichTooltipItem, ai: AIElement, TurretImage } })
 
 	const props = defineProps<{
 		modelValue?: boolean

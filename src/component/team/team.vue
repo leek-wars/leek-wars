@@ -24,7 +24,7 @@
 				</router-link>
 				<v-tooltip v-if="is_member">
 					<template #activator="{ props }">
-						<div class="tab" @click="updateOpened" v-bind="props">
+						<div class="tab" v-bind="props" @click="updateOpened">
 							<span>{{ $t('opened') }}</span>
 							<v-switch :model-value="team.opened ?? false" hide-details @click.stop />
 						</div>
@@ -158,7 +158,7 @@
 
 				<Line v-if="chartData && chartOptions" :data="chartData" :options="chartOptions" class="talent-history" />
 
-				<div class="center" v-if="team && $store.state.farmer && !is_member && $store.state.farmer.team == null && !myInvitation">
+				<div v-if="team && $store.state.farmer && !is_member && $store.state.farmer.team == null && !myInvitation" class="center">
 					<br>
 					<v-btn v-if="team.candidacy" @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</v-btn>
 					<v-btn v-if="team.opened && !team.candidacy" @click="sendCandidacy">{{ $t('join_team') }}</v-btn>
@@ -494,7 +494,7 @@
 			</div>
 			<div v-if="team.leek_count > 10 && !rankingsLoaded" class="load-rankings">
 				<loader v-if="rankingsLoading" />
-				<v-btn size="small" v-else @click="loadRankings">{{ $t('load_all') }}</v-btn>
+				<v-btn v-else size="small" @click="loadRankings">{{ $t('load_all') }}</v-btn>
 			</div>
 		</panel>
 
@@ -845,7 +845,7 @@
 	const Chat = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
 	const Explorer = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`))
 
-	defineOptions({ name: 'team', i18n: {}, mixins: [...mixins], components: {
+	defineOptions({ name: 'Team', i18n: {}, mixins: [...mixins], components: {
 		CharacteristicTooltip, RichTooltipItem, RichTooltipLeek, RichTooltipFarmer, RichTooltipComposition, RichTooltipTeam, FightsHistory, TournamentsHistory, ReportDialog, TurretImage, ai: AIElement, Line,
 	} })
 

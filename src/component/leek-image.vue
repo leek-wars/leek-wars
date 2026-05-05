@@ -32,7 +32,7 @@ import { Leek, LEEK_FACES } from '@/model/leek'
 import { LeekWars } from '@/model/leekwars'
 import { FishData, WeaponsData } from '@/model/weapon'
 
-defineOptions({ name: 'leek-image' })
+defineOptions({ name: 'LeekImage' })
 
 const props = defineProps<{
 	leek: Leek

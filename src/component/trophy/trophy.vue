@@ -11,11 +11,11 @@
 		</panel>
 		<panel v-if="trophy" class="first">
 			<div class="flex">
-				<img class="image" :src="'/image/trophy/' + code + '.svg'" @click="trophy.code === 'joker' && LeekWars.lucky(true)" :class="{clickable: trophy.code === 'joker'}">
+				<img class="image" :src="'/image/trophy/' + code + '.svg'" :class="{clickable: trophy.code === 'joker'}" @click="trophy.code === 'joker' && LeekWars.lucky(true)">
 				<div class="right">
 					<div class="name">
 						{{ $t('trophy.' + code) }}
-						<i18n-t tag="div" keypath="n_points" v-if="trophy.points" class="points">
+						<i18n-t v-if="trophy.points" tag="div" keypath="n_points" class="points">
 							<template #p>{{ trophy.points }}</template>
 						</i18n-t>
 					</div>
@@ -77,7 +77,7 @@
 					<div class="duration">
 						{{ LeekWars.formatLongDuration(farmer.time - trophy.created_time) }}
 					</div>
-					<router-link v-if="farmer.fight" :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight" v-ripple>
+					<router-link v-if="farmer.fight" v-ripple :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight">
 						<v-icon>mdi-sword-cross</v-icon> {{ $filters.date(farmer.time) }}
 					</router-link>
 					<span v-else class="fight">{{ $filters.date(farmer.time) }}</span>
@@ -93,7 +93,7 @@
 					<div class="duration">
 						{{ LeekWars.formatLongDuration(farmer.time - trophy.created_time) }}
 					</div>
-					<router-link v-if="farmer.fight" :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight" v-ripple>
+					<router-link v-if="farmer.fight" v-ripple :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight">
 						<v-icon>mdi-sword-cross</v-icon> {{ $filters.date(farmer.time) }}
 					</router-link>
 					<span v-else class="fight">{{ $filters.date(farmer.time) }}</span>
@@ -109,7 +109,7 @@
 					<div class="duration">
 						{{ LeekWars.formatLongDuration(farmer.duration) }}
 					</div>
-					<router-link v-if="farmer.fight" :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight" v-ripple>
+					<router-link v-if="farmer.fight" v-ripple :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight">
 						<v-icon>mdi-sword-cross</v-icon> {{ $filters.date(farmer.time) }}
 					</router-link>
 					<span v-else class="fight">{{ $filters.date(farmer.time) }}</span>
@@ -125,7 +125,7 @@
 					<div class="duration">
 						{{ LeekWars.formatLongDuration(farmer.duration) }}
 					</div>
-					<router-link v-if="farmer.fight" :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight" v-ripple>
+					<router-link v-if="farmer.fight" v-ripple :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight">
 						<v-icon>mdi-sword-cross</v-icon> {{ $filters.date(farmer.time) }}
 					</router-link>
 					<span v-else class="fight">{{ $filters.date(farmer.time) }}</span>
@@ -207,7 +207,7 @@ interface TrophyTemplate {
 	title_farmers?: TrophyFarmer[]
 }
 
-defineOptions({ name: 'trophy', i18n: {}, mixins: [...mixins], components: { 'lw-title': LwTitle } })
+defineOptions({ name: 'Trophy', i18n: {}, mixins: [...mixins], components: { 'lw-title': LwTitle } })
 
 const { locale } = useI18n()
 	const t = useNamespacedT('trophy')

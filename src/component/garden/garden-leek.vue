@@ -18,7 +18,7 @@
 import type { Leek } from '@/model/leek'
 import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 
-defineOptions({ name: 'garden-leek' })
+defineOptions({ name: 'GardenLeek' })
 
 defineProps<{
 	leek: Leek

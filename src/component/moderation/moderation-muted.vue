@@ -51,7 +51,7 @@
 	import { computed, ref } from 'vue'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 
-	defineOptions({ name: "moderation-muted", i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: "ModerationMuted", i18n: {}, mixins: [...mixins] })
 
 	const muted = ref<Record<string, unknown>[] | null>(null)
 	const now = Math.floor(Date.now() / 1000)

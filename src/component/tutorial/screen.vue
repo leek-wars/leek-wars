@@ -8,7 +8,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-defineOptions({ name: 'screen' })
+defineOptions({ name: 'Screen' })
 
 defineProps<{
 	src: string

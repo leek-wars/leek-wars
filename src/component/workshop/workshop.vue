@@ -120,7 +120,7 @@
 		DATE, PRICE, PRICE_LOT, QUANTITY, /*NAME, */ LEVEL, RARITY, INGREDIENT_COUNT
 	}
 
-	defineOptions({ name: 'workshop', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'Workshop', i18n: {}, mixins: [...mixins] })
 
 	const schemes = ref<SchemeTemplate[]>([])
 	const scheme = ref<SchemeTemplate | null>(null)

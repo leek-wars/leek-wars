@@ -183,7 +183,7 @@
 	import { store } from '@/model/store'
 	import { defineAsyncComponent, ref } from 'vue'
 
-	defineOptions({ name: 'lw-header' })
+	defineOptions({ name: 'LwHeader' })
 
 	const Conversation = defineAsyncComponent(() => import('@/component/messages/conversation.vue'))
 	const AccountSwitcher = defineAsyncComponent(() => import('@/component/app/account-switcher.vue'))

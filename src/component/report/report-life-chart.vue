@@ -49,7 +49,7 @@
 	import { FightStatistics, StatisticsEntity } from './statistics'
 	import { onBeforeUnmount, ref, watch } from 'vue'
 
-	defineOptions({ name: 'report', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'Report', i18n: {}, mixins: [...mixins] })
 
 	const props = defineProps<{
 		fight: Fight

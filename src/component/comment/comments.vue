@@ -19,7 +19,7 @@
 				</div>
 			</div>
 		</div>
-		<chat-input @message="send" :chat="0" />
+		<chat-input :chat="0" @message="send" />
 	</div>
 </template>
 
@@ -32,7 +32,7 @@ import { store } from '@/model/store'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import '@/model/emojis'
 
-defineOptions({ name: 'comments', components: { 'chat-input': ChatInput } })
+defineOptions({ name: 'Comments', components: { 'chat-input': ChatInput } })
 
 defineProps<{
 	comments: Comment[] | null

@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import type { Tournament } from '@/model/tournament'
 
-defineOptions({ name: 'tournament-history' })
+defineOptions({ name: 'TournamentHistory' })
 
 defineProps<{
 	tournament: Tournament

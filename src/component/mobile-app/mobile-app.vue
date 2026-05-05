@@ -53,7 +53,7 @@ import { locale } from '@/locale'
 import { LeekWars } from '@/model/leekwars'
 import { mixins, useNamespacedT } from '@/model/i18n'
 
-defineOptions({ name: 'mobile_app', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'MobileApp', i18n: {}, mixins: [...mixins] })
 
 const t = useNamespacedT('mobile_app')
 LeekWars.setTitle(t('title'))

@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { computed, ref, useSlots, watch } from 'vue'
 
-defineOptions({ name: 'panel' })
+defineOptions({ name: 'Panel' })
 
 const props = withDefaults(defineProps<{
 	icon?: string

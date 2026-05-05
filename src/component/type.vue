@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: 'lw-type' })
+defineOptions({ name: 'LwType' })
 
 defineProps<{
 	type: string | number

@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="git-diff-viewer" :class="{ready: editorReady}" ref="container"></div>
+	<div ref="container" class="git-diff-viewer" :class="{ready: editorReady}"></div>
 </template>
 
 <script setup lang="ts">
@@ -7,7 +7,7 @@ import * as monaco from 'monaco-editor'
 import { markRaw, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import { getLanguageForPath } from './file-types'
 
-defineOptions({ name: 'git-diff', i18n: {} })
+defineOptions({ name: 'GitDiff', i18n: {} })
 
 const props = withDefaults(defineProps<{
 	originalContent?: string

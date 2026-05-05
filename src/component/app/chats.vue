@@ -24,7 +24,7 @@ import { defineAsyncComponent, ref, watch, type ComponentPublicInstance } from '
 
 const Chat = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
 
-defineOptions({ name: 'chats' })
+defineOptions({ name: 'Chats' })
 
 const chats = ref<ComponentPublicInstance[]>([])
 

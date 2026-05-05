@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-defineOptions({ name: 'flag' })
+defineOptions({ name: 'Flag' })
 
 const props = defineProps<{
 	code?: string

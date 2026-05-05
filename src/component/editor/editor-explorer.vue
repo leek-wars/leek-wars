@@ -7,22 +7,22 @@
 		<v-menu :target="[x, y]" :model-value="aiMenu">
 			<v-list class="menu">
 				<v-list-subheader v-if="ai">{{ ai.name }}</v-list-subheader>
-				<v-list-item v-ripple @click="open()" prepend-icon="mdi-card-plus-outline">
+				<v-list-item v-ripple prepend-icon="mdi-card-plus-outline" @click="open()">
 					<v-list-item-title>{{ $t('open') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-if="ai && !aiInBin" v-ripple @click="$emit('test')" prepend-icon="mdi-play">
+				<v-list-item v-if="ai && !aiInBin" v-ripple prepend-icon="mdi-play" @click="$emit('test')">
 					<v-list-item-title>{{ $t('test') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-if="ai && !aiInBin" v-ripple @click="renameStart" prepend-icon="mdi-pencil">
+				<v-list-item v-if="ai && !aiInBin" v-ripple prepend-icon="mdi-pencil" @click="renameStart">
 					<v-list-item-title>{{ $t('rename') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-if="ai && !aiInBin" v-ripple @click="deleteDialog = true" prepend-icon="mdi-delete">
+				<v-list-item v-if="ai && !aiInBin" v-ripple prepend-icon="mdi-delete" @click="deleteDialog = true">
 					<v-list-item-title>{{ $t('delete') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-if="ai && aiInBin && ai.folder === -1" v-ripple @click="destroyDialog = true" prepend-icon="mdi-delete-forever">
+				<v-list-item v-if="ai && aiInBin && ai.folder === -1" v-ripple prepend-icon="mdi-delete-forever" @click="destroyDialog = true">
 					<v-list-item-title>{{ $t('destroy') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-if="ai && aiInBin && ai.folder === -1" v-ripple @click="restoreAI" prepend-icon="mdi-file-restore">
+				<v-list-item v-if="ai && aiInBin && ai.folder === -1" v-ripple prepend-icon="mdi-file-restore" @click="restoreAI">
 					<v-list-item-title>{{ $t('restore') }}</v-list-item-title>
 				</v-list-item>
 				<template v-if="ai && ai.includes && ai.includes.length">
@@ -33,16 +33,16 @@
 							</v-list-item>
 						</template>
 						<v-list class="menu" :dense="true">
-							<v-list-item v-ripple @click="downloadSimple()" prepend-icon="mdi-file-outline">
+							<v-list-item v-ripple prepend-icon="mdi-file-outline" @click="downloadSimple()">
 								<v-list-item-title>{{ $t('download_simple') }}</v-list-item-title>
 							</v-list-item>
-							<v-list-item v-ripple @click="downloadIncludes()" prepend-icon="mdi-file-multiple-outline">
+							<v-list-item v-ripple prepend-icon="mdi-file-multiple-outline" @click="downloadIncludes()">
 								<v-list-item-title>{{ $t('download_includes') }}</v-list-item-title>
 							</v-list-item>
 						</v-list>
 					</v-menu>
 				</template>
-				<v-list-item v-else v-ripple @click="downloadSimple()" prepend-icon="mdi-download">
+				<v-list-item v-else v-ripple prepend-icon="mdi-download" @click="downloadSimple()">
 					<v-list-item-title>{{ $t('download') }}</v-list-item-title>
 				</v-list-item>
 			</v-list>
@@ -51,28 +51,28 @@
 		<v-menu :target="[x, y]" :model-value="folderMenu">
 			<v-list class="menu" :dense="true">
 				<v-list-subheader v-if="folder && folder.id !== 0">{{ folder.name }}</v-list-subheader>
-				<v-list-item v-if="folder && !folder.closed" v-ripple @click="newAIStart()" prepend-icon="mdi-file-plus-outline">
+				<v-list-item v-if="folder && !folder.closed" v-ripple prepend-icon="mdi-file-plus-outline" @click="newAIStart()">
 					<v-list-item-title>{{ $t('new_ai') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-if="folder && !folder.closed" v-ripple @click="newFolderStart()" prepend-icon="mdi-folder-plus-outline">
+				<v-list-item v-if="folder && !folder.closed" v-ripple prepend-icon="mdi-folder-plus-outline" @click="newFolderStart()">
 					<v-list-item-title>{{ $t('new_folder') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-if="folder && !folder.closed" v-ripple @click="renameStart" prepend-icon="mdi-pencil">
+				<v-list-item v-if="folder && !folder.closed" v-ripple prepend-icon="mdi-pencil" @click="renameStart">
 					<v-list-item-title>{{ $t('rename') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-if="folder && folder.closed" v-ripple @click="openFolder()" prepend-icon="mdi-folder-open-outline">
+				<v-list-item v-if="folder && folder.closed" v-ripple prepend-icon="mdi-folder-open-outline" @click="openFolder()">
 					<v-list-item-title>{{ $t('open_folder') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-else v-ripple @click="closeFolder()" prepend-icon="mdi-folder-lock-outline">
+				<v-list-item v-else v-ripple prepend-icon="mdi-folder-lock-outline" @click="closeFolder()">
 					<v-list-item-title>{{ $t('close_folder') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-if="folder && folder.id > 0 && !folder.closed && !isFolderGitRepo" v-ripple @click="initGit()" prepend-icon="mdi-source-branch">
+				<v-list-item v-if="folder && folder.id > 0 && !folder.closed && !isFolderGitRepo" v-ripple prepend-icon="mdi-source-branch" @click="initGit()">
 					<v-list-item-title>{{ $t('init_git') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-if="folder && folder.id > 0 && !folder.closed && isFolderGitRepo" v-ripple @click="deinitGit()" prepend-icon="mdi-source-branch-remove">
+				<v-list-item v-if="folder && folder.id > 0 && !folder.closed && isFolderGitRepo" v-ripple prepend-icon="mdi-source-branch-remove" @click="deinitGit()">
 					<v-list-item-title>{{ $t('deinit_git') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-ripple @click="deleteDialog = true" prepend-icon="mdi-delete">
+				<v-list-item v-ripple prepend-icon="mdi-delete" @click="deleteDialog = true">
 					<v-list-item-title>{{ $t('delete') }}</v-list-item-title>
 				</v-list-item>
 			</v-list>
@@ -81,7 +81,7 @@
 		<v-menu :target="[x, y]" :model-value="binMenu">
 			<v-list class="menu">
 				<v-list-subheader v-if="folder" class="title">{{ $t(folder.name) }}</v-list-subheader>
-				<v-list-item v-ripple @click="emptyDialog = true" prepend-icon="mdi-delete-forever">
+				<v-list-item v-ripple prepend-icon="mdi-delete-forever" @click="emptyDialog = true">
 					<v-list-item-title>{{ $t('empty_bin') }}</v-list-item-title>
 				</v-list-item>
 			</v-list>
@@ -90,10 +90,10 @@
 		<v-menu :target="[x, y]" :model-value="binFolderMenu">
 			<v-list class="menu">
 				<v-list-subheader v-if="folder">{{ folder.name }}</v-list-subheader>
-				<v-list-item v-ripple @click="restoreFolder" prepend-icon="mdi-folder-refresh-outline">
+				<v-list-item v-ripple prepend-icon="mdi-folder-refresh-outline" @click="restoreFolder">
 					<v-list-item-title>{{ $t('restore') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-ripple @click="destroyFolderDialog = true" prepend-icon="mdi-delete-forever">
+				<v-list-item v-ripple prepend-icon="mdi-delete-forever" @click="destroyFolderDialog = true">
 					<v-list-item-title>{{ $t('destroy') }}</v-list-item-title>
 				</v-list-item>
 			</v-list>
@@ -198,7 +198,7 @@
 	import { useI18n } from 'vue-i18n'
 	import { useRouter } from 'vue-router'
 
-	defineOptions({ name: 'editor-explorer', i18n: {}, mixins: [...mixins], components: { 'editor-folder': EditorFolder } })
+	defineOptions({ name: 'EditorExplorer', i18n: {}, mixins: [...mixins], components: { 'editor-folder': EditorFolder } })
 
 	const props = defineProps<{
 		currentAi: AI | undefined

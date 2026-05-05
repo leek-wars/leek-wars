@@ -63,7 +63,7 @@ import BankProduct from './bank-product.vue'
 import Breadcrumb from '@/component/forum/breadcrumb.vue'
 import { store } from '@/model/store'
 
-defineOptions({ name: 'bank', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'Bank', i18n: {}, mixins: [...mixins] })
 
 const t = useNamespacedT('bank')
 const route = useRoute()

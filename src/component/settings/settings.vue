@@ -97,7 +97,7 @@
 
 			<panel :title="$t('misc_options')" icon="mdi-cog-outline">
 				<div class="misc-settings">
-					<div class="setting" id="dark-button">
+					<div id="dark-button" class="setting">
 						<div>{{ $t('theme') }}</div>
 						<div width="100">
 							<v-radio-group v-model="LeekWars.themeSetting" hide-details inline>
@@ -107,23 +107,23 @@
 							</v-radio-group>
 						</div>
 					</div>
-					<div class="setting" id="sfw-button">
+					<div id="sfw-button" class="setting">
 						<div>{{ $t('activate_discrete_mode') }}</div>
 						<div><v-switch v-model="sfwMode" hide-details /></div>
 					</div>
-					<div class="setting" id="notifs-popups-button">
+					<div id="notifs-popups-button" class="setting">
 						<div>{{ $t('notifs_popups') }}</div>
 						<div><v-switch v-model="notifsPopups" hide-details /></div>
 					</div>
-					<div class="setting" id="notifs-results-button">
+					<div id="notifs-results-button" class="setting">
 						<div>{{ $t('notifs_results') }}</div>
 						<div><v-switch v-model="notifsResults" hide-details /></div>
 					</div>
-					<div class="setting" v-if="LeekWars.mobile">
+					<div v-if="LeekWars.mobile" class="setting">
 						<div>{{ $t('chat_first') }}</div>
 						<div><v-switch v-model="chatFirst" hide-details /></div>
 					</div>
-					<div class="setting" v-if="!LeekWars.mobile">
+					<div v-if="!LeekWars.mobile" class="setting">
 						<div>{{ $t('leek_theme') }}</div>
 						<div><v-switch v-model="LeekWars.leekTheme" hide-details /></div>
 					</div>
@@ -171,12 +171,12 @@
 					<v-icon>{{ viewDeleteAccount ? 'mdi-menu-up' : 'mdi-menu-down' }}</v-icon>
 				</div>
 				<div v-if="viewDeleteAccount">
-					<v-btn @click="deleteDialog = true" color="error">{{ $t('delete_account') }}</v-btn>
+					<v-btn color="error" @click="deleteDialog = true">{{ $t('delete_account') }}</v-btn>
 					<br><br>
 				</div>
 
-				<v-switch v-if="$store.state.farmer?.verified" v-model="settings.github_login" :disabled="!$store.state.farmer.pass && !settings.google_login" :label="$t('allow_github')" @change="updateGithubLogin" hide-details />
-				<v-switch v-if="$store.state.farmer?.verified" v-model="settings.google_login" :disabled="!$store.state.farmer.pass && !settings.github_login" :label="$t('allow_google')" @change="updateGoogleLogin" hide-details />
+				<v-switch v-if="$store.state.farmer?.verified" v-model="settings.github_login" :disabled="!$store.state.farmer.pass && !settings.google_login" :label="$t('allow_github')" hide-details @change="updateGithubLogin" />
+				<v-switch v-if="$store.state.farmer?.verified" v-model="settings.google_login" :disabled="!$store.state.farmer.pass && !settings.github_login" :label="$t('allow_google')" hide-details @change="updateGoogleLogin" />
 			</panel>
 
 			<panel v-if="$store.state.farmer?.verified" :title="$t('main.notifications')" icon="mdi-bell-outline">
@@ -276,7 +276,7 @@
 	import { ref, watch } from 'vue'
 	import { useRouter } from 'vue-router'
 
-	defineOptions({ name: 'settings', i18n: {}, mixins: [...mixins], components: { TwoFactor } })
+	defineOptions({ name: 'Settings', i18n: {}, mixins: [...mixins], components: { TwoFactor } })
 
 	const t = useNamespacedT('settings')
 	const router = useRouter()

@@ -43,7 +43,7 @@ import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { getRedirectAfterLogin } from '@/router'
 
-defineOptions({ name: 'login', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'Login', i18n: {}, mixins: [...mixins] })
 
 const t = useNamespacedT('login')
 const route = useRoute()

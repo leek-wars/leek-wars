@@ -35,7 +35,7 @@ import { ref, computed, onBeforeUnmount } from 'vue'
 import { mixins , useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 
-defineOptions({ name: 'status', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'Status', i18n: {}, mixins: [...mixins] })
 
 const t = useNamespacedT('status')
 

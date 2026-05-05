@@ -104,7 +104,7 @@ import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { computed } from 'vue'
 
-defineOptions({ name: 'effect-view', components: { 'lw-code': Code } })
+defineOptions({ name: 'EffectView', components: { 'lw-code': Code } })
 
 interface EffectViewProps {
 	effect: Effect

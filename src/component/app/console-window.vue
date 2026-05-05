@@ -9,7 +9,7 @@
 					</template>
 					<leekscript-versions v-model:version="consoleRef.leekscript.version" v-model:strict="consoleRef.leekscript.strict" />
 				</v-menu>
-				<v-chip v-if="consoleRef && !consoleRef.isEmpty()" @click="consoleRef.clear()" size="small"><v-icon>mdi-cancel</v-icon></v-chip>
+				<v-chip v-if="consoleRef && !consoleRef.isEmpty()" size="small" @click="consoleRef.clear()"><v-icon>mdi-cancel</v-icon></v-chip>
 			</div>
 		</template>
 		<template #options>
@@ -36,7 +36,7 @@ import { onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 import Console from './console.vue'
 import LeekscriptVersions from './leekscript-versions.vue'
 
-defineOptions({ name: 'console-window', components: { 'console': Console, LeekscriptVersions } })
+defineOptions({ name: 'ConsoleWindow', components: { 'console': Console, LeekscriptVersions } })
 
 defineProps<{
 	modelValue: boolean

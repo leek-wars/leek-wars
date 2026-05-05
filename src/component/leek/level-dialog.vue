@@ -1,5 +1,5 @@
 <template>
-	<popup @update:modelValue="close" :width="700">
+	<popup :width="700" @update:modelValue="close">
 		<template #icon>
 			<v-icon>mdi-new-box</v-icon>
 		</template>
@@ -97,7 +97,7 @@ import { mixins } from '@/model/i18n'
 import { Leek } from '@/model/leek'
 import { LeekWars } from '@/model/leekwars'
 
-defineOptions({ name: 'level-dialog', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'LevelDialog', i18n: {}, mixins: [...mixins] })
 
 const props = defineProps<{
 	leek: Leek

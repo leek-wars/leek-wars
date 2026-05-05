@@ -38,7 +38,7 @@
 				<span class="talent-more">({{ farmer.talent_more >= 0 ? '+' + farmer.talent_more : farmer.talent_more }})</span>
 				<ranking-badge v-if="farmer && farmer.ranking && farmer.ranking <= 1000 && farmer.in_garden" :id="farmer.id" :ranking="farmer.ranking" category="farmer" />
 				<span class="level">• {{ $t('main.level_n', [farmer.total_level]) }}</span>
-				<v-btn class="expand" variant="text" size="x-small" @click="expand_leeks = !expand_leeks" :icon="expand_leeks ? 'mdi-chevron-up' : 'mdi-chevron-down'" />
+				<v-btn class="expand" variant="text" size="x-small" :icon="expand_leeks ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="expand_leeks = !expand_leeks" />
 				<table v-if="expand_leeks" class="leeks">
 					<thead>
 						<tr>

@@ -41,9 +41,9 @@
 				</div>
 			</div>
 
-			<editor-tabs v-if="!LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentTab" :active="currentSide === 1" :splitted="splitted" :theme="theme" group="tabs" :all-tabs="tabs1" @select="selectTab" @close-tab="closeTabEvent" @close-all="closeAllTabs" @split="setSplitted(true, $event)" :style="{ 'width': (editor1Width * 80) + '%' }" @open-file="openDiffFileFromMenu" />
+			<editor-tabs v-if="!LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentTab" :active="currentSide === 1" :splitted="splitted" :theme="theme" group="tabs" :all-tabs="tabs1" :style="{ 'width': (editor1Width * 80) + '%' }" @select="selectTab" @close-tab="closeTabEvent" @close-all="closeAllTabs" @split="setSplitted(true, $event)" @open-file="openDiffFileFromMenu" />
 
-			<editor-tabs v-if="splitted && !LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentAI2" :active="currentSide === 2" :splitted="splitted" :theme="theme" group="tabs2" @close="close" @close-all="closeAll" :style="{ 'width': (editor2Width * 100) + '%' }" @open="open($event, 2)" @close-panel="setSplitted(false)" />
+			<editor-tabs v-if="splitted && !LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentAI2" :active="currentSide === 2" :splitted="splitted" :theme="theme" group="tabs2" :style="{ 'width': (editor2Width * 100) + '%' }" @close="close" @close-all="closeAll" @open="open($event, 2)" @close-panel="setSplitted(false)" />
 
 			<editor-finder ref="finder" :active="activeAIs" :history="history" />
 		</div>
@@ -54,10 +54,10 @@
 					<template #content>
 						<div class="full">
 							<div v-if="Object.keys(fileSystem.gitRepos).length > 0" class="left-panel-tabs">
-								<div :class="{active: leftPanelTab === 'explorer'}" class="left-tab" @click="setLeftPanelTab('explorer')" :title="$t('title')">
+								<div :class="{active: leftPanelTab === 'explorer'}" class="left-tab" :title="$t('title')" @click="setLeftPanelTab('explorer')">
 									<v-icon>mdi-file-tree</v-icon>
 								</div>
-								<div :class="{active: leftPanelTab === 'git'}" class="left-tab" @click="setLeftPanelTab('git')" title="Git">
+								<div :class="{active: leftPanelTab === 'git'}" class="left-tab" title="Git" @click="setLeftPanelTab('git')">
 									<v-icon>mdi-source-branch</v-icon>
 								</div>
 							</div>
@@ -88,15 +88,15 @@
 							<div class="resizer explorer-resizer" @mousedown="resizerMousedown">
 								<v-icon>mdi-drag-vertical-variant</v-icon>
 							</div>
-							<div :class="{tabs: tabs1.length > 1}" class="editors" ref="editors">
+							<div ref="editors" :class="{tabs: tabs1.length > 1}" class="editors">
 
-								<ai-view-monaco v-if="ai1Ready" v-show="!showDiffViewer" ref="editor1" :ai="fileSystem.ais[currentAI1!]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" @jump="jump" @load="load" @focus="setSide(1)" :style="{ 'width': (editor1Width * 100) + '%' }" />
+								<ai-view-monaco v-if="ai1Ready" v-show="!showDiffViewer" ref="editor1" :ai="fileSystem.ais[currentAI1!]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" :style="{ 'width': (editor1Width * 100) + '%' }" @jump="jump" @load="load" @focus="setSide(1)" />
 
 								<div v-if="splitted" v-show="!showDiffViewer" class="resizer editor-resizer" @dblclick="split50_50" @mousedown="resizerEditorMousedown">
 									<v-icon>mdi-drag-vertical-variant</v-icon>
 								</div>
 
-								<ai-view-monaco v-if="splitted && ai2Ready" v-show="!showDiffViewer" ref="editor2" :ai="fileSystem.ais[currentAI2!]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" @jump="jump" @load="load" @focus="setSide(2)" :style="{ 'width': (editor2Width * 100) + '%' }" />
+								<ai-view-monaco v-if="splitted && ai2Ready" v-show="!showDiffViewer" ref="editor2" :ai="fileSystem.ais[currentAI2!]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" :style="{ 'width': (editor2Width * 100) + '%' }" @jump="jump" @load="load" @focus="setSide(2)" />
 
 								<div v-if="showDiffViewer && !isDiffReady" class="diff-loader"><loader :size="40" /></div>
 								<git-diff v-if="diffMounted && isDiffReady && !showMergeViewer && activeDiff" v-show="showDiffViewer" :original-content="activeDiff.original" :modified-content="activeDiffModified" :file="activeDiff.file" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :inline="diffInline" :collapse-unchanged="diffCollapseUnchanged" @close="closeDiff" @open-file="openDiffFile" />
@@ -105,7 +105,7 @@
 							</div>
 
 							<span v-if="LeekWars.didactitial_step === 4" class="dida-hint shaking">
-								<span class="bubble" v-html="$t('main.dida_8')" v-chat-code-latex></span>
+								<span v-chat-code-latex class="bubble" v-html="$t('main.dida_8')"></span>
 								<span class="arrow"></span>
 							</span>
 
@@ -253,7 +253,7 @@
 			</template>
 		</popup>
 
-		<editor-test ref="editorTestRef" v-model="testDialog" :ais="fileSystem.ais" :leek-ais="fileSystem.leekAIs" :currentAI="currentAI" />
+		<editor-test ref="editorTestRef" v-model="testDialog" :ais="fileSystem.ais" :leek-ais="fileSystem.leekAIs" :current-a-i="currentAI" />
 
 		<!--
 		<popup v-model="newAIv2Dialog" :width="500">
@@ -324,7 +324,7 @@
 	}
 
 	defineOptions({
-		name: 'editor',
+		name: 'Editor',
 		i18n: {},
 		mixins: [...mixins],
 		components: {

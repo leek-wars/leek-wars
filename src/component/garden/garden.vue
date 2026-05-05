@@ -289,7 +289,7 @@
 									</v-radio-group>
 								</div>
 								<br>
-								<v-btn v-if="garden.fights" color="primary" @click="arenaRegister" :disabled="!arenaEnabled">{{ $t('main.select') }}</v-btn>
+								<v-btn v-if="garden.fights" color="primary" :disabled="!arenaEnabled" @click="arenaRegister">{{ $t('main.select') }}</v-btn>
 								<garden-no-fights v-else :canbuy="true" @bought="reload" />
 							</div>
 							<div v-else>
@@ -319,7 +319,7 @@
 								<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('select_boss') }}</div>
 								<div class="bosses">
 									<div v-for="boss in BOSSES" :key="boss.name" class="boss-wrapper">
-										<div v-ripple @click="LeekWars.bossSquads.create(boss)" :class="{disabled: !garden.fights}" class="leek boss">
+										<div v-ripple :class="{disabled: !garden.fights}" class="leek boss" @click="LeekWars.bossSquads.create(boss)">
 											<leek-image :leek="boss" :scale="boss.scale" />
 											<div class="name">{{ $t('entity.' + boss.name) }}</div>
 											<div class="level">{{ $t('main.level_n', [boss.level]) }}</div>
@@ -351,7 +351,7 @@
 								<div v-else>
 									<h4>Participants</h4>
 									<div class="participants">
-										<rich-tooltip-leek v-for="(leek,p) of LeekWars.bossSquads.squad.engaged_leeks" :key="p" :id="leek.id" v-slot="{ props }">
+										<rich-tooltip-leek v-for="(leek,p) of LeekWars.bossSquads.squad.engaged_leeks" :id="leek.id" :key="p" v-slot="{ props }">
 											<div v-bind="props" class="participant" :class="{active: true}" @click="LeekWars.bossSquads.removeLeek(leek)">
 												<leek-image :leek="leek" :scale="0.42"></leek-image>
 												<div class="name">
@@ -365,7 +365,7 @@
 									</div>
 									<h4 v-if="LeekWars.bossSquads.squad.available_leeks?.length">Poireaux disponibles</h4>
 									<div class="participants">
-										<rich-tooltip-leek v-for="leek of LeekWars.bossSquads.squad.available_leeks" :key="leek.id" :id="leek.id" v-slot="{ props }">
+										<rich-tooltip-leek v-for="leek of LeekWars.bossSquads.squad.available_leeks" :id="leek.id" :key="leek.id" v-slot="{ props }">
 											<div v-bind="props" class="participant" :class="{active: true}" @click="LeekWars.bossSquads.addLeek(leek)">
 												<leek-image :leek="leek" :scale="0.42"></leek-image>
 												<div class="name">
@@ -381,7 +381,7 @@
 										<div class="farmers">
 											<v-icon v-if="LeekWars.bossSquads.squad.locked" :disabled="LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="LeekWars.bossSquads.open()">mdi-lock</v-icon>
 											<v-icon v-else :disabled="LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="LeekWars.bossSquads.lock()">mdi-earth</v-icon>
-											<rich-tooltip-farmer v-for="farmer of LeekWars.bossSquads.squad.farmers" :key="farmer.id" :id="farmer.id">
+											<rich-tooltip-farmer v-for="farmer of LeekWars.bossSquads.squad.farmers" :id="farmer.id" :key="farmer.id">
 												<avatar :farmer="farmer" :class="{master: LeekWars.bossSquads.squad.master === farmer.id}" />
 											</rich-tooltip-farmer>
 										</div>
@@ -422,7 +422,7 @@
 
 	const GardenNoFights = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/garden/garden-no-fights.${locale}.i18n`))
 
-	defineOptions({ name: 'garden', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'Garden', i18n: {}, mixins: [...mixins] })
 
 	const t = useNamespacedT('garden')
 	const route = useRoute()

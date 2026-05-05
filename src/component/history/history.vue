@@ -114,7 +114,7 @@ import Breadcrumb from '../forum/breadcrumb.vue'
 import FightsHistory from '@/component/history/fights-history.vue'
 import FightsHistoryTable from '@/component/history/fights-history-table.vue'
 
-defineOptions({ name: 'history', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'History', i18n: {}, mixins: [...mixins] })
 
 const props = defineProps<{
 	type: string

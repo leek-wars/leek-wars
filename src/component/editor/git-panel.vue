@@ -57,7 +57,7 @@
 				<!-- Merge en cours -->
 				<div v-if="merging" class="merge-banner">
 					<v-icon>mdi-source-merge</v-icon> {{ $t('merge_in_progress') }}
-					<div class="merge-abort" @click="mergeAbort" :title="$t('merge_abort')">
+					<div class="merge-abort" :title="$t('merge_abort')" @click="mergeAbort">
 						<v-icon>mdi-close</v-icon>
 					</div>
 				</div>
@@ -261,7 +261,7 @@
 		conflict?: boolean
 	}
 
-	defineOptions({ name: 'git-panel', i18n: {}, mixins: [...mixins], components: { GitHistory, GitRemoteDialog } })
+	defineOptions({ name: 'GitPanel', i18n: {}, mixins: [...mixins], components: { GitHistory, GitRemoteDialog } })
 
 	const props = withDefaults(defineProps<{
 		theme?: string

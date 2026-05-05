@@ -9,7 +9,7 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 
-defineOptions({ name: 'tournament-fight' })
+defineOptions({ name: 'TournamentFight' })
 
 const props = defineProps<{
 	fight: Record<string, unknown>

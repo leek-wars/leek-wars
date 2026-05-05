@@ -15,7 +15,7 @@
 					</template>
 					<v-tooltip v-if="$store.state.farmer && $store.state.farmer.tournaments_enabled && leek.tournament" content-class="fluid" @update:model-value="loadTournamentRange">
 						<template #activator="{ props }">
-							<div class="tab" @click="registerTournament" v-bind="props">
+							<div class="tab" v-bind="props" @click="registerTournament">
 								<v-icon>mdi-trophy</v-icon>
 								<span v-if="!leek.tournament.registered" class="register">{{ $t('register_to_tournament') }}</span>
 								<span v-else class="unregister">{{ $t('unregister') }}</span>
@@ -33,7 +33,7 @@
 					</v-tooltip>
 					<v-tooltip>
 						<template #activator="{ props }">
-							<div class="tab" @click="updateGarden" v-bind="props">
+							<div class="tab" v-bind="props" @click="updateGarden">
 								<span>{{ $t('garden') }}</span>
 								<v-switch :model-value="leek.in_garden" hide-details />
 							</div>
@@ -160,9 +160,9 @@
 								<span :class="'color-' + c">{{ leek ? leek['total_' + c] : '...' }}</span>
 							</div>
 						</characteristic-tooltip>
-						<div class="center mt-3" v-if="leek && my_leek">
+						<div v-if="leek && my_leek" class="center mt-3">
 							<span class="dida-element">
-								<v-btn v-if="(leek.capital > 0 || LeekWars.didactitial_step === 1) && $store.state.farmer && $store.state.farmer.equipment_enabled" color="primary" @click="showCapital = true" :class="{bouncing: !showCapital && LeekWars.didactitial_step === 1}">{{ $t('main.n_capital', [leek.capital]) }}</v-btn>
+								<v-btn v-if="(leek.capital > 0 || LeekWars.didactitial_step === 1) && $store.state.farmer && $store.state.farmer.equipment_enabled" color="primary" :class="{bouncing: !showCapital && LeekWars.didactitial_step === 1}" @click="showCapital = true">{{ $t('main.n_capital', [leek.capital]) }}</v-btn>
 								<span v-if="LeekWars.didactitial_step === 1" class="dida-hint">
 									<i18n-t v-if="LeekWars.didactitial_step === 1" tag="div" class="bubble" keypath="main.dida_2">
 										<template #life><img height=18 src="/image/charac/life.png"></template>
@@ -193,9 +193,9 @@
 						<loader v-if="!leek" />
 						<div v-else-if="leek.weapons.length === 0" class="empty">{{ $t('no_weapons') }}</div>
 						<template v-else>
-							<div class="weapon" v-for="weapon in orderedWeapons" :key="weapon.id">
+							<div v-for="weapon in orderedWeapons" :key="weapon.id" class="weapon">
 								<rich-tooltip-item  v-slot="{ props }" :item="LeekWars.items[weapon.template]" :bottom="true" :leek="leek">
-									<img v-bind="props" :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" @click="setWeapon(weapon.template)" :width="WeaponsData[LeekWars.items[weapon.template].params].width">
+									<img v-bind="props" :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" :width="WeaponsData[LeekWars.items[weapon.template].params].width" @click="setWeapon(weapon.template)">
 								</rich-tooltip-item>
 							</div>
 						</template>
@@ -238,13 +238,13 @@
 							<div class="components-grid">
 								<template v-for="(c, i) of 8">
 									<div v-if="leek.components[i]" class="component" :class="{disabled: i >= max_components}">
-										<rich-tooltip-item v-slot="{ props }" :item="LeekWars.items[leek.components[i].template]" :bottom="true" :key="c">
+										<rich-tooltip-item v-slot="{ props }" :key="c" :item="LeekWars.items[leek.components[i].template]" :bottom="true">
 											<div v-bind="props">
 												<img :src="'/image/component/' + LeekWars.items[leek.components[i].template].name + '.png'">
 											</div>
 										</rich-tooltip-item>
 									</div>
-									<div v-else class="component" :key="c"></div>
+									<div v-else :key="c" class="component"></div>
 								</template>
 								<template v-if="leek.ai">
 									<router-link v-if="my_leek" :to="'/editor/' + (leek.ai.path || leek.ai.name)">
@@ -264,7 +264,7 @@
 
 		</div>
 
-		<div class="center" v-if="leek && my_leek && leek.fights && leek.fights.length === 0">
+		<div v-if="leek && my_leek && leek.fights && leek.fights.length === 0" class="center">
 			<br>
 			<router-link to="/garden">
 				<v-btn color="primary">
@@ -328,7 +328,7 @@
 				</template>
 				<v-tooltip v-if="leek && my_leek && leek.level >= 20 && $store.state.farmer?.br_enabled">
 					<template #activator="{ props }">
-						<div class="tab" @click="registerAutoArena" v-bind="props">
+						<div class="tab" v-bind="props" @click="registerAutoArena">
 							<v-icon>mdi-trophy</v-icon>
 							<span v-if="!leek.auto_br" class="register">{{ $t('register_to_arena') }}</span>
 							<span v-else class="unregister">{{ $t('unregister') }}</span>
@@ -339,7 +339,7 @@
 				<template v-if="leek && leek.level > 1 && $store.state.connected">
 					<v-tooltip>
 						<template #activator="{ props }">
-							<div class="tab" @click="copyAsTest()" v-bind="props" icon="play_arrow">
+							<div class="tab" v-bind="props" icon="play_arrow" @click="copyAsTest()">
 								<v-icon class="list-icon">mdi-content-copy</v-icon><span>{{ $t('test') }}</span>
 							</div>
 						</template>
@@ -348,7 +348,7 @@
 				</template>
 				<v-tooltip v-if="leek && my_leek && $store.state.farmer && (!$store.state.farmer.group || $store.state.farmer.group.supervisor === $store.state.farmer.id)">
 					<template #activator="{ props }">
-						<div class="tab" @click="updateXpBlocked" v-bind="props">
+						<div class="tab" v-bind="props" @click="updateXpBlocked">
 							<span>{{ $t('main.xp_blocked') }}</span>
 							<v-switch :model-value="leek.xp_blocked" hide-details />
 						</div>
@@ -431,7 +431,7 @@
 				<div class="potions-grid">
 					<v-tooltip v-for="(potion, id) in ($store.state.farmer ? $store.state.farmer.potions : [])" :key="id">
 						<template #activator="{ props }">
-							<div :quantity="potion.quantity" class="potion" @click="usePotion(potion)" v-bind="props">
+							<div :quantity="potion.quantity" class="potion" v-bind="props" @click="usePotion(potion)">
 								<img :src="'/image/potion/' + LeekWars.potions[potion.template].name + '.png'">
 							</div>
 						</template>
@@ -458,7 +458,7 @@
 				<div class="potions-grid">
 					<v-tooltip v-for="(potion, id) in skinPotions" :key="id">
 						<template #activator="{ props }">
-							<div :quantity="potion.quantity" class="potion" @click="usePotion(potion)" v-bind="props">
+							<div :quantity="potion.quantity" class="potion" v-bind="props" @click="usePotion(potion)">
 								<img :src="'/image/potion/' + LeekWars.potions[potion.template].name + '.png'">
 							</div>
 						</template>
@@ -482,7 +482,7 @@
 				<div class="hats">
 					<v-tooltip>
 						<template #activator="{ props }">
-							<div v-ripple :quantity="1" class="hat" @click="selectHat(null)" v-bind="props">
+							<div v-ripple :quantity="1" class="hat" v-bind="props" @click="selectHat(null)">
 								<img src="/image/hat/no_hat.png">
 							</div>
 						</template>
@@ -490,7 +490,7 @@
 					</v-tooltip>
 					<v-tooltip v-for="hat in farmer_hats" :key="hat.id">
 						<template #activator="{ props }">
-							<div v-ripple :quantity="hat.quantity" class="hat" @click="selectHat(hat)" v-bind="props">
+							<div v-ripple :quantity="hat.quantity" class="hat" v-bind="props" @click="selectHat(hat)">
 								<img :src="'/image/hat/' + hat.name + '.png'">
 							</div>
 						</template>
@@ -511,7 +511,7 @@
 				<div class="leek-weapons">
 					<v-tooltip>
 						<template #activator="{ props }">
-							<div v-ripple :quantity="1" class="weapon" @click="setWeapon(0)" v-bind="props">
+							<div v-ripple :quantity="1" class="weapon" v-bind="props" @click="setWeapon(0)">
 								<img src="/image/weapon/no_weapon.png">
 							</div>
 						</template>
@@ -618,7 +618,7 @@
 						</div>
 					</div>
 					<div v-if="leek" class="pomp column6">
-						<v-radio-group v-model="leek.face" @update:model-value="changeFace" hide-details>
+						<v-radio-group v-model="leek.face" hide-details @update:model-value="changeFace">
 							<v-radio :value="0">
 								<template #label>
           							{{ $t('neutral') }}
@@ -685,7 +685,7 @@
 			<div class="ai-popup">
 				<div class="leek-ai-components components-grid">
 					<div v-for="(c, i) of 8" :key="i" class="component" :class="{dashed: draggedComponent, disabled: i >= max_components}" @dragover="dragOver" @drop="componentsDrop('leek', $event, i)">
-						<rich-tooltip-item v-if="leek.components[i]" v-slot="{ props }" :item="LeekWars.items[leek.components[i].template]" :key="i" :bottom="true" ref="componentTooltips">
+						<rich-tooltip-item v-if="leek.components[i]" v-slot="{ props }" :key="i" ref="componentTooltips" :item="LeekWars.items[leek.components[i].template]" :bottom="true">
 							<div :class="{dragging: draggedComponent && draggedComponent.template === leek.components[i].template && draggedComponentLocation === 'leek'}" draggable="true" v-bind="props" @dragstart="componentDragStart('leek', leek.components[i], $event)" @dragend="componentDragEnd(leek.components[0])" @click="removeComponent(leek.components[i])">
 								<img :src="'/image/component/' + LeekWars.items[leek.components[i].template].name + '.png'">
 							</div>
@@ -704,7 +704,7 @@
 							{{ $t('all_my_components') }} ({{ farmer_components.length }})
 						</div>
 						<div class="farmer-components" :class="{dashed: draggedComponent && draggedComponentLocation === 'leek'}" @dragover="dragOver" @drop="componentsDrop('farmer', $event)">
-							<rich-tooltip-item v-for="component in farmer_components" :key="component.id" v-slot="{ props }" :item="LeekWars.items[component.template]" :bottom="true" :nodge="true" ref="componentTooltips">
+							<rich-tooltip-item v-for="component in farmer_components" :key="component.id" v-slot="{ props }" ref="componentTooltips" :item="LeekWars.items[component.template]" :bottom="true" :nodge="true">
 								<div :quantity="component.quantity" :class="{dragging: draggedComponent && draggedComponent.template === component.template && draggedComponentLocation === 'farmer', locked: LeekWars.items[component.template].level > leek.level || leek.components.find(c => c && c.template === component.template) }" :draggable="LeekWars.items[component.template].level <= leek.level" class="component" v-bind="props" @dragstart="componentDragStart('farmer', component, $event)" @dragend="componentDragEnd(component)" @click="addComponent(component)">
 									<img :src="'/image/component/' + LeekWars.items[component.template].name + '.png'" draggable="false">
 								</div>
@@ -802,7 +802,7 @@
 	const LevelDialog = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/leek/level-dialog.${locale}.i18n`))
 	const Explorer = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`))
 
-	defineOptions({ name: 'leek', i18n: {}, mixins: [...mixins], components: {
+	defineOptions({ name: 'Leek', i18n: {}, mixins: [...mixins], components: {
 		CharacteristicTooltip, RichTooltipItem, RichTooltipFarmer, RichTooltipLeek, TitlePicker, ai: AIElement, 'lw-title': LwTitle, LeekComponent, Line,
 	} })
 

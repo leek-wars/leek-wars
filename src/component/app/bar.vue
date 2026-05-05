@@ -55,7 +55,7 @@ import { emitter } from '@/model/vue'
 import { ref } from 'vue'
 import type { Notification } from '@/model/notification'
 
-defineOptions({ name: 'lw-bar' })
+defineOptions({ name: 'LwBar' })
 
 const dark = ref(false)
 

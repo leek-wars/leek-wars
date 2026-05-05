@@ -29,7 +29,7 @@
 									{{ $filters.time(farmer.register_time) }}
 								</div>
 								<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }" :bottom="true">
-									<router-link :to="'/farmer/' + farmer.id" class="name" v-bind="props" v-ripple>
+									<router-link v-ripple :to="'/farmer/' + farmer.id" class="name" v-bind="props">
 										<avatar :farmer="farmer" />
 										<flag :code="LeekWars.languages[farmer.language].country" :clickable="false" />
 										<div>{{ farmer.name }}</div>
@@ -165,7 +165,7 @@
 
 					<div class="sources">
 						<div v-for="source of sources" :key="source.name" class="source card">
-							<component v-if="source.name" :is="LeekWars.safeUrl(source.name) ? 'a' : 'span'" class="name" :href="LeekWars.safeUrl(source.name)" target="_blank">{{ format(source.name) }}</component>
+							<component :is="LeekWars.safeUrl(source.name) ? 'a' : 'span'" v-if="source.name" class="name" :href="LeekWars.safeUrl(source.name)" target="_blank">{{ format(source.name) }}</component>
 							<div v-else class="name">∅</div>
 							<div class="stats">
 								<div class="count">{{ $filters.number(source.count) }}</div>

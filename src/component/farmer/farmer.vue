@@ -39,7 +39,7 @@
 							</template>
 						</i18n-t>
 					</v-tooltip>
-					<div class="tab" v-if="$store.getters.leek_count >= 2" @click="updateGarden">
+					<div v-if="$store.getters.leek_count >= 2" class="tab" @click="updateGarden">
 						<span>{{ $t('garden') }}</span>
 						<v-switch :model-value="farmer.in_garden" hide-details />
 					</div>
@@ -404,21 +404,21 @@
 						<div v-for="(reward, r) of rewards" :key="r" class="reward card" :class="{'notif-trophy': Number(r) <= (farmer.godsons_level ?? 0)}">
 							<div class="level">{{ $filters.number(Number(r)) }}<v-icon v-if="Number(r) <= (farmer.godsons_level ?? 0)">mdi-check</v-icon></div>
 							<img v-if="reward.trophy" :src="'/image/trophy/' + reward.trophy + '.svg'">
-							<rich-tooltip-item v-else-if="reward.resource" :item="LeekWars.items[reward.item!]" v-slot="{ props }" :bottom="true">
+							<rich-tooltip-item v-else-if="reward.resource" v-slot="{ props }" :item="LeekWars.items[reward.item!]" :bottom="true">
 								<img v-bind="props" :src="'/image/resource/' + reward.resource + '.png'">
 							</rich-tooltip-item>
 							<img v-else-if="reward.fight_pack" :src="'/image/fight-pack/' + reward.fight_pack + '.png'">
-							<rich-tooltip-item v-else-if="reward.potion" :item="LeekWars.items[reward.item!]" v-slot="{ props }" :bottom="true">
+							<rich-tooltip-item v-else-if="reward.potion" v-slot="{ props }" :item="LeekWars.items[reward.item!]" :bottom="true">
 								<img v-bind="props" :src="'/image/potion/skin_' + reward.potion + '.png'">
 							</rich-tooltip-item>
-							<rich-tooltip-item v-else-if="reward.hat" :item="LeekWars.items[reward.item!]" v-slot="{ props }" :bottom="true">
+							<rich-tooltip-item v-else-if="reward.hat" v-slot="{ props }" :item="LeekWars.items[reward.item!]" :bottom="true">
 								<img v-bind="props" :src="'/image/hat/' + reward.hat + '.png'">
 							</rich-tooltip-item>
-							<div class="name" v-if="reward.trophy">{{ $t('trophy_x', [$t('trophy.' + reward.trophy)]) }}</div>
-							<div class="name" v-else-if="reward.resource">{{ $t('resource.' + reward.resource) }}</div>
-							<div class="name" v-else-if="reward.fight_pack">{{ $t('fight-pack.' + reward.fight_pack) }}</div>
-							<div class="name" v-else-if="reward.potion">{{ $t('potion.skin_' + reward.potion) }}</div>
-							<div class="name" v-else-if="reward.hat">{{ $t('hat.' + reward.hat) }}</div>
+							<div v-if="reward.trophy" class="name">{{ $t('trophy_x', [$t('trophy.' + reward.trophy)]) }}</div>
+							<div v-else-if="reward.resource" class="name">{{ $t('resource.' + reward.resource) }}</div>
+							<div v-else-if="reward.fight_pack" class="name">{{ $t('fight-pack.' + reward.fight_pack) }}</div>
+							<div v-else-if="reward.potion" class="name">{{ $t('potion.skin_' + reward.potion) }}</div>
+							<div v-else-if="reward.hat" class="name">{{ $t('hat.' + reward.hat) }}</div>
 						</div>
 					</div>
 				</div>
@@ -488,7 +488,7 @@
 			<template #title><span>{{ $t('create_team') }}</span></template>
 			{{ $t('team_name') }} <input v-model="createTeamName" type="text">
 			<template #actions>
-				<div v-ripple @click="createTeamDialog = false" class="dismiss">{{ $t('cancel') }}</div>
+				<div v-ripple class="dismiss" @click="createTeamDialog = false">{{ $t('cancel') }}</div>
 				<div v-ripple @click="createTeam">{{ $t('create') }}</div>
 			</template>
 		</popup>
@@ -624,7 +624,7 @@
 	const TournamentsHistory = defineAsyncComponent(() => import('@/component/history/tournaments-history.vue'))
 	const ReportDialog = defineAsyncComponent(() => import('@/component/moderation/report-dialog.vue'))
 
-	defineOptions({ name: 'farmer', i18n: {}, mixins: [...mixins], components: {
+	defineOptions({ name: 'Farmer', i18n: {}, mixins: [...mixins], components: {
 		RichTooltipFarmer, RichTooltipTeam, RichTooltipLeek, TitlePicker, 'lw-title': LwTitle, 'rich-tooltip-item': RichTooltipItem, Line,
 	} })
 

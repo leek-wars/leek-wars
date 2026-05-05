@@ -159,7 +159,7 @@
 
 	const ChatPanel = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat-panel.vue`))
 
-	defineOptions({ name: 'forum', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'Forum', i18n: {}, mixins: [...mixins] })
 
 	const t = useNamespacedT('forum')
 	const router = useRouter()

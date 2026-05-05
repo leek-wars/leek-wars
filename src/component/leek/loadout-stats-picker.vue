@@ -8,13 +8,13 @@
 				<div class="add-wrapper">
 					<v-tooltip v-for="q in [1, 10, 100]" :key="q">
 						<template #activator="{ props }">
-							<span :q="q" class="add" :class="{disabled: wouldExceedMax(c, q)}" @click="add(c, q)" v-bind="props"></span>
+							<span :q="q" class="add" :class="{disabled: wouldExceedMax(c, q)}" v-bind="props" @click="add(c, q)"></span>
 						</template>
 						<div>{{ costs[c + q].cost + ' capital ⇔ ' + costs[c + q].bonus + ' ' + $t('characteristic.' + c) }}</div>
 					</v-tooltip>
 					<v-tooltip v-if="modelValue[c]">
 						<template #activator="{ props }">
-							<span q="0" class="add" @click="clear(c)" v-bind="props"></span>
+							<span q="0" class="add" v-bind="props" @click="clear(c)"></span>
 						</template>
 						{{ $t('main.clear') }}
 					</v-tooltip>

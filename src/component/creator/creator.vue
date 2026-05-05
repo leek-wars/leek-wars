@@ -23,15 +23,15 @@
 
 							<div class="category">
 								<div class="title">Informations</div>
-								<div>IA <input class="stat" v-model.number="game.selectedEntity.ai" @keyup="edited('ai')" type="number"></div>
-								<div>Niveau <input class="stat" v-model.number="game.selectedEntity.level" @keyup="edited('level')" type="number"></div>
-								<div>Mort <input type="checkbox" v-model.boolean="game.selectedEntity.initially_dead" @change="edited('dead')"></div>
+								<div>IA <input v-model.number="game.selectedEntity.ai" class="stat" type="number" @keyup="edited('ai')"></div>
+								<div>Niveau <input v-model.number="game.selectedEntity.level" class="stat" type="number" @keyup="edited('level')"></div>
+								<div>Mort <input v-model.boolean="game.selectedEntity.initially_dead" type="checkbox" @change="edited('dead')"></div>
 								<div class="orientation">
-									<v-icon @click="setOrientation(EntityDirection.NORTH)" :class="{active: game.selectedEntity.orientation === EntityDirection.NORTH}">mdi-arrow-top-left</v-icon>
-									<v-icon @click="setOrientation(EntityDirection.EAST)" :class="{active: game.selectedEntity.orientation === EntityDirection.EAST}">mdi-arrow-top-right</v-icon>
+									<v-icon :class="{active: game.selectedEntity.orientation === EntityDirection.NORTH}" @click="setOrientation(EntityDirection.NORTH)">mdi-arrow-top-left</v-icon>
+									<v-icon :class="{active: game.selectedEntity.orientation === EntityDirection.EAST}" @click="setOrientation(EntityDirection.EAST)">mdi-arrow-top-right</v-icon>
 									<br>
-									<v-icon @click="setOrientation(EntityDirection.WEST)" :class="{active: game.selectedEntity.orientation === EntityDirection.WEST}">mdi-arrow-bottom-left</v-icon>
-									<v-icon @click="setOrientation(EntityDirection.SOUTH)" :class="{active: game.selectedEntity.orientation === EntityDirection.SOUTH}">mdi-arrow-bottom-right</v-icon>
+									<v-icon :class="{active: game.selectedEntity.orientation === EntityDirection.WEST}" @click="setOrientation(EntityDirection.WEST)">mdi-arrow-bottom-left</v-icon>
+									<v-icon :class="{active: game.selectedEntity.orientation === EntityDirection.SOUTH}" @click="setOrientation(EntityDirection.SOUTH)">mdi-arrow-bottom-right</v-icon>
 								</div>
 							</div>
 
@@ -42,7 +42,7 @@
 										<characteristic-tooltip v-slot="{ props }" :characteristic="c" :value="game.selectedEntity[c]" :total="game.selectedEntity[c]" :leek="game.selectedEntity" :test="true">
 											<img v-bind="props" :src="'/image/charac/' + c + '.png'">
 										</characteristic-tooltip>
-										<input class="stat" :class="'color-' + c" v-model.number="game.selectedEntity[c]" @keyup="edited('charac')" type="number">
+										<input v-model.number="game.selectedEntity[c]" class="stat" :class="'color-' + c" type="number" @keyup="edited('charac')">
 									</div>
 								</div>
 							</div>
@@ -51,7 +51,7 @@
 								<div class="title">Armes</div>
 								<div class="container weapons">
 									<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ props }" :item="LeekWars.items[weapon.item]" :bottom="true" :nodge="true" :leek="game.selectedEntity">
-										<img :src="'/image/' + LeekWars.items[weapon.item].name.replace('_', '/') + '.png'" :class="{hidden: !hasWeaponEquipped(weapon.item)}" class="weapon" v-bind="props" @click="removeLeekWeapon(weapon.item)" :width="WeaponsData[LeekWars.items[weapon.item].params].width">
+										<img :src="'/image/' + LeekWars.items[weapon.item].name.replace('_', '/') + '.png'" :class="{hidden: !hasWeaponEquipped(weapon.item)}" class="weapon" v-bind="props" :width="WeaponsData[LeekWars.items[weapon.item].params].width" @click="removeLeekWeapon(weapon.item)">
 									</rich-tooltip-item>
 									<div v-if="game.selectedEntity.weapons.length < 4" class="add" @click="weaponsDialog = true">+</div>
 								</div>
@@ -139,7 +139,7 @@
 			<div v-if="game.selectedEntity" class="padding weapons-dialog">
 				<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ props }" :item="LeekWars.items[weapon.item]" :bottom="true" :nodge="true" :leek="game.selectedEntity">
 					<span :class="{disabled: game.selectedEntity.weapons.indexOf(weapon.item) !== -1}" v-bind="props">
-						<img :src="'/image/weapon/' + weapon.name + '.png'" class="weapon" v-bind="props" @click="addOrRemoveLeekWeapon(weapon.item)" :width="WeaponsData[LeekWars.items[weapon.item].params].width">
+						<img :src="'/image/weapon/' + weapon.name + '.png'" class="weapon" v-bind="props" :width="WeaponsData[LeekWars.items[weapon.item].params].width" @click="addOrRemoveLeekWeapon(weapon.item)">
 					</span>
 				</rich-tooltip-item>
 			</div>
@@ -171,7 +171,7 @@ import { ChipTemplate } from '@/model/chip'
 import { computed, nextTick, onMounted, onUnmounted, ref, useTemplateRef } from 'vue'
 import { useRoute } from 'vue-router'
 
-defineOptions({ name: 'creator', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'Creator', i18n: {}, mixins: [...mixins] })
 
 interface MapPlayer {
 	name: string

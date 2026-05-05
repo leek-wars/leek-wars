@@ -69,7 +69,7 @@
 	import { computed, ref, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 
-	defineOptions({ name: 'git-remote-dialog', i18n: {}, mixins: [...mixins], components: { Popup } })
+	defineOptions({ name: 'GitRemoteDialog', i18n: {}, mixins: [...mixins], components: { Popup } })
 
 	const props = defineProps<{
 		modelValue: boolean

@@ -63,15 +63,15 @@
 						<div class="type">{{ $t(statistic.today_state ? 'today' : 'total') }}</div>
 					</div>
 					<div v-if="name === 'fight_tournament' || name === 'turrets_killed' || name === 'ais_v4' || name === 'godsons'" :key="name + '1'" class="delimiter"></div>
-					<div v-if="name === 'godsons'" class="chart-wrap left" :key="name + '2'">
+					<div v-if="name === 'godsons'" :key="name + '2'" class="chart-wrap left">
 						<div class="chart"><Doughnut ref="charts" :data="chartLanguage" :options="chartOptions" /></div>
 						<div class="title">{{ $t('chart_language') }}</div>
 					</div>
-					<div v-if="name === 'damage'" class="chart-wrap left"  :key="name + '2'">
+					<div v-if="name === 'damage'" :key="name + '2'"  class="chart-wrap left">
 						<div class="chart"><Doughnut ref="charts" :data="chartDamage" :options="chartOptions" /></div>
 						<div class="title">{{ $t('chart_damage_type') }}</div>
 					</div>
-					<div v-if="name === 'fight_tournament'" class="chart-wrap right" :key="name + '2'">
+					<div v-if="name === 'fight_tournament'" :key="name + '2'" class="chart-wrap right">
 						<div class="chart"><Doughnut ref="charts" :data="chartFightContext" :options="chartOptions" /></div>
 						<div class="title">{{ $t('chart_fight_context') }}</div>
 					</div>
@@ -110,7 +110,7 @@
 		icon?: string
 	}
 
-	defineOptions({ name: 'statistics', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'Statistics', i18n: {}, mixins: [...mixins] })
 
 	const loaded = ref(false)
 	const statistics = ref<Array<{[key: string]: Statistic}>>([])

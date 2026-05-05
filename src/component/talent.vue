@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: 'talent' })
+defineOptions({ name: 'Talent' })
 
 defineProps<{
 	talent: number | string

@@ -71,7 +71,7 @@
 			<template v-else>
 				<panel v-for="(item, i) in items" :key="i" class="item-sample">
 					<template #content>
-						<router-link :to="'/market/' + item.name.replace(/[a-z-]+_/, '')" v-ripple>
+						<router-link v-ripple :to="'/market/' + item.name.replace(/[a-z-]+_/, '')">
 							<item :item="item" />
 							<div class="info">
 								<div class="name">{{ $t(item.name.replace('_', '.')) }}</div>
@@ -96,7 +96,7 @@ import { store } from '@/model/store'
 import Item from '@/component/item.vue'
 import BankProduct from './bank-product.vue'
 
-defineOptions({ name: 'bank', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'Bank', i18n: {}, mixins: [...mixins] })
 
 const t = useNamespacedT('bank')
 const router = useRouter()

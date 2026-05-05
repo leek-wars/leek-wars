@@ -14,19 +14,19 @@
 					density="comfortable"
 					class="elevation-1 members">
 					<template #item.id="{ item }">
-						<router-link :to="'/group/' + item.id" class="flex" v-ripple>
+						<router-link v-ripple :to="'/group/' + item.id" class="flex">
 							{{ item.id }}
 						</router-link>
 					</template>
 					<template #item.name="{ item }">
-						<router-link :to="'/group/' + item.id" class="flex" v-ripple>
+						<router-link v-ripple :to="'/group/' + item.id" class="flex">
 							{{ item.name }}
 						</router-link>
 					</template>
 					<template #item.supervisor="{ item }">
 						<router-link :to="'/farmer/' + item.supervisor.id">
 							<rich-tooltip-farmer :id="item.supervisor.id" :bottom="true">
-								<div class="flex name" v-ripple>
+								<div v-ripple class="flex name">
 									<avatar :farmer="item.supervisor" />
 									<span>{{ item.supervisor.name }}</span>
 									<img v-if="item.supervisor.connected" class="status" src="/image/connected.png">

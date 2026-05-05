@@ -74,7 +74,7 @@
 	const subtitle = computed(() => !selectedTarget.value && props.leeks ? t('warning.select_leek') : name.value)
 	const message = computed(() => t('warning.report_farmer_for_reason', [name.value]))
 	const selectedFarmer = computed(() => props.target || selectedTarget.value)
-	void selectedFarmer
+	void selectedFarmer.value
 
 	watch(() => props.target, () => {
 		selectedTarget.value = props.target ?? null

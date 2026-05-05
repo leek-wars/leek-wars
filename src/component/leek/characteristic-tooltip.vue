@@ -54,7 +54,7 @@
 import { COSTS } from '@/model/leek'
 import { computed } from 'vue'
 
-defineOptions({ name: "characteristic-tooltip" })
+defineOptions({ name: "CharacteristicTooltip" })
 
 const props = defineProps<{
 	characteristic: string

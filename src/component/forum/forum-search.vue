@@ -114,7 +114,7 @@
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 
-	defineOptions({ name: 'search', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'Search', i18n: {}, mixins: [...mixins] })
 
 	useI18n() // initialize local scope for <i18n-t>
 	const t = useNamespacedT('search')

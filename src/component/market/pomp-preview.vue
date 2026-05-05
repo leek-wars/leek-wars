@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import type { PompTemplate } from '@/model/pomp'
 
-defineOptions({ name: 'pomp-preview' })
+defineOptions({ name: 'PompPreview' })
 
 defineProps<{
 	pomp: PompTemplate

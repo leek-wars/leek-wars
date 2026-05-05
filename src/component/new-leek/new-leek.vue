@@ -34,7 +34,7 @@ import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { mixins , useNamespacedT } from '@/model/i18n'
 
-defineOptions({ name: 'new_leek', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'NewLeek', i18n: {}, mixins: [...mixins] })
 
 const t = useNamespacedT('new_leek')
 const router = useRouter()

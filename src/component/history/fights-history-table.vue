@@ -152,7 +152,7 @@ import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
 import RichTooltipFight from '@/component/rich-tooltip/rich-tooltip-fight.vue'
 
-defineOptions({ name: 'fights-history-table', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'FightsHistoryTable', i18n: {}, mixins: [...mixins] })
 
 defineProps<{
 	fights: Fight[]

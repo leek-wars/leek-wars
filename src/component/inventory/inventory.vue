@@ -185,7 +185,7 @@
 		SMALL, NORMAL, LARGE
 	}
 
-	defineOptions({ name: 'inventory', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'Inventory', i18n: {}, mixins: [...mixins] })
 
 	const t = useNamespacedT('inventory')
 	const router = useRouter()

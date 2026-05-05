@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: 'ranking-badge' })
+defineOptions({ name: 'RankingBadge' })
 
 defineProps<{
 	ranking: number

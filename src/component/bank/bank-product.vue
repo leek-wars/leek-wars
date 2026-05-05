@@ -21,7 +21,7 @@
 <script setup lang="ts">
 import { mixins } from '@/model/i18n'
 
-defineOptions({ name: 'bank-product', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'BankProduct', i18n: {}, mixins: [...mixins] })
 
 defineProps<{
 	product: Record<string, unknown>

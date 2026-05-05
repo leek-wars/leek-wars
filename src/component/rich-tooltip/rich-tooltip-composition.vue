@@ -25,7 +25,7 @@
 							• {{ composition.leeks.length }} <img src="/image/icon/black/leek.png">
 							• {{ $t('main.level_n', [composition.total_level]) }}
 						</span>
-						<v-btn class="expand" variant="text" size="x-small" @click="expand_leeks = !expand_leeks" :icon="expand_leeks ? 'mdi-chevron-up' : 'mdi-chevron-down'" />
+						<v-btn class="expand" variant="text" size="x-small" :icon="expand_leeks ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="expand_leeks = !expand_leeks" />
 					</div>
 				</div>
 

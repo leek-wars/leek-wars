@@ -22,7 +22,7 @@
 				</router-link>
 				<div class="tab disabled search" icon="search" link="/search">
 					<img class="search-icon" src="/image/search.png">
-					<input v-model="query" ref="search" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+					<input ref="search" v-model="query" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
 				</div>
 				<div v-if="!popup" class="tab action" icon="search" link="/search" @click="toggleLarge">
 					<v-icon v-if="LeekWars.large">mdi-fullscreen-exit</v-icon>
@@ -43,8 +43,8 @@
 									<v-icon v-else>mdi-chevron-down</v-icon>
 								</h2>
 								<div v-if="query.length || categoryState[c]">
-									<div v-for="(item, i) in category" :key="i" @click="navigate(item.name)" :item="item.name" class="item">
-										{{ item.name }}<span class="arguments" v-if="item.arguments_types">(<span v-for="(arg, i) in item.arguments_names" :key="i"><span v-if="item.optional[i]">[</span><span class="argument">{{ $t('doc.arg_type_' + item.arguments_types[i]) }}</span>&nbsp;{{ arg }}<span v-if="item.optional[i]">]</span><span v-if="Number(i) < item.arguments_names.length - 1">, </span></span>)
+									<div v-for="(item, i) in category" :key="i" :item="item.name" class="item" @click="navigate(item.name)">
+										{{ item.name }}<span v-if="item.arguments_types" class="arguments">(<span v-for="(arg, i) in item.arguments_names" :key="i"><span v-if="item.optional[i]">[</span><span class="argument">{{ $t('doc.arg_type_' + item.arguments_types[i]) }}</span>&nbsp;{{ arg }}<span v-if="item.optional[i]">]</span><span v-if="Number(i) < item.arguments_names.length - 1">, </span></span>)
 										<span v-if="item.return_type != 0">
 											<span class="arrow">→</span> <span class="argument"> {{ $t('doc.arg_type_' + item.return_type) }}</span>&nbsp;{{ item.return_name }}
 										</span></span>
@@ -85,7 +85,7 @@
 	import DocumentationFunction from './documentation-function.vue'
 	import { emitter } from '@/model/vue'
 
-	defineOptions({ name: 'documentation', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'Documentation', i18n: {}, mixins: [...mixins] })
 
 	const props = defineProps<{ popup?: boolean }>()
 	const { locale: i18nLocale } = useI18n()

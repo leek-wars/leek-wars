@@ -23,7 +23,7 @@ import { mixins } from '@/model/i18n'
 import ExplorerFolder from './explorer-folder.vue'
 import AIElement from '@/component/app/ai.vue'
 
-defineOptions({ name: 'explorer', i18n: {}, mixins: [...mixins], components: { 'explorer-folder': ExplorerFolder, ai: AIElement } })
+defineOptions({ name: 'Explorer', i18n: {}, mixins: [...mixins], components: { 'explorer-folder': ExplorerFolder, ai: AIElement } })
 
 defineEmits<{
 	select: [ai: unknown]

@@ -927,7 +927,7 @@ class Orbital extends Particle {
 		this.scale = scale
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	 
 	public draw(ctx: CanvasRenderingContext2D): void {
 		ctx.drawImage(T.orbital.texture, -T.orbital.texture.width / 2 * this.scale, -T.orbital.texture.height / 2 * this.scale, T.orbital.texture.width * this.scale, T.orbital.texture.height * this.scale)
 	}

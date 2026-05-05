@@ -10,7 +10,7 @@
 import type { Farmer } from '@/model/farmer'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-defineOptions({ name: 'lw-pseudo' })
+defineOptions({ name: 'LwPseudo' })
 
 defineProps<{
 	farmer: Farmer

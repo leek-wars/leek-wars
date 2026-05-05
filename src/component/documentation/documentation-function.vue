@@ -85,7 +85,7 @@ import { locale } from '@/locale'
 import type { LSFunction } from '@/model/function'
 import { LeekWars } from '@/model/leekwars'
 
-defineOptions({ name: 'documentation-function' })
+defineOptions({ name: 'DocumentationFunction' })
 
 const props = defineProps<{
 	fun: LSFunction

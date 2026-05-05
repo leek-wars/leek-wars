@@ -73,7 +73,7 @@
 import { LeekWars } from '@/model/leekwars'
 import { ref } from 'vue'
 
-defineOptions({ name: 'two-factor' })
+defineOptions({ name: 'TwoFactor' })
 
 const twoFactorConfirmDialog = ref(false)
 const step = ref(0)

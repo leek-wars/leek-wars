@@ -32,7 +32,7 @@ import { mixins, useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import Console from '../app/console.vue'
 
-defineOptions({ name: 'console-page', components: { Console }, mixins: [...mixins] })
+defineOptions({ name: 'ConsolePage', components: { Console }, mixins: [...mixins] })
 
 const t = useNamespacedT('console-page')
 

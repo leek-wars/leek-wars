@@ -1,5 +1,5 @@
 <template>
-	<div class="ai" ref="editorEl">
+	<div ref="editorEl" class="ai">
 		<!-- Editeur -->
 		<div class="compilation">
 			<div v-if="saving" class="compiling">
@@ -39,7 +39,7 @@ import { markRaw, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, wat
 import Code from '@/component/app/code.vue'
 import { parseConflicts, hasConflictMarkers, buildConflictDecorations, registerConflictCodeLens, type MergeConflict } from './merge-conflicts'
 
-defineOptions({ name: 'ai-view-monaco' })
+defineOptions({ name: 'AiViewMonaco' })
 
 const scrollKey = (path: string) => 'editor/scroll/' + farmerId() + '/' + path
 const viewStateKey = (path: string) => 'editor/viewstate/' + farmerId() + '/' + path

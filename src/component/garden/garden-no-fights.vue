@@ -40,7 +40,7 @@
 	import { computed, ref } from 'vue'
 	import { useRouter } from 'vue-router'
 
-	defineOptions({ name: 'garden-no-fights', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'GardenNoFights', i18n: {}, mixins: [...mixins] })
 
 	defineProps<{
 		canbuy?: boolean

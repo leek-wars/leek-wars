@@ -26,7 +26,7 @@
 
 			<template v-else-if="state == 2">
 				<loader v-if="!error" />
-				<div class="center" v-else>
+				<div v-else class="center">
 					<img src="/image/notgood.png">
 					<br><br>
 					<div class="error">{{ error }}</div>
@@ -70,7 +70,7 @@ import { useRoute } from 'vue-router'
 import { LeekWars } from '@/model/leekwars'
 import { mixins, useNamespacedT } from '@/model/i18n'
 
-defineOptions({ name: 'change_email', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'ChangeEmail', i18n: {}, mixins: [...mixins] })
 
 useI18n() // initialize local scope for <i18n-t>
 	const t = useNamespacedT('change_email')

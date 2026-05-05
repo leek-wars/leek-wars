@@ -295,7 +295,7 @@
 	import { useRoute, useRouter } from 'vue-router'
 
 	defineOptions({
-		name: 'ranking', i18n: {}, mixins: [...mixins],
+		name: 'Ranking', i18n: {}, mixins: [...mixins],
 		components: { 'ranking-leek-row': RankingLeekRowElement, 'ranking-farmer-row': RankingFarmerRowElement, 'ranking-team-row': RankingTeamRowElement, 'ranking-composition-row': RankingCompositionRowElement, 'ranking-search-result': RankingSearchResult, RichTooltipFarmer, Pagination }
 	})
 

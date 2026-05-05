@@ -10,7 +10,7 @@
 import type { Tournament } from '@/model/tournament'
 import TournamentHistory from '@/component/history/tournament-history.vue'
 
-defineOptions({ name: 'tournaments-history' })
+defineOptions({ name: 'TournamentsHistory' })
 
 defineProps<{
 	tournaments: Tournament[]

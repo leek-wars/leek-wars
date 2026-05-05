@@ -46,7 +46,7 @@
 	import { Fight } from '@/model/fight'
 	import { computed } from 'vue'
 
-	defineOptions({ name: 'report-statistics', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'ReportStatistics', i18n: {}, mixins: [...mixins] })
 
 	const props = defineProps<{
 		fight: Fight

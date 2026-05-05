@@ -130,7 +130,7 @@
 										<template #date>{{ $filters.datetime(page.creation_time) }}</template>
 									</i18n-t>
 
-									<i18n-t keypath="edited_by_x_the_y" tag="div" v-if="page.last_editor">
+									<i18n-t v-if="page.last_editor" keypath="edited_by_x_the_y" tag="div">
 										<template #farmer>
 											<rich-tooltip-farmer :id="page.last_editor" v-slot="{ props }">
 												<router-link :to="'/farmer/' + page.last_editor"><span v-bind="props">{{ page.last_editor_name }}</span></router-link>
@@ -230,7 +230,7 @@
 	import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
 	import { emitter } from '@/model/vue'
 
-	defineOptions({ name: 'encyclopedia', i18n: {}, mixins: [...mixins], components: { Markdown, Breadcrumb, RichTooltipFarmer } })
+	defineOptions({ name: 'Encyclopedia', i18n: {}, mixins: [...mixins], components: { Markdown, Breadcrumb, RichTooltipFarmer } })
 
 	const { locale: i18nLocale } = useI18n()
 	const t = useNamespacedT('encyclopedia')

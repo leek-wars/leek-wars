@@ -21,7 +21,7 @@
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
 			</template>
-			<v-menu v-if="!account.connected && !isActive(account)" :model-value="loginMenuId === account.id" @update:model-value="loginMenuId = $event ? account.id : null" activator="parent" location="end" :close-on-content-click="false" :open-on-click="true">
+			<v-menu v-if="!account.connected && !isActive(account)" :model-value="loginMenuId === account.id" activator="parent" location="end" :close-on-content-click="false" :open-on-click="true" @update:model-value="loginMenuId = $event ? account.id : null">
 				<v-card class="login-submenu">
 					<form @submit.prevent="loginNewAccount">
 						<input v-model="loginForm.password" type="password" :placeholder="$t('main.account_password')" class="login-input" @click.stop>
@@ -58,7 +58,7 @@ import router from '@/router'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-defineOptions({ name: 'account-switcher' })
+defineOptions({ name: 'AccountSwitcher' })
 
 const emit = defineEmits<{
 	'close': []

@@ -63,7 +63,7 @@ import { defineAsyncComponent, nextTick, ref } from 'vue'
 
 const ChatPanel = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat-panel.vue`))
 
-defineOptions({ name: 'lw-social' })
+defineOptions({ name: 'LwSocial' })
 
 const panelWidth = ref(400)
 const socialEverOpened = ref(false)

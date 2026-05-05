@@ -38,7 +38,7 @@
 	import { computed, ref } from 'vue'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 
-	defineOptions({ name: "moderation-thugs", i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: "ModerationThugs", i18n: {}, mixins: [...mixins] })
 
 	class ModerationRequest {
 		faults!: Fault[]

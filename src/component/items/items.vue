@@ -39,7 +39,7 @@ import { mixins, useNamespacedT } from '@/model/i18n'
 import Breadcrumb from '../forum/breadcrumb.vue'
 import Item from '@/component/item.vue'
 
-defineOptions({ name: 'items', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'Items', i18n: {}, mixins: [...mixins] })
 
 const { locale } = useI18n()
 	const t = useNamespacedT('items')

@@ -64,7 +64,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { LeekWars } from '@/model/leekwars'
 import { mixins , useNamespacedT } from '@/model/i18n'
 
-defineOptions({ name: 'forgot_password', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'ForgotPassword', i18n: {}, mixins: [...mixins] })
 
 defineProps<{
 	state?: string

@@ -233,7 +233,7 @@
 
 	const AccountSwitcher = defineAsyncComponent(() => import('@/component/app/account-switcher.vue'))
 
-	defineOptions({ name: 'lw-menu' })
+	defineOptions({ name: 'LwMenu' })
 
 	const route = useRoute()
 	const router = useRouter()

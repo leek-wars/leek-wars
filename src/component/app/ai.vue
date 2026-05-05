@@ -16,7 +16,7 @@ import { store } from '@/model/store'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-defineOptions({ name: "ai" })
+defineOptions({ name: "Ai" })
 
 const props = defineProps<{
 	ai: AI

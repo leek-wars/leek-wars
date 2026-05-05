@@ -9,7 +9,7 @@
 				<div v-if="messages[0]" class="separator">
 					{{ $filters.date(messages[0].date) }}
 				</div>
-				<chat-message v-for="(message, m) in messages" :key="message.id" :message="formatMessage(message)" :chat="chat" @scroll="updateScroll" :large="large" :class="'m-' + message.id" @menu="openMenu($event, message)" @emoji="openEmojis($event, message)" />
+				<chat-message v-for="(message, m) in messages" :key="message.id" :message="formatMessage(message)" :chat="chat" :large="large" :class="'m-' + message.id" @scroll="updateScroll" @menu="openMenu($event, message)" @emoji="openEmojis($event, message)" />
 			</div>
 			<div v-show="unread" v-ripple class="chat-new-messages" @click="updateScroll(true)">{{ $t('main.unread_messages') }}</div>
 		</div>
@@ -20,7 +20,7 @@
 		</div>
 		<chat-input v-else :chat="id || 0" @message="sendMessage" />
 
-		<div v-show="!isScrollBottom" class="card scroll-down" v-ripple @click="scrollToBottom">
+		<div v-show="!isScrollBottom" v-ripple class="card scroll-down" @click="scrollToBottom">
 			<v-icon>mdi-chevron-down</v-icon>
 		</div>
 
@@ -132,11 +132,11 @@
 			</template>
 		</popup>
 
-		<v-menu v-if="menuMessage && $store.state.farmer?.verified" offset-y top :nudge-top="10" v-model="menuEmoji" :activator="menuEmojiActivator" content-class="emojis-dialog">
+		<v-menu v-if="menuMessage && $store.state.farmer?.verified" v-model="menuEmoji" offset-y top :nudge-top="10" :activator="menuEmojiActivator" content-class="emojis-dialog">
 			<v-card class="emojis">
 				<span v-for="(emoji, e) in emojis" :key="e" class="emoji" :class="{selected: emoji === menuMessage.my_reaction}" @click="toggleReaction(emoji)">{{ emoji }}</span>
 				<span v-if="menuMessage.my_reaction && !emojis.includes(menuMessage.my_reaction)" class="emoji selected" @click="toggleReaction(menuMessage.my_reaction)">{{ menuMessage.my_reaction }}</span>
-				<emoji-picker @pick="toggleReaction" :close-on-selected="true"><v-icon class="more">mdi-dots-horizontal</v-icon></emoji-picker>
+				<emoji-picker :close-on-selected="true" @pick="toggleReaction"><v-icon class="more">mdi-dots-horizontal</v-icon></emoji-picker>
 			</v-card>
 		</v-menu>
 	</div>
@@ -161,7 +161,7 @@
 
 	const ReportDialog = defineAsyncComponent(() => import('@/component/moderation/report-dialog.vue'))
 
-	defineOptions({ name: "chat", components: { 'chat-message': ChatMessageComponent } })
+	defineOptions({ name: "Chat", components: { 'chat-message': ChatMessageComponent } })
 
 	const props = defineProps<{
 		id?: number

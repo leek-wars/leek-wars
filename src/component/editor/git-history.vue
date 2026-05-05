@@ -47,7 +47,7 @@ interface Commit {
 	date: number
 }
 
-defineOptions({ name: 'git-history', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'GitHistory', i18n: {}, mixins: [...mixins] })
 
 const props = defineProps<{
 	folder?: string

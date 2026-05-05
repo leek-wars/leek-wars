@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: 'component-preview' })
+defineOptions({ name: 'ComponentPreview' })
 
 defineProps<{
 	component?: Record<string, unknown>

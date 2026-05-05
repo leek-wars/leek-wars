@@ -2,7 +2,7 @@
 	<div class="wrapper">
 		<div class="didactitial">
 
-			<div class="bubble card" :class="{visible: LeekWars.didactitial_visible}" :key="LeekWars.didactitial_step">
+			<div :key="LeekWars.didactitial_step" class="bubble card" :class="{visible: LeekWars.didactitial_visible}">
 
 				<div v-if="LeekWars.didactitial_step === 1" class="content">
 					<div v-if="farmerName.includes('@')" class="text" v-html="$t('main.dida_1_leek', [farmerFirstLeek])"></div>
@@ -22,7 +22,7 @@
 				</div>
 				<div v-else-if="LeekWars.didactitial_step === 4" class="content">
 					<div class="text" v-html="$t('main.dida_7')"></div>
-					<div class="text" v-html="$t('main.dida_8')" v-chat-code-latex></div>
+					<div v-chat-code-latex class="text" v-html="$t('main.dida_8')"></div>
 					<div class="text" v-html="$t('main.dida_9')"></div>
 				</div>
 				<div v-else-if="LeekWars.didactitial_step === 5" class="content">
@@ -61,7 +61,7 @@ import { mixins } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 
-defineOptions({ name: 'didactitiel', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'Didactitiel', i18n: {}, mixins: [...mixins] })
 
 const farmerName = computed(() => store.state.farmer ? store.state.farmer.name : '')
 const farmerFirstLeek = computed(() => store.state.farmer ? LeekWars.first(store.state.farmer.leeks)?.name ?? '' : '')

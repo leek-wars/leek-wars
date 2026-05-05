@@ -78,7 +78,7 @@
 	import router from '@/router'
 	import { Component, computed, ref } from 'vue'
 
-	defineOptions({ name: 'hud', components: { leek: ActionLeek } })
+	defineOptions({ name: 'Hud', components: { leek: ActionLeek } })
 
 	const props = defineProps<{
 		game: Game

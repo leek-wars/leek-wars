@@ -31,7 +31,7 @@ import { LeekWars } from '@/model/leekwars'
 import { Line } from 'vue-chartjs'
 import { mixins, useNamespacedT } from '@/model/i18n'
 
-defineOptions({ name: 'talent', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'Talent', i18n: {}, mixins: [...mixins] })
 
 const t = useNamespacedT('talent')
 

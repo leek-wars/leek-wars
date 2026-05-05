@@ -22,7 +22,7 @@
 							• {{ $t('main.n_farmers', [team.farmers.length]) }}
 							• {{ team.leek_count }} <img src="/image/icon/black/leek.png">
 							• {{ $t('main.level_n', [team.level]) }}</span>
-						<v-btn class="expand" variant="text" size="x-small" @click="expand = !expand" :icon="expand ? 'mdi-chevron-up' : 'mdi-chevron-down'" />
+						<v-btn class="expand" variant="text" size="x-small" :icon="expand ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="expand = !expand" />
 					</div>
 				</div>
 				<div v-if="expand" class="farmers">

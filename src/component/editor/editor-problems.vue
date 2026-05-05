@@ -45,7 +45,7 @@ import { mixins } from '@/model/i18n'
 import { reactive, ref } from 'vue'
 import { analyzer } from './analyzer'
 
-defineOptions({ name: 'editor-problems', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'EditorProblems', i18n: {}, mixins: [...mixins] })
 
 const emit = defineEmits<{
 	'jump': [ai: AI, line: number, column: number]

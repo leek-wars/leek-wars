@@ -93,7 +93,7 @@ import { computed, ref, watch } from 'vue'
 import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-defineOptions({ name: 'teams', i18n: {}, components: { RichTooltipTeam, RichTooltipFarmer }, mixins: [...mixins] })
+defineOptions({ name: 'Teams', i18n: {}, components: { RichTooltipTeam, RichTooltipFarmer }, mixins: [...mixins] })
 
 const t = useNamespacedT('teams')
 

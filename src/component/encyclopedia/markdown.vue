@@ -25,7 +25,7 @@
 	import { scroll_to_hash } from '@/router-functions'
 	import LWLoader from '../app/loader.vue'
 
-	defineOptions({ name: 'markdown' })
+	defineOptions({ name: 'Markdown' })
 
 	const props = defineProps<{
 		content: string

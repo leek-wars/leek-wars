@@ -22,7 +22,7 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
-defineOptions({ name: 'error' })
+defineOptions({ name: 'Error' })
 
 const props = defineProps<{
 	title?: string

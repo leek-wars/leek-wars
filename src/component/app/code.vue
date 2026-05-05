@@ -1,10 +1,10 @@
 <template>
 	<div :class="{single, [finalTheme]: true}">
-		<code ref="code" v-show="expanded"></code>
-		<span v-if="expandable && !single" class="button" v-ripple @click="expanded = !expanded">
+		<code v-show="expanded" ref="code"></code>
+		<span v-if="expandable && !single" v-ripple class="button" @click="expanded = !expanded">
 			<v-icon>{{ expanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
-			<span class="label" v-if="expanded">{{ $t('main.close') }}</span>
-			<span class="label" v-else>{{ $t('main.open') }} ({{ $t('main.n_lines', lines) }})</span>
+			<span v-if="expanded" class="label">{{ $t('main.close') }}</span>
+			<span v-else class="label">{{ $t('main.open') }} ({{ $t('main.n_lines', lines) }})</span>
 		</span>
 	</div>
 </template>
@@ -13,7 +13,7 @@
 import { ref, computed, watch, nextTick, useTemplateRef } from 'vue'
 import { LeekWars } from '@/model/leekwars'
 
-defineOptions({ name: 'lw-code' })
+defineOptions({ name: 'LwCode' })
 
 const props = defineProps<{
 	code: string

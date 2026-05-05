@@ -12,7 +12,7 @@
 	import { TEAM_COLORS } from '@/model/team'
 	import { ref, watch } from 'vue'
 
-	defineOptions({ name: "lw-map" })
+	defineOptions({ name: "LwMap" })
 
 	interface MapCell {
 		enabled: boolean

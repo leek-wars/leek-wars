@@ -124,7 +124,7 @@
 		PRICE, LEVEL, RARITY, INGREDIENT_COUNT
 	}
 
-	defineOptions({ name: 'inventory-page', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'InventoryPage', i18n: {}, mixins: [...mixins] })
 
 	const bottomHeight = ref(Math.max(300, parseInt(localStorage.getItem('inventory/bottom-height') || '350', 10)))
 	const bottomExpanded = ref(localStorage.getItem('inventory/workshop') !== 'false')

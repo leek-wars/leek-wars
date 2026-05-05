@@ -12,9 +12,9 @@
 			<div class="actions">
 				<v-menu v-if="$store.state.farmer?.public_chat_enabled" location="bottom">
 					<template #activator="{ props }">
-						<div v-bind="props" v-ripple class="language-button">
+						<div v-ripple v-bind="props" class="language-button">
 							<flag :code="LeekWars.languages[LeekWars.publicChats[chatID].language].country" :clickable="false" />
-							<div class="unread-circle" v-if="Object.values(LeekWars.publicChats).some(chat => $store.state.chat[chat.id] && !$store.state.chat[chat.id].read)"></div>
+							<div v-if="Object.values(LeekWars.publicChats).some(chat => $store.state.chat[chat.id] && !$store.state.chat[chat.id].read)" class="unread-circle"></div>
 						</div>
 					</template>
 					<v-list :dense="true">
@@ -23,7 +23,7 @@
 							<v-list-item v-for="(chat, i) in data.chats" :key="i" class="language" @click="setChatLanguage(chat)">
 								<v-icon>{{ LeekWars.publicChats[chat].icon }}</v-icon>
 								<span class="name">{{ LeekWars.publicChats[chat].name }}</span>
-								<span class="unread-circle" v-if="$store.state.chat[chat] && !$store.state.chat[chat].read"></span>
+								<span v-if="$store.state.chat[chat] && !$store.state.chat[chat].read" class="unread-circle"></span>
 							</v-list-item>
 						</div>
 					</v-list>
@@ -48,7 +48,7 @@ import { useI18n } from 'vue-i18n'
 
 const Chat = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
 
-defineOptions({ name: 'chat-panel' })
+defineOptions({ name: 'ChatPanel' })
 
 const props = defineProps<{
 	toggle: string

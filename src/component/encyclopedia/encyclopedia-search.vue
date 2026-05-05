@@ -56,7 +56,7 @@ import { LeekWars } from '@/model/leekwars'
 import Breadcrumb from '../forum/breadcrumb.vue'
 import Pagination from '@/component/pagination.vue'
 
-defineOptions({ name: 'encyclopedia-search', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'EncyclopediaSearch', i18n: {}, mixins: [...mixins] })
 
 const t = useNamespacedT('encyclopedia-search')
 const route = useRoute()

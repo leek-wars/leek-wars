@@ -24,7 +24,7 @@
 						<img v-else class="status" src="/image/disconnected.png">
 					</div> -->
 					<router-link :to="'/farmer/' + group.owner.id">
-						<div class="card member" v-bind="props" v-ripple>
+						<div v-ripple class="card member" v-bind="props">
 							<avatar :farmer="group.owner" />
 							<div class="info">
 								<div class="name">
@@ -116,7 +116,7 @@
 							</router-link> -->
 							<router-link :to="'/farmer/' + item.id">
 								<rich-tooltip-farmer :id="item.id" v-slot="{ props }" :bottom="true">
-									<div class="flex name" v-bind="props" v-ripple>
+									<div v-ripple class="flex name" v-bind="props">
 										<avatar :farmer="item" />
 										<span>{{ item.name }}</span>
 										<img v-if="item.connected" class="status" src="/image/connected.png">
@@ -128,7 +128,7 @@
 						<template #item.team="{ item }">
 							<router-link v-if="item.team"  :to="'/team/' + item.team.id">
 								<rich-tooltip-team :id="item.team.id" v-slot="{ props }" :bottom="true">
-									<div class="flex name" v-bind="props" v-ripple>
+									<div v-ripple class="flex name" v-bind="props">
 										<emblem :team="item.team" />
 										<span>{{ item.team.name }}</span>
 									</div>
@@ -156,7 +156,7 @@
 				</div>
 				<div v-if="group.is_supervisor && !equipmentEditing" class="button green" @click="applyEquipment">
 					<v-icon>mdi-upload</v-icon> {{ $t('main.apply') }}
-					<loader class="small-loader" v-if="applyingEquipment" size="30" />
+					<loader v-if="applyingEquipment" class="small-loader" size="30" />
 				</div>
 				<div v-if="equipmentEditing" class="button" @click="equipmentEditing = false">
 					<v-icon>mdi-close</v-icon> {{ $t('main.cancel') }}
@@ -172,9 +172,9 @@
 						<v-icon v-if="equipmentEditing" @click="capitalDialogOpened = true">mdi-pencil</v-icon>
 					</div>
 
-					<div class="level" v-if="equipmentEditing">
+					<div v-if="equipmentEditing" class="level">
 						<b>{{ $t('main.level') }}</b>
-						<input type="number" v-model="group.level" @update:model-value="changeLevel" :min="1" :max="301" /> (1 - 301)
+						<input v-model="group.level" type="number" :min="1" :max="301" @update:model-value="changeLevel" /> (1 - 301)
 						<div class="spacer"></div>
 						<!-- <b :style="{color: $refs.capitalDialog.capital < 0 ? 'red' : 'green'}">{{ $refs.capitalDialog.capital }} capital</b> -->
 						<v-icon v-if="capitalDialog && capitalDialog.capital < 0" class="card alert">mdi-alert-circle</v-icon>
@@ -292,13 +292,13 @@
 					<div class="flex name">
 						<avatar :farmer="item" />
 						<div>
-							<input type="text" v-model="item.name" :class="{error: item.name_error}" @focusout="updateMemberName(item)">
+							<input v-model="item.name" type="text" :class="{error: item.name_error}" @focusout="updateMemberName(item)">
 							<div v-if="item.name_error" class="error">{{ $t('error_' + item.name_error.error, item.name_error.params) }}</div>
 						</div>
 					</div>
 				</template>
 				<template #item.leek="{ item }">
-					<input type="text" v-model="item.leek" :class="{error: item.leek_error}" @focusout="updateMemberLeekName(item)">
+					<input v-model="item.leek" type="text" :class="{error: item.leek_error}" @focusout="updateMemberLeekName(item)">
 					<div v-if="item.leek_error" class="error">{{ $t('error_' + item.leek_error.error, item.leek_error.params) }}</div>
 				</template>
 				<template #item.team="{ item }">
@@ -310,11 +310,11 @@
 					</rich-tooltip-team>
 				</template>
 				<template #item.mail="{ item }">
-					<input type="email" v-model="item.mail" :class="{error: item.mail_error}" @focusout="updateMemberEmail(item)">
+					<input v-model="item.mail" type="email" :class="{error: item.mail_error}" @focusout="updateMemberEmail(item)">
 					<div v-if="item.mail_error" class="error">{{ $t('error_' + item.mail_error.error, item.mail_error.params) }}</div>
 				</template>
 				<template #item.password="{ item }">
-					<input type="text" v-model="item.password" :class="{error: item.password_error}" @focusout="updateMemberPassword(item)">
+					<input v-model="item.password" type="text" :class="{error: item.password_error}" @focusout="updateMemberPassword(item)">
 					<div v-if="item.password_error" class="error">{{ $t('error_' + item.password_error.error, item.password_error.params) }}</div>
 				</template>
 				<template #item.actions="{ item }">
@@ -338,7 +338,7 @@
 					</div>
 				</template>
 			</v-data-table>
-			<div class="add-member" @click="addMember()" v-ripple>
+			<div v-ripple class="add-member" @click="addMember()">
 				<v-icon>mdi-plus</v-icon> {{ $t('add_member') }}
 			</div>
 		</popup>
@@ -458,7 +458,7 @@
 				<div>{{ $t('give_item') }}</div>
 			</template>
 
-			<v-tabs v-model="giveItemTab" :key="itemCategories.length" class="tabs" grow :show-arrows="false">
+			<v-tabs :key="itemCategories.length" v-model="giveItemTab" class="tabs" grow :show-arrows="false">
 				<v-tab v-for="(category, c) in itemCategories" :key="c" :value="'tab-' + c" class="tab">
 					<v-icon>{{ category.icon }}</v-icon>&nbsp;
 					{{ $t('main.' + category.name) }}
@@ -496,7 +496,7 @@
 			<template #title>
 				<div>{{ $t('give_item') }}</div>
 			</template>
-			<div class="give-item-confirm" v-if="itemToGive && giveItemTarget">
+			<div v-if="itemToGive && giveItemTarget" class="give-item-confirm">
 				<div class="item">
 					<item :item="itemToGive" />
 				</div>
@@ -524,14 +524,14 @@
 				<div class="column" style="flex: 1">
 					<h4>Habs</h4>
 					<div class="flex" style="justify-content: flex-start; gap: 6px; align-items: center;">
-						<input type="number" v-model="giveMoneyAmount" placeholder="1000000" :min="0" :max="10000000" style="padding: 8px; flex: 1" />
+						<input v-model="giveMoneyAmount" type="number" placeholder="1000000" :min="0" :max="10000000" style="padding: 8px; flex: 1" />
 						<span class="hab"></span>
 					</div>
 				</div>
 				<div class="column" style="flex: 1">
 					<h4>Combats</h4>
 					<div class="flex" style="justify-content: flex-start; gap: 6px; align-items: center;">
-						<input type="number" v-model="giveFightsAmount" placeholder="100" :min="0" :max="100" style="padding: 8px; flex: 1" />
+						<input v-model="giveFightsAmount" type="number" placeholder="100" :min="0" :max="100" style="padding: 8px; flex: 1" />
 						<v-icon>mdi-sword-cross</v-icon>
 					</div>
 				</div>
@@ -569,7 +569,7 @@
 	const TournamentsHistory = defineAsyncComponent(() => import('@/component/history/tournaments-history.vue'))
 	const Chat = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
 
-	defineOptions({ name: 'group', i18n: {}, mixins: [...mixins], components: { RichTooltipTeam, RichTooltipFarmer, CharacteristicTooltip, RichTooltipItem, CapitalDialog, Item } })
+	defineOptions({ name: 'Group', i18n: {}, mixins: [...mixins], components: { RichTooltipTeam, RichTooltipFarmer, CharacteristicTooltip, RichTooltipItem, CapitalDialog, Item } })
 
 	useI18n() // initialize local scope for <i18n-t>
 	const t = useNamespacedT('group')
