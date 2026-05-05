@@ -760,13 +760,16 @@
 	}
 
 	function cellRightClick(e: Event, cell: TestMapCell) {
-		if (cell.team !== 0 && currentMap.value) {
+		if (cell.enabled && cell.team !== 0 && currentMap.value) {
 			const team_array = cell.team === 1 ? currentMap.value.data.team1 : currentMap.value.data.team2
 			const index = team_array.indexOf(cell.cell)
 			if (index !== -1) {
 				team_array.splice(index, 1)
 			} else {
 				team_array.push(cell.cell)
+				const other_array = cell.team === 1 ? currentMap.value.data.team2 : currentMap.value.data.team1
+				const other_index = other_array.indexOf(cell.cell)
+				if (other_index !== -1) other_array.splice(other_index, 1)
 			}
 			resetSaveTimeout()
 		}
@@ -774,7 +777,7 @@
 	}
 
 	function cellMouseDown(e: MouseEvent, cell: TestMapCell) {
-		if (e.button === 0 && currentMap.value) {
+		if (e.button === 0 && cell.enabled && currentMap.value) {
 			map_down = true
 			map_add = !(cell.cell in currentMap.value.data.obstacles)
 			if (map_add) {
@@ -789,7 +792,7 @@
 	}
 
 	function cellMouseEnter(_e: Event, cell: TestMapCell) {
-		if (map_down && currentMap.value) {
+		if (map_down && cell.enabled && currentMap.value) {
 			const has_class = cell.cell in currentMap.value.data.obstacles
 			if (has_class !== map_add) {
 				if (map_add) {
