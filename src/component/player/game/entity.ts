@@ -264,7 +264,9 @@ abstract class FightEntity extends Entity {
 		this.ry = this.y
 		this.dcell = cell
 
-		const distance = Math.abs(this.cell!.x - cell.x) + Math.abs(this.cell!.y - cell.y)
+		const distance = this.cell
+			? Math.abs(this.cell.x - cell.x) + Math.abs(this.cell.y - cell.y)
+			: 1
 
 		const pos = this.game.ground.field.cellToXY(cell)
 
