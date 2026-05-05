@@ -333,17 +333,12 @@
 							letter.classList.add("letter")
 							child.prepend(letter)
 
-							// Create Vuetify checkbox using a reactive wrapper component
 							const checkboxContainer = document.createElement('span')
 							checkboxContainer.className = 'quiz-checkbox'
 							child.prepend(checkboxContainer)
-							const initialValue = completed && child.hasAttribute('correct') ? true : false
-							answer[index] = initialValue
+							answer[index] = completed && child.hasAttribute('correct')
+							const checked = ref(answer[index])
 
-							// Create a reactive ref for the checkbox value
-							const checked = ref(initialValue)
-
-							// Create a wrapper component that uses the reactive ref
 							const CheckboxWrapper = defineComponent({
 								setup() {
 									return () => h(VCheckbox as any, {
@@ -362,10 +357,8 @@
 							checkboxApp.mount(checkboxContainer)
 							components.push({ $destroy: () => checkboxApp.unmount() })
 
-							checkboxContainer.addEventListener('click', (e: Event) => {
-								e.stopPropagation()
-							})
-							child.addEventListener('click', () => {
+							child.addEventListener('click', (e: Event) => {
+								if (checkboxContainer.contains(e.target as Node)) return
 								checked.value = !checked.value
 								answer[index] = checked.value
 								updateBtnState()
