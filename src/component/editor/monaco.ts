@@ -451,7 +451,7 @@ monaco.languages.registerDocumentSymbolProvider("leekscript", {
 
 		// Functions
 		for (const fun of ai.functions) {
-			if (!fun.line || fun.line > lineCount) continue
+			if (!fun.line || fun.line < 1 || fun.line > lineCount) continue
 			const endLine = findBlockEnd(model, fun.line)
 			symbols.push({
 				name: fun.label + '(' + (fun.arguments || []).join(', ') + ')',
@@ -466,7 +466,7 @@ monaco.languages.registerDocumentSymbolProvider("leekscript", {
 		// Classes with their members
 		for (const name in ai.classes) {
 			const cls = ai.classes[name]
-			if (!cls.line || cls.line > lineCount) continue
+			if (!cls.line || cls.line < 1 || cls.line > lineCount) continue
 			const classEndLine = findBlockEnd(model, cls.line)
 			const children: monaco.languages.DocumentSymbol[] = []
 
