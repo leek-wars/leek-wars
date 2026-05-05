@@ -4,7 +4,7 @@ import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 // @ts-ignore
 import leekscript from './leekscript-monarch.js'
 
-const cspNonce = (document.querySelector('meta[name="csp-nonce"]') as HTMLMetaElement | null)?.content || undefined
+import { cspNonce } from './monaco-csp'
 
 self.MonacoEnvironment = {
 	getWorker(_: any, label: string) {
@@ -13,20 +13,6 @@ self.MonacoEnvironment = {
 	// Not in monaco's Environment type but consumed at runtime (CSP nonce).
 	nonce: cspNonce,
 } as monaco.Environment
-
-// Monaco injects <style> elements dynamically without a nonce, which violates
-// CSP style-src when a nonce is used. Patch each new <style> with the nonce.
-if (cspNonce) {
-	new MutationObserver((mutations) => {
-		for (const mutation of mutations) {
-			for (const node of mutation.addedNodes) {
-				if (node instanceof HTMLStyleElement && !node.nonce) {
-					node.nonce = cspNonce
-				}
-			}
-		}
-	}).observe(document.head, { childList: true })
-}
 
 import { i18n } from '@/model/i18n';
 import { fileSystem } from '@/model/filesystem';

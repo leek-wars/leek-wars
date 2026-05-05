@@ -216,6 +216,7 @@
 
 <script setup lang="ts">
 	import type * as Monaco from 'monaco-editor'
+	import '@/component/editor/monaco-csp'
 	import Markdown from '@/component/encyclopedia/markdown.vue'
 	import { locale } from '@/locale'
 	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
