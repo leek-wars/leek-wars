@@ -82,5 +82,18 @@
 	"strict": "स्ट्रिक्ट",
 	"storage": "स्टोरेज",
 	"git_auth_success": "GitHub सफलतापूर्वक कनेक्ट हो गया।",
-	"git_auth_error": "GitHub से कनेक्ट करते समय त्रुटि।"
+	"git_auth_error": "GitHub से कनेक्ट करते समय त्रुटि।",
+	"clone_repo": "Git रिपॉजिटरी क्लोन करें",
+	"clone_url": "रिपॉजिटरी URL",
+	"clone_url_placeholder": "https://github.com/user/my-repo.git",
+	"clone_folder": "गंतव्य फ़ोल्डर",
+	"clone_auth_hint": "निजी रिपॉजिटरी के लिए रिमोट सेटिंग्स में प्रमाणीकरण कॉन्फ़िगर करना आवश्यक है।",
+	"cloning": "क्लोन हो रहा है...",
+	"clone": "क्लोन करें",
+	"clone_success": "रिपॉजिटरी सफलतापूर्वक क्लोन हो गई।",
+	"folder_exists": "इस नाम का फ़ोल्डर पहले से मौजूद है।",
+	"invalid_folder_name": "अमान्य फ़ोल्डर नाम।",
+	"invalid_remote_url": "अमान्य URL। केवल HTTPS रिपॉजिटरी स्वीकार की जाती हैं।",
+	"unknown_host": "अनधिकृत होस्ट। पहले रिमोट सेटिंग्स में पहुँच कॉन्फ़िगर करें।",
+	"clone_failed": "क्लोन विफल हो गया।"
 }

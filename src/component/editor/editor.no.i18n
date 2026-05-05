@@ -82,5 +82,18 @@
 	"title": "Redaktør",
 	"todo": "Gjøre | Todos",
 	"v2_beta_message": "[beta] LeekScript V2 er kun tilgjengelig for testkamper, ennå ikke for \"rangerte\" kamper.",
-	"warning": "Ansvarsfraskrivelse | Advarsler"
+	"warning": "Ansvarsfraskrivelse | Advarsler",
+	"clone_repo": "Klone et git-repo",
+	"clone_url": "Repository-URL",
+	"clone_url_placeholder": "https://github.com/user/my-repo.git",
+	"clone_folder": "Målmappe",
+	"clone_auth_hint": "Private repoer krever at autentisering er konfigurert i innstillingene for ekstern tilkobling.",
+	"cloning": "Kloner...",
+	"clone": "Klone",
+	"clone_success": "Repositoryet ble klonet.",
+	"folder_exists": "En mappe med dette navnet finnes allerede.",
+	"invalid_folder_name": "Ugyldig mappenavn.",
+	"invalid_remote_url": "Ugyldig URL. Bare HTTPS-repoer aksepteres.",
+	"unknown_host": "Uautorisert vert. Konfigurer tilgang først i innstillingene for ekstern tilkobling.",
+	"clone_failed": "Kloning mislyktes."
 }

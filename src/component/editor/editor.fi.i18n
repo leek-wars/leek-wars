@@ -76,5 +76,18 @@
 	"warning": "Varoitus | Varoitukset",
 	"todo": "Tehtävä | Tehtävät",
 	"editor_already_opened": "Editori on jo auki toisella välilehdellä!",
-	"strict": "Tiukka"
+	"strict": "Tiukka",
+	"clone_repo": "Kloonaa git-repositorio",
+	"clone_url": "Repositorion URL",
+	"clone_url_placeholder": "https://github.com/user/my-repo.git",
+	"clone_folder": "Kohdekansio",
+	"clone_auth_hint": "Yksityiset repositoriot vaativat todennuksen määrittämisen etäasetuksissa.",
+	"cloning": "Kloonataan...",
+	"clone": "Kloonaa",
+	"clone_success": "Repositorio kloonattu onnistuneesti.",
+	"folder_exists": "Samanniminen kansio on jo olemassa.",
+	"invalid_folder_name": "Virheellinen kansion nimi.",
+	"invalid_remote_url": "Virheellinen URL. Vain HTTPS-repositoriot hyväksytään.",
+	"unknown_host": "Luvaton isäntä. Määritä ensin käyttöoikeus etäasetuksissa.",
+	"clone_failed": "Kloonaus epäonnistui."
 }

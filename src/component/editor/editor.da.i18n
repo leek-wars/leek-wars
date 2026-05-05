@@ -76,5 +76,18 @@
 	"warning": "Advarsel | Advarsler",
 	"todo": "Gøre | Todos",
 	"editor_already_opened": "Editoren er allerede åben i en anden fane!",
-	"strict": "Streng"
+	"strict": "Streng",
+	"clone_repo": "Klon et git-repository",
+	"clone_url": "Repository-URL",
+	"clone_url_placeholder": "https://github.com/user/my-repo.git",
+	"clone_folder": "Destinationsmappe",
+	"clone_auth_hint": "Private repositories kræver, at godkendelse er konfigureret i fjernindstillingerne.",
+	"cloning": "Kloner...",
+	"clone": "Klon",
+	"clone_success": "Repository klonet korrekt.",
+	"folder_exists": "En mappe med dette navn eksisterer allerede.",
+	"invalid_folder_name": "Ugyldigt mappenavn.",
+	"invalid_remote_url": "Ugyldig URL. Kun HTTPS-repositories accepteres.",
+	"unknown_host": "Ikke-autoriseret vært. Konfigurer adgang først i fjernindstillingerne.",
+	"clone_failed": "Kloning mislykkedes."
 }

@@ -82,5 +82,18 @@
 	"diff_inline": "Diff på rad",
 	"diff_collapse_unchanged": "Dölj oförändrade regioner",
 	"git_auth_success": "GitHub ansluten.",
-	"git_auth_error": "Fel vid anslutning till GitHub."
+	"git_auth_error": "Fel vid anslutning till GitHub.",
+	"clone_repo": "Klona ett git-repo",
+	"clone_url": "Repository-URL",
+	"clone_url_placeholder": "https://github.com/user/my-repo.git",
+	"clone_folder": "Målmapp",
+	"clone_auth_hint": "Privata repon kräver att autentisering är konfigurerad i fjärrinställningarna.",
+	"cloning": "Klonar...",
+	"clone": "Klona",
+	"clone_success": "Repositoryt klonades framgångsrikt.",
+	"folder_exists": "En mapp med det här namnet finns redan.",
+	"invalid_folder_name": "Ogiltigt mappnamn.",
+	"invalid_remote_url": "Ogiltig URL. Endast HTTPS-repon accepteras.",
+	"unknown_host": "Obehörig värd. Konfigurera åtkomst först i fjärrinställningarna.",
+	"clone_failed": "Kloning misslyckades."
 }

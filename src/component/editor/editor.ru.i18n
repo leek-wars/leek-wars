@@ -82,5 +82,18 @@
 	"diff_inline": "Встроенный diff",
 	"diff_collapse_unchanged": "Скрыть неизменённые области",
 	"git_auth_success": "GitHub успешно подключён.",
-	"git_auth_error": "Ошибка при подключении к GitHub."
+	"git_auth_error": "Ошибка при подключении к GitHub.",
+	"clone_repo": "Клонировать git-репозиторий",
+	"clone_url": "URL репозитория",
+	"clone_url_placeholder": "https://github.com/user/my-repo.git",
+	"clone_folder": "Папка назначения",
+	"clone_auth_hint": "Для приватных репозиториев необходима аутентификация, настроенная в параметрах удалённого сервера.",
+	"cloning": "Клонирование...",
+	"clone": "Клонировать",
+	"clone_success": "Репозиторий успешно клонирован.",
+	"folder_exists": "Папка с таким именем уже существует.",
+	"invalid_folder_name": "Недопустимое имя папки.",
+	"invalid_remote_url": "Недопустимый URL. Принимаются только HTTPS-репозитории.",
+	"unknown_host": "Неавторизованный хост. Сначала настройте доступ в параметрах удалённого сервера.",
+	"clone_failed": "Клонирование не удалось."
 }

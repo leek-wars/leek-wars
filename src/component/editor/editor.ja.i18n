@@ -76,5 +76,18 @@
 	"warning": "免責事項 |警告",
 	"todo": "トド |トドス",
 	"editor_already_opened": "エディタはすでに別のタブで開いています!",
-	"strict": "厳しい"
+	"strict": "厳しい",
+	"clone_repo": "Gitリポジトリをクローン",
+	"clone_url": "リポジトリURL",
+	"clone_url_placeholder": "https://github.com/user/my-repo.git",
+	"clone_folder": "保存先フォルダ",
+	"clone_auth_hint": "プライベートリポジトリにはリモート設定での認証が必要です。",
+	"cloning": "クローン中...",
+	"clone": "クローン",
+	"clone_success": "リポジトリのクローンに成功しました。",
+	"folder_exists": "同じ名前のフォルダがすでに存在します。",
+	"invalid_folder_name": "無効なフォルダ名です。",
+	"invalid_remote_url": "無効なURLです。HTTPSリポジトリのみ使用できます。",
+	"unknown_host": "許可されていないホストです。先にリモート設定でアクセスを設定してください。",
+	"clone_failed": "クローンに失敗しました。"
 }

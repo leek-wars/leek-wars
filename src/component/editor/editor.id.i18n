@@ -82,5 +82,18 @@
 	"git_auth_error": "Galat saat menghubungkan ke GitHub.",
 	"git_auth_success": "GitHub berhasil terhubung.",
 	"settings_diff": "Diff",
-	"storage": "Penyimpanan"
+	"storage": "Penyimpanan",
+	"clone_repo": "Klon repositori git",
+	"clone_url": "URL repositori",
+	"clone_url_placeholder": "https://github.com/user/my-repo.git",
+	"clone_folder": "Folder tujuan",
+	"clone_auth_hint": "Repositori privat memerlukan autentikasi yang dikonfigurasi di pengaturan remote.",
+	"cloning": "Mengklon...",
+	"clone": "Klon",
+	"clone_success": "Repositori berhasil diklon.",
+	"folder_exists": "Folder dengan nama ini sudah ada.",
+	"invalid_folder_name": "Nama folder tidak valid.",
+	"invalid_remote_url": "URL tidak valid. Hanya repositori HTTPS yang diterima.",
+	"unknown_host": "Host tidak diizinkan. Konfigurasikan akses terlebih dahulu di pengaturan remote.",
+	"clone_failed": "Klon gagal."
 }

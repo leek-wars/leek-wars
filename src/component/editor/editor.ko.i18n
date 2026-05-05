@@ -76,5 +76,18 @@
 	"warning": "면책 조항 | 경고",
 	"todo": "할 일 | 할 일",
 	"editor_already_opened": "편집기는 이미 다른 탭에서 열려 있습니다!",
-	"strict": "Strict"
+	"strict": "Strict",
+	"clone_repo": "Git 저장소 복제",
+	"clone_url": "저장소 URL",
+	"clone_url_placeholder": "https://github.com/user/my-repo.git",
+	"clone_folder": "대상 폴더",
+	"clone_auth_hint": "비공개 저장소는 원격 설정에서 인증을 구성해야 합니다.",
+	"cloning": "복제 중...",
+	"clone": "복제",
+	"clone_success": "저장소가 성공적으로 복제되었습니다.",
+	"folder_exists": "같은 이름의 폴더가 이미 존재합니다.",
+	"invalid_folder_name": "유효하지 않은 폴더 이름입니다.",
+	"invalid_remote_url": "유효하지 않은 URL입니다. HTTPS 저장소만 허용됩니다.",
+	"unknown_host": "허가되지 않은 호스트입니다. 먼저 원격 설정에서 접근을 구성하세요.",
+	"clone_failed": "복제에 실패했습니다."
 }

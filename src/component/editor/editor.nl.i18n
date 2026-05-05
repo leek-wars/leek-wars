@@ -82,5 +82,18 @@
 	"diff_inline": "Inline-diff",
 	"diff_collapse_unchanged": "Ongewijzigde regio's verbergen",
 	"git_auth_success": "GitHub succesvol verbonden.",
-	"git_auth_error": "Fout bij verbinden met GitHub."
+	"git_auth_error": "Fout bij verbinden met GitHub.",
+	"clone_repo": "Een git-repo klonen",
+	"clone_url": "Repository-URL",
+	"clone_url_placeholder": "https://github.com/user/my-repo.git",
+	"clone_folder": "Doelmap",
+	"clone_auth_hint": "Privé-repo's vereisen dat authenticatie is geconfigureerd in de instellingen voor externe verbindingen.",
+	"cloning": "Klonen...",
+	"clone": "Klonen",
+	"clone_success": "Repository succesvol gekloond.",
+	"folder_exists": "Er bestaat al een map met deze naam.",
+	"invalid_folder_name": "Ongeldige mapnaam.",
+	"invalid_remote_url": "Ongeldige URL. Alleen HTTPS-repo's worden geaccepteerd.",
+	"unknown_host": "Ongeautoriseerde host. Configureer eerst toegang in de instellingen voor externe verbindingen.",
+	"clone_failed": "Klonen mislukt."
 }

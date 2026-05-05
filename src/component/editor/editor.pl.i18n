@@ -82,5 +82,18 @@
 	"git_auth_error": "Błąd podczas łączenia z GitHub.",
 	"git_auth_success": "GitHub połączony pomyślnie.",
 	"settings_diff": "Diff",
-	"storage": "Pamięć"
+	"storage": "Pamięć",
+	"clone_repo": "Sklonuj repozytorium git",
+	"clone_url": "URL repozytorium",
+	"clone_url_placeholder": "https://github.com/user/my-repo.git",
+	"clone_folder": "Folder docelowy",
+	"clone_auth_hint": "Prywatne repozytoria wymagają skonfigurowania uwierzytelnienia w ustawieniach zdalnych.",
+	"cloning": "Klonowanie...",
+	"clone": "Sklonuj",
+	"clone_success": "Repozytorium zostało pomyślnie sklonowane.",
+	"folder_exists": "Folder o tej nazwie już istnieje.",
+	"invalid_folder_name": "Nieprawidłowa nazwa folderu.",
+	"invalid_remote_url": "Nieprawidłowy URL. Akceptowane są tylko repozytoria HTTPS.",
+	"unknown_host": "Nieautoryzowany host. Najpierw skonfiguruj dostęp w ustawieniach zdalnych.",
+	"clone_failed": "Klonowanie nie powiodło się."
 }

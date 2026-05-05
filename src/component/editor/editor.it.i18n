@@ -76,5 +76,18 @@
 	"warning": "Avvertimento | Avvertimenti",
 	"todo": "Todo | Todo",
 	"editor_already_opened": "L'editor è già aperto in un'altra scheda!",
-	"strict": "Rigoroso"
+	"strict": "Rigoroso",
+	"clone_repo": "Clonare un repository git",
+	"clone_url": "URL del repository",
+	"clone_url_placeholder": "https://github.com/user/my-repo.git",
+	"clone_folder": "Cartella di destinazione",
+	"clone_auth_hint": "I repository privati richiedono che l'autenticazione sia configurata nelle impostazioni remote.",
+	"cloning": "Clonazione in corso...",
+	"clone": "Clona",
+	"clone_success": "Repository clonato con successo.",
+	"folder_exists": "Esiste già una cartella con questo nome.",
+	"invalid_folder_name": "Nome della cartella non valido.",
+	"invalid_remote_url": "URL non valido. Sono accettati solo repository HTTPS.",
+	"unknown_host": "Host non autorizzato. Configurare prima l'accesso nelle impostazioni remote.",
+	"clone_failed": "Clonazione fallita."
 }
