@@ -3,7 +3,7 @@ import { getMany, setMany, createStore } from 'idb-keyval'
 const idbStore = createStore('leek-wars-data', 'game-data')
 const LS_PREFIX = 'gd:'
 
-const DATA_TYPES = [
+export const DATA_TYPES = [
 	'items', 'chips', 'weapons', 'hats', 'pomps', 'potions', 'schemes',
 	'components', 'trophies', 'constants', 'functions',
 	'hat_templates', 'chip_templates', 'summon_templates',
@@ -134,9 +134,12 @@ function saveToLs(masterVersion: string, hashes: { [key: string]: string }, data
  * À appeler AVANT le mount Vue.
  */
 export async function loadGameData(): Promise<{ [key: string]: any } | null> {
-	const inline: InlineData | null = (window as any).__DATA__
+	// `!= null` pour catcher aussi `undefined` : si le script inline `var __DATA__=...`
+	// ne s'exécute pas (CSP nonce mismatch, parse error, extension qui réécrit le DOM),
+	// `window.__DATA__` reste `undefined` au lieu de `null`.
+	const inline: InlineData | null | undefined = (window as any).__DATA__
 
-	if (inline !== null) {
+	if (inline != null) {
 		const changedTypes = Object.keys(inline.data)
 		console.log(`[GameData] Inline: ${changedTypes.length} types changed, master_version=${inline.master_version}`)
 
@@ -151,18 +154,14 @@ export async function loadGameData(): Promise<{ [key: string]: any } | null> {
 				}
 				return cached
 			}
-			// Aucun cache disponible → fetch complet
+			// Aucun cache disponible → fetch complet (laisse l'erreur remonter si fetchAll échoue,
+			// retourner inline.data partiel laisserait LeekWars.hats/etc. vides → crash render).
 			console.warn('[GameData] No cache for unchanged types, fetching all from API...')
-			try {
-				const full = await fetchAll()
-				for (const type of changedTypes) {
-					full[type] = inline.data[type]
-				}
-				return full
-			} catch (e) {
-				console.warn('[GameData] API fetch also failed, using partial inline data:', e)
-				return inline.data
+			const full = await fetchAll()
+			for (const type of changedTypes) {
+				full[type] = inline.data[type]
 			}
+			return full
 		}
 		return inline.data
 	}

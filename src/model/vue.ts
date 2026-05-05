@@ -599,8 +599,20 @@ app.config.globalProperties.$filters = {
 	duration: LeekWars.formatDuration,
 }
 
-// Charger les données de jeu AVANT le mount Vue
-await loadGameData().catch(e => console.warn('[GameData] Init failed:', e))
+// Charger les données de jeu AVANT le mount Vue. Si on monte avec un dataset
+// vide/incomplet, l'app crashe à des endroits aléatoires (ex: signup avec
+// LeekWars.hats vide). Mieux vaut afficher un écran d'erreur explicite.
+try {
+	await loadGameData()
+} catch (e) {
+	const root = document.getElementById('app2')
+	const tpl = document.getElementById('app-data-error') as HTMLTemplateElement | null
+	if (root && tpl) {
+		root.replaceChildren(tpl.content.cloneNode(true))
+	}
+	// Re-throw : indispensable pour stopper la suite (sinon app.mount('#app2') écraserait l'UI d'erreur).
+	throw e
+}
 
 const vm = app.mount('#app2') as ComponentPublicInstance & {
 	$once: (event: string, callback: () => void) => void
