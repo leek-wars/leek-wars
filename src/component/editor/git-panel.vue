@@ -74,7 +74,7 @@
 							<span class="status status-conflict">!</span>
 							<span class="filename">{{ change.file }}</span>
 							<span class="file-actions">
-								<v-icon :title="$t('stage')" @click.stop="stage(change)">mdi-check</v-icon>
+								<div class="file-action-icon" :title="$t('stage')" @click.stop="stage(change)"><v-icon size="18">mdi-check</v-icon></div>
 							</span>
 						</div>
 					</div>
@@ -93,7 +93,7 @@
 							<span :class="'status status-' + change.index.toLowerCase()">{{ change.index }}</span>
 							<span class="filename">{{ change.file }}</span>
 							<span class="file-actions">
-								<v-icon :title="$t('unstage')" @click.stop="unstage(change)">mdi-minus</v-icon>
+								<div class="file-action-icon" :title="$t('unstage')" @click.stop="unstage(change)"><v-icon size="18">mdi-minus</v-icon></div>
 							</span>
 						</div>
 					</div>
@@ -113,8 +113,8 @@
 							<span :class="'status status-' + statusChar(change)">{{ statusLabel(change) }}</span>
 							<span class="filename">{{ change.file }}</span>
 							<span class="file-actions">
-								<v-icon :title="$t('stage')" @click.stop="stage(change)">mdi-plus</v-icon>
-								<v-icon :title="$t('discard')" @click.stop="discard(change)">mdi-undo</v-icon>
+								<div class="file-action-icon" :title="$t('stage')" @click.stop="stage(change)"><v-icon size="18">mdi-plus</v-icon></div>
+								<div class="file-action-icon" :title="$t('discard')" @click.stop="discard(change)"><v-icon size="18">mdi-undo</v-icon></div>
 							</span>
 						</div>
 					</div>
@@ -225,7 +225,9 @@
 						</v-list>
 					</v-menu>
 				</div>
-				<v-icon :title="$t('remote_settings')" class="action-btn" @click="showRemoteDialog = true">mdi-cloud-cog</v-icon>
+				<div class="action-btn" :title="$t('remote_settings')" @click="showRemoteDialog = true">
+					<v-icon>mdi-cloud-cog</v-icon>
+				</div>
 			</div>
 		</div>
 
@@ -946,16 +948,16 @@
 	display: flex;
 	visibility: hidden;
 	gap: 2px;
-	.v-icon {
-		font-size: 18px;
-		padding: 0 6px;
-		border-radius: 4px;
-		align-self: stretch;
-		display: inline-flex;
-		align-items: center;
-		opacity: 0.6;
-		&:hover { opacity: 1; background: rgba(128, 128, 128, 0.15); }
-	}
+}
+.file-action-icon {
+	padding: 4px 6px;
+	border-radius: 4px;
+	align-self: stretch;
+	display: inline-flex;
+	align-items: center;
+	opacity: 0.6;
+	cursor: pointer;
+	&:hover { opacity: 1; background: rgba(128, 128, 128, 0.15); }
 }
 .merge-banner {
 	padding: 8px;
