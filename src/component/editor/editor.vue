@@ -12,11 +12,14 @@
 							<v-list-subheader v-if="currentFolder && currentFolder.id > 0" class="menu-title">
 								<v-icon>mdi-folder-outline</v-icon> {{ currentFolder.name }}
 							</v-list-subheader>
-							<v-list-item v-if="currentFolder && currentFolder.id !== -1" v-ripple prepend-icon="mdi-file-plus-outline" @click="explorerEl.openNewAI(currentFolder)">
+							<v-list-item v-if="currentFolder && currentFolder.id !== -1" v-ripple prepend-icon="mdi-file-plus-outline" @click="explorerEl?.openNewAI(currentFolder)">
 								<v-list-item-title>{{ $t('new_ai') }}</v-list-item-title>
 							</v-list-item>
-							<v-list-item v-if="currentFolder && currentFolder.id !== -1" v-ripple prepend-icon="mdi-folder-plus-outline" @click="explorerEl.openNewFolder(currentFolder)">
+							<v-list-item v-if="currentFolder && currentFolder.id !== -1" v-ripple prepend-icon="mdi-folder-plus-outline" @click="explorerEl?.openNewFolder(currentFolder)">
 								<v-list-item-title>{{ $t('new_folder') }}</v-list-item-title>
+							</v-list-item>
+							<v-list-item v-ripple prepend-icon="mdi-git" @click="openCloneDialog">
+								<v-list-item-title>{{ $t('clone_repo') }}</v-list-item-title>
 							</v-list-item>
 							<v-list-subheader v-if="currentAI" class="menu-title">
 								<v-icon>mdi-file-outline</v-icon> <span>{{ currentAI.name }}</span>
@@ -24,7 +27,7 @@
 							<v-list-item v-if="currentAI" v-ripple prepend-icon="mdi-content-save" @click="save()">
 								<v-list-item-title>{{ $t('save') }} <span class="shortcut">Ctrl + S</span></v-list-item-title>
 							</v-list-item>
-							<v-list-item v-if="currentAI" v-ripple prepend-icon="mdi-delete" @click="explorerEl.deleteAI(currentAI)">
+							<v-list-item v-if="currentAI" v-ripple prepend-icon="mdi-delete" @click="explorerEl?.deleteAI(currentAI)">
 								<v-list-item-title>{{ $t('delete') }}</v-list-item-title>
 							</v-list-item>
 						</v-list>
@@ -234,6 +237,22 @@
 			{{ $t('editor_already_opened') }}
 		</popup>
 
+		<popup v-model="cloneDialog" :width="480" icon="mdi-git" :title="$t('clone_repo')">
+			<div class="clone-dialog">
+				<v-text-field v-model="cloneUrl" :label="$t('clone_url')" :placeholder="$t('clone_url_placeholder')" variant="solo" density="compact" autofocus @input="onCloneUrlInput" @keyup.enter="doClone" @keyup.stop />
+				<v-text-field v-model="cloneFolder" :label="$t('clone_folder')" variant="solo" density="compact" :error-messages="cloneFolderError ? [cloneFolderError] : []" @keyup.enter="doClone" @keyup.stop />
+				<div class="clone-hint">
+					<v-icon size="small">mdi-information-outline</v-icon>
+					{{ $t('clone_auth_hint') }}
+				</div>
+				<div v-if="cloneError" class="clone-error">{{ cloneError }}</div>
+			</div>
+			<template #actions>
+				<div @click="cloneDialog = false">{{ $t('cancel') }}</div>
+				<div class="green" :class="{ disabled: !cloneUrl || !!cloneFolderError || cloning }" @click="doClone">{{ cloning ? $t('cloning') : $t('clone') }}</div>
+			</template>
+		</popup>
+
 		<editor-test ref="editorTestRef" v-model="testDialog" :ais="fileSystem.ais" :leek-ais="fileSystem.leekAIs" :currentAI="currentAI" />
 
 		<!--
@@ -287,6 +306,17 @@
 	const DEFAULT_LINE_HEIGHT = 24
 	const DEFAULT_THEME = () => LeekWars.darkMode ? "monokai" : "leek-wars"
 
+	interface ExplorerInstance {
+		openNewAI(folder: Folder): void
+		openNewFolder(folder: Folder): void
+		deleteAI(ai: AI): void
+	}
+	interface EditorTestInstance {
+		currentTab: string | number
+		allLeeks: Record<number, unknown>
+		selectLeek(leek: unknown): void
+	}
+
 	defineOptions({
 		name: 'editor',
 		i18n: {},
@@ -305,11 +335,24 @@
 	const currentAI1 = ref<string | null>(null)
 	const currentAI2 = ref<string | null>(null)
 	const currentSide = ref(1)
-	const currentEditor = shallowRef<any | null>(null)
+	const currentEditor = shallowRef<InstanceType<typeof AIViewMonaco> | null>(null)
 	const currentType = ref<string | null>(null)
 	const currentFolder = ref<Folder | null>(null)
 	const infoDialog = ref(false)
 	const settingsDialog = ref(false)
+	const cloneDialog = ref(false)
+	const cloneUrl = ref('')
+	const cloneFolder = ref('')
+	const cloneError = ref('')
+	const cloning = ref(false)
+	const cloneFolderError = computed(() => {
+		const name = cloneFolder.value.trim()
+		if (!name) return ''
+		if (!/^[a-zA-Z0-9._-]+$/.test(name)) return t('invalid_folder_name') as string
+		const exists = fileSystem.rootFolder?.items?.some(item => item instanceof Folder && item.name === name)
+		if (exists) return t('folder_exists') as string
+		return ''
+	})
 	const storageUsage = ref<{ size: number, files: number, max_size: number, max_files: number } | null>(null)
 	const enlargeWindow = ref(false)
 	const theme = ref<string>(DEFAULT_THEME())
@@ -329,7 +372,7 @@
 	const bottomPanel = ref<'problems' | 'git' | null>('problems')
 	const newAIv2Dialog = ref(false)
 	const fileMenu = ref(false)
-	const fileMenuActivator = ref<any>(null)
+	const fileMenuActivator = ref<Element | undefined>(undefined)
 	const history = ref<AI[]>([])
 	const alreadyOpenedDialog = ref(false)
 	const leftPanelTab = ref<string>(localStorage.getItem('editor/left_panel_tab') || 'explorer')
@@ -349,14 +392,14 @@
 	const editor2 = useTemplateRef<InstanceType<typeof AIViewMonaco>>('editor2')
 	const finder = useTemplateRef<InstanceType<typeof EditorFinder>>('finder')
 	const editors = useTemplateRef<HTMLElement>('editors')
-	const explorerEl = useTemplateRef<any>('explorerEl')
-	const editorTestRef = useTemplateRef<any>('editorTestRef')
+	const explorerEl = useTemplateRef<ExplorerInstance>('explorerEl')
+	const editorTestRef = useTemplateRef<EditorTestInstance>('editorTestRef')
 
 	const gitLogCount = computed(() => gitLog.entries.length)
 	const problemsCount = computed(() => analyzer.error_count + analyzer.warning_count + analyzer.todo_count)
 
 	const actions_list = computed(() => [
-		{icon: 'mdi-plus', click: (e: any) => add(e)},
+		{icon: 'mdi-plus', click: (e: MouseEvent) => add(e)},
 		{icon: 'mdi-cogs', click: () => settings() }
 	])
 	const actions_content = computed(() => [
@@ -365,7 +408,10 @@
 		{icon: 'mdi-play', click: () => startTest()},
 	])
 
-	const currentAI = computed(() => fileSystem.ais[currentSide.value === 1 ? currentAI1.value! : currentAI2.value!])
+	const currentAI = computed(() => {
+		const key = currentSide.value === 1 ? currentAI1.value : currentAI2.value
+		return key ? (fileSystem.ais[key] ?? null) : null
+	})
 	const ai1Ready = computed(() => {
 		const ai = currentAI1.value ? fileSystem.ais[currentAI1.value] : null
 		return ai && ai.code !== undefined
@@ -475,6 +521,41 @@
 		}
 	}
 
+	function openCloneDialog() {
+		cloneUrl.value = ''
+		cloneFolder.value = ''
+		cloneError.value = ''
+		cloning.value = false
+		cloneDialog.value = true
+	}
+
+	function onCloneUrlInput() {
+		cloneError.value = ''
+		if (!cloneFolder.value) {
+			const match = cloneUrl.value.match(/\/([^/]+?)(?:\.git)?\s*$/)
+			if (match) cloneFolder.value = match[1]
+		}
+	}
+
+	async function doClone() {
+		if (!cloneUrl.value || !cloneFolder.value.trim() || cloneFolderError.value || cloning.value) return
+		cloneError.value = ''
+		cloning.value = true
+		try {
+			const data = await LeekWars.post('git/clone', { url: cloneUrl.value.trim(), folder: cloneFolder.value.trim() })
+			cloneDialog.value = false
+			LeekWars.toast(t('clone_success') as string)
+			await loadGitRepos()
+			leftPanelTab.value = 'git'
+		} catch (e: unknown) {
+			const err = e as { error?: string, details?: string }
+			const key = err?.error
+			cloneError.value = (key && t(key) !== key ? t(key) : (err?.details || err?.error || 'Error')) as string
+		} finally {
+			cloning.value = false
+		}
+	}
+
 	function isChild(folder: Folder, parent: Folder): boolean {
 		let current = folder
 		while (current.id !== 0) {
@@ -486,9 +567,9 @@
 
 	function toggleFileMenu(event?: Event) {
 		if (LeekWars.mobile && event) {
-			fileMenuActivator.value = event.target
+			fileMenuActivator.value = event.target as Element
 		} else {
-			fileMenuActivator.value = fileButton.value
+			fileMenuActivator.value = fileButton.value ?? undefined
 		}
 		nextTick(() => {
 			fileMenu.value = !fileMenu.value
@@ -517,7 +598,7 @@
 				const id = parseInt(route.hash.substring(6))
 				testDialog.value = true
 				setTimeout(() => {
-					const test = editorTestRef.value as any
+					const test = editorTestRef.value
 					if (!test) return
 					test.currentTab = 1
 					if (test.allLeeks[id]) {
@@ -676,7 +757,7 @@
 
 		LeekWars.track('save-ai')
 
-		LeekWars.post('ai/write', {path: aiEditor.ai.path, code: content}).then((data: any) => {
+		LeekWars.post('ai/write', {path: aiEditor.ai.path, code: content}).then((data) => {
 			aiEditor.saving = false
 			aiEditor.ai.mtime = data.modified || Date.now()
 			localStorage.setItem('ai/mtime/' + aiEditor.ai.path, '' + aiEditor.ai.mtime)
@@ -694,7 +775,7 @@
 			}
 
 			emitter.emit('git-file-changed')
-		}).error((error: any) => {
+		}).error((error) => {
 			aiEditor.serverError = true
 			aiEditor.saving = false
 			LeekWars.toast(translateFileSystemError(error))
@@ -850,14 +931,15 @@
 		if (tabs1Loaded) return
 		tabs1Loaded = true
 		try {
-			const saved: any[] = JSON.parse(localStorage.getItem('editor/tabs1') || '[]')
+			type SavedTabData = { type?: string, id?: string, folder?: string, file?: string, staged?: boolean, hash?: string }
+			const saved = JSON.parse(localStorage.getItem('editor/tabs1') || '[]') as SavedTabData[]
 			for (const tt of saved) {
 				if (tt.type === 'file') {
-					if (tt.id in fileSystem.ais) {
+					if (tt.id && tt.id in fileSystem.ais) {
 						tabs1.value.push({ type: 'file', id: tt.id })
 					}
 				} else {
-					const tab: DiffTab = { type: tt.type || 'diff', id: tt.id || 0, folder: tt.folder, file: tt.file, staged: tt.staged, hash: tt.hash, original: '', modified: '', ready: false }
+					const tab: DiffTab = { type: (tt.type as DiffTab['type']) || 'diff', id: tt.id || '', folder: tt.folder || '', file: tt.file || '', staged: tt.staged, hash: tt.hash, original: '', modified: '', ready: false }
 					tabs1.value.push(tab)
 				}
 			}
@@ -891,7 +973,7 @@
 	}
 
 	async function fetchDiffContent(tab: DiffTab) {
-		const safe = (url: string, params: any) => LeekWars.post(url, params).catch(() => ({ content: '' }))
+		const safe = (url: string, params: Record<string, unknown>) => LeekWars.post(url, params).catch(() => ({ content: '' }))
 		let original = ''
 		let modified = ''
 		try {
@@ -940,8 +1022,8 @@
 	}
 
 	function startDelete() {
-		if (!explorerEl.value) return
-		explorerEl.value.deleteDialog = true
+		if (!explorerEl.value || !currentAI.value) return
+		explorerEl.value.deleteAI(currentAI.value)
 	}
 	function startTest(editor = currentEditor.value) {
 		if (!editor || !editor.ai) { return }
@@ -956,12 +1038,12 @@
 	}
 	function settings() {
 		settingsDialog.value = true
-		LeekWars.get('ai/get-storage-usage').then((data: any) => {
+		LeekWars.get('ai/get-storage-usage').then((data) => {
 			storageUsage.value = data
 		})
 	}
-	function add(event: any) {
-		fileMenuActivator.value = event.currentTarget
+	function add(event: MouseEvent) {
+		fileMenuActivator.value = event.currentTarget as Element
 		nextTick(() => {
 			fileMenu.value = true
 		})
@@ -998,7 +1080,7 @@
 		localStorage.setItem('editor/history', JSON.stringify(history.value.map(ai => ai.path)))
 	})
 
-	function jumpEvent(event: any) {
+	function jumpEvent(event: { ai: AI, line: number, column: number }) {
 		jump(event.ai, event.line, event.column)
 	}
 
@@ -1024,7 +1106,7 @@
 	function resizerMousedown(e: MouseEvent) {
 		const startWidth = panelWidth.value
 		const startX = e.clientX
-		const mousemove: any = (ev: MouseEvent) => {
+		const mousemove = (ev: MouseEvent) => {
 			let pw = Math.max(0, Math.min(400, startWidth + ev.clientX - startX))
 			if (pw < 120) {
 				pw = 0
@@ -1033,7 +1115,7 @@
 			editorTotalWidth = (editors.value as HTMLElement).clientWidth
 			localStorage.setItem('editor/panel-width', '' + panelWidth.value)
 		}
-		const mouseup: any = (_ev: MouseEvent) => {
+		const mouseup = (_ev: MouseEvent) => {
 			document.documentElement!.removeEventListener('mousemove', mousemove)
 			document.documentElement!.removeEventListener('mouseup', mouseup)
 		}
@@ -1046,14 +1128,14 @@
 		const startX = e.clientX
 		editorTotalWidth = (editors.value as HTMLElement).clientWidth
 		const startWidth = editor1Width.value * editorTotalWidth
-		const mousemove: any = (ev: MouseEvent) => {
+		const mousemove = (ev: MouseEvent) => {
 			let pw = Math.max(300, Math.min(editorTotalWidth - 300, startWidth + ev.clientX - startX))
 			editor1Width.value = pw / editorTotalWidth
 			editor2Width.value = 1 - editor1Width.value
 			localStorage.setItem('editor/editor1-width', '' + editor1Width.value)
 			localStorage.setItem('editor/editor2-width', '' + editor2Width.value)
 		}
-		const mouseup: any = (_ev: MouseEvent) => {
+		const mouseup = (_ev: MouseEvent) => {
 			document.documentElement!.removeEventListener('mousemove', mousemove)
 			document.documentElement!.removeEventListener('mouseup', mouseup)
 		}
@@ -1065,7 +1147,7 @@
 	function problemsResizerMousedown(e: MouseEvent) {
 		const startHeight = problemsHeight.value
 		const startY = e.clientY
-		const mousemove: any = (ev: MouseEvent) => {
+		const mousemove = (ev: MouseEvent) => {
 			let ph = Math.max(0, startHeight + startY - ev.clientY)
 			if (ph < 50) {
 				ph = 0
@@ -1073,7 +1155,7 @@
 			problemsHeight.value = ph
 			localStorage.setItem('editor/problems-height', '' + problemsHeight.value)
 		}
-		const mouseup: any = (_ev: MouseEvent) => {
+		const mouseup = (_ev: MouseEvent) => {
 			document.documentElement!.removeEventListener('mousemove', mousemove)
 			document.documentElement!.removeEventListener('mouseup', mouseup)
 		}
@@ -1290,7 +1372,7 @@
 		emitter.on('back', () => {
 			router.push('/editor')
 		})
-		emitter.on('editor-drag', (item: any) => {
+		emitter.on('editor-drag', (item: Item) => {
 			dragging.value = item
 		})
 		emitter.on('editor-drop', (folder: Folder) => {
@@ -1325,22 +1407,22 @@
 			editor1.value?.setAnalyzerTimeout()
 		})
 
-		emitter.on('close-diff', ({ folder, file }: any) => {
+		emitter.on('close-diff', ({ folder, file }: { folder: string, file: string }) => {
 			const tab = tabs1.value.find(t => t.type === 'diff' && (t as DiffTab).folder === folder && (t as DiffTab).file === file)
 			if (tab) { closeTabByRef(tab) }
 		})
 
-		emitter.on('close-file-tab', (aiPath: any) => {
+		emitter.on('close-file-tab', (aiPath: string) => {
 			const tab = tabs1.value.find(t => t.type === 'file' && t.id === aiPath)
 			if (tab) { closeTabByRef(tab) }
 		})
 
-		emitter.on('close-merge-tabs', ({ folder }: any) => {
+		emitter.on('close-merge-tabs', ({ folder }: { folder: string }) => {
 			const mergeTabs = tabs1.value.filter(t => t.type === 'merge' && (t as DiffTab).folder === folder)
 			for (const tab of mergeTabs) { closeTabByRef(tab) }
 		})
 
-		emitter.on('open-merge', ({ folder, file }: any) => {
+		emitter.on('open-merge', ({ folder, file }: { folder: string, file: string }) => {
 			openMerge({ folder, file })
 		})
 
@@ -1513,6 +1595,31 @@
 	}
 	.popup.input_popup input {
 		width: 90%;
+	}
+	.clone-dialog {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		.clone-hint {
+			display: flex;
+			align-items: flex-start;
+			gap: 6px;
+			font-size: 12px;
+			color: var(--text-color-secondary);
+			padding: 6px 10px;
+			background: rgba(0, 0, 0, 0.04);
+			border-radius: 4px;
+			.v-icon { flex-shrink: 0; margin-top: 1px; }
+		}
+		.clone-error {
+			font-size: 13px;
+			color: #c00;
+			padding: 4px 0;
+		}
+	}
+	body.dark .clone-dialog {
+		.clone-hint { background: rgba(255, 255, 255, 0.05); }
+		.clone-error { color: #f66; }
 	}
 	.ai-list :deep(.router-link-active > .item > .label) {
 		background: #cacaca;

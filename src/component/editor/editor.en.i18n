@@ -82,5 +82,18 @@
 	"cancel": "Cancel",
 	"strict": "Strict",
 	"git_auth_success": "GitHub successfully connected.",
-	"git_auth_error": "Error connecting to GitHub."
+	"git_auth_error": "Error connecting to GitHub.",
+	"clone_repo": "Clone a git repo",
+	"clone_url": "Repository URL",
+	"clone_url_placeholder": "https://github.com/user/my-repo.git",
+	"clone_folder": "Destination folder",
+	"clone_auth_hint": "Private repos require authentication to be configured in remote settings.",
+	"cloning": "Cloning...",
+	"clone": "Clone",
+	"clone_success": "Repository cloned successfully.",
+	"folder_exists": "A folder with this name already exists.",
+	"invalid_folder_name": "Invalid folder name.",
+	"invalid_remote_url": "Invalid URL. Only HTTPS repos are accepted.",
+	"unknown_host": "Unauthorized host. Configure access first in remote settings.",
+	"clone_failed": "Clone failed."
 }

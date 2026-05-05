@@ -83,5 +83,18 @@
 	"editor_already_opened": "L'éditeur est déjà ouvert dans un autre onglet !",
 	"strict": "Strict",
 	"git_auth_success": "GitHub connecté avec succès.",
-	"git_auth_error": "Erreur lors de la connexion à GitHub."
+	"git_auth_error": "Erreur lors de la connexion à GitHub.",
+	"clone_repo": "Cloner un repo git",
+	"clone_url": "URL du repo",
+	"clone_url_placeholder": "https://github.com/utilisateur/mon-repo.git",
+	"clone_folder": "Dossier de destination",
+	"clone_auth_hint": "Les repos privés nécessitent une authentification configurée dans les paramètres du remote.",
+	"cloning": "Clonage en cours...",
+	"clone": "Cloner",
+	"clone_success": "Repo cloné avec succès.",
+	"folder_exists": "Un dossier avec ce nom existe déjà.",
+	"invalid_folder_name": "Nom de dossier invalide.",
+	"invalid_remote_url": "URL invalide. Seuls les repos HTTPS sont acceptés.",
+	"unknown_host": "Hôte non autorisé. Configurez d'abord un accès dans les paramètres du remote.",
+	"clone_failed": "Échec du clonage."
 }
