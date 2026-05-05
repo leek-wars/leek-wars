@@ -27,6 +27,7 @@ const subApps: App[] = []
 const instance = getCurrentInstance()
 
 onMounted(() => {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const el = (instance?.proxy as any)?.$el
 	if (!el) return
 	el.querySelectorAll('.pseudo').forEach((c: HTMLElement) => {

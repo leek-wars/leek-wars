@@ -364,7 +364,7 @@ const t = useNamespacedT('market')
 	const potions = ref<PotionTemplate[]>([])
 	const hats = ref<HatTemplate[]>([])
 	const items_by_name = reactive<{[key: string]: ItemTemplate}>({})
-	const fight_packs = ref<any[]>([])
+	const fight_packs = ref<ItemTemplate[]>([])
 	const buyDialog = ref(false)
 	const buyCrystalsDialog = ref(false)
 	const buyQuantity = ref(1)
@@ -376,13 +376,13 @@ const t = useNamespacedT('market')
 	const unseenItemDialog = ref(false)
 	const pomps = ref<PompTemplate[]>([])
 	const schemes = ref<ItemTemplate[]>([])
-	let request: any = null
+	let request: { abort: () => void } | null = null
 	let onKeyDown: ((e: KeyboardEvent) => void) | null = null
 	const search = ref('')
 
 	const max_level = computed(() => {
 		if (store.state.farmer) {
-			return Math.max(...Object.values(store.state.farmer.leeks).map((l: any) => l.level))
+			return Math.max(...Object.values(store.state.farmer.leeks).map((l) => l.level))
 		}
 		return 0
 	})
@@ -432,9 +432,9 @@ const t = useNamespacedT('market')
 		{icon: 'mdi-bank', click: () => router.push('/bank?ref=market_action')},
 		{icon: 'mdi-treasure-chest', click: () => router.push('/inventory')},
 	]
-	request = LeekWars.get('market/get-item-templates')
-	request.then((res: any) => {
-		const list = res.items as ItemTemplate[]
+	request = LeekWars.get<{ items: ItemTemplate[] }>('market/get-item-templates')
+	request.then((res) => {
+		const list = res.items
 
 		for (const i in list) {
 			const item = list[i]
@@ -460,7 +460,7 @@ const t = useNamespacedT('market')
 					potions.value.push(potion)
 					items_by_name[LeekWars.potions[item.id].name] = item
 				} else {
-					const fakePotion = {...item, name: item.name.replace(/^potion_/, ''), level: 1, consumable: false, effects: [], template: item.id, duration: 0} as any
+					const fakePotion = {...item, name: item.name.replace(/^potion_/, ''), level: 1, consumable: false, effects: [], template: item.id, duration: 0} as unknown as PotionTemplate
 					potions.value.push(fakePotion)
 					items_by_name[fakePotion.name] = fakePotion
 				}
@@ -470,7 +470,7 @@ const t = useNamespacedT('market')
 					hats.value.push(hat)
 					items_by_name[hat.name] = item
 				} else {
-					const fakeHat = {...item, name: item.name.replace(/^hat_/, ''), level: 1, width: 0, height: 0, crop: 0, template: item.id, item: 0} as any
+					const fakeHat = {...item, name: item.name.replace(/^hat_/, ''), level: 1, width: 0, height: 0, crop: 0, template: item.id, item: 0} as unknown as HatTemplate
 					hats.value.push(fakeHat)
 					items_by_name[fakeHat.name] = fakeHat
 				}

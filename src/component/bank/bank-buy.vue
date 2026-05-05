@@ -71,7 +71,7 @@ const router = useRouter()
 
 const pack = ref(0)
 const offer = ref(0)
-const product = ref<any>(null)
+const product = ref<Record<string, unknown> | null>(null)
 const loading = ref(false)
 const firstPurchase = ref(false)
 
@@ -97,7 +97,7 @@ function loadPayPal() {
 				return LeekWars.post('bank/execute-paypal-payment', { order_id: data.orderID }).then(d => {
 					store.commit('update-crystals', d.crystals)
 					router.replace('/bank/validate/success/' + d.crystals)
-				}).catch((err: any) => {
+				}).catch((err) => {
 					router.replace('/bank/validate/failed/' + err.error)
 				})
 			}

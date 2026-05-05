@@ -36,11 +36,11 @@
 
 	defineOptions({ name: 'forge' })
 
-	const ITEM_CATEGORY_NAME: Record<number, any> = ITEM_CATEGORY_NAME_TYPED
+	const ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME_TYPED
 
-	const forge = ref<any[]>([null, null, null, null, null, null, null, null])
+	const forge = ref<(ForgeSlot | null)[]>([null, null, null, null, null, null, null, null])
 	const scheme = ref<SchemeTemplate | null>(null)
-	const result = ref<any>(null)
+	const result = ref<number | null>(null)
 	const building = ref(false)
 	const built = ref(false)
 

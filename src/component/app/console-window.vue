@@ -47,7 +47,7 @@ const emit = defineEmits<{
 	'close': []
 }>()
 
-const consoleRef = useTemplateRef<any>('console')
+const consoleRef = useTemplateRef<import('vue').ComponentPublicInstance>('console')
 const consoleX = ref(0)
 const consoleY = ref(0)
 const consoleDown = ref(false)

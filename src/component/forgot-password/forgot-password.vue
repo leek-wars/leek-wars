@@ -85,7 +85,7 @@ function submitForm() {
 	LeekWars.post('farmer/forgot-password', {email: email.value}).then(() => {
 		LeekWars.toast(t('mail_sent', {email: email.value}))
 		router.push('/forgot-password/email-sent/' + email.value)
-	}).catch((err: any) => {
+	}).catch((err) => {
 		LeekWars.toast(t(err.error, err.params))
 	})
 	return false
@@ -99,7 +99,7 @@ function submitResetForm() {
 	LeekWars.post('farmer/forgot-password-change', {farmer_id: route.params.id, new_password: password.value, code: route.params.code}).then(() => {
 		LeekWars.toast(t('password_changed'))
 		router.push('/login')
-	}).catch((err: any) => {
+	}).catch((err) => {
 		LeekWars.toast(t('error_' + err.error, err.params))
 	})
 	return false

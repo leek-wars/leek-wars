@@ -8,7 +8,7 @@ class NotificationBuilder {
 
 	public static rounds = ['sixteenth_final', 'eighth_final', 'quarter_final', 'semi_final', 'final']
 
-	public static build(data: any) {
+	public static build(data: Record<string, unknown>) {
 
 		const type = data.type
 		const params = data.parameters as string[]
@@ -162,7 +162,7 @@ class NotificationBuilder {
 			const farmer_name = params[0]
 			const item_id = params[1]
 			const item = LeekWars.items[item_id]
-			let item_name = item.name as any
+			let item_name: string = item.name
 			if (item.type === ItemType.WEAPON) {
 				item_name = i18n.t('weapon.' + item.name.substring(7))
 			} else if (item.type === ItemType.CHIP) {

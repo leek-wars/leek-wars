@@ -109,6 +109,11 @@
 	import { computed, defineAsyncComponent, onMounted, onUnmounted, ref, watch } from 'vue'
 	import { locale } from '@/locale'
 
+	interface ForgeItem {
+		template: number
+		quantity: number
+	}
+
 	const Inventory = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/inventory/inventory.${locale}.i18n`))
 
 	enum Sort {
@@ -118,8 +123,8 @@
 	defineOptions({ name: 'workshop', i18n: {}, mixins: [...mixins] })
 
 	const schemes = ref<SchemeTemplate[]>([])
-	const scheme = ref<any>(null)
-	const forge = ref<any[]>([null, null, null, null, null, null, null, null, null])
+	const scheme = ref<SchemeTemplate | null>(null)
+	const forge = ref<(ForgeItem | null)[]>([null, null, null, null, null, null, null, null, null])
 	const sort = ref<Sort>(parseInt(localStorage.getItem('workshop/sort') || '0', 10) as Sort)
 	const filter = ref<ItemType>(parseInt(localStorage.getItem('workshop/filter') || '0', 10) as ItemType)
 
@@ -148,7 +153,7 @@
 		LeekWars.box = false
 	})
 
-	function use(s: any) {
+	function use(s: SchemeTemplate) {
 		scheme.value = s
 		for (let i = 0; i < 9; ++i) {
 			forge.value[i] = null
@@ -158,7 +163,7 @@
 		}
 	}
 
-	function pick(item: any, position: number, event: MouseEvent) {
+	function pick(item: ForgeItem, position: number, event: MouseEvent) {
 		const all = event.ctrlKey
 		const added_quantity = all ? item.quantity : 1
 		let forgePosition = -1
@@ -212,7 +217,7 @@
 		}
 	}
 
-	function match(scheme: any) {
+	function match(scheme: SchemeTemplate) {
 		let forge_items = 0
 		for (const item of forge.value) {
 			if (item) { forge_items++ }

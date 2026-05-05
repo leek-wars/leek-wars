@@ -154,6 +154,56 @@ import { LeekWars } from '@/model/leekwars'
 import { i18n } from '@/model/i18n'
 import { FightContext, FightType } from '@/model/fight'
 
+interface TooltipLeek {
+	id: number
+	name: string
+	level: number
+	talent?: number
+	talent_gain?: number
+	boss?: boolean
+	chest?: boolean
+}
+
+interface TooltipReportLeek {
+	id: number
+	talent_gain?: number
+}
+
+interface TooltipTeam {
+	id: number
+	name: string
+}
+
+interface TooltipReport {
+	win?: number
+	duration?: number
+	bonus?: number
+	farmer1?: { talent_gain?: number }
+	farmer2?: { talent_gain?: number }
+	leeks1?: TooltipReportLeek[]
+	leeks2?: TooltipReportLeek[]
+}
+
+interface TooltipFight {
+	id: number
+	type: FightType
+	context: FightContext
+	status: number
+	date: number
+	result: string
+	leeks1: TooltipLeek[]
+	leeks2: TooltipLeek[]
+	team1?: TooltipTeam
+	team2?: TooltipTeam
+	farmer1_name?: string
+	farmer2_name?: string
+	boss_name?: string
+	starter?: { name: string }
+	views?: number
+	trophies?: { trophy: number, name: string }[]
+	report?: TooltipReport
+}
+
 const props = defineProps<{
 	id: number
 	disabled?: boolean
@@ -166,10 +216,10 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
-const tc = (key: string, count: number): string => (i18n as any).tc(key, count)
+const tc = (key: string, count: number): string => (i18n as { tc: (key: string, count: number) => string }).tc(key, count)
 
 const content_created = ref(false)
-const data = ref<any>(null)
+const data = ref<TooltipFight | null>(null)
 const expand = ref(false)
 const locked = ref(false)
 const mouse = ref(false)
@@ -189,7 +239,7 @@ function open(v: boolean) {
 	if (content_created.value) return
 	content_created.value = true
 	if (props.id > 0 && !data.value) {
-		LeekWars.get<any>('fight/rich-tooltip/' + props.id).then(d => {
+		LeekWars.get<TooltipFight>('fight/rich-tooltip/' + props.id).then(d => {
 			data.value = d
 		})
 	}
@@ -230,7 +280,7 @@ function isMulti(side: 1 | 2): boolean {
 	return Array.isArray(arr) && arr.length > 1
 }
 
-function isRealLeek(leek: any): boolean {
+function isRealLeek(leek: TooltipLeek): boolean {
 	return leek && !leek.boss && !leek.chest
 }
 
@@ -245,10 +295,10 @@ const tableSides = computed<(1 | 2)[]>(() => {
 	return sides
 })
 
-const brParticipants = computed<{ leek: any, side: 1 | 2 }[]>(() => {
+const brParticipants = computed<{ leek: TooltipLeek, side: 1 | 2 }[]>(() => {
 	const d = data.value
 	if (!d) return []
-	const rows: { leek: any, side: 1 | 2 }[] = []
+	const rows: { leek: TooltipLeek, side: 1 | 2 }[] = []
 	for (const l of d.leeks1 || []) if (isRealLeek(l)) rows.push({ leek: l, side: 1 })
 	for (const l of d.leeks2 || []) if (isRealLeek(l)) rows.push({ leek: l, side: 2 })
 	return rows
@@ -267,7 +317,7 @@ function sideName(side: 1 | 2): string {
 function leekGain(leekId: number, side: 1 | 2): number | null {
 	const arr = side === 1 ? data.value?.report?.leeks1 : data.value?.report?.leeks2
 	if (!arr) return null
-	const found = arr.find((l: any) => l.id === leekId)
+	const found = arr.find(l => l.id === leekId)
 	return found && typeof found.talent_gain === 'number' ? found.talent_gain : null
 }
 

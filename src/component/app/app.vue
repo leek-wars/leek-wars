@@ -234,7 +234,7 @@
 
 	const showConsole = ref(false)
 	const consoleValue = ref(false)
-	const changelog = ref<any>(null)
+	const changelog = ref<Record<string, unknown> | null>(null)
 	const showChangelog = ref(false)
 	let konami = ''
 	const annonce = ref(false)
@@ -247,7 +247,7 @@
 	const verifyMessage = ref(true)
 	const loggedOutOtherTab = ref(false)
 	const aprilFoolsDialog = ref(false)
-	const doc = useTemplateRef<any>('doc')
+	const doc = useTemplateRef<import('vue').ComponentPublicInstance>('doc')
 
 	const logoutAccounts = computed(() => {
 		const farmerId = store.state.farmer?.id

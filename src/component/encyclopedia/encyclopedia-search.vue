@@ -62,10 +62,10 @@ const t = useNamespacedT('encyclopedia-search')
 const route = useRoute()
 const router = useRouter()
 
-const options = ref<{[key: string]: any}>({ query: '', page: 1 })
+const options = ref<Record<string, unknown>>({ query: '', page: 1 })
 const queryLower = ref('')
 const pages = ref(0)
-const results = ref<any[] | null>(null)
+const results = ref<Record<string, unknown>[] | null>(null)
 const searchStarted = ref(false)
 const count = ref(0)
 const floor = Math.floor
@@ -95,7 +95,7 @@ function doSearch() {
 			results.value = data.results
 			pages.value = data.pages
 			count.value = data.count
-		}).catch((err: any) => {
+		}).catch((err) => {
 			results.value = []
 			count.value = 0
 			LeekWars.toast(err.error)
@@ -128,7 +128,7 @@ const url = computed(() => urlPagination.value + (options.value.page > 1 ? '&pag
 
 function search() {
 	if (!canSearch.value) return
-	router.push(url.value).then((failure: any) => {
+	router.push(url.value).then((failure) => {
 		if (failure) doSearch()
 	})
 }

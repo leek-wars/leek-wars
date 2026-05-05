@@ -24,7 +24,7 @@ import { mixins } from '@/model/i18n'
 defineOptions({ name: 'bank-product', i18n: {}, mixins: [...mixins] })
 
 defineProps<{
-	product: any
+	product: Record<string, unknown>
 	index: number
 	best?: boolean
 	preview?: boolean

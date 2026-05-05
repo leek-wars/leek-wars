@@ -49,7 +49,7 @@ const t = useNamespacedT('login')
 const route = useRoute()
 const router = useRouter()
 
-const error = ref<any>(null)
+const error = ref<unknown>(null)
 const loading = ref(false)
 const form = ref({
 	login: '',
@@ -65,7 +65,7 @@ if (tokenParam) {
 		const token = LeekWars.DEV ? data.token : '$'
 		store.commit('connect', { ...data, token })
 		router.push(getRedirectAfterLogin())
-	}).catch((err: any) => {
+	}).catch((err) => {
 		LeekWars.toast(err.error)
 		router.push('/')
 	})
@@ -79,7 +79,7 @@ function login() {
 		const token = LeekWars.DEV ? data.token : '$'
 		store.commit('connect', { ...data, token })
 		router.push(getRedirectAfterLogin())
-	}).catch((err: any) => {
+	}).catch((err) => {
 		loading.value = false
 		error.value = err
 	})

@@ -88,10 +88,26 @@ const emit = defineEmits<{
 	'update:modelValue': [value: boolean]
 }>()
 
+interface RichFarmerLeek {
+	id: number
+	name: string
+	level: number
+	talent: number
+	[key: string]: unknown
+}
+
+interface RichFarmerData {
+	id: number
+	name: string
+	avatar_changed: number
+	leeks: Record<string, RichFarmerLeek>
+	[key: string]: unknown
+}
+
 const router = useRouter()
-const menu = useTemplateRef<any>('menu')
+const menu = useTemplateRef<{ updateLocation?: () => void }>('menu')
 const content_created = ref(false)
-const farmer = ref<any>(null)
+const farmer = ref<RichFarmerData | null>(null)
 const expand_leeks = ref(false)
 const sums = ref<{[key: string]: number}>({})
 const locked = ref(false)
@@ -112,10 +128,10 @@ function open(v: boolean) {
 	if (content_created.value) { return }
 	content_created.value = true
 	if (props.id > 0 && !farmer.value) {
-		LeekWars.get<any>('farmer/rich-tooltip/' + props.id).then(f => {
+		LeekWars.get<RichFarmerData>('farmer/rich-tooltip/' + props.id).then(f => {
 			farmer.value = f
 			for (const c of LeekWars.characteristics) {
-				sums.value[c] = Object.values(f.leeks).reduce((sum: number, leek: any) => sum + leek['total_' + c], 0)
+				sums.value[c] = Object.values(f.leeks).reduce((sum: number, leek: RichFarmerLeek) => sum + (leek['total_' + c] as number), 0)
 			}
 			if (expand_leeks.value) {
 				menu.value?.updateLocation?.()

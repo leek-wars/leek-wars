@@ -15,12 +15,18 @@ const URL_ISSUE = "https://github.com/leek-wars/leek-wars/issues/new"
 const mdiInlineSvg = (path: string, cls = '') =>
 	`<i class="v-icon notranslate theme--light ${cls}"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="${path}"/></svg></i>`
 
+interface CommandOption {
+	name: string
+	nameLower: string
+	description: string
+}
+
 class Command {
 	name!: string
 	regex!: RegExp
-	replacement!: any
+	replacement!: (...args: string[]) => string
 	description!: string
-	options?: any[]
+	options?: CommandOption[]
 }
 
 const COMMANDS = [
@@ -68,7 +74,7 @@ const COMMANDS = [
 		name: "doc",
 		description: "Lien vers la documentation",
 		regex: /(?:^|(\s))\/doc(?::([^\s#]+))?(?=\s|$)/gi,
-		replacement: (a: any, b: any, item: string) => {
+		replacement: (_: string, __: string, item: string) => {
 			const link = item ? URL_DOC + "/" + item : URL_DOC
 			const name = item ? item : "Doc"
 			return " " + LeekWars.toChatLink(link, name, "target='_blank' rel='noopener'", "lw") + " "
@@ -84,7 +90,7 @@ const COMMANDS = [
 		name: "encyclo",
 		description: "Lien vers l'encyclopédie (avec une page et une ancre)",
 		regex: /(?:^|(\s))\/encyclo(?::([^\s#]+)(?:#([^\s]+))?)?(?=\s|$)/gi,
-		replacement: (a: any, b: any, page: string, anchor: string) => {
+		replacement: (_: string, __: string, page: string, anchor: string) => {
 			const name = page ? page + (anchor ? '#' + anchor : '') : "Encyclopédie"
 			const link = page ? URL_ENCYCLOPEDIA + '/' + page + (anchor ? '#' + anchor : '') : URL_ENCYCLOPEDIA
 			return  " " + mdiInlineSvg(mdiBookOpenPageVariant, 'book') + LeekWars.toChatLink(link, name, "target='_blank' rel='noopener'", "lw") + " "
@@ -99,7 +105,7 @@ const COMMANDS = [
 		name: "fliptable",
 		description: "(╯°□°）╯︵ ┻━┻",
 		regex: /(^| )\/fliptable(?=$|\s)/gi,
-		replacement: (a: any, b: string) => b + "(╯°□°）╯︵ ┻━┻"
+		replacement: (_: string, b: string) => b + "(╯°□°）╯︵ ┻━┻"
 	}, {
 		name: "issue",
 		description: "Lien vers les Issues sur GitHub",
@@ -123,12 +129,12 @@ const COMMANDS = [
 		name: "lenny",
 		description: "( ͡° ͜ʖ ͡° )",
 		regex: /(^| )\/lenny(?=$|\s)/gi,
-		replacement: (a: any, b: string) => b + "( ͡° ͜ʖ ͡° )"
+		replacement: (_: string, b: string) => b + "( ͡° ͜ʖ ͡° )"
 	}, {
 		name: "market",
 		regex: /(?:^|(\s))\/market(?::([^\s#]+))?(?=\s|$)/gi,
 		description: "Lien vers un item du marché",
-		replacement: (a: any, b: any, item: string) => {
+		replacement: (_: string, __: string, item: string) => {
 			const link = item ? URL_MARKET + "/" + item : URL_MARKET
 			const name = item ? item : "Marché"
 			return " " + LeekWars.toChatLink(link, name, "target='_blank' rel='noopener'", "lw") + " "
@@ -238,7 +244,7 @@ const Commands = {
 		const docCommand = COMMANDS.find((cmd) => cmd.name === "doc")
 		if (!docCommand) { return }
 		docCommand.options = []
-		const doneFunc: {[key: string]: any} = {}
+		const doneFunc: {[key: string]: boolean} = {}
 		for (const fun of FUNCTIONS) {
 			const name = fun.name
 			if (!doneFunc[name]) {

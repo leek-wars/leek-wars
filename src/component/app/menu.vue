@@ -200,7 +200,7 @@
 				<div class="title">
 					<div>
 						<h4>{{ $t('main.rewards') }} ({{ $store.state.farmer.rewards.length }})</h4>
-						<div>{{ $filters.number($store.state.farmer.rewards.reduce((s: number, r: any) => s + r.habs, 0)) }} <span class="hab"></span></div>
+						<div>{{ $filters.number($store.state.farmer.rewards.reduce((s: number, r: Reward) => s + r.habs, 0)) }} <span class="hab"></span></div>
 					</div>
 					<v-btn class="get-all notif-trophy" @click.stop="retrieveAll()"><span v-if="!LeekWars.mobile">{{ $t('main.retrieve_all') }}</span> <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
 				</div>
@@ -224,6 +224,7 @@
 
 <script setup lang="ts">
 	import { LeekWars } from '@/model/leekwars'
+	import type { Reward } from '@/model/farmer'
 	import { store } from '@/model/store'
 	import { BOSSES } from '@/model/boss'
 	import { emitter } from '@/model/vue'
@@ -376,7 +377,7 @@
 		e.stopPropagation()
 	}
 
-	function retrieve(reward: any) {
+	function retrieve(reward: Reward) {
 		LeekWars.post('trophy/retrieve-reward', { trophy_id: reward.trophy })
 		store.commit('remove-reward', reward.trophy)
 		store.commit('update-habs', reward.habs)
@@ -384,7 +385,7 @@
 
 	function retrieveAll() {
 		LeekWars.post('trophy/retrieve-all-rewards')
-		const total = store.state.farmer!.rewards.reduce((s: number, r: any) => s + r.habs, 0)
+		const total = store.state.farmer!.rewards.reduce((s: number, r: Reward) => s + r.habs, 0)
 		store.commit('remove-all-rewards')
 		store.commit('update-habs', total)
 	}

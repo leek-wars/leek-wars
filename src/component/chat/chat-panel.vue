@@ -63,6 +63,7 @@ const chatID = ref<number | null>(null)
 if (store.state.farmer?.group && store.state.farmer?.group.chat && !store.state.farmer?.public_chat_enabled) {
 	chatID.value = store.state.farmer.group.chat
 } else if (store.state.farmer?.public_chat_enabled) {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	chatID.value = parseInt(localStorage.getItem('chat-panel/' + props.chat) || '0') || (LeekWars.languages as any)[locale.value].chat
 }
 

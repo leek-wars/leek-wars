@@ -14,9 +14,12 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import Trophy from '@/component/trophies/trophy.vue'
+import { LeekWars } from '@/model/leekwars'
+
+type TrophyData = (typeof LeekWars.trophies)[number]
 
 const props = defineProps<{
-	trophy: any
+	trophy: TrophyData
 	bottom?: boolean
 	instant?: boolean
 }>()

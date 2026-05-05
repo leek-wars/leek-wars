@@ -44,7 +44,7 @@ class Keyword {
 	fullName!: string
 	insertText?: string
 	kind!: KeywordKind
-	details!: any
+	details!: unknown
 	argumentCount?: number
 	arguments?: string[]
 	ai?: AI
@@ -52,10 +52,10 @@ class Keyword {
 	shortcut?: number
 	function?: LSFunction
 	constant?: Constant
-	lstype?: any
-	location?: any
+	lstype?: unknown
+	location?: unknown
 	category!: number
-	javadoc?: any
+	javadoc?: unknown
 	documentation?: string
 	tags?: number[]
 }

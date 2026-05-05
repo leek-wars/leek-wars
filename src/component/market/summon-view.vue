@@ -42,12 +42,12 @@ const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tool
 defineOptions({ name: 'summon-view' })
 
 defineProps<{
-	summon: any
+	summon: Record<string, unknown>
 }>()
 
 defineEmits(['update:modelValue'])
 
-const CHIPS: Record<number, any> = CHIPSImport
+const CHIPS = CHIPSImport
 </script>
 
 <style lang="scss" scoped>

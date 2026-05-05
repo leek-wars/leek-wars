@@ -32,19 +32,26 @@ function add(entry: Omit<GitLogEntry, 'id'>) {
  * Wrapper autour de LeekWars.post qui récupère les commandes git
  * réellement exécutées côté serveur via le champ _git_commands.
  */
-export async function gitCall<T = any>(endpoint: string, params?: any): Promise<T> {
+export async function gitCall<T = unknown>(endpoint: string, params?: Record<string, unknown>): Promise<T> {
 	const start = Date.now()
 	try {
 		const data = await LeekWars.post<T>(endpoint, params ?? {})
-		ingestServerCommands(start, (data as any)?._git_commands)
+		ingestServerCommands(start, (data as Record<string, unknown>)?._git_commands as ServerCommand[] | undefined)
 		return data
-	} catch (e: any) {
-		ingestServerCommands(start, e?._git_commands)
+	} catch (e: unknown) {
+		ingestServerCommands(start, (e as Record<string, unknown>)?._git_commands as ServerCommand[] | undefined)
 		throw e
 	}
 }
 
-function ingestServerCommands(timestamp: number, cmds: any[] | undefined) {
+interface ServerCommand {
+	command?: string
+	exit_code?: number
+	output?: string
+	duration_ms?: number
+}
+
+function ingestServerCommands(timestamp: number, cmds: ServerCommand[] | undefined) {
 	if (!Array.isArray(cmds)) return
 	for (const c of cmds) {
 		add({

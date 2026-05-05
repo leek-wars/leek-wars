@@ -101,7 +101,7 @@ defineOptions({ name: 'lw-footer' })
 const didactitiel = ref(false)
 const didactitiel_enabled = ref(false)
 const didactitiel_new_enabled = ref(false)
-const cookies = ref<any[]>([])
+const cookies = ref<[number, number, number, number][]>([])
 
 function toggleTheme() {
 	LeekWars.themeSetting = LeekWars.darkMode ? 'light' : 'dark'

@@ -596,7 +596,7 @@
 	const giveItemDialog = ref(false)
 	const giveItemTab = ref('tab-0')
 	const giveItemConfirmDialog = ref(false)
-	const itemToGive = ref<any>(null)
+	const itemToGive = ref<{id: number} | null>(null)
 	const giveItemTarget = ref<Member | null>(null)
 	const giveMoneyDialog = ref(false)
 	const giveMoneyTarget = ref<Member | null>(null)
@@ -631,7 +631,7 @@
 		{ title: 'Actions', value: 'give' },
 	]
 
-	const headersDialog = ref<any[]>([])
+	const headersDialog = ref<{text: string, value: string, sortable?: boolean}[]>([])
 	const headersDialogEmails = [
 		{ text: 'Membre', value: 'name' },
 		{ text: 'Poireau', value: 'leek' },
@@ -847,9 +847,9 @@
 
 	const totalCapital = computed(() => group.value ? 50 + (group.value.level - 1) * 5 + Math.floor(group.value.level / 100) * 45 + (group.value.level === 301 ? 95 : 0) : 0)
 
-	function changeLevel(e: any) {
+	function changeLevel(e: Event) {
 		if (group.value) {
-			group.value.level = parseInt(e.target!.value)
+			group.value.level = parseInt((e.target as HTMLInputElement).value)
 			if (group.value.level < 1) group.value.level = 1
 			if (group.value.level > 301) group.value.level = 301
 			characteristics['level'] = group.value.level
@@ -936,10 +936,10 @@
 			member_id: member.id,
 			name: member.name,
 		}).then(() => {
-			delete (member as any).name_error
+			delete member.name_error
 		}).error(error => {
-			delete (member as any).name_error
-			;(member as any).name_error = error
+			delete member.name_error
+			member.name_error = error
 		})
 	}
 
@@ -948,12 +948,12 @@
 		LeekWars.put('groupe/member-leek-name', {
 			group_id: group.value.id,
 			member_id: member.id,
-			leek_name: (member as any).leek,
+			leek_name: member.leek,
 		}).then(() => {
-			delete (member as any).leek_error
+			delete member.leek_error
 		}).error(error => {
-			delete (member as any).leek_error
-			;(member as any).leek_error = error
+			delete member.leek_error
+			member.leek_error = error
 		})
 	}
 
@@ -964,24 +964,24 @@
 			member_id: member.id,
 			email: member.mail
 		}).then(() => {
-			delete (member as any).mail_error
+			delete member.mail_error
 		}).error(error => {
-			delete (member as any).mail_error
-			;(member as any).mail_error = error
+			delete member.mail_error
+			member.mail_error = error
 		})
 	}
 
 	function updateMemberPassword(member: Member) {
-		if (!group.value || !(member as any).password) { return }
+		if (!group.value || !member.password) { return }
 		LeekWars.put('groupe/member-password', {
 			group_id: group.value.id,
 			member_id: member.id,
-			password: (member as any).password
+			password: member.password
 		}).then(() => {
-			delete (member as any).password_error
+			delete member.password_error
 		}).error(error => {
-			delete (member as any).password_error
-			;(member as any).password_error = error
+			delete member.password_error
+			member.password_error = error
 		})
 	}
 

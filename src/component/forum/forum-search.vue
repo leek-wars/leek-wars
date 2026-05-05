@@ -130,7 +130,7 @@
 		moderator: false,
 		order: 'pertinence',
 		resolved: 'all',
-	} as {[key: string]: any})
+	} as Record<string, unknown>)
 	const defaultOptions = {
 		query: '',
 		farmer: '',
@@ -139,11 +139,11 @@
 		admin: false,
 		moderator: false,
 		order: 'pertinence'
-	} as {[key: string]: any}
+	} as Record<string, unknown>
 	const queryLower = ref('')
 	const pages = ref(0)
-	const results = ref<any[] | null>(null)
-	const categories = ref<any[]>([])
+	const results = ref<Record<string, unknown>[] | null>(null)
+	const categories = ref<Record<string, unknown>[]>([])
 	const searchStarted = ref(false)
 	const count = ref(0)
 	const floor = Math.floor

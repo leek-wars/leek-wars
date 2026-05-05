@@ -277,8 +277,8 @@
 	const emit = defineEmits<{
 		resize: []
 		fight: [fight: Fight]
-		'unlock-trophy': [trophy: any]
-		edited: [data?: any]
+		'unlock-trophy': [trophy: unknown]
+		edited: [data?: unknown]
 	}>()
 
 	const { t } = useI18n()
@@ -286,7 +286,7 @@
 	const document = window.document
 	const playerEl = useTemplateRef<HTMLElement>('player')
 	const playerAttach = computed(() => playerEl.value ?? undefined)
-	const hudRef = useTemplateRef<any>('hud')
+	const hudRef = useTemplateRef<{ hover_entity: FightEntity | null }>('hud')
 	const progressBar = useTemplateRef<HTMLElement>('progressBar')
 	const progressBarTooltip = useTemplateRef<HTMLElement>('progressBarTooltip')
 	const instance = getCurrentInstance()
@@ -316,22 +316,22 @@
 	}
 
 	const fight = ref<Fight | null>(null)
-	let canvas: any = null
+	let canvas: HTMLCanvasElement | null = null
 	const game = ref<Game>(new Game())
-	const queue = ref<any>(null)
+	const queue = ref<{ position: number, total: number } | null>(null)
 	let getDelay = 1000
 	const loaded = ref(false)
-	const error = ref<any>(false)
+	const error = ref<unknown>(false)
 	const fullscreen = ref(false)
-	const progressBarTurn = ref<any>(0)
+	const progressBarTurn = ref<number | string>(0)
 	const progressBarTooltipMargin = ref(0)
 	const progressBarPreviewMouse = ref(0)
 	const width = ref(0)
 	const totalWidth = ref(0)
 	const height = ref(0)
 	const totalHeight = ref(0)
-	let timeout: any = null
-	let request: any = null
+	let timeout: ReturnType<typeof setTimeout> | null = null
+	let request: ReturnType<typeof LeekWars.get> | null = null
 	const progress = ref(0)
 
 	;(async () => {
@@ -364,6 +364,7 @@
 	game.value.displayDebugs = localStorage.getItem('fight/debugs') === 'true'
 	game.value.displayAILines = localStorage.getItem('fight/debug-lines') === 'true'
 	game.value.displayAllyDebugs = localStorage.getItem('fight/ally-debugs') === 'true'
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	;(game.value as any).player = { gameLaunched, $emit: emit }
 
 	if (props.fightId) {
@@ -383,10 +384,10 @@
 		resize()
 	}
 
-	function onFightProgress(data: any) {
+	function onFightProgress(data: unknown[]) {
 		if (destroyed) return
 		if (fight.value && data[0] === fight.value.id) {
-			progress.value = data[1]
+			progress.value = data[1] as number
 			if (progress.value === 100 && request === null) {
 				if (timeout) clearTimeout(timeout)
 				getFight(false)
@@ -424,7 +425,7 @@
 			const newHeight = getHeight()
 			if (newWidth === width.value && newHeight === height.value) return
 			const aspectRatio = window.devicePixelRatio || 1
-			;(game.value as any).ratio = aspectRatio
+			game.value.ratio = aspectRatio
 			totalWidth.value = newWidth
 			totalHeight.value = newHeight
 			width.value = newWidth - (props.horizontal ? 2 * CONTROLS_HEIGHT : 0)
@@ -520,7 +521,7 @@
 	onBeforeUnmount(() => {
 		destroyed = true
 		game.value.pause()
-		;(game.value as any).cancelled = true
+		game.value.cancelled = true
 		emitter.off('keyup', keyup)
 		emitter.off('keydown', keydown)
 		emitter.off('resize', onResize)
@@ -602,6 +603,7 @@
 					report: {} as Report, status: 1,
 					team1_name: "A", team2_name: "B",
 					tournament: 0, type: 0, winner: 1, year: 2019,
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
 					data: report.fight as any,
 					comments: [], result: 'win', queue: 0, trophies: [],
 					chests: 0, size: 0, rareloot: 0, levelups: 0,
@@ -614,11 +616,11 @@
 		} else {
 			if (request === null) {
 				request = LeekWars.get('fight/get/' + props.fightId)
-				request.then((f: any) => {
+				request.then((f) => {
 					if (destroyed) return
 					request = null
 					fightLoaded(f)
-				}).error((err: any) => {
+				}).error((err) => {
 					if (destroyed) return
 					request = null
 					error.value = err
@@ -671,7 +673,7 @@
 		const tooltip = progressBarTooltip.value
 		if (!bar || !tooltip) return
 		const barOffset = bar.getBoundingClientRect().left
-		let turn: any = 0
+		let turn: number | string = 0
 		const pos = (e.pageX - barOffset) / bar.clientWidth
 		for (const i in game.value.turnPosition) {
 			if (pos >= game.value.turnPosition[i]) turn = i
@@ -681,7 +683,7 @@
 		progressBarPreviewMouse.value = 100 * (e.pageX - barOffset) / bar.clientWidth
 	}
 
-	function setLocalStorageAndRedraw(key: string, value: any, redraw = false) {
+	function setLocalStorageAndRedraw(key: string, value: unknown, redraw = false) {
 		localStorage.setItem('fight/' + key, '' + value)
 		if (redraw) game.value.redraw()
 	}

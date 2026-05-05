@@ -74,9 +74,13 @@ const emit = defineEmits<{
 	'update:modelValue': [value: boolean]
 }>()
 
-const menu = useTemplateRef<any>('menu')
+interface CompositionData {
+	leeks: Record<string, Record<string, number>>
+	[key: string]: unknown
+}
+const menu = useTemplateRef<{ updateLocation?: () => void }>('menu')
 const content_created = ref(false)
-const composition = ref<any>(null)
+const composition = ref<CompositionData | null>(null)
 const expand_leeks = ref(false)
 const sums = ref<{[key: string]: number}>({})
 const locked = ref(false)
@@ -96,10 +100,10 @@ function open(_v: boolean) {
 	if (content_created.value) { return }
 	content_created.value = true
 	if (props.id > 0 && !composition.value) {
-		LeekWars.get<any>('team/composition-rich-tooltip/' + props.id).then(c => {
+		LeekWars.get<CompositionData>('team/composition-rich-tooltip/' + props.id).then(c => {
 			composition.value = c
 			for (const ch of LeekWars.characteristics) {
-				sums.value[ch] = Object.values(c.leeks).reduce((sum: number, leek: any) => sum + leek[ch], 0)
+				sums.value[ch] = Object.values(c.leeks).reduce((sum: number, leek: Record<string, number>) => sum + leek[ch], 0)
 			}
 			if (expand_leeks.value) {
 				menu.value?.updateLocation?.()

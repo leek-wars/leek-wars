@@ -6,7 +6,7 @@
 defineOptions({ name: 'resource-preview' })
 
 defineProps<{
-	resource?: any
+	resource?: Record<string, unknown>
 }>()
 </script>
 

@@ -240,23 +240,59 @@
 	const markdownRef = useTemplateRef<HTMLElement>('markdown')
 	const diffContainer = useTemplateRef<HTMLElement>('diffContainer')
 
+	interface EncyclopediaPage {
+		id: number
+		title: string
+		language: string
+		content: string
+		parent?: number
+		reference?: number
+		official?: boolean
+		locker?: number | null
+		locker_name?: string
+		new?: boolean
+		translations: Record<string, string>
+		creator?: number
+		creator_name?: string
+		last_editor?: number
+		last_editor_name?: string
+		creation_time?: number
+		last_edition_time?: number
+		views?: number
+		contributions?: number
+		contributors?: { id: number; avatar_changed: number }[]
+	}
+	interface HistoryEntry {
+		content: string
+		author: number
+		author_name: string
+		color?: string
+		time: number
+		avatar_changed?: number
+		additions?: number
+		deletions?: number
+	}
+	interface ReferencedPage { id: number; title: string; language: string }
+	interface ReferencedBy { children: ReferencedPage[]; translations: ReferencedPage[]; linked_from: ReferencedPage[] }
+	interface PageAction { icon: string; click: () => void }
+
 	const english = ref('')
-	const page = ref<any>(null)
+	const page = ref<EncyclopediaPage | null>(null)
 	const edition = ref(false)
 	const editor = ref<Monaco.editor.IStandaloneCodeEditor | null>(null)
 	let scrolling = false
-	const pages = ref<any>({})
+	const pages = ref<Record<string, EncyclopediaPage>>({})
 	const modified = ref(false)
 	let initialVersionId = 0
 	const statsExpanded = ref(false)
 	const searchQuery = ref('')
 	const redirectedFrom = ref<string | null>(null)
 	let boundBeforeUnload: () => void
-	const actions = ref<any[]>([])
-	const history = ref<any[] | null>(null)
+	const actions = ref<PageAction[]>([])
+	const history = ref<HistoryEntry[] | null>(null)
 	const selectedHistoryIndex = ref<number | null>(null)
 	const diffEditor = ref<Monaco.editor.IStandaloneDiffEditor | null>(null)
-	const referencedBy = ref<{ children: any[], translations: any[], linked_from: any[] } | null>(null)
+	const referencedBy = ref<ReferencedBy | null>(null)
 	let destroyed = false
 
 	const language = computed(() => {
@@ -294,7 +330,7 @@
 		return list.reverse()
 	})
 	const function_args = computed(() => {
-		for (const fun of FUNCTIONS as any[]) {
+		for (const fun of FUNCTIONS) {
 			if (fun.name === code.value) {
 				let name = "("
 				let i = 0
@@ -369,7 +405,7 @@
 
 		if (code.value === 'Page au hasard') {
 			const ps = Object.values(LeekWars.encyclopedia[i18nLocale.value])
-			router.replace('/encyclopedia/' + i18nLocale.value + '/' + (ps[Math.random() * ps.length | 0] as any).title)
+			router.replace('/encyclopedia/' + i18nLocale.value + '/' + ps[Math.random() * ps.length | 0].title)
 			return
 		}
 
@@ -387,7 +423,7 @@
 		referencedBy.value = null
 		destroyDiffEditor()
 
-		LeekWars.get<any>('encyclopedia/get/' + language.value + '/' + code.value).then(p => {
+		LeekWars.get<EncyclopediaPage & { redirect?: string }>('encyclopedia/get/' + language.value + '/' + code.value).then(p => {
 			if (p.redirect) {
 				router.replace('/encyclopedia/' + language.value + '/' + p.redirect.replace(/ /g, '_') + '?from=' + encodeURIComponent(code.value))
 				return
@@ -403,12 +439,12 @@
 			LeekWars.setTitle(title.value)
 			emitter.emit('loaded')
 		})
-		.error((result: any) => {
-			let fun = null as any
+		.error((result: { translations?: Record<string, string> }) => {
+			let fun = null
 			let args = ''
 			let ret = ''
 			let description = ''
-			for (const funct of FUNCTIONS as any[]) {
+			for (const funct of FUNCTIONS) {
 				if (funct.name === code.value) {
 					fun = funct
 					description = t('doc.func_' + fun.name) as string
@@ -614,7 +650,7 @@ ${ret}
 
 	function loadHistory() {
 		if (!page.value || page.value.id === 0) return
-		LeekWars.get('encyclopedia/get-history/' + page.value.id).then((h: { content: string, author: number, author_name: string, time: number, additions?: number, deletions?: number }[]) => {
+		LeekWars.get<HistoryEntry[]>('encyclopedia/get-history/' + page.value.id).then((h) => {
 			for (let i = 0; i < h.length; i++) {
 				if (i < h.length - 1) {
 					const newLines = h[i].content.split('\n')
@@ -695,8 +731,8 @@ ${ret}
 		}
 	}
 
-	function comment(c: any) {
-		page.value.comments.push(c)
+	function comment(_c: unknown) {
+		// page.value.comments.push(c)
 	}
 
 	function search() {
@@ -710,7 +746,7 @@ ${ret}
 
 	function loadReferencedBy() {
 		if (!page.value || !page.value.id) return
-		LeekWars.get('encyclopedia/get-referenced-by/' + page.value.id).then((result: any) => {
+		LeekWars.get<ReferencedBy>('encyclopedia/get-referenced-by/' + page.value.id).then((result) => {
 			referencedBy.value = result
 		})
 	}
@@ -736,7 +772,7 @@ ${ret}
 		LeekWars.delete('encyclopedia/delete', { page_id: page.value.id }).then(() => {
 			LeekWars.toast('Page supprimée !')
 			router.push('/encyclopedia')
-		}).error((error: any) => {
+		}).error((error: { error: string; count?: number }) => {
 			if (error.error === 'has_children') {
 				LeekWars.toast('Impossible : ' + error.count + ' page(s) enfant(s)')
 			} else if (error.error === 'has_links') {

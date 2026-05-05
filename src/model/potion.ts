@@ -17,7 +17,7 @@ class PotionTemplate {
 	public name!: string
 	public level!: number
 	public consumable!: boolean
-	public effects!: any[]
+	public effects!: { type: number, params: unknown[], [key: string]: unknown }[]
 	public duration!: number
 }
 export { PotionEffect, Potion, PotionTemplate }

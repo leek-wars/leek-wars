@@ -9,14 +9,15 @@
 
 <script setup lang="ts">
 import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
+import type { Component } from '@/model/component'
 
 defineProps<{
-	component: any
+	component: Component
 }>()
 
 defineEmits<{
-	componentDragStart: [where: string, component: any, event: DragEvent]
-	componentDragEnd: [component: any]
+	componentDragStart: [where: string, component: Component, event: DragEvent]
+	componentDragEnd: [component: Component]
 	dragOver: []
 	componentsDrop: [where: string, event: DragEvent, qty: number]
 }>()

@@ -65,7 +65,7 @@
 
 	defineOptions({ name: "moderation-history", i18n: {}, mixins: [...mixins] })
 
-	const history = ref<any[]>([])
+	const history = ref<Record<string, unknown>[]>([])
 	const total = ref(0)
 	const loading = ref(true)
 	const headers = [
@@ -82,11 +82,11 @@
 		{name: "Historique", link: '/moderation/history'},
 	])
 
-	function updateOptions(options: any) {
+	function updateOptions(options: Record<string, unknown>) {
 		loading.value = true
 		const page = options.page - 1
 		const count = options.itemsPerPage
-		LeekWars.get('moderation/get-history/' + page + '/' + count).then((data: any) => {
+		LeekWars.get('moderation/get-history/' + page + '/' + count).then((data) => {
 			history.value = data.history
 			total.value = data.total
 			loading.value = false

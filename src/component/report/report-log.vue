@@ -6,17 +6,18 @@
 import { computed } from 'vue'
 import Leek from './action-leek.vue'
 import { fileSystem } from '@/model/filesystem'
+import type { FightLeek } from '@/model/fight'
 
 const props = defineProps<{
-	leeks: {[key: number]: any}
-	log: any
+	leeks: {[key: number]: FightLeek}
+	log: number[]
 	action: number
 	index: number
 	lines: boolean
 }>()
 
 defineEmits<{
-	goToAI: [ai: any, line: any, log: any]
+	goToAI: [ai: number, line: number, log: number[]]
 }>()
 
 const logAI = computed(() => fileSystem.ais[props.log[4]])

@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 	import { ActionComponents as ActionComponentsTyped } from '@/model/action-components'
-	import { Fight, Report } from '@/model/fight'
+	import { Fight, Report, ReportLeek } from '@/model/fight'
 	import ActionEndFight from '../action/action-end-fight.vue'
 	import ActionLog from './report-log.vue'
 	import router from '@/router'
@@ -20,13 +20,13 @@
 
 	defineOptions({ name: "actions" })
 
-	const ActionComponents: Record<number, any> = ActionComponentsTyped
+	const ActionComponents = ActionComponentsTyped
 
 	const props = defineProps<{
 		fight: Fight
 		report: Report
-		actions: any[]
-		leeks: {[key: number]: any}
+		actions: unknown[]
+		leeks: {[key: number]: ReportLeek}
 		displayLogs: boolean
 		displayAlliesLogs: boolean
 		hasErrWarn: boolean

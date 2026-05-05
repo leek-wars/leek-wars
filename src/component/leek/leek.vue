@@ -768,6 +768,7 @@
 	import { mixins , useNamespacedT } from '@/model/i18n'
 	import { ItemType } from '@/model/item'
 	import { Leek, Register } from '@/model/leek'
+	import { Component } from '@/model/component'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { Potion, PotionEffect } from '@/model/potion'
@@ -809,8 +810,10 @@
 	const t = useNamespacedT('leek')
 	const route = useRoute()
 	const router = useRouter()
-	const componentTooltipsRef = useTemplateRef<any[]>('componentTooltips')
-	const leekImageRef = useTemplateRef<any>('leekImage')
+	interface TooltipInstance { value: boolean; disabled: boolean }
+	interface LeekTournament { registered: boolean; current?: number }
+	const componentTooltipsRef = useTemplateRef<TooltipInstance[]>('componentTooltips')
+	const leekImageRef = useTemplateRef<InstanceType<typeof LeekImage>>('leekImage')
 	const pickerRef = useTemplateRef<InstanceType<typeof TitlePicker>>('picker')
 
 	const leek = ref<Leek | null>(null)
@@ -824,7 +827,7 @@
 	const renameName = ref('')
 	const renameSuccess = ref(false)
 	const renameFailed = ref(false)
-	const renameError = ref<any>(null)
+	const renameError = ref<{error: string, error_params?: unknown[]} | null>(null)
 	const potionDialog = ref(false)
 	const hatDialog = ref(false)
 	const chartData = ref<ChartData<'line'> | null>(null)
@@ -832,13 +835,13 @@
 	const showReport = ref(false)
 	const reasons = [Warning.INCORRECT_LEEK_NAME, Warning.INCORRECT_AI_NAME]
 	const levelPopup = ref(false)
-	const levelPopupData = ref<any>(null)
+	const levelPopupData = ref<unknown>(null)
 	const aiDialog = ref(false)
 	const draggedAI = ref<AI | null>(null)
 	const chipsDialog = ref(false)
 	const draggedChip = ref<Chip | null>(null)
 	const draggedChipLocation = ref<string | null>(null)
-	const draggedComponent = ref<any>(null)
+	const draggedComponent = ref<Component | null>(null)
 	const draggedComponentLocation = ref<string | null>(null)
 	const showCapital = ref(false)
 	const showLoadout = ref(false)
@@ -847,8 +850,8 @@
 	const titleDialog = ref(false)
 	const skinPotionDialog = ref(false)
 	const tournamentRangeLoading = ref(false)
-	const tournamentRange = ref<any>(null)
-	let request: any = null
+	const tournamentRange = ref<{min: number, max: number} | null>(null)
+	let request: ReturnType<typeof LeekWars.get> | null = null
 	const MAX_COMPONENTS = 8
 	type DragArea = 'farmer' | 'leek'
 
@@ -916,7 +919,7 @@
 	const leekTitleEnabled = computed(() => !!(store.state.farmer && LeekWars.selectWhere(store.state.farmer.pomps, 'template', 125) !== null))
 	const showAiLinesEnabled = computed(() => !!(store.state.farmer && LeekWars.selectWhere(store.state.farmer.pomps, 'template', 124) !== null))
 	const metalEnabled = computed(() => !!(store.state.farmer && LeekWars.selectWhere(store.state.farmer.pomps, 'template', 242) !== null))
-	const skinPotions = computed(() => store.state.farmer!.potions.filter(p => LeekWars.potions[p.template].effects.some((e: any) => e.type === PotionEffect.CHANGE_SKIN)))
+	const skinPotions = computed(() => store.state.farmer!.potions.filter(p => LeekWars.potions[p.template].effects.some((e) => e.type === PotionEffect.CHANGE_SKIN)))
 	const angryEnabled = computed(() => !!(store.state.farmer && LeekWars.selectWhere(store.state.farmer.pomps, 'template', 240) !== null))
 	const happyEnabled = computed(() => !!(store.state.farmer && LeekWars.selectWhere(store.state.farmer.pomps, 'template', 241) !== null))
 
@@ -936,14 +939,16 @@
 
 	const leek_components = computed(() => leek.value ? leek.value.components.reduce((s, c) => s + (c ? 1 : 0), 0) : 0)
 
-	const onUpdateLeekTalent = (message: any) => {
-		if (leek.value && message.leek === leek.value.id) {
-			leek.value.talent += message.talent
+	const onUpdateLeekTalent = (message: unknown) => {
+		const msg = message as { leek: number, talent: number }
+		if (leek.value && msg.leek === leek.value.id) {
+			leek.value.talent += msg.talent
 		}
 	}
-	const onUpdateLeekXp = (message: any) => {
-		if (leek.value && message.leek === leek.value.id) {
-			leek.value.xp += message.xp
+	const onUpdateLeekXp = (message: unknown) => {
+		const msg = message as { leek: number, xp: number }
+		if (leek.value && msg.leek === leek.value.id) {
+			leek.value.xp += msg.xp
 		}
 	}
 
@@ -1033,9 +1038,9 @@
 		if (leek.value) {
 			potionDialog.value = false
 			skinPotionDialog.value = false
-			const isClover = template.effects.some((e: any) => e.type >= PotionEffect.CLOVER_PASSED && e.type <= PotionEffect.CLOVER_SECOND)
+			const isClover = template.effects.some((e) => e.type >= PotionEffect.CLOVER_PASSED && e.type <= PotionEffect.CLOVER_SECOND)
 			if (isClover) {
-				LeekWars.post('potion/use', {item_id: p.id}).then((data: any) => {
+				LeekWars.post('potion/use', {item_id: p.id}).then((data) => {
 					if (template.consumable) {
 						store.commit('remove-inventory', {type: ItemType.POTION, item_template: p.template})
 					}
@@ -1066,11 +1071,13 @@
 
 	function registerTournament() {
 		if (leek.value) {
-			if (leek.value.tournament.registered) {
-				leek.value.tournament.registered = false
+			const t = leek.value.tournament as LeekTournament | null
+			if (!t) return
+			if (t.registered) {
+				t.registered = false
 				LeekWars.post('leek/unregister-tournament', {leek_id: leek.value.id})
 			} else {
-				leek.value.tournament.registered = true
+				t.registered = true
 				LeekWars.post('leek/register-tournament', {leek_id: leek.value.id})
 			}
 		}
@@ -1119,6 +1126,7 @@
 				borderWidth: 2,
 				fill: { target: 'origin', above: '#5fad1b30' },
 			}]
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} as any
 		chartOptions.value = {
 			aspectRatio: 2.5,
@@ -1250,7 +1258,7 @@
 		}
 		LeekWars.post('leek/add-weapon', {leek_id: leek.value.id, weapon_id: w.id}).then(data => {
 			if (leek.value) {
-				leek.value.weapons.push({id: data.id, template: w.template, quantity: 1} as any)
+				leek.value.weapons.push({id: data.id, template: w.template, quantity: 1} as Weapon)
 				store.commit('remove-weapon', w)
 			}
 		}).error(err => LeekWars.toast(err))
@@ -1297,7 +1305,7 @@
 		}
 		LeekWars.post('leek/add-chip', {leek_id: leek.value.id, chip_id: c.id}).then(data => {
 			if (leek.value) {
-				leek.value.chips.push({id: data.id, template: c.template, quantity: 1} as any)
+				leek.value.chips.push({id: data.id, template: c.template, quantity: 1} as Chip)
 				store.commit('remove-chip', c)
 			}
 		}).error(err => LeekWars.toast(err))
@@ -1322,7 +1330,7 @@
 		return false
 	}
 
-	function componentDragStart(location: DragArea, c: any, _e: DragEvent) {
+	function componentDragStart(location: DragArea, c: Component, _e: DragEvent) {
 		if (leek.value && LeekWars.items[c.template].level > leek.value.level) return
 		draggedComponent.value = c
 		draggedComponentLocation.value = location
@@ -1335,12 +1343,12 @@
 		}
 	}
 
-	function componentDragEnd(_c: any) {
+	function componentDragEnd(_c: Component) {
 		draggedComponent.value = null
 		enableComponentsTooltips()
 	}
 
-	function addComponent(c: any, index: number = -1) {
+	function addComponent(c: Component, index: number = -1) {
 		if (!leek.value) return
 		const template = LeekWars.items[c.template]
 		if (template.level > leek.value.level) {
@@ -1360,14 +1368,14 @@
 			if (leek.value) {
 				const old = leek.value.components[index]
 				if (old) store.commit('add-component', old)
-				leek.value.components[index] = {id: data.id, template: c.template, quantity: 1} as any
+				leek.value.components[index] = {id: data.id, template: c.template, quantity: 1} as Component
 				store.commit('remove-inventory', { ...c, item_template: c.template, quantity: 1, type: ItemType.COMPONENT })
 				refreshTotalCharacteristics()
 			}
 		}).error(err => LeekWars.toast(err))
 	}
 
-	function moveComponent(c: any, index: number | undefined) {
+	function moveComponent(c: Component, index: number | undefined) {
 		if (index === undefined) return
 		if (!leek.value) return
 		const old = leek.value.components[index]
@@ -1378,10 +1386,10 @@
 		refreshTotalCharacteristics()
 	}
 
-	function removeComponent(c: any) {
+	function removeComponent(c: Component) {
 		if (!leek.value) return
 		const index = leek.value.components.indexOf(c)
-		leek.value.components[index] = null as any
+		leek.value.components[index] = null
 		store.commit('add-component', c)
 		LeekWars.delete('leek/remove-component', {component_id: c.id}).error(err => LeekWars.toast(err))
 		refreshTotalCharacteristics()
@@ -1411,16 +1419,15 @@
 
 	function refreshTotalCharacteristics() {
 		if (!leek.value) return
+		const l = leek.value as Leek & Record<string, number>
 		for (const charac of LeekWars.characteristics) {
-			(leek.value as any)['total_' + charac] = (leek.value as any)[charac]
+			l['total_' + charac] = l[charac]
 		}
-		if (leek.value) {
-			for (let c = 0; c < 8; ++c) {
-				const component = leek.value.components[c]
-				if (component && c < max_components.value) {
-					for (const charac of LeekWars.components[LeekWars.items[component.template].params].stats) {
-						(leek.value as any)['total_' + charac[0]] += charac[1]
-					}
+		for (let c = 0; c < 8; ++c) {
+			const component = leek.value.components[c]
+			if (component && c < max_components.value) {
+				for (const charac of LeekWars.components[LeekWars.items[component.template].params].stats) {
+					l['total_' + charac[0]] += charac[1]
 				}
 			}
 		}
@@ -1482,9 +1489,11 @@
 				weapons: leek.value.weapons.map(w => w.template),
 				chips: leek.value.chips.map(c => c.template),
 				skin: leek.value.skin
-			} as any)
+			} as Record<string, unknown>)
+			const nl = newLeek as Leek & Record<string, number>
+			const lv = leek.value as Leek & Record<string, number>
 			for (const charac of LeekWars.characteristics) {
-				(newLeek as any)[charac] = (leek.value as any)['total_' + charac]
+				nl[charac] = lv['total_' + charac]
 			}
 			LeekWars.post('test-leek/update', {id: newLeek.id, data: JSON.stringify(newLeek)})
 				.then(() => router.push('/editor#leek-' + newLeek.id))

@@ -109,6 +109,7 @@
 
 <script lang="ts" setup>
 	import { Chat as ChatModel, ChatType } from '@/model/chat'
+	import type { Farmer } from '@/model/farmer'
 	import { mixins , useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
@@ -129,16 +130,16 @@
 	const route = useRoute()
 	const router = useRouter()
 
-	const newFarmer_ = ref<any>(null)
+	const newFarmer_ = ref<Farmer | null>(null)
 	const currentID = ref<number | null>(null)
 	const quitDialog = ref(false)
 	const languageDialog = ref(false)
 	const menuTarget = ref<HTMLElement | null>(null)
-	const actions = ref<any[]>([])
+	const actions = ref<{ icon: string, click: () => void }[]>([])
 	const loadingConversations = ref(false)
 
 	const chats = computed(() => {
-		const chats = [] as any[]
+		const chats: unknown[] = []
 		if (store.state.farmer && store.state.farmer.public_chat_enabled) {
 			chats.push({ name: 'Français', flag: 'fr', chats: Object.values(LeekWars.publicChats).filter(c => c.language === 'fr') })
 			chats.push({ name: 'English', flag: 'gb', chats: Object.values(LeekWars.publicChats).filter(c => c.language === 'en') })
@@ -187,7 +188,7 @@
 		return null
 	})
 
-	const newFarmer = computed<any>(() => {
+	const newFarmer = computed<Farmer | null>(() => {
 		if (!newFarmer_.value && 'name' in route.params) {
 			newFarmer_.value = {
 				id: parseInt(route.params.farmer_id as string, 10),

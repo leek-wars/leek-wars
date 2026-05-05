@@ -1,5 +1,8 @@
 import { AI } from '@/model/ai'
 import { Chip } from '@/model/chip'
+import { Farmer } from '@/model/farmer'
+import { Fight } from '@/model/fight'
+import { Tournament } from '@/model/tournament'
 import { Weapon } from '@/model/weapon'
 import { Hat } from './hat'
 import { Component } from './component'
@@ -34,7 +37,7 @@ class Leek {
 	public id!: number
 	public name!: string
 	public level!: number
-	public farmer!: any
+	public farmer!: Farmer
 	public chips!: Chip[]
 	public weapons!: Weapon[]
 	public opponents!: Leek[]
@@ -43,7 +46,7 @@ class Leek {
 	public xp!: number
 	public skin!: number
 	public hat!: Hat | null
-	public tournament!: any
+	public tournament!: Tournament | null
 	public in_garden!: boolean
 	public talent_history!: number[]
 	public dragging!: boolean
@@ -80,20 +83,20 @@ class Leek {
 	public metal!: boolean
 	public face!: number
 	public xp_blocked!: boolean
-	public fights!: any[]
-	public tournaments!: any[]
+	public fights!: Fight[]
+	public tournaments!: Tournament[]
 	public victories!: number
 	public ranking!: number
-	public components!: Component[]
+	public components!: (Component | null)[]
 	public total_ram!: number
 	public itemUsageStats: { [itemId: number]: { uses: number, fights: number } } | null = null
 	public itemUsageTotalFights: number = 0
 	public itemUsageHistograms: { [itemId: number]: number[] } | null = null
 	public country: string | null = null
 	public team_fights!: number
-	[key: string]: any
+	[key: string]: unknown
 
-	constructor(data: any) {
+	constructor(data: Record<string, unknown>) {
 		Object.assign(this, data)
 	}
 	get baseLife() {
@@ -109,7 +112,9 @@ class Leek {
 
 export const MAX_COMPONENTS = 8
 
-export const COSTS: {[key: string]: any} = {
+export interface CostEntry { step: number; capital: number; sup: number }
+
+export const COSTS: { [key: string]: CostEntry[] } = {
 	life : [
 		{step : 0, capital : 1, sup : 4},
 		{step : 1000, capital : 1, sup : 3},

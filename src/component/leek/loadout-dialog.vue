@@ -298,6 +298,11 @@
 	import Item from '@/component/item.vue'
 	import LoadoutStatsPicker from '@/component/leek/loadout-stats-picker.vue'
 	import Sortable from 'sortablejs'
+	import { Farmer } from '@/model/farmer'
+	import { Potion } from '@/model/potion'
+	import { Weapon } from '@/model/weapon'
+	import { Chip } from '@/model/chip'
+	import { Component } from '@/model/component'
 
 	const CHARACTERISTICS = ['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'tp', 'mp', 'cores', 'ram']
 
@@ -331,6 +336,12 @@
 		stats: LoadoutStats
 	}
 
+	interface SkippedItem {
+		template: number
+		type: string
+		reason: string
+	}
+
 
 	export default defineComponent({
 		name: 'LoadoutDialog',
@@ -355,7 +366,7 @@
 				sortable: null as Sortable | null,
 				forgottenSortable: null as Sortable | null,
 				skippedDialogOpen: false,
-				skippedItems: [] as any[],
+				skippedItems: [] as SkippedItem[],
 				ownedWeaponTemplates: [] as number[],
 				originalEditingSnapshot: '',
 				confirmCloseDialogOpen: false,
@@ -395,9 +406,9 @@
 				return ramFor(this.leek.level, this.editing.stats.ram || 0, this.editing.components)
 			},
 			restatPotionCount(): number {
-				const farmer = store.state.farmer as any
+				const farmer = store.state.farmer as Farmer | null
 				if (!farmer || !farmer.potions) return 0
-				const p = farmer.potions.find((p: any) => p.template === 49)
+				const p = farmer.potions.find((p: Potion) => p.template === 49)
 				return p ? p.quantity : 0
 			},
 			allWeapons() {
@@ -407,12 +418,12 @@
 				// l'union finale couvre tout ce que l'éleveur possède — y compris les
 				// oubliées actuellement équipées sur d'autres poireaux.
 				const farmer = store.state.farmer
-				const inventoryByTpl: { [k: number]: any } = {}
+				const inventoryByTpl: { [k: number]: Weapon } = {}
 				if (farmer) {
 					for (const w of farmer.weapons) inventoryByTpl[w.template] = w
 				}
 				const seen = new Set<number>()
-				const result: any[] = []
+				const result: Weapon[] = []
 				for (const tpl of this.ownedWeaponTemplates) {
 					if (seen.has(tpl)) continue
 					seen.add(tpl)
@@ -432,17 +443,17 @@
 			allChips() { return store.state.farmer?.chips ?? [] },
 			allComponents() { return store.state.farmer?.components ?? [] },
 			hasAnyForgotten(): boolean {
-				return this.allWeapons.some((w: any) => this.isForgottenTemplate(w.template))
+				return this.allWeapons.some((w: Weapon) => this.isForgottenTemplate(w.template))
 			},
 			loadoutStatus(): { [id: number]: { itemsDiffer: boolean, statsDiffer: boolean, fullyApplied: boolean } } {
 				const result: { [id: number]: { itemsDiffer: boolean, statsDiffer: boolean, fullyApplied: boolean } } = {}
 				if (!this.leek) return result
-				const leek = this.leek as any
-				const leekWeapons = (leek.weapons || []).map((w: any) => w.template).sort((a: number, b: number) => a - b)
-				const leekChips = (leek.chips || []).map((c: any) => c.template).sort((a: number, b: number) => a - b)
+				const leek = this.leek
+				const leekWeapons = (leek.weapons || []).map((w: Weapon) => w.template).sort((a: number, b: number) => a - b)
+				const leekChips = (leek.chips || []).map((c: Chip) => c.template).sort((a: number, b: number) => a - b)
 				const leekComps: { [idx: number]: number } = {}
-				const lComps = leek.components || []
-				for (let i = 0; i < lComps.length; i++) if (lComps[i]) leekComps[i] = lComps[i].template
+				const lComps: (Component | null)[] = leek.components || []
+				for (let i = 0; i < lComps.length; i++) if (lComps[i]) leekComps[i] = lComps[i]!.template
 				const leekCompKeys = Object.keys(leekComps)
 				for (const loadout of this.loadouts) {
 					// Pour les armes : on sépare oubliée (sticky : OK si l'oubliée actuelle ∈ alternatives,
@@ -548,7 +559,7 @@
 		},
 		methods: {
 			isCharac(icon: string) { return CHARACTERISTICS.includes(icon) },
-			skippedItemTKey(s: any): string {
+			skippedItemTKey(s: SkippedItem): string {
 				if (!s) return ''
 				const item = LeekWars.items[s.template]
 				if (!item) return ''
@@ -566,7 +577,7 @@
 			},
 			loadAll() {
 				this.loading = true
-				LeekWars.get('loadout/get-all').then((data: any) => {
+				LeekWars.get('loadout/get-all').then((data) => {
 					store.commit('set-loadouts', data.loadouts)
 					this.ownedWeaponTemplates = Array.isArray(data.owned_weapons) ? data.owned_weapons : []
 					this.loading = false
@@ -587,7 +598,7 @@
 						current.splice(evt.newIndex, 0, item)
 						store.commit('set-loadouts', current)
 						LeekWars.post('loadout/reorder', { order: JSON.stringify(current.map(l => l.id)) })
-							.error((e: any) => LeekWars.toast(e))
+							.error((e) => LeekWars.toast(e))
 					},
 				})
 			},
@@ -660,18 +671,18 @@
 			},
 			importCurrent() {
 				if (!this.leek || !this.editing) return
-				const allWeapons = this.leek.weapons.map((w: any) => w.template)
+				const allWeapons = this.leek.weapons.map((w: Weapon) => w.template)
 				this.editing.weapons = allWeapons.filter((tpl: number) => !this.isForgottenTemplate(tpl))
 				this.editing.forgottenWeapons = allWeapons.filter((tpl: number) => this.isForgottenTemplate(tpl))
-				this.editing.chips = this.leek.chips.map((c: any) => c.template)
+				this.editing.chips = this.leek.chips.map((c: Chip) => c.template)
 				this.editing.components = this.leek.components
-					.map((c: any, i: number) => c ? { index: i, template: c.template } : null)
-					.filter((c: any): c is LoadoutComponent => c !== null)
+					.map((c: Component | null, i: number) => c ? { index: i, template: c.template } : null)
+					.filter((c): c is LoadoutComponent => c !== null)
 				// Import des stats depuis l'allocation actuelle du leek
 				const stats: LoadoutStats = {}
-				const leek = this.leek as any
+				const leek = this.leek
 				for (const stat of CHARACTERISTICS) {
-					const bonus = leek[stat] - baseStatFor(leek.level, stat)
+					const bonus = (leek[stat] as number) - baseStatFor(leek.level, stat)
 					const cap = statBonusToCapital(stat, bonus)
 					if (cap > 0) stats[stat] = cap
 				}
@@ -762,19 +773,19 @@
 				}
 				this.saving = true
 				if (this.editing.id) {
-					LeekWars.put('loadout/update', { set_id: this.editing.id, ...payload }).then((data: any) => {
+					LeekWars.put('loadout/update', { set_id: this.editing.id, ...payload }).then((data) => {
 						store.commit('update-loadout', data.set)
 						this.editing = null
 						this.originalEditingSnapshot = ''
 						this.saving = false
-					}).error((e: any) => { LeekWars.toast(e); this.saving = false })
+					}).error((e) => { LeekWars.toast(e); this.saving = false })
 				} else {
-					LeekWars.post('loadout/create', payload).then((data: any) => {
+					LeekWars.post('loadout/create', payload).then((data) => {
 						store.commit('add-loadout', data.set)
 						this.editing = null
 						this.originalEditingSnapshot = ''
 						this.saving = false
-					}).error((e: any) => { LeekWars.toast(e); this.saving = false })
+					}).error((e) => { LeekWars.toast(e); this.saving = false })
 				}
 			},
 			apply(loadout: Loadout) {
@@ -790,7 +801,7 @@
 			applyItemsOnly(loadout: Loadout) {
 				if (!this.leek) return
 				this.applyingItemsOnly = loadout.id
-				LeekWars.post('loadout/apply', { set_id: loadout.id, leek_id: this.leek.id, use_restat: false }).then((data: any) => {
+				LeekWars.post('loadout/apply', { set_id: loadout.id, leek_id: this.leek.id, use_restat: false }).then((data) => {
 					this.leek!.weapons = data.leek.weapons
 					this.leek!.chips = data.leek.chips
 					this.leek!.components = data.leek.components
@@ -802,7 +813,7 @@
 						LeekWars.toast(this.$t('main.loadout_apply_success', [this.leek!.name]))
 					}
 					this.applyingItemsOnly = null
-				}).error((e: any) => {
+				}).error((e) => {
 					LeekWars.toast(e)
 					this.applyingItemsOnly = null
 				})
@@ -827,7 +838,7 @@
 			doApply(loadout: Loadout, useRestat: boolean) {
 				if (!this.leek) return
 				this.applying = loadout.id
-				LeekWars.post('loadout/apply', { set_id: loadout.id, leek_id: this.leek.id, use_restat: useRestat }).then((data: any) => {
+				LeekWars.post('loadout/apply', { set_id: loadout.id, leek_id: this.leek.id, use_restat: useRestat }).then((data) => {
 					this.leek!.weapons = data.leek.weapons
 					this.leek!.chips = data.leek.chips
 					this.leek!.components = data.leek.components
@@ -844,7 +855,7 @@
 						LeekWars.toast(this.$t('main.loadout_apply_success', [this.leek!.name]))
 					}
 					this.applying = null
-				}).error((e: any) => {
+				}).error((e) => {
 					if (e && e.error === 'no_restat_potion') LeekWars.toast(this.$t('main.loadout_no_restat_potion'))
 					else if (e && e.error === 'not_enough_capital') LeekWars.toast(this.$t('main.loadout_not_enough_capital'))
 					else LeekWars.toast(e)
@@ -853,9 +864,9 @@
 			},
 			statsDifferFromLeek(loadout: Loadout): boolean {
 				if (!this.leek) return false
-				const leek = this.leek as any
+				const leek = this.leek
 				const baseBonuses: { [k: string]: number } = {}
-				for (const s of CHARACTERISTICS) baseBonuses[s] = leek[s] - baseStatFor(leek.level, s)
+				for (const s of CHARACTERISTICS) baseBonuses[s] = (leek[s] as number) - baseStatFor(leek.level, s)
 				for (const stat of CHARACTERISTICS) {
 					const target = (loadout.stats && loadout.stats[stat]) || 0
 					const current = statBonusToCapital(stat, baseBonuses[stat] || 0)
@@ -865,13 +876,13 @@
 			},
 			applyStatsLocally(loadout: Loadout) {
 				if (!this.leek) return
-				const leek = this.leek as any
+				const leek = this.leek
 				let usedCapital = 0
 				for (const stat of CHARACTERISTICS) {
-					leek[stat] = baseStatFor(leek.level, stat)
+					(leek as Record<string, unknown>)[stat] = baseStatFor(leek.level, stat)
 					const cap = (loadout.stats && loadout.stats[stat]) || 0
 					if (cap > 0) {
-						leek[stat] += capitalToStatBonus(stat, cap)
+						(leek as Record<string, unknown>)[stat] = (leek[stat] as number) + capitalToStatBonus(stat, cap)
 						usedCapital += cap
 					}
 				}
@@ -880,9 +891,9 @@
 				store.commit('update-capital', { leek: this.leek.id, capital: newCapital })
 			},
 			decrementRestatPotion() {
-				const farmer = store.state.farmer as any
+				const farmer = store.state.farmer as Farmer | null
 				if (!farmer || !farmer.potions) return
-				const p = farmer.potions.find((p: any) => p.template === 49)
+				const p = farmer.potions.find((p: Potion) => p.template === 49)
 				if (p) {
 					p.quantity = Math.max(0, p.quantity - 1)
 					if (p.quantity === 0) {
@@ -894,7 +905,7 @@
 			remove(loadout: Loadout) {
 				LeekWars.delete('loadout/delete', { set_id: loadout.id }).then(() => {
 					store.commit('remove-loadout', loadout.id)
-				}).error((e: any) => { LeekWars.toast(e) })
+				}).error((e) => { LeekWars.toast(e) })
 			},
 		},
 	})

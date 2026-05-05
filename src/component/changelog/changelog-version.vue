@@ -26,14 +26,19 @@ import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { mixins } from '@/model/i18n'
 
+interface ChangelogVersion {
+	version: string
+	[key: string]: unknown
+}
+
 defineOptions({ name: 'changelog-version', i18n: {}, mixins: [...mixins] })
 
 const props = defineProps<{
-	version: any
+	version: ChangelogVersion | null
 }>()
 
 const { t, locale } = useI18n()
-const changelog = ref<any>(null)
+const changelog = ref<Record<string, unknown> | null>(null)
 
 function update() {
 	import(/* webpackChunkName: "changelog-[request]" */ `@/component/changelog/changelog.${locale.value}.yaml`).then((module) => {
@@ -63,10 +68,10 @@ const sections = computed(() => {
 	}
 	const regex = /#img_(\w+)/g
 	const codeRegex = /`([^`]+)`/g
-	return collected.map((cat: any) => cat
-		.map((c: any) => ({
+	return collected.map((cat: string[]) => cat
+		.map((c: string) => ({
 			text: c.replace('# ', '').replace('#ai', '<span class="ai" title="' + t('changelog.need_ai_change') + '">AI</span>').replace(regex, '').replace(codeRegex, '<code>$1</code>'),
-			images: Array.from(c.matchAll(regex), (m: any) => m[1])
+			images: Array.from(c.matchAll(regex), (m: RegExpMatchArray) => m[1])
 		}))
 	)
 })

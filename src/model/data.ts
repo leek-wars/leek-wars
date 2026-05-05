@@ -22,7 +22,8 @@ export { CHIP_TEMPLATES }
 const SUMMON_TEMPLATES: {[key: string]: SummonTemplate} = {}
 export { SUMMON_TEMPLATES }
 
-const TROPHY_CATEGORIES: any[] = []
+interface TrophyCategory { id: number; [key: string]: unknown }
+const TROPHY_CATEGORIES: TrophyCategory[] = []
 export { TROPHY_CATEGORIES }
 
 const COMPLEXITIES: {[key: string]: string} = {}

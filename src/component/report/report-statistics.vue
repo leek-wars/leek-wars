@@ -43,28 +43,30 @@
 	import { TEAM_COLORS } from '@/model/team'
 	import ReportStatisticsEntity from './report-statistics-entity.vue'
 	import { FightStatistics } from './statistics'
+	import { Fight } from '@/model/fight'
 	import { computed } from 'vue'
 
 	defineOptions({ name: 'report-statistics', i18n: {}, mixins: [...mixins] })
 
 	const props = defineProps<{
-		fight: any
+		fight: Fight
 		statistics: FightStatistics
 	}>()
 
 	const stats = ['dmg_out', 'dmg_in', 'heal_out', 'heal_in', 'kills', 'ops_format', 'ops_per_turn_format', 'usedPT', 'usedPTperTurn', 'usedPM', 'roundsPlayed', 'actionsWeapon', 'actionsChip', 'invocation', 'resurrection', 'critical', 'crashes']
 
 	const best = computed(() => {
-		const result: any = {}
+		const result: Record<string, number[]> = {}
 		for (const stat of stats) {
 			let best = 0
 			let bestEntities:number[] = []
 			const real_stat = stat === 'ops_format' ? 'operations' : (stat === 'ops_per_turn_format' ? 'operations_per_turn' : stat)
 			for (const e in props.statistics.entities) {
-				if ((props.statistics.entities[e] as any)[real_stat] > best) {
-					best = (props.statistics.entities[e] as any)[real_stat]
+				const entity = props.statistics.entities[e] as Record<string, number>
+				if (entity[real_stat] > best) {
+					best = entity[real_stat]
 					bestEntities = [props.statistics.entities[e].leek.id]
-				} else if ((props.statistics.entities[e] as any)[real_stat] === best && best !== 0) {
+				} else if (entity[real_stat] === best && best !== 0) {
 					bestEntities.push(props.statistics.entities[e].leek.id)
 				}
 			}

@@ -91,11 +91,11 @@ function toggleSocial() {
 function resizerMousedown(e: MouseEvent) {
 	const startWidth = panelWidth.value
 	const startX = e.clientX
-	const mousemove: any = (ev: MouseEvent) => {
+	const mousemove = (ev: MouseEvent) => {
 		panelWidth.value = Math.max(400, Math.min(800, startWidth + startX - ev.clientX))
 		localStorage.setItem('main/social-width', '' + panelWidth.value)
 	}
-	const mouseup: any = (_ev: MouseEvent) => {
+	const mouseup = (_ev: MouseEvent) => {
 		document.documentElement!.removeEventListener('mousemove', mousemove)
 		document.documentElement!.removeEventListener('mouseup', mouseup)
 	}

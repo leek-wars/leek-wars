@@ -68,10 +68,10 @@ const emit = defineEmits<{
 	'update:modelValue': [value: boolean]
 }>()
 
-const bonuses = reactive<{[key: string]: any}>({})
-const base = reactive<{[key: string]: any}>({})
-const added = reactive<{[key: string]: any}>({})
-const costs = reactive<{[key: string]: any}>({})
+const bonuses = reactive<{[key: string]: number}>({})
+const base = reactive<{[key: string]: number}>({})
+const added = reactive<{[key: string]: number}>({})
+const costs = reactive<{[key: string]: {cost: number, bonus: number}}>({})
 const usedCapital = ref(0)
 const validating = ref(false)
 
@@ -113,29 +113,29 @@ function reset() {
 		tp: 10,
 		mp: 3
 	}
-	for (const k in newBase) (base as any)[k] = (newBase as any)[k]
+	for (const k in newBase) base[k] = (newBase as Record<string, number>)[k]
 	if (props.restat) {
-		const newAdded = {
+		const newAdded: Record<string, number> = {
 			life: 0, strength: 0, wisdom: 0, agility: 0, resistance: 0,
 			frequency: 0, science: 0, magic: 0, cores: 0, ram: 0, tp: 0, mp: 0
 		}
-		for (const k in newAdded) (added as any)[k] = (newAdded as any)[k]
+		for (const k in newAdded) added[k] = newAdded[k]
 		for (const charac in added) {
-			let characLeft = (props.leek as any)[charac] - base[charac]
+			let characLeft = (props.leek[charac] as number) - base[charac]
 			let characAdded = 0
 			let step = 0
 			while (characAdded < characLeft) {
-				if (step < (COSTS as any)[charac].length - 1 && characAdded >= (COSTS as any)[charac][step + 1].step) {
+				if (step < COSTS[charac].length - 1 && characAdded >= COSTS[charac][step + 1].step) {
 					step++
 				}
-				const cost = (COSTS as any)[charac][step]
+				const cost = COSTS[charac][step]
 				characAdded += cost.sup
 				usedCapital.value += cost.capital
 			}
 			bonuses[charac] = characLeft
 		}
 	} else {
-		const newAdded = {
+		const newAdded: Record<string, number> = {
 			life: props.leek.life - base.life,
 			strength: props.leek.strength,
 			wisdom: props.leek.wisdom,
@@ -149,12 +149,12 @@ function reset() {
 			tp: props.leek.tp - base.tp,
 			mp: props.leek.mp - base.mp
 		}
-		for (const k in newAdded) (added as any)[k] = (newAdded as any)[k]
-		const newBonuses = {
+		for (const k in newAdded) added[k] = newAdded[k]
+		const newBonuses: Record<string, number> = {
 			life: 0, strength: 0, wisdom: 0, agility: 0, resistance: 0,
 			frequency: 0, science: 0, magic: 0, cores: 0, ram: 0, tp: 0, mp: 0
 		}
-		for (const k in newBonuses) (bonuses as any)[k] = (newBonuses as any)[k]
+		for (const k in newBonuses) bonuses[k] = newBonuses[k]
 	}
 	update()
 }
@@ -166,12 +166,12 @@ function buttonCost(capital: number, charac: string) {
 	while (q > 0) {
 		const total = added[charac] + tmpBonus
 		let step = 0
-		for (; step < (COSTS as any)[charac].length; ++step) {
-			if ((COSTS as any)[charac][step].step > total) { break }
+		for (; step < COSTS[charac].length; ++step) {
+			if (COSTS[charac][step].step > total) { break }
 		}
 		if (step > 0) { step-- }
-		const cost = (COSTS as any)[charac][step].capital
-		const bonus = (COSTS as any)[charac][step].sup
+		const cost = COSTS[charac][step].capital
+		const bonus = COSTS[charac][step].sup
 		q -= bonus
 		tmpBonus += bonus
 		costs[charac + capital].cost += cost
@@ -202,11 +202,11 @@ function clear(charac: string) {
 	let current = 0
 	let capitalUsed = 0
 	while (current < invested) {
-		let step = (COSTS as any)[charac].length - 1
+		let step = COSTS[charac].length - 1
 		for (; step >= 0; --step) {
-			if ((COSTS as any)[charac][step].step <= charAdded + current) { break }
+			if (COSTS[charac][step].step <= charAdded + current) { break }
 		}
-		const cost = (COSTS as any)[charac][step]
+		const cost = COSTS[charac][step]
 		capitalUsed += cost.capital
 		current += cost.sup
 	}
@@ -220,20 +220,20 @@ function validate() {
 	validating.value = true
 	if (props.restat) {
 		for (const stat in bonuses) {
-			(props.leek as any)[stat] = base[stat] + bonuses[stat]
+			(props.leek as Leek & Record<string, number>)[stat] = base[stat] + bonuses[stat]
 		}
 		close()
 		return
 	}
-	;(LeekWars.post('leek/spend-capital', {leek_id: props.leek.id, characteristics: JSON.stringify(bonuses)}).then(_data => {
+	LeekWars.post('leek/spend-capital', {leek_id: props.leek.id, characteristics: JSON.stringify(bonuses)}).then(_data => {
 		for (const stat in bonuses) {
-			;(props.leek as any)[stat] += bonuses[stat]
-			;(props.leek as any)['total_' + stat] += bonuses[stat]
+			(props.leek as Leek & Record<string, number>)[stat] += bonuses[stat]
+			;(props.leek as Leek & Record<string, number>)['total_' + stat] += bonuses[stat]
 		}
 		props.leek.capital = capital.value
 		store.commit('update-capital', {leek: props.leek.id, capital: capital.value})
 		close()
-	}) as any).error((error: any) => {
+	}).error(error => {
 		LeekWars.toast(error)
 	})
 }

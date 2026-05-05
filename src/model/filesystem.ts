@@ -13,6 +13,24 @@ import { reactive } from 'vue'
 export const aiCodeKey = (path: string) => 'ai/code/' + farmerId() + '/' + path
 export const aiMtimeKey = (path: string) => 'ai/mtime/' + farmerId() + '/' + path
 
+interface FSFile {
+	path: string
+	mtime?: number
+	valid: boolean
+	version: number
+	strict?: boolean
+	entrypoint?: boolean
+	total_lines?: number
+	total_chars?: number
+	scenario?: boolean
+}
+
+interface FSBinFile {
+	path: string
+	valid: boolean
+	version: number
+}
+
 const FS_ERROR_KEYS = new Set([
 	'quota_size_exceeded', 'quota_files_exceeded',
 	'path_traversal', 'symlink_forbidden',
@@ -66,7 +84,7 @@ class FileSystem {
 	/**
 	 * Initialise le filesystem depuis le scan FS (format path-based).
 	 */
-	public init(data: { files: any[], folders: string[], bin: any[], leek_ais: {[key: string]: string} }) {
+	public init(data: FarmerTree) {
 		let nextId = 1
 
 		// Root folder
@@ -126,7 +144,7 @@ class FileSystem {
 
 		// Bot AIs
 		for (const botAi of this.botAIs) {
-			this.ais[botAi.path] = botAi as any
+			this.ais[botAi.path] = botAi as unknown as AI
 		}
 
 		// Corbeille
@@ -172,7 +190,7 @@ class FileSystem {
 		}
 
 		return new Promise<AI>((resolve, reject) => {
-			LeekWars.post('ai/read', { path: ai.path }).then((data: any) => {
+			LeekWars.post('ai/read', { path: ai.path }).then((data) => {
 				ai.code = data.code
 				ai.mtime = data.mtime || Date.now()
 				localStorage.setItem(aiCodeKey(ai.path), ai.code)
@@ -256,7 +274,7 @@ class FileSystem {
 		ai.path = '.trash/' + ai.name
 		this.bin.items.push(...item)
 		this.sortFolder(this.bin)
-		LeekWars.delete('ai/delete', {path: oldPath}).then((data: any) => {
+		LeekWars.delete('ai/delete', {path: oldPath}).then((data) => {
 			if (data.trash_name && data.trash_name !== ai.name) {
 				delete this.ais[ai.path]
 				ai.name = data.trash_name
@@ -265,7 +283,7 @@ class FileSystem {
 				item[0].name = ai.name
 				this.sortFolder(this.bin)
 			}
-		}).error((error: any) => LeekWars.toast(translateFileSystemError(error)))
+		}).error((error) => LeekWars.toast(translateFileSystemError(error)))
 		emitter.emit('reanalyze')
 	}
 
@@ -273,13 +291,13 @@ class FileSystem {
 		const folder = this.folderById[ai.folder]
 		folder.items.splice(folder.items.findIndex((i) => !i.folder && (i as AIItem).ai === ai), 1)
 		delete this.ais[ai.path]
-		LeekWars.delete('ai/destroy', {trash_name: ai.name}).error(error => LeekWars.toast(error))
+		LeekWars.delete('ai/destroy', {trash_name: ai.name}).error(error => LeekWars.toast(translateFileSystemError(error)))
 	}
 
 	public emptyBin() {
 		this.cleanBinRefs(this.bin)
 		this.bin.items = []
-		LeekWars.delete('ai/bin').error(error => LeekWars.toast(error))
+		LeekWars.delete('ai/bin').error(error => LeekWars.toast(translateFileSystemError(error)))
 	}
 
 	private cleanBinRefs(folder: Folder) {
@@ -303,13 +321,13 @@ class FileSystem {
 		this.ais[ai.path] = ai
 		this.rootFolder.items.push(...item)
 		this.sortFolder(this.rootFolder)
-		LeekWars.post('ai/restore', {trash_name: trashName}).error((error: any) => LeekWars.toast(translateFileSystemError(error)))
+		LeekWars.post('ai/restore', {trash_name: trashName}).error((error) => LeekWars.toast(translateFileSystemError(error)))
 	}
 
 	public restoreFolder(folder: Folder) {
 		LeekWars.post('ai-folder/restore', { trash_name: folder.name }).then(() => {
 			this.reload()
-		}).error((error: any) => LeekWars.toast(translateFileSystemError(error)))
+		}).error((error) => LeekWars.toast(translateFileSystemError(error)))
 	}
 
 	public destroyFolder(folder: Folder) {
@@ -326,7 +344,7 @@ class FileSystem {
 				this.destroyFolderContents(item as Folder)
 			} else {
 				const ai = (item as AIItem).ai
-				LeekWars.delete('ai/destroy', {trash_name: ai.name}).error((error: any) => LeekWars.toast(error))
+				LeekWars.delete('ai/destroy', {trash_name: ai.name}).error((error) => LeekWars.toast(translateFileSystemError(error)))
 			}
 		}
 	}
@@ -339,7 +357,7 @@ class FileSystem {
 		folder.parent = this.bin.id
 		this.bin.items.push(folder)
 		this.sortFolder(this.bin)
-		LeekWars.delete('ai-folder/delete', {path: folderPath}).error((error: any) => LeekWars.toast(translateFileSystemError(error)))
+		LeekWars.delete('ai-folder/delete', {path: folderPath}).error((error) => LeekWars.toast(translateFileSystemError(error)))
 		emitter.emit('reanalyze')
 	}
 
@@ -400,9 +418,9 @@ class FileSystem {
 	 */
 	public reload(): Promise<void> {
 		return new Promise((resolve) => {
-			LeekWars.get('ai/get-farmer-tree').then((data: any) => {
+			LeekWars.get('ai/get-farmer-tree').then((data) => {
 				// Préserver code + model des AI existantes pour éviter un flash vide
-				const preserved: {[path: string]: { code: string, model: any, modified: boolean }} = {}
+				const preserved: {[path: string]: { code: string, model: import('monaco-editor').editor.ITextModel, modified: boolean }} = {}
 				for (const path in this.ais) {
 					const ai = this.ais[path]
 					if (ai.code !== undefined && ai.code !== null) {
@@ -454,4 +472,24 @@ class FileSystem {
 
 const fileSystem = reactive(new FileSystem())
 
+interface FarmerTreeFile {
+	path: string
+	mtime?: number
+	valid?: boolean
+	version?: number
+	strict?: boolean
+	entrypoint?: boolean
+	total_lines?: number
+	total_chars?: number
+	scenario?: number | null
+}
+
+interface FarmerTree {
+	files: FarmerTreeFile[]
+	folders: string[]
+	bin: FarmerTreeFile[]
+	leek_ais: {[key: string]: string}
+}
+
 export { fileSystem, FileSystem, translateFileSystemError }
+export type { FarmerTree }

@@ -97,7 +97,7 @@ defineOptions({ name: 'teams', i18n: {}, components: { RichTooltipTeam, RichTool
 
 const t = useNamespacedT('teams')
 
-const teams = ref<any[] | null>(null)
+const teams = ref<Record<string, unknown>[] | null>(null)
 const hasMatch = ref(false)
 const search = ref('')
 const activityFilter = ref('all')
@@ -121,7 +121,7 @@ const sizeOptions = computed(() => [
 const canApply = computed<boolean>(() => !!(store.state.farmer && store.state.farmer.team === null))
 
 const headers = computed(() => {
-	const h: any[] = [
+	const h: { title: string, value: string, sortable?: boolean }[] = [
 		{ title: t('team_name'), key: 'name', sortable: true },
 		{ title: t('level'), key: 'level', sortable: true, align: 'end' },
 		{ title: t('talent'), key: 'talent', sortable: true, align: 'end' },
@@ -189,7 +189,7 @@ function matchColor(score: number) {
 	return `hsl(${hue}, 70%, 40%)`
 }
 
-function rowProps({ item }: { item: any }) {
+function rowProps({ item }: { item: Record<string, unknown> }) {
 	return item.opened === false ? { class: 'closed-row' } : {}
 }
 
@@ -200,7 +200,7 @@ watch(showClosed, () => {
 
 function loadTeams() {
 	teams.value = null
-	LeekWars.get('team/get-recruiting?include_closed=' + showClosed.value).then((data: any) => {
+	LeekWars.get('team/get-recruiting?include_closed=' + showClosed.value).then((data) => {
 		teams.value = data.teams
 		hasMatch.value = teams.value !== null && teams.value.length > 0 && teams.value[0].match_score !== undefined
 		candidacyTeams.value = data.candidacy_teams || []

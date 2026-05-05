@@ -39,7 +39,7 @@
 								<div class="title">Caractéristiques</div>
 								<div class="characteristics">
 									<div v-for="c in LeekWars.characteristics_table" :key="c" class="characteristic" :class="c">
-										<characteristic-tooltip v-slot="{ props }: any" :characteristic="c" :value="game.selectedEntity[c]" :total="game.selectedEntity[c]" :leek="game.selectedEntity" :test="true">
+										<characteristic-tooltip v-slot="{ props }" :characteristic="c" :value="game.selectedEntity[c]" :total="game.selectedEntity[c]" :leek="game.selectedEntity" :test="true">
 											<img v-bind="props" :src="'/image/charac/' + c + '.png'">
 										</characteristic-tooltip>
 										<input class="stat" :class="'color-' + c" v-model.number="game.selectedEntity[c]" @keyup="edited('charac')" type="number">
@@ -166,11 +166,37 @@ import CharacteristicTooltip from '@/component/leek/characteristic-tooltip.vue'
 import { CHIPS } from '@/model/chips'
 import { ORDERED_CHIPS } from '@/model/sorted_chips'
 import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
-import { WeaponsData } from '@/model/weapon'
+import { WeaponsData, WeaponTemplate } from '@/model/weapon'
+import { ChipTemplate } from '@/model/chip'
 import { computed, nextTick, onMounted, onUnmounted, ref, useTemplateRef } from 'vue'
 import { useRoute } from 'vue-router'
 
 defineOptions({ name: 'creator', i18n: {}, mixins: [...mixins] })
+
+interface MapPlayer {
+	name: string
+	cell?: number
+	level?: number
+	ai?: number
+	dead?: boolean
+	orientation?: EntityDirection
+	hat?: number | null
+	weapon?: number | null
+	life?: number
+	strength?: number
+	wisdom?: number
+	agility?: number
+	resistance?: number
+	science?: number
+	magic?: number
+	frequency?: number
+	cores?: number
+	ram?: number
+	mp?: number
+	tp?: number
+	weapons?: number[]
+	chips?: number[]
+}
 
 const t = useNamespacedT('creator')
 const route = useRoute()
@@ -191,9 +217,9 @@ const decorations = [
 	{ id: 8, texture: "skull.png" },
 ]
 
-const game = ref<any>(null)
-let saveTimeout: any = null
-const playerRef = useTemplateRef<any>('playerRef')
+const game = ref<Game | null>(null)
+let saveTimeout: ReturnType<typeof setTimeout> | null = null
+const playerRef = useTemplateRef<{game: Game}>('playerRef')
 
 const id = computed(() => route.params.id)
 
@@ -217,7 +243,7 @@ function resize() { /* */ }
 
 function playerLoaded() {
 	nextTick(() => {
-		game.value = playerRef.value.game as Game
+		game.value = playerRef.value!.game
 		for (const ground of GROUNDS) {
 			ground.texture.load(game.value)
 		}
@@ -231,12 +257,12 @@ function playerLoaded() {
 }
 
 function selectGround(ground: GroundTexture) {
-	const g = playerRef.value.game as Game
+	const g = playerRef.value!.game
 	g.groundPaint = ground
 }
 
 function obstacleDragStart(obstacle: ObstacleInfo) {
-	const g = playerRef.value.game as Game
+	const g = playerRef.value!.game
 	const info = OBSTACLES[obstacle.id]
 	const o = new Obstacle(g, obstacle.geometry, g.ground.field.cells[570], info)
 	o.resize()
@@ -245,7 +271,7 @@ function obstacleDragStart(obstacle: ObstacleInfo) {
 	g.groundPaint = null
 }
 
-function mobDragStart(mob: any) {
+function mobDragStart(mob: MapPlayer) {
 	if (game.value) {
 		const entity = addEntity(mob)
 		game.value.draggedEntity = entity
@@ -253,7 +279,7 @@ function mobDragStart(mob: any) {
 	}
 }
 
-function addEntity(mob: any) {
+function addEntity(mob: MapPlayer) {
 	const entity = new Mob(game.value!, mob.name === 'leek' ? 1 : 2, 100, mob.name)
 	entity.setHat(mob.hat)
 	if (mob.weapon) {
@@ -290,13 +316,13 @@ function addEntity(mob: any) {
 	return entity
 }
 
-function edited(_info: any) {
+function edited(_info: string) {
 	if (saveTimeout) clearTimeout(saveTimeout)
 	saveTimeout = setTimeout(() => {
 		console.log("save...")
 		if (!map.value) return
 
-		const g = playerRef.value.game as Game
+		const g = playerRef.value!.game
 		const obstacles = {} as {[key: number]: number}
 		for (const obstacle of g.ground.obstacles) {
 			obstacles[obstacle.cell.id] = obstacle.info.id
@@ -350,36 +376,36 @@ function setOrientation(orientation: EntityDirection) {
 	edited('orient')
 }
 
-const availableWeapons = computed<any[]>(() => {
+const availableWeapons = computed<WeaponTemplate[]>(() => {
 	if (!game.value || !game.value.selectedEntity) { return [] }
-	return Object.values(LeekWars.weapons) as any[]
+	return Object.values(LeekWars.weapons) as WeaponTemplate[]
 })
-const availableChips = computed<any[]>(() => {
+const availableChips = computed<ChipTemplate[]>(() => {
 	if (!game.value || !game.value.selectedEntity) { return [] }
-	return (Object.values(CHIPS) as any[])
-		.sort((chipA: any, chipB: any) => ORDERED_CHIPS[chipA.id] - ORDERED_CHIPS[chipB.id])
+	return (Object.values(CHIPS) as ChipTemplate[])
+		.sort((chipA, chipB) => ORDERED_CHIPS[chipA.id] - ORDERED_CHIPS[chipB.id])
 })
 
-function hasChipEquipped(chip: any) {
+function hasChipEquipped(chip: number) {
 	if (!game.value || !game.value.selectedEntity) { return false }
-	return (game.value.selectedEntity.chips as any).indexOf(chip) !== -1
+	return game.value.selectedEntity.chips.indexOf(chip) !== -1
 }
 
-function hasWeaponEquipped(weapon: any) {
+function hasWeaponEquipped(weapon: number) {
 	if (!game.value || !game.value.selectedEntity) { return false }
-	return (game.value.selectedEntity.weapons as any).indexOf(weapon) !== -1
+	return game.value.selectedEntity.weapons.indexOf(weapon) !== -1
 }
-function removeLeekChip(chip: any) {
+function removeLeekChip(chip: number) {
 	if (!game.value || !game.value.selectedEntity) { return }
 	game.value.selectedEntity.chips.splice(game.value.selectedEntity.chips.indexOf(chip), 1)
 	edited('chip')
 }
-function removeLeekWeapon(weapon: any) {
+function removeLeekWeapon(weapon: number) {
 	if (!game.value || !game.value.selectedEntity) { return }
 	game.value.selectedEntity.weapons.splice(game.value.selectedEntity.weapons.indexOf(weapon), 1)
 	edited('weapon')
 }
-function addLeekChip(chip: any) {
+function addLeekChip(chip: number) {
 	if (!game.value || !game.value.selectedEntity) { return }
 	game.value.selectedEntity.chips.push(chip)
 	if (game.value.selectedEntity.chips.length === game.value.selectedEntity.ram) {
@@ -387,7 +413,7 @@ function addLeekChip(chip: any) {
 	}
 	edited('chip')
 }
-function addLeekWeapon(weapon: any) {
+function addLeekWeapon(weapon: number) {
 	if (!game.value || !game.value.selectedEntity) { return }
 	game.value.selectedEntity.weapons.push(weapon)
 	if (game.value.selectedEntity.weapons.length === 4) {
@@ -395,7 +421,7 @@ function addLeekWeapon(weapon: any) {
 	}
 	edited('weapon')
 }
-function addOrRemoveLeekChip(chip: any) {
+function addOrRemoveLeekChip(chip: number) {
 	if (!game.value || !game.value.selectedEntity) { return }
 	if (!hasChipEquipped(chip)) {
 		if (game.value.selectedEntity!.chips.length < game.value.selectedEntity.ram) {
@@ -406,7 +432,7 @@ function addOrRemoveLeekChip(chip: any) {
 	}
 }
 
-function addOrRemoveLeekWeapon(weapon: any) {
+function addOrRemoveLeekWeapon(weapon: number) {
 	if (!game.value || !game.value.selectedEntity) { return }
 	if (!hasWeaponEquipped(weapon)) {
 		if (game.value.selectedEntity!.weapons.length < 4) {

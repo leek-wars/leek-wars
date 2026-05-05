@@ -12,7 +12,7 @@
 defineOptions({ name: 'component-preview' })
 
 defineProps<{
-	component?: any
+	component?: Record<string, unknown>
 }>()
 </script>
 

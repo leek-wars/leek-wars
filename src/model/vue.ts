@@ -118,9 +118,10 @@ interface NavSnapshot {
 let previousNav: NavSnapshot | null = null
 let currentNav: NavSnapshot | null = null
 
-function describeRouteSubtree(instance: any): string | null {
+function describeRouteSubtree(instance: unknown): string | null {
 	try {
-		let node = instance?.subTree
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		let node = (instance as any)?.subTree
 		let depth = 0
 		while (node && depth < 20) {
 			const child = node.component
@@ -136,18 +137,24 @@ function describeRouteSubtree(instance: any): string | null {
 	return null
 }
 
-function reportVueError(err: any, vm: any, info: any, origin: string = 'main') {
+export function reportVueError(err: unknown, vm: unknown, info: unknown, origin: string = 'main') {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const e = err as any
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const vmAny = vm as any
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const infoAny = info as any
 
 	if (LeekWars.DEV) return
 
-	if (err?.message?.includes('Failed to fetch dynamically imported module') ||
-		err?.message?.includes('Loading chunk') ||
-		err?.message?.includes('Loading CSS chunk') ||
-		err?.message?.includes('Unable to preload CSS')) {
+	if (e?.message?.includes('Failed to fetch dynamically imported module') ||
+		e?.message?.includes('Loading chunk') ||
+		e?.message?.includes('Loading CSS chunk') ||
+		e?.message?.includes('Unable to preload CSS')) {
 		return
 	}
 
-	if (info?.includes?.('runtime-13')) {
+	if (infoAny?.includes?.('runtime-13')) {
 		reloadWithCacheBust()
 		return
 	}
@@ -155,7 +162,7 @@ function reportVueError(err: any, vm: any, info: any, origin: string = 'main') {
 	if (Date.now() - lastErrorSent < 1000) return
 	lastErrorSent = Date.now()
 
-	const error = (err?.name || 'Error') + ": " + (err?.message || String(err))
+	const error = (e?.name || 'Error') + ": " + (e?.message || String(e))
 	const file = document.location.href
 	const locale = i18n.locale
 	const user_agent = navigator.userAgent
@@ -163,11 +170,11 @@ function reportVueError(err: any, vm: any, info: any, origin: string = 'main') {
 	let componentTrace = ''
 	let routeSubtree: string | null = null
 	try {
-		if (vm) {
+		if (vmAny) {
 			const components: string[] = []
 			// errorCaptured passes a public proxy (.$ → internal instance); app.config.errorHandler
 			// passes the internal instance directly. Handle both.
-			let instance = vm.$ || vm
+			let instance = vmAny.$ || vmAny
 			const leafInstance = instance
 			while (instance && components.length < 100) {
 				const name = instance.type?.name || instance.type?.__name || 'Anonymous'
@@ -200,8 +207,8 @@ function reportVueError(err: any, vm: any, info: any, origin: string = 'main') {
 				routeSubtree = describeRouteSubtree(leafInstance)
 			}
 		}
-	} catch (e) {
-		componentTrace = '\n\n[Component trace failed: ' + (e as Error).message + ']'
+	} catch (ex) {
+		componentTrace = '\n\n[Component trace failed: ' + (ex as Error).message + ']'
 	}
 
 	let navTrace = ''
@@ -214,13 +221,13 @@ function reportVueError(err: any, vm: any, info: any, origin: string = 'main') {
 		if (lines.length) navTrace = '\n\n' + lines.join('\n')
 	} catch {}
 
-	const stack = (err?.stack || '(no stack)') + '\n\nOrigin: ' + origin + '\nVue info: ' + info + componentTrace + navTrace
+	const stack = (e?.stack || '(no stack)') + '\n\nOrigin: ' + origin + '\nVue info: ' + infoAny + componentTrace + navTrace
 	const build_date = typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : null
 	const build_commit = typeof __BUILD_COMMIT__ !== 'undefined' ? __BUILD_COMMIT__ : null
 	LeekWars.post('error/report', { error, stack, file, locale, user_agent, build_date, build_commit })
 }
 
-export function createSubApp(component: any, props?: any, origin: string = 'sub-app'): VueApp {
+export function createSubApp(component: Component, props?: Record<string, unknown>, origin: string = 'sub-app'): VueApp {
 	const subApp = createApp(component, props)
 	subApp.config.errorHandler = (err, vm, info) => reportVueError(err, vm, info, origin)
 	subApp.use(vuetify)
@@ -231,7 +238,7 @@ export function createSubApp(component: any, props?: any, origin: string = 'sub-
 	return subApp
 }
 
-let secondInterval: any = null, minuteInterval: any = null
+let secondInterval: ReturnType<typeof setInterval> | null = null, minuteInterval: ReturnType<typeof setInterval> | null = null
 
 const app = createApp({
 	data() {
@@ -349,6 +356,7 @@ const app = createApp({
 			if (matched) {
 				const component = matched.instances?.default
 				if (!component) return
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				const beforeRouteLeave = (component.$options as any).beforeRouteLeave
 				if (beforeRouteLeave) {
 					if (!beforeRouteLeave[0].bind(component)()) { return "Confirm" }
@@ -446,6 +454,7 @@ const I18nTWrapper = defineComponent({
 })
 // Override vue-i18n's built-in i18n-t with our namespace-aware wrapper.
 // Delete first to avoid Vue's "already registered" dev warning.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 delete (app as any)._context.components['i18n-t']
 app.component('i18n-t', I18nTWrapper)
 
@@ -616,7 +625,7 @@ try {
 
 const vm = app.mount('#app2') as ComponentPublicInstance & {
 	$once: (event: string, callback: () => void) => void
-	$emit: (event: string, ...args: any[]) => void
+	$emit: (event: string, ...args: unknown[]) => void
 }
 setVueMain(vm)
 
@@ -628,7 +637,7 @@ if (LeekWars.DEV || LeekWars.LOCAL) {
 	}
 }
 
-router.afterEach((to: any) => {
+router.afterEach((to) => {
 	previousNav = currentNav
 	currentNav = {
 		fullPath: to.fullPath,

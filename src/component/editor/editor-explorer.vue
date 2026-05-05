@@ -251,7 +251,7 @@
 		router.push('/editor/' + ai.value!.path)
 	}
 
-	function openMenu(event: { item: AI | Folder, ai: boolean, e: any }) {
+	function openMenu(event: { item: AI | Folder, ai: boolean, e: MouseEvent }) {
 		const { item, ai: isAi, e } = event
 		e.preventDefault()
 		aiMenu.value = folderMenu.value = binMenu.value = binFolderMenu.value = false
@@ -338,7 +338,7 @@
 					LeekWars.toast(gt('leekscript.ai_renamed', [newName.value]))
 					fileSystem.renameAI(ai.value!, newName.value)
 					router.replace('/editor/' + ai.value!.path)
-				}).error((error: any) => {
+				}).error((error) => {
 					LeekWars.toast(translateFileSystemError(error))
 				})
 			}
@@ -348,7 +348,7 @@
 				LeekWars.post('ai-folder/rename', {path: folderPath, new_name: newName.value}).then(() => {
 					LeekWars.toast(gt('leekscript.folder_renamed', [newName.value]))
 					folder.value!.name = newName.value
-				}).error((error: any) => {
+				}).error((error) => {
 					LeekWars.toast(translateFileSystemError(error))
 				})
 			}
@@ -369,8 +369,8 @@
 			fileSystem.gitRepos[folderPath] = true
 			emitter.emit('git-repos-changed')
 			LeekWars.toast('Git initialized in ' + folder.value!.name)
-		}).error((error: any) => {
-			LeekWars.toast(error.error)
+		}).error((error) => {
+			LeekWars.toast((error as { error: string }).error)
 		})
 	}
 
@@ -382,8 +382,8 @@
 			delete fileSystem.gitRepos[folderPath]
 			emitter.emit('git-repos-changed')
 			LeekWars.toast('Git removed from ' + folder.value!.name)
-		}).error((error: any) => {
-			LeekWars.toast(error.error)
+		}).error((error) => {
+			LeekWars.toast((error as { error: string }).error)
 		})
 	}
 
@@ -457,7 +457,7 @@
 	function newAI(v2: boolean, name: string) {
 		if (!folder.value) { return }
 		const folderPath = folder.value.id === 0 ? '' : fileSystem.getFolderPath(folder.value).replace(/\/$/, '')
-		LeekWars.post('ai/create', {folder: folderPath, version: LeekWars.LATEST_LEEKSCRIPT_VERSION, name}).then((data: any) => {
+		LeekWars.post<{ path: string, code: string }>('ai/create', {folder: folderPath, version: LeekWars.LATEST_LEEKSCRIPT_VERSION, name}).then((data) => {
 			const newAi = new AI({
 				name,
 				path: data.path,
@@ -473,7 +473,7 @@
 			router.push('/editor/' + newAi.path)
 			newAIDialog.value = false
 			newAIName.value = ''
-		}).error((error: any) => {
+		}).error((error) => {
 			LeekWars.toast(translateFileSystemError(error))
 		})
 	}

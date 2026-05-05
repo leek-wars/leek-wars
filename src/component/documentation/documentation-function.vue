@@ -92,7 +92,7 @@ const props = defineProps<{
 }>()
 
 const expanded = ref(false)
-const new_fun = ref<any>(null)
+const new_fun = ref<unknown>(null)
 
 watch(() => props.fun, () => {
 	LeekWars.documentation(locale).then((functions) => {

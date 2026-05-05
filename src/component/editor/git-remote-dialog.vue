@@ -201,7 +201,7 @@
 			newRemoteName.value = 'origin'
 			newRemoteUrl.value = ''
 			loadRemotes()
-		} catch (e: any) {
+		} catch (e: unknown) {
 			error.value = e.details || e.error || 'Error'
 		}
 	}
@@ -211,7 +211,7 @@
 		try {
 			await gitCall('git/remote-remove', { folder: props.folder, name })
 			loadRemotes()
-		} catch (e: any) {
+		} catch (e: unknown) {
 			error.value = e.details || e.error || 'Error'
 		}
 	}
@@ -230,7 +230,7 @@
 			patInstanceUrl.value = ''
 			selfHosted.value = false
 			loadCredentials()
-		} catch (e: any) {
+		} catch (e: unknown) {
 			const key = e?.error === 'invalid_instance_url' ? 'invalid_instance_url' : 'invalid_token'
 			let msg = t(key) as string
 			if (e?.details?.http_code) msg += ` (HTTP ${e.details.http_code})`
@@ -244,7 +244,7 @@
 		try {
 			await gitCall('git-credential/delete', { provider: cred.provider, instance_url: cred.instance_url || '' })
 			loadCredentials()
-		} catch (e: any) {
+		} catch (e: unknown) {
 			error.value = e.details || e.error || 'Error'
 		}
 	}

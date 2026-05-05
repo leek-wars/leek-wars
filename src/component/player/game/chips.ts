@@ -217,7 +217,7 @@ class ChipBoostAnimation extends ChipAnimation {
 	public texture: Texture
 	public delay: number = 2
 	public area: Area
-	constructor(game: Game, texture: any, area: Area = Area.SINGLE_CELL) {
+	constructor(game: Game, texture: Texture, area: Area = Area.SINGLE_CELL) {
 		super(game, S.buff, 60, DamageType.DEFAULT)
 		this.texture = texture
 		this.area = area
@@ -248,7 +248,7 @@ class ChipHealAnimation extends ChipAnimation {
 	public texture: Texture
 	public delay: number = 2
 	public area: Area
-	constructor(game: Game, texture: any, area: Area = Area.SINGLE_CELL) {
+	constructor(game: Game, texture: Texture, area: Area = Area.SINGLE_CELL) {
 		super(game, S.heal, 45, DamageType.DEFAULT)
 		this.texture = texture
 		this.area = area
@@ -279,7 +279,7 @@ class ChipNovaVitalityAnimation extends ChipAnimation {
 	public texture: Texture
 	public delay: number = 2
 	public area: Area
-	constructor(game: Game, texture: any, area: Area = Area.SINGLE_CELL) {
+	constructor(game: Game, texture: Texture, area: Area = Area.SINGLE_CELL) {
 		super(game, S.alteration, 45, DamageType.DEFAULT)
 		this.texture = texture
 		this.area = area
@@ -309,7 +309,7 @@ class ChipNovaVitalityAnimation extends ChipAnimation {
 class ChipDebuffAnimation extends ChipAnimation {
 	public texture: Texture
 	public area: Area
-	constructor(game: Game, texture: any, area: Area = Area.SINGLE_CELL) {
+	constructor(game: Game, texture: Texture, area: Area = Area.SINGLE_CELL) {
 		super(game, S.debuff, 60, DamageType.DEFAULT)
 		this.texture = texture
 		this.area = area
@@ -328,7 +328,7 @@ class ChipDebuffAnimation extends ChipAnimation {
 class ChipPoisonAnimation extends ChipAnimation {
 	public texture: Texture
 	public area: Area
-	constructor(game: Game, texture: any, area: Area = Area.SINGLE_CELL) {
+	constructor(game: Game, texture: Texture, area: Area = Area.SINGLE_CELL) {
 		super(game, S.poison, 60, DamageType.DEFAULT)
 		this.texture = texture
 		this.area = area
@@ -347,7 +347,7 @@ class ChipPoisonAnimation extends ChipAnimation {
 class ChipDamageReturnAnimation extends ChipAnimation {
 	public texture: Texture
 	public area: Area
-	constructor(game: Game, texture: any, area: Area = Area.SINGLE_CELL) {
+	constructor(game: Game, texture: Texture, area: Area = Area.SINGLE_CELL) {
 		super(game, S.buff, 60, DamageType.DEFAULT)
 		this.texture = texture
 		this.area = area
@@ -546,7 +546,7 @@ class Inversion extends ChipAnimation {
 	static sounds = [S.teleportation]
 
 	public inverted = false
-	public target: any
+	public target: FightEntity | null = null
 
 	constructor(game: Game) {
 		super(game, S.teleportation, 120, DamageType.DEFAULT)
@@ -580,8 +580,8 @@ class Inversion extends ChipAnimation {
 			this.game.particles.addRectangle(x2, y2, z, dx, dy, dz, angle, sx, sy, dsx, dsy, color, alpha, life)
 		}
 		if (!this.inverted && this.duration < 40 && this.launcher && this.target && !this.target.states.has(State.STATIC)) {
-			const cell = this.launcher.cell
-			this.launcher.setCell(this.target.cell)
+			const cell = this.launcher.cell!
+			this.launcher.setCell(this.target.cell!)
 			this.target.setCell(cell)
 			this.game.updateReachableCells()
 			this.inverted = true
@@ -594,7 +594,7 @@ class Repotting extends ChipAnimation {
 	static sounds = [S.teleportation]
 
 	public inverted = false
-	public target: any
+	public target: FightEntity | null = null
 
 	constructor(game: Game) {
 		super(game, S.teleportation, 120, DamageType.DEFAULT)
@@ -628,8 +628,8 @@ class Repotting extends ChipAnimation {
 			this.game.particles.addRectangle(x2, y2, z, dx, dy, dz, angle, sx, sy, dsx, dsy, color, alpha, life)
 		}
 		if (!this.inverted && this.duration < 40 && this.launcher && this.target) {
-			const cell = this.launcher.cell
-			this.launcher.setCell(this.target.cell)
+			const cell = this.launcher.cell!
+			this.launcher.setCell(this.target.cell!)
 			this.target.setCell(cell)
 			this.game.updateReachableCells()
 			this.inverted = true
@@ -907,7 +907,7 @@ class Teleportation extends ChipAnimation {
 	static sounds = [S.teleportation]
 
 	public teleported = false
-	public targetPos: any
+	public targetPos!: Position
 	public target!: FightEntity
 	constructor(game: Game) {
 		super(game, S.teleportation, 140, DamageType.DEFAULT)
@@ -1106,7 +1106,7 @@ class Knowledge extends ChipBoostAnimation {
 class Burning extends ChipAnimation {
 	static textures = [T.chip_burning, T.fire]
 	static sounds = [S.fire]
-	fires = [] as any[]
+	fires: Array<{x: number, y: number}> = []
 
 	constructor(game: Game) { super(game, S.fire, 60, DamageType.FIRE) }
 
@@ -1352,7 +1352,7 @@ class Jump extends ChipAnimation {
 	static sounds = []
 
 	public teleported = false
-	public targetPos: any
+	public targetPos!: Position
 	public target!: FightEntity
 
 	constructor(game: Game) {

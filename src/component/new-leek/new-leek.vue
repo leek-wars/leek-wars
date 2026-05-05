@@ -56,7 +56,7 @@ function createLeek() {
 	LeekWars.post('leek/create', { name: leekName.value }).then(leek => {
 		store.commit('new-leek', leek)
 		router.push('/leek/' + leek.id)
-	}).catch((err: any) => {
+	}).catch((err) => {
 		error.value = t('error_' + err.error, err.params) as string
 	})
 }

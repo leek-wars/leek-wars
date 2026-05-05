@@ -5,13 +5,14 @@
 
 <script setup lang="ts">
 import type { Action } from '@/model/action'
+import type { ReportLeek } from '@/model/fight'
 import { EffectComponents as EffectComponentsTyped } from '@/model/action-components'
 
-const EffectComponents: Record<number, any> = EffectComponentsTyped
+const EffectComponents = EffectComponentsTyped
 
 defineProps<{
 	action: Action
 	a?: number
-	leeks: Record<number, any>
+	leeks: Record<number, ReportLeek>
 }>()
 </script>

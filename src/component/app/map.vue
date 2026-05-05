@@ -14,16 +14,25 @@
 
 	defineOptions({ name: "lw-map" })
 
+	interface MapCell {
+		enabled: boolean
+		cell: number
+		teams: Record<string, boolean>
+		obstacle: boolean
+		color: string
+		big: boolean
+	}
+
 	const props = defineProps<{
-		obstacles: any
+		obstacles: Record<number, number>
 		teams?: {[key: number]: Set<number>}
 	}>()
 
-	const map = ref<any>([])
+	const map = ref<MapCell[][]>([])
 
 	function update() {
 		const size = 34
-		const m: any = []
+		const m: MapCell[][] = []
 		for (let i = 0; i <= size; ++i) {
 			const line = []
 			for (let j = 0; j <= size; ++j) {
@@ -32,7 +41,7 @@
 				const enabled = Math.abs(x) + Math.abs(y) <= size / 2
 				const cell = 306 + 18 * y - 17 * x
 				let obstacle = false
-				const teams = {} as any
+				const teams: Record<string, boolean> = {}
 				let color = ""
 				let obstacleSize = 1
 				if (enabled) {

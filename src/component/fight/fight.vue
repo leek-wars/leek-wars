@@ -146,7 +146,7 @@
 
 	const t = useNamespacedT('fight')
 	const route = useRoute()
-	const playerRef = useTemplateRef<any>('playerRef')
+	const playerRef = useTemplateRef<{ loaded: boolean }>('playerRef')
 
 	const fight_id = ref<string | null>(null)
 	const fight = ref<Fight | null>(null)
@@ -155,8 +155,9 @@
 	const playerHorizontal = ref(false)
 	const showReport = ref(false)
 	const reasons = [Warning.RUDE_SAY, Warning.INCORRECT_LEEK_NAME, Warning.INCORRECT_FARMER_NAME, Warning.INCORRECT_AVATAR]
-	const trophyQueue: any[] = []
-	const fightNotificationQueue: any[] = []
+	type NotificationData = { id: number, type: number, date: number, parameters: string[], new: boolean }
+	const trophyQueue: NotificationData[] = []
+	const fightNotificationQueue: NotificationData[] = []
 
 	function toggleLoading() {
 		if (playerRef.value) {
@@ -271,11 +272,11 @@
 		LeekWars.setTitle(loadedFight.title, LeekWars.formatDate(loadedFight.date))
 	}
 
-	function onTrophy(trophy: any) {
+	function onTrophy(trophy: NotificationData) {
 		trophyQueue.push(trophy)
 	}
 
-	function onFightNotification(message: any) {
+	function onFightNotification(message: NotificationData) {
 		fightNotificationQueue.push(message)
 	}
 

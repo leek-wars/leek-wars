@@ -6,6 +6,14 @@ import { Potion } from '@/model/potion'
 import { Team } from '@/model/team'
 import { Weapon } from '@/model/weapon'
 import { Group } from './group'
+import { FarmerTree } from './filesystem'
+
+interface InventoryItem {
+	id: number
+	template: number
+	quantity: number
+	time?: number
+}
 
 class Farmer {
 	public id!: number
@@ -16,20 +24,20 @@ class Farmer {
 	public animated_crystals!: number
 	public banned!: boolean
 	public deleted!: boolean
-	public tournaments!: any[]
+	public tournaments!: unknown[]
 	public trophies!: number
-	public trophies_list!: any
+	public trophies_list!: unknown
 	public leeks!: {[key: number]: Leek}
 	public weapons!: Weapon[]
 	public potions!: Potion[]
 	public avatar_changed!: number
-	public tournament!: any
+	public tournament!: unknown
 	public in_garden!: boolean
 	public talent_more!: number
 	public country!: string | null
-	public warnings!: any[]
-	public candidacy!: any
-	public team_invitations!: any[]
+	public warnings!: unknown[]
+	public candidacy!: unknown
+	public team_invitations!: unknown[]
 	public website!: string
 	public github!: string
 	public hats!: Hat[]
@@ -49,18 +57,18 @@ class Farmer {
 	public talent_history!: number[]
 	public team!: Team | null
 	public total_level!: number
-	public ai_tree?: { files: any[], folders: string[], bin: any[], leek_ais: {[key: string]: string} }
+	public ai_tree?: FarmerTree
 	public language!: string
 	public title!: number[]
 	public show_ai_lines!: boolean
-	public pomps!: any[]
+	public pomps!: InventoryItem[]
 	public pass!: boolean
 	public errors!: number
 	public contributor!: boolean
 	public rewards!: Reward[]
-	public resources!: any[]
-	public components!: any[]
-	public schemes!: any[]
+	public resources!: InventoryItem[]
+	public components!: InventoryItem[]
+	public schemes!: InventoryItem[]
 	public verified!: boolean
 	public tutorial_progress!: number
 	public group!: Group
@@ -89,21 +97,22 @@ class Farmer {
 	public won_farmer_tournaments!: number
 	public won_team_tournaments!: number
 	public won_battle_royale!: number
-	public fight_history!: any[]
-	public fight_pack!: any
-	public godfather!: any
-	public godsons!: any[]
-	public hat!: any
-	public item!: any
+	public fight_history!: unknown[]
+	public fight_pack!: unknown
+	public godfather!: unknown
+	public godsons!: unknown[]
+	public hat!: unknown
+	public item!: unknown
 	public login!: string
-	public potion!: any
-	public resource!: any
-	public trophy!: any
-	public leek_error!: { error: string, params?: any } | null
-	public mail_error!: { error: string, params?: any } | null
-	public name_error!: { error: string, params?: any } | null
-	public password_error!: { error: string, params?: any } | null
-	public candidacies!: any[]
+	public potion!: unknown
+	public resource!: unknown
+	public trophy!: unknown
+	public leek_error!: { error: string, params?: unknown } | null
+	public mail_error!: { error: string, params?: unknown } | null
+	public name_error!: { error: string, params?: unknown } | null
+	public password_error!: { error: string, params?: unknown } | null
+	public candidacies!: unknown[]
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	[key: string]: any
 }
 
@@ -116,4 +125,5 @@ class Reward {
 	public habs!: number
 }
 
-export { Farmer, Member }
+export { Farmer, Member, Reward }
+export type { InventoryItem }

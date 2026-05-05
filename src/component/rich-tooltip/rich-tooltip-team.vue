@@ -56,9 +56,9 @@ const emit = defineEmits<{
 	'update:modelValue': [value: boolean]
 }>()
 
-const menu = useTemplateRef<any>('menu')
+const menu = useTemplateRef<{ updateLocation?: () => void }>('menu')
 const content_created = ref(false)
-const team = ref<any>(null)
+const team = ref<Record<string, unknown> | null>(null)
 const expand = ref(false)
 const locked = ref(false)
 const mouse = ref(false)
@@ -77,7 +77,7 @@ function open(_v: boolean) {
 	if (content_created.value) { return }
 	content_created.value = true
 	if (props.id > 0 && !team.value) {
-		LeekWars.get<any>('team/rich-tooltip/' + props.id).then(t => {
+		LeekWars.get<Record<string, unknown>>('team/rich-tooltip/' + props.id).then(t => {
 			team.value = t
 			if (expand.value) {
 				menu.value?.updateLocation?.()

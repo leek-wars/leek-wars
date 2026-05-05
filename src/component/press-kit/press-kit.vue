@@ -92,8 +92,8 @@ defineOptions({ name: 'press-kit', i18n: {}, mixins: [...mixins] })
 
 const { locale } = useI18n()
 
-const language = ref<any>(null)
-const items: any[] = [
+const language = ref<string | null>(null)
+const items: { title: string, href: string }[] = [
 			{ name: 'logos', icon: 'mdi-image', items: [
 				{ name: 'leekwars_logo_dark', formats: ['svg', 'png'], alpha: true, legends: {
 					fr: 'Logo Leek Wars sombre',

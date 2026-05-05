@@ -87,7 +87,7 @@ if (state.value === 2) {
 	LeekWars.post('farmer/change-email3', {token: route.params.token}).then(() => {
 		LeekWars.toast(t('email_changed'))
 		state.value = 4
-	}).catch((err: any) => {
+	}).catch((err) => {
 		error.value = err
 		LeekWars.toast(err)
 	})
@@ -101,7 +101,7 @@ function submit() {
 	LeekWars.post('farmer/change-email2', {email: email.value, token: route.params.token}).then(() => {
 		LeekWars.toast(t('email_sent', {email: email.value}))
 		state.value = 3
-	}).catch((err: any) => {
+	}).catch((err) => {
 		error.value = err
 		LeekWars.toast(err)
 	})

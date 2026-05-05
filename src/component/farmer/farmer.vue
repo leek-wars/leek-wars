@@ -605,7 +605,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
-	import { Team, TeamMemberLevel } from '@/model/team'
+	import { Team, TeamMemberLevel, TeamInvitation, TournamentRange } from '@/model/team'
 	import { mixins , useNamespacedT } from '@/model/i18n'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
@@ -616,7 +616,7 @@
 	import { emitter } from '@/model/vue'
 	import { Line } from 'vue-chartjs'
 	import type { ChartData, ChartOptions } from 'chart.js'
-	import { computed, defineAsyncComponent, ref, useTemplateRef, watch } from 'vue'
+	import { computed, defineAsyncComponent, ref, useTemplateRef, watch, type ComponentPublicInstance } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 
@@ -632,15 +632,16 @@
 	const t = useNamespacedT('farmer')
 	const route = useRoute()
 	const router = useRouter()
-	const avatarRef = useTemplateRef<any>('avatar')
+	const avatarRef = useTemplateRef<ComponentPublicInstance>('avatar')
 	const avatarInput = useTemplateRef<HTMLInputElement>('avatarInput')
 	const pickerRef = useTemplateRef<InstanceType<typeof TitlePicker>>('picker')
-	const godfatherLink = useTemplateRef<any>('godfatherLink')
+	const godfatherLink = useTemplateRef<HTMLElement>('godfatherLink')
 
+	type Trophy = (typeof LeekWars.trophies)[number]
 	const farmer = ref<Farmer | null>(null)
-	const trophies = ref<any>(null)
+	const trophies = ref<Record<string, Trophy> | null>(null)
 	const trophiesMode = ref('list')
-	const trophyTooltip = ref<{ show: boolean, trophy: any, x: number, y: number }>({ show: false, trophy: null, x: 0, y: 0 })
+	const trophyTooltip = ref<{ show: boolean, trophy: Trophy | null, x: number, y: number }>({ show: false, trophy: null, x: 0, y: 0 })
 	const godfatherDialog = ref(false)
 	const countryDialog = ref(false)
 	const createTeamDialog = ref(false)
@@ -658,7 +659,7 @@
 	const rename_price_habs = 10000000
 	const rename_price_crystals = 200
 	const tournamentRangeLoading = ref(false)
-	const tournamentRange = ref<any>(null)
+	const tournamentRange = ref<TournamentRange | null>(null)
 	const trophyDialog = ref(false)
 	const giveTrophyID = ref<number | null>(null)
 	const giveTrophyFight = ref<number | null>(null)
@@ -717,7 +718,7 @@
 	const talent_gains = computed(() => farmer.value ? Math.round(farmer.value.talent_more / 3) : 0)
 
 	const trophies_list = computed(() => {
-		const list: any[] = []
+		const list: Trophy[] = []
 		for (const tr in trophies.value) {
 			if (trophies.value[tr].unlocked && trophies.value[tr].category !== 6) {
 				list.push(trophies.value[tr])
@@ -728,7 +729,7 @@
 	})
 
 	const trophies_grid = computed(() => {
-		const grid: {[key: string]: any} = {}
+		const grid: {[key: string]: Trophy | null} = {}
 		for (const tr in trophies.value) {
 			if (trophies.value[tr].category !== 6) {
 				grid[tr] = trophies.value[tr].unlocked ? trophies.value[tr] : null
@@ -738,7 +739,7 @@
 	})
 
 	const bonus_trophies = computed(() => {
-		const bonus: any[] = []
+		const bonus: Trophy[] = []
 		for (const tr in trophies.value) {
 			if (trophies.value[tr].unlocked && trophies.value[tr].category === 6) {
 				bonus.push(trophies.value[tr])
@@ -803,7 +804,7 @@
 		LeekWars.logoutDialog = true
 	}
 
-	function showTrophyTooltip(trophy: any, event: MouseEvent) {
+	function showTrophyTooltip(trophy: Trophy, event: MouseEvent) {
 		const rect = (event.currentTarget as HTMLElement).getBoundingClientRect()
 		trophyTooltip.value = {
 			show: true,
@@ -846,7 +847,8 @@
 					fill: { target: 'origin', above: '#5fad1b30' },
 				}
 			]
-		} as any
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	} as any
 		chartOptions.value = {
 			aspectRatio: 2.5,
 			plugins: { legend: { display: false } },
@@ -920,7 +922,7 @@
 			return
 		}
 
-		LeekWars.fileToImage(file, (avatarRef.value as any)?.$el as Element)
+		LeekWars.fileToImage(file, avatarRef.value?.$el as Element)
 
 		const formdata = new FormData()
 		formdata.append('avatar', file)
@@ -983,7 +985,7 @@
 		})
 	}
 
-	function acceptInvitation(invitation: any) {
+	function acceptInvitation(invitation: TeamInvitation) {
 		LeekWars.post('team/accept-invitation', {invitation_id: invitation.id}).then(() => {
 			LeekWars.toast(t('invitation_accepted'))
 			router.push('/team/' + invitation.team_id)
@@ -992,11 +994,11 @@
 		})
 	}
 
-	function rejectInvitation(invitation: any) {
+	function rejectInvitation(invitation: TeamInvitation) {
 		LeekWars.post('team/reject-invitation', {invitation_id: invitation.id}).then(() => {
 			if (farmer.value) {
 				LeekWars.toast(t('invitation_rejected'))
-				farmer.value.team_invitations.splice(farmer.value.team_invitations.indexOf(invitation), 1)
+				;(farmer.value.team_invitations as TeamInvitation[]).splice((farmer.value.team_invitations as TeamInvitation[]).indexOf(invitation), 1)
 			}
 		}).error(error => {
 			LeekWars.toast(t(error.error))
@@ -1007,7 +1009,7 @@
 		LeekWars.post('team/cancel-candidacy-for-team', { team_id: candidacy.team_id }).then(() => {
 			if (farmer.value) {
 				LeekWars.toast(t('candidacy_canceled'))
-				farmer.value.candidacies = farmer.value.candidacies.filter((c: any) => c.team_id !== candidacy.team_id)
+				farmer.value.candidacies = (farmer.value.candidacies as { team_id: number }[]).filter((c) => c.team_id !== candidacy.team_id)
 			}
 		}).error(error => {
 			LeekWars.toast(error)

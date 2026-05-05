@@ -152,7 +152,7 @@ abstract class FightEntity extends Entity {
 	public states: Set<number> = new Set()
 	// Reachable cells
 	public reachableCells: Set<Cell> = new Set<Cell>()
-	public reachableCellsArea: any
+	public reachableCellsArea!: number[][]
 	// Animations
 	public handPos = 0
 	// Weapon

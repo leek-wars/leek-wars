@@ -202,7 +202,7 @@
 		fast:    { label: 'Rapide',    title: 'Inscription rapide',    color: '#ff9800' },
 	}
 	const GRID = { color: 'rgba(128,128,128,0.15)' }
-	const makeChartOptions = (stacked: boolean): ChartOptions<any> => ({
+	const makeChartOptions = (stacked: boolean): ChartOptions<'bar'> => ({
 		responsive: true,
 		maintainAspectRatio: false,
 		plugins: { legend: { position: 'bottom' } },
@@ -214,18 +214,40 @@
 
 	const router = useRouter()
 
-	const data = ref<any>(null)
-	const sources = ref<any>(null)
-	const last = ref<any>(null)
+	interface RegistrationEntry {
+		day: string
+		classic: string | number
+		github: string | number
+		fast: string | number
+		google?: string | number
+		tuto_done?: string | number
+		avg_tuto_step?: string | number
+		verified?: string | number
+		[key: string]: unknown
+	}
+	interface SourceFarmer {
+		github?: boolean
+		google?: boolean
+		pass?: boolean
+		reg_type?: string
+		register_time: number
+		didactitiel_seen?: boolean
+		tutorial_progress?: number
+		[key: string]: unknown
+	}
+
+	const data = ref<Record<string, unknown> | null>(null)
+	const sources = ref<Record<string, unknown> | null>(null)
+	const last = ref<SourceFarmer[] | null>(null)
 	const loading = ref(false)
-	let timer: any = null
-	const last_farmers_by_day = ref<any>({})
+	let timer: ReturnType<typeof setInterval> | null = null
+	const last_farmers_by_day = ref<Record<string, SourceFarmer[]>>({})
 
 	const days = ref(parseInt(localStorage.getItem(STORAGE_KEY_DAYS) || '30'))
 	const stats_loading = ref(false)
-	const countries = ref<any[]>([])
+	const countries = ref<{ code: string, count: number }[]>([])
 	const country_available = ref(true)
-	const retention = ref<any>(null)
+	const retention = ref<Record<string, number> | null>(null)
 	const chartKey = ref(0)
 	const registrationsChart = ref<ChartData<'bar'> | null>(null)
 	const tutoChart = ref<ChartData<'line'> | null>(null)
@@ -286,7 +308,7 @@
 		})
 	}
 
-	function buildCharts(registrations: any[], trophies: any[]) {
+	function buildCharts(registrations: RegistrationEntry[], trophies: { day: string, avg_trophies: string | number }[]) {
 		const labels = registrations.map(r => r.day)
 
 		registrationsChart.value = {
@@ -321,7 +343,7 @@
 		return REG_TYPES[type]?.title ?? ''
 	}
 
-	function tutoTitle(farmer: any): string {
+	function tutoTitle(farmer: SourceFarmer): string {
 		const didactitiel = farmer.didactitiel_seen ? 'Didactitiel terminé' : 'Didactitiel non terminé'
 		const tuto = 'Tutoriel ' + farmer.tutorial_progress + '/10'
 		return didactitiel + ' · ' + tuto

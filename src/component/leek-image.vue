@@ -89,37 +89,37 @@ const HAT_SIZES: { [key: number]: {width: number, height: number} } = {
 }
 
 const is_boss = computed(() => {
-	const n = (props.leek as any).name
+	const n = props.leek.name
 	return n === 'nasu_samurai' || n === 'fennel_king' || n === 'evil_pumpkin'
 })
 
 const appearance = computed(() => LeekWars.getLeekAppearance(props.leek.level))
 const leekSize = computed(() => LeekWars.leekSizes[appearance.value])
 
-const hat = computed<any>(() => {
-	const l: any = props.leek
+const hat = computed<number | null>(() => {
+	const l = props.leek
 	let h = l.hat
 	if (!h && (!l.real || l.bot)) {
-		return botHats[-(props.ai as any) as number - 1]
+		return botHats[-(props.ai as number) - 1] ?? null
 	}
 	if (typeof h === 'number') {
 		return h
 	}
-	return LeekWars.items[h!.template].params
+	return h ? LeekWars.items[h.template].params : null
 })
 
 const hatTemplate = computed<HatTemplate | null>(() => hat.value ? LeekWars.hats[hat.value] : null)
 const hatImage = computed(() => hatTemplate.value ? 'hat/' + hatTemplate.value.name + '.png?2' : '')
 
 const leekWidth = computed<number>(() => {
-	const n = (props.leek as any).name
+	const n = props.leek.name
 	if (n === 'nasu_samurai') return 165
 	if (n === 'fennel_king') return 180
 	if (n === 'evil_pumpkin') return 292
 	return leekSize.value ? leekSize.value.width : 0
 })
 const leekHeight = computed<number>(() => {
-	const n = (props.leek as any).name
+	const n = props.leek.name
 	if (n === 'nasu_samurai') return 288
 	if (n === 'fennel_king') return 237
 	if (n === 'evil_pumpkin') return 237
@@ -127,7 +127,7 @@ const leekHeight = computed<number>(() => {
 })
 
 const hatWidth = computed(() => {
-	const n = (props.leek as any).name
+	const n = props.leek.name
 	if (n === 'nasu_samurai') return hatTemplate.value ? leekHeight.value * 0.65 * hatTemplate.value.width : 0
 	if (n === 'fennel_king') return hatTemplate.value ? leekHeight.value * 0.7 * hatTemplate.value.width : 0
 	if (n === 'evil_pumpkin') return hatTemplate.value ? leekHeight.value * 0.8 * hatTemplate.value.width : 0
@@ -136,39 +136,39 @@ const hatWidth = computed(() => {
 const hatSize = computed(() => hat.value ? HAT_SIZES[hat.value] : null)
 const hatHeight = computed(() => hatSize.value ? hatWidth.value * (hatSize.value.height / hatSize.value.width) : 0)
 const hatCrop = computed(() => {
-	if ((props.leek as any).name === 'nasu_samurai') return 0
+	if (props.leek.name === 'nasu_samurai') return 0
 	return hatTemplate.value ? hatTemplate.value.crop : 0
 })
 const hasHat = computed(() => hat.value !== null)
 const hatOffsetY = computed(() => {
-	if ((props.leek as any).name === 'nasu_samurai') return 0.85
+	if (props.leek.name === 'nasu_samurai') return 0.85
 	return hatTemplate.value ? hatTemplate.value.height : 0
 })
 
 const weapon = computed(() => {
-	const w: any = (props.leek as any).weapon
+	const w = props.leek.weapon
 	if (typeof w === 'number') return w
-	return w ? (w.id as number) : 0
+	return 0
 })
 const weaponTemplate = computed(() => weapon.value ? LeekWars.items[weapon.value].params : null)
 const weaponScale = computed(() => 1.0)
 const weaponData = computed(() => {
-	if ((props.leek as any).fish) return FishData
-	return weaponTemplate.value ? (WeaponsData as any)[weaponTemplate.value] : null
+	if (props.leek.fish) return FishData
+	return weaponTemplate.value ? WeaponsData[weaponTemplate.value] : null
 })
 const weaponRadianAngle = computed(() => {
-	if ((props.leek as any).name === 'evil_pumpkin') return -Math.PI / 2
+	if (props.leek.name === 'evil_pumpkin') return -Math.PI / 2
 	return (weaponData.value && weaponData.value.white) ? -Math.PI / 2.7 : Math.PI / 7 + randomAngle.value
 })
 const weaponAngle = computed(() => weaponRadianAngle.value * (180 / Math.PI))
 const weaponImage = computed(() => {
-	if ((props.leek as any).fish) return '/image/weapon/fish.png'
+	if (props.leek.fish) return '/image/weapon/fish.png'
 	return '/image/' + LeekWars.items[weapon.value].name.replace('_', '/') + '.png'
 })
 const weaponWidth = computed(() => weaponData.value ? weaponData.value.width : 0)
 const weaponHeight = computed(() => weaponData.value ? weaponData.value.height : 0)
 const weaponCX = computed(() => {
-	if ((props.leek as any).name === 'evil_pumpkin') {
+	if (props.leek.name === 'evil_pumpkin') {
 		return weaponData.value ? leekX.value + weaponData.value.centerX - 100 : 0
 	}
 	return weaponData.value ? leekX.value + weaponData.value.centerX : 0
@@ -229,20 +229,20 @@ const hatY = computed(() => offsetTop.value)
 
 const leekImage = computed<string>(() => {
 	if (is_boss.value) {
-		return '/image/mob/' + (props.leek as any).name + '.png'
+		return '/image/mob/' + props.leek.name + '.png'
 	}
 	const face = !props.leek.face ? '' : LEEK_FACES[props.leek.face]
-	return LeekWars.SERVER + 'image/leek/svg/leek_' + appearance.value + '_' + ((props.leek as any).back ? 'back' : 'front') + '_' + LeekWars.getLeekSkinName(props.leek.skin) + ((props.leek as any).metal ? '_metal' : '') + face + '.svg'
+	return LeekWars.SERVER + 'image/leek/svg/leek_' + appearance.value + '_' + (props.leek.back ? 'back' : 'front') + '_' + LeekWars.getLeekSkinName(props.leek.skin) + (props.leek.metal ? '_metal' : '') + face + '.svg'
 })
 
 const hand1 = computed(() => {
-	if ((props.leek as any).name === 'evil_pumpkin') return null
+	if (props.leek.name === 'evil_pumpkin') return null
 	return weaponData.value ? { x: weaponData.value.hand1x, y: weaponData.value.hand1z } : null
 })
 const hand2 = computed(() => weaponData.value ? { x: weaponData.value.hand2x, y: weaponData.value.hand2z } : null)
 const handSize = computed(() => 20 / weaponScale.value)
 const handImage = computed(() => {
-	const n = (props.leek as any).name
+	const n = props.leek.name
 	if (n === 'nasu_samurai') return '/image/fight/nasu_hand.png'
 	if (n === 'evil_pumpkin') return '/image/fight/pumpkin_hand.png'
 	return '/image/fight/leek_hand' + (props.leek.skin === 15 ? '_gold' : '') + '.png'
@@ -266,7 +266,7 @@ function drawOnCanvas(): HTMLCanvasElement | null {
 		hatImg.src = '/image/' + hatImage.value
 		context.drawImage(hatImg, hatX.value, hatY.value, hatWidth.value, hatHeight.value)
 	}
-	if (weapon.value || (props.leek as any).fish) {
+	if (weapon.value || props.leek.fish) {
 		const weaponImg = new Image()
 		weaponImg.src = weaponImage.value
 		const handImg = new Image()

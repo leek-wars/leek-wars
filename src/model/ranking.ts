@@ -10,7 +10,7 @@ class RankingRow {
 	public team?: string
 	public team_id?: number
 	public team_name?: string
-	[key: string]: any
+	[key: string]: unknown
 }
 class RankingLeekRow extends RankingRow {
 	public level!: number

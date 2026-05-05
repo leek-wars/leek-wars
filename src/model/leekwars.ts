@@ -10,6 +10,8 @@ import { emitter, vueMain } from '@/model/emitter'
 import { WeaponTemplate } from '@/model/weapon'
 import { UAParser } from 'ua-parser-js'
 import type { Router } from 'vue-router'
+import type { Constant } from '@/model/constant'
+import type { LSFunction } from '@/model/function'
 
 let _router: Router
 export function setRouter(r: Router) { _router = r }
@@ -38,7 +40,6 @@ const $t = (key: string, args?: any): string => {
 	const t = (i18n.global as any).t
 	return t(key, args)
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const $tc = (key: string, choice: number): string => {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const tc = (i18n as any).tc
@@ -46,7 +47,22 @@ const $tc = (key: string, choice: number): string => {
 }
 const $locale = (): string => i18n.locale
 
-function ucfirst(str: any) {
+interface Trophy {
+	id: number
+	code: string
+	habs: number
+	points: number
+	category: number
+	difficulty: number
+	rarity: number
+	unlocked: boolean
+	date: number
+	noun_gender: number
+	adj_gender: number
+	[key: string]: unknown
+}
+
+function ucfirst(str: string) {
 	str += ''
 	const f = str.charAt(0).toUpperCase()
 	return f + str.substr(1)
@@ -63,17 +79,18 @@ function retryDelay(retry: number) {
 
 interface ExtendedPromise<T> extends Promise<T> {
 	abort: () => void
-	error: (callback: (error: any) => void) => ExtendedPromise<T>
+	error: (callback: (error: unknown) => void) => ExtendedPromise<T>
 	then<TResult1 = T, TResult2 = never>(
 		onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
-		onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
+		onrejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | undefined | null
 	): ExtendedPromise<TResult1 | TResult2>
 	catch<TResult = never>(
-		onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null
+		onrejected?: ((reason: unknown) => TResult | PromiseLike<TResult>) | undefined | null
 	): ExtendedPromise<T | TResult>
 }
 
-function request<T = any>(method: string, url: string, params?: any): ExtendedPromise<T> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function request<T = any>(method: string, url: string, params?: string | FormData | null): ExtendedPromise<T> {
 	let currentXhr: XMLHttpRequest | null = null
 	let retryTimeout: ReturnType<typeof setTimeout> | null = null
 
@@ -91,10 +108,10 @@ function request<T = any>(method: string, url: string, params?: any): ExtendedPr
 				// xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
 				xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
 			}
-			xhr.onload = (e: any) => {
-				if (e.target.status === 200) {
-					resolve(e.target.response)
-				} else if (e.target.status === 429 && retry < RETRY_CONFIG.maxRetries) {
+			xhr.onload = () => {
+				if (xhr.status === 200) {
+					resolve(xhr.response)
+				} else if (xhr.status === 429 && retry < RETRY_CONFIG.maxRetries) {
 					const delay = retryDelay(retry)
 					if (store.getters.admin || LOCAL || DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
 						console.warn("[429] " + method + " " + url + " — retry " + (retry + 1) + "/" + RETRY_CONFIG.maxRetries + " in " + delay + "ms")
@@ -102,11 +119,11 @@ function request<T = any>(method: string, url: string, params?: any): ExtendedPr
 					retryTimeout = setTimeout(() => attempt(retry + 1), delay)
 				} else {
 					if (store.getters.admin || LOCAL || DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
-						const message = "[" + e.target.status + "] " + method + " " + url
+						const message = "[" + xhr.status + "] " + method + " " + url
 						console.error(message)
 						// LeekWars.toast(message, 5000)
 					}
-					reject(e.target.response)
+					reject(xhr.response)
 				}
 			}
 			xhr.onerror = () => {
@@ -125,49 +142,41 @@ function request<T = any>(method: string, url: string, params?: any): ExtendedPr
 		}
 		attempt(0)
 	})
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const extended = promise as any
 	extended.abort = () => {
 		if (retryTimeout) clearTimeout(retryTimeout)
 		if (currentXhr) currentXhr.abort()
 	}
-	extended.error = (e: (e: any) => void) => promise.catch(e)
+	extended.error = (e: (e: unknown) => void) => promise.catch(e)
 	const originalThen = promise.then.bind(promise)
-	extended.then = (p: (p: T) => void, r?: (e: any) => void) => {
+	extended.then = (p: (p: T) => void, r?: (e: unknown) => void) => {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const chained = originalThen(p, r) as any
-		chained.error = (e: (e: any) => void) => chained.catch(e)
+		chained.error = (e: (e: unknown) => void) => chained.catch(e)
 		return chained
 	}
 	return extended as ExtendedPromise<T>
 }
 
-function post<T = any>(url: any, form: any = {}) {
-	if (!(form instanceof FormData)) {
-		// const f = []
-		// for (const k in form) { f.push(k + '=' + encodeURIComponent(form[k])) }
-		// form = f.join('&')
-		form = JSON.stringify(form)
-	}
-	return request<T>('POST', LeekWars.API + url, form)
+function serializeBody(form: Record<string, unknown> | FormData): string | FormData {
+	if (form instanceof FormData) return form
+	return JSON.stringify(form)
 }
-function put<T = any>(url: any, form: any = {}) {
-	if (!(form instanceof FormData)) {
-		// const f = []
-		// for (const k in form) { f.push(k + '=' + encodeURIComponent(form[k])) }
-		// form = f.join('&')
-		form = JSON.stringify(form)
-	}
-	return request<T>('PUT', LeekWars.API + url, form)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function post<T = any>(url: string, form: Record<string, unknown> | FormData = {}) {
+	return request<T>('POST', LeekWars.API + url, serializeBody(form))
 }
-function del<T = any>(url: any, form: any = {}) {
-	if (!(form instanceof FormData)) {
-		// const f = []
-		// for (const k in form) { f.push(k + '=' + encodeURIComponent(form[k])) }
-		// form = f.join('&')
-		form = JSON.stringify(form)
-	}
-	return request<T>('DELETE', LeekWars.API + url, form)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function put<T = any>(url: string, form: Record<string, unknown> | FormData = {}) {
+	return request<T>('PUT', LeekWars.API + url, serializeBody(form))
 }
-function get<T = any>(url: any) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function del<T = any>(url: string, form: Record<string, unknown> | FormData = {}) {
+	return request<T>('DELETE', LeekWars.API + url, serializeBody(form))
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function get<T = any>(url: string) {
 	return request<T>('GET', LeekWars.API + url)
 }
 
@@ -330,13 +339,13 @@ const LeekWars = reactive({
 	menuCollapsed: false,
 	menuExpanded: false,
 	splitBack: false,
-	actions: [] as any[],
+	actions: [] as unknown[],
 	lightBar: false,
 	dark: 0,
 	title: '',
-	subtitle: '',
+	subtitle: '' as string | TranslateResult | null,
 	titleCounter: 0,
-	titleTag: null,
+	titleTag: null as string | number | null,
 	requests: 0,
 	notifsResults: localStorage.getItem('options/notifs-results') === 'true',
 	notifsPopups: localStorage.getItem('options/notifs-popups') !== 'false',
@@ -397,7 +406,7 @@ const LeekWars = reactive({
 			}
 		})
 	},
-	keepConnected: null as any,
+	keepConnected: null as ReturnType<typeof setInterval> | null,
 	startIntervals: () => {
 		if (LeekWars.keepConnected || !store.state.connected) { return }
 		LeekWars.keepConnected = setInterval(() => {
@@ -471,7 +480,7 @@ const LeekWars = reactive({
 		}
 		return null
 	},
-	isEmptyObj(obj: any) {
+	isEmptyObj(obj: object | null | undefined) {
 		for (const e in obj) {
 			// if (obj.hasOwnProperty(e)) {
 				return false
@@ -479,13 +488,13 @@ const LeekWars = reactive({
 		}
 		return true
 	},
-	selectWhere(array: any, key: string, value: any) {
+	selectWhere<T extends object>(array: T[], key: keyof T, value: T[keyof T]): T | null {
 		for (const e of array) {
 			if (e && e[key] === value) { return e }
 		}
 		return null
 	},
-	removeOneWhere(array: any, attr: string, condition: any) {
+	removeOneWhere<T extends object>(array: T[], attr: keyof T, condition: T[keyof T]) {
 		for (let i = 0; i < array.length; ++i) {
 			if (array[i] && array[i][attr] === condition) {
 				array.splice(i, 1)
@@ -493,10 +502,10 @@ const LeekWars = reactive({
 			}
 		}
 	},
-	clone(obj: any) {
+	clone<T>(obj: T): T {
 		return JSON.parse(JSON.stringify(obj))
 	},
-	selectText(element: any) {
+	selectText(element: HTMLElement) {
 		LeekWars.removeTextSelections()
 		if (window.getSelection) {
 			const range = document.createRange()
@@ -523,7 +532,7 @@ const LeekWars = reactive({
 	formatTurns(turns: number) {
 		return turns === -1 ? '∞' : turns
 	},
-	protect(string: any) {
+	protect(string: string) {
 		return ('' + string).replace(/&/g, "&amp;")
 			.replace(/>/g, "&gt;").replace(/</g, "&lt;")
 			.replace(/"/g, "&quot;").replace(/'/g, "&#39;")
@@ -533,7 +542,7 @@ const LeekWars = reactive({
 		const trimmed = url.trim()
 		return /^https?:\/\//i.test(trimmed) ? trimmed : null
 	},
-	decodehtmlentities(string: any) {
+	decodehtmlentities(string: string) {
 		// &nbsp; is a non-breaking SPACE, not a tab. Mapping to '\t' was the cause
 		// of issue #3337 : code pasted into the chat ended up with each &nbsp;
 		// rendered as a tab, then displayed at tab-size (4 or 8) chars — doubling
@@ -570,15 +579,15 @@ const LeekWars = reactive({
 	},
 	contenteditable_paste_protect(element: HTMLElement) {
 		// Paste : keep the pure text of the element
-		element.addEventListener('paste', (e: any) => {
+		element.addEventListener('paste', (e: ClipboardEvent) => {
 			e.preventDefault()
-			const text = (e.originalEvent || e).clipboardData.getData('text/plain')
+			const text = e.clipboardData?.getData('text/plain') ?? ''
 			document.execCommand('insertText', false, text)
 		})
 		// Drop : take the string data in the event and append it to the element
-		element.addEventListener('drop', (e: any) => {
+		element.addEventListener('drop', (e: DragEvent) => {
 			e.preventDefault()
-			e.originalEvent.dataTransfer.items[0].getAsString((str: any) => {
+			e.dataTransfer?.items[0]?.getAsString((str: string) => {
 				element.textContent = element.innerText + str
 			})
 		})
@@ -609,22 +618,24 @@ const LeekWars = reactive({
 		if (!LeekWars.isMobile()) { return }
 		LeekWars.splitBack = true
 	},
-	setActions(actions: any) {
+	setActions(actions: unknown[]) {
 		LeekWars.actions = actions
 	},
 	getAvatar(farmerID: number, avatarChanged: number) {
 		return avatarChanged === 0 ? '/image/no_avatar.png' : LeekWars.AVATAR + 'avatar/' + farmerID + '.png?' + avatarChanged
 	},
-	_documentation: {} as any,
-	_documentationPromises: {} as any,
+	_documentation: {} as Record<string, unknown>,
+	_documentationPromises: {} as Record<string, Promise<unknown>>,
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	documentation(locale: string): Promise<any> {
 		if (!(locale in LeekWars._documentationPromises)) {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const promise = get<any>('function/doc/' + locale)
 			LeekWars._documentationPromises[locale] = promise
-			promise.then((data) => {
+			promise.then((data: unknown) => {
 				LeekWars._documentation[locale] = data
 			})
-			return promise as any
+			return promise
 		}
 		return LeekWars._documentationPromises[locale]
 	},
@@ -723,7 +734,7 @@ const LeekWars = reactive({
 		LeekWars.sfw = false
 		LeekWars.setFavicon(true)
 	},
-	toast(message: string | TranslateResult, durationOrCallback: number | any = 1800) {
+	toast(message: string | TranslateResult, durationOrCallback: number | (() => void) = 1800) {
 		const d = typeof(durationOrCallback) === "number" ? durationOrCallback : 1800
 		const callback = typeof(durationOrCallback) === "function" ? durationOrCallback : null
 
@@ -771,7 +782,7 @@ const LeekWars = reactive({
 	setTitle, setSubTitle, setTitleCounter, setTitleTag,
 	shadeColor,
 	createCodeArea, createCodeAreaSimple,
-	clover: false, cloverTop: 0, cloverLeft: 0, cloverDX: 0, cloverDY: 0, cloverDDX: 0, cloverDDY: 0, cloverFake: false, cloverTimeout: null as any, lucky,
+	clover: false, cloverTop: 0, cloverLeft: 0, cloverDX: 0, cloverDY: 0, cloverDDX: 0, cloverDDY: 0, cloverFake: false, cloverTimeout: null as ReturnType<typeof setTimeout> | null, lucky,
 	setFavicon,
 	linkify, toChatLink,
 	parseUserAgent(ua: string): string {
@@ -803,17 +814,17 @@ const LeekWars = reactive({
 		nextTick(() => LeekWars.didactitial_visible = true)
 	},
 	socket: new Socket(),
-	hats: HATS as any,
-	pomps: POMPS as any,
-	schemes: SCHEMES as any,
-	weapons: WEAPONS as any,
-	weaponByName: WEAPON_BY_NAME as any,
-	items: ITEMS as any,
-	chipTemplates: CHIP_TEMPLATES as any,
-	trophies: [] as any,
-	constants: [] as any,
-	functions: [] as any,
-	chips: {} as any,
+	hats: HATS,
+	pomps: POMPS,
+	schemes: SCHEMES,
+	weapons: WEAPONS,
+	weaponByName: WEAPON_BY_NAME,
+	items: ITEMS,
+	chipTemplates: CHIP_TEMPLATES,
+	trophies: [] as Trophy[],
+	constants: [] as Constant[],
+	functions: [] as LSFunction[],
+	chips: {} as Record<string, unknown>,
 	trophyCategories: Object.freeze(TROPHY_CATEGORIES),
 	trophyCategoriesById: Object.freeze([...TROPHY_CATEGORIES].sort((a, b) => a.id - b.id)),
 	trophyCategoriesIcons: Object.freeze([
@@ -851,7 +862,7 @@ const LeekWars = reactive({
 			LeekWars.messagePopup = true
 		}
 	},
-	showCloverResult: (clover: any) => {
+	showCloverResult: (clover: Record<string, unknown>) => {
 		let result = ''
 		if (clover.type === 'passed') {
 			result = clover.passed ? i18n.t('potion.clover_passed_yes') as string : i18n.t('potion.clover_passed_no') as string
@@ -864,8 +875,8 @@ const LeekWars = reactive({
 		LeekWars.cloverResult = result
 		LeekWars.cloverPopup = true
 	},
-	encyclopedia: {} as {[key: string]: {[key: string]: any}},
-	encyclopediaById: {} as {[key: string]: {[key: number]: any}},
+	encyclopedia: {} as {[key: string]: {[key: string]: unknown}},
+	encyclopediaById: {} as {[key: string]: {[key: number]: unknown}},
 	encyclopediaLoaded: {} as {[key: string]: boolean},
 	encyclopediaPromise: {} as {[key: string]: Promise<void>},
 	loadEncyclopedia: (locale: string): Promise<void> => {
@@ -885,7 +896,7 @@ const LeekWars = reactive({
 		}
 		return LeekWars.encyclopediaPromise[locale] || Promise.resolve()
 	},
-	trophyWords: null as any[] | null,
+	trophyWords: null as Trophy[] | null,
 	loadTrophyWords: async () => {
 		if (LeekWars.trophyWords) {
 			return Promise.resolve(LeekWars.trophyWords)
@@ -906,39 +917,39 @@ const LeekWars = reactive({
 	christmasPresents: DATE.getMonth() === 11 && DATE.getDate() >= 25 && DATE.getDate() <= 31,
 	aprilFools: DATE.getMonth() === 3 && DATE.getDate() === 1,
 	LATEST_LEEKSCRIPT_VERSION: 4,
-	logClass: (log: any[]) => {
+	logClass: (log: unknown[]) => {
 		if (log[1] === 2 || log[1] === 7 || log[1] === 11) { return "warning" }
 		else if (log[1] === 3 || log[1] === 8) { return "error" }
 		else if (log[1] === 5) { return "pause" }
 		return null
 	},
-	logColor: (log: any[]) => {
-		return log[1] === 1 && log.length > 3 && log[3] >= 0 ? LeekWars.colorToHex(log[3]) : ''
+	logColor: (log: unknown[]) => {
+		return log[1] === 1 && log.length > 3 && (log[3] as number) >= 0 ? LeekWars.colorToHex(log[3] as number) : ''
 	},
-	logText: (log: any[]) => {
+	logText: (log: unknown[]) => {
 		if (log[1] === 5) { return "pause()" }
 		if (log[1] === 11) { return $t('leekscript.too_much_debug') }
-		if (log[1] >= 6 && log[1] <= 8) {
+		if ((log[1] as number) >= 6 && (log[1] as number) <= 8) {
 			if (log[3] === 113) { // HELP_PAGE_LINK
 				const helpPage = LeekWars.logHelpPage(log)
 				return helpPage
 			}
-			return $t('leekscript.error_' + log[3], log[4]) + "\n" + log[2]
+			return $t('leekscript.error_' + log[3], log[4] as string[]) + "\n" + log[2]
 		}
 		return log[2]
 	},
-	logHelpPage: (log: any[]) => {
-		const helpPages = {
+	logHelpPage: (log: unknown[]) => {
+		const helpPages: Record<string, Record<string, string>> = {
 			fr: { too_much_ops: "Comprendre les Erreurs d'exécution", summons: "Bulbes" },
 			en: { too_much_ops: "Understanding Runtime Errors",	summons: "Bulbs" },
 			es: { too_much_ops: "Comprender los errores de tiempo de ejecución", summons: "Bulbos" }
-		} as any
-		if (locale in helpPages) {
-			return helpPages[locale][log[4]]
 		}
-		return helpPages.en[log[4]]
+		if (locale in helpPages) {
+			return helpPages[locale][log[4] as string]
+		}
+		return helpPages.en[log[4] as string]
 	},
-	completionsProvider: null as any,
+	completionsProvider: null as unknown,
 	unload: () => {
 		// console.log("Leek Wars unload")
 		// if (LeekWars.completionsProvider) {
@@ -960,11 +971,11 @@ function setTitleCounter(counter: number) {
 	LeekWars.titleCounter = counter
 	updateTitle()
 }
-function setTitleTag(tag: any) {
+function setTitleTag(tag: string | number | null) {
 	LeekWars.titleTag = tag
 	updateTitle()
 }
-function setSubTitle(subtitle: any) {
+function setSubTitle(subtitle: string | TranslateResult | null) {
 	LeekWars.subtitle = subtitle
 }
 
@@ -1003,7 +1014,7 @@ function potionsBySkin(potions: {[key: string]: PotionTemplate}) {
 	for (const p in potions) {
 		const potion = potions[p]
 		if (potion.effects.length && potion.effects[0].type === PotionEffect.CHANGE_SKIN) {
-			result[potion.effects[0].params[0]] = potion
+			result[potion.effects[0].params[0] as number] = potion
 		}
 	}
 	return result
@@ -1034,7 +1045,7 @@ function formatDuration(timestamp: number, capital: boolean = false) {
 
 	const seconds = LeekWars.time - timestamp
 
-	let text: any = ""
+	let text: string = ""
 
 	if (seconds < 60) { // en dessous d'une minute
 		text = $t("main.time_just_now")
@@ -1109,7 +1120,7 @@ function formatDayMonthShort(timestamp: number) {
 function formatDateTime(timestamp: number) {
 	const date = new Date(timestamp * 1000)
 	const hour = date.getHours()
-	let minuts: any = date.getMinutes()
+	let minuts: string | number = date.getMinutes()
 	if (minuts < 10) { minuts = '0' + minuts }
 	return ucfirst($t('main.time_at', [ formatDate(timestamp), hour + ":" + minuts]))
 }
@@ -1172,7 +1183,7 @@ function createCodeAreaSimple(code: string, element: HTMLElement) {
 }
 
 
-function get_cursor_position(editableDiv: any) {
+function get_cursor_position(editableDiv: HTMLElement) {
 	if (window.getSelection) {
 		const sel = window.getSelection()
 		if (sel && sel.rangeCount) {
@@ -1185,7 +1196,8 @@ function get_cursor_position(editableDiv: any) {
 	return 0
 }
 
-function set_cursor_position(el: any, pos: number) {
+function set_cursor_position(el: HTMLElement, pos: number) {
+	if (!el.firstChild) return
 	const range = document.createRange()
 	const sel = window.getSelection()
 	range.setStart(el.firstChild, pos)
@@ -1322,10 +1334,12 @@ function goToRanking(type: string, order: string, id: number = 0) {
  */
 async function loadGameData() {
 	console.log('[GameData] Loading...')
-	const data = await loadGameDataRaw()
-	if (!data) {
+	const rawData = await loadGameDataRaw()
+	if (!rawData) {
 		throw new Error('[GameData] No data returned')
 	}
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const data = rawData as { [key: string]: any }
 
 	const missing = DATA_TYPES.filter(t => !data[t])
 	if (missing.length > 0) {
@@ -1353,7 +1367,7 @@ async function loadGameData() {
 	if (data.summon_templates) LeekWars.summonTemplates = Object.freeze(data.summon_templates)
 	if (data.trophy_categories) {
 		LeekWars.trophyCategories = Object.freeze(data.trophy_categories)
-		LeekWars.trophyCategoriesById = Object.freeze([...data.trophy_categories].sort((a: any, b: any) => a.id - b.id))
+		LeekWars.trophyCategoriesById = Object.freeze([...data.trophy_categories].sort((a, b) => a.id - b.id))
 	}
 	if (data.complexities) LeekWars.complexities = Object.freeze(data.complexities)
 	if (data.trophies) LeekWars.trophies = Object.freeze(data.trophies)
@@ -1364,6 +1378,6 @@ async function loadGameData() {
 	console.log(`[GameData] Applied in ${(performance.now() - t0).toFixed(1)}ms`)
 }
 
-if (DEV || LOCAL) { (window as any).LeekWars = LeekWars }
+if (DEV || LOCAL) { (window as unknown as Record<string, unknown>).LeekWars = LeekWars }
 
 export { LeekWars, Language, loadGameData }

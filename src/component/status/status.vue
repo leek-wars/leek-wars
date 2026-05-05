@@ -67,7 +67,7 @@ async function refresh() {
 	try {
 		const data = await LeekWars.get('health/check')
 		applyResponse(data)
-	} catch (e: any) {
+	} catch (e: unknown) {
 		if (e && typeof e === 'object' && 'services' in e) {
 			applyResponse(e)
 		} else {

@@ -230,9 +230,9 @@
 
 	const didactitiel = ref(false)
 	const didactitiel_enabled = ref(false)
-	const leek = ref<any>(null)
+	const leek = ref<Record<string, unknown> | null>(null)
 	const levelPopup = ref(false)
-	const levelPopupData = ref<any>(null)
+	const levelPopupData = ref<unknown>(null)
 	const encycloLinksLoading = ref(false)
 
 	if (!store.getters.admin) router.replace('/')
@@ -310,27 +310,27 @@
 	}
 
 	function testPush() {
-		LeekWars.post('notification/test-push').then((data: any) => {
+		LeekWars.post('notification/test-push').then((data) => {
 			LeekWars.toast("Push envoyé à " + data.endpoints + " endpoint(s)")
-		}).error((error: any) => {
+		}).error((error) => {
 			LeekWars.toast("Erreur : " + error.error)
 		})
 	}
 
 	function testMailSend() {
-		LeekWars.post('notification/test-mail-send').then((data: any) => {
+		LeekWars.post('notification/test-mail-send').then((data) => {
 			LeekWars.toast("Email envoyé à " + data.email)
-		}).error((error: any) => {
+		}).error((error) => {
 			LeekWars.toast("Erreur : " + error.error)
 		})
 	}
 
 	function arenaRegisterRandom() {
-		LeekWars.post('admin/arena-register-random').then((data: any) => {
+		LeekWars.post('admin/arena-register-random').then((data) => {
 			const modes = ['BR', 'Guerre', 'Chasse', 'Colosse']
 			const pref = data.preference === -1 ? 'Aucune' : modes[data.preference]
 			LeekWars.toast(`${data.farmer} / ${data.leek} inscrit (pref: ${pref})`)
-		}).error((error: any) => {
+		}).error((error) => {
 			LeekWars.toast("Erreur : " + error.error)
 		})
 	}
@@ -338,10 +338,10 @@
 	function refreshEncycloLinks() {
 		if (encycloLinksLoading.value) return
 		encycloLinksLoading.value = true
-		LeekWars.post('encyclopedia/refresh-links').then((data: any) => {
+		LeekWars.post('encyclopedia/refresh-links').then((data) => {
 			encycloLinksLoading.value = false
 			LeekWars.toast("Links refreshed: " + data.updated + " pages updated")
-		}).error((error: any) => {
+		}).error((error) => {
 			encycloLinksLoading.value = false
 			LeekWars.toast("Erreur : " + error.error)
 		})

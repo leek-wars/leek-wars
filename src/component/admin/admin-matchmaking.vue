@@ -162,13 +162,13 @@
 		loading.value = true
 		error.value = null
 		data.value = null
-		LeekWars.get('admin/matchmaking-debug/' + id).then((res: any) => {
+		LeekWars.get('admin/matchmaking-debug/' + id).then((res) => {
 			loading.value = false
 			data.value = res as DebugData
 			if (route.query.leek !== '' + id) {
 				router.replace({ query: { leek: '' + id } })
 			}
-		}).error((err: any) => {
+		}).error((err) => {
 			loading.value = false
 			error.value = err?.error || 'Erreur'
 		})

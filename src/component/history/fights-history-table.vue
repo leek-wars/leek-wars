@@ -163,7 +163,7 @@ const router = useRouter()
 
 const RESULT_ORDER: Record<string, number> = { win: 3, draw: 2, defeat: 1, '?': 0 }
 
-const headers = computed<any[]>(() => [
+const headers = computed<{ title: string, value: string, sortable?: boolean }[]>(() => [
 	{ title: t('type'), key: 'type', align: 'center', sortable: true, width: '60px' },
 	{ title: t('result'), key: 'result', align: 'center', sortable: true, width: '60px', sortRaw: (a: Fight, b: Fight) => (RESULT_ORDER[a.result] ?? 0) - (RESULT_ORDER[b.result] ?? 0) },
 	{ title: t('match'), key: 'match', align: 'center', sortable: false },

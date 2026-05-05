@@ -168,7 +168,7 @@
 </template>
 
 <script setup lang="ts">
-	import { EffectModifier, EffectType } from '@/model/effect'
+	import { EffectModifier, EffectType, EntityEffect } from '@/model/effect'
 	import { Chest } from './game/chest'
 	import { FightEntity } from './game/entity'
 	import { Game } from './game/game'
@@ -184,7 +184,7 @@
 		dark: boolean
 	}>()
 
-	function effectText(effect: any) {
+	function effectText(effect: EntityEffect) {
 		if (effect.type === EffectType.ADD_STATE) return ''
 		let r = '' + effect.value
 		if (effect.type === EffectType.SHACKLE_MAGIC || effect.type === EffectType.SHACKLE_MP || effect.type === EffectType.SHACKLE_TP || effect.type === EffectType.SHACKLE_STRENGTH || effect.type === EffectType.VULNERABILITY || effect.type === EffectType.ABSOLUTE_VULNERABILITY) {

@@ -44,6 +44,7 @@ function selectFirst() {
 }
 function scrollToSelected() {
 	nextTick(() => {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const items = (instance?.proxy as any)?.$el?.parentElement?.querySelectorAll('.command')
 		if (items) (items[index.value] as HTMLElement)?.scrollIntoView({ block: 'nearest' })
 	})

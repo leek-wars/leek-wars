@@ -55,10 +55,15 @@
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
 	const router = useRouter()
-	const farmers = ref<any>(null)
+	interface PendingFarmer {
+		id: number
+		disabled?: boolean
+		[key: string]: unknown
+	}
+	const farmers = ref<PendingFarmer[] | null>(null)
 	const email = ref('')
 	const deleteEmail = ref('')
-	const deleteTarget = ref<any>(null)
+	const deleteTarget = ref<Record<string, unknown> | null>(null)
 	const deleteConfirm = ref('')
 	const deleteError = ref('')
 	const deleteSuccess = ref('')
@@ -67,7 +72,7 @@
 	LeekWars.get('farmer/get-waiting-farmers').then(data => farmers.value = data.farmers)
 	LeekWars.setTitle("Admin activation mails")
 
-	function send(farmer: any) {
+	function send(farmer: PendingFarmer) {
 		if (!farmer.disabled) {
 			LeekWars.post('farmer/resend-activation-mail', {farmer_id: farmer.id})
 			farmer.disabled = true

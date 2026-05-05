@@ -18,7 +18,7 @@
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
 defineProps<{
-	farmer: any
+	farmer: Record<string, unknown>
 }>()
 </script>
 

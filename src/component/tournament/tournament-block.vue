@@ -40,7 +40,7 @@ defineOptions({ name: 'tournament-block' })
 const activeBlock = ref('')
 
 const props = defineProps<{
-	item: any
+	item: Record<string, unknown>
 	x: number
 	y: number
 	size: number

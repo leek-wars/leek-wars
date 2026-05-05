@@ -21,7 +21,7 @@
 defineOptions({ name: 'lw-type' })
 
 defineProps<{
-	type: any
+	type: string | number
 }>()
 </script>
 

@@ -22,7 +22,7 @@ defineProps<{
 	label?: string
 	id: number
 	category: string
-	on?: any
+	on?: Record<string, unknown>
 }>()
 </script>
 

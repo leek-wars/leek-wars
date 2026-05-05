@@ -143,7 +143,7 @@
 </template>
 
 <script lang="ts" setup>
-	import type { ChatMessage } from '@/model/chat'
+	import type { ChatMessage, ChatWindow } from '@/model/chat'
 	import { ChatType } from '@/model/chat'
 	import { formatChatMessage } from '@/model/chat-format'
 	import type { Farmer } from '@/model/farmer'
@@ -165,8 +165,8 @@
 
 	const props = defineProps<{
 		id?: number
-		newFarmer?: any
-		newConversation?: any
+		newFarmer?: Farmer
+		newConversation?: ChatWindow
 		large?: boolean
 	}>()
 
@@ -183,8 +183,8 @@
 
 	const menuMessage = ref<ChatMessage | null>(null)
 	let scrollMessage = 0
-	const menuActivator = ref<any>(null)
-	const menuEmojiActivator = ref<any>(null)
+	const menuActivator = ref<EventTarget | null>(null)
+	const menuEmojiActivator = ref<EventTarget | null>(null)
 	const menu = ref(false)
 	const menuEmoji = ref(false)
 
@@ -220,12 +220,13 @@
 	const chat = computed(() => props.id ? store.state.chat[props.id] : null)
 	const privateMessages = computed(() => chat.value && chat.value.type === ChatType.PM)
 	const isModerator = computed(() => store.getters.moderator || (chat.value && chat.value.type === ChatType.TEAM && store.state.farmer!.team!.member_level >= TeamMemberLevel.CAPTAIN))
-	const censorMessagesList = computed(() => chat.value && muteFarmer.value ? chat.value.messages.filter((m: any) => m.censored === 0 && m.farmer.id === muteFarmer.value!.id) : [])
-	const deleteMessagesList = computed(() => chat.value && muteFarmer.value ? chat.value.messages.filter((m: any) => m.farmer.id === muteFarmer.value!.id) : [])
+	const censorMessagesList = computed(() => chat.value && muteFarmer.value ? chat.value.messages.filter((m: ChatMessage) => m.censored === 0 && m.farmer.id === muteFarmer.value!.id) : [])
+	const deleteMessagesList = computed(() => chat.value && muteFarmer.value ? chat.value.messages.filter((m: ChatMessage) => m.farmer.id === muteFarmer.value!.id) : [])
 
+	const onResize = () => updateScroll()
 	emitter.on('chat', newMessage)
 	emitter.on('chat-history', chatHistory)
-	emitter.on('resize', updateScroll as any)
+	emitter.on('resize', onResize)
 	emitter.on('wsconnected', update)
 	if (store.state.wsconnected) {
 		update()
@@ -242,11 +243,11 @@
 	onBeforeUnmount(() => {
 		emitter.off('chat', newMessage)
 		emitter.off('chat-history', chatHistory)
-		emitter.off('resize', updateScroll as any)
+		emitter.off('resize', onResize)
 		emitter.off('wsconnected', update)
 	})
 
-	function newMessage(e: any) {
+	function newMessage(e: number[]) {
 		if (e[0] === props.id) {
 			updateScroll()
 			if (!isScrollBottom.value) { unread.value = true }
@@ -254,7 +255,7 @@
 		}
 	}
 
-	function chatHistory(e: any) {
+	function chatHistory(e: number) {
 		if (e === props.id && scrollMessage) {
 			nextTick(() => {
 				const element = (instance?.proxy?.$el as HTMLElement)?.querySelector('.m-' + scrollMessage) as HTMLElement
@@ -318,7 +319,7 @@
 		read()
 	}
 
-	function sendMessage(message: any) {
+	function sendMessage(message: string) {
 		LeekWars.track('chat-message')
 		if (message.startsWith('/ping')) {
 			store.commit('last-ping', Date.now())
@@ -330,7 +331,7 @@
 					const arenaLeekId = parseInt(localStorage.getItem('arena-leek') || '', 10)
 					const gardenLeekId = parseInt(localStorage.getItem('garden/leek') || '', 10)
 					const lastLeekId = (arenaLeekId && farmer.leeks[arenaLeekId]) ? arenaLeekId : gardenLeekId
-					const leek = (lastLeekId && farmer.leeks[lastLeekId]) ? farmer.leeks[lastLeekId] : Object.values(farmer.leeks)[0] as any
+					const leek = (lastLeekId && farmer.leeks[lastLeekId]) ? farmer.leeks[lastLeekId] : Object.values(farmer.leeks)[0]
 					if (leek) {
 						LeekWars.arena.register(leek.id)
 					}
@@ -444,7 +445,7 @@
 		muteDialog.value = false
 	}
 
-	function openMenu(activator: any, message: ChatMessage) {
+	function openMenu(activator: MouseEvent, message: ChatMessage) {
 		menuMessage.value = message
 		menuActivator.value = activator.target
 		menuEmoji.value = false
@@ -453,7 +454,7 @@
 		})
 	}
 
-	function openEmojis(activator: any, message: ChatMessage) {
+	function openEmojis(activator: MouseEvent, message: ChatMessage) {
 		menuMessage.value = message
 		menuEmojiActivator.value = activator.target
 		menu.value = false
@@ -475,7 +476,7 @@
 		}
 	}
 
-	function formatMessage(message: any) {
+	function formatMessage(message: ChatMessage) {
 		if (message.subMessages) {
 			for (const sub of message.subMessages) {
 				formatMessage(sub)

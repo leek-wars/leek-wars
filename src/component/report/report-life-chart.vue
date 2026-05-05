@@ -44,7 +44,8 @@
 	import { emitter } from '@/model/vue'
 	import { mixins } from '@/model/i18n'
 	import { Line } from 'vue-chartjs'
-	import { ChartOptions, Interaction } from 'chart.js'
+	import { ChartComponentRef } from 'vue-chartjs'
+	import { Chart as ChartJS, ChartOptions, ChartDataset, Interaction, InteractionItem, TooltipItem } from 'chart.js'
 	import { FightStatistics, StatisticsEntity } from './statistics'
 	import { onBeforeUnmount, ref, watch } from 'vue'
 
@@ -57,7 +58,7 @@
 
 	let chartFocusedIndex: number | null = null
 
-	function nearestDatasetBySegment(chart: any, px: number, py: number) {
+	function nearestDatasetBySegment(chart: ChartJS, px: number, py: number) {
 		let minDist = Infinity
 		let nearest = -1
 		for (let d = 0; d < chart.data.datasets.length; d++) {
@@ -77,8 +78,8 @@
 	}
 
 	// Custom interaction mode: when focused, only return items from the focused dataset
-	;(Interaction.modes as any).focusedNearest = function(chart: any, e: any, options: any, useFinalPosition: any) {
-		const items = Interaction.modes.index(chart, e, options, useFinalPosition)
+	;(Interaction.modes as Record<string, unknown>).focusedNearest = function(chart: ChartJS, e: { x: number; y: number }, options: Parameters<typeof Interaction.modes.index>[2], useFinalPosition: boolean): InteractionItem[] {
+		const items = Interaction.modes.index(chart, e as Parameters<typeof Interaction.modes.index>[1], options, useFinalPosition)
 		if (!items.length) return items
 		const target = chartFocusedIndex ?? nearestDatasetBySegment(chart, e.x, e.y).index
 		if (target === -1) return []
@@ -88,11 +89,11 @@
 	const smooth = ref(false)
 	const log = ref(false)
 	const turrets = ref(false)
-	const chartData = ref<any>(null)
+	const chartData = ref<{ datasets: ChartDataset<'line'>[] } | null>(null)
 	const chartOptions = ref<ChartOptions<'line'> | null>(null)
 	const chartDisplaySummons = ref(false)
 	let filtered_entities: StatisticsEntity[] = []
-	const lifeChart = ref<any>(null)
+	const lifeChart = ref<ChartComponentRef<'line'> | null>(null)
 
 	emitter.on('htmlclick', chartUnfocus)
 	smooth.value = localStorage.getItem('report/graph-type') === 'smooth'
@@ -143,7 +144,7 @@
 		let series = pairs.map(({s}) => s)
 		chartData.value = {
 			datasets: series.map((s, i) => ({
-				data: s.slice(0, (s.findLastIndex((p: any) => p.y !== null) + 1) || s.length),
+				data: s.slice(0, (s.findLastIndex((p: { x: number; y: number | null }) => p.y !== null) + 1) || s.length),
 				tension: smooth.value ? 0.2 : 0,
 				borderColor: TEAM_COLORS[filtered_entities[i].leek.team - 1],
 				label: filtered_entities[i].leek.translatedName,
@@ -155,7 +156,7 @@
 			plugins: {
 				legend: { display: false },
 				tooltip: {
-					mode: 'focusedNearest' as any,
+					mode: 'focusedNearest' as keyof typeof Interaction.modes,
 					intersect: false,
 					position: 'nearest',
 					yAlign: 'bottom',
@@ -165,12 +166,12 @@
 					boxPadding: 4,
 					callbacks: {
 						title: () => '',
-						label: (context: any) => context.dataset.label + ' : ' + context.parsed.y.toLocaleString() + (log.value ? '%' : '') + ' PV',
-						labelColor: (context: any) => ({ backgroundColor: context.dataset.borderColor, borderColor: context.dataset.borderColor })
+						label: (context: TooltipItem<'line'>) => context.dataset.label + ' : ' + context.parsed.y.toLocaleString() + (log.value ? '%' : '') + ' PV',
+						labelColor: (context: TooltipItem<'line'>) => ({ backgroundColor: context.dataset.borderColor as string, borderColor: context.dataset.borderColor as string })
 					}
 				}
 			},
-			onClick: (event: any) => {
+			onClick: (event: { native: MouseEvent | null }) => {
 				if (chartFocusedIndex !== null) {
 					chartUnfocus()
 					return
@@ -205,12 +206,12 @@
 		return `rgba(${r},${g},${b},${alpha})`
 	}
 
-	function findNearestDataset(event: any) {
-		const chart = (lifeChart.value as any)?.chart
+	function findNearestDataset(event: { native: MouseEvent | null }) {
+		const chart = lifeChart.value?.chart
 		if (!chart) return -1
 		const rect = chart.canvas.getBoundingClientRect()
-		const px = event.native.clientX - rect.left
-		const py = event.native.clientY - rect.top
+		const px = (event.native?.clientX ?? 0) - rect.left
+		const py = (event.native?.clientY ?? 0) - rect.top
 		let minDist = Infinity
 		let nearest = -1
 		for (let d = 0; d < chart.data.datasets.length; d++) {
@@ -236,9 +237,9 @@
 
 	function chartFocus(index: number) {
 		chartFocusedIndex = index
-		const chart = (lifeChart.value as any)?.chart
+		const chart = lifeChart.value?.chart
 		if (!chart) return
-		chart.data.datasets.forEach((ds: any, i: number) => {
+		chart.data.datasets.forEach((ds: ChartDataset<'line'>, i: number) => {
 			const color = TEAM_COLORS[filtered_entities[i].leek.team - 1]
 			ds.borderWidth = i === index ? 4 : 3
 			ds.borderColor = hexToRgba(color, i === index ? 1 : 0.2)
@@ -248,9 +249,9 @@
 
 	function chartUnfocus() {
 		chartFocusedIndex = null
-		const chart = (lifeChart.value as any)?.chart
+		const chart = lifeChart.value?.chart
 		if (!chart) return
-		chart.data.datasets.forEach((ds: any, i: number) => {
+		chart.data.datasets.forEach((ds: ChartDataset<'line'>, i: number) => {
 			ds.borderWidth = 3
 			ds.borderColor = TEAM_COLORS[filtered_entities[i].leek.team - 1]
 		})

@@ -101,7 +101,8 @@ function validateCode() {
 	;(LeekWars.post('farmer/confirm-enable-two-factor-authentication', {code: code.value}).then(_data => {
 		validating.value = false
 		nextStep()
-	}) as any).error((_error: any) => {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	}) as any).error((_error) => {
 		validating.value = false
 		LeekWars.toast('Wrong code!')
 	})

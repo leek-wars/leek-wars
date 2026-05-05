@@ -64,17 +64,17 @@ const props = withDefaults(defineProps<{
 })
 
 
-const isClover = computed(() => props.potion?.effects?.some((e: any) => e.type >= PotionEffect.CLOVER_PASSED && e.type <= PotionEffect.CLOVER_SECOND))
+const isClover = computed(() => props.potion?.effects?.some((e) => e.type >= PotionEffect.CLOVER_PASSED && e.type <= PotionEffect.CLOVER_SECOND))
 
 const inventoryItem = computed(() => {
 	if (!store.state.farmer) return null
-	return store.state.farmer.potions.find((p: any) => p.template === props.itemTemplateId)
+	return store.state.farmer.potions.find((p) => p.template === props.itemTemplateId)
 })
 
 function useCloverPotion() {
 	const item = inventoryItem.value
 	if (!item) return
-	LeekWars.post('potion/use', { item_id: item.id }).then((data: any) => {
+	LeekWars.post('potion/use', { item_id: item.id }).then((data) => {
 		if (props.potion.consumable) {
 			store.commit('remove-inventory', { type: ItemType.POTION, item_template: props.itemTemplateId })
 		}

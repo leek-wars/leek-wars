@@ -313,7 +313,7 @@
 		<popup v-model="aiDialog" :width="800" icon="mdi-code-braces" :title="$t('select_ai')">
 			<div v-if="aiDialogBot" class="title"><v-icon>mdi-file</v-icon> {{ $t('bot_ais') }}</div>
 			<div v-if="aiDialogBot" class="bot-ai">
-				<div v-for="ai in fileSystem.botAIs" :key="ai.path" v-ripple class="ai" @click="clickDialogAI((ai as any))">
+				<div v-for="ai in fileSystem.botAIs" :key="ai.path" v-ripple class="ai" @click="clickDialogAI((ai as unknown as AI))">
 					<ai :ai="ai" :small="false" :library="false" />
 					<ul>
 						<li v-for="(spec, s) in ai.specs" :key="s">{{ $t(spec) }}</li>
@@ -377,13 +377,14 @@
 	import { locale } from '@/locale'
 	import CharacteristicTooltip from '@/component/leek/characteristic-tooltip.vue'
 	import { AI } from '@/model/ai'
+	import { Effect } from '@/model/effect'
 	import { FightType } from '@/model/fight'
 	import { mixins } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { Potion, PotionEffect } from '@/model/potion'
 	import { store } from '@/model/store'
-	import { WeaponsData } from '@/model/weapon'
+	import { WeaponTemplate, WeaponsData } from '@/model/weapon'
 	import { fileSystem } from '@/model/filesystem'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 	import AIElement from '@/component/app/ai.vue'
@@ -428,17 +429,22 @@
 		base!: boolean
 		name!: string
 		type!: number
-		seed!: any
-		max_turns?: any
+		seed!: number | null
+		max_turns?: number | null
 		default!: boolean
 		ai!: AI | null
 		turret_ai_team1?: string | null
 		turret_ai_team2?: string | null
 	}
+	interface TestMapData {
+		obstacles: {[cell: number]: boolean}
+		team1: number[]
+		team2: number[]
+	}
 	class TestMap {
 		id!: number
 		name!: string
-		data!: any
+		data!: TestMapData
 	}
 	class TestMapCell {
 		cell!: number
@@ -462,16 +468,16 @@
 	const newMapName = ref('')
 	const mapDialog = ref(false)
 	const leekDialog = ref(false)
-	const addLeekTeam = ref<any>(null)
+	const addLeekTeam = ref<TestScenarioLeek[] | null>(null)
 	const aiDialog = ref(false)
 	const aiDialogBot = ref(false)
-	const aiLeek = ref<Leek | null>(null)
+	const aiLeek = ref<TestScenarioLeek | null>(null)
 	const aiLeekTeam = ref(0)
 	const turretTeam = ref(0)
 	const chipsDialog = ref(false)
 	const weaponsDialog = ref(false)
 	const skinPotionDialog = ref(false)
-	const map = reactive<any[]>([])
+	const map = reactive<unknown[]>([])
 	let map_down = false
 	let map_add = false
 	let timeout: number | null = null
@@ -487,7 +493,7 @@
 
 	const bots = [domingo, betalpha, tisma, guj, hachess, rex]
 
-	const characsLimits: {[key: string]: any} = {
+	const characsLimits: {[key: string]: {min: number, max: number}} = {
 		life: {min: 1, max: 100000},
 		strength: {min: 0, max: 9999},
 		wisdom: {min: 0, max: 9999},
@@ -503,7 +509,16 @@
 	}
 
 	const selectedTemplate = ref(0)
-	const compositionTemplates = ref<any[]>([])
+	interface CompositionLeek {
+		id: number
+		ai: { file_path?: string; name: string; path?: string } | string | null
+		ally?: boolean
+	}
+	interface CompositionTemplate {
+		name: string
+		leeks: CompositionLeek[]
+	}
+	const compositionTemplates = ref<CompositionTemplate[]>([])
 	const allies = reactive<{[key: number]: Leek}>({})
 	const alliesAIs = reactive<{[key: string]: AI}>({})
 	const teamTurretAI = ref<AI | null>(null)
@@ -600,7 +615,7 @@
 	// currentLeek.chips runtime shape is number[] (template ids), not the typed Chip[]
 	const currentLeekChipIds = computed<number[]>(() => (currentLeek.value?.chips ?? []) as unknown as number[])
 
-	const availableWeapons = computed<any[]>(() => {
+	const availableWeapons = computed<WeaponTemplate[]>(() => {
 		if (!currentLeek.value) return []
 		return Object.values(LeekWars.weapons)
 	})
@@ -667,7 +682,7 @@
 
 	function generateBots() {
 		for (const bot of bots) {
-			leeks.value.push(bot as any)
+			leeks.value.push(bot as unknown as Leek)
 		}
 	}
 
@@ -676,7 +691,7 @@
 		updateScenarioBotsLevels()
 	}
 
-	function selectLeek(leek: any) {
+	function selectLeek(leek: Leek) {
 		currentLeek.value = leek
 		localStorage.setItem('editor/leek', '' + leek.id)
 	}
@@ -716,12 +731,12 @@
 
 	const skinPotions = computed(() => {
 		if (!store.state.farmer) return []
-		return store.state.farmer.potions.filter(p => LeekWars.potions[p.template].effects.some((e: any) => e.type === PotionEffect.CHANGE_SKIN))
+		return store.state.farmer.potions.filter(p => LeekWars.potions[p.template].effects.some((e: Effect) => e.type === PotionEffect.CHANGE_SKIN))
 	})
 
 	function changeSkin(potion: Potion) {
 		if (!currentLeek.value) return
-		const effect = LeekWars.potions[potion.template].effects.find((e: any) => e.type === PotionEffect.CHANGE_SKIN)
+		const effect = LeekWars.potions[potion.template].effects.find((e: Effect) => e.type === PotionEffect.CHANGE_SKIN)
 		if (!effect) return
 		currentLeek.value.skin = effect.params[0]
 		skinPotionDialog.value = false
@@ -857,8 +872,8 @@
 		return Object.values(props.ais).sort((a, b) => a.path.toLowerCase().localeCompare(b.path.toLowerCase()))
 	})
 
-	function clickLeekAI(leek: any, team: number) {
-		if (allLeeks.value[leek.id] && (allLeeks.value[leek.id] as any).ally) return
+	function clickLeekAI(leek: TestScenarioLeek, team: number) {
+		if (allLeeks.value[leek.id] && allLeeks.value[leek.id].ally) return
 		turretTeam.value = 0
 		aiDialog.value = true
 		aiDialogBot.value = leek.id < 0
@@ -877,10 +892,10 @@
 		if (!currentScenario.value) return
 		if (turretTeam.value > 0) {
 			if (turretTeam.value === 1) {
-				currentScenario.value.turret_ai_team1 = ai.path as any
+				currentScenario.value.turret_ai_team1 = ai.path
 				updateScenario(currentScenario.value, { turret_ai_team1: ai.path })
 			} else {
-				currentScenario.value.turret_ai_team2 = ai.path as any
+				currentScenario.value.turret_ai_team2 = ai.path
 				updateScenario(currentScenario.value, { turret_ai_team2: ai.path })
 			}
 			turretTeam.value = 0
@@ -888,7 +903,7 @@
 			return
 		}
 		if (!aiLeek.value) return
-		;(aiLeek.value as any).ai = ai.path as any
+		aiLeek.value.ai = ai.path
 		LeekWars.post('test-scenario/add-leek', {scenario_id: currentScenario.value.id, leek: aiLeek.value.id, team: aiLeekTeam.value, ai: ai.path})
 		aiDialog.value = false
 	}
@@ -981,44 +996,46 @@
 		mapDialog.value = false
 	}
 
-	function updateLeekLevel(leek: any) {
+	function updateLeekLevel(leek: Leek) {
 		leek.level = Math.max(
-			leek.weapons.reduce((m: number, e: any) => Math.max(m, LeekWars.items[e].level), 1),
-			leek.chips.reduce((m: number, e: any) => Math.max(m, LeekWars.items[e].level), 1)
+			(leek.weapons as unknown as number[]).reduce((m: number, e: number) => Math.max(m, LeekWars.items[e].level), 1),
+			(leek.chips as unknown as number[]).reduce((m: number, e: number) => Math.max(m, LeekWars.items[e].level), 1)
 		)
 	}
 
-	function removeLeekChip(chip: any) {
+	function removeLeekChip(chip: number) {
 		if (!currentLeek.value) return
-		currentLeek.value.chips.splice(currentLeek.value.chips.indexOf(chip), 1)
+		const chips = currentLeek.value.chips as unknown as number[]
+		chips.splice(chips.indexOf(chip), 1)
 		updateLeekLevel(currentLeek.value)
 		saveLeek()
 	}
 
-	function removeLeekWeapon(weapon: any) {
+	function removeLeekWeapon(weapon: number) {
 		if (!currentLeek.value) return
-		currentLeek.value.weapons.splice(currentLeek.value.weapons.indexOf(weapon), 1)
+		const weapons = currentLeek.value.weapons as unknown as number[]
+		weapons.splice(weapons.indexOf(weapon), 1)
 		updateLeekLevel(currentLeek.value)
 		saveLeek()
 	}
 
-	function addLeekChip(chip: any) {
+	function addLeekChip(chip: number) {
 		if (!currentLeek.value) return
-		currentLeek.value.chips.push(chip)
+		;(currentLeek.value.chips as unknown as number[]).push(chip)
 		if (currentLeek.value.chips.length === currentLeek.value.ram) chipsDialog.value = false
 		updateLeekLevel(currentLeek.value)
 		saveLeek()
 	}
 
-	function addLeekWeapon(weapon: any) {
+	function addLeekWeapon(weapon: number) {
 		if (!currentLeek.value) return
-		currentLeek.value.weapons.push(weapon)
+		;(currentLeek.value.weapons as unknown as number[]).push(weapon)
 		if (currentLeek.value.weapons.length === MAX_WEAPONS) weaponsDialog.value = false
 		updateLeekLevel(currentLeek.value)
 		saveLeek()
 	}
 
-	function addOrRemoveLeekChip(chip: any) {
+	function addOrRemoveLeekChip(chip: number) {
 		if (!currentLeek.value) return
 		if (!hasChipEquipped(chip)) {
 			if (currentLeek.value.chips.length < currentLeek.value.ram) addLeekChip(chip)
@@ -1027,7 +1044,7 @@
 		}
 	}
 
-	function addOrRemoveLeekWeapon(weapon: any) {
+	function addOrRemoveLeekWeapon(weapon: number) {
 		if (!currentLeek.value) return
 		if (!hasWeaponEquipped(weapon)) {
 			if (currentLeek.value.weapons.length < MAX_WEAPONS) addLeekWeapon(weapon)
@@ -1036,14 +1053,14 @@
 		}
 	}
 
-	function hasChipEquipped(chip: any) {
+	function hasChipEquipped(chip: number) {
 		if (!currentLeek.value) return false
-		return (currentLeek.value.chips as any).indexOf(chip) !== -1
+		return (currentLeek.value.chips as unknown as number[]).indexOf(chip) !== -1
 	}
 
-	function hasWeaponEquipped(weapon: any) {
+	function hasWeaponEquipped(weapon: number) {
 		if (!currentLeek.value) return false
-		return (currentLeek.value.weapons as any).indexOf(weapon) !== -1
+		return (currentLeek.value.weapons as unknown as number[]).indexOf(weapon) !== -1
 	}
 
 	function changeLeekName() {
@@ -1055,11 +1072,8 @@
 
 	function createLeek() {
 		LeekWars.post('test-leek/new', {name: newLeekName.value}).then(data => {
-			const leek: any = {name: newLeekName.value, id: data.id, ai: -1}
+			const leek = new Leek({name: newLeekName.value, id: data.id, ai: null, ...data.data})
 			leeks.value.push(leek)
-			for (const k in data.data) {
-				leek[k] = data.data[k]
-			}
 			newLeekDialog.value = false
 			newLeekName.value = ''
 			currentLeek.value = leek
@@ -1069,7 +1083,7 @@
 
 	function createMap() {
 		LeekWars.post('test-map/new', {name: newMapName.value}).then(data => {
-			maps[data.id] = {name: newMapName.value, id: data.id, data: {obstacles: {}, team1: [], team2: []}} as any
+			maps[data.id] = {name: newMapName.value, id: data.id, data: {obstacles: {}, team1: [], team2: []}} as TestMap
 			newMapDialog.value = false
 			newMapName.value = ''
 			selectMap(maps[data.id])
@@ -1078,13 +1092,13 @@
 	}
 
 	function characteristicFocusout(characteristic: string, event: FocusEvent) {
-		if (!currentLeek.value || (currentLeek.value as any).bot || !event.target) return
+		if (!currentLeek.value || currentLeek.value.bot || !event.target) return
 		const target = event.target as HTMLElement
 		let value = parseInt(target.textContent as string, 10)
 		if (isNaN(value)) value = characsLimits[characteristic].min
 		value = Math.max(value, characsLimits[characteristic].min)
 		value = Math.min(value, characsLimits[characteristic].max)
-		;(currentLeek.value as any)[characteristic] = value
+		currentLeek.value[characteristic] = value
 		saveLeek()
 	}
 
@@ -1094,8 +1108,8 @@
 				...JSON.parse(JSON.stringify(leek)),
 				id: data.id
 			})
-			leeks.value.push(newLeek as any)
-			currentLeek.value = newLeek as any
+			leeks.value.push(newLeek)
+			currentLeek.value = newLeek
 			saveLeek()
 		})
 		.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
@@ -1167,7 +1181,8 @@
 		updateScenario(currentScenario.value, { type: currentScenario.value.type })
 	}
 
-	function updateScenario(scenario: TestScenario, data: any) {
+	type ScenarioUpdateData = Partial<Pick<TestScenario, 'type' | 'map' | 'seed' | 'max_turns' | 'turret_ai_team1' | 'turret_ai_team2'>>
+	function updateScenario(scenario: TestScenario, data: ScenarioUpdateData) {
 		if (scenario.id === 0) {
 			LeekWars.post('test-scenario/new', { name: scenario.ai!.name }).then(r => {
 				delete scenarios[0]
@@ -1223,8 +1238,8 @@
 					const leek = leeks.value[l]
 					if (!leek.chips) leek.chips = []
 					if (!leek.weapons) leek.weapons = []
-					;(leek as any).real = false
-					;(leek as any).ai = -1
+					leek.real = false
+					leek.ai = null
 				}
 				const startLeekID = parseInt(localStorage.getItem('editor/leek') || '', 10)
 				if (startLeekID && startLeekID in leeks.value) {

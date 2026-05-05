@@ -141,7 +141,7 @@
 	let tooltipHideTimer: number = 0
 	let tooltipOnTooltip: boolean = false
 
-	const bottomPanel = ref<any>(null)
+	const bottomPanel = ref<{ expanded: boolean } | null>(null)
 	const bottomContent = ref<HTMLElement | null>(null)
 
 	function showTooltip(data: { item: ItemTemplate, quantity: number, craftCost?: number, event: MouseEvent }) {
@@ -183,7 +183,9 @@
 		tooltipVisible.value = false
 	}
 
-	function isCraftable(scheme: any): boolean {
+	interface Scheme { id: number; result: number; items: ([number, number] | null)[] }
+
+	function isCraftable(scheme: Scheme): boolean {
 		if (!store.state.farmer) return false
 		const farmer = store.state.farmer
 		for (const ingredient of scheme.items) {
@@ -192,21 +194,21 @@
 			if (itemId === 148) {
 				if (farmer.habs < quantity) return false
 			} else {
-				const found = farmer.resources.find((i: any) => i.template === itemId)
-					|| farmer.components.find((i: any) => i.template === itemId)
-					|| farmer.potions.find((i: any) => i.template === itemId)
-					|| farmer.weapons.find((i: any) => i.template === itemId)
-					|| farmer.chips.find((i: any) => i.template === itemId)
+				const found = farmer.resources.find((i) => i.template === itemId)
+					|| farmer.components.find((i) => i.template === itemId)
+					|| farmer.potions.find((i) => i.template === itemId)
+					|| farmer.weapons.find((i) => i.template === itemId)
+					|| farmer.chips.find((i) => i.template === itemId)
 				if (!found || found.quantity < quantity) return false
 			}
 		}
 		return true
 	}
 
-	const all_schemes = computed<any[]>(() => {
+	const all_schemes = computed<Scheme[]>(() => {
 		if (!store.state.farmer) return []
-		return Object.values(LeekWars.schemes)
-			.filter((scheme: any) => store.state.farmer?.schemes.find(s => LeekWars.items[s.template].params == scheme.id))
+		return (Object.values(LeekWars.schemes) as Scheme[])
+			.filter((scheme) => store.state.farmer?.schemes.find(s => LeekWars.items[s.template].params == scheme.id))
 	})
 
 	const schemeFilterTypes = computed<ItemType[]>(() => {
@@ -225,7 +227,7 @@
 		return [...schemes].sort((a, b) => {
 			if (sort.value === Sort.LEVEL) return LeekWars.items[b.result].level - LeekWars.items[a.result].level
 			if (sort.value === Sort.RARITY) return LeekWars.items[b.result].rarity - LeekWars.items[a.result].rarity
-			if (sort.value === Sort.INGREDIENT_COUNT) return b.items.filter((i: any) => i !== null).length - a.items.filter((i: any) => i !== null).length
+			if (sort.value === Sort.INGREDIENT_COUNT) return b.items.filter((i) => i !== null).length - a.items.filter((i) => i !== null).length
 			return LeekWars.items[b.result].price! - LeekWars.items[a.result].price!
 		})
 	})
@@ -242,7 +244,7 @@
 	const instance = getCurrentInstance()
 
 	function resizerMousedown(e: MouseEvent) {
-		const panel = bottomPanel.value as any
+		const panel = bottomPanel.value
 		const column = (instance!.proxy!.$el as HTMLElement).querySelector('.column') as HTMLElement
 		const startY = e.clientY
 		const startHeight = panel.expanded ? bottomHeight.value : 0

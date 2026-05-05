@@ -60,12 +60,12 @@ const props = defineProps<{
 	characteristic: string
 	value: number
 	total: number
-	leek: any
+	leek: { level: number }
 	test: boolean
 }>()
 
 const base = computed(() => {
-	const base = {
+	const base: Record<string, number> = {
 		life: 100 + (props.leek.level - 1) * 3,
 		strength: 0,
 		wisdom: 0,
@@ -78,7 +78,7 @@ const base = computed(() => {
 		ram: 6,
 		tp: 10,
 		mp: 3,
-	} as any
+	}
 	return base[props.characteristic]
 })
 
@@ -90,10 +90,10 @@ const capitalSpent = computed(() => {
 	let step = 0
 	let usedCapital = 0
 	while (characAdded < characLeft) {
-		if (step < (COSTS as any)[props.characteristic].length - 1 && characAdded >= (COSTS as any)[props.characteristic][step + 1].step) {
+		if (step < COSTS[props.characteristic].length - 1 && characAdded >= COSTS[props.characteristic][step + 1].step) {
 			step++
 		}
-		const cost = (COSTS as any)[props.characteristic][step]
+		const cost = COSTS[props.characteristic][step]
 		characAdded += cost.sup
 		usedCapital += cost.capital
 	}

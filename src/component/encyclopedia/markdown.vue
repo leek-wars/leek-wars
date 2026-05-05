@@ -38,14 +38,17 @@
 	const router = useRouter()
 	const md = useTemplateRef<HTMLElement>('md')
 
-	const markdownInstance: any = new markdown({
+	interface SummaryNode { level: number; title: string; children: SummaryNode[] }
+	interface MountedComponent { $destroy: () => void }
+
+	const markdownInstance = new markdown({
 		html: true,
 		breaks: true,
 		linkify: true,
 	})
 	const html = ref('')
-	let summary: any = {}
-	let components: any[] = []
+	let summary: { children: SummaryNode[] } = { children: [] }
+	let components: MountedComponent[] = []
 
 	const encodeURL = (s: string) => s.trim().replace(/\s+/g, '_')
 	const encodeID = (s: string) => s.trim().replace(/\s+/g, '_').replace(/'/g, '~')
@@ -75,20 +78,21 @@
 
 			html.value = links(sanitized)
 
-			summary = {children: []}
-			const stack = [summary] as any[]
+			summary = { children: [] }
+			const stack: (SummaryNode | { children: SummaryNode[] })[] = [summary]
 
 			nextTick(() => {
 				const mdEl = md.value!
-				mdEl.querySelectorAll('h1, h2, h3, h4, h5').forEach((item: any) => {
-					const level = parseInt(item.tagName.substring(1), 10)
+				mdEl.querySelectorAll('h1, h2, h3, h4, h5').forEach((item) => {
+					const el = item as HTMLHeadingElement
+					const level = parseInt(el.tagName.substring(1), 10)
 					if (level >= 2) {
-						const node = {level, title: item.innerText, children: []}
+						const node: SummaryNode = { level, title: el.innerText, children: [] }
 						const parent = stack[level - 2] || summary
 						stack[level - 1] = node
 						parent.children.push(node)
 					}
-					item.id = encodeID(item.innerText)
+					el.id = encodeID(el.innerText)
 					if (level >= 2 && !item.querySelector('.heading-anchor')) {
 						const anchor = document.createElement('a')
 						anchor.className = 'heading-anchor'
@@ -189,21 +193,21 @@
 						components.push({ $destroy: () => app.unmount() })
 					}
 				})
-				const pageLink = (p: any) => '<a href="/encyclopedia/' + language.value + '/' + encodeURIComponent(p.title) + '">' + LeekWars.protect(p.title) + '</a>'
-				const renderPageList = (selector: string, endpoint: string, tag: 'ul' | 'ol', row: (p: any) => string) => {
+				const pageLink = (p: { title: string }) => '<a href="/encyclopedia/' + language.value + '/' + encodeURIComponent(p.title) + '">' + LeekWars.protect(p.title) + '</a>'
+				const renderPageList = (selector: string, endpoint: string, tag: 'ul' | 'ol', row: (p: { title: string, name?: string, time?: number, views?: number }) => string) => {
 					mdEl.querySelectorAll(selector).forEach((item) => {
-						LeekWars.get<any[]>(endpoint).then(pages => {
+						LeekWars.get<{ title: string, name?: string, time?: number, views?: number }[]>(endpoint).then(pages => {
 							item.innerHTML = '<' + tag + '>' + pages.map(row).join('') + '</' + tag + '>'
 							item.querySelectorAll('a').forEach(linkify)
 						})
 					})
 				}
 				renderPageList('.encyclopedia-locked-pages', 'encyclopedia/get-locked-pages', 'ul',
-					p => '<li>' + pageLink(p) + ', verrouillée par <b>' + LeekWars.protect(p.name) + '</b></li>')
+					p => '<li>' + pageLink(p) + ', verrouillée par <b>' + LeekWars.protect(p.name ?? '') + '</b></li>')
 				renderPageList('.encyclopedia-last-modifications', 'encyclopedia/get-last-pages/' + language.value, 'ul',
-					p => '<li>' + pageLink(p) + ', <b>' + LeekWars.protect(p.name) + '</b> ' + LeekWars.formatDuration(p.time) + '</li>')
+					p => '<li>' + pageLink(p) + ', <b>' + LeekWars.protect(p.name ?? '') + '</b> ' + LeekWars.formatDuration(p.time ?? 0) + '</li>')
 				renderPageList('.encyclopedia-most-viewed', 'encyclopedia/get-most-viewed/' + language.value, 'ol',
-					p => '<li>' + pageLink(p) + ' — ' + LeekWars.formatNumber(p.views) + ' views</li>')
+					p => '<li>' + pageLink(p) + ' — ' + LeekWars.formatNumber(p.views ?? 0) + ' views</li>')
 				// LoS
 				mdEl.querySelectorAll('.encyclopedia-los').forEach((item) => {
 					const app = createSubApp(LineOfSight, undefined, 'encyclopedia-los')
@@ -341,7 +345,8 @@
 
 							const CheckboxWrapper = defineComponent({
 								setup() {
-									return () => h(VCheckbox as any, {
+									// eslint-disable-next-line @typescript-eslint/no-explicit-any
+							return () => h(VCheckbox as any, {
 										hideDetails: true,
 										modelValue: checked.value,
 										'onUpdate:modelValue': (newValue: boolean) => {
@@ -491,15 +496,15 @@
 		}
 
 	function generateSummary(depth: number) {
-		const aux = (node: any, d: number) => {
+		const aux = (node: SummaryNode, d: number): string => {
 			let r = '<li><a href="#' + encodeURIComponent(encodeURL(node.title)) + '">' + LeekWars.protect(node.title) + '</a></li>'
 			if (d > 0 && node.children.length) {
-				r += '<ul>' + node.children.map((n: any) => aux(n, d - 1)).join('') + '</ul>'
+				r += '<ul>' + node.children.map((n: SummaryNode) => aux(n, d - 1)).join('') + '</ul>'
 			}
 			return r
 		}
 		return '<ul class="summary">'
-			+ summary.children.map((n: any) => aux(n, depth - 2)).join('')
+			+ summary.children.map((n: SummaryNode) => aux(n, depth - 2)).join('')
 			+ '</ul>'
 	}
 

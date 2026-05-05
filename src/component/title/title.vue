@@ -19,7 +19,7 @@ defineOptions({ name: 'lw-title' })
 const TROPHIES = LeekWars.trophies
 
 const props = defineProps<{
-	title: any
+	title: number[]
 }>()
 
 const { t } = useI18n()

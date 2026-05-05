@@ -160,11 +160,52 @@ import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { mixins , useNamespacedT } from '@/model/i18n'
-import { ItemType, ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED } from '@/model/item'
+import { ItemTemplate, ItemType, ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED } from '@/model/item'
 import { LeekWars } from '@/model/leekwars'
 import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 import Breadcrumb from '@/component/forum/breadcrumb.vue'
 import LwTitle from '@/component/title/title.vue'
+
+interface TrophyFarmer {
+	id: number
+	name: string
+	time: number
+	fight?: number
+	action?: number
+	duration?: number
+	title?: number
+	muted?: boolean
+	farmer?: { muted?: boolean }
+}
+
+interface TrophyTemplate {
+	id: number
+	code: string
+	habs: number
+	points: number
+	category: number
+	difficulty: number
+	description: string
+	in_fight: boolean
+	secret: boolean
+	unique: boolean
+	variable: boolean
+	progression: number
+	threshold: number
+	unlocked: boolean
+	date: number
+	fight?: number
+	action?: number
+	created_time: number
+	rarity: number
+	total: number
+	items: number[]
+	first_farmers: TrophyFarmer[]
+	last_farmers: TrophyFarmer[]
+	fastest_farmers?: TrophyFarmer[]
+	slowest_farmers?: TrophyFarmer[]
+	title_farmers?: TrophyFarmer[]
+}
 
 defineOptions({ name: 'trophy', i18n: {}, mixins: [...mixins], components: { 'lw-title': LwTitle } })
 
@@ -174,15 +215,15 @@ const route = useRoute()
 
 const ITEM_CATEGORY_NAME: Record<number, string> = ITEM_CATEGORY_NAME_TYPED
 
-const code = ref<any>(null)
-const trophy = ref<any>(null)
+const code = ref<string | null>(null)
+const trophy = ref<TrophyTemplate | null>(null)
 const error = ref(false)
 const deleteDialog = ref(false)
-const deleteFarmer = ref<any>(null)
+const deleteFarmer = ref<TrophyFarmer | null>(null)
 
 const items = computed(() => trophy.value ? trophy.value.items.map((i: number) => LeekWars.items[i]) : [])
 
-function schemeLabel(item: any) {
+function schemeLabel(item: ItemTemplate) {
 	const scheme = LeekWars.schemes[item.params]
 	if (!scheme) return ''
 	const result = LeekWars.items[scheme.result]
@@ -206,7 +247,7 @@ function update() {
 
 watch(() => route.params, update, { immediate: true })
 
-function confirmDelete(f: any) {
+function confirmDelete(f: TrophyFarmer) {
 	deleteFarmer.value = f
 	deleteDialog.value = true
 }
@@ -219,7 +260,7 @@ function deleteTrophy() {
 			LeekWars.toast('Trophée supprimé !')
 			update()
 		})
-		.catch((err: any) => LeekWars.toast(t('error_' + err.error, err.params) as string))
+		.catch((err: unknown) => LeekWars.toast(t('error_' + (err as { error: string }).error, (err as { params?: unknown[] }).params) as string))
 }
 </script>
 

@@ -179,6 +179,36 @@
 		query: string
 	}
 
+	interface SecurityAggregates {
+		total: number
+		top_ips: { ip: string; count: number; error_codes: string; farmers: number }[]
+		top_endpoints: { module: string; function: string; error_code: string; count: number }[]
+		top_user_agents: { user_agent: string; count: number; ips: number }[]
+		top_errors: { error_code: string; http_status: number; count: number }[]
+	}
+
+	interface SecurityLogEntry {
+		id: number
+		date: number
+		ip: string
+		http_status: number
+		error_code: string
+		method: string
+		uri: string
+		farmer_id?: number
+		farmer_name?: string
+		user_agent?: string
+		referer?: string
+		params?: unknown
+		extra?: unknown
+	}
+
+	interface IpDialogData {
+		total: number
+		farmers?: { id: number; name: string }[]
+		logs: SecurityLogEntry[]
+	}
+
 	function emptyFilters(): Filters {
 		return { ip: '', error_code: '', module: '', function: '', farmer_id: '', http_status: '', query: '' }
 	}
@@ -187,11 +217,11 @@
 	const route = useRoute()
 
 	const periodHours = ref(24)
-	const aggregates = ref<any>(null)
+	const aggregates = ref<SecurityAggregates | null>(null)
 	const aggLoading = ref(false)
 
 	const filters = ref<Filters>(emptyFilters())
-	const logs = ref<any[] | null>(null)
+	const logs = ref<SecurityLogEntry[] | null>(null)
 	const total = ref(0)
 	const page = ref(1)
 	const pageSize = ref(50)
@@ -200,7 +230,7 @@
 
 	const ipDialogOpen = ref(false)
 	const ipDialogIp = ref('')
-	const ipDialogData = ref<any>(null)
+	const ipDialogData = ref<IpDialogData | null>(null)
 	const ipDialogLoading = ref(false)
 
 	if (!store.getters.admin) router.replace('/')
@@ -214,7 +244,7 @@
 
 	function loadAggregates() {
 		aggLoading.value = true
-		LeekWars.post('admin/security-log-aggregates', { period_hours: periodHours.value }).then((data: any) => {
+		LeekWars.post('admin/security-log-aggregates', { period_hours: periodHours.value }).then((data) => {
 			aggregates.value = data
 			aggLoading.value = false
 		}).catch(() => {
@@ -224,16 +254,16 @@
 
 	function searchLogs() {
 		logsLoading.value = true
-		const f: any = {}
+		const f: Record<string, string | number> = {}
 		for (const key of Object.keys(filters.value) as (keyof Filters)[]) {
 			const v = filters.value[key]
 			if (v !== '' && v !== null && v !== undefined) {
 				f[key] = (key === 'farmer_id' || key === 'http_status') ? parseInt(v, 10) : v
 			}
 		}
-		LeekWars.post('admin/security-log', { filters: f, page: page.value, page_size: pageSize.value }).then((data: any) => {
-			logs.value = data.logs
-			total.value = data.total
+		LeekWars.post('admin/security-log', { filters: f, page: page.value, page_size: pageSize.value }).then((data) => {
+			logs.value = (data as { logs: SecurityLogEntry[]; total: number }).logs
+			total.value = (data as { logs: SecurityLogEntry[]; total: number }).total
 			logsLoading.value = false
 		}).catch(() => {
 			logsLoading.value = false
@@ -278,7 +308,7 @@
 		ipDialogOpen.value = true
 		ipDialogLoading.value = true
 		ipDialogData.value = null
-		LeekWars.get('admin/security-log-ip/' + encodeURIComponent(ip)).then((data: any) => {
+		LeekWars.get('admin/security-log-ip/' + encodeURIComponent(ip)).then((data) => {
 			ipDialogData.value = data
 			ipDialogLoading.value = false
 		}).catch(() => {

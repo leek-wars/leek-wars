@@ -16,7 +16,7 @@ class BossSquad {
 	public engaged_count?: number
 	public available_leeks?: Leek[]
 	public master?: number | Farmer
-	[key: string]: any
+	[key: string]: unknown
 }
 
 export class BossSquads {
@@ -47,17 +47,17 @@ export class BossSquads {
 		const leeks = localStorage.getItem('garden/boss-leeks') ? JSON.parse(localStorage.getItem('garden/boss-leeks')!) : allLeeks
 		LeekWars.socket.send([SocketMessage.GARDEN_BOSS_JOIN_SQUAD, squad_id, leeks])
 	}
-	update(data: any) {
+	update(data: {[key: number]: BossSquad[]}) {
 		this.squads = data
 		// this.enabled = true
 		// this.leeks = data.data[1]
 		// this.progress = LeekWars.objectSize(this.leeks)
 		// LeekWars.setTitleTag('BR ' + this.progress + '/10')
 	}
-	updateSquad(data: any) {
+	updateSquad(data: BossSquad) {
 		this.squad = data
 		// console.log("Update squad", data)
-		const leeks = this.squad!.engaged_leeks.filter(l => l.farmer === store.state.farmer!.id).map(l => l.id)
+		const leeks = this.squad!.engaged_leeks.filter(l => (l.farmer as unknown as number) === store.state.farmer!.id).map(l => l.id)
 		localStorage.setItem('garden/boss-leeks', JSON.stringify(leeks))
 		// this.enabled = true
 		// this.leeks = data.data[1]
@@ -104,9 +104,9 @@ export class BossSquads {
 	attack() {
 		LeekWars.socket.send([SocketMessage.GARDEN_BOSS_ATTACK])
 	}
-	start(data: any[]) {
+	start(data: unknown[]) {
 		// Only decrease fight count if we have engaged leeks in the squad
-		const hasEngagedLeeks = this.squad && this.squad.engaged_leeks.some((l: Leek) => l.farmer === store.state.farmer!.id)
+		const hasEngagedLeeks = this.squad && this.squad.engaged_leeks.some(l => (l.farmer as unknown as number) === store.state.farmer!.id)
 		if (hasEngagedLeeks) {
 			store.commit('update-fights', -1)
 		}

@@ -55,7 +55,7 @@ LeekWars.get<{[key: number]: ComponentTemplate}>("component/get-all/dfgdfgzegkty
 		.sort((a, b) => LeekWars.items[a.template].level - LeekWars.items[b.template].level)
 	components.value.forEach(component => component.stats = component.stats.map(stat => {
 		return stat instanceof Object ? Object.values(stat) : stat
-	}) as any)
+	}) as ComponentTemplate[])
 })
 
 onMounted(() => {
@@ -74,7 +74,7 @@ function up(component: ComponentTemplate, i: number) {
 }
 
 function updateComponent(component: ComponentTemplate) {
-	const stats = component.stats.map((stat: any) => [stat[0] as any, parseInt(stat[1] as any)])
+	const stats = component.stats.map((stat: [string, number]) => [stat[0], parseInt(String(stat[1]))])
 	LeekWars.put("component/set-stats", { component_id: component.id, stats: JSON.stringify(stats) })
 }
 </script>

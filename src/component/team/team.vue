@@ -887,7 +887,7 @@
 	const t = useNamespacedT('team')
 	const route = useRoute()
 	const router = useRouter()
-	const emblemRef = useTemplateRef<any>('emblem')
+	const emblemRef = useTemplateRef<{$el: Element}>('emblem')
 	const emblemInput = useTemplateRef<HTMLInputElement>('emblemInput')
 	const descriptionElement = useTemplateRef<HTMLElement>('descriptionElement')
 	const recruitmentElement = useTemplateRef<HTMLElement>('recruitmentElement')
@@ -967,7 +967,7 @@
 	const myInvitation = computed(() => {
 		const me = store.state.farmer
 		if (me && me.team_invitations && team.value) {
-			return me.team_invitations.find((inv: any) => inv.team_id === team.value!.id) || null
+			return me.team_invitations.find((inv) => inv.team_id === team.value!.id) || null
 		}
 		return null
 	})
@@ -995,7 +995,7 @@
 		})
 		.filter((h): h is NonNullable<typeof h> => h !== null))
 
-	const turret = computed<Record<string, any>>(() => {
+	const turret = computed<Record<string, number | string>>(() => {
 		if (!team.value) return {}
 		const team_ratio = 1 + (team.value.level / 100)
 		const max_life = 1000 + Math.round((4000 - 500) * team_ratio)
@@ -1050,11 +1050,11 @@
 				for (const composition of team.value.compositions) {
 					team.value.compositionsById[composition.id] = composition
 					for (const leek of composition.leeks) {
-						;(leek as any).dragging = false
+						leek.dragging = false
 					}
 				}
 				for (const leek of team.value.unengaged_leeks) {
-					;(leek as any).dragging = false
+					leek.dragging = false
 				}
 			}
 
@@ -1085,25 +1085,25 @@
 		if (!team.value) return
 		const styles = ['first', 'second', 'third']
 		for (let i = 0; i < 3; ++i) {
-			if (team.value.rankings.leeks.length > i) (team.value.rankings.leeks[i] as any).style = styles[i]
-			if (team.value.rankings.farmers.length > i) (team.value.rankings.farmers[i] as any).style = styles[i]
-			if (team.value.rankings.trophies.length > i) (team.value.rankings.trophies[i] as any).style = styles[i]
+			if (team.value.rankings.leeks.length > i) team.value.rankings.leeks[i].style = styles[i]
+			if (team.value.rankings.farmers.length > i) team.value.rankings.farmers[i].style = styles[i]
+			if (team.value.rankings.trophies.length > i) team.value.rankings.trophies[i].style = styles[i]
 		}
 		if (store.state.connected && store.state.farmer) {
 			for (const row of team.value.rankings.leeks) {
 				if (row.id in store.state.farmer.leeks) {
-					;(row as any).me = true
+					row.me = true
 				}
 			}
 			for (const row of team.value.rankings.farmers) {
 				if (row.id === store.state.farmer.id) {
-					;(row as any).me = true
+					row.me = true
 					break
 				}
 			}
 			for (const row of team.value.rankings.trophies) {
 				if (row.id === store.state.farmer.id) {
-					;(row as any).me = true
+					row.me = true
 					break
 				}
 			}
@@ -1121,7 +1121,7 @@
 			return
 		}
 
-		LeekWars.fileToImage(file, (emblemRef.value as any)?.$el as Element)
+		LeekWars.fileToImage(file, emblemRef.value?.$el as Element)
 
 		const formdata = new FormData()
 		formdata.append('team_id', '' + team.value.id)
@@ -1156,7 +1156,7 @@
 					fights: 10,
 					tournamentRange: [],
 					tournamentRangeLoading: false
-				} as any as Composition
+				} as unknown as Composition
 				team.value.compositions.push(compo)
 				team.value.compositionsById[compo.id] = compo
 				createCompoDialog.value = false
@@ -1306,13 +1306,13 @@
 		recruitmentElement.value!.blur()
 		const text = ('' + recruitmentElement.value!.innerText).trim()
 		team.value.recruitment_message = text
-		LeekWars.put('team/change-recruitment-message', {message: text}).error((e: any) => {
+		LeekWars.put('team/change-recruitment-message', {message: text}).error((e) => {
 			LeekWars.toast("Error: " + JSON.stringify(e))
 		})
 		nextTick(() => { savingRecruitment = false })
 	}
 
-	function acceptCandidacy(candidacy: any) {
+	function acceptCandidacy(candidacy: {id: number}) {
 		LeekWars.post('team/accept-candidacy', {candidacy_id: candidacy.id}).then(() => {
 			LeekWars.toast(gt('farmer_accepted'))
 			update()
@@ -1320,7 +1320,7 @@
 		.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
 	}
 
-	function rejectCandidacy(candidacy: any) {
+	function rejectCandidacy(candidacy: {id: number}) {
 		LeekWars.post('team/reject-candidacy', {candidacy_id: candidacy.id}).then(() => {
 			LeekWars.toast(gt('farmer_refused'))
 			update()
@@ -1401,7 +1401,7 @@
 		saveColumnsConfig()
 	}
 
-	function cancelInvitation(invitation: any) {
+	function cancelInvitation(invitation: {id: number}) {
 		if (!team.value) return
 		LeekWars.post('team/cancel-invitation', {invitation_id: invitation.id}).then(() => {
 			if (team.value) {
@@ -1507,12 +1507,12 @@
 		e.dataTransfer!.setData('text/plain', 'drag !!!')
 		draggedLeek.value = leek
 		draggedLeekComposition.value = composition
-		;(leek as any).dragging = true
+		leek.dragging = true
 		return true
 	}
 
 	function leeksDragend(leek: Leek, e: Event) {
-		;(leek as any).dragging = false
+		leek.dragging = false
 		draggedLeek.value = null
 		e.preventDefault()
 		return false
@@ -1521,7 +1521,7 @@
 	function leeksDrop(composition: Composition | null, e: Event) {
 		if (draggedLeek.value) {
 			moveLeek(draggedLeek.value, draggedLeekComposition.value, composition)
-			;(draggedLeek.value as any).dragging = false
+			draggedLeek.value.dragging = false
 			draggedLeek.value = null
 		}
 		e.preventDefault()
@@ -1538,7 +1538,7 @@
 		return !composition.tournament.registered && composition.leeks.length < 6 && draggedLeekComposition.value !== composition
 	}
 
-	function selectAI(ai: any) {
+	function selectAI(ai: {path: string}) {
 		LeekWars.put('team/set-turret-ai', {ai_path: ai.path}).then(() => {
 			team.value!.turret_ai = ai
 		})
@@ -1552,10 +1552,10 @@
 	}
 
 	function loadTournamentRange(composition: Composition) {
-		if ((composition as any).tournamentRange || (composition as any).tournamentRangeLoading) return
-		;(composition as any).tournamentRangeLoading = true
+		if (composition.tournamentRange || composition.tournamentRangeLoading) return
+		composition.tournamentRangeLoading = true
 		const power = Math.round(composition.leeks.reduce((p, l) => p + l.level ** LeekWars.POWER_FACTOR, 0))
-		LeekWars.get('tournament/range-compo/' + power).then(d => (composition as any).tournamentRange = d)
+		LeekWars.get('tournament/range-compo/' + power).then(d => composition.tournamentRange = d)
 	}
 
 	function chart() {
@@ -1575,6 +1575,7 @@
 				borderWidth: 2,
 				fill: { target: 'origin', above: '#5fad1b30' },
 			}]
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} as any
 		chartOptions.value = {
 			aspectRatio: 2.5,

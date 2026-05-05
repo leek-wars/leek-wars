@@ -107,7 +107,7 @@
 </template>
 
 <script setup lang="ts">
-	import { Fight, FightContext, FightType } from '@/model/fight'
+	import { Fight, FightContext, FightType, ReportLeek, ReportFarmer, ReportTeam } from '@/model/fight'
 	import ReportLeekRow from './report-leek-row.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import { computed } from 'vue'
@@ -116,18 +116,18 @@
 		fight: Fight
 		icon: string
 		title: string
-		leeks: any
-		farmer: any
-		team: any
-		flags: any
+		leeks: ReportLeek[]
+		farmer: ReportFarmer | null
+		team: ReportTeam & { xp?: number, cur_xp?: number, prev_xp?: number, next_xp?: number } | null
+		flags: Record<string, unknown>
 	}>()
 
-	const totalLevel = computed(() => props.leeks.reduce((sum: number, leek: any) => sum + leek.level, 0))
-	const totalXP = computed(() => props.leeks.reduce((sum: number, leek: any) => sum + (leek.xp || 0), 0))
-	const totalPower = computed(() => Math.round(props.leeks.reduce((sum: number, leek: any) => sum + Math.pow(leek.level, 4.2), 0)))
-	const totalMoney = computed(() => props.leeks.reduce((sum: number, leek: any) => sum + leek.money, 0))
-	const totalOpes = computed(() => props.leeks.reduce((sum: number, leek: any) => sum + leek.opes, 0))
-	const totalTime = computed(() => Math.round(props.leeks.reduce((sum: number, leek: any) => sum + leek.time, 0) / 1000000) / 1000)
+	const totalLevel = computed(() => props.leeks.reduce((sum: number, leek: ReportLeek) => sum + (leek.level || 0), 0))
+	const totalXP = computed(() => props.leeks.reduce((sum: number, leek: ReportLeek) => sum + (leek.xp || 0), 0))
+	const totalPower = computed(() => Math.round(props.leeks.reduce((sum: number, leek: ReportLeek) => sum + Math.pow(leek.level || 0, 4.2), 0)))
+	const totalMoney = computed(() => props.leeks.reduce((sum: number, leek: ReportLeek) => sum + (leek.money || 0), 0))
+	const totalOpes = computed(() => props.leeks.reduce((sum: number, leek: ReportLeek) => sum + (leek['opes'] as number || 0), 0))
+	const totalTime = computed(() => Math.round(props.leeks.reduce((sum: number, leek: ReportLeek) => sum + (leek['time'] as number || 0), 0) / 1000000) / 1000)
 
 	const currentBar = computed(() => {
 		const totalXP = props.team.next_xp - props.team.prev_xp

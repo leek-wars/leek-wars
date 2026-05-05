@@ -3,6 +3,7 @@ import { Cell } from '@/model/cell'
 import { CHIPS } from '@/model/chips'
 import { EffectType, EntityEffect } from '@/model/effect'
 import { Entity } from '@/model/entity'
+import type { RawAction } from '@/model/fight'
 import { Field } from '@/model/field'
 import { Fight, FightLeek, FightType } from "@/model/fight"
 import { i18n } from '@/model/i18n'
@@ -135,7 +136,7 @@ class FightStatistics {
 	public team2: StatisticsEntity[] = []
 	public teams: {[key: number]: Set<number>} = {}
 	// public best: any[] = []
-	public effects: any[] = []
+	public effects: {[key: number]: EntityEffect} = {}
 	public field!: Field
 	public newGlobalTurn: boolean = true
 	public time: number = 0
@@ -171,7 +172,7 @@ class FightStatistics {
 
 		let state = StatisticsState.BEGIN_TURN
 		let itemCaster: StatisticsEntity | null = null
-		let lastDamageAction: any = null
+		let lastDamageAction: RawAction | null = null
 
 		for (const action of fight.data.actions) {
 			const type = action[0] as ActionType
@@ -234,14 +235,15 @@ class FightStatistics {
 					break
 				}
 				case ActionType.MOVE_TO: {
-					const end_cell = this.field.cells[action[3][action[3].length - 1]]
+					const path = action[3] as unknown as number[]
+					const end_cell = this.field.cells[path[path.length - 1]]
 					const entity = entities[action[1]]
-					for (const cell of action[3]) {
+					for (const cell of path) {
 						entity.walkedCells.add(cell)
 					}
 					entity.move(end_cell)
-					entity.usedPM += action[3].length
-					this.addTime(action[3].length * 25)
+					entity.usedPM += path.length
+					this.addTime(path.length * 25)
 					break
 				}
 				case ActionType.MP_LOST:
@@ -310,7 +312,7 @@ class FightStatistics {
 							state = StatisticsState.ITEM_DAMAGE
 						} else {
 							// Détermine si la cible a du renvoi de dégât
-							const target = entities[lastDamageAction[1]]
+							const target = entities[lastDamageAction![1]]
 							let hasDamageReturn = false
 							for (const effect_id in target.effects) {
 								const effect = target.effects[effect_id]
@@ -344,7 +346,7 @@ class FightStatistics {
 						// Pendant son propre tour
 						if (state === StatisticsState.ITEM_DAMAGE_RETURN) {
 							// C'est un renvoi de dégâts
-							const target = entities[lastDamageAction[1]]
+							const target = entities[lastDamageAction![1]]
 							currentEntity.return_in += damage
 							currentEntity.nova_in += erosion
 							target.return_out += damage
@@ -695,7 +697,7 @@ class FightStatistics {
 		}
 	}
 
-	private addEffect(action: any, stacked: boolean) {
+	private addEffect(action: RawAction, stacked: boolean) {
 		const item = action[1]
 		const id = action[2]
 		const caster_id = action[3]
@@ -717,7 +719,7 @@ class FightStatistics {
 			}
 		} else {
 			// Ajout de l'effet
-			this.effects[id] = {id, item, caster: caster_id, target, type, value, turns, texture: null}
+			this.effects[id] = {id, item, caster: caster_id, target, type, value, turns, texture: null as unknown as HTMLImageElement, modifiers: 0}
 
 			leek.effects[id] = this.effects[id]
 			caster.launched_effects[id] = this.effects[id]

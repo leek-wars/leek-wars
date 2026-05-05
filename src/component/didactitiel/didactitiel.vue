@@ -152,7 +152,7 @@ function updateHeight() {
 	}, 50)
 }
 
-function input(event: any) {
+function input(event: Event) {
 	emit('update:modelValue', event)
 	updateHeight()
 }

@@ -71,11 +71,12 @@
 	import { Chest } from './game/chest'
 	import { Mob } from './game/mob'
 	import { Game } from './game/game'
+	import { FightEntity } from './game/entity'
 	import { Turret } from './game/turret'
 	import TurretImage from '@/component/turret-image.vue'
 	import ActionLog from '../report/report-log.vue'
 	import router from '@/router'
-	import { computed, ref } from 'vue'
+	import { Component, computed, ref } from 'vue'
 
 	defineOptions({ name: 'hud', components: { leek: ActionLeek } })
 
@@ -84,7 +85,7 @@
 		creator?: boolean
 	}>()
 
-	const ActionComponents: Record<number, any> = ActionComponentsTyped
+	const ActionComponents: Record<number, Component> = ActionComponentsTyped
 
 	const debug = ref(false)
 	const actionsWidth = ref(395)
@@ -97,14 +98,14 @@
 
 	actionsWidth.value = props.game.actionsWidth
 
-	function entity_enter(entity: any) {
+	function entity_enter(entity: FightEntity) {
 		props.game.hoverEntity = entity
 		props.game.hoverEntity!.updateReachableCells()
 	}
-	function entity_leave(entity: any) {
+	function entity_leave(_entity: FightEntity) {
 		props.game.hoverEntity = null
 	}
-	function entity_click(entity: any) {
+	function entity_click(entity: FightEntity) {
 		props.game.selectEntity(entity)
 	}
 
@@ -116,14 +117,14 @@
 		const startWidth = actionsWidth.value
 		const startX = e.clientX
 		const visible = actionsWidth.value > 0
-		const mousemove: any = (ev: MouseEvent) => {
+		const mousemove = (ev: MouseEvent) => {
 			let panelWidth = Math.max(0, Math.min(1000, startWidth + ev.clientX - startX))
 			if (visible && panelWidth < 60) {
 				panelWidth = 0
 			}
 			actionsWidth.value = panelWidth
 		}
-		const mouseup: any = (ev: MouseEvent) => {
+		const mouseup = () => {
 			document.documentElement!.removeEventListener('mousemove', mousemove)
 			document.documentElement!.removeEventListener('mouseup', mouseup)
 			props.game.actionsWidth = actionsWidth.value

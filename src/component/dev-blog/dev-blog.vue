@@ -50,7 +50,7 @@ import Breadcrumb from '../forum/breadcrumb.vue'
 
 defineOptions({ name: 'dev-blog', i18n: {}, mixins: [...mixins] })
 
-const articles = ref<any[] | null>(null)
+const articles = ref<Record<string, unknown>[] | null>(null)
 
 LeekWars.get('article/all').then(data => {
 	articles.value = data

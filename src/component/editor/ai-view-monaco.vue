@@ -49,7 +49,7 @@ const props = defineProps<{
 	theme: string
 	fontSize?: number
 	lineHeight?: number
-	t?: any
+	t?: (key: string, values?: unknown[]) => string
 	console?: boolean
 	lineNumbers?: boolean
 }>()
@@ -67,13 +67,13 @@ let editor: monaco.editor.IStandaloneCodeEditor
 let jumpToLine: number | null = 0
 let jumpToColumn: number | null = 0
 let scrollListener: monaco.IDisposable
-let analyzerTimeout: any
-let viewStateSaveTimeout: any
+let analyzerTimeout: ReturnType<typeof setTimeout> | null = null
+let viewStateSaveTimeout: ReturnType<typeof setTimeout> | null = null
 let currentAiPath: string | null = null
 const analyzing = ref(false)
 const saving = ref(false)
 const serverError = ref(false)
-const goods = ref<any[]>([])
+const goods = ref<{ ai: AI }[]>([])
 const position = ref<monaco.Position>({ lineNumber: 1, column: 1 } as monaco.Position)
 const selected = ref('')
 let currentVersionId = 0
@@ -110,7 +110,7 @@ onMounted(() => {
 	}, {
 		storageService: {
 			get() {},
-			getBoolean(key: any) {
+			getBoolean(key: string) {
 				if (key === "expandSuggestionDocs") return true
 				return false
 			},
@@ -119,6 +119,7 @@ onMounted(() => {
 			onWillSaveState() {},
 			onDidChangeStorage() {}
 		}
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	} as any))
 	scrollListener = editor.onDidScrollChange((e) => {
 		if (!props.ai) return
@@ -136,7 +137,7 @@ onMounted(() => {
 	editor.onDidFocusEditorWidget(() => {
 		emit('focus')
 	})
-	const isKey = (e: any, key: string) => e.code === key || e.browserEvent?.key === key
+	const isKey = (e: monaco.IKeyboardEvent, key: string) => e.code === key || e.browserEvent?.key === key
 	editor.onKeyDown((e) => {
 		if (props.console && isKey(e, 'Enter')) {
 			e.preventDefault()
@@ -169,6 +170,7 @@ onMounted(() => {
 		updateConflictDecorations()
 	})
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const suggestionWidget = (editor.getContribution('editor.contrib.suggestController') as any).widget
 	suggestionWidget.value.onDidShow(() => {
 		const widget = suggestionWidget.value._details.widget
@@ -176,11 +178,11 @@ onMounted(() => {
 			const body = widget._body as HTMLElement
 			const docs = widget._docs
 			docs.style.display = 'none'
-			body.querySelectorAll('.lw').forEach((e: any) => { e.remove() })
+			body.querySelectorAll('.lw').forEach((e: Element) => { e.remove() })
 			const element = document.createElement('div')
 			element.classList.add('lw')
 			body.appendChild(element)
-			const fun = FUNCTIONS.find((f: any) => f.name === docs.innerText)
+			const fun = FUNCTIONS.find((f) => f.name === docs.innerText)
 			if (fun) {
 				const doc = createSubApp(DocumentationFunction, { fun }, 'suggest-function')
 					.directive('code', code)
@@ -190,7 +192,7 @@ onMounted(() => {
 					suggestionWidget.value._details._placeAtAnchor(suggestionWidget.value._details._anchorBox, { width: 500, height: doc.$el.clientHeight + 10 }, true)
 				})
 			}
-			const constant = LeekWars.constants.find((c: any) => c.name === docs.innerText)
+			const constant = LeekWars.constants.find((c) => c.name === docs.innerText)
 			if (constant) {
 				const doc = createSubApp(DocumentationConstant, { constant }, 'suggest-constant')
 					.component('lw-code', Code)
@@ -214,21 +216,22 @@ onMounted(() => {
 		})
 	})
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const hoverController = (editor.getContribution('editor.contrib.contentHover') as any)
 	hoverController._getOrCreateContentWidget()
 	hoverController._contentWidget.onContentsChanged(() => {
 		const widget = hoverController._contentWidget.widget._resizableNode
 		const body = widget.domNode.querySelector('.hover-row-contents')
 		if (!body) return
-		body.querySelectorAll('.lw').forEach((e: any) => { e.remove() })
-		const firstRow = body.querySelector('.markdown-hover')
+		body.querySelectorAll('.lw').forEach((e: Element) => { e.remove() })
+		const firstRow = body.querySelector('.markdown-hover') as HTMLElement | null
 		if (!firstRow) return
 
 		const element = document.createElement('div')
 		element.classList.add('lw')
 		body.prepend(element)
 
-		const fun = FUNCTIONS.find((f: any) => f.name === firstRow.innerText)
+		const fun = FUNCTIONS.find((f) => f.name === firstRow.innerText)
 		if (fun) {
 			firstRow.style.display = 'none'
 			const doc = createSubApp(DocumentationFunction, { fun }, 'hover-function')
@@ -239,7 +242,7 @@ onMounted(() => {
 				hoverController._contentWidget.widget._resize({ width: 500, height: doc.$el.clientHeight + 40 })
 			})
 		}
-		const constant = LeekWars.constants.find((c: any) => c.name === firstRow.innerText)
+		const constant = LeekWars.constants.find((c) => c.name === firstRow.innerText)
 		if (constant) {
 			firstRow.style.display = 'none'
 			const doc = createSubApp(DocumentationConstant, { constant }, 'hover-constant')
@@ -454,7 +457,7 @@ defineExpose({
 	get analyzing() { return analyzing.value },
 	get saving() { return saving.value }, set saving(v: boolean) { saving.value = v },
 	get serverError() { return serverError.value }, set serverError(v: boolean) { serverError.value = v },
-	get goods() { return goods.value }, set goods(v: any[]) { goods.value = v },
+	get goods() { return goods.value }, set goods(v: { ai: AI }[]) { goods.value = v },
 	get position() { return position.value },
 	get selected() { return selected.value },
 })

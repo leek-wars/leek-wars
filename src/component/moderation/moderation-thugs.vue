@@ -46,7 +46,7 @@
 	}
 
 	const t = useNamespacedT('moderation-thugs')
-	const thugs = ref<any>(null)
+	const thugs = ref<Record<string, unknown>[] | null>(null)
 
 	const breadcrumb_items = computed(() => [
 		{name: "Modération", link: '/moderation'},

@@ -9,8 +9,8 @@ const i18nModules = import.meta.glob('/src/component/**/*.i18n', {
 }) as Record<string, () => Promise<Record<string, unknown>>>
 
 type I18nWithCompat = ReturnType<typeof createI18n> & {
-	t: (key: string, ...args: any[]) => string
-	tc: (key: string, choice?: number, ...args: any[]) => string
+	t: (key: string, ...args: unknown[]) => string
+	tc: (key: string, choice?: number, ...args: unknown[]) => string
 	locale: string
 }
 
@@ -18,7 +18,8 @@ const i18n = createI18n({
 	legacy: false,
 	globalInjection: true, // expose $t, $tc, $te, $i18n on all components
 	locale: initialLocale,
-	messages: {[initialLocale]: messages},
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	messages: {[initialLocale]: messages} as any,
 	silentTranslationWarn: true,
 	silentFallbackWarn: true,
 	missingWarn: false,
@@ -33,26 +34,33 @@ const i18n = createI18n({
 // pour le code historique (pages chargées hors composant Vue, services, etc.)
 Object.defineProperty(i18n, 't', {
 	get() {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		return (i18n.global.t as any).bind(i18n.global)
 	}
 })
 Object.defineProperty(i18n, 'tc', {
 	get() {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		return (i18n.global as any).rt
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			? (i18n.global.t as any).bind(i18n.global)
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			: ((i18n.global as any).tc as Function).bind(i18n.global)
 	}
 })
 Object.defineProperty(i18n, 'locale', {
 	get() {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		return (i18n.global.locale as any).value ?? i18n.global.locale
 	},
 	set(value: string) {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const loc = i18n.global.locale as any
 		if (loc && typeof loc === 'object' && 'value' in loc) {
 			loc.value = value
 		} else {
-			(i18n.global as any).locale = value
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			;(i18n.global as any).locale = value
 		}
 	}
 })
@@ -82,6 +90,7 @@ const mixins = [{
 	beforeCreate() {
 		// Reload translations because in case of hot reloading, they are lost
 		// Missing messages or messages for the current locale
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const opts = (this as any).$options
 		const locale = currentLocale()
 		if (!opts?.i18n?.messages?.[locale]) {
@@ -95,7 +104,8 @@ const mixins = [{
 	},
 	watch: {
 		'$i18n.locale'() {
-			const rawName = (this as any).$options?.name
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const rawName = (this as any).$options?.name
 			if (!rawName) return
 			const newLocale = currentLocale()
 			const name = normalizeComponentName(rawName)
@@ -124,6 +134,7 @@ function setI18nLanguage(lang: string) {
 	return lang
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function loadLanguageAsync(vue: any, newLocale: string) {
 	// console.log("loadLanguageAsync", newLocale)
 	const currentRoute = vue.$router.currentRoute.value?.matched[0]
@@ -147,6 +158,7 @@ function loadLanguageAsync(vue: any, newLocale: string) {
 	return Promise.resolve(setI18nLanguage(newLocale))
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function loadInstanceTranslations(newLocale: string, instance: any) {
 	if (!instance.$options?.name) {
 		return
@@ -178,6 +190,7 @@ function loadComponentLanguage(newLocale: string, component: ComponentInstance<C
 	let name = component.name ? normalizeComponentName(component.name) : undefined
 	if (name === "home" || !name) { name = "signup" }
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	if ((instance as any)?.$i18n?.messages?.[newLocale]) {
 		return
 	}

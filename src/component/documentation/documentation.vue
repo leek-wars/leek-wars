@@ -93,8 +93,8 @@
 	const route = useRoute()
 	const router = useRouter()
 
-	const categories: Record<string | number, any> = FUNCTION_CATEGORIES
-	const items = ref<any[]>([])
+	const categories: Record<string | number, { id: number; name: string }> = FUNCTION_CATEGORIES
+	const items = ref<(LSFunction | Constant)[]>([])
 	const query = ref('')
 	const lazy_start = ref(0)
 	const lazy_end = ref(10)
@@ -137,7 +137,7 @@
 	})
 	const lazy_items = computed(() => filteredItems.value.slice(lazy_start.value, lazy_end.value))
 	const filteredCategories = computed(() => {
-		const cats: {[key: number]: any} = {}
+		const cats: {[key: number]: (LSFunction | Constant)[]} = {}
 		for (const item of filteredItems.value) {
 			if (item.deprecated) continue
 			if (!(item.category in cats)) cats[item.category] = []
@@ -157,12 +157,12 @@
 			categoryState.value[category] = localStorage.getItem('documentation/category-' + category) === 'true'
 		}
 		let id = 0
-		for (const item of FUNCTIONS as any[]) {
+		for (const item of FUNCTIONS as LSFunction[]) {
 			if (item.replacement) {
 				FUNCTION_BY_ID[item.replacement].replacer = item
 			}
 		}
-		for (const item of FUNCTIONS as any[]) {
+		for (const item of FUNCTIONS as LSFunction[]) {
 			items.value.push(item)
 			item.lower_name = item.name.toLowerCase()
 			item.id = id++
@@ -180,11 +180,11 @@
 					}
 					item.data = new_data.toLowerCase()
 				} else {
-					let item_data = (t('doc.func_' + item.name) as any).toLowerCase()
+					let item_data = String(t('doc.func_' + item.name)).toLowerCase()
 					for (const i in item.arguments_names) {
-						item_data += (t('doc.func_' + item.name + '_arg_' + (parseInt(i, 10) + 1)) as any).toLowerCase()
+						item_data += String(t('doc.func_' + item.name + '_arg_' + (parseInt(i, 10) + 1))).toLowerCase()
 					}
-					item_data += (t('doc.func_' + item.name + '_return') as any).toLowerCase()
+					item_data += String(t('doc.func_' + item.name + '_return')).toLowerCase()
 					item.data = item_data
 				}
 				if (item.replacer) {
@@ -269,7 +269,7 @@
 				lazy_end.value = lazy_start.value + 10
 			}
 			setTimeout(() => {
-				const element: any = document.querySelector('.items .item[item=' + item + ']')
+				const element = document.querySelector<HTMLElement>('.items .item[item=' + item + ']')
 				if (element && elements.value) {
 					const offset = LeekWars.mobile ? 100 : (props.popup ? 185 : 140)
 					elements.value.scrollTo(0, element.offsetTop - offset + 10)

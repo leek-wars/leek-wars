@@ -433,10 +433,17 @@
 	// (parentNode null).
 	const replaceNextTick = (path: string) => nextTick(() => router.replace(path))
 
-	const garden = ref<any>(null)
+	interface GardenData {
+		fights: number
+		farmer_enabled: boolean
+		team_enabled: boolean
+		battle_royale_enabled: boolean
+		my_compositions: Composition[]
+	}
+	const garden = ref<GardenData | null>(null)
 	const category = ref('solo')
 	const selectedLeek = ref<Leek | null>(null)
-	const selectedComposition = ref<any>(null)
+	const selectedComposition = ref<Composition | null>(null)
 	const leekOpponents = reactive<{[key: number]: Leek[]}>({})
 	const leekErrors = reactive<{[key: number]: string}>({})
 	const farmerOpponents = ref<Farmer[] | null>(null)
@@ -451,7 +458,7 @@
 	const queue = ref(0)
 	const advanced = ref(false)
 	const storedSeed = parseInt(localStorage.getItem('garden/challenge/seed') || '', 10)
-	const seed = ref<any | null>(isNaN(storedSeed) || storedSeed < 1 ? null : storedSeed)
+	const seed = ref<number | null>(isNaN(storedSeed) || storedSeed < 1 ? null : storedSeed)
 	const side = ref(localStorage.getItem('garden/challenge/side') || 'left')
 
 	watch(seed, () => {
@@ -464,8 +471,8 @@
 	watch(side, () => {
 		localStorage.setItem('garden/challenge/side', side.value)
 	})
-	let request: any = null
-	const selectedBoss = ref<any | null>(null)
+	let request: { abort(): void } | null = null
+	const selectedBoss = ref<{ id: number; name: string; level: number; scale: number; difficulty: number } | null>(null)
 	const squad = ref<string | null>(null)
 	const arenaPreference = ref(parseInt(localStorage.getItem('arena/preference') || '-1', 10))
 	const wantsColossus = ref(false)
@@ -482,8 +489,8 @@
 	function modeIcon(preference: number): string {
 		return modeIcons[preference] || 'mdi-help-circle-outline'
 	}
-	function batchErrorToast(error: any) {
-		const key = typeof error === 'string' ? error : (error && error.error) || 'unknown_error'
+	function batchErrorToast(error: unknown) {
+		const key = typeof error === 'string' ? error : (error && typeof error === 'object' && 'error' in error ? String((error as { error: unknown }).error) : null) || 'unknown_error'
 		LeekWars.toast(t(key))
 	}
 	function batchSoloAttack() {
@@ -528,8 +535,8 @@
 		advanced.value = localStorage.getItem("editor/test/advanced") === 'true'
 
 		request = LeekWars.get('garden/get')
-		request.then((r: any) => {
-			garden.value = r.garden
+		request.then((r) => {
+			garden.value = (r as { garden: GardenData }).garden
 			for (const composition of garden.value.my_compositions) {
 				compositions_by_id[composition.id] = composition
 			}
@@ -540,7 +547,7 @@
 		LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_REGISTER])
 		emitter.on('garden-queue', (data: number) => queue.value = data)
 
-		emitter.on('update-team-talent', (message: any) => {
+		emitter.on('update-team-talent', (message: { composition: number; talent: number }) => {
 			if (message.composition in compositions_by_id) {
 				compositions_by_id[message.composition].talent += message.talent
 			}
@@ -559,8 +566,8 @@
 	}
 
 	function reload() {
-		LeekWars.get('garden/get').then((r: any) => {
-			garden.value = r.garden
+		LeekWars.get('garden/get').then((r) => {
+			garden.value = (r as { garden: GardenData }).garden
 			for (const composition of garden.value.my_compositions) {
 				compositions_by_id[composition.id] = composition
 			}

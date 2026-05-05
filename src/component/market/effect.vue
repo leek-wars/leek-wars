@@ -115,6 +115,7 @@ const props = defineProps<EffectViewProps>()
 
 const value1 = computed(() => {
 	if (props.effect.id === EffectType.ADD_STATE) {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		return (i18n.global.t as any)('effect.state_' + props.effect.value1)
 	}
 	return format(props.effect.value1)
@@ -147,11 +148,13 @@ const icon = computed(() => {
 const charac = computed(() => {
 	if (icon.value) {
 		if (props.leek) {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			return (props.leek as any)['total_' + icon.value]
 		}
 		if (store.state.farmer) {
 			let max = 0
 			for (const l in store.state.farmer!.leeks) {
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				max = Math.max(max, (store.state.farmer!.leeks[l] as any)['total_' + icon.value])
 			}
 			return max

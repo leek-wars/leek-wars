@@ -33,11 +33,11 @@ class Arena {
 		this.preference = preference
 		store.commit('arena-status', {enabled: true, preference})
 	}
-	update(data: any) {
+	update(data: { type?: number, data?: unknown[] }) {
 		this.enabled = true
-		this.progress = data.data[0]
-		this.countdown = data.data[1]
-		this.leeks = data.data[2]
+		this.progress = (data.data?.[0] as number) ?? 0
+		this.countdown = (data.data?.[1] as number) ?? -1
+		this.leeks = (data.data?.[2] as {[key: number]: Leek}) ?? {}
 		if (!store.state.arenaEnabled) {
 			store.commit('arena-status', {enabled: true, preference: this.preference})
 		}
@@ -59,7 +59,7 @@ class Arena {
 		this.preference = -1
 		store.commit('arena-status', {enabled: false, preference: -1})
 	}
-	start(data: any) {
+	start(data: [unknown, unknown]) {
 		if (data[1]) { // Garden arena (not automatic)
 			LeekWars.setTitleTag(null)
 			this.leeks = []

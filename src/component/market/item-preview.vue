@@ -107,12 +107,12 @@ const props = withDefaults(defineProps<{
 })
 
 const emit = defineEmits<{
-	'update:modelValue': [value: any]
-	'retrieve': [items: any[]]
+	'update:modelValue': [value: unknown]
+	'retrieve': [items: unknown[]]
 }>()
 
-const CHIPS: Record<number, any> = CHIPSImport
-const WeaponsData: Record<number, any> = WeaponsDataImport
+const CHIPS = CHIPSImport
+const WeaponsData = WeaponsDataImport
 
 onMounted(() => {
 	if (props.leek && myLeek.value && (props.item.type === ItemType.WEAPON || props.item.type === ItemType.CHIP) && props.leek.itemUsageStats === null) {
@@ -159,13 +159,13 @@ const schemeName = computed(() => schemeItem.value ? schemeItem.value.name.repla
 
 const schemeCraftCost = computed(() => {
 	if (!scheme.value) return 0
-	return scheme.value.items.reduce((s: number, i: any) => s + (i ? i[1] * LeekWars.items[i[0]].price! : 0), 0)
+	return scheme.value.items.reduce((s: number, i: ([number, number] | null)) => s + (i ? i[1] * LeekWars.items[i[0]].price! : 0), 0)
 })
 
 const displayCraftCost = computed(() => props.craftCost || schemeCraftCost.value)
 
 function retrieveN(n: number) {
-	LeekWars.post<{habs: number, items: {[key: number]: any}}>('item/retrieve', { template: props.item.id, quantity: n }).then((data) => {
+	LeekWars.post<{habs: number, items: {[key: number]: { template: number, [k: string]: unknown }}}>('item/retrieve', { template: props.item.id, quantity: n }).then((data) => {
 		if (data.habs) {
 			store.commit('update-habs', data.habs)
 		}
@@ -203,7 +203,7 @@ function weaponSound(id: number) {
 			38: ['sword'],
 			39: ['sword'],
 			40: ['quantum_rifle'],
-		} as {[key: number]: any})[id]
+		} as {[key: number]: unknown[]})[id]
 	}
 
 function chipSound(id: number) {
@@ -228,12 +228,12 @@ function chipSound(id: number) {
 			98: ['buff'], 99: ['shield'], 100: ['liberation'],
 			101: [], 102: [], 103: [], 104: ['buff'],
 
-		} as {[key: number]: any})[id]
+		} as {[key: number]: unknown[]})[id]
 	}
 
-function playSound(item: any, type: string) {
+function playSound(item: ItemTemplate, type: string) {
 		if (type !== 'chip' && type !== 'weapon') { return }
-		const play = (sounds: any) => {
+		const play = (sounds: unknown[]) => {
 			if (!Array.isArray(sounds) || sounds.length === 0) { return }
 			const sound = sounds[0]
 			if (typeof sound !== 'string') { return }
@@ -242,7 +242,7 @@ function playSound(item: any, type: string) {
 			audio.volume = 0.5
 			audio.play()
 			if (sounds.length > 2) {
-				const delay = parseFloat(sounds[1])
+				const delay = parseFloat(sounds[1] as string)
 				setTimeout(() => {
 					play(sounds.slice(2))
 				}, isNaN(delay) ? 0 : delay * 1000)

@@ -121,7 +121,7 @@
 	import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
 
 	const router = useRouter()
-	const data = ref<{ leeks: any[], farmers: any[], compositions: any[], br: any[] } | null>(null)
+	const data = ref<{ leeks: Record<string, unknown>[], farmers: Record<string, unknown>[], compositions: Record<string, unknown>[], br: Record<string, unknown>[] } | null>(null)
 	const tab = ref('leeks')
 
 	const leekHeaders = [

@@ -53,6 +53,7 @@ import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { emitter } from '@/model/vue'
 import { ref } from 'vue'
+import type { Notification } from '@/model/notification'
 
 defineOptions({ name: 'lw-bar' })
 
@@ -69,14 +70,14 @@ function closeMenu() {
 	LeekWars.menuExpanded = false
 	LeekWars.dark = 0
 }
-function readNotifications(e: any) {
+function readNotifications(e: boolean) {
 	if (e === false && store.state.unreadNotifications) {
 		LeekWars.post('notification/read-all')
 		store.commit('read-notifications')
 	}
 	dark.value = e
 }
-function readNotification(notification: any) {
+function readNotification(notification: Notification) {
 	LeekWars.post('notification/read', {notification_id: notification.id})
 }
 </script>

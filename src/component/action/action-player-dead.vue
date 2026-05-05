@@ -9,13 +9,14 @@
 
 <script setup lang="ts">
 import type { Action } from '@/model/action'
+import type { ReportLeek } from '@/model/fight'
 import Leek from '../report/action-leek.vue'
 import { TEAM_COLORS } from '@/model/team'
 
 defineProps<{
 	action: Action
 	a?: number
-	leeks: Record<number, any>
+	leeks: Record<number, ReportLeek>
 }>()
 </script>
 

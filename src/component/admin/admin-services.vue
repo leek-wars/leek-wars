@@ -35,7 +35,7 @@ import Breadcrumb from '@/component/forum/breadcrumb.vue'
 const router = useRouter()
 if (!store.getters.admin) router.replace('/')
 
-const services = ref<any>(null)
+const services = ref<Record<string, unknown> | null>(null)
 
 LeekWars.setTitle('Services')
 LeekWars.get('service/get-all-admin').then(data => {

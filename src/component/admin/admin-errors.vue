@@ -94,7 +94,30 @@
 
 	const STALE_THRESHOLD_DAYS = 2
 
-	function computeBuildInfo(error: any) {
+	interface ErrorEntry {
+		id: number
+		time: number
+		type: number
+		severity: number
+		trace: string
+		file?: string
+		line?: number
+		ai?: number
+		ai_version?: number
+		ai_strict?: boolean
+		fight?: number
+		issue?: number
+		farmer?: { id: number; name: string }
+		ip?: string
+		user_agent?: string
+		locale?: string
+		service?: string
+		build_commit?: string
+		build_date?: string
+		build: { stale: boolean; age: string; title: string; staleDays: number }
+	}
+
+	function computeBuildInfo(error: ErrorEntry) {
 		if (!error.build_date) return { staleDays: 0, stale: false, age: '', title: '' }
 		const buildMs = Date.parse(error.build_date)
 		if (isNaN(buildMs)) return { staleDays: 0, stale: false, age: '', title: '' }
@@ -114,7 +137,7 @@
 	const router = useRouter()
 	const instance = getCurrentInstance()
 
-	const errors = ref<any[] | null>(null)
+	const errors = ref<ErrorEntry[] | null>(null)
 	const deleteQuery = ref('')
 	const newErrors = ref(0)
 	const traceExpanded = ref<Record<number, boolean>>({})
@@ -135,7 +158,7 @@
 		resizeObserver = null
 	})
 
-	function onWsMessage(e: any) {
+	function onWsMessage(e: { type: number }) {
 		if (e.type === 89) {
 			newErrors.value++
 		}
@@ -178,9 +201,8 @@
 			if (changed) traceOverflows.value = next
 		})
 		const count = errors.value ? errors.value.length : 0
-		const refs = (instance?.proxy as any)?.$refs ?? {}
+		const refs = (instance?.proxy as { $refs: Record<string, Element | Element[]> } | null)?.$refs ?? {}
 		for (let i = 0; i < count; i++) {
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const r = refs['trace-' + i]
 			const el = Array.isArray(r) ? r[0] : r
 			if (el) {
@@ -201,9 +223,9 @@
 		store.commit('remove-error')
 	}
 
-	function createIssue(error: any) {
-		LeekWars.post('error/create-issue', { id: error.id }).then((data: any) => {
-			error.issue = data.issue
+	function createIssue(error: ErrorEntry) {
+		LeekWars.post('error/create-issue', { id: error.id }).then((data) => {
+			error.issue = (data as { issue: number }).issue
 		})
 	}
 
@@ -230,9 +252,9 @@
 		promptDialogContent.value = ''
 		promptDialogLoading.value = true
 		promptDialogOpen.value = true
-		LeekWars.get('error/get-prompt/' + id).then((data: any) => {
+		LeekWars.get('error/get-prompt/' + id).then((data) => {
 			if (promptDialogId.value !== id) return
-			promptDialogContent.value = data.prompt || ''
+			promptDialogContent.value = (data as { prompt?: string }).prompt || ''
 			promptDialogLoading.value = false
 			if (promptDialogContent.value) {
 				copyPromptToClipboard(promptDialogContent.value)

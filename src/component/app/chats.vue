@@ -20,13 +20,13 @@
 import { ChatType, ChatWindow } from '@/model/chat'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
-import { defineAsyncComponent, ref, watch } from 'vue'
+import { defineAsyncComponent, ref, watch, type ComponentPublicInstance } from 'vue'
 
 const Chat = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
 
 defineOptions({ name: 'chats' })
 
-const chats = ref<any[]>([])
+const chats = ref<ComponentPublicInstance[]>([])
 
 watch(() => LeekWars.chatWindows, () => {
 	localStorage.setItem('chats', JSON.stringify(LeekWars.chatWindows))
@@ -34,7 +34,7 @@ watch(() => LeekWars.chatWindows, () => {
 
 function toggleExpanded(window: ChatWindow, index: number) {
 	window.expanded = !window.expanded
-	setTimeout(() => (chats.value[index] as any).updateScroll())
+	setTimeout(() => (chats.value[index] as ComponentPublicInstance & { updateScroll?: () => void }).updateScroll?.())
 }
 
 function getFarmer(window: ChatWindow) {

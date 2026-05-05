@@ -6,6 +6,7 @@
 			<span v-if="currentFolder !== fileSystem.rootFolder" class="path"> ► {{ fileSystem.getFolderPath(currentFolder).slice(0, -1).replace(/\//g, ' ► ') }}</span>
 		</div>
 		<div class="dir">
+			<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
 			<explorer-folder v-if="currentFolder !== fileSystem.rootFolder" v-ripple :folder="({id: -1} as any)" @click.native="currentFolder = fileSystem.folderById[currentFolder.parent]" />
 			<template v-for="(item, i) in currentFolder.items" :key="i">
 				<explorer-folder v-if="item.folder" v-ripple :folder="item" @click.native="currentFolder = item" />
@@ -25,10 +26,10 @@ import AIElement from '@/component/app/ai.vue'
 defineOptions({ name: 'explorer', i18n: {}, mixins: [...mixins], components: { 'explorer-folder': ExplorerFolder, ai: AIElement } })
 
 defineEmits<{
-	select: [ai: any]
+	select: [ai: unknown]
 }>()
 
-const currentFolder = ref<any>(fileSystem.rootFolder)
+const currentFolder = ref<import("../editor/editor-item").Folder>(fileSystem.rootFolder)
 </script>
 
 <style lang="scss" scoped>

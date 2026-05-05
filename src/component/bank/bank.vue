@@ -101,13 +101,13 @@ defineOptions({ name: 'bank', i18n: {}, mixins: [...mixins] })
 const t = useNamespacedT('bank')
 const router = useRouter()
 
-const packs = ref<any>(null)
-const items = ref<any>(null)
+const packs = ref<Record<string, { bonus: number }> | null>(null)
+const items = ref<Record<string, unknown> | null>(null)
 const firstPurchase = ref(false)
 
 const bestBonus = computed(() => {
 	if (!packs.value) return -1
-	const max = Object.values(packs.value).reduce((a: number, p: any) => Math.max(a, p.bonus), 0)
+	const max = Object.values(packs.value).reduce((a: number, p: { bonus: number }) => Math.max(a, p.bonus), 0)
 	return max > 0 ? max : -1
 })
 

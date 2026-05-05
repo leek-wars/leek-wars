@@ -12,7 +12,7 @@ import { useRouter } from 'vue-router'
 defineOptions({ name: 'tournament-fight' })
 
 const props = defineProps<{
-	fight: any
+	fight: Record<string, unknown>
 	x: number
 	y: number
 }>()

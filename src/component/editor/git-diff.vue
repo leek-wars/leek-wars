@@ -50,6 +50,7 @@ onBeforeUnmount(() => {
 
 function dispose() {
 	if (diffEditor) {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		diffEditor.setModel(null as any)
 		diffEditor.dispose()
 		diffEditor = null

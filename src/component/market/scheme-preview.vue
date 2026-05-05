@@ -26,7 +26,7 @@ withDefaults(defineProps<{
 })
 
 defineEmits<{
-	'update:modelValue': [value: any]
+	'update:modelValue': [value: unknown]
 }>()
 
 const _emitter = emitter

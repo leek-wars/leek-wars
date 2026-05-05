@@ -101,7 +101,7 @@ defineOptions({ name: 'level-dialog', i18n: {}, mixins: [...mixins] })
 
 const props = defineProps<{
 	leek: Leek
-	levelData: any
+	levelData: Record<string, unknown>
 }>()
 
 function close() {

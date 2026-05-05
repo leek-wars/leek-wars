@@ -28,7 +28,7 @@ const router = useRouter()
 function accept() {
 	LeekWars.post('farmer/accept-terms')
 		.then(() => { router.push('/') })
-		.catch((error: any) => LeekWars.toast('Error: ' + error))
+		.catch((error) => LeekWars.toast('Error: ' + error))
 }
 </script>
 

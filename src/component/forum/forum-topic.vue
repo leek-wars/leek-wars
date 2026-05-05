@@ -428,7 +428,7 @@
 		}
 		page.value = p
 
-		if (topic.value) { topic.value.messages = null as any }
+		if (topic.value) { topic.value.messages = null }
 		notFound.value = false
 		forumLanguages.value = (localStorage.getItem('forum/languages') as string || i18nLocale.value).split(',')
 		LeekWars.get('forum/get-messages/' + t_id + '/' + forumLanguages.value + '/' + page.value).then(data => {
@@ -439,8 +439,8 @@
 				topic.value.messages = data.messages
 				if (topic.value.messages) {
 					for (const message of topic.value.messages) {
-						;(message as any).editing = false
-						;(message as any).height = 100
+						message.editing = false
+					message.height = 100
 					}
 				}
 			}
@@ -462,7 +462,7 @@
 	function createIssue() {
 		if (!topic.value || creatingIssue.value) { return }
 		creatingIssue.value = true
-		LeekWars.post('forum/create-issue', {topic_id: topic.value.id}).then((data: any) => {
+		LeekWars.post('forum/create-issue', {topic_id: topic.value.id}).then((data) => {
 			if (topic.value) {
 				topic.value.private_issue = data.private_issue
 			}
@@ -583,7 +583,7 @@
 		if (!topic.value || votes_up_names[message.id] !== undefined) { return }
 		votes_up_names[message.id] = null
 		LeekWars.post('forum/get-message-up-votes-names', {topic_id: topic.value.id, message_id: message.id}).then(data => {
-			votes_up_names[message.id] = data.farmers.map((f: any) => f[1])
+			votes_up_names[message.id] = data.farmers.map((f: unknown[]) => f[1])
 		})
 	}
 
@@ -591,7 +591,7 @@
 		if (!topic.value || votes_down_names[message.id] !== undefined) { return }
 		votes_down_names[message.id] = null
 		LeekWars.post('forum/get-message-down-votes-names', {topic_id: topic.value.id, message_id: message.id}).then(data => {
-			votes_down_names[message.id] = data.farmers.map((f: any) => f[1])
+			votes_down_names[message.id] = data.farmers.map((f: unknown[]) => f[1])
 		})
 	}
 
@@ -628,10 +628,10 @@
 	function loadMoveCategories() {
 		if (!category.value) { return }
 		const languages = forumLanguages.value.join(',')
-		LeekWars.get('forum/get-categories/' + languages).then((data: any) => {
+		LeekWars.get('forum/get-categories/' + languages).then((data) => {
 			moveCategories.value = data.categories
-				.filter((c: any) => c.id !== category.value!.id && c.type !== 'team' && c.name !== 'admin' && c.name !== 'moderation')
-				.map((c: any) => ({
+				.filter((c: ForumCategory) => c.id !== category.value!.id && c.type !== 'team' && c.name !== 'admin' && c.name !== 'moderation')
+				.map((c: ForumCategory) => ({
 					id: c.id,
 					name: t('forum-category.' + c.name) as string
 				}))
@@ -691,9 +691,9 @@
 	function edit(message: ForumMessage) {
 		const textElement = document.querySelector('#message-' + message.id + ' .text, #message-' + message.id + ' .md') as HTMLElement
 		if (textElement) {
-			;(message as any).height = textElement.offsetHeight - 14
+			message.height = textElement.offsetHeight - 14
 		}
-		;(message as any).editing = true
+		message.editing = true
 		if (message.id === -1) {
 			topicEditing.value = true
 		}
@@ -701,13 +701,13 @@
 
 	function autoResize(message: ForumMessage, e: Event) {
 		const textarea = e.target as HTMLTextAreaElement
-		if (textarea.scrollHeight > (message as any).height) {
-			;(message as any).height = textarea.scrollHeight
+		if (textarea.scrollHeight > message.height) {
+			message.height = textarea.scrollHeight
 		}
 	}
 
 	function endEdit(message: ForumMessage) {
-		;(message as any).editing = false
+		message.editing = false
 		if (message.id === -1) {
 			topicEditing.value = false
 		}
@@ -717,9 +717,9 @@
 		if (!topic.value) { return }
 		if (!message.message || !message.message.trim()) { return }
 		const callback = () => {
-			;(message as any).html = null
-			;(message as any).editing = false
-			;(message as any).edition_date = LeekWars.time
+			message.html = null
+			message.editing = false
+			message.edition_date = LeekWars.time
 			if (message.id === -1) {
 				topicEditing.value = false
 			}
@@ -740,7 +740,7 @@
 		}
 	}
 
-	function addEmoji(message: ForumMessage, emoji: string, textarea: any) {
+	function addEmoji(message: ForumMessage, emoji: string, textarea: HTMLTextAreaElement) {
 		const index = textarea.selectionStart
 		message.message = message.message.slice(0, index) + emoji + message.message.slice(index, message.message.length)
 	}
@@ -759,7 +759,7 @@
 
 	function toggleHidden() {
 		if (!topic.value) { return }
-		LeekWars.post('forum/toggle-hidden', {topic_id: topic.value.id}).then((data: any) => {
+		LeekWars.post('forum/toggle-hidden', {topic_id: topic.value.id}).then((data) => {
 			if (topic.value) {
 				topic.value.hidden = data.hidden
 			}

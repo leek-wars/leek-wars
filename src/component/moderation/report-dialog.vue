@@ -53,7 +53,7 @@
 		target?: Farmer | null
 		team?: Team | null
 		modelValue?: boolean
-		parameter?: any
+		parameter?: unknown
 		leeks?: Leek[] | null
 		fight?: number
 		leek?: Leek | null

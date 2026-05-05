@@ -297,7 +297,7 @@ monaco.languages.registerReferenceProvider("leekscript", {
 		if (!ai) { return [] }
 
 		const word = model.getWordAtPosition(position)
-		let locations: any[]
+		let locations: [string, number, number, number, number][]
 		if (word && word.word === 'constructor') {
 			const className = findEnclosingClassName(ai, position.lineNumber)
 			if (!className) { return [] }
@@ -313,12 +313,12 @@ monaco.languages.registerReferenceProvider("leekscript", {
 		if (!locations || !locations.length) { return [] }
 
 		// Load all referenced files in parallel
-		const uniqueAis = new Map<string, any>()
+		const uniqueAis = new Map<string, AI>()
 		for (const loc of locations) {
 			const targetAi = fileSystem.ais[loc[0]]
 			if (targetAi && !uniqueAis.has(loc[0])) { uniqueAis.set(loc[0], targetAi) }
 		}
-		await Promise.all([...uniqueAis.values()].map((a: any) => fileSystem.load(a)))
+		await Promise.all([...uniqueAis.values()].map((a) => fileSystem.load(a)))
 
 		const results: monaco.languages.Location[] = []
 		for (const loc of locations) {
@@ -601,7 +601,7 @@ LeekWars.completionsProvider = monaco.languages.registerCompletionItemProvider("
 			startColumn: word.startColumn,
 			endColumn: word.endColumn,
 		}
-		const suggestions = (completions ? completions.items.map((i: any) => ({
+		const suggestions = (completions ? completions.items.map((i) => ({
 			label: i.name,
 			kind: monaco.languages.CompletionItemKind.Function,
 			documentation: "Describe your library here",

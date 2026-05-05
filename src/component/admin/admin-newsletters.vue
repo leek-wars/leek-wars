@@ -43,9 +43,18 @@
 	import { useRouter } from 'vue-router'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
+	interface Newsletter {
+		version: string
+		fr: { subject: string; preview: string }
+		en: { subject: string; preview: string }
+		sent: number
+		testTarget?: number
+		expanded?: boolean
+	}
+
 	const router = useRouter()
-	const newsletters = ref<any>([])
-	const count = ref<any>(0)
+	const newsletters = ref<Newsletter[]>([])
+	const count = ref(0)
 
 	if (!store.getters.admin) router.replace('/')
 	LeekWars.setTitle("Admin Newsletters")
@@ -70,11 +79,11 @@
 		return html.replace("\n", "")
 	}
 
-	function test(n: any, target: any) {
+	function test(n: Newsletter, target: number) {
 		LeekWars.post('newsletter/test', { version: n.version, target }).then(() => LeekWars.toast("Envoyé !"))
 	}
 
-	function send(n: any) {
+	function send(n: Newsletter) {
 		const es = new EventSource(LeekWars.API + 'newsletter/send/' + encodeURIComponent(n.version))
 		es.onmessage = (e) => {
 			if (e.data === 'CLOSE') {

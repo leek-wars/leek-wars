@@ -350,7 +350,7 @@
 	const categories = ref<ForumCategory[] | null>(null)
 	const rawCategoryName = ref('')
 	const loading = ref(false)
-	const topics = ref<any[] | null>(null)
+	const topics = ref<Record<string, unknown>[] | null>(null)
 	const page = ref(0)
 	const pages = ref(0)
 	const createDialog = ref(false)
@@ -362,7 +362,7 @@
 	const createRelease = ref<number | null>(null)
 	const createHidden = ref(false)
 	const forumLanguages = reactive<{[key: string]: boolean}>({})
-	const translations = ref<any[]>([])
+	const translations = ref<Record<string, unknown>[]>([])
 	const order = ref(localStorage.getItem('forum/topic-order') || 'date')
 	const filterStatus = ref<number[]>([])
 	const filterAcknowledged = ref('all')
@@ -525,7 +525,7 @@
 		if (!categories.value) { return }
 		if (!createTitle.value || !createTitle.value.trim()) { return }
 		if (!createMessage.value || !createMessage.value.trim()) { return }
-		const params: any = {category_id: categories.value[0].id, title: createTitle.value, message: createMessage.value, issue: 0, lang: createMessageLang.value}
+		const params: Record<string, unknown> = {category_id: categories.value[0].id, title: createTitle.value, message: createMessage.value, issue: 0, lang: createMessageLang.value}
 		params.release = createRelease.value || 0
 		params.hidden = createHidden.value
 		LeekWars.post('forum/create-topic', params).then(data => {

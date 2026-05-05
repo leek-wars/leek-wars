@@ -103,7 +103,7 @@ const PROBE_RESPONSE_TIMEOUT = 3000
 
 class Socket {
 	public socket!: WebSocket
-	public queue: any[] = []
+	public queue: unknown[] = []
 	public retry_delay: number = 1000
 	private intentionallyClosed: boolean = false
 	private pingTimeout: ReturnType<typeof setTimeout> | null = null
@@ -155,7 +155,7 @@ class Socket {
 				// LeekWars.toast(message, 5000)
 			}
 		}
-		this.socket.onmessage = (msg: any) => {
+		this.socket.onmessage = (msg: MessageEvent) => {
 			this.lastReceivedTime = Date.now()
 			this.clearPongProbe()
 			const json = JSON.parse(msg.data)
@@ -496,7 +496,7 @@ class Socket {
 		}
 	}
 
-	public send(message: any) {
+	public send(message: unknown) {
 		if (this.socket && this.socket.readyState === WebSocket.OPEN) {
 			// console.log("[WS] send", message)
 			this.socket.send(JSON.stringify(message))

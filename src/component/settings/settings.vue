@@ -294,7 +294,7 @@
 		{ id: 9, icon: 'mdi-gavel', name: 'moderation' }
 	]
 
-	const settings = ref<any>(null)
+	const settings = ref<Record<string, unknown> | null>(null)
 	const sfwMode = ref(localStorage.getItem('sfw') === 'true')
 	const notifsPopups = ref(localStorage.getItem('options/notifs-popups') !== 'false')
 	const notifsResults = ref(localStorage.getItem('options/notifs-results') === 'true')
@@ -306,7 +306,7 @@
 	const deleteConfirmPassword = ref('')
 	const deleteSuccessDialog = ref(false)
 	const deleteFailedDialog = ref(false)
-	const deleteFailedError = ref<any>(null)
+	const deleteFailedError = ref<unknown>(null)
 	const deleteForumMessages = ref(false)
 	const advanced = ref(false)
 	const password = ref('')
@@ -509,10 +509,10 @@
 		errors.value = {}
 		const provider = signupMethod.value === 2 ? 'github' : signupMethod.value === 3 ? 'google' : null
 		const service = provider ? `farmer/verify-${provider}` : 'farmer/verify'
-		const args = {
+		const args: Record<string, unknown> = {
 			login: login.value,
 			godfather: godfather.value,
-		} as any
+		}
 		if (signupMethod.value === 1) {
 			args.password = password1.value
 			args.email = email.value

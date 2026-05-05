@@ -178,7 +178,7 @@
 	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
-	type Fault = any
+	interface Fault { target: Farmer; faults: unknown[]; [key: string]: unknown }
 	import router from '@/router'
 	import { computed, reactive, ref, watch } from 'vue'
 	import { useRoute, useRouter } from 'vue-router'
@@ -188,7 +188,7 @@
 
 	defineOptions({ name: "moderation", i18n: {}, mixins: [...mixins] })
 
-	type ModerationRequest = { faults: any[], thugs: Farmer[] }
+	type ModerationRequest = { faults: Fault[], thugs: Farmer[] }
 
 	const t = useNamespacedT('moderation')
 	const route = useRoute()
@@ -196,7 +196,7 @@
 
 	const faults = ref<Fault[] | null>(null)
 	const faultsById = reactive<{[key: number]: Fault}>({})
-	const thugs = ref<any>(null)
+	const thugs = ref<Farmer[] | null>(null)
 	const selectedFault = ref<Fault | null>(null)
 	const warningConfirmDialog = ref(false)
 	const message = ref('')

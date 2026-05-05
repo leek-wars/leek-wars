@@ -89,15 +89,27 @@
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
+	interface DashboardColumn {
+		title: string
+		key: string
+		sort_key?: string
+	}
+	interface Dashboard {
+		id: string
+		name: string
+		columns: DashboardColumn[]
+		rows: Record<string, unknown>[]
+	}
+
 	const router = useRouter()
-	const dashboards = ref<any[] | null>(null)
+	const dashboards = ref<Dashboard[] | null>(null)
 	const selectedDashboard = ref('')
-	const data = reactive<{ [key: string]: any }>({})
+	const data = reactive<{ [key: string]: Dashboard }>({})
 
 	LeekWars.setTitle("Admin Dashboards")
 	LeekWars.large = true
 	checkAdmin()
-	LeekWars.get('dashboard/get-all').then((res: any) => {
+	LeekWars.get('dashboard/get-all').then((res) => {
 		dashboards.value = res
 		if (res.length) {
 			selectedDashboard.value = res[0].id
@@ -127,7 +139,7 @@
 
 	function loadDashboard(id: string) {
 		if (!id || data[id]) return
-		LeekWars.get('dashboard/get-data/' + id).then((result: any) => {
+		LeekWars.get('dashboard/get-data/' + id).then((result) => {
 			data[id] = result
 		})
 	}
@@ -135,10 +147,11 @@
 	function getHeaders(id: string) {
 		const d = data[id]
 		if (!d) return []
-		return d.columns.map((col: any) => {
-			const header: any = { title: col.title, value: col.key, sortable: true }
+		return d.columns.map((col: DashboardColumn) => {
+			const header: { title: string, value: string, sortable: boolean, sort?: (a: unknown, b: unknown, itemA: Record<string, number>, itemB: Record<string, number>) => number } = { title: col.title, value: col.key, sortable: true }
 			if (col.sort_key) {
-				header.sort = (a: any, b: any, itemA: any, itemB: any) => itemA[col.sort_key] - itemB[col.sort_key]
+				const sortKey = col.sort_key
+				header.sort = (a, b, itemA, itemB) => itemA[sortKey] - itemB[sortKey]
 			}
 			return header
 		})
@@ -152,7 +165,7 @@
 		return Math.floor((LeekWars.time - timestamp) / 86400)
 	}
 
-	function sizePercent(dashboardId: string, item: any, col: any) {
+	function sizePercent(dashboardId: string, item: Record<string, number>, col: DashboardColumn) {
 		if (!col.sort_key) return 0
 		const rows = data[dashboardId]?.rows
 		if (!rows || !rows.length) return 0

@@ -10,14 +10,14 @@
 						</div>
 					</template>
 					<div class="theme-menu">
-						<div v-for="t in themes" :key="t.value" class="theme-item" :class="{ active: consoleRef && (consoleRef as any).theme === t.value }" @click="setTheme(t.value)">{{ t.label }}</div>
+						<div v-for="t in themes" :key="t.value" class="theme-item" :class="{ active: consoleRef && (consoleRef as (import("vue").ComponentPublicInstance & { theme?: string }))?.theme === t.value }" @click="setTheme(t.value)">{{ t.label }}</div>
 					</div>
 				</v-menu>
 			</div>
 		</div>
 		<v-menu v-if="LeekWars.mobile" v-model="themeMenu" :target="themeMenuTarget" offset-y :close-on-content-click="false">
 			<div class="theme-menu">
-				<div v-for="t in themes" :key="t.value" class="theme-item" :class="{ active: consoleRef && (consoleRef as any).theme === t.value }" @click="setTheme(t.value)">{{ t.label }}</div>
+				<div v-for="t in themes" :key="t.value" class="theme-item" :class="{ active: consoleRef && (consoleRef as (import("vue").ComponentPublicInstance & { theme?: string }))?.theme === t.value }" @click="setTheme(t.value)">{{ t.label }}</div>
 			</div>
 		</v-menu>
 		<div>
@@ -37,8 +37,8 @@ defineOptions({ name: 'console-page', components: { Console }, mixins: [...mixin
 const t = useNamespacedT('console-page')
 
 const themeMenu = ref(false)
-const themeMenuTarget = ref<any>(undefined)
-const consoleRef = useTemplateRef<any>('console')
+const themeMenuTarget = ref<HTMLElement | undefined>(undefined)
+const consoleRef = useTemplateRef<import("vue").ComponentPublicInstance>('console')
 
 const themes = [
 	{ value: 'leek-wars', label: 'Leek Wars' },

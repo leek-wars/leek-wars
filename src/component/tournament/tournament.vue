@@ -54,11 +54,11 @@ const t = useNamespacedT('tournament')
 const route = useRoute()
 
 const tournament = ref<Tournament | null>(null)
-const sixteenths = ref<any>(null)
-const eighths = ref<any>(null)
-const quarters = ref<any>(null)
-const semifinals = ref<any>(null)
-const finals = ref<any>(null)
+const sixteenths = ref<unknown>(null)
+const eighths = ref<unknown>(null)
+const quarters = ref<unknown>(null)
+const semifinals = ref<unknown>(null)
+const finals = ref<unknown>(null)
 const title = ref('')
 const tooltip = ref(false)
 const tooltipX = ref(0)
@@ -67,11 +67,11 @@ const tooltipText = ref('')
 const zoomed = ref(false)
 const height = ref(0)
 const timerText = ref('')
-let timer: any
+let timer: ReturnType<typeof setTimeout> | undefined
 const generating = ref(false)
 const sizer = useTemplateRef<HTMLElement>('sizer')
 
-const actions: any[] = [{ icon: 'mdi-magnify-plus-outline', click: () => zoom() }]
+const actions: { icon: string; click: () => void }[] = [{ icon: 'mdi-magnify-plus-outline', click: () => zoom() }]
 
 // Bumped on each navigation. update() captures the current value; when its
 // async response resolves it ignores itself if a newer update has fired since.
@@ -79,7 +79,7 @@ const actions: any[] = [{ icon: 'mdi-magnify-plus-outline', click: () => zoom() 
 // payload on the newer URL (issue #3208).
 let loadId = 0
 
-const onTournamentUpdate = (data: any) => {
+const onTournamentUpdate = (data: [number, ...unknown[]]) => {
 	if (tournament.value && data[0] === tournament.value.id) {
 		const id = ++loadId
 		LeekWars.get<Tournament>('tournament/get/' + route.params.id).then(t => {
@@ -191,7 +191,10 @@ function setupTimer() {
 function generateTournament() {
 	if (!tournament.value) return
 	generating.value = true
-	LeekWars.post('tournament/generate', { tournament_id: tournament.value.id }).then(() => {}).catch((err: any) => LeekWars.toast(t(err.error, err.params)))
+	LeekWars.post('tournament/generate', { tournament_id: tournament.value.id }).then(() => {}).catch((err: unknown) => {
+		const e = err as { error?: string; params?: unknown[] }
+		LeekWars.toast(t(e.error ?? 'unknown_error', e.params ?? []))
+	})
 }
 </script>
 

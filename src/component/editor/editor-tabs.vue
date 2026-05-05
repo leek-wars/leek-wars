@@ -127,7 +127,7 @@
 		return 'd-' + tab.file + '-' + (tab.hash || (tab.staged ? 's' : 'w'))
 	}
 
-	function tabClass(tab: EditorTab, i: number): any {
+	function tabClass(tab: EditorTab, i: number): Record<string, boolean> {
 		const selected = props.current && tabsMatch(tab, props.current)
 		if (tab.type === 'file') {
 			return { selected, modified: fileSystem.ais[tab.id]?.modified, conflict: fileSystem.ais[tab.id]?.hasConflict }

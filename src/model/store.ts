@@ -41,8 +41,8 @@ class LeekWarsState {
 	public last_ping: number = 0
 	public connected_farmers: number = 0
 	public loadingConversations: boolean = false
-	public habs_timer: any = null
-	public crystals_timer: any = null
+	public habs_timer: ReturnType<typeof setTimeout> | undefined = undefined
+	public crystals_timer: ReturnType<typeof setTimeout> | undefined = undefined
 	public farmer_by_name: {[key: string]: Farmer} = {}
 	public arenaCount: number = 0
 	public arenaCountdown: number = -1
@@ -110,7 +110,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				message: string | null,
 				unread: number,
 				notifications: Notification[],
-				conversations: any[],
+				conversations: { id: number, type?: number, farmers: Farmer[], last_farmer_id: number, last_date: number | null, last_message: string | null, read: boolean }[],
 				chats: {id: number, read: boolean, notifications: boolean}[],
 				token: string,
 				accounts?: AccountInfo[]
@@ -306,7 +306,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				emitter.emit('chat-history', chatID)
 				chat.loading = false
 			}).error(error => {
-				LeekWars.toast(error.error)
+				LeekWars.toast((error as Record<string, string>).error)
 				const chat = state.chat[chatID]
 				emitter.emit('chat-history', chatID)
 				chat.loading = false
@@ -462,7 +462,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (state.farmer) { state.farmer.talent = talent }
 		},
 
-		'set-leek-talents'(state: LeekWarsState, talents: any) {
+		'set-leek-talents'(state: LeekWarsState, talents: Record<string, number>) {
 			if (state.farmer) {
 				for (const i in talents) {
 					state.farmer.leeks[parseInt(i, 10)].talent = talents[i]
@@ -470,31 +470,31 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'rename-leek'(state: LeekWarsState, data: any) {
+		'rename-leek'(state: LeekWarsState, data: { leek: number, name: string }) {
 			if (state.farmer) {
 				state.farmer.leeks[data.leek].name = data.name
 			}
 		},
 
-		'rename-farmer'(state: LeekWarsState, data: any) {
+		'rename-farmer'(state: LeekWarsState, data: { name: string }) {
 			if (state.farmer) {
 				state.farmer.name = data.name
 			}
 		},
 
-		'update-capital'(state: LeekWarsState, data: any) {
+		'update-capital'(state: LeekWarsState, data: { leek: number, capital: number }) {
 			if (state.farmer) {
 				state.farmer.leeks[data.leek].capital = data.capital
 			}
 		},
 
-		'change-skin'(state: LeekWarsState, data: any) {
+		'change-skin'(state: LeekWarsState, data: { leek: number, skin: number }) {
 			if (state.farmer) {
 				state.farmer.leeks[data.leek].skin = data.skin
 			}
 		},
 
-		'change-fish'(state: LeekWarsState, data: any) {
+		'change-fish'(state: LeekWarsState, data: { leek: number, fish: boolean }) {
 			if (state.farmer) {
 				state.farmer.leeks[data.leek].fish = data.fish
 			}
@@ -540,13 +540,13 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		notification(state: LeekWarsState, data: { id: number, type: number, date: number, parameters: any[], new: boolean }) {
+		notification(state: LeekWarsState, data: { id: number, type: number, date: number, parameters: unknown[], new: boolean }) {
 			try {
 				if (data.new) {
 					// Received a new trophy, invalidate farmer trophies, add to rewards
 					if (state.farmer && data.type === NotificationType.TROPHY_UNLOCKED) {
 						delete state.farmer.trophies_list
-						const trophy = parseInt(data.parameters[0], 10)
+						const trophy = parseInt(String(data.parameters[0]), 10)
 						const trophyTemplate = LeekWars.trophies[trophy - 1]
 						if (trophyTemplate) {
 							state.farmer!.rewards.push({
@@ -625,15 +625,15 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'new-conversation'(state: LeekWarsState, data: any) {
+		'new-conversation'(state: LeekWarsState, data: { id: number, type?: number, farmers: Farmer[], last_farmer_id: number, last_date: number | null, last_message: string | null, read: boolean }) {
 			// console.log("new-conversation", data)
 			let chat = state.chat[data.id]
 			if (!chat) {
-				const last_farmer = data.farmers.find((f: any) => f.id === data.last_farmer_id)
-				const other_farmer = data.farmers.find((f: any) => f.id !== state.farmer!.id)
+				const last_farmer = data.farmers.find((f) => f.id === data.last_farmer_id)
+				const other_farmer = data.farmers.find((f) => f.id !== state.farmer!.id)
 				chat = new Chat(data.id, data.type ? data.type : ChatType.PM, other_farmer ? other_farmer.name : '?', true)
 				chat.last_date = data.last_date
-				chat.last_farmer = last_farmer
+				chat.last_farmer = last_farmer ?? null
 				chat.last_message = data.last_message
 				state.chat[data.id] = chat
 				state.conversationsList.push(chat)
@@ -758,11 +758,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'remove-inventory'(state: LeekWarsState, data: any) {
+		'remove-inventory'(state: LeekWarsState, data: { type: ItemType, item_template: number, quantity?: number }) {
 			if (!state.farmer) { return }
 			// console.log("remove-inventory", data)
 			const quantity = data.quantity || 1
-			let list = null
+			let list: { id: number, template: number, quantity: number }[] | null = null
 			if (data.type === ItemType.WEAPON) {
 				list = state.farmer.weapons
 			} else if (data.type === ItemType.CHIP) {
@@ -774,6 +774,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			} else if (data.type === ItemType.COMPONENT) {
 				list = state.farmer.components
 			}
+			if (!list) { return }
 			const item = LeekWars.selectWhere(list, 'template', data.item_template)
 			if (item !== null) {
 				item.quantity -= quantity
@@ -787,7 +788,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (state.farmer) { state.farmer.didactitiel_seen = true }
 		},
 
-		'add-weapon'(state: LeekWarsState, weapon: any) {
+		'add-weapon'(state: LeekWarsState, weapon: { id: number, template: number }) {
 			if (!state.farmer) { return }
 			for (const w of state.farmer.weapons) {
 				if (w.template === weapon.template) {
@@ -812,7 +813,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'add-chip'(state: LeekWarsState, chip: any) {
+		'add-chip'(state: LeekWarsState, chip: { id: number, template: number }) {
 			if (!state.farmer) { return }
 			for (const c of state.farmer.chips) {
 				if (c.template === chip.template) {
@@ -823,7 +824,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.farmer.chips.push({id: chip.id, quantity: 1, template: chip.template} as Chip)
 		},
 
-		'remove-chip'(state: LeekWarsState, chip: any) {
+		'remove-chip'(state: LeekWarsState, chip: { template: number }) {
 			if (!state.farmer) { return }
 			for (let w = 0; w < store.state.farmer!.chips.length; ++w) {
 				const f_chip = store.state.farmer!.chips[w]
@@ -857,7 +858,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (i !== -1) { state.farmer.loadouts.splice(i, 1) }
 		},
 
-		'add-component'(state: LeekWarsState, component: any) {
+		'add-component'(state: LeekWarsState, component: { id: number, template: number }) {
 			if (!state.farmer) { return }
 			for (const w of state.farmer.components) {
 				if (w.template === component.template) {
@@ -877,7 +878,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.last_ping = time
 		},
 
-		'receive-pong'(state: LeekWarsState, data: any) {
+		'receive-pong'(state: LeekWarsState) {
 			// const channel = data[0]
 			// if (!state.chat[channel]) {
 				// state.chat[channel] = new Chat(channel, ChatType.GLOBAL, false)
@@ -904,7 +905,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'level-up'(state: LeekWarsState, data: any) {
+		'level-up'(state: LeekWarsState, data: { leek: number, level: number, capital: number }) {
 			if (state.farmer) {
 				state.farmer.leeks[data.leek].level = data.level
 				state.farmer.leeks[data.leek].capital = data.capital
@@ -918,14 +919,14 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'set-leek-title'(state: LeekWarsState, data: any) {
+		'set-leek-title'(state: LeekWarsState, data: { leek: number, title: number[] }) {
 			if (state.farmer) {
 				const leek = state.farmer.leeks[data.leek]
 				leek.title = data.title
 			}
 		},
 
-		'set-leek-weapon'(state: LeekWarsState, data: any) {
+		'set-leek-weapon'(state: LeekWarsState, data: { leek: number, weapon: number }) {
 			if (state.farmer) {
 				const leek = state.farmer.leeks[data.leek]
 				leek.weapon = data.weapon
@@ -950,13 +951,13 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'set-trophies'(state: LeekWarsState, trophies: any) {
+		'set-trophies'(state: LeekWarsState, trophies: unknown) {
 			if (state.farmer) {
 				state.farmer.trophies_list = trophies
 			}
 		},
 
-		'connected-count'(state: LeekWarsState, farmers: any) {
+		'connected-count'(state: LeekWarsState, farmers: number) {
 			state.connected_farmers = farmers
 		},
 
@@ -988,13 +989,13 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'update-xp'(state: LeekWarsState, data: any) {
+		'update-xp'(state: LeekWarsState, data: { leek: number, xp: number }) {
 			if (state.farmer) {
 				state.farmer.leeks[data.leek].xp += data.xp
 			}
 		},
 
-		'update-leek-talent'(state: LeekWarsState, data: any) {
+		'update-leek-talent'(state: LeekWarsState, data: { leek: number, talent: number }) {
 			if (state.farmer) {
 				state.farmer.leeks[data.leek].talent += data.talent
 			}
@@ -1031,7 +1032,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				state.farmer.errors++
 			}
 		},
-		'remove-error'(state: LeekWarsState, data: any) {
+		'remove-error'(state: LeekWarsState) {
 			if (state.farmer) {
 				state.farmer.errors--
 			}

@@ -21,7 +21,8 @@ const VMdiSvgIcon = defineComponent({
 				if (path) resolved = path
 				else if (import.meta.env.DEV && !raw.startsWith('M')) console.warn('[mdi] unknown icon:', raw)
 			}
-			return h(VSvgIcon as any, { ...attrs, tag: props.tag, icon: resolved })
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				return h(VSvgIcon as any, { ...attrs, tag: props.tag, icon: resolved })
 		}
 	},
 })
