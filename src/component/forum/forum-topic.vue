@@ -669,7 +669,7 @@
 
 	function toggleSubscribe() {
 		if (!topic.value) { return }
-		topic.value.subscribed ? unsubscribe() : subscribe()
+		if (topic.value.subscribed) { unsubscribe() } else { subscribe() }
 	}
 
 	function subscribe() {

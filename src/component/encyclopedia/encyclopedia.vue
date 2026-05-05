@@ -346,6 +346,7 @@
 				return name
 			}
 		}
+		return undefined
 	})
 	const totalReferences = computed(() => {
 		if (!referencedBy.value) return 0

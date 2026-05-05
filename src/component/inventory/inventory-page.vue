@@ -183,9 +183,9 @@
 		tooltipVisible.value = false
 	}
 
-	interface Scheme { id: number; result: number; items: ([number, number] | null)[] }
+	interface SchemeData { id: number; result: number; items: ([number, number] | null)[] }
 
-	function isCraftable(scheme: Scheme): boolean {
+	function isCraftable(scheme: SchemeData): boolean {
 		if (!store.state.farmer) return false
 		const farmer = store.state.farmer
 		for (const ingredient of scheme.items) {
@@ -205,9 +205,9 @@
 		return true
 	}
 
-	const all_schemes = computed<Scheme[]>(() => {
+	const all_schemes = computed<SchemeData[]>(() => {
 		if (!store.state.farmer) return []
-		return (Object.values(LeekWars.schemes) as Scheme[])
+		return (Object.values(LeekWars.schemes) as SchemeData[])
 			.filter((scheme) => store.state.farmer?.schemes.find(s => LeekWars.items[s.template].params == scheme.id))
 	})
 

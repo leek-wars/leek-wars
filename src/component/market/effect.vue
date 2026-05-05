@@ -143,6 +143,7 @@ const icon = computed(() => {
 	if ([EffectType.DAMAGE_RETURN].includes(props.effect.id)) { return 'agility' }
 	if ([EffectType.BUFF_STRENGTH, EffectType.BUFF_RESISTANCE, EffectType.BUFF_WISDOM, EffectType.BUFF_AGILITY, EffectType.BUFF_MP, EffectType.BUFF_TP, EffectType.AFTEREFFECT, EffectType.NOVA_DAMAGE, EffectType.NOVA_VITALITY].includes(props.effect.id)) { return 'science' }
 	if ([EffectType.POISON, EffectType.SHACKLE_MP, EffectType.SHACKLE_TP, EffectType.SHACKLE_STRENGTH, EffectType.SHACKLE_MAGIC, EffectType.SHACKLE_AGILITY, EffectType.SHACKLE_WISDOM].includes(props.effect.id)) { return 'magic' }
+	return undefined
 })
 
 const charac = computed(() => {

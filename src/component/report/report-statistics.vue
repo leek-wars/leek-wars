@@ -26,14 +26,14 @@
 		</tr>
 		<template v-for="entity in statistics.team1" :key="entity.leek.id">
 			<report-statistics-entity :entity="entity" :stats="stats" :best="best" />
-			<report-statistics-entity v-for="summon in entity.summons" :entity="summon" :stats="stats" :best="best" />
+			<report-statistics-entity v-for="summon in entity.summons" :key="summon.leek.id" :entity="summon" :stats="stats" :best="best" />
 		</template>
 		<tr>
 			<td colspan="19" class="header"><b :style="{color: TEAM_COLORS[1]}">{{ $t('team_n', [2]) }}</b></td>
 		</tr>
 		<template v-for="entity in statistics.team2" :key="entity.leek.id">
 			<report-statistics-entity :entity="entity" :stats="stats" :best="best" />
-			<report-statistics-entity v-for="summon in entity.summons" :entity="summon" :stats="stats" :best="best" />
+			<report-statistics-entity v-for="summon in entity.summons" :key="summon.leek.id" :entity="summon" :stats="stats" :best="best" />
 		</template>
 	</table>
 </template>

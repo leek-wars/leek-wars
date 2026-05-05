@@ -1,6 +1,6 @@
 <template>
 	<div :class="{single, [finalTheme]: true}">
-		<code v-show="expanded" ref="code"></code>
+		<code v-show="expanded" ref="codeEl"></code>
 		<span v-if="expandable && !single" v-ripple class="button" @click="expanded = !expanded">
 			<v-icon>{{ expanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
 			<span v-if="expanded" class="label">{{ $t('main.close') }}</span>
@@ -23,16 +23,16 @@ const props = defineProps<{
 }>()
 
 const expanded = ref(true)
-const code = useTemplateRef<HTMLElement>('code')
+const codeEl = useTemplateRef<HTMLElement>('codeEl')
 
 const finalTheme = computed(() => props.theme ? props.theme : (LeekWars.darkMode ? 'theme-monokai' : ''))
 const lines = computed(() => props.code.split('\n').length)
 
 watch([() => props.code, () => props.single], () => {
 	nextTick(() => {
-		if (!code.value) return
-		if (props.single) LeekWars.createCodeAreaSimple(props.code, code.value)
-		else LeekWars.createCodeArea(props.code, code.value)
+		if (!codeEl.value) return
+		if (props.single) LeekWars.createCodeAreaSimple(props.code, codeEl.value)
+		else LeekWars.createCodeArea(props.code, codeEl.value)
 	})
 }, { immediate: true })
 </script>

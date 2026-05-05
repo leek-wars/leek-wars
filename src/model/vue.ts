@@ -133,7 +133,7 @@ function describeRouteSubtree(instance: unknown): string | null {
 			node = node.children?.[0]
 			depth++
 		}
-	} catch {}
+	} catch { /* empty */ }
 	return null
 }
 
@@ -219,7 +219,7 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 		if (currentNav) lines.push('Since last navigation: ' + (Date.now() - currentNav.at) + 'ms')
 		if (routeSubtree) lines.push('Route subtree: <' + routeSubtree + '>')
 		if (lines.length) navTrace = '\n\n' + lines.join('\n')
-	} catch {}
+	} catch { /* empty */ }
 
 	const stack = (e?.stack || '(no stack)') + '\n\nOrigin: ' + origin + '\nVue info: ' + infoAny + componentTrace + navTrace
 	const build_date = typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : null

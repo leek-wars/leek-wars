@@ -31,7 +31,7 @@
 								<template v-if="item.value" #prepend>
 									<img class="icon" :src="'/image/trophy/' + item.raw.code + '.svg'">
 								</template>
-								<template v-if="item.value" #append class="word">
+								<template v-if="item.value" #append>
 									<div class="rarity">{{ formatRarity(item.raw.rarity) }}%</div>
 								</template>
 								<template v-else #title>{{ $t('main.none') }}</template>
@@ -63,7 +63,7 @@
 								<template v-if="item.value" #prepend>
 									<img class="icon" :src="'/image/trophy/' + item.raw.code + '.svg'">
 								</template>
-								<template v-if="item.value" #append class="word">
+								<template v-if="item.value" #append>
 									<div class="rarity">{{ formatRarity(item.raw.rarity) }}%</div>
 								</template>
 								<template v-else #title>{{ $t('main.none') }}</template>

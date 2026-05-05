@@ -74,7 +74,7 @@
 					</div>
 					<div ref="progressBar" class="progress-bar" @click="progressBarClick" @mousemove="progressBarMove">
 						<div :style="{width: progressBarWidth + '%'}" class="bar"></div>
-						<span v-for="marker in game.progressBarMarkers">
+						<span v-for="(marker, idx) in game.progressBarMarkers" :key="idx">
 							<div class="marker" :style="{left: marker.left + '%', width: marker.width + '%', background: marker.background, outline: marker.outline}"></div>
 						</span>
 						<div class="circle" :style="{left: progressBarWidth + '%'}"></div>
@@ -253,6 +253,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { Game } from './game/game'
+	import type { FightEntity } from './game/entity'
 	import Hud from './hud.vue'
 	import LwTitle from '@/component/title/title.vue'
 	import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'

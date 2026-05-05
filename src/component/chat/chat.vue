@@ -340,7 +340,8 @@
 		}
 		if (chat.value === null) {
 			LeekWars.post('message/create-conversation', {farmer_id: props.newFarmer.id, message}).then(data => {
-				props.newConversation.id = data.conversation_id
+				// eslint-disable-next-line vue/no-mutating-props
+			props.newConversation.id = data.conversation_id
 				store.commit('new-conversation', props.newConversation)
 				router.replace('/messages/conversation/' + data.conversation_id)
 			})

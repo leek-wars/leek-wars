@@ -94,10 +94,12 @@
 	actionsWidth.value = props.game.actionsWidth
 
 	function entity_enter(entity: FightEntity) {
+		// eslint-disable-next-line vue/no-mutating-props
 		props.game.hoverEntity = entity
 		props.game.hoverEntity!.updateReachableCells()
 	}
 	function entity_leave(_entity: FightEntity) {
+		// eslint-disable-next-line vue/no-mutating-props
 		props.game.hoverEntity = null
 	}
 	function entity_click(entity: FightEntity) {
@@ -118,8 +120,10 @@
 		const mouseup = () => {
 			document.documentElement!.removeEventListener('mousemove', mousemove)
 			document.documentElement!.removeEventListener('mouseup', mouseup)
+			// eslint-disable-next-line vue/no-mutating-props
 			props.game.actionsWidth = actionsWidth.value
 			if (props.game.actionsWidth === 0) {
+				// eslint-disable-next-line vue/no-mutating-props
 				props.game.largeActions = false
 				actionsWidth.value = 395
 			}

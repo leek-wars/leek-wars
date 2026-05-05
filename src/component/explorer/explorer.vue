@@ -7,10 +7,10 @@
 		</div>
 		<div class="dir">
 			<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
-			<explorer-folder v-if="currentFolder !== fileSystem.rootFolder" v-ripple :folder="({id: -1} as any)" @click.native="currentFolder = fileSystem.folderById[currentFolder.parent]" />
+			<explorer-folder v-if="currentFolder !== fileSystem.rootFolder" v-ripple :folder="({id: -1} as any)" @click="currentFolder = fileSystem.folderById[currentFolder.parent]" />
 			<template v-for="(item, i) in currentFolder.items" :key="i">
-				<explorer-folder v-if="item.folder" v-ripple :folder="item" @click.native="currentFolder = item" />
-				<ai v-else v-ripple :ai="item.ai" :small="false" :library="false" @click.native="$emit('select', item.ai)" />
+				<explorer-folder v-if="item.folder" v-ripple :folder="item" @click="currentFolder = item" />
+				<ai v-else v-ripple :ai="item.ai" :small="false" :library="false" @click="$emit('select', item.ai)" />
 			</template>
 		</div>
 	</div>

@@ -1045,7 +1045,7 @@ function formatDuration(timestamp: number, capital: boolean = false) {
 
 	const seconds = LeekWars.time - timestamp
 
-	let text: string = ""
+	let text: string
 
 	if (seconds < 60) { // en dessous d'une minute
 		text = $t("main.time_just_now")

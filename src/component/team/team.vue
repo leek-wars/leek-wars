@@ -55,7 +55,7 @@
 								<template #activator="{ props }">
 									<div class="emblem-input" v-bind="props">
 										<input ref="emblemInput" type="file" accept="image/png, image/jpeg, image/jpg, image/bmp, image/gif, image/webp" @change="changeEmblem">
-										<emblem ref="emblem" :team="team" @click.native="emblemInput?.click()" />
+										<emblem ref="emblem" :team="team" @click="emblemInput?.click()" />
 									</div>
 								</template>
 								{{ $t('change_emblem') }}
@@ -184,13 +184,13 @@
 						</rich-tooltip-farmer>
 					</router-link>
 					<div class="turret">
-						<turret-image :level="team.level" :skin="1" :scale="0.32" @click.native="turretDialog = true" />
+						<turret-image :level="team.level" :skin="1" :scale="0.32" @click="turretDialog = true" />
 
 						<div class="infos">
 							<h4>{{ $t('turret') }}</h4>
 							<div class="level">{{ $t('level_n', [team.level]) }}</div>
 
-							<ai v-if="team.turret_ai" v-ripple :ai="team.turret_ai" :library="false" :small="false" :class="{active: captain}" @click.native="turretAiDialog = captain" />
+							<ai v-if="team.turret_ai" v-ripple :ai="team.turret_ai" :library="false" :small="false" :class="{active: captain}" @click="turretAiDialog = captain" />
 							<div v-else-if="is_member" class="no-ai" @click="turretAiDialog = true">{{ $t('no_ai') }}</div>
 						</div>
 					</div>

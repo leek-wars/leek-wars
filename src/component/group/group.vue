@@ -105,7 +105,7 @@
 						hide-default-footer
 						:items-per-page="100"
 						class="elevation-1 members">
-						<template #no-data class="no-member">
+						<template #no-data>
 							<span>{{ $t('no_member') }}</span>
 							<v-btn @click="membersDialog = true"><v-icon>mdi-plus</v-icon>&nbsp;{{ $t('add_member') }}</v-btn>
 						</template>

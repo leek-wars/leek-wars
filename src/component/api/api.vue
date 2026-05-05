@@ -114,7 +114,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { mixins , useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import Breadcrumb from '../forum/breadcrumb.vue'
-// @ts-ignore - no types for vue-json-viewer
+// @ts-expect-error - no types for vue-json-viewer
 import JsonViewer from 'vue-json-viewer'
 import Markdown from '@/component/encyclopedia/markdown.vue'
 import { emitter } from '@/model/vue'

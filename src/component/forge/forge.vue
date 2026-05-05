@@ -36,6 +36,8 @@
 
 	defineOptions({ name: 'Forge' })
 
+	type ForgeSlot = [number, number]
+
 	const ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME_TYPED
 
 	const forge = ref<(ForgeSlot | null)[]>([null, null, null, null, null, null, null, null])

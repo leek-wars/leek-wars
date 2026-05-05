@@ -1,6 +1,6 @@
 import * as monaco from 'monaco-editor'
 
-// @ts-ignore
+// @ts-expect-error no types for leekscript-monarch.js
 import leekscript from './leekscript-monarch.js'
 
 import { i18n } from '@/model/i18n';

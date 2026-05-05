@@ -104,6 +104,7 @@ const props = withDefaults(defineProps<{
 	showUse: false,
 	craftCost: 0,
 	quantity: 0,
+	leek: undefined,
 })
 
 const emit = defineEmits<{

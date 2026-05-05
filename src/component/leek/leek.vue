@@ -74,7 +74,7 @@
 					<div class="leek-image">
 						<leek-image v-if="leek" :scale="0.95" :leek="leek" />
 						<loader v-else />
-						<lw-title v-if="leek && leek.title.length" :title="leek.title" :class="{pointer: my_leek}" @click.native="titleDialog = my_leek" />
+						<lw-title v-if="leek && leek.title.length" :title="leek.title" :class="{pointer: my_leek}" @click="titleDialog = my_leek" />
 					</div>
 				</template>
 			</panel>
@@ -236,7 +236,7 @@
 						<loader v-if="!leek" />
 						<template v-else>
 							<div class="components-grid">
-								<template v-for="(c, i) of 8">
+								<template v-for="(c, i) of 8" :key="i">
 									<div v-if="leek.components[i]" class="component" :class="{disabled: i >= max_components}">
 										<rich-tooltip-item v-slot="{ props }" :key="c" :item="LeekWars.items[leek.components[i].template]" :bottom="true">
 											<div v-bind="props">
@@ -693,7 +693,7 @@
 						<div v-else><v-icon>mdi-sd</v-icon></div>
 					</div>
 					<div :class="{dashed: draggedAI && (!leek.ai || draggedAI.path !== leek.ai.path)}" class="leek-ai" @dragover="dragOver" @drop="aiDrop('leek', $event)">
-						<ai v-if="leek.ai" :ai="leek.ai" :library="true" :small="false" @click.native="removeAI()" @dragstart.native="aiDragStart(leek.ai, $event)" @dragend.native="aiDragEnd(leek.ai, $event)" />
+						<ai v-if="leek.ai" :ai="leek.ai" :library="true" :small="false" @click="removeAI()" @dragstart="aiDragStart(leek.ai, $event)" @dragend="aiDragEnd(leek.ai, $event)" />
 					</div>
 				</div>
 				<div class="flex">

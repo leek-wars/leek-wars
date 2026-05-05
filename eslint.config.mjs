@@ -37,6 +37,11 @@ export default tseslint.config(
 		rules: {
 			'@typescript-eslint/no-inferrable-types': 'off',
 			'@typescript-eslint/explicit-module-boundary-types': 'off',
+			'@typescript-eslint/no-unused-vars': ['error', {
+				varsIgnorePattern: '^_',
+				argsIgnorePattern: '^_',
+				caughtErrorsIgnorePattern: '^_',
+			}],
 		},
 	},
 
@@ -47,9 +52,11 @@ export default tseslint.config(
 			// template but neither no-unused-vars nor @typescript-eslint/no-unused-vars
 			// can detect template usage (known ecosystem limitation).
 			'@typescript-eslint/no-unused-vars': ['error', {
-				varsIgnorePattern: '^[A-Z]',
+				varsIgnorePattern: '^_|^[A-Z]',
 				argsIgnorePattern: '^_',
+				caughtErrorsIgnorePattern: '^_',
 			}],
+			'vue/valid-v-slot': ['error', { allowModifiers: true }],
 			'vue/attribute-hyphenation': 'error',
 			'vue/html-end-tags': 'error',
 			'vue/mustache-interpolation-spacing': 'error',
@@ -80,6 +87,13 @@ export default tseslint.config(
 				'selfClosingTag': 'always',
 			}],
 			'vue/no-use-v-if-with-v-for': 'off',
+			'vue/multi-word-component-names': 'off',
+		},
+	},
+
+	{
+		files: ['src/model/vue.ts'],
+		rules: {
 			'vue/multi-word-component-names': 'off',
 		},
 	},

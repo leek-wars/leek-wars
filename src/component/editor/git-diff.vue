@@ -21,6 +21,7 @@ const props = withDefaults(defineProps<{
 }>(), {
 	originalContent: '',
 	modifiedContent: '',
+	file: undefined,
 	theme: 'leek-wars',
 	fontSize: 13,
 	lineHeight: 20,

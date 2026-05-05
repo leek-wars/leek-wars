@@ -26,7 +26,7 @@
 					</template>
 					<template #content>
 						<div v-autostopscroll class="content-limit">
-							<notification v-for="notification in $store.state.notifications" :key="notification.id" :notification="notification" @click.native="readNotification(notification)" />
+							<notification v-for="notification in $store.state.notifications" :key="notification.id" :notification="notification" @click="readNotification(notification)" />
 						</div>
 					</template>
 				</panel>

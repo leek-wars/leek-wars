@@ -44,7 +44,7 @@ Object.defineProperty(i18n, 'tc', {
 		return (i18n.global as any).rt
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			? (i18n.global.t as any).bind(i18n.global)
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-function-type
 			: ((i18n.global as any).tc as Function).bind(i18n.global)
 	}
 })

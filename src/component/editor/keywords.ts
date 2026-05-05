@@ -67,7 +67,7 @@ const getChipByName = (name: string) => {
 }
 
 for (const constant of LeekWars.constants) {
-	let details: unknown = ""
+	let details: unknown
 	if (constant.name.substring(0, 5) === 'CHIP_') {
 		details = {type: 'chip', chip: getChipByName(constant.name.substring(5).toLowerCase())}
 	} else if (constant.name.substring(0, 7) === 'WEAPON_') {

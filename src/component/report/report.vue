@@ -626,8 +626,8 @@
 
 		for (const e in statistics.value.entities) {
 			const entity = statistics.value.entities[e]
-			let total = 0
-			let stats: unknown[] = []
+			let total: number
+			let stats: unknown[]
 			const name = entity.translatedName
 			if (damageChartType.value === 0) {
 				total = entity.dmg_out
@@ -677,8 +677,8 @@
 		}
 		damageEntities.value = entities
 
-		let labelKeys: string[] = []
-		let colors: string[] = []
+		let labelKeys: string[]
+		let colors: string[]
 		if (damageChartType.value === 0 || damageChartType.value === 1) {
 			labelKeys = ['direct', 'poison', 'return', 'nova', 'life']
 			colors = ['#e22424', '#a017d6', '#41d3ff', '#38e9ae', '#f28dff']

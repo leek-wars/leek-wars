@@ -141,8 +141,8 @@ onMounted(() => {
 		console.log("on console-error", data)
 		let zigzags = ""
 		if (data.location) {
-			for (var i = 0; i < data.location[2]; ++i) zigzags += ' '
-			for (var i = 0; i <= data.location[4] - data.location[2]; ++i) zigzags += '~'
+			for (let i = 0; i < data.location[2]; ++i) zigzags += ' '
+			for (let i = 0; i <= data.location[4] - data.location[2]; ++i) zigzags += '~'
 		}
 		lines.value.push({ type: 'error', ...data, zigzags })
 		scrollDown()

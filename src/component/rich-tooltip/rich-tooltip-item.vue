@@ -33,6 +33,9 @@ const props = withDefaults(defineProps<{
 	craftCost?: number
 }>(), {
 	craftCost: 0,
+	quantity: undefined,
+	openDelay: undefined,
+	leek: undefined,
 })
 
 const emit = defineEmits<{

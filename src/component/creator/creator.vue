@@ -25,7 +25,7 @@
 								<div class="title">Informations</div>
 								<div>IA <input v-model.number="game.selectedEntity.ai" class="stat" type="number" @keyup="edited('ai')"></div>
 								<div>Niveau <input v-model.number="game.selectedEntity.level" class="stat" type="number" @keyup="edited('level')"></div>
-								<div>Mort <input v-model.boolean="game.selectedEntity.initially_dead" type="checkbox" @change="edited('dead')"></div>
+								<div>Mort <input v-model="game.selectedEntity.initially_dead" type="checkbox" @change="edited('dead')"></div>
 								<div class="orientation">
 									<v-icon :class="{active: game.selectedEntity.orientation === EntityDirection.NORTH}" @click="setOrientation(EntityDirection.NORTH)">mdi-arrow-top-left</v-icon>
 									<v-icon :class="{active: game.selectedEntity.orientation === EntityDirection.EAST}" @click="setOrientation(EntityDirection.EAST)">mdi-arrow-top-right</v-icon>

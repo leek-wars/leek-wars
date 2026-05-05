@@ -165,6 +165,7 @@ onMounted(() => {
 		selected.value = editor.getModel()!.getValueInRange(editor.getSelection()!)
 	})
 	editor.onDidChangeModelContent(() => {
+		// eslint-disable-next-line vue/no-mutating-props
 		props.ai.modified = currentVersionId !== props.ai.model.getAlternativeVersionId()
 		setAnalyzerTimeout()
 		updateConflictDecorations()
@@ -311,6 +312,7 @@ function onFileReloaded(path: string) {
 			text: props.ai.code,
 		}])
 		currentVersionId = props.ai.model.getAlternativeVersionId()
+		// eslint-disable-next-line vue/no-mutating-props
 		props.ai.modified = false
 		updateConflictDecorations()
 	}
@@ -319,6 +321,7 @@ function onFileReloaded(path: string) {
 function syncModel() {
 	const uri = monaco.Uri.file(props.ai.path)
 	const model = monaco.editor.getModel(uri) || markRaw(monaco.editor.createModel(props.ai.code, getLanguageForPath(props.ai.path), uri))
+	// eslint-disable-next-line vue/no-mutating-props
 	props.ai.model = model
 
 	if (!editor) return
@@ -389,11 +392,13 @@ function updateConflictDecorations() {
 		if (conflictDecorations) { conflictDecorations.set([]) }
 		conflictLenses?.dispose()
 		conflictLenses = null
+		// eslint-disable-next-line vue/no-mutating-props
 		if (props.ai) props.ai.hasConflict = false
 		return
 	}
 
 	conflicts = parseConflicts(content)
+	// eslint-disable-next-line vue/no-mutating-props
 	if (props.ai) props.ai.hasConflict = true
 
 	if (conflictDecorations) {
@@ -414,6 +419,7 @@ function updateConflictDecorations() {
 }
 
 function save() {
+	// eslint-disable-next-line vue/no-mutating-props
 	props.ai.modified = false
 	currentVersionId = props.ai.model.getAlternativeVersionId()
 }
@@ -435,7 +441,7 @@ function restoreViewState() {
 			const viewState = JSON.parse(viewStateStr)
 			editor.restoreViewState(viewState)
 			return
-		} catch {}
+		} catch { /* empty */ }
 	}
 	const scrollPosition = parseInt(localStorage.getItem(scrollKey(props.ai.path)) || '0')
 	editor.setScrollTop(scrollPosition)

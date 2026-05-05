@@ -33,6 +33,9 @@ const props = withDefaults(defineProps<{
 	toggle?: string
 	toggleInvert?: boolean
 }>(), {
+	icon: undefined,
+	title: undefined,
+	toggle: undefined,
 	toggleInvert: false,
 })
 

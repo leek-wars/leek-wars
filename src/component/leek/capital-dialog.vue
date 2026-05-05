@@ -230,6 +230,7 @@ function validate() {
 			(props.leek as Leek & Record<string, number>)[stat] += bonuses[stat]
 			;(props.leek as Leek & Record<string, number>)['total_' + stat] += bonuses[stat]
 		}
+		// eslint-disable-next-line vue/no-mutating-props
 		props.leek.capital = capital.value
 		store.commit('update-capital', {leek: props.leek.id, capital: capital.value})
 		close()

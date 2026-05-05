@@ -50,7 +50,7 @@
 									<leek-image :leek="allLeeks[leek.id]" :ai="leek.ai" :scale="0.4" />
 									<div>{{ allLeeks[leek.id].name }}</div>
 								</div>
-								<ai v-if="leek.id in allLeeks && leek.ai && leek.ai in allAis" v-ripple="!allLeeks[leek.id].ally" :ai="allAis[leek.ai]" :small="true" :library="false" :locked="allLeeks[leek.id].ally" @click.native="clickLeekAI(leek, 0)" />
+								<ai v-if="leek.id in allLeeks && leek.ai && leek.ai in allAis" v-ripple="!allLeeks[leek.id].ally" :ai="allAis[leek.ai]" :small="true" :library="false" :locked="allLeeks[leek.id].ally" @click="clickLeekAI(leek, 0)" />
 								<div v-else v-ripple class="ai-placeholder" @click="clickLeekAI(leek, 0)"></div>
 							</div>
 							<div v-if="!currentScenario.base && LeekWars.objectSize(currentScenario.team1) < getLimit(currentScenario.type)" class="add" @click="addLeekTeam = currentScenario.team1; leekDialog = true">+</div>
@@ -73,7 +73,7 @@
 									<leek-image :leek="allLeeks[leek.id]" :ai="leek.ai" :scale="0.4" />
 									<div>{{ allLeeks[leek.id].name }}</div>
 								</div>
-								<ai v-if="leek.id in allLeeks && leek.ai && leek.ai in allAis" v-ripple="!allLeeks[leek.id].ally" :ai="allAis[leek.ai]" :small="true" :library="false" :locked="allLeeks[leek.id].ally" @click.native="clickLeekAI(leek, 1)" />
+								<ai v-if="leek.id in allLeeks && leek.ai && leek.ai in allAis" v-ripple="!allLeeks[leek.id].ally" :ai="allAis[leek.ai]" :small="true" :library="false" :locked="allLeeks[leek.id].ally" @click="clickLeekAI(leek, 1)" />
 								<div v-else v-ripple class="ai-placeholder" @click="clickLeekAI(leek, 1)"></div>
 							</div>
 							<div v-if="!currentScenario.base && LeekWars.objectSize(currentScenario.team2) < getLimit(currentScenario.type)" class="add" @click="addLeekTeam = currentScenario.team2; leekDialog = true">+</div>
@@ -1124,6 +1124,7 @@
 
 	function launchTest() {
 		if (!currentScenario.value || !props.currentAI) return
+		// eslint-disable-next-line vue/no-mutating-props
 		props.currentAI.scenario = currentScenario.value.id
 		LeekWars.post('ai/test-scenario', { scenario_id: currentScenario.value.id, ai_id: props.currentAI.path }).then(data => {
 			localStorage.setItem('editor/last-scenario', '' + currentScenario.value!.id)

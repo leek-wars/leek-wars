@@ -10,14 +10,14 @@
 						</div>
 					</template>
 					<div class="theme-menu">
-						<div v-for="t in themes" :key="t.value" class="theme-item" :class="{ active: consoleRef && (consoleRef as (import("vue").ComponentPublicInstance & { theme?: string }))?.theme === t.value }" @click="setTheme(t.value)">{{ t.label }}</div>
+						<div v-for="t in themes" :key="t.value" class="theme-item" :class="{ active: consoleTheme === t.value }" @click="setTheme(t.value)">{{ t.label }}</div>
 					</div>
 				</v-menu>
 			</div>
 		</div>
 		<v-menu v-if="LeekWars.mobile" v-model="themeMenu" :target="themeMenuTarget" offset-y :close-on-content-click="false">
 			<div class="theme-menu">
-				<div v-for="t in themes" :key="t.value" class="theme-item" :class="{ active: consoleRef && (consoleRef as (import("vue").ComponentPublicInstance & { theme?: string }))?.theme === t.value }" @click="setTheme(t.value)">{{ t.label }}</div>
+				<div v-for="t in themes" :key="t.value" class="theme-item" :class="{ active: consoleTheme === t.value }" @click="setTheme(t.value)">{{ t.label }}</div>
 			</div>
 		</v-menu>
 		<div>
@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, useTemplateRef, nextTick } from 'vue'
+import { ref, computed, useTemplateRef, nextTick } from 'vue'
 import { mixins, useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import Console from '../app/console.vue'
@@ -39,6 +39,7 @@ const t = useNamespacedT('console-page')
 const themeMenu = ref(false)
 const themeMenuTarget = ref<HTMLElement | undefined>(undefined)
 const consoleRef = useTemplateRef<import("vue").ComponentPublicInstance>('console')
+const consoleTheme = computed(() => (consoleRef.value as unknown as { theme?: string })?.theme)
 
 const themes = [
 	{ value: 'leek-wars', label: 'Leek Wars' },

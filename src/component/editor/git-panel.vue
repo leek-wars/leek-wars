@@ -458,8 +458,7 @@
 				selectedRepo.value = repos.value[0].folder
 				refreshStatus()
 			}
-		} catch {
-		} finally {
+		} catch { /* empty */ } finally {
 			loading.value = false
 		}
 	}
@@ -549,8 +548,7 @@
 				emitter.emit('close-merge-tabs', { folder: selectedRepo.value })
 			}
 			refreshStatus()
-		} catch {
-		}
+		} catch { /* empty */ }
 	}
 
 	async function push() {
@@ -675,8 +673,7 @@
 			reloadFiles(conflictFiles)
 			await refreshStatus()
 			emitter.emit('reanalyze')
-		} catch {
-		} finally {
+		} catch { /* empty */ } finally {
 			loading.value = false
 		}
 	}

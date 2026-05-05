@@ -76,8 +76,11 @@ function isCharac(icon: string) {
 function apply(loadout: Loadout) {
 	applying.value = loadout.id
 	LeekWars.post('loadout/apply', { set_id: loadout.id, leek_id: props.leek.id }).then((data) => {
+		// eslint-disable-next-line vue/no-mutating-props
 		props.leek.weapons = data.leek.weapons
+		// eslint-disable-next-line vue/no-mutating-props
 		props.leek.chips = data.leek.chips
+		// eslint-disable-next-line vue/no-mutating-props
 		props.leek.components = data.leek.components
 		emit('applied')
 		if (data.skipped && data.skipped.length > 0) {

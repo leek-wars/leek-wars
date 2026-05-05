@@ -27,13 +27,13 @@
 						</template>
 						<div class="dialog">
 							<div class="dialog-items">
-								<notification v-for="notification in $store.state.notifications" :key="notification.id" :notification="notification" @click.native="readNotification(notification)" />
+								<notification v-for="notification in $store.state.notifications" :key="notification.id" :notification="notification" @click="readNotification(notification)" />
 							</div>
-							<router-link to="/notifications" class="see-all" @click.native="LeekWars.closeMenu()">{{ $t('main.all_notifications') }}</router-link>
+							<router-link to="/notifications" class="see-all" @click="LeekWars.closeMenu()">{{ $t('main.all_notifications') }}</router-link>
 						</div>
 					</v-menu>
 				</div>
-				<router-link v-show="LeekWars.menuExpanded" v-ripple to="/settings" class="action header-button mobile settings" @click.native="closeMenu">
+				<router-link v-show="LeekWars.menuExpanded" v-ripple to="/settings" class="action header-button mobile settings" @click="closeMenu">
 					<v-icon>mdi-cog-outline</v-icon>
 				</router-link>
 			</div>

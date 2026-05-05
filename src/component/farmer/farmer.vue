@@ -71,7 +71,7 @@
 							<template #activator="{ props }">
 								<div class="avatar-input" v-bind="props">
 									<input ref="avatarInput" type="file" accept="image/png, image/jpeg, image/jpg, image/bmp, image/gif, image/webp" @change="changeAvatar">
-									<avatar ref="avatar" :farmer="farmer" @click.native="avatarInput?.click()" />
+									<avatar ref="avatar" :farmer="farmer" @click="avatarInput?.click()" />
 								</div>
 							</template>
 							{{ $t('click_to_change_avatar') }}
@@ -88,7 +88,7 @@
 							{{ farmer.likes }}
 						</v-btn>
 					</div>
-					<lw-title v-if="farmer && farmer.title.length" class="info title" :class="{me: myFarmer}" :title="farmer.title" @click.native="titleDialog = !!myFarmer" />
+					<lw-title v-if="farmer && farmer.title.length" class="info title" :class="{me: myFarmer}" :title="farmer.title" @click="titleDialog = !!myFarmer" />
 					<div v-if="farmer" class="infos">
 						<div v-if="!farmer.title.length && myFarmer" class="add add-title" :class="{locked: !farmerTitleEnabled}" @click="titleDialog = !!farmerTitleEnabled">
 							<v-tooltip :disabled="farmerTitleEnabled">

@@ -383,7 +383,7 @@
 
 	watch(sfwMode, () => {
 		localStorage.setItem('sfw', '' + sfwMode.value)
-		sfwMode.value ? LeekWars.sfwOn() : LeekWars.sfwOff()
+		if (sfwMode.value) { LeekWars.sfwOn() } else { LeekWars.sfwOff() }
 		if (sfwMode.value) {
 			LeekWars.post('trophy/unlock', {trophy_id: 234})
 		}

@@ -60,6 +60,8 @@ import { useI18n } from 'vue-i18n'
 
 defineOptions({ name: 'AccountSwitcher' })
 
+interface AuthData { token?: string; switched?: boolean; accounts?: unknown[] }
+
 const emit = defineEmits<{
 	'close': []
 }>()
@@ -97,8 +99,6 @@ function switchAccount(account: AccountInfo) {
 		loginError.value = ''
 		return
 	}
-
-	interface AuthData { token?: string; switched?: boolean; accounts?: unknown[] }
 
 	switchingId.value = account.id
 	LeekWars.post<AuthData>('farmer/switch', { farmer_id: account.id }).then((data) => {

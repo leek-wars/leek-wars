@@ -1272,7 +1272,7 @@
 		const aiObj = fileSystem.ais[ai]
 		if (aiObj) {
 			fileSystem.load(aiObj).then(() => {
-				side === 1 ? currentAI1.value = ai : currentAI2.value = ai
+				if (side === 1) { currentAI1.value = ai } else { currentAI2.value = ai }
 			})
 		}
 		updateUrl()

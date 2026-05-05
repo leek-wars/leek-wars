@@ -184,16 +184,17 @@
 		return null
 	})
 
-	const newFarmer = computed<Farmer | null>(() => {
-		if (!newFarmer_.value && 'name' in route.params) {
+	watch(() => route.params, (params) => {
+		if (!newFarmer_.value && 'name' in params) {
 			newFarmer_.value = {
-				id: parseInt(route.params.farmer_id as string, 10),
-				name: route.params.name,
-				avatar_changed: parseInt(route.params.avatar_changed as string, 10)
+				id: parseInt(params.farmer_id as string, 10),
+				name: params.name,
+				avatar_changed: parseInt(params.avatar_changed as string, 10)
 			}
 		}
-		return newFarmer_.value
-	})
+	}, { immediate: true })
+
+	const newFarmer = computed<Farmer | null>(() => newFarmer_.value)
 
 	const isAdmin = computed(() => {
 		const id = newConversation.value ? newFarmer.value.id : getConversationFarmerId()

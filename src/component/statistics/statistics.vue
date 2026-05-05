@@ -229,7 +229,7 @@
 
 	watch(playing, () => {
 		localStorage.setItem('statistics/play', '' + playing.value)
-		playing.value ? play() : pause()
+		if (playing.value) { play() } else { pause() }
 	})
 
 	function hoverStat(stat: string) {

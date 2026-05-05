@@ -11,12 +11,12 @@
 			<div v-if="LeekWars.mobile" class="menu-top">
 				<div class="top">
 					<div class="section">
-						<router-link to="/farmer" @click.native="clickItem">
+						<router-link to="/farmer" @click="clickItem">
 							<avatar :farmer="$store.state.farmer" class="farmer-avatar" />
 						</router-link>
 						<div class="right">
 							<div class="farmer-name-row">
-								<router-link to="/farmer" @click.native="clickItem">
+								<router-link to="/farmer" @click="clickItem">
 									<div v-if="$store.state.farmer" v-ripple class="text farmer-name">{{ $store.state.farmer.name }}</div>
 								</router-link>
 								<v-menu v-model="accountMenu" :width="300" :close-on-content-click="false" location="bottom start" scrim>
@@ -29,10 +29,10 @@
 								</v-menu>
 							</div>
 							<div class="moneys">
-								<router-link v-ripple to="/market" @click.native="clickItem">
+								<router-link v-ripple to="/market" @click="clickItem">
 									<span class="hab text"></span><span v-if="$store.state.farmer" class="farmer-habs">{{ $filters.number($store.state.farmer.habs) }}</span>
 								</router-link>
-								<router-link v-ripple class="crystals" to="/bank?ref=menu" @click.native="clickItem">
+								<router-link v-ripple class="crystals" to="/bank?ref=menu" @click="clickItem">
 									<span class="crystal text"></span><span v-if="$store.state.farmer" class="farmer-crystals">{{ $filters.number($store.state.farmer.crystals) }}</span>
 								</router-link>
 							</div>
@@ -71,7 +71,7 @@
 				<div v-if="$store.state.farmer && $store.state.farmer.leeks" class="separator"></div>
 
 				<span class="dida-element">
-					<router-link v-ripple to="/editor" class="section" :class="{'router-link-active': $route.path.startsWith('/editor'), bouncing: LeekWars.didactitial_step === 4 && !$route.path.startsWith('/editor')}" @click.native="clickItem">
+					<router-link v-ripple to="/editor" class="section" :class="{'router-link-active': $route.path.startsWith('/editor'), bouncing: LeekWars.didactitial_step === 4 && !$route.path.startsWith('/editor')}" @click="clickItem">
 						<img v-if="LeekWars.xpTheme" src="/image/icon/xp_editor.png">
 						<v-icon v-else>mdi-code-braces</v-icon>
 						<div class="text">{{ $t("main.editor") }}</div>
@@ -83,7 +83,7 @@
 				</span>
 
 				<span class="dida-element">
-					<router-link v-ripple to="/garden" class="section" :class="{'router-link-active': $route.path.startsWith('/garden'), bouncing: LeekWars.didactitial_step === 2 && !$route.path.startsWith('/garden')}" :label="$store.state.farmer ? ($store.state.farmer.fights + ($store.state.farmer.team_fights ? '+' + $store.state.farmer.team_fights : '')) : null" @click.native="clickItem">
+					<router-link v-ripple to="/garden" class="section" :class="{'router-link-active': $route.path.startsWith('/garden'), bouncing: LeekWars.didactitial_step === 2 && !$route.path.startsWith('/garden')}" :label="$store.state.farmer ? ($store.state.farmer.fights + ($store.state.farmer.team_fights ? '+' + $store.state.farmer.team_fights : '')) : null" @click="clickItem">
 						<img :src="LeekWars.xpTheme ? '/image/icon/xp_garden.png' : '/image/icon/garden.png'">
 						<div class="text">{{ $t("main.garden") }}</div>
 					</router-link>
@@ -93,60 +93,60 @@
 					</span>
 				</span>
 
-				<router-link v-ripple to="/inventory" class="section" :class="{'router-link-active': $route.path.startsWith('/inventory')}" @click.native="clickItem">
+				<router-link v-ripple to="/inventory" class="section" :class="{'router-link-active': $route.path.startsWith('/inventory')}" @click="clickItem">
 					<img v-if="LeekWars.xpTheme" src="/image/icon/xp_inventory.png">
 					<v-icon v-else>mdi-treasure-chest</v-icon>
 					<div class="text">{{ $t("main.inventory") }}</div>
 				</router-link>
 
-				<router-link v-if="$store.state.farmer && $store.state.farmer.team" v-ripple to="/team" class="section" :class="{'router-link-active': $route.path.startsWith('/team')}" @click.native="clickItem">
+				<router-link v-if="$store.state.farmer && $store.state.farmer.team" v-ripple to="/team" class="section" :class="{'router-link-active': $route.path.startsWith('/team')}" @click="clickItem">
 					<img :src="LeekWars.xpTheme ? '/image/icon/xp_team.png' : '/image/icon/team.png'">
 					<div class="text">{{ $t('main.team') }}</div>
 				</router-link>
-				<router-link v-else-if="$store.state.farmer && $store.state.farmer.total_level >= 5" v-ripple to="/teams" class="section" :class="{'router-link-active': $route.path.startsWith('/teams')}" @click.native="clickItem">
+				<router-link v-else-if="$store.state.farmer && $store.state.farmer.total_level >= 5" v-ripple to="/teams" class="section" :class="{'router-link-active': $route.path.startsWith('/teams')}" @click="clickItem">
 					<img :src="LeekWars.xpTheme ? '/image/icon/xp_team.png' : '/image/icon/team.png'">
 					<div class="text">{{ $t('main.teams') }}</div>
 				</router-link>
 
-				<router-link v-if="$store.state.farmer && $store.state.farmer.trophies" v-ripple to="/trophies" class="section" :class="{'router-link-active': $route.path.startsWith('/trophies') || $route.path.startsWith('/trophy')}" @click.native="clickItem">
+				<router-link v-if="$store.state.farmer && $store.state.farmer.trophies" v-ripple to="/trophies" class="section" :class="{'router-link-active': $route.path.startsWith('/trophies') || $route.path.startsWith('/trophy')}" @click="clickItem">
 					<img :src="LeekWars.xpTheme ? '/image/icon/xp_trophies.png' : '/image/icon/trophy.png'">
 					<div class="text">{{ $t("main.trophies") }}</div>
 				</router-link>
 
-				<router-link v-ripple :to="rankingURL" class="section" :class="{'router-link-active': $route.path.startsWith('/ranking')}" @click.native="clickItem">
+				<router-link v-ripple :to="rankingURL" class="section" :class="{'router-link-active': $route.path.startsWith('/ranking')}" @click="clickItem">
 					<img :src="LeekWars.xpTheme ? '/image/icon/xp_ranking.png' : '/image/icon/ranking.png'">
 					<div class="text">{{ $t("main.ranking") }}</div>
 				</router-link>
 
-				<router-link v-ripple to="/help" class="section" :class="{'router-link-active': $route.path.startsWith('/help') || $route.path.startsWith('/encyclopedia')}" @click.native="clickItem">
+				<router-link v-ripple to="/help" class="section" :class="{'router-link-active': $route.path.startsWith('/help') || $route.path.startsWith('/encyclopedia')}" @click="clickItem">
 					<img v-if="LeekWars.xpTheme" src="/image/icon/xp_help.png">
 					<v-icon v-else>mdi-help-circle-outline</v-icon>
 					<div class="text">{{ $t("main.help") }}</div>
 				</router-link>
 
-				<router-link v-if="env.SOCIAL" v-ripple to="/forum" class="section" :class="{'router-link-active': $route.path.startsWith('/forum')}" @click.native="clickItem">
+				<router-link v-if="env.SOCIAL" v-ripple to="/forum" class="section" :class="{'router-link-active': $route.path.startsWith('/forum')}" @click="clickItem">
 					<img :src="LeekWars.xpTheme ? '/image/icon/xp_forum.png' : '/image/icon/forum.png'">
 					<div class="text">{{ $t("main.forum") }}</div>
 				</router-link>
 
-				<router-link v-if="LeekWars.mobile" v-ripple to="/console" class="section" @click.native="clickItem">
+				<router-link v-if="LeekWars.mobile" v-ripple to="/console" class="section" @click="clickItem">
 					<v-icon>mdi-console</v-icon>
 					<div class="text">{{ $t("main.console") }}</div>
 				</router-link>
 
-				<router-link v-if="$store.state.farmer && $store.state.farmer.group" v-ripple :to="'/group/' + $store.state.farmer.group.id" class="section" @click.native="clickItem">
+				<router-link v-if="$store.state.farmer && $store.state.farmer.group" v-ripple :to="'/group/' + $store.state.farmer.group.id" class="section" @click="clickItem">
 					<img v-if="LeekWars.xpTheme" src="/image/icon/xp_team.png">
 					<v-icon v-else>mdi-account-group</v-icon>
 					<div class="text">{{ $store.state.farmer.group.name }}</div>
 				</router-link>
 
-				<router-link v-if="$store.getters.moderator" v-ripple :label="$store.state.farmer?.reportings || null" to="/moderation" class="section" :class="{'router-link-active': $route.path.startsWith('/moderation')}" tab="moderation" @click.native="clickItem">
+				<router-link v-if="$store.getters.moderator" v-ripple :label="$store.state.farmer?.reportings || null" to="/moderation" class="section" :class="{'router-link-active': $route.path.startsWith('/moderation')}" tab="moderation" @click="clickItem">
 					<img v-if="LeekWars.xpTheme" src="/image/icon/xp_moderation.png">
 					<v-icon v-else>mdi-gavel</v-icon>
 					<div class="text">{{ $t('main.moderation') }}</div>
 				</router-link>
 
-				<router-link v-if="$store.getters.admin" v-ripple :label="$store.state.farmer?.errors || null" to="/admin" class="section" :class="{'router-link-active': $route.path.startsWith('/admin')}" tab="admin" @click.native="clickItem">
+				<router-link v-if="$store.getters.admin" v-ripple :label="$store.state.farmer?.errors || null" to="/admin" class="section" :class="{'router-link-active': $route.path.startsWith('/admin')}" tab="admin" @click="clickItem">
 					<img v-if="LeekWars.xpTheme" src="/image/icon/xp_admin.png">
 					<v-icon v-else>mdi-security</v-icon>
 					<div class="text">{{ $t('main.admin') }}</div>

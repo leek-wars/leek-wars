@@ -61,6 +61,7 @@ const props = withDefaults(defineProps<{
 }>(), {
 	inventory: false,
 	showUse: false,
+	itemTemplateId: undefined,
 })
 
 

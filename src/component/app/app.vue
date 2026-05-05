@@ -207,14 +207,12 @@
 	const MobileBR = defineAsyncComponent(() => import('@/component/app/mobile-br.vue'))
 	const Social = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/app/social.vue`))
 	const Squares = defineAsyncComponent(() => import('@/component/app/squares.vue'))
-	const ChangelogVersion = defineAsyncComponent(() => import('@/component/changelog/changelog-version.vue'))
 	const ConsoleWindow = defineAsyncComponent(() => import('./console-window.vue'))
 	const ChangelogDialog = defineAsyncComponent(() => import('../changelog/changelog-dialog.vue'))
-	const Didactitiel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`))
 	const Documentation = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`))
 	const DidactitielNew = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel-new/didactitiel-new.${locale}.i18n`))
 	export default {
-		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Squares, Didactitiel, Chats, 'mobile-br': MobileBR, ChangelogVersion, ChangelogDialog, Documentation, DidactitielNew, ConsoleWindow }
+		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Squares, Chats, 'mobile-br': MobileBR, ChangelogDialog, Documentation, DidactitielNew, ConsoleWindow }
 	}
 </script>
 <script lang="ts" setup>
