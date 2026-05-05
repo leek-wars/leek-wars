@@ -50,7 +50,7 @@
 				{{ resource[1] }}x <b v-if="LeekWars.items[resource[0]].type === ItemType.SCHEME">{{ $t('main.scheme_x', [$t(ITEM_CATEGORY_NAME[LeekWars.items[LeekWars.schemes[LeekWars.items[resource[0]].params].result].type] + '.' + LeekWars.items[LeekWars.schemes[LeekWars.items[resource[0]].params].result].name.replace('potion_', ''))]) }}</b><b v-else>{{ $t(ITEM_CATEGORY_NAME[LeekWars.items[resource[0]].type] + '.' + LeekWars.items[resource[0]].name.replace('potion_', '')) }}</b>
 			</v-tooltip>
 		</td>
-		<td v-if="fight.context !== FightContext.CHALLENGE && leek.talent !== undefined" class="talent">
+		<td v-if="fight.context !== FightContext.CHALLENGE && leek.talent !== undefined && leek.talent_gain !== undefined" class="talent">
 			<img src="/image/talent.png">
 			{{ leek.talent }}
 			<span v-if="leek.talent_gain >= 0">+{{ leek.talent_gain }}</span>

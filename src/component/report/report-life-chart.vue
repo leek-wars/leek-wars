@@ -33,7 +33,7 @@
 				<div class="spacer"></div>
 				<v-switch v-model="chartDisplaySummons" :label="$t('display_summons')" :hide-details="true" :ripple="false" />
 			</div>
-			<Line ref="lifeChart" :data="chartData" :options="chartOptions" class="chart" :class="{long: statistics && statistics.lives.length >= 30}" />
+			<Line ref="lifeChart" :data="chartData" :options="chartOptions ?? undefined" class="chart" :class="{long: statistics && statistics.lives.length >= 30}" />
 		</div>
 	</panel>
 </template>
@@ -89,7 +89,7 @@
 	const log = ref(false)
 	const turrets = ref(false)
 	const chartData = ref<any>(null)
-	const chartOptions = ref<ChartOptions | null>(null)
+	const chartOptions = ref<ChartOptions<'line'> | null>(null)
 	const chartDisplaySummons = ref(false)
 	let filtered_entities: StatisticsEntity[] = []
 	const lifeChart = ref<any>(null)

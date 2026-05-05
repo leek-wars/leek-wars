@@ -1,5 +1,5 @@
 <template lang="html">
-	<div v-if="message.censored" class="censored">{{ $t('main.censored_by', [message.censored_by.name]) }}</div>
+	<div v-if="message.censored" class="censored">{{ $t('main.censored_by', [message.censored_by?.name]) }}</div>
 	<div v-else v-chat-code-latex class="text" :class="{'leek-wars': message.farmer.id === 0, 'large-emojis': message.only_emojis}" v-html="message.content"></div>
 </template>
 

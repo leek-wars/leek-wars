@@ -1,5 +1,5 @@
 <template lang="html">
-	<div draggable="true" class="ai" :class="{[ai.color]: true, small, locked}">
+	<div draggable="true" class="ai" :class="{[ai.color || '']: true, small, locked}">
 		<div class="name" :style="{ fontSize: nameSize + 'px' }">
 			{{ ai.bot ? $t('leekscript.' + ai.name) : ai.name }}
 			<v-icon v-if="!ai.valid">mdi-close-circle</v-icon>

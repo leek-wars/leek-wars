@@ -55,7 +55,7 @@
 								<template #activator="{ props }">
 									<div class="emblem-input" v-bind="props">
 										<input ref="emblemInput" type="file" accept="image/png, image/jpeg, image/jpg, image/bmp, image/gif, image/webp" @change="changeEmblem">
-										<emblem ref="emblem" :team="team" @click.native="$refs.emblemInput.click()" />
+										<emblem ref="emblem" :team="team" @click.native="emblemInput?.click()" />
 									</div>
 								</template>
 								{{ $t('change_emblem') }}
@@ -156,7 +156,7 @@
 					{{ $t('tournaments') }}
 				</v-tooltip>
 
-				<Line v-if="chartData" :data="chartData" :options="chartOptions" class="talent-history" />
+				<Line v-if="chartData && chartOptions" :data="chartData" :options="chartOptions" class="talent-history" />
 
 				<div class="center" v-if="team && $store.state.farmer && !is_member && $store.state.farmer.team == null && !myInvitation">
 					<br>
@@ -311,7 +311,7 @@
 							</rich-tooltip-farmer>
 						</router-link>
 						<template v-if="is_member">
-							<div class="logs" :class="{hidden: member.logs_level === 0, me: $store.state.farmer && member.id === $store.state.farmer.id}" @click="logsDialog = ($store.state.farmer && member.id === $store.state.farmer.id)">
+							<div class="logs" :class="{hidden: member.logs_level === 0, me: $store.state.farmer && member.id === $store.state.farmer.id}" @click="logsDialog = !!($store.state.farmer && member.id === $store.state.farmer.id)">
 								<v-icon v-if="member.logs_level > 0" class="activated">mdi-playlist-check</v-icon>
 								<v-icon v-else>mdi-playlist-remove</v-icon>
 								<span :title="$t('log_level_' + member.logs_level) + ' : ' + $t('log_level_' + member.logs_level + '_desc')"> {{ $t('log_level_' + member.logs_level) }} </span>
@@ -325,7 +325,7 @@
 								<option value="member">{{ $t('member') }}</option>
 							</select>
 							<br>
-							<v-btn v-if="member.id !== $store.state.farmer.id" class="ban" size="small" @click="banMemberStart(member)">
+							<v-btn v-if="$store.state.farmer && member.id !== $store.state.farmer.id" class="ban" size="small" @click="banMemberStart(member)">
 								<v-icon>mdi-hand-pointing-right</v-icon>
 								{{ $t('ban') }}
 							</v-btn>
@@ -432,7 +432,7 @@
 							<div class="p20">{{ $t('main.level') }}</div>
 						</div>
 						<div v-for="(leek, i) in team.rankings.leeks" :key="i" :class="{me: leek.me}">
-							<div class="p20">{{ parseInt(i) + 1 }}</div>
+							<div class="p20">{{ i + 1 }}</div>
 							<div class="p50" :class="leek.style">
 								<rich-tooltip-leek :id="leek.id" v-slot="{ props }">
 									<router-link :to="'/leek/' + leek.id">
@@ -455,7 +455,7 @@
 							<div class="p15">{{ $t('main.country') }}</div>
 						</div>
 						<div v-for="(farmer, i) in team.rankings.farmers" :key="i" :class="{me: farmer.me}">
-							<div class="p15">{{ parseInt(i) + 1 }}</div>
+							<div class="p15">{{ i + 1 }}</div>
 							<div class="p50" :class="farmer.style">
 								<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }">
 									<router-link :to="'/farmer/' + farmer.id">
@@ -479,7 +479,7 @@
 							<div class="p25">{{ $t('main.trophies') }}</div>
 						</div>
 						<div v-for="(farmer, i) in team.rankings.trophies" :key="i" :class="{me: farmer.me}">
-							<div class="p15">{{ parseInt(i) + 1 }}</div>
+							<div class="p15">{{ i + 1 }}</div>
 							<div class="p50" :class="farmer.style">
 								<rich-tooltip-farmer v-if="farmer" :id="farmer.id" v-slot="{ props }">
 									<router-link :to="'/farmer/' + farmer.id">
@@ -634,7 +634,7 @@
 				<div v-if="is_member" class="tab" @click="quitTeamStart">{{ $t('quit_team') }}</div>
 				<div v-if="owner" class="tab" @click="renameTeamDialog = true"><v-icon>mdi-pencil-outline</v-icon> {{ $t('rename_team') }}</div>
 				<div v-if="owner" class="tab" @click="changeOwnerStart">{{ $t('change_owner') }}</div>
-				<div v-if="owner" class="tab" @click="languageDialog = true"><flag v-if="team.language" :code="LeekWars.languages[team.language]?.country" :clickable="false" /> {{ $t('team_language') }}</div>
+				<div v-if="owner" class="tab" @click="languageDialog = true"><flag v-if="team && team.language" :code="LeekWars.languages[team.language]?.country" :clickable="false" /> {{ $t('team_language') }}</div>
 				<div v-if="owner" class="tab" @click="dissolveDialog = true">{{ $t('disolve_team') }}</div>
 				<div v-if="!is_member && $store.state.connected">
 					<div class="report-button tab" @click="showReport = true">
@@ -888,6 +888,7 @@
 	const route = useRoute()
 	const router = useRouter()
 	const emblemRef = useTemplateRef<any>('emblem')
+	const emblemInput = useTemplateRef<HTMLInputElement>('emblemInput')
 	const descriptionElement = useTemplateRef<HTMLElement>('descriptionElement')
 	const recruitmentElement = useTemplateRef<HTMLElement>('recruitmentElement')
 	const columnsConfigListEl = useTemplateRef<HTMLElement>('columnsConfigListEl')
@@ -934,8 +935,8 @@
 	const logsLevel = ref(0)
 	const rankingsLoading = ref(false)
 	const rankingsLoaded = ref(false)
-	const chartData = ref<ChartData | null>(null)
-	const chartOptions = ref<ChartOptions | null>(null)
+	const chartData = ref<ChartData<'line'> | null>(null)
+	const chartOptions = ref<ChartOptions<'line'> | null>(null)
 	let savingRecruitment = false
 
 	const id = computed(() => 'id' in route.params ? parseInt(route.params.id as string, 10) : (store.state.farmer && store.state.farmer.team !== null ? store.state.farmer.team.id : null))
@@ -974,7 +975,7 @@
 	const membersColumns = computed(() => team.value?.members_columns?.columns || DEFAULT_MEMBER_COLUMNS)
 	const membersSort = computed(() => {
 		const sort = team.value?.members_columns?.sort || DEFAULT_MEMBER_SORT
-		return [{ key: sort.key, order: sort.order }]
+		return [{ key: sort.key, order: sort.order as 'asc' | 'desc' }]
 	})
 
 	const customKeySort: Record<string, (a: number | null, b: number | null) => number> = {
@@ -990,11 +991,11 @@
 		.map(key => {
 			const col = ALL_MEMBER_COLUMNS_MAP[key]
 			if (!col) return null
-			return { title: t(col.titleKey), value: key, sortable: true, align: col.align }
+			return { title: t(col.titleKey), value: key, sortable: true, align: col.align as 'start' | 'end' | 'center' | undefined }
 		})
-		.filter(Boolean))
+		.filter((h): h is NonNullable<typeof h> => h !== null))
 
-	const turret = computed(() => {
+	const turret = computed<Record<string, any>>(() => {
 		if (!team.value) return {}
 		const team_ratio = 1 + (team.value.level / 100)
 		const max_life = 1000 + Math.round((4000 - 500) * team_ratio)
@@ -1164,7 +1165,8 @@
 		.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
 	}
 
-	function deleteComposition(composition: Composition) {
+	function deleteComposition(composition: Composition | null) {
+		if (!composition) return
 		LeekWars.delete('team/delete-composition', {composition_id: composition.id}).then(() => {
 			if (team.value) {
 				LeekWars.toast(gt('compo_deleted', [composition.name]))
@@ -1178,7 +1180,8 @@
 		.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
 	}
 
-	function renameComposition(composition: Composition) {
+	function renameComposition(composition: Composition | null) {
+		if (!composition) return
 		LeekWars.put('team/rename-composition', {composition_id: composition.id, composition_name: renameCompoName.value}).then(() => {
 			if (team.value) {
 				renameCompoDialog.value = false
@@ -1482,7 +1485,7 @@
 		.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
 	}
 
-	function moveLeek(leek: Leek, oldCompo: Composition | null, newCompo: Composition) {
+	function moveLeek(leek: Leek, oldCompo: Composition | null, newCompo: Composition | null) {
 		if (!team.value || (newCompo && !canDrop(newCompo))) return
 		if (oldCompo) {
 			oldCompo.leeks.splice(oldCompo.leeks.indexOf(leek), 1)
@@ -1499,7 +1502,7 @@
 			.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
 	}
 
-	function leeksDragstart(composition: Composition, leek: Leek, e: DragEvent) {
+	function leeksDragstart(composition: Composition | null, leek: Leek, e: DragEvent) {
 		if (composition && composition.tournament.registered) return false
 		e.dataTransfer!.setData('text/plain', 'drag !!!')
 		draggedLeek.value = leek
@@ -1515,7 +1518,7 @@
 		return false
 	}
 
-	function leeksDrop(composition: Composition, e: Event) {
+	function leeksDrop(composition: Composition | null, e: Event) {
 		if (draggedLeek.value) {
 			moveLeek(draggedLeek.value, draggedLeekComposition.value, composition)
 			;(draggedLeek.value as any).dragging = false

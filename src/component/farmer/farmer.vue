@@ -21,7 +21,7 @@
 							<div class="tab green">{{ $t('see_tournament') }}</div>
 						</router-link>
 					</template>
-					<v-tooltip v-if="$store.state.farmer.tournaments_enabled && $store.getters.leek_count >= 2" content-class="fluid" @update:model-value="loadTournamentRange()">
+					<v-tooltip v-if="$store.state.farmer && $store.state.farmer.tournaments_enabled && $store.getters.leek_count >= 2" content-class="fluid" @update:model-value="loadTournamentRange()">
 						<template #activator="{ props }">
 							<div class="tab" v-bind="props">
 								<v-icon>mdi-trophy</v-icon>
@@ -71,7 +71,7 @@
 							<template #activator="{ props }">
 								<div class="avatar-input" v-bind="props">
 									<input ref="avatarInput" type="file" accept="image/png, image/jpeg, image/jpg, image/bmp, image/gif, image/webp" @change="changeAvatar">
-									<avatar ref="avatar" :farmer="farmer" @click.native="$refs.avatarInput.click()" />
+									<avatar ref="avatar" :farmer="farmer" @click.native="avatarInput?.click()" />
 								</div>
 							</template>
 							{{ $t('click_to_change_avatar') }}
@@ -88,7 +88,7 @@
 							{{ farmer.likes }}
 						</v-btn>
 					</div>
-					<lw-title v-if="farmer && farmer.title.length" class="info title" :class="{me: myFarmer}" :title="farmer.title" @click.native="titleDialog = myFarmer" />
+					<lw-title v-if="farmer && farmer.title.length" class="info title" :class="{me: myFarmer}" :title="farmer.title" @click.native="titleDialog = !!myFarmer" />
 					<div v-if="farmer" class="infos">
 						<div v-if="!farmer.title.length && myFarmer" class="add add-title" :class="{locked: !farmerTitleEnabled}" @click="titleDialog = !!farmerTitleEnabled">
 							<v-tooltip :disabled="farmerTitleEnabled">
@@ -195,7 +195,7 @@
 						</tr>
 					</table>
 
-					<Line v-if="chartData" :data="chartData" :options="chartOptions" class="talent-history" />
+					<Line v-if="chartData && chartOptions" :data="chartData" :options="chartOptions" class="talent-history" />
 
 					<div v-if="farmer" class="godfather grey">
 						<div v-if="farmer.godfather">
@@ -388,11 +388,11 @@
 						</div>
 						<div class="column column-level">
 							<div class="grey">{{ $t('godsons_level') }}</div>
-							<div class="total-level">{{ $filters.number(farmer ? farmer.godsons_level : '...') }}</div>
+							<div class="total-level">{{ farmer ? $filters.number(farmer.godsons_level) : '...' }}</div>
 							<v-tooltip>
 								<template #activator="{ props }">
 									<div class="bar" v-bind="props">
-										<span :class="{ blue: farmer?.godsons_level >= 10_000 }" :style="{width: xp_bar_width + '%'}" class="xp-bar striked"></span>
+										<span :class="{ blue: (farmer?.godsons_level ?? 0) >= 10_000 }" :style="{width: xp_bar_width + '%'}" class="xp-bar striked"></span>
 									</div>
 								</template>
 								<span v-if="farmer">{{ $filters.number(farmer.godsons_level) }} / 10 000</span>
@@ -401,17 +401,17 @@
 					</div>
 					<h4>{{ $t('main.rewards') }}</h4>
 					<div v-if="farmer" class="rewards">
-						<div v-for="(reward, r) of rewards" :key="r" class="reward card" :class="{'notif-trophy': r <= farmer.godsons_level}">
-							<div class="level">{{ $filters.number(r) }}<v-icon v-if="r <= farmer.godsons_level">mdi-check</v-icon></div>
+						<div v-for="(reward, r) of rewards" :key="r" class="reward card" :class="{'notif-trophy': Number(r) <= (farmer.godsons_level ?? 0)}">
+							<div class="level">{{ $filters.number(Number(r)) }}<v-icon v-if="Number(r) <= (farmer.godsons_level ?? 0)">mdi-check</v-icon></div>
 							<img v-if="reward.trophy" :src="'/image/trophy/' + reward.trophy + '.svg'">
-							<rich-tooltip-item v-else-if="reward.resource" :item="LeekWars.items[reward.item]" v-slot="{ props }" :bottom="true">
+							<rich-tooltip-item v-else-if="reward.resource" :item="LeekWars.items[reward.item!]" v-slot="{ props }" :bottom="true">
 								<img v-bind="props" :src="'/image/resource/' + reward.resource + '.png'">
 							</rich-tooltip-item>
 							<img v-else-if="reward.fight_pack" :src="'/image/fight-pack/' + reward.fight_pack + '.png'">
-							<rich-tooltip-item v-else-if="reward.potion" :item="LeekWars.items[reward.item]" v-slot="{ props }" :bottom="true">
+							<rich-tooltip-item v-else-if="reward.potion" :item="LeekWars.items[reward.item!]" v-slot="{ props }" :bottom="true">
 								<img v-bind="props" :src="'/image/potion/skin_' + reward.potion + '.png'">
 							</rich-tooltip-item>
-							<rich-tooltip-item v-else-if="reward.hat" :item="LeekWars.items[reward.item]" v-slot="{ props }" :bottom="true">
+							<rich-tooltip-item v-else-if="reward.hat" :item="LeekWars.items[reward.item!]" v-slot="{ props }" :bottom="true">
 								<img v-bind="props" :src="'/image/hat/' + reward.hat + '.png'">
 							</rich-tooltip-item>
 							<div class="name" v-if="reward.trophy">{{ $t('trophy_x', [$t('trophy.' + reward.trophy)]) }}</div>
@@ -546,7 +546,7 @@
 			</div>
 			<template #actions>
 				<div v-ripple @click="titleDialog = false">{{ $t('cancel') }}</div>
-				<div v-ripple class="green" @click="pickTitle($refs.picker.getTitle())">{{ $t('validate') }}</div>
+				<div v-ripple class="green" @click="pickerRef && pickTitle(pickerRef.getTitle())">{{ $t('validate') }}</div>
 			</template>
 		</popup>
 
@@ -633,6 +633,8 @@
 	const route = useRoute()
 	const router = useRouter()
 	const avatarRef = useTemplateRef<any>('avatar')
+	const avatarInput = useTemplateRef<HTMLInputElement>('avatarInput')
+	const pickerRef = useTemplateRef<InstanceType<typeof TitlePicker>>('picker')
 	const godfatherLink = useTemplateRef<any>('godfatherLink')
 
 	const farmer = ref<Farmer | null>(null)
@@ -682,8 +684,8 @@
 		10000: { hat: 'gold_fedora', item: 280 },
 	}
 	const invitationSent = ref(false)
-	const chartData = ref<ChartData | null>(null)
-	const chartOptions = ref<ChartOptions | null>(null)
+	const chartData = ref<ChartData<'line'> | null>(null)
+	const chartOptions = ref<ChartOptions<'line'> | null>(null)
 
 	const id = computed<number | null>(() => route.params.id ? parseInt(route.params.id as string, 10) : (store.state.farmer ? store.state.farmer.id : null))
 	const myFarmer = computed(() => store.state.farmer && id.value === store.state.farmer.id)

@@ -64,7 +64,7 @@ import { store } from '@/model/store'
 defineOptions({ name: 'didactitiel', i18n: {}, mixins: [...mixins] })
 
 const farmerName = computed(() => store.state.farmer ? store.state.farmer.name : '')
-const farmerFirstLeek = computed(() => store.state.farmer ? LeekWars.first(store.state.farmer.leeks).name : '')
+const farmerFirstLeek = computed(() => store.state.farmer ? LeekWars.first(store.state.farmer.leeks)?.name ?? '' : '')
 
 function back() {
 	LeekWars.didactitial_step--

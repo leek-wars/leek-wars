@@ -16,7 +16,7 @@
 
 	const props = defineProps<{
 		obstacles: any
-		teams: {[key: number]: Set<number>}
+		teams?: {[key: number]: Set<number>}
 	}>()
 
 	const map = ref<any>([])
@@ -40,8 +40,8 @@
 						obstacle = true
 						obstacleSize = props.obstacles[cell]
 					}
-					for (const team in props.teams) {
-						if (props.teams[team].has(cell)) {
+					for (const team in props.teams ?? {}) {
+						if (props.teams![team].has(cell)) {
 							teams['t' + team] = true
 							color = TEAM_COLORS[parseInt(team, 10) - 1]
 						}

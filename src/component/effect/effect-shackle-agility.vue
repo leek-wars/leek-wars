@@ -18,9 +18,9 @@ import type { FightLeek } from '@/model/fight'
 import Leek from '../report/action-leek.vue'
 
 defineProps<{
-	leek?: FightLeek
-	value?: number
-	turns?: number
-	a?: number
+	leek: FightLeek
+	value: number
+	turns: number
+	a: number
 }>()
 </script>

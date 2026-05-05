@@ -56,9 +56,10 @@ defineOptions({ name: 'scheme', components: {
 const props = withDefaults(defineProps<{
 	scheme: SchemeTemplate
 	showResult: boolean
-	showPrice: boolean
+	showPrice?: boolean
 	sharedTooltip?: boolean
 }>(), {
+	showPrice: false,
 	sharedTooltip: false,
 })
 

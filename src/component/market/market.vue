@@ -87,7 +87,7 @@
 							</router-link>
 						</div>
 						<div v-else>
-							<div v-for="type in Object.entries(EffectTypeMarket).filter(e => !isNaN(e[0] as any)).map(x => x[0])" :key="type">
+							<div v-for="type in effectTypes" :key="type">
 								<h4 :class="{first: type === EffectTypeMarket.ATTACK}">{{ $t('effect.effect_type_' + type) }}</h4>
 								<div class="items chips">
 									<router-link v-for="chip in chipsByType[type]" :key="chip.id" v-ripple :to="'/market/' + chip.name" class="item chip" :class="{toohigh: chip.level > max_level}">
@@ -179,27 +179,27 @@
 									</div>
 									<div v-if="selectedItem.buyable || selectedItem.buyable_crystals" class="buy">
 										<h4 class="buy-label">{{ $t('buy') }}</h4>
-										<v-btn v-if="selectedItem.buyable && !(selectedItem.type === ItemType.FIGHT_PACK && $store.state.farmer?.fights > 0)" :disabled="($store.state.farmer && $store.state.farmer.habs < selectedItem.price) || (selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0)) || (selectedItem.type === ItemType.FIGHT_PACK && $store.state.farmer?.habs_fights)" class="buy-button" @click="openBuyHabs(1)">{{ selectedItem.type === ItemType.FIGHT_PACK && $store.state.farmer?.habs_fights ? $t('already_bought') : $filters.number(selectedItem.price) }}<img v-if="!(selectedItem.type === ItemType.FIGHT_PACK && $store.state.farmer?.habs_fights)" src="/image/hab.png"></v-btn>
-										<v-btn v-if="selectedItem.buyable_crystals" :disabled="selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0)" class="buy-crystals-button" @click="openBuyCrystals(1)">{{ $filters.number(selectedItem.crystals) }}<img src="/image/crystal.png"></v-btn>
+										<v-btn v-if="selectedItem.buyable && !(selectedItem.type === ItemType.FIGHT_PACK && ($store.state.farmer?.fights ?? 0) > 0)" :disabled="!!($store.state.farmer && $store.state.farmer.habs < selectedItem.price!) || (selectedItem.singleton && ((selectedItem.farmer_count ?? 0) > 0 || (selectedItem.leek_count ?? 0) > 0)) || (selectedItem.type === ItemType.FIGHT_PACK && !!$store.state.farmer?.habs_fights)" class="buy-button" @click="openBuyHabs(1)">{{ selectedItem.type === ItemType.FIGHT_PACK && $store.state.farmer?.habs_fights ? $t('already_bought') : $filters.number(selectedItem.price!) }}<img v-if="!(selectedItem.type === ItemType.FIGHT_PACK && $store.state.farmer?.habs_fights)" src="/image/hab.png"></v-btn>
+										<v-btn v-if="selectedItem.buyable_crystals" :disabled="selectedItem.singleton && ((selectedItem.farmer_count ?? 0) > 0 || (selectedItem.leek_count ?? 0) > 0)" class="buy-crystals-button" @click="openBuyCrystals(1)">{{ $filters.number(selectedItem.crystals!) }}<img src="/image/crystal.png"></v-btn>
 									</div>
 									<div v-if="selectedItem.name === 'potion_restat'" class="buy">
 										<h4 class="buy-label">{{ $t('buy') }} x10</h4>
-										<v-btn v-if="selectedItem.buyable" :disabled="($store.state.farmer && $store.state.farmer.habs < selectedItem.price * 10)" class="buy-button" @click="openBuyHabs(10)">{{ $filters.number(selectedItem.price * 10) }}<img src="/image/hab.png"></v-btn>
-										<v-btn v-if="selectedItem.buyable_crystals" class="buy-crystals-button" @click="openBuyCrystals(10)">{{ $filters.number(selectedItem.crystals * 10) }}<img src="/image/crystal.png"></v-btn>
+										<v-btn v-if="selectedItem.buyable" :disabled="!!($store.state.farmer && $store.state.farmer.habs < selectedItem.price! * 10)" class="buy-button" @click="openBuyHabs(10)">{{ $filters.number(selectedItem.price! * 10) }}<img src="/image/hab.png"></v-btn>
+										<v-btn v-if="selectedItem.buyable_crystals" class="buy-crystals-button" @click="openBuyCrystals(10)">{{ $filters.number(selectedItem.crystals! * 10) }}<img src="/image/crystal.png"></v-btn>
 									</div>
-									<v-btn v-if="selectedItem.buyable_crystals && $store.state.farmer && $store.state.farmer.crystals < selectedItem.crystals" class="not-enough-crystals" variant="text" color="#e91e9e" prepend-icon="mdi-cart-outline" :to="'/bank?ref=market_not_enough:' + selectedItem.name">
+									<v-btn v-if="selectedItem.buyable_crystals && $store.state.farmer && $store.state.farmer.crystals < selectedItem.crystals!" class="not-enough-crystals" variant="text" color="#e91e9e" prepend-icon="mdi-cart-outline" :to="'/bank?ref=market_not_enough:' + selectedItem.name">
 										{{ $t('not_enough_crystals') }}
 									</v-btn>
-									<div v-if="selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0)" class="already-have">
+									<div v-if="selectedItem.singleton && ((selectedItem.farmer_count ?? 0) > 0 || (selectedItem.leek_count ?? 0) > 0)" class="already-have">
 										{{ $t('already_have') }}
 									</div>
 									<div v-if="!selectedItem.sellable" class="already-have">
 										{{ $t('not_sellable') }}
 									</div>
-									<template v-if="selectedItem.sellable && selectedItem.farmer_count > 0">
+									<template v-if="selectedItem.sellable && (selectedItem.farmer_count ?? 0) > 0">
 										<div class="sell">
 											<h4 class="buy-label">{{ $t('resell') }}</h4>
-											<v-btn class="sell-button" @click="sellDialog = true">{{ $filters.number(selectedItem.sell_price) }} <img src="/image/hab.png"></v-btn>
+											<v-btn class="sell-button" @click="sellDialog = true">{{ $filters.number(selectedItem.sell_price!) }} <img src="/image/hab.png"></v-btn>
 										</div>
 									</template>
 								</div>
@@ -258,11 +258,11 @@
 					<template #item><b>{{ buyQuantity }}x {{ translateName(selectedItem) }}</b></template>
 				</i18n-t>
 				<br>
-				<b>{{ $t('price') }}</b> : {{ $filters.number(selectedItem.price * buyQuantity) }} <span class="hab"></span>
+				<b>{{ $t('price') }}</b> : {{ $filters.number(selectedItem.price! * buyQuantity) }} <span class="hab"></span>
 				<br>
 				<b>{{ $t('habs_before_purchase') }}</b> : {{ $filters.number($store.state.farmer.habs) }} <span class="hab"></span>
 				<br>
-				<b>{{ $t('habs_after_purchase') }}</b> : {{ $filters.number($store.state.farmer.habs - selectedItem.price * buyQuantity) }} <span class="hab"></span>
+				<b>{{ $t('habs_after_purchase') }}</b> : {{ $filters.number($store.state.farmer.habs - selectedItem.price! * buyQuantity) }} <span class="hab"></span>
 			</div>
 			<template #actions>
 				<div v-ripple @click="buyDialog = false">{{ $t('cancel') }}</div>
@@ -278,11 +278,11 @@
 					<template #item><b>{{ translateName(selectedItem) }}</b></template>
 				</i18n-t>
 				<br>
-				<b>{{ $t('price') }}</b> : {{ $filters.number(selectedItem.crystals * buyQuantity) }} <span class="crystal"></span>
+				<b>{{ $t('price') }}</b> : {{ $filters.number(selectedItem.crystals! * buyQuantity) }} <span class="crystal"></span>
 				<br>
 				<b>{{ $t('crystals_before_purchase') }}</b> : {{ $filters.number($store.state.farmer.crystals) }} <span class="crystal"></span>
 				<br>
-				<b>{{ $t('crystals_after_purchase') }}</b> : {{ $filters.number($store.state.farmer.crystals - selectedItem.crystals * buyQuantity) }} <span class="crystal"></span>
+				<b>{{ $t('crystals_after_purchase') }}</b> : {{ $filters.number($store.state.farmer.crystals - selectedItem.crystals! * buyQuantity) }} <span class="crystal"></span>
 			</div>
 			<template #actions>
 				<div v-ripple @click="buyCrystalsDialog = false">{{ $t('cancel') }}</div>
@@ -298,11 +298,11 @@
 					<template #item><b>{{ translateName(selectedItem) }}</b></template>
 				</i18n-t>
 				<br>
-				<b>{{ $t('price') }}</b> : {{ $filters.number(selectedItem.price) }} <span class="hab"></span>
+				<b>{{ $t('price') }}</b> : {{ $filters.number(selectedItem.price!) }} <span class="hab"></span>
 				<br>
 				<b>{{ $t('habs_before_sell') }}</b> : {{ $filters.number($store.state.farmer.habs) }} <span class="hab"></span>
 				<br>
-				<b>{{ $t('habs_after_sell') }}</b> : {{ $filters.number($store.state.farmer.habs + selectedItem.sell_price) }} <span class="hab"></span>
+				<b>{{ $t('habs_after_sell') }}</b> : {{ $filters.number($store.state.farmer.habs + selectedItem.sell_price!) }} <span class="hab"></span>
 			</div>
 			<template #actions>
 				<div v-ripple @click="sellDialog = false">{{ $t('cancel') }}</div>
@@ -353,6 +353,8 @@
 const t = useNamespacedT('market')
 	const route = useRoute()
 	const router = useRouter()
+
+	const effectTypes = Object.values(EffectTypeMarket).filter(v => typeof v === 'number') as number[]
 
 	const selectedItem = ref<ItemTemplate | null>(null)
 	const items = reactive<{[key: string]: ItemTemplate}>({})

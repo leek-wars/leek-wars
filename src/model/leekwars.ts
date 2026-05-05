@@ -25,7 +25,7 @@ import { SCHEMES } from './schemes'
 import { COMPONENTS } from './components'
 import { WEAPONS } from './weapons'
 import { BossSquads } from './boss-squads'
-import { loadGameData as loadGameDataRaw } from './gamedata'
+import { DATA_TYPES, loadGameData as loadGameDataRaw } from './gamedata'
 import { nextTick, reactive } from 'vue'
 
 const DEV = window.location.port === '8080'
@@ -454,7 +454,7 @@ const LeekWars = reactive({
 		if (!(skin in SKINS)) { return SKINS[1] }
 		return SKINS[skin]
 	},
-	objectSize(obj: Record<string, unknown>): number {
+	objectSize(obj: Record<string, unknown> | unknown[]): number {
 		let size = 0, key
 		for (key in obj) {
 			// if (obj.hasOwnProperty(key)) {
@@ -538,7 +538,7 @@ const LeekWars = reactive({
 			.replace(/&gt;/g, ">").replace(/&lt;/g, "<")
 			.replace(/&nbsp;/g, "\t")
 	},
-	formatNumber(n: number) {
+	formatNumber(n: number | string) {
 		return ("" + n).replace(/\B(?=(\d{3})+(?!\d))/g, " ")
 	},
 	formatFileSize(bytes: number) {
@@ -1319,9 +1319,13 @@ function goToRanking(type: string, order: string, id: number = 0) {
 async function loadGameData() {
 	console.log('[GameData] Loading...')
 	const data = await loadGameDataRaw()
-	if (!data || Object.keys(data).length === 0) {
-		console.log('[GameData] No data to apply, keeping bundled static data')
-		return
+	if (!data) {
+		throw new Error('[GameData] No data returned')
+	}
+
+	const missing = DATA_TYPES.filter(t => !data[t])
+	if (missing.length > 0) {
+		throw new Error('[GameData] Incomplete dataset, missing: ' + missing.join(', '))
 	}
 
 	const t0 = performance.now()

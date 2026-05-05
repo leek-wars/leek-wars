@@ -177,7 +177,7 @@
 						<input type="number" v-model="group.level" @update:model-value="changeLevel" :min="1" :max="301" /> (1 - 301)
 						<div class="spacer"></div>
 						<!-- <b :style="{color: $refs.capitalDialog.capital < 0 ? 'red' : 'green'}">{{ $refs.capitalDialog.capital }} capital</b> -->
-						<v-icon v-if="$refs.capitalDialog.capital < 0" class="card alert">mdi-alert-circle</v-icon>
+						<v-icon v-if="capitalDialog && capitalDialog.capital < 0" class="card alert">mdi-alert-circle</v-icon>
 					</div>
 					<b v-else class="level">{{ $t('main.level_n', [group.level]) }}</b>
 					<div class="card characteristics">
@@ -204,7 +204,7 @@
 
 					<rich-tooltip-item v-for="weapon in group.weapons" :key="weapon" v-slot="{ props }" :item="LeekWars.items[weapon]" :bottom="true">
 						<div class="weapon" v-bind="props">
-							<img :src="'/image/' + LeekWars.items[weapon].name.replace('_', '/') + '.png'" @click="setWeapon(weapon)" :width="WeaponsData[LeekWars.items[weapon].params].width">
+							<img :src="'/image/' + LeekWars.items[weapon].name.replace('_', '/') + '.png'" :width="WeaponsData[LeekWars.items[weapon].params].width">
 							<v-tooltip v-if="LeekWars.items[weapon].level > group.level">
 								<template #activator="{ props }">
 									<v-icon v-bind="props" class="card alert">mdi-alert-circle</v-icon>
@@ -302,7 +302,7 @@
 					<div v-if="item.leek_error" class="error">{{ $t('error_' + item.leek_error.error, item.leek_error.params) }}</div>
 				</template>
 				<template #item.team="{ item }">
-					<rich-tooltip-team :id="item.team.id" v-slot="{ props }" :bottom="true">
+					<rich-tooltip-team v-if="item.team" :id="item.team.id" v-slot="{ props }" :bottom="true">
 						<div class="flex name" v-bind="props">
 							<emblem :team="item.team" />
 							<span>{{ item.team.name }}</span>
@@ -378,7 +378,7 @@
 			<div class="weapons-popup">
 				<div :class="{dashed: draggedWeapon && draggedWeaponLocation === 'farmer'}" class="leek-weapons" @dragover="dragOver" @drop="weaponsDrop('leek', $event)">
 					<rich-tooltip-item v-for="(weapon, i) in orderedWeapons" :key="i" v-slot="{ props }" :item="LeekWars.items[weapon]" :bottom="true" :nodge="true">
-						<div :class="{dragging: draggedWeapon && draggedWeapon.template === weapon.template && draggedWeaponLocation === 'leek'}" class="weapon" draggable="true" v-bind="props" @dragstart="weaponDragStart('leek', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="removeWeapon(weapon)">
+						<div :class="{dragging: draggedWeapon === weapon && draggedWeaponLocation === 'leek'}" class="weapon" draggable="true" v-bind="props" @dragstart="weaponDragStart('leek', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="removeWeapon(weapon)">
 							<img :src="'/image/' + LeekWars.items[weapon].name.replace('_', '/') + '.png'" draggable="false">
 							<v-tooltip v-if="LeekWars.items[weapon].level > group.level">
 								<template #activator="{ props }">
@@ -423,8 +423,8 @@
 				<br>
 				<h4>{{ $t('main.chips') }} ({{ farmer_chips.length }})</h4>
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'leek'}" class="farmer-chips" @dragover="dragOver" @drop="chipsDrop('farmer', $event)">
-					<rich-tooltip-item v-for="chip in farmer_chips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[chip]" :bottom="true" :nodge="true">
-						<div :quantity="chip.quantity" :class="{dragging: draggedChip && draggedChip === chip && draggedChipLocation === 'farmer', locked: CHIPS[chip].level > group.level || group.chips.find(c => c === chip) }" :draggable="CHIPS[chip].level <= group.level" class="chip" v-bind="props" @dragstart="chipDragStart('farmer', chip, $event)" @dragend="chipDragEnd(chip)" @click="addChip(chip)">
+					<rich-tooltip-item v-for="chip in farmer_chips" :key="chip" v-slot="{ props }" :item="LeekWars.items[chip]" :bottom="true" :nodge="true">
+						<div :class="{dragging: draggedChip && draggedChip === chip && draggedChipLocation === 'farmer', locked: CHIPS[chip].level > group.level || group.chips.find(c => c === chip) }" :draggable="CHIPS[chip].level <= group.level" class="chip" v-bind="props" @dragstart="chipDragStart('farmer', chip, $event)" @dragend="chipDragEnd(chip)" @click="addChip(chip)">
 							<img :src="'/image/chip/' + CHIPS[chip].name + '.png'" draggable="false">
 						</div>
 					</rich-tooltip-item>
@@ -448,7 +448,7 @@
 			</template>
 		</popup>
 
-		<capital-dialog ref="capitalDialog" v-model="capitalDialogOpened" :leek="characteristics" :total-capital="totalCapital" :restat="true" />
+		<capital-dialog ref="capitalDialog" v-model="capitalDialogOpened" :leek="(characteristics as any)" :total-capital="totalCapital" :restat="true" />
 
 		<popup v-if="group" v-model="giveItemDialog" :width="800" class="give-item-dialog">
 			<template #icon>
@@ -555,12 +555,12 @@
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import CharacteristicTooltip from '@/component/leek/characteristic-tooltip.vue'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
-	import { Weapon, WeaponsData } from '@/model/weapon'
+	import { Weapon, WeaponsData, WeaponTemplate } from '@/model/weapon'
 	import { ORDERED_CHIPS } from '@/model/sorted_chips'
 	import { CHIPS } from '@/model/chips'
 	import Item from '@/component/item.vue'
 	import CapitalDialog from '../leek/capital-dialog.vue'
-	import { computed, defineAsyncComponent, reactive, ref } from 'vue'
+	import { computed, defineAsyncComponent, reactive, ref, useTemplateRef } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 	import { emitter } from '@/model/vue'
@@ -587,6 +587,7 @@
 	const draggedChip = ref<number | null>(null)
 	const draggedChipLocation = ref<string | null>(null)
 	const capitalDialogOpened = ref(false)
+	const capitalDialog = useTemplateRef<{ capital: number }>('capitalDialog')
 	const applyingEquipment = ref(false)
 	const membersDialog = ref(false)
 	const characteristics = reactive<{[key: string]: number}>({})
@@ -651,7 +652,7 @@
 	]
 
 	const group_id = computed(() => route.params.id)
-	const availableWeapons = computed(() => Object.values(LeekWars.weapons).filter(w => LeekWars.items[w.item].market))
+	const availableWeapons = computed(() => (Object.values(LeekWars.weapons) as WeaponTemplate[]).filter(w => LeekWars.items[w.item].market))
 	const availableChips = computed(() => Object.values(CHIPS).sort((a, b) => a.level - b.level).filter(w => LeekWars.items[w.id].market))
 
 	LeekWars.get('groupe/get/' + group_id.value).then(g => {
@@ -729,7 +730,7 @@
 	})
 
 	const farmer_weapons = computed(() => {
-		return Object.values(LeekWars.weapons).sort((weaponA, weaponB) => {
+		return (Object.values(LeekWars.weapons) as WeaponTemplate[]).sort((weaponA, weaponB) => {
 			return LeekWars.items[weaponA.item].level - LeekWars.items[weaponB.item].level
 		}).map(weapon => weapon.item)
 	})
@@ -750,7 +751,7 @@
 		draggedWeaponLocation.value = location
 	}
 
-	function weaponDragEnd(_weapon: Weapon) {
+	function weaponDragEnd(_weapon: number) {
 		draggedWeapon.value = null
 	}
 
@@ -790,7 +791,7 @@
 	}
 
 	const farmer_chips = computed(() => {
-		return Object.values(LeekWars.chipTemplates).sort((a, b) => {
+		return (Object.values(LeekWars.chipTemplates) as Array<{id: number, item: number}>).sort((a, b) => {
 			return LeekWars.items[a.item].level - LeekWars.items[b.item].level
 		}).map(chip => chip.item)
 	})

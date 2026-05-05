@@ -346,7 +346,7 @@
 							// Create a wrapper component that uses the reactive ref
 							const CheckboxWrapper = defineComponent({
 								setup() {
-									return () => h(VCheckbox, {
+									return () => h(VCheckbox as any, {
 										hideDetails: true,
 										modelValue: checked.value,
 										'onUpdate:modelValue': (newValue: boolean) => {

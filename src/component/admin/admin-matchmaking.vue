@@ -128,7 +128,7 @@
 	interface Opponent { id: number; name: string; level: number; talent: number; skin: number; hat: number; weapon: number; }
 	interface FunnelStep { name: string; sql: string; count: number; }
 	interface DebugData {
-		leek: { id: number; name: string; level: number; talent: number; in_arena: boolean; valid: boolean; attacked: number; ai: number; };
+		leek: { id: number; name: string; level: number; talent: number; in_arena: boolean; valid: boolean; attacked: number; ai: number; ai_path: string | null; };
 		farmer: { id: number; name: string; day_fight: number; banned: boolean; };
 		blockers: Record<string, boolean>;
 		thresholds: { talent_down: number; talent_up: number; level_down: number; level_up: number; max_attacked: number; };

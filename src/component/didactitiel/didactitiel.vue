@@ -143,7 +143,7 @@ const height = ref(280)
 const content = useTemplateRef<HTMLElement>('content')
 
 const farmerName = computed(() => store.state.farmer ? store.state.farmer.name : '')
-const farmerFirstLeek = computed(() => store.state.farmer ? LeekWars.first(store.state.farmer.leeks).name : '')
+const farmerFirstLeek = computed(() => store.state.farmer ? LeekWars.first(store.state.farmer.leeks)?.name ?? '' : '')
 
 function updateHeight() {
 	setTimeout(() => {

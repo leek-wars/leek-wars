@@ -288,7 +288,7 @@
 			only_emojis: false,
 			mentions: [],
 			formatted: false
-		} as ChatMessage
+		} as unknown as ChatMessage
 		LeekWars.squares.addFromMessage(message)
 	}
 

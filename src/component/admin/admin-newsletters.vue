@@ -16,7 +16,7 @@
 						<div class="main">
 							<b>Version {{ newsletter.version }}</b>
 							<div class="spacer"></div>
-							<v-btn @click="test(newsletter, $store.state.farmer.id)"><v-icon>mdi-cog-outline</v-icon> Test compte normal</v-btn>
+							<v-btn v-if="$store.state.farmer" @click="test(newsletter, $store.state.farmer.id)"><v-icon>mdi-cog-outline</v-icon> Test compte normal</v-btn>
 							<v-text-field v-model="newsletter.testTarget" type="number" label="Farmer ID" density="compact" hide-details style="max-width: 150px" />
 							<v-btn @click="test(newsletter, newsletter.testTarget)"><v-icon>mdi-cog-outline</v-icon> Test</v-btn>
 							<!-- <v-btn v-if="newsletter.sent === 0" color="primary" @click="send(newsletter)"><v-icon>mdi-send-outline</v-icon> Envoyer</v-btn> -->

@@ -97,7 +97,7 @@
 					<div class="bar-wrapper">
 						<div :style="{width: (100 * entity.displayLife / entity.maxLife) + '%', background: entity.lifeColor}" class="details-bar"></div>
 					</div>
-					<div>{{ entity.farmer_name }}</div>
+					<div>{{ entity.farmer?.name }}</div>
 					<avatar :farmer="entity.farmer" class="farmer-avatar" />
 				</div>
 				<div class="stats">

@@ -11,7 +11,7 @@
 		<td>{{ $filters.number(row.talent) }}</td>
 		<td>
 			<router-link :to="'/team/' + row.team_id">
-				<rich-tooltip-team :id="row.team_id" v-slot="{ props }" :bottom="true">
+				<rich-tooltip-team :id="row.team_id ?? 0" v-slot="{ props }" :bottom="true">
 					<span v-bind="props">{{ row.team_name }}</span>
 				</rich-tooltip-team>
 			</router-link>

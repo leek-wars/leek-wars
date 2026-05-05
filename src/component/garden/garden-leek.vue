@@ -1,5 +1,5 @@
 <template lang="html">
-	<rich-tooltip-leek v-if="leek" :id="leek.id" v-slot="{ props }" :bottom="!(leek.id in $store.state.farmer.leeks)" :instant="true">
+	<rich-tooltip-leek v-if="leek" :id="leek.id" v-slot="{ props }" :bottom="!$store.state.farmer || !(leek.id in $store.state.farmer.leeks)" :instant="true">
 		<div v-if="leek" class="leek" v-bind="props">
 			<div class="image">
 				<leek-image :leek="leek" :scale="LeekWars.mobile ? 0.5 : 0.70" />

@@ -75,7 +75,7 @@ const costs = reactive<{[key: string]: any}>({})
 const usedCapital = ref(0)
 const validating = ref(false)
 
-const useful_level = {
+const useful_level: Record<string, number> = {
 	life : 1,
 	strength : 1,
 	wisdom : 1,

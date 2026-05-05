@@ -5,11 +5,12 @@ import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 import leekscript from './leekscript-monarch.js'
 
 self.MonacoEnvironment = {
-	nonce: (document.querySelector('meta[name="csp-nonce"]') as HTMLMetaElement | null)?.content || undefined,
 	getWorker(_: any, label: string) {
 		return new editorWorker()
-	}
-}
+	},
+	// Not in monaco's Environment type but consumed at runtime (CSP nonce).
+	nonce: (document.querySelector('meta[name="csp-nonce"]') as HTMLMetaElement | null)?.content || undefined,
+} as monaco.Environment
 
 import { i18n } from '@/model/i18n';
 import { fileSystem } from '@/model/filesystem';

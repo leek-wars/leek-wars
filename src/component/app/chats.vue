@@ -5,7 +5,7 @@
 				<router-link v-if="window.type === ChatType.PM" v-ripple :to="'/farmer/' + getFarmer(window).id">
 					<avatar :farmer="getFarmer(window)" class="image" />
 				</router-link>
-				<router-link v-else-if="window.type === ChatType.TEAM" v-ripple :to="'/team/' + $store.state.farmer.team.id">
+				<router-link v-else-if="window.type === ChatType.TEAM && $store.state.farmer?.team" v-ripple :to="'/team/' + $store.state.farmer.team.id">
 					<emblem :team="$store.state.farmer.team" class="image" />
 				</router-link>
 				<div v-ripple class="title" @click="toggleExpanded(window, i)">{{ window.title }}</div>

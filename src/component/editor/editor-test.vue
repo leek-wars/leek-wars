@@ -1,6 +1,6 @@
 <template>
 	<popup :modelValue="modelValue" :width="1060" :full="true" icon="mdi-play" :title="$t('run_test')" @update:modelValue="$emit('update:modelValue', $event)">
-		<v-tabs :key="modelValue" v-model="currentTab" class="tabs" grow>
+		<v-tabs :key="String(modelValue)" v-model="currentTab" class="tabs" grow>
 			<v-tab class="tab" value="scenarios">{{ $t('scenarios') }} ({{ LeekWars.objectSize(scenarios) }})</v-tab>
 			<v-tab class="tab" value="leeks">{{ $t('test_leeks') }} ({{ LeekWars.objectSize(leeks) }})</v-tab>
 			<v-tab class="tab" value="maps">{{ $t('test_maps') }} ({{ LeekWars.objectSize(maps) }})</v-tab>
@@ -50,7 +50,7 @@
 									<leek-image :leek="allLeeks[leek.id]" :ai="leek.ai" :scale="0.4" />
 									<div>{{ allLeeks[leek.id].name }}</div>
 								</div>
-								<ai v-if="leek.id in allLeeks && leek.ai && leek.ai in allAis && (leek.id < 0 || leek.ai !== -1)" v-ripple="!allLeeks[leek.id].ally" :ai="allAis[leek.ai]" :small="true" :library="false" :locked="allLeeks[leek.id].ally" @click.native="clickLeekAI(leek, 0)" />
+								<ai v-if="leek.id in allLeeks && leek.ai && leek.ai in allAis" v-ripple="!allLeeks[leek.id].ally" :ai="allAis[leek.ai]" :small="true" :library="false" :locked="allLeeks[leek.id].ally" @click.native="clickLeekAI(leek, 0)" />
 								<div v-else v-ripple class="ai-placeholder" @click="clickLeekAI(leek, 0)"></div>
 							</div>
 							<div v-if="!currentScenario.base && LeekWars.objectSize(currentScenario.team1) < getLimit(currentScenario.type)" class="add" @click="addLeekTeam = currentScenario.team1; leekDialog = true">+</div>
@@ -73,7 +73,7 @@
 									<leek-image :leek="allLeeks[leek.id]" :ai="leek.ai" :scale="0.4" />
 									<div>{{ allLeeks[leek.id].name }}</div>
 								</div>
-								<ai v-if="leek.id in allLeeks && leek.ai && leek.ai in allAis && (leek.id < 0 || leek.ai !== -1)" v-ripple="!allLeeks[leek.id].ally" :ai="allAis[leek.ai]" :small="true" :library="false" :locked="allLeeks[leek.id].ally" @click.native="clickLeekAI(leek, 1)" />
+								<ai v-if="leek.id in allLeeks && leek.ai && leek.ai in allAis" v-ripple="!allLeeks[leek.id].ally" :ai="allAis[leek.ai]" :small="true" :library="false" :locked="allLeeks[leek.id].ally" @click.native="clickLeekAI(leek, 1)" />
 								<div v-else v-ripple class="ai-placeholder" @click="clickLeekAI(leek, 1)"></div>
 							</div>
 							<div v-if="!currentScenario.base && LeekWars.objectSize(currentScenario.team2) < getLimit(currentScenario.type)" class="add" @click="addLeekTeam = currentScenario.team2; leekDialog = true">+</div>
@@ -170,7 +170,7 @@
 						<div class="title">{{ $t('main.chips') }} [{{ currentLeek.chips.length }} / {{ currentLeek.ram }}]</div>
 						<div class="chips">
 							<div class="container">
-								<rich-tooltip-item v-for="(chip, c) of currentLeek.chips" :key="chip" v-slot="{ props }" :item="LeekWars.items[chip]" :nodge="true" :leek="currentLeek">
+								<rich-tooltip-item v-for="(chip, c) of currentLeekChipIds" :key="chip" v-slot="{ props }" :item="LeekWars.items[chip]" :nodge="true" :leek="currentLeek">
 									<img :src="'/image/chip/' + LeekWars.items[chip].name.replace('chip_', '') + '.png'" :class="{disabled: c >= currentLeek.ram}" class="chip" v-bind="props" @click="removeLeekChip(chip)">
 								</rich-tooltip-item>
 								<div v-if="currentLeek.chips.length < currentLeek.ram" class="add" @click="chipsDialog = true">+</div>
@@ -313,7 +313,7 @@
 		<popup v-model="aiDialog" :width="800" icon="mdi-code-braces" :title="$t('select_ai')">
 			<div v-if="aiDialogBot" class="title"><v-icon>mdi-file</v-icon> {{ $t('bot_ais') }}</div>
 			<div v-if="aiDialogBot" class="bot-ai">
-				<div v-for="ai in fileSystem.botAIs" :key="ai.path" v-ripple class="ai" @click="clickDialogAI(ai)">
+				<div v-for="ai in fileSystem.botAIs" :key="ai.path" v-ripple class="ai" @click="clickDialogAI((ai as any))">
 					<ai :ai="ai" :small="false" :library="false" />
 					<ul>
 						<li v-for="(spec, s) in ai.specs" :key="s">{{ $t(spec) }}</li>
@@ -437,6 +437,7 @@
 	}
 	class TestMap {
 		id!: number
+		name!: string
 		data!: any
 	}
 	class TestMapCell {
@@ -595,6 +596,9 @@
 		}
 		return teamTurretAI.value
 	})
+
+	// currentLeek.chips runtime shape is number[] (template ids), not the typed Chip[]
+	const currentLeekChipIds = computed<number[]>(() => (currentLeek.value?.chips ?? []) as unknown as number[])
 
 	const availableWeapons = computed<any[]>(() => {
 		if (!currentLeek.value) return []
@@ -967,7 +971,7 @@
 		return al
 	})
 
-	function selectScenarioMap(m: TestMap) {
+	function selectScenarioMap(m: TestMap | null) {
 		if (!currentScenario.value) return
 		currentScenario.value.map = m ? m.id : null
 		updateScenario(currentScenario.value, { map: currentScenario.value.map })

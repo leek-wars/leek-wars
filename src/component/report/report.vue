@@ -33,7 +33,7 @@
 		<panel class="first">
 			<template #content>
 				<loader v-if="!report" />
-				<div v-else class="content">
+				<div v-else-if="fight" class="content">
 				<div v-if="fight.too_long" class="too-long">
 					{{ $t('generation_too_long') }}
 				</div>
@@ -49,7 +49,6 @@
 									<th>{{ $t('main.xp') }}</th>
 									<th class="gain">{{ $t('main.habs') }}</th>
 									<th v-if="fight.context != FightContext.TEST && fight.context != FightContext.CHALLENGE" class="resources">{{ $t('main.resources') }}</th>
-									<th v-if="fight.type === FightType.SOLO" class="gain">{{ $t('main.talent') }}</th>
 									<!-- <th>Opérations</th> -->
 									<!-- <th v-if="$store.getters.admin" class="gain">Time</th> -->
 								</tr>
@@ -146,7 +145,7 @@
 			<comments :comments="fight.comments" @comment="comment" />
 		</panel>
 
-		<report-life-chart v-if="fight && statistics" :fight="fight" :statistics="statistics" />
+		<report-life-chart v-if="fight && statistics" :fight="fight" :statistics="(statistics as FightStatistics)" />
 
 		<panel :title="$t('damages_title')" toggle="report/damage" icon="mdi-chart-pie">
 			<loader v-if="!loaded" />
@@ -159,7 +158,7 @@
 						<v-radio :value="3" label="Tank" :ripple="false" />
 					</v-radio-group>
 					<div class="spacer"></div>
-					<v-radio-group v-if="fight.type !== FightType.BATTLE_ROYALE && fight.type !== FightType.SOLO" v-model="damagesTeams" :inline="true" :hide-details="true">
+					<v-radio-group v-if="fight!.type !== FightType.BATTLE_ROYALE && fight!.type !== FightType.SOLO" v-model="damagesTeams" :inline="true" :hide-details="true">
 						<v-radio :value="0" label="Entités" :ripple="false" />
 						<v-radio :value="1" label="Équipes" :ripple="false" />
 					</v-radio-group>
@@ -182,14 +181,14 @@
 		</panel>
 
 		<panel :title="$t('statistics')" toggle="report/statistics" icon="mdi-table-large">
-			<loader v-if="!statistics" />
+			<loader v-if="!statistics || !fight" />
 			<div v-else class="scroll-x">
 				<report-statistics :fight="fight" :statistics="statistics" />
 			</div>
 		</panel>
 
 		<panel :title="$t('movements')" toggle="report/movements" icon="mdi-map-outline">
-			<loader v-if="!loaded" />
+			<loader v-if="!loaded || !fight" />
 			<div v-else class="movements">
 				<lw-map v-if="map_obstacles" :teams="map_teams" :obstacles="map_obstacles" />
 
@@ -241,7 +240,7 @@
 				<v-switch v-model="actionsDisplayLogs" :label="$t('display_logs')" :hide-details="true" :ripple="false" />
 				<v-switch v-model="actionsDisplayAlliesLogs" :label="$t('display_allies_logs')" :hide-details="true" :ripple="false" />
 			</div>
-			<loader v-if="!loaded" />
+			<loader v-if="!loaded || !fight" />
 			<actions v-else :has-err-warn="hasErrWarn" :fight="fight" :report="report" :actions="fightActions" :leeks="leeks" :display-logs="actionsDisplayLogs" :display-allies-logs="actionsDisplayAlliesLogs" class="actions" />
 		</panel>
 	</div>

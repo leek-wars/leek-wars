@@ -80,7 +80,7 @@
 			</div> -->
 		</div>
 
-		<v-menu v-model="languageDialog" :target="menuTarget" location="bottom end">
+		<v-menu v-model="languageDialog" :target="menuTarget ?? undefined" location="bottom end">
 			<v-list :dense="true">
 				<div v-for="data in Object.values(LeekWars.languages).filter(l => l.chats)" :key="data.code" class="language">
 					<flag :code="data.country" />
@@ -297,7 +297,7 @@
 		}
 	}
 
-	function conversationsScroll(e: MouseEvent) {
+	function conversationsScroll(e: Event) {
 		const target = e.target as HTMLElement
 		if (target.scrollTop + target.clientHeight >= target.scrollHeight - 5 && !store.state.loadingConversations) {
 			store.commit('load-conversations')

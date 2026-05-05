@@ -1,4 +1,5 @@
 import { Farmer } from '@/model/farmer'
+import { Fight } from '@/model/fight'
 import { Leek } from '@/model/leek'
 
 const TEAM_COLORS = [
@@ -70,7 +71,7 @@ class Team {
 	public draws!: number
 	public victories!: number
 	public ratio!: number
-	public fights!: number
+	public fights!: Fight[]
 	public member_count!: number
 	public remaining_xp!: number
 	public total_level!: number

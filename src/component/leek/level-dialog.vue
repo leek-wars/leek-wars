@@ -83,7 +83,7 @@
 				<div>{{ $t('br_desc') }}</div>
 				<img class="screenshot" height=200 src="/image/feature/fight_battle_royale.webp" />
 			</div>
-			<div v-if="leek.level == 50 && Object.values($store.state.farmer.leeks).length < 4">
+			<div v-if="leek.level == 50 && $store.state.farmer && Object.values($store.state.farmer.leeks).length < 4">
 				<h4><v-icon>mdi-leek</v-icon> {{ $t('main.new_leek') }}</h4>
 				<div>{{ $t('newleek_desc') }}</div>
 				<leek-image class="screenshot" :leek="{level: 1}" :scale="0.7" />

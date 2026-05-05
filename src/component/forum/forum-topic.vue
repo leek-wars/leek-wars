@@ -88,7 +88,7 @@
 							<div v-else-if="message.html" v-emojis v-code class="text" v-html="message.html"></div>
 							<markdown v-else :content="message.message" mode="forum" />
 
-							<emoji-picker v-if="message.editing" class="emoji-picker" @pick="addEmoji(message, $event, $refs.textarea[0])" />
+							<emoji-picker v-if="message.editing" class="emoji-picker" @pick="textarea && addEmoji(message, $event, textarea[0])" />
 
 							<router-link v-if="message.id === -1 && topic.release" :to="'/release/' + releaseVersion.substring(1)" class="changelog-banner">
 								<img :src="'/image/mail/mail_' + topic.release + '.webp'" class="changelog-banner-image" @error="($event.target as HTMLImageElement).style.display = 'none'">
@@ -103,7 +103,7 @@
 							<div class="bottom">
 
 								<div v-if="!message.deleted" class="votes">
-									<v-tooltip :key="votes_up_names[message.id] ? message.id * 101 + votes_up_names[message.id].length : message.id * 101" :open-delay="0" :close-delay="0" :disabled="message.votes_up === 0" bottom @update:model-value="loadVotesUp(message)">
+									<v-tooltip :key="votes_up_names[message.id] ? message.id * 101 + votes_up_names[message.id]!.length : message.id * 101" :open-delay="0" :close-delay="0" :disabled="message.votes_up === 0" bottom @update:model-value="loadVotesUp(message)">
 										<template #activator="{ props }">
 											<div :class="{active: message.my_vote == 1, zero: message.votes_up === 0}" class="vote up" @click="voteUp(message)" v-bind="props">
 												<v-icon>mdi-thumb-up</v-icon>
@@ -115,7 +115,7 @@
 											<div v-for="name in votes_up_names[message.id]" :key="name">{{ name }}</div>
 										</div>
 									</v-tooltip>
-									<v-tooltip :key="votes_down_names[message.id] ? message.id * 100 + votes_down_names[message.id].length : message.id" :open-delay="0" :close-delay="0" :disabled="message.votes_down === 0" bottom @update:model-value="loadVotesDown(message)">
+									<v-tooltip :key="votes_down_names[message.id] ? message.id * 100 + votes_down_names[message.id]!.length : message.id" :open-delay="0" :close-delay="0" :disabled="message.votes_down === 0" bottom @update:model-value="loadVotesDown(message)">
 										<template #activator="{ props }">
 											<div :class="{active: message.my_vote == -1, zero: !message.votes_down}" class="vote down" @click="voteDown(message)" v-bind="props">
 												<v-icon>mdi-thumb-down</v-icon>
@@ -354,6 +354,7 @@
 	const router = useRouter()
 	const topicTitle = useTemplateRef<HTMLElement>('topicTitle')
 	const responseTextarea = useTemplateRef<HTMLTextAreaElement>('responseTextarea')
+	const textarea = useTemplateRef<HTMLTextAreaElement[]>('textarea')
 
 	const topic = ref<ForumTopic | null>(null)
 	const category = ref<ForumCategory | null>(null)

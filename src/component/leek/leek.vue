@@ -13,7 +13,7 @@
 							<div class="tab green">{{ $t('see_tournament') }}</div>
 						</router-link>
 					</template>
-					<v-tooltip v-if="$store.state.farmer.tournaments_enabled && leek.tournament" content-class="fluid" @update:model-value="loadTournamentRange">
+					<v-tooltip v-if="$store.state.farmer && $store.state.farmer.tournaments_enabled && leek.tournament" content-class="fluid" @update:model-value="loadTournamentRange">
 						<template #activator="{ props }">
 							<div class="tab" @click="registerTournament" v-bind="props">
 								<v-icon>mdi-trophy</v-icon>
@@ -124,9 +124,9 @@
 					<template #activator="{ props }">
 						<table class="fights" v-bind="props">
 							<tr>
-								<td class="big">{{ $filters.number(leek ? leek.victories : '...') }}</td>
-								<td class="big">{{ $filters.number(leek ? leek.draws : '...') }}</td>
-								<td class="big">{{ $filters.number(leek ? leek.defeats : '...') }}</td>
+								<td class="big">{{ leek ? $filters.number(leek.victories) : '...' }}</td>
+								<td class="big">{{ leek ? $filters.number(leek.draws) : '...' }}</td>
+								<td class="big">{{ leek ? $filters.number(leek.defeats) : '...' }}</td>
 							</tr>
 							<tr>
 								<td class="grey">{{ $t('victories') }}</td>
@@ -139,12 +139,12 @@
 				</v-tooltip>
 
 				<template v-if="leek && leek.level >= 100">
-					<Line v-if="chartData" :data="chartData" :options="chartOptions" ratio="ct-major-eleventh" class="talent-history" />
+					<Line v-if="chartData && chartOptions" :data="chartData" :options="chartOptions" ratio="ct-major-eleventh" class="talent-history" />
 				</template>
 			</panel>
 
 			<panel :title="$t('characteristic.characteristics')">
-				<template v-if="leek && my_leek && $store.state.farmer.equipment_enabled" #actions>
+				<template v-if="leek && my_leek && $store.state.farmer && $store.state.farmer.equipment_enabled" #actions>
 					<div class="button flat" @click="showLoadout = true">
 						<v-icon>mdi-package-variant-closed</v-icon>
 					</div>
@@ -162,7 +162,7 @@
 						</characteristic-tooltip>
 						<div class="center" v-if="leek && my_leek">
 							<span class="dida-element">
-								<v-btn v-if="(leek.capital > 0 || LeekWars.didactitial_step === 1) && $store.state.farmer.equipment_enabled" color="primary" @click="showCapital = true" :class="{bouncing: !showCapital && LeekWars.didactitial_step === 1}">{{ $t('main.n_capital', [leek.capital]) }}</v-btn>
+								<v-btn v-if="(leek.capital > 0 || LeekWars.didactitial_step === 1) && $store.state.farmer && $store.state.farmer.equipment_enabled" color="primary" @click="showCapital = true" :class="{bouncing: !showCapital && LeekWars.didactitial_step === 1}">{{ $t('main.n_capital', [leek.capital]) }}</v-btn>
 								<span v-if="LeekWars.didactitial_step === 1" class="dida-hint">
 									<i18n-t v-if="LeekWars.didactitial_step === 1" tag="div" class="bubble" keypath="main.dida_2">
 										<template #life><img height=18 src="/image/charac/life.png"></template>
@@ -184,7 +184,7 @@
 			<panel icon="mdi-sword">
 				<template #title>{{ $t('weapons') }} <span v-if="leek && leek.weapons" class="weapon-count">[{{ leek.weapons.length }}/{{ leek.max_weapons }}]</span></template>
 				<template v-if="leek && my_leek" #actions>
-					<div v-if="$store.state.farmer.equipment_enabled" class="button flat" @click="weaponsDialog = true">
+					<div v-if="$store.state.farmer && $store.state.farmer.equipment_enabled" class="button flat" @click="weaponsDialog = true">
 						<v-icon>mdi-pencil</v-icon>
 					</div>
 				</template>
@@ -206,7 +206,7 @@
 			<panel icon="mdi-chip">
 				<template #title>{{ $t('main.chips') }} <span v-if="leek && leek.chips" class="chip-count">[{{ leek.chips.length }}/{{ leek.total_ram }}]</span></template>
 				<template v-if="leek && my_leek && (leek.chips.length + farmer_chips.length) > 0" #actions>
-					<div v-if="$store.state.farmer.equipment_enabled" class="button flat" @click="chipsDialog = true">
+					<div v-if="$store.state.farmer && $store.state.farmer.equipment_enabled" class="button flat" @click="chipsDialog = true">
 						<v-icon>mdi-pencil</v-icon>
 					</div>
 				</template>
@@ -346,7 +346,7 @@
 						{{ $t('copy_as_test', [leek.name]) }}
 					</v-tooltip>
 				</template>
-				<v-tooltip v-if="leek && my_leek && (!$store.state.farmer.group || $store.state.farmer.group.supervisor === $store.state.farmer.id)">
+				<v-tooltip v-if="leek && my_leek && $store.state.farmer && (!$store.state.farmer.group || $store.state.farmer.group.supervisor === $store.state.farmer.id)">
 					<template #activator="{ props }">
 						<div class="tab" @click="updateXpBlocked" v-bind="props">
 							<span>{{ $t('main.xp_blocked') }}</span>
@@ -366,7 +366,7 @@
 				{{ $t('weapons_of', [leek.name]) }}
 				<span class="weapon-count">[{{ leek.weapons.length }}/{{ leek.max_weapons }}]</span>
 			</template>
-			<template v-if="my_leek && $store.state.farmer.equipment_enabled" #options>
+			<template v-if="my_leek && $store.state.farmer && $store.state.farmer.equipment_enabled" #options>
 				<div class="option" @click="weaponsDialog = false; showLoadout = true">
 					<v-icon>mdi-package-variant-closed</v-icon>
 				</div>
@@ -429,7 +429,7 @@
 			</template>
 			<div class="farmer-potions">
 				<div class="potions-grid">
-					<v-tooltip v-for="(potion, id) in $store.state.farmer.potions" :key="id">
+					<v-tooltip v-for="(potion, id) in ($store.state.farmer ? $store.state.farmer.potions : [])" :key="id">
 						<template #activator="{ props }">
 							<div :quantity="potion.quantity" class="potion" @click="usePotion(potion)" v-bind="props">
 								<img :src="'/image/potion/' + LeekWars.potions[potion.template].name + '.png'">
@@ -661,7 +661,7 @@
 			</div>
 			<template #actions>
 				<div v-ripple @click="titleDialog = false">{{ $t('main.cancel') }}</div>
-				<div v-ripple class="green" @click="pickTitle($refs.picker.getTitle())">{{ $t('validate') }}</div>
+				<div v-ripple class="green" @click="pickerRef && pickTitle(pickerRef.getTitle())">{{ $t('validate') }}</div>
 			</template>
 		</popup>
 
@@ -674,7 +674,7 @@
 			<template #title>
 				{{ $t('ai_of', [leek.name]) }}
 			</template>
-			<template v-if="$store.state.farmer.equipment_enabled" #options>
+			<template v-if="$store.state.farmer && $store.state.farmer.equipment_enabled" #options>
 				<div class="option" @click="aiDialog = false; showLoadout = true">
 					<v-icon>mdi-package-variant-closed</v-icon>
 				</div>
@@ -722,7 +722,7 @@
 
 		<popup v-if="leek && my_leek" v-model="chipsDialog" :width="816" icon="mdi-chip">
 			<template #title>{{ $t('chips_of', [leek.name]) }} <span class="chip-count">[{{ leek.chips.length }}/{{ leek.total_ram }}]</span></template>
-			<template v-if="$store.state.farmer.equipment_enabled" #options>
+			<template v-if="$store.state.farmer && $store.state.farmer.equipment_enabled" #options>
 				<div class="option" @click="chipsDialog = false; showLoadout = true">
 					<v-icon>mdi-package-variant-closed</v-icon>
 				</div>
@@ -811,6 +811,7 @@
 	const router = useRouter()
 	const componentTooltipsRef = useTemplateRef<any[]>('componentTooltips')
 	const leekImageRef = useTemplateRef<any>('leekImage')
+	const pickerRef = useTemplateRef<InstanceType<typeof TitlePicker>>('picker')
 
 	const leek = ref<Leek | null>(null)
 	const error = ref(false)
@@ -826,8 +827,8 @@
 	const renameError = ref<any>(null)
 	const potionDialog = ref(false)
 	const hatDialog = ref(false)
-	const chartData = ref<ChartData | null>(null)
-	const chartOptions = ref<ChartOptions | null>(null)
+	const chartData = ref<ChartData<'line'> | null>(null)
+	const chartOptions = ref<ChartOptions<'line'> | null>(null)
 	const showReport = ref(false)
 	const reasons = [Warning.INCORRECT_LEEK_NAME, Warning.INCORRECT_AI_NAME]
 	const levelPopup = ref(false)
@@ -915,7 +916,7 @@
 	const leekTitleEnabled = computed(() => !!(store.state.farmer && LeekWars.selectWhere(store.state.farmer.pomps, 'template', 125) !== null))
 	const showAiLinesEnabled = computed(() => !!(store.state.farmer && LeekWars.selectWhere(store.state.farmer.pomps, 'template', 124) !== null))
 	const metalEnabled = computed(() => !!(store.state.farmer && LeekWars.selectWhere(store.state.farmer.pomps, 'template', 242) !== null))
-	const skinPotions = computed(() => store.state.farmer!.potions.filter(p => LeekWars.potions[p.template].effects.some((e: PotionEffect) => e.type === PotionEffect.CHANGE_SKIN)))
+	const skinPotions = computed(() => store.state.farmer!.potions.filter(p => LeekWars.potions[p.template].effects.some((e: any) => e.type === PotionEffect.CHANGE_SKIN)))
 	const angryEnabled = computed(() => !!(store.state.farmer && LeekWars.selectWhere(store.state.farmer.pomps, 'template', 240) !== null))
 	const happyEnabled = computed(() => !!(store.state.farmer && LeekWars.selectWhere(store.state.farmer.pomps, 'template', 241) !== null))
 
@@ -1362,7 +1363,8 @@
 		}).error(err => LeekWars.toast(err))
 	}
 
-	function moveComponent(c: any, index: number) {
+	function moveComponent(c: any, index: number | undefined) {
+		if (index === undefined) return
 		if (!leek.value) return
 		const old = leek.value.components[index]
 		const old_index = leek.value.components.indexOf(c)

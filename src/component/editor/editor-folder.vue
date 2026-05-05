@@ -17,7 +17,7 @@
 			</div>
 			<div v-if="folder.expanded" :class="{dragging: dragging}" class="content">
 				<template v-for="(item, i) in folder.items" :key="i">
-					<editor-folder v-if="item.folder" :folder="item" :level="level + 1" />
+					<editor-folder v-if="item.folder" :folder="(item as Folder)" :level="level + 1" />
 					<editor-ai v-else :item="item" :level="level" />
 				</template>
 			</div>

@@ -81,8 +81,8 @@
 						<div class="preview-bar" :style="{width: progressBarPreviewWidth + '%'}"></div>
 					</div>
 				</div>
-				<hud ref="hud" :game="game" :creator="creator" />
-				<v-tooltip v-if="hasMarks" :open-delay="0" :close-delay="0" location="bottom" :attach="playerEl">
+				<hud ref="hud" :game="(game as Game)" :creator="creator" />
+				<v-tooltip v-if="hasMarks" :open-delay="0" :close-delay="0" location="bottom" :attach="playerAttach">
 					<template #activator="{ props }">
 						<v-icon v-ripple class="clear-marks" v-bind="props" @click="game.clearMarks()">mdi-eraser</v-icon>
 					</template>
@@ -97,44 +97,44 @@
 			</div>
 
 			<div v-if="!creator" class="controls controls-a">
-				<v-tooltip :open-delay="0" :close-delay="0" location="top" :attach="playerEl">
+				<v-tooltip :open-delay="0" :close-delay="0" location="top" :attach="playerAttach">
 					<template #activator="{ props }">
 						<v-icon v-ripple class="control" @click="pause" v-bind="props">{{ game.paused ? 'mdi-play' : 'mdi-pause' }}</v-icon>
 					</template>
 					{{ $t('pause') }} (P)
 				</v-tooltip>
-				<v-tooltip :open-delay="0" :close-delay="0" location="top" :attach="playerEl">
+				<v-tooltip :open-delay="0" :close-delay="0" location="top" :attach="playerAttach">
 					<template #activator="{ props }">
 						<v-icon v-ripple class="control" :style="{opacity: game.speedButtonVisible ? 1 : 0}" v-bind="props" @click="game.speedUp()">mdi-fast-forward</v-icon>
 					</template>
 					{{ $t('accelerate') }} (S)
 				</v-tooltip>
-				<v-tooltip v-if="!LeekWars.mobile" :open-delay="0" :close-delay="0" location="top" :attach="playerEl">
+				<v-tooltip v-if="!LeekWars.mobile" :open-delay="0" :close-delay="0" location="top" :attach="playerAttach">
 					<template #activator="{ props }">
 						<v-icon v-ripple class="control" v-bind="props" @click="game.previousAction()">mdi-skip-previous</v-icon>
 					</template>
 					{{ $t('previous_action') }} (←)
 				</v-tooltip>
-				<v-tooltip v-if="!LeekWars.mobile" :open-delay="0" :close-delay="0" location="top" :attach="playerEl">
+				<v-tooltip v-if="!LeekWars.mobile" :open-delay="0" :close-delay="0" location="top" :attach="playerAttach">
 					<template #activator="{ props }">
 						<v-icon v-ripple class="control" v-bind="props" @click="game.nextAction()">mdi-skip-next</v-icon>
 					</template>
 					{{ $t('next_action') }} (→)
 				</v-tooltip>
-				<v-tooltip :open-delay="0" :close-delay="0" location="top" :attach="playerEl">
+				<v-tooltip :open-delay="0" :close-delay="0" location="top" :attach="playerAttach">
 					<template #activator="{ props }">
 						<v-icon v-ripple class="control" v-bind="props" @click="game.sound = !game.sound">{{ game.sound ? 'mdi-volume-high' : 'mdi-volume-low' }}</v-icon>
 					</template>
 					{{ $t(game.sound ? 'sound_activated' : 'sound_disactivated') }} (V)
 				</v-tooltip>
-				<v-tooltip v-if="game.sound && !LeekWars.mobile" :open-delay="0" :close-delay="0" location="top" :attach="playerEl">
+				<v-tooltip v-if="game.sound && !LeekWars.mobile" :open-delay="0" :close-delay="0" location="top" :attach="playerAttach">
 					<template #activator="{ props }">
 						<input type="range" min="0" max="1" step="0.01" style="width: 100px; padding: 0" v-model="game.volume">
 					</template>
 				</v-tooltip>
-				<v-tooltip :open-delay="0" :close-delay="0" location="top" :attach="playerEl">
+				<v-tooltip :open-delay="0" :close-delay="0" location="top" :attach="playerAttach">
 					<template #activator="{ props: tooltipProps }">
-						<v-menu :close-on-content-click="false" :width="390" location="top" offset-y right :attach="playerEl">
+						<v-menu :close-on-content-click="false" :width="390" location="top" offset-y right :attach="playerAttach">
 							<template #activator="{ props: menuProps }">
 								<div v-ripple class="control turn" v-bind="{...tooltipProps, ...menuProps}">{{ horizontal ? game.turn : $t('fight.turn_n', [game.turn]) }}</div>
 								<!-- <v-icon class="control" >mdi-cog-outline</v-icon> -->
@@ -159,29 +159,29 @@
 
 			<div class="controls constrols-b">
 
-				<v-tooltip v-if="!creator && $store.state.farmer && $store.state.farmer.admin" :open-delay="0" :close-delay="0" location="top" :attach="playerEl">
+				<v-tooltip v-if="!creator && $store.state.farmer && $store.state.farmer.admin" :open-delay="0" :close-delay="0" location="top" :attach="playerAttach">
 					<template #activator="{ props: tooltipProps }">
 						<v-menu :close-on-content-click="false" top offset-y left>
 							<template #activator="{ props: menuProps }">
 								<v-icon v-ripple class="control" v-bind="{...tooltipProps, ...menuProps}">mdi-map</v-icon>
 							</template>
 							<v-radio-group v-model="game.mapType" class="map-menu" hide-details :mandatory="true">
-								<v-radio v-for="(map, m) of maps" :key="map" :label="map" :value="m" />
+								<v-radio v-for="(map, m) of game.maps" :key="m" :label="map.constructor.name" :value="m" />
 							</v-radio-group>
 						</v-menu>
 					</template>
 					Carte
 				</v-tooltip>
 
-				<v-tooltip :open-delay="0" :close-delay="0" location="top" :attach="playerEl">
+				<v-tooltip :open-delay="0" :close-delay="0" location="top" :attach="playerAttach">
 					<template #activator="{ props }">
 						<v-icon v-ripple class="control" v-bind="props" @click="toggleFullscreen">mdi-aspect-ratio</v-icon>
 					</template>
 					{{ $t('fullscreen') }}
 				</v-tooltip>
-				<v-tooltip :open-delay="0" :close-delay="0" location="top" :attach="playerEl">
+				<v-tooltip :open-delay="0" :close-delay="0" location="top" :attach="playerAttach">
 					<template #activator="{ props: tooltipProps }">
-						<v-menu :close-on-content-click="false" top offset-y left :attach="playerEl">
+						<v-menu :close-on-content-click="false" top offset-y left :attach="playerAttach">
 							<template #activator="{ props: menuProps }">
 								<v-icon v-ripple class="control" v-bind="{...tooltipProps, ...menuProps}">mdi-cog-outline</v-icon>
 							</template>
@@ -234,7 +234,7 @@
 					</template>
 					{{ $t('settings') }}
 				</v-tooltip>
-				<v-tooltip v-if="!creator" :open-delay="0" :close-delay="0" location="top" :attach="playerEl">
+				<v-tooltip v-if="!creator" :open-delay="0" :close-delay="0" location="top" :attach="playerAttach">
 					<template #activator="{ props }">
 						<v-icon v-ripple class="control" v-bind="props" @click="quit">mdi-exit-to-app</v-icon>
 					</template>
@@ -285,6 +285,7 @@
 	const router = useRouter()
 	const document = window.document
 	const playerEl = useTemplateRef<HTMLElement>('player')
+	const playerAttach = computed(() => playerEl.value ?? undefined)
 	const hudRef = useTemplateRef<any>('hud')
 	const progressBar = useTemplateRef<HTMLElement>('progressBar')
 	const progressBarTooltip = useTemplateRef<HTMLElement>('progressBarTooltip')
@@ -547,7 +548,7 @@
 			data: { actions: [], map, leeks: [], team1: [], team2: [], ops: {} },
 			comments: [], result: 'win', queue: 0, trophies: [],
 			chests: 0, size: 0, rareloot: 0, levelups: 0,
-		} as Fight
+		} as unknown as Fight
 		loaded.value = true
 		emit('fight', local_fight)
 		nextTick(() => {
@@ -596,7 +597,7 @@
 					data: report.fight as any,
 					comments: [], result: 'win', queue: 0, trophies: [],
 					chests: 0, size: 0, rareloot: 0, levelups: 0,
-				} as Fight
+				} as unknown as Fight
 				fightLoaded(local_fight)
 				if (store.state.farmer) {
 					game.value.setLogs(report.logs[store.state.farmer.id])
