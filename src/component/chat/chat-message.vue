@@ -19,7 +19,7 @@
 
 			<chat-message-text :message="message" />
 
-			<template v-for="(sub, i) in message.subMessages" :key="sub.id">
+			<template v-for="sub in message.subMessages" :key="sub.id">
 				<chat-message-text :message="sub" />
 			</template>
 
@@ -50,7 +50,6 @@
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import { Chat, ChatMessage, ChatType } from '@/model/chat'
 import { LeekWars } from '@/model/leekwars'
-import { store } from '@/model/store'
 import { computed, watch } from 'vue'
 import ChatMessageText from './chat-message-text.vue'
 
@@ -68,7 +67,6 @@ const emit = defineEmits<{
 	'menu': [event: MouseEvent]
 }>()
 
-const me = computed(() => props.message.farmer.id === store.state.farmer!.id)
 const privateMessages = computed(() => props.chat && props.chat.type === ChatType.PM)
 
 watch(() => props.message.reactions, () => {

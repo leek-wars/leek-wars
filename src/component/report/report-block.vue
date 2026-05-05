@@ -124,10 +124,7 @@
 
 	const totalLevel = computed(() => props.leeks.reduce((sum: number, leek: ReportLeek) => sum + (leek.level || 0), 0))
 	const totalXP = computed(() => props.leeks.reduce((sum: number, leek: ReportLeek) => sum + (leek.xp || 0), 0))
-	const totalPower = computed(() => Math.round(props.leeks.reduce((sum: number, leek: ReportLeek) => sum + Math.pow(leek.level || 0, 4.2), 0)))
 	const totalMoney = computed(() => props.leeks.reduce((sum: number, leek: ReportLeek) => sum + (leek.money || 0), 0))
-	const totalOpes = computed(() => props.leeks.reduce((sum: number, leek: ReportLeek) => sum + (leek['opes'] as number || 0), 0))
-	const totalTime = computed(() => Math.round(props.leeks.reduce((sum: number, leek: ReportLeek) => sum + (leek['time'] as number || 0), 0) / 1000000) / 1000)
 
 	const currentBar = computed(() => {
 		const totalXP = props.team.next_xp - props.team.prev_xp

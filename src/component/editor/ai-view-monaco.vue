@@ -435,7 +435,7 @@ function restoreViewState() {
 			const viewState = JSON.parse(viewStateStr)
 			editor.restoreViewState(viewState)
 			return
-		} catch (e) {}
+		} catch {}
 	}
 	const scrollPosition = parseInt(localStorage.getItem(scrollKey(props.ai.path)) || '0')
 	editor.setScrollTop(scrollPosition)

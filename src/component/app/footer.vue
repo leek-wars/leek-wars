@@ -98,9 +98,6 @@ const Didactitiel = defineAsyncComponent(() => import(/* webpackChunkName: "[req
 
 defineOptions({ name: 'LwFooter' })
 
-const didactitiel = ref(false)
-const didactitiel_enabled = ref(false)
-const didactitiel_new_enabled = ref(false)
 const cookies = ref<[number, number, number, number][]>([])
 
 function toggleTheme() {

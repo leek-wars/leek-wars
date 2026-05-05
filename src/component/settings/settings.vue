@@ -315,7 +315,6 @@
 	const viewChangePassword = ref(false)
 	const viewChangeEmail = ref(false)
 	const viewDeleteAccount = ref(false)
-	const view2FA = ref(false)
 	const changeEmailSent = ref(false)
 	const errors = ref<{[key: string]: string[]}>({})
 	const login = ref('')

@@ -507,9 +507,6 @@
 		})
 		return false
 	}
-	function successConfirm() {
-		router.push('/login')
-	}
 	function addError(form: string, error: string) {
 		if (!(form in errors.value)) {
 			errors.value[form] = []
@@ -527,12 +524,6 @@
 			return null
 		}
 	}
-	function enlarge(image: string[]) {
-		if (LeekWars.mobile) { return }
-		bigImage.value = image[0].replace('_small', '')
-		bigImageLegend.value = image[1]
-	}
-
 	function zoom(e: Event) {
 		bigImage.value = (e.target as HTMLElement).getAttribute('src')!.replace("small_", "")
 	}

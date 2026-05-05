@@ -237,10 +237,8 @@
 	const changelog = ref<Record<string, unknown> | null>(null)
 	const showChangelog = ref(false)
 	let konami = ''
-	const annonce = ref(false)
 	const docEverywhere = ref(false)
 	const docEverywhereModel = ref(false)
-	const didactitiel_new_enabled = ref(true)
 	let mouseX = 0
 	let mouseY = 0
 	let cloverSpeed = 200

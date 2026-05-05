@@ -94,7 +94,7 @@
 			parameter = selectedLeek.value!.id
 		}
 		const fight = props.fight ? props.fight : 0
-		LeekWars.post('moderation/report', {target_id: target, reason: selectedReason.value, message: additionalMessage.value, parameter, fight}).then(data => {
+		LeekWars.post('moderation/report', {target_id: target, reason: selectedReason.value, message: additionalMessage.value, parameter, fight}).then(() => {
 			LeekWars.toast(t('warning.thank_you_for_reporting') as string)
 			close()
 		}).error(error => {

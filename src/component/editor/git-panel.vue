@@ -428,7 +428,7 @@
 			await gitCall('git/fetch', { folder: selectedRepo.value })
 			lastFetchAt[selectedRepo.value] = Date.now()
 			await Promise.all([loadBranches(), refreshStatus()])
-		} catch (e) {
+		} catch {
 			await Promise.all([loadBranches(), refreshStatus()])
 		} finally {
 			fetching.value = false
@@ -458,7 +458,7 @@
 				selectedRepo.value = repos.value[0].folder
 				refreshStatus()
 			}
-		} catch (e) {
+		} catch {
 		} finally {
 			loading.value = false
 		}
@@ -479,7 +479,7 @@
 			hasRemote.value = !!data.has_remote
 			hasUpstream.value = !!data.has_upstream
 			updateGitStatusMap()
-		} catch (e) {
+		} catch {
 			changes.value = []
 		} finally {
 			loading.value = false
@@ -549,7 +549,7 @@
 				emitter.emit('close-merge-tabs', { folder: selectedRepo.value })
 			}
 			refreshStatus()
-		} catch (e) {
+		} catch {
 		}
 	}
 
@@ -595,7 +595,7 @@
 			const data = await gitCall('git/branches', { folder: selectedRepo.value })
 			branches.value = data.branches || []
 			remoteBranches.value = data.remote_branches || []
-		} catch (e) {
+		} catch {
 			branches.value = []
 			remoteBranches.value = []
 		}
@@ -675,7 +675,7 @@
 			reloadFiles(conflictFiles)
 			await refreshStatus()
 			emitter.emit('reanalyze')
-		} catch (e) {
+		} catch {
 		} finally {
 			loading.value = false
 		}

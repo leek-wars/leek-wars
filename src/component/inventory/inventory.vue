@@ -193,7 +193,6 @@
 
 	const CATEGORY_ITEMS = 1
 	const CATEGORY_RESOURCES = 2
-	const category = ref(3)
 	const placeholder_count = ref(0)
 	const columns = ref(0)
 	const sort = ref<Sort>(parseInt(localStorage.getItem('inventory/sort') || '0', 10) as Sort)

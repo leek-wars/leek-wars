@@ -1,7 +1,7 @@
 import { Game, SHADOW_ALPHA, SHADOW_SCALE } from "@/component/player/game/game"
 import { T, Texture } from '@/component/player/game/texture'
 import { Cell } from '@/model/cell'
-import { OBSTACLES, ObstacleInfo } from "./ground"
+import { ObstacleInfo } from "./ground"
 
 export class ObstacleGeometry {
 	public id!: number

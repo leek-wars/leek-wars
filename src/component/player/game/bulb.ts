@@ -74,7 +74,7 @@ class Bulb extends FightEntity {
 		super.update(dt)
 	}
 
-	public frameTexture(includeHat: boolean): Texture {
+	public frameTexture(_includeHat: boolean): Texture {
 		const texture = this.front ? this.bodyTexFront : this.bodyTexBack
 		return texture.getScaledTexture(texture.texture.width * Bulb.SCALE)
 	}

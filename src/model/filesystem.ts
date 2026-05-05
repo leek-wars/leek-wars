@@ -13,7 +13,7 @@ import { reactive } from 'vue'
 export const aiCodeKey = (path: string) => 'ai/code/' + farmerId() + '/' + path
 export const aiMtimeKey = (path: string) => 'ai/mtime/' + farmerId() + '/' + path
 
-interface FSFile {
+export interface FSFile {
 	path: string
 	mtime?: number
 	valid: boolean
@@ -25,7 +25,7 @@ interface FSFile {
 	scenario?: boolean
 }
 
-interface FSBinFile {
+export interface FSBinFile {
 	path: string
 	valid: boolean
 	version: number

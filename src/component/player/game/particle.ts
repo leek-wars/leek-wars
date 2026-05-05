@@ -498,9 +498,6 @@ class SmallExplosion extends Particle {
 		super(game, x, y, 0, RealisticExplosion.LIFE)
 
 		this.radius = radius
-		const SOURCE_SPEED = radius / 2.5
-		const rad = radius * this.game.ground.realTileSizeY / 5
-		const RADIUS_RAND = radius * this.game.ground.realTileSizeY / 8
 		const size = radius * 2
 
 		// this.sources.push({ s: size, p: 8, x: - (rad + Math.random() * RADIUS_RAND), y: - (rad + Math.random() * RADIUS_RAND) / 2 , dx: -SOURCE_SPEED, dy: -SOURCE_SPEED, points: [] })

@@ -122,7 +122,7 @@ class Mob extends FightEntity {
 		}
 	}
 
-	public frameTexture(includeHat: boolean): Texture {
+	public frameTexture(_includeHat: boolean): Texture {
 
 		const canvas = document.createElement('canvas')
 		canvas.width = this.baseWidth

@@ -6,7 +6,6 @@ import { Notification, NotificationType } from '@/model/notification'
 import { Team } from '@/model/team'
 
 import Vuex, { Store } from 'vuex'
-import { AI } from './ai'
 import { fileSystem } from './filesystem'
 import { Hat } from './hat'
 import { Leek } from './leek'
@@ -172,7 +171,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			emitter.emit('connected', state.farmer)
 		},
 
-		"disconnect"(state: LeekWarsState) {
+		"disconnect"(_state: LeekWarsState) {
 			LeekWars.post('farmer/disconnect')
 			localStorage.setItem('logout', '' + Date.now())
 			store.commit("reset")
@@ -878,7 +877,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.last_ping = time
 		},
 
-		'receive-pong'(state: LeekWarsState) {
+		'receive-pong'(_state: LeekWarsState) {
 			// const channel = data[0]
 			// if (!state.chat[channel]) {
 				// state.chat[channel] = new Chat(channel, ChatType.GLOBAL, false)

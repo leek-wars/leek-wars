@@ -128,7 +128,7 @@
 					{{ $t(game.sound ? 'sound_activated' : 'sound_disactivated') }} (V)
 				</v-tooltip>
 				<v-tooltip v-if="game.sound && !LeekWars.mobile" :open-delay="0" :close-delay="0" location="top" :attach="playerAttach">
-					<template #activator="{ props }">
+					<template #activator>
 						<input v-model="game.volume" type="range" min="0" max="1" step="0.01" style="width: 100px; padding: 0">
 					</template>
 				</v-tooltip>
@@ -256,7 +256,6 @@
 	import Hud from './hud.vue'
 	import LwTitle from '@/component/title/title.vue'
 	import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
-	import { useI18n } from 'vue-i18n'
 	import { useRouter } from 'vue-router'
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
@@ -281,7 +280,6 @@
 		edited: [data?: unknown]
 	}>()
 
-	const { t } = useI18n()
 	const router = useRouter()
 	const document = window.document
 	const playerEl = useTemplateRef<HTMLElement>('player')

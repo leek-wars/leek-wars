@@ -68,8 +68,6 @@ const pages = ref(0)
 const results = ref<Record<string, unknown>[] | null>(null)
 const searchStarted = ref(false)
 const count = ref(0)
-const floor = Math.floor
-
 let urlSyncing = false
 
 const canSearch = computed(() => options.value.query)

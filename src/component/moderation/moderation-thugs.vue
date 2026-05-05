@@ -59,7 +59,7 @@
 	})
 
 	function ban(farmer: Farmer) {
-		LeekWars.post('moderation/ban', {target: farmer.id}).then(data => {
+		LeekWars.post('moderation/ban', {target: farmer.id}).then(() => {
 			LeekWars.toast("Éleveur banni")
 		}).error(error => {
 			LeekWars.toast(error)

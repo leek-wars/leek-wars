@@ -75,7 +75,6 @@
 	import { Turret } from './game/turret'
 	import TurretImage from '@/component/turret-image.vue'
 	import ActionLog from '../report/report-log.vue'
-	import router from '@/router'
 	import { Component, computed, ref } from 'vue'
 
 	defineOptions({ name: 'Hud', components: { leek: ActionLeek } })
@@ -92,10 +91,6 @@
 
 	const barWidth = computed(() => LeekWars.mobile ? 300 : 500)
 	const totalLife = computed(() => props.game.leeks.reduce((total, e) => total + (!e.summon ? e.displayLife : 0), 0))
-	const darkEnabledtest = computed(() => props.game.dark)
-	const dark = computed(() => props.game.autoDark ? (props.game.map && props.game.map.options.dark) : props.game.dark)
-	const leeks = computed(() => props.game.leeks)
-
 	actionsWidth.value = props.game.actionsWidth
 
 	function entity_enter(entity: FightEntity) {
@@ -107,10 +102,6 @@
 	}
 	function entity_click(entity: FightEntity) {
 		props.game.selectEntity(entity)
-	}
-
-	function formatTurns(turns: number) {
-		return turns === -1 ? '∞' : turns
 	}
 
 	function resizerMousedown(e: MouseEvent) {
@@ -138,9 +129,6 @@
 		e.preventDefault()
 	}
 
-	function goToAI(file: string, line: number) {
-		router.push('/editor/' + file + '?line=' + line)
-	}
 </script>
 
 <style lang="scss" scoped>

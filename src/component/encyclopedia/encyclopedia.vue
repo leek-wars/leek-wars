@@ -276,16 +276,12 @@
 	interface ReferencedBy { children: ReferencedPage[]; translations: ReferencedPage[]; linked_from: ReferencedPage[] }
 	interface PageAction { icon: string; click: () => void }
 
-	const english = ref('')
 	const page = ref<EncyclopediaPage | null>(null)
 	const edition = ref(false)
 	const editor = ref<Monaco.editor.IStandaloneCodeEditor | null>(null)
 	let scrolling = false
-	const pages = ref<Record<string, EncyclopediaPage>>({})
 	const modified = ref(false)
-	let initialVersionId = 0
 	const statsExpanded = ref(false)
-	const searchQuery = ref('')
 	const redirectedFrom = ref<string | null>(null)
 	let boundBeforeUnload: () => void
 	const actions = ref<PageAction[]>([])
@@ -546,7 +542,6 @@ ${ret}
 					if (md) md.scrollTop = (md.scrollHeight - md.clientHeight) * percent
 				})
 
-				initialVersionId = editor.value.getModel()!.getAlternativeVersionId()
 				modified.value = false
 			})
 		})
@@ -555,7 +550,6 @@ ${ret}
 	function setEditorContent() {
 		if (!page.value || !editor.value) { return }
 		editor.value.setValue(page.value.content)
-		initialVersionId = editor.value.getModel()!.getAlternativeVersionId()
 		modified.value = false
 	}
 
@@ -633,7 +627,6 @@ ${ret}
 			}
 		})
 
-		initialVersionId = editor.value!.getModel()!.getAlternativeVersionId()
 		modified.value = false
 		page.value.last_edition_time = Date.now() / 1000
 		page.value.last_editor = store.state.farmer!.id
@@ -731,18 +724,6 @@ ${ret}
 		}
 	}
 
-	function comment(_c: unknown) {
-		// page.value.comments.push(c)
-	}
-
-	function search() {
-		const query = searchQuery.value.replace(/ /g, '+')
-		if (query) {
-			router.push('/encyclopedia-search?query=' + query)
-		} else {
-			router.push('/encyclopedia-search')
-		}
-	}
 
 	function loadReferencedBy() {
 		if (!page.value || !page.value.id) return

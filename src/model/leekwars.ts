@@ -20,7 +20,7 @@ export function getRouter() { return _router }
 import { TranslateResult } from 'vue-i18n'
 import { Chat, ChatWindow } from './chat'
 import { i18n, loadLanguageAsync } from './i18n'
-import { ItemTemplate, ItemType } from './item'
+import { ItemType } from './item'
 import { PotionEffect, PotionTemplate } from './potion'
 import { ITEMS } from './items'
 import { SCHEMES } from './schemes'
@@ -464,8 +464,8 @@ const LeekWars = reactive({
 		return SKINS[skin]
 	},
 	objectSize(obj: Record<string, unknown> | unknown[]): number {
-		let size = 0, key
-		for (key in obj) {
+		let size = 0
+		for (const _key in obj) {
 			// if (obj.hasOwnProperty(key)) {
 				size++
 			// }

@@ -49,7 +49,6 @@ const props = defineProps<{
 
 const router = useRouter()
 
-const link = computed(() => props.item && props.item.link ? props.item.link : undefined)
 const image = computed(() => (props.item && props.item.image) ? (props.item.image.indexOf('/') === 0 ? 'https://leekwars.com' + props.item.image : props.item.image) : '')
 const avatarSize = computed(() => Math.round(props.size * 0.4))
 const farmerAvatar = computed(() => {

@@ -344,7 +344,6 @@
 	const currentEditor = shallowRef<InstanceType<typeof AIViewMonaco> | null>(null)
 	const currentType = ref<string | null>(null)
 	const currentFolder = ref<Folder | null>(null)
-	const infoDialog = ref(false)
 	const settingsDialog = ref(false)
 	const cloneDialog = ref(false)
 	const cloneUrl = ref('')
@@ -376,7 +375,6 @@
 	const panelWidth = ref(200)
 	const problemsHeight = ref(200)
 	const bottomPanel = ref<'problems' | 'git' | null>('problems')
-	const newAIv2Dialog = ref(false)
 	const fileMenu = ref(false)
 	const fileMenuActivator = ref<Element | undefined>(undefined)
 	const history = ref<AI[]>([])
@@ -518,7 +516,7 @@
 			const repos: {[path: string]: boolean} = {}
 			for (const r of data.repos) { repos[r.folder] = true }
 			fileSystem.gitRepos = repos
-		} catch (e) {
+		} catch {
 			// Pas de repos git
 		}
 		if (leftPanelTab.value === 'git' && Object.keys(fileSystem.gitRepos).length === 0) {
@@ -547,7 +545,7 @@
 		cloneError.value = ''
 		cloning.value = true
 		try {
-			const data = await LeekWars.post('git/clone', { url: cloneUrl.value.trim(), folder: cloneFolder.value.trim() })
+			await LeekWars.post('git/clone', { url: cloneUrl.value.trim(), folder: cloneFolder.value.trim() })
 			cloneDialog.value = false
 			LeekWars.toast(t('clone_success') as string)
 			await loadGitRepos()
@@ -568,17 +566,6 @@
 			current = fileSystem.folderById[current.parent]
 		}
 		return false
-	}
-
-	function toggleFileMenu(event?: Event) {
-		if (LeekWars.mobile && event) {
-			fileMenuActivator.value = event.target as Element
-		} else {
-			fileMenuActivator.value = fileButton.value ?? undefined
-		}
-		nextTick(() => {
-			fileMenu.value = !fileMenu.value
-		})
 	}
 
 	function keydown(e: KeyboardEvent) {
@@ -822,7 +809,7 @@
 			tab.modified = data.content || ''
 			tab.ready = true
 			diffReady.value++
-		} catch (e) {
+		} catch {
 			tab.modified = ''
 			tab.ready = true
 			diffReady.value++
@@ -941,7 +928,7 @@
 					tabs1.value.push(tab)
 				}
 			}
-		} catch (e) {
+		} catch {
 			// Données corrompues
 		}
 	}
@@ -994,7 +981,7 @@
 				const headData = await safe('git/show', { folder: tab.folder, hash: 'HEAD', file: tab.file })
 				original = headData.content || ''
 			}
-		} catch (e) {
+		} catch {
 			// Erreur de fetch
 		}
 		tab.original = original
@@ -1030,9 +1017,6 @@
 			return
 		}
 		testDialog.value = true
-	}
-	function help() {
-		infoDialog.value = true
 	}
 	function settings() {
 		settingsDialog.value = true

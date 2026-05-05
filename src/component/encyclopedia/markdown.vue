@@ -326,7 +326,7 @@
 						;[...answers.children].forEach((child, index) => {
 							child.setAttribute('index', '' + index)
 						})
-						answers.append(...Array.from(answers.children).sort((a, b) => {
+						answers.append(...Array.from(answers.children).sort((_a, _b) => {
 							return Math.random() - 0.5
 						}))
 						let answer = Array(answers.children.length).fill(false)
@@ -423,7 +423,7 @@
 			// must be HTML-escaped (for text nodes) or strictly validated
 			// (for attribute values / known lookups).
 			const itemName = /^[a-z0-9_]+$/
-			return html.replace(/\[\[(.*?)\]\]/g, (m, link) => {
+			return html.replace(/\[\[(.*?)\]\]/g, (_m, link) => {
 				link = link.trim()
 				const parts = link.split('|', 2)
 				link = parts[0]
@@ -433,7 +433,7 @@
 				const target = page ? page.title.replace(/ /g, '_') : link.replace(/_/g, ' ')
 				const href = '/encyclopedia/' + language.value + '/' + encodeURIComponent(target)
 				return "<a href='" + href + "' class='" + clazz + "'>" + LeekWars.protect(alias) + "</a>"
-			}).replace(/{{(.*?)}}/g, (m, tag) => {
+			}).replace(/{{(.*?)}}/g, (_m, tag) => {
 				const originalTag = tag.trim()
 				tag = originalTag.toLowerCase()
 				if (tag.startsWith('summary')) {

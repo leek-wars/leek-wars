@@ -78,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, watch } from 'vue'
 import Markdown from '@/component/encyclopedia/markdown.vue'
 import { FUNCTION_BY_ID } from '@/model/function_by_id'
 import { locale } from '@/locale'
@@ -100,16 +100,6 @@ watch(() => props.fun, () => {
 	})
 }, { immediate: true })
 
-const new_arguments = computed(() => {
-	if (new_fun.value) {
-		const args = (new_fun.value.primary.Paramètres || '').split('\n')
-		return args.filter((a: string) => {
-			const name = a.match(/\*\*(\w+)\*\*/i)
-			return name && props.fun.arguments_names.includes(name[1])
-		}).join('\n')
-	}
-	return ''
-})
 </script>
 
 <style lang="scss" scoped>

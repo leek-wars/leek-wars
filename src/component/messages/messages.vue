@@ -115,7 +115,6 @@
 	import { SocketMessage } from '@/model/socket'
 	import { store } from '@/model/store'
 	import { computed, defineAsyncComponent, onMounted, onUnmounted, ref, watch } from 'vue'
-	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 	import { emitter } from '@/model/vue'
 	import { env } from '@/env'
@@ -125,7 +124,6 @@
 
 	defineOptions({ name: 'Messages', i18n: {}, mixins: [...mixins] })
 
-	const { locale: i18nLocale } = useI18n()
 	const t = useNamespacedT('messages')
 	const route = useRoute()
 	const router = useRouter()
@@ -136,8 +134,6 @@
 	const languageDialog = ref(false)
 	const menuTarget = ref<HTMLElement | null>(null)
 	const actions = ref<{ icon: string, click: () => void }[]>([])
-	const loadingConversations = ref(false)
-
 	const chats = computed(() => {
 		const chats: unknown[] = []
 		if (store.state.farmer && store.state.farmer.public_chat_enabled) {
@@ -212,8 +208,6 @@
 
 	const isPrivate = computed(() => currentChat.value && currentChat.value.type === ChatType.PM)
 
-	const isPublicChat = computed(() => currentID.value !== null && LeekWars.isPublicChat(currentID.value))
-
 	function update() {
 		if (id.value !== null || newFarmer.value) {
 			selectConversation(id.value || 0)
@@ -249,15 +243,6 @@
 			LeekWars.setTitle(chat_name.value)
 		} else {
 			LeekWars.setTitle(t('title') as string)
-		}
-	}
-
-	function getConversationName() {
-		if (!currentChat.value) { return }
-		for (const farmer of currentChat.value.farmers) {
-			if (!store.state.farmer || farmer.id !== store.state.farmer.id) {
-				return farmer.name
-			}
 		}
 	}
 

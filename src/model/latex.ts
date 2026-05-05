@@ -25,7 +25,7 @@ class Latex {
 			return html.replace(/\$(.*?)\$/gi, (m, f) => {
 				try {
 					return '<span title="' + f + '">' + katex.renderToString(f, {macros: MACROS}) + '</span>'
-				} catch (e) {
+				} catch {
 					return m
 				}
 			})

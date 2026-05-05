@@ -1,9 +1,8 @@
 import { DamageType, EntityDirection, EntityType, FightEntity } from "@/component/player/game/entity"
 import { Game, SHADOW_ALPHA, SHADOW_SCALE } from '@/component/player/game/game'
 import { SHADOW_QUALITY, T, Texture } from '@/component/player/game/texture'
-import { WeaponAnimation, WhiteWeaponAnimation } from '@/component/player/game/weapons'
+import { WhiteWeaponAnimation } from '@/component/player/game/weapons'
 import { Cell } from '@/model/cell'
-import { HatTemplate } from '@/model/hat'
 import { LEEK_FACES } from "@/model/leek"
 import { LeekWars } from '@/model/leekwars'
 import { S } from './sound'

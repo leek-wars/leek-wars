@@ -88,7 +88,7 @@
 			.then(data => {
 				deleteTarget.value = data.farmer
 			})
-			.error((error) => {
+			.error(() => {
 				deleteError.value = 'Compte non trouvé'
 			})
 	}

@@ -937,8 +937,6 @@
 
 	const remaining_xp = computed(() => leek.value ? leek.value.up_xp - leek.value.xp : 0)
 
-	const leek_components = computed(() => leek.value ? leek.value.components.reduce((s, c) => s + (c ? 1 : 0), 0) : 0)
-
 	const onUpdateLeekTalent = (message: unknown) => {
 		const msg = message as { leek: number, talent: number }
 		if (leek.value && msg.leek === leek.value.id) {
@@ -1134,8 +1132,6 @@
 			elements: { point: { radius: 4, hoverRadius: 6 } },
 		}
 	}
-
-	function hat() { hatDialog.value = true }
 
 	function selectHat(h: Hat | null) {
 		if (!leek.value) return

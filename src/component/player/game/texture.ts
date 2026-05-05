@@ -68,7 +68,7 @@ class Texture {
 			const ctx = canvas.getContext('2d')!
 			ctx.drawImage(this.texture, 0, 0, canvas.width, canvas.height)
 			return canvas
-		} catch (e) {
+		} catch {
 			return this.texture
 		}
 	}
@@ -88,7 +88,7 @@ class Texture {
 			ctx.drawImage(this.texture, 0, 0, width, canvas.height)
 			this.cache[width] = canvas
 			return canvas
-		} catch (e) {
+		} catch {
 			return this.texture
 		}
 	}

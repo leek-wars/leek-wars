@@ -61,7 +61,7 @@ class Analyzer {
 		if (this.initialized) { return Promise.resolve() }
 		this.initialized = true
 
-		this.promise = new Promise((resolve, reject) => {
+		this.promise = new Promise((resolve) => {
 			const Module: { onRuntimeInitialized?: () => void; ccall?: (name: string) => void } = {
 				onRuntimeInitialized: () => {
 					// console.log("Module initialized", Module)
@@ -120,7 +120,7 @@ class Analyzer {
 
 		LeekWars.socket.send([SocketMessage.EDITOR_ANALYZE, ai.path, code])
 
-		return new Promise<unknown>((resolve, reject) => {
+		return new Promise<unknown>((resolve) => {
 			this.analyzeResolve = (data: unknown) => {
 				if (version === this.analyzeVersion) {
 					resolve(data)

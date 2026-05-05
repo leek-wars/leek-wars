@@ -508,7 +508,7 @@ class Game {
 				obstacle.resize()
 				this.ground.addObstacle(obstacle)
 			} else {
-				const type = o instanceof Array ? o[0] : -2
+				const _type = o instanceof Array ? o[0] : -2
 				const size = o instanceof Array ? o[1] : o // Before the obstacle was an array [type, size]
 				if (size !== -1) {
 					// console.log({ type, size })
@@ -2074,7 +2074,7 @@ class Game {
 		}
 	}
 
-	public mousedown(e: MouseEvent) {
+	public mousedown(_e: MouseEvent) {
 		// console.log("game mousedown")
 		if (this.creator) {
 			if (this.groundPaint) {
@@ -2093,7 +2093,7 @@ class Game {
 		}
 	}
 
-	public mouseup(e: MouseEvent) {
+	public mouseup(_e: MouseEvent) {
 		if (this.creator) {
 			this.draggedObstacle = null
 			this.draggedEntity = null
@@ -3054,7 +3054,7 @@ class Game {
 		}
 	}
 
-	public resourceLoaded(res: string) { // variable "res" utile pour débug
+	public resourceLoaded(_res: string) { // variable utile pour débug
 		this.loadedData++
 		if (this.cancelled) { return }
 		// console.log("Resource loaded : " + res + " (" + this.loadedData + "/" + this.numData + ")")

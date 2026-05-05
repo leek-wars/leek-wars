@@ -680,8 +680,6 @@
 		})
 	}
 
-	function renameGroup() {}
-
 	function startBattleRoyale() {
 		if (!group.value) { return }
 		LeekWars.post('groupe/start-battle-royale', { group_id: group.value.id }).then(data => {

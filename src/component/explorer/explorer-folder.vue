@@ -9,7 +9,6 @@
 </template>
 
 <script setup lang="ts">
-import { fileSystem } from '@/model/filesystem'
 import type { Folder } from '../editor/editor-item'
 import { mixins } from '@/model/i18n'
 

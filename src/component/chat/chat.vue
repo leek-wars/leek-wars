@@ -9,7 +9,7 @@
 				<div v-if="messages[0]" class="separator">
 					{{ $filters.date(messages[0].date) }}
 				</div>
-				<chat-message v-for="(message, m) in messages" :key="message.id" :message="formatMessage(message)" :chat="chat" :large="large" :class="'m-' + message.id" @scroll="updateScroll" @menu="openMenu($event, message)" @emoji="openEmojis($event, message)" />
+				<chat-message v-for="message in messages" :key="message.id" :message="formatMessage(message)" :chat="chat" :large="large" :class="'m-' + message.id" @scroll="updateScroll" @menu="openMenu($event, message)" @emoji="openEmojis($event, message)" />
 			</div>
 			<div v-show="unread" v-ripple class="chat-new-messages" @click="updateScroll(true)">{{ $t('main.unread_messages') }}</div>
 		</div>

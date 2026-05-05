@@ -867,11 +867,6 @@
 		resetSaveTimeout()
 	}
 
-	const sortedAis = computed(() => {
-		if (!props.ais) return []
-		return Object.values(props.ais).sort((a, b) => a.path.toLowerCase().localeCompare(b.path.toLowerCase()))
-	})
-
 	function clickLeekAI(leek: TestScenarioLeek, team: number) {
 		if (allLeeks.value[leek.id] && allLeeks.value[leek.id].ally) return
 		turretTeam.value = 0

@@ -2,7 +2,6 @@ import { LeekWars } from '@/model/leekwars'
 import { SocketMessage } from '@/model/socket'
 import { store } from '@/model/store'
 import { getRouter } from '@/model/leekwars'
-import { ArenaMode } from '@/model/fight'
 import { Leek } from './leek'
 
 class Arena {

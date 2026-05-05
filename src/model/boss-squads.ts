@@ -5,7 +5,6 @@ import { getRouter } from '@/model/leekwars'
 import { Leek } from './leek'
 import { Farmer } from './farmer'
 import { BOSSES, Boss } from './boss'
-import { useRoute, useRouter } from 'vue-router'
 
 class BossSquad {
 	public id!: string

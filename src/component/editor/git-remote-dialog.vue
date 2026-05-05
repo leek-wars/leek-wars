@@ -162,7 +162,7 @@
 		try {
 			const data = await gitCall('git/remotes', { folder: props.folder })
 			remotes.value = data.remotes || []
-		} catch (e) {
+		} catch {
 			remotes.value = []
 		} finally {
 			remotesLoading.value = false
@@ -178,7 +178,7 @@
 			} else {
 				availableRepos.value = []
 			}
-		} catch (e) {
+		} catch {
 			credentials.value = []
 			availableRepos.value = []
 		}
@@ -188,7 +188,7 @@
 		try {
 			const data = await gitCall('git-credential/repos')
 			availableRepos.value = data.repos || []
-		} catch (e) {
+		} catch {
 			availableRepos.value = []
 		}
 	}

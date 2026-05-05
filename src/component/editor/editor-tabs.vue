@@ -127,7 +127,7 @@
 		return 'd-' + tab.file + '-' + (tab.hash || (tab.staged ? 's' : 'w'))
 	}
 
-	function tabClass(tab: EditorTab, i: number): Record<string, boolean> {
+	function tabClass(tab: EditorTab, _i: number): Record<string, boolean> {
 		const selected = props.current && tabsMatch(tab, props.current)
 		if (tab.type === 'file') {
 			return { selected, modified: fileSystem.ais[tab.id]?.modified, conflict: fileSystem.ais[tab.id]?.hasConflict }
@@ -153,7 +153,7 @@
 		emit('select', tab)
 	}
 
-	function openMenu(event: MouseEvent, tab: EditorTab, i: number) {
+	function openMenu(event: MouseEvent, tab: EditorTab, _i: number) {
 		menuTab.value = tab
 		menuTarget.value = [event.clientX, event.clientY]
 		nextTick(() => {

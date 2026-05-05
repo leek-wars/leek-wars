@@ -3,7 +3,6 @@ import { emitter } from '@/model/emitter'
 import { ChatMessage } from './chat'
 import { NotificationType } from './notification'
 import { store } from './store'
-import { Leek } from './leek'
 const getAnalyzer = () => import('@/component/editor/analyzer').then(m => m.analyzer)
 
 enum SocketMessage {

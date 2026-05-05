@@ -40,7 +40,6 @@
 </template>
 
 <script setup lang="ts">
-import { ChatType } from '@/model/chat'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { defineAsyncComponent, ref } from 'vue'
@@ -72,8 +71,6 @@ function setChatLanguage(chat: number) {
 	localStorage.setItem('chat-panel/' + props.chat, '' + chat)
 }
 
-// Make ChatType available in template
-const _ChatType = ChatType
 </script>
 
 <style lang="scss" scoped>

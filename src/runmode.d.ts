@@ -3,6 +3,7 @@
 // Definitions by: Joseph Vaughan <https://github.com/Joev->
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 // See docs https://codemirror.net/doc/manual.html#addon_runmode
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as CodeMirror from "codemirror"
 
 declare module "codemirror" {
