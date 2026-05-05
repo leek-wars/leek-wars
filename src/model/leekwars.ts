@@ -847,6 +847,19 @@ const LeekWars = reactive({
 			LeekWars.messagePopup = true
 		}
 	},
+	showCloverResult: (clover: any) => {
+		let result = ''
+		if (clover.type === 'passed') {
+			result = clover.passed ? i18n.t('potion.clover_passed_yes') as string : i18n.t('potion.clover_passed_no') as string
+		} else if (clover.type === 'hour') {
+			result = clover.passed ? i18n.t('potion.clover_hour_passed', [clover.hour]) as string : i18n.t('potion.clover_hour_coming', [clover.hour]) as string
+		} else if (clover.type === 'second') {
+			const time = clover.hour + 'h' + String(clover.minute).padStart(2, '0') + 'm' + String(clover.second).padStart(2, '0') + 's'
+			result = clover.passed ? i18n.t('potion.clover_second_passed', [time]) as string : i18n.t('potion.clover_second_coming', [time]) as string
+		}
+		LeekWars.cloverResult = result
+		LeekWars.cloverPopup = true
+	},
 	encyclopedia: {} as {[key: string]: {[key: string]: any}},
 	encyclopediaById: {} as {[key: string]: {[key: number]: any}},
 	encyclopediaLoaded: {} as {[key: string]: boolean},
