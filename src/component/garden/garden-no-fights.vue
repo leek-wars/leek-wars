@@ -34,14 +34,13 @@
 </template>
 
 <script setup lang="ts">
-	import { mixins } from '@/model/i18n'
+	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { computed, ref } from 'vue'
-	import { useI18n } from 'vue-i18n'
 	import { useRouter } from 'vue-router'
 
-	defineOptions({ i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'garden-no-fights', i18n: {}, mixins: [...mixins] })
 
 	defineProps<{
 		canbuy?: boolean
@@ -50,7 +49,7 @@
 		'bought': []
 	}>()
 
-	const { t } = useI18n()
+	const t = useNamespacedT('garden-no-fights')
 	const router = useRouter()
 
 	const buyingHabs = ref(false)
