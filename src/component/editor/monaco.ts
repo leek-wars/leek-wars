@@ -136,6 +136,7 @@ monaco.editor.defineTheme("leek-wars", {
 		{ token: "lsfunction-deprecated", foreground: '777777', fontStyle: 'italic' },
 		{ token: "atom", foreground: '0086bc', fontStyle: 'bold' },
 		{ token: "number", foreground: '007f00' },
+		{ token: "annotation", foreground: 'aa5500', fontStyle: 'bold' },
 	],
 	colors: {
 		"editor.foreground": "#000000",
@@ -157,6 +158,7 @@ monaco.editor.defineTheme("monokai", {
 		{ token: "lsfunction-deprecated", foreground: '777777', fontStyle: 'italic' },
 		{ token: "atom", foreground: 'ae81ff' },
 		{ token: "number", foreground: 'ae81ff' },
+		{ token: "annotation", foreground: 'ffaa44', fontStyle: 'bold' },
 	],
 	colors: {
 		"editor.foreground": "#f8f8f2",
@@ -178,9 +180,24 @@ monaco.editor.registerEditorOpener({
 	},
 })
 
+const ANNOTATION_NAMES = new Set(['unused', 'deprecated', 'pure', 'nodiscard', 'override', 'tailrec', 'todo'])
+
 monaco.languages.registerHoverProvider("leekscript", {
 	provideHover: async (model, position, token, context) => {
-		// console.log("hover", model.uri.path)
+		// Annotations hover — resolved locally, no server round-trip
+		const lineText = model.getLineContent(position.lineNumber)
+		const word = model.getWordAtPosition(position)
+		if (word && lineText[word.startColumn - 2] === '@' && ANNOTATION_NAMES.has(word.word)) {
+			const name = word.word
+			const doc = i18n.t('leekscript.annotation_' + name) as string
+			return {
+				range: new monaco.Range(position.lineNumber, word.startColumn - 1, position.lineNumber, word.endColumn),
+				contents: [
+					{ value: '**@' + name + '**' },
+					{ value: doc },
+				],
+			}
+		}
 
 		const ai = fileSystem.aiByFullPath[model.uri.path.substring(1)]
 		if (!ai) { return null }
@@ -356,6 +373,10 @@ monaco.languages.registerCodeLensProvider("leekscript", {
 		}
 		for (const fun of ai.functions) {
 			if (fun.line) addLens(fun.line, fun.label, true)
+		}
+		for (const name in ai.globals) {
+			const glob = ai.globals[name]
+			if (glob.line) addLens(glob.line, name, false)
 		}
 		for (const name in ai.classes) {
 			const cls = ai.classes[name]

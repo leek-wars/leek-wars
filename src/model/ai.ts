@@ -494,8 +494,8 @@ class AI {
 		this.globals = {}
 		let match
 
-		// Search global vars
-		const global_regex = /global\s+(?:.*\s+?)?(\w+)$/gm
+		// Search global vars — capture the identifier right before = or ; (skipping optional type annotation)
+		const global_regex = /global\s+(?:[^=;\n]*?\s)?([A-Za-z_]\w*)\s*(?:[=;]|$)/gm
 		while ((match = global_regex.exec(this.code)) != null) {
 			const line = this.code.substring(0, match.index).split("\n").length
 			const name = match[1]
