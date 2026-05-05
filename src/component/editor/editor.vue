@@ -653,6 +653,13 @@
 		if (num > 0 && !window.confirm(t('n_ais_unsaved', [num]) as string)) {
 			next(false)
 		} else {
+			// Réinitialiser le layout AVANT que Vue Router commence à patcher le DOM.
+			// Si on le fait dans onBeforeUnmount, app.vue se re-rend pendant que
+			// le <router-view> est en cours de swap, ce qui cause parentNode = null.
+			LeekWars.large = false
+			LeekWars.header = true
+			LeekWars.footer = true
+			LeekWars.box = false
 			next()
 		}
 	})
@@ -1379,10 +1386,6 @@
 		emitter.off('close-file-tab')
 		emitter.off('close-merge-tabs')
 		emitter.off('open-merge')
-		LeekWars.large = false
-		LeekWars.header = true
-		LeekWars.footer = true
-		LeekWars.box = false
 		if (broadcast) {
 			broadcast.close()
 		}

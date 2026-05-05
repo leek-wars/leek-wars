@@ -266,6 +266,8 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
 	emitter.off('file-reloaded', onFileReloaded)
+	clearTimeout(analyzerTimeout)
+	clearTimeout(viewStateSaveTimeout)
 	saveViewState()
 	scrollListener?.dispose()
 	conflictLenses?.dispose()
