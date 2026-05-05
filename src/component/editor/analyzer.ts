@@ -13,8 +13,20 @@ import { markRaw, reactive } from 'vue'
 const ERROR_UNUSED_VARIABLE = 148
 const ERROR_UNUSED_FUNCTION = 152
 
+/** Shape of a hover response from the analyzer server */
+export interface HoverResult {
+	type?: string
+	location: [unknown, number, number, number, number]
+	defined?: [string, number, number, number, number]
+}
+
+/** Shape of a completion response from the analyzer server */
+export interface CompletionResult {
+	items: Array<{ name: string }>
+}
+
 export class AnalyzerPromise {
-	public then!: (data: any) => void
+	public then!: (data: unknown) => void
 	public abort!: () => void
 }
 
@@ -26,14 +38,14 @@ class Analyzer {
 	public error_count: number = 0
 	public warning_count: number = 0
 	public todo_count: number = 0
-	public promise!: Promise<any>
+	public promise!: Promise<unknown>
 	public requestID: number = 0
-	public analyzeResolve!: ((value: unknown) => any) | null
+	public analyzeResolve!: ((value: unknown) => void) | null
 	private analyzeVersion: number = 0
-	public hoverResolve!: (value: unknown) => any
-	public lastHover: any
-	public completeResolve: {[key: number]: (value: unknown) => any} = {}
-	public referencesResolve: {[key: number]: (value: unknown) => any} = {}
+	public hoverResolve!: (value: unknown) => void
+	public lastHover: unknown
+	public completeResolve: {[key: number]: (value: unknown) => void} = {}
+	public referencesResolve: {[key: number]: (value: unknown) => void} = {}
 
 	private initialized: boolean = false
 	// private GeneratorAnalyze!: Function
@@ -50,10 +62,10 @@ class Analyzer {
 		this.initialized = true
 
 		this.promise = new Promise((resolve, reject) => {
-			const Module: any = {
+			const Module: { onRuntimeInitialized?: () => void; ccall?: (name: string) => void } = {
 				onRuntimeInitialized: () => {
 					// console.log("Module initialized", Module)
-					Module.ccall('init')
+					Module.ccall!('init')
 					// this.GeneratorAnalyze = Module.cwrap('analyze', 'string', ['boolean', 'string', 'string', 'boolean'])
 					// this.GeneratorComplete = Module.cwrap('complete', 'string', ['boolean', 'string', 'number'])
 					// this.GeneratorHover = Module.cwrap('hover', 'string', ['boolean', 'string', 'number', 'boolean'])
@@ -108,8 +120,8 @@ class Analyzer {
 
 		LeekWars.socket.send([SocketMessage.EDITOR_ANALYZE, ai.path, code])
 
-		return new Promise<any>((resolve, reject) => {
-			this.analyzeResolve = (data: any) => {
+		return new Promise<unknown>((resolve, reject) => {
+			this.analyzeResolve = (data: unknown) => {
 				if (version === this.analyzeVersion) {
 					resolve(data)
 				}
@@ -119,7 +131,7 @@ class Analyzer {
 		})
 	}
 
-	public analyzeResult(data: any[]) {
+	public analyzeResult(data: unknown[]) {
 		if (this.analyzeResolve) {
 			// console.timeEnd('hover')
 			this.analyzeResolve(data)
@@ -133,20 +145,27 @@ class Analyzer {
 	}
 
 	public applyAnalyzeResult(
-		result: {[path: string]: {problems?: any[], total_lines?: number, total_chars?: number}},
+		result: {[path: string]: {problems?: unknown[][], valid?: boolean, total_lines?: number, total_chars?: number}},
 		onValid?: (ai: AI) => void
 	) {
 		for (const epPath in result) {
 			const ai = fileSystem.ais[epPath]
 			if (!ai) continue
 			const entry = result[epPath]
-			const problems = entry.problems ?? []
-			const valid = !problems.some(p => p[0] === 0)
-			ai.valid = valid
 			if (typeof entry.total_lines === 'number') ai.total_lines = entry.total_lines
 			if (typeof entry.total_chars === 'number') ai.total_chars = entry.total_chars
-			if (valid && onValid) onValid(ai)
-			this.handleProblems(ai, problems)
+			if (entry.problems !== undefined) {
+				// Entrée avec problèmes dédupliqués
+				const valid = !entry.problems.some(p => p[0] === 0)
+				ai.valid = valid
+				if (valid && onValid) onValid(ai)
+				this.handleProblems(ai, entry.problems)
+			} else {
+				// Entrée stats-only (entrypoint parent) : nettoyage + mise à jour valid
+				this.removeProblems(ai)
+				if (typeof entry.valid === 'boolean') ai.valid = entry.valid
+				if (ai.valid && onValid) onValid(ai)
+			}
 		}
 	}
 
@@ -155,12 +174,12 @@ class Analyzer {
 		// console.time('hover')
 		LeekWars.socket.send([SocketMessage.EDITOR_HOVER, ai.path, line, column])
 
-		return new Promise<any>((resolve, reject) => {
-			this.hoverResolve = resolve
+		return new Promise<HoverResult | null>((resolve) => {
+			this.hoverResolve = resolve as (value: unknown) => void
 		})
 	}
 
-	public hoverResult(data: any[]) {
+	public hoverResult(data: HoverResult | null) {
 		if (this.hoverResolve) {
 			// console.timeEnd('hover')
 			this.lastHover = data
@@ -168,7 +187,7 @@ class Analyzer {
 		}
 	}
 
-	public complete(ai: AI, code: string, line: number, column: number): Promise<any> {
+	public complete(ai: AI, code: string, line: number, column: number): Promise<CompletionResult | null> {
 
 		console.log("🔥 Complete", ai.path, line, column)
 
@@ -181,8 +200,8 @@ class Analyzer {
 		// console.log("Complete request", requestID)
 		LeekWars.socket.send([SocketMessage.EDITOR_COMPLETE, requestID, ai.path, code, line, column])
 
-		const promise = new Promise<any>((resolve, reject) => {
-			this.completeResolve[requestID] = resolve
+		const promise = new Promise<CompletionResult | null>((resolve) => {
+			this.completeResolve[requestID] = resolve as (value: unknown) => void
 		})
 		// return { then: promise.then.bind(promise), abort: () => {
 		// 	// console.log("Abort request", requestID)
@@ -193,23 +212,23 @@ class Analyzer {
 
 	public references(ai: AI, line: number, column: number, ctorParamCount: number = -1) {
 		const requestID = this.requestID++
-		const msg: any[] = [SocketMessage.EDITOR_REFERENCES, requestID, ai.path, line, column]
+		const msg: (string | number)[] = [SocketMessage.EDITOR_REFERENCES, requestID, ai.path, line, column]
 		if (ctorParamCount >= 0) msg.push(ctorParamCount)
 		LeekWars.socket.send(msg)
 
-		return new Promise<any>((resolve, reject) => {
-			this.referencesResolve[requestID] = resolve
+		return new Promise<[string, number, number, number, number][]>((resolve) => {
+			this.referencesResolve[requestID] = resolve as (value: unknown) => void
 		})
 	}
 
-	public referencesResult(message: {id: number, data: any}) {
+	public referencesResult(message: {id: number, data: unknown}) {
 		if (this.referencesResolve[message.id]) {
 			this.referencesResolve[message.id](message.data)
 			delete this.referencesResolve[message.id]
 		}
 	}
 
-	public completeResult(message: {type: number, id: number, data: any}) {
+	public completeResult(message: {type: number, id: number, data: unknown}) {
 		// console.log("complete result", message)
 		if (this.completeResolve[message.id]) {
 			// console.log("resolve complete", message)
@@ -275,7 +294,7 @@ class Analyzer {
 
 
 
-	handleProblems(entrypoint: AI, problems: any[][]) {
+	handleProblems(entrypoint: AI, problems: unknown[][]) {
 
 		const previousAIs = this.problems[entrypoint.path] ? Object.keys(this.problems[entrypoint.path]) : []
 
@@ -289,29 +308,29 @@ class Analyzer {
 		const problemsByAI = {} as {[key: string]: Problem[]}
 		const markersByAI = {} as {[key: string]: monaco.editor.IMarkerData[]}
 		for (const problem of problems) {
-			const level = problem[0]
-			let aiPath = problem[1]
+			const level = problem[0] as number
+			let aiPath = problem[1] as string
 			// Si le path n'est pas trouvé directement, essayer avec le dossier de l'entrypoint
 			if (!fileSystem.ais[aiPath] && entrypointDir) {
 				const resolved = entrypointDir + '/' + aiPath
 				if (fileSystem.ais[resolved]) aiPath = resolved
 			}
 			const info = problem.length === 8
-				? i18n.t('leekscript.error_' + problem[6], problem[7]) as string
+				? i18n.t('leekscript.error_' + problem[6], problem[7] as unknown[]) as string
 				: i18n.t('leekscript.error_' + problem[6]) as string
 			if (!problemsByAI[aiPath]) {
 				problemsByAI[aiPath] = []
 				markersByAI[aiPath] = []
 			}
-			problemsByAI[aiPath].push(new Problem(problem[2], problem[3], problem[4], problem[5], level, info))
-			const errorCode = problem[6]
+			problemsByAI[aiPath].push(new Problem(problem[2] as number, problem[3] as number, problem[4] as number, problem[5] as number, level, info))
+			const errorCode = problem[6] as number
 			markersByAI[aiPath].push({
 				message: info,
 				severity: level === 0 ? monaco.MarkerSeverity.Error : monaco.MarkerSeverity.Warning,
-				startLineNumber: problem[2],
-				startColumn: problem[3] + 1,
-				endLineNumber: problem[4],
-				endColumn: problem[5] + 2,
+				startLineNumber: problem[2] as number,
+				startColumn: (problem[3] as number) + 1,
+				endLineNumber: problem[4] as number,
+				endColumn: (problem[5] as number) + 2,
 				tags: errorCode === ERROR_UNUSED_VARIABLE || errorCode === ERROR_UNUSED_FUNCTION ? [monaco.MarkerTag.Unnecessary] : [],
 			})
 		}
@@ -341,7 +360,7 @@ class Analyzer {
 		return model
 	}
 
-	public setProblems(entrypoint: string, ai: AI, problems: any) {
+	public setProblems(entrypoint: string, ai: AI, problems: Problem[]) {
 		// console.log("[Analyzer] set ai problems", entrypoint, ai, problems)
 		if (!(entrypoint in this.problems)) {
 			this.problems[entrypoint] = {}
