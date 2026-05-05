@@ -734,13 +734,6 @@
 		if (num > 0 && !window.confirm(t('n_ais_unsaved', [num]) as string)) {
 			next(false)
 		} else {
-			// Réinitialiser le layout AVANT que Vue Router commence à patcher le DOM.
-			// Si on le fait dans onBeforeUnmount, app.vue se re-rend pendant que
-			// le <router-view> est en cours de swap, ce qui cause parentNode = null.
-			LeekWars.large = false
-			LeekWars.header = true
-			LeekWars.footer = true
-			LeekWars.box = false
 			next()
 		}
 	})
@@ -1474,6 +1467,15 @@
 		if (LeekWars.didactitial_step === 4) {
 			LeekWars.didactitial_next()
 		}
+		// Réinitialiser le layout dans un nextTick pour que la mise à jour
+		// de app.vue se produise APRÈS le swap de <router-view>, évitant le
+		// conflit qui causait parentNode = null avec onBeforeUnmount synchrone.
+		nextTick(() => {
+			LeekWars.large = false
+			LeekWars.header = true
+			LeekWars.footer = true
+			LeekWars.box = false
+		})
 	})
 </script>
 
