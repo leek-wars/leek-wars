@@ -178,10 +178,10 @@ function loadComponentLanguage(newLocale: string, component: ComponentInstance<C
 	let name = component.name ? normalizeComponentName(component.name) : undefined
 	if (name === "home" || !name) { name = "signup" }
 
-	if (instance && (instance as any).$i18n && (instance as any).$i18n.messages[newLocale]) {
+	if ((instance as any)?.$i18n?.messages?.[newLocale]) {
 		return
 	}
-	if (component && component.i18n && component.i18n.messages && component.i18n.messages[newLocale]) {
+	if (component?.i18n?.messages?.[newLocale]) {
 		return
 	}
 	const modulePath = `/src/component/${name}/${name}.${newLocale}.i18n`
