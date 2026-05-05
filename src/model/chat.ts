@@ -61,6 +61,7 @@ class Chat {
 
 	add(message: ChatMessage) {
 		// console.log("chat add", message, this)
+		if (this.messages.length && this.messages[this.messages.length - 1].id === message.id) return
 		this.prepare(message)
 		this.messages.push(message)
 		message.subMessages = []
