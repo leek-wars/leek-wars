@@ -1,5 +1,5 @@
 <template>
-	<error v-if="error" :title="$t('title')" :message="$t('not_found')" />
+	<error v-if="notFound" :title="$t('title')" :message="$t('not_found')" />
 	<error v-else-if="generating" :title="$t('title')" :message="$t('not_generated_yet')">
 		<template #button>
 			<v-btn size="large" color="primary" @click="update">
@@ -312,7 +312,7 @@
 	const actionsDisplayAlliesLogs = ref(true)
 	const actionsDisplayLogs = ref(true)
 	const generating = ref(false)
-	const error = ref(false)
+	const notFound = ref(false)
 	const damageEntities = ref<any>(null)
 	const damageChartType = ref(0)
 	const damageChartDamage = ref<any>({})
@@ -381,7 +381,7 @@
 
 	function update() {
 		generating.value = false
-		error.value = false
+		notFound.value = false
 		loaded.value = false
 		fight.value = null
 		report.value = null
@@ -491,7 +491,7 @@
 				nextTick(() => emitter.emit('loaded'))
 			}
 		})
-		.error(() => error.value = true)
+		.error(() => notFound.value = true)
 	}
 
 	;(async () => {
