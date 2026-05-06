@@ -30,5 +30,6 @@
 	"fastest_farmers": "Fastest farmers",
 	"slowest_farmers": "Slowest farmers",
 	"title_farmers": "Farmers with it in their title",
-	"created_the": "Added on {0}"
+	"created_the": "Added on {0}",
+	"show_in_chat": "Shown in chat"
 }
