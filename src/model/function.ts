@@ -1,5 +1,3 @@
-import { LeekWars } from "./leekwars"
-
 class LeekScriptItem {
 
 }
@@ -22,6 +20,4 @@ class LSFunction extends LeekScriptItem {
 	public replacer?: LSFunction
 }
 
-const functions = LeekWars.get('function/get-all')
-
-export { functions, LSFunction, LeekScriptItem }
+export { LSFunction, LeekScriptItem }
