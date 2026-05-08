@@ -415,7 +415,7 @@
 	import { BOSSES } from '@/model/boss'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
-	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+	import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 
 	import { useRoute, useRouter } from 'vue-router'
 	import { emitter } from '@/model/vue'
@@ -427,6 +427,11 @@
 	const t = useNamespacedT('garden')
 	const route = useRoute()
 	const router = useRouter()
+
+	// Différer la re-navigation hors du watcher route.params : appeler router.replace
+	// synchroniquement pendant le patch de <router-view> casse les Teleport Vuetify
+	// (parentNode null).
+	const replaceNextTick = (path: string) => nextTick(() => router.replace(path))
 
 	const garden = ref<any>(null)
 	const category = ref('solo')
@@ -593,7 +598,7 @@
 				let defaultCategory = savedCategory || 'solo'
 				if (defaultCategory === 'challenge') { defaultCategory = 'solo' }
 				if ((defaultCategory === 'battle-royale' || defaultCategory === 'arena') && !store.state.farmer.br_enabled) { defaultCategory = 'solo' }
-				router.replace('/garden/' + defaultCategory)
+				replaceNextTick('/garden/' + defaultCategory)
 				return
 			}
 		}
@@ -605,7 +610,7 @@
 				if (!first) { return }
 				defaultLeek = first.id
 			}
-			router.replace('/garden/' + category.value + '/' + defaultLeek)
+			replaceNextTick('/garden/' + category.value + '/' + defaultLeek)
 			return
 		}
 		if (category.value === 'team' && !params.item && garden.value) {
@@ -614,7 +619,7 @@
 				if (!(defaultComposition in compositions_by_id)) {
 					defaultComposition = garden.value.my_compositions[0].id
 				}
-				router.replace('/garden/team/' + defaultComposition)
+				replaceNextTick('/garden/team/' + defaultComposition)
 				return
 			}
 		}
@@ -756,7 +761,7 @@
 
 		if (challengeType.value === 'leek') {
 			if (!route.params.item) {
-				router.replace('/garden/challenge/' + challengeType.value + '/' + challengeTarget.value + '/' + LeekWars.first(store.state.farmer!.leeks)!.id)
+				replaceNextTick('/garden/challenge/' + challengeType.value + '/' + challengeTarget.value + '/' + LeekWars.first(store.state.farmer!.leeks)!.id)
 				return
 			}
 			selectedLeek.value = store.state.farmer!.leeks[parseInt(route.params.item as string, 10)]!
@@ -775,7 +780,7 @@
 			})
 		} else if (challengeType.value === 'team') {
 			if (!route.params.item) {
-				router.replace('/garden/challenge/' + challengeType.value + '/' + challengeTarget.value + '/' + garden.value.my_compositions[0].id)
+				replaceNextTick('/garden/challenge/' + challengeType.value + '/' + challengeTarget.value + '/' + garden.value.my_compositions[0].id)
 				return
 			}
 			for (const composition of garden.value.my_compositions) {
