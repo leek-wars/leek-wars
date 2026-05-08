@@ -533,43 +533,50 @@
 	}
 
 	function vote(message: ForumMessage, v: number) {
-		if (!topic.value) { return }
+		if (!topic.value) { return Promise.resolve() }
 		const method = ['vote-message-down', 'remove-message-vote', 'vote-message-up'][v + 1]
-		LeekWars.post('forum/' + method, {topic_id: topic.value.id, message_id: message.id})
+		return LeekWars.post('forum/' + method, {topic_id: topic.value.id, message_id: message.id})
+	}
+
+	// Invalidate the cached voters list AFTER the vote POST resolves. Otherwise the
+	// optimistic counter update and a hover-triggered names fetch can race: the GET
+	// can land before the server has applied the POST, returning stale names that
+	// disagree with the freshly-bumped counter.
+	function invalidateVotesAfter(message: ForumMessage, votePromise: Promise<unknown>) {
+		votePromise.finally(() => {
+			delete votes_up_names[message.id]
+			delete votes_down_names[message.id]
+		})
 	}
 
 	function voteUp(message: ForumMessage) {
 		if (message.my_vote === 1) {
-			vote(message, 0)
+			invalidateVotesAfter(message, vote(message, 0))
 			message.votes_up--
 			message.my_vote = 0
 		} else {
-			vote(message, 1)
+			invalidateVotesAfter(message, vote(message, 1))
 			message.votes_up++
 			if (message.my_vote === -1) {
 				message.votes_down--
 			}
 			message.my_vote = 1
 		}
-		delete votes_up_names[message.id]
-		delete votes_down_names[message.id]
 	}
 
 	function voteDown(message: ForumMessage) {
 		if (message.my_vote === -1) {
-			vote(message, 0)
+			invalidateVotesAfter(message, vote(message, 0))
 			message.votes_down--
 			message.my_vote = 0
 		} else {
-			vote(message, -1)
+			invalidateVotesAfter(message, vote(message, -1))
 			message.votes_down++
 			if (message.my_vote === 1) {
 				message.votes_up--
 			}
 			message.my_vote = -1
 		}
-		delete votes_up_names[message.id]
-		delete votes_down_names[message.id]
 	}
 
 	function loadVotesUp(message: ForumMessage) {
