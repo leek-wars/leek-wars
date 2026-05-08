@@ -73,18 +73,29 @@ const sizer = useTemplateRef<HTMLElement>('sizer')
 
 const actions: any[] = [{ icon: 'mdi-magnify-plus-outline', click: () => zoom() }]
 
-emitter.on('tournament-update', (data: any) => {
+// Bumped on each navigation. update() captures the current value; when its
+// async response resolves it ignores itself if a newer update has fired since.
+// Without this, a fast back/forward between two tournaments can show the older
+// payload on the newer URL (issue #3208).
+let loadId = 0
+
+const onTournamentUpdate = (data: any) => {
 	if (tournament.value && data[0] === tournament.value.id) {
+		const id = ++loadId
 		LeekWars.get<Tournament>('tournament/get/' + route.params.id).then(t => {
+			if (id !== loadId) return
 			tournament.value = t
 			generating.value = false
 		})
 	}
-})
+}
+emitter.on('tournament-update', onTournamentUpdate)
 
 function update() {
+	const id = ++loadId
 	tournament.value = null
 	LeekWars.get<Tournament>('tournament/get/' + route.params.id).then(tour => {
+		if (id !== loadId) return
 		tournament.value = tour
 		if (!tournament.value) return
 
@@ -118,6 +129,7 @@ onBeforeUnmount(() => {
 	LeekWars.large = false
 	emitter.off('tooltip', tooltipOpen)
 	emitter.off('tooltip-close', tooltipClose)
+	emitter.off('tournament-update', onTournamentUpdate)
 	if (tournament.value) {
 		LeekWars.socket.send([SocketMessage.TOURNAMENT_UNLISTEN, tournament.value.id])
 	}
@@ -158,6 +170,7 @@ function zoom() {
 
 function setupTimer() {
 	if (!tournament.value) return
+	clearTimeout(timer)
 	const updateTimer = () => {
 		if (!tournament.value) return
 		const time = tournament.value.next_round - LeekWars.timeSeconds
