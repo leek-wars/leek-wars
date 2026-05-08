@@ -534,9 +534,13 @@ const LeekWars = reactive({
 		return /^https?:\/\//i.test(trimmed) ? trimmed : null
 	},
 	decodehtmlentities(string: any) {
+		// &nbsp; is a non-breaking SPACE, not a tab. Mapping to '\t' was the cause
+		// of issue #3337 : code pasted into the chat ended up with each &nbsp;
+		// rendered as a tab, then displayed at tab-size (4 or 8) chars — doubling
+		// or quadrupling the original indentation. Single space preserves intent.
 		return ('' + string).replace(/&amp;/g, "&")
 			.replace(/&gt;/g, ">").replace(/&lt;/g, "<")
-			.replace(/&nbsp;/g, "\t")
+			.replace(/&nbsp;/g, " ")
 	},
 	formatNumber(n: number | string) {
 		return ("" + n).replace(/\B(?=(\d{3})+(?!\d))/g, " ")
