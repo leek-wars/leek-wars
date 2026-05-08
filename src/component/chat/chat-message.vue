@@ -51,7 +51,6 @@ import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import { Chat, ChatMessage, ChatType } from '@/model/chat'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
-import 'katex/dist/katex.min.css'
 import { computed, watch } from 'vue'
 import ChatMessageText from './chat-message-text.vue'
 
