@@ -76,4 +76,3 @@ export function displayWarningMessage() {
 }
 
 export { emitter }
-export type { Events }

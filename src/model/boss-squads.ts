@@ -7,7 +7,7 @@ import { Farmer } from './farmer'
 import { BOSSES, Boss } from './boss'
 import { useRoute, useRouter } from 'vue-router'
 
-export class BossSquad {
+class BossSquad {
 	public id!: string
 	public boss!: number
 	public farmers!: Farmer[]

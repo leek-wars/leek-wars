@@ -62,4 +62,3 @@ class Action {
 }
 
 export { Action, ActionType }
-export type { ActionLog }

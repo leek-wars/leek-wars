@@ -199,4 +199,4 @@ export const COSTS: {[key: string]: any} = {
 	]
 }
 
-export { Leek, Characteristic, Register, LeekFace, LEEK_FACES }
+export { Leek, Register, LEEK_FACES }

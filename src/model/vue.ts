@@ -136,7 +136,7 @@ function describeRouteSubtree(instance: any): string | null {
 	return null
 }
 
-export function reportVueError(err: any, vm: any, info: any, origin: string = 'main') {
+function reportVueError(err: any, vm: any, info: any, origin: string = 'main') {
 
 	if (LeekWars.DEV) return
 
@@ -672,5 +672,4 @@ if (window.__FARMER__) {
 	}
 }
 
-export { vueMain } from './emitter'
-export { vuetify, displayWarningMessage, app, emitter, dochash, code }
+export { emitter, dochash, code }

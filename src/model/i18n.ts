@@ -210,4 +210,4 @@ function useNamespacedT(name: string) {
 	}
 }
 
-export { i18n, mixins, loadComponentLanguage, loadLanguageAsync, loadInstanceTranslations, t, locale, currentLocale, normalizeComponentName, useNamespacedT }
+export { i18n, mixins, loadLanguageAsync, t, locale, normalizeComponentName, useNamespacedT }

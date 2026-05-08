@@ -172,4 +172,4 @@ class FightData {
 	public ops!: any
 }
 
-export { Fight, FightType, FightContext, ArenaMode, Report, ReportLeek, ReportFarmer, ReportTeam, FightLeek, FightMap, FightData }
+export { Fight, FightType, FightContext, ArenaMode, Report, ReportLeek, FightLeek, FightMap, FightData }

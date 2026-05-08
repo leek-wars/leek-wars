@@ -1,7 +1,7 @@
 import { reactive } from 'vue'
 import { LeekWars } from '@/model/leekwars'
 
-export interface GitLogEntry {
+interface GitLogEntry {
 	id: number
 	timestamp: number
 	command: string    // commande git exécutée côté serveur (ex: "git push -u origin HEAD")

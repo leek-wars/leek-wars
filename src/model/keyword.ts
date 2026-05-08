@@ -2,6 +2,12 @@ import { AI } from "./ai"
 import { Constant } from "./constant"
 import { LSFunction } from "./function"
 
+/**
+ * 1:1 mirror of monaco-editor's `languages.CompletionItemKind`. Members not
+ * currently consumed by app code are kept so the enum stays a complete contract
+ * with Monaco's API (future code can use any kind without an additive change).
+ * @public
+ */
 export enum KeywordKind {
 	Method = 0,
 	Function = 1,

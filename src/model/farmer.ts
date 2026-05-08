@@ -116,4 +116,4 @@ class Reward {
 	public habs!: number
 }
 
-export { Farmer, Member, Reward }
+export { Farmer, Member }

@@ -40,4 +40,4 @@ class Fault {
 	target!: Farmer
 }
 
-export { Warning, Reporting, Fault }
+export { Warning, Fault }
