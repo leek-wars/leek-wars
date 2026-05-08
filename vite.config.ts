@@ -238,6 +238,31 @@ function monacoNoncePlugin(): Plugin {
 	}
 }
 
+// Replace Monaco's inlined DOMPurify (the file shipped at
+// `monaco-editor/esm/vs/base/browser/dompurify/dompurify.js`) with our top-level
+// `dompurify` package. Monaco 0.55.x — including the 0.56 dev branch — bundles
+// DOMPurify 3.2.7 which is vulnerable to 8 known XSS / prototype-pollution CVEs
+// (GHSA-v2wj-7wpq-c8vv et al). Vite's `resolve.alias` only matches the import
+// specifier string (a relative path here), so we intercept the resolved absolute
+// id instead. Drop this plugin when Monaco upstream catches up.
+function patchMonacoDompurify(): Plugin {
+	const matcher = /[\\/]monaco-editor[\\/]esm[\\/]vs[\\/]base[\\/]browser[\\/]dompurify[\\/]dompurify\.js$/
+	// Resolve from the project root so we hit the top-level `dompurify` package,
+	// not the 3.2.7 copy npm nested under `node_modules/monaco-editor/node_modules/`
+	// (Monaco hard-pins to 3.2.7, so it gets its own install).
+	const targetImporter = path.resolve(__dirname, 'package.json')
+	return {
+		name: 'patch-monaco-dompurify',
+		enforce: 'pre',
+		async resolveId(source, importer) {
+			if (!source.endsWith('dompurify.js')) return null
+			const resolved = await this.resolve(source, importer, { skipSelf: true })
+			if (!resolved || !matcher.test(resolved.id)) return null
+			return this.resolve('dompurify', targetImporter, { skipSelf: true })
+		},
+	}
+}
+
 // Plugin to handle YAML files (for changelog)
 function yamlPlugin(): Plugin {
 	return {
@@ -385,6 +410,7 @@ export default defineConfig({
 		i18nJsonPlugin(),
 		yamlPlugin(),
 		monacoNoncePlugin(),
+		patchMonacoDompurify(),
 		gameDataPlugin(),
 		vue(),
 		vueI18n({

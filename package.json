@@ -78,7 +78,10 @@
 		"vue-tsc": "^3.2.1"
 	},
 	"overrides": {
-		"minimatch": "^10.2.1"
+		"minimatch": "^10.2.1",
+		"monaco-editor": {
+			"dompurify": "$dompurify"
+		}
 	},
 	"postcss": {
 		"plugins": {
