@@ -285,7 +285,8 @@
 
 	defineOptions({ name: 'report', i18n: {}, mixins: [...mixins], components: { actions: ActionsElement, 'lw-map': Map } })
 
-	const { t, te } = useI18n()
+	const { te } = useI18n()
+	const t = useNamespacedT('report')
 	const route = useRoute()
 	const instance = getCurrentInstance()
 
@@ -353,11 +354,17 @@
 	const id = computed(() => route.params.id)
 	const team1Title = computed(() => {
 		if (!fight.value) { return '' }
-		return fight.value.report.win === 0 ? t('team1') : t('winners')
+		const r = fight.value.report
+		if (r.win === 0) return t('team1')
+		const count = r.win === 1 ? r.leeks1.length : r.leeks2.length
+		return t('winners', count)
 	})
 	const team2Title = computed(() => {
 		if (!fight.value) { return '' }
-		return fight.value.report.win === 0 ? t('team2') : t('loosers')
+		const r = fight.value.report
+		if (r.win === 0) return t('team2')
+		const count = r.win === 1 ? r.leeks2.length : r.leeks1.length
+		return t('loosers', count)
 	})
 	const team1Icon = computed(() => {
 		if (!fight.value) { return '' }
