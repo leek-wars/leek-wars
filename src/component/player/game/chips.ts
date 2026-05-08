@@ -113,6 +113,19 @@ abstract class ChipAnimation {
 			this.createChipNovaEntity(target)
 		}
 	}
+	// Filter the AoE-targets list down to entities on the launcher's team.
+	// Used by buff/shield/heal/damage-return chips to avoid stamping the chip
+	// icon over enemies caught in the AoE who don't actually receive the effect
+	// (issue #3127, e.g. Miroir).
+	public alliesOf(launcher: FightEntity | undefined, targets: FightEntity[]): FightEntity[] {
+		if (!launcher) return targets
+		return targets.filter(t => t.team === launcher.team)
+	}
+	// Symmetric helper for debuff/poison chips that only land on enemies.
+	public enemiesOf(launcher: FightEntity | undefined, targets: FightEntity[]): FightEntity[] {
+		if (!launcher) return targets
+		return targets.filter(t => t.team !== launcher.team)
+	}
 }
 
 class Summon extends ChipAnimation {
@@ -170,10 +183,11 @@ class ChipShieldAnimation extends ChipAnimation {
 		this.texture = texture
 		this.area = area
 	}
-	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
-		super.launch(launchCell, targetPos, targets, targetCell)
-		this.createChipAureol(targets, T.shield_aureol)
-		this.createChipImage(targets, this.texture)
+	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchCell, targetPos, targets, targetCell, launcher)
+		const recipients = this.alliesOf(launcher, targets)
+		this.createChipAureol(recipients, T.shield_aureol)
+		this.createChipImage(recipients, this.texture)
 		if (this.area !== Area.SINGLE_CELL) {
 			this.game.setEffectArea(targetCell, this.area, 'orange')
 		}
@@ -189,10 +203,12 @@ class ChipBoostAnimation extends ChipAnimation {
 		this.texture = texture
 		this.area = area
 	}
-	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
-		super.launch(launchCell, targetPos, targets, targetCell)
-		this.createChipAureol(targets, T.buff_aureol)
-		this.createChipImage(targets, this.texture)
+	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchCell, targetPos, targets, targetCell, launcher)
+		const recipients = this.alliesOf(launcher, targets)
+		this.targets = recipients
+		this.createChipAureol(recipients, T.buff_aureol)
+		this.createChipImage(recipients, this.texture)
 		if (this.area !== Area.SINGLE_CELL) {
 			this.game.setEffectArea(targetCell, this.area, 'blue')
 		}
@@ -218,10 +234,12 @@ class ChipHealAnimation extends ChipAnimation {
 		this.texture = texture
 		this.area = area
 	}
-	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
-		super.launch(launchCell, targetPos, targets, targetCell)
-		this.createChipAureol(targets, T.cure_aureol)
-		this.createChipImage(targets, this.texture)
+	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchCell, targetPos, targets, targetCell, launcher)
+		const recipients = this.alliesOf(launcher, targets)
+		this.targets = recipients
+		this.createChipAureol(recipients, T.cure_aureol)
+		this.createChipImage(recipients, this.texture)
 		if (this.area !== Area.SINGLE_CELL) {
 			this.game.setEffectArea(targetCell, this.area, 'green')
 		}
@@ -247,10 +265,12 @@ class ChipNovaVitalityAnimation extends ChipAnimation {
 		this.texture = texture
 		this.area = area
 	}
-	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
-		super.launch(launchCell, targetPos, targets, targetCell)
-		this.createChipAureol(targets, T.nova_aureol)
-		this.createChipImage(targets, this.texture)
+	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchCell, targetPos, targets, targetCell, launcher)
+		const recipients = this.alliesOf(launcher, targets)
+		this.targets = recipients
+		this.createChipAureol(recipients, T.nova_aureol)
+		this.createChipImage(recipients, this.texture)
 		if (this.area !== Area.SINGLE_CELL) {
 			this.game.setEffectArea(targetCell, this.area, '#26ffba')
 		}
@@ -275,10 +295,11 @@ class ChipDebuffAnimation extends ChipAnimation {
 		this.texture = texture
 		this.area = area
 	}
-	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
-		super.launch(launchCell, targetPos, targets, targetCell)
-		this.createChipAureol(targets, T.shackle_aureol)
-		this.createChipImage(targets, this.texture)
+	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchCell, targetPos, targets, targetCell, launcher)
+		const recipients = this.enemiesOf(launcher, targets)
+		this.createChipAureol(recipients, T.shackle_aureol)
+		this.createChipImage(recipients, this.texture)
 		if (this.area !== Area.SINGLE_CELL) {
 			this.game.setEffectArea(targetCell, this.area, '#9f00ef')
 		}
@@ -293,10 +314,11 @@ class ChipPoisonAnimation extends ChipAnimation {
 		this.texture = texture
 		this.area = area
 	}
-	public launch(launchCell: Cell, targetPos: Cell, targets: FightEntity[], targetCell: Cell) {
-		super.launch(launchCell, targetPos, targets, targetCell)
-		this.createChipAureol(targets, T.poison_aureol)
-		this.createChipImage(targets, this.texture)
+	public launch(launchCell: Cell, targetPos: Cell, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchCell, targetPos, targets, targetCell, launcher)
+		const recipients = this.enemiesOf(launcher, targets)
+		this.createChipAureol(recipients, T.poison_aureol)
+		this.createChipImage(recipients, this.texture)
 		if (this.area !== Area.SINGLE_CELL) {
 			this.game.setEffectArea(targetCell, this.area, '#ea5ef9')
 		}
@@ -311,10 +333,11 @@ class ChipDamageReturnAnimation extends ChipAnimation {
 		this.texture = texture
 		this.area = area
 	}
-	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
-		super.launch(launchCell, targetPos, targets, targetCell)
-		this.createChipAureol(targets, T.damage_return_aureol)
-		this.createChipImage(targets, this.texture)
+	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchCell, targetPos, targets, targetCell, launcher)
+		const recipients = this.alliesOf(launcher, targets)
+		this.createChipAureol(recipients, T.damage_return_aureol)
+		this.createChipImage(recipients, this.texture)
 		if (this.area !== Area.SINGLE_CELL) {
 			this.game.setEffectArea(targetCell, this.area, Colors.AGILITY_COLOR)
 		}
