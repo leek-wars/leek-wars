@@ -490,8 +490,21 @@ export default defineConfig({
 							return 'vue-vendor'
 						case 'vuetify':
 							return 'vuetify'
-						case 'chart.js': case 'markdown-it': case 'dompurify': case 'js-beautify':
-							return 'utils'
+						// Each heavy lazy-only lib in its own chunk. Without an explicit
+						// name, Rollup hoists shared deps used by multiple async routes
+						// into the eager root chunk. markdown-it + dompurify travel
+						// together (encyclopedia markdown).
+						case 'chart.js':
+							return 'chartjs'
+						case 'markdown-it':
+							return 'markdown'
+						case 'dompurify':
+							// Shared by markdown (encyclopedia) and monaco (via the
+							// `patchMonacoDompurify` plugin). Dedicated chunk so neither
+							// route drags the other's payload.
+							return 'dompurify'
+						case 'js-beautify':
+							return 'js-beautify'
 						case 'monaco-editor':
 							return 'monaco'
 						case 'codemirror':
