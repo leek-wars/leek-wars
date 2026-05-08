@@ -195,7 +195,7 @@
 						</tr>
 					</table>
 
-					<Line v-if="chartData && chartOptions" :data="chartData" :options="chartOptions" class="talent-history" />
+					<Line v-if="chartData && chartOptions && Object.values(farmer.leeks).length > 1" :data="chartData" :options="chartOptions" class="talent-history" />
 
 					<div v-if="farmer" class="godfather grey">
 						<div v-if="farmer.godfather">
