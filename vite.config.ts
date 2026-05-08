@@ -1,7 +1,6 @@
 import { defineConfig, Plugin, Rollup } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vuetify from 'vite-plugin-vuetify'
-import monacoEditorPlugin from 'vite-plugin-monaco-editor'
 import vueI18n from '@intlify/unplugin-vue-i18n/vite'
 import { baseCompile } from '@intlify/message-compiler'
 import { visualizer } from 'rollup-plugin-visualizer'
@@ -18,13 +17,20 @@ const BUILD_COMMIT = (() => {
 		return 'unknown'
 	}
 })()
-const BUILD_DATE = new Date().toISOString()
+// Pin BUILD_DATE via env var so two builds at the same commit (e.g. one for deploy
+// without sourcemaps, one with sourcemaps for the upload-after job) produce
+// byte-identical JS and matching content-hash filenames.
+const BUILD_DATE = process.env.BUILD_DATE || new Date().toISOString()
 
 // Recursively compile a message object: leaf strings → pre-compiled functions
 // so the runtime-only vue-i18n build needs no JIT compiler (no new Function()).
+const compileLeafCache = new Map<string, string>()
 function compileMessageObject(obj: unknown): string {
 	if (typeof obj === 'string') {
+		const cached = compileLeafCache.get(obj)
+		if (cached !== undefined) return cached
 		const { code } = baseCompile(obj, { sourceMap: false })
+		compileLeafCache.set(obj, code)
 		return code
 	}
 	if (Array.isArray(obj)) {
@@ -115,14 +121,24 @@ function multiLanguagePlugin(): Plugin {
 			const template = fs.readFileSync(templatePath, 'utf-8')
 			let defaultHtml = ''
 
+			// Hoist work that doesn't depend on `lang` out of the loop.
+			let mainEntry: string | undefined
+			const localeEntries: Record<string, string> = {}
+			for (const name of Object.keys(bundle)) {
+				if (!name.endsWith('.js')) continue
+				const localeMatch = name.match(/^assets\/locale-([a-z]+)-[A-Za-z0-9_-]+\.js$/)
+				if (localeMatch) { localeEntries[localeMatch[1]] = name; continue }
+				if (!mainEntry && /^assets\/main-[A-Za-z0-9_-]+\.js$/.test(name)) mainEntry = name
+			}
+			// App main CSS last — ensures it overrides vendor/library styles
+			const criticalCss = [...collectCriticalCss(bundle)].sort(
+				(a, b) => Number(a.includes('main-')) - Number(b.includes('main-'))
+			)
+			const cssLinks = criticalCss.map(css => `<link rel="stylesheet" crossorigin href="/${css}">`).join('\n\t\t')
+			const scriptTagPattern = /<script type="module" src="\/src\/lang\/locale\/fr\.ts"><\/script>\s*<script type="module" src="\/src\/main\.ts"><\/script>/
+
 			for (const lang of languages) {
-				// Find the JS entries for locale and main
-				const localeEntry = Object.keys(bundle).find(name =>
-					name.startsWith(`assets/locale-${lang}`) && name.endsWith('.js')
-				)
-				const mainEntry = Object.keys(bundle).find(name =>
-					name.match(/^assets\/main-[A-Za-z0-9_-]+\.js$/) && !name.includes('locale')
-				)
+				const localeEntry = localeEntries[lang]
 
 				// Build script tags: locale first (sets translations), then main (uses them)
 				const scripts = [
@@ -130,21 +146,7 @@ function multiLanguagePlugin(): Plugin {
 					mainEntry ? `<script type="module" crossorigin src="/${mainEntry}"></script>` : ''
 				].filter(Boolean).join('\n\t\t')
 
-				// Replace the dev script tags with built versions
-				let finalHtml = template.replace(
-					/<script type="module" src="\/src\/lang\/locale\/fr\.ts"><\/script>\s*<script type="module" src="\/src\/main\.ts"><\/script>/,
-					scripts
-				)
-
-				// Only include CSS from entry chunks and their static dependencies.
-				// Lazy-loaded route CSS will be injected by Vite's runtime on demand.
-				const criticalCss = [...collectCriticalCss(bundle)].sort((a, b) => {
-					// App main CSS last — ensures it overrides vendor/library styles
-					const aMain = a.includes('main-') ? 1 : 0
-					const bMain = b.includes('main-') ? 1 : 0
-					return aMain - bMain
-				})
-				const cssLinks = criticalCss.map(css => `<link rel="stylesheet" crossorigin href="/${css}">`).join('\n\t\t')
+				let finalHtml = template.replace(scriptTagPattern, scripts)
 				finalHtml = finalHtml.replace('</head>', `\t${cssLinks}\n\t</head>`)
 
 				this.emitFile({
@@ -389,25 +391,33 @@ export default defineConfig({
 			runtimeOnly: true,
 			compositionOnly: true,
 			dropMessageCompiler: true,
+			// Empty include = only SFC <i18n> blocks are processed by this plugin.
+			// All JSON locale files are handled by our `i18nJsonPlugin` (post), so
+			// letting this plugin also touch them is wasted work that gets thrown away.
+			include: [],
 		}),
 		vuetify({
 			autoImport: true
 		}),
-		monacoEditorPlugin({
-			languageWorkers: ['editorWorkerService'],
-			customWorkers: []
-		}),
-		visualizer({
+		// Visualizer ate ~20% of build time (CPU profile). Opt-in via STATS=1.
+		// Brotli size is the slowest part — compute it only when explicitly asked.
+		...(process.env.STATS ? [visualizer({
 			filename: 'dist/stats.html',
 			open: false,
 			gzipSize: true,
-			brotliSize: true
-		})
+			brotliSize: process.env.STATS === 'full',
+		})] : [])
 	],
 	resolve: {
-		alias: {
-			'@': path.resolve(__dirname, 'src'),
-		}
+		alias: [
+			{ find: '@', replacement: path.resolve(__dirname, 'src') },
+			// Redirect bare `monaco-editor` imports to a stripped barrel that only
+			// pulls the languages we actually use (markdown, yaml) + LeekScript
+			// custom registration in monaco.ts. Skips the ~80 basic-languages and
+			// the 4 heavy language services (ts/json/html/css) and their Workers
+			// — each Worker triggered a nested Vite build (~14s each).
+			{ find: /^monaco-editor$/, replacement: path.resolve(__dirname, 'src/component/editor/monaco-stripped.ts') }
+		]
 	},
 	css: {
 		preprocessorOptions: {
@@ -427,8 +437,13 @@ export default defineConfig({
 		}
 	},
 	build: {
-		// Generate source maps for production (like hidden-source-map in webpack)
-		sourcemap: true,
+		// Sourcemaps cost ~25% on the build. Disabled by default so the deploy-blocking
+		// build is fast; set BUILD_SOURCEMAP=1 (or 'hidden') to regenerate them in a
+		// parallel/post-deploy job. The minified JS is hash-stable, so the .map files
+		// produced by the second build line up with the already-deployed assets.
+		sourcemap: ({ '1': true, 'hidden': 'hidden' } as const)[process.env.BUILD_SOURCEMAP ?? ''] ?? false,
+		// Skip per-chunk gzip size compute in the build reporter (a few seconds saved).
+		reportCompressedSize: false,
 		rollupOptions: {
 			// Two entry points per language: locale (translations) and main (app)
 			// HTML loads locale first, then main, to ensure translations are set before app init
@@ -441,13 +456,24 @@ export default defineConfig({
 				)
 			},
 			output: {
-				manualChunks: {
-					// Vue ecosystem
-					'vue-vendor': ['vue', 'vue-router', 'vuex', 'vue-i18n'],
-					// Vuetify (large UI framework)
-					'vuetify': ['vuetify'],
-					// Utilities
-					'utils': ['chart.js', 'markdown-it', 'dompurify', 'js-beautify']
+				manualChunks(id) {
+					const m = id.match(/node_modules\/(@[^/]+\/[^/]+|[^/]+)/)
+					if (!m) return
+					switch (m[1]) {
+						case 'vue': case 'vue-router': case 'vuex': case 'vue-i18n':
+							return 'vue-vendor'
+						case 'vuetify':
+							return 'vuetify'
+						case 'chart.js': case 'markdown-it': case 'dompurify': case 'js-beautify':
+							return 'utils'
+						case 'monaco-editor':
+							return 'monaco'
+						case 'codemirror':
+							return 'codemirror'
+						case 'katex':
+							return 'katex'
+					}
+					if (m[1].startsWith('@vue/')) return 'vue-vendor'
 				}
 			}
 		}

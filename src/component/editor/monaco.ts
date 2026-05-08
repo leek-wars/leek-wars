@@ -1,18 +1,7 @@
 import * as monaco from 'monaco-editor'
-import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 
 // @ts-ignore
 import leekscript from './leekscript-monarch.js'
-
-import { cspNonce } from './monaco-csp'
-
-self.MonacoEnvironment = {
-	getWorker(_: any, label: string) {
-		return new editorWorker()
-	},
-	// Not in monaco's Environment type but consumed at runtime (CSP nonce).
-	nonce: cspNonce,
-} as monaco.Environment
 
 import { i18n } from '@/model/i18n';
 import { fileSystem } from '@/model/filesystem';
