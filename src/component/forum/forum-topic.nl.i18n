@@ -44,5 +44,6 @@
 	"old_topic_title": "Oud onderwerp",
 	"old_topic_warning": "Het laatste bericht in dit onderwerp is meer dan een jaar oud.",
 	"old_topic_confirm": "Het laatste bericht in dit onderwerp is meer dan een jaar oud. Weet je zeker dat je wilt antwoorden?",
-	"see_changelog": "Zie de changelog van {0}"
+	"see_changelog": "Zie de changelog van {0}",
+	"topic_not_found": "Onderwerp met id {topic} niet gevonden :("
 }

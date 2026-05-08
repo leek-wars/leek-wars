@@ -44,5 +44,6 @@
 	"old_topic_warning": "Den sidste besked i dette emne er mere end et år gammel.",
 	"old_topic_title": "Gammelt emne",
 	"old_topic_confirm": "Den sidste besked i dette emne er mere end et år gammel. Vil du virkelig svare på det?",
-	"see_changelog": "Se changeloggen for {0}"
+	"see_changelog": "Se changeloggen for {0}",
+	"topic_not_found": "Emne med id {topic} blev ikke fundet :("
 }

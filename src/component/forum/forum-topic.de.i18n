@@ -40,5 +40,6 @@
 	"hide_topic": "Ausblenden",
 	"show_topic": "Anzeigen",
 	"set_release": "Release",
-	"release_hint": "0 eingeben um die Release zu entfernen"
+	"release_hint": "0 eingeben um die Release zu entfernen",
+	"topic_not_found": "Betreff mit ID {topic} nicht gefunden :("
 }

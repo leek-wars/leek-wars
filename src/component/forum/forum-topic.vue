@@ -38,7 +38,9 @@
 				<div class="content">
 				<breadcrumb v-if="LeekWars.mobile" :items="breadcrumb_items" />
 				<pagination v-if="topic && category" :current="page" :total="pages" :url="'/forum/category-' + category.id + '/topic-' + topic.id" />
-				<div v-if="notFound" class="not-found" v-html="$t('forum.topic_not_found', [$route.params.topic])"></div>
+				<i18n-t v-if="notFound" keypath="topic_not_found" tag="div" class="not-found">
+					<template #topic><b>{{ $route.params.topic }}</b></template>
+				</i18n-t>
 			<loader v-else-if="!topic || !topic.messages" />
 				<div v-else>
 					<div v-for="message in topic.messages" :id="'message-' + message.id" :key="message.id" class="message-wrapper">

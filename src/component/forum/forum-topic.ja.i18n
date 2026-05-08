@@ -40,5 +40,6 @@
 	"hide_topic": "非表示",
 	"show_topic": "表示",
 	"set_release": "リリース",
-	"release_hint": "リリースを削除するには0を入力"
+	"release_hint": "リリースを削除するには0を入力",
+	"topic_not_found": "ID {topic} の件名が見つかりません:("
 }

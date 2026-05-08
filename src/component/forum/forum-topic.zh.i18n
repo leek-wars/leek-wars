@@ -44,5 +44,6 @@
 	"old_topic_confirm": "此主题的最后一条消息已超过一年。您确定要回复吗？",
 	"old_topic_title": "旧主题",
 	"old_topic_warning": "此主题的最后一条消息已超过一年。",
-	"see_changelog": "查看 {0} 的更新日志"
+	"see_changelog": "查看 {0} 的更新日志",
+	"topic_not_found": "未找到 ID 为 {topic} 的主题:("
 }

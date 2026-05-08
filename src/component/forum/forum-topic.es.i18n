@@ -44,5 +44,6 @@
 	"old_topic_warning": "El último mensaje de este tema tiene más de un año.",
 	"old_topic_title": "Tema antiguo",
 	"old_topic_confirm": "El último mensaje de este tema tiene más de un año. ¿Seguro que quieres responder?",
-	"see_changelog": "Ver el changelog de la {0}"
+	"see_changelog": "Ver el changelog de la {0}",
+	"topic_not_found": "Asunto con ID {topic} no encontrado :("
 }
