@@ -381,15 +381,14 @@ class Game {
 		for (let i = 0; i < this.ground.field.tilesY * 2; i++) {
 			this.drawableElements[i] = {}
 		}
-		const halloweenStart = new Date()
-		halloweenStart.setDate(30)
-		halloweenStart.setMonth(9) // October
-		halloweenStart.setHours(0, 0, 0, 0)
-		const halloweenEnd = new Date()
-		halloweenEnd.setDate(1)
-		halloweenEnd.setMonth(10) // November
-		halloweenEnd.setHours(0, 0, 0, 0)
+		// Use the (year, month, day) constructor to avoid month-rollover when the
+		// constructor runs in a month with < 30 days. The previous code did
+		// `new Date(); setDate(30); setMonth(9)` — in February that rolled to
+		// "Feb 30" → March 2 → October 2, so Halloween started 28 days early.
 		const now = new Date()
+		const year = now.getFullYear()
+		const halloweenStart = new Date(year, 9, 30)
+		const halloweenEnd = new Date(year, 10, 1)
 		this.halloween = now >= halloweenStart && now < halloweenEnd
 	}
 
