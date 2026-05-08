@@ -201,10 +201,10 @@
 										{{ $t('notification.category_' + category.id + '_desc') }}
 									</td>
 									<td class="push">
-										<v-checkbox v-model="settings['push_' + category.name]" hide-details label="Push" @change="updateNotif('push_' + category.name, $event)" />
+										<v-checkbox v-model="settings['push_' + category.name]" hide-details label="Push" @update:model-value="updateNotif('push_' + category.name, $event)" />
 									</td>
 									<td class="mail">
-										<v-checkbox v-model="settings['mail_' + category.name]" hide-details label="E-mail" @change="updateNotif('mail_' + category.name, $event)" />
+										<v-checkbox v-model="settings['mail_' + category.name]" hide-details label="E-mail" @update:model-value="updateNotif('mail_' + category.name, $event)" />
 									</td>
 								</tr>
 							</template>
