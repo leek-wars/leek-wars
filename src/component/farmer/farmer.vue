@@ -646,7 +646,7 @@
 	const createTeamDialog = ref(false)
 	const createTeamName = ref('')
 	const showReport = ref(false)
-	const reasons = [Warning.INCORRECT_FARMER_NAME, Warning.INCORRECT_AVATAR, Warning.INCORRECT_WEBSITE]
+	const reasons = [Warning.INCORRECT_FARMER_NAME, Warning.INCORRECT_AVATAR, Warning.INCORRECT_WEBSITE, Warning.INCORRECT_GITHUB]
 	const websiteDialog = ref(false)
 	const newWebsite = ref('')
 	const githubDialog = ref(false)
