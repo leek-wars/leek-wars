@@ -273,10 +273,10 @@
 <script setup lang="ts">
 	import { locale } from '@/locale'
 	import { AI } from '@/model/ai'
-	import { fileSystem, translateFileSystemError } from '@/model/filesystem'
+	import { aiCodeKey, aiMtimeKey, fileSystem, translateFileSystemError } from '@/model/filesystem'
 	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { store } from '@/model/store'
+	import { store, farmerId } from '@/model/store'
 	import AIViewMonaco from './ai-view-monaco.vue'
 	import EditorFinder from './editor-finder.vue'
 	import { AIItem, Folder, Item } from './editor-item'
@@ -305,6 +305,12 @@
 	const DEFAULT_FONT_SIZE = 16
 	const DEFAULT_LINE_HEIGHT = 24
 	const DEFAULT_THEME = () => LeekWars.darkMode ? "monokai" : "leek-wars"
+
+	// Clés localStorage per-account (cf. issue #2678).
+	const lastCodeKey = (side: number | string) => 'editor/last-code-' + side + '/' + farmerId()
+	const tabsKey = () => 'editor/tabs1/' + farmerId()
+	const currentTabKey = () => 'editor/current-tab/' + farmerId()
+	const historyKey = () => 'editor/history/' + farmerId()
 
 	interface ExplorerInstance {
 		openNewAI(folder: Folder): void
@@ -484,7 +490,6 @@
 		splitted.value = localStorage.getItem('editor/splitted') === 'true'
 		editor1Width.value = parseFloat(localStorage.getItem('editor/editor1-width') || '') || (splitted.value ? 0.5 : 1)
 		editor2Width.value = parseFloat(localStorage.getItem('editor/editor2-width') || '') || 0.5
-		currentAI2.value = localStorage.getItem('editor/last-code-2') || null
 
 		LeekWars.loadEncyclopedia(locale)
 
@@ -494,8 +499,8 @@
 	init()
 
 	async function connected() {
-		// Chargement de l'historique
-		const histIds = JSON.parse(localStorage.getItem('editor/history') || '[]')
+		currentAI2.value = localStorage.getItem(lastCodeKey(2)) || null
+		const histIds = JSON.parse(localStorage.getItem(historyKey()) || '[]')
 		for (const id of histIds) {
 			if (id in fileSystem.ais) {
 				history.value.push(fileSystem.ais[id])
@@ -622,7 +627,7 @@
 						currentEditor.value = (currentSide.value === 1 ? editor1.value : editor2.value) as InstanceType<typeof AIViewMonaco>
 					})
 				})
-				localStorage.setItem('editor/last-code-' + currentSide.value, key)
+				localStorage.setItem(lastCodeKey(currentSide.value), key)
 				currentType.value = 'ai'
 				currentFolder.value = fileSystem.folderById[ai.folder]
 				if (!(key in activeAIs)) {
@@ -689,7 +694,7 @@
 
 		} else if (!LeekWars.mobile) {
 
-			const lastCode = localStorage.getItem('editor/last-code-1')
+			const lastCode = localStorage.getItem(lastCodeKey(1))
 			if (lastCode && lastCode in fileSystem.ais) {
 				router.replace('/editor/' + lastCode)
 			} else if (store.state.farmer) {
@@ -718,7 +723,7 @@
 			if (!ai.modified) continue
 			if (!isLeekScript(ai.path)) continue
 			// Récupérer le code sauvegardé sur le FS (depuis le cache localStorage)
-			const savedCode = localStorage.getItem('ai/code/' + ai.path)
+			const savedCode = localStorage.getItem(aiCodeKey(ai.path))
 			if (savedCode !== null) {
 				// Renvoyer le code du disque au daemon pour restaurer son cache
 				LeekWars.socket.send([SocketMessage.EDITOR_ANALYZE, ai.path, savedCode])
@@ -753,8 +758,8 @@
 		LeekWars.post('ai/write', {path: aiEditor.ai.path, code: content}).then((data) => {
 			aiEditor.saving = false
 			aiEditor.ai.mtime = data.modified || Date.now()
-			localStorage.setItem('ai/mtime/' + aiEditor.ai.path, '' + aiEditor.ai.mtime)
-			localStorage.setItem('ai/code/' + aiEditor.ai.path, content)
+			localStorage.setItem(aiMtimeKey(aiEditor.ai.path), '' + aiEditor.ai.mtime)
+			localStorage.setItem(aiCodeKey(aiEditor.ai.path), content)
 			aiEditor.ai.modified = false
 
 			if (data.result) {
@@ -910,12 +915,12 @@
 			if (t.type === 'file') return { type: 'file', id: t.id }
 			return { type: t.type, id: t.id, folder: t.folder, file: t.file, staged: t.staged, hash: t.hash }
 		})
-		localStorage.setItem('editor/tabs1', JSON.stringify(serialized))
+		localStorage.setItem(tabsKey(), JSON.stringify(serialized))
 		if (currentTab.value) {
 			if (currentTab.value.type === 'file') {
-				localStorage.setItem('editor/current-tab', JSON.stringify({ type: 'file', id: currentTab.value.id }))
+				localStorage.setItem(currentTabKey(), JSON.stringify({ type: 'file', id: currentTab.value.id }))
 			} else {
-				localStorage.setItem('editor/current-tab', JSON.stringify({ type: currentTab.value.type, key: diffKey(currentTab.value as DiffTab) }))
+				localStorage.setItem(currentTabKey(), JSON.stringify({ type: currentTab.value.type, key: diffKey(currentTab.value as DiffTab) }))
 			}
 		}
 	}
@@ -925,7 +930,7 @@
 		tabs1Loaded = true
 		try {
 			type SavedTabData = { type?: string, id?: string, folder?: string, file?: string, staged?: boolean, hash?: string }
-			const saved = JSON.parse(localStorage.getItem('editor/tabs1') || '[]') as SavedTabData[]
+			const saved = JSON.parse(localStorage.getItem(tabsKey()) || '[]') as SavedTabData[]
 			for (const tt of saved) {
 				if (tt.type === 'file') {
 					if (tt.id && tt.id in fileSystem.ais) {
@@ -1070,7 +1075,7 @@
 		localStorage.setItem('editor/large', '' + enlargeWindow.value)
 	})
 	watch(() => history.value.map(ai => ai.path).join('|'), () => {
-		localStorage.setItem('editor/history', JSON.stringify(history.value.map(ai => ai.path)))
+		localStorage.setItem(historyKey(), JSON.stringify(history.value.map(ai => ai.path)))
 	})
 
 	function jumpEvent(event: { ai: AI, line: number, column: number }) {
@@ -1259,7 +1264,7 @@
 				currentAI2.value = ai!.path
 			})
 			setSide(2)
-			localStorage.setItem('editor/last-code-2', ai!.path)
+			localStorage.setItem(lastCodeKey(2), ai!.path)
 		} else {
 			editor1Width.value = editorTotalWidth
 			setSide(1)
@@ -1287,7 +1292,7 @@
 			})
 		}
 		updateUrl()
-		localStorage.setItem('editor/last-code-' + side, '' + ai)
+		localStorage.setItem(lastCodeKey(side), '' + ai)
 	}
 
 	function split50_50() {

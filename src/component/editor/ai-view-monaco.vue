@@ -25,6 +25,7 @@
 import * as monaco from 'monaco-editor'
 import { fileSystem } from '@/model/filesystem'
 import { LeekWars } from '@/model/leekwars'
+import { farmerId } from '@/model/store'
 import './monaco'
 import { AI } from '@/model/ai'
 import { analyzer } from './analyzer'
@@ -39,6 +40,9 @@ import Code from '@/component/app/code.vue'
 import { parseConflicts, hasConflictMarkers, buildConflictDecorations, registerConflictCodeLens, type MergeConflict } from './merge-conflicts'
 
 defineOptions({ name: 'ai-view-monaco' })
+
+const scrollKey = (path: string) => 'editor/scroll/' + farmerId() + '/' + path
+const viewStateKey = (path: string) => 'editor/viewstate/' + farmerId() + '/' + path
 
 const props = defineProps<{
 	ai: AI
@@ -118,7 +122,7 @@ onMounted(() => {
 	} as any))
 	scrollListener = editor.onDidScrollChange((e) => {
 		if (!props.ai) return
-		localStorage.setItem('editor/scroll/' + props.ai.path, '' + e.scrollTop)
+		localStorage.setItem(scrollKey(props.ai.path), '' + e.scrollTop)
 		debouncedSaveViewState()
 	})
 	editor.onMouseUp((e) => {
@@ -411,18 +415,18 @@ function save() {
 	currentVersionId = props.ai.model.getAlternativeVersionId()
 }
 
-function saveViewState(aiId?: number) {
+function saveViewState(aiPath?: string) {
 	if (!editor) return
-	const id = aiId ?? currentAiPath
-	if (!id) return
+	const path = aiPath ?? currentAiPath
+	if (!path) return
 	const viewState = editor.saveViewState()
 	if (viewState) {
-		localStorage.setItem('editor/viewstate/' + id, JSON.stringify(viewState))
+		localStorage.setItem(viewStateKey(path), JSON.stringify(viewState))
 	}
 }
 
 function restoreViewState() {
-	const viewStateStr = localStorage.getItem('editor/viewstate/' + props.ai.path)
+	const viewStateStr = localStorage.getItem(viewStateKey(props.ai.path))
 	if (viewStateStr) {
 		try {
 			const viewState = JSON.parse(viewStateStr)
@@ -430,7 +434,7 @@ function restoreViewState() {
 			return
 		} catch (e) {}
 	}
-	const scrollPosition = parseInt(localStorage.getItem('editor/scroll/' + props.ai.path) || '0')
+	const scrollPosition = parseInt(localStorage.getItem(scrollKey(props.ai.path)) || '0')
 	editor.setScrollTop(scrollPosition)
 }
 

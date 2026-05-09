@@ -2,10 +2,16 @@ import { AIItem, Folder } from '@/component/editor/editor-item'
 import { AI } from '@/model/ai'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
+import { farmerId } from '@/model/store'
 import { emitter } from '@/model/vue'
 
 import { Keyword } from './keyword'
 import { reactive } from 'vue'
+
+// Clés localStorage namespacées par farmer ID — évite la collision entre
+// comptes quand deux IA partagent le même path (cf. issue #2678).
+export const aiCodeKey = (path: string) => 'ai/code/' + farmerId() + '/' + path
+export const aiMtimeKey = (path: string) => 'ai/mtime/' + farmerId() + '/' + path
 
 const FS_ERROR_KEYS = new Set([
 	'quota_size_exceeded', 'quota_files_exceeded',
@@ -155,8 +161,8 @@ class FileSystem {
 	 * Utilise le mtime du fichier pour éviter les re-fetch inutiles.
 	 */
 	public load(ai: AI): Promise<AI> {
-		const cachedMtime = parseInt(localStorage.getItem('ai/mtime/' + ai.path) || '0', 10)
-		const cached = localStorage.getItem('ai/code/' + ai.path)
+		const cachedMtime = parseInt(localStorage.getItem(aiMtimeKey(ai.path)) || '0', 10)
+		const cached = localStorage.getItem(aiCodeKey(ai.path))
 
 		// Cache hit : le mtime local correspond au mtime serveur
 		if (cached !== null && cachedMtime > 0 && cachedMtime >= ai.mtime) {
@@ -169,8 +175,8 @@ class FileSystem {
 			LeekWars.post('ai/read', { path: ai.path }).then((data: any) => {
 				ai.code = data.code
 				ai.mtime = data.mtime || Date.now()
-				localStorage.setItem('ai/code/' + ai.path, ai.code)
-				localStorage.setItem('ai/mtime/' + ai.path, '' + ai.mtime)
+				localStorage.setItem(aiCodeKey(ai.path), ai.code)
+				localStorage.setItem(aiMtimeKey(ai.path), '' + ai.mtime)
 				ai.analyze()
 				resolve(ai)
 			}).error(reject)
@@ -428,8 +434,8 @@ class FileSystem {
 			const fullPath = (repoFolder ? repoFolder + '/' : '') + file
 			const ai = this.getAIByPath(fullPath)
 			if (!ai) continue
-			localStorage.removeItem('ai/mtime/' + ai.path)
-			localStorage.removeItem('ai/code/' + ai.path)
+			localStorage.removeItem(aiMtimeKey(ai.path))
+			localStorage.removeItem(aiCodeKey(ai.path))
 			promises.push(this.load(ai).then(() => {
 				emitter.emit('file-reloaded', ai.path)
 			}))

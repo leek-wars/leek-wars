@@ -168,11 +168,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			LeekWars.post('farmer/disconnect')
 			localStorage.setItem('logout', '' + Date.now())
 			store.commit("reset")
-			// Supprime le cache des IAs et l'état de l'éditeur (confidentialité + évite les collisions entre comptes)
+			// Supprime le cache des IAs et l'état de l'éditeur (confidentialité).
 			for (const key of Object.keys(localStorage)) {
 				if (key.startsWith('ai/') || key.startsWith('editor/tabs') || key.startsWith('editor/last-code-')
 					|| key.startsWith('editor/scroll/') || key.startsWith('editor/viewstate/')
-					|| key === 'editor/history') {
+					|| key.startsWith('editor/history') || key.startsWith('editor/current-tab')) {
 					localStorage.removeItem(key)
 				}
 			}
@@ -1052,5 +1052,30 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 	},
 })
 export { store }
+
+/** ID de l'éleveur connecté (0 si déconnecté). */
+export function farmerId(): number {
+	return store.state.farmer?.id ?? 0
+}
+
+// Purge les clés cache d'IA / d'état éditeur au format legacy non-namespacé
+// par farmer ID. Avant le fix de l'issue #2678, ces clés pouvaient leaker entre
+// comptes au switch et causer l'écrasement d'IA. Le nouveau format insère le
+// farmer ID juste après le préfixe (`ai/code/<id>/<path>`), donc une clé dont
+// le segment qui suit le préfixe n'est pas numérique est legacy.
+const MIGRATION_FLAG = 'migrations/issue-2678'
+const NS_PREFIX_RE = /^(?:ai\/code|ai\/mtime|editor\/scroll|editor\/viewstate)\/(?!\d+\/)/
+const LEGACY_EXACT = new Set([
+	'editor/tabs1', 'editor/history', 'editor/current-tab',
+	'editor/last-code-1', 'editor/last-code-2',
+])
+function migrateLegacyCacheKeys() {
+	if (localStorage.getItem(MIGRATION_FLAG) === '1') return
+	for (const key of Object.keys(localStorage)) {
+		if (LEGACY_EXACT.has(key) || NS_PREFIX_RE.test(key)) localStorage.removeItem(key)
+	}
+	localStorage.setItem(MIGRATION_FLAG, '1')
+}
+queueMicrotask(migrateLegacyCacheKeys)
 
 
