@@ -195,7 +195,7 @@
 						</tr>
 					</table>
 
-					<Line v-if="chartData && chartOptions && Object.values(farmer.leeks).length > 1" :data="chartData" :options="chartOptions" class="talent-history" />
+					<Line v-if="farmer && chartData && chartOptions && Object.values(farmer.leeks).length > 1" :data="chartData" :options="chartOptions" class="talent-history" />
 
 					<div v-if="farmer" class="godfather grey">
 						<div v-if="farmer.godfather">
@@ -758,6 +758,8 @@
 		notfound.value = false
 		invitationSent.value = false
 		tournamentRangeLoading.value = false
+		chartData.value = null
+		chartOptions.value = null
 		if (id.value === null) return
 		if (myFarmer.value) {
 			setTimeout(() => {
