@@ -280,7 +280,7 @@ const metaItems = computed(() => {
 	if (!d) return []
 	const items: { icon: string, text?: string, html?: string }[] = []
 	if (d.report?.duration) {
-		items.push({ icon: 'mdi-timer-outline', html: tc('effect.n_turns', d.report.duration) as string })
+		items.push({ icon: 'mdi-timer-outline', text: tc('effect.n_turns', d.report.duration) as string })
 	}
 	if (d.report?.bonus && d.report.bonus > 1) {
 		items.push({ icon: 'mdi-star-outline', text: '×' + d.report.bonus })

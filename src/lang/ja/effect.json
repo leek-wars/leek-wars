@@ -38,7 +38,7 @@
 	"line_until_obstacle": "障害物までのライン全体",
 	"max_uses": "1ラウンドあたりの最大{uses}回",
 	"multiplied_target": "ターゲット当たり",
-	"n_turns": "<b>1</b> ターン | <b>{n}</b>ラウンド",
+	"n_turns": "{n} ターン | {n}ラウンド",
 	"n_uses": "<b>1</b>回の使用｜<b>{n}</b>回の使用",
 	"not_replaceable": "交換不可",
 	"on_n_turns": " {turns}の間",

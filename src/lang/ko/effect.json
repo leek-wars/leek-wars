@@ -38,7 +38,7 @@
 	"line_until_obstacle": "장애물까지 전체 라인",
 	"max_uses": "라운드당 최대 {uses}",
 	"multiplied_target": "적중 당",
-	"n_turns": "<b>1</b>턴 | <b>{n}</b> 라운드",
+	"n_turns": "{n}턴 | {n} 라운드",
 	"n_uses": "<b>1</b> 사용 | <b>{n}</b> 사용",
 	"not_replaceable": "교체 불가",
 	"on_n_turns": " {turns} 동안",

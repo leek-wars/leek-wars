@@ -38,7 +38,7 @@
 	"line_until_obstacle": "die ganze Linie bis zu einem Hindernis",
 	"max_uses": "{uses} Maximum pro Runde",
 	"multiplied_target": "pro Zieltreffer",
-	"n_turns": "<b>1</b> Umdrehung | <b>{n}</b> Runden",
+	"n_turns": "{n} Umdrehung | {n} Runden",
 	"n_uses": "<b>1</b> Verwendung | <b>{n}</b> Verwendungen",
 	"not_replaceable": "nicht ersetzbar",
 	"on_n_turns": " während {turns}",

@@ -116,7 +116,9 @@
 			</template>
 
 			<template #item.duration="{ item }">
-				<span v-if="item.duration" v-html="$t('effect.n_turns', item.duration)"></span>
+				<i18n-t v-if="item.duration" keypath="effect.n_turns" :plural="item.duration">
+					<template #n><b>{{ item.duration }}</b></template>
+				</i18n-t>
 			</template>
 
 			<template #item.levelups="{ item }">

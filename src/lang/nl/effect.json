@@ -38,7 +38,7 @@
 	"line_until_obstacle": "de hele lijn tot aan een hindernis",
 	"max_uses": "maximum {uses} per ronde",
 	"multiplied_target": "per doel geraakt",
-	"n_turns": "<b>1</b> draai | <b>{n}</b> rondes",
+	"n_turns": "{n} draai | {n} rondes",
 	"n_uses": "<b>1</b> gebruik | <b>{n}</b> gebruik",
 	"not_replaceable": "niet vervangbaar",
 	"on_n_turns": " tijdens {turns}",

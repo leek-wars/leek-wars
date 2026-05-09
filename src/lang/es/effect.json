@@ -38,7 +38,7 @@
 	"line_until_obstacle": "toda la línea hasta un obstáculo",
 	"max_uses": "máximo {uses} por turno",
 	"multiplied_target": "por objetivo alcanzado",
-	"n_turns": "<b>1</b> turno | <b>{n}</b> turnos",
+	"n_turns": "{n} turno | {n} turnos",
 	"n_uses": "<b>1</b> uso | <b>{n}</b> usos",
 	"not_replaceable": "no reemplazable",
 	"on_n_turns": " durante {turns}",

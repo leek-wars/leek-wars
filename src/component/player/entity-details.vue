@@ -77,7 +77,13 @@
 						</b>
 					</b>
 					<span v-if="effect.turns === -1">{{ $t('effect.infinite') }}</span>
-					<span v-else v-html="$t('effect.on_n_turns', {turns: $t('effect.n_turns', effect.turns)})"></span>
+					<i18n-t v-else keypath="effect.on_n_turns" tag="span">
+						<template #turns>
+							<i18n-t keypath="effect.n_turns" :plural="effect.turns">
+								<template #n><b>{{ effect.turns }}</b></template>
+							</i18n-t>
+						</template>
+					</i18n-t>
 				</div>
 			</v-tooltip>
 		</div>

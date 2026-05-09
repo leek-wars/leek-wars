@@ -38,7 +38,7 @@
 	"line_until_obstacle": "całą linią do przeszkody",
 	"max_uses": "maksymalne {uses} na rundę",
 	"multiplied_target": "za trafienie w cel",
-	"n_turns": "<b>1</b> obrót | <b>{n}</b> rund",
+	"n_turns": "{n} obrót | {n} rund",
 	"n_uses": "<b>1</b> użycie | <b>{n}</b> użyć",
 	"not_replaceable": "nie do zastąpienia",
 	"on_n_turns": " podczas {turns}",

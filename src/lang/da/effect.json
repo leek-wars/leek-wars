@@ -38,7 +38,7 @@
 	"line_until_obstacle": "hele køen op til en forhindring",
 	"max_uses": "maksimalt {uses} pr. runde",
 	"multiplied_target": "pr måltræf",
-	"n_turns": "<b>1</b> omgang | <b>{n}</b> runder",
+	"n_turns": "{n} omgang | {n} runder",
 	"n_uses": "<b>1</b> brug | <b>{n}</b> brug",
 	"not_replaceable": "ikke udskiftelig",
 	"on_n_turns": " under {turns}",

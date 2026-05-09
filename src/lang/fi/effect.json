@@ -38,7 +38,7 @@
 	"line_until_obstacle": "koko rivi esteeseen asti",
 	"max_uses": "enintään {uses} kierrosta kohti",
 	"multiplied_target": "kohde osumaa kohti",
-	"n_turns": "<b>1</b> kierros | <b>{n}</b> kierrosta",
+	"n_turns": "{n} kierros | {n} kierrosta",
 	"n_uses": "<b>1</b> käyttö | <b>{n}</b> käyttötapoja",
 	"not_replaceable": "ei vaihdettavissa",
 	"on_n_turns": " aikana {turns}",

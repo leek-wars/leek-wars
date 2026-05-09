@@ -19,13 +19,19 @@
 				<i18n-t keypath="effect.cooldown">
 					<template #turns>
 						<b v-if="chip.cooldown === -1">∞</b>
-						<span v-else v-html="$t('effect.n_turns', chip.cooldown)"></span>
+						<i18n-t v-else keypath="effect.n_turns" :plural="chip.cooldown">
+							<template #n><b>{{ chip.cooldown }}</b></template>
+						</i18n-t>
 					</template>
 				</i18n-t>
 				<b v-if="chip.team_cooldown" v-html="'&nbsp;' + $t('effect.team_cooldown')"></b>
 			</div>
 			<i18n-t v-if="chip.initial_cooldown > 0" tag="div" keypath="effect.initial_cooldown">
-				<template #turns><span v-html="$t('effect.n_turns', chip.initial_cooldown)"></span></template>
+				<template #turns>
+					<i18n-t keypath="effect.n_turns" :plural="chip.initial_cooldown">
+						<template #n><b>{{ chip.initial_cooldown }}</b></template>
+					</i18n-t>
+				</template>
 			</i18n-t>
 			<i18n-t v-if="chip.max_uses != -1" keypath="effect.max_uses" tag="div">
 				<template #uses>

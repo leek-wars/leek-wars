@@ -38,7 +38,7 @@
 	"line_until_obstacle": "all the line up to an obstacle",
 	"max_uses": "Maximum {uses} per round",
 	"multiplied_target": "per target hit",
-	"n_turns": "<b>1</b> turn | <b>{n}</b> turns",
+	"n_turns": "{n} turn | {n} turns",
 	"n_uses": "<b>1</b> use | <b>{n}</b> uses",
 	"not_replaceable": "not replaceable",
 	"on_n_turns": " for {turns}",

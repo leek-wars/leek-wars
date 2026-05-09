@@ -38,7 +38,7 @@
 	"line_until_obstacle": "hela raden upp till ett hinder",
 	"max_uses": "maximalt {uses} per runda",
 	"multiplied_target": "per målträff",
-	"n_turns": "<b>1</b> varv | <b>{n}</b> omgångar",
+	"n_turns": "{n} varv | {n} omgångar",
 	"n_uses": "<b>1</b> användning | <b>{n}</b> användning",
 	"not_replaceable": "ej utbytbar",
 	"on_n_turns": " under {turns}",
