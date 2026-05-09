@@ -156,6 +156,14 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			for (const chat of data.chats) {
 				store.commit('register-chat', chat)
 			}
+			// Pré-enregistrer les chats publics non participés pour que la cloche reste toggleable
+			// (sans activer le canal WS — ils restent lazy-loadés à l'ouverture)
+			for (const [idStr, info] of Object.entries(LeekWars.publicChats)) {
+				const chatId = +idStr
+				if (!state.chat[chatId]) {
+					state.chat[chatId] = new Chat(chatId, ChatType.GLOBAL, info.name, true)
+				}
+			}
 			if (data.farmer.ai_tree) {
 				fileSystem.init(data.farmer.ai_tree)
 			}
