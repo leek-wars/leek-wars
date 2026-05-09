@@ -160,7 +160,7 @@
 								<span :class="'color-' + c">{{ leek ? leek['total_' + c] : '...' }}</span>
 							</div>
 						</characteristic-tooltip>
-						<div class="center" v-if="leek && my_leek">
+						<div class="center mt-3" v-if="leek && my_leek">
 							<span class="dida-element">
 								<v-btn v-if="(leek.capital > 0 || LeekWars.didactitial_step === 1) && $store.state.farmer && $store.state.farmer.equipment_enabled" color="primary" @click="showCapital = true" :class="{bouncing: !showCapital && LeekWars.didactitial_step === 1}">{{ $t('main.n_capital', [leek.capital]) }}</v-btn>
 								<span v-if="LeekWars.didactitial_step === 1" class="dida-hint">
@@ -1828,7 +1828,6 @@
 	}
 
 	.potions-button {
-		margin-top: 12px;
 		img {
 			height: 22px;
 			margin-right: 4px;
