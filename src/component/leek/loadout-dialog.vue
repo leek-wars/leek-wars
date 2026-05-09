@@ -866,11 +866,18 @@
 			applyStatsLocally(loadout: Loadout) {
 				if (!this.leek) return
 				const leek = this.leek as any
+				let usedCapital = 0
 				for (const stat of CHARACTERISTICS) {
 					leek[stat] = baseStatFor(leek.level, stat)
 					const cap = (loadout.stats && loadout.stats[stat]) || 0
-					if (cap > 0) leek[stat] += capitalToStatBonus(stat, cap)
+					if (cap > 0) {
+						leek[stat] += capitalToStatBonus(stat, cap)
+						usedCapital += cap
+					}
 				}
+				const newCapital = Math.max(0, totalCapitalForLevel(this.leek.level) - usedCapital)
+				this.leek.capital = newCapital
+				store.commit('update-capital', { leek: this.leek.id, capital: newCapital })
 			},
 			decrementRestatPotion() {
 				const farmer = store.state.farmer as any
