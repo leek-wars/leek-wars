@@ -6,7 +6,32 @@
 				<div class="info">{{ count }} inscrits</div>
 			</div>
 		</div>
+		<panel class="first" v-if="templates.length">
+			<template #title>Templates disponibles</template>
+			<template #content>
+				<div class="templates">
+					<div v-for="t in templates" :key="t.key" class="template card">
+						<div class="main">
+							<b>{{ t.folder }}/{{ t.name }}</b>
+							<v-text-field v-model="t.version" label="Version" density="compact" hide-details style="max-width: 100px" />
+							<div class="subjects">
+								<div><flag code="fr" /> {{ t.fr.subject || '(pas de sujet)' }}</div>
+								<div><flag code="gb" /> {{ t.en.subject || '(no subject)' }}</div>
+							</div>
+							<div class="spacer"></div>
+							<v-btn @click="t.expanded = !t.expanded"><v-icon>{{ t.expanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon> Aperçu</v-btn>
+							<v-btn color="primary" :loading="t.creating" @click="create(t)"><v-icon>mdi-plus</v-icon> Créer</v-btn>
+						</div>
+						<div v-if="t.expanded" class="content">
+							<v-card><div v-html="html(t.fr.preview)"></div></v-card>
+							<v-card><div v-html="html(t.en.preview)"></div></v-card>
+						</div>
+					</div>
+				</div>
+			</template>
+		</panel>
 		<panel class="first">
+			<template #title>Newsletters</template>
 			<template #content>
 				<div class="newsletters">
 					<!-- <div ref="progress" class="progress">
@@ -48,6 +73,7 @@
 
 	const router = useRouter()
 	const newsletters = ref<any>([])
+	const templates = ref<any>([])
 	const count = ref<any>(0)
 	const progress = ref<any>([])
 	const progressEl = useTemplateRef<HTMLElement>('progress')
@@ -55,14 +81,47 @@
 	if (!store.getters.admin) router.replace('/')
 	LeekWars.setTitle("Admin Newsletters")
 
-	LeekWars.get('newsletter/all').then(ns => {
-		for (const n of ns) n.testTarget = 73156
-		newsletters.value = ns
-	})
+	function loadNewsletters() {
+		LeekWars.get('newsletter/all').then(ns => {
+			for (const n of ns) n.testTarget = 73156
+			newsletters.value = ns
+		})
+	}
+	function loadTemplates() {
+		LeekWars.get('newsletter/templates').then(ts => {
+			for (const t of ts) { t.expanded = false; t.creating = false }
+			templates.value = ts
+		})
+	}
+
+	loadNewsletters()
+	loadTemplates()
 	LeekWars.get('newsletter/count').then(c => {
 		count.value = c
 		LeekWars.setSubTitle(c + " inscrits")
 	})
+
+	function create(template: any) {
+		if (!template.version) {
+			LeekWars.toast("Version manquante")
+			return
+		}
+		template.creating = true
+		LeekWars.post('newsletter/create', {
+			version: template.version,
+			title_fr: template.fr.subject,
+			title_en: template.en.subject,
+			content_fr: template.fr.content,
+			content_en: template.en.content,
+		}).then(() => {
+			template.creating = false
+			LeekWars.toast("Newsletter créée !")
+			loadNewsletters()
+		}).catch((e: any) => {
+			template.creating = false
+			LeekWars.toast("Erreur : " + (e && e.error ? e.error : 'unknown'))
+		})
+	}
 
 	function html(html: string) {
 		return html.replace("\n", "")
@@ -115,11 +174,42 @@
 	.v-btn .v-icon {
 		margin-right: 5px;
 	}
-	.newsletters {
+	.newsletters, .templates {
 		display: flex;
 		flex-direction: column;
 		gap: 15px;
 		margin: 15px;
+	}
+	.template {
+		.flag {
+			height: 14px;
+			margin-right: 4px;
+			vertical-align: middle;
+		}
+		.main {
+			display: flex;
+			align-items: center;
+			flex-wrap: wrap;
+			padding: 10px;
+			gap: 10px;
+		}
+		.subjects {
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+			font-size: 14px;
+			min-width: 250px;
+		}
+		.content {
+			display: flex;
+			justify-content: center;
+			padding-bottom: 15px;
+			gap: 15px;
+		}
+		.v-card {
+			flex: 700px 0 0;
+			padding: 15px;
+		}
 	}
 	.newsletter {
 		.flag {
