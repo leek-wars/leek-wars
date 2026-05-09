@@ -1,18 +1,11 @@
-import { DamageType, EntityType, FightEntity } from '@/component/player/game/entity'
+import { DamageType, FightEntity } from '@/component/player/game/entity'
 import { Colors, Game } from "@/component/player/game/game"
 import { S, Sound } from '@/component/player/game/sound'
 import { T, Texture } from '@/component/player/game/texture'
 import { Area } from '@/model/area'
 import { Cell } from '@/model/cell'
 import { Position } from './position'
-import { Effect, State } from '@/model/effect'
-
-// Bitmask Effect.targets (cf. constants EFFECT_TARGET_* côté serveur, doc/dev)
-const TARGET_ENEMIES = 1
-const TARGET_ALLIES = 2
-const TARGET_CASTER = 4
-const TARGET_NON_SUMMONS = 8
-const TARGET_SUMMONS = 16
+import { Effect, EffectTarget, State } from '@/model/effect'
 
 abstract class ChipAnimation {
 	public game: Game
@@ -124,12 +117,9 @@ abstract class ChipAnimation {
 			this.createChipNovaEntity(target)
 		}
 	}
-	// Returns the entities of the AoE that are actual recipients of at least
-	// one of the chip's effects, based on the Effect.targets bitmask
-	// (EFFECT_TARGET_ENEMIES=1, ALLIES=2, CASTER=4, NON_SUMMONS=8, SUMMONS=16).
-	// Used to filter the chip-icon overlay so it only shows over entities that
-	// actually receive an effect (issue #3127). Falls back to all targets when
-	// no chip data is available (defensive — avoids hiding visuals).
+	// Filtre les cibles d'une AoE pour ne garder que celles qui reçoivent
+	// effectivement au moins un effet de la puce (issue #3127). Fallback safe :
+	// si effects absent, retourne tout (pas de régression visuelle).
 	public recipientsOf(launcher: FightEntity | undefined, targets: FightEntity[]): FightEntity[] {
 		if (!launcher || !this.effects || this.effects.length === 0) return targets
 		const effects = this.effects
@@ -138,24 +128,22 @@ abstract class ChipAnimation {
 }
 
 function recipientMatches(effect: Effect, launcher: FightEntity, target: FightEntity): boolean {
-	const mask = effect.targets | 0
-	if (mask === 0) return true // no constraint → everyone in the AoE receives
-	// Side filter: caster / allies / enemies
+	const mask = effect.targets
+	if (!mask) return true
 	const isCaster = target.id === launcher.id
 	const isAlly = !isCaster && target.team === launcher.team
-	const isEnemy = target.team !== launcher.team
+	const isEnemy = !isCaster && target.team !== launcher.team
 	const sideOk =
-		(isCaster && (mask & TARGET_CASTER) !== 0) ||
-		(isAlly   && (mask & TARGET_ALLIES) !== 0) ||
-		(isEnemy  && (mask & TARGET_ENEMIES) !== 0)
+		(isCaster && (mask & EffectTarget.CASTER) !== 0) ||
+		(isAlly   && (mask & EffectTarget.ALLIES) !== 0) ||
+		(isEnemy  && (mask & EffectTarget.ENEMIES) !== 0)
 	if (!sideOk) return false
-	// Summon filter: when SUMMONS or NON_SUMMONS bits are set they restrict
-	// the recipient set; when both are unset the side filter alone decides.
-	const isSummon = target.type === EntityType.BULB
-	const summonRestriction = (mask & (TARGET_SUMMONS | TARGET_NON_SUMMONS)) !== 0
+	// Filtre summon/non-summon : appliqué seulement si l'un des deux bits
+	// est posé ; sinon le side filter ci-dessus décide seul.
+	const summonRestriction = (mask & (EffectTarget.SUMMONS | EffectTarget.NON_SUMMONS)) !== 0
 	if (!summonRestriction) return true
-	if (isSummon && (mask & TARGET_SUMMONS) !== 0) return true
-	if (!isSummon && (mask & TARGET_NON_SUMMONS) !== 0) return true
+	if (target.summon  && (mask & EffectTarget.SUMMONS) !== 0) return true
+	if (!target.summon && (mask & EffectTarget.NON_SUMMONS) !== 0) return true
 	return false
 }
 
