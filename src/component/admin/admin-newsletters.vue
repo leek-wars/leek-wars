@@ -10,10 +10,9 @@
 			<template #title>Templates disponibles</template>
 			<template #content>
 				<div class="templates">
-					<div v-for="t in templates" :key="t.key" class="template card">
+					<div v-for="t in templates" :key="t.version" class="template card">
 						<div class="main">
-							<b>{{ t.folder }}/{{ t.name }}</b>
-							<v-text-field v-model="t.version" label="Version" density="compact" hide-details style="max-width: 100px" />
+							<b>Version {{ t.version }}</b>
 							<div class="subjects">
 								<div><flag code="fr" /> {{ t.fr.subject || '(pas de sujet)' }}</div>
 								<div><flag code="gb" /> {{ t.en.subject || '(no subject)' }}</div>
@@ -102,21 +101,12 @@
 	})
 
 	function create(template: any) {
-		if (!template.version) {
-			LeekWars.toast("Version manquante")
-			return
-		}
 		template.creating = true
-		LeekWars.post('newsletter/create', {
-			version: template.version,
-			title_fr: template.fr.subject,
-			title_en: template.en.subject,
-			content_fr: template.fr.content,
-			content_en: template.en.content,
-		}).then(() => {
+		LeekWars.post('newsletter/create', { version: template.version }).then(() => {
 			template.creating = false
 			LeekWars.toast("Newsletter créée !")
 			loadNewsletters()
+			loadTemplates()
 		}).catch((e: any) => {
 			template.creating = false
 			LeekWars.toast("Erreur : " + (e && e.error ? e.error : 'unknown'))
