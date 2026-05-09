@@ -955,11 +955,15 @@
 	watch(id, () => update(), { immediate: true })
 
 	function update() {
+		// Sortir avant toute mutation réactive : pendant la navigation sortante, le
+		// composant reste monté le temps que la route suivante charge ; remettre
+		// leek.value à null démonte les v-if des dialogs/snackbars et casse les
+		// Teleport Vuetify (parentNode null).
+		if (!id.value) return
 		leek.value = null
 		tournamentRange.value = null
 		tournamentRangeLoading.value = false
 		error.value = false
-		if (!id.value) return
 		const method = my_leek.value ? 'leek/get-private/' + id.value : 'leek/get/' + id.value
 		request = LeekWars.get<Leek>(method)
 		request.then((l: Leek) => {
