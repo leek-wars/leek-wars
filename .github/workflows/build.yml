@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: npm ci
-      - run: npm run build
+      - run: npm run build:sourcemaps
 
       - name: Deploy to production
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
