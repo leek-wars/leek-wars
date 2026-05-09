@@ -560,6 +560,14 @@
 
 	function getFight(first: boolean) {
 		const fightLoaded = (f: Fight) => {
+			// Garde contre une réponse vide (déjà observé en prod : crash en
+			// aval sur f.team1_name, issue #3751). En général c'est la
+			// branche .error() de LeekWars.get qui devrait être empruntée,
+			// mais une réponse 200 + body null arrive parfois.
+			if (!f) {
+				error.value = true
+				return
+			}
 			fight.value = f
 			emit('fight', f)
 			if (f.status >= 1) {
