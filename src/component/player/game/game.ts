@@ -1242,6 +1242,10 @@ class Game {
 
 			if (CHIP_ANIMATIONS[chip - 1] !== null && chip !== 40) {
 				const chipAnimation: ChipAnimation = new CHIP_ANIMATIONS[chip - 1]!(this)
+				// Donne au launch() de quoi filtrer les vraies cibles via le
+				// bitmask Effect.targets (issue #3127 — l'inférence par
+				// sous-classe d'animation était trop grossière).
+				chipAnimation.effects = chip_template.effects
 				caster.useChip(chipAnimation, cell, targets, result)
 				this.chips.push(chipAnimation)
 				caster.lastDamageType = chipAnimation.damageType

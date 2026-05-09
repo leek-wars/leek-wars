@@ -1,11 +1,18 @@
-import { DamageType, FightEntity } from '@/component/player/game/entity'
+import { DamageType, EntityType, FightEntity } from '@/component/player/game/entity'
 import { Colors, Game } from "@/component/player/game/game"
 import { S, Sound } from '@/component/player/game/sound'
 import { T, Texture } from '@/component/player/game/texture'
 import { Area } from '@/model/area'
 import { Cell } from '@/model/cell'
 import { Position } from './position'
-import { State } from '@/model/effect'
+import { Effect, State } from '@/model/effect'
+
+// Bitmask Effect.targets (cf. constants EFFECT_TARGET_* côté serveur, doc/dev)
+const TARGET_ENEMIES = 1
+const TARGET_ALLIES = 2
+const TARGET_CASTER = 4
+const TARGET_NON_SUMMONS = 8
+const TARGET_SUMMONS = 16
 
 abstract class ChipAnimation {
 	public game: Game
@@ -18,6 +25,10 @@ abstract class ChipAnimation {
 	public launchPos!: Position
 	public position!: Position
 	public launcher!: FightEntity | undefined
+	// Effects de la chip template, posé par game.ts avant launch().
+	// Utilisé pour filtrer les visuels (createChipImage/Aureol) selon le
+	// bitmask Effect.targets (#3127).
+	public effects: Effect[] | undefined
 	// Type de dégât
 	public damageType: DamageType
 
@@ -113,19 +124,39 @@ abstract class ChipAnimation {
 			this.createChipNovaEntity(target)
 		}
 	}
-	// Filter the AoE-targets list down to entities on the launcher's team.
-	// Used by buff/shield/heal/damage-return chips to avoid stamping the chip
-	// icon over enemies caught in the AoE who don't actually receive the effect
-	// (issue #3127, e.g. Miroir).
-	public alliesOf(launcher: FightEntity | undefined, targets: FightEntity[]): FightEntity[] {
-		if (!launcher) return targets
-		return targets.filter(t => t.team === launcher.team)
+	// Returns the entities of the AoE that are actual recipients of at least
+	// one of the chip's effects, based on the Effect.targets bitmask
+	// (EFFECT_TARGET_ENEMIES=1, ALLIES=2, CASTER=4, NON_SUMMONS=8, SUMMONS=16).
+	// Used to filter the chip-icon overlay so it only shows over entities that
+	// actually receive an effect (issue #3127). Falls back to all targets when
+	// no chip data is available (defensive — avoids hiding visuals).
+	public recipientsOf(launcher: FightEntity | undefined, targets: FightEntity[]): FightEntity[] {
+		if (!launcher || !this.effects || this.effects.length === 0) return targets
+		const effects = this.effects
+		return targets.filter(target => effects.some(e => recipientMatches(e, launcher, target)))
 	}
-	// Symmetric helper for debuff/poison chips that only land on enemies.
-	public enemiesOf(launcher: FightEntity | undefined, targets: FightEntity[]): FightEntity[] {
-		if (!launcher) return targets
-		return targets.filter(t => t.team !== launcher.team)
-	}
+}
+
+function recipientMatches(effect: Effect, launcher: FightEntity, target: FightEntity): boolean {
+	const mask = effect.targets | 0
+	if (mask === 0) return true // no constraint → everyone in the AoE receives
+	// Side filter: caster / allies / enemies
+	const isCaster = target.id === launcher.id
+	const isAlly = !isCaster && target.team === launcher.team
+	const isEnemy = target.team !== launcher.team
+	const sideOk =
+		(isCaster && (mask & TARGET_CASTER) !== 0) ||
+		(isAlly   && (mask & TARGET_ALLIES) !== 0) ||
+		(isEnemy  && (mask & TARGET_ENEMIES) !== 0)
+	if (!sideOk) return false
+	// Summon filter: when SUMMONS or NON_SUMMONS bits are set they restrict
+	// the recipient set; when both are unset the side filter alone decides.
+	const isSummon = target.type === EntityType.BULB
+	const summonRestriction = (mask & (TARGET_SUMMONS | TARGET_NON_SUMMONS)) !== 0
+	if (!summonRestriction) return true
+	if (isSummon && (mask & TARGET_SUMMONS) !== 0) return true
+	if (!isSummon && (mask & TARGET_NON_SUMMONS) !== 0) return true
+	return false
 }
 
 class Summon extends ChipAnimation {
@@ -185,7 +216,7 @@ class ChipShieldAnimation extends ChipAnimation {
 	}
 	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
 		super.launch(launchCell, targetPos, targets, targetCell, launcher)
-		const recipients = this.alliesOf(launcher, targets)
+		const recipients = this.recipientsOf(launcher, targets)
 		this.createChipAureol(recipients, T.shield_aureol)
 		this.createChipImage(recipients, this.texture)
 		if (this.area !== Area.SINGLE_CELL) {
@@ -205,7 +236,7 @@ class ChipBoostAnimation extends ChipAnimation {
 	}
 	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
 		super.launch(launchCell, targetPos, targets, targetCell, launcher)
-		const recipients = this.alliesOf(launcher, targets)
+		const recipients = this.recipientsOf(launcher, targets)
 		this.targets = recipients
 		this.createChipAureol(recipients, T.buff_aureol)
 		this.createChipImage(recipients, this.texture)
@@ -236,7 +267,7 @@ class ChipHealAnimation extends ChipAnimation {
 	}
 	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
 		super.launch(launchCell, targetPos, targets, targetCell, launcher)
-		const recipients = this.alliesOf(launcher, targets)
+		const recipients = this.recipientsOf(launcher, targets)
 		this.targets = recipients
 		this.createChipAureol(recipients, T.cure_aureol)
 		this.createChipImage(recipients, this.texture)
@@ -267,7 +298,7 @@ class ChipNovaVitalityAnimation extends ChipAnimation {
 	}
 	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
 		super.launch(launchCell, targetPos, targets, targetCell, launcher)
-		const recipients = this.alliesOf(launcher, targets)
+		const recipients = this.recipientsOf(launcher, targets)
 		this.targets = recipients
 		this.createChipAureol(recipients, T.nova_aureol)
 		this.createChipImage(recipients, this.texture)
@@ -297,7 +328,7 @@ class ChipDebuffAnimation extends ChipAnimation {
 	}
 	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
 		super.launch(launchCell, targetPos, targets, targetCell, launcher)
-		const recipients = this.enemiesOf(launcher, targets)
+		const recipients = this.recipientsOf(launcher, targets)
 		this.createChipAureol(recipients, T.shackle_aureol)
 		this.createChipImage(recipients, this.texture)
 		if (this.area !== Area.SINGLE_CELL) {
@@ -316,7 +347,7 @@ class ChipPoisonAnimation extends ChipAnimation {
 	}
 	public launch(launchCell: Cell, targetPos: Cell, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
 		super.launch(launchCell, targetPos, targets, targetCell, launcher)
-		const recipients = this.enemiesOf(launcher, targets)
+		const recipients = this.recipientsOf(launcher, targets)
 		this.createChipAureol(recipients, T.poison_aureol)
 		this.createChipImage(recipients, this.texture)
 		if (this.area !== Area.SINGLE_CELL) {
@@ -335,7 +366,7 @@ class ChipDamageReturnAnimation extends ChipAnimation {
 	}
 	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
 		super.launch(launchCell, targetPos, targets, targetCell, launcher)
-		const recipients = this.alliesOf(launcher, targets)
+		const recipients = this.recipientsOf(launcher, targets)
 		this.createChipAureol(recipients, T.damage_return_aureol)
 		this.createChipImage(recipients, this.texture)
 		if (this.area !== Area.SINGLE_CELL) {
