@@ -672,9 +672,9 @@ class Lightning extends ChipAnimation {
 	constructor(game: Game) {
 		super(game, S.lightning, 80, DamageType.EXPLOSION)
 	}
-	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell) {
-		super.launch(launchPos, position, targets, targetCell)
-		this.targets = targets
+	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchPos, position, targets, targetCell, launcher)
+		this.targets = this.recipientsOf(launcher, targets)
 		this.game.particles.addImage(this.position.x - 50, this.position.y, 230, 0.5, 0, 0, 0, T.black_cloud, 90)
 		this.game.particles.addImage(this.position.x + 50, this.position.y, 230, -0.5, 0, 0, 0, T.black_cloud, 90)
 		this.game.particles.addImage(this.position.x + 10, this.position.y, 240, 0.2, 0, 0, 0, T.black_cloud, 90)
@@ -1110,9 +1110,9 @@ class Burning extends ChipAnimation {
 
 	constructor(game: Game) { super(game, S.fire, 60, DamageType.FIRE) }
 
-	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
-		super.launch(launchPos, targetPos, targets, targetCell)
-		this.createChipImage(targets, T.chip_burning)
+	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchPos, targetPos, targets, targetCell, launcher)
+		this.createChipImage(this.recipientsOf(launcher, targets), T.chip_burning)
 		this.game.setEffectArea(targetCell, Area.CIRCLE3, 'red')
 
 		const area = 220
@@ -1202,7 +1202,6 @@ class Punishment extends ChipAnimation {
 
 class StealChipAnimation extends ChipAnimation {
 	delta: number = 0
-	caster!: FightEntity
 	spinningTexture!: Texture
 	halo: (entity: FightEntity) => void;
 	constructor(game: Game, sound: Sound, spinningTexture: Texture, halo: (entity: FightEntity) => void) {
@@ -1211,15 +1210,15 @@ class StealChipAnimation extends ChipAnimation {
 		this.halo = halo
 	}
 	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, caster: FightEntity) {
-		super.launch(launchPos, position, targets, targetCell)
-		this.caster = caster
+		super.launch(launchPos, position, targets, targetCell, caster)
+		this.targets = this.recipientsOf(caster, targets)
 	}
 	public update(dt: number) {
 		super.update(dt)
 		this.delta += dt
 		if (this.delta > 3 && this.duration > 60) {
 			for (const target of this.targets!) {
-				if (target === this.caster) {
+				if (target === this.launcher) {
 					this.halo(target)
 				} else {
 					this.game.particles.addSpinningParticle(target.ox, target.oy, Math.PI / 2, this.spinningTexture)
