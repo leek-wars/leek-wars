@@ -5,10 +5,6 @@
 				<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Newsletters', link: '/admin/newsletters'}]" :raw="true" /></h1>
 				<div class="info">{{ count }} inscrits</div>
 			</div>
-			<v-btn-toggle v-model="lang" mandatory density="compact" color="primary">
-				<v-btn value="fr"><flag code="fr" /> FR</v-btn>
-				<v-btn value="en"><flag code="gb" /> EN</v-btn>
-			</v-btn-toggle>
 		</div>
 		<panel class="first">
 			<template #content>
@@ -16,7 +12,11 @@
 					<div v-for="n in newsletters" :key="n.version" class="newsletter card">
 						<div class="main">
 							<b>Version {{ n.version }}</b>
-							<div class="subject">{{ n[lang].subject || '(pas de sujet)' }}</div>
+							<v-btn-toggle v-model="n.lang" mandatory density="compact" color="primary">
+								<v-btn value="fr"><flag code="fr" /></v-btn>
+								<v-btn value="en"><flag code="gb" /></v-btn>
+							</v-btn-toggle>
+							<div class="subject">{{ n[n.lang].subject || '(pas de sujet)' }}</div>
 							<div class="spacer"></div>
 							<v-btn v-if="$store.state.farmer" @click="test(n, $store.state.farmer.id)"><v-icon>mdi-cog-outline</v-icon> Test compte normal</v-btn>
 							<v-text-field v-model="n.testTarget" type="number" label="Farmer ID" density="compact" hide-details style="max-width: 150px" />
@@ -24,7 +24,7 @@
 							<v-btn v-if="n.sent === 0" color="primary" @click="send(n)"><v-icon>mdi-send-outline</v-icon> Envoyer</v-btn>
 							<div v-else>Envoyé le {{ $filters.date(n.sent) }}</div>
 						</div>
-						<v-card class="preview"><div v-html="html(n[lang].preview)"></div></v-card>
+						<v-card class="preview"><div v-html="html(n[n.lang].preview)"></div></v-card>
 					</div>
 				</div>
 			</template>
@@ -42,14 +42,16 @@
 	const router = useRouter()
 	const newsletters = ref<any>([])
 	const count = ref<any>(0)
-	const lang = ref<'fr' | 'en'>('fr')
 
 	if (!store.getters.admin) router.replace('/')
 	LeekWars.setTitle("Admin Newsletters")
 
 	function load() {
 		LeekWars.get('newsletter/all').then(ns => {
-			for (const n of ns) n.testTarget = 73156
+			for (const n of ns) {
+				n.testTarget = 73156
+				n.lang = 'fr'
+			}
 			newsletters.value = ns
 		})
 	}
