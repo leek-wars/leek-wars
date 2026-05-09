@@ -111,6 +111,9 @@
 							<div v-else-if="finalReason === Warning.INCORRECT_WEBSITE">
 								Site web : <b>{{ selectedFault.data }}</b>
 							</div>
+							<div v-else-if="finalReason === Warning.INCORRECT_GITHUB">
+								GitHub : <b>{{ selectedFault.data }}</b>
+							</div>
 							<div v-else-if="finalReason === Warning.FLOOD_CHAT || finalReason === Warning.RUDE_CHAT || finalReason === Warning.PROMO_CHAT">
 								Messages chat :
 								<ul class="forum-message">
@@ -205,6 +208,7 @@
 		const reasons = [
 			Warning.INCORRECT_FARMER_NAME,
 			Warning.INCORRECT_WEBSITE,
+			Warning.INCORRECT_GITHUB,
 			Warning.RUDE_SAY,
 			Warning.RUDE_FORUM,
 			Warning.RUDE_CHAT,

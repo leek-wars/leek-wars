@@ -28,6 +28,8 @@
 	"reason_17_action": "The team emblem will be erased.",
 	"reason_18": "Incorrect website",
 	"reason_18_action": "The website will be deleted.",
+	"reason_19": "Incorrect GitHub",
+	"reason_19_action": "The GitHub account will be deleted and added to the banned word list.",
 	"reason_1_action": "The farmer's name will be replaced with 'Farmer{'@'}<id>' and the offending name will be added to the banned word list.",
 	"reason_2": "Incorrect leek name",
 	"reason_2_action": "The leek's name will be replaced with 'Leek{'@'}<id>' and the offending name will be added to the bad words list.",
