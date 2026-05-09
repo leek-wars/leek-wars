@@ -57,11 +57,10 @@
 
 	const remainingTime = computed(() => {
 		const nowMs = LeekWars.timeSeconds * 1000
-		const parisOffsetMs = getParisOffsetMs(new Date(nowMs))
-		const shifted = new Date(nowMs + parisOffsetMs)
-		shifted.setUTCHours(24, 0, 0, 0)
-		const midnightMs = shifted.getTime() - parisOffsetMs
-		return Math.round((midnightMs - nowMs) / 1000)
+		const offset = getParisOffsetMs(new Date(nowMs))
+		const midnight = new Date(nowMs + offset)
+		midnight.setUTCHours(24, 0, 0, 0)
+		return Math.round((midnight.getTime() - offset - nowMs) / 1000)
 	})
 
 	const habsPrice = computed(() => {
