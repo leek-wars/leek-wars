@@ -15,67 +15,6 @@
 			<template #content>
 				<div class="content">
 					<div class="title">
-						<h3>Statistiques</h3>
-						<div class="period-controls">
-							<v-btn size="small" variant="text" :class="{active: days === 7}" @click="setDays(7)">7j</v-btn>
-							<v-btn size="small" variant="text" :class="{active: days === 30}" @click="setDays(30)">30j</v-btn>
-							<v-btn size="small" variant="text" :class="{active: days === 90}" @click="setDays(90)">90j</v-btn>
-							<v-btn size="small" variant="text" :class="{active: days === 365}" @click="setDays(365)">1 an</v-btn>
-						</div>
-						<loader v-if="stats_loading" :size="32" />
-					</div>
-
-					<div v-if="retention" class="retention">
-						<div class="retention-card">
-							<div class="retention-label">Rétention J+1</div>
-							<div class="retention-value">{{ formatPercent(retention.d1) }}</div>
-						</div>
-						<div class="retention-card">
-							<div class="retention-label">Rétention J+7</div>
-							<div class="retention-value">{{ formatPercent(retention.d7) }}</div>
-						</div>
-						<div class="retention-card">
-							<div class="retention-label">Rétention J+30</div>
-							<div class="retention-value">{{ formatPercent(retention.d30) }}</div>
-						</div>
-					</div>
-
-					<div v-if="registrationsChart" class="chart-wrapper">
-						<h4>Inscriptions par jour</h4>
-						<Bar :key="'reg-' + chartKey" :data="registrationsChart" :options="barChartOptions" class="stats-chart" />
-					</div>
-
-					<div v-if="tutoChart" class="chart-wrapper">
-						<h4>Progression didactitiel</h4>
-						<Line :key="'tuto-' + chartKey" :data="tutoChart" :options="lineChartOptions" class="stats-chart" />
-					</div>
-
-					<div v-if="trophiesChart" class="chart-wrapper">
-						<h4>Trophées moyens par cohorte d'inscription</h4>
-						<Line :key="'tro-' + chartKey" :data="trophiesChart" :options="lineChartOptions" class="stats-chart" />
-					</div>
-
-					<div v-if="countries.length" class="chart-wrapper">
-						<h4>Top pays</h4>
-						<div class="countries">
-							<div v-for="c of countries.slice(0, 20)" :key="c.country" class="country card">
-								<flag :code="c.country" :clickable="false" />
-								<span class="code">{{ c.country.toUpperCase() }}</span>
-								<span class="count">{{ $filters.number(c.count) }}</span>
-							</div>
-						</div>
-					</div>
-					<div v-else-if="!stats_loading && !country_available" class="country-warning">
-						Données pays indisponibles.
-					</div>
-				</div>
-			</template>
-		</panel>
-
-		<panel>
-			<template #content>
-				<div class="content">
-					<div class="title">
 						<h3>Derniers éleveurs</h3>
 						<loader v-if="loading" :size="40" />
 					</div>
@@ -151,8 +90,74 @@
 						</div>
 					</div>
 
-					<br>
+				</div>
+			</template>
+		</panel>
 
+		<panel>
+			<template #content>
+				<div class="content">
+					<div class="title">
+						<h3>Statistiques</h3>
+						<div class="period-controls">
+							<v-btn size="small" variant="text" :class="{active: days === 7}" @click="setDays(7)">7j</v-btn>
+							<v-btn size="small" variant="text" :class="{active: days === 30}" @click="setDays(30)">30j</v-btn>
+							<v-btn size="small" variant="text" :class="{active: days === 90}" @click="setDays(90)">90j</v-btn>
+							<v-btn size="small" variant="text" :class="{active: days === 365}" @click="setDays(365)">1 an</v-btn>
+						</div>
+						<loader v-if="stats_loading" :size="32" />
+					</div>
+
+					<div v-if="retention" class="retention">
+						<div class="retention-card">
+							<div class="retention-label">Rétention J+1</div>
+							<div class="retention-value">{{ formatPercent(retention.d1) }}</div>
+						</div>
+						<div class="retention-card">
+							<div class="retention-label">Rétention J+7</div>
+							<div class="retention-value">{{ formatPercent(retention.d7) }}</div>
+						</div>
+						<div class="retention-card">
+							<div class="retention-label">Rétention J+30</div>
+							<div class="retention-value">{{ formatPercent(retention.d30) }}</div>
+						</div>
+					</div>
+
+					<div v-if="registrationsChart" class="chart-wrapper">
+						<h4>Inscriptions par jour</h4>
+						<Bar :key="'reg-' + chartKey" :data="registrationsChart" :options="barChartOptions" class="stats-chart" />
+					</div>
+
+					<div v-if="tutoChart" class="chart-wrapper">
+						<h4>Progression didactitiel</h4>
+						<Line :key="'tuto-' + chartKey" :data="tutoChart" :options="lineChartOptions" class="stats-chart" />
+					</div>
+
+					<div v-if="trophiesChart" class="chart-wrapper">
+						<h4>Trophées moyens par cohorte d'inscription</h4>
+						<Line :key="'tro-' + chartKey" :data="trophiesChart" :options="lineChartOptions" class="stats-chart" />
+					</div>
+
+					<div v-if="countries.length" class="chart-wrapper">
+						<h4>Top pays</h4>
+						<div class="countries">
+							<div v-for="c of countries.slice(0, 20)" :key="c.country" class="country card">
+								<flag :code="c.country" :clickable="false" />
+								<span class="code">{{ c.country.toUpperCase() }}</span>
+								<span class="count">{{ $filters.number(c.count) }}</span>
+							</div>
+						</div>
+					</div>
+					<div v-else-if="!stats_loading && !country_available" class="country-warning">
+						Données pays indisponibles.
+					</div>
+				</div>
+			</template>
+		</panel>
+
+		<panel>
+			<template #content>
+				<div class="content">
 					<div class="title">
 						<h3>Sources</h3>
 						<loader v-if="loading" :size="40" />
