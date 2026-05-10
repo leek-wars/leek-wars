@@ -188,14 +188,13 @@
 <script setup lang="ts">
 	import { AI } from '@/model/ai'
 	import { fileSystem, translateFileSystemError } from '@/model/filesystem'
-	import { mixins, t as gt } from '@/model/i18n'
+	import { mixins, t as gt, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import EditorFolder from './editor-folder.vue'
 	import { Folder } from './editor-item'
 	import { explorer } from './explorer'
 	import { emitter } from '@/model/vue'
 	import { computed, nextTick, onMounted, onUnmounted, ref, useTemplateRef } from 'vue'
-	import { useI18n } from 'vue-i18n'
 	import { useRouter } from 'vue-router'
 
 	defineOptions({ name: 'EditorExplorer', i18n: {}, mixins: [...mixins], components: { 'editor-folder': EditorFolder } })
@@ -211,7 +210,7 @@
 		'delete-folder': [folder: Folder]
 	}>()
 
-	const { t } = useI18n()
+	const t = useNamespacedT('editor-explorer')
 	const router = useRouter()
 	const nameInput = useTemplateRef<HTMLElement>('nameInput')
 	const newAIInput = useTemplateRef<HTMLElement>('newAIInput')

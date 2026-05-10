@@ -72,10 +72,11 @@ function currentLocale(): string {
 	return typeof loc === 'object' && loc !== null && 'value' in loc ? (loc.value as string) : (loc as string)
 }
 
-// Normalise un nom de composant en clé i18n: lowercase, underscores → dashes,
-// bank-* → bank (toutes les pages bank partagent le même fichier .i18n).
+// Normalise un nom de composant en clé i18n: PascalCase → kebab-case,
+// underscores → dashes, lowercase ; bank-* → bank (toutes les pages bank
+// partagent le même fichier .i18n).
 function normalizeComponentName(rawName: string): string {
-	const name = rawName.toLowerCase().replace(/_/g, '-')
+	const name = rawName.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase().replace(/_/g, '-')
 	if (name.startsWith('bank-') || name === 'bankbuy' || name === 'bankvalidate') return 'bank'
 	return name
 }
