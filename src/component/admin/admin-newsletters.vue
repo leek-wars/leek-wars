@@ -18,17 +18,16 @@
 									<v-btn value="en"><flag code="gb" /></v-btn>
 								</v-btn-toggle>
 							</div>
-							<div class="status">
+							<div class="actions">
+								<v-btn v-if="$store.state.farmer" variant="tonal" @click="test(n, $store.state.farmer.id)"><v-icon>mdi-cog-outline</v-icon> Test compte normal</v-btn>
+								<v-text-field v-model="n.testTarget" type="number" label="Farmer ID" density="compact" hide-details style="max-width: 130px" />
+								<v-btn variant="tonal" @click="test(n, n.testTarget)"><v-icon>mdi-cog-outline</v-icon> Test</v-btn>
 								<span v-if="n.sent !== 0" class="sent"><v-icon>mdi-check-circle-outline</v-icon> Envoyé le {{ $filters.date(n.sent) }}</span>
-								<v-btn v-else color="primary" @click="send(n)"><v-icon>mdi-send-outline</v-icon> Envoyer</v-btn>
+								<!-- Envoi via terminal (make newsletter) -->
+								<!-- <v-btn v-else color="primary" @click="send(n)"><v-icon>mdi-send-outline</v-icon> Envoyer</v-btn> -->
 							</div>
 						</div>
-						<h3 class="subject">{{ n[n.lang].subject || '(pas de sujet)' }}</h3>
-						<div class="actions">
-							<v-btn v-if="$store.state.farmer" variant="tonal" @click="test(n, $store.state.farmer.id)"><v-icon>mdi-cog-outline</v-icon> Test compte normal</v-btn>
-							<v-text-field v-model="n.testTarget" type="number" label="Farmer ID" density="compact" hide-details style="max-width: 130px" />
-							<v-btn variant="tonal" @click="test(n, n.testTarget)"><v-icon>mdi-cog-outline</v-icon> Test</v-btn>
-						</div>
+						<h2 class="subject">{{ n[n.lang].subject || '(pas de sujet)' }}</h2>
 						<v-card class="preview" variant="outlined"><div v-html="html(n[n.lang].preview)"></div></v-card>
 					</div>
 				</div>
@@ -85,6 +84,7 @@
 			}
 		}
 	}
+	void send
 </script>
 
 <style lang="scss" scoped>
@@ -123,7 +123,11 @@
 			font-weight: bold;
 			font-size: 16px;
 		}
-		.status {
+		.actions {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			flex-wrap: wrap;
 			.sent {
 				color: #5fad1b;
 				font-size: 14px;
@@ -137,15 +141,6 @@
 			font-weight: 500;
 			margin: 12px 0;
 			line-height: 1.3;
-		}
-		.actions {
-			display: flex;
-			align-items: center;
-			gap: 10px;
-			flex-wrap: wrap;
-			padding-bottom: 12px;
-			border-bottom: 1px solid var(--border-color, #e0e0e0);
-			margin-bottom: 12px;
 		}
 		.preview {
 			padding: 15px;
