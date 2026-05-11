@@ -13,7 +13,7 @@
 	"leek_shoot": "{leek} attacks with {weapon}",
 	"leek_shoot_cost": "{leek} attacks with {weapon} ({cost})",
 	"leek_show_cell": "{leek} indicates cell {cell} ({cost})",
-	"leek_speak": "{leek} says: « {text} » ({cost})",
+	"leek_speak": "{leek} says: \"{text}\" ({cost})",
 	"leek_take_weapon": "{leek} takes weapon {weapon}",
 	"leek_take_weapon_cost": "{leek} takes weapon {weapon} ({cost})",
 	"leek_win_x": "{leek} gains {value}",

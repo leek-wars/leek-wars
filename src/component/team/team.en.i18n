@@ -77,7 +77,7 @@
 	"log_level_0": "Hidden",
 	"log_level_0_desc": "does not display any of your logs for your allies",
 	"log_level_1": "Team",
-	"log_level_1_desc": "displays your logs for your allies only in team combat",
+	"log_level_1_desc": "shows your logs to your allies only in team fights",
 	"log_level_2": "All",
 	"log_level_2_desc": "displays your logs for your allies in all your fights",
 	"leeks": "Leeks ({0})",

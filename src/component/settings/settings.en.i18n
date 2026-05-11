@@ -16,7 +16,7 @@
 	"delete_failed": "Unable to delete the account",
 	"delete_finalize": "Finalize deletion",
 	"delete_forum_messages": "Delete my forum messages",
-	"delete_message": "By deleting your account, you are deleting all your personal informations on Leek Wars, your AIs, your private messages, etc.<br>Your leeks will be thrown to the composter :(",
+	"delete_message": "By deleting your account, you delete all your personal information on Leek Wars, your AIs, your private messages, etc.<br>Your leeks will be thrown to the composter :(",
 	"delete_ok": "OK",
 	"delete_password": "Password",
 	"delete_success": "Deletion successful",

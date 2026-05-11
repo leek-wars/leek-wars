@@ -1,5 +1,5 @@
 {
-	"description": "The bank lets you get <b>crystals</b> <span class='crystal'></span>, the second currency of Leek Wars, which you can use to buy potions and other purely cosmetic items that <b>do not affect</b> your power in combat. <br>\nTreat your leek to a color potion and support Leek Wars!",
+	"description": "The bank lets you get <b>crystals</b> <span class='crystal'></span>, the second currency of Leek Wars, which you can use to buy potions and other purely cosmetic items that <b>do not affect</b> your power in fights. <br>\nTreat your leek to a color potion and support Leek Wars!",
 	"pack_of_n_crystals": "Pack of <b>{0}</b> crystals",
 	"paypal_description": "Purchase {0} crystals for {1} €",
 	"first_purchase_banner": "First purchase? All your crystals are doubled!",
