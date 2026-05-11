@@ -155,6 +155,7 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/admin/funnels', component: AdminFunnels, beforeEnter: connected },
 	{ path: '/admin/funnels/:funnel', component: AdminFunnels, beforeEnter: connected },
 	{ path: '/admin/dashboards', component: AdminDashboards, beforeEnter: connected },
+	{ path: '/admin/dashboards/:id', component: AdminDashboards, beforeEnter: connected },
 	{ path: '/admin/matchmaking', component: AdminMatchmaking, beforeEnter: connected },
 	{ path: '/about', component: About },
 	{ path: '/app', component: MobileApp },

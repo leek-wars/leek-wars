@@ -85,9 +85,11 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { onUnmounted, reactive, ref, watch } from 'vue'
-	import { useRouter } from 'vue-router'
+	import { useRoute, useRouter } from 'vue-router'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+
+	const STORAGE_KEY = 'admin_dashboard_last'
 
 	interface DashboardColumn {
 		title: string
@@ -102,6 +104,7 @@
 	}
 
 	const router = useRouter()
+	const route = useRoute()
 	const dashboards = ref<Dashboard[] | null>(null)
 	const selectedDashboard = ref('')
 	const data = reactive<{ [key: string]: Dashboard }>({})
@@ -109,12 +112,13 @@
 	LeekWars.setTitle("Admin Dashboards")
 	LeekWars.large = true
 	checkAdmin()
-	LeekWars.get('dashboard/get-all').then((res) => {
+	LeekWars.get('dashboard/get-all').then((res: Dashboard[]) => {
 		dashboards.value = res
-		if (res.length) {
-			selectedDashboard.value = res[0].id
-			loadDashboard(res[0].id)
-		}
+		if (!res.length) return
+		const requested = (route.params.id as string) || localStorage.getItem(STORAGE_KEY) || ''
+		const initial = res.find(d => d.id === requested) ? requested : res[0].id
+		selectedDashboard.value = initial
+		loadDashboard(initial)
 	})
 
 	onUnmounted(() => {
@@ -134,7 +138,12 @@
 	})
 
 	watch(selectedDashboard, (id: string) => {
+		if (!id) return
 		loadDashboard(id)
+		localStorage.setItem(STORAGE_KEY, id)
+		if (route.params.id !== id) {
+			router.replace('/admin/dashboards/' + id)
+		}
 	})
 
 	function loadDashboard(id: string) {
