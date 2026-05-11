@@ -615,72 +615,78 @@
 			const ai = fileSystem.getAIFromRoute(routeId)
 			if (ai) {
 				const key = ai.path
+				const lineQuery = route.query.line
+				localStorage.setItem(lastCodeKey(currentSide.value), key)
+				// Appliquer toutes les mutations d'état atomiquement après le chargement :
+				// sinon currentTab/currentFolder pointent sur la nouvelle IA pendant que
+				// currentAI1 pointe encore sur l'ancienne, ce qui re-rend les v-if/Teleport
+				// du panel avec un état mixte et peut casser le patch Vue (parentNode null).
 				fileSystem.load(ai).then(() => {
 					if (currentSide.value === 1) {
 						currentAI1.value = key
 					} else {
 						currentAI2.value = key
 					}
+					currentType.value = 'ai'
+					currentFolder.value = fileSystem.folderById[ai.folder]
+					if (!(key in activeAIs)) {
+						activeAIs[key] = ai
+					}
+					explorer.selectAI(ai)
+					if (currentSide.value === 1 && !isDiffRoute) {
+						const fileTab: FileTab = { type: 'file', id: key }
+						if (!tabs1.value.find(tt => tt.type === 'file' && tt.id === key)) {
+							tabs1.value.push(fileTab)
+							saveTabs()
+						}
+						currentTab.value = tabs1.value.find(tt => tt.type === 'file' && tt.id === key) || fileTab
+					}
+					// Ajout dans l'historique
+					const i = history.value.indexOf(ai)
+					if (i !== -1) { history.value.splice(i, 1) }
+					history.value.unshift(ai)
+
+					LeekWars.setTitle(ai.name)
+
+					if (isDiffRoute) {
+						if (currentTab.value && currentTab.value.type !== 'file' && currentTab.value.id === key) {
+							// Déjà sur le bon diff tab
+						} else if (routeHash) {
+							const diffTab = tabs1.value.find(tt => tt.type !== 'file' && (tt as DiffTab).hash === routeHash)
+							if (diffTab) {
+								currentTab.value = diffTab
+								ensureDiffLoaded(diffTab as DiffTab)
+							}
+						} else {
+							const diffTab = tabs1.value.find(tt => tt.type !== 'file' && tt.id === key)
+							if (diffTab) {
+								currentTab.value = diffTab
+								ensureDiffLoaded(diffTab as DiffTab)
+							} else {
+								// Créer un onglet diff depuis l'URL
+								const { folder, file } = resolveGitPath(key)
+								if (folder !== null) {
+									openDiff({ folder, file: file as string })
+								}
+							}
+						}
+						LeekWars.splitShowContent()
+						LeekWars.setActions(actions_content.value)
+					} else if (lineQuery !== undefined) {
+						jump(ai, parseInt(lineQuery as string), 0)
+						router.replace('/editor/' + key).then(() => {
+							LeekWars.splitShowContent()
+							LeekWars.setActions(actions_content.value)
+						})
+					} else {
+						LeekWars.splitShowContent()
+						LeekWars.setActions(actions_content.value)
+					}
+
 					nextTick(() => {
 						currentEditor.value = (currentSide.value === 1 ? editor1.value : editor2.value) as InstanceType<typeof AIViewMonaco>
 					})
 				})
-				localStorage.setItem(lastCodeKey(currentSide.value), key)
-				currentType.value = 'ai'
-				currentFolder.value = fileSystem.folderById[ai.folder]
-				if (!(key in activeAIs)) {
-					activeAIs[key] = ai
-				}
-				explorer.selectAI(ai)
-				if (currentSide.value === 1 && !isDiffRoute) {
-					const fileTab: FileTab = { type: 'file', id: key }
-					if (!tabs1.value.find(tt => tt.type === 'file' && tt.id === key)) {
-						tabs1.value.push(fileTab)
-						saveTabs()
-					}
-					currentTab.value = tabs1.value.find(tt => tt.type === 'file' && tt.id === key) || fileTab
-				}
-				// Ajout dans l'historique
-				const i = history.value.indexOf(ai)
-				if (i !== -1) { history.value.splice(i, 1) }
-				history.value.unshift(ai)
-
-				LeekWars.setTitle(ai.name)
-
-				if (isDiffRoute) {
-					if (currentTab.value && currentTab.value.type !== 'file' && currentTab.value.id === key) {
-						// Déjà sur le bon diff tab
-					} else if (routeHash) {
-						const diffTab = tabs1.value.find(tt => tt.type !== 'file' && (tt as DiffTab).hash === routeHash)
-						if (diffTab) {
-							currentTab.value = diffTab
-							ensureDiffLoaded(diffTab as DiffTab)
-						}
-					} else {
-						const diffTab = tabs1.value.find(tt => tt.type !== 'file' && tt.id === key)
-						if (diffTab) {
-							currentTab.value = diffTab
-							ensureDiffLoaded(diffTab as DiffTab)
-						} else {
-							// Créer un onglet diff depuis l'URL
-							const { folder, file } = resolveGitPath(key)
-							if (folder !== null) {
-								openDiff({ folder, file: file as string })
-							}
-						}
-					}
-					LeekWars.splitShowContent()
-					LeekWars.setActions(actions_content.value)
-				} else if ('line' in route.query) {
-					jump(ai, parseInt(route.query.line as string), 0)
-					router.replace('/editor/' + key).then(() => {
-						LeekWars.splitShowContent()
-						LeekWars.setActions(actions_content.value)
-					})
-				} else {
-					LeekWars.splitShowContent()
-					LeekWars.setActions(actions_content.value)
-				}
 			} else {
 				currentFolder.value = fileSystem.folderById[parseInt(routeId)]
 				currentType.value = 'folder'
