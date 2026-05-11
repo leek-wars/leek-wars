@@ -208,7 +208,7 @@
 				</div>
 			</template>
 		</panel>
-		<didactitiel v-if="didactitiel_enabled" v-model="didactitiel" />
+		<didactitiel v-if="didactitiel_enabled" v-model="showDidactitiel" />
 		<level-dialog v-if="levelPopupData" v-model="levelPopup" :leek="leek" :level-data="levelPopupData" />
 	</div>
 </template>
@@ -228,7 +228,7 @@
 
 	const router = useRouter()
 
-	const didactitiel = ref(false)
+	const showDidactitiel = ref(false)
 	const didactitiel_enabled = ref(false)
 	const leek = ref<Record<string, unknown> | null>(null)
 	const levelPopup = ref(false)
@@ -295,7 +295,7 @@
 	function show_didactitiel() {
 		didactitiel_enabled.value = true
 		nextTick(() => {
-			didactitiel.value = true
+			showDidactitiel.value = true
 		})
 	}
 

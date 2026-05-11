@@ -60,13 +60,14 @@ const props = defineProps<{
 	characteristic: string
 	value: number
 	total: number
-	leek: { level: number }
+	leek: { level: number } | null
 	test: boolean
 }>()
 
 const base = computed(() => {
+	const level = props.leek?.level ?? 1
 	const base: Record<string, number> = {
-		life: 100 + (props.leek.level - 1) * 3,
+		life: 100 + (level - 1) * 3,
 		strength: 0,
 		wisdom: 0,
 		agility: 0,

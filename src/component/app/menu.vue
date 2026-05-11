@@ -51,7 +51,7 @@
 							</div>
 						</router-link>
 						<span v-if="LeekWars.didactitial_step === 1 && i === 0 && !(isHomePage || $route.path === '/leek/' + leek.id)" class="dida-hint right">
-							<i18n-t class="bubble" keypath="main.dida_2">
+							<i18n-t tag="div" class="bubble" keypath="main.dida_2">
 								<template #life>
 									<img height=18 src="/image/charac/life.png">
 								</template>
