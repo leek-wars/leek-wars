@@ -40,8 +40,7 @@
 				<div class="bottom">
 					<v-btn v-if="LeekWars.didactitial_step > 1" @click="back"><v-icon>mdi-arrow-left</v-icon></v-btn>
 					<div class="progress">{{ LeekWars.didactitial_step }} / 5</div>
-					<v-btn v-if="LeekWars.didactitial_step < 5" @click="LeekWars.didactitial_next">{{ $t('main.pass') }}&nbsp;<v-icon>mdi-arrow-right</v-icon></v-btn>
-					<v-btn v-else color="primary" @click="complete">{{ $t('main.play') }}&nbsp;<v-icon>mdi-sword-cross</v-icon></v-btn>
+					<v-btn v-if="LeekWars.didactitial_step === 5" color="primary" @click="complete">{{ $t('main.play') }}&nbsp;<v-icon>mdi-sword-cross</v-icon></v-btn>
 				</div>
 
 				<v-icon class="close" @click="closed">mdi-close</v-icon>
@@ -72,11 +71,25 @@ function back() {
 
 function complete() {
 	LeekWars.post('farmer/didactitiel-complete', {})
+	if (store.state.farmer) {
+		store.state.farmer.didactitiel_seen = true
+		store.state.farmer.didactitiel_step = 6
+		store.state.farmer.didactitiel_completed_at = Math.floor(Date.now() / 1000)
+	}
 	LeekWars.didactitial = false
 	LeekWars.didactitial_step = 0
 }
 
 function closed() {
+	// La croix vaut « didacticiel terminé » côté serveur : on n'a plus le bouton
+	// Passer, donc fermer doit faire avancer l'état sinon le didacticiel revient
+	// à la prochaine connexion. L'utilisateur a fait un choix conscient.
+	LeekWars.post('farmer/didactitiel-complete', {})
+	if (store.state.farmer) {
+		store.state.farmer.didactitiel_seen = true
+		store.state.farmer.didactitiel_step = 6
+		store.state.farmer.didactitiel_completed_at = Math.floor(Date.now() / 1000)
+	}
 	LeekWars.didactitial = false
 	LeekWars.didactitial_step = 0
 }

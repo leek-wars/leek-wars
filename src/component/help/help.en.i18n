@@ -1,11 +1,11 @@
 {
 	"documentation": "Documentation",
 	"documentation_desc": "Detailed list of all <b>LeekScript</b> functions and constants",
-	"general_help": "Discover the game, operation and information",
-	"rewatch_didactitiel": "Rewatch tutorial",
+	"general_help": "Game overview, mechanics and information",
+	"rewatch_didactitiel": "Replay the tutorial",
 	"title": "Help",
 	"tutorial": "LeekScript Tutorial",
-	"tutorial_desc": "Introduction to LeekScript language, specifications and syntax",
+	"tutorial_desc": "Introduction to the <b>LeekScript</b> language, specifications and syntax",
 	"wiki": "Wiki",
-	"wiki_desc": "Wiki written by the players with much information about the game"
+	"wiki_desc": "Player-written wiki with lots of information about the game"
 }

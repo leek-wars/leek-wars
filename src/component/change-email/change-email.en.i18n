@@ -5,7 +5,7 @@
 	"new_email": "New email address",
 	"confirm": "Confirmation",
 	"email_sent": "Confirmation email sent to {email}",
-	"email_changed_success": "Email address changed with success.",
-	"back_home": "Come back home",
-	"error_not_same_email": "The input addresses are not the same"
+	"email_changed_success": "Email address successfully changed.",
+	"back_home": "Back to home",
+	"error_not_same_email": "The entered addresses do not match"
 }

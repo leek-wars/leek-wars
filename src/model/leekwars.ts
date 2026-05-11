@@ -801,13 +801,24 @@ const LeekWars = reactive({
 	didactitial_visible: false,
 	show_didactitiel: () => {
 		LeekWars.didactitial = true
-		LeekWars.didactitial_step = 1
+		// Reprise à l'étape sauvegardée en BDD si disponible (1 à 5),
+		// sinon démarrage à l'étape 1.
+		const saved = store.state.farmer?.didactitiel_step ?? 0
+		LeekWars.didactitial_step = saved >= 1 && saved <= 5 ? saved : 1
+		if (LeekWars.didactitial_step !== saved) {
+			LeekWars.post('farmer/didactitiel-step', { step: LeekWars.didactitial_step })
+			if (store.state.farmer) store.state.farmer.didactitiel_step = LeekWars.didactitial_step
+		}
 		nextTick(() => {
 			LeekWars.didactitial_visible = true
 		})
 	},
 	didactitial_next: () => {
 		LeekWars.didactitial_step++
+		// Persistance serveur : permet la reprise au refresh et donne des
+		// analytics fines sur l'étape où les utilisateurs décrochent.
+		LeekWars.post('farmer/didactitiel-step', { step: LeekWars.didactitial_step })
+		if (store.state.farmer) store.state.farmer.didactitiel_step = LeekWars.didactitial_step
 		LeekWars.didactitial_visible = false
 		nextTick(() => LeekWars.didactitial_visible = true)
 	},

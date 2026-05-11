@@ -3,8 +3,8 @@
 	"reporting_deleted": "Report deleted",
 	"title": "Moderation",
 	"warning_sent": "Warning sent!",
-	"you_are_muted": "You are muted.",
+	"you_are_muted": "You have been muted.",
 	"you_have_been_muted_by_x": "You have been muted by {0}.",
-	"you_have_been_unmuted_by_x": "{0} allowed you to speak again on the chat.",
+	"you_have_been_unmuted_by_x": "{0} has allowed you to speak in the chat again.",
 	"you_must_choose_reason": "You must choose a reason!"
 }

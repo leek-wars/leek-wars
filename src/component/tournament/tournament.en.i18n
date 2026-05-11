@@ -3,11 +3,11 @@
 	"farmer": "{0} farmer tournament",
 	"few_seconds": "a few seconds",
 	"next_round_in": "Next round in {0}",
-	"not_found": "Tournament id {0} not found :(",
+	"not_found": "Tournament with id {0} not found :(",
 	"send": "Send",
 	"solo": "{0} solo tournament",
 	"team": "{0} team tournament",
 	"next_round_supervisor": "The next round will be initiated by the supervisor",
 	"generate": "Generate next round",
-	"generating": "Current generation..."
+	"generating": "Generating..."
 }

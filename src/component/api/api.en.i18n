@@ -17,7 +17,7 @@
 	"ai_restore": "Restores AI **ai_id** and removes it from the recycle bin.",
 	"ai_save": "Saves AI **ai_id** and returns any errors.",
 	"ai_strict": "Enables or disables strict mode on AI **ai_id**.",
-	"ai_sync": "Takes a list of AI ids **ais** in the form `{ ai: timestamp }` and returns the codes of AIs that are no longer up to date.",
+	"ai_sync": "Takes a list of AI ids **ais** in the form `{'{'} ai: timestamp {'}'}` and returns the codes of AIs that are no longer up to date.",
 	"ai_test-scenario": "Starts **scenario_id** scenario or **ai_id** AI default scenario if **scenario_id** is `0`.",
 	"ai_version": "Change AI version **ai_id** to **version**.",
 	"ai-folder_change-folder": "Moves **folder_id** folder to **dest_folder_id**.",

@@ -4,7 +4,7 @@
 	"reward_fights": "extra fights",
 	"reward_habs": "habs",
 	"reward_crystals": "crystals",
-	"reward_hat": "Cap hat",
+	"reward_hat": "Cap",
 	"login": "Choose your farmer name",
 	"email": "Your email address",
 	"password": "Password",
@@ -18,5 +18,5 @@
 	"error_invalid_mail": "Invalid email address",
 	"error_mail_already_used": "This email is already in use",
 	"error_password_length": "Password too short or too long",
-	"error_invalid_godfather": "Godfather not found"
+	"error_invalid_godfather": "Referrer not found"
 }
