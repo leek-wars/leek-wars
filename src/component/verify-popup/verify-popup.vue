@@ -13,7 +13,7 @@
 			</div>
 			<div class="reward">
 				<div class="reward-icon"><img src="/image/crystal.png" alt="crystal"></div>
-				<div class="reward-text"><b>10</b> {{ t('reward_crystals') }}</div>
+				<div class="reward-text"><b>50</b> {{ t('reward_crystals') }}</div>
 			</div>
 			<div class="reward">
 				<div class="reward-icon"><img src="/image/hat/cap.png" alt="cap"></div>
