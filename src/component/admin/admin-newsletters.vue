@@ -27,6 +27,45 @@
 								<!-- <v-btn v-else color="primary" @click="send(n)"><v-icon>mdi-send-outline</v-icon> Envoyer</v-btn> -->
 							</div>
 						</div>
+						<div v-if="n.stats && n.stats.total > 0" class="stats">
+							<div class="stat" title="Mails envoyés">
+								<v-icon size="18">mdi-send-outline</v-icon>
+								<span class="value">{{ n.stats.total.toLocaleString() }}</span>
+								<span class="slabel">envoyés</span>
+							</div>
+							<div class="stat" title="Mails ouverts (pixel de tracking)">
+								<v-icon size="18">mdi-email-open-outline</v-icon>
+								<span class="value">{{ n.stats.opened.toLocaleString() }}</span>
+								<span class="slabel">ouverts</span>
+								<span class="rate">({{ percent(n.stats.opened, n.stats.total) }}%)</span>
+							</div>
+							<div class="stat" title="Au moins un lien cliqué">
+								<v-icon size="18">mdi-cursor-default-click-outline</v-icon>
+								<span class="value">{{ n.stats.clicked.toLocaleString() }}</span>
+								<span class="slabel">clics</span>
+								<span class="rate">({{ percent(n.stats.clicked, n.stats.total) }}%)</span>
+							</div>
+							<div class="stat" title="Clics parmi les ouvertures (Click-To-Open Rate)">
+								<v-icon size="18">mdi-target</v-icon>
+								<span class="value">{{ percent(n.stats.clicked, n.stats.opened) }}%</span>
+								<span class="slabel">CTOR</span>
+							</div>
+							<div class="stat bounced" :title="`Hard: ${n.stats.hard_bounced} · Soft: ${n.stats.soft_bounced}`">
+								<v-icon size="18">mdi-email-alert-outline</v-icon>
+								<span class="value">{{ n.stats.bounced.toLocaleString() }}</span>
+								<span class="slabel">bounces</span>
+								<span class="rate">({{ percent(n.stats.bounced, n.stats.total) }}%)</span>
+								<span v-if="n.stats.bounced > 0" class="breakdown">
+									{{ n.stats.hard_bounced }} hard · {{ n.stats.soft_bounced }} soft
+								</span>
+							</div>
+							<div class="stat unsub" title="Désinscriptions via le lien du mail">
+								<v-icon size="18">mdi-account-off-outline</v-icon>
+								<span class="value">{{ n.stats.unsubscribed.toLocaleString() }}</span>
+								<span class="slabel">désinscriptions</span>
+								<span class="rate">({{ percent(n.stats.unsubscribed, n.stats.total) }}%)</span>
+							</div>
+						</div>
 						<h2 class="subject">{{ n[n.lang].subject || '(pas de sujet)' }}</h2>
 						<v-card class="preview" variant="outlined"><div v-html="html(n[n.lang].preview)"></div></v-card>
 					</div>
@@ -43,11 +82,21 @@
 	import { useRouter } from 'vue-router'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
+	interface NewsletterStats {
+		total: number
+		opened: number
+		clicked: number
+		bounced: number
+		hard_bounced: number
+		soft_bounced: number
+		unsubscribed: number
+	}
 	interface Newsletter {
 		version: string
 		fr: { subject: string; preview: string }
 		en: { subject: string; preview: string }
 		sent: number
+		stats?: NewsletterStats
 		testTarget?: number
 		expanded?: boolean
 	}
@@ -77,6 +126,11 @@
 
 	function html(html: string) {
 		return html.replace("\n", "")
+	}
+
+	function percent(part: number, total: number) {
+		if (!total) return '0.0'
+		return ((part / total) * 100).toFixed(1)
 	}
 
 	function test(n: Newsletter, target: number) {
@@ -143,6 +197,45 @@
 				display: inline-flex;
 				align-items: center;
 				gap: 4px;
+			}
+		}
+		@mixin tinted($light, $dark) {
+			&, .slabel, .rate { color: $light; }
+			body.dark & {
+				&, .slabel, .rate { color: $dark; }
+			}
+		}
+		.stats {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px 20px;
+			margin-top: 12px;
+			padding: 10px 14px;
+			background: var(--background-secondary);
+			border-radius: 6px;
+			font-size: 14px;
+			.stat {
+				display: inline-flex;
+				align-items: center;
+				gap: 6px;
+				color: var(--text-color);
+				.value {
+					font-weight: 600;
+				}
+				.slabel {
+					color: var(--text-color-secondary);
+				}
+				.rate {
+					color: var(--text-color-secondary);
+					font-size: 13px;
+				}
+				.breakdown {
+					color: var(--text-color-secondary);
+					font-size: 12px;
+					margin-left: 4px;
+				}
+				&.bounced { @include tinted(#c62828, #ef9a9a); }
+				&.unsub { @include tinted(#ef6c00, #ffb74d); }
 			}
 		}
 		.subject {
