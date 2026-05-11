@@ -37,12 +37,8 @@
 								</rich-tooltip-farmer>
 
 								<div class="register-type" :title="regLabel(farmer.reg_type)">
-									<v-icon v-if="farmer.reg_type === 'github'">mdi-github</v-icon>
-									<v-icon v-else-if="farmer.reg_type === 'google'">mdi-google</v-icon>
-									<v-icon v-else-if="farmer.reg_type === 'classic'">mdi-email-outline</v-icon>
-									<v-icon v-else>mdi-flash-outline</v-icon>
-									<v-icon v-if="farmer.verified" class="verified" title="Vérifié">mdi-check-decagram</v-icon>
-									<v-icon v-else class="unverified" title="Non vérifié">mdi-help-circle-outline</v-icon>
+									<v-icon v-if="farmer.reg_type" :class="{pending: isPendingEmail(farmer.reg_type, farmer.verified)}">{{ regIcon(farmer.reg_type, farmer.verified) }}</v-icon>
+									<v-icon v-if="farmer.validation" :class="{pending: isPendingEmail(farmer.validation, farmer.verified)}" :title="validationLabel(farmer.validation)">{{ regIcon(farmer.validation, farmer.verified) }}</v-icon>
 								</div>
 
 								<div class="tuto" :title="tutoTitle(farmer)">
@@ -196,12 +192,12 @@
 
 	const STORAGE_KEY_DAYS = 'admin_sources_days'
 	type RegType = 'classic' | 'github' | 'google' | 'fast_verified' | 'fast'
-	const REG_TYPES: Record<RegType, { label: string, title: string, color: string }> = {
-		classic:       { label: 'Classique',     title: 'Inscription classique',                color: '#2196f3' },
-		github:        { label: 'GitHub',        title: 'Inscription GitHub',                   color: '#424242' },
-		google:        { label: 'Google',        title: 'Inscription Google',                   color: '#db4437' },
-		fast_verified: { label: 'Rapide validé', title: 'Inscription rapide puis validée',      color: '#ffc107' },
-		fast:          { label: 'Rapide',        title: 'Inscription rapide (non validée)',     color: '#ff9800' },
+	const REG_TYPES: Record<RegType, { label: string, title: string, color: string, icon: string }> = {
+		classic:       { label: 'Classique',     title: 'Inscription classique',                color: '#2196f3', icon: 'mdi-email-outline' },
+		github:        { label: 'GitHub',        title: 'Inscription GitHub',                   color: '#424242', icon: 'mdi-github' },
+		google:        { label: 'Google',        title: 'Inscription Google',                   color: '#db4437', icon: 'mdi-google' },
+		fast_verified: { label: 'Rapide validé', title: 'Inscription rapide puis validée',      color: '#ffc107', icon: 'mdi-flash-outline' },
+		fast:          { label: 'Rapide',        title: 'Inscription rapide (non validée)',     color: '#ff9800', icon: 'mdi-flash-outline' },
 	}
 	const GRID = { color: 'rgba(128,128,128,0.15)' }
 	const makeChartOptions = (stacked: boolean): ChartOptions<'bar'> => ({
@@ -228,7 +224,9 @@
 		google?: boolean
 		pass?: boolean
 		registered_fast?: boolean
+		verified?: boolean
 		reg_type?: RegType
+		validation?: RegType | null
 		register_time: number
 		didactitiel_seen?: boolean
 		tutorial_progress?: number
@@ -289,6 +287,7 @@
 			last_farmers_by_day.value = {}
 			for (const farmer of last.value) {
 				farmer.reg_type = regType(farmer)
+				farmer.validation = regValidation(farmer)
 				const day = LeekWars.formatDate(farmer.register_time)
 				if (!last_farmers_by_day.value[day]) last_farmers_by_day.value[day] = []
 				last_farmers_by_day.value[day].push(farmer)
@@ -340,14 +339,40 @@
 	}
 
 	function regType(f: SourceFarmer): RegType {
+		if (f.registered_fast) {
+			return (f.pass || f.github || f.google) ? 'fast_verified' : 'fast'
+		}
 		if (f.github) return 'github'
 		if (f.google) return 'google'
-		if (f.registered_fast) return f.pass ? 'fast_verified' : 'fast'
 		return 'classic'
 	}
 
 	function regLabel(type: RegType | undefined): string {
 		return type ? REG_TYPES[type].title : ''
+	}
+
+	function regValidation(f: SourceFarmer): RegType | null {
+		if (!f.registered_fast) return null
+		if (f.pass) return 'classic'
+		if (f.github) return 'github'
+		if (f.google) return 'google'
+		return null
+	}
+
+	// Pour la voie email (type 'classic'), distingue mail envoyé non cliqué (outline + opacité)
+	// du mail confirmé (icône pleine). github/google déclenchent verifyConfirm donc toujours verified.
+	function regIcon(type: RegType, verified: boolean | undefined): string {
+		if (type === 'classic') return verified ? 'mdi-email' : 'mdi-email-outline'
+		return REG_TYPES[type].icon
+	}
+
+	function isPendingEmail(type: RegType, verified: boolean | undefined): boolean {
+		return type === 'classic' && !verified
+	}
+
+	function validationLabel(v: RegType): string {
+		const VIA: Record<RegType, string> = { classic: 'email', github: 'GitHub', google: 'Google', fast: '', fast_verified: '' }
+		return 'Validé via ' + VIA[v]
 	}
 
 	function tutoTitle(farmer: SourceFarmer): string {
@@ -585,11 +610,8 @@
 		}
 	}
 	.register-type {
-		.verified {
-			color: #4caf50;
-		}
-		.unverified {
-			color: #bbb;
+		.v-icon.pending {
+			opacity: 0.4;
 		}
 	}
 	.tuto {
