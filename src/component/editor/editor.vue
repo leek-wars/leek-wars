@@ -548,6 +548,7 @@
 			await LeekWars.post('git/clone', { url: cloneUrl.value.trim(), folder: cloneFolder.value.trim() })
 			cloneDialog.value = false
 			LeekWars.toast(t('clone_success') as string)
+			await fileSystem.reload()
 			await loadGitRepos()
 			leftPanelTab.value = 'git'
 		} catch (e: unknown) {
