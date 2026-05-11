@@ -107,5 +107,12 @@
 	"display_team": "クルー",
 	"trophy_x": "トロフィー{0}",
 	"sponsorship": "スポンサーシップ",
-	"godsons_level": "紹介の再帰的な合計レベル"
+	"godsons_level": "紹介の再帰的な合計レベル",
+	"team_invitations": "チームへの招待",
+	"invitation_sent": "招待を送信しました！",
+	"invitation_accepted": "招待を受諾しました！",
+	"invitation_rejected": "招待を辞退しました",
+	"accept": "承諾",
+	"reject": "辞退",
+	"invite_to_team": "チームに招待"
 }

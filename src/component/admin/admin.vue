@@ -227,7 +227,7 @@
 	import { useRouter } from 'vue-router'
 	const Didactitiel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`))
 	const LevelDialog = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/leek/level-dialog.${locale}.i18n`))
-	const VerifyPopup = defineAsyncComponent(() => import('@/component/farmer/verify-popup.vue'))
+	const VerifyPopup = defineAsyncComponent(() => import('@/component/verify-popup/verify-popup.vue'))
 
 	const router = useRouter()
 

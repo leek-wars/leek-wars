@@ -4,19 +4,19 @@
 
 		<div class="rewards">
 			<div class="reward">
-				<v-icon size="32" color="primary">mdi-sword-cross</v-icon>
+				<img src="/image/fight-pack/fight_pack_50.png" alt="fights" class="reward-img">
 				<div class="reward-text"><b>20</b> {{ t('reward_fights') }}</div>
 			</div>
 			<div class="reward">
-				<img src="/image/resource/box_100k_habs.png" width="40" alt="habs">
+				<img src="/image/resource/box_100k_habs.png" alt="habs" class="reward-img">
 				<div class="reward-text"><b>100 000</b> {{ t('reward_habs') }}</div>
 			</div>
 			<div class="reward">
-				<img src="/image/crystal.png" width="32" alt="crystal">
+				<img src="/image/crystal.png" alt="crystal" class="reward-img crystal">
 				<div class="reward-text"><b>10</b> {{ t('reward_crystals') }}</div>
 			</div>
 			<div class="reward">
-				<img src="/image/hat/cap.png" width="48" alt="cap" class="cap">
+				<img src="/image/hat/cap.png" alt="cap" class="reward-img">
 				<div class="reward-text">{{ t('reward_hat') }}</div>
 			</div>
 		</div>
@@ -122,9 +122,16 @@ function submit() {
 		background: var(--background-secondary);
 		padding: 10px 12px;
 		border-radius: 6px;
-		img {
-			flex-shrink: 0;
-		}
+	}
+	.reward-img {
+		flex-shrink: 0;
+		width: 44px;
+		height: 44px;
+		object-fit: contain;
+	}
+	.reward-img.crystal {
+		width: 28px;
+		height: 44px;
 	}
 	.reward-text {
 		font-size: 14px;

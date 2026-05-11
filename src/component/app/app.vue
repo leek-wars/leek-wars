@@ -210,7 +210,7 @@
 	const Social = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/app/social.vue`))
 	const Squares = defineAsyncComponent(() => import('@/component/app/squares.vue'))
 	const ConsoleWindow = defineAsyncComponent(() => import('./console-window.vue'))
-	const VerifyPopup = defineAsyncComponent(() => import('@/component/farmer/verify-popup.vue'))
+	const VerifyPopup = defineAsyncComponent(() => import('@/component/verify-popup/verify-popup.vue'))
 	const ChangelogDialog = defineAsyncComponent(() => import('../changelog/changelog-dialog.vue'))
 	const Documentation = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`))
 	const DidactitielNew = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel-new/didactitiel-new.${locale}.i18n`))
