@@ -305,8 +305,12 @@
 	// v-if guard retarde le mount jusqu'à résolution pour préserver le no-flash.
 	const explorerI18nReady = ref(false)
 	const editorTestI18nReady = ref(false)
-	import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-explorer.${locale}.i18n`).then(() => { explorerI18nReady.value = true })
-	import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-test.${locale}.i18n`).then(() => { editorTestI18nReady.value = true })
+	// Si le chargement i18n échoue, on monte quand même (dégradation = clés brutes
+	// plutôt que composant invisible définitif).
+	import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-explorer.${locale}.i18n`)
+		.finally(() => { explorerI18nReady.value = true })
+	import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-test.${locale}.i18n`)
+		.finally(() => { editorTestI18nReady.value = true })
 
 	const EditorTabs = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-tabs.${locale}.i18n`))
 	const EditorProblems = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-problems.${locale}.i18n`))
@@ -593,6 +597,7 @@
 		}
 	}
 
+	let updateGen = 0
 	function update() {
 		const routeHash = route.params.hash as string | undefined
 		const isDiffRoute = routeHash || route.path.endsWith('/diff')
@@ -616,12 +621,16 @@
 			if (ai) {
 				const key = ai.path
 				const lineQuery = route.query.line
+				const gen = ++updateGen
 				localStorage.setItem(lastCodeKey(currentSide.value), key)
 				// Appliquer toutes les mutations d'état atomiquement après le chargement :
 				// sinon currentTab/currentFolder pointent sur la nouvelle IA pendant que
 				// currentAI1 pointe encore sur l'ancienne, ce qui re-rend les v-if/Teleport
 				// du panel avec un état mixte et peut casser le patch Vue (parentNode null).
+				// Le compteur de génération annule un .then() périmé si l'utilisateur
+				// re-clique avant la fin du chargement (sinon stomp d'état frais).
 				fileSystem.load(ai).then(() => {
+					if (gen !== updateGen) return
 					if (currentSide.value === 1) {
 						currentAI1.value = key
 					} else {
