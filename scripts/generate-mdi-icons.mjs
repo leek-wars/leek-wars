@@ -67,6 +67,9 @@ const DYNAMIC = [
 	'gender-male', 'gender-female',
 	// encyclopedia content (font-class icons stored in PostgreSQL)
 	'map-legend',
+	// admin-dashboards.vue tab icons (server-driven, DashboardController.class.php)
+	'account-clock', 'account-plus', 'sword-cross', 'alert-circle', 'brain',
+	'database', 'git', 'folder-multiple',
 ].map(n => 'mdi-' + n)
 
 for (const n of DYNAMIC) found.add(n)
