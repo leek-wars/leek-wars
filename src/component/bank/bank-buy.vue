@@ -59,6 +59,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { LeekWars } from '@/model/leekwars'
 import { loadScript } from '@paypal/paypal-js'
 import { mixins, useNamespacedT } from '@/model/i18n'
+import { cspNonce } from '@/component/editor/monaco-csp'
 import BankProduct from './bank-product.vue'
 import Breadcrumb from '@/component/forum/breadcrumb.vue'
 import { store } from '@/model/store'
@@ -86,7 +87,8 @@ const breadcrumb_items = computed(() => {
 function loadPayPal() {
 	loadScript({
 		'client-id': (LeekWars.LOCAL || store.state.farmer?.id === 1) ? 'Acg3b4FoxUp3vXX-G4aQ01vc5rkev2DIio8e2_ApB7OVIVHocmuXu7RJcN5zZTHGCOpqf-a-ukdIELDy' : 'AesWr04mqzJrZlvdiR99GWBSnvWya49kuhJm84d3bgg7Afq-Ekh7PbunWFL6UOFXdQFw0TGmwr_vzS74',
-		currency: LeekWars.currency
+		currency: LeekWars.currency,
+		'data-csp-nonce': cspNonce
 	}).then((paypal) => {
 		paypal!.Buttons!({
 			style: { layout: 'vertical', color: LeekWars.dark > 0 ? 'black' : 'blue', shape: 'rect', label: 'paypal', tagline: false },
