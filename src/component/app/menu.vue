@@ -93,6 +93,11 @@
 					</span>
 				</span>
 
+				<router-link v-ripple to="/market" class="section" :class="{'router-link-active': $route.path.startsWith('/market')}" @click="clickItem">
+					<img src="/image/icon/market.png">
+					<div class="text">{{ $t("main.market") }}</div>
+				</router-link>
+
 				<router-link v-ripple to="/inventory" class="section" :class="{'router-link-active': $route.path.startsWith('/inventory')}" @click="clickItem">
 					<img v-if="LeekWars.xpTheme" src="/image/icon/xp_inventory.png">
 					<v-icon v-else>mdi-treasure-chest</v-icon>
