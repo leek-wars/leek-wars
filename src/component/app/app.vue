@@ -37,7 +37,7 @@
 
 				<div class="toasts"></div>
 
-				<div v-if="verifyMessage && $store.state.farmer && !$store.state.farmer.verified" class="finish-register">
+				<div v-if="shouldShowVerifyBanner" class="finish-register">
 					<div class="message">
 						<v-icon>mdi-account-plus</v-icon>
 						{{ $t('main.verify_message') }} <router-link class="green-link" to="/settings">{{ $t('main.verify_info') }}</router-link>
@@ -247,15 +247,29 @@
 	const verifyPopupDismissed = ref(false)
 	const loggedOutOtherTab = ref(false)
 
-	// Tick réactif pour réévaluer showVerifyPopup sans interaction du joueur.
-	// Seulement armé quand le farmer est non-verified : inutile sinon.
+	// Bandeau header "Terminer votre inscription par e-mail" :
+	//  - Comptes pré-migration (pas de didactitiel_completed_at) : ancien
+	//    comportement, visible dès qu'on est non-verified.
+	//  - Comptes post-migration : caché tant que la verify-popup n'a pas été
+	//    explicitement dismissée, pour ne pas triple-solliciter à l'inscription.
+	const shouldShowVerifyBanner = computed(() => {
+		if (!verifyMessage.value) return false
+		const f = store.state.farmer
+		if (!f || f.verified) return false
+		if (!f.didactitiel_completed_at) return true
+		return !!f.verify_modal_dismissed_at
+	})
+
+	// Tick réactif pour réévaluer showVerifyPopup. Désarmé dès que le verdict
+	// est figé (verified, ou modal dismissée) pour ne pas re-render à 60s.
 	const nowTick = ref(Date.now())
 	let verifyPopupTimer: ReturnType<typeof setInterval> | null = null
-	watch(() => store.state.farmer?.verified, (verified, _, onCleanup) => {
-		if (verified || verified === undefined) return
-		if (!localStorage.getItem('verify-popup-first-seen')) {
-			localStorage.setItem('verify-popup-first-seen', String(Date.now()))
-		}
+	const needsTick = computed(() => {
+		const f = store.state.farmer
+		return !!f && !f.verified && !f.verify_modal_dismissed_at && !verifyPopupDismissed.value
+	})
+	watch(needsTick, (active, _, onCleanup) => {
+		if (!active) return
 		verifyPopupTimer = setInterval(() => { nowTick.value = Date.now() }, 60000)
 		onCleanup(() => {
 			if (verifyPopupTimer) clearInterval(verifyPopupTimer)
@@ -264,18 +278,26 @@
 	}, { immediate: true })
 	onBeforeUnmount(() => { if (verifyPopupTimer) clearInterval(verifyPopupTimer) })
 
-	// Affiche la popup aux quick-signups après 5 combats OU 1h cumulée passée
-	// sur l'app. Cooldown 24h après "Plus tard".
+	// La verify-popup s'affiche 5 minutes après la fin du didacticiel. L'horloge
+	// vit côté serveur (farmer.didactitiel_completed_at) pour ne pas dépendre du
+	// localStorage : sinon un 2e compte créé sur le même navigateur voyait la
+	// modal immédiatement (bug observé sur la cohorte 2026-04). Fallback pour les
+	// comptes pré-migration (completed_at null) : 5 combats faits.
+	const VERIFY_POPUP_DELAY_MS = 5 * 60 * 1000
 	const showVerifyPopup = computed({
 		get() {
 			const f = store.state.farmer
 			if (!f || f.verified) return false
 			if (verifyPopupDismissed.value) return false
+			if (f.verify_modal_dismissed_at) return false
 			const snoozedUntil = parseInt(localStorage.getItem('verify-popup-snoozed-until') || '0')
 			if (snoozedUntil > nowTick.value) return false
-			const firstSeen = parseInt(localStorage.getItem('verify-popup-first-seen') || String(nowTick.value))
-			const hoursSinceFirstSeen = (nowTick.value - firstSeen) / 3600000
-			return (f.fights ?? 0) >= 5 || hoursSinceFirstSeen >= 1
+			if (f.didactitiel_completed_at) {
+				return nowTick.value >= f.didactitiel_completed_at * 1000 + VERIFY_POPUP_DELAY_MS
+			}
+			// Pré-migration : on garde l'ancien déclencheur "5 combats" pour ne
+			// pas attendre indéfiniment sur les comptes qui n'ont pas de timestamp.
+			return (f.fights ?? 0) >= 5
 		},
 		set(value: boolean) {
 			if (!value) verifyPopupDismissed.value = true

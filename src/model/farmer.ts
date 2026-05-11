@@ -49,6 +49,9 @@ class Farmer {
 	public team_fights!: number
 	public chips!: Chip[]
 	public didactitiel_seen!: boolean
+	public didactitiel_step!: number
+	public didactitiel_completed_at!: number | null
+	public verify_modal_dismissed_at!: number | null
 	public last_connection!: number
 	public moderator!: boolean
 	public admin!: boolean

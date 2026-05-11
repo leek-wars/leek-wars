@@ -74,25 +74,15 @@ function complete() {
 	if (store.state.farmer) {
 		store.state.farmer.didactitiel_seen = true
 		store.state.farmer.didactitiel_step = 6
-		store.state.farmer.didactitiel_completed_at = Math.floor(Date.now() / 1000)
+		store.state.farmer.didactitiel_completed_at = LeekWars.time
 	}
 	LeekWars.didactitial = false
 	LeekWars.didactitial_step = 0
 }
 
-function closed() {
-	// La croix vaut « didacticiel terminé » côté serveur : on n'a plus le bouton
-	// Passer, donc fermer doit faire avancer l'état sinon le didacticiel revient
-	// à la prochaine connexion. L'utilisateur a fait un choix conscient.
-	LeekWars.post('farmer/didactitiel-complete', {})
-	if (store.state.farmer) {
-		store.state.farmer.didactitiel_seen = true
-		store.state.farmer.didactitiel_step = 6
-		store.state.farmer.didactitiel_completed_at = Math.floor(Date.now() / 1000)
-	}
-	LeekWars.didactitial = false
-	LeekWars.didactitial_step = 0
-}
+// La croix vaut « didacticiel terminé » : sans bouton Passer, fermer doit
+// faire avancer l'état sinon le didacticiel revient à la prochaine connexion.
+const closed = complete
 </script>
 
 <style lang="scss" scoped>

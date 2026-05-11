@@ -53,6 +53,7 @@
 import { ref } from 'vue'
 import { LeekWars } from '@/model/leekwars'
 import { mixins, useNamespacedT } from '@/model/i18n'
+import { store } from '@/model/store'
 import Popup from '@/component/popup.vue'
 
 defineOptions({ name: 'VerifyPopup', i18n: {}, mixins: [...mixins] })
@@ -75,7 +76,13 @@ function close() {
 }
 
 function later() {
+	// Le dismiss serveur débloque le bandeau header (cf. app.vue), le snooze
+	// localStorage empêche la modal de revenir sur le même appareil pendant 24h.
 	localStorage.setItem('verify-popup-snoozed-until', String(Date.now() + 24 * 60 * 60 * 1000))
+	LeekWars.post('farmer/verify-modal-dismissed', {})
+	if (store.state.farmer && !store.state.farmer.verify_modal_dismissed_at) {
+		store.state.farmer.verify_modal_dismissed_at = LeekWars.time
+	}
 	close()
 }
 

@@ -331,6 +331,12 @@ const invdate = new Date(LOCAL_DATE.toLocaleString('en-US', {
 const DATE = new Date(invdate.getTime())
 
 let xpCursorListenerRegistered = false
+function persistDidactitielStep(step: number) {
+	LeekWars.didactitial_step = step
+	post('farmer/didactitiel-step', { step })
+	if (store.state.farmer) store.state.farmer.didactitiel_step = step
+}
+
 const LeekWars = reactive({
 	version: packageJson.version,
 	normal_version: packageJson.version.replace(/\.\d+$/, ''),
@@ -801,24 +807,18 @@ const LeekWars = reactive({
 	didactitial_visible: false,
 	show_didactitiel: () => {
 		LeekWars.didactitial = true
-		// Reprise à l'étape sauvegardée en BDD si disponible (1 à 5),
-		// sinon démarrage à l'étape 1.
 		const saved = store.state.farmer?.didactitiel_step ?? 0
-		LeekWars.didactitial_step = saved >= 1 && saved <= 5 ? saved : 1
-		if (LeekWars.didactitial_step !== saved) {
-			LeekWars.post('farmer/didactitiel-step', { step: LeekWars.didactitial_step })
-			if (store.state.farmer) store.state.farmer.didactitiel_step = LeekWars.didactitial_step
-		}
+		const step = saved >= 1 && saved <= 5 ? saved : 1
+		// Persiste si la valeur sauvegardée ne reflète pas où on démarre
+		// (ex: replay via le footer avec saved=6, ou tout premier lancement à saved=0).
+		if (step !== saved) persistDidactitielStep(step)
+		else LeekWars.didactitial_step = step
 		nextTick(() => {
 			LeekWars.didactitial_visible = true
 		})
 	},
 	didactitial_next: () => {
-		LeekWars.didactitial_step++
-		// Persistance serveur : permet la reprise au refresh et donne des
-		// analytics fines sur l'étape où les utilisateurs décrochent.
-		LeekWars.post('farmer/didactitiel-step', { step: LeekWars.didactitial_step })
-		if (store.state.farmer) store.state.farmer.didactitiel_step = LeekWars.didactitial_step
+		persistDidactitielStep(LeekWars.didactitial_step + 1)
 		LeekWars.didactitial_visible = false
 		nextTick(() => LeekWars.didactitial_visible = true)
 	},
