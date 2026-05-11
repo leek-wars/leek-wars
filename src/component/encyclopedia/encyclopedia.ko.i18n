@@ -14,10 +14,10 @@
 	"n_contributions": "{n} 기여",
 	"n_contributors": "기여자 없음 | <b>{n}</b> 기여자 | <b>{n}</b> 참여자",
 	"n_references": "참조 | 참조 | 참조",
-	"n_views": "{v} 보기",
+	"n_views": "{v} 조회수",
 	"not_found": "이 언어에 \"{name}\" 페이지가 없습니다.",
 	"redirected_from": "{0}에서 리디렉션됨",
 	"referencing_translations": "관련 번역",
-	"search": "페이지 찾기",
+	"search": "페이지 검색",
 	"views": "조회수"
 }

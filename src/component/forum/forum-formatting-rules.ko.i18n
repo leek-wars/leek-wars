@@ -13,8 +13,8 @@
 	"italic_ex": "이탤릭체",
 	"underlined": "밑줄",
 	"underlined_ex": "밑줄",
-	"striked": "막대",
-	"striked_ex": "막대",
+	"striked": "취소선",
+	"striked_ex": "취소선",
 	"basic_html": "기본 HTML 허용",
 	"image": "이미지",
 	"image_ex": "url"
