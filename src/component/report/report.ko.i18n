@@ -39,7 +39,7 @@
 	"winners": "승자 | 승자",
 	"errors": "오류",
 	"errors_warnings": "오류 및 경고",
-	"n_errors": "{n} 오류",
+	"n_errors": "{n} 오류 | {n} 오류",
 	"n_warnings": "{n} 경고",
 	"toggle_turrets": "포탑 표시/숨기기",
 	"toggle_percent": "생명력 비율",

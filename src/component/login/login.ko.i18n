@@ -7,7 +7,7 @@
 	"forgot_password": "비밀번호를 잊어 버렸습니까 ?",
 	"incorrect_login": "로그인 또는 비밀번호가 올바르지 않습니다.",
 	"keep_connected": "대기 중",
-	"login": "브리더 이름 또는 이메일",
+	"login": "사육자 이름 또는 이메일",
 	"password": "비밀번호",
 	"success": "연결되었습니다",
 	"title": "로그인"

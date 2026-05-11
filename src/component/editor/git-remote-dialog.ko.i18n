@@ -1,0 +1,22 @@
+{
+	"title": "리모트 설정",
+	"remotes": "리모트",
+	"no_remotes": "설정된 리모트가 없습니다.",
+	"remote_name": "이름 (예: origin)",
+	"remote_url": "https://github.com/user/repo.git",
+	"select_repo": "저장소 선택...",
+	"authentication": "인증",
+	"connected_as": "{0}(으)로 연결됨",
+	"connected_anonymous": "연결됨",
+	"install_github_app": "GitHub App 설치",
+	"install_hint": "설치 시 액세스를 허용할 저장소를 선택하세요.",
+	"github_app": "GitHub App",
+	"or_pat": "또는 개인 액세스 토큰 사용:",
+	"pat_placeholder": "액세스 토큰",
+	"instance_placeholder": "https://codeberg.org",
+	"self_hosted": "자체 호스팅 인스턴스",
+	"save": "저장",
+	"add": "추가",
+	"invalid_token": "공급자가 토큰을 거부했습니다.",
+	"invalid_instance_url": "유효하지 않거나 서버에서 접근할 수 없는 인스턴스 URL입니다."
+}
