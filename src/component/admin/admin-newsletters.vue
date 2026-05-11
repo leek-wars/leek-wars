@@ -31,7 +31,7 @@
 							<div class="stat" title="Mails envoyés">
 								<v-icon size="18">mdi-send-outline</v-icon>
 								<span class="value">{{ n.stats.total.toLocaleString() }}</span>
-								<span class="slabel">envoyés</span>
+								<span class="slabel">envois</span>
 							</div>
 							<div class="stat" title="Mails ouverts (pixel de tracking)">
 								<v-icon size="18">mdi-email-open-outline</v-icon>
@@ -45,18 +45,18 @@
 								<span class="slabel">clics</span>
 								<span class="rate">({{ percent(n.stats.clicked, n.stats.total) }}%)</span>
 							</div>
-							<div class="stat" title="Clics parmi les ouvertures (Click-To-Open Rate)">
+							<div class="stat" title="Click-To-Open Rate (clics / ouvertures)">
 								<v-icon size="18">mdi-target</v-icon>
 								<span class="value">{{ percent(n.stats.clicked, n.stats.opened) }}%</span>
 								<span class="slabel">CTOR</span>
 							</div>
-							<div class="stat bounced" :title="`Hard: ${n.stats.hard_bounced} · Soft: ${n.stats.soft_bounced}`">
+							<div class="stat bounced" :title="`Permanents: ${n.stats.hard_bounced} · Temporaires: ${n.stats.soft_bounced}`">
 								<v-icon size="18">mdi-email-alert-outline</v-icon>
 								<span class="value">{{ n.stats.bounced.toLocaleString() }}</span>
 								<span class="slabel">bounces</span>
 								<span class="rate">({{ percent(n.stats.bounced, n.stats.total) }}%)</span>
 								<span v-if="n.stats.bounced > 0" class="breakdown">
-									{{ n.stats.hard_bounced }} hard · {{ n.stats.soft_bounced }} soft
+									{{ n.stats.hard_bounced }} · {{ n.stats.soft_bounced }}
 								</span>
 							</div>
 							<div class="stat unsub" title="Désinscriptions via le lien du mail">
@@ -212,16 +212,16 @@
 		.stats {
 			display: flex;
 			flex-wrap: wrap;
-			gap: 8px 20px;
+			gap: 6px 12px;
 			margin-top: 12px;
-			padding: 10px 14px;
+			padding: 8px 12px;
 			background: var(--background-secondary);
 			border-radius: 6px;
-			font-size: 14px;
+			font-size: 13px;
 			.stat {
 				display: inline-flex;
 				align-items: center;
-				gap: 6px;
+				gap: 4px;
 				color: var(--text-color);
 				.value {
 					font-weight: 600;
@@ -231,7 +231,7 @@
 				}
 				.rate {
 					color: var(--text-color-secondary);
-					font-size: 13px;
+					font-size: 12px;
 				}
 				.breakdown {
 					color: var(--text-color-secondary);
