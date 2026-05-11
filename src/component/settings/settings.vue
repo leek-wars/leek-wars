@@ -263,7 +263,7 @@
 		<popup v-model="deleteFailedDialog" :width="600">
 			<template #icon><v-icon>mdi-delete</v-icon></template>
 			<template #title><span>{{ $t('delete_failed') }}</span></template>
-			{{ $t(deleteFailedError) }}
+			{{ $t('error_' + deleteFailedError) }}
 		</popup>
 	</div>
 </template>
@@ -306,7 +306,7 @@
 	const deleteConfirmPassword = ref('')
 	const deleteSuccessDialog = ref(false)
 	const deleteFailedDialog = ref(false)
-	const deleteFailedError = ref<unknown>(null)
+	const deleteFailedError = ref<string>('unknown')
 	const deleteForumMessages = ref(false)
 	const advanced = ref(false)
 	const password = ref('')
@@ -461,7 +461,7 @@
 			}).error(error => {
 				deleteDialog.value = false
 				deleteFailedDialog.value = true
-				deleteFailedError.value = error.error
+				deleteFailedError.value = typeof error?.error === 'string' ? error.error : 'unknown'
 			})
 		}
 	}
@@ -478,7 +478,7 @@
 		}).error(error => {
 			deleteConfirmDialog.value = false
 			deleteFailedDialog.value = true
-			deleteFailedError.value = error.error
+			deleteFailedError.value = typeof error?.error === 'string' ? error.error : 'unknown'
 		})
 	}
 
