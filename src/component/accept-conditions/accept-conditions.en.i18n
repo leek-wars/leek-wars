@@ -1,7 +1,7 @@
 {
-	"accept_1": "There is an update to the terms of use, or you didn't agree yet to the terms of use (beta-version players).",
-	"accept_2": "You must read and agree to the current {cgu} to start playing Leek Wars.",
-	"cgu": "terms of use",
-	"i_accept": "I agree to the terms of use.",
-	"title": "Terms of use"
+	"accept_1": "The terms of use have been updated, or you have not yet accepted any terms of use (beta participation).",
+	"accept_2": "You must read and accept the current {cgu} (ToU)\nbefore continuing to play Leek Wars.",
+	"cgu": "general terms of use",
+	"i_accept": "I accept the ToU",
+	"title": "Terms of Use"
 }

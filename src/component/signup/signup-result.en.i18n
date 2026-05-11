@@ -1,4 +1,4 @@
 {
 	"validated": "Registration validated!",
-	"validated_message": "Congratulations {farmer}, check your email and look for the verification email to finalize your registration!"
+	"validated_message": "Congratulations {farmer}! Check your inbox and click the activation link inside to validate your account."
 }
