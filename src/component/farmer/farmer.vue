@@ -618,7 +618,7 @@
 	import type { ChartData, ChartOptions } from 'chart.js'
 	import { computed, defineAsyncComponent, ref, useTemplateRef, watch, type ComponentPublicInstance } from 'vue'
 	import { useI18n } from 'vue-i18n'
-	import { useRoute, useRouter } from 'vue-router'
+	import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 
 	const FightsHistory = defineAsyncComponent(() => import('@/component/history/fights-history.vue'))
 	const TournamentsHistory = defineAsyncComponent(() => import('@/component/history/tournaments-history.vue'))
@@ -751,9 +751,17 @@
 
 	const farmerTitleEnabled = computed(() => LeekWars.selectWhere(store.state.farmer!.pomps, 'template', 126))
 
+	// Pendant la navigation sortante, le composant reste monté le temps que la
+	// route suivante charge ; nuller farmer.value démonte les v-if des popups et
+	// casse les Teleport Vuetify (parentNode null). onBeforeRouteLeave ne fire pas
+	// sur /farmer/A → /farmer/B (même composant), le watch reste fonctionnel.
+	let leaving = false
+	onBeforeRouteLeave(() => { leaving = true })
+
 	watch(id, () => update(), { immediate: true })
 
 	function update() {
+		if (leaving) return
 		farmer.value = null
 		trophies.value = null
 		notfound.value = false
