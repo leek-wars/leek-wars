@@ -17,8 +17,8 @@
 	"category_team_fight": "팀",
 	"challenge": "도전",
 	"click_opponent": "전투를 시작하려면 상대를 클릭하세요.",
-	"error_fight_not_enough_leeks": "팀에 파가 부족합니다.",
-	"error_fight_you_need_at_least_2_leeks": "최소 2개의 리크가 있어야 합니다.",
+	"error_fight_not_enough_leeks": "팀에 부추가 부족합니다.",
+	"error_fight_you_need_at_least_2_leeks": "최소 2개의 부추가 있어야 합니다.",
 	"error_target_needs_at_least_2_leeks": "대상 사육자는 최소 2마리의 부추가 필요합니다.",
 	"error_you_need_at_least_1_leek": "최소 1마리의 부추가 필요합니다.",
 	"error_you_need_at_least_2_leeks": "최소 2마리의 부추가 필요합니다.",
@@ -30,7 +30,7 @@
 	"garden_farmer": "채소밭",
 	"garden_solo": "단독 채소밭",
 	"garden_team": "텃밭팀",
-	"invalid_ai": "리크 AI는 유효하지 않습니다!",
+	"invalid_ai": "부추 AI는 유효하지 않습니다!",
 	"level_n": "레벨 {0}",
 	"n_challenges": "{0} 도전",
 	"n_fights": "1 싸움 | {count} 싸움",
@@ -50,6 +50,6 @@
 	"total_level_n": "총 레벨 {0}",
 	"you_have_no_team": "당신은 팀이 없습니다",
 	"you_must_be_level_20": "레벨 20이어야 합니다.",
-	"you_must_have_2_leeks": "파는 최소 2개 이상 있어야 합니다.",
+	"you_must_have_2_leeks": "부추는 최소 2개 이상 있어야 합니다.",
 	"you_must_have_a_team": "당신은 팀의 일원이어야합니다"
 }
