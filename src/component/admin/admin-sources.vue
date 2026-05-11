@@ -195,11 +195,13 @@
 	import type { ChartData, ChartOptions } from 'chart.js'
 
 	const STORAGE_KEY_DAYS = 'admin_sources_days'
-	const REG_TYPES: Record<string, { label: string, title: string, color: string }> = {
-		classic: { label: 'Classique', title: 'Inscription classique', color: '#2196f3' },
-		github:  { label: 'GitHub',    title: 'Inscription GitHub',    color: '#424242' },
-		google:  { label: 'Google',    title: 'Inscription Google',    color: '#db4437' },
-		fast:    { label: 'Rapide',    title: 'Inscription rapide',    color: '#ff9800' },
+	type RegType = 'classic' | 'github' | 'google' | 'fast_verified' | 'fast'
+	const REG_TYPES: Record<RegType, { label: string, title: string, color: string }> = {
+		classic:       { label: 'Classique',     title: 'Inscription classique',                color: '#2196f3' },
+		github:        { label: 'GitHub',        title: 'Inscription GitHub',                   color: '#424242' },
+		google:        { label: 'Google',        title: 'Inscription Google',                   color: '#db4437' },
+		fast_verified: { label: 'Rapide validé', title: 'Inscription rapide puis validée',      color: '#ffc107' },
+		fast:          { label: 'Rapide',        title: 'Inscription rapide (non validée)',     color: '#ff9800' },
 	}
 	const GRID = { color: 'rgba(128,128,128,0.15)' }
 	const makeChartOptions = (stacked: boolean): ChartOptions<'bar'> => ({
@@ -214,12 +216,8 @@
 
 	const router = useRouter()
 
-	interface RegistrationEntry {
+	type RegistrationEntry = Record<RegType, string | number> & {
 		day: string
-		classic: string | number
-		github: string | number
-		fast: string | number
-		google?: string | number
 		tuto_done?: string | number
 		avg_tuto_step?: string | number
 		verified?: string | number
@@ -229,7 +227,8 @@
 		github?: boolean
 		google?: boolean
 		pass?: boolean
-		reg_type?: string
+		registered_fast?: boolean
+		reg_type?: RegType
 		register_time: number
 		didactitiel_seen?: boolean
 		tutorial_progress?: number
@@ -289,7 +288,7 @@
 
 			last_farmers_by_day.value = {}
 			for (const farmer of last.value) {
-				farmer.reg_type = farmer.github ? 'github' : (farmer.google ? 'google' : (farmer.pass ? 'classic' : 'fast'))
+				farmer.reg_type = regType(farmer)
 				const day = LeekWars.formatDate(farmer.register_time)
 				if (!last_farmers_by_day.value[day]) last_farmers_by_day.value[day] = []
 				last_farmers_by_day.value[day].push(farmer)
@@ -313,11 +312,12 @@
 
 		registrationsChart.value = {
 			labels,
-			datasets: [
-				{ label: REG_TYPES.classic.label, data: registrations.map(r => +r.classic), backgroundColor: REG_TYPES.classic.color, stack: 'reg' },
-				{ label: REG_TYPES.github.label, data: registrations.map(r => +r.github), backgroundColor: REG_TYPES.github.color, stack: 'reg' },
-				{ label: REG_TYPES.fast.label, data: registrations.map(r => +r.fast), backgroundColor: REG_TYPES.fast.color, stack: 'reg' },
-			]
+			datasets: (Object.entries(REG_TYPES) as [RegType, typeof REG_TYPES[RegType]][]).map(([key, cfg]) => ({
+				label: cfg.label,
+				data: registrations.map(r => +r[key]),
+				backgroundColor: cfg.color,
+				stack: 'reg',
+			}))
 		}
 
 		tutoChart.value = {
@@ -339,8 +339,15 @@
 		chartKey.value++
 	}
 
-	function regLabel(type: string): string {
-		return REG_TYPES[type]?.title ?? ''
+	function regType(f: SourceFarmer): RegType {
+		if (f.github) return 'github'
+		if (f.google) return 'google'
+		if (f.registered_fast) return f.pass ? 'fast_verified' : 'fast'
+		return 'classic'
+	}
+
+	function regLabel(type: RegType | undefined): string {
+		return type ? REG_TYPES[type].title : ''
 	}
 
 	function tutoTitle(farmer: SourceFarmer): string {
