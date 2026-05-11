@@ -9,13 +9,9 @@ import { store } from '@/model/store'
 import { emitter, vueMain } from '@/model/emitter'
 import { WeaponTemplate } from '@/model/weapon'
 import { UAParser } from 'ua-parser-js'
-import type { Router } from 'vue-router'
+import router from '@/router'
 import type { Constant } from '@/model/constant'
 import type { LSFunction } from '@/model/function'
-
-let _router: Router
-export function setRouter(r: Router) { _router = r }
-export function getRouter() { return _router }
 
 import { TranslateResult } from 'vue-i18n'
 import { Chat, ChatWindow } from './chat'
@@ -1324,8 +1320,8 @@ function goToRanking(type: string, order: string, id: number = 0) {
 		const page = 1 + Math.floor((data.rank - 1) / 50)
 		const active_url = data.active ? '' : '?inactive'
 		const newRoute = '/ranking/' + type + '/' + order + '/page-' + page + active_url + '#rank-' + data.rank
-		if (_router.currentRoute.value.fullPath !== newRoute) {
-			_router.push(newRoute)
+		if (router.currentRoute.value.fullPath !== newRoute) {
+			router.push(newRoute)
 		}
 	})
 }

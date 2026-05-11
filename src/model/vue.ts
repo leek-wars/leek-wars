@@ -15,7 +15,7 @@ import RankingBadge from '@/component/ranking-badge.vue'
 import Talent from '@/component/talent.vue'
 import { env } from '@/env'
 import { i18n, loadLanguageAsync, normalizeComponentName } from '@/model/i18n'
-import { LeekWars, setRouter, loadGameData } from '@/model/leekwars'
+import { LeekWars, loadGameData } from '@/model/leekwars'
 import '@/model/serviceworker'
 import { store } from "@/model/store"
 import router, { getRedirectAfterLogin } from '@/router'
@@ -383,7 +383,6 @@ const app = createApp({
 
 app.config.errorHandler = (err, vm, info) => reportVueError(err, vm, info, 'main')
 
-setRouter(router)
 app.use(router)
 app.use(i18n)
 app.use(store)

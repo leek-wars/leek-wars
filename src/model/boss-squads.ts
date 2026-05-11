@@ -1,7 +1,7 @@
 import { LeekWars } from '@/model/leekwars'
+import router from '@/router'
 import { SocketMessage } from '@/model/socket'
 import { store } from '@/model/store'
-import { getRouter } from '@/model/leekwars'
 import { Leek } from './leek'
 import { Farmer } from './farmer'
 import { BOSSES, Boss } from './boss'
@@ -66,18 +66,18 @@ export class BossSquads {
 	joined(squad: BossSquad) {
 		this.squad = squad
 		const route = '/garden/boss/' + BOSSES[squad.boss].name + '/' + squad.id
-		getRouter().isReady().then(() => {
-			const currentPath = getRouter().currentRoute.value.path
+		router.isReady().then(() => {
+			const currentPath = router.currentRoute.value.path
 			if (currentPath.startsWith("/garden/boss") && currentPath !== route) {
-				getRouter().push(route)
+				router.push(route)
 			}
 		})
 	}
 	noSuchSquad() {
 		localStorage.removeItem('garden/boss-squad')
-		getRouter().isReady().then(() => {
-			if (getRouter().currentRoute.value.path.startsWith("/garden/boss") && getRouter().currentRoute.value.path !== "/garden/boss") {
-				getRouter().push('/garden/boss')
+		router.isReady().then(() => {
+			if (router.currentRoute.value.path.startsWith("/garden/boss") && router.currentRoute.value.path !== "/garden/boss") {
+				router.push('/garden/boss')
 			}
 		})
 	}
@@ -91,9 +91,9 @@ export class BossSquads {
 		LeekWars.socket.send([SocketMessage.GARDEN_BOSS_LEAVE_SQUAD])
 	}
 	left() {
-		getRouter().isReady().then(() => {
-			if (getRouter().currentRoute.value.path.startsWith("/garden/boss")) {
-				getRouter().push('/garden/boss/')
+		router.isReady().then(() => {
+			if (router.currentRoute.value.path.startsWith("/garden/boss")) {
+				router.push('/garden/boss/')
 			}
 		})
 		this.squad = null
@@ -109,9 +109,9 @@ export class BossSquads {
 		if (hasEngagedLeeks) {
 			store.commit('update-fights', -1)
 		}
-		getRouter().isReady().then(() => {
-			if (getRouter().currentRoute.value.path.startsWith("/garden/")) {
-				getRouter().push('/fight/' + data[0])
+		router.isReady().then(() => {
+			if (router.currentRoute.value.path.startsWith("/garden/")) {
+				router.push('/fight/' + data[0])
 			}
 		})
 		this.squad = null

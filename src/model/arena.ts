@@ -1,7 +1,7 @@
 import { LeekWars } from '@/model/leekwars'
+import router from '@/router'
 import { SocketMessage } from '@/model/socket'
 import { store } from '@/model/store'
-import { getRouter } from '@/model/leekwars'
 import { Leek } from './leek'
 
 class Arena {
@@ -73,9 +73,9 @@ class Arena {
 			store.commit('update-fights', -1)
 
 			// Redirect if on the garden page
-			getRouter().isReady().then(() => {
-				if (getRouter().currentRoute.value.path.startsWith("/garden/")) {
-					getRouter().push('/fight/' + data[0])
+			router.isReady().then(() => {
+				if (router.currentRoute.value.path.startsWith("/garden/")) {
+					router.push('/fight/' + data[0])
 				}
 			})
 		}
