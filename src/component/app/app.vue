@@ -248,7 +248,8 @@
 	const loggedOutOtherTab = ref(false)
 
 	// Affiche la popup de validation aux quick-signups après 5 combats joués
-	// ou 24h depuis l'inscription, avec un cooldown de 24h après "Plus tard".
+	// ou 1h cumulée passée sur l'app (timestamp de première ouverture stocké en
+	// localStorage). Cooldown 24h après "Plus tard".
 	const showVerifyPopup = computed({
 		get() {
 			const f = store.state.farmer
@@ -256,10 +257,14 @@
 			if (verifyPopupDismissed.value) return false
 			const snoozedUntil = parseInt(localStorage.getItem('verify-popup-snoozed-until') || '0')
 			if (snoozedUntil > Date.now()) return false
+			let firstSeen = parseInt(localStorage.getItem('verify-popup-first-seen') || '0')
+			if (!firstSeen) {
+				firstSeen = Date.now()
+				localStorage.setItem('verify-popup-first-seen', String(firstSeen))
+			}
+			const hoursSinceFirstSeen = (Date.now() - firstSeen) / 3600000
 			const fights = (f as any).fights ?? 0
-			const registerTime = (f as any).register_time ?? 0
-			const hoursSinceRegister = registerTime ? (Date.now() / 1000 - registerTime) / 3600 : 0
-			return fights >= 5 || hoursSinceRegister >= 24
+			return fights >= 5 || hoursSinceFirstSeen >= 1
 		},
 		set(value: boolean) {
 			if (!value) verifyPopupDismissed.value = true
