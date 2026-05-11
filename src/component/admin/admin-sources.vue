@@ -22,7 +22,7 @@
 					<div class="last-farmers">
 						<div v-for="(day, d) of last_farmers_by_day" :key="d" class="farmers">
 							<b class="date">{{ d }} ({{ day.length }})</b>
-							<div v-for="farmer of day" :key="farmer.id" class="card farmer">
+							<div v-for="farmer of day" :key="farmer.id" class="card farmer" :class="{deleted: farmer.deleted, connected: farmer.connected && !farmer.deleted}">
 								<div class="date">
 									<img v-if="farmer.connected" class="status" src="/image/connected.png">
 									<img v-else class="status" src="/image/disconnected.png">
@@ -30,9 +30,11 @@
 								</div>
 								<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }" :bottom="true">
 									<router-link v-ripple :to="'/farmer/' + farmer.id" class="name" v-bind="props">
-										<avatar :farmer="farmer" />
-										<flag :code="LeekWars.languages[farmer.language].country" :clickable="false" />
-										<div>{{ farmer.name }}</div>
+										<v-icon v-if="farmer.deleted" class="deleted-icon" title="Compte désinscrit">mdi-account-off</v-icon>
+										<avatar v-else :farmer="farmer" />
+										<flag v-if="farmer.language && LeekWars.languages[farmer.language]" :code="LeekWars.languages[farmer.language].country" :clickable="false" />
+										<div v-if="farmer.deleted" class="deleted-name">désinscrit #{{ farmer.id }}</div>
+										<div v-else>{{ farmer.name }}</div>
 									</router-link>
 								</rich-tooltip-farmer>
 
@@ -225,6 +227,7 @@
 		pass?: boolean
 		registered_fast?: boolean
 		verified?: boolean
+		deleted?: boolean
 		reg_type?: RegType
 		validation?: RegType | null
 		register_time: number
@@ -651,6 +654,30 @@
 			color: #000;
 		}
 	}
+	&.deleted {
+		> *:not(.name) {
+			opacity: 0.45;
+		}
+		.deleted-icon {
+			color: #b71c1c;
+			font-size: 22px;
+		}
+		.deleted-name {
+			font-style: italic;
+			color: #b71c1c;
+		}
+	}
+	&.connected {
+		background: rgba(76, 175, 80, 0.12);
+	}
+}
+body.dark .farmer.deleted {
+	.deleted-icon, .deleted-name {
+		color: #ef9a9a;
+	}
+}
+body.dark .farmer.connected {
+	background: rgba(76, 175, 80, 0.18);
 }
 #app.app .last-farmers {
 	overflow-x: auto;
