@@ -247,14 +247,25 @@
 	const verifyPopupDismissed = ref(false)
 	const loggedOutOtherTab = ref(false)
 
-	// Tick réactif pour réévaluer les computeds time-based sans interaction.
+	// Tick réactif pour réévaluer showVerifyPopup sans interaction du joueur.
+	// Seulement armé quand le farmer est non-verified : inutile sinon.
 	const nowTick = ref(Date.now())
-	const verifyPopupTimer = setInterval(() => { nowTick.value = Date.now() }, 60000)
-	onBeforeUnmount(() => clearInterval(verifyPopupTimer))
+	let verifyPopupTimer: ReturnType<typeof setInterval> | null = null
+	watch(() => store.state.farmer?.verified, (verified, _, onCleanup) => {
+		if (verified || verified === undefined) return
+		if (!localStorage.getItem('verify-popup-first-seen')) {
+			localStorage.setItem('verify-popup-first-seen', String(Date.now()))
+		}
+		verifyPopupTimer = setInterval(() => { nowTick.value = Date.now() }, 60000)
+		onCleanup(() => {
+			if (verifyPopupTimer) clearInterval(verifyPopupTimer)
+			verifyPopupTimer = null
+		})
+	}, { immediate: true })
+	onBeforeUnmount(() => { if (verifyPopupTimer) clearInterval(verifyPopupTimer) })
 
-	// Affiche la popup de validation aux quick-signups après 5 combats joués
-	// ou 1h cumulée passée sur l'app (timestamp de première ouverture stocké en
-	// localStorage). Cooldown 24h après "Plus tard".
+	// Affiche la popup aux quick-signups après 5 combats OU 1h cumulée passée
+	// sur l'app. Cooldown 24h après "Plus tard".
 	const showVerifyPopup = computed({
 		get() {
 			const f = store.state.farmer
@@ -262,14 +273,9 @@
 			if (verifyPopupDismissed.value) return false
 			const snoozedUntil = parseInt(localStorage.getItem('verify-popup-snoozed-until') || '0')
 			if (snoozedUntil > nowTick.value) return false
-			let firstSeen = parseInt(localStorage.getItem('verify-popup-first-seen') || '0')
-			if (!firstSeen) {
-				firstSeen = nowTick.value
-				localStorage.setItem('verify-popup-first-seen', String(firstSeen))
-			}
+			const firstSeen = parseInt(localStorage.getItem('verify-popup-first-seen') || String(nowTick.value))
 			const hoursSinceFirstSeen = (nowTick.value - firstSeen) / 3600000
-			const fights = (f as any).fights ?? 0
-			return fights >= 5 || hoursSinceFirstSeen >= 1
+			return (f.fights ?? 0) >= 5 || hoursSinceFirstSeen >= 1
 		},
 		set(value: boolean) {
 			if (!value) verifyPopupDismissed.value = true

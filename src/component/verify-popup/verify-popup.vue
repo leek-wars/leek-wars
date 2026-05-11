@@ -41,7 +41,7 @@
 
 		<template #actions>
 			<div v-ripple class="action compact" @click="later">{{ t('later') }}</div>
-			<div v-ripple class="action primary" :class="{ disabled: submitting }" @click="submit">
+			<div v-ripple class="action green" :class="{ disabled: submitting }" @click="submit">
 				<v-icon>mdi-check</v-icon>
 				{{ t('validate') }}
 			</div>
@@ -172,5 +172,8 @@ function submit() {
 	.error-msg {
 		color: #c0392b;
 		font-size: 12px;
+	}
+	body.dark .error-msg {
+		color: #e88;
 	}
 </style>
