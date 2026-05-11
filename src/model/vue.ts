@@ -162,7 +162,13 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 	if (Date.now() - lastErrorSent < 1000) return
 	lastErrorSent = Date.now()
 
-	const error = (e?.name || 'Error') + ": " + (e?.message || String(e))
+	let errorBody: string
+	try {
+		errorBody = e?.message || (e && typeof e === 'object' ? JSON.stringify(e) : String(e))
+	} catch {
+		errorBody = String(e)
+	}
+	const error = (e?.name || 'Error') + ": " + errorBody
 	const file = document.location.href
 	const locale = i18n.locale
 	const user_agent = navigator.userAgent

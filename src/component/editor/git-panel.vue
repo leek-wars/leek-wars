@@ -486,22 +486,38 @@
 	}
 
 	async function stage(change: GitChange) {
-		await gitCall('git/stage', { folder: selectedRepo.value, files: JSON.stringify([change.file]) })
+		try {
+			await gitCall('git/stage', { folder: selectedRepo.value, files: JSON.stringify([change.file]) })
+		} catch (e: unknown) {
+			syncError.value = 'Stage: ' + gitErrorMessage(e)
+		}
 		refreshStatus()
 	}
 
 	async function unstage(change: GitChange) {
-		await gitCall('git/unstage', { folder: selectedRepo.value, files: JSON.stringify([change.file]) })
+		try {
+			await gitCall('git/unstage', { folder: selectedRepo.value, files: JSON.stringify([change.file]) })
+		} catch (e: unknown) {
+			syncError.value = 'Unstage: ' + gitErrorMessage(e)
+		}
 		refreshStatus()
 	}
 
 	async function stageAll() {
-		await gitCall('git/stage-all', { folder: selectedRepo.value })
+		try {
+			await gitCall('git/stage-all', { folder: selectedRepo.value })
+		} catch (e: unknown) {
+			syncError.value = 'Stage all: ' + gitErrorMessage(e)
+		}
 		refreshStatus()
 	}
 
 	async function unstageAll() {
-		await gitCall('git/unstage-all', { folder: selectedRepo.value })
+		try {
+			await gitCall('git/unstage-all', { folder: selectedRepo.value })
+		} catch (e: unknown) {
+			syncError.value = 'Unstage all: ' + gitErrorMessage(e)
+		}
 		refreshStatus()
 	}
 
@@ -509,7 +525,13 @@
 		if (change.index === '?') {
 			if (!confirm(t('discard_untracked_confirm', [change.file]) as string)) return
 		}
-		await gitCall('git/discard', { folder: selectedRepo.value, files: JSON.stringify([change.file]) })
+		try {
+			await gitCall('git/discard', { folder: selectedRepo.value, files: JSON.stringify([change.file]) })
+		} catch (e: unknown) {
+			syncError.value = 'Discard: ' + gitErrorMessage(e)
+			await refreshStatus()
+			return
+		}
 		emitter.emit('close-diff', { folder: selectedRepo.value, file: change.file })
 		if (change.index === '?') {
 			removeDeletedFiles([change.file])
@@ -526,7 +548,13 @@
 			if (!confirm(t('discard_untracked_all_confirm', [untracked.length]) as string)) return
 		}
 		const files = unstagedChanges.value.map(c => c.file)
-		await gitCall('git/discard', { folder: selectedRepo.value, files: JSON.stringify(files) })
+		try {
+			await gitCall('git/discard', { folder: selectedRepo.value, files: JSON.stringify(files) })
+		} catch (e: unknown) {
+			syncError.value = 'Discard all: ' + gitErrorMessage(e)
+			await refreshStatus()
+			return
+		}
 		for (const file of files) {
 			emitter.emit('close-diff', { folder: selectedRepo.value, file })
 		}
