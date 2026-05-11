@@ -1,0 +1,21 @@
+{
+	"title": "Sécurise ton compte et reçois ta récompense",
+	"intro": "Tu vas perdre ta progression si tu changes de navigateur ou si tu effaces tes cookies. Valide ton compte pour le sécuriser et débloquer la récompense !",
+	"reward_fights": "combats supplémentaires",
+	"reward_habs": "habs",
+	"reward_crystals": "cristaux",
+	"reward_hat": "Chapeau Casquette",
+	"login": "Choisis ton nom d'éleveur",
+	"email": "Ton adresse email",
+	"password": "Mot de passe",
+	"validate": "Valider mon compte",
+	"later": "Plus tard",
+	"mail_sent": "Email de validation envoyé !",
+	"error_login_invalid": "Nom d'éleveur invalide",
+	"error_login_length": "Nom d'éleveur trop court ou trop long",
+	"error_login_exists": "Ce nom d'éleveur est déjà pris",
+	"error_email_invalid": "Email invalide",
+	"error_email_exists": "Cet email est déjà utilisé",
+	"error_password_length": "Mot de passe trop court",
+	"error_forbidden_name": "Ce nom n'est pas autorisé"
+}

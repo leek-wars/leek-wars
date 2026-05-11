@@ -1,0 +1,21 @@
+{
+	"title": "Secure your account and claim your reward",
+	"intro": "You'll lose your progress if you switch browsers or clear your cookies. Validate your account to secure it and unlock the reward!",
+	"reward_fights": "extra fights",
+	"reward_habs": "habs",
+	"reward_crystals": "crystals",
+	"reward_hat": "Cap hat",
+	"login": "Choose your farmer name",
+	"email": "Your email address",
+	"password": "Password",
+	"validate": "Validate my account",
+	"later": "Later",
+	"mail_sent": "Validation email sent!",
+	"error_login_invalid": "Invalid farmer name",
+	"error_login_length": "Farmer name too short or too long",
+	"error_login_exists": "This farmer name is already taken",
+	"error_email_invalid": "Invalid email",
+	"error_email_exists": "This email is already in use",
+	"error_password_length": "Password too short",
+	"error_forbidden_name": "This name is not allowed"
+}
