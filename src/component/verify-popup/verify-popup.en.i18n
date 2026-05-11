@@ -11,11 +11,12 @@
 	"validate": "Validate my account",
 	"later": "Later",
 	"mail_sent": "Validation email sent!",
-	"error_login_invalid": "Invalid farmer name",
 	"error_login_length": "Farmer name too short or too long",
-	"error_login_exists": "This farmer name is already taken",
-	"error_email_invalid": "Invalid email",
-	"error_email_exists": "This email is already in use",
-	"error_password_length": "Password too short",
-	"error_forbidden_name": "This name is not allowed"
+	"error_login_format": "Invalid name format (letters, digits, dashes only)",
+	"error_login_already_used": "This farmer name is already taken",
+	"error_forbidden_name": "This name is not allowed",
+	"error_invalid_mail": "Invalid email address",
+	"error_mail_already_used": "This email is already in use",
+	"error_password_length": "Password too short or too long",
+	"error_invalid_godfather": "Godfather not found"
 }
