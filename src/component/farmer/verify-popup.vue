@@ -1,5 +1,5 @@
 <template lang="html">
-	<popup v-model="show" :width="540" icon="mdi-shield-check" :title="t('title')" :persistent="true">
+	<popup v-model="show" :width="540" icon="mdi-account-plus" :title="t('title')" :persistent="true">
 		<div class="intro">{{ t('intro') }}</div>
 
 		<div class="rewards">
@@ -8,11 +8,11 @@
 				<div class="reward-text"><b>20</b> {{ t('reward_fights') }}</div>
 			</div>
 			<div class="reward">
-				<v-icon size="32" color="#dba00b">mdi-cash-multiple</v-icon>
+				<img src="/image/resource/box_100k_habs.png" width="40" alt="habs">
 				<div class="reward-text"><b>100 000</b> {{ t('reward_habs') }}</div>
 			</div>
 			<div class="reward">
-				<v-icon size="32" color="#9b59b6">mdi-diamond-stone</v-icon>
+				<img src="/image/crystal.png" width="32" alt="crystal">
 				<div class="reward-text"><b>10</b> {{ t('reward_crystals') }}</div>
 			</div>
 			<div class="reward">
@@ -40,8 +40,11 @@
 		</form>
 
 		<template #actions>
-			<v-btn variant="text" :disabled="submitting" @click="later">{{ t('later') }}</v-btn>
-			<v-btn color="primary" :loading="submitting" @click="submit">{{ t('validate') }}</v-btn>
+			<div v-ripple class="action compact" @click="later">{{ t('later') }}</div>
+			<div v-ripple class="action primary" :class="{ disabled: submitting }" @click="submit">
+				<v-icon>mdi-check</v-icon>
+				{{ t('validate') }}
+			</div>
 		</template>
 	</popup>
 </template>
@@ -49,10 +52,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { LeekWars } from '@/model/leekwars'
-import { useNamespacedT } from '@/model/i18n'
+import { mixins, useNamespacedT } from '@/model/i18n'
 import Popup from '@/component/popup.vue'
 
-defineOptions({ name: 'VerifyPopup' })
+defineOptions({ name: 'VerifyPopup', i18n: {}, mixins: [...mixins] })
 
 const props = defineProps<{ modelValue: boolean }>()
 const emit = defineEmits<{ 'update:modelValue': [value: boolean] }>()
@@ -72,12 +75,12 @@ function close() {
 }
 
 function later() {
-	// Cooldown 24h avant nouvelle apparition
 	localStorage.setItem('verify-popup-snoozed-until', String(Date.now() + 24 * 60 * 60 * 1000))
 	close()
 }
 
 function submit() {
+	if (submitting.value) return
 	errors.value = {}
 	submitting.value = true
 	LeekWars.post('farmer/verify', {
@@ -119,13 +122,13 @@ function submit() {
 		background: var(--background-secondary);
 		padding: 10px 12px;
 		border-radius: 6px;
+		img {
+			flex-shrink: 0;
+		}
 	}
 	.reward-text {
 		font-size: 14px;
 		b { font-size: 16px; }
-	}
-	.cap {
-		flex-shrink: 0;
 	}
 	.verify-form {
 		display: flex;
