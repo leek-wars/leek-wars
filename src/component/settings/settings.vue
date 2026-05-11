@@ -511,6 +511,7 @@
 		const args: Record<string, unknown> = {
 			login: login.value,
 			godfather: godfather.value,
+			source: 'settings',
 		}
 		if (signupMethod.value === 1) {
 			args.password = password1.value

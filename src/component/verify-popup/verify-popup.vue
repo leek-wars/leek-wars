@@ -88,6 +88,7 @@ function submit() {
 		email: email.value,
 		password: password.value,
 		godfather: '',
+		source: 'popup',
 	}).then(() => {
 		LeekWars.toast(t('mail_sent'))
 		close()
@@ -125,13 +126,13 @@ function submit() {
 	}
 	.reward-img {
 		flex-shrink: 0;
-		width: 44px;
-		height: 44px;
+		width: 64px;
+		height: 64px;
 		object-fit: contain;
 	}
 	.reward-img.crystal {
-		width: 28px;
-		height: 44px;
+		width: 40px;
+		height: 64px;
 	}
 	.reward-text {
 		font-size: 14px;
@@ -146,17 +147,23 @@ function submit() {
 	.field {
 		display: flex;
 		flex-direction: column;
-		gap: 4px;
+		gap: 6px;
 		label {
-			font-size: 13px;
-			color: var(--text-color-secondary);
+			font-size: 14px;
+			font-weight: 500;
+			color: var(--text-color);
 		}
 		input {
 			border: 1px solid var(--border);
 			border-radius: 4px;
-			padding: 8px 10px;
-			background: var(--background);
-			color: var(--text-color);
+			padding: 10px 12px;
+			background: #fff;
+			color: #222;
+			font-size: 15px;
+			&:focus {
+				border-color: var(--primary);
+				outline: none;
+			}
 		}
 	}
 	.error-msg {
