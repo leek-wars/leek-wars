@@ -17,7 +17,7 @@
 	"ai_restore": "AI **ai_id** を復元し、ごみ箱から削除する。",
 	"ai_save": "AI **ai_id** を保存し、エラーがあれば返す。",
 	"ai_strict": "AI **ai_id** のストリクトモードを有効または無効にする。",
-	"ai_sync": "AI ID **ais** のリストを `{ ai: timestamp }` の形式で受け取り、最新でなくなった AIのコードを返す。",
+	"ai_sync": "AI ID **ais** のリストを `{'{'} ai: timestamp {'}'}` の形式で受け取り、最新でなくなった AI のコードを返す。",
 	"ai_test-scenario": "Scenario_id**シナリオ、または**scenario_id**が`0`の場合、AIのデフォルトシナリオ**ai_id**を開始する。",
 	"ai_version": "AIのバージョン**ai_id**を**version**に変更する。",
 	"ai-folder_change-folder": "Folder_id**フォルダを**dest_folder_id**に移動します。",

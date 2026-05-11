@@ -23,7 +23,7 @@
 	"new_folder": "新しいフォルダ",
 	"new_desc": "新しい AI を作成する",
 	"folder_name": "フォルダ名",
-	"recycle_bin": "バスケット",
+	"recycle_bin": "ゴミ箱",
 	"restore": "戻す",
 	"close_folder": "フォルダを閉じる",
 	"open_folder": "フォルダを開く",
@@ -35,5 +35,7 @@
 	"windows_warning_reserved": "「{0}」はWindowsの予約名です。この名前はgitで問題を起こす可能性があります。",
 	"init_git": "Gitリポジトリを初期化",
 	"deinit_git": "Gitリポジトリを削除",
-	"deinit_git_confirm": "フォルダ「{0}」からGitリポジトリを削除しますか？コミット履歴が失われます。"
+	"deinit_git_confirm": "フォルダ「{0}」からGitリポジトリを削除しますか？コミット履歴が失われます。",
+	"destroy_folder": "フォルダ「{0}」を完全に破壊しますか？",
+	"destroy_folder_warning": "フォルダとその中のすべての AI が完全に削除されます。この操作は元に戻せません。"
 }

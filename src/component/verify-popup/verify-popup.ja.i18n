@@ -11,11 +11,12 @@
 	"validate": "アカウントを認証",
 	"later": "後で",
 	"mail_sent": "認証メールを送信しました！",
-	"error_login_invalid": "エレヴール名が無効です",
 	"error_login_length": "エレヴール名が短すぎるか長すぎます",
-	"error_login_exists": "このエレヴール名はすでに使用されています",
-	"error_email_invalid": "メールアドレスが無効です",
-	"error_email_exists": "このメールアドレスはすでに使用されています",
-	"error_password_length": "パスワードが短すぎます",
-	"error_forbidden_name": "この名前は許可されていません"
+	"error_login_format": "名前の形式が無効です（文字、数字、ハイフンのみ）",
+	"error_login_already_used": "このエレヴール名はすでに使用されています",
+	"error_forbidden_name": "この名前は許可されていません",
+	"error_invalid_mail": "メールアドレスが無効です",
+	"error_mail_already_used": "このメールアドレスはすでに使用されています",
+	"error_password_length": "パスワードが短すぎるか長すぎます",
+	"error_invalid_godfather": "ゴッドファーザーが見つかりません"
 }

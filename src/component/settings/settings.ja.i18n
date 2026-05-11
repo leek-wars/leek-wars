@@ -1,7 +1,7 @@
 {
 	"account": "アカウント",
 	"activate_discrete_mode": "静音モードを有効にする",
-	"advanced": "前進",
+	"advanced": "上級",
 	"change": "変更するには",
 	"change_email": "メールアドレスを変更",
 	"change_email_send": "確認メールを送信",
@@ -71,5 +71,12 @@
 	"auto": "オート",
 	"theme": "テーマ",
 	"modern_theme": "モダンテーマ（ベータ）",
-	"xp_theme": "XPテーマ"
+	"xp_theme": "XPテーマ",
+	"error_already_unregistered": "このアカウントはすでに削除されています。",
+	"error_impossible_owner_team": "チームの作成者である間はアカウントを削除できません。",
+	"error_impossible_to_unregister_moderator": "モデレーターは削除できません。",
+	"error_password_required": "このアカウントを削除するにはパスワードが必要です。",
+	"error_too_many_requests": "試行回数が多すぎます。しばらくしてから再度お試しください。",
+	"error_unknown": "予期しないエラーが発生しました。再度お試しください。",
+	"error_wrong_token": "セッションが期限切れです。再度ログインしてください。"
 }
