@@ -64,7 +64,7 @@
 
 							<template v-if="leftPanelTab === 'explorer'">
 								<div v-if="fileSystem.rootFolder" v-autostopscroll class="ai-list">
-									<Explorer ref="explorerEl" :current-ai="currentAI" :selected-folder="currentFolder" @test="startTest" @delete-ai="deleteAI" />
+									<Explorer v-if="explorerI18nReady" ref="explorerEl" :current-ai="currentAI" :selected-folder="currentFolder" @test="startTest" @delete-ai="deleteAI" />
 								</div>
 
 								<div v-if="currentEditor && currentEditor.loaded && panelWidth" class="ai-stats">
@@ -253,7 +253,7 @@
 			</template>
 		</popup>
 
-		<editor-test ref="editorTestRef" v-model="testDialog" :ais="fileSystem.ais" :leek-ais="fileSystem.leekAIs" :current-a-i="currentAI" />
+		<editor-test v-if="editorTestI18nReady" ref="editorTestRef" v-model="testDialog" :ais="fileSystem.ais" :leek-ais="fileSystem.leekAIs" :current-a-i="currentAI" />
 
 		<!--
 		<popup v-model="newAIv2Dialog" :width="500">
@@ -279,6 +279,8 @@
 	import { store, farmerId } from '@/model/store'
 	import AIViewMonaco from './ai-view-monaco.vue'
 	import EditorFinder from './editor-finder.vue'
+	import Explorer from './editor-explorer.vue'
+	import EditorTest from './editor-test.vue'
 	import { AIItem, Folder, Item } from './editor-item'
 	import { explorer } from './explorer'
 	import GitDiff from './git-diff.vue'
@@ -296,9 +298,17 @@
 	import { emitter } from '@/model/vue'
 	import LeekscriptVersions from '../app/leekscript-versions.vue'
 
-	const Explorer = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-explorer.${locale}.i18n`))
+	// Explorer et EditorTest sont accédés via template ref : defineAsyncComponent +
+	// ref="..." casse l'unmount (cf. #11226027, instance null sur bum/beforeUnmount).
+	// Import statique pour éviter le wrapper async ; les messages i18n sont chargés
+	// via le side-effect du fichier .i18n (qui mute le Component partagé), et un
+	// v-if guard retarde le mount jusqu'à résolution pour préserver le no-flash.
+	const explorerI18nReady = ref(false)
+	const editorTestI18nReady = ref(false)
+	import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-explorer.${locale}.i18n`).then(() => { explorerI18nReady.value = true })
+	import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-test.${locale}.i18n`).then(() => { editorTestI18nReady.value = true })
+
 	const EditorTabs = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-tabs.${locale}.i18n`))
-	const EditorTest = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-test.${locale}.i18n`))
 	const EditorProblems = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-problems.${locale}.i18n`))
 	const GitPanel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/git-panel.${locale}.i18n`))
 
