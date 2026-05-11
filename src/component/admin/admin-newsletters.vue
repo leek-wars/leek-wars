@@ -108,11 +108,15 @@
 	if (!store.getters.admin) router.replace('/')
 	LeekWars.setTitle("Admin Newsletters")
 
+	const STAT_KEYS: (keyof NewsletterStats)[] = ['total', 'opened', 'clicked', 'bounced', 'hard_bounced', 'soft_bounced', 'unsubscribed']
+
 	function load() {
 		LeekWars.get('newsletter/all').then(ns => {
 			for (const n of ns) {
 				n.testTarget = 73156
 				n.lang = 'fr'
+				if (!n.stats) n.stats = {} as NewsletterStats
+				for (const k of STAT_KEYS) n.stats[k] = n.stats[k] ?? 0
 			}
 			newsletters.value = ns
 		})
