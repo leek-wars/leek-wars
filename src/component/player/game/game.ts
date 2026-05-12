@@ -345,6 +345,7 @@ class Game {
 	public data!: FightData
 	public actions: Action[] = []
 	public consoleLines: ConsoleLine[] = []
+	private consoleLineIds: Set<string> = new Set()
 	public currentAction: number = -1
 	public actionToDo = true
 	public actionDelay = 0
@@ -2023,9 +2024,12 @@ class Game {
 			const type = log[1]
 			if (this.displayDebugs && (this.displayAllyDebugs || log[6])) {
 				if (type === 5) {
-					this.pause()
+					// En mode jumping, on ajoute la ligne sans pause() pour ne pas
+					// interrompre le fast-forward — l'utilisateur retrouvera le
+					// log en scrollant l'historique.
+					if (!this.jumping) this.pause()
 					this.addConsoleLine({id: 'l' + this.currentAction + '-' + this.currentLog, log})
-					return true
+					if (!this.jumping) return true
 				} else if (type === 4) {
 					this.addMarker(log[0] as number, log[2] as number[], log[3] as string, log[4] as number)
 				} else if (type === 9) {
@@ -2044,7 +2048,10 @@ class Game {
 		for (let t = 0; t < this.trophiesToSend.length; ++t) {
 			const trophy = this.trophiesToSend[t]
 			if (trophy.action != null && this.currentAction >= trophy.action) {
-				this.player.$emit('unlock-trophy', trophy.trophy)
+				// Pendant un jump, on ne re-notifie pas l'utilisateur (le trophy
+				// popup s'est déjà déclenché lors du premier play). La ligne dans
+				// le panneau d'actions est gérée par la boucle suivante.
+				if (!this.jumping) this.player.$emit('unlock-trophy', trophy.trophy)
 				this.trophiesToSend.splice(t, 1)
 				t--
 			}
@@ -2067,11 +2074,11 @@ class Game {
 		}
 	}
 	public addConsoleLine(line: ConsoleLine) {
-		if (line.id && this.consoleLines.some(l => l.id === line.id)) return
-		this.consoleLines.push(line)
-		if (this.consoleLines.length > 80) {
-			this.consoleLines.shift()
+		if (line.id) {
+			if (this.consoleLineIds.has(line.id)) return
+			this.consoleLineIds.add(line.id)
 		}
+		this.consoleLines.push(line)
 	}
 
 	public mousedown(_e: MouseEvent) {
@@ -2938,6 +2945,7 @@ class Game {
 			entity.infoText = []
 		}
 		this.consoleLines = []
+		this.consoleLineIds.clear()
 		this.effects = []
 		this.drawArea = 0
 
@@ -2957,15 +2965,23 @@ class Game {
 		this.chips = []
 
 		// Do actions
+		// On garde `logging = true` pour tout le replay : le panneau d'actions
+		// étant scrollable (fenêtre glissante côté Hud), l'utilisateur peut
+		// remonter à n'importe quelle action passée. readLogs/readTrophies
+		// s'exécutent aussi pour reconstruire l'historique complet (logs perso,
+		// trophées) mais elles court-circuitent pause()/emit() quand
+		// `this.jumping` est vrai.
 		this.jumping = true
-		this.logging = false
-		this.currentAction = 1
-		const loggingAction = Math.max(0, jumpAction - 150)
-		while (this.currentAction < loggingAction) {
-			this.doAction(this.actions[this.currentAction])
-			this.currentAction++
-		}
 		this.logging = true
+		// L'action 0 (START_FIGHT / "Tour 1") est loggée à part, jamais passée
+		// à doAction — comme dans l'init du combat (cf. this.log(actions[0])).
+		// On lit aussi ses logs : c'est là que vivent les outputs de
+		// beforeFight() (logs envoyés avant la 1ère action).
+		this.currentAction = 0
+		this.log(this.actions[0])
+		this.currentLog = 0
+		this.readLogs()
+		this.currentAction = 1
 		while (this.currentAction < jumpAction) {
 			this.doAction(this.actions[this.currentAction])
 			this.currentLog = 0

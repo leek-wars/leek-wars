@@ -1,5 +1,5 @@
 import { locale as initialLocale, messages } from '@/locale'
-import { Component, ComponentInstance } from 'vue'
+import type { Component, ComponentInstance } from 'vue'
 import { createI18n } from 'vue-i18n'
 
 // Pre-declare dynamic imports for Vite to bundle them

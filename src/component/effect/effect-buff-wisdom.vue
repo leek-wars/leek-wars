@@ -21,6 +21,6 @@ defineProps<{
 	leek: FightLeek
 	value: number
 	turns: number
-	a: number
+	a?: number
 }>()
 </script>
