@@ -4,6 +4,13 @@ import { SocketMessage } from '@/model/socket'
 import { store } from '@/model/store'
 import { Leek } from './leek'
 
+const ARENA_MODE_ICONS = ['mdi-sword-cross', 'mdi-flag', 'mdi-treasure-chest', 'mdi-shield-account']
+const ARENA_MODE_LABELS = ['arena_mode_br', 'arena_mode_war', 'arena_mode_chest_hunt', 'arena_mode_colossus']
+
+function arenaModeIcon(preference: number): string {
+	return ARENA_MODE_ICONS[preference] || 'mdi-help-circle-outline'
+}
+
 class Arena {
 	static readonly MIN_PLAYERS = 10
 	static readonly MAX_PLAYERS = 20
@@ -82,4 +89,4 @@ class Arena {
 	}
 }
 
-export { Arena }
+export { Arena, ARENA_MODE_LABELS, arenaModeIcon }

@@ -175,6 +175,12 @@
 						<v-icon>mdi-sword-cross</v-icon>
 					</template>
 					<template #title>{{ $t('main.arena') }}</template>
+					<div v-if="$store.state.farmer" class="arena-popup-my-leeks">
+						<div v-for="leek in $store.state.farmer.leeks" :key="leek.id" v-ripple class="my-leek" :class="{selected: leek.id === registeredLeekId, disabled: leek.level < 20}" @click="leek.level >= 20 && changeArenaLeek(leek.id)">
+							<leek-image :leek="leek" :scale="0.28" />
+							<div class="name">{{ leek.name }}</div>
+						</div>
+					</div>
 					<loader v-if="LeekWars.arena.progress == 0" />
 					<div class="br-leeks">
 						<div v-for="leek in LeekWars.arena.leeks" :key="leek.id" class="leek">
@@ -182,10 +188,30 @@
 							<div>{{ leek.name }}</div>
 							<talent :id="leek.id" :talent="leek.talent" category="leek" />
 							<div class="level">{{ $t('main.level_n', [leek.level]) }}</div>
+							<v-tooltip>
+								<template #activator="{ props }">
+									<v-icon v-bind="props" class="arena-pref" size="16">{{ arenaModeIcon(leek.preference) }}</v-icon>
+								</template>
+								{{ $t('main.' + (ARENA_MODE_LABELS[leek.preference] || 'arena_no_preference')) }}
+							</v-tooltip>
 						</div>
+					</div>
+					<div class="arena-popup-count">
+						<span class="arena-dot"></span>
+						<strong>{{ LeekWars.arena.progress }}</strong> / {{ Arena.MAX_PLAYERS }}
 					</div>
 					<div v-if="LeekWars.arena.countdown >= 0" class="arena-countdown center">
 						{{ $t('main.arena_countdown', [LeekWars.arena.countdown]) }}
+					</div>
+					<div class="arena-popup-preference">
+						<h4>{{ $t('main.arena_preference') }}</h4>
+						<v-radio-group :model-value="$store.state.arenaPreference" inline hide-details @update:model-value="changeArenaPreference">
+							<v-radio :label="$t('main.arena_no_preference')" :value="-1" />
+							<v-radio :label="$t('main.arena_mode_br')" :value="0" />
+							<v-radio :label="$t('main.arena_mode_war')" :value="1" />
+							<v-radio :label="$t('main.arena_mode_chest_hunt')" :value="2" />
+							<v-radio :label="$t('main.arena_mode_colossus')" :value="3" />
+						</v-radio-group>
 					</div>
 					<br>
 					<div class="center">
@@ -231,6 +257,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import type { Reward } from '@/model/farmer'
 	import { store } from '@/model/store'
+	import { Arena, ARENA_MODE_LABELS, arenaModeIcon } from '@/model/arena'
 	import { BOSSES } from '@/model/boss'
 	import { emitter } from '@/model/vue'
 	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue'
@@ -381,6 +408,28 @@
 		arenaDialog.value = false
 		e.stopPropagation()
 	}
+
+	function changeArenaPreference(preference: number | null) {
+		if (preference === null) return
+		const leek = parseInt(localStorage.getItem('arena-leek') || '', 10)
+		if (!leek) return
+		const wantsColossus = localStorage.getItem('arena-colossus') === '1'
+		LeekWars.arena.register(leek, preference, wantsColossus)
+	}
+
+	function changeArenaLeek(leekId: number) {
+		if (leekId === registeredLeekId.value) return
+		const wantsColossus = localStorage.getItem('arena-colossus') === '1'
+		LeekWars.arena.register(leekId, store.state.arenaPreference, wantsColossus)
+	}
+
+	const registeredLeekId = computed(() => {
+		if (!store.state.farmer) return 0
+		for (const id of Object.keys(LeekWars.arena.leeks)) {
+			if (+id in store.state.farmer.leeks) return +id
+		}
+		return 0
+	})
 
 	function retrieve(reward: Reward) {
 		LeekWars.post('trophy/retrieve-reward', { trophy_id: reward.trophy })
@@ -710,10 +759,17 @@
 		align-items: baseline;
 
 		.leek {
+			position: relative;
 			text-align: center;
 			font-size: 15px;
 			font-weight: 500;
 			margin: 0 3px;
+		}
+		.arena-pref {
+			position: absolute;
+			top: 2px;
+			right: 2px;
+			font-size: 14px;
 		}
 		.talent {
 			margin: 2px 0;
@@ -742,6 +798,82 @@
 			.close {
 				padding: 8px;
 			}
+		}
+	}
+	.arena-popup-count {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		font-size: 22px;
+		margin-top: 12px;
+		strong {
+			color: var(--primary);
+			font-weight: 700;
+		}
+	}
+	.arena-dot {
+		display: inline-block;
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: var(--primary);
+		animation: arena-pulse 2s infinite;
+	}
+	@keyframes arena-pulse {
+		0% { box-shadow: 0 0 0 0 rgba(95, 173, 27, 0.6); }
+		70% { box-shadow: 0 0 0 8px rgba(95, 173, 27, 0); }
+		100% { box-shadow: 0 0 0 0 rgba(95, 173, 27, 0); }
+	}
+	.arena-popup-my-leeks {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 6px;
+		margin-bottom: 24px;
+		.my-leek {
+			width: 80px;
+			padding: 4px;
+			border: 1px solid var(--border);
+			border-radius: 4px;
+			text-align: center;
+			cursor: pointer;
+			opacity: 0.45;
+			transition: opacity 150ms, background-color 150ms;
+			&:hover:not(.disabled) {
+				opacity: 1;
+				background: var(--pure-white);
+			}
+			&.selected {
+				opacity: 1;
+				border-color: var(--primary);
+				background: var(--pure-white);
+			}
+			&.disabled {
+				opacity: 0.2;
+				cursor: not-allowed;
+			}
+			.name {
+				font-size: 13px;
+				font-weight: 500;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+			:deep(svg) {
+				max-height: 60px;
+			}
+		}
+	}
+	.arena-popup-preference {
+		margin-top: 14px;
+		text-align: center;
+		h4 {
+			color: var(--text-color-secondary);
+			margin-bottom: 4px;
+		}
+		:deep(.v-radio-group) {
+			justify-content: center;
 		}
 	}
 	.rewards-button {

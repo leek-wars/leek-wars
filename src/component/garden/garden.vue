@@ -426,7 +426,7 @@
 
 <script setup lang="ts">
 	import { locale } from '@/locale'
-	import { Arena } from '@/model/arena'
+	import { Arena, ARENA_MODE_LABELS, arenaModeIcon } from '@/model/arena'
 	import { Farmer } from '@/model/farmer'
 	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
@@ -510,12 +510,6 @@
 	const liveArenaCount = computed(() => store.state.arenaCount || 0)
 	const liveArenaCountdown = computed(() => store.state.arenaCountdown)
 
-	const modeIcons = ['mdi-sword-cross', 'mdi-flag', 'mdi-treasure-chest', 'mdi-shield-account']
-	const modeLabels = ['arena_mode_br', 'arena_mode_war', 'arena_mode_chest_hunt', 'arena_mode_colossus']
-
-	function modeIcon(preference: number): string {
-		return modeIcons[preference] || 'mdi-help-circle-outline'
-	}
 	function batchErrorToast(error: unknown) {
 		const key = typeof error === 'string' ? error : (error && typeof error === 'object' && 'error' in error ? String((error as { error: unknown }).error) : null) || 'unknown_error'
 		LeekWars.toast(t(key))
@@ -547,8 +541,9 @@
 		})
 	}
 	function modeLabel(preference: number): string {
-		return t(modeLabels[preference] || 'arena_no_preference') as string
+		return t(ARENA_MODE_LABELS[preference] || 'arena_no_preference') as string
 	}
+	const modeIcon = arenaModeIcon
 
 	if (store.state.wsconnected) {
 		updateWS()
