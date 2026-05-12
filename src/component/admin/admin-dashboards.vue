@@ -67,6 +67,10 @@
 									<template v-else-if="col.type === 'number'">
 										{{ $filters.number(item[col.key]) }}
 									</template>
+									<!-- montant en euros -->
+									<template v-else-if="col.type === 'eur'">
+										{{ $filters.number(item[col.key]) }} €
+									</template>
 									<!-- texte brut (défaut) -->
 									<template v-else>
 										{{ item[col.key] }}
