@@ -304,7 +304,7 @@ const LANGUAGES = Object.freeze({
 	hi: { code: 'hi', name: 'भारतीय', country: 'in', flag: '/image/flag/in.png', chat: 2, encyclopedia: 'विश्वकोश', chats: null, currency: 'USD', beta: true, forum: false } as Language,
 	id: { code: 'id', name: 'Bahasa', country: 'id', flag: '/image/flag/id.png', chat: 2, encyclopedia: 'Ensiklopedia', chats: null, currency: 'USD', beta: true, forum: false } as Language,
 	ja: { code: 'ja', name: '日本', country: 'jp', flag: '/image/flag/jp.png', chat: 2, encyclopedia: '百科事典', chats: null, currency: 'JPY', beta: true, forum: false } as Language,
-	ko: { code: 'ko', name: '한국인', country: 'kr', flag: '/image/flag/kr.png', chat: 2, encyclopedia: '백과 사전', chats: null, currency: 'USD', beta: true, forum: false } as Language,
+	ko: { code: 'ko', name: '한국인', country: 'kr', flag: '/image/flag/kr.png', chat: 2, encyclopedia: '백과사전', chats: null, currency: 'USD', beta: true, forum: false } as Language,
 } as { [key: string]: Language })
 
 const CURRENCIES = Object.freeze({
