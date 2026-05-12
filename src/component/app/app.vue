@@ -223,7 +223,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { AccountInfo, store } from '@/model/store'
-	import { computed, nextTick, onBeforeUnmount, ref, useTemplateRef, watch } from 'vue'
+	import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRouter } from 'vue-router'
 	import { useTheme } from 'vuetify'
@@ -389,7 +389,8 @@
 
 	const toast = new URLSearchParams(window.location.search).get('toast')
 	if (toast) {
-		LeekWars.toast(i18n.t('main.account_' + toast) as string)
+		// LeekWars.toast cherche `#app .toasts` dans le DOM ; il faut attendre le mount.
+		onMounted(() => LeekWars.toast(i18n.t('main.account_' + toast) as string))
 		history.replaceState(null, '', window.location.pathname)
 	}
 
