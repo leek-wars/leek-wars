@@ -627,6 +627,9 @@ const t = useNamespacedT('market')
 			if (item.type === ItemType.FIGHT_PACK) {
 				store.commit('update-fights', data.fights)
 				store.commit('update-bought-fights', data.fights)
+				if (currency === 'habs' && store.state.farmer) {
+					store.state.farmer.habs_fights = true
+				}
 			}
 			store.commit('add-inventory', { type: item.type, id: data.item, template: id, quantity: buyQuantity.value, time: Date.now() / 1000 })
 			updateSubtitle()
