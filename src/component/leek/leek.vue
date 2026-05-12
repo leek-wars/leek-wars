@@ -789,7 +789,7 @@
 	import LeekComponent from './leek-component.vue'
 	import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
-	import { useRoute, useRouter } from 'vue-router'
+	import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 	import { emitter } from '@/model/vue'
 	import { Line } from 'vue-chartjs'
 	import type { ChartData, ChartOptions } from 'chart.js'
@@ -955,13 +955,18 @@
 		emitter.on('update-leek-xp', onUpdateLeekXp)
 	})
 
+	// Le computed `id` retombe sur le 1er leek du farmer quand route.params.id
+	// devient undefined (sortie de /leek/:x), ce qui fire le watch et swappe les
+	// v-if/Teleport pendant le patch router-view → parentNode null. `if (!id.value)`
+	// ne suffit pas : l'id est valide via fallback. onBeforeRouteLeave ne fire pas
+	// sur /leek/A → /leek/B (même composant), le watch reste opérant pour ce cas.
+	let leaving = false
+	onBeforeRouteLeave(() => { leaving = true })
+
 	watch(id, () => update(), { immediate: true })
 
 	function update() {
-		// Sortir avant toute mutation réactive : pendant la navigation sortante, le
-		// composant reste monté le temps que la route suivante charge ; remettre
-		// leek.value à null démonte les v-if des dialogs/snackbars et casse les
-		// Teleport Vuetify (parentNode null).
+		if (leaving) return
 		if (!id.value) return
 		leek.value = null
 		tournamentRange.value = null
