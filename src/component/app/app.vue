@@ -47,6 +47,8 @@
 
 				<verify-popup v-if="showVerifyPopup" v-model="showVerifyPopup" />
 
+				<activation-welcome v-if="showActivationWelcome" v-model="showActivationWelcome" />
+
 				<img v-if="LeekWars.clover" :style="{top: LeekWars.cloverTop + 'px', left: LeekWars.cloverLeft + 'px'}" class="clover" src="/image/clover.png" @click="clickClover">
 
 				<!-- <didactitiel v-if="didactitiel_enabled" v-model="didactitiel" /> -->
@@ -211,6 +213,7 @@
 	const Squares = defineAsyncComponent(() => import('@/component/app/squares.vue'))
 	const ConsoleWindow = defineAsyncComponent(() => import('./console-window.vue'))
 	const VerifyPopup = defineAsyncComponent(() => import('@/component/verify-popup/verify-popup.vue'))
+	const ActivationWelcome = defineAsyncComponent(() => import('@/component/activation-welcome/activation-welcome.vue'))
 	const ChangelogDialog = defineAsyncComponent(() => import('../changelog/changelog-dialog.vue'))
 	const Documentation = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`))
 	const DidactitielNew = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel-new/didactitiel-new.${locale}.i18n`))
@@ -245,6 +248,7 @@
 	let cloverSpeed = 200
 	const verifyMessage = ref(true)
 	const verifyPopupDismissed = ref(false)
+	const showActivationWelcome = ref(false)
 	const loggedOutOtherTab = ref(false)
 
 	// Bandeau header "Terminer votre inscription par e-mail" :
@@ -387,10 +391,16 @@
 	window.addEventListener('storage', onStorage)
 	onBeforeUnmount(() => window.removeEventListener('storage', onStorage))
 
-	const toast = new URLSearchParams(window.location.search).get('toast')
+	const queryParams = new URLSearchParams(window.location.search)
+	const toast = queryParams.get('toast')
 	if (toast) {
 		// LeekWars.toast cherche `#app .toasts` dans le DOM ; il faut attendre le mount.
 		onMounted(() => LeekWars.toast(i18n.t('main.account_' + toast) as string))
+	}
+	if (queryParams.get('welcome') === '1' && store.state.connected) {
+		showActivationWelcome.value = true
+	}
+	if (toast || queryParams.has('welcome')) {
 		history.replaceState(null, '', window.location.pathname)
 	}
 

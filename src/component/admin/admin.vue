@@ -206,12 +206,14 @@
 					<v-btn prepend-icon="mdi-email-fast" @click="testMailSend()">Test email</v-btn>
 					<v-btn prepend-icon="mdi-sword-cross" @click="arenaRegisterRandom()">Random en Arène</v-btn>
 					<v-btn prepend-icon="mdi-account-plus" @click="testVerifyPopup = true">Verify popup</v-btn>
+					<v-btn prepend-icon="mdi-party-popper" @click="testActivationWelcome = true">Activation welcome</v-btn>
 				</div>
 			</template>
 		</panel>
 		<didactitiel v-if="didactitiel_enabled" v-model="showDidactitiel" />
 		<level-dialog v-if="levelPopupData" v-model="levelPopup" :leek="leek" :level-data="levelPopupData" />
 		<verify-popup v-if="testVerifyPopup" v-model="testVerifyPopup" />
+		<activation-welcome v-if="testActivationWelcome" v-model="testActivationWelcome" />
 	</div>
 </template>
 
@@ -228,6 +230,7 @@
 	const Didactitiel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`))
 	const LevelDialog = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/leek/level-dialog.${locale}.i18n`))
 	const VerifyPopup = defineAsyncComponent(() => import('@/component/verify-popup/verify-popup.vue'))
+	const ActivationWelcome = defineAsyncComponent(() => import('@/component/activation-welcome/activation-welcome.vue'))
 
 	const router = useRouter()
 
@@ -238,6 +241,7 @@
 	const levelPopupData = ref<unknown>(null)
 	const encycloLinksLoading = ref(false)
 	const testVerifyPopup = ref(false)
+	const testActivationWelcome = ref(false)
 
 	if (!store.getters.admin) router.replace('/')
 	LeekWars.setTitle('Admin')
