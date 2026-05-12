@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { mixins, useNamespacedT } from '@/model/i18n'
 import Popup from '@/component/popup.vue'
 
@@ -44,9 +44,15 @@ const t = useNamespacedT('activation-welcome')
 
 const show = ref(props.modelValue)
 
+// Le parent applique v-if sur ce composant ; émettre immédiatement à la fermeture
+// le démonterait avant que v-dialog ne joue son animation. Différer le emit ~300 ms
+// (≈ durée de la dialog-transition Vuetify) laisse l'anim se terminer puis unmount.
+watch(show, (v) => {
+	if (!v) setTimeout(() => emit('update:modelValue', false), 300)
+})
+
 function close() {
 	show.value = false
-	emit('update:modelValue', false)
 }
 </script>
 
