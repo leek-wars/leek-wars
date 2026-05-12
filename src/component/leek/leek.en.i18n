@@ -65,7 +65,7 @@
 	"remaining_xp": "Remaining XP: {0}",
 	"rename_description": "This operation lets you rename your leek; you can pay with Habs or crystals. You can rename a leek once per day.",
 	"rename_done": "Leek renamed!",
-	"rename_error_delay": "You must wait one day between two renamings of your leek",
+	"rename_error_delay": "You must wait one day between two renamings of your leek.",
 	"rename_leek": "Rename leek",
 	"rename_new_name": "New name",
 	"rename_not_enough_crystals": "You don't have enough crystals.",

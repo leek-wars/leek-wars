@@ -19,7 +19,7 @@
 	"hi": "Hello to you <b>{0}</b>, young leek farmer! In this short tutorial, you will be explained the basics of the game.",
 	"leeks": "Leeks",
 	"market": "Market",
-	"market_1": "To buy weapons, chips or potions, go to the <a href='/market' target='_blank' rel='noopener'>Market</a>. You'll need Habs to pay for them.",
+	"market_1": "To buy weapons, chips or potions, go to the <a href='/market' target='_blank' rel='noopener'>Market</a> page. There you can spend your <b>Habs</b>, the game's currency, to acquire these items. You'll then need to equip them on your leek to use them.",
 	"market_2": "How can you earn Habs? Simply by fighting other leeks. The amount of Habs you gain depends on your opponent's leek's power compared to yours.",
 	"next": "Next",
 	"play": "Play!",
