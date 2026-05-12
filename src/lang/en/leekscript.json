@@ -24,7 +24,7 @@
 	"error_1005": "The invoked bulb has no AI",
 	"error_1006": "Loadout \"{0}\" not found. The name must match an existing farmer loadout exactly (case-sensitive).",
 	"error_1007": "setLoadout() can only be called inside the beforeFight() function.",
-	"error_1009": "Loadout \"{0}\": no forgotten weapon available — all candidates are already equipped on other leeks of the farmer.",
+	"error_1009": "Loadout \"{0}\": no forgotten weapon available, all candidates are already equipped on other leeks of the farmer.",
 	"error_1010": "Loadout \"{0}\": no restat potion available, characteristics were not changed.",
 	"error_101": "AI interrupted: too many operations consumed.",
 	"error_103": "AI interrupted: too much RAM consumed.",

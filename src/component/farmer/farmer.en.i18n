@@ -90,7 +90,7 @@
 	"no_icon": "none",
 	"unregister": "Unregister",
 	"impossible_to_unregister_moderator": "Impossible to delete a moderator.",
-	"impossible_to_unregister_team": "You are the owner of a team — you must first dissolve it before deleting your account.",
+	"impossible_to_unregister_team": "You are the owner of a team. You must first dissolve it before deleting your account.",
 	"unregister_wrong_password": "The password is incorrect",
 	"upload_failed": "An error occurred: {0}",
 	"uploading_avatar": "Uploading avatar...",

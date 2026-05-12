@@ -46,7 +46,7 @@
 	"push_notifications": "Push notifications",
 	"title": "Settings",
 	"chat_first": "Show the Chat page first",
-	"verify_message": "You have not added an email address, you may lose access to your account if you change device, browser.",
+	"verify_message": "You have not added an email address; you may lose access to your account if you change device or browser.",
 	"verify_tip": "Tip: keep the cookie that contains your login, if you lose it you completely lose access to the account.",
 	"verify_pros": "Once your account is verified, you can:",
 	"verify_pro1": "Keep access to your account",

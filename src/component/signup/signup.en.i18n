@@ -16,7 +16,7 @@
 	"error_login_character_count": "The username must contain between {0} and {1} characters",
 	"error_login_format": "The username must contain only alphanumeric characters",
 	"error_login_length": "The username must contain between {0} and {1} characters",
-	"error_mail_already_used": "This e-mail address is already used",
+	"error_mail_already_used": "This email address is already used",
 	"error_not_same_password": "The two entered passwords were not identical",
 	"error_password_length": "The password must contain between {0} and {1} characters",
 	"godfather": "Referrer (Optional)",
