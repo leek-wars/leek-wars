@@ -61,6 +61,10 @@
 										<div v-bind="props">
 											<h2>{{ $t('category_arena') }}</h2>
 											<span class="player-count">10-20</span>&nbsp;<img class="player" src="/image/player.png">
+											<span v-if="liveArenaCount > 0" class="live-arena-count">
+												<span class="dot"></span>
+												<span class="count">{{ liveArenaCount }}</span>
+											</span>
 										</div>
 									</router-link>
 								</template>
@@ -291,6 +295,23 @@
 								<br>
 								<v-btn v-if="garden.fights" color="primary" :disabled="!arenaEnabled" @click="arenaRegister">{{ $t('main.select') }}</v-btn>
 								<garden-no-fights v-else :canbuy="true" @bought="reload" />
+								<div v-if="garden.fights && liveArenaCount > 0" class="arena-live">
+									<div class="arena-live-count">
+										<span class="dot"></span>
+										<strong>{{ liveArenaCount }}</strong> / {{ Arena.MAX_PLAYERS }}
+									</div>
+									<div class="arena-live-message">
+										<template v-if="liveArenaCountdown >= 0">
+											{{ $t('arena_countdown_invite', [liveArenaCountdown]) }}
+										</template>
+										<template v-else-if="liveArenaCount >= Arena.MIN_PLAYERS">
+											{{ $t('arena_invite_ready', liveArenaCount) }}
+										</template>
+										<template v-else>
+											{{ $t('arena_invite_join', Arena.MIN_PLAYERS - liveArenaCount) }}
+										</template>
+									</div>
+								</div>
 							</div>
 							<div v-else>
 								<loader v-if="LeekWars.arena.progress == 0" />
@@ -306,7 +327,10 @@
 									</div>
 								</div>
 								<br>
-								<div class="leek-count">{{ LeekWars.arena.progress }} / {{ (LeekWars.arena.constructor as any).MAX_PLAYERS }}</div>
+								<div class="leek-count arena-waiting">
+									<span class="dot"></span>
+									<strong>{{ LeekWars.arena.progress }}</strong> / {{ Arena.MAX_PLAYERS }}
+								</div>
 								<div v-if="LeekWars.arena.countdown >= 0" class="arena-countdown">
 									{{ $t('arena_countdown', [LeekWars.arena.countdown]) }}
 								</div>
@@ -402,6 +426,7 @@
 
 <script setup lang="ts">
 	import { locale } from '@/locale'
+	import { Arena } from '@/model/arena'
 	import { Farmer } from '@/model/farmer'
 	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
@@ -482,6 +507,8 @@
 	const teamEnabled = computed(() => garden.value && garden.value.team_enabled)
 	const arenaEnabled = computed(() => garden.value && garden.value.battle_royale_enabled && store.state.farmer && store.state.farmer.verified)
 	const bossEnabled = computed(() => true)
+	const liveArenaCount = computed(() => store.state.arenaCount || 0)
+	const liveArenaCountdown = computed(() => store.state.arenaCountdown)
 
 	const modeIcons = ['mdi-sword-cross', 'mdi-flag', 'mdi-treasure-chest', 'mdi-shield-account']
 	const modeLabels = ['arena_mode_br', 'arena_mode_war', 'arena_mode_chest_hunt', 'arena_mode_colossus']
@@ -1052,6 +1079,56 @@
 	}
 	.leek-count {
 		font-size: 22px;
+	}
+	.arena-waiting,
+	.arena-live-count {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		strong {
+			color: var(--primary);
+			font-weight: 700;
+		}
+	}
+	.arena-live {
+		margin-top: 16px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 4px;
+	}
+	.arena-live-count {
+		font-size: 22px;
+		color: var(--text-color);
+	}
+	.arena-live-message {
+		color: var(--text-color-secondary);
+		font-size: 15px;
+	}
+	.live-arena-count {
+		margin-left: 10px;
+		font-size: 20px;
+		color: var(--primary);
+		font-weight: 600;
+		.dot {
+			vertical-align: middle;
+			margin-bottom: 3px;
+			margin-right: 5px;
+		}
+	}
+	.dot {
+		display: inline-block;
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: var(--primary);
+		animation: arena-pulse 2s infinite;
+	}
+	@keyframes arena-pulse {
+		0% { box-shadow: 0 0 0 0 rgba(95, 173, 27, 0.6); }
+		70% { box-shadow: 0 0 0 8px rgba(95, 173, 27, 0); }
+		100% { box-shadow: 0 0 0 0 rgba(95, 173, 27, 0); }
 	}
 	.arena-leek {
 		position: relative;

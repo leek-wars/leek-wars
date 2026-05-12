@@ -51,5 +51,8 @@
 	"arena_mode_colossus": "Colossus",
 	"arena_wants_colossus": "I want to be the Colossus",
 	"arena_countdown": "Starting in {0}s...",
+	"arena_countdown_invite": "Starting in {0}s, hurry up!",
+	"arena_invite_ready": "Ready to fight, join them! | {count} players ready to fight, join them!",
+	"arena_invite_join": "1 more player to start the fight! | {count} more players to start the fight!",
 	"garden_arena": "Arena Garden"
 }

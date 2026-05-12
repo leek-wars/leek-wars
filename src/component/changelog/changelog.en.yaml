@@ -5,6 +5,7 @@
     - "#ai `setLoadout(name)` function: applies a loadout for this fight only, to be used inside `beforeFight()`. The loadout's weapons/chips/stats are reverted at the end of the fight."
     - "#ai `getWinner()` function: retrieves the winning team side from `afterFight()`."
     - "#ai Support for `.md`, `.txt`, `.json`, `.yaml` and `.gitignore` files in the editor, with appropriate syntax highlighting."
+    - "Live counter of players waiting for an arena, shown in the garden (on the tab and below the Select button) to encourage joining. (thanks to TransLeek)"
   improved:
     - "#ai Warning on functions and globals never used in the AI (strict mode)."
     - "#ai New files are now empty by default (instead of the LeekScript example code), except for the very first file of an account."
