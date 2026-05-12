@@ -25,6 +25,7 @@
 	"error_1006": "Loadout \"{0}\" tidak ditemukan. Nama harus sama persis dengan loadout yang ada pada peternak (peka huruf besar/kecil).",
 	"error_1007": "setLoadout() hanya dapat dipanggil di dalam fungsi beforeFight().",
 	"error_1009": "Loadout \"{0}\": tidak ada senjata terlupakan yang tersedia — semua kandidat sudah dilengkapi pada daun bawang lain milik peternak.",
+	"error_1010": "Loadout \"{0}\": tidak ada potion restat yang tersedia, karakteristik tidak diubah.",
 	"error_101": "Interupsi AI: Terlalu banyak operasi yang dikonsumsi.",
 	"error_103": "AI yang terputus: terlalu banyak RAM yang dikonsumsi.",
 	"error_104": "Hanya satu pemisah angka berurutan yang diperbolehkan.",
