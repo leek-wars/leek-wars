@@ -35,7 +35,7 @@
 	"register_mail": "Félicitations %s, tu es inscrit sur Leek Wars.\n\nPour valider ton compte, rends toi sur cette page : %s\n\nEn validant ton compte, tu débloques :\n- 20 combats supplémentaires\n- Une caisse de 10 000 habs\n- 50 cristaux\n- Le chapeau Casquette\n",
 	"register_mail_html": "Félicitations <b>%s</b>, tu es inscrit sur Leek Wars !<br/><br/>En validant ton compte, tu débloques :<br/>🎯 <b>20 combats supplémentaires</b><br/>📦 <b>Une caisse de 10 000 habs</b><br/>💎 <b>50 cristaux</b><br/>🧢 <b>Le chapeau Casquette</b><br/><br/>%s",
 	"register_validate_button": "Valider mon compte",
-	"register_mail_subject": "Leek Wars : Inscription",
+	"register_mail_subject": "🎁 Active ton compte Leek Wars et récupère ton kit de démarrage",
 	"reset_mail": "Bonjour %s !\n\nVotre demande de réinitialisation du mot de passe a bien été enregistrée.\n\nPour changer votre mot de passe, cliquez sur ce lien : %s.",
 	"reset_mail_html": "Bonjour <b>%s</b> !\n<br><br>\nVotre demande de réinitialisation du mot de passe a bien été enregistrée.\n<br><br>\nPour pour changer votre mot de passe, cliquez sur <a href='%s'>ce lien</a>.\n<br><br>\nÀ bientôt sur Leek Wars !",
 	"reset_mail_subject": "Leek Wars : Réinitialisation du mot de passe",

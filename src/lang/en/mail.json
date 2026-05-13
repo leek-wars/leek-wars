@@ -35,7 +35,7 @@
 	"register_mail": "Congratulations %s, you are now registered on Leek Wars.\n\nGo to this page to validate your account: %s\n\nBy validating your account, you unlock:\n- 20 additional fights\n- A box of 10,000 Habs\n- 50 crystals\n- The Cap hat\n",
 	"register_mail_html": "Congratulations <b>%s</b>, you are now registered on Leek Wars!<br/><br/>By validating your account, you unlock:<br/>🎯 <b>20 additional fights</b><br/>📦 <b>A box of 10,000 Habs</b><br/>💎 <b>50 crystals</b><br/>🧢 <b>The Cap hat</b><br/><br/>%s",
 	"register_validate_button": "Validate my account",
-	"register_mail_subject": "Leek Wars: Sign up",
+	"register_mail_subject": "🎁 Activate your Leek Wars account and claim your starter kit",
 	"reset_mail": "Hello %s!\nYour password reset request has been registered.\n\nTo reset your password, visit this link: %s.",
 	"reset_mail_html": "Hello <b>%s</b>!\n<br><br>\nYour password reset request has been registered.\n<br><br>\nTo reset your password, click on <a href='%s'>this link</a>.\n<br><br>\nSee you soon on Leek Wars!",
 	"reset_mail_subject": "Leek Wars: Password reset",
