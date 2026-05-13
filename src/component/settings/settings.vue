@@ -77,9 +77,9 @@
 						</tr>
 					</table>
 					<div class="center">
-						<v-btn v-if="signupMethod === 1" size="large" color="primary" type="submit">{{ $t('verify') }}</v-btn>
-						<v-btn v-else-if="signupMethod === 2" color="black" type="submit" class="gh-button"> <img src="/image/github_white.png"> {{ $t('verify_gh') }}</v-btn>
-						<v-btn v-else type="submit" class="google-button"> <img src="/image/google.svg"> {{ $t('verify_google') }}</v-btn>
+						<v-btn v-if="signupMethod === 1" size="large" color="primary" type="submit" :disabled="submittingVerify" :loading="submittingVerify">{{ $t('verify') }}</v-btn>
+						<v-btn v-else-if="signupMethod === 2" color="black" type="submit" class="gh-button" :disabled="submittingVerify" :loading="submittingVerify"> <img src="/image/github_white.png"> {{ $t('verify_gh') }}</v-btn>
+						<v-btn v-else type="submit" class="google-button" :disabled="submittingVerify" :loading="submittingVerify"> <img src="/image/google.svg"> {{ $t('verify_google') }}</v-btn>
 					</div>
 				</form>
 			</div>
@@ -322,6 +322,7 @@
 	const signupMethod = ref(1)
 	const email = ref('')
 	const password1 = ref('')
+	const submittingVerify = ref(false)
 
 	settings.value = {}
 	for (const category in mails) {
@@ -505,6 +506,8 @@
 
 	function submit(e: Event) {
 		e.preventDefault()
+		if (submittingVerify.value) return false
+		submittingVerify.value = true
 		errors.value = {}
 		const provider = signupMethod.value === 2 ? 'github' : signupMethod.value === 3 ? 'google' : null
 		const service = provider ? `farmer/verify-${provider}` : 'farmer/verify'
@@ -523,10 +526,16 @@
 			} else {
 				router.push('/signup/success/' + login.value)
 			}
-		}).error(errs => {
-			for (const error of errs) {
-				const form = ['login', 'leek', 'email', 'password1', 'password2', 'godfather'][error[0]]
-				addError(form, t('error_' + error[1], error[2]) as string)
+		}).error(payload => {
+			submittingVerify.value = false
+			if (Array.isArray(payload)) {
+				for (const error of payload) {
+					const form = ['login', 'leek', 'email', 'password1', 'password2', 'godfather'][error[0]]
+					addError(form, t('error_' + error[1], error[2]) as string)
+				}
+			} else {
+				const code = typeof payload?.error === 'string' ? payload.error : 'unknown'
+				LeekWars.toast(t('error_' + code) as string)
 			}
 		})
 		return false
