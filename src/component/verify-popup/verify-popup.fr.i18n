@@ -1,10 +1,6 @@
 {
 	"title": "Sécurise ton compte et reçois ta récompense",
 	"intro": "Tu vas perdre ta progression si tu changes de navigateur ou si tu effaces tes cookies. Valide ton compte pour le sécuriser et débloquer la récompense !",
-	"reward_fights": "combats supplémentaires",
-	"reward_habs": "habs",
-	"reward_crystals": "cristaux",
-	"reward_hat": "Chapeau Casquette",
 	"login": "Choisis ton nom d'éleveur",
 	"email": "Ton adresse email",
 	"password": "Mot de passe",

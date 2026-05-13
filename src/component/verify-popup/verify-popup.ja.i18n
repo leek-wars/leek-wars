@@ -1,10 +1,6 @@
 {
 	"title": "アカウントを保護して報酬を受け取る",
 	"intro": "ブラウザを変更したり Cookie を消去すると、進行状況が失われます。アカウントを認証して保護し、報酬を解除しましょう！",
-	"reward_fights": "追加戦闘",
-	"reward_habs": "habs",
-	"reward_crystals": "クリスタル",
-	"reward_hat": "キャップ帽",
 	"login": "エレヴール名を選んでください",
 	"email": "メールアドレス",
 	"password": "パスワード",

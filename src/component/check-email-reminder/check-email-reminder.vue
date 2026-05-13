@@ -2,24 +2,7 @@
 	<popup v-model="show" :width="540" icon="mdi-email-fast" :title="t('title')" :persistent="false">
 		<div class="intro">{{ t('intro') }}</div>
 
-		<div class="rewards">
-			<div class="reward">
-				<div class="reward-icon"><img src="/image/fight-pack/fight_pack_50.png" alt="fights"></div>
-				<div class="reward-text"><b>20</b> {{ t('reward_fights') }}</div>
-			</div>
-			<div class="reward">
-				<div class="reward-icon"><img src="/image/resource/box_100k_habs.png" alt="habs"></div>
-				<div class="reward-text"><b>10 000</b> {{ t('reward_habs') }}</div>
-			</div>
-			<div class="reward">
-				<div class="reward-icon"><img src="/image/crystal.png" alt="crystal"></div>
-				<div class="reward-text"><b>50</b> {{ t('reward_crystals') }}</div>
-			</div>
-			<div class="reward">
-				<div class="reward-icon"><img src="/image/hat/cap.png" alt="cap"></div>
-				<div class="reward-text">{{ t('reward_hat') }}</div>
-			</div>
-		</div>
+		<verify-rewards class="popup-rewards" />
 
 		<div class="hint">
 			<v-icon>mdi-folder-alert-outline</v-icon>
@@ -42,6 +25,7 @@ import { LeekWars } from '@/model/leekwars'
 import { mixins, useNamespacedT } from '@/model/i18n'
 import { store } from '@/model/store'
 import Popup from '@/component/popup.vue'
+import VerifyRewards from '@/component/verify-rewards/verify-rewards.vue'
 
 defineOptions({ name: 'CheckEmailReminder', i18n: {}, mixins: [...mixins] })
 
@@ -99,6 +83,8 @@ function resend() {
 	}
 	LeekWars.post('farmer/resend-verify-mail', {}).then(() => {
 		LeekWars.toast(t('mail_resent'))
+		localStorage.removeItem(snoozeKey('count'))
+		localStorage.removeItem(snoozeKey('until'))
 		logEvent('dismissed')
 		close()
 	}).error(payload => {
@@ -116,36 +102,8 @@ function resend() {
 		padding: 4px 0 16px;
 		color: var(--text-color-secondary);
 	}
-	.rewards {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: 12px;
+	.popup-rewards {
 		margin-bottom: 16px;
-	}
-	.reward {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-		background: var(--background-secondary);
-		padding: 10px 12px;
-		border-radius: 6px;
-	}
-	.reward-icon {
-		flex-shrink: 0;
-		width: 64px;
-		height: 64px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		img {
-			max-width: 100%;
-			max-height: 100%;
-			object-fit: contain;
-		}
-	}
-	.reward-text {
-		font-size: 14px;
-		b { font-size: 16px; }
 	}
 	.hint {
 		display: flex;
