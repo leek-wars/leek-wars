@@ -43,9 +43,17 @@
 									<v-icon v-if="farmer.validation" :class="{pending: isPendingEmail(farmer.validation, farmer.verified)}" :title="validationLabel(farmer.validation)">{{ regIcon(farmer.validation, farmer.verified) }}</v-icon>
 								</div>
 
-								<div class="email-cell" :class="{verified: farmer.verified && farmer.mail, pending: farmer.mail && !farmer.verified}" :title="farmer.mail ? (farmer.verified ? 'Email validé : ' + farmer.mail : 'Email en attente de validation : ' + farmer.mail) : 'Aucun email'">
-									<span v-if="farmer.mail">{{ farmer.mail }}</span>
+								<div class="email-cell" :class="{verified: farmer.verified && farmer.mail, pending: farmer.mail && !farmer.verified}" :title="emailCellTitle(farmer)">
+									<span v-if="farmer.mail" class="addr">{{ farmer.mail }}</span>
 									<span v-else class="empty">—</span>
+									<span v-if="farmer.mail" class="status-icons">
+										<v-icon v-if="farmer.email_bounced_at" class="bounced" title="Mail rejeté (bounce)">mdi-email-alert</v-icon>
+										<template v-else-if="farmer.email_sent_at">
+											<v-icon v-if="farmer.email_clicked_at" class="clicked" :title="'Lien cliqué le ' + formatTs(farmer.email_clicked_at)">mdi-cursor-default-click</v-icon>
+											<v-icon v-else-if="farmer.email_opened_at" class="opened" :title="'Mail ouvert le ' + formatTs(farmer.email_opened_at) + ', pas cliqué'">mdi-eye-outline</v-icon>
+											<v-icon v-else class="unopened" :title="'Mail envoyé le ' + formatTs(farmer.email_sent_at) + ', jamais ouvert (spam folder ?)'">mdi-eye-off-outline</v-icon>
+										</template>
+									</span>
 								</div>
 
 								<div class="tuto" :title="tutoTitle(farmer)">
@@ -239,6 +247,10 @@
 		register_time: number
 		didactitiel_seen?: boolean
 		tutorial_progress?: number
+		email_sent_at?: number | null
+		email_opened_at?: number | null
+		email_clicked_at?: number | null
+		email_bounced_at?: number | null
 		[key: string]: unknown
 	}
 
@@ -399,6 +411,20 @@
 		name = name.replace('https://', '')
 		if (name.endsWith('/')) name = name.substring(0, name.length - 1)
 		return name
+	}
+
+	function formatTs(ts: number): string {
+		return new Date(ts * 1000).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' })
+	}
+
+	function emailCellTitle(f: SourceFarmer): string {
+		if (!f.mail) return 'Aucun email'
+		const base = (f.verified ? 'Email validé : ' : 'Email en attente : ') + f.mail
+		if (f.email_bounced_at) return base + '\nMail rejeté (bounce) le ' + formatTs(f.email_bounced_at)
+		if (!f.email_sent_at) return base
+		if (f.email_clicked_at) return base + '\nMail envoyé le ' + formatTs(f.email_sent_at) + '\nLien cliqué le ' + formatTs(f.email_clicked_at)
+		if (f.email_opened_at) return base + '\nMail envoyé le ' + formatTs(f.email_sent_at) + '\nOuvert le ' + formatTs(f.email_opened_at) + ' (pas cliqué)'
+		return base + '\nMail envoyé le ' + formatTs(f.email_sent_at) + '\nJamais ouvert (spam folder ?)'
 	}
 </script>
 
@@ -628,16 +654,33 @@
 		font-size: 12px;
 		color: #888;
 		overflow: hidden;
-		text-overflow: ellipsis;
-		&.verified {
+		gap: 4px;
+		.addr {
+			min-width: 0;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		&.verified .addr {
 			color: #4caf50;
 		}
-		&.pending {
+		&.pending .addr {
 			color: #ff9800;
 			font-style: italic;
 		}
 		.empty {
 			opacity: 0.4;
+		}
+		.status-icons {
+			margin-left: auto;
+			display: flex;
+			flex-shrink: 0;
+			.v-icon {
+				font-size: 16px;
+			}
+			.clicked { color: #4caf50; }
+			.opened { color: #2196f3; }
+			.unopened { color: #bbb; }
+			.bounced { color: #b71c1c; }
 		}
 	}
 	.tuto {
