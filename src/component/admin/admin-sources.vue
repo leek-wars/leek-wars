@@ -43,6 +43,11 @@
 									<v-icon v-if="farmer.validation" :class="{pending: isPendingEmail(farmer.validation, farmer.verified)}" :title="validationLabel(farmer.validation)">{{ regIcon(farmer.validation, farmer.verified) }}</v-icon>
 								</div>
 
+								<div class="email-cell" :class="{verified: farmer.verified && farmer.mail, pending: farmer.mail && !farmer.verified}" :title="farmer.mail ? (farmer.verified ? 'Email validé : ' + farmer.mail : 'Email en attente de validation : ' + farmer.mail) : 'Aucun email'">
+									<span v-if="farmer.mail">{{ farmer.mail }}</span>
+									<span v-else class="empty">—</span>
+								</div>
+
 								<div class="tuto" :title="tutoTitle(farmer)">
 									<v-icon v-if="farmer.didactitiel_seen" class="done" title="Didactitiel terminé">mdi-school</v-icon>
 									<v-icon v-else class="pending" title="Didactitiel non terminé">mdi-school-outline</v-icon>
@@ -225,6 +230,7 @@
 		github?: boolean
 		google?: boolean
 		pass?: boolean
+		mail?: string | null
 		registered_fast?: boolean
 		verified?: boolean
 		deleted?: boolean
@@ -540,6 +546,7 @@
 		/* date   */ 70px
 		/* name   */ minmax(120px, 1.4fr)
 		/* reg    */ 46px
+		/* email  */ minmax(120px, 1.4fr)
 		/* tuto   */ 70px
 		/* last   */ minmax(80px, 1fr)
 		/* play   */ minmax(90px, 1fr)
@@ -617,6 +624,22 @@
 			opacity: 0.4;
 		}
 	}
+	.email-cell {
+		font-size: 12px;
+		color: #888;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		&.verified {
+			color: #4caf50;
+		}
+		&.pending {
+			color: #ff9800;
+			font-style: italic;
+		}
+		.empty {
+			opacity: 0.4;
+		}
+	}
 	.tuto {
 		.done {
 			color: #4caf50;
@@ -686,7 +709,7 @@ body.dark .farmer.connected {
 	}
 }
 #app.app .farmer {
-	grid-template-columns: 60px minmax(100px, 1.3fr) 40px 60px minmax(70px, 1fr) minmax(80px, 1fr) 26px 30px minmax(110px, 1fr) minmax(90px, 1fr) minmax(70px, 1.1fr);
+	grid-template-columns: 60px minmax(100px, 1.3fr) 40px minmax(110px, 1.3fr) 60px minmax(70px, 1fr) minmax(80px, 1fr) 26px 30px minmax(110px, 1fr) minmax(90px, 1fr) minmax(70px, 1.1fr);
 	column-gap: 4px;
 	font-size: 12px;
 }
