@@ -34,7 +34,7 @@
 	"notif_count": "您有 {0} 个新通知{1}",
 	"register_mail": "恭喜 %s，您已注册 Leek Wars。\n\n要验证您的帐户，请转到此页面：%s\n",
 	"register_mail_html": "恭喜 <b>%s</b>，您已注册 Leek Wars！<br/><br/>要验证您的帐户，<a href='%s'>单击此处</a>",
-	"register_mail_subject": "韭菜大战：注册",
+	"register_mail_subject": "🎁 激活你的韭菜大战账号，领取新手礼包",
 	"reset_mail": "你好 %s！\n\n您的密码重置请求已成功注册。\n\n要更改您的密码，请单击此链接：%s。",
 	"reset_mail_html": "你好 <b>%s</b>！\n<br><br>\n您的密码重置请求已成功注册。\n<br><br>\n要更改您的密码，请单击<a href='%s'>此链接</a>。\n<br><br>\n韭菜大战见！",
 	"reset_mail_subject": "韭菜大战：密码重置",

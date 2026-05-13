@@ -34,7 +34,7 @@
 	"notif_count": "Tienes {0} notificaciones nuevas {1}",
 	"register_mail": "Felicidades %s, estás registrado en Leek Wars.\n\nPara validar su cuenta, vaya a esta página: %s\n",
 	"register_mail_html": "¡Felicidades <b>%s</b>, estás registrado en Leek Wars!<br/><br/>Para validar tu cuenta, <a href='%s'>Haz clic aquí</a>",
-	"register_mail_subject": "Leek Wars: registro",
+	"register_mail_subject": "🎁 Activa tu cuenta de Leek Wars y reclama tu kit de bienvenida",
 	"reset_mail": "¡Hola %s!\n\nSu solicitud de restablecimiento de contraseña se ha registrado correctamente.\n\nPara cambiar su contraseña, haga clic en este enlace: %s.",
 	"reset_mail_html": "¡Hola <b>%s</b>!\n<br><br>\nSu solicitud de restablecimiento de contraseña se ha registrado correctamente.\n<br><br>\nPara cambiar su contraseña, haga clic en <a href='%s'>este enlace</a>.\n<br><br>\n¡Nos vemos pronto en Leek Wars!",
 	"reset_mail_subject": "Leek Wars: restablecimiento de contraseña",

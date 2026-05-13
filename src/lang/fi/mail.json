@@ -34,7 +34,7 @@
 	"notif_count": "Sinulla on {0} uutta ilmoitusta {1}",
 	"register_mail": "Onnittelut %s, olet rekisteröitynyt Leek Warsiin.\n\nVahvista tilisi siirtymällä tälle sivulle: %s\n",
 	"register_mail_html": "Onnittelut <b>%s</b>, olet rekisteröitynyt Leek Warsiin!<br/><br/>Vahvista tilisi <a href='%s'>napsauttamalla tätä</a>",
-	"register_mail_subject": "Leek Wars: rekisteröinti",
+	"register_mail_subject": "🎁 Aktivoi Leek Wars -tilisi ja lunasta aloituspakkauksesi",
 	"reset_mail": "Hei %s!\n\nSalasanan palautuspyyntösi on rekisteröity onnistuneesti.\n\nVaihda salasanasi napsauttamalla tätä linkkiä: %s.",
 	"reset_mail_html": "Hei <b>%s</b>!\n<br><br>\nSalasanan palautuspyyntösi on rekisteröity onnistuneesti.\n<br><br>\nVaihda salasanasi napsauttamalla <a href='%s'>tätä linkkiä</a>.\n<br><br>\nNähdään pian Leek Warsissa!",
 	"reset_mail_subject": "Leek Wars: Salasanan palautus",

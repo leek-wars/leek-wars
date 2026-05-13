@@ -34,7 +34,7 @@
 	"notif_count": "Je hebt {0} nieuwe meldingen {1}",
 	"register_mail": "Gefeliciteerd %s, je bent geregistreerd op Leek Wars.\n\nGa naar deze pagina om uw account te valideren: %s\n",
 	"register_mail_html": "Gefeliciteerd <b>%s</b>, je bent geregistreerd bij Leek Wars!<br/><br/>Om je account te valideren, <a href='%s'>Klik hier</a>",
-	"register_mail_subject": "Leek Wars: Registratie",
+	"register_mail_subject": "🎁 Activeer je Leek Wars-account en ontvang je startpakket",
 	"reset_mail": "Hallo %s!\n\nUw verzoek om wachtwoord opnieuw in te stellen is met succes geregistreerd.\n\nKlik op deze link om uw wachtwoord te wijzigen: %s.",
 	"reset_mail_html": "Hallo <b>%s</b>!\n<br><br>\nUw verzoek om wachtwoord opnieuw in te stellen is met succes geregistreerd.\n<br><br>\nKlik op <a href='%s'>deze link</a> om uw wachtwoord te wijzigen.\n<br><br>\nTot ziens op Leek Wars!",
 	"reset_mail_subject": "Leek Wars: wachtwoord opnieuw instellen",

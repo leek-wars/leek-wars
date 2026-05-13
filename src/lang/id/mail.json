@@ -34,7 +34,7 @@
 	"notif_count": "Anda memiliki {0} pemberitahuan baru {1}",
 	"register_mail": "Selamat %s, Anda terdaftar di Leek Wars.\n\nUntuk memvalidasi akun Anda, buka halaman ini: %s\n",
 	"register_mail_html": "Selamat <b>%s</b>, Anda terdaftar di Leek Wars!<br/><br/>Untuk memvalidasi akun Anda, <a href='%s'>Klik di sini</a>",
-	"register_mail_subject": "Leek Wars: Pendaftaran",
+	"register_mail_subject": "🎁 Aktifkan akun Leek Wars-mu dan ambil paket pemula",
 	"reset_mail": "Halo %s!\n\nPermintaan pengaturan ulang kata sandi Anda telah berhasil didaftarkan.\n\nUntuk mengubah kata sandi Anda, klik tautan ini: %s.",
 	"reset_mail_html": "Halo <b>%s</b>!\n<br><br>\nPermintaan pengaturan ulang kata sandi Anda telah berhasil didaftarkan.\n<br><br>\nUntuk mengubah kata sandi Anda, klik <a href='%s'>tautan ini</a>.\n<br><br>\nSampai jumpa di Leek Wars!",
 	"reset_mail_subject": "Leek Wars: Reset Kata Sandi",
