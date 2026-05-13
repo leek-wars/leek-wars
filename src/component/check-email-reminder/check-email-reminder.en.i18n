@@ -1,0 +1,17 @@
+{
+	"title": "Check your inbox!",
+	"intro": "We sent you an email a few minutes ago. Click the link inside to activate your account and claim your rewards.",
+	"reward_fights": "extra fights",
+	"reward_habs": "Habs",
+	"reward_crystals": "crystals",
+	"reward_hat": "Cap hat",
+	"check_spam": "Don't forget to check your spam or promotions folder if you can't find it.",
+	"resend": "Resend the email",
+	"later": "Later",
+	"mail_resent": "Email resent!",
+	"error_wrong_token": "Session expired, please log in again",
+	"error_already_verified": "Your account is already verified",
+	"error_no_pending_verify": "No pending verification",
+	"error_too_many_requests": "Please wait a moment before trying again",
+	"error_unknown": "Something went wrong, please try again later"
+}

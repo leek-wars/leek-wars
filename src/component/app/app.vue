@@ -47,6 +47,8 @@
 
 				<verify-popup v-if="showVerifyPopup" v-model="showVerifyPopup" />
 
+				<check-email-reminder v-if="showCheckEmailReminder" v-model="showCheckEmailReminder" />
+
 				<activation-welcome v-if="showActivationWelcome" v-model="showActivationWelcome" />
 
 				<img v-if="LeekWars.clover" :style="{top: LeekWars.cloverTop + 'px', left: LeekWars.cloverLeft + 'px'}" class="clover" src="/image/clover.png" @click="clickClover">
@@ -213,6 +215,7 @@
 	const Squares = defineAsyncComponent(() => import('@/component/app/squares.vue'))
 	const ConsoleWindow = defineAsyncComponent(() => import('./console-window.vue'))
 	const VerifyPopup = defineAsyncComponent(() => import('@/component/verify-popup/verify-popup.vue'))
+	const CheckEmailReminder = defineAsyncComponent(() => import('@/component/check-email-reminder/check-email-reminder.vue'))
 	const ActivationWelcome = defineAsyncComponent(() => import('@/component/activation-welcome/activation-welcome.vue'))
 	const ChangelogDialog = defineAsyncComponent(() => import('../changelog/changelog-dialog.vue'))
 	const Documentation = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`))
@@ -248,6 +251,7 @@
 	let cloverSpeed = 200
 	const verifyMessage = ref(true)
 	const verifyPopupDismissed = ref(false)
+	const checkEmailReminderDismissed = ref(false)
 	const showActivationWelcome = ref(false)
 	const loggedOutOtherTab = ref(false)
 
@@ -270,7 +274,11 @@
 	let verifyPopupTimer: ReturnType<typeof setInterval> | null = null
 	const needsTick = computed(() => {
 		const f = store.state.farmer
-		return !!f && !f.verified && !f.verify_modal_dismissed_at && !verifyPopupDismissed.value
+		if (!f || f.verified) return false
+		// Tick tant qu'un des deux dialogs peut encore se déclencher.
+		const verifyPopupActive = !f.verify_modal_dismissed_at && !verifyPopupDismissed.value
+		const reminderActive = !!f.verify_code_at && !checkEmailReminderDismissed.value
+		return verifyPopupActive || reminderActive
 	})
 	watch(needsTick, (active, _, onCleanup) => {
 		if (!active) return
@@ -305,6 +313,25 @@
 		},
 		set(value: boolean) {
 			if (!value) verifyPopupDismissed.value = true
+		}
+	})
+
+	// Dialog de rappel "va checker ton mail" : 5 min après verify_start,
+	// puis snooze exponentiel x2 géré dans le composant (10min, 20min, 40min, …).
+	const CHECK_EMAIL_REMINDER_INITIAL_DELAY_MS = 5 * 60 * 1000
+	const showCheckEmailReminder = computed({
+		get() {
+			const f = store.state.farmer
+			if (!f || f.verified) return false
+			if (!f.verify_code_at) return false
+			if (checkEmailReminderDismissed.value) return false
+			if (nowTick.value < f.verify_code_at * 1000 + CHECK_EMAIL_REMINDER_INITIAL_DELAY_MS) return false
+			const snoozeKey = 'check-email-reminder-snoozed-until-' + f.id
+			const snoozedUntil = parseInt(localStorage.getItem(snoozeKey) || '0')
+			return snoozedUntil <= nowTick.value
+		},
+		set(value: boolean) {
+			if (!value) checkEmailReminderDismissed.value = true
 		}
 	})
 	const aprilFoolsDialog = ref(false)

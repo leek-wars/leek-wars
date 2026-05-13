@@ -1,0 +1,17 @@
+{
+	"title": "Va chercher ton email !",
+	"intro": "On t'a envoyé un email il y a quelques minutes. Clique sur le lien à l'intérieur pour activer ton compte et récupérer tes récompenses.",
+	"reward_fights": "combats supplémentaires",
+	"reward_habs": "habs",
+	"reward_crystals": "cristaux",
+	"reward_hat": "Chapeau Casquette",
+	"check_spam": "Pense à vérifier le dossier spam ou promotions si tu ne le trouves pas.",
+	"resend": "Renvoyer l'email",
+	"later": "Plus tard",
+	"mail_resent": "Email renvoyé !",
+	"error_wrong_token": "Session expirée, reconnecte-toi",
+	"error_already_verified": "Ton compte est déjà validé",
+	"error_no_pending_verify": "Aucune validation en attente",
+	"error_too_many_requests": "Patiente quelques instants avant de réessayer",
+	"error_unknown": "Une erreur est survenue, réessaie plus tard"
+}
