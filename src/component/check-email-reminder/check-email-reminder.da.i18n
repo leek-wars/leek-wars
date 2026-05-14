@@ -1,0 +1,17 @@
+{
+	"title": "Tjek din indbakke!",
+	"intro": "Vi sendte dig en e-mail for et par minutter siden. Klik på linket i den for at aktivere din konto og hente dine belønninger.",
+	"check_spam": "Husk at tjekke spam- eller reklamemappen, hvis du ikke kan finde den.",
+	"resend": "Send e-mailen igen",
+	"later": "Senere",
+	"or": "eller verificér uden e-mail",
+	"use_github": "Fortsæt med GitHub",
+	"use_google": "Fortsæt med Google",
+	"mail_resent": "E-mail sendt igen!",
+	"error_wrong_token": "Sessionen er udløbet, log ind igen",
+	"error_already_verified": "Din konto er allerede bekræftet",
+	"error_no_pending_verify": "Ingen ventende bekræftelse",
+	"error_no_login": "Mangler brugernavn, genindlæs siden",
+	"error_too_many_requests": "Vent et øjeblik før du prøver igen",
+	"error_unknown": "Noget gik galt, prøv igen senere"
+}

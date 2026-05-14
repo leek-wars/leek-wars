@@ -1,0 +1,17 @@
+{
+	"title": "Controlla la tua casella!",
+	"intro": "Ti abbiamo inviato un'email pochi minuti fa. Clicca sul link al suo interno per attivare il tuo account e ricevere le tue ricompense.",
+	"check_spam": "Non dimenticare di controllare la cartella spam o promozioni se non la trovi.",
+	"resend": "Rinvia l'email",
+	"later": "Più tardi",
+	"or": "oppure verifica senza email",
+	"use_github": "Continua con GitHub",
+	"use_google": "Continua con Google",
+	"mail_resent": "Email rinviata!",
+	"error_wrong_token": "Sessione scaduta, accedi di nuovo",
+	"error_already_verified": "Il tuo account è già verificato",
+	"error_no_pending_verify": "Nessuna verifica in attesa",
+	"error_no_login": "Nome utente mancante, ricarica la pagina",
+	"error_too_many_requests": "Attendi un momento prima di riprovare",
+	"error_unknown": "Qualcosa è andato storto, riprova più tardi"
+}

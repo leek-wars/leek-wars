@@ -1,0 +1,17 @@
+{
+	"title": "Schau in dein Postfach!",
+	"intro": "Wir haben dir vor einigen Minuten eine E-Mail geschickt. Klicke auf den Link darin, um dein Konto zu aktivieren und deine Belohnungen zu erhalten.",
+	"check_spam": "Vergiss nicht, deinen Spam- oder Werbeordner zu prüfen, falls du sie nicht findest.",
+	"resend": "E-Mail erneut senden",
+	"later": "Später",
+	"or": "oder ohne E-Mail bestätigen",
+	"use_github": "Mit GitHub fortfahren",
+	"use_google": "Mit Google fortfahren",
+	"mail_resent": "E-Mail erneut gesendet!",
+	"error_wrong_token": "Sitzung abgelaufen, bitte erneut anmelden",
+	"error_already_verified": "Dein Konto ist bereits verifiziert",
+	"error_no_pending_verify": "Keine ausstehende Verifizierung",
+	"error_no_login": "Benutzername fehlt, lade die Seite neu",
+	"error_too_many_requests": "Bitte warte einen Moment, bevor du es erneut versuchst",
+	"error_unknown": "Etwas ist schiefgelaufen, bitte versuche es später erneut"
+}

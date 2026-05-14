@@ -1,0 +1,17 @@
+{
+	"title": "Confira sua caixa de entrada!",
+	"intro": "Nós te enviamos um e-mail há alguns minutos. Clique no link dentro dele para ativar sua conta e receber suas recompensas.",
+	"check_spam": "Não esqueça de verificar a pasta de spam ou promoções se não encontrar.",
+	"resend": "Reenviar o e-mail",
+	"later": "Mais tarde",
+	"or": "ou verifique sem e-mail",
+	"use_github": "Continuar com GitHub",
+	"use_google": "Continuar com Google",
+	"mail_resent": "E-mail reenviado!",
+	"error_wrong_token": "Sessão expirada, faça login novamente",
+	"error_already_verified": "Sua conta já está verificada",
+	"error_no_pending_verify": "Nenhuma verificação pendente",
+	"error_no_login": "Nome de usuário ausente, recarregue a página",
+	"error_too_many_requests": "Aguarde um momento antes de tentar novamente",
+	"error_unknown": "Algo deu errado, tente novamente mais tarde"
+}

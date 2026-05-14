@@ -1,0 +1,17 @@
+{
+	"title": "查看你的收件箱！",
+	"intro": "我们刚刚给你发了一封邮件。点击邮件中的链接激活账号并领取你的奖励。",
+	"check_spam": "如果没找到，记得检查垃圾邮件或促销邮件文件夹。",
+	"resend": "重新发送邮件",
+	"later": "稍后",
+	"or": "或不用邮件验证",
+	"use_github": "使用 GitHub 继续",
+	"use_google": "使用 Google 继续",
+	"mail_resent": "邮件已重新发送！",
+	"error_wrong_token": "会话已过期，请重新登录",
+	"error_already_verified": "你的账号已验证",
+	"error_no_pending_verify": "没有待处理的验证",
+	"error_no_login": "缺少用户名，请刷新页面",
+	"error_too_many_requests": "请稍后再试",
+	"error_unknown": "出错了，请稍后重试"
+}

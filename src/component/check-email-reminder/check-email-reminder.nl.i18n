@@ -1,0 +1,17 @@
+{
+	"title": "Controleer je inbox!",
+	"intro": "We hebben je een paar minuten geleden een e-mail gestuurd. Klik op de link erin om je account te activeren en je beloningen te ontvangen.",
+	"check_spam": "Vergeet niet je spam- of promotiemap te controleren als je hem niet kunt vinden.",
+	"resend": "E-mail opnieuw versturen",
+	"later": "Later",
+	"or": "of verifieer zonder e-mail",
+	"use_github": "Doorgaan met GitHub",
+	"use_google": "Doorgaan met Google",
+	"mail_resent": "E-mail opnieuw verstuurd!",
+	"error_wrong_token": "Sessie verlopen, log opnieuw in",
+	"error_already_verified": "Je account is al geverifieerd",
+	"error_no_pending_verify": "Geen openstaande verificatie",
+	"error_no_login": "Gebruikersnaam ontbreekt, herlaad de pagina",
+	"error_too_many_requests": "Wacht even voordat je het opnieuw probeert",
+	"error_unknown": "Er ging iets mis, probeer het later opnieuw"
+}

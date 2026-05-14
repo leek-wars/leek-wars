@@ -1,0 +1,17 @@
+{
+	"title": "Sprawdź swoją skrzynkę!",
+	"intro": "Wysłaliśmy ci e-mail kilka minut temu. Kliknij link w środku, aby aktywować konto i odebrać nagrody.",
+	"check_spam": "Pamiętaj, aby sprawdzić folder spam lub promocje, jeśli go nie znajdujesz.",
+	"resend": "Wyślij e-mail ponownie",
+	"later": "Później",
+	"or": "lub zweryfikuj bez e-maila",
+	"use_github": "Kontynuuj z GitHub",
+	"use_google": "Kontynuuj z Google",
+	"mail_resent": "E-mail wysłany ponownie!",
+	"error_wrong_token": "Sesja wygasła, zaloguj się ponownie",
+	"error_already_verified": "Twoje konto jest już zweryfikowane",
+	"error_no_pending_verify": "Brak oczekującej weryfikacji",
+	"error_no_login": "Brak nazwy użytkownika, odśwież stronę",
+	"error_too_many_requests": "Poczekaj chwilę przed kolejną próbą",
+	"error_unknown": "Coś poszło nie tak, spróbuj ponownie później"
+}

@@ -1,0 +1,17 @@
+{
+	"title": "Kolla din inkorg!",
+	"intro": "Vi skickade dig ett e-postmeddelande för några minuter sedan. Klicka på länken inuti för att aktivera ditt konto och hämta dina belöningar.",
+	"check_spam": "Glöm inte att kolla skräppost- eller kampanjmappen om du inte hittar det.",
+	"resend": "Skicka e-postmeddelandet igen",
+	"later": "Senare",
+	"or": "eller verifiera utan e-post",
+	"use_github": "Fortsätt med GitHub",
+	"use_google": "Fortsätt med Google",
+	"mail_resent": "E-postmeddelandet har skickats igen!",
+	"error_wrong_token": "Sessionen har gått ut, logga in igen",
+	"error_already_verified": "Ditt konto är redan verifierat",
+	"error_no_pending_verify": "Ingen väntande verifiering",
+	"error_no_login": "Användarnamn saknas, ladda om sidan",
+	"error_too_many_requests": "Vänta en stund innan du försöker igen",
+	"error_unknown": "Något gick fel, försök igen senare"
+}

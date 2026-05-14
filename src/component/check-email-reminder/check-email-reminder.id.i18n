@@ -1,0 +1,17 @@
+{
+	"title": "Periksa kotak masuk!",
+	"intro": "Kami mengirimi kamu email beberapa menit yang lalu. Klik tautan di dalamnya untuk mengaktifkan akunmu dan menerima hadiahmu.",
+	"check_spam": "Jangan lupa periksa folder spam atau promosi jika tidak menemukannya.",
+	"resend": "Kirim ulang email",
+	"later": "Nanti",
+	"or": "atau verifikasi tanpa email",
+	"use_github": "Lanjutkan dengan GitHub",
+	"use_google": "Lanjutkan dengan Google",
+	"mail_resent": "Email dikirim ulang!",
+	"error_wrong_token": "Sesi kedaluwarsa, silakan login kembali",
+	"error_already_verified": "Akunmu sudah diverifikasi",
+	"error_no_pending_verify": "Tidak ada verifikasi tertunda",
+	"error_no_login": "Nama pengguna tidak ada, muat ulang halaman",
+	"error_too_many_requests": "Tunggu sebentar sebelum mencoba lagi",
+	"error_unknown": "Terjadi kesalahan, coba lagi nanti"
+}
