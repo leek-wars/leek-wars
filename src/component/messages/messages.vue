@@ -114,7 +114,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { store } from '@/model/store'
-	import { computed, defineAsyncComponent, onMounted, onUnmounted, ref, watch } from 'vue'
+	import { computed, defineAsyncComponent, onBeforeMount, onMounted, onUnmounted, ref, watch } from 'vue'
 	import { useRoute, useRouter } from 'vue-router'
 	import { emitter } from '@/model/vue'
 	import { env } from '@/env'
@@ -227,8 +227,10 @@
 	if (!env.SOCIAL) {
 		router.push('/')
 	}
-	LeekWars.setTitle(t('title') as string)
-	update()
+	onBeforeMount(() => {
+		LeekWars.setTitle(t('title') as string)
+		update()
+	})
 
 	function selectConversation(theId: number) {
 		currentID.value = theId

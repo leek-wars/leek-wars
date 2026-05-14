@@ -110,7 +110,7 @@
 	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import Pagination from '@/component/pagination.vue'
-	import { computed, reactive, ref, watch } from 'vue'
+	import { computed, onBeforeMount, reactive, ref, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 
@@ -156,7 +156,7 @@
 	LeekWars.get('forum/get-categories/' + languages).then(data => {
 		categories.value = data.categories
 	})
-	LeekWars.setTitle(t('title'))
+	onBeforeMount(() => LeekWars.setTitle(t('title')))
 
 	function update() {
 		options.query = (route.query.query as string || '').replace(/\+/g, ' ')

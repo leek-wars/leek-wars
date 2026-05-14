@@ -200,7 +200,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onBeforeMount } from 'vue'
 import { LeekWars } from '@/model/leekwars'
 import { mixins , useNamespacedT } from '@/model/i18n'
 import Breadcrumb from '../forum/breadcrumb.vue'
@@ -214,7 +214,7 @@ const breadcrumb_items = computed(() => [
 	{ name: t('title'), link: '/groups' },
 ])
 
-LeekWars.setTitle(t('title'))
+onBeforeMount(() => LeekWars.setTitle(t('title')))
 </script>
 
 <style lang="scss" scoped>

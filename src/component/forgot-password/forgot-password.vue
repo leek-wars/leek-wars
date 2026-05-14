@@ -58,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { LeekWars } from '@/model/leekwars'
@@ -79,7 +79,7 @@ const email = ref('')
 const password = ref('')
 const password2 = ref('')
 
-LeekWars.setTitle(t('title'))
+onBeforeMount(() => LeekWars.setTitle(t('title')))
 
 function submitForm() {
 	LeekWars.post('farmer/forgot-password', {email: email.value}).then(() => {

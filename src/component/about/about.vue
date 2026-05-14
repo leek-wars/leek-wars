@@ -173,7 +173,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, useTemplateRef } from 'vue'
+import { ref, computed, onBeforeMount, onMounted, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { Farmer } from '@/model/farmer'
 import { mixins, useNamespacedT } from '@/model/i18n'
@@ -249,8 +249,10 @@ const team = computed(() => [[
 const contributors = ref<Farmer[]>([])
 const github = useTemplateRef<HTMLElement>('github')
 
-LeekWars.setTitle(t('title'))
-LeekWars.setActions([{image: 'github_white.png', click: () => window.open('https://github.com/leek-wars/leek-wars', '_newtab')}])
+onBeforeMount(() => {
+	LeekWars.setTitle(t('title'))
+	LeekWars.setActions([{image: 'github_white.png', click: () => window.open('https://github.com/leek-wars/leek-wars', '_newtab')}])
+})
 
 onMounted(() => {
 	const script = document.createElement('script')

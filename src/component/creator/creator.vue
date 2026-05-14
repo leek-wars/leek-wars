@@ -168,7 +168,7 @@ import { ORDERED_CHIPS } from '@/model/sorted_chips'
 import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 import { WeaponsData, WeaponTemplate } from '@/model/weapon'
 import { ChipTemplate } from '@/model/chip'
-import { computed, nextTick, onMounted, onUnmounted, ref, useTemplateRef } from 'vue'
+import { computed, nextTick, onBeforeMount, onMounted, onUnmounted, ref, useTemplateRef } from 'vue'
 import { useRoute } from 'vue-router'
 
 defineOptions({ name: 'Creator', i18n: {}, mixins: [...mixins] })
@@ -223,7 +223,7 @@ const playerRef = useTemplateRef<{game: Game}>('playerRef')
 
 const id = computed(() => route.params.id)
 
-LeekWars.setTitle(t('title') as string)
+onBeforeMount(() => LeekWars.setTitle(t('title') as string))
 
 LeekWars.get("map/get/" + id.value).then(m => {
 	map.value = m

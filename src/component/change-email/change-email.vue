@@ -64,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { LeekWars } from '@/model/leekwars'
@@ -81,7 +81,7 @@ const email = ref('')
 const email2 = ref('')
 const error = ref<string | null>(null)
 
-LeekWars.setTitle(t('title'))
+onBeforeMount(() => LeekWars.setTitle(t('title')))
 
 if (state.value === 2) {
 	LeekWars.post('farmer/change-email3', {token: route.params.token}).then(() => {

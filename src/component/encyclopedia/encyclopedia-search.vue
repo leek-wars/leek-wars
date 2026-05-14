@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, onBeforeMount, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Markdown from '@/component/encyclopedia/markdown.vue'
 import { i18n, mixins , useNamespacedT } from '@/model/i18n'
@@ -72,7 +72,7 @@ let urlSyncing = false
 
 const canSearch = computed(() => options.value.query)
 
-LeekWars.setTitle(t('title'))
+onBeforeMount(() => LeekWars.setTitle(t('title')))
 
 function onQueryInput(e: Event) {
 	const query = (e.target as HTMLInputElement).value
