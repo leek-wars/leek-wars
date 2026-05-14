@@ -148,8 +148,13 @@ function useProvider(provider: 'github' | 'google') {
 		document.location.href = LeekWars.API + `farmer/start-${provider}-login`
 	}).error(payload => {
 		oauthLoading.value = false
-		const code = typeof payload?.error === 'string' ? payload.error : 'unknown'
-		LeekWars.toast(t('error_' + code) as string)
+		actionTaken = false // permet de retenter ou snoozer normalement après échec
+		if (Array.isArray(payload) && payload.length > 0 && Array.isArray(payload[0])) {
+			LeekWars.toast(t('error_' + payload[0][1]) as string)
+		} else {
+			const code = typeof payload?.error === 'string' ? payload.error : 'unknown'
+			LeekWars.toast(t('error_' + code) as string)
+		}
 	})
 }
 </script>
