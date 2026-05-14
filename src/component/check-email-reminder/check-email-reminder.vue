@@ -62,8 +62,9 @@ onMounted(() => logEvent('shown'))
 
 const SNOOZE_BASE_MS = 10 * 60 * 1000
 const SNOOZE_CAP_MS = 24 * 60 * 60 * 1000
+const SNOOZE_MAX_COUNT = 5
 
-function snoozeKey(suffix: 'until' | 'count'): string {
+function snoozeKey(suffix: 'until' | 'count' | 'final'): string {
 	const id = store.state.farmer?.id ?? 'anon'
 	return `check-email-reminder-snoozed-${suffix}-${id}`
 }
@@ -85,9 +86,16 @@ function later() {
 	actionTaken = true
 	if (!props.test) {
 		const count = parseInt(localStorage.getItem(snoozeKey('count')) || '0') + 1
-		const delay = Math.min(SNOOZE_BASE_MS * Math.pow(2, count - 1), SNOOZE_CAP_MS)
 		localStorage.setItem(snoozeKey('count'), String(count))
-		localStorage.setItem(snoozeKey('until'), String(Date.now() + delay))
+		if (count >= SNOOZE_MAX_COUNT) {
+			// Au-delà de SNOOZE_MAX_COUNT refus, on n'affiche plus jamais le dialog
+			// sur cet appareil. Le bandeau header reste, le user peut toujours
+			// revenir via /settings.
+			localStorage.setItem(snoozeKey('final'), '1')
+		} else {
+			const delay = Math.min(SNOOZE_BASE_MS * Math.pow(2, count - 1), SNOOZE_CAP_MS)
+			localStorage.setItem(snoozeKey('until'), String(Date.now() + delay))
+		}
 	}
 	logEvent('snoozed')
 	close()
@@ -108,6 +116,7 @@ function resend() {
 		LeekWars.toast(t('mail_resent'))
 		localStorage.removeItem(snoozeKey('count'))
 		localStorage.removeItem(snoozeKey('until'))
+		localStorage.removeItem(snoozeKey('final'))
 		actionTaken = true
 		logEvent('resend')
 		close()

@@ -326,8 +326,8 @@
 			if (!f.verify_code_at) return false
 			if (checkEmailReminderDismissed.value) return false
 			if (nowTick.value < f.verify_code_at * 1000 + CHECK_EMAIL_REMINDER_INITIAL_DELAY_MS) return false
-			const snoozeKey = 'check-email-reminder-snoozed-until-' + f.id
-			const snoozedUntil = parseInt(localStorage.getItem(snoozeKey) || '0')
+			if (localStorage.getItem('check-email-reminder-snoozed-final-' + f.id) === '1') return false
+			const snoozedUntil = parseInt(localStorage.getItem('check-email-reminder-snoozed-until-' + f.id) || '0')
 			return snoozedUntil <= nowTick.value
 		},
 		set(value: boolean) {
