@@ -212,7 +212,8 @@ class NotificationBuilder {
 			const fightID = params[0]
 			const result = params.length > 1 ? parseInt(params[1]) : 0
 			const leekName = params.length > 2 ? params[2] : ''
-			return new Notification(data, "/fight/" + fightID, "mdi-sword-cross", [leekName], [], result)
+			const participantCount = params.length > 3 ? params[3] : ''
+			return new Notification(data, "/fight/" + fightID, "mdi-sword-cross", [leekName, participantCount], [], result)
 		} else if (type === NotificationType.LEEK_AUTO_EXIT_ARENA) {
 			const leekId = parseInt(params[0], 10)
 			const leekName = leeks[leekId]?.name ?? '?'

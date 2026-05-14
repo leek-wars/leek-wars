@@ -11,6 +11,9 @@
     - "#ai Avertissement sur les fonctions et variables globales jamais utilisées dans l'IA (mode strict)."
     - "#ai Nouveau fichier vide par défaut (au lieu du code d'exemple LeekScript) sauf pour le tout premier fichier d'un compte."
     - "Panneau d'actions du combat scrollable : on peut remonter librement dans l'historique sans perdre les anciennes actions, avec chargement progressif dans les deux sens."
+    - "Notifications d'arènes plus précises : indiquent le nombre de poireaux affrontés (Battle Royale, Guerre, Chasse aux coffres, Colosse)."
+  fixed:
+    - "Icône Marché du menu mieux alignée verticalement."
 247:
   title: "Intégration Git, équipements, gestion multi-comptes et potions de trèfle."
   added:

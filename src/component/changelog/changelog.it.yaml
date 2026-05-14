@@ -11,6 +11,9 @@
     - "#ai Avviso sulle funzioni e variabili globali mai utilizzate nell'IA (modalità rigorosa)."
     - "#ai I nuovi file sono ora vuoti per default (invece del codice di esempio LeekScript), tranne per il primo file di un account."
     - "Pannello azioni del combattimento scorrevole: puoi risalire liberamente la cronologia senza perdere le azioni vecchie, con caricamento progressivo in entrambe le direzioni."
+    - "Notifiche delle arene più precise: indicano il numero di porri affrontati (Battle Royale, Guerra, Caccia ai forzieri, Colosso)."
+  fixed:
+    - "Icona Mercato del menu meglio allineata verticalmente."
 247:
   title: "Integrazione Git, equipaggiamenti, gestione multi-account e pozioni di trifoglio."
   added:

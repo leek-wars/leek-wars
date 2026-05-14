@@ -11,6 +11,9 @@
     - "#ai Warning on functions and globals never used in the AI (strict mode)."
     - "#ai New files are now empty by default (instead of the LeekScript example code), except for the very first file of an account."
     - "Fight actions panel is now scrollable: you can freely scroll back through the action history without losing old actions, with lazy loading in both directions."
+    - "More precise arena notifications: now show the number of leeks involved (Battle Royale, War, Chest Hunt, Colossus)."
+  fixed:
+    - "Market icon in the menu better vertically aligned."
 247:
   title: "Git integration, loadouts, multi-account management and clover potions."
   added:
