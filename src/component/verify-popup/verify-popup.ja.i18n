@@ -14,5 +14,9 @@
 	"error_invalid_mail": "メールアドレスが無効です",
 	"error_mail_already_used": "このメールアドレスはすでに使用されています",
 	"error_password_length": "パスワードが短すぎるか長すぎます",
-	"error_invalid_godfather": "ゴッドファーザーが見つかりません"
+	"error_invalid_godfather": "ゴッドファーザーが見つかりません",
+	"or": "または続行",
+	"use_github": "GitHub で続行",
+	"use_google": "Google で続行",
+	"error_no_login": "先にエレヴール名を選んでください"
 }

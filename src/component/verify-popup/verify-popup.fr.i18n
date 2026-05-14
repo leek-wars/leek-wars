@@ -14,5 +14,9 @@
 	"error_invalid_mail": "Email invalide",
 	"error_mail_already_used": "Cet email est déjà utilisé",
 	"error_password_length": "Mot de passe trop court ou trop long",
-	"error_invalid_godfather": "Parrain introuvable"
+	"error_invalid_godfather": "Parrain introuvable",
+	"or": "ou continue avec",
+	"use_github": "Continuer avec GitHub",
+	"use_google": "Continuer avec Google",
+	"error_no_login": "Choisis ton nom d'éleveur d'abord"
 }

@@ -14,5 +14,9 @@
 	"error_invalid_mail": "Invalid email address",
 	"error_mail_already_used": "This email is already in use",
 	"error_password_length": "Password too short or too long",
-	"error_invalid_godfather": "Referrer not found"
+	"error_invalid_godfather": "Referrer not found",
+	"or": "or continue with",
+	"use_github": "Continue with GitHub",
+	"use_google": "Continue with Google",
+	"error_no_login": "Choose your farmer name first"
 }
