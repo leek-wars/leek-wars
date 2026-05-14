@@ -158,6 +158,12 @@
 				<div>
 					<img src="/image/partner/n-hitec.png">
 				</div>
+				<div>
+					<img src="/image/partner/xplor.svg">
+				</div>
+				<div>
+					<img src="/image/partner/santevet.svg">
+				</div>
 			</div>
 
 			<div class="testimonies">
@@ -171,6 +177,15 @@
 				</div>
 
 				<div>
+				<div class="testimony">
+					<!-- <avatar :farmer="{id: -1, avatar_changed: 0}" /> -->
+					<div class="card">
+						« {{ $t('testimony_xplor') }} »
+					</div>
+					<img src="/image/partner/xplor.svg">
+				</div>
+				<br>
+
 				<div class="testimony">
 					<!-- <avatar :farmer="{id: -1, avatar_changed: 0}" /> -->
 					<div class="card">
