@@ -1,0 +1,22 @@
+{
+	"title": "Zabezpiecz konto i odbierz nagrodę",
+	"intro": "Utracisz swój postęp, jeśli zmienisz przeglądarkę lub wyczyścisz pliki cookie. Zweryfikuj konto, aby je zabezpieczyć i odblokować nagrodę.",
+	"login": "Wybierz nazwę hodowcy",
+	"email": "Twój e-mail",
+	"password": "Hasło",
+	"validate": "Zweryfikuj moje konto",
+	"later": "Później",
+	"mail_sent": "E-mail weryfikacyjny wysłany!",
+	"error_login_length": "Nazwa hodowcy za krótka lub za długa",
+	"error_login_format": "Nieprawidłowy format nazwy (tylko litery, cyfry i myślniki)",
+	"error_login_already_used": "Ta nazwa hodowcy jest już zajęta",
+	"error_forbidden_name": "Ta nazwa nie jest dozwolona",
+	"error_invalid_mail": "Nieprawidłowy adres e-mail",
+	"error_mail_already_used": "Ten e-mail jest już używany",
+	"error_password_length": "Hasło za krótkie lub za długie",
+	"error_invalid_godfather": "Nie znaleziono polecającego",
+	"or": "lub kontynuuj przez",
+	"use_github": "Kontynuuj z GitHub",
+	"use_google": "Kontynuuj z Google",
+	"error_no_login": "Najpierw wybierz nazwę hodowcy"
+}

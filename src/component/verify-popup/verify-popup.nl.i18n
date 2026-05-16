@@ -1,0 +1,22 @@
+{
+	"title": "Beveilig je account en ontvang je beloning",
+	"intro": "Je verliest je voortgang als je van browser wisselt of je cookies wist. Valideer je account om het te beveiligen en de beloning vrij te schakelen.",
+	"login": "Kies je kwekersnaam",
+	"email": "Je e-mailadres",
+	"password": "Wachtwoord",
+	"validate": "Mijn account valideren",
+	"later": "Later",
+	"mail_sent": "Validatie-e-mail verzonden!",
+	"error_login_length": "Kwekersnaam te kort of te lang",
+	"error_login_format": "Ongeldig naamformaat (alleen letters, cijfers en koppeltekens)",
+	"error_login_already_used": "Deze kwekersnaam is al in gebruik",
+	"error_forbidden_name": "Deze naam is niet toegestaan",
+	"error_invalid_mail": "Ongeldig e-mailadres",
+	"error_mail_already_used": "Dit e-mailadres is al in gebruik",
+	"error_password_length": "Wachtwoord te kort of te lang",
+	"error_invalid_godfather": "Peetvader niet gevonden",
+	"or": "of ga door met",
+	"use_github": "Doorgaan met GitHub",
+	"use_google": "Doorgaan met Google",
+	"error_no_login": "Kies eerst je kwekersnaam"
+}

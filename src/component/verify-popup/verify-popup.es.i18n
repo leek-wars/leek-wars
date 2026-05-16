@@ -1,0 +1,22 @@
+{
+	"title": "Asegura tu cuenta y recibe tu recompensa",
+	"intro": "Perderás tu progreso si cambias de navegador o borras las cookies. Valida tu cuenta para protegerla y desbloquear la recompensa.",
+	"login": "Elige tu nombre de granjero",
+	"email": "Tu correo electrónico",
+	"password": "Contraseña",
+	"validate": "Validar mi cuenta",
+	"later": "Más tarde",
+	"mail_sent": "¡Correo de validación enviado!",
+	"error_login_length": "Nombre de granjero demasiado corto o largo",
+	"error_login_format": "Formato de nombre inválido (solo letras, números y guiones)",
+	"error_login_already_used": "Este nombre de granjero ya está en uso",
+	"error_forbidden_name": "Este nombre no está permitido",
+	"error_invalid_mail": "Correo electrónico inválido",
+	"error_mail_already_used": "Este correo ya está en uso",
+	"error_password_length": "Contraseña demasiado corta o larga",
+	"error_invalid_godfather": "Padrino no encontrado",
+	"or": "o continúa con",
+	"use_github": "Continuar con GitHub",
+	"use_google": "Continuar con Google",
+	"error_no_login": "Elige primero tu nombre de granjero"
+}

@@ -1,0 +1,22 @@
+{
+	"title": "Suojaa tilisi ja lunasta palkintosi",
+	"intro": "Menetät edistymisesi, jos vaihdat selainta tai tyhjennät evästeesi. Vahvista tilisi suojataksesi sen ja avataksesi palkinnon.",
+	"login": "Valitse kasvattajanimesi",
+	"email": "Sähköpostiosoitteesi",
+	"password": "Salasana",
+	"validate": "Vahvista tilini",
+	"later": "Myöhemmin",
+	"mail_sent": "Vahvistussähköposti lähetetty!",
+	"error_login_length": "Kasvattajanimi on liian lyhyt tai liian pitkä",
+	"error_login_format": "Virheellinen nimimuoto (vain kirjaimet, numerot ja viivat)",
+	"error_login_already_used": "Tämä kasvattajanimi on jo käytössä",
+	"error_forbidden_name": "Tätä nimeä ei sallita",
+	"error_invalid_mail": "Virheellinen sähköpostiosoite",
+	"error_mail_already_used": "Tämä sähköposti on jo käytössä",
+	"error_password_length": "Salasana on liian lyhyt tai liian pitkä",
+	"error_invalid_godfather": "Suosittelijaa ei löytynyt",
+	"or": "tai jatka",
+	"use_github": "Jatka GitHubilla",
+	"use_google": "Jatka Googlella",
+	"error_no_login": "Valitse ensin kasvattajanimesi"
+}

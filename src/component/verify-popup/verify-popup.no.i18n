@@ -1,0 +1,22 @@
+{
+	"title": "Sikre kontoen din og motta belønningen",
+	"intro": "Du mister fremgangen din hvis du bytter nettleser eller sletter informasjonskapslene. Bekreft kontoen din for å sikre den og låse opp belønningen.",
+	"login": "Velg oppdretternavnet ditt",
+	"email": "E-postadressen din",
+	"password": "Passord",
+	"validate": "Bekreft kontoen min",
+	"later": "Senere",
+	"mail_sent": "Bekreftelsesmail sendt!",
+	"error_login_length": "Oppdretternavnet er for kort eller for langt",
+	"error_login_format": "Ugyldig navneformat (kun bokstaver, tall og bindestreker)",
+	"error_login_already_used": "Dette oppdretternavnet er allerede tatt",
+	"error_forbidden_name": "Dette navnet er ikke tillatt",
+	"error_invalid_mail": "Ugyldig e-postadresse",
+	"error_mail_already_used": "Denne e-postadressen er allerede i bruk",
+	"error_password_length": "Passordet er for kort eller for langt",
+	"error_invalid_godfather": "Fadderen ble ikke funnet",
+	"or": "eller fortsett med",
+	"use_github": "Fortsett med GitHub",
+	"use_google": "Fortsett med Google",
+	"error_no_login": "Velg først oppdretternavnet ditt"
+}

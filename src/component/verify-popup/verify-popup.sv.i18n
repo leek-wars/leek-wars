@@ -1,0 +1,22 @@
+{
+	"title": "Säkra ditt konto och hämta din belöning",
+	"intro": "Du kommer att förlora dina framsteg om du byter webbläsare eller rensar dina cookies. Validera ditt konto för att säkra det och låsa upp belöningen.",
+	"login": "Välj ditt odlarnamn",
+	"email": "Din e-postadress",
+	"password": "Lösenord",
+	"validate": "Validera mitt konto",
+	"later": "Senare",
+	"mail_sent": "Valideringsmail skickat!",
+	"error_login_length": "Odlarnamnet är för kort eller för långt",
+	"error_login_format": "Ogiltigt namnformat (endast bokstäver, siffror och bindestreck)",
+	"error_login_already_used": "Detta odlarnamn är redan taget",
+	"error_forbidden_name": "Detta namn är inte tillåtet",
+	"error_invalid_mail": "Ogiltig e-postadress",
+	"error_mail_already_used": "Den här e-postadressen används redan",
+	"error_password_length": "Lösenordet är för kort eller för långt",
+	"error_invalid_godfather": "Faddern hittades inte",
+	"or": "eller fortsätt med",
+	"use_github": "Fortsätt med GitHub",
+	"use_google": "Fortsätt med Google",
+	"error_no_login": "Välj först ditt odlarnamn"
+}

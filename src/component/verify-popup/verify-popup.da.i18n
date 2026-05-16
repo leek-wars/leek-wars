@@ -1,0 +1,22 @@
+{
+	"title": "Sikr din konto og hent din belønning",
+	"intro": "Du mister dine fremskridt, hvis du skifter browser eller rydder dine cookies. Bekræft din konto for at sikre den og låse op for belønningen.",
+	"login": "Vælg dit avlernavn",
+	"email": "Din e-mailadresse",
+	"password": "Adgangskode",
+	"validate": "Bekræft min konto",
+	"later": "Senere",
+	"mail_sent": "Bekræftelsesmail sendt!",
+	"error_login_length": "Avlernavnet er for kort eller for langt",
+	"error_login_format": "Ugyldigt navneformat (kun bogstaver, tal og bindestreger)",
+	"error_login_already_used": "Dette avlernavn er allerede taget",
+	"error_forbidden_name": "Dette navn er ikke tilladt",
+	"error_invalid_mail": "Ugyldig e-mailadresse",
+	"error_mail_already_used": "Denne e-mail bruges allerede",
+	"error_password_length": "Adgangskoden er for kort eller for lang",
+	"error_invalid_godfather": "Fadderen blev ikke fundet",
+	"or": "eller fortsæt med",
+	"use_github": "Fortsæt med GitHub",
+	"use_google": "Fortsæt med Google",
+	"error_no_login": "Vælg først dit avlernavn"
+}
