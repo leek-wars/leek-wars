@@ -340,11 +340,7 @@ watch(() => LeekWars.currency, () => {
 			}
 		}
 		:deep(.crystal) {
-			width: 14px;
-			height: 14px;
-			margin: 0;
-			vertical-align: -2px;
-			background-size: contain;
+			margin-bottom: -4px;
 		}
 		.suggestion-cta {
 			flex-shrink: 0;
