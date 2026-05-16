@@ -23,8 +23,10 @@ import { mixins } from '@/model/i18n'
 
 defineOptions({ name: 'BankProduct', i18n: {}, mixins: [...mixins] })
 
+interface Pack { id: number; crystals: number; bonus: number; prices: Record<string, number> }
+
 defineProps<{
-	product: Record<string, unknown>
+	product: Pack
 	index: number
 	best?: boolean
 	preview?: boolean
