@@ -205,7 +205,7 @@ const technologies = [
 		{ name: 'Vue', link: 'https://vuejs.org/', image: 'vue.png' },
 		{ name: 'Chart.js', link: 'https://www.chartjs.org/', image: 'chartjs.png' },
 		{ name: 'KaTeX', link: 'https://katex.org/', image: 'katex.png' },
-		{ name: 'webpack', link: 'https://webpack.js.org/', image: 'webpack.png' },
+		{ name: 'webpack', link: 'https://webpack.js.org/', image: 'webpack.webp' },
 		{ name: 'npm', link: 'https://www.npmjs.com/', image: 'npm.svg' },
 		{ name: 'Vuetify', link: 'https://vuetifyjs.com/en/', image: 'vuetify.png' },
 		{ name: 'Markdown it', link: 'https://markdown-it.github.io/', image: 'markdown-it.svg' },
