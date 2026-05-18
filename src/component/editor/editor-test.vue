@@ -657,6 +657,7 @@
 	watch(() => props.currentAI, () => updateAI())
 
 	function updateAI() {
+		if (!initialized.value) return
 		if (props.currentAI) {
 			let scenario = props.currentAI.scenario
 			if (!scenario) {
@@ -702,9 +703,7 @@
 		const existing = pendingPersist.get(scenario)
 		if (existing) return existing
 		const promise = LeekWars.post('test-scenario/new', { name: scenario.ai!.name }).then(r => {
-			for (const key in scenarios) {
-				if (scenarios[key] === scenario || scenarios[key].id === 0) delete scenarios[key]
-			}
+			delete scenarios[0]
 			scenario.id = r.id
 			scenarios[r.id] = scenario
 			scenario.default = false
