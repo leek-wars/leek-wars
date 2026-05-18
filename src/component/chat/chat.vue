@@ -183,8 +183,8 @@
 
 	const menuMessage = ref<ChatMessage | null>(null)
 	let scrollMessage = 0
-	const menuActivator = ref<EventTarget | null>(null)
-	const menuEmojiActivator = ref<EventTarget | null>(null)
+	const menuActivator = ref<Element | null>(null)
+	const menuEmojiActivator = ref<Element | null>(null)
 	const menu = ref(false)
 	const menuEmoji = ref(false)
 
@@ -339,10 +339,12 @@
 			}
 		}
 		if (chat.value === null) {
+			if (!props.newFarmer || !props.newConversation) return
+			const newConv = props.newConversation
 			LeekWars.post('message/create-conversation', {farmer_id: props.newFarmer.id, message}).then(data => {
 				// eslint-disable-next-line vue/no-mutating-props
-			props.newConversation.id = data.conversation_id
-				store.commit('new-conversation', props.newConversation)
+				newConv.id = data.conversation_id
+				store.commit('new-conversation', newConv)
 				router.replace('/messages/conversation/' + data.conversation_id)
 			})
 		} else {
@@ -448,7 +450,7 @@
 
 	function openMenu(activator: MouseEvent, message: ChatMessage) {
 		menuMessage.value = message
-		menuActivator.value = activator.target
+		menuActivator.value = activator.target as Element | null
 		menuEmoji.value = false
 		nextTick(() => {
 			menu.value = true
@@ -457,7 +459,7 @@
 
 	function openEmojis(activator: MouseEvent, message: ChatMessage) {
 		menuMessage.value = message
-		menuEmojiActivator.value = activator.target
+		menuEmojiActivator.value = activator.target as Element | null
 		menu.value = false
 		nextTick(() => {
 			menuEmoji.value = true

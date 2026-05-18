@@ -28,7 +28,7 @@ const emit = defineEmits<{
 }>()
 
 const commands = ref(Commands.commands)
-const options = ref<unknown[]>([])
+const options = ref<{ name: string, nameLower: string, description?: string }[]>([])
 const filterOptions = ref<string | null>(null)
 const index = ref(0)
 const instance = getCurrentInstance()
@@ -86,7 +86,7 @@ function down() {
 	scrollToSelected()
 }
 
-defineExpose({ getSelected, getSelectedOption, selectFirst, up, down })
+defineExpose({ getSelected, getSelectedOption, filterOptions, selectFirst, up, down })
 </script>
 
 <style lang="scss" scoped>

@@ -350,7 +350,35 @@
 	const categories = ref<ForumCategory[] | null>(null)
 	const rawCategoryName = ref('')
 	const loading = ref(false)
-	const topics = ref<Record<string, unknown>[] | null>(null)
+	interface ForumTopic {
+		id: number
+		title: string
+		category: number
+		seen?: boolean
+		pinned?: boolean
+		closed?: boolean
+		hidden?: boolean
+		acknowledged?: boolean
+		private_issue?: number
+		issue?: number
+		status?: number
+		priority?: number
+		release?: number
+		lang?: string
+		author: { id: number, name: string, [key: string]: unknown }
+		date: number
+		votes_up: number
+		votes_down: number
+		views: number
+		messages: number
+		last_message_date: number
+		last_message_page: number
+		last_message_id: number
+		last_message_writer: string
+		last_message_writer_id: number
+		[key: string]: unknown
+	}
+	const topics = ref<ForumTopic[] | null>(null)
 	const page = ref(0)
 	const pages = ref(0)
 	const createDialog = ref(false)
@@ -362,7 +390,7 @@
 	const createRelease = ref<number | null>(null)
 	const createHidden = ref(false)
 	const forumLanguages = reactive<{[key: string]: boolean}>({})
-	const translations = ref<Record<string, unknown>[]>([])
+	const translations = ref<{ id: number, lang: string, [key: string]: unknown }[]>([])
 	const order = ref(localStorage.getItem('forum/topic-order') || 'date')
 	const filterStatus = ref<number[]>([])
 	const filterAcknowledged = ref('all')
@@ -537,8 +565,9 @@
 			if (categories.value) {
 				router.push("/forum/category-" + category_ids.value + "/topic-" + data.topic_id)
 			}
-		}).catch(error => {
-			LeekWars.toast(t('error_' + error.error, error.params) as string)
+		}).catch((error: unknown) => {
+			const e = error as { error: string, params?: unknown[] }
+			LeekWars.toast(t('error_' + e.error, e.params) as string)
 		})
 	}
 
@@ -554,8 +583,9 @@
 		LeekWars.post('forum/mark-as-read').then(() => {
 			markAsReadDialog.value = false
 			update()
-		}).catch(error => {
-			LeekWars.toast(t('error_' + error.error, error.params) as string)
+		}).catch((error: unknown) => {
+			const e = error as { error: string, params?: unknown[] }
+			LeekWars.toast(t('error_' + e.error, e.params) as string)
 		})
 	}
 

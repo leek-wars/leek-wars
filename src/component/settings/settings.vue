@@ -175,8 +175,8 @@
 					<br><br>
 				</div>
 
-				<v-switch v-if="$store.state.farmer?.verified" v-model="settings.github_login" :disabled="!$store.state.farmer.pass && !settings.google_login" :label="$t('allow_github')" hide-details @change="updateGithubLogin" />
-				<v-switch v-if="$store.state.farmer?.verified" v-model="settings.google_login" :disabled="!$store.state.farmer.pass && !settings.github_login" :label="$t('allow_google')" hide-details @change="updateGoogleLogin" />
+				<v-switch v-if="settings && $store.state.farmer?.verified" v-model="settings.github_login" :disabled="!$store.state.farmer.pass && !settings.google_login" :label="$t('allow_github')" hide-details @change="updateGithubLogin" />
+				<v-switch v-if="settings && $store.state.farmer?.verified" v-model="settings.google_login" :disabled="!$store.state.farmer.pass && !settings.github_login" :label="$t('allow_google')" hide-details @change="updateGoogleLogin" />
 			</panel>
 
 			<panel v-if="$store.state.farmer?.verified" :title="$t('main.notifications')" icon="mdi-bell-outline">
@@ -200,10 +200,10 @@
 									<td class="item">
 										{{ $t('notification.category_' + category.id + '_desc') }}
 									</td>
-									<td class="push">
+									<td v-if="settings" class="push">
 										<v-checkbox v-model="settings['push_' + category.name]" hide-details label="Push" @update:model-value="updateNotif('push_' + category.name, settings['push_' + category.name])" />
 									</td>
-									<td class="mail">
+									<td v-if="settings" class="mail">
 										<v-checkbox v-model="settings['mail_' + category.name]" hide-details label="E-mail" @update:model-value="updateNotif('mail_' + category.name, settings['mail_' + category.name])" />
 									</td>
 								</tr>
@@ -294,7 +294,7 @@
 		{ id: 9, icon: 'mdi-gavel', name: 'moderation' }
 	]
 
-	const settings = ref<Record<string, unknown> | null>(null)
+	const settings = ref<Record<string, boolean> | null>(null)
 	const sfwMode = ref(localStorage.getItem('sfw') === 'true')
 	const notifsPopups = ref(localStorage.getItem('options/notifs-popups') !== 'false')
 	const notifsResults = ref(localStorage.getItem('options/notifs-results') === 'true')
@@ -491,10 +491,12 @@
 	}
 
 	function updateGithubLogin() {
+		if (!settings.value) return
 		LeekWars.post("settings/update-setting", {setting: 'github_login', value: settings.value.github_login})
 	}
 
 	function updateGoogleLogin() {
+		if (!settings.value) return
 		LeekWars.post("settings/update-setting", {setting: 'google_login', value: settings.value.google_login})
 	}
 

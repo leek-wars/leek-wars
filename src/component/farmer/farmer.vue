@@ -883,7 +883,7 @@
 	}
 
 	function registerTournament() {
-		if (farmer.value) {
+		if (farmer.value && farmer.value.tournament) {
 			if (farmer.value.tournament.registered) {
 				farmer.value.tournament.registered = false
 				LeekWars.post('farmer/unregister-tournament')

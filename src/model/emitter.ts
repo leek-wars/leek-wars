@@ -39,7 +39,7 @@ type Events = {
 	mouseup: MouseEvent,
 	jump: { ai: AI, line: number, column: number },
 	navigate: void,
-	'doc-navigate': unknown,
+	'doc-navigate': string,
 	'garden-queue': number,
 	'fight-progress': [number, number],
 	'update-leek-xp': unknown,

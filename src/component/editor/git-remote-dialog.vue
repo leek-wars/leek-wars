@@ -160,7 +160,7 @@
 		if (!props.folder) return
 		remotesLoading.value = true
 		try {
-			const data = await gitCall('git/remotes', { folder: props.folder })
+			const data = await gitCall<{ remotes: { name: string, url: string }[] }>('git/remotes', { folder: props.folder })
 			remotes.value = data.remotes || []
 		} catch {
 			remotes.value = []
@@ -171,7 +171,7 @@
 
 	async function loadCredentials() {
 		try {
-			const data = await gitCall('git-credential/get')
+			const data = await gitCall<{ credentials: { provider: string, auth_type: string, username: string, instance_url: string | null }[] }>('git-credential/get')
 			credentials.value = data.credentials || []
 			if (credentials.value.some(c => c.provider === 'github' && c.auth_type === 'app')) {
 				loadAvailableRepos()
@@ -186,7 +186,7 @@
 
 	async function loadAvailableRepos() {
 		try {
-			const data = await gitCall('git-credential/repos')
+			const data = await gitCall<{ repos: { name: string, full_name: string, clone_url: string, private: boolean }[] }>('git-credential/repos')
 			availableRepos.value = data.repos || []
 		} catch {
 			availableRepos.value = []
@@ -202,7 +202,8 @@
 			newRemoteUrl.value = ''
 			loadRemotes()
 		} catch (e: unknown) {
-			error.value = e.details || e.error || 'Error'
+			const err = e as { details?: string, error?: string }
+			error.value = err.details || err.error || 'Error'
 		}
 	}
 
@@ -212,7 +213,8 @@
 			await gitCall('git/remote-remove', { folder: props.folder, name })
 			loadRemotes()
 		} catch (e: unknown) {
-			error.value = e.details || e.error || 'Error'
+			const err = e as { details?: string, error?: string }
+			error.value = err.details || err.error || 'Error'
 		}
 	}
 
@@ -231,10 +233,11 @@
 			selfHosted.value = false
 			loadCredentials()
 		} catch (e: unknown) {
-			const key = e?.error === 'invalid_instance_url' ? 'invalid_instance_url' : 'invalid_token'
+			const err = e as { error?: string, details?: { http_code?: number, curl_error?: string } }
+			const key = err?.error === 'invalid_instance_url' ? 'invalid_instance_url' : 'invalid_token'
 			let msg = t(key) as string
-			if (e?.details?.http_code) msg += ` (HTTP ${e.details.http_code})`
-			if (e?.details?.curl_error) msg += `: ${e.details.curl_error}`
+			if (err?.details?.http_code) msg += ` (HTTP ${err.details.http_code})`
+			if (err?.details?.curl_error) msg += `: ${err.details.curl_error}`
 			error.value = msg
 		}
 	}
@@ -245,7 +248,8 @@
 			await gitCall('git-credential/delete', { provider: cred.provider, instance_url: cred.instance_url || '' })
 			loadCredentials()
 		} catch (e: unknown) {
-			error.value = e.details || e.error || 'Error'
+			const err = e as { details?: string, error?: string }
+			error.value = err.details || err.error || 'Error'
 		}
 	}
 </script>

@@ -26,8 +26,8 @@ defineProps<{
 const emit = defineEmits(['message'])
 
 const inputRef = useTemplateRef<HTMLElement>('input')
-const commandsRef = useTemplateRef<import("vue").ComponentPublicInstance>('commands')
-const pseudosRef = useTemplateRef<import("vue").ComponentPublicInstance>('pseudos')
+const commandsRef = useTemplateRef<InstanceType<typeof ChatCommands>>('commands')
+const pseudosRef = useTemplateRef<InstanceType<typeof ChatPseudos>>('pseudos')
 
 const message = ref('')
 const cursor = ref(0)

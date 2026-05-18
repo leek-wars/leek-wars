@@ -20,8 +20,9 @@
 <script setup lang="ts">
 defineOptions({ name: 'LwType' })
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 defineProps<{
-	type: string | number
+	type: any
 }>()
 </script>
 

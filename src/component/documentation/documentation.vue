@@ -35,7 +35,7 @@
 				<panel class="first">
 					<template #content>
 						<div class="items-list">
-							<div v-for="(category, c) of filteredCategories" :key="category.id">
+							<div v-for="(category, c) of filteredCategories" :key="c">
 								<h2 v-ripple @click="toggleCategory(c)">
 									<v-icon>{{ icons[c] }}</v-icon> {{ $t('doc.function_category_' + categories[c].name) }} <span v-if="query.length">({{ category.length }})</span>
 									<div class="spacer"></div>
@@ -43,8 +43,8 @@
 									<v-icon v-else>mdi-chevron-down</v-icon>
 								</h2>
 								<div v-if="query.length || categoryState[c]">
-									<div v-for="(item, i) in category" :key="i" :item="item.name" class="item" @click="navigate(item.name)">
-										{{ item.name }}<span v-if="item.arguments_types" class="arguments">(<span v-for="(arg, i) in item.arguments_names" :key="i"><span v-if="item.optional[i]">[</span><span class="argument">{{ $t('doc.arg_type_' + item.arguments_types[i]) }}</span>&nbsp;{{ arg }}<span v-if="item.optional[i]">]</span><span v-if="Number(i) < item.arguments_names.length - 1">, </span></span>)
+									<div v-for="(item, i) in (category as LSFunction[])" :key="i" :item="item.name" class="item" @click="navigate(item.name)">
+										{{ item.name }}<span v-if="item.arguments_types" class="arguments">(<span v-for="(arg, i) in item.arguments_names" :key="i"><span v-if="item.optional[i as number]">[</span><span class="argument">{{ $t('doc.arg_type_' + item.arguments_types[i as number]) }}</span>&nbsp;{{ arg }}<span v-if="item.optional[i as number]">]</span><span v-if="Number(i) < item.arguments_names.length - 1">, </span></span>)
 										<span v-if="item.return_type != 0">
 											<span class="arrow">→</span> <span class="argument"> {{ $t('doc.arg_type_' + item.return_type) }}</span>&nbsp;{{ item.return_name }}
 										</span></span>

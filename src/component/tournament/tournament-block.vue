@@ -9,7 +9,7 @@
 		<rich-tooltip-farmer v-else-if="entityType === 'farmer'" :id="entityId" v-slot="{ props }" :disabled="!isActive" :bottom="true">
 			<div v-bind="props" class="tooltip-target" @mouseenter="activate" @click="click" />
 		</rich-tooltip-farmer>
-		<rich-tooltip-composition v-else-if="entityType === 'team'" :id="item.id" v-slot="{ props }" :disabled="!isActive" :bottom="true">
+		<rich-tooltip-composition v-else-if="entityType === 'team' && item.id" :id="item.id" v-slot="{ props }" :disabled="!isActive" :bottom="true">
 			<div v-bind="props" class="tooltip-target" @mouseenter="activate" @click="click" />
 		</rich-tooltip-composition>
 		<div v-else class="tooltip-target" @click="click" @mouseenter="mouseenter" @mouseleave="mouseleave" />
@@ -39,8 +39,21 @@ defineOptions({ name: 'TournamentBlock' })
 // Shared across all tournament-block instances: only one tooltip at a time
 const activeBlock = ref('')
 
+interface TournamentItem {
+	me?: boolean
+	data?: number[]
+	win?: boolean
+	image?: string
+	id?: number
+	farmer_id?: number
+	farmer_avatar_changed?: number
+	link?: string
+	name?: string
+	[key: string]: unknown
+}
+
 const props = defineProps<{
-	item: Record<string, unknown>
+	item: TournamentItem
 	x: number
 	y: number
 	size: number
@@ -52,7 +65,7 @@ const router = useRouter()
 const image = computed(() => (props.item && props.item.image) ? (props.item.image.indexOf('/') === 0 ? 'https://leekwars.com' + props.item.image : props.item.image) : '')
 const avatarSize = computed(() => Math.round(props.size * 0.4))
 const farmerAvatar = computed(() => {
-	if (props.item && props.item.farmer_avatar_changed > 0) {
+	if (props.item && props.item.farmer_avatar_changed && props.item.farmer_avatar_changed > 0) {
 		return LeekWars.AVATAR + 'avatar/' + props.item.farmer_id + '.png?' + props.item.farmer_avatar_changed
 	}
 	return '/image/no_avatar.png'
@@ -76,7 +89,7 @@ function activate() {
 	activeBlock.value = blockKey.value
 }
 function click(e: Event) {
-	if (props.item) router.push(props.item.link)
+	if (props.item && props.item.link) router.push(props.item.link)
 	e.preventDefault()
 }
 function clickFarmer(e: Event) {
@@ -84,7 +97,7 @@ function clickFarmer(e: Event) {
 	e.preventDefault()
 }
 function mouseenter() {
-	if (props.item) {
+	if (props.item && props.item.name) {
 		emitter.emit('tooltip', { x: props.x + props.size / 2, y: props.y + props.size, content: props.item.name })
 	}
 }

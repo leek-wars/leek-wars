@@ -590,7 +590,7 @@
 	const capitalDialog = useTemplateRef<{ capital: number }>('capitalDialog')
 	const applyingEquipment = ref(false)
 	const membersDialog = ref(false)
-	const characteristics = reactive<{[key: string]: number}>({})
+	const characteristics = reactive<{[key: string]: number} & {level: number}>({ level: 0 })
 	const deleteMemberDialog = ref(false)
 	const memberToDelete = ref<Member | null>(null)
 	const giveItemDialog = ref(false)
@@ -937,7 +937,7 @@
 			delete member.name_error
 		}).error(error => {
 			delete member.name_error
-			member.name_error = error
+			member.name_error = error as { error: string, params?: unknown }
 		})
 	}
 
@@ -951,7 +951,7 @@
 			delete member.leek_error
 		}).error(error => {
 			delete member.leek_error
-			member.leek_error = error
+			member.leek_error = error as { error: string, params?: unknown }
 		})
 	}
 
@@ -965,7 +965,7 @@
 			delete member.mail_error
 		}).error(error => {
 			delete member.mail_error
-			member.mail_error = error
+			member.mail_error = error as { error: string, params?: unknown }
 		})
 	}
 
@@ -979,7 +979,7 @@
 			delete member.password_error
 		}).error(error => {
 			delete member.password_error
-			member.password_error = error
+			member.password_error = error as { error: string, params?: unknown }
 		})
 	}
 
