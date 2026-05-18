@@ -1,6 +1,13 @@
 {
 	"ai_renamed": "IA renommée en {0}",
 	"all_info_ls": "Toutes les informations sur le {0}",
+	"annotation_deprecated": "Marque l'élément comme obsolète. Un avertissement est émis à chaque utilisation.",
+	"annotation_nodiscard": "La valeur de retour ne doit pas être ignorée. Un avertissement est émis si elle n'est pas utilisée.",
+	"annotation_override": "Indique que la méthode redéfinit une méthode de la classe parente. Une erreur est levée si aucune méthode parente correspondante n'existe.",
+	"annotation_pure": "Indique que la fonction est pure (sans effet de bord). Un avertissement est émis si la valeur de retour est ignorée.",
+	"annotation_tailrec": "Indique que la fonction doit être récursive terminale. Le compilateur vérifie que la récursion peut être optimisée.",
+	"annotation_todo": "Marque l'élément comme à compléter. Un avertissement est émis à chaque utilisation.",
+	"annotation_unused": "Indique que la variable ou la fonction n'a pas besoin d'être utilisée. Supprime l'avertissement « non utilisé(e) ».",
 	"argument": "Argument <b>{0}</b>",
 	"chip_not_equipped": "Puce {0} ({1}) non équipée",
 	"chip_not_exists": "Puce {0} inexistante",

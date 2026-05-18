@@ -1,6 +1,13 @@
 {
 	"ai_renamed": "AI renamed to {0}",
 	"all_info_ls": "All information on {0}",
+	"annotation_deprecated": "Marks the element as deprecated. A warning is issued at each use.",
+	"annotation_nodiscard": "The return value must not be discarded. A warning is issued if it is not used.",
+	"annotation_override": "Indicates that the method overrides a parent class method. An error is raised if no matching parent method exists.",
+	"annotation_pure": "Marks the function as pure (no side effects). A warning is issued if the return value is discarded.",
+	"annotation_tailrec": "Indicates that the function should be tail-recursive. The compiler verifies that the recursion can be optimized.",
+	"annotation_todo": "Marks the element as to be completed. A warning is issued at each use.",
+	"annotation_unused": "Marks the variable or function as intentionally unused. Suppresses the \"unused\" warning.",
 	"argument": "Argument <b>{0}</b>",
 	"chip_not_equipped": "Chip {0} ({1}) is not equipped",
 	"chip_not_exists": "Chip {0} does not exist",

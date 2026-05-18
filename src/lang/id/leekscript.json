@@ -1,6 +1,13 @@
 {
 	"ai_renamed": "AI diganti namanya menjadi {0}",
 	"all_info_ls": "Semua informasi tentang {0}",
+	"annotation_deprecated": "Menandai elemen sebagai usang. Peringatan dikeluarkan setiap kali digunakan.",
+	"annotation_nodiscard": "Nilai pengembalian tidak boleh diabaikan. Peringatan dikeluarkan jika tidak digunakan.",
+	"annotation_override": "Menunjukkan bahwa metode menimpa metode kelas induk. Kesalahan dilemparkan jika tidak ada metode induk yang cocok.",
+	"annotation_pure": "Menandai fungsi sebagai murni (tanpa efek samping). Peringatan dikeluarkan jika nilai pengembalian diabaikan.",
+	"annotation_tailrec": "Menunjukkan bahwa fungsi harus rekursif ekor. Kompiler memverifikasi bahwa rekursi dapat dioptimalkan.",
+	"annotation_todo": "Menandai elemen sebagai akan diselesaikan. Peringatan dikeluarkan setiap kali digunakan.",
+	"annotation_unused": "Menandai variabel atau fungsi sebagai sengaja tidak digunakan. Menekan peringatan \"tidak digunakan\".",
 	"argument": "Argumen <b>{0}</b>",
 	"chip_not_equipped": "Chip {0} ({1}) tidak dilengkapi",
 	"chip_not_exists": "Chip {0} tidak ada",

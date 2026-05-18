@@ -1,6 +1,13 @@
 {
 	"ai_renamed": "AI 重命名为 {0}",
 	"all_info_ls": "关于 {0} 的所有信息",
+	"annotation_deprecated": "将元素标记为已弃用。每次使用都会发出警告。",
+	"annotation_nodiscard": "返回值不可被忽略。如果未使用会发出警告。",
+	"annotation_override": "表示该方法重写父类的方法。如果不存在对应的父类方法，将抛出错误。",
+	"annotation_pure": "将函数标记为纯函数（无副作用）。如果返回值被忽略会发出警告。",
+	"annotation_tailrec": "表示该函数应为尾递归。编译器会验证递归是否可被优化。",
+	"annotation_todo": "将元素标记为待完成。每次使用都会发出警告。",
+	"annotation_unused": "将变量或函数标记为有意未使用。抑制\"未使用\"警告。",
 	"argument": "参数 <b>{0}</b>",
 	"chip_not_equipped": "芯片 {0} ({1}) 未配备",
 	"chip_not_exists": "芯片 {0} 不存在",
