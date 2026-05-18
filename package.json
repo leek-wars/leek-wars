@@ -10,6 +10,7 @@
 		"build": "vite build",
 		"build-beta": "vite build --mode beta",
 		"build:sourcemaps": "NODE_OPTIONS='--max-old-space-size=8192' BUILD_SOURCEMAP=hidden vite build",
+		"build-beta:sourcemaps": "NODE_OPTIONS='--max-old-space-size=8192' BUILD_SOURCEMAP=hidden vite build --mode beta",
 		"build:stats": "STATS=1 vite build",
 		"preview": "vite preview",
 		"lint": "eslint src",
