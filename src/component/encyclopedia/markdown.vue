@@ -19,7 +19,7 @@
 	import { store } from '@/model/store'
 	import { i18n } from '@/model/i18n'
 	import LeekImage from '../leek-image.vue'
-	import { computed, defineComponent, h, nextTick, onBeforeUpdate, ref, useTemplateRef, watch } from 'vue'
+	import { computed, defineComponent, h, nextTick, onBeforeUnmount, onBeforeUpdate, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 	import { scroll_to_hash } from '@/router-functions'
@@ -216,7 +216,9 @@
 				})
 				// Search bar
 				mdEl.querySelectorAll('.encyclopedia-search-bar').forEach((item) => {
-					createSubApp(SearchBar, undefined, 'encyclopedia-search-bar').component('loader', LWLoader).mount(item)
+					const app = createSubApp(SearchBar, undefined, 'encyclopedia-search-bar').component('loader', LWLoader)
+					app.mount(item)
+					components.push({ $destroy: () => app.unmount() })
 				})
 				// Tutorial menu
 				mdEl.querySelectorAll('.tutorial-menu').forEach((item) => {
@@ -508,12 +510,15 @@
 			+ '</ul>'
 	}
 
-	onBeforeUpdate(() => {
+	function destroyComponents() {
 		for (const component of components) {
 			component.$destroy()
 		}
 		components = []
-	})
+	}
+
+	onBeforeUpdate(destroyComponents)
+	onBeforeUnmount(destroyComponents)
 </script>
 
 <style lang="scss" scoped>

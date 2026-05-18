@@ -366,9 +366,6 @@
 		destroyed = true
 		emitter.off('ctrlS', onCtrlS)
 		window.removeEventListener('beforeunload', boundBeforeUnload)
-		LeekWars.large = false
-		LeekWars.box = false
-		LeekWars.footer = true
 
 		destroyDiffEditor()
 		if (editor.value) {
@@ -379,6 +376,14 @@
 		if (edition.value) {
 			editEnd()
 		}
+		// Reset des flags layout après le swap router-view pour éviter un re-render
+		// de app.vue pendant le patch (parentNode null sur les nodes en cours de
+		// démontage). Voir feedback_nextTick_layout_reset.md.
+		nextTick(() => {
+			LeekWars.large = false
+			LeekWars.box = false
+			LeekWars.footer = true
+		})
 	})
 
 	onMounted(async () => {
