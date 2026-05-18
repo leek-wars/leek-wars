@@ -167,7 +167,7 @@
 				<div class="damages">
 					<div class="damage-chart">
 						<Doughnut :data="damageChartDamage" :options="damageChartOptions" :class="{heal: damageChartType === 2, tank: damageChartType === 3}" class="right" />
-						<div class="legend">
+						<div v-if="legends" class="legend">
 							<div v-for="(damage, d) in damageChartDamage.datasets[0].data" :key="d">
 								<span :style="{color: legends[d]}">{{ damageChartDamage.labels[d] }}</span> <div class="value">{{ $filters.number(damage) }}</div>
 							</div>
@@ -280,7 +280,7 @@
 
 	const ReportStatistics = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/report/report-statistics.${locale}.i18n`))
 
-	;(Tooltip.positioners as Record<string, unknown>).stackCenter = function(items: ActiveElement[]) {
+	;(Tooltip.positioners as unknown as Record<string, unknown>).stackCenter = function(items: ActiveElement[]) {
 		if (!items.length) return false
 		const first = items[0].element
 		const xStart = Math.min((first as unknown as { base: number; x: number }).base, (first as unknown as { x: number }).x)
@@ -327,8 +327,10 @@
 		plugins: { legend: { display: false } },
 	}
 	const damagesBarsData = ref<{ labels: string[]; datasets: ChartDataset<'bar'>[] }>({ labels: [], datasets: [] })
-	const damagesBarsOptions = ref<object | null>(null)
-	const damagesBarsTotal = {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const damagesBarsOptions = ref<any>(null)
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const damagesBarsTotal: any = {
 		id: 'stackTotal',
 		afterDatasetsDraw(chart: ChartJS) {
 			const ctx = chart.ctx
@@ -443,9 +445,9 @@
 				if (a[0] === ActionType.LEEK_TURN) {
 					currentPlayer = leeks.value[a[1]]
 				} else if (a[0] === ActionType.SET_WEAPON_OLD) {
-					leeks.value[a[1]].weapon = LeekWars.weapons[a[2]]
+					(leeks.value[a[1]] as unknown as { weapon: unknown }).weapon = LeekWars.weapons[a[2]]
 				} else if (a[0] === ActionType.SET_WEAPON) {
-					currentPlayer!.weapon = LeekWars.weapons[a[1]]
+					(currentPlayer! as unknown as { weapon: unknown }).weapon = LeekWars.weapons[a[1]]
 				} else if (a[0] === ActionType.USE_WEAPON || a[0] === ActionType.USE_WEAPON_OLD) {
 					action.item = currentPlayer!.weapon
 				} else if (a[0] === ActionType.USE_CHIP) {
@@ -494,7 +496,7 @@
 			loaded.value = true
 			if (store.state.farmer) {
 				LeekWars.get('fight/get-logs/' + fightId).then(d => {
-					logs.value = Object.freeze(d) as Record<string, Record<string, unknown[][]>>
+					logs.value = Object.freeze(d) as unknown as {[key: number]: {[action: number]: RawLogEntry[]}}
 					processLogs()
 					warningsErrors()
 					setTimeout(() => emitter.emit('loaded'), 100)
@@ -547,13 +549,13 @@
 				const action = farmerLogs[a]
 				let i = 0
 				for (const log of action) {
-					const leek = log[0]
-					const type = log[1]
-					const message = (type >= 6 && type <= 8) ? i18n.t('leekscript.error_' + log[3], log[4]) + "\n" + log[2] : log[2]
+					const leek = log[0] as number
+					const type = log[1] as number
+					const message = (type >= 6 && type <= 8) ? i18n.t('leekscript.error_' + log[3], log[4] as (string | number)[]) + "\n" + log[2] : log[2]
 					if (type === 2 || type === 7) {
-						warnings.value.push({entity: leeks.value[leek].name, data: message, action: a, index: i, ai: log[4], line: log[5], resolvedAI: fileSystem.ais[log[4]]})
+						warnings.value.push({entity: leeks.value[leek].name, data: message as string, action: a, index: i, ai: log[4] as number, line: log[5] as number, resolvedAI: fileSystem.ais[log[4] as number]})
 					} else if (type === 3 || type === 8) {
-						errors.value.push({entity: leeks.value[leek].name, data: message, action: a, index: i, ai: log[4], line: log[5], resolvedAI: fileSystem.ais[log[4]]})
+						errors.value.push({entity: leeks.value[leek].name, data: message as string, action: a, index: i, ai: log[4] as number, line: log[5] as number, resolvedAI: fileSystem.ais[log[4] as number]})
 					}
 					i++
 				}
@@ -622,7 +624,8 @@
 
 	function getChartDamage() {
 		if (!statistics.value || !fight.value) return
-		const entities: unknown[][] = []
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const entities: any[][] = []
 
 		for (const e in statistics.value.entities) {
 			const entity = statistics.value.entities[e]
