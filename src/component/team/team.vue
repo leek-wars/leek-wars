@@ -199,7 +199,7 @@
 		</div>
 
 		<panel v-if="myInvitation">
-			<div class="center">
+			<div v-if="myInvitation && myInvitation.sender_id !== undefined" class="center">
 				<b><i18n-t keypath="you_are_invited">
 					<template #sender>
 						<rich-tooltip-farmer :id="myInvitation.sender_id" v-slot="{ props }">
@@ -443,8 +443,8 @@
 									</router-link>
 								</rich-tooltip-leek>
 							</div>
-							<div class="p20">{{ $filters.number(leek.talent) }}</div>
-							<div class="p20">{{ $filters.number(leek.level) }}</div>
+							<div class="p20">{{ $filters.number(leek.talent ?? 0) }}</div>
+							<div class="p20">{{ $filters.number(leek.level ?? 0) }}</div>
 						</div>
 					</div>
 				</div>
@@ -466,7 +466,7 @@
 									</router-link>
 								</rich-tooltip-farmer>
 							</div>
-							<div class="p20">{{ $filters.number(farmer.talent) }}</div>
+							<div class="p20">{{ $filters.number(farmer.talent ?? 0) }}</div>
 							<div class="p15">
 								<flag v-if="farmer.country" :code="farmer.country" class="country" />
 							</div>
@@ -490,7 +490,7 @@
 									</router-link>
 								</rich-tooltip-farmer>
 							</div>
-							<div class="p25">{{ $filters.number(farmer.points) }}</div>
+							<div class="p25">{{ $filters.number(farmer.points ?? 0) }}</div>
 						</div>
 					</div>
 				</div>
@@ -827,7 +827,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
-	import { Composition, Team, TeamMember } from '@/model/team'
+	import { Composition, Team, TeamMember, type TeamInvitation } from '@/model/team'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
@@ -1408,7 +1408,7 @@
 		saveColumnsConfig()
 	}
 
-	function cancelInvitation(invitation: {id: number}) {
+	function cancelInvitation(invitation: TeamInvitation) {
 		if (!team.value) return
 		LeekWars.post('team/cancel-invitation', {invitation_id: invitation.id}).then(() => {
 			if (team.value) {

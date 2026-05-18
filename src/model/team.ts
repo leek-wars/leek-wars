@@ -1,6 +1,7 @@
 import { Farmer } from '@/model/farmer'
 import { Fight } from '@/model/fight'
 import { Leek } from '@/model/leek'
+import { Tournament } from '@/model/tournament'
 
 const TEAM_COLORS = [
 	"#0b30ea", // blue
@@ -82,7 +83,7 @@ class Team {
 	public membersById!: {[key: number]: TeamMember}
 	public compositions!: Composition[]
 	public compositionsById!: {[key: number]: Composition}
-	public tournaments!: unknown[]
+	public tournaments!: Tournament[]
 	public leeks!: Leek[]
 	public unengaged_leeks!: Leek[]
 	public opened!: boolean

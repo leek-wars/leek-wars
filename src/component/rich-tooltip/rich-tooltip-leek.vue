@@ -18,8 +18,8 @@
 							<router-link :to="'/farmer/' + leek.farmer.id">
 								<avatar :farmer="leek.farmer" :title="leek.farmer.name" />
 							</router-link>
-							<router-link v-if="leek.team" :to="'/team/' + leek.team.id">
-								<emblem :team="leek.team" :title="leek.team.name" />
+							<router-link v-if="leek.team" :to="'/team/' + (leek.team as { id: number, name: string }).id">
+								<emblem :team="leek.team" :title="(leek.team as { id: number, name: string }).name" />
 							</router-link>
 							<lw-title v-if="leek.title.length" :title="leek.title" />
 						</span>
@@ -61,9 +61,9 @@
 							</rich-tooltip-item>
 						</div>
 						<div class="components">
-							<rich-tooltip-item v-for="component in leek.components.filter((c: any) => c)" :key="component.id" v-slot="{ props }" :item="LeekWars.items[component.template]" :bottom="true" @update:modelValue="setParent">
+							<template v-for="(component, ci) in leek.components" :key="ci"><rich-tooltip-item v-if="component" v-slot="{ props }" :item="LeekWars.items[component.template]" :bottom="true" @update:modelValue="setParent">
 								<img :src="'/image/component/' + LeekWars.items[component.template].name + '.png'" class="component" v-bind="props">
-							</rich-tooltip-item>
+							</rich-tooltip-item></template>
 						</div>
 					</div>
 				</div>

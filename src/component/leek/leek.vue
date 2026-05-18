@@ -124,9 +124,9 @@
 					<template #activator="{ props }">
 						<table class="fights" v-bind="props">
 							<tr>
-								<td class="big">{{ leek ? $filters.number(leek.victories) : '...' }}</td>
-								<td class="big">{{ leek ? $filters.number(leek.draws) : '...' }}</td>
-								<td class="big">{{ leek ? $filters.number(leek.defeats) : '...' }}</td>
+								<td class="big">{{ leek ? $filters.number(leek.victories as number) : '...' }}</td>
+								<td class="big">{{ leek ? $filters.number(leek.draws as number) : '...' }}</td>
+								<td class="big">{{ leek ? $filters.number(leek.defeats as number) : '...' }}</td>
 							</tr>
 							<tr>
 								<td class="grey">{{ $t('victories') }}</td>
@@ -154,7 +154,7 @@
 				</template>
 				<template #content>
 					<div class="characteristics">
-						<characteristic-tooltip v-for="c in LeekWars.characteristics_table" :key="c" v-slot="{ props }" :characteristic="c" :value="leek ? leek[c] : 0" :total="leek ? leek['total_' + c] : 0" :leek="leek" :test="false">
+						<characteristic-tooltip v-for="c in LeekWars.characteristics_table" :key="c" v-slot="{ props }" :characteristic="c" :value="leek ? (leek[c] as number) : 0" :total="leek ? (leek['total_' + c] as number) : 0" :leek="leek" :test="false">
 							<div class="characteristic" :class="c" v-bind="props">
 								<img :src="'/image/charac/' + c + '.png'">
 								<span :class="'color-' + c">{{ leek ? leek['total_' + c] : '...' }}</span>
@@ -418,7 +418,7 @@
 		</popup>
 
 		<v-snackbar v-model="renameSuccess" :timeout="2000" color="success">{{ $t('rename_done') }}</v-snackbar>
-		<v-snackbar v-if="renameError" v-model="renameFailed" :timeout="5000" color="error">{{ $t(renameError.error, renameError.error_params) }}</v-snackbar>
+		<v-snackbar v-if="renameError" v-model="renameFailed" :timeout="5000" color="error">{{ $t(renameError.error, (renameError.error_params ?? []) as (string | number)[]) }}</v-snackbar>
 
 		<popup v-if="leek && my_leek" v-model="potionDialog" :width="750">
 			<template #icon>
@@ -718,7 +718,7 @@
 				<div class="leek-ai-components components-grid">
 					<div v-for="(c, i) of 8" :key="i" class="component" :class="{dashed: draggedComponent, disabled: i >= max_components}" @dragover="dragOver" @drop="componentsDrop('leek', $event, i)">
 						<rich-tooltip-item v-if="leek.components[i]" v-slot="{ props }" :key="i" ref="componentTooltips" :item="LeekWars.items[leek.components[i].template]" :bottom="true">
-							<div :class="{dragging: draggedComponent && draggedComponent.template === leek.components[i].template && draggedComponentLocation === 'leek'}" draggable="true" v-bind="props" @dragstart="componentDragStart('leek', leek.components[i], $event)" @dragend="componentDragEnd(leek.components[0])" @click="removeComponent(leek.components[i])">
+							<div v-if="leek.components[i]" :class="{dragging: draggedComponent && draggedComponent.template === leek.components[i]!.template && draggedComponentLocation === 'leek'}" draggable="true" v-bind="props" @dragstart="componentDragStart('leek', leek.components[i]!, $event)" @dragend="leek.components[0] && componentDragEnd(leek.components[0])" @click="leek.components[i] && removeComponent(leek.components[i]!)">
 								<img :src="'/image/component/' + LeekWars.items[leek.components[i].template].name + '.png'">
 							</div>
 						</rich-tooltip-item>
@@ -1082,8 +1082,8 @@
 		error.value = false
 		const method = my_leek.value ? 'leek/get-private/' + id.value : 'leek/get/' + id.value
 		request = LeekWars.get<Leek>(method)
-		request.then((l: Leek) => {
-			leek.value = new Leek(l)
+		request.then((l: unknown) => {
+			leek.value = new Leek(l as Record<string, unknown>)
 			if (leek.value) {
 				LeekWars.setTitle(leek.value.name, t('main.level_n', [leek.value.level]))
 				if (my_leek.value) {
@@ -1166,7 +1166,7 @@
 				if (effect.type === PotionEffect.RESTAT) {
 					up = true
 				} else if (effect.type === PotionEffect.CHANGE_SKIN) {
-					const skin = effect.params[0]
+					const skin = effect.params[0] as number
 					leek.value.skin = skin
 					store.commit('change-skin', {leek: leek.value.id, skin})
 				}
@@ -1255,7 +1255,7 @@
 				if (leek.value) {
 					store.commit('change-hat', {leek: leek.value.id, hat: null})
 				}
-			}).error(err => LeekWars.toast(err))
+			}).error(err => LeekWars.toast(err.error as string))
 		} else {
 			if (leek.value.hat && leek.value.hat.template === h.template) {
 				hatDialog.value = false
@@ -1266,7 +1266,7 @@
 				if (leek.value) {
 					store.commit('change-hat', { leek: leek.value.id, hat: h })
 				}
-			}).error(err => LeekWars.toast(err))
+			}).error(err => LeekWars.toast(err.error as string))
 		}
 	}
 
@@ -1370,14 +1370,14 @@
 				leek.value.weapons.push({id: data.id, template: w.template, quantity: 1} as Weapon)
 				store.commit('remove-weapon', w)
 			}
-		}).error(err => LeekWars.toast(err))
+		}).error(err => LeekWars.toast(err.error as string))
 	}
 
 	function removeWeapon(w: Weapon) {
 		if (!leek.value) return
 		leek.value.weapons.splice(leek.value.weapons.indexOf(w), 1)
 		store.commit('add-weapon', w)
-		LeekWars.delete('leek/remove-weapon', {weapon_id: w.id}).error(err => LeekWars.toast(err))
+		LeekWars.delete('leek/remove-weapon', {weapon_id: w.id}).error(err => LeekWars.toast(err.error as string))
 	}
 
 	function weaponsDrop(location: DragArea, e: DragEvent) {
@@ -1417,14 +1417,14 @@
 				leek.value.chips.push({id: data.id, template: c.template, quantity: 1} as Chip)
 				store.commit('remove-chip', c)
 			}
-		}).error(err => LeekWars.toast(err))
+		}).error(err => LeekWars.toast(err.error as string))
 	}
 
 	function removeChip(c: Chip) {
 		if (!leek.value) return
 		leek.value.chips.splice(leek.value.chips.indexOf(c), 1)
 		store.commit('add-chip', c)
-		LeekWars.delete('leek/remove-chip', {chip_id: c.id}).error(err => LeekWars.toast(err))
+		LeekWars.delete('leek/remove-chip', {chip_id: c.id}).error(err => LeekWars.toast(err.error as string))
 	}
 
 	function chipsDrop(location: DragArea, e: DragEvent) {
@@ -1481,7 +1481,7 @@
 				store.commit('remove-inventory', { ...c, item_template: c.template, quantity: 1, type: ItemType.COMPONENT })
 				refreshTotalCharacteristics()
 			}
-		}).error(err => LeekWars.toast(err))
+		}).error(err => LeekWars.toast(err.error as string))
 	}
 
 	function moveComponent(c: Component, index: number | undefined) {
@@ -1491,7 +1491,7 @@
 		const old_index = leek.value.components.indexOf(c)
 		leek.value.components[index] = c
 		leek.value.components[old_index] = old
-		LeekWars.post('leek/move-component', { component_id: c.id, index }).error(err => LeekWars.toast(err))
+		LeekWars.post('leek/move-component', { component_id: c.id, index }).error(err => LeekWars.toast(err.error as string))
 		refreshTotalCharacteristics()
 	}
 
@@ -1500,7 +1500,7 @@
 		const index = leek.value.components.indexOf(c)
 		leek.value.components[index] = null
 		store.commit('add-component', c)
-		LeekWars.delete('leek/remove-component', {component_id: c.id}).error(err => LeekWars.toast(err))
+		LeekWars.delete('leek/remove-component', {component_id: c.id}).error(err => LeekWars.toast(err.error as string))
 		refreshTotalCharacteristics()
 	}
 
