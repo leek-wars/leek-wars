@@ -114,7 +114,7 @@
 				<loader v-if="!$store.state.farmer" />
 				<div v-else class="inventory" :class="'size-' + size">
 					<template v-for="entry in display_inventory" :key="entry.key">
-						<div v-if="entry.separator" class="type-separator" :class="entry.rarity !== undefined ? 'rarity-' + entry.rarity : ''" @click="toggleGroup(entry.groupKey)">
+						<div v-if="entry.separator" class="type-separator" :class="entry.rarity !== undefined ? 'rarity-' + entry.rarity : ''" @click="entry.groupKey !== undefined && toggleGroup(entry.groupKey)">
 							<v-icon class="collapse-icon" :class="{ collapsed: entry.collapsed }">mdi-chevron-down</v-icon>
 							<v-icon v-if="entry.type !== undefined">{{ ITEM_TYPE_ICONS[entry.type] }}</v-icon>
 							<span v-if="entry.type !== undefined">{{ $t('main.' + ITEM_TYPE_NAME[entry.type]) }}</span>
@@ -122,7 +122,7 @@
 							<span class="group-count">({{ entry.count }})</span>
 						</div>
 						<div v-else-if="entry.placeholder" class="placeholder"></div>
-						<div v-else-if="entry.item" class="cell active" :class="['rarity-border-' + LeekWars.items[entry.item.template].rarity, { 'not-craftable': !entry.craftable }]" @mouseenter="showTooltip(entry.item, $event)" @mouseleave="scheduleHideTooltip()">
+						<div v-else-if="entry.item" class="cell active" :class="['rarity-border-' + LeekWars.items[entry.item.template].rarity, { 'not-craftable': !entry.craftable }]" @mouseenter="showTooltip(entry.item as InventoryItem, $event)" @mouseleave="scheduleHideTooltip()">
 							<div class="item" :quantity="$filters.number(entry.item.quantity)" :type="LeekWars.items[entry.item.template].type">
 								<img v-if="entry.item.type === ItemType.RESOURCE" class="image" :src="'/image/resource/' + LeekWars.items[entry.item.template].name + '.png'" loading="lazy">
 								<scheme-image v-else-if="entry.item.type === ItemType.SCHEME" class="image" :scheme="LeekWars.schemes[LeekWars.items[entry.item.template].params]" />
@@ -155,7 +155,7 @@
 					</div>
 					<br>
 					<div>
-						Total estimé : <b>{{ $filters.number(retrieveItems.reduce((s, i) => s + i.quantity * LeekWars.items[i.template].price, 0)) }}</b> <span class="hab"></span>
+						Total estimé : <b>{{ $filters.number(retrieveItems.reduce((s, i) => s + i.quantity * (LeekWars.items[i.template].price ?? 0), 0)) }}</b> <span class="hab"></span>
 					</div>
 				</popup>
 
@@ -292,7 +292,8 @@
 		return inventory.value.filter(item => item.type == filter.value)
 	})
 
-	type InventoryItem = Item & { type: ItemType }
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	type InventoryItem = any
 	function sortCompare(a: InventoryItem, b: InventoryItem) {
 		if (sort.value === Sort.DATE) {
 			if (b.time === a.time) return a.id - b.id
@@ -327,7 +328,8 @@
 			groupCounts[gk] = (groupCounts[gk] || 0) + 1
 		}
 		const cols = columns.value || 1
-		const result: unknown[] = []
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const result: any[] = []
 		let lastGroup = -1
 		let groupCount = 0
 		for (const item of items) {
@@ -430,10 +432,11 @@
 		localStorage.setItem('inventory/collapsed', JSON.stringify([...collapsedGroups.value]))
 	}
 
-	function retrieve(items: Item[]) {
-		if (items.length) {
+	function retrieve(items: unknown[]) {
+		const typedItems = items as Item[]
+		if (typedItems.length) {
 			retrieveDialog.value = true
-			retrieveItems.value = items
+			retrieveItems.value = typedItems
 		}
 	}
 </script>
