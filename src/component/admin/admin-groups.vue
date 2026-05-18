@@ -57,7 +57,7 @@
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
 	const router = useRouter()
-	const groups = ref<Record<string, unknown>[] | null>(null)
+	const groups = ref<{ id: number, name: string, supervisor: { id: number, name: string, connected?: boolean, avatar_changed?: number }, creation_date: number, archived: boolean, member_count: number, [key: string]: unknown }[] | null>(null)
 	const headers = [
 		{ title: 'ID', value: 'id' },
 		{ title: 'Nom', value: 'name' },

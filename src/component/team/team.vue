@@ -777,7 +777,7 @@
 				<div class="infos">
 					<h4>{{ $t('characteristic.characteristics') }}</h4>
 					<div class="card characteristics">
-						<characteristic-tooltip v-for="c in LeekWars.characteristics_table" :key="c" v-slot="{ props }" :characteristic="c" :value="turret[c]" :total="turret[c]" :leek="turret" :test="true">
+						<characteristic-tooltip v-for="c in LeekWars.characteristics_table" :key="c" v-slot="{ props }" :characteristic="c" :value="(turret[c] as number)" :total="(turret[c] as number)" :leek="{ level: team?.level ?? 0, ...turret }" :test="true">
 							<div class="characteristic" :class="c" v-bind="props">
 								<img :src="'/image/charac/' + c + '.png'">
 								<span class="stat" :class="'color-' + c">{{ turret[c] }}</span>

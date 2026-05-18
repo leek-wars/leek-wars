@@ -35,11 +35,15 @@ defineOptions({ name: 'Talent', i18n: {}, mixins: [...mixins] })
 
 const t = useNamespacedT('talent')
 
-const leekData = ref<Record<string, unknown> | null>(null)
-const leekOptions = ref<Record<string, unknown> | null>(null)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const leekData = ref<any>(null)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const leekOptions = ref<any>(null)
 const leekMax = ref(0)
-const farmerData = ref<Record<string, unknown> | null>(null)
-const farmerOptions = ref<Record<string, unknown> | null>(null)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const farmerData = ref<any>(null)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const farmerOptions = ref<any>(null)
 const farmerMax = ref(0)
 
 LeekWars.setTitle('Talent')

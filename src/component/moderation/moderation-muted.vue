@@ -53,7 +53,7 @@
 
 	defineOptions({ name: "ModerationMuted", i18n: {}, mixins: [...mixins] })
 
-	const muted = ref<{ id: number, name: string, avatar_changed?: number, chat_muted?: number, ai_muted?: number, [key: string]: unknown }[] | null>(null)
+	const muted = ref<{ id: number, name: string, avatar_changed?: number, chat_muted: number, ai_muted: number, [key: string]: unknown }[] | null>(null)
 	const now = Math.floor(Date.now() / 1000)
 
 	const breadcrumb_items = computed(() => [

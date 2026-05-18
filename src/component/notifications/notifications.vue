@@ -24,7 +24,7 @@ import { store } from '@/model/store'
 defineOptions({ name: 'Notifications', i18n: {}, mixins: [...mixins] })
 
 const t = useNamespacedT('notifications')
-const notifications = ref<Record<string, unknown> | null>(null)
+const notifications = ref<{ id: number, read: boolean, [key: string]: unknown }[] | null>(null)
 
 LeekWars.get('notification/get-latest/500').then(data => {
 	notifications.value = []
