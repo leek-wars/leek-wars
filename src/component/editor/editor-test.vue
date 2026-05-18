@@ -696,14 +696,21 @@
 		localStorage.setItem('editor/leek', '' + leek.id)
 	}
 
-	function persistDefaultScenario(scenario: TestScenario): Promise<number> {
-		return LeekWars.post('test-scenario/new', { name: scenario.ai!.name }).then(r => {
+	type ScenarioPersistData = Partial<Pick<TestScenario, 'type' | 'map' | 'seed' | 'max_turns' | 'turret_ai_team1' | 'turret_ai_team2'>> & { ai: string }
+	const pendingPersist = new WeakMap<TestScenario, Promise<void>>()
+	function persistDefaultScenario(scenario: TestScenario): Promise<void> {
+		const existing = pendingPersist.get(scenario)
+		if (existing) return existing
+		const promise = LeekWars.post('test-scenario/new', { name: scenario.ai!.name }).then(r => {
 			delete scenarios[0]
 			scenario.id = r.id
 			scenarios[r.id] = scenario
 			scenario.default = false
 			scenario.ai!.scenario = r.id
-			const json: any = { type: scenario.type, ai: scenario.ai!.path }
+			const json: ScenarioPersistData = { type: scenario.type, ai: scenario.ai!.path }
+			if (scenario.map != null) json.map = scenario.map
+			if (scenario.seed != null) json.seed = scenario.seed
+			if (scenario.max_turns != null) json.max_turns = scenario.max_turns
 			if (scenario.turret_ai_team1) json.turret_ai_team1 = scenario.turret_ai_team1
 			if (scenario.turret_ai_team2) json.turret_ai_team2 = scenario.turret_ai_team2
 			LeekWars.post('test-scenario/update', { id: r.id, data: JSON.stringify(json) })
@@ -713,8 +720,9 @@
 			for (const l of scenario.team2) {
 				LeekWars.post('test-scenario/add-leek', {scenario_id: r.id, leek: l.id, team: 1, ai: l.ai ? l.ai : null})
 			}
-			return r.id
 		})
+		pendingPersist.set(scenario, promise)
+		return promise
 	}
 
 	function deleteLeek(leek: TestScenarioLeek, teamID: number) {
