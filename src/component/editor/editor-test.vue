@@ -702,7 +702,9 @@
 		const existing = pendingPersist.get(scenario)
 		if (existing) return existing
 		const promise = LeekWars.post('test-scenario/new', { name: scenario.ai!.name }).then(r => {
-			delete scenarios[0]
+			for (const key in scenarios) {
+				if (scenarios[key] === scenario || scenarios[key].id === 0) delete scenarios[key]
+			}
 			scenario.id = r.id
 			scenarios[r.id] = scenario
 			scenario.default = false
