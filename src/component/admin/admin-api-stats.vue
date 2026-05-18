@@ -562,7 +562,7 @@
 	const deltas = computed(() => {
 		const prev = aggregates.value?.previous
 		const cur = aggregates.value
-		const compute = (key: string): number | null => {
+		const compute = (key: 'total' | 'avg_ms' | 'p95_ms' | 'farmers'): number | null => {
 			if (!prev || !cur || !prev[key]) return null
 			return ((cur[key] - prev[key]) / prev[key]) * 100
 		}

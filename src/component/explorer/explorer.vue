@@ -9,8 +9,10 @@
 			<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
 			<explorer-folder v-if="currentFolder !== fileSystem.rootFolder" v-ripple :folder="({id: -1} as any)" @click="currentFolder = fileSystem.folderById[currentFolder.parent]" />
 			<template v-for="(item, i) in currentFolder.items" :key="i">
-				<explorer-folder v-if="item.folder" v-ripple :folder="item" @click="currentFolder = item" />
-				<ai v-else v-ripple :ai="item.ai" :small="false" :library="false" @click="$emit('select', item.ai)" />
+				<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
+				<explorer-folder v-if="item.folder" v-ripple :folder="(item as any)" @click="currentFolder = (item as any)" />
+				<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
+				<ai v-else v-ripple :ai="(item as any).ai" :small="false" :library="false" @click="$emit('select', (item as any).ai)" />
 			</template>
 		</div>
 	</div>

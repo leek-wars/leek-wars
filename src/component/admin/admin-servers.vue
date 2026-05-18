@@ -51,7 +51,7 @@
 								<span v-if="runner.errors > 0" class="red">✘ <span class="error">{{ $filters.number(runner.errors) }}</span></span>
 								<br>
 								<div class="task">
-									<span v-if="runner.task && runner.task.type === 1">
+									<span v-if="runner.task && runner.task.type === 1 && runner.task.farmer">
 										<router-link :to="'/fight/' + runner.task.fight">► Combat {{ runner.task.fight }}</router-link>
 										<router-link :to="'/farmer/' + runner.task.farmer.id">
 											<avatar :farmer="runner.task.farmer" />
@@ -74,7 +74,7 @@
 						<v-switch v-model="show_ids" hide-details label="IDs" />
 					</div>
 					<div class="farmers">
-						<div v-for="(task, t) in queue" :key="t" class="card farmer" :style="{background: show_ids ? colorFromID(task[1].queue_id) : undefined}">
+						<div v-for="(task, t) in queue" :key="t" class="card farmer" :style="{background: show_ids ? colorFromID(task[1].queue_id ?? '') : undefined}">
 							<router-link :to="'/farmer/' + task[1].id">
 								<avatar :farmer="task[1]" /> {{ task[1].name }}
 							</router-link>
