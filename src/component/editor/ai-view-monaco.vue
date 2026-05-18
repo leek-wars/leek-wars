@@ -38,8 +38,11 @@ import { FUNCTIONS } from '@/model/functions'
 import { markRaw, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import Code from '@/component/app/code.vue'
 import { parseConflicts, hasConflictMarkers, buildConflictDecorations, registerConflictCodeLens, type MergeConflict } from './merge-conflicts'
+import { useI18n } from 'vue-i18n'
 
 defineOptions({ name: 'AiViewMonaco' })
+
+const { t } = useI18n()
 
 const scrollKey = (path: string) => 'editor/scroll/' + farmerId() + '/' + path
 const viewStateKey = (path: string) => 'editor/viewstate/' + farmerId() + '/' + path
@@ -274,8 +277,8 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
 	emitter.off('file-reloaded', onFileReloaded)
-	clearTimeout(analyzerTimeout)
-	clearTimeout(viewStateSaveTimeout)
+	if (analyzerTimeout) clearTimeout(analyzerTimeout)
+	if (viewStateSaveTimeout) clearTimeout(viewStateSaveTimeout)
 	saveViewState()
 	scrollListener?.dispose()
 	conflictLenses?.dispose()
@@ -358,7 +361,7 @@ function scrollToLine(ai: AI, line: number, column: number = 0) {
 }
 
 function setAnalyzerTimeout() {
-	clearTimeout(analyzerTimeout)
+	if (analyzerTimeout) clearTimeout(analyzerTimeout)
 	analyzerTimeout = setTimeout(() => {
 		const ai = props.ai
 		analyzing.value = true
@@ -370,7 +373,7 @@ function setAnalyzerTimeout() {
 		analyzer.analyze(ai, ai.code).then((result) => {
 			analyzing.value = false
 			if (!result) return
-			analyzer.applyAnalyzeResult(result)
+			analyzer.applyAnalyzeResult(result as Parameters<typeof analyzer.applyAnalyzeResult>[0])
 			analyzer.updateTodos(ai)
 			analyzer.updateCount()
 		}).catch(() => {
@@ -448,7 +451,7 @@ function restoreViewState() {
 }
 
 function debouncedSaveViewState() {
-	clearTimeout(viewStateSaveTimeout)
+	if (viewStateSaveTimeout) clearTimeout(viewStateSaveTimeout)
 	viewStateSaveTimeout = setTimeout(() => {
 		saveViewState()
 	}, 1000)

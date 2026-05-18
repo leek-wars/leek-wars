@@ -64,10 +64,10 @@
 
 							<template v-if="leftPanelTab === 'explorer'">
 								<div v-if="fileSystem.rootFolder" v-autostopscroll class="ai-list">
-									<Explorer v-if="explorerI18nReady" ref="explorerEl" :current-ai="currentAI" :selected-folder="currentFolder" @test="startTest" @delete-ai="deleteAI" />
+									<Explorer v-if="explorerI18nReady" ref="explorerEl" :current-ai="currentAI ?? undefined" :selected-folder="currentFolder" @test="startTest" @delete-ai="deleteAI" />
 								</div>
 
-								<div v-if="currentEditor && currentEditor.loaded && panelWidth" class="ai-stats">
+								<div v-if="currentAI && currentEditor && currentEditor.loaded && panelWidth" class="ai-stats">
 									<div class="line-count-wrapper">{{ $t('main.n_lines', currentEditor.lines) }}</div>
 									<div class="char-count-wrapper">{{ $t('main.n_characters', currentEditor.characters) }}</div>
 									<div v-if="currentAI.included_lines !== 0" class="line-count-wrapper">{{ $t('main.n_total_lines', currentEditor.lines + currentAI.included_lines) }}</div>
@@ -355,7 +355,8 @@
 	const currentAI1 = ref<string | null>(null)
 	const currentAI2 = ref<string | null>(null)
 	const currentSide = ref(1)
-	const currentEditor = shallowRef<InstanceType<typeof AIViewMonaco> | null>(null)
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const currentEditor = shallowRef<(InstanceType<typeof AIViewMonaco> & { loaded?: boolean, lines?: number, characters?: number, hovering?: boolean }) | any | null>(null)
 	const currentType = ref<string | null>(null)
 	const currentFolder = ref<Folder | null>(null)
 	const settingsDialog = ref(false)
