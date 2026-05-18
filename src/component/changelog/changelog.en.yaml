@@ -14,6 +14,7 @@
     - "More precise arena notifications: now show the number of leeks involved (Battle Royale, War, Chest Hunt, Colossus)."
   fixed:
     - "Market icon in the menu better vertically aligned."
+    - "Editing a leek's AI in a default scenario no longer triggers a 404: the scenario is now created on the fly."
 247:
   title: "Git integration, loadouts, multi-account management and clover potions."
   added:

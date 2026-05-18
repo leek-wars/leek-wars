@@ -14,6 +14,7 @@
     - "Notifiche delle arene più precise: indicano il numero di porri affrontati (Battle Royale, Guerra, Caccia ai forzieri, Colosso)."
   fixed:
     - "Icona Mercato del menu meglio allineata verticalmente."
+    - "Modificare l'IA di un porro in uno scenario predefinito non causa più un 404: lo scenario viene creato al volo."
 247:
   title: "Integrazione Git, equipaggiamenti, gestione multi-account e pozioni di trifoglio."
   added:

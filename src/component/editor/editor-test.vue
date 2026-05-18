@@ -696,29 +696,36 @@
 		localStorage.setItem('editor/leek', '' + leek.id)
 	}
 
+	function persistDefaultScenario(scenario: TestScenario): Promise<number> {
+		return LeekWars.post('test-scenario/new', { name: scenario.ai!.name }).then(r => {
+			delete scenarios[0]
+			scenario.id = r.id
+			scenarios[r.id] = scenario
+			scenario.default = false
+			scenario.ai!.scenario = r.id
+			const json: any = { type: scenario.type, ai: scenario.ai!.path }
+			if (scenario.turret_ai_team1) json.turret_ai_team1 = scenario.turret_ai_team1
+			if (scenario.turret_ai_team2) json.turret_ai_team2 = scenario.turret_ai_team2
+			LeekWars.post('test-scenario/update', { id: r.id, data: JSON.stringify(json) })
+			for (const l of scenario.team1) {
+				LeekWars.post('test-scenario/add-leek', {scenario_id: r.id, leek: l.id, team: 0, ai: l.ai ? l.ai : null})
+			}
+			for (const l of scenario.team2) {
+				LeekWars.post('test-scenario/add-leek', {scenario_id: r.id, leek: l.id, team: 1, ai: l.ai ? l.ai : null})
+			}
+			return r.id
+		})
+	}
+
 	function deleteLeek(leek: TestScenarioLeek, teamID: number) {
 		if (!currentScenario.value) return
 		const team = teamID === 0 ? currentScenario.value.team1 : currentScenario.value.team2
 		team.splice(team.findIndex(l => l.id === leek.id), 1)
 		const scenario = currentScenario.value
 		if (scenario.id === 0) {
-			LeekWars.post('test-scenario/new', { name: scenario.ai!.name }).then(r => {
-				delete scenarios[0]
-				scenario.id = r.id
-				scenarios[r.id] = scenario
-				scenario.default = false
-				scenario.ai!.scenario = r.id
-				const json = { type: scenario.type, ai: scenario.ai!.path }
-				LeekWars.post('test-scenario/update', { id: r.id, data: JSON.stringify(json) })
-				for (const l of scenario.team1) {
-					LeekWars.post('test-scenario/add-leek', {scenario_id: r.id, leek: l.id, team: 0, ai: l.ai ? l.ai : null})
-				}
-				for (const l of scenario.team2) {
-					LeekWars.post('test-scenario/add-leek', {scenario_id: r.id, leek: l.id, team: 1, ai: l.ai ? l.ai : null})
-				}
-			})
+			persistDefaultScenario(scenario)
 		} else {
-			LeekWars.delete('test-scenario/delete-leek', {scenario_id: currentScenario.value.id, leek: leek.id})
+			LeekWars.delete('test-scenario/delete-leek', {scenario_id: scenario.id, leek: leek.id})
 		}
 		updateScenarioBotsLevels()
 	}
@@ -899,7 +906,14 @@
 		}
 		if (!aiLeek.value) return
 		aiLeek.value.ai = ai.path
-		LeekWars.post('test-scenario/add-leek', {scenario_id: currentScenario.value.id, leek: aiLeek.value.id, team: aiLeekTeam.value, ai: ai.path})
+		const scenario = currentScenario.value
+		const leek = aiLeek.value
+		const team = aiLeekTeam.value
+		if (scenario.id === 0) {
+			persistDefaultScenario(scenario)
+		} else {
+			LeekWars.post('test-scenario/add-leek', {scenario_id: scenario.id, leek: leek.id, team, ai: ai.path})
+		}
 		aiDialog.value = false
 	}
 
@@ -946,8 +960,13 @@
 	function addScenarioLeek(leek: Leek) {
 		if (!currentScenario.value || !addLeekTeam.value) return
 		addLeekTeam.value.push({id: leek.id, ai: leek.ai})
-		const teamID = addLeekTeam.value === currentScenario.value.team1 ? 0 : 1
-		LeekWars.post('test-scenario/add-leek', {scenario_id: currentScenario.value.id, leek: leek.id, team: teamID, ai: leek.ai ? leek.ai : null})
+		const scenario = currentScenario.value
+		const teamID = addLeekTeam.value === scenario.team1 ? 0 : 1
+		if (scenario.id === 0) {
+			persistDefaultScenario(scenario)
+		} else {
+			LeekWars.post('test-scenario/add-leek', {scenario_id: scenario.id, leek: leek.id, team: teamID, ai: leek.ai ? leek.ai : null})
+		}
 		leekDialog.value = false
 		updateScenarioBotsLevels()
 	}
@@ -1180,21 +1199,7 @@
 	type ScenarioUpdateData = Partial<Pick<TestScenario, 'type' | 'map' | 'seed' | 'max_turns' | 'turret_ai_team1' | 'turret_ai_team2'>>
 	function updateScenario(scenario: TestScenario, data: ScenarioUpdateData) {
 		if (scenario.id === 0) {
-			LeekWars.post('test-scenario/new', { name: scenario.ai!.name }).then(r => {
-				delete scenarios[0]
-				scenario.id = r.id
-				scenarios[r.id] = scenario
-				scenario.default = false
-				scenario.ai!.scenario = r.id
-				const json = { ...data, ai: scenario.ai!.path }
-				LeekWars.post('test-scenario/update', { id: r.id, data: JSON.stringify(json) })
-				for (const leek of scenario.team1) {
-					LeekWars.post('test-scenario/add-leek', {scenario_id: r.id, leek: leek.id, team: 0, ai: leek.ai ? leek.ai : null})
-				}
-				for (const leek of scenario.team2) {
-					LeekWars.post('test-scenario/add-leek', {scenario_id: r.id, leek: leek.id, team: 1, ai: leek.ai ? leek.ai : null})
-				}
-			})
+			persistDefaultScenario(scenario)
 		} else {
 			LeekWars.post('test-scenario/update', { id: scenario.id, data: JSON.stringify(data) })
 		}

@@ -14,6 +14,7 @@
     - "Notifications d'arènes plus précises : indiquent le nombre de poireaux affrontés (Battle Royale, Guerre, Chasse aux coffres, Colosse)."
   fixed:
     - "Icône Marché du menu mieux alignée verticalement."
+    - "Modification de l'IA d'un poireau dans un scénario par défaut : ne provoque plus de 404, le scénario est créé à la volée. (merci à Kraspen)"
 247:
   title: "Intégration Git, équipements, gestion multi-comptes et potions de trèfle."
   added:
