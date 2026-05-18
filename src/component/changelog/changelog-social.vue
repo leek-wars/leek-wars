@@ -13,7 +13,7 @@
 					<div class="social-caption" style="margin-bottom: 10px">Cover image</div>
 					<div class="social-canvases">
 						<div v-for="f in FORMATS" :key="'cover_' + f.key" class="social-canvas-wrapper">
-							<canvas :ref="(el: HTMLCanvasElement | null) => setCoverCanvasRef(el, f.key)" :width="f.width" :height="f.height" class="social-canvas" />
+							<canvas :ref="(el) => setCoverCanvasRef(el as HTMLCanvasElement | null, f.key)" :width="f.width" :height="f.height" class="social-canvas" />
 							<div class="canvas-label">{{ f.label }}</div>
 							<div class="canvas-download" @click="downloadCoverCanvas(f.key)">
 								<v-icon>mdi-download</v-icon>
@@ -33,7 +33,7 @@
 							</div>
 							<div class="social-canvases">
 								<div v-for="f in FORMATS" :key="f.key" class="social-canvas-wrapper">
-									<canvas :ref="(el: HTMLCanvasElement | null) => setCanvasRef(el, i, f.key)" :width="f.width" :height="f.height" class="social-canvas" />
+									<canvas :ref="(el) => setCanvasRef(el as HTMLCanvasElement | null, i, f.key)" :width="f.width" :height="f.height" class="social-canvas" />
 									<div class="canvas-label">{{ f.label }}</div>
 									<div class="canvas-download" @click="downloadCanvas(i, f.key, entry.imageNames[0])">
 										<v-icon>mdi-download</v-icon>
@@ -107,13 +107,13 @@ const SECTION_EMOJIS: Record<string, string> = { added: '✨', improved: '⚡', 
 
 const socialEntries = computed<SocialEntry[]>(() => {
 	if (!props.version || !englishChangelog.value) return []
-	const versionData = englishChangelog.value[props.version]
+	const versionData = englishChangelog.value[props.version] as { title?: string, added?: string[], improved?: string[], fixed?: string[] } | undefined
 	if (!versionData) return []
 
 	const entries: SocialEntry[] = []
 	const imgRegex = /#img_(\w+)/g
 
-	for (const section of ['added', 'improved', 'fixed']) {
+	for (const section of ['added', 'improved', 'fixed'] as const) {
 		const items = versionData[section]
 		if (!items) continue
 		for (const line of items) {
@@ -160,7 +160,7 @@ function loadSocialState() {
 	let saved: Record<string, unknown> = {}
 	try { saved = JSON.parse(localStorage.getItem(`social_${props.version}`) || '{}') } catch { /* ignore */ }
 	descriptions.value = socialEntries.value.map(e => socialDescriptions.value[e.imageNames[0]]?.description ?? '')
-	included.value = socialEntries.value.map(e => saved.included?.[e.imageNames[0]] ?? true)
+	included.value = socialEntries.value.map(e => (saved.included as Record<string, boolean> | undefined)?.[e.imageNames[0]] ?? true)
 	nextTick(() => { socialStateLoading = false })
 }
 
@@ -407,7 +407,7 @@ function renderCoverCanvas(format: SocialFormat) {
 	ctx.textBaseline = 'middle'
 	ctx.fillText(`Update ${props.versionName}`, W / 2, centerY + 30)
 
-	const versionData = englishChangelog.value[props.version]
+	const versionData = englishChangelog.value[props.version] as { title?: string, added?: string[], improved?: string[], fixed?: string[] } | undefined
 	if (versionData?.title && versionData.title !== 'WIP') {
 		const subSize = isStory ? 56 : 48
 		ctx.font = `400 ${subSize}px "Roboto", sans-serif`

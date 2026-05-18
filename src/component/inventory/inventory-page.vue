@@ -183,7 +183,7 @@
 		tooltipVisible.value = false
 	}
 
-	interface SchemeData { id: number; result: number; items: ([number, number] | null)[] }
+	interface SchemeData { id: number; result: number; items: ([number, number] | null)[]; quantity: number }
 
 	function isCraftable(scheme: SchemeData): boolean {
 		if (!store.state.farmer) return false
@@ -245,6 +245,7 @@
 
 	function resizerMousedown(e: MouseEvent) {
 		const panel = bottomPanel.value
+		if (!panel) return
 		const column = (instance!.proxy!.$el as HTMLElement).querySelector('.column') as HTMLElement
 		const startY = e.clientY
 		const startHeight = panel.expanded ? bottomHeight.value : 0

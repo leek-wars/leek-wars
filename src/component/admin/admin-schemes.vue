@@ -61,8 +61,8 @@
 						</div>
 					</div>
 					<div>
-						<div>{{ $filters.number(scheme.quantity * LeekWars.items[scheme.result].price) }} <span class="hab"></span></div>
-						<div :class="{wrong: Math.abs((scheme.quantity * LeekWars.items[scheme.result].price) / scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0) - 1.1) > 0.03 }">{{ $filters.number(scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0)) }} ({{ ((scheme.quantity * LeekWars.items[scheme.result].price) / scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * LeekWars.items[i[0]].price : 0), 0)).toFixed(2) }}) <span class="hab"></span></div>
+						<div>{{ $filters.number(scheme.quantity * (LeekWars.items[scheme.result].price ?? 0)) }} <span class="hab"></span></div>
+						<div :class="{wrong: Math.abs((scheme.quantity * (LeekWars.items[scheme.result].price ?? 0)) / scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * (LeekWars.items[i[0]].price ?? 0) : 0), 0) - 1.1) > 0.03 }">{{ $filters.number(scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * (LeekWars.items[i[0]].price ?? 0) : 0), 0)) }} ({{ ((scheme.quantity * (LeekWars.items[scheme.result].price ?? 0)) / scheme.items.reduce((s, i) => s + (i && LeekWars.items[i[0]] ? i[1] * (LeekWars.items[i[0]].price ?? 0) : 0), 0)).toFixed(2) }}) <span class="hab"></span></div>
 					</div>
 					<button class="copy-code" @click="copyCode(scheme)">Copier le code PHP</button>
 				</div>
@@ -99,7 +99,7 @@
 			.map(sc => {
 				const items = [...sc.items] as ([number | string, number | string] | null)[]
 				for (let i = 0; i < 9; ++i) { if (!items[i]) items[i] = ['', ''] }
-				return { ...sc, items }
+				return { ...sc, items } as unknown as SchemeTemplate
 			})
 	})
 

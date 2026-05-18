@@ -99,9 +99,19 @@ import { LeekWars } from '@/model/leekwars'
 
 defineOptions({ name: 'LevelDialog', i18n: {}, mixins: [...mixins] })
 
+interface LevelData {
+	level: number
+	gains: { life: number, capital: number, [key: string]: number }
+	weapons: number[]
+	chips: number[]
+	new_chip: boolean
+	new_weapon: boolean
+	[key: string]: unknown
+}
+
 const props = defineProps<{
 	leek: Leek
-	levelData: Record<string, unknown> | null
+	levelData: LevelData | null
 }>()
 
 function close() {
