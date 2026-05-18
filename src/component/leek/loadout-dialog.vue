@@ -598,7 +598,7 @@
 						current.splice(evt.newIndex, 0, item)
 						store.commit('set-loadouts', current)
 						LeekWars.post('loadout/reorder', { order: JSON.stringify(current.map(l => l.id)) })
-							.error((e) => LeekWars.toast(e))
+							.error((e) => LeekWars.toast(e.error as string))
 					},
 				})
 			},
@@ -778,14 +778,14 @@
 						this.editing = null
 						this.originalEditingSnapshot = ''
 						this.saving = false
-					}).error((e) => { LeekWars.toast(e); this.saving = false })
+					}).error((e) => { LeekWars.toast(e.error as string); this.saving = false })
 				} else {
 					LeekWars.post('loadout/create', payload).then((data) => {
 						store.commit('add-loadout', data.set)
 						this.editing = null
 						this.originalEditingSnapshot = ''
 						this.saving = false
-					}).error((e) => { LeekWars.toast(e); this.saving = false })
+					}).error((e) => { LeekWars.toast(e.error as string); this.saving = false })
 				}
 			},
 			apply(loadout: Loadout) {
@@ -814,7 +814,7 @@
 					}
 					this.applyingItemsOnly = null
 				}).error((e) => {
-					LeekWars.toast(e)
+					LeekWars.toast(e.error as string)
 					this.applyingItemsOnly = null
 				})
 			},
@@ -858,7 +858,7 @@
 				}).error((e) => {
 					if (e && e.error === 'no_restat_potion') LeekWars.toast(this.$t('main.loadout_no_restat_potion'))
 					else if (e && e.error === 'not_enough_capital') LeekWars.toast(this.$t('main.loadout_not_enough_capital'))
-					else LeekWars.toast(e)
+					else LeekWars.toast(e.error as string)
 					this.applying = null
 				})
 			},
@@ -905,7 +905,7 @@
 			remove(loadout: Loadout) {
 				LeekWars.delete('loadout/delete', { set_id: loadout.id }).then(() => {
 					store.commit('remove-loadout', loadout.id)
-				}).error((e) => { LeekWars.toast(e) })
+				}).error((e) => { LeekWars.toast(e.error as string) })
 			},
 		},
 	})

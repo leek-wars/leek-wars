@@ -132,7 +132,7 @@ const adjectives = computed(() => [{ code: '', id: 0, t: '', rarity: 0 }].concat
 LeekWars.loadTrophyWords().then(words => {
 	allNouns.value = (words as TrophyWord[]).filter((w: TrophyWord) => w.title & 1)
 	allAdjectives.value = (words as TrophyWord[]).filter((w: TrophyWord) => w.title & 2)
-	icons.value = [{ id: 0, code: '', t: '', rarity: 0 }].concat(words as TrophyWord[]).sort((a, b) => a.rarity - b.rarity)
+	icons.value = ([{ id: 0, code: '', t: '', rarity: 0 } as (TrophyWord | { id: 0, code: '', t: '', rarity: 0 })]).concat(words as TrophyWord[]).sort((a, b) => a.rarity - b.rarity)
 })
 
 function changeNoun() {

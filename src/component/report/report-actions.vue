@@ -1,7 +1,7 @@
 <template>
 	<div class="fight-actions" @click="onActionClick" @auxclick="onActionClick">
 		<template v-for="(action, a) in actions" :key="a">
-			<component :is="ActionComponents[action.type]" :action="action" :a="a" :leeks="leeks" :report="report" :has-err-warn="hasErrWarn" @goToTurn="goToTurn" />
+			<component :is="(ActionComponents as Record<number, unknown>)[action.type]" :action="action" :a="a" :leeks="leeks" :report="report" :has-err-warn="hasErrWarn" @goToTurn="goToTurn" />
 			<template v-if="displayLogs && (displayAlliesLogs || action.me) && action.logs.length">
 				<action-log v-for="(log, l) in action.logs" :key="a + 'l' + l" :log="log" :leeks="leeks" :action="(a as number)" :index="(l as number)" :lines="true" @goToAI="goToAI" />
 			</template>
@@ -22,10 +22,16 @@
 
 	const ActionComponents = ActionComponentsTyped
 
+	interface FightAction {
+		type: number
+		me?: boolean
+		logs: unknown[]
+		[key: string]: unknown
+	}
 	const props = defineProps<{
 		fight: Fight
 		report: Report
-		actions: unknown[]
+		actions: FightAction[]
 		leeks: {[key: number]: ReportLeek}
 		displayLogs: boolean
 		displayAlliesLogs: boolean

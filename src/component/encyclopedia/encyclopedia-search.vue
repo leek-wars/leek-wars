@@ -32,7 +32,7 @@
 						<router-link v-for="(result, r) in results" :key="r" :to="'/encyclopedia/' + $i18n.locale + '/' + result.title">
 							<div v-ripple class="result card">
 								<div class="title" v-html="highlight(result.title_headline)"></div>
-								<markdown :content="result.content" :pages="{}" mode="encyclopedia" />
+								<markdown :content="result.content ?? ''" :pages="{}" mode="encyclopedia" />
 							</div>
 						</router-link>
 					</div>
@@ -68,10 +68,10 @@ const t = useNamespacedT('encyclopedia-search')
 const route = useRoute()
 const router = useRouter()
 
-const options = ref<Record<string, unknown>>({ query: '', page: 1 })
+const options = ref<{ query: string, page: number }>({ query: '', page: 1 })
 const queryLower = ref('')
 const pages = ref(0)
-const results = ref<Record<string, unknown>[] | null>(null)
+const results = ref<{ id: number, title: string, title_headline?: string, content?: string, language?: string, [key: string]: unknown }[] | null>(null)
 const searchStarted = ref(false)
 const count = ref(0)
 let urlSyncing = false
@@ -99,10 +99,10 @@ function doSearch() {
 			results.value = data.results
 			pages.value = data.pages
 			count.value = data.count
-		}).catch((err) => {
+		}).catch((err: unknown) => {
 			results.value = []
 			count.value = 0
-			LeekWars.toast(err.error)
+			LeekWars.toast((err as { error?: string }).error ?? '')
 		})
 	}
 }
@@ -121,7 +121,7 @@ watch(() => route.query, () => {
 
 const urlPagination = computed(() => {
 	const url = '/encyclopedia-search'
-	const opts = Object.keys(options.value)
+	const opts = (Object.keys(options.value) as (keyof typeof options.value)[])
 		.filter(option => options.value[option] !== null && option !== 'page')
 		.map(option => option + '=' + options.value[option])
 		.join('&')

@@ -121,7 +121,18 @@
 	const route = useRoute()
 	const router = useRouter()
 
-	const options = reactive({
+	interface SearchOptions {
+		query: string
+		farmer: string
+		page: number
+		category: number
+		admin: boolean
+		moderator: boolean
+		order: string
+		resolved: string
+		[key: string]: unknown
+	}
+	const options = reactive<SearchOptions>({
 		query: '',
 		farmer: '',
 		page: 1,
@@ -130,7 +141,7 @@
 		moderator: false,
 		order: 'pertinence',
 		resolved: 'all',
-	} as Record<string, unknown>)
+	})
 	const defaultOptions = {
 		query: '',
 		farmer: '',
@@ -142,8 +153,8 @@
 	} as Record<string, unknown>
 	const queryLower = ref('')
 	const pages = ref(0)
-	const results = ref<Record<string, unknown>[] | null>(null)
-	const categories = ref<Record<string, unknown>[]>([])
+	const results = ref<{ id: number, pos: number, fname?: string, date: number, cid?: number, cname?: string, [key: string]: unknown }[] | null>(null)
+	const categories = ref<{ id: number, name: string, type: string }[]>([])
 	const searchStarted = ref(false)
 	const count = ref(0)
 	const floor = Math.floor
@@ -162,15 +173,15 @@
 		options.query = (route.query.query as string || '').replace(/\+/g, ' ')
 		queryLower.value = options.query.toLowerCase()
 		if (options.query === '-') { options.query = '' }
-		options.farmer = route.query.farmer || ''
+		options.farmer = (route.query.farmer as string) || ''
 		if (options.farmer === '-') { options.farmer = '' }
 		options.page = parseInt(route.query.page as string, 10) || 1
 		const category = route.query.category as string
-		options.category = (category === '-' || !category) ? -1 : category
-		options.order = route.query.order || 'pertinence'
-		options.admin = route.query.admin || false
-		options.moderator = route.query.moderator || false
-		options.resolved = route.query.resolved || 'all'
+		options.category = (category === '-' || !category) ? -1 : parseInt(category, 10)
+		options.order = (route.query.order as string) || 'pertinence'
+		options.admin = !!route.query.admin
+		options.moderator = !!route.query.moderator
+		options.resolved = (route.query.resolved as string) || 'all'
 
 		searchStarted.value = false
 		results.value = null
