@@ -249,18 +249,18 @@
 							<div v-if="farmer.candidacies && farmer.candidacies.length" class="candidacies">
 								<h4>{{ $t('candidacies') }}</h4>
 								<div v-for="c in farmer.candidacies" :key="c.team_id" class="candidacy-item">
-									<rich-tooltip-team :id="c.team_id">
+									<rich-tooltip-team v-if="c.team_id" :id="c.team_id">
 										<emblem :team="{id: c.team_id, emblem_changed: c.emblem_changed}" />
 									</rich-tooltip-team>
 									<router-link :to="'/team/' + c.team_id">{{ c.team_name }}</router-link>
-									<v-btn size="small" variant="outlined" @click="cancelCandidacy(c)">{{ $t('cancel_candidacy') }}</v-btn>
+									<v-btn size="small" variant="outlined" @click="cancelCandidacy({ team_id: c.team_id ?? 0 })">{{ $t('cancel_candidacy') }}</v-btn>
 								</div>
 							</div>
 							<div v-if="$store.state.farmer && $store.state.farmer.team_invitations && $store.state.farmer.team_invitations.length > 0" class="invitations">
 								<br>
 								<h4>{{ $t('team_invitations') }}</h4>
 								<div v-for="invitation in $store.state.farmer.team_invitations" :key="invitation.id" class="invitation">
-									<rich-tooltip-team :id="invitation.team_id" v-slot="{ props }">
+									<rich-tooltip-team v-if="invitation.team_id" :id="invitation.team_id" v-slot="{ props }">
 										<router-link :to="'/team/' + invitation.team_id" v-bind="props">
 											<emblem :team="{id: invitation.team_id, emblem_changed: invitation.emblem_changed}" />
 											<span>{{ invitation.team_name }}</span>
@@ -780,7 +780,7 @@
 		return bonus
 	})
 
-	const farmerTitleEnabled = computed(() => LeekWars.selectWhere(store.state.farmer!.pomps, 'template', 126))
+	const farmerTitleEnabled = computed(() => !!LeekWars.selectWhere(store.state.farmer!.pomps, 'template', 126))
 
 	// Pendant la navigation sortante, le composant reste monté le temps que la
 	// route suivante charge ; nuller farmer.value démonte les v-if des popups et
@@ -944,6 +944,12 @@
 		}
 	}
 
+	function openGodfatherDialog() {
+		godfatherDialog.value = true
+		setTimeout(() => {
+			if (godfatherLink.value) LeekWars.selectText(godfatherLink.value)
+		}, 100)
+	}
 
 	function selectCountry(code: string) {
 		if (farmer.value) {
@@ -1115,10 +1121,10 @@
 		LeekWars.post('team/cancel-candidacy-for-team', { team_id: candidacy.team_id }).then(() => {
 			if (farmer.value) {
 				LeekWars.toast(t('candidacy_canceled'))
-				farmer.value.candidacies = (farmer.value.candidacies as { team_id: number }[]).filter((c) => c.team_id !== candidacy.team_id)
+				farmer.value.candidacies = farmer.value.candidacies.filter((c) => c.team_id !== candidacy.team_id)
 			}
 		}).error(error => {
-			LeekWars.toast(error)
+			LeekWars.toast(error.error as string)
 		})
 	}
 

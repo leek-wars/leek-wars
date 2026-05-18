@@ -4,6 +4,7 @@ import { Leek } from '@/model/leek'
 import { Loadout } from '@/model/loadout'
 import { Potion } from '@/model/potion'
 import { Team } from '@/model/team'
+import { Tournament } from '@/model/tournament'
 import { Weapon } from '@/model/weapon'
 import { Group } from './group'
 import { FarmerTree } from './filesystem'
@@ -28,12 +29,13 @@ interface FarmerGodson {
 
 interface TeamInvitation {
 	id: number
-	team_id: number
-	team_name: string
+	team_id?: number
+	team_name?: string
 	emblem_changed?: number
 	sender_id?: number
 	sender_name?: string
-	farmer?: { id: number, name: string, [key: string]: unknown }
+	farmer: { id: number, name: string, [key: string]: unknown }
+	[key: string]: unknown
 }
 
 class Farmer {
@@ -46,9 +48,10 @@ class Farmer {
 	public first_purchase!: boolean
 	public banned!: boolean
 	public deleted!: boolean
-	public tournaments!: unknown[]
+	public tournaments!: Tournament[]
 	public trophies!: number
-	public trophies_list!: unknown
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	public trophies_list!: any
 	public leeks!: {[key: number]: Leek}
 	public weapons!: Weapon[]
 	public potions!: Potion[]
@@ -57,7 +60,7 @@ class Farmer {
 	public in_garden!: boolean
 	public talent_more!: number
 	public country!: string | null
-	public warnings!: unknown[]
+	public warnings!: { id: number, reason: number, reason_text?: string, message?: string, severity: number, date: number, author?: { id: number, name: string }, [key: string]: unknown }[]
 	public candidacy!: unknown
 	public team_invitations!: TeamInvitation[]
 	public website!: string
@@ -128,7 +131,7 @@ class Farmer {
 	public won_farmer_tournaments!: number
 	public won_team_tournaments!: number
 	public won_battle_royale!: number
-	public fight_history!: unknown[]
+	public fight_history!: import('@/model/fight').Fight[]
 	public fight_pack!: unknown
 	public godfather!: FarmerGodson | null
 	public godsons!: FarmerGodson[]
