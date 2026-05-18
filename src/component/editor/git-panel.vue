@@ -270,6 +270,8 @@
 		current?: string
 		branches?: { name: string, current: boolean, remote: boolean }[]
 		content?: string
+		changed_files?: string[]
+		conflicts?: boolean
 	}
 
 	defineOptions({ name: 'GitPanel', i18n: {}, mixins: [...mixins], components: { GitHistory, GitRemoteDialog } })
@@ -611,7 +613,7 @@
 		syncError.value = ''
 		syncInfo.value = ''
 		try {
-			const data = await gitCall<GitOpResult & { changed_files?: string[], conflicts?: boolean }>('git/pull', { folder: selectedRepo.value, rebase: pullRebase.value })
+			const data = await gitCall<GitOpResult>('git/pull', { folder: selectedRepo.value, rebase: pullRebase.value })
 			syncInfo.value = 'Pull: ' + (data.message || 'OK')
 			await Promise.all([fileSystem.reload(), refreshStatus()])
 			if (data.changed_files) fileSystem.reloadChangedFiles(selectedRepo.value, data.changed_files)
@@ -645,7 +647,7 @@
 		syncInfo.value = ''
 		loading.value = true
 		try {
-			const data = await gitCall<{ changed_files?: string[] }>('git/checkout', { folder: selectedRepo.value, branch: b })
+			const data = await gitCall<GitOpResult>('git/checkout', { folder: selectedRepo.value, branch: b })
 			syncInfo.value = 'Checkout: ' + b
 			await Promise.all([fileSystem.reload(), refreshStatus()])
 			if (data.changed_files) fileSystem.reloadChangedFiles(selectedRepo.value, data.changed_files)
@@ -723,7 +725,7 @@
 		syncError.value = ''
 		syncInfo.value = ''
 		try {
-			const data = await gitCall<GitOpResult & { changed_files?: string[] }>('git/rebase-continue', { folder: selectedRepo.value })
+			const data = await gitCall<GitOpResult>('git/rebase-continue', { folder: selectedRepo.value })
 			syncInfo.value = 'Rebase: ' + (data.message || 'OK')
 			await Promise.all([fileSystem.reload(), refreshStatus()])
 			if (data.changed_files) fileSystem.reloadChangedFiles(selectedRepo.value, data.changed_files)
@@ -741,7 +743,7 @@
 		syncError.value = ''
 		syncInfo.value = ''
 		try {
-			const data = await gitCall<{ changed_files?: string[] }>('git/rebase-abort', { folder: selectedRepo.value })
+			const data = await gitCall<GitOpResult>('git/rebase-abort', { folder: selectedRepo.value })
 			syncInfo.value = t('rebase_aborted') as string
 			await Promise.all([fileSystem.reload(), refreshStatus()])
 			if (data.changed_files) fileSystem.reloadChangedFiles(selectedRepo.value, data.changed_files)

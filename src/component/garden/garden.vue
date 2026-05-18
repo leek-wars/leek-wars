@@ -567,9 +567,10 @@
 
 		emitter.on('back', back)
 		LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_REGISTER])
-		emitter.on('garden-queue', (data: number) => queue.value = data)
+		emitter.on('garden-queue', (data: unknown) => queue.value = data as number)
 
-		emitter.on('update-team-talent', (message: { composition: number; talent: number }) => {
+		emitter.on('update-team-talent', (m: unknown) => {
+			const message = m as { composition: number; talent: number }
 			if (message.composition in compositions_by_id) {
 				compositions_by_id[message.composition].talent += message.talent
 			}
