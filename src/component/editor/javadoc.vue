@@ -53,7 +53,7 @@
 
 	const props = defineProps<{
 		javadoc: Javadoc
-		keyword: Record<string, unknown>
+		keyword: { type?: string, kind?: number, clazz?: { label: string }, return_type?: unknown, [key: string]: unknown }
 	}>()
 
 	const args = computed<JavadocItem[]>(() => props.javadoc.items.filter((i) => i.type === 'param'))

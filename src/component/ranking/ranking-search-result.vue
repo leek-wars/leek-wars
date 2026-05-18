@@ -32,7 +32,7 @@ import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 
 const props = defineProps<{
-	result: Record<string, unknown>
+	result: { id: number, type: string, name?: string, level?: number, [key: string]: unknown }
 }>()
 
 defineEmits<{

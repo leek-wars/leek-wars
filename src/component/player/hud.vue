@@ -54,7 +54,8 @@
 						</template>
 					</i18n-t>
 				</div>
-				<action-log v-else-if="game.displayDebugs && line.log" :key="'_' + line.id" :log="line.log" :leeks="game.leeks" :action="0" :index="0" :lines="game.displayAILines" />
+				<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
+				<action-log v-else-if="game.displayDebugs && line.log" :key="'_' + line.id" :log="(line.log as any)" :leeks="(game.leeks as any)" :action="0" :index="0" :lines="game.displayAILines" />
 			</template>
 			<div v-if="!followBottom && renderEnd < game.consoleLines.length" class="load-marker bottom">…</div>
 		</div>

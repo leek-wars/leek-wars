@@ -54,7 +54,7 @@ const t = useNamespacedT('login')
 const route = useRoute()
 const router = useRouter()
 
-const error = ref<unknown>(null)
+const error = ref<{ error?: string } | null>(null)
 const loading = ref(false)
 const twoFactor = ref(false) // #4003 challenge 2FA déclenché par la réponse two_factor_required
 const form = ref({
@@ -72,8 +72,8 @@ if (tokenParam) {
 		const token = LeekWars.DEV ? data.token : '$'
 		store.commit('connect', { ...data, token })
 		router.push(getRedirectAfterLogin())
-	}).catch((err) => {
-		LeekWars.toast(err.error)
+	}).catch((err: unknown) => {
+		LeekWars.toast((err as { error?: string }).error ?? '')
 		router.push('/')
 	})
 }

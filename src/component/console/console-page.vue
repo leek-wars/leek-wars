@@ -38,7 +38,7 @@ const t = useNamespacedT('console-page')
 
 const themeMenu = ref(false)
 const themeMenuTarget = ref<HTMLElement | undefined>(undefined)
-const consoleRef = useTemplateRef<import("vue").ComponentPublicInstance>('console')
+const consoleRef = useTemplateRef<InstanceType<typeof Console>>('console')
 const consoleTheme = computed(() => (consoleRef.value as unknown as { theme?: string })?.theme)
 
 const themes = [
@@ -53,8 +53,8 @@ const themes = [
 LeekWars.setTitle(t('main.console'))
 if (LeekWars.mobile) {
 	LeekWars.setActions([
-		{ icon: 'mdi-weather-night', click: (e: Event) => {
-			themeMenuTarget.value = e.currentTarget
+		{ icon: 'mdi-weather-night', click: (e?: MouseEvent) => {
+			themeMenuTarget.value = e?.currentTarget as HTMLElement | undefined
 			nextTick(() => { themeMenu.value = !themeMenu.value })
 		}}
 	])

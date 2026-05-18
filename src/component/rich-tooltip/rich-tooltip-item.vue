@@ -6,7 +6,7 @@
 			</span>
 		</template>
 		<div class="card" :style="{ maxHeight: maxHeight + 'px' }" @mouseenter="mouse = true" @mouseleave="mouse = false">
-			<item-preview :item="item" :quantity="quantity" :inventory="inventory" :leek="leek" :craft-cost="craftCost" @update:modelValue="setParent" @retrieve="$emit('retrieve', $event)" />
+			<item-preview :item="item" :quantity="quantity" :inventory="inventory" :leek="leek" :craft-cost="craftCost" @update:modelValue="(v: unknown) => setParent(v as boolean)" @retrieve="(v: unknown) => $emit('retrieve', v as ItemTemplate[])" />
 		</div>
 	</v-menu>
 </template>

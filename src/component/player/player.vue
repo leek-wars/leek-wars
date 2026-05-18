@@ -451,7 +451,8 @@
 	function mousemove(e: MouseEvent) {
 		game.value.mousemove(e)
 		if (hudRef.value) {
-			hudRef.value.hover_entity = game.value.mouseEntity
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			(hudRef.value as any).hover_entity = game.value.mouseEntity
 		}
 	}
 	function mousedown(e: MouseEvent) { game.value.mousedown(e) }
@@ -459,8 +460,10 @@
 
 	onMounted(() => {
 		canvas = document.querySelector('.game-canvas')
-		game.value.canvas = canvas
-		game.value.ctx = canvas.getContext('2d')
+		if (canvas) {
+			game.value.canvas = canvas
+			game.value.ctx = canvas.getContext('2d')!
+		}
 	})
 
 	function keydown(e: KeyboardEvent) {
@@ -598,7 +601,7 @@
 				if (first) {
 					LeekWars.socket.send([SocketMessage.FIGHT_PROGRESS_REGISTER, fight.value!.id])
 				}
-				queue.value = f.queue
+				queue.value = f.queue as unknown as { position: number, total: number }
 				if (loaded.value) return
 				timeout = setTimeout(() => { getFight(false) }, getDelay)
 				getDelay += 500
@@ -633,7 +636,7 @@
 				request.then((f) => {
 					if (destroyed) return
 					request = null
-					fightLoaded(f)
+					fightLoaded(f as unknown as Fight)
 				}).error((err) => {
 					if (destroyed) return
 					request = null

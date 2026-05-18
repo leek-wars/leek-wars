@@ -55,9 +55,11 @@ interface GameTextMarker {
 /** Console line (action, log, trophy…) displayed in the side panel */
 interface ConsoleLine {
 	id?: string
-	action?: unknown
-	log?: unknown
-	trophy?: unknown
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	action?: any
+	log?: unknown[]
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	trophy?: any
 }
 
 /** Progress-bar marker for the timeline */

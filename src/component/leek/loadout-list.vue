@@ -90,7 +90,7 @@ function apply(loadout: Loadout) {
 		}
 		applying.value = null
 	}).error((e) => {
-		LeekWars.toast(e)
+		LeekWars.toast(e.error as string)
 		applying.value = null
 	})
 }
@@ -99,7 +99,7 @@ function remove(loadout: Loadout) {
 	LeekWars.delete('loadout/delete', { set_id: loadout.id }).then(() => {
 		store.commit('remove-loadout', loadout.id)
 	}).error((e) => {
-		LeekWars.toast(e)
+		LeekWars.toast(e.error as string)
 	})
 }
 </script>

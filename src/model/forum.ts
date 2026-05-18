@@ -36,6 +36,7 @@ class ForumTopic {
 	public views!: number
 	public last_message_date!: number
 	public owner!: number | null
+	public user_agent?: string
 	[key: string]: unknown
 }
 
