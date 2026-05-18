@@ -212,6 +212,7 @@
 		update()
 	})()
 
+	const onDocNavigate = (item: unknown) => navigate(item as string)
 	onMounted(() => {
 		if (!props.popup) {
 			LeekWars.large = localStorage.getItem('documentation/large') === 'true'
@@ -220,7 +221,7 @@
 		}
 		search.value?.focus()
 		emitter.on('back', back)
-		emitter.on('doc-navigate', navigate)
+		emitter.on('doc-navigate', onDocNavigate)
 	})
 
 	function focus() {
@@ -231,7 +232,7 @@
 	}
 	onBeforeUnmount(() => {
 		emitter.off('back', back)
-		emitter.off('doc-navigate', navigate)
+		emitter.off('doc-navigate', onDocNavigate)
 	})
 
 	function update() {

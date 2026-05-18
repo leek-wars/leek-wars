@@ -71,8 +71,8 @@ function keyDown(e: KeyboardEvent) {
 	if (e.which === 9) { // tab
 		if (commandsEnabled.value) {
 			const selectedCommand = commandsRef.value!.getSelected()
-			const selectedOption = commandsRef.value!.getSelectedOption()
-			const filterOptions = commandsRef.value!.filterOptions || ''
+			const selectedOption = commandsRef.value!.getSelectedOption() as { name: string } | null
+			const filterOptions = (commandsRef.value as unknown as { filterOptions?: string }).filterOptions || ''
 			const isSimple = !selectedCommand.options
 			selectCommand(selectedCommand.name + (isSimple ? '' : ':') + (selectedOption ? selectedOption.name : filterOptions), isSimple || !!selectedOption)
 			e.preventDefault()

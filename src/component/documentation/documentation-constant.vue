@@ -79,7 +79,7 @@ defineEmits<{
 }>()
 
 const expanded = ref(false)
-const new_constant = ref<unknown>(null)
+const new_constant = ref<{ description: string, primary: Record<string, string>, secondary: Record<string, string> } | null>(null)
 
 watch(() => props.constant, () => {
 	LeekWars.documentation(locale).then((functions) => {

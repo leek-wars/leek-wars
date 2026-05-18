@@ -79,7 +79,8 @@ const actions: { icon: string; click: () => void }[] = [{ icon: 'mdi-magnify-plu
 // payload on the newer URL (issue #3208).
 let loadId = 0
 
-const onTournamentUpdate = (data: [number, ...unknown[]]) => {
+const onTournamentUpdate = (raw: unknown) => {
+	const data = raw as [number, ...unknown[]]
 	if (tournament.value && data[0] === tournament.value.id) {
 		const id = ++loadId
 		LeekWars.get<Tournament>('tournament/get/' + route.params.id).then(t => {
