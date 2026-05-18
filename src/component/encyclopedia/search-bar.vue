@@ -33,7 +33,7 @@ const router = useRouter()
 
 const query = ref('')
 const loading = ref(false)
-const results = ref<unknown[] | null>(null)
+const results = ref<{ title: string, title_headline?: string, [key: string]: unknown }[] | null>(null)
 let timer: ReturnType<typeof setTimeout> | null = null
 
 const urlQuery = route.query.query as string
@@ -50,7 +50,7 @@ watch(query, () => {
 
 	results.value = []
 	if (query.value === '') {
-		clearTimeout(timer)
+		if (timer) clearTimeout(timer)
 		loading.value = false
 		return
 	}
@@ -60,9 +60,9 @@ watch(query, () => {
 		LeekWars.get('encyclopedia/search/' + i18n.locale + '/' + query.value.replace(/ /g, '+') + '/1').then(data => {
 			results.value = data.results
 			loading.value = false
-		}).catch((err) => {
+		}).catch((err: unknown) => {
 			results.value = []
-			LeekWars.toast(err.error)
+			LeekWars.toast((err as { error?: string }).error ?? '')
 		})
 	}, 200)
 })

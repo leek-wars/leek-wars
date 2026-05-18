@@ -280,12 +280,12 @@
 		LeekWars.setTitle(loadedFight.title, LeekWars.formatDate(loadedFight.date))
 	}
 
-	function onTrophy(trophy: NotificationData) {
-		trophyQueue.push(trophy)
+	function onTrophy(trophy: unknown) {
+		trophyQueue.push(trophy as NotificationData)
 	}
 
-	function onFightNotification(message: NotificationData) {
-		fightNotificationQueue.push(message)
+	function onFightNotification(message: unknown) {
+		fightNotificationQueue.push(message as NotificationData)
 	}
 
 	function unlockTrophy(trophy: number) {

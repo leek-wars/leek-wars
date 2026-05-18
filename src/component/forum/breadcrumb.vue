@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 defineProps<{
-	items: unknown[]
+	items: { name: string, link?: string }[]
 	raw?: boolean
 }>()
 </script>
