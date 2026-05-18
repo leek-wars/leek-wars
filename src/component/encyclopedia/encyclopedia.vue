@@ -99,7 +99,7 @@
 
 							<div class="contributors" @click="toggleStats">
 								<v-icon>mdi-account-multiple</v-icon>
-								<div v-html="$t('n_contributors', page.contributors.length)"></div>
+								<div v-html="$t('n_contributors', page.contributors?.length ?? 0)"></div>
 								<div class="avatars">
 									<rich-tooltip-farmer v-for="contributor in page.contributors" :id="contributor.id" :key="contributor.id">
 										<router-link :to="'/farmer/' + contributor.id">
@@ -109,7 +109,7 @@
 								</div>
 								<i18n-t tag="div" keypath="n_views" class="views">
 									<template #v>
-										<b>{{ $filters.number(page.views) }}</b>
+										<b>{{ $filters.number(page.views ?? 0) }}</b>
 									</template>
 								</i18n-t>
 								<div v-if="totalReferences > 0" class="references-count">
@@ -127,7 +127,7 @@
 												<router-link :to="'/farmer/' + page.creator"><span v-bind="props">{{ page.creator_name }}</span></router-link>
 											</rich-tooltip-farmer>
 										</template>
-										<template #date>{{ $filters.datetime(page.creation_time) }}</template>
+										<template #date>{{ $filters.datetime(page.creation_time ?? 0) }}</template>
 									</i18n-t>
 
 									<i18n-t v-if="page.last_editor" keypath="edited_by_x_the_y" tag="div">
@@ -136,13 +136,13 @@
 												<router-link :to="'/farmer/' + page.last_editor"><span v-bind="props">{{ page.last_editor_name }}</span></router-link>
 											</rich-tooltip-farmer>
 										</template>
-										<template #date>{{ $filters.datetime(page.last_edition_time) }}</template>
+										<template #date>{{ $filters.datetime(page.last_edition_time ?? 0) }}</template>
 									</i18n-t>
 								</div>
 								<div>
 									<i18n-t tag="div" keypath="n_contributions">
 										<template #n>
-											<b>{{ $filters.number(page.contributions) }}</b>
+											<b>{{ $filters.number(page.contributions ?? 0) }}</b>
 										</template>
 									</i18n-t>
 									{{ $t('main.n_lines', page.content.split('\n').length) }}
@@ -316,12 +316,14 @@
 	})
 	const contributor = computed(() => store.state.farmer ? store.state.farmer.contributor || store.state.farmer.moderator : false)
 	const parents = computed(() => {
-		const list = []
+		const list: { id: number, title: string, [key: string]: unknown }[] = []
 		const visited = new Set<number>()
-		for (let current = page.value; current; current = LeekWars.encyclopediaById[language.value] ? LeekWars.encyclopediaById[language.value][current.parent] : null) {
+		let current: { id: number, title: string, parent?: number, [key: string]: unknown } | null = page.value
+		while (current) {
 			if (visited.has(current.id)) { break }
 			visited.add(current.id)
 			list.push(current)
+			current = (current.parent !== undefined && LeekWars.encyclopediaById[language.value]) ? LeekWars.encyclopediaById[language.value][current.parent] : null
 		}
 		return list.reverse()
 	})
@@ -441,8 +443,9 @@
 			LeekWars.setTitle(title.value)
 			emitter.emit('loaded')
 		})
-		.error((result: { translations?: Record<string, string> }) => {
-			let fun = null
+		.error((err) => {
+			const result = err as { translations?: Record<string, string> }
+			let fun: typeof FUNCTIONS[number] | null = null
 			let args = ''
 			let ret = ''
 			let description = ''
@@ -532,7 +535,7 @@ ${ret}
 
 				editor.value.onDidChangeModelContent(() => {
 					modified.value = true
-					page.value.content = editor.value!.getValue()
+					if (page.value) page.value.content = editor.value!.getValue()
 				})
 
 				editor.value.onDidScrollChange((e) => {
@@ -569,16 +572,18 @@ ${ret}
 			editor.value.dispose()
 			editor.value = null
 		}
-		page.value.locker = null
+		if (page.value) page.value.locker = null
 		releasePage()
 	}
 
 	function setPageLanguage(lang: string) {
+		if (!page.value) return
 		page.value.language = lang
 		LeekWars.post('encyclopedia/set-language', {page_id: page.value.id, language: lang })
 	}
 
 	function releasePage() {
+		if (!page.value) return
 		LeekWars.post('encyclopedia/end-edition', {page_id: page.value.id})
 	}
 
@@ -619,9 +624,10 @@ ${ret}
 	})
 
 	function save() {
+		if (!page.value) return
 		LeekWars.put('encyclopedia/update', {page_id: page.value.id, language: page.value.language, title: page.value.title, content: page.value.content, parent: page.value.parent || 1, reference: page.value.reference || 0}).then((result) => {
 			LeekWars.toast("Sauvegardé !")
-			if (page.value.id === 0) {
+			if (page.value && page.value.id === 0) {
 				page.value.new = false
 				page.value.id = result.id
 			}
@@ -771,6 +777,7 @@ ${ret}
 	}
 
 	function updateOfficial() {
+		if (!page.value) return
 		LeekWars.put('encyclopedia/official', {page_id: page.value.id, official: page.value.official}).then(() => {
 		}).error(error => LeekWars.toast("Sauvegarde échouée : " + error.error))
 	}

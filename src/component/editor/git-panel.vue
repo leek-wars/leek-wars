@@ -129,7 +129,7 @@
 		</template>
 
 		<!-- Historique -->
-		<git-history v-if="showHistory && selectedRepo !== ''" :folder="selectedRepo" @show-diff="(e) => emit('show-diff', e)" />
+		<git-history v-if="showHistory && selectedRepo !== ''" :folder="selectedRepo" @show-diff="(e: { folder: string | undefined, hash: string, file: string }) => emit('show-diff', { folder: e.folder ?? '', file: e.file, staged: false })" />
 
 		<!-- Messages de sortie git (visibles même en mode historique) -->
 		<div v-if="syncError && selectedRepo !== ''" class="sync-error">
@@ -259,6 +259,17 @@
 		worktree: string
 		staged: boolean
 		conflict?: boolean
+	}
+
+	interface GitOpResult {
+		ok?: boolean
+		error?: string
+		message?: string
+		conflict?: boolean
+		merging?: boolean
+		current?: string
+		branches?: { name: string, current: boolean, remote: boolean }[]
+		content?: string
 	}
 
 	defineOptions({ name: 'GitPanel', i18n: {}, mixins: [...mixins], components: { GitHistory, GitRemoteDialog } })
@@ -445,7 +456,7 @@
 	async function loadRepos() {
 		loading.value = true
 		try {
-			const data = await gitCall('git/repos')
+			const data = await gitCall<{ repos: {folder: string, name: string}[] }>('git/repos')
 			repos.value = data.repos
 			const reposMap: {[path: string]: boolean} = {}
 			for (const r of repos.value) { reposMap[r.folder] = true }
@@ -468,7 +479,7 @@
 		localStorage.setItem('editor/git-repo', selectedRepo.value)
 		loading.value = true
 		try {
-			const data = await gitCall('git/status', { folder: selectedRepo.value })
+			const data = await gitCall<{ changes: GitChange[], merging: boolean, rebasing: boolean, ahead: number, behind: number, branch: string, has_remote: boolean, has_upstream: boolean }>('git/status', { folder: selectedRepo.value })
 			changes.value = data.changes
 			merging.value = data.merging
 			rebasing.value = !!data.rebasing
@@ -585,7 +596,7 @@
 		syncError.value = ''
 		syncInfo.value = ''
 		try {
-			const data = await gitCall('git/push', { folder: selectedRepo.value, force: pushForce.value })
+			const data = await gitCall<GitOpResult>('git/push', { folder: selectedRepo.value, force: pushForce.value })
 			syncInfo.value = 'Push: ' + (data.message || 'OK')
 			refreshStatus()
 		} catch (e: unknown) {
@@ -600,7 +611,7 @@
 		syncError.value = ''
 		syncInfo.value = ''
 		try {
-			const data = await gitCall('git/pull', { folder: selectedRepo.value, rebase: pullRebase.value })
+			const data = await gitCall<GitOpResult & { changed_files?: string[], conflicts?: boolean }>('git/pull', { folder: selectedRepo.value, rebase: pullRebase.value })
 			syncInfo.value = 'Pull: ' + (data.message || 'OK')
 			await Promise.all([fileSystem.reload(), refreshStatus()])
 			if (data.changed_files) fileSystem.reloadChangedFiles(selectedRepo.value, data.changed_files)
@@ -618,7 +629,7 @@
 
 	async function loadBranches() {
 		try {
-			const data = await gitCall('git/branches', { folder: selectedRepo.value })
+			const data = await gitCall<{ branches?: string[], remote_branches?: string[] }>('git/branches', { folder: selectedRepo.value })
 			branches.value = data.branches || []
 			remoteBranches.value = data.remote_branches || []
 		} catch {
@@ -634,7 +645,7 @@
 		syncInfo.value = ''
 		loading.value = true
 		try {
-			const data = await gitCall('git/checkout', { folder: selectedRepo.value, branch: b })
+			const data = await gitCall<{ changed_files?: string[] }>('git/checkout', { folder: selectedRepo.value, branch: b })
 			syncInfo.value = 'Checkout: ' + b
 			await Promise.all([fileSystem.reload(), refreshStatus()])
 			if (data.changed_files) fileSystem.reloadChangedFiles(selectedRepo.value, data.changed_files)
@@ -712,7 +723,7 @@
 		syncError.value = ''
 		syncInfo.value = ''
 		try {
-			const data = await gitCall('git/rebase-continue', { folder: selectedRepo.value })
+			const data = await gitCall<GitOpResult & { changed_files?: string[] }>('git/rebase-continue', { folder: selectedRepo.value })
 			syncInfo.value = 'Rebase: ' + (data.message || 'OK')
 			await Promise.all([fileSystem.reload(), refreshStatus()])
 			if (data.changed_files) fileSystem.reloadChangedFiles(selectedRepo.value, data.changed_files)
@@ -730,7 +741,7 @@
 		syncError.value = ''
 		syncInfo.value = ''
 		try {
-			const data = await gitCall('git/rebase-abort', { folder: selectedRepo.value })
+			const data = await gitCall<{ changed_files?: string[] }>('git/rebase-abort', { folder: selectedRepo.value })
 			syncInfo.value = t('rebase_aborted') as string
 			await Promise.all([fileSystem.reload(), refreshStatus()])
 			if (data.changed_files) fileSystem.reloadChangedFiles(selectedRepo.value, data.changed_files)
@@ -755,7 +766,7 @@
 			const fullPath = (selectedRepo.value ? selectedRepo.value + '/' : '') + file
 			const ai = fileSystem.getAIByPath(fullPath)
 			if (ai) {
-				gitCall('git/read-file', { folder: selectedRepo.value, file }).then((data) => {
+				gitCall<{ content?: string }>('git/read-file', { folder: selectedRepo.value, file }).then((data) => {
 					ai.code = data.content || ''
 					ai.modified = false
 					emitter.emit('file-reloaded', ai.path)
@@ -772,7 +783,7 @@
 				emitter.emit('close-file-tab', ai.path)
 				const folder = fileSystem.folderById[ai.folder]
 				if (folder) {
-					const idx = folder.items.findIndex((i) => !i.folder && (i as { folder: boolean, ai: unknown }).ai === ai)
+					const idx = folder.items.findIndex((i) => !i.folder && (i as unknown as { folder: boolean, ai: unknown }).ai === ai)
 					if (idx !== -1) folder.items.splice(idx, 1)
 				}
 				delete fileSystem.ais[ai.path]

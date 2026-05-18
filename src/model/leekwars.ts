@@ -82,9 +82,15 @@ function retryDelay(retry: number) {
 	return Math.min(RETRY_CONFIG.baseDelay * Math.pow(2, retry), RETRY_CONFIG.maxDelay)
 }
 
+interface ApiError {
+	error: string
+	params?: unknown[]
+	[key: string]: unknown
+}
+
 interface ExtendedPromise<T> extends Promise<T> {
 	abort: () => void
-	error: (callback: (error: unknown) => void) => ExtendedPromise<T>
+	error: (callback: (error: ApiError) => void) => ExtendedPromise<T>
 	then<TResult1 = T, TResult2 = never>(
 		onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
 		onrejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | undefined | null
@@ -894,8 +900,8 @@ const LeekWars = reactive({
 		LeekWars.cloverResult = result
 		LeekWars.cloverPopup = true
 	},
-	encyclopedia: {} as {[key: string]: {[key: string]: unknown}},
-	encyclopediaById: {} as {[key: string]: {[key: number]: unknown}},
+	encyclopedia: {} as {[key: string]: {[key: string]: { id: number, title: string, alias?: boolean, parent?: number, [key: string]: unknown } }},
+	encyclopediaById: {} as {[key: string]: {[key: number]: { id: number, title: string, parent?: number, [key: string]: unknown } }},
 	encyclopediaLoaded: {} as {[key: string]: boolean},
 	encyclopediaPromise: {} as {[key: string]: Promise<void>},
 	loadEncyclopedia: (locale: string): Promise<void> => {

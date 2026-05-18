@@ -13,6 +13,8 @@ class Tournament {
 	winner?: number
 	min_power?: number
 	max_power?: number
+	current?: number
+	registered?: boolean
 }
 
 export { Tournament }

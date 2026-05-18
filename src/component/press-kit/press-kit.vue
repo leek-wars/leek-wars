@@ -29,7 +29,7 @@
 
 				<div class="icon">📦</div>
 
-				<div>
+				<div v-if="language">
 					<v-menu offset-y>
 						<template #activator="{ props }">
 							<div v-ripple v-bind="props" class="language-button">
@@ -54,12 +54,12 @@
 		</panel>
 
 		<panel v-for="(category, c) in items" :key="c" :title="$t(category.name)" :icon="category.icon">
-			<div class="grid">
+			<div v-if="language" class="grid">
 				<div v-for="(item, i) in category.items" :key="i" class="item">
 					<iframe v-if="item.type === 'video'" width="500" height="315" :src="'https://www.youtube.com/embed/' + item.name" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-					<object v-else-if="item.type === 'text'" class="card" :data="'/press-kit/' + (item.localized ? language.code + '/' : '') + item.name + '.' + item.formats[0]" color-scheme="dark"></object>
-					<a v-else :href="'/press-kit/' + (item.localized ? language.code + '/' : '') + item.name + '.' + item.formats[0]" target="_blank">
-						<img :src="'/press-kit/' + (item.localized ? language.code + '/' : '') + item.name + '.' + item.formats[0]" :class="{alpha: item.alpha}">
+					<object v-else-if="item.type === 'text'" class="card" :data="'/press-kit/' + (item.localized ? language.code + '/' : '') + item.name + '.' + (item.formats?.[0] ?? '')" color-scheme="dark"></object>
+					<a v-else :href="'/press-kit/' + (item.localized ? language.code + '/' : '') + item.name + '.' + (item.formats?.[0] ?? '')" target="_blank">
+						<img :src="'/press-kit/' + (item.localized ? language.code + '/' : '') + item.name + '.' + (item.formats?.[0] ?? '')" :class="{alpha: item.alpha}">
 					</a>
 					<div class="legend">{{ item.legends ? item.legends[language.code] : item.legend }} <a v-for="format of item.formats" :key="format" :href="'/press-kit/' + (item.localized ? language.code + '/' : '') + item.name + '.' + format" target="_blank" class="format">{{ format }}</a></div>
 				</div>
@@ -92,8 +92,22 @@ defineOptions({ name: 'PressKit', i18n: {}, mixins: [...mixins] })
 
 const { locale } = useI18n()
 
-const language = ref<string | null>(null)
-const items: { title: string, href: string }[] = [
+const language = ref<Language | null>(null)
+interface PressItem {
+	name: string
+	type?: 'video' | 'text'
+	formats?: string[]
+	alpha?: boolean
+	localized?: boolean
+	legend?: string
+	legends?: Record<string, string>
+}
+interface PressCategory {
+	name: string
+	icon: string
+	items: PressItem[]
+}
+const items: PressCategory[] = [
 			{ name: 'logos', icon: 'mdi-image', items: [
 				{ name: 'leekwars_logo_dark', formats: ['svg', 'png'], alpha: true, legends: {
 					fr: 'Logo Leek Wars sombre',

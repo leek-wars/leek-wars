@@ -437,7 +437,7 @@
 		turret_ai_team2?: string | null
 	}
 	interface TestMapData {
-		obstacles: {[cell: number]: boolean}
+		obstacles: Record<number, number>
 		team1: number[]
 		team2: number[]
 	}
@@ -449,6 +449,7 @@
 	class TestMapCell {
 		cell!: number
 		team!: number
+		enabled?: boolean
 	}
 
 	const initialized = ref(false)
@@ -477,7 +478,7 @@
 	const chipsDialog = ref(false)
 	const weaponsDialog = ref(false)
 	const skinPotionDialog = ref(false)
-	const map = reactive<unknown[]>([])
+	const map = reactive<TestMapCell[][]>([])
 	let map_down = false
 	let map_add = false
 	let timeout: number | null = null
@@ -812,7 +813,7 @@
 			map_down = true
 			map_add = !(cell.cell in currentMap.value.data.obstacles)
 			if (map_add) {
-				currentMap.value.data.obstacles[cell.cell] = true
+				currentMap.value.data.obstacles[cell.cell] = 1
 			} else {
 				delete currentMap.value.data.obstacles[cell.cell]
 			}
@@ -827,7 +828,7 @@
 			const has_class = cell.cell in currentMap.value.data.obstacles
 			if (has_class !== map_add) {
 				if (map_add) {
-					currentMap.value.data.obstacles[cell.cell] = true
+					currentMap.value.data.obstacles[cell.cell] = 1
 				} else {
 					delete currentMap.value.data.obstacles[cell.cell]
 				}
@@ -877,7 +878,7 @@
 		currentMap.value.data.obstacles = {}
 		for (let cell = 0; cell < 612; ++cell) {
 			if (Math.random() > 0.8) {
-				currentMap.value.data.obstacles[cell] = true
+				currentMap.value.data.obstacles[cell] = 1
 			}
 		}
 		resetSaveTimeout()

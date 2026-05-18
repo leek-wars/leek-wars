@@ -122,7 +122,7 @@
 							<span class="group-count">({{ entry.count }})</span>
 						</div>
 						<div v-else-if="entry.placeholder" class="placeholder"></div>
-						<div v-else class="cell active" :class="['rarity-border-' + LeekWars.items[entry.item.template].rarity, { 'not-craftable': !entry.craftable }]" @mouseenter="showTooltip(entry.item, $event)" @mouseleave="scheduleHideTooltip()">
+						<div v-else-if="entry.item" class="cell active" :class="['rarity-border-' + LeekWars.items[entry.item.template].rarity, { 'not-craftable': !entry.craftable }]" @mouseenter="showTooltip(entry.item, $event)" @mouseleave="scheduleHideTooltip()">
 							<div class="item" :quantity="$filters.number(entry.item.quantity)" :type="LeekWars.items[entry.item.template].type">
 								<img v-if="entry.item.type === ItemType.RESOURCE" class="image" :src="'/image/resource/' + LeekWars.items[entry.item.template].name + '.png'" loading="lazy">
 								<scheme-image v-else-if="entry.item.type === ItemType.SCHEME" class="image" :scheme="LeekWars.schemes[LeekWars.items[entry.item.template].params]" />
@@ -133,7 +133,6 @@
 								<div class="id">#{{ entry.item.template }}</div>
 							</div>
 						</div>
-					</template>
 					<div v-for="item in (group === Group.NONE ? placeholder_count : 0)" :key="'p' + item" class="placeholder"></div>
 				</div>
 

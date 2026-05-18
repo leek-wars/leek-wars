@@ -13,6 +13,7 @@ interface InventoryItem {
 	template: number
 	quantity: number
 	time?: number
+	type?: number
 }
 
 interface FarmerTournament {

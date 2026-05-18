@@ -178,7 +178,9 @@
 	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
-	interface Fault { target: Farmer; faults: unknown[]; [key: string]: unknown }
+	interface FaultReporting { id: number; farmer_id: number; farmer_name: string; date: number; message: string }
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	interface Fault { id: number; target: Farmer; faults: unknown[]; reason: Warning; reason_text: string; reportings: FaultReporting[]; parameter: number; data: any; fight?: number; severity?: number; reason_data?: string; [key: string]: unknown }
 	import router from '@/router'
 	import { computed, reactive, ref, watch } from 'vue'
 	import { useRoute, useRouter } from 'vue-router'
@@ -270,8 +272,8 @@
 			faults.value!.splice(faults.value!.indexOf(fault), 1)
 			delete faultsById[fault.id]
 			localRouter.push('/moderation')
-		}).catch(error => {
-			LeekWars.toast(error)
+		}).catch((error: unknown) => {
+			LeekWars.toast(error as string)
 		})
 	}
 	function sendWarning() {
@@ -283,8 +285,8 @@
 			delete faultsById[fault.id]
 			warningConfirmDialog.value = false
 			localRouter.push('/moderation')
-		}).catch(error => {
-			LeekWars.toast(error)
+		}).catch((error: unknown) => {
+			LeekWars.toast(error as string)
 		})
 	}
 </script>

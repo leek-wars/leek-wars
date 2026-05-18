@@ -75,6 +75,7 @@ class Leek {
 	public itemUsageHistograms: { [itemId: number]: number[] } | null = null
 	public country: string | null = null
 	public team_fights!: number
+	public preference!: number
 	[key: string]: unknown
 
 	constructor(data: Record<string, unknown>) {

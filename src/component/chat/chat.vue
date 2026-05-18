@@ -143,7 +143,7 @@
 </template>
 
 <script lang="ts" setup>
-	import type { ChatMessage, ChatWindow } from '@/model/chat'
+	import type { Chat as ChatModel, ChatMessage, ChatWindow } from '@/model/chat'
 	import { ChatType } from '@/model/chat'
 	import { formatChatMessage } from '@/model/chat-format'
 	import type { Farmer } from '@/model/farmer'
@@ -166,7 +166,7 @@
 	const props = defineProps<{
 		id?: number
 		newFarmer?: Farmer
-		newConversation?: ChatWindow
+		newConversation?: ChatModel | ChatWindow
 		large?: boolean
 	}>()
 

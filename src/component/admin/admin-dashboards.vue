@@ -99,10 +99,13 @@
 		title: string
 		key: string
 		sort_key?: string
+		type?: string
+		id_key?: string
 	}
 	interface Dashboard {
 		id: string
 		name: string
+		icon?: string
 		columns: DashboardColumn[]
 		rows: Record<string, unknown>[]
 	}
@@ -157,11 +160,12 @@
 		})
 	}
 
-	function getHeaders(id: string) {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	function getHeaders(id: string): any[] {
 		const d = data[id]
 		if (!d) return []
 		return d.columns.map((col: DashboardColumn) => {
-			const header: { title: string, value: string, sortable: boolean, sort?: (a: unknown, b: unknown, itemA: Record<string, number>, itemB: Record<string, number>) => number } = { title: col.title, value: col.key, sortable: true }
+			const header: { title: string, key: string, sortable: boolean, sort?: (a: unknown, b: unknown, itemA: Record<string, number>, itemB: Record<string, number>) => number } = { title: col.title, key: col.key, sortable: true }
 			if (col.sort_key) {
 				const sortKey = col.sort_key
 				header.sort = (a, b, itemA, itemB) => itemA[sortKey] - itemB[sortKey]
@@ -182,7 +186,7 @@
 		if (!col.sort_key) return 0
 		const rows = data[dashboardId]?.rows
 		if (!rows || !rows.length) return 0
-		const max = rows[0][col.sort_key] || 1
+		const max = (rows[0][col.sort_key] as number) || 1
 		return Math.max(1, (item[col.sort_key] / max) * 100)
 	}
 </script>

@@ -496,16 +496,16 @@
 	watch(side, () => {
 		localStorage.setItem('garden/challenge/side', side.value)
 	})
-	let request: { abort(): void } | null = null
+	let request: ReturnType<typeof LeekWars.get> | null = null
 	const selectedBoss = ref<{ id: number; name: string; level: number; scale: number; difficulty: number } | null>(null)
 	const squad = ref<string | null>(null)
 	const arenaPreference = ref(parseInt(localStorage.getItem('arena/preference') || '-1', 10))
 	const wantsColossus = ref(false)
 	const batchLoading = ref(false)
 
-	const farmerEnabled = computed(() => garden.value && garden.value.farmer_enabled)
-	const teamEnabled = computed(() => garden.value && garden.value.team_enabled)
-	const arenaEnabled = computed(() => garden.value && garden.value.battle_royale_enabled && store.state.farmer && store.state.farmer.verified)
+	const farmerEnabled = computed(() => !!(garden.value && garden.value.farmer_enabled))
+	const teamEnabled = computed(() => !!(garden.value && garden.value.team_enabled))
+	const arenaEnabled = computed(() => !!(garden.value && garden.value.battle_royale_enabled && store.state.farmer && store.state.farmer.verified))
 	const bossEnabled = computed(() => true)
 	const liveArenaCount = computed(() => store.state.arenaCount || 0)
 	const liveArenaCountdown = computed(() => store.state.arenaCountdown)
@@ -528,7 +528,7 @@
 		const currentSquad = LeekWars.bossSquads.squad
 		if (!currentSquad || !selectedBoss.value) return
 		const participants = currentSquad.engaged_leeks
-			.filter((l: Leek) => l.farmer === store.state.farmer!.id)
+			.filter((l: Leek) => (l.farmer as unknown as number) === store.state.farmer!.id)
 			.map((l: Leek) => l.id)
 		if (participants.length === 0) return
 		batchLoading.value = true
@@ -675,7 +675,7 @@
 			} else if (category.value === 'boss') {
 				squad.value = route.params.target as string
 				if (squad.value) {
-					selectedBoss.value = Object.values(BOSSES).find(b => b.name === route.params.type)
+					selectedBoss.value = Object.values(BOSSES).find(b => b.name === route.params.type) ?? null
 					LeekWars.bossSquads.join(squad.value)
 				} else {
 					selectedBoss.value = null
@@ -714,13 +714,13 @@
 	}
 
 	function selectFarmer() {
-		if (garden.value.fights === 0 || farmerOpponents.value) {
+		if (!garden.value || garden.value.fights === 0 || farmerOpponents.value) {
 			return
 		}
 		LeekWars.get('garden/get-farmer-opponents').then(data => {
 			farmerOpponents.value = data.opponents
 		}).error(error => {
-			LeekWars.toast(error.error)
+			LeekWars.toast(error.error as string)
 		})
 	}
 
@@ -733,13 +733,13 @@
 		LeekWars.get('garden/get-composition-opponents/' + composition.id).then(data => {
 			teamOpponents[composition.id] = data.opponents
 		}).error(error => {
-			LeekWars.toast(error)
+			LeekWars.toast(error.error as string)
 		})
 	}
 
 	function selectArena(leek: Leek) {
 		selectedLeek.value = leek
-		if (garden.value.fights === 0 && LeekWars.arena.enabled) {
+		if (garden.value && garden.value.fights === 0 && LeekWars.arena.enabled) {
 			LeekWars.arena.leave()
 		}
 	}
@@ -762,7 +762,7 @@
 			LeekWars.post('garden/start-solo-fight', {leek_id: selectedLeek.value.id, target_id: leek.id}).then(data => {
 				router.push('/fight/' + data.fight)
 				store.commit('update-fights', -1)
-			}).error(error => LeekWars.toast(t(error)))
+			}).error(error => LeekWars.toast(t(error.error) as string))
 		}
 	}
 
@@ -780,7 +780,7 @@
 			LeekWars.post('garden/start-team-fight', {composition_id: selectedComposition.value.id, target_id: composition.id}).then(data => {
 				router.push('/fight/' + data.fight)
 				store.commit('update-team-fights', -1)
-			}).error(error => LeekWars.toast(t(error)))
+			}).error(error => LeekWars.toast(t(error.error) as string))
 		}
 	}
 
@@ -808,12 +808,13 @@
 				}
 			})
 		} else if (challengeType.value === 'team') {
+			if (!garden.value) return
 			if (!route.params.item) {
 				replaceNextTick('/garden/challenge/' + challengeType.value + '/' + challengeTarget.value + '/' + garden.value.my_compositions[0].id)
 				return
 			}
 			for (const composition of garden.value.my_compositions) {
-				if (composition.id == route.params.item) {
+				if (composition.id === parseInt(route.params.item as string, 10)) {
 					selectedComposition.value = composition
 					break
 				}
@@ -832,7 +833,7 @@
 		LeekWars.track('start-fight')
 		LeekWars.post('garden/start-farmer-challenge', {target_id: challengeFarmerTarget.value.id, seed: seed.value || 0, side: side.value}).then(data => {
 			router.push('/fight/' + data.fight)
-		}).error(error => LeekWars.toast(t(error)))
+		}).error(error => LeekWars.toast(t(error.error) as string))
 	}
 
 	function startLeekChallenge() {
@@ -840,14 +841,15 @@
 		LeekWars.track('start-fight')
 		LeekWars.post('garden/start-solo-challenge', {leek_id: selectedLeek.value.id, target_id: challengeLeekTarget.value.id, seed: seed.value || 0, side: side.value}).then(data => {
 			router.push('/fight/' + data.fight)
-		}).error(error => LeekWars.toast(t(error)))
+		}).error(error => LeekWars.toast(t(error.error) as string))
 	}
 
 	function startTeamChallenge(composition: Composition) {
+		if (!selectedComposition.value) return
 		LeekWars.track('start-fight')
 		LeekWars.post('garden/start-team-challenge', { composition_id: selectedComposition.value.id, target_id: composition.id, seed: seed.value || 0, side: side.value}).then(data => {
 			router.push('/fight/' + data.fight)
-		}).error(error => LeekWars.toast(t(error)))
+		}).error(error => LeekWars.toast(t(error.error) as string))
 	}
 
 	watch(category, () => {
@@ -881,7 +883,7 @@
 		if (event.data === '') {
 			seed.value = null
 		} else if (seed.value) {
-			seed.value = parseInt(seed.value)
+			seed.value = parseInt(String(seed.value))
 			if (seed.value > 2147483647) {
 				seed.value = 2147483647
 			} else if (seed.value < 1) {

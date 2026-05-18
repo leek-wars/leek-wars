@@ -164,7 +164,18 @@
 	const t = useNamespacedT('forum')
 	const router = useRouter()
 
-	const categories = ref<Record<string, unknown> | null>(null)
+	interface ForumCategory {
+		id: number
+		name: string
+		type: string
+		seen?: boolean
+		resolved_count: number
+		total_count: number
+		topics: number
+		messages: number
+		[key: string]: unknown
+	}
+	const categories = ref<ForumCategory[] | null>(null)
 	const connected_farmers = ref<Farmer[]>([])
 	const connected_languages = ref<Record<string, unknown>>({})
 	const forumLanguages = reactive<{[key: string]: boolean}>({})

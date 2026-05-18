@@ -40,6 +40,7 @@ interface TeamCandidacy {
 interface TeamInvitation {
 	id: number
 	team_id?: number
+	farmer: { id: number, name: string, [key: string]: unknown }
 	[key: string]: unknown
 }
 
