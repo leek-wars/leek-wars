@@ -6,7 +6,7 @@
 				<img :src="'/image/bulb/' + summon.name + '_front.png'" width="width">
 			</div>
 			<div>
-				<characteristic-tooltip v-for="c of LeekWars.characteristics_table" :key="c" v-slot="{ props }" :characteristic="c" :value="c === 'frequency' || c === 'ram' || c === 'cores' ? 0 : summon.characteristics[c][1]" :total="c === 'frequency' || c === 'ram' || c === 'cores' ? 0 : summon.characteristics[c][1]" :leek="summon.characteristics" :test="true">
+				<characteristic-tooltip v-for="c of LeekWars.characteristics_table" :key="c" v-slot="{ props }" :characteristic="c" :value="c === 'frequency' || c === 'ram' || c === 'cores' ? 0 : summon.characteristics[c][1]" :total="c === 'frequency' || c === 'ram' || c === 'cores' ? 0 : summon.characteristics[c][1]" :leek="{ level: summon.level ?? 1 }" :test="true">
 					<div class="characteristic" v-bind="props">
 						<img :src="'/image/charac/' + c + '.png'" v-bind="props">
 						<span :class="'color-' + c">
@@ -24,7 +24,7 @@
 		</div>
 		<h4>{{ $t('main.chips') }}</h4>
 		<div class="chips">
-			<rich-tooltip-item v-for="chip of summon.chips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[chip]" :bottom="true" @update:model-value="$emit('update:modelValue', $event)">
+			<rich-tooltip-item v-for="chip of summon.chips" :key="chip" v-slot="{ props }" :item="LeekWars.items[chip]" :bottom="true" @update:model-value="$emit('update:modelValue', $event)">
 				<img :src="'/image/chip/' + CHIPS[chip].name + '.png'" class="chip" v-bind="props">
 			</rich-tooltip-item>
 		</div>
@@ -41,8 +41,16 @@ const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tool
 
 defineOptions({ name: 'SummonView' })
 
+interface Summon {
+	name: string
+	characteristics: Record<string, [number, number]>
+	chips: number[]
+	level?: number
+	[key: string]: unknown
+}
+
 defineProps<{
-	summon: Record<string, unknown>
+	summon: Summon
 }>()
 
 defineEmits(['update:modelValue'])
