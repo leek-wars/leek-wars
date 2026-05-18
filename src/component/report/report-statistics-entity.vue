@@ -7,16 +7,17 @@
 		</td>
 		<td>{{ entity.level }}</td>
 		<td v-for="stat in stats" :key="stat" :class="{best: best[stat].indexOf(entity.leek.id) !== -1}">
-			<template v-if="entity[stat]">{{ $filters.number(entity[stat]) }}</template>
+			<template v-if="(entity as unknown as Record<string, number>)[stat]">{{ $filters.number((entity as unknown as Record<string, number>)[stat]) }}</template>
 		</td>
 	</tr>
 </template>
 
 <script setup lang="ts">
+import type { StatisticsEntity } from './statistics'
 defineProps<{
-	entity: Record<string, unknown>
+	entity: StatisticsEntity
 	stats: string[]
-	best: Record<string, unknown>
+	best: Record<string, number[]>
 }>()
 </script>
 

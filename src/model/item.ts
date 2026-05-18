@@ -35,7 +35,7 @@ class ItemTemplate {
 	public buyable!: boolean
 	public public!: boolean
 	public singleton!: boolean
-	public trophy!: number | null
+	public trophy!: { id: number, name: string, code?: string } | null
 	public market!: boolean
 	public buyable_crystals!: boolean
 	public rarity!: number

@@ -62,7 +62,7 @@
 			let bestEntities:number[] = []
 			const real_stat = stat === 'ops_format' ? 'operations' : (stat === 'ops_per_turn_format' ? 'operations_per_turn' : stat)
 			for (const e in props.statistics.entities) {
-				const entity = props.statistics.entities[e] as Record<string, number>
+				const entity = props.statistics.entities[e] as unknown as Record<string, number>
 				if (entity[real_stat] > best) {
 					best = entity[real_stat]
 					bestEntities = [props.statistics.entities[e].leek.id]

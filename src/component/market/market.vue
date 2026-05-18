@@ -376,7 +376,7 @@ const t = useNamespacedT('market')
 	const unseenItemDialog = ref(false)
 	const pomps = ref<PompTemplate[]>([])
 	const schemes = ref<ItemTemplate[]>([])
-	let request: { abort: () => void } | null = null
+	let request: ReturnType<typeof LeekWars.get> | null = null
 	let onKeyDown: ((e: KeyboardEvent) => void) | null = null
 	const search = ref('')
 
@@ -433,8 +433,8 @@ const t = useNamespacedT('market')
 		{icon: 'mdi-treasure-chest', click: () => router.push('/inventory')},
 	]
 	request = LeekWars.get<{ items: ItemTemplate[] }>('market/get-item-templates')
-	request.then((res) => {
-		const list = res.items
+	request.then((res: unknown) => {
+		const list = (res as { items: ItemTemplate[] }).items
 
 		for (const i in list) {
 			const item = list[i]
@@ -462,7 +462,7 @@ const t = useNamespacedT('market')
 				} else {
 					const fakePotion = {...item, name: item.name.replace(/^potion_/, ''), level: 1, consumable: false, effects: [], template: item.id, duration: 0} as unknown as PotionTemplate
 					potions.value.push(fakePotion)
-					items_by_name[fakePotion.name] = fakePotion
+					items_by_name[fakePotion.name] = fakePotion as unknown as ItemTemplate
 				}
 			} else if (item.type === ItemType.HAT) {
 				const hat = LeekWars.hats[item.id]
@@ -472,7 +472,7 @@ const t = useNamespacedT('market')
 				} else {
 					const fakeHat = {...item, name: item.name.replace(/^hat_/, ''), level: 1, width: 0, height: 0, crop: 0, template: item.id, item: 0} as unknown as HatTemplate
 					hats.value.push(fakeHat)
-					items_by_name[fakeHat.name] = fakeHat
+					items_by_name[fakeHat.name] = fakeHat as unknown as ItemTemplate
 				}
 			} else if (item.type === ItemType.POMP) {
 				pomps.value.push(LeekWars.pomps[item.id])
@@ -667,7 +667,7 @@ const t = useNamespacedT('market')
 		const costs = [50, 100, 200, 500]
 		for (const p in fights) {
 			const count = fights[p]
-			const pack: ItemTemplate = {
+			const pack = {
 				id: 1000000 + fights[p],
 				name: 'fight_pack_' + count,
 				title: t('n_fights', [count]),
@@ -691,7 +691,7 @@ const t = useNamespacedT('market')
 				params: null,
 				public: true,
 				rarity: 0,
-			} as ItemTemplate
+			} as unknown as ItemTemplate
 			fight_packs.value.push(pack)
 			items[pack.id] = pack
 			items_by_name[pack.name] = pack

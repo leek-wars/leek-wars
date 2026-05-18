@@ -120,7 +120,8 @@
 	const playing = ref(true)
 	const selectedStatistic = ref('')
 	const selectedStatisticColor = ref('')
-	const chartOptions = ref<Record<string, unknown> | null>(null)
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const chartOptions = ref<any>(null)
 	const actions = ref<{ icon: string, click: () => void }[]>([])
 	const charts = ref<{ chart?: unknown }[] | null>(null)
 
@@ -181,7 +182,7 @@
 			if (elements.length > 0) {
 				const idx = elements[0].index
 				const keys = chart.data.datasets[0].keys
-				selectedStatistic.value = keys[idx]
+				if (keys) selectedStatistic.value = keys[idx]
 				selectedStatisticColor.value = chart.data.datasets[0].backgroundColor[idx]
 			} else {
 				selectedStatistic.value = ''
@@ -224,7 +225,7 @@
 	})
 
 	onBeforeUnmount(() => {
-		clearInterval(interval)
+		if (interval) clearInterval(interval)
 	})
 
 	watch(playing, () => {

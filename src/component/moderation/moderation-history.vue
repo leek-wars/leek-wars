@@ -65,7 +65,15 @@
 
 	defineOptions({ name: "ModerationHistory", i18n: {}, mixins: [...mixins] })
 
-	const history = ref<Record<string, unknown>[]>([])
+	interface HistoryItem {
+		author: { id: number, name: string, [key: string]: unknown }
+		target: { id: number, name: string, [key: string]: unknown }
+		reason: number
+		severity: number
+		date: number
+		[key: string]: unknown
+	}
+	const history = ref<HistoryItem[]>([])
 	const total = ref(0)
 	const loading = ref(true)
 	const headers = [
@@ -82,7 +90,7 @@
 		{name: "Historique", link: '/moderation/history'},
 	])
 
-	function updateOptions(options: Record<string, unknown>) {
+	function updateOptions(options: { page: number, itemsPerPage: number }) {
 		loading.value = true
 		const page = options.page - 1
 		const count = options.itemsPerPage
