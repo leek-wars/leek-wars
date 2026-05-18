@@ -117,9 +117,9 @@
 		icon: string
 		title: string
 		leeks: ReportLeek[]
-		farmer: ReportFarmer | null
-		team: ReportTeam | null
-		flags: string[]
+		farmer?: ReportFarmer | null
+		team?: ReportTeam | null
+		flags?: string[]
 	}>()
 
 	const totalLevel = computed(() => props.leeks.reduce((sum: number, leek: ReportLeek) => sum + (leek.level || 0), 0))
