@@ -183,8 +183,8 @@
 
 	const menuMessage = ref<ChatMessage | null>(null)
 	let scrollMessage = 0
-	const menuActivator = ref<Element | null>(null)
-	const menuEmojiActivator = ref<Element | null>(null)
+	const menuActivator = ref<Element | undefined>(undefined)
+	const menuEmojiActivator = ref<Element | undefined>(undefined)
 	const menu = ref(false)
 	const menuEmoji = ref(false)
 
@@ -348,8 +348,9 @@
 				router.replace('/messages/conversation/' + data.conversation_id)
 			})
 		} else {
-			LeekWars.post('message/send-message', {conversation_id: chat.value.id, message}).then(() => { /**/ }).catch(data => {
-				LeekWars.toast(t('main.error_' + data.error, data.params) as string)
+			LeekWars.post('message/send-message', {conversation_id: chat.value.id, message}).then(() => { /**/ }).catch((data: unknown) => {
+				const d = data as { error: string, params?: (string | number)[] }
+				LeekWars.toast(t('main.error_' + d.error, d.params ?? []) as string)
 			})
 		}
 	}
@@ -420,8 +421,8 @@
 		issueDialog.value = false
 		LeekWars.post('message/create-issue', { message_id: id, title: issueTitle.value, description: issueDescription.value }).then(data => {
 			LeekWars.toast('Issue #' + data.issue + ' créée')
-		}).catch(data => {
-			LeekWars.toast(t('main.error_' + data.error) as string)
+		}).catch((data: unknown) => {
+			LeekWars.toast(t('main.error_' + (data as { error: string }).error) as string)
 		})
 	}
 
@@ -450,7 +451,7 @@
 
 	function openMenu(activator: MouseEvent, message: ChatMessage) {
 		menuMessage.value = message
-		menuActivator.value = activator.target as Element | null
+		menuActivator.value = (activator.target as Element | null) ?? undefined
 		menuEmoji.value = false
 		nextTick(() => {
 			menu.value = true
@@ -459,7 +460,7 @@
 
 	function openEmojis(activator: MouseEvent, message: ChatMessage) {
 		menuMessage.value = message
-		menuEmojiActivator.value = activator.target as Element | null
+		menuEmojiActivator.value = (activator.target as Element | null) ?? undefined
 		menu.value = false
 		nextTick(() => {
 			menuEmoji.value = true
@@ -494,7 +495,7 @@
 		element.innerHTML = message.content
 		const innerText = element.innerText.trim()
 		message.only_emojis = !element.querySelector('.br-invite') && (innerText.length === 0 || /^[\s\p{Emoji_Presentation}]+$/gmu.test(innerText))
-		if (!('censored' in message)) {
+		if (message.censored === undefined) {
 			message.censored = 0
 		}
 		message.reactionDialog = false

@@ -709,9 +709,11 @@ ${ret}
 		})
 
 		modified.value = false
-		page.value.last_edition_time = Date.now() / 1000
-		page.value.last_editor = store.state.farmer!.id
-		page.value.last_editor_name = store.state.farmer!.name
+		if (page.value) {
+			page.value.last_edition_time = Date.now() / 1000
+			page.value.last_editor = store.state.farmer!.id
+			page.value.last_editor_name = store.state.farmer!.name
+		}
 	}
 
 	function toggleStats() {
