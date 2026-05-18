@@ -217,7 +217,8 @@ const decorations = [
 	{ id: 8, texture: "skull.png" },
 ]
 
-const game = ref<Game | null>(null)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const game = ref<any>(null)
 let saveTimeout: ReturnType<typeof setTimeout> | null = null
 const playerRef = useTemplateRef<{game: Game}>('playerRef')
 
@@ -245,8 +246,8 @@ function playerLoaded() {
 		for (const obstacle in OBSTACLES) {
 			OBSTACLES[obstacle].texture.load(game.value)
 		}
-		for (const entity of map.value!.players) {
-			addEntity(entity)
+		for (const entity of Object.values(map.value!.players)) {
+			addEntity(entity as unknown as MapPlayer)
 		}
 	})
 }
@@ -276,9 +277,9 @@ function mobDragStart(mob: MapPlayer) {
 
 function addEntity(mob: MapPlayer) {
 	const entity = new Mob(game.value!, mob.name === 'leek' ? 1 : 2, 100, mob.name)
-	entity.setHat(mob.hat)
+	entity.setHat(mob.hat ?? null)
 	if (mob.weapon) {
-		const template = WEAPONS[parseInt(LeekWars.items[mob.weapon].params) - 1]
+		const template = WEAPONS[parseInt(String(LeekWars.items[mob.weapon].params)) - 1]
 		if (template) {
 			for (const texture of template.textures) {
 				texture.load(game.value!)
@@ -287,24 +288,24 @@ function addEntity(mob: MapPlayer) {
 		}
 	}
 	entity.setCell(game.value!.ground.field.cells[mob.cell || 570])
-	entity.setOrientation(mob.orientation)
-	entity.ai = mob.ai
-	entity.level = mob.level
-	entity.life = mob.life
-	entity.initially_dead = mob.dead
-	entity.maxLife = mob.life
-	entity.initialMaxLife = mob.life
-	entity.strength = mob.strength
-	entity.wisdom = mob.wisdom
-	entity.agility = mob.agility
-	entity.resistance = mob.resistance
-	entity.science = mob.science
-	entity.magic = mob.magic
-	entity.frequency = mob.frequency
-	entity.cores = mob.cores
-	entity.ram = mob.ram
-	entity.mp = mob.mp
-	entity.tp = mob.tp
+	entity.setOrientation(mob.orientation as EntityDirection)
+	entity.ai = mob.ai ?? 0
+	entity.level = mob.level ?? 1
+	entity.life = mob.life ?? 0
+	entity.initially_dead = mob.dead ?? false
+	entity.maxLife = mob.life ?? 0
+	entity.initialMaxLife = mob.life ?? 0
+	entity.strength = mob.strength ?? 0
+	entity.wisdom = mob.wisdom ?? 0
+	entity.agility = mob.agility ?? 0
+	entity.resistance = mob.resistance ?? 0
+	entity.science = mob.science ?? 0
+	entity.magic = mob.magic ?? 0
+	entity.frequency = mob.frequency ?? 0
+	entity.cores = mob.cores ?? 0
+	entity.ram = mob.ram ?? 0
+	entity.mp = mob.mp ?? 0
+	entity.tp = mob.tp ?? 0
 	entity.weapons = mob.weapons || []
 	entity.chips = mob.chips || []
 	game.value!.addEntity(entity)
