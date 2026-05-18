@@ -14,13 +14,13 @@
 							<span class="ops">{{ line.ops }} ops</span>
 						</div>
 					</template>
-					<template v-else-if="line.type === 'log'">
+					<template v-else-if="line.type === 'log' && line.log">
 						<div :class="LeekWars.logClass(line.log)" :style="{color: LeekWars.logColor(line.log)}">{{ LeekWars.logText(line.log) }}</div>
 					</template>
 					<template v-else-if="line.type === 'error'">
 						<div class="error">
 							<div v-if="line.location" class="zigzag">{{ line.zigzags }}</div>
-							<div>{{ $t('leekscript.error_' + line.error, line.params) }}</div>
+							<div>{{ $t('leekscript.error_' + line.error, line.params ?? []) }}</div>
 						</div>
 						<span v-if="line.ops" class="ops">{{ line.ops }} ops</span>
 					</template>
@@ -64,9 +64,9 @@ interface ConsoleLine {
 	code?: string
 	result?: unknown
 	ops?: number
-	log?: unknown
+	log?: unknown[]
 	error?: string
-	params?: unknown[]
+	params?: (string | number)[]
 	location?: number[]
 	zigzags?: string
 }
@@ -132,12 +132,14 @@ function down() {
 }
 
 onMounted(() => {
-	emitter.on('console', (data: Omit<ConsoleLine, 'type'>) => {
+	emitter.on('console', (raw: unknown) => {
+		const data = raw as Omit<ConsoleLine, 'type'>
 		console.log("on console", data)
 		lines.value.push({ type: 'result', ...data })
 		scrollDown()
 	})
-	emitter.on('console-error', (data: Omit<ConsoleLine, 'type'>) => {
+	emitter.on('console-error', (raw: unknown) => {
+		const data = raw as Omit<ConsoleLine, 'type'>
 		console.log("on console-error", data)
 		let zigzags = ""
 		if (data.location) {
@@ -149,7 +151,7 @@ onMounted(() => {
 	})
 	emitter.on('console-log', (data: unknown) => {
 		console.log("on console-log", data)
-		lines.value.push({ type: 'log', log: data })
+		lines.value.push({ type: 'log', log: data as unknown[] })
 		scrollDown()
 	})
 	emitter.on("wsconnected", () => {

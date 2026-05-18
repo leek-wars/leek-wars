@@ -6,7 +6,7 @@
 		</v-list-item>
 	</v-list>
 	<v-list v-else-if="options.length" dense>
-		<v-list-item v-for="option of options" :key="option.name" v-ripple class="command" @click="$emit('command', commands[0].name + ':' + option.name)">
+		<v-list-item v-for="option of (options as { name: string, description?: string }[])" :key="option.name" v-ripple class="command" @click="$emit('command', commands[0].name + ':' + option.name)">
 			<v-list-item-title>/{{ commands[0].name }}:{{ option.name }}</v-list-item-title>
 			<v-list-item-subtitle>{{ option.description }}</v-list-item-subtitle>
 		</v-list-item>
@@ -66,7 +66,7 @@ function getSelectedOption() {
 function selectFirst() {
 	if (!commands.value[index.value]) return
 	let command = commands.value[index.value].name
-	if (options.value.length) command += ':' + options.value[0].name
+	if (options.value.length) command += ':' + (options.value[0] as { name: string }).name
 	emit('command', command)
 }
 function scrollToSelected() {

@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="version">
+	<div v-if="version" class="version">
 		<img :src="'/image/mail/mail_' + version.version + '.webp'" class="image" loading="lazy" @error="($event.target as HTMLImageElement).style.display = 'none'">
 		<div class="wrapper">
 			<div v-for="(changes, s) in sections" :key="s" class="section">
@@ -28,6 +28,8 @@ import { mixins } from '@/model/i18n'
 
 interface ChangelogVersion {
 	version: string
+	forum_topic?: number
+	forum_category?: number
 	[key: string]: unknown
 }
 
@@ -49,7 +51,7 @@ function update() {
 watch(locale, update)
 update()
 
-const changes = computed(() => {
+const changes = computed<unknown>(() => {
 	if (!props.version || !changelog.value) return []
 	return changelog.value[props.version.version]
 })
@@ -60,15 +62,16 @@ const sections = computed(() => {
 	const collected = []
 	if (Array.isArray(changes.value)) {
 		collected.push(changes.value)
-	} else {
-		for (const key in changes.value) {
+	} else if (changes.value && typeof changes.value === 'object') {
+		const ch = changes.value as Record<string, unknown>
+		for (const key in ch) {
 			if (key === 'title') continue
-			collected.push(changes.value[key])
+			collected.push(ch[key])
 		}
 	}
 	const regex = /#img_(\w+)/g
 	const codeRegex = /`([^`]+)`/g
-	return collected.map((cat: string[]) => cat
+	return collected.map((cat: unknown) => (cat as string[])
 		.map((c: string) => ({
 			text: c.replace('# ', '').replace('#ai', '<span class="ai" title="' + t('changelog.need_ai_change') + '">AI</span>').replace(regex, '').replace(codeRegex, '<code>$1</code>'),
 			images: Array.from(c.matchAll(regex), (m: RegExpMatchArray) => m[1])

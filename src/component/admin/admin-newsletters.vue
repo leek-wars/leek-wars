@@ -22,7 +22,7 @@
 								<template v-if="n.sent === 0">
 									<v-btn v-if="$store.state.farmer" variant="tonal" @click="test(n, $store.state.farmer.id)"><v-icon>mdi-cog-outline</v-icon> Test compte normal</v-btn>
 									<v-text-field v-model="n.testTarget" type="number" label="Farmer ID" density="compact" hide-details style="max-width: 130px" />
-									<v-btn variant="tonal" @click="test(n, n.testTarget)"><v-icon>mdi-cog-outline</v-icon> Test</v-btn>
+									<v-btn variant="tonal" @click="test(n, n.testTarget ?? 0)"><v-icon>mdi-cog-outline</v-icon> Test</v-btn>
 								</template>
 								<span v-else class="sent"><v-icon>mdi-check-circle-outline</v-icon> Envoyé le {{ $filters.date(n.sent) }}</span>
 								<!-- Envoi via terminal (make newsletter) -->
@@ -68,8 +68,8 @@
 								<span class="rate">({{ percent(n.stats.unsubscribed, n.stats.total) }}%)</span>
 							</div>
 						</div>
-						<h2 class="subject">{{ n[n.lang].subject || '(pas de sujet)' }}</h2>
-						<v-card class="preview" variant="outlined"><div v-html="html(n[n.lang].preview)"></div></v-card>
+						<h2 class="subject">{{ n.lang ? n[n.lang].subject : '(pas de sujet)' }}</h2>
+						<v-card v-if="n.lang" class="preview" variant="outlined"><div v-html="html(n[n.lang].preview)"></div></v-card>
 					</div>
 				</div>
 			</template>
@@ -98,6 +98,7 @@
 		fr: { subject: string; preview: string }
 		en: { subject: string; preview: string }
 		sent: number
+		lang?: 'fr' | 'en'
 		stats?: NewsletterStats
 		testTarget?: number
 		expanded?: boolean
