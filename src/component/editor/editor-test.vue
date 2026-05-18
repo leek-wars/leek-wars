@@ -143,7 +143,7 @@
 						</div>
 						<div class="card characteristics">
 							<div v-for="c in LeekWars.characteristics_table" :key="c" class="characteristic" :class="c">
-								<characteristic-tooltip v-slot="{ props }" :characteristic="c" :value="currentLeek[c]" :total="currentLeek[c]" :leek="currentLeek" :test="true">
+								<characteristic-tooltip v-slot="{ props }" :characteristic="c" :value="(currentLeek[c] as number)" :total="(currentLeek[c] as number)" :leek="currentLeek" :test="true">
 									<img v-bind="props" :src="'/image/charac/' + c + '.png'">
 								</characteristic-tooltip>
 								<span :contenteditable="!currentLeek.bot" class="stat" :class="'color-' + c" @keyup.stop @focusout="characteristicFocusout(c, $event)" v-html="currentLeek[c]"></span>
@@ -743,19 +743,19 @@
 	function saveLeek() {
 		if (!currentLeek.value) return
 		LeekWars.post('test-leek/update', {id: currentLeek.value.id, data: JSON.stringify(currentLeek.value)})
-			.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
+			.error(err => LeekWars.toast(t('error_' + err.error, (err.params ?? []) as (string | number)[]) as string))
 	}
 
 	const skinPotions = computed(() => {
 		if (!store.state.farmer) return []
-		return store.state.farmer.potions.filter(p => LeekWars.potions[p.template].effects.some((e: Effect) => e.type === PotionEffect.CHANGE_SKIN))
+		return store.state.farmer.potions.filter(p => LeekWars.potions[p.template].effects.some((e) => (e as unknown as Effect).type === PotionEffect.CHANGE_SKIN))
 	})
 
 	function changeSkin(potion: Potion) {
 		if (!currentLeek.value) return
-		const effect = LeekWars.potions[potion.template].effects.find((e: Effect) => e.type === PotionEffect.CHANGE_SKIN)
+		const effect = LeekWars.potions[potion.template].effects.find((e) => (e as unknown as Effect).type === PotionEffect.CHANGE_SKIN) as { params: unknown[] } | undefined
 		if (!effect) return
-		currentLeek.value.skin = effect.params[0]
+		currentLeek.value.skin = effect.params[0] as number
 		skinPotionDialog.value = false
 		saveLeek()
 	}
@@ -763,7 +763,7 @@
 	function saveMap() {
 		if (!currentMap.value) return
 		LeekWars.post('test-map/update', {id: currentMap.value.id, data: JSON.stringify(currentMap.value.data)})
-			.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
+			.error(err => LeekWars.toast(t('error_' + err.error, (err.params ?? []) as (string | number)[]) as string))
 	}
 
 	function selectMap(m: TestMap) {
@@ -856,7 +856,7 @@
 
 	function deleteMap(m: TestMap) {
 		LeekWars.delete('test-map/delete', {id: m.id})
-			.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
+			.error(err => LeekWars.toast(t('error_' + err.error, (err.params ?? []) as (string | number)[]) as string))
 
 		delete maps[m.id]
 		for (const s in scenarios) {
@@ -930,7 +930,7 @@
 	function deleteScenario(scenario: TestScenario) {
 		if (scenario.base) return
 		LeekWars.delete('test-scenario/delete', {id: scenario.id})
-			.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
+			.error(err => LeekWars.toast(t('error_' + err.error, (err.params ?? []) as (string | number)[]) as string))
 
 		delete scenarios[scenario.id]
 		if (!LeekWars.isEmptyObj(scenarios)) {
@@ -964,12 +964,12 @@
 			newScenarioDialog.value = false
 			selectScenario(scenario)
 		})
-		.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
+		.error(err => LeekWars.toast(t('error_' + err.error, (err.params ?? []) as (string | number)[]) as string))
 	}
 
 	function addScenarioLeek(leek: Leek) {
 		if (!currentScenario.value || !addLeekTeam.value) return
-		addLeekTeam.value.push({id: leek.id, ai: leek.ai})
+		addLeekTeam.value.push({id: leek.id, ai: leek.ai as unknown as string})
 		const scenario = currentScenario.value
 		const teamID = addLeekTeam.value === scenario.team1 ? 0 : 1
 		if (scenario.id === 0) {
@@ -1102,7 +1102,7 @@
 			newLeekName.value = ''
 			currentLeek.value = leek
 		})
-		.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
+		.error(err => LeekWars.toast(t('error_' + err.error, (err.params ?? []) as (string | number)[]) as string))
 	}
 
 	function createMap() {
@@ -1112,7 +1112,7 @@
 			newMapName.value = ''
 			selectMap(maps[data.id])
 		})
-		.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
+		.error(err => LeekWars.toast(t('error_' + err.error, (err.params ?? []) as (string | number)[]) as string))
 	}
 
 	function characteristicFocusout(characteristic: string, event: FocusEvent) {
@@ -1136,7 +1136,7 @@
 			currentLeek.value = newLeek
 			saveLeek()
 		})
-		.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
+		.error(err => LeekWars.toast(t('error_' + err.error, (err.params ?? []) as (string | number)[]) as string))
 	}
 
 	function deleteTestLeek(leek: Leek) {
@@ -1160,7 +1160,7 @@
 			localStorage.setItem('editor/last-scenario-ai', '' + props.currentAI!.path)
 			router.push('/fight/' + data.fight)
 		})
-		.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
+		.error(err => LeekWars.toast(t('error_' + err.error, (err.params ?? []) as (string | number)[]) as string))
 	}
 
 	function onAIDeleted(path: string) {
@@ -1265,7 +1265,7 @@
 					currentMap.value = LeekWars.first(maps) as TestMap
 				}
 			})
-			.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
+			.error(err => LeekWars.toast(t('error_' + err.error, (err.params ?? []) as (string | number)[]) as string))
 		}
 	}
 
@@ -1289,7 +1289,7 @@
 				}
 			}
 		})
-		.error(err => LeekWars.toast(t('error_' + err.error, err.params)))
+		.error(err => LeekWars.toast(t('error_' + err.error, (err.params ?? []) as (string | number)[]) as string))
 	}
 
 	watch(advanced, () => {
@@ -1299,7 +1299,7 @@
 	function updateSeed(_event: InputEvent) {
 		if (currentScenario.value) {
 			if (currentScenario.value.seed) {
-				currentScenario.value.seed = parseInt(currentScenario.value.seed)
+				currentScenario.value.seed = parseInt(String(currentScenario.value.seed))
 				if (currentScenario.value.seed > 2147483647) {
 					currentScenario.value.seed = 2147483647
 				} else if (currentScenario.value.seed < 1) {
@@ -1315,7 +1315,7 @@
 	function updateMaxTurns(_event: InputEvent) {
 		if (currentScenario.value) {
 			if (currentScenario.value.max_turns) {
-				currentScenario.value.max_turns = parseInt(currentScenario.value.max_turns)
+				currentScenario.value.max_turns = parseInt(String(currentScenario.value.max_turns))
 				if (currentScenario.value.max_turns > 64) {
 					currentScenario.value.max_turns = 64
 				} else if (currentScenario.value.max_turns < 1) {
