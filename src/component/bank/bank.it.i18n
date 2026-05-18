@@ -1,5 +1,5 @@
 {
-	"description": "La banca ti propone di ottenere <b>cristalli</b> <span class='crystal'></span>, la seconda valuta di Leek Wars, permettendoti poi di acquistare pozioni e altri oggetti puramente decorativi e <b>non influenti </b> il tuo potere in combattimento. <br>\nConcediti una pozione di colore per il tuo porro e sostieni Leek Wars!",
+	"description": "Benvenuto in banca! I <b>cristalli</b> <span class='crystal'></span> ti permettono di ottenere pozioni, combattimenti extra, colori e accessori per i tuoi porri. <b>Nessun vantaggio in combattimento</b>: ogni acquisto è cosmetico o pratico.<br>\nOgni acquisto supporta direttamente lo sviluppo di Leek Wars. Grazie!",
 	"pack_of_n_crystals": "Pacchetto di <b>{0}</b> Cristalli",
 	"paypal_description": "Acquisto di {0} cristalli per {1} €",
 	"first_purchase_banner": "Primo acquisto? Tutti i tuoi cristalli sono raddoppiati!",

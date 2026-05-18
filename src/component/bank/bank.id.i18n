@@ -1,5 +1,5 @@
 {
-	"description": "Bank menawarkan Anda untuk mendapatkan <b>crystals</b> <span class='crystal'></span>, mata uang kedua Leek Wars, yang memungkinkan Anda untuk kemudian membeli ramuan dan dekorasi murni lainnya dan <b>tidak mempengaruhi </b> kekuatanmu dalam pertempuran. <br>\nManjakan diri Anda dengan ramuan warna untuk daun bawang Anda dan dukung Leek Wars!",
+	"description": "Selamat datang di bank! <b>Kristal</b> <span class='crystal'></span> memungkinkan Anda mendapatkan ramuan, pertarungan tambahan, warna, dan aksesori untuk daun bawang Anda. <b>Tidak ada keuntungan dalam pertarungan</b>: semua pembelian bersifat kosmetik atau praktis.<br>\nSetiap pembelian secara langsung mendukung pengembangan Leek Wars. Terima kasih!",
 	"pack_of_n_crystals": "Paket <b>{0}</b> kristal",
 	"paypal_description": "Beli {0} kristal seharga {1} €",
 	"title": "Bank kristal",

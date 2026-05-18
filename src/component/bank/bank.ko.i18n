@@ -1,5 +1,5 @@
 {
-	"description": "은행은 Leek Wars의 두 번째 통화인 <b>크리스탈</b> <span class='crystal'></span>을 얻을 수 있도록 제안합니다. 크리스탈로 포션과 순수 장식용 아이템을 구매할 수 있으며, 전투에서의 힘에는 <b>영향을 주지 않습니다</b>.<br>\n부추를 위한 색상 포션을 구매하고 Leek Wars를 지원해 주세요!",
+	"description": "은행에 오신 것을 환영합니다! <b>크리스털</b> <span class='crystal'></span>로 부추를 위한 포션, 추가 전투, 색상, 액세서리를 얻을 수 있습니다. <b>전투에서 이점 없음</b>: 모든 구매는 장식용이거나 실용적입니다.<br>\n모든 구매는 Leek Wars 개발을 직접 지원합니다. 감사합니다!",
 	"pack_of_n_crystals": "<b>{0}</b> 크리스탈 팩",
 	"paypal_description": "{1} €에 {0} 크리스탈 구매",
 	"title": "크리스탈 뱅크",

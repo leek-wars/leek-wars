@@ -1,5 +1,5 @@
 {
-	"description": "De bank biedt u aan om <b>kristallen</b> <span class='crystal'></span> te verkrijgen, de tweede munteenheid van Leek Wars, waarmee u drankjes en andere puur decoratieve en <b>niet-beïnvloedende drankjes kunt kopen. </b> jouw kracht in de strijd. <br>\nTrakteer jezelf op een kleurdrankje voor je prei en steun Leek Wars!",
+	"description": "Welkom bij de bank! <b>Kristallen</b> <span class='crystal'></span> geven je drankjes, extra gevechten, kleuren en accessoires voor je prei. <b>Geen voordeel in gevecht</b>: alle aankopen zijn cosmetisch of praktisch.<br>\nElke aankoop steunt direct de ontwikkeling van Leek Wars. Bedankt!",
 	"pack_of_n_crystals": "Pak <b>{0}</b> kristallen",
 	"paypal_description": "Aankoop van {0} kristallen voor {1} €",
 	"title": "Kristallen bank",
