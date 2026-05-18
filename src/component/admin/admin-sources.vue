@@ -235,6 +235,8 @@
 		[key: string]: unknown
 	}
 	interface SourceFarmer {
+		id: number
+		name: string
 		github?: boolean
 		google?: boolean
 		pass?: boolean
@@ -245,17 +247,30 @@
 		reg_type?: RegType
 		validation?: RegType | null
 		register_time: number
+		register_ip?: string
 		didactitiel_seen?: boolean
-		tutorial_progress?: number
+		tutorial_progress: number
 		email_sent_at?: number | null
 		email_opened_at?: number | null
 		email_clicked_at?: number | null
 		email_bounced_at?: number | null
+		connected?: boolean
+		language?: string
+		country?: string | null
+		referer?: string
+		last_time: number
+		playtime: number
+		fights: number
+		test_fights: number
+		trophies: number
+		team_id?: number
+		team_name?: string
+		ai_count: number
 		[key: string]: unknown
 	}
 
 	const data = ref<Record<string, unknown> | null>(null)
-	const sources = ref<Record<string, unknown> | null>(null)
+	const sources = ref<{ name: string, count: number, fights: number, test_fights: number, trophies: number }[] | null>(null)
 	const last = ref<SourceFarmer[] | null>(null)
 	const loading = ref(false)
 	let timer: ReturnType<typeof setInterval> | null = null
@@ -263,7 +278,7 @@
 
 	const days = ref(parseInt(localStorage.getItem(STORAGE_KEY_DAYS) || '30'))
 	const stats_loading = ref(false)
-	const countries = ref<{ code: string, count: number }[]>([])
+	const countries = ref<{ country: string, count: number }[]>([])
 	const country_available = ref(true)
 	const retention = ref<Record<string, number> | null>(null)
 	const chartKey = ref(0)
@@ -306,7 +321,7 @@
 			last.value = d.last
 
 			last_farmers_by_day.value = {}
-			for (const farmer of last.value) {
+			for (const farmer of last.value || []) {
 				farmer.reg_type = regType(farmer)
 				farmer.validation = regValidation(farmer)
 				const day = LeekWars.formatDate(farmer.register_time)
@@ -343,9 +358,9 @@
 		tutoChart.value = {
 			labels,
 			datasets: [
-				{ label: 'Didactitiel terminé', data: registrations.map(r => +r.tuto_done), borderColor: '#4caf50', backgroundColor: 'rgba(76,175,80,0.2)', fill: false, tension: 0.2 },
-				{ label: 'Étape moyenne', data: registrations.map(r => +r.avg_tuto_step), borderColor: '#9c27b0', backgroundColor: 'rgba(156,39,176,0.2)', fill: false, tension: 0.2 },
-				{ label: 'Vérifiés', data: registrations.map(r => +r.verified), borderColor: '#00bcd4', backgroundColor: 'rgba(0,188,212,0.2)', fill: false, tension: 0.2 },
+				{ label: 'Didactitiel terminé', data: registrations.map(r => +(r.tuto_done ?? 0)), borderColor: '#4caf50', backgroundColor: 'rgba(76,175,80,0.2)', fill: false, tension: 0.2 },
+				{ label: 'Étape moyenne', data: registrations.map(r => +(r.avg_tuto_step ?? 0)), borderColor: '#9c27b0', backgroundColor: 'rgba(156,39,176,0.2)', fill: false, tension: 0.2 },
+				{ label: 'Vérifiés', data: registrations.map(r => +(r.verified ?? 0)), borderColor: '#00bcd4', backgroundColor: 'rgba(0,188,212,0.2)', fill: false, tension: 0.2 },
 			]
 		}
 

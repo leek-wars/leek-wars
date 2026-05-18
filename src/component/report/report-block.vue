@@ -118,8 +118,8 @@
 		title: string
 		leeks: ReportLeek[]
 		farmer: ReportFarmer | null
-		team: ReportTeam & { xp?: number, cur_xp?: number, prev_xp?: number, next_xp?: number } | null
-		flags: Record<string, unknown>
+		team: ReportTeam | null
+		flags: string[]
 	}>()
 
 	const totalLevel = computed(() => props.leeks.reduce((sum: number, leek: ReportLeek) => sum + (leek.level || 0), 0))
@@ -127,6 +127,7 @@
 	const totalMoney = computed(() => props.leeks.reduce((sum: number, leek: ReportLeek) => sum + (leek.money || 0), 0))
 
 	const currentBar = computed(() => {
+		if (!props.team) return 0
 		const totalXP = props.team.next_xp - props.team.prev_xp
 		const newLevel = props.team.cur_xp - props.team.xp < props.team.prev_xp
 		const oldXP = newLevel ? 0 : props.team.cur_xp - props.team.xp - props.team.prev_xp
@@ -134,6 +135,7 @@
 	})
 
 	const newBar = computed(() => {
+		if (!props.team) return 0
 		const totalXP = props.team.next_xp - props.team.prev_xp
 		const newLevel = props.team.cur_xp - props.team.xp < props.team.prev_xp
 		const newXPInCurrentLevel = newLevel ? props.team.cur_xp - props.team.prev_xp : props.team.xp

@@ -169,10 +169,10 @@
 		if (!fight.value) { return [] }
 		const leeks = []
 		for (const leek of fight.value.leeks1) {
-			leeks.push({...leek, farmer: fight.value.farmers1[leek.farmer]})
+			leeks.push({...leek, farmer: fight.value.farmers1[leek.farmer as unknown as number]})
 		}
 		for (const leek of fight.value.leeks2) {
-			leeks.push({...leek, farmer: fight.value.farmers2[leek.farmer]})
+			leeks.push({...leek, farmer: fight.value.farmers2[leek.farmer as unknown as number]})
 		}
 		return leeks
 	})

@@ -379,7 +379,7 @@
 											<div v-bind="props" class="participant" :class="{active: true}" @click="LeekWars.bossSquads.removeLeek(leek)">
 												<leek-image :leek="leek" :scale="0.42"></leek-image>
 												<div class="name">
-													<avatar :farmer="LeekWars.bossSquads.squad.farmers.find(f => f.id === leek.farmer)" />
+													<avatar :farmer="LeekWars.bossSquads.squad.farmers.find(f => f.id === (leek.farmer as unknown as number))" />
 													<span>{{ leek.name }}</span>
 												</div>
 												<div class="level">{{ $t('main.level_n', [leek.level]) }}</div>
@@ -393,7 +393,7 @@
 											<div v-bind="props" class="participant" :class="{active: true}" @click="LeekWars.bossSquads.addLeek(leek)">
 												<leek-image :leek="leek" :scale="0.42"></leek-image>
 												<div class="name">
-													<avatar :farmer="LeekWars.bossSquads.squad.farmers.find(f => f.id === leek.farmer)" />
+													<avatar :farmer="LeekWars.bossSquads.squad.farmers.find(f => f.id === (leek.farmer as unknown as number))" />
 													<span>{{ leek.name }}</span>
 												</div>
 												<div class="level">{{ $t('main.level_n', [leek.level]) }}</div>

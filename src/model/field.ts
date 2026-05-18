@@ -20,7 +20,7 @@ class Field {
 		this.tilesX = tilesX
 		this.tilesY = tilesY
 		this.nb_cells = (this.tilesX * 2 - 1) * this.tilesY - (this.tilesX - 1)
-		this.cells = new Array(this.nb_cells)
+		this.cells = Array.from({length: this.nb_cells})
 
 		for (let x = -tilesX + 1; x < tilesX; x++) {
 			for (let y = -tilesX + 1; y < tilesX; y++) {
@@ -45,7 +45,7 @@ class Field {
 		}
 		const sx = this.max_x - this.min_x + 1
 		const sy = this.max_y - this.min_y + 1
-		this.coord = Array.from(Array(sy), () => new Array(sx).fill(null))
+		this.coord = Array.from({length: sy}, () => Array.from({length: sx}) as Cell[])
 		for (const cell of this.cells) {
 			this.coord[cell.x - this.min_x][cell.y - this.min_y] = cell
 		}

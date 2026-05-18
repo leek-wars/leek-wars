@@ -50,6 +50,8 @@ interface TeamRankingRow {
 	level?: number
 	me?: boolean
 	style?: string
+	country?: string | null
+	points?: number
 }
 
 interface TeamTournament {

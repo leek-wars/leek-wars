@@ -43,7 +43,7 @@
 		<panel class="first global">
 			<template #content>
 				<loader v-show="!loaded" />
-				<div v-if="loaded" class="content">
+				<div v-if="loaded && farmer" class="content">
 					<div class="stats">
 						<router-link :to="'/farmer/' + farmer.id">
 							<avatar :farmer="farmer" />
@@ -170,18 +170,7 @@ import { emitter } from '@/model/vue'
 
 defineOptions({ name: 'Trophies', i18n: {}, mixins: [...mixins] })
 
-interface TrophyData {
-	id: number
-	code: string
-	category: number
-	points: number
-	unlocked: boolean
-	rarity: number
-	date: number
-	difficulty: number
-	index: number
-	[key: string]: unknown
-}
+type TrophyData = (typeof LeekWars.trophies)[number]
 
 interface TrophyCategory {
 	id: number
@@ -200,7 +189,7 @@ const totalPoint = ref(0)
 const points = ref<{[key: number]: number}>({})
 const totals = ref<{[key: number]: number}>({})
 const totalPoints = ref<{[key: number]: number}>({})
-const raw_categories = LeekWars.trophyCategories as TrophyCategory[]
+const raw_categories = LeekWars.trophyCategories as unknown as TrophyCategory[]
 const count = ref(0)
 const total = ref(0)
 const title = ref<string | null>(null)
@@ -212,7 +201,7 @@ const group_by_categories = ref(localStorage.getItem('options/trophies/group-by-
 const sort_by = ref<string>(localStorage.getItem('options/trophies/sort') || 'index')
 const count_by_difficulty = ref<number[]>([0, 0, 0, 0, 0, 0])
 const farmer = ref<{id: number, name: string} | null>(null)
-const variables = ref<Record<string, unknown>>([])
+const variables = ref<Record<string, number>>({})
 
 const id = computed(() => route.params.id || (store.state.farmer ? store.state.farmer.id : null))
 
@@ -264,7 +253,7 @@ function update() {
 	title.value = null
 	all_trophies.value = []
 	if (!requestedId) return
-	LeekWars.trophyCategories.forEach((c: TrophyCategory) => {
+	(LeekWars.trophyCategories as unknown as TrophyCategory[]).forEach((c: TrophyCategory) => {
 		raw_trophies.value[c.id] = []
 		progressions.value[c.id] = 0
 		points.value[c.id] = 0

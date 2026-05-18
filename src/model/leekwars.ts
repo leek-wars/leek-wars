@@ -55,6 +55,15 @@ interface Trophy {
 	date: number
 	noun_gender: number
 	adj_gender: number
+	description: string
+	progression: number | null
+	threshold: number
+	total: number
+	in_fight: boolean
+	fight: number
+	index: number
+	noun_translation: string
+	adj_translation: string
 	[key: string]: unknown
 }
 
@@ -146,6 +155,7 @@ function request<T = any>(method: string, url: string, params?: string | FormDat
 	}
 	extended.error = (e: (e: unknown) => void) => promise.catch(e)
 	const originalThen = promise.then.bind(promise)
+	// eslint-disable-next-line unicorn/no-thenable
 	extended.then = (p: (p: T) => void, r?: (e: unknown) => void) => {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const chained = originalThen(p, r) as any

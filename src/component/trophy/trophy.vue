@@ -107,7 +107,7 @@
 						<span>{{ farmer.name }}</span>
 					</router-link>
 					<div class="duration">
-						{{ LeekWars.formatLongDuration(farmer.duration) }}
+						{{ LeekWars.formatLongDuration(farmer.duration ?? 0) }}
 					</div>
 					<router-link v-if="farmer.fight" v-ripple :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight">
 						<v-icon>mdi-sword-cross</v-icon> {{ $filters.date(farmer.time) }}
@@ -123,7 +123,7 @@
 						<span>{{ farmer.name }}</span>
 					</router-link>
 					<div class="duration">
-						{{ LeekWars.formatLongDuration(farmer.duration) }}
+						{{ LeekWars.formatLongDuration(farmer.duration ?? 0) }}
 					</div>
 					<router-link v-if="farmer.fight" v-ripple :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight">
 						<v-icon>mdi-sword-cross</v-icon> {{ $filters.date(farmer.time) }}
@@ -139,7 +139,7 @@
 						<span>{{ farmer.name }}</span>
 					</router-link>
 					<div class="spacer"></div>
-					<lw-title :title="farmer.title" />
+					<lw-title v-if="farmer.title" :title="farmer.title" />
 					<v-icon v-if="$store.getters.admin" class="admin-delete" @click="confirmDelete(farmer)">mdi-delete</v-icon>
 				</div>
 			</panel>
@@ -173,7 +173,7 @@ interface TrophyFarmer {
 	fight?: number
 	action?: number
 	duration?: number
-	title?: number
+	title?: number[]
 	muted?: boolean
 	farmer?: { muted?: boolean }
 }
@@ -234,7 +234,7 @@ function schemeLabel(item: ItemTemplate) {
 }
 
 function update() {
-	code.value = route.params.code
+	code.value = route.params.code as string
 	error.value = false
 	trophy.value = null
 	LeekWars.get('trophy-template/get/' + code.value + '/' + locale.value)
@@ -253,7 +253,7 @@ function confirmDelete(f: TrophyFarmer) {
 }
 
 function deleteTrophy() {
-	if (!deleteFarmer.value) return
+	if (!deleteFarmer.value || !trophy.value) return
 	LeekWars.post('trophy/delete', { trophy_id: trophy.value.id, farmer_id: deleteFarmer.value.id })
 		.then(() => {
 			deleteDialog.value = false

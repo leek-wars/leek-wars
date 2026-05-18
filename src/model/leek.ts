@@ -7,25 +7,6 @@ import { Weapon } from '@/model/weapon'
 import { Hat } from './hat'
 import { Component } from './component'
 
-enum Characteristic {
-	LIFE = 0,
-	STRENGTH = 1,
-	WISDOM = 2,
-	AGILITY = 3,
-	RESISTANCE = 4,
-	SCIENCE = 5,
-	MAGIC = 6,
-	FREQUENCY = 7,
-	TP = 8,
-	MP = 9,
-}
-
-enum LeekFace {
-	NEUTRAL = 0,
-	HAPPY = 1,
-	ANGRY = 2
-}
-
 const LEEK_FACES = ['', '_happy', '_angry']
 
 class Register {

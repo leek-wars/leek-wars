@@ -70,9 +70,11 @@ const t = useNamespacedT('bank')
 const route = useRoute()
 const router = useRouter()
 
+interface Pack { id: number; crystals: number; bonus: number; prices: Record<string, number> }
+
 const pack = ref(0)
 const offer = ref(0)
-const product = ref<Record<string, unknown> | null>(null)
+const product = ref<Pack | null>(null)
 const loading = ref(false)
 const firstPurchase = ref(false)
 

@@ -141,7 +141,7 @@ const itemStats = computed<{ uses: number, fights: number, avg: string } | null>
 
 const itemHistogram = computed<number[] | null>(() => {
 	if (!props.leek?.itemUsageHistograms || (props.item.type !== ItemType.WEAPON && props.item.type !== ItemType.CHIP)) return null
-	const data = props.leek.itemUsageHistograms[props.item.id] || new Array(84).fill(0)
+	const data = props.leek.itemUsageHistograms[props.item.id] || Array.from({length: 84}, () => 0)
 	const max = Math.max(...data, 1)
 	return data.map((v: number) => (v / max) * 18 + (v > 0 ? 2 : 1))
 })

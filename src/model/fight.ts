@@ -61,6 +61,13 @@ class ReportFarmer {
 class ReportTeam {
 	id!: number
 	name!: string
+	level!: number
+	talent!: number
+	talent_gain!: number
+	xp!: number
+	cur_xp!: number
+	prev_xp!: number
+	next_xp!: number
 }
 
 class Report {
@@ -74,6 +81,8 @@ class Report {
 	public farmer2!: ReportFarmer
 	public team1!: ReportTeam
 	public team2!: ReportTeam
+	public flags1!: string[]
+	public flags2!: string[]
 	public duration!: number
 }
 
@@ -104,7 +113,7 @@ class Fight {
 	public report!: Report
 	public winner!: number
 	public queue!: number
-	public trophies!: { trophy: number, name: string }[]
+	public trophies!: { trophy: number, name: string, farmer: Farmer }[]
 	public boss_name?: string
 	public chests!: number
 	public size!: number

@@ -26,6 +26,7 @@ export interface CompletionResult {
 }
 
 export class AnalyzerPromise {
+	// eslint-disable-next-line unicorn/no-thenable
 	public then!: (data: unknown) => void
 	public abort!: () => void
 }

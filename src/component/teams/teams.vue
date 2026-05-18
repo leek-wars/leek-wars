@@ -97,7 +97,21 @@ defineOptions({ name: 'Teams', i18n: {}, components: { RichTooltipTeam, RichTool
 
 const t = useNamespacedT('teams')
 
-const teams = ref<Record<string, unknown>[] | null>(null)
+interface TeamRow {
+	id: number
+	name: string
+	talent: number
+	ranking: number
+	member_count: number
+	activity_score: number
+	match_score: number
+	opened: boolean
+	recruitment_message?: string
+	emblem_changed?: number
+	recent_members?: { id: number, name: string, connected?: boolean }[]
+	[key: string]: unknown
+}
+const teams = ref<TeamRow[] | null>(null)
 const hasMatch = ref(false)
 const search = ref('')
 const activityFilter = ref('all')
@@ -121,7 +135,7 @@ const sizeOptions = computed(() => [
 const canApply = computed<boolean>(() => !!(store.state.farmer && store.state.farmer.team === null))
 
 const headers = computed(() => {
-	const h: { title: string, value: string, sortable?: boolean }[] = [
+	const h: { title: string, key: string, sortable?: boolean, align?: 'start' | 'end' | 'center', width?: string }[] = [
 		{ title: t('team_name'), key: 'name', sortable: true },
 		{ title: t('level'), key: 'level', sortable: true, align: 'end' },
 		{ title: t('talent'), key: 'talent', sortable: true, align: 'end' },
@@ -173,14 +187,20 @@ function sendCandidacy(team: { id: number }) {
 	LeekWars.post('team/send-candidacy', { team_id: team.id }).then(() => {
 		candidacyTeams.value.push(team.id)
 		LeekWars.toast(t('candidacy_sent'))
-	}).error((error: { error: string, params: string[] }) => LeekWars.toast(t('error_' + error.error, error.params)))
+	}).error((error: unknown) => {
+		const e = error as { error: string, params: string[] }
+		LeekWars.toast(t('error_' + e.error, e.params))
+	})
 }
 
 function cancelCandidacy(team: { id: number }) {
 	LeekWars.post('team/cancel-candidacy-for-team', { team_id: team.id }).then(() => {
 		candidacyTeams.value = candidacyTeams.value.filter(id => id !== team.id)
 		LeekWars.toast(t('candidacy_cancelled'))
-	}).error((error: { error: string, params: string[] }) => LeekWars.toast(t('error_' + error.error, error.params)))
+	}).error((error: unknown) => {
+		const e = error as { error: string, params: string[] }
+		LeekWars.toast(t('error_' + e.error, e.params))
+	})
 }
 
 function matchColor(score: number) {

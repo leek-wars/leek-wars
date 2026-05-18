@@ -2377,7 +2377,7 @@ class Game {
 
 		const init_lines = (l: number) => {
 			for (let i = 0; i < l; ++i) {
-				lines.push(new Array(l).fill(0))
+				lines.push(Array.from({length: l}, () => 0))
 			}
 			c = Math.floor(l / 2)
 		}
@@ -2523,7 +2523,7 @@ class Game {
 
 		const init_lines = (l: number) => {
 			for (let i = 0; i < l; ++i) {
-				lines.push(new Array(l).fill(0))
+				lines.push(Array.from({length: l}, () => 0))
 			}
 			c = Math.floor(l / 2)
 		}

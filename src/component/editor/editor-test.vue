@@ -591,7 +591,7 @@
 	})
 
 	const allAis = computed(() => {
-		const result = {...(props.ais || {})} as {[key: string]: AI}
+		const result = {...props.ais} as {[key: string]: AI}
 		for (const ai in alliesAIs) {
 			result[ai] = alliesAIs[ai]
 		}

@@ -15,6 +15,26 @@ interface InventoryItem {
 	time?: number
 }
 
+interface FarmerTournament {
+	current?: number
+	registered?: boolean
+}
+
+interface FarmerGodson {
+	id: number
+	name: string
+}
+
+interface TeamInvitation {
+	id: number
+	team_id: number
+	team_name: string
+	emblem_changed?: number
+	sender_id?: number
+	sender_name?: string
+	farmer?: { id: number, name: string, [key: string]: unknown }
+}
+
 class Farmer {
 	public id!: number
 	public name!: string
@@ -31,13 +51,13 @@ class Farmer {
 	public weapons!: Weapon[]
 	public potions!: Potion[]
 	public avatar_changed!: number
-	public tournament!: unknown
+	public tournament!: FarmerTournament | null
 	public in_garden!: boolean
 	public talent_more!: number
 	public country!: string | null
 	public warnings!: unknown[]
 	public candidacy!: unknown
-	public team_invitations!: unknown[]
+	public team_invitations!: TeamInvitation[]
 	public website!: string
 	public github!: string
 	public hats!: Hat[]
@@ -103,8 +123,8 @@ class Farmer {
 	public won_battle_royale!: number
 	public fight_history!: unknown[]
 	public fight_pack!: unknown
-	public godfather!: unknown
-	public godsons!: unknown[]
+	public godfather!: FarmerGodson | null
+	public godsons!: FarmerGodson[]
 	public hat!: unknown
 	public item!: unknown
 	public login!: string
@@ -115,7 +135,7 @@ class Farmer {
 	public mail_error!: { error: string, params?: unknown } | null
 	public name_error!: { error: string, params?: unknown } | null
 	public password_error!: { error: string, params?: unknown } | null
-	public candidacies!: unknown[]
+	public candidacies!: TeamInvitation[]
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	[key: string]: any
 }
