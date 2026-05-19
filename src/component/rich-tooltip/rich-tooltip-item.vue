@@ -6,7 +6,7 @@
 			</span>
 		</template>
 		<div class="card" :style="{ maxHeight: maxHeight + 'px' }" @mouseenter="mouse = true" @mouseleave="mouse = false">
-			<item-preview :item="item" :quantity="quantity" :inventory="inventory" :leek="leek" :craft-cost="craftCost" @update:modelValue="(v: unknown) => setParent(v as boolean)" @retrieve="(v: unknown) => $emit('retrieve', v as ItemTemplate[])" />
+			<item-preview :item="item" :quantity="quantity" :inventory="inventory" :leek="leek" :craft-cost="craftCost" @update:modelValue="(v: unknown) => setParent(v as boolean)" @retrieve="(v: unknown) => $emit('retrieve', v as unknown[])" />
 		</div>
 	</v-menu>
 </template>
@@ -40,7 +40,7 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{
 	'update:modelValue': [value: boolean]
-	'retrieve': [event: Event]
+	'retrieve': [items: unknown[]]
 }>()
 
 const locked = ref(false)

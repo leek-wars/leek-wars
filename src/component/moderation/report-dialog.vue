@@ -98,7 +98,7 @@
 			LeekWars.toast(t('warning.thank_you_for_reporting') as string)
 			close()
 		}).error(error => {
-			LeekWars.toast(error)
+			LeekWars.toast(error.error as string)
 		})
 	}
 	function close() {

@@ -27,9 +27,9 @@ import { useI18n } from 'vue-i18n'
 import { mixins } from '@/model/i18n'
 
 interface ChangelogVersion {
-	version: string
-	forum_topic?: number
-	forum_category?: number
+	version: string | number
+	forum_topic?: number | null
+	forum_category?: number | null
 	[key: string]: unknown
 }
 

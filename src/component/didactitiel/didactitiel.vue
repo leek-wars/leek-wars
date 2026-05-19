@@ -153,7 +153,7 @@ function updateHeight() {
 }
 
 function input(event: Event) {
-	emit('update:modelValue', event)
+	emit('update:modelValue', (event.target as HTMLInputElement)?.checked ?? false)
 	updateHeight()
 }
 

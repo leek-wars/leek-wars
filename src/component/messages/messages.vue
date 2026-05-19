@@ -241,7 +241,7 @@
 		if (currentChat.value && currentChat.value.type === ChatType.PM) {
 			LeekWars.setActions(actions.value)
 		} else if (LeekWars.isPublicChat(theId)) {
-			LeekWars.setActions([{icon: 'mdi-translate', click: (e: Event) => showLanguageDialog(e)}])
+			LeekWars.setActions([{icon: 'mdi-translate', click: (e?: MouseEvent) => showLanguageDialog(e!)}])
 		}
 		if (theId === 0) {
 			LeekWars.setTitle(t('new_message') as string)

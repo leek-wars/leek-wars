@@ -86,13 +86,14 @@ function login() {
 		const token = LeekWars.DEV ? data.token : '$'
 		store.commit('connect', { ...data, token })
 		router.push(getRedirectAfterLogin())
-	}).catch((err) => {
+	}).catch((err: unknown) => {
 		loading.value = false
-		if (err && err.error === 'two_factor_required') {
+		const e = err as { error?: string }
+		if (e && e.error === 'two_factor_required') {
 			twoFactor.value = true // 2FA activée : on affiche le champ code et on re-soumet avec
 			error.value = null
 		} else {
-			error.value = err
+			error.value = e
 		}
 	})
 }

@@ -153,7 +153,7 @@
 
 	const timelineChart = computed<ChartData<'line'> | null>(() => {
 		if (!data.value) return null
-		const labels = data.value.timeline.map((p) => formatBucket(p.bucket, data.value!.bucket_ms))
+		const labels = data.value.timeline.map((p) => formatBucket(parseInt(p.bucket, 10), data.value!.bucket_ms))
 		return {
 			labels,
 			datasets: [

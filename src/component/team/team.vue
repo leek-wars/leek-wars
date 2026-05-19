@@ -994,16 +994,17 @@
 		}
 	}
 
-	const membersHeaders = computed(() => membersColumns.value
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const membersHeaders = computed<any[]>(() => membersColumns.value
 		.map(key => {
 			const col = ALL_MEMBER_COLUMNS_MAP[key]
 			if (!col) return null
-			return { title: t(col.titleKey), value: key, sortable: true, align: col.align as 'start' | 'end' | 'center' | undefined }
+			return { title: t(col.titleKey), key: key, sortable: true, align: col.align as 'start' | 'end' | 'center' | undefined }
 		})
 		.filter((h): h is NonNullable<typeof h> => h !== null))
 
 	const turret = computed<Record<string, number | string>>(() => {
-		if (!team.value) return {}
+		if (!team.value) return {} as Record<string, number | string>
 		const team_ratio = 1 + (team.value.level / 100)
 		const max_life = 1000 + Math.round((4000 - 500) * team_ratio)
 		const characteristics_base_1000 = 100 + Math.round(950 * team_ratio)

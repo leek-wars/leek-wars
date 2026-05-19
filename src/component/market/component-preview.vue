@@ -1,6 +1,6 @@
 <template lang="html">
-	<div class="stats">
-		<div v-for="(stat, s) in component.stats" :key="s" class="stat" :class="{[stat[0]]: true, negative: stat[1] < 0}">
+	<div v-if="component" class="stats">
+		<div v-for="(stat, s) in (component.stats as [string, number][])" :key="s" class="stat" :class="{[stat[0]]: true, negative: stat[1] < 0}">
 			<img class="icon" :src="'/image/charac/' + stat[0] + '.png'">
 			<b :class="'color-' + stat[0]">{{ stat[1] }}</b>&nbsp;
 			<span v-html="$t('characteristic.' + stat[0])"></span>

@@ -320,6 +320,7 @@
 	function showLevelDialog(level: number) {
 		LeekWars.get('leek/random-by-level/' + level).then(l => {
 			leek.value = l
+			if (!leek.value) return
 			LeekWars.get('leek/get-level-popup/' + leek.value.id).then(data => {
 				levelPopup.value = true
 				levelPopupData.value = data.popup

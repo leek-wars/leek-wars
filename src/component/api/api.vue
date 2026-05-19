@@ -34,7 +34,7 @@
 				<panel class="first">
 					<template #content>
 						<div class="items-list">
-							<div v-for="(category, c) of filteredCategories" :key="category.id">
+							<div v-for="(category, c) of filteredCategories" :key="c">
 								<h2 v-ripple @click="toggleCategory(c)">
 									<v-icon>mdi-{{ icons[c] }}</v-icon>
 									<!-- {{ $t('doc.function_category_' + c) }} -->

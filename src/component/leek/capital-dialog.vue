@@ -16,7 +16,7 @@
 				</characteristic-tooltip>
 				<div>
 					<span v-if="restat" :class="'stat color-' + c">{{ base[c] + bonuses[c] }}</span>
-					<span v-else :class="'stat color-' + c">{{ leek[c] + bonuses[c] }}</span>
+					<span v-else :class="'stat color-' + c">{{ (leek[c] as number) + bonuses[c] }}</span>
 					<span v-if="bonuses[c]" class="sup">&nbsp;(+{{ bonuses[c] }})</span>
 					<div class="add-wrapper">
 						<v-tooltip v-for="cost in [1, 10, 100]" :key="cost">

@@ -334,7 +334,7 @@
 	const searchFarmers = ref(true)
 	const searchTeams = ref(true)
 	const searchQuery = ref('')
-	const searchResults = ref<{ id: number, [key: string]: unknown }[] | null>(null)
+	const searchResults = ref<{ id: number, type: string, [key: string]: unknown }[] | null>(null)
 	const activeSwitch = ref(false)
 	const compositionMode = ref(localStorage.getItem('ranking/team-mode') === 'composition')
 	const countryList = ref(false)

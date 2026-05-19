@@ -54,7 +54,8 @@
 	])
 
 	LeekWars.get<ModerationRequest>('moderation/get-reportings').then(data => {
-		thugs.value = data.thugs
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		thugs.value = data.thugs as any
 		LeekWars.setTitle(t('title'))
 	})
 

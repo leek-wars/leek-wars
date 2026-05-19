@@ -101,8 +101,8 @@ function loadPayPal() {
 				return LeekWars.post('bank/execute-paypal-payment', { order_id: data.orderID }).then(d => {
 					store.commit('update-crystals', d.crystals)
 					router.replace('/bank/validate/success/' + d.crystals)
-				}).catch((err) => {
-					router.replace('/bank/validate/failed/' + err.error)
+				}).catch((err: unknown) => {
+					router.replace('/bank/validate/failed/' + (err as { error?: string }).error)
 				})
 			}
 		}).render('#paypal-button-container')

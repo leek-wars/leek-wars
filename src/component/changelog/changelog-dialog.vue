@@ -33,7 +33,7 @@ import ChangelogVersion from './changelog-version.vue'
 defineOptions({ name: 'ChangelogDialog', i18n: {}, mixins: [...mixins] })
 
 defineProps<{
-	changelog: Record<string, unknown> | null
+	changelog: { version: string | number, version_name: string, [key: string]: unknown } | null
 	modelValue?: boolean
 }>()
 

@@ -24,7 +24,8 @@
 					<span class="funnel-label">{{ funnelData.label }}</span>
 				</div>
 				<div class="flow-container" :style="{ height: flowHeight }">
-					<VueFlow ref="flow" :nodes="flowNodes" :edges="flowEdges" :default-viewport="flowViewport" :min-zoom="0.3" :max-zoom="2" :auto-pan-on-node-drag="false" :zoom-on-scroll="false" :nodes-draggable="!mobile" :pan-on-drag="!mobile" @nodes-initialized="applyViewport">
+					<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
+					<VueFlow ref="flow" :nodes="(flowNodes as any)" :edges="(flowEdges as any)" :default-viewport="flowViewport" :min-zoom="0.3" :max-zoom="2" :auto-pan-on-node-drag="false" :zoom-on-scroll="false" :nodes-draggable="!mobile" :pan-on-drag="!mobile" @nodes-initialized="applyViewport">
 						<template #node-funnel="{ data }">
 							<Handle v-if="!data.isRoot" type="target" :position="data.tgtPos" />
 							<div class="flow-node" :class="{ root: data.isRoot }" :style="{ borderColor: data.color }">
@@ -358,7 +359,7 @@
 		}
 
 		// Build Vue Flow edges
-		flowEdges.value = edges.map(([from, to]) => {
+		flowEdges.value = edges.map(([from, to]): FlowEdge => {
 			const fromSessions = dataMap[from]?.sessions || 0
 			const toSessions = dataMap[to]?.sessions || 0
 			const hasMultipleParents = (parentCountMap[to] || 0) > 1
@@ -373,7 +374,7 @@
 				animated: true,
 				style: { stroke: '#999' },
 				labelStyle: { fontSize: '11px', fontWeight: '600', fill: '#1976d2' },
-				labelBgStyle: { fill: 'white', fillOpacity: 0.85 },
+				labelBgStyle: { fill: 'white', fillOpacity: '0.85' },
 				labelBgPadding: [4, 2] as [number, number],
 			}
 		})

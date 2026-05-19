@@ -93,7 +93,7 @@
 	const templates = ref<EmailTemplate[]>([])
 	const email = ref('')
 	const deleteEmail = ref('')
-	const deleteTarget = ref<Record<string, unknown> | null>(null)
+	const deleteTarget = ref<{ id: number, name: string, [key: string]: unknown } | null>(null)
 	const deleteConfirm = ref('')
 	const deleteError = ref('')
 	const deleteSuccess = ref('')

@@ -40,7 +40,8 @@
 			</i18n-t>
 			<effect-view v-for="(effect, e) in chip.effects" :key="chip.id + '_' + e" :effect="effect" :leek="leek" />
 		</div>
-		<summon-view v-if="summon" :summon="summon" @update:model-value="$emit('update:modelValue', $event)" />
+		<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
+		<summon-view v-if="summon" :summon="(summon as any)" @update:model-value="$emit('update:modelValue', $event)" />
 	</div>
 </template>
 

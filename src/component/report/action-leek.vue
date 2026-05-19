@@ -3,7 +3,8 @@
 </template>
 
 <script setup lang="ts">
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 defineProps<{
-	leek: { team?: number, translatedName?: string, [key: string]: unknown }
+	leek: any
 }>()
 </script>
