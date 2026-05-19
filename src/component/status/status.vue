@@ -69,7 +69,7 @@ async function refresh() {
 		applyResponse(data)
 	} catch (e: unknown) {
 		if (e && typeof e === 'object' && 'services' in e) {
-			applyResponse(e)
+			applyResponse(e as { services?: { [k: string]: string }, healthy?: boolean })
 		} else {
 			services.value = { api: 'error' }
 			healthy.value = false

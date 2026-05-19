@@ -518,7 +518,7 @@
 				router.push('/signup/success/' + login.value)
 			}
 		}).error(errs => {
-			for (const error of errs) {
+			for (const error of (errs as unknown as [number, string, (string | number)[]][])) {
 				const form = ['login', 'leek', 'email', 'password1', 'password2', 'godfather'][error[0]]
 				addError(form, t('error_' + error[1], error[2]) as string)
 			}

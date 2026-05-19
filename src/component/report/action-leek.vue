@@ -3,9 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import type { FightLeek } from '@/model/fight'
-
 defineProps<{
-	leek: FightLeek
+	leek: { team?: number, translatedName?: string, [key: string]: unknown }
 }>()
 </script>

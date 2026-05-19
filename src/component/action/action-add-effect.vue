@@ -1,6 +1,7 @@
 
 <template>
-	<component :is="EffectComponents[action.params[5]]" :leek="leeks[action.params[4]]" :value="action.params[6]" :turns="action.params[7]" :a="a" />
+	<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
+	<component :is="(EffectComponents as Record<number, unknown>)[action.params[5] as number]" :leek="leeks[action.params[4] as number]" :value="action.params[6]" :turns="action.params[7]" :a="a" />
 </template>
 
 <script setup lang="ts">

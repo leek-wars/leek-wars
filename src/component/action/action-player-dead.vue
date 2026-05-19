@@ -1,6 +1,6 @@
 
 <template>
-	<i18n-t tag="div" keypath="fight.leek_is_dead" class="kill" :style="{borderColor: action.params.length > 2 && leeks[action.params[2]] ? TEAM_COLORS[leeks[action.params[2]].team - 1] : ''}" :a="a">
+	<i18n-t tag="div" keypath="fight.leek_is_dead" class="kill" :style="{borderColor: action.params.length > 2 && leeks[action.params[2] as number] ? TEAM_COLORS[(leeks[action.params[2] as number].team as number) - 1] : ''}" :a="a">
 		<template #leek>
 			<leek :leek="leeks[action.params[1]]" />
 		</template>

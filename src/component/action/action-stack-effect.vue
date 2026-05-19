@@ -1,6 +1,6 @@
 
 <template>
-	<component :is="EffectComponents[action.item.type]" :leek="leeks[action.item.target]" :value="action.params[2]" :turns="action.item.turns" :a="a" />
+	<component :is="(EffectComponents as Record<number, unknown>)[(action.item as { type: number }).type]" :leek="leeks[(action.item as { target: number }).target]" :value="action.params[2]" :turns="(action.item as { turns: number }).turns" :a="a" />
 	<!-- <div>stack {{ props.action }} {{ props.action.item }}</div> -->
 </template>
 

@@ -116,7 +116,7 @@
 			</template>
 
 			<template #item.duration="{ item }">
-				<i18n-t v-if="item.duration" keypath="effect.n_turns" :plural="item.duration">
+				<i18n-t v-if="item.duration" keypath="effect.n_turns" :plural="(item.duration as number)">
 					<template #n><b>{{ item.duration }}</b></template>
 				</i18n-t>
 			</template>
@@ -163,7 +163,8 @@ const router = useRouter()
 
 const RESULT_ORDER: Record<string, number> = { win: 3, draw: 2, defeat: 1, '?': 0 }
 
-const headers = computed<{ title: string, value: string, sortable?: boolean }[]>(() => [
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const headers = computed<any[]>(() => [
 	{ title: t('type'), key: 'type', align: 'center', sortable: true, width: '60px' },
 	{ title: t('result'), key: 'result', align: 'center', sortable: true, width: '60px', sortRaw: (a: Fight, b: Fight) => (RESULT_ORDER[a.result] ?? 0) - (RESULT_ORDER[b.result] ?? 0) },
 	{ title: t('match'), key: 'match', align: 'center', sortable: false },

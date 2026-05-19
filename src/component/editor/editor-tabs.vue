@@ -128,9 +128,9 @@
 	}
 
 	function tabClass(tab: EditorTab, _i: number): Record<string, boolean> {
-		const selected = props.current && tabsMatch(tab, props.current)
+		const selected = !!(props.current && tabsMatch(tab, props.current))
 		if (tab.type === 'file') {
-			return { selected, modified: fileSystem.ais[tab.id]?.modified, conflict: fileSystem.ais[tab.id]?.hasConflict }
+			return { selected, modified: !!fileSystem.ais[tab.id]?.modified, conflict: !!fileSystem.ais[tab.id]?.hasConflict }
 		}
 		return { selected, 'diff-tab': true, 'commit-tab': tab.type === 'commit', 'merge-tab': tab.type === 'merge' }
 	}

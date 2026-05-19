@@ -19,7 +19,7 @@
 					<span v-for="(items, l) in levels" :key="l" class="level">
 						<span class="title" :class="{bold: (l + 1) % 10 === 0}">{{ l + 1 }}</span>
 						<template v-for="item in items">
-							<div v-if="item.trophy && (!(item.trophy in trophies) || !trophies[item.trophy].unlocked)" :key="item.id" class="locked">?</div>
+							<div v-if="item.trophy && (!(item.trophy.id in trophies) || !trophies[item.trophy.id].unlocked)" :key="item.id" class="locked">?</div>
 							<item v-else :key="item.id" :item="item" />
 						</template>
 					</span>
@@ -44,7 +44,7 @@ defineOptions({ name: 'Items', i18n: {}, mixins: [...mixins] })
 const { locale } = useI18n()
 	const t = useNamespacedT('items')
 
-const trophies = ref<Record<string, unknown>>({})
+const trophies = ref<Record<string, { unlocked: boolean, [key: string]: unknown }>>({})
 const ignoredItems = new Set([406, 407, 408, 409, 410, 425, 419, 418, 417, 416, 415, 414, 413, 412, 411])
 
 LeekWars.setTitle('Items')

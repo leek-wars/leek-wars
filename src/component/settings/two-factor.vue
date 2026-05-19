@@ -117,7 +117,8 @@ function validateCode() {
 		code.value = ''
 		nextStep()
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	}) as any).error((_error) => {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	}) as any).error((_error: any) => {
 		validating.value = false
 		LeekWars.toast('Wrong code!')
 	})

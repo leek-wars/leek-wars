@@ -5,7 +5,7 @@
 			<leek :leek="leeks[action.params[1]]" />
 		</template>
 		<template #text>
-			<i>{{ (leeks[action.params[1]].farmer && leeks[action.params[1]].farmer.muted) ? "@*%#$€" : action.params[2] }}</i>
+			<i>{{ (leeks[action.params[1] as number] && (leeks[action.params[1] as number].farmer as { muted?: boolean })?.muted) ? "@*%#$€" : action.params[2] }}</i>
 		</template>
 		<template #cost>
 			<b class="color-tp">{{ $t('fight.n_tp', [1]) }}</b>

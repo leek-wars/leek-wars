@@ -101,7 +101,7 @@ function submit() {
 		LeekWars.toast(t('mail_sent'))
 		close()
 	}).error(errs => {
-		for (const err of errs) {
+		for (const err of (errs as unknown as [number, string][])) {
 			const field = ['login', 'leek', 'email', 'password1', 'password2', 'godfather'][err[0]] ?? 'login'
 			if (!errors.value[field]) errors.value[field] = []
 			errors.value[field].push(t('error_' + err[1]) as string || (err[1] as string))
