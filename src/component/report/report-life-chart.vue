@@ -33,7 +33,7 @@
 				<div class="spacer"></div>
 				<v-switch v-model="chartDisplaySummons" :label="$t('display_summons')" :hide-details="true" :ripple="false" />
 			</div>
-			<Line ref="lifeChart" :data="chartData" :options="chartOptions ?? undefined" class="chart" :class="{long: statistics && statistics.lives.length >= 30}" />
+			<Line v-if="chartData" ref="lifeChart" :data="chartData" :options="chartOptions ?? undefined" class="chart" :class="{long: statistics && statistics.lives.length >= 30}" />
 		</div>
 	</panel>
 </template>
@@ -78,7 +78,7 @@
 	}
 
 	// Custom interaction mode: when focused, only return items from the focused dataset
-	;(Interaction.modes as Record<string, unknown>).focusedNearest = function(chart: ChartJS, e: { x: number; y: number }, options: Parameters<typeof Interaction.modes.index>[2], useFinalPosition: boolean): InteractionItem[] {
+	;(Interaction.modes as unknown as Record<string, unknown>).focusedNearest = function(chart: ChartJS, e: { x: number; y: number }, options: Parameters<typeof Interaction.modes.index>[2], useFinalPosition: boolean): InteractionItem[] {
 		const items = Interaction.modes.index(chart, e as Parameters<typeof Interaction.modes.index>[1], options, useFinalPosition)
 		if (!items.length) return items
 		const target = chartFocusedIndex ?? nearestDatasetBySegment(chart, e.x, e.y).index
@@ -168,17 +168,17 @@
 					boxPadding: 4,
 					callbacks: {
 						title: () => '',
-						label: (context: TooltipItem<'line'>) => context.dataset.label + ' : ' + context.parsed.y.toLocaleString() + (log.value ? '%' : '') + ' PV',
+						label: (context: TooltipItem<'line'>) => context.dataset.label + ' : ' + (context.parsed.y ?? 0).toLocaleString() + (log.value ? '%' : '') + ' PV',
 						labelColor: (context: TooltipItem<'line'>) => ({ backgroundColor: context.dataset.borderColor as string, borderColor: context.dataset.borderColor as string })
 					}
 				}
 			},
-			onClick: (event: { native: MouseEvent | null }) => {
+			onClick: (event: unknown) => {
 				if (chartFocusedIndex !== null) {
 					chartUnfocus()
 					return
 				}
-				const nearest = findNearestDataset(event)
+				const nearest = findNearestDataset(event as { native: MouseEvent | null })
 				if (nearest !== -1) {
 					chartFocus(nearest)
 				}

@@ -237,12 +237,13 @@
 	const windowsForbiddenChars = ['\\', ':', '*', '?', '"', '<', '>', '|']
 	const windowsReservedNames = ['CON', 'PRN', 'AUX', 'NUL', 'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9', 'LPT1', 'LPT2', 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9']
 
+	const onEditorMenu = (e: unknown) => openMenu(e as { item: AI | Folder, ai: boolean, e: MouseEvent })
 	onMounted(() => {
-		emitter.on('editor-menu', openMenu)
+		emitter.on('editor-menu', onEditorMenu)
 		emitter.on('keyup', keyup)
 	})
 	onUnmounted(() => {
-		emitter.off('editor-menu', openMenu)
+		emitter.off('editor-menu', onEditorMenu)
 		emitter.off('keyup', keyup)
 	})
 

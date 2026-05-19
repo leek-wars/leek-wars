@@ -418,7 +418,7 @@
 	const problemsCount = computed(() => analyzer.error_count + analyzer.warning_count + analyzer.todo_count)
 
 	const actions_list = computed(() => [
-		{icon: 'mdi-plus', click: (e: MouseEvent) => add(e)},
+		{icon: 'mdi-plus', click: (e?: MouseEvent) => add(e!)},
 		{icon: 'mdi-cogs', click: () => settings() }
 	])
 	const actions_content = computed(() => [

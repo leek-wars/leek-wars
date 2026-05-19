@@ -3,7 +3,8 @@
 		<template v-for="(action, a) in actions" :key="a">
 			<component :is="(ActionComponents as Record<number, unknown>)[action.type]" :action="action" :a="a" :leeks="leeks" :report="report" :has-err-warn="hasErrWarn" @goToTurn="goToTurn" />
 			<template v-if="displayLogs && (displayAlliesLogs || action.me) && action.logs.length">
-				<action-log v-for="(log, l) in action.logs" :key="a + 'l' + l" :log="log" :leeks="leeks" :action="(a as number)" :index="(l as number)" :lines="true" @goToAI="goToAI" />
+				<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
+				<action-log v-for="(log, l) in (action.logs as any[])" :key="a + 'l' + l" :log="(log as any)" :leeks="(leeks as any)" :action="(a as number)" :index="(l as number)" :lines="true" @goToAI="(...args: any[]) => goToAI(...(args as Parameters<typeof goToAI>))" />
 			</template>
 		</template>
 		<action-end-fight />

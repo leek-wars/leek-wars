@@ -55,7 +55,7 @@ LeekWars.get<{[key: number]: ComponentTemplate}>("component/get-all/dfgdfgzegkty
 		.sort((a, b) => LeekWars.items[a.template].level - LeekWars.items[b.template].level)
 	components.value.forEach(component => component.stats = component.stats.map(stat => {
 		return stat instanceof Object ? Object.values(stat) : stat
-	}) as ComponentTemplate[])
+	}) as unknown as [string, number][])
 })
 
 onMounted(() => {
