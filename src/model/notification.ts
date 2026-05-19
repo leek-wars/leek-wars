@@ -65,9 +65,9 @@ class Notification {
 	public icon!: boolean
 	public clazz!: string
 
-	constructor(data: any, link: string | null, image: string | null, title: string[] = [], message: string[] = [], result: number | null = null) {
-		this.id = data.id
-		this.date = data.date
+	constructor(data: Record<string, unknown>, link: string | null, image: string | null, title: string[] = [], message: string[] = [], result: number | null = null) {
+		this.id = data.id as number
+		this.date = data.date as number
 		this.type = data.type as NotificationType
 		this.link = link
 		this.image = image
@@ -83,7 +83,7 @@ class Notification {
 		this.title = title.map(t => '<b>' + LeekWars.protect(t) + '</b>')
 		this.message = message.map(LeekWars.protect)
 		this.result = result
-		this.read = data.read
+		this.read = data.read as boolean
 
 		this.clazz = ''
 		if (this.type === NotificationType.TROPHY_UNLOCKED) {

@@ -1,6 +1,6 @@
 <template>
 	<div class="search-bar">
-		<input class="card" v-model="query" type="text" :placeholder="$t('main.search_bar')">
+		<input v-model="query" class="card" type="text" :placeholder="$t('main.search_bar')">
 
 		<loader v-if="loading" />
 		<div v-else-if="results && results.length" class="results">
@@ -20,15 +20,15 @@ import { useRoute, useRouter } from 'vue-router'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 
-defineOptions({ name: 'search-bar' })
+defineOptions({ name: 'SearchBar' })
 
 const route = useRoute()
 const router = useRouter()
 
 const query = ref('')
 const loading = ref(false)
-const results = ref<any[] | null>(null)
-let timer: any
+const results = ref<unknown[] | null>(null)
+let timer: ReturnType<typeof setTimeout> | null = null
 
 const urlQuery = route.query.query as string
 if (urlQuery) {
@@ -54,7 +54,7 @@ watch(query, () => {
 		LeekWars.get('encyclopedia/search/' + i18n.locale + '/' + query.value.replace(/ /g, '+') + '/1').then(data => {
 			results.value = data.results
 			loading.value = false
-		}).catch((err: any) => {
+		}).catch((err) => {
 			results.value = []
 			LeekWars.toast(err.error)
 		})

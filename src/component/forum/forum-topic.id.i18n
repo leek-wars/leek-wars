@@ -44,5 +44,6 @@
 	"old_topic_confirm": "Pesan terakhir di topik ini sudah lebih dari satu tahun yang lalu. Anda yakin ingin membalas?",
 	"old_topic_title": "Topik lama",
 	"old_topic_warning": "Pesan terakhir di topik ini sudah lebih dari satu tahun yang lalu.",
-	"see_changelog": "Lihat changelog {0}"
+	"see_changelog": "Lihat changelog {0}",
+	"topic_not_found": "Subjek dengan id {topic} tidak ditemukan :("
 }

@@ -9,7 +9,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { locale } from '@/locale'
 
-defineOptions({ name: 'tutorial' })
+defineOptions({ name: 'Tutorial' })
 
 const { t } = useI18n()
 const router = useRouter()

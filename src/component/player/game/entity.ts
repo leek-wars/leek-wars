@@ -4,7 +4,7 @@ import { Colors, Game } from '@/component/player/game/game'
 import { InfoText } from '@/component/player/game/infotext'
 import { SHADOW_QUALITY, T, Texture } from '@/component/player/game/texture'
 import { Cell } from '@/model/cell'
-import { Effect, EffectModifier, EffectType, EntityEffect } from '@/model/effect'
+import { EffectModifier, EffectType, EntityEffect } from '@/model/effect'
 import { Entity } from '@/model/entity'
 import { Farmer } from '@/model/farmer'
 import { i18n } from '@/model/i18n'
@@ -152,7 +152,7 @@ abstract class FightEntity extends Entity {
 	public states: Set<number> = new Set()
 	// Reachable cells
 	public reachableCells: Set<Cell> = new Set<Cell>()
-	public reachableCellsArea: any
+	public reachableCellsArea!: number[][]
 	// Animations
 	public handPos = 0
 	// Weapon

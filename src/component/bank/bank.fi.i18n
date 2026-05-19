@@ -1,5 +1,5 @@
 {
-	"description": "Pankki tarjoaa sinulle mahdollisuuden hankkia <b>kiteitä</b> <span class='crystal'></span>, Leek Warsin toinen valuutta, jonka avulla voit ostaa juomia ja muita puhtaasti koristeellisia ja <b>ei vaikuttavia </b> voimasi taistelussa. <br>\nHemmottele itseäsi värijuoksulla purjollesi ja tue Leek Warsia!",
+	"description": "Tervetuloa pankkiin! <b>Kristallit</b> <span class='crystal'></span> antavat sinulle juomia, lisätaisteluita, värejä ja asusteita purjoillesi. <b>Ei taisteluetua</b>: kaikki ostokset ovat kosmeettisia tai käytännöllisiä.<br>\nJokainen osto tukee suoraan Leek Warsin kehitystä. Kiitos!",
 	"pack_of_n_crystals": "<b>{0}</b> kristallin pakkaus",
 	"paypal_description": "Osta {0} kristallia hintaan {1} €",
 	"title": "Kristallipankki",
@@ -24,6 +24,10 @@
 	"payment_no_code": "Ei koodeja",
 	"payment_wrong_code": "Virheellinen koodi",
 	"first_purchase_banner": "Ensimmäinen ostos? Kaikki kristallisi tuplataan!",
+	"suggestion_target_fights": "100 taistelun paketti",
+	"suggestion_with_remainder": "→ {pack} paketti hintaan {price} kattaa oston, jäljelle jää {remainder}.",
+	"suggestion_exact": "→ {pack} paketti hintaan {price} kattaa oston.",
+	"suggestion_cta": "Katso paketti",
 	"items_title": "Ne odottavat vain sinua",
 	"back": "Takaisin pankkiin",
 	"best_value": "Paras tarjous",

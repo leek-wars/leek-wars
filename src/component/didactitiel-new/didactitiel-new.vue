@@ -2,7 +2,7 @@
 	<div class="wrapper">
 		<div class="didactitial">
 
-			<div class="bubble card" :class="{visible: LeekWars.didactitial_visible}" :key="LeekWars.didactitial_step">
+			<div :key="LeekWars.didactitial_step" class="bubble card" :class="{visible: LeekWars.didactitial_visible}">
 
 				<div v-if="LeekWars.didactitial_step === 1" class="content">
 					<div v-if="farmerName.includes('@')" class="text" v-html="$t('main.dida_1_leek', [farmerFirstLeek])"></div>
@@ -22,7 +22,7 @@
 				</div>
 				<div v-else-if="LeekWars.didactitial_step === 4" class="content">
 					<div class="text" v-html="$t('main.dida_7')"></div>
-					<div class="text" v-html="$t('main.dida_8')" v-chat-code-latex></div>
+					<div v-chat-code-latex class="text" v-html="$t('main.dida_8')"></div>
 					<div class="text" v-html="$t('main.dida_9')"></div>
 				</div>
 				<div v-else-if="LeekWars.didactitial_step === 5" class="content">
@@ -40,8 +40,7 @@
 				<div class="bottom">
 					<v-btn v-if="LeekWars.didactitial_step > 1" @click="back"><v-icon>mdi-arrow-left</v-icon></v-btn>
 					<div class="progress">{{ LeekWars.didactitial_step }} / 5</div>
-					<v-btn v-if="LeekWars.didactitial_step < 5" @click="LeekWars.didactitial_next">{{ $t('main.pass') }}&nbsp;<v-icon>mdi-arrow-right</v-icon></v-btn>
-					<v-btn v-else color="primary" @click="complete">{{ $t('main.play') }}&nbsp;<v-icon>mdi-sword-cross</v-icon></v-btn>
+					<v-btn v-if="LeekWars.didactitial_step === 5" color="primary" @click="complete">{{ $t('main.play') }}&nbsp;<v-icon>mdi-sword-cross</v-icon></v-btn>
 				</div>
 
 				<v-icon class="close" @click="closed">mdi-close</v-icon>
@@ -61,7 +60,7 @@ import { mixins } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 
-defineOptions({ name: 'didactitiel', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'Didactitiel', i18n: {}, mixins: [...mixins] })
 
 const farmerName = computed(() => store.state.farmer ? store.state.farmer.name : '')
 const farmerFirstLeek = computed(() => store.state.farmer ? LeekWars.first(store.state.farmer.leeks)?.name ?? '' : '')
@@ -72,14 +71,18 @@ function back() {
 
 function complete() {
 	LeekWars.post('farmer/didactitiel-complete', {})
+	if (store.state.farmer) {
+		store.state.farmer.didactitiel_seen = true
+		store.state.farmer.didactitiel_step = 6
+		store.state.farmer.didactitiel_completed_at = LeekWars.time
+	}
 	LeekWars.didactitial = false
 	LeekWars.didactitial_step = 0
 }
 
-function closed() {
-	LeekWars.didactitial = false
-	LeekWars.didactitial_step = 0
-}
+// La croix vaut « didacticiel terminé » : sans bouton Passer, fermer doit
+// faire avancer l'état sinon le didacticiel revient à la prochaine connexion.
+const closed = complete
 </script>
 
 <style lang="scss" scoped>

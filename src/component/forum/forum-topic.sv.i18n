@@ -44,5 +44,6 @@
 	"old_topic_warning": "Det senaste inlägget i detta ämne är mer än ett år gammalt.",
 	"old_topic_title": "Gammalt ämne",
 	"old_topic_confirm": "Det senaste inlägget i detta ämne är mer än ett år gammalt. Är du säker på att du vill svara?",
-	"see_changelog": "Se changelog för {0}"
+	"see_changelog": "Se changelog för {0}",
+	"topic_not_found": "Ämnet med id {topic} hittades inte :("
 }

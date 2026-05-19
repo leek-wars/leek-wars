@@ -1,0 +1,22 @@
+{
+	"title": "Amankan akunmu dan dapatkan hadiahmu",
+	"intro": "Kamu akan kehilangan progres jika berganti browser atau menghapus cookie. Verifikasi akunmu untuk mengamankannya dan membuka hadiah.",
+	"login": "Pilih nama peternakmu",
+	"email": "Alamat emailmu",
+	"password": "Kata sandi",
+	"validate": "Verifikasi akunku",
+	"later": "Nanti",
+	"mail_sent": "Email verifikasi terkirim!",
+	"error_login_length": "Nama peternak terlalu pendek atau terlalu panjang",
+	"error_login_format": "Format nama tidak valid (hanya huruf, angka, dan tanda hubung)",
+	"error_login_already_used": "Nama peternak ini sudah digunakan",
+	"error_forbidden_name": "Nama ini tidak diizinkan",
+	"error_invalid_mail": "Alamat email tidak valid",
+	"error_mail_already_used": "Email ini sudah digunakan",
+	"error_password_length": "Kata sandi terlalu pendek atau terlalu panjang",
+	"error_invalid_godfather": "Pengundang tidak ditemukan",
+	"or": "atau lanjutkan dengan",
+	"use_github": "Lanjutkan dengan GitHub",
+	"use_google": "Lanjutkan dengan Google",
+	"error_no_login": "Pilih dulu nama peternakmu"
+}

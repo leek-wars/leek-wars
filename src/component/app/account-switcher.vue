@@ -21,7 +21,7 @@
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
 			</template>
-			<v-menu v-if="!account.connected && !isActive(account)" :model-value="loginMenuId === account.id" @update:model-value="loginMenuId = $event ? account.id : null" activator="parent" location="end" :close-on-content-click="false" :open-on-click="true">
+			<v-menu v-if="!account.connected && !isActive(account)" :model-value="loginMenuId === account.id" activator="parent" location="end" :close-on-content-click="false" :open-on-click="true" @update:model-value="loginMenuId = $event ? account.id : null">
 				<v-card class="login-submenu">
 					<form @submit.prevent="loginNewAccount">
 						<input v-model="loginForm.password" type="password" :placeholder="$t('main.account_password')" class="login-input" @click.stop>
@@ -58,7 +58,9 @@ import router from '@/router'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-defineOptions({ name: 'account-switcher' })
+defineOptions({ name: 'AccountSwitcher' })
+
+interface AuthData { token?: string; switched?: boolean; accounts?: unknown[] }
 
 const emit = defineEmits<{
 	'close': []
@@ -99,13 +101,13 @@ function switchAccount(account: AccountInfo) {
 	}
 
 	switchingId.value = account.id
-	;(LeekWars.post('farmer/switch', { farmer_id: account.id }).then((data: any) => {
+	LeekWars.post<AuthData>('farmer/switch', { farmer_id: account.id }).then((data) => {
 		const token = LeekWars.DEV ? data.token : '$'
 		store.commit('connect', { ...data, token })
 		switchingId.value = null
 		emit('close')
 		router.push('/')
-	}) as any).error(() => {
+	}).error(() => {
 		switchingId.value = null
 		loginForm.value.login = account.name
 	})
@@ -115,14 +117,15 @@ function loginNewAccount() {
 	loginLoading.value = true
 	loginError.value = ''
 	const url = LeekWars.DEV ? 'farmer/login-token' : 'farmer/login'
-	;(LeekWars.post(url, { ...loginForm.value, keep_connected: true }).then((data: any) => {
+	interface AuthError { error?: string }
+	LeekWars.post<AuthData>(url, { ...loginForm.value, keep_connected: true }).then((data) => {
 		const token = LeekWars.DEV ? data.token : '$'
 		store.commit('connect', { ...data, token })
 		loginForm.value = { login: '', password: '' }
 		loginLoading.value = false
 		loginMenuId.value = null
 		addMenuOpen.value = false
-	}) as any).error((error: any) => {
+	}).error((error: AuthError) => {
 		const code = error?.error || 'server'
 		loginError.value = t('main.account_error_' + code) as string
 		loginLoading.value = false
@@ -138,9 +141,10 @@ function removeAccount(account: AccountInfo) {
 }
 
 function accountAction(account: AccountInfo, action: string, endpoint: string) {
+	interface ActionData { switched?: boolean; token?: string; accounts?: unknown[] }
 	loadingId.value = account.id
 	loadingAction.value = action
-	LeekWars.post(endpoint, { farmer_id: account.id }).then((data: any) => {
+	LeekWars.post<ActionData>(endpoint, { farmer_id: account.id }).then((data) => {
 		loadingId.value = null
 		loadingAction.value = null
 		if (data.switched) {

@@ -85,7 +85,7 @@ class WhiteWeaponAnimation extends WeaponAnimation {
 		super(game, texture, id, DamageType.SLICE)
 	}
 
-	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, pos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number): number {
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, _pos: Position, _targets: FightEntity[], _caster: FightEntity, _cell: Cell, _scale: number): number {
 		this.step = 1
 		this.inte = 0.001
 		this.leekX = leekX
@@ -222,7 +222,7 @@ class Firegun extends RangeWeapon {
 	constructor(game: Game, texture: Texture, cartTexture: Texture | null, sound: Sound, id: number, damageType: DamageType) {
 		super(game, texture, cartTexture, sound, id, damageType)
 	}
-	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
+	public throwBullet(x: number, y: number, z: number, angle: number, _position: Position, targets: FightEntity[], _caster: FightEntity, _cell: Cell) {
 		this.game.particles.addShot(x, y, z, angle)
 		this.game.particles.addBullet(x, y, z, angle, targets)
 		return Firegun.FIREGUN_DURATION
@@ -716,7 +716,7 @@ class MachineGun extends Firegun {
 		super(game, T.machine_gun, T.cart_machine_gun, S.machine_gun, 2, DamageType.DEFAULT)
 	}
 
-	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell): number {
+	public throwBullet(x: number, y: number, z: number, angle: number, _position: Position, targets: FightEntity[], _caster: FightEntity, _cell: Cell): number {
 		this.game.particles.addShot(x, y, z, angle)
 		this.game.particles.addBullet(x, y, z, angle, targets)
 		this.game.particles.addBullet(x, y, z, angle + Math.PI / 50, [])
@@ -754,7 +754,7 @@ class Shotgun extends Firegun {
 	constructor(game: Game) {
 		super(game, T.shotgun, T.cart_shotgun, S.shotgun, 4, DamageType.EXPLOSION)
 	}
-	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
+	public throwBullet(x: number, y: number, z: number, angle: number, _position: Position, targets: FightEntity[], _caster: FightEntity, _cell: Cell) {
 		this.game.particles.addShot(x, y, z, angle)
 		for (let i = 0; i < 5; i++) {
 			this.game.particles.addBullet(x, y, z, angle + Math.random() * Math.PI / 4 - Math.PI / 8, targets)
@@ -780,7 +780,7 @@ class Fish extends Firegun {
 		super(game, T.fish, T.fish_cartridge, S.bubble, 0, DamageType.DEFAULT)
 	}
 
-	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
+	public throwBullet(x: number, y: number, z: number, angle: number, _position: Position, _targets: FightEntity[], _caster: FightEntity, _cell: Cell) {
 		this.bubbleX = x
 		this.bubbleY = y
 		this.bubbleZ = z

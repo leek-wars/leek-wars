@@ -1,4 +1,11 @@
 import { isLeekScript } from '@/component/editor/file-types'
+
+interface JavadocItem {
+	type: string
+	name: string
+	text: string | null
+	lstype?: { name: string }
+}
 import { Problem } from '@/component/editor/problem'
 import { fileSystem } from './filesystem'
 import { i18n } from './i18n'
@@ -43,7 +50,7 @@ class AI {
 	public problems: { [key: string]: Problem[] } = {}
 	public model!: monaco.editor.ITextModel
 
-	constructor(data: any) {
+	constructor(data: Record<string, unknown>) {
 		Object.assign(this, data)
 	}
 
@@ -146,7 +153,7 @@ class AI {
 			const javadoc = {
 				name: match[1],
 				description: "",
-				items: [] as any[],
+				items: [] as JavadocItem[],
 			}
 			// console.log(javadoc)
 			// Add arguments from signature
@@ -184,7 +191,7 @@ class AI {
 								const existing = javadoc.items.find(i => i.type === 'param' && ((name.length && i.name === name) || (text.length && i.name === text)))
 								// console.log('existing', existing)
 								// existing.name = existing.text
-								existing.text = text
+								if (existing) existing.text = text
 								continue
 							}
 						}
@@ -296,7 +303,7 @@ class AI {
 			const javadoc = {
 				name: fullName,
 				description: "",
-				items: [] as any[],
+				items: [] as JavadocItem[],
 				lstype: { name: type }
 			}
 			// console.log(javadoc.items)
@@ -387,7 +394,7 @@ class AI {
 				name,
 				args,
 				description: "",
-				items: [] as any[],
+				items: [] as JavadocItem[],
 			}
 			// Add arguments from signature
 			let a = 0
@@ -404,7 +411,7 @@ class AI {
 					if ((match_javadoc = javadoc_regex.exec(jline))) {
 						// console.log(match_javadoc)
 						const type = match_javadoc[1]
-						let lstype = null
+						let lstype: { name: string } | undefined = undefined
 						let name = match_javadoc[2]
 						let text = match_javadoc[3]
 						if (type === 'return') {
@@ -426,7 +433,7 @@ class AI {
 								const existing = javadoc.items.find(i => i.type === 'param' && ((name.length && i.name === name) || (text.length && i.name === text)))
 								// console.log('existing', existing)
 								// existing.name = existing.text
-								existing.text = text
+								if (existing) existing.text = text
 								continue
 							}
 						}

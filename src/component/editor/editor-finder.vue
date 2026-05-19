@@ -27,7 +27,7 @@
 	import { computed, nextTick, ref } from 'vue'
 	import { useRoute, useRouter } from 'vue-router'
 
-	defineOptions({ name: 'editor-finder' })
+	defineOptions({ name: 'EditorFinder' })
 
 	const props = defineProps<{
 		active: {[key: number]: AI}

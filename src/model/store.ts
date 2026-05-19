@@ -6,7 +6,6 @@ import { Notification, NotificationType } from '@/model/notification'
 import { Team } from '@/model/team'
 
 import Vuex, { Store } from 'vuex'
-import { AI } from './ai'
 import { fileSystem } from './filesystem'
 import { Hat } from './hat'
 import { Leek } from './leek'
@@ -41,8 +40,8 @@ class LeekWarsState {
 	public last_ping: number = 0
 	public connected_farmers: number = 0
 	public loadingConversations: boolean = false
-	public habs_timer: any = null
-	public crystals_timer: any = null
+	public habs_timer: ReturnType<typeof setTimeout> | undefined = undefined
+	public crystals_timer: ReturnType<typeof setTimeout> | undefined = undefined
 	public farmer_by_name: {[key: string]: Farmer} = {}
 	public arenaCount: number = 0
 	public arenaCountdown: number = -1
@@ -110,7 +109,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				message: string | null,
 				unread: number,
 				notifications: Notification[],
-				conversations: any[],
+				conversations: { id: number, type?: number, farmers: Farmer[], last_farmer_id: number, last_date: number | null, last_message: string | null, read: boolean }[],
 				chats: {id: number, read: boolean, notifications: boolean}[],
 				token: string,
 				accounts?: AccountInfo[]
@@ -156,6 +155,14 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			for (const chat of data.chats) {
 				store.commit('register-chat', chat)
 			}
+			// Pré-enregistrer les chats publics non participés pour que la cloche reste toggleable
+			// (sans activer le canal WS — ils restent lazy-loadés à l'ouverture)
+			for (const [idStr, info] of Object.entries(LeekWars.publicChats)) {
+				const chatId = +idStr
+				if (!state.chat[chatId]) {
+					state.chat[chatId] = new Chat(chatId, ChatType.GLOBAL, info.name, true)
+				}
+			}
 			if (data.farmer.ai_tree) {
 				fileSystem.init(data.farmer.ai_tree)
 			}
@@ -164,15 +171,15 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			emitter.emit('connected', state.farmer)
 		},
 
-		"disconnect"(state: LeekWarsState) {
+		"disconnect"(_state: LeekWarsState) {
 			LeekWars.post('farmer/disconnect')
 			localStorage.setItem('logout', '' + Date.now())
 			store.commit("reset")
-			// Supprime le cache des IAs et l'état de l'éditeur (confidentialité + évite les collisions entre comptes)
+			// Supprime le cache des IAs et l'état de l'éditeur (confidentialité).
 			for (const key of Object.keys(localStorage)) {
 				if (key.startsWith('ai/') || key.startsWith('editor/tabs') || key.startsWith('editor/last-code-')
 					|| key.startsWith('editor/scroll/') || key.startsWith('editor/viewstate/')
-					|| key === 'editor/history') {
+					|| key.startsWith('editor/history') || key.startsWith('editor/current-tab')) {
 					localStorage.removeItem(key)
 				}
 			}
@@ -298,7 +305,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				emitter.emit('chat-history', chatID)
 				chat.loading = false
 			}).error(error => {
-				LeekWars.toast(error.error)
+				LeekWars.toast((error as Record<string, string>).error)
 				const chat = state.chat[chatID]
 				emitter.emit('chat-history', chatID)
 				chat.loading = false
@@ -454,7 +461,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (state.farmer) { state.farmer.talent = talent }
 		},
 
-		'set-leek-talents'(state: LeekWarsState, talents: any) {
+		'set-leek-talents'(state: LeekWarsState, talents: Record<string, number>) {
 			if (state.farmer) {
 				for (const i in talents) {
 					state.farmer.leeks[parseInt(i, 10)].talent = talents[i]
@@ -462,31 +469,31 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'rename-leek'(state: LeekWarsState, data: any) {
+		'rename-leek'(state: LeekWarsState, data: { leek: number, name: string }) {
 			if (state.farmer) {
 				state.farmer.leeks[data.leek].name = data.name
 			}
 		},
 
-		'rename-farmer'(state: LeekWarsState, data: any) {
+		'rename-farmer'(state: LeekWarsState, data: { name: string }) {
 			if (state.farmer) {
 				state.farmer.name = data.name
 			}
 		},
 
-		'update-capital'(state: LeekWarsState, data: any) {
+		'update-capital'(state: LeekWarsState, data: { leek: number, capital: number }) {
 			if (state.farmer) {
 				state.farmer.leeks[data.leek].capital = data.capital
 			}
 		},
 
-		'change-skin'(state: LeekWarsState, data: any) {
+		'change-skin'(state: LeekWarsState, data: { leek: number, skin: number }) {
 			if (state.farmer) {
 				state.farmer.leeks[data.leek].skin = data.skin
 			}
 		},
 
-		'change-fish'(state: LeekWarsState, data: any) {
+		'change-fish'(state: LeekWarsState, data: { leek: number, fish: boolean }) {
 			if (state.farmer) {
 				state.farmer.leeks[data.leek].fish = data.fish
 			}
@@ -532,13 +539,13 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		notification(state: LeekWarsState, data: { id: number, type: number, date: number, parameters: any[], new: boolean }) {
+		notification(state: LeekWarsState, data: { id: number, type: number, date: number, parameters: unknown[], new: boolean }) {
 			try {
 				if (data.new) {
 					// Received a new trophy, invalidate farmer trophies, add to rewards
 					if (state.farmer && data.type === NotificationType.TROPHY_UNLOCKED) {
 						delete state.farmer.trophies_list
-						const trophy = parseInt(data.parameters[0], 10)
+						const trophy = parseInt(String(data.parameters[0]), 10)
 						const trophyTemplate = LeekWars.trophies[trophy - 1]
 						if (trophyTemplate) {
 							state.farmer!.rewards.push({
@@ -617,15 +624,15 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'new-conversation'(state: LeekWarsState, data: any) {
+		'new-conversation'(state: LeekWarsState, data: { id: number, type?: number, farmers: Farmer[], last_farmer_id: number, last_date: number | null, last_message: string | null, read: boolean }) {
 			// console.log("new-conversation", data)
 			let chat = state.chat[data.id]
 			if (!chat) {
-				const last_farmer = data.farmers.find((f: any) => f.id === data.last_farmer_id)
-				const other_farmer = data.farmers.find((f: any) => f.id !== state.farmer!.id)
+				const last_farmer = data.farmers.find((f) => f.id === data.last_farmer_id)
+				const other_farmer = data.farmers.find((f) => f.id !== state.farmer!.id)
 				chat = new Chat(data.id, data.type ? data.type : ChatType.PM, other_farmer ? other_farmer.name : '?', true)
 				chat.last_date = data.last_date
-				chat.last_farmer = last_farmer
+				chat.last_farmer = last_farmer ?? null
 				chat.last_message = data.last_message
 				state.chat[data.id] = chat
 				state.conversationsList.push(chat)
@@ -750,11 +757,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'remove-inventory'(state: LeekWarsState, data: any) {
+		'remove-inventory'(state: LeekWarsState, data: { type: ItemType, item_template: number, quantity?: number }) {
 			if (!state.farmer) { return }
 			// console.log("remove-inventory", data)
 			const quantity = data.quantity || 1
-			let list = null
+			let list: { id: number, template: number, quantity: number }[] | null = null
 			if (data.type === ItemType.WEAPON) {
 				list = state.farmer.weapons
 			} else if (data.type === ItemType.CHIP) {
@@ -766,6 +773,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			} else if (data.type === ItemType.COMPONENT) {
 				list = state.farmer.components
 			}
+			if (!list) { return }
 			const item = LeekWars.selectWhere(list, 'template', data.item_template)
 			if (item !== null) {
 				item.quantity -= quantity
@@ -779,7 +787,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (state.farmer) { state.farmer.didactitiel_seen = true }
 		},
 
-		'add-weapon'(state: LeekWarsState, weapon: any) {
+		'add-weapon'(state: LeekWarsState, weapon: { id: number, template: number }) {
 			if (!state.farmer) { return }
 			for (const w of state.farmer.weapons) {
 				if (w.template === weapon.template) {
@@ -804,7 +812,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'add-chip'(state: LeekWarsState, chip: any) {
+		'add-chip'(state: LeekWarsState, chip: { id: number, template: number }) {
 			if (!state.farmer) { return }
 			for (const c of state.farmer.chips) {
 				if (c.template === chip.template) {
@@ -815,7 +823,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.farmer.chips.push({id: chip.id, quantity: 1, template: chip.template} as Chip)
 		},
 
-		'remove-chip'(state: LeekWarsState, chip: any) {
+		'remove-chip'(state: LeekWarsState, chip: { template: number }) {
 			if (!state.farmer) { return }
 			for (let w = 0; w < store.state.farmer!.chips.length; ++w) {
 				const f_chip = store.state.farmer!.chips[w]
@@ -849,7 +857,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (i !== -1) { state.farmer.loadouts.splice(i, 1) }
 		},
 
-		'add-component'(state: LeekWarsState, component: any) {
+		'add-component'(state: LeekWarsState, component: { id: number, template: number }) {
 			if (!state.farmer) { return }
 			for (const w of state.farmer.components) {
 				if (w.template === component.template) {
@@ -869,7 +877,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.last_ping = time
 		},
 
-		'receive-pong'(state: LeekWarsState, data: any) {
+		'receive-pong'(_state: LeekWarsState) {
 			// const channel = data[0]
 			// if (!state.chat[channel]) {
 				// state.chat[channel] = new Chat(channel, ChatType.GLOBAL, false)
@@ -896,7 +904,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'level-up'(state: LeekWarsState, data: any) {
+		'level-up'(state: LeekWarsState, data: { leek: number, level: number, capital: number }) {
 			if (state.farmer) {
 				state.farmer.leeks[data.leek].level = data.level
 				state.farmer.leeks[data.leek].capital = data.capital
@@ -910,14 +918,14 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'set-leek-title'(state: LeekWarsState, data: any) {
+		'set-leek-title'(state: LeekWarsState, data: { leek: number, title: number[] }) {
 			if (state.farmer) {
 				const leek = state.farmer.leeks[data.leek]
 				leek.title = data.title
 			}
 		},
 
-		'set-leek-weapon'(state: LeekWarsState, data: any) {
+		'set-leek-weapon'(state: LeekWarsState, data: { leek: number, weapon: number }) {
 			if (state.farmer) {
 				const leek = state.farmer.leeks[data.leek]
 				leek.weapon = data.weapon
@@ -942,13 +950,13 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'set-trophies'(state: LeekWarsState, trophies: any) {
+		'set-trophies'(state: LeekWarsState, trophies: unknown) {
 			if (state.farmer) {
 				state.farmer.trophies_list = trophies
 			}
 		},
 
-		'connected-count'(state: LeekWarsState, farmers: any) {
+		'connected-count'(state: LeekWarsState, farmers: number) {
 			state.connected_farmers = farmers
 		},
 
@@ -980,13 +988,13 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'update-xp'(state: LeekWarsState, data: any) {
+		'update-xp'(state: LeekWarsState, data: { leek: number, xp: number }) {
 			if (state.farmer) {
 				state.farmer.leeks[data.leek].xp += data.xp
 			}
 		},
 
-		'update-leek-talent'(state: LeekWarsState, data: any) {
+		'update-leek-talent'(state: LeekWarsState, data: { leek: number, talent: number }) {
 			if (state.farmer) {
 				state.farmer.leeks[data.leek].talent += data.talent
 			}
@@ -1023,7 +1031,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				state.farmer.errors++
 			}
 		},
-		'remove-error'(state: LeekWarsState, data: any) {
+		'remove-error'(state: LeekWarsState) {
 			if (state.farmer) {
 				state.farmer.errors--
 			}
@@ -1052,5 +1060,30 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 	},
 })
 export { store }
+
+/** ID de l'éleveur connecté (0 si déconnecté). */
+export function farmerId(): number {
+	return store.state.farmer?.id ?? 0
+}
+
+// Purge les clés cache d'IA / d'état éditeur au format legacy non-namespacé
+// par farmer ID. Avant le fix de l'issue #2678, ces clés pouvaient leaker entre
+// comptes au switch et causer l'écrasement d'IA. Le nouveau format insère le
+// farmer ID juste après le préfixe (`ai/code/<id>/<path>`), donc une clé dont
+// le segment qui suit le préfixe n'est pas numérique est legacy.
+const MIGRATION_FLAG = 'migrations/issue-2678'
+const NS_PREFIX_RE = /^(?:ai\/code|ai\/mtime|editor\/scroll|editor\/viewstate)\/(?!\d+\/)/
+const LEGACY_EXACT = new Set([
+	'editor/tabs1', 'editor/history', 'editor/current-tab',
+	'editor/last-code-1', 'editor/last-code-2',
+])
+function migrateLegacyCacheKeys() {
+	if (localStorage.getItem(MIGRATION_FLAG) === '1') return
+	for (const key of Object.keys(localStorage)) {
+		if (LEGACY_EXACT.has(key) || NS_PREFIX_RE.test(key)) localStorage.removeItem(key)
+	}
+	localStorage.setItem(MIGRATION_FLAG, '1')
+}
+queueMicrotask(migrateLegacyCacheKeys)
 
 

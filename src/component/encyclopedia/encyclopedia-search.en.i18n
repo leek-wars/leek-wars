@@ -2,8 +2,8 @@
 	"all_categories": "All categories",
 	"author": "Author",
 	"category": "Category",
-	"no_results_found": "No result found...",
-	"not_enough_parameters": "Not enough parameters to start searching",
+	"no_results_found": "No results found...",
+	"not_enough_parameters": "Not enough parameters to run a search",
 	"post_by_x_the_x_in_x": "Posted by {farmer} on {date} in {topic}",
 	"query": "Search",
 	"results": "Search results",
@@ -12,7 +12,7 @@
 	"sort_pertinence": "Relevance",
 	"sort_date": "Date",
 	"sort_votes": "Votes",
-	"title": "Search in forum",
-	"too_few_params": "Too few parameters...",
+	"title": "Encyclopedia search",
+	"too_few_params": "Not enough parameters...",
 	"too_short": "Search too short..."
 }

@@ -39,12 +39,13 @@
 
 <script setup lang="ts">
 import { AI } from '@/model/ai'
+import type { Problem } from './problem'
 import { fileSystem } from '@/model/filesystem'
 import { mixins } from '@/model/i18n'
 import { reactive, ref } from 'vue'
 import { analyzer } from './analyzer'
 
-defineOptions({ name: 'editor-problems', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'EditorProblems', i18n: {}, mixins: [...mixins] })
 
 const emit = defineEmits<{
 	'jump': [ai: AI, line: number, column: number]
@@ -72,7 +73,7 @@ function toggleFilter(level: number) {
 	}
 }
 
-function filteredProblems(problems: any[]) {
+function filteredProblems(problems: Problem[]) {
 	return problems.filter(p =>
 		(p.level === 0 && filterErrors.value) ||
 		(p.level === 1 && filterWarnings.value) ||
@@ -80,7 +81,7 @@ function filteredProblems(problems: any[]) {
 	)
 }
 
-function filteredCount(problems: any[]) {
+function filteredCount(problems: Problem[]) {
 	return filteredProblems(problems).length
 }
 
@@ -88,7 +89,7 @@ function getAI(path: string): AI | undefined {
 	return fileSystem.ais[path]
 }
 
-function jumpProblem(path: string, problem: any) {
+function jumpProblem(path: string, problem: Problem) {
 	const ai = getAI(path)
 	if (ai) {
 		emit('jump', ai, problem.start_line, problem.start_column)

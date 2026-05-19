@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="git-merge-viewer" :class="{ready: editorReady}" ref="container"></div>
+	<div ref="container" class="git-merge-viewer" :class="{ready: editorReady}"></div>
 </template>
 
 <script setup lang="ts">
@@ -8,7 +8,7 @@ import { markRaw, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 
 import { getLanguageForPath } from './file-types'
 import { buildConflictDecorations, parseConflicts, registerConflictCodeLens, type MergeConflict } from './merge-conflicts'
 
-defineOptions({ name: 'git-merge', i18n: {} })
+defineOptions({ name: 'GitMerge', i18n: {} })
 
 const props = withDefaults(defineProps<{
 	content?: string

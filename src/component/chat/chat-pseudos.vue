@@ -14,7 +14,7 @@ import { ref, watch, nextTick, getCurrentInstance } from 'vue'
 import type { Farmer } from '@/model/farmer'
 import { LeekWars } from '@/model/leekwars'
 
-defineOptions({ name: 'chat-pseudos' })
+defineOptions({ name: 'ChatPseudos' })
 
 const props = defineProps<{
 	chat: number
@@ -44,6 +44,7 @@ function selectFirst() {
 }
 function scrollToSelected() {
 	nextTick(() => {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const items = (instance?.proxy as any)?.$el?.parentElement?.querySelectorAll('.command')
 		if (items) (items[index.value] as HTMLElement)?.scrollIntoView({ block: 'nearest' })
 	})

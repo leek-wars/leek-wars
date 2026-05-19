@@ -2,7 +2,7 @@
 	<div class="scheme-preview">
 		<scheme ref="schemeElement" :scheme="scheme" :show-result="true" :show-price="false" @update:model-value="$emit('update:modelValue', $event)" />
 
-		<v-btn v-if="showCraft" class="button" :disabled="!$store.getters.scheme_possible(scheme)" @click="emitter.emit('craft', scheme)" prepend-icon="mdi-hammer-wrench">{{ $t('main.craft') }}</v-btn>
+		<v-btn v-if="showCraft" class="button" :disabled="!$store.getters.scheme_possible(scheme)" prepend-icon="mdi-hammer-wrench" @click="emitter.emit('craft', scheme)">{{ $t('main.craft') }}</v-btn>
 	</div>
 </template>
 
@@ -26,7 +26,7 @@ withDefaults(defineProps<{
 })
 
 defineEmits<{
-	'update:modelValue': [value: any]
+	'update:modelValue': [value: unknown]
 }>()
 
 const _emitter = emitter

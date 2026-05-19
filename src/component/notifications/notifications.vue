@@ -21,10 +21,10 @@ import { LeekWars } from '@/model/leekwars'
 import { NotificationBuilder } from '@/model/notification-builder'
 import { store } from '@/model/store'
 
-defineOptions({ name: 'notifications', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'Notifications', i18n: {}, mixins: [...mixins] })
 
 const t = useNamespacedT('notifications')
-const notifications = ref<any>(null)
+const notifications = ref<Record<string, unknown> | null>(null)
 
 LeekWars.get('notification/get-latest/500').then(data => {
 	notifications.value = []

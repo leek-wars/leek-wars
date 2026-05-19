@@ -38,7 +38,9 @@
 				<div class="content">
 				<breadcrumb v-if="LeekWars.mobile" :items="breadcrumb_items" />
 				<pagination v-if="topic && category" :current="page" :total="pages" :url="'/forum/category-' + category.id + '/topic-' + topic.id" />
-				<div v-if="notFound" class="not-found" v-html="$t('forum.topic_not_found', [$route.params.topic])"></div>
+				<i18n-t v-if="notFound" keypath="topic_not_found" tag="div" class="not-found">
+					<template #topic><b>{{ $route.params.topic }}</b></template>
+				</i18n-t>
 			<loader v-else-if="!topic || !topic.messages" />
 				<div v-else>
 					<div v-for="message in topic.messages" :id="'message-' + message.id" :key="message.id" class="message-wrapper">
@@ -105,7 +107,7 @@
 								<div v-if="!message.deleted" class="votes">
 									<v-tooltip :key="votes_up_names[message.id] ? message.id * 101 + votes_up_names[message.id]!.length : message.id * 101" :open-delay="0" :close-delay="0" :disabled="message.votes_up === 0" bottom @update:model-value="loadVotesUp(message)">
 										<template #activator="{ props }">
-											<div :class="{active: message.my_vote == 1, zero: message.votes_up === 0}" class="vote up" @click="voteUp(message)" v-bind="props">
+											<div :class="{active: message.my_vote == 1, zero: message.votes_up === 0}" class="vote up" v-bind="props" @click="voteUp(message)">
 												<v-icon>mdi-thumb-up</v-icon>
 												<span class="counter">{{ message.votes_up }}</span>
 											</div>
@@ -117,7 +119,7 @@
 									</v-tooltip>
 									<v-tooltip :key="votes_down_names[message.id] ? message.id * 100 + votes_down_names[message.id]!.length : message.id" :open-delay="0" :close-delay="0" :disabled="message.votes_down === 0" bottom @update:model-value="loadVotesDown(message)">
 										<template #activator="{ props }">
-											<div :class="{active: message.my_vote == -1, zero: !message.votes_down}" class="vote down" @click="voteDown(message)" v-bind="props">
+											<div :class="{active: message.my_vote == -1, zero: !message.votes_down}" class="vote down" v-bind="props" @click="voteDown(message)">
 												<v-icon>mdi-thumb-down</v-icon>
 												<span class="counter">{{ message.votes_down }}</span>
 											</div>
@@ -198,18 +200,18 @@
 										<v-btn variant="text" density="compact" icon="mdi-dots-vertical" color="grey" v-bind="props" />
 									</template>
 									<v-list dense class="message-actions">
-										<v-list-item v-if="$store.state.farmer && category && (message.writer.id === $store.state.farmer.id || category.moderator)" v-ripple @click="edit(message)" prepend-icon="mdi-pencil">
+										<v-list-item v-if="$store.state.farmer && category && (message.writer.id === $store.state.farmer.id || category.moderator)" v-ripple prepend-icon="mdi-pencil" @click="edit(message)">
 											<span>{{ $t('edit') }}</span>
 										</v-list-item>
-										<v-list-item v-if="$store.state.farmer && category && (message.id !== -1 ? (message.writer.id === $store.state.farmer.id || category.moderator) : canDeleteTopic)" v-ripple @click="deleteGeneric(message)" prepend-icon="mdi-delete">
+										<v-list-item v-if="$store.state.farmer && category && (message.id !== -1 ? (message.writer.id === $store.state.farmer.id || category.moderator) : canDeleteTopic)" v-ripple prepend-icon="mdi-delete" @click="deleteGeneric(message)">
 											<span>{{ $t('delete') }}</span>
 										</v-list-item>
-										<v-list-item v-if="category && $store.state.farmer && category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'" v-ripple @click="report(message)" prepend-icon="mdi-flag">
+										<v-list-item v-if="category && $store.state.farmer && category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'" v-ripple prepend-icon="mdi-flag" @click="report(message)">
 											<span>{{ $t('warning.report') }}</span>
 										</v-list-item>
 										<v-menu v-if="message.id === -1 && canMoveTopic" submenu open-on-hover>
 											<template #activator="{ props }">
-												<v-list-item v-bind="props" v-ripple prepend-icon="mdi-folder-move" append-icon="mdi-chevron-right" @click.stop>
+												<v-list-item v-ripple v-bind="props" prepend-icon="mdi-folder-move" append-icon="mdi-chevron-right" @click.stop>
 													<span>{{ $t('move') }}</span>
 												</v-list-item>
 											</template>
@@ -219,7 +221,7 @@
 												</v-list-item>
 											</v-list>
 										</v-menu>
-										<v-list-item v-if="message.id === -1 && $store.state.farmer && $store.state.farmer.admin" v-ripple @click="toggleHidden" :prepend-icon="topic.hidden ? 'mdi-eye' : 'mdi-eye-off'">
+										<v-list-item v-if="message.id === -1 && $store.state.farmer && $store.state.farmer.admin" v-ripple :prepend-icon="topic.hidden ? 'mdi-eye' : 'mdi-eye-off'" @click="toggleHidden">
 											<span>{{ topic.hidden ? $t('show_topic') : $t('hide_topic') }}</span>
 										</v-list-item>
 										<v-list-item v-if="message.id === -1 && $store.state.farmer && $store.state.farmer.admin && !topic.release" v-ripple prepend-icon="mdi-tag" @click="releaseInput = topic.release; releaseDialog = true">
@@ -346,7 +348,7 @@
 	const ReportDialog = defineAsyncComponent(() => import('@/component/moderation/report-dialog.vue'))
 	const FormattingRules = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum-formatting-rules.${locale}.i18n`))
 
-	defineOptions({ name: 'forum_topic', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'ForumTopic', i18n: {}, mixins: [...mixins] })
 
 	const { locale: i18nLocale } = useI18n()
 	const t = useNamespacedT('forum_topic')
@@ -426,7 +428,7 @@
 		}
 		page.value = p
 
-		if (topic.value) { topic.value.messages = null as any }
+		if (topic.value) { topic.value.messages = null }
 		notFound.value = false
 		forumLanguages.value = (localStorage.getItem('forum/languages') as string || i18nLocale.value).split(',')
 		LeekWars.get('forum/get-messages/' + t_id + '/' + forumLanguages.value + '/' + page.value).then(data => {
@@ -437,8 +439,8 @@
 				topic.value.messages = data.messages
 				if (topic.value.messages) {
 					for (const message of topic.value.messages) {
-						;(message as any).editing = false
-						;(message as any).height = 100
+						message.editing = false
+					message.height = 100
 					}
 				}
 			}
@@ -460,7 +462,7 @@
 	function createIssue() {
 		if (!topic.value || creatingIssue.value) { return }
 		creatingIssue.value = true
-		LeekWars.post('forum/create-issue', {topic_id: topic.value.id}).then((data: any) => {
+		LeekWars.post('forum/create-issue', {topic_id: topic.value.id}).then((data) => {
 			if (topic.value) {
 				topic.value.private_issue = data.private_issue
 			}
@@ -531,50 +533,57 @@
 	}
 
 	function vote(message: ForumMessage, v: number) {
-		if (!topic.value) { return }
+		if (!topic.value) { return Promise.resolve() }
 		const method = ['vote-message-down', 'remove-message-vote', 'vote-message-up'][v + 1]
-		LeekWars.post('forum/' + method, {topic_id: topic.value.id, message_id: message.id})
+		return LeekWars.post('forum/' + method, {topic_id: topic.value.id, message_id: message.id})
+	}
+
+	// Invalidate the cached voters list AFTER the vote POST resolves. Otherwise the
+	// optimistic counter update and a hover-triggered names fetch can race: the GET
+	// can land before the server has applied the POST, returning stale names that
+	// disagree with the freshly-bumped counter.
+	function invalidateVotesAfter(message: ForumMessage, votePromise: Promise<unknown>) {
+		votePromise.finally(() => {
+			delete votes_up_names[message.id]
+			delete votes_down_names[message.id]
+		})
 	}
 
 	function voteUp(message: ForumMessage) {
 		if (message.my_vote === 1) {
-			vote(message, 0)
+			invalidateVotesAfter(message, vote(message, 0))
 			message.votes_up--
 			message.my_vote = 0
 		} else {
-			vote(message, 1)
+			invalidateVotesAfter(message, vote(message, 1))
 			message.votes_up++
 			if (message.my_vote === -1) {
 				message.votes_down--
 			}
 			message.my_vote = 1
 		}
-		delete votes_up_names[message.id]
-		delete votes_down_names[message.id]
 	}
 
 	function voteDown(message: ForumMessage) {
 		if (message.my_vote === -1) {
-			vote(message, 0)
+			invalidateVotesAfter(message, vote(message, 0))
 			message.votes_down--
 			message.my_vote = 0
 		} else {
-			vote(message, -1)
+			invalidateVotesAfter(message, vote(message, -1))
 			message.votes_down++
 			if (message.my_vote === 1) {
 				message.votes_up--
 			}
 			message.my_vote = -1
 		}
-		delete votes_up_names[message.id]
-		delete votes_down_names[message.id]
 	}
 
 	function loadVotesUp(message: ForumMessage) {
 		if (!topic.value || votes_up_names[message.id] !== undefined) { return }
 		votes_up_names[message.id] = null
 		LeekWars.post('forum/get-message-up-votes-names', {topic_id: topic.value.id, message_id: message.id}).then(data => {
-			votes_up_names[message.id] = data.farmers.map((f: any) => f[1])
+			votes_up_names[message.id] = data.farmers.map((f: unknown[]) => f[1])
 		})
 	}
 
@@ -582,7 +591,7 @@
 		if (!topic.value || votes_down_names[message.id] !== undefined) { return }
 		votes_down_names[message.id] = null
 		LeekWars.post('forum/get-message-down-votes-names', {topic_id: topic.value.id, message_id: message.id}).then(data => {
-			votes_down_names[message.id] = data.farmers.map((f: any) => f[1])
+			votes_down_names[message.id] = data.farmers.map((f: unknown[]) => f[1])
 		})
 	}
 
@@ -619,10 +628,10 @@
 	function loadMoveCategories() {
 		if (!category.value) { return }
 		const languages = forumLanguages.value.join(',')
-		LeekWars.get('forum/get-categories/' + languages).then((data: any) => {
+		LeekWars.get('forum/get-categories/' + languages).then((data) => {
 			moveCategories.value = data.categories
-				.filter((c: any) => c.id !== category.value!.id && c.type !== 'team' && c.name !== 'admin' && c.name !== 'moderation')
-				.map((c: any) => ({
+				.filter((c: ForumCategory) => c.id !== category.value!.id && c.type !== 'team' && c.name !== 'admin' && c.name !== 'moderation')
+				.map((c: ForumCategory) => ({
 					id: c.id,
 					name: t('forum-category.' + c.name) as string
 				}))
@@ -660,7 +669,7 @@
 
 	function toggleSubscribe() {
 		if (!topic.value) { return }
-		topic.value.subscribed ? unsubscribe() : subscribe()
+		if (topic.value.subscribed) { unsubscribe() } else { subscribe() }
 	}
 
 	function subscribe() {
@@ -682,9 +691,9 @@
 	function edit(message: ForumMessage) {
 		const textElement = document.querySelector('#message-' + message.id + ' .text, #message-' + message.id + ' .md') as HTMLElement
 		if (textElement) {
-			;(message as any).height = textElement.offsetHeight - 14
+			message.height = textElement.offsetHeight - 14
 		}
-		;(message as any).editing = true
+		message.editing = true
 		if (message.id === -1) {
 			topicEditing.value = true
 		}
@@ -692,13 +701,13 @@
 
 	function autoResize(message: ForumMessage, e: Event) {
 		const textarea = e.target as HTMLTextAreaElement
-		if (textarea.scrollHeight > (message as any).height) {
-			;(message as any).height = textarea.scrollHeight
+		if (textarea.scrollHeight > message.height) {
+			message.height = textarea.scrollHeight
 		}
 	}
 
 	function endEdit(message: ForumMessage) {
-		;(message as any).editing = false
+		message.editing = false
 		if (message.id === -1) {
 			topicEditing.value = false
 		}
@@ -708,9 +717,9 @@
 		if (!topic.value) { return }
 		if (!message.message || !message.message.trim()) { return }
 		const callback = () => {
-			;(message as any).html = null
-			;(message as any).editing = false
-			;(message as any).edition_date = LeekWars.time
+			message.html = null
+			message.editing = false
+			message.edition_date = LeekWars.time
 			if (message.id === -1) {
 				topicEditing.value = false
 			}
@@ -731,7 +740,7 @@
 		}
 	}
 
-	function addEmoji(message: ForumMessage, emoji: string, textarea: any) {
+	function addEmoji(message: ForumMessage, emoji: string, textarea: HTMLTextAreaElement) {
 		const index = textarea.selectionStart
 		message.message = message.message.slice(0, index) + emoji + message.message.slice(index, message.message.length)
 	}
@@ -750,7 +759,7 @@
 
 	function toggleHidden() {
 		if (!topic.value) { return }
-		LeekWars.post('forum/toggle-hidden', {topic_id: topic.value.id}).then((data: any) => {
+		LeekWars.post('forum/toggle-hidden', {topic_id: topic.value.id}).then((data) => {
 			if (topic.value) {
 				topic.value.hidden = data.hidden
 			}

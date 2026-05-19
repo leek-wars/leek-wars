@@ -164,4 +164,4 @@ class S {
 	}
 }
 
-export { S, Sound, VOL_MAP_SOUND }
+export { S, Sound }

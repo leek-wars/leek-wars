@@ -357,7 +357,7 @@ import TournamentBlock from '@/component/tournament/tournament-block.vue'
 import TournamentFight from '@/component/tournament/tournament-fight.vue'
 import type { Tournament } from '@/model/tournament'
 
-defineOptions({ name: 'tournament-graph', components: {
+defineOptions({ name: 'TournamentGraph', components: {
 	'tournament-block': TournamentBlock,
 	'tournament-fight': TournamentFight
 } })

@@ -1,0 +1,17 @@
+{
+	"title": "Check your inbox!",
+	"intro": "We sent you an email a few minutes ago. Click the link inside to activate your account and claim your rewards.",
+	"check_spam": "Don't forget to check your spam or promotions folder if you can't find it.",
+	"resend": "Resend the email",
+	"later": "Later",
+	"or": "or verify without email",
+	"use_github": "Continue with GitHub",
+	"use_google": "Continue with Google",
+	"mail_resent": "Email resent!",
+	"error_wrong_token": "Session expired, please log in again",
+	"error_already_verified": "Your account is already verified",
+	"error_no_pending_verify": "No pending verification",
+	"error_no_login": "Missing username, please reload the page",
+	"error_too_many_requests": "Please wait a moment before trying again",
+	"error_unknown": "Something went wrong, please try again later"
+}

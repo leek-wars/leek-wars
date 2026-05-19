@@ -8,7 +8,7 @@ class NotificationBuilder {
 
 	public static rounds = ['sixteenth_final', 'eighth_final', 'quarter_final', 'semi_final', 'final']
 
-	public static build(data: any) {
+	public static build(data: Record<string, unknown>) {
 
 		const type = data.type
 		const params = data.parameters as string[]
@@ -162,7 +162,7 @@ class NotificationBuilder {
 			const farmer_name = params[0]
 			const item_id = params[1]
 			const item = LeekWars.items[item_id]
-			let item_name = item.name as any
+			let item_name: string = item.name
 			if (item.type === ItemType.WEAPON) {
 				item_name = i18n.t('weapon.' + item.name.substring(7))
 			} else if (item.type === ItemType.CHIP) {
@@ -212,7 +212,8 @@ class NotificationBuilder {
 			const fightID = params[0]
 			const result = params.length > 1 ? parseInt(params[1]) : 0
 			const leekName = params.length > 2 ? params[2] : ''
-			return new Notification(data, "/fight/" + fightID, "mdi-sword-cross", [leekName], [], result)
+			const participantCount = params.length > 3 ? params[3] : ''
+			return new Notification(data, "/fight/" + fightID, "mdi-sword-cross", [leekName, participantCount], [], result)
 		} else if (type === NotificationType.LEEK_AUTO_EXIT_ARENA) {
 			const leekId = parseInt(params[0], 10)
 			const leekName = leeks[leekId]?.name ?? '?'

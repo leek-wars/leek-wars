@@ -21,14 +21,14 @@ import { useRouter } from 'vue-router'
 import { LeekWars } from '@/model/leekwars'
 import { mixins } from '@/model/i18n'
 
-defineOptions({ name: 'accept_conditions', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'AcceptConditions', i18n: {}, mixins: [...mixins] })
 
 const router = useRouter()
 
 function accept() {
 	LeekWars.post('farmer/accept-terms')
 		.then(() => { router.push('/') })
-		.catch((error: any) => LeekWars.toast('Error: ' + error))
+		.catch((error) => LeekWars.toast('Error: ' + error))
 }
 </script>
 

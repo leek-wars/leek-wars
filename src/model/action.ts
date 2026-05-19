@@ -1,5 +1,3 @@
-import { FightLeek, ReportLeek } from "./fight"
-
 enum ActionType {
 	START_FIGHT = 0,
 	USE_WEAPON_OLD = 1,
@@ -46,20 +44,24 @@ enum ActionType {
 	BUG = 1002,
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ActionLog = any[]
 class Action {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	params!: any[]
 	logs: ActionLog[] = []
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	item: any | null = null
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	entity: any | null = null
 	me: boolean = false
 
 	get type() { return this.params[0] }
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	constructor(params: any[]) {
 		this.params = params
 	}
 }
 
 export { Action, ActionType }
-export type { ActionLog }

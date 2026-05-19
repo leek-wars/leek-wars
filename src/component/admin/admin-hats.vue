@@ -22,7 +22,7 @@ import Breadcrumb from '@/component/forum/breadcrumb.vue'
 const router = useRouter()
 if (!store.getters.admin) router.replace('/')
 
-const all_weapons = computed<any[]>(() => Object.values(LeekWars.weapons))
+const all_weapons = computed<ReturnType<typeof Object.values<typeof LeekWars.weapons>>>(() => Object.values(LeekWars.weapons))
 
 function random_weapon() {
 	return all_weapons.value[Math.random() * all_weapons.value.length | 0].item

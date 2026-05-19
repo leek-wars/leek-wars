@@ -24,7 +24,7 @@
 						<img v-else class="status" src="/image/disconnected.png">
 					</div> -->
 					<router-link :to="'/farmer/' + group.owner.id">
-						<div class="card member" v-bind="props" v-ripple>
+						<div v-ripple class="card member" v-bind="props">
 							<avatar :farmer="group.owner" />
 							<div class="info">
 								<div class="name">
@@ -105,7 +105,7 @@
 						hide-default-footer
 						:items-per-page="100"
 						class="elevation-1 members">
-						<template #no-data class="no-member">
+						<template #no-data>
 							<span>{{ $t('no_member') }}</span>
 							<v-btn @click="membersDialog = true"><v-icon>mdi-plus</v-icon>&nbsp;{{ $t('add_member') }}</v-btn>
 						</template>
@@ -116,7 +116,7 @@
 							</router-link> -->
 							<router-link :to="'/farmer/' + item.id">
 								<rich-tooltip-farmer :id="item.id" v-slot="{ props }" :bottom="true">
-									<div class="flex name" v-bind="props" v-ripple>
+									<div v-ripple class="flex name" v-bind="props">
 										<avatar :farmer="item" />
 										<span>{{ item.name }}</span>
 										<img v-if="item.connected" class="status" src="/image/connected.png">
@@ -128,7 +128,7 @@
 						<template #item.team="{ item }">
 							<router-link v-if="item.team"  :to="'/team/' + item.team.id">
 								<rich-tooltip-team :id="item.team.id" v-slot="{ props }" :bottom="true">
-									<div class="flex name" v-bind="props" v-ripple>
+									<div v-ripple class="flex name" v-bind="props">
 										<emblem :team="item.team" />
 										<span>{{ item.team.name }}</span>
 									</div>
@@ -156,7 +156,7 @@
 				</div>
 				<div v-if="group.is_supervisor && !equipmentEditing" class="button green" @click="applyEquipment">
 					<v-icon>mdi-upload</v-icon> {{ $t('main.apply') }}
-					<loader class="small-loader" v-if="applyingEquipment" size="30" />
+					<loader v-if="applyingEquipment" class="small-loader" size="30" />
 				</div>
 				<div v-if="equipmentEditing" class="button" @click="equipmentEditing = false">
 					<v-icon>mdi-close</v-icon> {{ $t('main.cancel') }}
@@ -172,9 +172,9 @@
 						<v-icon v-if="equipmentEditing" @click="capitalDialogOpened = true">mdi-pencil</v-icon>
 					</div>
 
-					<div class="level" v-if="equipmentEditing">
+					<div v-if="equipmentEditing" class="level">
 						<b>{{ $t('main.level') }}</b>
-						<input type="number" v-model="group.level" @update:model-value="changeLevel" :min="1" :max="301" /> (1 - 301)
+						<input v-model="group.level" type="number" :min="1" :max="301" @update:model-value="changeLevel" /> (1 - 301)
 						<div class="spacer"></div>
 						<!-- <b :style="{color: $refs.capitalDialog.capital < 0 ? 'red' : 'green'}">{{ $refs.capitalDialog.capital }} capital</b> -->
 						<v-icon v-if="capitalDialog && capitalDialog.capital < 0" class="card alert">mdi-alert-circle</v-icon>
@@ -292,13 +292,13 @@
 					<div class="flex name">
 						<avatar :farmer="item" />
 						<div>
-							<input type="text" v-model="item.name" :class="{error: item.name_error}" @focusout="updateMemberName(item)">
+							<input v-model="item.name" type="text" :class="{error: item.name_error}" @focusout="updateMemberName(item)">
 							<div v-if="item.name_error" class="error">{{ $t('error_' + item.name_error.error, item.name_error.params) }}</div>
 						</div>
 					</div>
 				</template>
 				<template #item.leek="{ item }">
-					<input type="text" v-model="item.leek" :class="{error: item.leek_error}" @focusout="updateMemberLeekName(item)">
+					<input v-model="item.leek" type="text" :class="{error: item.leek_error}" @focusout="updateMemberLeekName(item)">
 					<div v-if="item.leek_error" class="error">{{ $t('error_' + item.leek_error.error, item.leek_error.params) }}</div>
 				</template>
 				<template #item.team="{ item }">
@@ -310,11 +310,11 @@
 					</rich-tooltip-team>
 				</template>
 				<template #item.mail="{ item }">
-					<input type="email" v-model="item.mail" :class="{error: item.mail_error}" @focusout="updateMemberEmail(item)">
+					<input v-model="item.mail" type="email" :class="{error: item.mail_error}" @focusout="updateMemberEmail(item)">
 					<div v-if="item.mail_error" class="error">{{ $t('error_' + item.mail_error.error, item.mail_error.params) }}</div>
 				</template>
 				<template #item.password="{ item }">
-					<input type="text" v-model="item.password" :class="{error: item.password_error}" @focusout="updateMemberPassword(item)">
+					<input v-model="item.password" type="text" :class="{error: item.password_error}" @focusout="updateMemberPassword(item)">
 					<div v-if="item.password_error" class="error">{{ $t('error_' + item.password_error.error, item.password_error.params) }}</div>
 				</template>
 				<template #item.actions="{ item }">
@@ -338,7 +338,7 @@
 					</div>
 				</template>
 			</v-data-table>
-			<div class="add-member" @click="addMember()" v-ripple>
+			<div v-ripple class="add-member" @click="addMember()">
 				<v-icon>mdi-plus</v-icon> {{ $t('add_member') }}
 			</div>
 		</popup>
@@ -458,7 +458,7 @@
 				<div>{{ $t('give_item') }}</div>
 			</template>
 
-			<v-tabs v-model="giveItemTab" :key="itemCategories.length" class="tabs" grow :show-arrows="false">
+			<v-tabs :key="itemCategories.length" v-model="giveItemTab" class="tabs" grow :show-arrows="false">
 				<v-tab v-for="(category, c) in itemCategories" :key="c" :value="'tab-' + c" class="tab">
 					<v-icon>{{ category.icon }}</v-icon>&nbsp;
 					{{ $t('main.' + category.name) }}
@@ -496,7 +496,7 @@
 			<template #title>
 				<div>{{ $t('give_item') }}</div>
 			</template>
-			<div class="give-item-confirm" v-if="itemToGive && giveItemTarget">
+			<div v-if="itemToGive && giveItemTarget" class="give-item-confirm">
 				<div class="item">
 					<item :item="itemToGive" />
 				</div>
@@ -524,14 +524,14 @@
 				<div class="column" style="flex: 1">
 					<h4>Habs</h4>
 					<div class="flex" style="justify-content: flex-start; gap: 6px; align-items: center;">
-						<input type="number" v-model="giveMoneyAmount" placeholder="1000000" :min="0" :max="10000000" style="padding: 8px; flex: 1" />
+						<input v-model="giveMoneyAmount" type="number" placeholder="1000000" :min="0" :max="10000000" style="padding: 8px; flex: 1" />
 						<span class="hab"></span>
 					</div>
 				</div>
 				<div class="column" style="flex: 1">
 					<h4>Combats</h4>
 					<div class="flex" style="justify-content: flex-start; gap: 6px; align-items: center;">
-						<input type="number" v-model="giveFightsAmount" placeholder="100" :min="0" :max="100" style="padding: 8px; flex: 1" />
+						<input v-model="giveFightsAmount" type="number" placeholder="100" :min="0" :max="100" style="padding: 8px; flex: 1" />
 						<v-icon>mdi-sword-cross</v-icon>
 					</div>
 				</div>
@@ -569,7 +569,7 @@
 	const TournamentsHistory = defineAsyncComponent(() => import('@/component/history/tournaments-history.vue'))
 	const Chat = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
 
-	defineOptions({ name: 'group', i18n: {}, mixins: [...mixins], components: { RichTooltipTeam, RichTooltipFarmer, CharacteristicTooltip, RichTooltipItem, CapitalDialog, Item } })
+	defineOptions({ name: 'Group', i18n: {}, mixins: [...mixins], components: { RichTooltipTeam, RichTooltipFarmer, CharacteristicTooltip, RichTooltipItem, CapitalDialog, Item } })
 
 	useI18n() // initialize local scope for <i18n-t>
 	const t = useNamespacedT('group')
@@ -596,7 +596,7 @@
 	const giveItemDialog = ref(false)
 	const giveItemTab = ref('tab-0')
 	const giveItemConfirmDialog = ref(false)
-	const itemToGive = ref<any>(null)
+	const itemToGive = ref<{id: number} | null>(null)
 	const giveItemTarget = ref<Member | null>(null)
 	const giveMoneyDialog = ref(false)
 	const giveMoneyTarget = ref<Member | null>(null)
@@ -631,7 +631,7 @@
 		{ title: 'Actions', value: 'give' },
 	]
 
-	const headersDialog = ref<any[]>([])
+	const headersDialog = ref<{text: string, value: string, sortable?: boolean}[]>([])
 	const headersDialogEmails = [
 		{ text: 'Membre', value: 'name' },
 		{ text: 'Poireau', value: 'leek' },
@@ -679,8 +679,6 @@
 			router.push('/chat/new/' + farmer.id + '/' + farmer.name + '/' + farmer.avatar_changed)
 		})
 	}
-
-	function renameGroup() {}
 
 	function startBattleRoyale() {
 		if (!group.value) { return }
@@ -847,9 +845,9 @@
 
 	const totalCapital = computed(() => group.value ? 50 + (group.value.level - 1) * 5 + Math.floor(group.value.level / 100) * 45 + (group.value.level === 301 ? 95 : 0) : 0)
 
-	function changeLevel(e: any) {
+	function changeLevel(e: Event) {
 		if (group.value) {
-			group.value.level = parseInt(e.target!.value)
+			group.value.level = parseInt((e.target as HTMLInputElement).value)
 			if (group.value.level < 1) group.value.level = 1
 			if (group.value.level > 301) group.value.level = 301
 			characteristics['level'] = group.value.level
@@ -936,10 +934,10 @@
 			member_id: member.id,
 			name: member.name,
 		}).then(() => {
-			delete (member as any).name_error
+			delete member.name_error
 		}).error(error => {
-			delete (member as any).name_error
-			;(member as any).name_error = error
+			delete member.name_error
+			member.name_error = error
 		})
 	}
 
@@ -948,12 +946,12 @@
 		LeekWars.put('groupe/member-leek-name', {
 			group_id: group.value.id,
 			member_id: member.id,
-			leek_name: (member as any).leek,
+			leek_name: member.leek,
 		}).then(() => {
-			delete (member as any).leek_error
+			delete member.leek_error
 		}).error(error => {
-			delete (member as any).leek_error
-			;(member as any).leek_error = error
+			delete member.leek_error
+			member.leek_error = error
 		})
 	}
 
@@ -964,24 +962,24 @@
 			member_id: member.id,
 			email: member.mail
 		}).then(() => {
-			delete (member as any).mail_error
+			delete member.mail_error
 		}).error(error => {
-			delete (member as any).mail_error
-			;(member as any).mail_error = error
+			delete member.mail_error
+			member.mail_error = error
 		})
 	}
 
 	function updateMemberPassword(member: Member) {
-		if (!group.value || !(member as any).password) { return }
+		if (!group.value || !member.password) { return }
 		LeekWars.put('groupe/member-password', {
 			group_id: group.value.id,
 			member_id: member.id,
-			password: (member as any).password
+			password: member.password
 		}).then(() => {
-			delete (member as any).password_error
+			delete member.password_error
 		}).error(error => {
-			delete (member as any).password_error
-			;(member as any).password_error = error
+			delete member.password_error
+			member.password_error = error
 		})
 	}
 

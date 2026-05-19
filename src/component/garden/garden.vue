@@ -61,6 +61,10 @@
 										<div v-bind="props">
 											<h2>{{ $t('category_arena') }}</h2>
 											<span class="player-count">10-20</span>&nbsp;<img class="player" src="/image/player.png">
+											<span v-if="liveArenaCount > 0" class="live-arena-count">
+												<span class="dot"></span>
+												<span class="count">{{ liveArenaCount }}</span>
+											</span>
 										</div>
 									</router-link>
 								</template>
@@ -289,8 +293,25 @@
 									</v-radio-group>
 								</div>
 								<br>
-								<v-btn v-if="garden.fights" color="primary" @click="arenaRegister" :disabled="!arenaEnabled">{{ $t('main.select') }}</v-btn>
+								<v-btn v-if="garden.fights" color="primary" :disabled="!arenaEnabled" @click="arenaRegister">{{ $t('main.select') }}</v-btn>
 								<garden-no-fights v-else :canbuy="true" @bought="reload" />
+								<div v-if="garden.fights && liveArenaCount > 0" class="arena-live">
+									<div class="arena-live-count">
+										<span class="dot"></span>
+										<strong>{{ liveArenaCount }}</strong> / {{ Arena.MAX_PLAYERS }}
+									</div>
+									<div class="arena-live-message">
+										<template v-if="liveArenaCountdown >= 0">
+											{{ $t('arena_countdown_invite', [liveArenaCountdown]) }}
+										</template>
+										<template v-else-if="liveArenaCount >= Arena.MIN_PLAYERS">
+											{{ $t('arena_invite_ready', liveArenaCount) }}
+										</template>
+										<template v-else>
+											{{ $t('arena_invite_join', Arena.MIN_PLAYERS - liveArenaCount) }}
+										</template>
+									</div>
+								</div>
 							</div>
 							<div v-else>
 								<loader v-if="LeekWars.arena.progress == 0" />
@@ -306,7 +327,10 @@
 									</div>
 								</div>
 								<br>
-								<div class="leek-count">{{ LeekWars.arena.progress }} / {{ (LeekWars.arena.constructor as any).MAX_PLAYERS }}</div>
+								<div class="leek-count arena-waiting">
+									<span class="dot"></span>
+									<strong>{{ LeekWars.arena.progress }}</strong> / {{ Arena.MAX_PLAYERS }}
+								</div>
 								<div v-if="LeekWars.arena.countdown >= 0" class="arena-countdown">
 									{{ $t('arena_countdown', [LeekWars.arena.countdown]) }}
 								</div>
@@ -319,7 +343,7 @@
 								<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('select_boss') }}</div>
 								<div class="bosses">
 									<div v-for="boss in BOSSES" :key="boss.name" class="boss-wrapper">
-										<div v-ripple @click="LeekWars.bossSquads.create(boss)" :class="{disabled: !garden.fights}" class="leek boss">
+										<div v-ripple :class="{disabled: !garden.fights}" class="leek boss" @click="LeekWars.bossSquads.create(boss)">
 											<leek-image :leek="boss" :scale="boss.scale" />
 											<div class="name">{{ $t('entity.' + boss.name) }}</div>
 											<div class="level">{{ $t('main.level_n', [boss.level]) }}</div>
@@ -351,11 +375,11 @@
 								<div v-else>
 									<h4>Participants</h4>
 									<div class="participants">
-										<rich-tooltip-leek v-for="(leek,p) of LeekWars.bossSquads.squad.engaged_leeks" :key="p" :id="leek.id" v-slot="{ props }">
+										<rich-tooltip-leek v-for="(leek,p) of LeekWars.bossSquads.squad.engaged_leeks" :id="leek.id" :key="p" v-slot="{ props }">
 											<div v-bind="props" class="participant" :class="{active: true}" @click="LeekWars.bossSquads.removeLeek(leek)">
 												<leek-image :leek="leek" :scale="0.42"></leek-image>
 												<div class="name">
-													<avatar :farmer="LeekWars.bossSquads.squad.farmers.find(f => f.id === leek.farmer)" />
+													<avatar :farmer="LeekWars.bossSquads.squad.farmers.find(f => f.id === (leek.farmer as unknown as number))" />
 													<span>{{ leek.name }}</span>
 												</div>
 												<div class="level">{{ $t('main.level_n', [leek.level]) }}</div>
@@ -365,11 +389,11 @@
 									</div>
 									<h4 v-if="LeekWars.bossSquads.squad.available_leeks?.length">Poireaux disponibles</h4>
 									<div class="participants">
-										<rich-tooltip-leek v-for="leek of LeekWars.bossSquads.squad.available_leeks" :key="leek.id" :id="leek.id" v-slot="{ props }">
+										<rich-tooltip-leek v-for="leek of LeekWars.bossSquads.squad.available_leeks" :id="leek.id" :key="leek.id" v-slot="{ props }">
 											<div v-bind="props" class="participant" :class="{active: true}" @click="LeekWars.bossSquads.addLeek(leek)">
 												<leek-image :leek="leek" :scale="0.42"></leek-image>
 												<div class="name">
-													<avatar :farmer="LeekWars.bossSquads.squad.farmers.find(f => f.id === leek.farmer)" />
+													<avatar :farmer="LeekWars.bossSquads.squad.farmers.find(f => f.id === (leek.farmer as unknown as number))" />
 													<span>{{ leek.name }}</span>
 												</div>
 												<div class="level">{{ $t('main.level_n', [leek.level]) }}</div>
@@ -381,7 +405,7 @@
 										<div class="farmers">
 											<v-icon v-if="LeekWars.bossSquads.squad.locked" :disabled="LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="LeekWars.bossSquads.open()">mdi-lock</v-icon>
 											<v-icon v-else :disabled="LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="LeekWars.bossSquads.lock()">mdi-earth</v-icon>
-											<rich-tooltip-farmer v-for="farmer of LeekWars.bossSquads.squad.farmers" :key="farmer.id" :id="farmer.id">
+											<rich-tooltip-farmer v-for="farmer of LeekWars.bossSquads.squad.farmers" :id="farmer.id" :key="farmer.id">
 												<avatar :farmer="farmer" :class="{master: LeekWars.bossSquads.squad.master === farmer.id}" />
 											</rich-tooltip-farmer>
 										</div>
@@ -402,6 +426,7 @@
 
 <script setup lang="ts">
 	import { locale } from '@/locale'
+	import { Arena, ARENA_MODE_LABELS, arenaModeIcon } from '@/model/arena'
 	import { Farmer } from '@/model/farmer'
 	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
@@ -415,23 +440,35 @@
 	import { BOSSES } from '@/model/boss'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
-	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+	import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 
 	import { useRoute, useRouter } from 'vue-router'
 	import { emitter } from '@/model/vue'
 
 	const GardenNoFights = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/garden/garden-no-fights.${locale}.i18n`))
 
-	defineOptions({ name: 'garden', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'Garden', i18n: {}, mixins: [...mixins] })
 
 	const t = useNamespacedT('garden')
 	const route = useRoute()
 	const router = useRouter()
 
-	const garden = ref<any>(null)
+	// Différer la re-navigation hors du watcher route.params : appeler router.replace
+	// synchroniquement pendant le patch de <router-view> casse les Teleport Vuetify
+	// (parentNode null).
+	const replaceNextTick = (path: string) => nextTick(() => router.replace(path))
+
+	interface GardenData {
+		fights: number
+		farmer_enabled: boolean
+		team_enabled: boolean
+		battle_royale_enabled: boolean
+		my_compositions: Composition[]
+	}
+	const garden = ref<GardenData | null>(null)
 	const category = ref('solo')
 	const selectedLeek = ref<Leek | null>(null)
-	const selectedComposition = ref<any>(null)
+	const selectedComposition = ref<Composition | null>(null)
 	const leekOpponents = reactive<{[key: number]: Leek[]}>({})
 	const leekErrors = reactive<{[key: number]: string}>({})
 	const farmerOpponents = ref<Farmer[] | null>(null)
@@ -446,7 +483,7 @@
 	const queue = ref(0)
 	const advanced = ref(false)
 	const storedSeed = parseInt(localStorage.getItem('garden/challenge/seed') || '', 10)
-	const seed = ref<any | null>(isNaN(storedSeed) || storedSeed < 1 ? null : storedSeed)
+	const seed = ref<number | null>(isNaN(storedSeed) || storedSeed < 1 ? null : storedSeed)
 	const side = ref(localStorage.getItem('garden/challenge/side') || 'left')
 
 	watch(seed, () => {
@@ -459,8 +496,8 @@
 	watch(side, () => {
 		localStorage.setItem('garden/challenge/side', side.value)
 	})
-	let request: any = null
-	const selectedBoss = ref<any | null>(null)
+	let request: { abort(): void } | null = null
+	const selectedBoss = ref<{ id: number; name: string; level: number; scale: number; difficulty: number } | null>(null)
 	const squad = ref<string | null>(null)
 	const arenaPreference = ref(parseInt(localStorage.getItem('arena/preference') || '-1', 10))
 	const wantsColossus = ref(false)
@@ -470,15 +507,11 @@
 	const teamEnabled = computed(() => garden.value && garden.value.team_enabled)
 	const arenaEnabled = computed(() => garden.value && garden.value.battle_royale_enabled && store.state.farmer && store.state.farmer.verified)
 	const bossEnabled = computed(() => true)
+	const liveArenaCount = computed(() => store.state.arenaCount || 0)
+	const liveArenaCountdown = computed(() => store.state.arenaCountdown)
 
-	const modeIcons = ['mdi-sword-cross', 'mdi-flag', 'mdi-treasure-chest', 'mdi-shield-account']
-	const modeLabels = ['arena_mode_br', 'arena_mode_war', 'arena_mode_chest_hunt', 'arena_mode_colossus']
-
-	function modeIcon(preference: number): string {
-		return modeIcons[preference] || 'mdi-help-circle-outline'
-	}
-	function batchErrorToast(error: any) {
-		const key = typeof error === 'string' ? error : (error && error.error) || 'unknown_error'
+	function batchErrorToast(error: unknown) {
+		const key = typeof error === 'string' ? error : (error && typeof error === 'object' && 'error' in error ? String((error as { error: unknown }).error) : null) || 'unknown_error'
 		LeekWars.toast(t(key))
 	}
 	function batchSoloAttack() {
@@ -508,8 +541,9 @@
 		})
 	}
 	function modeLabel(preference: number): string {
-		return t(modeLabels[preference] || 'arena_no_preference') as string
+		return t(ARENA_MODE_LABELS[preference] || 'arena_no_preference') as string
 	}
+	const modeIcon = arenaModeIcon
 
 	if (store.state.wsconnected) {
 		updateWS()
@@ -523,8 +557,8 @@
 		advanced.value = localStorage.getItem("editor/test/advanced") === 'true'
 
 		request = LeekWars.get('garden/get')
-		request.then((r: any) => {
-			garden.value = r.garden
+		request.then((r) => {
+			garden.value = (r as { garden: GardenData }).garden
 			for (const composition of garden.value.my_compositions) {
 				compositions_by_id[composition.id] = composition
 			}
@@ -535,7 +569,7 @@
 		LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_REGISTER])
 		emitter.on('garden-queue', (data: number) => queue.value = data)
 
-		emitter.on('update-team-talent', (message: any) => {
+		emitter.on('update-team-talent', (message: { composition: number; talent: number }) => {
 			if (message.composition in compositions_by_id) {
 				compositions_by_id[message.composition].talent += message.talent
 			}
@@ -554,8 +588,8 @@
 	}
 
 	function reload() {
-		LeekWars.get('garden/get').then((r: any) => {
-			garden.value = r.garden
+		LeekWars.get('garden/get').then((r) => {
+			garden.value = (r as { garden: GardenData }).garden
 			for (const composition of garden.value.my_compositions) {
 				compositions_by_id[composition.id] = composition
 			}
@@ -593,7 +627,7 @@
 				let defaultCategory = savedCategory || 'solo'
 				if (defaultCategory === 'challenge') { defaultCategory = 'solo' }
 				if ((defaultCategory === 'battle-royale' || defaultCategory === 'arena') && !store.state.farmer.br_enabled) { defaultCategory = 'solo' }
-				router.replace('/garden/' + defaultCategory)
+				replaceNextTick('/garden/' + defaultCategory)
 				return
 			}
 		}
@@ -605,7 +639,7 @@
 				if (!first) { return }
 				defaultLeek = first.id
 			}
-			router.replace('/garden/' + category.value + '/' + defaultLeek)
+			replaceNextTick('/garden/' + category.value + '/' + defaultLeek)
 			return
 		}
 		if (category.value === 'team' && !params.item && garden.value) {
@@ -614,7 +648,7 @@
 				if (!(defaultComposition in compositions_by_id)) {
 					defaultComposition = garden.value.my_compositions[0].id
 				}
-				router.replace('/garden/team/' + defaultComposition)
+				replaceNextTick('/garden/team/' + defaultComposition)
 				return
 			}
 		}
@@ -756,7 +790,7 @@
 
 		if (challengeType.value === 'leek') {
 			if (!route.params.item) {
-				router.replace('/garden/challenge/' + challengeType.value + '/' + challengeTarget.value + '/' + LeekWars.first(store.state.farmer!.leeks)!.id)
+				replaceNextTick('/garden/challenge/' + challengeType.value + '/' + challengeTarget.value + '/' + LeekWars.first(store.state.farmer!.leeks)!.id)
 				return
 			}
 			selectedLeek.value = store.state.farmer!.leeks[parseInt(route.params.item as string, 10)]!
@@ -775,7 +809,7 @@
 			})
 		} else if (challengeType.value === 'team') {
 			if (!route.params.item) {
-				router.replace('/garden/challenge/' + challengeType.value + '/' + challengeTarget.value + '/' + garden.value.my_compositions[0].id)
+				replaceNextTick('/garden/challenge/' + challengeType.value + '/' + challengeTarget.value + '/' + garden.value.my_compositions[0].id)
 				return
 			}
 			for (const composition of garden.value.my_compositions) {
@@ -1040,6 +1074,56 @@
 	}
 	.leek-count {
 		font-size: 22px;
+	}
+	.arena-waiting,
+	.arena-live-count {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		strong {
+			color: var(--primary);
+			font-weight: 700;
+		}
+	}
+	.arena-live {
+		margin-top: 16px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 4px;
+	}
+	.arena-live-count {
+		font-size: 22px;
+		color: var(--text-color);
+	}
+	.arena-live-message {
+		color: var(--text-color-secondary);
+		font-size: 15px;
+	}
+	.live-arena-count {
+		margin-left: 10px;
+		font-size: 20px;
+		color: var(--primary);
+		font-weight: 600;
+		.dot {
+			vertical-align: middle;
+			margin-bottom: 3px;
+			margin-right: 5px;
+		}
+	}
+	.dot {
+		display: inline-block;
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: var(--primary);
+		animation: arena-pulse 2s infinite;
+	}
+	@keyframes arena-pulse {
+		0% { box-shadow: 0 0 0 0 rgba(95, 173, 27, 0.6); }
+		70% { box-shadow: 0 0 0 8px rgba(95, 173, 27, 0); }
+		100% { box-shadow: 0 0 0 0 rgba(95, 173, 27, 0); }
 	}
 	.arena-leek {
 		position: relative;

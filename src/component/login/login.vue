@@ -36,20 +36,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { onBeforeMount, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { mixins , useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { getRedirectAfterLogin } from '@/router'
 
-defineOptions({ name: 'login', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'Login', i18n: {}, mixins: [...mixins] })
 
 const t = useNamespacedT('login')
 const route = useRoute()
 const router = useRouter()
 
-const error = ref<any>(null)
+const error = ref<unknown>(null)
 const loading = ref(false)
 const form = ref({
 	login: '',
@@ -57,7 +57,7 @@ const form = ref({
 	keep_connected: localStorage.getItem('keep_connected') === 'true'
 })
 
-LeekWars.setTitle(t('title'))
+onBeforeMount(() => LeekWars.setTitle(t('title')))
 
 const tokenParam = route.params.token
 if (tokenParam) {
@@ -65,7 +65,7 @@ if (tokenParam) {
 		const token = LeekWars.DEV ? data.token : '$'
 		store.commit('connect', { ...data, token })
 		router.push(getRedirectAfterLogin())
-	}).catch((err: any) => {
+	}).catch((err) => {
 		LeekWars.toast(err.error)
 		router.push('/')
 	})
@@ -79,7 +79,7 @@ function login() {
 		const token = LeekWars.DEV ? data.token : '$'
 		store.commit('connect', { ...data, token })
 		router.push(getRedirectAfterLogin())
-	}).catch((err: any) => {
+	}).catch((err) => {
 		loading.value = false
 		error.value = err
 	})

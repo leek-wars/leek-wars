@@ -26,7 +26,7 @@
 
 			<template v-else-if="state == 2">
 				<loader v-if="!error" />
-				<div class="center" v-else>
+				<div v-else class="center">
 					<img src="/image/notgood.png">
 					<br><br>
 					<div class="error">{{ error }}</div>
@@ -64,13 +64,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { LeekWars } from '@/model/leekwars'
 import { mixins, useNamespacedT } from '@/model/i18n'
 
-defineOptions({ name: 'change_email', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'ChangeEmail', i18n: {}, mixins: [...mixins] })
 
 useI18n() // initialize local scope for <i18n-t>
 	const t = useNamespacedT('change_email')
@@ -81,13 +81,13 @@ const email = ref('')
 const email2 = ref('')
 const error = ref<string | null>(null)
 
-LeekWars.setTitle(t('title'))
+onBeforeMount(() => LeekWars.setTitle(t('title')))
 
 if (state.value === 2) {
 	LeekWars.post('farmer/change-email3', {token: route.params.token}).then(() => {
 		LeekWars.toast(t('email_changed'))
 		state.value = 4
-	}).catch((err: any) => {
+	}).catch((err) => {
 		error.value = err
 		LeekWars.toast(err)
 	})
@@ -101,7 +101,7 @@ function submit() {
 	LeekWars.post('farmer/change-email2', {email: email.value, token: route.params.token}).then(() => {
 		LeekWars.toast(t('email_sent', {email: email.value}))
 		state.value = 3
-	}).catch((err: any) => {
+	}).catch((err) => {
 		error.value = err
 		LeekWars.toast(err)
 	})

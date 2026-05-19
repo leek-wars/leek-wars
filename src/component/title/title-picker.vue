@@ -13,7 +13,7 @@
 								<img class="icon" :src="'/image/trophy/' + item.raw.code + '.svg'">
 							</template>
 							<template v-else #title>{{ $t('main.none') }}</template>
-							<template #append v-if="item.raw.id">
+							<template v-if="item.raw.id" #append>
 								<div class="rarity">{{ formatRarity(item.raw.rarity) }}%</div>
 							</template>
 						</v-list-item>
@@ -31,10 +31,10 @@
 								<template v-if="item.value" #prepend>
 									<img class="icon" :src="'/image/trophy/' + item.raw.code + '.svg'">
 								</template>
-								<template #append v-if="item.value" class="word">
+								<template v-if="item.value" #append>
 									<div class="rarity">{{ formatRarity(item.raw.rarity) }}%</div>
 								</template>
-								<template #title v-else>{{ $t('main.none') }}</template>
+								<template v-else #title>{{ $t('main.none') }}</template>
 							</v-list-item>
 						</template>
 					</v-select>
@@ -63,10 +63,10 @@
 								<template v-if="item.value" #prepend>
 									<img class="icon" :src="'/image/trophy/' + item.raw.code + '.svg'">
 								</template>
-								<template #append v-if="item.value" class="word">
+								<template v-if="item.value" #append>
 									<div class="rarity">{{ formatRarity(item.raw.rarity) }}%</div>
 								</template>
-								<template #title v-else>{{ $t('main.none') }}</template>
+								<template v-else #title>{{ $t('main.none') }}</template>
 							</v-list-item>
 						</template>
 					</v-select>
@@ -85,7 +85,7 @@ import { useI18n } from 'vue-i18n'
 import { LeekWars } from '@/model/leekwars'
 import LwTitle from '@/component/title/title.vue'
 
-defineOptions({ name: 'title-picker' })
+defineOptions({ name: 'TitlePicker' })
 
 const props = defineProps<{
 	title: number[]
@@ -93,35 +93,46 @@ const props = defineProps<{
 
 const { t } = useI18n()
 
+interface TrophyWord {
+	id: number
+	code: string
+	title: number
+	rarity: number
+	noun_translation?: number
+	noun_gender?: number
+	adj_translation?: number
+	adj_gender?: number
+}
+
 const TROPHIES = LeekWars.trophies
-const icon = ref<any>(props.title[0] || 0)
+const icon = ref<number>(props.title[0] || 0)
 const noun = ref(props.title[1] || 0)
 const adjective = ref(props.title[3] || 0)
-const allNouns = ref<any[]>([])
-const allAdjectives = ref<any[]>([])
-const icons = ref<any[]>([])
+const allNouns = ref<TrophyWord[]>([])
+const allAdjectives = ref<TrophyWord[]>([])
+const icons = ref<(TrophyWord | { id: 0, code: '', t: '', rarity: 0 })[]>([])
 const gender = ref(props.title[2] || 1)
 const genders = [
 	{ id: 1, code: 'male' },
 	{ id: 2, code: 'female' }
 ]
 
-const nouns = computed(() => [{ code: '', id: 0, t: '', rarity: 0 }].concat(allNouns.value.filter((w: any) => w.id !== adjective.value).map((w: any) => {
+const nouns = computed(() => [{ code: '', id: 0, t: '', rarity: 0 }].concat(allNouns.value.filter((w: TrophyWord) => w.id !== adjective.value).map((w: TrophyWord) => {
 	const trophy = LeekWars.trophies[w.id - 1]
-	const gender_code = gender.value === 2 && (trophy.noun_translation & 2) && ((trophy.noun_gender & 2) === 0) ? '_f' : ''
+	const gender_code = gender.value === 2 && (trophy.noun_translation as number & 2) && (((trophy.noun_gender as number) & 2) === 0) ? '_f' : ''
 	return { code: w.code, id: w.id, t: t('trophy.' + w.code + gender_code) as string, rarity: w.rarity }
-}).sort((a: any, b: any) => a.t.localeCompare(b.t))))
+}).sort((a, b) => a.t.localeCompare(b.t))))
 
-const adjectives = computed(() => [{ code: '', id: 0, t: '', rarity: 0 }].concat(allAdjectives.value.filter((w: any) => w.id !== noun.value).map((w: any) => {
+const adjectives = computed(() => [{ code: '', id: 0, t: '', rarity: 0 }].concat(allAdjectives.value.filter((w: TrophyWord) => w.id !== noun.value).map((w: TrophyWord) => {
 	const trophy = LeekWars.trophies[w.id - 1]
-	const gender_code = gender.value === 2 && (trophy.adj_translation & 2) && ((trophy.adj_gender & 2) === 0) ? '_f' : ''
+	const gender_code = gender.value === 2 && (trophy.adj_translation as number & 2) && (((trophy.adj_gender as number) & 2) === 0) ? '_f' : ''
 	return { code: w.code, id: w.id, t: t('trophy.' + w.code + gender_code) as string, rarity: w.rarity }
-}).sort((a: any, b: any) => a.t.localeCompare(b.t))))
+}).sort((a, b) => a.t.localeCompare(b.t))))
 
 LeekWars.loadTrophyWords().then(words => {
-	allNouns.value = words.filter((w: any) => w.title & 1)
-	allAdjectives.value = words.filter((w: any) => w.title & 2)
-	icons.value = [{ id: 0, code: '', t: '', rarity: 0 }].concat(words).sort((a: any, b: any) => a.rarity - b.rarity)
+	allNouns.value = (words as TrophyWord[]).filter((w: TrophyWord) => w.title & 1)
+	allAdjectives.value = (words as TrophyWord[]).filter((w: TrophyWord) => w.title & 2)
+	icons.value = [{ id: 0, code: '', t: '', rarity: 0 }].concat(words as TrophyWord[]).sort((a, b) => a.rarity - b.rarity)
 })
 
 function changeNoun() {

@@ -1,0 +1,22 @@
+{
+	"title": "保护你的账号并领取奖励",
+	"intro": "如果你更换浏览器或清除 cookie，将会丢失进度。验证账号以保护它并解锁奖励。",
+	"login": "选择你的饲养员名字",
+	"email": "你的邮箱",
+	"password": "密码",
+	"validate": "验证我的账号",
+	"later": "稍后",
+	"mail_sent": "验证邮件已发送！",
+	"error_login_length": "饲养员名字过短或过长",
+	"error_login_format": "名字格式无效（仅限字母、数字和短横线）",
+	"error_login_already_used": "此饲养员名字已被占用",
+	"error_forbidden_name": "此名字不被允许",
+	"error_invalid_mail": "邮箱无效",
+	"error_mail_already_used": "此邮箱已被使用",
+	"error_password_length": "密码过短或过长",
+	"error_invalid_godfather": "推荐人未找到",
+	"or": "或继续使用",
+	"use_github": "使用 GitHub 继续",
+	"use_google": "使用 Google 继续",
+	"error_no_login": "请先选择你的饲养员名字"
+}

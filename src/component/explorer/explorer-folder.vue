@@ -9,11 +9,10 @@
 </template>
 
 <script setup lang="ts">
-import { fileSystem } from '@/model/filesystem'
 import type { Folder } from '../editor/editor-item'
 import { mixins } from '@/model/i18n'
 
-defineOptions({ name: 'explorer-folder', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'ExplorerFolder', i18n: {}, mixins: [...mixins] })
 
 defineProps<{
 	folder: Folder

@@ -16,13 +16,13 @@
 		<panel class="first">
 			<template #content>
 				<div class="fight" :style="{minWidth: playerWidth + 'px', minHeight: playerHeight + 'px'}">
-					<player ref="playerRef" v-if="fight_id" :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
+					<player v-if="fight_id" ref="playerRef" :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
 				</div>
 			</template>
 		</panel>
 
 		<div v-if="fight" class="fight-info">
-			<div class="center" v-if="fight.type === FightType.BATTLE_ROYALE">
+			<div v-if="fight.type === FightType.BATTLE_ROYALE" class="center">
 				<span v-for="(farmer, f, i) in fight.farmers1" :key="f">
 					<span v-if="i !== 0" class="br-versus">VS</span>
 					<router-link :to="'/farmer/' + farmer.id">
@@ -142,11 +142,11 @@
 	const ReportDialog = defineAsyncComponent(() => import('@/component/moderation/report-dialog.vue'))
 	const Player = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/player/player.${locale}.i18n`))
 
-	defineOptions({ name: 'fight', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'Fight', i18n: {}, mixins: [...mixins] })
 
 	const t = useNamespacedT('fight')
 	const route = useRoute()
-	const playerRef = useTemplateRef<any>('playerRef')
+	const playerRef = useTemplateRef<{ loaded: boolean }>('playerRef')
 
 	const fight_id = ref<string | null>(null)
 	const fight = ref<Fight | null>(null)
@@ -155,8 +155,9 @@
 	const playerHorizontal = ref(false)
 	const showReport = ref(false)
 	const reasons = [Warning.RUDE_SAY, Warning.INCORRECT_LEEK_NAME, Warning.INCORRECT_FARMER_NAME, Warning.INCORRECT_AVATAR]
-	const trophyQueue: any[] = []
-	const fightNotificationQueue: any[] = []
+	type NotificationData = { id: number, type: number, date: number, parameters: string[], new: boolean }
+	const trophyQueue: NotificationData[] = []
+	const fightNotificationQueue: NotificationData[] = []
 
 	function toggleLoading() {
 		if (playerRef.value) {
@@ -168,10 +169,10 @@
 		if (!fight.value) { return [] }
 		const leeks = []
 		for (const leek of fight.value.leeks1) {
-			leeks.push({...leek, farmer: fight.value.farmers1[leek.farmer]})
+			leeks.push({...leek, farmer: fight.value.farmers1[leek.farmer as unknown as number]})
 		}
 		for (const leek of fight.value.leeks2) {
-			leeks.push({...leek, farmer: fight.value.farmers2[leek.farmer]})
+			leeks.push({...leek, farmer: fight.value.farmers2[leek.farmer as unknown as number]})
 		}
 		return leeks
 	})
@@ -271,11 +272,11 @@
 		LeekWars.setTitle(loadedFight.title, LeekWars.formatDate(loadedFight.date))
 	}
 
-	function onTrophy(trophy: any) {
+	function onTrophy(trophy: NotificationData) {
 		trophyQueue.push(trophy)
 	}
 
-	function onFightNotification(message: any) {
+	function onFightNotification(message: NotificationData) {
 		fightNotificationQueue.push(message)
 	}
 

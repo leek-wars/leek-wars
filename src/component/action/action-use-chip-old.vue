@@ -14,14 +14,15 @@
 
 <script setup lang="ts">
 import type { Action } from '@/model/action'
+import type { ReportLeek } from '@/model/fight'
 import Leek from '../report/action-leek.vue'
 import { CHIPS as CHIPS_TYPED } from '@/model/chips'
 
-const CHIPS: Record<number, any> = CHIPS_TYPED
+const CHIPS = CHIPS_TYPED
 
 defineProps<{
 	action: Action
 	a?: number
-	leeks: Record<number, any>
+	leeks: Record<number, ReportLeek>
 }>()
 </script>

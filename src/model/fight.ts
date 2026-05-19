@@ -39,7 +39,7 @@ class ReportLeek {
 	next_xp!: number
 	prev_xp!: number
 	aiTime!: number
-	weapon!: any
+	weapon!: number | null
 	resources!: {[key: number]: number}
 	mob!: boolean
 	xp_locked!: boolean
@@ -48,7 +48,7 @@ class ReportLeek {
 	money?: number
 	talent?: number
 	talent_gain?: number
-	[key: string]: any
+	[key: string]: unknown
 }
 
 class ReportFarmer {
@@ -61,12 +61,19 @@ class ReportFarmer {
 class ReportTeam {
 	id!: number
 	name!: string
+	level!: number
+	talent!: number
+	talent_gain!: number
+	xp!: number
+	cur_xp!: number
+	prev_xp!: number
+	next_xp!: number
 }
 
 class Report {
 	public win!: number
 	public bonus!: number
-	public ai_times!: any[]
+	public ai_times!: number[]
 	public leeks!: ReportLeek[]
 	public leeks1!: ReportLeek[]
 	public leeks2!: ReportLeek[]
@@ -74,6 +81,8 @@ class Report {
 	public farmer2!: ReportFarmer
 	public team1!: ReportTeam
 	public team2!: ReportTeam
+	public flags1!: string[]
+	public flags2!: string[]
 	public duration!: number
 }
 
@@ -104,7 +113,7 @@ class Fight {
 	public report!: Report
 	public winner!: number
 	public queue!: number
-	public trophies!: any[]
+	public trophies!: { trophy: number, name: string, farmer: Farmer }[]
 	public boss_name?: string
 	public chests!: number
 	public size!: number
@@ -114,9 +123,9 @@ class Fight {
 	public starter?: number
 	public views?: number
 	public too_long?: boolean
-	public tournament?: any
+	public tournament?: number
 	public seed?: number
-	[key: string]: any
+	[key: string]: unknown
 }
 
 class FightMap {
@@ -126,7 +135,7 @@ class FightMap {
 	public obstacles!: {[key: number]: number[]}
 	public type!: number
 	public pattern!: number[]
-	public players!: any
+	public players!: {[key: number]: number[]}
 }
 
 class FightLeek {
@@ -163,13 +172,21 @@ class FightLeek {
 	public orientation!: number
 }
 
+/**
+ * Raw action array from the server: [ActionType, ...params].
+ * Most elements are numbers; in MOVE_TO actions, element [3] is a number[].
+ * Typed as number[] for ergonomics; cast element [3] to number[] in MOVE_TO.
+ */
+type RawAction = number[]
+
 class FightData {
-	public actions!: any[][]
+	public actions!: RawAction[]
 	public map!: FightMap
 	public leeks!: FightLeek[]
 	public team1!: number[]
 	public team2!: number[]
-	public ops!: any
+	public ops!: {[key: number]: number}
 }
 
 export { Fight, FightType, FightContext, ArenaMode, Report, ReportLeek, ReportFarmer, ReportTeam, FightLeek, FightMap, FightData }
+export type { RawAction }

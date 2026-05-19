@@ -1,0 +1,22 @@
+{
+	"title": "Proteja sua conta e receba sua recompensa",
+	"intro": "Você perderá seu progresso se trocar de navegador ou apagar os cookies. Valide sua conta para protegê-la e desbloquear a recompensa.",
+	"login": "Escolha seu nome de fazendeiro",
+	"email": "Seu e-mail",
+	"password": "Senha",
+	"validate": "Validar minha conta",
+	"later": "Mais tarde",
+	"mail_sent": "E-mail de validação enviado!",
+	"error_login_length": "Nome de fazendeiro muito curto ou muito longo",
+	"error_login_format": "Formato inválido (apenas letras, números e hífens)",
+	"error_login_already_used": "Este nome de fazendeiro já está em uso",
+	"error_forbidden_name": "Este nome não é permitido",
+	"error_invalid_mail": "E-mail inválido",
+	"error_mail_already_used": "Este e-mail já está em uso",
+	"error_password_length": "Senha muito curta ou muito longa",
+	"error_invalid_godfather": "Padrinho não encontrado",
+	"or": "ou continue com",
+	"use_github": "Continuar com GitHub",
+	"use_google": "Continuar com Google",
+	"error_no_login": "Escolha primeiro seu nome de fazendeiro"
+}

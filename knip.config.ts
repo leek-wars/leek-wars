@@ -10,38 +10,31 @@ const config: KnipConfig = {
 	// Tous les fichiers du projet sont considérés comme accessibles via le router
 	// dynamique. On les liste comme entries pour neutraliser le faux positif.
 	entry: [
-		'src/main.ts',
 		'src/router.ts',
 		'src/lang/locale/*.ts',
 		'src/component/**/*.vue',
 		'public/service-worker.js',
+		// Loaded via the `^monaco-editor$` Vite alias in vite.config.ts; knip can't
+		// follow the alias so it sees these as orphans.
+		'src/component/editor/monaco-stripped.ts',
 	],
 	project: [
 		'src/**/*.{ts,tsx,js,vue}',
 		'!src/component/editor/codemirror/**',
 	],
-	ignore: [
-		'vite.config.d.ts',
-		'vite.config.js',
-	],
 	ignoreDependencies: [
 		// Types-only ou implicit (PostCSS, plugin Vite, glob SCSS)
 		'@types/dompurify',
-		'@types/sortablejs',
 		'@types/google.analytics',
 		'autoprefixer',
-		'vite-plugin-node-polyfills',
 		'xp.css',
-		// Utilisés via shim ou @ts-ignore que knip ne suit pas
-		'vue-facing-decorator',
-		'vue-json-viewer',
-		// Utilisés mais knip ne voit pas l'import (template-only ou indirect)
-		'sortablejs',
-		'swiper',
 		// Utilisé via la CLI npx, pas d'import programmatique
 		'prettier',
 	],
 	ignoreBinaries: ['bundlesize', 'xdg-open'],
+	// Respect `@public` JSDoc tag — used on KeywordKind to keep the full
+	// CompletionItemKind contract even if some members aren't consumed today.
+	tags: ['-public'],
 }
 
 export default config

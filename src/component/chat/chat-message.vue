@@ -19,7 +19,7 @@
 
 			<chat-message-text :message="message" />
 
-			<template v-for="(sub, i) in message.subMessages" :key="sub.id">
+			<template v-for="sub in message.subMessages" :key="sub.id">
 				<chat-message-text :message="sub" />
 			</template>
 
@@ -31,7 +31,7 @@
 			<div class="reactions">
 				<v-tooltip v-for="(reaction, emoji) in message.reactions" :key="emoji" :open-delay="500" :close-delay="0" bottom>
 					<template #activator="{ props }">
-						<div v-bind="props" class="reaction" v-ripple :class="{me: emoji === message.my_reaction}" @click="toggleReaction(emoji)">
+						<div v-ripple v-bind="props" class="reaction" :class="{me: emoji === message.my_reaction}" @click="toggleReaction(emoji)">
 							{{ emoji }} <span v-if="reaction.count > 1" class="count">{{ reaction.count }}</span>
 						</div>
 					</template>
@@ -50,8 +50,6 @@
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import { Chat, ChatMessage, ChatType } from '@/model/chat'
 import { LeekWars } from '@/model/leekwars'
-import { store } from '@/model/store'
-import 'katex/dist/katex.min.css'
 import { computed, watch } from 'vue'
 import ChatMessageText from './chat-message-text.vue'
 
@@ -69,7 +67,6 @@ const emit = defineEmits<{
 	'menu': [event: MouseEvent]
 }>()
 
-const me = computed(() => props.message.farmer.id === store.state.farmer!.id)
 const privateMessages = computed(() => props.chat && props.chat.type === ChatType.PM)
 
 watch(() => props.message.reactions, () => {
@@ -79,9 +76,11 @@ watch(() => props.message.reactions, () => {
 function toggleReaction(emoji: string) {
 	if (props.message.my_reaction === emoji) { // Remove current reaction
 		LeekWars.delete('message-reaction/delete', { message_id: props.message.id })
+		// eslint-disable-next-line vue/no-mutating-props
 		props.message.my_reaction = null
 	} else {
 		LeekWars.post('message-reaction/add', { reaction: emoji, message_id: props.message.id })
+		// eslint-disable-next-line vue/no-mutating-props
 		props.message.my_reaction = emoji
 	}
 }

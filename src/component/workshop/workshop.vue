@@ -115,11 +115,9 @@
 		DATE, PRICE, PRICE_LOT, QUANTITY, /*NAME, */ LEVEL, RARITY, INGREDIENT_COUNT
 	}
 
-	defineOptions({ name: 'workshop', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'Workshop', i18n: {}, mixins: [...mixins] })
 
 	const schemes = ref<SchemeTemplate[]>([])
-	const scheme = ref<any>(null)
-	const forge = ref<any[]>([null, null, null, null, null, null, null, null, null])
 	const sort = ref<Sort>(parseInt(localStorage.getItem('workshop/sort') || '0', 10) as Sort)
 	const filter = ref<ItemType>(parseInt(localStorage.getItem('workshop/filter') || '0', 10) as ItemType)
 
@@ -148,85 +146,6 @@
 		LeekWars.box = false
 	})
 
-	function use(s: any) {
-		scheme.value = s
-		for (let i = 0; i < 9; ++i) {
-			forge.value[i] = null
-		}
-		for (let i = 0; i < s.items.length; ++i) {
-			forge.value[i] = {template: s.items[i][0][0], quantity: s.items[i][0][1]}
-		}
-	}
-
-	function pick(item: any, position: number, event: MouseEvent) {
-		const all = event.ctrlKey
-		const added_quantity = all ? item.quantity : 1
-		let forgePosition = -1
-		let quantity = added_quantity
-		for (let i = 0; i < 9; ++i) {
-			if (forge.value[i] && forge.value[i].template === item.template) {
-				forgePosition = i
-				quantity += forge.value[i].quantity
-				break
-			}
-		}
-		if (forgePosition === -1) {
-			for (let i = 0; i < 9; ++i) {
-				if (forge.value[i] == null) {
-					forgePosition = i
-					break
-				}
-			}
-		}
-		forge.value[forgePosition] = {template: item.template, quantity}
-		removeInventory(position, added_quantity)
-	}
-
-	function removeInventory(position: number, quantity: number) {
-		// noop
-	}
-
-	function remove(i: number, event: MouseEvent) {
-		const all = event.ctrlKey
-		if (forge.value[i].quantity === 1 || all) {
-			addInventory(forge.value[i].template, forge.value[i].quantity)
-			forge.value[i] = null
-		} else {
-			const quantity = all ? forge.value[i].quantity : 1
-			addInventory(forge.value[i].template, quantity)
-			forge.value[i] = {template: forge.value[i].template, quantity: forge.value[i].quantity - quantity}
-		}
-	}
-
-	function addInventory(template: number, quantity: number) {
-		// noop
-	}
-
-	function resolveScheme() {
-		console.log("forge updated")
-		scheme.value = null
-		for (const s of schemes.value) {
-			if (match(s)) {
-				scheme.value = s
-			}
-		}
-	}
-
-	function match(scheme: any) {
-		let forge_items = 0
-		for (const item of forge.value) {
-			if (item) { forge_items++ }
-		}
-		if (forge_items !== scheme.items.length) { return false }
-
-		for (let i = 0; i < forge.value.length; ++i) {
-			if (!forge.value[i]) continue
-			if (i >= scheme.items.length) { return false }
-		}
-		return true
-	}
-
-	watch(forge, resolveScheme)
 	watch(sort, () => localStorage.setItem('workshop/sort', '' + sort.value))
 	watch(filter, () => localStorage.setItem('workshop/filter', '' + filter.value))
 </script>

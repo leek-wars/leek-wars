@@ -77,9 +77,9 @@
 						</tr>
 					</table>
 					<div class="center">
-						<v-btn v-if="signupMethod === 1" size="large" color="primary" type="submit">{{ $t('verify') }}</v-btn>
-						<v-btn v-else-if="signupMethod === 2" color="black" type="submit" class="gh-button"> <img src="/image/github_white.png"> {{ $t('verify_gh') }}</v-btn>
-						<v-btn v-else type="submit" class="google-button"> <img src="/image/google.svg"> {{ $t('verify_google') }}</v-btn>
+						<v-btn v-if="signupMethod === 1" size="large" color="primary" type="submit" :disabled="submittingVerify" :loading="submittingVerify">{{ $t('verify') }}</v-btn>
+						<v-btn v-else-if="signupMethod === 2" color="black" type="submit" class="gh-button" :disabled="submittingVerify" :loading="submittingVerify"> <img src="/image/github_white.png"> {{ $t('verify_gh') }}</v-btn>
+						<v-btn v-else type="submit" class="google-button" :disabled="submittingVerify" :loading="submittingVerify"> <img src="/image/google.svg"> {{ $t('verify_google') }}</v-btn>
 					</div>
 				</form>
 			</div>
@@ -97,7 +97,7 @@
 
 			<panel :title="$t('misc_options')" icon="mdi-cog-outline">
 				<div class="misc-settings">
-					<div class="setting" id="dark-button">
+					<div id="dark-button" class="setting">
 						<div>{{ $t('theme') }}</div>
 						<div width="100">
 							<v-radio-group v-model="LeekWars.themeSetting" hide-details inline>
@@ -107,23 +107,23 @@
 							</v-radio-group>
 						</div>
 					</div>
-					<div class="setting" id="sfw-button">
+					<div id="sfw-button" class="setting">
 						<div>{{ $t('activate_discrete_mode') }}</div>
 						<div><v-switch v-model="sfwMode" hide-details /></div>
 					</div>
-					<div class="setting" id="notifs-popups-button">
+					<div id="notifs-popups-button" class="setting">
 						<div>{{ $t('notifs_popups') }}</div>
 						<div><v-switch v-model="notifsPopups" hide-details /></div>
 					</div>
-					<div class="setting" id="notifs-results-button">
+					<div id="notifs-results-button" class="setting">
 						<div>{{ $t('notifs_results') }}</div>
 						<div><v-switch v-model="notifsResults" hide-details /></div>
 					</div>
-					<div class="setting" v-if="LeekWars.mobile">
+					<div v-if="LeekWars.mobile" class="setting">
 						<div>{{ $t('chat_first') }}</div>
 						<div><v-switch v-model="chatFirst" hide-details /></div>
 					</div>
-					<div class="setting" v-if="!LeekWars.mobile">
+					<div v-if="!LeekWars.mobile" class="setting">
 						<div>{{ $t('leek_theme') }}</div>
 						<div><v-switch v-model="LeekWars.leekTheme" hide-details /></div>
 					</div>
@@ -171,12 +171,12 @@
 					<v-icon>{{ viewDeleteAccount ? 'mdi-menu-up' : 'mdi-menu-down' }}</v-icon>
 				</div>
 				<div v-if="viewDeleteAccount">
-					<v-btn @click="deleteDialog = true" color="error">{{ $t('delete_account') }}</v-btn>
+					<v-btn color="error" @click="deleteDialog = true">{{ $t('delete_account') }}</v-btn>
 					<br><br>
 				</div>
 
-				<v-switch v-if="$store.state.farmer?.verified" v-model="settings.github_login" :disabled="!$store.state.farmer.pass && !settings.google_login" :label="$t('allow_github')" @change="updateGithubLogin" hide-details />
-				<v-switch v-if="$store.state.farmer?.verified" v-model="settings.google_login" :disabled="!$store.state.farmer.pass && !settings.github_login" :label="$t('allow_google')" @change="updateGoogleLogin" hide-details />
+				<v-switch v-if="$store.state.farmer?.verified" v-model="settings.github_login" :disabled="!$store.state.farmer.pass && !settings.google_login" :label="$t('allow_github')" hide-details @change="updateGithubLogin" />
+				<v-switch v-if="$store.state.farmer?.verified" v-model="settings.google_login" :disabled="!$store.state.farmer.pass && !settings.github_login" :label="$t('allow_google')" hide-details @change="updateGoogleLogin" />
 			</panel>
 
 			<panel v-if="$store.state.farmer?.verified" :title="$t('main.notifications')" icon="mdi-bell-outline">
@@ -201,10 +201,10 @@
 										{{ $t('notification.category_' + category.id + '_desc') }}
 									</td>
 									<td class="push">
-										<v-checkbox v-model="settings['push_' + category.name]" hide-details label="Push" @change="updateNotif('push_' + category.name, $event)" />
+										<v-checkbox v-model="settings['push_' + category.name]" hide-details label="Push" @update:model-value="updateNotif('push_' + category.name, settings['push_' + category.name])" />
 									</td>
 									<td class="mail">
-										<v-checkbox v-model="settings['mail_' + category.name]" hide-details label="E-mail" @change="updateNotif('mail_' + category.name, $event)" />
+										<v-checkbox v-model="settings['mail_' + category.name]" hide-details label="E-mail" @update:model-value="updateNotif('mail_' + category.name, settings['mail_' + category.name])" />
 									</td>
 								</tr>
 							</template>
@@ -263,7 +263,7 @@
 		<popup v-model="deleteFailedDialog" :width="600">
 			<template #icon><v-icon>mdi-delete</v-icon></template>
 			<template #title><span>{{ $t('delete_failed') }}</span></template>
-			{{ $t(deleteFailedError) }}
+			{{ $t('error_' + deleteFailedError) }}
 		</popup>
 	</div>
 </template>
@@ -276,7 +276,7 @@
 	import { ref, watch } from 'vue'
 	import { useRouter } from 'vue-router'
 
-	defineOptions({ name: 'settings', i18n: {}, mixins: [...mixins], components: { TwoFactor } })
+	defineOptions({ name: 'Settings', i18n: {}, mixins: [...mixins], components: { TwoFactor } })
 
 	const t = useNamespacedT('settings')
 	const router = useRouter()
@@ -294,7 +294,7 @@
 		{ id: 9, icon: 'mdi-gavel', name: 'moderation' }
 	]
 
-	const settings = ref<any>(null)
+	const settings = ref<Record<string, unknown> | null>(null)
 	const sfwMode = ref(localStorage.getItem('sfw') === 'true')
 	const notifsPopups = ref(localStorage.getItem('options/notifs-popups') !== 'false')
 	const notifsResults = ref(localStorage.getItem('options/notifs-results') === 'true')
@@ -306,7 +306,7 @@
 	const deleteConfirmPassword = ref('')
 	const deleteSuccessDialog = ref(false)
 	const deleteFailedDialog = ref(false)
-	const deleteFailedError = ref<any>(null)
+	const deleteFailedError = ref<string>('unknown')
 	const deleteForumMessages = ref(false)
 	const advanced = ref(false)
 	const password = ref('')
@@ -315,7 +315,6 @@
 	const viewChangePassword = ref(false)
 	const viewChangeEmail = ref(false)
 	const viewDeleteAccount = ref(false)
-	const view2FA = ref(false)
 	const changeEmailSent = ref(false)
 	const errors = ref<{[key: string]: string[]}>({})
 	const login = ref('')
@@ -323,6 +322,7 @@
 	const signupMethod = ref(1)
 	const email = ref('')
 	const password1 = ref('')
+	const submittingVerify = ref(false)
 
 	settings.value = {}
 	for (const category in mails) {
@@ -384,7 +384,7 @@
 
 	watch(sfwMode, () => {
 		localStorage.setItem('sfw', '' + sfwMode.value)
-		sfwMode.value ? LeekWars.sfwOn() : LeekWars.sfwOff()
+		if (sfwMode.value) { LeekWars.sfwOn() } else { LeekWars.sfwOff() }
 		if (sfwMode.value) {
 			LeekWars.post('trophy/unlock', {trophy_id: 234})
 		}
@@ -462,7 +462,7 @@
 			}).error(error => {
 				deleteDialog.value = false
 				deleteFailedDialog.value = true
-				deleteFailedError.value = error.error
+				deleteFailedError.value = typeof error?.error === 'string' ? error.error : 'unknown'
 			})
 		}
 	}
@@ -479,7 +479,7 @@
 		}).error(error => {
 			deleteConfirmDialog.value = false
 			deleteFailedDialog.value = true
-			deleteFailedError.value = error.error
+			deleteFailedError.value = typeof error?.error === 'string' ? error.error : 'unknown'
 		})
 	}
 
@@ -506,13 +506,16 @@
 
 	function submit(e: Event) {
 		e.preventDefault()
+		if (submittingVerify.value) return false
+		submittingVerify.value = true
 		errors.value = {}
 		const provider = signupMethod.value === 2 ? 'github' : signupMethod.value === 3 ? 'google' : null
 		const service = provider ? `farmer/verify-${provider}` : 'farmer/verify'
-		const args = {
+		const args: Record<string, unknown> = {
 			login: login.value,
 			godfather: godfather.value,
-		} as any
+			source: 'settings',
+		}
 		if (signupMethod.value === 1) {
 			args.password = password1.value
 			args.email = email.value
@@ -523,10 +526,16 @@
 			} else {
 				router.push('/signup/success/' + login.value)
 			}
-		}).error(errs => {
-			for (const error of errs) {
-				const form = ['login', 'leek', 'email', 'password1', 'password2', 'godfather'][error[0]]
-				addError(form, t('error_' + error[1], error[2]) as string)
+		}).error(payload => {
+			submittingVerify.value = false
+			if (Array.isArray(payload)) {
+				for (const error of payload) {
+					const form = ['login', 'leek', 'email', 'password1', 'password2', 'godfather'][error[0]]
+					addError(form, t('error_' + error[1], error[2]) as string)
+				}
+			} else {
+				const code = typeof payload?.error === 'string' ? payload.error : 'unknown'
+				LeekWars.toast(t('error_' + code) as string)
 			}
 		})
 		return false

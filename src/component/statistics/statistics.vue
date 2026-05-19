@@ -63,15 +63,15 @@
 						<div class="type">{{ $t(statistic.today_state ? 'today' : 'total') }}</div>
 					</div>
 					<div v-if="name === 'fight_tournament' || name === 'turrets_killed' || name === 'ais_v4' || name === 'godsons'" :key="name + '1'" class="delimiter"></div>
-					<div v-if="name === 'godsons'" class="chart-wrap left" :key="name + '2'">
+					<div v-if="name === 'godsons'" :key="name + '2'" class="chart-wrap left">
 						<div class="chart"><Doughnut ref="charts" :data="chartLanguage" :options="chartOptions" /></div>
 						<div class="title">{{ $t('chart_language') }}</div>
 					</div>
-					<div v-if="name === 'damage'" class="chart-wrap left"  :key="name + '2'">
+					<div v-if="name === 'damage'" :key="name + '2'"  class="chart-wrap left">
 						<div class="chart"><Doughnut ref="charts" :data="chartDamage" :options="chartOptions" /></div>
 						<div class="title">{{ $t('chart_damage_type') }}</div>
 					</div>
-					<div v-if="name === 'fight_tournament'" class="chart-wrap right" :key="name + '2'">
+					<div v-if="name === 'fight_tournament'" :key="name + '2'" class="chart-wrap right">
 						<div class="chart"><Doughnut ref="charts" :data="chartFightContext" :options="chartOptions" /></div>
 						<div class="title">{{ $t('chart_fight_context') }}</div>
 					</div>
@@ -110,19 +110,19 @@
 		icon?: string
 	}
 
-	defineOptions({ name: 'statistics', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'Statistics', i18n: {}, mixins: [...mixins] })
 
 	const loaded = ref(false)
 	const statistics = ref<Array<{[key: string]: Statistic}>>([])
 	const statistics_cloned = ref<Array<{[key: string]: Statistic}>>([])
 	const interpolated: Statistic[] = []
-	let interval: any = null
+	let interval: ReturnType<typeof setInterval> | null = null
 	const playing = ref(true)
 	const selectedStatistic = ref('')
 	const selectedStatisticColor = ref('')
-	const chartOptions = ref<any>(null)
-	const actions = ref<any[]>([])
-	const charts = ref<any[] | null>(null)
+	const chartOptions = ref<Record<string, unknown> | null>(null)
+	const actions = ref<{ icon: string, click: () => void }[]>([])
+	const charts = ref<{ chart?: unknown }[] | null>(null)
 
 	function makeChartData(category: number, values: string[]) {
 		const stats = statistics_cloned.value[category]
@@ -177,10 +177,10 @@
 		plugins: {
 			legend: { display: false },
 		},
-		onHover: (_event: any, elements: any, chart: any) => {
+		onHover: (_event: unknown, elements: { index: number }[], chart: { data: { datasets: { keys?: string[], backgroundColor: string[] }[] }, setActiveElements: (e: unknown[]) => void, update: (mode: string) => void }) => {
 			if (elements.length > 0) {
 				const idx = elements[0].index
-				const keys = (chart.data.datasets[0] as any).keys
+				const keys = chart.data.datasets[0].keys
 				selectedStatistic.value = keys[idx]
 				selectedStatisticColor.value = chart.data.datasets[0].backgroundColor[idx]
 			} else {
@@ -229,17 +229,17 @@
 
 	watch(playing, () => {
 		localStorage.setItem('statistics/play', '' + playing.value)
-		playing.value ? play() : pause()
+		if (playing.value) { play() } else { pause() }
 	})
 
 	function hoverStat(stat: string) {
 		selectedStatistic.value = stat
-		const cs = charts.value as any[]
+		const cs = charts.value
 		if (!cs) return
 		for (const chartComponent of cs) {
-			const chart = chartComponent?.chart
+			const chart = chartComponent?.chart as { data: { datasets: { keys?: string[], backgroundColor: string[] }[] }, setActiveElements: (e: unknown[]) => void, update: (mode: string) => void } | undefined
 			if (!chart?.data?.datasets?.[0]) continue
-			const keys = (chart.data.datasets[0] as any).keys
+			const keys = chart.data.datasets[0].keys
 			if (!keys) continue
 			const idx = keys.indexOf(stat)
 			if (idx !== -1) {
@@ -254,10 +254,10 @@
 	function hoverLeave() {
 		selectedStatistic.value = ''
 		selectedStatisticColor.value = ''
-		const cs = charts.value as any[]
+		const cs = charts.value
 		if (!cs) return
 		for (const chartComponent of cs) {
-			const chart = chartComponent?.chart
+			const chart = chartComponent?.chart as { setActiveElements: (e: unknown[]) => void, update: (mode: string) => void } | undefined
 			if (!chart) continue
 			chart.setActiveElements([])
 			chart.update('none')

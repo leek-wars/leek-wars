@@ -6,7 +6,7 @@
 	"level": "レベル",
 	"talent": "タレント",
 	"avg_leek_level": "平均レベル",
-	"members": "ファーマー",
+	"members": "ブリーダー",
 	"leeks": "リーク",
 	"activity": "アクティビティ",
 	"recruitment_message": "募集",
@@ -23,5 +23,7 @@
 	"error_already_have_candidacy": "すでに応募中です。",
 	"error_already_in_team": "すでにチームに所属しています。",
 	"error_team_full": "このチームは満員です。",
-	"error_too_many_candidacies": "すでに5件の応募があります。"
+	"error_too_many_candidacies": "すでに5件の応募があります。",
+	"closed": "閉鎖中",
+	"show_closed": "閉鎖中も表示"
 }

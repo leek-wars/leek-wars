@@ -1,5 +1,5 @@
 {
-	"description": "银行为您提供<b>水晶</b> <span class='crystal'></span>，韭菜大战的第二种货币，让您可以购买药水和其他纯粹装饰性且<b>不影响</b> 你在战斗中的力量。 <br>\n犒劳自己，给韭菜上色药水，支持韭菜大战！",
+	"description": "欢迎来到银行！<b>水晶</b> <span class='crystal'></span> 可让您获得韭葱的药水、额外战斗、颜色和配件。<b>战斗中没有优势</b>：所有购买都是装饰性或实用性的。<br>\n每次购买直接支持 Leek Wars 的开发。谢谢！",
 	"pack_of_n_crystals": "一包 <b>{0}</b> 水晶",
 	"paypal_description": "以 {1} 欧元的价格购买 {0} 颗水晶",
 	"title": "水晶银行",
@@ -24,6 +24,10 @@
 	"payment_no_code": "没有代码",
 	"payment_wrong_code": "无效的代码",
 	"first_purchase_banner": "首次购买？您的所有水晶都将翻倍！",
+	"suggestion_target_fights": "100场战斗包",
+	"suggestion_with_remainder": "→ {price}的{pack}包足以覆盖此购买，还剩{remainder}。",
+	"suggestion_exact": "→ {price}的{pack}包正好覆盖此购买。",
+	"suggestion_cta": "查看此包",
 	"items_title": "它们正等着您",
 	"back": "返回银行",
 	"best_value": "超值优惠",

@@ -1,0 +1,22 @@
+{
+	"title": "Secure your account and claim your reward",
+	"intro": "You'll lose your progress if you switch browsers or clear your cookies. Validate your account to secure it and unlock the reward!",
+	"login": "Choose your farmer name",
+	"email": "Your email address",
+	"password": "Password",
+	"validate": "Validate my account",
+	"later": "Later",
+	"mail_sent": "Validation email sent!",
+	"error_login_length": "Farmer name too short or too long",
+	"error_login_format": "Invalid name format (letters, digits, dashes only)",
+	"error_login_already_used": "This farmer name is already taken",
+	"error_forbidden_name": "This name is not allowed",
+	"error_invalid_mail": "Invalid email address",
+	"error_mail_already_used": "This email is already in use",
+	"error_password_length": "Password too short or too long",
+	"error_invalid_godfather": "Referrer not found",
+	"or": "or continue with",
+	"use_github": "Continue with GitHub",
+	"use_google": "Continue with Google",
+	"error_no_login": "Choose your farmer name first"
+}

@@ -17,7 +17,7 @@
 import { ref, watch, nextTick, onMounted, getCurrentInstance } from 'vue'
 import { type Command, Commands } from '@/model/commands'
 
-defineOptions({ name: 'chat-commands' })
+defineOptions({ name: 'ChatCommands' })
 
 const props = defineProps<{
 	filter?: string
@@ -28,7 +28,7 @@ const emit = defineEmits<{
 }>()
 
 const commands = ref(Commands.commands)
-const options = ref<any[]>([])
+const options = ref<unknown[]>([])
 const filterOptions = ref<string | null>(null)
 const index = ref(0)
 const instance = getCurrentInstance()
@@ -71,6 +71,7 @@ function selectFirst() {
 }
 function scrollToSelected() {
 	nextTick(() => {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const items = (instance?.proxy as any)?.$el?.parentElement?.querySelectorAll('.command')
 		if (items) (items[index.value] as HTMLElement)?.scrollIntoView({ block: 'nearest' })
 	})

@@ -32,11 +32,11 @@ import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 
 const props = defineProps<{
-	result: any
+	result: Record<string, unknown>
 }>()
 
 defineEmits<{
-	gotoresult: [result: any]
+	gotoresult: [result: Record<string, unknown>]
 }>()
 
 const description = computed(() => {

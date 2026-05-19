@@ -9,7 +9,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-defineOptions({ name: 'range-view' })
+defineOptions({ name: 'RangeView' })
 
 const props = defineProps<{
 	min: number

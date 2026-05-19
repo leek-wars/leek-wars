@@ -27,6 +27,7 @@
 
 <script setup lang="ts">
 import type { Action } from '@/model/action'
+import type { ReportLeek } from '@/model/fight'
 import Leek from '../report/action-leek.vue'
 import { ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED } from '@/model/item'
 
@@ -35,6 +36,6 @@ const ITEM_CATEGORY_NAME: Record<number, string> = ITEM_CATEGORY_NAME_TYPED
 defineProps<{
 	action: Action
 	a?: number
-	leeks: Record<number, any>
+	leeks: Record<number, ReportLeek>
 }>()
 </script>

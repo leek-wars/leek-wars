@@ -1,18 +1,7 @@
 import * as monaco from 'monaco-editor'
-import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 
-// @ts-ignore
+// @ts-expect-error no types for leekscript-monarch.js
 import leekscript from './leekscript-monarch.js'
-
-import { cspNonce } from './monaco-csp'
-
-self.MonacoEnvironment = {
-	getWorker(_: any, label: string) {
-		return new editorWorker()
-	},
-	// Not in monaco's Environment type but consumed at runtime (CSP nonce).
-	nonce: cspNonce,
-} as monaco.Environment
 
 import { i18n } from '@/model/i18n';
 import { fileSystem } from '@/model/filesystem';
@@ -106,11 +95,11 @@ monaco.editor.addKeybindingRules([
 	}
 ]);
 
-monaco.editor.registerCommand('jump', (accessor, args) => {
+monaco.editor.registerCommand('jump', (_accessor, args) => {
 	emitter.emit('jump', { ai: fileSystem.aiByFullPath[args.ai], line: args.line, column: args.column })
 })
 
-monaco.editor.registerCommand('findReferencesAtPosition', (accessor, uri: monaco.Uri, position: monaco.IPosition) => {
+monaco.editor.registerCommand('findReferencesAtPosition', (_accessor, uri: monaco.Uri, position: monaco.IPosition) => {
 	const editor = monaco.editor.getEditors().find(e => e.getModel()?.uri.toString() === uri.toString())
 	if (editor) {
 		editor.setPosition(position)
@@ -168,7 +157,7 @@ monaco.editor.defineTheme("monokai", {
 })
 
 monaco.editor.registerEditorOpener({
-	openCodeEditor: async (source, resource, selectionOrPosition) => {
+	openCodeEditor: async (_source, resource, selectionOrPosition) => {
 		const ai = fileSystem.aiByFullPath[resource.path.substring(1)]
 		await fileSystem.load(ai)
 		const uri = monaco.Uri.file(ai.path)
@@ -183,7 +172,7 @@ monaco.editor.registerEditorOpener({
 const ANNOTATION_NAMES = new Set(['unused', 'deprecated', 'pure', 'nodiscard', 'override', 'tailrec', 'todo'])
 
 monaco.languages.registerHoverProvider("leekscript", {
-	provideHover: async (model, position, token, context) => {
+	provideHover: async (model, position, _token, _context) => {
 		// Annotations hover — resolved locally, no server round-trip
 		const lineText = model.getLineContent(position.lineNumber)
 		const word = model.getWordAtPosition(position)
@@ -254,7 +243,7 @@ monaco.languages.registerHoverProvider("leekscript", {
 })
 
 monaco.languages.registerDefinitionProvider("leekscript", {
-	provideDefinition: async (model, position, token) => {
+	provideDefinition: async (model, position, _token) => {
 		// console.log("provideDefinition", model.uri.path, position.lineNumber, position.column)
 
 		// Make a fresh hover request instead of using potentially stale lastHover
@@ -303,12 +292,12 @@ function countConstructorParams(lineContent: string): number {
 }
 
 monaco.languages.registerReferenceProvider("leekscript", {
-	provideReferences: async (model, position, context, token) => {
+	provideReferences: async (model, position, _context, _token) => {
 		const ai = fileSystem.aiByFullPath[model.uri.path.substring(1)]
 		if (!ai) { return [] }
 
 		const word = model.getWordAtPosition(position)
-		let locations: any[]
+		let locations: [string, number, number, number, number][]
 		if (word && word.word === 'constructor') {
 			const className = findEnclosingClassName(ai, position.lineNumber)
 			if (!className) { return [] }
@@ -324,12 +313,12 @@ monaco.languages.registerReferenceProvider("leekscript", {
 		if (!locations || !locations.length) { return [] }
 
 		// Load all referenced files in parallel
-		const uniqueAis = new Map<string, any>()
+		const uniqueAis = new Map<string, AI>()
 		for (const loc of locations) {
 			const targetAi = fileSystem.ais[loc[0]]
 			if (targetAi && !uniqueAis.has(loc[0])) { uniqueAis.set(loc[0], targetAi) }
 		}
-		await Promise.all([...uniqueAis.values()].map((a: any) => fileSystem.load(a)))
+		await Promise.all([...uniqueAis.values()].map((a) => fileSystem.load(a)))
 
 		const results: monaco.languages.Location[] = []
 		for (const loc of locations) {
@@ -349,7 +338,7 @@ monaco.languages.registerReferenceProvider("leekscript", {
 })
 
 monaco.languages.registerCodeLensProvider("leekscript", {
-	provideCodeLenses: (model, token) => {
+	provideCodeLenses: (model, _token) => {
 		const ai = fileSystem.aiByFullPath[model.uri.path.substring(1)]
 		if (!ai) { return { lenses: [], dispose: () => {} } }
 
@@ -404,7 +393,7 @@ monaco.languages.registerCodeLensProvider("leekscript", {
 		}
 		return { lenses, dispose: () => {} }
 	},
-	resolveCodeLens: async (model, codeLens, token) => {
+	resolveCodeLens: async (model, codeLens, _token) => {
 		const ai = fileSystem.aiByFullPath[model.uri.path.substring(1)]
 		if (!ai || !codeLens.id) { return codeLens }
 
@@ -612,7 +601,7 @@ LeekWars.completionsProvider = monaco.languages.registerCompletionItemProvider("
 			startColumn: word.startColumn,
 			endColumn: word.endColumn,
 		}
-		const suggestions = (completions ? completions.items.map((i: any) => ({
+		const suggestions = (completions ? completions.items.map((i) => ({
 			label: i.name,
 			kind: monaco.languages.CompletionItemKind.Function,
 			documentation: "Describe your library here",

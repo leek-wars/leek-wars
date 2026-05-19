@@ -17,7 +17,7 @@ import ChatCommands from './chat-commands.vue'
 import ChatPseudos from './chat-pseudos.vue'
 import EmojiPicker from './emoji-picker.vue'
 
-defineOptions({ name: 'chat-input', components: { 'emoji-picker': EmojiPicker, ChatCommands, ChatPseudos } })
+defineOptions({ name: 'ChatInput', components: { 'emoji-picker': EmojiPicker, ChatCommands, ChatPseudos } })
 
 defineProps<{
 	chat: number
@@ -26,8 +26,8 @@ defineProps<{
 const emit = defineEmits(['message'])
 
 const inputRef = useTemplateRef<HTMLElement>('input')
-const commandsRef = useTemplateRef<any>('commands')
-const pseudosRef = useTemplateRef<any>('pseudos')
+const commandsRef = useTemplateRef<import("vue").ComponentPublicInstance>('commands')
+const pseudosRef = useTemplateRef<import("vue").ComponentPublicInstance>('pseudos')
 
 const message = ref('')
 const cursor = ref(0)

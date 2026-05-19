@@ -185,7 +185,7 @@
 		SMALL, NORMAL, LARGE
 	}
 
-	defineOptions({ name: 'inventory', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'Inventory', i18n: {}, mixins: [...mixins] })
 
 	const t = useNamespacedT('inventory')
 	const router = useRouter()
@@ -193,7 +193,6 @@
 
 	const CATEGORY_ITEMS = 1
 	const CATEGORY_RESOURCES = 2
-	const category = ref(3)
 	const placeholder_count = ref(0)
 	const columns = ref(0)
 	const sort = ref<Sort>(parseInt(localStorage.getItem('inventory/sort') || '0', 10) as Sort)
@@ -204,7 +203,7 @@
 	const retrieveDialog = ref(false)
 	const retrieveItems = ref<Item[]>([])
 
-	function isSchemeCraftable(item: any): boolean {
+	function isSchemeCraftable(item: Item & { type: ItemType }): boolean {
 		if (item.type !== ItemType.SCHEME || !store.state.farmer) return true
 		const scheme = LeekWars.schemes[LeekWars.items[item.template].params]
 		if (!scheme) return true
@@ -215,11 +214,11 @@
 			if (itemId === 148) {
 				if (farmer.habs < quantity) return false
 			} else {
-				const found = farmer.resources.find((i: any) => i.template === itemId)
-					|| farmer.components.find((i: any) => i.template === itemId)
-					|| farmer.potions.find((i: any) => i.template === itemId)
-					|| farmer.weapons.find((i: any) => i.template === itemId)
-					|| farmer.chips.find((i: any) => i.template === itemId)
+				const found = farmer.resources.find((i) => i.template === itemId)
+					|| farmer.components.find((i) => i.template === itemId)
+					|| farmer.potions.find((i) => i.template === itemId)
+					|| farmer.weapons.find((i) => i.template === itemId)
+					|| farmer.chips.find((i) => i.template === itemId)
 				if (!found || found.quantity < quantity) return false
 			}
 		}
@@ -234,7 +233,7 @@
 	let tooltipHideTimer = 0
 	let tooltipOnTooltip = false
 
-	function showTooltip(item: any, event: MouseEvent) {
+	function showTooltip(item: Item & { type: ItemType }, event: MouseEvent) {
 		clearTimeout(tooltipHideTimer)
 		const target = event.currentTarget as HTMLElement
 		if (tooltipVisible.value) {
@@ -293,7 +292,8 @@
 		return inventory.value.filter(item => item.type == filter.value)
 	})
 
-	function sortCompare(a: any, b: any) {
+	type InventoryItem = Item & { type: ItemType }
+	function sortCompare(a: InventoryItem, b: InventoryItem) {
 		if (sort.value === Sort.DATE) {
 			if (b.time === a.time) return a.id - b.id
 			return b.time - a.time
@@ -306,7 +306,7 @@
 	}
 
 	const sorted_inventory = computed(() => {
-		return [...filtered_inventory.value].sort((a: any, b: any) => {
+		return [...filtered_inventory.value].sort((a, b) => {
 			if (group.value === Group.TYPE && a.type !== b.type) return a.type - b.type
 			if (group.value === Group.RARITY) {
 				const ra = LeekWars.items[a.template].rarity
@@ -317,9 +317,9 @@
 		})
 	})
 
-	const display_inventory = computed<any[]>(() => {
+	const display_inventory = computed<{ item?: InventoryItem; key: string | number; separator?: boolean; placeholder?: boolean; rarity?: number; type?: ItemType; count?: number; collapsed?: boolean; groupKey?: number; craftable?: boolean }[]>(() => {
 		const items = sorted_inventory.value
-		const entry = (item: any) => ({ item, key: item.id, craftable: isSchemeCraftable(item) })
+		const entry = (item: InventoryItem) => ({ item, key: item.id, craftable: isSchemeCraftable(item) })
 		if (group.value === Group.NONE) return items.map(entry)
 		const groupCounts: Record<number, number> = {}
 		for (const item of items) {
@@ -327,7 +327,7 @@
 			groupCounts[gk] = (groupCounts[gk] || 0) + 1
 		}
 		const cols = columns.value || 1
-		const result: any[] = []
+		const result: unknown[] = []
 		let lastGroup = -1
 		let groupCount = 0
 		for (const item of items) {
@@ -356,7 +356,7 @@
 		return result
 	})
 
-	const total_estimated = computed(() => Math.floor(filtered_inventory.value.reduce((s: number, i: any) => s + (LeekWars.items[i.template]?.price ?? 0) * i.quantity, 0)))
+	const total_estimated = computed(() => Math.floor(filtered_inventory.value.reduce((s: number, i) => s + (LeekWars.items[i.template]?.price ?? 0) * i.quantity, 0)))
 
 	const SIZES = {
 		[Size.SMALL]:  { desktop: { w: 55, h: 58 }, mobile: { w: 45, h: 48 } },

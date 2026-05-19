@@ -8,13 +8,13 @@
 				<div class="add-wrapper">
 					<v-tooltip v-for="q in [1, 10, 100]" :key="q">
 						<template #activator="{ props }">
-							<span :q="q" class="add" :class="{disabled: wouldExceedMax(c, q)}" @click="add(c, q)" v-bind="props"></span>
+							<span :q="q" class="add" :class="{disabled: wouldExceedMax(c, q)}" v-bind="props" @click="add(c, q)"></span>
 						</template>
 						<div>{{ costs[c + q].cost + ' capital ⇔ ' + costs[c + q].bonus + ' ' + $t('characteristic.' + c) }}</div>
 					</v-tooltip>
 					<v-tooltip v-if="modelValue[c]">
 						<template #activator="{ props }">
-							<span q="0" class="add" @click="clear(c)" v-bind="props"></span>
+							<span q="0" class="add" v-bind="props" @click="clear(c)"></span>
 						</template>
 						{{ $t('main.clear') }}
 					</v-tooltip>
@@ -49,7 +49,7 @@ const costs = reactive<{ [key: string]: { cost: number, bonus: number } }>({})
 const bonuses = computed<{ [stat: string]: number }>(() => {
 	const out: { [stat: string]: number } = {}
 	for (const c of LeekWars.characteristics) {
-		out[c] = capitalToStatBonus(c, (props.modelValue as any)[c] || 0)
+		out[c] = capitalToStatBonus(c, props.modelValue[c] || 0)
 	}
 	return out
 })
@@ -62,12 +62,12 @@ function buttonCost(q: number, charac: string) {
 	let remaining = q
 	while (remaining > 0) {
 		let step = 0
-		for (; step < (COSTS as any)[charac].length; ++step) {
-			if ((COSTS as any)[charac][step].step > tmpBonus) break
+		for (; step < COSTS[charac].length; ++step) {
+			if (COSTS[charac][step].step > tmpBonus) break
 		}
 		if (step > 0) step--
-		const cost = (COSTS as any)[charac][step].capital
-		const bonus = (COSTS as any)[charac][step].sup
+		const cost = COSTS[charac][step].capital
+		const bonus = COSTS[charac][step].sup
 		remaining -= bonus
 		tmpBonus += bonus
 		costs[charac + q].cost += cost
@@ -83,7 +83,7 @@ function refreshCosts() {
 
 function totalCapital(): number {
 	let total = 0
-	for (const k in props.modelValue) total += (props.modelValue as any)[k] || 0
+	for (const k in props.modelValue) total += props.modelValue[k] || 0
 	return total
 }
 
@@ -97,13 +97,13 @@ function add(charac: string, q: number) {
 	const cost = costs[charac + q]
 	if (!cost) return
 	if (totalCapital() + cost.cost > props.max) return
-	const next = { ...props.modelValue } as any
+	const next: LoadoutStats = { ...props.modelValue }
 	next[charac] = (next[charac] || 0) + cost.cost
 	emit('update:modelValue', next)
 }
 
 function clear(charac: string) {
-	const next = { ...props.modelValue } as any
+	const next: LoadoutStats = { ...props.modelValue }
 	delete next[charac]
 	emit('update:modelValue', next)
 }

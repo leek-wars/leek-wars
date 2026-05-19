@@ -11,11 +11,11 @@
 		</panel>
 		<panel v-if="trophy" class="first">
 			<div class="flex">
-				<img class="image" :src="'/image/trophy/' + code + '.svg'" @click="trophy.code === 'joker' && LeekWars.lucky(true)" :class="{clickable: trophy.code === 'joker'}">
+				<img class="image" :src="'/image/trophy/' + code + '.svg'" :class="{clickable: trophy.code === 'joker'}" @click="trophy.code === 'joker' && LeekWars.lucky(true)">
 				<div class="right">
 					<div class="name">
 						{{ $t('trophy.' + code) }}
-						<i18n-t tag="div" keypath="n_points" v-if="trophy.points" class="points">
+						<i18n-t v-if="trophy.points" tag="div" keypath="n_points" class="points">
 							<template #p>{{ trophy.points }}</template>
 						</i18n-t>
 					</div>
@@ -78,7 +78,7 @@
 					<div class="duration">
 						{{ LeekWars.formatLongDuration(farmer.time - trophy.created_time) }}
 					</div>
-					<router-link v-if="farmer.fight" :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight" v-ripple>
+					<router-link v-if="farmer.fight" v-ripple :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight">
 						<v-icon>mdi-sword-cross</v-icon> {{ $filters.date(farmer.time) }}
 					</router-link>
 					<span v-else class="fight">{{ $filters.date(farmer.time) }}</span>
@@ -94,7 +94,7 @@
 					<div class="duration">
 						{{ LeekWars.formatLongDuration(farmer.time - trophy.created_time) }}
 					</div>
-					<router-link v-if="farmer.fight" :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight" v-ripple>
+					<router-link v-if="farmer.fight" v-ripple :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight">
 						<v-icon>mdi-sword-cross</v-icon> {{ $filters.date(farmer.time) }}
 					</router-link>
 					<span v-else class="fight">{{ $filters.date(farmer.time) }}</span>
@@ -108,9 +108,9 @@
 						<span>{{ farmer.name }}</span>
 					</router-link>
 					<div class="duration">
-						{{ LeekWars.formatLongDuration(farmer.duration) }}
+						{{ LeekWars.formatLongDuration(farmer.duration ?? 0) }}
 					</div>
-					<router-link v-if="farmer.fight" :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight" v-ripple>
+					<router-link v-if="farmer.fight" v-ripple :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight">
 						<v-icon>mdi-sword-cross</v-icon> {{ $filters.date(farmer.time) }}
 					</router-link>
 					<span v-else class="fight">{{ $filters.date(farmer.time) }}</span>
@@ -124,9 +124,9 @@
 						<span>{{ farmer.name }}</span>
 					</router-link>
 					<div class="duration">
-						{{ LeekWars.formatLongDuration(farmer.duration) }}
+						{{ LeekWars.formatLongDuration(farmer.duration ?? 0) }}
 					</div>
-					<router-link v-if="farmer.fight" :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight" v-ripple>
+					<router-link v-if="farmer.fight" v-ripple :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight">
 						<v-icon>mdi-sword-cross</v-icon> {{ $filters.date(farmer.time) }}
 					</router-link>
 					<span v-else class="fight">{{ $filters.date(farmer.time) }}</span>
@@ -140,7 +140,7 @@
 						<span>{{ farmer.name }}</span>
 					</router-link>
 					<div class="spacer"></div>
-					<lw-title :title="farmer.title" />
+					<lw-title v-if="farmer.title" :title="farmer.title" />
 					<v-icon v-if="$store.getters.admin" class="admin-delete" @click="confirmDelete(farmer)">mdi-delete</v-icon>
 				</div>
 			</panel>
@@ -161,13 +161,54 @@ import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { mixins , useNamespacedT } from '@/model/i18n'
-import { ItemType, ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED } from '@/model/item'
+import { ItemTemplate, ItemType, ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED } from '@/model/item'
 import { LeekWars } from '@/model/leekwars'
 import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 import Breadcrumb from '@/component/forum/breadcrumb.vue'
 import LwTitle from '@/component/title/title.vue'
 
-defineOptions({ name: 'trophy', i18n: {}, mixins: [...mixins], components: { 'lw-title': LwTitle } })
+interface TrophyFarmer {
+	id: number
+	name: string
+	time: number
+	fight?: number
+	action?: number
+	duration?: number
+	title?: number[]
+	muted?: boolean
+	farmer?: { muted?: boolean }
+}
+
+interface TrophyTemplate {
+	id: number
+	code: string
+	habs: number
+	points: number
+	category: number
+	difficulty: number
+	description: string
+	in_fight: boolean
+	secret: boolean
+	unique: boolean
+	variable: boolean
+	progression: number
+	threshold: number
+	unlocked: boolean
+	date: number
+	fight?: number
+	action?: number
+	created_time: number
+	rarity: number
+	total: number
+	items: number[]
+	first_farmers: TrophyFarmer[]
+	last_farmers: TrophyFarmer[]
+	fastest_farmers?: TrophyFarmer[]
+	slowest_farmers?: TrophyFarmer[]
+	title_farmers?: TrophyFarmer[]
+}
+
+defineOptions({ name: 'Trophy', i18n: {}, mixins: [...mixins], components: { 'lw-title': LwTitle } })
 
 const { locale } = useI18n()
 	const t = useNamespacedT('trophy')
@@ -175,15 +216,15 @@ const route = useRoute()
 
 const ITEM_CATEGORY_NAME: Record<number, string> = ITEM_CATEGORY_NAME_TYPED
 
-const code = ref<any>(null)
-const trophy = ref<any>(null)
+const code = ref<string | null>(null)
+const trophy = ref<TrophyTemplate | null>(null)
 const error = ref(false)
 const deleteDialog = ref(false)
-const deleteFarmer = ref<any>(null)
+const deleteFarmer = ref<TrophyFarmer | null>(null)
 
 const items = computed(() => trophy.value ? trophy.value.items.map((i: number) => LeekWars.items[i]) : [])
 
-function schemeLabel(item: any) {
+function schemeLabel(item: ItemTemplate) {
 	const scheme = LeekWars.schemes[item.params]
 	if (!scheme) return ''
 	const result = LeekWars.items[scheme.result]
@@ -194,7 +235,7 @@ function schemeLabel(item: any) {
 }
 
 function update() {
-	code.value = route.params.code
+	code.value = route.params.code as string
 	error.value = false
 	trophy.value = null
 	LeekWars.get('trophy-template/get/' + code.value + '/' + locale.value)
@@ -207,20 +248,20 @@ function update() {
 
 watch(() => route.params, update, { immediate: true })
 
-function confirmDelete(f: any) {
+function confirmDelete(f: TrophyFarmer) {
 	deleteFarmer.value = f
 	deleteDialog.value = true
 }
 
 function deleteTrophy() {
-	if (!deleteFarmer.value) return
+	if (!deleteFarmer.value || !trophy.value) return
 	LeekWars.post('trophy/delete', { trophy_id: trophy.value.id, farmer_id: deleteFarmer.value.id })
 		.then(() => {
 			deleteDialog.value = false
 			LeekWars.toast('Trophée supprimé !')
 			update()
 		})
-		.catch((err: any) => LeekWars.toast(t('error_' + err.error, err.params) as string))
+		.catch((err: unknown) => LeekWars.toast(t('error_' + (err as { error: string }).error, (err as { params?: unknown[] }).params) as string))
 }
 </script>
 

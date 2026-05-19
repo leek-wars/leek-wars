@@ -115,8 +115,13 @@
 	const dateTo = ref('')
 	const loading = ref(false)
 	const funnelData = ref<FunnelData | null>(null)
-	const flowNodes = ref<any[]>([])
-	const flowEdges = ref<any[]>([])
+	interface FlowNodeData { label: string; sessions: number; count: number; percentNum: number; isRoot: boolean; hasChildren: boolean; color: string; srcPos: string; tgtPos: string; duration: string | null }
+	interface FlowNode { id: string; type: string; position: { x: number; y: number }; sourcePosition: string; targetPosition: string; data: FlowNodeData }
+	interface FlowEdge { id: string; source: string; target: string; label?: string; animated: boolean; style: Record<string, string>; labelStyle: Record<string, string>; labelBgStyle: Record<string, string>; labelBgPadding: [number, number] }
+	interface VueFlowInstance { $el: HTMLElement; fitView: (opts?: { padding?: number; maxZoom?: number }) => void }
+
+	const flowNodes = ref<FlowNode[]>([])
+	const flowEdges = ref<FlowEdge[]>([])
 	const flowViewport = ref({ x: 5, y: 5, zoom: 1 })
 	const graphWidth = ref(0)
 	const graphHeight = ref(0)
@@ -125,7 +130,7 @@
 	const granularity = ref(localStorage.getItem('funnel_granularity') || 'day')
 	const chartKey = ref(0)
 	const chartData = ref<ChartData<'line'> | null>(null)
-	const flow = ref<any>(null)
+	const flow = ref<VueFlowInstance | null>(null)
 
 	const chartOptions = ref<ChartOptions<'line'>>({
 		responsive: true,
@@ -181,7 +186,7 @@
 	}
 
 	function applyViewport() {
-		const f = flow.value as any
+		const f = flow.value
 		if (!f?.$el || !f.fitView) return
 		f.fitView({ padding: 0.01, maxZoom: 1 })
 	}
@@ -247,7 +252,7 @@
 		}
 
 		// Propagate Y alignment: children of moved nodes with a single parent get aligned
-		const crossAxis = isMobile ? 'x' : 'y'
+		const crossAxis: 'x' | 'y' = isMobile ? 'x' : 'y'
 		const childrenOf: Record<string, string[]> = {}
 		const parentCount: Record<string, number> = {}
 		for (const [from, to] of edges) {
@@ -258,7 +263,7 @@
 		const propagate = (name: string) => {
 			for (const child of (childrenOf[name] || [])) {
 				if (parentCount[child] === 1) {
-					(g.node(child) as any)[crossAxis] = (g.node(name) as any)[crossAxis]
+					g.node(child)[crossAxis] = g.node(name)[crossAxis]
 					propagate(child)
 				}
 			}
@@ -268,16 +273,16 @@
 		}
 
 		// Uniformize rank spacing
-		const axis = isMobile ? 'y' : 'x'
+		const axis: 'x' | 'y' = isMobile ? 'y' : 'x'
 		const spacing = isMobile ? (nodeH + 60) : (nodeW + 50)
 
 		// Read final positions and group into ranks (nodes within nodeW/3 of each other = same rank)
 		const threshold = nodeW / 3
-		const sortedNodes = [...nodes].sort((a, b) => (g.node(a) as any)[axis] - (g.node(b) as any)[axis])
+		const sortedNodes = [...nodes].sort((a, b) => g.node(a)[axis] - g.node(b)[axis])
 		const ranks: string[][] = []
 		for (const name of sortedNodes) {
-			const pos = (g.node(name) as any)[axis]
-			if (ranks.length && Math.abs(pos - (g.node(ranks[ranks.length - 1][0]) as any)[axis]) < threshold) {
+			const pos = g.node(name)[axis]
+			if (ranks.length && Math.abs(pos - g.node(ranks[ranks.length - 1][0])[axis]) < threshold) {
 				ranks[ranks.length - 1].push(name)
 			} else {
 				ranks.push([name])
@@ -288,7 +293,7 @@
 		for (let i = 0; i < ranks.length; i++) {
 			const newPos = i * spacing + spacing / 2
 			for (const name of ranks[i]) {
-				(g.node(name) as any)[axis] = newPos
+				g.node(name)[axis] = newPos
 			}
 		}
 
@@ -439,7 +444,7 @@
 	}
 
 	{
-		let timeout: any
+		let timeout: ReturnType<typeof setTimeout>
 		resizeHandler = () => {
 			clearTimeout(timeout)
 			timeout = setTimeout(() => {
@@ -452,7 +457,7 @@
 	if (store.state.farmer) {
 		init()
 	} else {
-		const unwatch = store.watch((s: any) => s.farmer, (farmer: any) => {
+		const unwatch = store.watch((s) => s.farmer, (farmer) => {
 			if (farmer) { unwatch(); init() }
 		})
 	}

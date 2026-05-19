@@ -62,21 +62,24 @@ import { CHIPS as CHIPS_TYPED } from '@/model/chips'
 import { CONSTANT_BY_ID } from '@/model/constant_by_id'
 import { locale } from '@/locale'
 import Markdown from '../encyclopedia/markdown.vue'
+import { ChipTemplate } from '@/model/chip'
+import { WeaponTemplate } from '@/model/weapon'
+import { Effect } from '@/model/effect'
 
-defineOptions({ name: 'documentation-constant', components: { ItemPreview } })
+defineOptions({ name: 'DocumentationConstant', components: { ItemPreview } })
 
-const CHIPS: Record<number, any> = CHIPS_TYPED
+const CHIPS = CHIPS_TYPED
 
 const props = defineProps<{
 	constant: Constant
 }>()
 
 defineEmits<{
-	'update:modelValue': [value: any]
+	'update:modelValue': [value: unknown]
 }>()
 
 const expanded = ref(false)
-const new_constant = ref<any>(null)
+const new_constant = ref<unknown>(null)
 
 watch(() => props.constant, () => {
 	LeekWars.documentation(locale).then((functions) => {
@@ -89,15 +92,15 @@ const is_weapon = computed(() => props.constant.name.startsWith('WEAPON_'))
 const is_chip = computed(() => props.constant.name.startsWith('CHIP_'))
 
 const chips = computed(() => {
-	const items: any[] = []
+	const items: ChipTemplate[] = []
 	if (props.constant.deprecated) return items
 	if (props.constant.name.startsWith('EFFECT_MODIFIER_')) {
 		for (const i in CHIPS) {
-			if (CHIPS[i].effects.some((e: any) => e.modifiers & value_int.value)) items.push(CHIPS[i])
+			if (CHIPS[i].effects.some((e: Effect) => e.modifiers & value_int.value)) items.push(CHIPS[i])
 		}
 	} else if (props.constant.name.startsWith('EFFECT_') && !props.constant.name.startsWith('EFFECT_TARGET_')) {
 		for (const i in CHIPS) {
-			if (CHIPS[i].effects.some((e: any) => e.id === value_int.value)) items.push(CHIPS[i])
+			if (CHIPS[i].effects.some((e: Effect) => e.id === value_int.value)) items.push(CHIPS[i])
 		}
 	} else if (props.constant.name.startsWith('AREA_')) {
 		for (const i in CHIPS) {
@@ -112,16 +115,16 @@ const chips = computed(() => {
 })
 
 const weapons = computed(() => {
-	const items: any[] = []
+	const items: WeaponTemplate[] = []
 	if (props.constant.name.startsWith('EFFECT_MODIFIER_')) {
 		for (const i in LeekWars.weapons) {
-			if (LeekWars.weapons[i].effects.some((e: any) => e.modifiers & value_int.value) || LeekWars.weapons[i].passive_effects.some((e: any) => e.modifiers & value_int.value)) {
+			if (LeekWars.weapons[i].effects.some((e: Effect) => e.modifiers & value_int.value) || LeekWars.weapons[i].passive_effects.some((e: Effect) => e.modifiers & value_int.value)) {
 				items.push(LeekWars.weapons[i])
 			}
 		}
 	} else if (props.constant.name.startsWith('EFFECT_') && !props.constant.name.startsWith('EFFECT_TARGET_')) {
 		for (const i in LeekWars.weapons) {
-			if (LeekWars.weapons[i].effects.some((e: any) => e.id === value_int.value) || LeekWars.weapons[i].passive_effects.some((e: any) => e.id === value_int.value)) {
+			if (LeekWars.weapons[i].effects.some((e: Effect) => e.id === value_int.value) || LeekWars.weapons[i].passive_effects.some((e: Effect) => e.id === value_int.value)) {
 				items.push(LeekWars.weapons[i])
 			}
 		}

@@ -31,7 +31,7 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { AIItem } from './editor-item'
 
-defineOptions({ name: 'editor-ai' })
+defineOptions({ name: 'EditorAi' })
 
 const props = defineProps<{
 	item: AIItem

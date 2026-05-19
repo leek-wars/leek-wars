@@ -110,11 +110,11 @@
 	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import Pagination from '@/component/pagination.vue'
-	import { computed, reactive, ref, watch } from 'vue'
+	import { computed, onBeforeMount, reactive, ref, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 
-	defineOptions({ name: 'search', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'ForumSearch', i18n: {}, mixins: [...mixins] })
 
 	useI18n() // initialize local scope for <i18n-t>
 	const t = useNamespacedT('search')
@@ -130,7 +130,7 @@
 		moderator: false,
 		order: 'pertinence',
 		resolved: 'all',
-	} as {[key: string]: any})
+	} as Record<string, unknown>)
 	const defaultOptions = {
 		query: '',
 		farmer: '',
@@ -139,11 +139,11 @@
 		admin: false,
 		moderator: false,
 		order: 'pertinence'
-	} as {[key: string]: any}
+	} as Record<string, unknown>
 	const queryLower = ref('')
 	const pages = ref(0)
-	const results = ref<any[] | null>(null)
-	const categories = ref<any[]>([])
+	const results = ref<Record<string, unknown>[] | null>(null)
+	const categories = ref<Record<string, unknown>[]>([])
 	const searchStarted = ref(false)
 	const count = ref(0)
 	const floor = Math.floor
@@ -152,13 +152,11 @@
 		return LeekWars.protect(text).replace(/&lt;b&gt;/g, '<b>').replace(/&lt;\/b&gt;/g, '</b>')
 	}
 
-	const canSearch = computed(() => options.query || options.farmer || options.admin)
-
 	const languages = (localStorage.getItem('forum/languages') as string || i18n.locale).split(',')
 	LeekWars.get('forum/get-categories/' + languages).then(data => {
 		categories.value = data.categories
 	})
-	LeekWars.setTitle(t('title'))
+	onBeforeMount(() => LeekWars.setTitle(t('title')))
 
 	function update() {
 		options.query = (route.query.query as string || '').replace(/\+/g, ' ')

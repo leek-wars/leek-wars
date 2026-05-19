@@ -14,12 +14,12 @@ import { useI18n } from 'vue-i18n'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 
-defineOptions({ name: 'lw-title' })
+defineOptions({ name: 'LwTitle' })
 
 const TROPHIES = LeekWars.trophies
 
 const props = defineProps<{
-	title: any
+	title: number[]
 }>()
 
 const { t } = useI18n()

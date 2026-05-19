@@ -49,7 +49,7 @@ import { LeekWars } from '@/model/leekwars'
 import { mixins, useNamespacedT } from '@/model/i18n'
 import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
-defineOptions({ name: 'bank', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'Bank', i18n: {}, mixins: [...mixins] })
 
 const props = defineProps<{
 	success?: boolean

@@ -28,6 +28,8 @@
 	"reason_17_action": "L'emblème de l'équipe sera effacé.",
 	"reason_18": "Site web incorrect",
 	"reason_18_action": "Le site web sera effacé.",
+	"reason_19": "GitHub incorrect",
+	"reason_19_action": "Le compte GitHub sera effacé et ajouté à la liste de mots interdits.",
 	"reason_1_action": "Le nom de l'éleveur sera remplacé par 'Farmer{'@'}<id>' et le nom incriminé sera ajouté à la liste de mots interdits.",
 	"reason_2": "Nom de poireau incorrect",
 	"reason_2_action": "Le nom du poireau sera remplacé par 'Leek{'@'}<id>' et le nom incriminé sera ajouté à la liste de mots interdits.",

@@ -34,5 +34,8 @@
 	"invalid_name_reserved": "Este nombre está reservado.",
 	"invalid_name_slash": "El carácter \"/\" no está permitido en los nombres.",
 	"windows_warning_char": "El carácter \"{0}\" no está permitido en Windows, este nombre podría causar problemas con git.",
-	"windows_warning_reserved": "\"{0}\" es un nombre reservado en Windows, este nombre podría causar problemas con git."
+	"windows_warning_reserved": "\"{0}\" es un nombre reservado en Windows, este nombre podría causar problemas con git.",
+	"init_git": "Inicializar un repositorio Git",
+	"deinit_git": "Eliminar el repositorio Git",
+	"deinit_git_confirm": "¿Eliminar el repositorio Git de la carpeta \"{0}\"? Se perderá el historial de commits."
 }

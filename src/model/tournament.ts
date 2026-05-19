@@ -5,12 +5,12 @@ class Tournament {
 	type!: number
 	date!: number
 	finished!: boolean
-	rounds!: any
+	rounds!: unknown
 	comments!: Comment[]
 	next_round!: number
 	group!: number | null
 	size!: number
-	winner?: any
+	winner?: number
 	min_power?: number
 	max_power?: number
 }

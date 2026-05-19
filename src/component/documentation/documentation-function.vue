@@ -78,21 +78,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, watch } from 'vue'
 import Markdown from '@/component/encyclopedia/markdown.vue'
 import { FUNCTION_BY_ID } from '@/model/function_by_id'
 import { locale } from '@/locale'
 import type { LSFunction } from '@/model/function'
 import { LeekWars } from '@/model/leekwars'
 
-defineOptions({ name: 'documentation-function' })
+defineOptions({ name: 'DocumentationFunction' })
 
 const props = defineProps<{
 	fun: LSFunction
 }>()
 
 const expanded = ref(false)
-const new_fun = ref<any>(null)
+const new_fun = ref<unknown>(null)
 
 watch(() => props.fun, () => {
 	LeekWars.documentation(locale).then((functions) => {
@@ -100,16 +100,6 @@ watch(() => props.fun, () => {
 	})
 }, { immediate: true })
 
-const new_arguments = computed(() => {
-	if (new_fun.value) {
-		const args = (new_fun.value.primary.Paramètres || '').split('\n')
-		return args.filter((a: string) => {
-			const name = a.match(/\*\*(\w+)\*\*/i)
-			return name && props.fun.arguments_names.includes(name[1])
-		}).join('\n')
-	}
-	return ''
-})
 </script>
 
 <style lang="scss" scoped>

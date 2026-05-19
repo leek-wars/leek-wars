@@ -50,8 +50,9 @@ function escapeRegExp(str: string) {
 	return str.replace(/[-[\]/{}()*+?.\\^$|]/g, "\\$&")
 }
 
-function formatEmojis(data: any) {
-	if (!data || typeof(data) !== 'string') { return data }
+function formatEmojis(rawData: unknown): string {
+	if (!rawData || typeof(rawData) !== 'string') { return String(rawData ?? '') }
+	let data: string = rawData
 	// Custom smileys
 	for (const i in Emojis.custom) {
 		const smiley = Emojis.custom[i]

@@ -32,7 +32,7 @@
 				<div>
 					<v-menu offset-y>
 						<template #activator="{ props }">
-							<div v-bind="props" v-ripple class="language-button">
+							<div v-ripple v-bind="props" class="language-button">
 								<flag :code="language.country" />
 								{{ language.name }}
 								<v-icon>mdi-chevron-down</v-icon>
@@ -57,7 +57,7 @@
 			<div class="grid">
 				<div v-for="(item, i) in category.items" :key="i" class="item">
 					<iframe v-if="item.type === 'video'" width="500" height="315" :src="'https://www.youtube.com/embed/' + item.name" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-					<object class="card" v-else-if="item.type === 'text'" :data="'/press-kit/' + (item.localized ? language.code + '/' : '') + item.name + '.' + item.formats[0]" color-scheme="dark"></object>
+					<object v-else-if="item.type === 'text'" class="card" :data="'/press-kit/' + (item.localized ? language.code + '/' : '') + item.name + '.' + item.formats[0]" color-scheme="dark"></object>
 					<a v-else :href="'/press-kit/' + (item.localized ? language.code + '/' : '') + item.name + '.' + item.formats[0]" target="_blank">
 						<img :src="'/press-kit/' + (item.localized ? language.code + '/' : '') + item.name + '.' + item.formats[0]" :class="{alpha: item.alpha}">
 					</a>
@@ -88,12 +88,12 @@ import { mixins } from '@/model/i18n'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import { type Language, LeekWars } from '@/model/leekwars'
 
-defineOptions({ name: 'press-kit', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'PressKit', i18n: {}, mixins: [...mixins] })
 
 const { locale } = useI18n()
 
-const language = ref<any>(null)
-const items: any[] = [
+const language = ref<string | null>(null)
+const items: { title: string, href: string }[] = [
 			{ name: 'logos', icon: 'mdi-image', items: [
 				{ name: 'leekwars_logo_dark', formats: ['svg', 'png'], alpha: true, legends: {
 					fr: 'Logo Leek Wars sombre',

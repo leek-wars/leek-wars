@@ -102,13 +102,13 @@ abstract class Map {
 	createPattern() {
 		// nothing by default
 	}
-	drawDecor(ctx: CanvasRenderingContext2D) {
+	drawDecor(_ctx: CanvasRenderingContext2D) {
 		// nothing by default
 	}
-	drawDetails(ctx: CanvasRenderingContext2D) {
+	drawDetails(_ctx: CanvasRenderingContext2D) {
 		// nothing by default
 	}
-	drawCellDetails(ctx: CanvasRenderingContext2D, cell: Cell) {
+	drawCellDetails(_ctx: CanvasRenderingContext2D, _cell: Cell) {
 		// nothing by default
 	}
 }
@@ -1031,7 +1031,7 @@ class Japan extends Map {
 		}
 	}
 
-	public drawDetails(ctx: CanvasRenderingContext2D) {
+	public drawDetails(_ctx: CanvasRenderingContext2D) {
 
 		// const num = 20 + this.random.next() * 20
 
@@ -1052,7 +1052,7 @@ class Japan extends Map {
 		// }
 	}
 
-	public drawDecor(ctx: CanvasRenderingContext2D) {
+	public drawDecor(_ctx: CanvasRenderingContext2D) {
 
 		// ctx.save()
 		// const top = this.game.ground.startY / this.game.ground.scale
@@ -1203,7 +1203,7 @@ class Castle extends Map {
 		}
 	}
 
-	public drawDetails(ctx: CanvasRenderingContext2D) {
+	public drawDetails(_ctx: CanvasRenderingContext2D) {
 
 		// const num = 20 + this.random.next() * 20
 
@@ -1224,7 +1224,7 @@ class Castle extends Map {
 		// }
 	}
 
-	public drawDecor(ctx: CanvasRenderingContext2D) {
+	public drawDecor(_ctx: CanvasRenderingContext2D) {
 
 		// ctx.save()
 		// const top = this.game.ground.startY / this.game.ground.scale
@@ -1369,7 +1369,7 @@ class Cemetery extends Map {
 		}
 	}
 
-	public drawDetails(ctx: CanvasRenderingContext2D) {
+	public drawDetails(_ctx: CanvasRenderingContext2D) {
 
 		// const num = 20 + this.random.next() * 20
 
@@ -1390,7 +1390,7 @@ class Cemetery extends Map {
 		// }
 	}
 
-	public drawDecor(ctx: CanvasRenderingContext2D) {
+	public drawDecor(_ctx: CanvasRenderingContext2D) {
 
 		// ctx.save()
 		// const top = this.game.ground.startY / this.game.ground.scale

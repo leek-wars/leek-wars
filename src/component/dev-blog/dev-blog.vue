@@ -16,7 +16,7 @@
 
 					<loader v-if="!articles" />
 					<div v-else class="articles">
-						<router-link v-for="article of articles" :key="article.id" class="article card" :to="'/forum/category-' + article.category + '/topic-' + article.topic + '-' + formatTitleURL(article.title)" v-ripple>
+						<router-link v-for="article of articles" :key="article.id" v-ripple class="article card" :to="'/forum/category-' + article.category + '/topic-' + article.topic + '-' + formatTitleURL(article.title)">
 							<img :src="article.image">
 							<div class="info">
 								<div class="title">{{ article.title }}</div>
@@ -48,9 +48,9 @@ import { mixins } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import Breadcrumb from '../forum/breadcrumb.vue'
 
-defineOptions({ name: 'dev-blog', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'DevBlog', i18n: {}, mixins: [...mixins] })
 
-const articles = ref<any[] | null>(null)
+const articles = ref<Record<string, unknown>[] | null>(null)
 
 LeekWars.get('article/all').then(data => {
 	articles.value = data

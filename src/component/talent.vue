@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: 'talent' })
+defineOptions({ name: 'Talent' })
 
 defineProps<{
 	talent: number | string
@@ -22,7 +22,7 @@ defineProps<{
 	label?: string
 	id: number
 	category: string
-	on?: any
+	on?: Record<string, unknown>
 }>()
 </script>
 

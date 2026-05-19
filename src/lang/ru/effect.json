@@ -38,7 +38,7 @@
 	"line_until_obstacle": "вся очередь до препятствия",
 	"max_uses": "максимум {uses} за раунд",
 	"multiplied_target": "за попадание в цель",
-	"n_turns": "<b>1</b> ход | <b>{n}</b> раундов",
+	"n_turns": "{n} ход | {n} раундов",
 	"n_uses": "<b>1</b> использование | <b>{n}</b> использование",
 	"not_replaceable": "не заменяемый",
 	"on_n_turns": " во время {turns}",

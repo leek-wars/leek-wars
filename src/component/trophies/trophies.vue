@@ -43,7 +43,7 @@
 		<panel class="first global">
 			<template #content>
 				<loader v-show="!loaded" />
-				<div v-if="loaded" class="content">
+				<div v-if="loaded && farmer" class="content">
 					<div class="stats">
 						<router-link :to="'/farmer/' + farmer.id">
 							<avatar :farmer="farmer" />
@@ -168,24 +168,31 @@ import Trophy from './trophy.vue'
 import RichTooltipTrophy from '@/component/rich-tooltip/rich-tooltip-trophy.vue'
 import { emitter } from '@/model/vue'
 
-defineOptions({ name: 'trophies', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'Trophies', i18n: {}, mixins: [...mixins] })
+
+type TrophyData = (typeof LeekWars.trophies)[number]
+
+interface TrophyCategory {
+	id: number
+	name: string
+}
 
 const { locale } = useI18n()
 const t = useNamespacedT('trophies')
 const route = useRoute()
 
-const all_trophies = ref<any[]>([])
-const raw_trophies = ref<{[key: number]: any}>({})
+const all_trophies = ref<TrophyData[]>([])
+const raw_trophies = ref<{[key: number]: TrophyData[]}>({})
 const progressions = ref<{[key: number]: number}>({})
 const point = ref(0)
 const totalPoint = ref(0)
 const points = ref<{[key: number]: number}>({})
 const totals = ref<{[key: number]: number}>({})
 const totalPoints = ref<{[key: number]: number}>({})
-const raw_categories = LeekWars.trophyCategories
+const raw_categories = LeekWars.trophyCategories as unknown as TrophyCategory[]
 const count = ref(0)
 const total = ref(0)
-const title = ref<any>(null)
+const title = ref<string | null>(null)
 const loaded = ref(false)
 const hide_unlocked = ref(localStorage.getItem('options/trophies/hide-unlocked') === 'true')
 const group_by_categories = ref(localStorage.getItem('options/trophies/group-by-category') !== null
@@ -193,29 +200,29 @@ const group_by_categories = ref(localStorage.getItem('options/trophies/group-by-
 	: true)
 const sort_by = ref<string>(localStorage.getItem('options/trophies/sort') || 'index')
 const count_by_difficulty = ref<number[]>([0, 0, 0, 0, 0, 0])
-const farmer = ref<any>(null)
-const variables = ref<any>([])
+const farmer = ref<{id: number, name: string} | null>(null)
+const variables = ref<Record<string, number>>({})
 
 const id = computed(() => route.params.id || (store.state.farmer ? store.state.farmer.id : null))
 
 const trophies = computed(() => {
-	const result: {[key: number]: any} = {}
+	const result: {[key: number]: TrophyData[]} = {}
 	for (const category in raw_trophies.value) {
-		result[category] = raw_trophies.value[category].filter((tr: any) => (category !== '6' || tr.unlocked) && (!hide_unlocked.value || !tr.unlocked))
-		if (sort_by.value === 'rarity') result[category].sort((a: any, b: any) => a.rarity - b.rarity)
-		else if (sort_by.value === 'points') result[category].sort((a: any, b: any) => b.points - a.points)
-		else if (sort_by.value === 'date') result[category].sort((a: any, b: any) => b.date - a.date)
+		result[category] = raw_trophies.value[category].filter(tr => (category !== '6' || tr.unlocked) && (!hide_unlocked.value || !tr.unlocked))
+		if (sort_by.value === 'rarity') result[category].sort((a, b) => a.rarity - b.rarity)
+		else if (sort_by.value === 'points') result[category].sort((a, b) => b.points - a.points)
+		else if (sort_by.value === 'date') result[category].sort((a, b) => b.date - a.date)
 	}
 	return result
 })
 
-const categories = computed(() => raw_categories.filter((c: any) => c.id !== 0 && (c.id !== 6 || progressions.value[6] !== 0) && (!loaded.value || !trophies.value[c.id] || trophies.value[c.id].length)))
+const categories = computed(() => raw_categories.filter(c => c.id !== 0 && (c.id !== 6 || progressions.value[6] !== 0) && (!loaded.value || !trophies.value[c.id] || trophies.value[c.id].length)))
 
 const sorted_trophies = computed(() => {
-	const result = all_trophies.value.filter((tr: any) => tr.category !== 0 && (tr.category !== 6 || tr.unlocked) && (!hide_unlocked.value || !tr.unlocked))
-	if (sort_by.value === 'rarity') result.sort((a: any, b: any) => a.rarity - b.rarity)
-	else if (sort_by.value === 'points') result.sort((a: any, b: any) => b.points - a.points)
-	else if (sort_by.value === 'date') result.sort((a: any, b: any) => b.date - a.date)
+	const result = all_trophies.value.filter(tr => tr.category !== 0 && (tr.category !== 6 || tr.unlocked) && (!hide_unlocked.value || !tr.unlocked))
+	if (sort_by.value === 'rarity') result.sort((a, b) => a.rarity - b.rarity)
+	else if (sort_by.value === 'points') result.sort((a, b) => b.points - a.points)
+	else if (sort_by.value === 'date') result.sort((a, b) => b.date - a.date)
 	return result
 })
 
@@ -246,7 +253,7 @@ function update() {
 	title.value = null
 	all_trophies.value = []
 	if (!requestedId) return
-	LeekWars.trophyCategories.forEach((c: any) => {
+	(LeekWars.trophyCategories as unknown as TrophyCategory[]).forEach((c: TrophyCategory) => {
 		raw_trophies.value[c.id] = []
 		progressions.value[c.id] = 0
 		points.value[c.id] = 0
@@ -274,7 +281,7 @@ function update() {
 			}
 		}
 		for (const category in raw_trophies.value) {
-			raw_trophies.value[category].sort((a: any, b: any) => a.index - b.index)
+			raw_trophies.value[category].sort((a, b) => a.index - b.index)
 		}
 		count.value = data.count
 		total.value = data.total

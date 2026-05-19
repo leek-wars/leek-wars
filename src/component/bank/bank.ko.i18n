@@ -1,5 +1,5 @@
 {
-	"description": "은행은 Leek Wars의 두 번째 통화인 <b>크리스탈</b> <span class='crystal'></span>을 얻을 수 있도록 제안합니다. </b> 전투에서 당신의 힘. <br>\n부추를 위한 색 물약으로 자신을 치료하고 부추 전쟁을 지원하세요!",
+	"description": "은행에 오신 것을 환영합니다! <b>크리스털</b> <span class='crystal'></span>로 부추를 위한 포션, 추가 전투, 색상, 액세서리를 얻을 수 있습니다. <b>전투에서 이점 없음</b>: 모든 구매는 장식용이거나 실용적입니다.<br>\n모든 구매는 Leek Wars 개발을 직접 지원합니다. 감사합니다!",
 	"pack_of_n_crystals": "<b>{0}</b> 크리스탈 팩",
 	"paypal_description": "{1} €에 {0} 크리스탈 구매",
 	"title": "크리스탈 뱅크",
@@ -24,6 +24,10 @@
 	"payment_no_code": "코드 없음",
 	"payment_wrong_code": "유효하지 않은 코드",
 	"first_purchase_banner": "첫 구매인가요? 모든 크리스탈이 두 배로 지급됩니다!",
+	"suggestion_target_fights": "100전투 팩",
+	"suggestion_with_remainder": "→ {price}의 {pack} 팩으로 이 구매를 충당하고 {remainder}이 남습니다.",
+	"suggestion_exact": "→ {price}의 {pack} 팩으로 이 구매를 충당합니다.",
+	"suggestion_cta": "팩 보기",
 	"items_title": "당신을 기다리고 있어요",
 	"back": "은행으로 돌아가기",
 	"best_value": "최고 혜택",

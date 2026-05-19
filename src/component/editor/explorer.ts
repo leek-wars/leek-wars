@@ -57,4 +57,4 @@ class Explorer {
 
 const explorer = new Explorer()
 
-export { Explorer, explorer }
+export { explorer }

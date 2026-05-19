@@ -179,7 +179,7 @@
 									</div>
 									<div v-if="selectedItem.buyable || selectedItem.buyable_crystals" class="buy">
 										<h4 class="buy-label">{{ $t('buy') }}</h4>
-										<v-btn v-if="selectedItem.buyable && !(selectedItem.type === ItemType.FIGHT_PACK && ($store.state.farmer?.fights ?? 0) > 0)" :disabled="!!($store.state.farmer && $store.state.farmer.habs < selectedItem.price!) || (selectedItem.singleton && ((selectedItem.farmer_count ?? 0) > 0 || (selectedItem.leek_count ?? 0) > 0)) || (selectedItem.type === ItemType.FIGHT_PACK && !!$store.state.farmer?.habs_fights)" class="buy-button" @click="openBuyHabs(1)">{{ selectedItem.type === ItemType.FIGHT_PACK && $store.state.farmer?.habs_fights ? $t('already_bought') : $filters.number(selectedItem.price!) }}<img v-if="!(selectedItem.type === ItemType.FIGHT_PACK && $store.state.farmer?.habs_fights)" src="/image/hab.png"></v-btn>
+										<v-btn v-if="selectedItem.buyable" :disabled="!!($store.state.farmer && $store.state.farmer.habs < selectedItem.price!) || (selectedItem.singleton && ((selectedItem.farmer_count ?? 0) > 0 || (selectedItem.leek_count ?? 0) > 0)) || (selectedItem.type === ItemType.FIGHT_PACK && !!$store.state.farmer?.habs_fights)" class="buy-button" @click="openBuyHabs(1)">{{ selectedItem.type === ItemType.FIGHT_PACK && $store.state.farmer?.habs_fights ? $t('already_bought') : $filters.number(selectedItem.price!) }}<img v-if="!(selectedItem.type === ItemType.FIGHT_PACK && $store.state.farmer?.habs_fights)" src="/image/hab.png"></v-btn>
 										<v-btn v-if="selectedItem.buyable_crystals" :disabled="selectedItem.singleton && ((selectedItem.farmer_count ?? 0) > 0 || (selectedItem.leek_count ?? 0) > 0)" class="buy-crystals-button" @click="openBuyCrystals(1)">{{ $filters.number(selectedItem.crystals!) }}<img src="/image/crystal.png"></v-btn>
 									</div>
 									<div v-if="selectedItem.name === 'potion_restat'" class="buy">
@@ -347,7 +347,7 @@
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 
-	defineOptions({ name: 'market', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'Market', i18n: {}, mixins: [...mixins] })
 
 	useI18n() // initialize local scope for <i18n-t>
 const t = useNamespacedT('market')
@@ -364,7 +364,7 @@ const t = useNamespacedT('market')
 	const potions = ref<PotionTemplate[]>([])
 	const hats = ref<HatTemplate[]>([])
 	const items_by_name = reactive<{[key: string]: ItemTemplate}>({})
-	const fight_packs = ref<any[]>([])
+	const fight_packs = ref<ItemTemplate[]>([])
 	const buyDialog = ref(false)
 	const buyCrystalsDialog = ref(false)
 	const buyQuantity = ref(1)
@@ -376,13 +376,13 @@ const t = useNamespacedT('market')
 	const unseenItemDialog = ref(false)
 	const pomps = ref<PompTemplate[]>([])
 	const schemes = ref<ItemTemplate[]>([])
-	let request: any = null
+	let request: { abort: () => void } | null = null
 	let onKeyDown: ((e: KeyboardEvent) => void) | null = null
 	const search = ref('')
 
 	const max_level = computed(() => {
 		if (store.state.farmer) {
-			return Math.max(...Object.values(store.state.farmer.leeks).map((l: any) => l.level))
+			return Math.max(...Object.values(store.state.farmer.leeks).map((l) => l.level))
 		}
 		return 0
 	})
@@ -432,9 +432,9 @@ const t = useNamespacedT('market')
 		{icon: 'mdi-bank', click: () => router.push('/bank?ref=market_action')},
 		{icon: 'mdi-treasure-chest', click: () => router.push('/inventory')},
 	]
-	request = LeekWars.get('market/get-item-templates')
-	request.then((res: any) => {
-		const list = res.items as ItemTemplate[]
+	request = LeekWars.get<{ items: ItemTemplate[] }>('market/get-item-templates')
+	request.then((res) => {
+		const list = res.items
 
 		for (const i in list) {
 			const item = list[i]
@@ -460,7 +460,7 @@ const t = useNamespacedT('market')
 					potions.value.push(potion)
 					items_by_name[LeekWars.potions[item.id].name] = item
 				} else {
-					const fakePotion = {...item, name: item.name.replace(/^potion_/, ''), level: 1, consumable: false, effects: [], template: item.id, duration: 0} as any
+					const fakePotion = {...item, name: item.name.replace(/^potion_/, ''), level: 1, consumable: false, effects: [], template: item.id, duration: 0} as unknown as PotionTemplate
 					potions.value.push(fakePotion)
 					items_by_name[fakePotion.name] = fakePotion
 				}
@@ -470,7 +470,7 @@ const t = useNamespacedT('market')
 					hats.value.push(hat)
 					items_by_name[hat.name] = item
 				} else {
-					const fakeHat = {...item, name: item.name.replace(/^hat_/, ''), level: 1, width: 0, height: 0, crop: 0, template: item.id, item: 0} as any
+					const fakeHat = {...item, name: item.name.replace(/^hat_/, ''), level: 1, width: 0, height: 0, crop: 0, template: item.id, item: 0} as unknown as HatTemplate
 					hats.value.push(fakeHat)
 					items_by_name[fakeHat.name] = fakeHat
 				}
@@ -627,6 +627,9 @@ const t = useNamespacedT('market')
 			if (item.type === ItemType.FIGHT_PACK) {
 				store.commit('update-fights', data.fights)
 				store.commit('update-bought-fights', data.fights)
+				if (currency === 'habs' && store.state.farmer) {
+					store.state.farmer.habs_fights = true
+				}
 			}
 			store.commit('add-inventory', { type: item.type, id: data.item, template: id, quantity: buyQuantity.value, time: Date.now() / 1000 })
 			updateSubtitle()

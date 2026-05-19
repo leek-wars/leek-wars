@@ -1,7 +1,7 @@
 {
-	"contact": "연락하다 : {email}",
+	"contact": "연락처: {email}",
 	"editor": "편집자",
 	"editor_message": "Leek Wars 웹사이트(leekwars.com)는 <b>Pilow</b> 및 <b>SilentHunter</b>가 편집합니다.",
-	"host": "주인",
+	"host": "호스팅",
 	"title": "법적 고지"
 }

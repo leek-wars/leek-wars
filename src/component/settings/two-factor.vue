@@ -73,7 +73,7 @@
 import { LeekWars } from '@/model/leekwars'
 import { ref } from 'vue'
 
-defineOptions({ name: 'two-factor' })
+defineOptions({ name: 'TwoFactor' })
 
 const twoFactorConfirmDialog = ref(false)
 const step = ref(0)
@@ -101,7 +101,8 @@ function validateCode() {
 	;(LeekWars.post('farmer/confirm-enable-two-factor-authentication', {code: code.value}).then(_data => {
 		validating.value = false
 		nextStep()
-	}) as any).error((_error: any) => {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	}) as any).error((_error) => {
 		validating.value = false
 		LeekWars.toast('Wrong code!')
 	})

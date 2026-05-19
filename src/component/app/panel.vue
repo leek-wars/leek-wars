@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { computed, ref, useSlots, watch } from 'vue'
 
-defineOptions({ name: 'panel' })
+defineOptions({ name: 'Panel' })
 
 const props = withDefaults(defineProps<{
 	icon?: string
@@ -33,6 +33,9 @@ const props = withDefaults(defineProps<{
 	toggle?: string
 	toggleInvert?: boolean
 }>(), {
+	icon: undefined,
+	title: undefined,
+	toggle: undefined,
 	toggleInvert: false,
 })
 

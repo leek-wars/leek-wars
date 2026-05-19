@@ -40,7 +40,7 @@
 	import { computed, ref } from 'vue'
 	import { useRouter } from 'vue-router'
 
-	defineOptions({ name: 'garden-no-fights', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'GardenNoFights', i18n: {}, mixins: [...mixins] })
 
 	defineProps<{
 		canbuy?: boolean
@@ -56,9 +56,11 @@
 	const buyingCrystals = ref(false)
 
 	const remainingTime = computed(() => {
-		const midnignt = new Date(LeekWars.timeSeconds * 1000)
-		midnignt.setUTCHours(24 + getFranceOffset(), 0, 0, 0)
-		return Math.round(midnignt.getTime() / 1000 - LeekWars.timeSeconds)
+		const nowMs = LeekWars.timeSeconds * 1000
+		const offset = getParisOffsetMs(new Date(nowMs))
+		const midnight = new Date(nowMs + offset)
+		midnight.setUTCHours(24, 0, 0, 0)
+		return Math.round((midnight.getTime() - offset - nowMs) / 1000)
 	})
 
 	const habsPrice = computed(() => {
@@ -66,10 +68,10 @@
 		return Math.round(10_000 + Math.pow((x - 1) / 1203, 1.5) * (5_000_000 - 10_000))
 	})
 
-	function getFranceOffset() {
-		const t1 = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Paris' }))
-		const t2 = new Date(new Date().toLocaleString('en-US', { timeZone: 'GMT' }))
-		return (t2.getTime() - t1.getTime()) / 1000 / 3600
+	function getParisOffsetMs(when: Date) {
+		const paris = new Date(when.toLocaleString('en-US', { timeZone: 'Europe/Paris' }))
+		const utc = new Date(when.toLocaleString('en-US', { timeZone: 'UTC' }))
+		return paris.getTime() - utc.getTime()
 	}
 
 	function buyHabs() {

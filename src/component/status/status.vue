@@ -31,11 +31,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onBeforeUnmount } from 'vue'
+import { ref, computed, onBeforeMount, onBeforeUnmount } from 'vue'
 import { mixins , useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 
-defineOptions({ name: 'status', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'Status', i18n: {}, mixins: [...mixins] })
 
 const t = useNamespacedT('status')
 
@@ -67,7 +67,7 @@ async function refresh() {
 	try {
 		const data = await LeekWars.get('health/check')
 		applyResponse(data)
-	} catch (e: any) {
+	} catch (e: unknown) {
 		if (e && typeof e === 'object' && 'services' in e) {
 			applyResponse(e)
 		} else {
@@ -79,7 +79,7 @@ async function refresh() {
 	loaded.value = true
 }
 
-LeekWars.setTitle(t('title'))
+onBeforeMount(() => LeekWars.setTitle(t('title')))
 refresh()
 timer = window.setInterval(() => refresh(), 10000)
 nowTimer = window.setInterval(() => {

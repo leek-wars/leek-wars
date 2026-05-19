@@ -37,13 +37,19 @@
 
 				<div class="toasts"></div>
 
-				<div v-if="verifyMessage && $store.state.farmer && !$store.state.farmer.verified" class="finish-register">
+				<div v-if="shouldShowVerifyBanner" class="finish-register">
 					<div class="message">
 						<v-icon>mdi-account-plus</v-icon>
 						{{ $t('main.verify_message') }} <router-link class="green-link" to="/settings">{{ $t('main.verify_info') }}</router-link>
 						<v-icon @click="verifyMessage = false">mdi-close</v-icon>
 					</div>
 				</div>
+
+				<verify-popup v-if="showVerifyPopup" v-model="showVerifyPopup" />
+
+				<check-email-reminder v-if="showCheckEmailReminder" v-model="showCheckEmailReminder" />
+
+				<activation-welcome v-if="showActivationWelcome" v-model="showActivationWelcome" />
 
 				<img v-if="LeekWars.clover" :style="{top: LeekWars.cloverTop + 'px', left: LeekWars.cloverLeft + 'px'}" class="clover" src="/image/clover.png" @click="clickClover">
 
@@ -207,14 +213,15 @@
 	const MobileBR = defineAsyncComponent(() => import('@/component/app/mobile-br.vue'))
 	const Social = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/app/social.vue`))
 	const Squares = defineAsyncComponent(() => import('@/component/app/squares.vue'))
-	const ChangelogVersion = defineAsyncComponent(() => import('@/component/changelog/changelog-version.vue'))
 	const ConsoleWindow = defineAsyncComponent(() => import('./console-window.vue'))
+	const VerifyPopup = defineAsyncComponent(() => import('@/component/verify-popup/verify-popup.vue'))
+	const CheckEmailReminder = defineAsyncComponent(() => import('@/component/check-email-reminder/check-email-reminder.vue'))
+	const ActivationWelcome = defineAsyncComponent(() => import('@/component/activation-welcome/activation-welcome.vue'))
 	const ChangelogDialog = defineAsyncComponent(() => import('../changelog/changelog-dialog.vue'))
-	const Didactitiel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`))
 	const Documentation = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`))
 	const DidactitielNew = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel-new/didactitiel-new.${locale}.i18n`))
 	export default {
-		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Squares, Didactitiel, Chats, 'mobile-br': MobileBR, ChangelogVersion, ChangelogDialog, Documentation, DidactitielNew, ConsoleWindow }
+		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Squares, Chats, 'mobile-br': MobileBR, ChangelogDialog, Documentation, DidactitielNew, ConsoleWindow }
 	}
 </script>
 <script lang="ts" setup>
@@ -222,7 +229,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { AccountInfo, store } from '@/model/store'
-	import { computed, nextTick, onBeforeUnmount, ref, useTemplateRef, watch } from 'vue'
+	import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRouter } from 'vue-router'
 	import { useTheme } from 'vuetify'
@@ -234,20 +241,101 @@
 
 	const showConsole = ref(false)
 	const consoleValue = ref(false)
-	const changelog = ref<any>(null)
+	const changelog = ref<Record<string, unknown> | null>(null)
 	const showChangelog = ref(false)
 	let konami = ''
-	const annonce = ref(false)
 	const docEverywhere = ref(false)
 	const docEverywhereModel = ref(false)
-	const didactitiel_new_enabled = ref(true)
 	let mouseX = 0
 	let mouseY = 0
 	let cloverSpeed = 200
 	const verifyMessage = ref(true)
+	const verifyPopupDismissed = ref(false)
+	const checkEmailReminderDismissed = ref(false)
+	const showActivationWelcome = ref(false)
 	const loggedOutOtherTab = ref(false)
+
+	// Bandeau header "Terminer votre inscription par e-mail" :
+	//  - Comptes pré-migration (pas de didactitiel_completed_at) : ancien
+	//    comportement, visible dès qu'on est non-verified.
+	//  - Comptes post-migration : caché tant que la verify-popup n'a pas été
+	//    explicitement dismissée, pour ne pas triple-solliciter à l'inscription.
+	const shouldShowVerifyBanner = computed(() => {
+		if (!verifyMessage.value) return false
+		const f = store.state.farmer
+		if (!f || f.verified) return false
+		if (!f.didactitiel_completed_at) return true
+		return !!f.verify_modal_dismissed_at
+	})
+
+	// Tick réactif pour réévaluer showVerifyPopup. Désarmé dès que le verdict
+	// est figé (verified, ou modal dismissée) pour ne pas re-render à 60s.
+	const nowTick = ref(Date.now())
+	let verifyPopupTimer: ReturnType<typeof setInterval> | null = null
+	const needsTick = computed(() => {
+		const f = store.state.farmer
+		if (!f || f.verified) return false
+		// Tick tant qu'un des deux dialogs peut encore se déclencher.
+		const verifyPopupActive = !f.verify_modal_dismissed_at && !verifyPopupDismissed.value
+		const reminderActive = !!f.verify_code_at && !checkEmailReminderDismissed.value
+		return verifyPopupActive || reminderActive
+	})
+	watch(needsTick, (active, _, onCleanup) => {
+		if (!active) return
+		verifyPopupTimer = setInterval(() => { nowTick.value = Date.now() }, 60000)
+		onCleanup(() => {
+			if (verifyPopupTimer) clearInterval(verifyPopupTimer)
+			verifyPopupTimer = null
+		})
+	}, { immediate: true })
+	onBeforeUnmount(() => { if (verifyPopupTimer) clearInterval(verifyPopupTimer) })
+
+	// La verify-popup s'affiche 5 minutes après la fin du didacticiel. L'horloge
+	// vit côté serveur (farmer.didactitiel_completed_at) pour ne pas dépendre du
+	// localStorage : sinon un 2e compte créé sur le même navigateur voyait la
+	// modal immédiatement (bug observé sur la cohorte 2026-04). Fallback pour les
+	// comptes pré-migration (completed_at null) : 5 combats faits.
+	const VERIFY_POPUP_DELAY_MS = 5 * 60 * 1000
+	const showVerifyPopup = computed({
+		get() {
+			const f = store.state.farmer
+			if (!f || f.verified) return false
+			if (verifyPopupDismissed.value) return false
+			if (f.verify_modal_dismissed_at) return false
+			const snoozedUntil = parseInt(localStorage.getItem('verify-popup-snoozed-until') || '0')
+			if (snoozedUntil > nowTick.value) return false
+			if (f.didactitiel_completed_at) {
+				return nowTick.value >= f.didactitiel_completed_at * 1000 + VERIFY_POPUP_DELAY_MS
+			}
+			// Pré-migration : on garde l'ancien déclencheur "5 combats" pour ne
+			// pas attendre indéfiniment sur les comptes qui n'ont pas de timestamp.
+			return (f.fights ?? 0) >= 5
+		},
+		set(value: boolean) {
+			if (!value) verifyPopupDismissed.value = true
+		}
+	})
+
+	// Dialog de rappel "va checker ton mail" : 5 min après verify_start,
+	// puis snooze exponentiel x2 géré dans le composant (10min, 20min, 40min, …).
+	const CHECK_EMAIL_REMINDER_INITIAL_DELAY_MS = 5 * 60 * 1000
+	const showCheckEmailReminder = computed({
+		get() {
+			const f = store.state.farmer
+			if (!f || f.verified) return false
+			if (!f.verify_code_at) return false
+			if (checkEmailReminderDismissed.value) return false
+			if (nowTick.value < f.verify_code_at * 1000 + CHECK_EMAIL_REMINDER_INITIAL_DELAY_MS) return false
+			if (localStorage.getItem('check-email-reminder-snoozed-final-' + f.id) === '1') return false
+			const snoozedUntil = parseInt(localStorage.getItem('check-email-reminder-snoozed-until-' + f.id) || '0')
+			return snoozedUntil <= nowTick.value
+		},
+		set(value: boolean) {
+			if (!value) checkEmailReminderDismissed.value = true
+		}
+	})
 	const aprilFoolsDialog = ref(false)
-	const doc = useTemplateRef<any>('doc')
+	const doc = useTemplateRef<import('vue').ComponentPublicInstance>('doc')
 
 	const logoutAccounts = computed(() => {
 		const farmerId = store.state.farmer?.id
@@ -330,9 +418,16 @@
 	window.addEventListener('storage', onStorage)
 	onBeforeUnmount(() => window.removeEventListener('storage', onStorage))
 
-	const toast = new URLSearchParams(window.location.search).get('toast')
+	const queryParams = new URLSearchParams(window.location.search)
+	const toast = queryParams.get('toast')
 	if (toast) {
-		LeekWars.toast(i18n.t('main.account_' + toast) as string)
+		// LeekWars.toast cherche `#app .toasts` dans le DOM ; il faut attendre le mount.
+		onMounted(() => LeekWars.toast(i18n.t('main.account_' + toast) as string))
+	}
+	if (queryParams.get('welcome') === '1' && store.state.connected) {
+		showActivationWelcome.value = true
+	}
+	if (toast || queryParams.has('welcome')) {
 		history.replaceState(null, '', window.location.pathname)
 	}
 

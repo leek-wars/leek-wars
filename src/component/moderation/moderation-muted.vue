@@ -51,9 +51,9 @@
 	import { computed, ref } from 'vue'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 
-	defineOptions({ name: "moderation-muted", i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: "ModerationMuted", i18n: {}, mixins: [...mixins] })
 
-	const muted = ref<any[] | null>(null)
+	const muted = ref<Record<string, unknown>[] | null>(null)
 	const now = Math.floor(Date.now() / 1000)
 
 	const breadcrumb_items = computed(() => [
@@ -61,7 +61,7 @@
 		{name: "Mutés", link: '/moderation/muted'},
 	])
 
-	LeekWars.get('moderation/get-muted').then((data: any) => {
+	LeekWars.get('moderation/get-muted').then((data) => {
 		muted.value = data.muted
 		LeekWars.setTitle("Mutés")
 	})
@@ -70,11 +70,11 @@
 		return LeekWars.formatDuration(timestamp)
 	}
 
-	function unmute(farmer: any) {
+	function unmute(farmer: Record<string, unknown>) {
 		LeekWars.post('moderation/unmute', {target_id: farmer.id, type: 'all'}).then(() => {
 			LeekWars.toast("Joueur démuté")
 			muted.value = muted.value!.filter(f => f.id !== farmer.id)
-		}).error((error: any) => {
+		}).error((error) => {
 			LeekWars.toast(error)
 		})
 	}

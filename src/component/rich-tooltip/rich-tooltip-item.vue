@@ -14,14 +14,15 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import ItemPreview from '@/component/market/item-preview.vue'
+import { ItemTemplate } from '@/model/item'
 import { LeekWars } from '@/model/leekwars'
 import type { Leek } from '@/model/leek'
 import { emitter } from '@/model/vue'
 
-defineOptions({ name: 'rich-tooltip-item' })
+defineOptions({ name: 'RichTooltipItem' })
 
 const props = withDefaults(defineProps<{
-	item: any
+	item: ItemTemplate
 	quantity?: number
 	bottom?: boolean
 	instant?: boolean
@@ -32,11 +33,14 @@ const props = withDefaults(defineProps<{
 	craftCost?: number
 }>(), {
 	craftCost: 0,
+	quantity: undefined,
+	openDelay: undefined,
+	leek: undefined,
 })
 
 const emit = defineEmits<{
 	'update:modelValue': [value: boolean]
-	'retrieve': [event: any]
+	'retrieve': [event: Event]
 }>()
 
 const locked = ref(false)

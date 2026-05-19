@@ -25,7 +25,7 @@ import { LeekWars } from '@/model/leekwars'
 import type { Notification } from '@/model/notification'
 import { store } from '@/model/store'
 
-defineOptions({ name: 'notification' })
+defineOptions({ name: 'Notification' })
 
 const props = defineProps<{
 	notification: Notification

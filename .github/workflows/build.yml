@@ -15,7 +15,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: npm ci
-      - run: npm run build
+
+      # Push develop : build mode beta (lit .env.beta) et push vers la stack
+      # leekwars_beta (volume Docker leekwars_beta_client) via une clé SSH
+      # dédiée dont le ForceCommand pointe sur deploy-client-beta.sh.
+      - name: Build for beta
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        run: npm run build-beta:sourcemaps
+
+      - name: Deploy to beta
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_BETA_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H -p 58117 leekwars.com >> ~/.ssh/known_hosts
+          tar cz dist/ | ssh -T -p 58117 deploy@leekwars.com
+
+      # Push master : build prod et deploy vers la stack leekwars (clé prod).
+      - name: Build for production
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: npm run build:sourcemaps
 
       - name: Deploy to production
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
@@ -25,3 +45,8 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H -p 58117 leekwars.com >> ~/.ssh/known_hosts
           tar cz dist/ | ssh -T -p 58117 deploy@leekwars.com
+
+      # PRs et autres branches : on garde un build pour valider que la compil tient.
+      - name: Build (validation only)
+        if: github.event_name != 'push' || (github.ref != 'refs/heads/master' && github.ref != 'refs/heads/develop')
+        run: npm run build:sourcemaps

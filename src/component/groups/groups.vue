@@ -158,6 +158,12 @@
 				<div>
 					<img src="/image/partner/n-hitec.png">
 				</div>
+				<div>
+					<img src="/image/partner/xplor.svg">
+				</div>
+				<div>
+					<img src="/image/partner/santevet.svg">
+				</div>
 			</div>
 
 			<div class="testimonies">
@@ -171,6 +177,15 @@
 				</div>
 
 				<div>
+				<div class="testimony">
+					<!-- <avatar :farmer="{id: -1, avatar_changed: 0}" /> -->
+					<div class="card">
+						« {{ $t('testimony_xplor') }} »
+					</div>
+					<img src="/image/partner/xplor.svg">
+				</div>
+				<br>
+
 				<div class="testimony">
 					<!-- <avatar :farmer="{id: -1, avatar_changed: 0}" /> -->
 					<div class="card">
@@ -200,7 +215,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onBeforeMount } from 'vue'
 import { LeekWars } from '@/model/leekwars'
 import { mixins , useNamespacedT } from '@/model/i18n'
 import Breadcrumb from '../forum/breadcrumb.vue'
@@ -214,7 +229,7 @@ const breadcrumb_items = computed(() => [
 	{ name: t('title'), link: '/groups' },
 ])
 
-LeekWars.setTitle(t('title'))
+onBeforeMount(() => LeekWars.setTitle(t('title')))
 </script>
 
 <style lang="scss" scoped>

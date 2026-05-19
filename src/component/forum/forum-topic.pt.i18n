@@ -40,5 +40,6 @@
 	"hide_topic": "Ocultar",
 	"show_topic": "Mostrar",
 	"set_release": "Release",
-	"release_hint": "Digite 0 para remover a release"
+	"release_hint": "Digite 0 para remover a release",
+	"topic_not_found": "Assunto com id {topic} não encontrado :("
 }

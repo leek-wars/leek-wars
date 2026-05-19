@@ -205,11 +205,17 @@
 					<v-btn prepend-icon="mdi-bell-ring" @click="testPush()">Test push notif</v-btn>
 					<v-btn prepend-icon="mdi-email-fast" @click="testMailSend()">Test email</v-btn>
 					<v-btn prepend-icon="mdi-sword-cross" @click="arenaRegisterRandom()">Random en Arène</v-btn>
+					<v-btn prepend-icon="mdi-account-plus" @click="testVerifyPopup = true">Verify popup</v-btn>
+					<v-btn prepend-icon="mdi-email-fast" @click="testCheckEmailReminder = true">Check email reminder</v-btn>
+					<v-btn prepend-icon="mdi-party-popper" @click="testActivationWelcome = true">Activation welcome</v-btn>
 				</div>
 			</template>
 		</panel>
-		<didactitiel v-if="didactitiel_enabled" v-model="didactitiel" />
+		<didactitiel v-if="didactitiel_enabled" v-model="showDidactitiel" />
 		<level-dialog v-if="levelPopupData" v-model="levelPopup" :leek="leek" :level-data="levelPopupData" />
+		<verify-popup v-if="testVerifyPopup" v-model="testVerifyPopup" />
+		<check-email-reminder v-if="testCheckEmailReminder" v-model="testCheckEmailReminder" :test="true" />
+		<activation-welcome v-if="testActivationWelcome" v-model="testActivationWelcome" />
 	</div>
 </template>
 
@@ -225,15 +231,21 @@
 	import { useRouter } from 'vue-router'
 	const Didactitiel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`))
 	const LevelDialog = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/leek/level-dialog.${locale}.i18n`))
+	const VerifyPopup = defineAsyncComponent(() => import('@/component/verify-popup/verify-popup.vue'))
+	const CheckEmailReminder = defineAsyncComponent(() => import('@/component/check-email-reminder/check-email-reminder.vue'))
+	const ActivationWelcome = defineAsyncComponent(() => import('@/component/activation-welcome/activation-welcome.vue'))
 
 	const router = useRouter()
 
-	const didactitiel = ref(false)
+	const showDidactitiel = ref(false)
 	const didactitiel_enabled = ref(false)
-	const leek = ref<any>(null)
+	const leek = ref<Record<string, unknown> | null>(null)
 	const levelPopup = ref(false)
-	const levelPopupData = ref<any>(null)
+	const levelPopupData = ref<unknown>(null)
 	const encycloLinksLoading = ref(false)
+	const testVerifyPopup = ref(false)
+	const testCheckEmailReminder = ref(false)
+	const testActivationWelcome = ref(false)
 
 	if (!store.getters.admin) router.replace('/')
 	LeekWars.setTitle('Admin')
@@ -295,7 +307,7 @@
 	function show_didactitiel() {
 		didactitiel_enabled.value = true
 		nextTick(() => {
-			didactitiel.value = true
+			showDidactitiel.value = true
 		})
 	}
 
@@ -310,27 +322,27 @@
 	}
 
 	function testPush() {
-		LeekWars.post('notification/test-push').then((data: any) => {
+		LeekWars.post('notification/test-push').then((data) => {
 			LeekWars.toast("Push envoyé à " + data.endpoints + " endpoint(s)")
-		}).error((error: any) => {
+		}).error((error) => {
 			LeekWars.toast("Erreur : " + error.error)
 		})
 	}
 
 	function testMailSend() {
-		LeekWars.post('notification/test-mail-send').then((data: any) => {
+		LeekWars.post('notification/test-mail-send').then((data) => {
 			LeekWars.toast("Email envoyé à " + data.email)
-		}).error((error: any) => {
+		}).error((error) => {
 			LeekWars.toast("Erreur : " + error.error)
 		})
 	}
 
 	function arenaRegisterRandom() {
-		LeekWars.post('admin/arena-register-random').then((data: any) => {
+		LeekWars.post('admin/arena-register-random').then((data) => {
 			const modes = ['BR', 'Guerre', 'Chasse', 'Colosse']
 			const pref = data.preference === -1 ? 'Aucune' : modes[data.preference]
 			LeekWars.toast(`${data.farmer} / ${data.leek} inscrit (pref: ${pref})`)
-		}).error((error: any) => {
+		}).error((error) => {
 			LeekWars.toast("Erreur : " + error.error)
 		})
 	}
@@ -338,10 +350,10 @@
 	function refreshEncycloLinks() {
 		if (encycloLinksLoading.value) return
 		encycloLinksLoading.value = true
-		LeekWars.post('encyclopedia/refresh-links').then((data: any) => {
+		LeekWars.post('encyclopedia/refresh-links').then((data) => {
 			encycloLinksLoading.value = false
 			LeekWars.toast("Links refreshed: " + data.updated + " pages updated")
-		}).error((error: any) => {
+		}).error((error) => {
 			encycloLinksLoading.value = false
 			LeekWars.toast("Erreur : " + error.error)
 		})

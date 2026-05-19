@@ -12,5 +12,12 @@
 	"end_edition": "編集終了",
 	"editing_by_x": "現在編集中。{0}",
 	"redirected_from": "{0} からリダイレクト",
-	"aliases": "別名: {0}"
+	"aliases": "別名: {0}",
+	"history": "履歴",
+	"initial": "作成",
+	"child_pages": "子ページ",
+	"referencing_translations": "関連翻訳",
+	"linked_from": "リンク元ページ",
+	"n_references": "参照 | 参照 | 参照",
+	"views": "ビュー"
 }

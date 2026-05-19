@@ -126,7 +126,7 @@
 			<div v-for="(feature, f) in features" :key="f" class="feature">
 				<div class="images">
 					<div v-for="(image, i) in feature.images" :key="i" class="image-wrapper">
-						<img height="300" :src="'/image/feature/small_' + image + '.webp'" @click="zoom" loading="lazy">
+						<img height="300" :src="'/image/feature/small_' + image + '.webp'" loading="lazy" @click="zoom">
 					</div>
 				</div>
 				<div class="description">
@@ -356,6 +356,7 @@
 	import { locale } from '@/locale'
 	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
+	import { RankingLeekRow, RankingFarmerRow, RankingTeamRow } from '@/model/ranking'
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
 	import { getRedirectAfterLogin } from '@/router'
@@ -363,12 +364,18 @@
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 
+	interface ChangelogEntry {
+		version: string
+		version_name: string
+		date: number
+	}
+
 	const SignupCarousel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup-carousel.${locale}.i18n`))
 	const RichTooltipLeek = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-leek.vue'))
 	const RichTooltipFarmer = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-farmer.vue'))
 	const RichTooltipTeam = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-team.vue'))
 
-	defineOptions({ name: 'signup', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'Signup', i18n: {}, mixins: [...mixins] })
 
 	const { locale: i18nLocale } = useI18n()
 	const t = useNamespacedT('signup')
@@ -377,9 +384,9 @@
 
 	const godfather = ref('')
 	const leek_count = ref(85290)
-	const farmer_ranking = ref<any>([])
-	const leek_ranking = ref<any>([])
-	const team_ranking = ref<any>([])
+	const farmer_ranking = ref<RankingFarmerRow[]>([])
+	const leek_ranking = ref<RankingLeekRow[]>([])
+	const team_ranking = ref<RankingTeamRow[]>([])
 	const login = ref('')
 	const leek = ref('')
 	const email = ref('')
@@ -388,8 +395,8 @@
 	const bigImage = ref<string | null>(null)
 	const bigImageLegend = ref('')
 	const signupMethod = ref(1)
-	const last_version = ref<any>(null)
-	const translations = ref<any>({})
+	const last_version = ref<ChangelogEntry | null>(null)
+	const translations = ref<Record<string, { title?: string }>>({})
 	const leekSkin = ref(1)
 	const leekHat = ref(0)
 	const fastRegister = ref(true)
@@ -467,11 +474,11 @@
 		errors.value = {}
 		const provider = signupMethod.value === 2 ? 'github' : signupMethod.value === 3 ? 'google' : null
 		const service = fastRegister.value ? 'farmer/register-fast' : (provider ? `farmer/register-${provider}` : 'farmer/register')
-		const args = {
+		const args: Record<string, unknown> = {
 			leek_name: leek.value,
 			hat: leekHat.value,
 			skin: leekSkin.value
-		} as any
+		}
 		if (!fastRegister.value) {
 			args.login = login.value
 			args.godfather = godfather.value
@@ -500,9 +507,6 @@
 		})
 		return false
 	}
-	function successConfirm() {
-		router.push('/login')
-	}
 	function addError(form: string, error: string) {
 		if (!(form in errors.value)) {
 			errors.value[form] = []
@@ -520,12 +524,6 @@
 			return null
 		}
 	}
-	function enlarge(image: any) {
-		if (LeekWars.mobile) { return }
-		bigImage.value = image[0].replace('_small', '')
-		bigImageLegend.value = image[1]
-	}
-
 	function zoom(e: Event) {
 		bigImage.value = (e.target as HTMLElement).getAttribute('src')!.replace("small_", "")
 	}

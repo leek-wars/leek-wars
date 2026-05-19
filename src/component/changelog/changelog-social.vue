@@ -13,7 +13,7 @@
 					<div class="social-caption" style="margin-bottom: 10px">Cover image</div>
 					<div class="social-canvases">
 						<div v-for="f in FORMATS" :key="'cover_' + f.key" class="social-canvas-wrapper">
-							<canvas :ref="(el: any) => setCoverCanvasRef(el, f.key)" :width="f.width" :height="f.height" class="social-canvas" />
+							<canvas :ref="(el: HTMLCanvasElement | null) => setCoverCanvasRef(el, f.key)" :width="f.width" :height="f.height" class="social-canvas" />
 							<div class="canvas-label">{{ f.label }}</div>
 							<div class="canvas-download" @click="downloadCoverCanvas(f.key)">
 								<v-icon>mdi-download</v-icon>
@@ -33,7 +33,7 @@
 							</div>
 							<div class="social-canvases">
 								<div v-for="f in FORMATS" :key="f.key" class="social-canvas-wrapper">
-									<canvas :ref="(el: any) => setCanvasRef(el, i, f.key)" :width="f.width" :height="f.height" class="social-canvas" />
+									<canvas :ref="(el: HTMLCanvasElement | null) => setCanvasRef(el, i, f.key)" :width="f.width" :height="f.height" class="social-canvas" />
 									<div class="canvas-label">{{ f.label }}</div>
 									<div class="canvas-download" @click="downloadCanvas(i, f.key, entry.imageNames[0])">
 										<v-icon>mdi-download</v-icon>
@@ -97,9 +97,9 @@ function setCanvasRef(el: HTMLCanvasElement | null, index: number, format: strin
 	if (el) { canvasRefs[key] = el } else { delete canvasRefs[key] }
 }
 
-const englishChangelog = ref<Record<number, any>>({})
+const englishChangelog = ref<Record<number, unknown>>({})
 
-import('@/component/changelog/changelog.en.yaml').then((module: { default: Record<number, any> }) => {
+import('@/component/changelog/changelog.en.yaml').then((module: { default: Record<number, unknown> }) => {
 	englishChangelog.value = module.default
 })
 
@@ -117,7 +117,7 @@ const socialEntries = computed<SocialEntry[]>(() => {
 		const items = versionData[section]
 		if (!items) continue
 		for (const line of items) {
-			const images = Array.from(line.matchAll(imgRegex), (m: any) => m[1])
+			const images = Array.from(line.matchAll(imgRegex), (m: RegExpMatchArray) => m[1])
 			if (images.length === 0) continue
 			const text = line
 				.replace(/#ai\s*/g, '')
@@ -157,7 +157,7 @@ let socialStateLoading = false
 function loadSocialState() {
 	if (!props.version) return
 	socialStateLoading = true
-	let saved: any = {}
+	let saved: Record<string, unknown> = {}
 	try { saved = JSON.parse(localStorage.getItem(`social_${props.version}`) || '{}') } catch { /* ignore */ }
 	descriptions.value = socialEntries.value.map(e => socialDescriptions.value[e.imageNames[0]]?.description ?? '')
 	included.value = socialEntries.value.map(e => saved.included?.[e.imageNames[0]] ?? true)

@@ -38,13 +38,14 @@
 </template>
 
 <script setup lang="ts">
+import { onBeforeMount } from 'vue'
 import { LeekWars } from '@/model/leekwars'
 import { mixins , useNamespacedT } from '@/model/i18n'
 
-defineOptions({ name: 'conditions', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'Conditions', i18n: {}, mixins: [...mixins] })
 
 const t = useNamespacedT('conditions')
-LeekWars.setTitle(t('title'))
+onBeforeMount(() => LeekWars.setTitle(t('title')))
 </script>
 
 <style lang="scss" scoped>

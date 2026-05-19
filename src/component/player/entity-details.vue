@@ -5,7 +5,7 @@
 				<template #activator="{ props }">
 					<div :value="effectText(effect)" :turns="effect.turns === -1 ? '∞' : effect.turns" class="effect" :class="{irreductible: effect.modifiers & EffectModifier.IRREDUCTIBLE}" v-bind="props">
 						<img class="image" :src="effect.texture.src">
-						<img class="state" v-if="effect.type === EffectType.ADD_STATE" :src="LeekWars.STATIC + 'image/state/' + effect.value + '.svg'" :style="{ background: FightEntity.stateColors[effect.value] }">
+						<img v-if="effect.type === EffectType.ADD_STATE" class="state" :src="LeekWars.STATIC + 'image/state/' + effect.value + '.svg'" :style="{ background: FightEntity.stateColors[effect.value] }">
 					</div>
 				</template>
 				<div v-if="effect.item"><b>{{ $t(LeekWars.items[effect.item].name.replace('_', '.')) }}</b></div>
@@ -77,7 +77,13 @@
 						</b>
 					</b>
 					<span v-if="effect.turns === -1">{{ $t('effect.infinite') }}</span>
-					<span v-else v-html="$t('effect.on_n_turns', {turns: $t('effect.n_turns', effect.turns)})"></span>
+					<i18n-t v-else keypath="effect.on_n_turns" tag="span">
+						<template #turns>
+							<i18n-t keypath="effect.n_turns" :plural="effect.turns">
+								<template #n><b>{{ effect.turns }}</b></template>
+							</i18n-t>
+						</template>
+					</i18n-t>
 				</div>
 			</v-tooltip>
 		</div>
@@ -162,7 +168,7 @@
 </template>
 
 <script setup lang="ts">
-	import { EffectModifier, EffectType } from '@/model/effect'
+	import { EffectModifier, EffectType, EntityEffect } from '@/model/effect'
 	import { Chest } from './game/chest'
 	import { FightEntity } from './game/entity'
 	import { Game } from './game/game'
@@ -170,7 +176,7 @@
 	import TurretImage from '@/component/turret-image.vue'
 	import { Mob } from './game/mob'
 
-	defineOptions({ name: 'entity-details' })
+	defineOptions({ name: 'EntityDetails' })
 
 	defineProps<{
 		entity: FightEntity
@@ -178,7 +184,7 @@
 		dark: boolean
 	}>()
 
-	function effectText(effect: any) {
+	function effectText(effect: EntityEffect) {
 		if (effect.type === EffectType.ADD_STATE) return ''
 		let r = '' + effect.value
 		if (effect.type === EffectType.SHACKLE_MAGIC || effect.type === EffectType.SHACKLE_MP || effect.type === EffectType.SHACKLE_TP || effect.type === EffectType.SHACKLE_STRENGTH || effect.type === EffectType.VULNERABILITY || effect.type === EffectType.ABSOLUTE_VULNERABILITY) {

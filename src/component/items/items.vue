@@ -39,12 +39,12 @@ import { mixins, useNamespacedT } from '@/model/i18n'
 import Breadcrumb from '../forum/breadcrumb.vue'
 import Item from '@/component/item.vue'
 
-defineOptions({ name: 'items', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'Items', i18n: {}, mixins: [...mixins] })
 
 const { locale } = useI18n()
 	const t = useNamespacedT('items')
 
-const trophies = ref<any>({})
+const trophies = ref<Record<string, unknown>>({})
 const ignoredItems = new Set([406, 407, 408, 409, 410, 425, 419, 418, 417, 416, 415, 414, 413, 412, 411])
 
 LeekWars.setTitle('Items')

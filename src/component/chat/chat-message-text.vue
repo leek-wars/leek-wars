@@ -8,7 +8,6 @@ import { onMounted, onBeforeUnmount, getCurrentInstance, type App } from 'vue'
 import { store } from '@/model/store'
 import { createSubApp } from '@/model/vue'
 import Pseudo from '../app/pseudo.vue'
-import 'katex/dist/katex.min.css'
 import type { ChatMessage } from '@/model/chat'
 import Loader from '@/component/app/loader.vue'
 import Avatar from '../avatar.vue'
@@ -28,6 +27,7 @@ const subApps: App[] = []
 const instance = getCurrentInstance()
 
 onMounted(() => {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const el = (instance?.proxy as any)?.$el
 	if (!el) return
 	el.querySelectorAll('.pseudo').forEach((c: HTMLElement) => {
@@ -35,12 +35,12 @@ onMounted(() => {
 		const farmer = store.state.farmer_by_name[name]
 		if (farmer) {
 			const app = createSubApp(Pseudo, { farmer }, 'chat-pseudo')
-			app.component('loader', Loader)
-			app.component('avatar', Avatar)
-			app.component('emblem', Emblem)
-			app.component('flag', Flag)
-			app.component('talent', Talent)
-			app.component('ranking-badge', RankingBadge)
+			app.component('Loader', Loader)
+			app.component('Avatar', Avatar)
+			app.component('Emblem', Emblem)
+			app.component('Flag', Flag)
+			app.component('Talent', Talent)
+			app.component('RankingBadge', RankingBadge)
 			app.mount(c)
 			subApps.push(app)
 		}

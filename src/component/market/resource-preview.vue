@@ -3,10 +3,10 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: 'resource-preview' })
+defineOptions({ name: 'ResourcePreview' })
 
 defineProps<{
-	resource?: any
+	resource?: Record<string, unknown>
 }>()
 </script>
 

@@ -1,0 +1,22 @@
+{
+	"title": "Proteggi il tuo account e ricevi la ricompensa",
+	"intro": "Perderai i tuoi progressi se cambi browser o cancelli i cookie. Valida il tuo account per proteggerlo e sbloccare la ricompensa.",
+	"login": "Scegli il tuo nome da allevatore",
+	"email": "La tua email",
+	"password": "Password",
+	"validate": "Valida il mio account",
+	"later": "Più tardi",
+	"mail_sent": "Email di validazione inviata!",
+	"error_login_length": "Nome allevatore troppo corto o troppo lungo",
+	"error_login_format": "Formato non valido (solo lettere, cifre e trattini)",
+	"error_login_already_used": "Questo nome allevatore è già in uso",
+	"error_forbidden_name": "Questo nome non è consentito",
+	"error_invalid_mail": "Email non valida",
+	"error_mail_already_used": "Questa email è già in uso",
+	"error_password_length": "Password troppo corta o troppo lunga",
+	"error_invalid_godfather": "Padrino non trovato",
+	"or": "oppure continua con",
+	"use_github": "Continua con GitHub",
+	"use_google": "Continua con Google",
+	"error_no_login": "Scegli prima il tuo nome da allevatore"
+}

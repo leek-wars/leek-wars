@@ -19,7 +19,7 @@
 	"hi": "Hello to you <b>{0}</b>, young leek farmer! In this short tutorial, you will be explained the basics of the game.",
 	"leeks": "Leeks",
 	"market": "Market",
-	"market_1": "To buy weapons, chips or potions, go to the <a href='/market' target='_blank' rel='noopener'>Market page</a>. You will be able to spend your <b>Habs</b>, the game currency, to acquire these objects. You will then have to equip the items on your leek in order to use them in combat.",
+	"market_1": "To buy weapons, chips or potions, go to the <a href='/market' target='_blank' rel='noopener'>Market</a> page. There you can spend your <b>Habs</b>, the game's currency, to acquire these items. You'll then need to equip them on your leek to use them.",
 	"market_2": "How can you earn Habs? Simply by fighting other leeks. The amount of Habs you gain depends on your opponent's leek's power compared to yours.",
 	"next": "Next",
 	"play": "Play!",
@@ -29,6 +29,6 @@
 	"title": "Tutorial",
 	"weapons_chips": "Weapons and chips",
 	"weapons_chips_1": "A leek can use <b>weapons</b> to shoot other leeks. It can equip up to <b>2</b> weapons at the same time, up to <b>4</b> by leveling up.",
-	"weapons_chips_2": "But it can also use <b>chips</b> (from <b>12</b> to <b>20</b> at the same time), that allow it to perform various actions in combat, like attacking, healing, protecting, and even teleporting...",
+	"weapons_chips_2": "But it can also use <b>chips</b> (from <b>12</b> to <b>20</b> at the same time) which let it perform many actions in fights such as attacking, healing, putting up shields, even teleporting...",
 	"welcome": "Welcome to Leek Wars!"
 }

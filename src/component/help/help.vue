@@ -107,7 +107,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineAsyncComponent, nextTick } from 'vue'
+import { ref, defineAsyncComponent, nextTick, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
 import { locale } from '@/locale'
 import { mixins, useNamespacedT } from '@/model/i18n'
@@ -115,7 +115,7 @@ import { LeekWars } from '@/model/leekwars'
 
 const Didactitiel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`))
 
-defineOptions({ name: 'help', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'Help', i18n: {}, mixins: [...mixins] })
 
 const t = useNamespacedT('help')
 const router = useRouter()
@@ -124,8 +124,10 @@ const advanced = ref(false)
 const didactitiel = ref(false)
 const didactitiel_enabled = ref(false)
 
-LeekWars.setTitle(t('title'))
-LeekWars.setActions([{icon: 'mdi-information-variant', click: () => router.push('/about')}])
+onBeforeMount(() => {
+	LeekWars.setTitle(t('title'))
+	LeekWars.setActions([{icon: 'mdi-information-variant', click: () => router.push('/about')}])
+})
 
 function show_didactitiel() {
 	didactitiel_enabled.value = true

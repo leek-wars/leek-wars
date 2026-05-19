@@ -27,6 +27,7 @@
 </template>
 
 <script setup lang="ts">
+import { ChipTemplate } from '@/model/chip'
 import { CHIPS as CHIPSImport } from '@/model/chips'
 import { Leek } from '@/model/leek'
 import { LeekWars } from '@/model/leekwars'
@@ -36,7 +37,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const CHARACTERISTICS = ['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'tp', 'mp', 'cores', 'ram']
-const CHIPS: Record<number, any> = CHIPSImport
+const CHIPS: Record<number, ChipTemplate> = CHIPSImport
 
 defineOptions({ name: 'LoadoutList' })
 
@@ -59,10 +60,10 @@ const loadouts = computed<Loadout[]>(() => store.state.farmer?.loadouts || [])
 onMounted(() => {
 	if (!store.state.farmer?.loadouts) {
 		loading.value = true
-		;(LeekWars.get('loadout/get-all').then((data: any) => {
+		LeekWars.get('loadout/get-all').then((data) => {
 			store.commit('set-loadouts', data.loadouts)
 			loading.value = false
-		}) as any).error(() => {
+		}).error(() => {
 			loading.value = false
 		})
 	}
@@ -74,9 +75,12 @@ function isCharac(icon: string) {
 
 function apply(loadout: Loadout) {
 	applying.value = loadout.id
-	;(LeekWars.post('loadout/apply', { set_id: loadout.id, leek_id: props.leek.id }).then((data: any) => {
+	LeekWars.post('loadout/apply', { set_id: loadout.id, leek_id: props.leek.id }).then((data) => {
+		// eslint-disable-next-line vue/no-mutating-props
 		props.leek.weapons = data.leek.weapons
+		// eslint-disable-next-line vue/no-mutating-props
 		props.leek.chips = data.leek.chips
+		// eslint-disable-next-line vue/no-mutating-props
 		props.leek.components = data.leek.components
 		emit('applied')
 		if (data.skipped && data.skipped.length > 0) {
@@ -85,16 +89,16 @@ function apply(loadout: Loadout) {
 			LeekWars.toast(t('main.loadout_apply_success', [props.leek.name]))
 		}
 		applying.value = null
-	}) as any).error((e: any) => {
+	}).error((e) => {
 		LeekWars.toast(e)
 		applying.value = null
 	})
 }
 
 function remove(loadout: Loadout) {
-	;(LeekWars.delete('loadout/delete', { set_id: loadout.id }).then(() => {
+	LeekWars.delete('loadout/delete', { set_id: loadout.id }).then(() => {
 		store.commit('remove-loadout', loadout.id)
-	}) as any).error((e: any) => {
+	}).error((e) => {
 		LeekWars.toast(e)
 	})
 }

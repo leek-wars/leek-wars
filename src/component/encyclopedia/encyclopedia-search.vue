@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, onBeforeMount, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Markdown from '@/component/encyclopedia/markdown.vue'
 import { i18n, mixins , useNamespacedT } from '@/model/i18n'
@@ -56,25 +56,23 @@ import { LeekWars } from '@/model/leekwars'
 import Breadcrumb from '../forum/breadcrumb.vue'
 import Pagination from '@/component/pagination.vue'
 
-defineOptions({ name: 'encyclopedia-search', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'EncyclopediaSearch', i18n: {}, mixins: [...mixins] })
 
 const t = useNamespacedT('encyclopedia-search')
 const route = useRoute()
 const router = useRouter()
 
-const options = ref<{[key: string]: any}>({ query: '', page: 1 })
+const options = ref<Record<string, unknown>>({ query: '', page: 1 })
 const queryLower = ref('')
 const pages = ref(0)
-const results = ref<any[] | null>(null)
+const results = ref<Record<string, unknown>[] | null>(null)
 const searchStarted = ref(false)
 const count = ref(0)
-const floor = Math.floor
-
 let urlSyncing = false
 
 const canSearch = computed(() => options.value.query)
 
-LeekWars.setTitle(t('title'))
+onBeforeMount(() => LeekWars.setTitle(t('title')))
 
 function onQueryInput(e: Event) {
 	const query = (e.target as HTMLInputElement).value
@@ -95,7 +93,7 @@ function doSearch() {
 			results.value = data.results
 			pages.value = data.pages
 			count.value = data.count
-		}).catch((err: any) => {
+		}).catch((err) => {
 			results.value = []
 			count.value = 0
 			LeekWars.toast(err.error)
@@ -128,7 +126,7 @@ const url = computed(() => urlPagination.value + (options.value.page > 1 ? '&pag
 
 function search() {
 	if (!canSearch.value) return
-	router.push(url.value).then((failure: any) => {
+	router.push(url.value).then((failure) => {
 		if (failure) doSearch()
 	})
 }

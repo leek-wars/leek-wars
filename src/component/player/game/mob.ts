@@ -8,7 +8,7 @@ import { Cell } from "@/model/cell"
 const handSize = 20
 const handSize2 = handSize / 2
 
-export class MobTemplate {
+class MobTemplate {
 	id!: number
 	name!: string
 	hat!: number | null
@@ -122,7 +122,7 @@ class Mob extends FightEntity {
 		}
 	}
 
-	public frameTexture(includeHat: boolean): Texture {
+	public frameTexture(_includeHat: boolean): Texture {
 
 		const canvas = document.createElement('canvas')
 		canvas.width = this.baseWidth

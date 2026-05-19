@@ -5,9 +5,16 @@
     - "#ai Funzione `setLoadout(name)`: applica un loadout solo per questo combattimento, da usare all'interno di `beforeFight()`. Armi/chip/stat del loadout sono ripristinati alla fine del combattimento."
     - "#ai Funzione `getWinner()`: recupera il lato della squadra vincente da `afterFight()`."
     - "#ai Supporto dei file `.md`, `.txt`, `.json`, `.yaml` e `.gitignore` nell'editor, con evidenziazione della sintassi appropriata."
+    - "Contatore in tempo reale dei giocatori in coda per le arene, mostrato nell'orto (sulla scheda e sotto il pulsante Seleziona) per invogliare a unirsi. (grazie a TransLeek)"
+    - "Popup di attesa arena: modalità preferita visibile su ogni partecipante, contatore in tempo reale con diodo, selezione del porro e scelta della modalità modificabili senza lasciare la coda."
   improved:
     - "#ai Avviso sulle funzioni e variabili globali mai utilizzate nell'IA (modalità rigorosa)."
     - "#ai I nuovi file sono ora vuoti per default (invece del codice di esempio LeekScript), tranne per il primo file di un account."
+    - "Pannello azioni del combattimento scorrevole: puoi risalire liberamente la cronologia senza perdere le azioni vecchie, con caricamento progressivo in entrambe le direzioni."
+    - "Notifiche delle arene più precise: indicano il numero di porri affrontati (Battle Royale, Guerra, Caccia ai forzieri, Colosso)."
+  fixed:
+    - "Icona Mercato del menu meglio allineata verticalmente."
+    - "Modificare l'IA di un porro in uno scenario predefinito non causa più un 404: lo scenario viene creato al volo."
 247:
   title: "Integrazione Git, equipaggiamenti, gestione multi-account e pozioni di trifoglio."
   added:

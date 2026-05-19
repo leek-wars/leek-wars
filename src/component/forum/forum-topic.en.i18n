@@ -6,7 +6,7 @@
 	"do_you_want_to_delete_message": "Do you really want to delete this message?",
 	"do_you_want_to_delete_topic": "Do you really want to delete this topic?",
 	"edit": "Edit",
-	"edited_the": "Edited the {0}",
+	"edited_the": "Edited on {0}",
 	"lock": "Lock",
 	"locked": "Topic locked",
 	"n_messages": "{0} messages",
@@ -44,5 +44,6 @@
 	"old_topic_warning": "The last message in this topic is over a year old.",
 	"old_topic_title": "Old topic",
 	"old_topic_confirm": "The last message in this topic is over a year old. Do you really want to reply?",
-	"see_changelog": "See the {0} changelog"
+	"see_changelog": "See the {0} changelog",
+	"topic_not_found": "Topic with id {topic} not found :("
 }

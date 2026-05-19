@@ -31,11 +31,11 @@ class ItemTemplate {
 	public crystals!: number | null
 	public sellable!: boolean
 	public level!: number
-	public params!: any
+	public params!: number
 	public buyable!: boolean
 	public public!: boolean
 	public singleton!: boolean
-	public trophy!: any
+	public trophy!: number | null
 	public market!: boolean
 	public buyable_crystals!: boolean
 	public rarity!: number
@@ -46,7 +46,7 @@ class ItemTemplate {
 	public farmer_count?: number
 	public sell_price?: number
 	public seen?: boolean
-	[key: string]: any
+	[key: string]: unknown
 }
 
 const ITEM_CATEGORY_NAME: { [key: number]: string } = {

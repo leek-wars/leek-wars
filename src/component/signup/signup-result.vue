@@ -26,7 +26,7 @@ import { mixins } from '@/model/i18n'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
-defineOptions({ name: 'signup-result', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'SignupResult', i18n: {}, mixins: [...mixins] })
 
 const props = defineProps<{
 	result?: string

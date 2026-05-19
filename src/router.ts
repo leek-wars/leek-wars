@@ -86,7 +86,7 @@ const Tutorial = () => import(/* webpackChunkName: "[request]" */ `@/component/t
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { createRouter, createWebHistory } from 'vue-router'
-import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
+import type { RouteLocationNormalized, NavigationGuardNext, RouteLocationRaw, RouteLocationResolved, RouteRecordRaw } from 'vue-router'
 import { scroll_to_hash } from './router-functions'
 import AdminComponents from './component/admin/admin-components.vue'
 import { defineAsyncComponent, defineComponent, h } from 'vue'
@@ -107,7 +107,8 @@ const Home = defineComponent({
 	},
 	render() {
 		if (store.state.connected) {
-			return (this as any).chatFirst ? null : h(LeekAsync)
+			const chatFirst = LeekWars.mobile && localStorage.getItem('options/chat-first') === 'true'
+			return chatFirst ? null : h(LeekAsync)
 		}
 		return h(Signup)
 	}
@@ -129,7 +130,7 @@ const disconnected = (to: RouteLocationNormalized, _from: RouteLocationNormalize
 	}
 }
 
-const routes = [
+const routes: RouteRecordRaw[] = [
 	{ path: '/', component: Home },
 	{ path: '/godfather', component: Home },
 	{ path: '/godfather/:godfather', component: Home },
@@ -154,6 +155,7 @@ const routes = [
 	{ path: '/admin/funnels', component: AdminFunnels, beforeEnter: connected },
 	{ path: '/admin/funnels/:funnel', component: AdminFunnels, beforeEnter: connected },
 	{ path: '/admin/dashboards', component: AdminDashboards, beforeEnter: connected },
+	{ path: '/admin/dashboards/:id', component: AdminDashboards, beforeEnter: connected },
 	{ path: '/admin/matchmaking', component: AdminMatchmaking, beforeEnter: connected },
 	{ path: '/about', component: About },
 	{ path: '/app', component: MobileApp },
@@ -265,10 +267,10 @@ if (import.meta.env.VITE_BANK !== 'false') {
 		{ path: '/bank/buy/:pack', component: BankBuy, beforeEnter: connected },
 		{ path: '/bank/buy/:pack/:offer', component: BankBuy, beforeEnter: connected },
 		{ path: '/bank/validate/', component: BankValidate, beforeEnter: connected },
-		{ path: '/bank/validate/success/:crystals', component: BankValidate, props: {success: true} as any, beforeEnter: connected },
-		{ path: '/bank/validate/success/:crystals/:vendor', component: BankValidate, props: {success: true} as any, beforeEnter: connected },
-		{ path: '/bank/validate/failed/:reason', component: BankValidate, props: {success: false} as any, beforeEnter: connected },
-		{ path: '/bank/validate/failed/:vendor/:reason', component: BankValidate, props: {success: false} as any, beforeEnter: connected },
+		{ path: '/bank/validate/success/:crystals', component: BankValidate, props: { success: true }, beforeEnter: connected },
+		{ path: '/bank/validate/success/:crystals/:vendor', component: BankValidate, props: { success: true }, beforeEnter: connected },
+		{ path: '/bank/validate/failed/:reason', component: BankValidate, props: { success: false }, beforeEnter: connected },
+		{ path: '/bank/validate/failed/:vendor/:reason', component: BankValidate, props: { success: false }, beforeEnter: connected },
 	)
 }
 
@@ -279,7 +281,8 @@ const router = createRouter({
 		// console.log("scrollBehavior", to, from, savedPosition)
 		const vm = vueMain
 		if (vm) {
-			vm.$data.savedPosition = 0
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			;(vm.$data as any).savedPosition = 0
 		}
 		if (to.hash) {
 			setTimeout(() => {
@@ -289,7 +292,8 @@ const router = createRouter({
 		}
 		if (savedPosition && !from.hash) {
 			if (vm) {
-				vm.$data.savedPosition = savedPosition.top
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				;(vm.$data as any).savedPosition = savedPosition.top
 			}
 		} else if (LeekWars.mobile && !to.meta!.noscrollapp) {
 			return { left: 0, top: 0 }
@@ -302,21 +306,22 @@ const router = createRouter({
 
 // Diagnose #11099185 — router.resolve(null) during arena notifications
 {
-	const orig = router.resolve.bind(router) as (...a: any[]) => any
-	;(router as any).resolve = (...args: any[]) => {
-		if (args[0] == null) {
+	const orig = router.resolve.bind(router)
+	const patched = (location: RouteLocationRaw): RouteLocationResolved => {
+		if (location == null) {
 			let stack: string
 			try { throw new Error() } catch (e) { stack = (e as { stack?: string }).stack || '' }
 			LeekWars.post('error/report', {
-				error: 'TypeError: router.resolve(' + args[0] + ')',
+				error: 'TypeError: router.resolve(' + location + ')',
 				stack,
 				file: document.location.href,
 				locale: 'fr',
 				user_agent: navigator.userAgent,
 			})
 		}
-		return orig(...args)
+		return orig(location)
 	}
+	;(router as { resolve: typeof patched }).resolve = patched
 }
 
 // Handle chunk loading errors (e.g., after deployment when old chunks no longer exist)

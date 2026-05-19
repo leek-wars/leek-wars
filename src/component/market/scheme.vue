@@ -42,14 +42,14 @@
 
 <script setup lang="ts">
 import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
-import { ITEM_CATEGORY_NAME } from '@/model/item'
+import { ITEM_CATEGORY_NAME, ItemTemplate } from '@/model/item'
 import { LeekWars } from '@/model/leekwars'
 import { SchemeTemplate } from '@/model/scheme'
 import { store } from '@/model/store'
 import { emitter } from '@/model/vue'
 import { computed } from 'vue'
 
-defineOptions({ name: 'scheme', components: {
+defineOptions({ name: 'Scheme', components: {
 	'rich-tooltip-item': RichTooltipItem,
 } })
 
@@ -64,9 +64,9 @@ const props = withDefaults(defineProps<{
 })
 
 defineEmits<{
-	'show-tooltip': [event: any]
+	'show-tooltip': [event: MouseEvent]
 	'hide-tooltip': []
-	'update:modelValue': [value: any]
+	'update:modelValue': [value: unknown]
 }>()
 
 const result = computed(() => LeekWars.items[props.scheme.result])
@@ -77,15 +77,17 @@ const ingredientCost = computed(() => props.scheme.items.reduce((s, i) => s + (i
 
 const possible = computed(() => item_present.value.every(p => p === 'present'))
 
-function ingredientScheme(ingredient: any): SchemeTemplate | null {
+interface Ingredient { item: ItemTemplate, quantity: number }
+
+function ingredientScheme(ingredient: Ingredient): SchemeTemplate | null {
 	if (!ingredient || !store.state.farmer) return null
-	const scheme = Object.values(LeekWars.schemes).find((s: any) => s.result === ingredient.item.id) as SchemeTemplate | undefined
+	const scheme = Object.values(LeekWars.schemes).find((s) => s.result === ingredient.item.id) as SchemeTemplate | undefined
 	if (!scheme) return null
-	if (!store.state.farmer.schemes.find((s: any) => LeekWars.items[s.template].params == scheme.id)) return null
+	if (!store.state.farmer.schemes.find((s) => LeekWars.items[s.template].params == scheme.id)) return null
 	return store.getters.scheme_possible(scheme) ? scheme : null
 }
 
-function craftIngredient(ingredient: any) {
+function craftIngredient(ingredient: Ingredient) {
 	const scheme = ingredientScheme(ingredient)
 	if (scheme) emitter.emit('craft', scheme)
 }

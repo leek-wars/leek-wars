@@ -1,5 +1,5 @@
 {
-	"description": "Banken erbjuder dig att skaffa <b>kristaller</b> <span class='crystal'></span>, den andra valutan i Leek Wars, så att du sedan kan köpa trolldrycker och annat rent dekorativt och <b>inte påverkar </b> din kraft i strid. <br>\nUnna dig en färgdryck för din purjolök och stöd Leek Wars!",
+	"description": "Välkommen till banken! <b>Kristaller</b> <span class='crystal'></span> ger dig drycker, extra strider, färger och tillbehör till dina purjolökar. <b>Ingen stridsfördel</b>: alla köp är kosmetiska eller praktiska.<br>\nVarje köp stödjer direkt utvecklingen av Leek Wars. Tack!",
 	"pack_of_n_crystals": "Paket med <b>{0}</b> kristaller",
 	"paypal_description": "Köp av {0} kristaller för {1} €",
 	"title": "Kristallbank",
@@ -24,6 +24,10 @@
 	"payment_no_code": "Inga koder",
 	"payment_wrong_code": "Ogiltig kod",
 	"first_purchase_banner": "Första köpet? Alla dina kristaller fördubblas!",
+	"suggestion_target_fights": "100-strids-paket",
+	"suggestion_with_remainder": "→ Paketet {pack} för {price} täcker köpet, med {remainder} kvar.",
+	"suggestion_exact": "→ Paketet {pack} för {price} täcker köpet.",
+	"suggestion_cta": "Visa paketet",
 	"items_title": "De väntar bara på dig",
 	"back": "Tillbaka till banken",
 	"best_value": "Bästa erbjudandet",

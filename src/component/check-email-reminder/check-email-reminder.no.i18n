@@ -1,0 +1,17 @@
+{
+	"title": "Sjekk innboksen din!",
+	"intro": "Vi sendte deg en e-post for noen minutter siden. Klikk på lenken inni for å aktivere kontoen din og motta belønningene dine.",
+	"check_spam": "Husk å sjekke søppelpost- eller reklamemappen hvis du ikke finner den.",
+	"resend": "Send e-posten på nytt",
+	"later": "Senere",
+	"or": "eller verifiser uten e-post",
+	"use_github": "Fortsett med GitHub",
+	"use_google": "Fortsett med Google",
+	"mail_resent": "E-post sendt på nytt!",
+	"error_wrong_token": "Økten har utløpt, logg inn på nytt",
+	"error_already_verified": "Kontoen din er allerede verifisert",
+	"error_no_pending_verify": "Ingen ventende verifisering",
+	"error_no_login": "Mangler brukernavn, last siden på nytt",
+	"error_too_many_requests": "Vent litt før du prøver igjen",
+	"error_unknown": "Noe gikk galt, prøv igjen senere"
+}

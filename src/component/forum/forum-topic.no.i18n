@@ -44,5 +44,6 @@
 	"unlock": "Låse opp",
 	"unpin": "Å ta ned",
 	"unsolved": "Uløst",
-	"unsubscribe": "Avslutt abonnement på emnet"
+	"unsubscribe": "Avslutt abonnement på emnet",
+	"topic_not_found": "Emne med ID {topic} ikke funnet :("
 }

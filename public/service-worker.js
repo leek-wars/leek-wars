@@ -3,7 +3,7 @@
 // - Same-origin GET assets (non-/api/): Stale-while-revalidate with throttled background refresh
 // - Push notifications + click handling
 
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v3';
 const NAV_CACHE = 'nav-' + CACHE_VERSION;
 const ASSET_CACHE = 'assets-' + CACHE_VERSION;
 const ALL_CACHES = [NAV_CACHE, ASSET_CACHE];
@@ -78,7 +78,7 @@ async function handleAsset(event) {
 			const now = Date.now();
 			if (now - (lastRefreshed.get(url) || 0) > BG_REFRESH_TTL) {
 				lastRefreshed.set(url, now);
-				event.waitUntil(refreshCache(cache, url).catch(() => {}));
+				event.waitUntil(refreshCache(cache, event.request).catch(() => {}));
 			}
 			return cached;
 		}
@@ -92,10 +92,13 @@ async function handleAsset(event) {
 	}
 }
 
-async function refreshCache(cache, url) {
-	const fresh = await fetch(new Request(url, { credentials: 'same-origin' }));
+// Use the original request (with its Accept header) for both fetch and put,
+// otherwise Vary: Accept on the response re-keys the entry with Accept=*/* and
+// the next <img> request misses the cache.
+async function refreshCache(cache, request) {
+	const fresh = await fetch(request.clone());
 	if (fresh && fresh.ok) {
-		await cache.put(url, fresh);
+		await cache.put(request, fresh);
 	}
 }
 

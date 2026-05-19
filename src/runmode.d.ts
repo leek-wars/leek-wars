@@ -3,6 +3,7 @@
 // Definitions by: Joseph Vaughan <https://github.com/Joev->
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 // See docs https://codemirror.net/doc/manual.html#addon_runmode
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as CodeMirror from "codemirror"
 
 declare module "codemirror" {
@@ -17,5 +18,6 @@ declare module "codemirror" {
 	 *               tokens will be converted to span elements as in an editor,
 	 *               and inserted into the node (through innerHTML).
 	 */
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	function runMode(text: string, modespec: any, callback: (HTMLElement | ((text: string, style: string | null) => void)), options?: { tabSize?: number; state?: any; }): void
 }

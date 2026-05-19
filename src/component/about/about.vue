@@ -58,7 +58,7 @@
 
 		<panel :title="$t('team')">
 			<div v-for="(part, p) of team" :key="p" class="devs">
-				<rich-tooltip-farmer v-for="member of part" :key="member.id" :id="member.id">
+				<rich-tooltip-farmer v-for="member of part" :id="member.id" :key="member.id">
 					<router-link :key="member.id" :to="'/farmer/' + member.id">
 						<div class="dev" :class="member.grade">
 							<avatar :farmer="{id: member.id, avatar_changed: member.id === 11 ? 0 : 1}" />
@@ -70,7 +70,7 @@
 			</div>
 			<h4>{{ $t('contributors') }}</h4>
 			<div class="devs contributors">
-				<rich-tooltip-farmer v-for="member of contributors" :key="member.id" :id="member.id">
+				<rich-tooltip-farmer v-for="member of contributors" :id="member.id" :key="member.id">
 					<router-link :key="member.id" :to="'/farmer/' + member.id">
 						<div class="contributor" :class="member.grade">
 							<avatar :farmer="{id: member.id, avatar_changed: member.avatar_changed}" />
@@ -173,14 +173,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, useTemplateRef } from 'vue'
+import { ref, computed, onBeforeMount, onMounted, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { Farmer } from '@/model/farmer'
 import { mixins, useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-defineOptions({ name: 'about', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'About', i18n: {}, mixins: [...mixins] })
 
 useI18n() // initialize local scope for <i18n-t>
 	const t = useNamespacedT('about')
@@ -205,7 +205,7 @@ const technologies = [
 		{ name: 'Vue', link: 'https://vuejs.org/', image: 'vue.png' },
 		{ name: 'Chart.js', link: 'https://www.chartjs.org/', image: 'chartjs.png' },
 		{ name: 'KaTeX', link: 'https://katex.org/', image: 'katex.png' },
-		{ name: 'webpack', link: 'https://webpack.js.org/', image: 'webpack.png' },
+		{ name: 'webpack', link: 'https://webpack.js.org/', image: 'webpack.webp' },
 		{ name: 'npm', link: 'https://www.npmjs.com/', image: 'npm.svg' },
 		{ name: 'Vuetify', link: 'https://vuetifyjs.com/en/', image: 'vuetify.png' },
 		{ name: 'Markdown it', link: 'https://markdown-it.github.io/', image: 'markdown-it.svg' },
@@ -249,8 +249,10 @@ const team = computed(() => [[
 const contributors = ref<Farmer[]>([])
 const github = useTemplateRef<HTMLElement>('github')
 
-LeekWars.setTitle(t('title'))
-LeekWars.setActions([{image: 'github_white.png', click: () => window.open('https://github.com/leek-wars/leek-wars', '_newtab')}])
+onBeforeMount(() => {
+	LeekWars.setTitle(t('title'))
+	LeekWars.setActions([{image: 'github_white.png', click: () => window.open('https://github.com/leek-wars/leek-wars', '_newtab')}])
+})
 
 onMounted(() => {
 	const script = document.createElement('script')

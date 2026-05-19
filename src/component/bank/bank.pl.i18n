@@ -1,5 +1,5 @@
 {
-	"description": "Bank oferuje zdobycie <b>kryształów</b> <span class='crystal'></span>, drugiej waluty Leek Wars, umożliwiającej następnie zakup mikstur i innych czysto dekoracyjnych i <b>nie wpływających </b> swoją siłę w walce. <br>\nZafunduj sobie eliksir koloru dla swojego pora i wesprzyj Leek Wars!",
+	"description": "Witaj w banku! <b>Kryształy</b> <span class='crystal'></span> pozwalają zdobyć eliksiry, dodatkowe walki, kolory i akcesoria dla twoich porów. <b>Brak przewagi w walce</b>: wszystkie zakupy są kosmetyczne lub praktyczne.<br>\nKażdy zakup bezpośrednio wspiera rozwój Leek Wars. Dziękujemy!",
 	"pack_of_n_crystals": "Pakiet <b>{0}</b> kryształów",
 	"paypal_description": "Zakup {0} kryształów za {1} €",
 	"title": "Bank kryształów",
@@ -24,6 +24,10 @@
 	"payment_no_code": "Żadnych kodów",
 	"payment_wrong_code": "Zły kod",
 	"first_purchase_banner": "Pierwszy zakup? Wszystkie Twoje kryształy zostaną podwojone!",
+	"suggestion_target_fights": "Pakiet 100 walk",
+	"suggestion_with_remainder": "→ Pakiet {pack} za {price} pokrywa ten zakup, z {remainder} w zapasie.",
+	"suggestion_exact": "→ Pakiet {pack} za {price} pokrywa ten zakup.",
+	"suggestion_cta": "Zobacz pakiet",
 	"items_title": "Czekają tylko na Ciebie",
 	"back": "Powrót do banku",
 	"best_value": "Najlepsza oferta",

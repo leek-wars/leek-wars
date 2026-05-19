@@ -33,8 +33,10 @@ class Squares {
 			notification,
 			image: (notification.icon ? notification.image : '/image/' + notification.image),
 			icon: notification.icon,
-			title: (i18n as any).t('notification.title_' + notification.type, notification.title) as string,
-			message: (i18n as any).t('notification.message_' + notification.type, notification.message) as string,
+			title: // eslint-disable-next-line @typescript-eslint/no-explicit-any
+			(i18n as any).t('notification.title_' + notification.type, notification.title) as string,
+			message: // eslint-disable-next-line @typescript-eslint/no-explicit-any
+			(i18n as any).t('notification.message_' + notification.type, notification.message) as string,
 			link: notification.link,
 			padding: true,
 			clazz: notification.clazz,

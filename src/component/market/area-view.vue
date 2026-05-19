@@ -64,7 +64,7 @@ import { computed } from 'vue'
 import RangeView from '@/component/market/range-view.vue'
 import { Area } from '@/model/area'
 
-defineOptions({ name: 'area-view', components: { 'range-view': RangeView } })
+defineOptions({ name: 'AreaView', components: { 'range-view': RangeView } })
 
 const props = defineProps<{
 	area: Area

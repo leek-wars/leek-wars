@@ -1,5 +1,5 @@
 <template lang="html">
-
+	<div></div>
 </template>
 
 <script setup lang="ts">
@@ -7,7 +7,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { locale } from '@/locale'
 
-defineOptions({ name: 'general_help' })
+defineOptions({ name: 'GeneralHelp' })
 
 const { t } = useI18n()
 const router = useRouter()

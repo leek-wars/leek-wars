@@ -1,0 +1,22 @@
+{
+	"title": "계정을 보호하고 보상을 받으세요",
+	"intro": "브라우저를 변경하거나 쿠키를 삭제하면 진행 상황을 잃게 됩니다. 계정을 인증하여 보호하고 보상을 잠금 해제하세요!",
+	"login": "사육자 이름을 선택하세요",
+	"email": "이메일 주소",
+	"password": "비밀번호",
+	"validate": "계정 인증",
+	"later": "나중에",
+	"mail_sent": "인증 이메일이 발송되었습니다!",
+	"error_login_length": "사육자 이름이 너무 짧거나 너무 깁니다",
+	"error_login_format": "잘못된 이름 형식 (영문자, 숫자, 하이픈만 허용)",
+	"error_login_already_used": "이 사육자 이름은 이미 사용 중입니다",
+	"error_forbidden_name": "이 이름은 허용되지 않습니다",
+	"error_invalid_mail": "잘못된 이메일",
+	"error_mail_already_used": "이 이메일은 이미 사용 중입니다",
+	"error_password_length": "비밀번호가 너무 짧거나 너무 깁니다",
+	"error_invalid_godfather": "추천인을 찾을 수 없습니다",
+	"or": "또는 계속",
+	"use_github": "GitHub로 계속",
+	"use_google": "Google로 계속",
+	"error_no_login": "먼저 사용자 이름을 선택하세요"
+}

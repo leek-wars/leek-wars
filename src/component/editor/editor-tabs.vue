@@ -24,16 +24,16 @@
 		</div>
 		<v-menu v-model="menuOpened" :target="menuTarget" :theme="isDark ? 'dark' : 'light'" @update:model-value="menuChange">
 			<v-list class="menu" :dense="true">
-				<v-list-item v-if="menuTab" v-ripple @click="closeTab(menuTab)" prepend-icon="mdi-close-box-outline">
+				<v-list-item v-if="menuTab" v-ripple prepend-icon="mdi-close-box-outline" @click="closeTab(menuTab)">
 					<v-list-item-title>{{ $t('close') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-if="menuTab" v-ripple @click="closeOthers(menuTab)" prepend-icon="mdi-close-box-multiple-outline">
+				<v-list-item v-if="menuTab" v-ripple prepend-icon="mdi-close-box-multiple-outline" @click="closeOthers(menuTab)">
 					<v-list-item-title>{{ $t('close_others') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-if="menuTab && menuTab.type !== 'file'" v-ripple @click="$emit('open-file', menuTab)" prepend-icon="mdi-file-outline">
+				<v-list-item v-if="menuTab && menuTab.type !== 'file'" v-ripple prepend-icon="mdi-file-outline" @click="$emit('open-file', menuTab)">
 					<v-list-item-title>{{ $t('open_file') }}</v-list-item-title>
 				</v-list-item>
-				<v-list-item v-if="menuTab && menuTab.type === 'file' && !splitted" v-ripple @click="split()" prepend-icon="mdi-dock-right">
+				<v-list-item v-if="menuTab && menuTab.type === 'file' && !splitted" v-ripple prepend-icon="mdi-dock-right" @click="split()">
 					<v-list-item-title>{{ $t('split') }}</v-list-item-title>
 				</v-list-item>
 			</v-list>
@@ -65,7 +65,7 @@
 	}
 	export type EditorTab = FileTab | DiffTab
 
-	defineOptions({ name: 'editor-tabs', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'EditorTabs', i18n: {}, mixins: [...mixins] })
 
 	const props = withDefaults(defineProps<{
 		ais: {[key: string]: AI}
@@ -127,7 +127,7 @@
 		return 'd-' + tab.file + '-' + (tab.hash || (tab.staged ? 's' : 'w'))
 	}
 
-	function tabClass(tab: EditorTab, i: number): any {
+	function tabClass(tab: EditorTab, _i: number): Record<string, boolean> {
 		const selected = props.current && tabsMatch(tab, props.current)
 		if (tab.type === 'file') {
 			return { selected, modified: fileSystem.ais[tab.id]?.modified, conflict: fileSystem.ais[tab.id]?.hasConflict }
@@ -153,7 +153,7 @@
 		emit('select', tab)
 	}
 
-	function openMenu(event: MouseEvent, tab: EditorTab, i: number) {
+	function openMenu(event: MouseEvent, tab: EditorTab, _i: number) {
 		menuTab.value = tab
 		menuTarget.value = [event.clientX, event.clientY]
 		nextTick(() => {

@@ -15,6 +15,100 @@
 			<template #content>
 				<div class="content">
 					<div class="title">
+						<h3>Derniers éleveurs</h3>
+						<loader v-if="loading" :size="40" />
+					</div>
+
+					<div class="last-farmers">
+						<div v-for="(day, d) of last_farmers_by_day" :key="d" class="farmers">
+							<b class="date">{{ d }} ({{ day.length }})</b>
+							<div v-for="farmer of day" :key="farmer.id" class="card farmer" :class="{deleted: farmer.deleted, connected: farmer.connected && !farmer.deleted}">
+								<div class="date">
+									<img v-if="farmer.connected" class="status" src="/image/connected.png">
+									<img v-else class="status" src="/image/disconnected.png">
+									{{ $filters.time(farmer.register_time) }}
+								</div>
+								<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }" :bottom="true">
+									<router-link v-ripple :to="'/farmer/' + farmer.id" class="name" v-bind="props">
+										<v-icon v-if="farmer.deleted" class="deleted-icon" title="Compte désinscrit">mdi-account-off</v-icon>
+										<avatar v-else :farmer="farmer" />
+										<flag v-if="farmer.language && LeekWars.languages[farmer.language]" :code="LeekWars.languages[farmer.language].country" :clickable="false" />
+										<div v-if="farmer.deleted" class="deleted-name">désinscrit #{{ farmer.id }}</div>
+										<div v-else>{{ farmer.name }}</div>
+									</router-link>
+								</rich-tooltip-farmer>
+
+								<div class="register-type" :title="regLabel(farmer.reg_type)">
+									<v-icon v-if="farmer.reg_type" :class="{pending: isPendingEmail(farmer.reg_type, farmer.verified)}">{{ regIcon(farmer.reg_type, farmer.verified) }}</v-icon>
+									<v-icon v-if="farmer.validation" :class="{pending: isPendingEmail(farmer.validation, farmer.verified)}" :title="validationLabel(farmer.validation)">{{ regIcon(farmer.validation, farmer.verified) }}</v-icon>
+								</div>
+
+								<div class="email-cell" :class="{verified: farmer.verified && farmer.mail, pending: farmer.mail && !farmer.verified}" :title="emailCellTitle(farmer)">
+									<span v-if="farmer.mail" class="addr">{{ farmer.mail }}</span>
+									<span v-else class="empty">—</span>
+									<span v-if="farmer.mail" class="status-icons">
+										<v-icon v-if="farmer.email_bounced_at" class="bounced" title="Mail rejeté (bounce)">mdi-email-alert</v-icon>
+										<template v-else-if="farmer.email_sent_at">
+											<v-icon v-if="farmer.email_clicked_at" class="clicked" :title="'Lien cliqué le ' + formatTs(farmer.email_clicked_at)">mdi-cursor-default-click</v-icon>
+											<v-icon v-else-if="farmer.email_opened_at" class="opened" :title="'Mail ouvert le ' + formatTs(farmer.email_opened_at) + ', pas cliqué'">mdi-eye-outline</v-icon>
+											<v-icon v-else class="unopened" :title="'Mail envoyé le ' + formatTs(farmer.email_sent_at) + ', jamais ouvert (spam folder ?)'">mdi-eye-off-outline</v-icon>
+										</template>
+									</span>
+								</div>
+
+								<div class="tuto" :title="tutoTitle(farmer)">
+									<v-icon v-if="farmer.didactitiel_seen" class="done" title="Didactitiel terminé">mdi-school</v-icon>
+									<v-icon v-else class="pending" title="Didactitiel non terminé">mdi-school-outline</v-icon>
+									<span v-if="farmer.tutorial_progress > 0" class="progress" :class="{complete: farmer.tutorial_progress >= 10}">{{ farmer.tutorial_progress }}/10</span>
+								</div>
+
+								<div class="last-connection" :title="'Dernière connexion: ' + $filters.date(farmer.last_time)">
+									<v-icon>mdi-clock-outline</v-icon>
+									{{ $filters.duration(farmer.last_time) }}
+								</div>
+
+								<div class="playtime" :title="farmer.playtime > 0 ? 'Temps total : ' + LeekWars.formatLongDuration(farmer.playtime) : ''">
+									<template v-if="farmer.playtime > 0">
+										<v-icon>mdi-timer-sand</v-icon>
+										{{ LeekWars.formatLongDuration(farmer.playtime) }}
+									</template>
+								</div>
+
+								<div class="team-cell">
+									<router-link v-if="farmer.team_id" :to="'/team/' + farmer.team_id" class="team" :title="farmer.team_name">
+										<v-icon>mdi-shield-outline</v-icon>
+									</router-link>
+								</div>
+
+								<div class="ai-count" :title="farmer.ai_count + ' IA'">
+									<v-icon>mdi-file-document-outline</v-icon>
+									{{ farmer.ai_count }}
+								</div>
+
+								<div class="ip" :title="farmer.country ? farmer.country.toUpperCase() + ' — ' + farmer.register_ip : farmer.register_ip">
+									<flag v-if="farmer.country" :code="farmer.country" :clickable="false" />
+									{{ farmer.register_ip }}
+								</div>
+								<div class="stats" :class="{empty: farmer.fights + farmer.test_fights + farmer.trophies === 0}">
+									<v-icon>mdi-sword-cross</v-icon> {{ farmer.fights }}
+									<v-icon>mdi-cog-outline</v-icon> {{ farmer.test_fights }}
+									<v-icon>mdi-trophy-outline</v-icon> {{ farmer.trophies }}
+								</div>
+								<component :is="LeekWars.safeUrl(farmer.referer) ? 'a' : 'span'" class="source" :href="LeekWars.safeUrl(farmer.referer)" target="_blank" :title="farmer.referer">
+									{{ format(farmer.referer || '∅') }}
+								</component>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</template>
+		</panel>
+
+		<panel>
+			<template #content>
+				<div class="content">
+					<div class="title">
 						<h3>Statistiques</h3>
 						<div class="period-controls">
 							<v-btn size="small" variant="text" :class="{active: days === 7}" @click="setDays(7)">7j</v-btn>
@@ -76,91 +170,13 @@
 			<template #content>
 				<div class="content">
 					<div class="title">
-						<h3>Derniers éleveurs</h3>
-						<loader v-if="loading" :size="40" />
-					</div>
-
-					<div class="last-farmers">
-						<div v-for="(day, d) of last_farmers_by_day" :key="d" class="farmers">
-							<b class="date">{{ d }} ({{ day.length }})</b>
-							<div v-for="farmer of day" :key="farmer.id" class="card farmer">
-								<div class="date">
-									<img v-if="farmer.connected" class="status" src="/image/connected.png">
-									<img v-else class="status" src="/image/disconnected.png">
-									{{ $filters.time(farmer.register_time) }}
-								</div>
-								<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }" :bottom="true">
-									<router-link :to="'/farmer/' + farmer.id" class="name" v-bind="props" v-ripple>
-										<avatar :farmer="farmer" />
-										<flag :code="LeekWars.languages[farmer.language].country" :clickable="false" />
-										<div>{{ farmer.name }}</div>
-									</router-link>
-								</rich-tooltip-farmer>
-
-								<div class="register-type" :title="regLabel(farmer.reg_type)">
-									<v-icon v-if="farmer.reg_type === 'github'">mdi-github</v-icon>
-									<v-icon v-else-if="farmer.reg_type === 'google'">mdi-google</v-icon>
-									<v-icon v-else-if="farmer.reg_type === 'classic'">mdi-email-outline</v-icon>
-									<v-icon v-else>mdi-flash-outline</v-icon>
-									<v-icon v-if="farmer.verified" class="verified" title="Vérifié">mdi-check-decagram</v-icon>
-									<v-icon v-else class="unverified" title="Non vérifié">mdi-help-circle-outline</v-icon>
-								</div>
-
-								<div class="tuto" :title="tutoTitle(farmer)">
-									<v-icon v-if="farmer.didactitiel_seen" class="done" title="Didactitiel terminé">mdi-school</v-icon>
-									<v-icon v-else class="pending" title="Didactitiel non terminé">mdi-school-outline</v-icon>
-									<span v-if="farmer.tutorial_progress > 0" class="progress" :class="{complete: farmer.tutorial_progress >= 10}">{{ farmer.tutorial_progress }}/10</span>
-								</div>
-
-								<div class="last-connection" :title="'Dernière connexion: ' + $filters.date(farmer.last_time)">
-									<v-icon>mdi-clock-outline</v-icon>
-									{{ $filters.duration(farmer.last_time) }}
-								</div>
-
-								<div class="playtime" :title="farmer.playtime > 0 ? 'Temps total : ' + LeekWars.formatLongDuration(farmer.playtime) : ''">
-									<template v-if="farmer.playtime > 0">
-										<v-icon>mdi-timer-sand</v-icon>
-										{{ LeekWars.formatLongDuration(farmer.playtime) }}
-									</template>
-								</div>
-
-								<div class="team-cell">
-									<router-link v-if="farmer.team_id" :to="'/team/' + farmer.team_id" class="team" :title="farmer.team_name">
-										<v-icon>mdi-shield-outline</v-icon>
-									</router-link>
-								</div>
-
-								<div class="ai-count" :title="farmer.ai_count + ' IA'">
-									<v-icon>mdi-file-document-outline</v-icon>
-									{{ farmer.ai_count }}
-								</div>
-
-								<div class="ip" :title="farmer.country ? farmer.country.toUpperCase() + ' — ' + farmer.register_ip : farmer.register_ip">
-									<flag v-if="farmer.country" :code="farmer.country" :clickable="false" />
-									{{ farmer.register_ip }}
-								</div>
-								<div class="stats" :class="{empty: farmer.fights + farmer.test_fights + farmer.trophies === 0}">
-									<v-icon>mdi-sword-cross</v-icon> {{ farmer.fights }}
-									<v-icon>mdi-cog-outline</v-icon> {{ farmer.test_fights }}
-									<v-icon>mdi-trophy-outline</v-icon> {{ farmer.trophies }}
-								</div>
-								<component :is="LeekWars.safeUrl(farmer.referer) ? 'a' : 'span'" class="source" :href="LeekWars.safeUrl(farmer.referer)" target="_blank" :title="farmer.referer">
-									{{ format(farmer.referer || '∅') }}
-								</component>
-							</div>
-						</div>
-					</div>
-
-					<br>
-
-					<div class="title">
 						<h3>Sources</h3>
 						<loader v-if="loading" :size="40" />
 					</div>
 
 					<div class="sources">
 						<div v-for="source of sources" :key="source.name" class="source card">
-							<component v-if="source.name" :is="LeekWars.safeUrl(source.name) ? 'a' : 'span'" class="name" :href="LeekWars.safeUrl(source.name)" target="_blank">{{ format(source.name) }}</component>
+							<component :is="LeekWars.safeUrl(source.name) ? 'a' : 'span'" v-if="source.name" class="name" :href="LeekWars.safeUrl(source.name)" target="_blank">{{ format(source.name) }}</component>
 							<div v-else class="name">∅</div>
 							<div class="stats">
 								<div class="count">{{ $filters.number(source.count) }}</div>
@@ -190,14 +206,16 @@
 	import type { ChartData, ChartOptions } from 'chart.js'
 
 	const STORAGE_KEY_DAYS = 'admin_sources_days'
-	const REG_TYPES: Record<string, { label: string, title: string, color: string }> = {
-		classic: { label: 'Classique', title: 'Inscription classique', color: '#2196f3' },
-		github:  { label: 'GitHub',    title: 'Inscription GitHub',    color: '#424242' },
-		google:  { label: 'Google',    title: 'Inscription Google',    color: '#db4437' },
-		fast:    { label: 'Rapide',    title: 'Inscription rapide',    color: '#ff9800' },
+	type RegType = 'classic' | 'github' | 'google' | 'fast_verified' | 'fast'
+	const REG_TYPES: Record<RegType, { label: string, title: string, color: string, icon: string }> = {
+		classic:       { label: 'Classique',     title: 'Inscription classique',                color: '#2196f3', icon: 'mdi-email-outline' },
+		github:        { label: 'GitHub',        title: 'Inscription GitHub',                   color: '#424242', icon: 'mdi-github' },
+		google:        { label: 'Google',        title: 'Inscription Google',                   color: '#db4437', icon: 'mdi-google' },
+		fast_verified: { label: 'Rapide validé', title: 'Inscription rapide puis validée',      color: '#ffc107', icon: 'mdi-flash-outline' },
+		fast:          { label: 'Rapide',        title: 'Inscription rapide (non validée)',     color: '#ff9800', icon: 'mdi-flash-outline' },
 	}
 	const GRID = { color: 'rgba(128,128,128,0.15)' }
-	const makeChartOptions = (stacked: boolean): ChartOptions<any> => ({
+	const makeChartOptions = (stacked: boolean): ChartOptions<'bar'> => ({
 		responsive: true,
 		maintainAspectRatio: false,
 		plugins: { legend: { position: 'bottom' } },
@@ -209,18 +227,60 @@
 
 	const router = useRouter()
 
-	const data = ref<any>(null)
-	const sources = ref<any>(null)
-	const last = ref<any>(null)
+	type RegistrationEntry = Record<RegType, string | number> & {
+		day: string
+		tuto_done?: string | number
+		avg_tuto_step?: string | number
+		verified?: string | number
+		[key: string]: unknown
+	}
+	interface SourceFarmer {
+		id: number
+		name: string
+		github?: boolean
+		google?: boolean
+		pass?: boolean
+		mail?: string | null
+		registered_fast?: boolean
+		verified?: boolean
+		deleted?: boolean
+		reg_type?: RegType
+		validation?: RegType | null
+		register_time: number
+		register_ip?: string
+		didactitiel_seen?: boolean
+		tutorial_progress: number
+		email_sent_at?: number | null
+		email_opened_at?: number | null
+		email_clicked_at?: number | null
+		email_bounced_at?: number | null
+		connected?: boolean
+		language?: string
+		country?: string | null
+		referer?: string
+		last_time: number
+		playtime: number
+		fights: number
+		test_fights: number
+		trophies: number
+		team_id?: number
+		team_name?: string
+		ai_count: number
+		[key: string]: unknown
+	}
+
+	const data = ref<Record<string, unknown> | null>(null)
+	const sources = ref<{ name: string, count: number, fights: number, test_fights: number, trophies: number }[] | null>(null)
+	const last = ref<SourceFarmer[] | null>(null)
 	const loading = ref(false)
-	let timer: any = null
-	const last_farmers_by_day = ref<any>({})
+	let timer: ReturnType<typeof setInterval> | null = null
+	const last_farmers_by_day = ref<Record<string, SourceFarmer[]>>({})
 
 	const days = ref(parseInt(localStorage.getItem(STORAGE_KEY_DAYS) || '30'))
 	const stats_loading = ref(false)
-	const countries = ref<any[]>([])
+	const countries = ref<{ country: string, count: number }[]>([])
 	const country_available = ref(true)
-	const retention = ref<any>(null)
+	const retention = ref<Record<string, number> | null>(null)
 	const chartKey = ref(0)
 	const registrationsChart = ref<ChartData<'bar'> | null>(null)
 	const tutoChart = ref<ChartData<'line'> | null>(null)
@@ -261,8 +321,9 @@
 			last.value = d.last
 
 			last_farmers_by_day.value = {}
-			for (const farmer of last.value) {
-				farmer.reg_type = farmer.github ? 'github' : (farmer.google ? 'google' : (farmer.pass ? 'classic' : 'fast'))
+			for (const farmer of last.value || []) {
+				farmer.reg_type = regType(farmer)
+				farmer.validation = regValidation(farmer)
 				const day = LeekWars.formatDate(farmer.register_time)
 				if (!last_farmers_by_day.value[day]) last_farmers_by_day.value[day] = []
 				last_farmers_by_day.value[day].push(farmer)
@@ -281,24 +342,25 @@
 		})
 	}
 
-	function buildCharts(registrations: any[], trophies: any[]) {
+	function buildCharts(registrations: RegistrationEntry[], trophies: { day: string, avg_trophies: string | number }[]) {
 		const labels = registrations.map(r => r.day)
 
 		registrationsChart.value = {
 			labels,
-			datasets: [
-				{ label: REG_TYPES.classic.label, data: registrations.map(r => +r.classic), backgroundColor: REG_TYPES.classic.color, stack: 'reg' },
-				{ label: REG_TYPES.github.label, data: registrations.map(r => +r.github), backgroundColor: REG_TYPES.github.color, stack: 'reg' },
-				{ label: REG_TYPES.fast.label, data: registrations.map(r => +r.fast), backgroundColor: REG_TYPES.fast.color, stack: 'reg' },
-			]
+			datasets: (Object.entries(REG_TYPES) as [RegType, typeof REG_TYPES[RegType]][]).map(([key, cfg]) => ({
+				label: cfg.label,
+				data: registrations.map(r => +r[key]),
+				backgroundColor: cfg.color,
+				stack: 'reg',
+			}))
 		}
 
 		tutoChart.value = {
 			labels,
 			datasets: [
-				{ label: 'Didactitiel terminé', data: registrations.map(r => +r.tuto_done), borderColor: '#4caf50', backgroundColor: 'rgba(76,175,80,0.2)', fill: false, tension: 0.2 },
-				{ label: 'Étape moyenne', data: registrations.map(r => +r.avg_tuto_step), borderColor: '#9c27b0', backgroundColor: 'rgba(156,39,176,0.2)', fill: false, tension: 0.2 },
-				{ label: 'Vérifiés', data: registrations.map(r => +r.verified), borderColor: '#00bcd4', backgroundColor: 'rgba(0,188,212,0.2)', fill: false, tension: 0.2 },
+				{ label: 'Didactitiel terminé', data: registrations.map(r => +(r.tuto_done ?? 0)), borderColor: '#4caf50', backgroundColor: 'rgba(76,175,80,0.2)', fill: false, tension: 0.2 },
+				{ label: 'Étape moyenne', data: registrations.map(r => +(r.avg_tuto_step ?? 0)), borderColor: '#9c27b0', backgroundColor: 'rgba(156,39,176,0.2)', fill: false, tension: 0.2 },
+				{ label: 'Vérifiés', data: registrations.map(r => +(r.verified ?? 0)), borderColor: '#00bcd4', backgroundColor: 'rgba(0,188,212,0.2)', fill: false, tension: 0.2 },
 			]
 		}
 
@@ -312,11 +374,44 @@
 		chartKey.value++
 	}
 
-	function regLabel(type: string): string {
-		return REG_TYPES[type]?.title ?? ''
+	function regType(f: SourceFarmer): RegType {
+		if (f.registered_fast) {
+			return (f.pass || f.github || f.google) ? 'fast_verified' : 'fast'
+		}
+		if (f.github) return 'github'
+		if (f.google) return 'google'
+		return 'classic'
 	}
 
-	function tutoTitle(farmer: any): string {
+	function regLabel(type: RegType | undefined): string {
+		return type ? REG_TYPES[type].title : ''
+	}
+
+	function regValidation(f: SourceFarmer): RegType | null {
+		if (!f.registered_fast) return null
+		if (f.pass) return 'classic'
+		if (f.github) return 'github'
+		if (f.google) return 'google'
+		return null
+	}
+
+	// Pour la voie email (type 'classic'), distingue mail envoyé non cliqué (outline + opacité)
+	// du mail confirmé (icône pleine). github/google déclenchent verifyConfirm donc toujours verified.
+	function regIcon(type: RegType, verified: boolean | undefined): string {
+		if (type === 'classic') return verified ? 'mdi-email' : 'mdi-email-outline'
+		return REG_TYPES[type].icon
+	}
+
+	function isPendingEmail(type: RegType, verified: boolean | undefined): boolean {
+		return type === 'classic' && !verified
+	}
+
+	function validationLabel(v: RegType): string {
+		const VIA: Record<RegType, string> = { classic: 'email', github: 'GitHub', google: 'Google', fast: '', fast_verified: '' }
+		return 'Validé via ' + VIA[v]
+	}
+
+	function tutoTitle(farmer: SourceFarmer): string {
 		const didactitiel = farmer.didactitiel_seen ? 'Didactitiel terminé' : 'Didactitiel non terminé'
 		const tuto = 'Tutoriel ' + farmer.tutorial_progress + '/10'
 		return didactitiel + ' · ' + tuto
@@ -331,6 +426,20 @@
 		name = name.replace('https://', '')
 		if (name.endsWith('/')) name = name.substring(0, name.length - 1)
 		return name
+	}
+
+	function formatTs(ts: number): string {
+		return new Date(ts * 1000).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' })
+	}
+
+	function emailCellTitle(f: SourceFarmer): string {
+		if (!f.mail) return 'Aucun email'
+		const base = (f.verified ? 'Email validé : ' : 'Email en attente : ') + f.mail
+		if (f.email_bounced_at) return base + '\nMail rejeté (bounce) le ' + formatTs(f.email_bounced_at)
+		if (!f.email_sent_at) return base
+		if (f.email_clicked_at) return base + '\nMail envoyé le ' + formatTs(f.email_sent_at) + '\nLien cliqué le ' + formatTs(f.email_clicked_at)
+		if (f.email_opened_at) return base + '\nMail envoyé le ' + formatTs(f.email_sent_at) + '\nOuvert le ' + formatTs(f.email_opened_at) + ' (pas cliqué)'
+		return base + '\nMail envoyé le ' + formatTs(f.email_sent_at) + '\nJamais ouvert (spam folder ?)'
 	}
 </script>
 
@@ -478,6 +587,7 @@
 		/* date   */ 70px
 		/* name   */ minmax(120px, 1.4fr)
 		/* reg    */ 46px
+		/* email  */ minmax(120px, 1.4fr)
 		/* tuto   */ 70px
 		/* last   */ minmax(80px, 1fr)
 		/* play   */ minmax(90px, 1fr)
@@ -551,11 +661,41 @@
 		}
 	}
 	.register-type {
-		.verified {
+		.v-icon.pending {
+			opacity: 0.4;
+		}
+	}
+	.email-cell {
+		font-size: 12px;
+		color: #888;
+		overflow: hidden;
+		gap: 4px;
+		.addr {
+			min-width: 0;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		&.verified .addr {
 			color: #4caf50;
 		}
-		.unverified {
-			color: #bbb;
+		&.pending .addr {
+			color: #ff9800;
+			font-style: italic;
+		}
+		.empty {
+			opacity: 0.4;
+		}
+		.status-icons {
+			margin-left: auto;
+			display: flex;
+			flex-shrink: 0;
+			.v-icon {
+				font-size: 16px;
+			}
+			.clicked { color: #4caf50; }
+			.opened { color: #2196f3; }
+			.unopened { color: #bbb; }
+			.bounced { color: #b71c1c; }
 		}
 	}
 	.tuto {
@@ -595,6 +735,30 @@
 			color: #000;
 		}
 	}
+	&.deleted {
+		> *:not(.name) {
+			opacity: 0.45;
+		}
+		.deleted-icon {
+			color: #b71c1c;
+			font-size: 22px;
+		}
+		.deleted-name {
+			font-style: italic;
+			color: #b71c1c;
+		}
+	}
+	&.connected {
+		background: rgba(76, 175, 80, 0.12);
+	}
+}
+body.dark .farmer.deleted {
+	.deleted-icon, .deleted-name {
+		color: #ef9a9a;
+	}
+}
+body.dark .farmer.connected {
+	background: rgba(76, 175, 80, 0.18);
 }
 #app.app .last-farmers {
 	overflow-x: auto;
@@ -603,7 +767,7 @@
 	}
 }
 #app.app .farmer {
-	grid-template-columns: 60px minmax(100px, 1.3fr) 40px 60px minmax(70px, 1fr) minmax(80px, 1fr) 26px 30px minmax(110px, 1fr) minmax(90px, 1fr) minmax(70px, 1.1fr);
+	grid-template-columns: 60px minmax(100px, 1.3fr) 40px minmax(110px, 1.3fr) 60px minmax(70px, 1fr) minmax(80px, 1fr) 26px 30px minmax(110px, 1fr) minmax(90px, 1fr) minmax(70px, 1.1fr);
 	column-gap: 4px;
 	font-size: 12px;
 }

@@ -38,7 +38,7 @@
 	"line_until_obstacle": "hele linjen opp til et hinder",
 	"max_uses": "maksimalt {uses} per runde",
 	"multiplied_target": "per måltreff",
-	"n_turns": "<b>1</b> sving | <b>{n}</b> runder",
+	"n_turns": "{n} sving | {n} runder",
 	"n_uses": "<b>1</b> bruk | <b>{n}</b> bruk",
 	"not_replaceable": "ikke utskiftbar",
 	"on_n_turns": " under {turns}",

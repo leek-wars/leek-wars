@@ -9,7 +9,7 @@
 	"last_message": "{farmer}による最後の{date}",
 	"last_by_x": "{author}による",
 	"locked": "トピックがロックされました",
-	"messages": "投稿",
+	"messages": "メッセージ",
 	"new_topic_message": "トピックメッセージ",
 	"new_topic_title": "トピックタイトル",
 	"pinned": "ぶら下げ対象",

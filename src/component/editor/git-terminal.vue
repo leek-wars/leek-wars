@@ -21,7 +21,7 @@ import { mixins } from '@/model/i18n'
 import { computed, nextTick, onMounted, useTemplateRef, watch } from 'vue'
 import { clearLog, gitLog } from './git-log'
 
-defineOptions({ name: 'git-terminal', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'GitTerminal', i18n: {}, mixins: [...mixins] })
 
 const props = withDefaults(defineProps<{
 	theme?: string

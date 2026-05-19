@@ -27,7 +27,7 @@
 						<span class="talent-more">({{ leek.talent_more >= 0 ? '+' + leek.talent_more : leek.talent_more }})</span>
 						<ranking-badge v-if="leek && leek.ranking && leek.ranking <= 1000 && leek.in_garden" :id="leek.id" :ranking="leek.ranking" category="leek" />
 						<span class="level">• {{ $t('main.level_n', [leek.level]) }}</span>
-						<v-btn class="expand" variant="text" size="x-small" @click="expand_items = !expand_items" :icon="expand_items ? 'mdi-chevron-up' : 'mdi-chevron-down'" />
+						<v-btn class="expand" variant="text" size="x-small" :icon="expand_items ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="expand_items = !expand_items" />
 					</div>
 				</div>
 				<div v-if="expand_items">
@@ -82,7 +82,7 @@ import { CHIPS as CHIPS_TYPED } from '@/model/chips'
 
 const LwTitle = defineAsyncComponent(() => import('@/component/title/title.vue'))
 
-const CHIPS: Record<number, any> = CHIPS_TYPED
+const CHIPS = CHIPS_TYPED
 
 const props = defineProps<{
 	id: number
@@ -95,9 +95,9 @@ const emit = defineEmits<{
 	'update:modelValue': [value: boolean]
 }>()
 
-const menu = useTemplateRef<any>('menu')
+const menu = useTemplateRef<{ updateLocation?: () => void }>('menu')
 const content_created = ref(false)
-const leek = ref<any>(null)
+const leek = ref<Leek | null>(null)
 const expand_items = ref(false)
 const locked = ref(false)
 const mouse = ref(false)
@@ -117,7 +117,7 @@ function open(v: boolean) {
 	if (content_created.value) { return }
 	content_created.value = true
 	if (props.id > 0 && !leek.value) {
-		LeekWars.get<any>('leek/rich-tooltip/' + props.id).then(l => {
+		LeekWars.get('leek/rich-tooltip/' + props.id).then(l => {
 			leek.value = new Leek(l)
 			if (expand_items.value) {
 				menu.value?.updateLocation?.()

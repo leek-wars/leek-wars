@@ -1,7 +1,7 @@
 export let locale: string = ''
-export let messages: any = {}
+export let messages: Record<string, unknown> = {}
 
-export function setTranslations(locale_: string, dict: any) {
+export function setTranslations(locale_: string, dict: Record<string, unknown>) {
 	locale = locale_
 	messages = dict
 }

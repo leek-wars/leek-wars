@@ -1,0 +1,22 @@
+{
+	"title": "Sécurise ton compte et reçois ta récompense",
+	"intro": "Tu vas perdre ta progression si tu changes de navigateur ou si tu effaces tes cookies. Valide ton compte pour le sécuriser et débloquer la récompense !",
+	"login": "Choisis ton nom d'éleveur",
+	"email": "Ton adresse email",
+	"password": "Mot de passe",
+	"validate": "Valider mon compte",
+	"later": "Plus tard",
+	"mail_sent": "Email de validation envoyé !",
+	"error_login_length": "Nom d'éleveur trop court ou trop long",
+	"error_login_format": "Format de nom invalide (lettres, chiffres, tirets uniquement)",
+	"error_login_already_used": "Ce nom d'éleveur est déjà pris",
+	"error_forbidden_name": "Ce nom n'est pas autorisé",
+	"error_invalid_mail": "Email invalide",
+	"error_mail_already_used": "Cet email est déjà utilisé",
+	"error_password_length": "Mot de passe trop court ou trop long",
+	"error_invalid_godfather": "Parrain introuvable",
+	"or": "ou continue avec",
+	"use_github": "Continuer avec GitHub",
+	"use_google": "Continuer avec Google",
+	"error_no_login": "Choisis ton nom d'éleveur d'abord"
+}

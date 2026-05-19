@@ -7,7 +7,7 @@
 		</v-btn>
 		</template>
 	</error>
-	<div class="page" v-else>
+	<div v-else class="page">
 		<div class="page-header page-bar">
 			<div>
 				<h1><breadcrumb v-if="fight && fightTypeLabel" :items="breadcrumbItems" :raw="true" /><span v-else>{{ $t('title') }}</span></h1>
@@ -252,7 +252,8 @@
 	import { locale } from '@/locale'
 	import { Action, ActionType } from '@/model/action'
 	import { Comment } from '@/model/comment'
-	import { Fight, FightContext, FightType, ReportLeek } from '@/model/fight'
+	import { Fight, FightContext, FightType, Report, ReportLeek } from '@/model/fight'
+	import { Farmer } from '@/model/farmer'
 	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
@@ -270,31 +271,36 @@
 	import { useI18n } from 'vue-i18n'
 	import { useRoute } from 'vue-router'
 	import { Bar, Doughnut } from 'vue-chartjs'
-	import { Tooltip } from 'chart.js'
+	import { Chart as ChartJS, Tooltip, TooltipItem, ChartDataset, ActiveElement } from 'chart.js'
 	import ReportLifeChart from './report-life-chart.vue'
+
+	interface LogEntry { entity: string; data: string; action: string; index: number; ai: number; line: number; resolvedAI: { path: string } | null }
+	// Raw log entry from server: [leekId, type, message, ...extra]
+	type RawLogEntry = [number, number, string, ...unknown[]]
 
 	const ReportStatistics = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/report/report-statistics.${locale}.i18n`))
 
-	;(Tooltip.positioners as any).stackCenter = function(items: any[]) {
+	;(Tooltip.positioners as Record<string, unknown>).stackCenter = function(items: ActiveElement[]) {
 		if (!items.length) return false
 		const first = items[0].element
-		const xStart = Math.min(first.base, first.x)
-		const xEnd = Math.max(...items.map((i: any) => Math.max(i.element.x, i.element.base)))
-		return { x: (xStart + xEnd) / 2, y: first.y }
+		const xStart = Math.min((first as unknown as { base: number; x: number }).base, (first as unknown as { x: number }).x)
+		const xEnd = Math.max(...items.map(i => Math.max((i.element as unknown as { x: number; base: number }).x, (i.element as unknown as { base: number }).base)))
+		return { x: (xStart + xEnd) / 2, y: (first as unknown as { y: number }).y }
 	}
 
-	defineOptions({ name: 'report', i18n: {}, mixins: [...mixins], components: { actions: ActionsElement, 'lw-map': Map } })
+	defineOptions({ name: 'Report', i18n: {}, mixins: [...mixins], components: { actions: ActionsElement, 'lw-map': Map } })
 
-	const { t, te } = useI18n()
+	const { te } = useI18n()
+	const t = useNamespacedT('report')
 	const route = useRoute()
 	const instance = getCurrentInstance()
 
 	const fight = ref<Fight | null>(null)
-	const report = ref<any>(null)
+	const report = ref<Report | null>(null)
 	const fightActions = ref<Action[] | null>(null)
 	const leeks = ref<{[key: number]: ReportLeek}>({})
-	const farmers = ref<{[key: number]: any}>({})
-	const logs = ref<{[key: number]: any[][]}>({})
+	const farmers = ref<{[key: number]: Farmer}>({})
+	const logs = ref<{[key: number]: {[action: number]: RawLogEntry[]}}>({})
 	const loaded = ref(false)
 	const fightTypeLabel = ref<string | null>(null)
 
@@ -302,41 +308,41 @@
 		if (!fight.value || !fightTypeLabel.value) return []
 		return [{ name: fightTypeLabel.value, link: '/fight/' + fight.value.id }, { name: t('title') as string, link: '' }]
 	})
-	const errors = ref<any[]>([])
-	const warnings = ref<any[]>([])
+	const errors = ref<LogEntry[]>([])
+	const warnings = ref<LogEntry[]>([])
 	const hasErrWarn = ref(false)
 	const myFight = ref(false)
 	const iWin = ref(false)
-	const enemy = ref<any>(null)
+	const enemy = ref<number | null>(null)
 	const statistics = ref<FightStatistics | null>(null)
 	const actionsDisplayAlliesLogs = ref(true)
 	const actionsDisplayLogs = ref(true)
 	const generating = ref(false)
 	const notFound = ref(false)
-	const damageEntities = ref<any>(null)
+	const damageEntities = ref<(string | number)[][]>([])
 	const damageChartType = ref(0)
-	const damageChartDamage = ref<any>({})
+	const damageChartDamage = ref<{ labels: string[]; datasets: ChartDataset<'doughnut'>[] }>({ labels: [], datasets: [] })
 	const damageChartOptions = {
 		donut: true, cutout: '70%', rotation: 90, showLabel: false,
 		plugins: { legend: { display: false } },
 	}
-	const damagesBarsData = ref<any>({})
-	const damagesBarsOptions = ref<any>(null)
+	const damagesBarsData = ref<{ labels: string[]; datasets: ChartDataset<'bar'>[] }>({ labels: [], datasets: [] })
+	const damagesBarsOptions = ref<object | null>(null)
 	const damagesBarsTotal = {
 		id: 'stackTotal',
-		afterDatasetsDraw(chart: any) {
+		afterDatasetsDraw(chart: ChartJS) {
 			const ctx = chart.ctx
 			const meta = chart.getDatasetMeta(chart.data.datasets.length - 1)
 			ctx.save()
 			ctx.font = 'bold 13px sans-serif'
 			ctx.fillStyle = getComputedStyle(chart.canvas).getPropertyValue('--text-color-secondary') || '#888'
 			ctx.textBaseline = 'middle'
-			meta.data.forEach((bar: any, i: number) => {
-				const total = chart.data.datasets.reduce((sum: number, ds: any) => sum + (ds.data[i] || 0), 0)
+			meta.data.forEach((bar, i: number) => {
+				const total = chart.data.datasets.reduce((sum: number, ds: ChartDataset) => sum + ((ds.data[i] as number) || 0), 0)
 				if (total > 0) {
 					const lastMeta = chart.getDatasetMeta(chart.data.datasets.length - 1)
-					const x = lastMeta.data[i].x
-					ctx.fillText(total.toLocaleString(), x + 6, bar.y)
+					const x = (lastMeta.data[i] as unknown as { x: number }).x
+					ctx.fillText(total.toLocaleString(), x + 6, (bar as unknown as { y: number }).y)
 				}
 			})
 			ctx.restore()
@@ -345,19 +351,25 @@
 	const damagesTeams = ref(0)
 	const damagesBarsHeight = ref(0)
 	const damagesDisplaySummons = ref(false)
-	const map_obstacles = ref<any>(null)
-	const map_teams = ref<any>(null)
-	const legends = ref<any>(null)
+	const map_obstacles = ref<{[key: number]: number[]} | null>(null)
+	const map_teams = ref<{[team: number]: Set<number>} | null>(null)
+	const legends = ref<string[] | null>(null)
 	let currentLink: Element | null = null
 
 	const id = computed(() => route.params.id)
 	const team1Title = computed(() => {
 		if (!fight.value) { return '' }
-		return fight.value.report.win === 0 ? t('team1') : t('winners')
+		const r = fight.value.report
+		if (r.win === 0) return t('team1')
+		const count = r.win === 1 ? r.leeks1.length : r.leeks2.length
+		return t('winners', count)
 	})
 	const team2Title = computed(() => {
 		if (!fight.value) { return '' }
-		return fight.value.report.win === 0 ? t('team2') : t('loosers')
+		const r = fight.value.report
+		if (r.win === 0) return t('team2')
+		const count = r.win === 1 ? r.leeks2.length : r.leeks1.length
+		return t('loosers', count)
 	})
 	const team1Icon = computed(() => {
 		if (!fight.value) { return '' }
@@ -416,17 +428,17 @@
 			}
 
 			for (const leek of fight.value.data.leeks) {
-				leeks.value[leek.id] = leek as any
-				;(leek as any).translatedName = leek.name
+				leeks.value[leek.id] = leek as unknown as ReportLeek
+				leek.translatedName = leek.name
 				if (leek.type !== 0) {
-					;(leek as any).translatedName = te('entity.' + leek.name) ? t('entity.' + leek.name) as string : leek.name
+					leek.translatedName = te('entity.' + leek.name) ? t('entity.' + leek.name) as string : leek.name
 				}
-				;(leek as any).farmer = farmers.value[leek.farmer]
+				;(leek as unknown as { farmer: Farmer }).farmer = farmers.value[leek.farmer]
 			}
 
 			let currentPlayer: ReportLeek | null = null
-			const effects = {} as any
-			fightActions.value = fight.value.data.actions.map((a: any) => {
+			const effects: {[key: number]: { turns: number; value: number; type: number; target: number }} = {}
+			fightActions.value = fight.value.data.actions.map((a: number[]) => {
 				const action = new Action(a)
 				if (a[0] === ActionType.LEEK_TURN) {
 					currentPlayer = leeks.value[a[1]]
@@ -443,7 +455,7 @@
 				} else if (a[0] === ActionType.STACK_EFFECT) {
 					action.item = effects[a[1]]
 				}
-				;(action as any).entity = currentPlayer
+				action.entity = currentPlayer
 				return action
 			})
 
@@ -482,7 +494,7 @@
 			loaded.value = true
 			if (store.state.farmer) {
 				LeekWars.get('fight/get-logs/' + fightId).then(d => {
-					logs.value = Object.freeze(d) as any
+					logs.value = Object.freeze(d) as Record<string, Record<string, unknown[][]>>
 					processLogs()
 					warningsErrors()
 					setTimeout(() => emitter.emit('loaded'), 100)
@@ -518,7 +530,7 @@
 			for (const farmer in logs.value) {
 				const farmerLogs = logs.value[farmer]
 				if (i in farmerLogs) {
-					;(fightActions.value[+a] as any).me = parseInt(farmer, 10) === store.state.farmer!.id
+					;(fightActions.value[+a] as Record<string, unknown>).me = parseInt(farmer, 10) === store.state.farmer!.id
 					fightActions.value[+a].logs.push(...farmerLogs[i].filter(l => l[1] !== 4 && l[1] !== 9 && l[1] !== 10))
 				}
 			}
@@ -550,7 +562,7 @@
 		hasErrWarn.value = errors.value.length > 0 || warnings.value.length > 0
 	}
 
-	function searchMyLeek(myLeek: any, leeks: ReportLeek[]) {
+	function searchMyLeek(myLeek: { id: number }, leeks: ReportLeek[]) {
 		for (const l in leeks) {
 			if (leeks[l].id === myLeek.id) { return true }
 		}
@@ -610,12 +622,12 @@
 
 	function getChartDamage() {
 		if (!statistics.value || !fight.value) return
-		const entities: any[][] = []
+		const entities: unknown[][] = []
 
 		for (const e in statistics.value.entities) {
 			const entity = statistics.value.entities[e]
-			let total = 0
-			let stats: any[] = []
+			let total: number
+			let stats: unknown[]
 			const name = entity.translatedName
 			if (damageChartType.value === 0) {
 				total = entity.dmg_out
@@ -665,8 +677,8 @@
 		}
 		damageEntities.value = entities
 
-		let labelKeys: string[] = []
-		let colors: string[] = []
+		let labelKeys: string[]
+		let colors: string[]
 		if (damageChartType.value === 0 || damageChartType.value === 1) {
 			labelKeys = ['direct', 'poison', 'return', 'nova', 'life']
 			colors = ['#e22424', '#a017d6', '#41d3ff', '#38e9ae', '#f28dff']
@@ -697,13 +709,15 @@
 			plugins: {
 				legend: { display: false },
 				tooltip: {
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
 					mode: 'index' as any,
 					intersect: true,
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
 					position: 'stackCenter' as any,
 					yAlign: 'top',
 					callbacks: {
-						title: (items: any[]) => items[0]?.label || '',
-						label: (context: any) => context.raw ? `${context.dataset.label} : ${context.raw.toLocaleString()}` : null,
+						title: (items: { label: string }[]) => items[0]?.label || '',
+						label: (context: { raw: number | null, dataset: { label: string } }) => context.raw ? `${context.dataset.label} : ${context.raw.toLocaleString()}` : null,
 					}
 				}
 			},

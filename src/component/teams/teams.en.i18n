@@ -1,7 +1,7 @@
 {
 	"title": "Recruiting teams",
 	"banner_title": "Join a team!",
-	"banner_desc": "Fight alongside other farmers, compete in team tournaments and level up faster. Find the team that suits you!",
+	"banner_desc": "Fight alongside other farmers, take part in team tournaments and level up faster. Find the team that's right for you!",
 	"team_name": "Team",
 	"level": "Level",
 	"talent": "Talent",
@@ -24,6 +24,6 @@
 	"error_already_in_team": "You are already in a team.",
 	"error_team_full": "This team is full.",
 	"error_too_many_candidacies": "You already have 5 pending applications.",
-	"show_closed": "Show closed",
+	"show_closed": "Show closed teams",
 	"closed": "Closed"
 }

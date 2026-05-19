@@ -40,5 +40,10 @@
 	"hide_topic": "非表示",
 	"show_topic": "表示",
 	"set_release": "リリース",
-	"release_hint": "リリースを削除するには0を入力"
+	"release_hint": "リリースを削除するには0を入力",
+	"topic_not_found": "ID {topic} の件名が見つかりません:(",
+	"old_topic_title": "古いトピック",
+	"old_topic_warning": "このトピックの最終投稿は1年以上前です。",
+	"old_topic_confirm": "このトピックの最終投稿は1年以上前です。本当に返信しますか？",
+	"see_changelog": "{0} の変更履歴を見る"
 }

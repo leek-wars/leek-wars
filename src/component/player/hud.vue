@@ -41,8 +41,9 @@
 				<span v-else>{{ entity.name }}</span>
 			</v-tooltip>
 		</div>
-		<div v-if="!creator && !LeekWars.mobile && game.showActions && actionsWidth > 0" ref="actions" class="fight-actions" :class="{large: game.largeActions}" :style="{'width': game.largeActions ? actionsWidth + 'px' : '', 'max-width': game.largeActions ? Math.max(600, actionsWidth) + 'px' : ''}">
-			<template v-for="line of game.consoleLines">
+		<div v-if="!creator && !LeekWars.mobile && game.showActions && actionsWidth > 0" ref="actionsRef" class="fight-actions" :class="{large: game.largeActions, scrolled: !followBottom}" :style="{'width': game.largeActions ? actionsWidth + 'px' : '', 'max-width': game.largeActions ? Math.max(600, actionsWidth) + 'px' : ''}" @scroll.passive="onActionsScroll" @wheel.passive="onActionsWheel">
+			<div v-if="renderStart > 0" class="load-marker">…</div>
+			<template v-for="line of renderedLines">
 				<component :is="ActionComponents[line.action.type]" v-if="line.action" :key="line.id" :action="line.action" :leeks="game.leeks" />
 				<div v-else-if="line.trophy" :key="line.id" class="notif-trophy">
 					<img :src="'/image/trophy/' + line.trophy.name + '.svg'">
@@ -55,6 +56,7 @@
 				</div>
 				<action-log v-else-if="game.displayDebugs && line.log" :key="'_' + line.id" :log="line.log" :leeks="game.leeks" :action="0" :index="0" :lines="game.displayAILines" />
 			</template>
+			<div v-if="!followBottom && renderEnd < game.consoleLines.length" class="load-marker bottom">…</div>
 		</div>
 		<div v-if="!creator && game.showActions && game.largeActions" class="resizer" :style="{left: actionsWidth + 'px'}" @mousedown="resizerMousedown"></div>
 		<entity-details v-if="game.mouseEntity" :entity="game.mouseEntity" :game="game" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
@@ -71,63 +73,257 @@
 	import { Chest } from './game/chest'
 	import { Mob } from './game/mob'
 	import { Game } from './game/game'
+	import { FightEntity } from './game/entity'
 	import { Turret } from './game/turret'
 	import TurretImage from '@/component/turret-image.vue'
 	import ActionLog from '../report/report-log.vue'
-	import router from '@/router'
-	import { computed, ref } from 'vue'
+	import type { Component } from 'vue'
+	import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
-	defineOptions({ name: 'hud', components: { leek: ActionLeek } })
+	defineOptions({ name: 'Hud', components: { leek: ActionLeek } })
 
 	const props = defineProps<{
 		game: Game
 		creator?: boolean
 	}>()
 
-	const ActionComponents: Record<number, any> = ActionComponentsTyped
+	const ActionComponents: Record<number, Component> = ActionComponentsTyped
 
 	const debug = ref(false)
 	const actionsWidth = ref(395)
 
 	const barWidth = computed(() => LeekWars.mobile ? 300 : 500)
 	const totalLife = computed(() => props.game.leeks.reduce((total, e) => total + (!e.summon ? e.displayLife : 0), 0))
-	const darkEnabledtest = computed(() => props.game.dark)
-	const dark = computed(() => props.game.autoDark ? (props.game.map && props.game.map.options.dark) : props.game.dark)
-	const leeks = computed(() => props.game.leeks)
-
 	actionsWidth.value = props.game.actionsWidth
 
-	function entity_enter(entity: any) {
+	const MAX_WINDOW = 250
+	const LOAD_CHUNK = 80
+	const SCROLL_THRESHOLD = 80
+	const PRELOAD_RATIO = 0.5
+	const AT_EDGE_TOLERANCE = 5
+
+	const actionsRef = ref<HTMLElement | null>(null)
+	const followBottom = ref(true)
+	const renderStart = ref(0)
+	const renderEnd = ref(0)
+
+	function windowBounds() {
+		const length = props.game.consoleLines.length
+		if (followBottom.value) {
+			return { start: Math.max(0, length - MAX_WINDOW), end: length, length }
+		}
+		return { start: renderStart.value, end: renderEnd.value, length }
+	}
+
+	const renderedLines = computed(() => {
+		const { start, end } = windowBounds()
+		return props.game.consoleLines.slice(start, end)
+	})
+
+	function scrollToBottom() {
+		const el = actionsRef.value
+		if (el) el.scrollTop = el.scrollHeight
+	}
+
+	watch(() => props.game.consoleLines.length, (newLen) => {
+		if (!followBottom.value) return
+		renderEnd.value = newLen
+		renderStart.value = Math.max(0, newLen - MAX_WINDOW)
+		nextTick(scrollToBottom)
+	})
+
+	// `game.jump()` est entièrement synchrone : `jumping` passe true puis false
+	// dans le même tick. Avec le flush par défaut ('pre'), Vue compare au flush
+	// la valeur finale à l'initiale et ne voit rien changer → le watcher ne
+	// fire pas. `flush: 'sync'` exécute le callback à chaque mutation, donc on
+	// capte bien la transition false → true → false et on resynchronise.
+	watch(() => props.game.jumping, (jumping) => {
+		if (jumping) return
+		followBottom.value = true
+		resizeAnchor = null
+		const len = props.game.consoleLines.length
+		renderEnd.value = len
+		renderStart.value = Math.max(0, len - MAX_WINDOW)
+		nextTick(scrollToBottom)
+	}, { flush: 'sync' })
+
+	watch(() => props.game.largeActions, () => {
+		if (followBottom.value) nextTick(scrollToBottom)
+	})
+
+	// Au resize (hover/leave, large mode, changement de contenu), on re-bottoms
+	// si followBottom, sinon on restaure l'ancre visuelle capturée au scroll
+	// pour éviter le décalage dû au re-wrapping du texte (largeur 395 → 600).
+	let resizeObserver: ResizeObserver | null = null
+	let resizeAnchor: Anchor | null = null
+	onMounted(() => {
+		nextTick(() => {
+			const el = actionsRef.value
+			if (!el) return
+			scrollToBottom()
+			resizeObserver = new ResizeObserver(() => {
+				const target = actionsRef.value
+				if (!target) return
+				if (followBottom.value) {
+					target.scrollTop = target.scrollHeight
+				} else if (resizeAnchor) {
+					restoreAnchor(target, resizeAnchor)
+				}
+			})
+			resizeObserver.observe(el)
+		})
+	})
+	onBeforeUnmount(() => {
+		resizeObserver?.disconnect()
+		resizeObserver = null
+	})
+
+	let loadingMore = false
+
+	// Mémorise le DERNIER enfant visible (en bas du viewport) et son offset
+	// par rapport au bas du viewport. Au resize/re-render on restaure cet item
+	// au même bord bas → la vue réduite montre la queue de la vue agrandie.
+	function captureAnchor(el: HTMLElement) {
+		const prevScrollTop = el.scrollTop
+		const viewportBottom = prevScrollTop + el.clientHeight
+		for (let i = el.children.length - 1; i >= 0; i--) {
+			const child = el.children[i] as HTMLElement
+			if (child.offsetTop < viewportBottom) {
+				return {
+					index: i,
+					offsetFromBottom: viewportBottom - (child.offsetTop + child.offsetHeight),
+					prevScrollTop,
+				}
+			}
+		}
+		return { index: -1, offsetFromBottom: 0, prevScrollTop }
+	}
+
+	type Anchor = ReturnType<typeof captureAnchor>
+
+	function restoreAnchor(el: HTMLElement, anchor: Anchor, indexShift = 0) {
+		const target = anchor.index >= 0 ? el.children[anchor.index + indexShift] as HTMLElement | undefined : undefined
+		if (target) {
+			const newViewportBottom = (target.offsetTop + target.offsetHeight) + anchor.offsetFromBottom
+			el.scrollTop = Math.max(0, newViewportBottom - el.clientHeight)
+		} else {
+			el.scrollTop = anchor.prevScrollTop
+		}
+	}
+
+	function loadDirection(direction: -1 | 1) {
+		if (loadingMore) return
+		const el = actionsRef.value
+		if (!el) return
+		const w = windowBounds()
+		if (direction < 0 ? w.start <= 0 : w.end >= w.length) return
+		loadingMore = true
+		const anchor = captureAnchor(el)
+		let newStart = w.start
+		let newEnd = w.end
+		if (direction < 0) {
+			newStart = Math.max(0, w.start - LOAD_CHUNK)
+			if (newEnd - newStart > MAX_WINDOW) newEnd = newStart + MAX_WINDOW
+			followBottom.value = false
+		} else {
+			newEnd = Math.min(w.length, w.end + LOAD_CHUNK)
+			if (newEnd - newStart > MAX_WINDOW) newStart = newEnd - MAX_WINDOW
+		}
+		const indexShift = w.start - newStart
+		renderStart.value = newStart
+		renderEnd.value = newEnd
+		nextTick(() => {
+			const el2 = actionsRef.value
+			if (el2) {
+				restoreAnchor(el2, anchor, indexShift)
+				// Les indices dans inner.children ont shifté : on re-capture pour
+				// que le prochain ResizeObserver (hover/leave) restaure
+				// correctement la position.
+				if (!followBottom.value) resizeAnchor = captureAnchor(el2)
+			}
+			loadingMore = false
+		})
+	}
+
+	function onActionsScroll() {
+		if (loadingMore) return
+		const el = actionsRef.value
+		if (!el) return
+		const w = windowBounds()
+		const preloadThreshold = Math.max(SCROLL_THRESHOLD, el.clientHeight * PRELOAD_RATIO)
+		const distanceFromBottom = el.scrollHeight - (el.scrollTop + el.clientHeight)
+		const nearTop = el.scrollTop < preloadThreshold
+		const nearBottom = distanceFromBottom < preloadThreshold
+		const atBottom = distanceFromBottom < SCROLL_THRESHOLD
+
+		if (nearTop && w.start > 0) return loadDirection(-1)
+		if (nearBottom && w.end < w.length) return loadDirection(1)
+
+		if (atBottom && w.end >= w.length && !followBottom.value) {
+			followBottom.value = true
+			resizeAnchor = null
+			renderEnd.value = w.length
+			renderStart.value = Math.max(0, w.length - MAX_WINDOW)
+			nextTick(scrollToBottom)
+			return
+		}
+
+		if (followBottom.value && !atBottom) {
+			followBottom.value = false
+			renderStart.value = w.start
+			renderEnd.value = w.end
+		}
+
+		if (!followBottom.value) resizeAnchor = captureAnchor(el)
+	}
+
+	function onActionsWheel(e: WheelEvent) {
+		// MAX_WINDOW saturé + trim symétrique → scrollHeight constant, scrollTop
+		// reste collé au bord → plus d'événement scroll. Le wheel reste actif.
+		if (loadingMore) return
+		const el = actionsRef.value
+		if (!el) return
+		const w = windowBounds()
+		if (e.deltaY < 0) {
+			if (el.scrollTop > AT_EDGE_TOLERANCE || w.start <= 0) return
+			loadDirection(-1)
+		} else {
+			if (el.scrollHeight - el.scrollTop - el.clientHeight > AT_EDGE_TOLERANCE || w.end >= w.length) return
+			loadDirection(1)
+		}
+	}
+
+	function entity_enter(entity: FightEntity) {
+		// eslint-disable-next-line vue/no-mutating-props
 		props.game.hoverEntity = entity
 		props.game.hoverEntity!.updateReachableCells()
 	}
-	function entity_leave(entity: any) {
+	function entity_leave(_entity: FightEntity) {
+		// eslint-disable-next-line vue/no-mutating-props
 		props.game.hoverEntity = null
 	}
-	function entity_click(entity: any) {
+	function entity_click(entity: FightEntity) {
 		props.game.selectEntity(entity)
-	}
-
-	function formatTurns(turns: number) {
-		return turns === -1 ? '∞' : turns
 	}
 
 	function resizerMousedown(e: MouseEvent) {
 		const startWidth = actionsWidth.value
 		const startX = e.clientX
 		const visible = actionsWidth.value > 0
-		const mousemove: any = (ev: MouseEvent) => {
+		const mousemove = (ev: MouseEvent) => {
 			let panelWidth = Math.max(0, Math.min(1000, startWidth + ev.clientX - startX))
 			if (visible && panelWidth < 60) {
 				panelWidth = 0
 			}
 			actionsWidth.value = panelWidth
 		}
-		const mouseup: any = (ev: MouseEvent) => {
+		const mouseup = () => {
 			document.documentElement!.removeEventListener('mousemove', mousemove)
 			document.documentElement!.removeEventListener('mouseup', mouseup)
+			// eslint-disable-next-line vue/no-mutating-props
 			props.game.actionsWidth = actionsWidth.value
 			if (props.game.actionsWidth === 0) {
+				// eslint-disable-next-line vue/no-mutating-props
 				props.game.largeActions = false
 				actionsWidth.value = 395
 			}
@@ -137,9 +333,6 @@
 		e.preventDefault()
 	}
 
-	function goToAI(file: string, line: number) {
-		router.push('/editor/' + file + '?line=' + line)
-	}
 </script>
 
 <style lang="scss" scoped>
@@ -265,6 +458,7 @@
 		max-height: 100px;
 		width: 395px;
 		overflow: hidden;
+		overscroll-behavior: contain;
 		position: absolute;
 		background: #fff;
 		border-top-right-radius: 5px;
@@ -275,7 +469,14 @@
 		padding-bottom: 10px;
 		display: flex;
 		flex-direction: column;
-		justify-content: flex-end;
+		// `margin-top: auto` sur le 1er enfant équivaut à `min-height: 100%` sur
+		// un wrapper : quand le contenu rentre, le bloc s'absorbe l'espace
+		// libre et pousse les items en bas. Quand ça déborde, ce margin se
+		// résorbe à 0 et le contenu fluit naturellement, donc `scrollHeight`
+		// reste correct (pas de bug Chromium comme avec `justify-content: flex-end`).
+		& > *:first-child {
+			margin-top: auto;
+		}
 		&::-webkit-scrollbar {
 			width: 4px;
 		}
@@ -304,13 +505,19 @@
 				background-color: #f2f2f2dd;
 			}
 		}
-		& > div {
-			padding: 1px 0;
+		& > div:not(.load-marker) {
 			font-size: 14px;
 			width: max(588px, 100%);
 		}
-		pre {
+		& > pre {
 			width: max(588px, 100%);
+		}
+		.load-marker {
+			text-align: center;
+			color: #888;
+			font-size: 12px;
+			padding: 4px 0;
+			user-select: none;
 		}
 	}
 	.resizer {

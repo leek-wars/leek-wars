@@ -39,15 +39,15 @@ import CharacteristicTooltip from '../leek/characteristic-tooltip.vue'
 
 const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
 
-defineOptions({ name: 'summon-view' })
+defineOptions({ name: 'SummonView' })
 
 defineProps<{
-	summon: any
+	summon: Record<string, unknown>
 }>()
 
 defineEmits(['update:modelValue'])
 
-const CHIPS: Record<number, any> = CHIPSImport
+const CHIPS = CHIPSImport
 </script>
 
 <style lang="scss" scoped>

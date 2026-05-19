@@ -1,5 +1,5 @@
 {
-	"description": "Banken tilbyr deg å få tak i <b>krystaller</b> <span class='crystal'></span>, den andre valutaen i Leek Wars, slik at du deretter kan kjøpe eliksirer og annet rent dekorativt og <b>ikke påvirker </b> din kraft i kamp. <br>\nUnn deg selv en fargedrikk for purren din og støtt purrekrigen!",
+	"description": "Velkommen til banken! <b>Krystaller</b> <span class='crystal'></span> lar deg få drikker, ekstra kamper, farger og tilbehør til purrene dine. <b>Ingen kampfordel</b>: alle kjøp er kosmetiske eller praktiske.<br>\nHvert kjøp støtter direkte utviklingen av Leek Wars. Takk!",
 	"pack_of_n_crystals": "Pakke med <b>{0}</b> krystaller",
 	"paypal_description": "Kjøp av {0} krystaller for {1} €",
 	"title": "Krystall bank",
@@ -24,6 +24,10 @@
 	"payment_no_code": "Ingen koder",
 	"payment_wrong_code": "Ugyldig kode",
 	"first_purchase_banner": "Første kjøp? Alle krystallene dine blir doblet!",
+	"suggestion_target_fights": "100-kamper-pakke",
+	"suggestion_with_remainder": "→ {pack}-pakken til {price} dekker kjøpet, med {remainder} til overs.",
+	"suggestion_exact": "→ {pack}-pakken til {price} dekker kjøpet.",
+	"suggestion_cta": "Se pakken",
 	"items_title": "De venter bare på deg",
 	"back": "Tilbake til banken",
 	"best_value": "Beste tilbud",

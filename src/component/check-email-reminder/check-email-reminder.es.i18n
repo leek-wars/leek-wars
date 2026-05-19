@@ -1,0 +1,17 @@
+{
+	"title": "¡Revisa tu correo!",
+	"intro": "Te enviamos un correo hace unos minutos. Haz clic en el enlace para activar tu cuenta y obtener tus recompensas.",
+	"check_spam": "No olvides revisar la carpeta de spam o promociones si no lo encuentras.",
+	"resend": "Reenviar el correo",
+	"later": "Más tarde",
+	"or": "o verifica sin correo",
+	"use_github": "Continuar con GitHub",
+	"use_google": "Continuar con Google",
+	"mail_resent": "¡Correo reenviado!",
+	"error_wrong_token": "Sesión expirada, inicia sesión de nuevo",
+	"error_already_verified": "Tu cuenta ya está verificada",
+	"error_no_pending_verify": "No hay verificación pendiente",
+	"error_no_login": "Falta el nombre de usuario, recarga la página",
+	"error_too_many_requests": "Espera un momento antes de volver a intentarlo",
+	"error_unknown": "Algo salió mal, inténtalo de nuevo más tarde"
+}

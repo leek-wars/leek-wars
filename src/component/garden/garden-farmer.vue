@@ -8,7 +8,7 @@
 				<span class="flex">
 				{{ farmer.leek_count }} <img class="icon" src="/image/icon/black/leek.png"></span>
 				{{ $t('main.level_n', [farmer.total_level]) }}
-				<flag class="country" v-if="farmer.country" :code="farmer.country" />
+				<flag v-if="farmer.country" class="country" :code="farmer.country" />
 			</div>
 		</div>
 	</rich-tooltip-farmer>
@@ -18,7 +18,7 @@
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
 defineProps<{
-	farmer: any
+	farmer: Record<string, unknown>
 }>()
 </script>
 

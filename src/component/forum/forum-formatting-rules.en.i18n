@@ -3,7 +3,7 @@
 	"source_code_ex": "my source code",
 	"image": "Image",
 	"image_ex": "url",
-	"big_title": "Main title",
+	"big_title": "Big title",
 	"big_title_ex": "Main title",
 	"sub_title": "Sub-title",
 	"sub_title_ex": "Sub-title",
@@ -14,8 +14,8 @@
 	"italic": "Italic",
 	"italic_ex": "italic",
 	"underlined": "Underlined",
-	"underlined_ex": "underline",
-	"striked": "Striked",
-	"striked_ex": "striked",
+	"underlined_ex": "underlined",
+	"striked": "Strikethrough",
+	"striked_ex": "strikethrough",
 	"basic_html": "Basic HTML authorized"
 }

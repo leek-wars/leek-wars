@@ -38,7 +38,7 @@
 	import { computed, ref } from 'vue'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 
-	defineOptions({ name: "moderation-thugs", i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: "ModerationThugs", i18n: {}, mixins: [...mixins] })
 
 	class ModerationRequest {
 		faults!: Fault[]
@@ -46,7 +46,7 @@
 	}
 
 	const t = useNamespacedT('moderation-thugs')
-	const thugs = ref<any>(null)
+	const thugs = ref<Record<string, unknown>[] | null>(null)
 
 	const breadcrumb_items = computed(() => [
 		{name: "Modération", link: '/moderation'},
@@ -59,7 +59,7 @@
 	})
 
 	function ban(farmer: Farmer) {
-		LeekWars.post('moderation/ban', {target: farmer.id}).then(data => {
+		LeekWars.post('moderation/ban', {target: farmer.id}).then(() => {
 			LeekWars.toast("Éleveur banni")
 		}).error(error => {
 			LeekWars.toast(error)

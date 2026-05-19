@@ -1,0 +1,22 @@
+{
+	"title": "リモート設定",
+	"remotes": "リモート",
+	"no_remotes": "リモートが設定されていません。",
+	"remote_name": "名前 (例 : origin)",
+	"remote_url": "https://github.com/user/repo.git",
+	"select_repo": "リポジトリを選択...",
+	"authentication": "認証",
+	"connected_as": "{0} として接続中",
+	"connected_anonymous": "接続済み",
+	"install_github_app": "GitHub App をインストール",
+	"install_hint": "インストール時にアクセスを許可するリポジトリを選択してください。",
+	"github_app": "GitHub App",
+	"or_pat": "または Personal Access Token を使用 :",
+	"pat_placeholder": "アクセストークン",
+	"instance_placeholder": "https://codeberg.org",
+	"self_hosted": "セルフホストインスタンス",
+	"save": "保存",
+	"add": "追加",
+	"invalid_token": "プロバイダによってトークンが拒否されました。",
+	"invalid_instance_url": "インスタンスの URL が無効、またはサーバーからアクセスできません。"
+}

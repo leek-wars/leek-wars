@@ -4,9 +4,9 @@
 			<div v-if="folder.id != 0" :style="{'padding-left': ((level - 1) * 15 + 10) + 'px'}" class="label" :class="{error: folder.errors, warning: folder.warnings, closed: folder.closed}" @click="toggle(folder)">
 				<div class="triangle"></div>
 				<!-- <v-icon v-if="folder.id === -1" class="icon">mdi-delete-outline</v-icon> -->
-				<v-icon class="icon" v-if="folder.closed">mdi-folder-lock-outline</v-icon>
-				<v-icon class="icon" v-else-if="isGitRepo">mdi-source-branch</v-icon>
-				<v-icon class="icon" v-else>mdi-folder-outline</v-icon>
+				<v-icon v-if="folder.closed" class="icon">mdi-folder-lock-outline</v-icon>
+				<v-icon v-else-if="isGitRepo" class="icon">mdi-source-branch</v-icon>
+				<v-icon v-else class="icon">mdi-folder-outline</v-icon>
 				<span v-if="folder.id === -1" ref="name" class="text">{{ $t(folder.name) }}
 					<span v-if="folder.id === -1">({{ folder.items.length }})</span>
 				</span>
@@ -34,7 +34,7 @@ import EditorAI from './editor-ai.vue'
 import { Folder } from './editor-item'
 import { explorer } from './explorer'
 
-defineOptions({ name: 'editor-folder', components: { 'editor-ai': EditorAI } })
+defineOptions({ name: 'EditorFolder', components: { 'editor-ai': EditorAI } })
 
 const props = defineProps<{
 	folder: Folder

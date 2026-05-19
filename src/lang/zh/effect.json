@@ -38,7 +38,7 @@
 	"line_until_obstacle": "整条线直到障碍物",
 	"max_uses": "每回合最多 {uses} 次",
 	"multiplied_target": "每个被命中的目标",
-	"n_turns": "<b>1</b> 回合 | <b>{n}</b> 回合",
+	"n_turns": "{n} 回合 | {n} 回合",
 	"n_uses": "<b>1</b> 次使用 | <b>{n}</b> 次使用",
 	"not_replaceable": "不可更换",
 	"on_n_turns": " 持续 {turns}",

@@ -1,6 +1,6 @@
 <template lang="html">
 	<div class="console" :class="'theme-' + cssTheme">
-		<div ref="scroll" class="scroll" v-autostopscroll >
+		<div ref="scroll" v-autostopscroll class="scroll" >
 			<div class="lines">
 				<div v-for="(line, l) in lines" :key="l" class="line">
 					<template v-if="line.type === 'code'">
@@ -31,7 +31,7 @@
 			</div>
 			<div class="input" @click="focus()">
 				<v-icon class="arrow">mdi-chevron-right</v-icon>
-				<ai-view-monaco class="editor" ref="editor" :ai="ai" :ais="{}" :visible="true" :line-numbers="false" :font-size="17" :line-height="20" @enter="enter" :autocomplete-option="true" :popups="true" :console="true" :theme="theme" @down="down" @up="up" />
+				<ai-view-monaco ref="editor" class="editor" :ai="ai" :ais="{}" :visible="true" :line-numbers="false" :font-size="17" :line-height="20" :autocomplete-option="true" :popups="true" :console="true" :theme="theme" @enter="enter" @down="down" @up="up" />
 			</div>
 		</div>
 	</div>
@@ -48,15 +48,36 @@ import { emitter } from '@/model/vue'
 import { computed, onBeforeUnmount, onMounted, reactive, ref, useTemplateRef, watch } from 'vue'
 import AIViewMonaco from '../editor/ai-view-monaco.vue'
 
-defineOptions({ name: 'console', components: { 'ai-view-monaco': AIViewMonaco } })
+defineOptions({ name: 'Console', components: { 'ai-view-monaco': AIViewMonaco } })
 
-const editorRef = useTemplateRef<any>('editor')
+interface EditorRef {
+	editor: {
+		getModel(): unknown
+		getValue(): string
+		setValue(v: string): void
+		focus(): void
+	}
+}
+
+interface ConsoleLine {
+	type: string
+	code?: string
+	result?: unknown
+	ops?: number
+	log?: unknown
+	error?: string
+	params?: unknown[]
+	location?: number[]
+	zigzags?: string
+}
+
+const editorRef = useTemplateRef<EditorRef>('editor')
 const scrollRef = useTemplateRef<HTMLElement>('scroll')
 
-const lines = ref<any[]>([])
+const lines = ref<ConsoleLine[]>([])
 const history = ref<string[]>([])
 const historyPos = ref(0)
-const ai = ref<any>(new AI({ id: 0, code: '', path: FileSystem.CONSOLE_MAGIC_KEY + Math.random() + '.leek' }))
+const ai = ref<AI>(new AI({ id: 0, code: '', path: FileSystem.CONSOLE_MAGIC_KEY + Math.random() + '.leek' }))
 const theme = ref<string>(localStorage.getItem('editor/theme') || (LeekWars.darkMode ? 'monokai' : 'leek-wars'))
 const leekscript = reactive({
 	version: 4,
@@ -111,22 +132,22 @@ function down() {
 }
 
 onMounted(() => {
-	emitter.on('console', (data: any) => {
+	emitter.on('console', (data: Omit<ConsoleLine, 'type'>) => {
 		console.log("on console", data)
 		lines.value.push({ type: 'result', ...data })
 		scrollDown()
 	})
-	emitter.on('console-error', (data: any) => {
+	emitter.on('console-error', (data: Omit<ConsoleLine, 'type'>) => {
 		console.log("on console-error", data)
 		let zigzags = ""
 		if (data.location) {
-			for (var i = 0; i < data.location[2]; ++i) zigzags += ' '
-			for (var i = 0; i <= data.location[4] - data.location[2]; ++i) zigzags += '~'
+			for (let i = 0; i < data.location[2]; ++i) zigzags += ' '
+			for (let i = 0; i <= data.location[4] - data.location[2]; ++i) zigzags += '~'
 		}
 		lines.value.push({ type: 'error', ...data, zigzags })
 		scrollDown()
 	})
-	emitter.on('console-log', (data: any) => {
+	emitter.on('console-log', (data: unknown) => {
 		console.log("on console-log", data)
 		lines.value.push({ type: 'log', log: data })
 		scrollDown()

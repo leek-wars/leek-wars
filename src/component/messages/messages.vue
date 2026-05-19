@@ -29,7 +29,7 @@
 									{{ category.name }}
 								</div>
 								<div v-for="chat in category.chats" :key="chat.id" class="conversation chat-preview" :class="{unread: $store.state.chat[chat.id] && !$store.state.chat[chat.id].read, notifications: $store.state.chat[chat.id] && $store.state.chat[chat.id].notifications}">
-									<router-link class="wrapper" :to="'/chat/' + chat.id" v-ripple>
+									<router-link v-ripple class="wrapper" :to="'/chat/' + chat.id">
 										<v-icon>{{ chat.icon }}</v-icon>
 										{{ $t(chat.name) }}
 										<div class="unread"></div>
@@ -61,7 +61,7 @@
 			</div>
 			<panel v-show="!LeekWars.mobile || LeekWars.splitBack" class="main-column">
 				<template #content>
-					<div class="admin-warn" v-if="isAdmin">
+					<div v-if="isAdmin" class="admin-warn">
 						<v-icon>mdi-alert-outline</v-icon>
 						<i18n-t keypath="admin_warn" tag="div">
 							<template #forum>
@@ -87,7 +87,7 @@
 					<v-list-item v-for="(chatId, i) in data.chats" :key="i" class="language" @click="$router.push('/chat/' + chatId)">
 						<v-icon>{{ LeekWars.publicChats[chatId].icon }}</v-icon>
 						<span class="name">{{ LeekWars.publicChats[chatId].name }}</span>
-						<span class="unread-circle" v-if="$store.state.chat[chatId] && !$store.state.chat[chatId].read"></span>
+						<span v-if="$store.state.chat[chatId] && !$store.state.chat[chatId].read" class="unread-circle"></span>
 					</v-list-item>
 				</div>
 			</v-list>
@@ -109,12 +109,12 @@
 
 <script lang="ts" setup>
 	import { Chat as ChatModel, ChatType } from '@/model/chat'
+	import type { Farmer } from '@/model/farmer'
 	import { mixins , useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { store } from '@/model/store'
-	import { computed, defineAsyncComponent, onMounted, onUnmounted, ref, watch } from 'vue'
-	import { useI18n } from 'vue-i18n'
+	import { computed, defineAsyncComponent, onBeforeMount, onMounted, onUnmounted, ref, watch } from 'vue'
 	import { useRoute, useRouter } from 'vue-router'
 	import { emitter } from '@/model/vue'
 	import { env } from '@/env'
@@ -122,23 +122,20 @@
 
 	const Chat = defineAsyncComponent(() => import(`@/component/chat/chat.vue`))
 
-	defineOptions({ name: 'messages', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'Messages', i18n: {}, mixins: [...mixins] })
 
-	const { locale: i18nLocale } = useI18n()
 	const t = useNamespacedT('messages')
 	const route = useRoute()
 	const router = useRouter()
 
-	const newFarmer_ = ref<any>(null)
+	const newFarmer_ = ref<Farmer | null>(null)
 	const currentID = ref<number | null>(null)
 	const quitDialog = ref(false)
 	const languageDialog = ref(false)
 	const menuTarget = ref<HTMLElement | null>(null)
-	const actions = ref<any[]>([])
-	const loadingConversations = ref(false)
-
+	const actions = ref<{ icon: string, click: () => void }[]>([])
 	const chats = computed(() => {
-		const chats = [] as any[]
+		const chats: unknown[] = []
 		if (store.state.farmer && store.state.farmer.public_chat_enabled) {
 			chats.push({ name: 'Français', flag: 'fr', chats: Object.values(LeekWars.publicChats).filter(c => c.language === 'fr') })
 			chats.push({ name: 'English', flag: 'gb', chats: Object.values(LeekWars.publicChats).filter(c => c.language === 'en') })
@@ -187,16 +184,17 @@
 		return null
 	})
 
-	const newFarmer = computed<any>(() => {
-		if (!newFarmer_.value && 'name' in route.params) {
+	watch(() => route.params, (params) => {
+		if (!newFarmer_.value && 'name' in params) {
 			newFarmer_.value = {
-				id: parseInt(route.params.farmer_id as string, 10),
-				name: route.params.name,
-				avatar_changed: parseInt(route.params.avatar_changed as string, 10)
+				id: parseInt(params.farmer_id as string, 10),
+				name: params.name,
+				avatar_changed: parseInt(params.avatar_changed as string, 10)
 			}
 		}
-		return newFarmer_.value
-	})
+	}, { immediate: true })
+
+	const newFarmer = computed<Farmer | null>(() => newFarmer_.value)
 
 	const isAdmin = computed(() => {
 		const id = newConversation.value ? newFarmer.value.id : getConversationFarmerId()
@@ -210,8 +208,6 @@
 	const chat_name = computed(() => currentChat.value ? currentChat.value.name : '')
 
 	const isPrivate = computed(() => currentChat.value && currentChat.value.type === ChatType.PM)
-
-	const isPublicChat = computed(() => currentID.value !== null && LeekWars.isPublicChat(currentID.value))
 
 	function update() {
 		if (id.value !== null || newFarmer.value) {
@@ -231,8 +227,10 @@
 	if (!env.SOCIAL) {
 		router.push('/')
 	}
-	LeekWars.setTitle(t('title') as string)
-	update()
+	onBeforeMount(() => {
+		LeekWars.setTitle(t('title') as string)
+		update()
+	})
 
 	function selectConversation(theId: number) {
 		currentID.value = theId
@@ -248,15 +246,6 @@
 			LeekWars.setTitle(chat_name.value)
 		} else {
 			LeekWars.setTitle(t('title') as string)
-		}
-	}
-
-	function getConversationName() {
-		if (!currentChat.value) { return }
-		for (const farmer of currentChat.value.farmers) {
-			if (!store.state.farmer || farmer.id !== store.state.farmer.id) {
-				return farmer.name
-			}
 		}
 	}
 

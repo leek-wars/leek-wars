@@ -59,7 +59,7 @@ export function hasConflictMarkers(content: string): boolean {
  * Résout un conflit spécifique dans un contenu textuel.
  * Retourne le nouveau contenu avec le conflit résolu.
  */
-export function resolveConflict(content: string, conflict: MergeConflict, choice: 'current' | 'incoming' | 'both'): string {
+function resolveConflict(content: string, conflict: MergeConflict, choice: 'current' | 'incoming' | 'both'): string {
 	const lines = content.split('\n')
 
 	let replacement: string[]
@@ -77,19 +77,6 @@ export function resolveConflict(content: string, conflict: MergeConflict, choice
 	const before = lines.slice(0, conflict.startLine)
 	const after = lines.slice(conflict.endLine + 1)
 	return [...before, ...replacement, ...after].join('\n')
-}
-
-/**
- * Résout tous les conflits d'un contenu avec le même choix.
- * Résout du dernier au premier pour ne pas décaler les indices.
- */
-export function resolveAllConflicts(content: string, choice: 'current' | 'incoming' | 'both'): string {
-	let result = content
-	let conflicts = parseConflicts(result)
-	for (let i = conflicts.length - 1; i >= 0; i--) {
-		result = resolveConflict(result, conflicts[i], choice)
-	}
-	return result
 }
 
 /**
@@ -139,7 +126,7 @@ export function buildConflictDecorations(model: monaco.editor.ITextModel, confli
 /**
  * Applique un choix de résolution sur le modèle Monaco (undoable via pushEditOperations).
  */
-export function applyConflictResolution(model: monaco.editor.ITextModel, conflictIndex: number, choice: 'current' | 'incoming' | 'both'): boolean {
+function applyConflictResolution(model: monaco.editor.ITextModel, conflictIndex: number, choice: 'current' | 'incoming' | 'both'): boolean {
 	const content = model.getValue()
 	const conflicts = parseConflicts(content)
 	if (conflictIndex >= conflicts.length) return false

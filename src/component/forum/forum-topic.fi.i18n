@@ -40,5 +40,6 @@
 	"hide_topic": "Piilota",
 	"show_topic": "Näytä",
 	"set_release": "Julkaisu",
-	"release_hint": "Syötä 0 poistaaksesi julkaisun"
+	"release_hint": "Syötä 0 poistaaksesi julkaisun",
+	"topic_not_found": "Aihetta tunnuksella {topic} ei löydy :("
 }

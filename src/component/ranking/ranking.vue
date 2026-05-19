@@ -295,7 +295,7 @@
 	import { useRoute, useRouter } from 'vue-router'
 
 	defineOptions({
-		name: 'ranking', i18n: {}, mixins: [...mixins],
+		name: 'Ranking', i18n: {}, mixins: [...mixins],
 		components: { 'ranking-leek-row': RankingLeekRowElement, 'ranking-farmer-row': RankingFarmerRowElement, 'ranking-team-row': RankingTeamRowElement, 'ranking-composition-row': RankingCompositionRowElement, 'ranking-search-result': RankingSearchResult, RichTooltipFarmer, Pagination }
 	})
 
@@ -305,7 +305,7 @@
 	const searchInput = useTemplateRef<HTMLElement>('search')
 
 	const fun = ref(false)
-	const rankings = ref<any>(null)
+	const rankings = ref<Record<string, unknown> | null>(null)
 	const page = ref(0)
 	const pages = ref(0)
 	const category = ref('')
@@ -316,7 +316,7 @@
 	const searchFarmers = ref(true)
 	const searchTeams = ref(true)
 	const searchQuery = ref('')
-	const searchResults = ref<any[] | null>(null)
+	const searchResults = ref<Record<string, unknown>[] | null>(null)
 	const activeSwitch = ref(false)
 	const compositionMode = ref(localStorage.getItem('ranking/team-mode') === 'composition')
 	const countryList = ref(false)
@@ -438,7 +438,7 @@
 		}
 	}, { immediate: true })
 
-	function goToResult(event: any) {
+	function goToResult(event: Record<string, unknown>) {
 		searchDialog.value = false
 		LeekWars.goToRanking(event.type, 'talent', event.id)
 	}

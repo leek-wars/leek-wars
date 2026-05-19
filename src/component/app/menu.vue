@@ -11,12 +11,12 @@
 			<div v-if="LeekWars.mobile" class="menu-top">
 				<div class="top">
 					<div class="section">
-						<router-link to="/farmer" @click.native="clickItem">
+						<router-link to="/farmer" @click="clickItem">
 							<avatar :farmer="$store.state.farmer" class="farmer-avatar" />
 						</router-link>
 						<div class="right">
 							<div class="farmer-name-row">
-								<router-link to="/farmer" @click.native="clickItem">
+								<router-link to="/farmer" @click="clickItem">
 									<div v-if="$store.state.farmer" v-ripple class="text farmer-name">{{ $store.state.farmer.name }}</div>
 								</router-link>
 								<v-menu v-model="accountMenu" :width="300" :close-on-content-click="false" location="bottom start" scrim>
@@ -29,10 +29,10 @@
 								</v-menu>
 							</div>
 							<div class="moneys">
-								<router-link v-ripple to="/market" @click.native="clickItem">
+								<router-link v-ripple to="/market" @click="clickItem">
 									<span class="hab text"></span><span v-if="$store.state.farmer" class="farmer-habs">{{ $filters.number($store.state.farmer.habs) }}</span>
 								</router-link>
-								<router-link v-ripple class="crystals" to="/bank?ref=menu" @click.native="clickItem">
+								<router-link v-ripple class="crystals" to="/bank?ref=menu" @click="clickItem">
 									<span class="crystal text"></span><span v-if="$store.state.farmer" class="farmer-crystals">{{ $filters.number($store.state.farmer.crystals) }}</span>
 								</router-link>
 							</div>
@@ -51,7 +51,7 @@
 							</div>
 						</router-link>
 						<span v-if="LeekWars.didactitial_step === 1 && i === 0 && !(isHomePage || $route.path === '/leek/' + leek.id)" class="dida-hint right">
-							<i18n-t class="bubble" keypath="main.dida_2">
+							<i18n-t tag="div" class="bubble" keypath="main.dida_2">
 								<template #life>
 									<img height=18 src="/image/charac/life.png">
 								</template>
@@ -71,7 +71,7 @@
 				<div v-if="$store.state.farmer && $store.state.farmer.leeks" class="separator"></div>
 
 				<span class="dida-element">
-					<router-link v-ripple to="/editor" class="section" :class="{'router-link-active': $route.path.startsWith('/editor'), bouncing: LeekWars.didactitial_step === 4 && !$route.path.startsWith('/editor')}" @click.native="clickItem">
+					<router-link v-ripple to="/editor" class="section" :class="{'router-link-active': $route.path.startsWith('/editor'), bouncing: LeekWars.didactitial_step === 4 && !$route.path.startsWith('/editor')}" @click="clickItem">
 						<img v-if="LeekWars.xpTheme" src="/image/icon/xp_editor.png">
 						<v-icon v-else>mdi-code-braces</v-icon>
 						<div class="text">{{ $t("main.editor") }}</div>
@@ -83,7 +83,7 @@
 				</span>
 
 				<span class="dida-element">
-					<router-link v-ripple to="/garden" class="section" :class="{'router-link-active': $route.path.startsWith('/garden'), bouncing: LeekWars.didactitial_step === 2 && !$route.path.startsWith('/garden')}" :label="$store.state.farmer ? ($store.state.farmer.fights + ($store.state.farmer.team_fights ? '+' + $store.state.farmer.team_fights : '')) : null" @click.native="clickItem">
+					<router-link v-ripple to="/garden" class="section" :class="{'router-link-active': $route.path.startsWith('/garden'), bouncing: LeekWars.didactitial_step === 2 && !$route.path.startsWith('/garden')}" :label="$store.state.farmer ? ($store.state.farmer.fights + ($store.state.farmer.team_fights ? '+' + $store.state.farmer.team_fights : '')) : null" @click="clickItem">
 						<img :src="LeekWars.xpTheme ? '/image/icon/xp_garden.png' : '/image/icon/garden.png'">
 						<div class="text">{{ $t("main.garden") }}</div>
 					</router-link>
@@ -93,60 +93,65 @@
 					</span>
 				</span>
 
-				<router-link v-ripple to="/inventory" class="section" :class="{'router-link-active': $route.path.startsWith('/inventory')}" @click.native="clickItem">
+				<router-link v-ripple to="/market" class="section" :class="{'router-link-active': $route.path.startsWith('/market')}" @click="clickItem">
+					<img src="/image/icon/market.png">
+					<div class="text">{{ $t("main.market") }}</div>
+				</router-link>
+
+				<router-link v-ripple to="/inventory" class="section" :class="{'router-link-active': $route.path.startsWith('/inventory')}" @click="clickItem">
 					<img v-if="LeekWars.xpTheme" src="/image/icon/xp_inventory.png">
 					<v-icon v-else>mdi-treasure-chest</v-icon>
 					<div class="text">{{ $t("main.inventory") }}</div>
 				</router-link>
 
-				<router-link v-if="$store.state.farmer && $store.state.farmer.team" v-ripple to="/team" class="section" :class="{'router-link-active': $route.path.startsWith('/team')}" @click.native="clickItem">
+				<router-link v-if="$store.state.farmer && $store.state.farmer.team" v-ripple to="/team" class="section" :class="{'router-link-active': $route.path.startsWith('/team')}" @click="clickItem">
 					<img :src="LeekWars.xpTheme ? '/image/icon/xp_team.png' : '/image/icon/team.png'">
 					<div class="text">{{ $t('main.team') }}</div>
 				</router-link>
-				<router-link v-else-if="$store.state.farmer && $store.state.farmer.total_level >= 5" v-ripple to="/teams" class="section" :class="{'router-link-active': $route.path.startsWith('/teams')}" @click.native="clickItem">
+				<router-link v-else-if="$store.state.farmer && $store.state.farmer.total_level >= 5" v-ripple to="/teams" class="section" :class="{'router-link-active': $route.path.startsWith('/teams')}" @click="clickItem">
 					<img :src="LeekWars.xpTheme ? '/image/icon/xp_team.png' : '/image/icon/team.png'">
 					<div class="text">{{ $t('main.teams') }}</div>
 				</router-link>
 
-				<router-link v-if="$store.state.farmer && $store.state.farmer.trophies" v-ripple to="/trophies" class="section" :class="{'router-link-active': $route.path.startsWith('/trophies') || $route.path.startsWith('/trophy')}" @click.native="clickItem">
+				<router-link v-if="$store.state.farmer && $store.state.farmer.trophies" v-ripple to="/trophies" class="section" :class="{'router-link-active': $route.path.startsWith('/trophies') || $route.path.startsWith('/trophy')}" @click="clickItem">
 					<img :src="LeekWars.xpTheme ? '/image/icon/xp_trophies.png' : '/image/icon/trophy.png'">
 					<div class="text">{{ $t("main.trophies") }}</div>
 				</router-link>
 
-				<router-link v-ripple :to="rankingURL" class="section" :class="{'router-link-active': $route.path.startsWith('/ranking')}" @click.native="clickItem">
+				<router-link v-ripple :to="rankingURL" class="section" :class="{'router-link-active': $route.path.startsWith('/ranking')}" @click="clickItem">
 					<img :src="LeekWars.xpTheme ? '/image/icon/xp_ranking.png' : '/image/icon/ranking.png'">
 					<div class="text">{{ $t("main.ranking") }}</div>
 				</router-link>
 
-				<router-link v-ripple to="/help" class="section" :class="{'router-link-active': $route.path.startsWith('/help') || $route.path.startsWith('/encyclopedia')}" @click.native="clickItem">
+				<router-link v-ripple to="/help" class="section" :class="{'router-link-active': $route.path.startsWith('/help') || $route.path.startsWith('/encyclopedia')}" @click="clickItem">
 					<img v-if="LeekWars.xpTheme" src="/image/icon/xp_help.png">
 					<v-icon v-else>mdi-help-circle-outline</v-icon>
 					<div class="text">{{ $t("main.help") }}</div>
 				</router-link>
 
-				<router-link v-if="env.SOCIAL" v-ripple to="/forum" class="section" :class="{'router-link-active': $route.path.startsWith('/forum')}" @click.native="clickItem">
+				<router-link v-if="env.SOCIAL" v-ripple to="/forum" class="section" :class="{'router-link-active': $route.path.startsWith('/forum')}" @click="clickItem">
 					<img :src="LeekWars.xpTheme ? '/image/icon/xp_forum.png' : '/image/icon/forum.png'">
 					<div class="text">{{ $t("main.forum") }}</div>
 				</router-link>
 
-				<router-link v-if="LeekWars.mobile" v-ripple to="/console" class="section" @click.native="clickItem">
+				<router-link v-if="LeekWars.mobile" v-ripple to="/console" class="section" @click="clickItem">
 					<v-icon>mdi-console</v-icon>
 					<div class="text">{{ $t("main.console") }}</div>
 				</router-link>
 
-				<router-link v-if="$store.state.farmer && $store.state.farmer.group" v-ripple :to="'/group/' + $store.state.farmer.group.id" class="section" @click.native="clickItem">
+				<router-link v-if="$store.state.farmer && $store.state.farmer.group" v-ripple :to="'/group/' + $store.state.farmer.group.id" class="section" @click="clickItem">
 					<img v-if="LeekWars.xpTheme" src="/image/icon/xp_team.png">
 					<v-icon v-else>mdi-account-group</v-icon>
 					<div class="text">{{ $store.state.farmer.group.name }}</div>
 				</router-link>
 
-				<router-link v-if="$store.getters.moderator" v-ripple :label="$store.state.farmer?.reportings || null" to="/moderation" class="section" :class="{'router-link-active': $route.path.startsWith('/moderation')}" tab="moderation" @click.native="clickItem">
+				<router-link v-if="$store.getters.moderator" v-ripple :label="$store.state.farmer?.reportings || null" to="/moderation" class="section" :class="{'router-link-active': $route.path.startsWith('/moderation')}" tab="moderation" @click="clickItem">
 					<img v-if="LeekWars.xpTheme" src="/image/icon/xp_moderation.png">
 					<v-icon v-else>mdi-gavel</v-icon>
 					<div class="text">{{ $t('main.moderation') }}</div>
 				</router-link>
 
-				<router-link v-if="$store.getters.admin" v-ripple :label="$store.state.farmer?.errors || null" to="/admin" class="section" :class="{'router-link-active': $route.path.startsWith('/admin')}" tab="admin" @click.native="clickItem">
+				<router-link v-if="$store.getters.admin" v-ripple :label="$store.state.farmer?.errors || null" to="/admin" class="section" :class="{'router-link-active': $route.path.startsWith('/admin')}" tab="admin" @click="clickItem">
 					<img v-if="LeekWars.xpTheme" src="/image/icon/xp_admin.png">
 					<v-icon v-else>mdi-security</v-icon>
 					<div class="text">{{ $t('main.admin') }}</div>
@@ -170,6 +175,12 @@
 						<v-icon>mdi-sword-cross</v-icon>
 					</template>
 					<template #title>{{ $t('main.arena') }}</template>
+					<div v-if="$store.state.farmer" class="arena-popup-my-leeks">
+						<div v-for="leek in $store.state.farmer.leeks" :key="leek.id" v-ripple class="my-leek" :class="{selected: leek.id === registeredLeekId, disabled: leek.level < 20}" @click="leek.level >= 20 && changeArenaLeek(leek.id)">
+							<leek-image :leek="leek" :scale="0.28" />
+							<div class="name">{{ leek.name }}</div>
+						</div>
+					</div>
 					<loader v-if="LeekWars.arena.progress == 0" />
 					<div class="br-leeks">
 						<div v-for="leek in LeekWars.arena.leeks" :key="leek.id" class="leek">
@@ -177,10 +188,30 @@
 							<div>{{ leek.name }}</div>
 							<talent :id="leek.id" :talent="leek.talent" category="leek" />
 							<div class="level">{{ $t('main.level_n', [leek.level]) }}</div>
+							<v-tooltip>
+								<template #activator="{ props }">
+									<v-icon v-bind="props" class="arena-pref" size="16">{{ arenaModeIcon(leek.preference) }}</v-icon>
+								</template>
+								{{ $t('main.' + (ARENA_MODE_LABELS[leek.preference] || 'arena_no_preference')) }}
+							</v-tooltip>
 						</div>
+					</div>
+					<div class="arena-popup-count">
+						<span class="arena-dot"></span>
+						<strong>{{ LeekWars.arena.progress }}</strong> / {{ Arena.MAX_PLAYERS }}
 					</div>
 					<div v-if="LeekWars.arena.countdown >= 0" class="arena-countdown center">
 						{{ $t('main.arena_countdown', [LeekWars.arena.countdown]) }}
+					</div>
+					<div class="arena-popup-preference">
+						<h4>{{ $t('main.arena_preference') }}</h4>
+						<v-radio-group :model-value="$store.state.arenaPreference" inline hide-details @update:model-value="changeArenaPreference">
+							<v-radio :label="$t('main.arena_no_preference')" :value="-1" />
+							<v-radio :label="$t('main.arena_mode_br')" :value="0" />
+							<v-radio :label="$t('main.arena_mode_war')" :value="1" />
+							<v-radio :label="$t('main.arena_mode_chest_hunt')" :value="2" />
+							<v-radio :label="$t('main.arena_mode_colossus')" :value="3" />
+						</v-radio-group>
 					</div>
 					<br>
 					<div class="center">
@@ -200,7 +231,7 @@
 				<div class="title">
 					<div>
 						<h4>{{ $t('main.rewards') }} ({{ $store.state.farmer.rewards.length }})</h4>
-						<div>{{ $filters.number($store.state.farmer.rewards.reduce((s: number, r: any) => s + r.habs, 0)) }} <span class="hab"></span></div>
+						<div>{{ $filters.number($store.state.farmer.rewards.reduce((s: number, r: Reward) => s + r.habs, 0)) }} <span class="hab"></span></div>
 					</div>
 					<v-btn class="get-all notif-trophy" @click.stop="retrieveAll()"><span v-if="!LeekWars.mobile">{{ $t('main.retrieve_all') }}</span> <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
 				</div>
@@ -224,7 +255,9 @@
 
 <script setup lang="ts">
 	import { LeekWars } from '@/model/leekwars'
+	import type { Reward } from '@/model/farmer'
 	import { store } from '@/model/store'
+	import { Arena, ARENA_MODE_LABELS, arenaModeIcon } from '@/model/arena'
 	import { BOSSES } from '@/model/boss'
 	import { emitter } from '@/model/vue'
 	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue'
@@ -232,7 +265,7 @@
 
 	const AccountSwitcher = defineAsyncComponent(() => import('@/component/app/account-switcher.vue'))
 
-	defineOptions({ name: 'lw-menu' })
+	defineOptions({ name: 'LwMenu' })
 
 	const route = useRoute()
 	const router = useRouter()
@@ -376,7 +409,29 @@
 		e.stopPropagation()
 	}
 
-	function retrieve(reward: any) {
+	function changeArenaPreference(preference: number | null) {
+		if (preference === null) return
+		const leek = parseInt(localStorage.getItem('arena-leek') || '', 10)
+		if (!leek) return
+		const wantsColossus = localStorage.getItem('arena-colossus') === '1'
+		LeekWars.arena.register(leek, preference, wantsColossus)
+	}
+
+	function changeArenaLeek(leekId: number) {
+		if (leekId === registeredLeekId.value) return
+		const wantsColossus = localStorage.getItem('arena-colossus') === '1'
+		LeekWars.arena.register(leekId, store.state.arenaPreference, wantsColossus)
+	}
+
+	const registeredLeekId = computed(() => {
+		if (!store.state.farmer) return 0
+		for (const id of Object.keys(LeekWars.arena.leeks)) {
+			if (+id in store.state.farmer.leeks) return +id
+		}
+		return 0
+	})
+
+	function retrieve(reward: Reward) {
 		LeekWars.post('trophy/retrieve-reward', { trophy_id: reward.trophy })
 		store.commit('remove-reward', reward.trophy)
 		store.commit('update-habs', reward.habs)
@@ -384,7 +439,7 @@
 
 	function retrieveAll() {
 		LeekWars.post('trophy/retrieve-all-rewards')
-		const total = store.state.farmer!.rewards.reduce((s: number, r: any) => s + r.habs, 0)
+		const total = store.state.farmer!.rewards.reduce((s: number, r: Reward) => s + r.habs, 0)
 		store.commit('remove-all-rewards')
 		store.commit('update-habs', total)
 	}
@@ -704,10 +759,17 @@
 		align-items: baseline;
 
 		.leek {
+			position: relative;
 			text-align: center;
 			font-size: 15px;
 			font-weight: 500;
 			margin: 0 3px;
+		}
+		.arena-pref {
+			position: absolute;
+			top: 2px;
+			right: 2px;
+			font-size: 14px;
 		}
 		.talent {
 			margin: 2px 0;
@@ -736,6 +798,82 @@
 			.close {
 				padding: 8px;
 			}
+		}
+	}
+	.arena-popup-count {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		font-size: 22px;
+		margin-top: 12px;
+		strong {
+			color: var(--primary);
+			font-weight: 700;
+		}
+	}
+	.arena-dot {
+		display: inline-block;
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: var(--primary);
+		animation: arena-pulse 2s infinite;
+	}
+	@keyframes arena-pulse {
+		0% { box-shadow: 0 0 0 0 rgba(95, 173, 27, 0.6); }
+		70% { box-shadow: 0 0 0 8px rgba(95, 173, 27, 0); }
+		100% { box-shadow: 0 0 0 0 rgba(95, 173, 27, 0); }
+	}
+	.arena-popup-my-leeks {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 6px;
+		margin-bottom: 24px;
+		.my-leek {
+			width: 80px;
+			padding: 4px;
+			border: 1px solid var(--border);
+			border-radius: 4px;
+			text-align: center;
+			cursor: pointer;
+			opacity: 0.45;
+			transition: opacity 150ms, background-color 150ms;
+			&:hover:not(.disabled) {
+				opacity: 1;
+				background: var(--pure-white);
+			}
+			&.selected {
+				opacity: 1;
+				border-color: var(--primary);
+				background: var(--pure-white);
+			}
+			&.disabled {
+				opacity: 0.2;
+				cursor: not-allowed;
+			}
+			.name {
+				font-size: 13px;
+				font-weight: 500;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+			:deep(svg) {
+				max-height: 60px;
+			}
+		}
+	}
+	.arena-popup-preference {
+		margin-top: 14px;
+		text-align: center;
+		h4 {
+			color: var(--text-color-secondary);
+			margin-bottom: 4px;
+		}
+		:deep(.v-radio-group) {
+			justify-content: center;
 		}
 	}
 	.rewards-button {

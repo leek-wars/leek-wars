@@ -27,13 +27,13 @@
 						</template>
 						<div class="dialog">
 							<div class="dialog-items">
-								<notification v-for="notification in $store.state.notifications" :key="notification.id" :notification="notification" @click.native="readNotification(notification)" />
+								<notification v-for="notification in $store.state.notifications" :key="notification.id" :notification="notification" @click="readNotification(notification)" />
 							</div>
-							<router-link to="/notifications" class="see-all" @click.native="LeekWars.closeMenu()">{{ $t('main.all_notifications') }}</router-link>
+							<router-link to="/notifications" class="see-all" @click="LeekWars.closeMenu()">{{ $t('main.all_notifications') }}</router-link>
 						</div>
 					</v-menu>
 				</div>
-				<router-link v-show="LeekWars.menuExpanded" v-ripple to="/settings" class="action header-button mobile settings" @click.native="closeMenu">
+				<router-link v-show="LeekWars.menuExpanded" v-ripple to="/settings" class="action header-button mobile settings" @click="closeMenu">
 					<v-icon>mdi-cog-outline</v-icon>
 				</router-link>
 			</div>
@@ -53,8 +53,9 @@ import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { emitter } from '@/model/vue'
 import { ref } from 'vue'
+import type { Notification } from '@/model/notification'
 
-defineOptions({ name: 'lw-bar' })
+defineOptions({ name: 'LwBar' })
 
 const dark = ref(false)
 
@@ -69,14 +70,14 @@ function closeMenu() {
 	LeekWars.menuExpanded = false
 	LeekWars.dark = 0
 }
-function readNotifications(e: any) {
+function readNotifications(e: boolean) {
 	if (e === false && store.state.unreadNotifications) {
 		LeekWars.post('notification/read-all')
 		store.commit('read-notifications')
 	}
 	dark.value = e
 }
-function readNotification(notification: any) {
+function readNotification(notification: Notification) {
 	LeekWars.post('notification/read', {notification_id: notification.id})
 }
 </script>

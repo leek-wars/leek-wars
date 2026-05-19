@@ -51,5 +51,8 @@
 	"arena_mode_colossus": "Colosso",
 	"arena_wants_colossus": "Voglio essere il Colosso",
 	"arena_countdown": "Inizio tra {0}s...",
+	"arena_countdown_invite": "Inizio tra {0}s, sbrigati!",
+	"arena_invite_ready": "Pronti a combattere, unisciti a loro! | {count} giocatori pronti a combattere, unisciti a loro!",
+	"arena_invite_join": "Ancora 1 giocatore per iniziare il combattimento! | Ancora {count} giocatori per iniziare il combattimento!",
 	"garden_arena": "Orto Arena"
 }

@@ -2,6 +2,7 @@
 import Player from '@/component/player/player.vue'
 import { Bubble } from '@/component/player/game/bubble'
 import { Bulb } from '@/component/player/game/bulb'
+import { Farmer } from '@/model/farmer'
 import { Acceleration, Adrenaline, Alteration, Antidote, Armor, Armoring, Arsenic, Awakening, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Carapace, ChipAnimation, Collar, Covetousness, Covid, Crushing, Cure, Desintegration, DevilStrike, DivineProtection, Dome, Doping, Drip, Elevation, Exasperation, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Ice, Iceberg, Inversion, Jump, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Prism, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Summon, Teleportation, Therapy, Thorn, Toxin, Tranquilizer, Transmutation, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry } from '@/component/player/game/chips'
 import { DamageType, EntityDirection, EntityType, FightEntity } from '@/component/player/game/entity'
 import { Ground, GroundTexture, OBSTACLES } from '@/component/player/game/ground'
@@ -26,6 +27,77 @@ import { store } from '@/model/store'
 import { Chest } from './chest'
 import { Mob } from './mob'
 import { Turret } from './turret'
+
+/** Anything the game loop can draw on a canvas row */
+interface Drawable {
+	draw(ctx: CanvasRenderingContext2D): void
+}
+
+/** Marker (colored cell overlay) stored by cell id */
+interface GameMarker {
+	owner: number
+	color: string
+	duration: number
+	x: number
+	y: number
+}
+
+/** Text marker stored by cell id */
+interface GameTextMarker {
+	owner: number
+	text: string
+	color: string
+	duration: number
+	x: number
+	y: number
+}
+
+/** Console line (action, log, trophy…) displayed in the side panel */
+interface ConsoleLine {
+	id?: string
+	action?: unknown
+	log?: unknown
+	trophy?: unknown
+}
+
+/** Progress-bar marker for the timeline */
+interface ProgressBarMarker {
+	left: number
+	width: number
+	background: string
+	outline: string
+}
+
+/** Trophy entry from fight data */
+interface FightTrophy {
+	trophy: number
+	name?: string
+	action?: number
+}
+
+/** A single log entry: a heterogeneous array [leekId, type, ...args] */
+type LogEntry = unknown[]
+
+/** State snapshot of a leek at the start of a fight (for jump/rewind) */
+interface LeekState {
+	absoluteShield: number
+	relativeShield: number
+	active: boolean
+	life: number
+	maxLife: number
+	tp: number
+	mp: number
+	agility: number
+	strength: number
+	wisdom: number
+	damageReturn: number
+	science: number
+	magic: number
+	resistance: number
+	cell: Cell | null
+	weapon: unknown
+	[key: string]: unknown
+}
 
 enum Colors {
 	MP_COLOR = "#08D900",
@@ -261,18 +333,19 @@ class Game {
 	public height: number = 0
 	public particles = new Particles(this)
 	public ground = new Ground(this)
-	public drawableElements: Array<{[key: number]: any}> = []
+	public drawableElements: Array<{[key: number]: Drawable}> = []
 	public drawableElementCurrentId: number = 0
 	// Players
 	public teams: FightEntity[][] = []
 	public leeks: FightEntity[] = []
-	public farmers: {[key: number]: any} = {}
+	public farmers: Record<number, Farmer> = {}
 	public entityOrder: FightEntity[] = []
-	public states: {[key: number]: any} = []
+	public states: {[key: number]: LeekState} = []
 	// Actions
 	public data!: FightData
 	public actions: Action[] = []
-	public consoleLines: any[] = []
+	public consoleLines: ConsoleLine[] = []
+	private consoleLineIds: Set<string> = new Set()
 	public currentAction: number = -1
 	public actionToDo = true
 	public actionDelay = 0
@@ -284,11 +357,11 @@ class Game {
 	// Chips
 	public chips: ChipAnimation[] = []
 	// Logs
-	public logs: {[key: number]: any} = {}
+	public logs: {[key: number]: LogEntry[]} = {}
 	public currentLog = 0
 	// Marqueurs
-	public markers = [] as any[]
-	public markersText = [] as any[]
+	public markers: {[key: number]: GameMarker} = {}
+	public markersText: {[key: number]: GameTextMarker} = {}
 	// Map
 	public mapType: number = -1 // -1 = pas initialisée
 	public map!: Map
@@ -333,19 +406,19 @@ class Game {
 	public currentPlayer: number | null = null
 	public selectedEntity: FightEntity | null = null
 	public hoverEntity: FightEntity | null = null
-	public jumping: any
-	public logging: any = true
+	public jumping: boolean = false
+	public logging: boolean = true
 	public jumpRequested: boolean = false
 	public jumpAction: number = 0
 	public ratio: number = 1
-	public areaColor: any
-	public area!: any[]
-	public showCellX: any
-	public showCellY: any
+	public areaColor: string = ''
+	public area: number[][] = []
+	public showCellX: number = 0
+	public showCellY: number = 0
 	public ctx!: CanvasRenderingContext2D
-	public showCellColor: any
-	public showCellCell: any
-	public reportTimer: any
+	public showCellColor: string = ''
+	public showCellCell: Cell | null = null
+	public reportTimer: ReturnType<typeof setTimeout> | null = null
 	public progressBarWidth: number = 0
 	public mouseOriginX: number = 0
 	public mouseOriginY: number = 0
@@ -354,9 +427,9 @@ class Game {
 	public player!: InstanceType<typeof Player>
 	public halloween: boolean = false
 	public textRatio: number = 1
-	public trophies: any[] = []
-	public trophiesToSend: any[] = []
-	public progressBarMarkers: {[key: number]: any} = {}
+	public trophies: FightTrophy[] = []
+	public trophiesToSend: FightTrophy[] = []
+	public progressBarMarkers: {[key: number]: ProgressBarMarker} = {}
 	public creator: boolean = false
 	public draggedObstacle: Obstacle | null = null
 	public draggedEntity: FightEntity | null = null
@@ -381,15 +454,14 @@ class Game {
 		for (let i = 0; i < this.ground.field.tilesY * 2; i++) {
 			this.drawableElements[i] = {}
 		}
-		const halloweenStart = new Date()
-		halloweenStart.setDate(30)
-		halloweenStart.setMonth(9) // October
-		halloweenStart.setHours(0, 0, 0, 0)
-		const halloweenEnd = new Date()
-		halloweenEnd.setDate(1)
-		halloweenEnd.setMonth(10) // November
-		halloweenEnd.setHours(0, 0, 0, 0)
+		// Use the (year, month, day) constructor to avoid month-rollover when the
+		// constructor runs in a month with < 30 days. The previous code did
+		// `new Date(); setDate(30); setMonth(9)` — in February that rolled to
+		// "Feb 30" → March 2 → October 2, so Halloween started 28 days early.
 		const now = new Date()
+		const year = now.getFullYear()
+		const halloweenStart = new Date(year, 9, 30)
+		const halloweenEnd = new Date(year, 10, 1)
 		this.halloween = now >= halloweenStart && now < halloweenEnd
 	}
 
@@ -437,7 +509,7 @@ class Game {
 				obstacle.resize()
 				this.ground.addObstacle(obstacle)
 			} else {
-				const type = o instanceof Array ? o[0] : -2
+				const _type = o instanceof Array ? o[0] : -2
 				const size = o instanceof Array ? o[1] : o // Before the obstacle was an array [type, size]
 				if (size !== -1) {
 					// console.log({ type, size })
@@ -458,6 +530,7 @@ class Game {
 
 			const type = typeof(e.type) === 'undefined' ? EntityType.LEEK : e.type
 
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const entity = new ENTITY_CLASSES[type](this, e.team, e.level, e.name) as any
 
 			// Infos vitales
@@ -758,7 +831,7 @@ class Game {
 		}
 	}
 
-	public setLogs(logs: any) {
+	public setLogs(logs: {[farmerId: string]: {[actionId: string]: LogEntry[]}}) {
 		// Merge logs
 		// return
 		for (const farmer in logs) {
@@ -1243,6 +1316,10 @@ class Game {
 
 			if (CHIP_ANIMATIONS[chip - 1] !== null && chip !== 40) {
 				const chipAnimation: ChipAnimation = new CHIP_ANIMATIONS[chip - 1]!(this)
+				// Donne au launch() de quoi filtrer les vraies cibles via le
+				// bitmask Effect.targets (issue #3127 — l'inférence par
+				// sous-classe d'animation était trop grossière).
+				chipAnimation.effects = chip_template.effects
 				caster.useChip(chipAnimation, cell, targets, result)
 				this.chips.push(chipAnimation)
 				caster.lastDamageType = chipAnimation.damageType
@@ -1947,13 +2024,16 @@ class Game {
 			const type = log[1]
 			if (this.displayDebugs && (this.displayAllyDebugs || log[6])) {
 				if (type === 5) {
-					this.pause()
+					// En mode jumping, on ajoute la ligne sans pause() pour ne pas
+					// interrompre le fast-forward — l'utilisateur retrouvera le
+					// log en scrollant l'historique.
+					if (!this.jumping) this.pause()
 					this.addConsoleLine({id: 'l' + this.currentAction + '-' + this.currentLog, log})
-					return true
+					if (!this.jumping) return true
 				} else if (type === 4) {
-					this.addMarker(log[0], log[2], log[3], log[4])
+					this.addMarker(log[0] as number, log[2] as number[], log[3] as string, log[4] as number)
 				} else if (type === 9) {
-					this.addTextMarker(log[0], log[2], log[3], log[4], log[5])
+					this.addTextMarker(log[0] as number, log[2] as number[], log[3] as string, log[4] as string, log[5] as number)
 				} else if (type === 10) {
 					this.clearMarks()
 				} else {
@@ -1967,15 +2047,18 @@ class Game {
 	public readTrophies() {
 		for (let t = 0; t < this.trophiesToSend.length; ++t) {
 			const trophy = this.trophiesToSend[t]
-			if (this.currentAction >= trophy.action) {
-				this.player.$emit('unlock-trophy', trophy.trophy)
+			if (trophy.action != null && this.currentAction >= trophy.action) {
+				// Pendant un jump, on ne re-notifie pas l'utilisateur (le trophy
+				// popup s'est déjà déclenché lors du premier play). La ligne dans
+				// le panneau d'actions est gérée par la boucle suivante.
+				if (!this.jumping) this.player.$emit('unlock-trophy', trophy.trophy)
 				this.trophiesToSend.splice(t, 1)
 				t--
 			}
 		}
 		for (let t = 0; t < this.trophies.length; ++t) {
 			const trophy = this.trophies[t]
-			if (this.currentAction === trophy.action) {
+			if (trophy.action != null && this.currentAction === trophy.action) {
 				this.addConsoleLine({id: 't' + t, trophy})
 			}
 		}
@@ -1985,20 +2068,20 @@ class Game {
 		this.actionToDo = true
 		this.actionDelay = delay
 	}
-	public log(action: any) {
+	public log(action: Action) {
 		if (this.logging) {
 			this.addConsoleLine({id: 'a' + this.currentAction, action})
 		}
 	}
-	public addConsoleLine(line: any) {
-		if (line.id && this.consoleLines.some(l => l.id === line.id)) return
-		this.consoleLines.push(line)
-		if (this.consoleLines.length > 80) {
-			this.consoleLines.shift()
+	public addConsoleLine(line: ConsoleLine) {
+		if (line.id) {
+			if (this.consoleLineIds.has(line.id)) return
+			this.consoleLineIds.add(line.id)
 		}
+		this.consoleLines.push(line)
 	}
 
-	public mousedown(e: MouseEvent) {
+	public mousedown(_e: MouseEvent) {
 		// console.log("game mousedown")
 		if (this.creator) {
 			if (this.groundPaint) {
@@ -2017,7 +2100,7 @@ class Game {
 		}
 	}
 
-	public mouseup(e: MouseEvent) {
+	public mouseup(_e: MouseEvent) {
 		if (this.creator) {
 			this.draggedObstacle = null
 			this.draggedEntity = null
@@ -2185,8 +2268,8 @@ class Game {
 	}
 
 	public clearMarks() {
-		this.markers = []
-		this.markersText = []
+		this.markers = {}
+		this.markersText = {}
 		if (this.paused) {
 			this.redraw()
 		}
@@ -2223,14 +2306,14 @@ class Game {
 		}
 	}
 
-	public addDrawableElement(element: any, line: number): number {
+	public addDrawableElement(element: Drawable, line: number): number {
 		// console.log("add drawable element")
 		this.drawableElementCurrentId++
 		this.drawableElements[line][this.drawableElementCurrentId] = element
 		return this.drawableElementCurrentId
 	}
 
-	public moveDrawableElement(element: any, id: number, line: number, newLine: number) {
+	public moveDrawableElement(element: Drawable, id: number, line: number, newLine: number) {
 		// console.log("move drawable element")
 		if (!this.drawableElements[newLine]) {
 			console.warn("Error moving object to line " + newLine)
@@ -2294,7 +2377,7 @@ class Game {
 
 		const init_lines = (l: number) => {
 			for (let i = 0; i < l; ++i) {
-				lines.push(new Array(l).fill(0))
+				lines.push(Array.from({length: l}, () => 0))
 			}
 			c = Math.floor(l / 2)
 		}
@@ -2440,7 +2523,7 @@ class Game {
 
 		const init_lines = (l: number) => {
 			for (let i = 0; i < l; ++i) {
-				lines.push(new Array(l).fill(0))
+				lines.push(Array.from({length: l}, () => 0))
 			}
 			c = Math.floor(l / 2)
 		}
@@ -2487,7 +2570,7 @@ class Game {
 		}
 	}
 
-	public drawEffectArea(area: any, color: string, width: number, lineAlpha: number, areaAlpha: number) {
+	public drawEffectArea(area: number[][], color: string, width: number, lineAlpha: number, areaAlpha: number) {
 
 		this.ctx.save()
 
@@ -2796,7 +2879,7 @@ class Game {
 	}
 
 	public requestJump(jumpAction: number) {
-		clearTimeout(this.reportTimer)
+		if (this.reportTimer) clearTimeout(this.reportTimer)
 		if (this.paused) {
 			this.jump(jumpAction)
 		} else {
@@ -2810,7 +2893,7 @@ class Game {
 		this.ground.field.resetCells()
 		for (const i in this.states) {
 			const leek = this.leeks[i] as Leek
-			leek.active = this.states[i].active && this.states[i].cell
+			leek.active = this.states[i].active && !!this.states[i].cell
 			leek.life = this.states[i].life
 			leek.displayLife = this.states[i].life
 			leek.maxLife = this.states[i].maxLife
@@ -2847,7 +2930,7 @@ class Game {
 					this.entityOrder.splice(index, 1)
 				}
 			} else if (this.states[i].cell) {
-				leek.setCell(this.states[i].cell)
+				leek.setCell(this.states[i].cell!)
 			}
 			// Remove drawable element
 			if (leek.drawID) {
@@ -2862,6 +2945,7 @@ class Game {
 			entity.infoText = []
 		}
 		this.consoleLines = []
+		this.consoleLineIds.clear()
 		this.effects = []
 		this.drawArea = 0
 
@@ -2881,15 +2965,23 @@ class Game {
 		this.chips = []
 
 		// Do actions
+		// On garde `logging = true` pour tout le replay : le panneau d'actions
+		// étant scrollable (fenêtre glissante côté Hud), l'utilisateur peut
+		// remonter à n'importe quelle action passée. readLogs/readTrophies
+		// s'exécutent aussi pour reconstruire l'historique complet (logs perso,
+		// trophées) mais elles court-circuitent pause()/emit() quand
+		// `this.jumping` est vrai.
 		this.jumping = true
-		this.logging = false
-		this.currentAction = 1
-		const loggingAction = Math.max(0, jumpAction - 150)
-		while (this.currentAction < loggingAction) {
-			this.doAction(this.actions[this.currentAction])
-			this.currentAction++
-		}
 		this.logging = true
+		// L'action 0 (START_FIGHT / "Tour 1") est loggée à part, jamais passée
+		// à doAction — comme dans l'init du combat (cf. this.log(actions[0])).
+		// On lit aussi ses logs : c'est là que vivent les outputs de
+		// beforeFight() (logs envoyés avant la 1ère action).
+		this.currentAction = 0
+		this.log(this.actions[0])
+		this.currentLog = 0
+		this.readLogs()
+		this.currentAction = 1
 		while (this.currentAction < jumpAction) {
 			this.doAction(this.actions[this.currentAction])
 			this.currentLog = 0
@@ -2978,7 +3070,7 @@ class Game {
 		}
 	}
 
-	public resourceLoaded(res: string) { // variable "res" utile pour débug
+	public resourceLoaded(_res: string) { // variable utile pour débug
 		this.loadedData++
 		if (this.cancelled) { return }
 		// console.log("Resource loaded : " + res + " (" + this.loadedData + "/" + this.numData + ")")

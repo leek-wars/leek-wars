@@ -26,7 +26,7 @@
 					</template>
 					<template #content>
 						<div v-autostopscroll class="content-limit">
-							<notification v-for="notification in $store.state.notifications" :key="notification.id" :notification="notification" @click.native="readNotification(notification)" />
+							<notification v-for="notification in $store.state.notifications" :key="notification.id" :notification="notification" @click="readNotification(notification)" />
 						</div>
 					</template>
 				</panel>
@@ -63,7 +63,7 @@ import { defineAsyncComponent, nextTick, ref } from 'vue'
 
 const ChatPanel = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat-panel.vue`))
 
-defineOptions({ name: 'lw-social' })
+defineOptions({ name: 'LwSocial' })
 
 const panelWidth = ref(400)
 const socialEverOpened = ref(false)
@@ -91,11 +91,11 @@ function toggleSocial() {
 function resizerMousedown(e: MouseEvent) {
 	const startWidth = panelWidth.value
 	const startX = e.clientX
-	const mousemove: any = (ev: MouseEvent) => {
+	const mousemove = (ev: MouseEvent) => {
 		panelWidth.value = Math.max(400, Math.min(800, startWidth + startX - ev.clientX))
 		localStorage.setItem('main/social-width', '' + panelWidth.value)
 	}
-	const mouseup: any = (_ev: MouseEvent) => {
+	const mouseup = (_ev: MouseEvent) => {
 		document.documentElement!.removeEventListener('mousemove', mousemove)
 		document.documentElement!.removeEventListener('mouseup', mouseup)
 	}

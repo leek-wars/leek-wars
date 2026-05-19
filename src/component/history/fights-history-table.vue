@@ -116,7 +116,9 @@
 			</template>
 
 			<template #item.duration="{ item }">
-				<span v-if="item.duration" v-html="$t('effect.n_turns', item.duration)"></span>
+				<i18n-t v-if="item.duration" keypath="effect.n_turns" :plural="item.duration">
+					<template #n><b>{{ item.duration }}</b></template>
+				</i18n-t>
 			</template>
 
 			<template #item.levelups="{ item }">
@@ -150,7 +152,7 @@ import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
 import RichTooltipFight from '@/component/rich-tooltip/rich-tooltip-fight.vue'
 
-defineOptions({ name: 'fights-history-table', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'FightsHistoryTable', i18n: {}, mixins: [...mixins] })
 
 defineProps<{
 	fights: Fight[]
@@ -161,7 +163,7 @@ const router = useRouter()
 
 const RESULT_ORDER: Record<string, number> = { win: 3, draw: 2, defeat: 1, '?': 0 }
 
-const headers = computed<any[]>(() => [
+const headers = computed<{ title: string, value: string, sortable?: boolean }[]>(() => [
 	{ title: t('type'), key: 'type', align: 'center', sortable: true, width: '60px' },
 	{ title: t('result'), key: 'result', align: 'center', sortable: true, width: '60px', sortRaw: (a: Fight, b: Fight) => (RESULT_ORDER[a.result] ?? 0) - (RESULT_ORDER[b.result] ?? 0) },
 	{ title: t('match'), key: 'match', align: 'center', sortable: false },

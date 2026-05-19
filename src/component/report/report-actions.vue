@@ -1,7 +1,7 @@
 <template>
 	<div class="fight-actions" @click="onActionClick" @auxclick="onActionClick">
 		<template v-for="(action, a) in actions" :key="a">
-			<component :is="ActionComponents[action.type]" :action="action" :a="a" :leeks="leeks" :report="report" :hasErrWarn="hasErrWarn" @goToTurn="goToTurn" />
+			<component :is="ActionComponents[action.type]" :action="action" :a="a" :leeks="leeks" :report="report" :has-err-warn="hasErrWarn" @goToTurn="goToTurn" />
 			<template v-if="displayLogs && (displayAlliesLogs || action.me) && action.logs.length">
 				<action-log v-for="(log, l) in action.logs" :key="a + 'l' + l" :log="log" :leeks="leeks" :action="(a as number)" :index="(l as number)" :lines="true" @goToAI="goToAI" />
 			</template>
@@ -12,21 +12,21 @@
 
 <script setup lang="ts">
 	import { ActionComponents as ActionComponentsTyped } from '@/model/action-components'
-	import { Fight, Report } from '@/model/fight'
+	import { Fight, Report, ReportLeek } from '@/model/fight'
 	import ActionEndFight from '../action/action-end-fight.vue'
 	import ActionLog from './report-log.vue'
 	import router from '@/router'
 	import { useRouter } from 'vue-router'
 
-	defineOptions({ name: "actions" })
+	defineOptions({ name: "Actions" })
 
-	const ActionComponents: Record<number, any> = ActionComponentsTyped
+	const ActionComponents = ActionComponentsTyped
 
 	const props = defineProps<{
 		fight: Fight
 		report: Report
-		actions: any[]
-		leeks: {[key: number]: any}
+		actions: unknown[]
+		leeks: {[key: number]: ReportLeek}
 		displayLogs: boolean
 		displayAlliesLogs: boolean
 		hasErrWarn: boolean

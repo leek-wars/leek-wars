@@ -38,7 +38,7 @@
 	"line_until_obstacle": "seluruh barisan menjadi penghalang",
 	"max_uses": "maksimum {uses} per putaran",
 	"multiplied_target": "per pukulan target",
-	"n_turns": "<b>1</b> giliran | <b>{n}</b> putaran",
+	"n_turns": "{n} giliran | {n} putaran",
 	"n_uses": "<b>1</b> penggunaan | <b>{n}</b> penggunaan",
 	"not_replaceable": "tidak tergantikan",
 	"on_n_turns": " selama {turns}",

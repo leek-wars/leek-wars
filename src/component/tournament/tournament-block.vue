@@ -3,13 +3,13 @@
 	<leek-image v-if="item && item.data" :x="x + 1" :y="y + 1" :width="size - 2" :height="size - 2" :leek="{level: item.data[0], skin: item.data[1], hat: item.data[2], weapon: item.data[3], metal: item.data[5], face: item.data[6]}" :scale="1" :invert="invert" />
 	<image v-else-if="item" :win="item.win" :width="size - 2" :height="size - 2" :x="x + 1" :y="y + 1" :xlink:href="image" />
 	<foreignObject v-if="item" :x="x" :y="y" :width="size" :height="size" style="overflow: visible">
-		<rich-tooltip-leek v-if="entityType === 'leek'" :id="entityId" :disabled="!isActive" :bottom="true" v-slot="{ props }">
+		<rich-tooltip-leek v-if="entityType === 'leek'" :id="entityId" v-slot="{ props }" :disabled="!isActive" :bottom="true">
 			<div v-bind="props" class="tooltip-target" @mouseenter="activate" @click="click" />
 		</rich-tooltip-leek>
-		<rich-tooltip-farmer v-else-if="entityType === 'farmer'" :id="entityId" :disabled="!isActive" :bottom="true" v-slot="{ props }">
+		<rich-tooltip-farmer v-else-if="entityType === 'farmer'" :id="entityId" v-slot="{ props }" :disabled="!isActive" :bottom="true">
 			<div v-bind="props" class="tooltip-target" @mouseenter="activate" @click="click" />
 		</rich-tooltip-farmer>
-		<rich-tooltip-composition v-else-if="entityType === 'team'" :id="item.id" :disabled="!isActive" :bottom="true" v-slot="{ props }">
+		<rich-tooltip-composition v-else-if="entityType === 'team'" :id="item.id" v-slot="{ props }" :disabled="!isActive" :bottom="true">
 			<div v-bind="props" class="tooltip-target" @mouseenter="activate" @click="click" />
 		</rich-tooltip-composition>
 		<div v-else class="tooltip-target" @click="click" @mouseenter="mouseenter" @mouseleave="mouseleave" />
@@ -34,13 +34,13 @@ import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
 
-defineOptions({ name: 'tournament-block' })
+defineOptions({ name: 'TournamentBlock' })
 
 // Shared across all tournament-block instances: only one tooltip at a time
 const activeBlock = ref('')
 
 const props = defineProps<{
-	item: any
+	item: Record<string, unknown>
 	x: number
 	y: number
 	size: number
@@ -49,7 +49,6 @@ const props = defineProps<{
 
 const router = useRouter()
 
-const link = computed(() => props.item && props.item.link ? props.item.link : undefined)
 const image = computed(() => (props.item && props.item.image) ? (props.item.image.indexOf('/') === 0 ? 'https://leekwars.com' + props.item.image : props.item.image) : '')
 const avatarSize = computed(() => Math.round(props.size * 0.4))
 const farmerAvatar = computed(() => {

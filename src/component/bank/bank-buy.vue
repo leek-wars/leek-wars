@@ -59,19 +59,22 @@ import { useRoute, useRouter } from 'vue-router'
 import { LeekWars } from '@/model/leekwars'
 import { loadScript } from '@paypal/paypal-js'
 import { mixins, useNamespacedT } from '@/model/i18n'
+import { cspNonce } from '@/component/editor/monaco-csp'
 import BankProduct from './bank-product.vue'
 import Breadcrumb from '@/component/forum/breadcrumb.vue'
 import { store } from '@/model/store'
 
-defineOptions({ name: 'bank', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'Bank', i18n: {}, mixins: [...mixins] })
 
 const t = useNamespacedT('bank')
 const route = useRoute()
 const router = useRouter()
 
+interface Pack { id: number; crystals: number; bonus: number; prices: Record<string, number> }
+
 const pack = ref(0)
 const offer = ref(0)
-const product = ref<any>(null)
+const product = ref<Pack | null>(null)
 const loading = ref(false)
 const firstPurchase = ref(false)
 
@@ -86,7 +89,8 @@ const breadcrumb_items = computed(() => {
 function loadPayPal() {
 	loadScript({
 		'client-id': (LeekWars.LOCAL || store.state.farmer?.id === 1) ? 'Acg3b4FoxUp3vXX-G4aQ01vc5rkev2DIio8e2_ApB7OVIVHocmuXu7RJcN5zZTHGCOpqf-a-ukdIELDy' : 'AesWr04mqzJrZlvdiR99GWBSnvWya49kuhJm84d3bgg7Afq-Ekh7PbunWFL6UOFXdQFw0TGmwr_vzS74',
-		currency: LeekWars.currency
+		currency: LeekWars.currency,
+		'data-csp-nonce': cspNonce
 	}).then((paypal) => {
 		paypal!.Buttons!({
 			style: { layout: 'vertical', color: LeekWars.dark > 0 ? 'black' : 'blue', shape: 'rect', label: 'paypal', tagline: false },
@@ -97,7 +101,7 @@ function loadPayPal() {
 				return LeekWars.post('bank/execute-paypal-payment', { order_id: data.orderID }).then(d => {
 					store.commit('update-crystals', d.crystals)
 					router.replace('/bank/validate/success/' + d.crystals)
-				}).catch((err: any) => {
+				}).catch((err) => {
 					router.replace('/bank/validate/failed/' + err.error)
 				})
 			}

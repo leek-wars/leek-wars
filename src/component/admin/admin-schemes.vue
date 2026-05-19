@@ -85,7 +85,7 @@
 
 	defineOptions({})
 
-	const ITEM_CATEGORY_NAME: Record<number, any> = ITEM_CATEGORY_NAME_TYPED
+	const ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME_TYPED
 
 	const router = useRouter()
 	const schemes = ref<SchemeTemplate[] | null>(null)
@@ -97,7 +97,7 @@
 		schemes.value = Object.values(s)
 			.sort((a, b) => LeekWars.items[a.result].price! - LeekWars.items[b.result].price!)
 			.map(sc => {
-				const items = [...sc.items] as any
+				const items = [...sc.items] as ([number | string, number | string] | null)[]
 				for (let i = 0; i < 9; ++i) { if (!items[i]) items[i] = ['', ''] }
 				return { ...sc, items }
 			})
@@ -111,8 +111,8 @@
 	})
 
 	function copyCode(scheme: SchemeTemplate) {
-		const slots = scheme.items.map(i => i && i[0] ? `[${parseInt(i[0] as any)}, ${parseInt(i[1] as any)}]` : 'null').join(', ')
-		const comment = (scheme as any).comment ?? ''
+		const slots = scheme.items.map(i => i && i[0] ? `[${parseInt(String(i[0]))}, ${parseInt(String(i[1]))}]` : 'null').join(', ')
+		const comment = (scheme as unknown as { comment?: string }).comment ?? ''
 		const snippet = `${scheme.id} => ['result' => ${scheme.result}, 'items' => [${slots}], 'comment' => '${comment}', 'quantity' => ${scheme.quantity}],`
 		navigator.clipboard.writeText(snippet)
 		LeekWars.toast("Snippet copié — à coller dans SchemeTemplateRegistry")

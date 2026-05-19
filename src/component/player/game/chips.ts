@@ -5,7 +5,7 @@ import { T, Texture } from '@/component/player/game/texture'
 import { Area } from '@/model/area'
 import { Cell } from '@/model/cell'
 import { Position } from './position'
-import { State } from '@/model/effect'
+import { Effect, EffectTarget, State } from '@/model/effect'
 
 abstract class ChipAnimation {
 	public game: Game
@@ -18,6 +18,10 @@ abstract class ChipAnimation {
 	public launchPos!: Position
 	public position!: Position
 	public launcher!: FightEntity | undefined
+	// Effects de la chip template, posé par game.ts avant launch().
+	// Utilisé pour filtrer les visuels (createChipImage/Aureol) selon le
+	// bitmask Effect.targets (#3127).
+	public effects: Effect[] | undefined
 	// Type de dégât
 	public damageType: DamageType
 
@@ -113,6 +117,34 @@ abstract class ChipAnimation {
 			this.createChipNovaEntity(target)
 		}
 	}
+	// Filtre les cibles d'une AoE pour ne garder que celles qui reçoivent
+	// effectivement au moins un effet de la puce (issue #3127). Fallback safe :
+	// si effects absent, retourne tout (pas de régression visuelle).
+	public recipientsOf(launcher: FightEntity | undefined, targets: FightEntity[]): FightEntity[] {
+		if (!launcher || !this.effects || this.effects.length === 0) return targets
+		const effects = this.effects
+		return targets.filter(target => effects.some(e => recipientMatches(e, launcher, target)))
+	}
+}
+
+function recipientMatches(effect: Effect, launcher: FightEntity, target: FightEntity): boolean {
+	const mask = effect.targets
+	if (!mask) return true
+	const isCaster = target.id === launcher.id
+	const isAlly = !isCaster && target.team === launcher.team
+	const isEnemy = !isCaster && target.team !== launcher.team
+	const sideOk =
+		(isCaster && (mask & EffectTarget.CASTER) !== 0) ||
+		(isAlly   && (mask & EffectTarget.ALLIES) !== 0) ||
+		(isEnemy  && (mask & EffectTarget.ENEMIES) !== 0)
+	if (!sideOk) return false
+	// Filtre summon/non-summon : appliqué seulement si l'un des deux bits
+	// est posé ; sinon le side filter ci-dessus décide seul.
+	const summonRestriction = (mask & (EffectTarget.SUMMONS | EffectTarget.NON_SUMMONS)) !== 0
+	if (!summonRestriction) return true
+	if (target.summon  && (mask & EffectTarget.SUMMONS) !== 0) return true
+	if (!target.summon && (mask & EffectTarget.NON_SUMMONS) !== 0) return true
+	return false
 }
 
 class Summon extends ChipAnimation {
@@ -170,10 +202,11 @@ class ChipShieldAnimation extends ChipAnimation {
 		this.texture = texture
 		this.area = area
 	}
-	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
-		super.launch(launchCell, targetPos, targets, targetCell)
-		this.createChipAureol(targets, T.shield_aureol)
-		this.createChipImage(targets, this.texture)
+	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchCell, targetPos, targets, targetCell, launcher)
+		const recipients = this.recipientsOf(launcher, targets)
+		this.createChipAureol(recipients, T.shield_aureol)
+		this.createChipImage(recipients, this.texture)
 		if (this.area !== Area.SINGLE_CELL) {
 			this.game.setEffectArea(targetCell, this.area, 'orange')
 		}
@@ -184,15 +217,17 @@ class ChipBoostAnimation extends ChipAnimation {
 	public texture: Texture
 	public delay: number = 2
 	public area: Area
-	constructor(game: Game, texture: any, area: Area = Area.SINGLE_CELL) {
+	constructor(game: Game, texture: Texture, area: Area = Area.SINGLE_CELL) {
 		super(game, S.buff, 60, DamageType.DEFAULT)
 		this.texture = texture
 		this.area = area
 	}
-	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
-		super.launch(launchCell, targetPos, targets, targetCell)
-		this.createChipAureol(targets, T.buff_aureol)
-		this.createChipImage(targets, this.texture)
+	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchCell, targetPos, targets, targetCell, launcher)
+		const recipients = this.recipientsOf(launcher, targets)
+		this.targets = recipients
+		this.createChipAureol(recipients, T.buff_aureol)
+		this.createChipImage(recipients, this.texture)
 		if (this.area !== Area.SINGLE_CELL) {
 			this.game.setEffectArea(targetCell, this.area, 'blue')
 		}
@@ -213,15 +248,17 @@ class ChipHealAnimation extends ChipAnimation {
 	public texture: Texture
 	public delay: number = 2
 	public area: Area
-	constructor(game: Game, texture: any, area: Area = Area.SINGLE_CELL) {
+	constructor(game: Game, texture: Texture, area: Area = Area.SINGLE_CELL) {
 		super(game, S.heal, 45, DamageType.DEFAULT)
 		this.texture = texture
 		this.area = area
 	}
-	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
-		super.launch(launchCell, targetPos, targets, targetCell)
-		this.createChipAureol(targets, T.cure_aureol)
-		this.createChipImage(targets, this.texture)
+	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchCell, targetPos, targets, targetCell, launcher)
+		const recipients = this.recipientsOf(launcher, targets)
+		this.targets = recipients
+		this.createChipAureol(recipients, T.cure_aureol)
+		this.createChipImage(recipients, this.texture)
 		if (this.area !== Area.SINGLE_CELL) {
 			this.game.setEffectArea(targetCell, this.area, 'green')
 		}
@@ -242,15 +279,17 @@ class ChipNovaVitalityAnimation extends ChipAnimation {
 	public texture: Texture
 	public delay: number = 2
 	public area: Area
-	constructor(game: Game, texture: any, area: Area = Area.SINGLE_CELL) {
+	constructor(game: Game, texture: Texture, area: Area = Area.SINGLE_CELL) {
 		super(game, S.alteration, 45, DamageType.DEFAULT)
 		this.texture = texture
 		this.area = area
 	}
-	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
-		super.launch(launchCell, targetPos, targets, targetCell)
-		this.createChipAureol(targets, T.nova_aureol)
-		this.createChipImage(targets, this.texture)
+	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchCell, targetPos, targets, targetCell, launcher)
+		const recipients = this.recipientsOf(launcher, targets)
+		this.targets = recipients
+		this.createChipAureol(recipients, T.nova_aureol)
+		this.createChipImage(recipients, this.texture)
 		if (this.area !== Area.SINGLE_CELL) {
 			this.game.setEffectArea(targetCell, this.area, '#26ffba')
 		}
@@ -270,15 +309,16 @@ class ChipNovaVitalityAnimation extends ChipAnimation {
 class ChipDebuffAnimation extends ChipAnimation {
 	public texture: Texture
 	public area: Area
-	constructor(game: Game, texture: any, area: Area = Area.SINGLE_CELL) {
+	constructor(game: Game, texture: Texture, area: Area = Area.SINGLE_CELL) {
 		super(game, S.debuff, 60, DamageType.DEFAULT)
 		this.texture = texture
 		this.area = area
 	}
-	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
-		super.launch(launchCell, targetPos, targets, targetCell)
-		this.createChipAureol(targets, T.shackle_aureol)
-		this.createChipImage(targets, this.texture)
+	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchCell, targetPos, targets, targetCell, launcher)
+		const recipients = this.recipientsOf(launcher, targets)
+		this.createChipAureol(recipients, T.shackle_aureol)
+		this.createChipImage(recipients, this.texture)
 		if (this.area !== Area.SINGLE_CELL) {
 			this.game.setEffectArea(targetCell, this.area, '#9f00ef')
 		}
@@ -288,15 +328,16 @@ class ChipDebuffAnimation extends ChipAnimation {
 class ChipPoisonAnimation extends ChipAnimation {
 	public texture: Texture
 	public area: Area
-	constructor(game: Game, texture: any, area: Area = Area.SINGLE_CELL) {
+	constructor(game: Game, texture: Texture, area: Area = Area.SINGLE_CELL) {
 		super(game, S.poison, 60, DamageType.DEFAULT)
 		this.texture = texture
 		this.area = area
 	}
-	public launch(launchCell: Cell, targetPos: Cell, targets: FightEntity[], targetCell: Cell) {
-		super.launch(launchCell, targetPos, targets, targetCell)
-		this.createChipAureol(targets, T.poison_aureol)
-		this.createChipImage(targets, this.texture)
+	public launch(launchCell: Cell, targetPos: Cell, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchCell, targetPos, targets, targetCell, launcher)
+		const recipients = this.recipientsOf(launcher, targets)
+		this.createChipAureol(recipients, T.poison_aureol)
+		this.createChipImage(recipients, this.texture)
 		if (this.area !== Area.SINGLE_CELL) {
 			this.game.setEffectArea(targetCell, this.area, '#ea5ef9')
 		}
@@ -306,15 +347,16 @@ class ChipPoisonAnimation extends ChipAnimation {
 class ChipDamageReturnAnimation extends ChipAnimation {
 	public texture: Texture
 	public area: Area
-	constructor(game: Game, texture: any, area: Area = Area.SINGLE_CELL) {
+	constructor(game: Game, texture: Texture, area: Area = Area.SINGLE_CELL) {
 		super(game, S.buff, 60, DamageType.DEFAULT)
 		this.texture = texture
 		this.area = area
 	}
-	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
-		super.launch(launchCell, targetPos, targets, targetCell)
-		this.createChipAureol(targets, T.damage_return_aureol)
-		this.createChipImage(targets, this.texture)
+	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchCell, targetPos, targets, targetCell, launcher)
+		const recipients = this.recipientsOf(launcher, targets)
+		this.createChipAureol(recipients, T.damage_return_aureol)
+		this.createChipImage(recipients, this.texture)
 		if (this.area !== Area.SINGLE_CELL) {
 			this.game.setEffectArea(targetCell, this.area, Colors.AGILITY_COLOR)
 		}
@@ -504,7 +546,7 @@ class Inversion extends ChipAnimation {
 	static sounds = [S.teleportation]
 
 	public inverted = false
-	public target: any
+	public target: FightEntity | null = null
 
 	constructor(game: Game) {
 		super(game, S.teleportation, 120, DamageType.DEFAULT)
@@ -538,8 +580,8 @@ class Inversion extends ChipAnimation {
 			this.game.particles.addRectangle(x2, y2, z, dx, dy, dz, angle, sx, sy, dsx, dsy, color, alpha, life)
 		}
 		if (!this.inverted && this.duration < 40 && this.launcher && this.target && !this.target.states.has(State.STATIC)) {
-			const cell = this.launcher.cell
-			this.launcher.setCell(this.target.cell)
+			const cell = this.launcher.cell!
+			this.launcher.setCell(this.target.cell!)
 			this.target.setCell(cell)
 			this.game.updateReachableCells()
 			this.inverted = true
@@ -552,7 +594,7 @@ class Repotting extends ChipAnimation {
 	static sounds = [S.teleportation]
 
 	public inverted = false
-	public target: any
+	public target: FightEntity | null = null
 
 	constructor(game: Game) {
 		super(game, S.teleportation, 120, DamageType.DEFAULT)
@@ -586,8 +628,8 @@ class Repotting extends ChipAnimation {
 			this.game.particles.addRectangle(x2, y2, z, dx, dy, dz, angle, sx, sy, dsx, dsy, color, alpha, life)
 		}
 		if (!this.inverted && this.duration < 40 && this.launcher && this.target) {
-			const cell = this.launcher.cell
-			this.launcher.setCell(this.target.cell)
+			const cell = this.launcher.cell!
+			this.launcher.setCell(this.target.cell!)
 			this.target.setCell(cell)
 			this.game.updateReachableCells()
 			this.inverted = true
@@ -630,9 +672,9 @@ class Lightning extends ChipAnimation {
 	constructor(game: Game) {
 		super(game, S.lightning, 80, DamageType.EXPLOSION)
 	}
-	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell) {
-		super.launch(launchPos, position, targets, targetCell)
-		this.targets = targets
+	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchPos, position, targets, targetCell, launcher)
+		this.targets = this.recipientsOf(launcher, targets)
 		this.game.particles.addImage(this.position.x - 50, this.position.y, 230, 0.5, 0, 0, 0, T.black_cloud, 90)
 		this.game.particles.addImage(this.position.x + 50, this.position.y, 230, -0.5, 0, 0, 0, T.black_cloud, 90)
 		this.game.particles.addImage(this.position.x + 10, this.position.y, 240, 0.2, 0, 0, 0, T.black_cloud, 90)
@@ -865,7 +907,7 @@ class Teleportation extends ChipAnimation {
 	static sounds = [S.teleportation]
 
 	public teleported = false
-	public targetPos: any
+	public targetPos!: Position
 	public target!: FightEntity
 	constructor(game: Game) {
 		super(game, S.teleportation, 140, DamageType.DEFAULT)
@@ -1064,13 +1106,13 @@ class Knowledge extends ChipBoostAnimation {
 class Burning extends ChipAnimation {
 	static textures = [T.chip_burning, T.fire]
 	static sounds = [S.fire]
-	fires = [] as any[]
+	fires: Array<{x: number, y: number}> = []
 
 	constructor(game: Game) { super(game, S.fire, 60, DamageType.FIRE) }
 
-	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
-		super.launch(launchPos, targetPos, targets, targetCell)
-		this.createChipImage(targets, T.chip_burning)
+	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchPos, targetPos, targets, targetCell, launcher)
+		this.createChipImage(this.recipientsOf(launcher, targets), T.chip_burning)
 		this.game.setEffectArea(targetCell, Area.CIRCLE3, 'red')
 
 		const area = 220
@@ -1160,7 +1202,6 @@ class Punishment extends ChipAnimation {
 
 class StealChipAnimation extends ChipAnimation {
 	delta: number = 0
-	caster!: FightEntity
 	spinningTexture!: Texture
 	halo: (entity: FightEntity) => void;
 	constructor(game: Game, sound: Sound, spinningTexture: Texture, halo: (entity: FightEntity) => void) {
@@ -1169,15 +1210,15 @@ class StealChipAnimation extends ChipAnimation {
 		this.halo = halo
 	}
 	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, caster: FightEntity) {
-		super.launch(launchPos, position, targets, targetCell)
-		this.caster = caster
+		super.launch(launchPos, position, targets, targetCell, caster)
+		this.targets = this.recipientsOf(caster, targets)
 	}
 	public update(dt: number) {
 		super.update(dt)
 		this.delta += dt
 		if (this.delta > 3 && this.duration > 60) {
 			for (const target of this.targets!) {
-				if (target === this.caster) {
+				if (target === this.launcher) {
 					this.halo(target)
 				} else {
 					this.game.particles.addSpinningParticle(target.ox, target.oy, Math.PI / 2, this.spinningTexture)
@@ -1311,7 +1352,7 @@ class Jump extends ChipAnimation {
 	static sounds = []
 
 	public teleported = false
-	public targetPos: any
+	public targetPos!: Position
 	public target!: FightEntity
 
 	constructor(game: Game) {

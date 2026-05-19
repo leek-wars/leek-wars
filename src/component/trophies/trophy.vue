@@ -39,10 +39,12 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: 'trophy' })
+defineOptions({ name: 'Trophy' })
 
+import { LeekWars } from '@/model/leekwars'
+type TrophyData = (typeof LeekWars.trophies)[number]
 defineProps<{
-	trophy: any
+	trophy: TrophyData
 }>()
 </script>
 

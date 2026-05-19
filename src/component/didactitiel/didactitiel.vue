@@ -1,5 +1,5 @@
 <template>
-	<popup :modelValue="modelValue" :width="800" :full="true" :title="$t('title')" persistent @update:model-value="input">
+	<popup :model-value="modelValue" :width="800" :full="true" :title="$t('title')" persistent @update:model-value="input">
 		<template #icon>
 			<v-icon>mdi-human-greeting</v-icon>
 		</template>
@@ -128,7 +128,7 @@ import { mixins } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 
-defineOptions({ name: 'didactitiel', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'Didactitiel', i18n: {}, mixins: [...mixins] })
 
 defineProps<{
 	modelValue?: boolean
@@ -152,7 +152,7 @@ function updateHeight() {
 	}, 50)
 }
 
-function input(event: any) {
+function input(event: Event) {
 	emit('update:modelValue', event)
 	updateHeight()
 }

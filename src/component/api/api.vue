@@ -21,7 +21,7 @@
 				</router-link> -->
 				<div class="tab disabled search" icon="search" link="/search">
 					<img class="search-icon" src="/image/search.png">
-					<input v-model="query" ref="search" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+					<input ref="search" v-model="query" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
 				</div>
 				<!-- <div class="tab action" icon="search" link="/search" @click="toggleLarge">
 					<v-icon v-if="LeekWars.large">mdi-fullscreen-exit</v-icon>
@@ -45,7 +45,7 @@
 									<v-icon v-else>mdi-chevron-down</v-icon>
 								</h2>
 								<div v-if="query.length || categoryState[c]">
-									<div v-for="(item, i) in category" :key="i" @click="navigate(item.module + '/' + item.function)" :item="item.name" class="item">
+									<div v-for="(item, i) in category" :key="i" :item="item.name" class="item" @click="navigate(item.module + '/' + item.function)">
 										<span class="method chip" :class="item.method">{{ item.method }}</span>
 										{{ item.function }}
 									</div>
@@ -114,19 +114,34 @@ import { useRoute, useRouter } from 'vue-router'
 import { mixins , useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import Breadcrumb from '../forum/breadcrumb.vue'
-// @ts-ignore - no types for vue-json-viewer
+// @ts-expect-error - no types for vue-json-viewer
 import JsonViewer from 'vue-json-viewer'
 import Markdown from '@/component/encyclopedia/markdown.vue'
 import { emitter } from '@/model/vue'
 
-defineOptions({ name: 'api', i18n: {}, mixins: [...mixins], components: { JsonViewer } })
+defineOptions({ name: 'Api', i18n: {}, mixins: [...mixins], components: { JsonViewer } })
 
 const t = useNamespacedT('api')
 const route = useRoute()
 const router = useRouter()
 
-const services = ref<any[]>([])
-const categories = ref<any>({})
+interface ApiService {
+	name: string
+	module: string
+	function: string
+	method: string
+	auth: boolean
+	parameters: string[]
+	parameters_types: string[]
+	returns: string[]
+	returns_types: string[]
+	example?: string
+	example_url?: string
+	deprecated?: boolean
+}
+
+const services = ref<ApiService[]>([])
+const categories = ref<Record<string, ApiService[]>>({})
 const query = ref('')
 const categoryState = ref<{[key: string]: boolean}>({})
 const search = useTemplateRef<HTMLElement>('search')
@@ -187,19 +202,19 @@ const lower_query = computed(() => query.value.toLowerCase())
 
 const filteredItems = computed(() => {
 	if (lower_query.value.length) {
-		return services.value.filter((item: any) =>
+		return services.value.filter((item) =>
 			item.function!.indexOf(lower_query.value) !== -1
 			|| item.module!.indexOf(lower_query.value) !== -1
 			|| (item.module + '/' + item.function).indexOf(lower_query.value) !== -1
-			|| item.returns.some((r: any) => r.indexOf(lower_query.value) !== -1)
-			|| item.parameters.some((r: any) => r.indexOf(lower_query.value) !== -1)
+			|| item.returns.some((r) => r.indexOf(lower_query.value) !== -1)
+			|| item.parameters.some((r) => r.indexOf(lower_query.value) !== -1)
 		)
 	}
 	return services.value
 })
 
 const filteredCategories = computed(() => {
-	const cats: {[key: string]: any} = {}
+	const cats: Record<string, ApiService[]> = {}
 	for (const item of filteredItems.value) {
 		if (item.deprecated) continue
 		if (!(item.module in cats)) cats[item.module] = []
@@ -208,7 +223,7 @@ const filteredCategories = computed(() => {
 	return cats
 })
 
-LeekWars.get('service/get-all').then(servicesData => {
+LeekWars.get<ApiService[]>('service/get-all').then(servicesData => {
 	services.value = servicesData
 	for (const service of servicesData) {
 		if (service.example) service.example = JSON.parse(service.example)
@@ -236,12 +251,12 @@ function update() {
 watch(() => route.params, update)
 
 function selectItem(item: string) {
-	if (!filteredItems.value.find((it: any) => it.name === item)) {
+	if (!filteredItems.value.find((it) => it.name === item)) {
 		query.value = ''
 	}
 	nextTick(() => {
 		setTimeout(() => {
-			const element: any = document.querySelector('.items .service[item=' + item + ']')
+			const element = document.querySelector('.items .service[item=' + item + ']') as HTMLElement | null
 			if (element && elements.value) {
 				const offset = LeekWars.mobile ? 100 : 140
 				elements.value.scrollTo(0, element.offsetTop - offset + 10)

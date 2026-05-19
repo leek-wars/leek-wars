@@ -34,5 +34,8 @@
 	"windows_warning_char": "Il carattere \"{0}\" non è consentito su Windows, questo nome potrebbe causare problemi con git.",
 	"windows_warning_reserved": "\"{0}\" è un nome riservato su Windows, questo nome potrebbe causare problemi con git.",
 	"destroy_folder": "Distruggere la cartella \"{0}\" definitivamente?",
-	"destroy_folder_warning": "La cartella e tutte le IA che contiene verranno eliminate definitivamente. Questa azione è irreversibile."
+	"destroy_folder_warning": "La cartella e tutte le IA che contiene verranno eliminate definitivamente. Questa azione è irreversibile.",
+	"init_git": "Inizializzare un repository Git",
+	"deinit_git": "Rimuovere il repository Git",
+	"deinit_git_confirm": "Rimuovere il repository Git dalla cartella \"{0}\"? La cronologia dei commit andrà persa."
 }

@@ -38,7 +38,7 @@
 	"line_until_obstacle": "पूरी लाइन एक बाधा तक",
 	"max_uses": "प्रति मोड़ अधिकतम {uses}",
 	"multiplied_target": "प्रति लक्ष्य हिट",
-	"n_turns": "<b>1</b> बारी | <b>{n}</b> राउंड",
+	"n_turns": "{n} बारी | {n} राउंड",
 	"n_uses": "<b>1</b> उपयोग | <b>{n}</b> उपयोग",
 	"not_replaceable": "बदली नहीं",
 	"on_n_turns": " {turns} के दौरान",

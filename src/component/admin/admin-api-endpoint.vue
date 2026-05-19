@@ -113,7 +113,16 @@
 
 	const periodHours = ref(24)
 	const loading = ref(false)
-	const data = ref<any>(null)
+	interface ApiEndpointData {
+		summary: { count: number; farmers: number; errors: number; avg_ms: number; p50_ms: number; p95_ms: number; p99_ms: number; max_ms: number }
+		timeline: { bucket: string; count: number; avg_ms: number; p95_ms: number; errors?: number }[]
+		bucket_ms: number
+		histogram: { bucket_label: string; count: number }[]
+		top_farmers: { farmer_id: number; farmer_name: string; count: number; last_seen: number }[]
+		status_distribution: { http_status: number; count: number }[]
+		security_count: number
+	}
+	const data = ref<ApiEndpointData | null>(null)
 
 	const crumb = computed(() => [
 		{ name: 'Administration', link: '/admin' },
@@ -134,8 +143,8 @@
 			module: moduleName.value,
 			function: fnName.value,
 			period_hours: periodHours.value,
-		}).then((res: any) => {
-			data.value = res
+		}).then((res) => {
+			data.value = res as ApiEndpointData
 			loading.value = false
 		}).catch(() => {
 			loading.value = false
@@ -144,13 +153,13 @@
 
 	const timelineChart = computed<ChartData<'line'> | null>(() => {
 		if (!data.value) return null
-		const labels = data.value.timeline.map((p: any) => formatBucket(p.bucket, data.value.bucket_ms))
+		const labels = data.value.timeline.map((p) => formatBucket(p.bucket, data.value!.bucket_ms))
 		return {
 			labels,
 			datasets: [
 				{
 					label: 'Requêtes',
-					data: data.value.timeline.map((p: any) => p.count),
+					data: data.value.timeline.map((p) => p.count),
 					borderColor: '#2196f3',
 					backgroundColor: 'rgba(33,150,243,0.15)',
 					yAxisID: 'y',
@@ -160,7 +169,7 @@
 				},
 				{
 					label: 'Moy. (ms)',
-					data: data.value.timeline.map((p: any) => p.avg_ms),
+					data: data.value.timeline.map((p) => p.avg_ms),
 					borderColor: '#ff9800',
 					yAxisID: 'y1',
 					tension: 0.25,
@@ -168,7 +177,7 @@
 				},
 				{
 					label: 'p95 (ms)',
-					data: data.value.timeline.map((p: any) => p.p95_ms),
+					data: data.value.timeline.map((p) => p.p95_ms),
 					borderColor: '#9c27b0',
 					yAxisID: 'y1',
 					tension: 0.25,
@@ -176,7 +185,7 @@
 				},
 				{
 					label: 'Erreurs',
-					data: data.value.timeline.map((p: any) => p.errors ?? 0),
+					data: data.value.timeline.map((p) => p.errors ?? 0),
 					borderColor: '#e53935',
 					yAxisID: 'y',
 					tension: 0.25,
@@ -201,10 +210,10 @@
 	const histogramChart = computed<ChartData<'bar'> | null>(() => {
 		if (!data.value || !data.value.histogram.length) return null
 		return {
-			labels: data.value.histogram.map((b: any) => b.bucket_label),
+			labels: data.value.histogram.map((b) => b.bucket_label),
 			datasets: [{
 				label: 'Requêtes',
-				data: data.value.histogram.map((b: any) => b.count),
+				data: data.value.histogram.map((b) => b.count),
 				backgroundColor: '#2196f3',
 			}],
 		}

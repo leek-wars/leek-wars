@@ -22,7 +22,7 @@
 				</router-link>
 				<div class="tab disabled search" icon="search" link="/search">
 					<img class="search-icon" src="/image/search.png">
-					<input v-model="query" ref="search" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+					<input ref="search" v-model="query" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
 				</div>
 				<div v-if="!popup" class="tab action" icon="search" link="/search" @click="toggleLarge">
 					<v-icon v-if="LeekWars.large">mdi-fullscreen-exit</v-icon>
@@ -43,8 +43,8 @@
 									<v-icon v-else>mdi-chevron-down</v-icon>
 								</h2>
 								<div v-if="query.length || categoryState[c]">
-									<div v-for="(item, i) in category" :key="i" @click="navigate(item.name)" :item="item.name" class="item">
-										{{ item.name }}<span class="arguments" v-if="item.arguments_types">(<span v-for="(arg, i) in item.arguments_names" :key="i"><span v-if="item.optional[i]">[</span><span class="argument">{{ $t('doc.arg_type_' + item.arguments_types[i]) }}</span>&nbsp;{{ arg }}<span v-if="item.optional[i]">]</span><span v-if="Number(i) < item.arguments_names.length - 1">, </span></span>)
+									<div v-for="(item, i) in category" :key="i" :item="item.name" class="item" @click="navigate(item.name)">
+										{{ item.name }}<span v-if="item.arguments_types" class="arguments">(<span v-for="(arg, i) in item.arguments_names" :key="i"><span v-if="item.optional[i]">[</span><span class="argument">{{ $t('doc.arg_type_' + item.arguments_types[i]) }}</span>&nbsp;{{ arg }}<span v-if="item.optional[i]">]</span><span v-if="Number(i) < item.arguments_names.length - 1">, </span></span>)
 										<span v-if="item.return_type != 0">
 											<span class="arrow">→</span> <span class="argument"> {{ $t('doc.arg_type_' + item.return_type) }}</span>&nbsp;{{ item.return_name }}
 										</span></span>
@@ -85,7 +85,7 @@
 	import DocumentationFunction from './documentation-function.vue'
 	import { emitter } from '@/model/vue'
 
-	defineOptions({ name: 'documentation', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'Documentation', i18n: {}, mixins: [...mixins] })
 
 	const props = defineProps<{ popup?: boolean }>()
 	const { locale: i18nLocale } = useI18n()
@@ -93,8 +93,8 @@
 	const route = useRoute()
 	const router = useRouter()
 
-	const categories: Record<string | number, any> = FUNCTION_CATEGORIES
-	const items = ref<any[]>([])
+	const categories: Record<string | number, { id: number; name: string }> = FUNCTION_CATEGORIES
+	const items = ref<(LSFunction | Constant)[]>([])
 	const query = ref('')
 	const lazy_start = ref(0)
 	const lazy_end = ref(10)
@@ -137,7 +137,7 @@
 	})
 	const lazy_items = computed(() => filteredItems.value.slice(lazy_start.value, lazy_end.value))
 	const filteredCategories = computed(() => {
-		const cats: {[key: number]: any} = {}
+		const cats: {[key: number]: (LSFunction | Constant)[]} = {}
 		for (const item of filteredItems.value) {
 			if (item.deprecated) continue
 			if (!(item.category in cats)) cats[item.category] = []
@@ -157,12 +157,12 @@
 			categoryState.value[category] = localStorage.getItem('documentation/category-' + category) === 'true'
 		}
 		let id = 0
-		for (const item of FUNCTIONS as any[]) {
+		for (const item of FUNCTIONS as LSFunction[]) {
 			if (item.replacement) {
 				FUNCTION_BY_ID[item.replacement].replacer = item
 			}
 		}
-		for (const item of FUNCTIONS as any[]) {
+		for (const item of FUNCTIONS as LSFunction[]) {
 			items.value.push(item)
 			item.lower_name = item.name.toLowerCase()
 			item.id = id++
@@ -180,11 +180,11 @@
 					}
 					item.data = new_data.toLowerCase()
 				} else {
-					let item_data = (t('doc.func_' + item.name) as any).toLowerCase()
+					let item_data = String(t('doc.func_' + item.name)).toLowerCase()
 					for (const i in item.arguments_names) {
-						item_data += (t('doc.func_' + item.name + '_arg_' + (parseInt(i, 10) + 1)) as any).toLowerCase()
+						item_data += String(t('doc.func_' + item.name + '_arg_' + (parseInt(i, 10) + 1))).toLowerCase()
 					}
-					item_data += (t('doc.func_' + item.name + '_return') as any).toLowerCase()
+					item_data += String(t('doc.func_' + item.name + '_return')).toLowerCase()
 					item.data = item_data
 				}
 				if (item.replacer) {
@@ -269,7 +269,7 @@
 				lazy_end.value = lazy_start.value + 10
 			}
 			setTimeout(() => {
-				const element: any = document.querySelector('.items .item[item=' + item + ']')
+				const element = document.querySelector<HTMLElement>('.items .item[item=' + item + ']')
 				if (element && elements.value) {
 					const offset = LeekWars.mobile ? 100 : (props.popup ? 185 : 140)
 					elements.value.scrollTo(0, element.offsetTop - offset + 10)

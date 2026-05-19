@@ -31,15 +31,15 @@ import { LeekWars } from '@/model/leekwars'
 import { Line } from 'vue-chartjs'
 import { mixins, useNamespacedT } from '@/model/i18n'
 
-defineOptions({ name: 'talent', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'Talent', i18n: {}, mixins: [...mixins] })
 
 const t = useNamespacedT('talent')
 
-const leekData = ref<any>(null)
-const leekOptions = ref<any>(null)
+const leekData = ref<Record<string, unknown> | null>(null)
+const leekOptions = ref<Record<string, unknown> | null>(null)
 const leekMax = ref(0)
-const farmerData = ref<any>(null)
-const farmerOptions = ref<any>(null)
+const farmerData = ref<Record<string, unknown> | null>(null)
+const farmerOptions = ref<Record<string, unknown> | null>(null)
 const farmerMax = ref(0)
 
 LeekWars.setTitle('Talent')
@@ -64,14 +64,14 @@ LeekWars.get('talent/farmer').then(talents => {
 			legend: { display: false },
 			tooltip: {
 				callbacks: {
-					title: (items: any) => t('main.level_n', [items[0].label]),
+					title: (items: { label: string }[]) => t('main.level_n', [items[0].label]),
 				}
 			}
 		},
 		scales: {
 			x: {
 				ticks: {
-					callback: (_value: any, index: any) => index % 25 === 0 ? 50 + index : null,
+					callback: (_value: unknown, index: number) => index % 25 === 0 ? 50 + index : null,
 					maxRotation: 0,
 				},
 				grid: { color: 'rgba(128,128,128,0.15)' },
@@ -104,14 +104,14 @@ LeekWars.get('talent/leek').then(talents => {
 			legend: { display: false },
 			tooltip: {
 				callbacks: {
-					title: (items: any) => t('main.level_n', [items[0].label]),
+					title: (items: { label: string }[]) => t('main.level_n', [items[0].label]),
 				}
 			}
 		},
 		scales: {
 			x: {
 				ticks: {
-					callback: (_value: any, index: any) => index === 0 ? 1 : (index % 10 === 0 ? index + 1 : null),
+					callback: (_value: unknown, index: number) => index === 0 ? 1 : (index % 10 === 0 ? index + 1 : null),
 					maxRotation: 0,
 				},
 				grid: { color: 'rgba(128,128,128,0.15)' },

@@ -8,21 +8,41 @@
 			<div v-else>
 				<h4>Supprimer un compte par email</h4>
 				<div class="delete-account">
-					<input type="email" placeholder="Email du compte à supprimer" v-model="deleteEmail">
-					<v-btn @click="searchAccount" :disabled="!deleteEmail">Rechercher</v-btn>
+					<input v-model="deleteEmail" type="email" placeholder="Email du compte à supprimer">
+					<v-btn :disabled="!deleteEmail" @click="searchAccount">Rechercher</v-btn>
 				</div>
 				<div v-if="deleteTarget" class="delete-confirm">
 					<p>Compte trouvé : <b>{{ deleteTarget.name }}</b> (id: {{ deleteTarget.id }})</p>
 					<p>Pour confirmer la suppression, tapez le nom du joueur :</p>
-					<input type="text" v-model="deleteConfirm" :placeholder="deleteTarget.name">
-					<v-btn color="red" @click="deleteAccount" :disabled="deleteConfirm !== deleteTarget.name">Supprimer définitivement</v-btn>
+					<input v-model="deleteConfirm" type="text" :placeholder="deleteTarget.name">
+					<v-btn color="red" :disabled="deleteConfirm !== deleteTarget.name" @click="deleteAccount">Supprimer définitivement</v-btn>
 				</div>
 				<div v-if="deleteSuccess" class="delete-success">{{ deleteSuccess }}</div>
 				<div v-if="deleteError" class="delete-error">{{ deleteError }}</div>
 				<br>
 				<h4>Désinscrire totalement une email</h4>
-				<input type="email" placeholder="Désinscrire totalement une email" v-model="email"> <v-btn @click="unsubscribe">Désinscrire</v-btn>
+				<input v-model="email" type="email" placeholder="Désinscrire totalement une email"> <v-btn @click="unsubscribe">Désinscrire</v-btn>
 				<br><br>
+				<h4>Tester les templates de mails</h4>
+				<p class="hint">Envoie un mail réel à votre adresse ({{ store.state.farmer?.mail }}) pour vérifier le rendu de chaque template.</p>
+				<table class="templates">
+					<tr class="header">
+						<th>Template</th>
+						<th>Type</th>
+						<th></th>
+					</tr>
+					<tr v-for="tpl in templates" :key="tpl.key">
+						<td class="left">{{ tpl.label }}{{ tpl.placeholder ? ' *' : '' }}</td>
+						<td>{{ tpl.group === 'digest' ? 'Digest' : 'Transac' }}</td>
+						<td>
+							<v-btn :loading="tpl.sending" :disabled="tpl.sending" @click="sendTemplate(tpl)">Tester</v-btn>
+							<span v-if="tpl.status === 'ok'" class="ok">Envoyé</span>
+							<span v-if="tpl.status === 'error'" class="err">Erreur : {{ tpl.error }}</span>
+						</td>
+					</tr>
+				</table>
+				<p v-if="templates.some(t => t.placeholder)" class="hint">* Le lien du mail contient un token fictif (non fonctionnel).</p>
+				<br>
 				<h4>Mails d'activation</h4>
 				<table>
 					<tr class="header">
@@ -55,19 +75,35 @@
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
 	const router = useRouter()
-	const farmers = ref<any>(null)
+	interface PendingFarmer {
+		id: number
+		disabled?: boolean
+		[key: string]: unknown
+	}
+	interface EmailTemplate {
+		key: string
+		group: string
+		label: string
+		placeholder: boolean
+		sending?: boolean
+		status?: 'ok' | 'error'
+		error?: string
+	}
+	const farmers = ref<PendingFarmer[] | null>(null)
+	const templates = ref<EmailTemplate[]>([])
 	const email = ref('')
 	const deleteEmail = ref('')
-	const deleteTarget = ref<any>(null)
+	const deleteTarget = ref<Record<string, unknown> | null>(null)
 	const deleteConfirm = ref('')
 	const deleteError = ref('')
 	const deleteSuccess = ref('')
 
 	if (!store.getters.admin) router.replace('/')
 	LeekWars.get('farmer/get-waiting-farmers').then(data => farmers.value = data.farmers)
+	LeekWars.get('notification/list-email-templates').then(data => templates.value = data.templates)
 	LeekWars.setTitle("Admin activation mails")
 
-	function send(farmer: any) {
+	function send(farmer: PendingFarmer) {
 		if (!farmer.disabled) {
 			LeekWars.post('farmer/resend-activation-mail', {farmer_id: farmer.id})
 			farmer.disabled = true
@@ -83,7 +119,7 @@
 			.then(data => {
 				deleteTarget.value = data.farmer
 			})
-			.error((error) => {
+			.error(() => {
 				deleteError.value = 'Compte non trouvé'
 			})
 	}
@@ -102,6 +138,19 @@
 			.error((error) => {
 				deleteError.value = 'Erreur : ' + error.error
 			})
+	}
+
+	function sendTemplate(tpl: EmailTemplate) {
+		tpl.sending = true
+		tpl.status = undefined
+		tpl.error = undefined
+		LeekWars.post('notification/send-email-template', { template: tpl.key })
+			.then(() => { tpl.status = 'ok' })
+			.error((err: unknown) => {
+				tpl.status = 'error'
+				tpl.error = (err as { error?: string })?.error || 'unknown'
+			})
+			.finally(() => { tpl.sending = false })
 	}
 
 	function unsubscribe() {
@@ -168,6 +217,22 @@
 	}
 	.delete-error {
 		margin-top: 10px;
+		color: red;
+	}
+	.hint {
+		color: var(--text-color-secondary);
+		font-size: 14px;
+		margin-bottom: 10px;
+	}
+	table.templates td.left {
+		text-align: left;
+	}
+	.ok {
+		margin-left: 10px;
+		color: green;
+	}
+	.err {
+		margin-left: 10px;
 		color: red;
 	}
 </style>

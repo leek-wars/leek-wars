@@ -9,5 +9,5 @@
 	"team": "{0}チームトーナメント",
 	"next_round_supervisor": "次のラウンドはスーパーバイザーによって開始されます",
 	"generate": "次のラウンドを生成する",
-	"generating": "現世代..."
+	"generating": "生成中..."
 }

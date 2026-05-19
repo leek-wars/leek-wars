@@ -10,3 +10,9 @@ static/report.json
 *.tsbuildinfo
 vite.config.d.ts
 vite.config.js
+
+# Secrets (.env files here are intentional public VITE_ config and stay tracked)
+*.pem
+*.key
+id_rsa*
+id_ed25519*

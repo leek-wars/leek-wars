@@ -11,7 +11,7 @@
 			</div>
 			<div class="cell" :class="{cell8: true, active: !!result && !built, built}" @click="craft">
 				<rich-tooltip-item v-if="result && scheme" v-slot="{ props }" :item="LeekWars.items[result]" :inventory="true" :quantity="scheme.quantity" :open-delay="built ? 500 : 1000">
-					<div v-bind="props" v-ripple class="item" :class="{building}" :type="LeekWars.items[result].type">
+					<div v-ripple v-bind="props" class="item" :class="{building}" :type="LeekWars.items[result].type">
 						<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[result].type] + '/' + LeekWars.items[result].name.replace('hat_', '').replace('potion_', '') + '.png'">
 						<div v-if="scheme.quantity > 1" class="quantity">{{ $filters.number(scheme.quantity) }}</div>
 					</div>
@@ -34,13 +34,15 @@
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
 
-	defineOptions({ name: 'forge' })
+	defineOptions({ name: 'Forge' })
 
-	const ITEM_CATEGORY_NAME: Record<number, any> = ITEM_CATEGORY_NAME_TYPED
+	type ForgeSlot = [number, number]
 
-	const forge = ref<any[]>([null, null, null, null, null, null, null, null])
+	const ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME_TYPED
+
+	const forge = ref<(ForgeSlot | null)[]>([null, null, null, null, null, null, null, null])
 	const scheme = ref<SchemeTemplate | null>(null)
-	const result = ref<any>(null)
+	const result = ref<number | null>(null)
 	const building = ref(false)
 	const built = ref(false)
 

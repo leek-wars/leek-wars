@@ -14,9 +14,9 @@
 
 <script setup lang="ts">
 defineProps<{
-	entity: any
+	entity: Record<string, unknown>
 	stats: string[]
-	best: any
+	best: Record<string, unknown>
 }>()
 </script>
 

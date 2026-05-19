@@ -1,5 +1,5 @@
 {
-	"description": "De bank biedt u aan om <b>kristallen</b> <span class='crystal'></span> te verkrijgen, de tweede munteenheid van Leek Wars, waarmee u drankjes en andere puur decoratieve en <b>niet-beïnvloedende drankjes kunt kopen. </b> jouw kracht in de strijd. <br>\nTrakteer jezelf op een kleurdrankje voor je prei en steun Leek Wars!",
+	"description": "Welkom bij de bank! <b>Kristallen</b> <span class='crystal'></span> geven je drankjes, extra gevechten, kleuren en accessoires voor je prei. <b>Geen voordeel in gevecht</b>: alle aankopen zijn cosmetisch of praktisch.<br>\nElke aankoop steunt direct de ontwikkeling van Leek Wars. Bedankt!",
 	"pack_of_n_crystals": "Pak <b>{0}</b> kristallen",
 	"paypal_description": "Aankoop van {0} kristallen voor {1} €",
 	"title": "Kristallen bank",
@@ -24,6 +24,10 @@
 	"payment_no_code": "Geen codes",
 	"payment_wrong_code": "Ongeldige code",
 	"first_purchase_banner": "Eerste aankoop? Al je kristallen worden verdubbeld!",
+	"suggestion_target_fights": "100-gevechten-pakket",
+	"suggestion_with_remainder": "→ Het {pack} pakket voor {price} dekt deze aankoop, met {remainder} over.",
+	"suggestion_exact": "→ Het {pack} pakket voor {price} dekt deze aankoop.",
+	"suggestion_cta": "Bekijk het pakket",
 	"items_title": "Ze wachten op je",
 	"back": "Terug naar de bank",
 	"best_value": "Beste aanbieding",

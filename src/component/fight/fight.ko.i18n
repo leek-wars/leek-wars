@@ -1,5 +1,7 @@
 {
 	"battle_royale": "배틀 로얄",
+	"chest_hunt": "보물 사냥",
+	"colossus": "콜로서스",
 	"date_format": "{0}",
 	"deleted_farmer": "육종가 제거",
 	"deleted_leek": "부추 제거",
@@ -8,5 +10,6 @@
 	"not_found": "싸움을 찾을 수 없습니다 :(",
 	"not_found_id": "싸움 ID <b>{0}</b> 찾을 수 없음 :(",
 	"pause_message": "다시 시작하려면 'P'를 클릭하거나 누르세요.",
-	"starter": "파이트 런처"
+	"starter": "전투 개시자",
+	"war": "전쟁"
 }

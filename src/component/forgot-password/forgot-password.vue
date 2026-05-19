@@ -58,13 +58,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { LeekWars } from '@/model/leekwars'
 import { mixins , useNamespacedT } from '@/model/i18n'
 
-defineOptions({ name: 'forgot_password', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'ForgotPassword', i18n: {}, mixins: [...mixins] })
 
 defineProps<{
 	state?: string
@@ -79,13 +79,13 @@ const email = ref('')
 const password = ref('')
 const password2 = ref('')
 
-LeekWars.setTitle(t('title'))
+onBeforeMount(() => LeekWars.setTitle(t('title')))
 
 function submitForm() {
 	LeekWars.post('farmer/forgot-password', {email: email.value}).then(() => {
 		LeekWars.toast(t('mail_sent', {email: email.value}))
 		router.push('/forgot-password/email-sent/' + email.value)
-	}).catch((err: any) => {
+	}).catch((err) => {
 		LeekWars.toast(t(err.error, err.params))
 	})
 	return false
@@ -99,7 +99,7 @@ function submitResetForm() {
 	LeekWars.post('farmer/forgot-password-change', {farmer_id: route.params.id, new_password: password.value, code: route.params.code}).then(() => {
 		LeekWars.toast(t('password_changed'))
 		router.push('/login')
-	}).catch((err: any) => {
+	}).catch((err) => {
 		LeekWars.toast(t('error_' + err.error, err.params))
 	})
 	return false

@@ -41,9 +41,9 @@
 				</div>
 			</div>
 
-			<editor-tabs v-if="!LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentTab" :active="currentSide === 1" :splitted="splitted" :theme="theme" group="tabs" :all-tabs="tabs1" @select="selectTab" @close-tab="closeTabEvent" @close-all="closeAllTabs" @split="setSplitted(true, $event)" :style="{ 'width': (editor1Width * 80) + '%' }" @open-file="openDiffFileFromMenu" />
+			<editor-tabs v-if="!LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentTab" :active="currentSide === 1" :splitted="splitted" :theme="theme" group="tabs" :all-tabs="tabs1" :style="{ 'width': (editor1Width * 80) + '%' }" @select="selectTab" @close-tab="closeTabEvent" @close-all="closeAllTabs" @split="setSplitted(true, $event)" @open-file="openDiffFileFromMenu" />
 
-			<editor-tabs v-if="splitted && !LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentAI2" :active="currentSide === 2" :splitted="splitted" :theme="theme" group="tabs2" @close="close" @close-all="closeAll" :style="{ 'width': (editor2Width * 100) + '%' }" @open="open($event, 2)" @close-panel="setSplitted(false)" />
+			<editor-tabs v-if="splitted && !LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentAI2" :active="currentSide === 2" :splitted="splitted" :theme="theme" group="tabs2" :style="{ 'width': (editor2Width * 100) + '%' }" @close="close" @close-all="closeAll" @open="open($event, 2)" @close-panel="setSplitted(false)" />
 
 			<editor-finder ref="finder" :active="activeAIs" :history="history" />
 		</div>
@@ -54,17 +54,17 @@
 					<template #content>
 						<div class="full">
 							<div v-if="Object.keys(fileSystem.gitRepos).length > 0" class="left-panel-tabs">
-								<div :class="{active: leftPanelTab === 'explorer'}" class="left-tab" @click="setLeftPanelTab('explorer')" :title="$t('title')">
+								<div :class="{active: leftPanelTab === 'explorer'}" class="left-tab" :title="$t('title')" @click="setLeftPanelTab('explorer')">
 									<v-icon>mdi-file-tree</v-icon>
 								</div>
-								<div :class="{active: leftPanelTab === 'git'}" class="left-tab" @click="setLeftPanelTab('git')" title="Git">
+								<div :class="{active: leftPanelTab === 'git'}" class="left-tab" title="Git" @click="setLeftPanelTab('git')">
 									<v-icon>mdi-source-branch</v-icon>
 								</div>
 							</div>
 
 							<template v-if="leftPanelTab === 'explorer'">
 								<div v-if="fileSystem.rootFolder" v-autostopscroll class="ai-list">
-									<Explorer ref="explorerEl" :current-ai="currentAI" :selected-folder="currentFolder" @test="startTest" @delete-ai="deleteAI" />
+									<Explorer v-if="explorerI18nReady" ref="explorerEl" :current-ai="currentAI" :selected-folder="currentFolder" @test="startTest" @delete-ai="deleteAI" />
 								</div>
 
 								<div v-if="currentEditor && currentEditor.loaded && panelWidth" class="ai-stats">
@@ -88,15 +88,15 @@
 							<div class="resizer explorer-resizer" @mousedown="resizerMousedown">
 								<v-icon>mdi-drag-vertical-variant</v-icon>
 							</div>
-							<div :class="{tabs: tabs1.length > 1}" class="editors" ref="editors">
+							<div ref="editors" :class="{tabs: tabs1.length > 1}" class="editors">
 
-								<ai-view-monaco v-if="ai1Ready" v-show="!showDiffViewer" ref="editor1" :ai="fileSystem.ais[currentAI1!]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" @jump="jump" @load="load" @focus="setSide(1)" :style="{ 'width': (editor1Width * 100) + '%' }" />
+								<ai-view-monaco v-if="ai1Ready" v-show="!showDiffViewer" ref="editor1" :ai="fileSystem.ais[currentAI1!]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" :style="{ 'width': (editor1Width * 100) + '%' }" @jump="jump" @load="load" @focus="setSide(1)" />
 
 								<div v-if="splitted" v-show="!showDiffViewer" class="resizer editor-resizer" @dblclick="split50_50" @mousedown="resizerEditorMousedown">
 									<v-icon>mdi-drag-vertical-variant</v-icon>
 								</div>
 
-								<ai-view-monaco v-if="splitted && ai2Ready" v-show="!showDiffViewer" ref="editor2" :ai="fileSystem.ais[currentAI2!]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" @jump="jump" @load="load" @focus="setSide(2)" :style="{ 'width': (editor2Width * 100) + '%' }" />
+								<ai-view-monaco v-if="splitted && ai2Ready" v-show="!showDiffViewer" ref="editor2" :ai="fileSystem.ais[currentAI2!]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" :style="{ 'width': (editor2Width * 100) + '%' }" @jump="jump" @load="load" @focus="setSide(2)" />
 
 								<div v-if="showDiffViewer && !isDiffReady" class="diff-loader"><loader :size="40" /></div>
 								<git-diff v-if="diffMounted && isDiffReady && !showMergeViewer && activeDiff" v-show="showDiffViewer" :original-content="activeDiff.original" :modified-content="activeDiffModified" :file="activeDiff.file" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :inline="diffInline" :collapse-unchanged="diffCollapseUnchanged" @close="closeDiff" @open-file="openDiffFile" />
@@ -105,7 +105,7 @@
 							</div>
 
 							<span v-if="LeekWars.didactitial_step === 4" class="dida-hint shaking">
-								<span class="bubble" v-html="$t('main.dida_8')" v-chat-code-latex></span>
+								<span v-chat-code-latex class="bubble" v-html="$t('main.dida_8')"></span>
 								<span class="arrow"></span>
 							</span>
 
@@ -253,7 +253,7 @@
 			</template>
 		</popup>
 
-		<editor-test ref="editorTestRef" v-model="testDialog" :ais="fileSystem.ais" :leek-ais="fileSystem.leekAIs" :currentAI="currentAI" />
+		<editor-test v-if="editorTestI18nReady" ref="editorTestRef" v-model="testDialog" :ais="fileSystem.ais" :leek-ais="fileSystem.leekAIs" :current-a-i="currentAI" />
 
 		<!--
 		<popup v-model="newAIv2Dialog" :width="500">
@@ -273,12 +273,14 @@
 <script setup lang="ts">
 	import { locale } from '@/locale'
 	import { AI } from '@/model/ai'
-	import { fileSystem, translateFileSystemError } from '@/model/filesystem'
+	import { aiCodeKey, aiMtimeKey, fileSystem, translateFileSystemError } from '@/model/filesystem'
 	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { store } from '@/model/store'
+	import { store, farmerId } from '@/model/store'
 	import AIViewMonaco from './ai-view-monaco.vue'
 	import EditorFinder from './editor-finder.vue'
+	import Explorer from './editor-explorer.vue'
+	import EditorTest from './editor-test.vue'
 	import { AIItem, Folder, Item } from './editor-item'
 	import { explorer } from './explorer'
 	import GitDiff from './git-diff.vue'
@@ -296,15 +298,33 @@
 	import { emitter } from '@/model/vue'
 	import LeekscriptVersions from '../app/leekscript-versions.vue'
 
-	const Explorer = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-explorer.${locale}.i18n`))
+	// Explorer et EditorTest sont accédés via template ref : defineAsyncComponent +
+	// ref="..." casse l'unmount (cf. #11226027, instance null sur bum/beforeUnmount).
+	// Import statique pour éviter le wrapper async ; les messages i18n sont chargés
+	// via le side-effect du fichier .i18n (qui mute le Component partagé), et un
+	// v-if guard retarde le mount jusqu'à résolution pour préserver le no-flash.
+	const explorerI18nReady = ref(false)
+	const editorTestI18nReady = ref(false)
+	// Si le chargement i18n échoue, on monte quand même (dégradation = clés brutes
+	// plutôt que composant invisible définitif).
+	import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-explorer.${locale}.i18n`)
+		.finally(() => { explorerI18nReady.value = true })
+	import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-test.${locale}.i18n`)
+		.finally(() => { editorTestI18nReady.value = true })
+
 	const EditorTabs = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-tabs.${locale}.i18n`))
-	const EditorTest = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-test.${locale}.i18n`))
 	const EditorProblems = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-problems.${locale}.i18n`))
 	const GitPanel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/git-panel.${locale}.i18n`))
 
 	const DEFAULT_FONT_SIZE = 16
 	const DEFAULT_LINE_HEIGHT = 24
 	const DEFAULT_THEME = () => LeekWars.darkMode ? "monokai" : "leek-wars"
+
+	// Clés localStorage per-account (cf. issue #2678).
+	const lastCodeKey = (side: number | string) => 'editor/last-code-' + side + '/' + farmerId()
+	const tabsKey = () => 'editor/tabs1/' + farmerId()
+	const currentTabKey = () => 'editor/current-tab/' + farmerId()
+	const historyKey = () => 'editor/history/' + farmerId()
 
 	interface ExplorerInstance {
 		openNewAI(folder: Folder): void
@@ -318,7 +338,7 @@
 	}
 
 	defineOptions({
-		name: 'editor',
+		name: 'Editor',
 		i18n: {},
 		mixins: [...mixins],
 		components: {
@@ -338,7 +358,6 @@
 	const currentEditor = shallowRef<InstanceType<typeof AIViewMonaco> | null>(null)
 	const currentType = ref<string | null>(null)
 	const currentFolder = ref<Folder | null>(null)
-	const infoDialog = ref(false)
 	const settingsDialog = ref(false)
 	const cloneDialog = ref(false)
 	const cloneUrl = ref('')
@@ -370,7 +389,6 @@
 	const panelWidth = ref(200)
 	const problemsHeight = ref(200)
 	const bottomPanel = ref<'problems' | 'git' | null>('problems')
-	const newAIv2Dialog = ref(false)
 	const fileMenu = ref(false)
 	const fileMenuActivator = ref<Element | undefined>(undefined)
 	const history = ref<AI[]>([])
@@ -484,7 +502,6 @@
 		splitted.value = localStorage.getItem('editor/splitted') === 'true'
 		editor1Width.value = parseFloat(localStorage.getItem('editor/editor1-width') || '') || (splitted.value ? 0.5 : 1)
 		editor2Width.value = parseFloat(localStorage.getItem('editor/editor2-width') || '') || 0.5
-		currentAI2.value = localStorage.getItem('editor/last-code-2') || null
 
 		LeekWars.loadEncyclopedia(locale)
 
@@ -494,8 +511,8 @@
 	init()
 
 	async function connected() {
-		// Chargement de l'historique
-		const histIds = JSON.parse(localStorage.getItem('editor/history') || '[]')
+		currentAI2.value = localStorage.getItem(lastCodeKey(2)) || null
+		const histIds = JSON.parse(localStorage.getItem(historyKey()) || '[]')
 		for (const id of histIds) {
 			if (id in fileSystem.ais) {
 				history.value.push(fileSystem.ais[id])
@@ -513,7 +530,7 @@
 			const repos: {[path: string]: boolean} = {}
 			for (const r of data.repos) { repos[r.folder] = true }
 			fileSystem.gitRepos = repos
-		} catch (e) {
+		} catch {
 			// Pas de repos git
 		}
 		if (leftPanelTab.value === 'git' && Object.keys(fileSystem.gitRepos).length === 0) {
@@ -542,9 +559,10 @@
 		cloneError.value = ''
 		cloning.value = true
 		try {
-			const data = await LeekWars.post('git/clone', { url: cloneUrl.value.trim(), folder: cloneFolder.value.trim() })
+			await LeekWars.post('git/clone', { url: cloneUrl.value.trim(), folder: cloneFolder.value.trim() })
 			cloneDialog.value = false
 			LeekWars.toast(t('clone_success') as string)
+			await fileSystem.reload()
 			await loadGitRepos()
 			leftPanelTab.value = 'git'
 		} catch (e: unknown) {
@@ -565,17 +583,6 @@
 		return false
 	}
 
-	function toggleFileMenu(event?: Event) {
-		if (LeekWars.mobile && event) {
-			fileMenuActivator.value = event.target as Element
-		} else {
-			fileMenuActivator.value = fileButton.value ?? undefined
-		}
-		nextTick(() => {
-			fileMenu.value = !fileMenu.value
-		})
-	}
-
 	function keydown(e: KeyboardEvent) {
 		// Up and down arrows while Alt + Left/right
 		if (e.altKey && finder.value?.value) {
@@ -590,6 +597,7 @@
 		}
 	}
 
+	let updateGen = 0
 	function update() {
 		const routeHash = route.params.hash as string | undefined
 		const isDiffRoute = routeHash || route.path.endsWith('/diff')
@@ -612,72 +620,82 @@
 			const ai = fileSystem.getAIFromRoute(routeId)
 			if (ai) {
 				const key = ai.path
+				const lineQuery = route.query.line
+				const gen = ++updateGen
+				localStorage.setItem(lastCodeKey(currentSide.value), key)
+				// Appliquer toutes les mutations d'état atomiquement après le chargement :
+				// sinon currentTab/currentFolder pointent sur la nouvelle IA pendant que
+				// currentAI1 pointe encore sur l'ancienne, ce qui re-rend les v-if/Teleport
+				// du panel avec un état mixte et peut casser le patch Vue (parentNode null).
+				// Le compteur de génération annule un .then() périmé si l'utilisateur
+				// re-clique avant la fin du chargement (sinon stomp d'état frais).
 				fileSystem.load(ai).then(() => {
+					if (gen !== updateGen) return
 					if (currentSide.value === 1) {
 						currentAI1.value = key
 					} else {
 						currentAI2.value = key
 					}
+					currentType.value = 'ai'
+					currentFolder.value = fileSystem.folderById[ai.folder]
+					if (!(key in activeAIs)) {
+						activeAIs[key] = ai
+					}
+					explorer.selectAI(ai)
+					if (currentSide.value === 1 && !isDiffRoute) {
+						const fileTab: FileTab = { type: 'file', id: key }
+						if (!tabs1.value.find(tt => tt.type === 'file' && tt.id === key)) {
+							tabs1.value.push(fileTab)
+							saveTabs()
+						}
+						currentTab.value = tabs1.value.find(tt => tt.type === 'file' && tt.id === key) || fileTab
+					}
+					// Ajout dans l'historique
+					const i = history.value.indexOf(ai)
+					if (i !== -1) { history.value.splice(i, 1) }
+					history.value.unshift(ai)
+
+					LeekWars.setTitle(ai.name)
+
+					if (isDiffRoute) {
+						if (currentTab.value && currentTab.value.type !== 'file' && currentTab.value.id === key) {
+							// Déjà sur le bon diff tab
+						} else if (routeHash) {
+							const diffTab = tabs1.value.find(tt => tt.type !== 'file' && (tt as DiffTab).hash === routeHash)
+							if (diffTab) {
+								currentTab.value = diffTab
+								ensureDiffLoaded(diffTab as DiffTab)
+							}
+						} else {
+							const diffTab = tabs1.value.find(tt => tt.type !== 'file' && tt.id === key)
+							if (diffTab) {
+								currentTab.value = diffTab
+								ensureDiffLoaded(diffTab as DiffTab)
+							} else {
+								// Créer un onglet diff depuis l'URL
+								const { folder, file } = resolveGitPath(key)
+								if (folder !== null) {
+									openDiff({ folder, file: file as string })
+								}
+							}
+						}
+						LeekWars.splitShowContent()
+						LeekWars.setActions(actions_content.value)
+					} else if (lineQuery !== undefined) {
+						jump(ai, parseInt(lineQuery as string), 0)
+						router.replace('/editor/' + key).then(() => {
+							LeekWars.splitShowContent()
+							LeekWars.setActions(actions_content.value)
+						})
+					} else {
+						LeekWars.splitShowContent()
+						LeekWars.setActions(actions_content.value)
+					}
+
 					nextTick(() => {
 						currentEditor.value = (currentSide.value === 1 ? editor1.value : editor2.value) as InstanceType<typeof AIViewMonaco>
 					})
 				})
-				localStorage.setItem('editor/last-code-' + currentSide.value, key)
-				currentType.value = 'ai'
-				currentFolder.value = fileSystem.folderById[ai.folder]
-				if (!(key in activeAIs)) {
-					activeAIs[key] = ai
-				}
-				explorer.selectAI(ai)
-				if (currentSide.value === 1 && !isDiffRoute) {
-					const fileTab: FileTab = { type: 'file', id: key }
-					if (!tabs1.value.find(tt => tt.type === 'file' && tt.id === key)) {
-						tabs1.value.push(fileTab)
-						saveTabs()
-					}
-					currentTab.value = tabs1.value.find(tt => tt.type === 'file' && tt.id === key) || fileTab
-				}
-				// Ajout dans l'historique
-				const i = history.value.indexOf(ai)
-				if (i !== -1) { history.value.splice(i, 1) }
-				history.value.unshift(ai)
-
-				LeekWars.setTitle(ai.name)
-
-				if (isDiffRoute) {
-					if (currentTab.value && currentTab.value.type !== 'file' && currentTab.value.id === key) {
-						// Déjà sur le bon diff tab
-					} else if (routeHash) {
-						const diffTab = tabs1.value.find(tt => tt.type !== 'file' && (tt as DiffTab).hash === routeHash)
-						if (diffTab) {
-							currentTab.value = diffTab
-							ensureDiffLoaded(diffTab as DiffTab)
-						}
-					} else {
-						const diffTab = tabs1.value.find(tt => tt.type !== 'file' && tt.id === key)
-						if (diffTab) {
-							currentTab.value = diffTab
-							ensureDiffLoaded(diffTab as DiffTab)
-						} else {
-							// Créer un onglet diff depuis l'URL
-							const { folder, file } = resolveGitPath(key)
-							if (folder !== null) {
-								openDiff({ folder, file: file as string })
-							}
-						}
-					}
-					LeekWars.splitShowContent()
-					LeekWars.setActions(actions_content.value)
-				} else if ('line' in route.query) {
-					jump(ai, parseInt(route.query.line as string), 0)
-					router.replace('/editor/' + key).then(() => {
-						LeekWars.splitShowContent()
-						LeekWars.setActions(actions_content.value)
-					})
-				} else {
-					LeekWars.splitShowContent()
-					LeekWars.setActions(actions_content.value)
-				}
 			} else {
 				currentFolder.value = fileSystem.folderById[parseInt(routeId)]
 				currentType.value = 'folder'
@@ -689,7 +707,7 @@
 
 		} else if (!LeekWars.mobile) {
 
-			const lastCode = localStorage.getItem('editor/last-code-1')
+			const lastCode = localStorage.getItem(lastCodeKey(1))
 			if (lastCode && lastCode in fileSystem.ais) {
 				router.replace('/editor/' + lastCode)
 			} else if (store.state.farmer) {
@@ -718,7 +736,7 @@
 			if (!ai.modified) continue
 			if (!isLeekScript(ai.path)) continue
 			// Récupérer le code sauvegardé sur le FS (depuis le cache localStorage)
-			const savedCode = localStorage.getItem('ai/code/' + ai.path)
+			const savedCode = localStorage.getItem(aiCodeKey(ai.path))
 			if (savedCode !== null) {
 				// Renvoyer le code du disque au daemon pour restaurer son cache
 				LeekWars.socket.send([SocketMessage.EDITOR_ANALYZE, ai.path, savedCode])
@@ -753,8 +771,8 @@
 		LeekWars.post('ai/write', {path: aiEditor.ai.path, code: content}).then((data) => {
 			aiEditor.saving = false
 			aiEditor.ai.mtime = data.modified || Date.now()
-			localStorage.setItem('ai/mtime/' + aiEditor.ai.path, '' + aiEditor.ai.mtime)
-			localStorage.setItem('ai/code/' + aiEditor.ai.path, content)
+			localStorage.setItem(aiMtimeKey(aiEditor.ai.path), '' + aiEditor.ai.mtime)
+			localStorage.setItem(aiCodeKey(aiEditor.ai.path), content)
 			aiEditor.ai.modified = false
 
 			if (data.result) {
@@ -817,7 +835,7 @@
 			tab.modified = data.content || ''
 			tab.ready = true
 			diffReady.value++
-		} catch (e) {
+		} catch {
 			tab.modified = ''
 			tab.ready = true
 			diffReady.value++
@@ -910,12 +928,12 @@
 			if (t.type === 'file') return { type: 'file', id: t.id }
 			return { type: t.type, id: t.id, folder: t.folder, file: t.file, staged: t.staged, hash: t.hash }
 		})
-		localStorage.setItem('editor/tabs1', JSON.stringify(serialized))
+		localStorage.setItem(tabsKey(), JSON.stringify(serialized))
 		if (currentTab.value) {
 			if (currentTab.value.type === 'file') {
-				localStorage.setItem('editor/current-tab', JSON.stringify({ type: 'file', id: currentTab.value.id }))
+				localStorage.setItem(currentTabKey(), JSON.stringify({ type: 'file', id: currentTab.value.id }))
 			} else {
-				localStorage.setItem('editor/current-tab', JSON.stringify({ type: currentTab.value.type, key: diffKey(currentTab.value as DiffTab) }))
+				localStorage.setItem(currentTabKey(), JSON.stringify({ type: currentTab.value.type, key: diffKey(currentTab.value as DiffTab) }))
 			}
 		}
 	}
@@ -925,7 +943,7 @@
 		tabs1Loaded = true
 		try {
 			type SavedTabData = { type?: string, id?: string, folder?: string, file?: string, staged?: boolean, hash?: string }
-			const saved = JSON.parse(localStorage.getItem('editor/tabs1') || '[]') as SavedTabData[]
+			const saved = JSON.parse(localStorage.getItem(tabsKey()) || '[]') as SavedTabData[]
 			for (const tt of saved) {
 				if (tt.type === 'file') {
 					if (tt.id && tt.id in fileSystem.ais) {
@@ -936,7 +954,7 @@
 					tabs1.value.push(tab)
 				}
 			}
-		} catch (e) {
+		} catch {
 			// Données corrompues
 		}
 	}
@@ -989,7 +1007,7 @@
 				const headData = await safe('git/show', { folder: tab.folder, hash: 'HEAD', file: tab.file })
 				original = headData.content || ''
 			}
-		} catch (e) {
+		} catch {
 			// Erreur de fetch
 		}
 		tab.original = original
@@ -1025,9 +1043,6 @@
 			return
 		}
 		testDialog.value = true
-	}
-	function help() {
-		infoDialog.value = true
 	}
 	function settings() {
 		settingsDialog.value = true
@@ -1070,7 +1085,7 @@
 		localStorage.setItem('editor/large', '' + enlargeWindow.value)
 	})
 	watch(() => history.value.map(ai => ai.path).join('|'), () => {
-		localStorage.setItem('editor/history', JSON.stringify(history.value.map(ai => ai.path)))
+		localStorage.setItem(historyKey(), JSON.stringify(history.value.map(ai => ai.path)))
 	})
 
 	function jumpEvent(event: { ai: AI, line: number, column: number }) {
@@ -1259,7 +1274,7 @@
 				currentAI2.value = ai!.path
 			})
 			setSide(2)
-			localStorage.setItem('editor/last-code-2', ai!.path)
+			localStorage.setItem(lastCodeKey(2), ai!.path)
 		} else {
 			editor1Width.value = editorTotalWidth
 			setSide(1)
@@ -1283,11 +1298,11 @@
 		const aiObj = fileSystem.ais[ai]
 		if (aiObj) {
 			fileSystem.load(aiObj).then(() => {
-				side === 1 ? currentAI1.value = ai : currentAI2.value = ai
+				if (side === 1) { currentAI1.value = ai } else { currentAI2.value = ai }
 			})
 		}
 		updateUrl()
-		localStorage.setItem('editor/last-code-' + side, '' + ai)
+		localStorage.setItem(lastCodeKey(side), '' + ai)
 	}
 
 	function split50_50() {

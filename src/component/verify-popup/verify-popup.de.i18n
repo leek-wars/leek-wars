@@ -1,0 +1,22 @@
+{
+	"title": "Sichere dein Konto und hole dir deine Belohnung",
+	"intro": "Du verlierst deinen Fortschritt, wenn du den Browser wechselst oder deine Cookies löschst. Bestätige dein Konto, um es zu sichern und die Belohnung freizuschalten.",
+	"login": "Wähle deinen Züchternamen",
+	"email": "Deine E-Mail-Adresse",
+	"password": "Passwort",
+	"validate": "Konto bestätigen",
+	"later": "Später",
+	"mail_sent": "Bestätigungs-E-Mail gesendet!",
+	"error_login_length": "Züchtername zu kurz oder zu lang",
+	"error_login_format": "Ungültiges Namensformat (nur Buchstaben, Ziffern und Bindestriche)",
+	"error_login_already_used": "Dieser Züchtername ist bereits vergeben",
+	"error_forbidden_name": "Dieser Name ist nicht erlaubt",
+	"error_invalid_mail": "Ungültige E-Mail-Adresse",
+	"error_mail_already_used": "Diese E-Mail wird bereits verwendet",
+	"error_password_length": "Passwort zu kurz oder zu lang",
+	"error_invalid_godfather": "Pate nicht gefunden",
+	"or": "oder fahre fort mit",
+	"use_github": "Mit GitHub fortfahren",
+	"use_google": "Mit Google fortfahren",
+	"error_no_login": "Wähle zuerst deinen Züchternamen"
+}

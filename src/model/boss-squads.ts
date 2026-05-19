@@ -1,13 +1,12 @@
 import { LeekWars } from '@/model/leekwars'
+import router from '@/router'
 import { SocketMessage } from '@/model/socket'
 import { store } from '@/model/store'
-import { getRouter } from '@/model/leekwars'
 import { Leek } from './leek'
 import { Farmer } from './farmer'
 import { BOSSES, Boss } from './boss'
-import { useRoute, useRouter } from 'vue-router'
 
-export class BossSquad {
+class BossSquad {
 	public id!: string
 	public boss!: number
 	public farmers!: Farmer[]
@@ -16,7 +15,7 @@ export class BossSquad {
 	public engaged_count?: number
 	public available_leeks?: Leek[]
 	public master?: number | Farmer
-	[key: string]: any
+	[key: string]: unknown
 }
 
 export class BossSquads {
@@ -47,17 +46,17 @@ export class BossSquads {
 		const leeks = localStorage.getItem('garden/boss-leeks') ? JSON.parse(localStorage.getItem('garden/boss-leeks')!) : allLeeks
 		LeekWars.socket.send([SocketMessage.GARDEN_BOSS_JOIN_SQUAD, squad_id, leeks])
 	}
-	update(data: any) {
+	update(data: {[key: number]: BossSquad[]}) {
 		this.squads = data
 		// this.enabled = true
 		// this.leeks = data.data[1]
 		// this.progress = LeekWars.objectSize(this.leeks)
 		// LeekWars.setTitleTag('BR ' + this.progress + '/10')
 	}
-	updateSquad(data: any) {
+	updateSquad(data: BossSquad) {
 		this.squad = data
 		// console.log("Update squad", data)
-		const leeks = this.squad!.engaged_leeks.filter(l => l.farmer === store.state.farmer!.id).map(l => l.id)
+		const leeks = this.squad!.engaged_leeks.filter(l => (l.farmer as unknown as number) === store.state.farmer!.id).map(l => l.id)
 		localStorage.setItem('garden/boss-leeks', JSON.stringify(leeks))
 		// this.enabled = true
 		// this.leeks = data.data[1]
@@ -67,18 +66,18 @@ export class BossSquads {
 	joined(squad: BossSquad) {
 		this.squad = squad
 		const route = '/garden/boss/' + BOSSES[squad.boss].name + '/' + squad.id
-		getRouter().isReady().then(() => {
-			const currentPath = getRouter().currentRoute.value.path
+		router.isReady().then(() => {
+			const currentPath = router.currentRoute.value.path
 			if (currentPath.startsWith("/garden/boss") && currentPath !== route) {
-				getRouter().push(route)
+				router.push(route)
 			}
 		})
 	}
 	noSuchSquad() {
 		localStorage.removeItem('garden/boss-squad')
-		getRouter().isReady().then(() => {
-			if (getRouter().currentRoute.value.path.startsWith("/garden/boss") && getRouter().currentRoute.value.path !== "/garden/boss") {
-				getRouter().push('/garden/boss')
+		router.isReady().then(() => {
+			if (router.currentRoute.value.path.startsWith("/garden/boss") && router.currentRoute.value.path !== "/garden/boss") {
+				router.push('/garden/boss')
 			}
 		})
 	}
@@ -92,9 +91,9 @@ export class BossSquads {
 		LeekWars.socket.send([SocketMessage.GARDEN_BOSS_LEAVE_SQUAD])
 	}
 	left() {
-		getRouter().isReady().then(() => {
-			if (getRouter().currentRoute.value.path.startsWith("/garden/boss")) {
-				getRouter().push('/garden/boss/')
+		router.isReady().then(() => {
+			if (router.currentRoute.value.path.startsWith("/garden/boss")) {
+				router.push('/garden/boss/')
 			}
 		})
 		this.squad = null
@@ -104,15 +103,15 @@ export class BossSquads {
 	attack() {
 		LeekWars.socket.send([SocketMessage.GARDEN_BOSS_ATTACK])
 	}
-	start(data: any[]) {
+	start(data: unknown[]) {
 		// Only decrease fight count if we have engaged leeks in the squad
-		const hasEngagedLeeks = this.squad && this.squad.engaged_leeks.some((l: Leek) => l.farmer === store.state.farmer!.id)
+		const hasEngagedLeeks = this.squad && this.squad.engaged_leeks.some(l => (l.farmer as unknown as number) === store.state.farmer!.id)
 		if (hasEngagedLeeks) {
 			store.commit('update-fights', -1)
 		}
-		getRouter().isReady().then(() => {
-			if (getRouter().currentRoute.value.path.startsWith("/garden/")) {
-				getRouter().push('/fight/' + data[0])
+		router.isReady().then(() => {
+			if (router.currentRoute.value.path.startsWith("/garden/")) {
+				router.push('/fight/' + data[0])
 			}
 		})
 		this.squad = null

@@ -123,20 +123,27 @@
 		public metrics?: NodeMetrics
 	}
 
+	interface RunnerTask {
+		type: number
+		fight?: number
+		tournament?: number
+		farmer?: { id: number; name: string }
+	}
+
 	class Runner {
 		public id!: number
 		public node!: string
 		public generated!: number
 		public errors!: number
 		public name!: string
-		public task!: any
+		public task!: RunnerTask | null
 	}
 
 	const router = useRouter()
 
 	const runners = reactive<{[key: number]: Runner}>({})
 	const nodeMetrics = reactive<{[key: string]: NodeMetrics}>({})
-	const queue = ref<any>([])
+	const queue = ref<[number, { id: number; name: string; queue_id?: string }, number?][]>([])
 	const loading = ref(true)
 	const colors: {[key: string]: string} = {}
 	const show_ids = ref(localStorage.getItem('admin/queue-ids') === 'true')
@@ -168,25 +175,28 @@
 		emitter.off('wsmessage', update)
 	})
 
-	function update(message: any) {
+	interface WsRunnerData { node: string; id: number; name: string; connected: boolean; task: RunnerTask | null; task_start: number; generated: number; errors: number }
+	interface WsMetricsData { node: string; usedRAM: number; maxRAM: number; cacheSize: number; compressedClassSpaceUsed: number; compressedClassSpaceMax: number; bootTime: number; lastUpdate: number }
+
+	function update(message: { type: number; data: unknown }) {
 		const type = message.type
 		const data = message.data
 		if (type === UPDATE_RUNNER) {
 			loading.value = false
-			for (const th of data) {
-				updateRunner(th.node, th.id, th.name, th.connected, th.task, th.task_start, th.generated, th.errors)
+			for (const th of data as WsRunnerData[]) {
+				updateRunner(th.node, th.id, th.name, th.task, th.generated, th.errors)
 			}
 		}
 		if (type === REMOVE_RUNNER) {
-			for (const th of data) {
+			for (const th of data as { id: number }[]) {
 				removeRunner(th.id)
 			}
 		}
 		if (type === ADMIN_QUEUE) {
-			queue.value = data
+			queue.value = data as typeof queue.value
 		}
 		if (type === UPDATE_NODE_METRICS) {
-			for (const m of data) {
+			for (const m of data as WsMetricsData[]) {
 				nodeMetrics[m.node] = {
 					usedRAM: m.usedRAM,
 					maxRAM: m.maxRAM,
@@ -200,7 +210,7 @@
 		}
 	}
 
-	function updateRunner(nodeName: string, runnerID: any, runnerName: string, connected: any, task: any, task_start: any, generated: number, errors: number) {
+	function updateRunner(nodeName: string, runnerID: number, runnerName: string, task: RunnerTask | null, generated: number, errors: number) {
 		const runner = runners[runnerID]
 		if (!runner) {
 			const runner = { id: runnerID, name: runnerName, node: nodeName, generated, errors, task } as Runner

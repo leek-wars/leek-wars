@@ -13,8 +13,8 @@
 	"italic_ex": "斜体",
 	"underlined": "下線",
 	"underlined_ex": "下線",
-	"striked": "ロッド",
-	"striked_ex": "ロッド",
+	"striked": "打ち消し線",
+	"striked_ex": "打ち消し",
 	"basic_html": "基本的な HTML を許可",
 	"image": "画像",
 	"image_ex": "url"

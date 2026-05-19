@@ -1,5 +1,5 @@
 {
-	"description": "O banco oferece a você a obtenção de <b>cristais</b> <span class='crystal'></span>, a segunda moeda de Leek Wars, permitindo que você compre poções e outros itens puramente decorativos e <b>não afetando </b> seu poder em combate. <br>\nMime-se com uma poção colorida para o seu alho-poró e apoie o Leek Wars!",
+	"description": "Bem-vindo ao banco! Os <b>cristais</b> <span class='crystal'></span> permitem que você obtenha poções, combates adicionais, cores e acessórios para seus alhos-porós. <b>Sem vantagem em combate</b>: todas as compras são cosméticas ou práticas.<br>\nCada compra apoia diretamente o desenvolvimento de Leek Wars. Obrigado!",
 	"pack_of_n_crystals": "Pacote de <b>{0}</b> cristais",
 	"paypal_description": "Compra de {0} cristais por {1} €",
 	"title": "Banco de cristal",
@@ -24,6 +24,10 @@
 	"payment_no_code": "Sem códigos",
 	"payment_wrong_code": "Código inválido",
 	"first_purchase_banner": "Primeira compra? Todos os seus cristais são duplicados!",
+	"suggestion_target_fights": "Pacote 100 combates",
+	"suggestion_with_remainder": "→ O pacote {pack} por {price} cobre esta compra, com {remainder} de reserva.",
+	"suggestion_exact": "→ O pacote {pack} por {price} cobre esta compra.",
+	"suggestion_cta": "Ver o pacote",
 	"items_title": "Eles estão esperando por você",
 	"back": "Voltar ao banco",
 	"best_value": "Melhor oferta",

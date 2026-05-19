@@ -33,7 +33,9 @@
 		<b v-if="effect.turns === -1">{{ $t('effect.infinite') }}</b>
 		<i18n-t v-else-if="effect.turns > 0" keypath="effect.on_n_turns">
 			<template #turns>
-				<span v-html="$t('effect.n_turns', effect.turns)"></span>
+				<i18n-t keypath="effect.n_turns" :plural="effect.turns">
+					<template #n><b>{{ effect.turns }}</b></template>
+				</i18n-t>
 			</template>
 		</i18n-t>
 		<span v-if="effect.modifiers & EffectModifier.STACKABLE">
@@ -102,7 +104,7 @@ import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { computed } from 'vue'
 
-defineOptions({ name: 'effect-view', components: { 'lw-code': Code } })
+defineOptions({ name: 'EffectView', components: { 'lw-code': Code } })
 
 interface EffectViewProps {
 	effect: Effect
@@ -113,6 +115,7 @@ const props = defineProps<EffectViewProps>()
 
 const value1 = computed(() => {
 	if (props.effect.id === EffectType.ADD_STATE) {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		return (i18n.global.t as any)('effect.state_' + props.effect.value1)
 	}
 	return format(props.effect.value1)
@@ -140,16 +143,19 @@ const icon = computed(() => {
 	if ([EffectType.DAMAGE_RETURN].includes(props.effect.id)) { return 'agility' }
 	if ([EffectType.BUFF_STRENGTH, EffectType.BUFF_RESISTANCE, EffectType.BUFF_WISDOM, EffectType.BUFF_AGILITY, EffectType.BUFF_MP, EffectType.BUFF_TP, EffectType.AFTEREFFECT, EffectType.NOVA_DAMAGE, EffectType.NOVA_VITALITY].includes(props.effect.id)) { return 'science' }
 	if ([EffectType.POISON, EffectType.SHACKLE_MP, EffectType.SHACKLE_TP, EffectType.SHACKLE_STRENGTH, EffectType.SHACKLE_MAGIC, EffectType.SHACKLE_AGILITY, EffectType.SHACKLE_WISDOM].includes(props.effect.id)) { return 'magic' }
+	return undefined
 })
 
 const charac = computed(() => {
 	if (icon.value) {
 		if (props.leek) {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			return (props.leek as any)['total_' + icon.value]
 		}
 		if (store.state.farmer) {
 			let max = 0
 			for (const l in store.state.farmer!.leeks) {
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				max = Math.max(max, (store.state.farmer!.leeks[l] as any)['total_' + icon.value])
 			}
 			return max

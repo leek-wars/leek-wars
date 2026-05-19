@@ -23,7 +23,7 @@
 	import { Navigation, Pagination, Autoplay } from 'swiper/modules'
 	import 'swiper/css'
 
-	defineOptions({ name: 'signup-carousel', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'SignupCarousel', i18n: {}, mixins: [...mixins] })
 
 	const bigImage = ref<string | null>(null)
 	const bigImageLegend = ref('')

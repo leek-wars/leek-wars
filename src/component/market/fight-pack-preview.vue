@@ -4,6 +4,6 @@
 
 <script setup lang="ts">
 defineProps<{
-	pack?: any
+	pack?: Record<string, unknown>
 }>()
 </script>

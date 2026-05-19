@@ -29,9 +29,9 @@ abstract class Particle {
 	public static GARBAGE_LIFE = 50
 
 	public game: Game
-	public x: any
-	public y: any
-	public z: any
+	public x: number
+	public y: number
+	public z: number
 	public life: number
 	public dx: number = 0
 	public dy: number = 0
@@ -382,13 +382,20 @@ class Explosion extends Particle {
 	}
 }
 
+interface ExplosionPoint {
+	x: number; y: number; z: number
+	dx: number; dy: number; dz: number
+	angle: number; s: number; life: number
+}
+interface ExplosionSource {
+	s: number; p: number; x: number; y: number; dx: number; dy: number
+	points: ExplosionPoint[]
+}
+
 class RealisticExplosion extends Particle {
 	static LIFE = 65
 	static POINT_LIFE = 50
-	public sources = [] as {
-		s: number, p: number, x: number, y: number, dx: number, dy: number,
-		points: {x: number, y: number, z: number, dx: number, dy: number, dz: number, angle: number, s: number, life: number}[]
-	}[]
+	public sources: ExplosionSource[] = []
 	public delay = 0
 	public radius: number
 
@@ -415,7 +422,7 @@ class RealisticExplosion extends Particle {
 		}
 	}
 
-	public add_point(source: any, angle: number): void {
+	public add_point(source: ExplosionSource, angle: number): void {
 		const dx = Math.cos(angle)
 		const dy = Math.sin(angle)
 		const speed = this.radius + Math.random() * (this.radius / 1.3)
@@ -483,10 +490,7 @@ class RealisticExplosion extends Particle {
 class SmallExplosion extends Particle {
 	static LIFE = 65
 	static POINT_LIFE = 50
-	public sources = [] as {
-		s: number, p: number, x: number, y: number, dx: number, dy: number,
-		points: {x: number, y: number, z: number, dx: number, dy: number, dz: number, angle: number, s: number, life: number}[]
-	}[]
+	public sources: ExplosionSource[] = []
 	public delay = 0
 	public radius: number
 
@@ -494,9 +498,6 @@ class SmallExplosion extends Particle {
 		super(game, x, y, 0, RealisticExplosion.LIFE)
 
 		this.radius = radius
-		const SOURCE_SPEED = radius / 2.5
-		const rad = radius * this.game.ground.realTileSizeY / 5
-		const RADIUS_RAND = radius * this.game.ground.realTileSizeY / 8
 		const size = radius * 2
 
 		// this.sources.push({ s: size, p: 8, x: - (rad + Math.random() * RADIUS_RAND), y: - (rad + Math.random() * RADIUS_RAND) / 2 , dx: -SOURCE_SPEED, dy: -SOURCE_SPEED, points: [] })
@@ -513,7 +514,7 @@ class SmallExplosion extends Particle {
 		}
 	}
 
-	public add_point(source: any, angle: number): void {
+	public add_point(source: ExplosionSource, angle: number): void {
 		const dx = Math.cos(angle)
 		const dy = Math.sin(angle)
 		const speed = this.radius + Math.random() * (this.radius / 1.3)
@@ -660,7 +661,7 @@ class Garbage extends FallingParticle {
 }
 
 class ImageParticle extends Particle {
-	public totalLife: any
+	public totalLife: number
 	public alpha: number
 	public texture: HTMLImageElement | HTMLCanvasElement
 	public scale: number
@@ -697,7 +698,7 @@ class CriticalParticle extends Particle {
 	}
 }
 class SpikeParticle extends Particle {
-	public totalLife: any
+	public totalLife: number
 	public flip: boolean
 	public ix: number
 	public iy: number
@@ -923,7 +924,7 @@ class Orbital extends Particle {
 		this.scale = scale
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	 
 	public draw(ctx: CanvasRenderingContext2D): void {
 		ctx.drawImage(T.orbital.texture, -T.orbital.texture.width / 2 * this.scale, -T.orbital.texture.height / 2 * this.scale, T.orbital.texture.width * this.scale, T.orbital.texture.height * this.scale)
 	}

@@ -281,6 +281,28 @@
 		to: number | null
 	}
 
+	interface EndpointRow { module: string; function: string; count: number; avg_ms: number; p95_ms: number; max_ms: number; security_count: number }
+	interface FarmerRow { farmer_id: number; farmer_name: string; count: number; endpoints: number; register_time?: number }
+	interface StatusRow { http_status: number; count: number }
+	interface SlowRow { id: number; module: string; function: string; duration_ms: number; http_status: number; farmer_id?: number; farmer_name?: string; date: number }
+	interface TimelinePoint { bucket: number; count: number; avg_ms: number; errors?: number }
+	interface AggregateData {
+		total: number; avg_ms: number; p95_ms: number; farmers: number
+		timeline: TimelinePoint[]
+		bucket_ms: number
+		top_endpoints: EndpointRow[]
+		top_farmers: FarmerRow[]
+		status_distribution: StatusRow[]
+		top_slow: SlowRow[]
+		previous?: { total: number; avg_ms: number; p95_ms: number; farmers: number }
+	}
+	interface HeatmapCell { count: number; errors: number; avg_ms: number }
+	interface HeatmapRow { module: string; function: string; cells: (HeatmapCell | null)[] }
+	interface HeatmapData { matrix: HeatmapRow[]; buckets: number[]; bucket_ms: number }
+	interface LogRow { id: number; module: string; function: string; method: string; http_status: number; duration_ms: number; farmer_id?: number; farmer_name?: string; ip: string; date: number }
+	interface JourneyRow extends LogRow { gapLabel?: string; gapTitle?: string }
+	interface JourneyData { farmer_id: number; farmer_name: string; total: number; hours: number; logs: LogRow[] }
+
 	function emptyFilters(): Filters {
 		return { module: '', function: '', farmer_id: null, ip: '', method: '', http_status: null, min_duration_ms: null, from: null, to: null }
 	}
@@ -299,22 +321,22 @@
 	const refreshInterval = ref(30)
 	let refreshTimer: number | null = null
 
-	const aggregates = ref<any>(null)
+	const aggregates = ref<AggregateData | null>(null)
 	const aggLoading = ref(false)
 	const chartData = ref<ChartData<'line'> | null>(null)
 
-	const heatmap = ref<any>(null)
+	const heatmap = ref<HeatmapData | null>(null)
 	const heatmapLoading = ref(false)
 	const heatmapMetric = ref<'count' | 'errors' | 'avg_ms'>('count')
 
 	const filters = ref<Filters>(emptyFilters())
-	const logs = ref<any[] | null>(null)
+	const logs = ref<LogRow[] | null>(null)
 	const total = ref(0)
 	const page = ref(1)
 	const pageSize = ref(50)
 	const logsLoading = ref(false)
 
-	const journeyData = ref<any>(null)
+	const journeyData = ref<JourneyData | null>(null)
 	const journeyLoading = ref(false)
 
 	const chartOptions: ChartOptions<'line'> = {
@@ -359,9 +381,9 @@
 		return idx % bucketLabelStep.value === 0 ? formatBucket(bucket, heatmap.value.bucket_ms) : ''
 	}
 
-	const journeyRows = computed(() => {
+	const journeyRows = computed((): JourneyRow[] => {
 		const rows = journeyData.value?.logs ?? []
-		return rows.map((row: any, i: number) => {
+		return rows.map((row, i) => {
 			const next = rows[i + 1]
 			const gapMs = next ? row.date - next.date : 0
 			return { ...row, gapLabel: formatGap(gapMs), gapTitle: gapMs ? 'Gap depuis la requête précédente : ' + Math.round(gapMs / 1000) + 's' : '' }
@@ -384,7 +406,7 @@
 	function loadAggregates() {
 		aggLoading.value = true
 		const payload = { ...windowPayload(), compare: compare.value, new_farmer_days: newFarmersOnly.value ? newFarmerDays.value : 0 }
-		LeekWars.post('admin/api-log-aggregates', payload).then((data: any) => {
+		LeekWars.post<AggregateData>('admin/api-log-aggregates', payload).then((data) => {
 			aggregates.value = data
 			chartData.value = buildChartData(data)
 			aggLoading.value = false
@@ -396,7 +418,7 @@
 	function loadHeatmap() {
 		heatmapLoading.value = true
 		const payload = { ...windowPayload(), metric: heatmapMetric.value }
-		LeekWars.post('admin/api-log-heatmap', payload).then((data: any) => {
+		LeekWars.post<HeatmapData>('admin/api-log-heatmap', payload).then((data) => {
 			heatmap.value = data
 			heatmapLoading.value = false
 		}).catch(() => {
@@ -404,14 +426,14 @@
 		})
 	}
 
-	function buildChartData(data: any): ChartData<'line'> {
-		const labels = data.timeline.map((p: any) => formatBucket(p.bucket, data.bucket_ms))
+	function buildChartData(data: AggregateData): ChartData<'line'> {
+		const labels = data.timeline.map((p) => formatBucket(p.bucket, data.bucket_ms))
 		return {
 			labels,
 			datasets: [
 				{
 					label: 'Requêtes',
-					data: data.timeline.map((p: any) => p.count),
+					data: data.timeline.map((p) => p.count),
 					borderColor: '#2196f3',
 					backgroundColor: 'rgba(33,150,243,0.15)',
 					yAxisID: 'y',
@@ -421,7 +443,7 @@
 				},
 				{
 					label: 'Latence moyenne (ms)',
-					data: data.timeline.map((p: any) => p.avg_ms),
+					data: data.timeline.map((p) => p.avg_ms),
 					borderColor: '#ff9800',
 					backgroundColor: 'rgba(255,152,0,0.15)',
 					yAxisID: 'y1',
@@ -430,7 +452,7 @@
 				},
 				{
 					label: 'Erreurs',
-					data: data.timeline.map((p: any) => p.errors ?? 0),
+					data: data.timeline.map((p) => p.errors ?? 0),
 					borderColor: '#e53935',
 					backgroundColor: 'rgba(229,57,53,0.1)',
 					yAxisID: 'y',
@@ -443,11 +465,11 @@
 
 	function searchLogs() {
 		logsLoading.value = true
-		const f: any = {}
+		const f: Partial<Filters> = {}
 		for (const [key, value] of Object.entries(filters.value)) {
-			if (value !== '' && value !== null && value !== undefined) f[key] = value
+			if (value !== '' && value !== null && value !== undefined) (f as Record<string, unknown>)[key] = value
 		}
-		LeekWars.post('admin/api-log', { filters: f, page: page.value, page_size: pageSize.value }).then((data: any) => {
+		LeekWars.post<{ logs: LogRow[]; total: number }>('admin/api-log', { filters: f, page: page.value, page_size: pageSize.value }).then((data) => {
 			logs.value = data.logs
 			total.value = data.total
 			logsLoading.value = false
@@ -483,7 +505,7 @@
 
 	function loadFarmerJourney(farmerId: number) {
 		journeyLoading.value = true
-		LeekWars.get('admin/api-log-farmer/' + farmerId + '/' + (periodHours.value || 24)).then((data: any) => {
+		LeekWars.get<JourneyData>('admin/api-log-farmer/' + farmerId + '/' + (periodHours.value || 24)).then((data) => {
 			journeyData.value = data
 			journeyLoading.value = false
 		}).catch(() => {
@@ -578,14 +600,14 @@
 		for (const row of heatmap.value.matrix) {
 			for (const cell of row.cells) {
 				if (!cell) continue
-				const v = cell[heatmapMetric.value]
+				const v: number = cell[heatmapMetric.value]
 				if (v > max) max = v
 			}
 		}
 		return max || 1
 	})
 
-	function cellStyle(cell: any): Record<string, string> {
+	function cellStyle(cell: HeatmapCell | null): Record<string, string> {
 		if (!cell) return { background: 'transparent' }
 		const v = cell[heatmapMetric.value]
 		if (!v) return { background: 'transparent' }
@@ -593,8 +615,8 @@
 		return { background: `rgba(${HEATMAP_COLORS[heatmapMetric.value]},${intensity})` }
 	}
 
-	function cellTitle(row: any, cell: any, bucket: number): string {
-		const ts = formatBucket(bucket, heatmap.value.bucket_ms)
+	function cellTitle(row: HeatmapRow, cell: HeatmapCell | null, bucket: number): string {
+		const ts = formatBucket(bucket, heatmap.value!.bucket_ms)
 		if (!cell) return `${row.module}/${row.function} @ ${ts}\nAucune requête`
 		return `${row.module}/${row.function} @ ${ts}\n${cell.count} req · ${cell.errors} err · ${cell.avg_ms}ms moy.`
 	}

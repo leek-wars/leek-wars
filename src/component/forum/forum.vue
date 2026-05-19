@@ -159,14 +159,14 @@
 
 	const ChatPanel = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat-panel.vue`))
 
-	defineOptions({ name: 'forum', i18n: {}, mixins: [...mixins] })
+	defineOptions({ name: 'Forum', i18n: {}, mixins: [...mixins] })
 
 	const t = useNamespacedT('forum')
 	const router = useRouter()
 
-	const categories = ref<any>(null)
+	const categories = ref<Record<string, unknown> | null>(null)
 	const connected_farmers = ref<Farmer[]>([])
-	const connected_languages = ref<any>({})
+	const connected_languages = ref<Record<string, unknown>>({})
 	const forumLanguages = reactive<{[key: string]: boolean}>({})
 	const expandFarmers = ref(true)
 	const searchQuery = ref('')

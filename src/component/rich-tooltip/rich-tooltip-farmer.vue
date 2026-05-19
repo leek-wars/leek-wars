@@ -38,7 +38,7 @@
 				<span class="talent-more">({{ farmer.talent_more >= 0 ? '+' + farmer.talent_more : farmer.talent_more }})</span>
 				<ranking-badge v-if="farmer && farmer.ranking && farmer.ranking <= 1000 && farmer.in_garden" :id="farmer.id" :ranking="farmer.ranking" category="farmer" />
 				<span class="level">• {{ $t('main.level_n', [farmer.total_level]) }}</span>
-				<v-btn class="expand" variant="text" size="x-small" @click="expand_leeks = !expand_leeks" :icon="expand_leeks ? 'mdi-chevron-up' : 'mdi-chevron-down'" />
+				<v-btn class="expand" variant="text" size="x-small" :icon="expand_leeks ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="expand_leeks = !expand_leeks" />
 				<table v-if="expand_leeks" class="leeks">
 					<thead>
 						<tr>
@@ -88,10 +88,26 @@ const emit = defineEmits<{
 	'update:modelValue': [value: boolean]
 }>()
 
+interface RichFarmerLeek {
+	id: number
+	name: string
+	level: number
+	talent: number
+	[key: string]: unknown
+}
+
+interface RichFarmerData {
+	id: number
+	name: string
+	avatar_changed: number
+	leeks: Record<string, RichFarmerLeek>
+	[key: string]: unknown
+}
+
 const router = useRouter()
-const menu = useTemplateRef<any>('menu')
+const menu = useTemplateRef<{ updateLocation?: () => void }>('menu')
 const content_created = ref(false)
-const farmer = ref<any>(null)
+const farmer = ref<RichFarmerData | null>(null)
 const expand_leeks = ref(false)
 const sums = ref<{[key: string]: number}>({})
 const locked = ref(false)
@@ -112,10 +128,10 @@ function open(v: boolean) {
 	if (content_created.value) { return }
 	content_created.value = true
 	if (props.id > 0 && !farmer.value) {
-		LeekWars.get<any>('farmer/rich-tooltip/' + props.id).then(f => {
+		LeekWars.get<RichFarmerData>('farmer/rich-tooltip/' + props.id).then(f => {
 			farmer.value = f
 			for (const c of LeekWars.characteristics) {
-				sums.value[c] = Object.values(f.leeks).reduce((sum: number, leek: any) => sum + leek['total_' + c], 0)
+				sums.value[c] = Object.values(f.leeks).reduce((sum: number, leek: RichFarmerLeek) => sum + (leek['total_' + c] as number), 0)
 			}
 			if (expand_leeks.value) {
 				menu.value?.updateLocation?.()

@@ -47,7 +47,7 @@ interface Commit {
 	date: number
 }
 
-defineOptions({ name: 'git-history', i18n: {}, mixins: [...mixins] })
+defineOptions({ name: 'GitHistory', i18n: {}, mixins: [...mixins] })
 
 const props = defineProps<{
 	folder?: string
@@ -96,7 +96,7 @@ async function loadCommits() {
 		const data = await LeekWars.post('git/log', { folder: props.folder, count: 50, offset: 0 })
 		commits.value = data.commits
 		total.value = data.total
-	} catch (e) {
+	} catch {
 		// Pas de commits
 	} finally {
 		loading.value = false
@@ -108,7 +108,7 @@ async function loadMore() {
 	try {
 		const data = await LeekWars.post('git/log', { folder: props.folder, count: 50, offset: commits.value.length })
 		commits.value.push(...data.commits)
-	} catch (e) {
+	} catch {
 		// Erreur
 	} finally {
 		loading.value = false
@@ -125,7 +125,7 @@ async function toggleCommit(commit: Commit) {
 		try {
 			const data = await LeekWars.post('git/commit-files', { folder: props.folder, hash: commit.hash })
 			commitFiles[commit.hash] = data.files
-		} catch (e) {
+		} catch {
 			commitFiles[commit.hash] = []
 		}
 	}

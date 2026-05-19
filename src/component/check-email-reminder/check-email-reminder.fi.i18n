@@ -1,0 +1,17 @@
+{
+	"title": "Tarkista postilaatikkosi!",
+	"intro": "Lähetimme sinulle sähköpostin muutama minuutti sitten. Napsauta sen sisällä olevaa linkkiä aktivoidaksesi tilisi ja saadaksesi palkintosi.",
+	"check_spam": "Muista tarkistaa myös roskaposti- tai mainoskansio, jos et löydä sitä.",
+	"resend": "Lähetä sähköposti uudelleen",
+	"later": "Myöhemmin",
+	"or": "tai vahvista ilman sähköpostia",
+	"use_github": "Jatka GitHubilla",
+	"use_google": "Jatka Googlella",
+	"mail_resent": "Sähköposti lähetetty uudelleen!",
+	"error_wrong_token": "Istunto vanhentunut, kirjaudu uudelleen",
+	"error_already_verified": "Tilisi on jo vahvistettu",
+	"error_no_pending_verify": "Ei odottavaa vahvistusta",
+	"error_no_login": "Käyttäjänimi puuttuu, lataa sivu uudelleen",
+	"error_too_many_requests": "Odota hetki ennen uudelleenyritystä",
+	"error_unknown": "Jokin meni pieleen, yritä myöhemmin uudelleen"
+}

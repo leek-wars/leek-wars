@@ -12,9 +12,9 @@
 			<div class="actions">
 				<v-menu v-if="$store.state.farmer?.public_chat_enabled" location="bottom">
 					<template #activator="{ props }">
-						<div v-bind="props" v-ripple class="language-button">
+						<div v-ripple v-bind="props" class="language-button">
 							<flag :code="LeekWars.languages[LeekWars.publicChats[chatID].language].country" :clickable="false" />
-							<div class="unread-circle" v-if="Object.values(LeekWars.publicChats).some(chat => $store.state.chat[chat.id] && !$store.state.chat[chat.id].read)"></div>
+							<div v-if="Object.values(LeekWars.publicChats).some(chat => $store.state.chat[chat.id] && !$store.state.chat[chat.id].read)" class="unread-circle"></div>
 						</div>
 					</template>
 					<v-list :dense="true">
@@ -23,7 +23,7 @@
 							<v-list-item v-for="(chat, i) in data.chats" :key="i" class="language" @click="setChatLanguage(chat)">
 								<v-icon>{{ LeekWars.publicChats[chat].icon }}</v-icon>
 								<span class="name">{{ LeekWars.publicChats[chat].name }}</span>
-								<span class="unread-circle" v-if="$store.state.chat[chat] && !$store.state.chat[chat].read"></span>
+								<span v-if="$store.state.chat[chat] && !$store.state.chat[chat].read" class="unread-circle"></span>
 							</v-list-item>
 						</div>
 					</v-list>
@@ -40,7 +40,6 @@
 </template>
 
 <script setup lang="ts">
-import { ChatType } from '@/model/chat'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { defineAsyncComponent, ref } from 'vue'
@@ -48,7 +47,7 @@ import { useI18n } from 'vue-i18n'
 
 const Chat = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
 
-defineOptions({ name: 'chat-panel' })
+defineOptions({ name: 'ChatPanel' })
 
 const props = defineProps<{
 	toggle: string
@@ -63,6 +62,7 @@ const chatID = ref<number | null>(null)
 if (store.state.farmer?.group && store.state.farmer?.group.chat && !store.state.farmer?.public_chat_enabled) {
 	chatID.value = store.state.farmer.group.chat
 } else if (store.state.farmer?.public_chat_enabled) {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	chatID.value = parseInt(localStorage.getItem('chat-panel/' + props.chat) || '0') || (LeekWars.languages as any)[locale.value].chat
 }
 
@@ -71,8 +71,6 @@ function setChatLanguage(chat: number) {
 	localStorage.setItem('chat-panel/' + props.chat, '' + chat)
 }
 
-// Make ChatType available in template
-const _ChatType = ChatType
 </script>
 
 <style lang="scss" scoped>

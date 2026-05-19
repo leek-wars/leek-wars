@@ -1,6 +1,6 @@
 <template lang="html">
     <v-list class="version-menu">
-        <v-list-item v-ripple @click="version = 4" :lines="false">
+        <v-list-item v-ripple :lines="false" @click="version = 4">
             <template #prepend>
                 <v-icon v-if="version === 4" class="list-icon">mdi-star</v-icon>
                 <v-icon v-else class="list-icon">mdi-star-outline</v-icon>
@@ -15,7 +15,7 @@
                 <router-link class="link" to="/encyclopedia/LeekScript_4"><v-icon>mdi-book-open-page-variant</v-icon> {{ $t('leekscript.all_info_ls', ['LeekScript 4']) }}</router-link>
             </v-list-item-subtitle>
         </v-list-item>
-        <v-list-item v-ripple @click="version = 3" :lines="false">
+        <v-list-item v-ripple :lines="false" @click="version = 3">
             <template #prepend>
                 <v-icon v-if="version === 3" class="list-icon">mdi-star</v-icon>
                 <v-icon v-else class="list-icon">mdi-star-outline</v-icon>
@@ -30,7 +30,7 @@
                 <router-link class="link" to="/encyclopedia/LeekScript_3"><v-icon>mdi-book-open-page-variant</v-icon> {{ $t('leekscript.all_info_ls', ['LeekScript 3']) }}</router-link>
             </v-list-item-subtitle>
         </v-list-item>
-        <v-list-item v-ripple @click="version = 2" :lines="false">
+        <v-list-item v-ripple :lines="false" @click="version = 2">
             <template #prepend>
                 <v-icon v-if="version === 2" class="list-icon">mdi-star</v-icon>
                 <v-icon v-else class="list-icon">mdi-star-outline</v-icon>
@@ -46,7 +46,7 @@
             </v-list-item-subtitle>
         </v-list-item>
 
-        <v-list-item v-ripple @click="version = 1" :lines="false">
+        <v-list-item v-ripple :lines="false" @click="version = 1">
             <template #prepend>
                 <v-icon v-if="version === 1" class="list-icon">mdi-star</v-icon>
                 <v-icon v-else class="list-icon">mdi-star-outline</v-icon>
@@ -61,7 +61,7 @@
 
         <v-divider></v-divider>
 
-        <v-list-item v-ripple @click="strict = !strict" :lines="false">
+        <v-list-item v-ripple :lines="false" @click="strict = !strict">
             <template #prepend>
                 <v-checkbox v-model="strict" :hide-details="true" @click.stop />
             </template>

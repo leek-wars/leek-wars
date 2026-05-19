@@ -53,7 +53,7 @@
 		target?: Farmer | null
 		team?: Team | null
 		modelValue?: boolean
-		parameter?: any
+		parameter?: unknown
 		leeks?: Leek[] | null
 		fight?: number
 		leek?: Leek | null
@@ -74,7 +74,7 @@
 	const subtitle = computed(() => !selectedTarget.value && props.leeks ? t('warning.select_leek') : name.value)
 	const message = computed(() => t('warning.report_farmer_for_reason', [name.value]))
 	const selectedFarmer = computed(() => props.target || selectedTarget.value)
-	void selectedFarmer
+	void selectedFarmer.value
 
 	watch(() => props.target, () => {
 		selectedTarget.value = props.target ?? null
@@ -94,7 +94,7 @@
 			parameter = selectedLeek.value!.id
 		}
 		const fight = props.fight ? props.fight : 0
-		LeekWars.post('moderation/report', {target_id: target, reason: selectedReason.value, message: additionalMessage.value, parameter, fight}).then(data => {
+		LeekWars.post('moderation/report', {target_id: target, reason: selectedReason.value, message: additionalMessage.value, parameter, fight}).then(() => {
 			LeekWars.toast(t('warning.thank_you_for_reporting') as string)
 			close()
 		}).error(error => {

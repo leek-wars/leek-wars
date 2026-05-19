@@ -99,8 +99,28 @@
 	import { useRouter } from 'vue-router'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
+	interface AdminTrophy {
+		id: number
+		index: number
+		code: string
+		difficulty: number
+		points: number
+		category: number
+		title: number
+		noun_gender: number
+		noun_translation: number
+		adj_gender: number
+		adj_translation: number
+		public_description: boolean
+		name_fr: string
+		name_en: string
+		unlocked: number
+		unlocked_percent: number
+		last: number
+	}
+
 	const router = useRouter()
-	const trophies = ref<any>(null)
+	const trophies = ref<AdminTrophy[] | null>(null)
 	const difficulties = [
 		{id: 0, color: '#444'},
 		{id: 1, color: '#00aa00'},
@@ -112,7 +132,7 @@
 
 	if (!store.getters.admin) router.replace('/')
 	LeekWars.setTitle("Admin Trophies")
-	LeekWars.get('trophy/get-admin').then(data => {
+	LeekWars.get<{ trophies: AdminTrophy[] }>('trophy/get-admin').then(data => {
 		trophies.value = data.trophies
 	})
 
@@ -123,53 +143,51 @@
 		LeekWars.large = false
 	})
 
-	function nameFocusout(trophy: any, locale: string, e: Event) {
+	function nameFocusout(trophy: AdminTrophy, locale: string, e: Event) {
 		const value = (e.target as HTMLElement).textContent || ''
-		if (trophy['name_' + locale] !== value) {
-			trophy['name_' + locale] = value
+		const key = ('name_' + locale) as 'name_fr' | 'name_en'
+		if (trophy[key] !== value) {
+			trophy[key] = value
 			LeekWars.put('trophy-template/name', {id: trophy.id, locale, name: value})
 		}
 	}
-	function descriptionFocusout(trophy: any, locale: string, e: Event) {
+	function descriptionFocusout(trophy: AdminTrophy, locale: string, e: Event) {
 		const value = (e.target as HTMLElement).textContent || ''
-		if (trophy['description_' + locale] !== value) {
-			trophy['description_' + locale] = value
-			LeekWars.put('trophy-template/description', {id: trophy.id, locale, description: value})
-		}
+		LeekWars.put('trophy-template/description', {id: trophy.id, locale, description: value})
 	}
 	void descriptionFocusout
 
-	function pointsFocusout(trophy: any, e: Event) {
+	function pointsFocusout(trophy: AdminTrophy, e: Event) {
 		trophy.points = parseInt((e.target as HTMLElement).innerText, 10)
 		LeekWars.put('trophy-template/points', {id: trophy.id, points: trophy.points})
 	}
-	function difficultyChange(trophy: any) {
+	function difficultyChange(trophy: AdminTrophy) {
 		LeekWars.put('trophy-template/difficulty', {id: trophy.id, difficulty: trophy.difficulty})
 	}
 
-	function publicDescUpdate(trophy: any) {
+	function publicDescUpdate(trophy: AdminTrophy) {
 		LeekWars.put('trophy-template/public-description', {id: trophy.id, is_public: trophy.public_description})
 	}
 
-	function updateTitle(trophy: any, part: number, e: any) {
-		if (e.target.checked) { trophy.title += part } else { trophy.title -= part }
+	function updateTitle(trophy: AdminTrophy, part: number, e: Event) {
+		if ((e.target as HTMLInputElement).checked) { trophy.title += part } else { trophy.title -= part }
 		LeekWars.put('trophy-template/title', {id: trophy.id, title: trophy.title})
 	}
 
-	function updateNounGender(trophy: any, part: number, e: any) {
-		if (e.target.checked) { trophy.noun_gender += part } else { trophy.noun_gender -= part }
+	function updateNounGender(trophy: AdminTrophy, part: number, e: Event) {
+		if ((e.target as HTMLInputElement).checked) { trophy.noun_gender += part } else { trophy.noun_gender -= part }
 		LeekWars.put('trophy-template/noun-gender', {id: trophy.id, gender: trophy.noun_gender})
 	}
-	function updateNounTranslation(trophy: any, part: number, e: any) {
-		if (e.target.checked) { trophy.noun_translation += part } else { trophy.noun_translation -= part }
+	function updateNounTranslation(trophy: AdminTrophy, part: number, e: Event) {
+		if ((e.target as HTMLInputElement).checked) { trophy.noun_translation += part } else { trophy.noun_translation -= part }
 		LeekWars.put('trophy-template/noun-translation', {id: trophy.id, gender: trophy.noun_translation})
 	}
-	function updateAdjectiveGender(trophy: any, part: number, e: any) {
-		if (e.target.checked) { trophy.adj_gender += part } else { trophy.adj_gender -= part }
+	function updateAdjectiveGender(trophy: AdminTrophy, part: number, e: Event) {
+		if ((e.target as HTMLInputElement).checked) { trophy.adj_gender += part } else { trophy.adj_gender -= part }
 		LeekWars.put('trophy-template/adjective-gender', {id: trophy.id, gender: trophy.adj_gender})
 	}
-	function updateAdjectiveTranslation(trophy: any, part: number, e: any) {
-		if (e.target.checked) { trophy.adj_translation += part } else { trophy.adj_translation -= part }
+	function updateAdjectiveTranslation(trophy: AdminTrophy, part: number, e: Event) {
+		if ((e.target as HTMLInputElement).checked) { trophy.adj_translation += part } else { trophy.adj_translation -= part }
 		LeekWars.put('trophy-template/adjective-translation', {id: trophy.id, gender: trophy.adj_translation})
 	}
 </script>

@@ -69,7 +69,7 @@
 	import { computed, ref, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 
-	defineOptions({ name: 'git-remote-dialog', i18n: {}, mixins: [...mixins], components: { Popup } })
+	defineOptions({ name: 'GitRemoteDialog', i18n: {}, mixins: [...mixins], components: { Popup } })
 
 	const props = defineProps<{
 		modelValue: boolean
@@ -162,7 +162,7 @@
 		try {
 			const data = await gitCall('git/remotes', { folder: props.folder })
 			remotes.value = data.remotes || []
-		} catch (e) {
+		} catch {
 			remotes.value = []
 		} finally {
 			remotesLoading.value = false
@@ -178,7 +178,7 @@
 			} else {
 				availableRepos.value = []
 			}
-		} catch (e) {
+		} catch {
 			credentials.value = []
 			availableRepos.value = []
 		}
@@ -188,7 +188,7 @@
 		try {
 			const data = await gitCall('git-credential/repos')
 			availableRepos.value = data.repos || []
-		} catch (e) {
+		} catch {
 			availableRepos.value = []
 		}
 	}
@@ -201,7 +201,7 @@
 			newRemoteName.value = 'origin'
 			newRemoteUrl.value = ''
 			loadRemotes()
-		} catch (e: any) {
+		} catch (e: unknown) {
 			error.value = e.details || e.error || 'Error'
 		}
 	}
@@ -211,7 +211,7 @@
 		try {
 			await gitCall('git/remote-remove', { folder: props.folder, name })
 			loadRemotes()
-		} catch (e: any) {
+		} catch (e: unknown) {
 			error.value = e.details || e.error || 'Error'
 		}
 	}
@@ -230,7 +230,7 @@
 			patInstanceUrl.value = ''
 			selfHosted.value = false
 			loadCredentials()
-		} catch (e: any) {
+		} catch (e: unknown) {
 			const key = e?.error === 'invalid_instance_url' ? 'invalid_instance_url' : 'invalid_token'
 			let msg = t(key) as string
 			if (e?.details?.http_code) msg += ` (HTTP ${e.details.http_code})`
@@ -244,7 +244,7 @@
 		try {
 			await gitCall('git-credential/delete', { provider: cred.provider, instance_url: cred.instance_url || '' })
 			loadCredentials()
-		} catch (e: any) {
+		} catch (e: unknown) {
 			error.value = e.details || e.error || 'Error'
 		}
 	}

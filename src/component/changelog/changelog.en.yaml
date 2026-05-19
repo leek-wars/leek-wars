@@ -5,9 +5,16 @@
     - "#ai `setLoadout(name)` function: applies a loadout for this fight only, to be used inside `beforeFight()`. The loadout's weapons/chips/stats are reverted at the end of the fight."
     - "#ai `getWinner()` function: retrieves the winning team side from `afterFight()`."
     - "#ai Support for `.md`, `.txt`, `.json`, `.yaml` and `.gitignore` files in the editor, with appropriate syntax highlighting."
+    - "Live counter of players waiting for an arena, shown in the garden (on the tab and below the Select button) to encourage joining. (thanks to TransLeek)"
+    - "Arena waiting popup: preferred mode visible on each participant, live counter with pulse, leek selection and mode choice changeable without leaving the queue."
   improved:
     - "#ai Warning on functions and globals never used in the AI (strict mode)."
     - "#ai New files are now empty by default (instead of the LeekScript example code), except for the very first file of an account."
+    - "Fight actions panel is now scrollable: you can freely scroll back through the action history without losing old actions, with lazy loading in both directions."
+    - "More precise arena notifications: now show the number of leeks involved (Battle Royale, War, Chest Hunt, Colossus)."
+  fixed:
+    - "Market icon in the menu better vertically aligned."
+    - "Editing a leek's AI in a default scenario no longer triggers a 404: the scenario is now created on the fly."
 247:
   title: "Git integration, loadouts, multi-account management and clover potions."
   added:

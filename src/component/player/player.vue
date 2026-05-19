@@ -74,7 +74,7 @@
 					</div>
 					<div ref="progressBar" class="progress-bar" @click="progressBarClick" @mousemove="progressBarMove">
 						<div :style="{width: progressBarWidth + '%'}" class="bar"></div>
-						<span v-for="marker in game.progressBarMarkers">
+						<span v-for="(marker, idx) in game.progressBarMarkers" :key="idx">
 							<div class="marker" :style="{left: marker.left + '%', width: marker.width + '%', background: marker.background, outline: marker.outline}"></div>
 						</span>
 						<div class="circle" :style="{left: progressBarWidth + '%'}"></div>
@@ -99,7 +99,7 @@
 			<div v-if="!creator" class="controls controls-a">
 				<v-tooltip :open-delay="0" :close-delay="0" location="top" :attach="playerAttach">
 					<template #activator="{ props }">
-						<v-icon v-ripple class="control" @click="pause" v-bind="props">{{ game.paused ? 'mdi-play' : 'mdi-pause' }}</v-icon>
+						<v-icon v-ripple class="control" v-bind="props" @click="pause">{{ game.paused ? 'mdi-play' : 'mdi-pause' }}</v-icon>
 					</template>
 					{{ $t('pause') }} (P)
 				</v-tooltip>
@@ -128,8 +128,8 @@
 					{{ $t(game.sound ? 'sound_activated' : 'sound_disactivated') }} (V)
 				</v-tooltip>
 				<v-tooltip v-if="game.sound && !LeekWars.mobile" :open-delay="0" :close-delay="0" location="top" :attach="playerAttach">
-					<template #activator="{ props }">
-						<input type="range" min="0" max="1" step="0.01" style="width: 100px; padding: 0" v-model="game.volume">
+					<template #activator>
+						<input v-model="game.volume" type="range" min="0" max="1" step="0.01" style="width: 100px; padding: 0">
 					</template>
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" location="top" :attach="playerAttach">
@@ -187,19 +187,19 @@
 							</template>
 							<v-list density="compact" class="settings-menu">
 								<div class="section">INTERFACE</div>
-								<v-list-item v-ripple @click="game.showLifes = !game.showLifes" prepend-icon="mdi-heart-half-full">
+								<v-list-item v-ripple prepend-icon="mdi-heart-half-full" @click="game.showLifes = !game.showLifes">
 									<v-switch :model-value="game.showLifes" :label="$t('display_life_bars') + ' (L)'" hide-details />
 								</v-list-item>
-								<v-list-item :ripple="game.showLifes" :class="{disabled: !game.showLifes}" @click="game.showLifes ? (game.showEffects = !game.showEffects) : null" prepend-icon="mdi-flare">
+								<v-list-item :ripple="game.showLifes" :class="{disabled: !game.showLifes}" prepend-icon="mdi-flare" @click="game.showLifes ? (game.showEffects = !game.showEffects) : null">
 									<v-switch :model-value="game.showEffects" :disabled="!game.showLifes" :label="$t('display_effects') + ' (E)'" hide-details />
 								</v-list-item>
-								<v-list-item v-if="!LeekWars.mobile" v-ripple @click="game.showActions = !game.showActions" prepend-icon="mdi-format-list-bulleted">
+								<v-list-item v-if="!LeekWars.mobile" v-ripple prepend-icon="mdi-format-list-bulleted" @click="game.showActions = !game.showActions">
 									<v-switch :model-value="game.showActions" :label="$t('show_actions') + ' (A)'" hide-details />
 								</v-list-item>
-								<v-list-item v-if="!LeekWars.mobile" :ripple="game.showActions" :class="{disabled: !game.showActions}" @click="game.showActions ? (game.largeActions = !game.largeActions) : null" prepend-icon="mdi-view-split-vertical">
+								<v-list-item v-if="!LeekWars.mobile" :ripple="game.showActions" :class="{disabled: !game.showActions}" prepend-icon="mdi-view-split-vertical" @click="game.showActions ? (game.largeActions = !game.largeActions) : null">
 									<v-switch :model-value="game.largeActions" :disabled="!game.showActions" :label="$t('large_actions') + ' (G)'" hide-details />
 								</v-list-item>
-								<v-list-item v-if="!LeekWars.mobile" :ripple="game.displayDebugs" :class="{disabled: !game.showActions}" @click="game.showActions ? (game.displayDebugs = !game.displayDebugs) : null" prepend-icon="mdi-math-log">
+								<v-list-item v-if="!LeekWars.mobile" :ripple="game.displayDebugs" :class="{disabled: !game.showActions}" prepend-icon="mdi-math-log" @click="game.showActions ? (game.displayDebugs = !game.displayDebugs) : null">
 									<v-switch :model-value="game.displayDebugs" :disabled="!game.showActions" :label="$t('display_logs') + ' (D)'" hide-details />
 									<template #append>
 										<v-checkbox v-model="game.displayAILines" :disabled="!game.showActions || !game.displayDebugs" :class="{disabled: !game.showActions || !game.displayDebugs}" label="Lignes" hide-details class="ally-debug" @click.stop />
@@ -207,7 +207,7 @@
 									</template>
 								</v-list-item>
 								<div class="section">GRAPHISMES</div>
-								<v-list-item v-ripple @click="game.shadows = !game.shadows" prepend-icon="mdi-box-shadow">
+								<v-list-item v-ripple prepend-icon="mdi-box-shadow" @click="game.shadows = !game.shadows">
 									<v-switch :model-value="game.shadows" :label="$t('display_shadows') + ' (O)'" hide-details />
 								</v-list-item>
 								<v-list-item prepend-icon="mdi-weather-night">
@@ -217,16 +217,16 @@
 									</template>
 								</v-list-item>
 								<div class="section">DEVELOPEMENT</div>
-								<v-list-item v-ripple @click="game.tactic = !game.tactic" prepend-icon="mdi-view-comfy">
+								<v-list-item v-ripple prepend-icon="mdi-view-comfy" @click="game.tactic = !game.tactic">
 									<v-switch :model-value="game.tactic" :label="$t('tactic_mode') + ' (T)'" hide-details />
 								</v-list-item>
-								<v-list-item v-ripple @click="game.plainBackground = !game.plainBackground" prepend-icon="mdi-format-color-fill">
+								<v-list-item v-ripple prepend-icon="mdi-format-color-fill" @click="game.plainBackground = !game.plainBackground">
 									<v-switch :model-value="game.plainBackground" :label="$t('plain_background') + ' (U)'" hide-details />
 								</v-list-item>
-								<v-list-item v-ripple @click="game.showCells = !game.showCells" prepend-icon="mdi-numeric-1-box">
+								<v-list-item v-ripple prepend-icon="mdi-numeric-1-box" @click="game.showCells = !game.showCells">
 									<v-switch :model-value="game.showCells" :label="$t('display_cell_numbers') + ' (C)'" hide-details />
 								</v-list-item>
-								<v-list-item v-if="!LeekWars.mobile" :ripple="game.showLifes" :class="{disabled: !game.showLifes}" @click="game.showLifes ? (game.showIDs = !game.showIDs) : null" prepend-icon="mdi-key">
+								<v-list-item v-if="!LeekWars.mobile" :ripple="game.showLifes" :class="{disabled: !game.showLifes}" prepend-icon="mdi-key" @click="game.showLifes ? (game.showIDs = !game.showIDs) : null">
 									<v-switch :model-value="game.showIDs" :disabled="!game.showLifes" :label="$t('show_ids') + ' (I)'" hide-details />
 								</v-list-item>
 							</v-list>
@@ -253,15 +253,15 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { Game } from './game/game'
+	import type { FightEntity } from './game/entity'
 	import Hud from './hud.vue'
 	import LwTitle from '@/component/title/title.vue'
 	import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
-	import { useI18n } from 'vue-i18n'
 	import { useRouter } from 'vue-router'
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
 
-	defineOptions({ name: 'player', i18n: {}, mixins: [...mixins], components: { Hud, 'lw-title': LwTitle } })
+	defineOptions({ name: 'Player', i18n: {}, mixins: [...mixins], components: { Hud, 'lw-title': LwTitle } })
 
 	const props = defineProps<{
 		fightId?: string
@@ -277,16 +277,15 @@
 	const emit = defineEmits<{
 		resize: []
 		fight: [fight: Fight]
-		'unlock-trophy': [trophy: any]
-		edited: [data?: any]
+		'unlock-trophy': [trophy: unknown]
+		edited: [data?: unknown]
 	}>()
 
-	const { t } = useI18n()
 	const router = useRouter()
 	const document = window.document
 	const playerEl = useTemplateRef<HTMLElement>('player')
 	const playerAttach = computed(() => playerEl.value ?? undefined)
-	const hudRef = useTemplateRef<any>('hud')
+	const hudRef = useTemplateRef<{ hover_entity: FightEntity | null }>('hud')
 	const progressBar = useTemplateRef<HTMLElement>('progressBar')
 	const progressBarTooltip = useTemplateRef<HTMLElement>('progressBarTooltip')
 	const instance = getCurrentInstance()
@@ -316,22 +315,22 @@
 	}
 
 	const fight = ref<Fight | null>(null)
-	let canvas: any = null
+	let canvas: HTMLCanvasElement | null = null
 	const game = ref<Game>(new Game())
-	const queue = ref<any>(null)
+	const queue = ref<{ position: number, total: number } | null>(null)
 	let getDelay = 1000
 	const loaded = ref(false)
-	const error = ref<any>(false)
+	const error = ref<unknown>(false)
 	const fullscreen = ref(false)
-	const progressBarTurn = ref<any>(0)
+	const progressBarTurn = ref<number | string>(0)
 	const progressBarTooltipMargin = ref(0)
 	const progressBarPreviewMouse = ref(0)
 	const width = ref(0)
 	const totalWidth = ref(0)
 	const height = ref(0)
 	const totalHeight = ref(0)
-	let timeout: any = null
-	let request: any = null
+	let timeout: ReturnType<typeof setTimeout> | null = null
+	let request: ReturnType<typeof LeekWars.get> | null = null
 	const progress = ref(0)
 
 	;(async () => {
@@ -364,6 +363,7 @@
 	game.value.displayDebugs = localStorage.getItem('fight/debugs') === 'true'
 	game.value.displayAILines = localStorage.getItem('fight/debug-lines') === 'true'
 	game.value.displayAllyDebugs = localStorage.getItem('fight/ally-debugs') === 'true'
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	;(game.value as any).player = { gameLaunched, $emit: emit }
 
 	if (props.fightId) {
@@ -383,10 +383,10 @@
 		resize()
 	}
 
-	function onFightProgress(data: any) {
+	function onFightProgress(data: unknown[]) {
 		if (destroyed) return
 		if (fight.value && data[0] === fight.value.id) {
-			progress.value = data[1]
+			progress.value = data[1] as number
 			if (progress.value === 100 && request === null) {
 				if (timeout) clearTimeout(timeout)
 				getFight(false)
@@ -424,7 +424,7 @@
 			const newHeight = getHeight()
 			if (newWidth === width.value && newHeight === height.value) return
 			const aspectRatio = window.devicePixelRatio || 1
-			;(game.value as any).ratio = aspectRatio
+			game.value.ratio = aspectRatio
 			totalWidth.value = newWidth
 			totalHeight.value = newHeight
 			width.value = newWidth - (props.horizontal ? 2 * CONTROLS_HEIGHT : 0)
@@ -520,7 +520,7 @@
 	onBeforeUnmount(() => {
 		destroyed = true
 		game.value.pause()
-		;(game.value as any).cancelled = true
+		game.value.cancelled = true
 		emitter.off('keyup', keyup)
 		emitter.off('keydown', keydown)
 		emitter.off('resize', onResize)
@@ -560,6 +560,14 @@
 
 	function getFight(first: boolean) {
 		const fightLoaded = (f: Fight) => {
+			// Garde contre une réponse vide (déjà observé en prod : crash en
+			// aval sur f.team1_name, issue #3751). En général c'est la
+			// branche .error() de LeekWars.get qui devrait être empruntée,
+			// mais une réponse 200 + body null arrive parfois.
+			if (!f) {
+				error.value = true
+				return
+			}
 			fight.value = f
 			emit('fight', f)
 			if (f.status >= 1) {
@@ -594,6 +602,7 @@
 					report: {} as Report, status: 1,
 					team1_name: "A", team2_name: "B",
 					tournament: 0, type: 0, winner: 1, year: 2019,
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
 					data: report.fight as any,
 					comments: [], result: 'win', queue: 0, trophies: [],
 					chests: 0, size: 0, rareloot: 0, levelups: 0,
@@ -606,11 +615,11 @@
 		} else {
 			if (request === null) {
 				request = LeekWars.get('fight/get/' + props.fightId)
-				request.then((f: any) => {
+				request.then((f) => {
 					if (destroyed) return
 					request = null
 					fightLoaded(f)
-				}).error((err: any) => {
+				}).error((err) => {
 					if (destroyed) return
 					request = null
 					error.value = err
@@ -663,7 +672,7 @@
 		const tooltip = progressBarTooltip.value
 		if (!bar || !tooltip) return
 		const barOffset = bar.getBoundingClientRect().left
-		let turn: any = 0
+		let turn: number | string = 0
 		const pos = (e.pageX - barOffset) / bar.clientWidth
 		for (const i in game.value.turnPosition) {
 			if (pos >= game.value.turnPosition[i]) turn = i
@@ -673,7 +682,7 @@
 		progressBarPreviewMouse.value = 100 * (e.pageX - barOffset) / bar.clientWidth
 	}
 
-	function setLocalStorageAndRedraw(key: string, value: any, redraw = false) {
+	function setLocalStorageAndRedraw(key: string, value: unknown, redraw = false) {
 		localStorage.setItem('fight/' + key, '' + value)
 		if (redraw) game.value.redraw()
 	}
