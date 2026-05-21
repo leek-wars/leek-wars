@@ -98,19 +98,54 @@
 			<template v-else>
 				<panel v-for="(item, i) in items" :key="i" class="item-sample">
 					<template #content>
-						<router-link v-ripple :to="'/market/' + item.name.replace(/[a-z-]+_/, '')">
-							<item :item="item" />
+						<div class="sample">
+							<router-link v-ripple :to="'/market/' + item.name.replace(/[a-z-]+_/, '')" class="item-link">
+								<item :item="item" />
+							</router-link>
 							<div class="info">
-								<div class="name">{{ $t(item.name.replace('_', '.')) }}</div>
-								<div class="price">
-									{{ $filters.number(item.crystals!) }} <span class="crystal"></span>
-								</div>
+								<router-link :to="'/market/' + item.name.replace(/[a-z-]+_/, '')" class="name">{{ translateItemName(item) }}</router-link>
+								<v-tooltip location="bottom">
+									<template #activator="{ props: tprops }">
+										<v-btn
+											v-bind="tprops"
+											class="buy-button"
+											:class="{ 'not-enough': !hasEnough(item) }"
+											:color="hasEnough(item) ? '#4caf50' : undefined"
+											variant="flat"
+											prepend-icon="mdi-cart-outline"
+											@click="onBuyClick(item)">
+											<span class="price">{{ $filters.number(item.crystals!) }}&nbsp;<span class="crystal"></span></span>
+										</v-btn>
+									</template>
+									<span v-if="hasEnough(item)">{{ $t('buy_now') }}</span>
+									<span v-else>{{ $t('missing_n_crystals', [$filters.number(item.crystals! - ($store.state.farmer?.crystals ?? 0))]) }}</span>
+								</v-tooltip>
 							</div>
-						</router-link>
+						</div>
 					</template>
 				</panel>
 			</template>
 		</div>
+
+		<popup v-model="buyDialog" :width="600">
+			<template #icon><v-icon>mdi-cash-multiple</v-icon></template>
+			<template #title><span>{{ $t('confirm_purchase') }}</span></template>
+			<div v-if="buyItem && $store.state.farmer">
+				<i18n-t tag="div" keypath="are_you_sure_you_want_to_buy">
+					<template #item><b>{{ translateItemName(buyItem) }}</b></template>
+				</i18n-t>
+				<br>
+				<b>{{ $t('price') }}</b> : {{ $filters.number(buyItem.crystals!) }} <span class="crystal"></span>
+				<br>
+				<b>{{ $t('crystals_before_purchase') }}</b> : {{ $filters.number($store.state.farmer.crystals) }} <span class="crystal"></span>
+				<br>
+				<b>{{ $t('crystals_after_purchase') }}</b> : {{ $filters.number($store.state.farmer.crystals - buyItem.crystals!) }} <span class="crystal"></span>
+			</div>
+			<template #actions>
+				<div v-ripple @click="buyDialog = false">{{ $t('cancel') }}</div>
+				<div v-ripple class="buy green" @click="confirmBuy">{{ $t('buy') }}</div>
+			</template>
+		</popup>
 	</div>
 </template>
 
@@ -120,9 +155,10 @@ import { useRoute, useRouter } from 'vue-router'
 import { i18n, mixins , useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
-import { ITEM_CATEGORY_NAME, type ItemTemplate } from '@/model/item'
+import { ITEM_CATEGORY_NAME, ItemType, type ItemTemplate } from '@/model/item'
 import Item from '@/component/item.vue'
 import BankProduct from './bank-product.vue'
+import Popup from '@/component/popup.vue'
 
 interface Pack { id: number; crystals: number; bonus: number; prices: Record<string, number> }
 
@@ -135,6 +171,8 @@ const route = useRoute()
 const packs = ref<Record<string, Pack> | null>(null)
 const items = ref<Record<string, ItemTemplate> | null>(null)
 const firstPurchase = ref(false)
+const buyDialog = ref(false)
+const buyItem = ref<ItemTemplate | null>(null)
 
 const bestBonus = computed(() => {
 	if (!packs.value) return -1
@@ -196,16 +234,60 @@ const suggestion = computed(() => {
 	}
 })
 
-const suggestionItemName = computed(() => {
-	const s = suggestion.value
-	if (!s || s.target !== 'item' || !s.item) return ''
-	const item = s.item
+function translateItemName(item: ItemTemplate): string {
 	const type = ITEM_CATEGORY_NAME[item.type]
 	const shortName = item.name.replace(type + '_', '').replace('fight-pack_', '')
 	const key = type + '.' + shortName
 	const translated = i18n.t(key)
 	return translated && translated !== key ? translated : shortName.replace(/_/g, ' ')
+}
+
+const suggestionItemName = computed(() => {
+	const s = suggestion.value
+	if (!s || s.target !== 'item' || !s.item) return ''
+	return translateItemName(s.item)
 })
+
+function hasEnough(item: ItemTemplate): boolean {
+	if (!store.state.farmer) return false
+	return store.state.farmer.crystals >= (item.crystals ?? 0)
+}
+
+function onBuyClick(item: ItemTemplate) {
+	if (!store.state.farmer) return
+	if (hasEnough(item)) {
+		buyItem.value = item
+		buyDialog.value = true
+	} else {
+		const refName = item.name.replace(/^[a-z-]+_/, '')
+		router.replace({ path: '/bank', query: { ref: 'market_not_enough:' + refName } })
+		window.scrollTo({ top: 0, behavior: 'smooth' })
+	}
+}
+
+function confirmBuy() {
+	const item = buyItem.value
+	if (!item || !store.state.farmer) return
+	if (store.state.farmer.crystals < (item.crystals ?? 0)) {
+		LeekWars.toast(i18n.t('market.error_not_enough_crystals'))
+		buyDialog.value = false
+		return
+	}
+	const id = item.type === ItemType.FIGHT_PACK ? (item.id - 1000000) + 'fights' : item.id
+	LeekWars.post('market/buy-crystals-quantity', { item_id: id, quantity: 1 }).then((data: any) => {
+		store.commit('update-crystals', -(item.crystals ?? 0))
+		if (item.type === ItemType.FIGHT_PACK) {
+			store.commit('update-fights', data.fights)
+			store.commit('update-bought-fights', data.fights)
+		}
+		store.commit('add-inventory', { type: item.type, id: data.item, template: id, quantity: 1, time: Date.now() / 1000 })
+		if (store.state.farmer) {
+			LeekWars.setSubTitle(t('main.x_habs', [LeekWars.formatNumber(store.state.farmer.habs)]) + ' • ' + t('main.x_crystals', [LeekWars.formatNumber(store.state.farmer.crystals)]))
+		}
+	})
+	.error((error: any) => LeekWars.toast(i18n.t('market.error_' + error.error, error.params)))
+	buyDialog.value = false
+}
 
 const suggestionPrice = computed(() => {
 	const s = suggestion.value
@@ -340,10 +422,10 @@ watch(() => LeekWars.currency, () => {
 			}
 		}
 		:deep(.crystal) {
-			width: 14px;
-			height: 14px;
+			width: 10px;
+			height: 20px;
 			margin: 0;
-			vertical-align: -2px;
+			vertical-align: -4px;
 			background-size: contain;
 		}
 		.suggestion-cta {
@@ -397,24 +479,49 @@ watch(() => LeekWars.currency, () => {
 		}
 	}
 	.item-sample {
-		a {
+		.sample {
 			display: flex;
+			align-items: center;
 			gap: 10px;
 			padding: 10px;
-			color: var(--text-color-secondary);
+		}
+		.item-link {
+			flex-shrink: 0;
+			display: flex;
+			text-decoration: none;
+		}
+		.info {
+			flex: 1;
+			min-width: 0;
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			align-items: flex-start;
 		}
 		:deep(.item) {
 			width: 80px;
 			height: 80px;
+			flex-shrink: 0;
 		}
 		.name {
 			font-size: 16px;
-			margin-top: 10px;
+			color: var(--text-color);
+			text-decoration: none;
 		}
-		.price {
-			font-size: 20px;
-			font-weight: 500;
-			margin-top: 12px;
+		.buy-button {
+			text-transform: none;
+			letter-spacing: 0;
+			font-weight: 600;
+			font-size: 15px;
+			&.not-enough {
+				background: var(--background-disabled) !important;
+				color: var(--text-color-secondary) !important;
+				box-shadow: none !important;
+				opacity: 0.85;
+				&:hover {
+					opacity: 1;
+				}
+			}
 		}
 	}
 </style>
