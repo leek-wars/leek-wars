@@ -133,6 +133,7 @@
 								<div class="id">#{{ entry.item.template }}</div>
 							</div>
 						</div>
+					</template>
 					<div v-for="item in (group === Group.NONE ? placeholder_count : 0)" :key="'p' + item" class="placeholder"></div>
 				</div>
 
