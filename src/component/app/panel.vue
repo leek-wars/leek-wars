@@ -60,6 +60,8 @@ watch(expanded, () => {
 		emit('update:expanded', expanded.value)
 	}
 })
+
+defineExpose({ expanded })
 </script>
 
 <style lang="scss" scoped>

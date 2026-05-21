@@ -902,7 +902,10 @@
 		}
 	}
 	.game.horizontal .controls .control {
-		padding: 12px 5px;
+		padding: 12px 6px;
+		min-width: 0;
+		width: 36px;
+		height: 48px;
 	}
 	.controls .control:hover {
 		background: rgba(255,255,255, 0.2);

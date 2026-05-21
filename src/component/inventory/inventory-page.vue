@@ -324,7 +324,6 @@
 		font-size: 20px;
 		opacity: 1;
 		color: #aaa;
-		padding: 0 20px;
 	}
 	&:hover .v-icon {
 		opacity: 1;

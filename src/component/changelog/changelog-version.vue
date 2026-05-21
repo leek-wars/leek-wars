@@ -108,7 +108,7 @@ const sections = computed(() => {
 		.screenshot {
 			color: #5fad1b;
 			cursor: pointer;
-			padding: 0 4px;
+			margin: 0 4px;
 			border-radius: 4px;
 			font-size: 20px;
 			vertical-align: top;
