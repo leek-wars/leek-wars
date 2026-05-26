@@ -13,7 +13,7 @@
 		</div>
 		<div v-if="item.type === ItemType.WEAPON || item.type === ItemType.CHIP" class="constant">{{ item.name.toUpperCase() }}</div>
 		<div class="image" :class="{sound: category === 'chip' || category === 'weapon'}">
-			<img v-if="item.type === ItemType.WEAPON" :src="'/image/weapon/' + item.name.replace(category + '_', '') + '.png'" :width="WeaponsData[item.params].width" @click="playSound(item, category)">
+			<img v-if="item.type === ItemType.WEAPON" :src="'/image/weapon/' + item.name.replace(category + '_', '') + '.png'" :width="WeaponsData[item.params]?.width" @click="playSound(item, category)">
 			<scheme-image v-else-if="item.type === ItemType.SCHEME" :scheme="LeekWars.schemes[item.params]" />
 			<img v-else :src="'/image/' + category + '/' + item.name.replace(category + '_', '') + '.png'" @click="playSound(item, category)">
 		</div>
