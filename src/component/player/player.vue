@@ -267,6 +267,9 @@
 								<v-list-item v-if="!compact" :ripple="ui.showLifes" :class="{disabled: !ui.showLifes}" prepend-icon="mdi-key" @click="ui.showLifes ? (ui.showIDs = !ui.showIDs) : null">
 									<lw-switch :model-value="ui.showIDs" :disabled="!ui.showLifes" :label="$t('show_ids') + ' (I)'" />
 								</v-list-item>
+								<v-list-item v-if="hasOwnEntities" v-ripple prepend-icon="mdi-account-filter" @click="ui.debugOnlyMine = !ui.debugOnlyMine">
+									<lw-switch :model-value="ui.debugOnlyMine" :label="$t('debug_only_my_leeks')" />
+								</v-list-item>
 							</v-list>
 						</v-menu>
 					</template>
@@ -419,6 +422,7 @@
 		displayDebugs: true,
 		displayAILines: false,
 		displayAllyDebugs: false,
+		debugOnlyMine: false,
 		mapType: -1,
 		showFPS: false,
 		// Volontairement PAS retenu d'une visite à l'autre : le mode débridé occupe
@@ -453,6 +457,7 @@
 		ui.displayDebugs = g.displayDebugs
 		ui.displayAILines = g.displayAILines
 		ui.displayAllyDebugs = g.displayAllyDebugs
+		ui.debugOnlyMine = g.debugOnlyMine
 		ui.mapType = g.mapType
 		ui.showFPS = g.showFPS
 		ui.uncapped = g.uncapped
@@ -541,6 +546,8 @@
 	const queue = ref<{ position: number, total: number } | null>(null)
 	let getDelay = 1000
 	const loaded = ref(false)
+	// Le mode « mes actions » n'est proposé que si le joueur a des entités dans le combat.
+	const hasOwnEntities = ref(false)
 	const error = ref<unknown>(false)
 	const fullscreen = ref(false)
 	const progressBarTurn = ref<number | string>(0)
@@ -584,6 +591,7 @@
 	game.value.displayDebugs = localStorage.getItem('fight/debugs') === 'true'
 	game.value.displayAILines = localStorage.getItem('fight/debug-lines') === 'true'
 	game.value.displayAllyDebugs = localStorage.getItem('fight/ally-debugs') === 'true'
+	game.value.debugOnlyMine = localStorage.getItem('fight/debug-only-mine') === 'true'
 	game.value.showFPS = localStorage.getItem('fight/fps') === 'true'
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	;(game.value as any).player = { gameLaunched, $emit: emit }
@@ -625,6 +633,7 @@
 
 	function gameLaunched() {
 		loaded.value = true
+		hasOwnEntities.value = game.value.ownEntities.size > 0
 		setOrigin()
 	}
 
@@ -1156,6 +1165,10 @@
 	watchUI('displayDebugs', () => { localStorage.setItem('fight/debugs', '' + game.value.displayDebugs) })
 	watchUI('displayAILines', () => { localStorage.setItem('fight/debug-lines', '' + game.value.displayAILines) })
 	watchUI('displayAllyDebugs', () => { localStorage.setItem('fight/ally-debugs', '' + game.value.displayAllyDebugs) })
+	watchUI('debugOnlyMine', () => {
+		localStorage.setItem('fight/debug-only-mine', '' + game.value.debugOnlyMine)
+		game.value.skipOthersTurn()
+	})
 
 	function canvasClick() { game.value.selectEntity(game.value.click()); refreshUI(true) }
 	function canvasRightClick(e: Event) { game.value.rightClick(); e.preventDefault(); refreshUI(true) }

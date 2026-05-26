@@ -24,7 +24,7 @@ import { Area } from '@/model/area'
 import { Cell } from '@/model/cell'
 import { CHIPS } from '@/model/chips'
 import { EffectType, EntityEffect, isPeriodicEffect, repelDistance } from '@/model/effect'
-import { Fight, FightData, FightType, isOwnLogs, Report, VERSION_PERIODIC_ON_HIT } from '@/model/fight'
+import { Fight, FightData, FightLeek, FightType, isOwnLogs, Report, VERSION_PERIODIC_ON_HIT } from '@/model/fight'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
@@ -368,6 +368,29 @@ export const CHIP_ANIMATIONS = [
 	Popcorn, // 121 (2.50)
 ]
 
+/**
+ * Entités du joueur pour le mode « mes actions » : ses poireaux et leurs invocations, qui
+ * portent l'éleveur de leur invocateur, plus la tourelle de son camp quand c'est son IA qui
+ * la joue. Vide pour un spectateur ou un visiteur non connecté.
+ */
+function ownEntityIds(entities: FightLeek[], farmer: number | undefined, turretAIOwners?: Report['turret_ai_owners']): Set<number> {
+	const own = new Set<number>()
+	if (farmer === undefined) { return own }
+	const sides = new Set<number>()
+	for (const e of entities) {
+		if (e.farmer === farmer) {
+			own.add(e.id)
+			sides.add(e.team)
+		}
+	}
+	if (turretAIOwners && Object.values(turretAIOwners).includes(farmer)) {
+		for (const e of entities) {
+			if (e.type === EntityType.TURRET && sides.has(e.team)) { own.add(e.id) }
+		}
+	}
+	return own
+}
+
 class Game {
 	public canvas!: HTMLCanvasElement
 	public loadedData: number = 0
@@ -451,6 +474,10 @@ class Game {
 	public displayDebugs: boolean = true
 	public displayAllyDebugs: boolean = true
 	public displayAILines: boolean = true
+	/** Mode « mes actions » : la lecture saute les tours des entités qui ne sont pas au joueur. */
+	public debugOnlyMine: boolean = false
+	/** Entités du joueur connecté (cf. ownEntityIds), vide pour un spectateur. */
+	public ownEntities: Set<number> = new Set()
 	/** Affichage du compteur d'images, réservé aux administrateurs. */
 	public showFPS: boolean = false
 	public plainBackground: boolean = false
@@ -791,6 +818,7 @@ class Game {
 				this.entityOrder.push(entity)
 			}
 		}
+		this.ownEntities = ownEntityIds(entities, store.state.farmer?.id, fight.report?.turret_ai_owners)
 
 		// Actions
 		this.actions = withEffectItemIds(this.data.actions, fight.date).map(a => new Action(a))
@@ -1203,7 +1231,14 @@ class Game {
 							this.reportTimer = setTimeout(() => this.showReport(), 2500)
 							return
 						}
-						this.doAction(action)
+						// Mode « mes actions » : le tour d'un autre n'est pas joué, on saute au
+						// prochain tour du joueur, ou à la fin du combat s'il n'en a plus. Le saut
+						// mène toujours plus loin, et sur un tour du joueur : pas de boucle.
+						if (action.type === ActionType.LEEK_TURN && this.isOthersTurn(action.params[1])) {
+							this.jump(this.nextOwnTurn(this.currentAction))
+						} else {
+							this.doAction(action)
+						}
 					}
 				}
 				this.drawArea -= dt
@@ -3452,6 +3487,29 @@ class Game {
 		}
 	}
 
+	/** Mode « mes actions » : ce tour est celui d'une entité qui n'est pas au joueur. */
+	public isOthersTurn(entity: number) {
+		return this.debugOnlyMine && this.ownEntities.size > 0 && !this.ownEntities.has(entity)
+	}
+
+	/** Index du prochain tour d'une entité du joueur après `from`, ou la fin du combat s'il n'en a plus. */
+	public nextOwnTurn(from: number) {
+		for (let i = from + 1; i < this.actions.length; i++) {
+			const action = this.actions[i]
+			if (action.type === ActionType.LEEK_TURN && this.ownEntities.has(action.params[1])) { return i }
+		}
+		return this.actions.length
+	}
+
+	/** Mode « mes actions » activé en pleine lecture : le tour d'un autre est passé tout de suite. */
+	public skipOthersTurn() {
+		const player = this.awakeningPlayer ?? this.currentPlayer
+		if (player === null || !this.isOthersTurn(player)) { return }
+		const target = this.nextOwnTurn(this.currentAction)
+		// Combat déjà fini : rien à passer.
+		if (target > this.currentAction + 1) { this.requestJump(target) }
+	}
+
 	public resourceLoaded(_res: string) { // variable utile pour débug
 		this.loadedData++
 		if (this.cancelled) { return }
@@ -3526,4 +3584,4 @@ class Game {
 	}
 }
 
-export { Game, Colors, SHADOW_SCALE, SHADOW_ALPHA, GROUND_TEXTURE }
+export { Game, Colors, SHADOW_SCALE, SHADOW_ALPHA, GROUND_TEXTURE, ownEntityIds }
