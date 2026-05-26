@@ -34,5 +34,6 @@
 	"sound_activated": "Звук активирован",
 	"sound_disactivated": "Приглушенный звук",
 	"tactic_mode": "Тактический режим",
+	"debug_only_my_leeks": "Мои действия",
 	"error_secret_trophy": "В этой битве есть секретный трофей, который вы еще не открыли."
 }

@@ -34,5 +34,6 @@
 	"sound_activated": "サウンドが有効化されました",
 	"sound_disactivated": "消音",
 	"tactic_mode": "戦術モード",
+	"debug_only_my_leeks": "自分の動作",
 	"error_secret_trophy": "この戦いには、まだアンロックされていない秘密のトロフィーがある。"
 }

@@ -34,5 +34,6 @@
 	"sound_activated": "Som ativado",
 	"sound_disactivated": "Som mudo",
 	"tactic_mode": "Modo tático",
+	"debug_only_my_leeks": "Minhas ações",
 	"error_secret_trophy": "Esta batalha contém um troféu secreto que ainda não desbloqueaste."
 }

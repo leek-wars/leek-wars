@@ -34,5 +34,6 @@
 	"sound_activated": "Son activé",
 	"sound_disactivated": "Son coupé",
 	"clear_marks": "Effacer les mark()",
+	"debug_only_my_leeks": "Mes actions",
 	"tactic_mode": "Mode tactique"
 }

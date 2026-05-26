@@ -34,5 +34,6 @@
 	"sound_disactivated": "Sound is off",
 	"clear_marks": "Clear mark()",
 	"tactic_mode": "Tactical mode",
+	"debug_only_my_leeks": "My actions",
 	"error_secret_trophy": "This fight contains a secret trophy you haven't unlocked yet."
 }
