@@ -22,22 +22,22 @@
 		</panel>
 
 		<div v-if="fight" class="fight-info">
-			<div v-if="fight.type === FightType.BATTLE_ROYALE" class="center">
-				<span v-for="(farmer, f, i) in fight.farmers1" :key="f">
+			<div v-if="isFlatLayout" class="center">
+				<span v-for="(farmer, i) in flatFarmers" :key="farmer.id">
 					<span v-if="i !== 0" class="br-versus">VS</span>
-					<router-link :to="'/farmer/' + farmer.id">
+					<component :is="farmer.id > 0 ? 'router-link' : 'span'" :to="'/farmer/' + farmer.id">
 						<rich-tooltip-farmer :id="farmer.id">
 							<div class="farmer">
 								<avatar :farmer="farmer" /><br>
 								<span class="name">{{ farmer.name }}</span>
 							</div>
 						</rich-tooltip-farmer>
-					</router-link>
+					</component>
 				</span>
 			</div>
 			<table v-else>
 				<tr>
-					<td :class="{'arena-many-players': fight.type === FightType.CHEST_HUNT || fight.type === FightType.COLOSSUS}">
+					<td>
 						<router-link v-for="farmer in fight.farmers1" :key="farmer.id" :disabled="farmer.id > 0" :to="'/farmer/' + farmer.id">
 							<rich-tooltip-farmer :id="farmer.id">
 								<div class="farmer">
@@ -164,6 +164,16 @@
 			playerRef.value.loaded = !playerRef.value.loaded
 		}
 	}
+
+	const isFlatLayout = computed(() => {
+		if (!fight.value) return false
+		return fight.value.type === FightType.BATTLE_ROYALE || fight.value.type === FightType.CHEST_HUNT
+	})
+
+	const flatFarmers = computed(() => {
+		if (!fight.value) return []
+		return [...Object.values(fight.value.farmers1), ...Object.values(fight.value.farmers2)]
+	})
 
 	const reportLeeks = computed(() => {
 		if (!fight.value) { return [] }
@@ -354,18 +364,6 @@
 	.fight-info .farmer img {
 		width: 75px;
 		height: 75px;
-	}
-	.fight-info .arena-many-players {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		max-width: 250px;
-	}
-	.fight-info .arena-many-players .farmer {
-		display: inline-block;
-		width: 50px;
-		img { width: 32px; height: 32px; }
-		.name { font-size: 9px; }
 	}
 	.fight-info .br-versus {
 		line-height: 75px;
