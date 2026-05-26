@@ -831,8 +831,9 @@ class Rocket extends Particle {
 	initial_angle: number
 	targetCell: Cell
 	radius: number
+	texture: Texture
 
-	public constructor(game: Game, x: number, y: number, z: number, angle: number, duration: number, targetCell: Cell, radius: number) {
+	public constructor(game: Game, x: number, y: number, z: number, angle: number, duration: number, targetCell: Cell, radius: number, texture: Texture = T.rocket) {
 		super(game, x, y, z, duration)
 		this.dx = Math.cos(angle) * Rocket.SPEED
 		this.dy = Math.sin(angle) * Rocket.SPEED
@@ -841,6 +842,7 @@ class Rocket extends Particle {
 		this.fire_y = -Math.sin(angle) * 45
 		this.targetCell = targetCell
 		this.radius = radius
+		this.texture = texture
 	}
 
 	public update(dt: number): boolean {
@@ -863,7 +865,7 @@ class Rocket extends Particle {
 	}
 
 	public draw(ctx: CanvasRenderingContext2D): void {
-		ctx.drawImage(T.rocket.texture, -T.rocket.texture.width / 2 * Rocket.SCALE, -T.rocket.texture.height / 2 * Rocket.SCALE, T.rocket.texture.width * Rocket.SCALE, T.rocket.texture.height * Rocket.SCALE)
+		ctx.drawImage(this.texture.texture, -this.texture.texture.width / 2 * Rocket.SCALE, -this.texture.texture.height / 2 * Rocket.SCALE, this.texture.texture.width * Rocket.SCALE, this.texture.texture.height * Rocket.SCALE)
 	}
 }
 

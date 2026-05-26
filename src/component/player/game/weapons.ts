@@ -927,7 +927,7 @@ class Bazooka extends Firegun {
 		const duration = (distance - 1) * 4
 
 		this.game.setEffectArea(cell, Area.CIRCLE3, this.areaColor(), duration + RealisticExplosion.LIFE)
-		this.game.particles.addRocket(x, y, z, angle, duration, cell, 3)
+		this.game.particles.addRocket(x, y, z, angle, duration, cell, 3, this.rocketTexture())
 
 		return duration + 10
 	}
@@ -935,15 +935,25 @@ class Bazooka extends Firegun {
 	protected areaColor(): string {
 		return 'red'
 	}
+
+	protected rocketTexture(): Texture {
+		return T.rocket
+	}
 }
 
 class PlutoniumBazooka extends Bazooka {
+	static textures = [T.shots, T.bullet, T.bazooka, T.cart_bazooka, T.plutonium_rocket, T.fire, T.explosion_mark, T.explosion_rock, T.explosion_rock2]
+
 	constructor(game: Game) {
 		super(game)
 	}
 
 	protected areaColor(): string {
 		return 'yellow'
+	}
+
+	protected rocketTexture(): Texture {
+		return T.plutonium_rocket
 	}
 }
 

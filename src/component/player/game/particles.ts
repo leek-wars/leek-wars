@@ -128,8 +128,8 @@ class Particles {
 	public addSpinningParticle(x: number, y: number, angle: number, texture: Texture) {
 		this.particles.unshift(new SpinningParticle(this.game, x, y, angle, texture))
 	}
-	public addRocket(x: number, y: number, z: number, angle: number, duration: number, targetCell: Cell, radius: number) {
-		this.add(new Rocket(this.game, x, y, z, angle, duration, targetCell, radius))
+	public addRocket(x: number, y: number, z: number, angle: number, duration: number, targetCell: Cell, radius: number, texture?: Texture) {
+		this.add(new Rocket(this.game, x, y, z, angle, duration, targetCell, radius, texture))
 	}
 	public addLighningBall(x: number, y: number, z: number, angle: number, duration: number, radius: number, texture: Texture) {
 		this.add(new LighningBall(this.game, x, y, z, angle, duration, radius, texture))
