@@ -1690,7 +1690,7 @@ class Game {
 					const template = LeekWars.items[item].params
 					const img = ["pistol", "machine_gun", "double_gun", "shotgun", "magnum", "laser", "grenade_launcher", "flamme", "destroyer", "gaz_icon", "electrisor", "m_laser", "b_laser", "katana", "broadsword", "axe", "j_laser", "illicit_grenade_launcher", "mysterious_electrisor", "unbridled_gazor", "revoked_m_laser", "rifle", "rhino", "explorer_rifle",
 					"lightninger",
-					null, // 26
+					"plutonium_bazooka", // 26
 					"neutrino", // 27
 					null, // 28
 					"bazooka", // 29
