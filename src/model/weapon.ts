@@ -100,7 +100,7 @@ const WeaponsData = {
 	24: { width: 184, height: 55, centerX: 15, centerZ: 30, x: -50, z: -20, hand1x: 37, hand1z: 35, hand2x: 75, hand2z: 33, sx: 210, sz: 20, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, angleForce: 12, top: 4, bottom: 27, white: false },
 	// Foudroyeur
 	25: { width: 175, height: 65, centerX: 15, centerZ: 35, x: -40, z: -35, hand1x: 29, hand1z: 46, hand2x: 64, hand2z: 46, sx: 165, sz: 26, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 15, angleForce: 12, top: 4, bottom: 40, white: false },
-	// PinkBazooka (mêmes dims que le bazooka classique, juste reskin rose)
+	// PlutoniumBazooka (mêmes dims que le bazooka classique)
 	26: { width: 190, height: 81, centerX: 15, centerZ: 50, x: -50, z: -40, hand1x: 37, hand1z: 65, hand2x: 70, hand2z: 68, sx: 190, sz: 40, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, angleForce: 30, top: 0, bottom: 59, white: false },
 	// Neutrino
 	27: { width: 100, height: 50, centerX: 5, centerZ: 25, x: 10, z: -35, hand1x: 25, hand1z: 33, hand2x: 18, hand2z: 40, sx: 105, sz: 20, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, angleForce: 20, top: 4, bottom: 40, white: false },
