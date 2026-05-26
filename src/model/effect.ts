@@ -61,6 +61,7 @@ enum EffectType {
 	TOTAL_DEBUFF = 60,
 	STEAL_LIFE = 61,
 	MULTIPLY_STATS = 62,
+	DAMAGE_TO_RESISTANCE = 63,
 }
 
 enum EffectModifier {

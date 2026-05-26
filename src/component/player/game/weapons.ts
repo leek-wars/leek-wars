@@ -926,10 +926,24 @@ class Bazooka extends Firegun {
 		const distance = this.game.ground.field.real_distance(caster.cell!, cell)
 		const duration = (distance - 1) * 4
 
-		this.game.setEffectArea(cell, Area.CIRCLE3, 'red', duration + RealisticExplosion.LIFE)
+		this.game.setEffectArea(cell, Area.CIRCLE3, this.areaColor(), duration + RealisticExplosion.LIFE)
 		this.game.particles.addRocket(x, y, z, angle, duration, cell, 3)
 
 		return duration + 10
+	}
+
+	protected areaColor(): string {
+		return 'red'
+	}
+}
+
+class PlutoniumBazooka extends Bazooka {
+	constructor(game: Game) {
+		super(game)
+	}
+
+	protected areaColor(): string {
+		return 'yellow'
 	}
 }
 
@@ -978,4 +992,4 @@ class QuantumRifle extends Firegun {
 	}
 }
 
-export { WeaponAnimation, WhiteWeaponAnimation, Axe, Bazooka, BLaser, Broadsword, DarkKatana, Destroyer, DoubleGun, Electrisor, EnhancedLightninger, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, Neutrino, Rhino, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rifle, Shotgun, UnbridledGazor, UnstableDestroyer, Sword, HeavySword, QuantumRifle }
+export { WeaponAnimation, WhiteWeaponAnimation, Axe, Bazooka, BLaser, Broadsword, DarkKatana, Destroyer, DoubleGun, Electrisor, EnhancedLightninger, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, Neutrino, PlutoniumBazooka, Rhino, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rifle, Shotgun, UnbridledGazor, UnstableDestroyer, Sword, HeavySword, QuantumRifle }
