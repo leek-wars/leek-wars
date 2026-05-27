@@ -1830,7 +1830,7 @@ class Trebuchet extends ChipAnimation {
 }
 
 class Thunder extends ChipAnimation {
-	static textures = [T.black_cloud, T.red_lightning]
+	static textures = [T.black_cloud, T.yellow_lightning]
 	static sounds = [S.lightning]
 	public delay = 1
 	constructor(game: Game) { super(game, S.lightning, 90, DamageType.EXPLOSION) }
@@ -1851,8 +1851,7 @@ class Thunder extends ChipAnimation {
 			const da = Math.random() * Math.PI / 18 - Math.PI / 36
 			const dx = Math.random() * 120 - 60
 			const dy = Math.random() * 6 - 3
-			// red_lightning utilisé comme placeholder, à remplacer par yellow_lightning quand l'asset existera
-			this.game.particles.addLightning(this.position.x + dx, this.position.y - 220 + dy, 0, Math.PI / 2 + da, this.position, T.red_lightning)
+			this.game.particles.addLightning(this.position.x + dx, this.position.y - 220 + dy, 0, Math.PI / 2 + da, this.position, T.yellow_lightning)
 			if (this.targets) {
 				for (const target of this.targets) {
 					target.electrify()

@@ -141,6 +141,7 @@ class T {
 	public static cyan_lightning = new Texture(LeekWars.STATIC + 'image/weapon/cyan_lightning.png')
 	public static purple_lightning = new Texture(LeekWars.STATIC + 'image/weapon/purple_lightning.png')
 	public static red_lightning = new Texture(LeekWars.STATIC + 'image/weapon/red_lightning.png')
+	public static yellow_lightning = new Texture(LeekWars.STATIC + 'image/weapon/yellow_lightning.png')
 	public static blue_lightning = new Texture(LeekWars.STATIC + 'image/weapon/blue_lightning.png')
 	public static green_lightning = new Texture(LeekWars.STATIC + 'image/weapon/green_lightning.png')
 	public static double_gun = new Texture(LeekWars.STATIC + 'image/weapon/double_gun.png', true, SHADOW_QUALITY)
