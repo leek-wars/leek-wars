@@ -1723,4 +1723,143 @@ class Prism extends ChipAnimation {
 	}
 }
 
-export { Alteration, Arsenic, Adrenaline, Armor, Acceleration, Antidote, Armoring, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Covid, ChipAnimation, Carapace, Collar, Covetousness, Crushing, Cure, Desintegration, DevilStrike, Dome, Doping, Drip, Elevation, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Ice, Iceberg, Inversion, Jump, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Prism, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Summon, Teleportation, Therapy, Thorn, Toxin, Tranquilizer, Transmutation, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry }
+// Chips boss (#3627). Patterns inspirés des chips existantes :
+// Kemuridama → Teleportation + smoke ; Shuriken → projectile rotation + impact ;
+// FireBall → projectile + dégâts feu ; Trebuchet → Meteorite ; Thunder → Lightning grande zone.
+class Kemuridama extends ChipAnimation {
+	static textures = [T.smoke]
+	static sounds = [S.teleportation]
+	public teleported = false
+	public targetPos!: Position
+	constructor(game: Game) { super(game, S.teleportation, 120, DamageType.DEFAULT) }
+	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher: FightEntity) {
+		super.launch(launchPos, targetPos, targets, targetCell, launcher)
+		this.targetPos = targetPos
+	}
+	public update(dt: number) {
+		super.update(dt)
+		if (Math.random() > 0.5) {
+			const pos = this.duration > 60 ? this.launchPos : this.targetPos
+			const ox = Math.random() * 50 - 25
+			const oy = Math.random() * 30 - 15
+			this.game.particles.addImage(pos.x + ox, pos.y + oy, 30, 0, 0, 0.3, 0, T.smoke, 60, 0.6)
+		}
+		if (!this.teleported && this.duration < 60) {
+			this.launcher!.setCell(this.cell)
+			this.game.updateReachableCells()
+			this.teleported = true
+		}
+	}
+}
+
+class Shuriken extends ChipAnimation {
+	static textures = [T.chip_shuriken]
+	static sounds = [S.leek_slice]
+	public flyDuration = 30
+	public hit = false
+	constructor(game: Game) { super(game, S.leek_slice, 50, DamageType.DEFAULT) }
+	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchPos, targetPos, targets, targetCell, launcher)
+		this.game.particles.addFlyingSpinningProjectile(launchPos.x, launchPos.y, 40, targetPos.x, targetPos.y, this.flyDuration, T.chip_shuriken, 40, 0.8)
+	}
+	public update(dt: number) {
+		super.update(dt)
+		if (!this.hit && this.duration < this.flyDuration) {
+			this.hit = true
+			if (this.targets) {
+				for (const target of this.targets) {
+					target.hurt(target.ox, target.oy, 10, 0, 0, 0)
+				}
+			}
+		}
+	}
+}
+
+class FireBall extends ChipAnimation {
+	static textures = [T.fire, T.chip_fire_ball]
+	static sounds = [S.fire]
+	public flyDuration = 25
+	public exploded = false
+	constructor(game: Game) { super(game, S.fire, 70, DamageType.FIRE) }
+	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchPos, targetPos, targets, targetCell, launcher)
+		this.game.particles.addFlyingSpinningProjectile(launchPos.x, launchPos.y, 50, targetPos.x, targetPos.y, this.flyDuration, T.chip_fire_ball, 50, 0.3)
+	}
+	public update(dt: number) {
+		super.update(dt)
+		if (!this.exploded && this.duration < this.flyDuration) {
+			this.exploded = true
+			this.game.setEffectArea(this.cell, Area.CIRCLE1, '#f26304', 60)
+		}
+		// Petits feux sur targets après impact
+		if (this.duration < this.flyDuration - 2 && this.targets && Math.random() > 0.5) {
+			for (const target of this.targets) {
+				this.game.particles.addFire(target.ox + Math.random() * 30 - 15, target.oy + Math.random() * 30 - 15, 20, Math.random() * Math.PI * 2, false)
+				target.burnAnim(40)
+			}
+		}
+	}
+}
+
+class Trebuchet extends ChipAnimation {
+	static textures = [T.meteorite, T.explosion_mark, T.explosion_rock, T.explosion_rock2]
+	static sounds = [S.meteorite, S.explosion]
+	public willFinish = false
+	public delay = 0
+	public count = 1
+	public vx: number = 0
+	constructor(game: Game) { super(game, S.meteorite, 90, DamageType.EXPLOSION) }
+	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell) {
+		super.launch(launchPos, position, targets, targetCell)
+		this.vx = (300 + Math.random() * 200) * ((Math.random() > 0.5) ? 1 : -1)
+		this.game.setEffectArea(targetCell, Area.CIRCLE2, '#888', 180)
+	}
+	public update(dt: number) {
+		super.update(dt)
+		this.delay -= dt
+		if (this.delay < 0 && this.count > 0) {
+			this.delay = 8
+			this.count--
+			const y = this.position.y
+			const z = this.position.y + 200
+			const x = this.position.x + this.vx
+			const angle = Math.atan2(this.vx, z) + Math.PI / 2
+			this.game.particles.addMeteorite(x, y, z, angle, 1.2, this.targets, true)
+		}
+	}
+}
+
+class Thunder extends ChipAnimation {
+	static textures = [T.black_cloud, T.red_lightning]
+	static sounds = [S.lightning]
+	public delay = 1
+	constructor(game: Game) { super(game, S.lightning, 90, DamageType.EXPLOSION) }
+	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchPos, position, targets, targetCell, launcher)
+		this.targets = this.recipientsOf(launcher, targets)
+		// Plus de nuages noirs, zone plus large que Lightning
+		for (const offset of [-70, -30, 10, 50, 90]) {
+			this.game.particles.addImage(this.position.x + offset, this.position.y, 240, offset > 0 ? -0.4 : 0.4, 0, 0, 0, T.black_cloud, 100)
+		}
+		this.game.setEffectArea(targetCell, Area.CIRCLE3, '#ffcc00')
+	}
+	public update(dt: number) {
+		super.update(dt)
+		this.delay -= dt
+		if (this.delay <= 0) {
+			this.delay = 1
+			const da = Math.random() * Math.PI / 18 - Math.PI / 36
+			const dx = Math.random() * 120 - 60
+			const dy = Math.random() * 6 - 3
+			// red_lightning utilisé comme placeholder, à remplacer par yellow_lightning quand l'asset existera
+			this.game.particles.addLightning(this.position.x + dx, this.position.y - 220 + dy, 0, Math.PI / 2 + da, this.position, T.red_lightning)
+			if (this.targets) {
+				for (const target of this.targets) {
+					target.electrify()
+				}
+			}
+		}
+	}
+}
+
+export { Alteration, Arsenic, Adrenaline, Armor, Acceleration, Antidote, Armoring, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Covid, ChipAnimation, Carapace, Collar, Covetousness, Crushing, Cure, Desintegration, DevilStrike, Dome, Doping, Drip, Elevation, Ferocity, Fertilizer, FireBall, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Ice, Iceberg, Inversion, Jump, Kemuridama, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Prism, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, Shuriken, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Summon, Teleportation, Therapy, Thorn, Thunder, Toxin, Tranquilizer, Transmutation, Trebuchet, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry }

@@ -823,6 +823,45 @@ class SpinningParticle extends Particle {
 	}
 }
 
+// Projectile qui vole d'A à B en tournant sur lui-même (shuriken, fireball, etc.).
+class FlyingSpinningProjectile extends Particle {
+	endX: number
+	endY: number
+	startX: number
+	startY: number
+	rotation: number
+	angle2: number = 0
+	texture: Texture
+	size: number
+	totalDuration: number
+
+	public constructor(game: Game, startX: number, startY: number, z: number, endX: number, endY: number, duration: number, texture: Texture, size: number = 30, rotation: number = 0.4) {
+		super(game, startX, startY, z, duration)
+		this.startX = startX
+		this.startY = startY
+		this.endX = endX
+		this.endY = endY
+		this.texture = texture
+		this.size = size
+		this.rotation = rotation
+		this.totalDuration = duration
+	}
+	public update(dt: number): boolean {
+		this.angle2 += this.rotation * dt
+		// progress 0 → 1
+		const p = 1 - this.life / this.totalDuration
+		this.x = this.startX + (this.endX - this.startX) * p
+		this.y = this.startY + (this.endY - this.startY) * p
+		return super.update(dt)
+	}
+	public draw(ctx: CanvasRenderingContext2D): void {
+		ctx.save()
+		ctx.rotate(this.angle2)
+		ctx.drawImage(this.texture.texture, -this.size / 2, -this.size / 2, this.size, this.size)
+		ctx.restore()
+	}
+}
+
 class Rocket extends Particle {
 	static SPEED = 8
 	static SCALE = 0.5
@@ -1027,4 +1066,4 @@ class PrismParticle extends Particle {
 	}
 }
 
-export { Particle, Bubble, Bullet, BuryParticle, CriticalParticle, Laser, Lightning, Fire, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, LighningBall, LineParticle, Plasma, Rectangle, Blood, PrismParticle, RealisticExplosion, Rocket, SmallExplosion, SpikeParticle, SpinningParticle, NUM_BLOOD_SPRITES, Orbital }
+export { Particle, Bubble, Bullet, BuryParticle, CriticalParticle, Laser, Lightning, Fire, FlyingSpinningProjectile, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, LighningBall, LineParticle, Plasma, Rectangle, Blood, PrismParticle, RealisticExplosion, Rocket, SmallExplosion, SpikeParticle, SpinningParticle, NUM_BLOOD_SPRITES, Orbital }

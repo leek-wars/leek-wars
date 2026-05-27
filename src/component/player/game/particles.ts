@@ -1,6 +1,6 @@
 import { FightEntity } from '@/component/player/game/entity'
 import { Game } from "@/component/player/game/game"
-import { Blood, Bubble, Bullet, BuryParticle, Cartridge, CriticalParticle, Explosion, Fire, Garbage, Gaz, Grenade, ImageParticle, Laser, LighningBall, Lightning, LineParticle, Meteorite, NUM_BLOOD_SPRITES, Orbital, Particle, Plasma, PrismParticle, RealisticExplosion, Rectangle, Rocket, Shot, SimpleFire, SmallExplosion, SpikeParticle, SpinningParticle } from '@/component/player/game/particle'
+import { Blood, Bubble, Bullet, BuryParticle, Cartridge, CriticalParticle, Explosion, Fire, FlyingSpinningProjectile, Garbage, Gaz, Grenade, ImageParticle, Laser, LighningBall, Lightning, LineParticle, Meteorite, NUM_BLOOD_SPRITES, Orbital, Particle, Plasma, PrismParticle, RealisticExplosion, Rectangle, Rocket, Shot, SimpleFire, SmallExplosion, SpikeParticle, SpinningParticle } from '@/component/player/game/particle'
 import { Position } from '@/component/player/game/position'
 import { T, Texture } from '@/component/player/game/texture'
 import { Cell } from '@/model/cell'
@@ -127,6 +127,9 @@ class Particles {
 	}
 	public addSpinningParticle(x: number, y: number, angle: number, texture: Texture) {
 		this.particles.unshift(new SpinningParticle(this.game, x, y, angle, texture))
+	}
+	public addFlyingSpinningProjectile(startX: number, startY: number, z: number, endX: number, endY: number, duration: number, texture: Texture, size?: number, rotation?: number) {
+		this.add(new FlyingSpinningProjectile(this.game, startX, startY, z, endX, endY, duration, texture, size, rotation))
 	}
 	public addRocket(x: number, y: number, z: number, angle: number, duration: number, targetCell: Cell, radius: number, texture?: Texture) {
 		this.add(new Rocket(this.game, x, y, z, angle, duration, targetCell, radius, texture))
