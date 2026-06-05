@@ -7,6 +7,7 @@
     - "#ai Support for `.md`, `.txt`, `.json`, `.yaml` and `.gitignore` files in the editor, with appropriate syntax highlighting."
     - "Live counter of players waiting for an arena, shown in the garden (on the tab and below the Select button) to encourage joining. (thanks to TransLeek)"
     - "Arena waiting popup: preferred mode visible on each participant, live counter with pulse, leek selection and mode choice changeable without leaving the queue."
+    - "Four new hats: feather cap, steampunk hat, Navy bachi and invisible hat."
   improved:
     - "#ai Warning on functions and globals never used in the AI (strict mode)."
     - "#ai New files are now empty by default (instead of the LeekScript example code), except for the very first file of an account."

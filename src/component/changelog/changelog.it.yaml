@@ -7,6 +7,7 @@
     - "#ai Supporto dei file `.md`, `.txt`, `.json`, `.yaml` e `.gitignore` nell'editor, con evidenziazione della sintassi appropriata."
     - "Contatore in tempo reale dei giocatori in coda per le arene, mostrato nell'orto (sulla scheda e sotto il pulsante Seleziona) per invogliare a unirsi. (grazie a TransLeek)"
     - "Popup di attesa arena: modalità preferita visibile su ogni partecipante, contatore in tempo reale con diodo, selezione del porro e scelta della modalità modificabili senza lasciare la coda."
+    - "Quattro nuovi cappelli: berretto con piuma, cappello steampunk, bachi della Marina e cappello invisibile."
   improved:
     - "#ai Avviso sulle funzioni e variabili globali mai utilizzate nell'IA (modalità rigorosa)."
     - "#ai I nuovi file sono ora vuoti per default (invece del codice di esempio LeekScript), tranne per il primo file di un account."

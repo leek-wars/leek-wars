@@ -7,6 +7,7 @@
     - "#ai Support des fichiers `.md`, `.txt`, `.json`, `.yaml` et `.gitignore` dans l'éditeur, avec coloration syntaxique adaptée."
     - "Compteur en direct des joueurs en file d'attente pour les arènes, affiché dans le potager (sur l'onglet et sous le bouton Sélectionner) pour donner envie de rejoindre. (merci à TransLeek)"
     - "Popup d'attente d'arène : mode préféré visible sur chaque participant, compteur en direct avec diode, sélection de poireau et choix du mode modifiables sans quitter la file."
+    - "Quatre nouveaux chapeaux : casquette à plume, chapeau steampunk, bachi de la Marine nationale et chapeau invisible."
   improved:
     - "#ai Avertissement sur les fonctions et variables globales jamais utilisées dans l'IA (mode strict)."
     - "#ai Nouveau fichier vide par défaut (au lieu du code d'exemple LeekScript) sauf pour le tout premier fichier d'un compte."
