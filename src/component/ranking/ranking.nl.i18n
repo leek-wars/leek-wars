@@ -56,5 +56,9 @@
 	"damage_title": "Toegebrachte schade",
 	"won": "Overwinningen",
 	"composition": "Compositie",
-	"compositions": "Composities"
+	"compositions": "Composities",
+	"boss": "Boss",
+	"turns": "Turns",
+	"power": "Power",
+	"date": "Date"
 }

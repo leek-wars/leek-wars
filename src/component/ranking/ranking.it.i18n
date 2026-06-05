@@ -56,5 +56,9 @@
 	"damage_title": "Danni inflitti",
 	"compositions": "Composizioni",
 	"composition": "Composizione",
-	"won": "Vittorie"
+	"won": "Vittorie",
+	"boss": "Boss",
+	"turns": "Turni",
+	"power": "Power",
+	"date": "Data"
 }

@@ -56,5 +56,9 @@
 	"damage_title": "Zadane obrażenia",
 	"composition": "Kompozycja",
 	"compositions": "Kompozycje",
-	"won": "Zwycięstwa"
+	"won": "Zwycięstwa",
+	"boss": "Boss",
+	"turns": "Turns",
+	"power": "Power",
+	"date": "Date"
 }

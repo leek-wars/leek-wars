@@ -56,5 +56,9 @@
 	"composition": "Composición",
 	"won": "Victorias",
 	"damage": "Daño",
-	"damage_title": "Daño infligido"
+	"damage_title": "Daño infligido",
+	"boss": "Boss",
+	"turns": "Turns",
+	"power": "Power",
+	"date": "Date"
 }

@@ -56,5 +56,9 @@
 	"turrets_killed": "포탑",
 	"turrets_killed_title": "파괴한 터릿",
 	"won": "승리",
-	"xp": "경험치"
+	"xp": "경험치",
+	"boss": "Boss",
+	"turns": "Turns",
+	"power": "Power",
+	"date": "Date"
 }

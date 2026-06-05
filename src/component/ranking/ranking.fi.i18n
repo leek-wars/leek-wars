@@ -53,5 +53,9 @@
 	"turrets_killed": "Tornit",
 	"turrets_killed_title": "Torneja tuhottu",
 	"damage": "Vahinko",
-	"damage_title": "Aiheutettu vahinko"
+	"damage_title": "Aiheutettu vahinko",
+	"boss": "Boss",
+	"turns": "Turns",
+	"power": "Power",
+	"date": "Date"
 }

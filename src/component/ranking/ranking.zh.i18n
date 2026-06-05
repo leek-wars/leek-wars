@@ -56,5 +56,9 @@
 	"damage_title": "造成的伤害",
 	"composition": "阵容",
 	"compositions": "阵容",
-	"won": "胜利"
+	"won": "胜利",
+	"boss": "Boss",
+	"turns": "Turns",
+	"power": "Power",
+	"date": "Date"
 }

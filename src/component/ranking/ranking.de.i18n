@@ -53,5 +53,9 @@
 	"turrets_killed": "Geschütztürme",
 	"turrets_killed_title": "Geschütztürme zerstört",
 	"damage": "Schaden",
-	"damage_title": "Verursachter Schaden"
+	"damage_title": "Verursachter Schaden",
+	"boss": "Boss",
+	"turns": "Turns",
+	"power": "Power",
+	"date": "Date"
 }

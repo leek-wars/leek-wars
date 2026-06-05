@@ -56,5 +56,9 @@
 	"damage_title": "Нанесённый урон",
 	"compositions": "Композиции",
 	"composition": "Композиция",
-	"won": "Победы"
+	"won": "Победы",
+	"boss": "Boss",
+	"turns": "Turns",
+	"power": "Power",
+	"date": "Date"
 }

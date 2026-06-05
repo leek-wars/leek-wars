@@ -56,5 +56,9 @@
 	"damage_title": "Skada orsakad",
 	"composition": "Komposition",
 	"compositions": "Kompositioner",
-	"won": "Segrar"
+	"won": "Segrar",
+	"boss": "Boss",
+	"turns": "Turns",
+	"power": "Power",
+	"date": "Date"
 }

@@ -21,6 +21,21 @@
 				</router-link>
 				<router-link :to="getURL('farmer', 'talent', country, LeekWars.rankingInactive)"><div class="tab" :class="{active: category === 'farmer'}">{{ $t('farmers') }}</div></router-link>
 				<router-link :to="getURL(teamMode, 'talent', country, LeekWars.rankingInactive)"><div class="tab" :class="{active: category === 'team' || category === 'composition'}">{{ $t('teams') }}</div></router-link>
+				<router-link :to="getURL('boss-' + bossId, bossMode, null, LeekWars.rankingInactive)">
+					<div class="tab" :class="{active: category.startsWith('boss')}">
+						{{ $t('boss') }}
+						<v-menu offset-y>
+							<template #activator="{ props }">
+								<v-icon v-bind="props" @click.prevent="">mdi-chevron-down</v-icon>
+							</template>
+							<v-list>
+								<router-link v-for="b in BOSSES" :key="b.id" :to="getURL('boss-' + b.id, bossMode, null, LeekWars.rankingInactive)">
+									<v-list-item v-ripple :title="$t('entity.' + b.name)" />
+								</router-link>
+							</v-list>
+						</v-menu>
+					</div>
+				</router-link>
 
 				<v-menu v-model="countryList" offset-y>
 					<template #activator="{ props }">
@@ -253,6 +268,52 @@
 						</tr>
 						<ranking-composition-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: searchResult == row.rank}" />
 					</table>
+					<table v-else-if="displayCategory.startsWith('boss')" class="ranking large">
+						<tr class="header">
+							<th class="ranking-column">{{ $t('place') }}</th>
+							<th class="column-farmer">{{ $t('main.farmer') }}</th>
+							<th>{{ $t('main.country') }}</th>
+							<th>
+								<router-link :to="getURL(category, 'turns', null, inactive)">
+									<span>{{ $t('turns') }}</span>
+									<v-icon v-if="order === 'turns'">mdi-chevron-up</v-icon>
+								</router-link>
+							</th>
+							<th>
+								<router-link :to="getURL(category, 'leeks', null, inactive)">
+									<span>{{ $t('leeks') }}</span>
+									<v-icon v-if="order === 'leeks'">mdi-chevron-up</v-icon>
+								</router-link>
+							</th>
+							<th>
+								<router-link :to="getURL(category, 'power', null, inactive)">
+									<span>{{ $t('power') }}</span>
+									<v-icon v-if="order === 'power'">mdi-chevron-up</v-icon>
+								</router-link>
+							</th>
+							<th>
+								<router-link :to="getURL(category, 'first', null, inactive)">
+									<span>{{ $t('date') }}</span>
+									<v-icon v-if="order === 'first'">mdi-chevron-up</v-icon>
+								</router-link>
+							</th>
+						</tr>
+						<tr v-for="row in (ranking as unknown as BossRow[])" :key="row.id" :class="{me: row.me, highlight: searchResult == row.rank}">
+							<td :class="row.style">{{ row.rank }}</td>
+							<td>
+								<router-link :to="'/farmer/' + row.id">
+									<rich-tooltip-farmer :id="row.id" v-slot="{ props }" :bottom="true">
+										<span v-bind="props">{{ row.name }}</span>
+									</rich-tooltip-farmer>
+								</router-link>
+							</td>
+							<td><div class="country-wrapper"><flag v-if="row.country" :code="row.country" /></div></td>
+							<td>{{ row.turns }}</td>
+							<td>{{ row.leeks }}</td>
+							<td>{{ $filters.number(row.power) }}</td>
+							<td>{{ new Date(row.date * 1000).toLocaleDateString() }}</td>
+						</tr>
+					</table>
 					<loader v-if="!ranking" />
 				</div>
 				<div class="pagination-buttons-filters">
@@ -286,6 +347,7 @@
 	import RankingCompositionRowElement from '@/component/ranking/ranking-composition-row.vue'
 	import { mixins , useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
+	import { BOSSES } from '@/model/boss'
 	import { Ranking, RankingRow } from '@/model/ranking'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import Pagination from '@/component/pagination.vue'
@@ -341,6 +403,11 @@
 	const displayCategory = ref('')
 
 	const teamMode = computed(() => compositionMode.value ? 'composition' : 'team')
+
+	// Classements de boss (#3627) : category = 'boss-<id>', order = mode (turns|leeks|first|power)
+	interface BossRow { id: number, name: string, country: string | null, rank: number, me?: string, style?: string, turns: number, leeks: number, power: number, date: number }
+	const bossId = computed(() => category.value.startsWith('boss-') ? (parseInt(category.value.substring(5), 10) || 1) : 1)
+	const bossMode = computed(() => category.value.startsWith('boss-') && order.value ? order.value : 'turns')
 
 	const url = computed(() => getURLBase(category.value, order.value))
 	const urlQuery = computed(() => getURLQuery(country.value, LeekWars.rankingInactive))
@@ -400,6 +467,29 @@
 				rankings.value = data.rankings
 				ranking.value = []
 				LeekWars.setTitle(t('title'), t('fun'))
+				emitter.emit('loaded')
+			})
+		} else if (category.value.startsWith('boss-')) {
+			ranking.value = null
+			const modeMap: {[k: string]: number} = { turns: 1, leeks: 2, first: 3, power: 4 }
+			const mode = modeMap[order.value] || 1
+			LeekWars.get('ranking/boss/' + bossId.value + '/' + mode + '/' + page.value).then(data => {
+				const r = data.ranking as Ranking
+				if (page.value === 1) {
+					if (r.length > 0) r[0].style = 'first'
+					if (r.length > 1) r[1].style = 'second'
+					if (r.length > 2) r[2].style = 'third'
+				}
+				if (store.state.farmer) {
+					for (const row of r) {
+						if (row.id === store.state.farmer.id) row.me = 'me'
+					}
+				}
+				fun.value = false
+				pages.value = data.pages
+				ranking.value = r
+				LeekWars.setActions([{icon: 'mdi-magnify', click: () => openSearch()}])
+				LeekWars.setTitle(t('title'), t('boss'))
 				emitter.emit('loaded')
 			})
 		} else {

@@ -56,5 +56,9 @@
 	"turrets_killed_title": "Tourelles détruites",
 	"won": "Victoires",
 	"damage": "Dégâts",
-	"damage_title": "Dégâts infligés"
+	"damage_title": "Dégâts infligés",
+	"boss": "Boss",
+	"turns": "Tours",
+	"power": "Power",
+	"date": "Date"
 }

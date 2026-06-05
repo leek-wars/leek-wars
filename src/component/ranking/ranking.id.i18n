@@ -56,5 +56,9 @@
 	"damage_title": "Kerusakan yang diberikan",
 	"composition": "Komposisi",
 	"compositions": "Komposisi",
-	"won": "Kemenangan"
+	"won": "Kemenangan",
+	"boss": "Boss",
+	"turns": "Turns",
+	"power": "Power",
+	"date": "Date"
 }

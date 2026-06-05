@@ -56,5 +56,9 @@
 	"turrets_killed_title": "Turrets destroyed",
 	"won": "Victories",
 	"damage": "Damage",
-	"damage_title": "Damage dealt"
+	"damage_title": "Damage dealt",
+	"boss": "Boss",
+	"turns": "Turns",
+	"power": "Power",
+	"date": "Date"
 }

@@ -56,5 +56,9 @@
 	"damage_title": "与えたダメージ",
 	"composition": "編成",
 	"compositions": "編成",
-	"won": "勝利"
+	"won": "勝利",
+	"boss": "Boss",
+	"turns": "Turns",
+	"power": "Power",
+	"date": "Date"
 }

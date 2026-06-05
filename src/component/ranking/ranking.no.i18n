@@ -56,5 +56,9 @@
 	"turrets_killed": "Tårn",
 	"turrets_killed_title": "Tårn ødelagt",
 	"won": "Seire",
-	"xp": "XP"
+	"xp": "XP",
+	"boss": "Boss",
+	"turns": "Turns",
+	"power": "Power",
+	"date": "Date"
 }
