@@ -312,6 +312,7 @@
 									<v-icon v-if="order === 'first'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
+							<th></th>
 						</tr>
 						<tr v-for="row in (ranking as unknown as BossRow[])" :key="row.id" :class="{me: row.me, highlight: searchResult == row.rank}">
 							<td>{{ row.rank }}</td>
@@ -327,6 +328,11 @@
 							<td>{{ row.leeks }}</td>
 							<td>{{ $filters.number(row.power) }}</td>
 							<td>{{ new Date(row.date * 1000).toLocaleDateString() }}</td>
+							<td class="fight-link-cell">
+								<router-link v-if="row.fight" :to="'/fight/' + row.fight" :title="$t('main.fight')">
+									<v-icon>mdi-sword-cross</v-icon>
+								</router-link>
+							</td>
 						</tr>
 					</table>
 					<loader v-if="!ranking" />
@@ -420,7 +426,7 @@
 	const teamMode = computed(() => compositionMode.value ? 'composition' : 'team')
 
 	// Classements de boss (#3627) : category = 'boss-<id>', order = mode (turns|leeks|first|power)
-	interface BossRow { id: number, name: string, country: string | null, rank: number, me?: string, style?: string, turns: number, leeks: number, power: number, date: number }
+	interface BossRow { id: number, name: string, country: string | null, rank: number, me?: string, style?: string, turns: number, leeks: number, power: number, date: number, fight: number }
 	const bossId = computed(() => category.value.startsWith('boss-') ? (parseInt(category.value.substring(5), 10) || 1) : 1)
 	const bossMode = computed(() => category.value.startsWith('boss-') && order.value ? order.value : 'turns')
 
@@ -659,6 +665,15 @@
 		justify-content: center;
 		a { text-decoration: none; }
 		.active { background: var(--primary); color: white; }
+	}
+	.fight-link-cell {
+		a {
+			display: inline-flex;
+			color: var(--text-color-secondary);
+		}
+		a:hover {
+			color: var(--primary);
+		}
 	}
 	.pagination-buttons-filters {
 		display: flex;
