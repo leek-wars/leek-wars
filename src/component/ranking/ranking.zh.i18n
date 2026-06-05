@@ -59,10 +59,10 @@
 	"won": "胜利",
 	"boss": "Boss",
 	"turns": "Turns",
-	"power": "Power",
+	"power": "Level",
 	"date": "Date",
 	"boss_mode_turns": "Fastest",
 	"boss_mode_leeks": "Fewest leeks",
-	"boss_mode_power": "Lowest power",
+	"boss_mode_power": "Lowest level",
 	"boss_mode_first": "First"
 }

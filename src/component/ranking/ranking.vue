@@ -644,7 +644,7 @@
 		border: 2px solid transparent;
 		cursor: pointer;
 		color: var(--text-color);
-		span { font-size: 13px; margin-top: 2px; }
+		span { font-size: 13px; margin-top: 2px; white-space: nowrap; }
 		&:hover { background: var(--background-secondary); }
 		&.active {
 			border-color: var(--primary);

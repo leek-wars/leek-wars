@@ -59,10 +59,10 @@
 	"won": "Vittorie",
 	"boss": "Boss",
 	"turns": "Turni",
-	"power": "Power",
+	"power": "Livello",
 	"date": "Data",
 	"boss_mode_turns": "Il più veloce",
 	"boss_mode_leeks": "Meno porri",
-	"boss_mode_power": "Power più basso",
+	"boss_mode_power": "Livello più basso",
 	"boss_mode_first": "Primi"
 }
