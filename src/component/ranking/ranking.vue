@@ -110,6 +110,21 @@
 				</div>
 			</div>
 			<div v-else>
+				<div v-if="category.startsWith('boss')" class="boss-controls">
+					<div class="boss-tabs">
+						<router-link v-for="b in BOSSES" :key="b.id" :to="getURL('boss-' + b.id, bossMode, null, false)">
+							<div class="boss-tab" :class="{active: bossId === b.id}">
+								<leek-image :leek="b" :scale="b.scale * 0.55" />
+								<span>{{ $t('entity.' + b.name) }}</span>
+							</div>
+						</router-link>
+					</div>
+					<div class="mode-buttons">
+						<router-link v-for="m in ['turns', 'leeks', 'power', 'first']" :key="m" :to="getURL(category, m, null, false)">
+							<v-btn size="small" :class="{active: order === m}">{{ $t('boss_mode_' + m) }}</v-btn>
+						</router-link>
+					</div>
+				</div>
 				<div class="pagination-buttons-filters">
 					<pagination :current="page" :total="pages" :url="url" :url-query="urlQuery" />
 					<div v-if="$store.state.farmer" class="me-buttons">
@@ -119,7 +134,7 @@
 						<v-btn v-else-if="category === 'farmer'" @click="LeekWars.goToRanking('farmer', order, $store.state.farmer.id)">{{ $t('my_farmer') }}</v-btn>
 						<v-btn v-else-if="category === 'team' && $store.state.farmer.team" @click="LeekWars.goToRanking('team', order, $store.state.farmer.team.id)">{{ $t('my_team') }}</v-btn>
 					</div>
-					<v-switch v-model="activeSwitch" :label="$t('hide_inactives')" hide-details class="inactives" @change="toggleInactives" />
+					<v-switch v-if="!category.startsWith('boss')" v-model="activeSwitch" :label="$t('hide_inactives')" hide-details class="inactives" @change="toggleInactives" />
 					<v-switch v-if="category === 'team' || category === 'composition'" v-model="compositionMode" :label="$t('compositions')" hide-details class="inactives" @change="toggleCompositionMode" />
 				</div>
 				<div class="scroll-x">
@@ -299,8 +314,8 @@
 							</th>
 						</tr>
 						<tr v-for="row in (ranking as unknown as BossRow[])" :key="row.id" :class="{me: row.me, highlight: searchResult == row.rank}">
-							<td :class="row.style">{{ row.rank }}</td>
-							<td>
+							<td>{{ row.rank }}</td>
+							<td :class="row.style">
 								<router-link :to="'/farmer/' + row.id">
 									<rich-tooltip-farmer :id="row.id" v-slot="{ props }" :bottom="true">
 										<span v-bind="props">{{ row.name }}</span>
@@ -603,6 +618,48 @@
 </script>
 
 <style lang="scss" scoped>
+	.boss-controls {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 12px;
+		padding: 12px 0 4px;
+	}
+	.boss-tabs {
+		display: flex;
+		gap: 10px;
+		flex-wrap: wrap;
+		justify-content: center;
+		a { text-decoration: none; }
+	}
+	.boss-tab {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: flex-end;
+		width: 100px;
+		height: 90px;
+		padding: 4px;
+		border-radius: 6px;
+		border: 2px solid transparent;
+		cursor: pointer;
+		color: var(--text-color);
+		span { font-size: 13px; margin-top: 2px; }
+		&:hover { background: var(--background-secondary); }
+		&.active {
+			border-color: var(--primary);
+			background: var(--background-secondary);
+			span { font-weight: bold; }
+		}
+	}
+	.mode-buttons {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+		justify-content: center;
+		a { text-decoration: none; }
+		.active { background: var(--primary); color: white; }
+	}
 	.pagination-buttons-filters {
 		display: flex;
 		align-items: center;

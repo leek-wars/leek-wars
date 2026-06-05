@@ -60,5 +60,9 @@
 	"boss": "Boss",
 	"turns": "Tours",
 	"power": "Power",
-	"date": "Date"
+	"date": "Date",
+	"boss_mode_turns": "Le plus rapide",
+	"boss_mode_leeks": "Le moins de poireaux",
+	"boss_mode_power": "Plus bas power",
+	"boss_mode_first": "Premiers"
 }

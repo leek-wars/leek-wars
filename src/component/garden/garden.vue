@@ -351,6 +351,9 @@
 												<v-icon v-for="d of 3" :key="d">{{ d > boss.difficulty ? 'mdi-star-outline' : 'mdi-star' }}</v-icon>
 											</div>
 										</div>
+										<router-link :to="'/ranking/boss-' + boss.id + '/turns'" class="boss-ranking-link">
+											<v-icon>mdi-podium</v-icon> {{ $t('main.ranking') }}
+										</router-link>
 										<div v-for="(squad, s) of LeekWars.bossSquads.squads[boss.id]" :key="s" class="squad" :class="{disabled: !squad.id}" @click="squad.id ? LeekWars.bossSquads.join(squad.id) : null">
 											<div class="farmers">
 												<avatar v-for="farmer of squad.farmers" :key="farmer.id" :farmer="farmer" />
@@ -994,6 +997,17 @@
 	.boss-wrapper {
 		flex: 1;
 		height: 100%;
+	}
+	.boss-ranking-link {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 4px;
+		margin: 6px 0;
+		font-size: 13px;
+		color: var(--text-color-secondary);
+		.v-icon { font-size: 18px; }
+		&:hover { color: var(--primary); }
 	}
 	.squad {
 		border: 1px solid var(--border);
