@@ -1,7 +1,7 @@
 <template lang="html">
 	<svg class="scheme-image" viewBox="0 0 300 215">
 		<image class="bg" x="0" y="0" width="300" height="215" xlink:href="/image/resource/scheme.png" />
-		<image class="item" x="55" y="55" width="190" height="190" :xlink:href="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[scheme.result].type] + '/' + LeekWars.items[scheme.result].name.replace('potion_', '') + '.png'" />
+		<image class="item" x="55" y="55" width="190" height="190" :xlink:href="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[scheme.result].type] + '/' + LeekWars.items[scheme.result].name.replace('hat_', '').replace('potion_', '') + '.png'" />
 	</svg>
 </template>
 

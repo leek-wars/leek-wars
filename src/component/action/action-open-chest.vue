@@ -13,11 +13,11 @@
 				<template #activator="{ props }">
 					<span class="res" v-bind="props">
 						<b>{{ quantity }}</b>
-						<img v-if="LeekWars.items[resource]" :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[resource].type] + '/' + LeekWars.items[resource].name.replace('potion_', '') + '.png'">
+						<img v-if="LeekWars.items[resource]" :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[resource].type] + '/' + LeekWars.items[resource].name.replace('hat_', '').replace('potion_', '') + '.png'">
 						<span v-else>{{ resource }}</span>
 					</span>
 				</template>
-				{{ quantity }}x <b v-if="LeekWars.items[resource]">{{ $t(ITEM_CATEGORY_NAME[LeekWars.items[resource].type] + '.' + LeekWars.items[resource].name.replace('potion_', '')) }}</b>
+				{{ quantity }}x <b v-if="LeekWars.items[resource]">{{ $t(ITEM_CATEGORY_NAME[LeekWars.items[resource].type] + '.' + LeekWars.items[resource].name.replace('hat_', '').replace('potion_', '')) }}</b>
 			</v-tooltip>
 
 			<!-- <span v-for="(resource, i) in props.action.params[3]" :key="i">{{ resource }}, </span> -->

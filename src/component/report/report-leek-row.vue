@@ -43,11 +43,11 @@
 				<template #activator="{ props }">
 					<span class="resource" v-bind="props">
 						<scheme-image v-if="LeekWars.items[resource[0]].type === ItemType.SCHEME" class="image" :scheme="LeekWars.schemes[LeekWars.items[resource[0]].params]" />
-						<img v-else :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[resource[0]].type] + '/' + LeekWars.items[resource[0]].name.replace('potion_', '') + '.png'">
+						<img v-else :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[resource[0]].type] + '/' + LeekWars.items[resource[0]].name.replace('hat_', '').replace('potion_', '') + '.png'">
 						<span v-if="resource[1] > 1" class="quantity">{{ resource[1] }}</span>
 					</span>
 				</template>
-				{{ resource[1] }}x <b v-if="LeekWars.items[resource[0]].type === ItemType.SCHEME">{{ $t('main.scheme_x', [$t(ITEM_CATEGORY_NAME[LeekWars.items[LeekWars.schemes[LeekWars.items[resource[0]].params].result].type] + '.' + LeekWars.items[LeekWars.schemes[LeekWars.items[resource[0]].params].result].name.replace('potion_', ''))]) }}</b><b v-else>{{ $t(ITEM_CATEGORY_NAME[LeekWars.items[resource[0]].type] + '.' + LeekWars.items[resource[0]].name.replace('potion_', '')) }}</b>
+				{{ resource[1] }}x <b v-if="LeekWars.items[resource[0]].type === ItemType.SCHEME">{{ $t('main.scheme_x', [$t(ITEM_CATEGORY_NAME[LeekWars.items[LeekWars.schemes[LeekWars.items[resource[0]].params].result].type] + '.' + LeekWars.items[LeekWars.schemes[LeekWars.items[resource[0]].params].result].name.replace('hat_', '').replace('potion_', ''))]) }}</b><b v-else>{{ $t(ITEM_CATEGORY_NAME[LeekWars.items[resource[0]].type] + '.' + LeekWars.items[resource[0]].name.replace('hat_', '').replace('potion_', '')) }}</b>
 			</v-tooltip>
 		</td>
 		<td v-if="fight.context !== FightContext.CHALLENGE && leek.talent !== undefined && leek.talent_gain !== undefined" class="talent">
