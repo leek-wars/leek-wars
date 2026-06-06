@@ -126,9 +126,10 @@ function multiLanguagePlugin(): Plugin {
 		// Generate all language HTML files in the output
 		generateBundle(_options, bundle) {
 			let template = fs.readFileSync(templatePath, 'utf-8')
-			// Beta build: use the pink "Leek Wars Beta" PWA manifest
+			// Beta build: pink "Leek Wars Beta" PWA manifest + pink browser theme-color
 			if (isBeta) {
 				template = template.replace('href="/manifest.json"', 'href="/manifest_beta.json"')
+				template = template.replace('name="theme-color" content="#4b9e06"', 'name="theme-color" content="#bb00bb"')
 			}
 			let defaultHtml = ''
 
