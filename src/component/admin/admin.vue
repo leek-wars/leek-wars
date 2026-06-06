@@ -182,6 +182,10 @@
 						<v-icon :class="{ 'mdi-spin': encycloLinksLoading }">{{ encycloLinksLoading ? 'mdi-loading' : 'mdi-book-sync' }}</v-icon>
 						<h2>Refresh encyclo links</h2>
 					</div>
+					<div v-ripple class="section card" @click="deployMobs">
+						<v-icon :class="{ 'mdi-spin': mobsLoading }">{{ mobsLoading ? 'mdi-loading' : 'mdi-robot' }}</v-icon>
+						<h2>Deploy mobs ({{ env.BETA ? 'develop' : 'master' }})</h2>
+					</div>
 					<a target="_blank" rel="noopener" href="https://www.paypal.com/webapps/business/">
 						<div v-ripple class="section card">
 							<v-icon>mdi-currency-eur</v-icon>
@@ -226,6 +230,7 @@
 </template>
 
 <script setup lang="ts">
+	import { env } from '@/env'
 	import { locale } from '@/locale'
 	import { ChatMessage } from '@/model/chat'
 	import { Farmer } from '@/model/farmer'
@@ -249,6 +254,7 @@
 	const levelPopup = ref(false)
 	const levelPopupData = ref<unknown>(null)
 	const encycloLinksLoading = ref(false)
+	const mobsLoading = ref(false)
 	const testVerifyPopup = ref(false)
 	const testCheckEmailReminder = ref(false)
 	const testActivationWelcome = ref(false)
@@ -363,6 +369,21 @@
 		}).error((error) => {
 			encycloLinksLoading.value = false
 			LeekWars.toast("Erreur : " + error.error)
+		})
+	}
+
+	function deployMobs() {
+		if (mobsLoading.value) return
+		const branch = env.BETA ? 'develop' : 'master'
+		if (!confirm('Pull leek-wars-mobs (' + branch + ') et déployer les IA des mobs/boss ?')) return
+		mobsLoading.value = true
+		LeekWars.post('admin/deploy-mobs', { branch }).then((data) => {
+			mobsLoading.value = false
+			const n = data.changed_files ? data.changed_files.length : 0
+			LeekWars.toast('Mobs déployés (' + data.branch + ') : ' + n + ' fichier(s) mis à jour')
+		}).error((error) => {
+			mobsLoading.value = false
+			LeekWars.toast('Erreur : ' + (error.error || JSON.stringify(error)))
 		})
 	}
 
