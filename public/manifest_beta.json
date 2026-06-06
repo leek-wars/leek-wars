@@ -1,0 +1,25 @@
+{
+	"name": "Leek Wars Beta",
+	"short_name": "Leek Wars Beta",
+	"icons": [
+		{
+			"src": "/image/icon64_beta.png",
+			"sizes": "64x64"
+		},
+		{
+			"src": "/image/icon192_beta.png",
+			"sizes": "192x192"
+		},
+		{
+			"src": "/image/icon512_beta.png",
+			"sizes": "512x512"
+		}
+	],
+	"start_url": "/",
+	"display": "standalone",
+	"permissions": [
+		"notifications"
+	],
+	"theme_color": "#bb00bb",
+	"background_color": "#333333"
+}

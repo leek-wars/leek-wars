@@ -90,10 +90,15 @@ function collectCriticalCss(bundle: Rollup.OutputBundle): Set<string> {
 // Plugin to generate multiple HTML outputs for each language
 function multiLanguagePlugin(): Plugin {
 	const templatePath = path.resolve(__dirname, 'index.html')
+	let isBeta = false
 
 	return {
 		name: 'multi-language-html',
 		enforce: 'pre',
+
+		configResolved(config) {
+			isBeta = config.mode === 'beta'
+		},
 
 		// Resolve virtual HTML files for each language
 		resolveId(id) {
@@ -120,7 +125,11 @@ function multiLanguagePlugin(): Plugin {
 
 		// Generate all language HTML files in the output
 		generateBundle(_options, bundle) {
-			const template = fs.readFileSync(templatePath, 'utf-8')
+			let template = fs.readFileSync(templatePath, 'utf-8')
+			// Beta build: use the pink "Leek Wars Beta" PWA manifest
+			if (isBeta) {
+				template = template.replace('href="/manifest.json"', 'href="/manifest_beta.json"')
+			}
 			let defaultHtml = ''
 
 			// Hoist work that doesn't depend on `lang` out of the loop.
