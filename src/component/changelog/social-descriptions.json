@@ -96,5 +96,26 @@
 	"247_bot_color": { "emoji": "🎨", "description": "Test your AI with leek color potions applied: see exactly how it will look" },
 	"247_bank": { "emoji": "💰", "description": "Progressive bonuses from +50 up to +2000 extra crystals per pack" },
 	"247_no_fights": { "emoji": "🚪", "description": "Automatically exit the arena after 20 consecutive defeats" },
-	"247_editor_test_mobile": { "emoji": "📱", "description": "The editor's test interface now works smoothly on mobile" }
+	"247_editor_test_mobile": { "emoji": "📱", "description": "The editor's test interface now works smoothly on mobile" },
+
+	"248_boss_rankings": { "emoji": "🏆", "description": "Climb four leaderboards for each boss" },
+	"248_hats": { "emoji": "🎩", "description": "Four new hats to deck out your leeks" },
+	"248_trophies": { "emoji": "🏅", "description": "18 fresh trophies to chase" },
+	"248_hooks": { "emoji": "⚔️", "description": "Pick a loadout per fight from your AI" },
+	"248_forgotten_weapons": { "emoji": "🗡️", "description": "Rank backup weapons, the first one you own gets equipped" },
+	"248_plutonium_bazooka": { "emoji": "💥", "description": "Rare weapon that turns damage taken into resistance" },
+	"248_annotations": { "emoji": "🏷️", "description": "Annotate your code: @unused, @deprecated, @pure and more" },
+	"248_git_clone": { "emoji": "📥", "description": "Clone a remote git repo right in the editor" },
+	"248_git_selfhosted": { "emoji": "🔗", "description": "Connect your self-hosted GitHub, GitLab or Forgejo" },
+	"248_global_codelens": { "emoji": "🔎", "description": "See how many times each global variable is used" },
+	"248_history_table": { "emoji": "📋", "description": "Sort and page through your fight history in a table" },
+	"248_fight_tooltip": { "emoji": "🔍", "description": "Hover a fight to preview duration, gains and trophies" },
+	"248_arena_counter": { "emoji": "👥", "description": "See how many players are queuing for arenas, live" },
+	"248_arena_popup": { "emoji": "⏳", "description": "Richer arena queue: pick your leek and mode without leaving" },
+	"248_encyclo_anchors": { "emoji": "⚓", "description": "Link straight to any encyclopedia section" },
+	"248_bank_buy": { "emoji": "🛒", "description": "Buy featured items in crystals in one tap" },
+	"248_welcome": { "emoji": "🎉", "description": "New players get a welcome screen listing their rewards" },
+	"248_loadout_counters": { "emoji": "🎒", "description": "Live counters and restat icon in the loadout editor" },
+	"248_unused_warning": { "emoji": "⚠️", "description": "Get warned about functions and globals you never use" },
+	"248_logout": { "emoji": "🚪", "description": "Logout shows the connected accounts you'll sign out" }
 }
