@@ -54,6 +54,6 @@
 	"undo_last_commit_done": "最後のコミットを取り消しました。変更はステージされています。",
 	"quota_size_exceeded": "容量クォータを超過しました。ファイルを削除して空き容量を確保してください。",
 	"quota_files_exceeded": "ファイル数のクォータを超過しました。制限を下回るようにファイルを削除してください。",
-	"optimize_repo": "リポジトリを最適化",
-	"optimize_repo_done": "リポジトリを最適化しました（{0} 削減）"
+	"optimize_repo": "リポジトリを圧縮",
+	"optimize_repo_done": "リポジトリを圧縮しました（{0} 削減）"
 }

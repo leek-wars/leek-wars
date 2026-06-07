@@ -54,6 +54,6 @@
 	"undo_last_commit_pushed_warn": "⚠️ 이 커밋은 이미 푸시되었습니다. 로컬에서 취소하면 리모트와 분기가 생깁니다. 계속하시겠습니까?",
 	"unstage": "언스테이지",
 	"unstage_all": "모두 언스테이지",
-	"optimize_repo": "저장소 최적화",
-	"optimize_repo_done": "저장소를 최적화했습니다 ({0} 확보)"
+	"optimize_repo": "저장소 압축",
+	"optimize_repo_done": "저장소를 압축했습니다 ({0} 확보)"
 }

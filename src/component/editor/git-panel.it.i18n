@@ -54,6 +54,6 @@
 	"undo_last_commit_done": "Ultimo commit annullato. Le modifiche sono nello stage.",
 	"quota_size_exceeded": "Quota di spazio superata. Elimina dei file per liberare spazio.",
 	"quota_files_exceeded": "Quota di file superata. Elimina dei file per scendere sotto il limite.",
-	"optimize_repo": "Ottimizza il repository",
-	"optimize_repo_done": "Repository ottimizzato, {0} liberati"
+	"optimize_repo": "Compatta il repository",
+	"optimize_repo_done": "Repository compattato, {0} liberati"
 }

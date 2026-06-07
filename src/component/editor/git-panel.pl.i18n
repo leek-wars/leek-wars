@@ -54,6 +54,6 @@
 	"undo_last_commit_done": "Ostatni commit cofnięty. Zmiany są w indeksie.",
 	"quota_size_exceeded": "Przekroczono limit przestrzeni. Usuń pliki, aby zwolnić miejsce.",
 	"quota_files_exceeded": "Przekroczono limit plików. Usuń pliki, aby zejść poniżej limitu.",
-	"optimize_repo": "Optymalizuj repozytorium",
-	"optimize_repo_done": "Repozytorium zoptymalizowane, zwolniono {0}"
+	"optimize_repo": "Skompaktuj repozytorium",
+	"optimize_repo_done": "Repozytorium skompaktowane, zwolniono {0}"
 }

@@ -54,6 +54,6 @@
 	"undo_last_commit_done": "Letzter Commit rückgängig gemacht. Die Änderungen sind gestaged.",
 	"quota_size_exceeded": "Speicherkontingent überschritten. Lösche Dateien, um Platz freizugeben.",
 	"quota_files_exceeded": "Dateianzahl-Kontingent überschritten. Lösche Dateien, um unter das Limit zu kommen.",
-	"optimize_repo": "Repository optimieren",
-	"optimize_repo_done": "Repository optimiert, {0} freigegeben"
+	"optimize_repo": "Repository komprimieren",
+	"optimize_repo_done": "Repository komprimiert, {0} freigegeben"
 }

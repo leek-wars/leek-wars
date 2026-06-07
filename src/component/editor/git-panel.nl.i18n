@@ -54,6 +54,6 @@
 	"undo_last_commit_done": "Laatste commit ongedaan gemaakt. De wijzigingen zijn gestaged.",
 	"quota_size_exceeded": "Opslagquotum overschreden. Verwijder bestanden om ruimte vrij te maken.",
 	"quota_files_exceeded": "Bestandenquotum overschreden. Verwijder bestanden om onder de limiet te komen.",
-	"optimize_repo": "Repository optimaliseren",
-	"optimize_repo_done": "Repository geoptimaliseerd, {0} vrijgemaakt"
+	"optimize_repo": "Repository comprimeren",
+	"optimize_repo_done": "Repository gecomprimeerd, {0} vrijgemaakt"
 }
