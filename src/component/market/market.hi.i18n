@@ -19,6 +19,7 @@
 	"error_already_bought_fights_with_habs": "आप Habs में प्रति दिन केवल एक युद्ध पैक खरीद सकते हैं",
 	"error_not_enough_habs": "आपके पास पर्याप्त Habs नहीं हैं",
 	"error_not_enough_crystals": "आपके पास पर्याप्त क्रिस्टल नहीं हैं",
+	"not_enough_crystals_first": "पहली खरीदारी? आपके सभी क्रिस्टल दोगुने हो जाएंगे!",
 	"not_enough_crystals": "कुछ और क्रिस्टल और यह आपका है!",
 	"fights": "लड़ाइयाँ",
 	"fights_bought": "लड़ाइयाँ खरीदे!",

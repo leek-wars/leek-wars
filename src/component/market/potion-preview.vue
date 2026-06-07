@@ -5,9 +5,17 @@
 				<template v-if="effect.type == PotionEffect.CHANGE_SKIN">
 					<div v-html="$t('potion.effect_' + effect.type, [$t('potion.skin_' + effect.params[0])])"></div>
 					<div class="leek-preview">
-						<leek-image :leek="{level: 30, skin: effect.params[0]}" :scale="0.55" />
-						<leek-image :leek="{level: 90, skin: effect.params[0]}" :scale="0.65" />
-						<leek-image :leek="{level: 250, skin: effect.params[0]}" :scale="0.7" />
+						<template v-if="myLeeks.length">
+							<div v-for="leek in myLeeks" :key="leek.id" class="leek-entry">
+								<leek-image :leek="skinnedLeek(leek, effect.params[0])" :scale="0.55" />
+								<div class="leek-name">{{ leek.name }}</div>
+							</div>
+						</template>
+						<template v-else>
+							<leek-image :leek="{level: 30, skin: effect.params[0]}" :scale="0.55" />
+							<leek-image :leek="{level: 90, skin: effect.params[0]}" :scale="0.65" />
+							<leek-image :leek="{level: 250, skin: effect.params[0]}" :scale="0.7" />
+						</template>
 					</div>
 				</template>
 				<div v-else-if="effect.type == PotionEffect.RESTAT">
@@ -42,6 +50,7 @@ import AreaView from '@/component/market/area-view.vue'
 import EffectView from '@/component/market/effect.vue'
 import RangeView from '@/component/market/range-view.vue'
 import { ItemType } from '@/model/item'
+import type { Leek } from '@/model/leek'
 import { LeekWars } from '@/model/leekwars'
 import { PotionEffect, PotionTemplate } from '@/model/potion'
 import { store } from '@/model/store'
@@ -66,6 +75,19 @@ const props = withDefaults(defineProps<{
 
 
 const isClover = computed(() => props.potion?.effects?.some((e) => e.type >= PotionEffect.CLOVER_PASSED && e.type <= PotionEffect.CLOVER_SECOND))
+
+const MAX_PREVIEW_LEEKS = 4
+
+// Aperçu de la couleur sur les poireaux du joueur, avec leur chapeau et leur arme habituels.
+// Repli sur des poireaux d'exemple si le joueur n'est pas connecté ou n'a pas de poireau.
+const myLeeks = computed<Leek[]>(() => {
+	const farmer = store.state.farmer
+	if (!farmer || !farmer.leeks) { return [] }
+	return Object.values(farmer.leeks).slice(0, MAX_PREVIEW_LEEKS)
+})
+function skinnedLeek(leek: Leek, skin: unknown): Leek {
+	return { ...leek, skin } as unknown as Leek
+}
 
 const inventoryItem = computed(() => {
 	if (!store.state.farmer) return null
@@ -106,5 +128,28 @@ function useCloverPotion() {
 	background: var(--background);
 	padding: 12px;
 	text-align: center;
+}
+.leek-preview {
+	flex-wrap: wrap;
+	align-items: flex-end;
+	gap: 10px 14px;
+	// Neutralise le padding 5px hérité de .item-preview .stats div
+	.leek-entry {
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+	.leek-name {
+		padding: 0;
+		margin-top: 2px;
+		font-size: 13px;
+		font-weight: 500;
+		color: var(--text-color);
+		max-width: 120px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
 }
 </style>

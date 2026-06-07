@@ -43,6 +43,7 @@ class Farmer {
 	public animated_habs!: number
 	public crystals!: number
 	public animated_crystals!: number
+	public first_purchase!: boolean
 	public banned!: boolean
 	public deleted!: boolean
 	public tournaments!: unknown[]

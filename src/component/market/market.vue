@@ -188,7 +188,7 @@
 										<v-btn v-if="selectedItem.buyable_crystals" class="buy-crystals-button" @click="openBuyCrystals(10)">{{ $filters.number(selectedItem.crystals! * 10) }}<img src="/image/crystal.png"></v-btn>
 									</div>
 									<v-btn v-if="selectedItem.buyable_crystals && $store.state.farmer && $store.state.farmer.crystals < selectedItem.crystals!" class="not-enough-crystals" variant="text" color="#e91e9e" prepend-icon="mdi-cart-outline" :to="'/bank?ref=market_not_enough:' + selectedItem.name">
-										{{ $t('not_enough_crystals') }}
+										{{ $t($store.state.farmer.first_purchase ? 'not_enough_crystals_first' : 'not_enough_crystals') }}
 									</v-btn>
 									<div v-if="selectedItem.singleton && ((selectedItem.farmer_count ?? 0) > 0 || (selectedItem.leek_count ?? 0) > 0)" class="already-have">
 										{{ $t('already_have') }}
