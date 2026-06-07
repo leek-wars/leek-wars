@@ -133,7 +133,9 @@
 		if (!props.fight || !props.statistics) { return }
 		const allSeries = log.value ? props.statistics.lives_percent : props.statistics.lives
 		const entityList = Object.values(props.statistics!.entities)
-		let pairs = entityList.map((e, i) => ({ e, s: allSeries[i] }))
+		// Une entité peut ne pas avoir de série de vie correspondante (allSeries plus
+		// court que la liste d'entités) : on filtre pour éviter un s.slice sur undefined.
+		let pairs = entityList.map((e, i) => ({ e, s: allSeries[i] })).filter(({ s }) => s)
 		if (!chartDisplaySummons.value) {
 			pairs = pairs.filter(({e}) => !e.leek.summon)
 		}
