@@ -53,5 +53,7 @@
 	"undo_last_commit_pushed_warn": "⚠️ Tämä commit on jo pushattu. Sen paikallinen kumoaminen aiheuttaa eroavuuden remoten kanssa. Jatka?",
 	"undo_last_commit_done": "Viimeisin commit kumottu. Muutokset ovat stagessa.",
 	"quota_size_exceeded": "Tilakiintiö ylittynyt. Poista tiedostoja vapauttaaksesi tilaa.",
-	"quota_files_exceeded": "Tiedostomääräkiintiö ylittynyt. Poista tiedostoja päästäksesi rajan alle."
+	"quota_files_exceeded": "Tiedostomääräkiintiö ylittynyt. Poista tiedostoja päästäksesi rajan alle.",
+	"optimize_repo": "Tiivistä tietovarasto",
+	"optimize_repo_done": "Tietovarasto tiivistetty, {0} vapautettu"
 }

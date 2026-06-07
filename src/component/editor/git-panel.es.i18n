@@ -53,5 +53,7 @@
 	"undo_last_commit_pushed_warn": "⚠️ Este commit ya ha sido pusheado. Deshacerlo localmente creará una divergencia con el remote. ¿Continuar?",
 	"undo_last_commit_done": "Último commit deshecho. Los cambios están en stage.",
 	"quota_size_exceeded": "Cuota de espacio superada. Elimina archivos para liberar espacio.",
-	"quota_files_exceeded": "Cuota de archivos superada. Elimina archivos para bajar del límite."
+	"quota_files_exceeded": "Cuota de archivos superada. Elimina archivos para bajar del límite.",
+	"optimize_repo": "Optimizar el repositorio",
+	"optimize_repo_done": "Repositorio optimizado, {0} liberados"
 }

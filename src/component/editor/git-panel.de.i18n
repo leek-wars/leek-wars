@@ -53,5 +53,7 @@
 	"undo_last_commit_pushed_warn": "⚠️ Dieser Commit wurde bereits gepusht. Ihn lokal rückgängig zu machen, führt zu einer Divergenz mit dem Remote. Fortfahren?",
 	"undo_last_commit_done": "Letzter Commit rückgängig gemacht. Die Änderungen sind gestaged.",
 	"quota_size_exceeded": "Speicherkontingent überschritten. Lösche Dateien, um Platz freizugeben.",
-	"quota_files_exceeded": "Dateianzahl-Kontingent überschritten. Lösche Dateien, um unter das Limit zu kommen."
+	"quota_files_exceeded": "Dateianzahl-Kontingent überschritten. Lösche Dateien, um unter das Limit zu kommen.",
+	"optimize_repo": "Repository optimieren",
+	"optimize_repo_done": "Repository optimiert, {0} freigegeben"
 }

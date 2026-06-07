@@ -53,5 +53,7 @@
 	"undo_last_commit_pushed_warn": "⚠️ 此提交已被推送。在本地撤销将与远程产生分歧。是否继续？",
 	"undo_last_commit_done": "已撤销上次提交。更改已暂存。",
 	"quota_size_exceeded": "存储配额已超出。请删除文件以释放空间。",
-	"quota_files_exceeded": "文件数量配额已超出。请删除文件以低于限制。"
+	"quota_files_exceeded": "文件数量配额已超出。请删除文件以低于限制。",
+	"optimize_repo": "优化仓库",
+	"optimize_repo_done": "仓库已优化，释放了 {0}"
 }

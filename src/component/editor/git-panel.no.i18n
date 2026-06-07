@@ -53,5 +53,7 @@
 	"undo_last_commit_done": "Siste commit angret. Endringene er staged.",
 	"undo_last_commit_pushed_warn": "⚠️ Denne commiten er allerede pushet. Å angre lokalt vil skape en divergens med remote. Fortsette?",
 	"unstage": "Unstage",
-	"unstage_all": "Unstage alt"
+	"unstage_all": "Unstage alt",
+	"optimize_repo": "Komprimer depotet",
+	"optimize_repo_done": "Depotet komprimert, {0} frigjort"
 }

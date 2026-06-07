@@ -53,5 +53,7 @@
 	"undo_last_commit_pushed_warn": "⚠️ Ten commit został już wypchnięty. Jego lokalne cofnięcie spowoduje rozbieżność z remote'em. Kontynuować?",
 	"undo_last_commit_done": "Ostatni commit cofnięty. Zmiany są w indeksie.",
 	"quota_size_exceeded": "Przekroczono limit przestrzeni. Usuń pliki, aby zwolnić miejsce.",
-	"quota_files_exceeded": "Przekroczono limit plików. Usuń pliki, aby zejść poniżej limitu."
+	"quota_files_exceeded": "Przekroczono limit plików. Usuń pliki, aby zejść poniżej limitu.",
+	"optimize_repo": "Optymalizuj repozytorium",
+	"optimize_repo_done": "Repozytorium zoptymalizowane, zwolniono {0}"
 }

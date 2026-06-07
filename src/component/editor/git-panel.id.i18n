@@ -53,5 +53,7 @@
 	"undo_last_commit_done": "Commit terakhir dibatalkan. Perubahan tetap di-stage.",
 	"undo_last_commit_pushed_warn": "⚠️ Commit ini sudah di-push. Membatalkannya secara lokal akan membuat divergensi dengan remote.",
 	"unstage": "Unstage",
-	"unstage_all": "Unstage semua"
+	"unstage_all": "Unstage semua",
+	"optimize_repo": "Optimalkan repositori",
+	"optimize_repo_done": "Repositori dioptimalkan, {0} dibebaskan"
 }

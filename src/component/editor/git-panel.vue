@@ -26,6 +26,9 @@
 					<v-list-item prepend-icon="mdi-undo-variant" @click="undoLastCommit">
 						<v-list-item-title>{{ $t('undo_last_commit') }}</v-list-item-title>
 					</v-list-item>
+					<v-list-item prepend-icon="mdi-broom" @click="gc">
+						<v-list-item-title>{{ $t('optimize_repo') }}</v-list-item-title>
+					</v-list-item>
 				</v-list>
 			</v-menu>
 		</div>
@@ -377,6 +380,18 @@
 			emitter.emit('reanalyze')
 		} catch (e: unknown) {
 			syncError.value = 'Undo: ' + gitErrorMessage(e)
+		}
+	}
+
+	async function gc() {
+		actionsMenuOpen.value = false
+		syncError.value = ''
+		syncInfo.value = ''
+		try {
+			const data = await gitCall<{ freed: number, size: number }>('git/gc', { folder: selectedRepo.value })
+			syncInfo.value = t('optimize_repo_done', [LeekWars.formatFileSize(data.freed)]) as string
+		} catch (e: unknown) {
+			syncError.value = 'Gc: ' + gitErrorMessage(e)
 		}
 	}
 

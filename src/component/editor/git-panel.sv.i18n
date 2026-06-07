@@ -53,5 +53,7 @@
 	"undo_last_commit_pushed_warn": "⚠️ Denna commit har redan pushats. Att ångra den lokalt skapar en divergens med remoten. Fortsätt?",
 	"undo_last_commit_done": "Senaste commit ångrad. Ändringarna är indexerade.",
 	"quota_size_exceeded": "Lagringskvot överskriden. Ta bort filer för att frigöra utrymme.",
-	"quota_files_exceeded": "Filkvot överskriden. Ta bort filer för att komma under gränsen."
+	"quota_files_exceeded": "Filkvot överskriden. Ta bort filer för att komma under gränsen.",
+	"optimize_repo": "Optimera arkivet",
+	"optimize_repo_done": "Arkivet optimerat, {0} frigjort"
 }

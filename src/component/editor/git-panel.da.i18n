@@ -53,5 +53,7 @@
 	"undo_last_commit_pushed_warn": "⚠️ Denne commit er allerede pushet. At fortryde lokalt vil skabe en divergens med remote. Fortsæt?",
 	"undo_last_commit_done": "Seneste commit fortrudt. Ændringerne er staged.",
 	"quota_size_exceeded": "Lagerkvote overskredet. Slet filer for at frigøre plads.",
-	"quota_files_exceeded": "Filantals-kvote overskredet. Slet filer for at komme under grænsen."
+	"quota_files_exceeded": "Filantals-kvote overskredet. Slet filer for at komme under grænsen.",
+	"optimize_repo": "Komprimér depotet",
+	"optimize_repo_done": "Depotet komprimeret, {0} frigjort"
 }
