@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted } from 'vue'
 import { LeekWars } from '@/model/leekwars'
 import { Line } from 'vue-chartjs'
 import { mixins, useNamespacedT } from '@/model/i18n'
@@ -125,7 +125,6 @@ LeekWars.get('talent/leek').then(talents => {
 })
 
 onMounted(() => { LeekWars.large = true })
-onBeforeUnmount(() => { LeekWars.large = false })
 </script>
 
 <style lang="scss" scoped>

@@ -249,8 +249,6 @@
 	})
 
 	onUnmounted(() => {
-		LeekWars.flex = false
-		LeekWars.lightBar = false
 		emitter.off('resize', resize)
 		emitter.off('trophy', onTrophy)
 		emitter.off('fight_notification', onFightNotification)

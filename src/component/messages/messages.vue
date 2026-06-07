@@ -167,9 +167,6 @@
 	})
 
 	onUnmounted(() => {
-		LeekWars.footer = true
-		LeekWars.box = false
-		LeekWars.large = false
 		emitter.off('back', back)
 		emitter.off('focus', conversationRead)
 	})

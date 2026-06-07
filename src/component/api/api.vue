@@ -290,9 +290,6 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-	LeekWars.large = false
-	LeekWars.footer = true
-	LeekWars.box = false
 	emitter.off('back', back)
 })
 </script>

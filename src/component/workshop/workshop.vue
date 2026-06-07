@@ -106,7 +106,7 @@
 	import { SchemeTemplate } from '@/model/scheme'
 	import RichTooltipItem from '../rich-tooltip/rich-tooltip-item.vue'
 	import Scheme from '../market/scheme.vue'
-	import { computed, defineAsyncComponent, onMounted, onUnmounted, ref, watch } from 'vue'
+	import { computed, defineAsyncComponent, onMounted, ref, watch } from 'vue'
 	import { locale } from '@/locale'
 
 	const Inventory = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/inventory/inventory.${locale}.i18n`))
@@ -140,10 +140,6 @@
 	onMounted(() => {
 		LeekWars.footer = false
 		LeekWars.box = true
-	})
-	onUnmounted(() => {
-		LeekWars.footer = true
-		LeekWars.box = false
 	})
 
 	watch(sort, () => localStorage.setItem('workshop/sort', '' + sort.value))

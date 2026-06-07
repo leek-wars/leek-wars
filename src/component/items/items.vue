@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { type ItemTemplate, ItemType } from '@/model/item'
 import { LeekWars } from '@/model/leekwars'
@@ -82,7 +82,6 @@ onMounted(() => {
 		})
 	}
 })
-onBeforeUnmount(() => { LeekWars.large = false })
 </script>
 
 <style lang="scss" scoped>

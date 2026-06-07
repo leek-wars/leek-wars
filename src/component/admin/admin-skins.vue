@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
@@ -36,7 +36,6 @@ if (!store.getters.admin) router.replace('/')
 const front = ref(true)
 
 onMounted(() => { LeekWars.large = true })
-onBeforeUnmount(() => { LeekWars.large = false })
 </script>
 
 <style lang="scss" scoped>

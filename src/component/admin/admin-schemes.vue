@@ -76,7 +76,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { SchemeTemplate } from '@/model/scheme'
 	import { store } from '@/model/store'
-	import { defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue'
+	import { defineAsyncComponent, onMounted, ref } from 'vue'
 	import { useRouter } from 'vue-router'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
@@ -105,9 +105,6 @@
 
 	onMounted(() => {
 		LeekWars.large = true
-	})
-	onBeforeUnmount(() => {
-		LeekWars.large = false
 	})
 
 	function copyCode(scheme: SchemeTemplate) {

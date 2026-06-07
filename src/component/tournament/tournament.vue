@@ -126,7 +126,6 @@ emitter.on('tooltip-close', tooltipClose)
 
 onBeforeUnmount(() => {
 	clearTimeout(timer)
-	LeekWars.large = false
 	emitter.off('tooltip', tooltipOpen)
 	emitter.off('tooltip-close', tooltipClose)
 	emitter.off('tournament-update', onTournamentUpdate)

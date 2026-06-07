@@ -291,8 +291,6 @@
 	})
 
 	onBeforeUnmount(() => {
-		LeekWars.footer = true
-		LeekWars.box = false
 		emitter.off('craft', scrollToForge)
 		emitter.off('clover-used', onCloverUsed)
 	})

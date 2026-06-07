@@ -230,11 +230,6 @@
 		router.push('/help/documentation')
 	}
 	onBeforeUnmount(() => {
-		if (!props.popup) {
-			LeekWars.large = false
-			LeekWars.footer = true
-			LeekWars.box = false
-		}
 		emitter.off('back', back)
 		emitter.off('doc-navigate', navigate)
 	})

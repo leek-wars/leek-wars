@@ -540,7 +540,6 @@ const t = useNamespacedT('market')
 
 	onBeforeUnmount(() => {
 		if (request) { request.abort() }
-		LeekWars.large = false
 	})
 
 	onUnmounted(() => {

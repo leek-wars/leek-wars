@@ -300,7 +300,6 @@
 	})
 
 	onBeforeUnmount(() => {
-		LeekWars.large = false
 		if (timer) {
 			clearInterval(timer)
 		}

@@ -88,7 +88,7 @@
 <script setup lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { onUnmounted, reactive, ref, watch } from 'vue'
+	import { reactive, ref, watch } from 'vue'
 	import { useRoute, useRouter } from 'vue-router'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
@@ -126,10 +126,6 @@
 		const initial = res.find(d => d.id === requested) ? requested : res[0].id
 		selectedDashboard.value = initial
 		loadDashboard(initial)
-	})
-
-	onUnmounted(() => {
-		LeekWars.large = false
 	})
 
 	// Sur refresh, state.farmer est null le temps de recharger la session.

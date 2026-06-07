@@ -638,6 +638,21 @@ const LeekWars = reactive({
 		if (!LeekWars.isMobile()) { return }
 		LeekWars.splitBack = true
 	},
+	// Remet tous les flags de layout par page à leurs valeurs par défaut. Appelé par
+	// router.beforeEach sur un vrai changement de composant : chaque page ré-applique
+	// ensuite ses overrides dans onMounted (donc après le swap de <router-view>).
+	// Évite que des resets synchrones en onBeforeUnmount fassent re-render app.vue
+	// pendant le démontage → "TypeError: e.parentNode" (cf. cluster #3957-#3983).
+	// Exceptions : editor.vue et encyclopedia.vue conservent leur propre reset en
+	// nextTick (cas Monaco / mode édition in-page) ; ce reset central y est redondant.
+	resetLayout() {
+		LeekWars.large = false
+		LeekWars.flex = false
+		LeekWars.footer = true
+		LeekWars.box = false
+		LeekWars.header = true
+		LeekWars.lightBar = false
+	},
 	setActions(actions: unknown[]) {
 		LeekWars.actions = actions
 	},

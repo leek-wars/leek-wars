@@ -36,7 +36,7 @@
 import { ComponentTemplate } from '@/model/component'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import ItemView from '../item.vue'
 
@@ -60,9 +60,6 @@ LeekWars.get<{[key: number]: ComponentTemplate}>("component/get-all/dfgdfgzegkty
 
 onMounted(() => {
 	LeekWars.large = true
-})
-onBeforeUnmount(() => {
-	LeekWars.large = false
 })
 
 function up(component: ComponentTemplate, i: number) {

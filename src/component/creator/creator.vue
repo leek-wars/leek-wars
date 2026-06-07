@@ -168,7 +168,7 @@ import { ORDERED_CHIPS } from '@/model/sorted_chips'
 import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 import { WeaponsData, WeaponTemplate } from '@/model/weapon'
 import { ChipTemplate } from '@/model/chip'
-import { computed, nextTick, onBeforeMount, onMounted, onUnmounted, ref, useTemplateRef } from 'vue'
+import { computed, nextTick, onBeforeMount, onMounted, ref, useTemplateRef } from 'vue'
 import { useRoute } from 'vue-router'
 
 defineOptions({ name: 'Creator', i18n: {}, mixins: [...mixins] })
@@ -232,11 +232,6 @@ LeekWars.get("map/get/" + id.value).then(m => {
 onMounted(() => {
 	LeekWars.large = true
 	LeekWars.footer = false
-})
-
-onUnmounted(() => {
-	LeekWars.large = false
-	LeekWars.footer = true
 })
 
 function resize() { /* */ }

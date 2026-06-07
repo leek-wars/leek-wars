@@ -95,7 +95,7 @@
 <script setup lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { onBeforeUnmount, onMounted, ref } from 'vue'
+	import { onMounted, ref } from 'vue'
 	import { useRouter } from 'vue-router'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
@@ -138,9 +138,6 @@
 
 	onMounted(() => {
 		LeekWars.large = true
-	})
-	onBeforeUnmount(() => {
-		LeekWars.large = false
 	})
 
 	function nameFocusout(trophy: AdminTrophy, locale: string, e: Event) {

@@ -343,10 +343,21 @@ router.onError((error, to) => {
 	}
 })
 
-router.beforeEach((to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) => {
+router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
 
 	LeekWars.splitShowList()
 	LeekWars.actions = []
+
+	// Reset des flags de layout par page à leurs valeurs par défaut AVANT le swap de
+	// <router-view> : chaque page ré-applique son layout dans onMounted (après le swap).
+	// On ne reset que sur un vrai changement de composant (route record différent), pas
+	// sur un simple changement de param (/editor/:id, /encyclopedia/:page…) où le
+	// composant est réutilisé et conserve son layout sans re-déclencher onMounted.
+	const toRecord = to.matched[to.matched.length - 1]
+	const fromRecord = from.matched[from.matched.length - 1]
+	if (toRecord !== fromRecord) {
+		LeekWars.resetLayout()
+	}
 
 	if (window.__FARMER__) {
 		store.commit('connected', '$')
