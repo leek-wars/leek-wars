@@ -9,10 +9,10 @@
 				<form @submit.prevent="submitResetForm">
 					<br>
 					<h4>{{ $t('new_password') }}</h4>
-					<input v-model="password" name="password" type="password">
+					<input v-model="password" name="password" type="password" autocapitalize="none" autocorrect="off" autocomplete="new-password" spellcheck="false">
 
 					<h4>{{ $t('confirm') }}</h4>
-					<input v-model="password2" name="password2" type="password">
+					<input v-model="password2" name="password2" type="password" autocapitalize="none" autocorrect="off" autocomplete="new-password" spellcheck="false">
 
 					<br>
 					<br>
@@ -44,7 +44,7 @@
 				<form @submit.prevent="submitForm">
 					<br>
 					<h2>{{ $t('email_address') }}</h2>
-					<input v-model="email" type="text" name="email">
+					<input v-model="email" type="text" name="email" autocapitalize="none" autocorrect="off" autocomplete="email" spellcheck="false" inputmode="email">
 					<br><br>
 					<div class="center">
 						<v-btn type="submit">{{ $t('ask_new_password') }}</v-btn>

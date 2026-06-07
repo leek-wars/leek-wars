@@ -52,7 +52,7 @@
 							<tr>
 								<td class="align-right">{{ $t('your_farmer_name') }}</td>
 								<td class="align-left">
-									<input v-model="login" :status="status('login')" name="login" type="text" required>
+									<input v-model="login" :status="status('login')" name="login" type="text" autocapitalize="none" autocorrect="off" autocomplete="username" spellcheck="false" required>
 									<div v-for="e in errors.login" :key="e" class="error-msg">{{ e }}</div>
 								</td>
 							</tr>
@@ -78,14 +78,14 @@
 							<tr v-if="signupMethod === 1">
 								<td class="align-right">{{ $t('your_email') }}</td>
 								<td class="align-left">
-									<input v-model="email" :status="status('email')" name="email" type="text" required>
+									<input v-model="email" :status="status('email')" name="email" type="text" autocapitalize="none" autocorrect="off" autocomplete="email" spellcheck="false" inputmode="email" required>
 									<div v-for="e in errors.email" :key="e" class="error-msg">{{ e }}</div>
 								</td>
 							</tr>
 							<tr v-if="signupMethod === 1">
 								<td class="align-right">{{ $t('password') }}</td>
 								<td class="align-left">
-									<input v-model="password1" :status="status('password1')" name="password" type="password" required>
+									<input v-model="password1" :status="status('password1')" name="password" type="password" autocapitalize="none" autocorrect="off" autocomplete="new-password" spellcheck="false" required>
 									<div v-for="e in errors.password1" :key="e" class="error-msg">{{ e }}</div>
 								</td>
 							</tr>

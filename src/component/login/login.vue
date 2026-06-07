@@ -7,10 +7,10 @@
 					<form @submit.prevent="login">
 						<br>
 						<div class="title">{{ $t('login') }}</div>
-						<input v-model="form.login" type="text" name="login">
+						<input v-model="form.login" type="text" name="login" autocapitalize="none" autocorrect="off" autocomplete="username" spellcheck="false">
 						<br><br>
 						<div class="title">{{ $t('password') }}</div>
-						<input v-model="form.password" type="password" name="password">
+						<input v-model="form.password" type="password" name="password" autocapitalize="none" autocorrect="off" autocomplete="current-password" spellcheck="false">
 						<br><br>
 						<v-checkbox v-model="form.keep_connected" :label="$t('keep_connected')" hide-details />
 						<br><br>
