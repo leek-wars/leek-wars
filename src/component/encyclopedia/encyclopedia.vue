@@ -536,6 +536,18 @@ ${ret}
 				editor.value.onDidChangeModelContent(() => {
 					modified.value = true
 					if (page.value) page.value.content = editor.value!.getValue()
+					// La page parent est déclarée par le premier blockquote (« > Titre ») du
+					// contenu. On la résout depuis le rendu markdown après mise à jour du DOM.
+					nextTick(() => {
+						const md = markdownRef.value
+						if (!md || !page.value) return
+						const blockquote = md.querySelector('blockquote')
+						if (blockquote) {
+							const key = blockquote.textContent!.trim().replace(/_/g, ' ').toLowerCase()
+							const pages = LeekWars.encyclopedia[language.value]
+							page.value.parent = (pages && pages[key]) ? pages[key].id : 1
+						}
+					})
 				})
 
 				editor.value.onDidScrollChange((e) => {
