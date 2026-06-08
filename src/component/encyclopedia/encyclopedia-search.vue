@@ -31,7 +31,7 @@
 					<div v-if="results.length" class="results">
 						<router-link v-for="(result, r) in results" :key="r" :to="'/encyclopedia/' + $i18n.locale + '/' + result.title">
 							<div v-ripple class="result card">
-								<div class="title" v-html="result.title_headline"></div>
+								<div class="title" v-html="highlight(result.title_headline)"></div>
 								<markdown :content="result.content" :pages="{}" mode="encyclopedia" />
 							</div>
 						</router-link>
@@ -57,6 +57,12 @@ import Breadcrumb from '../forum/breadcrumb.vue'
 import Pagination from '@/component/pagination.vue'
 
 defineOptions({ name: 'EncyclopediaSearch', i18n: {}, mixins: [...mixins] })
+
+// Le titre vient de ts_headline() côté serveur, qui n'échappe PAS le HTML de la source
+// (seuls <b>/</b> sont ajoutés autour des termes). On échappe tout puis on ré-autorise <b>.
+function highlight(text: unknown): string {
+	return typeof text === 'string' ? LeekWars.protect(text).replace(/&lt;b&gt;/g, '<b>').replace(/&lt;\/b&gt;/g, '</b>') : ''
+}
 
 const t = useNamespacedT('encyclopedia-search')
 const route = useRoute()

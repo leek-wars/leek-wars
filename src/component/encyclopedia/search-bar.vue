@@ -5,7 +5,7 @@
 		<loader v-if="loading" />
 		<div v-else-if="results && results.length" class="results">
 			<router-link v-for="(result, r) in results" :key="r" :to="'/encyclopedia/' + $i18n.locale + '/' + result.title" class="result">
-				<div class="title" v-html="result.title_headline"></div>
+				<div class="title" v-html="highlight(result.title_headline)"></div>
 			</router-link>
 			<router-link :to="'/encyclopedia-search?query=' + query" class="more">
 				<div class="title">{{ $t('main.more_results') }}</div>
@@ -21,6 +21,12 @@ import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 
 defineOptions({ name: 'SearchBar' })
+
+// Le titre vient de ts_headline() côté serveur, qui n'échappe PAS le HTML de la source
+// (seuls <b>/</b> sont ajoutés autour des termes). On échappe tout puis on ré-autorise <b>.
+function highlight(text: unknown): string {
+	return typeof text === 'string' ? LeekWars.protect(text).replace(/&lt;b&gt;/g, '<b>').replace(/&lt;\/b&gt;/g, '</b>') : ''
+}
 
 const route = useRoute()
 const router = useRouter()
