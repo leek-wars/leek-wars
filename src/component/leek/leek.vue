@@ -472,7 +472,7 @@
 					</v-tooltip>
 				</div>
 				<template v-if="suggestedSkinPotions.length">
-					<div class="shop-suggestion-title"><v-icon size="18">mdi-cart-outline</v-icon> {{ $t('main.shop') }}</div>
+					<div class="shop-suggestion-title"><v-icon size="18">mdi-cart-outline</v-icon> {{ $t('main.shop') }} <v-icon class="refresh-btn" size="20" @click="refreshSuggestions">mdi-refresh</v-icon></div>
 					<div class="potions-grid">
 						<v-tooltip v-for="s in suggestedSkinPotions" :key="'sug-' + s.id">
 							<template #activator="{ props }">
@@ -519,7 +519,7 @@
 				<br>
 				<div class="center">({{ $t('click_to_put_hat') }})</div>
 				<template v-if="suggestedHats.length">
-					<div class="shop-suggestion-title"><v-icon size="18">mdi-cart-outline</v-icon> {{ $t('main.shop') }}</div>
+					<div class="shop-suggestion-title"><v-icon size="18">mdi-cart-outline</v-icon> {{ $t('main.shop') }} <v-icon class="refresh-btn" size="20" @click="refreshSuggestions">mdi-refresh</v-icon></div>
 					<div class="hats">
 						<v-tooltip v-for="s in suggestedHats" :key="'sug-' + s.id">
 							<template #activator="{ props }">
@@ -959,6 +959,9 @@
 			// Le serveur renvoie items via (object), donc Object.values pour obtenir un vrai tableau
 			marketItems.value = res && res.items ? shuffled(Object.values(res.items)) : []
 		}).error(() => { marketRequested = false })
+	}
+	function refreshSuggestions() {
+		if (marketItems.value.length) { marketItems.value = shuffled(marketItems.value) }
 	}
 	// Re-mélange à chaque ouverture pour varier les items, et réinitialise l'aperçu au survol
 	watch([hatDialog, skinPotionDialog, customizeDialog], ([h, s, c]) => {
@@ -2024,6 +2027,14 @@
 		border-top: 1px solid var(--border);
 		font-weight: bold;
 		color: var(--text-color-secondary);
+	}
+	.shop-suggestion-title .refresh-btn {
+		margin-left: auto;
+		cursor: pointer;
+		color: var(--text-color-secondary);
+	}
+	.shop-suggestion-title .refresh-btn:hover {
+		color: var(--text-color);
 	}
 	.hat.suggestion, .potion.suggestion {
 		position: relative;
