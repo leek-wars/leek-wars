@@ -350,12 +350,15 @@ router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, n
 
 	// Reset des flags de layout par page à leurs valeurs par défaut AVANT le swap de
 	// <router-view> : chaque page ré-applique son layout dans onMounted (après le swap).
-	// On ne reset que sur un vrai changement de composant (route record différent), pas
-	// sur un simple changement de param (/editor/:id, /encyclopedia/:page…) où le
-	// composant est réutilisé et conserve son layout sans re-déclencher onMounted.
-	const toRecord = to.matched[to.matched.length - 1]
-	const fromRecord = from.matched[from.matched.length - 1]
-	if (toRecord !== fromRecord) {
+	// On ne reset que si le COMPOSANT de destination diffère de celui d'origine : sinon
+	// le composant est réutilisé (pas de re-mount, donc pas de onMounted) et il conserve
+	// son layout. Comparer le composant et non le route record est crucial pour l'éditeur,
+	// qui a 4 records distincts (/editor, /editor/:id, /editor/:id/diff, .../h/:hash)
+	// pointant tous sur le MÊME composant : naviguer entre eux (ex: ouvrir un fichier)
+	// ne doit pas reset le layout, sinon l'éditeur perd son flag `large` et rapetisse.
+	const toComponent = to.matched[to.matched.length - 1]?.components?.default
+	const fromComponent = from.matched[from.matched.length - 1]?.components?.default
+	if (toComponent !== fromComponent) {
 		LeekWars.resetLayout()
 	}
 
