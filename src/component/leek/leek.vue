@@ -579,7 +579,7 @@
 						<img v-else class="image" src="/image/hat/no_hat.png">
 						<div v-if="leek.hat" class="name">{{ $t('hat.' + LeekWars.hats[LeekWars.items[leek.hat.template].params].name) }}</div>
 					</div>
-					<div v-ripple class="item card" :class="{disabled: !holdWeaponEnabled}" @click="skinWeaponDialog = true">
+					<div v-ripple class="item card" :class="{disabled: !holdWeaponEnabled}" @click="holdWeaponEnabled ? (skinWeaponDialog = true) : goToMarket('hold_weapon')">
 						<div class="title">
 							<v-tooltip v-if="holdWeaponEnabled">
 								<template #activator="{ props }">
@@ -599,7 +599,7 @@
 							<div class="name"><v-icon>mdi-lock</v-icon> {{ $t('pomp.hold_weapon') }}</div>
 						</template>
 					</div>
-					<div v-ripple class="item card" :class="{disabled: !leekTitleEnabled}" @click="titleDialog = true">
+					<div v-ripple class="item card" :class="{disabled: !leekTitleEnabled}" @click="leekTitleEnabled ? (titleDialog = true) : goToMarket('leek_title')">
 						<div class="title">
 							<v-tooltip v-if="leekTitleEnabled">
 								<template #activator="{ props }">
@@ -628,7 +628,7 @@
 									<span>{{ $t('pomp.ai_lines') }}</span>
 									<v-tooltip :disabled="showAiLinesEnabled">
 										<template #activator="{ props }">
-											<img v-bind="props" src="/image/pomp/ai_lines.png">
+											<img v-bind="props" src="/image/pomp/ai_lines.png" :class="{'buy-pomp': !showAiLinesEnabled}" @click="!showAiLinesEnabled && goToMarket('ai_lines')">
 										</template>
 										<v-icon>mdi-lock</v-icon> {{ $t('pomp.ai_lines') }}
 									</v-tooltip>
@@ -641,7 +641,7 @@
 									<span>{{ $t('pomp.metal') }}</span>
 									<v-tooltip :disabled="metalEnabled">
 										<template #activator="{ props }">
-											<img v-bind="props" src="/image/pomp/metal.png">
+											<img v-bind="props" src="/image/pomp/metal.png" :class="{'buy-pomp': !metalEnabled}" @click="!metalEnabled && goToMarket('metal')">
 										</template>
 										<v-icon>mdi-lock</v-icon> {{ $t('pomp.metal') }}
 									</v-tooltip>
@@ -661,7 +661,7 @@
           							{{ $t('happy') }}
 									<v-tooltip :disabled="happyEnabled">
 										<template #activator="{ props }">
-											<img v-bind="props" src="/image/pomp/happy.png">
+											<img v-bind="props" src="/image/pomp/happy.png" :class="{'buy-pomp': !happyEnabled}" @click="!happyEnabled && goToMarket('happy')">
 										</template>
 										<v-icon>mdi-lock</v-icon> {{ $t('pomp.happy') }}
 									</v-tooltip>
@@ -672,7 +672,7 @@
 									{{ $t('angry') }}
 									<v-tooltip :disabled="angryEnabled">
 										<template #activator="{ props }">
-											<img v-bind="props" src="/image/pomp/angry.png">
+											<img v-bind="props" src="/image/pomp/angry.png" :class="{'buy-pomp': !angryEnabled}" @click="!angryEnabled && goToMarket('angry')">
 										</template>
 										<v-icon>mdi-lock</v-icon> {{ $t('pomp.angry') }}
 									</v-tooltip>
@@ -962,6 +962,11 @@
 	}
 	function refreshSuggestions() {
 		if (marketItems.value.length) { marketItems.value = shuffled(marketItems.value) }
+	}
+	// Apparat verrouillé : clic vers le marché pour l'acheter
+	function goToMarket(name: string) {
+		customizeDialog.value = false
+		router.push('/market/' + name)
 	}
 	// Re-mélange à chaque ouverture pour varier les items, et réinitialise l'aperçu au survol
 	watch([hatDialog, skinPotionDialog, customizeDialog], ([h, s, c]) => {
@@ -2180,7 +2185,6 @@
 				}
 				&.disabled {
 					background: transparent;
-					pointer-events: none;
 					.image {
 						opacity: 0.5;
 					}
@@ -2199,6 +2203,10 @@
 				width: 20px;
 				margin-left: 4px;
 			}
+		}
+		.buy-pomp {
+			cursor: pointer;
+			pointer-events: auto;
 		}
 		.v-radio.v-radio--is-disabled {
 			opacity: 0.7;
