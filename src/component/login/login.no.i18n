@@ -1,4 +1,6 @@
 {
+	"two_factor_code": "Verification code",
+	"error_wrong_two_factor_code": "Invalid verification code.",
 	"connection": "Logg Inn",
 	"error_banned": "Kontoen din er utestengt",
 	"error_inactive": "Kontoen din er ikke aktivert, vennligst gå til lenken sendt på e-post.",

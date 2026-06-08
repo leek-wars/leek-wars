@@ -1,4 +1,6 @@
 {
+	"two_factor_code": "Verification code",
+	"error_wrong_two_factor_code": "Invalid verification code.",
 	"connection": "Kirjaudu sisään",
 	"error_banned": "Tilisi on estetty",
 	"error_inactive": "Tiliäsi ei ole aktivoitu, siirry sähköpostilla lähetettyyn linkkiin.",

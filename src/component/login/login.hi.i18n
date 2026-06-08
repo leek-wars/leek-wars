@@ -1,4 +1,6 @@
 {
+	"two_factor_code": "Verification code",
+	"error_wrong_two_factor_code": "Invalid verification code.",
 	"connection": "लॉग इन करें",
 	"error_banned": "आपका खाता प्रतिबंधित कर दिया गया है",
 	"error_inactive": "आपका खाता सक्रिय नहीं किया गया है, कृपया ईमेल द्वारा भेजे गए लिंक पर जाएं।",

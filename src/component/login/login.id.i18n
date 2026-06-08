@@ -1,4 +1,6 @@
 {
+	"two_factor_code": "Verification code",
+	"error_wrong_two_factor_code": "Invalid verification code.",
 	"connection": "Gabung",
 	"error_banned": "Akun Anda telah diblokir",
 	"error_inactive": "Akun Anda belum diaktifkan, silakan buka tautan yang dikirim melalui email.",

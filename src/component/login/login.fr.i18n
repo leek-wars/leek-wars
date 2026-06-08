@@ -1,4 +1,6 @@
 {
+	"two_factor_code": "Code de validation",
+	"error_wrong_two_factor_code": "Code de validation incorrect.",
 	"connection": "Connexion",
 	"error_banned": "Votre compte a été banni",
 	"error_inactive": "Votre compte n'a pas été activé, veuillez vous rendre sur le lien envoyé par mail.",

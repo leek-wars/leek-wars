@@ -1,4 +1,6 @@
 {
+	"two_factor_code": "Bestätigungscode",
+	"error_wrong_two_factor_code": "Ungültiger Bestätigungscode.",
 	"connection": "Anmeldung",
 	"error_banned": "Dein Account wurde gesperrt",
 	"error_inactive": "Ihr Konto wurde nicht aktiviert, bitte gehen Sie auf den per E-Mail gesendeten Link.",

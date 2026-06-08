@@ -1,4 +1,6 @@
 {
+	"two_factor_code": "Código de verificação",
+	"error_wrong_two_factor_code": "Código de verificação inválido.",
 	"connection": "Conecte-se",
 	"error_banned": "Sua conta foi banida",
 	"error_inactive": "Sua conta não foi ativada, acesse o link enviado por e-mail.",

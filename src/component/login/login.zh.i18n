@@ -1,4 +1,6 @@
 {
+	"two_factor_code": "Verification code",
+	"error_wrong_two_factor_code": "Invalid verification code.",
 	"connection": "登录",
 	"error_banned": "您的帐户已被禁止",
 	"error_inactive": "您的帐户尚未激活，请转到通过电子邮件发送的链接。",

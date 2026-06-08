@@ -12,6 +12,11 @@
 						<div class="title">{{ $t('password') }}</div>
 						<input v-model="form.password" type="password" name="password" autocapitalize="none" autocorrect="off" autocomplete="current-password" spellcheck="false">
 						<br><br>
+<template v-if="twoFactor">
+							<div class="title">{{ $t('two_factor_code') }}</div>
+							<input v-model="form.code" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" autocapitalize="none" autocorrect="off" spellcheck="false">
+							<br><br>
+						</template>
 						<v-checkbox v-model="form.keep_connected" :label="$t('keep_connected')" hide-details />
 						<br><br>
 						<div class="center"><v-btn size="large" color="primary" type="submit" :loading="loading">{{ $t('connection') }}</v-btn></div>
@@ -51,9 +56,11 @@ const router = useRouter()
 
 const error = ref<unknown>(null)
 const loading = ref(false)
+const twoFactor = ref(false) // #4003 challenge 2FA déclenché par la réponse two_factor_required
 const form = ref({
 	login: '',
 	password: '',
+	code: '',
 	keep_connected: localStorage.getItem('keep_connected') === 'true'
 })
 
@@ -81,7 +88,12 @@ function login() {
 		router.push(getRedirectAfterLogin())
 	}).catch((err) => {
 		loading.value = false
-		error.value = err
+		if (err && err.error === 'two_factor_required') {
+			twoFactor.value = true // 2FA activée : on affiche le champ code et on re-soumet avec
+			error.value = null
+		} else {
+			error.value = err
+		}
 	})
 }
 

@@ -51,7 +51,17 @@
 			<div v-if="step === 4" class="step final">
 				Two factor authentication enabled! Congratulations!
 				<br><br>
-				<v-btn>Disable</v-btn>
+				<v-btn v-if="!disabling" @click="disabling = true">Disable</v-btn>
+					<template v-else>
+						Enter a code to disable:
+						<br><br>
+						<loader v-if="validating" :size="40" />
+						<input v-else v-model="code" class="code" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="XXX XXX" @keydown.enter="disable">
+						<div class="buttons">
+							<div class="back" @click="disabling = false">Back</div>
+							<div class="back" @click="disable">Disable</div>
+						</div>
+					</template>
 			</div>
 		</div>
 
@@ -71,16 +81,19 @@
 
 <script setup lang="ts">
 import { LeekWars } from '@/model/leekwars'
+import { store } from '@/model/store'
 import { ref } from 'vue'
 
 defineOptions({ name: 'TwoFactor' })
 
 const twoFactorConfirmDialog = ref(false)
-const step = ref(0)
+// #4003 si la 2FA est déjà activée, on ouvre direct sur l'écran "activée / désactiver"
+const step = ref(store.state.farmer && (store.state.farmer as any).two_factor_enabled ? 4 : 0)
 const code = ref('')
 const QRCode = ref('')
 const secret = ref('')
 const validating = ref(false)
+const disabling = ref(false)
 
 function nextStep() {
 	step.value++
@@ -100,7 +113,24 @@ function validateCode() {
 	validating.value = true
 	;(LeekWars.post('farmer/confirm-enable-two-factor-authentication', {code: code.value}).then(_data => {
 		validating.value = false
+		if (store.state.farmer) (store.state.farmer as any).two_factor_enabled = true
+		code.value = ''
 		nextStep()
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	}) as any).error((_error) => {
+		validating.value = false
+		LeekWars.toast('Wrong code!')
+	})
+}
+
+function disable() {
+	validating.value = true
+	;(LeekWars.post('farmer/disable-two-factor-authentication', {code: code.value}).then(_data => {
+		validating.value = false
+		disabling.value = false
+		code.value = ''
+		if (store.state.farmer) (store.state.farmer as any).two_factor_enabled = false
+		step.value = 0
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	}) as any).error((_error) => {
 		validating.value = false

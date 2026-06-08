@@ -1,4 +1,6 @@
 {
+	"two_factor_code": "Verification code",
+	"error_wrong_two_factor_code": "Invalid verification code.",
 	"connection": "Verbinding",
 	"error_banned": "Je account is verbannen",
 	"error_inactive": "Uw account is niet geactiveerd, ga naar de link die per e-mail is verzonden.",
