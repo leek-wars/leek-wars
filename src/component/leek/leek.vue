@@ -470,6 +470,21 @@
 						</div>
 					</v-tooltip>
 				</div>
+				<template v-if="suggestedSkinPotions.length">
+					<div class="shop-suggestion-title"><v-icon size="18">mdi-cart-outline</v-icon> {{ $t('main.shop') }}</div>
+					<div class="potions-grid">
+						<v-tooltip v-for="s in suggestedSkinPotions" :key="'sug-' + s.id">
+							<template #activator="{ props }">
+								<router-link v-ripple class="potion suggestion" v-bind="props" :to="'/market/' + s.name" @click="skinPotionDialog = false">
+									<img :src="'/image/potion/' + s.name + '.png'">
+									<span class="price"><img src="/image/crystal.png">{{ s.crystals }}</span>
+								</router-link>
+							</template>
+							<b>{{ $t('potion.' + s.name) }}</b>
+							<template v-if="s.level"><br>{{ $t('main.level_n', [s.level]) }}</template>
+						</v-tooltip>
+					</div>
+				</template>
 			</div>
 		</popup>
 
@@ -501,6 +516,21 @@
 				</div>
 				<br>
 				<div class="center">({{ $t('click_to_put_hat') }})</div>
+				<template v-if="suggestedHats.length">
+					<div class="shop-suggestion-title"><v-icon size="18">mdi-cart-outline</v-icon> {{ $t('main.shop') }}</div>
+					<div class="hats">
+						<v-tooltip v-for="s in suggestedHats" :key="'sug-' + s.id">
+							<template #activator="{ props }">
+								<router-link v-ripple class="hat suggestion" v-bind="props" :to="'/market/' + s.name" @click="hatDialog = false">
+									<img :src="'/image/hat/' + s.name + '.png'">
+									<span class="price"><img src="/image/crystal.png">{{ s.crystals }}</span>
+								</router-link>
+							</template>
+							<b>{{ $t('hat.' + s.name) }}</b>
+							<template v-if="s.level"><br>{{ $t('main.level_n', [s.level]) }}</template>
+						</v-tooltip>
+					</div>
+				</template>
 			</div>
 		</popup>
 
@@ -766,7 +796,7 @@
 	import { Chip } from '@/model/chip'
 	import { Hat } from '@/model/hat'
 	import { mixins , useNamespacedT } from '@/model/i18n'
-	import { ItemType } from '@/model/item'
+	import { ItemTemplate, ItemType } from '@/model/item'
 	import { Leek, Register } from '@/model/leek'
 	import { Component } from '@/model/component'
 	import { LeekWars } from '@/model/leekwars'
@@ -906,6 +936,55 @@
 
 	const farmer_hats = computed(() => store.state.farmer ? store.state.farmer.hats : [])
 	const farmer_components = computed(() => store.state.farmer ? store.state.farmer.components : [])
+
+	// Suggestions d'achat : items achetables en cristaux non possédés, depuis le catalogue du marché
+	const marketItems = ref<ItemTemplate[]>([])
+	let marketRequested = false
+	function shuffled(arr: ItemTemplate[]): ItemTemplate[] {
+		const a = arr.slice()
+		for (let i = a.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1))
+			const t = a[i]; a[i] = a[j]; a[j] = t
+		}
+		return a
+	}
+	function loadMarketItems() {
+		if (marketRequested) return
+		marketRequested = true
+		LeekWars.get<{ items: ItemTemplate[] }>('market/get-item-templates').then(res => {
+			// Le serveur renvoie items via (object), donc Object.values pour obtenir un vrai tableau
+			marketItems.value = res && res.items ? shuffled(Object.values(res.items)) : []
+		}).error(() => { marketRequested = false })
+	}
+	// Re-mélange à chaque ouverture pour varier les items proposés (pas toujours les mêmes)
+	watch([hatDialog, skinPotionDialog, customizeDialog], ([h, s, c]) => {
+		if (h || s || c) {
+			loadMarketItems()
+			if (marketItems.value.length) { marketItems.value = shuffled(marketItems.value) }
+		}
+	})
+	function buildSuggestions(isType: (item: ItemTemplate) => boolean, owned: Set<number>, prefix: RegExp, count: number) {
+		const result: { id: number, name: string, level: number, crystals: number }[] = []
+		if (!Array.isArray(marketItems.value)) return result
+		for (const item of marketItems.value) {
+			if (isType(item) && item.buyable_crystals && !item.trophy && !owned.has(item.id)) {
+				result.push({ id: item.id, name: item.name.replace(prefix, ''), level: typeof item.level === 'number' ? item.level : 0, crystals: item.crystals || 0 })
+				if (result.length >= count) break
+			}
+		}
+		return result
+	}
+	const suggestedHats = computed(() => {
+		const f = store.state.farmer
+		if (!f) return []
+		return buildSuggestions(item => item.type === ItemType.HAT, new Set(f.hats.map(h => h.template)), /^hat_/, 6)
+	})
+	const suggestedSkinPotions = computed(() => {
+		const f = store.state.farmer
+		if (!f) return []
+		const isSkin = (item: ItemTemplate) => item.type === ItemType.POTION && !!LeekWars.potions[item.id] && LeekWars.potions[item.id].effects.some((e) => e.type === PotionEffect.CHANGE_SKIN)
+		return buildSuggestions(isSkin, new Set(f.potions.map(p => p.template)), /^potion_/, 8)
+	})
 
 	const hasForgottenWeapon = computed(() => {
 		if (!leek.value) return false
@@ -1901,6 +1980,48 @@
 			max-height: 70px;
 			max-width: 96px;
 		}
+	}
+	.shop-suggestion-title {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		margin: 16px 0 8px;
+		padding-top: 12px;
+		border-top: 1px solid var(--border);
+		font-weight: bold;
+		color: var(--text-color-secondary);
+	}
+	.hat.suggestion, .potion.suggestion {
+		position: relative;
+		text-decoration: none;
+		img {
+			opacity: 0.85;
+		}
+		&:hover img {
+			opacity: 1;
+		}
+		.price {
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			display: flex;
+			align-items: center;
+			gap: 3px;
+			padding: 2px 7px;
+			background: rgba(0, 0, 0, 0.6);
+			color: #fff;
+			font-size: 14px;
+			font-weight: bold;
+			border-radius: 8px 0 0 0;
+			img {
+				height: 20px;
+				width: auto;
+				opacity: 1;
+			}
+		}
+	}
+	.hat.suggestion::before, .potion.suggestion::after {
+		display: none !important;
 	}
 	#app.app .hat-button {
 		display: none;
