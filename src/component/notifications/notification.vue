@@ -4,7 +4,7 @@
 			<v-icon v-if="notification.icon" class="image">{{ notification.image }}</v-icon>
 			<img v-else :src="'/image/' + notification.image" class="image">
 			<div class="content">
-				<div class="title" v-html="$t('notification.title_' + notification.type, notification.title)"></div>
+				<div class="title" v-html="titleHtml"></div>
 				<div class="message">{{ $t('notification.message_' + notification.type, notification.message) }}</div>
 			</div>
 			<div class="spacer"></div>
@@ -21,6 +21,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import type { Notification } from '@/model/notification'
 import { store } from '@/model/store'
@@ -30,6 +31,22 @@ defineOptions({ name: 'Notification' })
 const props = defineProps<{
 	notification: Notification
 }>()
+
+// Les paramètres du titre contiennent du HTML déjà sûr (<b> autour d'une valeur
+// échappée via LeekWars.protect, cf. notification.ts) destiné à un rendu v-html.
+// On interpole à la main depuis le template brut pour contourner escapeParameter:true
+// (#4007), qui sinon échapperait le <b> et l'afficherait en littéral dans la notif.
+const titleHtml = computed(() => {
+	const messages = i18n.global.getLocaleMessage(i18n.locale) as Record<string, Record<string, string>>
+	const key = 'title_' + props.notification.type
+	const template = messages?.notification?.[key]
+	if (typeof template !== 'string') { return 'notification.' + key }
+	let result = template
+	props.notification.title.forEach((value, index) => {
+		result = result.replace(new RegExp('\\{' + index + '\\}', 'g'), () => value)
+	})
+	return result
+})
 
 const link = computed(() => props.notification.link ? props.notification.link : '')
 const resultIcon = computed(() => props.notification.result === null ? '' : props.notification.result === 1 ? 'mdi-check' : props.notification.result === 0 ? 'mdi-equal' : 'mdi-close')
