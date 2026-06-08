@@ -1084,6 +1084,20 @@
 		LeekWars.large = enlargeWindow.value
 		localStorage.setItem('editor/large', '' + enlargeWindow.value)
 	})
+
+	// Le composant éditeur est réutilisé sur ses 4 records (/editor, /editor/:id,
+	// /editor/:id/diff, .../h/:hash) : onMounted ne se redéclenche pas entre eux, or
+	// router.beforeEach (resetLayout) remet les flags de layout par défaut sur un
+	// changement de record (et l'éditeur s'auto-replace /editor -> /editor/:id au
+	// montage). On ré-applique donc le layout à chaque navigation interne, sinon box
+	// (hauteur) et large (largeur) sont perdus -> éditeur écrasé après une nav SPA.
+	watch(() => route.path, () => {
+		if (route.path.startsWith('/editor')) {
+			LeekWars.large = enlargeWindow.value
+			LeekWars.footer = false
+			LeekWars.box = true
+		}
+	})
 	watch(() => history.value.map(ai => ai.path).join('|'), () => {
 		localStorage.setItem(historyKey(), JSON.stringify(history.value.map(ai => ai.path)))
 	})
