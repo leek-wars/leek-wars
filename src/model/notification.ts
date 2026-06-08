@@ -80,7 +80,9 @@ class Notification {
 				this.icon = true
 			}
 		}
-		this.title = title.map(t => '<b>' + LeekWars.protect(t) + '</b>')
+		// Valeurs brutes : le gras + l'échappement sont gérés côté template par <i18n-t>
+		// (slots #0/#1 : <b> du slot + {{ }} qui échappe). Voir notification.vue.
+		this.title = title
 		this.message = message.map(LeekWars.protect)
 		this.result = result
 		this.read = data.read as boolean
