@@ -1482,15 +1482,10 @@
 		if (LeekWars.didactitial_step === 4) {
 			LeekWars.didactitial_next()
 		}
-		// Réinitialiser le layout dans un nextTick pour que la mise à jour
-		// de app.vue se produise APRÈS le swap de <router-view>, évitant le
-		// conflit qui causait parentNode = null avec onBeforeUnmount synchrone.
-		nextTick(() => {
-			LeekWars.large = false
-			LeekWars.header = true
-			LeekWars.footer = true
-			LeekWars.box = false
-		})
+		// Pas de reset de layout ici : LeekWars.resetLayout() (router.beforeEach)
+		// le fait AVANT le swap de <router-view>. Un reset différé en nextTick
+		// s'exécutait APRÈS le onMounted de la page de destination et l'écrasait
+		// (ex : éditeur rapetissé en venant de l'encyclopédie).
 	})
 </script>
 

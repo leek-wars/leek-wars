@@ -378,14 +378,10 @@
 		if (edition.value) {
 			editEnd()
 		}
-		// Reset des flags layout après le swap router-view pour éviter un re-render
-		// de app.vue pendant le patch (parentNode null sur les nodes en cours de
-		// démontage). Voir feedback_nextTick_layout_reset.md.
-		nextTick(() => {
-			LeekWars.large = false
-			LeekWars.box = false
-			LeekWars.footer = true
-		})
+		// Pas de reset de layout ici : LeekWars.resetLayout() (router.beforeEach)
+		// le fait AVANT le swap de <router-view>. Un reset différé en nextTick
+		// s'exécutait APRÈS le onMounted de la page de destination et l'écrasait.
+		// Voir feedback_nextTick_layout_reset.md.
 	})
 
 	onMounted(async () => {
