@@ -455,10 +455,11 @@
 				{{ $t("select_skin") }}
 			</template>
 			<div class="farmer-potions">
+				<div class="preview-leek"><leek-image v-if="skinPreviewLeek" :leek="skinPreviewLeek" :scale="1.2" /></div>
 				<div class="potions-grid">
 					<v-tooltip v-for="(potion, id) in skinPotions" :key="id">
 						<template #activator="{ props }">
-							<div :quantity="potion.quantity" class="potion" v-bind="props" @click="usePotion(potion)">
+							<div :quantity="potion.quantity" class="potion" v-bind="props" @click="usePotion(potion)" @mouseenter="hoverSkin = skinOf(potion.template)" @mouseleave="hoverSkin = undefined">
 								<img :src="'/image/potion/' + LeekWars.potions[potion.template].name + '.png'">
 							</div>
 						</template>
@@ -475,7 +476,7 @@
 					<div class="potions-grid">
 						<v-tooltip v-for="s in suggestedSkinPotions" :key="'sug-' + s.id">
 							<template #activator="{ props }">
-								<router-link v-ripple class="potion suggestion" v-bind="props" :to="'/market/' + s.name" @click="skinPotionDialog = false">
+								<router-link v-ripple class="potion suggestion" v-bind="props" :to="'/market/' + s.name" @click="skinPotionDialog = false" @mouseenter="hoverSkin = s.preview" @mouseleave="hoverSkin = undefined">
 									<img :src="'/image/potion/' + s.name + '.png'">
 									<span class="price"><img src="/image/crystal.png">{{ s.crystals }}</span>
 								</router-link>
@@ -494,10 +495,11 @@
 			<template #icon><v-icon>mdi-hat-fedora</v-icon></template>
 			<template #title><span>{{ $t('select_a_hat') }}</span></template>
 			<div class="hat-dialog">
+				<div class="preview-leek"><leek-image v-if="hatPreviewLeek" :leek="hatPreviewLeek" :scale="1.2" /></div>
 				<div class="hats">
 					<v-tooltip>
 						<template #activator="{ props }">
-							<div v-ripple :quantity="1" class="hat" v-bind="props" @click="selectHat(null)">
+							<div v-ripple :quantity="1" class="hat" v-bind="props" @click="selectHat(null)" @mouseenter="hoverHat = null" @mouseleave="hoverHat = undefined">
 								<img src="/image/hat/no_hat.png">
 							</div>
 						</template>
@@ -505,7 +507,7 @@
 					</v-tooltip>
 					<v-tooltip v-for="hat in farmer_hats" :key="hat.id">
 						<template #activator="{ props }">
-							<div v-ripple :quantity="hat.quantity" class="hat" v-bind="props" @click="selectHat(hat)">
+							<div v-ripple :quantity="hat.quantity" class="hat" v-bind="props" @click="selectHat(hat)" @mouseenter="hoverHat = hat.hat_template" @mouseleave="hoverHat = undefined">
 								<img :src="'/image/hat/' + hat.name + '.png'">
 							</div>
 						</template>
@@ -521,7 +523,7 @@
 					<div class="hats">
 						<v-tooltip v-for="s in suggestedHats" :key="'sug-' + s.id">
 							<template #activator="{ props }">
-								<router-link v-ripple class="hat suggestion" v-bind="props" :to="'/market/' + s.name" @click="hatDialog = false">
+								<router-link v-ripple class="hat suggestion" v-bind="props" :to="'/market/' + s.name" @click="hatDialog = false" @mouseenter="hoverHat = s.preview" @mouseleave="hoverHat = undefined">
 									<img :src="'/image/hat/' + s.name + '.png'">
 									<span class="price"><img src="/image/crystal.png">{{ s.crystals }}</span>
 								</router-link>
@@ -939,6 +941,8 @@
 
 	// Suggestions d'achat : items achetables en cristaux non possédés, depuis le catalogue du marché
 	const marketItems = ref<ItemTemplate[]>([])
+	const hoverHat = ref<number | null | undefined>(undefined)
+	const hoverSkin = ref<number | undefined>(undefined)
 	let marketRequested = false
 	function shuffled(arr: ItemTemplate[]): ItemTemplate[] {
 		const a = arr.slice()
@@ -956,19 +960,28 @@
 			marketItems.value = res && res.items ? shuffled(Object.values(res.items)) : []
 		}).error(() => { marketRequested = false })
 	}
-	// Re-mélange à chaque ouverture pour varier les items proposés (pas toujours les mêmes)
+	// Re-mélange à chaque ouverture pour varier les items, et réinitialise l'aperçu au survol
 	watch([hatDialog, skinPotionDialog, customizeDialog], ([h, s, c]) => {
+		if (h) { hoverHat.value = undefined }
+		if (s) { hoverSkin.value = undefined }
 		if (h || s || c) {
 			loadMarketItems()
 			if (marketItems.value.length) { marketItems.value = shuffled(marketItems.value) }
 		}
 	})
-	function buildSuggestions(isType: (item: ItemTemplate) => boolean, owned: Set<number>, prefix: RegExp, count: number) {
-		const result: { id: number, name: string, level: number, crystals: number }[] = []
-		if (!Array.isArray(marketItems.value)) return result
+	function hatTemplateByName(name: string): number {
+		return LeekWars.selectWhere(Object.values(LeekWars.hats), 'name', name)?.id ?? 0
+	}
+	function skinOf(potionItemId: number): number | undefined {
+		const p = LeekWars.potions[potionItemId]
+		const e = p && p.effects ? p.effects.find(ef => ef.type === PotionEffect.CHANGE_SKIN) : undefined
+		return e ? e.params[0] as number : undefined
+	}
+	function buildSuggestions(isType: (item: ItemTemplate) => boolean, owned: Set<number>, prefix: RegExp, count: number, previewOf: (item: ItemTemplate) => number) {
+		const result: { id: number, name: string, level: number, crystals: number, preview: number }[] = []
 		for (const item of marketItems.value) {
 			if (isType(item) && item.buyable_crystals && !item.trophy && !owned.has(item.id)) {
-				result.push({ id: item.id, name: item.name.replace(prefix, ''), level: typeof item.level === 'number' ? item.level : 0, crystals: item.crystals || 0 })
+				result.push({ id: item.id, name: item.name.replace(prefix, ''), level: typeof item.level === 'number' ? item.level : 0, crystals: item.crystals || 0, preview: previewOf(item) })
 				if (result.length >= count) break
 			}
 		}
@@ -977,13 +990,21 @@
 	const suggestedHats = computed(() => {
 		const f = store.state.farmer
 		if (!f) return []
-		return buildSuggestions(item => item.type === ItemType.HAT, new Set(f.hats.map(h => h.template)), /^hat_/, 6)
+		return buildSuggestions(item => item.type === ItemType.HAT, new Set(f.hats.map(h => h.template)), /^hat_/, 6, item => hatTemplateByName(item.name.replace(/^hat_/, '')))
 	})
 	const suggestedSkinPotions = computed(() => {
 		const f = store.state.farmer
 		if (!f) return []
 		const isSkin = (item: ItemTemplate) => item.type === ItemType.POTION && !!LeekWars.potions[item.id] && LeekWars.potions[item.id].effects.some((e) => e.type === PotionEffect.CHANGE_SKIN)
-		return buildSuggestions(isSkin, new Set(f.potions.map(p => p.template)), /^potion_/, 8)
+		return buildSuggestions(isSkin, new Set(f.potions.map(p => p.template)), /^potion_/, 8, item => skinOf(item.id) || 0)
+	})
+	const hatPreviewLeek = computed(() => {
+		if (!leek.value) { return null }
+		return { ...leek.value, hat: hoverHat.value === undefined ? leek.value.hat : hoverHat.value } as unknown as Leek
+	})
+	const skinPreviewLeek = computed(() => {
+		if (!leek.value) { return null }
+		return { ...leek.value, skin: hoverSkin.value === undefined ? leek.value.skin : hoverSkin.value } as unknown as Leek
 	})
 
 	const hasForgottenWeapon = computed(() => {
@@ -1980,6 +2001,19 @@
 			max-height: 70px;
 			max-width: 96px;
 		}
+	}
+	.preview-leek {
+		display: flex;
+		align-items: flex-end;
+		justify-content: center;
+		height: 220px;
+		overflow: hidden;
+		margin-bottom: 8px;
+	}
+	.preview-leek :deep(svg) {
+		max-height: 100%;
+		max-width: 100%;
+		width: auto;
 	}
 	.shop-suggestion-title {
 		display: flex;
