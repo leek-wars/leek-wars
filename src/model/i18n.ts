@@ -26,7 +26,7 @@ const i18n = createI18n({
 	fallbackWarn: false,
 	warnHtmlMessage: false,
 	warnHtmlInMessage: 'off',
-	escapeParameter: false,
+	escapeParameter: true, // échappe les params interpolés dans v-html="$t(k,[userData])" (défense XSS) — #4007
 }) as unknown as I18nWithCompat
 
 // Compat wrappers: en mode composition, i18n.global.locale est un WritableComputedRef
