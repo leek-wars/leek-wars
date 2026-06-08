@@ -2,12 +2,17 @@
 // `resolve.alias` in vite.config.ts. The default `monaco-editor` pulls 80+
 // basic-languages and 4 heavy language services (ts/json/html/css), each with its
 // own Worker that triggers a nested Vite build. We keep only the editor core plus
-// the basic-languages we use (markdown, yaml); LeekScript is registered in
+// the basic-languages we use (markdown, yaml, javascript, python); LeekScript is registered in
 // `./monaco.ts`; JSON is given a worker-less syntax-only Monarch grammar.
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 import 'monaco-editor/esm/vs/editor/edcore.main.js'
 import 'monaco-editor/esm/vs/basic-languages/markdown/markdown.contribution.js'
 import 'monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution.js'
+// javascript/python = coloration des IA polyglot (.js / .py). Ces contributions
+// enregistrent une grammaire Monarch lazy seulement : pas de language service ts/python
+// ni de worker lourd, juste la coloration syntaxique.
+import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution.js'
+import 'monaco-editor/esm/vs/basic-languages/python/python.contribution.js'
 export * from 'monaco-editor/esm/vs/editor/editor.api.js'
 
 import { languages } from 'monaco-editor/esm/vs/editor/editor.api.js'

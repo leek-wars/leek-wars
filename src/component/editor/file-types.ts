@@ -10,6 +10,8 @@ export function getLanguageForPath(path: string): string {
 
 	switch (lower.substring(dot + 1)) {
 		case 'leek': return 'leekscript'
+		case 'js': return 'javascript' // IA polyglot (GraalVM JS) : coloration Monaco native
+		case 'py': return 'python'     // IA polyglot (GraalPy) : coloration Monaco native
 		case 'md': return 'markdown'
 		case 'txt': return 'plaintext'
 		case 'json': return 'json'

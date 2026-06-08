@@ -155,12 +155,17 @@
 
 		<popup v-model="newAIDialog" :width="500" icon="mdi-plus-circle-outline" :title="$t('new_desc')">
 			<div class="padding">
-				<v-text-field ref="newAIInput" v-model="newAIName" :placeholder="$t('ai_name')" variant="outlined" density="compact" autofocus
+				<v-text-field ref="newAIInput" v-model="newAIName" :placeholder="$t('ai_name')" :suffix="newAIExtension" variant="outlined" density="compact" autofocus
 					:error-messages="newAIError ? [newAIError] : []"
 					:messages="!newAIError && windowsWarning(newAIName) ? [isWindowsReservedName(newAIName) ? $t('windows_warning_reserved', [newAIName]) : $t('windows_warning_char', [windowsWarning(newAIName)])] : []"
 					:color="!newAIError && windowsWarning(newAIName) ? 'warning' : undefined"
 					:class="{'text-field-warning': !newAIError && windowsWarning(newAIName)}"
 					@keyup.stop @keyup.enter="!newAIError && newAI(false, newAIName)" />
+				<v-btn-toggle v-model="newAILanguage" mandatory density="compact" class="language-toggle">
+					<v-btn value="leekscript" size="small">LeekScript</v-btn>
+					<v-btn value="javascript" size="small">JavaScript</v-btn>
+					<v-btn value="python" size="small">Python</v-btn>
+				</v-btn-toggle>
 			</div>
 			<template #actions>
 				<div v-ripple @click="newAIDialog = false">{{ $t('main.cancel') }}</div>
@@ -231,6 +236,7 @@
 	const destroyDialog = ref(false)
 	const emptyDialog = ref(false)
 	const newAIName = ref('')
+	const newAILanguage = ref('leekscript')
 	const newAIDialog = ref(false)
 	const newFolderDialog = ref(false)
 	const newFolderName = ref('')
@@ -311,9 +317,20 @@
 		return null
 	})
 
+	// L'extension d'IA détermine le langage : .js = JavaScript, .py = Python (IA polyglot GraalVM),
+	// rien = LeekScript. Voir getLanguageForPath (file-types.ts) côté coloration / exécution.
+	const newAIExtension = computed(() => {
+		if (newAILanguage.value === 'javascript') return '.js'
+		if (newAILanguage.value === 'python') return '.py'
+		return ''
+	})
+
 	const newAIError = computed(() => {
 		if (!folder.value) return null
-		return nameError(newAIName.value, folder.value)
+		// Les règles (vide, slash, réservé) portent sur le nom saisi (sans dossier = sans test de conflit) ;
+		// le conflit, lui, porte sur le nom final avec extension — sinon "main" + .js serait refusé à tort
+		// quand un LeekScript "main" (sans extension) existe déjà dans le dossier.
+		return nameError(newAIName.value) || nameError(newAIName.value + newAIExtension.value, folder.value)
 	})
 
 	const newFolderError = computed(() => {
@@ -452,15 +469,21 @@
 		newAIStart()
 	}
 	function newAIStart() {
+		// Repartir de LeekScript à chaque ouverture : sinon le langage choisi précédemment
+		// (puis annulé) fuite et on créerait un .js/.py par surprise.
+		newAILanguage.value = 'leekscript'
 		newAIDialog.value = true
 		setTimeout(() => newAIInput.value?.focus(), 50)
 	}
 	function newAI(v2: boolean, name: string) {
 		if (!folder.value) { return }
+		// Ne pas doubler l'extension si l'utilisateur l'a déjà tapée (ex: "main.js" + JavaScript).
+		const ext = newAIExtension.value
+		const fullName = ext && name.toLowerCase().endsWith(ext) ? name : name + ext
 		const folderPath = folder.value.id === 0 ? '' : fileSystem.getFolderPath(folder.value).replace(/\/$/, '')
-		LeekWars.post<{ path: string, code: string }>('ai/create', {folder: folderPath, version: LeekWars.LATEST_LEEKSCRIPT_VERSION, name}).then((data) => {
+		LeekWars.post<{ path: string, code: string }>('ai/create', {folder: folderPath, version: LeekWars.LATEST_LEEKSCRIPT_VERSION, name: fullName}).then((data) => {
 			const newAi = new AI({
-				name,
+				name: fullName,
 				path: data.path,
 				folder: folder.value!.id,
 				valid: true,
@@ -474,6 +497,7 @@
 			router.push('/editor/' + newAi.path)
 			newAIDialog.value = false
 			newAIName.value = ''
+			newAILanguage.value = 'leekscript'
 		}).error((error) => {
 			LeekWars.toast(translateFileSystemError(error))
 		})
@@ -620,5 +644,8 @@
 }
 .text-field-warning :deep(.v-messages__message) {
 	color: #d35400;
+}
+.language-toggle {
+	margin-top: 4px;
 }
 </style>
