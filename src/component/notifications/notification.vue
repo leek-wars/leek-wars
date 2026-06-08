@@ -4,9 +4,9 @@
 			<v-icon v-if="notification.icon" class="image">{{ notification.image }}</v-icon>
 			<img v-else :src="'/image/' + notification.image" class="image">
 			<div class="content">
-				<i18n-t :keypath="'notification.title_' + notification.type" tag="div" class="title">
-					<template #0><b>{{ notification.title[0] }}</b></template>
-					<template #1><b>{{ notification.title[1] }}</b></template>
+				<i18n-t :keypath="'notification.title_' + notification.type" tag="div" class="title" scope="global">
+					<template #p0><b>{{ notification.title[0] }}</b></template>
+					<template #p1><b>{{ notification.title[1] }}</b></template>
 				</i18n-t>
 				<div class="message">{{ $t('notification.message_' + notification.type, notification.message) }}</div>
 			</div>
@@ -31,10 +31,10 @@ import { store } from '@/model/store'
 
 defineOptions({ name: 'Notification' })
 
-// Initialise le scope i18n requis par <i18n-t> dans le template (cf. feedback_useNamespacedT).
-// Le titre est rendu via <i18n-t> + slots #0/#1 : le markup <b> vit dans le slot (VNode, donc
-// pas échappé) et {{ }} échappe la valeur (sûr). Ça contourne escapeParameter:true (#4007) qui
-// échapperait un <b> passé en paramètre, tout en marchant avec les messages précompilés en prod.
+// Titre rendu via <i18n-t> + slots NOMMÉS (#p0/#p1, cf. placeholders {p0}/{p1} dans
+// notification.json) : le <b> vit dans le slot (VNode, non échappé) et {{ }} échappe la
+// valeur (sûr, pas de v-html). notification.ts passe les valeurs brutes dans .title.
+// useI18n() (side-effect) initialise le scope requis par <i18n-t> (cf. feedback_useNamespacedT).
 useI18n()
 
 const props = defineProps<{
