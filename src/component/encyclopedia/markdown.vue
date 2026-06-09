@@ -6,6 +6,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { CHIP_BY_NAME } from '@/model/sorted_chips'
 	import { mdiIcons } from '@/model/mdi-icons'
+	import { Latex } from '@/model/latex'
 	import { createSubApp } from '@/model/vue'
 	import markdown from 'markdown-it'
 	import DOMPurify from 'dompurify'
@@ -83,6 +84,9 @@
 
 			nextTick(() => {
 				const mdEl = md.value!
+				// Rendu LaTeX inline ($...$) — fait avant la transformation des blocs
+				// de code pour que le contenu des <code>/<pre> reste intact.
+				renderMath(mdEl)
 				mdEl.querySelectorAll('h1, h2, h3, h4, h5').forEach((item) => {
 					const el = item as HTMLHeadingElement
 					const level = parseInt(el.tagName.substring(1), 10)
@@ -496,6 +500,51 @@
 				return '{{ ' + tag + ' }}'
 			})
 		}
+
+	// Rend les expressions LaTeX inline délimitées par des $ ($x^2$), en
+	// n'opérant que sur les nœuds texte (les listeners et sous-composants déjà
+	// montés ne sont jamais touchés) et en ignorant le contenu des blocs de code.
+	// On écrit $$ pour afficher un $ littéral (utile pour documenter la syntaxe).
+	const MATH_RE = /\$\$|\$([^$\s](?:[^$]*[^$\s])?)\$/g
+	function renderMath(root: HTMLElement) {
+		const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+			acceptNode(node) {
+				let p = node.parentElement
+				while (p && p !== root) {
+					const tag = p.tagName
+					if (tag === 'CODE' || tag === 'PRE' || tag === 'LATEX') return NodeFilter.FILTER_REJECT
+					p = p.parentElement
+				}
+				return (node.nodeValue && node.nodeValue.indexOf('$') !== -1) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT
+			}
+		})
+		const targets: Text[] = []
+		let n: Node | null
+		while ((n = walker.nextNode())) targets.push(n as Text)
+
+		for (const textNode of targets) {
+			const text = textNode.nodeValue || ''
+			MATH_RE.lastIndex = 0
+			const frag = document.createDocumentFragment()
+			let last = 0
+			let m: RegExpExecArray | null
+			while ((m = MATH_RE.exec(text)) !== null) {
+				if (m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)))
+				if (m[0] === '$$') {
+					frag.appendChild(document.createTextNode('$'))
+				} else {
+					const el = document.createElement('latex')
+					el.textContent = m[1]
+					frag.appendChild(el)
+					Latex.latexify('$' + m[1] + '$').then(result => { el.innerHTML = result })
+				}
+				last = m.index + m[0].length
+			}
+			if (last === 0) continue // aucune correspondance : on laisse le nœud texte intact
+			if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)))
+			textNode.parentNode!.replaceChild(frag, textNode)
+		}
+	}
 
 	function generateSummary(depth: number) {
 		const aux = (node: SummaryNode, d: number): string => {
