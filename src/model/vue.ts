@@ -137,6 +137,51 @@ function describeRouteSubtree(instance: unknown): string | null {
 	return null
 }
 
+// Pour les erreurs "parentNode is null" pendant un patch in-place de <RouterView>
+// (ex. navigation /leek/A → /leek/B, cluster #4050-#4056) : la stack ne contient
+// que des frames vendor (flush async du scheduler), donc Vue n'attribue que
+// <RouterView> et le composant fautif reste invisible. On parcourt le sous-arbre
+// de vnodes APRÈS l'erreur (lecture seule, aucun effet sur le rendu) pour nommer
+// le chemin jusqu'au vnode dont `el` est null — le nœud réellement cassé.
+function findNullElVnodePath(instance: unknown): string | null {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const label = (vn: any): string => {
+		const t = vn?.type
+		if (t == null) return 'vnode'
+		if (typeof t === 'symbol') return t.description || 'Fragment'
+		if (typeof t === 'string') return t
+		return t.name || t.__name || t.__file || 'Component'
+	}
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const visit = (vn: any, depth: number): string[] | null => {
+		if (!vn || typeof vn !== 'object' || depth > 50) return null
+		// Descendre dans le sous-arbre rendu d'un composant
+		if (vn.component?.subTree) {
+			const r = visit(vn.component.subTree, depth + 1)
+			if (r) return [label(vn), ...r]
+		}
+		if (Array.isArray(vn.children)) {
+			for (const c of vn.children) {
+				if (c && typeof c === 'object' && 'type' in c) {
+					const r = visit(c, depth + 1)
+					if (r) return [label(vn), ...r]
+				}
+			}
+		}
+		// Un vnode élément/composant monté doit porter un `el`. On ignore les
+		// Fragment/Text/Comment (type = symbol) qui peuvent légitimement avoir un
+		// el null/anchor.
+		if (vn.el == null && typeof vn.type !== 'symbol') return [label(vn) + '(el=null)']
+		return null
+	}
+	try {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const root = (instance as any)?.subTree
+		const path = root ? visit(root, 0) : null
+		return path ? path.join(' › ') : null
+	} catch { return null }
+}
+
 export function reportVueError(err: unknown, vm: unknown, info: unknown, origin: string = 'main') {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const e = err as any
@@ -175,6 +220,7 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 
 	let componentTrace = ''
 	let routeSubtree: string | null = null
+	let nullElPath: string | null = null
 	try {
 		if (vmAny) {
 			const components: string[] = []
@@ -211,6 +257,10 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 			const leafName = leafInstance?.type?.name || leafInstance?.type?.__name
 			if (leafName === 'RouterView' || !leafName) {
 				routeSubtree = describeRouteSubtree(leafInstance)
+				// Erreurs de patch sur un el null (cluster #4050-#4056) : pointer le vnode cassé
+				if (e?.message?.includes('parentNode') || e?.message?.includes("reading 'el'")) {
+					nullElPath = findNullElVnodePath(leafInstance)
+				}
 			}
 		}
 	} catch (ex) {
@@ -224,6 +274,7 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 		if (previousNav) lines.push('Previous route: ' + previousNav.fullPath + (previousNav.name ? ' [' + previousNav.name + ']' : ''))
 		if (currentNav) lines.push('Since last navigation: ' + (Date.now() - currentNav.at) + 'ms')
 		if (routeSubtree) lines.push('Route subtree: <' + routeSubtree + '>')
+		if (nullElPath) lines.push('Null-el path: ' + nullElPath)
 		if (lines.length) navTrace = '\n\n' + lines.join('\n')
 	} catch { /* empty */ }
 
