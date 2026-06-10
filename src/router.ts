@@ -85,6 +85,7 @@ const Tutorial = () => import(/* webpackChunkName: "[request]" */ `@/component/t
 
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
+import { nextTick } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteLocationNormalized, NavigationGuardNext, RouteLocationRaw, RouteLocationResolved, RouteRecordRaw } from 'vue-router'
 import { scroll_to_hash } from './router-functions'
@@ -343,7 +344,7 @@ router.onError((error, to) => {
 	}
 })
 
-router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
+router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
 
 	LeekWars.splitShowList()
 	LeekWars.actions = []
@@ -360,6 +361,14 @@ router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, n
 	const fromComponent = from.matched[from.matched.length - 1]?.components?.default
 	if (toComponent !== fromComponent) {
 		LeekWars.resetLayout()
+		// resetLayout() mute des flags réactifs bindés sur la classe de app.vue (ancêtre
+		// du <router-view>). Sans ce tick, le re-render de app.vue et le swap de route
+		// flushent ensemble : app.vue re-patche son sous-arbre PENDANT que <RouterView>
+		// monte la page de destination, dont le vnode racine a alors `el` null → crash
+		// "parentNode of null" dans le scheduler (cluster #4050-#4059, Firefox). En
+		// attendant un tick, app.vue se stabilise AVANT le swap. Ne touche aucune valeur
+		// de layout (le gating par composant est conservé) → pas de régression éditeur.
+		await nextTick()
 	}
 
 	if (window.__FARMER__) {
