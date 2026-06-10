@@ -643,11 +643,11 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: flex-end;
-		width: 100px;
+		width: 130px;
 		height: 90px;
 		padding: 4px;
 		border-radius: 6px;
-		border: 2px solid transparent;
+		border: 2px solid var(--border);
 		cursor: pointer;
 		color: var(--text-color);
 		span { font-size: 13px; margin-top: 2px; white-space: nowrap; }
