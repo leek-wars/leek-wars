@@ -62,8 +62,8 @@ interface Trophy {
 	in_fight: boolean
 	fight: number
 	index: number
-	noun_translation: string
-	adj_translation: string
+	noun_translation: number
+	adj_translation: number
 	[key: string]: unknown
 }
 
@@ -374,7 +374,7 @@ const LeekWars = reactive({
 	menuCollapsed: false,
 	menuExpanded: false,
 	splitBack: false,
-	actions: [] as unknown[],
+	actions: [] as { icon?: string, image?: string, click: (e?: MouseEvent) => void }[],
 	lightBar: false,
 	dark: 0,
 	title: '',
@@ -395,6 +395,7 @@ const LeekWars = reactive({
 	timeDelta: 0, // (Date.now() / 1000 | 0) - __SERVER_TIME,
 	time: (Date.now() / 1000) | 0,
 	timeSeconds: (Date.now() / 1000) | 0,
+	routerViewKey: 0,
 	large: false,
 	flex: false,
 	header: true,
@@ -653,7 +654,7 @@ const LeekWars = reactive({
 		LeekWars.header = true
 		LeekWars.lightBar = false
 	},
-	setActions(actions: unknown[]) {
+	setActions(actions: { icon?: string, image?: string, click: (e?: MouseEvent) => void }[]) {
 		LeekWars.actions = actions
 	},
 	getAvatar(farmerID: number, avatarChanged: number) {
@@ -864,7 +865,7 @@ const LeekWars = reactive({
 	trophies: [] as Trophy[],
 	constants: [] as Constant[],
 	functions: [] as LSFunction[],
-	chips: {} as Record<string, unknown>,
+	chips: {} as Record<string, { id: number, name: string, [key: string]: unknown }>,
 	trophyCategories: Object.freeze(TROPHY_CATEGORIES),
 	trophyCategoriesById: Object.freeze([...TROPHY_CATEGORIES].sort((a, b) => a.id - b.id)),
 	trophyCategoriesIcons: Object.freeze([

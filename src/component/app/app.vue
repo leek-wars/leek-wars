@@ -16,7 +16,7 @@
 					<div :class="{large: LeekWars.large || LeekWars.flex, flex: LeekWars.flex, box: LeekWars.box}" class="app-wrapper">
 						<lw-header v-if="!LeekWars.mobile || !$store.state.connected" />
 						<div class="page-wrapper">
-							<router-view />
+							<router-view :key="LeekWars.routerViewKey" />
 						</div>
 						<lw-footer v-if="LeekWars.footer" />
 					</div>
@@ -241,7 +241,7 @@
 
 	const showConsole = ref(false)
 	const consoleValue = ref(false)
-	const changelog = ref<Record<string, unknown> | null>(null)
+	const changelog = ref<{ version: number, version_name: string, [key: string]: unknown } | null>(null)
 	const showChangelog = ref(false)
 	let konami = ''
 	const docEverywhere = ref(false)
@@ -379,7 +379,8 @@
 				docEverywhereModel.value = true
 				nextTick(() => {
 					if (doc.value) {
-						doc.value.focus()
+						// eslint-disable-next-line @typescript-eslint/no-explicit-any
+						(doc.value as any).focus()
 					}
 				})
 			})
