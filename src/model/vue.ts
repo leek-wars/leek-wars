@@ -282,6 +282,20 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 	const build_date = typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : null
 	const build_commit = typeof __BUILD_COMMIT__ !== 'undefined' ? __BUILD_COMMIT__ : null
 	LeekWars.post('error/report', { error, stack, file, locale, user_agent, build_date, build_commit })
+
+	// Après un crash "parentNode of null", RouterView est dans un état cassé (vnode avec
+	// el=null) : chaque navigation suivante recrash. On recharge la page pour repartir
+	// d'un état sain. Un délai court laisse le POST error/report partir avant le reload.
+	// Le cooldown sessionStorage empêche la boucle infinie si le crash se reproduit
+	// immédiatement après le reload.
+	if (e?.message?.includes('parentNode') || e?.message?.includes("reading 'el'")) {
+		const RELOAD_KEY = 'parentNode-reload-at'
+		const last = parseInt(sessionStorage.getItem(RELOAD_KEY) || '0', 10)
+		if (Date.now() - last > 30_000) {
+			sessionStorage.setItem(RELOAD_KEY, Date.now().toString())
+			setTimeout(() => location.reload(), 400)
+		}
+	}
 }
 
 export function createSubApp(component: Component, props?: Record<string, unknown>, origin: string = 'sub-app'): VueApp {

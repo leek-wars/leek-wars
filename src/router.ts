@@ -349,6 +349,19 @@ router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormali
 	LeekWars.splitShowList()
 	LeekWars.actions = []
 
+	// Mettre à jour le store ici (avant le nextTick) pour que ce changement réactif
+	// soit batché avec resetLayout() dans le même flush, plutôt que de créer un second
+	// flush non drainé juste avant next() (ce second flush s'exécuterait en même temps
+	// que le swap <RouterView> → risque accru de "parentNode of null").
+	if (window.__FARMER__) {
+		store.commit('connected', '$')
+	} else {
+		const token = LeekWars.DEV ? localStorage.getItem('token') : '$'
+		if (localStorage.getItem('connected') === 'true') {
+			store.commit('connected', token)
+		}
+	}
+
 	// Reset des flags de layout par page à leurs valeurs par défaut AVANT le swap de
 	// <router-view> : chaque page ré-applique son layout dans onMounted (après le swap).
 	// On ne reset que si le COMPOSANT de destination diffère de celui d'origine : sinon
@@ -361,23 +374,14 @@ router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormali
 	const fromComponent = from.matched[from.matched.length - 1]?.components?.default
 	if (toComponent !== fromComponent) {
 		LeekWars.resetLayout()
-		// resetLayout() mute des flags réactifs bindés sur la classe de app.vue (ancêtre
-		// du <router-view>). Sans ce tick, le re-render de app.vue et le swap de route
-		// flushent ensemble : app.vue re-patche son sous-arbre PENDANT que <RouterView>
-		// monte la page de destination, dont le vnode racine a alors `el` null → crash
-		// "parentNode of null" dans le scheduler (cluster #4050-#4059, Firefox). En
-		// attendant un tick, app.vue se stabilise AVANT le swap. Ne touche aucune valeur
-		// de layout (le gating par composant est conservé) → pas de régression éditeur.
+		// resetLayout() (et le store.commit ci-dessus) mutent des flags réactifs bindés
+		// sur app.vue (ancêtre du <router-view>). Sans ce tick, le re-render de app.vue
+		// et le swap de route flushent ensemble : app.vue re-patche son sous-arbre PENDANT
+		// que <RouterView> monte la page de destination, dont le vnode racine a alors
+		// `el` null → crash "parentNode of null" dans le scheduler. En attendant un tick,
+		// app.vue se stabilise AVANT le swap. Ne touche aucune valeur de layout (le
+		// gating par composant est conservé) → pas de régression éditeur.
 		await nextTick()
-	}
-
-	if (window.__FARMER__) {
-		store.commit('connected', '$')
-	} else {
-		const token = LeekWars.DEV ? localStorage.getItem('token') : '$'
-		if (localStorage.getItem('connected') === 'true') {
-			store.commit('connected', token)
-		}
 	}
 
 	next()
