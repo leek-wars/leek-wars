@@ -1202,8 +1202,31 @@ function formatTime(time: number) {
 	return date.getHours() + ":" + minuts
 }
 
-function createCodeArea(code: string, element: HTMLElement) {
+// Module codemirror-wrapper mis en cache : une fois chargé, le formatage est
+// synchrone (avant le paint), sinon le bloc brut est peint un instant puis
+// remplacé par la version formatée (flicker à chaque re-rendu, ex. édition encyclopédie).
+let codeMirrorWrapper: typeof import("@/codemirror-wrapper") | null = null
+function withCodeMirror(callback: (wrapper: typeof import("@/codemirror-wrapper")) => void) {
+	if (codeMirrorWrapper) {
+		callback(codeMirrorWrapper)
+		return
+	}
 	import(/* webpackChunkName: "codemirror" */ "@/codemirror-wrapper").then(wrapper => {
+		codeMirrorWrapper = wrapper
+		callback(wrapper)
+	})
+}
+// Marqueur posé de façon synchrone : si l'élément a déjà été formaté (un update
+// dont le HTML rendu est identique ne recrée pas le DOM du v-html), re-formater
+// injecterait les numéros de ligne dans le code (textContent les contient).
+function markFormatted(element: HTMLElement): boolean {
+	if (element.dataset.lwFormatted) { return false }
+	element.dataset.lwFormatted = '1'
+	return true
+}
+function createCodeArea(code: string, element: HTMLElement) {
+	if (!markFormatted(element)) { return }
+	withCodeMirror(wrapper => {
 		wrapper.CodeMirror.runMode(code, "leekscript", element)
 		element.innerHTML = '<span class="line-number"></span><pre>' + element.innerHTML + '</pre>'
 
@@ -1216,7 +1239,8 @@ function createCodeArea(code: string, element: HTMLElement) {
 	})
 }
 function createCodeAreaSimple(code: string, element: HTMLElement) {
-	import(/* webpackChunkName: "codemirror" */ "@/codemirror-wrapper").then(wrapper => {
+	if (!markFormatted(element)) { return }
+	withCodeMirror(wrapper => {
 		wrapper.CodeMirror.runMode(code, "leekscript", element)
 		element.innerHTML = '<pre>' + element.innerHTML + '</pre>'
 		element.classList.add('single')
