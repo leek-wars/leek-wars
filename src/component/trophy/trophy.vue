@@ -48,8 +48,8 @@
 					</div>
 				</div>
 				<div>
-					<h4><v-icon>mdi-chart-line-variant</v-icon> {{ $t('progress') }}</h4>
-					<div v-if="trophy.variable" class="bar-wrapper">
+					<h4 v-if="trophy.variable && trophy.progression != null"><v-icon>mdi-chart-line-variant</v-icon> {{ $t('progress') }}</h4>
+					<div v-if="trophy.variable && trophy.progression != null" class="bar-wrapper">
 						{{ $filters.number(trophy.progression) }} / {{ $filters.number(trophy.threshold) }}
 						<div class="trophy-bar" :class="{full: trophy.unlocked}">
 							<div :style="{width: Math.floor(100 * Math.min(trophy.threshold, trophy.progression) / trophy.threshold) + '%'}" class="bar striked"></div>

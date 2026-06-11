@@ -219,6 +219,10 @@ html {
 *, *:before, *:after {
 	box-sizing: inherit;
 }
+// Marqueur visuel de la beta : fond extérieur légèrement rosé (classe ajoutée dans vue.ts si env.BETA)
+body.beta {
+	background: #6e4452;
+}
 body {
 	margin: 0;
 	font-family: "Roboto", sans-serif;

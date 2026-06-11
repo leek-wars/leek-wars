@@ -130,6 +130,7 @@ function multiLanguagePlugin(): Plugin {
 			if (isBeta) {
 				template = template.replace('href="/manifest.json"', 'href="/manifest_beta.json"')
 				template = template.replace('name="theme-color" content="#4b9e06"', 'name="theme-color" content="#bb00bb"')
+				template = template.replace('<body>', '<body class="beta">')
 			}
 			let defaultHtml = ''
 
