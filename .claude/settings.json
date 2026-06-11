@@ -40,7 +40,8 @@
       "mcp__blender__get_objects_summary",
       "mcp__blender__render_viewport_to_path",
       "mcp__blender__execute_blender_code_for_cli",
-      "mcp__blender__execute_blender_code"
+      "mcp__blender__execute_blender_code",
+      "mcp__chrome-devtools__new_page"
     ]
   }
 }
