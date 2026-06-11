@@ -815,7 +815,7 @@ const LeekWars = reactive({
 	},
 	get_cursor_position, set_cursor_position,
 	formatDate, formatDateTime, formatDuration, formatTime, formatTimeSeconds, formatDayMonthShort, formatLongDuration,
-	setTitle, setSubTitle, setTitleCounter, setTitleTag,
+	setTitle, setSubTitle, setTitleCounter, setTitleTag, setMeta,
 	shadeColor,
 	createCodeArea, createCodeAreaSimple,
 	clover: false, cloverTop: 0, cloverLeft: 0, cloverDX: 0, cloverDY: 0, cloverDDX: 0, cloverDDY: 0, cloverFake: false, cloverTimeout: null as ReturnType<typeof setTimeout> | null, lucky,
@@ -1036,6 +1036,73 @@ function updateTitle() {
 		title = '[' + LeekWars.titleTag + '] ' + title
 	}
 	document.title = title
+	// Garder og:title synchronisé avec le titre visible (setMeta() dans router.afterEach
+	// s'exécute avant que la page n'appelle setTitle, donc og:title y serait en retard d'une nav).
+	setMetaContent('meta[property="og:title"]', 'property', 'og:title', title)
+}
+
+const SITE_URL = 'https://leekwars.com'
+const DEFAULT_META_DESCRIPTION = 'In Leek Wars, create the most powerful leek in the world and destroy your enemies!'
+const DEFAULT_OG_IMAGE = SITE_URL + '/press-kit/banner_factory.png'
+
+interface MetaOptions {
+	title?: string | null
+	description?: string | null
+	image?: string | null
+	canonical?: string | null
+	alternates?: { lang: string, url: string }[] | null
+}
+
+function setMetaContent(selector: string, attr: 'name' | 'property', key: string, value: string) {
+	let el = document.head.querySelector<HTMLMetaElement>(selector)
+	if (!el) {
+		el = document.createElement('meta')
+		el.setAttribute(attr, key)
+		document.head.appendChild(el)
+	}
+	el.setAttribute('content', value)
+}
+
+function setLinkHref(rel: string, href: string, hreflang?: string) {
+	const selector = hreflang
+		? `link[rel="${rel}"][hreflang="${hreflang}"]`
+		: `link[rel="${rel}"]:not([hreflang])`
+	let el = document.head.querySelector<HTMLLinkElement>(selector)
+	if (!el) {
+		el = document.createElement('link')
+		el.setAttribute('rel', rel)
+		if (hreflang) el.setAttribute('hreflang', hreflang)
+		document.head.appendChild(el)
+	}
+	el.setAttribute('href', href)
+}
+
+// Met à jour les balises meta SEO/partage pour la page courante. Appelé sans argument
+// par le router (router.afterEach) pour réinitialiser aux valeurs par défaut + poser le
+// canonical de l'URL courante, puis surchargé par les pages publiques (onMounted) avec
+// leur contenu propre (titre, description, image, alternates de langue).
+function setMeta(options: MetaOptions = {}) {
+	const url = SITE_URL + window.location.pathname
+	const description = (options.description || DEFAULT_META_DESCRIPTION) as string
+	const image = options.image || DEFAULT_OG_IMAGE
+	const ogTitle = (options.title || document.title) as string
+	const canonical = options.canonical || url
+
+	setMetaContent('meta[name="description"]', 'name', 'description', description)
+	setMetaContent('meta[property="og:title"]', 'property', 'og:title', ogTitle)
+	setMetaContent('meta[property="og:description"]', 'property', 'og:description', description)
+	setMetaContent('meta[property="og:url"]', 'property', 'og:url', url)
+	setMetaContent('meta[property="og:image"]', 'property', 'og:image', image)
+	setLinkHref('canonical', canonical)
+
+	// Toujours repartir d'une base propre : sinon les hreflang d'une page d'encyclopédie
+	// fuiteraient sur la page suivante.
+	document.head.querySelectorAll('link[rel="alternate"][hreflang]').forEach(el => el.remove())
+	if (options.alternates) {
+		for (const alt of options.alternates) {
+			setLinkHref('alternate', alt.url, alt.lang)
+		}
+	}
 }
 
 function setFavicon(reset: boolean = false) {

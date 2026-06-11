@@ -399,6 +399,40 @@
 		i18n.global.mergeLocaleMessage(locale, { doc: docMessages.default })
 	})
 
+	// Met à jour les balises SEO/partage pour la page d'encyclopédie chargée :
+	// description tirée du contenu, URL canonique propre, et hreflang vers les traductions.
+	function updatePageMeta(p: EncyclopediaPage) {
+		const path = '/encyclopedia/' + p.language + '/' + p.title.replace(/ /g, '_')
+		const canonical = 'https://leekwars.com' + path
+
+		let description = p.content
+			.replace(/```[\s\S]*?```/g, ' ')           // blocs de code
+			.replace(/\{\{[^}]*\}\}/g, ' ')             // tokens de template encyclo ({{ summary }}, ...)
+			.replace(/<[^>]*>/g, ' ')                   // HTML inline (avant de retirer les > du markdown)
+			.replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1')  // liens / images → texte
+			.replace(/[#>*_`~|[\]-]/g, ' ')             // syntaxe markdown
+			.replace(/\s+/g, ' ')
+			.trim()
+		if (description.length > 200) {
+			description = description.slice(0, 200).replace(/\s+\S*$/, '') + '…'
+		}
+
+		const alternates = [
+			{ lang: p.language, url: canonical },
+			...Object.entries(p.translations).map(([lang, t]) => ({
+				lang,
+				url: 'https://leekwars.com/encyclopedia/' + lang + '/' + t.replace(/ /g, '_')
+			}))
+		]
+
+		LeekWars.setMeta({
+			title: p.title,
+			description: description || null,
+			canonical,
+			alternates
+		})
+	}
+
 	watch(lanuage_and_code, async () => {
 		await LeekWars.loadEncyclopedia(language.value)
 		if (destroyed) { return }
@@ -437,6 +471,7 @@
 				setEditorContent()
 			}
 			LeekWars.setTitle(title.value)
+			updatePageMeta(p)
 			emitter.emit('loaded')
 		})
 		.error((err) => {

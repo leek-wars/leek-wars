@@ -387,6 +387,13 @@ router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormali
 	next()
 })
 
+// Réinitialise les balises meta SEO/partage à chaque navigation : pose le canonical et
+// l'og:url de l'URL courante + remet les valeurs par défaut. Les pages publiques surchargent
+// ensuite via LeekWars.setMeta() dans leur onMounted (après le swap de <router-view>).
+router.afterEach(() => {
+	LeekWars.setMeta()
+})
+
 export function getRedirectAfterLogin(): string {
 	const redirect = sessionStorage.getItem('redirect_after_login')
 	sessionStorage.removeItem('redirect_after_login')

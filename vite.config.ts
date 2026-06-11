@@ -109,10 +109,12 @@ function multiLanguagePlugin(): Plugin {
 				const lang = match[1]
 				const template = fs.readFileSync(templatePath, 'utf-8')
 				// Replace fr locale with requested language
-				return template.replace(
-					'src="/src/lang/locale/fr.ts"',
-					`src="/src/lang/locale/${lang}.ts"`
-				)
+				return template
+					.replace('<html>', `<html lang="${lang}">`)
+					.replace(
+						'src="/src/lang/locale/fr.ts"',
+						`src="/src/lang/locale/${lang}.ts"`
+					)
 			}
 		},
 
@@ -147,6 +149,7 @@ function multiLanguagePlugin(): Plugin {
 				].filter(Boolean).join('\n\t\t')
 
 				let finalHtml = template.replace(scriptTagPattern, scripts)
+				finalHtml = finalHtml.replace('<html>', `<html lang="${lang}">`)
 				finalHtml = finalHtml.replace('</head>', `\t${cssLinks}\n\t</head>`)
 
 				this.emitFile({
