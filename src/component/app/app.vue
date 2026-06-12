@@ -45,6 +45,8 @@
 
 				<activation-welcome v-if="showActivationWelcome" v-model="showActivationWelcome" />
 
+			<visitor-banner v-if="!$store.state.connected" />
+
 				<img v-if="LeekWars.clover" :style="{top: LeekWars.cloverTop + 'px', left: LeekWars.cloverLeft + 'px'}" class="clover" src="/image/clover.png" @click="clickClover">
 
 				<!-- <didactitiel v-if="didactitiel_enabled" v-model="didactitiel" /> -->
@@ -211,6 +213,7 @@
 	const VerifyPopup = defineAsyncComponent(() => import('@/component/verify-popup/verify-popup.vue'))
 	const CheckEmailReminder = defineAsyncComponent(() => import('@/component/check-email-reminder/check-email-reminder.vue'))
 	const ActivationWelcome = defineAsyncComponent(() => import('@/component/activation-welcome/activation-welcome.vue'))
+	const VisitorBanner = defineAsyncComponent(() => import('@/component/visitor-banner/visitor-banner.vue'))
 	const VerifyBanner = defineAsyncComponent(() => import('@/component/verify-banner/verify-banner.vue'))
 	const ChangelogDialog = defineAsyncComponent(() => import('../changelog/changelog-dialog.vue'))
 	const Documentation = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`))

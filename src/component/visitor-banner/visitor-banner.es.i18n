@@ -1,0 +1,11 @@
+{
+	"pitch": "¡Programa la IA de tu puerro y desafía a miles de jugadores!",
+	"leek_name": "Nombre de tu puerro",
+	"error_leek_name_already_used": "Este nombre de puerro ya está en uso",
+	"error_leek_name_format": "El nombre del puerro no debe contener caracteres especiales",
+	"error_leek_name_length": "El nombre del puerro debe contener entre {0} y {1} caracteres",
+	"play": "¡Jugar!",
+	"error_register": "No se pudo registrar, inténtalo de nuevo o usa la página de inicio.",
+	"minimize": "Minimizar",
+	"finish": "¡Termina tu puerro!"
+}

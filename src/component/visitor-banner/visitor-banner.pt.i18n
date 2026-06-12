@@ -1,0 +1,11 @@
+{
+	"pitch": "Programe a IA do seu alho-poró e desafie milhares de jogadores!",
+	"leek_name": "Nome do seu alho-poró",
+	"error_leek_name_already_used": "Este nome de alho-poró já está em uso",
+	"error_leek_name_format": "O nome do alho-poró não deve conter caracteres especiais",
+	"error_leek_name_length": "O nome do alho-poró deve conter entre {0} e {1} caracteres",
+	"play": "Jogar!",
+	"error_register": "Falha no registro, tente novamente ou use a página inicial.",
+	"minimize": "Minimizar",
+	"finish": "Termine seu alho-poró!"
+}

@@ -1,0 +1,11 @@
+{
+	"pitch": "Code your leek's AI and challenge thousands of players!",
+	"leek_name": "Your leek's name",
+	"error_leek_name_already_used": "This leek's name is already used",
+	"error_leek_name_format": "The leek's name cannot contain special characters",
+	"error_leek_name_length": "The leek's name must contain between {0} and {1} characters",
+	"play": "Play!",
+	"error_register": "Registration failed, try again or use the home page.",
+	"minimize": "Minimize",
+	"finish": "Finish your leek!"
+}

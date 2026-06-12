@@ -1,0 +1,11 @@
+{
+	"pitch": "Programmiere die KI deines Lauchs und fordere tausende Spieler heraus!",
+	"leek_name": "Name Ihres Lauchs",
+	"error_leek_name_already_used": "Dieser Lauchname wird bereits verwendet",
+	"error_leek_name_format": "Lauchname darf keine Sonderzeichen enthalten",
+	"error_leek_name_length": "Lauchname muss zwischen {0} und {1} Zeichen enthalten",
+	"play": "Spielen!",
+	"error_register": "Registrierung fehlgeschlagen, versuche es erneut oder nutze die Startseite.",
+	"minimize": "Minimieren",
+	"finish": "Mach deinen Lauch fertig!"
+}

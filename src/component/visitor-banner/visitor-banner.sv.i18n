@@ -1,0 +1,11 @@
+{
+	"pitch": "Koda din purjolöks AI och utmana tusentals spelare!",
+	"leek_name": "Namnet på din purjolök",
+	"error_leek_name_already_used": "Detta purjolöksnamn används redan",
+	"error_leek_name_format": "Purjolöksnamn får inte innehålla specialtecken",
+	"error_leek_name_length": "Purjolökens namn måste innehålla mellan {0} och {1} tecken",
+	"play": "Spela!",
+	"error_register": "Registreringen misslyckades, försök igen eller använd startsidan.",
+	"minimize": "Minimera",
+	"finish": "Gör klart din purjolök!"
+}

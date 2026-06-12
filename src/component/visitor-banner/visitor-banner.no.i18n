@@ -1,0 +1,11 @@
+{
+	"pitch": "Kod AI-en til purren din og utfordre tusenvis av spillere!",
+	"leek_name": "Navnet på purren din",
+	"error_leek_name_already_used": "Dette purrenavnet er allerede i bruk",
+	"error_leek_name_format": "Purrenavn må ikke inneholde spesialtegn",
+	"error_leek_name_length": "Purrenavn må inneholde mellom {0} og {1} tegn",
+	"play": "Spill!",
+	"error_register": "Registrering mislyktes, prøv igjen eller bruk forsiden.",
+	"minimize": "Minimer",
+	"finish": "Fullfør purren din!"
+}

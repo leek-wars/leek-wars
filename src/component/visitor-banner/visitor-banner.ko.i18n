@@ -1,0 +1,11 @@
+{
+	"pitch": "리크의 AI를 코딩하고 수천 명의 플레이어에게 도전하세요!",
+	"leek_name": "부추 이름",
+	"error_leek_name_already_used": "이 부추 이름은 이미 사용 중입니다.",
+	"error_leek_name_format": "부추 이름에는 특수 문자가 포함되지 않아야 합니다.",
+	"error_leek_name_length": "부추 이름은 {0}에서 {1}자 사이여야 합니다.",
+	"play": "플레이!",
+	"error_register": "가입에 실패했습니다. 다시 시도하거나 홈페이지를 이용하세요.",
+	"minimize": "최소화",
+	"finish": "리크를 완성하세요!"
+}

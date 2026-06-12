@@ -1,0 +1,11 @@
+{
+	"pitch": "Programmeer de AI van je prei en daag duizenden spelers uit!",
+	"leek_name": "Naam van je prei",
+	"error_leek_name_already_used": "Deze preinaam is al in gebruik",
+	"error_leek_name_format": "Preinaam mag geen speciale tekens bevatten",
+	"error_leek_name_length": "Leek-naam moet tussen {0} en {1} tekens bevatten",
+	"play": "Spelen!",
+	"error_register": "Registratie mislukt, probeer opnieuw of gebruik de startpagina.",
+	"minimize": "Minimaliseren",
+	"finish": "Maak je prei af!"
+}

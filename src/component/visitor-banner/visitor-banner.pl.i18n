@@ -1,0 +1,11 @@
+{
+	"pitch": "Zaprogramuj SI swojego pora i rzuć wyzwanie tysiącom graczy!",
+	"leek_name": "Nazwa twojego pora",
+	"error_leek_name_already_used": "Ta nazwa pora jest już w użyciu",
+	"error_leek_name_format": "Nazwa pora nie może zawierać znaków specjalnych",
+	"error_leek_name_length": "Nazwa pora musi zawierać od {0} do {1} znaków",
+	"play": "Graj!",
+	"error_register": "Rejestracja nie powiodła się, spróbuj ponownie lub użyj strony głównej.",
+	"minimize": "Zminimalizuj",
+	"finish": "Dokończ swojego pora!"
+}
