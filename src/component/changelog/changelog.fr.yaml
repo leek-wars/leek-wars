@@ -1,9 +1,10 @@
 248:
   title: "Classements de boss, hooks de combat, chapeaux et nouveaux trophées."
   added:
-    - "Classements de boss : 4 classements (le plus rapide, le moins de poireaux, plus bas niveau, premiers). #img_248_boss_rankings"
+    - "Classements de boss : le plus rapide, le moins de poireaux, le plus bas niveau et les premiers. #img_248_boss_rankings"
     - "4 nouveaux chapeaux : casquette à plume, chapeau steampunk, bachi de marin et chapeau invisible. #img_248_hats"
     - "18 nouveaux trophées : git, équipement rapide, boss x1000, potions de trèfle et likes reçus. #img_248_trophies"
+    - "Bandeau visiteur sur les pages publiques : crée ton poireau et inscris-toi sans changer de page. #img_248_visitor_banner"
     - "#ai Hooks `beforeFight()` et `afterFight()` : appelés avant le tour 1 et après la fin du combat. #img_248_hooks"
     - "#ai `setLoadout(name)` : applique un équipement pour ce combat, à utiliser dans `beforeFight()`."
     - "#ai Fonction `getWinner()` : récupère le côté de l'équipe gagnante depuis `afterFight()`."
@@ -25,10 +26,11 @@
     - "Bouton d'achat direct en cristaux sur les items mis en avant à la banque. #img_248_bank_buy"
     - "Un dialogue de bienvenue félicite les nouveaux joueurs et liste leurs récompenses après activation. #img_248_welcome"
     - "Validez votre compte par e-mail : 20 combats, 50 cristaux, une caisse de 10 000 habs et un chapeau."
+    - "Nouveau bandeau de validation de compte : récompenses affichées et validation en un clic. #img_248_verify_banner"
   improved:
-    - "#ai Avertissement de code mort sur les fonctions et variables globales jamais utilisées (mode strict). #img_248_unused_warning"
+    - "#ai Avertissement de code mort sur les fonctions et variables globales inutilisées (mode strict). #img_248_unused_warning"
     - "#ai Documentation au survol des annotations LeekScript (`@unused`, `@deprecated`, `@pure`...)."
-    - "#ai `setLoadout` consomme une potion de restat si les stats diffèrent, sinon équipe seulement les items."
+    - "#ai `setLoadout` consomme une potion de restat si les stats diffèrent, sinon équipe les items."
     - "Éditeur d'équipement : compteurs dynamiques armes/puces/composants et icône de potion de restat. #img_248_loadout_counters"
     - "Équipements : confirmation si modifs non sauvegardées, mode sombre et mobile améliorés."
     - "Popup d'attente d'arène enrichie : choix du poireau, mode préféré visible et compteur en direct. #img_248_arena_popup"

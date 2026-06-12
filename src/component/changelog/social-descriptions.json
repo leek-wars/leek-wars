@@ -1,121 +1,466 @@
 {
-	"243_quantum_rifle": { "emoji": "🔫", "description": "New weapon with unique mechanics" },
-	"243_quantum_rifle2": { "emoji": "🔫", "description": "New weapon with unique mechanics" },
-	"243_emojis": { "emoji": "😄", "description": "More ways to express yourself in chat" },
-	"243_sound": { "emoji": "🔊", "description": "Adjust volume directly from the fight player" },
-	"243_filters": { "emoji": "🎁", "description": "Quickly find chests and rare drops in your history" },
-	"243_stats": { "emoji": "📊", "description": "Leeks with identical stats are now grouped together" },
-	"243_ranking": { "emoji": "🏅", "description": "Better default level ranges in rankings" },
-	"243_multiple_errors": { "emoji": "🐛", "description": "See all errors at once instead of one at a time" },
-	"243_links": { "emoji": "🔗", "description": "URLs in code comments are now clickable" },
-	"243_invalid_chars": { "emoji": "⚠️", "description": "Invalid characters are highlighted immediately" },
-
-	"244_talent_history": { "emoji": "📈", "description": "Track your talent evolution over time" },
-	"244_composition_ranking": { "emoji": "🏅", "description": "Compare team compositions in a dedicated leaderboard" },
-	"244_theme_toggle": { "emoji": "🌗", "description": "Switch between light and dark mode anytime" },
-	"244_topic_status": { "emoji": "🏷️", "description": "Mark topics as not reproduced, not planned or not a bug" },
-	"244_topic_move": { "emoji": "📂", "description": "Reorganize topics between forum categories" },
-	"244_resolution": { "emoji": "✅", "description": "See how many suggestions and bugs have been resolved" },
-	"244_emoji_selector": { "emoji": "😊", "description": "Pick emojis without typing codes" },
-	"244_most_viewed": { "emoji": "🔥", "description": "Discover the most popular encyclopedia pages" },
-	"244_alias": { "emoji": "↪️", "description": "Alternate names that redirect to the right page" },
-	"244_boss_ranking": { "emoji": "👹", "description": "Who has slain the most bosses?" },
-	"244_chest_ranking": { "emoji": "🎁", "description": "Who has opened the most chests?" },
-	"244_turret_ranking": { "emoji": "🗼", "description": "Who has destroyed the most turrets?" },
-	"244_crashes_ranking": { "emoji": "💀", "description": "Who has crashed the most AIs?" },
-	"244_mobile_lang": { "emoji": "🌍", "description": "Switch chat language on mobile" },
-	"244_vue3": { "emoji": "⚡", "description": "Full framework migration for better performance" },
-	"244_error_large": { "emoji": "📏", "description": "Know exactly which line is causing the size limit" },
-
-	"245_switch": { "emoji": "🔀", "description": "Supports fall-through and all value types, with each case costing 1 operation" },
-	"245_null_coalesce": { "emoji": "❓", "description": "Unlike 'or', ?? only checks null, so 0 ?? 42 returns 0" },
-	"245_not_in": { "emoji": "🚫", "description": "Saves 1 operation compared to not (x in array)" },
-	"245_teams": { "emoji": "🤝", "description": "Activity scores, match ratings and up to 5 applications at once" },
-	"245_team_invite": { "emoji": "📨", "description": "Joining a team auto-cancels all other pending requests" },
-	"245_likes": { "emoji": "❤️", "description": "Show some appreciation for your favorite farmers" },
-	"245_team_likes": { "emoji": "💚", "description": "Support your favorite teams with a like" },
-	"245_team_members": { "emoji": "📊", "description": "19 columns with drag & drop reordering" },
-	"245_team_tournaments": { "emoji": "🏆", "description": "Only shown when the team has at least one win" },
-	"245_team_rename": { "emoji": "✏️", "description": "10M habs or 200 crystals, once per week" },
-	"245_team_language": { "emoji": "🌍", "description": "Welcome messages in chat adapt to the team's language" },
-	"245_team_owner": { "emoji": "👑", "description": "Clickable card with live online status" },
-	"245_ranking_badges": { "emoji": "🥇", "description": "Gold/silver/bronze for top 3, dark for top 10, up to top 1000" },
-	"245_tournament_avatars": { "emoji": "🎭", "description": "Clickable avatars in bracket blocks" },
-	"245_tooltips_tournament": { "emoji": "💡", "description": "Stats adapt to tournament type: leek, farmer or composition" },
-	"245_chat_tournaments": { "emoji": "📢", "description": "Winners announced at 14h (solo), 20h (farmer), 23h (team)" },
-	"245_fun_ranking_damage": { "emoji": "💥", "description": "Tracks all damage types: direct, poison, return, life steal and nova" },
-	"245_topic_views": { "emoji": "👁️", "description": "View count on every topic" },
-	"245_forum_vote_notification": { "emoji": "🔔", "description": "Get notified on both upvotes and downvotes" },
-	"245_topic_sort_messages": { "emoji": "📑", "description": "New sorting option alongside date, votes, views and priority" },
-	"245_topic_priority": { "emoji": "🚩", "description": "High (red), medium (orange) and low (gray) priority flags" },
-	"245_old_topic": { "emoji": "⏳", "description": "Confirmation required when replying to topics older than a year" },
-	"245_clear_marks": { "emoji": "🧹", "description": "Keyboard shortcut: M" },
-	"245_br_invite": { "emoji": "⚔️", "description": "Live player count, auto-expires when the BR starts" },
-	"245_market_expand": { "emoji": "🔍", "description": "Quick overview without opening each item" },
-	"245_fight_tooltip": { "emoji": "🎯", "description": "See the breakdown: free, purchased and team fights" },
-	"245_notif_br": { "emoji": "📋", "description": "Now shows which leek participated" },
-	"245_named_bulbs": { "emoji": "🏷️", "description": "Name your summons! Max 20 chars, shown above the bulb in combat" },
-	"245_turret_test_ai": { "emoji": "🤖", "description": "Override the default turret AI for testing" },
-	"245_max_turns": { "emoji": "⏱️", "description": "Great for testing early-game strategies" },
-	"245_next_player": { "emoji": "🔄", "description": "Get turn order relative to any entity, not just yours" },
-
-	"246_war": { "emoji": "⚔️", "description": "Two teams clash in XL battles, launched from the Garden like BR" },
-	"246_chest_hunt": { "emoji": "🎁", "description": "All leeks cooperate to crack open as many chests as possible" },
-	"246_colossus": { "emoji": "🏋️", "description": "One leek gets a x5 stat boost (+1/turn). Can you take it down?" },
-	"246_trophies": { "emoji": "🏆", "description": "Daily trophies, exploits and a new Arenas category for all 3 modes" },
-	"246_narrowing": { "emoji": "🔬", "description": "After a null check, the compiler knows x is non-null, so fewer casts are needed" },
-	"246_symbols": { "emoji": "🧭", "description": "Jump to any function, class or global variable instantly" },
-	"246_references": { "emoji": "🔗", "description": "Find every usage of a variable or function across all your AIs" },
-	"246_unused": { "emoji": "👻", "description": "Spot dead code at a glance: unused vars are visually dimmed" },
-	"246_todos": { "emoji": "📝", "description": "Your // TODO comments show up in the problems panel with a blue underline" },
-	"246_contributor_trophies": { "emoji": "🤝", "description": "Automatic trophy for GitHub contributors, with 2 tiers for top contributors" },
-	"246_forum_filters": { "emoji": "🔍", "description": "Filter by status, priority, recognized, locked, read/unread, all synced with the URL" },
-	"246_stargazer": { "emoji": "⭐", "description": "Star the GitHub repo to unlock this trophy, checked every hour" },
-	"246_inventory": { "emoji": "🎒", "description": "Sort by type, rarity, price or quantity, with collapsible group separators" },
-	"246_schemes": { "emoji": "📋", "description": "Craftability indicator and cost shown directly on schematics" },
-	"246_recraft": { "emoji": "🔨", "description": "One-click re-craft after forging, with mobile navigation improvements" },
-	"246_item_stats": { "emoji": "📊", "description": "Weekly usage sparkline: see how often each weapon/chip is used per fight" },
-	"246_name_validation": { "emoji": "✏️", "description": "No more duplicate names and warnings for Windows-incompatible characters" },
-	"246_folder": { "emoji": "🗑️", "description": "Deleted folders can now be restored from the trash" },
-
-	"247_google": { "emoji": "🔐", "description": "Sign in and register instantly with your Google account" },
-	"247_loadouts": { "emoji": "🎒", "description": "Save named equipment sets and apply them to any leek in one click" },
-	"247_git": { "emoji": "🔀", "description": "Version your AIs directly in the editor: commit, push, pull, branches and diffs" },
-	"247_git2": { "emoji": "☁️", "description": "Sync with GitHub, GitLab, Bitbucket or Forgejo, including self-hosted instances" },
-	"247_multiaccount": { "emoji": "👥", "description": "Switch between multiple accounts without ever logging out" },
-	"247_clover": { "emoji": "🍀", "description": "Reveal the day's four-leaf clover spawn time, with 3 precision tiers unlocked by trophies" },
-	"247_double_crystals": { "emoji": "💎", "description": "Your very first crystal purchase is doubled: x2 bonus" },
-	"247_buy_fights": { "emoji": "⚔️", "description": "Buy more fights directly from the Garden and Market when you run out" },
-	"247_market_search": { "emoji": "🔍", "description": "Find any item in the market instantly by typing its name" },
-	"247_encyclopedia_diff": { "emoji": "📜", "description": "See exactly how each encyclopedia page has evolved over time" },
-	"247_highlight": { "emoji": "👀", "description": "Your own leeks are now highlighted in every report and ranking" },
-	"247_function_default": { "emoji": "🧰", "description": "Give your functions optional parameters with default values" },
-	"247_arrayFind": { "emoji": "🔎", "description": "Returns the first element matching a predicate, saving a manual loop" },
-	"247_getCompositionName": { "emoji": "🏷️", "description": "Get the name of an entity's team composition in one call" },
-	"247_pragma": { "emoji": "⚙️", "description": "Declare LeekScript version and strict mode right at the top of your AI" },
-	"247_bot_color": { "emoji": "🎨", "description": "Test your AI with leek color potions applied: see exactly how it will look" },
-	"247_bank": { "emoji": "💰", "description": "Progressive bonuses from +50 up to +2000 extra crystals per pack" },
-	"247_no_fights": { "emoji": "🚪", "description": "Automatically exit the arena after 20 consecutive defeats" },
-	"247_editor_test_mobile": { "emoji": "📱", "description": "The editor's test interface now works smoothly on mobile" },
-
-	"248_boss_rankings": { "emoji": "🏆", "description": "Climb four leaderboards for each boss" },
-	"248_hats": { "emoji": "🎩", "description": "Four new hats to deck out your leeks" },
-	"248_trophies": { "emoji": "🏅", "description": "18 fresh trophies to chase" },
-	"248_hooks": { "emoji": "⚔️", "description": "Pick a loadout per fight from your AI" },
-	"248_forgotten_weapons": { "emoji": "🗡️", "description": "Rank backup weapons, the first one you own gets equipped" },
-	"248_plutonium_bazooka": { "emoji": "💥", "description": "Rare weapon that turns damage taken into resistance" },
-	"248_annotations": { "emoji": "🏷️", "description": "Annotate your code: @unused, @deprecated, @pure and more" },
-	"248_git_clone": { "emoji": "📥", "description": "Clone a remote git repo right in the editor" },
-	"248_git_selfhosted": { "emoji": "🔗", "description": "Connect your self-hosted GitHub, GitLab or Forgejo" },
-	"248_global_codelens": { "emoji": "🔎", "description": "See how many times each global variable is used" },
-	"248_history_table": { "emoji": "📋", "description": "Sort and page through your fight history in a table" },
-	"248_fight_tooltip": { "emoji": "🔍", "description": "Hover a fight to preview duration, gains and trophies" },
-	"248_arena_counter": { "emoji": "👥", "description": "See how many players are queuing for arenas, live" },
-	"248_arena_popup": { "emoji": "⏳", "description": "Richer arena queue: pick your leek and mode without leaving" },
-	"248_encyclo_anchors": { "emoji": "⚓", "description": "Link straight to any encyclopedia section" },
-	"248_bank_buy": { "emoji": "🛒", "description": "Buy featured items in crystals in one tap" },
-	"248_welcome": { "emoji": "🎉", "description": "New players get a welcome screen listing their rewards" },
-	"248_loadout_counters": { "emoji": "🎒", "description": "Live counters and restat icon in the loadout editor" },
-	"248_unused_warning": { "emoji": "⚠️", "description": "Get warned about functions and globals you never use" },
-	"248_logout": { "emoji": "🚪", "description": "Logout shows the connected accounts you'll sign out" }
+	"243_quantum_rifle": {
+		"emoji": "🔫",
+		"description": "New weapon with unique mechanics"
+	},
+	"243_quantum_rifle2": {
+		"emoji": "🔫",
+		"description": "New weapon with unique mechanics"
+	},
+	"243_emojis": {
+		"emoji": "😄",
+		"description": "More ways to express yourself in chat"
+	},
+	"243_sound": {
+		"emoji": "🔊",
+		"description": "Adjust volume directly from the fight player"
+	},
+	"243_filters": {
+		"emoji": "🎁",
+		"description": "Quickly find chests and rare drops in your history"
+	},
+	"243_stats": {
+		"emoji": "📊",
+		"description": "Leeks with identical stats are now grouped together"
+	},
+	"243_ranking": {
+		"emoji": "🏅",
+		"description": "Better default level ranges in rankings"
+	},
+	"243_multiple_errors": {
+		"emoji": "🐛",
+		"description": "See all errors at once instead of one at a time"
+	},
+	"243_links": {
+		"emoji": "🔗",
+		"description": "URLs in code comments are now clickable"
+	},
+	"243_invalid_chars": {
+		"emoji": "⚠️",
+		"description": "Invalid characters are highlighted immediately"
+	},
+	"244_talent_history": {
+		"emoji": "📈",
+		"description": "Track your talent evolution over time"
+	},
+	"244_composition_ranking": {
+		"emoji": "🏅",
+		"description": "Compare team compositions in a dedicated leaderboard"
+	},
+	"244_theme_toggle": {
+		"emoji": "🌗",
+		"description": "Switch between light and dark mode anytime"
+	},
+	"244_topic_status": {
+		"emoji": "🏷️",
+		"description": "Mark topics as not reproduced, not planned or not a bug"
+	},
+	"244_topic_move": {
+		"emoji": "📂",
+		"description": "Reorganize topics between forum categories"
+	},
+	"244_resolution": {
+		"emoji": "✅",
+		"description": "See how many suggestions and bugs have been resolved"
+	},
+	"244_emoji_selector": {
+		"emoji": "😊",
+		"description": "Pick emojis without typing codes"
+	},
+	"244_most_viewed": {
+		"emoji": "🔥",
+		"description": "Discover the most popular encyclopedia pages"
+	},
+	"244_alias": {
+		"emoji": "↪️",
+		"description": "Alternate names that redirect to the right page"
+	},
+	"244_boss_ranking": {
+		"emoji": "👹",
+		"description": "Who has slain the most bosses?"
+	},
+	"244_chest_ranking": {
+		"emoji": "🎁",
+		"description": "Who has opened the most chests?"
+	},
+	"244_turret_ranking": {
+		"emoji": "🗼",
+		"description": "Who has destroyed the most turrets?"
+	},
+	"244_crashes_ranking": {
+		"emoji": "💀",
+		"description": "Who has crashed the most AIs?"
+	},
+	"244_mobile_lang": {
+		"emoji": "🌍",
+		"description": "Switch chat language on mobile"
+	},
+	"244_vue3": {
+		"emoji": "⚡",
+		"description": "Full framework migration for better performance"
+	},
+	"244_error_large": {
+		"emoji": "📏",
+		"description": "Know exactly which line is causing the size limit"
+	},
+	"245_switch": {
+		"emoji": "🔀",
+		"description": "Supports fall-through and all value types, with each case costing 1 operation"
+	},
+	"245_null_coalesce": {
+		"emoji": "❓",
+		"description": "Unlike 'or', ?? only checks null, so 0 ?? 42 returns 0"
+	},
+	"245_not_in": {
+		"emoji": "🚫",
+		"description": "Saves 1 operation compared to not (x in array)"
+	},
+	"245_teams": {
+		"emoji": "🤝",
+		"description": "Activity scores, match ratings and up to 5 applications at once"
+	},
+	"245_team_invite": {
+		"emoji": "📨",
+		"description": "Joining a team auto-cancels all other pending requests"
+	},
+	"245_likes": {
+		"emoji": "❤️",
+		"description": "Show some appreciation for your favorite farmers"
+	},
+	"245_team_likes": {
+		"emoji": "💚",
+		"description": "Support your favorite teams with a like"
+	},
+	"245_team_members": {
+		"emoji": "📊",
+		"description": "19 columns with drag & drop reordering"
+	},
+	"245_team_tournaments": {
+		"emoji": "🏆",
+		"description": "Only shown when the team has at least one win"
+	},
+	"245_team_rename": {
+		"emoji": "✏️",
+		"description": "10M habs or 200 crystals, once per week"
+	},
+	"245_team_language": {
+		"emoji": "🌍",
+		"description": "Welcome messages in chat adapt to the team's language"
+	},
+	"245_team_owner": {
+		"emoji": "👑",
+		"description": "Clickable card with live online status"
+	},
+	"245_ranking_badges": {
+		"emoji": "🥇",
+		"description": "Gold/silver/bronze for top 3, dark for top 10, up to top 1000"
+	},
+	"245_tournament_avatars": {
+		"emoji": "🎭",
+		"description": "Clickable avatars in bracket blocks"
+	},
+	"245_tooltips_tournament": {
+		"emoji": "💡",
+		"description": "Stats adapt to tournament type: leek, farmer or composition"
+	},
+	"245_chat_tournaments": {
+		"emoji": "📢",
+		"description": "Winners announced at 14h (solo), 20h (farmer), 23h (team)"
+	},
+	"245_fun_ranking_damage": {
+		"emoji": "💥",
+		"description": "Tracks all damage types: direct, poison, return, life steal and nova"
+	},
+	"245_topic_views": {
+		"emoji": "👁️",
+		"description": "View count on every topic"
+	},
+	"245_forum_vote_notification": {
+		"emoji": "🔔",
+		"description": "Get notified on both upvotes and downvotes"
+	},
+	"245_topic_sort_messages": {
+		"emoji": "📑",
+		"description": "New sorting option alongside date, votes, views and priority"
+	},
+	"245_topic_priority": {
+		"emoji": "🚩",
+		"description": "High (red), medium (orange) and low (gray) priority flags"
+	},
+	"245_old_topic": {
+		"emoji": "⏳",
+		"description": "Confirmation required when replying to topics older than a year"
+	},
+	"245_clear_marks": {
+		"emoji": "🧹",
+		"description": "Keyboard shortcut: M"
+	},
+	"245_br_invite": {
+		"emoji": "⚔️",
+		"description": "Live player count, auto-expires when the BR starts"
+	},
+	"245_market_expand": {
+		"emoji": "🔍",
+		"description": "Quick overview without opening each item"
+	},
+	"245_fight_tooltip": {
+		"emoji": "🎯",
+		"description": "See the breakdown: free, purchased and team fights"
+	},
+	"245_notif_br": {
+		"emoji": "📋",
+		"description": "Now shows which leek participated"
+	},
+	"245_named_bulbs": {
+		"emoji": "🏷️",
+		"description": "Name your summons! Max 20 chars, shown above the bulb in combat"
+	},
+	"245_turret_test_ai": {
+		"emoji": "🤖",
+		"description": "Override the default turret AI for testing"
+	},
+	"245_max_turns": {
+		"emoji": "⏱️",
+		"description": "Great for testing early-game strategies"
+	},
+	"245_next_player": {
+		"emoji": "🔄",
+		"description": "Get turn order relative to any entity, not just yours"
+	},
+	"246_war": {
+		"emoji": "⚔️",
+		"description": "Two teams clash in XL battles, launched from the Garden like BR"
+	},
+	"246_chest_hunt": {
+		"emoji": "🎁",
+		"description": "All leeks cooperate to crack open as many chests as possible"
+	},
+	"246_colossus": {
+		"emoji": "🏋️",
+		"description": "One leek gets a x5 stat boost (+1/turn). Can you take it down?"
+	},
+	"246_trophies": {
+		"emoji": "🏆",
+		"description": "Daily trophies, exploits and a new Arenas category for all 3 modes"
+	},
+	"246_narrowing": {
+		"emoji": "🔬",
+		"description": "After a null check, the compiler knows x is non-null, so fewer casts are needed"
+	},
+	"246_symbols": {
+		"emoji": "🧭",
+		"description": "Jump to any function, class or global variable instantly"
+	},
+	"246_references": {
+		"emoji": "🔗",
+		"description": "Find every usage of a variable or function across all your AIs"
+	},
+	"246_unused": {
+		"emoji": "👻",
+		"description": "Spot dead code at a glance: unused vars are visually dimmed"
+	},
+	"246_todos": {
+		"emoji": "📝",
+		"description": "Your // TODO comments show up in the problems panel with a blue underline"
+	},
+	"246_contributor_trophies": {
+		"emoji": "🤝",
+		"description": "Automatic trophy for GitHub contributors, with 2 tiers for top contributors"
+	},
+	"246_forum_filters": {
+		"emoji": "🔍",
+		"description": "Filter by status, priority, recognized, locked, read/unread, all synced with the URL"
+	},
+	"246_stargazer": {
+		"emoji": "⭐",
+		"description": "Star the GitHub repo to unlock this trophy, checked every hour"
+	},
+	"246_inventory": {
+		"emoji": "🎒",
+		"description": "Sort by type, rarity, price or quantity, with collapsible group separators"
+	},
+	"246_schemes": {
+		"emoji": "📋",
+		"description": "Craftability indicator and cost shown directly on schematics"
+	},
+	"246_recraft": {
+		"emoji": "🔨",
+		"description": "One-click re-craft after forging, with mobile navigation improvements"
+	},
+	"246_item_stats": {
+		"emoji": "📊",
+		"description": "Weekly usage sparkline: see how often each weapon/chip is used per fight"
+	},
+	"246_name_validation": {
+		"emoji": "✏️",
+		"description": "No more duplicate names and warnings for Windows-incompatible characters"
+	},
+	"246_folder": {
+		"emoji": "🗑️",
+		"description": "Deleted folders can now be restored from the trash"
+	},
+	"247_google": {
+		"emoji": "🔐",
+		"description": "Sign in and register instantly with your Google account"
+	},
+	"247_loadouts": {
+		"emoji": "🎒",
+		"description": "Save named equipment sets and apply them to any leek in one click"
+	},
+	"247_git": {
+		"emoji": "🔀",
+		"description": "Version your AIs directly in the editor: commit, push, pull, branches and diffs"
+	},
+	"247_git2": {
+		"emoji": "☁️",
+		"description": "Sync with GitHub, GitLab, Bitbucket or Forgejo, including self-hosted instances"
+	},
+	"247_multiaccount": {
+		"emoji": "👥",
+		"description": "Switch between multiple accounts without ever logging out"
+	},
+	"247_clover": {
+		"emoji": "🍀",
+		"description": "Reveal the day's four-leaf clover spawn time, with 3 precision tiers unlocked by trophies"
+	},
+	"247_double_crystals": {
+		"emoji": "💎",
+		"description": "Your very first crystal purchase is doubled: x2 bonus"
+	},
+	"247_buy_fights": {
+		"emoji": "⚔️",
+		"description": "Buy more fights directly from the Garden and Market when you run out"
+	},
+	"247_market_search": {
+		"emoji": "🔍",
+		"description": "Find any item in the market instantly by typing its name"
+	},
+	"247_encyclopedia_diff": {
+		"emoji": "📜",
+		"description": "See exactly how each encyclopedia page has evolved over time"
+	},
+	"247_highlight": {
+		"emoji": "👀",
+		"description": "Your own leeks are now highlighted in every report and ranking"
+	},
+	"247_function_default": {
+		"emoji": "🧰",
+		"description": "Give your functions optional parameters with default values"
+	},
+	"247_arrayFind": {
+		"emoji": "🔎",
+		"description": "Returns the first element matching a predicate, saving a manual loop"
+	},
+	"247_getCompositionName": {
+		"emoji": "🏷️",
+		"description": "Get the name of an entity's team composition in one call"
+	},
+	"247_pragma": {
+		"emoji": "⚙️",
+		"description": "Declare LeekScript version and strict mode right at the top of your AI"
+	},
+	"247_bot_color": {
+		"emoji": "🎨",
+		"description": "Test your AI with leek color potions applied: see exactly how it will look"
+	},
+	"247_bank": {
+		"emoji": "💰",
+		"description": "Progressive bonuses from +50 up to +2000 extra crystals per pack"
+	},
+	"247_no_fights": {
+		"emoji": "🚪",
+		"description": "Automatically exit the arena after 20 consecutive defeats"
+	},
+	"247_editor_test_mobile": {
+		"emoji": "📱",
+		"description": "The editor's test interface now works smoothly on mobile"
+	},
+	"248_boss_rankings": {
+		"emoji": "🏆",
+		"description": "Climb four leaderboards for each boss"
+	},
+	"248_hats": {
+		"emoji": "🎩",
+		"description": "Four new hats to deck out your leeks"
+	},
+	"248_trophies": {
+		"emoji": "🏅",
+		"description": "18 fresh trophies to chase"
+	},
+	"248_hooks": {
+		"emoji": "⚔️",
+		"description": "Pick a loadout per fight from your AI"
+	},
+	"248_forgotten_weapons": {
+		"emoji": "🗡️",
+		"description": "Rank backup weapons, the first one you own gets equipped"
+	},
+	"248_plutonium_bazooka": {
+		"emoji": "💥",
+		"description": "Rare weapon that turns damage taken into resistance"
+	},
+	"248_annotations": {
+		"emoji": "🏷️",
+		"description": "Annotate your code: @unused, @deprecated, @pure and more"
+	},
+	"248_git_clone": {
+		"emoji": "📥",
+		"description": "Clone a remote git repo right in the editor"
+	},
+	"248_git_selfhosted": {
+		"emoji": "🔗",
+		"description": "Connect your self-hosted GitHub, GitLab or Forgejo"
+	},
+	"248_global_codelens": {
+		"emoji": "🔎",
+		"description": "See how many times each global variable is used"
+	},
+	"248_history_table": {
+		"emoji": "📋",
+		"description": "Sort and page through your fight history in a table"
+	},
+	"248_fight_tooltip": {
+		"emoji": "🔍",
+		"description": "Hover a fight to preview duration, gains and trophies"
+	},
+	"248_arena_counter": {
+		"emoji": "👥",
+		"description": "See how many players are queuing for arenas, live"
+	},
+	"248_arena_popup": {
+		"emoji": "⏳",
+		"description": "Richer arena queue: pick your leek and mode without leaving"
+	},
+	"248_encyclo_anchors": {
+		"emoji": "⚓",
+		"description": "Link straight to any encyclopedia section"
+	},
+	"248_bank_buy": {
+		"emoji": "🛒",
+		"description": "Buy featured items in crystals in one tap"
+	},
+	"248_welcome": {
+		"emoji": "🎉",
+		"description": "New players get a welcome screen listing their rewards"
+	},
+	"248_loadout_counters": {
+		"emoji": "🎒",
+		"description": "Live counters and restat icon in the loadout editor"
+	},
+	"248_unused_warning": {
+		"emoji": "⚠️",
+		"description": "Get warned about functions and globals you never use"
+	},
+	"248_logout": {
+		"emoji": "🚪",
+		"description": "Logout shows the connected accounts you'll sign out"
+	},
+	"248_visitor_banner": {
+		"emoji": "🌱",
+		"description": "Create your leek and sign up right from any public page, without leaving what you were reading."
+	},
+	"248_verify_banner": {
+		"emoji": "🎁",
+		"description": "A new bottom banner shows your verification rewards and opens the validation dialog in one click."
+	}
 }
