@@ -885,6 +885,7 @@
 		}
 		// Sur mobile, en-têtes triables réduites à leur icône (place/poireau/farmer restent en texte)
 		.boss-ranking {
+			min-width: 480px;
 			tr.header a span {
 				display: none;
 			}
