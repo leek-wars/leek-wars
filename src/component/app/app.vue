@@ -37,13 +37,7 @@
 
 				<div class="toasts"></div>
 
-				<div v-if="shouldShowVerifyBanner" class="finish-register">
-					<div class="message">
-						<v-icon>mdi-account-plus</v-icon>
-						{{ $t('main.verify_message') }} <router-link class="green-link" to="/settings">{{ $t('main.verify_info') }}</router-link>
-						<v-icon @click="verifyMessage = false">mdi-close</v-icon>
-					</div>
-				</div>
+				<verify-banner v-if="shouldShowVerifyBanner" @verify="verifyPopupForced = true" />
 
 				<verify-popup v-if="showVerifyPopup" v-model="showVerifyPopup" />
 
@@ -217,6 +211,7 @@
 	const VerifyPopup = defineAsyncComponent(() => import('@/component/verify-popup/verify-popup.vue'))
 	const CheckEmailReminder = defineAsyncComponent(() => import('@/component/check-email-reminder/check-email-reminder.vue'))
 	const ActivationWelcome = defineAsyncComponent(() => import('@/component/activation-welcome/activation-welcome.vue'))
+	const VerifyBanner = defineAsyncComponent(() => import('@/component/verify-banner/verify-banner.vue'))
 	const ChangelogDialog = defineAsyncComponent(() => import('../changelog/changelog-dialog.vue'))
 	const Documentation = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`))
 	const DidactitielNew = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel-new/didactitiel-new.${locale}.i18n`))
@@ -249,23 +244,20 @@
 	let mouseX = 0
 	let mouseY = 0
 	let cloverSpeed = 200
-	const verifyMessage = ref(true)
 	const verifyPopupDismissed = ref(false)
+	const verifyPopupForced = ref(false)
 	const checkEmailReminderDismissed = ref(false)
 	const showActivationWelcome = ref(false)
 	const loggedOutOtherTab = ref(false)
 
-	// Bandeau header "Terminer votre inscription par e-mail" :
-	//  - Comptes pré-migration (pas de didactitiel_completed_at) : ancien
-	//    comportement, visible dès qu'on est non-verified.
-	//  - Comptes post-migration : caché tant que la verify-popup n'a pas été
-	//    explicitement dismissée, pour ne pas triple-solliciter à l'inscription.
+	// Bandeau bas "Valide ton compte" (verify-banner) : visible une fois le
+	// didactitiel terminé (ou au moins un combat joué pour les comptes
+	// pré-migration sans timestamp), jamais pendant la création du poireau.
 	const shouldShowVerifyBanner = computed(() => {
-		if (!verifyMessage.value) return false
 		const f = store.state.farmer
 		if (!f || f.verified) return false
-		if (!f.didactitiel_completed_at) return true
-		return !!f.verify_modal_dismissed_at
+		return !!f.didactitiel_completed_at
+			|| ((f.victories ?? 0) + (f.draws ?? 0) + (f.defeats ?? 0)) >= 1
 	})
 
 	// Tick réactif pour réévaluer showVerifyPopup. Désarmé dès que le verdict
@@ -290,16 +282,19 @@
 	}, { immediate: true })
 	onBeforeUnmount(() => { if (verifyPopupTimer) clearInterval(verifyPopupTimer) })
 
-	// La verify-popup s'affiche 5 minutes après la fin du didacticiel. L'horloge
+	// La verify-popup s'affiche 2 minutes après la fin du didacticiel. L'horloge
 	// vit côté serveur (farmer.didactitiel_completed_at) pour ne pas dépendre du
 	// localStorage : sinon un 2e compte créé sur le même navigateur voyait la
 	// modal immédiatement (bug observé sur la cohorte 2026-04). Fallback pour les
 	// comptes pré-migration (completed_at null) : 5 combats faits.
-	const VERIFY_POPUP_DELAY_MS = 5 * 60 * 1000
+	const VERIFY_POPUP_DELAY_MS = 2 * 60 * 1000
 	const showVerifyPopup = computed({
 		get() {
 			const f = store.state.farmer
 			if (!f || f.verified) return false
+			// Ouverture explicite depuis le bandeau verify-banner : prioritaire
+			// sur le dismiss et le snooze.
+			if (verifyPopupForced.value) return true
 			if (verifyPopupDismissed.value) return false
 			if (f.verify_modal_dismissed_at) return false
 			const snoozedUntil = parseInt(localStorage.getItem('verify-popup-snoozed-until') || '0')
@@ -309,10 +304,17 @@
 			}
 			// Pré-migration : on garde l'ancien déclencheur "5 combats" pour ne
 			// pas attendre indéfiniment sur les comptes qui n'ont pas de timestamp.
-			return (f.fights ?? 0) >= 5
+			// Compter les combats JOUÉS (victoires + nuls + défaites) : f.fights est
+			// le nombre de combats RESTANTS (50 à l'inscription), ce qui faisait
+			// surgir la popup immédiatement après un fast register hors didactitiel
+			// (inscription via le bandeau visiteur notamment).
+			return ((f.victories ?? 0) + (f.draws ?? 0) + (f.defeats ?? 0)) >= 5
 		},
 		set(value: boolean) {
-			if (!value) verifyPopupDismissed.value = true
+			if (!value) {
+				verifyPopupForced.value = false
+				verifyPopupDismissed.value = true
+			}
 		}
 	})
 
@@ -794,28 +796,6 @@
 		margin-top: 10vh !important;
 		.documentation-page {
 			max-height: 80vh;
-		}
-	}
-	.finish-register {
-		position: fixed;
-		top: 0;
-		right: 0;
-		left: 0;
-		display: flex;
-		justify-content: center;
-		z-index: 10;
-		.message {
-			background: var(--pure-white);
-			box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
-			border-bottom-left-radius: 5px;
-			border-bottom-right-radius: 5px;
-			padding: 4px 12px;
-			display: flex;
-			align-items: center;
-			gap: 10px;
-			i, button {
-				font-size: 18px;
-			}
 		}
 	}
 	.logout-accounts {
