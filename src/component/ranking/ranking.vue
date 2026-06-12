@@ -114,14 +114,17 @@
 					<div class="boss-tabs">
 						<router-link v-for="b in BOSSES" :key="b.id" :to="getURL('boss-' + b.id, bossMode, null, false)">
 							<div class="boss-tab" :class="{active: bossId === b.id}">
-								<leek-image :leek="b" :scale="b.scale * 0.55" />
+								<leek-image :leek="b" :scale="b.scale * 0.4" />
 								<span>{{ $t('entity.' + b.name) }}</span>
 							</div>
 						</router-link>
 					</div>
 					<div class="mode-buttons">
-						<router-link v-for="m in ['turns', 'leeks', 'power', 'first']" :key="m" :to="getURL(category, m, null, false)">
-							<v-btn size="small" :class="{active: order === m}">{{ $t('boss_mode_' + m) }}</v-btn>
+						<router-link v-for="m in BOSS_MODES" :key="m.id" :to="getURL(category, m.id, null, false)">
+							<v-btn class="mode-button" :class="{active: order === m.id}">
+								<v-icon>{{ m.icon }}</v-icon>
+								<span>{{ $t('boss_mode_' + m.id) }}</span>
+							</v-btn>
 						</router-link>
 					</div>
 				</div>
@@ -283,36 +286,40 @@
 						</tr>
 						<ranking-composition-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: searchResult == row.rank}" />
 					</table>
-					<table v-else-if="displayCategory.startsWith('boss')" class="ranking large">
+					<table v-else-if="displayCategory.startsWith('boss')" class="ranking large boss-ranking">
 						<tr class="header">
 							<th class="ranking-column">{{ $t('place') }}</th>
 							<th class="column-farmer">{{ $t('main.farmer') }}</th>
-							<th>{{ $t('main.country') }}</th>
+							<th class="column-country">{{ $t('main.country') }}</th>
 							<th>
 								<router-link :to="getURL(category, 'turns', null, inactive)">
+									<v-icon>mdi-timer-sand</v-icon>
 									<span>{{ $t('turns') }}</span>
 									<v-icon v-if="order === 'turns'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>
 								<router-link :to="getURL(category, 'leeks', null, inactive)">
+									<v-icon>mdi-leek</v-icon>
 									<span>{{ $t('leeks') }}</span>
 									<v-icon v-if="order === 'leeks'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>
 								<router-link :to="getURL(category, 'power', null, inactive)">
+									<v-icon>mdi-arm-flex</v-icon>
 									<span>{{ $t('power') }}</span>
 									<v-icon v-if="order === 'power'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>
 								<router-link :to="getURL(category, 'first', null, inactive)">
+									<v-icon>mdi-flag-checkered</v-icon>
 									<span>{{ $t('date') }}</span>
 									<v-icon v-if="order === 'first'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
-							<th></th>
+							<th>{{ $t('main.fight') }}</th>
 						</tr>
 						<tr v-for="row in (ranking as unknown as BossRow[])" :key="row.id" :class="{me: row.me, highlight: searchResult == row.rank}">
 							<td>{{ row.rank }}</td>
@@ -426,6 +433,12 @@
 	const teamMode = computed(() => compositionMode.value ? 'composition' : 'team')
 
 	// Classements de boss (#3627) : category = 'boss-<id>', order = mode (turns|leeks|first|power)
+	const BOSS_MODES = [
+		{ id: 'turns', icon: 'mdi-timer-sand' },
+		{ id: 'leeks', icon: 'mdi-leek' },
+		{ id: 'power', icon: 'mdi-arm-flex' },
+		{ id: 'first', icon: 'mdi-flag-checkered' },
+	]
 	interface BossRow { id: number, name: string, country: string | null, rank: number, me?: string, style?: string, turns: number, leeks: number, power: number, date: number, fight: number }
 	const bossId = computed(() => category.value.startsWith('boss-') ? (parseInt(category.value.substring(5), 10) || 1) : 1)
 	const bossMode = computed(() => category.value.startsWith('boss-') && order.value ? order.value : 'turns')
@@ -643,9 +656,9 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: flex-end;
-		width: 130px;
+		min-width: 130px;
 		height: 90px;
-		padding: 4px;
+		padding: 4px 14px;
 		border-radius: 6px;
 		border: 2px solid var(--border);
 		cursor: pointer;
@@ -663,8 +676,29 @@
 		gap: 8px;
 		flex-wrap: wrap;
 		justify-content: center;
-		a { text-decoration: none; }
+		a { text-decoration: none; display: flex; }
 		.active { background: var(--primary); color: white; }
+		:deep(.mode-button) {
+			height: 42px;
+			margin: 0;
+			font-size: 15px;
+			padding: 0 18px;
+			.v-btn__content {
+				gap: 7px;
+			}
+			.v-icon {
+				font-size: 22px;
+			}
+		}
+	}
+	.boss-ranking {
+		tr.header a {
+			gap: 4px;
+			i { font-size: 18px; }
+		}
+		.column-country {
+			width: 60px;
+		}
 	}
 	.fight-link-cell {
 		a {
@@ -825,6 +859,41 @@
 		grid-template-columns: 1fr;
 		table {
 			margin: 6px 0;
+		}
+	}
+	#app.app {
+		.boss-controls {
+			gap: 8px;
+			padding: 8px 0 2px;
+		}
+		.boss-tab {
+			min-width: 44px;
+			width: auto;
+			height: 80px;
+			padding: 4px;
+			span { font-size: 10px; margin-top: 5px; }
+		}
+		.mode-buttons {
+			gap: 6px;
+			:deep(.v-btn) {
+				min-width: 0;
+				padding: 0 10px;
+			}
+			:deep(.v-btn__content) {
+				gap: 4px;
+			}
+		}
+		// Sur mobile, en-têtes triables réduites à leur icône (place/poireau/farmer restent en texte)
+		.boss-ranking {
+			tr.header a span {
+				display: none;
+			}
+			tr.header a i {
+				font-size: 20px;
+			}
+			:deep(td), th {
+				padding: 5px 4px;
+			}
 		}
 	}
 	.query {
