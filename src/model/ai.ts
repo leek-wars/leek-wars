@@ -60,23 +60,27 @@ class AI {
 
 		// console.log("analyze", this.path)
 
-		this.updateIncludes()
+		try {
+			this.updateIncludes()
 
-		// Search /* */ comments first
-		let match
-		const comments: {[key: number]: string} = {}
-		const comment_regex = /\/\*([^]*?)\*\/\s*/gm
-		while ((match = comment_regex.exec(this.code)) != null) {
-			const content = match[1].trim().split("\n").map(line => line.replace(/^\s*\*\s?/, '')).join("\n").trim()
-			comments[match.index + match[0].length] = content
+			// Search /* */ comments first
+			let match
+			const comments: {[key: number]: string} = {}
+			const comment_regex = /\/\*([^]*?)\*\/\s*/gm
+			while ((match = comment_regex.exec(this.code)) != null) {
+				const content = match[1].trim().split("\n").map(line => line.replace(/^\s*\*\s?/, '')).join("\n").trim()
+				comments[match.index + match[0].length] = content
+			}
+			this.comments = comments
+
+			// console.log("Comments", comments)
+
+			this.updateFunctions()
+			this.updateClasses()
+			this.updateGlobalVars()
+		} catch (e) {
+			console.error("analyze failed", this.path, e)
 		}
-		this.comments = comments
-
-		// console.log("Comments", comments)
-
-		this.updateFunctions()
-		this.updateClasses()
-		this.updateGlobalVars()
 	}
 
 	public updateIncludes() {
@@ -368,7 +372,7 @@ class AI {
 		// console.time('methods')
 
 		// Search methods
-		const method_regex = /^\s*(?:public\s+)?(?:(static)\s+)?(.*\s+?)?(\w+)\s*\(([\w\s,<>=?!'".\-[\]|]*)\)\s*{/gm
+		const method_regex = /^\s*(?:public\s+)?(?:(static)\s+)?([^\n(]*?\s+)?(\w+)\s*\(([\w \t,<>=?!'".\-[\]|]*)\)\s*{/gm
 		while ((match = method_regex.exec(this.code)) != null) {
 
 			const name = match[3]
