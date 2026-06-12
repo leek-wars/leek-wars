@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { LeekWars } from '@/model/leekwars'
 import { mixins, useNamespacedT } from '@/model/i18n'
 import { store } from '@/model/store'
@@ -61,6 +61,11 @@ const emit = defineEmits<{ 'update:modelValue': [value: boolean] }>()
 const t = useNamespacedT('verify-popup')
 
 const show = ref(props.modelValue)
+// La croix du header de <popup> ferme via le v-model interne (show) sans passer
+// par close(). On propage donc toute fermeture vers le parent, sinon app.vue
+// croit le popup encore ouvert et le bouton de réouverture du bandeau reste sans
+// effet (verifyPopupForced déjà à true).
+watch(show, (v) => { if (!v) emit('update:modelValue', false) })
 const submitting = ref(false)
 const oauthLoading = ref(false)
 const login = ref('')
@@ -70,7 +75,7 @@ const errors = ref<Record<string, string[]>>({})
 
 function close() {
 	show.value = false
-	emit('update:modelValue', false)
+	// l'emit est géré par le watch(show) ci-dessus
 }
 
 function later() {
