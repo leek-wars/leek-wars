@@ -234,7 +234,11 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 
 	if (LeekWars.DEV) return
 
+	// Échecs de chargement de chunk/CSS (Chrome: "Failed to fetch...", Firefox: "error loading...").
+	// On les logge en masqué SANS recharger : la récupération après déploiement est gérée par le
+	// handler `vite:preloadError` (HEAD-checké) qui fire pour le même échec et ne recharge que sur un vrai 404.
 	if (e?.message?.includes('Failed to fetch dynamically imported module') ||
+		e?.message?.includes('error loading dynamically imported module') ||
 		e?.message?.includes('Loading chunk') ||
 		e?.message?.includes('Loading CSS chunk') ||
 		e?.message?.includes('Unable to preload CSS')) {
@@ -242,9 +246,10 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 		return
 	}
 
+	// runtime-13 = ASYNC_COMPONENT_LOADER : sur un échec de chunk, le handler vite:preloadError
+	// gère déjà la récup ; sur un vrai throw de composant, recharger ne sert à rien (boucle). On logge.
 	if (infoAny?.includes?.('runtime-13')) {
 		reportHidden((e?.message || String(e)) + ' [' + infoAny + ']', e?.stack)
-		reloadWithCacheBust()
 		return
 	}
 
