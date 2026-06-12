@@ -208,7 +208,9 @@ class Obstacle {
 				}
 			}
 		} else {
-			if (this.texture) {
+			// La texture peut être de taille 0 si l'image source n'était pas encore
+			// chargée au moment du scale (drawImage lèverait InvalidStateError).
+			if (this.texture && this.texture.width > 0 && this.texture.height > 0) {
 				ctx.drawImage(this.texture, this.realX, this.realY)
 			}
 		}
