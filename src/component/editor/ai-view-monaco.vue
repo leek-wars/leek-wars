@@ -24,6 +24,7 @@
 <script setup lang="ts">
 import * as monaco from 'monaco-editor'
 import { fileSystem } from '@/model/filesystem'
+import { setLocalStorageSafe } from '@/model/storage'
 import { LeekWars } from '@/model/leekwars'
 import { farmerId } from '@/model/store'
 import './monaco'
@@ -126,7 +127,7 @@ onMounted(() => {
 	} as any))
 	scrollListener = editor.onDidScrollChange((e) => {
 		if (!props.ai) return
-		localStorage.setItem(scrollKey(props.ai.path), '' + e.scrollTop)
+		setLocalStorageSafe(scrollKey(props.ai.path), '' + e.scrollTop)
 		debouncedSaveViewState()
 	})
 	editor.onMouseUp((e) => {
@@ -433,7 +434,7 @@ function saveViewState(aiPath?: string) {
 	if (!path) return
 	const viewState = editor.saveViewState()
 	if (viewState) {
-		localStorage.setItem(viewStateKey(path), JSON.stringify(viewState))
+		setLocalStorageSafe(viewStateKey(path), JSON.stringify(viewState))
 	}
 }
 

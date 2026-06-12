@@ -274,6 +274,7 @@
 	import { locale } from '@/locale'
 	import { AI } from '@/model/ai'
 	import { aiCodeKey, aiMtimeKey, fileSystem, translateFileSystemError } from '@/model/filesystem'
+	import { setLocalStorageSafe } from '@/model/storage'
 	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store, farmerId } from '@/model/store'
@@ -772,8 +773,8 @@
 		LeekWars.post('ai/write', {path: aiEditor.ai.path, code: content}).then((data) => {
 			aiEditor.saving = false
 			aiEditor.ai.mtime = data.modified || Date.now()
-			localStorage.setItem(aiMtimeKey(aiEditor.ai.path), '' + aiEditor.ai.mtime)
-			localStorage.setItem(aiCodeKey(aiEditor.ai.path), content)
+			setLocalStorageSafe(aiMtimeKey(aiEditor.ai.path), '' + aiEditor.ai.mtime)
+			setLocalStorageSafe(aiCodeKey(aiEditor.ai.path), content)
 			aiEditor.ai.modified = false
 
 			if (data.result) {
@@ -929,12 +930,12 @@
 			if (t.type === 'file') return { type: 'file', id: t.id }
 			return { type: t.type, id: t.id, folder: t.folder, file: t.file, staged: t.staged, hash: t.hash }
 		})
-		localStorage.setItem(tabsKey(), JSON.stringify(serialized))
+		setLocalStorageSafe(tabsKey(), JSON.stringify(serialized))
 		if (currentTab.value) {
 			if (currentTab.value.type === 'file') {
-				localStorage.setItem(currentTabKey(), JSON.stringify({ type: 'file', id: currentTab.value.id }))
+				setLocalStorageSafe(currentTabKey(), JSON.stringify({ type: 'file', id: currentTab.value.id }))
 			} else {
-				localStorage.setItem(currentTabKey(), JSON.stringify({ type: currentTab.value.type, key: diffKey(currentTab.value as DiffTab) }))
+				setLocalStorageSafe(currentTabKey(), JSON.stringify({ type: currentTab.value.type, key: diffKey(currentTab.value as DiffTab) }))
 			}
 		}
 	}
@@ -1100,7 +1101,7 @@
 		}
 	})
 	watch(() => history.value.map(ai => ai.path).join('|'), () => {
-		localStorage.setItem(historyKey(), JSON.stringify(history.value.map(ai => ai.path)))
+		setLocalStorageSafe(historyKey(), JSON.stringify(history.value.map(ai => ai.path)))
 	})
 
 	function jumpEvent(event: { ai: AI, line: number, column: number }) {

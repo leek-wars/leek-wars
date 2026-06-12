@@ -3,6 +3,7 @@ import { AI } from '@/model/ai'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { farmerId } from '@/model/store'
+import { setLocalStorageSafe } from '@/model/storage'
 import { emitter } from '@/model/vue'
 
 import { Keyword } from './keyword'
@@ -193,8 +194,8 @@ class FileSystem {
 			LeekWars.post('ai/read', { path: ai.path }).then((data) => {
 				ai.code = data.code
 				ai.mtime = data.mtime || Date.now()
-				localStorage.setItem(aiCodeKey(ai.path), ai.code)
-				localStorage.setItem(aiMtimeKey(ai.path), '' + ai.mtime)
+				setLocalStorageSafe(aiCodeKey(ai.path), ai.code)
+				setLocalStorageSafe(aiMtimeKey(ai.path), '' + ai.mtime)
 				ai.analyze()
 				resolve(ai)
 			}).error(reject)
