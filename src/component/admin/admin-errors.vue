@@ -11,7 +11,7 @@
 				<loader v-if="!errors" />
 				<div v-else>
 					<div class="delete">
-						<v-btn size="small" :color="showHidden ? 'primary' : undefined" :prepend-icon="showHidden ? 'mdi-eye-off' : 'mdi-eye-off-outline'" @click="toggleHidden">{{ showHidden ? 'Masquées' : 'Erreurs masquées' }}</v-btn>
+						<v-switch v-model="showHidden" color="primary" density="compact" hide-details label="Erreurs masquées" @update:model-value="onShowHiddenChange" />
 						<div class="spacer"></div>
 						Supprimer par mot-clé
 						<input v-model="deleteQuery" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
@@ -173,8 +173,8 @@
 		traceExpanded.value = { ...traceExpanded.value, [index]: expanded }
 	}
 
-	function toggleHidden() {
-		showHidden.value = !showHidden.value
+	function onShowHiddenChange() {
+		// v-model a déjà basculé showHidden ; on recharge la liste correspondante.
 		errors.value = null
 		update()
 	}
