@@ -34,5 +34,6 @@
 	"sound_activated": "Suono attivato",
 	"sound_disactivated": "Suono silenziato",
 	"tactic_mode": "Modalità tattica",
+	"debug_only_my_leeks": "Le mie azioni",
 	"error_secret_trophy": "Questa battaglia contiene un trofeo segreto che non avete ancora sbloccato."
 }

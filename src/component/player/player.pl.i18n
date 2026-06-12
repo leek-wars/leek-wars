@@ -34,5 +34,6 @@
 	"sound_activated": "Aktywowany dźwiękiem",
 	"sound_disactivated": "Wyciszony dźwięk",
 	"tactic_mode": "Tryb taktyczny",
+	"debug_only_my_leeks": "Moje akcje",
 	"error_secret_trophy": "Ta bitwa zawiera sekretne trofeum, którego jeszcze nie odblokowałeś."
 }

@@ -34,5 +34,6 @@
 	"sound_activated": "Ääni aktivoitu",
 	"sound_disactivated": "Mykistetty ääni",
 	"tactic_mode": "Taktinen tila",
+	"debug_only_my_leeks": "Omat toiminnot",
 	"error_secret_trophy": "Tämä taistelu sisältää salaisen palkinnon, jota et ole vielä avannut."
 }

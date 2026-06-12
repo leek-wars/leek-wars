@@ -34,5 +34,6 @@
 	"sound_activated": "Geluid geactiveerd",
 	"sound_disactivated": "Gedempt geluid",
 	"tactic_mode": "Tactische modus",
+	"debug_only_my_leeks": "Mijn acties",
 	"error_secret_trophy": "Dit gevecht bevat een geheime trofee die je nog niet hebt vrijgespeeld."
 }
