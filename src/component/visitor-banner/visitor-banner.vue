@@ -154,7 +154,7 @@ function submit() {
 	}
 	loading.value = true
 	error.value = ''
-	LeekWars.post('farmer/register-fast', { leek_name: name, hat: hat.value, skin: skin.value }).then(data => {
+	LeekWars.post('farmer/register-fast', { leek_name: name, hat: hat.value, skin: skin.value, source: 'visitor-banner' }).then(data => {
 		store.commit('connect', data)
 		store.commit('connected', '$')
 		router.push(getRedirectAfterLogin())
