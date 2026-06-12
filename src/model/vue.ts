@@ -100,8 +100,20 @@ function reloadWithCacheBust() {
 }
 
 window.addEventListener('vite:preloadError', (event) => {
-	reportHidden('vite:preloadError', (event as { payload?: { message?: string } })?.payload?.message)
-	reloadWithCacheBust()
+	// Un preloadError pendant une navigation = chunk dynamique annulé par le navigateur
+	// (surtout Firefox), PAS forcément un déploiement périmé : l'asset existe souvent
+	// encore (HTTP 200). On ne recharge donc toute la page (#_r=) QUE si l'asset a vraiment
+	// disparu (404 = vrai chunk périmé) ; sinon on laisse Vite/le routeur réessayer.
+	// Le marqueur ":suppressed" mesure les rechargements intempestifs ainsi évités.
+	const message = (event as { payload?: { message?: string } })?.payload?.message || ''
+	const assetUrl = message.match(/https?:\/\/\S+/)?.[0]
+	if (!assetUrl) { reloadWithCacheBust(); return }
+	fetch(assetUrl, { method: 'HEAD', cache: 'no-store' })
+		.then(r => {
+			if (r.ok) reportHidden('vite:preloadError:suppressed', message) // asset 200 → reload évité
+			else reloadWithCacheBust()                                      // 404 → vrai stale → reload
+		})
+		.catch(() => reportHidden('vite:preloadError:suppressed', message + ' (head error)'))
 })
 
 // Enregistre une erreur normalement avalée (bruit navigateur/cache, chunk périmé,
