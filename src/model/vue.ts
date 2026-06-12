@@ -105,8 +105,10 @@ window.addEventListener('vite:preloadError', (event) => {
 	// encore (HTTP 200). On ne recharge donc toute la page (#_r=) QUE si l'asset a vraiment
 	// disparu (404 = vrai chunk périmé) ; sinon on laisse Vite/le routeur réessayer.
 	// Le marqueur ":suppressed" mesure les rechargements intempestifs ainsi évités.
+	// Le message est soit "...module: https://.../assets/x.js" (URL absolue, erreurs JS),
+	// soit "Unable to preload CSS for /assets/x.css" (chemin relatif, erreurs CSS) : capter les deux.
 	const message = (event as { payload?: { message?: string } })?.payload?.message || ''
-	const assetUrl = message.match(/https?:\/\/\S+/)?.[0]
+	const assetUrl = message.match(/https?:\/\/\S+|\/[^\s'"]+\.(?:css|m?js)/)?.[0]
 	if (!assetUrl) { reloadWithCacheBust(); return }
 	fetch(assetUrl, { method: 'HEAD', cache: 'no-store' })
 		.then(r => {
