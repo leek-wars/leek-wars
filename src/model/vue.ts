@@ -99,11 +99,39 @@ function reloadWithCacheBust() {
 	window.location.replace(url.toString())
 }
 
-window.addEventListener('vite:preloadError', reloadWithCacheBust)
+window.addEventListener('vite:preloadError', (event) => {
+	reportHidden('vite:preloadError', (event as { payload?: { message?: string } })?.payload?.message)
+	reloadWithCacheBust()
+})
+
+// Enregistre une erreur normalement avalée (bruit navigateur/cache, chunk périmé,
+// annulation Monaco) en "masquée" côté serveur : loggée pour mesurer son volume mais
+// sans issue GitHub ni notification admin, et exclue de la vue par défaut de #admin/errors.
+// Throttle 1s indépendant des vraies erreurs pour ne pas s'auto-étouffer mutuellement.
+let lastHiddenSent = 0
+function reportHidden(message: string, stack?: string) {
+	if (LeekWars.DEV) return
+	const now = Date.now()
+	if (now - lastHiddenSent < 1000) return
+	lastHiddenSent = now
+	try {
+		LeekWars.post('error/report', {
+			error: message,
+			stack: (stack || '(no stack)') + '\n\nOrigin: hidden',
+			file: document.location.href,
+			locale: i18n.locale,
+			user_agent: navigator.userAgent,
+			hidden: true,
+			build_date: typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : null,
+			build_commit: typeof __BUILD_COMMIT__ !== 'undefined' ? __BUILD_COMMIT__ : null,
+		})
+	} catch { /* best effort */ }
+}
 
 // Suppress Monaco internal error when hovering markers on a disposed editor
 window.addEventListener('error', (event) => {
 	if (event.error?.message?.includes('InstantiationService has been disposed')) {
+		reportHidden(event.error.message, event.error.stack)
 		event.preventDefault()
 	}
 })
@@ -196,10 +224,12 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 		e?.message?.includes('Loading chunk') ||
 		e?.message?.includes('Loading CSS chunk') ||
 		e?.message?.includes('Unable to preload CSS')) {
+		reportHidden(e?.message || String(e), e?.stack)
 		return
 	}
 
 	if (infoAny?.includes?.('runtime-13')) {
+		reportHidden((e?.message || String(e)) + ' [' + infoAny + ']', e?.stack)
 		reloadWithCacheBust()
 		return
 	}
@@ -393,6 +423,7 @@ const app = createApp({
 		// Ignore Monaco "Canceled" errors (normal behavior when switching files/canceling operations)
 		window.addEventListener('unhandledrejection', (event) => {
 			if (event.reason?.message === 'Canceled' || event.reason?.message === 'Model not found') {
+				reportHidden(event.reason.message, event.reason.stack)
 				event.preventDefault()
 			}
 		})

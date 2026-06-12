@@ -11,6 +11,8 @@
 				<loader v-if="!errors" />
 				<div v-else>
 					<div class="delete">
+						<v-btn size="small" :color="showHidden ? 'primary' : undefined" :prepend-icon="showHidden ? 'mdi-eye-off' : 'mdi-eye-off-outline'" @click="toggleHidden">{{ showHidden ? 'Masquées' : 'Erreurs masquées' }}</v-btn>
+						<div class="spacer"></div>
 						Supprimer par mot-clé
 						<input v-model="deleteQuery" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
 						<v-btn size="small" @click="deleteErrors">Supprimer</v-btn>
@@ -23,6 +25,7 @@
 								<div class="header">
 									<v-icon color="error" @click="removeError(error.id)">mdi-delete</v-icon>
 									<div>Erreur #{{ error.id }} - <b>{{ LeekWars.formatDateTime(error.time) }}</b> - Type {{ error.type }} - Gravité {{ error.severity }}</div>
+									<span v-if="error.hidden" class="hidden-tag">masquée</span>
 									<span v-if="error.service" class="service" :class="error.service">{{ error.service }}</span>
 									<div class="spacer"></div>
 									<flag v-if="error.locale" class="locale" :code="LeekWars.languages[error.locale]?.country" />
@@ -112,6 +115,7 @@
 		user_agent?: string
 		locale?: string
 		service?: string
+		hidden?: boolean
 		build_commit?: string
 		build_date?: string
 		build: { stale: boolean; age: string; title: string; staleDays: number }
@@ -140,6 +144,7 @@
 	const errors = ref<ErrorEntry[] | null>(null)
 	const deleteQuery = ref('')
 	const newErrors = ref(0)
+	const showHidden = ref(false)
 	const traceExpanded = ref<Record<number, boolean>>({})
 	const traceOverflows = ref<Record<number, boolean>>({})
 	let resizeObserver: ResizeObserver | null = null
@@ -168,8 +173,14 @@
 		traceExpanded.value = { ...traceExpanded.value, [index]: expanded }
 	}
 
+	function toggleHidden() {
+		showHidden.value = !showHidden.value
+		errors.value = null
+		update()
+	}
+
 	function update() {
-		LeekWars.get('error/get-latest').then(data => {
+		LeekWars.get('error/get-latest' + (showHidden.value ? '?hidden=1' : '')).then(data => {
 			for (const error of data.errors) {
 				error.build = computeBuildInfo(error)
 			}
@@ -177,7 +188,8 @@
 			traceExpanded.value = {}
 			traceOverflows.value = {}
 			nextTick(() => observeTraces())
-			store.commit('error-count', data.count)
+			// En vue masquée, data.count = nombre de masquées : ne pas écraser le badge non-lu.
+			if (!showHidden.value) store.commit('error-count', data.count)
 			LeekWars.setTitle("Gestionnaire d'erreur (" + (store.state.farmer ? store.state.farmer!.errors : 0) + ")")
 		})
 	}
@@ -302,6 +314,15 @@
 			border-radius: 3px;
 			background: #e57373;
 			color: white;
+		}
+		.hidden-tag {
+			font-size: 11px;
+			font-weight: bold;
+			padding: 2px 6px;
+			border-radius: 3px;
+			background: #9e9e9e;
+			color: white;
+			text-transform: uppercase;
 		}
 		.ip {
 			font-family: monospace;
