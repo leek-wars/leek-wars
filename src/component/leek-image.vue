@@ -87,7 +87,7 @@ const HAT_SIZES: { [key: number]: {width: number, height: number} } = {
 	40: {width: 300, height: 205},
 	41: {width: 300, height: 187},
 	42: {width: 270, height: 377},
-	43: {width: 342, height: 317},
+	43: {width: 358, height: 343},
 	44: {width: 262, height: 192},
 	45: {width: 370, height: 384},
 }
