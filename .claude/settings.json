@@ -41,7 +41,12 @@
       "mcp__blender__render_viewport_to_path",
       "mcp__blender__execute_blender_code_for_cli",
       "mcp__blender__execute_blender_code",
-      "mcp__chrome-devtools__new_page"
+      "mcp__chrome-devtools__new_page",
+      "mcp__chrome-devtools__list_console_messages",
+      "mcp__chrome-devtools__list_network_requests",
+      "mcp__chrome-devtools__get_network_request",
+      "mcp__chrome-devtools__resize_page",
+      "mcp__chrome-devtools__close_page"
     ]
   }
 }
