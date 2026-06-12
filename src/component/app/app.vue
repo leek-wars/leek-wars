@@ -611,9 +611,6 @@
 			outline-offset: -4px;
 		}
 	}
-	#app.beta {
-		background: #492e46;
-	}
 	.console-button.v-icon {
 		position: fixed;
 		top: 44px;
