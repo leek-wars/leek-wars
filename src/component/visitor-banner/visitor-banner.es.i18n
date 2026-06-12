@@ -7,5 +7,6 @@
 	"play": "¡Jugar!",
 	"error_register": "No se pudo registrar, inténtalo de nuevo o usa la página de inicio.",
 	"minimize": "Minimizar",
-	"finish": "¡Termina tu puerro!"
+	"finish": "¡Termina tu puerro!",
+	"random": "¡Sorpréndeme!"
 }

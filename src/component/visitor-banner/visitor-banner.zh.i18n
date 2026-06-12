@@ -7,5 +7,6 @@
 	"play": "开始游戏！",
 	"error_register": "注册失败，请重试或使用首页。",
 	"minimize": "最小化",
-	"finish": "完成你的韭菜！"
+	"finish": "完成你的韭菜！",
+	"random": "随机！"
 }

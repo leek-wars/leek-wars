@@ -7,5 +7,6 @@
 	"play": "Jouer !",
 	"error_register": "Inscription impossible, réessaie ou passe par la page d'accueil.",
 	"minimize": "Réduire",
-	"finish": "Termine ton poireau !"
+	"finish": "Termine ton poireau !",
+	"random": "Surprends-moi !"
 }

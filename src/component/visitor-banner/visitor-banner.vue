@@ -7,7 +7,10 @@
 			<div class="title">Leek Wars</div>
 			<div class="pitch">{{ t('pitch') }}</div>
 			<div class="form">
-				<input ref="nameInput" v-model="leekName" :placeholder="t('leek_name')" maxlength="20" @keyup.enter="submit">
+				<div class="name-row">
+					<input ref="nameInput" v-model="leekName" :placeholder="t('leek_name')" maxlength="20" @keyup.enter="submit">
+					<div v-ripple class="dice" :title="t('random')" @click="randomize"><v-icon>mdi-dice-multiple</v-icon></div>
+				</div>
 				<div class="skins">
 					<div v-for="s in [1, 2, 3, 4, 5, 6, 7, 8]" :key="s" v-ripple class="skin" :class="{['skin-' + s]: true, selected: skin === s}" @click="skin = s"></div>
 				</div>
@@ -18,7 +21,7 @@
 				<div v-if="error" class="error">{{ error }}</div>
 			</div>
 		</div>
-		<button v-ripple class="cta" :disabled="loading" @click="submit">{{ t('play') }}</button>
+		<button v-ripple class="cta" :disabled="loading || !leekName.trim()" @click="submit">{{ t('play') }}</button>
 		<v-icon class="close" :title="t('minimize')" @click="minimize">mdi-chevron-down</v-icon>
 	</div>
 	<div v-else-if="enabled" v-ripple class="visitor-bubble" :title="t('pitch')" @click="reopen">
@@ -95,7 +98,7 @@ function arm() {
 	} else {
 		// Courte temporisation pour laisser la page s'afficher d'abord (pas de
 		// déclenchement au scroll : certaines pages ne scrollent pas).
-		timer = window.setTimeout(reveal, 1500)
+		timer = window.setTimeout(reveal, 500)
 	}
 }
 function disarm() {
@@ -118,6 +121,22 @@ function minimize() {
 	minimized.value = true
 	localStorage.setItem(MINIMIZED_KEY, '1')
 }
+// Générateur de pseudos pour le bouton dé : composés prononçables, optionnellement
+// numérotés, toujours valides côté serveur (lettres/chiffres, 4-20 caractères).
+const NAME_STARTS = ['Poiro', 'Leek', 'Porro', 'Turbo', 'Mega', 'Ultra', 'Dark', 'Super', 'Cyber', 'Atomik', 'Ninja', 'Pixel', 'Quantum', 'Astro', 'Hyper', 'Krypto', 'Zappy', 'Iron', 'Shadow', 'Volt', 'Spicy', 'Disco']
+const NAME_ENDS = ['tron', 'zor', 'max', 'flash', 'storm', 'byte', 'wave', 'blade', 'boss', 'prime', 'mancer', 'punch', 'racer', 'nator', 'splash', 'fury', 'spark', 'rex', 'leek', 'mix']
+function pick<T>(list: T[]): T {
+	return list[Math.floor(Math.random() * list.length)]
+}
+function randomize() {
+	const start = pick(NAME_STARTS)
+	let end = pick(NAME_ENDS)
+	while (start.toLowerCase().includes('leek') && end === 'leek') { end = pick(NAME_ENDS) }
+	leekName.value = start + end + (Math.random() < 0.4 ? String(1 + Math.floor(Math.random() * 98)) : '')
+	skin.value = 1 + Math.floor(Math.random() * 8)
+	hat.value = pick([0, ...hatList.value])
+}
+
 function reopen() {
 	minimized.value = false
 	visible.value = true
@@ -165,7 +184,7 @@ function submit() {
 		background: linear-gradient(115deg, #2a7a05, #5fad1b, #8bc34a, #5fad1b, #2a7a05);
 		background-size: 300% 300%;
 		box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
-		transform: translateX(-50%) translateY(calc(100% + 20px));
+		transform: translateX(-50%) translateY(calc(100% + 80px));
 		transition: transform 0.55s cubic-bezier(0.22, 1.4, 0.36, 1);
 		animation: visitor-banner-gradient 9s ease-in-out infinite;
 		&.visible {
@@ -225,6 +244,27 @@ function submit() {
 			&::placeholder {
 				color: #999;
 			}
+		}
+	}
+	.name-row {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+	.dice {
+		flex-shrink: 0;
+		width: 38px;
+		height: 38px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(255, 255, 255, 0.22);
+		border-radius: 8px;
+		cursor: pointer;
+		transition: background 0.15s ease, transform 0.3s ease;
+		&:hover {
+			background: rgba(255, 255, 255, 0.4);
+			transform: rotate(180deg);
 		}
 	}
 	.skins {
@@ -344,6 +384,7 @@ function submit() {
 	.bubble-name {
 		font-weight: bold;
 		font-size: 14px;
+		margin-bottom: 4px;
 		max-width: 150px;
 		overflow: hidden;
 		text-overflow: ellipsis;
