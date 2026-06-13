@@ -492,7 +492,7 @@
 		else if (k === 76) { game.value.showLifes = !game.value.showLifes; e.preventDefault() }
 		else if (k === 79) { game.value.shadows = !game.value.shadows; e.preventDefault() }
 		else if (k === 71) { game.value.largeActions = !game.value.largeActions; e.preventDefault() }
-		else if (k === 78) { game.value.dark = !game.value.dark; e.preventDefault() }
+		else if (k === 78) { game.value.autoDark = false; game.value.dark = !game.value.dark; e.preventDefault() }
 		else if (k === 84) { game.value.tactic = !game.value.tactic; e.preventDefault() }
 		else if (k === 68) { game.value.displayDebugs = !game.value.displayDebugs; e.preventDefault() }
 		else if (k === 85) { game.value.plainBackground = !game.value.plainBackground; e.preventDefault() }
@@ -710,7 +710,9 @@
 	})
 	watch(() => game.value.actionsWidth, () => { localStorage.setItem('fight/actions-width', '' + game.value.actionsWidth); resize() })
 	watch(() => game.value.dark, () => { localStorage.setItem('fight/dark', '' + game.value.dark); game.value.toggleDark() })
-	watch(() => game.value.autoDark, () => { localStorage.setItem('fight/auto-dark', '' + game.value.autoDark) })
+	watch(() => game.value.autoDark, () => { localStorage.setItem('fight/auto-dark', '' + game.value.autoDark); game.value.toggleDark() })
+	// En mode auto, la Nexus suit le thème du site (clair / sombre) en direct.
+	watch(() => LeekWars.darkMode, () => { if (game.value.autoDark) game.value.toggleDark() })
 	watch(() => game.value.plainBackground, () => { localStorage.setItem('fight/plain-background', '' + game.value.plainBackground); resize() })
 	watch(() => game.value.displayDebugs, () => { localStorage.setItem('fight/debugs', '' + game.value.displayDebugs) })
 	watch(() => game.value.displayAILines, () => { localStorage.setItem('fight/debug-lines', '' + game.value.displayAILines) })

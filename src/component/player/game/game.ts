@@ -485,7 +485,7 @@ class Game {
 
 		this.mapType = this.data.map.type + 1
 		this.map = this.maps[this.mapType]
-		if (this.mapType === 0 && this.dark) {
+		if (this.mapType === 0 && this.isDark()) {
 			this.map = this.darkNexus
 		}
 		this.map.seed = fight.id
@@ -3100,7 +3100,7 @@ class Game {
 
 	public updateMap() {
 		this.map = this.maps[this.mapType]
-		if (this.mapType === 0 && this.dark) {
+		if (this.mapType === 0 && this.isDark()) {
 			this.map = this.darkNexus
 		}
 		this.map.create()
@@ -3113,15 +3113,22 @@ class Game {
 		this.redraw()
 	}
 
+	// État sombre effectif : en mode auto on suit le thème du site, sinon le
+	// réglage manuel (touche N / switch). Pilote le choix Nexus / DarkNexus.
+	public isDark(): boolean {
+		return this.autoDark ? LeekWars.darkMode : this.dark
+	}
+
 	public toggleDark() {
 		if (this.mapType == 0) {
-			if (this.dark) {
+			if (this.isDark()) {
 				this.map = this.darkNexus
 			} else {
 				this.map = this.maps[this.mapType]
 			}
 			this.map.create()
 			this.atmosphere = this.map.options.sound
+			this.redraw()
 		}
 	}
 }
