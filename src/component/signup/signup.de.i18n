@@ -21,6 +21,8 @@
 	"error_password_length": "Das Passwort muss zwischen {0} und {1} Zeichen enthalten",
 	"godfather": "Sponsor (Optional)",
 	"godfather_invite": "{0} lädt dich zu Leek Wars ein!",
+	"godfather_stats": "Level {0} · {1} Lauche",
+	"godfather_rewards": "Registriere dich und erhalte 20.000 {habs} + 20 {crystals} + 20 Kämpfe!",
 	"help_tutorial_doc": "Hilfe, Anleitung, Dokumentation",
 	"intro": "<b>Leek Wars</b> ist ein Programmierspiel, in dem du den mächtigsten Lauch erschaffen und deine Feinde vernichten musst!<br><br>\nEntwickeln Sie Ihre eigene künstliche Intelligenz dank <b>LeekScript</b>, einer leicht zu erlernenden Sprache,\nund werde der beste Züchter!",
 	"last_update": "Letztes Update",

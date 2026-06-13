@@ -21,6 +21,8 @@
 	"error_password_length": "비밀번호는 {0}에서 {1}자 사이여야 합니다.",
 	"godfather": "추천인 (선택사항)",
 	"godfather_invite": "{0} 님이 Leek Wars에 초대합니다!",
+	"godfather_stats": "레벨 {0} · 파 {1}개",
+	"godfather_rewards": "가입하고 20,000 {habs} + 20 {crystals} + 전투 20회 받으세요!",
 	"help_tutorial_doc": "도움말, 튜토리얼, 문서",
 	"intro": "<b>부추 전쟁</b>은 가장 강력한 부추를 만들고 적을 파괴해야 하는 프로그래밍 게임입니다!<br><br>\n배우기 쉬운 언어인 <b>LeekScript</b> 덕분에 나만의 인공 지능을 개발할 수 있습니다.\n최고의 육종가가 되십시오!",
 	"last_update": "마지막 업데이트",

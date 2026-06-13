@@ -21,6 +21,8 @@
 	"error_password_length": "La contraseña debe contener entre {0} y {1} caracteres",
 	"godfather": "Patrocinador (Opcional)",
 	"godfather_invite": "¡{0} te invita a Leek Wars!",
+	"godfather_stats": "Nivel {0} · {1} puerros",
+	"godfather_rewards": "¡Regístrate y recibe 20.000 {habs} + 20 {crystals} + 20 combates!",
 	"help_tutorial_doc": "Ayuda, tutorial, doc",
 	"intro": "¡<b>Leek Wars</b> es un juego de programación en el que debes crear el puerro más poderoso y destruir a tus enemigos!<br><br>\nDesarrolla tu propia inteligencia artificial gracias a <b>LeekScript</b>, un lenguaje fácil de aprender,\n¡y conviértete en el mejor criador!",
 	"last_update": "Última actualización",

@@ -21,6 +21,8 @@
 	"error_password_length": "Wachtwoord moet tussen {0} en {1} tekens bevatten",
 	"godfather": "Sponsor (optioneel)",
 	"godfather_invite": "{0} nodigt je uit voor Leek Wars!",
+	"godfather_stats": "Niveau {0} · {1} preien",
+	"godfather_rewards": "Meld je aan en ontvang 20.000 {habs} + 20 {crystals} + 20 gevechten!",
 	"help_tutorial_doc": "Help, zelfstudie, doc",
 	"intro": "<b>Leek Wars</b> is een programmeerspel waarin je de krachtigste prei moet maken en je vijanden moet vernietigen!<br><br>\nOntwikkel uw eigen kunstmatige intelligentie dankzij <b>LeekScript</b>, een gemakkelijk te leren taal,\nen word de beste fokker!",
 	"last_update": "Laatste update",

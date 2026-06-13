@@ -21,6 +21,8 @@
 	"error_password_length": "Salasanan tulee sisältää {0}–{1} merkkiä",
 	"godfather": "Sponsori (valinnainen)",
 	"godfather_invite": "{0} kutsuu sinut Leek Warsiin!",
+	"godfather_stats": "Taso {0} · {1} purjoa",
+	"godfather_rewards": "Rekisteröidy ja saat 20 000 {habs} + 20 {crystals} + 20 taistelua!",
 	"help_tutorial_doc": "Ohje, opetusohjelma, doc",
 	"intro": "<b>Leek Wars</b> on ohjelmointipeli, jossa sinun on luotava tehokkain purjo ja tuhottava vihollisesi!<br><br>\nKehitä omaa tekoälyäsi <b>LeekScriptin</b> avulla, joka on helposti opittava kieli,\nja tule parhaaksi kasvattajaksi!",
 	"last_update": "Viimeisin päivitys",

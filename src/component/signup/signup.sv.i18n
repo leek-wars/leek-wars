@@ -21,6 +21,8 @@
 	"error_password_length": "Lösenordet måste innehålla mellan {0} och {1} tecken",
 	"godfather": "Sponsor (valfritt)",
 	"godfather_invite": "{0} bjuder in dig till Leek Wars!",
+	"godfather_stats": "Nivå {0} · {1} purjolökar",
+	"godfather_rewards": "Registrera dig och få 20 000 {habs} + 20 {crystals} + 20 strider!",
 	"help_tutorial_doc": "Hjälp, handledning, doc",
 	"intro": "<b>Leek Wars</b> är ett programmeringsspel där du måste skapa den mest kraftfulla purjolöken och förstöra dina fiender!<br><br>\nUtveckla din egen artificiella intelligens tack vare <b>LeekScript</b>, ett språk som är lätt att lära sig,\noch bli den bästa uppfödaren!",
 	"last_update": "Senaste uppdateringen",

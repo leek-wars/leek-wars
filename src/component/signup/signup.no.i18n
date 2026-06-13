@@ -21,6 +21,8 @@
 	"error_password_length": "Passordet må inneholde mellom {0} og {1} tegn",
 	"godfather": "Sponsor (valgfritt)",
 	"godfather_invite": "{0} inviterer deg til Leek Wars!",
+	"godfather_stats": "Nivå {0} · {1} purrer",
+	"godfather_rewards": "Registrer deg og få 20 000 {habs} + 20 {crystals} + 20 kamper!",
 	"help_tutorial_doc": "Hjelp, veiledning, doc",
 	"intro": "<b>Leek Wars</b> er et programmeringsspill der du må lage den kraftigste purren og ødelegge fiendene dine!<br><br>\nUtvikle din egen kunstige intelligens takket være <b>LeekScript</b>, et språk som er lett å lære,\nog bli den beste oppdretteren!",
 	"last_update": "Siste oppdatering",

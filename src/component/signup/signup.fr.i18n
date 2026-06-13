@@ -21,6 +21,8 @@
 	"error_password_length": "Le mot de passe doit contenir entre {0} et {1} caractères",
 	"godfather": "Parrain (Facultatif)",
 	"godfather_invite": "{0} t'invite sur Leek Wars !",
+	"godfather_stats": "Niveau {0} · {1} poireaux",
+	"godfather_rewards": "Inscris-toi et reçois 20 000 {habs} + 20 {crystals} + 20 combats !",
 	"help_tutorial_doc": "Aide, tutoriel, doc",
 	"intro": "<b>Leek Wars</b> est un jeu de programmation dans lequel vous devez créer le plus puissant poireau et détruire vos ennemis !<br><br>\nDéveloppez votre propre intelligence artificielle grâce au <b>LeekScript</b>, un langage facile à apprendre, \net devenez le meilleur éleveur !",
 	"last_update": "Dernière mise à jour",

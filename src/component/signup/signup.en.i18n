@@ -21,6 +21,8 @@
 	"error_password_length": "The password must contain between {0} and {1} characters",
 	"godfather": "Referrer (Optional)",
 	"godfather_invite": "{0} invites you to Leek Wars!",
+	"godfather_stats": "Level {0} · {1} leeks",
+	"godfather_rewards": "Sign up and get 20,000 {habs} + 20 {crystals} + 20 fights!",
 	"help_tutorial_doc": "Help, tutorial, documentation",
 	"intro": "<b>Leek Wars</b> is a programming game in which you have to create the most powerful leek and destroy your enemies!<br><br>\nDevelop your own artificial intelligence thanks to <b>LeekScript</b>, an easy to learn language and become the best farmer!",
 	"last_update": "Last update",
