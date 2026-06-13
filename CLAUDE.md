@@ -2,9 +2,9 @@
 
 ## Structure du projet
 
-- **Frontend Vue.js 2** avec TypeScript et Vuetify
+- **Frontend Vue.js 3** (Composition API, `<script setup>`) avec TypeScript, **Vite 7** et **Vuetify 3**
 - **Éditeur de code** : Monaco Editor (`src/component/editor/`)
-- **Point d'entrée** : `src/model/vue.ts`
+- **Points d'entrée** : `index.html` charge `src/lang/locale/<lang>.ts` (traductions) puis `src/main.ts` (app). `main.ts` importe `src/model/vue.ts` qui bootstrappe l'app via `createApp`.
 
 ## Changelogs
 
