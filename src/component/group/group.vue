@@ -90,6 +90,9 @@
 		<panel v-if="group" toggle="group/members" icon="mdi-account-group">
 			<template #title>{{ $t('members') }} ({{ group.members.length }})</template>
 			<template #actions>
+				<div v-if="group.is_supervisor" class="button" @click="inviteDialog = true">
+					<v-icon>mdi-account-plus</v-icon> {{ $t('invite_friends') }}
+				</div>
 				<div v-if="group.is_supervisor" class="button" @click="giveMoneyDialog = true; giveMoneyTarget = null">
 					<v-icon>mdi-hand-coin-outline</v-icon>
 				</div>
@@ -450,6 +453,8 @@
 
 		<capital-dialog ref="capitalDialog" v-model="capitalDialogOpened" :leek="(characteristics as any)" :total-capital="totalCapital" :restat="true" />
 
+		<invite-dialog v-model="inviteDialog" />
+
 		<popup v-if="group" v-model="giveItemDialog" :width="800" class="give-item-dialog">
 			<template #icon>
 				<v-icon>mdi-gift-outline</v-icon>
@@ -560,6 +565,7 @@
 	import { CHIPS } from '@/model/chips'
 	import Item from '@/component/item.vue'
 	import CapitalDialog from '../leek/capital-dialog.vue'
+	import InviteDialog from '@/component/invite-dialog/invite-dialog.vue'
 	import { computed, defineAsyncComponent, reactive, ref, useTemplateRef } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
@@ -569,7 +575,7 @@
 	const TournamentsHistory = defineAsyncComponent(() => import('@/component/history/tournaments-history.vue'))
 	const Chat = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
 
-	defineOptions({ name: 'Group', i18n: {}, mixins: [...mixins], components: { RichTooltipTeam, RichTooltipFarmer, CharacteristicTooltip, RichTooltipItem, CapitalDialog, Item } })
+	defineOptions({ name: 'Group', i18n: {}, mixins: [...mixins], components: { RichTooltipTeam, RichTooltipFarmer, CharacteristicTooltip, RichTooltipItem, CapitalDialog, Item, InviteDialog } })
 
 	useI18n() // initialize local scope for <i18n-t>
 	const t = useNamespacedT('group')
@@ -590,6 +596,7 @@
 	const capitalDialog = useTemplateRef<{ capital: number }>('capitalDialog')
 	const applyingEquipment = ref(false)
 	const membersDialog = ref(false)
+	const inviteDialog = ref(false)
 	const characteristics = reactive<{[key: string]: number} & {level: number}>({ level: 0 })
 	const deleteMemberDialog = ref(false)
 	const memberToDelete = ref<Member | null>(null)

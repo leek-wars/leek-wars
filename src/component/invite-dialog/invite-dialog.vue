@@ -8,6 +8,8 @@
 
 		<div ref="linkElement" class="invite-url" @click="selectLink">{{ link }}</div>
 
+		<img class="invite-qr" :src="qrUrl" alt="QR code" width="170" height="170" loading="lazy">
+
 		<div class="share-buttons">
 			<a class="share x" :href="shareUrls.x" target="_blank" rel="noopener">
 				<v-icon :icon="X_LOGO" />
@@ -69,6 +71,9 @@ const shareUrls = computed(() => {
 	}
 })
 
+// QR code du lien de parrainage (même service que la 2FA). Le lien est public.
+const qrUrl = computed(() => `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=8&data=${encodeURIComponent(fullLink.value)}`)
+
 const canNativeShare = computed(() => typeof navigator !== 'undefined' && !!navigator.share)
 
 function selectLink() {
@@ -100,6 +105,13 @@ function nativeShare() {
 	cursor: pointer;
 	user-select: all;
 	word-break: break-all;
+}
+.invite-qr {
+	display: block;
+	margin: 16px auto 0;
+	background: white;
+	border-radius: 4px;
+	padding: 6px;
 }
 .share-buttons {
 	display: flex;
