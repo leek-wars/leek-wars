@@ -29,6 +29,9 @@ const url = computed(() => props.code ? '/image/flag/' + props.code + '.png?2' :
 		img {
 			width: 100%;
 			height: 100%;
+			// object-fit: contain empêche Safari d'étirer le drapeau quand il
+			// résout mal la taille auto du conteneur inline-flex (#4122).
+			object-fit: contain;
 			border-radius: calc(1px + 6%);
 			box-shadow: 0 1px 2px 0 #0003;
 		}
