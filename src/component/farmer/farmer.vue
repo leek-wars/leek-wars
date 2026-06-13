@@ -354,7 +354,7 @@
 
 		<panel :title="$t('sponsorship')" toggle="trophies/sponsorship" icon="mdi-hat-fedora">
 			<template #actions>
-				<div v-if="myFarmer" class="button flat" @click="openGodfatherDialog"><v-icon>mdi-link-variant</v-icon> {{ $t('godfather_link') }}</div>
+				<div v-if="myFarmer" class="button flat" @click="godfatherDialog = true"><v-icon>mdi-link-variant</v-icon> {{ $t('godfather_link') }}</div>
 			</template>
 			<template #content>
 				<div class="content sponsorship">
@@ -493,12 +493,7 @@
 			</template>
 		</popup>
 
-		<popup v-if="farmer" v-model="godfatherDialog" :width="600" icon="mdi-hat-fedora" :title="$t('godfather_link')">
-			{{ $t('godfather_link_description') }} :
-			<br>
-			<br>
-			<div ref="godfatherLink" class="godfather-url">leekwars.com/godfather/{{ farmer.login }}</div>
-		</popup>
+		<invite-dialog v-if="farmer && myFarmer" v-model="godfatherDialog" :login="farmer.login" />
 
 		<popup v-if="farmer" v-model="countryDialog" :width="1000" icon="mdi-earth" :title="$t('country_selection')">
 			<div class="country-dialog">
@@ -614,6 +609,7 @@
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 	import TitlePicker from '@/component/title/title-picker.vue'
 	import LwTitle from '@/component/title/title.vue'
+	import InviteDialog from '@/component/invite-dialog/invite-dialog.vue'
 	import { emitter } from '@/model/vue'
 	import { Line } from 'vue-chartjs'
 	import type { ChartData, ChartOptions } from 'chart.js'
@@ -626,7 +622,7 @@
 	const ReportDialog = defineAsyncComponent(() => import('@/component/moderation/report-dialog.vue'))
 
 	defineOptions({ name: 'Farmer', i18n: {}, mixins: [...mixins], components: {
-		RichTooltipFarmer, RichTooltipTeam, RichTooltipLeek, TitlePicker, 'lw-title': LwTitle, 'rich-tooltip-item': RichTooltipItem, Line,
+		RichTooltipFarmer, RichTooltipTeam, RichTooltipLeek, TitlePicker, 'lw-title': LwTitle, 'rich-tooltip-item': RichTooltipItem, Line, InviteDialog,
 	} })
 
 	const { locale: i18nLocale } = useI18n()
@@ -636,7 +632,6 @@
 	const avatarRef = useTemplateRef<ComponentPublicInstance>('avatar')
 	const avatarInput = useTemplateRef<HTMLInputElement>('avatarInput')
 	const pickerRef = useTemplateRef<InstanceType<typeof TitlePicker>>('picker')
-	const godfatherLink = useTemplateRef<HTMLElement>('godfatherLink')
 
 	type Trophy = (typeof LeekWars.trophies)[number]
 	const farmer = ref<Farmer | null>(null)
@@ -902,12 +897,6 @@
 		}
 	}
 
-	function openGodfatherDialog() {
-		godfatherDialog.value = true
-		setTimeout(() => {
-			LeekWars.selectText(godfatherLink.value)
-		}, 100)
-	}
 
 	function selectCountry(code: string) {
 		if (farmer.value) {
