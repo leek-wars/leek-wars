@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="menu">
+	<nav class="menu">
 
 		<div v-if="!LeekWars.mobile" class="menu-button" @click="LeekWars.menuCollapsed = !LeekWars.menuCollapsed">
 			<v-icon v-if="LeekWars.menuCollapsed">mdi-chevron-right</v-icon>
@@ -250,7 +250,7 @@
 				</div>
 			</v-card>
 		</v-menu>
-	</div>
+	</nav>
 </template>
 
 <script setup lang="ts">

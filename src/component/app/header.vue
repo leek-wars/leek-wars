@@ -1,5 +1,5 @@
 <template lang="html">
-	<div v-if="LeekWars.header" class="header">
+	<header v-if="LeekWars.header" class="header">
 		<div class="header-left">
 			<router-link to="/">
 				<div class="logo-wrapper">
@@ -175,7 +175,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</header>
 </template>
 
 <script lang="ts" setup>

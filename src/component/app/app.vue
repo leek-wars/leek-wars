@@ -1,5 +1,7 @@
 <template>
 	<div id="app" :class="{ connected: $store.state.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw, xp: LeekWars.xpTheme, dark: LeekWars.darkMode, 'menu-collapsed': !LeekWars.mobile && LeekWars.menuCollapsed, beta: env.BETA, lightbar: LeekWars.lightBar }" data-app="true" @mousemove="mousemove">
+				<a class="skip-link" href="#main-content">{{ $t('main.skip_to_content') }}</a>
+
 				<div :class="{visible: LeekWars.dark > 0}" :style="{opacity: LeekWars.dark}" class="dark-shadow" @click="darkClick"></div>
 
 				<div class="requests">{{ LeekWars.requests }} <v-btn size="x-small" @click="LeekWars.requests = 0">reset</v-btn></div>
@@ -15,9 +17,9 @@
 				<div class="app-center">
 					<div :class="{large: LeekWars.large || LeekWars.flex, flex: LeekWars.flex, box: LeekWars.box}" class="app-wrapper">
 						<lw-header v-if="!LeekWars.mobile || !$store.state.connected" />
-						<div class="page-wrapper">
+						<main id="main-content" class="page-wrapper">
 							<router-view :key="LeekWars.routerViewKey" />
-						</div>
+						</main>
 						<lw-footer v-if="LeekWars.footer" />
 					</div>
 				</div>
@@ -545,6 +547,25 @@
 </script>
 
 <style lang="scss" scoped>
+	// Lien d'évitement (a11y) : invisible jusqu'au focus clavier, amène
+	// directement au contenu principal en sautant le menu et l'en-tête.
+	.skip-link {
+		position: absolute;
+		left: 8px;
+		top: -48px;
+		z-index: 10000;
+		padding: 10px 16px;
+		background: var(--primary);
+		color: #fff;
+		font-weight: 500;
+		border-radius: 0 0 4px 4px;
+		transition: top 0.15s ease;
+		&:focus {
+			top: 0;
+			outline: 2px solid #fff;
+			outline-offset: -4px;
+		}
+	}
 	#app.beta {
 		background: #492e46;
 	}
