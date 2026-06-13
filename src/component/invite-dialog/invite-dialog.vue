@@ -1,7 +1,10 @@
 <template lang="html">
 	<popup :model-value="modelValue" :width="560" icon="mdi-hat-fedora" :title="t('title')" @update:model-value="$emit('update:modelValue', $event)">
 
-		<div class="intro">{{ t('description') }}</div>
+		<i18n-t keypath="description" tag="div" class="intro">
+			<template #habs><span class="hab"></span></template>
+			<template #crystals><span class="crystal"></span></template>
+		</i18n-t>
 
 		<div ref="linkElement" class="invite-url" @click="selectLink">{{ link }}</div>
 
