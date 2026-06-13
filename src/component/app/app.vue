@@ -45,6 +45,8 @@
 
 				<check-email-reminder v-if="showCheckEmailReminder" v-model="showCheckEmailReminder" />
 
+				<invite-dialog v-if="inviteDialogOpen" v-model="inviteDialogOpen" />
+
 				<activation-welcome v-if="showActivationWelcome" v-model="showActivationWelcome" />
 
 			<visitor-banner v-if="!$store.state.connected" />
@@ -214,6 +216,7 @@
 	const ConsoleWindow = defineAsyncComponent(() => import('./console-window.vue'))
 	const VerifyPopup = defineAsyncComponent(() => import('@/component/verify-popup/verify-popup.vue'))
 	const CheckEmailReminder = defineAsyncComponent(() => import('@/component/check-email-reminder/check-email-reminder.vue'))
+	const InviteDialog = defineAsyncComponent(() => import('@/component/invite-dialog/invite-dialog.vue'))
 	const ActivationWelcome = defineAsyncComponent(() => import('@/component/activation-welcome/activation-welcome.vue'))
 	const VisitorBanner = defineAsyncComponent(() => import('@/component/visitor-banner/visitor-banner.vue'))
 	const VerifyBanner = defineAsyncComponent(() => import('@/component/verify-banner/verify-banner.vue'))
@@ -341,6 +344,30 @@
 			if (!value) checkEmailReminderDismissed.value = true
 		}
 	})
+
+	// Nudge parrainage : on propose au joueur engagé (15 victoires) d'inviter ses
+	// amis, une seule fois. Le flag vit en base (invite_dialog_seen_at) car le
+	// localStorage peut être vidé et reverrait le dialog sur un autre compte du
+	// même navigateur (même piège que la verify-popup). On ne concurrence pas le
+	// flux de validation email.
+	const inviteDialogOpen = ref(false)
+	watch(() => {
+		const f = store.state.farmer
+		if (!f || f.invite_dialog_seen_at) return false
+		if ((f.victories ?? 0) < 15) return false
+		if (!f.verified && (showVerifyPopup.value || showCheckEmailReminder.value)) return false
+		return true
+	}, (shouldShow) => {
+		if (shouldShow && !inviteDialogOpen.value) {
+			inviteDialogOpen.value = true
+			// Marque vu immédiatement pour ne jamais re-déclencher, sans fermer le
+			// dialog (piloté par inviteDialogOpen, découplé du flag).
+			const f = store.state.farmer!
+			f.invite_dialog_seen_at = Math.floor(Date.now() / 1000)
+			LeekWars.post('farmer/dismiss-invite-dialog')
+		}
+	}, { immediate: true })
+
 	const aprilFoolsDialog = ref(false)
 	const doc = useTemplateRef<import('vue').ComponentPublicInstance>('doc')
 

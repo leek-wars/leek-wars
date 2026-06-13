@@ -75,6 +75,7 @@ class Farmer {
 	public didactitiel_completed_at!: number | null
 	public verify_modal_dismissed_at!: number | null
 	public verify_code_at!: number | null
+	public invite_dialog_seen_at!: number | null
 	public last_connection!: number
 	public moderator!: boolean
 	public admin!: boolean

@@ -277,6 +277,9 @@
 				<div v-if="owner && !membersTableView && editMembers" class="button flat" @click="editMembers = false">
 					<v-icon>mdi-check</v-icon>
 				</div>
+				<div v-if="is_member" class="button flat" @click="inviteDialog = true">
+					<v-icon>mdi-account-plus</v-icon> {{ $t('invite_friends') }}
+				</div>
 				<div v-if="is_member || $store.state.farmer?.admin" class="button flat" @click="toggleMembersView">
 					<v-icon>{{ membersTableView ? 'mdi-view-grid' : 'mdi-view-list' }}</v-icon>
 				</div>
@@ -809,6 +812,8 @@
 			</v-radio-group>
 		</popup>
 
+		<invite-dialog v-model="inviteDialog" />
+
 	</div>
 </template>
 
@@ -833,6 +838,7 @@
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
 	import TurretImage from '@/component/turret-image.vue'
 	import AIElement from '@/component/app/ai.vue'
+	import InviteDialog from '@/component/invite-dialog/invite-dialog.vue'
 	import { CHIPS } from '@/model/chips'
 	import { computed, defineAsyncComponent, nextTick, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
@@ -846,7 +852,7 @@
 	const Explorer = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`))
 
 	defineOptions({ name: 'Team', i18n: {}, mixins: [...mixins], components: {
-		CharacteristicTooltip, RichTooltipItem, RichTooltipLeek, RichTooltipFarmer, RichTooltipComposition, RichTooltipTeam, FightsHistory, TournamentsHistory, ReportDialog, TurretImage, ai: AIElement, Line,
+		CharacteristicTooltip, RichTooltipItem, RichTooltipLeek, RichTooltipFarmer, RichTooltipComposition, RichTooltipTeam, FightsHistory, TournamentsHistory, ReportDialog, TurretImage, ai: AIElement, Line, InviteDialog,
 	} })
 
 	interface ColumnDef {
@@ -898,6 +904,7 @@
 	const captain = ref(false)
 	const owner = ref(false)
 	const showReport = ref(false)
+	const inviteDialog = ref(false)
 	const reasons = [Warning.INCORRECT_EMBLEM, Warning.INCORRECT_TEAM_NAME, Warning.INCORRECT_TEAM_DESCRIPTION]
 	const createCompoDialog = ref(false)
 	const createCompoName = ref('')

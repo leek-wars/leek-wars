@@ -72,6 +72,7 @@
 	"history": "History",
 	"invalid_name": "The team name must be between %1$s and %2$s characters",
 	"join_team": "Join this team",
+	"invite_friends": "Invite friends",
 	"log_change": "Change the visibility level of the logs",
 	"log_change_text": "Change the visibility level of your logs (functions debug(), debugE(), etc.) for your allies (team members) in your fights.",
 	"log_level_0": "Hidden",
