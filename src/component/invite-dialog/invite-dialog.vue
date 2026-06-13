@@ -7,7 +7,7 @@
 
 		<div class="share-buttons">
 			<a class="share x" :href="shareUrls.x" target="_blank" rel="noopener">
-				<v-icon>mdi-alpha-x</v-icon>
+				<v-icon :icon="X_LOGO" />
 				<span>X</span>
 			</a>
 			<a class="share whatsapp" :href="shareUrls.whatsapp" target="_blank" rel="noopener">
@@ -22,14 +22,11 @@
 				<v-icon>mdi-share-variant</v-icon>
 				<span>{{ t('share') }}</span>
 			</div>
-		</div>
-
-		<template #actions>
-			<div v-ripple class="action" @click="copyLink">
+			<div v-ripple class="share copy" @click="copyLink">
 				<v-icon>{{ copied ? 'mdi-check' : 'mdi-content-copy' }}</v-icon>
-				{{ copied ? t('copied') : t('copy') }}
+				<span>{{ copied ? t('copied') : t('copy') }}</span>
 			</div>
-		</template>
+		</div>
 	</popup>
 </template>
 
@@ -46,6 +43,10 @@ defineOptions({ name: 'InviteDialog', i18n: {}, mixins: [...mixins] })
 const props = defineProps<{ modelValue: boolean, login?: string }>()
 defineEmits<{ (e: 'update:modelValue', value: boolean): void }>()
 const t = useNamespacedT('invite-dialog')
+
+// Logo X officiel (absent de @mdi/js) : le set d'icônes Vuetify rend directement
+// un path SVG brut commençant par "M".
+const X_LOGO = 'M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z'
 
 const linkElement = ref<HTMLElement | null>(null)
 const copied = ref(false)
@@ -123,5 +124,6 @@ function nativeShare() {
 	&.whatsapp { background: #25d366; }
 	&.telegram { background: #29a9eb; }
 	&.native { background: var(--primary); }
+	&.copy { background: #607d8b; }
 }
 </style>
