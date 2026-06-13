@@ -18,6 +18,7 @@ import {
 	mdiAlertOutline,
 	mdiAllInclusive,
 	mdiAlphaCCircleOutline,
+	mdiAlphaX,
 	mdiAlphaXBoxOutline,
 	mdiAlphabeticalVariant,
 	mdiApi,
@@ -407,6 +408,7 @@ import {
 	mdiWeatherNight,
 	mdiWeatherSunny,
 	mdiWeb,
+	mdiWhatsapp,
 	mdiWrench,
 	mdiWrenchOutline
 } from '@mdi/js'
@@ -429,6 +431,7 @@ export const mdiIcons: Record<string, string> = {
 	'mdi-alert-outline': mdiAlertOutline,
 	'mdi-all-inclusive': mdiAllInclusive,
 	'mdi-alpha-c-circle-outline': mdiAlphaCCircleOutline,
+	'mdi-alpha-x': mdiAlphaX,
 	'mdi-alpha-x-box-outline': mdiAlphaXBoxOutline,
 	'mdi-alphabetical-variant': mdiAlphabeticalVariant,
 	'mdi-api': mdiApi,
@@ -819,6 +822,7 @@ export const mdiIcons: Record<string, string> = {
 	'mdi-weather-night': mdiWeatherNight,
 	'mdi-weather-sunny': mdiWeatherSunny,
 	'mdi-web': mdiWeb,
+	'mdi-whatsapp': mdiWhatsapp,
 	'mdi-wrench': mdiWrench,
 	'mdi-wrench-outline': mdiWrenchOutline,
 }
