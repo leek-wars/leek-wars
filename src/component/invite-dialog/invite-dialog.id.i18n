@@ -1,8 +1,8 @@
 {
-	"title": "Invite your friends",
-	"description": "Share your sponsorship link. When a friend signs up with it and verifies their account, you both receive Habs {habs} and crystals {crystals}.",
-	"share_message": "Join me on Leek Wars, the battle game where you program the AI of your leeks!",
-	"share": "Share",
-	"copy": "Copy link",
-	"copied": "Link copied!"
+	"title": "Undang temanmu",
+	"description": "Bagikan tautan referralmu. Saat teman mendaftar dengannya dan memverifikasi akunnya, kalian berdua mendapatkan Habs {habs} dan kristal {crystals}.",
+	"share_message": "Bergabunglah denganku di Leek Wars, game pertarungan di mana kamu memprogram AI daun bawangmu!",
+	"share": "Bagikan",
+	"copy": "Salin tautan",
+	"copied": "Tautan disalin!"
 }

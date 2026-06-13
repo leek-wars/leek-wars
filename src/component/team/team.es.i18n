@@ -61,6 +61,7 @@
 	"history": "Histórico",
 	"invalid_name": "El nombre del equipo debe contener entre %1$s y %2$s caracteres",
 	"join_team": "Únete a este equipo",
+	"invite_friends": "Invitar amigos",
 	"leeks": "Puerros ({0})",
 	"level_n": "Nivel {0}",
 	"log_change": "Cambiar el nivel de visibilidad de las trazas",

@@ -61,6 +61,7 @@
 	"history": "履歴",
 	"invalid_name": "チーム名には %1$s から %2$s 文字を含める必要があります",
 	"join_team": "このチームに参加",
+	"invite_friends": "友達を招待",
 	"leeks": "ネギ（{0}）",
 	"level_n": "レベル {0}",
 	"log_change": "トレースの可視性レベルを変更する",

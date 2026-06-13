@@ -61,6 +61,7 @@
 	"history": "Historik",
 	"invalid_name": "Lagnamnet måste innehålla mellan %1$s och %2$s tecken",
 	"join_team": "Gå med i detta team",
+	"invite_friends": "Bjud in vänner",
 	"leeks": "Purjolök ({0})",
 	"level_n": "Nivå {0}",
 	"log_change": "Ändra synlighetsnivån för spår",

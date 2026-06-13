@@ -20,7 +20,7 @@
 	"error_not_same_password": "De to passordene som legges inn må være identiske",
 	"error_password_length": "Passordet må inneholde mellom {0} og {1} tegn",
 	"godfather": "Sponsor (valgfritt)",
-	"godfather_invite": "{0} invites you to Leek Wars!",
+	"godfather_invite": "{0} inviterer deg til Leek Wars!",
 	"help_tutorial_doc": "Hjelp, veiledning, doc",
 	"intro": "<b>Leek Wars</b> er et programmeringsspill der du må lage den kraftigste purren og ødelegge fiendene dine!<br><br>\nUtvikle din egen kunstige intelligens takket være <b>LeekScript</b>, et språk som er lett å lære,\nog bli den beste oppdretteren!",
 	"last_update": "Siste oppdatering",

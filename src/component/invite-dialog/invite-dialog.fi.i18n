@@ -1,8 +1,8 @@
 {
-	"title": "Invite your friends",
-	"description": "Share your sponsorship link. When a friend signs up with it and verifies their account, you both receive Habs {habs} and crystals {crystals}.",
-	"share_message": "Join me on Leek Wars, the battle game where you program the AI of your leeks!",
-	"share": "Share",
-	"copy": "Copy link",
-	"copied": "Link copied!"
+	"title": "Kutsu ystäväsi",
+	"description": "Jaa suosittelulinkkisi. Kun ystävä rekisteröityy sen kautta ja vahvistaa tilinsä, saatte molemmat Habs {habs} ja kristalleja {crystals}.",
+	"share_message": "Liity seuraani Leek Warsissa, taistelupelissä, jossa ohjelmoit purjojesi tekoälyn!",
+	"share": "Jaa",
+	"copy": "Kopioi linkki",
+	"copied": "Linkki kopioitu!"
 }

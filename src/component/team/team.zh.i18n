@@ -61,6 +61,7 @@
 	"history": "历史的",
 	"invalid_name": "团队名称必须包含 %1$s 到 %2$s 个字符",
 	"join_team": "加入这个团队",
+	"invite_friends": "邀请好友",
 	"leeks": "韭菜（{0}）",
 	"level_n": "{0} 级",
 	"log_change": "更改痕迹的可见性级别",

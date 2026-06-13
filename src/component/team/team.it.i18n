@@ -72,6 +72,7 @@
 	"history": "Storico",
 	"invalid_name": "Il nome della squadra deve contenere tra %1$s e %2$s caratteri",
 	"join_team": "Unisciti a questa squadra",
+	"invite_friends": "Invita amici",
 	"leeks": "Porri ({0})",
 	"level_n": "Livello {0}",
 	"log_change": "Modificare il livello di visibilità delle tracce",

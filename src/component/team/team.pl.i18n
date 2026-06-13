@@ -61,6 +61,7 @@
 	"history": "Historia",
 	"invalid_name": "Nazwa zespołu musi zawierać od %1$s do %2$s znaków",
 	"join_team": "Dołącz do tego zespołu",
+	"invite_friends": "Zaproś znajomych",
 	"leeks": "Pory ({0})",
 	"level_n": "Poziom {0}",
 	"log_change": "Zmień poziom widoczności śladów",

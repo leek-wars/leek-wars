@@ -20,7 +20,7 @@
 	"error_not_same_password": "入力する 2 つのパスワードは同一でなければなりません",
 	"error_password_length": "パスワードには {0} ～ {1} 文字を含める必要があります",
 	"godfather": "スポンサー（オプション）",
-	"godfather_invite": "{0} invites you to Leek Wars!",
+	"godfather_invite": "{0} があなたをLeek Warsに招待しています！",
 	"help_tutorial_doc": "ヘルプ、チュートリアル、ドキュメント",
 	"intro": "<b>Leek Wars</b> は、最も強力なネギを作成して敵を倒すプログラミング ゲームです!<br><br>\n学習しやすい言語である <b>LeekScript</b> のおかげで、独自の人工知能を開発できます。\n最高のブリーダーになろう！",
 	"last_update": "最後の更新",

@@ -61,6 +61,7 @@
 	"history": "Historik",
 	"invalid_name": "Holdnavnet skal indeholde mellem %1$s og %2$s tegn",
 	"join_team": "Slut dig til dette hold",
+	"invite_friends": "Inviter venner",
 	"leeks": "Porrer ({0})",
 	"level_n": "Niveau {0}",
 	"log_change": "Skift synlighedsniveauet for spor",

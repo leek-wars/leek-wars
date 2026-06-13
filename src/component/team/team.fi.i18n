@@ -61,6 +61,7 @@
 	"history": "Historia",
 	"invalid_name": "Joukkueen nimessä on oltava %1$s–%2$s merkkiä",
 	"join_team": "Liity tähän tiimiin",
+	"invite_friends": "Kutsu ystäviä",
 	"leeks": "Purjo ({0})",
 	"level_n": "Taso {0}",
 	"log_change": "Muuta jälkien näkyvyystasoa",

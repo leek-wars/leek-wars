@@ -61,6 +61,7 @@
 	"history": "Historisch",
 	"invalid_name": "Der Teamname muss zwischen %1$s und %2$s Zeichen enthalten",
 	"join_team": "Treten Sie diesem Team bei",
+	"invite_friends": "Freunde einladen",
 	"leeks": "Lauch ({0})",
 	"level_n": "Stufe {0}",
 	"log_change": "Ändern Sie die Sichtbarkeitsstufe von Ablaufverfolgungen",

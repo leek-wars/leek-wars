@@ -1,8 +1,8 @@
 {
-	"title": "Invite your friends",
-	"description": "Share your sponsorship link. When a friend signs up with it and verifies their account, you both receive Habs {habs} and crystals {crystals}.",
-	"share_message": "Join me on Leek Wars, the battle game where you program the AI of your leeks!",
-	"share": "Share",
-	"copy": "Copy link",
-	"copied": "Link copied!"
+	"title": "Inviter vennene dine",
+	"description": "Del henvisningslenken din. Når en venn registrerer seg med den og bekrefter kontoen sin, får dere begge Habs {habs} og krystaller {crystals}.",
+	"share_message": "Bli med meg på Leek Wars, kampspillet der du programmerer purrenes AI!",
+	"share": "Del",
+	"copy": "Kopier lenke",
+	"copied": "Lenke kopiert!"
 }

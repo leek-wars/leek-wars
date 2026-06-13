@@ -61,6 +61,7 @@
 	"history": "Histórico",
 	"invalid_name": "O nome da equipe deve conter entre %1$s e %2$s caracteres",
 	"join_team": "Junte-se a esta equipe",
+	"invite_friends": "Convidar amigos",
 	"leeks": "Alho-poró ({0})",
 	"level_n": "Nível {0}",
 	"log_change": "Alterar o nível de visibilidade dos rastros",
