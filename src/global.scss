@@ -29,6 +29,20 @@
 .mdi-spin {
 	animation: mdi-spin 2s infinite linear;
 }
+// Respecter la préférence système « réduire les animations » (a11y, WCAG 2.3.3).
+// Les animations/transitions sont neutralisées mais laissées « instantanées »
+// (0.01ms) pour que les évènements animationend/transitionend continuent de se
+// déclencher côté JS.
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
 .theme--light.v-icon {
 	color: inherit;
 }
