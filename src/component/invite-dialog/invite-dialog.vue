@@ -8,7 +8,7 @@
 
 		<div ref="linkElement" class="invite-url" @click="selectLink">{{ link }}</div>
 
-		<img class="invite-qr" :src="qrUrl" alt="QR code" width="170" height="170" loading="lazy">
+		<img v-if="qrDataUrl" class="invite-qr" :src="qrDataUrl" alt="QR code" width="170" height="170">
 
 		<div class="share-buttons">
 			<a class="share x" :href="shareUrls.x" target="_blank" rel="noopener">
@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { LeekWars } from '@/model/leekwars'
 import { mixins, useNamespacedT } from '@/model/i18n'
 import { store } from '@/model/store'
@@ -71,8 +71,14 @@ const shareUrls = computed(() => {
 	}
 })
 
-// QR code du lien de parrainage (même service que la 2FA). Le lien est public.
-const qrUrl = computed(() => `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=8&data=${encodeURIComponent(fullLink.value)}`)
+// QR code du lien de parrainage généré côté client (lib qrcode, import dynamique
+// pour ne pas alourdir le bundle) en data URI : pas de service externe, couvert par
+// la CSP img-src 'data:'.
+const qrDataUrl = ref('')
+watch(fullLink, async (url) => {
+	const QRCode = (await import('qrcode')).default
+	qrDataUrl.value = await QRCode.toDataURL(url, { width: 240, margin: 2 })
+}, { immediate: true })
 
 const canNativeShare = computed(() => typeof navigator !== 'undefined' && !!navigator.share)
 
