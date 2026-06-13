@@ -380,6 +380,11 @@ onMounted(() => {
 	}
 	.github-button {
 		padding: 0 10px;
+	}
+	// Aligne verticalement les widgets sociaux (Facebook, GitHub, Twitter)
+	// qui ont des hauteurs légèrement différentes (#4128).
+	.center > a,
+	.center > iframe {
 		vertical-align: middle;
 	}
 </style>
