@@ -9,8 +9,8 @@
 		<panel class="first">
 			<div class="search">
 				<div class="search-box">
-					<div class="label">{{ $t('query') }}</div>
-					<input :value="options.query" class="query card" type="text" @input="onQueryInput" @keydown.enter="search">
+					<label class="label" for="encyclopedia-query">{{ $t('query') }}</label>
+					<input id="encyclopedia-query" :value="options.query" class="query card" type="text" @input="onQueryInput" @keydown.enter="search">
 				</div>
 
 				<div class="center">
@@ -168,6 +168,7 @@ h1 {
 	padding-top: 10px;
 }
 .label {
+	display: block;
 	margin-right: 6px;
 	color: var(--text-color-secondary);
 	margin-bottom: 5px;

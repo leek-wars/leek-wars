@@ -32,14 +32,14 @@
 						<tr>
 							<td class="align-right">{{ $t('your_farmer_name') }}</td>
 							<td class="align-left">
-								<input v-model="login" :status="status('login')" name="login" type="text" required>
+								<input v-model="login" :status="status('login')" :aria-label="$t('your_farmer_name')" name="login" type="text" autocomplete="username" required>
 								<div v-for="e in errors.login" :key="e" class="error-msg">{{ e }}</div>
 							</td>
 						</tr>
 						<tr>
 							<td class="align-right"><i>{{ $t('godfather') }}</i></td>
 							<td class="align-left">
-								<input v-model="godfather" :status="status('godfather')" type="text">
+								<input v-model="godfather" :status="status('godfather')" :aria-label="$t('godfather')" type="text">
 								<div v-for="e in errors.godfather" :key="e" class="error-msg">{{ e }}</div>
 							</td>
 						</tr>
@@ -58,14 +58,14 @@
 						<tr v-if="signupMethod === 1">
 							<td class="align-right">{{ $t('your_email') }}</td>
 							<td class="align-left">
-								<input v-model="email" :status="status('email')" name="email" type="text" required>
+								<input v-model="email" :status="status('email')" :aria-label="$t('your_email')" name="email" type="text" autocomplete="email" required>
 								<div v-for="e in errors.email" :key="e" class="error-msg">{{ e }}</div>
 							</td>
 						</tr>
 						<tr v-if="signupMethod === 1">
 							<td class="align-right">{{ $t('password') }}</td>
 							<td class="align-left">
-								<input v-model="password1" :status="status('password1')" name="password" type="password" required>
+								<input v-model="password1" :status="status('password1')" :aria-label="$t('password')" name="password" type="password" autocomplete="new-password" required>
 								<div v-for="e in errors.password1" :key="e" class="error-msg">{{ e }}</div>
 							</td>
 						</tr>
@@ -142,12 +142,12 @@
 				</div>
 				<form v-if="viewChangePassword && $store.state.farmer" class="change-password" @submit="changePassword">
 					<h4 v-if="$store.state.farmer.pass">{{ $t('old_password') }}</h4>
-					<input v-if="$store.state.farmer.pass" v-model="password" name="password" type="password">
+					<input v-if="$store.state.farmer.pass" v-model="password" :aria-label="$t('old_password')" name="password" type="password" autocomplete="current-password">
 					<br v-if="$store.state.farmer.pass">
 					<h4>{{ $t('new_password') }}</h4>
-					<input v-model="newPassword1" name="new_password1" type="password" required> <br>
+					<input v-model="newPassword1" :aria-label="$t('new_password')" name="new_password1" type="password" autocomplete="new-password" required> <br>
 					<h4>{{ $t('confirm_password') }}</h4>
-					<input v-model="newPassword2" name="new_password2" type="password" required> <br>
+					<input v-model="newPassword2" :aria-label="$t('confirm_password')" name="new_password2" type="password" autocomplete="new-password" required> <br>
 					<div class="center"><v-btn type="submit">{{ $t('change') }}</v-btn></div>
 				</form>
 
@@ -247,7 +247,7 @@
 			<template #icon><v-icon>mdi-delete</v-icon></template>
 			<template #title><span>{{ $t('delete_confirmation') }}</span></template>
 			{{ $t('delete_confirmation_password') }} : <br><br>
-			{{ $t('delete_password') }} : <input v-model="deleteConfirmPassword" type="password">
+			{{ $t('delete_password') }} : <input v-model="deleteConfirmPassword" :aria-label="$t('delete_password')" type="password" autocomplete="current-password">
 			<template #actions>
 				<div v-ripple class="action dismiss" @click="deleteConfirmDialog = false">{{ $t('delete_cancel') }}</div>
 				<div v-ripple class="action red" @click="deleteAccountFinal">{{ $t('delete_finalize') }}</div>

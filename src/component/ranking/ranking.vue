@@ -263,7 +263,7 @@
 		</panel>
 
 		<popup v-model="searchDialog" :width="500" icon="mdi-magnify" :title="$t('search_in_ranking')">
-			<input ref="search" v-model="searchQuery" :placeholder="$t('search_name')" class="query" type="text">
+			<input ref="search" v-model="searchQuery" :placeholder="$t('search_name')" :aria-label="$t('search_name')" class="query" type="text">
 			<div class="flex">
 				<v-checkbox v-model="searchLeeks" :label="$t('leeks')" hide-details />
 				<v-checkbox v-model="searchFarmers" :label="$t('farmers')" hide-details />

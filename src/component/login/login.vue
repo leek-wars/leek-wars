@@ -6,15 +6,15 @@
 				<div class="column">
 					<form @submit.prevent="login">
 						<br>
-						<div class="title">{{ $t('login') }}</div>
-						<input v-model="form.login" type="text" name="login" autocapitalize="none" autocorrect="off" autocomplete="username" spellcheck="false">
+						<label class="title" for="login-field">{{ $t('login') }}</label>
+						<input id="login-field" v-model="form.login" type="text" name="login" autocapitalize="none" autocorrect="off" autocomplete="username" spellcheck="false">
 						<br><br>
-						<div class="title">{{ $t('password') }}</div>
-						<input v-model="form.password" type="password" name="password" autocapitalize="none" autocorrect="off" autocomplete="current-password" spellcheck="false">
+						<label class="title" for="password-field">{{ $t('password') }}</label>
+						<input id="password-field" v-model="form.password" type="password" name="password" autocapitalize="none" autocorrect="off" autocomplete="current-password" spellcheck="false">
 						<br><br>
 <template v-if="twoFactor">
-							<div class="title">{{ $t('two_factor_code') }}</div>
-							<input v-model="form.code" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" autocapitalize="none" autocorrect="off" spellcheck="false">
+							<label class="title" for="code-field">{{ $t('two_factor_code') }}</label>
+							<input id="code-field" v-model="form.code" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" autocapitalize="none" autocorrect="off" spellcheck="false">
 							<br><br>
 						</template>
 						<v-checkbox v-model="form.keep_connected" :label="$t('keep_connected')" hide-details />
@@ -178,6 +178,7 @@ function oauthStart(provider: 'github' | 'google') {
 		filter: invert(1);
 	}
 	.title {
+		display: block;
 		font-size: 16px;
 	}
 </style>
