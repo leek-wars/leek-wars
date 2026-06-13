@@ -33,6 +33,7 @@ function matchFiles(globPath) {
 	return entries.filter(f => re.test(f)).map(f => `${dir}/${f}`)
 }
 
+const fmt = n => (n / 1024).toFixed(2) + 'kB'
 let failed = false
 let checked = 0
 for (const { path, maxSize } of budgets) {
@@ -47,7 +48,6 @@ for (const { path, maxSize } of budgets) {
 		const gz = gzipSync(readFileSync(file)).length
 		checked++
 		const ok = gz <= limit
-		const fmt = n => (n / 1024).toFixed(2) + 'kB'
 		console.log(`${ok ? '✓' : '✗'} ${file} : ${fmt(gz)} (max ${fmt(limit)})`)
 		if (!ok) failed = true
 	}

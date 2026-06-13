@@ -598,10 +598,11 @@ const LeekWars = reactive({
 		return width < 900
 		*/
 	},
-	contenteditable_paste_protect(element: HTMLElement): () => void {
+	contenteditable_paste_protect(element: HTMLElement): (() => void) | void {
 		// Garde : évite d'empiler les listeners si la fonction est rappelée sur
-		// le même élément (re-montage, appel multiple).
-		if (element.dataset.pasteProtected) return () => {}
+		// le même élément (re-montage, appel multiple). Pas de cleanup à rendre
+		// dans ce cas : les consommateurs appellent le retour via `?.()`.
+		if (element.dataset.pasteProtected) return
 		element.dataset.pasteProtected = 'true'
 		// Paste : keep the pure text of the element
 		const onPaste = (e: ClipboardEvent) => {
