@@ -20,6 +20,7 @@
 	"error_not_same_password": "Syötettyjen kahden salasanan on oltava identtisiä",
 	"error_password_length": "Salasanan tulee sisältää {0}–{1} merkkiä",
 	"godfather": "Sponsori (valinnainen)",
+	"godfather_invite": "{0} invites you to Leek Wars!",
 	"help_tutorial_doc": "Ohje, opetusohjelma, doc",
 	"intro": "<b>Leek Wars</b> on ohjelmointipeli, jossa sinun on luotava tehokkain purjo ja tuhottava vihollisesi!<br><br>\nKehitä omaa tekoälyäsi <b>LeekScriptin</b> avulla, joka on helposti opittava kieli,\nja tule parhaaksi kasvattajaksi!",
 	"last_update": "Viimeisin päivitys",

@@ -20,6 +20,7 @@
 	"error_not_same_password": "Kedua kata sandi yang dimasukkan harus identik",
 	"error_password_length": "Sandi harus berisi antara {0} dan {1} karakter",
 	"godfather": "Sponsor (Opsional)",
+	"godfather_invite": "{0} invites you to Leek Wars!",
 	"help_tutorial_doc": "Bantuan, tutorial, dok",
 	"intro": "<b>Leek Wars</b> adalah game pemrograman di mana Anda harus membuat daun bawang yang paling kuat dan menghancurkan musuh Anda!<br><br>\nKembangkan kecerdasan buatan Anda sendiri berkat <b>LeekScript</b>, bahasa yang mudah dipelajari,\ndan menjadi peternak terbaik!",
 	"last_update": "Pembaharuan Terakhir",

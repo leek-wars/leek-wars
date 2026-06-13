@@ -20,6 +20,7 @@
 	"error_not_same_password": "Les deux mots de passe entrés doivent être identiques",
 	"error_password_length": "Le mot de passe doit contenir entre {0} et {1} caractères",
 	"godfather": "Parrain (Facultatif)",
+	"godfather_invite": "{0} t'invite sur Leek Wars !",
 	"help_tutorial_doc": "Aide, tutoriel, doc",
 	"intro": "<b>Leek Wars</b> est un jeu de programmation dans lequel vous devez créer le plus puissant poireau et détruire vos ennemis !<br><br>\nDéveloppez votre propre intelligence artificielle grâce au <b>LeekScript</b>, un langage facile à apprendre, \net devenez le meilleur éleveur !",
 	"last_update": "Dernière mise à jour",

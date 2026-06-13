@@ -1,5 +1,9 @@
 <template lang="html">
 	<div>
+		<div v-if="godfatherName" class="godfather-invite-banner">
+			<v-icon>mdi-hat-fedora</v-icon>
+			<span>{{ $t('godfather_invite', [godfatherName]) }}</span>
+		</div>
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 		</div>
@@ -383,6 +387,7 @@
 	const router = useRouter()
 
 	const godfather = ref('')
+	const godfatherName = ref<string | null>(null)
 	const leek_count = ref(85290)
 	const farmer_ranking = ref<RankingFarmerRow[]>([])
 	const leek_ranking = ref<RankingLeekRow[]>([])
@@ -448,6 +453,11 @@
 
 	LeekWars.setTitle("Leek Wars: online leek programming game")
 	godfather.value = 'godfather' in route.params ? route.params.godfather as string : ''
+	if (godfather.value) {
+		LeekWars.get('farmer/get-godfather-info/' + encodeURIComponent(godfather.value)).then(data => {
+			godfatherName.value = data ? data.name : null
+		})
+	}
 	LeekWars.get('leek/get-count').then(data => {
 		leek_count.value = data.leeks
 	})
@@ -530,6 +540,22 @@
 </script>
 
 <style lang="scss" scoped>
+	.godfather-invite-banner {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 10px;
+		background: var(--primary);
+		color: white;
+		padding: 12px 20px;
+		font-size: 18px;
+		font-weight: 500;
+		border-radius: 4px;
+		margin-bottom: 12px;
+		.v-icon {
+			color: white;
+		}
+	}
 	@media screen and (max-width: 900px) {
 		.top .column6:nth-child(2) .panel {
 			margin-top: 12px;

@@ -20,6 +20,7 @@
 	"error_not_same_password": "两次输入的密码必须相同",
 	"error_password_length": "密码必须包含 {0} 到 {1} 个字符",
 	"godfather": "赞助商（可选）",
+	"godfather_invite": "{0} invites you to Leek Wars!",
 	"help_tutorial_doc": "帮助、教程、文档",
 	"intro": "<b>Leek Wars</b> 是一款编程游戏，您必须在其中创造最强大的韭菜并消灭敌人！<br><br>\n借助 <b>LeekScript</b> 开发您自己的人工智能，这是一种易于学习的语言，\n并成为最好的饲养员！",
 	"last_update": "最后更新",
