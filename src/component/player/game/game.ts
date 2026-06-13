@@ -200,7 +200,7 @@ export const WEAPONS = [
 	QuantumRifle, // 40
 ]
 
-const CHIP_ANIMATIONS = [
+export const CHIP_ANIMATIONS = [
 	Bandage, // 1
 	Cure, // 2
 	Drip, // 3

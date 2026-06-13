@@ -272,6 +272,7 @@
 		startAction?: number
 		creator?: boolean
 		map?: FightMap
+		fight?: Fight
 	}>()
 
 	const emit = defineEmits<{
@@ -368,6 +369,8 @@
 
 	if (props.fightId) {
 		getFight(true)
+	} else if (props.fight) {
+		initFight(props.fight)
 	} else if (props.map) {
 		initMap(props.map)
 	}
@@ -534,6 +537,18 @@
 			LeekWars.didactitial_next()
 		}
 	})
+
+	// Initialise le player à partir d'un combat déjà construit (pas de fetch
+	// serveur). Utilisé par la page admin de test des animations de puces.
+	function initFight(f: Fight) {
+		fight.value = f
+		emit('fight', f)
+		nextTick(() => {
+			game.value.startTurn = props.startTurn ?? 1
+			game.value.startAction = props.startAction ?? 0
+			game.value.init(f)
+		})
+	}
 
 	function initMap(map: FightMap) {
 		const local_fight = {
@@ -722,7 +737,7 @@
 	function canvasRightClick(e: Event) { game.value.rightClick(); e.preventDefault() }
 
 	watch(() => game.value.going_to_report, () => {
-		if (game.value.going_to_report && props.fightId !== 'local') {
+		if (game.value.going_to_report && props.fightId && props.fightId !== 'local') {
 			router.push("/report/" + props.fightId)
 		}
 	})
@@ -731,7 +746,7 @@
 		if (before !== -1) game.value.updateMap()
 	})
 
-	defineExpose({ get loaded() { return loaded.value }, set loaded(v: boolean) { loaded.value = v }, gameLaunched })
+	defineExpose({ get loaded() { return loaded.value }, set loaded(v: boolean) { loaded.value = v }, gameLaunched, get game() { return game.value as Game } })
 </script>
 
 
