@@ -3,7 +3,7 @@
 		<template #activator="{ props: tp }">
 			<span class="talent" v-bind="tp" @click.stop="LeekWars.goToRanking(category, 'talent', id)">
 				<div v-ripple class="icon">
-					<img src="/image/talent.png">
+					<img src="/image/talent.png" alt="">
 				</div>
 				<div v-ripple class="value">{{ LeekWars.formatNumber(talent) }}</div>
 			</span>

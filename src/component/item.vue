@@ -1,7 +1,7 @@
 <template lang="html">
 	<rich-tooltip-item :bottom="true" :instant="true" :item="item" :inventory="true">
 		<div class="item">
-			<img :src="url" :class="{weapon: is_weapon}">
+			<img :src="url" :alt="label" :class="{weapon: is_weapon}">
 		</div>
 	</rich-tooltip-item>
 </template>
@@ -9,6 +9,7 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue'
 import { ItemType, ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED, type ItemTemplate } from '@/model/item'
+import { i18n } from '@/model/i18n'
 
 const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
 
@@ -23,6 +24,12 @@ const props = defineProps<{
 const image = computed(() => props.item.type === ItemType.COMPONENT ? props.item.name : props.item.name.substring(props.item.name.indexOf('_') + 1))
 const url = computed(() => '/image/' + ITEM_CATEGORY_NAME[props.item.type] + '/' + image.value + '.png')
 const is_weapon = computed(() => props.item.type === ItemType.WEAPON)
+// alt accessible : nom traduit de l'objet, repli sur le nom brut si la clé
+// de traduction n'existe pas (dégradation gracieuse, jamais la clé brute).
+const label = computed(() => {
+	const key = ITEM_CATEGORY_NAME[props.item.type] + '.' + image.value
+	return i18n.global.te(key) ? i18n.t(key) as string : image.value
+})
 </script>
 
 <style lang="scss" scoped>

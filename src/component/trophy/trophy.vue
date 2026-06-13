@@ -11,7 +11,7 @@
 		</panel>
 		<panel v-if="trophy" class="first">
 			<div class="flex">
-				<img class="image" :src="'/image/trophy/' + code + '.svg'" :class="{clickable: trophy.code === 'joker'}" @click="trophy.code === 'joker' && LeekWars.lucky(true)">
+				<img class="image" :src="'/image/trophy/' + code + '.svg'" :alt="$t('trophy.' + code)" :class="{clickable: trophy.code === 'joker'}" @click="trophy.code === 'joker' && LeekWars.lucky(true)">
 				<div class="right">
 					<div class="name">
 						{{ $t('trophy.' + code) }}

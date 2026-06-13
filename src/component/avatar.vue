@@ -1,5 +1,5 @@
 <template lang="html">
-	<img :src="url" class="avatar" loading="lazy" v-bind="$attrs">
+	<img :src="url" :alt="farmer && farmer.name ? farmer.name : ''" class="avatar" loading="lazy" v-bind="$attrs">
 </template>
 
 <script setup lang="ts">

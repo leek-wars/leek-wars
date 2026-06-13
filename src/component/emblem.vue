@@ -1,5 +1,5 @@
 <template lang="html">
-	<img :src="url" class="emblem">
+	<img :src="url" :alt="team && team.name ? team.name : ''" class="emblem">
 </template>
 
 <script setup lang="ts">

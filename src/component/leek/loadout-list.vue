@@ -5,15 +5,15 @@
 		<div v-else class="loadouts">
 			<div v-for="loadout in loadouts" :key="loadout.id" class="loadout-card">
 				<div class="loadout-icon">
-					<img v-if="isCharac(loadout.icon)" :src="'/image/charac/' + loadout.icon + '.png'" width="28" height="28">
+					<img v-if="isCharac(loadout.icon)" :src="'/image/charac/' + loadout.icon + '.png'" width="28" height="28" alt="">
 					<span v-else-if="loadout.icon" class="emoji-icon">{{ loadout.icon }}</span>
 					<v-icon v-else size="28">mdi-package-variant-closed</v-icon>
 				</div>
 				<div class="loadout-info">
 					<div class="loadout-name">{{ loadout.name }}</div>
 					<div class="loadout-preview">
-						<img v-for="tpl in loadout.weapons.slice(0, 4)" :key="'w' + tpl" :src="'/image/' + LeekWars.items[tpl].name.replace('_', '/') + '.png'" class="preview-weapon" :title="LeekWars.items[tpl].name">
-						<img v-for="tpl in loadout.chips.slice(0, 6)" :key="'c' + tpl" :src="'/image/chip/' + CHIPS[tpl].name + '.png'" class="preview-chip" :title="CHIPS[tpl].name">
+						<img v-for="tpl in loadout.weapons.slice(0, 4)" :key="'w' + tpl" :src="'/image/' + LeekWars.items[tpl].name.replace('_', '/') + '.png'" class="preview-weapon" :alt="LeekWars.items[tpl].name" :title="LeekWars.items[tpl].name">
+						<img v-for="tpl in loadout.chips.slice(0, 6)" :key="'c' + tpl" :src="'/image/chip/' + CHIPS[tpl].name + '.png'" class="preview-chip" :alt="CHIPS[tpl].name" :title="CHIPS[tpl].name">
 					</div>
 				</div>
 				<div class="loadout-actions">
