@@ -40,7 +40,7 @@
 				<a href="https://www.facebook.com/LeekWars">
 					<img height="28" src="/image/about/facebook_like.png">
 				</a>
-				<iframe class="github-button" src="https://ghbtns.com/github-btn.html?user=leek-wars&repo=leek-wars&type=star&count=true&size=large" frameborder="0" scrolling="0" width="120" height="30" title="Star Leek Wars on GitHub"></iframe>
+				<iframe class="github-button" allowtransparency="true" src="https://ghbtns.com/github-btn.html?user=leek-wars&repo=leek-wars&type=star&count=true&size=large" frameborder="0" scrolling="0" width="120" height="30" title="Star Leek Wars on GitHub"></iframe>
 				<iframe class="twitter-button" allowtransparency="true" frameborder="0" scrolling="no" src="//platform.twitter.com/widgets/follow_button.html?screen_name=LeekWars&size=l" width="250" height="28"></iframe>
 			</div>
 		</panel>
