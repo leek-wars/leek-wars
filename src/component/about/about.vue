@@ -40,8 +40,7 @@
 				<a href="https://www.facebook.com/LeekWars">
 					<img height="28" src="/image/about/facebook_like.png">
 				</a>
-				<span ref="github"></span>
-				<span class="github-button"><a class="github-button" href="https://github.com/leek-wars/leek-wars" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star Leek Wars on GitHub">Star</a></span>
+				<iframe class="github-button" src="https://ghbtns.com/github-btn.html?user=leek-wars&repo=leek-wars&type=star&count=true&size=large" frameborder="0" scrolling="0" width="120" height="30" title="Star Leek Wars on GitHub"></iframe>
 				<iframe class="twitter-button" allowtransparency="true" frameborder="0" scrolling="no" src="//platform.twitter.com/widgets/follow_button.html?screen_name=LeekWars&size=l" width="250" height="28"></iframe>
 			</div>
 		</panel>
@@ -173,7 +172,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onBeforeMount, onMounted, useTemplateRef } from 'vue'
+import { ref, computed, onBeforeMount, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { Farmer } from '@/model/farmer'
 import { mixins, useNamespacedT } from '@/model/i18n'
@@ -247,7 +246,6 @@ const team = computed(() => [[
 ]])
 
 const contributors = ref<Farmer[]>([])
-const github = useTemplateRef<HTMLElement>('github')
 
 onBeforeMount(() => {
 	LeekWars.setTitle(t('title'))
@@ -255,11 +253,6 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-	const script = document.createElement('script')
-	script.src = 'https://buttons.github.io/buttons.js'
-	script.async = true
-	if (github.value) github.value.appendChild(script)
-
 	LeekWars.get<Farmer[]>('farmer/contributors').then(list => {
 		contributors.value = list.filter(c => c.id !== 43276 && c.id !== 8773 && c.id !== 38357)
 		contributors.value.sort(() => Math.random() - 0.5)
@@ -387,5 +380,6 @@ onMounted(() => {
 	}
 	.github-button {
 		padding: 0 10px;
+		vertical-align: middle;
 	}
 </style>
