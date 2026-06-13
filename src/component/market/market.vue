@@ -963,7 +963,7 @@ const t = useNamespacedT('market')
 	}
 	.already-have {
 		font-style: italic;
-		color: #777;
+		color: var(--text-color-secondary);
 		padding-bottom: 8px;
 	}
 	.unseen-dialog .trophy {

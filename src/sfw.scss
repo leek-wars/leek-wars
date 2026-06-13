@@ -6,7 +6,7 @@
 	}
 	h1 {
 		background: var(--pure-white);
-		color: #777;
+		color: var(--text-color-secondary);
 		text-shadow: none;
 	}
 	h1:after {
@@ -21,23 +21,23 @@
 	}
 	.panel .header h2 {
 		background: var(--pure-white);
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	.panel .header h2 a {
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	.panel .header h2:before {
 		border-color: transparent transparent transparent var(--pure-white);
 	}
 	.panel .header .right .button {
 		background: var(--pure-white);
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	.panel .header .right .button:hover {
 		color: black;
 	}
 	.panel .actions .button i {
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	.page-bar {
 		background: none;
@@ -56,7 +56,7 @@
 	}
 	.menu .section {
 		background: var(--pure-white);
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	.menu-center a.router-link-active {
 		text-shadow: none;
@@ -67,7 +67,7 @@
 	}
 	.menu .menu-top {
 		background: var(--pure-white);
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	.xp-bar, .switch-active .switch-switch {
 		background: #caf0ca;
@@ -98,11 +98,11 @@
 	}
 	.menu .section[label]:after {
 		background: none;
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	.header .label {
 		background: none;
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	.panel > .header h2 a {
 		font-weight: normal;
@@ -113,7 +113,7 @@
 	}
 	.page-bar .tab {
 		background: none;
-		color: #777;
+		color: var(--text-color-secondary);
 		&::after, &::before {
 			display: none;
 		}
@@ -123,7 +123,7 @@
 	}
 	.header .header-button {
 		background: none;
-		color: #777;
+		color: var(--text-color-secondary);
 		&:before {
 			display: none;
 		}
@@ -139,14 +139,14 @@
 	}
 	.dev-label {
 		background: none;
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	.panel .wrapper {
 		background: none;
 	}
 	h3 {
 		background: none;
-		color: #777;
+		color: var(--text-color-secondary);
 		&:before, &:after {
 			display: none;
 		}
@@ -161,7 +161,7 @@
 		font-weight: normal;
 	}
 	.characteristics .characteristic div > span {
-		color: #777 !important;
+		color: var(--text-color-secondary) !important;
 		font-weight: normal;
 	}
 	.bubble {
@@ -180,12 +180,12 @@
 		box-shadow: none;
 		.action {
 			background: var(--pure-white);
-			color: #777;
+			color: var(--text-color-secondary);
 		}
 	}
 	.v-dialog > .title {
 		background: var(--pure-white);
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	.v-dialog .content {
 		background: var(--pure-white);
@@ -220,17 +220,17 @@
 	}
 	.primary {
 		background-color: #eee !important;
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	h1 a {
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	h4 {
 		font-weight: normal;
 	}
 	.items .item:before, .items .item:after {
 		background: var(--pure-white);
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	.item.weapon, .item.fight-pack, .item.chip, .item.potion, .item.hat {
 		border: none;
@@ -253,11 +253,11 @@
 	}
 	.window .header, .br .header {
 		background: var(--pure-white);
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	.v-btn.error {
 		background-color: #ffecec !important;
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	svg.tournament {
 		opacity: 1;

@@ -1892,7 +1892,7 @@
 	.menu-title {
 		padding: 5px 10px;
 		padding-top: 10px;
-		color: #777;
+		color: var(--text-color-secondary);
 		font-size: 13px;
 		display: flex;
 		align-items: center;

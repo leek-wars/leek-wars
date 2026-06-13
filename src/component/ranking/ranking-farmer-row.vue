@@ -43,7 +43,7 @@ defineProps<{
 		font-weight: bold;
 	}
 	tr.inactive td, tr.inactive a {
-		color: #777;
+		color: var(--text-color-secondary);
 		font-style: italic;
 	}
 </style>

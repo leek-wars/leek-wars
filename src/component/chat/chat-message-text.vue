@@ -81,7 +81,7 @@ onBeforeUnmount(() => {
 	}
 	.censored {
 		font-size: 15px;
-		color: #777;
+		color: var(--text-color-secondary);
 		font-style: italic;
 	}
 </style>

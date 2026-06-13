@@ -657,7 +657,7 @@
 		}
 		.more {
 			font-size: 23px;
-			color: #777;
+			color: var(--text-color-secondary);
 		}
 	}
 	.emojis-dialog {

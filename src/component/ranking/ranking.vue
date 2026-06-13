@@ -606,7 +606,7 @@
 		}
 		tr.inactive {
 			:deep(td), :deep(a) {
-				color: #777;
+				color: var(--text-color-secondary);
 				font-style: italic;
 			}
 		}

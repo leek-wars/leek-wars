@@ -50,11 +50,11 @@ watch([() => props.code, () => props.single], () => {
 		gap: 6px;
 		align-items: center;
 		cursor: pointer;
-		color: #777;
+		color: var(--text-color-secondary);
 		user-select: none;
 		padding-right: 10px;
 	}
 	.label {
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 </style>

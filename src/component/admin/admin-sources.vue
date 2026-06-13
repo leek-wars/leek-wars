@@ -476,7 +476,7 @@
 		text-align: center;
 		.retention-label {
 			font-size: 13px;
-			color: #777;
+			color: var(--text-color-secondary);
 		}
 		.retention-value {
 			font-size: 24px;
@@ -707,7 +707,7 @@
 		.progress {
 			font-weight: 600;
 			font-size: 11px;
-			color: #777;
+			color: var(--text-color-secondary);
 			&.complete {
 				color: #4caf50;
 			}

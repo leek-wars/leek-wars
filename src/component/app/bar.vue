@@ -233,7 +233,7 @@ function readNotification(notification: Notification) {
 		padding: 8px;
 		display: block;
 		text-align: center;
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	.see-all:hover {
 		background: var(--pure-white);

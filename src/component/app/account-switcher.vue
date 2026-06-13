@@ -206,7 +206,7 @@ function accountAction(account: AccountInfo, action: string, endpoint: string) {
 		color: #4fc3f7;
 	}
 	.status-expired {
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	.login-submenu {
 		padding: 12px;

@@ -419,7 +419,7 @@
 		padding: 5px;
 		background: white;
 		font-weight: normal;
-		color: #777;
+		color: var(--text-color-secondary);
 		font-size: 18px;
 	}
 	.codes td {

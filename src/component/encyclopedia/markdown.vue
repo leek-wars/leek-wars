@@ -646,7 +646,7 @@
 	.md :deep(blockquote) {
 		padding: 0 1em;
 		p {
-			color: #777;
+			color: var(--text-color-secondary);
 			padding: 4px 0;
 		}
 		border-left: .3em solid #aaa;
@@ -769,7 +769,7 @@
 				}
 				.letter {
 					font-weight: 500;
-					color: #777;
+					color: var(--text-color-secondary);
 				}
 				.v-input {
 					display: inline-block;

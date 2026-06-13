@@ -58,7 +58,7 @@ LeekWars.get('service/get-all-admin').then(data => {
 		color: var(--pure-black);
 	}
 	.service .parameter {
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	.service .parameter-type {
 		font-size: 12px;

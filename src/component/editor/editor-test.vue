@@ -1470,7 +1470,7 @@
 	}
 	.desc {
 		padding-left: 6px;
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	.column-scenario .team {
 		width: 810px;

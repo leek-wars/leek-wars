@@ -237,7 +237,7 @@
 	}
 	.label {
 		margin-right: 6px;
-		color: #777;
+		color: var(--text-color-secondary);
 		margin-bottom: 5px;
 	}
 	.search-button {
@@ -289,7 +289,7 @@
 		}
 	}
 	.result .headline {
-		color: #777;
+		color: var(--text-color-secondary);
 		font-size: 14px;
 	}
 	.result :deep(b) {

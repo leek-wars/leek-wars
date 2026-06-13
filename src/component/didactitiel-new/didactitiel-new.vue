@@ -157,7 +157,7 @@ const closed = complete
 	flex-basis: 30%;
 }
 .progress {
-	color: #777;
+	color: var(--text-color-secondary);
 	font-weight: 500;
 	font-size: 16px;
 }

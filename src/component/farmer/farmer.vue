@@ -1298,7 +1298,7 @@
 			color: #999;
 		}
 		.v-icon {
-			color: #777;
+			color: var(--text-color-secondary);
 		}
 	}
 	.log-time, .godfather {
@@ -1427,7 +1427,7 @@
 		margin: 5px;
 	}
 	.trophies .grey {
-		color: #777;
+		color: var(--text-color-secondary);
 		text-align: center;
 		padding: 15px;
 	}
@@ -1472,7 +1472,7 @@
 		margin-top: 15px;
 		h4 {
 			margin-bottom: 8px;
-			color: #777;
+			color: var(--text-color-secondary);
 		}
 		.candidacy-item {
 			display: flex;
@@ -1492,7 +1492,7 @@
 	.invitations {
 		h4 {
 			margin-bottom: 8px;
-			color: #777;
+			color: var(--text-color-secondary);
 		}
 		.invitation {
 			display: flex;

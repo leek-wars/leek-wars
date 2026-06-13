@@ -652,7 +652,7 @@
 		.title {
 			font-size: 18px;
 			font-weight: bold;
-			color: #777;
+			color: var(--text-color-secondary);
 		}
 		input {
 			margin-top: 3px;
@@ -694,7 +694,7 @@
 			}
 		}
 		.item {
-			color: #777;
+			color: var(--text-color-secondary);
 		}
 		.push label, .mail label {
 			cursor: pointer;
@@ -711,7 +711,7 @@
 		}
 	}
 	.notif-info {
-		color: #777;
+		color: var(--text-color-secondary);
 		font-size: 14px;
 		padding-top: 10px;
 		.v-icon {

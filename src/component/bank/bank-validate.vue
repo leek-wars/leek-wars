@@ -99,7 +99,7 @@ onMounted(() => {
 	}
 	.thank-you-2 {
 		font-size: 20px;
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	i {
 		padding-right: 5px;

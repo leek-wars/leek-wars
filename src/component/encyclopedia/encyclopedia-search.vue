@@ -169,7 +169,7 @@ h1 {
 }
 .label {
 	margin-right: 6px;
-	color: #777;
+	color: var(--text-color-secondary);
 	margin-bottom: 5px;
 }
 .search-button {
@@ -217,7 +217,7 @@ h2 {
 	margin-bottom: 5px;
 }
 .result .headline {
-	color: #777;
+	color: var(--text-color-secondary);
 	font-size: 14px;
 }
 .result :deep(b) {

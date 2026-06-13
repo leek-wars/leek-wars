@@ -1984,7 +1984,7 @@
 				color: #eee;
 				border-radius: 20px;
 				font-weight: bold;
-				background-color: #777;
+				background-color: var(--text-color-secondary);
 			}
 		}
 	}
@@ -2161,7 +2161,7 @@
 				}
 				.title {
 					text-align: left;
-					color: #777;
+					color: var(--text-color-secondary);
 					display: flex;
 					text-align: center;
 					img {
@@ -2177,7 +2177,7 @@
 				}
 				.large-icon {
 					font-size: 50px;
-					color: #777;
+					color: var(--text-color-secondary);
 					display: block;
 					.v-icon {
 						font-size: 50px;
@@ -2232,7 +2232,7 @@
 	}
 	.info {
 		margin: 8px 0;
-		color: #777;
+		color: var(--text-color-secondary);
 	}
 	.buy-hint {
 		margin-top: 15px;
