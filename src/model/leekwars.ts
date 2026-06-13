@@ -598,20 +598,32 @@ const LeekWars = reactive({
 		return width < 900
 		*/
 	},
-	contenteditable_paste_protect(element: HTMLElement) {
+	contenteditable_paste_protect(element: HTMLElement): () => void {
+		// Garde : évite d'empiler les listeners si la fonction est rappelée sur
+		// le même élément (re-montage, appel multiple).
+		if (element.dataset.pasteProtected) return () => {}
+		element.dataset.pasteProtected = 'true'
 		// Paste : keep the pure text of the element
-		element.addEventListener('paste', (e: ClipboardEvent) => {
+		const onPaste = (e: ClipboardEvent) => {
 			e.preventDefault()
 			const text = e.clipboardData?.getData('text/plain') ?? ''
 			document.execCommand('insertText', false, text)
-		})
+		}
 		// Drop : take the string data in the event and append it to the element
-		element.addEventListener('drop', (e: DragEvent) => {
+		const onDrop = (e: DragEvent) => {
 			e.preventDefault()
 			e.dataTransfer?.items[0]?.getAsString((str: string) => {
 				element.textContent = element.innerText + str
 			})
-		})
+		}
+		element.addEventListener('paste', onPaste)
+		element.addEventListener('drop', onDrop)
+		// Cleanup à appeler en onBeforeUnmount pour retirer les listeners.
+		return () => {
+			element.removeEventListener('paste', onPaste)
+			element.removeEventListener('drop', onDrop)
+			delete element.dataset.pasteProtected
+		}
 	},
 	toggleMenu() {
 		if (LeekWars.menuExpanded) {

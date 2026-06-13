@@ -36,14 +36,16 @@ const commandFilter = ref('')
 const pseudosEnabled = ref(false)
 const pseudosFilter = ref('')
 let rootEl: HTMLElement
+let cleanupPasteProtect: (() => void) | null = null
 
 onMounted(() => {
-	LeekWars.contenteditable_paste_protect(inputRef.value!)
+	cleanupPasteProtect = LeekWars.contenteditable_paste_protect(inputRef.value!)
 	rootEl = inputRef.value!.parentElement as HTMLElement
 	document.addEventListener('mousedown', onClickOutside)
 })
 
 onBeforeUnmount(() => {
+	cleanupPasteProtect?.()
 	document.removeEventListener('mousedown', onClickOutside)
 })
 

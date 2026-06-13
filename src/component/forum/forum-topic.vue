@@ -339,7 +339,7 @@
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import Pagination from '@/component/pagination.vue'
 	import LwTitle from '@/component/title/title.vue'
-	import { computed, defineAsyncComponent, nextTick, onMounted, reactive, ref, useTemplateRef, watch } from 'vue'
+	import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, reactive, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 	import { store } from '@/model/store'
@@ -411,11 +411,13 @@
 		{name: topic.value ? topic.value.name : '...', link: '/forum-category-' + (category.value ? category.value.id : 0) + '/topic-' + (topic.value ? topic.value.id : 0)}
 	])
 
+	let cleanupPasteProtect: (() => void) | null = null
 	onMounted(() => {
 		if (topicTitle.value) {
-			LeekWars.contenteditable_paste_protect(topicTitle.value)
+			cleanupPasteProtect = LeekWars.contenteditable_paste_protect(topicTitle.value)
 		}
 	})
+	onBeforeUnmount(() => cleanupPasteProtect?.())
 
 	watch(() => route.params, () => update(), { immediate: true })
 
