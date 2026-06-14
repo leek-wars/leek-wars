@@ -59,10 +59,6 @@
 							<span>{{ $t('challenge') }}</span>
 						</div>
 					</router-link>
-					<div v-if="$store.state.connected && farmer.can_request_godfather" class="tab action" :class="{ disabled: farmer.godfather_request_sent }" @click="requestGodfather">
-						<v-icon>mdi-hat-fedora</v-icon>
-						<span>{{ farmer.godfather_request_sent ? $t('godfather_request_sent') : $t('choose_as_godfather') }}</span>
-					</div>
 					<div class="action" icon="question_answer" link="/chat/new/{farmer.id}/{farmer.name}/{farmer.avatar_changed}"></div>
 				</div>
 			</div>
@@ -360,6 +356,7 @@
 			<template #actions>
 				<div v-if="myFarmer && farmer && farmer.godsons.length" class="button flat" @click="godsonsManageOpen = true"><v-icon>mdi-account-supervisor</v-icon> {{ $t('manage_godsons') }}</div>
 				<div v-if="myFarmer" class="button flat" @click="godfatherDialog = true"><v-icon>mdi-link-variant</v-icon> {{ $t('godfather_link') }}</div>
+				<div v-if="!myFarmer && $store.state.connected && farmer && farmer.can_request_godfather" class="button flat" :class="{ disabled: farmer.godfather_request_sent }" @click="requestGodfather"><v-icon>mdi-hat-fedora</v-icon> {{ farmer.godfather_request_sent ? $t('godfather_request_sent') : $t('choose_as_godfather') }}</div>
 			</template>
 			<template #content>
 				<div class="content sponsorship">
@@ -957,12 +954,12 @@
 
 	// La cible accepte une demande reçue : le demandeur devient filleul. #4118
 	function acceptGodsonRequest(req: GodfatherRequest) {
-		LeekWars.post('farmer/accept-godson-request', { request_id: req.id }).then(() => {
+		LeekWars.post('farmer/accept-godson-request', { request_id: req.id }).then((data: { godsons_level_current: number }) => {
 			godfatherRequests.value = godfatherRequests.value.filter(r => r.id !== req.id)
 			if (farmer.value) {
 				farmer.value.godsons = [{ id: req.requester, name: req.name }, ...farmer.value.godsons]
-				farmer.value.godsons_level_current += req.total_level + req.godsons_level
-				farmer.value.godsons_level = Math.max(farmer.value.godsons_level, farmer.value.godsons_level_current)
+				farmer.value.godsons_level_current = data.godsons_level_current
+				farmer.value.godsons_level = Math.max(farmer.value.godsons_level, data.godsons_level_current)
 			}
 			LeekWars.toast(t('godson_request_accepted') as string)
 		}).catch(() => {})
@@ -1597,7 +1594,7 @@
 		width: 30px;
 		margin: 0 5px;
 	}
-	.tab.action.disabled {
+	.button.flat.disabled {
 		opacity: 0.5;
 		pointer-events: none;
 	}
