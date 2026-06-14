@@ -1740,16 +1740,19 @@ class Kemuridama extends ChipAnimation {
 		super.update(dt)
 		// Gros nuage de fumée : plusieurs sprites de nuage par frame, étalés, qui
 		// dérivent sur le côté et montent, sans rotation, en grande échelle.
-		// Les nuages d'arrivée démarrent avant la téléportation (60) pour la masquer
-		const pos = this.duration > 75 ? this.launchPos : this.targetPos
-		if (Math.random() > 0.55) {
+		const spawnCloud = (p: Position) => {
 			const ox = Math.random() * 90 - 45
 			const oy = Math.random() * 60 - 30
 			const dx = (Math.random() - 0.5) * 1.4 // dérive latérale
 			const scale = 0.5 + Math.random() * 0.9 // petits à moyens nuages
 			const texture = Math.random() > 0.5 ? T.grey_cloud : T.cloud
-			this.game.particles.addImage(pos.x + ox, pos.y + oy, 20 + Math.random() * 40, dx, 0, 0.2, 0, texture, 75, 0.5, 0, false, scale)
+			this.game.particles.addImage(p.x + ox, p.y + oy, 20 + Math.random() * 40, dx, 0, 0.2, 0, texture, 75, 0.5, 0, false, scale)
 		}
+		// Fenêtres qui se chevauchent : origine jusqu'à la téléportation (60), et
+		// arrivée dès 90 (bien avant 60) pour que les nuages soient déjà denses
+		// quand le poireau s'y téléporte.
+		if (this.duration > 60 && Math.random() > 0.55) spawnCloud(this.launchPos)
+		if (this.duration < 90 && Math.random() > 0.55) spawnCloud(this.targetPos)
 		if (!this.teleported && this.duration < 60) {
 			this.launcher!.setCell(this.cell)
 			this.game.updateReachableCells()
