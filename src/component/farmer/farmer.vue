@@ -354,6 +354,7 @@
 
 		<panel :title="$t('sponsorship')" toggle="trophies/sponsorship" icon="mdi-hat-fedora">
 			<template #actions>
+				<div v-if="myFarmer && farmer && farmer.godsons.length" class="button flat" @click="godsonsManageOpen = true"><v-icon>mdi-account-supervisor</v-icon> {{ $t('manage_godsons') }}</div>
 				<div v-if="myFarmer" class="button flat" @click="godfatherDialog = true"><v-icon>mdi-link-variant</v-icon> {{ $t('godfather_link') }}</div>
 			</template>
 			<template #content>
@@ -507,6 +508,8 @@
 
 		<invite-dialog v-if="farmer && myFarmer" v-model="godfatherDialog" :login="farmer.login" />
 
+		<godsons-manage-dialog v-if="myFarmer" v-model="godsonsManageOpen" />
+
 		<popup v-if="farmer" v-model="countryDialog" :width="1000" icon="mdi-earth" :title="$t('country_selection')">
 			<div class="country-dialog">
 				<div class="country" code="null" @click="selectCountry('null')">
@@ -622,6 +625,7 @@
 	import TitlePicker from '@/component/title/title-picker.vue'
 	import LwTitle from '@/component/title/title.vue'
 	import InviteDialog from '@/component/invite-dialog/invite-dialog.vue'
+	import GodsonsManageDialog from '@/component/godsons-manage-dialog/godsons-manage-dialog.vue'
 	import { emitter } from '@/model/vue'
 	import { Line } from 'vue-chartjs'
 	import type { ChartData, ChartOptions } from 'chart.js'
@@ -634,7 +638,7 @@
 	const ReportDialog = defineAsyncComponent(() => import('@/component/moderation/report-dialog.vue'))
 
 	defineOptions({ name: 'Farmer', i18n: {}, mixins: [...mixins], components: {
-		RichTooltipFarmer, RichTooltipTeam, RichTooltipLeek, TitlePicker, 'lw-title': LwTitle, 'rich-tooltip-item': RichTooltipItem, Line, InviteDialog,
+		RichTooltipFarmer, RichTooltipTeam, RichTooltipLeek, TitlePicker, 'lw-title': LwTitle, 'rich-tooltip-item': RichTooltipItem, Line, InviteDialog, GodsonsManageDialog,
 	} })
 
 	const { locale: i18nLocale } = useI18n()
@@ -651,6 +655,7 @@
 	const trophiesMode = ref('list')
 	const trophyTooltip = ref<{ show: boolean, trophy: Trophy | null, x: number, y: number }>({ show: false, trophy: null, x: 0, y: 0 })
 	const godfatherDialog = ref(false)
+	const godsonsManageOpen = ref(false)
 	const countryDialog = ref(false)
 	const createTeamDialog = ref(false)
 	const createTeamName = ref('')
