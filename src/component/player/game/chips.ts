@@ -1837,12 +1837,9 @@ class Trebuchet extends ChipAnimation {
 		// Impact quand le rocher atteint la cible (durée totale - durée de vol)
 		if (!this.exploded && this.duration <= 90 - this.flyDuration) {
 			this.exploded = true
-			// Le rocher se brise en éclats qui s'envolent (chunks de la sprite boulder
-			// qui retombent), + souffle d'impact et débris projetés par le sol.
-			for (let i = 0; i < 7; ++i) {
-				const a = Math.random() * Math.PI * 2
-				this.game.particles.addGarbage(this.position.x, this.position.y, 12, Math.cos(a) * (1.5 + Math.random() * 2), 0, 1.5 + Math.random() * 2.5, T.boulder, 1, -0.08 + Math.random() * 0.16, 0.18 + Math.random() * 0.22, 0, 70)
-			}
+			// Le rocher éclate en fragments procéduraux (découpage de la sprite, comme
+			// la mort d'un poireau) + souffle d'impact et débris projetés par le sol.
+			this.game.particles.addShatter(T.boulder, this.position.x, this.position.y, 14, this.boulderSize)
 			this.game.particles.addRealisticExplosion(this.position.x, this.position.y, 1.5)
 			if (this.targets) {
 				for (const target of this.targets) {
