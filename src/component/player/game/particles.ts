@@ -75,22 +75,24 @@ class Particles {
 		this.add(new Explosion(this.game, x, y, z, texture, life))
 		S.explosion.play(this.game)
 	}
-	public addRealisticExplosion(x: number, y: number, radius: number) {
-		// Explosion
-		this.add(new RealisticExplosion(this.game, x, y, radius))
+	public addRealisticExplosion(x: number, y: number, radius: number, color?: string, debris: boolean = true) {
+		// Explosion (couleur fixe optionnelle, sinon dégradé de feu)
+		this.add(new RealisticExplosion(this.game, x, y, radius, color))
 		// Sound
 		S.explosion.play(this.game)
 		// Mark
 		this.game.ground.drawTextureScale(T.explosion_mark.texture, x, y, 0, 0.5, 0.5, 0.5)
 		// Debrits
-		const count = (3 + Math.random() * 5) * radius
-		for (let p = 0; p < count; ++p) {
-			const scale = 0.15 + Math.random() * 0.35
-			const dx = -4 + Math.random() * 8
-			const dy = -2 + Math.random() * 4
-			const dz = 1 + Math.random() * 6
-			const texture = Math.random() > 0.5 ? T.explosion_rock : T.explosion_rock2
-			this.addGarbage(x, y, 5, dx, dy, dz, texture, 1, Math.random() * 0.2, scale, Math.random() * Math.PI, 70)
+		if (debris) {
+			const count = (3 + Math.random() * 5) * radius
+			for (let p = 0; p < count; ++p) {
+				const scale = 0.15 + Math.random() * 0.35
+				const dx = -4 + Math.random() * 8
+				const dy = -2 + Math.random() * 4
+				const dz = 1 + Math.random() * 6
+				const texture = Math.random() > 0.5 ? T.explosion_rock : T.explosion_rock2
+				this.addGarbage(x, y, 5, dx, dy, dz, texture, 1, Math.random() * 0.2, scale, Math.random() * Math.PI, 70)
+			}
 		}
 	}
 	public addSmallExplosion(x: number, y: number, radius: number) {
@@ -131,8 +133,8 @@ class Particles {
 	public addFlyingSpinningProjectile(startX: number, startY: number, z: number, endX: number, endY: number, duration: number, texture: Texture, size?: number, rotation?: number) {
 		this.add(new FlyingSpinningProjectile(this.game, startX, startY, z, endX, endY, duration, texture, size, rotation))
 	}
-	public addRocket(x: number, y: number, z: number, angle: number, duration: number, targetCell: Cell, radius: number, texture?: Texture) {
-		this.add(new Rocket(this.game, x, y, z, angle, duration, targetCell, radius, texture))
+	public addRocket(x: number, y: number, z: number, angle: number, duration: number, targetCell: Cell, radius: number, texture?: Texture, explosionColor?: string, explosionDebris: boolean = true) {
+		this.add(new Rocket(this.game, x, y, z, angle, duration, targetCell, radius, texture, explosionColor, explosionDebris))
 	}
 	public addLighningBall(x: number, y: number, z: number, angle: number, duration: number, radius: number, texture: Texture) {
 		this.add(new LighningBall(this.game, x, y, z, angle, duration, radius, texture))

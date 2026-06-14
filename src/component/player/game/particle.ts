@@ -398,11 +398,13 @@ class RealisticExplosion extends Particle {
 	public sources: ExplosionSource[] = []
 	public delay = 0
 	public radius: number
+	public color: string | undefined
 
-	constructor(game: Game, x: number, y: number, radius: number) {
+	constructor(game: Game, x: number, y: number, radius: number, color?: string) {
 		super(game, x, y, 0, RealisticExplosion.LIFE)
 
 		this.radius = radius
+		this.color = color
 		const SOURCE_SPEED = radius / 2.5
 		const rad = radius * this.game.ground.realTileSizeY / 5
 		const RADIUS_RAND = radius * this.game.ground.realTileSizeY / 8
@@ -471,11 +473,15 @@ class RealisticExplosion extends Particle {
 		for (const source of this.sources) {
 			for (const point of source.points) {
 				ctx.globalAlpha = Math.max(0, point.life / (RealisticExplosion.POINT_LIFE / 3))
-				const dir = (RealisticExplosion.POINT_LIFE / 4)
-				const blue = (point.life - 3 * RealisticExplosion.POINT_LIFE / 4) / dir
-				const green = (point.life - 2 * RealisticExplosion.POINT_LIFE / 4) / dir
-				const red = (point.life - RealisticExplosion.POINT_LIFE / 4) / dir
-				ctx.fillStyle = 'rgb(' + red * 255 + ', ' + green * 255 + ', ' + blue * 255 + ')'
+				if (this.color) {
+					ctx.fillStyle = this.color
+				} else {
+					const dir = (RealisticExplosion.POINT_LIFE / 4)
+					const blue = (point.life - 3 * RealisticExplosion.POINT_LIFE / 4) / dir
+					const green = (point.life - 2 * RealisticExplosion.POINT_LIFE / 4) / dir
+					const red = (point.life - RealisticExplosion.POINT_LIFE / 4) / dir
+					ctx.fillStyle = 'rgb(' + red * 255 + ', ' + green * 255 + ', ' + blue * 255 + ')'
+				}
 
 				ctx.beginPath()
 				ctx.arc(point.x, point.y - point.z, point.s, 0, 2 * Math.PI)
@@ -871,8 +877,10 @@ class Rocket extends Particle {
 	targetCell: Cell
 	radius: number
 	texture: Texture
+	explosionColor: string | undefined
+	explosionDebris: boolean
 
-	public constructor(game: Game, x: number, y: number, z: number, angle: number, duration: number, targetCell: Cell, radius: number, texture: Texture = T.rocket) {
+	public constructor(game: Game, x: number, y: number, z: number, angle: number, duration: number, targetCell: Cell, radius: number, texture: Texture = T.rocket, explosionColor?: string, explosionDebris: boolean = true) {
 		super(game, x, y, z, duration)
 		this.dx = Math.cos(angle) * Rocket.SPEED
 		this.dy = Math.sin(angle) * Rocket.SPEED
@@ -882,6 +890,8 @@ class Rocket extends Particle {
 		this.targetCell = targetCell
 		this.radius = radius
 		this.texture = texture
+		this.explosionColor = explosionColor
+		this.explosionDebris = explosionDebris
 	}
 
 	public update(dt: number): boolean {
@@ -897,7 +907,7 @@ class Rocket extends Particle {
 		if (super.update(dt)) {
 			let xy = this.game.ground.field.cellToXY(this.targetCell)
 			xy = this.game.ground.xyToXYPixels(xy.x, xy.y)
-			this.game.particles.addRealisticExplosion(xy.x, xy.y, this.radius)
+			this.game.particles.addRealisticExplosion(xy.x, xy.y, this.radius, this.explosionColor, this.explosionDebris)
 			return true
 		}
 		return false

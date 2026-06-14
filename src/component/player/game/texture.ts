@@ -187,6 +187,7 @@ class T {
 	public static cart_bazooka = new Texture(LeekWars.STATIC + 'image/weapon/cart_bazooka.png')
 	public static rocket = new Texture(LeekWars.STATIC + 'image/weapon/rocket.png')
 	public static plutonium_rocket = new Texture(LeekWars.STATIC + 'image/weapon/plutonium_rocket.png')
+	public static plutonium_bazooka = new Texture(LeekWars.STATIC + 'image/weapon/plutonium_bazooka.png')
 	public static neutrino = new Texture(LeekWars.STATIC + 'image/weapon/neutrino.png', true, SHADOW_QUALITY)
 	public static cart_neutrino = new Texture(LeekWars.STATIC + 'image/weapon/cart_neutrino.png')
 	public static dark_katana = new Texture(LeekWars.STATIC + 'image/weapon/dark_katana.png', true, SHADOW_QUALITY)

@@ -916,8 +916,8 @@ class Bazooka extends Firegun {
 	static textures = [T.shots, T.bullet, T.bazooka, T.cart_bazooka, T.rocket, T.fire, T.explosion_mark, T.explosion_rock, T.explosion_rock2]
 	static sounds = [S.rocket, S.explosion]
 
-	constructor(game: Game) {
-		super(game, T.bazooka, T.cart_bazooka, S.rocket, 29, DamageType.EXPLOSION)
+	constructor(game: Game, texture: Texture = T.bazooka) {
+		super(game, texture, T.cart_bazooka, S.rocket, 29, DamageType.EXPLOSION)
 	}
 
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell): number {
@@ -927,7 +927,7 @@ class Bazooka extends Firegun {
 		const duration = (distance - 1) * 4
 
 		this.game.setEffectArea(cell, Area.CIRCLE3, this.areaColor(), duration + RealisticExplosion.LIFE)
-		this.game.particles.addRocket(x, y, z, angle, duration, cell, 3, this.rocketTexture())
+		this.game.particles.addRocket(x, y, z, angle, duration, cell, 3, this.rocketTexture(), this.explosionColor(), this.explosionDebris())
 
 		return duration + 10
 	}
@@ -939,13 +939,22 @@ class Bazooka extends Firegun {
 	protected rocketTexture(): Texture {
 		return T.rocket
 	}
+
+	// Explosion : couleur fixe (sinon dégradé de feu) et débris de cailloux.
+	protected explosionColor(): string | undefined {
+		return undefined
+	}
+
+	protected explosionDebris(): boolean {
+		return true
+	}
 }
 
 class PlutoniumBazooka extends Bazooka {
-	static textures = [T.shots, T.bullet, T.bazooka, T.cart_bazooka, T.plutonium_rocket, T.fire, T.explosion_mark, T.explosion_rock, T.explosion_rock2]
+	static textures = [T.shots, T.bullet, T.plutonium_bazooka, T.cart_bazooka, T.plutonium_rocket, T.fire, T.explosion_mark]
 
 	constructor(game: Game) {
-		super(game)
+		super(game, T.plutonium_bazooka)
 	}
 
 	protected areaColor(): string {
@@ -954,6 +963,15 @@ class PlutoniumBazooka extends Bazooka {
 
 	protected rocketTexture(): Texture {
 		return T.plutonium_rocket
+	}
+
+	// Explosion entièrement jaune, sans cailloux qui volent.
+	protected explosionColor(): string {
+		return 'yellow'
+	}
+
+	protected explosionDebris(): boolean {
+		return false
 	}
 }
 
