@@ -51,6 +51,7 @@
 	"godfather_of_label": "Fadder för:",
 	"untie_godfather": "Koppla bort",
 	"disown_godson": "Ta bort",
+	"manage_godsons": "Hantera fadderbarn",
 	"history": "Historik",
 	"invalid_name": "Ogiltigt namn",
 	"last_connection": "Senaste inloggning {0}",

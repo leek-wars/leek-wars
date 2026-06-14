@@ -51,6 +51,7 @@
 	"godfather_of_label": "Padrino di:",
 	"untie_godfather": "Slega",
 	"disown_godson": "Rimuovi",
+	"manage_godsons": "Gestisci figliocci",
 	"history": "Storico",
 	"invalid_name": "Nome non valido",
 	"last_connection": "Ultimo accesso {0}",

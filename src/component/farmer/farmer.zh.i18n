@@ -51,6 +51,7 @@
 	"godfather_of_label": "师傅：",
 	"untie_godfather": "解除",
 	"disown_godson": "移除",
+	"manage_godsons": "管理徒弟",
 	"history": "历史的",
 	"invalid_name": "名称无效",
 	"last_connection": "上次登录 {0}",

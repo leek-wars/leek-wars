@@ -1,0 +1,6 @@
+{
+	"title": "Gestionar ahijados",
+	"stats": "Nivel {0} · Talento {1} · Ahijados niv. {2} · Registrado {3}",
+	"disown": "Quitar",
+	"empty": "Aún no hay ahijados."
+}

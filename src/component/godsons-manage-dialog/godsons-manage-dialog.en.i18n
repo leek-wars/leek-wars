@@ -1,0 +1,6 @@
+{
+	"title": "Manage godsons",
+	"stats": "Level {0} · Talent {1} · Godsons lv. {2} · Joined {3}",
+	"disown": "Remove",
+	"empty": "No godsons yet."
+}

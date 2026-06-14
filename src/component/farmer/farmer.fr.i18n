@@ -51,6 +51,7 @@
 	"godfather_of_label": "Parrain de :",
 	"untie_godfather": "Se délier",
 	"disown_godson": "Renier",
+	"manage_godsons": "Gérer les filleuls",
 	"history": "Historique",
 	"invalid_name": "Nom invalide",
 	"last_connection": "Dernière connexion {0}",

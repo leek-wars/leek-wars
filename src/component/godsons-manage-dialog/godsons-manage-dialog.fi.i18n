@@ -1,0 +1,6 @@
+{
+	"title": "Hallinnoi kummilapsia",
+	"stats": "Taso {0} · Lahjakkuus {1} · Kummilapset taso {2} · Liittyi {3}",
+	"disown": "Poista",
+	"empty": "Ei vielä kummilapsia."
+}

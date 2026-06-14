@@ -51,6 +51,7 @@
 	"godfather_of_label": "親:",
 	"untie_godfather": "解除",
 	"disown_godson": "削除",
+	"manage_godsons": "弟子を管理",
 	"history": "履歴",
 	"invalid_name": "無効な名前",
 	"last_connection": "最終ログイン {0}",

@@ -51,6 +51,7 @@
 	"godfather_of_label": "Referrer of:",
 	"untie_godfather": "Unlink",
 	"disown_godson": "Remove",
+	"manage_godsons": "Manage godsons",
 	"history": "History",
 	"invalid_name": "Invalid name",
 	"last_connection": "Last login {0}",

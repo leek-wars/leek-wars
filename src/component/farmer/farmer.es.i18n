@@ -51,6 +51,7 @@
 	"godfather_of_label": "Padrino de:",
 	"untie_godfather": "Desvincular",
 	"disown_godson": "Quitar",
+	"manage_godsons": "Gestionar ahijados",
 	"history": "Histórico",
 	"invalid_name": "Nombre inválido",
 	"last_connection": "Último inicio de sesión {0}",

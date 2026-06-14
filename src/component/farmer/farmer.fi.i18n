@@ -51,6 +51,7 @@
 	"godfather_of_label": "Kummi:",
 	"untie_godfather": "Irrota",
 	"disown_godson": "Poista",
+	"manage_godsons": "Hallinnoi kummilapsia",
 	"history": "Historia",
 	"invalid_name": "Epäkelpo nimi",
 	"last_connection": "Viimeisin kirjautuminen {0}",

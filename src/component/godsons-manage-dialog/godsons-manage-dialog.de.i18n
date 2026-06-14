@@ -1,0 +1,6 @@
+{
+	"title": "Patenkinder verwalten",
+	"stats": "Level {0} · Talent {1} · Patenkinder Stufe {2} · Beigetreten {3}",
+	"disown": "Entfernen",
+	"empty": "Noch keine Patenkinder."
+}

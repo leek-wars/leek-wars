@@ -51,6 +51,7 @@
 	"godfather_of_label": "Наставник:",
 	"untie_godfather": "Отвязать",
 	"disown_godson": "Удалить",
+	"manage_godsons": "Управление подопечными",
 	"history": "Исторический",
 	"invalid_name": "Неверное имя",
 	"last_connection": "Последний вход {0}",

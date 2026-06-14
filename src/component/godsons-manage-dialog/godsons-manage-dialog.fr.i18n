@@ -1,0 +1,6 @@
+{
+	"title": "Gérer les filleuls",
+	"stats": "Niveau {0} · Talent {1} · Filleuls niv. {2} · Inscrit le {3}",
+	"disown": "Renier",
+	"empty": "Aucun filleul pour le moment."
+}
