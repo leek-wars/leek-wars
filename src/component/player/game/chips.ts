@@ -1740,7 +1740,8 @@ class Kemuridama extends ChipAnimation {
 		super.update(dt)
 		// Gros nuage de fumée : plusieurs sprites de nuage par frame, étalés, qui
 		// dérivent sur le côté et montent, sans rotation, en grande échelle.
-		const pos = this.duration > 60 ? this.launchPos : this.targetPos
+		// Les nuages d'arrivée démarrent avant la téléportation (60) pour la masquer
+		const pos = this.duration > 75 ? this.launchPos : this.targetPos
 		if (Math.random() > 0.55) {
 			const ox = Math.random() * 90 - 45
 			const oy = Math.random() * 60 - 30
@@ -1815,7 +1816,7 @@ class FireBall extends ChipAnimation {
 }
 
 class Trebuchet extends ChipAnimation {
-	static textures = [T.boulder, T.explosion_mark]
+	static textures = [T.boulder, T.explosion_mark, T.explosion_rock, T.explosion_rock2]
 	static sounds = [S.meteorite, S.explosion]
 	public flyDuration = 40
 	public boulderSize = 96
