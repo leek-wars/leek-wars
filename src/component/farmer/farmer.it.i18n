@@ -127,5 +127,9 @@
 	"godson_request_accepted": "Richiesta accettata!",
 	"godsons_level_actual": "attuale: {0}",
 	"error_godfather_cycle": "Non puoi essere padrinato da uno dei tuoi figliocci.",
-	"godfather_action_failed": "Azione non riuscita, riprova."
+	"godfather_action_failed": "Azione non riuscita, riprova.",
+	"aposteriori_title": "Ricompense di padrinato da riscuotere",
+	"aposteriori_desc": "Il sistema di ricompense di padrinato è recente: riscuoti quelle dei tuoi figliocci e del tuo padrino.",
+	"aposteriori_claim": "Riscuoti",
+	"aposteriori_claimed": "Ricompense ricevute!"
 }

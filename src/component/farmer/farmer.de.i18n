@@ -127,5 +127,9 @@
 	"godson_request_accepted": "Anfrage angenommen!",
 	"godsons_level_actual": "aktuell: {0}",
 	"error_godfather_cycle": "Du kannst nicht von einem deiner Patenkinder gesponsert werden.",
-	"godfather_action_failed": "Aktion fehlgeschlagen, bitte versuche es erneut."
+	"godfather_action_failed": "Aktion fehlgeschlagen, bitte versuche es erneut.",
+	"aposteriori_title": "Patenschafts-Belohnungen abzuholen",
+	"aposteriori_desc": "Das Belohnungssystem für Patenschaften ist neu: hol dir die für deine Patenkinder und deinen Paten.",
+	"aposteriori_claim": "Abholen",
+	"aposteriori_claimed": "Belohnungen erhalten!"
 }

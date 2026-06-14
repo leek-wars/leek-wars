@@ -108,6 +108,7 @@ class Farmer {
 	public godsons_level_current!: number
 	public can_request_godfather!: boolean
 	public godfather_request_sent!: boolean
+	public aposteriori_rewards?: { claimable: boolean, is_godson: boolean, godson_units: number, crystals: number, habs: number, fights: number }
 	public password!: string
 	public role!: string
 	public connected!: boolean

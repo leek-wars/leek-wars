@@ -127,5 +127,9 @@
 	"godson_request_accepted": "Permintaan diterima!",
 	"godsons_level_actual": "saat ini: {0}",
 	"error_godfather_cycle": "Kamu tidak bisa dibimbing oleh salah satu anak baptismu.",
-	"godfather_action_failed": "Tindakan gagal, coba lagi."
+	"godfather_action_failed": "Tindakan gagal, coba lagi.",
+	"aposteriori_title": "Hadiah perwalian untuk diklaim",
+	"aposteriori_desc": "Sistem hadiah perwalian masih baru: klaim hadiah untuk anak baptis dan wali baptismu.",
+	"aposteriori_claim": "Klaim",
+	"aposteriori_claimed": "Hadiah diterima!"
 }

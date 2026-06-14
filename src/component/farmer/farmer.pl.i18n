@@ -127,5 +127,9 @@
 	"godson_request_accepted": "Prośba zaakceptowana!",
 	"godsons_level_actual": "obecnie: {0}",
 	"error_godfather_cycle": "Nie możesz mieć za patrona jednego ze swoich podopiecznych.",
-	"godfather_action_failed": "Akcja nie powiodła się, spróbuj ponownie."
+	"godfather_action_failed": "Akcja nie powiodła się, spróbuj ponownie.",
+	"aposteriori_title": "Nagrody za patronat do odebrania",
+	"aposteriori_desc": "System nagród za patronat jest nowy: odbierz te za swoich podopiecznych i swojego patrona.",
+	"aposteriori_claim": "Odbierz",
+	"aposteriori_claimed": "Nagrody odebrane!"
 }

@@ -127,5 +127,9 @@
 	"godson_request_accepted": "Request accepted!",
 	"godsons_level_actual": "current: {0}",
 	"error_godfather_cycle": "You can't be sponsored by one of your own godsons.",
-	"godfather_action_failed": "Action failed, please try again."
+	"godfather_action_failed": "Action failed, please try again.",
+	"aposteriori_title": "Sponsorship rewards to claim",
+	"aposteriori_desc": "The sponsorship reward system is recent: claim those for your godsons and your godfather.",
+	"aposteriori_claim": "Claim",
+	"aposteriori_claimed": "Rewards received!"
 }

@@ -127,5 +127,9 @@
 	"godson_request_accepted": "Pedido aceite!",
 	"godsons_level_actual": "atual: {0}",
 	"error_godfather_cycle": "Você não pode ser apadrinhado por um dos seus afilhados.",
-	"godfather_action_failed": "A ação falhou, tente novamente."
+	"godfather_action_failed": "A ação falhou, tente novamente.",
+	"aposteriori_title": "Recompensas de apadrinhamento a resgatar",
+	"aposteriori_desc": "O sistema de recompensas de apadrinhamento é recente: resgate as dos seus afilhados e do seu padrinho.",
+	"aposteriori_claim": "Resgatar",
+	"aposteriori_claimed": "Recompensas recebidas!"
 }

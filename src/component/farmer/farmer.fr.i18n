@@ -127,5 +127,9 @@
 	"godson_request_accepted": "Demande acceptée !",
 	"godsons_level_actual": "actuel : {0}",
 	"error_godfather_cycle": "Vous ne pouvez pas être parrainé par un de vos filleuls.",
-	"godfather_action_failed": "L'action a échoué, réessayez."
+	"godfather_action_failed": "L'action a échoué, réessayez.",
+	"aposteriori_title": "Récompenses de parrainage à réclamer",
+	"aposteriori_desc": "Le système de récompenses de parrainage est récent : réclamez celles de vos filleuls et de votre parrain.",
+	"aposteriori_claim": "Réclamer",
+	"aposteriori_claimed": "Récompenses reçues !"
 }

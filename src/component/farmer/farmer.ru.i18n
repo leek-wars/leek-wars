@@ -127,5 +127,9 @@
 	"godson_request_accepted": "Заявка принята!",
 	"godsons_level_actual": "текущий: {0}",
 	"error_godfather_cycle": "Вы не можете выбрать наставником своего подопечного.",
-	"godfather_action_failed": "Не удалось выполнить действие, попробуйте снова."
+	"godfather_action_failed": "Не удалось выполнить действие, попробуйте снова.",
+	"aposteriori_title": "Награды за наставничество",
+	"aposteriori_desc": "Система наград за наставничество новая: получите награды за подопечных и наставника.",
+	"aposteriori_claim": "Получить",
+	"aposteriori_claimed": "Награды получены!"
 }

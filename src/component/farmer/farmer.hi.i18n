@@ -127,5 +127,9 @@
 	"godson_request_accepted": "अनुरोध स्वीकृत!",
 	"godsons_level_actual": "वर्तमान: {0}",
 	"error_godfather_cycle": "आप अपने किसी शिष्य को अपना गुरु नहीं बना सकते।",
-	"godfather_action_failed": "कार्रवाई विफल रही, पुनः प्रयास करें।"
+	"godfather_action_failed": "कार्रवाई विफल रही, पुनः प्रयास करें।",
+	"aposteriori_title": "प्राप्त करने योग्य गुरु-शिष्य पुरस्कार",
+	"aposteriori_desc": "गुरु-शिष्य पुरस्कार प्रणाली नई है: अपने शिष्यों और गुरु के पुरस्कार प्राप्त करें।",
+	"aposteriori_claim": "प्राप्त करें",
+	"aposteriori_claimed": "पुरस्कार प्राप्त हुए!"
 }

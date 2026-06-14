@@ -120,5 +120,9 @@
 	"godson_request_accepted": "Pyyntö hyväksytty!",
 	"godsons_level_actual": "nykyinen: {0}",
 	"error_godfather_cycle": "Et voi saada kummiksesi yhtä kummilapsistasi.",
-	"godfather_action_failed": "Toiminto epäonnistui, yritä uudelleen."
+	"godfather_action_failed": "Toiminto epäonnistui, yritä uudelleen.",
+	"aposteriori_title": "Lunastettavat kummipalkkiot",
+	"aposteriori_desc": "Kummipalkkiojärjestelmä on uusi: lunasta palkkiot kummilapsistasi ja kummistasi.",
+	"aposteriori_claim": "Lunasta",
+	"aposteriori_claimed": "Palkkiot vastaanotettu!"
 }

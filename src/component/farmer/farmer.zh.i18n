@@ -127,5 +127,9 @@
 	"godson_request_accepted": "已接受请求！",
 	"godsons_level_actual": "当前：{0}",
 	"error_godfather_cycle": "你不能拜自己的徒弟为师。",
-	"godfather_action_failed": "操作失败，请重试。"
+	"godfather_action_failed": "操作失败，请重试。",
+	"aposteriori_title": "可领取的师徒奖励",
+	"aposteriori_desc": "师徒奖励系统是新功能：领取你的徒弟和师傅的奖励。",
+	"aposteriori_claim": "领取",
+	"aposteriori_claimed": "已领取奖励！"
 }

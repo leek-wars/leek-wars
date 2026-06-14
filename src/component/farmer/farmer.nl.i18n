@@ -127,5 +127,9 @@
 	"godson_request_accepted": "Verzoek geaccepteerd!",
 	"godsons_level_actual": "huidig: {0}",
 	"error_godfather_cycle": "Je kunt niet gesponsord worden door een van je petekinderen.",
-	"godfather_action_failed": "Actie mislukt, probeer het opnieuw."
+	"godfather_action_failed": "Actie mislukt, probeer het opnieuw.",
+	"aposteriori_title": "Peetschap-beloningen om te claimen",
+	"aposteriori_desc": "Het beloningssysteem voor peetschap is nieuw: claim die voor je petekinderen en je peetvader.",
+	"aposteriori_claim": "Claimen",
+	"aposteriori_claimed": "Beloningen ontvangen!"
 }

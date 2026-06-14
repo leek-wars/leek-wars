@@ -360,6 +360,18 @@
 			</template>
 			<template #content>
 				<div class="content sponsorship">
+					<div v-if="myFarmer && farmer && farmer.aposteriori_rewards && farmer.aposteriori_rewards.claimable" class="aposteriori-banner">
+						<div class="ap-text">
+							<h4>{{ $t('aposteriori_title') }}</h4>
+							<div class="ap-desc grey">{{ $t('aposteriori_desc') }}</div>
+							<div class="ap-rewards">
+								<span v-if="farmer.aposteriori_rewards.crystals" class="ap-reward"><span class="crystal"></span> {{ $filters.number(farmer.aposteriori_rewards.crystals) }}</span>
+								<span v-if="farmer.aposteriori_rewards.habs" class="ap-reward"><span class="hab"></span> {{ $filters.number(farmer.aposteriori_rewards.habs) }}</span>
+								<span v-if="farmer.aposteriori_rewards.fights" class="ap-reward"><img src="/image/icon/fight.png" class="ap-fight-icon"> {{ farmer.aposteriori_rewards.fights }}</span>
+							</div>
+						</div>
+						<div v-ripple class="ap-claim" @click="claimAposterioriRewards">{{ $t('aposteriori_claim') }}</div>
+					</div>
 					<div v-if="myFarmer && godfatherRequests.length" class="godfather-requests">
 						<h4>{{ $t('godfather_requests') }}</h4>
 						<div v-for="req in godfatherRequests" :key="req.id" class="request-row">
@@ -947,6 +959,18 @@
 	function godfatherError(e: unknown) {
 		const code = (e as { error?: string } | null)?.error
 		LeekWars.toast(t(code === 'godfather_cycle' ? 'error_godfather_cycle' : 'godfather_action_failed') as string)
+	}
+
+	// Réclame une fois les récompenses de parrainage a posteriori (anciens joueurs). #4118
+	function claimAposterioriRewards() {
+		LeekWars.post('farmer/claim-aposteriori-rewards').then((data: { crystals: number, habs: number, fights: number }) => {
+			if (farmer.value && farmer.value.aposteriori_rewards) farmer.value.aposteriori_rewards.claimable = false
+			if (store.state.farmer) {
+				store.state.farmer.habs += data.habs
+				store.state.farmer.crystals += data.crystals
+			}
+			LeekWars.toast(t('aposteriori_claimed') as string)
+		}).catch(godfatherError)
 	}
 
 	// Sens 2 : demander à ce joueur d'être notre parrain. #4118
@@ -1640,6 +1664,54 @@
 		.current-level {
 			font-size: 13px;
 			margin-top: -2px;
+		}
+		.aposteriori-banner {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			flex-wrap: wrap;
+			padding: 12px;
+			margin-bottom: 14px;
+			border-radius: 4px;
+			background: rgba(90, 194, 0, 0.12);
+			border: 1px solid var(--primary);
+			.ap-text {
+				flex: 1;
+				min-width: 200px;
+			}
+			h4 {
+				margin: 0 0 2px;
+			}
+			.ap-desc {
+				font-size: 13px;
+				margin-bottom: 6px;
+			}
+			.ap-rewards {
+				display: flex;
+				gap: 14px;
+				flex-wrap: wrap;
+				font-weight: 500;
+			}
+			.ap-reward {
+				display: inline-flex;
+				align-items: center;
+				gap: 4px;
+			}
+			.ap-fight-icon {
+				width: 18px;
+				height: 18px;
+				vertical-align: middle;
+			}
+			.ap-claim {
+				cursor: pointer;
+				padding: 8px 18px;
+				border-radius: 4px;
+				font-weight: 500;
+				color: #fff;
+				background: var(--primary);
+				white-space: nowrap;
+				&:hover { filter: brightness(1.1); }
+			}
 		}
 		.godfather-requests {
 			margin-bottom: 12px;

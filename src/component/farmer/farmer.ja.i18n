@@ -127,5 +127,9 @@
 	"godson_request_accepted": "申請を承認しました！",
 	"godsons_level_actual": "現在: {0}",
 	"error_godfather_cycle": "自分の弟子を師匠にすることはできません。",
-	"godfather_action_failed": "操作に失敗しました。もう一度お試しください。"
+	"godfather_action_failed": "操作に失敗しました。もう一度お試しください。",
+	"aposteriori_title": "受け取れる師弟の報酬",
+	"aposteriori_desc": "師弟の報酬システムは新しいです。弟子と師匠の報酬を受け取りましょう。",
+	"aposteriori_claim": "受け取る",
+	"aposteriori_claimed": "報酬を受け取りました！"
 }

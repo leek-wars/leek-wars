@@ -127,5 +127,9 @@
 	"godson_request_accepted": "Förfrågan accepterad!",
 	"godsons_level_actual": "aktuell: {0}",
 	"error_godfather_cycle": "Du kan inte få ett av dina fadderbarn som fadder.",
-	"godfather_action_failed": "Åtgärden misslyckades, försök igen."
+	"godfather_action_failed": "Åtgärden misslyckades, försök igen.",
+	"aposteriori_title": "Fadderbelöningar att hämta",
+	"aposteriori_desc": "Belöningssystemet för fadderskap är nytt: hämta dem för dina fadderbarn och din fadder.",
+	"aposteriori_claim": "Hämta",
+	"aposteriori_claimed": "Belöningar mottagna!"
 }
