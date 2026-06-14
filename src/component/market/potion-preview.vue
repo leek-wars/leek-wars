@@ -130,8 +130,12 @@ function useCloverPotion() {
 	text-align: center;
 }
 .leek-preview {
-	flex-wrap: wrap;
-	align-items: flex-end;
+	// Grille 2 colonnes (2x2 pour 4 poireaux) au lieu d'un flex-wrap qui
+	// retombait en une seule colonne très haute sur les conteneurs étroits.
+	display: grid;
+	grid-template-columns: repeat(2, auto);
+	justify-content: center;
+	align-items: end;
 	gap: 10px 14px;
 	// Neutralise le padding 5px hérité de .item-preview .stats div
 	.leek-entry {
