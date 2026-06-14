@@ -367,7 +367,7 @@
 							<div class="ap-rewards">
 								<span v-if="farmer.aposteriori_rewards.crystals" class="ap-reward"><span class="crystal"></span> {{ $filters.number(farmer.aposteriori_rewards.crystals) }}</span>
 								<span v-if="farmer.aposteriori_rewards.habs" class="ap-reward"><span class="hab"></span> {{ $filters.number(farmer.aposteriori_rewards.habs) }}</span>
-								<span v-if="farmer.aposteriori_rewards.fights" class="ap-reward"><img src="/image/icon/fight.png" class="ap-fight-icon"> {{ farmer.aposteriori_rewards.fights }}</span>
+								<span v-if="farmer.aposteriori_rewards.fights" class="ap-reward"><v-icon class="ap-fight-icon">mdi-sword-cross</v-icon> {{ farmer.aposteriori_rewards.fights }}</span>
 							</div>
 						</div>
 						<div v-ripple class="ap-claim" @click="claimAposterioriRewards">{{ $t('aposteriori_claim') }}</div>
@@ -1698,9 +1698,8 @@
 				gap: 4px;
 			}
 			.ap-fight-icon {
-				width: 18px;
-				height: 18px;
-				vertical-align: middle;
+				font-size: 18px;
+				opacity: 0.8;
 			}
 			.ap-claim {
 				cursor: pointer;
