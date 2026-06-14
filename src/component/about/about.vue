@@ -37,11 +37,21 @@
 				<h2 class="title">Leek Wars</h2>
 				<h4>{{ $t('version_n', [LeekWars.version]) }}</h4>
 				<br>
-				<a href="https://www.facebook.com/LeekWars">
-					<img height="28" src="/image/about/facebook_like.png">
-				</a>
-				<iframe class="github-button" allowtransparency="true" src="https://ghbtns.com/github-btn.html?user=leek-wars&repo=leek-wars&type=star&count=true&size=large" frameborder="0" scrolling="0" width="120" height="30" title="Star Leek Wars on GitHub"></iframe>
-				<iframe class="twitter-button" allowtransparency="true" frameborder="0" scrolling="no" src="//platform.twitter.com/widgets/follow_button.html?screen_name=LeekWars&size=l" width="250" height="28"></iframe>
+				<div class="social-buttons">
+					<a class="social-btn" href="https://github.com/leek-wars/leek-wars" target="_blank" rel="noopener">
+						<v-icon>mdi-github</v-icon>
+						<span>GitHub</span>
+						<span v-if="githubStars !== null" class="count"><v-icon>mdi-star</v-icon>{{ LeekWars.formatNumber(githubStars) }}</span>
+					</a>
+					<a class="social-btn" href="https://www.facebook.com/LeekWars" target="_blank" rel="noopener">
+						<v-icon>mdi-facebook</v-icon>
+						<span>Facebook</span>
+					</a>
+					<a class="social-btn" href="https://twitter.com/LeekWars" target="_blank" rel="noopener">
+						<v-icon>mdi-twitter</v-icon>
+						<span>Twitter</span>
+					</a>
+				</div>
 			</div>
 		</panel>
 
@@ -246,6 +256,7 @@ const team = computed(() => [[
 ]])
 
 const contributors = ref<Farmer[]>([])
+const githubStars = ref<number | null>(null)
 
 onBeforeMount(() => {
 	LeekWars.setTitle(t('title'))
@@ -253,6 +264,8 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
+	LeekWars.get<{stars: number}>('github/stars').then(r => { githubStars.value = r.stars }).catch(() => {})
+
 	LeekWars.get<Farmer[]>('farmer/contributors').then(list => {
 		contributors.value = list.filter(c => c.id !== 43276 && c.id !== 8773 && c.id !== 38357)
 		contributors.value.sort(() => Math.random() - 0.5)
@@ -375,16 +388,41 @@ onMounted(() => {
 		width: 80px;
 		max-width: 90px;
 	}
-	.fb-like {
-		vertical-align: top;
+	// Boutons sociaux maison, thémés via les variables CSS (clair + sombre).
+	// Remplacent les widgets tiers (GitHub/Facebook/Twitter) qui ne savaient
+	// pas faire de dark mode (fond blanc) (#4128).
+	.social-buttons {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 8px;
+		margin-top: 8px;
 	}
-	.github-button {
-		padding: 0 10px;
-	}
-	// Aligne verticalement les widgets sociaux (Facebook, GitHub, Twitter)
-	// qui ont des hauteurs légèrement différentes (#4128).
-	.center > a,
-	.center > iframe {
-		vertical-align: middle;
+	.social-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		padding: 6px 14px;
+		border-radius: 6px;
+		background: var(--background-secondary);
+		border: 1px solid var(--border);
+		color: var(--text-color);
+		font-weight: 500;
+		text-decoration: none;
+		&:hover {
+			background: var(--background-disabled);
+		}
+		.v-icon {
+			font-size: 20px;
+		}
+		.count {
+			display: inline-flex;
+			align-items: center;
+			gap: 2px;
+			color: var(--text-color-secondary);
+			.v-icon {
+				font-size: 16px;
+			}
+		}
 	}
 </style>
