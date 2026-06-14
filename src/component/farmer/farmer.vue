@@ -359,9 +359,9 @@
 			<template #content>
 				<div class="content sponsorship">
 					<div class="container">
-						<div v-if="farmer" class="column grey">
-							<div v-if="farmer.godfather">
-								<i18n-t keypath="godson_of" tag="div">
+						<div v-if="farmer" class="column grey godfather-manage">
+							<div v-if="farmer.godfather" class="gf-row">
+								<i18n-t keypath="godson_of" tag="span">
 									<template #farmer>
 										<router-link :to="'/farmer/' + farmer.godfather.id">
 											<rich-tooltip-farmer :id="farmer.godfather.id" v-slot="{ props }">
@@ -370,9 +370,21 @@
 										</router-link>
 									</template>
 								</i18n-t>
+								<span v-if="myFarmer" class="gf-action" @click="untieGodfather">{{ $t('untie_godfather') }}</span>
 							</div>
-							<div v-if="farmer.godsons.length">
-								<i18n-t keypath="godfather_of" tag="div">
+							<div v-if="farmer.godsons.length" class="godsons">
+								<template v-if="myFarmer">
+									<div>{{ $t('godfather_of_label') }}</div>
+									<div v-for="godson in farmer.godsons" :key="godson.id" class="gf-row">
+										<router-link :to="'/farmer/' + godson.id">
+											<rich-tooltip-farmer :id="godson.id" v-slot="{ props }">
+												<span v-bind="props">{{ godson.name }}</span>
+											</rich-tooltip-farmer>
+										</router-link>
+										<span class="gf-action" @click="disownGodson(godson)">{{ $t('disown_godson') }}</span>
+									</div>
+								</template>
+								<i18n-t v-else keypath="godfather_of" tag="div">
 									<template #farmers>
 										<template v-for="(godson, i) in farmer.godsons" :key="i">
 											<router-link :to="'/farmer/' + godson.id">
@@ -904,6 +916,18 @@
 			countryDialog.value = false
 			LeekWars.post('farmer/change-country', {country_code: code})
 		}
+	}
+
+	// Parrainage a posteriori : se délier de son parrain / renier un filleul. #4118
+	function untieGodfather() {
+		LeekWars.post('farmer/remove-godfather').then(() => {
+			if (farmer.value) farmer.value.godfather = null
+		})
+	}
+	function disownGodson(godson: { id: number }) {
+		LeekWars.post('farmer/remove-godson', {godson_id: godson.id}).then(() => {
+			if (farmer.value) farmer.value.godsons = farmer.value.godsons.filter(g => g.id !== godson.id)
+		})
 	}
 
 	function changeAvatar(e: Event) {
@@ -1524,6 +1548,18 @@
 	.sponsorship {
 		.grey {
 			color: #999;
+		}
+		.godfather-manage .gf-row {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			padding: 2px 0;
+		}
+		.godfather-manage .gf-action {
+			color: var(--error, #c0392b);
+			cursor: pointer;
+			font-size: 12px;
+			&:hover { text-decoration: underline; }
 		}
 		.container {
 			display: grid;
