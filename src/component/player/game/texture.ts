@@ -310,6 +310,7 @@ class T {
 	public static explosion_mark = new Texture(LeekWars.STATIC + 'image/fight/explosion_mark.png')
 	public static explosion_rock = new Texture(LeekWars.STATIC + 'image/fight/explosion_rock.png')
 	public static explosion_rock2 = new Texture(LeekWars.STATIC + 'image/fight/explosion_rock2.png')
+	public static boulder = new Texture(LeekWars.STATIC + 'image/fight/boulder.png')
 	public static summon_leaf = new Texture(LeekWars.STATIC + 'image/fight/summon_leaf.png')
 	public static japan_grass = new Texture(LeekWars.STATIC + 'image/map/japan_grass.png')
 	public static japan_rock = new Texture(LeekWars.STATIC + 'image/map/japan_rock.png')

@@ -1745,7 +1745,7 @@ class Kemuridama extends ChipAnimation {
 			const ox = Math.random() * 90 - 45
 			const oy = Math.random() * 60 - 30
 			const dx = (Math.random() - 0.5) * 1.4 // dérive latérale
-			const scale = 1.8 + Math.random() * 1.8 // bien plus grand
+			const scale = 0.5 + Math.random() * 0.9 // petits à moyens nuages
 			const texture = Math.random() > 0.5 ? T.grey_cloud : T.cloud
 			this.game.particles.addImage(pos.x + ox, pos.y + oy, 20 + Math.random() * 40, dx, 0, 0.2, 0, texture, 75, 0.5, 0, false, scale)
 		}
@@ -1765,7 +1765,7 @@ class Shuriken extends ChipAnimation {
 	constructor(game: Game) { super(game, S.leek_slice, 50, DamageType.DEFAULT) }
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
 		super.launch(launchPos, targetPos, targets, targetCell, launcher)
-		this.game.particles.addFlyingSpinningProjectile(launchPos.x, launchPos.y, 40, targetPos.x, targetPos.y, this.flyDuration, T.shuriken_star, 40, 0.8)
+		this.game.particles.addFlyingSpinningProjectile(launchPos.x, launchPos.y, 40, targetPos.x, targetPos.y, this.flyDuration, T.shuriken_star, 56, 0.8)
 	}
 	public update(dt: number) {
 		super.update(dt)
@@ -1781,23 +1781,30 @@ class Shuriken extends ChipAnimation {
 }
 
 class FireBall extends ChipAnimation {
-	static textures = [T.fire, T.chip_fire_ball]
+	static textures = [T.fire]
 	static sounds = [S.fire]
-	public flyDuration = 25
+	static DURATION = 70
+	static FLIGHT = 45
 	public exploded = false
-	constructor(game: Game) { super(game, S.fire, 70, DamageType.FIRE) }
-	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
-		super.launch(launchPos, targetPos, targets, targetCell, launcher)
-		this.game.particles.addFlyingSpinningProjectile(launchPos.x, launchPos.y, 50, targetPos.x, targetPos.y, this.flyDuration, T.chip_fire_ball, 50, 0.3)
-	}
+	constructor(game: Game) { super(game, S.fire, FireBall.DURATION, DamageType.FIRE) }
 	public update(dt: number) {
 		super.update(dt)
-		if (!this.exploded && this.duration < this.flyDuration) {
+		const elapsed = FireBall.DURATION - this.duration
+		if (elapsed < FireBall.FLIGHT) {
+			// Vol : vraie boule de feu (flux de particules de feu) qui laisse une
+			// traînée en suivant la tête interpolée du lanceur vers la cible.
+			const p = elapsed / FireBall.FLIGHT
+			const hx = this.launchPos.x + (this.position.x - this.launchPos.x) * p
+			const hy = this.launchPos.y + (this.position.y - this.launchPos.y) * p
+			for (let i = 0; i < 3; ++i) {
+				this.game.particles.addFire(hx + Math.random() * 16 - 8, hy + Math.random() * 16 - 8, 45, Math.random() * Math.PI * 2, true)
+			}
+		} else if (!this.exploded) {
 			this.exploded = true
 			this.game.setEffectArea(this.cell, Area.CIRCLE1, '#f26304', 60)
 		}
 		// Petits feux sur targets après impact
-		if (this.duration < this.flyDuration - 2 && this.targets && Math.random() > 0.5) {
+		if (elapsed > FireBall.FLIGHT + 2 && this.targets && Math.random() > 0.5) {
 			for (const target of this.targets) {
 				this.game.particles.addFire(target.ox + Math.random() * 30 - 15, target.oy + Math.random() * 30 - 15, 20, Math.random() * Math.PI * 2, false)
 				target.burnAnim(40)
@@ -1807,9 +1814,10 @@ class FireBall extends ChipAnimation {
 }
 
 class Trebuchet extends ChipAnimation {
-	static textures = [T.explosion_rock, T.explosion_rock2, T.explosion_mark]
+	static textures = [T.boulder, T.explosion_mark]
 	static sounds = [S.meteorite, S.explosion]
 	public flyDuration = 40
+	public boulderSize = 64
 	public exploded = false
 	constructor(game: Game) { super(game, S.meteorite, 90, DamageType.EXPLOSION) }
 	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
@@ -1820,15 +1828,17 @@ class Trebuchet extends ChipAnimation {
 		// (côté du lanceur), monte en parabole, puis s'écrase sur la cible.
 		const side = Math.sign(launchPos.x - position.x) || 1
 		const startX = position.x + side * 700
-		this.game.particles.addBoulder(startX, position.y, 120, position.x, position.y, 160, this.flyDuration, T.explosion_rock, 64)
+		this.game.particles.addBoulder(startX, position.y, 120, position.x, position.y, 160, this.flyDuration, T.boulder, this.boulderSize)
 	}
 	public update(dt: number) {
 		super.update(dt)
 		// Impact quand le rocher atteint la cible (durée totale - durée de vol)
 		if (!this.exploded && this.duration <= 90 - this.flyDuration) {
 			this.exploded = true
-			// Petite explosion + marque noire au sol + rocher qui se découpe en morceaux
-			this.game.particles.addRealisticExplosion(this.position.x, this.position.y, 1.5)
+			// Le rocher éclate en fragments (comme la mort d'un poireau) + souffle
+			// d'impact et marque au sol (sans les cailloux génériques).
+			this.game.particles.addShatter(T.boulder, this.position.x, this.position.y, 14, this.boulderSize)
+			this.game.particles.addRealisticExplosion(this.position.x, this.position.y, 1.2, undefined, false)
 			if (this.targets) {
 				for (const target of this.targets) {
 					target.hurt(this.position.x, this.position.y, 0, 0, 0, 0)

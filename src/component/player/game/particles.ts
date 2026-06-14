@@ -1,6 +1,7 @@
 import { FightEntity } from '@/component/player/game/entity'
 import { Game } from "@/component/player/game/game"
 import { Blood, Boulder, Bubble, Bullet, BuryParticle, Cartridge, CriticalParticle, Explosion, Fire, FlyingSpinningProjectile, Garbage, Gaz, Grenade, ImageParticle, Laser, LighningBall, Lightning, LineParticle, Meteorite, NUM_BLOOD_SPRITES, Orbital, Particle, Plasma, PrismParticle, RealisticExplosion, Rectangle, Rocket, Shot, SimpleFire, SmallExplosion, SpikeParticle, SpinningParticle } from '@/component/player/game/particle'
+import { Path } from './path'
 import { Position } from '@/component/player/game/position'
 import { T, Texture } from '@/component/player/game/texture'
 import { Cell } from '@/model/cell'
@@ -135,6 +136,47 @@ class Particles {
 	}
 	public addBoulder(startX: number, startY: number, startZ: number, targetX: number, targetY: number, arcHeight: number, duration: number, texture: Texture, size?: number) {
 		this.add(new Boulder(this.game, startX, startY, startZ, targetX, targetY, arcHeight, duration, texture, size))
+	}
+	// Éclate une sprite en fragments « parts de tarte » qui s'envolent, comme
+	// l'animation de mort d'un poireau (cf. entity.explode). displaySize = taille
+	// affichée de la sprite entière en pixels (les fragments sont scalés en conséquence).
+	public addShatter(texture: Texture, x: number, y: number, z: number, displaySize: number, dx: number = 0, dy: number = 0) {
+		const tex = texture.texture
+		const w = tex.width
+		const h = tex.height
+		const s = Math.max(w, h)
+		const scale = displaySize / s
+		const cx = w * (0.3 + Math.random() * 0.4)
+		const cy = h * (0.3 + Math.random() * 0.4)
+		const startAngle = Math.random() * Math.PI
+		const lines = 8 + Math.random() * 6 | 0
+		for (let f = 0; f < lines; ++f) {
+			const angle1 = startAngle + (f / lines) * Math.PI * 2
+			const angle3 = startAngle + ((f + 1) / lines) * Math.PI * 2
+			const angle2 = (angle1 + angle3) / 2
+			const path = new Path(0, 0, w, h)
+			path.moveTo(cx, cy)
+			path.lineTo(cx + Math.cos(angle1) * s, cy + Math.sin(angle1) * s)
+			path.lineTo(cx + Math.cos(angle3) * s, cy + Math.sin(angle3) * s)
+			path.closePath()
+			const canvas = document.createElement('canvas')
+			canvas.width = path.x2 - path.x1
+			canvas.height = path.y2 - path.y1
+			const fragmentCtx = canvas.getContext('2d')!
+			const fragment = new Texture('')
+			fragment.texture = canvas
+			fragmentCtx.translate(-path.x1, -path.y1)
+			fragmentCtx.drawImage(tex, 0, 0)
+			fragmentCtx.globalCompositeOperation = 'destination-in'
+			fragmentCtx.fill(path)
+			fragmentCtx.globalCompositeOperation = 'source-over'
+			const f_x = x + (-w / 2 + (path.x1 + path.x2) / 2) * scale
+			const f_z = z + (h / 2 - (path.y1 + path.y2) / 2) * scale
+			const fdx = dx + Math.cos(angle2) * 2.5
+			const fdz = dy + 1 + Math.random() * 2 // pop vers le haut
+			const rotation = -0.06 + Math.random() * 0.12
+			this.addGarbage(f_x, y, f_z, fdx, 0, fdz, fragment, 1, rotation, scale, 0, 70)
+		}
 	}
 	public addRocket(x: number, y: number, z: number, angle: number, duration: number, targetCell: Cell, radius: number, texture?: Texture, explosionColorFn?: (t: number) => string, explosionDebris: boolean = true) {
 		this.add(new Rocket(this.game, x, y, z, angle, duration, targetCell, radius, texture, explosionColorFn, explosionDebris))
