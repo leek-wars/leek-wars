@@ -1797,7 +1797,8 @@ class FireBall extends ChipAnimation {
 			const hx = this.launchPos.x + (this.position.x - this.launchPos.x) * p
 			const hy = this.launchPos.y + (this.position.y - this.launchPos.y) * p
 			for (let i = 0; i < 3; ++i) {
-				this.game.particles.addFire(hx + Math.random() * 16 - 8, hy + Math.random() * 16 - 8, 45, Math.random() * Math.PI * 2, true)
+				// thrown=false : particules lentes qui restent près de la tête (traînée courte)
+				this.game.particles.addFire(hx + Math.random() * 16 - 8, hy + Math.random() * 16 - 8, 45, Math.random() * Math.PI * 2, false)
 			}
 		} else if (!this.exploded) {
 			this.exploded = true
