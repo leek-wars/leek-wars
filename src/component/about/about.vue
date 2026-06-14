@@ -43,13 +43,13 @@
 						<span>GitHub</span>
 						<span v-if="githubStars !== null" class="count"><v-icon>mdi-star</v-icon>{{ LeekWars.formatNumber(githubStars) }}</span>
 					</a>
-					<a class="social-btn" href="https://www.facebook.com/LeekWars" target="_blank" rel="noopener">
+					<a class="social-btn facebook" href="https://www.facebook.com/LeekWars" target="_blank" rel="noopener">
 						<v-icon>mdi-facebook</v-icon>
 						<span>Facebook</span>
 					</a>
-					<a class="social-btn" href="https://twitter.com/LeekWars" target="_blank" rel="noopener">
-						<v-icon>mdi-twitter</v-icon>
-						<span>Twitter</span>
+					<a class="social-btn x" href="https://x.com/LeekWars" target="_blank" rel="noopener">
+						<v-icon>mdi-alpha-x</v-icon>
+						<span>X</span>
 					</a>
 				</div>
 			</div>
@@ -424,5 +424,18 @@ onMounted(() => {
 				font-size: 16px;
 			}
 		}
+	}
+	// Couleurs de marque (texte/icône blancs, OK clair + sombre).
+	.social-btn.facebook {
+		background: #1877f2;
+		border-color: #1877f2;
+		color: #fff;
+		&:hover { background: #1465d8; }
+	}
+	.social-btn.x {
+		background: #000;
+		border-color: #000;
+		color: #fff;
+		&:hover { background: #222; }
 	}
 </style>
