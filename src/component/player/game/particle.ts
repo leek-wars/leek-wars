@@ -58,7 +58,7 @@ abstract class Particle {
 			return true
 		}
 		// Sortie de terrain
-		if (!(this instanceof Laser) && !(this instanceof Meteorite)) {
+		if (!(this instanceof Laser) && !(this instanceof Meteorite) && !(this instanceof Boulder)) {
 			if (this.x < -150 || this.y < -150 || this.x > this.game.ground.width + 150 || this.y > this.game.ground.height + 150) {
 				this.onDie()
 				return true
@@ -870,6 +870,47 @@ class FlyingSpinningProjectile extends Particle {
 	}
 }
 
+// Projectile en trajectoire parabolique de trébuchet : entre par le côté de
+// l'écran, monte puis retombe sur la cible. Purement visuel (l'explosion est
+// déclenchée par l'animation de puce). Exempté du kill hors-terrain (il démarre
+// volontairement hors écran), cf. Particle.update.
+class Boulder extends Particle {
+	startX: number
+	startY: number
+	startZ: number
+	targetX: number
+	targetY: number
+	arcHeight: number
+	totalDuration: number
+	texture: Texture
+	size: number
+
+	public constructor(game: Game, startX: number, startY: number, startZ: number, targetX: number, targetY: number, arcHeight: number, duration: number, texture: Texture, size: number = 64) {
+		super(game, startX, startY, startZ, duration)
+		this.startX = startX
+		this.startY = startY
+		this.startZ = startZ
+		this.targetX = targetX
+		this.targetY = targetY
+		this.arcHeight = arcHeight
+		this.totalDuration = duration
+		this.texture = texture
+		this.size = size
+		this.rotation = 0.15
+	}
+	public update(dt: number): boolean {
+		const p = Math.min(1, 1 - this.life / this.totalDuration)
+		this.x = this.startX + (this.targetX - this.startX) * p
+		this.y = this.startY + (this.targetY - this.startY) * p
+		// Parabole : part de startZ, monte, retombe à 0 sur la cible (p = 1).
+		this.z = this.startZ * (1 - p) + this.arcHeight * 4 * p * (1 - p)
+		return super.update(dt)
+	}
+	public draw(ctx: CanvasRenderingContext2D): void {
+		ctx.drawImage(this.texture.texture, -this.size / 2, -this.size / 2, this.size, this.size)
+	}
+}
+
 class Rocket extends Particle {
 	static SPEED = 8
 	static SCALE = 0.5
@@ -1078,4 +1119,4 @@ class PrismParticle extends Particle {
 	}
 }
 
-export { Particle, Bubble, Bullet, BuryParticle, CriticalParticle, Laser, Lightning, Fire, FlyingSpinningProjectile, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, LighningBall, LineParticle, Plasma, Rectangle, Blood, PrismParticle, RealisticExplosion, Rocket, SmallExplosion, SpikeParticle, SpinningParticle, NUM_BLOOD_SPRITES, Orbital }
+export { Particle, Bubble, Bullet, BuryParticle, CriticalParticle, Laser, Lightning, Fire, FlyingSpinningProjectile, Boulder, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, LighningBall, LineParticle, Plasma, Rectangle, Blood, PrismParticle, RealisticExplosion, Rocket, SmallExplosion, SpikeParticle, SpinningParticle, NUM_BLOOD_SPRITES, Orbital }

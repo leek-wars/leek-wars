@@ -384,6 +384,7 @@ class T {
 	// Chips boss (icones directes faute de glyph dédié)
 	public static chip_kemuridama = new Texture(LeekWars.STATIC + 'image/chip/kemuridama.png')
 	public static chip_shuriken = new Texture(LeekWars.STATIC + 'image/chip/shuriken.png')
+	public static shuriken_star = new Texture(LeekWars.STATIC + 'image/chip/shuriken_star.png')
 	public static chip_fire_ball = new Texture(LeekWars.STATIC + 'image/chip/fire_ball.png')
 	public static chip_trebuchet = new Texture(LeekWars.STATIC + 'image/chip/trebuchet.png')
 	public static chip_thunder = new Texture(LeekWars.STATIC + 'image/chip/thunder.png')

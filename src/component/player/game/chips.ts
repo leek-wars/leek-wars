@@ -1727,7 +1727,7 @@ class Prism extends ChipAnimation {
 // Kemuridama → Teleportation + smoke ; Shuriken → projectile rotation + impact ;
 // FireBall → projectile + dégâts feu ; Trebuchet → Meteorite ; Thunder → Lightning grande zone.
 class Kemuridama extends ChipAnimation {
-	static textures = [T.smoke]
+	static textures = [T.grey_cloud, T.cloud]
 	static sounds = [S.teleportation]
 	public teleported = false
 	public targetPos!: Position
@@ -1738,11 +1738,16 @@ class Kemuridama extends ChipAnimation {
 	}
 	public update(dt: number) {
 		super.update(dt)
-		if (Math.random() > 0.5) {
-			const pos = this.duration > 60 ? this.launchPos : this.targetPos
-			const ox = Math.random() * 50 - 25
-			const oy = Math.random() * 30 - 15
-			this.game.particles.addImage(pos.x + ox, pos.y + oy, 30, 0, 0, 0.3, 0, T.smoke, 60, 0.6)
+		// Gros nuage de fumée : plusieurs sprites de nuage par frame, étalés, qui
+		// dérivent sur le côté et montent, sans rotation, en grande échelle.
+		const pos = this.duration > 60 ? this.launchPos : this.targetPos
+		for (let i = 0; i < 3; ++i) {
+			const ox = Math.random() * 90 - 45
+			const oy = Math.random() * 60 - 30
+			const dx = (Math.random() - 0.5) * 1.4 // dérive latérale
+			const scale = 1.8 + Math.random() * 1.8 // bien plus grand
+			const texture = Math.random() > 0.5 ? T.grey_cloud : T.cloud
+			this.game.particles.addImage(pos.x + ox, pos.y + oy, 20 + Math.random() * 40, dx, 0, 0.2, 0, texture, 75, 0.5, 0, false, scale)
 		}
 		if (!this.teleported && this.duration < 60) {
 			this.launcher!.setCell(this.cell)
@@ -1753,14 +1758,14 @@ class Kemuridama extends ChipAnimation {
 }
 
 class Shuriken extends ChipAnimation {
-	static textures = [T.chip_shuriken]
+	static textures = [T.shuriken_star]
 	static sounds = [S.leek_slice]
 	public flyDuration = 30
 	public hit = false
 	constructor(game: Game) { super(game, S.leek_slice, 50, DamageType.DEFAULT) }
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
 		super.launch(launchPos, targetPos, targets, targetCell, launcher)
-		this.game.particles.addFlyingSpinningProjectile(launchPos.x, launchPos.y, 40, targetPos.x, targetPos.y, this.flyDuration, T.chip_shuriken, 40, 0.8)
+		this.game.particles.addFlyingSpinningProjectile(launchPos.x, launchPos.y, 40, targetPos.x, targetPos.y, this.flyDuration, T.shuriken_star, 40, 0.8)
 	}
 	public update(dt: number) {
 		super.update(dt)
@@ -1811,8 +1816,11 @@ class Trebuchet extends ChipAnimation {
 		super.launch(launchPos, position, targets, targetCell, launcher)
 		// Zone d'impact télégraphiée
 		this.game.setEffectArea(targetCell, Area.CIRCLE2, '#888', 180)
-		// Rocher lancé par le trébuchet : il tournoie jusqu'à la cible, sans traînée
-		this.game.particles.addFlyingSpinningProjectile(launchPos.x, launchPos.y, 50, position.x, position.y, this.flyDuration, T.explosion_rock, 64, 0.25)
+		// Boulet en trajectoire de trébuchet : il entre par le côté de l'écran
+		// (côté du lanceur), monte en parabole, puis s'écrase sur la cible.
+		const side = Math.sign(launchPos.x - position.x) || 1
+		const startX = position.x + side * 700
+		this.game.particles.addBoulder(startX, position.y, 120, position.x, position.y, 160, this.flyDuration, T.explosion_rock, 64)
 	}
 	public update(dt: number) {
 		super.update(dt)
@@ -1838,9 +1846,9 @@ class Thunder extends ChipAnimation {
 	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
 		super.launch(launchPos, position, targets, targetCell, launcher)
 		this.targets = this.recipientsOf(launcher, targets)
-		// Plus de nuages noirs, zone plus large que Lightning
-		for (const offset of [-70, -30, 10, 50, 90]) {
-			this.game.particles.addImage(this.position.x + offset, this.position.y, 240, offset > 0 ? -0.4 : 0.4, 0, 0, 0, T.black_cloud, 100)
+		// Nuages noirs larges couvrant toute la zone CIRCLE3
+		for (const offset of [-110, -75, -40, -5, 30, 65, 100]) {
+			this.game.particles.addImage(this.position.x + offset, this.position.y, 240, offset > 0 ? -0.4 : 0.4, 0, 0, 0, T.black_cloud, 100, 1, 0, false, 1.3)
 		}
 		this.game.setEffectArea(targetCell, Area.CIRCLE3, '#ffcc00')
 	}
@@ -1849,10 +1857,16 @@ class Thunder extends ChipAnimation {
 		this.delay -= dt
 		if (this.delay <= 0) {
 			this.delay = 1
-			const da = Math.random() * Math.PI / 18 - Math.PI / 36
-			const dx = Math.random() * 120 - 60
-			const dy = Math.random() * 6 - 3
-			this.game.particles.addLightning(this.position.x + dx, this.position.y - 220 + dy, 0, Math.PI / 2 + da, this.position, T.yellow_lightning)
+			// Rayon pixel de CIRCLE3 (~3 cellules), ellipse isométrique (y aplati x0.5)
+			const rx = 3 * this.game.ground.realTileSizeX / 2
+			// Plusieurs éclairs par tick, répartis dans toute la zone CIRCLE3
+			for (let i = 0; i < 2; ++i) {
+				const ang = Math.random() * Math.PI * 2
+				const rr = Math.sqrt(Math.random()) * rx
+				const landing = { x: this.position.x + Math.cos(ang) * rr, y: this.position.y + Math.sin(ang) * rr * 0.5 }
+				const da = Math.random() * Math.PI / 18 - Math.PI / 36
+				this.game.particles.addLightning(landing.x, landing.y - 220, 0, Math.PI / 2 + da, landing, T.yellow_lightning)
+			}
 			if (this.targets) {
 				for (const target of this.targets) {
 					target.electrify()
