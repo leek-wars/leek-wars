@@ -130,7 +130,7 @@
 						<span v-else>{{ $t('registered_the', [LeekWars.formatDate(farmer.register_date)]) }}</span>
 						<br>
 						<span v-if="farmer.connected">{{ $t('connected') }}</span>
-						<span v-else>{{ $t('last_connection', [LeekWars.formatDuration(farmer.last_connection)]) }}</span>
+						<span v-else v-html="$t('last_connection', [LeekWars.formatDuration(farmer.last_connection)])"></span>
 						<br>
 						<span v-if="farmer.verified">{{ $t('verified') }}</span>
 						<span v-else>{{ $t('not_verified') }}</span>
