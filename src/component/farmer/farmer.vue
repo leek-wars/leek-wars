@@ -412,6 +412,9 @@
 										</template>
 									</template>
 								</i18n-t>
+								<div v-if="myFarmer" class="button flat manage-godsons" @click="godsonsManageOpen = true">
+									<v-icon>mdi-account-supervisor</v-icon> {{ $t('manage_godsons') }}
+								</div>
 							</div>
 						</div>
 						<div class="column column-level">
