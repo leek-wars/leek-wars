@@ -2,5 +2,8 @@
 	"title": "Kelola anak baptis",
 	"stats": "Level {0} · Bakat {1} · Anak baptis lv. {2} · Bergabung {3}",
 	"disown": "Hapus",
-	"empty": "Belum ada anak baptis."
+	"empty": "Belum ada anak baptis.",
+	"disown_confirm_title": "Hapus anak baptis ini?",
+	"disown_confirm_message": "Anda akan menghapus {name} dan kehilangan {level} level anak baptis rekursif.",
+	"cancel": "Batal"
 }

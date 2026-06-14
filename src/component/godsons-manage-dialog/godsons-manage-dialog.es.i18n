@@ -2,5 +2,8 @@
 	"title": "Gestionar ahijados",
 	"stats": "Nivel {0} · Talento {1} · Ahijados niv. {2} · Registrado {3}",
 	"disown": "Quitar",
-	"empty": "Aún no hay ahijados."
+	"empty": "Aún no hay ahijados.",
+	"disown_confirm_title": "¿Quitar a este ahijado?",
+	"disown_confirm_message": "Vas a quitar a {name} y perder {level} niveles recursivos de ahijados.",
+	"cancel": "Cancelar"
 }

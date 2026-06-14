@@ -9,14 +9,26 @@
 					<router-link :to="'/farmer/' + g.id" class="g-name">{{ g.name }}</router-link>
 					<div class="g-stats grey">{{ t('stats', [g.total_level, g.talent, g.godsons_level, formatDate(g.register_time)]) }}</div>
 				</div>
-				<div v-ripple class="g-disown" @click="disown(g)">{{ t('disown') }}</div>
+				<div v-ripple class="g-disown" @click="confirmGodson = g">{{ t('disown') }}</div>
 			</div>
 		</div>
+
+		<popup v-if="confirmGodson" :model-value="true" :width="500" icon="mdi-account-remove" :title="t('disown_confirm_title')" @update:model-value="confirmGodson = null">
+			<i18n-t keypath="disown_confirm_message" tag="div">
+				<template #name><b>{{ confirmGodson.name }}</b></template>
+				<template #level><b>{{ $filters.number(confirmGodson.total_level + confirmGodson.godsons_level) }}</b></template>
+			</i18n-t>
+			<template #actions>
+				<div v-ripple class="action dismiss" @click="confirmGodson = null">{{ t('cancel') }}</div>
+				<div v-ripple class="action red" @click="disown(confirmGodson)">{{ t('disown') }}</div>
+			</template>
+		</popup>
 	</popup>
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { LeekWars } from '@/model/leekwars'
 import { mixins, useNamespacedT } from '@/model/i18n'
 import Popup from '@/component/popup.vue'
@@ -27,9 +39,11 @@ interface Godson { id: number, name: string, avatar_changed: number, total_level
 defineOptions({ name: 'GodsonsManageDialog', i18n: {}, mixins: [...mixins] })
 const props = defineProps<{ modelValue: boolean }>()
 defineEmits<{ (e: 'update:modelValue', value: boolean): void }>()
+useI18n() // initialize local scope for <i18n-t>
 const t = useNamespacedT('godsons-manage-dialog')
 
 const godsons = ref<Godson[] | null>(null)
+const confirmGodson = ref<Godson | null>(null)
 const formatDate = LeekWars.formatDate
 
 watch(() => props.modelValue, (open) => {
@@ -43,6 +57,7 @@ watch(() => props.modelValue, (open) => {
 function disown(g: Godson) {
 	LeekWars.post('farmer/remove-godson', { godson_id: g.id }).then(() => {
 		if (godsons.value) godsons.value = godsons.value.filter(x => x.id !== g.id)
+		confirmGodson.value = null
 	})
 }
 </script>

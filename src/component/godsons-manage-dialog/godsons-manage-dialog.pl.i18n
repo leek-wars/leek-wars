@@ -2,5 +2,8 @@
 	"title": "Zarządzaj podopiecznymi",
 	"stats": "Poziom {0} · Talent {1} · Podopieczni poz. {2} · Dołączył {3}",
 	"disown": "Usuń",
-	"empty": "Brak podopiecznych."
+	"empty": "Brak podopiecznych.",
+	"disown_confirm_title": "Usunąć tego podopiecznego?",
+	"disown_confirm_message": "Usuniesz {name} i stracisz {level} rekurencyjnych poziomów podopiecznych.",
+	"cancel": "Anuluj"
 }

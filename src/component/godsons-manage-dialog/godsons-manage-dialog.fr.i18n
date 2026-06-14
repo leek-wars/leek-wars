@@ -2,5 +2,8 @@
 	"title": "Gérer les filleuls",
 	"stats": "Niveau {0} · Talent {1} · Filleuls niv. {2} · Inscrit le {3}",
 	"disown": "Renier",
-	"empty": "Aucun filleul pour le moment."
+	"empty": "Aucun filleul pour le moment.",
+	"disown_confirm_title": "Renier ce filleul ?",
+	"disown_confirm_message": "Vous allez renier {name} et perdre {level} niveaux récursifs de filleuls.",
+	"cancel": "Annuler"
 }

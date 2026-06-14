@@ -2,5 +2,8 @@
 	"title": "管理徒弟",
 	"stats": "等级 {0} · 天赋 {1} · 徒弟等级 {2} · 加入 {3}",
 	"disown": "移除",
-	"empty": "还没有徒弟。"
+	"empty": "还没有徒弟。",
+	"disown_confirm_title": "移除这个徒弟？",
+	"disown_confirm_message": "你将移除 {name}，并失去 {level} 点徒弟递归等级。",
+	"cancel": "取消"
 }

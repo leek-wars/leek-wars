@@ -2,5 +2,8 @@
 	"title": "Administrer faddersønner",
 	"stats": "Niveau {0} · Talent {1} · Fadderbørn niv. {2} · Tilmeldt {3}",
 	"disown": "Fjern",
-	"empty": "Ingen faddersønner endnu."
+	"empty": "Ingen faddersønner endnu.",
+	"disown_confirm_title": "Fjern dette fadderbarn?",
+	"disown_confirm_message": "Du fjerner {name} og mister {level} rekursive fadderbarn-niveauer.",
+	"cancel": "Annuller"
 }

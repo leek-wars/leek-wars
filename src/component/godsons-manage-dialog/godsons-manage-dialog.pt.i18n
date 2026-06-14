@@ -2,5 +2,8 @@
 	"title": "Gerir afilhados",
 	"stats": "Nível {0} · Talento {1} · Afilhados nív. {2} · Registado {3}",
 	"disown": "Remover",
-	"empty": "Ainda sem afilhados."
+	"empty": "Ainda sem afilhados.",
+	"disown_confirm_title": "Remover este afilhado?",
+	"disown_confirm_message": "Você vai remover {name} e perder {level} níveis recursivos de afilhados.",
+	"cancel": "Cancelar"
 }

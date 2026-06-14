@@ -2,5 +2,8 @@
 	"title": "Petekinderen beheren",
 	"stats": "Niveau {0} · Talent {1} · Petekinderen niv. {2} · Lid sinds {3}",
 	"disown": "Verwijderen",
-	"empty": "Nog geen petekinderen."
+	"empty": "Nog geen petekinderen.",
+	"disown_confirm_title": "Dit petekind verwijderen?",
+	"disown_confirm_message": "Je gaat {name} verwijderen en {level} recursieve petekind-niveaus verliezen.",
+	"cancel": "Annuleren"
 }

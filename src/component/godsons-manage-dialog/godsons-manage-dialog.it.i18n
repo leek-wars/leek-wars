@@ -2,5 +2,8 @@
 	"title": "Gestisci figliocci",
 	"stats": "Livello {0} · Talento {1} · Figliocci liv. {2} · Iscritto {3}",
 	"disown": "Rimuovi",
-	"empty": "Ancora nessun figlioccio."
+	"empty": "Ancora nessun figlioccio.",
+	"disown_confirm_title": "Rimuovere questo figlioccio?",
+	"disown_confirm_message": "Stai per rimuovere {name} e perdere {level} livelli ricorsivi di figliocci.",
+	"cancel": "Annulla"
 }
