@@ -120,5 +120,11 @@
 	"title_6": "{p0} meminta untuk bergabung dengan {p1}.",
 	"title_7": "Anda telah diterima di tim {p0}.",
 	"title_8": "Permohonan Anda untuk tim {p0} telah ditolak",
-	"title_9": "{p0} memenangkan turnamen!"
+	"title_9": "{p0} memenangkan turnamen!",
+	"title_49": "{p0} ingin menjadikanmu wali baptisnya!",
+	"title_50": "{p0} kini menjadi wali baptismu!",
+	"title_51": "{p0} menolak permintaan perwalianmu.",
+	"message_49": "Kelola permintaan",
+	"message_50": "Lihat halaman",
+	"message_51": "Lihat halaman"
 }

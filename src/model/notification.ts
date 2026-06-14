@@ -49,6 +49,9 @@ enum NotificationType {
 	COLOSSUS_REPORT = 46, // Rapport de Colosse
 	LEEK_AUTO_EXIT_ARENA = 47, // Poireau sorti auto du potager (20 défaites en défense)
 	FARMER_AUTO_EXIT_GARDEN = 48, // Éleveur sorti auto du potager (20 défaites en défense)
+	GODFATHER_REQUEST = 49, // Demande de parrainage reçue (params : id_requester, name_requester)
+	GODFATHER_REQUEST_ACCEPTED = 50, // Demande de parrainage acceptée (params : id_godfather, name_godfather)
+	GODFATHER_REQUEST_REFUSED = 51, // Demande de parrainage refusée (params : id_target, name_target)
 }
 
 class Notification {

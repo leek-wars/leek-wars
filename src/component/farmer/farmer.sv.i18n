@@ -118,5 +118,12 @@
 	"invitation_accepted": "Inbjudan accepterad!",
 	"invitation_rejected": "Inbjudan avvisad",
 	"invite_to_team": "Bjud in till laget",
-	"invitation_sent": "Inbjudan skickad!"
+	"invitation_sent": "Inbjudan skickad!",
+	"choose_as_godfather": "Välj som fadder",
+	"godfather_request_sent": "Förfrågan skickad",
+	"godfather_request_sent_toast": "Fadderförfrågan skickad!",
+	"godfather_requests": "Fadderförfrågningar",
+	"request_stats": "Nivå {0} · Talang {1}",
+	"godson_request_accepted": "Förfrågan accepterad!",
+	"godsons_level_actual": "aktuell: {0}"
 }

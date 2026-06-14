@@ -118,5 +118,12 @@
 	"invitation_accepted": "निमंत्रण स्वीकार किया गया!",
 	"invitation_rejected": "निमंत्रण अस्वीकार किया गया",
 	"accept": "स्वीकार करें",
-	"reject": "अस्वीकार करें"
+	"reject": "अस्वीकार करें",
+	"choose_as_godfather": "गुरु के रूप में चुनें",
+	"godfather_request_sent": "अनुरोध भेजा गया",
+	"godfather_request_sent_toast": "गुरु अनुरोध भेजा गया!",
+	"godfather_requests": "गुरु अनुरोध",
+	"request_stats": "स्तर {0} · प्रतिभा {1}",
+	"godson_request_accepted": "अनुरोध स्वीकृत!",
+	"godsons_level_actual": "वर्तमान: {0}"
 }

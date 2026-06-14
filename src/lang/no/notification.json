@@ -120,5 +120,11 @@
 	"title_6": "{p0} ber om å bli med i {p1}.",
 	"title_7": "Du har blitt akseptert i {p0}-teamet.",
 	"title_8": "Søknaden din for {p0}-teamet har blitt avvist",
-	"title_9": "{p0} vant en turnering!"
+	"title_9": "{p0} vant en turnering!",
+	"title_49": "{p0} vil ha deg som fadder!",
+	"title_50": "{p0} er nå fadderen din!",
+	"title_51": "{p0} avslo fadderforespørselen din.",
+	"message_49": "Administrer forespørselen",
+	"message_50": "Se siden",
+	"message_51": "Se siden"
 }

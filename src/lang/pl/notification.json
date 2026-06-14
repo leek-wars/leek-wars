@@ -120,5 +120,11 @@
 	"title_6": "{p0} prosi o dołączenie do {p1}.",
 	"title_7": "Zostałeś przyjęty do zespołu {p0}.",
 	"title_8": "Twoje zgłoszenie do zespołu {p0} zostało odrzucone",
-	"title_9": "{p0} wygrał turniej!"
+	"title_9": "{p0} wygrał turniej!",
+	"title_49": "{p0} chce mieć Cię za patrona!",
+	"title_50": "{p0} jest teraz Twoim patronem!",
+	"title_51": "{p0} odrzucił Twoją prośbę o patronat.",
+	"message_49": "Zarządzaj prośbą",
+	"message_50": "Zobacz stronę",
+	"message_51": "Zobacz stronę"
 }

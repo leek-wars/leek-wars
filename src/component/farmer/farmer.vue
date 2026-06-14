@@ -59,6 +59,10 @@
 							<span>{{ $t('challenge') }}</span>
 						</div>
 					</router-link>
+					<div v-if="$store.state.connected && farmer.can_request_godfather" class="tab action" :class="{ disabled: farmer.godfather_request_sent }" @click="requestGodfather">
+						<v-icon>mdi-hat-fedora</v-icon>
+						<span>{{ farmer.godfather_request_sent ? $t('godfather_request_sent') : $t('choose_as_godfather') }}</span>
+					</div>
 					<div class="action" icon="question_answer" link="/chat/new/{farmer.id}/{farmer.name}/{farmer.avatar_changed}"></div>
 				</div>
 			</div>
@@ -359,6 +363,19 @@
 			</template>
 			<template #content>
 				<div class="content sponsorship">
+					<div v-if="myFarmer && godfatherRequests.length" class="godfather-requests">
+						<h4>{{ $t('godfather_requests') }}</h4>
+						<div v-for="req in godfatherRequests" :key="req.id" class="request-row">
+							<avatar :farmer="{ id: req.requester, name: req.name, avatar_changed: req.avatar_changed }" class="req-avatar" />
+							<div class="req-info">
+								<router-link :to="'/farmer/' + req.requester" class="req-name">{{ req.name }}</router-link>
+								<span class="req-stats grey">{{ $t('request_stats', [$filters.number(req.total_level), $filters.number(req.talent)]) }}</span>
+							</div>
+							<div class="spacer"></div>
+							<div v-ripple class="req-action accept" @click="acceptGodsonRequest(req)">{{ $t('accept') }}</div>
+							<div v-ripple class="req-action refuse" @click="refuseGodsonRequest(req)">{{ $t('reject') }}</div>
+						</div>
+					</div>
 					<div class="container">
 						<div v-if="farmer" class="column grey godfather-manage">
 							<div v-if="farmer.godfather" class="gf-row">
@@ -391,6 +408,7 @@
 						<div class="column column-level">
 							<div class="grey">{{ $t('godsons_level') }}</div>
 							<div class="total-level">{{ farmer ? $filters.number(farmer.godsons_level) : '...' }}</div>
+							<div v-if="farmer && farmer.godsons_level_current < farmer.godsons_level" class="grey current-level">{{ $t('godsons_level_actual', [$filters.number(farmer.godsons_level_current)]) }}</div>
 							<v-tooltip>
 								<template #activator="{ props }">
 									<div class="bar" v-bind="props">
@@ -497,7 +515,7 @@
 
 		<invite-dialog v-if="farmer && myFarmer" v-model="godfatherDialog" :login="farmer.login" />
 
-		<godsons-manage-dialog v-if="myFarmer" v-model="godsonsManageOpen" />
+		<godsons-manage-dialog v-if="myFarmer" v-model="godsonsManageOpen" @disowned="onGodsonDisowned" />
 
 		<popup v-if="farmer" v-model="countryDialog" :width="1000" icon="mdi-earth" :title="$t('country_selection')">
 			<div class="country-dialog">
@@ -645,6 +663,8 @@
 	const trophyTooltip = ref<{ show: boolean, trophy: Trophy | null, x: number, y: number }>({ show: false, trophy: null, x: 0, y: 0 })
 	const godfatherDialog = ref(false)
 	const godsonsManageOpen = ref(false)
+	interface GodfatherRequest { id: number, requester: number, name: string, avatar_changed: number, talent: number, godsons_level: number, total_level: number, date: number }
+	const godfatherRequests = ref<GodfatherRequest[]>([])
 	const countryDialog = ref(false)
 	const createTeamDialog = ref(false)
 	const createTeamName = ref('')
@@ -808,6 +828,13 @@
 		newWebsite.value = f.website
 		newGitHub.value = f.github
 		emitter.emit('loaded')
+		// Demandes de parrainage reçues (sens 2, parrainage a posteriori). #4118
+		godfatherRequests.value = []
+		if (myFarmer.value) {
+			LeekWars.get('farmer/get-godfather-requests').then(data => {
+				godfatherRequests.value = data.requests
+			}).catch(() => {})
+		}
 	}
 
 	function logout() {
@@ -917,6 +944,42 @@
 		LeekWars.post('farmer/remove-godfather').then(() => {
 			if (farmer.value) farmer.value.godfather = null
 		})
+	}
+
+	// Sens 2 : demander à ce joueur d'être notre parrain. #4118
+	function requestGodfather() {
+		if (!farmer.value || farmer.value.godfather_request_sent) return
+		LeekWars.post('farmer/request-godfather', { target: farmer.value.id }).then(() => {
+			if (farmer.value) farmer.value.godfather_request_sent = true
+			LeekWars.toast(t('godfather_request_sent_toast') as string)
+		}).catch(() => {})
+	}
+
+	// La cible accepte une demande reçue : le demandeur devient filleul. #4118
+	function acceptGodsonRequest(req: GodfatherRequest) {
+		LeekWars.post('farmer/accept-godson-request', { request_id: req.id }).then(() => {
+			godfatherRequests.value = godfatherRequests.value.filter(r => r.id !== req.id)
+			if (farmer.value) {
+				farmer.value.godsons = [{ id: req.requester, name: req.name }, ...farmer.value.godsons]
+				farmer.value.godsons_level_current += req.total_level + req.godsons_level
+				farmer.value.godsons_level = Math.max(farmer.value.godsons_level, farmer.value.godsons_level_current)
+			}
+			LeekWars.toast(t('godson_request_accepted') as string)
+		}).catch(() => {})
+	}
+
+	// La cible refuse une demande reçue. #4118
+	function refuseGodsonRequest(req: GodfatherRequest) {
+		LeekWars.post('farmer/refuse-godson-request', { request_id: req.id }).then(() => {
+			godfatherRequests.value = godfatherRequests.value.filter(r => r.id !== req.id)
+		}).catch(() => {})
+	}
+
+	// MAJ instantanée du niveau récursif courant quand un filleul est renié dans le dialogue. #4118
+	function onGodsonDisowned(payload: { id: number, godsons_level_current: number }) {
+		if (!farmer.value) return
+		farmer.value.godsons = farmer.value.godsons.filter(g => g.id !== payload.id)
+		farmer.value.godsons_level_current = payload.godsons_level_current
 	}
 
 	function changeAvatar(e: Event) {
@@ -1534,6 +1597,10 @@
 		width: 30px;
 		margin: 0 5px;
 	}
+	.tab.action.disabled {
+		opacity: 0.5;
+		pointer-events: none;
+	}
 	.sponsorship {
 		.grey {
 			color: #999;
@@ -1566,6 +1633,56 @@
 		.total-level {
 			font-size: 32px;
 			font-weight: 500;
+		}
+		.current-level {
+			font-size: 13px;
+			margin-top: -2px;
+		}
+		.godfather-requests {
+			margin-bottom: 12px;
+			h4 {
+				margin: 0 0 6px;
+			}
+			.request-row {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				padding: 6px 4px;
+				border-bottom: 1px solid var(--border);
+				&:last-child { border-bottom: none; }
+			}
+			.req-avatar {
+				width: 40px;
+				height: 40px;
+				flex: 0 0 auto;
+			}
+			.req-info {
+				min-width: 0;
+				display: flex;
+				flex-direction: column;
+			}
+			.req-name {
+				font-weight: 500;
+			}
+			.req-stats {
+				font-size: 12px;
+			}
+			.req-action {
+				cursor: pointer;
+				padding: 6px 14px;
+				border-radius: 4px;
+				white-space: nowrap;
+				font-weight: 500;
+				&.accept {
+					color: #fff;
+					background: var(--primary);
+					&:hover { filter: brightness(1.1); }
+				}
+				&.refuse {
+					color: var(--error, #c0392b);
+					&:hover { background: rgba(192, 57, 43, 0.1); }
+				}
+			}
 		}
 		.rewards {
 			display: grid;

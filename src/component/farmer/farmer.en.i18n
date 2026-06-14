@@ -118,5 +118,12 @@
 	"invitation_accepted": "Invitation accepted!",
 	"invitation_rejected": "Invitation rejected",
 	"invite_to_team": "Invite to team",
-	"invitation_sent": "Invitation sent!"
+	"invitation_sent": "Invitation sent!",
+	"choose_as_godfather": "Choose as godfather",
+	"godfather_request_sent": "Request sent",
+	"godfather_request_sent_toast": "Sponsorship request sent!",
+	"godfather_requests": "Sponsorship requests",
+	"request_stats": "Level {0} · Talent {1}",
+	"godson_request_accepted": "Request accepted!",
+	"godsons_level_actual": "current: {0}"
 }

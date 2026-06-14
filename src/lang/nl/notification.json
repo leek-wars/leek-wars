@@ -120,5 +120,11 @@
 	"title_6": "{p0} vraagt om lid te worden van {p1}.",
 	"title_7": "U bent geaccepteerd in het {p0}-team.",
 	"title_8": "Uw aanmelding voor het {p0}-team is afgewezen",
-	"title_9": "{p0} heeft een toernooi gewonnen!"
+	"title_9": "{p0} heeft een toernooi gewonnen!",
+	"title_49": "{p0} wil jou als peetvader!",
+	"title_50": "{p0} is nu jouw peetvader!",
+	"title_51": "{p0} heeft je peetverzoek afgewezen.",
+	"message_49": "Verzoek beheren",
+	"message_50": "Bekijk de pagina",
+	"message_51": "Bekijk de pagina"
 }

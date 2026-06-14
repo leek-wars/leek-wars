@@ -38,7 +38,7 @@ interface Godson { id: number, name: string, avatar_changed: number, total_level
 
 defineOptions({ name: 'GodsonsManageDialog', i18n: {}, mixins: [...mixins] })
 const props = defineProps<{ modelValue: boolean }>()
-defineEmits<{ (e: 'update:modelValue', value: boolean): void }>()
+const emit = defineEmits<{ (e: 'update:modelValue', value: boolean): void, (e: 'disowned', payload: { id: number, godsons_level_current: number }): void }>()
 useI18n() // initialize local scope for <i18n-t>
 const t = useNamespacedT('godsons-manage-dialog')
 
@@ -55,9 +55,10 @@ watch(() => props.modelValue, (open) => {
 }, { immediate: true })
 
 function disown(g: Godson) {
-	LeekWars.post('farmer/remove-godson', { godson_id: g.id }).then(() => {
+	LeekWars.post('farmer/remove-godson', { godson_id: g.id }).then((data: { godsons_level_current: number }) => {
 		if (godsons.value) godsons.value = godsons.value.filter(x => x.id !== g.id)
 		confirmGodson.value = null
+		emit('disowned', { id: g.id, godsons_level_current: data.godsons_level_current })
 	})
 }
 </script>

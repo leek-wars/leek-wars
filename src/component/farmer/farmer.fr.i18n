@@ -118,5 +118,12 @@
 	"invitation_accepted": "Invitation acceptée !",
 	"invitation_rejected": "Invitation refusée",
 	"invite_to_team": "Inviter dans l'équipe",
-	"invitation_sent": "Invitation envoyée !"
+	"invitation_sent": "Invitation envoyée !",
+	"choose_as_godfather": "Choisir comme parrain",
+	"godfather_request_sent": "Demande envoyée",
+	"godfather_request_sent_toast": "Demande de parrainage envoyée !",
+	"godfather_requests": "Demandes de parrainage",
+	"request_stats": "Niveau {0} · Talent {1}",
+	"godson_request_accepted": "Demande acceptée !",
+	"godsons_level_actual": "actuel : {0}"
 }

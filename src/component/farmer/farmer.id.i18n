@@ -118,5 +118,12 @@
 	"invitation_sent": "Undangan terkirim!",
 	"invite_to_team": "Undang ke tim",
 	"reject": "Tolak",
-	"team_invitations": "Undangan tim"
+	"team_invitations": "Undangan tim",
+	"choose_as_godfather": "Pilih sebagai wali baptis",
+	"godfather_request_sent": "Permintaan terkirim",
+	"godfather_request_sent_toast": "Permintaan perwalian terkirim!",
+	"godfather_requests": "Permintaan perwalian",
+	"request_stats": "Level {0} · Bakat {1}",
+	"godson_request_accepted": "Permintaan diterima!",
+	"godsons_level_actual": "saat ini: {0}"
 }

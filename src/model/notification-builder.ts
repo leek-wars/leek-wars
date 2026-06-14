@@ -118,6 +118,17 @@ class NotificationBuilder {
 			const godsonID = params[0]
 			const godsonName = params[1]
 			return new Notification(data, "/farmer/" + godsonID, "godfather.png", [godsonName])
+		} else if (type === NotificationType.GODFATHER_REQUEST) {
+			const requesterName = params[1]
+			return new Notification(data, "/farmer", "godfather.png", [requesterName])
+		} else if (type === NotificationType.GODFATHER_REQUEST_ACCEPTED) {
+			const godfatherID = params[0]
+			const godfatherName = params[1]
+			return new Notification(data, "/farmer/" + godfatherID, "godfather.png", [godfatherName])
+		} else if (type === NotificationType.GODFATHER_REQUEST_REFUSED) {
+			const targetID = params[0]
+			const targetName = params[1]
+			return new Notification(data, "/farmer/" + targetID, "godfather.png", [targetName])
 		} else if (type === NotificationType.FARMER_TOURNAMENT_END) {
 			const tournamentID = params[0]
 			const lastRound = parseInt(params[1])

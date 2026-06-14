@@ -120,5 +120,11 @@
 	"title_6": "{p0} demande à rejoindre {p1}.",
 	"title_7": "Vous avez été accepté dans l'équipe {p0}.",
 	"title_8": "Votre candidature pour l'équipe {p0} a été refusée",
-	"title_9": "{p0} a gagné un tournoi !"
+	"title_9": "{p0} a gagné un tournoi !",
+	"title_49": "{p0} souhaite vous avoir comme parrain !",
+	"title_50": "{p0} est devenu votre parrain !",
+	"title_51": "{p0} a décliné votre demande de parrainage.",
+	"message_49": "Gérer la demande",
+	"message_50": "Voir sa page",
+	"message_51": "Voir sa page"
 }

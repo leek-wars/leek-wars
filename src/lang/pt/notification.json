@@ -116,5 +116,11 @@
 	"title_6": "{p0} está pedindo para entrar em {p1}.",
 	"title_7": "Você foi aceito na equipe {p0}.",
 	"title_8": "Sua inscrição para a equipe {p0} foi recusada",
-	"title_9": "{p0} ganhou um torneio!"
+	"title_9": "{p0} ganhou um torneio!",
+	"title_49": "{p0} gostaria de ter você como padrinho!",
+	"title_50": "{p0} é agora o seu padrinho!",
+	"title_51": "{p0} recusou o seu pedido de apadrinhamento.",
+	"message_49": "Gerir o pedido",
+	"message_50": "Ver a página",
+	"message_51": "Ver a página"
 }

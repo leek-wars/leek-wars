@@ -118,5 +118,12 @@
 	"invitation_sent": "邀请已发送！",
 	"invite_to_team": "邀请加入团队",
 	"reject": "拒绝",
-	"team_invitations": "团队邀请"
+	"team_invitations": "团队邀请",
+	"choose_as_godfather": "选为师傅",
+	"godfather_request_sent": "已发送请求",
+	"godfather_request_sent_toast": "拜师请求已发送！",
+	"godfather_requests": "拜师请求",
+	"request_stats": "等级 {0} · 天赋 {1}",
+	"godson_request_accepted": "已接受请求！",
+	"godsons_level_actual": "当前：{0}"
 }

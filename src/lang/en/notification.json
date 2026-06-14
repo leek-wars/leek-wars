@@ -120,5 +120,11 @@
 	"title_6": "{p0} wants to join {p1}",
 	"title_7": "You have been accepted into team {p0}.",
 	"title_8": "Your application to join {p0} has been rejected",
-	"title_9": "{p0} has won a tournament!"
+	"title_9": "{p0} has won a tournament!",
+	"title_49": "{p0} would like you as their godfather!",
+	"title_50": "{p0} is now your godfather!",
+	"title_51": "{p0} declined your sponsorship request.",
+	"message_49": "Manage the request",
+	"message_50": "See their page",
+	"message_51": "See their page"
 }

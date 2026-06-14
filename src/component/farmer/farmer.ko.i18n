@@ -118,5 +118,12 @@
 	"warnings": "경고",
 	"wins": "승리",
 	"you_have_n_warnings": "1개의 경고가 있습니다 | {n}개의 경고가 있습니다.",
-	"you_must_have_2_leeks": "사육자 토너먼트에 참가하려면 최소 2개의 부추가 있어야 합니다."
+	"you_must_have_2_leeks": "사육자 토너먼트에 참가하려면 최소 2개의 부추가 있어야 합니다.",
+	"choose_as_godfather": "후원자로 선택",
+	"godfather_request_sent": "요청 전송됨",
+	"godfather_request_sent_toast": "후원 요청을 보냈습니다!",
+	"godfather_requests": "후원 요청",
+	"request_stats": "레벨 {0} · 탤런트 {1}",
+	"godson_request_accepted": "요청을 수락했습니다!",
+	"godsons_level_actual": "현재: {0}"
 }

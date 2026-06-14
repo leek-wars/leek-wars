@@ -118,5 +118,12 @@
 	"invitation_accepted": "Invito accettato!",
 	"invitation_rejected": "Invito rifiutato",
 	"invite_to_team": "Invita nella squadra",
-	"invitation_sent": "Invito inviato!"
+	"invitation_sent": "Invito inviato!",
+	"choose_as_godfather": "Scegli come padrino",
+	"godfather_request_sent": "Richiesta inviata",
+	"godfather_request_sent_toast": "Richiesta di padrinato inviata!",
+	"godfather_requests": "Richieste di padrinato",
+	"request_stats": "Livello {0} · Talento {1}",
+	"godson_request_accepted": "Richiesta accettata!",
+	"godsons_level_actual": "attuale: {0}"
 }

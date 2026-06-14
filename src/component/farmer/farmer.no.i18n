@@ -118,5 +118,12 @@
 	"warnings": "Advarsler",
 	"wins": "seire",
 	"you_have_n_warnings": "Du har 1 advarsel | Du har {n} advarsler",
-	"you_must_have_2_leeks": "Du må ha minst 2 purre for å delta i en oppdretterturnering"
+	"you_must_have_2_leeks": "Du må ha minst 2 purre for å delta i en oppdretterturnering",
+	"choose_as_godfather": "Velg som fadder",
+	"godfather_request_sent": "Forespørsel sendt",
+	"godfather_request_sent_toast": "Fadderforespørsel sendt!",
+	"godfather_requests": "Fadderforespørsler",
+	"request_stats": "Nivå {0} · Talent {1}",
+	"godson_request_accepted": "Forespørsel godtatt!",
+	"godsons_level_actual": "nåværende: {0}"
 }

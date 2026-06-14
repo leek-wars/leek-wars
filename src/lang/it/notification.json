@@ -120,5 +120,11 @@
 	"title_6": "{p0} sta chiedendo di unirsi a {p1}.",
 	"title_7": "Sei stato accettato nella squadra {p0}.",
 	"title_8": "La tua candidatura per la squadra {p0} è stata rifiutata",
-	"title_9": "{p0} ha vinto un torneo!"
+	"title_9": "{p0} ha vinto un torneo!",
+	"title_49": "{p0} vorrebbe averti come padrino!",
+	"title_50": "{p0} è ora il tuo padrino!",
+	"title_51": "{p0} ha rifiutato la tua richiesta di padrinato.",
+	"message_49": "Gestisci la richiesta",
+	"message_50": "Vedi la sua pagina",
+	"message_51": "Vedi la sua pagina"
 }

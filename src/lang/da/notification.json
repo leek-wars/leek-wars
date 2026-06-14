@@ -116,5 +116,11 @@
 	"title_6": "{p0} anmoder om at deltage i {p1}.",
 	"title_7": "Du er blevet accepteret i {p0}-teamet.",
 	"title_8": "Din ansøgning til {p0}-teamet er blevet afvist",
-	"title_9": "{p0} vandt en turnering!"
+	"title_9": "{p0} vandt en turnering!",
+	"title_49": "{p0} vil gerne have dig som fadder!",
+	"title_50": "{p0} er nu din fadder!",
+	"title_51": "{p0} afviste din fadderanmodning.",
+	"message_49": "Administrer anmodningen",
+	"message_50": "Se siden",
+	"message_51": "Se siden"
 }

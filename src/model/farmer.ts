@@ -105,6 +105,9 @@ class Farmer {
 	public mail!: string
 	public can_create_leek!: boolean
 	public godsons_level!: number
+	public godsons_level_current!: number
+	public can_request_godfather!: boolean
+	public godfather_request_sent!: boolean
 	public password!: string
 	public role!: string
 	public connected!: boolean
