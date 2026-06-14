@@ -1769,7 +1769,7 @@ class Shuriken extends ChipAnimation {
 	constructor(game: Game) { super(game, S.leek_slice, 50, DamageType.DEFAULT) }
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
 		super.launch(launchPos, targetPos, targets, targetCell, launcher)
-		this.game.particles.addFlyingSpinningProjectile(launchPos.x, launchPos.y, 40, targetPos.x, targetPos.y, this.flyDuration, T.shuriken_star, 56, 1.3)
+		this.game.particles.addFlyingSpinningProjectile(launchPos.x, launchPos.y, 40, targetPos.x, targetPos.y, this.flyDuration, T.shuriken_star, 56, 1.0)
 	}
 	public update(dt: number) {
 		super.update(dt)
@@ -1821,7 +1821,7 @@ class FireBall extends ChipAnimation {
 class Trebuchet extends ChipAnimation {
 	static textures = [T.boulder, T.explosion_mark, T.explosion_rock, T.explosion_rock2]
 	static sounds = [S.meteorite, S.explosion]
-	public flyDuration = 40
+	public flyDuration = 60
 	public boulderSize = 96
 	public exploded = false
 	constructor(game: Game) { super(game, S.meteorite, 90, DamageType.EXPLOSION) }
