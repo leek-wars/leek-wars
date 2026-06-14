@@ -75,9 +75,9 @@ class Particles {
 		this.add(new Explosion(this.game, x, y, z, texture, life))
 		S.explosion.play(this.game)
 	}
-	public addRealisticExplosion(x: number, y: number, radius: number, color?: string, debris: boolean = true) {
-		// Explosion (couleur fixe optionnelle, sinon dégradé de feu)
-		this.add(new RealisticExplosion(this.game, x, y, radius, color))
+	public addRealisticExplosion(x: number, y: number, radius: number, colorFn?: (t: number) => string, debris: boolean = true) {
+		// Explosion (fonction de couleur optionnelle, sinon dégradé de feu)
+		this.add(new RealisticExplosion(this.game, x, y, radius, colorFn))
 		// Sound
 		S.explosion.play(this.game)
 		// Mark
@@ -133,8 +133,8 @@ class Particles {
 	public addFlyingSpinningProjectile(startX: number, startY: number, z: number, endX: number, endY: number, duration: number, texture: Texture, size?: number, rotation?: number) {
 		this.add(new FlyingSpinningProjectile(this.game, startX, startY, z, endX, endY, duration, texture, size, rotation))
 	}
-	public addRocket(x: number, y: number, z: number, angle: number, duration: number, targetCell: Cell, radius: number, texture?: Texture, explosionColor?: string, explosionDebris: boolean = true) {
-		this.add(new Rocket(this.game, x, y, z, angle, duration, targetCell, radius, texture, explosionColor, explosionDebris))
+	public addRocket(x: number, y: number, z: number, angle: number, duration: number, targetCell: Cell, radius: number, texture?: Texture, explosionColorFn?: (t: number) => string, explosionDebris: boolean = true) {
+		this.add(new Rocket(this.game, x, y, z, angle, duration, targetCell, radius, texture, explosionColorFn, explosionDebris))
 	}
 	public addLighningBall(x: number, y: number, z: number, angle: number, duration: number, radius: number, texture: Texture) {
 		this.add(new LighningBall(this.game, x, y, z, angle, duration, radius, texture))

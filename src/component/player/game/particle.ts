@@ -398,13 +398,15 @@ class RealisticExplosion extends Particle {
 	public sources: ExplosionSource[] = []
 	public delay = 0
 	public radius: number
-	public color: string | undefined
+	// Couleur en fonction de l'âge de la particule (t : 1 = neuve → 0 = éteinte).
+	// Si absent, dégradé de feu par défaut (jaune → orange → rouge → noir).
+	public colorFn: ((t: number) => string) | undefined
 
-	constructor(game: Game, x: number, y: number, radius: number, color?: string) {
+	constructor(game: Game, x: number, y: number, radius: number, colorFn?: (t: number) => string) {
 		super(game, x, y, 0, RealisticExplosion.LIFE)
 
 		this.radius = radius
-		this.color = color
+		this.colorFn = colorFn
 		const SOURCE_SPEED = radius / 2.5
 		const rad = radius * this.game.ground.realTileSizeY / 5
 		const RADIUS_RAND = radius * this.game.ground.realTileSizeY / 8
@@ -473,8 +475,8 @@ class RealisticExplosion extends Particle {
 		for (const source of this.sources) {
 			for (const point of source.points) {
 				ctx.globalAlpha = Math.max(0, point.life / (RealisticExplosion.POINT_LIFE / 3))
-				if (this.color) {
-					ctx.fillStyle = this.color
+				if (this.colorFn) {
+					ctx.fillStyle = this.colorFn(point.life / RealisticExplosion.POINT_LIFE)
 				} else {
 					const dir = (RealisticExplosion.POINT_LIFE / 4)
 					const blue = (point.life - 3 * RealisticExplosion.POINT_LIFE / 4) / dir
@@ -877,10 +879,10 @@ class Rocket extends Particle {
 	targetCell: Cell
 	radius: number
 	texture: Texture
-	explosionColor: string | undefined
+	explosionColorFn: ((t: number) => string) | undefined
 	explosionDebris: boolean
 
-	public constructor(game: Game, x: number, y: number, z: number, angle: number, duration: number, targetCell: Cell, radius: number, texture: Texture = T.rocket, explosionColor?: string, explosionDebris: boolean = true) {
+	public constructor(game: Game, x: number, y: number, z: number, angle: number, duration: number, targetCell: Cell, radius: number, texture: Texture = T.rocket, explosionColorFn?: (t: number) => string, explosionDebris: boolean = true) {
 		super(game, x, y, z, duration)
 		this.dx = Math.cos(angle) * Rocket.SPEED
 		this.dy = Math.sin(angle) * Rocket.SPEED
@@ -890,7 +892,7 @@ class Rocket extends Particle {
 		this.targetCell = targetCell
 		this.radius = radius
 		this.texture = texture
-		this.explosionColor = explosionColor
+		this.explosionColorFn = explosionColorFn
 		this.explosionDebris = explosionDebris
 	}
 
@@ -907,7 +909,7 @@ class Rocket extends Particle {
 		if (super.update(dt)) {
 			let xy = this.game.ground.field.cellToXY(this.targetCell)
 			xy = this.game.ground.xyToXYPixels(xy.x, xy.y)
-			this.game.particles.addRealisticExplosion(xy.x, xy.y, this.radius, this.explosionColor, this.explosionDebris)
+			this.game.particles.addRealisticExplosion(xy.x, xy.y, this.radius, this.explosionColorFn, this.explosionDebris)
 			return true
 		}
 		return false

@@ -927,7 +927,7 @@ class Bazooka extends Firegun {
 		const duration = (distance - 1) * 4
 
 		this.game.setEffectArea(cell, Area.CIRCLE3, this.areaColor(), duration + RealisticExplosion.LIFE)
-		this.game.particles.addRocket(x, y, z, angle, duration, cell, 3, this.rocketTexture(), this.explosionColor(), this.explosionDebris())
+		this.game.particles.addRocket(x, y, z, angle, duration, cell, 3, this.rocketTexture(), this.explosionColorFn(), this.explosionDebris())
 
 		return duration + 10
 	}
@@ -940,8 +940,9 @@ class Bazooka extends Firegun {
 		return T.rocket
 	}
 
-	// Explosion : couleur fixe (sinon dégradé de feu) et débris de cailloux.
-	protected explosionColor(): string | undefined {
+	// Couleur de l'explosion selon l'âge des particules (sinon dégradé de feu)
+	// et débris de cailloux.
+	protected explosionColorFn(): ((t: number) => string) | undefined {
 		return undefined
 	}
 
@@ -958,16 +959,17 @@ class PlutoniumBazooka extends Bazooka {
 	}
 
 	protected areaColor(): string {
-		return 'yellow'
+		return '#ffaa00'
 	}
 
 	protected rocketTexture(): Texture {
 		return T.plutonium_rocket
 	}
 
-	// Explosion entièrement jaune, sans cailloux qui volent.
-	protected explosionColor(): string {
-		return 'yellow'
+	// Légère transition jaune → orange (t : 1 = neuve → 0 = éteinte), sans
+	// cailloux qui volent.
+	protected explosionColorFn(): (t: number) => string {
+		return (t: number) => 'rgb(255, ' + Math.round(165 + 90 * t) + ', 0)'
 	}
 
 	protected explosionDebris(): boolean {
