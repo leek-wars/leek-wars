@@ -51,6 +51,14 @@
 						<v-icon>mdi-alpha-x</v-icon>
 						<span>X</span>
 					</a>
+					<a class="social-btn instagram" href="https://www.instagram.com/leekwars" target="_blank" rel="noopener">
+						<v-icon>mdi-instagram</v-icon>
+						<span>Instagram</span>
+					</a>
+					<a class="social-btn linkedin" href="https://www.linkedin.com/company/leek-wars" target="_blank" rel="noopener">
+						<v-icon>mdi-linkedin</v-icon>
+						<span>LinkedIn</span>
+					</a>
 				</div>
 			</div>
 		</panel>
@@ -437,5 +445,17 @@ onMounted(() => {
 		border-color: #000;
 		color: #fff;
 		&:hover { background: #222; }
+	}
+	.social-btn.instagram {
+		background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+		border-color: #cc2366;
+		color: #fff;
+		&:hover { filter: brightness(1.08); }
+	}
+	.social-btn.linkedin {
+		background: #0a66c2;
+		border-color: #0a66c2;
+		color: #fff;
+		&:hover { background: #08529c; }
 	}
 </style>
