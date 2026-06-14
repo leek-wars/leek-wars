@@ -1817,7 +1817,7 @@ class Trebuchet extends ChipAnimation {
 	static textures = [T.boulder, T.explosion_mark]
 	static sounds = [S.meteorite, S.explosion]
 	public flyDuration = 40
-	public boulderSize = 64
+	public boulderSize = 96
 	public exploded = false
 	constructor(game: Game) { super(game, S.meteorite, 90, DamageType.EXPLOSION) }
 	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
@@ -1836,9 +1836,9 @@ class Trebuchet extends ChipAnimation {
 		if (!this.exploded && this.duration <= 90 - this.flyDuration) {
 			this.exploded = true
 			// Le rocher éclate en fragments (comme la mort d'un poireau) + souffle
-			// d'impact et marque au sol (sans les cailloux génériques).
+			// d'impact, marque au sol et débris projetés par le sol (réalisme).
 			this.game.particles.addShatter(T.boulder, this.position.x, this.position.y, 14, this.boulderSize)
-			this.game.particles.addRealisticExplosion(this.position.x, this.position.y, 1.2, undefined, false)
+			this.game.particles.addRealisticExplosion(this.position.x, this.position.y, 1.5)
 			if (this.targets) {
 				for (const target of this.targets) {
 					target.hurt(this.position.x, this.position.y, 0, 0, 0, 0)
