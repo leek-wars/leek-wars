@@ -120,10 +120,10 @@
 							<h2>Services</h2>
 						</div>
 					</router-link>
-					<router-link to="/admin/chips-animations">
+					<router-link to="/admin/game-animations">
 						<div v-ripple class="section card">
 							<v-icon>mdi-flask-outline</v-icon>
-							<h2>Animations puces</h2>
+							<h2>Game animations</h2>
 						</div>
 					</router-link>
 				</div>

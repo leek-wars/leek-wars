@@ -1,14 +1,14 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Animations puces', link: '/admin/chips-animations'}]" :raw="true" /></h1>
+			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Game animations', link: '/admin/game-animations'}]" :raw="true" /></h1>
 		</div>
 
-		<panel class="player-panel" icon="mdi-flask-outline" title="Test des animations de puces">
+		<panel class="player-panel" icon="mdi-flask-outline" title="Test des animations d'armes et de puces">
 			<template #content>
 				<div class="toolbar">
 					<div class="search">
-						<v-text-field v-model="search" prepend-inner-icon="mdi-magnify" placeholder="Rechercher une puce..." hide-details density="compact" clearable />
+						<v-text-field v-model="search" prepend-inner-icon="mdi-magnify" placeholder="Rechercher une arme ou une puce..." hide-details density="compact" clearable />
 					</div>
 					<div class="options">
 						<div class="option">
@@ -19,32 +19,33 @@
 							<label>Carte</label>
 							<v-select v-model="mapType" :items="mapItems" item-title="label" item-value="value" hide-details density="compact" />
 						</div>
-						<v-btn v-if="selectedChip" color="primary" variant="flat" prepend-icon="mdi-restart" @click="relaunch">Relancer</v-btn>
+						<v-btn v-if="selected" color="primary" variant="flat" prepend-icon="mdi-restart" @click="relaunch">Relancer</v-btn>
 					</div>
 				</div>
 
 				<div class="content">
 					<div class="grid">
-						<div v-for="chip in filteredChips" :key="chip.chipId" v-ripple class="chip" :class="{selected: selectedChip === chip.chipId}" :title="chipLabel(chip) + ' (#' + chip.chipId + ')'" @click="selectChip(chip.chipId)">
-							<img :src="'/image/chip/' + chip.name + '.png'" loading="lazy">
-							<span class="name">{{ chipLabel(chip) }}</span>
+						<div v-for="entry in filteredEntries" :key="entry.kind + entry.id" v-ripple class="entry" :class="{selected: isSelected(entry)}" :title="entry.label + ' (' + entry.kind + ' #' + entry.id + ')'" @click="selectEntry(entry)">
+							<span class="kind" :class="entry.kind">{{ entry.kind === 'weapon' ? 'arme' : 'puce' }}</span>
+							<img :src="entry.icon" loading="lazy">
+							<span class="name">{{ entry.label }}</span>
 						</div>
-						<div v-if="!filteredChips.length" class="empty">Aucune puce trouvée</div>
+						<div v-if="!filteredEntries.length" class="empty">Aucun résultat</div>
 					</div>
 
 					<div class="player-column">
-						<div v-if="!selectedChip" class="placeholder">
+						<div v-if="!selected" class="placeholder">
 							<v-icon size="48">mdi-cursor-default-click-outline</v-icon>
-							<p>Sélectionne une puce dans la grille pour tester son animation.</p>
+							<p>Sélectionne une arme ou une puce dans la grille pour tester son animation.</p>
 						</div>
 						<div v-else class="player-zone">
 							<player ref="playerRef" :key="playerKey" :fight="currentFight" :horizontal="false" />
 						</div>
-						<div v-if="selectedChip" class="current-chip">
-							<img :src="'/image/chip/' + selectedChipData.name + '.png'">
+						<div v-if="selected" class="current-entry">
+							<img :src="selected.icon">
 							<div>
-								<div class="chip-title">{{ chipLabel(selectedChipData) }} <span class="chip-id">#{{ selectedChip }}</span></div>
-								<div class="chip-sub">Niveau {{ selectedChipData.level }} · {{ loopMode ? 'boucle infinie' : repetitions + ' lancers' }} · {{ emptyCellMode ? 'sur case vide' : 'sur soi-même puis les 4 poireaux à tour de rôle' }}</div>
+								<div class="entry-title">{{ selected.label }} <span class="entry-id">{{ selected.kind }} #{{ selected.id }}</span></div>
+								<div class="entry-sub">Niveau {{ selected.level }} · {{ loopMode ? 'boucle infinie' : repetitions + ' lancers' }} · {{ targetDescription }}</div>
 							</div>
 						</div>
 					</div>
@@ -61,26 +62,26 @@
 	import { store } from '@/model/store'
 	import { ActionType } from '@/model/action'
 	import { EffectType } from '@/model/effect'
-	import { CHIP_ANIMATIONS } from '@/component/player/game/game'
+	import { CHIP_ANIMATIONS, WEAPONS } from '@/component/player/game/game'
 	import type { Game } from '@/component/player/game/game'
 	import Player from '@/component/player/player.vue'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 	import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 	import { useRouter } from 'vue-router'
 
-	defineOptions({ name: 'AdminChipsAnimations', i18n: {}, mixins: [...mixins], components: { Player, Breadcrumb } })
+	defineOptions({ name: 'AdminGameAnimations', i18n: {}, mixins: [...mixins], components: { Player, Breadcrumb } })
 
-	interface ChipEntry { chipId: number, item: number, name: string, level: number }
+	type Kind = 'weapon' | 'chip'
+	interface AnimEntry { kind: Kind, id: number, name: string, label: string, icon: string, level: number }
 
 	const router = useRouter()
 	if (!store.getters.admin) router.replace('/')
-	LeekWars.setTitle("Animations puces")
+	LeekWars.setTitle("Game animations")
 	// large = pleine largeur, box = pleine hauteur, footer masqué (cf. inventaire/
 	// documentation). resetLayout() dans router.beforeEach remet tout à défaut.
 	onMounted(() => { LeekWars.large = true; LeekWars.box = true; LeekWars.footer = false })
 
-	// Scène fixe : lanceur au centre, 2 ennemis et 2 alliés autour. Le lanceur
-	// envoie la puce sur les 4 à tour de rôle pour comparer le rendu allié/ennemi.
+	// Scène fixe : lanceur au centre, 2 ennemis et 2 alliés autour.
 	const CASTER_CELL = 306
 	const SCENE = [
 		{ id: 0, cell: CASTER_CELL, team: 1 }, // lanceur
@@ -89,19 +90,22 @@
 		{ id: 3, cell: 216, team: 1 },         // allié
 		{ id: 4, cell: 391, team: 1 },         // allié
 	]
-	// Ciblage à tour de rôle : d'abord soi-même, puis ennemi/allié alternés pour
-	// bien voir la différence de rendu.
-	const ROUND_ROBIN = [CASTER_CELL, SCENE[1].cell, SCENE[2].cell, SCENE[3].cell, SCENE[4].cell]
+	// Cibles non-lanceur, ennemi / allié alternés pour bien voir la différence.
+	const NON_CASTER_TARGETS = [SCENE[1].cell, SCENE[3].cell, SCENE[2].cell, SCENE[4].cell]
+	// Puces : d'abord soi-même, puis les 4 autres. Armes : seulement les 4 autres.
+	const CHIP_TARGETS = [CASTER_CELL, ...NON_CASTER_TARGETS]
+	const WEAPON_TARGETS = NON_CASTER_TARGETS
 	// Cases vides alternées pour les puces type téléportation / invocation qui
 	// exigent une cellule libre (504 puis 306 en boucle).
 	const EMPTY_CELLS = [504, 306]
 
+	// L'ordre doit suivre game.maps (index 0 = Nexus) ; data.map.type = index - 1 (cf. buildFight).
 	const MAPS = ['Nexus', 'Usine', 'Désert', 'Forêt', 'Glacier', 'Plage', 'Temple', 'Japon', 'Château', 'Cimetière']
 
 	const search = ref('')
 	const repetitions = ref<number>(100)
 	const mapType = ref(0)
-	const selectedChip = ref<number | null>(null)
+	const selected = ref<AnimEntry | null>(null)
 	const runId = ref(0)
 	const playerRef = ref<{ game: Game } | null>(null)
 
@@ -112,6 +116,10 @@
 		{ label: 'Boucle infinie', value: -1 },
 	]
 	const mapItems = MAPS.map((label, value) => ({ label, value }))
+
+	function trans(key: string, fallback: string) {
+		return i18n.global.te(key) ? i18n.t(key) as string : fallback
+	}
 
 	// Une puce « case vide » a un effet de téléportation ou d'invocation : elle
 	// doit viser une cellule libre, pas un poireau.
@@ -125,47 +133,60 @@
 	const loopMode = computed(() => repetitions.value === -1)
 	const castCount = computed(() => loopMode.value ? 100 : repetitions.value)
 
-	const allChips = computed<ChipEntry[]>(() => {
-		const out: ChipEntry[] = []
+	// Armes (id = template, animation = WEAPONS[id-1]) puis puces (id = chipId,
+	// animation = CHIP_ANIMATIONS[id-1]). On ne garde que celles ayant une animation.
+	const allEntries = computed<AnimEntry[]>(() => {
+		const weapons: AnimEntry[] = []
+		for (const idStr in LeekWars.weapons) {
+			const id = parseInt(idStr, 10)
+			if (!WEAPONS[id - 1]) continue
+			const tpl = LeekWars.weapons[id] as { name: string, level?: number } | undefined
+			if (!tpl) continue
+			const short = tpl.name.replace('weapon_', '')
+			weapons.push({ kind: 'weapon', id, name: short, label: trans('weapon.' + short, short), icon: '/image/weapon/' + short + '.png', level: tpl.level ?? 0 })
+		}
+		weapons.sort((a, b) => a.level - b.level || a.id - b.id)
+
+		const chips: AnimEntry[] = []
 		for (const chipIdStr in LeekWars.chipTemplates) {
-			const chipId = parseInt(chipIdStr, 10)
-			if (!CHIP_ANIMATIONS[chipId - 1]) continue // pas d'animation côté client
-			const tpl = LeekWars.chipTemplates[chipId]
+			const id = parseInt(chipIdStr, 10)
+			if (!CHIP_ANIMATIONS[id - 1]) continue
+			const tpl = LeekWars.chipTemplates[id]
 			const data = LeekWars.chips[tpl.item] as { name: string, level?: number } | undefined
 			if (!data) continue
-			out.push({ chipId, item: tpl.item, name: data.name, level: data.level ?? 0 })
+			chips.push({ kind: 'chip', id, name: data.name, label: trans('chip.' + data.name, data.name), icon: '/image/chip/' + data.name + '.png', level: data.level ?? 0 })
 		}
-		out.sort((a, b) => b.chipId - a.chipId) // plus récentes (chipId élevé) en premier
-		return out
+		chips.sort((a, b) => b.id - a.id) // puces récentes (id élevé) en premier
+
+		return [...weapons, ...chips]
 	})
 
-	function chipLabel(chip: { name: string }) {
-		const key = 'chip.' + chip.name
-		return i18n.global.te(key) ? i18n.t(key) as string : chip.name
+	const filteredEntries = computed(() => {
+		const q = (search.value || '').trim().toLowerCase()
+		if (!q) return allEntries.value
+		return allEntries.value.filter(e => e.name.toLowerCase().includes(q) || e.label.toLowerCase().includes(q) || ('' + e.id) === q)
+	})
+
+	function isSelected(entry: AnimEntry) {
+		return selected.value?.kind === entry.kind && selected.value?.id === entry.id
 	}
 
-	const filteredChips = computed(() => {
-		const q = (search.value || '').trim().toLowerCase()
-		if (!q) return allChips.value
-		return allChips.value.filter(c => c.name.toLowerCase().includes(q) || chipLabel(c).toLowerCase().includes(q) || ('' + c.chipId) === q)
+	const targetDescription = computed(() => {
+		if (!selected.value) return ''
+		if (selected.value.kind === 'weapon') return 'sur les 4 poireaux à tour de rôle'
+		const emptyCell = needsEmptyCell(selected.value.id)
+		return emptyCell ? 'sur case vide' : 'sur soi-même puis les 4 poireaux à tour de rôle'
 	})
 
-	const selectedChipData = computed(() => {
-		const found = allChips.value.find(c => c.chipId === selectedChip.value)
-		return found ?? { chipId: 0, item: 0, name: '', level: 0 }
-	})
-
-	const emptyCellMode = computed(() => selectedChip.value !== null && needsEmptyCell(selectedChip.value))
-
-	const playerKey = computed(() => `${selectedChip.value}-${castCount.value}-${mapType.value}-${runId.value}`)
+	const playerKey = computed(() => `${selected.value?.kind}-${selected.value?.id}-${castCount.value}-${mapType.value}-${runId.value}`)
 
 	const currentFight = computed<Fight | undefined>(() => {
-		if (!selectedChip.value) return undefined
-		return buildFight(selectedChip.value, castCount.value)
+		if (!selected.value) return undefined
+		return buildFight(selected.value, castCount.value)
 	})
 
-	function selectChip(chipId: number) {
-		selectedChip.value = chipId
+	function selectEntry(entry: AnimEntry) {
+		selected.value = entry
 		setupLoop()
 	}
 
@@ -174,10 +195,10 @@
 		setupLoop()
 	}
 
-	// Construit un combat synthétique sur la scène fixe : le lanceur (id 0) lance
-	// la puce sur les 4 autres poireaux à tour de rôle. Pas de dégâts réels
-	// (aucune action LIFE_LOST émise) → personne ne meurt, la boucle reste valide.
-	function buildFight(chipId: number, casts: number): Fight {
+	// Construit un combat synthétique sur la scène fixe : le lanceur (id 0) utilise
+	// l'arme ou la puce sur les cibles à tour de rôle. Pas de dégâts réels (aucune
+	// action LIFE_LOST émise) → personne ne meurt, la boucle reste valide.
+	function buildFight(entry: AnimEntry, casts: number): Fight {
 		// Ids 0-based et denses : le moteur itère this.leeks via for...of (un id
 		// manquant à l'index 0 ferait planter launch() sur entity.cell).
 		const leeks = SCENE.map((s, i) => ({
@@ -193,14 +214,20 @@
 			chips: [], weapons: [],
 		}))
 		const casterId = 0
-		const emptyCell = needsEmptyCell(chipId)
+		const emptyCell = entry.kind === 'chip' && needsEmptyCell(entry.id)
 
 		const actions: number[][] = [[ActionType.START_FIGHT]]
 		for (let k = 0; k < casts; k++) {
-			const cell = emptyCell ? EMPTY_CELLS[k % EMPTY_CELLS.length] : ROUND_ROBIN[k % ROUND_ROBIN.length]
 			actions.push([ActionType.NEW_TURN, k + 1])
 			actions.push([ActionType.LEEK_TURN, casterId])
-			actions.push([ActionType.USE_CHIP, chipId, cell, 0])
+			if (entry.kind === 'weapon') {
+				const cell = WEAPON_TARGETS[k % WEAPON_TARGETS.length]
+				actions.push([ActionType.SET_WEAPON, entry.id])
+				actions.push([ActionType.USE_WEAPON, cell, 0])
+			} else {
+				const cell = emptyCell ? EMPTY_CELLS[k % EMPTY_CELLS.length] : CHIP_TARGETS[k % CHIP_TARGETS.length]
+				actions.push([ActionType.USE_CHIP, entry.id, cell, 0])
+			}
 			actions.push([ActionType.END_TURN, casterId, 100, 6])
 		}
 		actions.push([ActionType.END_FIGHT])
@@ -212,7 +239,7 @@
 		const map = { id: 0, type: mapType.value - 1, width: 18, height: 18, obstacles: {}, pattern: [], players: {} }
 
 		return {
-			title: 'Test animation puce', context: 0, date: 0,
+			title: 'Test animation', context: 0, date: 0,
 			farmers1: { 1: { id: 1, name: 'Pilow' } },
 			farmers2: { 1: { id: 1, name: 'Pilow' } },
 			id: 0, farmer1: 1, farmer2: 1,
@@ -301,7 +328,8 @@
 		overflow-y: auto;
 		align-content: start;
 	}
-	.chip {
+	.entry {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -321,6 +349,19 @@
 			width: 48px;
 			height: 48px;
 			object-fit: contain;
+		}
+		.kind {
+			position: absolute;
+			top: 2px;
+			left: 2px;
+			font-size: 9px;
+			line-height: 1;
+			padding: 2px 3px;
+			border-radius: 3px;
+			color: var(--pure-white);
+			text-transform: uppercase;
+			&.weapon { background: #c0612a; }
+			&.chip { background: #5fad1b; }
 		}
 		.name {
 			font-size: 11px;
@@ -366,7 +407,7 @@
 		border-radius: 4px;
 		overflow: hidden;
 	}
-	.current-chip {
+	.current-entry {
 		display: flex;
 		align-items: center;
 		gap: 12px;
@@ -376,16 +417,17 @@
 			height: 40px;
 			object-fit: contain;
 		}
-		.chip-title {
+		.entry-title {
 			font-weight: 500;
 			font-size: 16px;
 		}
-		.chip-id {
+		.entry-id {
 			color: var(--text-color-secondary);
 			font-weight: 400;
 			font-size: 13px;
+			text-transform: capitalize;
 		}
-		.chip-sub {
+		.entry-sub {
 			font-size: 13px;
 			color: var(--text-color-secondary);
 		}
