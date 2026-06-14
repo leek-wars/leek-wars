@@ -22,7 +22,7 @@
 	"godfather": "Sponsor (valgfrit)",
 	"godfather_invite": "{0} inviterer dig til Leek Wars!",
 	"godfather_stats": "Niveau {0} · {1} porrer",
-	"godfather_rewards": "Tilmeld dig og få 20.000 {habs} + 20 {crystals} + 20 kampe!",
+	"godfather_rewards": "Tilmeld dig og få 20.000 {habs} + 10 {crystals} + 20 kampe!",
 	"help_tutorial_doc": "Hjælp, tutorial, doc",
 	"intro": "<b>Leek Wars</b> er et programmeringsspil, hvor du skal skabe den mest kraftfulde porre og ødelægge dine fjender!<br><br>\nUdvikl din egen kunstige intelligens takket være <b>LeekScript</b>, et sprog, der er let at lære,\nog bliv den bedste opdrætter!",
 	"last_update": "Sidste ændring",

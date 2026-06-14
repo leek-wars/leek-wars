@@ -22,7 +22,7 @@
 	"godfather": "Sponsor (opcjonalnie)",
 	"godfather_invite": "{0} zaprasza Cię do Leek Wars!",
 	"godfather_stats": "Poziom {0} · {1} porów",
-	"godfather_rewards": "Zarejestruj się i odbierz 20 000 {habs} + 20 {crystals} + 20 walk!",
+	"godfather_rewards": "Zarejestruj się i odbierz 20 000 {habs} + 10 {crystals} + 20 walk!",
 	"help_tutorial_doc": "Pomoc, samouczek, doc",
 	"intro": "<b>Leek Wars</b> to gra programistyczna, w której musisz stworzyć najpotężniejszego pora i zniszczyć wrogów!<br><br>\nRozwijaj własną sztuczną inteligencję dzięki <b>LeekScript</b>, łatwemu do nauczenia się językowi,\ni zostań najlepszym hodowcą!",
 	"last_update": "Ostatnia aktualizacja",

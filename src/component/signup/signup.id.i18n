@@ -22,7 +22,7 @@
 	"godfather": "Sponsor (Opsional)",
 	"godfather_invite": "{0} mengundangmu ke Leek Wars!",
 	"godfather_stats": "Level {0} · {1} daun bawang",
-	"godfather_rewards": "Daftar dan dapatkan 20.000 {habs} + 20 {crystals} + 20 pertarungan!",
+	"godfather_rewards": "Daftar dan dapatkan 20.000 {habs} + 10 {crystals} + 20 pertarungan!",
 	"help_tutorial_doc": "Bantuan, tutorial, dok",
 	"intro": "<b>Leek Wars</b> adalah game pemrograman di mana Anda harus membuat daun bawang yang paling kuat dan menghancurkan musuh Anda!<br><br>\nKembangkan kecerdasan buatan Anda sendiri berkat <b>LeekScript</b>, bahasa yang mudah dipelajari,\ndan menjadi peternak terbaik!",
 	"last_update": "Pembaharuan Terakhir",

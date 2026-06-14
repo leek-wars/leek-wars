@@ -1,7 +1,7 @@
 {
 	"title": "{0} als Pate?",
 	"stats": "Level {0} · {1} Lauche",
-	"rewards": "Annehmen und 20.000 {habs} + 20 {crystals} + 20 Kämpfe erhalten.",
+	"rewards": "Annehmen und 20.000 {habs} + 10 {crystals} + 20 Kämpfe erhalten.",
 	"accept": "Annehmen",
 	"refuse": "Ablehnen",
 	"accepted": "{0} ist jetzt dein Pate!"

@@ -1,7 +1,7 @@
 {
 	"title": "{0} na patrona?",
 	"stats": "Poziom {0} · {1} porów",
-	"rewards": "Zaakceptuj i odbierz 20 000 {habs} + 20 {crystals} + 20 walk.",
+	"rewards": "Zaakceptuj i odbierz 20 000 {habs} + 10 {crystals} + 20 walk.",
 	"accept": "Akceptuj",
 	"refuse": "Odrzuć",
 	"accepted": "{0} jest teraz Twoim patronem!"

@@ -1,7 +1,7 @@
 {
 	"title": "{0} as your godfather?",
 	"stats": "Level {0} · {1} leeks",
-	"rewards": "Accept and get 20,000 {habs} + 20 {crystals} + 20 fights.",
+	"rewards": "Accept and get 20,000 {habs} + 10 {crystals} + 20 fights.",
 	"accept": "Accept",
 	"refuse": "Decline",
 	"accepted": "{0} is now your godfather!"

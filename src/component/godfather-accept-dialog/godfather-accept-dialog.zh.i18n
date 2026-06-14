@@ -1,7 +1,7 @@
 {
 	"title": "{0} 作为你的师傅？",
 	"stats": "等级 {0} · {1} 棵韭葱",
-	"rewards": "接受即可获得 20,000 {habs} + 20 {crystals} + 20 场战斗。",
+	"rewards": "接受即可获得 20,000 {habs} + 10 {crystals} + 20 场战斗。",
 	"accept": "接受",
 	"refuse": "拒绝",
 	"accepted": "{0} 现在是你的师傅了！"

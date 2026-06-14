@@ -1,7 +1,7 @@
 {
 	"title": "{0} comme parrain ?",
 	"stats": "Niveau {0} · {1} poireaux",
-	"rewards": "En l'acceptant, tu reçois 20 000 {habs} + 20 {crystals} + 20 combats.",
+	"rewards": "En l'acceptant, tu reçois 20 000 {habs} + 10 {crystals} + 20 combats.",
 	"accept": "Accepter",
 	"refuse": "Refuser",
 	"accepted": "{0} est maintenant ton parrain !"

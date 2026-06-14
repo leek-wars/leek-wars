@@ -1,7 +1,7 @@
 {
 	"title": "{0} som fadder?",
 	"stats": "Nivå {0} · {1} purjolökar",
-	"rewards": "Acceptera och få 20 000 {habs} + 20 {crystals} + 20 strider.",
+	"rewards": "Acceptera och få 20 000 {habs} + 10 {crystals} + 20 strider.",
 	"accept": "Acceptera",
 	"refuse": "Avböj",
 	"accepted": "{0} är nu din fadder!"

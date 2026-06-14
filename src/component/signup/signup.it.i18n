@@ -22,7 +22,7 @@
 	"godfather": "Sponsor (facoltativo)",
 	"godfather_invite": "{0} ti invita su Leek Wars!",
 	"godfather_stats": "Livello {0} · {1} porri",
-	"godfather_rewards": "Iscriviti e ricevi 20.000 {habs} + 20 {crystals} + 20 combattimenti!",
+	"godfather_rewards": "Iscriviti e ricevi 20.000 {habs} + 10 {crystals} + 20 combattimenti!",
 	"help_tutorial_doc": "Aiuto, tutorial, doc",
 	"intro": "<b>Leek Wars</b> è un gioco di programmazione in cui devi creare il porro più potente e distruggere i tuoi nemici!<br><br>\nSviluppa la tua intelligenza artificiale grazie a <b>LeekScript</b>, un linguaggio facile da imparare,\ne diventa il miglior allevatore!",
 	"last_update": "Ultimo aggiornamento",
