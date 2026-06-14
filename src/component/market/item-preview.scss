@@ -126,10 +126,7 @@
 	}
 	.stats .leek-preview {
 		padding: 10px;
-		// Grille 2 colonnes (2x2 pour 4 poireaux) ; un flex sans wrap mettait
-		// les 4 poireaux sur une seule ligne.
-		display: grid;
-		grid-template-columns: repeat(2, auto);
+		display: flex;
 		justify-content: center;
 	}
 }
