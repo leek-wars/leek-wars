@@ -38,6 +38,15 @@
 									</router-link>
 								</rich-tooltip-farmer>
 
+								<source-detail :id="farmer.id" v-slot="{ props }">
+									<div class="score" v-bind="props">
+										<template v-if="farmer.score">
+											<div class="bar a"><div class="fill" :style="{ width: farmer.score.a + '%' }"></div></div>
+											<div class="bar b"><div class="fill" :style="{ width: farmer.score.b + '%' }"></div></div>
+										</template>
+									</div>
+								</source-detail>
+
 								<div class="register-type" :title="regLabel(farmer.reg_type)">
 									<v-icon v-if="farmer.reg_type" :class="{pending: isPendingEmail(farmer.reg_type, farmer.verified)}">{{ regIcon(farmer.reg_type, farmer.verified) }}</v-icon>
 									<v-icon v-if="farmer.validation" :class="{pending: isPendingEmail(farmer.validation, farmer.verified)}" :title="validationLabel(farmer.validation)">{{ regIcon(farmer.validation, farmer.verified) }}</v-icon>
@@ -201,6 +210,7 @@
 	import { onBeforeUnmount, onMounted, ref } from 'vue'
 	import { useRouter } from 'vue-router'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+	import SourceDetail from '@/component/admin/source-detail.vue'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 	import { Line, Bar } from 'vue-chartjs'
 	import type { ChartData, ChartOptions } from 'chart.js'
@@ -266,6 +276,7 @@
 		team_id?: number
 		team_name?: string
 		ai_count: number
+		score?: { a: number, b: number }
 		[key: string]: unknown
 	}
 
@@ -585,6 +596,7 @@
 	grid-template-columns:
 		/* date   */ 70px
 		/* name   */ minmax(120px, 1.4fr)
+		/* score  */ 64px
 		/* reg    */ 46px
 		/* email  */ minmax(120px, 1.4fr)
 		/* tuto   */ 70px
@@ -713,8 +725,28 @@
 			}
 		}
 	}
-	.last-connection, .playtime, .ai-count {
-		color: #666;
+	.score {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 3px;
+		width: 100%;
+		cursor: help;
+		.bar {
+			height: 6px;
+			border-radius: 3px;
+			background: var(--background-disabled, #e0e0e0);
+			overflow: hidden;
+			.fill {
+				height: 100%;
+				border-radius: 3px;
+			}
+			&.a .fill {
+				background: #4caf50;
+			}
+			&.b .fill {
+				background: #ff9800;
+			}
+		}
 	}
 	.team-cell {
 		.team {
@@ -762,11 +794,11 @@ body.dark .farmer.connected {
 #app.app .last-farmers {
 	overflow-x: auto;
 	.farmer, .farmers > .date {
-		min-width: 1200px;
+		min-width: 1264px;
 	}
 }
 #app.app .farmer {
-	grid-template-columns: 60px minmax(100px, 1.3fr) 40px minmax(110px, 1.3fr) 60px minmax(70px, 1fr) minmax(80px, 1fr) 26px 30px minmax(110px, 1fr) minmax(90px, 1fr) minmax(70px, 1.1fr);
+	grid-template-columns: 60px minmax(100px, 1.3fr) 64px 40px minmax(110px, 1.3fr) 60px minmax(70px, 1fr) minmax(80px, 1fr) 26px 30px minmax(110px, 1fr) minmax(90px, 1fr) minmax(70px, 1.1fr);
 	column-gap: 4px;
 	font-size: 12px;
 }
