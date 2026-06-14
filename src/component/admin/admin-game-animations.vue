@@ -24,7 +24,7 @@
 				</div>
 
 				<div class="content">
-					<div class="grid">
+					<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="grid">
 						<div v-for="entry in filteredEntries" :key="entry.kind + entry.id" v-ripple class="entry" :class="{selected: isSelected(entry)}" :title="entry.label + ' (' + entry.kind + ' #' + entry.id + ')'" @click="selectEntry(entry)">
 							<span class="kind" :class="entry.kind">{{ entry.kind === 'weapon' ? 'arme' : 'puce' }}</span>
 							<img :src="entry.icon" loading="lazy">
@@ -33,7 +33,10 @@
 						<div v-if="!filteredEntries.length" class="empty">Aucun résultat</div>
 					</div>
 
-					<div class="player-column">
+					<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="player-column">
+						<div v-if="LeekWars.mobile" class="mobile-back" @click="LeekWars.splitShowList()">
+							<v-icon>mdi-chevron-left</v-icon> Retour à la liste
+						</div>
 						<div v-if="!selected" class="placeholder">
 							<v-icon size="48">mdi-cursor-default-click-outline</v-icon>
 							<p>Sélectionne une arme ou une puce dans la grille pour tester son animation.</p>
@@ -78,8 +81,9 @@
 	if (!store.getters.admin) router.replace('/')
 	LeekWars.setTitle("Game animations")
 	// large = pleine largeur, box = pleine hauteur, footer masqué (cf. inventaire/
-	// documentation). resetLayout() dans router.beforeEach remet tout à défaut.
-	onMounted(() => { LeekWars.large = true; LeekWars.box = true; LeekWars.footer = false })
+	// documentation). resetLayout() dans router.beforeEach remet tout à défaut sauf
+	// splitBack (vue mobile liste/contenu) qu'on gère ici au mount/unmount.
+	onMounted(() => { LeekWars.large = true; LeekWars.box = true; LeekWars.footer = false; LeekWars.splitBack = false })
 
 	// Scène fixe : lanceur au centre, 2 ennemis et 2 alliés autour.
 	const CASTER_CELL = 306
@@ -188,6 +192,7 @@
 	function selectEntry(entry: AnimEntry) {
 		selected.value = entry
 		setupLoop()
+		LeekWars.splitShowContent() // mobile : bascule sur le player (no-op desktop)
 	}
 
 	function relaunch() {
@@ -271,7 +276,7 @@
 	// Réarme/désarme la boucle quand on bascule entre « fini » et « infini ».
 	watch(loopMode, setupLoop)
 
-	onBeforeUnmount(() => { if (loopTimer) clearInterval(loopTimer) })
+	onBeforeUnmount(() => { if (loopTimer) clearInterval(loopTimer); LeekWars.splitBack = false })
 </script>
 
 <style lang="scss" scoped>
@@ -430,6 +435,40 @@
 		.entry-sub {
 			font-size: 13px;
 			color: var(--text-color-secondary);
+		}
+	}
+	.mobile-back {
+		display: none;
+		align-items: center;
+		gap: 4px;
+		padding: 6px 8px 10px;
+		cursor: pointer;
+		font-weight: 500;
+		color: var(--text-color);
+	}
+
+	// Mobile (mode app) : vue scindée liste / player façon page marché. Un seul
+	// panneau visible à la fois (v-show piloté par LeekWars.splitBack), en pleine
+	// largeur. La grille passe en flex:1 au lieu de la colonne fixe desktop.
+	#app.app {
+		.content {
+			padding: 8px;
+			gap: 8px;
+		}
+		.grid {
+			flex: 1;
+			grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+		}
+		.search {
+			flex: 1 1 100%;
+			min-width: 0;
+		}
+		.option {
+			flex: 1;
+			min-width: 110px;
+		}
+		.mobile-back {
+			display: flex;
 		}
 	}
 </style>
