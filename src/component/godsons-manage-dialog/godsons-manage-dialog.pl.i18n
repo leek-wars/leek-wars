@@ -5,5 +5,6 @@
 	"empty": "Brak podopiecznych.",
 	"disown_confirm_title": "Usunąć tego podopiecznego?",
 	"disown_confirm_message": "Usuniesz {name} i stracisz {level} rekurencyjnych poziomów podopiecznych.",
-	"cancel": "Anuluj"
+	"cancel": "Anuluj",
+	"error_disown_failed": "Nie udało się usunąć tego podopiecznego."
 }

@@ -125,5 +125,7 @@
 	"godfather_requests": "Demandes de parrainage",
 	"request_stats": "Niveau {0} · Talent {1}",
 	"godson_request_accepted": "Demande acceptée !",
-	"godsons_level_actual": "actuel : {0}"
+	"godsons_level_actual": "actuel : {0}",
+	"error_godfather_cycle": "Vous ne pouvez pas être parrainé par un de vos filleuls.",
+	"godfather_action_failed": "L'action a échoué, réessayez."
 }

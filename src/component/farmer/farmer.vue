@@ -943,13 +943,19 @@
 		})
 	}
 
+	// Retour utilisateur sur échec d'une action de parrainage (sinon le clic semble ne rien faire). #4118
+	function godfatherError(e: unknown) {
+		const code = (e as { error?: string } | null)?.error
+		LeekWars.toast(t(code === 'godfather_cycle' ? 'error_godfather_cycle' : 'godfather_action_failed') as string)
+	}
+
 	// Sens 2 : demander à ce joueur d'être notre parrain. #4118
 	function requestGodfather() {
 		if (!farmer.value || farmer.value.godfather_request_sent) return
 		LeekWars.post('farmer/request-godfather', { target: farmer.value.id }).then(() => {
 			if (farmer.value) farmer.value.godfather_request_sent = true
 			LeekWars.toast(t('godfather_request_sent_toast') as string)
-		}).catch(() => {})
+		}).catch(godfatherError)
 	}
 
 	// La cible accepte une demande reçue : le demandeur devient filleul. #4118
@@ -962,14 +968,14 @@
 				farmer.value.godsons_level = Math.max(farmer.value.godsons_level, data.godsons_level_current)
 			}
 			LeekWars.toast(t('godson_request_accepted') as string)
-		}).catch(() => {})
+		}).catch(godfatherError)
 	}
 
 	// La cible refuse une demande reçue. #4118
 	function refuseGodsonRequest(req: GodfatherRequest) {
 		LeekWars.post('farmer/refuse-godson-request', { request_id: req.id }).then(() => {
 			godfatherRequests.value = godfatherRequests.value.filter(r => r.id !== req.id)
-		}).catch(() => {})
+		}).catch(godfatherError)
 	}
 
 	// MAJ instantanée du niveau récursif courant quand un filleul est renié dans le dialogue. #4118

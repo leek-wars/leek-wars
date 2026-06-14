@@ -125,5 +125,7 @@
 	"godfather_requests": "Richieste di padrinato",
 	"request_stats": "Livello {0} · Talento {1}",
 	"godson_request_accepted": "Richiesta accettata!",
-	"godsons_level_actual": "attuale: {0}"
+	"godsons_level_actual": "attuale: {0}",
+	"error_godfather_cycle": "Non puoi essere padrinato da uno dei tuoi figliocci.",
+	"godfather_action_failed": "Azione non riuscita, riprova."
 }

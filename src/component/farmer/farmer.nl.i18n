@@ -125,5 +125,7 @@
 	"godfather_requests": "Peetverzoeken",
 	"request_stats": "Niveau {0} · Talent {1}",
 	"godson_request_accepted": "Verzoek geaccepteerd!",
-	"godsons_level_actual": "huidig: {0}"
+	"godsons_level_actual": "huidig: {0}",
+	"error_godfather_cycle": "Je kunt niet gesponsord worden door een van je petekinderen.",
+	"godfather_action_failed": "Actie mislukt, probeer het opnieuw."
 }

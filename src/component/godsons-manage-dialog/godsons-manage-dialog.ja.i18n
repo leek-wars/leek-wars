@@ -5,5 +5,6 @@
 	"empty": "まだ弟子がいません。",
 	"disown_confirm_title": "この弟子を削除しますか？",
 	"disown_confirm_message": "{name} を削除し、弟子の再帰レベル {level} を失います。",
-	"cancel": "キャンセル"
+	"cancel": "キャンセル",
+	"error_disown_failed": "この弟子を削除できませんでした。"
 }

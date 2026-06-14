@@ -5,5 +5,6 @@
 	"empty": "Ingen fadderbarn ennå.",
 	"disown_confirm_title": "Fjerne dette fadderbarnet?",
 	"disown_confirm_message": "Du fjerner {name} og mister {level} rekursive fadderbarn-nivåer.",
-	"cancel": "Avbryt"
+	"cancel": "Avbryt",
+	"error_disown_failed": "Kunne ikke fjerne dette fadderbarnet."
 }

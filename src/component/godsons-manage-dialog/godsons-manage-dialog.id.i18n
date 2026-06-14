@@ -5,5 +5,6 @@
 	"empty": "Belum ada anak baptis.",
 	"disown_confirm_title": "Hapus anak baptis ini?",
 	"disown_confirm_message": "Anda akan menghapus {name} dan kehilangan {level} level anak baptis rekursif.",
-	"cancel": "Batal"
+	"cancel": "Batal",
+	"error_disown_failed": "Tidak dapat menghapus anak baptis ini."
 }

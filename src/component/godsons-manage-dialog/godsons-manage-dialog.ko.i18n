@@ -5,5 +5,6 @@
 	"empty": "아직 후원 자녀가 없습니다.",
 	"disown_confirm_title": "이 후원 자녀를 제거하시겠습니까?",
 	"disown_confirm_message": "{name} 님을 제거하고 후원 자녀 재귀 레벨 {level} 을(를) 잃게 됩니다.",
-	"cancel": "취소"
+	"cancel": "취소",
+	"error_disown_failed": "이 후원 자녀를 제거할 수 없습니다."
 }

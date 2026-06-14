@@ -5,5 +5,6 @@
 	"empty": "अभी कोई शिष्य नहीं।",
 	"disown_confirm_title": "इस शिष्य को हटाएं?",
 	"disown_confirm_message": "आप {name} को हटाने वाले हैं और {level} पुनरावर्ती शिष्य स्तर खो देंगे।",
-	"cancel": "रद्द करें"
+	"cancel": "रद्द करें",
+	"error_disown_failed": "इस शिष्य को हटाया नहीं जा सका।"
 }

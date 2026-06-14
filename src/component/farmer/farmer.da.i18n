@@ -125,5 +125,7 @@
 	"godfather_requests": "Fadderanmodninger",
 	"request_stats": "Niveau {0} · Talent {1}",
 	"godson_request_accepted": "Anmodning accepteret!",
-	"godsons_level_actual": "aktuelt: {0}"
+	"godsons_level_actual": "aktuelt: {0}",
+	"error_godfather_cycle": "Du kan ikke få en af dine fadderbørn som fadder.",
+	"godfather_action_failed": "Handlingen mislykkedes, prøv igen."
 }

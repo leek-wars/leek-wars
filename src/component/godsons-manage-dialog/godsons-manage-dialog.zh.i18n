@@ -5,5 +5,6 @@
 	"empty": "还没有徒弟。",
 	"disown_confirm_title": "移除这个徒弟？",
 	"disown_confirm_message": "你将移除 {name}，并失去 {level} 点徒弟递归等级。",
-	"cancel": "取消"
+	"cancel": "取消",
+	"error_disown_failed": "无法移除这个徒弟。"
 }

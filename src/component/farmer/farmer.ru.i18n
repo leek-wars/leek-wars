@@ -125,5 +125,7 @@
 	"godfather_requests": "Заявки на наставничество",
 	"request_stats": "Уровень {0} · Талант {1}",
 	"godson_request_accepted": "Заявка принята!",
-	"godsons_level_actual": "текущий: {0}"
+	"godsons_level_actual": "текущий: {0}",
+	"error_godfather_cycle": "Вы не можете выбрать наставником своего подопечного.",
+	"godfather_action_failed": "Не удалось выполнить действие, попробуйте снова."
 }

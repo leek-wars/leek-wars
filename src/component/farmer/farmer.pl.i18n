@@ -125,5 +125,7 @@
 	"godfather_requests": "Prośby o patronat",
 	"request_stats": "Poziom {0} · Talent {1}",
 	"godson_request_accepted": "Prośba zaakceptowana!",
-	"godsons_level_actual": "obecnie: {0}"
+	"godsons_level_actual": "obecnie: {0}",
+	"error_godfather_cycle": "Nie możesz mieć za patrona jednego ze swoich podopiecznych.",
+	"godfather_action_failed": "Akcja nie powiodła się, spróbuj ponownie."
 }

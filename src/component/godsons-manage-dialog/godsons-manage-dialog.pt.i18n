@@ -5,5 +5,6 @@
 	"empty": "Ainda sem afilhados.",
 	"disown_confirm_title": "Remover este afilhado?",
 	"disown_confirm_message": "Você vai remover {name} e perder {level} níveis recursivos de afilhados.",
-	"cancel": "Cancelar"
+	"cancel": "Cancelar",
+	"error_disown_failed": "Não foi possível remover este afilhado."
 }

@@ -125,5 +125,7 @@
 	"godfather_requests": "Sponsorship requests",
 	"request_stats": "Level {0} · Talent {1}",
 	"godson_request_accepted": "Request accepted!",
-	"godsons_level_actual": "current: {0}"
+	"godsons_level_actual": "current: {0}",
+	"error_godfather_cycle": "You can't be sponsored by one of your own godsons.",
+	"godfather_action_failed": "Action failed, please try again."
 }

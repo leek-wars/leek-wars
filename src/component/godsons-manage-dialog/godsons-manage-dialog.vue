@@ -59,6 +59,10 @@ function disown(g: Godson) {
 		if (godsons.value) godsons.value = godsons.value.filter(x => x.id !== g.id)
 		confirmGodson.value = null
 		emit('disowned', { id: g.id, godsons_level_current: data.godsons_level_current })
+	}).catch(() => {
+		// Sinon le dialogue de confirmation reste bloqué ouvert sans aucun retour. #4118
+		confirmGodson.value = null
+		LeekWars.toast(t('error_disown_failed') as string)
 	})
 }
 </script>

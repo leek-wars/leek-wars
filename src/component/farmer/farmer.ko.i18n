@@ -125,5 +125,7 @@
 	"godfather_requests": "후원 요청",
 	"request_stats": "레벨 {0} · 탤런트 {1}",
 	"godson_request_accepted": "요청을 수락했습니다!",
-	"godsons_level_actual": "현재: {0}"
+	"godsons_level_actual": "현재: {0}",
+	"error_godfather_cycle": "자신의 후원 자녀를 후원자로 삼을 수 없습니다.",
+	"godfather_action_failed": "작업에 실패했습니다. 다시 시도해 주세요."
 }

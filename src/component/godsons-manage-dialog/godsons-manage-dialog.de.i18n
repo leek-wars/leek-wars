@@ -5,5 +5,6 @@
 	"empty": "Noch keine Patenkinder.",
 	"disown_confirm_title": "Dieses Patenkind entfernen?",
 	"disown_confirm_message": "Du entfernst {name} und verlierst {level} rekursive Patenkind-Level.",
-	"cancel": "Abbrechen"
+	"cancel": "Abbrechen",
+	"error_disown_failed": "Dieses Patenkind konnte nicht entfernt werden."
 }

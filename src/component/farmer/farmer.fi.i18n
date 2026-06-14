@@ -118,5 +118,7 @@
 	"godfather_requests": "Kummipyynnöt",
 	"request_stats": "Taso {0} · Lahjakkuus {1}",
 	"godson_request_accepted": "Pyyntö hyväksytty!",
-	"godsons_level_actual": "nykyinen: {0}"
+	"godsons_level_actual": "nykyinen: {0}",
+	"error_godfather_cycle": "Et voi saada kummiksesi yhtä kummilapsistasi.",
+	"godfather_action_failed": "Toiminto epäonnistui, yritä uudelleen."
 }

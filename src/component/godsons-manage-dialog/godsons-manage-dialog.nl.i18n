@@ -5,5 +5,6 @@
 	"empty": "Nog geen petekinderen.",
 	"disown_confirm_title": "Dit petekind verwijderen?",
 	"disown_confirm_message": "Je gaat {name} verwijderen en {level} recursieve petekind-niveaus verliezen.",
-	"cancel": "Annuleren"
+	"cancel": "Annuleren",
+	"error_disown_failed": "Kon dit petekind niet verwijderen."
 }

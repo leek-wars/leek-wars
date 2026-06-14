@@ -125,5 +125,7 @@
 	"godfather_requests": "Pedidos de apadrinhamento",
 	"request_stats": "Nível {0} · Talento {1}",
 	"godson_request_accepted": "Pedido aceite!",
-	"godsons_level_actual": "atual: {0}"
+	"godsons_level_actual": "atual: {0}",
+	"error_godfather_cycle": "Você não pode ser apadrinhado por um dos seus afilhados.",
+	"godfather_action_failed": "A ação falhou, tente novamente."
 }

@@ -5,5 +5,6 @@
 	"empty": "Aún no hay ahijados.",
 	"disown_confirm_title": "¿Quitar a este ahijado?",
 	"disown_confirm_message": "Vas a quitar a {name} y perder {level} niveles recursivos de ahijados.",
-	"cancel": "Cancelar"
+	"cancel": "Cancelar",
+	"error_disown_failed": "No se pudo quitar a este ahijado."
 }

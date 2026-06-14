@@ -125,5 +125,7 @@
 	"godfather_requests": "拜师请求",
 	"request_stats": "等级 {0} · 天赋 {1}",
 	"godson_request_accepted": "已接受请求！",
-	"godsons_level_actual": "当前：{0}"
+	"godsons_level_actual": "当前：{0}",
+	"error_godfather_cycle": "你不能拜自己的徒弟为师。",
+	"godfather_action_failed": "操作失败，请重试。"
 }

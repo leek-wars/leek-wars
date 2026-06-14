@@ -125,5 +125,7 @@
 	"godfather_requests": "Fadderförfrågningar",
 	"request_stats": "Nivå {0} · Talang {1}",
 	"godson_request_accepted": "Förfrågan accepterad!",
-	"godsons_level_actual": "aktuell: {0}"
+	"godsons_level_actual": "aktuell: {0}",
+	"error_godfather_cycle": "Du kan inte få ett av dina fadderbarn som fadder.",
+	"godfather_action_failed": "Åtgärden misslyckades, försök igen."
 }

@@ -125,5 +125,7 @@
 	"godfather_requests": "Patenanfragen",
 	"request_stats": "Level {0} · Talent {1}",
 	"godson_request_accepted": "Anfrage angenommen!",
-	"godsons_level_actual": "aktuell: {0}"
+	"godsons_level_actual": "aktuell: {0}",
+	"error_godfather_cycle": "Du kannst nicht von einem deiner Patenkinder gesponsert werden.",
+	"godfather_action_failed": "Aktion fehlgeschlagen, bitte versuche es erneut."
 }

@@ -125,5 +125,7 @@
 	"godfather_requests": "Permintaan perwalian",
 	"request_stats": "Level {0} · Bakat {1}",
 	"godson_request_accepted": "Permintaan diterima!",
-	"godsons_level_actual": "saat ini: {0}"
+	"godsons_level_actual": "saat ini: {0}",
+	"error_godfather_cycle": "Kamu tidak bisa dibimbing oleh salah satu anak baptismu.",
+	"godfather_action_failed": "Tindakan gagal, coba lagi."
 }
