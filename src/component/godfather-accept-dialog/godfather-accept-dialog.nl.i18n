@@ -1,0 +1,8 @@
+{
+	"title": "{0} als peetvader?",
+	"stats": "Niveau {0} · {1} preien",
+	"rewards": "Accepteer en ontvang 20.000 {habs} + 20 {crystals} + 20 gevechten.",
+	"accept": "Accepteren",
+	"refuse": "Weigeren",
+	"accepted": "{0} is nu je peetvader!"
+}

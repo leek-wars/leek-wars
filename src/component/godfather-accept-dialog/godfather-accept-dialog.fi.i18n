@@ -1,0 +1,8 @@
+{
+	"title": "{0} kummiksi?",
+	"stats": "Taso {0} · {1} purjoa",
+	"rewards": "Hyväksy ja saat 20 000 {habs} + 20 {crystals} + 20 taistelua.",
+	"accept": "Hyväksy",
+	"refuse": "Hylkää",
+	"accepted": "{0} on nyt kummisi!"
+}

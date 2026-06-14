@@ -1,0 +1,8 @@
+{
+	"title": "{0} som fadder?",
+	"stats": "Nivå {0} · {1} purrer",
+	"rewards": "Aksepter og få 20 000 {habs} + 20 {crystals} + 20 kamper.",
+	"accept": "Aksepter",
+	"refuse": "Avslå",
+	"accepted": "{0} er nå fadderen din!"
+}

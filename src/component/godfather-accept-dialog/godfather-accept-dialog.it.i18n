@@ -1,0 +1,8 @@
+{
+	"title": "{0} come padrino?",
+	"stats": "Livello {0} · {1} porri",
+	"rewards": "Accetta e ricevi 20.000 {habs} + 20 {crystals} + 20 combattimenti.",
+	"accept": "Accetta",
+	"refuse": "Rifiuta",
+	"accepted": "{0} è ora il tuo padrino!"
+}

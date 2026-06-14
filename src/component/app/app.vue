@@ -47,6 +47,8 @@
 
 				<invite-dialog v-if="inviteDialogOpen" v-model="inviteDialogOpen" />
 
+				<godfather-accept-dialog v-if="godfatherAcceptOpen" v-model="godfatherAcceptOpen" :login="godfatherAcceptLogin" />
+
 				<activation-welcome v-if="showActivationWelcome" v-model="showActivationWelcome" />
 
 			<visitor-banner v-if="!$store.state.connected" />
@@ -217,6 +219,7 @@
 	const VerifyPopup = defineAsyncComponent(() => import('@/component/verify-popup/verify-popup.vue'))
 	const CheckEmailReminder = defineAsyncComponent(() => import('@/component/check-email-reminder/check-email-reminder.vue'))
 	const InviteDialog = defineAsyncComponent(() => import('@/component/invite-dialog/invite-dialog.vue'))
+	const GodfatherAcceptDialog = defineAsyncComponent(() => import('@/component/godfather-accept-dialog/godfather-accept-dialog.vue'))
 	const ActivationWelcome = defineAsyncComponent(() => import('@/component/activation-welcome/activation-welcome.vue'))
 	const VisitorBanner = defineAsyncComponent(() => import('@/component/visitor-banner/visitor-banner.vue'))
 	const VerifyBanner = defineAsyncComponent(() => import('@/component/verify-banner/verify-banner.vue'))
@@ -365,6 +368,21 @@
 			const f = store.state.farmer!
 			f.invite_dialog_seen_at = Math.floor(Date.now() / 1000)
 			LeekWars.post('farmer/dismiss-invite-dialog')
+		}
+	}, { immediate: true })
+
+	// Parrainage a posteriori : un joueur connecté qui ouvre /godfather/:login et qui
+	// n'a pas encore de parrain se voit proposer ce parrain (accepter/refuser). #4118
+	// Source = path quand connecté (sinon '') : se redéclenche aussi quand connected
+	// passe à true sur un deep-link.
+	const godfatherAcceptOpen = ref(false)
+	const godfatherAcceptLogin = ref('')
+	watch(() => store.state.connected ? router.currentRoute.value.path : '', (path) => {
+		const m = path.match(/^\/godfather\/(.+)$/)
+		const f = store.state.farmer
+		if (m && f && !f.godfather && !godfatherAcceptOpen.value) {
+			godfatherAcceptLogin.value = decodeURIComponent(m[1])
+			godfatherAcceptOpen.value = true
 		}
 	}, { immediate: true })
 
